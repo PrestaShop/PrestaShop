@@ -731,10 +731,8 @@ class AdminModulesControllerCore extends AdminController
 						$module_upgraded = array();
 						foreach ($module_to_update as $name => $attr)
 						{
-							if (is_null($attr) && $this->logged_on_addons == 0)
-								$this->errors[] = sprintf(Tools::displayError('Please log in to PrestaShop Addons to check available updates for %s'), '<strong>'.$name.'</strong>');
-							elseif ($attr['need_loggedOnAddons'] == 1 && $this->logged_on_addons == 0)
-								$this->errors[] = sprintf(Tools::displayError('Please log in to PrestaShop Addons to update your module %s'), '<strong>'.$name.'</strong>');
+							if ((is_null($attr) && $this->logged_on_addons == 0) || ($attr['need_loggedOnAddons'] == 1 && $this->logged_on_addons == 0))
+								$this->errors[] = sprintf(Tools::displayError('%s : You need to be logged in to your PrestaShop Addons account to update this module. %s'), '<strong>'.$name.'</strong>', '<a href="#" class="addons_connect" data-toggle="modal" data-target="#modal_addons_connect" title="Addons">'.$this->l('Click here to log in').'</a>');
 							elseif (!is_null($attr['id']))
 							{
 								$download_ok = false;
@@ -751,7 +749,7 @@ class AdminModulesControllerCore extends AdminController
 									$module_upgraded[] = $name;
 							}
 							else
-								$this->errors[] = sprintf(Tools::displayError("Module %s can't be upgraded. Please make sure you are logged in to the PrestaShop Addons account that purchased the module."), '<strong>'.$name.'</strong>');
+								$this->errors[] = sprintf(Tools::displayError("%s : You don’t have the rights to update this module. Please make sure you are logged in to the PrestaShop Addons account that purchased the module."), '<strong>'.$name.'</strong>');
 						}
 						$module_upgraded = implode('|', $module_upgraded);
 					}
