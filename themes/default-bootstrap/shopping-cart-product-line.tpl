@@ -63,7 +63,11 @@
                     			{assign var='symbol' value='%'}
                     		{/if}
 						{/if}
-						{$priceReduction|round|string_format:"%d"}{$symbol}
+						{if $symbol == '%'}
+							{$priceReduction|round|string_format:"%d"}{$symbol}
+						{else}
+							{$priceReduction|string_format:"%.2f"}{$symbol}
+						{/if}
                     </span>
 					<span class="old-price">{convertPrice price=$product.price_without_specific_price}</span>
 				{/if}
