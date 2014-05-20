@@ -859,7 +859,7 @@ function submitPublishProduct(url, redirect, token)
 		function(data)
 		{
 			if (data.indexOf('error') === -1)
-			document.location.href = data;
+				document.location.href = data;
 		}
 	);
 	return true;
