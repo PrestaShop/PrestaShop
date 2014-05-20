@@ -127,7 +127,7 @@ function updateState(suffix)
 	if (typeof states !== 'undefined')
 	{
 		$(states).each(function(key, item){
-			$('#id_state' + (typeof suffix !== 'undefined' ? '_' + suffix : '')).append('<option value="' + parseInt(item.id) + '"' + (idSelectedCountry === item.id ? ' selected="selected"' : '') + '>' + item.name + '</option>');
+			$('#id_state' + (typeof suffix !== 'undefined' ? '_' + suffix : '')).append('<option value="' + parseInt(item.id) + '">' + item.name + '</option>');
 		});
 
 		$('.id_state' + (typeof suffix !== 'undefined' ? '_' + suffix : '') + ':hidden').fadeIn('slow');
