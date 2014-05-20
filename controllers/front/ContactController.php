@@ -145,8 +145,11 @@ class ContactControllerCore extends FrontController
 						$cm = new CustomerMessage();
 						$cm->id_customer_thread = $ct->id;
 						$cm->message = $message;
-						if (isset($fileAttachment['rename']) && !empty($fileAttachment['rename']) && rename($fileAttachment['tmp_name'], _PS_MODULE_DIR_.'../upload/'.basename($fileAttachment['rename'])))
+						if (isset($fileAttachment['rename']) && !empty($fileAttachment['rename']) && rename($fileAttachment['tmp_name'], _PS_UPLOAD_DIR_.basename($fileAttachment['rename'])))
+						{
 							$cm->file_name = $fileAttachment['rename'];
+							@chmod(_PS_UPLOAD_DIR_.basename($fileAttachment['rename']), 0664);
+						}
 						$cm->ip_address = ip2long(Tools::getRemoteAddr());
 						$cm->user_agent = $_SERVER['HTTP_USER_AGENT'];
 						if (!$cm->add())
