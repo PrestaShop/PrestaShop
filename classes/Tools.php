@@ -2420,7 +2420,7 @@ exit;
 		{
 			require_once(_PS_ROOT_DIR_.'/tools/pclzip/pclzip.lib.php');
 			$zip = new PclZip($from_file);
-			$list = $zip->extract(PCLZIP_OPT_PATH, $to_dir);
+			$list = $zip->extract(PCLZIP_OPT_PATH, $to_dir, PCLZIP_OPT_REPLACE_NEWER);
 			foreach ($list as $file)
 				if ($file['status'] != 'ok' && $file['status'] != 'already_a_directory')
 					return false;
