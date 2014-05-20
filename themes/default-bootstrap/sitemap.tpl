@@ -41,7 +41,7 @@
                     </a>
                 </li>
     			{if !$PS_CATALOG_MODE}
-    			{if $display_best_seller_link OR $PS_DISPLAY_BEST_SELLERS}
+    			{if $PS_DISPLAY_BEST_SELLERS}
         			<li>
                         <a 
                         href="{$link->getPageLink('best-sales')|escape:'html':'UTF-8'}" 
