@@ -31,7 +31,7 @@
         <ul class="toggle-footer">
             {if $blockcontactinfos_company != ''}
             	<li>
-            		<i class="icon-map-marker"></i>{$blockcontactinfos_company|escape:'html':'UTF-8'}{if $blockcontactinfos_address != ''}, {$blockcontactinfos_address|escape:'html':'UTF-8'}{/if}
+            		<i class="icon-map-marker"></i>{$blockcontactinfos_company|escape:'html':'UTF-8'}{if $blockcontactinfos_address != ''}, <br />{$blockcontactinfos_address|nl2br}{/if}
             	</li>
             {/if}
             {if $blockcontactinfos_phone != ''}
