@@ -42,21 +42,26 @@ class CompareControllerCore extends FrontController
 		// Add or remove product with Ajax
 		if (Tools::getValue('ajax') && Tools::getValue('id_product') && Tools::getValue('action'))
 		{
-			$return = false;
 			if (Tools::getValue('action') == 'add')
 			{
 				$id_compare = isset($this->context->cookie->id_compare) ? $this->context->cookie->id_compare: false;
 				if (CompareProduct::getNumberProducts($id_compare) < Configuration::get('PS_COMPARATOR_MAX_ITEM'))
 					CompareProduct::addCompareProduct($id_compare, (int)Tools::getValue('id_product'));
+				else
+					die('0');
 			}
 			else if (Tools::getValue('action') == 'remove')
 			{
 				if (isset($this->context->cookie->id_compare))
 					CompareProduct::removeCompareProduct((int)$this->context->cookie->id_compare, (int)Tools::getValue('id_product'));
+				else
+					die('0');
 			}
-			$return = true;
+			else
+				die('0');
+			die('1');
 		}
-		die($return);
+		die('0');
 	}
 
 	/**
