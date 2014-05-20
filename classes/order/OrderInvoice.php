@@ -321,8 +321,13 @@ class OrderInvoiceCore extends ObjectModel
 						'total_price_tax_excl' => 0
 					);
 
-				$ratio = $tax_infos['total_price_tax_excl'] / $this->total_products;
-				$order_reduction_amount = $this->total_discount_tax_excl * $ratio;
+				if((int)$this->total_products > 0){
+					$ratio = $tax_infos['total_price_tax_excl'] / $this->total_products;
+					$order_reduction_amount = $this->total_discount_tax_excl * $ratio;
+				} else {
+					$ratio = 0;
+					$order_reduction_amount = 0;
+				}
 				$tmp_tax_infos[$tax_infos['rate']]['total_amount'] += ($tax_infos['total_amount'] - Tools::ps_round($tax_infos['ecotax'] * $tax_infos['product_quantity'] * $tax_infos['ecotax_tax_rate'] / 100, 2));
 				$tmp_tax_infos[$tax_infos['rate']]['name'] = $tax_infos['name'];
 				$tmp_tax_infos[$tax_infos['rate']]['total_price_tax_excl'] += $tax_infos['total_price_tax_excl'] - $order_reduction_amount - Tools::ps_round($tax_infos['ecotax'] * $tax_infos['product_quantity'], 2);
