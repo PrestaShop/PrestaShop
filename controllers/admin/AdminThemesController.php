@@ -121,10 +121,10 @@ class AdminThemesControllerCore extends AdminController
 		{
 			if (!$this->isFresh(Theme::CACHE_FILE_CUSTOMER_THEMES_LIST, 86400))
 				file_put_contents(_PS_ROOT_DIR_.Theme::CACHE_FILE_CUSTOMER_THEMES_LIST, Tools::addonsRequest('customer_themes'));
-			
+
 			$customer_themes_list = file_get_contents(_PS_ROOT_DIR_.Theme::CACHE_FILE_CUSTOMER_THEMES_LIST);
 			if (!empty($customer_themes_list) && $customer_themes_list_xml = simplexml_load_string($customer_themes_list))
-			{			
+			{
 				foreach ($customer_themes_list_xml->theme as $addons_theme)
 				{
 					//get addons theme if folder does not exist
@@ -133,17 +133,17 @@ class AdminThemesControllerCore extends AdminController
 					if (!is_array($ids_themes) || (is_array($ids_themes) && !in_array((string)$addons_theme->id, $ids_themes)))
 					{
 						$zip_content = Tools::addonsRequest('module', array(
-							'id_module' => pSQL($addons_theme->id), 
-							'username_addons' => pSQL(trim($this->context->cookie->username_addons)), 
+							'id_module' => pSQL($addons_theme->id),
+							'username_addons' => pSQL(trim($this->context->cookie->username_addons)),
 							'password_addons' => pSQL(trim($this->context->cookie->password_addons)))
 							);
-						
+
 						$uniqid = uniqid();
 						$sandbox = _PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR.$uniqid.DIRECTORY_SEPARATOR;
 						mkdir($sandbox);
 
 						file_put_contents($sandbox.(string)$addons_theme->name.'.zip', $zip_content);
-						
+
 						if ($theme_directory = $this->extractTheme($sandbox.(string)$addons_theme->name.'.zip', $sandbox))
 							$ids_themes[$theme_directory] = (string)$addons_theme->id;
 
@@ -311,21 +311,25 @@ class AdminThemesControllerCore extends AdminController
 				),
 				'submit' => array('title' => $this->l('Save'))
 			),
-			'theme' => array(
-				'title' => sprintf($this->l('Select a theme for shop %s'), $this->context->shop->name),
-				'description' => (!$this->can_display_themes) ? $this->l('You must select a shop from the above list if you wish to choose a theme.') : '',
-				'fields' => array(
-					'theme_for_shop' => array(
-						'type' => 'theme',
-						'themes' => $other_themes,
-						'id_theme' => $this->context->shop->id_theme,
-						'can_display_themes' => $this->can_display_themes,
-						'no_multishop_checkbox' => true,
-						'addons_link' => 'http://addons.prestashop.com/en/3-templates-prestashop?utm_source=back-office&utm_medium=theme-button&utm_campaign=back-office-'.$iso_lang_uc,
-					),
-				),
-			),
 		);
+
+		if (!empty($other_themes))
+		{
+			$this->fields_options['theme'] = array(
+					'title' => sprintf($this->l('Select a theme for shop %s'), $this->context->shop->name),
+					'description' => (!$this->can_display_themes) ? $this->l('You must select a shop from the above list if you wish to choose a theme.') : '',
+					'fields' => array(
+						'theme_for_shop' => array(
+							'type' => 'theme',
+							'themes' => $other_themes,
+							'id_theme' => $this->context->shop->id_theme,
+							'can_display_themes' => $this->can_display_themes,
+							'no_multishop_checkbox' => true,
+							'addons_link' => 'http://addons.prestashop.com/en/3-templates-prestashop?utm_source=back-office&utm_medium=theme-button&utm_campaign=back-office-'.$iso_lang_uc,
+						),
+					),
+				);
+		}
 	}
 
 	public function renderForm()
@@ -741,11 +745,11 @@ class AdminThemesControllerCore extends AdminController
 
 			if (is_dir(_PS_ALL_THEMES_DIR_.$obj->directory) && !in_array($obj->directory, $themes))
 				Tools::deleteDirectory(_PS_ALL_THEMES_DIR_.$obj->directory.'/');
-			
+
 			$ids_themes = unserialize(Configuration::get('PS_ADDONS_THEMES_IDS'));
 			if (array_key_exists($obj->directory, $ids_themes))
 				unset($ids_themes[$obj->directory]);
-			
+
 			$obj->removeMetas();
 		}
 
@@ -1553,7 +1557,7 @@ class AdminThemesControllerCore extends AdminController
 				Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminThemes').'&conf=18');
 		}
 	}
-	
+
 	protected function extractTheme($theme_zip_file, $sandbox)
 	{
 		if (!Tools::ZipExtract($theme_zip_file, $sandbox.'uploaded/'))
@@ -1851,7 +1855,7 @@ class AdminThemesControllerCore extends AdminController
 				Configuration::updateValue('SHOP_LOGO_HEIGHT', (int)round($height));
 				Configuration::updateValue('SHOP_LOGO_WIDTH', (int)round($width));
 			}
-			if (Configuration::get('PS_LOGO_MOBILE') && trim(Configuration::get('PS_LOGO_MOBILE')) != '' 
+			if (Configuration::get('PS_LOGO_MOBILE') && trim(Configuration::get('PS_LOGO_MOBILE')) != ''
 				&& file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MOBILE')) && filesize(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MOBILE')))
 			{
 				list($width, $height, $type, $attr) = getimagesize(_PS_IMG_DIR_.Configuration::get('PS_LOGO_MOBILE'));
@@ -2236,7 +2240,7 @@ class AdminThemesControllerCore extends AdminController
 					),
 					'submit' => array(
 						'title' => $this->l('Save'),
-					),					
+					),
 				)
 			);
 

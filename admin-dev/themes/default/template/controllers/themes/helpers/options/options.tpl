@@ -66,19 +66,6 @@
 					{/foreach}
 				</div>
 			</div>
-			{else}
-			<div class="col-lg-12">
-				<div class="row">
-					<div style="text-align:center;">
-						{l s='You currently have no other themes. Choose a new theme:'}
-						<br />	
-						<a class="btn btn-default" href="{$field['addons_link']}" onclick="return !window.open(this.href)">
-							<i class='icon icon-folder-open'></i>
-							{l s='Visit Theme store'}
-						</a>
-					</div>
-				</div>
-			</div>
 			{/if}
 		{/if}
 	{else}
