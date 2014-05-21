@@ -734,7 +734,8 @@ class MediaCore
 								$version = $matches[1];
 							if ($version)
 							{
-								Context::getContext()->controller->addJquery($version, null, $minifier);
+								if ($version != _PS_JQUERY_VERSION_)
+									Context::getContext()->controller->addJquery($version, null, $minifier);
 								array_push(Media::$inline_script_src, $src);
 							}
 						}

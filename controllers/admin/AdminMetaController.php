@@ -98,29 +98,32 @@ class AdminMetaControllerCore extends AdminController
 		);
 
 		$url_description = '';
-		if ($this->checkConfiguration($this->ht_file))
+		if (!defined('_PS_HOST_MODE_'))
 		{
-			$general_fields['PS_HTACCESS_DISABLE_MULTIVIEWS'] = array(
-				'title' => $this->l('Disable Apache\'s MultiViews option'),
-				'hint' => $this->l('Enable this option only if you have problems with URL rewriting.'),
-				'validation' => 'isBool',
-				'cast' => 'intval',
-				'type' => 'bool',
-			);
+			if ($this->checkConfiguration($this->ht_file))
+			{
+				$general_fields['PS_HTACCESS_DISABLE_MULTIVIEWS'] = array(
+					'title' => $this->l('Disable Apache\'s MultiViews option'),
+					'hint' => $this->l('Enable this option only if you have problems with URL rewriting.'),
+					'validation' => 'isBool',
+					'cast' => 'intval',
+					'type' => 'bool',
+				);
 
-			$general_fields['PS_HTACCESS_DISABLE_MODSEC'] = array(
-				'title' => $this->l('Disable Apache\'s mod_security module'),
-				'hint' => $this->l('Some of PrestaShop\'s features might not work correctly with a specific configuration of Apache\'s mod_security module. We recommend to turn it off.'),
-				'validation' => 'isBool',
-				'cast' => 'intval',
-				'type' => 'bool',
-			);
-		}
-		else
-		{
-			$url_description = $this->l('Before you can use this tool, you need to:');
-			$url_description .= $this->l('1) Create a blank .htaccess file in your root directory.');
-			$url_description .= $this->l('2) Give it write permissions (CHMOD 666 on Unix system).');
+				$general_fields['PS_HTACCESS_DISABLE_MODSEC'] = array(
+					'title' => $this->l('Disable Apache\'s mod_security module'),
+					'hint' => $this->l('Some of PrestaShop\'s features might not work correctly with a specific configuration of Apache\'s mod_security module. We recommend to turn it off.'),
+					'validation' => 'isBool',
+					'cast' => 'intval',
+					'type' => 'bool',
+				);
+			}
+			else
+			{
+				$url_description = $this->l('Before you can use this tool, you need to:');
+				$url_description .= $this->l('1) Create a blank .htaccess file in your root directory.');
+				$url_description .= $this->l('2) Give it write permissions (CHMOD 666 on Unix system).');
+			}
 		}
 
 		// Options to generate robot.txt

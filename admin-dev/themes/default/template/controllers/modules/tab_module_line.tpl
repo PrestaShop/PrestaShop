@@ -65,7 +65,7 @@
 			<p>
 				<a href="{$module->addons_buy_url}" target="_blank" class="button updated">
 					<span class="btn btn-default">
-						<i class="icon-shopping-cart"></i> &nbsp;&nbsp;{displayPrice price=$module->price currency=$module->id_currency}
+						<i class="icon-shopping-cart"></i>{if isset($module->price) && isset($module->id_currency)} &nbsp;&nbsp;{displayPrice price=$module->price currency=$module->id_currency}{/if}
 					</span>
 				</a>
 			</p>
