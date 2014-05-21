@@ -653,12 +653,11 @@
 		{/if}
 	{/if}
 {strip}
-{strip}
 {if isset($smarty.get.ad) && $smarty.get.ad}
-{addJsDefL name=ad}{$base_dir|cat:$smarty.get.ad|escape:'html':'UTF-8'}{/addJsDefL}
+	{addJsDefL name=ad}{$base_dir|cat:$smarty.get.ad|escape:'html':'UTF-8'}{/addJsDefL}
 {/if}
 {if isset($smarty.get.adtoken) && $smarty.get.adtoken}
-{addJsDefL name=adtoken}{$smarty.get.adtoken|escape:'html':'UTF-8'}{/addJsDefL}
+	{addJsDefL name=adtoken}{$smarty.get.adtoken|escape:'html':'UTF-8'}{/addJsDefL}
 {/if}
 {addJsDef allowBuyWhenOutOfStock=$allow_oosp|boolval}
 {addJsDef availableNowValue=$product->available_now|escape:'quotes':'UTF-8'}
