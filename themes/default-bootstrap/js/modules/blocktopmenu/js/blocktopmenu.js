@@ -28,6 +28,8 @@ var categoryMenu = $('ul.sf-menu');
 var mCategoryGrover = $('.sf-contener .cat-title');
 
 $(document).ready(function(){
+	categoryMenu = $('ul.sf-menu');
+	mCategoryGrover = $('.sf-contener .cat-title');
 	responsiveMenu();
 	$(window).resize(responsiveMenu);
 });
