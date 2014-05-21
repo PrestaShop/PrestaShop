@@ -342,29 +342,32 @@ class AdminPerformanceControllerCore extends AdminController
 						)
 					)
 				),
-				array(
-					'type' => 'switch',
-					'label' => $this->l('Apache optimization'),
-					'name' => 'PS_HTACCESS_CACHE_CONTROL',
-					'hint' => $this->l('This will add directives to your .htaccess file, which should improve caching and compression.'),
-					'values' => array(
-						array(
-							'id' => 'PS_HTACCESS_CACHE_CONTROL_1',
-							'value' => 1,
-							'label' => $this->l('Yes'),
-						),
-						array(
-							'id' => 'PS_HTACCESS_CACHE_CONTROL_0',
-							'value' => 0,
-							'label' => $this->l('No'),
-						),
-					),
-				)
+				
 			),
 			'submit' => array(
 				'title' => $this->l('Save')
 			)
 		);
+
+		if (!defined('_PS_HOST_MODE_'))
+			$this->fields_form[3]['form']['input'][] = array(
+				'type' => 'switch',
+				'label' => $this->l('Apache optimization'),
+				'name' => 'PS_HTACCESS_CACHE_CONTROL',
+				'hint' => $this->l('This will add directives to your .htaccess file, which should improve caching and compression.'),
+				'values' => array(
+					array(
+						'id' => 'PS_HTACCESS_CACHE_CONTROL_1',
+						'value' => 1,
+						'label' => $this->l('Yes'),
+					),
+					array(
+						'id' => 'PS_HTACCESS_CACHE_CONTROL_0',
+						'value' => 0,
+						'label' => $this->l('No'),
+					),
+				),
+			);
 
 		$this->fields_value['PS_CSS_THEME_CACHE'] = Configuration::get('PS_CSS_THEME_CACHE');
 		$this->fields_value['PS_JS_THEME_CACHE'] = Configuration::get('PS_JS_THEME_CACHE');
@@ -563,19 +566,17 @@ class AdminPerformanceControllerCore extends AdminController
 
 	public function renderForm()
 	{
-		// Initialize fieldset for a form
 		$this->initFieldsetSmarty();
-
 		$this->initFieldsetDebugMode();
-
 		$this->initFieldsetFeaturesDetachables();
 		$this->initFieldsetCCC();
 
 		if (!defined('_PS_HOST_MODE_'))
+		{
 			$this->initFieldsetMediaServer();
-
-		$this->initFieldsetCiphering();
-		$this->initFieldsetCaching();
+			$this->initFieldsetCiphering();
+			$this->initFieldsetCaching();
+		}
 
 		// Reindex fields
 		$this->fields_form = array_values($this->fields_form);

@@ -78,6 +78,7 @@
 				</h3>
 				<p>{l s='This information must be provided when you report an issue on our bug tracker or forum.'}</p>
 			</div>
+			{if !$host_mode}
 			<div class="panel">
 				<h3>
 					<i class="icon-info"></i>
@@ -120,6 +121,7 @@
 				</p>
 			</div>
 		</div>
+		{/if}
 		<div class="col-lg-6">
 			<div class="panel">
 				<h3>
