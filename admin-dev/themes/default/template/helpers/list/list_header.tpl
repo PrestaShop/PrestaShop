@@ -249,7 +249,7 @@
 							{if $shop_link_type == 'shop'}
 								{l s='Shop'}
 							{else}
-								{l s='Group shop'}
+								{l s='Shop group'}
 							{/if}
 							</span>
 						</th>

@@ -1465,7 +1465,7 @@ abstract class AdminTabCore
 
 		if ($this->shopLinkType)
 		{
-			echo '<th style="width: 80px">'.$this->l(($this->shopLinkType == 'shop') ? 'Shop' : 'Group shop').'</th>';
+			echo '<th style="width: 80px">'.$this->l(($this->shopLinkType == 'shop') ? 'Shop' : 'Shop group').'</th>';
 		}
 
 		/* Check if object can be modified, deleted or detailed */
