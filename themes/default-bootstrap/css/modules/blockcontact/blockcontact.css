@@ -2,6 +2,9 @@
   float: left;
   padding: 5px 0 10px;
   line-height: 18px; }
+#call a {
+  color: #FFFFFF; }
+
   @media (max-width: 767px) {
     .shop-phone {
       display: none; } }
@@ -12,6 +15,8 @@
     padding-right: 7px; }
   .shop-phone strong {
     color: white; }
+  #call a {
+    color: #FFFFFF; }
 
 #contact-link {
   float: right;

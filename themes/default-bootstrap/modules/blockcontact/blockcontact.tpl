@@ -33,7 +33,7 @@
 		</p>
 		{if $telnumber != ''}
 			<p class="tel">
-				<span class="label">{l s='Phone:' mod='blockcontact'}</span>{$telnumber|escape:'html':'UTF-8'}
+				<span class="label">{l s='Phone:' mod='blockcontact'}</span><a href="tel:{$telnumber}">{$telnumber|escape:'html':'UTF-8'}</a>
 			</p>
 		{/if}
 		{if $email != ''}
