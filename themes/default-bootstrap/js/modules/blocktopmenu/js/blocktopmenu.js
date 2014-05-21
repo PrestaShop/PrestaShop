@@ -57,7 +57,6 @@ function desktopInit()
 	$('.sf-menu > li > ul').removeClass('menu-mobile').parent().find('.menu-mobile-grover').remove();
 	$('.sf-menu').removeAttr('style');
 	categoryMenu.superfish('init');
-	console.log('category inited !');
 	//add class for width define
 	$('.sf-menu > li > ul').addClass('submenu-container clearfix'); 
 	 // loop through each sublist under each top list item
