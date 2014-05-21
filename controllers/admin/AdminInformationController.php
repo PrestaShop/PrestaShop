@@ -29,6 +29,7 @@ class AdminInformationControllerCore extends AdminController
 
 	public function __construct()
 	{
+		define('_PS_HOST_MODE_', 1);
 		$this->bootstrap = true;
 		parent::__construct();
 	}
@@ -54,20 +55,26 @@ class AdminInformationControllerCore extends AdminController
 	public function renderView()
 	{
 		$this->initPageHeaderToolbar();
-		$this->tpl_view_vars = array(
-			'version' => array(
-				'php' => phpversion(),
-				'server' => $_SERVER['SERVER_SOFTWARE'],
-				'memory_limit' => ini_get('memory_limit'),
-				'max_execution_time' => ini_get('max_execution_time')
-			),
-			'database' => array(
-				'version' => Db::getInstance()->getVersion(),
-				'prefix' => _DB_PREFIX_,
-				'engine' => _MYSQL_ENGINE_,
-			),
-			'uname' => function_exists('php_uname') ? php_uname('s').' '.php_uname('v').' '.php_uname('m') : '',
-			'apache_instaweb' => Tools::apacheModExists('mod_instaweb'),
+		
+		$hosting_vars = array();
+		if (!defined('_PS_HOST_MODE_'))
+			$hosting_vars = array(
+				'version' => array(
+					'php' => phpversion(),
+					'server' => $_SERVER['SERVER_SOFTWARE'],
+					'memory_limit' => ini_get('memory_limit'),
+					'max_execution_time' => ini_get('max_execution_time')
+				),
+				'database' => array(
+					'version' => Db::getInstance()->getVersion(),
+					'prefix' => _DB_PREFIX_,
+					'engine' => _MYSQL_ENGINE_,
+				),
+				'uname' => function_exists('php_uname') ? php_uname('s').' '.php_uname('v').' '.php_uname('m') : '',
+				'apache_instaweb' => Tools::apacheModExists('mod_instaweb')
+			);
+		
+		$shop_vars = array(
 			'shop' => array(
 				'ps' => _PS_VERSION_,
 				'url' => $this->context->shop->getBaseURL(),
@@ -83,7 +90,8 @@ class AdminInformationControllerCore extends AdminController
 			),
 			'user_agent' => $_SERVER['HTTP_USER_AGENT'],
 		);
-		$this->tpl_view_vars = array_merge($this->getTestResult(), $this->tpl_view_vars);
+
+		$this->tpl_view_vars = array_merge($this->getTestResult(), array_merge($hosting_vars, $shop_vars));
 
 		return parent::renderView();
 	}
