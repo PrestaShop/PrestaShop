@@ -753,6 +753,12 @@ $(document).ready(function()
 		});
 	}
 
+	if (typeof formToMove != 'undefined' && typeof formDestination != 'undefined' )
+	{
+		$('<hr style="margin 24px 0;" />').appendTo('#'+formDestination)
+		$('#theme_fieldset_'+formToMove+' .form-wrapper').appendTo('#'+formDestination);
+	}
+
 	$('select.chosen').each(function(k, item){
 		$(item).chosen({disable_search_threshold: 10});
 	});
