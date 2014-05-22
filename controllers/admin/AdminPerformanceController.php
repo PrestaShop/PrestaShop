@@ -327,13 +327,13 @@ class AdminPerformanceControllerCore extends AdminController
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Defer JavaScript in HTML'),
+					'label' => $this->l('Move JavaScript at the end'),
 					'name' => 'PS_JS_DEFER',
 					'values' => array(
 						array(
 							'id' => 'PS_JS_DEFER_1',
 							'value' => 1,
-							'label' => $this->l('Defer JavaScript at the end of html document')
+							'label' => $this->l('Move JavaScript at the end of the HTML document')
 						),
 						array(
 							'id' => 'PS_JS_DEFER_0',
