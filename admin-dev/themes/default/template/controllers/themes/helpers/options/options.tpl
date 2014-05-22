@@ -79,15 +79,12 @@
 	{if isset($categoryData['after_tabs'])}
 		{assign var=cur_theme value=$categoryData['after_tabs']['cur_theme']}
 		<div class="row" style="margin-top: 64px;">
-			<div class="col-md-2">
-				<h2>{l s='Your theme'}</h2>
-			</div>
-			<div class="col-md-3">
+			<div class="col-md-3" style="text-align: center;">
 				<a href="{$base_url}">
 					<img src="../themes/{$cur_theme.theme_directory}/preview.jpg">
 				</a>
 			</div>
-			<div class="col-md-7">
+			<div id="js_theme_form_container" class="col-md-9">
 				<h2>{$cur_theme.theme_name} <small>version {$cur_theme.theme_version}</small></h2>
 				<p>
 					Designed by {$cur_theme.author_name}
@@ -155,5 +152,10 @@
 				$("#prestastore-content").html("<h3><i class='icon-picture-o'></i> {l s='Live from PrestaShop Addons!'}</h3>"+htmlData);
 			}
 		});
+
+		// These variable will move the form to another location
+		var formToMove = "appearance";
+		var formDestination = "js_theme_form_container";
 	</script>
 {/block}
+
