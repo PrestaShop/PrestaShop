@@ -382,7 +382,7 @@ class HelperCore
 			$value = 's-'.Shop::getContextShopID();
 
 		// Generate HTML
-		$url = $_SERVER['REQUEST_URI'].(($_SERVER['QUERY_STRING']) ? '&' : '?').'setShopContext=';
+		$url = $_SERVER['REQUEST_URI'].(($_SERVER['QUERY_STRING']) ? '&' : '?').'setShopContext='; // <<< ??? Aïe Aïe ! le breadcrumb-multishop select reprend le href en court ! #BO @PrestaShop C'est pas bon ça ! il garde tous les params url des modules persos
 		$shop = new Shop(Shop::getContextShopID());
 
 		// $html = '<a href="#"><i class="icon-home"></i> '.$shop->name.'</a>';
