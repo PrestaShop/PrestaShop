@@ -482,6 +482,18 @@ class AdminManufacturersControllerCore extends AdminController
 			'type' => 'hidden',
 			'name' => 'id_address',
 		);
+
+		$form['input'][] = (in_array('company', $required_fields) ? 
+			array(
+				'type' => 'text',
+				'label' => $this->l('Company'),
+				'name' => 'company',
+				'display' => in_array('company', $required_fields),
+				'required' => in_array('company', $required_fields),
+				'maxlength' => 16,
+				'col' => 4,
+				'hint' => $this->l('Company Name for this supplier')
+			) : null);
 		
 		$form['input'][] = array(
 			'type' => 'text',
