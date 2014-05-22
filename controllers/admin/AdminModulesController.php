@@ -732,7 +732,7 @@ class AdminModulesControllerCore extends AdminController
 						foreach ($module_to_update as $name => $attr)
 						{
 							if ((is_null($attr) && $this->logged_on_addons == 0) || ($attr['need_loggedOnAddons'] == 1 && $this->logged_on_addons == 0))
-								$this->errors[] = sprintf(Tools::displayError('You need to be logged in to your PrestaShop Addons account in order to update the %s module. %s'), '<strong>'.$name.'</strong>', '<a href="#" class="addons_connect" data-toggle="modal" data-target="#modal_addons_connect" title="Addons">'.$this->l('Click here to log in.')'</a>');
+								$this->errors[] = sprintf(Tools::displayError('You need to be logged in to your PrestaShop Addons account in order to update the %s module. %s'), '<strong>'.$name.'</strong>', '<a href="#" class="addons_connect" data-toggle="modal" data-target="#modal_addons_connect" title="Addons">'.$this->l('Click here to log in.').'</a>');
 							elseif (!is_null($attr['id']))
 							{
 								$download_ok = false;
