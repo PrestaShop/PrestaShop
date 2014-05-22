@@ -73,9 +73,9 @@ function psinstall_google_click() {
 }
 
 function psinstall_pinterest_click() {
-	window.open('http://www.pinterest.com/pin/create/button/?url=http://www.prestashop.com/', 'sharerpinterest', 'toolbar=0,status=0,width=660,height=445');
+	window.open('http://www.pinterest.com/pin/create/button/?media=http://img-cdn.prestashop.com/logo.png&url=http://www.prestashop.com/', 'sharerpinterest', 'toolbar=0,status=0,width=660,height=445');
 }
 
 function psinstall_linkedin_click() {
-	window.open('https://www.linkedin.com/cws/share?url=http%3A%2F%2Fwww.prestashop.com%2F&isFramed=true', 'sharerlinkedin', 'toolbar=0,status=0,width=600,height=450');
+	window.open('https://www.linkedin.com/shareArticle?title=PrestaShop&url=http://www.prestashop.com/download', 'sharerlinkedin', 'toolbar=0,status=0,width=600,height=450');
 }
