@@ -580,7 +580,7 @@ class AdminControllerCore extends Controller
 			}
 
 			foreach ($_GET as $key => $value)
-				if (stripos($key, $this->list_id.'OrderBy') === 0 && Validate::isOrderBy($value))
+				if (stripos($key, $this->list_id.'Orderby') === 0 && Validate::isOrderBy($value))
 				{
 					if ($value === '' || $value == $this->_defaultOrderBy)
 						unset($this->context->cookie->{$prefix.$key});
