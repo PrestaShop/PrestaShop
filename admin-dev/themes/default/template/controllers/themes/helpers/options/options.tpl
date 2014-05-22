@@ -29,18 +29,18 @@
 		{if $field['can_display_themes']}
 			{if $field.themes|count > 0}
 			<div class="col-lg-12">
-				<a class="btn btn-link pull-right" href="{$field['addons_link']}" onclick="return !window.open(this.href)"><i class="icon icon-share-alt"></i> Visit Theme store</a>
+				<a class="btn btn-link pull-right" href="{$field['addons_link']}" onclick="return !window.open(this.href)"><i class="icon icon-share-alt"></i> {l s='Visit the theme store'}</a>
 			</div>
 			<div class="col-lg-12">
 				<div class="row">
 					{foreach $field.themes as $theme}
 						<div class="col-lg-3">
 							<div class="theme_container">
-								<h4>{$theme.name}</h4>
+								<h4>{l s='Theme name: %s' sprintf=$theme.name}</h4>
 								<div class="thumbnail-wrapper" style="display: inline;">
 									<div class="action-wrapper" style="position: absolute;display:none;">
-										<div class="action-overlay" style="position: absolute; width: 100%; height: 100%; background:black; opacity: 0.7;"></div>
-										<div class="action-buttons" style="position: absolute;  width: 100%; top:45%; text-align:center;">
+										<div class="action-overlay" style="position: absolute; width: 100%; height: 100%; background: black; opacity: 0.7;"></div>
+										<div class="action-buttons" style="position: absolute; width: 100%; top: 45%; text-align: center;">
 											<div class="btn-group">
 												<a href="{$link->getAdminLink('AdminThemes')|addslashes}&submitOptionstheme&id_theme={$theme.id}" class="btn btn-default">
 													<i class="icon-check"></i> {l s='Use this theme'}
@@ -50,8 +50,8 @@
 												</button>
 												<ul class="dropdown-menu">
 													<li>
-														<a href="{$link->getAdminLink('AdminThemes')|addslashes}&deletetheme&id_theme={$theme.id}" title="Delete" class="delete">
-															<i class="icon-trash"></i> {l s='Delete'}
+														<a href="{$link->getAdminLink('AdminThemes')|addslashes}&deletetheme&id_theme={$theme.id}" title="{l s='Delete this theme'}" class="delete">
+															<i class="icon-trash"></i> {l s='Delete this theme'}
 														</a>
 													</li>
 												</ul>
@@ -87,12 +87,12 @@
 			<div id="js_theme_form_container" class="col-md-9">
 				<h2>{$cur_theme.theme_name} <small>version {$cur_theme.theme_version}</small></h2>
 				<p>
-					Designed by {$cur_theme.author_name}
+					{l s='Designed by %s' sprintf=$cur_theme.author_name}
 					{if isset($cur_theme.author_url) && $cur_theme.author_url != ''}
-					 | <a href="{$cur_theme.author_url}" onclick="return !window.open(this.href)">{$cur_theme.author_url}</a>
+					 | <a href="{$cur_theme.author_url}" onclick="return !window.open(this.href)">{$cur_theme.author_url}</a>
 					{/if}
 					{if isset($cur_theme.author_email) && $cur_theme.author_email != ''}
-					 | <a href="mailto:{$cur_theme.author_email}" onclick="return !window.open(this.href)">{$cur_theme.author_email}</a>
+					 | <a href="mailto:{$cur_theme.author_email}" onclick="return !window.open(this.href)">{$cur_theme.author_email}</a>
 					{/if}
 				</p>
 
@@ -101,11 +101,11 @@
 				<div class="row">
 					<div class="col-md-8 col-sm-8">
 						<h4>{l s='Customize your theme'}</h4>
-						<p>{l s='Customize the main elements (sliders, banners, colors,...) that are specific to your theme'}</p>
+						<p>{l s='Customize the main elements of your theme: sliders, banners, colors, etc.'}</p>
 					</div>
 					<div class="col-md-4 col-sm-4" style="text-align:center;">
 						<h4>&nbsp;</h4>
-						<a class="btn btn-default" href="{$link->getAdminLink('AdminModules')|addslashes}&configure=themeconfigurator"><i class="icon icon-list-alt"></i> Theme Configurator</a>
+						<a class="btn btn-default" href="{$link->getAdminLink('AdminModules')|addslashes}&configure=themeconfigurator"><i class="icon icon-list-alt"></i> {l s='Theme Configurator'}</a>
 					</div>
 				</div>
 				{/if}
@@ -114,11 +114,11 @@
 				<div class="row">
 					<div class="col-md-8 col-sm-8">
 						<h4>{l s='Configure your theme'}</h4>
-						<p>{l s='Configure advanced settings such as the number of columns you want for each page (mostly for developers)'}</p>
+						<p>{l s='Configure your theme\'s advanced settings, such as the number of columns you want for each page. Mostly for advanced users.'}</p>
 					</div>
 					<div class="col-md-4 col-sm-4" style="text-align:center;">
 						<h4>&nbsp;</h4>
-						<a href="{$link->getAdminLink('AdminThemes')|addslashes}&updatetheme&id_theme={$cur_theme.theme_id}" class="btn btn-default"><i class="icon icon-cog"></i> Advanced settings</a>
+						<a href="{$link->getAdminLink('AdminThemes')|addslashes}&updatetheme&id_theme={$cur_theme.theme_id}" class="btn btn-default"><i class="icon icon-cog"></i> {l s='Advanced settings'}</a>
 					</div>
 				</div>
 			</div>

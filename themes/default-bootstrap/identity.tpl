@@ -56,7 +56,7 @@
         <form action="{$link->getPageLink('identity', true)|escape:'html':'UTF-8'}" method="post" class="std">
             <fieldset>
                 <div class="clearfix">
-                    <label>{l s='Title'}</label>
+                    <label>{l s='Social title'}</label>
                     <br />
                     {foreach from=$genders key=k item=gender}
                         <div class="radio-inline">

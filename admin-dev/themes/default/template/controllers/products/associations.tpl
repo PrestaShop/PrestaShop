@@ -31,7 +31,7 @@
 	</div>
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="category_block">
-			{include file="controllers/products/multishop/checkbox.tpl" field="associated-categories-tree" type="category_box"}
+			{include file="controllers/products/multishop/checkbox.tpl" field="category_box" type="category_box"}
 			{l s='Associated categories'}
 		</label>
 		<div class="col-lg-9">
