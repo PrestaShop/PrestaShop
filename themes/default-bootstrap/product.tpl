@@ -34,7 +34,8 @@
 		{assign var='productPrice' value=$product->getPrice(false, $smarty.const.NULL, $priceDisplayPrecision)}
 		{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL)}
 	{/if}
-	<div class="primary_block row" itemscope itemtype="http://schema.org/Product">
+<div itemscope itemtype="http://schema.org/Product">
+	<div class="primary_block row">
 		{if !$content_only}
 			<div class="container">
 				<div class="top-hr"></div>
@@ -155,16 +156,21 @@
 				<label>{l s='Model'} </label>
 				<span class="editable" itemprop="sku">{if !isset($groups)}{$product->reference|escape:'html':'UTF-8'}{/if}</span>
 			</p>
-			{capture name=condition}
-				{if $product->condition == 'new'}{l s='New'}
-				{elseif $product->condition == 'used'}{l s='Used'}
-				{elseif $product->condition == 'refurbished'}{l s='Refurbished'}
-				{/if}
-			{/capture}
-			<p id="product_condition"{if !$product->condition} style="display: none;"{/if}>
+			{if $product->condition}
+			<p id="product_condition">
 				<label>{l s='Condition'} </label>
-				<span class="editable" itemprop="condition">{$smarty.capture.condition}</span>
+				{if $product->condition == 'new'}
+					<link itemprop="condition" href="http://schema.org/NewCondition"/>
+					<span class="editable">{l s='New'}</span>
+				{elseif $product->condition == 'used'}
+					<link itemprop="condition" href="http://schema.org/UsedCondition"/>
+					<span class="editable">{l s='Used'}</span>
+				{elseif $product->condition == 'refurbished'}
+					<link itemprop="condition" href="http://schema.org/RefurbishedCondition"/>
+					<span class="editable">{l s='Refurbished'}</span>
+				{/if}
 			</p>
+			{/if}
 			{if $product->description_short || $packItems|@count > 0}
 				<div id="short_description_block">
 					{if $product->description_short}
@@ -651,6 +657,7 @@
 		</section>
 		{/if}
 	{/if}
+</div> <!-- itemscope product wrapper -->
 {strip}
 {if isset($smarty.get.ad) && $smarty.get.ad}
 	{addJsDefL name=ad}{$base_dir|cat:$smarty.get.ad|escape:'html':'UTF-8'}{/addJsDefL}
