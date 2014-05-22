@@ -3109,17 +3109,20 @@ class ProductCore extends ObjectModel
 		if (!count($products))
 			return array();
 
+		$id_lang = Context::getContext()->language->id;
+
 		$check_stock = !Configuration::get('PS_DISP_UNAVAILABLE_ATTR');
 		if (!$res = Db::getInstance()->executeS('
-					SELECT pa.id_product, a.color, pac.id_product_attribute, '.($check_stock ? 'SUM(IF(stock.quantity > 0, 1, 0))' : '0').' qty
-					FROM '._DB_PREFIX_.'product_attribute pa
+					SELECT pa.`id_product`, a.`color`, pac.`id_product_attribute`, '.($check_stock ? 'SUM(IF(stock.`quantity` > 0, 1, 0))' : '0').' qty, a.`id_attribute`, al.`name`
+					FROM `'._DB_PREFIX_.'product_attribute` pa
 					'.Shop::addSqlAssociation('product_attribute', 'pa').
 					($check_stock ? Product::sqlStock('pa', 'pa') : '').'
-					JOIN '._DB_PREFIX_.'product_attribute_combination pac ON (pac.id_product_attribute = product_attribute_shop.id_product_attribute)
-					JOIN '._DB_PREFIX_.'attribute a ON (a.id_attribute = pac.id_attribute)
-					JOIN '._DB_PREFIX_.'attribute_group ag ON (ag.id_attribute_group = ag.id_attribute_group)
-					WHERE pa.id_product IN ('.implode(array_map('intval', $products), ',').') AND ag.is_color_group = 1
-					GROUP BY pa.id_product, color
+					JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.`id_product_attribute` = product_attribute_shop.`id_product_attribute`)
+					JOIN `'._DB_PREFIX_.'attribute` a ON (a.`id_attribute` = pac.`id_attribute`)
+					JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
+					JOIN `'._DB_PREFIX_.'attribute_group` ag ON (ag.id_attribute_group = ag.`id_attribute_group`)
+					WHERE pa.`id_product` IN ('.implode(array_map('intval', $products), ',').') AND ag.`is_color_group` = 1
+					GROUP BY pa.`id_product`, `color`
 					'.($check_stock ? 'HAVING qty > 0' : '')
 				)
 			)
@@ -3128,10 +3131,10 @@ class ProductCore extends ObjectModel
 		$colors = array();
 		foreach ($res as $row)
 		{
-			if (Tools::isEmpty($row['color']))
+			if (Tools::isEmpty($row['color']) && !@filemtime(_PS_COL_IMG_DIR_.$row['id_attribute'].'.jpg'))
 				continue;
 
-			$colors[(int)$row['id_product']][] = array('id_product_attribute' => (int)$row['id_product_attribute'], 'color' => $row['color'], 'id_product' => $row['id_product']);
+			$colors[(int)$row['id_product']][] = array('id_product_attribute' => (int)$row['id_product_attribute'], 'color' => $row['color'], 'id_product' => $row['id_product'], 'name' => $row['name'], 'id_attribute' => $row['id_attribute']);
 		}
 		
 		return $colors;
