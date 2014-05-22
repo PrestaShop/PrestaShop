@@ -48,10 +48,10 @@
 					</div> <!-- .comment_author -->
 
 					<div class="comment_details col-sm-10">
-						<p class="title_block" itemprop="name">
+						<p itemprop="name" class="title_block">
 							<strong>{$comment.title}</strong>
 						</p>
-						<p>{$comment.content|escape:'html':'UTF-8'|nl2br}</p>
+						<p itemprop="reviewBody">{$comment.content|escape:'html':'UTF-8'|nl2br}</p>
 						<ul>
 							{if $comment.total_advice > 0}
 								<li>
