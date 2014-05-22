@@ -239,7 +239,7 @@
 				</div>
 				<div class="form-group" style="display: none">
 					<label for="match_ref" class="control-label col-lg-4">
-						<span data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='If enabled, the product\'s reference number MUST be unique!	'}">
+						<span data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='If enabled, the product\'s reference number MUST be unique!'}">
 						{l s='Use product reference as key'}
 					</label>
 					<div class="col-lg-8">
