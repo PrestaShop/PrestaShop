@@ -26,6 +26,11 @@
 
 class OrderCore extends ObjectModel
 {
+	const ROUND_ITEM = 1;
+	const ROUND_LINE = 2;
+	const ROUND_TOTAL = 3;
+
+	
 	/** @var integer Delivery address id */
 	public $id_address_delivery;
 

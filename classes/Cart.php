@@ -547,98 +547,46 @@ class CartCore extends ObjectModel
 			if ($cart_shop_context->shop->id != $row['id_shop'])
 				$cart_shop_context->shop = new Shop((int)$row['id_shop']);
 
-			if ($this->_taxCalculationMethod == PS_TAX_EXC)
+			$address = Address::initialize($address_id, true);
+			$id_tax_rules_group = Product::getIdTaxRulesGroupByIdProduct((int)$row['id_product'], $cart_shop_context);
+			$tax_calculator = TaxManagerFactory::getManager($address, $id_tax_rules_group)->getTaxCalculator();
+
+			$row['price'] = Product::getPriceStatic(
+				(int)$row['id_product'],
+				false,
+				isset($row['id_product_attribute']) ? (int)$row['id_product_attribute'] : null,
+				6,
+				null,
+				false,
+				true,
+				$row['cart_quantity'],
+				false,
+				(int)$this->id_customer ? (int)$this->id_customer : null,
+				(int)$this->id,
+				$address_id,
+				$specific_price_output,
+				false,
+				true,
+				$cart_shop_context
+			);
+
+			switch (Configuration::get('PS_ROUND_TYPE'))
 			{
-				$row['price'] = Product::getPriceStatic(
-					(int)$row['id_product'],
-					false,
-					isset($row['id_product_attribute']) ? (int)$row['id_product_attribute'] : null,
-					2,
-					null,
-					false,
-					true,
-					(int)$row['cart_quantity'],
-					false,
-					((int)$this->id_customer ? (int)$this->id_customer : null),
-					(int)$this->id,
-					((int)$address_id ? (int)$address_id : null),
-					$specific_price_output,
-					true,
-					true,
-					$cart_shop_context
-				); // Here taxes are computed only once the quantity has been applied to the product price
+				case Order::ROUND_TOTAL:
+				case Order::ROUND_LINE:
+					$row['total'] = Tools::ps_round($row['price'] * (int)$row['cart_quantity'], _PS_PRICE_DISPLAY_PRECISION_);
+					$row['total_wt'] = Tools::ps_round($tax_calculator->addTaxes($row['price']) * (int)$row['cart_quantity'], _PS_PRICE_DISPLAY_PRECISION_);
+					break;
 
-				$row['price_wt'] = Product::getPriceStatic(
-					(int)$row['id_product'],
-					true,
-					isset($row['id_product_attribute']) ? (int)$row['id_product_attribute'] : null,
-					2,
-					null,
-					false,
-					true,
-					(int)$row['cart_quantity'],
-					false,
-					((int)$this->id_customer ? (int)$this->id_customer : null),
-					(int)$this->id,
-					((int)$address_id ? (int)$address_id : null),
-					$null,
-					true,
-					true,
-					$cart_shop_context
-				);
-
-				$tax_rate = Tax::getProductTaxRate((int)$row['id_product'], (int)$address_id);
-
-				$row['total_wt'] = Tools::ps_round($row['price'] * (float)$row['cart_quantity'] * (1 + (float)$tax_rate / 100), 2);
-				$row['total'] = $row['price'] * (int)$row['cart_quantity'];
+				case Order::ROUND_ITEM:
+				default:
+					$row['total'] = Tools::ps_round($row['price'], _PS_PRICE_DISPLAY_PRECISION_) * (int)$row['cart_quantity'];
+					$row['total_wt'] = Tools::ps_round($tax_calculator->addTaxes($row['price']), _PS_PRICE_DISPLAY_PRECISION_) * (int)$row['cart_quantity'];
+					break;
 			}
-			else
-			{
-				$row['price'] = Product::getPriceStatic(
-					(int)$row['id_product'],
-					false,
-					(int)$row['id_product_attribute'],
-					2,
-					null,
-					false,
-					true,
-					$row['cart_quantity'],
-					false,
-					((int)$this->id_customer ? (int)$this->id_customer : null),
-					(int)$this->id,
-					((int)$address_id ? (int)$address_id : null),
-					$specific_price_output,
-					true,
-					true,
-					$cart_shop_context
-				);
-
-				$row['price_wt'] = Product::getPriceStatic(
-					(int)$row['id_product'],
-					true,
-					(int)$row['id_product_attribute'],
-					2,
-					null,
-					false,
-					true,
-					$row['cart_quantity'],
-					false,
-					((int)$this->id_customer ? (int)$this->id_customer : null),
-					(int)$this->id,
-					((int)$address_id ? (int)$address_id : null),
-					$null,
-					true,
-					true,
-					$cart_shop_context
-				);
-				
-				// In case when you use QuantityDiscount, getPriceStatic() can be return more of 2 decimals
-				$row['price_wt'] = Tools::ps_round($row['price_wt'], 2);
-				$row['total_wt'] = $row['price_wt'] * (int)$row['cart_quantity'];
-				$row['total'] = Tools::ps_round($row['price'] * (int)$row['cart_quantity'], 2);
-				$row['description_short'] = Tools::nl2br($row['description_short']);
-			}
-
+			$row['price_wt'] = $tax_calculator->addTaxes($row['price']);
+			$row['description_short'] = Tools::nl2br($row['description_short']);
+			
 			if (!isset($row['pai_id_image']) || $row['pai_id_image'] == 0)
 			{
 				$cache_id = 'Cart::getProducts_'.'-pai_id_image-'.(int)$row['id_product'].'-'.(int)$this->id_lang.'-'.(int)$row['id_shop'];
@@ -1443,7 +1391,7 @@ class CartCore extends ObjectModel
 				if ($ecotax)
 					$ecotax_tax_calculator = TaxManagerFactory::getManager($address, (int)Configuration::get('PS_ECOTAX_TAX_RULES_GROUP_ID'))->getTaxCalculator();
 				
-				if (in_array(Configuration::get('PS_TAX_ROUND_TYPE'), array(Tax::TAX_ROUND_ITEM, Tax::TAX_ROUND_LINE)))
+				if (in_array(Configuration::get('PS_ROUND_TYPE'), array(Order::ROUND_ITEM, Order::ROUND_LINE)))
 				{
 					if (!isset($products_total[$id_tax_rules_group]))
 						$products_total[$id_tax_rules_group] = 0;
@@ -1452,19 +1400,19 @@ class CartCore extends ObjectModel
 					if (!isset($products_total[$id_tax_rules_group.'_'.$id_address]))
 						$products_total[$id_tax_rules_group.'_'.$id_address] = 0;
 
-				switch (Configuration::get('PS_TAX_ROUND_TYPE'))
+				switch (Configuration::get('PS_ROUND_TYPE'))
 				{
-					case Tax::TAX_ROUND_TOTAL:
+					case Order::ROUND_TOTAL:
 						$products_total[$id_tax_rules_group.'_'.$id_address] += $price * (int)$product['cart_quantity'];
 						if ($ecotax)
 							$ecotax_total += $ecotax * (int)$product['cart_quantity'];
 						break;
-					case Tax::TAX_ROUND_LINE:
+					case Order::ROUND_LINE:
 						$products_total[$id_tax_rules_group] += Tools::ps_round($tax_calculator->addTaxes($price) * (int)$product['cart_quantity'], _PS_PRICE_DISPLAY_PRECISION_);
 						if ($ecotax)
 							$ecotax_total += Tools::ps_round($ecotax_tax_calculator->addTaxes($ecotax) * (int)$product['cart_quantity'], _PS_PRICE_DISPLAY_PRECISION_);
 						break;
-					case Tax::TAX_ROUND_ITEM:
+					case Order::ROUND_ITEM:
 					default:
 						$products_total[$id_tax_rules_group] += Tools::ps_round($tax_calculator->addTaxes($price), _PS_PRICE_DISPLAY_PRECISION_) * (int)$product['cart_quantity'];
 						if ($ecotax)
@@ -1485,7 +1433,7 @@ class CartCore extends ObjectModel
 
 		foreach ($products_total as $key => $price)
 		{
-			if ($with_taxes && Configuration::get('PS_TAX_ROUND_TYPE') == Tax::TAX_ROUND_TOTAL)
+			if ($with_taxes && Configuration::get('PS_ROUND_TYPE') == Order::ROUND_TOTAL)
 			{
 				$tmp = explode('_', $key);
 				$address = Address::initialize((int)$tmp[1], true);
@@ -1496,7 +1444,7 @@ class CartCore extends ObjectModel
 				$order_total += $price;
 		}
 
-		if ($ecotax_total && $with_taxes && Configuration::get('PS_TAX_ROUND_TYPE') == Tax::TAX_ROUND_TOTAL)
+		if ($ecotax_total && $with_taxes && Configuration::get('PS_ROUND_TYPE') == Order::ROUND_TOTAL)
 			$ecotax_total = Tools::ps_round($ecotax_tax_calculator->addTaxes($ecotax_total), _PS_PRICE_DISPLAY_PRECISION_);
 
 		$order_total += $ecotax_total;

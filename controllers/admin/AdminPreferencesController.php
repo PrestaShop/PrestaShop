@@ -138,6 +138,26 @@ class AdminPreferencesControllerCore extends AdminController
 					'list' => $round_mode,
 					'identifier' => 'value'
 				),
+				'PS_ROUND_TYPE' => array(
+					'title' => $this->l('Round type'),
+					'cast' => 'intval',
+					'type' => 'select',
+					'list' => array(
+						array(
+							'name' => $this->l('Round on each item'),
+							'id' => Order::ROUND_ITEM
+							),
+						array(
+							'name' => $this->l('Round on each line'),
+							'id' => Order::ROUND_LINE
+							),
+						array(
+							'name' => $this->l('Round on the total'),
+							'id' => Order::ROUND_TOTAL
+							),
+						),
+					'identifier' => 'id'
+				),
 				'PS_DISPLAY_SUPPLIERS' => array(
 					'title' => $this->l('Display suppliers and manufacturers'),
 					'desc' => $this->l('Enable suppliers and manufacturers pages on your Front Office even when their respective modules are disabled.'),
