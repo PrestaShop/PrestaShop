@@ -572,6 +572,10 @@ ul#optional {
 
 .print{background:white;color:#78A542;cursor:pointer;font-weight:700}
 
+.print:hover {
+color: #385E0B;
+}
+
 .blockInfoEnd {
 	float:left;
 	margin:34px 20px 22px 0;
