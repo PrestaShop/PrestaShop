@@ -41,7 +41,7 @@
 				</table>
 				{if $controller_name == 'AdminPayment' && isset($view_all)}
 					<div class="panel-footer text-center">
-						<br /><a class="btn btn-default pagination-centered" href="index.php?tab=AdminModules&amp;token={getAdminToken tab='AdminModules'}&amp;filterCategory=payments_gateways">{l s='View all available payments'}</a>
+						<br /><a class="btn btn-default pagination-centered" href="index.php?tab=AdminModules&amp;token={getAdminToken tab='AdminModules'}&amp;filterCategory=payments_gateways">{l s='View all available payments solutions'}</a>
 					</div>
 				{/if}
 			{else}
@@ -50,8 +50,8 @@
 						<td>
 							<div class="alert alert-warning">
 							{if $controller_name == 'AdminPayment'}
-							{l s='It seems there are no recommended payment solutions for your country'}<br />
-							<a target="_blank" href="http://www.prestashop.com/en/contribute-prestashop-localization">{l s='Do you think there should be one ? Tell us!'}</a>
+							{l s='It seems there are no recommended payment solutions for your country.'}<br />
+							<a target="_blank" href="http://www.prestashop.com/en/contribute-prestashop-localization">{l s='Do you think there should be one? Let us know!'}</a>
 							{else}{l s='No modules available in this section.'}{/if}</div>
 						</td>
 					</tr>
