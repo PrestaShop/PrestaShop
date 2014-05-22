@@ -284,7 +284,7 @@ class OrderSlipCore extends ObjectModel
 			
 			$order_slip->total_products_tax_excl += $price * $quantity;
 			
-			if (in_array(Configuration::get('PS_TAX_ROUND_TYPE'), array(Tax::TAX_ROUND_ITEM, Tax::TAX_ROUND_LINE)))
+			if (in_array(Configuration::get('PS_ROUND_TYPE'), array(Order::ROUND_ITEM, Order::ROUND_LINE)))
 			{
 				if (!isset($products_total[$id_tax_rules_group]))
 					$total_products[$id_tax_rules_group] = 0;
@@ -294,17 +294,17 @@ class OrderSlipCore extends ObjectModel
 					$total_products[$id_tax_rules_group.'_'.$id_address] = 0;
 
 			$product_tax_incl_line = Tools::ps_round($tax_calculator->addTaxes($price) * $quantity, _PS_PRICE_DISPLAY_PRECISION_);
-			switch (Configuration::get('PS_TAX_ROUND_TYPE'))
+			switch (Configuration::get('PS_ROUND_TYPE'))
 			{
-				case Tax::TAX_ROUND_ITEM:
+				case Order::ROUND_ITEM:
 					$product_tax_incl = Tools::ps_round($tax_calculator->addTaxes($price), _PS_PRICE_DISPLAY_PRECISION_) * $quantity;
 					$total_products[$id_tax_rules_group] += $product_tax_incl;
 					break;
-				case Tax::TAX_ROUND_LINE:
+				case Order::ROUND_LINE:
 					$product_tax_incl = $product_tax_incl_line;
 					$total_products[$id_tax_rules_group] += $product_tax_incl;
 					break;
-				case Tax::TAX_ROUND_TOTAL:
+				case Order::ROUND_TOTAL:
 					$product_tax_incl = $product_tax_incl_line;
 					$total_products[$id_tax_rules_group.'_'.$id_address] += $price * $quantity;
 					break;
@@ -321,7 +321,7 @@ class OrderSlipCore extends ObjectModel
 
 		foreach ($total_products as $key => $price)
 		{
-			if (Configuration::get('PS_TAX_ROUND_TYPE') == Tax::TAX_ROUND_TOTAL)
+			if (Configuration::get('PS_TAX_ROUND_TYPE') == Order::ROUND_TOTAL)
 			{
 				$tmp = explode('_', $key);
 				$address = Address::initialize((int)$tmp[1], true);
