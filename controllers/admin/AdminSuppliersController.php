@@ -38,8 +38,8 @@ class AdminSuppliersControllerCore extends AdminController
 		$this->addRowAction('delete');
 		$this->allow_export = true;
 
-		$this->_orderBy = 'name';
-		$this->_orderWay = 'ASC';
+		$this->_defaultOrderBy = 'name';
+		$this->_defaultOrderWay = 'ASC';
 		
 		$this->bulk_actions = array(
 			'delete' => array(
@@ -64,6 +64,7 @@ class AdminSuppliersControllerCore extends AdminController
 		);
 
 		parent::__construct();
+
 	}
 
 	public function setMedia()
