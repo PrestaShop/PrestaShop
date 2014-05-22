@@ -744,7 +744,7 @@ class AdminModulesControllerCore extends AdminController
 								if (!$download_ok)
 									$this->errors[] = sprintf(Tools::displayError("Module %s can't be upgraded: Error on downloading the latest version"), '<strong>'.$attr['displayName'].'</strong>');
 								elseif (!$this->extractArchive(_PS_MODULE_DIR_.$name.'.zip', false))
-									$this->errors[] = $this->l(sprintf("Module %s can't be upgraded: Error on extracting the latest version", '<strong>'.$attr['displayName'].'</strong>'));
+									$this->errors[] = sprintf(Tools::displayError("Module %s can't be upgraded: Error on extracting the latest version"), '<strong>'.$attr['displayName'].'</strong>');
 								else
 									$module_upgraded[] = $name;
 							}
