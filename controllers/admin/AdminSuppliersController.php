@@ -123,7 +123,7 @@ class AdminSuppliersControllerCore extends AdminController
 				array(
 					'type' => 'text',
 					'label' => $this->l('Company'),
-					'name' => 'phone',
+					'name' => 'company',
 					'display' => in_array('company', $required_fields),
 					'required' => in_array('company', $required_fields),
 					'maxlength' => 16,
