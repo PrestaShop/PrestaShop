@@ -344,12 +344,9 @@ class HelperCore
 		return $tpl->fetch();
 	}
 	
-	public function renderModulesList($modules_list, $panel_title = null)
+	public function renderModulesList($modules_list)
 	{
-		if (is_null($panel_title))
-			$panel_title = Translate::getAdminTranslation('Modules list');
 		$this->tpl_vars = array(
-			'panel_title' => $panel_title,
 			'modules_list' => $modules_list,
 			'modules_uri' => __PS_BASE_URI__.basename(_PS_MODULE_DIR_)
 		);
