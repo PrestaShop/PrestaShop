@@ -340,8 +340,11 @@ class AdminCmsControllerCore extends AdminController
                 else
                     $this->updateAssoShop($cms->id);
             }
-            if (Tools::isSubmit('submitAddcmsAndPreview'))
-					$this->redirect_after = $this->previewUrl($cms);
+            if (Tools::isSubmit('view'.$this->table))
+			{
+					$this->redirect_after = $this->getPreviewUrl($cms);
+					Tools::redirectAdmin($this->redirect_after);
+			}
             elseif (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
                 Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$cms->id.'&conf=4&update'.$this->table.'&token='.Tools::getAdminTokenLite('AdminCmsContent'));
             else
