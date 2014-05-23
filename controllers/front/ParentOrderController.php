@@ -151,7 +151,8 @@ class ParentOrderControllerCore extends FrontController
 		if ((Configuration::get('PS_ORDER_PROCESS_TYPE') == 0 && Tools::getValue('step') == 1) || Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
 			$this->addJS(_THEME_JS_DIR_.'order-address.js');
 		$this->addJqueryPlugin('fancybox');
-		if ((int)(Configuration::get('PS_BLOCK_CART_AJAX')) || Configuration::get('PS_ORDER_PROCESS_TYPE') == 1 || Tools::getValue('step') == 2)
+		
+		if (in_array((int)Tools::getValue('step'), array(0, 2)) || Configuration::get('PS_ORDER_PROCESS_TYPE'))
 		{
 			$this->addJqueryPlugin('typewatch');
 			$this->addJS(_THEME_JS_DIR_.'cart-summary.js');
