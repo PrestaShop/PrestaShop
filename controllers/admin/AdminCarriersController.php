@@ -136,7 +136,8 @@ class AdminCarriersControllerCore extends AdminController
 	{
 		$this->initTabModuleList();
 		$this->filterTabModuleList();
-		$this->tpl_view_vars = array('modules_list' => $this->renderModulesList($this->l('Use recommended shipping')));
+		$this->context->smarty->assign('panel_title', $this->l('Use recommended shipping'));
+		$this->tpl_view_vars = array('modules_list' => $this->renderModulesList());
 		unset($this->page_header_toolbar_btn['modules-list']);
 		return parent::renderView();
 	}

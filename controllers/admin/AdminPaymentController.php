@@ -255,9 +255,9 @@ class AdminPaymentControllerCore extends AdminController
 		return parent::renderView();
 	}
 
-	public function renderModulesList($panel_title = NULL)
+	public function renderModulesList()
 	{
-		parent::renderModulesList($panel_title);
+		parent::renderModulesList();
 
 		if ($this->getModulesList($this->filter_modules_list))
 		{
