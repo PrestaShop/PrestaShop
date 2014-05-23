@@ -733,12 +733,12 @@ function showNoticeMessage(msg) {
 
 $(document).ready(function()
 {
-	if (typeof tabs != 'undefined')
+	if (typeof helper_tabs != 'undefined' && typeof unique_field_id != 'undefined')
 	{
-		$.each(tabs, function(index) {
+		$.each(helper_tabs, function(index) {
 			$('#'+unique_field_id+'fieldset_'+index+' .form-wrapper').prepend('<div class="tab-content panel" />');
 			$('#'+unique_field_id+'fieldset_'+index+' .form-wrapper').prepend('<ul class="nav nav-tabs" />');
-			$.each(tabs[index], function(key, value) {
+			$.each(helper_tabs[index], function(key, value) {
 				// Move every form-group into the correct .tab-content > .tab-pane
 				$('#'+unique_field_id+'fieldset_'+index+' .tab-content').append('<div id="'+key+'" class="tab-pane" />');
 				var elemts = $('#'+unique_field_id+'fieldset_'+index).find("[data-tab-id='" + key + "']");

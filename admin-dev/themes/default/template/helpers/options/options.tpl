@@ -28,7 +28,7 @@
 <script type="text/javascript">
 	id_language = Number({$current_id_lang});
 	{if isset($tabs) && $tabs|count}
-		var tabs = {$tabs|json_encode};
+		var helper_tabs= {$tabs|json_encode};
 		var unique_field_id = '{$table}_';
 	{/if}
 </script>

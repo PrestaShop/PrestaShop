@@ -26,7 +26,7 @@
 
 {if isset($tabs) && $tabs|count}
 <script type="text/javascript">
-	var tabs = {$tabs|json_encode};
+	var helper_tabs = {$tabs|json_encode};
 	var unique_field_id = '';
 </script>
 {/if}
