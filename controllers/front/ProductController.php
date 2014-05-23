@@ -327,6 +327,7 @@ class ProductControllerCore extends FrontController
 				foreach ($attributes as $attribute)
 					$quantity_discount['attributes'] = $attribute['name'].' - ';
 				$quantity_discount['attributes'] = rtrim($quantity_discount['attributes'], ' - ');
+                                $quantity_discount['attribute_price'] = $this->product->getPrice(Product::$_taxCalculationMethod == PS_TAX_INC, (int)$quantity_discount['id_product_attribute']);
 			}
 			if ((int)$quantity_discount['id_currency'] == 0 && $quantity_discount['reduction_type'] == 'amount')
 				$quantity_discount['reduction'] = Tools::convertPriceFull($quantity_discount['reduction'], null, Context::getContext()->currency);
@@ -692,7 +693,10 @@ class ProductControllerCore extends FrontController
 					$cur_price -= (Product::$_taxCalculationMethod == PS_TAX_INC ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100));
 				else
 					$cur_price *= 1 - $row['reduction'];
-				$row['real_value'] = $price - $cur_price;
+                                if(isset($row['attribute_price']))
+                                    $row['real_value'] = $row['attribute_price'] - $cur_price;
+                                else
+                                    $row['real_value'] = $price - $cur_price;
 			}
 			else
 			{
