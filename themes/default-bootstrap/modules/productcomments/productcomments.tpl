@@ -38,7 +38,9 @@
 									<div class="star star_on"></div>
 								{/if}
 							{/section}
+            				<meta itemprop="worstRating" content = "0" />
 							<meta itemprop="ratingValue" content = "{$comment.grade|escape:'html':'UTF-8'}" />
+            				<meta itemprop="bestRating" content = "5" />
 						</div>
 						<div class="comment_author_infos">
 							<strong itemprop="author">{$comment.customer_name|escape:'html':'UTF-8'}</strong>
