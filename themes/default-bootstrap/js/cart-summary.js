@@ -35,7 +35,7 @@ $(document).ready(function()
 
 function cleanSelectAddressDelivery()
 {
-	if (window.ajaxCart !== undefined)
+	if (window.blockCart !== undefined)
 	{
 		//Removing "Ship to an other address" from the address delivery select option if there is not enought address
 		$.each($('.cart_address_delivery'), function(it, item)
@@ -106,8 +106,8 @@ function changeAddressDelivery(obj)
 					if ($('#product_' + id_product + '_' + id_product_attribute + '_0_' + new_id_address_delivery).length)
 					{
 						updateCartSummary(jsonData.summary);
-						if (window.ajaxCart != undefined)
-							ajaxCart.updateCart(jsonData);
+						if (window.blockCart != undefined)
+							blockCart.updateCart(jsonData);
 						updateCustomizedDatas(jsonData.customizedDatas);
 						updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
 						updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
@@ -121,8 +121,8 @@ function changeAddressDelivery(obj)
 						// @todo improve customization upgrading
 						$('.product_' + id_product + '_' + id_product_attribute + '_0_' + old_id_address_delivery).remove();
 					}
-					if (window.ajaxCart != undefined)
-						ajaxCart.updateCart(jsonData);
+					if (window.blockCart != undefined)
+						blockCart.updateCart(jsonData);
 					updateAddressId(id_product, id_product_attribute, old_id_address_delivery, new_id_address_delivery);
 					cleanSelectAddressDelivery();
 				}
@@ -191,8 +191,8 @@ function changeAddressDelivery(obj)
 				cleanSelectAddressDelivery();
 				
 				updateCartSummary(jsonData.summary);
-				if (window.ajaxCart !== undefined)
-					ajaxCart.updateCart(jsonData);
+				if (window.blockCart !== undefined)
+					blockCart.updateCart(jsonData);
 			}
 		});
 	}
@@ -228,7 +228,7 @@ function updateAddressId(id_product, id_product_attribute, old_id_address_delive
 	
 	line.find('#select_address_delivery_' + id_product + '_' + id_product_attribute + '_' + old_id_address_delivery).attr('id', 'select_address_delivery_' + id_product + '_' + id_product_attribute + '_' + id_address_delivery);
 
-	if (window.ajaxCart !== undefined)
+	if (window.blockCart !== undefined)
 	{
 		$('#cart_block_list dd, #cart_block_list dt').each(function(){
 			if (typeof($(this).attr('id')) != 'undefined')
@@ -369,8 +369,8 @@ function deleteProductFromSummary(id)
 						});
 				}
 				updateCartSummary(jsonData.summary);
-				if (window.ajaxCart != undefined)
-					ajaxCart.updateCart(jsonData);
+				if (window.blockCart != undefined)
+					blockCart.updateCart(jsonData);
 				updateCustomizedDatas(jsonData.customizedDatas);
 				updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
 				updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
@@ -464,8 +464,8 @@ function upQuantity(id, qty)
 				if (jsonData.refresh)
 					location.reload();
 				updateCartSummary(jsonData.summary);
-				if (window.ajaxCart != undefined)
-					ajaxCart.updateCart(jsonData);
+				if (window.blockCart != undefined)
+					blockCart.updateCart(jsonData);
 				if (customizationId !== 0)
 					updateCustomizedDatas(jsonData.customizedDatas);
 				updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
@@ -549,8 +549,8 @@ function downQuantity(id, qty)
 					if (jsonData.refresh)
 						location.reload();
 					updateCartSummary(jsonData.summary);
-					if (window.ajaxCart !== undefined)
-						ajaxCart.updateCart(jsonData);
+					if (window.blockCart !== undefined)
+						blockCart.updateCart(jsonData);
 					if (customizationId !== 0)					
 						updateCustomizedDatas(jsonData.customizedDatas);
 					updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
