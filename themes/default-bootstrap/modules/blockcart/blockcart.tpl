@@ -132,7 +132,7 @@
 											</td>
 											<td class="delete">
 												{if strlen($discount.code)}
-													<a class="delete_voucher" href="{$link->getPageLink("$order_process", true)}?deleteDiscount={$discount.id_discount}" title="{l s='Delete' mod='blockcart'}" rel="nofollow">
+													<a class="delete_voucher" data-discount-id="{$discount.id_discount}" href="{$link->getPageLink("$order_process", true)}?deleteDiscount={$discount.id_discount}" title="{l s='Delete' mod='blockcart'}" rel="nofollow">
 														<i class="icon-remove-sign"></i>
 													</a>
 												{/if}

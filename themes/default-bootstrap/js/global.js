@@ -170,8 +170,8 @@ function display(view)
 		$('.display').find('li#list').addClass('selected');
 		$('.display').find('li#grid').removeAttr('class');
 		$.totalStorage('display', 'list');
-		if (typeof ajaxCart != 'undefined')      // cart button reload
-			ajaxCart.overrideButtonsInThePage();
+		if (typeof blockCart != 'undefined')      // cart button reload
+			blockCart.overrideButtonsInThePage();
 		if (typeof quickView !== 'undefined' && quickView) 	// qick view button reload
 			quick_view();
 	}
@@ -212,8 +212,8 @@ function display(view)
 		$('.display').find('li#grid').addClass('selected');
 		$('.display').find('li#list').removeAttr('class');
 		$.totalStorage('display', 'grid');			
-		if (typeof ajaxCart != 'undefined') 	// cart button reload
-			ajaxCart.overrideButtonsInThePage();
+		if (typeof blockCart != 'undefined') 	// cart button reload
+			blockCart.overrideButtonsInThePage();
 		if (typeof quickView !== 'undefined' && quickView) 	// qick view button reload
 			quick_view();
 	}	
