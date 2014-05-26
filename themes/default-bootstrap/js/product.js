@@ -204,7 +204,7 @@ $(document).ready(function(){
 
 	if (contentOnly == false)
 	{
-		if(!!$.prototype.fancybox)
+		if (!!$.prototype.fancybox)
 			$('.fancybox').fancybox({
 				'hideOnContentClick': true,
 				'openEffect'	: 'elastic',
@@ -404,7 +404,7 @@ function findCombination(firstTime)
 			//update the display
 			updateDisplay();
 
-			if(typeof(firstTime) != 'undefined' && firstTime)
+			if (typeof(firstTime) != 'undefined' && firstTime)
 				refreshProductImages(0);
 			else
 				refreshProductImages(combinations[combination]['idCombination']);
@@ -446,7 +446,7 @@ function updateDisplay()
 			//update the availability statut of the product
 			$('#availability_value').removeClass('warning_inline');
 			$('#availability_value').text(availableNowValue);
-			if(stock_management == 1)
+			if (stock_management == 1)
 				$('#availability_statut:hidden').show();
 		}
 		else
@@ -510,7 +510,7 @@ function updateDisplay()
 			$('#availability_value').text(doesntExist).addClass('warning_inline');
 			$('#oosHook').hide();
 		}
-		if(stock_management == 1 && !allowBuyWhenOutOfStock)
+		if (stock_management == 1 && !allowBuyWhenOutOfStock)
 			$('#availability_statut:hidden').show();
 
 		if (typeof(selectedCombination['available_date']) != 'undefined' && selectedCombination['available_date']['date'].length != 0)
@@ -527,7 +527,7 @@ function updateDisplay()
 					$(this).fadeIn();
 				});
 			}
-			else if(now.getTime() < time_available.getTime())
+			else if (now.getTime() < time_available.getTime())
 				$('#availability_date').fadeIn();
 		}
 		else
@@ -541,7 +541,7 @@ function updateDisplay()
 			if (availableLaterValue != '')
 			{
 				$('#availability_value').text(availableLaterValue);
-				if(stock_management == 1)
+				if (stock_management == 1)
 					$('#availability_statut:hidden').show('slow');
 			}
 			else
@@ -550,7 +550,7 @@ function updateDisplay()
 		else
 		{
 			$('#add_to_cart:visible').fadeOut(600);
-			if(stock_management == 1)
+			if (stock_management == 1)
 				$('#availability_statut:hidden').show('slow');
 		}
 
@@ -685,7 +685,7 @@ function updatePrice()
 		ecotax = default_eco_tax;
 
 		// If the default product ecotax is overridden by the combination
-		if(combination.ecotax)
+		if (combination.ecotax)
 			ecotax = combination.ecotax;
 
 		if (!noTaxForThisProduct)
@@ -928,7 +928,7 @@ function getProductAttribute()
 
 function initLocationChange(time)
 {
-	if(!time) time = 500;
+	if (!time) time = 500;
 		setInterval(checkUrl, time);
 }
 

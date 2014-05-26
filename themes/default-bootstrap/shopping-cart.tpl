@@ -76,7 +76,6 @@
 	{assign var='total_discounts_num' value="{if $total_discounts != 0}1{else}0{/if}"}
 	{assign var='use_show_taxes' value="{if $use_taxes && $show_taxes}2{else}0{/if}"}
 	{assign var='total_wrapping_taxes_num' value="{if $total_wrapping != 0}1{else}0{/if}"}
-	{* eu-legal *}
 	{hook h="displayBeforeShoppingCartBlock"}
 
 	<div id="order-detail-content" class="table_block table-responsive">
