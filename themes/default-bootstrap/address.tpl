@@ -176,7 +176,7 @@
 				<input class="{if isset($one_phone_at_least) && $one_phone_at_least}is_required{/if} validate form-control" data-validate="{$address_validation.phone.validate}" type="tel" id="phone" name="phone" value="{if isset($smarty.post.phone)}{$smarty.post.phone}{else}{if isset($address->phone)}{$address->phone|escape:'html':'UTF-8'}{/if}{/if}"  />
 			</div>
 		{/if}
-		{if isset($one_phone_at_least) && $one_phone_at_least && !$atLeastOneExists }
+		{if isset($one_phone_at_least) && $one_phone_at_least && !$atLeastOneExists}
 			<p class="inline-infos required">{l s='You must register at least one phone number.'}</p>
 		{/if}
 		<div class="clearfix"></div>
