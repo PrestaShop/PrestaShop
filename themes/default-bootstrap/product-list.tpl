@@ -64,14 +64,12 @@
 									<span itemprop="price" class="price product-price">
 										{if !$priceDisplay}{convertPrice price=$product.price}{else}{convertPrice price=$product.price_tax_exc}{/if}
 									</span>
-									{* eu-legal: Additional Price Information *}
 									{hook h="displayProductPriceBlock" id_product=$product.id_product type="price"}
 									<meta itemprop="priceCurrency" content="{$currency->iso_code}" />
 									{if isset($product.specific_prices) && $product.specific_prices && isset($product.specific_prices.reduction) && $product.specific_prices.reduction > 0}
 										<span class="old-price product-price">
 											{displayWtPrice p=$product.price_without_reduction}
 										</span>
-										{* eu-legal: Additional Price Information *}
 										{hook h="displayProductPriceBlock" id_product=$product.id_product type="old_price"}
 										{if $product.specific_prices.reduction_type == 'percentage'}
 											<span class="price-percent-reduction">-{$product.specific_prices.reduction * 100}%</span>
@@ -116,7 +114,6 @@
 								<span class="old-price product-price">
 									{displayWtPrice p=$product.price_without_reduction}
 								</span>
-								{* eu-legal: Additional Price Information *}
 								{hook h="displayProductPriceBlock" id_product=$product.id_product type="old_price"}
 								{if $product.specific_prices.reduction_type == 'percentage'}
 									<span class="price-percent-reduction">-{$product.specific_prices.reduction * 100}%</span>
@@ -178,7 +175,6 @@
 									</span>
 								{/if}
 							</span>
-							{* eu-legal: Product Availability *}
 							{hook h="displayProductAvailability" id_product=$product.id_product}
 						{/if}
 					{/if}
