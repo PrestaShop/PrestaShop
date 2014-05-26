@@ -45,7 +45,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 	{
 		foreach ($attributes as $attribute)
 		{
-			$price += (float)preg_replace('/[^0-9.]/', '', str_replace(',', '.', Tools::getValue('price_impact_'.(int)$attribute)));
+			$price += (float)preg_replace('/[^0-9.-]/', '', str_replace(',', '.', Tools::getValue('price_impact_'.(int)$attribute)));
 			$weight += (float)preg_replace('/[^0-9.]/', '', str_replace(',', '.', Tools::getValue('weight_impact_'.(int)$attribute)));
 		}
 		if ($this->product->id)
