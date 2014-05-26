@@ -85,8 +85,6 @@
 						<div class="prices-container">
 							{if isset($product->show_price) && $product->show_price && !isset($restricted_country_mode) && !$PS_CATALOG_MODE}
 								<span class="price product-price">{convertPrice price=$product->getPrice($taxes_behavior)}</span>
-								{* eu-legal: Additional Price Information *}
-								{hook h="displayProductPriceBlock" id_product=$product->id type="price"}
 								{if isset($product->specificPrice) && $product->specificPrice}
 									{if {$product->specificPrice.reduction_type == 'percentage'}}
 										<span class="old-price product-price">
@@ -103,9 +101,11 @@
 											-{convertPrice price=$product->specificPrice.reduction}
 										</span>
 									{/if}
-									{* eu-legal: Additional Price Information *}
-									{hook h="displayProductPriceBlock" id_product=$product->id type="old_price"}
+									{* eu-legal: Additional Price Information - Old price *}
+									{hook h="displayProductPriceBlock" product=$product type="old_price"}
 								{/if}
+								{* eu-legal: Additional Price Information - Tax/Shipping *}
+								{hook h="displayProductPriceBlock" product=$product type="price"}
 								{if $product->on_sale}
 									{elseif $product->specificPrice AND $product->specificPrice.reduction}
 										<div class="product_discount">
@@ -117,8 +117,8 @@
 										<span class="comparison_unit_price">
 											&nbsp;{convertPrice price=$unit_price} {l s='per %s' sprintf=$product->unity|escape:'html':'UTF-8'}
 										</span>
-										{* eu-legal: Additional Price Information *}
-										{hook h="displayProductPriceBlock" id_product=$product->id type="unit_price"}
+										{* eu-legal: Additional Price Information - Unit price *}
+										{hook h="displayProductPriceBlock" product=$product type="unit_price"}
 									{else}
 								{/if}
 							{/if}
@@ -145,8 +145,10 @@
 									</span>
 								{/if}
 							</p>
-							{* eu-legal: Product Availability *}
-							{hook h="displayProductAvailability" id_product=$product->id}
+							{* eu-legal: Product DeliveryTime *}
+							{hook h="displayProductDeliveryTime" product=$product}
+							{* eu-legal: Product Weight *}
+							{hook h="displayProductPriceBlock" product=$product type="weight"}
 							<div class="clearfix">
 								<div class="button-container">
 									{if (!$product->hasAttributes() OR (isset($add_prod_display) AND ($add_prod_display == 1))) AND $product->minimal_quantity == 1 AND $product->customizable != 2 AND !$PS_CATALOG_MODE}
