@@ -225,7 +225,7 @@
 				</div>
 				<hr>
 				<div class="form-group">
-					<label for="truncate" class="control-label col-lg-4">{l s='Delete all'} <span id="entitie">{l s='categories'}</span> {l s='before import?'} </label>
+					<label for="truncate" class="control-label col-lg-4">{l s='Delete all'} <span id="entitie">{l s='categories'}</span> {l s='before import'} </label>
 					<div class="col-lg-8">
 						<label class="switch-light prestashop-switch fixed-width-lg">
 							<input id="truncate" name="truncate" type="checkbox"/>
@@ -238,7 +238,10 @@
 					</div>
 				</div>
 				<div class="form-group" style="display: none">
-					<label for="match_ref" class="control-label col-lg-4">{l s='Use product reference as key?'}</label>
+					<label for="match_ref" class="control-label col-lg-4">
+						<span data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='If enabled, the product\'s reference number MUST be unique!'}">
+						{l s='Use product reference as key'}
+					</label>
 					<div class="col-lg-8">
 						<label class="switch-light prestashop-switch fixed-width-lg">
 							<input id="match_ref" name="match_ref" type="checkbox" />
@@ -251,7 +254,7 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="regenerate" class="control-label col-lg-4">{l s='No thumbnails regeneration'}</label>
+					<label for="regenerate" class="control-label col-lg-4">{l s='Do not regenerate thumbnails'}</label>
 					<div class="col-lg-8">
 						<label class="switch-light prestashop-switch fixed-width-lg">
 							<input id="regenerate" name="regenerate" type="checkbox" />
