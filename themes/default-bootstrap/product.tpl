@@ -160,13 +160,13 @@
 			<p id="product_condition">
 				<label>{l s='Condition'} </label>
 				{if $product->condition == 'new'}
-					<link itemprop="condition" href="http://schema.org/NewCondition"/>
+					<link itemprop="itemCondition" href="http://schema.org/NewCondition"/>
 					<span class="editable">{l s='New'}</span>
 				{elseif $product->condition == 'used'}
-					<link itemprop="condition" href="http://schema.org/UsedCondition"/>
+					<link itemprop="itemCondition" href="http://schema.org/UsedCondition"/>
 					<span class="editable">{l s='Used'}</span>
 				{elseif $product->condition == 'refurbished'}
-					<link itemprop="condition" href="http://schema.org/RefurbishedCondition"/>
+					<link itemprop="itemCondition" href="http://schema.org/RefurbishedCondition"/>
 					<span class="editable">{l s='Refurbished'}</span>
 				{/if}
 			</p>
