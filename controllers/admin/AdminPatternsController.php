@@ -399,7 +399,8 @@ class AdminPatternsControllerCore extends AdminController
 				),
 				array(
 					'type' => 'html',
-					'name' => '<hr><strong>html:</strong> for writing free html like this <span class="label label-danger">i\'m a label</span> <span class="badge badge-info">i\'m a badge</span> <button type="button" class="btn btn-default">i\'m a button</button><hr>'
+					'name' => 'html_data',
+					'html_content' => '<hr><strong>html:</strong> for writing free html like this <span class="label label-danger">i\'m a label</span> <span class="badge badge-info">i\'m a badge</span> <button type="button" class="btn btn-default">i\'m a button</button><hr>'
 				),
 				array(
 					'type' => 'free',
