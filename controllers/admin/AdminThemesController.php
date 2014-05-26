@@ -62,7 +62,7 @@ class AdminThemesControllerCore extends AdminController
 					),
 				),
 			),
-			'error' => 'This theme may not correctly use "combine, compress and cache" options.',
+			'error' => 'This theme may not correctly use PrestaShop\'s "combine, compress and cache" options.',
 			'tab' => 'AdminPerformance',
 		),
 		'guest_checkout' => array(
@@ -72,7 +72,7 @@ class AdminThemesControllerCore extends AdminController
 					'check_if_not_valid' => array('PS_GUEST_CHECKOUT_ENABLED' => 0)
 				),
 			),
-			'error' => 'This theme may not correctly use "guest checkout" option.',
+			'error' => 'This theme may not correctly use PrestaShop\'s "guest checkout" feature.',
 			'tab' => 'AdminPreferences',
 		),
 		'one_page_checkout' => array(
@@ -82,7 +82,7 @@ class AdminThemesControllerCore extends AdminController
 					'check_if_not_valid' => array('PS_ORDER_PROCESS_TYPE' => 0),
 				),
 			),
-			'error' => 'This theme may not correctly use "one-page checkout" option.',
+			'error' => 'This theme may not correctly use PrestaShop\'s "one-page checkout" feature.',
 			'tab' => 'AdminPreferences',
 		),
 		'store_locator' => array(
@@ -95,7 +95,7 @@ class AdminThemesControllerCore extends AdminController
 					),
 				)
 			),
-			'error' => 'This theme may not correctly use "display store location" option.',
+			'error' => 'This theme may not correctly use PrestaShop\'s "store locator" feature.',
 			'tab' => 'AdminStores',
 		)
 	);
@@ -247,9 +247,8 @@ class AdminThemesControllerCore extends AdminController
 					),
 					'PS_LOGO_MOBILE' => array(
 						'title' => $this->l('Header logo for mobile'),
-						'desc' =>
-							((Configuration::get('PS_LOGO_MOBILE') === false) ? '<span class="light-warning">'.$this->l('Warning: No mobile logo has been defined. The header logo will be used instead.').'</span><br />' : '').
-							$this->l('Will appear on the main page of your mobile template. If left undefined, the header logo will be used.'),
+						'desc' => ((Configuration::get('PS_LOGO_MOBILE') === false) ? '<span class="light-warning">'.$this->l('Warning: No mobile logo has been defined. The header logo will be used instead.').'</span><br />' : ''),
+						'hint' => $this->l('Will appear on the main page of your mobile template. If left undefined, the header logo will be used.'),
 						'type' => 'file',
 						'name' => 'PS_LOGO_MOBILE',
 						'tab' => 'mobile',
@@ -257,9 +256,8 @@ class AdminThemesControllerCore extends AdminController
 					),
 					'PS_LOGO_MAIL' => array(
 						'title' => $this->l('Mail logo'),
-						'desc' =>
-							((Configuration::get('PS_LOGO_MAIL') === false) ? '<span class="light-warning">'.$this->l('Warning: No email logo has been identified. The header logo will be used instead.').'</span><br />' : '').
-							$this->l('Will appear on email headers. If undefined, the header logo will be used.'),
+						'desc' => ((Configuration::get('PS_LOGO_MAIL') === false) ? '<span class="light-warning">'.$this->l('Warning: No email logo has been identified. The header logo will be used instead.').'</span><br />' : ''),
+						'hint' => $this->l('Will appear on email headers. If undefined, the header logo will be used.'),
 						'type' => 'file',
 						'name' => 'PS_LOGO_MAIL',
 						'tab' => 'logo2',
@@ -267,9 +265,8 @@ class AdminThemesControllerCore extends AdminController
 					),
 					'PS_LOGO_INVOICE' => array(
 						'title' => $this->l('Invoice logo'),
-						'desc' =>
-							((Configuration::get('PS_LOGO_INVOICE') === false) ? '<span class="light-warning">'.$this->l('Warning: No invoice logo has been defined. The header logo will be used instead.').'</span><br />' : '').
-							$this->l('Will appear on invoice headers.').' '.$this->l('Warning: you can use a PNG file for transparency, but it can take up to 1 second per page for processing. Please consider using JPG instead.'),
+						'desc' => ((Configuration::get('PS_LOGO_INVOICE') === false) ? '<span class="light-warning">'.$this->l('Warning: No invoice logo has been defined. The header logo will be used instead.').'</span><br />' : ''),
+						'hint' => $this->l('Will appear on invoice headers.').' '.$this->l('Warning: you can use a PNG file for transparency, but it can take up to 1 second per page for processing. Please consider using JPG instead.'),
 						'type' => 'file',
 						'name' => 'PS_LOGO_INVOICE',
 						'tab' => 'logo2',
@@ -299,10 +296,10 @@ class AdminThemesControllerCore extends AdminController
 						'validation' => 'isGenericName',
 						'tab' => 'mobile',
 						'choices' => array(
-							0 => $this->l('I\'d like to disable it, please.'),
-							1 => $this->l('I\'d like to enable it only on smart phones.'),
+							0 => $this->l('I\'d like to disable it.'),
+							1 => $this->l('I\'d like to enable it only on smartphones.'),
 							2 => $this->l('I\'d like to enable it only on tablets.'),
-							3 => $this->l('I\'d like to enable it on both smart phones and tablets.')
+							3 => $this->l('I\'d like to enable it on both smartphones and tablets.')
 						)
 					),
 				),
@@ -316,7 +313,7 @@ class AdminThemesControllerCore extends AdminController
 		if (!empty($other_themes))
 		{
 			$this->fields_options['theme'] = array(
-					'title' => sprintf($this->l('Select a theme for shop %s'), $this->context->shop->name),
+					'title' => sprintf($this->l('Select a theme for the "%s" shop'), $this->context->shop->name),
 					'description' => (!$this->can_display_themes) ? $this->l('You must select a shop from the above list if you wish to choose a theme.') : '',
 					'fields' => array(
 						'theme_for_shop' => array(
@@ -417,7 +414,7 @@ class AdminThemesControllerCore extends AdminController
 					'label' => $this->l('Preview image for the theme'),
 					'name' => 'image_preview',
 					'display_image' => true,
-					'hint' => sprintf($this->l('Max image size: %1s'), Tools::formatBytes(Tools::getMaxUploadSize())),
+					'hint' => sprintf($this->l('Maximum image size: %1s'), Tools::formatBytes(Tools::getMaxUploadSize())),
 					'image' => $image_url,
 				),
 				array(
@@ -475,7 +472,7 @@ class AdminThemesControllerCore extends AdminController
 				'label' => $this->l('Name of the theme\'s directory'),
 				'name' => 'directory',
 				'required' => true,
-				'hint' => $this->l('If the directory does not exists, it will be created.'),
+				'hint' => $this->l('If the directory does not exist, PrestaShop will create it automatically.'),
 			);
 
 			$theme_query = Theme::getThemes();
@@ -483,7 +480,7 @@ class AdminThemesControllerCore extends AdminController
 				'type' => 'select',
 				'name' => 'based_on',
 				'label' => $this->l('Copy missing files from existing theme'),
-				'hint' => $this->l('If you create a new theme, it\'s recommended that you use the default theme files.'),
+				'hint' => $this->l('If you create a new theme from scratch, it is recommended that you use the files from the default theme as a foundation.'),
 				'options' => array(
 					'id' => 'id',
 					'name' => 'name',
@@ -626,7 +623,7 @@ class AdminThemesControllerCore extends AdminController
 			{
 				$this->display = 'add';
 
-				return !($this->errors[] = Tools::displayError('A directory with this name already exist'));
+				return !($this->errors[] = Tools::displayError('A directory with this name already exists.'));
 			}
 
 			if (mkdir(_PS_ALL_THEMES_DIR_.$new_dir, Theme::$access_rights))
@@ -647,7 +644,7 @@ class AdminThemesControllerCore extends AdminController
 				}
 				else
 				{
-					$this->errors[] = $this->l('Image not valid');
+					$this->errors[] = $this->l('Image is not valid.');
 					$this->display = 'form';
 
 					return false;
@@ -705,7 +702,7 @@ class AdminThemesControllerCore extends AdminController
 				}
 				else
 				{
-					$this->errors[] = $this->l('Image not valid');
+					$this->errors[] = $this->l('Image is not valid.');
 					$this->display = 'form';
 
 					return false;
@@ -876,7 +873,7 @@ class AdminThemesControllerCore extends AdminController
 			!preg_match($exp, Tools::getValue('compa_from')) || !preg_match($exp, Tools::getValue('compa_to')) ||
 			version_compare(Tools::getValue('compa_from'), Tools::getValue('compa_to')) == 1
 		)
-			$this->errors[] = $this->l('Syntax error on version field. Only digits and points are allowed and the compatibility should be increasing or equal.');
+			$this->errors[] = $this->l('Syntax error on version field. Only digits and periods (.) are allowed, and the compatibility version should be increasing or at least be equal to the previous version.');
 
 		if (count($this->errors) > 0)
 			return false;
@@ -1349,7 +1346,7 @@ class AdminThemesControllerCore extends AdminController
 		{
 			$fields_form['form']['input'][] = array(
 				'type' => 'checkbox',
-				'label' => $this->l('Select the theme\'s modules you wish to export'),
+				'label' => $this->l('Select the theme\'s modules that you wish to export'),
 				'values' => array(
 					'query' => $this->formatHelperArray($to_install),
 					'id' => 'id',
@@ -1413,7 +1410,7 @@ class AdminThemesControllerCore extends AdminController
 					array(
 						'type' => 'select',
 						'name' => 'id_theme_export',
-						'label' => $this->l('Choose the theme you want to export'),
+						'label' => $this->l('Choose the theme that you want to export'),
 						'options' => array(
 							'id' => 'id',
 							'name' => 'name',
@@ -1899,14 +1896,14 @@ class AdminThemesControllerCore extends AdminController
 
 		if (!is_file(_PS_ALL_THEMES_DIR_.$theme_dir.'/config.xml'))
 		{
-			$this->errors[] = Tools::displayError('config.xml is missing in your theme path.').'<br/>';
+			$this->errors[] = Tools::displayError('The config.xml file is missing in your theme path.').'<br/>';
 			$xml = null;
 		}
 		else
 		{
 			$xml = @simplexml_load_file(_PS_ALL_THEMES_DIR_.$theme_dir.'/config.xml');
 			if (!$xml)
-				$this->errors[] = Tools::displayError('config.xml is not a valid xml file in your theme path.').'<br/>';
+				$this->errors[] = Tools::displayError('The config.xml file in your theme path is not a valid XML file.').'<br/>';
 		}
 		// will be set to false if any version node in xml is correct
 		$xml_version_too_old = true;
@@ -1933,7 +1930,7 @@ class AdminThemesControllerCore extends AdminController
 		}
 		if ($xml_version_too_old && !$this->_checkConfigForFeatures(array_keys(AdminThemes::$check_features)))
 		{
-			$this->errors[] .= Tools::displayError('config.xml theme file has not been created for this version of PrestaShop.');
+			$this->errors[] .= Tools::displayError('The config.xml file has not been created for this version of PrestaShop.');
 			$return = false;
 		}
 
@@ -2226,7 +2223,7 @@ class AdminThemesControllerCore extends AdminController
 						'title' => $this->l('Modules to install'),
 						'icon' => 'icon-picture'
 					),
-					'description' => $this->l('The themes include their own modules in order to work properly. This option determines which module should be enabled or disabled. If you are unsure of what to do next, just press the "Save" button and proceed to the next step.'),
+					'description' => $this->l('Themes often include their own modules in order to work properly. This option enables you to choose which modules should be enabled and which should be disabled. If you are unsure of what to do next, just press the "Save" button and proceed to the next step.'),
 					'input' => array(
 						array(
 							'type' => 'shop',
@@ -2741,7 +2738,7 @@ class AdminThemesControllerCore extends AdminController
 
 			// Copy new ico
 			elseif (!copy($_FILES[$name]['tmp_name'], $dest))
-				$this->errors[] = sprintf(Tools::displayError('An error occurred while uploading favicon: %s to %s'), $_FILES[$name]['tmp_name'], $dest);
+				$this->errors[] = sprintf(Tools::displayError('An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".'), $_FILES[$name]['tmp_name'], $dest);
 		}
 
 		return !count($this->errors) ? true : false;
