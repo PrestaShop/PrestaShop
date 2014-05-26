@@ -145,7 +145,6 @@
 			{if $product->online_only}
 				<p class="online_only">{l s='Online only'}</p>
 			{/if}
-
 			<h1 itemprop="name">{$product->name|escape:'html':'UTF-8'}</h1>
 			<p id="product_reference"{if empty($product->reference) || !$product->reference} style="display: none;"{/if}>
 				<label>{l s='Model'} </label>
@@ -207,7 +206,6 @@
 					{*<span id="availability_label">{l s='Availability:'}</span>*}
 					<span id="availability_value"{if $product->quantity <= 0 && !$allow_oosp} class="warning_inline"{/if}>{if $product->quantity <= 0}{if $allow_oosp}{$product->available_later}{else}{l s='This product is no longer in stock'}{/if}{else}{$product->available_now}{/if}</span>
 				</p>
-				{* eu-legal: Product Availability *}
 				{hook h="displayProductAvailability" id_product=$product->id}
 				<p class="warning_inline" id="last_quantities"{if ($product->quantity > $last_qties || $product->quantity <= 0) || $allow_oosp || !$product->available_for_order || $PS_CATALOG_MODE} style="display: none"{/if} >{l s='Warning: Last items in stock!'}</p>
 			{/if}
@@ -247,8 +245,8 @@
 					<input type="hidden" name="id_product_attribute" id="idCombination" value="" />
 				</p>
 				<div class="box-info-product">
-					<div class="content_prices clearfix">
-						{if $product->show_price && !isset($restricted_country_mode) && !$PS_CATALOG_MODE}
+					{if $product->show_price && !isset($restricted_country_mode) && !$PS_CATALOG_MODE}
+						<div class="content_prices clearfix">
 							<!-- prices -->
 							<div class="price">
 								<p class="our_price_display" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
@@ -259,7 +257,6 @@
 											{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}
 										{/if}-->
 										<meta itemprop="priceCurrency" content="{$currency->iso_code}" />
-										{* eu-legal: Additional Price Information *}
 										{hook h="displayProductPriceBlock" id_product=$product->id type="price"}
 									{/if}
 								</p>
@@ -279,7 +276,6 @@
 									{if $priceDisplay >= 0 && $priceDisplay <= 2}
 										<span id="old_price_display">{if $productPriceWithoutReduction > $productPrice}{convertPrice price=$productPriceWithoutReduction}{/if}</span>
 										<!-- {if $tax_enabled && $display_tax_label == 1}{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}{/if} -->
-										{* bootstrap-legal: Additional Price Information *}
 										{hook h="displayProductPriceBlock" id_product=$product->id type="old_price"}
 									{/if}
 								</p>
@@ -304,12 +300,11 @@
 							{if !empty($product->unity) && $product->unit_price_ratio > 0.000000}
 								{math equation="pprice / punit_price"  pprice=$productPrice  punit_price=$product->unit_price_ratio assign=unit_price}
 								<p class="unit-price"><span id="unit_price_display">{convertPrice price=$unit_price}</span> {l s='per'} {$product->unity|escape:'html':'UTF-8'}</p>
-								{* eu-legal: Additional Price Information *}
 								{hook h="displayProductPriceBlock" id_product=$product->id type="unit_price"}
 							{/if}
-						{/if} {*close if for show price*}
 						<div class="clear"></div>
 					</div> <!-- end content_prices -->
+					{/if}
 					<div class="product_attributes clearfix">
 						<!-- quantity wanted -->
 						{if !$PS_CATALOG_MODE}
@@ -319,7 +314,7 @@
 							<a href="#" data-field-qty="qty" class="btn btn-default button-minus product_quantity_down">
 								<span><i class="icon-minus"></i></span>
 							</a>
-							<a href="#" data-field-qty="qty" class="btn btn-default button-plus product_quantity_up ">
+							<a href="#" data-field-qty="qty" class="btn btn-default button-plus product_quantity_up">
 								<span><i class="icon-plus"></i></span>
 							</a>
 							<span class="clearfix"></span>
