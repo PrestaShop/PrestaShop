@@ -767,7 +767,11 @@
 								{elseif $input.type == 'free'}
 									{$fields_value[$input.name]}
 								{elseif $input.type == 'html'}
-									{$input.name}
+									{if isset($input.html_content)}
+										{$input.html_content}
+									{else}
+										{$input.name}
+									{/if}
 								{/if}
 								{/block}{* end block input *}
 								{block name="description"}
