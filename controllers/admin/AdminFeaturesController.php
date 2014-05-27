@@ -35,8 +35,6 @@ class AdminFeaturesControllerCore extends AdminController
 		$this->className = 'Feature';
 		$this->list_id = 'feature';
 		$this->identifier = 'id_feature';
-		$this->_defaultOrderBy = 'position';
-		$this->_defaultOrderWay = 'ASC';
 		$this->lang = true;
 
 		$this->fields_list = array(
@@ -463,7 +461,11 @@ class AdminFeaturesControllerCore extends AdminController
 				$this->processResetFilters();
 		}
 		else
+		{
 			$this->list_id = 'feature';
+			$this->_defaultOrderBy = 'position';
+			$this->_defaultOrderWay = 'ASC';
+		}
 
 		parent::initProcess();
 
