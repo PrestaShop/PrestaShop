@@ -1834,7 +1834,6 @@ class AdminProductsControllerCore extends AdminController
 			return false;
 
 		$res = parent::processStatus();
-		Hook::exec('actionProductUpdate', array('product' => $this->object));
 		
 		return $res;
 	}
@@ -1941,8 +1940,6 @@ class AdminProductsControllerCore extends AdminController
 						$this->processWarehouses();
 					if (empty($this->errors))
 					{
-						Hook::exec('actionProductUpdate', array('product' => $object));
-
 						if (in_array($object->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION'))
 							Search::indexation(false, $object->id);
 
