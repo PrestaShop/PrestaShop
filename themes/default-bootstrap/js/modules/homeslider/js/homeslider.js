@@ -32,20 +32,20 @@ $(document).ready(function(){
 		homeslider_pause = 3000;
 	if (typeof(homeslider_loop) == 'undefined')
 		homeslider_loop = true;
-    if (typeof(homeslider_width) == 'undefined')
-        homeslider_width = 779;
+	if (typeof(homeslider_width) == 'undefined')
+		homeslider_width = 779;
 
 
-    $('.homeslider-description').click(function () {
-        window.location.href = $(this).prev('a').prop('href');
-    });
+	$('.homeslider-description').click(function () {
+		window.location.href = $(this).prev('a').prop('href');
+	});
 
-    if ($('#htmlcontent_top').length > 0)
-    	$('#homepage-slider').addClass('col-xs-8');
-    else
-    	$('#homepage-slider').addClass('col-xs-12');
+	if ($('#htmlcontent_top').length > 0)
+		$('#homepage-slider').addClass('col-xs-8');
+	else
+		$('#homepage-slider').addClass('col-xs-12');
 
-    if (!!$.prototype.bxSlider)
+	if (!!$.prototype.bxSlider)
 		$('#homeslider').bxSlider({
 			useCSS: false,
 			maxSlides: 1,
