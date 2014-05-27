@@ -30,9 +30,9 @@
 			<tr>
 				<th class="cart_product first_item">{l s='Product'}</th>
 				<th class="cart_description item">{l s='Description'}</th>
-				<th class="cart_ref item">{l s='Ref.'}</th>
-                <th class="cart_avail item">{l s='Avail.'}</th>
-				<th class="cart_quantity item">{l s='Qty'}</th>
+				<th class="cart_ref item">{l s='Reference'}</th>
+                <th class="cart_avail item">{l s='Availability'}</th>
+				<th class="cart_quantity item">{l s='Quantity'}</th>
 				<th class="shipping_address last_item">{l s='Shipping address'}</th>
 			</tr>
 		</thead>
