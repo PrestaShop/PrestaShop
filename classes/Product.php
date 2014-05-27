@@ -520,6 +520,7 @@ class ProductCore extends ObjectModel
 
 		$this->setGroupReduction();
 		Hook::exec('actionProductSave', array('id_product' => $this->id));
+		Hook::exec('actionProductUpdate', array('id_product' => $this->id));
 		return true;
 	}
 
