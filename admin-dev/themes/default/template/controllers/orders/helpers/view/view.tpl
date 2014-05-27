@@ -165,6 +165,7 @@
 				</div>
 				<!-- Tab nav -->
 				<ul class="nav nav-tabs" id="tabOrder">
+					{$HOOK_TAB_ORDER}
 					<li class="active">
 						<a href="#status">
 							<i class="icon-time"></i>
@@ -180,6 +181,7 @@
 				</ul>
 				<!-- Tab content -->
 				<div class="tab-content panel">
+					{$HOOK_CONTENT_ORDER}
 					<!-- Tab status -->
 					<div class="tab-pane active" id="status">
 						<h4 class="visible-print">{l s='Status'} <span class="badge">({$history|@count})</span></h4>
@@ -242,6 +244,7 @@
 				<hr>
 				<!-- Tab nav -->
 				<ul class="nav nav-tabs" id="myTab">
+					{$HOOK_TAB_SHIP}
 					<li class="active">
 						<a href="#shipping">
 							<i class="icon-truck "></i>
@@ -257,6 +260,7 @@
 				</ul>
 				<!-- Tab content -->
 				<div class="tab-content panel">
+				{$HOOK_CONTENT_SHIP}
 					<!-- Tab shipping -->
 					<div class="tab-pane active" id="shipping">
 						<h4 class="visible-print">{l s='Shipping'} <span class="badge">({$order->getShipping()|@count})</span></h4>

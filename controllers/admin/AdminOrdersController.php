@@ -1597,7 +1597,27 @@ class AdminOrdersControllerCore extends AdminController
 			'not_paid_invoices_collection' => $order->getNotPaidInvoicesCollection(),
 			'payment_methods' => $payment_methods,
 			'invoice_management_active' => Configuration::get('PS_INVOICE', null, null, $order->id_shop),
-			'display_warehouse' => (int)Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
+			'display_warehouse' => (int)Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'),
+			'HOOK_CONTENT_ORDER' => Hook::exec('displayAdminOrderContentOrder', array(
+				'order' => $order,
+				'products' => $products,
+				'customer' => $customer)
+			),
+			'HOOK_CONTENT_SHIP' => Hook::exec('displayAdminOrderContentShip', array(
+				'order' => $order,
+				'products' => $products,
+				'customer' => $customer)
+			),
+			'HOOK_TAB_ORDER' => Hook::exec('displayAdminOrderTabOrder', array(
+				'order' => $order,
+				'products' => $products,
+				'customer' => $customer)
+			),
+			'HOOK_TAB_SHIP' => Hook::exec('displayAdminOrderTabShip', array(
+				'order' => $order,
+				'products' => $products,
+				'customer' => $customer)
+			),
 		);
 
 		return parent::renderView();
