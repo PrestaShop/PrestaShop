@@ -69,7 +69,7 @@
 					<span class="form_info">{l s='(five characters min.)'}</span>
 				</div>
 				<div class="required clearfix gender-line">
-					<label>{l s='Title'}</label>
+					<label>{l s='Social title'}</label>
 					{foreach from=$genders key=k item=gender}	
                     	<div class="radio-inline">
                     	<label for="id_gender{$gender->id_gender}" class="top">
