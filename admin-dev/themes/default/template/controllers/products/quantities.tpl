@@ -237,7 +237,7 @@
 						</div>
 
 					</div>
-					<p class="help-block">{l s='The available date when this product is out of stock.'}</p>
+					<p class="help-block">{l s='The next date of availability for this product when it is out of stock.'}</p>
 				</div>
 			</div>
 			{/if}
