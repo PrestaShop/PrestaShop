@@ -201,14 +201,14 @@ $(function() {
 				}
 			});
 			//remap links
-			var target ='';
-			$( "#help-container a[href^='/display/']" ).attr( "href", function( i, href ) {
-				target = mapping[href][0];
-				return "//help.prestashop.com/" + mapping[href][0] + '?version=1.6&language=' + mapping[href][2];
-			}).on('click',function(e){
+			$( "#help-container a[href^='/display/']" ).on('click', function(e){
 				e.preventDefault();
+				var href = $(this).attr('href');
+				var target = mapping[href][0];
 				pushContent(target);
 			});
+			// "//help.prestashop.com/" + mapping[href][0] + '?version=1.6&language=' + mapping[href][2];
+
 			//home link
 			$('#help-container a.home').attr('href', '//help.prestashop.com/'+toc[language].id+'?version=1.6').on('click',function(e){
 				e.preventDefault();
