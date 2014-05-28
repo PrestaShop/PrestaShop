@@ -89,7 +89,12 @@
 			$('#no_default_category').hide();
 			{assign var=imploded_selected_categories value='","'|implode:$selected_categories}
 			var selected_categories = new Array("{$imploded_selected_categories}");
-
+			
+			if (selected_categories.length > 1)
+				$('#expand-all-{$id}').hide();
+			else
+				$('#collapse-all-{$id}').hide();
+			
 			$('#{$id}').find(':input').each(function(){
 				if ($.inArray($(this).val(), selected_categories) != -1)
 				{
@@ -104,6 +109,8 @@
 					}
 				}
 			});
+		{else}
+			$('#collapse-all-{$id}').hide();
 		{/if}
 
 		$('#{$id}').find(':input[type=checkbox]').click(function(){
