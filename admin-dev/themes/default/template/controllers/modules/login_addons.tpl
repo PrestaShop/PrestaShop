@@ -37,36 +37,46 @@
 		{else}
 			<!--start addons login-->
 			<form id="addons_login_form" method="post" >
-				<div class="form-group">
-					<div class="input-group">
-						<span class="help-tooltip" data-toggle="tooltip" title="" data-original-title="{l s='PrestaShop Addons is PrestaShop\'s marketplace with more than 3,500 modules and themes available.'}">
-							{l s="Connect your shop with PrestaShop's marketplace in order to automatically import all your Addons purchases."}
-						</span>
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="username_addons">{l s='Addons login'}</label> 
-					<div class="input-group">
-						<span class="input-group-addon"><i class="icon-user"></i></span>
-						<input id="username_addons" class="form-control" name="username_addons" type="text" value=""  autocomplete="off" class="form-control ac_input">
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="password_addons">{l s= 'Addons password'}</label>
-					<div class="input-group">
-						<span class="input-group-addon"><i class="icon-key"></i></span>
-						<input id="password_addons" class="form-control" name="password_addons" type="password" value=""  autocomplete="off" class="form-control ac_input">
-					</div>
-				</div>
-				<div class="form-group">
-					<button id="addons_login_button" class="btn btn-default btn-block btn-lg" type="submit">
-						<i class="icon-unlock"></i> {l s='Sign in'}
-					</button>
-				</div>
+				<p>{l s="Connect your shop with PrestaShop's marketplace in order to automatically import all your Addons purchases."}</p>
 				<div class="row">
-					<a target="_blank" href="{$addons_register_link}">{l s="Don't have an account?"}</a>
-				</div>
+					<div class="col-lg-6">
+
+						<h3>Link your Addons Account</h3>
+						<hr>
+						<div class="form-group">
+							<!-- <label for="username_addons">{l s='Addons login'}</label>  -->
+							<div class="input-group">
+								<span class="input-group-addon"><i class="icon-user"></i></span>
+								<input id="username_addons" class="form-control" name="username_addons" type="text" value=""  autocomplete="off" class="form-control ac_input">
+							</div>
+						</div>
+
+						<div class="form-group">
+							<!-- <label for="password_addons">{l s= 'Addons password'}</label> -->
+							<div class="input-group">
+								<span class="input-group-addon"><i class="icon-key"></i></span>
+								<input id="password_addons" class="form-control" name="password_addons" type="password" value=""  autocomplete="off" class="form-control ac_input">
+							</div>
+						</div>
+						<div class="form-group">
+							<button id="addons_login_button" class="btn btn-default btn-block btn-lg" type="submit">
+								<i class="icon-unlock"></i> {l s='Sign in'}
+							</button>
+						</div>
+
+					</div>
+					<div class="col-lg-6">
+						<h3>{l s="Don't have an account?"}</h3>
+						<p class='intro'>{l s="Discover the Power of PrestaShop Addons! Explore the PrestaShop Official Marketplace and find over 3 500 innovative modules and themes that optimize conversion rates, increase traffic, build customer loyalty and maximize your productivity"}</p>
+						<a class="btn btn-default btn-block btn-lg" target="_blank" href="{$addons_register_link}">
+							{l s="Create Account"}
+							<i class="icon-external-link"></i>
+						</a>
+					</div>
+				</div>					
+
 				<div id="addons_loading" class="help-block"></div>
+
 			</form>
 			<!--end addons login-->
 		{/if}
