@@ -349,7 +349,13 @@ function findCombination(firstTime)
 
 	//create a temporary 'choice' array containing the choices of the customer
 	var choice = [];
-	$('#attributes select, #attributes input[type=hidden], #attributes input[type=radio]:checked').each(function(){
+	var radio_inputs = parseInt($('#attributes .checked > input[type=radio]').length);
+	if (radio_inputs)
+		radio_inputs = '#attributes .checked > input[type=radio]';
+	else
+		radio_inputs = '#attributes input[type=radio]:checked';
+
+	$('#attributes select, #attributes input[type=hidden], ' + radio_inputs).each(function(){
 		choice.push(parseInt($(this).val()));
 	});
 
@@ -905,7 +911,13 @@ function getProductAttribute()
 	request = '';
 	//create a temporary 'tab_attributes' array containing the choices of the customer
 	var tab_attributes = [];
-	$('#attributes select, #attributes input[type=hidden], #attributes input[type=radio]:checked').each(function(){
+	var radio_inputs = parseInt($('#attributes .checked > input[type=radio]').length);
+	if (radio_inputs)
+		radio_inputs = '#attributes .checked > input[type=radio]';
+	else
+		radio_inputs = '#attributes input[type=radio]:checked';
+
+	$('#attributes select, #attributes input[type=hidden], ' + radio_inputs).each(function(){
 		tab_attributes.push($(this).val());
 	});
 
