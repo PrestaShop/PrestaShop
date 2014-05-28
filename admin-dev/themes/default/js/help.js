@@ -48,7 +48,7 @@ $(function() {
 			e.preventDefault();
 			storage.set('helpOpen', false);
 			$('#help-container .close-help').trigger('click');
-			var helpWindow = window.open("index.php?controller=" + help_class_name + "?token=" + token + "&ajax=1&action=OpenHelp", "helpWindow", "width=450, height=650");
+			var helpWindow = window.open("index.php?controller=" + help_class_name + "?token=" + token + "&ajax=1&action=OpenHelp", "helpWindow", "width=450, height=650, scrollbars=yes");
 		});
 	};
 	//init
@@ -274,10 +274,10 @@ $(function() {
 			$('#help-container .helpful-labels li').removeClass('active');
 			var percentage = parseInt($(this).data('percentage'));
 			$('#help-container .slider-cursor').css('left',percentage+'%');
+			$('#help-container .helpful-labels li').addClass('disabled').off();
+			$(this).removeClass('disabled').addClass('active');
 			if ( percentage <= 25) {
 				$('#help-container .feedback-reason').show();
-				$('#help-container .helpful-labels li').addClass('disabled').off();
-				$(this).removeClass('disabled').addClass('active');
 			} else if ( percentage > 25) {
 				submitFeedback();
 			}
