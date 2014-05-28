@@ -22,13 +22,13 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<div class="modal fade" id="{$modal_id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="{$modal_id}" tabindex="-1">
 	<div class="modal-dialog {if isset($modal_class)}{$modal_class}{/if}">
 		<div class="modal-content">
 			{if isset($modal_title)}
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title" id="myModalLabel">{$modal_title}</h4>
+				<h4 class="modal-title">{$modal_title}</h4>
 			</div>
 			{/if}
 

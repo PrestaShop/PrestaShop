@@ -1935,7 +1935,7 @@ class AdminControllerCore extends Controller
 		
 		$this->modals[] = array(
 			'modal_id' => "modal_addons_connect",
-			'modal_class' => "modal-sm",
+			'modal_class' => "modal-md",
 			'modal_title' => '<i class="icon-puzzle-piece"></i> <a target="_blank" href="http://addons.prestashop.com/?utm_source=backoffice_modules">PrestaShop Addons</a>',
 			'modal_content' => $this->context->smarty->fetch('controllers/modules/login_addons.tpl'),
 		);
