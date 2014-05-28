@@ -207,7 +207,7 @@ $(function() {
 				var target = mapping[href][0];
 				pushContent(target);
 			});
-			// "//help.prestashop.com/" + mapping[href][0] + '?version=1.6&language=' + mapping[href][2];
+			// rewrite url ? -> "//help.prestashop.com/" + mapping[href][0] + '?version=1.6&language=' + mapping[href][2];
 
 			//home link
 			$('#help-container a.home').attr('href', '//help.prestashop.com/'+toc[language].id+'?version=1.6').on('click',function(e){
@@ -237,8 +237,8 @@ $(function() {
 			var searchTerm = encodeURIComponent($('input[name="search"]').val());
 			$.ajax( {
 				url: "//help.prestashop.com/api/?request=" + searchUrl + searchTerm,
-				jsonp : "callback",
-				dataType:"jsonp",
+				jsonp: "callback",
+				dataType: "jsonp",
 				success: function(data) {
 					if (data.results.length === 0) {
 						$("#search-results").addClass('hide');
@@ -269,31 +269,52 @@ $(function() {
 	//feedback
 	function initFeedback() {
 		//console.log('initFeedback');
+		var arr_feedback = {
+			pageID: help_class_name,
+			helpfulRate: null,
+			lowRatingReason: null,
+			comment: null
+		};
 		$('#help-container .helpful-labels li').on('click', function(){
+			var percentage = parseInt($(this).data('percentage'));
+			arr_feedback.helpfulRate = percentage;
 			$('#help-container .slider-cursor').removeClass('hide');
 			$('#help-container .helpful-labels li').removeClass('active');
-			var percentage = parseInt($(this).data('percentage'));
 			$('#help-container .slider-cursor').css('left',percentage+'%');
 			$('#help-container .helpful-labels li').addClass('disabled').off();
 			$(this).removeClass('disabled').addClass('active');
 			if ( percentage <= 25) {
 				$('#help-container .feedback-reason').show();
 			} else if ( percentage > 25) {
-				submitFeedback();
+				submitFeedback(arr_feedback);
 			}
 		});
-		$('#help-container .feedback-submit').on('click', function(){
-			submitFeedback();
+		$('#help-container .feedback-reason .radio label').on('click', function() {
+			arr_feedback.lowRatingReason = $('input[name=lowrating-reason]:checked').val();
+		});
+		$('#help-container .feedback-submit').on('click', function() {
+			arr_feedback.comment = $('textarea[name=feedback-detail]').val();
+			submitFeedback(arr_feedback);
 		});
 	}
 
-	function submitFeedback() {
-		$.post( "api/", arr_feedback).done(
-			function(data){
-				//@todo: do something with datas !
+	function submitFeedback(arr_feedback) {
+
+		var feedback = '';
+		// var keys = arr_feedback.keys();
+
+		// for (var key in obj) {
+		// 	feedback += keys[i] + '=' + arr_feedback[i];
+		// };
+
+		$.ajax( {
+			url: "//help.prestashop.com/api/feedback/?" + feedback,
+			jsonp: "callback",
+			datatype: 'jsonp',
+			success: function(){
 				$('#help-container #helpful-feedback').hide();
 				$('#help-container .thanks').removeClass('hide');
 			}
-		);
+		});
 	}
 });
