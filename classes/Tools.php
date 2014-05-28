@@ -1041,6 +1041,7 @@ class ToolsCore
 				$sql = 'SELECT c.id_category, cl.name, cl.link_rewrite
 						FROM '._DB_PREFIX_.'category c
 						LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = c.id_category'.Shop::addSqlRestrictionOnLang('cl').')
+						'.Shop::addSqlAssociation('category', 'c').'
 						WHERE c.nleft <= '.$interval['nleft'].'
 							AND c.nright >= '.$interval['nright'].'
 							AND c.nleft >= '.$interval_root['nleft'].'
