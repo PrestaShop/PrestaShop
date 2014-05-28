@@ -23,7 +23,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {$header}
-
 {if isset($conf)}
 	<div class="bootstrap">
 		<div class="alert alert-success">

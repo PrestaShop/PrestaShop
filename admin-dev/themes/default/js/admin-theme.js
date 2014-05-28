@@ -386,17 +386,6 @@ $(document).ready(function() {
 		$('#bo_query').focus();
 	});
 
-	// open contextual help into popup
-	$('a.btn-help').on('click', function(e){
-		e.preventDefault();
-		var url = $(this).attr('href');
-		window.open(
-			url,
-			'PrestaShop',
-			'width=500,height=600,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=50,top=50'
-		);
-	});
-
 	//build confirmation modal
 	function confirm_modal(heading, question, left_button_txt, right_button_txt, left_button_callback, right_button_callback) {
 		var confirmModal =
@@ -467,5 +456,4 @@ $(document).ready(function() {
 	}
 	//scroll_if_anchor(window.location.hash);
 	$("body").on("click", "a.anchor", scroll_if_anchor);
-
 });
