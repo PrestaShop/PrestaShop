@@ -256,6 +256,8 @@
 					// override jquery validate plugin defaults for bootstrap 3
 					highlight: function(element) {
 						$(element).closest('.form-group').addClass('has-error');
+						var lang_id = $(element).attr('name').substr($(element).attr('name').lastIndexOf('_')+1);
+						hideOtherLanguage(lang_id);
 					},
 					unhighlight: function(element) {
 						$(element).closest('.form-group').removeClass('has-error');
