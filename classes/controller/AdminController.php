@@ -1930,7 +1930,7 @@ class AdminControllerCore extends Controller
 		
 		$this->modals[] = array(
 			'modal_id' => "modal_addons_connect",
-			'modal_class' => "modal-sm",
+			'modal_class' => "modal-md",
 			'modal_title' => '<i class="icon-puzzle-piece"></i> <a target="_blank" href="http://addons.prestashop.com/?utm_source=backoffice_modules">PrestaShop Addons</a>',
 			'modal_content' => $this->context->smarty->fetch('controllers/modules/login_addons.tpl'),
 		);
@@ -2215,7 +2215,7 @@ class AdminControllerCore extends Controller
 		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/overrides.css', 'all', 99);
 
 		$this->addJquery();
-		$this->addjQueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox'));
+		$this->addjQueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox', 'storageapi' ));
 		$this->addjQueryPlugin('growl', null, false);
 		$this->addJqueryUI(array('ui.slider', 'ui.datepicker'));
 
@@ -3309,6 +3309,32 @@ class AdminControllerCore extends Controller
 			return false;
 	}
 	
+	protected function ajaxProcessOpenHelp()
+	{
+		$help_class_name = $_GET["controller"];
+		$popupContent = "<!doctype html>
+		<html>
+			<head>
+				<meta charset='UTF-8'>
+				<title>PrestaShop Help</title>
+				<link href='//help.prestashop.com/css/help.css' rel='stylesheet'>
+				<link href='//fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+				<script src='"._PS_JS_DIR_."/jquery/jquery-1.11.0.min.js'></script>
+				<script src='"._PS_JS_DIR_."/jquery/plugins/jquery.storageapi.js'></script>
+				<script src='themes/default/js/help.js'></script>
+				<script>
+					help_class_name='".$help_class_name."';
+					$(function(){
+						initHelp();
+					});
+				</script>
+			</head>
+			<body><div id='help-container' class='help-popup'></div></body>
+		</html>";
+		die($popupContent);
+	}
+
+
 	/**
 	 * Enable multiple items
 	 *
