@@ -129,7 +129,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'required' => in_array('company', $required_fields),
 					'maxlength' => 16,
 					'col' => 4,
-					'hint' => $this->l('Company Name for this supplier')
+					'hint' => $this->l('Company name for this supplier')
 				) : null),
 				array(
 					'type' => 'textarea',

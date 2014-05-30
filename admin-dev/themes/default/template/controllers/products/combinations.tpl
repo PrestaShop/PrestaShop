@@ -37,7 +37,7 @@
 			attrs[{$idgrp}] = new Array(0
 			, '---'
 			{foreach from=$group key=idattr item=attrname}
-				, "{$idattr}", "{$attrname|addslashes}"
+				, {$idattr|strval|json_encode}, {$attrname|trim|json_encode}
 			{/foreach}
 			);
 		{/foreach}

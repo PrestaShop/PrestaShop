@@ -86,7 +86,7 @@ class AdminCustomersControllerCore extends AdminController
 				'class' => 'fixed-width-xs'
 			),
 			'title' => array(
-				'title' => $this->l('Title'),
+				'title' => $this->l('Social title'),
 				'filter_key' => 'a!id_gender',
 				'type' => 'select',
 				'list' => $titles_array,
@@ -323,7 +323,7 @@ class AdminCustomersControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Title'),
+					'label' => $this->l('Social title'),
 					'name' => 'id_gender',
 					'required' => false,
 					'class' => 't',

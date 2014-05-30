@@ -3707,7 +3707,7 @@ class AdminProductsControllerCore extends AdminController
 
 		// TinyMCE
 		$iso_tiny_mce = $this->context->language->iso_code;
-		$iso_tiny_mce = (file_exists(_PS_JS_DIR_.'tiny_mce/langs/'.$iso_tiny_mce.'.js') ? $iso_tiny_mce : 'en');
+		$iso_tiny_mce = (file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso_tiny_mce.'.js') ? $iso_tiny_mce : 'en');
 		$data->assign('ad', dirname($_SERVER['PHP_SELF']));
 		$data->assign('iso_tiny_mce', $iso_tiny_mce);
 		$data->assign('check_product_association_ajax', $check_product_association_ajax);

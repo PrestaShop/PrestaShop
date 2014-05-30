@@ -218,7 +218,7 @@ abstract class PaymentModuleCore extends Module
 					if ($error = $rule->checkValidity($this->context, true, true))
 					{
 						$this->context->cart->removeCartRule((int)$rule->id);
-						if (isset($this->context->cookie) && isset($this->context->cookie->id_customer) && $this->context->cookie->id_customer)
+						if (isset($this->context->cookie) && isset($this->context->cookie->id_customer) && $this->context->cookie->id_customer && !empty($rule->code))
 						{
 							if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
 								Tools::redirect('index.php?controller=order-opc&submitAddDiscount=1&discount_name='.urlencode($rule->code));
