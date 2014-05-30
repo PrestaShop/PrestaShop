@@ -1925,7 +1925,7 @@ class AdminControllerCore extends Controller
 			'check_url_fopen' => (ini_get('allow_url_fopen') ? 'ok' : 'ko'),
 			'check_openssl' => (extension_loaded('openssl') ? 'ok' : 'ko'),
 			'add_permission' => 1,
-			'addons_register_link' => "//addons.prestashop.com/fr/login?utm_source=back-office&utm_medium=connect-to-addons&utm_campaign=back-office-".$iso_code_caps."#createnow",
+			'addons_register_link' => "//addons.prestashop.com/".$language->iso_code."/login?utm_source=back-office&utm_medium=connect-to-addons&utm_campaign=back-office-".$iso_code_caps."#createnow",
 		));
 		
 		$this->modals[] = array(
