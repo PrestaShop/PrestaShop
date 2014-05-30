@@ -152,7 +152,7 @@ function blockHover(status)
 
 function quick_view()
 {
-	$(document).on('click', '.quick-view:visible', function(e) 
+	$(document).on('click', '.quick-view:visible, .quick-view-mobile:visible', function(e) 
 	{
 		e.preventDefault();
 		var url = this.rel;
