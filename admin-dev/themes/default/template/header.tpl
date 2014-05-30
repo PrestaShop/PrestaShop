@@ -74,6 +74,7 @@
 		var tab_modules_list = '{if isset($tab_modules_list) && $tab_modules_list}{$tab_modules_list|addslashes}{/if}';
 		var update_success_msg = '{l s='Update successful' js=1}';
 		var errorLogin = '{l s='PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.'}';
+		var search_product_msg = '{l s='Search for a product' js=1}';
 	</script>
 {/if}
 {if isset($css_files)}

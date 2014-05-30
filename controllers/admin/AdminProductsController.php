@@ -1370,7 +1370,9 @@ class AdminProductsControllerCore extends AdminController
 				'thickbox',
 				'ajaxfileupload',
 				'date',
-				'tagify'
+				'tagify',
+				'select2',
+				'validate'
 			));
 
 			$this->addJS(array(
@@ -1385,8 +1387,11 @@ class AdminProductsControllerCore extends AdminController
 				_PS_JS_DIR_.'vendor/ladda.js'
 			));
 
+			$this->addJS(_PS_JS_DIR_.'jquery/plugins/select2/select2_locale_'.$this->context->language->iso_code.'.js');
+			$this->addJS(_PS_JS_DIR_.'jquery/plugins/validate/localization/messages_'.$this->context->language->iso_code.'.js');
+
 			$this->addCSS(array(
-				_PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.css',
+				_PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.css'
 			));
 		}
 	}
@@ -3157,12 +3162,14 @@ class AdminProductsControllerCore extends AdminController
 			{
 				$length = count($ids);
 				for ($i = 0; $i < $length; $i++)
+				{
 					if (!empty($ids[$i]) && !empty($names[$i]))
 					{
 						list($pack_items[$i]['pack_quantity'], $pack_items[$i]['id']) = explode('x', $ids[$i]);
 						$exploded_name = explode('x', $names[$i]);
 						$pack_items[$i]['name'] = $exploded_name[1];
 					}
+				}
 			}
 		}
 		else
@@ -3173,10 +3180,16 @@ class AdminProductsControllerCore extends AdminController
 				$pack_items[$i]['id'] = $pack_item->id;
 				$pack_items[$i]['pack_quantity'] = $pack_item->pack_quantity;
 				$pack_items[$i]['name']	= $pack_item->name;
+				$pack_items[$i]['reference'] = $pack_item->reference;
+
+				$cover = Product::getCover($pack_item->id);
+				$pack_items[$i]['image'] = Context::getContext()->link->getImageLink($pack_item->link_rewrite, $cover['id_image'] , 'home_default');
+				// @todo: don't rely on 'home_default'
+				//$path_to_image = _PS_IMG_DIR_.'p/'.Image::getImgFolderStatic($cover['id_image']).(int)$cover['id_image'].'.jpg';
+				//$pack_items[$i]['image'] = ImageManager::thumbnail($path_to_image, 'pack_mini_'.$pack_item->id.'_'.$this->context->shop->id.'.jpg', 120);
 				$i++;
 			}
 		}
-
 		return $pack_items;
 	}
 
@@ -4571,7 +4584,7 @@ class AdminProductsControllerCore extends AdminController
 
 	protected function initPack(Product $product)
 	{
-		$this->tpl_form_vars['is_pack'] = ($product->id && Pack::isPack($product->id)) || Tools::getValue('ppack') || Tools::getValue('type_product') == Product::PTYPE_PACK;
+		$this->tpl_form_vars['is_pack'] = ($product->id && Pack::isPack($product->id)) || Tools::getValue('type_product') == Product::PTYPE_PACK;
 		$product->packItems = Pack::getItems($product->id, $this->context->language->id);
 
 		$input_pack_items = '';
