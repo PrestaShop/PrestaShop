@@ -1266,7 +1266,7 @@ function bindAddonsButtons()
 					{
 						$('#addons_loading').html('');
 						$('#addons_login_div').fadeOut();
-						window.location.href = currentIndex + '&token=' + token;
+						window.location.reload();
 					}
 					else
 						$('#addons_loading').html(errorLogin);
