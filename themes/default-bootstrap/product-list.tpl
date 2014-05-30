@@ -116,7 +116,6 @@
 								<span class="old-price product-price">
 									{displayWtPrice p=$product.price_without_reduction}
 								</span>
-								{* eu-legal: Additional Price Information *}
 								{hook h="displayProductPriceBlock" id_product=$product.id_product type="old_price"}
 								{if $product.specific_prices.reduction_type == 'percentage'}
 									<span class="price-percent-reduction">-{$product.specific_prices.reduction * 100}%</span>

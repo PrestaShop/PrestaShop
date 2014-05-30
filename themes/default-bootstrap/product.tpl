@@ -145,7 +145,6 @@
 			{if $product->online_only}
 				<p class="online_only">{l s='Online only'}</p>
 			{/if}
-
 			<h1 itemprop="name">{$product->name|escape:'html':'UTF-8'}</h1>
 			<p id="product_reference"{if empty($product->reference) || !$product->reference} style="display: none;"{/if}>
 				<label>{l s='Model'} </label>
@@ -247,8 +246,8 @@
 					<input type="hidden" name="id_product_attribute" id="idCombination" value="" />
 				</p>
 				<div class="box-info-product">
-					<div class="content_prices clearfix">
-						{if $product->show_price && !isset($restricted_country_mode) && !$PS_CATALOG_MODE}
+					{if $product->show_price && !isset($restricted_country_mode) && !$PS_CATALOG_MODE}
+						<div class="content_prices clearfix">
 							<!-- prices -->
 							<div class="price">
 								<p class="our_price_display" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
@@ -304,12 +303,12 @@
 							{if !empty($product->unity) && $product->unit_price_ratio > 0.000000}
 								{math equation="pprice / punit_price"  pprice=$productPrice  punit_price=$product->unit_price_ratio assign=unit_price}
 								<p class="unit-price"><span id="unit_price_display">{convertPrice price=$unit_price}</span> {l s='per'} {$product->unity|escape:'html':'UTF-8'}</p>
-								{* eu-legal: Additional Price Information *}
+								{* eu-legal: Additional Price Information *}								
 								{hook h="displayProductPriceBlock" id_product=$product->id type="unit_price"}
 							{/if}
-						{/if} {*close if for show price*}
 						<div class="clear"></div>
 					</div> <!-- end content_prices -->
+					{/if}
 					<div class="product_attributes clearfix">
 						<!-- quantity wanted -->
 						{if !$PS_CATALOG_MODE}
@@ -319,7 +318,7 @@
 							<a href="#" data-field-qty="qty" class="btn btn-default button-minus product_quantity_down">
 								<span><i class="icon-minus"></i></span>
 							</a>
-							<a href="#" data-field-qty="qty" class="btn btn-default button-plus product_quantity_up ">
+							<a href="#" data-field-qty="qty" class="btn btn-default button-plus product_quantity_up">
 								<span><i class="icon-plus"></i></span>
 							</a>
 							<span class="clearfix"></span>

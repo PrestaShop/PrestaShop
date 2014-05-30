@@ -43,11 +43,11 @@
 		var roundMode = {$round_mode|intval};
 {if isset($shop_context)}
 	{if $shop_context == Shop::CONTEXT_ALL}
-		var youEditFieldFor = '{l s='A modification of this field will be applied for all shops' js=1}';
+		var youEditFieldFor = '{l s='This field will be modified for all your shops.' js=1}';
 	{elseif $shop_context == Shop::CONTEXT_GROUP}
-		var youEditFieldFor = '{l s='A modification of this field will be applied for all shops of group' js=1} <b>{$shop_name|@addcslashes:'\''}</b>';
+		var youEditFieldFor = '{l s='This field will be modified for all shops in this shop group:' js=1} <b>{$shop_name|@addcslashes:'\''}</b>';
 	{else}
-		var youEditFieldFor = '{l s='A modification of this field will be applied for the shop' js=1} <b>{$shop_name|@addcslashes:'\''}</b>';
+		var youEditFieldFor = '{l s='This field will be modified for this shop:' js=1} <b>{$shop_name|@addcslashes:'\''}</b>';
 	{/if}
 {else}
 		var youEditFieldFor = '';
@@ -60,7 +60,7 @@
 		var see_order_msg = '{l s='View this order' js=1}';
 		var new_customer_msg = '{l s='A new customer registered on your shop.' js=1}';
 		var customer_name_msg = '{l s='Customer name:' js=1} ';
-		var new_msg = '{l s='A new message posted on your shop.' js=1}';
+		var new_msg = '{l s='A new message was posted on your shop.' js=1}';
 		var see_msg = '{l s='Read this message' js=1}';
 		var token = '{$token|addslashes}';
 		var token_admin_orders = '{getAdminToken tab='AdminOrders'}';
@@ -73,7 +73,7 @@
 		var admin_modules_link = '{$link->getAdminLink("AdminModules")|addslashes}';
 		var tab_modules_list = '{if isset($tab_modules_list) && $tab_modules_list}{$tab_modules_list|addslashes}{/if}';
 		var update_success_msg = '{l s='Update successful' js=1}';
-		var errorLogin = '{l s='PrestaShop was unable to login to Addons. Please check your credentials and your internet connection.'}';
+		var errorLogin = '{l s='PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.'}';
 	</script>
 {/if}
 {if isset($css_files)}
@@ -133,7 +133,7 @@
 								</div>
 								<div id="list_orders_notif" class="list_notif">
 									<span class="no_notifs">
-										{l s='No new orders has been placed on your shop'}
+										{l s='No new orders have been placed on your shop.'}
 									</span>
 								</div>
 								<div class="notifs_panel_footer">
@@ -158,7 +158,7 @@
 								</div>
 								<div id="list_customers_notif" class="list_notif">
 									<span class="no_notifs">
-										{l s='No new customers registered on your shop'}
+										{l s='No new customers have registered on your shop.'}
 									</span>
 								</div>
 								<div class="notifs_panel_footer">
@@ -183,7 +183,7 @@
 								</div>
 								<div id="list_customer_messages_notif" class="list_notif">
 									<span class="no_notifs">
-										{l s='No new messages posted on your shop'}
+										{l s='No new messages have been posted on your shop.'}
 									</span>
 								</div>
 								<div class="notifs_panel_footer">
@@ -270,7 +270,7 @@
 
 {if $install_dir_exists}
 			<div class="alert alert-warning">
-				{l s='For security reasons, you must also:'}&nbsp;{l s='delete the /install folder'}
+				{l s='For security reasons, you must also delete the /install folder.'}
 			</div>
 {/if}
 
