@@ -1121,6 +1121,7 @@ CREATE TABLE `PREFIX_orders` (
   KEY `id_address_delivery` (`id_address_delivery`),
   KEY `id_address_invoice` (`id_address_invoice`),
   KEY `id_shop_group` (`id_shop_group`),
+  KEY (`current_state`),
   KEY `id_shop` (`id_shop`),
   INDEX `date_add`(`date_add`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
