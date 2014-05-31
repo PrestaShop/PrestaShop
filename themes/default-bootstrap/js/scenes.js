@@ -31,7 +31,7 @@ $(document).ready(function(){
 	/* calcul nb of click to see every scenes */
 	var ul_width = parseInt($('#scenes_list ul').width());
 	var div_width = parseInt($('#scenes_list').width());
-	nb_move_available = Math.ceil((ul_width-div_width)/li_width)+1;
+	nb_move_available = Math.ceil((ul_width-div_width)/ul_width)+1;
 	if (nb_move_available < 2)
 		$('#scenes .next').hide();
 	
