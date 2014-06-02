@@ -248,9 +248,10 @@ $(function() {
 						$("#search-results").addClass('hide');
 					}
 					for (var i = 0 ; i < data.results.length ; i++) {
-						if (isCleanHtml(data.results[i].id + data.results[i].title + data.results[i].bodyTextHighlights))
+						if (isCleanHtml(data.results[i].id + data.results[i].title + data.results[i].bodyTextHighlights)) {
 							$("#search-results").removeClass('hide')
 							.append( '<div class="result-item"><i class="fa fa-file-o"></i> <a href="//help.prestashop.com/' + data.results[i].id + '?version=1.6" data-target="' + data.results[i].id + '">' + strongify(data.results[i].title) + '</a><p>' + strongify(data.results[i].bodyTextHighlights) + '</p></div>');
+						}
 					}
 					$("#search-results a").on('click',function(e) {
 						e.preventDefault();

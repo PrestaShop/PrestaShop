@@ -25,7 +25,6 @@
 
 <div class="modal-body">
 {if $add_permission eq '1'}
-	<div class="panel">
 	{if !isset($logged_on_addons) || !$logged_on_addons}
 		{if $check_url_fopen eq 'ko'  OR $check_openssl eq 'ko'}
 			<div class="alert alert-warning">
@@ -37,11 +36,14 @@
 		{else}
 			<!--start addons login-->
 			<form id="addons_login_form" method="post" >
-				<p>{l s="Connect your shop with PrestaShop's marketplace in order to automatically import all your Addons purchases."}</p>
+				<div class="text-center">
+					<img class="text-center" src="themes/default/img/prestashop-addons-logo.png" alt="Logo PrestaShop Addons"/>
+					<h3>{l s="Connect your shop with PrestaShop's marketplace in order to automatically import all your Addons purchases."}</h3>
+					<hr>
+				</div>
 				<div class="row">
-					<div class="col-lg-6">
-						<h3>Connect to PrestaShop Addons</h3>
-						<hr>
+					<div class="col-lg-6 col-lg-push-6">
+						<h4>Connect to PrestaShop Addons</h4>
 						<div class="form-group">
 							<!-- <label for="username_addons">{l s='Addons login'}</label>  -->
 							<div class="input-group">
@@ -49,25 +51,25 @@
 								<input id="username_addons" class="form-control" name="username_addons" type="text" value=""  autocomplete="off" class="form-control ac_input">
 							</div>
 						</div>
-
 						<div class="form-group">
 							<!-- <label for="password_addons">{l s= 'Addons password'}</label> -->
 							<div class="input-group">
 								<span class="input-group-addon"><i class="icon-key"></i></span>
 								<input id="password_addons" class="form-control" name="password_addons" type="password" value=""  autocomplete="off" class="form-control ac_input">
 							</div>
+							<a class="btn btn-link pull-right" href="{$addons_forgot_password_link}" target="_blank" >I forgot my password</a>
+							<br>
 						</div>
 						<div class="form-group">
 							<button id="addons_login_button" class="btn btn-primary btn-block btn-lg" type="submit">
 								<i class="icon-unlock"></i> {l s='Sign in'}
 							</button>
 						</div>
-
 					</div>
-					<div class="col-lg-6">
-						<h3>{l s="Don't have an account?"}</h3>
-						<p class='intro'>{l s="Discover the Power of PrestaShop Addons! Explore the PrestaShop Official Marketplace and find over 3 500 innovative modules and themes that optimize conversion rates, increase traffic, build customer loyalty and maximize your productivity"}</p>
-						<a class="btn btn-default btn-block btn-lg" target="_blank" href="{$addons_register_link}">
+					<div class="col-lg-5 col-lg-pull-6">
+						<h4>{l s="Don't have an account?"}</h4>
+						<p class='text-justify'>{l s="Discover the Power of PrestaShop Addons! Explore the PrestaShop Official Marketplace and find over 3 500 innovative modules and themes that optimize conversion rates, increase traffic, build customer loyalty and maximize your productivity"}</p>
+						<a class="btn btn-default btn-block" target="_blank" href="{$addons_register_link}">
 							{l s="Create an Account"}
 							<i class="icon-external-link"></i>
 						</a>
@@ -80,6 +82,5 @@
 			<!--end addons login-->
 		{/if}
 	{/if}
-	</div>
 {/if}
 </div>
