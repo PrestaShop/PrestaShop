@@ -229,7 +229,6 @@ $(function() {
 
 	//search
 	function initSearch() {
-		//console.log('initSearch');
 		//replace tag from confluence search api
 		function strongify(str) {
 			return str.replace(/@@@hl@@@/g, '<strong>').replace(/@@@endhl@@@/g, '</strong>');
@@ -275,27 +274,30 @@ $(function() {
 	//feedback
 	function initFeedback() {
 		var arr_feedback = {
-			pageID: help_class_name,
-			helpfulRate: null,
-			lowRatingReason: null,
+			controller: help_class_name,
+			language: iso_user,
+			helpful: null,
+			reason: null,
 			comment: null
 		};
 		$('#help-container .helpful-labels li').on('click', function(){
+			var percentageMap = {0:'Not at all', 25:'Not very', 50:'Somewhat', 75:'Very', 100:'Extremly'};
 			var percentage = parseInt($(this).data('percentage'));
-			arr_feedback.helpfulRate = percentage;
+			arr_feedback.helpful = percentageMap[percentage];
 			$('#help-container .slider-cursor').removeClass('hide');
 			$('#help-container .helpful-labels li').removeClass('active');
 			$('#help-container .slider-cursor').css('left',percentage+'%');
 			$('#help-container .helpful-labels li').addClass('disabled').off();
 			$(this).removeClass('disabled').addClass('active');
-			if ( percentage <= 25) {
+			if (percentage <= 25) {
 				$('#help-container .feedback-reason').show();
-			} else if ( percentage > 25) {
+			} else if (percentage > 25) {
 				submitFeedback(arr_feedback);
 			}
 		});
 		$('#help-container .feedback-reason .radio label').on('click', function() {
-			arr_feedback.lowRatingReason = $('input[name=lowrating-reason]:checked').val();
+			var reasonMap = {1:'Not related', 2:'Too complicated', 3:'Too much', 4:'Incorrect', 5:'Unclear', 6:'Incomplete'};
+			arr_feedback.reason = reasonMap[$('input[name=lowrating-reason]:checked').val()];
 		});
 		$('#help-container .feedback-submit').on('click', function(e) {
 			e.preventDefault();
