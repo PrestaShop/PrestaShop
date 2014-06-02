@@ -268,7 +268,6 @@ $(function() {
 
 	//feedback
 	function initFeedback() {
-		//console.log('initFeedback');
 		var arr_feedback = {
 			pageID: help_class_name,
 			helpfulRate: null,
@@ -292,25 +291,26 @@ $(function() {
 		$('#help-container .feedback-reason .radio label').on('click', function() {
 			arr_feedback.lowRatingReason = $('input[name=lowrating-reason]:checked').val();
 		});
-		$('#help-container .feedback-submit').on('click', function() {
+		$('#help-container .feedback-submit').on('click', function(e) {
+			e.preventDefault();
 			arr_feedback.comment = $('textarea[name=feedback-detail]').val();
 			submitFeedback(arr_feedback);
 		});
 	}
 
 	function submitFeedback(arr_feedback) {
-
-		var feedback = '';
-		// var keys = arr_feedback.keys();
-
-		// for (var key in obj) {
-		// 	feedback += keys[i] + '=' + arr_feedback[i];
-		// };
-
+		var feedback = '?';
+		var keys = Object.keys(arr_feedback);
+		for (var i = 0; i < keys.length; i++) {
+			if (i > 0){
+				feedback += '&';
+			};
+			feedback += keys[i] + '=' + arr_feedback[keys[i]];
+		};
 		$.ajax( {
-			url: "//help.prestashop.com/api/feedback/?" + feedback,
+			url: "//help.prestashop.com/api/feedback/" + feedback,
+			dataType: 'jsonp',
 			jsonp: "callback",
-			datatype: 'jsonp',
 			success: function(){
 				$('#help-container #helpful-feedback').hide();
 				$('#help-container .thanks').removeClass('hide');
