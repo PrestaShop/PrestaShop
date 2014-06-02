@@ -94,6 +94,8 @@
 									{/if}
 									{hook h="displayProductPriceBlock" id_product=$product->id type="old_price"}
 								{/if}
+								{* eu-legal: Additional Price Information - Tax/Shipping *}
+								{hook h="displayProductPriceBlock" product=$product type="price"}
 								{if $product->on_sale}
 									{elseif $product->specificPrice AND $product->specificPrice.reduction}
 										<div class="product_discount">
