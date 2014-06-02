@@ -64,19 +64,18 @@
 									<span itemprop="price" class="price product-price">
 										{if !$priceDisplay}{convertPrice price=$product.price}{else}{convertPrice price=$product.price_tax_exc}{/if}
 									</span>
-									{* eu-legal: Additional Price Information *}
-									{hook h="displayProductPriceBlock" id_product=$product.id_product type="price"}
 									<meta itemprop="priceCurrency" content="{$currency->iso_code}" />
 									{if isset($product.specific_prices) && $product.specific_prices && isset($product.specific_prices.reduction) && $product.specific_prices.reduction > 0}
+										{hook h="displayProductPriceBlock" product=$product type="old_price"}
 										<span class="old-price product-price">
 											{displayWtPrice p=$product.price_without_reduction}
 										</span>
-										{* eu-legal: Additional Price Information *}
-										{hook h="displayProductPriceBlock" id_product=$product.id_product type="old_price"}
 										{if $product.specific_prices.reduction_type == 'percentage'}
 											<span class="price-percent-reduction">-{$product.specific_prices.reduction * 100}%</span>
 										{/if}
 									{/if}
+									{hook h="displayProductPriceBlock" product=$product type="price"}
+									{hook h="displayProductPriceBlock" product=$product type="unit_price"}
 								{/if}
 							</div>
 						{/if}
@@ -91,6 +90,8 @@
 							</a>
 						{/if}
 					</div>
+					{hook h="displayProductDeliveryTime" product=$product}
+					{hook h="displayProductPriceBlock" product=$product type="weight"}
 				</div>
 				<div class="right-block">
 					<h5 itemprop="name">
@@ -109,10 +110,9 @@
 							<span itemprop="price" class="price product-price">
 								{if !$priceDisplay}{convertPrice price=$product.price}{else}{convertPrice price=$product.price_tax_exc}{/if}
 							</span>
-							{* eu-legal: Additional Price Information *}
-							{hook h="displayProductPriceBlock" id_product=$product.id_product type="price"}
 							<meta itemprop="priceCurrency" content="{$currency->iso_code}" />
 							{if isset($product.specific_prices) && $product.specific_prices && isset($product.specific_prices.reduction) && $product.specific_prices.reduction > 0}
+								{hook h="displayProductPriceBlock" product=$product type="old_price"}
 								<span class="old-price product-price">
 									{displayWtPrice p=$product.price_without_reduction}
 								</span>
@@ -121,6 +121,8 @@
 									<span class="price-percent-reduction">-{$product.specific_prices.reduction * 100}%</span>
 								{/if}
 							{/if}
+							{hook h="displayProductPriceBlock" product=$product type="price"}
+							{hook h="displayProductPriceBlock" product=$product type="unit_price"}
 						{/if}
 					</div>
 					{/if}
@@ -177,8 +179,6 @@
 									</span>
 								{/if}
 							</span>
-							{* eu-legal: Product Availability *}
-							{hook h="displayProductAvailability" id_product=$product.id_product}
 						{/if}
 					{/if}
 				</div>

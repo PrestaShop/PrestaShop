@@ -97,8 +97,11 @@ $(function() {
 			jsonp:"callback",
 			dataType:"jsonp",
 			success: function(data) {
-				$('#help-container').html(data);
-				d.resolve();
+				if (isCleanHtml(data))
+				{
+					$('#help-container').html(data);
+					d.resolve();
+				}
 			}
 		});
 		return d.promise();
@@ -128,7 +131,8 @@ $(function() {
 			dataType: "jsonp",
 			success: function(data) {
 				for (var i = 0 ; i < data.page.results.length ; i++){
-					$("#help-container #main-nav").append('<a href="//help.prestashop.com/' + data.page.results[i].id + '?version=1.6" data-target="' + data.page.results[i].id + '">' + data.page.results[i].title + '</a>');
+					if (isCleanHtml(data.page.results[i].id + data.page.results[i].title))
+						$("#help-container #main-nav").append('<a href="//help.prestashop.com/' + data.page.results[i].id + '?version=1.6" data-target="' + data.page.results[i].id + '">' + data.page.results[i].title + '</a>');
 				}
 				$("#help-container #main-nav a").on('click',function(e){
 					e.preventDefault();
@@ -244,8 +248,9 @@ $(function() {
 						$("#search-results").addClass('hide');
 					}
 					for (var i = 0 ; i < data.results.length ; i++) {
-						$("#search-results").removeClass('hide')
-						.append( '<div class="result-item"><i class="fa fa-file-o"></i> <a href="//help.prestashop.com/' + data.results[i].id + '?version=1.6" data-target="' + data.results[i].id + '">' + strongify(data.results[i].title) + '</a><p>' + strongify(data.results[i].bodyTextHighlights) + '</p></div>');
+						if (isCleanHtml(data.results[i].id + data.results[i].title + data.results[i].bodyTextHighlights))
+							$("#search-results").removeClass('hide')
+							.append( '<div class="result-item"><i class="fa fa-file-o"></i> <a href="//help.prestashop.com/' + data.results[i].id + '?version=1.6" data-target="' + data.results[i].id + '">' + strongify(data.results[i].title) + '</a><p>' + strongify(data.results[i].bodyTextHighlights) + '</p></div>');
 					}
 					$("#search-results a").on('click',function(e) {
 						e.preventDefault();
@@ -268,7 +273,6 @@ $(function() {
 
 	//feedback
 	function initFeedback() {
-		//console.log('initFeedback');
 		var arr_feedback = {
 			pageID: help_class_name,
 			helpfulRate: null,
@@ -292,25 +296,26 @@ $(function() {
 		$('#help-container .feedback-reason .radio label').on('click', function() {
 			arr_feedback.lowRatingReason = $('input[name=lowrating-reason]:checked').val();
 		});
-		$('#help-container .feedback-submit').on('click', function() {
+		$('#help-container .feedback-submit').on('click', function(e) {
+			e.preventDefault();
 			arr_feedback.comment = $('textarea[name=feedback-detail]').val();
 			submitFeedback(arr_feedback);
 		});
 	}
 
 	function submitFeedback(arr_feedback) {
-
-		var feedback = '';
-		// var keys = arr_feedback.keys();
-
-		// for (var key in obj) {
-		// 	feedback += keys[i] + '=' + arr_feedback[i];
-		// };
-
+		var feedback = '?';
+		var keys = Object.keys(arr_feedback);
+		for (var i = 0; i < keys.length; i++) {
+			if (i > 0){
+				feedback += '&';
+			};
+			feedback += keys[i] + '=' + arr_feedback[keys[i]];
+		};
 		$.ajax( {
-			url: "//help.prestashop.com/api/feedback/?" + feedback,
+			url: "//help.prestashop.com/api/feedback/" + feedback,
+			dataType: 'jsonp',
 			jsonp: "callback",
-			datatype: 'jsonp',
 			success: function(){
 				$('#help-container #helpful-feedback').hide();
 				$('#help-container .thanks').removeClass('hide');
