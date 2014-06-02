@@ -40,8 +40,7 @@
 				<p>{l s="Connect your shop with PrestaShop's marketplace in order to automatically import all your Addons purchases."}</p>
 				<div class="row">
 					<div class="col-lg-6">
-
-						<h3>Link your Addons Account</h3>
+						<h3>Connect to PrestaShop Addons</h3>
 						<hr>
 						<div class="form-group">
 							<!-- <label for="username_addons">{l s='Addons login'}</label>  -->
@@ -59,7 +58,7 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<button id="addons_login_button" class="btn btn-default btn-block btn-lg" type="submit">
+							<button id="addons_login_button" class="btn btn-primary btn-block btn-lg" type="submit">
 								<i class="icon-unlock"></i> {l s='Sign in'}
 							</button>
 						</div>
@@ -69,7 +68,7 @@
 						<h3>{l s="Don't have an account?"}</h3>
 						<p class='intro'>{l s="Discover the Power of PrestaShop Addons! Explore the PrestaShop Official Marketplace and find over 3 500 innovative modules and themes that optimize conversion rates, increase traffic, build customer loyalty and maximize your productivity"}</p>
 						<a class="btn btn-default btn-block btn-lg" target="_blank" href="{$addons_register_link}">
-							{l s="Create Account"}
+							{l s="Create an Account"}
 							<i class="icon-external-link"></i>
 						</a>
 					</div>

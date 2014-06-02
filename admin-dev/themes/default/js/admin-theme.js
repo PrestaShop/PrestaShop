@@ -227,17 +227,6 @@ $(document).ready(function() {
 		confirmModal.modal('show');
 	}
 
-	// open contextual help into popup
-	$('a.btn-help').on('click', function(e){
-		e.preventDefault();
-		var url = $(this).attr('href');
-		window.open(
-			url,
-			'PrestaShop',
-			'width=500,height=600,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=50,top=50'
-		);
-	});
-
 	// reset form
 	$(".reset_ready").click(function () {
 		var href = $(this).attr('href');
@@ -303,11 +292,27 @@ function navSidebar(){
 	});
 }
 function navTopbarReset() {
-	ellipsed = [];
+	var ellipsed = [];
 	$('#ellipsistab').remove();
 	$('#nav-topbar ul.menu').find('li.maintab').each(function(){
 		$(this).removeClass('hide');
 	});
+}
+//agregate out of bounds items from top menu into ellipsis dropdown
+function navTopbarEllipsis() {
+	navTopbarReset();
+	$('#nav-topbar ul.menu').find('li.maintab').each(function(){
+		if ($(this).position().top > 0) {
+			ellipsed.push($(this));
+			$(this).addClass('hide');
+		}
+	});
+	if (ellipsed.length > 0) {
+		$('#nav-topbar ul.menu').append('<li id="ellipsistab" class="subtab has_submenu"><a href="#"><i class="icon-ellipsis-horizontal"></i></a><ul id="ellipsis_submenu" class="submenu"></ul></li>');
+		for (var i = 0; i < ellipsed.length; i++) {
+			$('#ellipsis_submenu').append('<li class="subtab has_submenu">'+ellipsed[i].html()+'</li>');
+		}
+	}
 }
 //set main navigation on top
 function navTopbar(){
@@ -334,22 +339,6 @@ function navTopbar(){
 	});
 }
 
-//agregate out of bounds items from top menu into ellipsis dropdown
-function navTopbarEllipsis() {
-	navTopbarReset();
-	$('#nav-topbar ul.menu').find('li.maintab').each(function(){
-		if ($(this).position().top > 0) {
-			ellipsed.push($(this));
-			$(this).addClass('hide');
-		}
-	});
-	if (ellipsed.length > 0) {
-		$('#nav-topbar ul.menu').append('<li id="ellipsistab" class="subtab has_submenu"><a href="#"><i class="icon-ellipsis-horizontal"></i></a><ul id="ellipsis_submenu" class="submenu"></ul></li>');
-		for (var i = 0; i < ellipsed.length; i++) {
-			$('#ellipsis_submenu').append('<li class="subtab has_submenu">'+ellipsed[i].html()+'</li>');
-		}
-	}
-}
 
 //set main navigation for mobile devices
 function mobileNav() {
