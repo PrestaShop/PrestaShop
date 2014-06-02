@@ -3319,7 +3319,8 @@ class AdminControllerCore extends Controller
 				<meta charset='UTF-8'>
 				<title>PrestaShop Help</title>
 				<link href='//help.prestashop.com/css/help.css' rel='stylesheet'>
-				<link href='//fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+				<link href='//fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet'>
+				<link href='//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css' rel='stylesheet'>
 				<script src='"._PS_JS_DIR_."jquery/jquery-1.11.0.min.js'></script>
 				<script src='"._PS_JS_DIR_."jquery/plugins/jquery.storageapi.js'></script>
 				<script src='"._PS_JS_DIR_."admin.js'></script>
