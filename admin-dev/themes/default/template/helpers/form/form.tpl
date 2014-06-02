@@ -952,10 +952,10 @@
 				pmNames: ['PM', 'P'],
 				timeFormat: 'hh:mm:ss tt',
 				timeSuffix: '',
-				timeOnlyTitle: '{l s='Choose Time'}',
-				timeText: '{l s='Time'}',
-				hourText: '{l s='Hour'}',
-				minuteText: '{l s='Minute'}',
+				timeOnlyTitle: '{l s='Choose Time' js=1}',
+				timeText: '{l s='Time' js=1}',
+				hourText: '{l s='Hour' js=1}',
+				minuteText: '{l s='Minute' js=1}',
 			});
 			{if isset($use_textarea_autosize)}
 			$(".textarea-autosize").autosize();
