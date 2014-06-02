@@ -71,7 +71,6 @@
 									</span>
 									<meta itemprop="priceCurrency" content="{$currency->iso_code}" />
 									{if isset($product.specific_prices) && $product.specific_prices && isset($product.specific_prices.reduction) && $product.specific_prices.reduction > 0}
-										{* eu-legal: Additional Price Information - Old price *}
 										{hook h="displayProductPriceBlock" product=$product type="old_price"}
 										<span class="old-price product-price">
 											{displayWtPrice p=$product.price_without_reduction}
@@ -80,9 +79,7 @@
 											<span class="price-percent-reduction">-{$product.specific_prices.reduction * 100}%</span>
 										{/if}
 									{/if}
-									{* eu-legal: Additional Price Information - Tax/Shipping *}
 									{hook h="displayProductPriceBlock" product=$product type="price"}
-									{* eu-legal: Additional Price Information - Unit price *}
 									{hook h="displayProductPriceBlock" product=$product type="unit_price"}	
 								{/if}
 							</div>
@@ -98,9 +95,7 @@
 							</a>
 						{/if}
 					</div>
-					{* eu-legal: Product DeliveryTime *}
 					{hook h="displayProductDeliveryTime" product=$product}
-					{* eu-legal: Product Weight *}
 					{hook h="displayProductPriceBlock" product=$product type="weight"}
 				</div>
 				<div class="right-block">
@@ -122,7 +117,6 @@
 							</span>
 							<meta itemprop="priceCurrency" content="{$currency->iso_code}" />
 							{if isset($product.specific_prices) && $product.specific_prices && isset($product.specific_prices.reduction) && $product.specific_prices.reduction > 0}
-								{* eu-legal: Additional Price Information - Old price *}
 								{hook h="displayProductPriceBlock" product=$product type="old_price"}
 								<span class="old-price product-price">
 									{displayWtPrice p=$product.price_without_reduction}
@@ -131,9 +125,7 @@
 									<span class="price-percent-reduction">-{$product.specific_prices.reduction * 100}%</span>
 								{/if}
 							{/if}
-							{* eu-legal: Additional Price Information - Tax/Shipping *}
 							{hook h="displayProductPriceBlock" product=$product type="price"}
-							{* eu-legal: Additional Price Information - Unit price *}
 							{hook h="displayProductPriceBlock" product=$product type="unit_price"}
 						{/if}
 					</div>
