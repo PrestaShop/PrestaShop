@@ -137,7 +137,9 @@ class IdentityControllerCore extends FrontController
 				'genders' => Gender::getGenders(),
 			));
 
-		$this->context->smarty->assign('newsletter', (int)Module::getInstanceByName('blocknewsletter')->active);
+		if(Module::isInstalled('blocknewsletter'))
+			$this->context->smarty->assign('newsletter', (int)Module::getInstanceByName('blocknewsletter')->active);
+		else $this->context->smarty->assign('newsletter', 0);
 
 		$this->setTemplate(_PS_THEME_DIR_.'identity.tpl');
 	}
