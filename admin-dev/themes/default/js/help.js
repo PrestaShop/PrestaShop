@@ -26,8 +26,6 @@ $(function() {
 	var storage = $.localStorage;
 	initHelp = function(){
 		$('#main').addClass('helpOpen');
-		//localstorage : remember that user wants help
-		storage.set('helpOpen',true);
 		//first time only
 		if( $('#help-container').length === 0) {
 			//add css
@@ -37,13 +35,6 @@ $(function() {
 		}
 		//init help (it use a global javascript variable to get actual controller)
 		pushContent(help_class_name);
-		//close button
-		$('#help-container').on('click', '.close-help', function(e){
-			e.preventDefault();
-			$('#main').removeClass('helpOpen');
-			$('#help-container').html('');
-			storage.set('helpOpen', false);
-		});
 		$('#help-container').on('click', '.popup', function(e){
 			e.preventDefault();
 			storage.set('helpOpen', false);
@@ -54,7 +45,19 @@ $(function() {
 	//init
 	$('a.btn-help').on('click', function(e) {
 		e.preventDefault();
-		initHelp();
+		//localstorage : remember that user wants help
+		if( !$('#main').hasClass('helpOpen')) {
+			$('a.btn-help').find('i').addClass('process-icon-close');
+			$('a.btn-help').find('i').removeClass('process-icon-help');
+			storage.set('helpOpen',true);
+			initHelp();
+		} else {
+			$('#main').removeClass('helpOpen');
+			$('#help-container').html('');
+			$('a.btn-help').find('i').removeClass('process-icon-close');
+			$('a.btn-help').find('i').addClass('process-icon-help');
+			storage.set('helpOpen', false);
+		};
 	});
 	//open help if localstorage helpOpen = true;
 	if ( storage.get('helpOpen') === true ) {
