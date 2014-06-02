@@ -1765,7 +1765,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 					'search' => false,
 				),
 				'ean13' => array(
-					'title' => $this->l('EAN-13 or JAN barcore'),
+					'title' => $this->l('EAN-13 or JAN barcode'),
 					'align' => 'center',
 					'orderby' => false,
 					'filter' => false,
