@@ -212,7 +212,6 @@
 					{*<span id="availability_label">{l s='Availability:'}</span>*}
 					<span id="availability_value"{if $product->quantity <= 0 && !$allow_oosp} class="warning_inline"{/if}>{if $product->quantity <= 0}{if $allow_oosp}{$product->available_later}{else}{l s='This product is no longer in stock'}{/if}{else}{$product->available_now}{/if}</span>
 				</p>
-				{* eu-legal: Product DeliveryTime *}
 				{hook h="displayProductDeliveryTime" product=$product}
 				<p class="warning_inline" id="last_quantities"{if ($product->quantity > $last_qties || $product->quantity <= 0) || $allow_oosp || !$product->available_for_order || $PS_CATALOG_MODE} style="display: none"{/if} >{l s='Warning: Last items in stock!'}</p>
 			{/if}
@@ -264,7 +263,6 @@
 											{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}
 										{/if}-->
 										<meta itemprop="priceCurrency" content="{$currency->iso_code}" />
-										{* eu-legal: Additional Price Information *}
 										{hook h="displayProductPriceBlock" product=$product type="price"}
 									{/if}
 								</p>
@@ -282,7 +280,6 @@
 								</p>
 								<p id="old_price"{if (!$product->specificPrice || !$product->specificPrice.reduction) && $group_reduction == 0} class="hidden"{/if}>
 									{if $priceDisplay >= 0 && $priceDisplay <= 2}
-										{* eu-legal: Additional Price Information *}
 										{hook h="displayProductPriceBlock" product=$product type="old_price"}
 										<span id="old_price_display">{if $productPriceWithoutReduction > $productPrice}{convertPrice price=$productPriceWithoutReduction}{/if}</span>
 										<!-- {if $tax_enabled && $display_tax_label == 1}{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}{/if} -->
@@ -309,11 +306,9 @@
 							{if !empty($product->unity) && $product->unit_price_ratio > 0.000000}
 								{math equation="pprice / punit_price"  pprice=$productPrice  punit_price=$product->unit_price_ratio assign=unit_price}
 								<p class="unit-price"><span id="unit_price_display">{convertPrice price=$unit_price}</span> {l s='per'} {$product->unity|escape:'html':'UTF-8'}</p>
-								{* eu-legal: Additional Price Information *}
 								{hook h="displayProductPriceBlock" product=$product type="unit_price"}
 							{/if}
 						{/if} {*close if for show price*}
-						{* eu-legal: Product Weight *}
 						{hook h="displayProductPriceBlock" product=$product type="weight"}
 						<div class="clear"></div>
 					</div> <!-- end content_prices -->

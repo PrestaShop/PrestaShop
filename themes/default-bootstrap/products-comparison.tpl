@@ -101,10 +101,8 @@
 											-{convertPrice price=$product->specificPrice.reduction}
 										</span>
 									{/if}
-									{* eu-legal: Additional Price Information - Old price *}
 									{hook h="displayProductPriceBlock" product=$product type="old_price"}
 								{/if}
-								{* eu-legal: Additional Price Information - Tax/Shipping *}
 								{hook h="displayProductPriceBlock" product=$product type="price"}
 								{if $product->on_sale}
 									{elseif $product->specificPrice AND $product->specificPrice.reduction}
@@ -117,7 +115,6 @@
 										<span class="comparison_unit_price">
 											&nbsp;{convertPrice price=$unit_price} {l s='per %s' sprintf=$product->unity|escape:'html':'UTF-8'}
 										</span>
-										{* eu-legal: Additional Price Information - Unit price *}
 										{hook h="displayProductPriceBlock" product=$product type="unit_price"}
 									{else}
 								{/if}
@@ -145,9 +142,7 @@
 									</span>
 								{/if}
 							</p>
-							{* eu-legal: Product DeliveryTime *}
 							{hook h="displayProductDeliveryTime" product=$product}
-							{* eu-legal: Product Weight *}
 							{hook h="displayProductPriceBlock" product=$product type="weight"}
 							<div class="clearfix">
 								<div class="button-container">
