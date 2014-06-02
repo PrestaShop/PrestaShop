@@ -35,19 +35,17 @@ $(document).ready(function()
 
 	// Click on color
 	$(document).on('click', '#layered_form input[type=button], #layered_form label.layered_color', function(e) {
+		console.log(e.target.type);
 		if (!$('input[name='+$(this).attr('name')+'][type=hidden]').length)
 			$('<input />').attr('type', 'hidden').attr('name', $(this).attr('name')).val($(this).attr('rel')).appendTo('#layered_form');
 		else
 			$('input[name='+$(this).attr('name')+'][type=hidden]').remove();
-		reloadContent();
+		reloadContent(true);
 	});
 
-	$(document).on('click', '#layered_form .select', function(e) {
-		reloadContent();
-	});
+	$(document).on('click', '#layered_form .select, #layered_form input[type=checkbox], #layered_form input[type=radio]', function(e) {
 
-	$(document).on('click', '#layered_form input[type=checkbox], #layered_form input[type=radio]', function(e) {
-		reloadContent();
+		reloadContent(true);
 	});
 
 	// Changing content of an input text
@@ -130,13 +128,13 @@ $(document).ready(function()
 		$('.selectProductSort').val($(this).val());
 
 		if($('#layered_form').length > 0)
-			reloadContent();
+			reloadContent(true);
 	});
 
 	$(document).off('change').on('change', 'select[name=n]', function(e) 
 	{
 		$('select[name=n]').val($(this).val());
-		reloadContent();
+		reloadContent(true);
 	});
 
 	paginationButton(false);
@@ -186,7 +184,7 @@ function initFilters()
 						$('#layered_' + $(event.target).data('type') + '_range').html(from + ' - ' + to);
 					},
 					stop: function () {
-						reloadContent();
+						reloadContent(true);
 					}
 				}, filter.unit, parseInt(filter.format));
 			}
@@ -330,8 +328,12 @@ function paginationButton(nbProductsIn, nbProductOut) {
 			productCountRow = $.trim(productCountRow);
 			productCountRow = productCountRow.split(' ');
 			productCountRow[1] = productShowingStart;
-			productCountRow[3] = (nbProductOut != 'undefined') ? nbProductOut : productShowing;
+			productCountRow[3] = (nbProductOut != 'undefined') && (nbProductOut > productShowing) ? nbProductOut : productShowing;
 			productCountRow[5] = nb_products;
+
+			if (productCountRow[3] > productCountRow[5])
+				productCountRow[3] = productCountRow[5];
+
 			productCountRow = productCountRow.join(' ');
 			$('.product-count').html(productCountRow);
 			$('.product-count').show();
@@ -373,7 +375,7 @@ function cancelFilter()
 				$('#layered_form input[type=hidden][name='+$(this).attr('rel')+']').remove();
 			}
 		}
-		reloadContent();
+		reloadContent(true);
 		e.preventDefault();
 	});
 }
@@ -463,7 +465,7 @@ function reloadContent(params_plus)
 		if (params_plus)
 			data += '&n=' + $('select[name=n]:first').val();
 		else
-			data += '&n=' + $('div.pagination form.showall').find('input[name=n]').val();	
+			data += '&n=' + $('div.pagination form.showall').find('input[name=n]').val();
 	}
 
 	var slideUp = true;
@@ -482,7 +484,6 @@ function reloadContent(params_plus)
 				n = '&n=' + option.value;
 		});
 	}
-
 	ajaxQuery = $.ajax(
 	{
 		type: 'GET',
