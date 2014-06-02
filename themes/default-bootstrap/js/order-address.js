@@ -214,12 +214,18 @@ function appendAddressList(dest_comp, values, fields_name)
 {
 	for (var item in fields_name)
 	{
-		var name = fields_name[item];
+		var name = fields_name[item].replace(",", "");
 		var value = getFieldValue(name, values);
-		if (value != "") {
+		if (value != "")
+		{
 			var new_li = document.createElement('li');
-			new_li.className = 'address_' + name;
-			new_li.innerHTML = getFieldValue(name, values);
+			var reg = new RegExp("[ ]+", "g");
+			var classes = name.split(reg);
+			new_li.className = '';
+			for (clas in classes)
+				new_li.className += 'address_' + classes[clas].toLowerCase().replace(":", "_") + ' ';
+			new_li.className = new_li.className.trim();
+			new_li.innerHTML = value;
 			dest_comp.append(new_li);
 		}
 	}
@@ -227,7 +233,7 @@ function appendAddressList(dest_comp, values, fields_name)
 
 function getFieldValue(field_name, values)
 {
-	var reg=new RegExp("[ ]+", "g");
+	var reg = new RegExp("[ ]+", "g");
 	var items = field_name.split(reg);
 	var vals = new Array();
 	for (var field_item in items)
