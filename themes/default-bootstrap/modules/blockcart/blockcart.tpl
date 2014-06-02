@@ -273,7 +273,7 @@
 				{/if}
 				<div class="layer_cart_row">
 					<strong class="dark">
-						{l s='Total shipping' mod='blockcart'}&nbsp;{l s='(tax excl.)' mod='blockcart'}
+						{l s='Total shipping' mod='blockcart'}&nbsp;{l s='(tax incl.)' mod='blockcart'}
 					</strong>
 					<span class="ajax_cart_shipping_cost">
 						{if $shipping_cost_float == 0}
