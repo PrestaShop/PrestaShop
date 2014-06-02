@@ -114,7 +114,7 @@
 				<div class="row">
 					<div class="col-md-8 col-sm-8">
 						<h4>{l s='Configure your theme'}</h4>
-						<p>{l s='Configure your theme\'s advanced settings, such as the number of columns you want for each page. Mostly for advanced users.'}</p>
+						<p>{l s='Configure your theme\'s advanced settings, such as the number of columns you want for each page. This setting is mostly for advanced users.'}</p>
 					</div>
 					<div class="col-md-4 col-sm-4" style="text-align:center;">
 						<h4>&nbsp;</h4>
