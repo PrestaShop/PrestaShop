@@ -88,6 +88,11 @@
 				{else}
 					<span id="view_full_size">
 						<img itemprop="image" src="{$img_prod_dir}{$lang_iso}-default-large_default.jpg" id="bigpic" alt="" title="{$product->name|escape:'html':'UTF-8'}" width="{$largeSize.width}" height="{$largeSize.height}"/>
+						{if !$content_only}
+							<span class="span_link">
+								{l s='View larger'}
+							</span>
+						{/if}
 					</span>
 				{/if}
 			</div> <!-- end image-block -->
@@ -245,8 +250,8 @@
 					<input type="hidden" name="id_product_attribute" id="idCombination" value="" />
 				</p>
 				<div class="box-info-product">
-					{if $product->show_price && !isset($restricted_country_mode) && !$PS_CATALOG_MODE}
-						<div class="content_prices clearfix">
+					<div class="content_prices clearfix">
+						{if $product->show_price && !isset($restricted_country_mode) && !$PS_CATALOG_MODE}
 							<!-- prices -->
 							<div class="price">
 								<p class="our_price_display" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
@@ -306,7 +311,6 @@
 						{hook h="displayProductPriceBlock" product=$product type="weight"}
 						<div class="clear"></div>
 					</div> <!-- end content_prices -->
-					{/if}
 					<div class="product_attributes clearfix">
 						<!-- quantity wanted -->
 						{if !$PS_CATALOG_MODE}
