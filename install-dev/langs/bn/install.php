@@ -186,7 +186,7 @@ return array (
     'Discover your store' => 'আপনার দোকান উন্মোচন করুন',
     'Share your experience with your friends!' => 'আপনার বন্ধুদের সঙ্গে আপনার অভিজ্ঞতা শেয়ার করুন!',
     'I just built an online store with PrestaShop!' => 'আমি  PrestaShop দিয়ে একটি অনলাইন দোকান নির্মাণ করলাম!',
-    'Look at this exhilarating experience : http://vimeo.com/89298199' => '',
+    'Look at this exhilarating experience : http://vimeo.com/89298199' => 'এই চমৎকার অভিজ্ঞতা দেখুন: http://vimeo.com/89298199',
     'Tweet' => 'টুইট',
     'Share' => 'শেয়ার ',
     'Google+' => 'Google+ ',
