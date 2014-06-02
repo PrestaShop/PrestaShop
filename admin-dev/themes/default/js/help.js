@@ -97,8 +97,11 @@ $(function() {
 			jsonp:"callback",
 			dataType:"jsonp",
 			success: function(data) {
-				$('#help-container').html(data);
-				d.resolve();
+				if (isCleanHtml(data))
+				{
+					$('#help-container').html(data);
+					d.resolve();
+				}
 			}
 		});
 		return d.promise();
@@ -128,7 +131,8 @@ $(function() {
 			dataType: "jsonp",
 			success: function(data) {
 				for (var i = 0 ; i < data.page.results.length ; i++){
-					$("#help-container #main-nav").append('<a href="//help.prestashop.com/' + data.page.results[i].id + '?version=1.6" data-target="' + data.page.results[i].id + '">' + data.page.results[i].title + '</a>');
+					if (isCleanHtml(data.page.results[i].id + data.page.results[i].title))
+						$("#help-container #main-nav").append('<a href="//help.prestashop.com/' + data.page.results[i].id + '?version=1.6" data-target="' + data.page.results[i].id + '">' + data.page.results[i].title + '</a>');
 				}
 				$("#help-container #main-nav a").on('click',function(e){
 					e.preventDefault();
@@ -244,8 +248,9 @@ $(function() {
 						$("#search-results").addClass('hide');
 					}
 					for (var i = 0 ; i < data.results.length ; i++) {
-						$("#search-results").removeClass('hide')
-						.append( '<div class="result-item"><i class="fa fa-file-o"></i> <a href="//help.prestashop.com/' + data.results[i].id + '?version=1.6" data-target="' + data.results[i].id + '">' + strongify(data.results[i].title) + '</a><p>' + strongify(data.results[i].bodyTextHighlights) + '</p></div>');
+						if (isCleanHtml(data.results[i].id + data.results[i].title + data.results[i].bodyTextHighlights))
+							$("#search-results").removeClass('hide')
+							.append( '<div class="result-item"><i class="fa fa-file-o"></i> <a href="//help.prestashop.com/' + data.results[i].id + '?version=1.6" data-target="' + data.results[i].id + '">' + strongify(data.results[i].title) + '</a><p>' + strongify(data.results[i].bodyTextHighlights) + '</p></div>');
 					}
 					$("#search-results a").on('click',function(e) {
 						e.preventDefault();
