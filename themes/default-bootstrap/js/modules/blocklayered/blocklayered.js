@@ -35,7 +35,6 @@ $(document).ready(function()
 
 	// Click on color
 	$(document).on('click', '#layered_form input[type=button], #layered_form label.layered_color', function(e) {
-		console.log(e.target.type);
 		if (!$('input[name='+$(this).attr('name')+'][type=hidden]').length)
 			$('<input />').attr('type', 'hidden').attr('name', $(this).attr('name')).val($(this).attr('rel')).appendTo('#layered_form');
 		else
