@@ -3316,7 +3316,7 @@ class AdminControllerCore extends Controller
 	
 	protected function ajaxProcessOpenHelp()
 	{
-		$help_class_name = $_GET["controller"];
+		$help_class_name = $_GET['controller'];
 		$popupContent = "<!doctype html>
 		<html>
 			<head>
@@ -3328,7 +3328,7 @@ class AdminControllerCore extends Controller
 				<script src='"._PS_JS_DIR_."/jquery/plugins/jquery.storageapi.js'></script>
 				<script src='themes/default/js/help.js'></script>
 				<script>
-					help_class_name='".$help_class_name."';
+					help_class_name='".addslashes($help_class_name)."';
 					$(function(){
 						initHelp();
 					});
