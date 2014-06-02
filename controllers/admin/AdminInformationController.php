@@ -29,7 +29,6 @@ class AdminInformationControllerCore extends AdminController
 
 	public function __construct()
 	{
-		define('_PS_HOST_MODE_', 1);
 		$this->bootstrap = true;
 		parent::__construct();
 	}
