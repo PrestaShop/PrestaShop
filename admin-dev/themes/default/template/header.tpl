@@ -30,8 +30,12 @@
 <html lang="{$iso}">
 <head>
 	<meta charset="utf-8">
+	
 	<meta name="viewport" content="width=device-width, initial-scale=0.75, maximum-scale=0.75, user-scalable=0">
 	<meta name="apple-mobile-web-app-capable" content="yes">
+	<link rel="icon" type="image/x-icon" href="{$img_dir}favicon.ico" />
+	<link rel="apple-touch-icon" href="{$img_dir}app_icon.png" />
+
 	<meta name="robots" content="NOFOLLOW, NOINDEX">
 	<title>{if $meta_title != ''}{$meta_title} • {/if}{$shop_name}</title>
 	{if $display_header}
@@ -89,8 +93,6 @@
 {/foreach}
 {/if}
 
-	<link rel="icon" type="image/vnd.microsoft.icon" href="{$img_dir}favicon.ico" />
-	<link rel="shortcut icon" type="image/x-icon" href="{$img_dir}favicon.ico" />
 	{if isset($displayBackOfficeHeader)}
 		{$displayBackOfficeHeader}
 	{/if}

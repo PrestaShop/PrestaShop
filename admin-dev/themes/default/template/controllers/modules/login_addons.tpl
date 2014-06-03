@@ -37,22 +37,20 @@
 			<!--start addons login-->
 			<form id="addons_login_form" method="post" >
 				<div class="text-center">
-					<img class="text-center" src="themes/default/img/prestashop-addons-logo.png" alt="Logo PrestaShop Addons"/>
+					<img class="img-responsive" src="themes/default/img/prestashop-addons-logo.png" alt="Logo PrestaShop Addons"/>
 					<h3>{l s="Connect your shop with PrestaShop's marketplace in order to automatically import all your Addons purchases."}</h3>
 					<hr>
 				</div>
 				<div class="row">
-					<div class="col-lg-6 col-lg-push-6">
+					<div class="col-md-6 col-md-push-6">
 						<h4>Connect to PrestaShop Addons</h4>
 						<div class="form-group">
-							<!-- <label for="username_addons">{l s='Addons login'}</label>  -->
 							<div class="input-group">
 								<span class="input-group-addon"><i class="icon-user"></i></span>
 								<input id="username_addons" class="form-control" name="username_addons" type="text" value=""  autocomplete="off" class="form-control ac_input">
 							</div>
 						</div>
 						<div class="form-group">
-							<!-- <label for="password_addons">{l s= 'Addons password'}</label> -->
 							<div class="input-group">
 								<span class="input-group-addon"><i class="icon-key"></i></span>
 								<input id="password_addons" class="form-control" name="password_addons" type="password" value=""  autocomplete="off" class="form-control ac_input">
@@ -66,7 +64,7 @@
 							</button>
 						</div>
 					</div>
-					<div class="col-lg-5 col-lg-pull-6">
+					<div class="col-md-5 col-md-pull-6">
 						<h4>{l s="Don't have an account?"}</h4>
 						<p class='text-justify'>{l s="Discover the Power of PrestaShop Addons! Explore the PrestaShop Official Marketplace and find over 3 500 innovative modules and themes that optimize conversion rates, increase traffic, build customer loyalty and maximize your productivity"}</p>
 						<a class="btn btn-default btn-block" target="_blank" href="{$addons_register_link}">
