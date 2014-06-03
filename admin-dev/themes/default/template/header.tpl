@@ -30,7 +30,8 @@
 <html lang="{$iso}">
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+	<meta name="viewport" content="width=device-width, initial-scale=0.75, maximum-scale=0.75, user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="robots" content="NOFOLLOW, NOINDEX">
 	<title>{if $meta_title != ''}{$meta_title} • {/if}{$shop_name}</title>
 	{if $display_header}

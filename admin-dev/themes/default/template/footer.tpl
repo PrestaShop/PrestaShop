@@ -48,32 +48,30 @@
 	</div>	
 
 	<div class="col-sm-4 footer-contact">
-		<p>
-			<a href="http://www.prestashop.com/en/contact_us?utm_source=backoffice_footer" target="_blank" class="footer_link">
-				<i class="icon-envelope"></i>
-				{l s='Contact'}
-			</a>
-			/&nbsp;
-			<a href="http://forge.prestashop.com/?utm_source=backoffice_footer" target="_blank" class="footer_link">
-				<i class="icon-bug"></i>
-				{l s='Bug Tracker'}
-			</a>
-			/&nbsp;
-			<a href="http://www.prestashop.com/forums/?utm_source=backoffice_footer" target="_blank" class="footer_link">
-				<i class="icon-comments"></i>
-				{l s='Forum'}
-			</a>
-			/&nbsp;
-			<a href="http://addons.prestashop.com/?utm_source=backoffice_footer" target="_blank" class="footer_link">
-				<i class="icon-puzzle-piece"></i>
-				{l s='Addons'}
-			</a>
-			/&nbsp;
-			<a href="http://www.prestashop.com/en/training-prestashop?utm_source=backoffice_footer" target="_blank" class="footer_link">
-				<i class="icon-book"></i>
-				{l s='Training'}
-			</a>
-		</p>
+		<a href="http://www.prestashop.com/en/contact_us?utm_source=backoffice_footer" target="_blank" class="footer_link">
+			<i class="icon-envelope"></i>
+			{l s='Contact'}
+		</a>
+		/&nbsp;
+		<a href="http://forge.prestashop.com/?utm_source=backoffice_footer" target="_blank" class="footer_link">
+			<i class="icon-bug"></i>
+			{l s='Bug Tracker'}
+		</a>
+		/&nbsp;
+		<a href="http://www.prestashop.com/forums/?utm_source=backoffice_footer" target="_blank" class="footer_link">
+			<i class="icon-comments"></i>
+			{l s='Forum'}
+		</a>
+		/&nbsp;
+		<a href="http://addons.prestashop.com/?utm_source=backoffice_footer" target="_blank" class="footer_link">
+			<i class="icon-puzzle-piece"></i>
+			{l s='Addons'}
+		</a>
+		/&nbsp;
+		<a href="http://www.prestashop.com/en/training-prestashop?utm_source=backoffice_footer" target="_blank" class="footer_link">
+			<i class="icon-book"></i>
+			{l s='Training'}
+		</a>
 		{if $iso_is_fr}
 		<p>Questions • Renseignements • Formations : 
 			<strong>+33 (0)1.40.18.30.04</strong>

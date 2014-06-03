@@ -38,26 +38,32 @@ $(function() {
 		$('#help-container').on('click', '.popup', function(e){
 			e.preventDefault();
 			storage.set('helpOpen', false);
-			$('#help-container .close-help').trigger('click');
+			$('.toolbarBox a.btn-help').trigger('click');
 			var helpWindow = window.open("index.php?controller=" + help_class_name + "?token=" + token + "&ajax=1&action=OpenHelp", "helpWindow", "width=450, height=650, scrollbars=yes");
 		});
 	};
+
+	// change help icon
+	function iconCloseHelp(){
+		$('.toolbarBox a.btn-help i').removeClass('process-icon-loading').addClass('process-icon-close');
+	}
+
 	//init
-	$('a.btn-help').on('click', function(e) {
+	$('.toolbarBox a.btn-help').on('click', function(e) {
 		e.preventDefault();
 		//localstorage : remember that user wants help
-		if( !$('#main').hasClass('helpOpen')) {
-			$('a.btn-help').find('i').addClass('process-icon-close');
-			$('a.btn-help').find('i').removeClass('process-icon-help');
+		if( !$('#main').hasClass('helpOpen') && document.body.clientWidth > 1200) {
 			storage.set('helpOpen',true);
+			$('.toolbarBox a.btn-help i').removeClass('process-icon-help').addClass('process-icon-loading');
 			initHelp();
+		} else if(!$('#main').hasClass('helpOpen') && document.body.clientWidth < 1200){
+			var helpWindow = window.open("index.php?controller=" + help_class_name + "?token=" + token + "&ajax=1&action=OpenHelp", "helpWindow", "width=450, height=650, scrollbars=yes");
 		} else {
 			$('#main').removeClass('helpOpen');
 			$('#help-container').html('');
-			$('a.btn-help').find('i').removeClass('process-icon-close');
-			$('a.btn-help').find('i').addClass('process-icon-help');
+			$('.toolbarBox a.btn-help i').removeClass('process-icon-close').addClass('process-icon-help');
 			storage.set('helpOpen', false);
-		};
+		}
 	});
 	//open help if localstorage helpOpen = true;
 	if ( storage.get('helpOpen') === true ) {
@@ -117,6 +123,7 @@ $(function() {
 		$('#help-container').html('');
 		//@todo: track event
 		getHelp(target)
+		.then(iconCloseHelp)
 		.then(initToc)
 		.then(initNavigation)
 		.then(initSearch)
@@ -315,9 +322,9 @@ $(function() {
 		for (var i = 0; i < keys.length; i++) {
 			if (i > 0){
 				feedback += '&';
-			};
+			}
 			feedback += keys[i] + '=' + arr_feedback[keys[i]];
-		};
+		}
 		$.ajax( {
 			url: "//help.prestashop.com/api/feedback/" + feedback,
 			dataType: 'jsonp',
