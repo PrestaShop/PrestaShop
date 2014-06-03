@@ -78,7 +78,7 @@
 
 	{if isset($categoryData['after_tabs'])}
 		{assign var=cur_theme value=$categoryData['after_tabs']['cur_theme']}
-		<div class="row" style="margin-top: 64px;">
+		<div class="row">
 			<div class="col-md-3" style="text-align: center;">
 				<a href="{$base_url}">
 					<img src="../themes/{$cur_theme.theme_directory}/preview.jpg">
