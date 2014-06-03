@@ -93,8 +93,19 @@ $(document).ready(function() {
 	});
 
 	//media queries - depends of enquire.js
+	enquire.register('screen and (max-width: 1200px)', {
+		match : function() {
+			if( $('#main').hasClass('helpOpen')) {
+				$('.toolbarBox a.btn-help').trigger('click');
+			}
+		},
+		unmatch : function() {
+			
+		}
+	});
 	enquire.register('screen and (max-width: 768px)', {
 		match : function() {
+
 			$('body.page-sidebar').addClass('page-sidebar-closed');
 		},
 		unmatch : function() {

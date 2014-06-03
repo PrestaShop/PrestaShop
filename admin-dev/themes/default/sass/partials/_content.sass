@@ -169,7 +169,27 @@ body.display-modal
 			.btn
 				line-height: 1em
 
+//help containers
 #header
 	.panel-footer
 		margin: 15px 0 0!important
 		height: 40px!important
+
+#main.helpOpen
+	width: 70%
+	@media (max-width: $screen-lg)
+		width: 100% !important
+
+#help-container
+	position: relative
+	margin: 0
+	padding: 0
+	float: right
+	width: 30%
+	margin-top: 120px
+	margin-bottom: 50px
+	background-color: white
+	box-sizing: border-box
+	overflow-x: hidden
+	@media (max-width: $screen-lg)
+		display: none !important
