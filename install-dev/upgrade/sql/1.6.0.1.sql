@@ -76,11 +76,18 @@ INSERT INTO `PREFIX_configuration` (`id_shop_group`, `id_shop`, `name`, `value`,
 
 ALTER TABLE  `PREFIX_employee` ADD  `stats_compare_from` DATE NULL DEFAULT NULL AFTER  `stats_date_to` , ADD  `stats_compare_to` DATE NULL DEFAULT NULL AFTER  `stats_compare_from`;
 
-INSERT INTO `PREFIX_hook` (`id_hook` , `name` , `title` , `description` , `position` , `live_edit`) 
-VALUES (NULL , 'displayHomeTab', 'Home Page Tabs', 'This hook displays new elements on the homepage tabs', '1', '1'), 
-(NULL , 'displayHomeTabContent', 'Home Page Tabs Content', 'This hook displays new elements on the homepage tabs content', '1', '1'),
-(NULL , 'displayBackOfficeCategory', 'Display new elements in the Back Office, tab AdminCategories', 'This hook launches modules when the AdminCategories tab is displayed in the Back Office', '1', '1'),
-(NULL , 'actionBackOfficeCategory', 'Process new elements in the Back Office, tab AdminCategories', 'This hook process modules when the AdminCategories tab is displayed in the Back Office', '1', '1');
+INSERT INTO `PREFIX_hook` (`name` , `title` , `description` , `position` , `live_edit`)
+	VALUES ('displayHomeTab', 'Home Page Tabs', 'This hook displays new elements on the homepage tabs', '1', '1')
+	ON DUPLICATE KEY UPDATE `position` = 1, `live_edit` = 1;
+INSERT INTO `PREFIX_hook` (`name` , `title` , `description` , `position` , `live_edit`)
+	VALUES ('displayHomeTabContent', 'Home Page Tabs Content', 'This hook displays new elements on the homepage tabs content', '1', '1')
+	ON DUPLICATE KEY UPDATE `position` = 1, `live_edit` = 1;
+INSERT INTO `PREFIX_hook` (`name` , `title` , `description` , `position` , `live_edit`)
+	VALUES ('displayBackOfficeCategory', 'Display new elements in the Back Office, tab AdminCategories', 'This hook launches modules when the AdminCategories tab is displayed in the Back Office', '1', '1')
+	ON DUPLICATE KEY UPDATE `position` = 1, `live_edit` = 1;
+INSERT INTO `PREFIX_hook` (`name` , `title` , `description` , `position` , `live_edit`)
+	VALUES ('actionBackOfficeCategory', 'Process new elements in the Back Office, tab AdminCategories', 'This hook process modules when the AdminCategories tab is displayed in the Back Office', '1', '1')
+	ON DUPLICATE KEY UPDATE `position` = 1, `live_edit` = 1;
 
 ALTER TABLE  `PREFIX_employee` ADD  `stats_compare_option` INT( 1 ) NOT NULL DEFAULT  '1' AFTER  `stats_compare_to`;
 
@@ -88,12 +95,8 @@ INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VAL
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES('DASHACTIVITY_CART_ABANDONED_MIN', '24', NOW(), NOW());
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES('DASHACTIVITY_CART_ABANDONED_MAX', '48', NOW(), NOW());
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES('DASHACTIVITY_VISITOR_ONLINE', '30', NOW(), NOW());
-
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES('PS_DASHGOALS_CURRENT_YEAR', YEAR(NOW()), NOW(), NOW());
-
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES('DASHPRODUCT_NBR_SHOW_LAST_ORDER', '10', NOW(), NOW());
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES('DASHPRODUCT_NBR_SHOW_BEST_SELLER', '10', NOW(), NOW());
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES('DASHPRODUCT_NBR_SHOW_MOST_VIEWED', '10', NOW(), NOW());
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES('DASHPRODUCT_NBR_SHOW_TOP_SEARCH', '10', NOW(), NOW());
-
-
