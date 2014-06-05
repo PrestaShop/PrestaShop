@@ -648,8 +648,6 @@ class LanguageCore extends ObjectModel
 		// and sort on equality with the exact IETF code wanted.
 		// That way using only one query we get either the exact wanted language
 		// or a close match.
-
-
 		$id_lang = Db::getInstance()->getValue(
 			'SELECT `id_lang`, IF(language_code = \''.pSQL($code).'\', 0, LENGTH(language_code)) as found
 			FROM `'._DB_PREFIX_.'lang` 
