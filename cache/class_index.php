@@ -2139,6 +2139,16 @@
     'path' => 'classes/module/ModuleGridEngine.php',
     'type' => 'abstract class',
   ),
+  'ModuleOverride' => 
+  array (
+    'path' => '',
+    'type' => 'class',
+  ),
+  'ModuleOverrideCore' => 
+  array (
+    'path' => 'classes/module/ModuleOverride.php',
+    'type' => 'class',
+  ),
   'MyAccountController' => 
   array (
     'path' => '',
