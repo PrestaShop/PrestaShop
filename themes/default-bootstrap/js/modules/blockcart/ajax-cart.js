@@ -271,6 +271,13 @@ var ajaxCart = {
 	add : function(idProduct, idCombination, addedFromProductPage, callerElement, quantity, whishlist){
 		if (addedFromProductPage && !checkCustomizations())
 		{
+			if (contentOnly) 
+			{
+				var productUrl = window.document.location.href + '';
+				var data = productUrl.replace('content_only=1', '');
+				window.parent.document.location.href = data;
+				return;
+			}
 			if (!!$.prototype.fancybox)
 			    $.fancybox.open([
 			        {
