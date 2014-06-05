@@ -3326,6 +3326,7 @@ class AdminControllerCore extends Controller
 				<script src='themes/default/js/help.js'></script>
 				<script>
 					help_class_name='".addslashes($help_class_name)."';
+					iso_user = '".addslashes($this->context->language->iso_code)."'
 					$(function(){
 						initHelp();
 					});
