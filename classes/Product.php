@@ -3976,6 +3976,11 @@ class ProductCore extends ObjectModel
 		if ($row['pack'] && !Pack::isInStock($row['id_product']))
 			$row['quantity'] = 0;
 
+		$row['customization_required'] = false;
+		if ($row['customizable'] && Customization::isFeatureActive())
+			if (count(Product::getRequiredCustomizableFieldsStatic((int)$row['id_product'])))
+				$row['customization_required'] = true;
+
 		$row = Product::getTaxesInformations($row, $context);
 		self::$producPropertiesCache[$cache_key] = $row;
 		return self::$producPropertiesCache[$cache_key];
@@ -4358,10 +4363,17 @@ class ProductCore extends ObjectModel
 	{
 		if (!Customization::isFeatureActive())
 			return array();
+		return Product::getRequiredCustomizableFieldsStatic($this->id);
+	}
+
+	public static function getRequiredCustomizableFieldsStatic($id)
+	{
+		if (!$id || !Customization::isFeatureActive())
+			return array();
 		return Db::getInstance()->executeS('
 			SELECT `id_customization_field`, `type`
 			FROM `'._DB_PREFIX_.'customization_field`
-			WHERE `id_product` = '.(int)$this->id.'
+			WHERE `id_product` = '.(int)$id.'
 			AND `required` = 1'
 		);
 	}
@@ -4380,9 +4392,11 @@ class ProductCore extends ObjectModel
 		$fields_present = array();
 		foreach ($fields as $field)
 			$fields_present[] = array('id_customization_field' => $field['index'], 'type' => $field['type']);
-		foreach ($required_fields as $required_field)
-			if (!in_array($required_field, $fields_present))
-				return false;
+
+		if (is_array($required_fields) && count($required_fields))
+			foreach ($required_fields as $required_field)
+				if (!in_array($required_field, $fields_present))
+					return false;
 		return true;
 	}
 

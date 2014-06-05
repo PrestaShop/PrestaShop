@@ -222,6 +222,13 @@ class ProductControllerCore extends FrontController
 				'pictures' => $pictures,
 				'textFields' => $text_fields));
 
+			$this->product->customization_required = false;
+			$customizationFields = $this->product->customizable ? $this->product->getCustomizationFields($this->context->language->id) : false;
+			if (is_array($customizationFields))
+				foreach($customizationFields as $customizationField)
+					if ($this->product->customization_required = $customizationField['required'])
+						break;
+
 			// Assign template vars related to the category + execute hooks related to the category
 			$this->assignCategory();
 			// Assign template vars related to the price and tax
@@ -247,7 +254,7 @@ class ProductControllerCore extends FrontController
 
 			$this->context->smarty->assign(array(
 				'stock_management' => Configuration::get('PS_STOCK_MANAGEMENT'),
-				'customizationFields' => $this->product->customizable ? $this->product->getCustomizationFields($this->context->language->id) : false,
+				'customizationFields' => $customizationFields,
 				'accessories' => $this->product->getAccessories($this->context->language->id),
 				'return_link' => $return_link,
 				'product' => $this->product,
