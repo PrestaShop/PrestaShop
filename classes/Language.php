@@ -649,9 +649,10 @@ class LanguageCore extends ObjectModel
 		// That way using only one query we get either the exact wanted language
 		// or a close match.
 		$id_lang = Db::getInstance()->getValue(
-			'SELECT `id_lang` FROM ' 
-			.'`'._DB_PREFIX_.'lang` WHERE LEFT(`language_code`,2) = \''.pSQL($lang).'\' '
-			.'ORDER BY language_code = \''.pSQL($code).'\' DESC'
+			'SELECT `id_lang` 
+			FROM `'._DB_PREFIX_.'lang` 
+			WHERE LEFT(`language_code`,2) = \''.pSQL($lang).'\'
+			ORDER BY IF(language_code = \''.pSQL($code).'\', 0, 1) ASC'
 		);
 
 		// Instantiate the Language object if we found it.
