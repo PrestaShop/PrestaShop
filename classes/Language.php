@@ -652,7 +652,7 @@ class LanguageCore extends ObjectModel
 			'SELECT `id_lang` 
 			FROM `'._DB_PREFIX_.'lang` 
 			WHERE LEFT(`language_code`,2) = \''.pSQL($lang).'\'
-			ORDER BY IF(language_code = \''.pSQL($code).'\', 0, 1) ASC'
+			ORDER BY IF(language_code = \''.pSQL($code).'\', 0, LENGTH(language_code)) ASC'
 		);
 
 		// Instantiate the Language object if we found it.
