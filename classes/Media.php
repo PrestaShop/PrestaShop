@@ -146,7 +146,7 @@ class MediaCore
 		$preg_matches[count($preg_matches) - 1] = '/* ]]> */'.$preg_matches[count($preg_matches) - 1];
 		unset($preg_matches[0]);
 		$output = implode('', $preg_matches);
-		return $output;
+		return ';'.$output.';';
 	}
 
 
@@ -160,10 +160,10 @@ class MediaCore
 			} catch (Exception $e) {
 				if (_PS_MODE_DEV_)
 					echo $e->getMessage();
-				return $js_content;
+				return ';'.$js_content.';';
 			}
 		}
-		return $js_content;
+		return ';'.$js_content.';';
 	}
 
 	public static function minifyCSS($css_content, $fileuri = false, &$import_url = array())
