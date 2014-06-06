@@ -146,7 +146,7 @@ class MediaCore
 		$preg_matches[count($preg_matches) - 1] = '/* ]]> */'.$preg_matches[count($preg_matches) - 1];
 		unset($preg_matches[0]);
 		$output = implode('', $preg_matches);
-		return ';'.$output.';';
+		return $output;
 	}
 
 
