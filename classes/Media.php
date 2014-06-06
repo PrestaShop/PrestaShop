@@ -160,10 +160,10 @@ class MediaCore
 			} catch (Exception $e) {
 				if (_PS_MODE_DEV_)
 					echo $e->getMessage();
-				return ';'.$js_content.';';
+				return ';'.trim($js_content, ';').';';
 			}
 		}
-		return ';'.$js_content.';';
+		return ';'.trim($js_content, ';').';';
 	}
 
 	public static function minifyCSS($css_content, $fileuri = false, &$import_url = array())
