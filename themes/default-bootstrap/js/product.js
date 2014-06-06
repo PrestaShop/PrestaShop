@@ -287,6 +287,11 @@ $(document).ready(function(){
 			submitPublishProduct(ad, 1, adtoken);
 		});
 	}
+
+	if (typeof product_fileDefaultHtml !== 'undefined')
+		$.uniform.defaults.fileDefaultHtml = product_fileDefaultHtml;
+	if (typeof product_fileButtonHtml !== 'undefined')
+		$.uniform.defaults.fileButtonHtml = product_fileButtonHtml;
 });
 
 function arrayUnique(a)
