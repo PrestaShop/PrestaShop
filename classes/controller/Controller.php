@@ -299,13 +299,13 @@ abstract class ControllerCore
 			{
 				$js_path = Media::getJSPath($js_file);
 				$key = is_array($js_path) ? key($js_path) : $js_path;
-				if ($js_path && (!isset($this->js_file[$key]) || ($this->js_file[$key] != reset($js_path))))
+				if ($js_path && !in_array($js_path, $this->js_files))
 					$this->js_files[] = $js_path;
 			}
 		else
 		{
 			$js_path = Media::getJSPath($js_uri);
-			if ($js_path)
+			if ($js_path && !in_array($js_path, $this->js_files))
 				$this->js_files[] = $js_path;
 		}
 	}
