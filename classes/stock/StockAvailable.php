@@ -743,9 +743,15 @@ class StockAvailableCore extends ObjectModel
 		else
 		{
 			if (is_object($sql))
+			{
 				$sql->where(pSQL($alias).'id_shop = '.(int)$shop->id);
+				$sql->where(pSQL($alias).'id_shop_group = 0');
+			}
 			else
+			{
 				$sql = ' AND '.pSQL($alias).'id_shop = '.(int)$shop->id.' ';
+				$sql .= ' AND '.pSQL($alias).'id_shop_group = 0 ';
+			}
 		}
 
 		return $sql;
