@@ -856,20 +856,36 @@ class CartRuleCore extends ObjectModel
 						$reduction_value += ($use_tax ? $product['total_wt'] : $product['total']) * $this->reduction_percent / 100;
 			}
 
-			// Discount (%) on the cheapest product
-			if ($this->reduction_percent && $this->reduction_product == -1)
-			{
-				$minPrice = false;
-				$cheapest_product = null;
-				foreach ($all_products as $product)
-				{
-					$price = ($use_tax ? $product['price_wt'] : $product['price']);
-					if ($price > 0 && ($minPrice === false || $minPrice > $price))
-					{
-						$minPrice = $price;
-						$cheapest_product = $product['id_product'].'-'.$product['id_product_attribute'];
-					}
-				}
+			// Discount (%) on the cheapest product (-1) or cheapest from selected product (-3)
+                        if ($this->reduction_percent && ($this->reduction_product == -1 || $this->reduction_product == -3))
+                        {
+                                $minPrice = false;
+                                $cheapest_product = null;
+
+                                $selected_products = null;
+                                if ($this->reduction_product == -3)
+                                {
+                                        $selected_products = $this->checkProductRestrictions($context, true);
+                                }
+
+
+                                foreach ($all_products as $product)
+                                {
+                                        // if we have selected products and our cart product is not one we skip it
+                                        if ($selected_products && is_array($selected_products)
+                                              && ! (in_array($product['id_product'].'-'.$product['id_product_attribute'], $selected_products)
+                                                    || in_array($product['id_product'].'-0', $selected_products)) )
+                                        {
+                                                continue;
+                                        }
+
+                                        $price = ($use_tax ? $product['price_wt'] : $product['price']);
+                                        if ($price > 0 && ($minPrice === false || $minPrice > $price))
+                                        {
+                                                $minPrice = $price;
+                                                $cheapest_product = $product['id_product'].'-'.$product['id_product_attribute'];
+                                        }
+                                }
 				
 				// Check if the cheapest product is in the package
 				$in_package = false;

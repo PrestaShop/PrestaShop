@@ -144,6 +144,8 @@ function toggleApplyDiscount(percent, amount, apply_to)
 		$('*[for=apply_discount_to_cheapest]').show();
 		$('#apply_discount_to_selection').show();
 		$('*[for=apply_discount_to_selection]').show();
+                $('#apply_discount_to_cheapest_selection').show();
+                $('*[for=apply_discount_to_cheapest_selection]').show();
 	}
 	else
 	{
@@ -162,6 +164,9 @@ function toggleApplyDiscount(percent, amount, apply_to)
 		$('#apply_discount_to_selection').hide();
 		$('*[for=apply_discount_to_selection]').hide();
 		$('#apply_discount_to_selection').removeAttr('checked');
+                $('#apply_discount_to_cheapest_selection').hide();
+                $('*[for=apply_discount_to_cheapest_selection]').hide();
+                $('#apply_discount_to_cheapest_selection').removeAttr('checked');
 	}
 	else
 	{
@@ -198,6 +203,9 @@ function toggleApplyDiscountTo()
 			$('#reduction_product').val('-1');
 		if ($('#apply_discount_to_selection').prop('checked'))
 			$('#reduction_product').val('-2');
+                if ($('#apply_discount_to_cheapest_selection').prop('checked'))
+                        $('#reduction_product').val('-3');
+
 	}
 }
 
@@ -241,6 +249,10 @@ $('#apply_discount_to_selection').click(function() {toggleApplyDiscountTo();});
 if ($('#apply_discount_to_selection').prop('checked'))
 	toggleApplyDiscountTo();
 	
+$('#apply_discount_to_cheapest_selection').click(function() {toggleApplyDiscountTo();});
+if ($('#apply_discount_to_cheapest_selection').prop('checked'))
+        toggleApplyDiscountTo();
+
 $('#free_gift_on').click(function() {toggleGiftProduct();});
 $('#free_gift_off').click(function() {toggleGiftProduct();});
 toggleGiftProduct();
