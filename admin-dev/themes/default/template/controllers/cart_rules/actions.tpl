@@ -101,6 +101,13 @@
 				{l s='Selected product(s)'}{if $product_rule_groups|@count == 0}&nbsp;<span id="apply_discount_to_selection_warning" class="text-muted clearfix"><i class="icon-warning-sign"></i> <a href="#" id="apply_discount_to_selection_shortcut">{l s='You must select some products before'}</a></span>{/if}
 			</label>
 		</p>
+                <p class="radio">
+                        <label for="apply_discount_to_cheapest_selection">
+                                <input type="radio" name="apply_discount_to" id="apply_discount_to_cheapest_selection" value="cheapest_selection"{if $currentTab->getFieldValue($currentObject, 'reduction_product')|intval == -3} checked="checked"{/if}{if $product_rule_groups|@count == 0}disabled="disabled"{/if} />
+                                {l s='Cheapest selected product(s)'}{if $product_rule_groups|@count == 0}&nbsp;<span id="apply_discount_to_selection_warning" class="text-muted clearfix"><i class="icon-warning-sign"></i> <a href="#" id="apply_discount_to_selection_shortcut">{l s='You must select some products before'}</a></span>{/if}
+                        </label>
+                </p>
+
 	</div>
 </div>
 
