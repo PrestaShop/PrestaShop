@@ -1633,10 +1633,7 @@ class AdminThemesControllerCore extends AdminController
 			}
 
 			if ($this->isThemeInstalled($new_theme->name))
-			{
-				$new_theme_array[] = sprintf($this->l('Theme %s already installed.'), $new_theme->name);
 				continue;
-			}
 
 			$new_theme->product_per_page = Configuration::get('PS_PRODUCTS_PER_PAGE');
 
