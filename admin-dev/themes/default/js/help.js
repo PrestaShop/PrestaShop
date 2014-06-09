@@ -99,7 +99,7 @@ $(function() {
 
 	//get content
 	function getHelp(pageController) {
-		var request = encodeURIComponent("getHelp=" + pageController + "&version=1.6");
+		var request = encodeURIComponent("getHelp=" + pageController + "&version=1.6&language=" + iso_user);
 		var d = new $.Deferred();
 		$.ajax( {
 			url: "//help.prestashop.com/api/?request=" + request,
