@@ -3094,6 +3094,27 @@ exit;
 	{
 		return strip_tags(stripslashes($description));
 	}
+
+	public static function purifyHTML($html)
+	{
+		static $use_html_purifier = null;
+		static $purifier = null;
+
+		if (!Configuration::configurationIsLoaded())
+			return $html;
+
+		if ($use_html_purifier === null)
+			$use_html_purifier = (bool)Configuration::get('PS_USE_HTMLPURIFIER');
+
+		if ($use_html_purifier)
+		{
+			$config = HTMLPurifier_Config::createDefault();
+			$purifier = new HTMLPurifier($config);
+			$html = $purifier->purify($html);
+		}
+
+		return $html;
+	}
 }
 
 /**
