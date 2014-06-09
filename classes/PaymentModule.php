@@ -853,8 +853,7 @@ abstract class PaymentModuleCore extends Module
 		{
 			return Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'module_currency` (`id_module`, `id_currency`)
-			VALUES '.rtrim($values, ',')
-			);
+			VALUES '.rtrim($values, ','));
 		}
 
 		return true;
@@ -874,15 +873,13 @@ abstract class PaymentModuleCore extends Module
 			$hook_payment = 'displayPayment';
 
 		return Db::getInstance()->executeS('
-			SELECT DISTINCT m.`id_module`, h.`id_hook`, m.`name`, hm.`position`
-			FROM `'._DB_PREFIX_.'module` m
-			LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
-			LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
-			INNER JOIN `'._DB_PREFIX_.'module_shop` ms ON (m.`id_module` = ms.`id_module` AND ms.id_shop='.(int)Context::getContext()->shop->id.')
-			WHERE h.`name` = \''.pSQL($hook_payment).'\'
-		');
+		SELECT DISTINCT m.`id_module`, h.`id_hook`, m.`name`, hm.`position`
+		FROM `'._DB_PREFIX_.'module` m
+		LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
+		LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
+		INNER JOIN `'._DB_PREFIX_.'module_shop` ms ON (m.`id_module` = ms.`id_module` AND ms.id_shop='.(int)Context::getContext()->shop->id.')
+		WHERE h.`name` = \''.pSQL($hook_payment).'\'');
 	}
-
 
 	public static function preCall($module_name)
 	{
@@ -912,21 +909,16 @@ abstract class PaymentModuleCore extends Module
 			return '';
 
 		$theme_template_path = _PS_THEME_DIR_.'mails'.DIRECTORY_SEPARATOR.$this->context->language->iso_code.DIRECTORY_SEPARATOR.$template_name;
-
 		$default_mail_template_path = _PS_MAIL_DIR_.$this->context->language->iso_code.DIRECTORY_SEPARATOR.$template_name;
 
 		if (Tools::file_exists_cache($theme_template_path))
 			$default_mail_template_path = $theme_template_path;
 
-		$this->context->smarty->assign(
-			array(
-				'list' => $var
-			)
-		);
-
 		if (Tools::file_exists_cache($default_mail_template_path))
+		{
+			$this->context->smarty->assign('list', $var);
 			return $this->context->smarty->fetch($default_mail_template_path);
-
+		}
 		return '';
 	}
 }
