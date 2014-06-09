@@ -2677,7 +2677,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 	protected function writeSubjectTranslationFile($sub, $path)
 	{
-		if (!Tools::file_exists_cache(dirname(path)))
+		if (!Tools::file_exists_cache(dirname($path)))
 			if (!mkdir(dirname(path), 0700))
 				throw new PrestaShopException('Directory '.dirname(path).' cannot be created.');
 		if ($fd = @fopen($path, 'w'))
