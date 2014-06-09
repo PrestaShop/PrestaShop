@@ -926,16 +926,31 @@ class AdminThemesControllerCore extends AdminController
 				$this->errors[] = $this->l('Can\'t create config file.');
 
 			if (isset($_FILES['documentation']))
-				if (!$zip->addFile($_FILES['documentation']['tmp_name'], 'doc/'.$_POST['documentation']['name']))
-					$this->error = $this->l('Can\'t copy documentation.');
+				if (!empty($_FILES['documentation']['tmp_name']) && 
+					!empty($_FILES['documentation']['name']) && 
+					!$zip->addFile($_FILES['documentation']['tmp_name'], 'doc/'.$_FILES['documentation']['name']))
+					$this->errors[] = $this->l('Can\'t copy documentation.');
 
-			$this->archiveThisFile($zip, Tools::getValue('theme_directory'), _PS_ALL_THEMES_DIR_, 'themes/');
-
-			foreach ($this->to_export as $row)
+			$given_path = realpath(_PS_ALL_THEMES_DIR_.Tools::getValue('theme_directory'));
+			
+			if ($given_path !== false)
 			{
-				if (!in_array($row, $this->native_modules))
-					$this->archiveThisFile($zip, $row, _PS_ROOT_DIR_.'/modules/', 'modules/');
+				$ps_all_theme_dir_lenght = strlen(realpath(_PS_ALL_THEMES_DIR_));
+				$to_compare_path = substr($given_path, 0, $ps_all_theme_dir_lenght);
+				if ($to_compare_path != realpath(_PS_ALL_THEMES_DIR_))
+					$this->errors[] = $this->l('Wrong theme directory path');
+				else
+				{
+					$this->archiveThisFile($zip, Tools::getValue('theme_directory'), _PS_ALL_THEMES_DIR_, 'themes/');			
+					foreach ($this->to_export as $row)
+					{
+						if (!in_array($row, $this->native_modules))
+							$this->archiveThisFile($zip, $row, _PS_ROOT_DIR_.'/modules/', 'modules/');
+					}
+				}
 			}
+			else
+				$this->errors[] = $this->l('Wrong theme directory path');
 
 			$zip->close();
 
