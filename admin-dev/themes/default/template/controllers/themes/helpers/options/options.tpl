@@ -88,12 +88,6 @@
 				<h2>{$cur_theme.theme_name} <small>version {$cur_theme.theme_version}</small></h2>
 				<p>
 					{l s='Designed by %s' sprintf=$cur_theme.author_name}
-					{if isset($cur_theme.author_url) && $cur_theme.author_url != ''}
-					 | <a href="{$cur_theme.author_url}" onclick="return !window.open(this.href)">{$cur_theme.author_url}</a>
-					{/if}
-					{if isset($cur_theme.author_email) && $cur_theme.author_email != ''}
-					 | <a href="mailto:{$cur_theme.author_email}" onclick="return !window.open(this.href)">{$cur_theme.author_email}</a>
-					{/if}
 				</p>
 
 				{if isset($cur_theme.tc) && $cur_theme.tc}
