@@ -306,26 +306,33 @@ class AdminThemesControllerCore extends AdminController
 				'after_tabs' => array(
 					'cur_theme' => $cur_theme,
 				),
-				'submit' => array('title' => $this->l('Save'))
+				'submit' => array('title' => $this->l('Save')),
+				'buttons' => array(
+					'storeLink' => array(
+						'title' => $this->l('Visit the theme store'),
+						'icon' => 'process-icon-themes',
+						'href' => 'http://addons.prestashop.com/en/3-templates-prestashop?utm_source=back-office&utm_medium=theme-button&utm_campaign=back-office-'.$iso_lang_uc,
+						'js' => 'return !window.open(this.href)'
+					)
+				)
 			),
 		);
 
 		if (!empty($other_themes))
 		{
 			$this->fields_options['theme'] = array(
-					'title' => sprintf($this->l('Select a theme for the "%s" shop'), $this->context->shop->name),
-					'description' => (!$this->can_display_themes) ? $this->l('You must select a shop from the above list if you wish to choose a theme.') : '',
-					'fields' => array(
-						'theme_for_shop' => array(
-							'type' => 'theme',
-							'themes' => $other_themes,
-							'id_theme' => $this->context->shop->id_theme,
-							'can_display_themes' => $this->can_display_themes,
-							'no_multishop_checkbox' => true,
-							'addons_link' => 'http://addons.prestashop.com/en/3-templates-prestashop?utm_source=back-office&utm_medium=theme-button&utm_campaign=back-office-'.$iso_lang_uc,
-						),
+				'title' => sprintf($this->l('Select a theme for the "%s" shop'), $this->context->shop->name),
+				'description' => (!$this->can_display_themes) ? $this->l('You must select a shop from the above list if you wish to choose a theme.') : '',
+				'fields' => array(
+					'theme_for_shop' => array(
+						'type' => 'theme',
+						'themes' => $other_themes,
+						'id_theme' => $this->context->shop->id_theme,
+						'can_display_themes' => $this->can_display_themes,
+						'no_multishop_checkbox' => true
 					),
-				);
+				),
+			);
 		}
 	}
 
