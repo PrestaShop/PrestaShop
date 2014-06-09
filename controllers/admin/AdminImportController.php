@@ -657,7 +657,7 @@ class AdminImportControllerCore extends AdminController
 		else
 		{
 			@chmod(AdminImportController::getPath().$filename_prefix.$_FILES['file']['name'], 0664);
-			$_FILES['file']['filename'] = $filename_prefix.$_FILES['file']['name'];
+			$_FILES['file']['filename'] = $filename_prefix.str_replace('\0', '', $_FILES['file']['name']);
 		}
 
 		die(Tools::jsonEncode($_FILES));
