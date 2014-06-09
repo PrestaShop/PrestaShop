@@ -1693,7 +1693,7 @@ class AdminControllerCore extends Controller
 		$lang = '';
 		if (Configuration::get('PS_REWRITING_SETTINGS') && count(Language::getLanguages(true)) > 1)
 			$lang = Language::getIsoById($this->context->employee->id_lang).'/';
-		if (is_object($module) && (int)Configuration::get('PS_TC_ACTIVE') == 1 && $this->context->shop->getBaseURL())
+		if (is_object($module) && $module->active && (int)Configuration::get('PS_TC_ACTIVE') == 1 && $this->context->shop->getBaseURL())
 			$this->context->smarty->assign('base_url_tc', $this->context->shop->getBaseUrl()
 				.(Configuration::get('PS_REWRITING_SETTINGS') ? '' : 'index.php')
 				.$lang
@@ -3326,6 +3326,7 @@ class AdminControllerCore extends Controller
 				<script src='themes/default/js/help.js'></script>
 				<script>
 					help_class_name='".addslashes($help_class_name)."';
+					iso_user = '".addslashes($this->context->language->iso_code)."'
 					$(function(){
 						initHelp();
 					});
