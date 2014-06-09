@@ -819,7 +819,7 @@ class AdminPerformanceControllerCore extends AdminController
 				{
 					$new_settings = preg_replace(
 						'/define\(\'_PS_CACHING_SYSTEM_\', \'([a-z0-9=\/+-_]*)\'\);/Ui',
-						'define(\'_PS_CACHING_SYSTEM_\', \''.$caching_system.'\');',
+						'define(\'_PS_CACHING_SYSTEM_\', \''.preg_replace('[^a-zA-Z0-9]', '', $caching_system).'\');',
 						$new_settings
 					);
 				}
