@@ -16,7 +16,7 @@ AMOUNT: {total_paid}
 
 PAYABLE TO THE ORDER OF: {cheque_name}
 
-PLEASE MAIL YOUR CHECK TO: {cheque_address_html} 		 
+PLEASE MAIL YOUR CHECK TO: {cheque_address} 		 
 
 You can review your order and download your invoice from the
 "Order history" [{history_url}] section of your
