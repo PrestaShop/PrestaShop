@@ -29,18 +29,15 @@
 		{if $field['can_display_themes']}
 			{if $field.themes|count > 0}
 			<div class="col-lg-12">
-				<a class="btn btn-link pull-right" href="{$field['addons_link']}" onclick="return !window.open(this.href)"><i class="icon icon-share-alt"></i> {l s='Visit the theme store'}</a>
-			</div>
-			<div class="col-lg-12">
 				<div class="row">
 					{foreach $field.themes as $theme}
-						<div class="col-lg-3">
-							<div class="theme_container">
-								<h4>{l s='Theme name: %s' sprintf=$theme.name}</h4>
-								<div class="thumbnail-wrapper" style="display: inline;">
-									<div class="action-wrapper" style="position: absolute;display:none;">
-										<div class="action-overlay" style="position: absolute; width: 100%; height: 100%; background:black; opacity: 0.7;"></div>
-										<div class="action-buttons" style="position: absolute;  width: 100%; top:45%; text-align:center;">
+						<div class="col-sm-4 col-lg-3">
+							<div class="theme-container">
+								<h4 class="theme-title">{$theme.name}</h4>
+								<div class="thumbnail-wrapper">
+									<div class="action-wrapper">
+										<div class="action-overlay"></div>
+										<div class="action-buttons">
 											<div class="btn-group">
 												<a href="{$link->getAdminLink('AdminThemes')|addslashes}&submitOptionstheme&id_theme={$theme.id}" class="btn btn-default">
 													<i class="icon-check"></i> {l s='Use this theme'}
@@ -58,9 +55,8 @@
 											</div>
 										</div>
 									</div>
-									<img class="img-thumbnail" src="{$theme.preview}" alt="{$theme.name}" style="min-width: 180px;" />
+									<img class="center-block img-thumbnail" src="{$theme.preview}" alt="{$theme.name}" />
 								</div>
-
 							</div>
 						</div>
 					{/foreach}
@@ -78,12 +74,14 @@
 
 	{if isset($categoryData['after_tabs'])}
 		{assign var=cur_theme value=$categoryData['after_tabs']['cur_theme']}
-		<div class="row" style="margin-top: 64px;">
-			<div class="col-md-3" style="text-align: center;">
-				<a href="{$base_url}">
-					<img src="../themes/{$cur_theme.theme_directory}/preview.jpg">
+		<div class="row row-padding-top">
+
+			<div class="col-md-3">
+				<a class="" href="{$base_url}">
+					<img class="center-block img-thumbnail" src="../themes/{$cur_theme.theme_directory}/preview.jpg">
 				</a>
 			</div>
+
 			<div id="js_theme_form_container" class="col-md-9">
 				<h2>{$cur_theme.theme_name} <small>version {$cur_theme.theme_version}</small></h2>
 				<p>
@@ -97,28 +95,32 @@
 				</p>
 
 				{if isset($cur_theme.tc) && $cur_theme.tc}
-				<hr style="margin 24px 0;">
+				<hr>
+				<h4>{l s='Customize your theme'}</h4>
 				<div class="row">
-					<div class="col-md-8 col-sm-8">
-						<h4>{l s='Customize your theme'}</h4>
+					<div class="col-sm-8">
 						<p>{l s='Customize the main elements of your theme: sliders, banners, colors, etc.'}</p>
 					</div>
-					<div class="col-md-4 col-sm-4" style="text-align:center;">
-						<h4>&nbsp;</h4>
-						<a class="btn btn-default" href="{$link->getAdminLink('AdminModules')|addslashes}&configure=themeconfigurator"><i class="icon icon-list-alt"></i> {l s='Theme Configurator'}</a>
+					<div class="col-sm-4">
+						<a class="btn btn-default pull-right" href="{$link->getAdminLink('AdminModules')|addslashes}&configure=themeconfigurator">
+							<i class="icon icon-list-alt"></i> 
+							{l s='Theme Configurator'}
+						</a>
 					</div>
 				</div>
 				{/if}
 
-				<hr style="margin 24px 0;">
+				<hr>
+				<h4>{l s='Configure your theme'}</h4>
 				<div class="row">
-					<div class="col-md-8 col-sm-8">
-						<h4>{l s='Configure your theme'}</h4>
+					<div class="col-sm-8">
 						<p>{l s='Configure your theme\'s advanced settings, such as the number of columns you want for each page. Mostly for advanced users.'}</p>
 					</div>
-					<div class="col-md-4 col-sm-4" style="text-align:center;">
-						<h4>&nbsp;</h4>
-						<a href="{$link->getAdminLink('AdminThemes')|addslashes}&updatetheme&id_theme={$cur_theme.theme_id}" class="btn btn-default"><i class="icon icon-cog"></i> {l s='Advanced settings'}</a>
+					<div class="col-sm-4">
+						<a class="btn btn-default pull-right" href="{$link->getAdminLink('AdminThemes')|addslashes}&updatetheme&id_theme={$cur_theme.theme_id}">
+							<i class="icon icon-cog"></i> 
+							{l s='Advanced settings'}
+						</a>
 					</div>
 				</div>
 			</div>

@@ -33,7 +33,7 @@
 						<input type="radio" name="id_theme" value="{$theme->id}"{if $theme->id == $fields_value.id_theme_checked} checked="checked"{/if}> {$theme->name}
 					</label>
 				</div>
-				<div class="theme_container">
+				<div class="theme-container">
 					<img class="thumbnail" src="../themes/{$theme->directory}/preview.jpg" alt="{$theme->directory}">
 				</div>
 			</div>
