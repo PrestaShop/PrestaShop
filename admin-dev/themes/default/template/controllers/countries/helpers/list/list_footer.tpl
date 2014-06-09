@@ -31,7 +31,11 @@
 							<div class="col-lg-6">
 								<select id="select_submitBulk" name="select_submitBulk">
 									{foreach $bulk_actions as $key => $params}
-									<option value="{$key}"{if isset($params.confirm)} data-confirm="{$params.confirm}"{/if}>{$params.text}</option>
+										{if $params.text == 'divider'}
+											<option value="" disabled="disabled" class="{$params.text|escape:'html':'UTF-8'}">--</option>
+										{else}
+											<option value="{$key}"{if isset($params.confirm)} data-confirm="{$params.confirm}"{/if}>{$params.text|escape:'html':'UTF-8'}</option>
+										{/if}
 									{/foreach}
 								</select>
 							</div>
