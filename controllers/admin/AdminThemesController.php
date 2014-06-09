@@ -1616,6 +1616,11 @@ class AdminThemesControllerCore extends AdminController
 	 */
 	protected function importThemeXmlConfig(SimpleXMLElement $xml, $theme_dir = false)
 	{
+		$attr = $xml->attributes();
+		$th_name = (string)$attr->name;
+		if ($this->isThemeInstalled($th_name))
+			return array(sprintf($this->l('Theme %s already installed.'), $th_name));
+
 		$new_theme_array = array();
 		foreach ($xml->variations->variation as $variation)
 		{
