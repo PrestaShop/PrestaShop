@@ -815,11 +815,11 @@ class AdminPerformanceControllerCore extends AdminController
 				$new_settings = $prev_settings = file_get_contents(_PS_ROOT_DIR_.'/config/settings.inc.php');
 				$cache_active = (bool)Tools::getValue('cache_active');
 				
-				if ($caching_system = Tools::getValue('caching_system'))
+				if ($caching_system = preg_replace('[^a-zA-Z0-9]', '', Tools::getValue('caching_system')))
 				{
 					$new_settings = preg_replace(
 						'/define\(\'_PS_CACHING_SYSTEM_\', \'([a-z0-9=\/+-_]*)\'\);/Ui',
-						'define(\'_PS_CACHING_SYSTEM_\', \''.preg_replace('[^a-zA-Z0-9]', '', $caching_system).'\');',
+						'define(\'_PS_CACHING_SYSTEM_\', \''.$caching_system.'\');',
 						$new_settings
 					);
 				}
