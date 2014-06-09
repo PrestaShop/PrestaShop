@@ -15,3 +15,5 @@ ALTER TABLE `PREFIX_order_detail_tax` DROP PRIMARY KEY, ADD INDEX id_order_detai
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES('PS_DISPLAY_BEST_SELLERS', '1', NOW(), NOW());
 
 ALTER TABLE `PREFIX_orders` ADD INDEX (`current_state`);
+
+INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES('PS_USE_HTMLPURIFIER', '1', NOW(), NOW());

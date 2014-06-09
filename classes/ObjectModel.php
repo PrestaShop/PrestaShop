@@ -372,16 +372,16 @@ abstract class ObjectModelCore
 	{
 		switch ($type)
 		{
-			case self::TYPE_INT :
+			case self::TYPE_INT:
 				return (int)$value;
 
-			case self::TYPE_BOOL :
+			case self::TYPE_BOOL:
 				return (int)$value;
 
-			case self::TYPE_FLOAT :
+			case self::TYPE_FLOAT:
 				return (float)str_replace(',', '.', $value);
 
-			case self::TYPE_DATE :
+			case self::TYPE_DATE:
 				if (!$value)
 					return '0000-00-00';
 
@@ -389,15 +389,15 @@ abstract class ObjectModelCore
 					return '\''.pSQL($value).'\'';
 				return pSQL($value);
 
-			case self::TYPE_HTML :
+			case self::TYPE_HTML:
 				if ($with_quotes)
 					return '\''.pSQL($value, true).'\'';
 				return pSQL($value, true);
 
-			case self::TYPE_NOTHING :
+			case self::TYPE_NOTHING:
 				return $value;
 
-			case self::TYPE_STRING :
+			case self::TYPE_STRING:
 			default :
 				if ($with_quotes)
 					return '\''.pSQL($value).'\'';
