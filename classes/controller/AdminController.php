@@ -3323,10 +3323,13 @@ class AdminControllerCore extends Controller
 				<script src='"._PS_JS_DIR_."jquery/jquery-1.11.0.min.js'></script>
 				<script src='"._PS_JS_DIR_."jquery/plugins/jquery.storageapi.js'></script>
 				<script src='"._PS_JS_DIR_."admin.js'></script>
-				<script src='themes/default/js/help.js'></script>
+				<script src='"._PS_JS_DIR_."tools.js'></script>
 				<script>
 					help_class_name='".addslashes($help_class_name)."';
 					iso_user = '".addslashes($this->context->language->iso_code)."'
+				</script>
+				<script src='themes/default/js/help.js'></script>
+				<script>
 					$(function(){
 						initHelp();
 					});
