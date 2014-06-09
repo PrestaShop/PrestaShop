@@ -3100,7 +3100,7 @@ exit;
 		static $use_html_purifier = null;
 		static $purifier = null;
 
-		if (!Configuration::configurationIsLoaded())
+		if (defined('PS_INSTALLATION_IN_PROGRESS') || !Configuration::configurationIsLoaded())
 			return $html;
 
 		if ($use_html_purifier === null)
