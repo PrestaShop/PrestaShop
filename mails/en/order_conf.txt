@@ -19,7 +19,7 @@ QUANTITY
 
 TOTAL PRICE
 
-{products} 
+{products_txt} 
 
 {discounts} 
 
