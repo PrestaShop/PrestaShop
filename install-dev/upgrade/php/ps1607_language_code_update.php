@@ -35,7 +35,7 @@ function ps1607_language_code_update()
 				{
 					$result = Tools::jsonDecode(Tools::file_get_contents('https://www.prestashop.com/download/lang_packs/get_language_pack.php?version='._PS_VERSION_.'&iso_lang='.Tools::strtolower($lang['iso_code'])));
 					if ($result && !isset($result->error) && Tools::strlen($result->language_code) > 2)
-						return Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'lang` SET `language_code` = \''.pSQL($result->language_code).'\' WHERE `id_lang` = '.(int)$lang['id_lang']);
+						Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'lang` SET `language_code` = \''.pSQL($result->language_code).'\' WHERE `id_lang` = '.(int)$lang['id_lang']).' LIMIT 1';
 				}
 	}
 	return true;

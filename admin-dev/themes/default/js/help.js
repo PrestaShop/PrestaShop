@@ -71,7 +71,7 @@ $(function() {
 	}
 
 	//switch home
-	var language;
+	var language = iso_user;
 	var home;
 	switch(language) {
 		case 'en':
