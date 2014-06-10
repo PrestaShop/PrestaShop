@@ -355,7 +355,7 @@ abstract class ObjectModelCore
 					$value = '';
 			}
 
-			$purify = Tools::strtolower($data['validate']) == 'iscleanhtml' ? true : false;
+			$purify = (isset($data['validate']) && Tools::strtolower($data['validate']) == 'iscleanhtml') ? true : false;
 			// Format field value
 			$fields[$field] = ObjectModel::formatValue($value, $data['type'], false, $purify);
 		}
