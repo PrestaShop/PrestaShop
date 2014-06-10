@@ -652,7 +652,7 @@ class AdminImportControllerCore extends AdminController
 		elseif (!preg_match('/.*\.csv$/i', $_FILES['file']['name']))
 			$_FILES['file']['error'] = Tools::displayError('The extension of your file should be .csv.');
 		elseif (!@filemtime($_FILES['file']['tmp_name']) ||
-			!@move_uploaded_file($_FILES['file']['tmp_name'], AdminImportController::getPath().$filename_prefix.$_FILES['file']['name']))
+			!@move_uploaded_file($_FILES['file']['tmp_name'], AdminImportController::getPath().$filename_prefix.str_replace("\0", '', $_FILES['file']['name'])))
 			$_FILES['file']['error'] = $this->l('An error occurred while uploading / copying the file.');
 		else
 		{
