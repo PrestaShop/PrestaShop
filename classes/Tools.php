@@ -3112,7 +3112,7 @@ exit;
 			if (Configuration::get('PS_ALLOW_HTML_IFRAME'))
 			{
 				$config->set('HTML.SafeIframe', true);
-			   $config->set('HTML.SafeObject', true);
+				$config->set('HTML.SafeObject', true);
 				$config->set('Attr.EnableID', true);
 				$config->set('URI.SafeIframeRegexp','/.*/');
 			}
