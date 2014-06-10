@@ -355,8 +355,9 @@ abstract class ObjectModelCore
 					$value = '';
 			}
 
+			$purify = Tools::strtolower($data['validate']) == 'iscleanhtml' ? true : false;
 			// Format field value
-			$fields[$field] = ObjectModel::formatValue($value, $data['type']);
+			$fields[$field] = ObjectModel::formatValue($value, $data['type'], false, $purify);
 		}
 
 		return $fields;
@@ -368,7 +369,7 @@ abstract class ObjectModelCore
 	 * @param mixed $value
 	 * @param int $type
 	 */
-	public static function formatValue($value, $type, $with_quotes = false)
+	public static function formatValue($value, $type, $with_quotes = false, $purify = true)
 	{
 		switch ($type)
 		{
@@ -390,6 +391,8 @@ abstract class ObjectModelCore
 				return pSQL($value);
 
 			case self::TYPE_HTML:
+				if ($purify)
+					$value = Tools::purifyHTML($value);
 				if ($with_quotes)
 					return '\''.pSQL($value, true).'\'';
 				return pSQL($value, true);
