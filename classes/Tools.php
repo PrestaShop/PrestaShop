@@ -3113,6 +3113,8 @@ exit;
 			{
 				$config->set('HTML.SafeIframe', true);
 			   $config->set('HTML.SafeObject', true);
+				$config->set('Attr.EnableID', true);
+				$config->set('URI.SafeIframeRegexp','/.*/');
 			}
 			$purifier = new HTMLPurifier($config);
 			$html = $purifier->purify($html);
