@@ -229,17 +229,22 @@ $min-height: 850px
 
 #nav-topbar
 	position: fixed
-	height: 28px
-	top: 37px
+	height: 30px
+	top: 36px
 	width: 100%
 	z-index: 600
 	background-color: white
+	border: solid 1px white
 	@include padding(0, 40px, 0, 0)
 	ul.menu
 		margin: 0
 		padding: 0
 		display: block
 		list-style: none
+		li.maintab
+			border-right: solid 1px #E6E6E6
+		li.maintab:last-child
+			border: none
 		li.searchtab
 			width: 200px
 			@include margin-right(5px)
@@ -293,7 +298,7 @@ $min-height: 850px
 				> a
 					display: block
 					@include padding(4px, 5px, 4px, 10px)
-					border-bottom: solid 1px lighten($brand-primary,45%)
+					border-bottom: solid 1px #E6E6E6
 					&:hover
 						color: white
 						background-color: $brand-primary
