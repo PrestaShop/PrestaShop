@@ -786,36 +786,30 @@ function init()
 		return false;
 	});
 
-	$('.js-set-payment').unbind('click');
-	$('.js-set-payment').click(function() {
+
+	$('.js-set-payment').unbind('click').click(function(e) {
 		var amount = $(this).attr('data-amount');
 		$('input[name=payment_amount]').val(amount);
 		var id_invoice = $(this).attr('data-id-invoice');
 		$('select[name=payment_invoice] option[value='+id_invoice+']').attr('selected', true);
-
-		$.scrollTo('#formAddPayment', 1000, {offset: -100});
-
-		return false;
+		e.preventDefault();
 	});
 
-	$('#add_voucher').unbind('click');
-	$('#add_voucher').click(function() {
+	$('#add_voucher').unbind('click').click(function(e) {
 		$('.order_action').hide();
 		$('.panel-vouchers,#voucher_form').show();
-		return false;
+		e.preventDefault();
 	});
 
-	$('#cancel_add_voucher').unbind('click');
-	$('#cancel_add_voucher').click(function() {
+	$('#cancel_add_voucher').unbind('click').click(function(e) {
 		$('#voucher_form').hide();
 		if (!has_voucher)
 			$('.panel-vouchers').hide();
 		$('.order_action').show();
-		return false;
+		e.preventDefault();
 	});
 
-	$('#discount_type').unbind('click');
-	$('#discount_type').change(function() {
+	$('#discount_type').unbind('change').change(function() {
 		// Percent type
 		if ($(this).val() == 1)
 		{
@@ -839,22 +833,19 @@ function init()
 		}
 	});
 
-	$('#discount_all_invoices').unbind('change');
-	$('#discount_all_invoices').change(function() {
+	$('#discount_all_invoices').unbind('change').change(function() {
 		if ($(this).is(':checked'))
 			$('select[name=discount_invoice]').attr('disabled', true);
 		else
 			$('select[name=discount_invoice]').attr('disabled', false);
 	});
 
-	$('.open_payment_information').unbind('click');
-	$('.open_payment_information').click(function() {
+	$('.open_payment_information').unbind('click').click(function(e) {
 		if ($(this).parent().parent().next('tr').is(':visible'))
 			$(this).parent().parent().next('tr').hide();
 		else
 			$(this).parent().parent().next('tr').show();
-
-		return false;
+		e.preventDefault();
 	});
 }
 
