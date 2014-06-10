@@ -733,7 +733,7 @@ class LanguageCore extends ObjectModel
 
 		// Initialize the language
 		$lang = new Language();
-		$lang->iso_code = $iso_code;
+		$lang->iso_code = Tools::strtolower($iso_code);
 		$lang->language_code = $iso_code;
 		$lang->active = true;
 
