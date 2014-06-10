@@ -653,8 +653,6 @@ abstract class DbCore
 			$string = $this->_escape($string);
 			if (!$html_ok)
 				$string = strip_tags(Tools::nl2br($string));
-			else
-				$string = Tools::purifyHTML($string);
 		}
 
 		return $string;

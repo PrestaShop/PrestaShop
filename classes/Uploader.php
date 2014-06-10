@@ -234,6 +234,12 @@ class UploaderCore
 			return false;
 		}
 
+		if (preg_match('/\%00/', $file['name']))
+		{
+			$file['error'] = Tools::displayError('Invalid file name');
+			return false;
+		}
+
 		$types = $this->getAcceptTypes();
 
 		//TODO check mime type.

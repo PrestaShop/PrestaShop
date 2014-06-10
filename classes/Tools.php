@@ -3109,6 +3109,11 @@ exit;
 		if ($use_html_purifier)
 		{
 			$config = HTMLPurifier_Config::createDefault();
+			if (Configuration::get('PS_ALLOW_HTML_IFRAME'))
+			{
+				$config->set('HTML.SafeIframe', true);
+			   $config->set('HTML.SafeObject', true);
+			}
 			$purifier = new HTMLPurifier($config);
 			$html = $purifier->purify($html);
 		}
@@ -3142,4 +3147,3 @@ function cmpPriceDesc($a, $b)
 		return -1;
 	return 0;
 }
-
