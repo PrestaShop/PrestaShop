@@ -362,7 +362,7 @@
 				</script>
 			</div>
 			<!-- Payments block -->
-			<div class="panel">
+			<div id="formAddPaymentPanel" class="panel">
 				<div class="panel-heading">
 					<i class="icon-money"></i>
 					{l s="Payment"} <span class="badge">{$order->getOrderPayments()|@count}</span>
