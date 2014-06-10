@@ -237,7 +237,7 @@ product_tabs['Combinations'] = new function(){
 					$('#attribute_quantity').show();
 					$('#product_att_list').html('');
 					self.removeButtonCombination('update');
-					$.scrollTo('#add_new_combination', 1200, { offset: -100 });
+					scroll_if_anchor('#add_new_combination');
 					var wholesale_price = Math.abs(data[0]['wholesale_price']);
 					var price = data[0]['price'];
 					var weight = data[0]['weight'];
