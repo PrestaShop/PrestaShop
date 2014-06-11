@@ -25,8 +25,8 @@
 */
 function drop_module_non_unique_index()
 {
-	$index = Db::getInstance()->getValue('SHOW INDEX FROM `'._DB_PREFIX_.'module` WHERE column_name = "name"');
-	if ($index)
-		Db::getInstance()->execute('ALTER IGNORE TABLE `'._DB_PREFIX_.'module` DROP INDEX "'.pSQL($index).'"');
-	Db::getInstance()->execute('ALTER IGNORE TABLE `'._DB_PREFIX_.'module` ADD UNIQUE `name` (`name`)');	
+	$index = Db::getInstance()->executeS('SHOW INDEX FROM `'._DB_PREFIX_.'module` WHERE key_name = "name"');
+	if (is_array($index) && count($index))
+		Db::getInstance()->execute('ALTER IGNORE TABLE `'._DB_PREFIX_.'module` DROP INDEX `name`');
+	Db::getInstance()->execute('ALTER IGNORE TABLE `'._DB_PREFIX_.'module` ADD UNIQUE `name` (`name`)');
 }
