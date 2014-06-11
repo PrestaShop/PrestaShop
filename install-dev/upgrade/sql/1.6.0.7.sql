@@ -19,3 +19,4 @@ ALTER TABLE `PREFIX_orders` ADD INDEX (`current_state`);
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES('PS_USE_HTMLPURIFIER', '1', NOW(), NOW());
 
 /* PHP:ps1607_language_code_update(); */;
+/* PHP:drop_module_non_unique_index(); */;
