@@ -3975,7 +3975,7 @@ class ProductCore extends ObjectModel
 			$row['quantity'] = 0;
 
 		$row['customization_required'] = false;
-		if ($row['customizable'] && Customization::isFeatureActive())
+		if (isset($row['customizable']) && $row['customizable'] && Customization::isFeatureActive())
 			if (count(Product::getRequiredCustomizableFieldsStatic((int)$row['id_product'])))
 				$row['customization_required'] = true;
 
