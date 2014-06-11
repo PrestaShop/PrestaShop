@@ -47,7 +47,7 @@ class QuickAccessCore extends ObjectModel
 			'new_window' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
 
 			// Lang fields
-			'name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+			'name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 32),
 		),
 	);
 
