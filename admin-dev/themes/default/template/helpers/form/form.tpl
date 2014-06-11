@@ -32,7 +32,7 @@
 {/if}
 
 {block name="defaultForm"}
-<form id="{if isset($fields.form.form.id_form)}{$fields.form.form.id_form|escape:'html':'UTF-8'}{else}{if $table == null}configuration_form{else}{$table}_form{/if}{/if}" class="defaultForm {$name_controller} form-horizontal" action="{$current}&amp;token={$token}" method="post" enctype="multipart/form-data" {if isset($style)}style="{$style}"{/if} novalidate>
+<form id="{if isset($fields.form.form.id_form)}{$fields.form.form.id_form|escape:'html':'UTF-8'}{else}{if $table == null}configuration_form{else}{$table}_form{/if}{/if}" class="defaultForm {$name_controller} form-horizontal" action="{$current}&amp;token={$token}" method="post" enctype="multipart/form-data"{if isset($style)} style="{$style}"{/if} novalidate>
 	{if $form_id}
 		<input type="hidden" name="{$identifier}" id="{$identifier}" value="{$form_id}" />
 	{/if}
@@ -499,7 +499,7 @@
 															<span class="input-group-addon">
 																<i class="icon-unlock"></i>
 															</span>
-															<input type="password" id="old_passwd" name="old_passwd" class="form-control" value="" required="required">
+															<input type="password" id="old_passwd" name="old_passwd" class="form-control" value="" required="required" autocomplete="off">
 														</div>
 													</div>
 												</div>
@@ -515,12 +515,7 @@
 															<span class="input-group-addon">
 																<i class="icon-key"></i>
 															</span>
-															<input type="password"
-																id="{$input.name}"
-																name="{$input.name}"
-																class="{if isset($input.class)}{$input.class}{/if}"
-																value=""
-																required="required"/>
+															<input type="password" id="{$input.name}" name="{$input.name}" class="{if isset($input.class)}{$input.class}{/if}" value="" required="required" autocomplete="off"/>
 														</div>
 														<span id="{$input.name}-output"></span>
 													</div>
@@ -534,11 +529,7 @@
 															<span class="input-group-addon">
 																<i class="icon-key"></i>
 															</span>
-															<input type="password"
-																id="{$input.name}2"
-																name="{$input.name}2"
-																class="{if isset($input.class)}{$input.class}{/if}"
-																value=""/>
+															<input type="password" id="{$input.name}2" name="{$input.name}2" class="{if isset($input.class)}{$input.class}{/if}" value="" autocomplete="off"/>
 														</div>
 													</div>
 												</div>
