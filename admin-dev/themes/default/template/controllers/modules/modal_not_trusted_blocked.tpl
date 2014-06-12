@@ -26,7 +26,7 @@
 {assign var=module_name value='<strong><span class="module-name-placeholder"></span></strong>'}
 <div class="modal-body">
 	<div class="alert alert-danger">
-		<h4>{l s='The module "%s" could not be identified securely by PrestaShop.' sprintf=$module_name}</h4>
+		<h4>{l s='The module "%s" could not be securely identified by PrestaShop.' sprintf=$module_name}</h4>
 		<p>
 			{l s='This generally happens when the module is not distributed through our official marketplace, PrestaShop Addons - or when your server failed to communicate with PrestaShop Addons.'}
 			{l s='Since you did not download the module from PrestaShop Addons, we cannot assert that the module is safe (i.e. that it is not adding some undisclosed functionality like backdoors, ads, hidden links, spam, etc.).'}
