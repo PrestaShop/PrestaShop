@@ -108,7 +108,7 @@
 				<h4>{l s='Configure your theme'}</h4>
 				<div class="row">
 					<div class="col-sm-8">
-						<p>{l s='Configure your theme\'s advanced settings, such as the number of columns you want for each page. Mostly for advanced users.'}</p>
+						<p>{l s='Configure your theme\'s advanced settings, such as the number of columns you want for each page. This setting is mostly for advanced users.'}</p>
 					</div>
 					<div class="col-sm-4">
 						<a class="btn btn-default pull-right" href="{$link->getAdminLink('AdminThemes')|addslashes}&updatetheme&id_theme={$cur_theme.theme_id}">
