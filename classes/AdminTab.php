@@ -2325,8 +2325,8 @@ abstract class AdminTabCore
 			return;
 
 		$assos = array();
-		$sql = 'SELECT id_shop, `'.pSQL($this->identifier).'`
-				FROM `'._DB_PREFIX_.pSQL($this->table).'_shop`';
+		$sql = 'SELECT id_shop, `'.bqSQL($this->identifier).'`
+				FROM `'._DB_PREFIX_.bqSQL($this->table).'_shop`';
 		foreach (Db::getInstance()->executeS($sql) as $row)
 			$assos[$row['id_shop']][] = $row[$this->identifier];
 

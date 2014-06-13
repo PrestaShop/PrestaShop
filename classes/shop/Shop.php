@@ -976,7 +976,7 @@ class ShopCore extends ObjectModel
 		if (!$id_shop)
 			$id_shop = (int)Configuration::get('PS_SHOP_DEFAULT');
 
-		return ' AND '.(($alias) ? $alias.'.' : '').'id_shop = '.$id_shop.' ';
+		return ' AND '.(($alias) ? $alias.'.' : '').'id_shop = '.(int)$id_shop.' ';
 	}
 
 	/**

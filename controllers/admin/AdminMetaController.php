@@ -420,7 +420,7 @@ class AdminMetaControllerCore extends AdminController
 			Tools::clearCache($this->context->smarty);
 
 		if (Tools::isSubmit('deletemeta') && (int)Tools::getValue('id_meta') > 0)
-			Db::getInstance()->delete('theme_meta', 'id_meta='.Tools::getValue('id_meta'));
+			Db::getInstance()->delete('theme_meta', 'id_meta='.(int)Tools::getValue('id_meta'));
 
 		$ret = parent::postProcess();
 
@@ -431,7 +431,7 @@ class AdminMetaControllerCore extends AdminController
 			foreach ($themes as $theme)
 			{
 				$theme_meta_value[] = array(
-					'id_theme' => $theme->id,
+					'id_theme' => (int)$theme->id,
 					'id_meta' => (int)$ret->id,
 					'left_column' => (int)$theme->default_left_column,
 					'right_column' => (int)$theme->default_right_column
