@@ -26,7 +26,7 @@ $brand-danger:          #d9534f !default;
 
 //== Scaffolding
 //
-// ## Settings for some of the most global styles.
+//## Settings for some of the most global styles.
 
 //** Background color for `<body>`.
 $body-bg:               #fff !default;
@@ -72,13 +72,17 @@ $headings-line-height:    1.1 !default;
 $headings-color:          inherit !default;
 
 
-//-- Iconography
+//== Iconography
 //
-//## Specify custom locations of the include Glyphicons icon font. Useful for those including Bootstrap via Bower.
+//## Specify custom location and filename of the included Glyphicons icon font. Useful for those including Bootstrap via Bower.
 
+//** Load fonts from this directory.
 $icon-font-path: "bootstrap/" !default;
+//** File name for all font files.
 $icon-font-name:          "glyphicons-halflings-regular" !default;
+//** Element ID within SVG icon file.
 $icon-font-svg-id:        "glyphicons_halflingsregular" !default;
+
 
 //== Components
 //
@@ -236,7 +240,7 @@ $dropdown-link-disabled-color:   $gray-light !default;
 //** Text color for headers within dropdown menus.
 $dropdown-header-color:          $gray-light !default;
 
-// Note: Deprecated $dropdown-caret-color as of v3.1.0
+//** Deprecated `$dropdown-caret-color` as of v3.1.0
 $dropdown-caret-color:           #000 !default;
 
 
@@ -249,8 +253,8 @@ $dropdown-caret-color:           #000 !default;
 
 $zindex-navbar:            1000 !default;
 $zindex-dropdown:          1000 !default;
-$zindex-popover:           1010 !default;
-$zindex-tooltip:           1030 !default;
+$zindex-popover:           1060 !default;
+$zindex-tooltip:           1070 !default;
 $zindex-navbar-fixed:      1030 !default;
 $zindex-modal-background:  1040 !default;
 $zindex-modal:             1050 !default;
@@ -261,27 +265,32 @@ $zindex-modal:             1050 !default;
 //## Define the breakpoints at which your layout will change, adapting to different screen sizes.
 
 // Extra small screen / phone
-// Note: Deprecated $screen-xs and $screen-phone as of v3.0.1
+//** Deprecated `$screen-xs` as of v3.0.1
 $screen-xs:                  480px !default;
+//** Deprecated `$screen-xs-min` as of v3.2.0
 $screen-xs-min:              $screen-xs !default;
+//** Deprecated `$screen-phone` as of v3.0.1
 $screen-phone:               $screen-xs-min !default;
 
 // Small screen / tablet
-// Note: Deprecated $screen-sm and $screen-tablet as of v3.0.1
+//** Deprecated `$screen-sm` as of v3.0.1
 $screen-sm:                  768px !default;
 $screen-sm-min:              $screen-sm !default;
+//** Deprecated `$screen-tablet` as of v3.0.1
 $screen-tablet:              $screen-sm-min !default;
 
 // Medium screen / desktop
-// Note: Deprecated $screen-md and $screen-desktop as of v3.0.1
+//** Deprecated `$screen-md` as of v3.0.1
 $screen-md:                  992px !default;
 $screen-md-min:              $screen-md !default;
+//** Deprecated `$screen-desktop` as of v3.0.1
 $screen-desktop:             $screen-md-min !default;
 
 // Large screen / wide desktop
-// Note: Deprecated $screen-lg and $screen-lg-desktop as of v3.0.1
+//** Deprecated `$screen-lg` as of v3.0.1
 $screen-lg:                  1200px !default;
 $screen-lg-min:              $screen-lg !default;
+//** Deprecated `$screen-lg-desktop` as of v3.0.1
 $screen-lg-desktop:          $screen-lg-min !default;
 
 // So media queries don't overlap when required, provide a maximum
@@ -529,7 +538,7 @@ $popover-arrow-color:                 #fff !default;
 //** Popover outer arrow width
 $popover-arrow-outer-width:           ($popover-arrow-width + 1) !default;
 //** Popover outer arrow color
-$popover-arrow-outer-color:           fadein($popover-border-color, 5%) !default;
+$popover-arrow-outer-color:           rgba($popover-border-color, 0.05) !default;
 //** Popover outer arrow fallback color
 $popover-arrow-outer-fallback-color:  darken($popover-fallback-border-color, 20%) !default;
 
@@ -562,7 +571,7 @@ $label-link-hover-color:      #fff !default;
 //##
 
 //** Padding applied to the modal body
-$modal-inner-padding:         20px !default;
+$modal-inner-padding:         15px !default;
 
 //** Padding applied to the modal title
 $modal-title-padding:         15px !default;
@@ -647,17 +656,26 @@ $list-group-border:             #ddd !default;
 //** List group border radius
 $list-group-border-radius:      $border-radius-base !default;
 
-//** Background color of single list elements on hover
+//** Background color of single list items on hover
 $list-group-hover-bg:           #f5f5f5 !default;
-//** Text color of active list elements
+//** Text color of active list items
 $list-group-active-color:       $component-active-color !default;
-//** Background color of active list elements
+//** Background color of active list items
 $list-group-active-bg:          $component-active-bg !default;
 //** Border color of active list elements
 $list-group-active-border:      $list-group-active-bg !default;
+//** Text color for content within active list items
 $list-group-active-text-color:  lighten($list-group-active-bg, 40%) !default;
 
+//** Text color of disabled list items
+$list-group-disabled-color:      $gray-light !default;
+//** Background color of disabled list items
+$list-group-disabled-bg:         $gray-lighter !default;
+//** Text color for content within disabled list items
+$list-group-disabled-text-color: $list-group-disabled-color !default;
+
 $list-group-link-color:         #555 !default;
+$list-group-link-hover-color:   $list-group-link-color !default;
 $list-group-link-heading-color: #333 !default;
 
 
@@ -667,6 +685,8 @@ $list-group-link-heading-color: #333 !default;
 
 $panel-bg:                    #fff !default;
 $panel-body-padding:          15px !default;
+$panel-heading-padding:       10px 15px !default;
+$panel-footer-padding:        $panel-heading-padding !default;
 $panel-border-radius:         $border-radius-base !default;
 
 //** Border color for elements within panels
