@@ -883,7 +883,7 @@ abstract class ModuleCore
 		// Unregister module on hook by id
 		$sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module`
 			WHERE `id_module` = '.(int)$this->id.' AND `id_hook` = '.(int)$hook_id
-			.(($shop_list) ? ' AND `id_shop` IN('.implode(', ', $shop_list).')' : '');
+			.(($shop_list) ? ' AND `id_shop` IN('.implode(', ', array_map('intval', $shop_list)).')' : '');
 		$result = Db::getInstance()->execute($sql);
 
 		// Clean modules position
@@ -905,7 +905,7 @@ abstract class ModuleCore
 	{
 		$sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module_exceptions`
 			WHERE `id_module` = '.(int)$this->id.' AND `id_hook` = '.(int)$hook_id
-			.(($shop_list) ? ' AND `id_shop` IN('.implode(', ', $shop_list).')' : '');
+			.(($shop_list) ? ' AND `id_shop` IN('.implode(', ', array_map('intval', $shop_list)).')' : '');
 		return Db::getInstance()->execute($sql);
 	}
 
@@ -1814,7 +1814,7 @@ abstract class ModuleCore
 		$sql = 'SELECT `id_module`, `id_shop`
 			FROM `'._DB_PREFIX_.'hook_module`
 			WHERE `id_hook` = '.(int)$id_hook.'
-			'.((!is_null($shop_list) && $shop_list) ? ' AND `id_shop` IN('.implode(', ', $shop_list).')' : '').'
+			'.((!is_null($shop_list) && $shop_list) ? ' AND `id_shop` IN('.implode(', ', array_map('intval', $shop_list)).')' : '').'
 			ORDER BY `position`';
 		$results = Db::getInstance()->executeS($sql);
 		$position = array();
