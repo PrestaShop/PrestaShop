@@ -34,9 +34,7 @@
 		$('#domain').keydown(function()
 		{
 			if (!$('#domain_ssl').val() || $('#domain_ssl').val() == $('#domain').val())
-			{
 				change_domain_value = true;
-			}
 		});
 
 		$('#domain_ssl').keydown(function()
@@ -44,20 +42,18 @@
 			change_domain_value = false;
 		});
 
-		$('#domain').keyup(function()
+		$('#domain').blur(function()
 		{
 			if (change_domain_value)
 			{
 				change_domain_value = false;
-				$('#domain_ssl').val($('#domain').val());
+				$('#domain_ssl').val($(this).val().replace(/ /g, '-'));
 			}
 		});
 
-		$('#virtual_uri').keyup(function()
+		$('#domain, #domain_ssl, #physical_uri, #virtual_uri').blur(function()
 		{
-			txt = $('#virtual_uri').val()
-			txt = txt.replace(' ', '-');
-			$('#virtual_uri').val(txt);
+			$(this).val($.trim($(this).val().replace(/ /g, '-')));
 		});
 
 	});
@@ -75,7 +71,7 @@
 		if (virtual)
 			url += '/'+virtual+'/';
 		url = url.replace(/\/+/g, "/");
-		$('#final_url').val('http://'+url);
+		$('#final_url').val('http://' + url.replace(/ /g, '-'));
 	};
 
 	function checkMainUrlInfo(shopID)
