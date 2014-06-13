@@ -3,9 +3,9 @@
 return array (
   'informations' => 
   array (
-    'phone' => '',
-    'documentation' => '',
-    'documentation_upgrade' => '',
+    'phone' => '+1 (888) 947-6543',
+    'documentation' => 'http://doc.prestashop.com/',
+    'documentation_upgrade' => 'http://docs.prestashop.com/display/PS16/Updating+PrestaShop',
     'forum' => 'http://www.prestashop.com/forums/',
     'blog' => 'http://www.prestashop.com/blog/',
     'support' => 'https://www.prestashop.com/en/support',
@@ -188,7 +188,7 @@ return array (
     'I just built an online store with PrestaShop!' => '',
     'Look at this exhilarating experience : http://vimeo.com/89298199' => '',
     'Tweet' => '',
-    'Share' => '',
+    'Share' => '分享',
     'Google+' => '',
     'Pinterest' => '',
     'LinkedIn' => '',

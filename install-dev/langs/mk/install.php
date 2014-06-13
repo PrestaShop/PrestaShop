@@ -186,7 +186,7 @@ return array (
     'Discover your store' => 'Истражи ја својата продавница',
     'Share your experience with your friends!' => 'Сподели го искуството со своите пријатели!',
     'I just built an online store with PrestaShop!' => 'Јас штотуку изградив on-lineпродавница со PrestaShop!',
-    'Look at this exhilarating experience : http://vimeo.com/89298199' => '',
+    'Look at this exhilarating experience : http://vimeo.com/89298199' => 'Look at this exhilarating experience : http://vimeo.com/89298199',
     'Tweet' => 'Tweet',
     'Share' => 'сподели',
     'Google+' => 'Google+',

@@ -166,7 +166,7 @@ return array (
     'To enjoy the many features that are offered for free by PrestaShop, please read the license terms below. PrestaShop core is licensed under OSL 3.0, while the modules and themes are licensed under AFL 3.0.' => 'Um all die Vorteile zu nutzen, die Ihnen Prestashop bietet, lesen sie bitte die folgenden Bedingungen. Der PrestaShop ist unter OSL 3.0 lizensiert, die Module und Themen unter AFL 3.0.',
     'I agree to the above terms and conditions.' => 'Ich akzeptiere die obenstehenden AGB',
     'I agree to participate in improving the solution by sending anonymous information about my configuration.' => 'Ich möchte zur Verbesserung von PrestaShop beitragen und bin einverstanden, dass anonyme Informationen zu meiner Konfiguration übermittelt werden.',
-    'Done!' => 'Erfolgreich abgeschlossen!',
+    'Done!' => 'Fertig!',
     'An error occured during installation...' => 'Bei der Installation ist ein Fehler aufgetreten...',
     'You can use the links on the left column to go back to the previous steps, or restart the installation process by <a href="%s">clicking here</a>.' => 'Um zum vorherigen Schritt zu gelangen, können Sie die Links in der linken Spalte nutzen, oder den Installationsprozess komplett neu starten wenn Sie <a href="%s">HIER klicken</a>.',
     'Your installation is finished!' => 'Die Installation ist abgeschlossen!',
