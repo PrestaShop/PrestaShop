@@ -271,15 +271,15 @@ class ReferrerCore extends ObjectModel
 				$stats_sales = $referrer->getStatsSales(null, $employee);
 
 				Db::getInstance()->update('referrer_shop', array(
-					'cache_visitors' => $stats_visits['uniqs'],
-					'cache_visits' => $stats_visits['visits'],
-					'cache_pages' => $stats_visits['pages'],
-					'cache_registrations' => $registrations,
-					'cache_orders' => $stats_sales['orders'],
+					'cache_visitors' => (int)$stats_visits['uniqs'],
+					'cache_visits' => (int)$stats_visits['visits'],
+					'cache_pages' => (int)$stats_visits['pages'],
+					'cache_registrations' => (int)$registrations,
+					'cache_orders' => (int)$stats_sales['orders'],
 					'cache_sales' => number_format($stats_sales['sales'], 2, '.', ''),
 					'cache_reg_rate' => $stats_visits['uniqs'] ? $registrations / $stats_visits['uniqs'] : 0,
 					'cache_order_rate' => $stats_visits['uniqs'] ? $stats_sales['orders'] / $stats_visits['uniqs'] : 0,
-				), 'id_referrer = '.$referrer->id.' AND id_shop = '.$shop_id);
+				), 'id_referrer = '.(int)$referrer->id.' AND id_shop = '.(int)$shop_id);
 			}
 		}
 

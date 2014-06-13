@@ -3157,7 +3157,7 @@ class AdminControllerCore extends Controller
 		$insert = array();
 		foreach ($assos_data as $id_shop)
 			$insert[] = array(
-				$this->identifier => $id_object,
+				$this->identifier => (int)$id_object,
 				'id_shop' => (int)$id_shop,
 			);
 		return Db::getInstance()->insert($this->table.'_shop', $insert, false, true, Db::INSERT_IGNORE);
