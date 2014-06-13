@@ -157,7 +157,7 @@ class DbMySQLiCore extends Db
 	 */
 	public function set_db($db_name)
 	{
-		return $this->link->query('USE '.pSQL($db_name));
+		return $this->link->query('USE `'.bqSQL($db_name).'`');
 	}
 
 	/**

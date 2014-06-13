@@ -159,7 +159,7 @@ function getPath($urlBase, $id_category, $path = '', $highlight = '', $categoryT
 					WHERE c.nleft <= '.(int)$category['nleft'].'
 						AND c.nright >= '.(int)$category['nright'].'
 						AND cl.id_lang = '.(int)$context->language->id.
-						($home ? ' AND c.id_category='.$id_category : '').'
+						($home ? ' AND c.id_category='.(int)$id_category : '').'
 						AND c.id_category != '.(int)Category::getTopCategory()->id.'
 					GROUP BY c.id_category
 					ORDER BY c.level_depth ASC
