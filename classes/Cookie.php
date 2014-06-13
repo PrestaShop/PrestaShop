@@ -270,9 +270,7 @@ class CookieCore
 			//printf("\$content = %s<br />", $content);
 			
 			/* Get cookie checksum */
-			$tmpTab = explode('¤', $content);
-			array_pop($tmpTab);
-			$content_for_checksum = implode('¤', $tmpTab).'¤';
+			$content_for_checksum = Tools::substr($content, 0, Tools::strrpos($content, '¤')) . '¤';
 			$checksum = crc32($this->_salt.$content_for_checksum);
 			//printf("\$checksum = %s<br />", $checksum);
 			
