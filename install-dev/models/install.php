@@ -342,7 +342,7 @@ class InstallModelInstall extends InstallAbstractModel
 
 		$list = array(
 			'products' =>		_PS_PROD_IMG_DIR_,
-			'categories',		_PS_CAT_IMG_DIR_,
+			'categories' =>		_PS_CAT_IMG_DIR_,
 			'manufacturers' =>	_PS_MANU_IMG_DIR_,
 			'suppliers' =>		_PS_SUPP_IMG_DIR_,
 			'scenes' =>			_PS_SCENE_IMG_DIR_,
