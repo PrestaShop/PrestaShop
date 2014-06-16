@@ -221,6 +221,14 @@ $(function() {
 				var target = mapping[href][0];
 				pushContent(target);
 			});
+			$( "#help-container a[href^='/pages/viewpage.action?pageId=']" ).on('click', function(e){
+				e.preventDefault();
+				var pageId = $(this).attr('href').match(/\d+$/);
+				if (pageId) {
+					pushContent(pageId[0]);
+				}
+			});
+
 			// rewrite url ? -> "//help.prestashop.com/" + mapping[href][0] + '?version=1.6&language=' + mapping[href][2];
 
 			//home link
