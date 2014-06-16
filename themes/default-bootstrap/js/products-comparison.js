@@ -51,7 +51,7 @@ function addToCompare(productId)
 			if (action === 'add' && comparedProductsIds.length < comparator_max_item) {
 				comparedProductsIds.push(parseInt(productId)),
 				compareButtonsStatusRefresh(),
-				totalVal = totalValueNow ++,
+				totalVal = totalValueNow +1,
 				$('.bt_compare').next('.compare_product_count').val(totalVal),
 				totalValue(totalVal);
 			}
