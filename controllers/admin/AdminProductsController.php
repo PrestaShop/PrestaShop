@@ -3704,9 +3704,12 @@ class AdminProductsControllerCore extends AdminController
 
 		$images = Image::getImages($this->context->language->id, $product->id);
 
-		foreach ($images as $k => $image)
-			$images[$k]['src'] = $this->context->link->getImageLink($product->link_rewrite[$this->context->language->id], $product->id.'-'.$image['id_image'], 'small_default');
-		$data->assign('images', $images);
+		if (is_array($images))
+		{
+			foreach ($images as $k => $image)
+				$images[$k]['src'] = $this->context->link->getImageLink($product->link_rewrite[$this->context->language->id], $product->id.'-'.$image['id_image'], 'small_default');
+			$data->assign('images', $images);
+		}
 		$data->assign('imagesTypes', ImageType::getImagesTypes('products'));
 
 		$product->tags = Tag::getProductTags($product->id);
