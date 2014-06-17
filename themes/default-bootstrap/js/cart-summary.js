@@ -802,7 +802,7 @@ function updateCartSummary(json)
 	}
 
 	// Update discounts
-	if (json.discounts.length == 0)
+	if (!$.isArray(json.discounts) || json.discounts.length == 0)
 	{
 		$('.cart_discount').each(function(){$(this).remove();});
 		$('.cart_total_voucher').remove();
