@@ -205,7 +205,7 @@ $(document).ready(function(){
 	if (contentOnly == false)
 	{
 		if (!!$.prototype.fancybox)
-			$('.fancybox').fancybox({
+			$('li:visible .fancybox').fancybox({
 				'hideOnContentClick': true,
 				'openEffect'	: 'elastic',
 				'closeEffect'	: 'elastic'
