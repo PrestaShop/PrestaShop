@@ -5602,6 +5602,6 @@ class ProductCore extends ObjectModel
 		
 	public static function getColorsListCacheId($id_product)
 	{
-		return 'productlist_colors|'.(int)$id_product.'|'.(int)Context::getContext()->shop->id;
+		return 'productlist_colors|'.(int)$id_product.'|'.(int)Context::getContext()->shop->id.'|'.(int)Context::getContext()->cookie->id_lang;
 	}
 }
