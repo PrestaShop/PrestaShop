@@ -2232,6 +2232,9 @@ class AdminControllerCore extends Controller
 		$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/modernizr-loads.js');
 		$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/moment-with-langs.min.js');
 
+		if (!$this->lite_display)
+			$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/help.js');
+
 		if (!Tools::getValue('submitFormAjax'))
 			$this->addJs(_PS_JS_DIR_.'notifications.js');
 
