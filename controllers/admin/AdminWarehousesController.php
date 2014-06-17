@@ -555,6 +555,13 @@ class AdminWarehousesControllerCore extends AdminController
 		$address->id_state = Tools::getValue('id_state', null);
 		$address->city = Tools::getValue('city', null);
 
+		if (!($country = new Country($address->id_country, Configuration::get('PS_LANG_DEFAULT'))) || !Validate::isLoadedObject($country))
+			$this->errors[] = Tools::displayError('Country is invalid');
+		$contains_state = isset($country) && is_object($country) ? (int)$country->contains_states: 0;
+		$id_state = isset($address) && is_object($address) ? (int)$address->id_state: 0;
+		if ($contains_state && !$id_state)
+			$this->errors[] = Tools::displayError('This country requires you to choose a State.');
+
 		// validates the address
 		$validation = $address->validateController();
 
@@ -629,5 +636,4 @@ class AdminWarehousesControllerCore extends AdminController
 			return;
 		$obj->resetStockAvailable();
 	}
-
 }
