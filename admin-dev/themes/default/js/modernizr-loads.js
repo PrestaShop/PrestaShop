@@ -5,5 +5,4 @@ Modernizr.load([
 	},
 	"themes/default/js/vendor/enquire.min.js",
 	"themes/default/js/admin-theme.js",
-	"themes/default/js/help.js"
 ]);
