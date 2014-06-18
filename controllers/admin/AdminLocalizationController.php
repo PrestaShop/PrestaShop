@@ -59,7 +59,7 @@ class AdminLocalizationControllerCore extends AdminController
 						'cast' => 'intval',
 						'type' => 'select',
 						'identifier' => 'id_currency',
-						'list' => Currency::getCurrencies()
+						'list' => Currency::getCurrencies(false, true, true)
 					),
 				),
 				'submit' => array('title' => $this->l('Save'))

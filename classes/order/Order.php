@@ -860,8 +860,8 @@ class OrderCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'orders`
 				WHERE DATE_ADD(date_upd, INTERVAL -1 DAY) <= \''.pSQL($date_to).'\' AND date_upd >= \''.pSQL($date_from).'\'
 					'.Shop::addSqlRestriction()
-					.($type ? ' AND '.pSQL(strval($type)).'_number != 0' : '')
-					.($id_customer ? ' AND id_customer = '.(int)($id_customer) : '');
+					.($type ? ' AND `'.bqSQL($type).'_number` != 0' : '')
+					.($id_customer ? ' AND id_customer = '.(int)$id_customer : '');
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
 		$orders = array();
@@ -909,7 +909,7 @@ class OrderCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'orders`
 				WHERE DATE_ADD(invoice_date, INTERVAL -1 DAY) <= \''.pSQL($date_to).'\' AND invoice_date >= \''.pSQL($date_from).'\'
 					'.Shop::addSqlRestriction()
-					.($type ? ' AND '.pSQL(strval($type)).'_number != 0' : '')
+					.($type ? ' AND `'.bqSQL($type).'_number` != 0' : '')
 					.($id_customer ? ' AND id_customer = '.(int)($id_customer) : '').
 				' ORDER BY invoice_date ASC';
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);

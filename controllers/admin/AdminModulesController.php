@@ -744,7 +744,7 @@ class AdminModulesControllerCore extends AdminController
 								if (!$download_ok)
 									$this->errors[] = sprintf(Tools::displayError("Module %s can't be upgraded: Error on downloading the latest version."), '<strong>'.$attr['displayName'].'</strong>');
 								elseif (!$this->extractArchive(_PS_MODULE_DIR_.$name.'.zip', false))
-									$this->errors[] = sprintf(Tools::displayError("Module %s can't be upgraded: Error on extracting the latest version."), '<strong>'.$attr['displayName'].'</strong>');
+									$this->errors[] = sprintf(Tools::displayError("Module %s can't be upgraded: Error on extracting the latest version"), '<strong>'.$attr['displayName'].'</strong>');
 								else
 									$module_upgraded[] = $name;
 							}
@@ -763,6 +763,8 @@ class AdminModulesControllerCore extends AdminController
 					elseif (defined('_PS_HOST_MODE_') && in_array($module->name, Module::$hosted_modules_blacklist))
 						$this->errors[] = Tools::displayError('You do not have permission to access this module.');
 					elseif ($key == 'install' && $this->tabAccess['add'] !== '1')
+						$this->errors[] = Tools::displayError('You do not have permission to install this module.');
+					elseif ($key == 'install' && defined('_PS_HOST_MODE_') && _PS_HOST_MODE_ && !Module::isModuleTrusted($module->name))
 						$this->errors[] = Tools::displayError('You do not have permission to install this module.');
 					elseif ($key == 'delete' && ($this->tabAccess['delete'] !== '1' || !$module->getPermission('configure')))
 						$this->errors[] = Tools::displayError('You do not have permission to delete this module.');
@@ -1260,8 +1262,8 @@ class AdminModulesControllerCore extends AdminController
 			'module_languages' => Language::getLanguages(false),
 			'module_name' => Tools::getValue('module_name'),
 		));
+		
 		$modal_content = $this->context->smarty->fetch('controllers/modules/modal_translation.tpl');
-
 		$this->modals[] = array(
 			'modal_id' => "moduleTradLangSelect",
 			'modal_class' => "modal-sm",
@@ -1269,8 +1271,7 @@ class AdminModulesControllerCore extends AdminController
 			'modal_content' => $modal_content
 		);
 
-		$modal_content = $this->context->smarty->fetch('controllers/modules/modal_not_trusted.tpl');
-
+		$modal_content = $this->context->smarty->fetch('controllers/modules/'.((defined('_PS_HOST_MODE_') && _PS_HOST_MODE_) ? 'modal_not_trusted_blocked.tpl' : 'modal_not_trusted.tpl'));
 		$this->modals[] = array(
 			'modal_id' => "moduleNotTrusted",
 			'modal_class' => "modal-lg",

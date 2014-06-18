@@ -150,7 +150,6 @@
 			{if $product->online_only}
 				<p class="online_only">{l s='Online only'}</p>
 			{/if}
-
 			<h1 itemprop="name">{$product->name|escape:'html':'UTF-8'}</h1>
 			<p id="product_reference"{if empty($product->reference) || !$product->reference} style="display: none;"{/if}>
 				<label>{l s='Model'} </label>
@@ -321,7 +320,7 @@
 							<a href="#" data-field-qty="qty" class="btn btn-default button-minus product_quantity_down">
 								<span><i class="icon-minus"></i></span>
 							</a>
-							<a href="#" data-field-qty="qty" class="btn btn-default button-plus product_quantity_up ">
+							<a href="#" data-field-qty="qty" class="btn btn-default button-plus product_quantity_up">
 								<span><i class="icon-plus"></i></span>
 							</a>
 							<span class="clearfix"></span>
@@ -351,9 +350,10 @@
 													<ul id="color_to_pick_list" class="clearfix">
 														{assign var="default_colorpicker" value=""}
 														{foreach from=$group.attributes key=id_attribute item=group_attribute}
+															{assign var='img_color_exists' value=file_exists($col_img_dir|cat:$id_attribute|cat:'.jpg')}
 															<li{if $group.default == $id_attribute} class="selected"{/if}>
-																<a href="{$link->getProductLink($product)|escape:'html':'UTF-8'}" id="color_{$id_attribute|intval}" name="{$colors.$id_attribute.name|escape:'html':'UTF-8'}" class="color_pick{if ($group.default == $id_attribute)} selected{/if}" style="background: {$colors.$id_attribute.value|escape:'html':'UTF-8'};" title="{$colors.$id_attribute.name|escape:'html':'UTF-8'}">
-																	{if file_exists($col_img_dir|cat:$id_attribute|cat:'.jpg')}
+																<a href="{$link->getProductLink($product)|escape:'html':'UTF-8'}" id="color_{$id_attribute|intval}" name="{$colors.$id_attribute.name|escape:'html':'UTF-8'}" class="color_pick{if ($group.default == $id_attribute)} selected{/if}"{if !$img_color_exists && isset($colors.$id_attribute.value) && $colors.$id_attribute.value} style="background:{$colors.$id_attribute.value|escape:'html':'UTF-8'};"{/if} title="{$colors.$id_attribute.name|escape:'html':'UTF-8'}">
+																	{if $img_color_exists}
 																		<img src="{$img_col_dir}{$id_attribute|intval}.jpg" alt="{$colors.$id_attribute.name|escape:'html':'UTF-8'}" title="{$colors.$id_attribute.name|escape:'html':'UTF-8'}" width="20" height="20" />
 																	{/if}
 																</a>
@@ -655,13 +655,16 @@
 		{/if}
 	{/if}
 </div> <!-- itemscope product wrapper -->
+<<<<<<< HEAD
 {strip}
+=======
+>>>>>>> release
 {strip}
 {if isset($smarty.get.ad) && $smarty.get.ad}
-{addJsDefL name=ad}{$base_dir|cat:$smarty.get.ad|escape:'html':'UTF-8'}{/addJsDefL}
+	{addJsDefL name=ad}{$base_dir|cat:$smarty.get.ad|escape:'html':'UTF-8'}{/addJsDefL}
 {/if}
 {if isset($smarty.get.adtoken) && $smarty.get.adtoken}
-{addJsDefL name=adtoken}{$smarty.get.adtoken|escape:'html':'UTF-8'}{/addJsDefL}
+	{addJsDefL name=adtoken}{$smarty.get.adtoken|escape:'html':'UTF-8'}{/addJsDefL}
 {/if}
 {addJsDef allowBuyWhenOutOfStock=$allow_oosp|boolval}
 {addJsDef availableNowValue=$product->available_now|escape:'quotes':'UTF-8'}

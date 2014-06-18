@@ -1370,7 +1370,9 @@ class AdminProductsControllerCore extends AdminController
 				'thickbox',
 				'ajaxfileupload',
 				'date',
-				'tagify'
+				'tagify',
+				'select2',
+				'validate'
 			));
 
 			$this->addJS(array(
@@ -1385,8 +1387,11 @@ class AdminProductsControllerCore extends AdminController
 				_PS_JS_DIR_.'vendor/ladda.js'
 			));
 
+			$this->addJS(_PS_JS_DIR_.'jquery/plugins/select2/select2_locale_'.$this->context->language->iso_code.'.js');
+			$this->addJS(_PS_JS_DIR_.'jquery/plugins/validate/localization/messages_'.$this->context->language->iso_code.'.js');
+
 			$this->addCSS(array(
-				_PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.css',
+				_PS_JS_DIR_.'jquery/plugins/timepicker/jquery-ui-timepicker-addon.css'
 			));
 		}
 	}
@@ -1489,7 +1494,7 @@ class AdminProductsControllerCore extends AdminController
 		$id_product = Tools::getValue('id_product');
 		if (($id_image = Tools::getValue('id_image')) && ($id_shop = (int)Tools::getValue('id_shop')))
 			if (Tools::getValue('active') == 'true')
-				$res = Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'image_shop (`id_image`, `id_shop`) VALUES('.(int)$id_image.', '.(int)$id_shop.')');
+				$res = Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'image_shop (`id_image`, `id_shop`, `cover`) VALUES('.(int)$id_image.', '.(int)$id_shop.', \'0\')');
 			else
 				$res = Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'image_shop WHERE `id_image` = '.(int)$id_image.' AND `id_shop` = '.(int)$id_shop);
 		
@@ -3154,12 +3159,14 @@ class AdminProductsControllerCore extends AdminController
 			{
 				$length = count($ids);
 				for ($i = 0; $i < $length; $i++)
+				{
 					if (!empty($ids[$i]) && !empty($names[$i]))
 					{
 						list($pack_items[$i]['pack_quantity'], $pack_items[$i]['id']) = explode('x', $ids[$i]);
 						$exploded_name = explode('x', $names[$i]);
 						$pack_items[$i]['name'] = $exploded_name[1];
 					}
+				}
 			}
 		}
 		else
@@ -3170,10 +3177,16 @@ class AdminProductsControllerCore extends AdminController
 				$pack_items[$i]['id'] = $pack_item->id;
 				$pack_items[$i]['pack_quantity'] = $pack_item->pack_quantity;
 				$pack_items[$i]['name']	= $pack_item->name;
+				$pack_items[$i]['reference'] = $pack_item->reference;
+
+				$cover = Product::getCover($pack_item->id);
+				$pack_items[$i]['image'] = Context::getContext()->link->getImageLink($pack_item->link_rewrite, $cover['id_image'] , 'home_default');
+				// @todo: don't rely on 'home_default'
+				//$path_to_image = _PS_IMG_DIR_.'p/'.Image::getImgFolderStatic($cover['id_image']).(int)$cover['id_image'].'.jpg';
+				//$pack_items[$i]['image'] = ImageManager::thumbnail($path_to_image, 'pack_mini_'.$pack_item->id.'_'.$this->context->shop->id.'.jpg', 120);
 				$i++;
 			}
 		}
-
 		return $pack_items;
 	}
 
@@ -3688,9 +3701,12 @@ class AdminProductsControllerCore extends AdminController
 
 		$images = Image::getImages($this->context->language->id, $product->id);
 
-		foreach ($images as $k => $image)
-			$images[$k]['src'] = $this->context->link->getImageLink($product->link_rewrite[$this->context->language->id], $product->id.'-'.$image['id_image'], 'small_default');
-		$data->assign('images', $images);
+		if (is_array($images))
+		{
+			foreach ($images as $k => $image)
+				$images[$k]['src'] = $this->context->link->getImageLink($product->link_rewrite[$this->context->language->id], $product->id.'-'.$image['id_image'], 'small_default');
+			$data->assign('images', $images);
+		}
 		$data->assign('imagesTypes', ImageType::getImagesTypes('products'));
 
 		$product->tags = Tag::getProductTags($product->id);
@@ -3704,7 +3720,7 @@ class AdminProductsControllerCore extends AdminController
 
 		// TinyMCE
 		$iso_tiny_mce = $this->context->language->iso_code;
-		$iso_tiny_mce = (file_exists(_PS_JS_DIR_.'tiny_mce/langs/'.$iso_tiny_mce.'.js') ? $iso_tiny_mce : 'en');
+		$iso_tiny_mce = (file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso_tiny_mce.'.js') ? $iso_tiny_mce : 'en');
 		$data->assign('ad', dirname($_SERVER['PHP_SELF']));
 		$data->assign('iso_tiny_mce', $iso_tiny_mce);
 		$data->assign('check_product_association_ajax', $check_product_association_ajax);
@@ -4568,7 +4584,7 @@ class AdminProductsControllerCore extends AdminController
 
 	protected function initPack(Product $product)
 	{
-		$this->tpl_form_vars['is_pack'] = ($product->id && Pack::isPack($product->id)) || Tools::getValue('ppack') || Tools::getValue('type_product') == Product::PTYPE_PACK;
+		$this->tpl_form_vars['is_pack'] = ($product->id && Pack::isPack($product->id)) || Tools::getValue('type_product') == Product::PTYPE_PACK;
 		$product->packItems = Pack::getItems($product->id, $this->context->language->id);
 
 		$input_pack_items = '';

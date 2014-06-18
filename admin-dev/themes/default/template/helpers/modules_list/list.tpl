@@ -40,8 +40,13 @@
 					{/foreach}
 				</table>
 				{if $controller_name == 'AdminPayment' && isset($view_all)}
-					<div class="panel-footer text-center">
-						<br /><a class="btn btn-default pagination-centered" href="index.php?tab=AdminModules&amp;token={getAdminToken tab='AdminModules'}&amp;filterCategory=payments_gateways">{l s='View all available payments solutions'}</a>
+					<div class="panel-footer">
+						<div class="col-lg-4 col-lg-offset-4">
+							<a class="btn btn-default btn-block" href="index.php?tab=AdminModules&amp;token={getAdminToken tab='AdminModules'}&amp;filterCategory=payments_gateways">
+								<i class="process-icon-payment"></i>
+								{l s='View all available payments solutions'}
+							</a>
+						</div>
 					</div>
 				{/if}
 			{else}

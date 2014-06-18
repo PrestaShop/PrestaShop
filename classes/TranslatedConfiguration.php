@@ -57,10 +57,9 @@ class TranslatedConfigurationCore extends Configuration
 		// Otherwise configuration is not set as translated configuration.
 		if ($id !== null)
 		{
-			$id_translated = Db::getInstance()->executeS('
-				SELECT `'.$this->def['primary'].'`
-				FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_lang`
-				WHERE `'.$this->def['primary'].'`='.pSQL($id).' LIMIT 0,1
+			$id_translated = Db::getInstance()->executeS('				SELECT `'.bqSQL($this->def['primary']).'`
+				FROM `'.bqSQL(_DB_PREFIX_.$this->def['table']).'_lang`
+				WHERE `'.bqSQL($this->def['primary']).'`='.(int)$id.' LIMIT 0,1
 			');
 
 			if (empty($id_translated))

@@ -96,7 +96,7 @@ function searchLocations()
 			searchLocationsNear(results[0].geometry.location);
 		else
 		{
-			if (!!$.prototype.fancybox)
+			if (!!$.prototype.fancybox && isCleanHtml(address))
 			    $.fancybox.open([
 			        {
 			            type: 'inline',
@@ -167,6 +167,8 @@ function searchLocationsNear(center)
 			createOption(name, distance, i);
 			createMarker(latlng, name, address, other, id_store, has_store_picture);
 			bounds.extend(latlng);
+			address = address.replace(phone, '');
+
 			$('table#stores-table').find('tbody').append('<tr ><td class="num">'+parseInt(i + 1)+'</td><td class="name">'+(has_store_picture == 1 ? '<img src="'+img_store_dir+parseInt(id_store)+'.jpg" alt="" />' : '')+'<span>'+name+'</span></td><td class="address">'+address+(phone !== '' ? ''+translation_4+' '+phone : '')+'</td><td class="distance">'+distance+' '+distance_unit+'</td></tr>');
 			$('#stores-table').show();
 		}

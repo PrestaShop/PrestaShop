@@ -214,7 +214,7 @@ abstract class ObjectModelCore
 					if (!$id_lang && isset($this->def['multilang']) && $this->def['multilang'])
 					{
 						$sql = 'SELECT * FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_lang`
-								WHERE `'.$this->def['primary'].'` = '.(int)$id
+								WHERE `'.bqSQL($this->def['primary']).'` = '.(int)$id
 								.(($this->id_shop && $this->isLangMultishop()) ? ' AND `id_shop` = '.$this->id_shop : '');
 						if ($object_datas_lang = ObjectModel::$db->executeS($sql))
 							foreach ($object_datas_lang as $row)
@@ -1432,9 +1432,9 @@ abstract class ObjectModelCore
 	public static function existsInDatabase($id_entity, $table)
 	{
 		$row = Db::getInstance()->getRow('
-			SELECT `id_'.$table.'` as id
-			FROM `'._DB_PREFIX_.$table.'` e
-			WHERE e.`id_'.$table.'` = '.(int)$id_entity
+			SELECT `id_'.bqSQL($table).'` as id
+			FROM `'._DB_PREFIX_.bqSQL($table).'` e
+			WHERE e.`id_'.bqSQL($table).'` = '.(int)$id_entity
 		);
 
 		return isset($row['id']);
@@ -1453,7 +1453,7 @@ abstract class ObjectModelCore
 			$table = self::$definition['table'];
 
 		$query = new DbQuery();
-		$query->select('`id_'.pSQL($table).'`');
+		$query->select('`id_'.bqSQL($table).'`');
 		$query->from($table);
 		if ($has_active_column)
 			$query->where('`active` = 1');

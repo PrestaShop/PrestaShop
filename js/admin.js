@@ -804,26 +804,6 @@ $(document).ready(function()
 			return copyMeta2friendlyURL()
 	});
 
-	// Adding a button to top
-	var scroll = $('#scrollTop a');
-	var view = $(window);
-
-	scroll.click(function(){
-		$.scrollTo('#top_container', 1200, { offset: -100 });
-	});
-
-	view.bind("scroll", function(e) {
-		var heightView = view.height();
-		if (scroll.offset())
-			var btnPlace = scroll.offset().top;
-		else
-			var btnPlace = 0;
-		if (heightView < btnPlace)
-			scroll.show();
-		else
-			scroll.hide();
-	});
-
 	$('#ajax_running').ajaxStart(function() {
 		ajax_running_timeout = setTimeout(function() {showAjaxOverlay()}, 1000);
 	});
@@ -1233,7 +1213,7 @@ function bindAddonsButtons()
 					{
 						$('#addons_loading').html('');
 						$('#addons_login_div').fadeOut();
-						window.location.href = currentIndex + '&conf=32' + '&token=' + token;
+						window.location.href = admin_modules_link + '&conf=32';
 					}
 					else
 						$('#addons_loading').html(errorLogin);

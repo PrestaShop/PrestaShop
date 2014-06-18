@@ -45,7 +45,7 @@ class AdminImportControllerCore extends AdminController
 
 	public $available_fields = array();
 
-	public $required_fields = array('name');
+	public $required_fields = array();
 
 	public $cache_image_deleted = array();
 
@@ -182,7 +182,7 @@ class AdminImportControllerCore extends AdminController
 					'no' => array('label' => $this->l('Ignore this column')),
 					'id' => array('label' => $this->l('ID')),
 					'active' => array('label' => $this->l('Active (0/1)')),
-					'name' => array('label' => $this->l('Name *')),
+					'name' => array('label' => $this->l('Name')),
 					'parent' => array('label' => $this->l('Parent category')),
 					'is_root_category' => array(
 						'label' => $this->l('Root category (0/1)'),
@@ -217,7 +217,7 @@ class AdminImportControllerCore extends AdminController
 					'no' => array('label' => $this->l('Ignore this column')),
 					'id' => array('label' => $this->l('ID')),
 					'active' => array('label' => $this->l('Active (0/1)')),
-					'name' => array('label' => $this->l('Name *')),
+					'name' => array('label' => $this->l('Name')),
 					'category' => array('label' => $this->l('Categories (x,y,z...)')),
 					'price_tex' => array('label' => $this->l('Price tax excluded')),
 					'price_tin' => array('label' => $this->l('Price tax included')),
@@ -404,7 +404,7 @@ class AdminImportControllerCore extends AdminController
 					'no' => array('label' => $this->l('Ignore this column')),
 					'id' => array('label' => $this->l('ID')),
 					'active' => array('label' => $this->l('Active (0/1)')),
-					'name' => array('label' => $this->l('Name *')),
+					'name' => array('label' => $this->l('Name')),
 					'description' => array('label' => $this->l('Description')),
 					'short_description' => array('label' => $this->l('Short description')),
 					'meta_title' => array('label' => $this->l('Meta title')),
@@ -657,7 +657,7 @@ class AdminImportControllerCore extends AdminController
 		else
 		{
 			@chmod(AdminImportController::getPath().$filename_prefix.$_FILES['file']['name'], 0664);
-			$_FILES['file']['filename'] = $filename_prefix.$_FILES['file']['name'];
+			$_FILES['file']['filename'] = $filename_prefix.str_replace('\0', '', $_FILES['file']['name']);
 		}
 
 		die(Tools::jsonEncode($_FILES));

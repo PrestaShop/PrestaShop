@@ -36,11 +36,12 @@
 			{/if}
 			<input type="text"
 			id="{$input_name}_{$language.id_lang}"
-			{if isset($input_class)}class="{$input_class}"{/if}
+			class="form-control {if isset($input_class)}{$input_class} {/if}"
 			name="{$input_name}_{$language.id_lang}"
 			value="{$input_value[$language.id_lang]|htmlentitiesUTF8|default:''}"
 			onkeyup="if (isArrowKey(event)) return ;updateFriendlyURL();"
 			onblur="updateLinkRewrite();"
+			{if isset($required)} required="required"{/if}
 			{if isset($maxchar)} data-maxchar="{$maxchar}"{/if}
 			{if isset($maxlength)} maxlength="{$maxlength}"{/if} />
 			{if isset($maxchar)}

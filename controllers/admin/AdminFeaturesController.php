@@ -34,6 +34,7 @@ class AdminFeaturesControllerCore extends AdminController
 		$this->table = 'feature';
 		$this->className = 'Feature';
 		$this->list_id = 'feature';
+		$this->identifier = 'id_feature';
 		$this->lang = true;
 
 		$this->fields_list = array(
@@ -82,7 +83,6 @@ class AdminFeaturesControllerCore extends AdminController
 		$this->addRowAction('view');
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-		$this->_defaultOrderBy = 'position';
 
 		return parent::renderList();
 	}
@@ -461,7 +461,11 @@ class AdminFeaturesControllerCore extends AdminController
 				$this->processResetFilters();
 		}
 		else
+		{
 			$this->list_id = 'feature';
+			$this->_defaultOrderBy = 'position';
+			$this->_defaultOrderWay = 'ASC';
+		}
 
 		parent::initProcess();
 

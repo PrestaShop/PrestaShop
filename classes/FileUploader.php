@@ -76,10 +76,10 @@ class FileUploaderCore
 		$pathinfo = pathinfo($this->file->getName());
 		$these = implode(', ', $this->allowedExtensions);
 		if (!isset($pathinfo['extension']))
-			return array('error' => sprintf(Tools::displayError('File has an invalid extension, it should be one of these: %s.'), $these);
+			return array('error' => sprintf(Tools::displayError('File has an invalid extension, it should be one of these: %s.'), $these));
 		$ext = $pathinfo['extension'];
 		if ($this->allowedExtensions && !in_array(strtolower($ext), $this->allowedExtensions))
-			return array('error' => sprintf(Tools::displayError('File has an invalid extension, it should be one of these: %s.'), $these);
+			return array('error' => sprintf(Tools::displayError('File has an invalid extension, it should be one of these: %s.'), $these));
 
 		return $this->file->save();
 

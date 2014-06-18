@@ -709,7 +709,7 @@ class AdminTranslationsControllerCore extends AdminController
 				
 				$i = 0;
 				$tmp_array = array();
-				foreach($files_paths as $files_path)
+				foreach ($files_paths as $files_path)
 				{
 					$path = dirname($files_path);
 					if (is_dir(_PS_TRANSLATIONS_DIR_.'../'.$path) && !is_writable(_PS_TRANSLATIONS_DIR_.'../'.$path) && !in_array($path, $tmp_array))
@@ -732,7 +732,7 @@ class AdminTranslationsControllerCore extends AdminController
 						foreach ($files_list as $file2check)
 							if (pathinfo($file2check['filename'], PATHINFO_BASENAME) == 'index.php' && file_put_contents(_PS_TRANSLATIONS_DIR_.'../'.$file2check['filename'], Tools::getDefaultIndexContent()))
 								continue;
-	
+
 						// Clear smarty modules cache
 						Tools::clearCache();
 	
@@ -781,7 +781,8 @@ class AdminTranslationsControllerCore extends AdminController
 		$kept = array();
 		foreach ($list as $file)
 		{
-			$m = array();
+			if ('index.php' == basename($file['filename']))
+				continue;
 			if (preg_match('#^modules/([^/]+)/#', $file['filename'], $m))
 			{
 				if (is_dir(_PS_MODULE_DIR_.$m[1]))
@@ -2676,7 +2677,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 	protected function writeSubjectTranslationFile($sub, $path)
 	{
-		if (!Tools::file_exists_cache(dirname(path)))
+		if (!Tools::file_exists_cache(dirname($path)))
 			if (!mkdir(dirname(path), 0700))
 				throw new PrestaShopException('Directory '.dirname(path).' cannot be created.');
 		if ($fd = @fopen($path, 'w'))

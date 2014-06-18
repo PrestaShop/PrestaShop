@@ -327,11 +327,14 @@ class ShopCore extends ObjectModel
 					ORDER BY LENGTH(CONCAT(su.physical_uri, su.virtual_uri)) DESC';
 
 			$result = Db::getInstance()->executeS($sql);
+
+			$through = false;
 			foreach ($result as $row)
 			{
 				// An URL matching current shop was found
 				if (preg_match('#^'.preg_quote($row['uri'], '#').'#i', $request_uri))
 				{
+					$through = true;
 					$id_shop = $row['id_shop'];
 					$found_uri = $row['uri'];
 					if ($row['main'])
@@ -341,8 +344,9 @@ class ShopCore extends ObjectModel
 			}
 
 			// If an URL was found but is not the main URL, redirect to main URL
-			if ($id_shop && !$is_main_uri)
+			if ($through && $id_shop && !$is_main_uri)
 			{
+
 				foreach ($result as $row)
 				{
 					if ($row['id_shop'] == $id_shop && $row['main'])
@@ -415,6 +419,12 @@ class ShopCore extends ObjectModel
 				header('HTTP/1.0 '.$redirect_type.' Moved');
 				header('location: http://'.$url);
 				exit;
+			}
+			elseif (defined('_PS_ADMIN_DIR_') && empty($shop->physical_uri))
+			{
+				$shop_default = new Shop((int)Configuration::get('PS_SHOP_DEFAULT'));
+				$shop->physical_uri = $shop_default->physical_uri;
+				$shop->virtual_uri = $shop_default->virtual_uri;
 			}
 		}
 

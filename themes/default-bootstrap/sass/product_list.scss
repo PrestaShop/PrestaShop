@@ -34,11 +34,18 @@ ul.product_list {
 			li {
 				display: inline-block;
 				border: 1px solid $base-border-color;
+				width: 26px;
+				height: 26px;
 				a {
 					display: block;
-					width: 23px;
-					height: 23px;
+					width: 22px;
+					height: 22px;
 					margin: 1px;
+					img {
+						display: block;
+						width: 22px;
+						height: 22px;
+					}
 				}	
 			}
 		}

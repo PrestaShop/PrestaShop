@@ -580,7 +580,7 @@ class AdminControllerCore extends Controller
 			}
 
 			foreach ($_GET as $key => $value)
-				if (stripos($key, $this->list_id.'OrderBy') === 0 && Validate::isOrderBy($value))
+				if (stripos($key, $this->list_id.'Orderby') === 0 && Validate::isOrderBy($value))
 				{
 					if ($value === '' || $value == $this->_defaultOrderBy)
 						unset($this->context->cookie->{$prefix.$key});
@@ -1710,7 +1710,7 @@ class AdminControllerCore extends Controller
 		$lang = '';
 		if (Configuration::get('PS_REWRITING_SETTINGS') && count(Language::getLanguages(true)) > 1)
 			$lang = Language::getIsoById($this->context->employee->id_lang).'/';
-		if (is_object($module) && (int)Configuration::get('PS_TC_ACTIVE') == 1 && $this->context->shop->getBaseURL())
+		if (is_object($module) && $module->active && (int)Configuration::get('PS_TC_ACTIVE') == 1 && $this->context->shop->getBaseURL())
 			$this->context->smarty->assign('base_url_tc', $this->context->shop->getBaseUrl()
 				.(Configuration::get('PS_REWRITING_SETTINGS') ? '' : 'index.php')
 				.$lang
@@ -1943,6 +1943,7 @@ class AdminControllerCore extends Controller
 			'check_openssl' => (extension_loaded('openssl') ? 'ok' : 'ko'),
 			'add_permission' => 1,
 			'addons_register_link' => "//addons.prestashop.com/".$language->iso_code."/login?email=".urlencode($this->context->employee->email)."&firstname=".urlencode($this->context->employee->firstname)."&lastname=".urlencode($this->context->employee->lastname)."&website=".urlencode($this->context->shop->getBaseURL())."&utm_source=back-office&utm_medium=connect-to-addons&utm_campaign=back-office-".$iso_code_caps."#createnow",
+			'addons_forgot_password_link' => "//addons.prestashop.com/".$language->iso_code."/forgot-your-password"
 		));
 		
 		$this->modals[] = array(
@@ -1967,7 +1968,7 @@ class AdminControllerCore extends Controller
 		return $modal_render;
 	}
 	
-	public function renderModulesList($panel_title = null)
+	public function renderModulesList()
 	{
 		// Load cache file modules list (natives and partners modules)
 		$xmlModules = false;
@@ -1994,7 +1995,7 @@ class AdminControllerCore extends Controller
 					$module->show_quick_view = true;
 			}
 			$helper = new Helper();
-			return $helper->renderModulesList($this->modules_list, $panel_title);
+			return $helper->renderModulesList($this->modules_list);
 		}
 	}
 	
@@ -2247,6 +2248,9 @@ class AdminControllerCore extends Controller
 		$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/modernizr.min.js');
 		$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/modernizr-loads.js');
 		$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/moment-with-langs.min.js');
+
+		if (!$this->lite_display)
+			$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/help.js');
 
 		if (!Tools::getValue('submitFormAjax'))
 			$this->addJs(_PS_JS_DIR_.'notifications.js');
@@ -3173,7 +3177,7 @@ class AdminControllerCore extends Controller
 		$insert = array();
 		foreach ($assos_data as $id_shop)
 			$insert[] = array(
-				$this->identifier => $id_object,
+				$this->identifier => (int)$id_object,
 				'id_shop' => (int)$id_shop,
 			);
 		return Db::getInstance()->insert($this->table.'_shop', $insert, false, true, Db::INSERT_IGNORE);
@@ -3335,12 +3339,17 @@ class AdminControllerCore extends Controller
 				<meta charset='UTF-8'>
 				<title>PrestaShop Help</title>
 				<link href='//help.prestashop.com/css/help.css' rel='stylesheet'>
-				<link href='//fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-				<script src='"._PS_JS_DIR_."/jquery/jquery-1.11.0.min.js'></script>
-				<script src='"._PS_JS_DIR_."/jquery/plugins/jquery.storageapi.js'></script>
-				<script src='themes/default/js/help.js'></script>
+				<link href='//fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet'>
+				<script src='"._PS_JS_DIR_."jquery/jquery-1.11.0.min.js'></script>
+				<script src='"._PS_JS_DIR_."jquery/plugins/jquery.storageapi.js'></script>
+				<script src='"._PS_JS_DIR_."admin.js'></script>
+				<script src='"._PS_JS_DIR_."tools.js'></script>
 				<script>
 					help_class_name='".addslashes($help_class_name)."';
+					iso_user = '".addslashes($this->context->language->iso_code)."'
+				</script>
+				<script src='themes/default/js/help.js'></script>
+				<script>
 					$(function(){
 						initHelp();
 					});
@@ -3350,7 +3359,6 @@ class AdminControllerCore extends Controller
 		</html>";
 		die($popupContent);
 	}
-
 
 	/**
 	 * Enable multiple items
@@ -3808,5 +3816,38 @@ class AdminControllerCore extends Controller
 			$return = '<select id="select_'.$module->name.'">'.$return.'</select>';
 
 		return $return;
+	}
+		
+	public function ajaxProcessGetModuleQuickView()
+	{
+		$modules = Module::getModulesOnDisk();
+
+		foreach ($modules as $module)
+			if ($module->name == Tools::getValue('module'))
+				break;
+
+		$url = $module->url;
+
+		if (isset($module->type) && ($module->type == 'addonsPartner' || $module->type == 'addonsNative'))
+			$url = $this->context->link->getAdminLink('AdminModules').'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name);
+
+		$this->context->smarty->assign(array(
+			'displayName' => $module->displayName,
+			'image' => $module->image,
+			'nb_rates' => (int)$module->nb_rates[0],
+			'avg_rate' => (int)$module->avg_rate[0],
+			'badges' => $module->badges,
+			'compatibility' => $module->compatibility,
+			'description_full' => $module->description_full,
+			'additional_description' => $module->additional_description,
+			'is_addons_partner' => (isset($module->type) && ($module->type == 'addonsPartner' || $module->type == 'addonsNative')),
+			'url' => $url,
+			'price' => $module->price
+			
+		));
+		// Fetch the translations in the right place - they are not defined by our current controller!
+		Context::getContext()->override_controller_name_for_translations = 'AdminModules';
+		$this->smartyOutputContent('controllers/modules/quickview.tpl');
+		die(1);
 	}
 }

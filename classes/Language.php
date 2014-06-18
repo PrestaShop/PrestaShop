@@ -733,8 +733,8 @@ class LanguageCore extends ObjectModel
 
 		// Initialize the language
 		$lang = new Language();
-		$lang->iso_code = $iso_code;
-		$lang->language_code = $iso_code;
+		$lang->iso_code = Tools::strtolower($iso_code);
+		$lang->language_code = $iso_code; // Rewritten afterwards if the language code is available
 		$lang->active = true;
 
 		// If the language pack has not been provided, retrieve it from prestashop.com
