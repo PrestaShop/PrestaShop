@@ -276,7 +276,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 									'label' => $this->l('No')
 								)
 							),
-							'hint' => $this->l('Indicates if products have been either partially or completely received. This will allow you to know if ordered products have to be added to the corresponding warehouse.'),
+							'hint' => $this->l('Indicates whether the supplies have been either partially or completely received. This will allow you to know if ordered products have to be added to the corresponding warehouse.'),
 						),
 						array(
 							'type' => 'switch',

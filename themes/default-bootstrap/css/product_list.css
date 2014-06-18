@@ -21,12 +21,18 @@ ul.product_list .color-list-container {
   margin-bottom: 12px; }
   ul.product_list .color-list-container ul li {
     display: inline-block;
-    border: 1px solid #d6d4d4; }
+    border: 1px solid #d6d4d4;
+    width: 26px;
+    height: 26px; }
     ul.product_list .color-list-container ul li a {
       display: block;
-      width: 23px;
-      height: 23px;
-      margin: 1px; }
+      width: 22px;
+      height: 22px;
+      margin:1px; }
+	    ul.product_list .color-list-container ul li a img {
+	      display: block;
+	      width: 22px;
+	      height: 22px; }
 ul.product_list .product-image-container {
   text-align: center; }
   ul.product_list .product-image-container img {

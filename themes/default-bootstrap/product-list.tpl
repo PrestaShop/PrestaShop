@@ -80,7 +80,7 @@
 										{/if}
 									{/if}
 									{hook h="displayProductPriceBlock" product=$product type="price"}
-									{hook h="displayProductPriceBlock" product=$product type="unit_price"}	
+									{hook h="displayProductPriceBlock" product=$product type="unit_price"}
 								{/if}
 							</div>
 						{/if}
@@ -121,6 +121,7 @@
 								<span class="old-price product-price">
 									{displayWtPrice p=$product.price_without_reduction}
 								</span>
+								{hook h="displayProductPriceBlock" id_product=$product.id_product type="old_price"}
 								{if $product.specific_prices.reduction_type == 'percentage'}
 									<span class="price-percent-reduction">-{$product.specific_prices.reduction * 100}%</span>
 								{/if}
@@ -153,7 +154,7 @@
 						</a>
 					</div>
 					{if isset($product.color_list)}
-						<div class="color-list-container">{$product.color_list} </div>
+						<div class="color-list-container">{$product.color_list}</div>
 					{/if}
 					<div class="product-flags">
 						{if (!$PS_CATALOG_MODE AND ((isset($product.show_price) && $product.show_price) || (isset($product.available_for_order) && $product.available_for_order)))}

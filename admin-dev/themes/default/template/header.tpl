@@ -30,7 +30,12 @@
 <html lang="{$iso}">
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=0.75, maximum-scale=0.75, user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<link rel="icon" type="image/x-icon" href="{$img_dir}favicon.ico" />
+	<link rel="apple-touch-icon" href="{$img_dir}app_icon.png" />
+
 	<meta name="robots" content="NOFOLLOW, NOINDEX">
 	<title>{if $meta_title != ''}{$meta_title} • {/if}{$shop_name}</title>
 	{if $display_header}
@@ -74,6 +79,7 @@
 		var tab_modules_list = '{if isset($tab_modules_list) && $tab_modules_list}{$tab_modules_list|addslashes}{/if}';
 		var update_success_msg = '{l s='Update successful' js=1}';
 		var errorLogin = '{l s='PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.'}';
+		var search_product_msg = '{l s='Search for a product' js=1}';
 	</script>
 {/if}
 {if isset($css_files)}
@@ -87,8 +93,6 @@
 {/foreach}
 {/if}
 
-	<link rel="icon" type="image/vnd.microsoft.icon" href="{$img_dir}favicon.ico" />
-	<link rel="shortcut icon" type="image/x-icon" href="{$img_dir}favicon.ico" />
 	{if isset($displayBackOfficeHeader)}
 		{$displayBackOfficeHeader}
 	{/if}

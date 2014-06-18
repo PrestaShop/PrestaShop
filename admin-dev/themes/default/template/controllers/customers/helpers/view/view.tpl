@@ -318,7 +318,7 @@
 					<tbody>
 						{foreach $products AS $key => $product}
 						<tr onclick="document.location = '?tab=AdminOrders&id_order={$product['id_order']}&vieworder&token={getAdminToken tab='AdminOrders'}'">
-							<td>{dateFormat date=$order['date_add'] full=0}</td>
+							<td>{dateFormat date=$product['date_add'] full=0}</td>
 							<td>
 								<a href="?tab=AdminOrders&amp;id_order={$product['id_order']}&amp;vieworder&amp;token={getAdminToken tab='AdminOrders'}">
 									{$product['product_name']}

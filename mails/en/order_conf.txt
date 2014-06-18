@@ -19,7 +19,7 @@ QUANTITY
 
 TOTAL PRICE
 
-{products} 
+{products_txt} 
 
 {discounts} 
 
@@ -51,9 +51,9 @@ CARRIER: {carrier}
 
 PAYMENT: {payment} 		 
 
-{delivery_block_html} 
+{delivery_block_txt} 
 
-{invoice_block_html} 
+{invoice_block_txt} 
 
 You can review your order and download your invoice from the
 "Order history" [{history_url}] section of your

@@ -24,6 +24,280 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.6
 --------------------------------
 ####################################
+#   v1.6.0.7 - (2014-06-17)  #
+####################################
+
+	Fixed bugs:
+
+	[-] Installer : Fix the name of the language    PT-BR is Portuguese of Brazil's, PT-PT is Portuguese of Portugal
+
+	[-] FO : Fix bug #PSCSX-2388, fancybox on visible thumbs    Conflicts: themes/default-bootstrap/js/product.js
+	[-] FO : product-list-colors bad cache id
+	[-] FO : Fix bug #PSCFV-12176, var not sanitized in stores.js
+	[-] FO : Fix bug #PSCSX-2236, bad check on addJs array
+	[-] FO : Fix bug #PSCSX-1730, could not translate customization upload inputs
+	[-] FO: Improve performance of some SQL requests #PSCSX-2321
+	[-] FO : Fix display issue #PSCSX-2229 on homeslider
+	[-] FO : Fix bug #PSCFV-12140, color status in front
+	[-] FO : Fix bug #PSCFV-12140, could not see order status color
+	[-] FO : Fix bug #PSCSX-2299, followup https://github.com/PrestaShop/PrestaShop/commit/14374814021310677909b17ea1ba52cace6d3756
+	[-] FO : Css fix
+	[-] FO : Fix bug #PSCSX-2216, uniform conflict with radio inputs
+	[-] FO : Fix bug #PSCSX-2193, cms category description
+	[-] FO : no View larger with default img
+	[-] FO : Fix #PSCSX-2208, undefined
+	[-] FO : Fix bug #PSCFV-12113, duplicate phone in stores address
+	[-] FO : Fix bug #PSCSX-2184 when !PS_BLOCK_CART_AJAX
+	[-] FO : Fix bug #PSCSX-2025, no texture in product-list
+	[-] FO : Fix bug #PSCSX-2142, bad state selected
+	[-] FO : Correct displaying issue #PSCSX-2091
+	[-] FO : Fix #PSCFV-12006, erratic cart rules highlight
+	[-] FO : product.js Fix amount discount and display prices without tax (customer group)
+	[-] FO : Fix bug #PSCSX-2090, bad discount value when TI on shopping cart
+	[-] FO: css and not js folder.
+	[-] FO : Fix bug #PSCSX-2083, no oos message
+	[-] FO : Fix bug #PSCFV-12066, Cart carrier not updated correctly when carrier selected before account create
+	[-] FO : Fix bug #PSCSX-2066, nb of item per page badly set from cookie
+	[-] FO : Css fix #PSCSX-2037
+	[-] FO : Fix bug #PSCSX-2037, stock label when allow oosp
+	[-] FO : Category image resize FF
+	[-] FO : Fix bug #PSCFV-11922, bad carrier default selection
+	[-] FO : Fix bug #PSCSX-2014, bad carrier in OPC
+	[-] FO : fixed global sass file, charset is now taken in account on compilation
+	[-] FO : Fix bug #PSCFV-12040, google map in https
+	[-] FO : Meta priceCurrency fixed #PSCSX-1991
+	[-] FO : Fix css bug #PSCSX-1929
+	[-] FO : Fix bug #PSCSX-1956, USA adress format
+	[-] FO : Fix bug #PSCSX-1935, notice when using header.php
+	[-] FO : Wrong cache on active ul on index
+	[-] FO : Fix bug #PSCSX-1930, could not delete banner in live edit
+	[-] FO : Bug #PSCSX-1678, Concert price in Voucher table
+	[-] FO : Fix bug #PSCFV-12003, robots.txt without unactive languages
+	[-] FO : Fix bug #PSCFV-12001, previous category badly selected
+	[-] FO : #PSCSX-1889 Css fix
+	[-] FO : order-carrier.js "acceptCGV" method needs "msg_order_carrier" translation which shall depend on PS_CONDITIONS rather than PS_ORDER_PROCESS_TYPE
+	[-] FO : Fix bug #PSCSX-1828, showall button
+	[-] FO : Fix bug #PSCSX-1693, missing infos in stores
+	[-] FO : FixBug #PSCSX-1857
+	[-] FO : Corrected vouchers order details displaying issues #PSCSX-1583
+	[-] FO : FixBug #PSCSX-1505
+	[-] FO : Correcting touch based device issues #PSCSX-1621
+	[-] FO : Category badly instantiated on product page
+	[-] FO : Corrected #PSCSX-1621 ajax-cart touch screen issue
+	[-] FO : Fix bug #PSCSX-1607 missing order message in OPC
+	[-] FO : Fix bug #PSCSX-1717, active
+	[-] FO : Contact form Exception with ip2long
+	[-] FO : Fix css bug #PSCSX-1427
+	[-] FO: Fix controller detection when url rewrite is on
+
+	[-] BO : Fix bug #PSCSX-2410, bad date for bought products
+	[-] BO : fixed undefined help variable for light display
+	[-] BO : fixed radio/checkbox for AdminProduct
+	[-] BO : Fix bug #PSCSX-2402, states for warehouses
+	[-] BO : Could not create shop
+	[-] BO : fixed links with accented characters in contextual help
+	[-] BO : Fix bug #PSCSX-2380, bad domain trim
+	[-] BO : $.scrollto not working
+	[-] BO : Fix bug #PSCFV-12180 no scrollto + norms
+	[-] BO : Fix export theme path check
+	[-] BO : Filemanager prevents null byte
+	[-] BO : fixed contextual help language
+	[-] BO : Fix bug #PSCSX-2354, divider in option list
+	[-] BO : Fix error message on same variation
+	[-] BO : Fix bug #PSCSX-1821, shop url when themeconfugurator not enabled
+	[-] BO : contextual help toc fix
+	[-] BO : Fix bug #PSCSX-2038, bad cars in json in combinations loading
+	[-] BO : Fix bug #PSCSX-2038, open base_dir restrict in AdminProductsController
+	[-] BO : Fix bug #PSCFV-12120, unit price ratio during import
+	[-] BO : Bad AdminFeatures orderby
+	[-] BO : Could not associate image to shop
+	[-] BO : Fix bug #PSCSX-2185, cms preview
+	[-] BO : Fix #PSCSX-2087
+	[-] BO : Fix bug #PSCSX-2174, addresses fixtures
+	[-] BO : Fix bug #PSCSX-2120, admin features orderby
+	[-] BO : Fix bug #PSCSX-2120, manufacturers orderby
+	[-] BO : Fix bug #PSCSX-2120, suppliers order by
+	[-] BO : Missing compagny in manufacturers
+	[-] BO : Fix bug #PSCFV-12089, do not set name as default required field for import
+	[-] BO : Fix bug #PSCFV-12030, false positive on extract return when pclzip
+	[-] BO : Fix bug #PSCSX-2047, chmod on contact attachment
+	[-] BO : Footer github link updated
+	[-] BO : Bug #PSCSX-2101, Display error when modules aren't updated
+	[-] BO : added error management when trying to install a theme without write permissions
+	[-] BO : Fix bug #PSCFV-12091, default shop reset on employee pwd renewal
+	[-] BO : Typo fixed: "sprinf" instead of "sprintf"    When saving email translations with an invalid module name, the error was displayed with *sprinf* function instead of *sprintf*, hence triggering a PHP Fatal Error
+	[-] BO : Fix link to edit customer in group member list
+	[-] BO : Fixed position updating issue #PSCSX-2026 PSCSX-1873    A change made on March 24th prevented to update the positions correctly in some tabs (like "Attributes/Values". The $position_group_identifier variable would be always populated with 1 or 0 instead of the $this->position_group_identifier value.    This will make the "id" HTML attribute wrong and methods such as ajaxProcessUpdateAttributesPositions() to fail. Fixed it by keeping the change made on March 24th and using getValue() instead of getIsset().
+	[-] BO : Add module blacklist for host mode
+	[-] BO : Fixed module action buttons issue #PSCSX-2015
+	[-] BO : Fix feature #PSCFV-12041, choose products categories defaukt display
+	[-] BO : Fix bug #PSCSX-2028, company for suppliers addresses
+	[-] BO : Bug #PSCFV-11515, Supply order autocompletion is now sorted correctly
+	[-] BO : Fix bug #PSCSX-1692, import success
+	[-] BO : renderShopList, reselect disabled group
+	[-] BO : Fix #PSCSX-2003, prevent shop url lik category image rwrite
+	[-] BO: use addJquerylugin (autosize)    (And correct the filename, cause jquery.autosize.min.js doesn't exist !)
+	[-] BO: use addJqueryPlugin (colorpicker)
+	[-] BO : AdminTranslations could not copy in configuration_lang
+	[-] BO : Performance    its not necessary to count Products per Manufacturer here. ( $get_nb_product passed to false )
+	[-] BO : Fix bug #PSCFV-12034, modules removed from Files check
+	[-] BO : Fix bug #PSCFV-11166, orderslips in multishop
+	[-] BO : Install module button style changed #PSCSX-1959
+	[-] BO : fix left and right column display    Hi,    The problem is :    For pages that doesn't exists in 'ps_theme_meta' tables ( like front controller in new module, or add in override/controllers ),    $colums['left_column'] and $colums['right_column'] value is null, so the columns aren't displayed even if $this->display_column_left or $this->display_column_right is set to true.    $column test resolve this problem.    Thanks
+	[-] BO : Fix bug #PSCSX-1686, manufacturers address errors
+	[-] BO : Fix bug #PSCSX-1908, index rewrite
+	[-] BO : Correct abandonned carts issue #PSCSX-691
+	[-] BO : Fix bug #PSCSX-1780, Unable to generate delivery slips without invoices
+	[-] BO : Fix bug #PSCSX-1779, PS_INVOICE not taken into account
+	[-] BO : Fix bug #PSCFV-9880, no overrides pdf TR in FO
+	[-] BO : Fix bug #PSCFV-11989, address required fields for warehouses
+	[-] BO : Images options not checked
+	[-] BO : Bug #PSCSX-1859, AdminTabs - change default link of helperlist
+	[-] BO : Fix bug #PSCSX-1850,bad  price display precision
+	[-] BO : Fix bug #PSCSX-1831 customer_message readed
+	[-] BO : FixBug #PSCSX-1706
+	[-] BO : FixBug #PSCSX-1561 - Customer service order
+	[-] BO : Fix bug #PSCSX-1671, return on confirm in AdminTaxes
+	[-] BO : Fix bug #PSCSX-1682, could not filter with comma
+	[-] BO : Fix bug #PSCSX-1687, html tags in description for AdminTracking
+	[-] BO : #PSCFV-11918, possible bad carriers display IN BO
+	[-] BO : Fix bug #PSCFV-11930, could not import state
+	[-] BO : FixBug #PSCSX-1668
+	[-] BO : Undefined offset
+	[-] BO : Fix bug #PSCSX-1659, could not update conf key PS_GROUP_FEATURE_ACTIVE && PS_COMBINATION_FEATURE_ACTIVE
+	[-] BO : FixBug #PSCSX-1471
+	[-] BO : Bug #PSCFV-11936, Escape HTML char for Return Message
+	[-] BO : FixBug #PSCSX-1741 - Wrong fields label
+	[-] BO : FixBug #PSCSX-1762 - Add more test file
+	[-] BO : FixBug #PSCFV-11946
+	[-] BO : fix fatal when adding a theme without directory
+	[-] BO : FixBug #PSCSX-1569
+	[-] BO : Bug #PSCSX-1767, Display correct number of messages
+	[-] BO : fix a display when updating a module with a file upgrade
+	[-] BO : fix an issue when installing a theme directly from the disc
+
+	[-] CORE : Fix bug #PSCSX-2307, bad language_code in ps_lang < 1.5.6.1
+	[-] CORE : Fix bug #PSCSX-2361, bad closing tag in ajax requests
+	[-] CORE : Fix bug #PSCFV-12169, bad call to Product::cleanPositions
+	[-] CORE : Fix bug #PSCSX-2307, again lang detect conflict
+	[-] CORE : fix mails copy for translation #PSCSX-2133
+	[-] CORE : Fix bug #PSCFV-12147, bad sql join in getAttributesColorList
+	[-] CORE : Fix #PSCSX-2256, add ui.spinner in media dependancies
+	[-] CORE : Fix bug #PSCSX-2110, bad check on country active
+	[-] CORE : external js badly called
+	[-] CORE : Follow up #PSCSX-2039, parsing regex in admin TR
+	[-] CORE : Fixed module install buttons display
+	[-] CORE: Fix feature #PSCFV-10463, enable check for displaying best sellers page
+	[-] CORE : Fix bug #PSCFV-11584 bad cache on setNoMultishipping
+	[-] CORE : Fix bug #PSCFV-11298, context in single shop on module install
+	[-] CORE : Fix bug #PSCFV-11157 part 2
+	[-] CORE : Partial fix for #PSCFV-11157 Default cache attribute problems in multistore
+	[-] CORE : Partial fix for #PSCFV-9955, products restriction
+	[-] CORE : Fixed php issues Cart::duplicate
+	[-] CORE : Fix bug #PSCSX-1961, Db::getInstance method can return server id > total servers
+	[-] CORE : Fix bug #PSCFV-9517, check voucher validity before order validation
+	[-] CORE : Fix bug #PSCSX-1899, short tags in overrides
+	[-] CORE : Fix bug #PSCSX-1898 Missing trailing slash
+	[-] Core: Fix cart rule discount price in db when total_products < total_shipping with free shipping #PSCFV-11702
+	[-] CORE : could not disable overrides
+	[-] CORE : FixBug #PSCSX-1834 - modified / deleted address used during order
+	[-] CORE : FixBug #PSCSX-1485 - Wrong orders date information
+	[-] CORE : Fix non recursive module install override
+	[-] CORE: Fix bug #PSCSX-1676, bad id shop for PS_DELIVERY_NUMBER
+
+	[-] MO : blocklayered - Correct filtering issues #PSCSX-2030
+	[-] MO: Product comments comparison    Bug when delete a product from comparator when this have reviews
+	[-] MO : Correct 'show all' issue #PSCSX-2030
+	[-] MO: ratingValue fixed value    Fixed ratingValue
+
+	[-] LO : Fix bug #PSCSX-2348, html in text mails
+	[-] LO : #PSCSX-2009 fix taxRulesGroup in nl.xml
+
+	Improved/changed features:
+
+	[*] Installer : hover on print login information
+
+	[*] FO : better small screen quickview handling #PSCSX-2029
+	[*] FO : Better schema.org support
+	[*] FO :  Add more schema.org attributes
+	[*] FO : Typo    // double strip tag
+	[*] FO : Fix #PSCSX-1703, enable configuration for defering scripts
+	[*] FO : Duplicate line    Unnecessary line in CSS.
+	[*] FO : better footer css #PSCSX-1985
+	[*] FO : Fixed button-medium exclusive hovering - Fix PSCSX-1206
+	[*] FO : Bug #PSCSX-1844, Display correct reduction amount and percentage
+
+	[*] BO : updated bootstrap to latest version
+	[*] BO : admin_theme js + admin themes controller js
+	[*] BO : fixed UI themes
+	[*] BO : Change KPI from Net Profit per Visitor to Net Profit per Visit
+	[*] BO : fixed help.js home + nav
+	[*] BO : fixed top-bar menu
+	[*] BO : fix footer overflow + update schemes
+	[*] BO : UI fixes for addon's login, payments, themes
+	[*] BO : Fix _PS_CACHING_SYSTEM_ selection
+	[*] BO : Prevent nyll bytes in upload name
+	[*] BO : updated github link on login page
+	[*] BO : viewport scale
+	[*] BO : update fontAwesome 4.1 (sass src)
+	[*] BO : help behavior + update fontAwesome 4.1
+	[*] BO : help (fontAwesome)
+	[*] BO : added admin.js to help popup.
+	[*] BO : help
+	[*] BO : fix hidden class for file upload safari/pc
+	[*] BO : HelperFrom, improved html type behavior
+	[*] BO : new help section and some wording for the Carriers page.
+	[*] BO : #PSCSX-2087
+	[*] BO : Add use of tabs in AdminPatters
+	[*] BO : Introduce tabs feature in HelperForm
+	[*] BO : New Theme Page is fully working
+	[*] BO : Introduce tabs feature in HelperOption
+	[*] BO : Fix #PSCFV-12070, bind filter on enter key only
+	[*] BO: better wording for modal_not_trusted.tpl.
+	[*] BO : display order summary without taxes if needed
+	[*] BO : Better dashtrends kpi #PSCSX-1928
+	[*] BO : Scroll to module upload - fix PSCSX-1932
+	[*] BO : added a timeout to footer display - fix PSCSX-1806
+	[*] BO: updating labels and descriptions, and made a string easier to translate, for AdminShopController.
+	[*] BO : helper list - date filters are now localized - fix PSCSX-1874
+	[*] BO : Difference between abandonned cart and non ordered is now available
+	[*] BO : Fix feature #PSCSX-1890, enable country on loc. pack loading
+	[*] BO : Add untrusted modal window on module install
+	[*] BO : Improvement #PSCSX-1830
+	[*] BO: Bug #PSCSX-1606, Add links on KPI
+	[*] BO : Bug #PSCSX-1669, Add search form in AdminSearch page
+	[*] BO : Product Pack Refacto - fixes/updates
+	[*] BO : string updated in AdminStockManagementController.
+	[*] BO : Product Pack refacto
+	[*] BO : clearer labels for request_sql
+	[*] BO : Bug #PSCSX-1763, Display bought label in module list
+	[*] BO : better string for modules/configuration_bar.tpl
+	[*] BO: updating labels and descriptions for Import form.tpl
+
+	[*] CORE : Load all theme xml
+	[*] CORE: Add new XML with all native modules (for all countries)
+	[*] Core : Revamp profiling - fix PSCSX-1933    https://www.dropbox.com/s/hmp4ri5dqrea6e1/Capture%20d%27%C3%A9cran%202014-04-25%2017.24.06.png
+	[*] Core: Bug #PSCSX-1891, Introduce Trusted and Untrusted xml files
+	[*] Core : Add addons API call for isModuleTrusted()
+	[*] CORE: Allow override of DisplayEnableLink in Module class and child class
+
+	[*] MO : blocktopmenu - Better category slide up/down under mobile devices
+
+	[*] PDF : #PSCSX-2023 Add custos to Delivery Slip
+
+	Added Features:
+
+	[+] BO : help update
+	[+] BO : contextual help
+	[+] BO : Added ID on nav/subnav - fix PSCSX-1836
+	[+] BO : Improvement #PSCSX-1426
+	[+] BO : Product Pack Refacto
+
+	[+] LO : Added Hungarian installer
+	[+] LO : Added Norwegian (Bokmål) installer
+
+
+####################################
 #   v1.6.0.6 - (2014-04-10)  #
 ####################################
 

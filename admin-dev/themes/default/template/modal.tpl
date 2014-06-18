@@ -27,7 +27,7 @@
 		<div class="modal-content">
 			{if isset($modal_title)}
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
 				<h4 class="modal-title">{$modal_title}</h4>
 			</div>
 			{/if}

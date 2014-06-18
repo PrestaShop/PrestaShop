@@ -21,8 +21,8 @@ needs please refer to http://www.prestashop.com for more information.
 @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 International Registered Trademark & Property of PrestaShop SA
 
-NAME: Prestashop 1.6.0.6
-VERSION: 1.6.0.6
+NAME: Prestashop 1.6.0.7
+VERSION: 1.6.0.7
 
 PREPARAZIONE
 ===========

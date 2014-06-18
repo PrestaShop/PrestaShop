@@ -62,6 +62,7 @@ function calcPriceTI()
 	var tax = getTax();
 	var priceTE = parseFloat(document.getElementById('priceTEReal').value.replace(/,/g, '.'));
 	var newPrice = priceTE * ((tax / 100) + 1);
+
 	document.getElementById('priceTI').value = (isNaN(newPrice) == true || newPrice < 0) ? '' :
 		ps_round(newPrice, priceDisplayPrecision);
 	document.getElementById('finalPrice').innerHTML = (isNaN(newPrice) == true || newPrice < 0) ? '' :
@@ -69,8 +70,17 @@ function calcPriceTI()
 	document.getElementById('finalPriceWithoutTax').innerHTML = (isNaN(priceTE) == true || priceTE < 0) ? '' :
 		(ps_round(priceTE, 6) + getEcotaxTaxExcluded()).toFixed(6);
 	calcReduction();
-	$('#priceTI').val((parseFloat($('#priceTI').val()) + getEcotaxTaxIncluded()).toFixed(priceDisplayPrecision));
-	$('#finalPrice').html(parseFloat($('#priceTI').val()).toFixed(priceDisplayPrecision));
+
+	if (isNaN(parseFloat($('#priceTI').val())))
+	{
+		$('#priceTI').val('');
+		$('#finalPrice').html('');
+	}
+	else
+	{
+		$('#priceTI').val((parseFloat($('#priceTI').val()) + getEcotaxTaxIncluded()).toFixed(priceDisplayPrecision));
+		$('#finalPrice').html(parseFloat($('#priceTI').val()).toFixed(priceDisplayPrecision));
+	}
 }
 
 function calcPriceTE()

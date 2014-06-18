@@ -60,13 +60,16 @@ class ShopUrlCore extends ObjectModel
 	 */
 	public function getFields()
 	{
-		$this->physical_uri = trim($this->physical_uri, '/');
+		$this->domain = trim($this->domain);
+		$this->domain_ssl = trim($this->domain_ssl);
+		$this->physical_uri = trim(str_replace(' ', '', $this->physical_uri), '/');
+
 		if ($this->physical_uri)
 			$this->physical_uri = preg_replace('#/+#', '/', '/'.$this->physical_uri.'/');
 		else
 			$this->physical_uri = '/';
 
-		$this->virtual_uri = trim($this->virtual_uri, '/');
+		$this->virtual_uri = trim(str_replace(' ', '', $this->virtual_uri), '/');
 		if ($this->virtual_uri)
 			$this->virtual_uri = preg_replace('#/+#', '/', trim($this->virtual_uri, '/')).'/';
 
