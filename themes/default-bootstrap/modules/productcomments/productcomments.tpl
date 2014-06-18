@@ -27,29 +27,33 @@
 		{if $comments}
 			{foreach from=$comments item=comment}
 				{if $comment.content}
-				<div class="comment row">
+				<div class="comment row" itemprop="review" itemscope itemtype="http://schema.org/Review">
 					<div class="comment_author col-sm-2">
 						<span>{l s='Grade' mod='productcomments'}&nbsp;</span>
-						<div class="star_content clearfix">
-						{section name="i" start=0 loop=5 step=1}
-							{if $comment.grade le $smarty.section.i.index}
-								<div class="star"></div>
-							{else}
-								<div class="star star_on"></div>
-							{/if}
-						{/section}
+						<div class="star_content clearfix"  itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">
+							{section name="i" start=0 loop=5 step=1}
+								{if $comment.grade le $smarty.section.i.index}
+									<div class="star"></div>
+								{else}
+									<div class="star star_on"></div>
+								{/if}
+							{/section}
+            				<meta itemprop="worstRating" content = "0" />
+							<meta itemprop="ratingValue" content = "{$comment.grade|escape:'html':'UTF-8'}" />
+            				<meta itemprop="bestRating" content = "5" />
 						</div>
 						<div class="comment_author_infos">
-							<strong>{$comment.customer_name|escape:'html':'UTF-8'}</strong>
+							<strong itemprop="author">{$comment.customer_name|escape:'html':'UTF-8'}</strong>
+							<meta itemprop="datePublished" content="{$comment.date_add|escape:'html':'UTF-8'|substr:0:10}" />
 							<em>{dateFormat date=$comment.date_add|escape:'html':'UTF-8' full=0}</em>
 						</div>
 					</div> <!-- .comment_author -->
-					
+
 					<div class="comment_details col-sm-10">
-						<p class="title_block">
+						<p itemprop="name" class="title_block">
 							<strong>{$comment.title}</strong>
 						</p>
-						<p>{$comment.content|escape:'html':'UTF-8'|nl2br}</p>
+						<p itemprop="reviewBody">{$comment.content|escape:'html':'UTF-8'|nl2br}</p>
 						<ul>
 							{if $comment.total_advice > 0}
 								<li>
@@ -78,7 +82,7 @@
 							{/if}
 						</ul>
 					</div><!-- .comment_details -->
-					
+
 				</div> <!-- .comment -->
 				{/if}
 			{/foreach}
@@ -99,7 +103,7 @@
 			{else}
 			<p class="align_center">{l s='No customer comments for the moment.' mod='productcomments'}</p>
 			{/if}
-		{/if}	
+		{/if}
 	</div> <!-- #product_comments_block_tab -->
 </div>
 
@@ -184,7 +188,7 @@
 {addJsDef productcomments_url_rewrite=$productcomments_url_rewriting_activated|boolval}
 {addJsDef secure_key=$secure_key}
 
-{addJsDefL name=confirm_report_message}{l s='Are you sure you want report this comment?' mod='productcomments' js=1}{/addJsDefL}
+{addJsDefL name=confirm_report_message}{l s='Are you sure that you want to report this comment?' mod='productcomments' js=1}{/addJsDefL}
 {addJsDefL name=productcomment_added}{l s='Your comment has been added!' mod='productcomments' js=1}{/addJsDefL}
 {addJsDefL name=productcomment_added_moderation}{l s='Your comment has been added and will be available once approved by a moderator' mod='productcomments' js=1}{/addJsDefL}
 {addJsDefL name=productcomment_title}{l s='New comment' mod='productcomments' js=1}{/addJsDefL}

@@ -67,7 +67,7 @@ class AdminCustomersControllerCore extends AdminController
 
 		$this->_select = '
 		a.date_add, gl.name as title, (
-			SELECT SUM(total_paid_tax_excl / conversion_rate) FROM '._DB_PREFIX_.'orders o
+			SELECT SUM(total_paid_real / conversion_rate) FROM '._DB_PREFIX_.'orders o
 			WHERE o.id_customer = a.id_customer
 			'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 			AND a.active = 1
@@ -86,7 +86,7 @@ class AdminCustomersControllerCore extends AdminController
 				'class' => 'fixed-width-xs'
 			),
 			'title' => array(
-				'title' => $this->l('Title'),
+				'title' => $this->l('Social title'),
 				'filter_key' => 'a!id_gender',
 				'type' => 'select',
 				'list' => $titles_array,
@@ -131,14 +131,14 @@ class AdminCustomersControllerCore extends AdminController
 				'filter_key' => 'a!active'
 			),
 			'newsletter' => array(
-				'title' => $this->l('News.'),
+				'title' => $this->l('Newsletter'),
 				'align' => 'text-center',
 				'type' => 'bool',
 				'callback' => 'printNewsIcon',
 				'orderby' => false
 			),
 			'optin' => array(
-				'title' => $this->l('Opt.'),
+				'title' => $this->l('Opt-in'),
 				'align' => 'text-center',
 				'type' => 'bool',
 				'callback' => 'printOptinIcon',
@@ -323,7 +323,7 @@ class AdminCustomersControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Title'),
+					'label' => $this->l('Social title'),
 					'name' => 'id_gender',
 					'required' => false,
 					'class' => 't',
@@ -417,7 +417,7 @@ class AdminCustomersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Opt in'),
+					'label' => $this->l('Opt-in'),
 					'name' => 'optin',
 					'required' => false,
 					'class' => 't',
@@ -712,7 +712,7 @@ class AdminCustomersControllerCore extends AdminController
 		$products = $customer->getBoughtProducts();
 		$total_products = count($products);
 		for ($i = 0; $i < $total_products; $i++)
-			$products[$i]['date_add'] = Tools::displayDate($products[$i]['date_add'], null, true);
+			$products[$i]['date_add'] = Tools::displayDate($products[$i]['date_add'], null, false);
 
 		$carts = Cart::getCustomerCarts($customer->id);
 		$total_carts = count($carts);

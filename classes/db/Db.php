@@ -191,7 +191,7 @@ abstract class DbCore
 		else
 		{
 			$id++;
-			$id_server = ($total_servers > 2 && ($id % $total_servers) != 0) ? $id : 1;
+			$id_server = ($total_servers > 2 && ($id % $total_servers) != 0) ? $id % $total_servers : 1;
 		}
 
 		if (!isset(self::$instance[$id_server]))
@@ -373,7 +373,7 @@ abstract class DbCore
 						throw new PrestaShopDatabaseException('Keys form $data subarray don\'t match');
 				}
 				else
-					$keys[] = "`$key`";
+					$keys[] = '`'.bqSQL($key).'`';
 
 				if (!is_array($value))
 					$value = array('type' => 'text', 'value' => $value);
@@ -408,15 +408,15 @@ abstract class DbCore
 		if ($add_prefix)
 			$table = _DB_PREFIX_.$table;
 
-		$sql = 'UPDATE `'.$table.'` SET ';
+		$sql = 'UPDATE `'.bqSQL($table).'` SET ';
 		foreach ($data as $key => $value)
 		{
 			if (!is_array($value))
 				$value = array('type' => 'text', 'value' => $value);
 			if ($value['type'] == 'sql')
-				$sql .= "`$key` = {$value['value']},";
+				$sql .= '`'.bqSQL($key)."` = {$value['value']},";
 			else
-				$sql .= ($null_values && ($value['value'] === '' || is_null($value['value']))) ? "`$key` = NULL," : "`$key` = '{$value['value']}',";
+				$sql .= ($null_values && ($value['value'] === '' || is_null($value['value']))) ? '`'.bqSQL($key)."` = NULL," : '`'.bqSQL($key)."` = '{$value['value']}',";
 		}
 
 		$sql = rtrim($sql, ',');

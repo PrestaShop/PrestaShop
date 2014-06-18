@@ -23,7 +23,7 @@
 			background-color: lighten(#CAE5F4,8%)
 			input[type="text"].filter, input[type="password"].filter, select.filter
 				font-size: 11px
-				padding: 0 4px
+				padding: 4px
 				border-color: darken(#CAE5F4,10%)
 	input, select
 		margin: 0
@@ -140,6 +140,9 @@ tr.highlighted td
 		clear: both
 		font-size: $icon-size-base*6
 		@include text-shadow(white 1px 1px 0)
+
+.date_range .input-group:first-child
+	margin-bottom: 5px
 
 @media (max-width: $screen-sm-max)
 	.table-responsive

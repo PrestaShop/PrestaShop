@@ -22,19 +22,18 @@
 	color: $brand-danger
 
 .dash_trend_down
-	color: red
+	color: $brand-danger
 	&:before
 		font-family: FontAwesome
 		content: "\f0ab"
 		@include margin-right(4px)
 .dash_trend_up
-	color: green
+	color: $brand-success
 	&:before
 		font-family: FontAwesome
 		content: "\f0aa"
 		@include margin-right(4px)
 .dash_trend_right
-	color: darkblue
 	&:before
 		font-family: FontAwesome
 		content: "\f0a9"
@@ -141,10 +140,33 @@
 			margin-bottom: 0
 		#dashtrends_toolbar
 			margin: 0 -16px 10px
+			dl
+				@include box-shadow(0 0 0 2px white inset)
+				dt
+					color: #777
+					padding: 0
+					margin: 0
+					height: 20px
+				dd.data_value
+					color: #aaa
+					margin-bottom: 8px
+				dd.dash_trend
+					background-color: white
+					width: 80px
+					margin: 0 auto
+					@include border-radius(3px)
+				&:hover
+					dt, dd.data_value
+						color: $brand-primary
+					dt
+						text-decoration: underline
+				&.active
+					dt, dd.data_value
+						color: white
 		dl
 			cursor: pointer
 			margin: 0
-			min-height: 90px
+			min-height: 70px
 			text-align: center
 			background-color: white
 			padding: 10px
@@ -158,8 +180,6 @@
 				dt
 					color: white
 					font-size: 1.2em
-				dd
-					color: white
 		dt
 			text-align: center
 			height: 37px

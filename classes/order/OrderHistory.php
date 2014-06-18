@@ -128,11 +128,11 @@ class OrderHistoryCore extends ObjectModel
 							$assign[$key]['downloadable'] = (int)$product_download->nb_downloadable;
 					}
 				}
-								
+
 				$customer = new Customer((int)$order->id_customer);
 				
 				$links = '<ul>';
-				foreach($assign as $product)
+				foreach ($assign as $product)
 				{
 					$links .= '<li>';
 					$links .= '<a href="'.$product['link'].'">'.Tools::htmlentitiesUTF8($product['name']).'</a>';
@@ -144,14 +144,14 @@ class OrderHistoryCore extends ObjectModel
 				}
 				$links .= '</ul>';
 				$data = array(
-						'{lastname}' => $customer->lastname,
-						'{firstname}' => $customer->firstname,
-						'{id_order}' => (int)$order->id,
-						'{order_name}' => $order->getUniqReference(),
-						'{nbProducts}' => count($virtual_products),
-						'{virtualProducts}' => $links
-					);
-				// If there's at least one downloadable file
+					'{lastname}' => $customer->lastname,
+					'{firstname}' => $customer->firstname,
+					'{id_order}' => (int)$order->id,
+					'{order_name}' => $order->getUniqReference(),
+					'{nbProducts}' => count($virtual_products),
+					'{virtualProducts}' => $links
+				);
+				// If there is at least one downloadable file
 				if (!empty($assign))
 					Mail::Send((int)$order->id_lang, 'download_product', Mail::l('Virtual product to download', $order->id_lang), $data, $customer->email, $customer->firstname.' '.$customer->lastname,
 						null, null, null, null, _PS_MAIL_DIR_, false, (int)$order->id_shop);
@@ -284,6 +284,8 @@ class OrderHistoryCore extends ObjectModel
 
 		if ($new_os->invoice && !$order->invoice_number)
 			$order->setInvoice($use_existing_payment);
+		elseif ($new_os->delivery && !$order->delivery_number)
+			$order->setDeliverySlip();
 
 		// set orders as paid
 		if ($new_os->paid == 1)

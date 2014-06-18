@@ -91,20 +91,20 @@ abstract class Controller extends ControllerCore
 	{
 		$n /= 1048576;
 		if ($n > 3)
-			return '<span style="color:red">'.round($n, 2).' Mb</span>';
+			return '<span style="color:red">'.sprintf('%0.2f', $n).'</span>';
 		if ($n > 1)
-			return '<span style="color:orange">'.round($n, 2).' Mb</span>';
-		return '<span style="color:green">'.round($n, 2).' Mb</span>';
+			return '<span style="color:orange">'.sprintf('%0.2f', $n).'</span>';
+		return '<span style="color:green">'.sprintf('%0.2f', $n).'</span>';
 	}
 
 	private function displayPeakMemoryColor($n)
 	{
 		$n /= 1048576;
 		if ($n > 16)
-			return '<span style="color:red">'.round($n, 1).' Mb</span>';
+			return '<span style="color:red">'.sprintf('%0.1f', $n).'</span>';
 		if ($n > 12)
-			return '<span style="color:orange">'.round($n, 1).' Mb</span>';
-		return '<span style="color:green">'.round($n, 1).' Mb</span>';
+			return '<span style="color:orange">'.sprintf('%0.1f', $n).'</span>';
+		return '<span style="color:green">'.sprintf('%0.1f', $n).'</span>';
 	}
 
 	private function displaySQLQueries($n)
@@ -128,10 +128,10 @@ abstract class Controller extends ControllerCore
 	private function displayLoadTimeColor($n, $kikoo = false)
 	{
 		if ($n > 1)
-			return '<span style="color:red">'.round($n, 3).'s</span>'.($kikoo ? '<br />You\'d better run your shop on a toaster' : '');
+			return '<span style="color:red">'.round($n * 1000).'</span>'.($kikoo ? ' ms<br />You\'d better run your shop on a toaster' : '');
 		if ($n > 0.5)
-			return '<span style="color:orange">'.round($n * 1000).'ms</span>'.($kikoo ? '<br />I hope it is a shared hosting' : '');
-		return '<span style="color:green">'.round($n * 1000).'ms</span>'.($kikoo ? '<br />Good boy! That\'s what I call a webserver!' : '');
+			return '<span style="color:orange">'.round($n * 1000).'</span>'.($kikoo ? ' ms<br />I hope it is a shared hosting' : '');
+		return '<span style="color:green">'.round($n * 1000).'</span>'.($kikoo ? ' ms<br />Good boy! That\'s what I call a webserver!' : '');
 	}
 
 	private function getTimeColor($n)
@@ -306,7 +306,7 @@ abstract class Controller extends ControllerCore
 
 		$memory_peak_usage = memory_get_peak_usage();
 			
-		$hr = '<hr style="color:#F5F5F5;margin:2px" />';
+		$hr = '<hr>';
 
 		$totalSize = 0;
 		foreach (get_included_files() as $file)
@@ -344,62 +344,174 @@ abstract class Controller extends ControllerCore
  	 	$totalCacheSize = $this->sizeofvar($cache);
 
 		echo '
-		<div style="clear:both;height:20px;line-height:20px">&nbsp;</div>
-		<div style="margin:50px;background-color:#FFFFFF">
-		<div class="rte" style="text-align:left;padding:8px;float:left">
-			<b>Load time</b>: '.$this->displayLoadTimeColor($this->_time['display'] - $start_time, true).'';
-		if (self::$_footer)
-			echo '<ul>';
-			$last_time = $start_time;
-			foreach ($this->_time as $k => $time)
-			{
-				echo '<li>'.$k.': '.$this->displayLoadTimeColor($time - $last_time).'</li>';
-				$last_time = $time;
+		<style>
+			#ps_profiling{
+				padding: 20px;
 			}
-			echo '</ul>';
+			.ps_back-office.page-sidebar #ps_profiling{
+				margin-left: 210px;
+			}
+			.ps_back-office.page-sidebar-closed #ps_profiling{
+				margin-left: 50px;
+			}
+			.ps_back-office #ps_profiling{
+				clear: both;
+				padding: 10px;
+				margin-bottom: 50px;
+			}
+			#ps_profiling *{
+				box-sizing:border-box;
+				-moz-box-sizing:border-box;
+				color: #888;
+			}
+			#ps_profiling .ps_profiling_title{
+				font-size: 20px;
+				display: inline-block;
+				padding-bottom: 15px;
+			}
+			#ps_profiling ul{
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+			#ps_profiling hr{
+				margin: 5px 0;
+				padding: 0;
+				border: none;
+				border-bottom: solid 1px #ccc;
+			}
+			#ps_profiling td pre{
+				padding: 6px;
+				max-width: 600px;
+				max-height: 140px;
+				border-radius: 5px;
+				overflow: auto;
+				display: block;
+				color: #777;
+				font-size: 12px;
+				line-height: 1.42857;
+				word-break: break-all;
+				word-wrap: break-word;
+				background-color: whitesmoke;
+				border: 1px solid #cccccc;
+			}
+			#ps_profiling table{
+				width: 100%;
+				margin-bottom: 10px;
+				background-color: white;
+			}
+			#ps_profiling table th{
+				font-weight: normal;
+				border-bottom: 1px solid #999;
+				color: #888;
+				padding: 5px 0;
+			}
+			#ps_profiling table td{
+				border-bottom: 1px solid #eee;
+				padding: 6px;
+			}
+
+			#ps_profiling table .text-right{
+				text-align: right
+			}
+			#ps_profiling table .text-left{
+				text-align: left
+			}
+			#ps_profiling table .text-center{
+				text-align: center
+			}
+			#ps_profiling .ps_profiling_row{
+				clear: both;
+				margin-bottom: 60px;
+			}
+			#ps_profiling .ps_profiling_col4{
+				float: left;
+				padding: 0 10px;
+				border-right: 1px solid #ccc;
+				width: 25%;
+			}
+			@media (max-width: 1200px) {
+				#ps_profiling .ps_profiling_col4 {
+					width: 50%;
+				}
+			}
+			@media (max-width: 600px) {
+				#ps_profiling .ps_profiling_col4 {
+					width: 100%;
+				}
+			}
+			#ps_profiling .ps_profiling_col4:last-child{
+				border-right: none;
+			}
+			#ps_profiling .ps_profiling_infobox{
+				background-color: white;
+				padding: 5px 10px;
+				border: 1px solid #ccc;
+				margin-bottom: 10px;
+			}
+			#ps_profiling .text-muted{
+				color: #bbb;
+			}
+		</style>';
+
+		echo '
+		<div id="ps_profiling">
+		<div class="ps_profiling_row">
+		<div class="ps_profiling_col4">
+			<div class="ps_profiling_infobox"><b>Load time</b>: '.$this->displayLoadTimeColor($this->_time['display'] - $start_time, true).'</div>';
+
+		if (self::$_footer){
+				echo '<table>';
+				echo '<thead><tr><th class="text-left">Execution</th><th class="text-right">Load time (ms)</th></tr><thead><tbody>';
+				$last_time = $start_time;
+				foreach ($this->_time as $k => $time)
+				{
+					echo '<tr><td>'.$k.'</td><td class="text-right">'.$this->displayLoadTimeColor($time - $last_time).'</td></tr>';
+					$last_time = $time;
+				}
+				echo '</tbody></table>';
+			}
 		echo '</div>
-		
-		<div class="rte" style="text-align:left;padding:8px;float:left;margin-left:20px">
-			<b>Hook processing</b>: '.$this->displayLoadTimeColor($totalHookTime).' / '.$this->displayMemoryColor($totalHookMemoryUsage).'<br />
-			'.(int)count($executedModules).' methods called in '.(int)count(array_unique($executedModules)).' modules
-			<ul>';
+		<div class="ps_profiling_col4">
+			<div class="ps_profiling_infobox"><b>Hook processing</b>: '.$this->displayLoadTimeColor($totalHookTime).' ms / '.$this->displayMemoryColor($totalHookMemoryUsage).' Mb<br>
+			'.(int)count($executedModules).' methods called in '.(int)count(array_unique($executedModules)).' modules</div>';
+			echo '<table>';
+			echo '<thead><tr><th class="text-left">Hook</th><th class="text-right">Processing</th></tr><thead><tbody>';
 		foreach ($hooktime as $hook => $time)
-			echo '<li>'.$hook.': '.$this->displayLoadTimeColor($time).' / '.$this->displayMemoryColor($hookMemoryUsage[$hook]).'</li>';
-		echo '</ul>
+			echo '<tr><td>'.$hook.'</td><td class="text-right">'.$this->displayMemoryColor($hookMemoryUsage[$hook]).' Mb in '.$this->displayLoadTimeColor($time).' ms</td></tr>';
+		echo '</table>
 		</div>
-		<div class="rte" style="text-align:left;padding:8px;float:left;margin-left:20px">
-			<b>Memory peak usage</b>: '.$this->displayPeakMemoryColor($memory_peak_usage);
+
+		<div class="ps_profiling_col4">
+			<div class="ps_profiling_infobox"><b>Memory peak usage</b>: '.$this->displayPeakMemoryColor($memory_peak_usage).' Mb</div>';
 		if (self::$_footer)
 		{
-			echo '<ul>';
+			echo '<table>';
+			echo '<thead><tr><th class="text-left">Execution</th><th class="text-right">Memory (Mb)</th><th class="text-right">Total (Mb)</th></tr><thead><tbody>';
 			$last_memory = 0;
 			foreach ($this->_memory as $k => $memory)
 			{
-				echo '<li>'.$k.': '.$this->displayMemoryColor($memory - $last_memory).' ('.$this->displayPeakMemoryColor($this->_mempeak[$k]).')</li>';
+				echo '<tr><td>'.$k.'</td><td class="text-right">'.$this->displayMemoryColor($memory - $last_memory).'</td><td class="text-right">'.$this->displayPeakMemoryColor($this->_mempeak[$k]).'</td></tr>';
 				$last_memory = $memory;
 			}
-			echo '</ul>';
+			echo '<tbody></table>';
 		}
-		echo '<br /><br />
- 	 	<b>Total cache size (in Cache class)</b>: '.$this->displayMemoryColor($totalCacheSize).'
+		echo '
  	 	</div>';
 
 		echo '
-		<div class="rte" style="text-align:left;padding:8px;float:left;margin-left:20px">
-			<b>DB type</b>: '.get_class(Db::getInstance()).'
-			<br /><b>SQL Queries</b>: '.$this->displaySQLQueries(count(Db::getInstance()->queries)).'
-			<br /><b>Time spent querying</b>: '.$this->displayLoadTimeColor($totalQueryTime).'
-		</div>
-		<div class="rte" style="text-align:left;padding:8px;float:left;margin-left:20px">
-			<b>Included files</b>: '.sizeof(get_included_files()).'<br />
-			<b>Size of included files</b>: '.$this->displayMemoryColor($totalSize).'
-		</div>
-		<div class="rte" style="text-align:left;padding:8px;float:left;margin-left:20px">
-			<b>Globals (&gt; 1 Ko only): '.round($totalGlobalSize / 1024).' Ko</b>
+		<div class="ps_profiling_col4">
+			<div class="ps_profiling_infobox"><b>Total cache size (in Cache class)</b>: '.$this->displayMemoryColor($totalCacheSize).' Mb</div>
+			<div class="ps_profiling_infobox"><b>DB type</b>: '.get_class(Db::getInstance()).'</div>
+			<div class="ps_profiling_infobox"><b>SQL Queries</b>: '.$this->displaySQLQueries(count(Db::getInstance()->queries)).'</div>
+			<div class="ps_profiling_infobox"><b>Time spent querying</b>: '.$this->displayLoadTimeColor($totalQueryTime).' ms</div>
+			<div class="ps_profiling_infobox"><b>Included files</b>: '.sizeof(get_included_files()).'</div>
+			<div class="ps_profiling_infobox"><b>Size of included files</b>: '.$this->displayMemoryColor($totalSize).' Mb</div>
+			<div class="ps_profiling_infobox"><b>Globals</b> (&gt; 1 Ko only): '.round($totalGlobalSize / 1024).' Ko
 			<ul>';
-		foreach ($globalSize as $global => $size)
-			echo '<li>'.$global.' &asymp; '.$size.' Ko</li>';
-		echo '</ul>
+			foreach ($globalSize as $global => $size)
+				echo '<li>'.$global.' &asymp; '.$size.' Ko</li>';
+			echo '</ul></div>
 		</div>';
 
 		$array_queries = array();
@@ -428,33 +540,31 @@ abstract class Controller extends ControllerCore
 			}
 			$array_queries[] = $query_row;
 		}
-
+		echo '</div>';
 		echo '
-		<div class="rte" style="text-align:left;padding:8px;clear:both;margin-top:20px">
+		<div class="ps_profiling_row">
 			<ul>
-				<li><a href="#stopwatch">Go to Stopwatch</a></li>
-				<li><a href="#doubles">Go to Doubles</a></li>
-				<li><a href="#tables">Go to Tables</a></li>
-				'.(isset(ObjectModel::$debug_list) ? '<li><a href="#objectModels">Go to ObjectModels</a></li>' : '').'
-				<li><a onclick="$(\'#queries_table\').toggle();" style="cursor:pointer">Display queries table</a></li>
-				<li><a href="#includedFiles">Go to files</a></li>
+				<li><a href="#stopwatch">Stopwatch</a></li>
+				<li><a href="#doubles">Doubles</a></li>
+				<li><a href="#tables">Tables stress</a></li>
+				'.(isset(ObjectModel::$debug_list) ? '<li><a href="#objectModels">ObjectModel instances</a></li>' : '').'
+				<li><a href="#includedFiles">Files included</a></li>
 			</ul>
 		</div>
-		<div id="queries_table" style="display:none;margin:4px">
-			<table class="table std">
-				<tr><th>Time (ms)</th><th>Rows</th><th>Query</th><th>Location</th><th>Filesort</th><th>Group By</th></tr>';
-		foreach ($array_queries as &$data)
-		{
-			$data['location'] = str_replace('\\', '/', substr($data['location'], strlen(_PS_ROOT_DIR_)));
-			$data['query'] = str_replace('SQL_NO_CACHE ', '', $data['query']);
-			echo '<tr><td>'.round(1000 * $data['time'], 3).'</td><td>'.$data['rows'].'</td><td>'.$data['query'].'</td><td>'.$data['location'].'</td><td>'.($data['filesort'] ? 'Yes' : '').'</td><td>'.($data['group_by'] ? 'Yes' : '').'</td></tr>';
-		}
-		echo '
-			</table>
-		</div>
-		<div class="rte" style="text-align:left;padding:8px">
-		<h3><a name="stopwatch">Stopwatch (with SQL_NO_CACHE) (total = '.count(Db::getInstance()->queries).')</a></h3>';
+
+		<div class="ps_profiling_row">
+		<span class="ps_profiling_title"><a name="stopwatch">Stopwatch (with SQL_NO_CACHE) (total = '.count(Db::getInstance()->queries).')</a></span>';
 		$i = 1;
+		echo '<table><thead>
+				<tr>
+				<th class="text-left">Query</th>
+				<th class="text-left" width="80px">Time (ms)</th>
+				<th class="text-left" width="40px">Rows</th>
+				<th class="text-left" width="70px">Filesort</th>
+				<th class="text-left" width="70px">Group By</th>
+				<th class="text-left" width="300px">Location</th>
+				</tr>
+				<thead><tbody>';
 		foreach ($array_queries as $data)
 		{
 			$echo_stack = '';
@@ -462,20 +572,16 @@ abstract class Controller extends ControllerCore
 			foreach ($data['stack'] as $call)
 				$echo_stack .= 'from '.str_replace('\\', '/', substr($call['file'], strlen(_PS_ROOT_DIR_))).':'.$call['line'].'<br />';
 
-			echo $hr.'<div onclick="$(\'#qbt'.$i.'\').toggle();"><b '.$this->getTimeColor($data['time'] * 1000).'>'.round($data['time'] * 1000, 3).' ms</b>
-			'.htmlspecialchars($data['query'], ENT_NOQUOTES, 'utf-8', false).'<br />
-			in '.$data['location'].'<br />
-			<div id="qbt'.($i++).'" style="display:none">'.$echo_stack.'</div>';
-			if (preg_match('/^\s*select\s+/i', $data['query']))
-			{
-				if ($data['filesort'])
-					echo '<b '.$this->getTimeColor($data['time'] * 1000).'>USING FILESORT</b> - ';
-				echo $this->displayRowsBrowsed($data['rows']);
-				if ($data['group_by'])
-					echo '<br /><b>Useless GROUP BY need to be removed</b>';
-			}
-			echo '</div>';
+			echo '<tr>';
+			echo '<td><pre>'.preg_replace("/(^[\s]*)/m", "", htmlspecialchars($data['query'], ENT_NOQUOTES, 'utf-8', false)).'</pre></td>';
+			echo '<td><span '.$this->getTimeColor($data['time'] * 1000).'>'.round($data['time'] * 1000, 3).'</span></td>';
+			echo '<td>'.$data['rows'].'</td>';
+			echo '<td>'.($data['filesort'] ? '<span style="color:green">Yes</span>' : '').'</td>';
+			echo '<td>'.($data['group_by'] ? '<span style="color:red">Yes</span>' : '').'</td>';
+			echo '<td>in '.$data['location'].'<br><br><div id="qbt'.($i++).'">'.$echo_stack.'</div></td>';
+			echo '</tr>';
 		}
+		echo '</table>';
 		$queries = Db::getInstance()->uniqQueries;
 		arsort($queries);
 		$count = count(Db::getInstance()->uniqQueries);
@@ -484,54 +590,58 @@ abstract class Controller extends ControllerCore
 			$count--;
 		if ($count)
 			echo '</div>
-			<div class="rte" style="text-align:left;padding:8px">
-			<h3><a name="doubles">Doubles (IDs replaced by "XX") (total = '.$count.')</a></h3>';
+			<div class="ps_profiling_row">
+			<span class="ps_profiling_title"><a name="doubles">Doubles (IDs replaced by "XX") (total = '.$count.')</a></span>
+			<table>';
 		foreach ($queries as $q => $nb)
 			if ($nb > 1)
-				echo $hr.'<b '.$this->getQueryColor($nb).'>'.$nb.'</b> '.$q;
-		echo '</div>
-		<div class="rte" style="text-align:left;padding:8px">
-		<h3><a name="tables">Tables stress</a></h3>';
+				echo '<tr><td><span '.$this->getQueryColor($nb).'>'.$nb.'</span> '.$q.'</td></tr>';
+		echo '</table></div>
+
+		<div class="ps_profiling_row">
+		<span class="ps_profiling_title"><a name="tables">Tables stress</a></span>
+		<table>';
 		$tables = Db::getInstance()->tables;
 		arsort($tables);
 		foreach ($tables as $table => $nb)
-			echo $hr.'<b '.$this->getTableColor($nb).'>'.$nb.'</b> '.$table;
-		echo '</div>';
+			echo '<tr><td><span '.$this->getTableColor($nb).'>'.$nb.'</span> '.$table.'</td></tr>';
+		echo '</table></div>';
 
 		if (isset(ObjectModel::$debug_list))
 		{
-			echo '<div class="rte" style="text-align:left;padding:8px">
-			<h3><a name="objectModels">ObjectModel instances</a></h3>';
+			echo '<div class="ps_profiling_row">
+			<span class="ps_profiling_title"><a name="objectModels">ObjectModel instances</a></span>';
 			$list = ObjectModel::$debug_list;
 			uasort($list, create_function('$a,$b', 'return (count($a) < count($b)) ? 1 : -1;'));
 			$i = 0;
+			echo '<table><thead><tr><th class="text-left">Name</th><th class="text-left">Instance</th><th class="text-left">Source</th></tr></thead><tbody>';
 			foreach ($list as $class => $info)
 			{
-				echo $hr.'<b '.$this->getObjectModelColor(count($info)).'>'.count($info).'</b> ';
-				echo '<a href="#" onclick="$(\'#object_model_'.$i.'\').css(\'display\', $(\'#object_model_'.$i.'\').css(\'display\') == \'none\' ? \'block\' : \'none\'); return false">'.$class.'</a>';
-				echo '<div id="object_model_'.$i.'" style="display: none">';
+				echo '<tr><td>'.$class.'</td>';
+				echo '<td><span '.$this->getObjectModelColor(count($info)).'>'.count($info).'</span></td>';
+				echo '<td><div id="object_model_'.$i.'">';
 				foreach ($info as $trace)
 					echo ltrim(str_replace(array(_PS_ROOT_DIR_, '\\'), array('', '/'), $trace['file']), '/').' ['.$trace['line'].']<br />';
-				echo '</div>';
+				echo '</div></td></tr>';
 				$i++;
 			}
-			echo '</div>';
+			echo '</tbody></table></div>';
 		}
 
 		// List of included files
-		echo '<div class="rte" style="text-align:left;padding:8px">
-		<h3><a name="includedFiles">Included files</a></h3>';
+		echo '<div class="ps_profiling_row">
+		<span class="ps_profiling_title"><a name="includedFiles">Included files</a></span>
+		<table>';
 		$i = 1;
+		echo '<thead><tr><th class="text-left">#</th><th class="text-left">Filename</th></tr></thead><tbody>';
 		foreach (get_included_files() as $file)
 		{
 			$file = ltrim(str_replace('\\', '/', str_replace(_PS_ROOT_DIR_, '', $file)), '/');
-			$file = '<b style="color: red">'.dirname($file).'/</b><b style="color: blue">'.basename($file).'</b>';
-			echo $i.' '.$file.'<br />';
+			$file = '<span class="text-muted">'.dirname($file).'/</span><span>'.basename($file).'</span>';
+			echo '<tr><td>'.$i.'</td><td>'.$file.'</td></tr>';
 			$i++;
 		}
-		echo '</div>
-		<div style="clear:both;height:20px;line-height:20px">&nbsp;</div>
-		</div>';
+		echo '</tbody></table></div></div>';
 	}
 }
 

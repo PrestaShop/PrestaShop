@@ -54,10 +54,7 @@
 	<!-- Pagination -->
 	<div id="pagination{if isset($paginationId)}_{$paginationId}{/if}" class="pagination clearfix">
 	    {if $nb_products > $products_per_page && $start!=$stop}
-			<form
-			class="showall" 
-			action="{if !is_array($requestNb)}{$requestNb}{else}{$requestNb.requestUrl}{/if}" 
-			method="get">
+			<form class="showall" action="{if !is_array($requestNb)}{$requestNb}{else}{$requestNb.requestUrl}{/if}" method="get">
 				<div>
 					{if isset($search_query) AND $search_query}
 						<input type="hidden" name="search_query" value="{$search_query|escape:'html':'UTF-8'}" />
@@ -70,7 +67,7 @@
 	                </button>
 					{if is_array($requestNb)}
 						{foreach from=$requestNb item=requestValue key=requestKey}
-							{if $requestKey != 'requestUrl'}
+							{if $requestKey != 'requestUrl' && $requestKey != 'p'}
 								<input type="hidden" name="{$requestKey|escape:'html':'UTF-8'}" value="{$requestValue|escape:'html':'UTF-8'}" />
 							{/if}
 						{/foreach}

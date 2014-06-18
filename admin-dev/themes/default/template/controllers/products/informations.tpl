@@ -32,6 +32,10 @@
 	<input type="hidden" name="submitted_tabs[]" value="Informations" />
 	<h3 class="tab"> <i class="icon-info"></i> {l s='Information'}</h3>
 	<script type="text/javascript">
+		
+		var msg_select_one = "{l s='Please select at least one product.' js=1}";
+		var msg_set_quantity = "{l s='Please set a quantity to add a product.' js=1}";
+
 		{if isset($ps_force_friendly_product) && $ps_force_friendly_product}
 			var ps_force_friendly_product = 1;
 		{else}
@@ -96,8 +100,6 @@
 
 	{include file="controllers/products/multishop/check_fields.tpl" product_tab="Informations"}
 
-	<div id="warn_virtual_combinations" class="alert alert-warning" style="display:none">{l s='You cannot use combinations with a virtual product.'}</div>
-
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="simple_product">
 			{$bullet_common_field} {l s='Type'}
@@ -105,29 +107,34 @@
 		<div class="col-lg-9">
 			<div class="radio">
 				<label for="simple_product">
-					<input type="radio" name="type_product" id="simple_product" value="{Product::PTYPE_SIMPLE}" {if $product_type == Product::PTYPE_SIMPLE}checked="checked"{/if} />
-					{l s='Standard product'}
-				</label>
+					<input type="radio" name="type_product" id="simple_product" value="{Product::PTYPE_SIMPLE}" {if $product_type == Product::PTYPE_SIMPLE}checked="checked"{/if} >
+					{l s='Standard product'}</label>
 			</div>
 			<div class="radio">
 				<label for="pack_product">
-					<input type="radio" name="type_product" {if $is_in_pack}disabled="disabled"{/if} id="pack_product" value="{Product::PTYPE_PACK}" {if $product_type == Product::PTYPE_PACK}checked="checked"{/if} />
-					{l s='Pack of existing products'}
-				</label>
+					<input type="radio" name="type_product" {if $is_in_pack}disabled="disabled"{/if} id="pack_product" value="{Product::PTYPE_PACK}" {if $product_type == Product::PTYPE_PACK}checked="checked"{/if} > {l s='Pack of existing products'}</label>
 			</div>
 			<div class="radio">
 				<label for="virtual_product">
-					<input type="radio" name="type_product" id="virtual_product" {if $is_in_pack}disabled="disabled"{/if} value="{Product::PTYPE_VIRTUAL}" {if $product_type == Product::PTYPE_VIRTUAL}checked="checked"{/if} />
-					{l s='Virtual product (services, booking, downloadable products, etc.)'}
-				</label>
+					<input type="radio" name="type_product" id="virtual_product" {if $is_in_pack}disabled="disabled"{/if} value="{Product::PTYPE_VIRTUAL}" {if $product_type == Product::PTYPE_VIRTUAL}checked="checked"{/if} >
+					{l s='Virtual product (services, booking, downloadable products, etc.)'}</label>
 			</div>
+
+			<div class="row">
+				<div id="warn_virtual_combinations" class="alert alert-warning" style="display:none">{l s='You cannot use combinations with a virtual product.'}</div>
+				<div id="warn_pack_combinations" class="alert alert-warning" style="display:none">{l s='You cannot use combinations with a pack.'}</div>
+			</div>
+
 		</div>
 	</div>
 
-	<hr/>
+	<div id="product-pack-container" {if $product_type != Product::PTYPE_PACK}style="display:none"{/if}></div>
+
+	<hr>
 
 	<div class="form-group">
 		<label class="control-label col-lg-3 required" for="name_{$id_lang}">
+			{include file="controllers/products/multishop/checkbox.tpl" field="name" type="default" multilang="true"}
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='The public name for this product.'} {l s='Invalid characters:'} &lt;&gt;;=#{}">
 				{l s='Name'}
@@ -139,6 +146,7 @@
 				input_class="{$class_input_ajax}{if !$product->id || Configuration::get('PS_FORCE_FRIENDLY_PRODUCT')}copy2friendlyUrl{/if} updateCurrentText"
 				input_value=$product->name
 				input_name="name"
+				required=true
 			}
 		</div>
 	</div>
@@ -158,7 +166,7 @@
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="ean13">
 			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='This type of product code that is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.'}">
+				title="{l s='This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.'}">
 				{$bullet_common_field} {l s='EAN-13 or JAN barcode'}
 			</span>
 		</label>
@@ -234,7 +242,7 @@
 			<input type="hidden" value="" name="id_product_redirected" />
 
 			<div class="input-group">
-				<input type="text" id="related_product_autocomplete_input" autocomplete="off" class="ac_input" />
+				<input type="text" id="related_product_autocomplete_input" name="related_product_autocomplete_input" autocomplete="off" class="ac_input" />
 				<span class="input-group-addon"><i class="icon-search"></i></span>
 			</div>
 
@@ -273,6 +281,7 @@
 	<div id="product_options" class="form-group">
 		<div class="col-lg-12">
 			<div class="form-group">
+
 				<label class="control-label col-lg-3" for="available_for_order">
 					{if isset($display_multishop_checkboxes) && $display_multishop_checkboxes}
 						{include file="controllers/products/multishop/checkbox.tpl" only_checkbox="true" field="available_for_order" type="default"}
@@ -281,19 +290,22 @@
 					{/if}
 					{l s='Options'}
 				</label>
-				<div class="col-lg-5">
-					<p class="checkbox">
-						<input type="checkbox" name="available_for_order" id="available_for_order" value="1" {if $product->available_for_order}checked="checked"{/if}  />
-						<label for="available_for_order">{l s='Available for order'}</label>
-					</p>
-					<p class="checkbox">	
-						<input type="checkbox" name="show_price" id="show_price" value="1" {if $product->show_price}checked="checked"{/if} {if $product->available_for_order}disabled="disabled"{/if}/>
-						<label for="show_price">{l s='Show price'}</label>
-					</p>
-					<p class="checkbox">
-						<input type="checkbox" name="online_only" id="online_only" value="1" {if $product->online_only}checked="checked"{/if} />
-						<label for="online_only">{l s='Online only (not sold in your retail store)'}</label>
-					</p>
+				<div class="col-lg-9">
+					<div class="checkbox">
+						<label for="available_for_order">
+							<input type="checkbox" name="available_for_order" id="available_for_order" value="1" {if $product->available_for_order}checked="checked"{/if} >
+							{l s='Available for order'}</label>
+					</div>
+					<div class="checkbox">
+						<label for="show_price">
+							<input type="checkbox" name="show_price" id="show_price" value="1" {if $product->show_price}checked="checked"{/if} {if $product->available_for_order}disabled="disabled"{/if} >
+							{l s='Show price'}</label>
+					</div>
+					<div class="checkbox">
+						<label for="online_only">
+							<input type="checkbox" name="online_only" id="online_only" value="1" {if $product->online_only}checked="checked"{/if} >
+							{l s='Online only (not sold in your retail store)'}</label>
+					</div>
 				</div>
 			</div>
 

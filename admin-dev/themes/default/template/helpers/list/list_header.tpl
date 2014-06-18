@@ -62,9 +62,14 @@
 		<script type="text/javascript" src="../js/admin-dnd.js"></script>
 	{/if}
 	<script type="text/javascript">
-		$(document).ready(function() {
-			$('table.{$list_id} .filter').keypress(function(event){
-				formSubmit(event, 'submitFilterButton{$list_id}')
+		$(function() {
+			$('table.{$list_id} .filter').keypress(function(e){
+				var key = (e.keyCode ? e.keyCode : e.which);
+				if (key == 13)
+				{
+					e.preventDefault();
+					formSubmit(event, 'submitFilterButton{$list_id}');
+				}
 			})
 			$('#submitFilterButton{$list_id}').click(function() {
 				$('#submitFilter{$list_id}').val(1);
@@ -73,7 +78,7 @@
 				$("table.{$list_id} .datepicker").datepicker({
 					prevText: '',
 					nextText: '',
-					dateFormat: 'yy-mm-dd'
+					altFormat: 'yy-mm-dd'
 				});
 			}
 		});
@@ -274,18 +279,37 @@
 									</select>
 								{elseif $params.type == 'date' || $params.type == 'datetime'}
 									<div class="date_range row">
-										<div class="input-group fixed-width-md row-margin-bottom">
-											<input type="text" class="filter datepicker date-input form-control" id="{$params.id_date}_0" name="{$params.name_date}[0]" value="{if isset($params.value.0)}{$params.value.0}{/if}" placeholder="{l s='From'}"/>
+ 										<div class="input-group fixed-width-md">
+											<input type="text" class="filter datepicker date-input form-control" id="local_{$params.id_date}_0" name="local_{$params.name_date}[0]"  placeholder="{l s='From'}" />
+											<input type="hidden" id="{$params.id_date}_0" name="{$params.name_date}[0]" value="{if isset($params.value.0)}{$params.value.0}{/if}">
 											<span class="input-group-addon">
 												<i class="icon-calendar"></i>
 											</span>
 										</div>
-										<div class="input-group fixed-width-md">
-											<input type="text" class="filter datepicker date-input form-control" id="{$params.id_date}_1" name="{$params.name_date}[1]" value="{if isset($params.value.1)}{$params.value.1}{/if}" placeholder="{l s='To'}" />
+ 										<div class="input-group fixed-width-md">
+											<input type="text" class="filter datepicker date-input form-control" id="local_{$params.id_date}_1" name="local_{$params.name_date}[1]"  placeholder="{l s='To'}" />
+											<input type="hidden" id="{$params.id_date}_1" name="{$params.name_date}[1]" value="{if isset($params.value.1)}{$params.value.1}{/if}">
 											<span class="input-group-addon">
 												<i class="icon-calendar"></i>
 											</span>
 										</div>
+										<script>
+											function parseDate(date){
+												return $.datepicker.parseDate("yy-mm-dd", date);
+											}
+											$(function() {
+												var dateStart = parseDate($("#{$params.id_date}_0").val());
+												var dateEnd = parseDate($("#{$params.id_date}_1").val());
+												$("#local_{$params.id_date}_0").datepicker("option", "altField", "#{$params.id_date}_0");
+												$("#local_{$params.id_date}_1").datepicker("option", "altField", "#{$params.id_date}_1");
+												if (dateStart !== null){
+													$("#local_{$params.id_date}_0").datepicker("setDate", dateStart);
+												}
+												if (dateEnd !== null){
+													$("#local_{$params.id_date}_1").datepicker("setDate", dateEnd);
+												}
+											});
+										</script>
 									</div>
 								{elseif $params.type == 'select'}
 									{if isset($params.filter_key)}

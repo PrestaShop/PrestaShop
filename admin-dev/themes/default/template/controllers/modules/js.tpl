@@ -36,7 +36,6 @@
 	var ajaxCurrentIndex = '{$ajaxCurrentIndex}';
 	var installed_modules = {if isset($installed_modules) && count($installed_modules)}{$installed_modules}{else}false{/if};
 	var by = '{l s='by'}';
-	var errorLogin = '{l s='PrestaShop was unable to login to Addons. Please check your credentials and your internet connection.'}';
 	var confirmPreferencesSaved = '{l s='Preferences saved'}';
 	{if isset($smarty.get.anchor) && !isset($error_module)}var anchor = '{$smarty.get.anchor|htmlentities|replace:'(':''|replace:')':''|replace:'{':''|replace:'}':''|replace:'\'':''|replace:'/':''}';{else}var anchor = '';{/if}
 
@@ -147,6 +146,7 @@
 
 						$('#moduleContainer').html(data);
 						$('.dropdown-toggle').dropdown();
+						$('.help-tooltip').tooltip();
 					}
 				});
 			}
@@ -177,78 +177,6 @@
 			});
 		}
 		catch(e) { }
-
-		// Method to log on PrestaShop Addons WebServices
-		$('#addons_login_button').click(function()
-		{
-			var username_addons = $("#username_addons").val();
-			var password_addons = $("#password_addons").val();
-			try
-			{
-				resAjax = $.ajax({
-					type:"POST",
-					url : ajaxCurrentIndex,
-					async: true,
-					data : {
-						ajax : "1",
-						token : token,
-						controller : "AdminModules",
-						action : "logOnAddonsWebservices",
-						username_addons : username_addons,
-						password_addons : password_addons
-					},
-					beforeSend: function(xhr){
-						$('#addons_loading').html('<img src="../img/loader.gif" alt="" border="0" />');
-					},
-					success : function(data){
-						if (data == 'OK')
-						{
-							$('#addons_loading').html('');
-							$('#addons_login_div').fadeOut();
-							window.location.href = currentIndexWithToken + '&conf=32';
-						}
-						else
-							$('#addons_loading').html(errorLogin);
-					}
-				});
-			}
-			catch(e){}
-			return false;
-		});
-
-		// Method to log out PrestaShop Addons WebServices
-		$('#addons_logout_button').click(function()
-		{
-			try
-			{
-				resAjax = $.ajax({
-					type:"POST",
-					url : ajaxCurrentIndex,
-					async: true,
-					data : {
-						ajax : "1",
-						token : token,
-						controller : "AdminModules",
-						action : "logOutAddonsWebservices"
-					},
-					beforeSend: function(xhr){
-						$('#addons_loading').html('<img src="../img/loader.gif" alt="" border="0" />');
-					},
-					success: function(data) {
-						if (data == 'OK')
-						{
-							$('#addons_loading').html('');
-							$('#addons_login_div').fadeOut();
-							window.location.href = currentIndexWithToken;
-						}
-						else
-							$('#addons_loading').html(errorLogin);
-					}
-				});
-			}
-			catch(e){}
-			return false;
-		});
 
 		// Method to set filter on modules
 		function setFilter()

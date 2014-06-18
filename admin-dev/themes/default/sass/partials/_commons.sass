@@ -117,6 +117,13 @@
 	@include alert-variant(#F3F3F2, $alert-addons-border, $alert-addons-text)
 	@include alert-panel(icon-puzzle-piece, $brand-addons)
 
+.alert.alert-onboarding
+	$alert-addons-border: lighten($brand-primary,10%)
+	$alert-addons-text: $brand-primary
+	@include alert-variant(white, $alert-addons-border, $alert-addons-text)
+	@include alert-panel(icon-rocket, $brand-primary)
+	border: solid 1px lighten($brand-info,25%)
+
 .alert.alert-message
 	@include alert-panel(icon-comment, $brand-warning)
 	border: solid 2px $brand-warning
@@ -149,4 +156,4 @@
 	border: solid 1px black
 
 #mColorPickerInput
-	color: #000000 
+	color: #000000

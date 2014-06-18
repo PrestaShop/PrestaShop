@@ -34,10 +34,10 @@
 		<p>
 			<a class="btn btn-default" href="{$backup_url}">
 				<i class="icon-download"></i> 
-				{l s='Download the backup file'} ({$backup_weight}{l s='MB'})
+				{l s='Download the backup file (%s MB)' sprintf=$backup_weight}
 			</a>
 		</p>
-		<p>{l s='Tip: You can also download this file over to your FTP. Backup files are located in the "admin/backups" directory.'}</p>
+		<p>{l s='Tip: You can also download this file from your FTP server. Backup files are located in the "/adminXXXX/backups" directory.'}</p>
 	</div>
 
 	<div class="row">

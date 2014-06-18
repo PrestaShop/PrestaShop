@@ -48,7 +48,6 @@
 		<ul class="breadcrumb page-breadcrumb">
 
 			{* Shop *}
-
 			{if isset($is_multishop) && $is_multishop && $shop_list && (isset($multishop_context) && $multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
 				<li class="breadcrumb-multishop">
 					{$shop_list}
@@ -95,8 +94,8 @@
 					{foreach from=$toolbar_btn item=btn key=k}
 					{if $k != 'back' && $k != 'modules-list'}
 					<li>
-						<a id="page-header-desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass|escape}{else}{$k}{/if}" class="toolbar_btn" {if isset($btn.href)}href="{$btn.href|escape}"{/if} title="{$btn.desc|escape}" {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if}>
-							<i class="{if isset($btn.icon)}{$btn.icon|escape}{else}process-icon-{if isset($btn.imgclass)}{$btn.imgclass|escape}{else}{$k}{/if}{/if} {if isset($btn.class)}{$btn.class|escape}{/if}" ></i>
+						<a id="page-header-desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass|escape}{else}{$k}{/if}" class="toolbar_btn" {if isset($btn.href)}href="{$btn.href|escape}"{/if} title="{$btn.desc|escape}" {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if} {if isset($btn.modal_target) && $btn.modal_target}data-target="{$btn.modal_target}" data-toggle="modal"{/if}>
+							<i class="{if isset($btn.icon)}{$btn.icon|escape}{else}process-icon-{if isset($btn.imgclass)}{$btn.imgclass|escape}{else}{$k}{/if}{/if} {if isset($btn.class)}{$btn.class|escape}{/if}"></i>
 							<span {if isset($btn.force_desc) && $btn.force_desc == true } class="locked" {/if}>{$btn.desc|escape}</span>
 						</a>
 					</li>

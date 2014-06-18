@@ -145,9 +145,9 @@ class ProductControllerCore extends FrontController
 					// If the previous page was a category and is a parent category of the product use this category as parent category
 					$id_object = false;
 					if (isset($regs[1]) && is_numeric($regs[1]))
-						$id_object = (int)$regs[2];
+						$id_object = (int)$regs[1];
 					elseif (isset($regs[5]) && is_numeric($regs[5]))
-						$id_object = (int)$regs[6];
+						$id_object = (int)$regs[5];
 					if ($id_object)
 					{
 						$referers = array($_SERVER['HTTP_REFERER'],urldecode($_SERVER['HTTP_REFERER']));
@@ -343,7 +343,8 @@ class ProductControllerCore extends FrontController
 			'group_reduction' => $group_reduction,
 			'no_tax' => Tax::excludeTaxeOption() || !$this->product->getTaxesRate($address),
 			'ecotax' => (!count($this->errors) && $this->product->ecotax > 0 ? Tools::convertPrice((float)$this->product->ecotax) : 0),
-			'tax_enabled' => Configuration::get('PS_TAX')
+			'tax_enabled' => Configuration::get('PS_TAX'),
+			'customer_group_without_tax' => Group::getPriceDisplayMethod($this->context->customer->id_default_group),
 		));
 	}
 
@@ -386,7 +387,7 @@ class ProductControllerCore extends FrontController
 		}
 		$size = Image::getSize(ImageType::getFormatedName('large'));
 		$this->context->smarty->assign(array(
-			'have_image' => isset($cover['id_image'])? array((int)$cover['id_image']) : Product::getCover((int)Tools::getValue('id_product')),
+			'have_image' => (isset($cover['id_image']) && (int)$cover['id_image'])? array((int)$cover['id_image']) : Product::getCover((int)Tools::getValue('id_product')),
 			'cover' => $cover,
 			'imgWidth' => (int)$size['width'],
 			'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
@@ -570,7 +571,7 @@ class ProductControllerCore extends FrontController
 			$path = Tools::getPath($this->category->id, $this->product->name, true);
 		elseif (Category::inShopStatic($this->product->id_category_default, $this->context->shop))
 		{
-			$this->category = new Category((int)$this->product->id_category_default);
+			$this->category = new Category((int)$this->product->id_category_default, (int)$this->context->language->id);
 			if (Validate::isLoadedObject( $this->category) &&  $this->category->active &&  $this->category->isAssociatedToShop())
 				$path = Tools::getPath((int)$this->product->id_category_default, $this->product->name);
 		}

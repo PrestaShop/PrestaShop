@@ -38,27 +38,27 @@ class AdminShopControllerCore extends AdminController
 		$this->list_skip_actions['delete'] = array((int)Configuration::get('PS_SHOP_DEFAULT'));
 		$this->fields_list = array(
 			'id_shop' => array(
-				'title' => $this->l('ID'),
+				'title' => $this->l('Shop ID'),
 				'align' => 'center',
 				'class' => 'fixed-width-xs'
 			),
 			'name' => array(
-				'title' => $this->l('Shop'),
+				'title' => $this->l('Shop name'),
 				'filter_key' => 'a!name',
 				'width' => 200,
 			),
 			'shop_group_name' => array(
-				'title' => $this->l('Group Shop'),
+				'title' => $this->l('Shop group'),
 				'width' => 150,
 				'filter_key' => 'gs!name'
 			),
 			'category_name' => array(
-				'title' => $this->l('Category'),
+				'title' => $this->l('Root category'),
 				'width' => 150,
 				'filter_key' => 'cl!name'
 			),
 			'url' => array(
-				'title' => $this->l('The shop\'s main URL'),
+				'title' => $this->l('Main URL for this shop'),
 				'havingFilter' => 'url',
 			),
 			/*'active' => array(
@@ -341,7 +341,7 @@ class AdminShopControllerCore extends AdminController
 				array(
 					'type' => 'text',
 					'label' => $this->l('Shop name'),
-					'desc' => array($this->l('This field does not refer to the shop name visible in the front office.'),
+					'desc' => array($this->l('This field does not refer to the shop name visible in the Front Office.'),
 							sprintf($this->l('Follow %sthis link%s to edit the shop name used on the Front Office.'), '<a href="'.$this->context->link->getAdminLink('AdminStores').'#store_fieldset_general">', '</a>')),
 					'name' => 'name',
 					'required' => true,
@@ -408,7 +408,7 @@ class AdminShopControllerCore extends AdminController
 		$this->fields_form['input'][] = array(
 			'type' => 'select',
 			'label' => $this->l('Category root'),
-			'desc' => $this->l('This is the root category of the store that you\'ve created. To define a new root category for your store,').'&nbsp;<a href="'.$this->context->link->getAdminLink('AdminCategories').'&addcategoryroot" target="_blank">'.$this->l('Please click here').'</a>',
+			'desc' => sprintf($this->l('This is the root category of the store that you\'ve created. To define a new root category for your store, %splease click here%s.'), '<a href="'.$this->context->link->getAdminLink('AdminCategories').'&addcategoryroot" target="_blank">', '</a>'),
 			'name' => 'id_category',
 			'options' => array(
 				'query' => $categories,
@@ -519,9 +519,9 @@ class AdminShopControllerCore extends AdminController
 			'manufacturer' => $this->l('Manufacturers'),
 			'module' => $this->l('Modules'),
 			'hook_module' => $this->l('Module hooks'),
-			'meta_lang' => $this->l('Meta'),
+			'meta_lang' => $this->l('Meta information'),
 			'product' => $this->l('Products'),
-			'product_attribute' => $this->l('Combinations'),
+			'product_attribute' => $this->l('Product combinations'),
 			'scene' => $this->l('Scenes'),
 			'stock_available' => $this->l('Available quantities for sale'),
 			'store' => $this->l('Stores'),
@@ -556,7 +556,7 @@ class AdminShopControllerCore extends AdminController
 				'select' => array(
 					'type' => 'select',
 					'name' => 'importFromShop',
-					'label' => $this->l('Choose the shop (source)'),
+					'label' => $this->l('Choose the source shop'),
 					'options' => array(
 						'query' => Shop::getShops(false),
 						'name' => 'name'
@@ -705,7 +705,7 @@ class AdminShopControllerCore extends AdminController
 						'icon' => 'themes/'.$this->context->employee->bo_theme.'/img/tree-multishop-groups.png',
 						'attr' => array(
 							'href' => $this->context->link->getAdminLink('AdminShop').'&id_shop_group='.$id_shop_group,
-							'title' => sprintf($this->l('Click here to display the shops in group %s', 'AdminShop', false, false), $row['group_name']),
+							'title' => sprintf($this->l('Click here to display the shops in the %s shop group', 'AdminShop', false, false), $row['group_name']),
 						),
 					),
 					'attr' => array(
@@ -725,7 +725,7 @@ class AdminShopControllerCore extends AdminController
 						'icon' => 'themes/'.$this->context->employee->bo_theme.'/img/tree-multishop-shop.png',
 						'attr' => array(
 							'href' => $this->context->link->getAdminLink('AdminShopUrl').'&id_shop='.$id_shop,
-							'title' => sprintf($this->l('Click here to display the URLs of shops %s', 'AdminShop', false, false), $row['shop_name']),
+							'title' => sprintf($this->l('Click here to display the URLs of the %s shop', 'AdminShop', false, false), $row['shop_name']),
 						)
 					),
 					'attr' => array(
@@ -775,7 +775,7 @@ class AdminShopControllerCore extends AdminController
 				'icon' => 'themes/'.$this->context->employee->bo_theme.'/img/tree-multishop-root.png',
 				'attr' => array(
 					'href' => $this->context->link->getAdminLink('AdminShopGroup'),
-					'title' => $this->l('Click here to display group shops list', 'AdminShop', false, false),
+					'title' => $this->l('Click here to display the list of shop groups', 'AdminShop', false, false),
 				)
 			),
 			'attr' => array(

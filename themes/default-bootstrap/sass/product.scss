@@ -407,7 +407,8 @@ span.view_scroll_spacer {
 	padding: 0 20px 20px;
 	word-wrap: break-word;
 	p{
-		margin-bottom: 0;
+		margin-bottom: 1em;
+		min-height: 1px
 	}
 }
 #attributes{
@@ -452,11 +453,18 @@ span.view_scroll_spacer {
 				padding: 1px;
 				border: 1px solid $base-border-color;
 				clear: none;
+      			width: 26px;
+      			height: 26px;
 				a.color_pick {
 					display: block;
 					height: 22px;
 					width: 22px;
 					cursor: pointer;
+					img {
+						display: block;
+						height: 22px;
+						width: 22px;
+					}
 				}
 				&.selected{
 					border:1px solid #4d4d4d;
@@ -473,7 +481,16 @@ span.view_scroll_spacer {
 .box-cart-bottom{
 	padding: 0;	
 }
-
+#short_description_content,
+.page-product-box {
+	a{
+		color: #333333;
+		text-decoration: underline;
+	}
+	a.btn{
+		text-decoration: none;
+	}
+}
 .box-info-product {
 	background: $list-info-bg;	
 	border: 1px solid #d2d0d0;
@@ -521,6 +538,7 @@ span.view_scroll_spacer {
 		&.added.disabled, 
 		&.disabled {
 			&:before {
+				height: 51px;
 				content: "\f110";
 				animation: 2s linear 0s normal none infinite spin;
 				-webkit-animation: 2s linear 0s normal none infinite spin;

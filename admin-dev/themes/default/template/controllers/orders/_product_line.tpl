@@ -31,13 +31,13 @@
 {/if}
 
 {if ($product['product_quantity'] > $product['customizationQuantityTotal'])}
-<tr class="product-line-row" {if isset($product.image) && $product.image->id && isset($product.image_size)} height="{$product['image_size'][1] + 7}"{/if}>
+<tr class="product-line-row">
 	<td>{if isset($product.image) && $product.image->id}{$product.image_tag}{/if}</td>
 	<td>
 		<a href="index.php?controller=adminproducts&amp;id_product={$product['product_id']}&amp;updateproduct&amp;token={getAdminToken tab='AdminProducts'}">
 			<span class="productName">{$product['product_name']}</span><br />
-			{if $product.product_reference}{l s='Ref:'} {$product.product_reference}<br />{/if}
-			{if $product.product_supplier_reference}{l s='Ref Supplier:'} {$product.product_supplier_reference}{/if}
+			{if $product.product_reference}{l s='Reference number:'} {$product.product_reference}<br />{/if}
+			{if $product.product_supplier_reference}{l s='Supplier reference:'} {$product.product_supplier_reference}{/if}
 		</a>
 	</td>
 	<td>
@@ -80,12 +80,12 @@
 			{if count($product['refund_history'])}
 				<span class="tooltip">
 					<span class="tooltip_label tooltip_button">+</span>
-					<div class="tooltip_content">
+					<span class="tooltip_content">
 					<span class="title">{l s='Refund history'}</span>
 					{foreach $product['refund_history'] as $refund}
 						{l s='%1s - %2s' sprintf=[{dateFormat date=$refund.date_add}, {displayPrice price=$refund.amount_tax_incl}]}<br />
 					{/foreach}
-					</div>
+					</span>
 				</span>
 			{/if}
 		</td>
@@ -96,12 +96,12 @@
 			{if count($product['return_history'])}
 				<span class="tooltip">
 					<span class="tooltip_label tooltip_button">+</span>
-					<div class="tooltip_content">
+					<span class="tooltip_content">
 					<span class="title">{l s='Return history'}</span>
 					{foreach $product['return_history'] as $return}
 						{l s='%1s - %2s - %3s' sprintf=[{dateFormat date=$return.date_add}, $return.product_quantity, $return.state]}<br />
 					{/foreach}
-					</div>
+					</span>
 				</span>
 			{/if}
 		</td>

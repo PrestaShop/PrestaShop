@@ -156,7 +156,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Specific price rules'),
+				'title' => $this->l('Catalog price rules'),
 				'icon' => 'icon-dollar'
 			),
 			'input' => array(
@@ -279,39 +279,41 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 			$price = '';
 
 		$this->fields_value = array(
-										'price' => $price,
-										'from_quantity' => (($value = $this->getFieldValue($this->object, 'from_quantity')) ? $value : 1),
-										'reduction' => number_format((($value = $this->getFieldValue($this->object, 'reduction')) ? $value : 0), 6),
-										'leave_bprice_on' => $price ? 0 : 1
-									);
+			'price' => $price,
+			'from_quantity' => (($value = $this->getFieldValue($this->object, 'from_quantity')) ? $value : 1),
+			'reduction' => number_format((($value = $this->getFieldValue($this->object, 'reduction')) ? $value : 0), 6),
+			'leave_bprice_on' => $price ? 0 : 1
+		);
 
 		$attribute_groups = array();
 		$attributes = Attribute::getAttributes((int)$this->context->language->id);
 		foreach ($attributes as $attribute)
 		{
 			if (!isset($attribute_groups[$attribute['id_attribute_group']]))
+			{
 				$attribute_groups[$attribute['id_attribute_group']]  = array(
-																							'id_attribute_group' => $attribute['id_attribute_group'],
-																							'name' => $attribute['attribute_group']
-																						);
-			$attribute_groups[$attribute['id_attribute_group']]['attributes'][] = array(
-																											'id_attribute' => $attribute['id_attribute'],
-																											'name' => $attribute['name']
-																										);
+					'id_attribute_group' => $attribute['id_attribute_group'],
+					'name' => $attribute['attribute_group']
+				);
+				$attribute_groups[$attribute['id_attribute_group']]['attributes'][] = array(
+					'id_attribute' => $attribute['id_attribute'],
+					'name' => $attribute['name']
+				);
+			}
 		}
 		$features = Feature::getFeatures((int)$this->context->language->id);
 		foreach ($features as &$feature)
 			$feature['values'] = FeatureValue::getFeatureValuesWithLang((int)$this->context->language->id, $feature['id_feature'], true);
 
 		$this->tpl_form_vars = array(
-										'manufacturers' => Manufacturer::getManufacturers(),
-										'suppliers' => Supplier::getSuppliers(),
-										'attributes_group' => $attribute_groups,
-										'features' => $features,
-										'categories' => Category::getSimpleCategories((int)$this->context->language->id),
-										'conditions' => $this->object->getConditions(),
-										'is_multishop' => Shop::isFeatureActive()
-										);
+			'manufacturers' => Manufacturer::getManufacturers(),
+			'suppliers' => Supplier::getSuppliers(),
+			'attributes_group' => $attribute_groups,
+			'features' => $features,
+			'categories' => Category::getSimpleCategories((int)$this->context->language->id),
+			'conditions' => $this->object->getConditions(),
+			'is_multishop' => Shop::isFeatureActive()
+			);
 		return parent::renderForm();
 	}
 

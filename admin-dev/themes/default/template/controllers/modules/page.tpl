@@ -31,7 +31,7 @@
 	<div class="panel col-lg-12">
 		<form action="{$currentIndex}&amp;token={$token}" method="post" enctype="multipart/form-data" class="form-horizontal">
 			<h3>{l s='Add a new module'}</h3>
-			<p class="alert alert-info">{l s='The module must either be a zip file or a tarball.'}</p>
+			<p class="alert alert-info">{l s='The module must either be a Zip file (.zip) or a tarball file (.tar, .tar.gz, .tgz).'}</p>
 			<div class="form-group">
 				<label for="file" class="control-label col-lg-3">
 					<span class="label-tooltip" data-toggle="tooltip" title="{l s='Upload a module from your computer.'}">
@@ -107,7 +107,6 @@
 						</a>
 					{/foreach}
 				</div>
-				{include file='controllers/modules/login_addons.tpl'}
 			</div>
 			<div id="moduleContainer" class="col-md-9">
 				{include file='controllers/modules/list.tpl'}

@@ -78,6 +78,10 @@ class HelperFormCore extends Helper
 		$textarea_autosize = true;
 		$file = true;
 		foreach ($this->fields_form as $fieldset_key => &$fieldset)
+		{
+			if (isset($fieldset['form']['tabs']))
+				$tabs[] = $fieldset['form']['tabs'];
+
 			if (isset($fieldset['form']['input']))
 				foreach ($fieldset['form']['input'] as $key => &$params)
 				{
@@ -158,7 +162,7 @@ class HelperFormCore extends Helper
 							if ($color)
 							{
 								// Added JS file
-								$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/jquery.colorpicker.js');
+								$this->context->controller->addJqueryPlugin('colorpicker');
 								$color = false;
 							}
 						break;
@@ -187,7 +191,7 @@ class HelperFormCore extends Helper
 
 							if ($textarea_autosize)
 							{
-								$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/jquery.autosize.min.js');
+								$this->context->controller->addJqueryPlugin('autosize');
 								$textarea_autosize = false;
 							}
 						break;
@@ -200,6 +204,7 @@ class HelperFormCore extends Helper
 						break;
 					}
 				}
+		}
 
 		$this->tpl->assign(array(
 			'title' => $this->title,
@@ -218,6 +223,7 @@ class HelperFormCore extends Helper
 			'defaultFormLanguage' => $this->default_form_language,
 			'allowEmployeeFormLang' => $this->allow_employee_form_lang,
 			'form_id' => $this->id,
+			'tabs' => (isset($tabs)) ? $tabs : null,
 			'fields' => $this->fields_form,
 			'fields_value' => $this->fields_value,
 			'required_fields' => $this->getFieldsRequired(),

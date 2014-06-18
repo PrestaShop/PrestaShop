@@ -273,7 +273,7 @@
 				{/if}
 				<div class="layer_cart_row">
 					<strong class="dark">
-						{l s='Total shipping' mod='blockcart'}&nbsp;{l s='(tax excl.)' mod='blockcart'}
+						{l s='Total shipping' mod='blockcart'}&nbsp;{if $priceDisplay == 1}{l s='(tax excl.)' mod='blockcart'}{else}{l s='(tax incl.)' mod='blockcart'}{/if}
 					</strong>
 					<span class="ajax_cart_shipping_cost">
 						{if $shipping_cost_float == 0}
@@ -329,6 +329,7 @@
 {strip}
 {addJsDef CUSTOMIZE_TEXTFIELD=$CUSTOMIZE_TEXTFIELD}
 {addJsDef img_dir=$img_dir|addslashes}
+{addJsDef generated_date=$smarty.now|intval}
 {addJsDef ajax_allowed=$ajax_allowed|boolval}
 
 {addJsDefL name=customizationIdMessage}{l s='Customization #' mod='blockcart' js=1}{/addJsDefL}

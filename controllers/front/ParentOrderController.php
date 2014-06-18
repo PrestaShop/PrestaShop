@@ -151,7 +151,8 @@ class ParentOrderControllerCore extends FrontController
 		if ((Configuration::get('PS_ORDER_PROCESS_TYPE') == 0 && Tools::getValue('step') == 1) || Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
 			$this->addJS(_THEME_JS_DIR_.'order-address.js');
 		$this->addJqueryPlugin('fancybox');
-		if ((int)(Configuration::get('PS_BLOCK_CART_AJAX')) || Configuration::get('PS_ORDER_PROCESS_TYPE') == 1 || Tools::getValue('step') == 2)
+		
+		if (in_array((int)Tools::getValue('step'), array(0, 2)) || Configuration::get('PS_ORDER_PROCESS_TYPE'))
 		{
 			$this->addJqueryPlugin('typewatch');
 			$this->addJS(_THEME_JS_DIR_.'cart-summary.js');
@@ -484,8 +485,8 @@ class ParentOrderControllerCore extends FrontController
 	{	
 		$address = new Address($this->context->cart->id_address_delivery);
 		$id_zone = Address::getZoneById($address->id);
-		$carriers = $this->context->cart->simulateCarriersOutput();
-		$checked = $this->context->cart->simulateCarrierSelectedOutput();
+		$carriers = $this->context->cart->simulateCarriersOutput(null, true);
+		$checked = $this->context->cart->simulateCarrierSelectedOutput(false);
 		$delivery_option_list = $this->context->cart->getDeliveryOptionList();
 		$delivery_option = $this->context->cart->getDeliveryOption(null, false);
 		$this->setDefaultCarrierSelection($delivery_option_list);

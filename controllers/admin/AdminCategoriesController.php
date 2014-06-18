@@ -364,6 +364,7 @@ class AdminCategoriesControllerCore extends AdminController
 		$helper->id = 'box-empty-categories';
 		$helper->icon = 'icon-bookmark-empty';
 		$helper->color = 'color2';
+		$helper->href = $this->context->link->getAdminLink('AdminTracking');
 		$helper->title = $this->l('Empty Categories', null, null, false);
 		if (ConfigurationKPI::get('EMPTY_CATEGORIES') !== false)
 			$helper->value = ConfigurationKPI::get('EMPTY_CATEGORIES');
@@ -522,7 +523,7 @@ class AdminCategoriesControllerCore extends AdminController
 					'unidentified' => $unidentified_group_information,
 					'guest' => $guest_group_information,
 					'customer' => $default_group_information,
-					'hint' => $this->l('Mark all of the customer groups you;d like to have access to this category.')
+					'hint' => $this->l('Mark all of the customer groups which you would like to have access to this category.')
 				)
 			),
 			'submit' => array(
@@ -774,14 +775,9 @@ class AdminCategoriesControllerCore extends AdminController
 		return $ret;
 	}
 
-	/**
-	  * Allows to display the category description without HTML tags and slashes
-	  *
-	  * @return string
-	  */
 	public static function getDescriptionClean($description)
 	{
-		return strip_tags(stripslashes($description));
+		return Tools::getDescriptionClean($description);
 	}
 
 	public function ajaxProcessUpdatePositions()

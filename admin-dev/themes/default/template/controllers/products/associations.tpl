@@ -31,7 +31,7 @@
 	</div>
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="category_block">
-			{include file="controllers/products/multishop/checkbox.tpl" field="associated-categories-tree" type="category_box"}
+			{include file="controllers/products/multishop/checkbox.tpl" field="category_box" type="category_box"}
 			{l s='Associated categories'}
 		</label>
 		<div class="col-lg-9">
@@ -71,7 +71,7 @@
 			<input type="hidden" name="nameAccessories" id="nameAccessories" value="{foreach from=$accessories item=accessory}{$accessory.name|escape:'html':'UTF-8'}¤{/foreach}" />
 			<div id="ajax_choose_product">
 				<div class="input-group">
-					<input type="text" id="product_autocomplete_input" />
+					<input type="text" id="product_autocomplete_input" name="product_autocomplete_input" />
 					<span class="input-group-addon"><i class="icon-search"></i></span>
 				</div>
 			</div>

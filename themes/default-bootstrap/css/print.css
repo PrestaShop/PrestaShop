@@ -20,8 +20,8 @@
     border-color: #fff; }
 
   .product_attributes, .box-cart-bottom {
-    -moz-box-shadow: none;
     -webkit-box-shadow: none;
+    -moz-box-shadow: none;
     box-shadow: none; }
 
   .pb-left-column #views_block {

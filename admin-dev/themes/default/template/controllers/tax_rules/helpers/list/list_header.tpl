@@ -51,8 +51,9 @@
 			{/if}
 			<thead>
 				<tr class="nodrag nodrop">
-					<th class="center">
-					</th>
+					{if $bulk_actions && $has_bulk_actions}
+						<th class="center"></th>
+					{/if}
 					{foreach $fields_display AS $key => $params}
 						<th{if isset($params.align)} align="{$params.align}"{/if}{if isset($params.class)} class="{$params.class}"{/if}>
 							{if isset($params.hint)}<span class="hint" name="help_box">{$params.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}

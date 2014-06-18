@@ -39,12 +39,17 @@ class AdminCartsControllerCore extends AdminController
 		$this->allow_export = true;
 		$this->_orderWay = 'DESC';
 
-		$this->_select = 'CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) `customer`, a.id_cart total, ca.name carrier, IFNULL(o.id_order, \''.$this->l('Non ordered').'\') id_order, IF(o.id_order, 1, 0) badge_success, IF(o.id_order, 0, 1) badge_danger, IF(co.id_guest, 1, 0) id_guest';
+		$this->_select = 'CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) `customer`, a.id_cart total, ca.name carrier, 
+		IF (IFNULL(o.id_order, \''.$this->l('Non ordered').'\') = \''.$this->l('Non ordered').'\', IF(TIME_TO_SEC(TIMEDIFF(NOW(), a.`date_add`)) > 86400, \''.$this->l('Abandoned cart').'\', \''.$this->l('Non ordered').'\'), o.id_order) id_order, IF(o.id_order, 1, 0) badge_success, IF(o.id_order, 0, 1) badge_danger, IF(co.id_guest, 1, 0) id_guest';
 		$this->_join = 'LEFT JOIN '._DB_PREFIX_.'customer c ON (c.id_customer = a.id_customer)
 		LEFT JOIN '._DB_PREFIX_.'currency cu ON (cu.id_currency = a.id_currency)
 		LEFT JOIN '._DB_PREFIX_.'carrier ca ON (ca.id_carrier = a.id_carrier)
 		LEFT JOIN '._DB_PREFIX_.'orders o ON (o.id_cart = a.id_cart)
 		LEFT JOIN `'._DB_PREFIX_.'connections` co ON (a.id_guest = co.id_guest AND TIME_TO_SEC(TIMEDIFF(NOW(), co.`date_add`)) < 1800)';
+
+		if (Tools::getValue('action') && Tools::getValue('action') == 'filterOnlyAbandonedCarts')
+			$this->_having = 'id_order = \''.$this->l('Abandoned cart').'\'';
+
 
 		$this->fields_list = array(
 			'id_cart' => array(
@@ -140,8 +145,10 @@ class AdminCartsControllerCore extends AdminController
 		$helper->icon = 'icon-shopping-cart';
 		$helper->color = 'color2';
 		$helper->title = $this->l('Abandoned Carts', null, null, false);
-		$helper->subtitle = $this->l('Today', null, null, false);
-		$helper->href = $this->context->link->getAdminLink('AdminCarts');
+		$date_from = date(Context::getContext()->language->date_format_lite, strtotime('-2 day'));
+		$date_to = date(Context::getContext()->language->date_format_lite, strtotime('-1 day'));
+		$helper->subtitle = sprintf($this->l('From %s to %s', null, null, false), $date_from, $date_to);
+		$helper->href = $this->context->link->getAdminLink('AdminCarts').'&action=filterOnlyAbandonedCarts';
 		if (ConfigurationKPI::get('ABANDONED_CARTS') !== false)
 			$helper->value = ConfigurationKPI::get('ABANDONED_CARTS');
 		if (ConfigurationKPI::get('ABANDONED_CARTS_EXPIRE') < $time)
@@ -176,6 +183,7 @@ class AdminCartsControllerCore extends AdminController
 		$helper->kpis = $kpis;
 		return $helper->generate();
 	}
+
 
 	public function renderView()
 	{
@@ -872,3 +880,4 @@ class AdminCartsControllerCore extends AdminController
 		return $list;
 	}
 }
+

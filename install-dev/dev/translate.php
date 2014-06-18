@@ -97,6 +97,6 @@ echo '			</tbody>
 	</body>
 </html>';
 
-function just_quotes($s) {return str_replace('\'', '\\\'', $s);}
+function just_quotes($s) {return addcslashes($s, '\\\'');}
 function my_urlencode($s) {return str_replace('.', '_dot_', urlencode($s));}
 function my_urldecode($s) {return str_replace('_dot_', '.', urldecode($s));}

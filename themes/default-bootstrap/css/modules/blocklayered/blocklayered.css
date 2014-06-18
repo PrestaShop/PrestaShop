@@ -12,6 +12,12 @@
 
 #enabled_filters li a {
   float: right;
+  /*display: inline-block;
+  height: 12px;
+  width: 12px;
+  text-indent: -5000px;*/
+  /*background: url(../../../img/icon/delete.gif) no-repeat 0 0 transparent;*/
+  /*background: url(./delete.gif) no-repeat 0 0 transparent;*/
   cursor: pointer; }
 
 #layered_block_left .layered_close {
@@ -80,7 +86,6 @@
   border: 1px solid #666666;
   height: 16px;
   margin-left: 0;
-  margin-right: 5px;
   padding: 0;
   width: 16px; }
 
@@ -103,7 +108,7 @@
   border: 1px solid #666; }
 
 #layered_form .color-option.on {
-  border: 2px solid black; }
+  border: 1px solid red; }
 
 #layered_form input[type=radio] {
   margin-left: 2px;
@@ -158,6 +163,6 @@
 .layered_filter {
   border-bottom: 1px solid #eee; }
   .layered_filter label {
-    font-weight: normal;}
+    font-weight: normal; }
   .layered_filter layered_subtitle {
     font-size: 1.2 em; }

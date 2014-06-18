@@ -45,7 +45,7 @@
 					<div class="col-lg-9 col-lg-offset-3">
 						<p class="checkbox">
 							<label for="advanced_stock_management">
-								<input type="checkbox" name="advanced_stock_management" class="advanced_stock_management" id="advanced_stock_management" 
+								<input type="checkbox" id="advanced_stock_management" name="advanced_stock_management" class="advanced_stock_management"  
 									{if $product->advanced_stock_management == 1 && $stock_management_active == 1}
 										value="1" checked="checked"
 									{else}
@@ -71,7 +71,7 @@
 					<div class="col-lg-9">
 						<p class="radio">
 							<label for="depends_on_stock_1">
-								<input type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_1" value="1"
+								<input type="radio" id="depends_on_stock_1" name="depends_on_stock" class="depends_on_stock"  value="1"
 									{if $product->depends_on_stock == 1 && $stock_management_active == 1}
 										checked="checked" 
 									{/if} 
@@ -87,7 +87,7 @@
 						</p>
 						<p class="radio">
 							<label for="depends_on_stock_0" for="depends_on_stock_0">
-								<input type="radio" name="depends_on_stock" class="depends_on_stock" id="depends_on_stock_0" value="0"
+								<input type="radio"  id="depends_on_stock_0" name="depends_on_stock" class="depends_on_stock" value="0"
 									{if $product->depends_on_stock == 0 || $stock_management_active == 0}
 										checked="checked" 
 									{/if} 
@@ -117,7 +117,7 @@
 								<tr>
 									<td class="available_quantity" id="qty_{$attribute['id_product_attribute']}">
 										<span>{$available_quantity[$attribute['id_product_attribute']]}</span>
-										<input type="text" class="fixed-width-sm" value="{$available_quantity[$attribute['id_product_attribute']]|htmlentities}"/>
+										<input type="text" name="qty_{$attribute['id_product_attribute']}" class="fixed-width-sm" value="{$available_quantity[$attribute['id_product_attribute']]|htmlentities}"/>
 									</td>
 									<td>{$product_designation[$attribute['id_product_attribute']]}</td>
 								</tr>
@@ -130,19 +130,19 @@
 					<div class="col-lg-9">
 						<p class="radio">
 							<label id="label_out_of_stock_1" for="out_of_stock_1">
-								<input {if $product->out_of_stock == 0} checked="checked" {/if} id="out_of_stock_1" type="radio" checked="checked" value="0" class="out_of_stock" name="out_of_stock">
+								<input type="radio" id="out_of_stock_1" name="out_of_stock" checked="checked" value="0" class="out_of_stock" {if $product->out_of_stock == 0} checked="checked" {/if}>
 								{l s='Deny orders'}
 							</label>
 						</p>
 						<p class="radio">
 							<label id="label_out_of_stock_2" for="out_of_stock_2">
-								<input {if $product->out_of_stock == 1} checked="checked" {/if} id="out_of_stock_2" type="radio" value="1" class="out_of_stock" name="out_of_stock">
+								<input type="radio" id="out_of_stock_2" name="out_of_stock" value="1" class="out_of_stock" {if $product->out_of_stock == 1} checked="checked" {/if}>
 								{l s='Allow orders'}
 							</label>
 						</p>
 						<p class="radio">
 							<label id="label_out_of_stock_3" for="out_of_stock_3">
-								<input {if $product->out_of_stock == 2} checked="checked" {/if} id="out_of_stock_3" type="radio" value="2" class="out_of_stock" name="out_of_stock">
+								<input type="radio" id="out_of_stock_3" name="out_of_stock" value="2" class="out_of_stock" {if $product->out_of_stock == 2} checked="checked" {/if}>
 								{l s='Default'}:
 								{if $order_out_of_stock == 1}
 								{l s='Allow orders'}
@@ -184,7 +184,7 @@
 					{l s='Minimum quantity'}
 				</label>
 				<div class="col-lg-9">
-					<input class="form-control fixed-width-sm" maxlength="6" name="minimal_quantity" id="minimal_quantity" type="text" value="{$product->minimal_quantity|default:1}" />
+					<input type="text" id="minimal_quantity" name="minimal_quantity" class="form-control fixed-width-sm" maxlength="6" value="{$product->minimal_quantity|default:1}" />
 					<p class="help-block">{l s='The minimum quantity to buy this product (set to 1 to disable this feature)'}</p>
 				</div>
 			</div>
@@ -210,7 +210,7 @@
 				<label class="control-label col-lg-3" for="available_later_{$default_language}">
 					{include file="controllers/products/multishop/checkbox.tpl" field="available_later" type="default" multilang="true"}
 					<span class="label-tooltip" data-toggle="tooltip"
-						title="{l s='Forbidden characters:'} &#60;&#62;;&#61;#&#123;&#125;">
+						title="{l s='If empty, the message "in stock" will be displayed.'} {l s='Forbidden characters:'} &#60;&#62;;&#61;#&#123;&#125;">
 						{l s='Displayed text when backordering is allowed'}
 					</span>
 					
@@ -237,7 +237,7 @@
 						</div>
 
 					</div>
-					<p class="help-block">{l s='The available date when this product is out of stock.'}</p>
+					<p class="help-block">{l s='The next date of availability for this product when it is out of stock.'}</p>
 				</div>
 			</div>
 			{/if}

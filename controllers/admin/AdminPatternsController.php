@@ -54,7 +54,11 @@ class AdminPatternsControllerCore extends AdminController
 			'groupBox_1' => false,
 			'groupBox_2' => true,
 			'groupBox_3' => false,
+			'groupBox_4' => true,
+			'groupBox_5' => true,
+			'groupBox_6' => false,
 			'type_color' => '#8BC954',
+			'tab_note' => 'The tabs are always pushed to the top of the form, wherever they are in the fields_form array.',
 			'type_free' => '<p class="form-control-static">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc lacinia in enim iaculis malesuada. Quisque congue fermentum leo et porta. Pellentesque a quam dui. Pellentesque sed augue id sem aliquet faucibus eu vel odio. Nullam non libero volutpat, pulvinar turpis non, gravida mauris. Nullam tincidunt id est at euismod. Quisque euismod quam in pellentesque mollis. Nulla suscipit porttitor massa, nec eleifend risus egestas in. Aenean luctus porttitor tempus. Morbi dolor leo, dictum id interdum vel, semper ac est. Maecenas justo augue, accumsan in velit nec, consectetur fringilla orci. Nunc ut ante erat. Curabitur dolor augue, eleifend a luctus non, aliquet a mi. Curabitur ultricies lectus in rhoncus sodales. Maecenas quis dictum erat. Suspendisse blandit lacus sed felis facilisis, in interdum quam congue.<p>'
 		);
 
@@ -62,6 +66,10 @@ class AdminPatternsControllerCore extends AdminController
 			'legend' => array(
 				'title' => 'patterns of helper form.tpl',
 				'icon' => 'icon-edit'
+			),
+			'tabs' => array(
+				'small' => 'Small Inputs',
+				'large' => 'Large Inputs',
 			),
 			'description' => 'You can use image instead of icon for the title.',
 			'input' => array(
@@ -159,6 +167,47 @@ class AdminPatternsControllerCore extends AdminController
 					'label' => 'input fixed-width-xxl',
 					'name' => 'type_text_xxl',
 					'class' => 'fixed-width-xxl'
+				),
+				array(
+					'type' => 'text',
+					'label' => 'input fixed-width-sm',
+					'name' => 'type_text_sm',
+					'class' => 'input fixed-width-sm',
+					'tab' => 'small',
+				),
+				array(
+					'type' => 'text',
+					'label' => 'input fixed-width-md',
+					'name' => 'type_text_md',
+					'class' => 'input fixed-width-md',
+					'tab' => 'small',
+				),
+				array(
+					'type' => 'text',
+					'label' => 'input fixed-width-lg',
+					'name' => 'type_text_lg',
+					'class' => 'input fixed-width-lg',
+					'tab' => 'large',
+				),
+				array(
+					'type' => 'text',
+					'label' => 'input fixed-width-xl',
+					'name' => 'type_text_xl',
+					'class' => 'input fixed-width-xl',
+					'tab' => 'large',
+				),
+				array(
+					'type' => 'text',
+					'label' => 'input fixed-width-xxl',
+					'name' => 'type_text_xxl',
+					'class' => 'fixed-width-xxl',
+					'tab' => 'large',
+				),
+				array(
+					'type' => 'free',
+					'label' => 'About tabs',
+					'name' => 'tab_note',
+					'tab' => 'small',
 				),
 				array(
 					'type' => 'text',
@@ -350,7 +399,8 @@ class AdminPatternsControllerCore extends AdminController
 				),
 				array(
 					'type' => 'html',
-					'name' => '<hr><strong>html:</strong> for writing free html like this <span class="label label-danger">i\'m a label</span> <span class="badge badge-info">i\'m a badge</span> <button type="button" class="btn btn-default">i\'m a button</button><hr>'
+					'name' => 'html_data',
+					'html_content' => '<hr><strong>html:</strong> for writing free html like this <span class="label label-danger">i\'m a label</span> <span class="badge badge-info">i\'m a badge</span> <button type="button" class="btn btn-default">i\'m a button</button><hr>'
 				),
 				array(
 					'type' => 'free',

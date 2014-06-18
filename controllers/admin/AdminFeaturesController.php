@@ -34,6 +34,7 @@ class AdminFeaturesControllerCore extends AdminController
 		$this->table = 'feature';
 		$this->className = 'Feature';
 		$this->list_id = 'feature';
+		$this->identifier = 'id_feature';
 		$this->lang = true;
 
 		$this->fields_list = array(
@@ -82,7 +83,6 @@ class AdminFeaturesControllerCore extends AdminController
 		$this->addRowAction('view');
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-		$this->_defaultOrderBy = 'position';
 
 		return parent::renderList();
 	}
@@ -462,7 +462,11 @@ class AdminFeaturesControllerCore extends AdminController
 				$this->processResetFilters();
 		}
 		else
+		{
 			$this->list_id = 'feature';
+			$this->_defaultOrderBy = 'position';
+			$this->_defaultOrderWay = 'ASC';
+		}
 
 		parent::initProcess();
 
@@ -495,7 +499,12 @@ class AdminFeaturesControllerCore extends AdminController
 		$object = parent::processAdd();
 
 		if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
-			$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$this->token;
+		{
+			if( $this->table == 'feature_value' && ($this->display == 'edit' || $this->display == 'add') )
+				$this->redirect_after = self::$currentIndex.'&addfeature_value&id_feature='.(int)Tools::getValue('id_feature').'&token='.$this->token;
+			else
+				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$this->token;
+		}
 		elseif (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && count($this->errors))
 			$this->display = 'editFeatureValue';
 

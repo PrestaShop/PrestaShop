@@ -26,14 +26,10 @@
 <table id="module-list" class="table">
 	<thead>
 		<tr>
-			<th width="1%">
-				<!-- <input type="checkbox" rel="false" class="noborder" id="checkme"> -->
-			</th>
-			<th colspan="3">
-				<div class="pull-left">
-					{include file='controllers/modules/filters.tpl'}
-				</div>
-				<!-- 
+			<th colspan="4">
+				{include file='controllers/modules/filters.tpl'}
+				<!--
+				<input type="checkbox" rel="false" class="noborder" id="checkme">
 				<div class="pull-right">
 					<a class="btn btn-default {if !isset($smarty.get.select)} active{/if}" href="index.php?controller={$smarty.get.controller|htmlentities}&amp;token={$smarty.get.token|htmlentities}" title="{l s='Normal view'}">
 						<i class="icon-list"></i> 
@@ -41,7 +37,7 @@
 					<a class="btn btn-default {if isset($smarty.get.select) && $smarty.get.select == 'favorites'} active{/if}" href="index.php?controller={$smarty.get.controller|htmlentities}&amp;token={$smarty.get.token|htmlentities}&select=favorites" title="{l s='Favorites view'}">
 						<i class="icon-star"></i>
 					</a>
-				</div>
+				</div> 
 				-->
 			</th>
 		</tr>
@@ -58,7 +54,7 @@ module_inactive
 {/if}
 {/capture}
 				<tr>
-					<td class="{{$smarty.capture.moduleStatutClass}}">
+					<td class="{{$smarty.capture.moduleStatutClass}} text-center" width="1%">
 						{if (isset($module->id) && $module->id > 0) || !isset($module->type) || $module->type != 'addonsMustHave'}
 						<input type="checkbox" name="modules" value="{$module->name}"
 							{if !isset($module->confirmUninstall) OR empty($module->confirmUninstall)}rel="false"{else}rel="{$module->confirmUninstall|addslashes}"{/if}
@@ -77,7 +73,9 @@ module_inactive
 								<span style="display:none">{$module->name}</span>
 								{$module->displayName}
 								<small class="text-muted">v{$module->version} - by {$module->author}</small>
-								{if isset($module->type) && $module->type == 'addonsMustHave'}
+								{if isset($module->type) && $module->type == 'addonsBought'}
+								- <span class="module-badge-bought help-tooltip text-warning" data-title="{l s="You bought this module on PrestaShop Addons. Thank You."}"><i class="icon-pushpin"></i> <small>{l s="Bought"}</small></span>
+								{elseif isset($module->type) && $module->type == 'addonsMustHave'}
 									- <span class="module-badge-popular help-tooltip text-primary" data-title="{l s="This module is available on PrestaShop Addons"}"><i class="icon-group"></i> <small>{l s="Popular"}</small></span>
 								{elseif isset($module->type) && $module->type == 'addonsPartner'}
 									- <span class="module-badge-partner help-tooltip text-warning" data-title="{l s="Official, PrestaShop certified module. Free, secure and includes updates!"}"><i class="icon-pushpin"></i> <small>{l s="Official"}</small></span>
@@ -122,9 +120,15 @@ module_inactive
 											</a>
 										{/if}
 									{else}
+										{if isset($module->trusted) && $module->trusted}
 										<a class="btn btn-success" href="{$module->options.install_url}">
 											<i class="icon-plus-sign-alt"></i>&nbsp;{l s='Install'}
 										</a>
+										{else}
+										<a class="btn btn-success untrustedaddon" href="#" data-target="#moduleNotTrusted" data-toggle="modal" data-link="{$module->options.install_url}" data-module-name="{$module->displayName}">
+											<i class="icon-plus-sign-alt"></i>&nbsp;{l s='Install'}
+										</a>
+										{/if}
 									{/if}
 
 									{if !isset($module->not_on_disk) && isset($module->id)}
@@ -217,7 +221,11 @@ module_inactive
 	{else}
 		<tbody>
 			<tr>
-				<td colspan="4" class="text-center"><i class="icon-warning-sign"></i> {l s='No modules available in this section.'}</td>
+				<td colspan="4" class="list-empty">
+					<div class="list-empty-msg">
+						<i class="icon-warning-sign list-empty-icon"></i> {l s='No modules available in this section.'}
+					</div>
+				</td>
 			</tr>
 		</tbody>
 	</table>

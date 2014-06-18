@@ -162,7 +162,7 @@
 					</div>
 				</div>
 				{if $customer->isGuest()}
-					{l s='This customer is registered as.'} <b>{l s='Guest'}</b>
+					{l s='This customer is registered as a Guest.'}
 					{if !$customer_exists}
 					<form method="post" action="index.php?tab=AdminCustomers&amp;id_customer={$customer->id}&amp;token={getAdminToken tab='AdminCustomers'}">
 						<input type="hidden" name="id_lang" value="{$id_lang}" />
@@ -191,7 +191,7 @@
 								<i class="icon-ok-circle icon-big"></i>
 								{l s='Valid orders:'}
 								<span class="label label-success">{$count_ok}</span>
-								{l s='for'} {$total_ok}
+								{l s='for a total amount of %s' sprintf=$total_ok}
 							</div>
 							<div class="col-lg-6">
 								<i class="icon-exclamation-sign icon-big"></i>
@@ -318,7 +318,7 @@
 					<tbody>
 						{foreach $products AS $key => $product}
 						<tr onclick="document.location = '?tab=AdminOrders&id_order={$product['id_order']}&vieworder&token={getAdminToken tab='AdminOrders'}'">
-							<td>{dateFormat date=$order['date_add'] full=0}</td>
+							<td>{dateFormat date=$product['date_add'] full=0}</td>
 							<td>
 								<a href="?tab=AdminOrders&amp;id_order={$product['id_order']}&amp;vieworder&amp;token={getAdminToken tab='AdminOrders'}">
 									{$product['product_name']}

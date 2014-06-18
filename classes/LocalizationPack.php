@@ -33,13 +33,26 @@ class LocalizationPackCore
 	protected $iso_currency;
 	protected $_errors = array();
 
-	public function loadLocalisationPack($file, $selection, $install_mode = false)
+	public function loadLocalisationPack($file, $selection, $install_mode = false, $iso_localization_pack = null)
 	{
 		if (!$xml = simplexml_load_string($file))
 			return false;
 		$main_attributes = $xml->attributes();
 		$this->name = (string)$main_attributes['name'];
 		$this->version = (string)$main_attributes['version'];
+		if ($iso_localization_pack)
+		{
+
+			$id_country = Country::getByIso($iso_localization_pack);
+			$country = new Country($id_country);
+			if (!$country->active)
+			{
+				$country->active = 1;
+				if (!$country->update())
+					$this->_errors[] = Tools::displayError('Cannot enable the associated country: ').$country->name;
+			}
+		}
+
 		$res = true;
 
 		if (empty($selection))
@@ -83,12 +96,15 @@ class LocalizationPackCore
 			foreach ($xml->states->state as $data)
 			{
 				$attributes = $data->attributes();
-				if (!$id_state = State::getIdByName($attributes['name']))
+				$id_country = ($attributes['country']) ? (int)Country::getByIso(strval($attributes['country'])) : false;
+				$id_state = ($id_country) ? State::getIdByIso($attributes['iso_code'], $id_country) : State::getIdByName($attributes['name']);
+
+				if (!$id_state)
 				{
 					$state = new State();
 					$state->name = strval($attributes['name']);
 					$state->iso_code = strval($attributes['iso_code']);
-					$state->id_country = Country::getByIso(strval($attributes['country']));
+					$state->id_country = $id_country;
 
 					$id_zone = (int)Zone::getIdByName(strval($attributes['zone']));
 					if (!$id_zone)

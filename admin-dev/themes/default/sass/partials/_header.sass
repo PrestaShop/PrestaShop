@@ -5,7 +5,6 @@
 	@extend .navbar-inverse
 	@extend .navbar-fixed-top
 	height: 36px !important
-	min-width: 450px
 	.navbar-header
 		width: 100%
 #header_shopname
@@ -15,6 +14,8 @@
 	height: 36px
 	padding-left: 45px !important
 	@include margin(0, 5px, 0, 0)
+	@media (max-width: $screen-xs)
+		display: none
 	img
 		position: absolute
 		top: 0
@@ -45,6 +46,7 @@
 		top: 2px
 		padding: 0 5px !important
 		display: none
+		z-index: 10
 		@include right(-3px)
 	.notifs_dropdown
 		background-color: white
@@ -91,11 +93,11 @@
 			display: inline-block
 			@include float(left)
 	span.string-long
-		@media (max-width: $screen-sm)
+		@media (max-width: $screen-md)
 			display: none
 	span.string-short
 		display: none
-		@media (max-width: $screen-sm)
+		@media (max-width: $screen-md)
 			display: inline-block
 	a img
 		@include margin-right(5px)
@@ -157,4 +159,3 @@
 		font-size: 20px
 		color: rgba(white,.6)
 		line-height: 35px
-

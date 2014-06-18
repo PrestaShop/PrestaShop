@@ -442,6 +442,7 @@ class OrderInvoiceCore extends ObjectModel
 			WHERE DATE_ADD(oi.date_add, INTERVAL -1 DAY) <= \''.pSQL($date_to).'\'
 			AND oi.date_add >= \''.pSQL($date_from).'\'
 			'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
+			AND oi.number > 0
 			ORDER BY oi.date_add ASC
 		');
 
@@ -462,6 +463,7 @@ class OrderInvoiceCore extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = oi.`id_order`)
 			WHERE '.(int)$id_order_state.' = o.current_state 
 			'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').' 
+			AND oi.number > 0
 			ORDER BY oi.`date_add` ASC
 		');
 

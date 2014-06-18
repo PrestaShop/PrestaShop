@@ -118,7 +118,7 @@ class PrestaShopAutoload
 			}
 		}
 		// Call directly ProductCore, ShopCore class
-		else
+		elseif (isset($this->index[$classname]['path']) && $this->index[$classname]['path'])
 			require($this->root_dir.$this->index[$classname]['path']);
 	}
 

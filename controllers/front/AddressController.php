@@ -141,6 +141,9 @@ class AddressControllerCore extends FrontController
 			if ((int)$country->contains_states && !(int)$address->id_state)
 				$this->errors[] = Tools::displayError('This country requires you to chose a State.');
 
+			if (!$country->active)
+				$this->errors[] = Tools::displayError('This country is not active.');
+
 			$postcode = Tools::getValue('postcode');		
 			/* Check zip code format */
 			if ($country->zip_code_format && !$country->checkZipCode($postcode))
@@ -162,15 +165,9 @@ class AddressControllerCore extends FrontController
 			$id_address = Tools::getValue('id_address');
 			if(Configuration::get('PS_ORDER_PROCESS_TYPE') && (int)Tools::getValue('opc_id_address_'.Tools::getValue('type')) > 0)
 				$id_address = Tools::getValue('opc_id_address_'.Tools::getValue('type'));
- 	
-			if (Db::getInstance()->getValue('
-				SELECT count(*)
-				FROM '._DB_PREFIX_.'address
-				WHERE `alias` = \''.pSql($_POST['alias']).'\'
-				AND id_address != '.(int)$id_address.'
-				AND id_customer = '.(int)$this->context->customer->id.'
-				AND deleted = 0') > 0)
-				$this->errors[] = sprintf(Tools::displayError('The alias "%s" has already been used. Please select another one.'), Tools::safeOutput($_POST['alias']));
+
+			if (Address::aliasExist(Tools::getValue('alias'), (int)$id_address, (int)$this->context->customer->id))
+				$this->errors[] = sprintf(Tools::displayError('The alias "%s" has already been used. Please select another one.'), Tools::safeOutput(Tools::getValue('alias')));		
 		}
 
 		// Check the requires fields which are settings in the BO

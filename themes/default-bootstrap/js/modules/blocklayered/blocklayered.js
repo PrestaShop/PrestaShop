@@ -39,15 +39,12 @@ $(document).ready(function()
 			$('<input />').attr('type', 'hidden').attr('name', $(this).attr('name')).val($(this).attr('rel')).appendTo('#layered_form');
 		else
 			$('input[name='+$(this).attr('name')+'][type=hidden]').remove();
-		reloadContent();
+		reloadContent(true);
 	});
 
-	$(document).on('click', '#layered_form .select', function(e) {
-		reloadContent();
-	});
+	$(document).on('click', '#layered_form .select, #layered_form input[type=checkbox], #layered_form input[type=radio]', function(e) {
 
-	$(document).on('click', '#layered_form input[type=checkbox], #layered_form input[type=radio]', function(e) {
-		reloadContent();
+		reloadContent(true);
 	});
 
 	// Changing content of an input text
@@ -130,13 +127,13 @@ $(document).ready(function()
 		$('.selectProductSort').val($(this).val());
 
 		if($('#layered_form').length > 0)
-			reloadContent();
+			reloadContent(true);
 	});
 
 	$(document).off('change').on('change', 'select[name=n]', function(e) 
 	{
 		$('select[name=n]').val($(this).val());
-		reloadContent();
+		reloadContent(true);
 	});
 
 	paginationButton(false);
@@ -186,7 +183,7 @@ function initFilters()
 						$('#layered_' + $(event.target).data('type') + '_range').html(from + ' - ' + to);
 					},
 					stop: function () {
-						reloadContent();
+						reloadContent(true);
 					}
 				}, filter.unit, parseInt(filter.format));
 			}
@@ -273,7 +270,7 @@ function initLayered()
 	}
 }
 
-function paginationButton(nbProductsIn) {
+function paginationButton(nbProductsIn, nbProductOut) {
 	if (typeof(current_friendly_url) === 'undefined')
 		current_friendly_url = '#';
 
@@ -330,8 +327,12 @@ function paginationButton(nbProductsIn) {
 			productCountRow = $.trim(productCountRow);
 			productCountRow = productCountRow.split(' ');
 			productCountRow[1] = productShowingStart;
-			productCountRow[3] = productShowing;
+			productCountRow[3] = (nbProductOut != 'undefined') && (nbProductOut > productShowing) ? nbProductOut : productShowing;
 			productCountRow[5] = nb_products;
+
+			if (productCountRow[3] > productCountRow[5])
+				productCountRow[3] = productCountRow[5];
+
 			productCountRow = productCountRow.join(' ');
 			$('.product-count').html(productCountRow);
 			$('.product-count').show();
@@ -373,7 +374,7 @@ function cancelFilter()
 				$('#layered_form input[type=hidden][name='+$(this).attr('rel')+']').remove();
 			}
 		}
-		reloadContent();
+		reloadContent(true);
 		e.preventDefault();
 	});
 }
@@ -460,7 +461,10 @@ function reloadContent(params_plus)
 	}
 	if ($('select[name=n]:first').length)
 	{
-		data += '&n=' + $('select[name=n]:first').val();
+		if (params_plus)
+			data += '&n=' + $('select[name=n]:first').val();
+		else
+			data += '&n=' + $('div.pagination form.showall').find('input[name=n]').val();
 	}
 
 	var slideUp = true;
@@ -472,11 +476,13 @@ function reloadContent(params_plus)
 
 	// Get nb items per page
 	var n = '';
-	$('div.pagination select[name=n]').children().each(function(it, option) {
-		if (option.selected)
-			n = '&n=' + option.value;
-	});
-
+	if (params_plus)
+	{
+		$('div.pagination select[name=n]').children().each(function(it, option) {
+			if (option.selected)
+				n = '&n=' + option.value;
+		});
+	}
 	ajaxQuery = $.ajax(
 	{
 		type: 'GET',
@@ -504,6 +510,9 @@ function reloadContent(params_plus)
 			$('#layered_block_left').replaceWith(utf8_decode(result.filtersBlock));
 			$('.category-product-count, .heading-counter').html(result.categoryCount);
 
+			if (result.nbRenderedProducts == result.nbAskedProducts)
+				$('div.clearfix.selector1').hide();
+
 			if (result.productList)
 				$('.product_list').replaceWith(utf8_decode(result.productList));
 			else
@@ -514,35 +523,36 @@ function reloadContent(params_plus)
 				$('.product_list').css('filter', '');
 
 			if (result.pagination.search(/[^\s]/) >= 0) {
-				var data = $('<div/>').html(result.pagination);
+				var pagination = $('<div/>').html(result.pagination)
+				var pagination_bottom = $('<div/>').html(result.pagination_bottom);
 
-				if (data.find('ul.pagination').length)
+				if ($('<div/>').html(pagination).find('#pagination').length)
 				{
-					$('div.pagination').show();
-					$('ul.pagination').each(function () {
-						$(this).replaceWith(data.find('ul.pagination'));
-					});
-				}
-				else if (!$('ul.pagination').length)
-				{
-					$('div.pagination').show();
-					$('div.pagination').each(function () {
-						$(this).html(data.find('div.pagination').innerHTML);
-					});
+					$('#pagination').show();
+					$('#pagination').replaceWith(pagination.find('#pagination'));
 				}
 				else
 				{
-					$('ul.pagination').html('');
-					$('div.pagination').hide();
+					$('#pagination').hide();
+				}
+
+				if ($('<div/>').html(pagination_bottom).find('#pagination_bottom').length)
+				{
+					$('#pagination_bottom').show();
+					$('#pagination_bottom').replaceWith(pagination_bottom.find('#pagination_bottom'));
+				}
+				else
+				{
+					$('#pagination_bottom').hide();
 				}
 			}
 			else
 			{
-				$('ul.pagination').html('');
-				$('div.pagination').hide();
+				$('#pagination').hide();
+				$('#pagination_bottom').hide();
 			}
 
-			paginationButton(parseInt(result.categoryCount.replace(/[^0-9]/g,'')));
+			paginationButton(result.nbRenderedProducts, result.nbAskedProducts);
 			ajaxLoaderOn = 0;
 
 			// On submiting nb items form, relaod with the good nb of items
@@ -550,12 +560,14 @@ function reloadContent(params_plus)
 			{
 				e.preventDefault();
 				val = $('div.pagination select[name=n]').val();
+			
 				$('div.pagination select[name=n]').children().each(function(it, option) {
 					if (option.value == val)
 						$(option).attr('selected', true);
 					else
 						$(option).removeAttr('selected');
 				});
+
 				// Reload products and pagination
 				reloadContent();
 			});
@@ -598,6 +610,10 @@ function reloadContent(params_plus)
 				current_friendly_url = '#/';
 
 			window.location.href = current_friendly_url;
+
+			if (current_friendly_url != '#/show-all')
+				$('div.clearfix.selector1').show();
+			
 			lockLocationChecking = true;
 
 			if(slideUp)
@@ -664,7 +680,6 @@ function updateProductUrl()
 		});
 	}
 }
-
 
 /**
  * Copy of the php function utf8_decode()

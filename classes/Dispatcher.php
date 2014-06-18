@@ -764,7 +764,7 @@ class DispatcherCore
 									$_GET[$k] = $v;
 		
 							// A patch for module friendly urls
-							if (preg_match('#module-([a-z0-9_-]+)-([a-z0-9]+)$#i', $controller, $m))
+							if (preg_match('#module-([a-z0-9_-]+)-([a-z0-9_]+)$#i', $controller, $m))
 							{
 								$_GET['module'] = $m[1];
 								$_GET['fc'] = 'module';
@@ -776,8 +776,8 @@ class DispatcherCore
 							break;
 						}
 			}
-			
-			if ($controller == 'index' || $this->request_uri == '/index.php') 
+
+			if ($controller == 'index' || preg_match('/^\/index.php(?:\?.*)?$/', $this->request_uri))
 				$controller = $this->useDefaultController();
 		}
 
@@ -813,7 +813,7 @@ class DispatcherCore
 		$modules_controllers = array();
 		if (is_null($module))
 			$modules = Module::getModulesOnDisk(true);
-		else if (!is_array($modules))
+		else if (!is_array($module))
 			$modules = array(Module::getInstanceByName($module));
 		else
 		{

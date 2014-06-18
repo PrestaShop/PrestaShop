@@ -7,6 +7,12 @@
 		background-color: transparent
 		color: $main-color
 		@include left(0)
+	select.active
+		border: solid 1px $brand-primary
+		background: lighten($brand-primary,40%)
+		option
+			background: white!important
+
 .hook_panel
 	margin-bottom: 10px!important
 	border: solid #E6E6E6 1px
@@ -94,13 +100,15 @@ td.module_active
 	background-color: lighten($brand-success,10%)!important
 td.module_inactive
 	background-color: lighten($gray,50%)!important
-.module-badge-popular, .module-badge-partner
+.module-badge-popular, .module-badge-partner, .module-badge-bought
 	@extend .badge
 	font-size: 12px
 .module-badge-popular
 	background-color: $brand-addons
 .module-badge-partner
 	background-color: $brand-primary
+.module-badge-bought
+	background-color: $greenPrestashop
 
 .categoriesTitle
 	.list-group

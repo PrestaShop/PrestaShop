@@ -255,34 +255,40 @@ class AdminPaymentControllerCore extends AdminController
 		return parent::renderView();
 	}
 
-	public function ajaxProcessGetModuleQuickView()
+	public function renderModulesList()
 	{
-		$modules = Module::getModulesOnDisk();
+		if ($this->getModulesList($this->filter_modules_list))
+		{
+			$active_list = array();
+			foreach ($this->modules_list as $key => $module)
+			{
+				if (in_array($module->name, $this->list_partners_modules))
+					$this->modules_list[$key]->type = 'addonsPartner';
+				if (isset($module->description_full) && trim($module->description_full) != '')
+					$module->show_quick_view = true;
+				
+				if ($module->active)
+					$active_list[] = $module; 
+				else
+					$unactive_list[] = $module; 
+			}
 
-		foreach ($modules as $module)
-			if ($module->name == Tools::getValue('module'))
-				break;
+			$helper = new Helper();
+			$fetch = '';
 
-		$url = $module->url;
+			if (isset($active_list))
+			{
+				$this->context->smarty->assign('panel_title', $this->l('Active payment'));
+				$fetch = $helper->renderModulesList($active_list);
+			}
 
-		if (isset($module->type) && ($module->type == 'addonsPartner' || $module->type == 'addonsNative'))
-			$url = $this->context->link->getAdminLink('AdminModules').'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name);
-
-		$this->context->smarty->assign(array(
-			'displayName' => $module->displayName,
-			'image' => $module->image,
-			'nb_rates' => (int)$module->nb_rates[0],
-			'avg_rate' => (int)$module->avg_rate[0],
-			'badges' => $module->badges,
-			'compatibility' => $module->compatibility,
-			'description_full' => $module->description_full,
-			'additional_description' => $module->additional_description,
-			'is_addons_partner' => (isset($module->type) && ($module->type == 'addonsPartner' || $module->type == 'addonsNative')),
-			'url' => $url
-		));
-		$this->smartyOutputContent('controllers/modules/quickview.tpl');
-		die(1);
+			$this->context->smarty->assign(array(
+				'panel_title' => $this->l('Recommended payment gateways'),
+				'view_all' => true
+			));
+			$fetch .= $helper->renderModulesList($unactive_list);
+			return $fetch;
+		}
 	}
-
 }
 

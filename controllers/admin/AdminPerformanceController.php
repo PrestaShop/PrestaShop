@@ -327,33 +327,54 @@ class AdminPerformanceControllerCore extends AdminController
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Apache optimization'),
-					'name' => 'PS_HTACCESS_CACHE_CONTROL',
-					'hint' => $this->l('This will add directives to your .htaccess file, which should improve caching and compression.'),
+					'label' => $this->l('Move JavaScript to the end'),
+					'name' => 'PS_JS_DEFER',
 					'values' => array(
 						array(
-							'id' => 'PS_HTACCESS_CACHE_CONTROL_1',
+							'id' => 'PS_JS_DEFER_1',
 							'value' => 1,
-							'label' => $this->l('Yes'),
+							'label' => $this->l('Move JavaScript to the end of the HTML document')
 						),
 						array(
-							'id' => 'PS_HTACCESS_CACHE_CONTROL_0',
+							'id' => 'PS_JS_DEFER_0',
 							'value' => 0,
-							'label' => $this->l('No'),
-						),
-					),
-				)
+							'label' => $this->l('Keep JavaScript in HTML at its original position')
+						)
+					)
+				),
+				
 			),
 			'submit' => array(
 				'title' => $this->l('Save')
 			)
 		);
 
+		if (!defined('_PS_HOST_MODE_'))
+			$this->fields_form[3]['form']['input'][] = array(
+				'type' => 'switch',
+				'label' => $this->l('Apache optimization'),
+				'name' => 'PS_HTACCESS_CACHE_CONTROL',
+				'hint' => $this->l('This will add directives to your .htaccess file, which should improve caching and compression.'),
+				'values' => array(
+					array(
+						'id' => 'PS_HTACCESS_CACHE_CONTROL_1',
+						'value' => 1,
+						'label' => $this->l('Yes'),
+					),
+					array(
+						'id' => 'PS_HTACCESS_CACHE_CONTROL_0',
+						'value' => 0,
+						'label' => $this->l('No'),
+					),
+				),
+			);
+
 		$this->fields_value['PS_CSS_THEME_CACHE'] = Configuration::get('PS_CSS_THEME_CACHE');
 		$this->fields_value['PS_JS_THEME_CACHE'] = Configuration::get('PS_JS_THEME_CACHE');
 		$this->fields_value['PS_HTML_THEME_COMPRESSION'] = Configuration::get('PS_HTML_THEME_COMPRESSION');
 		$this->fields_value['PS_JS_HTML_THEME_COMPRESSION'] = Configuration::get('PS_JS_HTML_THEME_COMPRESSION');
 		$this->fields_value['PS_HTACCESS_CACHE_CONTROL'] = Configuration::get('PS_HTACCESS_CACHE_CONTROL');
+		$this->fields_value['PS_JS_DEFER'] = Configuration::get('PS_JS_DEFER');
 		$this->fields_value['ccc_up'] = 1;
 	}
 
@@ -545,19 +566,17 @@ class AdminPerformanceControllerCore extends AdminController
 
 	public function renderForm()
 	{
-		// Initialize fieldset for a form
 		$this->initFieldsetSmarty();
-
 		$this->initFieldsetDebugMode();
-
 		$this->initFieldsetFeaturesDetachables();
 		$this->initFieldsetCCC();
 
 		if (!defined('_PS_HOST_MODE_'))
+		{
 			$this->initFieldsetMediaServer();
-
-		$this->initFieldsetCiphering();
-		$this->initFieldsetCaching();
+			$this->initFieldsetCiphering();
+			$this->initFieldsetCaching();
+		}
 
 		// Reindex fields
 		$this->fields_form = array_values($this->fields_form);
@@ -662,11 +681,15 @@ class AdminPerformanceControllerCore extends AdminController
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
-				if (Tools::getValue('combination') || !Combination::isCurrentlyUsed())
-					Configuration::updateValue('PS_COMBINATION_FEATURE_ACTIVE', Tools::getValue('combination'));
-				if (Tools::getValue('customer_group') && !Group::isCurrentlyUsed())
-					Configuration::updateValue('PS_GROUP_FEATURE_ACTIVE', Tools::getValue('customer_group'));
-				Configuration::updateValue('PS_FEATURE_FEATURE_ACTIVE', Tools::getValue('feature'));
+				if (Tools::isSubmit('combination'))
+					if ((!Tools::getValue('combination') && Combination::isCurrentlyUsed()) === false)
+						Configuration::updateValue('PS_COMBINATION_FEATURE_ACTIVE', (bool)Tools::getValue('combination'));
+
+				if (Tools::isSubmit('customer_group'))
+					if ((!Tools::getValue('customer_group') && Group::isCurrentlyUsed()) === false)
+						Configuration::updateValue('PS_GROUP_FEATURE_ACTIVE', (bool)Tools::getValue('customer_group'));
+
+				Configuration::updateValue('PS_FEATURE_FEATURE_ACTIVE', (bool)Tools::getValue('feature'));
 				$redirectAdmin = true;
 			}
 			else
@@ -684,6 +707,7 @@ class AdminPerformanceControllerCore extends AdminController
 					!Configuration::updateValue('PS_JS_THEME_CACHE', (int)Tools::getValue('PS_JS_THEME_CACHE')) ||
 					!Configuration::updateValue('PS_HTML_THEME_COMPRESSION', (int)Tools::getValue('PS_HTML_THEME_COMPRESSION')) ||
 					!Configuration::updateValue('PS_JS_HTML_THEME_COMPRESSION', (int)Tools::getValue('PS_JS_HTML_THEME_COMPRESSION')) ||
+					!Configuration::updateValue('PS_JS_DEFER', (int)Tools::getValue('PS_JS_DEFER')) ||
 					!Configuration::updateValue('PS_HTACCESS_CACHE_CONTROL', (int)Tools::getValue('PS_HTACCESS_CACHE_CONTROL')))
 					$this->errors[] = Tools::displayError('Unknown error.');
 				else
@@ -791,7 +815,7 @@ class AdminPerformanceControllerCore extends AdminController
 				$new_settings = $prev_settings = file_get_contents(_PS_ROOT_DIR_.'/config/settings.inc.php');
 				$cache_active = (bool)Tools::getValue('cache_active');
 				
-				if ($caching_system = Tools::getValue('caching_system'))
+				if ($caching_system = preg_replace('[^a-zA-Z0-9]', '', Tools::getValue('caching_system')))
 				{
 					$new_settings = preg_replace(
 						'/define\(\'_PS_CACHING_SYSTEM_\', \'([a-z0-9=\/+-_]*)\'\);/Ui',
@@ -865,18 +889,14 @@ class AdminPerformanceControllerCore extends AdminController
 			Tools::clearSmartyCache();
 			Tools::clearXMLCache();
 			Media::clearCache();
-			PrestaShopAutoload::getInstance()->generateIndex();
+			Tools::generateIndex();
 		}
 
-		if (Tools::isSubmit('submitAddconfiguration') && _PS_MODE_DEV_)
+		if (Tools::isSubmit('submitAddconfiguration'))
 		{
 			Configuration::updateGlobalValue('PS_DISABLE_NON_NATIVE_MODULE', (int)Tools::getValue('native_module'));
 			Configuration::updateGlobalValue('PS_DISABLE_OVERRIDES', (int)Tools::getValue('overrides'));
-
-			if (Tools::getValue('overrides'))
-				PrestaShopAutoload::getInstance()->_include_override_path = false;
-
-			PrestaShopAutoload::getInstance()->generateIndex();
+			Tools::generateIndex();
 		}
 
 		if ($redirectAdmin && (!isset($this->errors) || !count($this->errors)))

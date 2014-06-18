@@ -889,7 +889,9 @@ class AdminCarrierWizardControllerCore extends AdminController
 
 	public function getValidationRules()
 	{
-		$step_number = Tools::getValue('step_number');
+		$step_number = (int)Tools::getValue('step_number');
+		if (!$step_number)
+			return;
 
 		if ($step_number == 4 && !Shop::isFeatureActive() || $step_number == 5 && Shop::isFeatureActive())
 			return array('fields' => array());
@@ -910,7 +912,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 
 		$definition = ObjectModel::getDefinition('Carrier');
 		foreach ($definition['fields'] as $field => $def)
-			if (!in_array($field, $step_fields[$step_number]))
+			if (is_array($step_fields[$step_number]) && !in_array($field, $step_fields[$step_number]))
 				unset($definition['fields'][$field]);
 		return $definition;
 	}

@@ -35,7 +35,7 @@ class AdminPPreferencesControllerCore extends AdminController
 		parent::__construct();
 
 		$warehouse_list = Warehouse::getWarehouses();
-		$warehouse_no = array(array('id_warehouse' => 0,'name' => $this->l('No default warehouse (Standard)')));
+		$warehouse_no = array(array('id_warehouse' => 0,'name' => $this->l('No default warehouse (default setting)')));
 		$warehouse_list = array_merge($warehouse_no,$warehouse_list);
 
 		$this->fields_options = array(

@@ -24,8 +24,15 @@
 *}
 {if isset($fields.title)}<h3>{$fields.title}</h3>{/if}
 
+{if isset($tabs) && $tabs|count}
+<script type="text/javascript">
+	var helper_tabs = {$tabs|json_encode};
+	var unique_field_id = '';
+</script>
+{/if}
+
 {block name="defaultForm"}
-<form id="{if isset($fields.form.form.id_form)}{$fields.form.form.id_form|escape:'html':'UTF-8'}{else}{if $table == null}configuration_form{else}{$table}_form{/if}{/if}" class="defaultForm {$name_controller} form-horizontal" action="{$current}&amp;token={$token}" method="post" enctype="multipart/form-data" {if isset($style)}style="{$style}"{/if} novalidate>
+<form id="{if isset($fields.form.form.id_form)}{$fields.form.form.id_form|escape:'html':'UTF-8'}{else}{if $table == null}configuration_form{else}{$table}_form{/if}{/if}" class="defaultForm {$name_controller} form-horizontal" action="{$current}&amp;token={$token}" method="post" enctype="multipart/form-data"{if isset($style)} style="{$style}"{/if} novalidate>
 	{if $form_id}
 		<input type="hidden" name="{$identifier}" id="{$identifier}" value="{$form_id}" />
 	{/if}
@@ -48,9 +55,10 @@
 				{elseif $key == 'description' && $field}
 					<div class="alert alert-info">{$field}</div>
 				{elseif $key == 'input'}
+					<div class="form-wrapper">
 					{foreach $field as $input}
 						{block name="input_row"}
-						<div class="form-group{if isset($input.form_group_class)} {$input.form_group_class}{/if}{if $input.type == 'hidden'} hide{/if}"{if $input.name == 'id_state'} id="contains_states"{if !$contains_states} style="display:none;"{/if}{/if}>
+						<div class="form-group{if isset($input.form_group_class)} {$input.form_group_class}{/if}{if $input.type == 'hidden'} hide{/if}"{if $input.name == 'id_state'} id="contains_states"{if !$contains_states} style="display:none;"{/if}{/if} {if isset($tabs) && isset($input.tab)}data-tab-id="{$input.tab}"{/if}>
 						{if $input.type == 'hidden'}
 							<input type="hidden" name="{$input.name}" id="{$input.name}" value="{$fields_value[$input.name]|escape:'html':'UTF-8'}" />
 						{else}
@@ -107,7 +115,7 @@
 													{/literal}
 												{/if}
 												{if isset($input.maxchar) || isset($input.prefix) || isset($input.suffix)}
-												<div class="input-group">
+												<div class="input-group {if isset($input.class)}{$input.class}{/if}">
 												{/if}
 												{if isset($input.maxchar)}
 												<span id="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}_counter" class="input-group-addon">
@@ -194,7 +202,7 @@
 										{/if}
 										{assign var='value_text' value=$fields_value[$input.name]}
 										{if isset($input.maxchar) || isset($input.prefix) || isset($input.suffix)}
-										<div class="input-group">
+										<div class="input-group {if isset($input.class)}{$input.class}{/if}">
 										{/if}
 										{if isset($input.maxchar)}
 										<span id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}_counter" class="input-group-addon"><span class="text-count-down">{$input.maxchar}</span></span>
@@ -445,14 +453,14 @@
 
 								{elseif $input.type == 'checkbox'}
 									{if isset($input.expand)}
-										<a class="btn btn-default show_checkbox{if $input.expand.default == 'hide'} hidden {/if}" href="#">
+										<a class="btn btn-default show_checkbox{if strtolower($input.expand.default) == 'hide'} hidden {/if}" href="#">
 											<i class="icon-{$input.expand.show.icon}"></i>
 											{$input.expand.show.text}
 											{if isset($input.expand.print_total) && $input.expand.print_total > 0}
 												<span class="badge">{$input.expand.print_total}</span>
 											{/if}
 										</a>
-										<a class="btn btn-default hide_checkbox{if $input.expand.default == 'show'} hidden {/if}" href="#">
+										<a class="btn btn-default hide_checkbox{if strtolower($input.expand.default) == 'show'} hidden {/if}" href="#">
 											<i class="icon-{$input.expand.hide.icon}"></i>
 											{$input.expand.hide.text}
 											{if isset($input.expand.print_total) && $input.expand.print_total > 0}
@@ -462,7 +470,7 @@
 									{/if}
 									{foreach $input.values.query as $value}
 										{assign var=id_checkbox value=$input.name|cat:'_'|cat:$value[$input.values.id]}
-										<div class="checkbox{if isset($input.expand) && $input.expand.default == 'show'} hidden {/if}">
+										<div class="checkbox{if isset($input.expand) && strtolower($input.expand.default) == 'show'} hidden {/if}">
 											<label for="{$id_checkbox}">
 												<input type="checkbox"
 													name="{$id_checkbox}"
@@ -491,7 +499,7 @@
 															<span class="input-group-addon">
 																<i class="icon-unlock"></i>
 															</span>
-															<input type="password" id="old_passwd" name="old_passwd" class="form-control" value="" required="required">
+															<input type="password" id="old_passwd" name="old_passwd" class="form-control" value="" required="required" autocomplete="off">
 														</div>
 													</div>
 												</div>
@@ -507,12 +515,7 @@
 															<span class="input-group-addon">
 																<i class="icon-key"></i>
 															</span>
-															<input type="password"
-																id="{$input.name}"
-																name="{$input.name}"
-																class="{if isset($input.class)}{$input.class}{/if}"
-																value=""
-																required="required"/>
+															<input type="password" id="{$input.name}" name="{$input.name}" class="{if isset($input.class)}{$input.class}{/if}" value="" required="required" autocomplete="off"/>
 														</div>
 														<span id="{$input.name}-output"></span>
 													</div>
@@ -526,11 +529,7 @@
 															<span class="input-group-addon">
 																<i class="icon-key"></i>
 															</span>
-															<input type="password"
-																id="{$input.name}2"
-																name="{$input.name}2"
-																class="{if isset($input.class)}{$input.class}{/if}"
-																value=""/>
+															<input type="password" id="{$input.name}2" name="{$input.name}2" class="{if isset($input.class)}{$input.class}{/if}" value="" autocomplete="off"/>
 														</div>
 													</div>
 												</div>
@@ -759,7 +758,11 @@
 								{elseif $input.type == 'free'}
 									{$fields_value[$input.name]}
 								{elseif $input.type == 'html'}
-									{$input.name}
+									{if isset($input.html_content)}
+										{$input.html_content}
+									{else}
+										{$input.name}
+									{/if}
 								{/if}
 								{/block}{* end block input *}
 								{block name="description"}
@@ -793,6 +796,7 @@
 						{capture name=hookName assign=hookName}display{$smarty.get.controller|ucfirst|htmlentities}Form{/capture}
 						{hook h=$hookName fieldset=$f}
 					{/if}
+				</div><!-- /.form-wrapper -->
 				{elseif $key == 'desc'}
 					<div class="alert alert-info col-lg-offset-3">
 						{if is_array($field)}
@@ -877,7 +881,7 @@
 {if $firstCall}
 	<script type="text/javascript">
 		var module_dir = '{$smarty.const._MODULE_DIR_}';
-		var id_language = {$defaultFormLanguage};
+		var id_language = {$defaultFormLanguage|intval};
 		var languages = new Array();
 		var vat_number = {if $vat_number}1{else}0{/if};
 		// Multilang field setup must happen before document is ready so that calls to displayFlags() to avoid
@@ -939,10 +943,10 @@
 				pmNames: ['PM', 'P'],
 				timeFormat: 'hh:mm:ss tt',
 				timeSuffix: '',
-				timeOnlyTitle: '{l s='Choose Time'}',
-				timeText: '{l s='Time'}',
-				hourText: '{l s='Hour'}',
-				minuteText: '{l s='Minute'}',
+				timeOnlyTitle: '{l s='Choose Time' js=1}',
+				timeText: '{l s='Time' js=1}',
+				hourText: '{l s='Hour' js=1}',
+				minuteText: '{l s='Minute' js=1}',
 			});
 			{if isset($use_textarea_autosize)}
 			$(".textarea-autosize").autosize();

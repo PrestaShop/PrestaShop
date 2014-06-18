@@ -30,7 +30,12 @@
 <html lang="{$iso}">
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<link rel="icon" type="image/x-icon" href="{$img_dir}favicon.ico" />
+		<link rel="apple-touch-icon" href="{$img_dir}app_icon.png" />
+
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<meta name="robots" content="NOFOLLOW, NOINDEX">
 		<title>
@@ -43,9 +48,8 @@
 			<script type="text/javascript" src="{$js_uri}"></script>
 		{/foreach}
 		<script type="text/javascript" src="../js/login.js?{$smarty.now}"></script>
-		<link rel="icon" type="image/vnd.microsoft.icon" href="{$img_dir}favicon.ico" />
-		<link rel="shortcut icon" type="image/x-icon" href="{$img_dir}favicon.ico" />
+
 	</head>
-	<body class="bootstrap">
+	<body class="ps_back-office bootstrap">
 		<div id="login">
 			<div id="content">

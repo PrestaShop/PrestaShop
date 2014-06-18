@@ -30,7 +30,12 @@
 <html lang="{$iso}">
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=0.75, maximum-scale=0.75, user-scalable=0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<link rel="icon" type="image/x-icon" href="{$img_dir}favicon.ico" />
+	<link rel="apple-touch-icon" href="{$img_dir}app_icon.png" />
+
 	<meta name="robots" content="NOFOLLOW, NOINDEX">
 	<title>{if $meta_title != ''}{$meta_title} • {/if}{$shop_name}</title>
 	{if $display_header}
@@ -43,11 +48,11 @@
 		var roundMode = {$round_mode|intval};
 {if isset($shop_context)}
 	{if $shop_context == Shop::CONTEXT_ALL}
-		var youEditFieldFor = '{l s='A modification of this field will be applied for all shops' js=1}';
+		var youEditFieldFor = '{l s='This field will be modified for all your shops.' js=1}';
 	{elseif $shop_context == Shop::CONTEXT_GROUP}
-		var youEditFieldFor = '{l s='A modification of this field will be applied for all shops of group' js=1} <b>{$shop_name|@addcslashes:'\''}</b>';
+		var youEditFieldFor = '{l s='This field will be modified for all shops in this shop group:' js=1} <b>{$shop_name|@addcslashes:'\''}</b>';
 	{else}
-		var youEditFieldFor = '{l s='A modification of this field will be applied for the shop' js=1} <b>{$shop_name|@addcslashes:'\''}</b>';
+		var youEditFieldFor = '{l s='This field will be modified for this shop:' js=1} <b>{$shop_name|@addcslashes:'\''}</b>';
 	{/if}
 {else}
 		var youEditFieldFor = '';
@@ -60,7 +65,7 @@
 		var see_order_msg = '{l s='View this order' js=1}';
 		var new_customer_msg = '{l s='A new customer registered on your shop.' js=1}';
 		var customer_name_msg = '{l s='Customer name:' js=1} ';
-		var new_msg = '{l s='A new message posted on your shop.' js=1}';
+		var new_msg = '{l s='A new message was posted on your shop.' js=1}';
 		var see_msg = '{l s='Read this message' js=1}';
 		var token = '{$token|addslashes}';
 		var token_admin_orders = '{getAdminToken tab='AdminOrders'}';
@@ -73,11 +78,13 @@
 		var admin_modules_link = '{$link->getAdminLink("AdminModules")|addslashes}';
 		var tab_modules_list = '{if isset($tab_modules_list) && $tab_modules_list}{$tab_modules_list|addslashes}{/if}';
 		var update_success_msg = '{l s='Update successful' js=1}';
+		var errorLogin = '{l s='PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.'}';
+		var search_product_msg = '{l s='Search for a product' js=1}';
 	</script>
 {/if}
 {if isset($css_files)}
 {foreach from=$css_files key=css_uri item=media}
-	<link href="{$css_uri}" rel="stylesheet" type="text/css" media="{$media}" />
+	<link href="{$css_uri}" rel="stylesheet" type="text/css"/>
 {/foreach}
 {/if}
 {if isset($js_files)}
@@ -86,8 +93,6 @@
 {/foreach}
 {/if}
 
-	<link rel="icon" type="image/vnd.microsoft.icon" href="{$img_dir}favicon.ico" />
-	<link rel="shortcut icon" type="image/x-icon" href="{$img_dir}favicon.ico" />
 	{if isset($displayBackOfficeHeader)}
 		{$displayBackOfficeHeader}
 	{/if}
@@ -102,7 +107,7 @@
 </head>
 
 {if $display_header}
-	<body class="{if $employee->bo_menu}page-sidebar {if $collapse_menu}page-sidebar-closed{/if}{else}page-topbar{/if} {$smarty.get.controller|escape|strtolower}">
+	<body class="ps_back-office {if $employee->bo_menu}page-sidebar {if $collapse_menu}page-sidebar-closed{/if}{else}page-topbar{/if} {$smarty.get.controller|escape|strtolower}">
 	{* begin  HEADER *}
 	<header id="header" class="bootstrap">
 		<nav id="header_infos" role="navigation">
@@ -132,7 +137,7 @@
 								</div>
 								<div id="list_orders_notif" class="list_notif">
 									<span class="no_notifs">
-										{l s='No new orders has been placed on your shop'}
+										{l s='No new orders have been placed on your shop.'}
 									</span>
 								</div>
 								<div class="notifs_panel_footer">
@@ -157,7 +162,7 @@
 								</div>
 								<div id="list_customers_notif" class="list_notif">
 									<span class="no_notifs">
-										{l s='No new customers registered on your shop'}
+										{l s='No new customers have registered on your shop.'}
 									</span>
 								</div>
 								<div class="notifs_panel_footer">
@@ -182,7 +187,7 @@
 								</div>
 								<div id="list_customer_messages_notif" class="list_notif">
 									<span class="no_notifs">
-										{l s='No new messages posted on your shop'}
+										{l s='No new messages have been posted on your shop.'}
 									</span>
 								</div>
 								<div class="notifs_panel_footer">
@@ -206,8 +211,16 @@
 					</li>
 				</ul>
 {/if}
-
 				<ul id="header_employee_box">
+					{if !isset($logged_on_addons) || !$logged_on_addons}
+						<li>
+							<a href="#" class="addons_connect" data-toggle="modal" data-target="#modal_addons_connect" class="toolbar_btn" title="{l s='Addons'}">
+								<i class="icon-chain-broken"></i>
+								<span class="string-long">{l s='Not connected to PrestaShop Addons'}</span>
+								<span class="string-short">{l s='Addons'}</span>
+							</a>
+						</li>
+					{/if}
 {if {$base_url}}
 					<li>
 						<a href="{if isset($base_url_tc)}{$base_url_tc}{else}{$base_url}{/if}" id="header_foaccess" target="_blank" title="{l s='View my shop'}">
@@ -220,7 +233,9 @@
 					<li id="employee_infos" class="dropdown">
 						<a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&id_employee={$employee->id}&amp;updateemployee" class="employee_name dropdown-toggle" data-toggle="dropdown">
 							<span class="employee_avatar_small">
+								{if isset($employee)}
 								<img class="imgm img-thumbnail" alt="" src="{$employee->getImage()}" width="32" height="32" />
+								{/if}
 							</span>
 							<span class="string-long">{$employee->firstname}&nbsp;{$employee->lastname}</span>
 							<span class="string-short">{l s='Me'}</span>
@@ -259,7 +274,7 @@
 
 {if $install_dir_exists}
 			<div class="alert alert-warning">
-				{l s='For security reasons, you must also:'}&nbsp;{l s='delete the /install folder'}
+				{l s='For security reasons, you must also delete the /install folder.'}
 			</div>
 {/if}
 
@@ -267,7 +282,7 @@
 {* end display_header*}
 
 {else}
-	<body{if isset($lite_display) && $lite_display} class="display-modal"{/if}>		
+	<body{if isset($lite_display) && $lite_display} class="ps_back-office display-modal"{/if}>		
 		<div id="main">
 			<div id="content" class="{if !$bootstrap}nobootstrap{else}bootstrap{/if}">
 {/if}

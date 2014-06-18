@@ -649,9 +649,10 @@ class LanguageCore extends ObjectModel
 		// That way using only one query we get either the exact wanted language
 		// or a close match.
 		$id_lang = Db::getInstance()->getValue(
-			'SELECT `id_lang` FROM ' 
-			.'`'._DB_PREFIX_.'lang` WHERE LEFT(`language_code`,2) = \''.pSQL($lang).'\' '
-			.'ORDER BY language_code = \''.pSQL($code).'\' DESC'
+			'SELECT `id_lang`, IF(language_code = \''.pSQL($code).'\', 0, LENGTH(language_code)) as found
+			FROM `'._DB_PREFIX_.'lang` 
+			WHERE LEFT(`language_code`,2) = \''.pSQL($lang).'\'
+			ORDER BY found ASC'
 		);
 
 		// Instantiate the Language object if we found it.
@@ -688,7 +689,7 @@ class LanguageCore extends ObjectModel
 					$query .= '(';
 					$row2['id_lang'] = $to;
 					foreach ($row2 as $field)
-						$query .= '\''.pSQL($field, true).'\',';
+						$query .= (!is_string($field) && $field == NULL) ? 'NULL,' : '\''.pSQL($field, true).'\',';
 					$query = rtrim($query, ',').'),';
 				}
 				$query = rtrim($query, ',');
@@ -732,8 +733,8 @@ class LanguageCore extends ObjectModel
 
 		// Initialize the language
 		$lang = new Language();
-		$lang->iso_code = $iso_code;
-		$lang->language_code = $iso_code;
+		$lang->iso_code = Tools::strtolower($iso_code);
+		$lang->language_code = $iso_code; // Rewritten afterwards if the language code is available
 		$lang->active = true;
 
 		// If the language pack has not been provided, retrieve it from prestashop.com

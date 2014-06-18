@@ -187,8 +187,6 @@
 		$('#{$id}-add-button').on('click', function() {
 			$('#{$id}-success').html('').parent().hide();
 			$('#{$id}-errors').html('').parent().hide();
-			$('#{$id}-files-list').parent().hide();
-			{$id}_total_files = 0;
 			$('#{$id}').trigger('click');
 		});
 	});

@@ -35,7 +35,7 @@
 			{l s='This is where you decide what payment modules are available for different variations like your customers\' currency, group, and country.'}
 			<br />
 			{l s='A check mark indicates you want the payment module available.'}
-			{l s='If it is not checked then this means that the Payment module is disabled.'}
+			{l s='If it is not checked then this means that the payment module is disabled.'}
 			<br />
 			{l s='Please make sure to click Save for each section.'}
 		</div>

@@ -1410,7 +1410,7 @@ class AdminOrdersControllerCore extends AdminController
 		$helper->color = 'color2';
 		$helper->title = $this->l('Abandoned Carts', null, null, false);
 		$helper->subtitle = $this->l('Today', null, null, false);
-		$helper->href = $this->context->link->getAdminLink('AdminCarts');
+		$helper->href = $this->context->link->getAdminLink('AdminCarts').'&action=filterOnlyAbandonedCarts';
 		if (ConfigurationKPI::get('ABANDONED_CARTS') !== false)
 			$helper->value = ConfigurationKPI::get('ABANDONED_CARTS');
 		if (ConfigurationKPI::get('ABANDONED_CARTS_EXPIRE') < $time)
@@ -1430,15 +1430,15 @@ class AdminOrdersControllerCore extends AdminController
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
-		$helper->id = 'box-net-profit-visitor';
+		$helper->id = 'box-net-profit-visit';
 		$helper->icon = 'icon-user';
 		$helper->color = 'color4';
-		$helper->title = $this->l('Net Profit per Visitor', null, null, false);
+		$helper->title = $this->l('Net Profit per Visit', null, null, false);
 		$helper->subtitle = $this->l('30 days', null, null, false);
-		if (ConfigurationKPI::get('NETPROFIT_VISITOR') !== false)
-			$helper->value = ConfigurationKPI::get('NETPROFIT_VISITOR');
-		if (ConfigurationKPI::get('NETPROFIT_VISITOR_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=netprofit_visitor';
+		if (ConfigurationKPI::get('NETPROFIT_VISIT') !== false)
+			$helper->value = ConfigurationKPI::get('NETPROFIT_VISIT');
+		if (ConfigurationKPI::get('NETPROFIT_VISIT_EXPIRE') < $time)
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=netprofit_visit';
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpiRow();
@@ -2068,7 +2068,7 @@ class AdminOrdersControllerCore extends AdminController
 			foreach (Tools::getValue('product_quantity') as $id_customization => $qty)
 			{
 				// Update quantity of each customization
-				Db::getInstance()->update('customization', array('quantity' => $qty), 'id_customization = '.(int)$id_customization);
+				Db::getInstance()->update('customization', array('quantity' => (int)$qty), 'id_customization = '.(int)$id_customization);
 				// Calculate the real quantity of the product
 				$product_quantity += $qty;
 			}

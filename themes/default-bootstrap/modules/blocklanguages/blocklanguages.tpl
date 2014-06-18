@@ -28,7 +28,7 @@
 		{foreach from=$languages key=k item=language name="languages"}
 			{if $language.iso_code == $lang_iso}
 				<div class="current">
-					<span>{$language.name|regex_replace:"/\s.*$/":""}</span>
+					<span>{$language.name|regex_replace:"/\s\(.*\)$/":""}</span>
 				</div>
 			{/if}
 		{/foreach}
@@ -43,7 +43,7 @@
 						<a href="{$link->getLanguageLink($language.id_lang)|escape:'html':'UTF-8'}" title="{$language.name}">
 					{/if}
 				{/if}
-						<span>{$language.name|regex_replace:"/\s.*$/":""}</span>
+						<span>{$language.name|regex_replace:"/\s\(.*\)$/":""}</span>
 				{if $language.iso_code != $lang_iso}
 					</a>
 				{/if}

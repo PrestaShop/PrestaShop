@@ -45,11 +45,11 @@ class AdminStockManagementControllerCore extends AdminController
 				'filter_key' => 'a!reference'
 			),
 			'ean13' => array(
-				'title' => $this->l('EAN13'),
+				'title' => $this->l('EAN-13 or JAN barcode'),
 				'filter_key' => 'a!ean13'
 			),
 			'upc' => array(
-				'title' => $this->l('UPC'),
+				'title' => $this->l('UPC barcode'),
 				'filter_key' => 'a!upc'
 			),
 			'name' => array(
@@ -117,7 +117,7 @@ class AdminStockManagementControllerCore extends AdminController
 		// displays informations
 		$this->displayInformation($this->l('This interface allows you to manage product stock and their variations.').'<br />');
 		$this->displayInformation($this->l('Through this interface, you can increase and decrease product stock for an given warehouse.'));
-		$this->displayInformation($this->l('Furthermore, you can alter product quantities between warehouses, or within one warehouse.').'<br />');
+		$this->displayInformation($this->l('Furthermore, you can move product quantities between warehouses, or within one warehouse.').'<br />');
 		$this->displayInformation($this->l('If you want to increase quantities of multiple products at once, you can use the "Supply orders" page under the "Stock" menu.').'<br />');
 		$this->displayInformation($this->l('Finally, you need to provide the quantity that you\'ll be adding: "Usable for sale" means that this quantity will be available in your shop(s), otherwise it will be considered reserved (i.e. for other purposes).'));
 
@@ -140,7 +140,7 @@ class AdminStockManagementControllerCore extends AdminController
 
 		// displays warning if no warehouses
 		if (!$warehouses_add)
-			$this->displayWarning($this->l('You must choose a warehouses before adding stock. See Stock/Warehouses'));
+			$this->displayWarning($this->l('You must choose a warehouses before adding stock. See Stock/Warehouses.'));
 
 		//get currencies list
         $currencies = Currency::getCurrencies();
@@ -169,7 +169,7 @@ class AdminStockManagementControllerCore extends AdminController
 						$last_sm_unit_price_te = Tools::displayPrice((float)$last_sm['price_te'], $last_sm_currency);
 				}
 
-				$this->displayInformation($this->l('Rolling over the quantity and price fields will give you the details about the last stock movement.'));
+				$this->displayInformation($this->l('Moving the mouse cursor over the quantity and price fields will give you the details about the last stock movement.'));
 				// fields in the form
 				$this->fields_form[]['form'] = array(
 					'legend' => array(
@@ -201,13 +201,13 @@ class AdminStockManagementControllerCore extends AdminController
 						),
 						array(
 							'type' => 'text',
-							'label' => $this->l('EAN13'),
+							'label' => $this->l('EAN-13 or JAN barcode'),
 							'name' => 'ean13',
 							'disabled' => true,
 						),
 						array(
 							'type' => 'text',
-							'label' => $this->l('UPC'),
+							'label' => $this->l('UPC barcode'),
 							'name' => 'upc',
 							'disabled' => true,
 						),
@@ -225,9 +225,9 @@ class AdminStockManagementControllerCore extends AdminController
 							'required' => true,
 							'hint' => array(
 										$this->l('Indicate the physical quantity of this product that you want to add.'),
-										$this->l('Last physical quantity added: %s (%s).'),
+										$this->l('Last physical quantity added: %s items (usable for sale: %s).'),
 										($last_sm_quantity > 0 ? $last_sm_quantity : $this->l('N/A')),
-										($last_sm_quantity > 0 ? ($last_sm_quantity_is_usable >= 0 ? $this->l('Usable') : $this->l('Not usable')) : $this->l('N/A'))),
+										($last_sm_quantity > 0 ? ($last_sm_quantity_is_usable >= 0 ? $this->l('Yes') : $this->l('No')) : $this->l('N/A'))),
 						),
 						array(
 							'type' => 'switch',
@@ -338,7 +338,7 @@ class AdminStockManagementControllerCore extends AdminController
 						),
 						array(
 							'type' => 'text',
-							'label' => $this->l('EAN13'),
+							'label' => $this->l('EAN-13 or JAN barcode'),
 							'name' => 'ean13',
 							'disabled' => true,
 						),
@@ -440,7 +440,7 @@ class AdminStockManagementControllerCore extends AdminController
 						),
 						array(
 							'type' => 'text',
-							'label' => $this->l('EAN13'),
+							'label' => $this->l('EAN-13 or JAN barcode'),
 							'name' => 'ean13',
 							'disabled' => true,
 						),
@@ -597,7 +597,7 @@ class AdminStockManagementControllerCore extends AdminController
 			// get usable flag
 			$usable = Tools::getValue('usable', null);
 			if (is_null($usable))
-				$this->errors[] = Tools::displayError('You have to specify if the product quantity is usable for sale on shops.');
+				$this->errors[] = Tools::displayError('You have to specify whether the product quantity is usable for sale on shops or not.');
 			$usable = (bool)$usable;
 		}
 
@@ -671,9 +671,9 @@ class AdminStockManagementControllerCore extends AdminController
 					$usable_quantity_in_stock = (int)$stock_manager->getProductPhysicalQuantities($id_product, $id_product_attribute, array($warehouse->id), true);
 					$not_usable_quantity = ($physical_quantity_in_stock - $usable_quantity_in_stock);
 					if ($usable_quantity_in_stock < $quantity)
-						$this->errors[] = sprintf(Tools::displayError('You don\'t have enough usable quantity. Cannot remove %d out of %d.'), (int)$quantity, (int)$usable_quantity_in_stock);
+						$this->errors[] = sprintf(Tools::displayError('You don\'t have enough usable quantity. Cannot remove %d items out of %d.'), (int)$quantity, (int)$usable_quantity_in_stock);
 					else if ($not_usable_quantity < $quantity)
-						$this->errors[] = sprintf(Tools::displayError('You don\'t have enough usable quantity. Cannot remove %d out of %d.'), (int)$quantity, (int)$not_usable_quantity);
+						$this->errors[] = sprintf(Tools::displayError('You don\'t have enough usable quantity. Cannot remove %d items out of %d.'), (int)$quantity, (int)$not_usable_quantity);
 					else
 						$this->errors[] = Tools::displayError('It is not possible to remove the specified quantity. Therefore no stock was removed.');
 				}
@@ -695,13 +695,13 @@ class AdminStockManagementControllerCore extends AdminController
 			// get usable flag for source warehouse
 			$usable_from = Tools::getValue('usable_from', null);
 			if (is_null($usable_from))
-				$this->errors[] = Tools::displayError('You have to specify if the product quantity in your source warehouse(s) is ready for sale.');
+				$this->errors[] = Tools::displayError('You have to specify whether the product quantity in your source warehouse(s) is ready for sale or not.');
 			$usable_from = (bool)$usable_from;
 
 			// get usable flag for destination warehouse
 			$usable_to = Tools::getValue('usable_to', null);
 			if (is_null($usable_to))
-				$this->errors[] = Tools::displayError('You have to specify if the product quantity in your destination warehouse(s) is ready for sale.');
+				$this->errors[] = Tools::displayError('You have to specify whether the product quantity in your destination warehouse(s) is ready for sale or not.');
 			$usable_to = (bool)$usable_to;
 
 			// if we can process stock transfers
@@ -833,11 +833,11 @@ class AdminStockManagementControllerCore extends AdminController
 					'filter_key' => 'a!reference'
 				),
 				'ean13' => array(
-					'title' => $this->l('EAN13'),
+					'title' => $this->l('EAN-13 or JAN barcode'),
 					'filter_key' => 'a!ean13'
 				),
 				'upc' => array(
-					'title' => $this->l('UPC'),
+					'title' => $this->l('UPC barcode'),
 					'filter_key' => 'a!upc'
 				),
 				'name' => array(
@@ -956,7 +956,7 @@ class AdminStockManagementControllerCore extends AdminController
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 		{
-			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management prior to using this feature.');
+			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate the Advanced Stock Management feature prior to using this feature.');
 			return false;
 		}
 		
@@ -1086,7 +1086,7 @@ class AdminStockManagementControllerCore extends AdminController
 					));
 				}
 				else
-					$this->errors[] = Tools::displayError('The product specified is not valid.');
+					$this->errors[] = Tools::displayError('The specified product is not valid.');
 			}
 		}
 		else

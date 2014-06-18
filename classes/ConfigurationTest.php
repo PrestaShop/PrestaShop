@@ -334,6 +334,21 @@ class ConfigurationTestCore
 			'/config/index.php',
 			'/tools/tar/Archive_Tar.php',
 			'/tools/pear/PEAR.php',
+			'/controllers/admin/AdminLoginController.php',
+			'/css/index.php',
+			'/download/index.php',
+			'/img/404.gif',
+			'/js/tools.js',
+			'/js/jquery/plugins/fancybox/jquery.fancybox.js',
+			'/localization/fr.xml',
+			'/mails/index.php',
+			'/modules/index.php',
+			'/override/controllers/front/index.php',
+			'/pdf/order-return.tpl',
+			'/themes/default-bootstrap/css/global.css',
+			'/translations/export/index.php',
+			'/webservice/dispatcher.php',
+			'/upload/index.php',
 			'/index.php'
 		);
 		foreach ($files as $file)

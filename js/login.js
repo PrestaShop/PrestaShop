@@ -93,12 +93,16 @@ function feedbackSubmit() {
 function displayForgotPassword() {
 	$('#error').hide();
 	$("#login").find('.flip-container').toggleClass("flip");
+	setTimeout(function(){$('.front').hide()},200);
+	setTimeout(function(){$('.back').show()},200);
 	$('#email_forgot').select();
 }
 
 function displayLogin() {
 	$('#error').hide();
 	$("#login").find('.flip-container').toggleClass("flip");
+	setTimeout(function(){$('.back').hide()},200);
+	setTimeout(function(){$('.front').show()},200);
 	$('#email').select();
 	return false;
 }
@@ -180,7 +184,7 @@ function doAjaxForgot() {
 }
 
 function displayErrors(errors) {
-	str_errors = '<p><strong>' + (errors.length > 1 ? there_are : there_is) + ' ' + errors.length + ' ' + (errors.length > 1 ? label_errors : label_error) + '</strong></p><ol>';
+	str_errors = '<p><strong>' + (errors.length > 1 ? more_errors : one_error) + '</strong></p><ol>';
 	for (var error in errors) //IE6 bug fix
 		if (error != 'indexOf') str_errors += '<li>' + errors[error] + '</li>';
 	$('#error').html(str_errors + '</ol>').removeClass('hide').fadeIn('slow');

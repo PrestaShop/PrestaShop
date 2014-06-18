@@ -41,6 +41,7 @@ class MediaCore
 		'ui.dialog' => array('fileName' => 'jquery.ui.dialog.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.position','ui.button'), 'theme' => true),
 		'ui.menu' => array('fileName' => 'jquery.ui.menu.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.position'), 'theme' => true),
 		'ui.slider' => array('fileName' => 'jquery.ui.slider.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.mouse'), 'theme' => true),
+		'ui.spinner' => array('fileName' => 'jquery.ui.spinner.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.button'), 'theme' => true),
 		'ui.tabs' => array('fileName' => 'jquery.ui.tabs.min.js', 'dependencies' => array('ui.core', 'ui.widget'), 'theme' => true),
 		'ui.datepicker' => array('fileName' => 'jquery.ui.datepicker.min.js', 'dependencies' => array('ui.core'), 'theme' => true),
 		'ui.progressbar' => array('fileName' => 'jquery.ui.progressbar.min.js', 'dependencies' => array('ui.core', 'ui.widget'), 'theme' => true),
@@ -160,10 +161,10 @@ class MediaCore
 			} catch (Exception $e) {
 				if (_PS_MODE_DEV_)
 					echo $e->getMessage();
-				return $js_content;
+				return ';'.trim($js_content, ';').';';
 			}
 		}
-		return $js_content;
+		return ';'.trim($js_content, ';').';';
 	}
 
 	public static function minifyCSS($css_content, $fileuri = false, &$import_url = array())
@@ -585,9 +586,7 @@ class MediaCore
 		// get js files infos
 		foreach ($js_files as $filename)
 		{
-			$expr = explode(':', $filename);
-
-			if ($expr[0] == 'http')
+			if (Validate::isAbsoluteUrl($filename))
 				$js_external_files[] = $filename;
 			else
 			{
@@ -713,7 +712,7 @@ class MediaCore
 			foreach ($scripts as $script)
 				if ($src = $script->getAttribute('src'))
 				{
-			  		if (preg_match('#^//#', $src))
+			  		if (substr(src, 0, 2) == '//')
 						$src = Tools::getCurrentUrlProtocolPrefix().substr($src, 2);
 
 					$patterns = array(
@@ -736,7 +735,8 @@ class MediaCore
 								$version = $matches[1];
 							if ($version)
 							{
-								Context::getContext()->controller->addJquery($version, null, $minifier);
+								if ($version != _PS_JQUERY_VERSION_)
+									Context::getContext()->controller->addJquery($version, null, $minifier);
 								array_push(Media::$inline_script_src, $src);
 							}
 						}
@@ -766,10 +766,17 @@ class MediaCore
 			return '';
 
 		/* This is an external script, if it already belongs to js_files then remove it from content */
-
 		preg_match('/src\s*=\s*["\']?([^"\']*)[^>]/ims', $original, $results);
-		if (isset($results[1]) && (in_array($results[1], Context::getContext()->controller->js_files) || in_array($results[1], Media::$inline_script_src)))
-			return '';
+		if (array_key_exists(1, $results))
+		{
+			if (substr($results[1], 0, 2) == '//')
+			{
+				$protocol_link = Tools::getCurrentUrlProtocolPrefix();
+				$results[1] = $protocol_link.ltrim($results[1], '/');
+			}
+			if (in_array($results[1], Context::getContext()->controller->js_files) || in_array($results[1], Media::$inline_script_src))
+				return '';
+		}
 
 		/* return original string because no match was found */
 		return $original;

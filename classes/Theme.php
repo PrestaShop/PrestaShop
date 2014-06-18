@@ -32,6 +32,10 @@ class ThemeCore extends ObjectModel
 	public $default_left_column;
 	public $default_right_column;
 	public $product_per_page;
+	
+	const CACHE_FILE_CUSTOMER_THEMES_LIST = '/config/xml/customer_themes_list.xml';
+	
+	const CACHE_FILE_MUST_HAVE_THEMES_LIST = '/config/xml/must_have_themes_list.xml';
 
 	/** @var int access rights of created folders (octal) */
 	public static $access_rights = 0775;
@@ -146,7 +150,7 @@ class ThemeCore extends ObjectModel
 	public function updateMetas($metas, $full_update = false)
 	{
 		if ($full_update)
-			Db::getInstance()->delete(_DB_PREFIX_ . 'theme_meta', 'id_theme=' . $this->id);
+			Db::getInstance()->delete(_DB_PREFIX_ . 'theme_meta', 'id_theme='.(int)$this->id);
 
 		$values = array();
 		if ($this->id > 0)
@@ -154,11 +158,11 @@ class ThemeCore extends ObjectModel
 			foreach ($metas as $meta)
 			{
 				if (!$full_update)
-					Db::getInstance()->delete(_DB_PREFIX_ . 'theme_meta', 'id_theme=' . $this->id . ' AND id_meta=' . $meta['id_meta']);
+					Db::getInstance()->delete(_DB_PREFIX_ . 'theme_meta', 'id_theme='.(int)$this->id.' AND id_meta='.(int)$meta['id_meta']);
 
 				$values[] = array(
-					'id_theme'     => $this->id,
-					'id_meta'      => $meta['id_meta'],
+					'id_theme'     => (int)$this->id,
+					'id_meta'      => (int)$meta['id_meta'],
 					'left_column'  => (int)$meta['left'],
 					'right_column' => (int)$meta['right']
 				);

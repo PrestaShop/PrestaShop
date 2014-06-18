@@ -44,4 +44,5 @@
 {addJsDef ajaxsearch=Configuration::get('PS_SEARCH_AJAX')|boolval}
 {addJsDef instantsearch=Configuration::get('PS_INSTANT_SEARCH')|boolval}
 {addJsDef quickView=$quick_view|boolval}
+{addJsDef displayList=Configuration::get('PS_GRID_PRODUCT')|boolval}
 {/strip}

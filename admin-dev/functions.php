@@ -105,7 +105,12 @@ function rewriteSettingsFile($baseUrls = null, $theme = null, $arrayDB = null)
 	$defines['_PS_VERSION_'] = addslashes(_PS_VERSION_);
 	$content = "<?php\n\n";
 	foreach ($defines as $k => $value)
+	{
+		if ($k == '_PS_VERSION_')
+			$content .= 'if (!defined(\''.$k.'\'))'."\n\t";
+
 		$content .= 'define(\''.$k.'\', \''.addslashes($value).'\');'."\n";
+	}
 	copy(_PS_ADMIN_DIR_.'/../config/settings.inc.php', _PS_ADMIN_DIR_.'/../config/settings.old.php');
 	if ($fd = fopen(_PS_ADMIN_DIR_.'/../config/settings.inc.php', 'w'))
 	{
@@ -154,7 +159,7 @@ function getPath($urlBase, $id_category, $path = '', $highlight = '', $categoryT
 					WHERE c.nleft <= '.(int)$category['nleft'].'
 						AND c.nright >= '.(int)$category['nright'].'
 						AND cl.id_lang = '.(int)$context->language->id.
-						($home ? ' AND c.id_category='.$id_category : '').'
+						($home ? ' AND c.id_category='.(int)$id_category : '').'
 						AND c.id_category != '.(int)Category::getTopCategory()->id.'
 					GROUP BY c.id_category
 					ORDER BY c.level_depth ASC

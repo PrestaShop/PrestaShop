@@ -183,6 +183,9 @@ class AddressCore extends ObjectModel
 		if (isset(self::$_idZones[$this->id]))
 			unset(self::$_idZones[$this->id]);
 
+		if (Validate::isUnsignedId($this->id_customer))
+			Customer::resetAddressCache($this->id_customer);
+
 		return parent::update($null_values);
 	}
 
@@ -386,6 +389,19 @@ class AddressCore extends ObjectModel
 		$query->where('id_customer = 0');
 		$query->where('id_manufacturer = 0');
 		$query->where('id_warehouse = 0');
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+	}
+	
+	public static function aliasExist($alias, $id_address, $id_customer)
+	{
+		$query = new DbQuery();
+		$query->select('count(*)');
+		$query->from('address');
+		$query->where('alias = \''.pSQL($alias).'\'');
+		$query->where('id_address != '.(int)$id_address);
+		$query->where('id_customer = '.(int)$id_customer);
+		$query->where('deleted = 0');
+
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 	}
 }

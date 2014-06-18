@@ -25,12 +25,12 @@
 *}
 {strip}
 <span class="heading-counter">
-{if $category->id == 1 OR $nb_products == 0}
-	{l s='There are no products in  this category'}
+{if (isset($category) && $category->id == 1) OR (isset($nb_products) && $nb_products == 0)}
+	{l s='There are no products in this category.'}
 {else}
-	{if $nb_products == 1}
-		{l s='There is %d product.' sprintf=$nb_products}
-	{else}
+	{if isset($nb_products) && $nb_products == 1}
+		{l s='There is 1 product.'}
+	{elseif isset($nb_products)}
 		{l s='There are %d products.' sprintf=$nb_products}
 	{/if}
 {/if}

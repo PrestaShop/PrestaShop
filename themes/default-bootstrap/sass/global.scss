@@ -1,5 +1,5 @@
-// Make sure the charset is set appropriately
 @charset "UTF-8";
+// Make sure the charset is set appropriately
 
 @import "compass";
 @import "compass/reset";
@@ -417,23 +417,15 @@ span.exclusive {
 
 .button.button-medium.exclusive {
 	border-color: #db8600 #d98305 #c86d26 #d98305;
-	background: rgb(253, 170, 2);
-	background: -moz-linear-gradient(top, rgba(253, 170, 2, 1) 0%, rgba(254, 151, 2, 1) 100%);
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(253, 170, 2, 1)), color-stop(100%, rgba(254, 151, 2, 1)));
-	background: -webkit-linear-gradient(top, rgba(253, 170, 2, 1) 0%, rgba(254, 151, 2, 1) 100%);
-	background: -o-linear-gradient(top, rgba(253, 170, 2, 1) 0%, rgba(254, 151, 2, 1) 100%);
-	background: -ms-linear-gradient(top, rgba(253, 170, 2, 1) 0%, rgba(254, 151, 2, 1) 100%);
-	background: linear-gradient(to bottom, rgba(253, 170, 2, 1) 0%, rgba(254, 151, 2, 1) 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fdaa02', endColorstr='#fe9702',GradientType=0 );
+	@include background-image(linear-gradient(top, rgba(253, 170, 2, 1), rgba(254, 151, 2, 1)));
 	span {
 		border-color: #fec133 #febc33 #feb233 #febc33;
-		&:hover {
-			filter: none;
-			background: #f89609;
-			border-color: #a6550c #ba6708 #db8600 #ba6708;
-			span {
-				border-color: #fec133;
-			}
+	}
+	&:hover {
+		background: #f89609;
+		border-color: #a6550c #ba6708 #db8600 #ba6708;
+		span {
+			border-color: #fec133;
 		}
 	}
 }
@@ -1815,6 +1807,7 @@ div.star a:hover {
 			font: 600 18px / 22px $font-custom;
 			color: $light-text-color;
 			margin: 0 0 13px 0;
+			cursor: pointer;
 			// max 767px
 			@media (max-width: $screen-xs-max) {
 				position: relative;
@@ -2015,10 +2008,12 @@ div.star a:hover {
 
 .rte ul {
 	list-style-type: disc;
+	padding-left: 15px;
 }
 
 .rte ol {
 	list-style-type: decimal;
+	padding-left: 15px;	
 }
 
 .block_hidden_only_for_screen {
@@ -2136,14 +2131,17 @@ a.price_discount_delete {
 #cart_summary {
 	tbody {
 		td {
+			padding: 7px 8px 9px 18px;
 			&.cart_product {
-				padding: 19px;
+				@extend .text-center;			
+				padding: 7px;
 				width: 137px;
 				img {
 					border: 1px solid $table-border-color;
 				}
 			}
 			&.cart_unit {
+				@extend .text-right;
 				.price {
 					span {
 						display: inline-block;
@@ -2163,7 +2161,12 @@ a.price_discount_delete {
 					padding: 5px 0 0 0;
 				}
 			}
-			&.cart_avail {}
+			&.cart_avail{
+				@extend .text-center;
+			}
+			&.cart_total {
+				@extend .text-right;
+			}	
 		}
 	}
 	tfoot {
@@ -2199,6 +2202,14 @@ a.price_discount_delete {
 			}
 		}
 	}
+}
+
+.cart_discount_price{
+  text-align: right;
+}
+
+.cart_discount_delete{
+  text-align: center;
 }
 
 @media (max-width: $screen-xs-max) {

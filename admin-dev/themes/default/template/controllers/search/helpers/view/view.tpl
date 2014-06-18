@@ -29,16 +29,30 @@ $(function() {
 });
 </script>
 
-{if !isset($nb_results) || !$nb_results}
-	<h2>{l s='There are no results matching your query "%s".' sprintf=$query}</h2>
-{else}
+{if $query}
 	<h2>
-	{if $nb_results == 1}
+	{if isset($nb_results) && $nb_results == 0}
+		<h2>{l s='There are no results matching your query "%s".' sprintf=$query}</h2>
+	{elseif isset($nb_results) && $nb_results == 1}
 		{l s='1 result matches your query "%s".' sprintf=$query}
-	{else}
+	{elseif isset($nb_results)}
 		{l s='%d results match your query "%s".' sprintf=[$nb_results|intval, $query]}
 	{/if}
 	</h2>
+{/if}
+
+<div class="panel">
+	<h3>Search</h3>
+
+	<div class="row">
+		<div class="col-lg-4">
+			{include file="search_form.tpl" id="in_content"}
+		</div>
+	</div>
+</div>
+
+
+{if $query && isset($nb_results) && $nb_results}
 
 	{if isset($features)}
 	<div class="panel">

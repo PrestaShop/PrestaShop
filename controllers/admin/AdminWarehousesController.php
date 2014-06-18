@@ -156,6 +156,12 @@ class AdminWarehousesControllerCore extends AdminController
 		else
 			$this->toolbar_title = $this->l('Stock: Warehouse management');
 
+		$tmp_addr = new Address();
+		$res = $tmp_addr->getFieldsRequiredDatabase();
+		$required_fields = array();
+		foreach ($res as $row)
+			$required_fields[(int)$row['id_required_field']] = $row['field_name'];
+
 		// sets the fields of the form
 		$this->fields_form = array(
 			'legend' => array(
@@ -191,7 +197,16 @@ class AdminWarehousesControllerCore extends AdminController
 					'label' => $this->l('Phone'),
 					'name' => 'phone',
 					'maxlength' => 16,
-					'hint' => $this->l('Phone number for this warehouse.')
+					'hint' => $this->l('Phone number for this warehouse.'),
+					'required' => in_array('phone', $required_fields)
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Mobile phone'),
+					'name' => 'phone_mobile',
+					'required' => in_array('phone_mobile', $required_fields),
+					'maxlength' => 16,
+					'hint' => $this->l('Mobile phone number for this supplier.')
 				),
 				array(
 					'type' => 'text',
@@ -206,13 +221,14 @@ class AdminWarehousesControllerCore extends AdminController
 					'name' => 'address2',
 					'maxlength' => 128,
 					'hint' => $this->l('Complementary address (optional).'),
+					'required' => in_array('address2', $required_fields)
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Zip/postal code'),
 					'name' => 'postcode',
 					'maxlength' => 12,
-					'required' => true,
+					'required' => in_array('postcode', $required_fields)
 				),
 				array(
 					'type' => 'text',
@@ -302,7 +318,7 @@ class AdminWarehousesControllerCore extends AdminController
 					'query' => array(
 						array(
 							'id' => 'WA',
-							'name' => $this->l('Average Weight')
+							'name' => $this->l('Weighted Average')
 						),
 						array(
 							'id' => 'FIFO',
@@ -467,15 +483,15 @@ class AdminWarehousesControllerCore extends AdminController
 			switch ($item['management_type']) // management type can be either WA/FIFO/LIFO
 			{
 				case 'WA':
-					$item['management_type'] = $this->l('WA');
+					$item['management_type'] = $this->l('WA: Weighted Average');
 				break;
 
 				case 'FIFO':
-					$item['management_type'] = $this->l('FIFO');
+					$item['management_type'] = $this->l('FIFO: First In, First Out');
 				break;
 
 				case 'LIFO':
-					$item['management_type'] = $this->l('LIFO');
+					$item['management_type'] = $this->l('LIFO: Last In, First Out');
 				break;
 			}
 		}
@@ -538,6 +554,13 @@ class AdminWarehousesControllerCore extends AdminController
 		$address->id_country = Tools::getValue('id_country', null);
 		$address->id_state = Tools::getValue('id_state', null);
 		$address->city = Tools::getValue('city', null);
+
+		if (!($country = new Country($address->id_country, Configuration::get('PS_LANG_DEFAULT'))) || !Validate::isLoadedObject($country))
+			$this->errors[] = Tools::displayError('Country is invalid');
+		$contains_state = isset($country) && is_object($country) ? (int)$country->contains_states: 0;
+		$id_state = isset($address) && is_object($address) ? (int)$address->id_state: 0;
+		if ($contains_state && !$id_state)
+			$this->errors[] = Tools::displayError('This country requires you to choose a State.');
 
 		// validates the address
 		$validation = $address->validateController();
@@ -613,5 +636,4 @@ class AdminWarehousesControllerCore extends AdminController
 			return;
 		$obj->resetStockAvailable();
 	}
-
 }

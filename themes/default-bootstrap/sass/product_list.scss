@@ -6,6 +6,11 @@ Product list Styles
 ********************************************************/
 
 ul.product_list {
+	.product-name {
+		display: inline-block;
+		width: 100%;
+		overflow: hidden;
+	}
 	.availability {
 		span {
 			display: inline-block;
@@ -29,11 +34,18 @@ ul.product_list {
 			li {
 				display: inline-block;
 				border: 1px solid $base-border-color;
+				width: 26px;
+				height: 26px;
 				a {
 					display: block;
-					width: 23px;
-					height: 23px;
+					width: 22px;
+					height: 22px;
 					margin: 1px;
+					img {
+						display: block;
+						width: 22px;
+						height: 22px;
+					}
 				}	
 			}
 		}
@@ -42,7 +54,59 @@ ul.product_list {
 		text-align: center;
 		img {
 			margin: 0 auto;
-		}	
+		}
+		.quick-view-wrapper-mobile {
+    		display: none;
+    		.quick-view-mobile {
+    			display: none;
+	    		@media (max-width: $screen-md-max) {
+					display: block;
+					position: relative;
+					background-color: rgba(208, 208, 211, 0.57);
+					height: 130px;
+					width: 85px;
+					top: 80px;
+					right: -162px;
+					-moz-transform: rotate(45deg);
+					-o-transform: rotate(45deg);
+					-webkit-transform: rotate(45deg);
+					-ms-transform: rotate(45deg);
+					transform: rotate(45deg);
+					zoom: 1;
+					pointer-events: all;		
+					i {
+						position: relative;
+						top: 48px;
+						left: -20px;
+						font-size: x-large;
+						color: black;
+					}
+					i:before{
+							-moz-transform: rotate(315deg);
+							-o-transform: rotate(315deg);
+							-webkit-transform: rotate(315deg);
+							-ms-transform: rotate(315deg);
+							transform: rotate(315deg);
+					}
+				}
+    		}
+    		.quick-view-mobile:hover{
+    			@media (max-width: $screen-md-max) {
+						background-color: rgba(167, 167, 167, 0.57);   
+				}
+			} 
+    		@media (max-width: $screen-md-max) {
+	 			display: block; 
+				background-color: transparent;
+				height: 155px;
+				width: 215px;
+				position: absolute;
+				overflow: hidden;
+				pointer-events: none;
+				bottom: 0px;
+				right: 0px;
+    		}
+    	}
 		.quick-view {
 			font: 700 13px/16px $font-family;
 			color: #777676;
@@ -56,6 +120,9 @@ ul.product_list {
 			height: 43px;
 			text-align: center;
 			@include box-shadow(rgba(black, 0.16) 0 2px 8px);
+			@media (max-width: $screen-md-max) {
+    			display: none;	
+    		}
 			@media (min-width: $screen-lg) { // min 1200px
 				display: none;
 			}

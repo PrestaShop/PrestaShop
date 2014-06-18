@@ -22,14 +22,12 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 <div class="leadin">{block name="leadin"}{/block}</div>
 {if $module_confirmation}
-<div class="module_confirmation conf confirm">
-	{l s='Your .CSV file has been successfully imported into your shop. Don\'t forget to Re-build the products search index.'}
+<div class="alert alert-success clearfix">
+	{l s='Your .CSV file has been successfully imported into your shop. Don\'t forget to re-build the products\' search index.'}
 </div>
 {/if}
-
 <div class="row">
 	<div class="col-lg-8">
 		{* Import fieldset *}
@@ -43,7 +41,7 @@
 					<li>{l s='You can read information on CSV import at:'}
 						<a href="http://doc.prestashop.com/display/PS16/CSV+Import+Parameters" target="_blank">http://doc.prestashop.com/display/PS16/CSV+Import+Parameters</a>
 					</li>
-					<li>{l s='Read more about CSV format at:'}
+					<li>{l s='Read more about the CSV format at:'}
 						<a href="http://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">http://en.wikipedia.org/wiki/Comma-separated_values</a>
 					</li>
 				</ul>
@@ -64,21 +62,21 @@
 				</div>
 				<div class="alert alert-warning import_products_categories">
 					<ul>
-						<li>{l s='Note that the category import does not support categories of the same name.'}</li>
+						<li>{l s='Note that the Category import does not support having two categories with the same name.'}</li>
 						<li>{l s='Note that you can have several products with the same reference.'}</li>
 					</ul>
 				</div>
 				<div class="alert alert-warning import_supply_orders_details">
-					<p>{l s='Importing Supply Order Details will reset products ordered, if there are any.'}</p>
+					<p>{l s='Importing Supply Order Details will reset your history of ordered products, if there are any.'}</p>
 				</div>
 				<hr />
 				<div class="form-group" id="csv_file_uploader">
-					<label for="file" class="control-label col-lg-4">{l s='Select your CSV file'}</label>
+					<label for="file" class="control-label col-lg-4">{l s='Select a CSV file to import'}</label>
 					<div class="col-lg-8">
 						<input id="file" type="file" name="file" data-url="{$current}&amp;token={$token}&amp;ajax=1&amp;action=uploadCsv" class="hide" />
 						<button class="ladda-button btn btn-default" data-style="expand-right" data-size="s" type="button" id="file-add-button">
 							<i class="icon-folder-open"></i>
-							{l s='Add file'}
+							{l s='Upload a file'}
 						</button>
 						{l s='or'}
 						<button class="btn btn-default csv-history-btn" type="button">
@@ -86,8 +84,8 @@
 							{l s="Choose from history / FTP"}
 						</button>
 						<p class="help-block">
-							{l s='Only UTF-8 and ISO-8859-1 encoding are allowed'}.<br/>
-							{l s='You can also upload your file via FTP to the following directory:'} {$path_import}.
+							{l s='Only UTF-8 and ISO 8859-1 encodings are allowed'}.<br/>
+							{l s='You can also upload your file via FTP to the following directory: %s .' sprintf=$path_import}
 						</p>
 					</div>
 					<div class="alert alert-danger" id="file-errors" style="display:none"></div>
@@ -199,7 +197,7 @@
 					</div>
 				</div>			
 				<div class="form-group">
-					<label for="convert" class="control-label col-lg-4">{l s='ISO-8859-1 encoded file?'}</label>
+					<label for="convert" class="control-label col-lg-4">{l s='ISO 8859-1 encoded file?'}</label>
 					<div class="col-lg-8">
 						<label class="switch-light prestashop-switch fixed-width-lg">
 							<input name="convert" id="convert" type="checkbox" />
@@ -215,19 +213,19 @@
 					<label for="separator" class="control-label col-lg-4">{l s='Field separator'}</label>
 					<div class="col-lg-8">
 						<input id="separator" name="separator" class="fixed-width-xs form-control" type="text" value="{if isset($separator_selected)}{$separator_selected|escape:'html':'UTF-8'}{else};{/if}" />
-						<div class="help-block">{l s='e.g. '} 1; Ipod; 129.90; 5</div>
+						<div class="help-block">{l s='e.g. '} 1; Blouse; 129.90; 5</div>
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="multiple_value_separator" class="control-label col-lg-4">{l s='Multiple value separator'}</label>
 					<div class="col-lg-8">
 						<input id="multiple_value_separator" name="multiple_value_separator" class="fixed-width-xs form-control" type="text" value="{if isset($multiple_value_separator_selected)}{$multiple_value_separator_selected|escape:'html':'UTF-8'}{else},{/if}" />
-						<div class="help-block">{l s='e.g. '} Ipod; red.jpg, blue.jpg, green.jpg; 129.90</div>
+						<div class="help-block">{l s='e.g. '} Blouse; red.jpg, blue.jpg, green.jpg; 129.90</div>
 					</div>
 				</div>
 				<hr>
 				<div class="form-group">
-					<label for="truncate" class="control-label col-lg-4">{l s='Delete all'} <span id="entitie">{l s='categories'}</span> {l s='before import?'} </label>
+					<label for="truncate" class="control-label col-lg-4">{l s='Delete all'} <span id="entitie">{l s='categories'}</span> {l s='before import'} </label>
 					<div class="col-lg-8">
 						<label class="switch-light prestashop-switch fixed-width-lg">
 							<input id="truncate" name="truncate" type="checkbox"/>
@@ -240,7 +238,10 @@
 					</div>
 				</div>
 				<div class="form-group" style="display: none">
-					<label for="match_ref" class="control-label col-lg-4">{l s='Use product reference as key?'}</label>
+					<label for="match_ref" class="control-label col-lg-4">
+						<span data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='If enabled, the product\'s reference number MUST be unique!'}">
+						{l s='Use product reference as key'}
+					</label>
 					<div class="col-lg-8">
 						<label class="switch-light prestashop-switch fixed-width-lg">
 							<input id="match_ref" name="match_ref" type="checkbox" />
@@ -253,7 +254,7 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="regenerate" class="control-label col-lg-4">{l s='No thumbnails regeneration'}</label>
+					<label for="regenerate" class="control-label col-lg-4">{l s='Do not regenerate thumbnails'}</label>
 					<div class="col-lg-8">
 						<label class="switch-light prestashop-switch fixed-width-lg">
 							<input id="regenerate" name="regenerate" type="checkbox" />
@@ -267,8 +268,8 @@
 				</div>
 				<div class="form-group">
 					<label for="forceIDs" class="control-label col-lg-4">
-						<span data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='If you don\'t use this option, all ID\'s will be auto-incremented.'}">
-							{l s='Force all ID'} 
+						<span data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='If you enable this option, your imported items\' ID number will be used as-is. If you do not enable this option, the imported ID number will be ignored, and PrestaShop will instead create auto-incremented ID numbers for all the imported items.'}">
+							{l s='Force all ID numbers'} 
 						</span>
 					</label>
 					<div class="col-lg-8">
@@ -337,14 +338,14 @@
 					{l s='Sample Suppliers file'}
 				</a>
 				<a class="list-group-item" href="../docs/csv_import/alias_import.csv" target="_blank">
-					{l s='Sample Alias file'}
+					{l s='Sample Aliases file'}
 				</a>
 				{if $PS_ADVANCED_STOCK_MANAGEMENT}
 				<a class="list-group-item" href="../docs/csv_import/supply_orders_import.csv" target="_blank">
-					{l s='Supply Orders sample file'}
+					{l s='Sample Supply Orders file'}
 				</a>
 				<a class="list-group-item" href="../docs/csv_import/supply_orders_details_import.csv" target="_blank">
-					{l s='Supply Orders Details sample file'}
+					{l s='Sample Supply Order Details file'}
 				</a>
 				{/if}
 			</div>
@@ -474,11 +475,11 @@
 		$('#preview_import').submit(function(e) {
 			if ($('#truncate').get(0).checked) {
 				if (truncateAuthorized) {
-					if (!confirm('{l s='Are you sure that you would like to delete this' js=1}' + ' ' + $.trim($('#entity > option:selected').text().toLowerCase()) + '?'))
+					if (!confirm('{l s='Are you sure that you would like to delete this entity: ' js=1}' + ' ' + $.trim($('#entity > option:selected').text().toLowerCase()) + '?'))
 						e.preventDefault();
 				}
 				else {
-					jAlert('{l s='You do not have permission to delete here. When the multistore is enabled, only a SuperAdmin can delete all items before an import.' js=1}');
+					jAlert('{l s='You do not have permission to delete this. When the MultiStore mode is enabled, only a SuperAdmin can delete all items before an import.' js=1}');
 					return false;
 				}
 			}

@@ -27,9 +27,9 @@
     <td class="feature-name td_empty">
     	<span>{l s='Comments' mod='productcomments'}</span>
     </td>
-    {section loop=$list_ids_product|count step=1 start=0 name=td}
-    	<td></td>
-    {/section}
+    {foreach from=$list_ids_product item=id_product}
+    	<td class="product-{$id_product}"></td>
+    {/foreach}
 </tr>
 
 {foreach from=$grades item=grade key=grade_id}
@@ -40,7 +40,7 @@
         </td>
         {foreach from=$list_ids_product item=id_product}
         	{assign var='tab_grade' value=$product_grades[$grade_id]}
-        	<td class="{$classname} comparison_infos ajax_block_product" align="center">
+        	<td class="{$classname} comparison_infos ajax_block_product product-{$id_product}" align="center">
         		{if isset($tab_grade[$id_product]) AND $tab_grade[$id_product]}
         			<div class="product-rating">
         				{section loop=6 step=1 start=1 name=average}
@@ -61,7 +61,7 @@
     	<strong>{l s='Average' mod='productcomments'}</strong>
     </td>
 	{foreach from=$list_ids_product item=id_product}
-		<td class="{$classname} comparison_infos" align="center" >
+		<td class="{$classname} comparison_infos product-{$id_product}" align="center" >
 			{if isset($list_product_average[$id_product]) AND $list_product_average[$id_product]}
 				<div class="product-rating">
 					{section loop=6 step=1 start=1 name=average}
@@ -78,7 +78,7 @@
 <tr>
 <td class="{$classname} comparison_infos feature-name">&nbsp;</td>
     {foreach from=$list_ids_product item=id_product}
-    	<td class="{$classname} comparison_infos" align="center" >
+    	<td class="{$classname} comparison_infos product-{$id_product}" align="center" >
     		{if isset($product_comments[$id_product]) AND $product_comments[$id_product]}
     			<a class="btn btn-default button button-small" href="#" data-id-product-comment="{$id_product|intval}" rel="#comments_{$id_product|intval}">
     				<span>

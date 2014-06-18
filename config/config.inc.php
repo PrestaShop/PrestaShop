@@ -43,9 +43,12 @@ if (!headers_sent())
 if (!file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php'))
 {
 	$dir = ((substr($_SERVER['REQUEST_URI'], -1) == '/' || is_dir($_SERVER['REQUEST_URI'])) ? $_SERVER['REQUEST_URI'] : dirname($_SERVER['REQUEST_URI']).'/');
-	if (!file_exists(dirname(__FILE__).'/../install'))
+	if (file_exists(dirname(__FILE__).'/../install'))
+		header('Location: install/');
+	elseif (file_exists(dirname(__FILE__).'/../install-dev'))
+		header('Location: install-dev/');
+	else
 		die('Error: "install" directory is missing');
-	header('Location: install/');
 	exit;
 }
 //include settings file only if we are not in multi-tenancy mode 
@@ -61,7 +64,7 @@ if (_PS_DEBUG_PROFILING_)
 	include_once(_PS_TOOL_DIR_.'profiling/Tools.php');
 }
 
-if (Tools::isPHPCLI())
+if (Tools::isPHPCLI() && isset($argc) && isset($argv))
 	Tools::argvToGET($argc, $argv);
 
 /* Redefine REQUEST_URI if empty (on some webservers...) */
@@ -111,6 +114,9 @@ $_MODULES = array();
 
 /* Load configuration */
 Configuration::loadConfiguration();
+
+if (Configuration::get('PS_USE_HTMLPURIFIER'))
+	require_once (_PS_TOOL_DIR_.'htmlpurifier/HTMLPurifier.standalone.php');
 
 /* Load all languages */
 Language::loadLanguages();

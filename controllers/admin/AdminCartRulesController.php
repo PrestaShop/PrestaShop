@@ -44,7 +44,7 @@ class AdminCartRulesControllerCore extends AdminController
 			'priority' => array('title' => $this->l('Priority'), 'align' => 'center', 'class' => 'fixed-width-xs'),
 			'code' => array('title' => $this->l('Code'), 'class' => 'fixed-width-sm'),
 			'quantity' => array('title' => $this->l('Quantity'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-			'date_to' => array('title' => $this->l('Until'), 'type' => 'datetime'),
+			'date_to' => array('title' => $this->l('Validity end date'), 'type' => 'datetime'),
 			'active' => array('title' => $this->l('Status'), 'active' => 'status', 'type' => 'bool', 'orderby' => false),
 		);
 
@@ -530,26 +530,27 @@ class AdminCartRulesControllerCore extends AdminController
 		if ((int)$current_object->gift_product)
 		{
 			$search_products = $this->searchProducts($gift_product_filter);
-			foreach ($search_products['products'] as $product)
-			{
-				$gift_product_select .= '
-				<option value="'.$product['id_product'].'" '.($product['id_product'] == $current_object->gift_product ? 'selected="selected"' : '').'>
-					'.$product['name'].(count($product['combinations']) == 0 ? ' - '.$product['formatted_price'] : '').'
-				</option>';
-				
-				if (count($product['combinations']))
+			if (isset($search_products['products']) && is_array($search_products['products']))
+				foreach ($search_products['products'] as $product)
 				{
-					$gift_product_attribute_select .= '<select class="control-form id_product_attribute" id="ipa_'.$product['id_product'].'" name="ipa_'.$product['id_product'].'">';
-					foreach ($product['combinations'] as $combination)
+					$gift_product_select .= '
+					<option value="'.$product['id_product'].'" '.($product['id_product'] == $current_object->gift_product ? 'selected="selected"' : '').'>
+						'.$product['name'].(count($product['combinations']) == 0 ? ' - '.$product['formatted_price'] : '').'
+					</option>';
+					
+					if (count($product['combinations']))
 					{
-						$gift_product_attribute_select .= '
-						<option '.($combination['id_product_attribute'] == $current_object->gift_product_attribute ? 'selected="selected"' : '').' value="'.$combination['id_product_attribute'].'">
-							'.$combination['attributes'].' - '.$combination['formatted_price'].'
-						</option>';
+						$gift_product_attribute_select .= '<select class="control-form id_product_attribute" id="ipa_'.$product['id_product'].'" name="ipa_'.$product['id_product'].'">';
+						foreach ($product['combinations'] as $combination)
+						{
+							$gift_product_attribute_select .= '
+							<option '.($combination['id_product_attribute'] == $current_object->gift_product_attribute ? 'selected="selected"' : '').' value="'.$combination['id_product_attribute'].'">
+								'.$combination['attributes'].' - '.$combination['formatted_price'].'
+							</option>';
+						}
+						$gift_product_attribute_select .= '</select>';
 					}
-					$gift_product_attribute_select .= '</select>';
 				}
-			}
 		}
 
 		$product = new Product($current_object->gift_product);

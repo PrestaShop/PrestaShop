@@ -26,7 +26,7 @@
 {if $products}
     {if !$refresh}
         <div class="wishlistLinkTop">
-        <a id="hideSendWishlist" class="button_account icon"  href="#" onclick="WishlistVisibility('wishlistLinkTop', 'SendWishlist'); return false;" rel="nofollow" title="{l s='Close send this wishlist' mod='blockwishlist'}">
+        <a id="hideSendWishlist" class="button_account icon"  href="#" onclick="WishlistVisibility('wishlistLinkTop', 'SendWishlist'); return false;" rel="nofollow" title="{l s='Close this wishlist' mod='blockwishlist'}">
             <i class="icon-remove"></i>
         </a>
         <ul class="clearfix display_list">

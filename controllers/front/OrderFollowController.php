@@ -57,7 +57,7 @@ class OrderFollowControllerCore extends FrontController
 			$orderReturn = new OrderReturn();
 			$orderReturn->id_customer = (int)$this->context->customer->id;
 			$orderReturn->id_order = $id_order;
-			$orderReturn->question = strval(Tools::getValue('returnText'));
+			$orderReturn->question = htmlspecialchars(Tools::getValue('returnText'));
 			if (empty($orderReturn->question))
 				Tools::redirect('index.php?controller=order-follow&errorMsg&'.
 					http_build_query(array(

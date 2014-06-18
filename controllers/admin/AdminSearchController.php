@@ -38,12 +38,7 @@ class AdminSearchControllerCore extends AdminController
 		$this->query = trim(Tools::getValue('bo_query'));
 		$searchType = (int)Tools::getValue('bo_search_type');
 		/* Handle empty search field */
-		if (empty($this->query))
-		{
-			$this->errors[] = Tools::displayError('Please complete the search form first.');
-			return;
-		}
-		else
+		if (!empty($this->query))
 		{
 			if (!$searchType && strlen($this->query) > 1)
 				$this->searchFeatures();
@@ -287,7 +282,7 @@ class AdminSearchControllerCore extends AdminController
 		}
 		$this->fields_list['customers'] = (array(
 			'id_customer' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-			'id_gender' => array('title' => $this->l('Titles'), 'align' => 'center', 'icon' => $genders_icon, 'list' => $genders, 'width' => 25),
+			'id_gender' => array('title' => $this->l('Social title'), 'align' => 'center', 'icon' => $genders_icon, 'list' => $genders, 'width' => 25),
 			'firstname' => array('title' => $this->l('First Name'), 'align' => 'left', 'width' => 150),
 			'lastname' => array('title' => $this->l('Name'), 'align' => 'left', 'width' => 'auto'),
 			'email' => array('title' => $this->l('Email address'), 'align' => 'left', 'width' => 250),

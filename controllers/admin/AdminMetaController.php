@@ -57,7 +57,7 @@ class AdminMetaControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_meta' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
 			'page' => array('title' => $this->l('Page')),
-			'title' => array('title' => $this->l('Title')),
+			'title' => array('title' => $this->l('Page title')),
 			'url_rewrite' => array('title' => $this->l('Friendly URL'))
 		);
 		$this->_where = ' AND a.configurable = 1';
@@ -98,33 +98,36 @@ class AdminMetaControllerCore extends AdminController
 		);
 
 		$url_description = '';
-		if ($this->checkConfiguration($this->ht_file))
+		if (!defined('_PS_HOST_MODE_'))
 		{
-			$general_fields['PS_HTACCESS_DISABLE_MULTIVIEWS'] = array(
-				'title' => $this->l('Disable apache multiviews'),
-				'hint' => $this->l('Enable this option only if you have problems with URL rewriting.'),
-				'validation' => 'isBool',
-				'cast' => 'intval',
-				'type' => 'bool',
-			);
+			if ($this->checkConfiguration($this->ht_file))
+			{
+				$general_fields['PS_HTACCESS_DISABLE_MULTIVIEWS'] = array(
+					'title' => $this->l('Disable Apache\'s MultiViews option'),
+					'hint' => $this->l('Enable this option only if you have problems with URL rewriting.'),
+					'validation' => 'isBool',
+					'cast' => 'intval',
+					'type' => 'bool',
+				);
 
-			$general_fields['PS_HTACCESS_DISABLE_MODSEC'] = array(
-				'title' => $this->l('Disable apache mod security'),
-				'hint' => $this->l('Some features could not work correctly with a specific configuration of Apache mod_security. We recommend to turn it off.'),
-				'validation' => 'isBool',
-				'cast' => 'intval',
-				'type' => 'bool',
-			);
-		}
-		else
-		{
-			$url_description = $this->l('Before you can use this tool, you need to:');
-			$url_description .= $this->l('Create a blank .htaccess file in your root directory.');
-			$url_description .= $this->l('Give it write permissions (CHMOD 666 on Unix system).');
+				$general_fields['PS_HTACCESS_DISABLE_MODSEC'] = array(
+					'title' => $this->l('Disable Apache\'s mod_security module'),
+					'hint' => $this->l('Some of PrestaShop\'s features might not work correctly with a specific configuration of Apache\'s mod_security module. We recommend to turn it off.'),
+					'validation' => 'isBool',
+					'cast' => 'intval',
+					'type' => 'bool',
+				);
+			}
+			else
+			{
+				$url_description = $this->l('Before you can use this tool, you need to:');
+				$url_description .= $this->l('1) Create a blank .htaccess file in your root directory.');
+				$url_description .= $this->l('2) Give it write permissions (CHMOD 666 on Unix system).');
+			}
 		}
 
 		// Options to generate robot.txt
-		$robots_description = $this->l('Your robots.txt file MUST be in your website\'s root directory and nowhere else (e.g. http://www.yoursite.com/robots.txt).');
+		$robots_description = $this->l('Your robots.txt file MUST be in your website\'s root directory and nowhere else (e.g. http://www.example.com/robots.txt).');
 		if ($this->checkConfiguration($this->rb_file))
 		{
 			$robots_description .= $this->l('Generate your "robots.txt" file by clicking on the following button (this will erase the old robots.txt file)');
@@ -133,8 +136,8 @@ class AdminMetaControllerCore extends AdminController
 		else
 		{
 			$robots_description .= $this->l('Before you can use this tool, you need to:');
-			$robots_description .= $this->l('Create a blank robots.txt file in your root directory.');
-			$robots_description .= $this->l('Give it write permissions (CHMOD 666 on Unix system).');
+			$robots_description .= $this->l('1) Create a blank robots.txt file in your root directory.');
+			$robots_description .= $this->l('2) Give it write permissions (CHMOD 666 on Unix system).');
 		}
 
 		$robots_options = array(
@@ -201,7 +204,7 @@ class AdminMetaControllerCore extends AdminController
 		{
 			$this->fields_options['routes'] = array(
 				'title' =>	$this->l('Schema of URLs'),
-				'description' => $this->l('Change the pattern of your links. There are some available keywords for each route listed below, keywords with * are required. To add a keyword in your URL use {keyword} syntax. You can add text before or after the keyword if the keyword is not empty with syntax {prepend:keyword:append}. For example {-hey-:meta_title} will add "-hey-my-title" in the URL if the meta title is set. Friendly URL and rewriting Apache option must be activated on your web server to use this functionality.'),
+				'description' => $this->l('This section enables you to change the default pattern of your links. In order to use this functionality, PrestaShop\'s "Friendly URL" option must be enabled, and Apache\'s URL rewriting module (mod_rewrite) must be activated on your web server.').'<br />'.$this->l('There are several available keywords for each route listed below; note that keywords with * are required!').'<br />'.$this->l('To add a keyword in your URL, use the {keyword} syntax. If the keyword is not empty, you can add text before or after the keyword with syntax {prepend:keyword:append}. For example {-hey-:meta_title} will add "-hey-my-title" in the URL if the meta title is set.'),
 				'fields' => array(),
 				'submit' => array('title' => $this->l('Save'))
 			);
@@ -259,7 +262,7 @@ class AdminMetaControllerCore extends AdminController
 		$files = Meta::getPages(true, ($this->object->page ? $this->object->page : false));
 		
 		$is_index = false;
-		if (is_array($this->object))
+		if (is_object($this->object) && is_array($this->object->url_rewrite) &&  count($this->object->url_rewrite))
 			foreach ($this->object->url_rewrite as $rewrite)
 				if($is_index != true)
 					$is_index = ($this->object->page == 'index' && empty($rewrite)) ? true : false;
@@ -367,6 +370,14 @@ class AdminMetaControllerCore extends AdminController
 
 	public function postProcess()
 	{
+		/* PrestaShop demo mode */
+		if (_PS_MODE_DEMO_ && Tools::isSubmit('submitOptionsmeta')
+			&& (Tools::getValue('domain') != Configuration::get('PS_SHOP_DOMAIN') || Tools::getValue('domain_ssl') != Configuration::get('PS_SHOP_DOMAIN_SSL')))
+		{
+			$this->errors[] = Tools::displayError('This functionality has been disabled.');
+			return;
+		}
+
 		if (Tools::isSubmit('submitAddmeta'))
 		{
 			$langs = Language::getLanguages(false);
@@ -402,14 +413,14 @@ class AdminMetaControllerCore extends AdminController
 
 			Hook::exec('actionAdminMetaSave');
 		}
-		else if (Tools::isSubmit('submitRobots'))
+		elseif (Tools::isSubmit('submitRobots'))
 			$this->generateRobotsFile();
 
 		if (Tools::isSubmit('PS_ROUTE_product_rule'))
 			Tools::clearCache($this->context->smarty);
 
 		if (Tools::isSubmit('deletemeta') && (int)Tools::getValue('id_meta') > 0)
-			Db::getInstance()->delete('theme_meta', 'id_meta='.Tools::getValue('id_meta'));
+			Db::getInstance()->delete('theme_meta', 'id_meta='.(int)Tools::getValue('id_meta'));
 
 		$ret = parent::postProcess();
 
@@ -420,7 +431,7 @@ class AdminMetaControllerCore extends AdminController
 			foreach ($themes as $theme)
 			{
 				$theme_meta_value[] = array(
-					'id_theme' => $theme->id,
+					'id_theme' => (int)$theme->id,
 					'id_meta' => (int)$ret->id,
 					'left_column' => (int)$theme->default_left_column,
 					'right_column' => (int)$theme->default_right_column
@@ -430,7 +441,6 @@ class AdminMetaControllerCore extends AdminController
 			if (count($theme_meta_value) > 0)
 				Db::getInstance()->insert('theme_meta', $theme_meta_value, false, true, DB::INSERT_IGNORE);
 		}
-
 
 		return $ret;
 	}
@@ -473,10 +483,14 @@ class AdminMetaControllerCore extends AdminController
 			// Files
 			if (count($this->rb_data['Files']))
 			{
+				$languages = Language::getLanguages();
 				fwrite($write_fd, "# Files\n");
 				foreach ($this->rb_data['Files'] as $iso_code => $files)
 					foreach ($files as $file)
-						fwrite($write_fd, 'Disallow: /*'.$iso_code.'/'.$file."\n");
+						if (count($languages) > 1)
+							fwrite($write_fd, 'Disallow: /*'.$iso_code.'/'.$file."\n");
+						else
+							fwrite($write_fd, 'Disallow: /'.$file."\n");
 			}
 			
 			// Sitemap

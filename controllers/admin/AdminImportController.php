@@ -45,7 +45,7 @@ class AdminImportControllerCore extends AdminController
 
 	public $available_fields = array();
 
-	public $required_fields = array('name');
+	public $required_fields = array();
 
 	public $cache_image_deleted = array();
 
@@ -182,7 +182,7 @@ class AdminImportControllerCore extends AdminController
 					'no' => array('label' => $this->l('Ignore this column')),
 					'id' => array('label' => $this->l('ID')),
 					'active' => array('label' => $this->l('Active (0/1)')),
-					'name' => array('label' => $this->l('Name *')),
+					'name' => array('label' => $this->l('Name')),
 					'parent' => array('label' => $this->l('Parent category')),
 					'is_root_category' => array(
 						'label' => $this->l('Root category (0/1)'),
@@ -217,7 +217,7 @@ class AdminImportControllerCore extends AdminController
 					'no' => array('label' => $this->l('Ignore this column')),
 					'id' => array('label' => $this->l('ID')),
 					'active' => array('label' => $this->l('Active (0/1)')),
-					'name' => array('label' => $this->l('Name *')),
+					'name' => array('label' => $this->l('Name')),
 					'category' => array('label' => $this->l('Categories (x,y,z...)')),
 					'price_tex' => array('label' => $this->l('Price tax excluded')),
 					'price_tin' => array('label' => $this->l('Price tax included')),
@@ -243,8 +243,8 @@ class AdminImportControllerCore extends AdminController
 					'minimal_quantity' => array('label' => $this->l('Minimal quantity')),
 					'visibility' => array('label' => $this->l('Visibility')),
 					'additional_shipping_cost' => array('label' => $this->l('Additional shipping cost')),
-					'unity' => array('label' => $this->l('Unity')),
-					'unit_price_ratio' => array('label' => $this->l('Unit price ratio')),
+					'unity' => array('label' => $this->l('Unit for the unit price')),
+					'unit_price' => array('label' => $this->l('Unit price')),
 					'description_short' => array('label' => $this->l('Short description')),
 					'description' => array('label' => $this->l('Description')),
 					'tags' => array('label' => $this->l('Tags (x,y,z...)')),
@@ -262,7 +262,7 @@ class AdminImportControllerCore extends AdminController
 					'delete_existing_images' => array(
 						'label' => $this->l('Delete existing images (0 = No, 1 = Yes)')
 					),
-					'features' => array('label' => $this->l('Feature(Name:Value:Position:Customized)')),
+					'features' => array('label' => $this->l('Feature (Name:Value:Position:Customized)')),
 					'online_only' => array('label' => $this->l('Available online only (0 = No, 1 = Yes)')),
 					'condition' => array('label' => $this->l('Condition')),
 					'customizable' => array('label' => $this->l('Customizable (0 = No, 1 = Yes)')),
@@ -297,7 +297,7 @@ class AdminImportControllerCore extends AdminController
 					'weight' => 0.000000,
 					'visibility' => 'both',
 					'additional_shipping_cost' => 0.00,
-					'unit_price_ratio' => 0.000000,
+					'unit_price' => 0,
 					'quantity' => 0,
 					'minimal_quantity' => 1,
 					'price' => 0,
@@ -404,7 +404,7 @@ class AdminImportControllerCore extends AdminController
 					'no' => array('label' => $this->l('Ignore this column')),
 					'id' => array('label' => $this->l('ID')),
 					'active' => array('label' => $this->l('Active (0/1)')),
-					'name' => array('label' => $this->l('Name *')),
+					'name' => array('label' => $this->l('Name')),
 					'description' => array('label' => $this->l('Description')),
 					'short_description' => array('label' => $this->l('Short description')),
 					'meta_title' => array('label' => $this->l('Meta title')),
@@ -602,7 +602,7 @@ class AdminImportControllerCore extends AdminController
 
 		$this->tpl_form_vars = array(
 			'post_max_size' => (int)$bytes,
-			'module_confirmation' => (Tools::getValue('import')) && (isset($this->warnings) && !count($this->warnings)),
+			'module_confirmation' => Tools::isSubmit('import') && (isset($this->warnings) && !count($this->warnings)),
 			'path_import' => AdminImportController::getPath(),
 			'entities' => $this->entities,
 			'entity_selected' => $entity_selected,
@@ -652,12 +652,12 @@ class AdminImportControllerCore extends AdminController
 		elseif (!preg_match('/.*\.csv$/i', $_FILES['file']['name']))
 			$_FILES['file']['error'] = Tools::displayError('The extension of your file should be .csv.');
 		elseif (!@filemtime($_FILES['file']['tmp_name']) ||
-			!@move_uploaded_file($_FILES['file']['tmp_name'], AdminImportController::getPath().$filename_prefix.$_FILES['file']['name']))
+			!@move_uploaded_file($_FILES['file']['tmp_name'], AdminImportController::getPath().$filename_prefix.str_replace("\0", '', $_FILES['file']['name'])))
 			$_FILES['file']['error'] = $this->l('An error occurred while uploading / copying the file.');
 		else
 		{
 			@chmod(AdminImportController::getPath().$filename_prefix.$_FILES['file']['name'], 0664);
-			$_FILES['file']['filename'] = $filename_prefix.$_FILES['file']['name'];
+			$_FILES['file']['filename'] = $filename_prefix.str_replace('\0', '', $_FILES['file']['name']);
 		}
 
 		die(Tools::jsonEncode($_FILES));
@@ -926,9 +926,6 @@ class AdminImportControllerCore extends AdminController
 		if (is_array(self::$column_mask))
 			foreach (self::$column_mask as $type => $nb)
 				$res[$type] = isset($row[$nb]) ? $row[$nb] : null;
-
-		if (Tools::getValue('forceIds')) // if you choose to force table before import the column id is removed from the CSV file.
-			unset($res['id']);
 
 		return $res;
 	}
@@ -2161,9 +2158,9 @@ class AdminImportControllerCore extends AdminController
 				if (isset($info['advanced_stock_management']))
 				{
 					if ($info['advanced_stock_management'] != 1 && $info['advanced_stock_management'] != 0)
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management has incorrect value. Not set for product with id %s '),$product->id);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management has incorrect value. Not set for product with id %s.'),$product->id);
 					elseif (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $info['advanced_stock_management'] == 1)
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, can not enable on product with id %s '),$product->id);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, can not enable on product with id %s.'),$product->id);
 					else
 						$product->setAdvancedStockManagement($info['advanced_stock_management']);
 					// automaticly disable depends on stock, if a_s_m set to disabled
@@ -2175,7 +2172,7 @@ class AdminImportControllerCore extends AdminController
 				if (isset($info['warehouse']) && $info['warehouse'])
 				{
 					if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, warehouse not set on product with id %s '),$product->id);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, warehouse is not set on product with id %s.'),$product->id);
 					else
 					{
 						if (Warehouse::exists($info['warehouse']))
@@ -2191,7 +2188,7 @@ class AdminImportControllerCore extends AdminController
 							StockAvailable::synchronize($product->id);
 						}
 						else
-							$this->warnings[] = sprintf(Tools::displayError('Warehouse did not exist, cannot set on product %1$s '),$product->name[$default_language_id]);
+							$this->warnings[] = sprintf(Tools::displayError('Warehouse did not exist, cannot set on product %1$s.'),$product->name[$default_language_id]);
 					}
 				}
 
@@ -2201,7 +2198,7 @@ class AdminImportControllerCore extends AdminController
 					if ($info['depends_on_stock'] != 0 && $info['depends_on_stock'] != 1)
 						$this->warnings[] = sprintf(Tools::displayError('Incorrect value for depends on stock for product %1$s '),$product->name[$default_language_id]);
 					elseif ((!$info['advanced_stock_management'] || $info['advanced_stock_management'] == 0) && $info['depends_on_stock'] == 1)
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management not enabled, can not set depends on stock %1$s '),$product->name[$default_language_id]);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, cannot set depends on stock %1$s '),$product->name[$default_language_id]);
 					else
 						StockAvailable::setProductDependsOnStock($product->id, $info['depends_on_stock'],null,$id_product_attribute);
 
@@ -2525,7 +2522,7 @@ class AdminImportControllerCore extends AdminController
 
 					if (count($customer_list) == 0)
 						$this->errors[] = sprintf(
-							Tools::displayError('%1$s does not exist in database %2$s (ID: %3$s) cannot be saved'),
+							Tools::displayError('%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be saved.'),
 							Db::getInstance()->getMsgError(),
 							$address->customer_email,
 							(isset($info['id']) && !empty($info['id']))? $info['id'] : 'null'
@@ -2533,7 +2530,7 @@ class AdminImportControllerCore extends AdminController
 				}
 				else
 				{
-					$this->errors[] = sprintf(Tools::displayError('"%s": Is not a valid email address'), $address->customer_email);
+					$this->errors[] = sprintf(Tools::displayError('"%s" is not a valid email address.'), $address->customer_email);
 					continue;
 				}
 			}
@@ -2548,14 +2545,14 @@ class AdminImportControllerCore extends AdminController
 
 					if (count($customer_list) == 0)
 						$this->errors[] = sprintf(
-							Tools::displayError('%1$s does not exist in database %2$s (ID: %3$s) cannot be saved'),
+							Tools::displayError('%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be saved.'),
 							Db::getInstance()->getMsgError(),
 							$customer->email,
 							(int)$address->id_customer
 						);
 				}
 				else
-					$this->errors[] = sprintf(Tools::displayError('The customer ID n.%d does not exist in the database (ID: %d) cannot be saved'), $address->id_customer);
+					$this->errors[] = sprintf(Tools::displayError('The customer ID #%d does not exist in the database, and therefore cannot be saved.'), $address->id_customer);
 			}
 			else
 			{

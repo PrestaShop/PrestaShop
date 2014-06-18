@@ -57,7 +57,7 @@ class AdminGroupsControllerCore extends AdminController
 				'class' => 'fixed-width-xs'
 			),
 			'name' => array(
-				'title' => $this->l('Name'),
+				'title' => $this->l('Group name'),
 				'filter_key' => 'b!name'
 			),
 			'reduction' => array(
@@ -119,7 +119,7 @@ class AdminGroupsControllerCore extends AdminController
 						),
 						'PS_CUSTOMER_GROUP' => array(
 							'title' => $this->l('Customers group'), 
-							'desc' => $this->l('The group defined for your identified customers.'), 
+							'desc' => $this->l('The group defined for your identified registered customers.'), 
 							'cast' => 'intval', 
 							'type' => 'select',
 							'list' => $groups,
@@ -214,19 +214,19 @@ class AdminGroupsControllerCore extends AdminController
 		$this->list_id = 'customer_group';
 		$this->actions = array();
 		$this->addRowAction('edit');
-		$this->identifier = 'id_group';
+		$this->identifier = 'id_customer';
 		$this->bulk_actions = false;
 		$this->list_no_link = true;
 		$this->explicitSelect = true;
 
 		$this->fields_list = (array(
 			'id_customer' => array('title' => $this->l('ID'), 'align' => 'center', 'filter_key' => 'c!id_customer', 'class' => 'fixed-width-xs'),
-			'id_gender' => array('title' => $this->l('Titles'), 'icon' => $genders_icon, 'list' => $genders),
+			'id_gender' => array('title' => $this->l('Social title'), 'icon' => $genders_icon, 'list' => $genders),
 			'firstname' => array('title' => $this->l('First name')),
 			'lastname' => array('title' => $this->l('Last name')),
 			'email' => array('title' => $this->l('Email address'), 'filter_key' => 'c!email', 'orderby' => true),
 			'birthday' => array('title' => $this->l('Birth date'), 'type' => 'date', 'class' => 'fixed-width-md', 'align' => 'center'),
-			'date_add' => array('title' => $this->l('Register date'), 'type' => 'date', 'class' => 'fixed-width-md', 'align' => 'center'),
+			'date_add' => array('title' => $this->l('Registration date'), 'type' => 'date', 'class' => 'fixed-width-md', 'align' => 'center'),
 			'active' => array('title' => $this->l('Enabled'),'align' => 'center', 'class' => 'fixed-width-sm', 'active' => 'status','type' => 'bool', 'search' => false, 'orderby' => false, 'filter_key' => 'c!active')
 		));
 		$this->_select = 'c.*, a.id_group';

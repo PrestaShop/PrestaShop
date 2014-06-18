@@ -37,7 +37,7 @@
 	var currency_sign = "{$currency->sign}";
 	var currency_format = "{$currency->format}";
 	var currency_blank = "{$currency->blank}";
-	var priceDisplayPrecision = 2;
+	var priceDisplayPrecision = {$smarty.const._PS_PRICE_DISPLAY_PRECISION_|intval};
 	var use_taxes = {if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_INC}true{else}false{/if};
 	var stock_management = {$stock_management|intval};
 	var txt_add_product_stock_issue = "{l s='Are you sure you want to add this quantity?' js=1}";
@@ -113,13 +113,13 @@
 					</div>
 				</div>
 				<!-- Orders Actions -->
-				<div class="well">
+				<div class="well hidden-print">
 					<a class="btn btn-default" href="javascript:window.print()">
 						<i class="icon-print"></i>
 						{l s='Print order'}
 					</a>
 					&nbsp;
-					{if (count($invoices_collection))}
+					{if Configuration::get('PS_INVOICE') && count($invoices_collection) && (($currentState && $currentState->invoice && $order->invoice_number) || $order->invoice_number)}
 						<a class="btn btn-default" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&submitAction=generateInvoicePDF&id_order={$order->id}" target="_blank">
 							<i class="icon-file"></i>
 							{l s='View invoice'}
@@ -131,7 +131,7 @@
 						</span>
 					{/if}
 					&nbsp;
-					{if (($currentState && $currentState->delivery) || $order->delivery_number)}
+					{if (($currentState && $currentState->delivery && $order->delivery_number) || $order->delivery_number)}
 						<a class="btn btn-default"  href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&submitAction=generateDeliverySlipPDF&id_order={$order->id}" target="_blank">
 							<i class="icon-truck"></i>
 							{l s='View delivery slip'}
@@ -182,6 +182,7 @@
 				<div class="tab-content panel">
 					<!-- Tab status -->
 					<div class="tab-pane active" id="status">
+						<h4 class="visible-print">{l s='Status'} <span class="badge">({$history|@count})</span></h4>
 						<!-- History of status -->
 						<div class="table-responsive">
 							<table class="table history-status row-margin-bottom">
@@ -207,7 +208,7 @@
 							</table>
 						</div>
 						<!-- Change status form -->
-						<form action="{$currentIndex}&amp;vieworder&amp;token={$smarty.get.token}" method="post" class="form-horizontal well">
+						<form action="{$currentIndex}&amp;vieworder&amp;token={$smarty.get.token}" method="post" class="form-horizontal well hidden-print">
 							<div class="row">
 								<div class="col-lg-9">
 									<select id="id_order_state" class="chosen form-control" name="id_order_state">
@@ -227,6 +228,7 @@
 					</div>
 					<!-- Tab documents -->
 					<div class="tab-pane" id="documents">
+						<h4 class="visible-print">{l s='Documents'} <span class="badge">({$order->getDocuments()|@count})</span></h4>
 						{* Include document template *}
 						{include file='controllers/orders/_documents.tpl'}
 					</div>
@@ -257,6 +259,7 @@
 				<div class="tab-content panel">
 					<!-- Tab shipping -->
 					<div class="tab-pane active" id="shipping">
+						<h4 class="visible-print">{l s='Shipping'} <span class="badge">({$order->getShipping()|@count})</span></h4>
 						<!-- Shipping block -->
 						{if !$order->isVirtual()}
 						<div class="form-horizontal">
@@ -289,6 +292,7 @@
 					</div>
 					<!-- Tab returns -->
 					<div class="tab-pane" id="returns">
+						<h4 class="visible-print">{l s='Merchandise Returns'} <span class="badge">({$order->getReturn()|@count})</span></h4>
 						{if !$order->isVirtual()}
 						<!-- Return block -->
 							{if $order->getReturn()|count > 0}
@@ -337,7 +341,7 @@
 								</table>
 							</div>
 							{else}
-							<div class="list-empty">
+							<div class="list-empty hidden-print">
 								<div class="list-empty-msg">
 									<i class="icon-warning-sign list-empty-icon"></i>
 									{l s='No merchandise returned yet'}
@@ -358,11 +362,11 @@
 				</script>
 			</div>
 			<!-- Payments block -->
-			<div class="panel">
-				<h3>
+			<div id="formAddPaymentPanel" class="panel">
+				<div class="panel-heading">
 					<i class="icon-money"></i>
 					{l s="Payment"} <span class="badge">{$order->getOrderPayments()|@count}</span>
-				</h3>
+				</div>
 				{if count($order->getOrderPayments()) > 0}
 					<p class="alert alert-danger" style="{if round($orders_total_paid_tax_incl, 2) == round($total_paid, 2) || $currentState->id == 6}display: none;{/if}">
 						{l s='Warning'}
@@ -383,7 +387,7 @@
 						{/foreach}
 					</p>
 				{/if}
-				<form id="formAddPayment" method="post" action="{$current_index}&amp;vieworder&amp;id_order={$order->id}&amp;token={$smarty.get.token|escape:'html':'UTF-8'}">
+				<form id="formAddPayment"  method="post" action="{$current_index}&amp;vieworder&amp;id_order={$order->id}&amp;token={$smarty.get.token|escape:'html':'UTF-8'}">
 					<div class="table-responsive">
 						<table class="table">
 							<thead>
@@ -454,15 +458,15 @@
 								</tr>
 								{foreachelse}
 								<tr>
-									<td class="list-empty" colspan="6">
+									<td class="list-empty hidden-print" colspan="6">
 										<div class="list-empty-msg">
 											<i class="icon-warning-sign list-empty-icon"></i>
-											{l s='No payments are available'}
+											{l s='No payment methods are available'}
 										</div>
 									</td>
 								</tr>
 								{/foreach}
-								<tr class="current-edit">
+								<tr class="current-edit hidden-print">
 									<td>
 										<div class="input-group fixed-width-xl">
 											<input type="text" name="payment_date" class="datepicker" value="{date('Y-m-d')}" />
@@ -534,7 +538,7 @@
 			<!-- Customer informations -->
 			<div class="panel">
 				{if $customer->id}
-					<h3>
+					<div class="panel-heading">
 						<i class="icon-user"></i>
 						{l s='Customer'}
 						<span class="badge">
@@ -548,9 +552,9 @@
 						<span class="badge">
 							{l s='#'}{$customer->id}
 						</span>
-					</h3>
+					</div>
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-xs-6">
 							{if ($customer->isGuest())}
 								{l s='This order has been placed by a guest.'}
 								{if (!Customer::customerExists($customer->email))}
@@ -584,8 +588,8 @@
 							{/if}
 						</div>
 
-						<div class="col-md-6">
-							<div class="form-group">
+						<div class="col-xs-6">
+							<div class="form-group hidden-print">
 								<a href="?tab=AdminCustomers&amp;id_customer={$customer->id}&amp;viewcustomer&amp;token={getAdminToken tab='AdminCustomers'}" class="btn btn-default btn-block">{l s='View full details...'}</a>
 							</div>
 							<div class="panel panel-sm">
@@ -614,36 +618,88 @@
 					</div>
 				{/if}
 				<!-- Tab nav -->
-				<ul class="nav nav-tabs" id="tabAddresses">
-					<li class="active">
-						<a href="#addressShipping">
-							<i class="icon-truck"></i>
-							{l s='Shipping address'}
-						</a>
-					</li>
-					<li>
-						<a href="#addressInvoice">
-							<i class="icon-file-text"></i>
-							{l s='Invoice address'}
-						</a>
-					</li>
-				</ul>
-				<!-- Tab content -->
-				<div class="tab-content panel">
-					<!-- Tab status -->
-					<div class="tab-pane  in active" id="addressShipping">
-						<!-- Addresses -->
-						{if !$order->isVirtual()}
-						<!-- Shipping address -->
+				<div class="row">
+					<ul class="nav nav-tabs" id="tabAddresses">
+						<li class="active">
+							<a href="#addressShipping">
+								<i class="icon-truck"></i>
+								{l s='Shipping address'}
+							</a>
+						</li>
+						<li>
+							<a href="#addressInvoice">
+								<i class="icon-file-text"></i>
+								{l s='Invoice address'}
+							</a>
+						</li>
+					</ul>
+					<!-- Tab content -->
+					<div class="tab-content panel">
+						<!-- Tab status -->
+						<div class="tab-pane  in active" id="addressShipping">
+							<!-- Addresses -->
+							<h4 class="visible-print">{l s='Shipping address'}</h4>
+							{if !$order->isVirtual()}
+							<!-- Shipping address -->
+								{if $can_edit}
+									<form class="form-horizontal hidden-print" method="post" action="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$order->id}">
+										<div class="form-group">
+											<div class="col-lg-9">
+												<select name="id_address">
+													{foreach from=$customer_addresses item=address}
+													<option value="{$address['id_address']}"
+														{if $address['id_address'] == $order->id_address_delivery}
+															selected="selected"
+														{/if}>
+														{$address['alias']} -
+														{$address['address1']}
+														{$address['postcode']}
+														{$address['city']}
+														{if !empty($address['state'])}
+															{$address['state']}
+														{/if},
+														{$address['country']}
+													</option>
+													{/foreach}
+												</select>
+											</div>
+											<div class="col-lg-3">
+												<button class="btn btn-default" type="submit" name="submitAddressShipping"><i class="icon-refresh"></i> {l s='Change'}</button>
+											</div>
+										</div>
+									</form>
+								{/if}
+								<div class="well">
+									<div class="row">
+										<div class="col-sm-6">
+											<a class="btn btn-default pull-right" href="?tab=AdminAddresses&amp;id_address={$addresses.delivery->id}&amp;addaddress&realedit=1&amp;id_order={$order->id}{if ($addresses.delivery->id == $addresses.invoice->id)}&amp;address_type=1{/if}&amp;token={getAdminToken tab='AdminAddresses'}&back={$smarty.server.REQUEST_URI|urlencode}">
+												<i class="icon-pencil"></i>
+												{l s='Edit'}
+											</a>
+											{displayAddressDetail address=$addresses.delivery newLine='<br />'}
+											{if $addresses.delivery->other}
+												<hr />{$addresses.delivery->other}<br />
+											{/if}
+										</div>
+										<div class="col-sm-6 hidden-print">
+											<div id="map-delivery-canvas" style="height: 190px"></div>
+										</div>
+									</div>
+								</div>
+							{/if}
+						</div>
+						<div class="tab-pane " id="addressInvoice">
+							<!-- Invoice address -->
+							<h4 class="visible-print">{l s='Invoice address'}</h4>
 							{if $can_edit}
-								<form class="form-horizontal" method="post" action="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$order->id}">
+								<form class="form-horizontal hidden-print" method="post" action="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$order->id}">
 									<div class="form-group">
 										<div class="col-lg-9">
 											<select name="id_address">
 												{foreach from=$customer_addresses item=address}
 												<option value="{$address['id_address']}"
-													{if $address['id_address'] == $order->id_address_delivery}
-														selected="selected"
+													{if $address['id_address'] == $order->id_address_invoice}
+													selected="selected"
 													{/if}>
 													{$address['alias']} -
 													{$address['address1']}
@@ -658,7 +714,7 @@
 											</select>
 										</div>
 										<div class="col-lg-3">
-											<button class="btn btn-default" type="submit" name="submitAddressShipping"><i class="icon-refresh"></i> {l s='Change'}</button>
+											<button class="btn btn-default" type="submit" name="submitAddressInvoice"><i class="icon-refresh"></i> {l s='Change'}</button>
 										</div>
 									</div>
 								</form>
@@ -666,66 +722,18 @@
 							<div class="well">
 								<div class="row">
 									<div class="col-sm-6">
-										<a class="btn btn-default pull-right" href="?tab=AdminAddresses&amp;id_address={$addresses.delivery->id}&amp;addaddress&realedit=1&amp;id_order={$order->id}{if ($addresses.delivery->id == $addresses.invoice->id)}&amp;address_type=1{/if}&amp;token={getAdminToken tab='AdminAddresses'}&back={$smarty.server.REQUEST_URI|urlencode}">
+										<a class="btn btn-default pull-right" href="?tab=AdminAddresses&amp;id_address={$addresses.invoice->id}&amp;addaddress&amp;realedit=1&amp;id_order={$order->id}{if ($addresses.delivery->id == $addresses.invoice->id)}&amp;address_type=2{/if}&amp;back={$smarty.server.REQUEST_URI|urlencode}&amp;token={getAdminToken tab='AdminAddresses'}">
 											<i class="icon-pencil"></i>
 											{l s='Edit'}
 										</a>
-										{displayAddressDetail address=$addresses.delivery newLine='<br />'}
-										{if $addresses.delivery->other}
-											<hr />{$addresses.delivery->other}<br />
+										{displayAddressDetail address=$addresses.invoice newLine='<br />'}
+										{if $addresses.invoice->other}
+											<hr />{$addresses.invoice->other}<br />
 										{/if}
 									</div>
-									<div class="col-sm-6">
-										<div id="map-delivery-canvas" style="height: 190px"></div>
+									<div class="col-sm-6 hidden-print">
+										<div id="map-invoice-canvas" style="height: 190px"></div>
 									</div>
-								</div>
-							</div>
-						{/if}
-					</div>
-					<div class="tab-pane " id="addressInvoice">
-						<!-- Invoice address -->
-						{if $can_edit}
-							<form class="form-horizontal" method="post" action="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$order->id}">
-								<div class="form-group">
-									<div class="col-lg-9">
-										<select name="id_address">
-											{foreach from=$customer_addresses item=address}
-											<option value="{$address['id_address']}"
-												{if $address['id_address'] == $order->id_address_invoice}
-												selected="selected"
-												{/if}>
-												{$address['alias']} -
-												{$address['address1']}
-												{$address['postcode']}
-												{$address['city']}
-												{if !empty($address['state'])}
-													{$address['state']}
-												{/if},
-												{$address['country']}
-											</option>
-											{/foreach}
-										</select>
-									</div>
-									<div class="col-lg-3">
-										<button class="btn btn-default" type="submit" name="submitAddressInvoice"><i class="icon-refresh"></i> {l s='Change'}</button>
-									</div>
-								</div>
-							</form>
-						{/if}
-						<div class="well">
-							<div class="row">
-								<div class="col-sm-6">
-									<a class="btn btn-default pull-right" href="?tab=AdminAddresses&amp;id_address={$addresses.invoice->id}&amp;addaddress&amp;realedit=1&amp;id_order={$order->id}{if ($addresses.delivery->id == $addresses.invoice->id)}&amp;address_type=2{/if}&amp;back={$smarty.server.REQUEST_URI|urlencode}&amp;token={getAdminToken tab='AdminAddresses'}">
-										<i class="icon-pencil"></i>
-										{l s='Edit'}
-									</a>
-									{displayAddressDetail address=$addresses.invoice newLine='<br />'}
-									{if $addresses.invoice->other}
-										<hr />{$addresses.invoice->other}<br />
-									{/if}
-								</div>
-								<div class="col-sm-6">
-									<div id="map-invoice-canvas" style="height: 190px"></div>
 								</div>
 							</div>
 						</div>
@@ -740,7 +748,7 @@
 			</div>
 			<div class="panel">
 				<div class="panel-heading">
-					<i class="icon-envelope"></i> {l s='Messages'} <span class="badge">{$messages|@count}</span>
+					<i class="icon-envelope"></i> {l s='Messages'} <span class="badge">{sizeof($customer_thread_message)}</span>
 				</div>
 				{if (sizeof($messages))}
 					<div class="panel panel-highlighted">
@@ -754,9 +762,7 @@
 								<div class="message-body">
 									
 									<span class="message-date">&nbsp;<i class="icon-calendar"></i>
-										{l s='At'}
-										{dateFormat date=$message['date_add']}
-										{l s='from'}
+										{dateFormat date=$message['date_add']} - 
 									</span>
 									<h4 class="message-item-heading">
 										{if ($message['elastname']|escape:'html':'UTF-8')}{$message['efirstname']|escape:'html':'UTF-8'}
@@ -779,7 +785,7 @@
 						</div>
 					</div>
 				{/if}
-				<div id="messages" class="well">
+				<div id="messages" class="well hidden-print">
 					<form action="{$smarty.server.REQUEST_URI}&amp;token={$smarty.get.token}" method="post" onsubmit="if (getE('visibility').checked == true) return confirm('{l s='Do you want to send this message to the customer?'}');">
 						<div id="message" class="form-horizontal">
 							<div class="form-group">
@@ -851,10 +857,10 @@
 				</div>
 
 				<div class="panel">
-					<h3>
+					<div class="panel-heading">
 						<i class="icon-shopping-cart"></i>
 						{l s='Products'} <span class="badge">{$products|@count}</span>
-					</h3>
+					</div>
 					<div id="refundForm">
 					<!--
 						<a href="#" class="standard_refund"><img src="../img/admin/add.gif" alt="{l s='Process a standard refund'}" /> {l s='Process a standard refund'}</a>
@@ -938,9 +944,8 @@
 						</button>
 					</div>
 					{/if}
-					<br />
 					<div class="row">
-						<div class="col-lg-6">
+						<div class="col-xs-6">
 							<div class="alert alert-warning">
 								{l s='For this customer group, prices are displayed as:'}
 								<strong>{$smarty.capture.TaxMethod}</strong>
@@ -949,7 +954,7 @@
 								{/if}
 							</div>
 						</div>
-						<div class="col-lg-6">
+						<div class="col-xs-6">
 							<div class="panel panel-vouchers" style="{if !sizeof($discounts)}display:none;{/if}">
 								{if (sizeof($discounts) || $can_edit)}
 								<div class="table-responsive">
@@ -999,14 +1004,20 @@
 								</div>
 								{/if}
 							</div>
-							<div class="panel">
+							<div class="panel panel-total">
 								<div class="table-responsive">
 									<table class="table">
 										{* Assign order price *}
 										{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
 											{assign var=order_product_price value=($order->total_products)}
+											{assign var=order_discount_price value=$order->total_discounts_tax_excl}
+											{assign var=order_wrapping_price value=$order->total_wrapping_tax_excl}
+											{assign var=order_shipping_price value=$order->total_shipping_tax_excl}
 										{else}
 											{assign var=order_product_price value=$order->total_products_wt}
+											{assign var=order_discount_price value=$order->total_discounts_tax_incl}
+											{assign var=order_wrapping_price value=$order->total_wrapping_tax_incl}
+											{assign var=order_shipping_price value=$order->total_shipping_tax_incl}
 										{/if}
 										<tr id="total_products">
 											<td class="text-right">{l s='Products:'}</td>
@@ -1018,21 +1029,21 @@
 										<tr id="total_discounts" {if $order->total_discounts_tax_incl == 0}style="display: none;"{/if}>
 											<td class="text-right">{l s='Discounts'}</td>
 											<td class="amount text-right">
-												-{displayPrice price=$order->total_discounts_tax_incl currency=$currency->id}
+												-{displayPrice price=$order_discount_price currency=$currency->id}
 											</td>
 											<td class="partial_refund_fields current-edit" style="display:none;"></td>
 										</tr>
 										<tr id="total_wrapping" {if $order->total_wrapping_tax_incl == 0}style="display: none;"{/if}>
 											<td class="text-right">{l s='Wrapping'}</td>
 											<td class="amount text-right">
-												{displayPrice price=$order->total_wrapping_tax_incl currency=$currency->id}
+												{displayPrice price=$order_wrapping_price currency=$currency->id}
 											</td>
 											<td class="partial_refund_fields current-edit" style="display:none;"></td>
 										</tr>
 										<tr id="total_shipping">
 											<td class="text-right">{l s='Shipping'}</td>
 											<td class="amount text-right" >
-												{displayPrice price=$order->total_shipping_tax_incl currency=$currency->id}
+												{displayPrice price=$order_shipping_price currency=$currency->id}
 											</td>
 											<td class="partial_refund_fields current-edit" style="display:none;">
 												<div class="input-group">
@@ -1044,12 +1055,14 @@
 												</div>
 											</td>
 										</tr>
-										{* Assign order price *}
 										{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
-											{assign var=order_total_price value=($order->total_paid_tax_excl)}
-										{else}
-											{assign var=order_total_price value=$order->total_paid_tax_incl}
-										{/if}
+			 							<tr id="total_taxes">
+			 								<td class="text-right">{l s='Taxes'}</td>
+			 								<td class="amount text-right" >{displayPrice price=($order->total_paid_tax_incl-$order->total_paid_tax_excl) currency=$currency->id}</td>
+			 								<td class="partial_refund_fields current-edit" style="display:none;"></td>
+			 							</tr>
+			 							{/if}
+										{assign var=order_total_price value=$order->total_paid_tax_incl}
 										<tr id="total_order">
 											<td class="text-right"><strong>{l s='Total'}</strong></td>
 											<td class="amount text-right">
@@ -1126,10 +1139,10 @@
 			<!-- Sources block -->
 			{if (sizeof($sources))}
 			<div class="panel">
-				<h3>
+				<div class="panel-heading">
 					<i class="icon-globe"></i>
 					{l s='Sources'} <span class="badge">{$sources|@count}</span>
-				</h3>
+				</div>
 				<ul {if sizeof($sources) > 3}style="height: 200px; overflow-y: scroll;"{/if}>
 				{foreach from=$sources item=source}
 					<li>
@@ -1146,10 +1159,10 @@
 			<!-- linked orders block -->
 			{if count($order->getBrother()) > 0}
 			<div class="panel">
-				<h3>
+				<div class="panel-heading">
 					<i class="icon-cart"></i>
 					{l s='Linked orders'}
-				</h3>
+				</div>
 				<div class="table-responsive">
 					<table class="table">
 						<thead>

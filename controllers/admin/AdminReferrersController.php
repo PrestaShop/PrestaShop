@@ -90,7 +90,7 @@ class AdminReferrersControllerCore extends AdminController
 				'align' => 'center'
 			),
 			'cache_orders' => array(
-				'title' => $this->l('Ord.'),
+				'title' => $this->l('Orders'),
 				'width' => 30,
 				'align' => 'center'
 			),
@@ -232,7 +232,7 @@ class AdminReferrersControllerCore extends AdminController
 			);
 		else
 			$this->fields_form[0]['form']['desc'] = array(
-				sprintf($this->l('Please install the "%s" module in order to let your affiliates access their own statistics.'), Module::getModuleName('trackingfront'))
+				sprintf($this->l('Please install the "%s" module in order to give your affiliates access their own statistics.'), Module::getModuleName('trackingfront'))
 			);
 
 		$this->fields_form[1] = array('form' => array(
@@ -414,7 +414,13 @@ class AdminReferrersControllerCore extends AdminController
 		{
 			$tpl = $this->createTemplate('form_settings.tpl');
 
+			$statsdata = Module::getInstanceByName('statsdata');
+
+			$statsdata_name = false;
+			if (Validate::isLoadedObject($statsdata))
+				$statsdata_name = $statsdata->displayName;
 			$tpl->assign(array(
+				'statsdata_name' => $statsdata_name,
 				'current' => self::$currentIndex,
 				'token' => $this->token,
 				'tracking_dt' => (int)Tools::getValue('tracking_dt', Configuration::get('TRACKING_DIRECT_TRAFFIC'))
