@@ -117,12 +117,12 @@ $('#product_restriction').click(function() {
 
 	if ($(this).prop('checked'))
 	{
-		$('#apply_discount_to_selection').removeAttr('disabled');
+		$('#apply_discount_to_selection').prop('disabled', false);
 		$('#apply_discount_to_selection_warning').hide();
 	}
 	else
 	{
-		$('#apply_discount_to_selection').attr('disabled', 'disabled');
+		$('#apply_discount_to_selection').prop('disabled', true);
 		$('#apply_discount_to_selection_warning').show();
 	}
 });
@@ -275,13 +275,13 @@ $('#cart_rule_form').submit(function() {
 		else
 		{
 			$('#' + restrictions[i] + '_select_2 option').each(function(i) {
-				$(this).attr('selected', true);
+				$(this).prop('selected', true);
 			});
 		}
 	}
 	
 	$('.product_rule_toselect option').each(function(i) {
-		$(this).attr('selected', true);
+		$(this).prop('selected', true);
 	});
 });
 	
