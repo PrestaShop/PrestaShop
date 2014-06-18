@@ -1632,7 +1632,7 @@ class WebserviceRequestCore
 						$temp .= bqSQL($tableAlias).'`'.bqSQL($sqlId).'` = "'.bqSQL($value).'" OR ';
 					$ret .= rtrim($temp, 'OR ').')'."\n";
 				}
-				elseif (preg_match('/^([\d\.:-\s]+),([\d\.:-\s]+)$/', $matches[2], $matches3))
+				elseif (preg_match('/^([\d\.:\-\s]+),([\d\.:\-\s]+)$/', $matches[2], $matches3))
 				{
 					unset($matches3[0]);
 					if (count($matches3) > 0)
