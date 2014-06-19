@@ -710,7 +710,6 @@ class AdminCustomersControllerCore extends AdminController
 		}
 
 		$products = $customer->getBoughtProducts();
-		$total_products = count($products);
 
 		$carts = Cart::getCustomerCarts($customer->id);
 		$total_carts = count($carts);
