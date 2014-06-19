@@ -2983,7 +2983,7 @@ class AdminThemesControllerCore extends AdminController
 
 	public function setMedia()
 	{
-		$this->addJS(_PS_JS_DIR_.'admin_themes.js');
 		parent::setMedia();
+		$this->addJS(_PS_JS_DIR_.'admin_themes.js');
 	}
 }
