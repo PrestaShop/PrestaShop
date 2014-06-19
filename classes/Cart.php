@@ -474,7 +474,11 @@ class CartCore extends ObjectModel
 		$sql->groupBy('unique_id');
 
 		// Build ORDER BY
+		/*
 		$sql->orderBy('p.`id_product`, cp.`id_product_attribute`, cp.`date_add` ASC');
+		*/
+		// Es mejor que sea opcional en el back o en el front office pero mientras como en el super mercado: en el orden que se agrega
+		$sql->orderBy('cp.`date_add` ASC, p.`id_product`');
 
 		if (Customization::isFeatureActive())
 		{
