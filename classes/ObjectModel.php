@@ -140,6 +140,11 @@ abstract class ObjectModelCore
 	protected static $db = false;
 
 	/**
+	 * @var boolean, enable possibility to define an id before adding object
+	 */
+	public $force_id = false;
+
+	/**
 	 * Returns object validation rules (fields validity)
 	 *
 	 * @param string $class Child class name for static use (optional)
@@ -432,6 +437,9 @@ abstract class ObjectModelCore
 		if (!ObjectModel::$db)
 			ObjectModel::$db = Db::getInstance();
 
+		if (isset($this->id) && !$this->force_id)
+			unset($this->id);
+
 		// @hook actionObject*AddBefore
 		Hook::exec('actionObjectAddBefore', array('object' => $this));
 		Hook::exec('actionObject'.get_class($this).'AddBefore', array('object' => $this));
@@ -451,8 +459,6 @@ abstract class ObjectModelCore
 		}
 		
 		// Database insertion
-		if (isset($this->id))
-			unset($this->id);
 		if (Shop::checkIdShopDefault($this->def['table']))
 			$this->id_shop_default = min($id_shop_list);
 		if (!$result = ObjectModel::$db->insert($this->def['table'], $this->getFields(), $null_values))
