@@ -116,8 +116,6 @@ class AdminThemesControllerCore extends AdminController
 
 		libxml_use_internal_errors(true);
 
-		$this->addJS(_PS_JS_DIR_.'admin_themes.js');
-
 		//get addons themes
 		if ($this->logged_on_addons)
 		{
@@ -2981,5 +2979,11 @@ class AdminThemesControllerCore extends AdminController
 
 			return $options;
 		}
+	}
+
+	public function setMedia()
+	{
+		$this->addJS(_PS_JS_DIR_.'admin_themes.js');
+		parent::setMedia();
 	}
 }
