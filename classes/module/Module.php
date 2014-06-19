@@ -2424,7 +2424,7 @@ abstract class ModuleCore
 			$override_class = new ReflectionClass($classname.'OverrideOriginal'.$uniq);
 
 			$module_file = file($this->getLocalPath().'override'.DIRECTORY_SEPARATOR.$path);
-			eval(preg_replace(array('^\s*<\?(?:php)?\s#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array(' ', 'class '.$classname.'Override'.$uniq), implode('', $module_file)));
+			eval(preg_replace(array('#^\s*<\?(?:php)?\s#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array(' ', 'class '.$classname.'Override'.$uniq), implode('', $module_file)));
 			$module_class = new ReflectionClass($classname.'Override'.$uniq);
 
 			// Check if none of the methods already exists in the override class
