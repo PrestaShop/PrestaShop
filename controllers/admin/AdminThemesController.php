@@ -169,8 +169,10 @@ class AdminThemesControllerCore extends AdminController
 				{
 					if (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml'))
 						$config_file = _PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml';
-					else
+					elseif ($theme->name == 'default-bootstrap')
 						$config_file = _PS_ROOT_DIR_.'/config/xml/themes/default.xml';
+					else
+						$config_file = false;
 
 					if ($config_file)
 					{
@@ -188,6 +190,13 @@ class AdminThemesControllerCore extends AdminController
 							if ($cur_theme['theme_name'] == 'default-bootstrap')
 								$cur_theme['tc'] = Module::isEnabled('themeconfigurator');
 						}
+					}
+					else
+					{
+						// If no xml we use data from database
+						$cur_theme['theme_id'] = $theme->id;
+						$cur_theme['theme_name'] = $theme->name;
+						$cur_theme['theme_directory'] = $theme->directory;
 					}
 				}
 				else
