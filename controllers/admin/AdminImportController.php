@@ -1508,7 +1508,7 @@ class AdminImportControllerCore extends AdminController
 				if (!$res)
 				{
 					if (isset($product->date_add) && $product->date_add != '')
-						$res = $product->add();
+						$res = $product->add(false);
 					else
 						$res = $product->add();
 				}
