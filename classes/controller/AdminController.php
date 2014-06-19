@@ -3097,8 +3097,10 @@ class AdminControllerCore extends Controller
 
 		/* Multilingual fields */
 		$languages = Language::getLanguages(false);
-		$class = get_class($object);
-		$fields = $class::$definition['fields'];
+		$class_vars = get_class_vars(get_class($object));
+		$fields = array();
+		if (isset($class_vars['definition']['fields']))
+			$fields = $class_vars['definition']['fields'];
 
 		foreach ($fields as $field => $params) {
 			if (array_key_exists('lang', $params) && $params['lang']) {
