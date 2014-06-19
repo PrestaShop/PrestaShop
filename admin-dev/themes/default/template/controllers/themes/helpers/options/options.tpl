@@ -83,10 +83,12 @@
 			</div>
 
 			<div id="js_theme_form_container" class="col-md-9">
-				<h2>{$cur_theme.theme_name} <small>version {$cur_theme.theme_version}</small></h2>
+				<h2>{$cur_theme.theme_name} {if isset($cur_theme.theme_version)}<small>version {$cur_theme.theme_version}</small>{/if}</h2>
+				{if isset($cur_theme.author_name)}
 				<p>
 					{l s='Designed by %s' sprintf=$cur_theme.author_name}
 				</p>
+				{/if}
 
 				{if isset($cur_theme.tc) && $cur_theme.tc}
 				<hr>
