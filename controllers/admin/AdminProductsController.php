@@ -2433,7 +2433,7 @@ class AdminProductsControllerCore extends AdminController
 
 	public function ajaxProcessProductManufacturers()
 	{
-		$manufacturers = Manufacturer::getManufacturers();
+		$manufacturers = Manufacturer::getManufacturers(false, 0, true, false, false, false, true);
 		$jsonArray = array();
 			if ($manufacturers)
 				foreach ($manufacturers as $manufacturer)
