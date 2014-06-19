@@ -712,7 +712,7 @@ class AdminCustomersControllerCore extends AdminController
 		$products = $customer->getBoughtProducts();
 		$total_products = count($products);
 		for ($i = 0; $i < $total_products; $i++)
-			$products[$i]['date_add'] = Tools::displayDate($products[$i]['date_add'], null, true);
+			$products[$i]['date_add'] = Tools::displayDate($products[$i]['date_add'], null, false);
 
 		$carts = Cart::getCustomerCarts($customer->id);
 		$total_carts = count($carts);
