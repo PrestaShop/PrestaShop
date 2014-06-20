@@ -24,6 +24,37 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.6
 --------------------------------
 ####################################
+#   v1.6.0.8 - (2014-06-20)  #
+####################################
+
+	Fixed bugs:
+
+	[-] FO : Fix bug #PSCFV-12189, module can be disabled
+	[-] FO : Fix bug #PSCSX-2025 again, group by empty color for textures
+	[-] FO : Fix bug #PSCSX-2418, no thickbow when only one image
+	[-] FO : Fix bug #PSCFV-12204, bad deletion of cart rule    Conflicts:    	themes/default-bootstrap/js/cart-summary.js
+
+	[-] BO : Fix bug #PSCSX-2455, lang not valid
+	[-] BO : Fix bug duplicate manufacturers, follow up https://github.com/PrestaShop/PrestaShop/pull/1892
+	[-] BO : Fix bug #PSCSX-2382, could not chosse an accessory
+	[-] BO : FixBug #PSCSX-2440
+	[-] BO : Fix bug #PSCSX-2419, could not force id
+	[-] BO : Fix bug #PSCSX-2431, bad admin_themes.js loading
+	[-] BO : Fix #PSCSX-2432, Display theme info from DB if no XML
+	[-] BO : Fix Invalid date Exception on AdminCustomers
+	[-] BO : Fix bug #PSCFV-12205, checked property for specific product selection
+
+	[-] CORE : #PSCSX-2438 undefined conts
+
+	[-] WS: Fix #PSCSX-2344 preg_match(): Compilation failed
+
+	Improved/changed features:
+
+	[*] BO : fix strip switch
+	[*] BO : strip label & checkbox for bootstrap/chrome
+
+
+####################################
 #   v1.6.0.7 - (2014-06-17)  #
 ####################################
 
