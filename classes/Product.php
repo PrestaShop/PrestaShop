@@ -3111,7 +3111,7 @@ class ProductCore extends ObjectModel
 
 		$check_stock = !Configuration::get('PS_DISP_UNAVAILABLE_ATTR');
 		if (!$res = Db::getInstance()->executeS('
-					SELECT pa.`id_product`, a.`color`, pac.`id_product_attribute`, '.($check_stock ? 'SUM(IF(stock.`quantity` > 0, 1, 0))' : '0').' qty, a.`id_attribute`, al.`name`
+					SELECT pa.`id_product`, a.`color`, pac.`id_product_attribute`, '.($check_stock ? 'SUM(IF(stock.`quantity` > 0, 1, 0))' : '0').' qty, a.`id_attribute`, al.`name`, IF(color = "", a.id_attribute, color) group_by
 					FROM `'._DB_PREFIX_.'product_attribute` pa
 					'.Shop::addSqlAssociation('product_attribute', 'pa').
 					($check_stock ? Product::sqlStock('pa', 'pa') : '').'
@@ -3120,7 +3120,7 @@ class ProductCore extends ObjectModel
 					JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
 					JOIN `'._DB_PREFIX_.'attribute_group` ag ON (a.id_attribute_group = ag.`id_attribute_group`)
 					WHERE pa.`id_product` IN ('.implode(array_map('intval', $products), ',').') AND ag.`is_color_group` = 1
-					GROUP BY pa.`id_product`, `color`
+					GROUP BY pa.`id_product`, `group_by`
 					'.($check_stock ? 'HAVING qty > 0' : '')
 				)
 			)
