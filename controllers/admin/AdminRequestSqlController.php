@@ -171,7 +171,6 @@ class AdminRequestSqlControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('This functionality has been disabled.');
 			return;
 		}
-		/* PrestaShop demo mode*/
 		return parent::postProcess();
 	}
 	
@@ -184,7 +183,6 @@ class AdminRequestSqlControllerCore extends AdminController
 		/* PrestaShop demo mode */
 		if (_PS_MODE_DEMO_)
 			die(Tools::displayError('This functionality has been disabled.'));
-		/* PrestaShop demo mode*/
 		if ($table = Tools::GetValue('table'))
 		{
 			$request_sql = new RequestSql();
