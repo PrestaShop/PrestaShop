@@ -1479,7 +1479,7 @@ class ProductCore extends ObjectModel
 			$this->cache_default_attribute = $id_default_attribute;
 
 		Hook::exec('actionProductAttributeUpdate', array('id_product_attribute' => $id_product_attribute));
-
+		Tools::clearColorListCache($this->id);
 		return true;
 	}
 
@@ -1536,7 +1536,8 @@ class ProductCore extends ObjectModel
 
 		if (!empty($id_images))
 			$combination->setImages($id_images);
-
+		
+		Tools::clearColorListCache($this->id);
 		return (int)$combination->id;
 	}
 
@@ -1573,6 +1574,7 @@ class ProductCore extends ObjectModel
 		foreach ($combinations as $combination)
 			$result &= $combination->delete();
 		SpecificPriceRule::applyAllRules(array((int)$this->id));
+		Tools::clearColorListCache($this->id);
 		return $result;
 	}
 

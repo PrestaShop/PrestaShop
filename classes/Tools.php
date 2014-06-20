@@ -2620,6 +2620,16 @@ exit;
 		Tools::clearCompile($smarty);
 	}
 
+	public static function clearColorListCache($id_product = false)
+	{
+
+		// Change template dir if called from the BackOffice
+		$current_template_dir = Context::getContext()->smarty->getTemplateDir();
+		Context::getContext()->smarty->setTemplateDir(_PS_THEME_DIR_);
+		Tools::clearCache(null, 'product-list-colors.tpl', ($id_product ? 'productlist_colors|'.(int)$id_product.'|'.(int)Context::getContext()->shop->id : 'productlist_colors'));
+		Context::getContext()->smarty->setTemplateDir($current_template_dir);
+	}
+
 	/**
 	 * getMemoryLimit allow to get the memory limit in octet
 	 *
