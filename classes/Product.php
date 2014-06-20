@@ -5092,7 +5092,7 @@ class ProductCore extends ObjectModel
 	public static function getAttributesInformationsByProduct($id_product)
 	{
 		// if blocklayered module is installed we check if user has set custom attribute name
-		if (Module::isInstalled('blocklayered'))
+		if (Module::isInstalled('blocklayered') && Module::isEnabled('blocklayered'))
 		{
 			$nb_custom_values = Db::getInstance()->executeS('
 			SELECT DISTINCT la.`id_attribute`, la.`url_name` as `attribute`
