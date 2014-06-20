@@ -156,10 +156,12 @@
 										<div class="col-lg-9">
 											{foreach $field['choices'] AS $k => $v}
 												<p class="radio">
+													{strip}
 													<label for="{$key}_{$k}">
 														<input type="radio" name="{$key}" id="{$key}_{$k}" value="{$k}"{if $k == $field['value']} checked="checked"{/if}{if isset($field['js'][$k])} {$field['js'][$k]}{/if}/>
 													 	{$v}
 													</label>
+													{strip}
 												</p>
 											{/foreach}
 										</div>
@@ -167,8 +169,12 @@
 										<div class="col-lg-9">
 											{foreach $field['choices'] AS $k => $v}
 												<p class="checkbox">
-													<input type="checkbox" name="{$key}" id="{$key}{$k}_on" value="{$k|intval}"{if $k == $field['value']} checked="checked"{/if}{if isset($field['js'][$k])} {$field['js'][$k]}{/if}/>
-													<label class="col-lg-3" for="{$key}{$k}_on"> {$v}</label>
+													{strip}
+													<label class="col-lg-3" for="{$key}{$k}_on">
+														<input type="checkbox" name="{$key}" id="{$key}{$k}_on" value="{$k|intval}"{if $k == $field['value']} checked="checked"{/if}{if isset($field['js'][$k])} {$field['js'][$k]}{/if}/>
+													 	{$v}
+													</label>
+													{strip}
 												</p>
 											{/foreach}
 										</div>
