@@ -78,14 +78,11 @@ elseif ($items)
 	$results = array();
 	foreach ($items AS $item)
 	{
-		$img = Context::getContext()->link->getImageLink($item['link_rewrite'], $item['id_image'], 'home_default');
-		$prot = Tools::getShopProtocol();
-		$img = str_replace('http://', $prot, $img);
 		$product = array(
 			'id' => (int)($item['id_product']),
 			'name' => $item['name'],
 			'ref' => (!empty($item['reference']) ? $item['reference'] : ''),
-			'image' => $img,
+			'image' => str_replace('http://', Tools::getShopProtocol(), Context::getContext()->link->getImageLink($item['link_rewrite'], $item['id_image'], 'home_default')),
 		);
 		array_push($results, $product);
 	}
