@@ -594,9 +594,9 @@ class AdminThemesControllerCore extends AdminController
 	protected static function copyTheme($base_theme_dir, $target_theme_dir)
 	{
 		$res = true;
-		$base_theme_dir = rtrim($base_theme_dir, '/').'/';
+		$base_theme_dir = Tools::normalizeDirectory($base_theme_dir);
 		$base_dir = _PS_ALL_THEMES_DIR_.$base_theme_dir;
-		$target_theme_dir = rtrim($target_theme_dir, '/').'/';
+		$target_theme_dir = Tools::normalizeDirectory($target_theme_dir);
 		$target_dir = _PS_ALL_THEMES_DIR_.$target_theme_dir;
 		$files = scandir($base_dir);
 
@@ -612,7 +612,7 @@ class AdminThemesControllerCore extends AdminController
 					$res &= AdminThemesController::copyTheme($base_theme_dir.$file, $target_theme_dir.$file);
 				}
 				elseif (!file_exists($target_theme_dir.$file))
-					$res &= copy($base_dir.$file, $target_dir.$file);
+					$res &= copy($base_dir.$file, $target_theme_dir.$file);
 			}
 		}
 
