@@ -378,12 +378,14 @@
 								{elseif $input.type == 'radio'}
 									{foreach $input.values as $value}
 										<div class="radio {if isset($input.class)}{$input.class}{/if}">
+											{strip}
 											<label>
 											<input type="radio"	name="{$input.name}" id="{$value.id}" value="{$value.value|escape:'html':'UTF-8'}"
 												{if $fields_value[$input.name] == $value.value}checked="checked"{/if}
 												{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if} />
 												{$value.label}
 											</label>
+											{/strip}
 										</div>
 										{if isset($value.p) && $value.p}<p class="help-block">{$value.p}</p>{/if}
 									{/foreach}
@@ -402,19 +404,19 @@
 											{if $fields_value[$input.name] == $value.value}checked="checked"{/if}
 											{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if}
 										/>
-										<label
-											{if $value.value == 1}
+										{strip}
+										<label {if $value.value == 1}
 												for="{$input.name}_on"
 											{else}
 												for="{$input.name}_off"
-											{/if}
-										>
+											{/if}>
 											{if $value.value == 1}
 												{l s='Yes'}
 											{else}
 												{l s='No'}
 											{/if}
 										</label>
+										{/strip}
 										{/foreach}
 										<a class="slide-button btn"></a>
 									</span>
@@ -471,15 +473,17 @@
 									{foreach $input.values.query as $value}
 										{assign var=id_checkbox value=$input.name|cat:'_'|cat:$value[$input.values.id]}
 										<div class="checkbox{if isset($input.expand) && strtolower($input.expand.default) == 'show'} hidden {/if}">
-											<label for="{$id_checkbox}">
-												<input type="checkbox"
-													name="{$id_checkbox}"
-													id="{$id_checkbox}"
-													class="{if isset($input.class)}{$input.class}{/if}"
-													{if isset($value.val)}value="{$value.val|escape:'html':'UTF-8'}"{/if}
-													{if isset($fields_value[$id_checkbox]) && $fields_value[$id_checkbox]}checked="checked"{/if} />
-												{$value[$input.values.name]}
-											</label>
+											{strip}
+												<label for="{$id_checkbox}">
+													<input type="checkbox"
+														name="{$id_checkbox}"
+														id="{$id_checkbox}"
+														class="{if isset($input.class)}{$input.class}{/if}"
+														{if isset($value.val)}value="{$value.val|escape:'html':'UTF-8'}"{/if}
+														{if isset($fields_value[$id_checkbox]) && $fields_value[$id_checkbox]}checked="checked"{/if} />
+													{$value[$input.values.name]}
+												</label>
+											{/strip}
 										</div>
 									{/foreach}
 								{elseif $input.type == 'change-password'}

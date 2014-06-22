@@ -116,8 +116,6 @@ class AdminThemesControllerCore extends AdminController
 
 		libxml_use_internal_errors(true);
 
-		$this->addJS(_PS_JS_DIR_.'admin_themes.js');
-
 		//get addons themes
 		if ($this->logged_on_addons)
 		{
@@ -169,8 +167,10 @@ class AdminThemesControllerCore extends AdminController
 				{
 					if (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml'))
 						$config_file = _PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml';
-					else
+					elseif ($theme->name == 'default-bootstrap')
 						$config_file = _PS_ROOT_DIR_.'/config/xml/themes/default.xml';
+					else
+						$config_file = false;
 
 					if ($config_file)
 					{
@@ -188,6 +188,13 @@ class AdminThemesControllerCore extends AdminController
 							if ($cur_theme['theme_name'] == 'default-bootstrap')
 								$cur_theme['tc'] = Module::isEnabled('themeconfigurator');
 						}
+					}
+					else
+					{
+						// If no xml we use data from database
+						$cur_theme['theme_id'] = $theme->id;
+						$cur_theme['theme_name'] = $theme->name;
+						$cur_theme['theme_directory'] = $theme->directory;
 					}
 				}
 				else
@@ -587,9 +594,9 @@ class AdminThemesControllerCore extends AdminController
 	protected static function copyTheme($base_theme_dir, $target_theme_dir)
 	{
 		$res = true;
-		$base_theme_dir = rtrim($base_theme_dir, '/').'/';
+		$base_theme_dir = Tools::normalizeDirectory($base_theme_dir);
 		$base_dir = _PS_ALL_THEMES_DIR_.$base_theme_dir;
-		$target_theme_dir = rtrim($target_theme_dir, '/').'/';
+		$target_theme_dir = Tools::normalizeDirectory($target_theme_dir);
 		$target_dir = _PS_ALL_THEMES_DIR_.$target_theme_dir;
 		$files = scandir($base_dir);
 
@@ -605,7 +612,7 @@ class AdminThemesControllerCore extends AdminController
 					$res &= AdminThemesController::copyTheme($base_theme_dir.$file, $target_theme_dir.$file);
 				}
 				elseif (!file_exists($target_theme_dir.$file))
-					$res &= copy($base_dir.$file, $target_dir.$file);
+					$res &= copy($base_dir.$file, $target_theme_dir.$file);
 			}
 		}
 
@@ -2972,5 +2979,11 @@ class AdminThemesControllerCore extends AdminController
 
 			return $options;
 		}
+	}
+
+	public function setMedia()
+	{
+		parent::setMedia();
+		$this->addJS(_PS_JS_DIR_.'admin_themes.js');
 	}
 }

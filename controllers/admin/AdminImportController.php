@@ -1178,6 +1178,7 @@ class AdminImportControllerCore extends AdminController
 				if ($category->id == Configuration::get('PS_ROOT_CATEGORY'))
 					$this->errors[] = Tools::displayError('The root category cannot be modified.');
 				// If no id_category or update failed
+				$category->force_id = (bool)Tools::getValue('forceIDs');
 				if (!$res)
 					$res = $category->add();
 			}
@@ -1503,6 +1504,7 @@ class AdminImportControllerCore extends AdminController
 					$res = $product->update();
 				}
 				// If no id_product or update failed
+				$product->force_id = (bool)Tools::getValue('forceIDs');
 				if (!$res)
 				{
 					if (isset($product->date_add) && $product->date_add != '')
@@ -2370,6 +2372,7 @@ class AdminImportControllerCore extends AdminController
 			{
 				foreach ($customers_shop as $id_shop => $id_group)
 				{
+					$customer->force_id = (bool)Tools::getValue('forceIDs');
 					if ($id_shop == 'shared')
 					{
 						foreach ($id_group as $key => $id)
@@ -2629,7 +2632,8 @@ class AdminImportControllerCore extends AdminController
 					}
 				}
 				else
-				{
+				{						
+					$address->force_id = (bool)Tools::getValue('forceIDs');
 					if ($address->id && $address->addressExists($address->id))
 						$res = $address->update();
 					if (!$res)
@@ -2681,6 +2685,7 @@ class AdminImportControllerCore extends AdminController
 			{
 				if ($manufacturer->id && $manufacturer->manufacturerExists($manufacturer->id))
 					$res = $manufacturer->update();
+				$manufacturer->force_id = (bool)Tools::getValue('forceIDs');
 				if (!$res)
 					$res = $manufacturer->add();
 
@@ -2759,6 +2764,7 @@ class AdminImportControllerCore extends AdminController
 				$res = false;
 				if ($supplier->id && $supplier->supplierExists($supplier->id))
 					$res = $supplier->update();
+				$supplier->force_id = (bool)Tools::getValue('forceIDs');
 				if (!$res)
 					$res = $supplier->add();
 
@@ -2837,6 +2843,7 @@ class AdminImportControllerCore extends AdminController
 			{
 				if ($alias->id && $alias->aliasExists($alias->id))
 					$res = $alias->update();
+				$alias->force_id = (bool)Tools::getValue('forceIDs');
 				if (!$res)
 					$res = $alias->add();
 
@@ -2943,7 +2950,10 @@ class AdminImportControllerCore extends AdminController
 				if ((int)$supply_order->id && ($supply_order->exists((int)$supply_order->id) || $supply_order->exists($supply_order->reference)))
 					$res &= $supply_order->update();
 				else
+				{
+					$supply_order->force_id = (bool)Tools::getValue('forceIDs');
 					$res &= $supply_order->add();
+				}
 
 				// errors
 				if (!$res)
@@ -3056,7 +3066,7 @@ class AdminImportControllerCore extends AdminController
 					$supply_order_detail->reference = $product_infos['reference'];
 					$supply_order_detail->ean13 = $product_infos['ean13'];
 					$supply_order_detail->upc = $product_infos['upc'];
-
+					$supply_order_detail->force_id = (bool)Tools::getValue('forceIDs');
 					$supply_order_detail->add();
 					$supply_order->update();
 					unset($supply_order_detail);
@@ -3403,4 +3413,3 @@ class AdminImportControllerCore extends AdminController
 			.DIRECTORY_SEPARATOR.$file;
 	}
 }
-

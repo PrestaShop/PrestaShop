@@ -65,24 +65,28 @@ $sql = 'SELECT p.`id_product`, pl.`link_rewrite`, p.`reference`, pl.`name`, MAX(
 		($exclude_packs ? 'AND (p.cache_is_pack IS NULL OR p.cache_is_pack = 0)' : '').
 		' GROUP BY p.id_product';
 
-$result = Db::getInstance()->executeS($sql);
+$items = Db::getInstance()->executeS($sql);
 
-if ($result)
+$acc = (bool)Tools::isSubmit('excludeIds');
+
+if ($items && $acc)
+	foreach ($items AS $item)
+		echo trim($item['name']).(!empty($item['reference']) ? ' (ref: '.$item['reference'].')' : '').'|'.(int)($item['id_product'])."\n";
+elseif ($items)
 {
-	$items = array();
-	foreach ($result AS $item)
+	// packs
+	$results = array();
+	foreach ($items AS $item)
 	{
 		$product = array(
 			'id' => (int)($item['id_product']),
 			'name' => $item['name'],
 			'ref' => (!empty($item['reference']) ? $item['reference'] : ''),
-			'image' => Context::getContext()->link->getImageLink($item['link_rewrite'], $item['id_image'], 'home_default' ),
+			'image' => str_replace('http://', Tools::getShopProtocol(), Context::getContext()->link->getImageLink($item['link_rewrite'], $item['id_image'], 'home_default')),
 		);
-		array_push($items, $product);
+		array_push($results, $product);
 	}
-	echo Tools::jsonEncode($items);
+	echo Tools::jsonEncode($results);
 }
 else
-{
-	json_encode (new stdClass);
-}
+	json_encode(new stdClass);

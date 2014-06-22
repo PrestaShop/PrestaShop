@@ -712,7 +712,7 @@ class MediaCore
 			foreach ($scripts as $script)
 				if ($src = $script->getAttribute('src'))
 				{
-			  		if (substr(src, 0, 2) == '//')
+			  		if (substr($src, 0, 2) == '//')
 						$src = Tools::getCurrentUrlProtocolPrefix().substr($src, 2);
 
 					$patterns = array(
