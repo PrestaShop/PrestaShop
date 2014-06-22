@@ -753,7 +753,7 @@ class LanguageCore extends ObjectModel
 				if ($key != 'iso_code' && isset(Language::$definition['fields'][$key]))
 					$lang->$key = $value;
 
-		if (!$lang->add(true, false, $only_add))
+		if (!$lang->validateFields() || !$lang->validateFieldsLang() || !$lang->add(true, false, $only_add))
 			return false;
 
 		$flag = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/flags/jpeg/'.$iso_code.'.jpg');

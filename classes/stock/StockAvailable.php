@@ -411,11 +411,7 @@ class StockAvailableCore extends ObjectModel
 				{
 					if ($product->isColorUnavailable((int)$color['id_attribute'], (int)$this->id_shop))
 					{
-						// Change template dir if called from the BackOffice
-						$current_template_dir = Context::getContext()->smarty->getTemplateDir();
-						Context::getContext()->smarty->setTemplateDir(_PS_THEME_DIR_.'tpl');
-						Tools::clearCache(null, 'product-list-colors.tpl', Product::getColorsListCacheId((int)$product->id));
-						Context::getContext()->smarty->setTemplateDir($current_template_dir);
+						Tools::clearColorListCache($product->id);
 						break;
 					}
 				}
