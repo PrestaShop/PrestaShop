@@ -9,6 +9,7 @@
 config.codekit
 *.sublime-project
 *.sublime-workspace
+nbproject
 robots.txt
 sitemap.xml
 cache/cachefs/*
