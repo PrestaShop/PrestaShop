@@ -363,13 +363,10 @@ class ProductControllerCore extends FrontController
 		$images = $this->product->getImages((int)$this->context->cookie->id_lang);
 		$product_images = array();
 
-		if(isset($images[0]))
-			$this->context->smarty->assign('mainImage', $images[0]);
 		foreach ($images as $k => $image)
 		{
 			if ($image['cover'])
 			{
-				$this->context->smarty->assign('mainImage', $image);
 				$cover = $image;
 				$cover['id_image'] = (Configuration::get('PS_LEGACY_IMAGES') ? ($this->product->id.'-'.$image['id_image']) : $image['id_image']);
 				$cover['id_image_only'] = (int)$image['id_image'];
@@ -499,7 +496,6 @@ class ProductControllerCore extends FrontController
 							if (isset($product_images) && is_array($product_images) && isset($product_images[$id_image]))
 							{
 								$product_images[$id_image]['cover'] = 1;
-								$this->context->smarty->assign('mainImage', $product_images[$id_image]);
 								if (count($product_images))
 									$this->context->smarty->assign('images', $product_images);
 							}
