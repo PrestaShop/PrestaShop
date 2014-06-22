@@ -63,6 +63,7 @@
 				</label>
 				<div class="col-lg-9">
 					<span class="switch prestashop-switch fixed-width-lg">
+						{strip}
 						<input type="radio" name="{$table}_multishop_{$category}" id="{$table}_multishop_{$category}_on" value="1" onclick="toggleAllMultishopDefaultValue($('#{$table}_fieldset_{$category}'), true)">
 						<label for="{$table}_multishop_{$category}_on">
 							{l s='Yes'}
@@ -71,6 +72,7 @@
 						<label for="{$table}_multishop_{$category}_off">
 							{l s='No'}
 						</label>
+						{/strip}
 						<a class="slide-button btn"></a>
 					</span>
 					<div class="row">
@@ -141,6 +143,7 @@
 									{elseif $field['type'] == 'bool'}
 										<div class="col-lg-9">
 											<span class="switch prestashop-switch fixed-width-lg">
+												{strip}
 												<input type="radio" name="{$key}" id="{$key}_on" value="1" {if $field['value']} checked="checked"{/if}{if isset($field['js']['on'])} {$field['js']['on']}{/if}/>
 												<label for="{$key}_on" class="radioCheck">
 													{l s='Yes'}
@@ -149,6 +152,7 @@
 												<label for="{$key}_off" class="radioCheck">
 													{l s='No'}
 												</label>
+												{/strip}
 												<a class="slide-button btn"></a>
 											</span>
 										</div>
@@ -156,10 +160,12 @@
 										<div class="col-lg-9">
 											{foreach $field['choices'] AS $k => $v}
 												<p class="radio">
+													{strip}
 													<label for="{$key}_{$k}">
 														<input type="radio" name="{$key}" id="{$key}_{$k}" value="{$k}"{if $k == $field['value']} checked="checked"{/if}{if isset($field['js'][$k])} {$field['js'][$k]}{/if}/>
 													 	{$v}
 													</label>
+													{/strip}
 												</p>
 											{/foreach}
 										</div>
@@ -167,8 +173,12 @@
 										<div class="col-lg-9">
 											{foreach $field['choices'] AS $k => $v}
 												<p class="checkbox">
-													<input type="checkbox" name="{$key}" id="{$key}{$k}_on" value="{$k|intval}"{if $k == $field['value']} checked="checked"{/if}{if isset($field['js'][$k])} {$field['js'][$k]}{/if}/>
-													<label class="col-lg-3" for="{$key}{$k}_on"> {$v}</label>
+													{strip}
+													<label class="col-lg-3" for="{$key}{$k}_on">
+														<input type="checkbox" name="{$key}" id="{$key}{$k}_on" value="{$k|intval}"{if $k == $field['value']} checked="checked"{/if}{if isset($field['js'][$k])} {$field['js'][$k]}{/if}/>
+													 	{$v}
+													</label>
+													{/strip}
 												</p>
 											{/foreach}
 										</div>
