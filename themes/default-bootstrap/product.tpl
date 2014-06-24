@@ -136,7 +136,7 @@
 			{if isset($images) && count($images) > 1}
 				<p class="resetimg clear no-print">
 					<span id="wrapResetImages" style="display: none;">
-						<a href="{$link->getProductLink($product)|escape:'html':'UTF-8'}" name="resetImages">
+						<a href="{$link->getProductLink($product)|escape:'html':'UTF-8'}" id="resetImages">
 							<i class="icon-repeat"></i>
 							{l s='Display all pictures'}
 						</a>
