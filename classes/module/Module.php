@@ -1012,27 +1012,25 @@ abstract class ModuleCore
 	  * @return Module
 	  */
 	public static function getInstanceByName($module_name)
-	{
-		if (!Validate::isModuleName($module_name))
-		{
-			if (_PS_MODE_DEV_)
-				die(Tools::displayError(Tools::safeOutput($module_name).' is not a valid module name.'));
-			return false;
-		}
+  {
+    if (!Validate::isModuleName($module_name))
+    {
+      if (_PS_MODE_DEV_)
+        die(Tools::displayError($module_name.' is not a valid module name.'));
+      return false;
+    }
 
-		if (!isset(self::$_INSTANCE[$module_name]))
-		{
-			if (Tools::file_exists_cache(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php'))
-			{
-				include_once(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php');
+    if (!isset(self::$_INSTANCE[$module_name]))
+    {
+      // and load the right classes (child and mother or just the mother)
+      ModuleOverride::load($module_name);
 
-				if (class_exists($module_name, false))
-					return self::$_INSTANCE[$module_name] = new $module_name;
-			}
-			return false;
-		}
-		return self::$_INSTANCE[$module_name];
-	}
+      if (class_exists($module_name, false))
+        return self::$_INSTANCE[$module_name] = new $module_name;
+      return false;
+    }
+    return self::$_INSTANCE[$module_name];
+  }
 
 	/**
 	  * Return an instance of the specified module
@@ -1210,20 +1208,7 @@ abstract class ModuleCore
 				// If class does not exists, we include the file
 				if (!class_exists($module, false))
 				{
-					// Get content from php file
-					$filepath = _PS_MODULE_DIR_.$module.'/'.$module.'.php';
-					$file = trim(file_get_contents(_PS_MODULE_DIR_.$module.'/'.$module.'.php'));
-					if (substr($file, 0, 5) == '<?php')
-						$file = substr($file, 5);
-					if (substr($file, -2) == '?>')
-						$file = substr($file, 0, -2);
-
-					// If (false) is a trick to not load the class with "eval".
-					// This way require_once will works correctly
-					if (eval('if (false){	'.$file.' }') !== false)
-						require_once( _PS_MODULE_DIR_.$module.'/'.$module.'.php' );
-					else
-						$errors[] = sprintf(Tools::displayError('%1$s (parse error in %2$s)'), $module, substr($filepath, strlen(_PS_ROOT_DIR_)));
+					self::getInstanceByName($module);
 				}
 
 				// If class exists, we just instanciate it
@@ -1961,6 +1946,10 @@ abstract class ModuleCore
 	*/
 	protected static function _isTemplateOverloadedStatic($module_name, $template)
 	{
+		// Rewrite module name if it's overrided module
+		if(false !== strpos($module_name, '.core'))
+      $module_name = str_ireplace('.core', '', $module_name);
+
 		if (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$module_name.'/'.$template))
 			return _PS_THEME_DIR_.'modules/'.$module_name.'/'.$template;
 		elseif (Tools::file_exists_cache(_PS_THEME_DIR_.'modules/'.$module_name.'/views/templates/hook/'.$template))
