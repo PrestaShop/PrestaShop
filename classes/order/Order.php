@@ -232,7 +232,7 @@ class OrderCore extends ObjectModel
 			'date_upd' => array(),
 		),
 		'associations' => array(
-			'order_rows' => array('resource' => 'order_row', 'setter' => false, 'virtual_entity' => true,
+			'order_rows' => array('resource' => 'order_rows', 'setter' => false, 'virtual_entity' => true,
 				'fields' => array(
 					'id' =>  array(),
 					'product_id' => array('required' => true),
