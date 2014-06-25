@@ -528,7 +528,7 @@ abstract class PaymentModuleCore extends Module
 								Mail::Send(
 									(int)$order->id_lang,
 									'voucher',
-									sprintf(Mail::l('New voucher regarding your order %s', (int)$order->id_lang), $order->reference),
+									sprintf(Mail::l('New voucher for your order %s', (int)$order->id_lang), $order->reference),
 									$params,
 									$this->context->customer->email,
 									$this->context->customer->firstname.' '.$this->context->customer->lastname,
