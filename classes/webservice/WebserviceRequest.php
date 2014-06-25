@@ -317,6 +317,7 @@ class WebserviceRequestCore
 			'tax_rule_groups' => array('description' => 'Tax rule groups', 'class' => 'TaxRulesGroup'),
 			'specific_prices' => array('description' => 'Specific price management', 'class' => 'SpecificPrice'),
 			'specific_price_rules' => array('description' => 'Specific price management', 'class' => 'SpecificPriceRule'),
+			'shop_urls' => array('description' => 'Shop URLs from multi-shop feature', 'class' => 'ShopUrl'),
 		);
 		ksort($resources);
 		return $resources;
