@@ -153,7 +153,7 @@ class OrderHistoryCore extends ObjectModel
 				);
 				// If there is at least one downloadable file
 				if (!empty($assign))
-					Mail::Send((int)$order->id_lang, 'download_product', Mail::l('Virtual product to download', $order->id_lang), $data, $customer->email, $customer->firstname.' '.$customer->lastname,
+					Mail::Send((int)$order->id_lang, 'download_product', Mail::l('The virtual product that you bought is available for download', $order->id_lang), $data, $customer->email, $customer->firstname.' '.$customer->lastname,
 						null, null, null, null, _PS_MAIL_DIR_, false, (int)$order->id_shop);
 			}
 
