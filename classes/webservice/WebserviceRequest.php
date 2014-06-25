@@ -210,6 +210,7 @@ class WebserviceRequestCore
 		return self::$_instance;
 	}
 
+	/*
 	protected function getOutputObject($type)
 	{
 		switch ($type)
@@ -218,6 +219,33 @@ class WebserviceRequestCore
 			default :
 				$obj_render = new WebserviceOutputXML();
 				break;
+		}
+		return $obj_render;
+	}
+	*/
+	protected function getOutputObject($type)
+	{
+		// set header param in header or as get param
+		$headers = self::getallheaders();
+		if (isset($headers['Io-Format']))
+		   $type = $headers['Io-Format'];
+		else if (isset($headers['Output-Format']))
+		     $type = $headers['Output-Format'];
+		else if (isset($_GET['output_format']))
+		     $type = $_GET['output_format'];
+		else if (isset($_GET['io_format']))
+		   $type = $_GET['io_format'];
+		$this->outputFormat = $type;
+		switch ($type)
+		{
+			case 'JSON' :
+				require_once dirname(__FILE__).'/WebserviceOutputJSON.php';
+				$obj_render = new WebserviceOutputJSON();
+				break;
+			case 'XML' :
+			default :
+				$obj_render = new WebserviceOutputXML();
+			break;
 		}
 		return $obj_render;
 	}
@@ -1822,5 +1850,36 @@ class WebserviceRequestCore
 		$return['headers'] = $this->objOutput->buildHeader();
 		restore_error_handler();
 		return $return;
+	}
+
+	public static function getallheaders()
+	{
+		$retarr = array();
+		$headers = array();
+		
+		if (function_exists('apache_request_headers'))
+		{
+			$headers = apache_request_headers();
+		}
+		else
+		{
+			$headers = array_merge($_ENV, $_SERVER);
+			foreach ($headers as $key => $val)
+			{
+				//we need this header
+				if (strpos(strtolower($key), 'content-type') !== FALSE)
+					continue;
+				if (strtoupper(substr($key, 0, 5)) != "HTTP_")
+					unset($headers[$key]);
+			}
+		}
+		//Normalize this array to Cased-Like-This structure.
+		foreach ($headers AS $key => $value) {
+			$key = preg_replace('/^HTTP_/i', '', $key);
+			$key = str_replace(" ", "-", ucwords(strtolower(str_replace(array("-", "_"), " ", $key))));
+			$retarr[$key] = $value;
+		}
+		ksort($retarr);
+		return $retarr;
 	}
 }

@@ -88,19 +88,19 @@ class WarehouseCore extends ObjectModel
  		),
  		'associations' => array(
 			'stocks' => array(
-				'resource' => 'stock',
+				'resource' => 'stocks',
 				'fields' => array(
 					'id' => array(),
 				),
 			),
 			'carriers' => array(
-				'resource' => 'carrier',
+				'resource' => 'carriers',
 				'fields' => array(
 					'id' => array(),
 				),
 			),
 			'shops' => array(
-				'resource' => 'shop',
+				'resource' => 'shops',
 				'fields' => array(
 					'id' => array(),
 					'name' => array(),

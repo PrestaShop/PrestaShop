@@ -3299,6 +3299,11 @@
     'path' => 'classes/webservice/WebserviceOutputInterface.php',
     'type' => 'interface',
   ),
+  'WebserviceOutputJSON' => 
+  array (
+    'path' => 'classes/webservice/WebserviceOutputJSON.php',
+    'type' => 'class',
+  ),
   'WebserviceOutputXML' => 
   array (
     'path' => '',
