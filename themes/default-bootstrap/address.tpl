@@ -66,7 +66,7 @@
 			{/if}
 			{if $field_name eq 'dni'}
 			{assign var="dniExist" value=true}
-			<div class="required form-group">
+			<div class="required form-group dni">
 				<label for="dni">{l s='Identification number'} <sup>*</sup></label>
 				<input class="form-control" data-validate="{$address_validation.$field_name.validate}" type="text" name="dni" id="dni" value="{if isset($smarty.post.dni)}{$smarty.post.dni}{else}{if isset($address->dni)}{$address->dni|escape:'html'}{/if}{/if}" />
 				<span class="form_info">{l s='DNI / NIF / NIE'}</span>
