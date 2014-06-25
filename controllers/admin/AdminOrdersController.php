@@ -695,7 +695,7 @@ class AdminOrdersControllerCore extends AdminController
 									$params['{voucher_amount}'] = Tools::displayPrice($cart_rule->reduction_amount, $currency, false);
 									$params['{voucher_num}'] = $cart_rule->code;
 									$customer = new Customer((int)$order->id_customer);
-									@Mail::Send((int)$order->id_lang, 'voucher', sprintf(Mail::l('New voucher regarding your order %s', (int)$order->id_lang), $order->reference),
+									@Mail::Send((int)$order->id_lang, 'voucher', sprintf(Mail::l('New voucher for your order #%s', (int)$order->id_lang), $order->reference),
 										$params, $customer->email, $customer->firstname.' '.$customer->lastname, null, null, null,
 										null, _PS_MAIL_DIR_, true, (int)$order->id_shop);
 								}
@@ -913,7 +913,7 @@ class AdminOrdersControllerCore extends AdminController
 									$currency = $this->context->currency;
 									$params['{voucher_amount}'] = Tools::displayPrice($cartrule->reduction_amount, $currency, false);
 									$params['{voucher_num}'] = $cartrule->code;
-									@Mail::Send((int)$order->id_lang, 'voucher', sprintf(Mail::l('New voucher regarding your order %s', (int)$order->id_lang), $order->reference),
+									@Mail::Send((int)$order->id_lang, 'voucher', sprintf(Mail::l('New voucher for your order #%s', (int)$order->id_lang), $order->reference),
 									$params, $customer->email, $customer->firstname.' '.$customer->lastname, null, null, null,
 									null, _PS_MAIL_DIR_, true, (int)$order->id_shop);
 								}
