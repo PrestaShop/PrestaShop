@@ -44,7 +44,7 @@ class AdminCartRulesControllerCore extends AdminController
 			'priority' => array('title' => $this->l('Priority'), 'align' => 'center', 'class' => 'fixed-width-xs'),
 			'code' => array('title' => $this->l('Code'), 'class' => 'fixed-width-sm'),
 			'quantity' => array('title' => $this->l('Quantity'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-			'date_to' => array('title' => $this->l('Validity end date'), 'type' => 'datetime'),
+			'date_to' => array('title' => $this->l('Expiration date'), 'type' => 'datetime'),
 			'active' => array('title' => $this->l('Status'), 'active' => 'status', 'type' => 'bool', 'orderby' => false),
 		);
 
