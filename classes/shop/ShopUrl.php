@@ -54,6 +54,12 @@ class ShopUrlCore extends ObjectModel
 		),
 	);
 
+	protected $webserviceParameters = array(
+		'fields' => array(
+			'id_shop' => array('xlink_resource' => 'shops'),
+		),
+	);
+
 	/**
 	 * @see ObjectModel::getFields()
 	 * @return array
