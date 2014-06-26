@@ -22,7 +22,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 <script>
 	var dashboard_ajax_url = '{$link->getAdminLink('AdminDashboard')}';
 	var adminstats_ajax_url = '{$link->getAdminLink('AdminStats')}';
@@ -30,7 +29,6 @@
 	var dashboard_use_push = '{$dashboard_use_push|intval}';
 	var read_more = '{l s='Read more' js=1}';
 </script>
-
 <div id="dashboard">
 	<div class="row">
 		<div class="col-lg-12">
@@ -63,11 +61,9 @@
 							{l s='Real Time'}
 						</button> -->
 					</div>
-
 					<input type="hidden" name="datepickerFrom" id="datepickerFrom" value="{$date_from|escape}" class="form-control">
 					<input type="hidden" name="datepickerTo" id="datepickerTo" value="{$date_to|escape}" class="form-control">
 					<input type="hidden" name="preselectDateRange" id="preselectDateRange" value="{if isset($preselect_date_range)}{$preselect_date_range}{/if}" class="form-control">
-
 					<div class="form-group pull-right">
 						<button id="datepickerExpand" class="btn btn-default" type="button">
 							<i class="icon-calendar-empty"></i>
@@ -104,7 +100,6 @@
 				<div class="dash_news_content"></div>
 				<div class="text-center"><h4><a href="http://www.prestashop.com/blog/" onclick="return !window.open(this.href);">{l s='Find more news'}</a></h4></div>
 			</section>
-
 			<section id="dash_version" class="visible-lg">
 				<!--[if IE]>
 					<iframe frameborder="no" scrolling="no" allowtransparency="true" src="{$new_version_url|escape:'html':'UTF-8'}"></iframe>
@@ -113,7 +108,6 @@
 					<iframe style="overflow:hidden;" src="{$new_version_url|escape:'html':'UTF-8'}" ></iframe>
 				<![endif]-->
 			</section>
-
 			<section class="dash_links panel">
 				<h3><i class="icon-link"></i> {l s="Useful Links"}</h3>
 					<dl>
@@ -137,7 +131,6 @@
 						<dd><a href="http://www.prestashop.com/en/contact-us?utm_source=backoffice_dashboard" target="_blank">{l s="Go to prestashop.com"}</a></dd>
 					</dl>
 			</section>
-
 			<section class="dash_simulation panel">
 				<h3><i class="icon-link"></i> {l s="Demo Mode"}</h3>
 				<span class="switch prestashop-switch">

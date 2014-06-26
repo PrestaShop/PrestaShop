@@ -106,7 +106,7 @@
 <div class="alert alert-warning" id="{$list_id}-empty-filters-alert" style="display:none;">{l s='Please fill at least one field to perform a search in this list.'}</div>
 
 {block name="startForm"}
-	<form method="post" action="{$action}" class="form-horizontal clearfix" id="{$list_id}">
+	<form method="post" action="{$action|escape:'html':'UTF-8'}" class="form-horizontal clearfix" id="form-{$list_id}">
 {/block}
 
 {if !$simple_header}
@@ -202,7 +202,7 @@
 {/if}
 	{block name="preTable"}{/block}
 	<div class="table-responsive clearfix{if isset($use_overflow) && $use_overflow} overflow-y{/if}">
-		<table {if $table_id} id={$table_id}{/if} class="table {if $table_dnd}tableDnD{/if} {$table}" >
+		<table{if $table_id} id="table-{$table_id}"{/if} class="table{if $table_dnd} tableDnD{/if} {$table}" >
 			<thead>
 				<tr class="nodrag nodrop">
 					{if $bulk_actions && $has_bulk_actions}
