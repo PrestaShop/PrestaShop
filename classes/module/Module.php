@@ -626,6 +626,7 @@ abstract class ModuleCore
 		if (Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module` WHERE `id_module` = '.(int)$this->id))
 		{
 			Cache::clean('Module::isInstalled'.$this->name);
+			Cache::clean('Module::getModuleIdByName_'.pSQL($this->name));
 			return true;
 		}
 		
