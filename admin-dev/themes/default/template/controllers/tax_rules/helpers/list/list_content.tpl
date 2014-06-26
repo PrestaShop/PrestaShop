@@ -50,7 +50,7 @@
 						   {if isset($params.align)} {$params.align}{/if}"
 
 				{if (!isset($params.position) && !$no_link)}
-					onclick="document.location = '{$current_index}&{$identifier}={$tr.$identifier}{if $view}&view{else}&update{/if}{$table}&token={$token}'">{if isset($params.prefix)}{$params.prefix}{/if}
+					onclick="document.location = '{$current_index|escape:'html':'UTF-8'}&amp;{$identifier|escape:'html':'UTF-8'}={$tr.$identifier|escape:'html':'UTF-8'}{if $view}&amp;view{else}&amp;update{/if}{$table}&amp;token={$token}'">{if isset($params.prefix)}{$params.prefix}{/if}
 				{else}
 					>
 				{/if}
