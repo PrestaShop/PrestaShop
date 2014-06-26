@@ -102,11 +102,16 @@
 			<section class="dash_news panel">
 				<h3><i class="icon-rss"></i> PrestaShop News</h3>
 				<div class="dash_news_content"></div>
-				<div class="text-center"><h4><a href="http://www.prestashop.com/blog/" onclick="return !window.open(this.href);">{l s='Find more news'}</a></h4>
+				<div class="text-center"><h4><a href="http://www.prestashop.com/blog/" onclick="return !window.open(this.href);">{l s='Find more news'}</a></h4></div>
 			</section>
 
 			<section id="dash_version" class="visible-lg">
-				<iframe frameborder="no" scrolling="no" allowtransparency="true" src="{$new_version_url}"></iframe>
+				<!--[if IE]>
+					<iframe frameborder="no" scrolling="no" allowtransparency="true" src="{$new_version_url|escape:'html':'UTF-8'}"></iframe>
+				<![endif]-->
+				<!--[if !IE]>
+					<iframe style="overflow:hidden;" src="{$new_version_url|escape:'html':'UTF-8'}" ></iframe>
+				<![endif]-->
 			</section>
 
 			<section class="dash_links panel">

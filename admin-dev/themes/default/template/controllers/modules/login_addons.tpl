@@ -47,13 +47,13 @@
 						<div class="form-group">
 							<div class="input-group">
 								<span class="input-group-addon"><i class="icon-user"></i></span>
-								<input id="username_addons" class="form-control" name="username_addons" type="text" value=""  autocomplete="off" class="form-control ac_input">
+								<input id="username_addons" name="username_addons" type="text" value="" autocomplete="off" class="form-control ac_input">
 							</div>
 						</div>
 						<div class="form-group">
 							<div class="input-group">
 								<span class="input-group-addon"><i class="icon-key"></i></span>
-								<input id="password_addons" class="form-control" name="password_addons" type="password" value=""  autocomplete="off" class="form-control ac_input">
+								<input id="password_addons" name="password_addons" type="password" value="" autocomplete="off" class="form-control ac_input">
 							</div>
 							<a class="btn btn-link pull-right" href="{$addons_forgot_password_link}" target="_blank" >I forgot my password</a>
 							<br>
@@ -67,7 +67,7 @@
 					<div class="col-md-5 col-md-pull-6">
 						<h4>{l s="Don't have an account?"}</h4>
 						<p class='text-justify'>{l s="Discover the Power of PrestaShop Addons! Explore the PrestaShop Official Marketplace and find over 3 500 innovative modules and themes that optimize conversion rates, increase traffic, build customer loyalty and maximize your productivity"}</p>
-						<a class="btn btn-default btn-block" target="_blank" href="{$addons_register_link}">
+						<a class="btn btn-default btn-block" target="_blank" href="{$addons_register_link|escape:'html':'UTF-8'}">
 							{l s="Create an Account"}
 							<i class="icon-external-link"></i>
 						</a>
