@@ -114,10 +114,19 @@
 					<strong>{l s='MySQL version:'}</strong> {$database.version|escape:'html':'UTF-8'}
 				</p>
 				<p>
-					<strong>{l s='MySQL engine:'}</strong> {$database.engine|escape:'html':'UTF-8'}
+					<strong>{l s='MySQL server:'}</strong> {$database.server|escape:'html':'UTF-8'}
+				</p>
+				<p>
+					<strong>{l s='MySQL name:'}</strong> {$database.name|escape:'html':'UTF-8'}
+				</p>
+				<p>
+					<strong>{l s='MySQL user:'}</strong> {$database.user|escape:'html':'UTF-8'}
 				</p>
 				<p>
 					<strong>{l s='Tables prefix:'}</strong> {$database.prefix|escape:'html':'UTF-8'}
+				</p>
+				<p>
+					<strong>{l s='MySQL engine:'}</strong> {$database.engine|escape:'html':'UTF-8'}
 				</p>
 			</div>
 		</div>
