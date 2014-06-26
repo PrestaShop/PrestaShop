@@ -32,7 +32,7 @@
 {/if}
 
 {block name="defaultForm"}
-<form id="{if isset($fields.form.form.id_form)}{$fields.form.form.id_form|escape:'html':'UTF-8'}{else}{if $table == null}configuration_form{else}{$table}_form{/if}{/if}" class="defaultForm {$name_controller} form-horizontal" action="{$current}&amp;token={$token}" method="post" enctype="multipart/form-data"{if isset($style)} style="{$style}"{/if} novalidate>
+<form id="{if isset($fields.form.form.id_form)}{$fields.form.form.id_form|escape:'html':'UTF-8'}{else}{if $table == null}configuration_form{else}{$table}_form_{counter name='form_count'}{/if}{/if}" class="defaultForm form-horizontal{if isset($name_controller) && $name_controller} {$name_controller}{/if}"{if isset($current) && $current} action="{$current}{if isset($token) && $token}&amp;token={$token}{/if}"{/if} method="post" enctype="multipart/form-data"{if isset($style)} style="{$style}"{/if} novalidate>
 	{if $form_id}
 		<input type="hidden" name="{$identifier}" id="{$identifier}" value="{$form_id}" />
 	{/if}
@@ -42,7 +42,7 @@
 	
 	{foreach $fields as $f => $fieldset}
 		{block name="fieldset"}
-		<div class="panel" id="fieldset_{$f}">
+		<div class="panel" id="fieldset_{$f}_{counter name='fieldset_name'}">
 			{foreach $fieldset.form as $key => $field}
 				{if $key == 'legend'}
 					{block name="legend"}
@@ -823,13 +823,7 @@
 				{if isset($fieldset['form']['submit']) || isset($fieldset['form']['buttons'])}
 					<div class="panel-footer">
 						{if isset($fieldset['form']['submit']) && !empty($fieldset['form']['submit'])}
-						<button
-							type="submit"
-							value="1"
-							id="{if isset($fieldset['form']['submit']['id'])}{$fieldset['form']['submit']['id']}{else}{$table}_form_submit_btn{/if}"
-							name="{if isset($fieldset['form']['submit']['name'])}{$fieldset['form']['submit']['name']}{else}{$submit_action}{/if}{if isset($fieldset['form']['submit']['stay']) && $fieldset['form']['submit']['stay']}AndStay{/if}"
-							class="{if isset($fieldset['form']['submit']['class'])}{$fieldset['form']['submit']['class']}{else}btn btn-default pull-right{/if}"
-							>
+						<button type="submit" value="1"	id="{if isset($fieldset['form']['submit']['id'])}{$fieldset['form']['submit']['id']}{else}{$table}_form_submit_btn_{counter name='form_submit_btn'}{/if}" name="{if isset($fieldset['form']['submit']['name'])}{$fieldset['form']['submit']['name']}{else}{$submit_action}{/if}{if isset($fieldset['form']['submit']['stay']) && $fieldset['form']['submit']['stay']}AndStay{/if}" class="{if isset($fieldset['form']['submit']['class'])}{$fieldset['form']['submit']['class']}{else}btn btn-default pull-right{/if}">
 							<i class="{if isset($fieldset['form']['submit']['icon'])}{$fieldset['form']['submit']['icon']}{else}process-icon-save{/if}"></i> {$fieldset['form']['submit']['title']}
 						</button>
 						{/if}
