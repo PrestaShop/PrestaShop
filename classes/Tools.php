@@ -2241,7 +2241,8 @@ class ToolsCore
 	ExpiresByType application/x-font-otf \"access plus 1 year\"
 </IfModule>
 
-FileETag INode MTime Size
+Header unset Etag
+FileETag none
 <IfModule mod_deflate.c>
 	<IfModule mod_filter.c>
 		AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/x-javascript
