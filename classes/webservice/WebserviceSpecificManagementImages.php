@@ -795,6 +795,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	 */
 	protected function writeImageOnDisk($basePath, $newPath, $destWidth = null, $destHeight = null, $imageTypes = null, $parentPath = null)
 	{
+		
 		list($sourceWidth, $sourceHeight, $type, $attr) = getimagesize($basePath);
 		if (!$sourceWidth)
 			throw new WebserviceException('Image width was null', array(68, 400));
@@ -883,7 +884,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 				{
 					if ($this->imageType == 'products')
 					{
-						$declination_path = $parentPath.$this->wsObject->urlSegment[2].'-'.$this->productImageDeclinationId.'-'.$imageType['name'].'.jpg';
+						$declination_path = $parentPath.chunk_split($this->wsObject->urlSegment[3], 1, '/').$this->wsObject->urlSegment[3].'-'.$imageType['name'].'.jpg';
 					}
 					else
 						$declination_path = $parentPath.$this->wsObject->urlSegment[2].'-'.$imageType['name'].'.jpg';
@@ -892,6 +893,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 					throw new WebserviceException(sprintf('Unable to save the declination "%s" of this image.', $imageType['name']), array(71, 500));
 			}
 		}
+
+		Hook::exec('actionWatermark', array('id_image' => $this->wsObject->urlSegment[3], 'id_product' => $this->wsObject->urlSegment[2]));
 		return $newPath;
 	}
 

@@ -131,7 +131,7 @@ class CartCore extends ObjectModel
 			'id_lang' => array('xlink_resource' => 'languages'),
 		),
 		'associations' => array(
-			'cart_rows' => array('resource' => 'cart_row', 'virtual_entity' => true, 'fields' => array(
+			'cart_rows' => array('resource' => 'cart_rows', 'virtual_entity' => true, 'fields' => array(
 				'id_product' => array('required' => true, 'xlink_resource' => 'products'),
 				'id_product_attribute' => array('required' => true, 'xlink_resource' => 'combinations'),
 				'id_address_delivery' => array('required' => true, 'xlink_resource' => 'addresses'),
@@ -474,7 +474,7 @@ class CartCore extends ObjectModel
 		$sql->groupBy('unique_id');
 
 		// Build ORDER BY
-		$sql->orderBy('p.`id_product`, cp.`id_product_attribute`, cp.`date_add` ASC');
+		$sql->orderBy('cp.`date_add`, p.`id_product`, cp.`id_product_attribute` ASC');
 
 		if (Customization::isFeatureActive())
 		{

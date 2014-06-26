@@ -59,25 +59,19 @@ else
 	die;
 }
 
-if (isset($_REQUEST['xml']))
-{
-	// if a XML is in POST
-	$input_xml = stripslashes($_REQUEST['xml']);
-}
-else
-{
-	// if no XML
-	$input_xml = NULL;
 
-	// if a XML is in PUT or in POST
-	if (($_SERVER['REQUEST_METHOD'] == 'PUT') || ($_SERVER['REQUEST_METHOD'] == 'POST'))
-	{
-		$putresource = fopen("php://input", "r");
-		while ($putData = fread($putresource, 1024))
-			$input_xml .= $putData;
-		fclose($putresource);
-	}
+$input_xml = NULL;
+
+// if a XML is in PUT or in POST
+if (($_SERVER['REQUEST_METHOD'] == 'PUT') || ($_SERVER['REQUEST_METHOD'] == 'POST'))
+{
+	$putresource = fopen("php://input", "r");
+	while ($putData = fread($putresource, 1024))
+		$input_xml .= $putData;
+	fclose($putresource);
 }
+if (isset($input_xml) && strncmp($input_xml, 'xml=', 4) == 0)
+	$input_xml = substr($input_xml, 4);
 
 $params = $_GET;
 unset($params['url']);
@@ -92,6 +86,7 @@ if (!class_exists($class_name))
 // fetch the request
 WebserviceRequest::$ws_current_classname = $class_name;
 $request = call_user_func(array($class_name, 'getInstance'));
+
 $result = $request->fetch($key, $method, $_GET['url'], $params, $bad_class_name, $input_xml);
 
 // display result

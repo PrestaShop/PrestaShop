@@ -368,7 +368,7 @@ class ProductCore extends ObjectModel
 			),
 			'position_in_category' => array(
 				'getter' => 'getWsPositionInCategory',
-				'setter' => false
+				'setter' => 'setWsPositionInCategory'
 			),
 			'manufacturer_name' => array(
 				'getter' => 'getWsManufacturerName',
@@ -385,13 +385,13 @@ class ProductCore extends ObjectModel
 		),
 		'associations' => array(
 			'categories' => array(
-				'resource' => 'category',
+				'resource' => 'categories',
 				'fields' => array(
 					'id' => array('required' => true),
 				)
 			),
 			'images' => array(
-				'resource' => 'image',
+				'resource' => 'images',
 				'fields' => array('id' => array())
 			),
 			'combinations' => array(
@@ -401,13 +401,13 @@ class ProductCore extends ObjectModel
 				)
 			),
 			'product_option_values' => array(
-				'resource' => 'product_options_values',
+				'resource' => 'product_option_values',
 				'fields' => array(
 					'id' => array('required' => true),
 				)
 			),
 			'product_features' => array(
-				'resource' => 'product_feature',
+				'resource' => 'product_features',
 				'fields' => array(
 					'id' => array('required' => true),
 					'custom' => array('required' => false),
@@ -417,11 +417,11 @@ class ProductCore extends ObjectModel
 					),
 				)
 			),
-			'tags' => array('resource' => 'tag',
+			'tags' => array('resource' => 'tags',
 				'fields' => array(
 					'id' => array('required' => true),
 			)),
-			'stock_availables' => array('resource' => 'stock_available',
+			'stock_availables' => array('resource' => 'stock_availables',
 				'fields' => array(
 					'id' => array('required' => true),
 					'id_product_attribute' => array('required' => true),
@@ -429,7 +429,7 @@ class ProductCore extends ObjectModel
 				'setter' => false
 			),
 			'accessories' => array(
-				'resource' => 'product',
+				'resource' => 'products',
 				'fields' => array(
 					'id' => array(
 						'required' => true,
@@ -500,6 +500,7 @@ class ProductCore extends ObjectModel
 		$fields = parent::getFieldsShop();
 		if (is_null($this->update_fields) || (!empty($this->update_fields['price']) && !empty($this->update_fields['unit_price'])))
 		$fields['unit_price_ratio'] = (float)$this->unit_price > 0 ? $this->price / $this->unit_price : 0;
+		$fields['unity'] = pSQL($this->unity);
 
 		return $fields;
 	}
@@ -3975,6 +3976,11 @@ class ProductCore extends ObjectModel
 		if ($row['pack'] && !Pack::isInStock($row['id_product']))
 			$row['quantity'] = 0;
 
+		$row['customization_required'] = false;
+		if (isset($row['customizable']) && $row['customizable'] && Customization::isFeatureActive())
+			if (count(Product::getRequiredCustomizableFieldsStatic((int)$row['id_product'])))
+				$row['customization_required'] = true;
+
 		$row = Product::getTaxesInformations($row, $context);
 		self::$producPropertiesCache[$cache_key] = $row;
 		return self::$producPropertiesCache[$cache_key];
@@ -4357,10 +4363,17 @@ class ProductCore extends ObjectModel
 	{
 		if (!Customization::isFeatureActive())
 			return array();
+		return Product::getRequiredCustomizableFieldsStatic($this->id);
+	}
+
+	public static function getRequiredCustomizableFieldsStatic($id)
+	{
+		if (!$id || !Customization::isFeatureActive())
+			return array();
 		return Db::getInstance()->executeS('
 			SELECT `id_customization_field`, `type`
 			FROM `'._DB_PREFIX_.'customization_field`
-			WHERE `id_product` = '.(int)$this->id.'
+			WHERE `id_product` = '.(int)$id.'
 			AND `required` = 1'
 		);
 	}
@@ -4379,9 +4392,11 @@ class ProductCore extends ObjectModel
 		$fields_present = array();
 		foreach ($fields as $field)
 			$fields_present[] = array('id_customization_field' => $field['index'], 'type' => $field['type']);
-		foreach ($required_fields as $required_field)
-			if (!in_array($required_field, $fields_present))
-				return false;
+
+		if (is_array($required_fields) && count($required_fields))
+			foreach ($required_fields as $required_field)
+				if (!in_array($required_field, $fields_present))
+					return false;
 		return true;
 	}
 
@@ -4838,6 +4853,41 @@ class ProductCore extends ObjectModel
 		if (count($result) > 0)
 			return $result[0]['position'];
 		return '';
+	}
+
+	/**
+	* Webservice setter : set virtual field position in category
+	*
+	* @return bool
+	*/
+	public function setWsPositionInCategory($position)
+	{
+		if ($position < 0)
+			WebserviceRequest::getInstance()->setError(500, Tools::displayError('You can\'t set a position under 0.'), 134);
+		$result = Db::getInstance()->executeS('
+			SELECT `id_product`
+			FROM `'._DB_PREFIX_.'category_product`
+			WHERE `id_category` = '.(int)$this->id_category_default.'
+			ORDER BY `position`
+		');
+		if ($position + 1 > count($result))
+			WebserviceRequest::getInstance()->setError(500, Tools::displayError('You can\'t set a position greater than total product in category - 1 (position start at 0).'), 135);
+
+		foreach ($result as &$value)
+			$value = $value['id_product'];
+		$currentPosition = $this->getWsPositionInCategory();
+
+		$save = $result[$currentPosition];
+		unset($result[$currentPosition]);
+		array_splice($result, $position, 0, $save);
+
+		foreach ($result as $position => $id_product)
+		{
+			Db::getInstance()->update('category_product', array(
+				'position' => $position,
+			), '`id_category` = '.(int)$this->id_category_default.' AND `id_product` = '.(int)$id_product);
+		}
+		return true;
 	}
 
 	/**

@@ -717,6 +717,8 @@ class WebserviceOutputBuilderCore
 			$arr_details['maxSize'] = $field['maxSize'];
 		if (array_key_exists('validateMethod', $field) && $field['validateMethod'])
 			$arr_details['format'] = $field['validateMethod'];
+		if (array_key_exists('setter', $field) && !$field['setter'])
+			$arr_details['readOnly'] = 'true';
 		return $arr_details;
 	}
 

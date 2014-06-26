@@ -448,5 +448,4 @@ $(document).ready(function() {
 
 	//scroll_if_anchor(window.location.hash);
 	$("body").on("click", "a.anchor", scroll_if_anchor);
-
 }); //end dom ready

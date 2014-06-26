@@ -219,9 +219,10 @@ $(document).ready(function(){
 
 		$(document).on('click', '#image-block', function(e){
 			e.preventDefault();
-			var productUrl= window.document.location.href + '';
+			var productUrl = window.document.location.href + '';
 			var data = productUrl.replace('content_only=1', '');
 			window.parent.document.location.href = data;
+			return;
 		});
 
 		if (typeof ajax_allowed != 'undefined' && !ajax_allowed)
@@ -247,27 +248,24 @@ $(document).ready(function(){
         e.preventDefault();
         fieldName = $(this).data('field-qty');
         var currentVal = parseInt($('input[name='+fieldName+']').val());
-		if (quantityAvailable > 0) {
-				quantityAvailableT = quantityAvailable;
-		} else {
-				quantityAvailableT = 100000000;
-		}
-        if (!isNaN(currentVal) && currentVal < quantityAvailableT) {
+		if (quantityAvailable > 0)
+			quantityAvailableT = quantityAvailable;
+		else
+			quantityAvailableT = 100000000;
+        if (!isNaN(currentVal) && currentVal < quantityAvailableT)
             $('input[name='+fieldName+']').val(currentVal + 1).trigger('keyup');
-        } else {
+        else
             $('input[name='+fieldName+']').val(quantityAvailableT);
-        }
     });
 	 // The button to decrement the product value
     $(document).on('click', '.product_quantity_down', function(e){
         e.preventDefault();
         fieldName = $(this).data('field-qty');
         var currentVal = parseInt($('input[name='+fieldName+']').val());
-        if (!isNaN(currentVal) && currentVal > 1) {
+        if (!isNaN(currentVal) && currentVal > 1)
             $('input[name='+fieldName+']').val(currentVal - 1).trigger('keyup');
-        } else {
+        else
             $('input[name='+fieldName+']').val(1);
-        }
     });
 
 	if (typeof minimalQuantity != 'undefined' && minimalQuantity)
@@ -870,7 +868,7 @@ function submitPublishProduct(url, redirect, token)
 		function(data)
 		{
 			if (data.indexOf('error') === -1)
-			document.location.href = data;
+				document.location.href = data;
 		}
 	);
 	return true;

@@ -778,6 +778,11 @@ class AdminControllerCore extends Controller
 					if ($path_to_image)
 						$field_value = $path_to_image;  
 				}
+				if (isset($params['callback']))
+                                {
+                                	$callback_obj = (isset($params['callback_object'])) ? $params['callback_object'] : $this->context->controller;
+                                	$field_value = call_user_func_array(array($callback_obj, $params['callback']), array($field_value, $row));
+                                }
 				$content[$i][] = $field_value;
 			}
 		}
@@ -863,7 +868,7 @@ class AdminControllerCore extends Controller
 	{
 		if (!isset($this->className) || empty($this->className))
 			return false;
-		/* Checking fields validity */
+
 		$this->validateRules();
 		if (count($this->errors) <= 0)
 		{
@@ -905,7 +910,6 @@ class AdminControllerCore extends Controller
 
 		return $this->object;
 	}
-
 
 	/**
 	 * Object update
@@ -1552,6 +1556,26 @@ class AdminControllerCore extends Controller
 				}
 			}
 		}
+
+		$name = $this->l('New Bookmark');
+
+		if (isset($this->context->smarty->tpl_vars['breadcrumbs2']) && $this->context->smarty->tpl_vars['breadcrumbs2']->value['tab']['name'])
+		{
+			if ($this->context->smarty->tpl_vars['breadcrumbs2']->value['action']['name'])
+				$name = $this->context->smarty->tpl_vars['breadcrumbs2']->value['tab']['name'].' > '.$this->context->smarty->tpl_vars['breadcrumbs2']->value['action']['name'];
+			else
+				$name = $this->context->smarty->tpl_vars['breadcrumbs2']->value['tab']['name'];
+		}
+		elseif (isset($this->context->smarty->tpl_vars['breadcrumbs2']))
+			$name = $this->context->smarty->tpl_vars['breadcrumbs2']->value;
+
+		$link = preg_replace('/&token=[a-z0-9]{32}/', '', basename($_SERVER['REQUEST_URI']));
+
+		$quick_access[] = array(
+			'name' => $this->l('Bookmark this page'),
+			'link' => $this->context->link->getAdminLink('AdminQuickAccesses').'&new_window=0&name_'.(int)Configuration::get('PS_LANG_DEFAULT').'='.urlencode($name).'&link='.urlencode($link).'&submitAddquick_access=1',
+			'new_window' => 0
+		);
 
 		// Tab list
 		$tabs = Tab::getTabs($this->context->language->id, 0);
@@ -3802,7 +3826,7 @@ class AdminControllerCore extends Controller
 
 		return $return;
 	}
-	
+		
 	public function ajaxProcessGetModuleQuickView()
 	{
 		$modules = Module::getModulesOnDisk();

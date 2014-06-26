@@ -230,9 +230,13 @@ class OrderCore extends ObjectModel
 			'valid' => array(),
 			'date_add' => array(),
 			'date_upd' => array(),
+			'shipping_number' => array(
+				'getter' => 'getWsShippingNumber',
+				'setter' => 'setWsShippingNumber'
+			),
 		),
 		'associations' => array(
-			'order_rows' => array('resource' => 'order_row', 'setter' => false, 'virtual_entity' => true,
+			'order_rows' => array('resource' => 'order_rows', 'setter' => false, 'virtual_entity' => true,
 				'fields' => array(
 					'id' =>  array(),
 					'product_id' => array('required' => true),
@@ -2029,5 +2033,36 @@ class OrderCore extends ObjectModel
 		if ($a->date_add == $b->date_add)
 			return 0;
 		return ($a->date_add < $b->date_add) ? -1 : 1;
+	}
+
+	public function getWsShippingNumber()
+	{
+		$id_order_carrier = Db::getInstance()->getValue('
+			SELECT `id_order_carrier`
+			FROM `'._DB_PREFIX_.'order_carrier`
+			WHERE `id_order` = '.(int)$this->id);
+		if ($id_order_carrier)
+		{
+			$order_carrier = new OrderCarrier($id_order_carrier);
+			return $order_carrier->tracking_number;
+		}
+		return $this->shipping_number;
+	}
+
+	public function setWsShippingNumber($shipping_number)
+	{
+		$id_order_carrier = Db::getInstance()->getValue('
+			SELECT `id_order_carrier`
+			FROM `'._DB_PREFIX_.'order_carrier`
+			WHERE `id_order` = '.(int)$this->id);
+		if ($id_order_carrier)
+		{
+			$order_carrier = new OrderCarrier($id_order_carrier);
+			$order_carrier->tracking_number = $shipping_number;
+			$order_carrier->update();
+		}
+		else
+			$this->shipping_number = $shipping_number;
+		return true;
 	}
 }
