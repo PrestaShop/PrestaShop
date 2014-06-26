@@ -694,10 +694,10 @@ class AdminModulesControllerCore extends AdminController
 			}
 
 			$module_errors = array();
-			$module_to_update = array();
 			if (isset($modules))
 				foreach ($modules as $name)
 				{
+					$module_to_update = array();
 					$module_to_update[$name] = null;
 					$full_report = null;
 					// If Addons module, download and unzip it before installing it
