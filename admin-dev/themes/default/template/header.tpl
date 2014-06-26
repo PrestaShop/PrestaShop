@@ -214,7 +214,7 @@
 				<ul id="header_employee_box">
 					{if !isset($logged_on_addons) || !$logged_on_addons}
 						<li>
-							<a href="#" class="addons_connect" data-toggle="modal" data-target="#modal_addons_connect" class="toolbar_btn" title="{l s='Addons'}">
+							<a href="#" class="addons_connect toolbar_btn" data-toggle="modal" data-target="#modal_addons_connect" title="{l s='Addons'}">
 								<i class="icon-chain-broken"></i>
 								<span class="string-long">{l s='Not connected to PrestaShop Addons'}</span>
 								<span class="string-short">{l s='Addons'}</span>
