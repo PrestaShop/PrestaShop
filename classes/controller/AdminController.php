@@ -1558,7 +1558,6 @@ class AdminControllerCore extends Controller
 		}
 
 		$name = $this->l('New Bookmark');
-
 		if (isset($this->context->smarty->tpl_vars['breadcrumbs2']) && $this->context->smarty->tpl_vars['breadcrumbs2']->value['tab']['name'])
 		{
 			if ($this->context->smarty->tpl_vars['breadcrumbs2']->value['action']['name'])
@@ -1566,7 +1565,7 @@ class AdminControllerCore extends Controller
 			else
 				$name = $this->context->smarty->tpl_vars['breadcrumbs2']->value['tab']['name'];
 		}
-		elseif (isset($this->context->smarty->tpl_vars['breadcrumbs2']))
+		elseif (isset($this->context->smarty->tpl_vars['breadcrumbs2']) && is_string($this->context->smarty->tpl_vars['breadcrumbs2']->value))
 			$name = $this->context->smarty->tpl_vars['breadcrumbs2']->value;
 
 		$link = preg_replace('/&token=[a-z0-9]{32}/', '', basename($_SERVER['REQUEST_URI']));
