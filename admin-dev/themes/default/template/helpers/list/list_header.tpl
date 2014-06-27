@@ -136,7 +136,7 @@
 			{/if}
 		</div>
 		{if $show_toolbar}
-			<script language="javascript" type="text/javascript">
+			<script type="text/javascript">
 				//<![CDATA[
 				var submited = false;
 				$(function() {
@@ -210,7 +210,7 @@
 					{/if}
 					{foreach $fields_display AS $key => $params}
 					<th class="{if isset($params.class)}{$params.class}{/if}{if isset($params.align)} {$params.align}{/if}">
-						<span class="title_box {if isset($order_by) && ($key == $order_by)} active{/if}">
+						<span class="title_box{if isset($order_by) && ($key == $order_by)} active{/if}">
 							{if isset($params.hint)}
 								<span class="label-tooltip" data-toggle="tooltip"
 									title="
