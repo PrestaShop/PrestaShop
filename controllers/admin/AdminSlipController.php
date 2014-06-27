@@ -43,7 +43,7 @@ class AdminSlipControllerCore extends AdminController
 				'class' => 'fixed-width-xs'
  			),
 			'id_order' => array(
-				'title' => $this->l('ID Order'),
+				'title' => $this->l('Order ID'),
 				'align' => 'left',
 				'class' => 'fixed-width-md'
  			),
