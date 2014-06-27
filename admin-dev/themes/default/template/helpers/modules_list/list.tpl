@@ -33,9 +33,7 @@
 				<table class="table">
 					{counter start=1  assign="count"}
 						{foreach from=$modules_list item=module}	
-							<div>{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",row alt"}}</div>
-							{if $count %3 == 0}
-							{/if}
+							{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",row alt"}}
 						{counter}
 					{/foreach}
 				</table>
@@ -65,7 +63,6 @@
 		</div>
 	</div>
 </div>
-
 <script type="text/javascript">
 	$(document).ready(function(){
 		$('.fancybox-quick-view').fancybox({
