@@ -93,7 +93,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 	public static function getInstalledModules()
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT COUNT(*)
+		SELECT COUNT(DISTINCT m.`id_module`)
 		FROM `'._DB_PREFIX_.'module` m
 		'.Shop::addSqlAssociation('module', 'm'));
 	}
