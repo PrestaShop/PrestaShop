@@ -97,7 +97,7 @@ class AdminCustomersControllerCore extends AdminController
 				'title' => $this->l('Last name')
 			),
 			'firstname' => array(
-				'title' => $this->l('First Name')
+				'title' => $this->l('First name')
 			),
 			'email' => array(
 				'title' => $this->l('Email address')
@@ -375,7 +375,7 @@ class AdminCustomersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Status'),
+					'label' => $this->l('Enabled'),
 					'name' => 'active',
 					'required' => false,
 					'class' => 't',

@@ -90,7 +90,7 @@
 			{$hookDashboardZoneTwo}
 			<div id="dashaddons" class="row-margin-bottom">
 				<a href="http://addons.prestashop.com/en/209-dashboards?utm_source=backoffice_dashboard" target="_blank">
-					<i class="icon-plus"></i> {l s='Add more graph and data'}
+					<i class="icon-plus"></i> {l s='Add more dashboard modules'}
 				</a>
 			</div>
 		</div>
