@@ -22,9 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 {extends file="helpers/view/view.tpl"}
-
 {block name="override_tpl"}
 	<script type="text/javascript">
 		function chooseTypeTranslation(id_lang)
@@ -74,7 +72,6 @@
 			});
 		});
 	</script>
-	
 	<form method="get" action="index.php" id="typeTranslationForm" class="form-horizontal">
 		<div class="panel">
 			<h3>
@@ -174,7 +171,6 @@
 			</div>
 		</div>
 	</form>
-	
 	<form action="{$url_submit}" method="post" enctype="multipart/form-data" class="form-horizontal">
 		<div class="panel">
 			<h3>
@@ -219,7 +215,6 @@
 			</div>
 		</div>
 	</form>
-	
 	<form action="{$url_submit}" method="post" enctype="multipart/form-data" class="form-horizontal">
 		<div class="panel">
 			<h3>
@@ -255,7 +250,6 @@
 			</div>
 		</div>
 	</form>
-	
 	<form action="{$url_submit}" method="post" class="form-horizontal">
 		<div class="panel">
 			<h3>
