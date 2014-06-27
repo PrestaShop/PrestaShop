@@ -375,7 +375,7 @@ class AdminCustomersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Status'),
+					'label' => $this->l('Enabled'),
 					'name' => 'active',
 					'required' => false,
 					'class' => 't',
