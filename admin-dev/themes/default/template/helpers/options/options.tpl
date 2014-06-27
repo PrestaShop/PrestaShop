@@ -96,9 +96,9 @@
 							<div id="conf_id_{$key}" {if $field['is_invisible']} class="isInvisible"{/if}>								
 								{block name="label"}
 									{if isset($field['title']) && isset($field['hint'])}
-										<label class="control-label col-lg-3 {if isset($field['required']) && $field['required'] && $field['type'] != 'radio'}required{/if}" for="{$key}">
+										<label class="control-label col-lg-3{if isset($field['required']) && $field['required'] && $field['type'] != 'radio'} required{/if}">
 											{if !$categoryData['hide_multishop_checkbox'] && $field['multishop_default'] && empty($field['no_multishop_checkbox'])}
-											<input type="checkbox" name="multishopOverrideOption[{$key}]" value="1" {if !$field['is_disabled']}checked="checked"{/if} onclick="toggleMultishopDefaultValue(this, '{$key}')"/>
+											<input type="checkbox" name="multishopOverrideOption[{$key}]" value="1"{if !$field['is_disabled']} checked="checked"{/if} onclick="toggleMultishopDefaultValue(this, '{$key}')"/>
 											{/if}
 											<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="
 												{if is_array($field['hint'])}
@@ -117,9 +117,9 @@
 											</span>
 										</label>
 									{elseif isset($field['title'])}
-										<label class="control-label col-lg-3" for="{$key}">
+										<label class="control-label col-lg-3">
 											{if !$categoryData['hide_multishop_checkbox'] && $field['multishop_default'] && empty($field['no_multishop_checkbox'])}
-											<input type="checkbox" name="multishopOverrideOption[{$key}]" value="1" {if !$field['is_disabled']}checked="checked"{/if} onclick="checkMultishopDefaultValue(this, '{$key}')" />
+											<input type="checkbox" name="multishopOverrideOption[{$key}]" value="1"{if !$field['is_disabled']} checked="checked"{/if} onclick="checkMultishopDefaultValue(this, '{$key}')" />
 											{/if}
 											{$field['title']}
 										</label>
