@@ -154,7 +154,8 @@ ul.sf-menu li li li.sfHover ul {
       width: 50%; } }
   @media (max-width: 479px) {
     .sf-menu > li > ul > li {
-      width: 100%; } }
+      width: 100%;
+      padding-bottom: 20px; } }
   @media (min-width: 768px) {
     .sf-menu > li > ul > li.first-in-line-lg {
       clear: left; } }
