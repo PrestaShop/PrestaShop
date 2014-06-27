@@ -84,7 +84,7 @@ class AdminEmployeesControllerCore extends AdminController
 			'email' => array('title' => $this->l('Email address')),
 			'profile' => array('title' => $this->l('Profile'), 'type' => 'select', 'list' => $this->profiles_array,
 				'filter_key' => 'pl!name', 'class' => 'fixed-width-lg'),
-			'active' => array('title' => $this->l('Can log in'), 'align' => 'center', 'active' => 'status',
+			'active' => array('title' => $this->l('Active'), 'align' => 'center', 'active' => 'status',
 				'type' => 'bool', 'class' => 'fixed-width-sm'),
 		);
 
@@ -348,7 +348,7 @@ class AdminEmployeesControllerCore extends AdminController
 		{
 			$this->fields_form['input'][] = array(
 				'type' => 'switch',
-				'label' => $this->l('Status'),
+				'label' => $this->l('Active'),
 				'name' => 'active',
 				'required' => false,
 				'is_bool' => true,
