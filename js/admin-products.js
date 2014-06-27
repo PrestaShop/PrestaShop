@@ -757,6 +757,13 @@ product_tabs['Associations'] = new function(){
 				mustMatch:true,
 				scroll:false,
 				cacheLength:0,
+				dataType: 'json',
+                                parse: function(data) {
+                                        var items = new Array();
+                                        for (var i = 0; data && i < data.length; ++i)
+                                                items[items.length] = { data: [data[i].name, data[i].id], value: data[i].name  };
+                                        return items;
+                                },
 				formatItem: function(item) {
 					return item[1]+' - '+item[0];
 				}
@@ -770,11 +777,12 @@ product_tabs['Associations'] = new function(){
 	};
 
 	this.getAccessoriesIds = function()
-	{
-		if ($('#inputAccessories').val() === undefined)
-			return '';
-		return $('#inputAccessories').val().replace(/\-/g,',');
-	}
+        {
+                var excl = id_product;
+                if ($('#inputAccessories').val() === undefined)
+                        return excl;
+                return excl + ',' + $('#inputAccessories').val().replace(/\-/g,',');
+        }
 
 	this.addAccessory = function(event, data, formatted)
 	{
