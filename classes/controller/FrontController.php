@@ -594,7 +594,9 @@ class FrontControllerCore extends Controller
 					'HOOK_MAINTENANCE' => Hook::exec('displayMaintenance', array()),
 				));
 
-				$this->smartyOutputContent($this->getTemplatePath($this->getThemeDir().'maintenance.tpl'));
+				// If the controller is a module, then getTemplatePath will try to find the template in the modules, so we need to instanciate a real frontcontroller
+				$front_controller = preg_match('/ModuleFrontController$/', get_class($this)) ? new FrontController() : $this;
+				$this->smartyOutputContent($front_controller->getTemplatePath($this->getThemeDir().'maintenance.tpl'));
 				exit;
 			}
 		}
