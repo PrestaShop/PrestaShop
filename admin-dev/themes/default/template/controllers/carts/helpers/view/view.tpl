@@ -52,7 +52,7 @@
 					{else}
 					<i class="icon-question"></i> 
 					{/if}
-					<a href="{$link->getAdminLink('AdminCustomers')|escape:'html':'UTF-8'}&id_customer={$customer->id}&viewcustomer">{$customer->firstname} {$customer->lastname}</a></h2>
+					<a href="{$link->getAdminLink('AdminCustomers')|escape:'html':'UTF-8'}&amp;id_customer={$customer->id}&amp;viewcustomer">{$customer->firstname} {$customer->lastname}</a></h2>
 				<div class="form-horizontal">
 					<div class="form-group">
 						<label class="col-lg-3 control-label">{l s='Account registration date:'}</label>

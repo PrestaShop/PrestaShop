@@ -64,11 +64,11 @@
 				<div class="col-lg-9">
 					<span class="switch prestashop-switch fixed-width-lg">
 						{strip}
-						<input type="radio" name="{$table}_multishop_{$category}" id="{$table}_multishop_{$category}_on" value="1" onclick="toggleAllMultishopDefaultValue($('#{$table}_fieldset_{$category}'), true)">
+						<input type="radio" name="{$table}_multishop_{$category}" id="{$table}_multishop_{$category}_on" value="1" onclick="toggleAllMultishopDefaultValue($('#{$table}_fieldset_{$category}'), true)"/>
 						<label for="{$table}_multishop_{$category}_on">
 							{l s='Yes'}
 						</label>
-						<input type="radio" name="{$table}_multishop_{$category}" id="{$table}_multishop_{$category}_off" value="0" checked="checked" onclick="toggleAllMultishopDefaultValue($('#{$table}_fieldset_{$category}'), false)">
+						<input type="radio" name="{$table}_multishop_{$category}" id="{$table}_multishop_{$category}_off" value="0" checked="checked" onclick="toggleAllMultishopDefaultValue($('#{$table}_fieldset_{$category}'), false)"/>
 						<label for="{$table}_multishop_{$category}_off">
 							{l s='No'}
 						</label>
@@ -194,7 +194,7 @@
 										</div>
 									{elseif $field['type'] == 'password'}
 										<div class="col-lg-9">{if isset($field['suffix'])}<div class="input-group">{/if}
-											<input type="{$field['type']}"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="" {if isset($field['autocomplete']) && !$field['autocomplete']}autocomplete="off"{/if} />
+											<input type="{$field['type']}"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value=""{if isset($field['autocomplete']) && !$field['autocomplete']} autocomplete="off"{/if} />
 											{if isset($field['suffix'])}
 											<span class="input-group-addon">
 												{$field['suffix']|strval}
