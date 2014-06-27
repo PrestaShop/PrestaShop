@@ -41,7 +41,7 @@
 			<form class="form-inline well">
 				<label>{l s='Show'}</label>
 				<span>
-					<select id="show_modules" onChange="autoUrl('show_modules', '{$url_show_modules}')" class="filter fixed-width-lg">
+					<select id="show_modules" onchange="autoUrl('show_modules', '{$url_show_modules}')" class="filter fixed-width-lg">
 						<option value="all">{l s='All modules'}&nbsp;</option>
 						<option>-</option>
 						{foreach $modules as $module}
@@ -92,11 +92,11 @@
 									<span class="positions">{$module@iteration}</span>
 									{if $can_move}
 									<div class="btn-group-vertical">
-										<a class="btn btn-default btn-xs" {if {$module@iteration} == 1} disabled{/if} href="{$current}&amp;id_module={$module['instance']->id}&amp;id_hook={$hook['id_hook']}&amp;direction=0&amp;token={$token}&amp;changePosition#{$hook['name']}">
+										<a class="btn btn-default btn-xs"{if {$module@iteration} == 1} disabled{/if} href="{$current}&amp;id_module={$module['instance']->id}&amp;id_hook={$hook['id_hook']}&amp;direction=0&amp;token={$token}&amp;changePosition#{$hook['name']}">
 											<i class="icon-chevron-up"></i>
 										</a>
 
-										<a class="btn btn-default btn-xs" {if {$module@iteration} == count($hook['modules'])}disabled{/if} href="{$current}&amp;id_module={$module['instance']->id}&amp;id_hook={$hook['id_hook']}&amp;direction=1&amp;token={$token}&amp;changePosition#{$hook['name']}">
+										<a class="btn btn-default btn-xs"{if {$module@iteration} == count($hook['modules'])} disabled{/if} href="{$current}&amp;id_module={$module['instance']->id}&amp;id_hook={$hook['id_hook']}&amp;direction=1&amp;token={$token}&amp;changePosition#{$hook['name']}">
 											<i class="icon-chevron-down"></i>
 										</a>
 									</div>

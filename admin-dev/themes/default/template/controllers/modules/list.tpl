@@ -54,7 +54,7 @@ module_inactive
 {/if}
 {/capture}
 				<tr>
-					<td class="{{$smarty.capture.moduleStatutClass}} text-center" width="1%">
+					<td class="{{$smarty.capture.moduleStatutClass}} text-center" style="width: 1%;">
 						{if (isset($module->id) && $module->id > 0) || !isset($module->type) || $module->type != 'addonsMustHave'}
 						<input type="checkbox" name="modules" value="{$module->name}"
 							{if !isset($module->confirmUninstall) OR empty($module->confirmUninstall)}rel="false"{else}rel="{$module->confirmUninstall|addslashes}"{/if}
@@ -100,13 +100,13 @@ module_inactive
 						<div class="btn-group-action">
 							<div class="btn-group pull-right">
 								{if isset($module->type) && $module->type == 'addonsMustHave'}
-									<a class="btn btn-default" href="{$module->addons_buy_url}" target="_blank">
+									<a class="btn btn-default" href="{$module->addons_buy_url|escape:'html':'UTF-8'}" target="_blank">
 										<i class="icon-shopping-cart"></i> &nbsp;{if isset($module->id_currency) && isset($module->price)}{displayPrice price=$module->price currency=$module->id_currency}{/if}
 									</a>
 								{else}
 									{if isset($module->id) && $module->id gt 0}
 										{if isset($module->version_addons) && $module->version_addons}
-											<a class="btn btn-warning" href="{$module->options.update_url}">
+											<a class="btn btn-warning" href="{$module->options.update_url|escape:'html':'UTF-8'}">
 												<i class="icon-refresh"></i> {l s='Update it!'}
 											</a>
 										{elseif !isset($module->not_on_disk)}
@@ -115,17 +115,17 @@ module_inactive
 												{$option}
 											{/if}
 										{else}
-											<a class="btn btn-danger" {if !empty($module->options.uninstall_onclick)}onclick="{$module->options.uninstall_onclick}"{/if} href="{$module->options.uninstall_url}">
+											<a class="btn btn-danger" {if !empty($module->options.uninstall_onclick)}onclick="{$module->options.uninstall_onclick}"{/if} href="{$module->options.uninstall_url|escape:'html':'UTF-8'}">
 												<i class="icon-minus-sign-alt"></i>&nbsp;{l s='Uninstall'}
 											</a>
 										{/if}
 									{else}
 										{if isset($module->trusted) && $module->trusted}
-										<a class="btn btn-success" href="{$module->options.install_url}">
+										<a class="btn btn-success" href="{$module->options.install_url|escape:'html':'UTF-8'}">
 											<i class="icon-plus-sign-alt"></i>&nbsp;{l s='Install'}
 										</a>
 										{else}
-										<a class="btn btn-success untrustedaddon" href="#" data-target="#moduleNotTrusted" data-toggle="modal" data-link="{$module->options.install_url}" data-module-name="{$module->displayName}">
+										<a class="btn btn-success untrustedaddon" href="#" data-target="#moduleNotTrusted" data-toggle="modal" data-link="{$module->options.install_url|escape:'html':'UTF-8'}" data-module-name="{$module->displayName}">
 											<i class="icon-plus-sign-alt"></i>&nbsp;{l s='Install'}
 										</a>
 										{/if}

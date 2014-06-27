@@ -25,7 +25,7 @@
 *}
 <tr>
 	<td class="fixed-width-sm center">
-		<img class="img-thumbnail" alt="{$module->name}" src="{if isset($module->image)}{$module->image}{else}{$smarty.const._MODULE_DIR_}{$module->name}/{$module->logo}{/if}">
+		<img class="img-thumbnail" alt="{$module->name}" src="{if isset($module->image)}{$module->image}{else}{$smarty.const._MODULE_DIR_}{$module->name}/{$module->logo}{/if}" />
 	</td>
 	<td>
 		<div id="anchor{$module->name|ucfirst}" title="{$module->displayName}">
@@ -55,7 +55,6 @@
 			</p>
 			{if isset($module->message) && (empty($module->name) !== false) && (!isset($module->type) || ($module->type != 'addonsMustHave' || $module->type !== 'addonsNative'))}<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>{$module->message}</div>{/if}
 		</div>
-
 	</td>
 	{if isset($module->type) && $module->type == 'addonsMustHave'}
 		<td>&nbsp;</td>
