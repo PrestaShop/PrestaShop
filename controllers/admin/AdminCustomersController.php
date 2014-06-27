@@ -97,7 +97,7 @@ class AdminCustomersControllerCore extends AdminController
 				'title' => $this->l('Last name')
 			),
 			'firstname' => array(
-				'title' => $this->l('First Name')
+				'title' => $this->l('First name')
 			),
 			'email' => array(
 				'title' => $this->l('Email address')
