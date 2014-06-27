@@ -194,7 +194,7 @@
 {/foreach}
 {else}
 	<tr>
-		<td class="list-empty" colspan="{count($fields_display) + 2}">
+		<td class="list-empty" colspan="{count($fields_display)}">
 			<div class="list-empty-msg">
 				<i class="icon-warning-sign list-empty-icon"></i>
 				{l s='No records found'}

@@ -33,7 +33,7 @@
 		{/if}
 	{/foreach}
 
-	<script language="javascript" type="text/javascript">
+	<script type="text/javascript">
 	//<![CDATA[
 		var submited = false
 

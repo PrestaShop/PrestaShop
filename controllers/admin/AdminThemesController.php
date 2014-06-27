@@ -611,8 +611,8 @@ class AdminThemesControllerCore extends AdminController
 
 					$res &= AdminThemesController::copyTheme($base_theme_dir.$file, $target_theme_dir.$file);
 				}
-				elseif (!file_exists($target_theme_dir.$file))
-					$res &= copy($base_dir.$file, $target_theme_dir.$file);
+				elseif (!file_exists($target_dir.$file))
+					$res &= copy($base_dir.$file, $target_dir.$file);
 			}
 		}
 

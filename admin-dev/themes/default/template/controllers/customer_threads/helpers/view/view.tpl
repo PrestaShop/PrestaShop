@@ -50,13 +50,13 @@
 	</div>
 	<div class="row">
 		<div class="message-item-initial media">
-			<a href="{if isset($customer->id)}{$link->getAdminLink('AdminCustomers')}&id_customer={$customer->id|intval}&viewcustomer&{else}#{/if}" class="avatar-lg pull-left"><i class="icon-user icon-3x"></i></a>
+			<a href="{if isset($customer->id)}{$link->getAdminLink('AdminCustomers')|escape:'html':'UTF-8'}&amp;id_customer={$customer->id|intval}&amp;viewcustomer&{else}#{/if}" class="avatar-lg pull-left"><i class="icon-user icon-3x"></i></a>
 			<div class="media-body">
 				<div class="row">
 					<div class="col-sm-6">
 					{if isset($customer->firstname)}
 						<h2>
-							<a href="{$link->getAdminLink('AdminCustomers')}&id_customer={$customer->id|intval}&viewcustomer&">
+							<a href="{$link->getAdminLink('AdminCustomers')|escape:'html':'UTF-8'}&amp;id_customer={$customer->id|intval}&viewcustomer&">
 							{$customer->firstname|escape:'html':'UTF-8'} {$customer->lastname|escape:'html':'UTF-8'} <small>({$customer->email|escape:'html':'UTF-8'})</small>
 							</a>
 						</h2>
