@@ -1333,6 +1333,7 @@ class AdminModulesControllerCore extends AdminController
 		$module_errors = array();
 		$module_success = array();
 		$upgrade_available = array();
+		$dont_filter = false;
 
 		// Browse modules list
 		foreach ($modules as $km => $module)
@@ -1384,12 +1385,14 @@ class AdminModulesControllerCore extends AdminController
 				unset($object);
 			}
 			//Add succes message for one module update
-			else if (Tools::getValue('updated') && Tools::getValue('module_name'))
+			elseif (Tools::getValue('updated') && Tools::getValue('module_name'))
 			{
 				$module_names = (string)Tools::getValue('module_name');
-
 				if (strpos($module_names, '|'))
+				{
 					$module_names = explode('|', $module_names);
+					$dont_filter = true;
+				}
 
 				if (!is_array($module_names))
 					$module_names = (array)$module_names;
@@ -1467,37 +1470,38 @@ class AdminModulesControllerCore extends AdminController
 			$this->confirmations[] = $this->l('Everything is up-to-date');
 
 		// Init tpl vars for smarty
-		$tpl_vars = array();
-
-		$tpl_vars['token'] = $this->token;
-		$tpl_vars['upgrade_available'] = $upgrade_available;
-		$tpl_vars['currentIndex'] = self::$currentIndex;
-		$tpl_vars['dirNameCurrentIndex'] = dirname(self::$currentIndex);
-		$tpl_vars['ajaxCurrentIndex'] = str_replace('index', 'ajax-tab', self::$currentIndex);
-		$tpl_vars['autocompleteList'] = rtrim($autocompleteList, ' ,').'];';
-		$tpl_vars['showTypeModules'] = $this->filter_configuration['PS_SHOW_TYPE_MODULES_'.(int)$this->id_employee];
-		$tpl_vars['showCountryModules'] = $this->filter_configuration['PS_SHOW_COUNTRY_MODULES_'.(int)$this->id_employee];
-		$tpl_vars['showInstalledModules'] = $this->filter_configuration['PS_SHOW_INSTALLED_MODULES_'.(int)$this->id_employee];
-		$tpl_vars['showEnabledModules'] = $this->filter_configuration['PS_SHOW_ENABLED_MODULES_'.(int)$this->id_employee];
-		$tpl_vars['nameCountryDefault'] = Country::getNameById($this->context->language->id, Configuration::get('PS_COUNTRY_DEFAULT'));
-		$tpl_vars['isoCountryDefault'] = $this->iso_default_country;
-		$tpl_vars['categoryFiltered'] = $categoryFiltered;
-		$tpl_vars['modules'] = $modules;
-		$tpl_vars['nb_modules'] = $this->nb_modules_total;
-		$tpl_vars['nb_modules_favorites'] = Db::getInstance()->getValue('SELECT COUNT(`id_module_preference`) FROM `'._DB_PREFIX_.'module_preference` WHERE `id_employee` = '.(int)$this->id_employee.' AND `favorite` = 1 AND (`interest` = 1 OR `interest` IS NULL)');
-		$tpl_vars['nb_modules_installed'] = $this->nb_modules_installed;
-		$tpl_vars['nb_modules_uninstalled'] = $tpl_vars['nb_modules'] - $tpl_vars['nb_modules_installed'];
-		$tpl_vars['nb_modules_activated'] = $this->nb_modules_activated;
-		$tpl_vars['nb_modules_unactivated'] = $tpl_vars['nb_modules_installed'] - $tpl_vars['nb_modules_activated'];
-		$tpl_vars['list_modules_categories'] = $cleaned_list;
-		$tpl_vars['list_modules_authors'] = $this->modules_authors;
-		$tpl_vars['add_permission'] = $this->tabAccess['add'];
-		$tpl_vars['tab_modules_preferences'] = $tab_modules_preferences;
-		$tpl_vars['kpis'] = $this->renderKpis();
-		$tpl_vars['module_name'] = Tools::getValue('module_name');
-		$tpl_vars['page_header_toolbar_title'] = $this->page_header_toolbar_title;
-		$tpl_vars['page_header_toolbar_btn'] = $this->page_header_toolbar_btn;
-		$tpl_vars['modules_uri'] = __PS_BASE_URI__.basename(_PS_MODULE_DIR_);
+		$tpl_vars = array(
+			'token' => $this->token,
+			'upgrade_available' => $upgrade_available,
+			'currentIndex' => self::$currentIndex,
+			'dirNameCurrentIndex' => dirname(self::$currentIndex),
+			'ajaxCurrentIndex' => str_replace('index', 'ajax-tab', self::$currentIndex),
+			'autocompleteList' => rtrim($autocompleteList, ' ,').'];',
+			'showTypeModules' => $this->filter_configuration['PS_SHOW_TYPE_MODULES_'.(int)$this->id_employee],
+			'showCountryModules' => $this->filter_configuration['PS_SHOW_COUNTRY_MODULES_'.(int)$this->id_employee],
+			'showInstalledModules' => $this->filter_configuration['PS_SHOW_INSTALLED_MODULES_'.(int)$this->id_employee],
+			'showEnabledModules' => $this->filter_configuration['PS_SHOW_ENABLED_MODULES_'.(int)$this->id_employee],
+			'nameCountryDefault' => Country::getNameById($this->context->language->id, Configuration::get('PS_COUNTRY_DEFAULT')),
+			'isoCountryDefault' => $this->iso_default_country,
+			'categoryFiltered' => $categoryFiltered,
+			'modules' => $modules,
+			'nb_modules' => $this->nb_modules_total,
+			'nb_modules_favorites' => count($this->context->employee->favoriteModulesList()),
+			'nb_modules_installed' => $this->nb_modules_installed,
+			'nb_modules_uninstalled' => $this->nb_modules_total - $this->nb_modules_installed,
+			'nb_modules_activated' => $this->nb_modules_activated,
+			'nb_modules_unactivated' => $this->nb_modules_installed - $this->nb_modules_activated,
+			'list_modules_categories' => $cleaned_list,
+			'list_modules_authors' => $this->modules_authors,
+			'add_permission' => $this->tabAccess['add'],
+			'tab_modules_preferences' => $tab_modules_preferences,
+			'kpis' => $this->renderKpis(),
+			'module_name' => Tools::getValue('module_name'),
+			'page_header_toolbar_title' => $this->page_header_toolbar_title,
+			'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
+			'modules_uri' => __PS_BASE_URI__.basename(_PS_MODULE_DIR_),
+			'dont_filter' => $dont_filter,
+		);		
 
 		if ($this->logged_on_addons)
 		{
