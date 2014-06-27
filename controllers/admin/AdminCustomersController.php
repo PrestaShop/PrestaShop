@@ -965,16 +965,16 @@ class AdminCustomersControllerCore extends AdminController
 
 	public function printNewsIcon($value, $customer)
 	{
-		return '<a class="list-action-enable '.($value ? 'action-enabled' : 'action-disabled').'" href="index.php?tab=AdminCustomers&id_customer='
-			.(int)$customer['id_customer'].'&changeNewsletterVal&token='.Tools::getAdminTokenLite('AdminCustomers').'">
+		return '<a class="list-action-enable '.($value ? 'action-enabled' : 'action-disabled').'" href="index.php?'.htmlspecialchars('tab=AdminCustomers&id_customer='
+			.(int)$customer['id_customer'].'&changeNewsletterVal&token='.Tools::getAdminTokenLite('AdminCustomers')).'">
 				'.($value ? '<i class="icon-check"></i>' : '<i class="icon-remove"></i>').
 			'</a>';
 	}
 
 	public function printOptinIcon($value, $customer)
 	{
-		return '<a class="list-action-enable '.($value ? 'action-enabled' : 'action-disabled').'" href="index.php?tab=AdminCustomers&id_customer='
-			.(int)$customer['id_customer'].'&changeOptinVal&token='.Tools::getAdminTokenLite('AdminCustomers').'">
+		return '<a class="list-action-enable '.($value ? 'action-enabled' : 'action-disabled').'" href="index.php?'.htmlspecialchars('tab=AdminCustomers&id_customer='
+			.(int)$customer['id_customer'].'&changeOptinVal&token='.Tools::getAdminTokenLite('AdminCustomers')).'">
 				'.($value ? '<i class="icon-check"></i>' : '<i class="icon-remove"></i>').
 			'</a>';
 	}
