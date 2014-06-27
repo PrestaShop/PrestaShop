@@ -106,24 +106,23 @@
 			<section class="dash_links panel">
 				<h3><i class="icon-link"></i> {l s="Useful Links"}</h3>
 					<dl>
-						<dt>{l s="Discover the official documentation"}</dt>
-						<dd><a href="http://doc.prestashop.com/display/PS16?utm_source=backoffice_dashboard" target="_blank">{l s="Go to doc.prestashop.com"}</a></dd>
+						<dt><a href="http://doc.prestashop.com/display/PS16?utm_source=backoffice_dashboard" target="_blank">{l s="Official Documentation"}</a></dt>
+						<dd>{l s="User, Developer and Designer Guides"}</dd>
 					</dl>
 					<dl>
-						<dt>{l s="Use the forum & discover a great community"}</dt>
-						<dd><a href="http://www.prestashop.com/forums?utm_source=backoffice_dashboard" target="_blank">{l s="Go to forums.prestashop.com"}</a></dd>
+						<dt><a href="http://www.prestashop.com/forums?utm_source=backoffice_dashboard" target="_blank">{l s="PrestaShop Forum"}</a></dt>
+						<dd>{l s="Connect with the PrestaShop community"}</dd>
 					</dl>
 					<dl>
-						<dt>{l s="Enhance your Shop with new templates & modules"}</dt>
-						<dd><a href="http://addons.prestashop.com?utm_source=backoffice_dashboard" target="_blank">{l s="Go to addons.prestashop.com"}</a></dd>
+						<dt><a href="http://addons.prestashop.com?utm_source=backoffice_dashboard" target="_blank">{l s="PrestaShop Addons"}</a></dt>
+						<dd>{l s="Enhance your store with templates & modules"}</dd>
 					</dl>
 					<dl>
-						<dt>{l s="Report issues in the Bug Tracker"}</dt>
-						<dd><a href="http://forge.prestashop.com?utm_source=backoffice_dashboard" target="_blank">{l s="Go to forge.prestashop.com"}</a></dd>
+						<dt><a href="http://forge.prestashop.com?utm_source=backoffice_dashboard" target="_blank">{l s="The Forge"}</a></dt>
+						<dd>{l s="Report issues in the Bug Tracker"}</dd>
 					</dl>
 					<dl>
-						<dt>{l s="Contact Us"}</dt>
-						<dd><a href="http://www.prestashop.com/en/contact-us?utm_source=backoffice_dashboard" target="_blank">{l s="Go to prestashop.com"}</a></dd>
+						<dt><a href="http://www.prestashop.com/en/contact-us?utm_source=backoffice_dashboard" target="_blank">{l s="Contact Us!"}</a></dt>
 					</dl>
 			</section>
 			<section class="dash_simulation panel">
@@ -131,15 +130,15 @@
 				<span class="switch prestashop-switch">
 					<input id="PS_DASHBOARD_SIMULATION_on" class="ps_dashboard_simulation" type="radio" {if $PS_DASHBOARD_SIMULATION == 1}checked="checked"{/if} value="1" name="PS_DASHBOARD_SIMULATION">
 					<label class="radioCheck" for="PS_DASHBOARD_SIMULATION_on">
-						{l s='Yes'}
+						{l s='On'}
 					</label>
 					<input id="PS_DASHBOARD_SIMULATION_off" class="ps_dashboard_simulation" type="radio" {if $PS_DASHBOARD_SIMULATION == 0}checked="checked"{/if} value="0" name="PS_DASHBOARD_SIMULATION">
 					<label class="radioCheck" for="PS_DASHBOARD_SIMULATION_off">
-						{l s='No'}
+						{l s='Off'}
 					</label>
 					<a class="slide-button btn"></a>
 				</span>
-				{l s='This mode generates fake data so you can try your Dashboard without real numbers.'}
+				{l s='This mode displays sample data so you can try your Dashboard without real numbers.'}
 			</section>
 
 		</div>
