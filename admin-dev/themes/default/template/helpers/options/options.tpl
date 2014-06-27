@@ -64,11 +64,11 @@
 				<div class="col-lg-9">
 					<span class="switch prestashop-switch fixed-width-lg">
 						{strip}
-						<input type="radio" name="{$table}_multishop_{$category}" id="{$table}_multishop_{$category}_on" value="1" onclick="toggleAllMultishopDefaultValue($('#{$table}_fieldset_{$category}'), true)">
+						<input type="radio" name="{$table}_multishop_{$category}" id="{$table}_multishop_{$category}_on" value="1" onclick="toggleAllMultishopDefaultValue($('#{$table}_fieldset_{$category}'), true)"/>
 						<label for="{$table}_multishop_{$category}_on">
 							{l s='Yes'}
 						</label>
-						<input type="radio" name="{$table}_multishop_{$category}" id="{$table}_multishop_{$category}_off" value="0" checked="checked" onclick="toggleAllMultishopDefaultValue($('#{$table}_fieldset_{$category}'), false)">
+						<input type="radio" name="{$table}_multishop_{$category}" id="{$table}_multishop_{$category}_off" value="0" checked="checked" onclick="toggleAllMultishopDefaultValue($('#{$table}_fieldset_{$category}'), false)"/>
 						<label for="{$table}_multishop_{$category}_off">
 							{l s='No'}
 						</label>
@@ -96,9 +96,9 @@
 							<div id="conf_id_{$key}" {if $field['is_invisible']} class="isInvisible"{/if}>								
 								{block name="label"}
 									{if isset($field['title']) && isset($field['hint'])}
-										<label class="control-label col-lg-3 {if isset($field['required']) && $field['required'] && $field['type'] != 'radio'}required{/if}" for="{$key}">
+										<label class="control-label col-lg-3{if isset($field['required']) && $field['required'] && $field['type'] != 'radio'} required{/if}">
 											{if !$categoryData['hide_multishop_checkbox'] && $field['multishop_default'] && empty($field['no_multishop_checkbox'])}
-											<input type="checkbox" name="multishopOverrideOption[{$key}]" value="1" {if !$field['is_disabled']}checked="checked"{/if} onclick="toggleMultishopDefaultValue(this, '{$key}')"/>
+											<input type="checkbox" name="multishopOverrideOption[{$key}]" value="1"{if !$field['is_disabled']} checked="checked"{/if} onclick="toggleMultishopDefaultValue(this, '{$key}')"/>
 											{/if}
 											<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="
 												{if is_array($field['hint'])}
@@ -117,9 +117,9 @@
 											</span>
 										</label>
 									{elseif isset($field['title'])}
-										<label class="control-label col-lg-3" for="{$key}">
+										<label class="control-label col-lg-3">
 											{if !$categoryData['hide_multishop_checkbox'] && $field['multishop_default'] && empty($field['no_multishop_checkbox'])}
-											<input type="checkbox" name="multishopOverrideOption[{$key}]" value="1" {if !$field['is_disabled']}checked="checked"{/if} onclick="checkMultishopDefaultValue(this, '{$key}')" />
+											<input type="checkbox" name="multishopOverrideOption[{$key}]" value="1"{if !$field['is_disabled']} checked="checked"{/if} onclick="checkMultishopDefaultValue(this, '{$key}')" />
 											{/if}
 											{$field['title']}
 										</label>
@@ -194,7 +194,7 @@
 										</div>
 									{elseif $field['type'] == 'password'}
 										<div class="col-lg-9">{if isset($field['suffix'])}<div class="input-group">{/if}
-											<input type="{$field['type']}"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="" {if isset($field['autocomplete']) && !$field['autocomplete']}autocomplete="off"{/if} />
+											<input type="{$field['type']}"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value=""{if isset($field['autocomplete']) && !$field['autocomplete']} autocomplete="off"{/if} />
 											{if isset($field['suffix'])}
 											<span class="input-group-addon">
 												{$field['suffix']|strval}

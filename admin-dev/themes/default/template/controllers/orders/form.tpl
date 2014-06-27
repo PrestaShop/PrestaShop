@@ -473,7 +473,7 @@
 						html += '<span>'+this.email+'</span><br/>';
 						html += '<span class="text-muted">'+((this.birthday != '0000-00-00') ? this.birthday : '')+'</span><br/>';
 						html += '<div class="panel-footer">';
-						html += '<a href="{$link->getAdminLink('AdminCustomers')}&id_customer='+this.id_customer+'&viewcustomer&liteDisplaying=1" class="btn btn-default fancybox"><i class="icon-search"></i> {l s='Details'}</a>';
+						html += '<a href="{$link->getAdminLink('AdminCustomers')}&amp;id_customer='+this.id_customer+'&amp;viewcustomer&amp;liteDisplaying=1" class="btn btn-default fancybox"><i class="icon-search"></i> {l s='Details'}</a>';
 						html += '<button type="button" data-customer="'+this.id_customer+'" class="setup-customer btn btn-default pull-right"><i class="icon-arrow-right"></i> {l s='Choose'}</button>';
 						html += '</div>';
 						html += '</div>';
@@ -1339,7 +1339,7 @@
 		</div>
 		<div class="row">
 			<div class="col-lg-12">
-				<a class="fancybox btn btn-default" id="new_address" href="{$link->getAdminLink('AdminAddresses')|escape:'html':'UTF-8'}&addaddress&id_customer=42&liteDisplaying=1&submitFormAjax=1#">
+				<a class="fancybox btn btn-default" id="new_address" href="{$link->getAdminLink('AdminAddresses')|escape:'html':'UTF-8'}&amp;addaddress&amp;id_customer=42&amp;liteDisplaying=1&amp;submitFormAjax=1#">
 					<i class="icon-plus-sign-alt"></i>
 					{l s='Add a new address'}
 				</a>

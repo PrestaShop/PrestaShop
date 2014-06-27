@@ -120,7 +120,7 @@
 					</a>
 					&nbsp;
 					{if Configuration::get('PS_INVOICE') && count($invoices_collection) && (($currentState && $currentState->invoice && $order->invoice_number) || $order->invoice_number)}
-						<a class="btn btn-default" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&submitAction=generateInvoicePDF&id_order={$order->id}" target="_blank">
+						<a class="btn btn-default" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateInvoicePDF&amp;id_order={$order->id}" target="_blank">
 							<i class="icon-file"></i>
 							{l s='View invoice'}
 						</a>
@@ -132,7 +132,7 @@
 					{/if}
 					&nbsp;
 					{if (($currentState && $currentState->delivery && $order->delivery_number) || $order->delivery_number)}
-						<a class="btn btn-default"  href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&submitAction=generateDeliverySlipPDF&id_order={$order->id}" target="_blank">
+						<a class="btn btn-default"  href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateDeliverySlipPDF&amp;id_order={$order->id}" target="_blank">
 							<i class="icon-truck"></i>
 							{l s='View delivery slip'}
 						</a>

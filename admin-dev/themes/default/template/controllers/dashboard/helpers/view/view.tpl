@@ -101,12 +101,7 @@
 				<div class="text-center"><h4><a href="http://www.prestashop.com/blog/" onclick="return !window.open(this.href);">{l s='Find more news'}</a></h4></div>
 			</section>
 			<section id="dash_version" class="visible-lg">
-				<!--[if IE]>
-					<iframe frameborder="no" scrolling="no" allowtransparency="true" src="{$new_version_url|escape:'html':'UTF-8'}"></iframe>
-				<![endif]-->
-				<!--[if !IE]>
-					<iframe style="overflow:hidden;" src="{$new_version_url|escape:'html':'UTF-8'}" ></iframe>
-				<![endif]-->
+				<iframe style="overflow:hidden;border:none" src="{$new_version_url|escape:'html':'UTF-8'}" ></iframe>
 			</section>
 			<section class="dash_links panel">
 				<h3><i class="icon-link"></i> {l s="Useful Links"}</h3>
