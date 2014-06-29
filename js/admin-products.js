@@ -213,6 +213,7 @@ product_tabs['Combinations'] = new function(){
 	this.bindEdit = function(){
 		$('table[id=combinations-list]').delegate('a.edit', 'click', function(e){
 			e.preventDefault();
+			e.stopPropagation();
 			editProductAttribute(this.href, $(this).closest('tr'));
 		});
 
