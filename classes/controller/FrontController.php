@@ -801,8 +801,7 @@ class FrontControllerCore extends Controller
 			'priceDisplayPrecision' => _PS_PRICE_DISPLAY_PRECISION_,
 			'content_only' => (int)Tools::getValue('content_only'),
 		));
-		
-		$this->context->smarty->assign('is_rtl',$this->context->language->is_rtl);
+				
 		$this->context->smarty->assign($this->initLogoAndFavicon());
 	}
 
