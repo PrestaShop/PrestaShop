@@ -137,9 +137,6 @@
 				</div>
 				{/if}
 			</div>
-		</td>
-	</tr>
-</table>
 <input type="hidden" name="token" value="{$token}" />
 </div>
 </div>
