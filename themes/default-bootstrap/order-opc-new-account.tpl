@@ -136,7 +136,7 @@
 				</div>
 				<div class="checkbox" >
                 	<label for="optin">
-					<input type="checkbox"name="optin" id="optin" value="1" {if isset($guestInformations) && isset($guestInformations.optin) && $guestInformations.optin}checked="checked"{/if} autocomplete="off"/>
+					<input type="checkbox" name="optin" id="optin" value="1" {if isset($guestInformations) && isset($guestInformations.optin) && $guestInformations.optin}checked="checked"{/if} autocomplete="off"/>
 					{l s='Receive special offers from our partners!'}</label>
 				</div>
 				{/if}
