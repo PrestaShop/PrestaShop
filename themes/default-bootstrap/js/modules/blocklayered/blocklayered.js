@@ -502,10 +502,7 @@ function reloadContent(params_plus)
 				$('title').html(result.meta_title);
 
 			if (result.heading != '')
-			{
 				$('h1.page-heading .cat-name').html(result.heading);
-				$('span.category-name').html(result.heading);
-			}
 
 			$('#layered_block_left').replaceWith(utf8_decode(result.filtersBlock));
 			$('.category-product-count, .heading-counter').html(result.categoryCount);
