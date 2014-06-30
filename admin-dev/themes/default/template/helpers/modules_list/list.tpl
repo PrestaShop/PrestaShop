@@ -27,7 +27,7 @@
 		<i class="icon-list-ul"></i>
 		{if isset($panel_title)}{$panel_title|escape:'html':'UTF-8'}{else}{l s='Modules list'}{/if}
 	</h3>
-	<div id="modules_list_container_tab" class="row">
+	<div class="modules_list_container_tab row">
 		<div class="col-lg-12">
 			{if count($modules_list)}
 				<table class="table">
