@@ -644,7 +644,7 @@ class MediaCore
 		// rebuild the original js_files array
 		$url = str_replace(_PS_ROOT_DIR_.'/', __PS_BASE_URI__, $compressed_js_path);
 
-		return array_merge(array($protocol_link.Tools::getMediaServer($url).$url), $js_external_files);
+		return array_merge($js_external_files, array($protocol_link.Tools::getMediaServer($url).$url));
 	}
 	
 	public static function clearCache()
