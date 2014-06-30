@@ -6,5 +6,5 @@ VALUES (NULL , 'displayAdminOrderTabOrder', 'Display new elements in Back Office
 (NULL , 'displayAdminOrderTabShip', 'Display new elements in Back Office, AdminOrder, panel Shipping', 'This hook launches modules when the AdminOrder tab is displayed in the Back Office and extends / override Shipping panel tabs', '1', '0'),
 (NULL , 'displayAdminOrderContentShip', 'Display new elements in Back Office, AdminOrder, panel Shipping', 'This hook launches modules when the AdminOrder tab is displayed in the Back Office and extends / override Shipping panel content', '1', '0');
 
-INSERT INTO `PREFIX_configuration` (`id_configuration` , `id_shop_group` , `id_shop` , `name` , `value` , `date_add` , `date_upd`)
-VALUES (NULL, NULL, NULL, 'PS_SET_DISPLAY_SUBCATEGORIES', '1', NOW(), NOW());
+INSERT INTO `PREFIX_configuration` (`name` , `value` , `date_add` , `date_upd`)
+VALUES ('PS_SET_DISPLAY_SUBCATEGORIES', '1', NOW(), NOW());
