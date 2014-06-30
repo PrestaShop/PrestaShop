@@ -1095,4 +1095,9 @@ class ValidateCore
     {
         return (preg_match('/^(?:'.Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id).')\s*([0-9]+)$/i', $id));
     }
+
+    public static function isPasswordHash($hash)
+    {
+        return (substr($hash, 0, 3) === '$P$');
+    }
 }

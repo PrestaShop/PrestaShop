@@ -24,6 +24,8 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
+require_once(_PS_TOOL_DIR_.'phpass/PasswordHash.php');
+
 class ToolsCore
 {
     protected static $file_exists_cache = array();
@@ -31,6 +33,7 @@ class ToolsCore
     protected static $_caching;
     protected static $_user_plateform;
     protected static $_user_browser;
+    protected static $_hasher;
 
     public static $round_mode = null;
 
@@ -1187,7 +1190,11 @@ class ToolsCore
     */
     public static function hashPassword($passwd)
     {
-        return self::hash($passwd);
+        if (!self::$_hasher) {
+            self::$_hasher = new PasswordHash(10, TRUE);
+        }
+
+        return self::$_hasher->HashPassword($passwd);
     }
 
     /**
@@ -1199,7 +1206,16 @@ class ToolsCore
     */
     public static function checkPassword($passwd, $storedHash)
     {
-        return $passwd === $storedHash || self::hash($passwd) === $storedHash;
+        if (!self::$_hasher) {
+            self::$_hasher = new PasswordHash(10, TRUE);
+        }
+
+        // $passwd is already hashed, do a straight comparison
+        if (Validate::isPasswordHash($passwd)) {
+            return $passwd === $storedHash;
+        }
+
+        return self::$_hasher->CheckPassword($passwd, $storedHash);
     }
 
     /**

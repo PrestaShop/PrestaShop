@@ -102,7 +102,7 @@ class EmployeeCore extends ObjectModel
             'firstname' =>                    array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
             'email' =>                        array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'required' => true, 'size' => 128),
             'id_lang' =>                    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
-            'passwd' =>                    array('type' => self::TYPE_STRING, 'validate' => 'isPasswdAdmin', 'required' => true, 'size' => 32),
+            'passwd' =>                    array('type' => self::TYPE_STRING, 'validate' => 'isPasswdAdmin', 'required' => true, 'size' => 34),
             'last_passwd_gen' =>            array('type' => self::TYPE_STRING),
             'active' =>                    array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
             'optin' =>                        array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
@@ -280,18 +280,37 @@ class EmployeeCore extends ObjectModel
 		SELECT *
 		FROM `'._DB_PREFIX_.'employee`
 		WHERE `email` = \''.pSQL($email).'\'
-		'.($active_only ? ' AND active = 1' : '')
-        .($passwd !== null ? ' AND `passwd` = \''.Tools::hashPassword($passwd).'\'' : ''));
+		'.($active_only ? ' AND active = 1' : ''));
         if (!$result) {
             return false;
         }
+
+        $old_password = false;
+        if (isset($passwd)) {
+            /* For backward-compatibility, we update old-style passwords to the new method */
+            $valid_password = Tools::checkPassword($passwd, $result['passwd']);
+            $old_password = (Tools::hash($passwd) == $result['passwd']);
+            if (!$valid_password && !$old_password) {
+                return false;
+            }
+        }
+
         $this->id = $result['id_employee'];
         $this->id_profile = $result['id_profile'];
+
         foreach ($result as $key => $value) {
             if (property_exists($this, $key)) {
                 $this->{$key} = $value;
             }
         }
+
+        if ($old_password) {
+            /* Persist the updated password */
+            $this->passwd = Tools::hashPassword($passwd);
+            $this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-'.Configuration::get('PS_PASSWD_TIME_BACK').'minutes'));
+            $this->save();
+        }
+
         return $this;
     }
 
@@ -315,16 +334,17 @@ class EmployeeCore extends ObjectModel
      */
     public static function checkPassword($id_employee, $passwd)
     {
-        if (!Validate::isUnsignedId($id_employee) || !Validate::isPasswd($passwd, 8)) {
+        if (!Validate::isUnsignedId($id_employee) || !Validate::isPasswd($passwd, 8) || !Validate::isPasswdHash($passwd)) {
             die(Tools::displayError());
         }
 
-        return Db::getInstance()->getValue('
-		SELECT `id_employee`
+        $stored = Db::getInstance()->getValue('
+		SELECT `passwd`
 		FROM `'._DB_PREFIX_.'employee`
 		WHERE `id_employee` = '.(int)$id_employee.'
-		AND `passwd` = \''.pSQL($passwd).'\'
 		AND active = 1');
+
+        return Tools::checkPassword($passwd, $stored);
     }
 
     public static function countProfile($id_profile, $active_only = false)

@@ -323,19 +323,37 @@ class CustomerCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'customer`
 		WHERE `email` = \''.pSQL($email).'\'
 		'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
-		'.(isset($passwd) ? 'AND `passwd` = \''.pSQL(Tools::hashPassword($passwd)).'\'' : '').'
 		AND `deleted` = 0
 		'.($ignore_guest ? ' AND `is_guest` = 0' : ''));
 
         if (!$result) {
             return false;
         }
+
+        $old_password = false;
+        if (isset($passwd)) {
+            /* For backward-compatibility, we update old-style passwords to the new method */
+            $valid_password = Tools::checkPassword($passwd, $result['passwd']);
+            $old_password = (Tools::hash($passwd) == $result['passwd']);
+            if (!$valid_password && !$old_password) {
+                return false;
+            }
+        }
+
         $this->id = $result['id_customer'];
         foreach ($result as $key => $value) {
             if (property_exists($this, $key)) {
                 $this->{$key} = $value;
             }
         }
+
+        if ($old_password) {
+            /* Persist the updated password */
+            $this->passwd = Tools::hashPassword($passwd);
+            $this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-'.Configuration::get('PS_PASSWD_TIME_BACK').'minutes'));
+            $this->save();
+        }
+
         return $this;
     }
 
@@ -485,16 +503,18 @@ class CustomerCore extends ObjectModel
      */
     public static function checkPassword($id_customer, $passwd)
     {
-        if (!Validate::isUnsignedId($id_customer) || !Validate::isMd5($passwd)) {
+        if (!Validate::isUnsignedId($id_customer) || !Validate::isStrongHash($passwd)) {
             die(Tools::displayError());
         }
         $cache_id = 'Customer::checkPassword'.(int)$id_customer.'-'.$passwd;
         if (!Cache::isStored($cache_id)) {
-            $result = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT `id_customer`
+            $stored = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT `passwd`
 			FROM `'._DB_PREFIX_.'customer`
 			WHERE `id_customer` = '.(int)$id_customer.'
 			AND `passwd` = \''.pSQL($passwd).'\'');
+            $result = Tools::checkPassword($stored, $passwd);
+
             Cache::store($cache_id, $result);
             return $result;
         }
