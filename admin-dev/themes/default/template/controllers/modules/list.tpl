@@ -45,20 +45,11 @@
 	{if count($modules)}
 		<tbody>
 			{foreach from=$modules item=module}
-			
-{capture name="moduleStatutClass"}
-{if isset($module->id) && $module->id gt 0 && $module->active == 1}
-module_active
-{else}
-module_inactive
-{/if}
-{/capture}
+				{capture name="moduleStatutClass"}{if isset($module->id) && $module->id gt 0 && $module->active == 1}module_active{else}module_inactive{/if}{/capture}
 				<tr>
 					<td class="{{$smarty.capture.moduleStatutClass}} text-center" style="width: 1%;">
 						{if (isset($module->id) && $module->id > 0) || !isset($module->type) || $module->type != 'addonsMustHave'}
-						<input type="checkbox" name="modules" value="{$module->name}"
-							{if !isset($module->confirmUninstall) OR empty($module->confirmUninstall)}rel="false"{else}rel="{$module->confirmUninstall|addslashes}"{/if}
-							class="noborder" title="{l s='Module %1s '|sprintf:$module->name}" />
+						<input type="checkbox" name="modules" value="{$module->name|escape:'html':'UTF-8'}" class="noborder" title="{l s='Module %1s '|sprintf:$module->name}"{if !isset($module->confirmUninstall) OR empty($module->confirmUninstall)} data-rel="false"{else} data-rel="{$module->confirmUninstall|addslashes}"{/if}/>
 						{/if}
 					</td>
 					<td class="fixed-width-xs">
@@ -90,7 +81,7 @@ module_inactive
 									{$module->description}
 								{/if}
 								{if isset($module->show_quick_view) &&  $module->show_quick_view}
-									<br><a href="{$currentIndex}&token={$token}&ajax=1&action=GetModuleQuickView&module={$module->name}" class="fancybox-quick-view"><i class="icon-search"></i> {l s='Read more'}</a>
+									<br><a href="{$currentIndex|escape:'html':'UTF-8'}&amp;token={$token}&amp;ajax=1&amp;action=GetModuleQuickView&amp;module={$module->name|urlencode}" class="fancybox-quick-view"><i class="icon-search"></i> {l s='Read more'}</a>
 								{/if}
 							</p>
 							{if isset($module->message) && (empty($module->name) !== false) && (!isset($module->type) || ($module->type != 'addonsMustHave' || $module->type !== 'addonsNative'))}<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>{$module->message}</div>{/if}
@@ -100,7 +91,7 @@ module_inactive
 						<div class="btn-group-action">
 							<div class="btn-group pull-right">
 								{if isset($module->type) && $module->type == 'addonsMustHave'}
-									<a class="btn btn-default" href="{$module->addons_buy_url|escape:'html':'UTF-8'}" target="_blank">
+									<a class="btn btn-default" href="{$module->addons_buy_url|replace:' ':'+'|escape:'html':'UTF-8'}" target="_blank">
 										<i class="icon-shopping-cart"></i> &nbsp;{if isset($module->id_currency) && isset($module->price)}{displayPrice price=$module->price currency=$module->id_currency}{/if}
 									</a>
 								{else}
