@@ -1211,7 +1211,7 @@ class AdminControllerCore extends Controller
 						if ($this->validateField($val, $options))
 						{
 							if (Validate::isCleanHtml($val))
-								Configuration::updateValue($key, $val);
+								Configuration::updateValue($key, $val, isset($values['validation']) && $options['validation']=='isCleanHtml'?true:false);
 							else
 								$this->errors[] = Tools::displayError('Can not add configuration '.$key);
 						}
