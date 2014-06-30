@@ -123,6 +123,7 @@
 					</dl>
 					<dl>
 						<dt><a href="http://www.prestashop.com/en/contact-us?utm_source=backoffice_dashboard" target="_blank">{l s="Contact Us!"}</a></dt>
+						<dd></dd>
 					</dl>
 			</section>
 			<section class="dash_simulation panel">
