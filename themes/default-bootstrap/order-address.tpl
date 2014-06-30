@@ -126,7 +126,7 @@
 	{addJsDefL name=CloseTxt}{l s='Submit' js=1}{/addJsDefL}
 {/if}
 {capture}{if $back}&mod={$back|urlencode}{/if}{/capture}
-{capture name=addressUrl}{$link->getPageLink('address', true, NULL, 'back='|cat:$back_order_page|cat:'?step=1'|cat:$smarty.capture.default)|addslashes}{/capture}
+{capture name=addressUrl}{$link->getPageLink('address', true, NULL, 'back='|cat:$back_order_page|cat:'?step=1'|cat:$smarty.capture.default)|escape:'quotes':'UTF-8'}{/capture}
 {addJsDef addressUrl=$smarty.capture.addressUrl}
 {capture}{'&multi-shipping=1'|urlencode}{/capture}
 {addJsDef addressMultishippingUrl=$smarty.capture.addressUrl|cat:$smarty.capture.default}

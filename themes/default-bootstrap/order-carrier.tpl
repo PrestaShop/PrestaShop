@@ -314,7 +314,7 @@
 	{else}
 		{addJsDef cart_gift=false}
 	{/if}
-	{addJsDef orderUrl=$link->getPageLink("order", true)|addslashes}
+	{addJsDef orderUrl=$link->getPageLink("order", true)|escape:'quotes':'UTF-8'}
 	{addJsDefL name=txtProduct}{l s='Product' js=1}{/addJsDefL}
 	{addJsDefL name=txtProducts}{l s='Products' js=1}{/addJsDefL}
 {/if}
