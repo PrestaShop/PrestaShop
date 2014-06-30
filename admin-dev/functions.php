@@ -171,9 +171,9 @@ function getPath($urlBase, $id_category, $path = '', $highlight = '', $categoryT
 			foreach ($categories AS $category)
 			{
 				$link = Context::getContext()->link->getAdminLink('AdminCategories');
-				$edit = '<a href="'.$link.'&id_category='.(int)$category['id_category'].'&'.(($category['id_category'] == 1 || $home) ? 'viewcategory' : 'updatecategory').'" title="'.($category['id_category'] == Category::getRootCategory()->id_category ? 'Home' : 'Modify').'"><i class="icon-'.(($category['id_category'] == Category::getRootCategory()->id_category  || $home) ? 'home' : 'pencil').'"></i></a> ';
+				$edit = '<a href="'.Tools::safeOutput($link.'&id_category='.(int)$category['id_category'].'&'.(($category['id_category'] == 1 || $home) ? 'viewcategory' : 'updatecategory')).'" title="'.($category['id_category'] == Category::getRootCategory()->id_category ? 'Home' : 'Modify').'"><i class="icon-'.(($category['id_category'] == Category::getRootCategory()->id_category  || $home) ? 'home' : 'pencil').'"></i></a> ';
 				$fullPath .= $edit.
-				($n < $nCategories ? '<a href="'.$urlBase.'&id_category='.(int)$category['id_category'].'&viewcategory&token='.Tools::getAdminToken('AdminCategories'.(int)(Tab::getIdFromClassName('AdminCategories')).(int)$context->employee->id).'" title="'.htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').'">' : '').
+				($n < $nCategories ? '<a href="'.Tools::safeOutput($urlBase.'&id_category='.(int)$category['id_category'].'&viewcategory&token='.Tools::getAdminToken('AdminCategories'.(int)(Tab::getIdFromClassName('AdminCategories')).(int)$context->employee->id)).'" title="'.htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').'">' : '').
 				(!empty($highlight) ? str_ireplace($highlight, '<span class="highlight">'.htmlentities($highlight, ENT_NOQUOTES, 'UTF-8').'</span>', $category['name']) : $category['name']).
 				($n < $nCategories ? '</a>' : '').
 				(($n++ != $nCategories || !empty($path)) ? ' > ' : '');
@@ -189,12 +189,12 @@ function getPath($urlBase, $id_category, $path = '', $highlight = '', $categoryT
 			return $path;
 
 		$name = ($highlight != null) ? str_ireplace($highlight, '<span class="highlight">'.$highlight.'</span>', CMSCategory::hideCMSCategoryPosition($category->name)) : CMSCategory::hideCMSCategoryPosition($category->name);
-		$edit = '<a href="'.$urlBase.'&id_cms_category='.$category->id.'&addcategory&token=' . Tools::getAdminToken('AdminCmsContent'.(int)(Tab::getIdFromClassName('AdminCmsContent')).(int)$context->employee->id).'">
+		$edit = '<a href="'.Tools::safeOutput($urlBase.'&id_cms_category='.$category->id.'&addcategory&token=' . Tools::getAdminToken('AdminCmsContent'.(int)(Tab::getIdFromClassName('AdminCmsContent')).(int)$context->employee->id)).'">
 				<i class="icon-pencil"></i></a> ';
 		if ($category->id == 1)
-			$edit = '<li><a href="'.$urlBase.'&id_cms_category='.$category->id.'&viewcategory&token=' . Tools::getAdminToken('AdminCmsContent'.(int)(Tab::getIdFromClassName('AdminCmsContent')).(int)$context->employee->id).'">
+			$edit = '<li><a href="'.Tools::safeOutput($urlBase.'&id_cms_category='.$category->id.'&viewcategory&token=' . Tools::getAdminToken('AdminCmsContent'.(int)(Tab::getIdFromClassName('AdminCmsContent')).(int)$context->employee->id)).'">
 					<i class="icon-home"></i></a></li> ';
-		$path = $edit.'<li><a href="'.$urlBase.'&id_cms_category='.$category->id.'&viewcategory&token=' . Tools::getAdminToken('AdminCmsContent'.(int)(Tab::getIdFromClassName('AdminCmsContent')).(int)$context->employee->id).'">
+		$path = $edit.'<li><a href="'.Tools::safeOutput($urlBase.'&id_cms_category='.$category->id.'&viewcategory&token=' . Tools::getAdminToken('AdminCmsContent'.(int)(Tab::getIdFromClassName('AdminCmsContent')).(int)$context->employee->id)).'">
 		'.$name.'</a></li> > '.$path;
 		if ($category->id == 1)
 			return substr($path, 0, strlen($path) - 3);

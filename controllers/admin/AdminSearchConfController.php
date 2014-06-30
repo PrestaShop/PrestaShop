@@ -69,17 +69,16 @@ class AdminSearchConfControllerCore extends AdminController
 			'indexation' => array(
 				'title' => $this->l('Indexing'),
 				'icon' => 'icon-cogs',
-				'info' =>
-						$this->l('The "indexed" products have been analyzed by PrestaShop and will appear in the results of a Front Office search.').'<br />
+				'info' =>'<p>'.$this->l('The "indexed" products have been analyzed by PrestaShop and will appear in the results of a Front Office search.').'<br />
 						'.$this->l('Indexed products').' <strong>'.(int)$indexed.' / '.(int)$total.'</strong>.
 						</p>
 						<p>'.$this->l('Building the product index may take a few minutes.')
 						.$this->l('If your server stops before the process ends, you can resume the indexing by clicking "Add missing products."').'</p>
-						<a href="searchcron.php?token='.substr(_COOKIE_KEY_, 34, 8).'&redirect=1" class="btn-link"><i class="icon-external-link-sign"></i> '.
+						<a href="searchcron.php?token='.substr(_COOKIE_KEY_, 34, 8).'&amp;redirect=1" class="btn-link"><i class="icon-external-link-sign"></i> '.
 							$this->l('Add missing products to the index.').'</a><br />
-						<a href="searchcron.php?full=1&token='.substr(_COOKIE_KEY_, 34, 8).'&redirect=1" class="btn-link"><i class="icon-external-link-sign"></i> '.
+						<a href="searchcron.php?full=1&amp;token='.substr(_COOKIE_KEY_, 34, 8).'&amp;redirect=1" class="btn-link"><i class="icon-external-link-sign"></i> '.
 							$this->l('Re-build the entire index.').'</a><br /><br />
-						'.$this->l('You can set a cron job that will rebuild your index using the following URL:').' <a href="'.$cron_url.'"><i class="icon-external-link-sign"></i> '.$cron_url.'</a>',
+						'.$this->l('You can set a cron job that will rebuild your index using the following URL:').' <a href="'.Tools::safeOutput($cron_url).'"><i class="icon-external-link-sign"></i> '.Tools::safeOutput($cron_url).'</a>',
 				'fields' =>	array(
 					'PS_SEARCH_INDEXATION' => array(
 						'title' => $this->l('Indexing'),

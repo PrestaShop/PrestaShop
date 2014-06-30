@@ -85,7 +85,6 @@
 			{/if*}
 			</ul>
 		{/block}
-
 		{block name=toolbarBox}
 		<div class="page-bar toolbarBox">
 			<div class="btn-toolbar">
@@ -118,19 +117,17 @@
 					</li>
 					{/if}
 				</ul>
-
+				{if (isset($tab_modules_open) && $tab_modules_open) || isset($tab_modules_list)}
 				<script type="text/javascript">
 				//<![CDATA[
+					{if isset($tab_modules_open) && $tab_modules_open}
 					var modules_list_loaded = false;
-
-					$(function() {
-
-						{if isset($tab_modules_open) && $tab_modules_open}
-							$('#modules_list_container').modal('show');
-							openModulesList();
-						{/if}
-					});
-
+						$(function() {
+								$('#modules_list_container').modal('show');
+								openModulesList();
+							
+						});
+					{/if}
 					{if isset($tab_modules_list)}
 						$('.process-icon-modules-list').parent('a').unbind().bind('click', function (){
 							$('#modules_list_container').modal('show');
@@ -138,7 +135,8 @@
 						});
 					{/if}
 				//]]>
-				</script>				
+				</script>
+				{/if}				
 			</div>
 		</div>
 		{/block}
