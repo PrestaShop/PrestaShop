@@ -3812,11 +3812,11 @@ class AdminControllerCore extends Controller
 					if (isset($option['style']))
 						$html .= ' style="'.$option['style'].'"';
 
-					$html .= ' href="'.urlencode($option['href']).(!is_null($back) ? '&back='.urlencode($back) : '').'" onclick="'.$option['onclick'].'"  title="'.$option['title'].'"><i class="icon-'.(isset($option['icon']) && $option['icon'] ? $option['icon']:'cog' ).'"></i> '.$option['text'].'</a>';
+					$html .= ' href="'.htmlentities($option['href']).(!is_null($back) ? '&back='.urlencode($back) : '').'" onclick="'.$option['onclick'].'"  title="'.$option['title'].'"><i class="icon-'.(isset($option['icon']) && $option['icon'] ? $option['icon']:'cog' ).'"></i> '.$option['text'].'</a>';
 					$return[] = $html;
 				}
 				elseif ($output_type == 'select')
-					$return .= '<option id="'.$option_name.'" data-href="'.urlencode($option['href']).(!is_null($back) ? '&back='.urlencode($back) : '').'" data-onclick="'.$option['onclick'].'">'.$option['text'].'</option>';
+					$return .= '<option id="'.$option_name.'" data-href="'.htmlentities($option['href']).(!is_null($back) ? '&back='.urlencode($back) : '').'" data-onclick="'.$option['onclick'].'">'.$option['text'].'</option>';
 			}
 		}
 
