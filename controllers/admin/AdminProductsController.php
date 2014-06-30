@@ -200,7 +200,7 @@ class AdminProductsControllerCore extends AdminController
 			'type' => 'int'
 		);
 		$this->fields_list['image'] = array(
-			'title' => $this->l('Photo'),
+			'title' => $this->l('Image'),
 			'align' => 'center',
 			'image' => 'p',
 			'orderby' => false,
