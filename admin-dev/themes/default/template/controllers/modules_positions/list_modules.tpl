@@ -41,24 +41,23 @@
 			<form class="form-inline well">
 				<label>{l s='Show'}</label>
 				<span>
-					<select id="show_modules" onchange="autoUrl('show_modules', '{$url_show_modules}')" class="filter fixed-width-lg">
+					<select id="show_modules" onchange="autoUrl('show_modules', '{$url_show_modules|escape:'html':'UTF-8'}')" class="filter fixed-width-lg">
 						<option value="all">{l s='All modules'}&nbsp;</option>
 						<option>-</option>
 						{foreach $modules as $module}
-							<option value="{$module->id|intval}" {if $display_key == $module->id}selected="selected"{/if}>{$module->displayName}</option>
+							<option value="{$module->id|intval}" {if $display_key == $module->id}selected="selected"{/if}>{$module->displayName|escape:'html':'UTF-8'}</option>
 						{/foreach}
 					</select>
 				</span>
 				<p class="checkbox">
 					<label class="control-label" for="hook_position">
-						<input type="checkbox" id="hook_position" onclick="autoUrlNoList('hook_position', '{$url_show_invisible}')" {if $hook_position}checked="checked"{/if} />
+						<input type="checkbox" id="hook_position" onclick="autoUrlNoList('hook_position', '{$url_show_invisible|escape:'html':'UTF-8'}')" {if $hook_position}checked="checked"{/if} />
 						{l s='Display non-positionable hooks'}
 					</label>
 				</p>
 			</form>
 			<div id="modulePosition">
-				<form method="post" action="{$url_submit}" >
-
+				<form method="post" action="{$url_submit|escape:'html':'UTF-8'}" >
 {foreach $hooks as $hook}
 					<section class="hook_panel">
 						<a name="{$hook['name']}"></a>
@@ -88,15 +87,15 @@
 									<input type="checkbox" id="mod{$hook['id_hook']}_{$module['instance']->id}" class="hook{$hook['id_hook']}" onclick="hookCheckboxes({$hook['id_hook']}, 1, this)" name="unhooks[]" value="{$hook['id_hook']}_{$module['instance']->id}"/>
 								</div>
 								{if !$display_key}
-								<div class="module_col_position" {if $can_move && $hook['module_count'] >= 2}class="dragHandle"{/if} id="td_{$hook['id_hook']}_{$module['instance']->id}">
+								<div class="module_col_position{if $can_move && $hook['module_count'] >= 2} dragHandle{/if}" id="td_{$hook['id_hook']}_{$module['instance']->id}">
 									<span class="positions">{$module@iteration}</span>
 									{if $can_move}
 									<div class="btn-group-vertical">
-										<a class="btn btn-default btn-xs"{if {$module@iteration} == 1} disabled{/if} href="{$current}&amp;id_module={$module['instance']->id}&amp;id_hook={$hook['id_hook']}&amp;direction=0&amp;token={$token}&amp;changePosition#{$hook['name']}">
+										<a class="btn btn-default btn-xs" href="{$current}&amp;id_module={$module['instance']->id}&amp;id_hook={$hook['id_hook']}&amp;direction=0&amp;token={$token}&amp;changePosition#{$hook['name']}">
 											<i class="icon-chevron-up"></i>
 										</a>
 
-										<a class="btn btn-default btn-xs"{if {$module@iteration} == count($hook['modules'])} disabled{/if} href="{$current}&amp;id_module={$module['instance']->id}&amp;id_hook={$hook['id_hook']}&amp;direction=1&amp;token={$token}&amp;changePosition#{$hook['name']}">
+										<a class="btn btn-default btn-xs" href="{$current}&amp;id_module={$module['instance']->id}&amp;id_hook={$hook['id_hook']}&amp;direction=1&amp;token={$token}&amp;changePosition#{$hook['name']}">
 											<i class="icon-chevron-down"></i>
 										</a>
 									</div>
@@ -160,7 +159,7 @@
 				<p>{l s='You have to select a shop to use Live Edit'}</p>
 			{else}
 				<p>{l s='Click here to be redirected to the Front Office of your shop where you can move and delete modules directly.'}</p>
-					<a class="btn btn-default" href="{$url_live_edit}" target="_blank">
+					<a class="btn btn-default" href="{$url_live_edit|escape:'html':'UTF-8'}" target="_blank">
 						<i class="icon-edit"></i>
 						{l s='Run Live Edit'}
 					</a>
