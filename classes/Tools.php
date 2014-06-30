@@ -1168,12 +1168,49 @@ class ToolsCore
     }
 
     /**
+    * Hash string
+    *
+    * Note that if you're hashing sensitive information, you might consider hashPassword instead.
+    *
+    * @param string $string String to hash
+    */
+    public static function hash($string)
+    {
+        return md5(_COOKIE_KEY_.$string);
+    }
+
+    /**
+    * Hash password
+    *
+    * @param string $passwd The password to hash
+    * @return string
+    */
+    public static function hashPassword($passwd)
+    {
+        return self::hash($passwd);
+    }
+
+    /**
+    * Check a hashed password
+    *
+    * @param string $passwd The password to check
+    * @param string $storedHash The stored hash for this password
+    * @return boolean
+    */
+    public static function checkPassword($passwd, $storedHash)
+    {
+        return $passwd === $storedHash || self::hash($passwd) === $storedHash;
+    }
+
+    /**
     * Encrypt password
     *
     * @param string $passwd String to encrypt
+    * @deprecated 1.6.1.0
     */
     public static function encrypt($passwd)
     {
+        Tools::displayAsDeprecated();
         return md5(_COOKIE_KEY_.$passwd);
     }
 
@@ -1181,9 +1218,11 @@ class ToolsCore
     * Encrypt data string
     *
     * @param string $data String to encrypt
+    * @deprecated 1.6.1.0
     */
     public static function encryptIV($data)
     {
+        Tools::displayAsDeprecated();
         return md5(_COOKIE_IV_.$data);
     }
 
@@ -1198,9 +1237,9 @@ class ToolsCore
             $context = Context::getContext();
         }
         if ($page === true) {
-            return (Tools::encrypt($context->customer->id.$context->customer->passwd.$_SERVER['SCRIPT_NAME']));
+            return (Tools::hash($context->customer->id.$context->customer->passwd.$_SERVER['SCRIPT_NAME']));
         } else {
-            return (Tools::encrypt($context->customer->id.$context->customer->passwd.$page));
+            return (Tools::hash($context->customer->id.$context->customer->passwd.$page));
         }
     }
 
@@ -1211,7 +1250,7 @@ class ToolsCore
     */
     public static function getAdminToken($string)
     {
-        return !empty($string) ? Tools::encrypt($string) : false;
+        return !empty($string) ? Tools::hash($string) : false;
     }
 
     public static function getAdminTokenLite($tab, Context $context = null)

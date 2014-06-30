@@ -73,7 +73,7 @@ class PasswordControllerCore extends FrontController
                 } elseif ((strtotime($customer->last_passwd_gen.'+'.(int)Configuration::get('PS_PASSWD_TIME_FRONT').' minutes') - time()) > 0) {
                     Tools::redirect('index.php?controller=authentication&error_regen_pwd');
                 } else {
-                    $customer->passwd = Tools::encrypt($password = Tools::passwdGen(MIN_PASSWD_LENGTH, 'RANDOM'));
+                    $customer->passwd = Tools::hashPassword($password = Tools::passwdGen(MIN_PASSWD_LENGTH, 'RANDOM'));
                     $customer->last_passwd_gen = date('Y-m-d H:i:s', time());
                     if ($customer->update()) {
                         Hook::exec('actionPasswordRenew', array('customer' => $customer, 'password' => $password));

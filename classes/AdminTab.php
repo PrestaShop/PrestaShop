@@ -1178,7 +1178,7 @@ abstract class AdminTabCore
                 }
                 /* Automatically encrypt password in MD5 */
                 if ($key == 'passwd' && !empty($value)) {
-                    $value = Tools::encrypt($value);
+                    $value = Tools::hashPassword($value);
                 }
                 $object->{$key} = $value;
             }

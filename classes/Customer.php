@@ -162,7 +162,7 @@ class CustomerCore extends ObjectModel
             'lastname' =>                    array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
             'firstname' =>                    array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
             'email' =>                        array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'required' => true, 'size' => 128),
-            'passwd' =>                    array('type' => self::TYPE_STRING, 'validate' => 'isPasswd', 'required' => true, 'size' => 32),
+            'passwd' =>                    array('type' => self::TYPE_STRING, 'validate' => 'isPasswd', 'required' => true, 'size' => 34),
             'last_passwd_gen' =>            array('type' => self::TYPE_STRING, 'copy_post' => false),
             'id_gender' =>                    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
             'birthday' =>                    array('type' => self::TYPE_DATE, 'validate' => 'isBirthDate'),
@@ -323,7 +323,7 @@ class CustomerCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'customer`
 		WHERE `email` = \''.pSQL($email).'\'
 		'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
-		'.(isset($passwd) ? 'AND `passwd` = \''.pSQL(Tools::encrypt($passwd)).'\'' : '').'
+		'.(isset($passwd) ? 'AND `passwd` = \''.pSQL(Tools::hashPassword($passwd)).'\'' : '').'
 		AND `deleted` = 0
 		'.($ignore_guest ? ' AND `is_guest` = 0' : ''));
 
@@ -768,7 +768,7 @@ class CustomerCore extends ObjectModel
         }
 
         $this->is_guest = 0;
-        $this->passwd = Tools::encrypt($password);
+        $this->passwd = Tools::hashPassword($password);
         $this->cleanGroups();
         $this->addGroups(array(Configuration::get('PS_CUSTOMER_GROUP'))); // add default customer group
         if ($this->update()) {
@@ -802,7 +802,7 @@ class CustomerCore extends ObjectModel
     public function setWsPasswd($passwd)
     {
         if ($this->id == 0 || $this->passwd != $passwd) {
-            $this->passwd = Tools::encrypt($passwd);
+            $this->passwd = Tools::hashPassword($passwd);
         }
         return true;
     }
