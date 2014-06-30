@@ -53,7 +53,7 @@
 			{/if}
 			{* Category info *}
 			{if (isset($categoryData['info']) && $categoryData['info'])}
-				<p>{$categoryData['info']}</p>
+				<div>{$categoryData['info']}</div>
 			{/if}
 
 			{if !$categoryData['hide_multishop_checkbox'] && $use_multishop}
