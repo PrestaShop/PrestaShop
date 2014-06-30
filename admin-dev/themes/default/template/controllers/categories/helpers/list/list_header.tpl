@@ -35,7 +35,7 @@
 				<i class="icon-home"></i>
 				{assign var=params_url value=""}
 			{elseif isset($category.id_category)}
-				{assign var=params_url value="&id_category={$category.id_category|intval}&viewcategory"}
+				{assign var=params_url value="&amp;id_category={$category.id_category|intval}&amp;viewcategory"}
 			{/if}
 			{if isset($category.id_category) && $category.id_category == $categories_tree_current_id}
 				{$category.name}

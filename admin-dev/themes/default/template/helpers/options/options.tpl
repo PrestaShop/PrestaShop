@@ -309,7 +309,7 @@
 									{/if}
 									{if isset($field['desc']) && !empty($field['desc'])}
 									<div class="col-lg-9 col-lg-offset-3">
-										<p class="help-block">
+										<div class="help-block">
 											{if is_array($field['desc'])}
 												{foreach $field['desc'] as $p}
 													{if is_array($p)}
@@ -321,7 +321,7 @@
 											{else}
 												{$field['desc']}
 											{/if}
-										</p>
+										</div>
 									</div>
 									{/if}
 								{/block}{* end block input *}

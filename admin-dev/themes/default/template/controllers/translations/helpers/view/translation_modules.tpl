@@ -57,7 +57,7 @@
 			<p>{l s='Total missing expressions:'} <span class="badge">{l s='%d' sprintf=$missing_translations}</p>
 		</div>
 
-		<form method="post" id="{$table}_form" action="{$url_submit}" class="form-horizontal">
+		<form method="post" id="{$table}_form" action="{$url_submit|escape:'html':'UTF-8'}" class="form-horizontal">
 			<div class="panel">
 				<input type="hidden" name="lang" value="{$lang}" />
 				<input type="hidden" name="type" value="{$type}" />

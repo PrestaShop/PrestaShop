@@ -208,7 +208,7 @@ function new_condition_group()
 function appendConditionToGroup(html)
 {
 	if ($('#condition_group_'+current_id_condition_group+' table tbody tr').length > 0)
-		$('#condition_group_'+current_id_condition_group+' table tbody').append('<tr><td align="center" class="btn_delete_condition" colspan="3"><b>{l s='AND' js=1}</b></td></tr>');
+		$('#condition_group_'+current_id_condition_group+' table tbody').append('<tr><td class="text-center btn_delete_condition" colspan="3"><b>{l s='AND' js=1}</b></td></tr>');
 	$('#condition_group_'+current_id_condition_group+' table tbody').append(html);
 }
 

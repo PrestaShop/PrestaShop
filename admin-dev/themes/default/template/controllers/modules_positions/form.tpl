@@ -25,7 +25,7 @@
 
 <div class="leadin">{block name="leadin"}{/block}</div>
 
-<form action="{$url_submit}" id="{$table}_form" method="post" class="form-horizontal">
+<form action="{$url_submit|escape:'html':'UTF-8'}" id="{$table}_form" method="post" class="form-horizontal">
 	{if $display_key}
 		<input type="hidden" name="show_modules" value="{$display_key}" />
 	{/if}

@@ -206,7 +206,7 @@
 		{foreach from=$discounts item='discount'}
 			<tr>
 				<td><a href="{$link->getAdminLink('AdminDiscounts')|escape:'html':'UTF-8'}&id_discount={$discount.id_discount}&updatediscount">{$discount.name}</a></td>
-				<td align="center">- {displayWtPriceWithCurrency price=$discount.value_real currency=$currency}</td>
+				<td class="text-center">- {displayWtPriceWithCurrency price=$discount.value_real currency=$currency}</td>
 			</tr>
 		{/foreach}
 	</table>
