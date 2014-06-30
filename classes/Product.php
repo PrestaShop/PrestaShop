@@ -4142,8 +4142,9 @@ class ProductCore extends ObjectModel
 				else
 					$price_wt = $price * (1 + ((isset($product_update['tax_rate']) ? $product_update['tax_rate'] : $product_update['rate']) * 0.01));
 
-				if (isset($customized_datas[$product_id][$product_attribute_id][$id_address_delivery])) {
-					if(!isset($customized_datas[$product_id][$product_attribute_id][$id_address_delivery]))
+				if (isset($customized_datas[$product_id][$product_attribute_id][$id_address_delivery]))
+				{
+					if (!isset($customized_datas[$product_id][$product_attribute_id][$id_address_delivery]))
                                             $id_address_delivery = 0;
 					foreach ($customized_datas[$product_id][$product_attribute_id][$id_address_delivery] as $customization)
 					{
