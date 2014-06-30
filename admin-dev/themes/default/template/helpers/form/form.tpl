@@ -380,9 +380,7 @@
 										<div class="radio {if isset($input.class)}{$input.class}{/if}">
 											{strip}
 											<label>
-											<input type="radio"	name="{$input.name}" id="{$value.id}" value="{$value.value|escape:'html':'UTF-8'}"
-												{if $fields_value[$input.name] == $value.value}checked="checked"{/if}
-												{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if} />
+											<input type="radio"	name="{$input.name}" id="{$value.id}" value="{$value.value|escape:'html':'UTF-8'}"{if $fields_value[$input.name] == $value.value} checked="checked"{/if}{if isset($input.disabled) && $input.disabled} disabled="disabled"{/if}/>
 												{$value.label}
 											</label>
 											{/strip}
@@ -392,24 +390,9 @@
 								{elseif $input.type == 'switch'}
 									<span class="switch prestashop-switch fixed-width-lg">
 										{foreach $input.values as $value}
-										<input
-											type="radio"
-											name="{$input.name}"
-											{if $value.value == 1}
-												id="{$input.name}_on"
-											{else}
-												id="{$input.name}_off"
-											{/if}
-											value="{$value.value}"
-											{if $fields_value[$input.name] == $value.value}checked="checked"{/if}
-											{if isset($input.disabled) && $input.disabled}disabled="disabled"{/if}
-										/>
+										<input type="radio" name="{$input.name}"{if $value.value == 1} id="{$input.name}_on"{else} id="{$input.name}_off"{/if} value="{$value.value}"{if $fields_value[$input.name] == $value.value} checked="checked"{/if}{if isset($input.disabled) && $input.disabled} disabled="disabled"{/if}/>
 										{strip}
-										<label {if $value.value == 1}
-												for="{$input.name}_on"
-											{else}
-												for="{$input.name}_off"
-											{/if}>
+										<label {if $value.value == 1} for="{$input.name}_on"{else} for="{$input.name}_off"{/if}>
 											{if $value.value == 1}
 												{l s='Yes'}
 											{else}
@@ -472,15 +455,10 @@
 									{/if}
 									{foreach $input.values.query as $value}
 										{assign var=id_checkbox value=$input.name|cat:'_'|cat:$value[$input.values.id]}
-										<div class="checkbox{if isset($input.expand) && strtolower($input.expand.default) == 'show'} hidden {/if}">
+										<div class="checkbox{if isset($input.expand) && strtolower($input.expand.default) == 'show'} hidden{/if}">
 											{strip}
 												<label for="{$id_checkbox}">
-													<input type="checkbox"
-														name="{$id_checkbox}"
-														id="{$id_checkbox}"
-														class="{if isset($input.class)}{$input.class}{/if}"
-														{if isset($value.val)}value="{$value.val|escape:'html':'UTF-8'}"{/if}
-														{if isset($fields_value[$id_checkbox]) && $fields_value[$id_checkbox]}checked="checked"{/if} />
+													<input type="checkbox" name="{$id_checkbox}" id="{$id_checkbox}" class="{if isset($input.class)}{$input.class}{/if}"{if isset($value.val)} value="{$value.val|escape:'html':'UTF-8'}"{/if}{if isset($fields_value[$id_checkbox]) && $fields_value[$id_checkbox]} checked="checked"{/if} />
 													{$value[$input.values.name]}
 												</label>
 											{/strip}
