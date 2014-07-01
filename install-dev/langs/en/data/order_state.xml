@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <entity_order_state>
   <order_state id="Awaiting_cheque_payment">
-    <name>Pending check payment</name>
+    <name>Awaiting check payment</name>
     <template>cheque</template>
   </order_state>
   <order_state id="Payment_accepted">
