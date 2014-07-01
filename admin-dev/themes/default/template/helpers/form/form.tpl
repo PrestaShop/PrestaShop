@@ -485,7 +485,7 @@
 														</div>
 													</div>
 												</div>
-												<hr>
+												<hr />
 												<div class="form-group">
 													<label for="{$input.name}" class="required control-label col-lg-2">
 														<span class="label-tooltip" data-toggle="tooltip" data-html="true" title="" data-original-title="Minimum of 8 characters.">						

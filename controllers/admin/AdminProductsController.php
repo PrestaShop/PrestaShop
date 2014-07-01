@@ -2523,7 +2523,7 @@ class AdminProductsControllerCore extends AdminController
 						'href' => $this->context->link->getAdminLink('AdminProducts', true).'&id_product='.(int)$product->id.'&duplicateproduct',
 						'desc' => $this->l('Duplicate', null, null, false),
 						'confirm' => 1,
-						'js' => 'if (confirm(\''.$this->l('Also copy images', null, true, false).' ?\')){document.location.href = \''.$this->context->link->getAdminLink('AdminProducts', true).'&id_product='.(int)$product->id.'&duplicateproduct\'; return false;} else{document.location.href = \''.$this->context->link->getAdminLink('AdminProducts', true).'&id_product='.(int)$product->id.'&duplicateproduct&noimage=1\'; return false;}'
+						'js' => 'if (confirm(\''.$this->l('Also copy images', null, true, false).' ?\')){document.location.href = \''.Tools::safeOutput($this->context->link->getAdminLink('AdminProducts', true).'&id_product='.(int)$product->id.'&duplicateproduct').'\'; return false;} else{document.location.href = \''.Tools::safeOutput($this->context->link->getAdminLink('AdminProducts', true).'&id_product='.(int)$product->id.'&duplicateproduct&noimage=1').'\'; return false;}'
 					);
 
 				// adding button for preview this product statistics

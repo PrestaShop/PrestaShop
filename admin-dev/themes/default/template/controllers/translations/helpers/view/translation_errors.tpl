@@ -100,7 +100,7 @@
 					{/foreach}
 				</table>
 				<div class="panel-footer">
-					<a name="submitTranslations{$type|ucfirst}" href="{$cancel_url}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
+					<a name="submitTranslations{$type|ucfirst}" href="{$cancel_url|escape:'html':'UTF-8'}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
 					<button type="submit" id="{$table}_form_submit_btn" name="submitTranslations{$type|ucfirst}" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save'}</button>
 					<button type="submit" name="submitTranslations{$type|ucfirst}AndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
 				</div>

@@ -91,7 +91,7 @@
 				{/if}
 
 				{if isset($cur_theme.tc) && $cur_theme.tc}
-				<hr>
+				<hr />
 				<h4>{l s='Customize your theme'}</h4>
 				<div class="row">
 					<div class="col-sm-8">
@@ -105,7 +105,7 @@
 					</div>
 				</div>
 				{/if}
-				<hr>
+				<hr />
 				<h4>{l s='Configure your theme'}</h4>
 				<div class="row">
 					<div class="col-sm-8">
