@@ -39,7 +39,7 @@
 				<div>
 					<img class="img-responsive center-block" src="themes/default/img/prestashop-addons-logo.png" alt="Logo PrestaShop Addons"/>
 					<h3 class="text-center">{l s="Connect your shop with PrestaShop's marketplace in order to automatically import all your Addons purchases."}</h3>
-					<hr>
+					<hr />
 				</div>
 				<div class="row">
 					<div class="col-md-6 col-md-push-6">

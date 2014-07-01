@@ -24,7 +24,7 @@
 *}
 
 <input type="hidden" name="submitted_tabs[]" value="Pack" />
-<hr>
+<hr />
 <div class="form-group listOfPack">
 	<label class="control-label col-lg-3 product_description">
 		{l s='List of products of this pack'}

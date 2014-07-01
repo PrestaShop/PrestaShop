@@ -30,8 +30,8 @@
 		{l s='Please select a default category.'}
 	</div>
 	<div class="form-group">
-		<label class="control-label col-lg-3" for="category_block">
-			{include file="controllers/products/multishop/checkbox.tpl" field="category_box" type="category_box"}
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="category_box" type="category_box"}</span></div>
+		<label class="control-label col-lg-2" for="category_block">
 			{l s='Associated categories'}
 		</label>
 		<div class="col-lg-9">
@@ -44,10 +44,9 @@
 		</div>
 	</div>
 	<div class="form-group">
-		<label class="control-label col-lg-3" for="id_category_default">
-			{include file="controllers/products/multishop/checkbox.tpl" field="id_category_default" type="default"}
-			<span class="label-tooltip" data-toggle="tooltip"
-			title="{l s='The default category is the main category for your product, and is displayed by default.'}">
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="id_category_default" type="default"}</span></div>
+		<label class="control-label col-lg-2" for="id_category_default">
+			<span class="label-tooltip" data-toggle="tooltip" title="{l s='The default category is the main category for your product, and is displayed by default.'}">
 				{l s='Default category'}
 			</span>
 		</label>
@@ -106,7 +105,7 @@
 		</div>
 	</div>
 	<div class="panel-footer">
-		<a href="{$link->getAdminLink('AdminProducts')}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
+		<a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
 		<button type="submit" name="submitAddproduct" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save'}</button>
 		<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
 	</div>

@@ -551,7 +551,7 @@
 								<i class="icon-download"></i>
 								{l s="Download"} ({Tools::formatBytes($attachment.file_size, 2)})
 							</a>
-							<hr>
+							<hr />
 						</div>
 					{if $smarty.foreach.attachements.iteration %3 == 0 || $smarty.foreach.attachements.last}</div>{/if}
 				{/foreach}

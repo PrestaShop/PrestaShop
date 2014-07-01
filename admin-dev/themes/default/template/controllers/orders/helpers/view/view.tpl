@@ -243,7 +243,7 @@
 						$(this).tab('show')
 					})
 				</script>
-				<hr>
+				<hr />
 				<!-- Tab nav -->
 				<ul class="nav nav-tabs" id="myTab">
 					{$HOOK_TAB_SHIP}
@@ -281,7 +281,7 @@
 							{if $carrierModuleCall}
 								{$carrierModuleCall}
 							{/if}
-							<hr>
+							<hr />
 							{if $order->recyclable}
 								<span class="label label-success"><i class="icon-check"></i> {l s='Recycled packaging'}</span>
 							{else}
