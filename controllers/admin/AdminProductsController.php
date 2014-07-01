@@ -2317,7 +2317,7 @@ class AdminProductsControllerCore extends AdminController
 						'id' => $product_tab,
 						'selected' => (strtolower($product_tab) == strtolower($this->tab_display) || (isset($this->tab_display_module) && 'module'.$this->tab_display_module == Tools::strtolower($product_tab))),
 						'name' => $this->available_tabs_lang[$product_tab],
-						'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)Tools::getValue('id_product').'&amp;action='.$product_tab,
+						'href' => $this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&action='.$product_tab,
 					);
 				}
 				$this->tpl_form_vars['product_tabs'] = $product_tabs;
@@ -2649,7 +2649,7 @@ class AdminProductsControllerCore extends AdminController
 		else
 			$id_product = (int)Tools::getvalue('id_product');
 
-		$this->tpl_form_vars['form_action'] = $this->context->link->getAdminLink('AdminProducts').'&amp;'.($id_product ? 'id_product='.(int)$id_product : 'addproduct');
+		$this->tpl_form_vars['form_action'] = $this->context->link->getAdminLink('AdminProducts').'&'.($id_product ? 'id_product='.(int)$id_product : 'addproduct');
 		$this->tpl_form_vars['id_product'] = $id_product;
 
 		// Transform configuration option 'upload_max_filesize' in octets

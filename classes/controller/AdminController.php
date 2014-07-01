@@ -1325,12 +1325,12 @@ class AdminControllerCore extends Controller
 				break;
 			default: // list
 				$this->toolbar_btn['new'] = array(
-					'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
+					'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
 					'desc' => $this->l('Add new')
 				);
 				if ($this->allow_export)
 					$this->toolbar_btn['export'] = array(
-						'href' => self::$currentIndex.'&amp;export'.$this->table.'&amp;token='.$this->token,
+						'href' => self::$currentIndex.'&export'.$this->table.'&token='.$this->token,
 						'desc' => $this->l('Export')
 					);
 		}
