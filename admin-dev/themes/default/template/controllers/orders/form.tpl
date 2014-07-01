@@ -473,7 +473,7 @@
 						html += '<span>'+this.email+'</span><br/>';
 						html += '<span class="text-muted">'+((this.birthday != '0000-00-00') ? this.birthday : '')+'</span><br/>';
 						html += '<div class="panel-footer">';
-						html += '<a href="{$link->getAdminLink('AdminCustomers')}&amp;id_customer='+this.id_customer+'&amp;viewcustomer&amp;liteDisplaying=1" class="btn btn-default fancybox"><i class="icon-search"></i> {l s='Details'}</a>';
+						html += '<a href="{$link->getAdminLink('AdminCustomers')}&id_customer='+this.id_customer+'&viewcustomer&liteDisplaying=1" class="btn btn-default fancybox"><i class="icon-search"></i> {l s='Details'}</a>';
 						html += '<button type="button" data-customer="'+this.id_customer+'" class="setup-customer btn btn-default pull-right"><i class="icon-arrow-right"></i> {l s='Choose'}</button>';
 						html += '</div>';
 						html += '</div>';
@@ -1067,7 +1067,7 @@
 					</div>
 					<div class="col-lg-6">
 						<span class="form-control-static">{l s='Or'}&nbsp;</span>
-						<a class="fancybox_customer btn btn-default" href="{$link->getAdminLink('AdminCustomers')|escape:'html':'UTF-8'}&addcustomer&liteDisplaying=1&submitFormAjax=1#">
+						<a class="fancybox_customer btn btn-default" href="{$link->getAdminLink('AdminCustomers')|escape:'html':'UTF-8'}&amp;addcustomer&amp;liteDisplaying=1&amp;submitFormAjax=1#">
 							<i class="icon-plus-sign-alt"></i>
 							{l s='Add new customer'}
 						</a>
@@ -1277,7 +1277,7 @@
 					</div>
 					<div class="col-lg-6">
 						<span class="form-control-static">{l s='Or'}&nbsp;</span>
-						<a class="fancybox btn btn-default" href="{$link->getAdminLink('AdminCartRules')|escape:'html':'UTF-8'}&addcart_rule&liteDisplaying=1&submitFormAjax=1#">
+						<a class="fancybox btn btn-default" href="{$link->getAdminLink('AdminCartRules')|escape:'html':'UTF-8'}&amp;addcart_rule&amp;liteDisplaying=1&amp;submitFormAjax=1#">
 							<i class="icon-plus-sign-alt"></i>
 							{l s='Add new voucher'}
 						</a>

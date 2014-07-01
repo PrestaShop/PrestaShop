@@ -105,10 +105,10 @@
 					<span class="badge">{l s="#"}{$order->id}</span>
 					<div class="panel-heading-action">
 						<div class="btn-group">
-							<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$previousOrder}" {if !$previousOrder}disabled{/if}>
+							<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;vieworder&amp;id_order={$previousOrder}" {if !$previousOrder}disabled{/if}>
 								<i class="icon-backward"></i>
 							</a>
-							<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$nextOrder}" {if !$nextOrder}disabled{/if}>
+							<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;vieworder&amp;id_order={$nextOrder}" {if !$nextOrder}disabled{/if}>
 								<i class="icon-forward"></i>
 							</a>
 						</div>

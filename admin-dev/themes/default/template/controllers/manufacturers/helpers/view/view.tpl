@@ -36,7 +36,7 @@
 			<div class="panel-heading">
 				{$addresse.firstname} {$addresse.lastname}
 				<div class="pull-right">
-					<a class="btn btn-default" href="{$link->getAdminLink('AdminManufacturers')}&id_address={$addresse.id_address}&editaddresses=1">
+					<a class="btn btn-default" href="{$link->getAdminLink('AdminManufacturers')|escape:'html':'UTF-8'}&amp;id_address={$addresse.id_address}&amp;editaddresses=1">
 						<i class="icon-edit"></i>
 						{l s='Edit'}</a>
 				</div>

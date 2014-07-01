@@ -76,7 +76,7 @@ $(document).ready(function () {
 			if(result.found) {
 				var html = '<ul class="list-unstyled">';
 				jQuery.each(result.customers, function() {
-					html += '<li><a class="fancybox" href="{$link->getAdminLink('AdminCustomers')}&amp;id_customer='+this.id_customer+'&amp;viewcustomer&amp;liteDisplaying=1">'+this.firstname+' '+this.lastname+'</a>'+(this.birthday ? ' - '+this.birthday:'');
+					html += '<li><a class="fancybox" href="{$link->getAdminLink('AdminCustomers')}&id_customer='+this.id_customer+'&viewcustomer&liteDisplaying=1">'+this.firstname+' '+this.lastname+'</a>'+(this.birthday ? ' - '+this.birthday:'');
 					html += ' - '+this.email;
 					html += '<a onclick="Customer.select('+this.id_customer+', \''+this.firstname+' '+this.lastname+'\'); return false;" href="#" class="btn btn-default">{l s='Choose'}</a></li>';
 				});
