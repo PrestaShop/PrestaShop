@@ -165,7 +165,7 @@ $(document).ready(function () {
 					</select>
 				</div>
 				<div class="col-lg-2">
-					<a class="btn btn-link confirm_leave" href="{$link->getAdminLink('AdminTaxRulesGroup')|escape:'html':'UTF-8'}&addtax_rules_group&id_product={$product->id}"{if $tax_exclude_taxe_option} disabled="disabled"{/if}>
+					<a class="btn btn-link confirm_leave" href="{$link->getAdminLink('AdminTaxRulesGroup')|escape:'html':'UTF-8'}&amp;addtax_rules_group&amp;id_product={$product->id}"{if $tax_exclude_taxe_option} disabled="disabled"{/if}>
 						<i class="icon-plus-sign"></i> {l s='Create new tax'} <i class="icon-external-link-sign"></i>
 					</a>
 				</div>
