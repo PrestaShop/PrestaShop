@@ -43,7 +43,7 @@
 				</div>
 				<div class="row">
 					<div class="col-md-6 col-md-push-6">
-						<h4>Connect to PrestaShop Addons</h4>
+						<h4>{l s='Connect to PrestaShop Addons'}</h4>
 						<div class="form-group">
 							<div class="input-group">
 								<span class="input-group-addon"><i class="icon-user"></i></span>
@@ -55,7 +55,7 @@
 								<span class="input-group-addon"><i class="icon-key"></i></span>
 								<input id="password_addons" name="password_addons" type="password" value="" autocomplete="off" class="form-control ac_input">
 							</div>
-							<a class="btn btn-link pull-right" href="{$addons_forgot_password_link}" target="_blank" >I forgot my password</a>
+							<a class="btn btn-link pull-right" href="{$addons_forgot_password_link}" target="_blank" >{l s='I forgot my password'}</a>
 							<br>
 						</div>
 						<div class="form-group">
@@ -72,7 +72,7 @@
 							<i class="icon-external-link"></i>
 						</a>
 					</div>
-				</div>					
+				</div>
 
 				<div id="addons_loading" class="help-block"></div>
 
