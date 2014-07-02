@@ -223,7 +223,7 @@
 						<div class="help-block">{l s='e.g. '} Blouse; red.jpg, blue.jpg, green.jpg; 129.90</div>
 					</div>
 				</div>
-				<hr>
+				<hr />
 				<div class="form-group">
 					<label for="truncate" class="control-label col-lg-4">{l s='Delete all'} <span id="entitie">{l s='categories'}</span> {l s='before import'} </label>
 					<div class="col-lg-8">
@@ -240,7 +240,8 @@
 				<div class="form-group" style="display: none">
 					<label for="match_ref" class="control-label col-lg-4">
 						<span data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='If enabled, the product\'s reference number MUST be unique!'}">
-						{l s='Use product reference as key'}
+							{l s='Use product reference as key'}
+						</span>
 					</label>
 					<div class="col-lg-8">
 						<label class="switch-light prestashop-switch fixed-width-lg">
@@ -274,7 +275,7 @@
 					</label>
 					<div class="col-lg-8">
 						<label class="switch-light prestashop-switch fixed-width-lg">
-							<input  id="forceIDs"name="forceIDs" type="checkbox"/>
+							<input  id="forceIDs" name="forceIDs" type="checkbox"/>
 							<span>
 								<span>{l s='Yes'}</span>
 								<span>{l s='No'}</span>

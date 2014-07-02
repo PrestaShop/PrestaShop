@@ -551,7 +551,7 @@
 								<i class="icon-download"></i>
 								{l s="Download"} ({Tools::formatBytes($attachment.file_size, 2)})
 							</a>
-							<hr>
+							<hr />
 						</div>
 					{if $smarty.foreach.attachements.iteration %3 == 0 || $smarty.foreach.attachements.last}</div>{/if}
 				{/foreach}
@@ -665,7 +665,7 @@
 {addJsDef allowBuyWhenOutOfStock=$allow_oosp|boolval}
 {addJsDef availableNowValue=$product->available_now|escape:'quotes':'UTF-8'}
 {addJsDef availableLaterValue=$product->available_later|escape:'quotes':'UTF-8'}
-{addJsDef attribute_anchor_separator=$attribute_anchor_separator|addslashes}
+{addJsDef attribute_anchor_separator=$attribute_anchor_separator|escape:'quotes':'UTF-8'}
 {addJsDef attributesCombinations=$attributesCombinations}
 {addJsDef currencySign=$currencySign|html_entity_decode:2:"UTF-8"}
 {addJsDef currencyRate=$currencyRate|floatval}

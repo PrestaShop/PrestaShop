@@ -45,13 +45,13 @@
 				ed.on('keydown', function(ed, e) {
 					tinyMCE.triggerSave();
 					textarea = $('#'+tinymce.activeEditor.id);
-					max = textarea.parent('div').find('span.counter').attr('max');
+					var max = textarea.parent('div').find('span.counter').data('max');
 					if (max != 'none')
 					{
 						count = tinyMCE.activeEditor.getBody().textContent.length;
 						rest = max - count;
 						if (rest < 0)
-							textarea.parent('div').find('span.counter').html('<span style="color:red;">{l s='Maximum'} '+max+' {l s='characters'} : '+rest+'</span>');
+							textarea.parent('div').find('span.counter').html('<span style="color:red;">{l s='Maximum'} '+ max +' {l s='characters'} : '+rest+'</span>');
 						else
 							textarea.parent('div').find('span.counter').html(' ');
 					}
@@ -67,7 +67,7 @@
 			<div class="list-group">
 			{foreach $product_tabs key=numStep item=tab}
 				{if $tab.name != "Pack"}
-					<a class="list-group-item {if $tab.selected}active{/if}" id="link-{$tab.id}" href="{$tab.href}&amp;updateproduct">{$tab.name}</a>
+					<a class="list-group-item {if $tab.selected}active{/if}" id="link-{$tab.id}" href="{$tab.href|escape:html:'UTF-8'}&amp;updateproduct">{$tab.name}</a>
 				{/if}
 			{/foreach}
 			</div>
@@ -288,7 +288,7 @@
 			<div id="loading"><i class="icon-refresh icon-spin"></i>&nbsp;{l s='Loading...'}</div>
 		</div>
 
-		<form id="product_form" class="form-horizontal col-lg-10" action="{$form_action}" method="post" enctype="multipart/form-data" name="product" novalidate>
+		<form id="product_form" class="form-horizontal col-lg-10" action="{$form_action|escape:html:'UTF-8'}" method="post" enctype="multipart/form-data" name="product" novalidate>
 			<input type="hidden" name="id_product" value="{$id_product}" />
 			<input type="hidden" id="is_virtual" name="is_virtual" value="{$product->is_virtual|escape:html:'UTF-8'}" />
 

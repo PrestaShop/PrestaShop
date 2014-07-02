@@ -67,7 +67,6 @@
 				</div>
 			</div>
 			<div id="formMemcachedServer" style="display:none;">
-				<form action="{$current}&amp;token={$token}" method="post" class="form-horizontal">
 					<div class="form-group">
 						<label class="control-label col-lg-3">{l s='IP Address'} </label>
 						<div class="col-lg-9">
@@ -92,7 +91,6 @@
 							<input type="button" value="{l s='Test Server'}" id="testMemcachedServer" class="btn btn-default" />
 	                	</div>
 					</div>
-				</form>
 			</div>
 			{if $servers}
 			<div class="form-group">

@@ -49,7 +49,7 @@
 			{l s='%s at least, or you will have to edit the translation files.' sprintf=$limit_warning['needed_limit']}
 		</div>
 	{else}
-		<form method="post" id="{$table}_form" action="{$url_submit}" class="form-horizontal">
+		<form method="post" id="{$table}_form" action="{$url_submit|escape:'html':'UTF-8'}" class="form-horizontal">
 			<div class="panel">
 				<input type="hidden" name="lang" value="{$lang}" />
 				<input type="hidden" name="type" value="{$type}" />

@@ -84,11 +84,13 @@
 				</div>
 			</div>
 			<div class="col-xs-6 col-sm-3 box-stats color1" >
-				<div class="kpi-content">
-					<i class="icon-book"></i>
-					<span class="title">{l s='Products'}</span>
-					<span class="value">{sizeof($products)}</span>
-				</div>
+				<a href="#start_products">
+					<div class="kpi-content">
+						<i class="icon-book"></i>
+						<span class="title">{l s='Products'}</span>
+						<span class="value">{sizeof($products)}</span>
+					</div>
+				</a>
 			</div>
 		</div>
 	</div>
@@ -103,10 +105,10 @@
 					<span class="badge">{l s="#"}{$order->id}</span>
 					<div class="panel-heading-action">
 						<div class="btn-group">
-							<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$previousOrder}" {if !$previousOrder}disabled{/if}>
+							<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;vieworder&amp;id_order={$previousOrder}" {if !$previousOrder}disabled{/if}>
 								<i class="icon-backward"></i>
 							</a>
-							<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$nextOrder}" {if !$nextOrder}disabled{/if}>
+							<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;vieworder&amp;id_order={$nextOrder}" {if !$nextOrder}disabled{/if}>
 								<i class="icon-forward"></i>
 							</a>
 						</div>
@@ -192,14 +194,14 @@
 									{foreach from=$history item=row key=key}
 										{if ($key == 0)}
 											<tr>
-												<td style="background-color:{$row['color']}"><img src="../img/os/{$row['id_order_state']|intval}.gif" /></td>
+												<td style="background-color:{$row['color']}"><img src="../img/os/{$row['id_order_state']|intval}.gif" width="16" height="16" /></td>
 												<td style="background-color:{$row['color']};color:{$row['text-color']}">{$row['ostate_name']|stripslashes}</td>
 												<td style="background-color:{$row['color']};color:{$row['text-color']}">{if $row['employee_lastname']}{$row['employee_firstname']|stripslashes} {$row['employee_lastname']|stripslashes}{/if}</td>
 												<td style="background-color:{$row['color']};color:{$row['text-color']}">{dateFormat date=$row['date_add'] full=true}</td>
 											</tr>
 										{else}
 											<tr>
-												<td><img src="../img/os/{$row['id_order_state']|intval}.gif" /></td>
+												<td><img src="../img/os/{$row['id_order_state']|intval}.gif" width="16" height="16" /></td>
 												<td>{$row['ostate_name']|stripslashes}</td>
 												<td>{if $row['employee_lastname']}{$row['employee_firstname']|stripslashes} {$row['employee_lastname']|stripslashes}{else}&nbsp;{/if}</td>
 												<td>{dateFormat date=$row['date_add'] full=true}</td>
@@ -241,7 +243,7 @@
 						$(this).tab('show')
 					})
 				</script>
-				<hr>
+				<hr />
 				<!-- Tab nav -->
 				<ul class="nav nav-tabs" id="myTab">
 					{$HOOK_TAB_SHIP}
@@ -279,7 +281,7 @@
 							{if $carrierModuleCall}
 								{$carrierModuleCall}
 							{/if}
-							<hr>
+							<hr />
 							{if $order->recyclable}
 								<span class="label label-success"><i class="icon-check"></i> {l s='Recycled packaging'}</span>
 							{else}
@@ -852,7 +854,7 @@
 		</div>
 	</div>
 
-	<div class="row">
+	<div class="row" id="start_products">
 		<div class="col-lg-12">
 			<form class="container-command-top-spacing" action="{$current_index}&amp;vieworder&amp;token={$smarty.get.token}&id_order={$order->id}" method="post" onsubmit="return orderDeleteProduct('{l s='This product cannot be returned.'}', '{l s='Quantity to cancel is greater than quantity available.'}');">
 				<input type="hidden" name="id_order" value="{$order->id}" />

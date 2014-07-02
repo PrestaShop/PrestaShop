@@ -132,10 +132,9 @@
 		</div>
 		<hr/>
 		<div class="form-group">
-			<label class="control-label col-lg-3" for="attribute_wholesale_price">
-				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_wholesale_price" type="default"}
-				<span class="label-tooltip" data-toggle="tooltip"
-					title="{l s='Set to zero if the price does not change.'}">
+			<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="attribute_wholesale_price" type="default"}</span></div>
+			<label class="control-label col-lg-2" for="attribute_wholesale_price">
+				<span class="label-tooltip" data-toggle="tooltip" title="{l s='Set to zero if the price does not change.'}">
 					{l s='Wholesale price'}
 				</span>
 			</label>
@@ -151,8 +150,8 @@
 			<span style="display:none;" id="attribute_wholesale_price_full">({l s='Overrides the wholesale price from the "Prices" tab.'})</span>
 		</div>
 		<div class="form-group">
-			<label class="control-label col-lg-3" for="attribute_price_impact">
-				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_price_impact" type="attribute_price_impact"}
+			<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="attribute_price_impact" type="attribute_price_impact"}</span></div>
+			<label class="control-label col-lg-2" for="attribute_price_impact">
 				{l s='Impact on price'}
 			</label>
 			<div class="col-lg-9">
@@ -210,8 +209,8 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="control-label col-lg-3" for="attribute_weight_impact">
-				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_weight_impact" type="attribute_weight_impact"}
+			<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="attribute_weight_impact" type="attribute_weight_impact"}</span></div>
+			<label class="control-label col-lg-2" for="attribute_weight_impact">
 				{l s='Impact on weight'}
 			</label>
 			<div class="col-lg-9">
@@ -240,8 +239,8 @@
 			</div>
 		</div>
 		<div id="tr_unit_impact" class="form-group">
-			<label class="control-label col-lg-3" for="attribute_unit_impact">
-				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_unit_impact" type="attribute_unit_impact"}
+			<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="attribute_unit_impact" type="attribute_unit_impact"}</span></div>
+			<label class="control-label col-lg-2" for="attribute_unit_impact">
 				{l s='Impact on unit price'}
 			</label>
 			<div class="col-lg-3">
@@ -269,10 +268,9 @@
 		</div>
 		{if $ps_use_ecotax}
 		<div class="form-group">
-			<label class="control-label col-lg-3" for="attribute_ecotax">
-				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_ecotax" type="default"}
-				<span class="label-tooltip" data-toggle="tooltip"
-					title="{l s='Overrides the ecotax from the "Prices" tab.'}">
+			<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="attribute_ecotax" type="default"}</span></div>
+			<label class="control-label col-lg-2" for="attribute_ecotax">
+				<span class="label-tooltip" data-toggle="tooltip" title="{l s='Overrides the ecotax from the "Prices" tab.'}">
 					{l s='Ecotax (tax excl.)'}
 				</span>
 			</label>
@@ -286,10 +284,9 @@
 		</div>
 		{/if}
 		<div class="form-group">
-			<label class="control-label col-lg-3" for="attribute_minimal_quantity">
-				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_minimal_quantity" type="default"}
-				<span class="label-tooltip" data-toggle="tooltip"
-					title="{l s='The minimum quantity to buy this product (set to 1 to disable this feature).'}">
+			<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="attribute_minimal_quantity" type="default"}</span></div>
+			<label class="control-label col-lg-2" for="attribute_minimal_quantity">
+				<span class="label-tooltip" data-toggle="tooltip" title="{l s='The minimum quantity to buy this product (set to 1 to disable this feature).'}">
 					{l s='Minimum quantity'}
 				</span>
 			</label>
@@ -301,10 +298,9 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="control-label col-lg-3" for="available_date_attribute">
-				{include file="controllers/products/multishop/checkbox.tpl" field="available_date_attribute" type="default"}
-				<span class="label-tooltip" data-toggle="tooltip"
-					title="{l s='If this product is out of stock, you can indicate when the product will be available again.'}">
+			<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="available_date_attribute" type="default"}</span></div>
+			<label class="control-label col-lg-2" for="available_date_attribute">
+				<span class="label-tooltip" data-toggle="tooltip" title="{l s='If this product is out of stock, you can indicate when the product will be available again.'}">
 					{l s='Available date'}
 				</span>
 			</label>
@@ -338,8 +334,8 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="control-label col-lg-3" for="attribute_default">
-				{include file="controllers/products/multishop/checkbox.tpl" field="attribute_default" type="attribute_default"}
+			<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="attribute_default" type="attribute_default"}</span></div>
+			<label class="control-label col-lg-2" for="attribute_default">
 				{l s='Default'}
 			</label>
 			<div class="col-lg-9">
@@ -361,7 +357,7 @@
 	</div>
 	{$list}
 	<div class="panel-footer">
-		<a href="{$link->getAdminLink('AdminProducts')}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
+		<a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
 		<button type="submit" name="submitAddproduct" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save'}</button>
 		<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
 		<a href="#" id="desc-product-newCombination" class="btn btn-default pull-right"><i class="process-icon-new"></i> <span>{l s="New combination"}</span></a>

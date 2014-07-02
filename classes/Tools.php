@@ -3118,17 +3118,21 @@ exit;
 
 		if ($use_html_purifier)
 		{
-			$config = HTMLPurifier_Config::createDefault();
-			$config->set('Attr.EnableID', true);
-			$config->set('Cache.SerializerPath', _PS_CACHE_DIR_.'purifier');
-
-			if (Configuration::get('PS_ALLOW_HTML_IFRAME'))
+			if ($purifier === null)
 			{
-				$config->set('HTML.SafeIframe', true);
-				$config->set('HTML.SafeObject', true);
-				$config->set('URI.SafeIframeRegexp','/.*/');
+				$config = HTMLPurifier_Config::createDefault();
+				$config->set('Attr.EnableID', true);
+				$config->set('HTML.Trusted', true);
+				$config->set('Cache.SerializerPath', _PS_CACHE_DIR_.'purifier');
+
+				if (Configuration::get('PS_ALLOW_HTML_IFRAME'))
+				{
+					$config->set('HTML.SafeIframe', true);
+					$config->set('HTML.SafeObject', true);
+					$config->set('URI.SafeIframeRegexp','/.*/');
+				}
+				$purifier = new HTMLPurifier($config);
 			}
-			$purifier = new HTMLPurifier($config);
 			$html = $purifier->purify($html);
 		}
 

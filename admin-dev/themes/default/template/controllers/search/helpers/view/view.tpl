@@ -109,7 +109,7 @@ $(function() {
 				{l s='%d categories' sprintf=$categories|@count}
 			{/if}
 		</h3>
-		<table cellspacing="0" cellpadding="0" class="table">
+		<table class="table" style="border-spacing : 0; border-collapse : collapse;">
 			{foreach $categories key=key item=category}
 				<tr>
 					<td>{$category}</td>

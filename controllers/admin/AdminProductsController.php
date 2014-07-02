@@ -200,7 +200,7 @@ class AdminProductsControllerCore extends AdminController
 			'type' => 'int'
 		);
 		$this->fields_list['image'] = array(
-			'title' => $this->l('Photo'),
+			'title' => $this->l('Image'),
 			'align' => 'center',
 			'image' => 'p',
 			'orderby' => false,
@@ -2317,7 +2317,7 @@ class AdminProductsControllerCore extends AdminController
 						'id' => $product_tab,
 						'selected' => (strtolower($product_tab) == strtolower($this->tab_display) || (isset($this->tab_display_module) && 'module'.$this->tab_display_module == Tools::strtolower($product_tab))),
 						'name' => $this->available_tabs_lang[$product_tab],
-						'href' => $this->context->link->getAdminLink('AdminProducts').'&amp;id_product='.(int)Tools::getValue('id_product').'&amp;action='.$product_tab,
+						'href' => $this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&action='.$product_tab,
 					);
 				}
 				$this->tpl_form_vars['product_tabs'] = $product_tabs;
@@ -2523,7 +2523,7 @@ class AdminProductsControllerCore extends AdminController
 						'href' => $this->context->link->getAdminLink('AdminProducts', true).'&id_product='.(int)$product->id.'&duplicateproduct',
 						'desc' => $this->l('Duplicate', null, null, false),
 						'confirm' => 1,
-						'js' => 'if (confirm(\''.$this->l('Also copy images', null, true, false).' ?\')){document.location.href = \''.$this->context->link->getAdminLink('AdminProducts', true).'&id_product='.(int)$product->id.'&duplicateproduct\'; return false;} else{document.location.href = \''.$this->context->link->getAdminLink('AdminProducts', true).'&id_product='.(int)$product->id.'&duplicateproduct&noimage=1\'; return false;}'
+						'js' => 'if (confirm(\''.$this->l('Also copy images', null, true, false).' ?\')){document.location.href = \''.Tools::safeOutput($this->context->link->getAdminLink('AdminProducts', true).'&id_product='.(int)$product->id.'&duplicateproduct').'\'; return false;} else{document.location.href = \''.Tools::safeOutput($this->context->link->getAdminLink('AdminProducts', true).'&id_product='.(int)$product->id.'&duplicateproduct&noimage=1').'\'; return false;}'
 					);
 
 				// adding button for preview this product statistics
@@ -2649,7 +2649,7 @@ class AdminProductsControllerCore extends AdminController
 		else
 			$id_product = (int)Tools::getvalue('id_product');
 
-		$this->tpl_form_vars['form_action'] = $this->context->link->getAdminLink('AdminProducts').'&amp;'.($id_product ? 'id_product='.(int)$id_product : 'addproduct');
+		$this->tpl_form_vars['form_action'] = $this->context->link->getAdminLink('AdminProducts').'&'.($id_product ? 'id_product='.(int)$id_product : 'addproduct');
 		$this->tpl_form_vars['id_product'] = $id_product;
 
 		// Transform configuration option 'upload_max_filesize' in octets

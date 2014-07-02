@@ -328,7 +328,7 @@
 {/if}
 {strip}
 {addJsDef CUSTOMIZE_TEXTFIELD=$CUSTOMIZE_TEXTFIELD}
-{addJsDef img_dir=$img_dir|addslashes}
+{addJsDef img_dir=$img_dir|escape:'quotes':'UTF-8'}
 {addJsDef generated_date=$smarty.now|intval}
 {addJsDef ajax_allowed=$ajax_allowed|boolval}
 

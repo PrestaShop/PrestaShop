@@ -53,7 +53,7 @@
 		{
 			if (modules[i].checked == true)
 			{
-				rel = modules[i].getAttribute('rel');
+				rel = modules[i].getAttribute('data-rel');
 				if (rel != "false" && action == "uninstall")
 				{
 					if (!confirm(rel))

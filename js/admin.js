@@ -370,45 +370,6 @@ function viewTemplates(id_select, prefix, ext)
 	}
 }
 
-function validateImportation(mandatory)
-{
-    var type_value = [];
-	var seted_value = [];
-	var elem;
-	var col = 'unknow';
-
-	toggle(getE('error_duplicate_type'), false);
-	toggle(getE('required_column'), false);
-    for (i = 0; elem = getE('type_value['+i+']'); i++)
-    {
-		if (seted_value[elem.options[elem.selectedIndex].value])
-		{
-			scroll(0,0);
-			toggle(getE('error_duplicate_type'), true);
-			return false;
-		}
-		else if (elem.options[elem.selectedIndex].value != 'no')
-			seted_value[elem.options[elem.selectedIndex].value] = true;
-	}
-	for (needed in mandatory)
-		if (!seted_value[mandatory[needed]])
-		{
-			scroll(0,0);
-			toggle(getE('required_column'), true);
-			getE('missing_column').innerHTML = mandatory[needed];
-			elem = getE('type_value[0]');
-			for (i = 0; i < elem.length; ++i)
-			{
-				if (elem.options[i].value == mandatory[needed])
-				{
-					getE('missing_column').innerHTML = elem.options[i].innerHTML;
-					break ;
-				}
-			}
-			return false
-		}
-}
-
 function orderDeleteProduct(txtConfirm, txtExplain)
 {
 	ret = true;
