@@ -271,10 +271,6 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 					'name' => 'action'
 				),
 				array(
-					'type' => 'hidden',
-					'name' => 'id_tax_rules_group'
-				),
-				array(
 					'type' => 'text',
 					'label' => $this->l('Zip/postal code range'),
 					'name' => 'zipcode',
