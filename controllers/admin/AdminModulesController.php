@@ -630,26 +630,29 @@ class AdminModulesControllerCore extends AdminController
 
 	public function postProcessDelete()
 	{
-		 	if ($this->tabAccess['delete'] === '1')
+		if ($this->tabAccess['delete'] === '1')
+		{
+			if (Tools::getValue('module_name') != '')
 			{
-				if (Tools::getValue('module_name') != '')
+				$module = Module::getInstanceByName(Tools::getValue('module_name'));
+				if (Validate::isLoadedObject($module) && !$module->getPermission('configure'))
+					$this->errors[] = Tools::displayError('You do not have the permission to use this module.');
+				else
 				{
-					$module = Module::getInstanceByName(Tools::getValue('module_name'));
-					if (Validate::isLoadedObject($module) && !$module->getPermission('configure'))
-						$this->errors[] = Tools::displayError('You do not have the permission to use this module.');
-					else
-					{
-						// Uninstall the module before deleting the files, but do not block the process if uninstall returns false
-						if (Module::isInstalled($module->name))
-							$module->uninstall();
-						$moduleDir = _PS_MODULE_DIR_.str_replace(array('.', '/', '\\'), array('', '', ''), Tools::getValue('module_name'));
-						$this->recursiveDeleteOnDisk($moduleDir);
+					// Uninstall the module before deleting the files, but do not block the process if uninstall returns false
+					if (Module::isInstalled($module->name))
+						$module->uninstall();
+					$moduleDir = _PS_MODULE_DIR_.str_replace(array('.', '/', '\\'), array('', '', ''), Tools::getValue('module_name'));
+					$this->recursiveDeleteOnDisk($moduleDir);
+					if (!file_exists($moduleDir))
 						Tools::redirectAdmin(self::$currentIndex.'&conf=22&token='.$this->token.'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name'));
-					}
+					else
+						$this->errors[] = Tools::displayError('Sorry, the module cannot be deleted. Please check if you have the right permissions on this folder.');
 				}
 			}
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to delete this.');
+		}
+		else
+			$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 	}
 
 	public function postProcessCallback()
