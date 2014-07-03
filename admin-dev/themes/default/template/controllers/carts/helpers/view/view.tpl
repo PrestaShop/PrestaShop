@@ -27,16 +27,7 @@
 
 {block name="override_tpl"}
 <div class="panel">
-	{include file="helpers/kpi/kpi.tpl"
-		id="kpi-cart"
-		color="color1"
-		icon="icon-shopping-cart"
-		title="{l s='Cart #%06d'|sprintf:$cart->id}"
-		subtitle="{if $customer->id}{$customer->firstname} {$customer->lastname}{else}{l s='Guest'}{/if} {l s='On'} {dateFormat date=$cart->date_upd full=0}"
-		value="{displayWtPriceWithCurrency price=$total_price currency=$currency}"
-		source=''
-		chart=null
-	}
+	{$kpi}
 </div>
 <div class="row">
 	<div class="col-lg-6">
