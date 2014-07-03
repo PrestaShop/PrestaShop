@@ -33,7 +33,7 @@
 	{/if}
 </script>
 {block name="defaultOptions"}
-<form action="{$current}&amp;token={$token|escape:'html':'UTF-8'}"
+<form action="{$currentIndex|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}"
 	id="{if $table == null}configuration_form{else}{$table}_form{/if}"
 	method="post"
 	enctype="multipart/form-data" class="form-horizontal">

@@ -86,7 +86,7 @@
 				</dl>
 			{/if}
 			
-			<form class="form-inline" action="{$current}&amp;token={$token|escape:'html':'UTF-8'}&amp;id_customer_thread={$message.id_customer_thread}&amp;viewcustomer_thread" method="post" >
+			<form class="form-inline" action="{$currentIndex|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;id_customer_thread={$message.id_customer_thread}&amp;viewcustomer_thread" method="post" >
 				<input type="hidden" name="id_customer_message" value="{$message.id_customer_message}" />
 				<div class="form-group">
 					<dl class="dl-horizontal">
@@ -175,7 +175,7 @@
 	{/if}
 	<div id="reply_to_{$message.id_customer_message}" style="display: none;">
 		<div class="panel">
-			<form action="{$current}&amp;token={getAdminToken tab='AdminCustomerThreads'}&amp;id_customer_thread={$message.id_customer_thread|intval}&amp;viewcustomer_thread=1" method="post" enctype="multipart/form-data" class="form-horizontal">
+			<form action="{$currentIndex|escape:'html':'UTF-8'}&amp;token={getAdminToken tab='AdminCustomerThreads'}&amp;id_customer_thread={$message.id_customer_thread|intval}&amp;viewcustomer_thread=1" method="post" enctype="multipart/form-data" class="form-horizontal">
 				<div class="panel-heading">
 					{l s='Please type your reply below:'}
 				</div>
