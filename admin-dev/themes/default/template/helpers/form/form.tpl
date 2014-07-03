@@ -408,8 +408,7 @@
 									{if isset($input.lang) AND $input.lang}
 									{foreach $languages as $language}
 									{if $languages|count > 1}
-									<div class="form-group translatable-field lang-{$language.id_lang}"  {if $language.id_lang != $defaultFormLanguage}style="display:none;"{/if}>
-
+									<div class="form-group translatable-field lang-{$language.id_lang}"{if $language.id_lang != $defaultFormLanguage} style="display:none;"{/if}>
 										<div class="col-lg-9">
 									{/if}
 											<textarea name="{$input.name}_{$language.id_lang}" class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte{if isset($input.class)} {$input.class}{/if}{else}{if isset($input.class)} {$input.class}{else} textarea-autosize{/if}{/if}">{$fields_value[$input.name][$language.id_lang]|escape:'html':'UTF-8'}</textarea>
@@ -438,14 +437,14 @@
 
 								{elseif $input.type == 'checkbox'}
 									{if isset($input.expand)}
-										<a class="btn btn-default show_checkbox{if strtolower($input.expand.default) == 'hide'} hidden {/if}" href="#">
+										<a class="btn btn-default show_checkbox{if strtolower($input.expand.default) == 'hide'} hidden{/if}" href="#">
 											<i class="icon-{$input.expand.show.icon}"></i>
 											{$input.expand.show.text}
 											{if isset($input.expand.print_total) && $input.expand.print_total > 0}
 												<span class="badge">{$input.expand.print_total}</span>
 											{/if}
 										</a>
-										<a class="btn btn-default hide_checkbox{if strtolower($input.expand.default) == 'show'} hidden {/if}" href="#">
+										<a class="btn btn-default hide_checkbox{if strtolower($input.expand.default) == 'show'} hidden{/if}" href="#">
 											<i class="icon-{$input.expand.hide.icon}"></i>
 											{$input.expand.hide.text}
 											{if isset($input.expand.print_total) && $input.expand.print_total > 0}
