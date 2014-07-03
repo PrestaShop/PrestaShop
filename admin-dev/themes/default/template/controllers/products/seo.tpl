@@ -30,7 +30,7 @@
 		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="meta_title" type="default" multilang="true"}</span></div>
 		<label class="control-label col-lg-2" for="meta_title_{$id_lang}">
 			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='Public title for the product\'s page, and for search engines. Leave blank to use the product name.'}">
+				title="{l s='Public title for the product\'s page, and for search engines. Leave blank to use the product name. At the left of the field is display the number of character you still can write.'}">
 				{l s='Meta title'}
 			</span>
 		</label>
