@@ -4142,13 +4142,17 @@ class ProductCore extends ObjectModel
 				else
 					$price_wt = $price * (1 + ((isset($product_update['tax_rate']) ? $product_update['tax_rate'] : $product_update['rate']) * 0.01));
 
+				if (!isset($customized_datas[$product_id][$product_attribute_id][$id_address_delivery]))
+                                        $id_address_delivery = 0;
 				if (isset($customized_datas[$product_id][$product_attribute_id][$id_address_delivery]))
+				{
 					foreach ($customized_datas[$product_id][$product_attribute_id][$id_address_delivery] as $customization)
 					{
 						$customization_quantity += (int)$customization['quantity'];
 						$customization_quantity_refunded += (int)$customization['quantity_refunded'];
 						$customization_quantity_returned += (int)$customization['quantity_returned'];
 					}
+				}
 
 				$product_update['customizationQuantityTotal'] = $customization_quantity;
 				$product_update['customizationQuantityRefunded'] = $customization_quantity_refunded;
