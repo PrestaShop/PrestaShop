@@ -3622,7 +3622,6 @@ class ProductCore extends ObjectModel
 			return true;
 
 		$data = array();
-		$res = true;
 		foreach ($results as $row)
 		{
 			$new_filename = ProductDownload::getNewFilename();
@@ -3639,10 +3638,8 @@ class ProductCore extends ObjectModel
 				'is_shareable' => (int)$row['is_shareable'],
 				'date_add' => date('Y-m-d H:i:s')
 			);
-			$res &= Db::getInstance()->insert('product_download', $data);
 		}
-
-		return $res;
+		return Db::getInstance()->insert('product_download', $data);
 	}
 
 	public static function duplicateAttachments($id_product_old, $id_product_new)

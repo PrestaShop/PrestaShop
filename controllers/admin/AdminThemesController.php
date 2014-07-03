@@ -1876,7 +1876,6 @@ class AdminThemesControllerCore extends AdminController
 		}
 		else
 		{
-
 			$content = '';
 			if (Configuration::hasKey('PS_LOGO') && trim(Configuration::get('PS_LOGO')) != ''
 				&& file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO')) && filesize(_PS_IMG_DIR_.Configuration::get('PS_LOGO')))
@@ -2404,7 +2403,6 @@ class AdminThemesControllerCore extends AdminController
 			$helper->table = 'theme';
 
 			$helper->override_folder = $this->tpl_folder;
-
 
 			return $helper->generateForm(array($fields_form));
 		}
