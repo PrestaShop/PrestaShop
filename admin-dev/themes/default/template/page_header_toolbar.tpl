@@ -120,8 +120,8 @@
 				{if (isset($tab_modules_open) && $tab_modules_open) || isset($tab_modules_list)}
 				<script type="text/javascript">
 				//<![CDATA[
-					{if isset($tab_modules_open) && $tab_modules_open}
 					var modules_list_loaded = false;
+					{if isset($tab_modules_open) && $tab_modules_open}
 						$(function() {
 								$('#modules_list_container').modal('show');
 								openModulesList();

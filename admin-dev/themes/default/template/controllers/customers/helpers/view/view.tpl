@@ -370,7 +370,7 @@
 					</div>
 					<div class="row">
 						<div class="col-lg-12">
-							<button type="submit" id="submitCustomerNote" class="btn btn-default pull-right" disabled="disabled" />
+							<button type="submit" id="submitCustomerNote" class="btn btn-default pull-right" disabled="disabled">
 								<i class="icon-save"></i>
 								{l s='Save'}
 							</button>

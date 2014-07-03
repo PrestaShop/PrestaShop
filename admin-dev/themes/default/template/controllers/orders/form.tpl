@@ -1134,7 +1134,7 @@
 	</div>
 
 
-<form class="form-horizontal" action="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&submitAdd{$table}=1" method="post" autocomplete="off">
+<form class="form-horizontal" action="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;submitAdd{$table|escape:'html':'UTF-8'}=1" method="post" autocomplete="off">
 	<div class="panel" id="products_part" style="display:none;">
 		<div class="panel-heading">
 			<i class="icon-shopping-cart"></i>

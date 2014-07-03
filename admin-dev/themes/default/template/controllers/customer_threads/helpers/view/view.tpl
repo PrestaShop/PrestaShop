@@ -37,7 +37,7 @@
 		{/if}
 	</div>
 	<div class="well">
-		<form action="{$link->getAdminLink('AdminCustomerThreads')}&viewcustomer_thread&id_customer_thread={$id_customer_thread}" method="post" enctype="multipart/form-data" class="form-horizontal">
+		<form action="{$link->getAdminLink('AdminCustomerThreads')|escape:'html':'UTF-8'}&amp;viewcustomer_thread&amp;id_customer_thread={$id_customer_thread|intval}" method="post" enctype="multipart/form-data" class="form-horizontal">
 			{foreach $actions as $action}
 				<button class="btn btn-default" name="{$action.name|escape:'html':'UTF-8'}" value="{$action.value|intval}">
 					{if isset($action.icon)}<i class="{$action.icon|escape:'html':'UTF-8'}"></i>{/if}{$action.label}
@@ -56,7 +56,7 @@
 					<div class="col-sm-6">
 					{if isset($customer->firstname)}
 						<h2>
-							<a href="{$link->getAdminLink('AdminCustomers')|escape:'html':'UTF-8'}&amp;id_customer={$customer->id|intval}&viewcustomer&">
+							<a href="{$link->getAdminLink('AdminCustomers')|escape:'html':'UTF-8'}&amp;id_customer={$customer->id|intval}&amp;viewcustomer&">
 							{$customer->firstname|escape:'html':'UTF-8'} {$customer->lastname|escape:'html':'UTF-8'} <small>({$customer->email|escape:'html':'UTF-8'})</small>
 							</a>
 						</h2>
@@ -97,7 +97,7 @@
 	</div>
 </div>
 <div class="panel">
-	<form action="{$link->getAdminLink('AdminCustomerThreads')}&id_customer_thread={$thread->id|intval}&viewcustomer_thread" method="post" enctype="multipart/form-data" class="form-horizontal">
+	<form action="{$link->getAdminLink('AdminCustomerThreads')|escape:'html':'UTF-8'}&amp;id_customer_thread={$thread->id|intval}&amp;viewcustomer_thread" method="post" enctype="multipart/form-data" class="form-horizontal">
 	<h3>{l s="Your answer to"} {if isset($customer->firstname)}{$customer->firstname|escape:'html':'UTF-8'} {$customer->lastname|escape:'html':'UTF-8'} {else} {$thread->email}{/if}</h3>
 	<div class="row">
 		<div class="media">

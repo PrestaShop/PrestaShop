@@ -4,7 +4,7 @@
 	<form action="{$link->getPageLink('authentication', true, NULL, "back=order-opc")|escape:'html':'UTF-8'}" method="post" id="login_form" class="box">
 		<fieldset>
 			<h3 class="page-subheading">{l s='Already registered?'}</h3>
-			<p><a href="{$link->getPageLink('authentication', true)|escape:'html'}" id="openLoginFormBlock">&raquo; {l s='Click here'}</a></p>
+			<p><a href="{$link->getPageLink('authentication', true)|escape:'html':'UTF-8'}" id="openLoginFormBlock">&raquo; {l s='Click here'}</a></p>
 			<div id="login_form_content" style="display:none;">
 				<!-- Error return block -->
 				<div id="opc_login_errors" class="alert alert-danger" style="display:none;"></div>
@@ -25,7 +25,7 @@
 			</div>
 		</fieldset>
 	</form>
-	<form action="{$link->getPageLink('authentication', true)|escape:'html'}" method="post" id="new_account_form" class="std" autocomplete="on" autofill="on">
+	<form action="{$link->getPageLink('authentication', true)|escape:'html':'UTF-8'}" method="post" id="new_account_form" class="std" autocomplete="on" autofill="on">
 		<fieldset>
         	<div class="box">
                 <h3 id="new_account_title" class="page-subheading">{l s='New Customer'}</h3>

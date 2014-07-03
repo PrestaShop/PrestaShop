@@ -67,7 +67,7 @@
 			<div class="list-group">
 			{foreach $product_tabs key=numStep item=tab}
 				{if $tab.name != "Pack"}
-					<a class="list-group-item {if $tab.selected}active{/if}" id="link-{$tab.id}" href="{$tab.href|escape:html:'UTF-8'}&amp;updateproduct">{$tab.name}</a>
+					<a class="list-group-item {if $tab.selected}active{/if}" id="link-{$tab.id}" href="{$tab.href|escape:'html':'UTF-8'}&amp;updateproduct">{$tab.name}</a>
 				{/if}
 			{/foreach}
 			</div>
@@ -288,9 +288,9 @@
 			<div id="loading"><i class="icon-refresh icon-spin"></i>&nbsp;{l s='Loading...'}</div>
 		</div>
 
-		<form id="product_form" class="form-horizontal col-lg-10" action="{$form_action|escape:html:'UTF-8'}" method="post" enctype="multipart/form-data" name="product" novalidate>
+		<form id="product_form" class="form-horizontal col-lg-10" action="{$form_action|escape:'html':'UTF-8'}" method="post" enctype="multipart/form-data" name="product" novalidate>
 			<input type="hidden" name="id_product" value="{$id_product}" />
-			<input type="hidden" id="is_virtual" name="is_virtual" value="{$product->is_virtual|escape:html:'UTF-8'}" />
+			<input type="hidden" id="is_virtual" name="is_virtual" value="{$product->is_virtual|escape:'html':'UTF-8'}" />
 
 			{if !$product->active && $product->isAssociatedToShop()}
 			<div class="alert alert-info draft" >
