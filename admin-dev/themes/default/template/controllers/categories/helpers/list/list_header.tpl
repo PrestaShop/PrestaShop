@@ -35,12 +35,12 @@
 				<i class="icon-home"></i>
 				{assign var=params_url value=""}
 			{elseif isset($category.id_category)}
-				{assign var=params_url value="&amp;id_category={$category.id_category|intval}&amp;viewcategory"}
+				{assign var=params_url value="&id_category={$category.id_category|intval}&viewcategory"}
 			{/if}
 			{if isset($category.id_category) && $category.id_category == $categories_tree_current_id}
 				{$category.name|escape:'html':'UTF-8'}
 			{else}
-				<a href="{$currentIndex|escape:'html':'UTF-8'}{$params_url}&amp;token={$token|escape:'html':'UTF-8'}">{$category.name|escape:'html':'UTF-8'}</a>
+				<a href="{$currentIndex|escape:'html':'UTF-8'}{$params_url|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}">{$category.name|escape:'html':'UTF-8'}</a>
 			{/if}
 		</li>
 		{/foreach}
