@@ -30,7 +30,7 @@
 	<div class="filter-stock">
 		<form id="stock_instant_state" type="get" class="form-horizontal">
 			<input type="hidden" name="controller" value="AdminStockInstantState" />
-			<input type="hidden" name="token" value="{$token}" />
+			<input type="hidden" name="token" value="{$token|escape:'html':'UTF-8'}" />
 		{if count($stock_instant_state_warehouses) > 0}
 			<div id="stock_instant_state_form_warehouse" class="form-group">
 				<label for="id_warehouse" class="control-label col-lg-3">{l s='Filter by warehouse:'}</label>

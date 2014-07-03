@@ -119,7 +119,7 @@
 						{/foreach}
 					</ul>
 				</div>
-				<input type="hidden" name="token" value="{$token}" />
+				<input type="hidden" name="token" value="{$token|escape:'html':'UTF-8'}" />
 			</div>
 			<div class="panel-footer">
 				<button type="button" class="btn btn-default pull-right" id="modify-translations">

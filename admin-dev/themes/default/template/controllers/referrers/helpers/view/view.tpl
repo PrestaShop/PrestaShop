@@ -56,7 +56,7 @@
 					ajaxReferrers:1,
 					ajaxProductFilter:1,
 					id_employee:{$id_employee},
-					token:'{$token}',
+					token:'{$token|escape:'html':'UTF-8'}',
 					id_referrer:{$referrer->id},
 					id_product:id_product
 				},
@@ -77,7 +77,7 @@
 					ajaxReferrers:1,
 					ajaxFillProducts:1,
 					id_employee:{$id_employee},
-					token:'{$token}',
+					token:'{$token|escape:'html':'UTF-8'}',
 					id_lang:{$id_lang},
 					filter:filter
 				},

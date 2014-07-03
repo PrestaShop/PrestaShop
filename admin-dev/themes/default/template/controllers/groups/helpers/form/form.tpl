@@ -190,7 +190,7 @@
 						<label for="{$module->name|escape:'html':'UTF-8'}_off">{l s='No'}</label>
 						<a class="slide-button btn"></a>
 					</span>
-					<input type="hidden" name="modulesBoxAuth[]" value="{$module->id}"/>
+					<input type="hidden" name="modulesBoxAuth[]" value="{$module->id|intval}"/>
 				</div>
 			</div>
 			{/foreach}

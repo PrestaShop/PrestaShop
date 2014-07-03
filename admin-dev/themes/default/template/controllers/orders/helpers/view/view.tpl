@@ -212,7 +212,7 @@
 							</table>
 						</div>
 						<!-- Change status form -->
-						<form action="{$currentIndex}&amp;vieworder&amp;token={$smarty.get.token}" method="post" class="form-horizontal well hidden-print">
+						<form action="{$currentIndex|escape:'html':'UTF-8'}&amp;vieworder&amp;token={$smarty.get.token}" method="post" class="form-horizontal well hidden-print">
 							<div class="row">
 								<div class="col-lg-9">
 									<select id="id_order_state" class="chosen form-control" name="id_order_state">
@@ -519,7 +519,7 @@
 					</div>
 				</form>
 				{if (!$order->valid && sizeof($currencies) > 1)}
-					<form class="form-horizontal well" method="post" action="{$currentIndex}&amp;vieworder&amp;id_order={$order->id}&amp;token={$smarty.get.token|escape:'html':'UTF-8'}">
+					<form class="form-horizontal well" method="post" action="{$currentIndex|escape:'html':'UTF-8'}&amp;vieworder&amp;id_order={$order->id}&amp;token={$smarty.get.token|escape:'html':'UTF-8'}">
 						<div class="row">
 							<label class="control-label col-lg-3">{l s='Change currency'}</label>
 							<div class="col-lg-6">

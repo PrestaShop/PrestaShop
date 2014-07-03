@@ -148,7 +148,7 @@
 {/if}
 {/block}
 {if !$simple_header}
-		<input type="hidden" name="token" value="{$token}" />
+		<input type="hidden" name="token" value="{$token|escape:'html':'UTF-8'}" />
 	</div>
 {else}
 	</div>

@@ -30,7 +30,7 @@
 			<div class="col-lg-3 select_theme {if $theme->id == $fields_value.id_theme_checked}select_theme_choice{/if}" onclick="$(this).find('input').attr('checked', true); $('.select_theme').removeClass('select_theme_choice'); $(this).toggleClass('select_theme_choice');">
 				<div class="radio">
 					<label>
-						<input type="radio" name="id_theme" value="{$theme->id}"{if $theme->id == $fields_value.id_theme_checked} checked="checked"{/if} /> {$theme->name}
+						<input type="radio" name="id_theme" value="{$theme->id|intval}"{if $theme->id == $fields_value.id_theme_checked} checked="checked"{/if} /> {$theme->name|escape:'html':'UTF-8'}
 					</label>
 				</div>
 				<div class="theme-container">
@@ -53,7 +53,7 @@
 							use_shop_context : 0,
 							action : "getCategoriesFromRootCategory",
 							controller: "AdminShop",
-							token : "{$token}",
+							token : "{$token|escape:'html':'UTF-8'}",
 							},
 							function(res)
 							{
@@ -122,7 +122,7 @@
 			<button type="submit" value="1" id="shop_form_submit_btn" name="submitAddshop" class="btn btn-default pull-right">
 				<i class="process-icon-save"></i> {l s='Save'}
 			</button>
-			<a href="{$currentIndex|escape:'html':'UTF-8'}&amp;id_shop_group=0&amp;token={$token}" class="btn btn-default" onclick="window.history.back();">
+			<a href="{$currentIndex|escape:'html':'UTF-8'}&amp;id_shop_group=0&amp;token={$token|escape:'html':'UTF-8'}" class="btn btn-default" onclick="window.history.back();">
 				<i class="process-icon-cancel"></i> {l s='Cancel'}
 			</a>
 		</div>

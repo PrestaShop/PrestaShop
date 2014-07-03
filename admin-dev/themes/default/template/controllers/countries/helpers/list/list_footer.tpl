@@ -137,7 +137,7 @@
 				</div>
 				{/if}
 			</div>
-<input type="hidden" name="token" value="{$token}" />
+<input type="hidden" name="token" value="{$token|escape:'html':'UTF-8'}" />
 </div>
 </div>
 </form>
@@ -167,7 +167,7 @@
 				type: 'POST',
 				headers: { "cache-control": "no-cache" },
 				url: 'ajax.php?rand=' + new Date().getTime(),
-				data: 'getZones=true&token={$token}',
+				data: 'getZones=true&token={$token|escape:'html':'UTF-8'}',
 				async : true,
 				cache: false,
 				dataType: 'json',

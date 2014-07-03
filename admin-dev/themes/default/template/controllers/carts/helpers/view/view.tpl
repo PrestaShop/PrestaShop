@@ -52,7 +52,7 @@
 					{else}
 					<i class="icon-question"></i> 
 					{/if}
-					<a href="{$link->getAdminLink('AdminCustomers')|escape:'html':'UTF-8'}&amp;id_customer={$customer->id}&amp;viewcustomer">{$customer->firstname} {$customer->lastname}</a></h2>
+					<a href="{$link->getAdminLink('AdminCustomers')|escape:'html':'UTF-8'}&amp;id_customer={$customer->id|intval}&amp;viewcustomer">{$customer->firstname} {$customer->lastname}</a></h2>
 				<div class="form-horizontal">
 					<div class="form-group">
 						<label class="col-lg-3 control-label">{l s='Account registration date:'}</label>
@@ -76,12 +76,12 @@
 		<div class="panel">
 			<h3><i class="icon-shopping-cart"></i> {l s='Order information'}</h3>
 			{if $order->id}
-				<h2><a href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;id_order={$order->id}&amp;vieworder"> {l s='Order #%d' sprintf=$order->id|string_format:"%06d"}</a></h2>
+				<h2><a href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;id_order={$order->id|intval}&amp;vieworder"> {l s='Order #%d' sprintf=$order->id|string_format:"%06d"}</a></h2>
 				{l s='Made on:'} {dateFormat date=$order->date_add}
 			{else}
 				<h2>{l s='No order was created from this cart.'}</h2>
 				{if $customer->id}
-					<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;id_cart={$cart->id}&amp;addorder"><i class="icon-shopping-cart"></i> {l s='Create an order from this cart.'}</a>
+					<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;id_cart={$cart->id|intval}&amp;addorder"><i class="icon-shopping-cart"></i> {l s='Create an order from this cart.'}</a>
 				{/if}
 			{/if}
 		</div>
@@ -124,7 +124,7 @@
 								<ul style="margin: 0; padding: 0; list-style-type: none;">
 								{foreach from=$datas key='index' item='data'}
 										<li style="display: inline; margin: 2px;">
-											<a href="displayImage.php?img={$data.value}&name={$order->id}-file{$index}" target="_blank">
+											<a href="displayImage.php?img={$data.value}&name={$order->id|intval}-file{$index}" target="_blank">
 											<img src="{$pic_dir}{$data.value}_small" alt="" /></a>
 										</li>
 								{/foreach}

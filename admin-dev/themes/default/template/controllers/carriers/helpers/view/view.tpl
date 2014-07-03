@@ -36,7 +36,7 @@
 	
 		<div class="col-lg-12">
 			<form action="" id="configuration_form" method="post" enctype="multipart/form-data" class="form-horizontal">
-				<div class="form-group ">
+				<div class="form-group">
 					<label class="control-label col-lg-3">{l s="Create a custom carrier"}</label>
 					<a class="btn btn-default" href="{$link->getAdminLink('AdminCarrierWizard')|escape:'html':'UTF-8'}">{l s="Add new carrier"}</a>
 					<div class="col-lg-9 col-lg-offset-3">

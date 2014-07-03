@@ -141,7 +141,7 @@
 			</div>
 </div>
 
-<input type="hidden" name="token" value="{$token}" />
+<input type="hidden" name="token" value="{$token|escape:'html':'UTF-8'}" />
 </form>
 
 <script type="text/javascript">
@@ -169,7 +169,7 @@
 			$.ajax({
 				type: 'POST',
 				url: 'ajax.php',
-				data: 'getZones=true&token={$token}',
+				data: 'getZones=true&token={$token|escape:'html':'UTF-8'}',
 				async : true,
 				cache: false,
 				dataType: 'json',

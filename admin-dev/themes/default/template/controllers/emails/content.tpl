@@ -28,7 +28,7 @@
 	var textSubject = "{l s='Test message -- Prestashop' js=1}";
 	var textSendOk = "{l s='A test email has been sent to the email address you provided.' js=1}";
 	var textSendError= "{l s='Error: Please check your configuration' js=1}";
-	var token_mail = '{$token}';
+	var token_mail = '{$token|escape:'html':'UTF-8'}';
 	var errorMail = "{l s='This email address is not valid' js=1}";
 	$(document).ready(function() {
 		if ($('input[name=PS_MAIL_METHOD]:checked').val() == 2)

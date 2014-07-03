@@ -262,7 +262,7 @@
 						"id_image":id,
 						"id_product" : {/literal}{$id_product}{literal},
 						"id_category" : {/literal}{$id_category_default}{literal},
-						"token" : "{/literal}{$token}{literal}",
+						"token" : "{/literal}{$token|escape:'html':'UTF-8'}{literal}",
 						"tab" : "AdminProducts",
 						"ajax" : 1 }, afterDeleteProductImage
 				);
@@ -285,7 +285,7 @@
 					"action":"UpdateCover",
 					"id_image":id,
 					"id_product" : {/literal}{$id_product}{literal},
-					"token" : "{/literal}{$token}{literal}",
+					"token" : "{/literal}{$token|escape:'html':'UTF-8'}{literal}",
 					"controller" : "AdminProducts",
 					"ajax" : 1 }
 				);
@@ -305,7 +305,7 @@
 					"id_product":id_product,
 					"id_shop": id_shop,
 					"active":active,
-					"token" : "{/literal}{$token}{literal}",
+					"token" : "{/literal}{$token|escape:'html':'UTF-8'}{literal}",
 					"tab" : "AdminProducts",
 					"ajax" : 1 
 				});
@@ -317,7 +317,7 @@
 				{
 					"action":"updateImagePosition",
 					"json":json,
-					"token" : "{/literal}{$token}{literal}",
+					"token" : "{/literal}{$token|escape:'html':'UTF-8'}{literal}",
 					"tab" : "AdminProducts",
 					"ajax" : 1
 				});
