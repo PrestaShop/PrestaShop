@@ -182,7 +182,7 @@
 			</span>
 		</label>
 		<div class="col-lg-3">
-			<input maxlength="12" type="text" id="upc" name="upc" value="{$product->upc|escape:html:'UTF-8'}" />
+			<input maxlength="12" type="text" id="upc" name="upc" value="{$product->upc|escape:'html':'UTF-8'}" />
 		</div>
 	</div>
 
@@ -258,7 +258,7 @@
 		<script>
 			var no_related_product = '{l s='No related product'}';
 			var id_product_redirected = {$product->id_product_redirected|intval};
-			var product_name_redirected = '{$product_name_redirected|escape:html:'UTF-8'}';
+			var product_name_redirected = '{$product_name_redirected|escape:'html':'UTF-8'}';
 		</script>
 	</div>
 

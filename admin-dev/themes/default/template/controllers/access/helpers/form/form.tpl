@@ -178,7 +178,7 @@
 		{/foreach}
 		</div>
 	</div>
-	<form id="{$table}_form" class="defaultForm form-horizontal col-lg-10" action="{$current|escape:html:'UTF-8'}&amp;{$submit_action}=1&amp;token={$token}" method="post" enctype="multipart/form-data">
+	<form id="{$table}_form" class="defaultForm form-horizontal col-lg-10" action="{$current|escape:'html':'UTF-8'}&amp;{$submit_action}=1&amp;token={$token}" method="post" enctype="multipart/form-data">
 		{if $form_id}
 			<input type="hidden" name="{$identifier}" id="{$identifier}" value="{$form_id}" />
 		{/if}
