@@ -174,11 +174,11 @@
 	<div class="productTabs col-lg-2">
 		<div class="tab list-group">
 		{foreach $profiles as $profile}
-			<a class="list-group-item nav-profile {if $profile.id_profile == $current_profile}active{/if}" id="profile-{$profile.id_profile}" href="{$current}&amp;token={$token}&amp;id_profile={$profile.id_profile}">{$profile.name}</a>
+			<a class="list-group-item nav-profile {if $profile.id_profile == $current_profile}active{/if}" id="profile-{$profile.id_profile}" href="{$current}&amp;token={$token|escape:'html':'UTF-8'}&amp;id_profile={$profile.id_profile}">{$profile.name}</a>
 		{/foreach}
 		</div>
 	</div>
-	<form id="{$table}_form" class="defaultForm form-horizontal col-lg-10" action="{$current|escape:'html':'UTF-8'}&amp;{$submit_action}=1&amp;token={$token}" method="post" enctype="multipart/form-data">
+	<form id="{$table}_form" class="defaultForm form-horizontal col-lg-10" action="{$current|escape:'html':'UTF-8'}&amp;{$submit_action}=1&amp;token={$token|escape:'html':'UTF-8'}" method="post" enctype="multipart/form-data">
 		{if $form_id}
 			<input type="hidden" name="{$identifier}" id="{$identifier}" value="{$form_id}" />
 		{/if}

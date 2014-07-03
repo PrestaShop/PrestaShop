@@ -32,7 +32,7 @@
 	{hook h=$hookName}
 {/if}
 
-<form method="post" action="{$currentIndex}&amp;{$identifier}&amp;token={$token}&amp;id_tax_rules_group={$id_tax_rules_group}&amp;updatetax_rules_group#{$table}" class="form">
+<form method="post" action="{$currentIndex|escape:'html':'UTF-8'}&amp;{$identifier}&amp;token={$token|escape:'html':'UTF-8'}&amp;id_tax_rules_group={$id_tax_rules_group}&amp;updatetax_rules_group#{$table}" class="form">
 	<div class="panel">
 		<input type="hidden" id="submitFilter{$list_id}" name="submitFilter{$list_id}" value="0"/>
 		<div class="table-responsive clearfix">

@@ -359,11 +359,11 @@ class HelperListCore extends Helper
 		$duplicate = $this->currentIndex.'&'.$this->identifier.'='.$id.'&duplicate'.$this->table;
 
 		$tpl->assign(array(
-			'href' => Tools::safeOutput($this->currentIndex.'&'.$this->identifier.'='.$id.'&view'.$this->table.'&token='.($token != null ? $token : $this->token)),
+			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&view'.$this->table.'&token='.($token != null ? $token : $this->token),
 			'action' => self::$cache_lang['Duplicate'],
 			'confirm' => self::$cache_lang['Copy images too?'],
-			'location_ok' => Tools::safeOutput($duplicate.'&token='.($token != null ? $token : $this->token)),
-			'location_ko' => Tools::safeOutput($duplicate.'&noimage=1&token='.($token ? $token : $this->token)),
+			'location_ok' => $duplicate.'&token='.($token != null ? $token : $this->token),
+			'location_ko' => $duplicate.'&noimage=1&token='.($token ? $token : $this->token),
 		));
 
 		return $tpl->fetch();
@@ -400,10 +400,10 @@ class HelperListCore extends Helper
 			$ajax_params['action'] = 'details';
 
 		$tpl->assign(array(
-			'id' => Tools::safeOutput($id),
-			'href' => Tools::safeOutput($this->currentIndex.'&'.$this->identifier.'='.$id.'&details'.$this->table.'&token='.($token != null ? $token : $this->token)),
+			'id' => $id,
+			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&details'.$this->table.'&token='.($token != null ? $token : $this->token),
 			'controller' => str_replace('Controller', '', get_class($this->context->controller)),
-			'token' => Tools::safeOutput($token != null ? $token : $this->token),
+			'token' => $token != null ? $token : $this->token,
 			'action' => self::$cache_lang['Details'],
 			'params' => $ajax_params,
 			'json_params' => Tools::jsonEncode($ajax_params)
@@ -421,7 +421,7 @@ class HelperListCore extends Helper
 			self::$cache_lang['View'] = $this->l('View', 'Helper');
 
 		$tpl->assign(array(
-			'href' => Tools::safeOutput($this->currentIndex.'&'.$this->identifier.'='.$id.'&view'.$this->table.'&token='.($token != null ? $token : $this->token)),
+			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&view'.$this->table.'&token='.($token != null ? $token : $this->token),
 			'action' => self::$cache_lang['View'],
 		));
 
@@ -468,7 +468,7 @@ class HelperListCore extends Helper
 
 		$data = array(
 			$this->identifier => $id,
-			'href' => Tools::safeOutput($this->currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token)),
+			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
 			'action' => self::$cache_lang['Delete'],
 		);
 
@@ -490,9 +490,9 @@ class HelperListCore extends Helper
 			self::$cache_lang['Default'] = $this->l('Default', 'Helper');
 
 		$tpl->assign(array_merge($this->tpl_delete_link_vars, array(
-			'href' => Tools::safeOutput($this->currentIndex).'&'.Tools::safeOutput($this->identifier).'='.(int)$id.'&delete'.Tools::safeOutput($this->table).'&token='.Tools::safeOutput(($token != null ? $token : $this->token)),
+			'href' => $this->currentIndex.'&'.$this->identifier.'='.(int)$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
 			'action' => self::$cache_lang['Default'],
-			'name' => Tools::safeOutput($name),
+			'name' => $name,
 		)));
 
 		return $tpl->fetch();

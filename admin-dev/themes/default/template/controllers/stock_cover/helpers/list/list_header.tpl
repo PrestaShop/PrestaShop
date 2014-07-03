@@ -30,7 +30,7 @@
 	<div class="filter-stock-extended">
 		<form id="stock_cover" type="get" class="form-horizontal">
 			<input type="hidden" name="controller" value="AdminStockCover" />
-			<input type="hidden" name="token" value="{$token}" />
+			<input type="hidden" name="token" value="{$token|escape:'html':'UTF-8'}" />
 			{if count($stock_cover_periods) > 1}
 			<div class="form-group">
 				<label for="coverage_period" class="control-label col-lg-3">{l s='Filter by period:'}</label>

@@ -41,7 +41,7 @@
 						{$customer->email}
 					</a>
 					<div class="panel-heading-action">
-						<a class="btn btn-default" href="{$current}&amp;updatecustomer&amp;id_customer={$customer->id}&amp;token={$token}">
+						<a class="btn btn-default" href="{$current}&amp;updatecustomer&amp;id_customer={$customer->id|intval}&amp;token={$token|escape:'html':'UTF-8'}">
 							<i class="icon-edit"></i>
 							{l s='Edit'}
 						</a>
@@ -164,7 +164,7 @@
 				{if $customer->isGuest()}
 					{l s='This customer is registered as a Guest.'}
 					{if !$customer_exists}
-					<form method="post" action="index.php?tab=AdminCustomers&amp;id_customer={$customer->id}&amp;token={getAdminToken tab='AdminCustomers'}">
+					<form method="post" action="index.php?tab=AdminCustomers&amp;id_customer={$customer->id|intval}&amp;token={getAdminToken tab='AdminCustomers'}">
 						<input type="hidden" name="id_lang" value="{$id_lang}" />
 						<p class="text-center">
 							<input class="button" type="submit" name="submitGuestToCustomer" value="{l s='Transform to a customer account'}" />
@@ -362,7 +362,7 @@
 					<i class="icon-eye-close"></i> {l s='Add a private note'}
 				</div>
 				<div class="alert alert-info">{l s='This note will be displayed to all employees but not to customers.'}</div>
-				<form id="customer_note" class="form-horizontal" action="ajax.php" method="post" onsubmit="saveCustomerNote({$customer->id});return false;" >
+				<form id="customer_note" class="form-horizontal" action="ajax.php" method="post" onsubmit="saveCustomerNote({$customer->id|intval});return false;" >
 					<div class="form-group">
 						<div class="col-lg-12">
 							<textarea name="note" id="noteContent" onkeyup="$(this).val().length > 0 ? $('#submitCustomerNote').removeAttr('disabled') : $('#submitCustomerNote').attr('disabled', 'disabled')">{$customer_note}</textarea>
@@ -489,7 +489,7 @@
 					<i class="icon-group"></i>
 					{l s='Groups'}
 					<span class="badge">{count($groups)}</span>
-					<a class="btn btn-default pull-right" href="{$current}&amp;updatecustomer&amp;id_customer={$customer->id}&amp;token={$token}">
+					<a class="btn btn-default pull-right" href="{$current}&amp;updatecustomer&amp;id_customer={$customer->id|intval}&amp;token={$token|escape:'html':'UTF-8'}">
 						<i class="icon-edit"></i> {l s='Edit'}
 					</a>
 				</div>
@@ -554,7 +554,7 @@
 
 	<div class="row">
 		{* display hook specified to this page : AdminCustomers *}
-		{hook h="displayAdminCustomers" id_customer=$customer->id}
+		{hook h="displayAdminCustomers" id_customer=$customer->id|intval}
 		<div class="col-lg-12">
 			<div class="panel">
 				<div class="panel-heading">

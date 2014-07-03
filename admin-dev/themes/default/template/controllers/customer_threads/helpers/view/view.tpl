@@ -170,7 +170,7 @@
 			data: {
 				controller: 'AdminCustomerThreads',
 				action: 'markAsRead',
-				token : '{$token}',
+				token : '{$token|escape:'html':'UTF-8'}',
 				id_thread: {$id_customer_thread}
 			}
 		});

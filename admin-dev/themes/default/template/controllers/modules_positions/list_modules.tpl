@@ -45,7 +45,7 @@
 						<option value="all">{l s='All modules'}&nbsp;</option>
 						<option>-</option>
 						{foreach $modules as $module}
-							<option value="{$module->id|intval}" {if $display_key == $module->id}selected="selected"{/if}>{$module->displayName|escape:'html':'UTF-8'}</option>
+							<option value="{$module->id|intval}"{if $display_key == $module->id} selected="selected"{/if}>{$module->displayName|escape:'html':'UTF-8'}</option>
 						{/foreach}
 					</select>
 				</span>
@@ -82,20 +82,20 @@
 
 						{foreach $hook['modules'] as $position => $module}
 							{if isset($module['instance'])}
-							<li id="{$hook['id_hook']}_{$module['instance']->id}" class="module_list_item{if $can_move && $hook['module_count'] >= 2} draggable{/if}">
+							<li id="{$hook['id_hook']|intval}_{$module['instance']->id|intval}" class="module_list_item{if $can_move && $hook['module_count'] >= 2} draggable{/if}">
 								<div class="module_col_select">
-									<input type="checkbox" id="mod{$hook['id_hook']}_{$module['instance']->id}" class="hook{$hook['id_hook']}" onclick="hookCheckboxes({$hook['id_hook']}, 1, this)" name="unhooks[]" value="{$hook['id_hook']}_{$module['instance']->id}"/>
+									<input type="checkbox" id="mod{$hook['id_hook']|intval}_{$module['instance']->id|intval}" class="hook{$hook['id_hook']}" onclick="hookCheckboxes({$hook['id_hook']}, 1, this)" name="unhooks[]" value="{$hook['id_hook']}_{$module['instance']->id}"/>
 								</div>
 								{if !$display_key}
-								<div class="module_col_position{if $can_move && $hook['module_count'] >= 2} dragHandle{/if}" id="td_{$hook['id_hook']}_{$module['instance']->id}">
+								<div class="module_col_position{if $can_move && $hook['module_count'] >= 2} dragHandle{/if}" id="td_{$hook['id_hook']|intval}_{$module['instance']->id}">
 									<span class="positions">{$module@iteration}</span>
 									{if $can_move}
 									<div class="btn-group-vertical">
-										<a class="btn btn-default btn-xs" href="{$current}&amp;id_module={$module['instance']->id}&amp;id_hook={$hook['id_hook']}&amp;direction=0&amp;token={$token}&amp;changePosition#{$hook['name']}">
+										<a class="btn btn-default btn-xs" href="{$current}&amp;id_module={$module['instance']->id|intval}&amp;id_hook={$hook['id_hook']|intval}&amp;direction=0&amp;token={$token|escape:'html':'UTF-8'}&amp;changePosition#{$hook['name']}">
 											<i class="icon-chevron-up"></i>
 										</a>
 
-										<a class="btn btn-default btn-xs" href="{$current}&amp;id_module={$module['instance']->id}&amp;id_hook={$hook['id_hook']}&amp;direction=1&amp;token={$token}&amp;changePosition#{$hook['name']}">
+										<a class="btn btn-default btn-xs" href="{$current}&amp;id_module={$module['instance']->id|intval}&amp;id_hook={$hook['id_hook']|intval}&amp;direction=1&amp;token={$token|escape:'html':'UTF-8'}&amp;changePosition#{$hook['name']}">
 											<i class="icon-chevron-down"></i>
 										</a>
 									</div>
@@ -115,7 +115,7 @@
 								<div class="module_col_actions">
 									<!-- <div class="lab_modules_positions" for="mod{$hook['id_hook']}_{$module['instance']->id}"></div> -->
 									<div class="btn-group">
-										<a class="btn btn-default" href="{$current}&amp;id_module={$module['instance']->id}&amp;id_hook={$hook['id_hook']}&amp;editGraft{if $display_key}&amp;show_modules={$display_key}{/if}&amp;token={$token}">
+										<a class="btn btn-default" href="{$current}&amp;id_module={$module['instance']->id|intval}&amp;id_hook={$hook['id_hook']}&amp;editGraft{if $display_key}&amp;show_modules={$display_key}{/if}&amp;token={$token|escape:'html':'UTF-8'}">
 											<i class="icon-pencil"></i>
 											{l s='Edit'}
 										</a>
@@ -124,7 +124,7 @@
 										</a>
 										<ul class="dropdown-menu">
 											<li>
-												<a href="{$current}&amp;id_module={$module['instance']->id}&amp;id_hook={$hook['id_hook']}&amp;deleteGraft{if $display_key}&amp;show_modules={$display_key}{/if}&amp;token={$token}">
+												<a href="{$current}&amp;id_module={$module['instance']->id|intval}&amp;id_hook={$hook['id_hook']}&amp;deleteGraft{if $display_key}&amp;show_modules={$display_key}{/if}&amp;token={$token|escape:'html':'UTF-8'}">
 													<i class="icon-minus-sign-alt"></i>
 													{l s='Unhook'}
 												</a>

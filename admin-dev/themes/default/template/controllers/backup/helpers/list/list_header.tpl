@@ -57,7 +57,7 @@
 				<li>{l s='Always check your data.'}</li>
 				<li>{l s='Never restore a backup on a live site.'}</li>
 			</ol>
-			<form action="{$currentIndex}&amp;add{$table}&amp;token={$token}" method="post" class="form-horizontal">
+			<form action="{$currentIndex|escape:'html':'UTF-8'}&amp;add{$table}&amp;token={$token|escape:'html':'UTF-8'}" method="post" class="form-horizontal">
 				<button type="submit" class="btn btn-default">
 					<i class="icon-save"></i> 
 					{l s='I have read the disclaimer. Please create a new backup.'}

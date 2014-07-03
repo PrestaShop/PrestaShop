@@ -30,7 +30,7 @@
 	<div class="filter-stock-extended">
 		<form id="supply_orders" type="get" class="form-horizontal">
 			<input type="hidden" name="controller" value="AdminSupplyOrders" />
-			<input type="hidden" name="token" value="{$token}" />
+			<input type="hidden" name="token" value="{$token|escape:'html':'UTF-8'}" />
 			<div class="form-group">
 				<label for="id_warehouse" class="control-label col-lg-3">{l s='Filter by warehouse:'}</label>
 				<div class="col-lg-9">

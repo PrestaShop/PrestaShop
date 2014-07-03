@@ -33,9 +33,10 @@
 
 {block name="defaultForm"}
 {capture name='form_count'}{counter name='form_count'}{/capture}
-<form id="{if isset($fields.form.form.id_form)}{$fields.form.form.id_form|escape:'html':'UTF-8'}{else}{if $table == null}configuration_form{else}{$table}_form{/if}{if $smarty.capture.form_count > 1}_{$smarty.capture.form_count|intval}{/if}{/if}" class="defaultForm form-horizontal{if isset($name_controller) && $name_controller} {$name_controller}{/if}"{if isset($current) && $current} action="{$current}{if isset($token) && $token}&amp;token={$token}{/if}"{/if} method="post" enctype="multipart/form-data"{if isset($style)} style="{$style}"{/if} novalidate>
+{capture name='identifier_count'}{counter name='identifier_count'}{/capture}
+<form id="{if isset($fields.form.form.id_form)}{$fields.form.form.id_form|escape:'html':'UTF-8'}{else}{if $table == null}configuration_form{else}{$table}_form{/if}{if $smarty.capture.form_count > 1}_{($smarty.capture.form_count - 1)|intval}{/if}{/if}" class="defaultForm form-horizontal{if isset($name_controller) && $name_controller} {$name_controller}{/if}"{if isset($current) && $current} action="{$current}{if isset($token) && $token}&amp;token={$token|escape:'html':'UTF-8'}{/if}"{/if} method="post" enctype="multipart/form-data"{if isset($style)} style="{$style}"{/if} novalidate>
 	{if $form_id}
-		<input type="hidden" name="{$identifier}" id="{$identifier}" value="{$form_id}" />
+		<input type="hidden" name="{$identifier}" id="{$identifier}{if $smarty.capture.identifier_count > 1}_{($smarty.capture.identifier_count - 1)|intval}{/if}" value="{$form_id}" />
 	{/if}
 	{if !empty($submit_action)}
 		<input type="hidden" name="{$submit_action}" value="1" />
@@ -44,7 +45,7 @@
 	{foreach $fields as $f => $fieldset}
 		{block name="fieldset"}
 		{capture name='fieldset_name'}{counter name='fieldset_name'}{/capture}
-		<div class="panel" id="fieldset_{$f}{if $smarty.capture.fieldset_name > 1}_{$smarty.capture.fieldset_name|intval}{/if}">
+		<div class="panel" id="fieldset_{$f}{if $smarty.capture.fieldset_name > 1}_{($smarty.capture.fieldset_name - 1)|intval}{/if}">
 			{foreach $fieldset.form as $key => $field}
 				{if $key == 'legend'}
 					{block name="legend"}
@@ -116,7 +117,7 @@
 													{/literal}
 												{/if}
 												{if isset($input.maxchar) || isset($input.prefix) || isset($input.suffix)}
-												<div class="input-group {if isset($input.class)}{$input.class}{/if}">
+												<div class="input-group{if isset($input.class)} {$input.class}{/if}">
 												{/if}
 												{if isset($input.maxchar)}
 												<span id="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}_counter" class="input-group-addon">
@@ -131,7 +132,7 @@
 												<input type="text"
 													id="{if isset($input.id)}{$input.id}_{$language.id_lang}{else}{$input.name}_{$language.id_lang}{/if}"
 													name="{$input.name}_{$language.id_lang}"
-													class="{if $input.type == 'tags'}tagify {/if}{if isset($input.class)}{$input.class}{/if}"
+													class="{if isset($input.class)}{$input.class}{/if}{if $input.type == 'tags'} tagify{/if}"
 													value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|escape:'html':'UTF-8'}{else}{$value_text|escape:'html':'UTF-8'}{/if}"
 													onkeyup="if (isArrowKey(event)) return ;updateFriendlyURL();"
 													{if isset($input.size)} size="{$input.size}"{/if}
@@ -203,7 +204,7 @@
 										{/if}
 										{assign var='value_text' value=$fields_value[$input.name]}
 										{if isset($input.maxchar) || isset($input.prefix) || isset($input.suffix)}
-										<div class="input-group {if isset($input.class)}{$input.class}{/if}">
+										<div class="input-group{if isset($input.class)} {$input.class}{/if}">
 										{/if}
 										{if isset($input.maxchar)}
 										<span id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}_counter" class="input-group-addon"><span class="text-count-down">{$input.maxchar}</span></span>
@@ -217,11 +218,10 @@
 											name="{$input.name}"
 											id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
 											value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|escape:'html':'UTF-8'}{else}{$value_text|escape:'html':'UTF-8'}{/if}"
-											class="{if $input.type == 'tags'}tagify {/if}{if isset($input.class)}{$input.class}{/if}"
+											class="{if isset($input.class)}{$input.class}{/if}{if $input.type == 'tags'} tagify{/if}"
 											{if isset($input.size)} size="{$input.size}"{/if}
 											{if isset($input.maxchar)} data-maxchar="{$input.maxchar}"{/if}
 											{if isset($input.maxlength)} maxlength="{$input.maxlength}"{/if}
-											{if isset($input.class)} class="{$input.class}"{/if}
 											{if isset($input.readonly) && $input.readonly} readonly="readonly"{/if}
 											{if isset($input.disabled) && $input.disabled} disabled="disabled"{/if}
 											{if isset($input.autocomplete) && !$input.autocomplete} autocomplete="off"{/if}
@@ -267,11 +267,10 @@
 											name="{$input.name}"
 											id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
 											value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|escape:'html':'UTF-8'}{else}{$value_text|escape:'html':'UTF-8'}{/if}"
-											class="{if $input.type == 'tags'}tagify {/if}{if isset($input.class)}{$input.class}{/if}"
+											class="{if isset($input.class)}{$input.class}{/if}{if $input.type == 'tags'} tagify{/if}"
 											{if isset($input.size)} size="{$input.size}"{/if}
 											{if isset($input.maxchar)} data-maxchar="{$input.maxchar}"{/if}
 											{if isset($input.maxlength)} maxlength="{$input.maxlength}"{/if}
-											{if isset($input.class)} class="{$input.class}"{/if}
 											{if isset($input.readonly) && $input.readonly} readonly="readonly"{/if}
 											{if isset($input.disabled) && $input.disabled} disabled="disabled"{/if}
 											{if isset($input.autocomplete) && !$input.autocomplete} autocomplete="off"{/if}
@@ -286,7 +285,7 @@
 											<button type="button" class="btn btn-default{if isset($input.button.attributes['class'])} {$input.button.attributes['class']}{/if}{if isset($input.button.class)} {$input.button.class}{/if}"
 												{foreach from=$input.button.attributes key=name item=value}
 													{if $name|lower != 'class'}
-													 {$name}="{$value}"
+													 {$name|escape:'html':'UTF-8'}="{$value|escape:'html':'UTF-8'}"
 													{/if}
 												{/foreach} >
 												{$input.button.label}
@@ -413,7 +412,7 @@
 
 										<div class="col-lg-9">
 									{/if}
-											<textarea name="{$input.name}_{$language.id_lang}" class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte {if isset($input.class)}{$input.class}{/if}{else}{if isset($input.class)}{$input.class}{else}textarea-autosize{/if}{/if}" >{$fields_value[$input.name][$language.id_lang]|escape:'html':'UTF-8'}</textarea>
+											<textarea name="{$input.name}_{$language.id_lang}" class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte{if isset($input.class)} {$input.class}{/if}{else}{if isset($input.class)} {$input.class}{else} textarea-autosize{/if}{/if}">{$fields_value[$input.name][$language.id_lang]|escape:'html':'UTF-8'}</textarea>
 									{if $languages|count > 1}	
 										</div>
 										<div class="col-lg-2">
@@ -434,7 +433,7 @@
 									{/foreach}
 
 									{else}
-										<textarea name="{$input.name}" id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}" {if isset($input.cols)}cols="{$input.cols}"{/if} {if isset($input.rows)}rows="{$input.rows}"{/if} class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte {if isset($input.class)}{$input.class}{/if}{else}textarea-autosize{/if}">{$fields_value[$input.name]|escape:'html':'UTF-8'}</textarea>
+										<textarea name="{$input.name}" id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}" {if isset($input.cols)}cols="{$input.cols}"{/if} {if isset($input.rows)}rows="{$input.rows}"{/if} class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte{if isset($input.class)} {$input.class}{/if}{else} textarea-autosize{/if}">{$fields_value[$input.name]|escape:'html':'UTF-8'}</textarea>
 									{/if}
 
 								{elseif $input.type == 'checkbox'}
@@ -698,8 +697,8 @@
 											<div class="input-group">
 												<input type="color"
 												data-hex="true"
-												{if isset($input.class)}class="{$input.class}"
-												{else}class="color mColorPickerInput"{/if}
+												{if isset($input.class)} class="{$input.class}"
+												{else} class="color mColorPickerInput"{/if}
 												name="{$input.name}"
 												value="{$fields_value[$input.name]|escape:'html':'UTF-8'}" />
 											</div>
@@ -713,7 +712,7 @@
 												id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
 												type="text"
 												data-hex="true"
-												{if isset($input.class)}class="{$input.class}"
+												{if isset($input.class)} class="{$input.class}"
 												{else}class="datepicker"{/if}
 												name="{$input.name}"
 												value="{$fields_value[$input.name]|escape:'html':'UTF-8'}" />
@@ -729,8 +728,8 @@
 												id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
 												type="text"
 												data-hex="true"
-												{if isset($input.class)}class="{$input.class}"
-												{else}class="datetimepicker"{/if}
+												{if isset($input.class)} class="{$input.class}"
+												{else} class="datetimepicker"{/if}
 												name="{$input.name}"
 												value="{$fields_value[$input.name]|escape:'html':'UTF-8'}" />
 											<span class="input-group-addon">
@@ -803,7 +802,7 @@
 				{if isset($fieldset['form']['submit']) || isset($fieldset['form']['buttons'])}
 					<div class="panel-footer">
 						{if isset($fieldset['form']['submit']) && !empty($fieldset['form']['submit'])}
-						<button type="submit" value="1"	id="{if isset($fieldset['form']['submit']['id'])}{$fieldset['form']['submit']['id']}{else}{$table}_form_submit_btn{/if}{if $smarty.capture.form_submit_btn > 1}_{$smarty.capture.form_submit_btn|intval}{/if}" name="{if isset($fieldset['form']['submit']['name'])}{$fieldset['form']['submit']['name']}{else}{$submit_action}{/if}{if isset($fieldset['form']['submit']['stay']) && $fieldset['form']['submit']['stay']}AndStay{/if}" class="{if isset($fieldset['form']['submit']['class'])}{$fieldset['form']['submit']['class']}{else}btn btn-default pull-right{/if}">
+						<button type="submit" value="1"	id="{if isset($fieldset['form']['submit']['id'])}{$fieldset['form']['submit']['id']}{else}{$table}_form_submit_btn{/if}{if $smarty.capture.form_submit_btn > 1}_{($smarty.capture.form_submit_btn - 1)|intval}{/if}" name="{if isset($fieldset['form']['submit']['name'])}{$fieldset['form']['submit']['name']}{else}{$submit_action}{/if}{if isset($fieldset['form']['submit']['stay']) && $fieldset['form']['submit']['stay']}AndStay{/if}" class="{if isset($fieldset['form']['submit']['class'])}{$fieldset['form']['submit']['class']}{else}btn btn-default pull-right{/if}">
 							<i class="{if isset($fieldset['form']['submit']['icon'])}{$fieldset['form']['submit']['icon']}{else}process-icon-save{/if}"></i> {$fieldset['form']['submit']['title']}
 						</button>
 						{/if}

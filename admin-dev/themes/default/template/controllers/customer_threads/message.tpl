@@ -86,7 +86,7 @@
 				</dl>
 			{/if}
 			
-			<form class="form-inline" action="{$current}&amp;token={$token}&amp;id_customer_thread={$message.id_customer_thread}&amp;viewcustomer_thread" method="post" >
+			<form class="form-inline" action="{$current}&amp;token={$token|escape:'html':'UTF-8'}&amp;id_customer_thread={$message.id_customer_thread}&amp;viewcustomer_thread" method="post" >
 				<input type="hidden" name="id_customer_message" value="{$message.id_customer_message}" />
 				<div class="form-group">
 					<dl class="dl-horizontal">

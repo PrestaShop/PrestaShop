@@ -33,7 +33,7 @@
 	{/if}
 </script>
 {block name="defaultOptions"}
-<form action="{$current}&amp;token={$token}"
+<form action="{$current}&amp;token={$token|escape:'html':'UTF-8'}"
 	id="{if $table == null}configuration_form{else}{$table}_form{/if}"
 	method="post"
 	enctype="multipart/form-data" class="form-horizontal">
@@ -92,8 +92,8 @@
 					{if $field['type'] == 'hidden'}
 						<input type="hidden" name="{$key}" value="{$field['value']}" />
 					{else}
-						<div class="form-group {if isset($field.form_group_class)} {$field.form_group_class} {/if}" {if isset($tabs) && isset($field.tab)}data-tab-id="{$field.tab}"{/if}>
-							<div id="conf_id_{$key}" {if $field['is_invisible']} class="isInvisible"{/if}>								
+						<div class="form-group{if isset($field.form_group_class)} {$field.form_group_class}{/if}"{if isset($tabs) && isset($field.tab)} data-tab-id="{$field.tab}"{/if}>
+							<div id="conf_id_{$key}"{if $field['is_invisible']} class="isInvisible"{/if}>								
 								{block name="label"}
 									{if isset($field['title']) && isset($field['hint'])}
 										<label class="control-label col-lg-3{if isset($field['required']) && $field['required'] && $field['type'] != 'radio'} required{/if}">

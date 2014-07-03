@@ -236,7 +236,7 @@
 	                id_currency: '{$currency->id}',
 					ajax : '1',
 					controller : 'AdminSupplyOrders',
-					token : '{$token}',
+					token : '{$token|escape:'html':'UTF-8'}',
 					action : 'searchProduct'
 	            },
 	            parse: function(data) {

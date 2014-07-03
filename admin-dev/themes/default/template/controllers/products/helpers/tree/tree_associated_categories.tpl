@@ -25,7 +25,7 @@
 <div class="panel">
 	{if isset($header)}{$header}{/if}
 	{if isset($nodes)}
-	<ul id="{$id}" class="tree">
+	<ul id="{$id|escape:'html':'UTF-8'}" class="tree">
 		{$nodes}
 	</ul>
 	{/if}
@@ -64,8 +64,8 @@
 		}
 	{/if}
 	{if isset($use_search) && $use_search == true}
-		$('#{$id}-categories-search').bind('typeahead:selected', function(obj, datum){
-		    $('#{$id}').find(':input').each(function(){
+		$('#{$id|escape:'html':'UTF-8'}-categories-search').bind('typeahead:selected', function(obj, datum){
+		    $('#{$id|escape:'html':'UTF-8'}').find(':input').each(function(){
 					if ($(this).val() == datum.id_category)
 					{
 						$(this).prop("checked", true);
@@ -80,8 +80,8 @@
 		});
 	{/if}
 	$(document).ready(function(){
-		$('#{$id}').tree('collapseAll');
-		$('#{$id}').find(':input[type=radio]').click(function(){
+		$('#{$id|escape:'html':'UTF-8'}').tree('collapseAll');
+		$('#{$id|escape:'html':'UTF-8'}').find(':input[type=radio]').click(function(){
 			location.href = location.href.replace(/&id_category=[0-9]*/, '') + '&id_category=' + $(this).val();
 		});
 
@@ -91,11 +91,11 @@
 			var selected_categories = new Array("{$imploded_selected_categories}");
 			
 			if (selected_categories.length > 1)
-				$('#expand-all-{$id}').hide();
+				$('#expand-all-{$id|escape:'html':'UTF-8'}').hide();
 			else
-				$('#collapse-all-{$id}').hide();
+				$('#collapse-all-{$id|escape:'html':'UTF-8'}').hide();
 			
-			$('#{$id}').find(':input').each(function(){
+			$('#{$id|escape:'html':'UTF-8'}').find(':input').each(function(){
 				if ($.inArray($(this).val(), selected_categories) != -1)
 				{
 					if ($.inArray($(this).val(), selected_categories) != -1)
@@ -110,10 +110,10 @@
 				}
 			});
 		{else}
-			$('#collapse-all-{$id}').hide();
+			$('#collapse-all-{$id|escape:'html':'UTF-8'}').hide();
 		{/if}
 
-		$('#{$id}').find(':input[type=checkbox]').click(function(){
+		$('#{$id|escape:'html':'UTF-8'}').find(':input[type=checkbox]').click(function(){
 			if ($(this).prop('checked'))
 			{
 				$('select#id_category_default').append('<option value="' + $(this).val()+'">' + ($(this).val() !=1 ? $(this).parent().find('label').html() : home) + '</option>');

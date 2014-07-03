@@ -27,7 +27,7 @@
 	var id_customer = 0;
 	var changed_shipping_price = false;
 	var shipping_price_selected_carrier = '';
-	var current_index = '{$current}&token={$token}';
+	var current_index = '{$current}&token={$token|escape:'html':'UTF-8'}';
 	var admin_cart_link = '{$link->getAdminLink('AdminCarts')|addslashes}';
 	var cart_quantity = new Array();
 	var currencies = new Array();
@@ -584,7 +584,7 @@
 			dataType: "json",
 			data : {
 				ajax: "1",
-				token: "{$token}",
+				token: "{$token|escape:'html':'UTF-8'}",
 				tab: "AdminOrders",
 				action: "searchProducts",
 				id_cart: id_cart,

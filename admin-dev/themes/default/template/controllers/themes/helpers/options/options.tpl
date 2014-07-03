@@ -140,7 +140,7 @@
 			dataType : "html",
 			data: {
 				tab: 'AdminThemes',
-				token: '{$token}',
+				token: '{$token|escape:'html':'UTF-8'}',
 				ajax: '1',
 				action:'getAddonsThemes',
 				page:'themes'
