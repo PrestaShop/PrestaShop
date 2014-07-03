@@ -244,13 +244,9 @@ class AdminCartsControllerCore extends AdminController
 			}
 			$image = array();
 			if (isset($product['id_product_attribute']) && (int)$product['id_product_attribute'])
-				$image = Db::getInstance()->getRow('SELECT id_image
-																FROM '._DB_PREFIX_.'product_attribute_image
-																WHERE id_product_attribute = '.(int)$product['id_product_attribute']);
+				$image = Db::getInstance()->getRow('SELECT id_image FROM '._DB_PREFIX_.'product_attribute_image WHERE id_product_attribute = '.(int)$product['id_product_attribute']);
 			if (!isset($image['id_image']))
-				$image = Db::getInstance()->getRow('SELECT id_image
-																FROM '._DB_PREFIX_.'image
-																WHERE id_product = '.(int)$product['id_product'].' AND cover = 1');
+				$image = Db::getInstance()->getRow('SELECT id_image FROM '._DB_PREFIX_.'image WHERE id_product = '.(int)$product['id_product'].' AND cover = 1');
 
 			$product_obj = new Product($product['id_product']);
 			$product['qty_in_stock'] = StockAvailable::getQuantityAvailableByProduct($product['id_product'], isset($product['id_product_attribute']) ? $product['id_product_attribute'] : null, (int)$id_shop);
@@ -259,7 +255,17 @@ class AdminCartsControllerCore extends AdminController
 			$product['image'] = (isset($image['id_image']) ? ImageManager::thumbnail(_PS_IMG_DIR_.'p/'.$image_product->getExistingImgPath().'.jpg', 'product_mini_'.(int)$product['id_product'].(isset($product['id_product_attribute']) ? '_'.(int)$product['id_product_attribute'] : '').'.jpg', 45, 'jpg') : '--');
 		}
 
+		$helper = new HelperKpi();
+		$helper->id = 'box-kpi-cart';
+		$helper->icon = 'icon-shopping-cart';
+		$helper->color = 'color1';
+		$helper->title = $this->l('Total Cart', null, null, false);
+		$helper->subtitle = sprintf($this->l('Cart #%06d', null, null, false), $cart->id);
+		$helper->value = Tools::displayPrice($total_price, $currency);
+		$kpi = $helper->generate();
+
 		$this->tpl_view_vars = array(
+			'kpi' => $kpi,
 			'products' => $products,
 			'discounts' => $cart->getCartRules(),
 			'order' => $order,
