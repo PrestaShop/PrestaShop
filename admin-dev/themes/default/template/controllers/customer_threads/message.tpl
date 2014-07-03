@@ -191,7 +191,7 @@
 				<div class="row">
 					<button type="submit" class="btn btn-default" name="submitReply">
 						<i class="icon-check"></i> {l s='Send my reply'}</button>
-					<input type="hidden" name="id_customer_thread" value="{$message.id_customer_thread}" />
+					<input type="hidden" name="id_customer_thread" value="{$message.id_customer_thread|intval}" />
 					<input type="hidden" name="msg_email" value="{$message.email}" />
 				</div>				
 			</form>

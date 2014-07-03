@@ -32,7 +32,8 @@
 {/if}
 
 {block name="defaultForm"}
-<form id="{if isset($fields.form.form.id_form)}{$fields.form.form.id_form|escape:'html':'UTF-8'}{else}{if $table == null}configuration_form{else}{$table}_form_{counter name='form_count'}{/if}{/if}" class="defaultForm form-horizontal{if isset($name_controller) && $name_controller} {$name_controller}{/if}"{if isset($current) && $current} action="{$current}{if isset($token) && $token}&amp;token={$token}{/if}"{/if} method="post" enctype="multipart/form-data"{if isset($style)} style="{$style}"{/if} novalidate>
+{capture name='form_count'}{counter name='form_count'}{/capture}
+<form id="{if isset($fields.form.form.id_form)}{$fields.form.form.id_form|escape:'html':'UTF-8'}{else}{if $table == null}configuration_form{else}{$table}_form{/if}{if $smarty.capture.form_count > 1}_{$smarty.capture.form_count|intval}{/if}{/if}" class="defaultForm form-horizontal{if isset($name_controller) && $name_controller} {$name_controller}{/if}"{if isset($current) && $current} action="{$current}{if isset($token) && $token}&amp;token={$token}{/if}"{/if} method="post" enctype="multipart/form-data"{if isset($style)} style="{$style}"{/if} novalidate>
 	{if $form_id}
 		<input type="hidden" name="{$identifier}" id="{$identifier}" value="{$form_id}" />
 	{/if}
@@ -42,7 +43,8 @@
 	
 	{foreach $fields as $f => $fieldset}
 		{block name="fieldset"}
-		<div class="panel" id="fieldset_{$f}_{counter name='fieldset_name'}">
+		{capture name='fieldset_name'}{counter name='fieldset_name'}{/capture}
+		<div class="panel" id="fieldset_{$f}{if $smarty.capture.fieldset_name > 1}_{$smarty.capture.fieldset_name|intval}{/if}">
 			{foreach $fieldset.form as $key => $field}
 				{if $key == 'legend'}
 					{block name="legend"}
@@ -66,17 +68,16 @@
 								{if isset($input.label)}
 									<label class="control-label col-lg-3{if isset($input.required) && $input.required && $input.type != 'radio'} required{/if}">
 										{if isset($input.hint)}
-										<span class="label-tooltip" data-toggle="tooltip" data-html="true"
-											title="{if is_array($input.hint)}
+										<span class="label-tooltip" data-toggle="tooltip" data-html="true" title="{if is_array($input.hint)}
 													{foreach $input.hint as $hint}
 														{if is_array($hint)}
-															{$hint.text}
+															{$hint.text|escape:'html':'UTF-8'}
 														{else}
-															{$hint}
+															{$hint|escape:'html':'UTF-8'}
 														{/if}
 													{/foreach}
 												{else}
-													{$input.hint}
+													{$input.hint|escape:'html':'UTF-8'}
 												{/if}">
 										{/if}
 										{$input.label}
@@ -647,7 +648,7 @@
 								<div class="form-group">
 									{foreach $input.options as $key => $select}
 									<div class="col-lg-2">
-										<select name="{$key}" class="{if isset($input.class)}{$input.class}{/if}" class="fixed-width-lg">
+										<select name="{$key}" class="fixed-width-lg{if isset($input.class)} {$input.class}{/if}">
 											<option value="">-</option>
 											{if $key == 'months'}
 												{*
@@ -798,10 +799,11 @@
 				{block name="other_input"}{/block}
 			{/foreach}
 			{block name="footer"}
+			{capture name='form_submit_btn'}{counter name='form_submit_btn'}{/capture}
 				{if isset($fieldset['form']['submit']) || isset($fieldset['form']['buttons'])}
 					<div class="panel-footer">
 						{if isset($fieldset['form']['submit']) && !empty($fieldset['form']['submit'])}
-						<button type="submit" value="1"	id="{if isset($fieldset['form']['submit']['id'])}{$fieldset['form']['submit']['id']}{else}{$table}_form_submit_btn_{counter name='form_submit_btn'}{/if}" name="{if isset($fieldset['form']['submit']['name'])}{$fieldset['form']['submit']['name']}{else}{$submit_action}{/if}{if isset($fieldset['form']['submit']['stay']) && $fieldset['form']['submit']['stay']}AndStay{/if}" class="{if isset($fieldset['form']['submit']['class'])}{$fieldset['form']['submit']['class']}{else}btn btn-default pull-right{/if}">
+						<button type="submit" value="1"	id="{if isset($fieldset['form']['submit']['id'])}{$fieldset['form']['submit']['id']}{else}{$table}_form_submit_btn{/if}{if $smarty.capture.form_submit_btn > 1}_{$smarty.capture.form_submit_btn|intval}{/if}" name="{if isset($fieldset['form']['submit']['name'])}{$fieldset['form']['submit']['name']}{else}{$submit_action}{/if}{if isset($fieldset['form']['submit']['stay']) && $fieldset['form']['submit']['stay']}AndStay{/if}" class="{if isset($fieldset['form']['submit']['class'])}{$fieldset['form']['submit']['class']}{else}btn btn-default pull-right{/if}">
 							<i class="{if isset($fieldset['form']['submit']['icon'])}{$fieldset['form']['submit']['icon']}{else}process-icon-save{/if}"></i> {$fieldset['form']['submit']['title']}
 						</button>
 						{/if}
