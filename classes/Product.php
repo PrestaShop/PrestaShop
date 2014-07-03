@@ -3639,8 +3639,8 @@ class ProductCore extends ObjectModel
 				'is_shareable' => (int)$row['is_shareable'],
 				'date_add' => date('Y-m-d H:i:s')
 			);
-			$res &= Db::getInstance()->insert('product_download', $data);
 		}
+		$res &= Db::getInstance()->insert('product_download', $data);
 
 		return $res;
 	}
