@@ -28,7 +28,7 @@
 <div class="clearfix">&nbsp;</div>
 <div style="display:none" class="panel requiredFieldsParameters">
 	<h3><i class="icon-asterisk"></i> {l s='Required Fields'}</h3>
-	<form name="updateFields" action="{$currentIndex|escape:'html':'UTF-8'}&amp;submitFields=1&amp;token={$token|escape:'html':'UTF-8'}" method="post">
+	<form name="updateFields" action="{$current|escape:'html':'UTF-8'}&amp;submitFields=1&amp;token={$token|escape:'html':'UTF-8'}" method="post">
 		<div class="alert alert-info">
 			{l s='Select the fields you would like to be required for this section.'}
 		</div>

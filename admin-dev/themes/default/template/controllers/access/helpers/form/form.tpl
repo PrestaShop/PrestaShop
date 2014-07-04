@@ -174,7 +174,7 @@
 	<div class="productTabs col-lg-2">
 		<div class="tab list-group">
 		{foreach $profiles as $profile}
-			<a class="list-group-item nav-profile {if $profile.id_profile == $current_profile}active{/if}" id="profile-{$profile.id_profile}" href="{$currentIndex|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;id_profile={$profile.id_profile}">{$profile.name}</a>
+			<a class="list-group-item nav-profile {if $profile.id_profile == $current_profile}active{/if}" id="profile-{$profile.id_profile}" href="{$current|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;id_profile={$profile.id_profile}">{$profile.name}</a>
 		{/foreach}
 		</div>
 	</div>
