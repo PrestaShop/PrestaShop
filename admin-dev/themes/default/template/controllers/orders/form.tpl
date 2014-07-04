@@ -27,7 +27,7 @@
 	var id_customer = 0;
 	var changed_shipping_price = false;
 	var shipping_price_selected_carrier = '';
-	var current_index = '{$currentIndex|escape:'html':'UTF-8'}&token={$token|escape:'html':'UTF-8'}';
+	var current_index = '{$current|escape:'html':'UTF-8'}&token={$token|escape:'html':'UTF-8'}';
 	var admin_cart_link = '{$link->getAdminLink('AdminCarts')|addslashes}';
 	var cart_quantity = new Array();
 	var currencies = new Array();

@@ -41,7 +41,7 @@
 						{$customer->email}
 					</a>
 					<div class="panel-heading-action">
-						<a class="btn btn-default" href="{$currentIndex|escape:'html':'UTF-8'}&amp;updatecustomer&amp;id_customer={$customer->id|intval}&amp;token={$token|escape:'html':'UTF-8'}">
+						<a class="btn btn-default" href="{$current|escape:'html':'UTF-8'}&amp;updatecustomer&amp;id_customer={$customer->id|intval}&amp;token={$token|escape:'html':'UTF-8'}">
 							<i class="icon-edit"></i>
 							{l s='Edit'}
 						</a>
@@ -489,7 +489,7 @@
 					<i class="icon-group"></i>
 					{l s='Groups'}
 					<span class="badge">{count($groups)}</span>
-					<a class="btn btn-default pull-right" href="{$currentIndex|escape:'html':'UTF-8'}&amp;updatecustomer&amp;id_customer={$customer->id|intval}&amp;token={$token|escape:'html':'UTF-8'}">
+					<a class="btn btn-default pull-right" href="{$current|escape:'html':'UTF-8'}&amp;updatecustomer&amp;id_customer={$customer->id|intval}&amp;token={$token|escape:'html':'UTF-8'}">
 						<i class="icon-edit"></i> {l s='Edit'}
 					</a>
 				</div>

@@ -91,11 +91,11 @@
 									<span class="positions">{$module@iteration}</span>
 									{if $can_move}
 									<div class="btn-group-vertical">
-										<a class="btn btn-default btn-xs" href="{$currentIndex|escape:'html':'UTF-8'}&amp;id_module={$module['instance']->id|intval}&amp;id_hook={$hook['id_hook']|intval}&amp;direction=0&amp;token={$token|escape:'html':'UTF-8'}&amp;changePosition#{$hook['name']}">
+										<a class="btn btn-default btn-xs" href="{$current|escape:'html':'UTF-8'}&amp;id_module={$module['instance']->id|intval}&amp;id_hook={$hook['id_hook']|intval}&amp;direction=0&amp;token={$token|escape:'html':'UTF-8'}&amp;changePosition#{$hook['name']}">
 											<i class="icon-chevron-up"></i>
 										</a>
 
-										<a class="btn btn-default btn-xs" href="{$currentIndex|escape:'html':'UTF-8'}&amp;id_module={$module['instance']->id|intval}&amp;id_hook={$hook['id_hook']|intval}&amp;direction=1&amp;token={$token|escape:'html':'UTF-8'}&amp;changePosition#{$hook['name']}">
+										<a class="btn btn-default btn-xs" href="{$current|escape:'html':'UTF-8'}&amp;id_module={$module['instance']->id|intval}&amp;id_hook={$hook['id_hook']|intval}&amp;direction=1&amp;token={$token|escape:'html':'UTF-8'}&amp;changePosition#{$hook['name']}">
 											<i class="icon-chevron-down"></i>
 										</a>
 									</div>
@@ -115,7 +115,7 @@
 								<div class="module_col_actions">
 									<!-- <div class="lab_modules_positions" for="mod{$hook['id_hook']}_{$module['instance']->id}"></div> -->
 									<div class="btn-group">
-										<a class="btn btn-default" href="{$currentIndex|escape:'html':'UTF-8'}&amp;id_module={$module['instance']->id|intval}&amp;id_hook={$hook['id_hook']}&amp;editGraft{if $display_key}&amp;show_modules={$display_key}{/if}&amp;token={$token|escape:'html':'UTF-8'}">
+										<a class="btn btn-default" href="{$current|escape:'html':'UTF-8'}&amp;id_module={$module['instance']->id|intval}&amp;id_hook={$hook['id_hook']}&amp;editGraft{if $display_key}&amp;show_modules={$display_key}{/if}&amp;token={$token|escape:'html':'UTF-8'}">
 											<i class="icon-pencil"></i>
 											{l s='Edit'}
 										</a>
@@ -124,7 +124,7 @@
 										</a>
 										<ul class="dropdown-menu">
 											<li>
-												<a href="{$currentIndex|escape:'html':'UTF-8'}&amp;id_module={$module['instance']->id|intval}&amp;id_hook={$hook['id_hook']}&amp;deleteGraft{if $display_key}&amp;show_modules={$display_key}{/if}&amp;token={$token|escape:'html':'UTF-8'}">
+												<a href="{$current|escape:'html':'UTF-8'}&amp;id_module={$module['instance']->id|intval}&amp;id_hook={$hook['id_hook']}&amp;deleteGraft{if $display_key}&amp;show_modules={$display_key}{/if}&amp;token={$token|escape:'html':'UTF-8'}">
 													<i class="icon-minus-sign-alt"></i>
 													{l s='Unhook'}
 												</a>
