@@ -173,6 +173,7 @@ function doAjaxForgot() {
 				} else {
 					alert(jsonData.confirm);
 					$('#forgot_password_form').hide();
+					$('a.show-forgot-password').hide();
 					displayLogin();
 				}
 			},
