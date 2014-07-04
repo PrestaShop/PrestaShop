@@ -34,7 +34,7 @@
 {block name="defaultForm"}
 {capture name='form_count'}{counter name='form_count'}{/capture}
 {capture name='identifier_count'}{counter name='identifier_count'}{/capture}
-<form id="{if isset($fields.form.form.id_form)}{$fields.form.form.id_form|escape:'html':'UTF-8'}{else}{if $table == null}configuration_form{else}{$table}_form{/if}{if $smarty.capture.form_count > 1}_{($smarty.capture.form_count - 1)|intval}{/if}{/if}" class="defaultForm form-horizontal{if isset($name_controller) && $name_controller} {$name_controller}{/if}"{if isset($current) && $current} action="{$currentIndex|escape:'html':'UTF-8'}{if isset($token) && $token}&amp;token={$token|escape:'html':'UTF-8'}{/if}"{/if} method="post" enctype="multipart/form-data"{if isset($style)} style="{$style}"{/if} novalidate>
+<form id="{if isset($fields.form.form.id_form)}{$fields.form.form.id_form|escape:'html':'UTF-8'}{else}{if $table == null}configuration_form{else}{$table}_form{/if}{if $smarty.capture.form_count > 1}_{($smarty.capture.form_count - 1)|intval}{/if}{/if}" class="defaultForm form-horizontal{if isset($name_controller) && $name_controller} {$name_controller}{/if}"{if isset($current) && $current} action="{$current|escape:'html':'UTF-8'}{if isset($token) && $token}&amp;token={$token|escape:'html':'UTF-8'}{/if}"{/if} method="post" enctype="multipart/form-data"{if isset($style)} style="{$style}"{/if} novalidate>
 	{if $form_id}
 		<input type="hidden" name="{$identifier}" id="{$identifier}{if $smarty.capture.identifier_count > 1}_{($smarty.capture.identifier_count - 1)|intval}{/if}" value="{$form_id}" />
 	{/if}
