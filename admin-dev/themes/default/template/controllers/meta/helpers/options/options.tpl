@@ -25,7 +25,7 @@
 
 {extends file="helpers/options/options.tpl"}
 {block name="input"}
-	{if $field['type'] == 'rewriting_settings'}
+	{if isset($field['mod_rewrite'])}
 			<label class="t" for="{$key}_on"><img src="../img/admin/enabled.gif" alt="{l s='Yes'}" title="{l s='Yes'}" /></label>
 			<input type="radio" name="{$key}" id="{$key}_on" value="1" {if $field['value']} checked="checked"{/if}{if isset($field['js']['on'])} {$field['js']['on']}{/if}/>
 			<label class="t" for="{$key}_on"> {l s='Yes'}</label>
