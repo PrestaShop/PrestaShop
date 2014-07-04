@@ -22,6 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+{capture name='tr_count'}{counter name='tr_count'}{/capture}
 <tbody>
 {if count($list)}
 {foreach $list AS $index => $tr}
@@ -44,7 +45,7 @@
 			{block name="open_td"}
 				<td
 					{if isset($params.position)}
-						id="td_{if !empty($position_group_identifier)}{$position_group_identifier}{else}0{/if}_{$tr.$identifier}"
+						id="td_{if !empty($position_group_identifier)}{$position_group_identifier}{else}0{/if}_{$tr.$identifier}{if $smarty.capture.tr_count > 1}_{($smarty.capture.tr_count - 1)|intval}{/if}"
 					{/if}
 					class="{if !$no_link}pointer{/if}
 					{if isset($params.position) && $order_by == 'position'  && $order_way != 'DESC'} dragHandle{/if}
