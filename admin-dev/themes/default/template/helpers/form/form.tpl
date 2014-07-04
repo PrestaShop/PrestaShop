@@ -32,11 +32,11 @@
 {/if}
 
 {block name="defaultForm"}
-{capture name='form_count'}{counter name='form_count'}{/capture}
-{capture name='identifier_count'}{counter name='identifier_count'}{/capture}
-<form id="{if isset($fields.form.form.id_form)}{$fields.form.form.id_form|escape:'html':'UTF-8'}{else}{if $table == null}configuration_form{else}{$table}_form{/if}{if $smarty.capture.form_count > 1}_{($smarty.capture.form_count - 1)|intval}{/if}{/if}" class="defaultForm form-horizontal{if isset($name_controller) && $name_controller} {$name_controller}{/if}"{if isset($current) && $current} action="{$current|escape:'html':'UTF-8'}{if isset($token) && $token}&amp;token={$token|escape:'html':'UTF-8'}{/if}"{/if} method="post" enctype="multipart/form-data"{if isset($style)} style="{$style}"{/if} novalidate>
+{if isset($identifier_bk) && $identifier_bk == $identifier}{capture name='identifier_count'}{counter name='identifier_count'}{/capture}{/if}
+{assign var='identifier_bk' value=$identifier scope='parent'}
+<form id="{if isset($fields.form.form.id_form)}{$fields.form.form.id_form|escape:'html':'UTF-8'}{else}{if $table == null}configuration_form{else}{$table}_form{/if}{if isset($smarty.capture.identifier_count) && $smarty.capture.identifier_count}_{$smarty.capture.identifier_count|intval}{/if}{/if}" class="defaultForm form-horizontal{if isset($name_controller) && $name_controller} {$name_controller}{/if}"{if isset($current) && $current} action="{$current|escape:'html':'UTF-8'}{if isset($token) && $token}&amp;token={$token|escape:'html':'UTF-8'}{/if}"{/if} method="post" enctype="multipart/form-data"{if isset($style)} style="{$style}"{/if} novalidate>
 	{if $form_id}
-		<input type="hidden" name="{$identifier}" id="{$identifier}{if $smarty.capture.identifier_count > 1}_{($smarty.capture.identifier_count - 1)|intval}{/if}" value="{$form_id}" />
+		<input type="hidden" name="{$identifier}" id="{$identifier}{if isset($smarty.capture.identifier_count) && $smarty.capture.identifier_count}_{$smarty.capture.identifier_count|intval}{/if}" value="{$form_id}" />
 	{/if}
 	{if !empty($submit_action)}
 		<input type="hidden" name="{$submit_action}" value="1" />
@@ -45,7 +45,7 @@
 	{foreach $fields as $f => $fieldset}
 		{block name="fieldset"}
 		{capture name='fieldset_name'}{counter name='fieldset_name'}{/capture}
-		<div class="panel" id="fieldset_{$f}{if $smarty.capture.fieldset_name > 1}_{($smarty.capture.fieldset_name - 1)|intval}{/if}">
+		<div class="panel" id="fieldset_{$f}{if isset($smarty.capture.identifier_count) && $smarty.capture.identifier_count}_{$smarty.capture.identifier_count|intval}{/if}{if $smarty.capture.fieldset_name > 1}_{($smarty.capture.fieldset_name - 1)|intval}{/if}">
 			{foreach $fieldset.form as $key => $field}
 				{if $key == 'legend'}
 					{block name="legend"}

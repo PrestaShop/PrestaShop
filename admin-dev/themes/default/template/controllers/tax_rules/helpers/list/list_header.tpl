@@ -37,9 +37,11 @@
 		<input type="hidden" id="submitFilter{$list_id}" name="submitFilter{$list_id}" value="0"/>
 		<div class="table-responsive clearfix">
 			<table{if $table_id} id="table-{$table_id}"{/if} class="table{if $table_dnd} tableDnD{/if} {$list_id}">
+				{if $bulk_actions && $has_bulk_actions}
 				<col style="width: 10px;" />
+				{/if}
 				{foreach $fields_display AS $key => $params}
-					<col {if isset($params.width) && $params.width != 'auto'}width="{$params.width}px"{/if}/>
+					<col{if isset($params.width) && $params.width != 'auto'} width="{$params.width}px"{/if}/>
 				{/foreach}
 				{if $shop_link_type}
 					<col style="width: 80px;"/>
@@ -77,7 +79,5 @@
 						{else}
 							<th class="actions text-right"></th>
 						{/if}
-						<th></th>
 					</tr>
-
-					</thead>
+				</thead>
