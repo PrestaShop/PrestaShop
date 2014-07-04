@@ -82,7 +82,7 @@ class AdminCmsContentControllerCore extends AdminController
 	public function initContent()
 	{
 		$this->initTabModuleList();
-		$this->content .= $this->renderPageHeaderToolbar();
+		$this->renderPageHeaderToolbar();
 		
 		$this->admin_cms_categories->token = $this->token;
 		$this->admin_cms->token = $this->token;
@@ -187,8 +187,6 @@ class AdminCmsContentControllerCore extends AdminController
 			'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
 			'page_header_toolbar_title' => $this->toolbar_title,
 		));
-
-		return $template->fetch();
 	}
 
 	public function postProcess()
