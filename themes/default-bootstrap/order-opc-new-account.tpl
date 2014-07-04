@@ -73,7 +73,7 @@
 					{foreach from=$genders key=k item=gender}	
                     	<div class="radio-inline">
                     	<label for="id_gender{$gender->id_gender}" class="top">
-						<input type="radio" name="id_gender" id="id_gender{$gender->id_gender}" value="{$gender->id_gender}" {if isset($smarty.post.id_gender) && $smarty.post.id_gender == $gender->id_gender}checked="checked"{/if} />
+						<input type="radio" name="id_gender" id="id_gender{$gender->id_gender}" value="{$gender->id_gender}" {if isset($smarty.post.id_gender) && $smarty.post.id_gender == $gender->id_gender || (isset($guestInformations) && $guestInformations.id_gender == $gender->id_gender)}checked="checked"{/if} />
 						{$gender->name}</label></div>
 					{/foreach}
 				</div>
