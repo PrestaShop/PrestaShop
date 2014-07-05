@@ -37,12 +37,12 @@ class FileUploaderCore
 		$this->allowedExtensions = $allowedExtensions;
 		$this->sizeLimit = $sizeLimit;
 
-        if (isset($_GET['qqfile']))
-            $this->file = new QqUploadedFileXhr();
-        elseif (isset($_FILES['qqfile']))
-            $this->file = new QqUploadedFileForm();
-        else
-            $this->file = false;
+		if (isset($_GET['qqfile']))
+			$this->file = new QqUploadedFileXhr();
+		elseif (isset($_FILES['qqfile']))
+			$this->file = new QqUploadedFileForm();
+		else
+			$this->file = false;
 	}
 
 	protected function toBytes($str)
@@ -88,10 +88,10 @@ class FileUploaderCore
 
 class QqUploadedFileForm
 {
-    /**
-     * Save the file to the specified path
-     * @return boolean TRUE on success
-     */
+	/**
+	 * Save the file to the specified path
+	 * @return boolean TRUE on success
+	 */
 	public function save()
 	{
 		$product = new Product($_GET['id_product']);
@@ -147,15 +147,15 @@ class QqUploadedFileForm
 		return array('success' => $img);
 	}
 
-    public function getName()
-    {
-        return $_FILES['qqfile']['name'];
-    }
+	public function getName()
+	{
+		return $_FILES['qqfile']['name'];
+	}
 
-    public function getSize()
-    {
-        return $_FILES['qqfile']['size'];
-    }
+	public function getSize()
+	{
+		return $_FILES['qqfile']['size'];
+	}
 }
 /**
  * Handle file uploads via XMLHttpRequest

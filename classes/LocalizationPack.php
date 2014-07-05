@@ -289,9 +289,9 @@ class LocalizationPackCore
 					PaymentModule::addCurrencyPermissions($currency->id);
 				}
 			}
-            
+
 			if (($error = Currency::refreshCurrencies()) !== null)
-                $this->_errors[] = $error;
+				$this->_errors[] = $error;
 
 			if (!count($this->_errors) && $install_mode && isset($attributes['iso_code']) && count($xml->currencies->currency) == 1)
 				$this->iso_currency = $attributes['iso_code'];
@@ -431,4 +431,3 @@ class LocalizationPackCore
 		return $this->_errors;
 	}
 }
-

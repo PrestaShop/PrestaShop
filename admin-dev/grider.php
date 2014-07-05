@@ -43,7 +43,7 @@ $id_lang = (int)(Tools::getValue('id_lang'));
 
 
 if (!isset($cookie->id_employee) || !$cookie->id_employee  || $cookie->id_employee != $id_employee)
-    die(Tools::displayError());
+	die(Tools::displayError());
 
 if (!Validate::isModuleName($module))
 	die(Tools::displayError());
@@ -96,8 +96,7 @@ if (!$shop_id)
 	Context::getContext()->shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
 elseif (Context::getContext()->shop->id != $shop_id)
 	Context::getContext()->shop = new Shop($shop_id);
-	
-	
+
 require_once($module_path);
 
 $grid = new $module();
@@ -105,6 +104,6 @@ $grid->setEmployee($id_employee);
 $grid->setLang($id_lang);
 if ($option)
 	$grid->setOption($option);
-	
+
 $grid->create($render, $type, $width, $height, $start, $limit, $sort, $dir);
 $grid->render();

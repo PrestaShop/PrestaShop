@@ -307,12 +307,12 @@ class CurrencyCore extends ObjectModel
 		return Cache::retrieve($cache_id);
 	}
 
-    /**
-     * @static
-     * @param $iso_code
-     * @param int $id_shop
-     * @return int
-     */
+	/**
+	 * @static
+	 * @param $iso_code
+	 * @param int $id_shop
+	 * @return int
+	 */
 	public static function getIdByIsoCodeNum($iso_code_num, $id_shop = 0)
 	{
 		$query = Currency::getIdByQuery($id_shop);

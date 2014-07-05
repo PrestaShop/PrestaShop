@@ -32,15 +32,15 @@
 class CSVCore
 {
 	public $filename;
-    public $collection;
-    public $delimiter;
+	public $collection;
+	public $delimiter;
 
-    /**
-     * Loads objects, filename and optionnaly a delimiter.
-     * @param Collection $collection collection of objects / array (of non-objects)
-     * @param string $filename : used later to save the file
-     * @param string $delimiter Optional : delimiter used
-     */
+	/**
+	 * Loads objects, filename and optionnaly a delimiter.
+	 * @param Collection $collection collection of objects / array (of non-objects)
+	 * @param string $filename : used later to save the file
+	 * @param string $delimiter Optional : delimiter used
+	 */
 	public function __construct($collection, $filename, $delimiter = ';')
 	{
 		$this->filename = $filename;
@@ -80,8 +80,8 @@ class CSVCore
 	 */
 	public function output($data)
 	{
-    	$wraped_data = array_map(array('CSVCore', 'wrap'), $data);
-        echo sprintf("%s\n", implode($this->delimiter, $wraped_data));
+		$wraped_data = array_map(array('CSVCore', 'wrap'), $data);
+		echo sprintf("%s\n", implode($this->delimiter, $wraped_data));
 	}
 
 	/**
@@ -89,21 +89,20 @@ class CSVCore
 	 * @param string $data
 	 * @return string $data
 	 */
-    public static function wrap($data)
-    {
-    	$data = Tools::safeOutput($data, '";');
-        return sprintf('"%s"', $data);
-    }
+	public static function wrap($data)
+	{
+		$data = Tools::safeOutput($data, '";');
+		return sprintf('"%s"', $data);
+	}
 
-    /**
-     * Adds headers
-     */
-    public function headers()
-    {
-        header('Content-type: text/csv');
-        header('Content-Type: application/force-download; charset=UTF-8');
+	/**
+	 * Adds headers
+	 */
+	public function headers()
+	{
+		header('Content-type: text/csv');
+		header('Content-Type: application/force-download; charset=UTF-8');
 		header('Cache-Control: no-store, no-cache');
-        header('Content-disposition: attachment; filename="'.$this->filename.'.csv"');
-    }
+		header('Content-disposition: attachment; filename="'.$this->filename.'.csv"');
+	}
 }
-
