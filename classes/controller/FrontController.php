@@ -107,6 +107,11 @@ class FrontControllerCore extends Controller
 
 	public function init()
 	{
+		$this->_init__FrontControllerCore();
+	}
+
+	protected function _init__FrontControllerCore()
+	{
 		/*
 		 * Globals are DEPRECATED as of version 1.5.
 		 * Use the Context to access objects instead.
@@ -436,6 +441,11 @@ class FrontControllerCore extends Controller
 
 	public function initContent()
 	{
+		$this->_initContent__FrontControllerCore();
+	}
+
+	protected function _initContent__FrontControllerCore()
+	{
 		$this->process();
 		if (!isset($this->context->cart))
 			$this->context->cart = new Cart();
@@ -523,6 +533,11 @@ class FrontControllerCore extends Controller
 	}
 
 	public function display()
+	{
+		return $this->_display__FrontControllerCore();
+	}
+
+	protected function _display__FrontControllerCore()
 	{
 		Tools::safePostVars();
 
@@ -789,6 +804,11 @@ class FrontControllerCore extends Controller
 
 	public function initHeader()
 	{
+		$this->_initHeader__FrontControllerCore();
+	}
+
+	protected function _initHeader__FrontControllerCore()
+	{
 		// P3P Policies (http://www.w3.org/TR/2002/REC-P3P-20020416/#compact_policies)
 		header('P3P: CP="IDC DSP COR CURa ADMa OUR IND PHY ONL COM STA"');
 
@@ -806,6 +826,11 @@ class FrontControllerCore extends Controller
 	}
 
 	public function initFooter()
+	{
+		$this->_initFooter__FrontControllerCore();
+	}
+
+	protected function _initFooter__FrontControllerCore()
 	{
 		$this->context->smarty->assign(array(
 			'HOOK_FOOTER' => Hook::exec('displayFooter'),
