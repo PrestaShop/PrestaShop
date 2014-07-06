@@ -2499,13 +2499,16 @@ class ProductCore extends ObjectModel
 	* @param boolean $only_reduc Returns only the reduction amount
 	* @param boolean $usereduc Set if the returned amount will include reduction
 	* @param integer $quantity Required for quantity discount application (default value: 1)
-	* @param boolean $forceAssociatedTax DEPRECATED - NOT USED Force to apply the associated tax. Only works when the parameter $usetax is true
+	* @param boolean $force_associated_tax DEPRECATED - NOT USED Force to apply the associated tax. Only works when the parameter $usetax is true
 	* @param integer $id_customer Customer ID (for customer group reduction)
 	* @param integer $id_cart Cart ID. Required when the cookie is not accessible (e.g., inside a payment module, a cron task...)
 	* @param integer $id_address Customer address ID. Required for price (tax included) calculation regarding the guest localization
-	* @param variable_reference $specificPriceOutput.
+	* @param variable_reference $specific_price_output.
 	* 	If a specific price applies regarding the previous parameters, this variable is filled with the corresponding SpecificPrice object
 	* @param boolean $with_ecotax insert ecotax in price output.
+        * @param boolean $use_group_reduction compute price using group reduction
+        * @param Context $context
+        * @param boolean $use_customer_price use customer group reduction
 	* @return float Product price
 	*/
 	public static function getPriceStatic($id_product, $usetax = true, $id_product_attribute = null, $decimals = 6, $divisor = null,
@@ -2630,6 +2633,7 @@ class ProductCore extends ObjectModel
 	* @param integer $id_product_attribute Product attribute id
 	* @param integer $id_country Country id
 	* @param integer $id_state State id
+        * @param integer $zipcode Post code
 	* @param integer $id_currency Currency id
 	* @param integer $id_group Group id
 	* @param integer $quantity Quantity Required for Specific prices : quantity discount application
@@ -2638,7 +2642,7 @@ class ProductCore extends ObjectModel
 	* @param boolean $only_reduc Returns only the reduction amount
 	* @param boolean $use_reduc Set if the returned amount will include reduction
 	* @param boolean $with_ecotax insert ecotax in price output.
-	* @param variable_reference $specific_price_output
+	* @param variable_reference $specific_price
 	* 	If a specific price applies regarding the previous parameters, this variable is filled with the corresponding SpecificPrice object
 	* @return float Product price
 	**/
