@@ -2473,7 +2473,7 @@ class ProductCore extends ObjectModel
 	{
 		if (!$context)
 			$context = Context::getContext();
-		$cache_id = 'Product::getOrderStates_'.(int)$id_product.'-'.(int)$context->shop->id;
+		$cache_id = 'Product::getCover_'.(int)$id_product.'-'.(int)$context->shop->id;
 		if (!Cache::isStored($cache_id))
 		{
 			$sql = 'SELECT image_shop.`id_image`
