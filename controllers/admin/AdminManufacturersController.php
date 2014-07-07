@@ -490,8 +490,8 @@ class AdminManufacturersControllerCore extends AdminController
 			'name' => 'id_address',
 		);
 
-		$form['input'][] = (in_array('company', $required_fields) ? 
-			array(
+		 if (in_array('company', $required_fields))
+			$form['input'][] = array(
 				'type' => 'text',
 				'label' => $this->l('Company'),
 				'name' => 'company',
@@ -500,7 +500,7 @@ class AdminManufacturersControllerCore extends AdminController
 				'maxlength' => 16,
 				'col' => 4,
 				'hint' => $this->l('Company name for this supplier')
-			) : null);
+			);
 		
 		$form['input'][] = array(
 			'type' => 'text',
