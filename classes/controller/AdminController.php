@@ -597,7 +597,6 @@ class AdminControllerCore extends Controller
 		}
 
 		$filters = $this->context->cookie->getFamily($prefix.$this->list_id.'Filter_');
-
 		foreach ($filters as $key => $value)
 		{
 			/* Extracting filters from $_POST on key filter_ */
@@ -610,7 +609,8 @@ class AdminControllerCore extends Controller
 
 				if ($field = $this->filterToField($key, $filter))
 				{
-					$type = (array_key_exists('filter_type', $field) ? $field['filter_type'] : (array_key_exists('type', $field) ? $field['type'] : false));					if (($type == 'date' || $type == 'datetime') && is_string($value))
+					$type = (array_key_exists('filter_type', $field) ? $field['filter_type'] : (array_key_exists('type', $field) ? $field['type'] : false));
+					if (($type == 'date' || $type == 'datetime') && is_string($value))
 						$value = Tools::unSerialize($value);
 					$key = isset($tmp_tab[1]) ? $tmp_tab[0].'.`'.$tmp_tab[1].'`' : '`'.$tmp_tab[0].'`';
 
@@ -699,7 +699,7 @@ class AdminControllerCore extends Controller
 			else
 			{
 				// Process list filtering
-				if ($this->filter)
+				if ($this->filter && $this->action != 'reset_filters')
 					$this->processFilter();
 
 				// If the method named after the action exists, call "before" hooks, then call action method, then call "after" hooks
@@ -2831,7 +2831,6 @@ class AdminControllerCore extends Controller
 			{
 				break;
 			}
-
 		} while (empty($this->_list));
 
 		Hook::exec('action'.$this->controller_name.'ListingResultsModifier', array(
