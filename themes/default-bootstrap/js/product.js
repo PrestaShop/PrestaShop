@@ -175,7 +175,7 @@ $(document).ready(function(){
 	else if (typeof productHasAttributes != 'undefined' && !productHasAttributes && !url_found)
 		refreshProductImages(0);
 
-	$(document).on('click', 'a[name=resetImages]', function(e){
+	$(document).on('click', 'a[id=resetImages]', function(e){
 		e.preventDefault();
 		refreshProductImages(0);
 	});
