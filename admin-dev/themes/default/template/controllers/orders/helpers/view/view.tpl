@@ -581,7 +581,7 @@
 									<dt>{l s='Account registered'}</dt>
 										<dd class="text-muted"><i class="icon-calendar-o"></i> {dateFormat date=$customer->date_add full=true}</dd>
 									<dt>{l s='Valid orders placed'}</dt>
-										<dd><span class="badge">{$customerStats['nb_orders']}</span></dd>
+										<dd><span class="badge">{$customerStats['nb_orders']|intval}</span></dd>
 									<dt>{l s='Total spent since registration'}</dt>
 										<dd><span class="badge badge-success">{displayPrice price=Tools::ps_round(Tools::convertPrice($customerStats['total_orders'], $currency), 2) currency=$currency->id}</span></dd>
 									{if Configuration::get('PS_B2B_ENABLE')}

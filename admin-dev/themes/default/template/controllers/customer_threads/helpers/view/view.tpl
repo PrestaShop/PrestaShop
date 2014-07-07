@@ -31,7 +31,7 @@
 		<i class="icon-comments"></i>
 		{l s="Thread"}: <span class="badge">#{$id_customer_thread|intval}</span>
 		{if isset($next_thread) && $next_thread}
-			<a class="btn btn-default pull-right" href="{$next_thread.href}">
+			<a class="btn btn-default pull-right" href="{$next_thread.href|escape:'html':'UTF-8'}">
 				{$next_thread.name} <i class="icon-forward"></i>
 			</a> 
 		{/if}
