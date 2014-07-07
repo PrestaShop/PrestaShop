@@ -33,7 +33,7 @@
 				<i class="icon-info"></i>
 				{if isset($is_template) && $is_template == 1} {l s='Template'} {/if}{l s='General information'}
 			</h3>
-			<table classe="table">
+			<table class="table">
 				<tr>
 					<td>{l s='Creation date:'}</td>
 					<td>{$supply_order_creation_date}</td>

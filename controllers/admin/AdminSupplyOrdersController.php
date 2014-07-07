@@ -186,8 +186,12 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			if (Tools::isSubmit('addsupply_order') ||	Tools::isSubmit('submitAddsupply_order'))
 				$this->toolbar_title = $this->l('Stock: Create a new supply order');
 
+			$update = false;
 			if (Tools::isSubmit('updatesupply_order') || Tools::isSubmit('submitUpdatesupply_order'))
+			{
 				$this->toolbar_title = $this->l('Stock: Manage supply orders');
+				$update = true;
+			}
 
 			if (Tools::isSubmit('mod') && Tools::getValue('mod') === 'template' || $this->object->is_template)
 				$this->toolbar_title .= ' ('.$this->l('template').')';
@@ -202,21 +206,13 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				$this->displayWarning($this->l('You must have at least one warehouse. See Stock/Warehouses'));
 
 			//get currencies list
-			$currencies = Currency::getCurrencies();
-			$id_default_currency = Configuration::get('PS_CURRENCY_DEFAULT');
-			$default_currency = Currency::getCurrency($id_default_currency);
-			if ($default_currency)
-				$currencies = array_merge(array($default_currency, '-'), $currencies);
+			$currencies = Currency::getCurrencies(false, true, true);
 
 			//get suppliers list
 			$suppliers = array_unique(Supplier::getSuppliers(), SORT_REGULAR);
 
 			//get languages list
 			$languages = Language::getLanguages(true);
-			$id_default_lang = Configuration::get('PS_LANG_DEFAULT');
-			$default_lang = Language::getLanguage($id_default_lang);
-			if ($default_lang)
-				$languages = array_merge(array($default_lang, '-'), $languages);
 
 			$this->fields_form = array(
 				'legend' => array(
@@ -303,18 +299,17 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						),
 					),
 				),
-				'submit' => array(
-					'title' => $this->l('Save order'),
-				),
-				'buttons' => array(
-					'save-and-stay' => array(
-						'title' => $this->l('Save order and stay'),
-						'name' => 'submitAddsupply_orderAndStay',
-						'type' => 'submit',
-						'class' => 'btn btn-default pull-right',
-						'icon' => 'process-icon-save'
-					)
-				)
+				'submit' => (!$update ? array('title' => $this->l('Save order')) : array()), 
+				'buttons' => (!$update ?
+					array(
+						'save-and-stay' => array(
+							'title' => $this->l('Save order and stay'),
+							'name' => 'submitAddsupply_orderAndStay',
+							'type' => 'submit',
+							'class' => 'btn btn-default pull-right',
+							'icon' => 'process-icon-save'
+						)
+					) : array())
 			);
 
 			if (Tools::isSubmit('mod') && Tools::getValue('mod') === 'template' ||
@@ -385,14 +380,14 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			// adds export csv buttons
 			$this->toolbar_btn['export-csv-orders'] = array(
 				'short' => 'Export Orders',
-				'href' => $this->context->link->getAdminLink('AdminSupplyOrders').'&amp;csv_orders&id_warehouse='.$this->getCurrentWarehouse(),
+				'href' => $this->context->link->getAdminLink('AdminSupplyOrders').'&csv_orders&id_warehouse='.$this->getCurrentWarehouse(),
 				'desc' => $this->l('Export Orders (CSV)'),
 				'class' => 'process-icon-export'
 			);
 
 			$this->toolbar_btn['export-csv-details'] = array(
 				'short' => 'Export Orders Details',
-				'href' => $this->context->link->getAdminLink('AdminSupplyOrders').'&amp;csv_orders_details&id_warehouse='.$this->getCurrentWarehouse(),
+				'href' => $this->context->link->getAdminLink('AdminSupplyOrders').'&csv_orders_details&id_warehouse='.$this->getCurrentWarehouse(),
 				'desc' => $this->l('Export Orders Details (CSV)'),
 				'class' => 'process-icon-export'
 			);
@@ -401,7 +396,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 			if ($this->tabAccess['add'] === '1')
 			{
 				$this->toolbar_btn['new'] = array(
-					'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
+					'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
 					'desc' => $this->l('Add New')
 				);
 			}
@@ -544,8 +539,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$this->initToolbar();
 		unset($this->toolbar_btn['new']);
 		$this->toolbar_btn['new'] = array(
-			'href' => self::$currentIndex.'&amp;add'.$this->table.'&mod=template&amp;token='.$this->token,
-			'desc' => $this->l('Add new template')
+			'href' => self::$currentIndex.'&add'.$this->table.'&mod=template&token='.$this->token,
+			'desc' => $this->l('Add new template'),
+			'imgclass' => 'new_1',
+			'class' => 'process-icon-new'
 		);
 
 		$this->list_id = 'templates';
@@ -1929,7 +1926,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		if ($supply_order_state->editable == false)
 			$content .= '<a class="btn btn-default" href="'.$this->context->link->getAdminLink('AdminPdf').'&submitAction=generateSupplyOrderFormPDF&id_supply_order='.(int)$supply_order->id.'" title="'.$this->l('Export as PDF').'"><i class="icon-print"></i></a>';
 		if ($supply_order_state->enclosed == true && $supply_order_state->receipt_state == true)
-			$content .= '<a href="'.$this->context->link->getAdminLink('AdminSupplyOrders').'&amp;id_supply_order='.(int)$supply_order->id.'
+			$content .= '<a href="'.$this->context->link->getAdminLink('AdminSupplyOrders').'&id_supply_order='.(int)$supply_order->id.'
 						 &csv_order_details" title='.$this->l('Export as CSV').'">
 						 <i class="icon-table"></i></a>';
 
