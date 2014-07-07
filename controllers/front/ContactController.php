@@ -60,18 +60,7 @@ class ContactControllerCore extends FrontController
 
 				$contact = new Contact($id_contact, $this->context->language->id);
 
-				if (!is_numeric($reference = Tools::getValue('id_order')))
-				{
-					$orders = Order::getByReference($reference);
-					if ($orders)
-						foreach ($orders as $order)
-						{
-							$id_order = (int)$order->id;
-							break;
-						}
-				}
-				else
-					$id_order = (int)Tools::getValue('id_order');
+				$id_order = (int)$this->getOrder();
 
 				if (!((
 						($id_customer_thread = (int)Tools::getValue('id_customer_thread'))
@@ -281,6 +270,7 @@ class ContactControllerCore extends FrontController
 			FROM '._DB_PREFIX_.'orders
 			WHERE id_customer = '.(int)$this->context->customer->id.' ORDER BY date_add');
 			$orders = array();
+
 			foreach ($result as $row)
 			{
 				$order = new Order($row['id_order']);
@@ -288,11 +278,30 @@ class ContactControllerCore extends FrontController
 				$tmp = $order->getProducts();
 				foreach ($tmp as $key => $val)
 					$products[$row['id_order']][$val['product_id']] = array('value' => $val['product_id'], 'label' => $val['product_name']);
-				$orders[] = array('value' => $order->id, 'label' => $order->getUniqReference().' - '.Tools::displayDate($date[0],null) , 'selected' => (int)$id_order == $order->id);
+
+				$orders[] = array('value' => $order->id, 'label' => $order->getUniqReference().' - '.Tools::displayDate($date[0], null) , 'selected' => (int)$this->getOrder() == $order->id);
 			}
 
 			$this->context->smarty->assign('orderList', $orders);
 			$this->context->smarty->assign('orderedProductList', $products);
 		}
+	}
+
+	protected function getOrder()
+	{
+		$id_order = false;
+		if (!is_numeric($reference = Tools::getValue('id_order')))
+		{
+			$orders = Order::getByReference($reference);
+			if ($orders)
+				foreach ($orders as $order)
+				{
+					$id_order = $order->id;
+					break;
+				}
+		}
+		else
+			$id_order = Tools::getValue('id_order');
+		return (int)$id_order;	
 	}
 }
