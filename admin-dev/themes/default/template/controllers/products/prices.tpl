@@ -455,10 +455,10 @@ $(document).ready(function () {
 				pmNames: ['PM', 'P'],
 				timeFormat: 'hh:mm:ss tt',
 				timeSuffix: '',
-				timeOnlyTitle: '{l s='Choose Time'}',
+				timeOnlyTitle: '{l s='Choose Time' js=1}',
 				timeText: '{l s='Time'}',
 				hourText: '{l s='Hour'}',
-				minuteText: '{l s='Minute'}',
+				minuteText: '{l s='Minute'}'
 			});
 		});
 	</script>
