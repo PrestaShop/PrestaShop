@@ -127,7 +127,7 @@
 						</a>
 					{/if}
 				{/foreach}
-					<a id="desc-{$table}-refresh" class="list-toolbar-btn" href="javascript:location.reload();">
+					<a class="list-toolbar-btn" href="javascript:location.reload();">
 						<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Refresh list'}" data-html="true" data-placement="left">
 							<i class="process-icon-refresh" ></i>
 						</span>
