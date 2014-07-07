@@ -63,7 +63,7 @@ class CookieCore
 		$this->_content = array();
 		$this->_standalone = $standalone;
 		$this->_expire = is_null($expire) ? time() + 1728000 : (int)$expire;
-		$this->_name = md5(($this->_standalone ? '' : _PS_VERSION_).$name);
+		$this->_name = 'PrestaShop-'.md5(($this->_standalone ? '' : _PS_VERSION_).$name);
 		$this->_path = trim(($this->_standalone ? '' : Context::getContext()->shop->physical_uri).$path, '/\\').'/';
 		if ($this->_path{0} != '/') $this->_path = '/'.$this->_path;
 		$this->_path = rawurlencode($this->_path);
