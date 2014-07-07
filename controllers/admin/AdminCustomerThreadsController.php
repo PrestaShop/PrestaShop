@@ -674,7 +674,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$timeline = array();
 		foreach ($messages as $message)
 		{
-			$content = $this->l('Message to: ').' <span class="badge">'.(!$message['id_employee'] ? $message['subject'] : $message['customer_name']).'</span></br>'.$message['message'];
+			$content = $this->l('Message to: ').' <span class="badge">'.(!$message['id_employee'] ? $message['subject'] : $message['customer_name']).'</span><br/>'.Tools::safeOutput($message['message']);
 			
 			$timeline[$message['date_add']][] = array(
 				'arrow' => 'left',
@@ -692,7 +692,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			foreach ($order_history as $history)
 			{
 				$link = $this->context->link->getAdminLink('AdminOrders').'&vieworder&id_order='.(int)$order->id;
-				$content = '<a class="badge" target="_blank" href="'.$link.'">'.$this->l('Order').' #'.(int)$order->id.'</a></br></br>';
+				$content = '<a class="badge" target="_blank" href="'.Tools::safeOutput($link).'">'.$this->l('Order').' #'.(int)$order->id.'</a><br/><br/>';
 				$content .= '<span>'.$this->l('Status:').' '.$history['ostate_name'].'</span>';
 
 				$timeline[$history['date_add']][] = array(
