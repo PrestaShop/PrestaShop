@@ -113,8 +113,12 @@ class PrestaShopAutoload
 				// request a non Core Class load the associated Core class if exists
 				if (isset($this->index[$classname.'Core']))
 					require_once($this->root_dir.$this->index[$classname.'Core']['path']);
+
+				$class_dir = (isset($this->index[$classname]['override'])
+					&& $this->index[$classname]['override'] === true) ? _PS_ROOT_DIR_ : $this->root_dir;
+
 				if (isset($this->index[$classname]))
-					require_once($this->root_dir.$this->index[$classname]['path']);
+					require_once($class_dir.$this->index[$classname]['path']);
 			}
 		}
 		// Call directly ProductCore, ShopCore class
@@ -184,13 +188,15 @@ class PrestaShopAutoload
 			 		{
 			 			$classes[$m['classname']] = array(
 			 				'path' => $path.$file,
-			 				'type' => trim($m[1])
+			 				'type' => trim($m[1]),
+			 				'override' => $host_mode
 			 			);
 
 						if (substr($m['classname'], -4) == 'Core')
 							$classes[substr($m['classname'], 0, -4)] = array(
 								'path' => '',
-								'type' => $classes[$m['classname']]['type']
+								'type' => $classes[$m['classname']]['type'],
+								'override' => $host_mode
 							);
 			 		}
 				}
