@@ -2519,7 +2519,7 @@ CREATE TABLE `PREFIX_smarty_cache` (
   `compile_id` varchar(250) DEFAULT NULL,
   `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `content` longtext NOT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`id_smarty_cache`),
   KEY `name` (`name`),
   KEY `cache_id` (`cache_id`),
   KEY `compile_id` (`compile_id`),
