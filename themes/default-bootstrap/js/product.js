@@ -972,7 +972,7 @@ function checkUrl()
 			for (var z in tabValues)
 				for (var a in attributesCombinations)
 					if (attributesCombinations[a]['group'] === decodeURIComponent(tabValues[z][0])
-						&& attributesCombinations[a]['attribute'] === tabValues[z][1])
+						&& attributesCombinations[a]['attribute'] === decodeURIComponent(tabValues[z][1]))
 					{
 						count++;
 						// add class 'selected' to the selected color
