@@ -27,8 +27,6 @@ var ajaxQueries = new Array();
 var ajaxLoaderOn = 0;
 var sliderList = new Array();
 var slidersInit = false;
-//RTL check
-var rtl = $("#page").css('direction')=='rtl' ? true : false;
 
 $(document).ready(function()
 {
