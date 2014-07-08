@@ -36,6 +36,11 @@ if (!Tools::getSafeModeStatus())
 	$smarty->use_sub_dirs = true;
 $smarty->setConfigDir(_PS_SMARTY_DIR_.'configs');
 $smarty->caching = false;
+if (Configuration::get('PS_SMARTY_CACHING_TYPE') == 'mysql')
+{
+	include(_PS_CLASS_DIR_.'/SmartyCacheResourceMysql.php');
+	$smarty->caching_type = 'mysql';
+}
 $smarty->force_compile = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_FORCE_COMPILE_) ? true : false;
 $smarty->compile_check = (Configuration::get('PS_SMARTY_FORCE_COMPILE') >= _PS_SMARTY_CHECK_COMPILE_) ? true : false;
 
