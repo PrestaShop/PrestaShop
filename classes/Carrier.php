@@ -156,7 +156,7 @@ class CarrierCore extends ObjectModel
 				'getter' => 'getIdTaxRulesGroup',
 				'setter' => 'setTaxRulesGroup',
 				'xlink_resource' => array(
-					'resourceName' => 'tax_rules_group'
+					'resourceName' => 'tax_rule_groups'
 				)
 			),
 		),
