@@ -7,7 +7,7 @@
 	</label>
 	<div class="col-lg-9">
 		<div class="input-group col-lg-12">		
-			<span class="input-group-addon"><i class="icon-user"></i></i></span>
+			<span class="input-group-addon"><i class="icon-user"></i></span>
 			<input type="hidden" id="id_customer" name="id_customer" value="{$currentTab->getFieldValue($currentObject, 'id_customer')|intval}" />
 			<input type="text" id="customerFilter" class="input-xlarge" name="customerFilter" value="{$customerFilter|escape:'html':'UTF-8'}" />
 			<span class="input-group-addon"><i class="icon-search"></i></span>

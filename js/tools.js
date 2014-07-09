@@ -482,6 +482,27 @@ function in_array(value, array)
 	return false;
 }
 
+function isCleanHtml(content)
+{
+	var events = 'onmousedown|onmousemove|onmmouseup|onmouseover|onmouseout|onload|onunload|onfocus|onblur|onchange';
+	events += '|onsubmit|ondblclick|onclick|onkeydown|onkeyup|onkeypress|onmouseenter|onmouseleave|onerror|onselect|onreset|onabort|ondragdrop|onresize|onactivate|onafterprint|onmoveend';
+	events += '|onafterupdate|onbeforeactivate|onbeforecopy|onbeforecut|onbeforedeactivate|onbeforeeditfocus|onbeforepaste|onbeforeprint|onbeforeunload|onbeforeupdate|onmove';
+	events += '|onbounce|oncellchange|oncontextmenu|oncontrolselect|oncopy|oncut|ondataavailable|ondatasetchanged|ondatasetcomplete|ondeactivate|ondrag|ondragend|ondragenter|onmousewheel';
+	events += '|ondragleave|ondragover|ondragstart|ondrop|onerrorupdate|onfilterchange|onfinish|onfocusin|onfocusout|onhashchange|onhelp|oninput|onlosecapture|onmessage|onmouseup|onmovestart';
+	events += '|onoffline|ononline|onpaste|onpropertychange|onreadystatechange|onresizeend|onresizestart|onrowenter|onrowexit|onrowsdelete|onrowsinserted|onscroll|onsearch|onselectionchange';
+	events += '|onselectstart|onstart|onstop';
+	
+	var script1 = /<[\s]*script/im;
+	var script2 = new RegExp('('+events+')[\s]*=', 'im');
+	var script3 = /.*script\:/im;
+	var script4 = /<[\s]*(i?frame|embed|object)/im;
+
+	if (script1.test(content) || script2.test(content) || script3.test(content) || script4.test(content))
+		return false;
+
+	return true;
+}
+
 $(document).ready(function()
 {
 	// Hide all elements with .hideOnSubmit class when parent form is submit

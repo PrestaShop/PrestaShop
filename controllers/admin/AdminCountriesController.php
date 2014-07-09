@@ -485,7 +485,7 @@ class AdminCountriesControllerCore extends AdminController
 		{
 			if ($i != 0){ $class_tab_active = ''; }
 			$fields = array();
-			$html_tabnav .= '<li class="'.$class_tab_active.'"">
+			$html_tabnav .= '<li'.($class_tab_active ? ' class="'.$class_tab_active.'"' : '').'>
 				<a href="#availableListFieldsFor_'.$class_name.'"><i class="icon-caret-down"></i>&nbsp;'.Translate::getAdminTranslation($class_name, 'AdminCountries').'</a></li>';
 			
 			foreach (AddressFormat::getValidateFields($class_name) as $name)

@@ -92,8 +92,9 @@
 											-{convertPrice price=$product->specificPrice.reduction}
 										</span>
 									{/if}
-									{hook h="displayProductPriceBlock" id_product=$product->id type="old_price"}
+									{hook h="displayProductPriceBlock" product=$product type="old_price"}
 								{/if}
+								{hook h="displayProductPriceBlock" product=$product type="price"}
 								{if $product->on_sale}
 									{elseif $product->specificPrice AND $product->specificPrice.reduction}
 										<div class="product_discount">
@@ -105,7 +106,7 @@
 										<span class="comparison_unit_price">
 											&nbsp;{convertPrice price=$unit_price} {l s='per %s' sprintf=$product->unity|escape:'html':'UTF-8'}
 										</span>
-										{hook h="displayProductPriceBlock" id_product=$product->id type="unit_price"}
+										{hook h="displayProductPriceBlock" product=$product type="unit_price"}
 									{else}
 								{/if}
 							{/if}
@@ -130,7 +131,8 @@
 									</span>
 								{/if}
 							</p>
-							{hook h="displayProductAvailability" id_product=$product->id}
+							{hook h="displayProductDeliveryTime" product=$product}
+							{hook h="displayProductPriceBlock" product=$product type="weight"}
 							<div class="clearfix">
 								<div class="button-container">
 									{if (!$product->hasAttributes() OR (isset($add_prod_display) AND ($add_prod_display == 1))) AND $product->minimal_quantity == 1 AND $product->customizable != 2 AND !$PS_CATALOG_MODE}

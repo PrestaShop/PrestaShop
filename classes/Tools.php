@@ -1151,7 +1151,7 @@ class ToolsCore
 		else
 			$str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]-]/','', $str);
 
-		$str = preg_replace('/[\s\'\:\/\[\]-]+/', ' ', $str);
+		$str = preg_replace('/[\s\'\:\/\[\]\-]+/', ' ', $str);
 		$str = str_replace(array(' ', '/'), '-', $str);
 
 		// If it was not possible to lowercase the string with mb_strtolower, we do it after the transformations.
@@ -2620,6 +2620,16 @@ exit;
 		Tools::clearCompile($smarty);
 	}
 
+	public static function clearColorListCache($id_product = false)
+	{
+
+		// Change template dir if called from the BackOffice
+		$current_template_dir = Context::getContext()->smarty->getTemplateDir();
+		Context::getContext()->smarty->setTemplateDir(_PS_THEME_DIR_);
+		Tools::clearCache(null, 'product-list-colors.tpl', ($id_product ? 'productlist_colors|'.(int)$id_product.'|'.(int)Context::getContext()->shop->id : 'productlist_colors'));
+		Context::getContext()->smarty->setTemplateDir($current_template_dir);
+	}
+
 	/**
 	 * getMemoryLimit allow to get the memory limit in octet
 	 *
@@ -3094,6 +3104,46 @@ exit;
 	{
 		return strip_tags(stripslashes($description));
 	}
+
+	public static function purifyHTML($html)
+	{
+		static $use_html_purifier = null;
+		static $purifier = null;
+
+		if (defined('PS_INSTALLATION_IN_PROGRESS') || !Configuration::configurationIsLoaded())
+			return $html;
+
+		if ($use_html_purifier === null)
+			$use_html_purifier = (bool)Configuration::get('PS_USE_HTMLPURIFIER');
+
+		if ($use_html_purifier)
+		{
+			if ($purifier === null)
+			{
+				$config = HTMLPurifier_Config::createDefault();
+				$config->set('Attr.EnableID', true);
+				$config->set('HTML.Trusted', true);
+				$config->set('Cache.SerializerPath', _PS_CACHE_DIR_.'purifier');
+
+				if (Configuration::get('PS_ALLOW_HTML_IFRAME'))
+				{
+					$config->set('HTML.SafeIframe', true);
+					$config->set('HTML.SafeObject', true);
+					$config->set('URI.SafeIframeRegexp','/.*/');
+				}
+				$purifier = new HTMLPurifier($config);
+			}
+			if (_PS_MAGIC_QUOTES_GPC_)
+				$html = stripslashes($html);
+
+			$html = $purifier->purify($html);
+
+			if (_PS_MAGIC_QUOTES_GPC_)
+				$html = addslashes($html);
+		}
+
+		return $html;
+	}
 }
 
 /**
@@ -3121,4 +3171,3 @@ function cmpPriceDesc($a, $b)
 		return -1;
 	return 0;
 }
-

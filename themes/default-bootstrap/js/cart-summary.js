@@ -802,7 +802,14 @@ function updateCartSummary(json)
 	}
 
 	// Update discounts
-	if (json.discounts.length == 0)
+	var discount_count = 0;
+	for(var e in json.discounts)
+	{
+		discount_count++;
+		break;
+	}
+
+	if (!discount_count)
 	{
 		$('.cart_discount').each(function(){$(this).remove();});
 		$('.cart_total_voucher').remove();
@@ -821,7 +828,7 @@ function updateCartSummary(json)
 			var idElmt = $(this).attr('id').replace('cart_discount_','');
 			var toDelete = true;
 
-			for (i=0;i<json.discounts.length;i++)
+			for (var i in json.discounts)
 				if (json.discounts[i].id_discount == idElmt)
 				{
 					if (json.discounts[i].value_real !== '!')

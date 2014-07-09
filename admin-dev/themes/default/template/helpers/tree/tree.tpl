@@ -25,7 +25,7 @@
 <div class="panel">
 	{if isset($header)}{$header}{/if}
 	{if isset($nodes)}
-	<ul id="{$id}" class="tree">
+	<ul id="{$id|escape:'html':'UTF-8'}" class="tree">
 		{$nodes}
 	</ul>
 	{/if}

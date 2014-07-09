@@ -25,7 +25,7 @@
 
 <div class="leadin">{block name="leadin"}{/block}</div>
 
-<form action="{$url_submit}" id="{$table}_form" method="post" class="form-horizontal">
+<form action="{$url_submit|escape:'html':'UTF-8'}" id="{$table}_form" method="post" class="form-horizontal">
 	{if $display_key}
 		<input type="hidden" name="show_modules" value="{$display_key}" />
 	{/if}
@@ -39,7 +39,7 @@
 			<div class="col-lg-9">
 				<select name="id_module" {if $edit_graft} disabled="disabled"{/if}>
 					{foreach $modules as $module}
-						<option value="{$module->id}" {if $id_module == $module->id || (!$id_module && $show_modules == $module->id)}selected="selected"{/if}>{$module->displayName|stripslashes}</option>
+						<option value="{$module->id|intval}"{if $id_module == $module->id || (!$id_module && $show_modules == $module->id)} selected="selected"{/if}>{$module->displayName|stripslashes}</option>
 					{/foreach}
 				</select>
 			</div>
@@ -58,7 +58,7 @@
 			<label class="control-label col-lg-3">{l s='Exceptions'}</label>
 			<div class="col-lg-9">
 				<div class="well">
-					<p>
+					<div>
 						{l s='Please specify the files for which you do not want the module to be displayed.'}<br />
 						{l s='Please input each filename, separated by a comma (",").'}<br />
 						{l s='You can also click the filename in the list below, and even make a multiple selection by keeping the Ctrl key pressed while clicking, or choose a whole range of filename by keeping the Shift key pressed while clicking.'}<br />
@@ -69,7 +69,7 @@
 								{$value}
 							{/foreach}
 						{/if}
-					</p>
+					</div>
 				</div>
 			</div>
 		</div>

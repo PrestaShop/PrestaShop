@@ -594,7 +594,9 @@ class FrontControllerCore extends Controller
 					'HOOK_MAINTENANCE' => Hook::exec('displayMaintenance', array()),
 				));
 
-				$this->smartyOutputContent($this->getTemplatePath($this->getThemeDir().'maintenance.tpl'));
+				// If the controller is a module, then getTemplatePath will try to find the template in the modules, so we need to instanciate a real frontcontroller
+				$front_controller = preg_match('/ModuleFrontController$/', get_class($this)) ? new FrontController() : $this;
+				$this->smartyOutputContent($front_controller->getTemplatePath($this->getThemeDir().'maintenance.tpl'));
 				exit;
 			}
 		}
@@ -1276,6 +1278,8 @@ class FrontControllerCore extends Controller
 		foreach ($products as &$product)
 			if (!$this->isCached(_PS_THEME_DIR_.'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product'])))
 				$products_need_cache[] = (int)$product['id_product']; 
+		
+		unset($product);
 
 		$colors = false;
 		if (count($products_need_cache))

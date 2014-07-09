@@ -115,6 +115,9 @@ $_MODULES = array();
 /* Load configuration */
 Configuration::loadConfiguration();
 
+if (Configuration::get('PS_USE_HTMLPURIFIER'))
+	require_once (_PS_TOOL_DIR_.'htmlpurifier/HTMLPurifier.standalone.php');
+
 /* Load all languages */
 Language::loadLanguages();
 

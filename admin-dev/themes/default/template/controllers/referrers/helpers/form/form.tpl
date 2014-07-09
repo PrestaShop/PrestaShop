@@ -100,7 +100,7 @@
 	{/if}
 
 	{if isset($input.label)}
-		<label class="control-label col-lg-3" for="{$input.name}">{$input.label}</label>
+		<label class="control-label col-lg-3" for="{$input.id}">{$input.label}</label>
 	{/if}
 {/block}
 

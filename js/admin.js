@@ -370,45 +370,6 @@ function viewTemplates(id_select, prefix, ext)
 	}
 }
 
-function validateImportation(mandatory)
-{
-    var type_value = [];
-	var seted_value = [];
-	var elem;
-	var col = 'unknow';
-
-	toggle(getE('error_duplicate_type'), false);
-	toggle(getE('required_column'), false);
-    for (i = 0; elem = getE('type_value['+i+']'); i++)
-    {
-		if (seted_value[elem.options[elem.selectedIndex].value])
-		{
-			scroll(0,0);
-			toggle(getE('error_duplicate_type'), true);
-			return false;
-		}
-		else if (elem.options[elem.selectedIndex].value != 'no')
-			seted_value[elem.options[elem.selectedIndex].value] = true;
-	}
-	for (needed in mandatory)
-		if (!seted_value[mandatory[needed]])
-		{
-			scroll(0,0);
-			toggle(getE('required_column'), true);
-			getE('missing_column').innerHTML = mandatory[needed];
-			elem = getE('type_value[0]');
-			for (i = 0; i < elem.length; ++i)
-			{
-				if (elem.options[i].value == mandatory[needed])
-				{
-					getE('missing_column').innerHTML = elem.options[i].innerHTML;
-					break ;
-				}
-			}
-			return false
-		}
-}
-
 function orderDeleteProduct(txtConfirm, txtExplain)
 {
 	ret = true;
@@ -804,26 +765,6 @@ $(document).ready(function()
 			return copyMeta2friendlyURL()
 	});
 
-	// Adding a button to top
-	var scroll = $('#scrollTop a');
-	var view = $(window);
-
-	scroll.click(function(){
-		$.scrollTo('#top_container', 1200, { offset: -100 });
-	});
-
-	view.bind("scroll", function(e) {
-		var heightView = view.height();
-		if (scroll.offset())
-			var btnPlace = scroll.offset().top;
-		else
-			var btnPlace = 0;
-		if (heightView < btnPlace)
-			scroll.show();
-		else
-			scroll.hide();
-	});
-
 	$('#ajax_running').ajaxStart(function() {
 		ajax_running_timeout = setTimeout(function() {showAjaxOverlay()}, 1000);
 	});
@@ -1190,7 +1131,7 @@ function openModulesList()
 			},
 			success : function(data)
 			{
-				$('#modules_list_container_tab').html(data).slideDown();
+				$('#modules_list_container_tab_modal').html(data).slideDown();
 				$('#modules_list_loader').hide();
 				modules_list_loaded = true;
 				$('.help-tooltip').tooltip();
@@ -1199,7 +1140,7 @@ function openModulesList()
 	}
 	else
 	{
-		$('#modules_list_container_tab').slideDown();
+		$('#modules_list_container_tab_modal').slideDown();
 		$('#modules_list_loader').hide();
 	}
 	return false;
@@ -1233,7 +1174,7 @@ function bindAddonsButtons()
 					{
 						$('#addons_loading').html('');
 						$('#addons_login_div').fadeOut();
-						window.location.href = currentIndex + '&conf=32' + '&token=' + token;
+						window.location.href = admin_modules_link + '&conf=32';
 					}
 					else
 						$('#addons_loading').html(errorLogin);
@@ -1480,4 +1421,25 @@ function saveCustomerNote(customerId){
 			showSuccessMessage(update_success_msg);
 		}
 	});
+}
+
+function isCleanHtml(content)
+{
+	var events = 'onmousedown|onmousemove|onmmouseup|onmouseover|onmouseout|onload|onunload|onfocus|onblur|onchange';
+	events += '|onsubmit|ondblclick|onclick|onkeydown|onkeyup|onkeypress|onmouseenter|onmouseleave|onerror|onselect|onreset|onabort|ondragdrop|onresize|onactivate|onafterprint|onmoveend';
+	events += '|onafterupdate|onbeforeactivate|onbeforecopy|onbeforecut|onbeforedeactivate|onbeforeeditfocus|onbeforepaste|onbeforeprint|onbeforeunload|onbeforeupdate|onmove';
+	events += '|onbounce|oncellchange|oncontextmenu|oncontrolselect|oncopy|oncut|ondataavailable|ondatasetchanged|ondatasetcomplete|ondeactivate|ondrag|ondragend|ondragenter|onmousewheel';
+	events += '|ondragleave|ondragover|ondragstart|ondrop|onerrorupdate|onfilterchange|onfinish|onfocusin|onfocusout|onhashchange|onhelp|oninput|onlosecapture|onmessage|onmouseup|onmovestart';
+	events += '|onoffline|ononline|onpaste|onpropertychange|onreadystatechange|onresizeend|onresizestart|onrowenter|onrowexit|onrowsdelete|onrowsinserted|onscroll|onsearch|onselectionchange';
+	events += '|onselectstart|onstart|onstop';
+	
+	var script1 = /<[\s]*script/im;
+	var script2 = new RegExp('('+events+')[\s]*=', 'im');
+	var script3 = /.*script\:/im;
+	var script4 = /<[\s]*(i?frame|embed|object)/im;
+
+	if (script1.test(content) || script2.test(content) || script3.test(content) || script4.test(content))
+		return false;
+
+	return true;
 }

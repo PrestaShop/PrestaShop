@@ -46,7 +46,7 @@
 			<input type="hidden" id="logo" name="logo" value="" />
 			<div class="dummyfile input-group">
 				<span class="input-group-addon"><i class="icon-file"></i></span>
-				<input id="attachement_filename" type="text" name="filename" readonly="">
+				<input id="attachement_filename" type="text" name="filename" readonly="" />
 				<span class="input-group-btn">
 					<button id="attachement_fileselectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
 						<i class="icon-folder-open"></i> {l s='Choose a file'}

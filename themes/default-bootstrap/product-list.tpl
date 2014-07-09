@@ -54,9 +54,14 @@
 							<img class="replace-2x img-responsive" src="{$link->getImageLink($product.link_rewrite, $product.id_image, 'home_default')|escape:'html':'UTF-8'}" alt="{if !empty($product.legend)}{$product.legend|escape:'html':'UTF-8'}{else}{$product.name|escape:'html':'UTF-8'}{/if}" title="{if !empty($product.legend)}{$product.legend|escape:'html':'UTF-8'}{else}{$product.name|escape:'html':'UTF-8'}{/if}" {if isset($homeSize)} width="{$homeSize.width}" height="{$homeSize.height}"{/if} itemprop="image" />
 						</a>
 						{if isset($quick_view) && $quick_view}
-							<a class="quick-view" href="{$product.link|escape:'html':'UTF-8'}" rel="{$product.link|escape:'html':'UTF-8'}">
-								<span>{l s='Quick view'}</span>
+							<div class="quick-view-wrapper-mobile">
+							<a class="quick-view-mobile" href="{$product.link|escape:'html':'UTF-8'}" rel="{$product.link|escape:'html':'UTF-8'}">
+								<i class="icon-eye-open"></i>
 							</a>
+						</div>
+						<a class="quick-view" href="{$product.link|escape:'html':'UTF-8'}" rel="{$product.link|escape:'html':'UTF-8'}">
+							<span>{l s='Quick view'}</span>
+						</a>
 						{/if}
 						{if (!$PS_CATALOG_MODE AND ((isset($product.show_price) && $product.show_price) || (isset($product.available_for_order) && $product.available_for_order)))}
 							<div class="content_price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
@@ -64,19 +69,18 @@
 									<span itemprop="price" class="price product-price">
 										{if !$priceDisplay}{convertPrice price=$product.price}{else}{convertPrice price=$product.price_tax_exc}{/if}
 									</span>
-									{* eu-legal: Additional Price Information *}
-									{hook h="displayProductPriceBlock" id_product=$product.id_product type="price"}
 									<meta itemprop="priceCurrency" content="{$currency->iso_code}" />
 									{if isset($product.specific_prices) && $product.specific_prices && isset($product.specific_prices.reduction) && $product.specific_prices.reduction > 0}
+										{hook h="displayProductPriceBlock" product=$product type="old_price"}
 										<span class="old-price product-price">
 											{displayWtPrice p=$product.price_without_reduction}
 										</span>
-										{* eu-legal: Additional Price Information *}
-										{hook h="displayProductPriceBlock" id_product=$product.id_product type="old_price"}
 										{if $product.specific_prices.reduction_type == 'percentage'}
 											<span class="price-percent-reduction">-{$product.specific_prices.reduction * 100}%</span>
 										{/if}
 									{/if}
+									{hook h="displayProductPriceBlock" product=$product type="price"}
+									{hook h="displayProductPriceBlock" product=$product type="unit_price"}
 								{/if}
 							</div>
 						{/if}
@@ -91,6 +95,8 @@
 							</a>
 						{/if}
 					</div>
+					{hook h="displayProductDeliveryTime" product=$product}
+					{hook h="displayProductPriceBlock" product=$product type="weight"}
 				</div>
 				<div class="right-block">
 					<h5 itemprop="name">
@@ -109,10 +115,9 @@
 							<span itemprop="price" class="price product-price">
 								{if !$priceDisplay}{convertPrice price=$product.price}{else}{convertPrice price=$product.price_tax_exc}{/if}
 							</span>
-							{* eu-legal: Additional Price Information *}
-							{hook h="displayProductPriceBlock" id_product=$product.id_product type="price"}
 							<meta itemprop="priceCurrency" content="{$currency->iso_code}" />
 							{if isset($product.specific_prices) && $product.specific_prices && isset($product.specific_prices.reduction) && $product.specific_prices.reduction > 0}
+								{hook h="displayProductPriceBlock" product=$product type="old_price"}
 								<span class="old-price product-price">
 									{displayWtPrice p=$product.price_without_reduction}
 								</span>
@@ -121,12 +126,14 @@
 									<span class="price-percent-reduction">-{$product.specific_prices.reduction * 100}%</span>
 								{/if}
 							{/if}
+							{hook h="displayProductPriceBlock" product=$product type="price"}
+							{hook h="displayProductPriceBlock" product=$product type="unit_price"}
 						{/if}
 					</div>
 					{/if}
 					<div class="button-container">
 						{if ($product.id_product_attribute == 0 || (isset($add_prod_display) && ($add_prod_display == 1))) && $product.available_for_order && !isset($restricted_country_mode) && $product.minimal_quantity <= 1 && $product.customizable != 2 && !$PS_CATALOG_MODE}
-							{if ($product.allow_oosp || $product.quantity > 0)}
+							{if (!isset($product.customization_required) || !$product.customization_required) && ($product.allow_oosp || $product.quantity > 0)}
 								{if isset($static_token)}
 									<a class="button ajax_add_to_cart_button btn btn-default" href="{$link->getPageLink('cart',false, NULL, "add=1&amp;id_product={$product.id_product|intval}&amp;token={$static_token}", false)|escape:'html':'UTF-8'}" rel="nofollow" title="{l s='Add to cart'}" data-id-product="{$product.id_product|intval}">
 										<span>{l s='Add to cart'}</span>
@@ -143,11 +150,11 @@
 							{/if}
 						{/if}
 						<a itemprop="url" class="button lnk_view btn btn-default" href="{$product.link|escape:'html':'UTF-8'}" title="{l s='View'}">
-							<span>{l s='More'}</span>
+							<span>{if (isset($product.customization_required) && $product.customization_required)}{l s='Customize'}{else}{l s='More'}{/if}</span>
 						</a>
 					</div>
 					{if isset($product.color_list)}
-						<div class="color-list-container">{$product.color_list} </div>
+						<div class="color-list-container">{$product.color_list}</div>
 					{/if}
 					<div class="product-flags">
 						{if (!$PS_CATALOG_MODE AND ((isset($product.show_price) && $product.show_price) || (isset($product.available_for_order) && $product.available_for_order)))}
@@ -177,8 +184,6 @@
 									</span>
 								{/if}
 							</span>
-							{* eu-legal: Product Availability *}
-							{hook h="displayProductAvailability" id_product=$product.id_product}
 						{/if}
 					{/if}
 				</div>

@@ -114,8 +114,8 @@ $(document).ready(function () {
 	</div>
 	{include file="controllers/products/multishop/check_fields.tpl" product_tab="Prices"}
 	<div class="form-group">
-		<label class="control-label col-lg-3" for="wholesale_price">
-			{include file="controllers/products/multishop/checkbox.tpl" field="wholesale_price" type="default"}
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="wholesale_price" type="default"}</span></div>
+		<label class="control-label col-lg-2" for="wholesale_price">
 			<span class="label-tooltip" data-toggle="tooltip" title="{l s='The wholesale price is the price you paid for the product. Do not include the tax.'}">{if !$country_display_tax_label || $tax_exclude_taxe_option}{l s='Wholesale price'}{else}{l s='Pre-tax wholesale price'}{/if}</span>
 		</label>
 		<div class="input-group col-lg-2">
@@ -124,8 +124,8 @@ $(document).ready(function () {
 		</div>
 	</div>
 	<div class="form-group">
-		<label class="control-label col-lg-3" for="priceTE">
-			{include file="controllers/products/multishop/checkbox.tpl" field="price" type="price"}
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="price" type="price"}</span></div>
+		<label class="control-label col-lg-2" for="priceTE">
 			<span class="label-tooltip" data-toggle="tooltip" title="{l s='The pre-tax retail price is the price for which you intend sell this product to your customers. It should be higher than the pre-tax wholesale price: the difference between the two will be your margin.'}">{if !$country_display_tax_label || $tax_exclude_taxe_option}{l s='Retail price'}{else}{l s='Pre-tax retail price'}{/if}</span>
 		</label>
 		<div class="input-group col-lg-2">
@@ -134,9 +134,9 @@ $(document).ready(function () {
 			<input size="11" maxlength="14" id="priceTE" name="price_displayed" type="text" value="{{toolsConvertPrice price=$product->price}|string_format:'%.6f'}" onchange="noComma('priceTE'); $('#priceTEReal').val(this.value);" onkeyup="$('#priceType').val('TE'); $('#priceTEReal').val(this.value.replace(/,/g, '.')); if (isArrowKey(event)) return; calcPriceTI();" />
 		</div>
 	</div>
-	<div class="form-group">		
-		<label class="control-label col-lg-3" for="id_tax_rules_group">
-			{include file="controllers/products/multishop/checkbox.tpl" field="id_tax_rules_group" type="default"}
+	<div class="form-group">
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="id_tax_rules_group" type="default"}</span></div>		
+		<label class="control-label col-lg-2" for="id_tax_rules_group">
 			{l s='Tax rule:'}
 		</label>
 		<div class="col-lg-8">
@@ -165,7 +165,7 @@ $(document).ready(function () {
 					</select>
 				</div>
 				<div class="col-lg-2">
-					<a class="btn btn-link confirm_leave" href="{$link->getAdminLink('AdminTaxRulesGroup')|escape:'html':'UTF-8'}&addtax_rules_group&id_product={$product->id}"{if $tax_exclude_taxe_option} disabled="disabled"{/if}>
+					<a class="btn btn-link confirm_leave" href="{$link->getAdminLink('AdminTaxRulesGroup')|escape:'html':'UTF-8'}&amp;addtax_rules_group&amp;id_product={$product->id}"{if $tax_exclude_taxe_option} disabled="disabled"{/if}>
 						<i class="icon-plus-sign"></i> {l s='Create new tax'} <i class="icon-external-link-sign"></i>
 					</a>
 				</div>
@@ -184,8 +184,8 @@ $(document).ready(function () {
 	</div>
 	{/if}
 	<div class="form-group" {if !$ps_use_ecotax} style="display:none;"{/if}>
-		<label class="control-label col-lg-3" for="ecotax">
-			{include file="controllers/products/multishop/checkbox.tpl" field="ecotax" type="default"}
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="ecotax" type="default"}</span></div>	
+		<label class="control-label col-lg-2" for="ecotax">
 			<span class="label-tooltip" data-toggle="tooltip" title="{l s='The ecotax is a local set of taxes intended to "promote ecologically sustainable activities via economic incentives". It is already included in retail price: the higher this ecotax is, the lower your margin will be.'}">{l s='Ecotax (tax incl.)'}</span>
 		</label>
 		<div class="input-group col-lg-2">
@@ -203,8 +203,8 @@ $(document).ready(function () {
 	</div>
 
 	<div class="form-group">
-		<label class="control-label col-lg-3" for="unit_price">
-			{include file="controllers/products/multishop/checkbox.tpl" field="unit_price" type="unit_price"}
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="unit_price" type="unit_price"}</span></div>	
+		<label class="control-label col-lg-2" for="unit_price">
 			<span class="label-tooltip" data-toggle="tooltip" title="{l s='When selling a pack of items, you can indicate the unit price for each item of the pack. For instance, "per bottle" or "per pound".'}">{l s='Unit price'}</span>
 		</label>
 		<div class="input-group col-lg-4">
@@ -227,9 +227,8 @@ $(document).ready(function () {
 	</div>
 	{/if}
 	<div class="form-group">
-		<label class="control-label col-lg-3" for="on_sale">
-		{include file="controllers/products/multishop/checkbox.tpl" field="on_sale" type="default"}
-		</label>
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="on_sale" type="default"}</span></div>
+		<label class="control-label col-lg-2" for="on_sale">&nbsp;</label>
 		<div class="col-lg-9">
 			<div class="checkbox">
 				<label class="control-label" for="on_sale" >
@@ -262,7 +261,7 @@ $(document).ready(function () {
 		</div>
 	</div>
 	<div class="panel-footer">
-		<a href="{$link->getAdminLink('AdminProducts')}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
+		<a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
 		<button type="submit" name="submitAddproduct" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save'}</button>
 		<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
 	</div>

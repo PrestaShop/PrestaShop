@@ -261,7 +261,7 @@ class AdminCategoriesControllerCore extends AdminController
 		if (empty($this->display))
 		{
 			$this->toolbar_btn['new'] = array(
-				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
+				'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
 				'desc' => $this->l('Add New')
 			);
 			$this->toolbar_btn['import'] = array(
@@ -273,20 +273,20 @@ class AdminCategoriesControllerCore extends AdminController
 		if (count(Category::getCategoriesWithoutParent()) == 1 && !Tools::isSubmit('id_category')
 			&& ($this->display == 'view' || empty($this->display)))
 			$this->toolbar_btn['edit'] = array(
-				'href' => self::$currentIndex.'&amp;update'.$this->table.'&amp;id_category='.(int)$this->_category->id.'&amp;token='.$this->token,
+				'href' => self::$currentIndex.'&update'.$this->table.'&id_category='.(int)$this->_category->id.'&token='.$this->token,
 				'desc' => $this->l('Edit')
 			);
 		if (Tools::getValue('id_category') && !Tools::isSubmit('updatecategory'))
 		{
 			$this->toolbar_btn['edit'] = array(
-				'href' => self::$currentIndex.'&amp;update'.$this->table.'&amp;id_category='.(int)Tools::getValue('id_category').'&amp;token='.$this->token,
+				'href' => self::$currentIndex.'&update'.$this->table.'&id_category='.(int)Tools::getValue('id_category').'&token='.$this->token,
 				'desc' => $this->l('Edit')
 			);
 		}
 
 		if ($this->display == 'view')
 			$this->toolbar_btn['new'] = array(
-				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;id_parent='.(int)Tools::getValue('id_category').'&amp;token='.$this->token,
+				'href' => self::$currentIndex.'&add'.$this->table.'&id_parent='.(int)Tools::getValue('id_category').'&token='.$this->token,
 				'desc' => $this->l('Add New')
 			);
 		parent::initToolbar();
@@ -295,9 +295,9 @@ class AdminCategoriesControllerCore extends AdminController
 		// after adding a category
 		if (empty($this->display))
 		{
-			$id_category = (Tools::isSubmit('id_category')) ? '&amp;id_parent='.(int)Tools::getValue('id_category') : '';
+			$id_category = (Tools::isSubmit('id_category')) ? '&id_parent='.(int)Tools::getValue('id_category') : '';
 			$this->toolbar_btn['new'] = array(
-				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token.$id_category,
+				'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token.$id_category,
 				'desc' => $this->l('Add New')
 			);
 

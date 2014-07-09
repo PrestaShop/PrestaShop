@@ -96,7 +96,7 @@ function searchLocations()
 			searchLocationsNear(results[0].geometry.location);
 		else
 		{
-			if (!!$.prototype.fancybox)
+			if (!!$.prototype.fancybox && isCleanHtml(address))
 			    $.fancybox.open([
 			        {
 			            type: 'inline',

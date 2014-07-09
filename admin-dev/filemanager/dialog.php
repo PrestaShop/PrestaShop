@@ -10,11 +10,13 @@ else
 
 	include('include/utils.php');
 
+
+
 	if (isset($_GET['fldr'])
 		&& !empty($_GET['fldr'])
 		&& preg_match('/\.{1,2}[\/|\\\]/', urldecode($_GET['fldr'])) === 0
 	)
-		$subdir = urldecode(trim($_GET['fldr'], '/').'/');
+		$subdir = urldecode(trim(str_replace("\0", '', $_GET['fldr']), '/').'/');
 	else
 		$subdir = '';
 

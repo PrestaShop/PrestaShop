@@ -126,7 +126,7 @@ class SupplyOrderStateCore extends ObjectModel
 				$is_pending_receipt = $state->pending_receipt;
 			}
 
-			$query->where('s.id_supply_order_state <> '.$id_state_referrer);
+			$query->where('s.id_supply_order_state <> '.(int)$id_state_referrer);
 
 			//check first if the order is editable
 			if ($is_editable)

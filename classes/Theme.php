@@ -150,7 +150,7 @@ class ThemeCore extends ObjectModel
 	public function updateMetas($metas, $full_update = false)
 	{
 		if ($full_update)
-			Db::getInstance()->delete(_DB_PREFIX_ . 'theme_meta', 'id_theme=' . $this->id);
+			Db::getInstance()->delete(_DB_PREFIX_ . 'theme_meta', 'id_theme='.(int)$this->id);
 
 		$values = array();
 		if ($this->id > 0)
@@ -158,11 +158,11 @@ class ThemeCore extends ObjectModel
 			foreach ($metas as $meta)
 			{
 				if (!$full_update)
-					Db::getInstance()->delete(_DB_PREFIX_ . 'theme_meta', 'id_theme=' . $this->id . ' AND id_meta=' . $meta['id_meta']);
+					Db::getInstance()->delete(_DB_PREFIX_ . 'theme_meta', 'id_theme='.(int)$this->id.' AND id_meta='.(int)$meta['id_meta']);
 
 				$values[] = array(
-					'id_theme'     => $this->id,
-					'id_meta'      => $meta['id_meta'],
+					'id_theme'     => (int)$this->id,
+					'id_meta'      => (int)$meta['id_meta'],
 					'left_column'  => (int)$meta['left'],
 					'right_column' => (int)$meta['right']
 				);

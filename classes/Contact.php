@@ -72,8 +72,8 @@ class ContactCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'contact_lang` cl ON (c.`id_contact` = cl.`id_contact`)
 				WHERE cl.`id_lang` = '.(int)$id_lang.'
 				AND contact_shop.`id_shop` IN ('.implode(', ', array_map('intval', $shop_ids)).')
+				GROUP BY c.`id_contact`
 				ORDER BY `name` ASC';
-
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
 

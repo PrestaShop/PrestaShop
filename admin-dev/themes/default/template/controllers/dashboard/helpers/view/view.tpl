@@ -22,7 +22,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 <script>
 	var dashboard_ajax_url = '{$link->getAdminLink('AdminDashboard')}';
 	var adminstats_ajax_url = '{$link->getAdminLink('AdminStats')}';
@@ -30,7 +29,6 @@
 	var dashboard_use_push = '{$dashboard_use_push|intval}';
 	var read_more = '{l s='Read more' js=1}';
 </script>
-
 <div id="dashboard">
 	<div class="row">
 		<div class="col-lg-12">
@@ -63,11 +61,9 @@
 							{l s='Real Time'}
 						</button> -->
 					</div>
-
 					<input type="hidden" name="datepickerFrom" id="datepickerFrom" value="{$date_from|escape}" class="form-control">
 					<input type="hidden" name="datepickerTo" id="datepickerTo" value="{$date_to|escape}" class="form-control">
 					<input type="hidden" name="preselectDateRange" id="preselectDateRange" value="{if isset($preselect_date_range)}{$preselect_date_range}{/if}" class="form-control">
-
 					<div class="form-group pull-right">
 						<button id="datepickerExpand" class="btn btn-default" type="button">
 							<i class="icon-calendar-empty"></i>
@@ -94,7 +90,7 @@
 			{$hookDashboardZoneTwo}
 			<div id="dashaddons" class="row-margin-bottom">
 				<a href="http://addons.prestashop.com/en/209-dashboards?utm_source=backoffice_dashboard" target="_blank">
-					<i class="icon-plus"></i> {l s='Add more graph and data'}
+					<i class="icon-plus"></i> {l s='Add more dashboard modules'}
 				</a>
 			</div>
 		</div>
@@ -102,51 +98,48 @@
 			<section class="dash_news panel">
 				<h3><i class="icon-rss"></i> PrestaShop News</h3>
 				<div class="dash_news_content"></div>
-				<div class="text-center"><h4><a href="http://www.prestashop.com/blog/" onclick="return !window.open(this.href);">{l s='Find more news'}</a></h4>
+				<div class="text-center"><h4><a href="http://www.prestashop.com/blog/" onclick="return !window.open(this.href);">{l s='Find more news'}</a></h4></div>
 			</section>
-
 			<section id="dash_version" class="visible-lg">
-				<iframe frameborder="no" scrolling="no" allowtransparency="true" src="{$new_version_url}"></iframe>
+				<iframe style="overflow:hidden;border:none" src="{$new_version_url|escape:'html':'UTF-8'}" ></iframe>
 			</section>
-
 			<section class="dash_links panel">
 				<h3><i class="icon-link"></i> {l s="Useful Links"}</h3>
 					<dl>
-						<dt>{l s="Discover the official documentation"}</dt>
-						<dd><a href="http://doc.prestashop.com/display/PS16?utm_source=backoffice_dashboard" target="_blank">{l s="Go to doc.prestashop.com"}</a></dd>
+						<dt><a href="http://doc.prestashop.com/display/PS16?utm_source=backoffice_dashboard" target="_blank">{l s="Official Documentation"}</a></dt>
+						<dd>{l s="User, Developer and Designer Guides"}</dd>
 					</dl>
 					<dl>
-						<dt>{l s="Use the forum & discover a great community"}</dt>
-						<dd><a href="http://www.prestashop.com/forums?utm_source=backoffice_dashboard" target="_blank">{l s="Go to forums.prestashop.com"}</a></dd>
+						<dt><a href="http://www.prestashop.com/forums?utm_source=backoffice_dashboard" target="_blank">{l s="PrestaShop Forum"}</a></dt>
+						<dd>{l s="Connect with the PrestaShop community"}</dd>
 					</dl>
 					<dl>
-						<dt>{l s="Enhance your Shop with new templates & modules"}</dt>
-						<dd><a href="http://addons.prestashop.com?utm_source=backoffice_dashboard" target="_blank">{l s="Go to addons.prestashop.com"}</a></dd>
+						<dt><a href="http://addons.prestashop.com?utm_source=backoffice_dashboard" target="_blank">{l s="PrestaShop Addons"}</a></dt>
+						<dd>{l s="Enhance your store with templates & modules"}</dd>
 					</dl>
 					<dl>
-						<dt>{l s="Report issues in the Bug Tracker"}</dt>
-						<dd><a href="http://forge.prestashop.com?utm_source=backoffice_dashboard" target="_blank">{l s="Go to forge.prestashop.com"}</a></dd>
+						<dt><a href="http://forge.prestashop.com?utm_source=backoffice_dashboard" target="_blank">{l s="The Forge"}</a></dt>
+						<dd>{l s="Report issues in the Bug Tracker"}</dd>
 					</dl>
 					<dl>
-						<dt>{l s="Contact Us"}</dt>
-						<dd><a href="http://www.prestashop.com/en/contact-us?utm_source=backoffice_dashboard" target="_blank">{l s="Go to prestashop.com"}</a></dd>
+						<dt><a href="http://www.prestashop.com/en/contact-us?utm_source=backoffice_dashboard" target="_blank">{l s="Contact Us!"}</a></dt>
+						<dd></dd>
 					</dl>
 			</section>
-
 			<section class="dash_simulation panel">
 				<h3><i class="icon-link"></i> {l s="Demo Mode"}</h3>
 				<span class="switch prestashop-switch">
 					<input id="PS_DASHBOARD_SIMULATION_on" class="ps_dashboard_simulation" type="radio" {if $PS_DASHBOARD_SIMULATION == 1}checked="checked"{/if} value="1" name="PS_DASHBOARD_SIMULATION">
 					<label class="radioCheck" for="PS_DASHBOARD_SIMULATION_on">
-						{l s='Yes'}
+						{l s='On'}
 					</label>
 					<input id="PS_DASHBOARD_SIMULATION_off" class="ps_dashboard_simulation" type="radio" {if $PS_DASHBOARD_SIMULATION == 0}checked="checked"{/if} value="0" name="PS_DASHBOARD_SIMULATION">
 					<label class="radioCheck" for="PS_DASHBOARD_SIMULATION_off">
-						{l s='No'}
+						{l s='Off'}
 					</label>
 					<a class="slide-button btn"></a>
 				</span>
-				{l s='This mode generates fake data so you can try your Dashboard without real numbers.'}
+				{l s='This mode displays sample data so you can try your Dashboard without real numbers.'}
 			</section>
 
 		</div>

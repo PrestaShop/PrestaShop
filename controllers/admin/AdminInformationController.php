@@ -29,7 +29,6 @@ class AdminInformationControllerCore extends AdminController
 
 	public function __construct()
 	{
-		define('_PS_HOST_MODE_', 1);
 		$this->bootstrap = true;
 		parent::__construct();
 	}
@@ -67,6 +66,9 @@ class AdminInformationControllerCore extends AdminController
 				),
 				'database' => array(
 					'version' => Db::getInstance()->getVersion(),
+					'server' => _DB_SERVER_,
+					'name' => _DB_NAME_,
+					'user' => _DB_USER_,
 					'prefix' => _DB_PREFIX_,
 					'engine' => _MYSQL_ENGINE_,
 				),
