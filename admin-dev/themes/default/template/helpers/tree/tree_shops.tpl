@@ -25,7 +25,7 @@
 <div class="panel">
 	{if isset($header)}{$header}{/if}
 	{if isset($nodes)}
-	<ul id="{$id}" class="tree">
+	<ul id="{$id|escape:'html':'UTF-8'}" class="tree">
 		{$nodes}
 	</ul>
 	{/if}
@@ -54,8 +54,8 @@
 	}
 
 	$(document).ready(function () {
-		$("#{$id}").tree("expandAll");
-		$("#{$id}").find(":input[type=checkbox]").click(
+		$("#{$id|escape:'html':'UTF-8'}").tree("expandAll");
+		$("#{$id|escape:'html':'UTF-8'}").find(":input[type=checkbox]").click(
 			function()
 			{
 				if($(this).is(':checked'))
@@ -87,7 +87,7 @@
 			{assign var=imploded_selected_shops value='","'|implode:$selected_shops}
 			var selected_shops = new Array("{$imploded_selected_shops}");
 
-			$("#{$id}").find(".tree-item :input").each(
+			$("#{$id|escape:'html':'UTF-8'}").find(".tree-item :input").each(
 				function()
 				{
 					if ($.inArray($(this).val(), selected_shops) != -1)

@@ -306,37 +306,32 @@ function init()
 		$('#nbchars').html(length+'/600');
 	});
 
-	$('#newMessage').unbind('click');
-	$('#newMessage').click(function() {
+	$('#newMessage').unbind('click').click(function(e) {
 		$(this).hide();
 		$('#message').show();
-		return false;
+		e.preventDefault();
 	});
 
-	$('#cancelMessage').unbind('click');
-	$('#cancelMessage').click(function() {
+	$('#cancelMessage').unbind('click').click(function(e) {
 		$('#newMessage').show();
 		$('#message').hide();
-		return false;
+		e.preventDefault();
 	});
-
-	$('#add_product').unbind('click');
-	$('#add_product').click(function() {
+	
+	$('#add_product').unbind('click').click(function(e) {
 		$('.cancel_product_change_link:visible').trigger('click');
 		$('.add_product_fields').show();
 		$('.edit_product_fields, .standard_refund_fields, .partial_refund_fields, .order_action').hide();
 		$('tr#new_product').slideDown('fast', function () {
 			$('tr#new_product td').fadeIn('fast', function() {
 				$('#add_product_product_name').focus();
-				$.scrollTo('tr#new_product', 1200, {offset: -100});
+				scroll_if_anchor('#new_product');
 			});
 		});
-
-		return false;
+		e.preventDefault();
 	});
 
-	$('#cancelAddProduct').unbind('click');
-	$('#cancelAddProduct').click(function() {
+	$('#cancelAddProduct').unbind('click').click(function() {
 		$('.order_action').show();
 		$('tr#new_product td').fadeOut('fast');
 	});
@@ -436,8 +431,7 @@ function init()
 			$('#add_product_product_stock').html(current_product.combinations[$(this).val()].qty_in_stock);
 	});
 
-	$('input#add_product_product_quantity').unbind('keyup');
-	$('input#add_product_product_quantity').keyup(function() {
+	$('input#add_product_product_quantity').unbind('keyup').keyup(function() {
 		if (stock_management)
 		{
 			var quantity = parseInt($(this).val());
@@ -454,8 +448,7 @@ function init()
 		addProductRefreshTotal();
 	});
 
-	$('#submitAddProduct').unbind('click');
-	$('#submitAddProduct').click(function(e) {
+	$('#submitAddProduct').unbind('click').click(function(e) {
 		e.preventDefault();
 		stopAjaxQuery();
 		var go = true;
@@ -531,38 +524,32 @@ function init()
 		}
 	});
 
-	$('.edit_shipping_number_link').unbind('click');
-	$('.edit_shipping_number_link').click(function() {
+	$('.edit_shipping_number_link').unbind('click').click(function(e) {
 		$(this).parent().find('.shipping_number_show').hide();
 		$(this).parent().find('.shipping_number_edit').show();
 
 		$(this).parent().find('.edit_shipping_number_link').hide();
 		$(this).parent().find('.cancel_shipping_number_link').show();
-
-		return false;
+		e.preventDefault();
 	});
 
-	$('.cancel_shipping_number_link').unbind('click');
-	$('.cancel_shipping_number_link').click(function() {
+	$('.cancel_shipping_number_link').unbind('click').click(function(e) {
 		$(this).parent().find('.shipping_number_show').show();
 		$(this).parent().find('.shipping_number_edit').hide();
 
 		$(this).parent().find('.edit_shipping_number_link').show();
 		$(this).parent().find('.cancel_shipping_number_link').hide();
-
-		return false;
+		e.preventDefault();
 	});
 
-	$('#add_product_product_invoice').unbind('change');
-	$('#add_product_product_invoice').change(function() {
+	$('#add_product_product_invoice').unbind('change').change(function() {
 		if ($(this).val() == '0')
 			$('#new_invoice').slideDown('slow');
 		else
 			$('#new_invoice').slideUp('slow');
 	});
 
-	$('#add_product_product_price_tax_excl').unbind('keyup');
-	$('#add_product_product_price_tax_excl').keyup(function() {
+	$('#add_product_product_price_tax_excl').unbind('keyup').keyup(function() {
 		var price_tax_excl = parseFloat($(this).val());
 		if (price_tax_excl < 0 || isNaN(price_tax_excl))
 			price_tax_excl = 0;
@@ -574,8 +561,7 @@ function init()
 		addProductRefreshTotal();
 	});
 
-	$('#add_product_product_price_tax_incl').unbind('keyup');
-	$('#add_product_product_price_tax_incl').keyup(function() {
+	$('#add_product_product_price_tax_incl').unbind('keyup').keyup(function() {
 		var price_tax_incl = parseFloat($(this).val());
 		if (price_tax_incl < 0 || isNaN(price_tax_incl))
 			price_tax_incl = 0;
@@ -587,8 +573,7 @@ function init()
 		addProductRefreshTotal();
 	});
 
-	$('.edit_product_change_link').unbind('click');
-	$('.edit_product_change_link').click(function() {
+	$('.edit_product_change_link').unbind('click').click(function(e) {
 		$('.add_product_fields, .standard_refund_fields, .order_action').hide();
 		$('.edit_product_fields').show();
 		$('.cancel_product_change_link:visible').trigger('click');
@@ -637,11 +622,11 @@ function init()
 					jAlert(data.error);
 			}
 		});
-		return false;
+		e.preventDefault();
 	});
 
-	$('.cancel_product_change_link').unbind('click');
-	$('.cancel_product_change_link').click(function() {
+	$('.cancel_product_change_link').unbind('click').click(function(e)
+	{
 		current_product = null;
 		$('.edit_product_fields').hide();
 		var element_list = $('.customized-' + $(this).parent().parent().find('.edit_product_id_order_detail').val());
@@ -659,11 +644,10 @@ function init()
 		element_list.find('.cancel_product_change_link').hide();
 		$('.order_action').show();
 		$('.standard_refund_fields').hide();
-		return false;
+		e.preventDefault();
 	});
 
-	$('button.submitProductChange').unbind('click');
-	$('button.submitProductChange').click(function(e) {
+	$('button.submitProductChange').unbind('click').click(function(e) {
 		e.preventDefault();
 
 		if ($(this).closest('tr.product-line-row').find('td .edit_product_quantity').val() <= 0)
@@ -720,8 +704,7 @@ function init()
 		return false;
 	});
 
-	$('.edit_product_price_tax_excl').unbind('keyup');
-	$('.edit_product_price_tax_excl').keyup(function() {
+	$('.edit_product_price_tax_excl').unbind('keyup').keyup(function() {
 		var price_tax_excl = parseFloat($(this).val());
 		if (price_tax_excl < 0 || isNaN(price_tax_excl))
 			price_tax_excl = 0;
@@ -753,8 +736,7 @@ function init()
 		editProductRefreshTotal($(this));
 	});
 
-	$('.delete_product_line').unbind('click');
-	$('.delete_product_line').click(function() {
+	$('.delete_product_line').unbind('click').click(function(e) {
 		if (!confirm(txt_confirm))
 			return false;
 		var tr_product = $(this).closest('.product-line-row');
@@ -783,39 +765,33 @@ function init()
 					jAlert(data.error);
 			}
 		});
-		return false;
+		e.preventDefault();
 	});
 
-	$('.js-set-payment').unbind('click');
-	$('.js-set-payment').click(function() {
+
+	$('.js-set-payment').unbind('click').click(function(e) {
 		var amount = $(this).attr('data-amount');
 		$('input[name=payment_amount]').val(amount);
 		var id_invoice = $(this).attr('data-id-invoice');
 		$('select[name=payment_invoice] option[value='+id_invoice+']').attr('selected', true);
-
-		$.scrollTo('#formAddPayment', 1000, {offset: -100});
-
-		return false;
+		e.preventDefault();
 	});
 
-	$('#add_voucher').unbind('click');
-	$('#add_voucher').click(function() {
+	$('#add_voucher').unbind('click').click(function(e) {
 		$('.order_action').hide();
 		$('.panel-vouchers,#voucher_form').show();
-		return false;
+		e.preventDefault();
 	});
 
-	$('#cancel_add_voucher').unbind('click');
-	$('#cancel_add_voucher').click(function() {
+	$('#cancel_add_voucher').unbind('click').click(function(e) {
 		$('#voucher_form').hide();
 		if (!has_voucher)
 			$('.panel-vouchers').hide();
 		$('.order_action').show();
-		return false;
+		e.preventDefault();
 	});
 
-	$('#discount_type').unbind('click');
-	$('#discount_type').change(function() {
+	$('#discount_type').unbind('change').change(function() {
 		// Percent type
 		if ($(this).val() == 1)
 		{
@@ -839,22 +815,19 @@ function init()
 		}
 	});
 
-	$('#discount_all_invoices').unbind('change');
-	$('#discount_all_invoices').change(function() {
+	$('#discount_all_invoices').unbind('change').change(function() {
 		if ($(this).is(':checked'))
 			$('select[name=discount_invoice]').attr('disabled', true);
 		else
 			$('select[name=discount_invoice]').attr('disabled', false);
 	});
 
-	$('.open_payment_information').unbind('click');
-	$('.open_payment_information').click(function() {
+	$('.open_payment_information').unbind('click').click(function(e) {
 		if ($(this).parent().parent().next('tr').is(':visible'))
 			$(this).parent().parent().next('tr').hide();
 		else
 			$(this).parent().parent().next('tr').show();
-
-		return false;
+		e.preventDefault();
 	});
 }
 

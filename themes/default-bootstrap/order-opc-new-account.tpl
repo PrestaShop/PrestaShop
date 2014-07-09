@@ -4,7 +4,7 @@
 	<form action="{$link->getPageLink('authentication', true, NULL, "back=order-opc")|escape:'html':'UTF-8'}" method="post" id="login_form" class="box">
 		<fieldset>
 			<h3 class="page-subheading">{l s='Already registered?'}</h3>
-			<p><a href="{$link->getPageLink('authentication', true)|escape:'html'}" id="openLoginFormBlock">&raquo; {l s='Click here'}</a></p>
+			<p><a href="{$link->getPageLink('authentication', true)|escape:'html':'UTF-8'}" id="openLoginFormBlock">&raquo; {l s='Click here'}</a></p>
 			<div id="login_form_content" style="display:none;">
 				<!-- Error return block -->
 				<div id="opc_login_errors" class="alert alert-danger" style="display:none;"></div>
@@ -25,7 +25,7 @@
 			</div>
 		</fieldset>
 	</form>
-	<form action="{$link->getPageLink('authentication', true)|escape:'html'}" method="post" id="new_account_form" class="std" autocomplete="on" autofill="on">
+	<form action="{$link->getPageLink('authentication', true)|escape:'html':'UTF-8'}" method="post" id="new_account_form" class="std" autocomplete="on" autofill="on">
 		<fieldset>
         	<div class="box">
                 <h3 id="new_account_title" class="page-subheading">{l s='New Customer'}</h3>
@@ -73,7 +73,7 @@
 					{foreach from=$genders key=k item=gender}	
                     	<div class="radio-inline">
                     	<label for="id_gender{$gender->id_gender}" class="top">
-						<input type="radio" name="id_gender" id="id_gender{$gender->id_gender}" value="{$gender->id_gender}" {if isset($smarty.post.id_gender) && $smarty.post.id_gender == $gender->id_gender}checked="checked"{/if} />
+						<input type="radio" name="id_gender" id="id_gender{$gender->id_gender}" value="{$gender->id_gender}"{if isset($smarty.post.id_gender) && $smarty.post.id_gender == $gender->id_gender || (isset($guestInformations) && $guestInformations.id_gender == $gender->id_gender)} checked="checked"{/if} />
 						{$gender->name}</label></div>
 					{/foreach}
 				</div>
@@ -131,12 +131,12 @@
 				{if isset($newsletter) && $newsletter}
 				<div class="checkbox">
                 	<label for="newsletter">
-					<input type="checkbox" name="newsletter" id="newsletter" value="1" {if isset($guestInformations) && isset($guestInformations.newsletter) && $guestInformations.newsletter}checked="checked"{/if} autocomplete="off"/>
+					<input type="checkbox" name="newsletter" id="newsletter" value="1"{if isset($guestInformations) && isset($guestInformations.newsletter) && $guestInformations.newsletter} checked="checked"{/if} autocomplete="off"/>
 					{l s='Sign up for our newsletter!'}</label>
 				</div>
-				<div class="checkbox" >
+				<div class="checkbox">
                 	<label for="optin">
-					<input type="checkbox"name="optin" id="optin" value="1" {if isset($guestInformations) && isset($guestInformations.optin) && $guestInformations.optin}checked="checked"{/if} autocomplete="off"/>
+					<input type="checkbox" name="optin" id="optin" value="1"{if isset($guestInformations) && isset($guestInformations.optin) && $guestInformations.optin} checked="checked"{/if} autocomplete="off"/>
 					{l s='Receive special offers from our partners!'}</label>
 				</div>
 				{/if}

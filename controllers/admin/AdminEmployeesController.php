@@ -84,7 +84,7 @@ class AdminEmployeesControllerCore extends AdminController
 			'email' => array('title' => $this->l('Email address')),
 			'profile' => array('title' => $this->l('Profile'), 'type' => 'select', 'list' => $this->profiles_array,
 				'filter_key' => 'pl!name', 'class' => 'fixed-width-lg'),
-			'active' => array('title' => $this->l('Can log in'), 'align' => 'center', 'active' => 'status',
+			'active' => array('title' => $this->l('Active'), 'align' => 'center', 'active' => 'status',
 				'type' => 'bool', 'class' => 'fixed-width-sm'),
 		);
 
@@ -238,8 +238,8 @@ class AdminEmployeesControllerCore extends AdminController
 				array(
 					'type' => 'html',
 					'name' => 'employee_avatar',
-					'html_content' => '<div id="employee-thumbnail"><a href="http://www.prestashop.com/forums/index.php?app=core&module=usercp" target="_blank" style="background-image:url('.$obj->getImage().')"></a></div>
-					<div class="alert alert-info">'.sprintf($this->l('Your avatar in PrestaShop 1.6.x is your profile picture on %1$s. To change your avatar, log in to PrestaShop.com with your email %2$s and follow the on-screen instructions.'), '<a href="http://www.prestashop.com/forums/index.php?app=core&module=usercp" class="alert-link" target="_blank">PrestaShop.com</a>', $obj->email).'</div>',
+					'html_content' => '<div id="employee-thumbnail"><a href="http://www.prestashop.com/forums/index.php?app=core&amp;module=usercp" target="_blank" style="background-image:url('.$obj->getImage().')"></a></div>
+					<div class="alert alert-info">'.sprintf($this->l('Your avatar in PrestaShop 1.6.x is your profile picture on %1$s. To change your avatar, log in to PrestaShop.com with your email %2$s and follow the on-screen instructions.'), '<a href="http://www.prestashop.com/forums/index.php?app=core&amp;module=usercp" class="alert-link" target="_blank">PrestaShop.com</a>', $obj->email).'</div>',
 				),
 				array(
 					'type' => 'text',
@@ -348,7 +348,7 @@ class AdminEmployeesControllerCore extends AdminController
 		{
 			$this->fields_form['input'][] = array(
 				'type' => 'switch',
-				'label' => $this->l('Status'),
+				'label' => $this->l('Active'),
 				'name' => 'active',
 				'required' => false,
 				'is_bool' => true,

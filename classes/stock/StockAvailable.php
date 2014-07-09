@@ -100,7 +100,7 @@ class StockAvailableCore extends ObjectModel
 	public function updateWs()
 	{
 		if ($this->depends_on_stock)
-			return WebserviceRequest::getInstance()->setError(500, Tools::displayError('You cannot update the available stock when it depends on stock.'));
+			return WebserviceRequest::getInstance()->setError(500, Tools::displayError('You cannot update the available stock when it depends on stock.'), 133);
 		return $this->update();
 	}
 	
@@ -411,11 +411,7 @@ class StockAvailableCore extends ObjectModel
 				{
 					if ($product->isColorUnavailable((int)$color['id_attribute'], (int)$this->id_shop))
 					{
-						// Change template dir if called from the BackOffice
-						$current_template_dir = Context::getContext()->smarty->getTemplateDir();
-						Context::getContext()->smarty->setTemplateDir(_PS_THEME_DIR_.'tpl');
-						Tools::clearCache(null, 'product-list-colors.tpl', Product::getColorsListCacheId((int)$product->id));
-						Context::getContext()->smarty->setTemplateDir($current_template_dir);
+						Tools::clearColorListCache($product->id);
 						break;
 					}
 				}
@@ -743,9 +739,15 @@ class StockAvailableCore extends ObjectModel
 		else
 		{
 			if (is_object($sql))
+			{
 				$sql->where(pSQL($alias).'id_shop = '.(int)$shop->id);
+				$sql->where(pSQL($alias).'id_shop_group = 0');
+			}
 			else
+			{
 				$sql = ' AND '.pSQL($alias).'id_shop = '.(int)$shop->id.' ';
+				$sql .= ' AND '.pSQL($alias).'id_shop_group = 0 ';
+			}
 		}
 
 		return $sql;

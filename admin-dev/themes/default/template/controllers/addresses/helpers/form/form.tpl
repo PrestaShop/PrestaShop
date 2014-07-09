@@ -41,7 +41,7 @@
 	{if $input.type == 'text_customer'}
 		{if isset($customer)}
 			<div class="col-lg-9">
-				<a class="btn btn-default" href="?tab=AdminCustomers&amp;id_customer={$customer->id}&amp;viewcustomer&amp;token={$tokenCustomer}">
+				<a class="btn btn-default" href="?tab=AdminCustomers&amp;id_customer={$customer->id|intval}&amp;viewcustomer&amp;token={$tokenCustomer}">
 					<i class="icon-eye-open"></i> {$customer->lastname} {$customer->firstname} ({$customer->email})
 				</a>
 			</div>
@@ -56,7 +56,7 @@
 				{
 					var data = {};
 					data.email = email;
-					data.token = "{$token}";
+					data.token = "{$token|escape:'html':'UTF-8'}";
 					data.ajax = 1;
 					data.controller = "AdminAddresses";
 					data.action = "loadNames";

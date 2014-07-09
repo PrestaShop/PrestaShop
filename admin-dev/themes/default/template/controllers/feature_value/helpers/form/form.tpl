@@ -27,6 +27,6 @@
 {block name="input_row"}
 	{$smarty.block.parent}
 	{if $input.name == 'value'}
-		{hook h="displayFeatureValueForm" id_feature_value=$feature_value->id}
+		{hook h="displayFeatureValueForm" id_feature_value=$feature_value->id|intval}
 	{/if}
 {/block}

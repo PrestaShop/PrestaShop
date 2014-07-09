@@ -214,7 +214,7 @@ class OrderDetailCore extends ObjectModel
 		),
 		'hidden_fields' => array('tax_rate', 'tax_name'),
 		'associations' => array(
-			'taxes'  => array('resource' => 'tax', 'getter' => 'getWsTaxes', 'setter' => false,
+			'taxes'  => array('resource' => 'taxes', 'getter' => 'getWsTaxes', 'setter' => false,
 				'fields' => array('id' =>  array(), ),
 			),
 		));

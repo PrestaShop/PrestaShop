@@ -597,7 +597,6 @@ class AdminControllerCore extends Controller
 		}
 
 		$filters = $this->context->cookie->getFamily($prefix.$this->list_id.'Filter_');
-
 		foreach ($filters as $key => $value)
 		{
 			/* Extracting filters from $_POST on key filter_ */
@@ -610,7 +609,8 @@ class AdminControllerCore extends Controller
 
 				if ($field = $this->filterToField($key, $filter))
 				{
-					$type = (array_key_exists('filter_type', $field) ? $field['filter_type'] : (array_key_exists('type', $field) ? $field['type'] : false));					if (($type == 'date' || $type == 'datetime') && is_string($value))
+					$type = (array_key_exists('filter_type', $field) ? $field['filter_type'] : (array_key_exists('type', $field) ? $field['type'] : false));
+					if (($type == 'date' || $type == 'datetime') && is_string($value))
 						$value = Tools::unSerialize($value);
 					$key = isset($tmp_tab[1]) ? $tmp_tab[0].'.`'.$tmp_tab[1].'`' : '`'.$tmp_tab[0].'`';
 
@@ -699,7 +699,7 @@ class AdminControllerCore extends Controller
 			else
 			{
 				// Process list filtering
-				if ($this->filter)
+				if ($this->filter && $this->action != 'reset_filters')
 					$this->processFilter();
 
 				// If the method named after the action exists, call "before" hooks, then call action method, then call "after" hooks
@@ -778,6 +778,11 @@ class AdminControllerCore extends Controller
 					if ($path_to_image)
 						$field_value = $path_to_image;  
 				}
+				if (isset($params['callback']))
+                                {
+                                	$callback_obj = (isset($params['callback_object'])) ? $params['callback_object'] : $this->context->controller;
+                                	$field_value = call_user_func_array(array($callback_obj, $params['callback']), array($field_value, $row));
+                                }
 				$content[$i][] = $field_value;
 			}
 		}
@@ -863,7 +868,7 @@ class AdminControllerCore extends Controller
 	{
 		if (!isset($this->className) || empty($this->className))
 			return false;
-		/* Checking fields validity */
+
 		$this->validateRules();
 		if (count($this->errors) <= 0)
 		{
@@ -905,7 +910,6 @@ class AdminControllerCore extends Controller
 
 		return $this->object;
 	}
-
 
 	/**
 	 * Object update
@@ -1321,12 +1325,12 @@ class AdminControllerCore extends Controller
 				break;
 			default: // list
 				$this->toolbar_btn['new'] = array(
-					'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
+					'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
 					'desc' => $this->l('Add new')
 				);
 				if ($this->allow_export)
 					$this->toolbar_btn['export'] = array(
-						'href' => self::$currentIndex.'&amp;export'.$this->table.'&amp;token='.$this->token,
+						'href' => self::$currentIndex.'&export'.$this->table.'&token='.$this->token,
 						'desc' => $this->l('Export')
 					);
 		}
@@ -1553,6 +1557,25 @@ class AdminControllerCore extends Controller
 			}
 		}
 
+		$name = $this->l('New Bookmark');
+		if (isset($this->context->smarty->tpl_vars['breadcrumbs2']) && $this->context->smarty->tpl_vars['breadcrumbs2']->value['tab']['name'])
+		{
+			if ($this->context->smarty->tpl_vars['breadcrumbs2']->value['action']['name'])
+				$name = $this->context->smarty->tpl_vars['breadcrumbs2']->value['tab']['name'].' > '.$this->context->smarty->tpl_vars['breadcrumbs2']->value['action']['name'];
+			else
+				$name = $this->context->smarty->tpl_vars['breadcrumbs2']->value['tab']['name'];
+		}
+		elseif (isset($this->context->smarty->tpl_vars['breadcrumbs2']) && is_string($this->context->smarty->tpl_vars['breadcrumbs2']->value))
+			$name = $this->context->smarty->tpl_vars['breadcrumbs2']->value;
+
+		$link = preg_replace('/&token=[a-z0-9]{32}/', '', basename($_SERVER['REQUEST_URI']));
+
+		$quick_access[] = array(
+			'name' => $this->l('Bookmark this page'),
+			'link' => $this->context->link->getAdminLink('AdminQuickAccesses').'&new_window=0&name_'.(int)Configuration::get('PS_LANG_DEFAULT').'='.urlencode($name).'&link='.urlencode($link).'&submitAddquick_access=1',
+			'new_window' => 0
+		);
+
 		// Tab list
 		$tabs = Tab::getTabs($this->context->language->id, 0);
 		$current_id = Tab::getCurrentParentId();
@@ -1693,7 +1716,7 @@ class AdminControllerCore extends Controller
 		$lang = '';
 		if (Configuration::get('PS_REWRITING_SETTINGS') && count(Language::getLanguages(true)) > 1)
 			$lang = Language::getIsoById($this->context->employee->id_lang).'/';
-		if (is_object($module) && (int)Configuration::get('PS_TC_ACTIVE') == 1 && $this->context->shop->getBaseURL())
+		if (is_object($module) && $module->active && (int)Configuration::get('PS_TC_ACTIVE') == 1 && $this->context->shop->getBaseURL())
 			$this->context->smarty->assign('base_url_tc', $this->context->shop->getBaseUrl()
 				.(Configuration::get('PS_REWRITING_SETTINGS') ? '' : 'index.php')
 				.$lang
@@ -1925,7 +1948,8 @@ class AdminControllerCore extends Controller
 			'check_url_fopen' => (ini_get('allow_url_fopen') ? 'ok' : 'ko'),
 			'check_openssl' => (extension_loaded('openssl') ? 'ok' : 'ko'),
 			'add_permission' => 1,
-			'addons_register_link' => "//addons.prestashop.com/fr/login?utm_source=back-office&utm_medium=connect-to-addons&utm_campaign=back-office-".$iso_code_caps."#createnow",
+			'addons_register_link' => "//addons.prestashop.com/".$language->iso_code."/login?email=".urlencode($this->context->employee->email)."&firstname=".urlencode($this->context->employee->firstname)."&lastname=".urlencode($this->context->employee->lastname)."&website=".urlencode($this->context->shop->getBaseURL())."&utm_source=back-office&utm_medium=connect-to-addons&utm_campaign=back-office-".$iso_code_caps."#createnow",
+			'addons_forgot_password_link' => "//addons.prestashop.com/".$language->iso_code."/forgot-your-password"
 		));
 		
 		$this->modals[] = array(
@@ -2230,6 +2254,9 @@ class AdminControllerCore extends Controller
 		$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/modernizr.min.js');
 		$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/modernizr-loads.js');
 		$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/moment-with-langs.min.js');
+
+		if (!$this->lite_display)
+			$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/help.js');
 
 		if (!Tools::getValue('submitFormAjax'))
 			$this->addJs(_PS_JS_DIR_.'notifications.js');
@@ -2809,7 +2836,6 @@ class AdminControllerCore extends Controller
 			{
 				break;
 			}
-
 		} while (empty($this->_list));
 
 		Hook::exec('action'.$this->controller_name.'ListingResultsModifier', array(
@@ -3098,8 +3124,10 @@ class AdminControllerCore extends Controller
 
 		/* Multilingual fields */
 		$languages = Language::getLanguages(false);
-		$class = get_class($object);
-		$fields = $class::$definition['fields'];
+		$class_vars = get_class_vars(get_class($object));
+		$fields = array();
+		if (isset($class_vars['definition']['fields']))
+			$fields = $class_vars['definition']['fields'];
 
 		foreach ($fields as $field => $params) {
 			if (array_key_exists('lang', $params) && $params['lang']) {
@@ -3161,7 +3189,7 @@ class AdminControllerCore extends Controller
 		$insert = array();
 		foreach ($assos_data as $id_shop)
 			$insert[] = array(
-				$this->identifier => $id_object,
+				$this->identifier => (int)$id_object,
 				'id_shop' => (int)$id_shop,
 			);
 		return Db::getInstance()->insert($this->table.'_shop', $insert, false, true, Db::INSERT_IGNORE);
@@ -3316,19 +3344,24 @@ class AdminControllerCore extends Controller
 	
 	protected function ajaxProcessOpenHelp()
 	{
-		$help_class_name = $_GET["controller"];
+		$help_class_name = $_GET['controller'];
 		$popupContent = "<!doctype html>
 		<html>
 			<head>
 				<meta charset='UTF-8'>
 				<title>PrestaShop Help</title>
 				<link href='//help.prestashop.com/css/help.css' rel='stylesheet'>
-				<link href='//fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-				<script src='"._PS_JS_DIR_."/jquery/jquery-1.11.0.min.js'></script>
-				<script src='"._PS_JS_DIR_."/jquery/plugins/jquery.storageapi.js'></script>
+				<link href='//fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet'>
+				<script src='"._PS_JS_DIR_."jquery/jquery-1.11.0.min.js'></script>
+				<script src='"._PS_JS_DIR_."jquery/plugins/jquery.storageapi.js'></script>
+				<script src='"._PS_JS_DIR_."admin.js'></script>
+				<script src='"._PS_JS_DIR_."tools.js'></script>
+				<script>
+					help_class_name='".addslashes($help_class_name)."';
+					iso_user = '".addslashes($this->context->language->iso_code)."'
+				</script>
 				<script src='themes/default/js/help.js'></script>
 				<script>
-					help_class_name='".$help_class_name."';
 					$(function(){
 						initHelp();
 					});
@@ -3338,7 +3371,6 @@ class AdminControllerCore extends Controller
 		</html>";
 		die($popupContent);
 	}
-
 
 	/**
 	 * Enable multiple items
@@ -3784,11 +3816,11 @@ class AdminControllerCore extends Controller
 					if (isset($option['style']))
 						$html .= ' style="'.$option['style'].'"';
 
-					$html .= ' href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'" onclick="'.$option['onclick'].'"  title="'.$option['title'].'"><i class="icon-'.(isset($option['icon']) && $option['icon'] ? $option['icon']:'cog' ).'"></i> '.$option['text'].'</a>';
+					$html .= ' href="'.htmlentities($option['href']).(!is_null($back) ? '&back='.urlencode($back) : '').'" onclick="'.$option['onclick'].'"  title="'.$option['title'].'"><i class="icon-'.(isset($option['icon']) && $option['icon'] ? $option['icon']:'cog' ).'"></i> '.$option['text'].'</a>';
 					$return[] = $html;
 				}
 				elseif ($output_type == 'select')
-					$return .= '<option id="'.$option_name.'" data-href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'" data-onclick="'.$option['onclick'].'">'.$option['text'].'</option>';
+					$return .= '<option id="'.$option_name.'" data-href="'.htmlentities($option['href']).(!is_null($back) ? '&back='.urlencode($back) : '').'" data-onclick="'.$option['onclick'].'">'.$option['text'].'</option>';
 			}
 		}
 
@@ -3797,7 +3829,7 @@ class AdminControllerCore extends Controller
 
 		return $return;
 	}
-	
+		
 	public function ajaxProcessGetModuleQuickView()
 	{
 		$modules = Module::getModulesOnDisk();

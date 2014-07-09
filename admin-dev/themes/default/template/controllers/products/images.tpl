@@ -113,7 +113,11 @@
 			</td>
 			<td>legend</td>
 			<td id="td_image_id" class="pointer dragHandle center positionImage">
-				image_position
+				<div class="dragGroup">
+					<div class="positions">
+						image_position
+                                        </div>
+                                </div>
 			</td>
 			{if $shops}
 				{foreach from=$shops item=shop}
@@ -140,7 +144,7 @@
 		</tr>
 	</table>
 	<div class="panel-footer">
-		<a href="{$link->getAdminLink('AdminProducts')}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
+		<a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
 		<button type="submit" name="submitAddproduct" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save'}</button>
 		<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
 	</div>
@@ -199,16 +203,22 @@
 			var originalOrder = false;
 
 			$("#imageTable").tableDnD(
-			{	onDragStart: function(table, row) {
-					originalOrder = $.tableDnD.serialize();
-				},
+			{	dragHandle: 'dragHandle',
+                                onDragClass: 'myDragClass',
+                                onDragStart: function(table, row) {
+                                        originalOrder = $.tableDnD.serialize();
+                                        reOrder = ':even';
+                                        if (table.tBodies[0].rows[1] && $('#' + table.tBodies[0].rows[1].id).hasClass('alt_row'))
+                                                reOrder = ':odd';
+                                        $(table).find('#' + row.id).parent('tr').addClass('myDragClass');
+                                },
 				onDrop: function(table, row) {
 					if (originalOrder != $.tableDnD.serialize()) {
 						current = $(row).attr("id");
 						stop = false;
 						image_up = "{";
 						$("#imageList").find("tr").each(function(i) {
-							$("#td_" +  $(this).attr("id")).html(i + 1);
+							$("#td_" +  $(this).attr("id")).html('<div class="dragGroup"><div class="positions">'+(i + 1)+'</div></div>');
 							if (!stop || (i + 1) == 2)
 								image_up += '"' + $(this).attr("id") + '" : ' + (i + 1) + ',';
 						});
@@ -252,7 +262,7 @@
 						"id_image":id,
 						"id_product" : {/literal}{$id_product}{literal},
 						"id_category" : {/literal}{$id_category_default}{literal},
-						"token" : "{/literal}{$token}{literal}",
+						"token" : "{/literal}{$token|escape:'html':'UTF-8'}{literal}",
 						"tab" : "AdminProducts",
 						"ajax" : 1 }, afterDeleteProductImage
 				);
@@ -275,7 +285,7 @@
 					"action":"UpdateCover",
 					"id_image":id,
 					"id_product" : {/literal}{$id_product}{literal},
-					"token" : "{/literal}{$token}{literal}",
+					"token" : "{/literal}{$token|escape:'html':'UTF-8'}{literal}",
 					"controller" : "AdminProducts",
 					"ajax" : 1 }
 				);
@@ -295,7 +305,7 @@
 					"id_product":id_product,
 					"id_shop": id_shop,
 					"active":active,
-					"token" : "{/literal}{$token}{literal}",
+					"token" : "{/literal}{$token|escape:'html':'UTF-8'}{literal}",
 					"tab" : "AdminProducts",
 					"ajax" : 1 
 				});
@@ -307,7 +317,7 @@
 				{
 					"action":"updateImagePosition",
 					"json":json,
-					"token" : "{/literal}{$token}{literal}",
+					"token" : "{/literal}{$token|escape:'html':'UTF-8'}{literal}",
 					"tab" : "AdminProducts",
 					"ajax" : 1
 				});

@@ -131,7 +131,7 @@ class CartCore extends ObjectModel
 			'id_lang' => array('xlink_resource' => 'languages'),
 		),
 		'associations' => array(
-			'cart_rows' => array('resource' => 'cart_row', 'virtual_entity' => true, 'fields' => array(
+			'cart_rows' => array('resource' => 'cart_rows', 'virtual_entity' => true, 'fields' => array(
 				'id_product' => array('required' => true, 'xlink_resource' => 'products'),
 				'id_product_attribute' => array('required' => true, 'xlink_resource' => 'combinations'),
 				'id_address_delivery' => array('required' => true, 'xlink_resource' => 'addresses'),
@@ -474,7 +474,7 @@ class CartCore extends ObjectModel
 		$sql->groupBy('unique_id');
 
 		// Build ORDER BY
-		$sql->orderBy('p.`id_product`, cp.`id_product_attribute`, cp.`date_add` ASC');
+		$sql->orderBy('cp.`date_add`, p.`id_product`, cp.`id_product_attribute` ASC');
 
 		if (Customization::isFeatureActive())
 		{
@@ -1572,15 +1572,21 @@ class CartCore extends ObjectModel
 	{
 		static $address = null;
 
-		if ($id_address === null)
-			$id_address = (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
-
-		if ($address === null)
-			$address = Address::initialize($id_address);
-
 		$wrapping_fees = (float)Configuration::get('PS_GIFT_WRAPPING_PRICE');
 		if ($with_taxes && $wrapping_fees > 0)
 		{
+			if ($address === null)
+			{
+				if ($id_address === null)
+					$id_address = (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+				try {
+					$address = Address::initialize($id_address);
+				} catch (Exception $e) {
+					$address = new Address();
+					$address->id_country = Configuration::get('PS_COUNTRY_DEFAULT');
+				}
+			}
+
 			$tax_manager = TaxManagerFactory::getManager($address, (int)Configuration::get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'));
 			$tax_calculator = $tax_manager->getTaxCalculator();
 			$wrapping_fees = $tax_calculator->addTaxes($wrapping_fees);
@@ -2977,7 +2983,7 @@ class CartCore extends ObjectModel
 			'formattedAddresses' => $formatted_addresses,
 			'products' => array_values($products),
 			'gift_products' => $gift_products,
-			'discounts' => $cart_rules,
+			'discounts' => array_values($cart_rules),
 			'is_virtual_cart' => (int)$this->isVirtualCart(),
 			'total_discounts' => $total_discounts,
 			'total_discounts_tax_exc' => $total_discounts_tax_exc,

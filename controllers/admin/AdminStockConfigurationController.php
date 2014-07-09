@@ -394,7 +394,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 		 * Supply Order Status/State
 		 */
 		$second_list = null;
-		unset($this->_select, $this->_where, $this->_join, $this->_group, $this->_filterHaving, $this->_filter, $this->list_skip_actions['delete'], $this->list_skip_actions['edit']);
+		unset($this->_select, $this->_where, $this->_join, $this->_group, $this->_filterHaving, $this->_filter, $this->list_skip_actions['delete'], $this->list_skip_actions['edit'], $this->list_id);
 
 		// generates the actual second list
 		$second_list = $this->initSupplyOrderStatusList();

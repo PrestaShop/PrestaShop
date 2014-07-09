@@ -59,8 +59,8 @@
 	{if !$simple_header && $list_total > $pagination[0]}
 	<div class="col-lg-6">
 		{* Choose number of results per page *}
-		<span class="pagination">
-			{l s='Display'}: 
+		<div class="pagination">
+			{l s='Display'} 
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 				{$selected_pagination}
 				<i class="icon-caret-down"></i>
@@ -74,7 +74,7 @@
 			</ul>
 			/ {$list_total} {l s='result(s)'}
 			<input type="hidden" id="{$list_id}-pagination-items-page" name="{$list_id}_pagination" value="{$selected_pagination|intval}" />
-		</span>
+		</div>
 		<script type="text/javascript">
 			$('.pagination-items-page').on('click',function(e){
 				e.preventDefault();
@@ -141,14 +141,14 @@
 {/foreach}
 {if isset($back_button)}
 <div class="panel-footer">
-	<a id="desc-{$table}-{if isset($back_button.imgclass)}{$back_button.imgclass}{else}{$k}{/if}" class="btn btn-default" {if isset($back_button.href)}href="{$back_button.href}"{/if} {if isset($back_button.target) && $back_button.target}target="_blank"{/if}{if isset($back_button.js) && $back_button.js}onclick="{$back_button.js}"{/if}>
+	<a id="desc-{$table}-{if isset($back_button.imgclass)}{$back_button.imgclass}{else}{$k}{/if}" class="btn btn-default" {if isset($back_button.href)}href="{$back_button.href|escape:'html':'UTF-8'}"{/if} {if isset($back_button.target) && $back_button.target}target="_blank"{/if}{if isset($back_button.js) && $back_button.js}onclick="{$back_button.js}"{/if}>
 		<i class="process-icon-back {if isset($back_button.class)}{$back_button.class}{/if}" ></i> <span {if isset($back_button.force_desc) && $back_button.force_desc == true } class="locked" {/if}>{$back_button.desc}</span>
 	</a>
 </div>
 {/if}
 {/block}
 {if !$simple_header}
-		<input type="hidden" name="token" value="{$token}" />
+		<input type="hidden" name="token" value="{$token|escape:'html':'UTF-8'}" />
 	</div>
 {else}
 	</div>

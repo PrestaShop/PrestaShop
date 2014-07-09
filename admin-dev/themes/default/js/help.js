@@ -26,8 +26,6 @@ $(function() {
 	var storage = $.localStorage;
 	initHelp = function(){
 		$('#main').addClass('helpOpen');
-		//localstorage : remember that user wants help
-		storage.set('helpOpen',true);
 		//first time only
 		if( $('#help-container').length === 0) {
 			//add css
@@ -37,24 +35,35 @@ $(function() {
 		}
 		//init help (it use a global javascript variable to get actual controller)
 		pushContent(help_class_name);
-		//close button
-		$('#help-container').on('click', '.close-help', function(e){
-			e.preventDefault();
-			$('#main').removeClass('helpOpen');
-			$('#help-container').html('');
-			storage.set('helpOpen', false);
-		});
 		$('#help-container').on('click', '.popup', function(e){
 			e.preventDefault();
 			storage.set('helpOpen', false);
-			$('#help-container .close-help').trigger('click');
+			$('.toolbarBox a.btn-help').trigger('click');
 			var helpWindow = window.open("index.php?controller=" + help_class_name + "?token=" + token + "&ajax=1&action=OpenHelp", "helpWindow", "width=450, height=650, scrollbars=yes");
 		});
 	};
+
+	// change help icon
+	function iconCloseHelp(){
+		$('.toolbarBox a.btn-help i').removeClass('process-icon-loading').addClass('process-icon-close');
+	}
+
 	//init
-	$('a.btn-help').on('click', function(e) {
+	$('.toolbarBox a.btn-help').on('click', function(e) {
 		e.preventDefault();
-		initHelp();
+		//localstorage : remember that user wants help
+		if( !$('#main').hasClass('helpOpen') && document.body.clientWidth > 1200) {
+			storage.set('helpOpen',true);
+			$('.toolbarBox a.btn-help i').removeClass('process-icon-help').addClass('process-icon-loading');
+			initHelp();
+		} else if(!$('#main').hasClass('helpOpen') && document.body.clientWidth < 1200){
+			var helpWindow = window.open("index.php?controller=" + help_class_name + "?token=" + token + "&ajax=1&action=OpenHelp", "helpWindow", "width=450, height=650, scrollbars=yes");
+		} else {
+			$('#main').removeClass('helpOpen');
+			$('#help-container').html('');
+			$('.toolbarBox a.btn-help i').removeClass('process-icon-close').addClass('process-icon-help');
+			storage.set('helpOpen', false);
+		}
 	});
 	//open help if localstorage helpOpen = true;
 	if ( storage.get('helpOpen') === true ) {
@@ -62,7 +71,7 @@ $(function() {
 	}
 
 	//switch home
-	var language;
+	var language = iso_user;
 	var home;
 	switch(language) {
 		case 'en':
@@ -90,15 +99,18 @@ $(function() {
 
 	//get content
 	function getHelp(pageController) {
-		var request = encodeURIComponent("getHelp=" + pageController + "&version=1.6");
+		var request = encodeURIComponent("getHelp=" + pageController + "&version=1.6&language=" + iso_user);
 		var d = new $.Deferred();
 		$.ajax( {
 			url: "//help.prestashop.com/api/?request=" + request,
 			jsonp:"callback",
 			dataType:"jsonp",
 			success: function(data) {
-				$('#help-container').html(data);
-				d.resolve();
+				if (isCleanHtml(data))
+				{
+					$('#help-container').html(data);
+					d.resolve();
+				}
 			}
 		});
 		return d.promise();
@@ -111,6 +123,7 @@ $(function() {
 		$('#help-container').html('');
 		//@todo: track event
 		getHelp(target)
+		.then(iconCloseHelp)
 		.then(initToc)
 		.then(initNavigation)
 		.then(initSearch)
@@ -128,7 +141,8 @@ $(function() {
 			dataType: "jsonp",
 			success: function(data) {
 				for (var i = 0 ; i < data.page.results.length ; i++){
-					$("#help-container #main-nav").append('<a href="//help.prestashop.com/' + data.page.results[i].id + '?version=1.6" data-target="' + data.page.results[i].id + '">' + data.page.results[i].title + '</a>');
+					if (isCleanHtml(data.page.results[i].id + data.page.results[i].title))
+						$("#help-container #main-nav").append('<a href="//help.prestashop.com/' + data.page.results[i].id + '?version=1.6" data-target="' + data.page.results[i].id + '">' + data.page.results[i].title + '</a>');
 				}
 				$("#help-container #main-nav a").on('click',function(e){
 					e.preventDefault();
@@ -207,6 +221,14 @@ $(function() {
 				var target = mapping[href][0];
 				pushContent(target);
 			});
+			$( "#help-container a[href^='/pages/viewpage.action?pageId=']" ).on('click', function(e){
+				e.preventDefault();
+				var pageId = $(this).attr('href').match(/\d+$/);
+				if (pageId) {
+					pushContent(pageId[0]);
+				}
+			});
+
 			// rewrite url ? -> "//help.prestashop.com/" + mapping[href][0] + '?version=1.6&language=' + mapping[href][2];
 
 			//home link
@@ -225,7 +247,6 @@ $(function() {
 
 	//search
 	function initSearch() {
-		//console.log('initSearch');
 		//replace tag from confluence search api
 		function strongify(str) {
 			return str.replace(/@@@hl@@@/g, '<strong>').replace(/@@@endhl@@@/g, '</strong>');
@@ -244,8 +265,10 @@ $(function() {
 						$("#search-results").addClass('hide');
 					}
 					for (var i = 0 ; i < data.results.length ; i++) {
-						$("#search-results").removeClass('hide')
-						.append( '<div class="result-item"><i class="fa fa-file-o"></i> <a href="//help.prestashop.com/' + data.results[i].id + '?version=1.6" data-target="' + data.results[i].id + '">' + strongify(data.results[i].title) + '</a><p>' + strongify(data.results[i].bodyTextHighlights) + '</p></div>');
+						if (isCleanHtml(data.results[i].id + data.results[i].title + data.results[i].bodyTextHighlights)) {
+							$("#search-results").removeClass('hide')
+							.append( '<div class="result-item"><i class="fa fa-file-o"></i> <a href="//help.prestashop.com/' + data.results[i].id + '?version=1.6" data-target="' + data.results[i].id + '">' + strongify(data.results[i].title) + '</a><p>' + strongify(data.results[i].bodyTextHighlights) + '</p></div>');
+						}
 					}
 					$("#search-results a").on('click',function(e) {
 						e.preventDefault();
@@ -268,49 +291,52 @@ $(function() {
 
 	//feedback
 	function initFeedback() {
-		//console.log('initFeedback');
 		var arr_feedback = {
-			pageID: help_class_name,
-			helpfulRate: null,
-			lowRatingReason: null,
+			controller: help_class_name,
+			language: iso_user,
+			helpful: null,
+			reason: null,
 			comment: null
 		};
 		$('#help-container .helpful-labels li').on('click', function(){
+			var percentageMap = {0:'Not at all', 25:'Not very', 50:'Somewhat', 75:'Very', 100:'Extremly'};
 			var percentage = parseInt($(this).data('percentage'));
-			arr_feedback.helpfulRate = percentage;
+			arr_feedback.helpful = percentageMap[percentage];
 			$('#help-container .slider-cursor').removeClass('hide');
 			$('#help-container .helpful-labels li').removeClass('active');
 			$('#help-container .slider-cursor').css('left',percentage+'%');
 			$('#help-container .helpful-labels li').addClass('disabled').off();
 			$(this).removeClass('disabled').addClass('active');
-			if ( percentage <= 25) {
+			if (percentage <= 25) {
 				$('#help-container .feedback-reason').show();
-			} else if ( percentage > 25) {
+			} else if (percentage > 25) {
 				submitFeedback(arr_feedback);
 			}
 		});
 		$('#help-container .feedback-reason .radio label').on('click', function() {
-			arr_feedback.lowRatingReason = $('input[name=lowrating-reason]:checked').val();
+			var reasonMap = {1:'Not related', 2:'Too complicated', 3:'Too much', 4:'Incorrect', 5:'Unclear', 6:'Incomplete'};
+			arr_feedback.reason = reasonMap[$('input[name=lowrating-reason]:checked').val()];
 		});
-		$('#help-container .feedback-submit').on('click', function() {
+		$('#help-container .feedback-submit').on('click', function(e) {
+			e.preventDefault();
 			arr_feedback.comment = $('textarea[name=feedback-detail]').val();
 			submitFeedback(arr_feedback);
 		});
 	}
 
 	function submitFeedback(arr_feedback) {
-
-		var feedback = '';
-		// var keys = arr_feedback.keys();
-
-		// for (var key in obj) {
-		// 	feedback += keys[i] + '=' + arr_feedback[i];
-		// };
-
+		var feedback = '?';
+		var keys = Object.keys(arr_feedback);
+		for (var i = 0; i < keys.length; i++) {
+			if (i > 0){
+				feedback += '&';
+			}
+			feedback += keys[i] + '=' + arr_feedback[keys[i]];
+		}
 		$.ajax( {
-			url: "//help.prestashop.com/api/feedback/?" + feedback,
+			url: "//help.prestashop.com/api/feedback/" + feedback,
+			dataType: 'jsonp',
 			jsonp: "callback",
-			datatype: 'jsonp',
 			success: function(){
 				$('#help-container #helpful-feedback').hide();
 				$('#help-container .thanks').removeClass('hide');

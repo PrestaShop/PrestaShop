@@ -117,6 +117,14 @@ class AdminPreferencesControllerCore extends AdminController
 					'type' => 'bool',
 					'default' => '0'
 				),
+				'PS_USE_HTMLPURIFIER' => array(
+					'title' => $this->l('Use HTMLPurifier Library'),
+					'desc' => $this->l('Clean the HTML content on text fields. We recommend that you leave this option enabled.'),
+					'validation' => 'isBool',
+					'cast' => 'intval',
+					'type' => 'bool',
+					'default' => '0'
+				),
 				'PS_PRICE_ROUND_MODE' => array(
 					'title' => $this->l('Round mode'),
 					'desc' => $this->l('You can choose how to round prices: always round up, always round down or classic rounding (up if > .5, down if < .5).'),
@@ -135,7 +143,7 @@ class AdminPreferencesControllerCore extends AdminController
 				),
 				'PS_DISPLAY_BEST_SELLERS' => array(
 					'title' => $this->l('Display best sellers'),
-					'desc' => $this->l('Enable best sellers page on your Front Office even when it\'s respective module is disabled.'),
+					'desc' => $this->l('Enable best sellers page on your Front Office even when its respective module is disabled.'),
 					'validation' => 'isBool',
 					'cast' => 'intval',
 					'type' => 'bool'

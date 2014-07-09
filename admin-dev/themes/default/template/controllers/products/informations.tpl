@@ -105,42 +105,37 @@
 			{$bullet_common_field} {l s='Type'}
 		</label>
 		<div class="col-lg-9">
-			<div class="form-group">
-				<div class="radio">
-					<label for="simple_product">
-						<input type="radio" name="type_product" id="simple_product" value="{Product::PTYPE_SIMPLE}" {if $product_type == Product::PTYPE_SIMPLE}checked="checked"{/if} />
-						{l s='Standard product'}
-					</label>
-				</div>
-				<div class="radio">
-					<label for="pack_product">
-						<input type="radio" name="type_product" {if $is_in_pack}disabled="disabled"{/if} id="pack_product" value="{Product::PTYPE_PACK}" {if $product_type == Product::PTYPE_PACK}checked="checked"{/if} />
-						{l s='Pack of existing products'}
-					</label>
-				</div>
-				<div class="radio">
-					<label for="virtual_product">
-						<input type="radio" name="type_product" id="virtual_product" {if $is_in_pack}disabled="disabled"{/if} value="{Product::PTYPE_VIRTUAL}" {if $product_type == Product::PTYPE_VIRTUAL}checked="checked"{/if} />
-						{l s='Virtual product (services, booking, downloadable products, etc.)'}
-					</label>
-				</div>
+			<div class="radio">
+				<label for="simple_product">
+					<input type="radio" name="type_product" id="simple_product" value="{Product::PTYPE_SIMPLE}" {if $product_type == Product::PTYPE_SIMPLE}checked="checked"{/if} >
+					{l s='Standard product'}</label>
 			</div>
+			<div class="radio">
+				<label for="pack_product">
+					<input type="radio" name="type_product" {if $is_in_pack}disabled="disabled"{/if} id="pack_product" value="{Product::PTYPE_PACK}" {if $product_type == Product::PTYPE_PACK}checked="checked"{/if} > {l s='Pack of existing products'}</label>
+			</div>
+			<div class="radio">
+				<label for="virtual_product">
+					<input type="radio" name="type_product" id="virtual_product" {if $is_in_pack}disabled="disabled"{/if} value="{Product::PTYPE_VIRTUAL}" {if $product_type == Product::PTYPE_VIRTUAL}checked="checked"{/if} >
+					{l s='Virtual product (services, booking, downloadable products, etc.)'}</label>
+			</div>
+
 			<div class="row">
 				<div id="warn_virtual_combinations" class="alert alert-warning" style="display:none">{l s='You cannot use combinations with a virtual product.'}</div>
 				<div id="warn_pack_combinations" class="alert alert-warning" style="display:none">{l s='You cannot use combinations with a pack.'}</div>
 			</div>
+
 		</div>
 	</div>
 
 	<div id="product-pack-container" {if $product_type != Product::PTYPE_PACK}style="display:none"{/if}></div>
 
-	<hr>
+	<hr />
 
 	<div class="form-group">
-		<label class="control-label col-lg-3 required" for="name_{$id_lang}">
-			{include file="controllers/products/multishop/checkbox.tpl" field="name" type="default" multilang="true"}
-			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='The public name for this product.'} {l s='Invalid characters:'} &lt;&gt;;=#{}">
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="name" type="default" multilang="true"}</span></div>
+		<label class="control-label col-lg-2 required" for="name_{$id_lang}">
+			<span class="label-tooltip" data-toggle="tooltip" title="{l s='The public name for this product.'} {l s='Invalid characters:'} &lt;&gt;;=#{}">
 				{l s='Name'}
 			</span>
 		</label>
@@ -187,16 +182,16 @@
 			</span>
 		</label>
 		<div class="col-lg-3">
-			<input maxlength="12" type="text" id="upc" name="upc" value="{$product->upc|escape:html:'UTF-8'}" />
+			<input maxlength="12" type="text" id="upc" name="upc" value="{$product->upc|escape:'html':'UTF-8'}" />
 		</div>
 	</div>
 
 	<hr/>
 
 	{* status informations *}
-	<div class="form-group">		
-		<label class="control-label col-lg-3">
-			{include file="controllers/products/multishop/checkbox.tpl" field="active" type="radio" onclick=""}
+	<div class="form-group">
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="active" type="radio" onclick=""}</span></div>
+		<label class="control-label col-lg-2">
 			{l s='Enabled'}
 		</label>
 		<div class="col-lg-9">
@@ -214,9 +209,9 @@
 		</div>
 	</div>
 
-	<div class="form-group redirect_product_options" style="display:none">		
-		<label class="control-label col-lg-3" for="redirect_type">
-			{include file="controllers/products/multishop/checkbox.tpl" field="redirect_type" type="radio" onclick=""}
+	<div class="form-group redirect_product_options" style="display:none">
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="redirect_type" type="radio" onclick=""}</span></div>
+		<label class="control-label col-lg-2" for="redirect_type">
 			{l s='Redirect when disabled'}
 		</label>
 		<div class="col-lg-5">
@@ -237,9 +232,9 @@
 		</div>
 	</div>
 
-	<div class="form-group redirect_product_options redirect_product_options_product_choise" style="display:none">		
-		<label class="control-label col-lg-3" for="related_product_autocomplete_input">
-			{include file="controllers/products/multishop/checkbox.tpl" field="id_product_redirected" type="radio" onclick=""}
+	<div class="form-group redirect_product_options redirect_product_options_product_choise" style="display:none">	
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="id_product_redirected" type="radio" onclick=""}</span></div>	
+		<label class="control-label col-lg-2" for="related_product_autocomplete_input">
 			{l s='Related product:'}
 		</label>
 		<div class="col-lg-7">
@@ -263,13 +258,13 @@
 		<script>
 			var no_related_product = '{l s='No related product'}';
 			var id_product_redirected = {$product->id_product_redirected|intval};
-			var product_name_redirected = '{$product_name_redirected|escape:html:'UTF-8'}';
+			var product_name_redirected = '{$product_name_redirected|escape:'html':'UTF-8'}';
 		</script>
 	</div>
 
-	<div class="form-group">		
-		<label class="control-label col-lg-3" for="visibility">
-			{include file="controllers/products/multishop/checkbox.tpl" field="visibility" type="default"}
+	<div class="form-group">
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="visibility" type="default"}</span></div>		
+		<label class="control-label col-lg-2" for="visibility">
 			{l s='Visibility'}
 		</label>
 		<div class="col-lg-3">
@@ -285,33 +280,39 @@
 	<div id="product_options" class="form-group">
 		<div class="col-lg-12">
 			<div class="form-group">
-				<label class="control-label col-lg-3" for="available_for_order">
-					{if isset($display_multishop_checkboxes) && $display_multishop_checkboxes}
-						{include file="controllers/products/multishop/checkbox.tpl" only_checkbox="true" field="available_for_order" type="default"}
-						{include file="controllers/products/multishop/checkbox.tpl" only_checkbox="true" field="show_price" type="show_price"}
-						{include file="controllers/products/multishop/checkbox.tpl" only_checkbox="true" field="online_only" type="default"}
-					{/if}
+				<div class="col-lg-1">
+					<span class="pull-right">
+						{if isset($display_multishop_checkboxes) && $display_multishop_checkboxes}
+							{include file="controllers/products/multishop/checkbox.tpl" only_checkbox="true" field="available_for_order" type="default"}
+							{include file="controllers/products/multishop/checkbox.tpl" only_checkbox="true" field="show_price" type="show_price"}
+							{include file="controllers/products/multishop/checkbox.tpl" only_checkbox="true" field="online_only" type="default"}
+						{/if}
+					</span>
+				</div>	
+				<label class="control-label col-lg-2" for="available_for_order">
 					{l s='Options'}
 				</label>
-				<div class="col-lg-5">
-					<p class="checkbox">
-						<input type="checkbox" name="available_for_order" id="available_for_order" value="1" {if $product->available_for_order}checked="checked"{/if}  />
-						<label for="available_for_order">{l s='Available for order'}</label>
-					</p>
-					<p class="checkbox">	
-						<input type="checkbox" name="show_price" id="show_price" value="1" {if $product->show_price}checked="checked"{/if} {if $product->available_for_order}disabled="disabled"{/if}/>
-						<label for="show_price">{l s='Show price'}</label>
-					</p>
-					<p class="checkbox">
-						<input type="checkbox" name="online_only" id="online_only" value="1" {if $product->online_only}checked="checked"{/if} />
-						<label for="online_only">{l s='Online only (not sold in your retail store)'}</label>
-					</p>
+				<div class="col-lg-9">
+					<div class="checkbox">
+						<label for="available_for_order">
+							<input type="checkbox" name="available_for_order" id="available_for_order" value="1" {if $product->available_for_order}checked="checked"{/if} >
+							{l s='Available for order'}</label>
+					</div>
+					<div class="checkbox">
+						<label for="show_price">
+							<input type="checkbox" name="show_price" id="show_price" value="1" {if $product->show_price}checked="checked"{/if} {if $product->available_for_order}disabled="disabled"{/if} >
+							{l s='Show price'}</label>
+					</div>
+					<div class="checkbox">
+						<label for="online_only">
+							<input type="checkbox" name="online_only" id="online_only" value="1" {if $product->online_only}checked="checked"{/if} >
+							{l s='Online only (not sold in your retail store)'}</label>
+					</div>
 				</div>
 			</div>
-
-			<div class="form-group">				
-				<label class="control-label col-lg-3" for="condition">
-					{include file="controllers/products/multishop/checkbox.tpl" field="condition" type="default"}
+			<div class="form-group">
+				<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="condition" type="default"}</span></div>				
+				<label class="control-label col-lg-2" for="condition">
 					{l s='Condition'}
 				</label>
 				<div class="col-lg-3">
@@ -324,14 +325,11 @@
 			</div>
 		</div>
 	</div>
-
 	<hr/>
-
 	<div class="form-group">
-		<label class="control-label col-lg-3" for="description_short_{$id_lang}">
-			{include file="controllers/products/multishop/checkbox.tpl" field="description_short" type="tinymce" multilang="true"}
-			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='Appears in the product list(s), and at the top of the product page.'}">
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="description_short" type="tinymce" multilang="true"}</span></div>
+		<label class="control-label col-lg-2" for="description_short_{$id_lang}">
+			<span class="label-tooltip" data-toggle="tooltip" title="{l s='Appears in the product list(s), and at the top of the product page.'}">
 				{l s='Short description'}
 			</span>
 		</label>
@@ -345,10 +343,9 @@
 				max=$PS_PRODUCT_SHORT_DESC_LIMIT}
 		</div>
 	</div>
-
 	<div class="form-group">
-		<label class="control-label col-lg-3" for="description_{$id_lang}">
-			{include file="controllers/products/multishop/checkbox.tpl" field="description" type="tinymce" multilang="true"}
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="description" type="tinymce" multilang="true"}</span></div>
+		<label class="control-label col-lg-2" for="description_{$id_lang}">
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='Appears in the body of the product page.'}">
 				{l s='Description'}
@@ -362,7 +359,6 @@
 				input_value=$product->description}
 		</div>
 	</div>
-
 	{if $images}
 	<div class="form-group">
 		<div class="col-lg-9 col-lg-offset-3">
@@ -372,7 +368,6 @@
 			</div>
 		</div>
 	</div>
-
 	<div id="createImageDescription" class="panel" style="display:none">
 		<div class="form-group">
 			<label class="control-label col-lg-3" for="smallImage_0">{l s='Select your image'}</label>
@@ -482,7 +477,7 @@
 		</div>
 	</div>
 	<div class="panel-footer">
-		<a href="{$link->getAdminLink('AdminProducts')}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
+		<a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
 		<button type="submit" name="submitAddproduct" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save'}</button>
 		<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
 	</div>

@@ -245,7 +245,7 @@ class HelperFormCore extends Helper
 		foreach ($this->fields_form as $fieldset)
 			if (isset($fieldset['form']['input']))
 				foreach ($fieldset['form']['input'] as $input)
-					if (array_key_exists('required', $input) && $input['required'] && $input['type'] != 'radio')
+					if (is_array($input) && array_key_exists('required', $input) && $input['required'] && $input['type'] != 'radio')
 						return true;
 
 		return false;

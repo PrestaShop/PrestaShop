@@ -47,7 +47,7 @@
 				</ul>
 			</div>
 			<hr />
-			<form id="preview_import" action="{$current}&amp;token={$token}" method="post" enctype="multipart/form-data" class="form-horizontal">
+			<form id="preview_import" action="{$current|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}" method="post" enctype="multipart/form-data" class="form-horizontal">
 				<div class="form-group">
 					<label for="entity" class="control-label col-lg-4">{l s='What kind of entity would you like to import?'} </label>
 					<div class="col-lg-8">
@@ -73,7 +73,7 @@
 				<div class="form-group" id="csv_file_uploader">
 					<label for="file" class="control-label col-lg-4">{l s='Select a CSV file to import'}</label>
 					<div class="col-lg-8">
-						<input id="file" type="file" name="file" data-url="{$current}&amp;token={$token}&amp;ajax=1&amp;action=uploadCsv" class="hide" />
+						<input id="file" type="file" name="file" data-url="{$current|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;ajax=1&amp;action=uploadCsv" class="hide" />
 						<button class="ladda-button btn btn-default" data-style="expand-right" data-size="s" type="button" id="file-add-button">
 							<i class="icon-folder-open"></i>
 							{l s='Upload a file'}
@@ -145,14 +145,14 @@
 										</button>
 										<ul class="dropdown-menu" role="menu">
 											<li>
-												<a href="{$current}&amp;token={$token}&amp;csvfilename={$filename|@urlencode}" target="_blank">
+												<a href="{$current|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;csvfilename={$filename|@urlencode}" target="_blank">
 													<i class="icon-download"></i>
 													{l s='Download'}
 												</a>
 											</li>
 											<li class="divider"></li>
 											<li>
-												<a href="{$current}&amp;token={$token}&amp;csvfilename={$filename|@urlencode}&amp;delete=1">
+												<a href="{$current|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;csvfilename={$filename|@urlencode}&amp;delete=1">
 													<i class="icon-trash"></i>
 													{l s='Delete'}
 												</a>
@@ -223,7 +223,7 @@
 						<div class="help-block">{l s='e.g. '} Blouse; red.jpg, blue.jpg, green.jpg; 129.90</div>
 					</div>
 				</div>
-				<hr>
+				<hr />
 				<div class="form-group">
 					<label for="truncate" class="control-label col-lg-4">{l s='Delete all'} <span id="entitie">{l s='categories'}</span> {l s='before import'} </label>
 					<div class="col-lg-8">
@@ -240,7 +240,8 @@
 				<div class="form-group" style="display: none">
 					<label for="match_ref" class="control-label col-lg-4">
 						<span data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='If enabled, the product\'s reference number MUST be unique!'}">
-						{l s='Use product reference as key'}
+							{l s='Use product reference as key'}
+						</span>
 					</label>
 					<div class="col-lg-8">
 						<label class="switch-light prestashop-switch fixed-width-lg">
@@ -274,7 +275,7 @@
 					</label>
 					<div class="col-lg-8">
 						<label class="switch-light prestashop-switch fixed-width-lg">
-							<input  id="forceIDs"name="forceIDs" type="checkbox"/>
+							<input  id="forceIDs" name="forceIDs" type="checkbox"/>
 							<span>
 								<span>{l s='Yes'}</span>
 								<span>{l s='No'}</span>
@@ -419,8 +420,8 @@
 							row.removeClass('hide');
 							row.find('td:first').html(data.result.file.filename);
 							row.find('button.csv-use-btn').data('filename', data.result.file.filename);
-							row.find('a.csv-download-link').attr('href','{$current}&token={$token}&csvfilename='+filename);
-							row.find('a.csv-delete-link').attr('href','{$current}&token={$token}&csvfilename='+filename+'&delete=1');
+							row.find('a.csv-download-link').attr('href','{$current|escape:'html':'UTF-8'}&token={$token|escape:'html':'UTF-8'}&csvfilename='+filename);
+							row.find('a.csv-delete-link').attr('href','{$current|escape:'html':'UTF-8'}&token={$token|escape:'html':'UTF-8'}&csvfilename='+filename+'&delete=1');
 							csv_select(data.result.file.filename);
 							var items = $('#csv_uploaded_history tr').length -1;
 							$('.csv-history-nb').html(items);

@@ -1,3 +1,4 @@
+- 123monsite-regis
 - adonis karavokyros
 - Adonis Karavokyros
 - Adrien
@@ -9,6 +10,7 @@
 - Alexander Otchenashev
 - alexey-svistunov
 - Alexey Svistunov
+- Alfonso Jiménez
 - anat
 - Andrew
 - aNiassy
@@ -17,9 +19,11 @@
 - Arnaud Lemercier
 - Axome
 - Balestrino
+- bellini13
 - Benjamin PONGY
 - BigZ
 - bLeveque
+- BluTiGeS
 - bMancone
 - Bruno Leveque
 - bumbu
@@ -30,6 +34,7 @@
 - Captain-FLAM
 - ccauw
 - cedricfontaine
+- cedricgeffroy
 - Cédric Mouleyre
 - Chen.Zhidong
 - Chris
@@ -49,6 +54,7 @@
 - Danoosh Mir
 - David Gasperoni
 - Davy Rolink
+- DevNet
 - Dh42
 - Dimitrios Karvounaris
 - Dinis Lage
@@ -56,6 +62,7 @@
 - dlage
 - dMetzger
 - (d)oekia
+- doekia
 - DOEO
 - Dragan Skrbic
 - dreammeup
@@ -77,6 +84,7 @@
 - fchellypresta
 - Felipe Uribe
 - fetis
+- Florian Kwakkenbos
 - fram
 - Francois Gaillard
 - François Gaillard
@@ -103,8 +111,10 @@
 - hiousi
 - indesign47
 - inem0o
+- ITBpro.com
 - ivancasasempere
 - Jáchym Toušek
+- janisVincent
 - Javsmile
 - jBreux
 - J. Danse
@@ -116,9 +126,13 @@
 - Jérôme Nadaud
 - jessylenne
 - jmCollin
+- Joan Juvanteny
 - jObregon
+- Joep Hendrix
+- Jonadabe
 - Jonathan Danse
 - Jonathan SAHM
+- Jorge Vargas
 - joseantgv
 - Julien
 - julienbourdeau
@@ -157,9 +171,11 @@
 - Mikael Blotin
 - Mikko Hellsing
 - Milow
+- Mingsong Hu
 - minic studio
 - misthero
 - mMarinetti
+- M-Mommsen
 - montes
 - MustangZhong
 - natrim
@@ -167,6 +183,7 @@
 - nezenmoins
 - Nicolas Sorosac
 - Niklas Ekman
+- Niko Wicaksono
 - Nils-Helge Garli Hegvik
 - Nino Uzelac
 - nPellicari
@@ -174,6 +191,8 @@
 - oleacorner
 - Otto Nascarella
 - Patanock
+- Per Lejontand
+- peterept
 - Peter Schaeffer
 - PhpMadman
 - Pierre
@@ -201,6 +220,7 @@
 - romainberger
 - root
 - runningz
+- sadlyblue
 - sagaradonis
 - Samy Rabih
 - Sarah Lorenzini
@@ -209,6 +229,7 @@
 - Sébastien
 - Sébastien Bocahu
 - Seynaeve
+- shaffe-fr
 - Shagshag
 - Shipow
 - sjousse
@@ -226,8 +247,10 @@
 - tDidierjean
 - Thibaud Chauviere
 - thoma202
+- Thomas
 - Thomas Blanc
 - Thomas Nabord
+- Threef
 - timsit
 - TMMeilleur
 - Tomasz Slominski
@@ -247,6 +270,7 @@
 - Xavier
 - Xavier Borderie
 - Xavier POITAU
+- xKnut
 - yanngarras
 - Yoozio
 - zimmi1

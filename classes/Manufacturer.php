@@ -92,7 +92,7 @@ class ManufacturerCore extends ObjectModel
 			'link_rewrite' => array('getter' => 'getLink', 'setter' => false),
 		),
 		'associations' => array(
-			'addresses' => array('resource' => 'address', 'setter' => false, 'fields' => array(
+			'addresses' => array('resource' => 'addresses', 'setter' => false, 'fields' => array(
 				'id' => array('xlink_resource' => 'addresses'),
 			)),
 		),
@@ -160,7 +160,7 @@ class ManufacturerCore extends ObjectModel
 	  * @param bool $all_group
 	  * @return array Manufacturers
 	  */
-	public static function getManufacturers($get_nb_products = false, $id_lang = 0, $active = true, $p = false, $n = false, $all_group = false)
+	public static function getManufacturers($get_nb_products = false, $id_lang = 0, $active = true, $p = false, $n = false, $all_group = false, $group_by = false)
 	{
 		if (!$id_lang)
 			$id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
@@ -172,7 +172,8 @@ class ManufacturerCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'manufacturer` m
 		'.Shop::addSqlAssociation('manufacturer', 'm').'
 		INNER JOIN `'._DB_PREFIX_.'manufacturer_lang` ml ON (m.`id_manufacturer` = ml.`id_manufacturer` AND ml.`id_lang` = '.(int)$id_lang.')
-		'.($active ? 'WHERE m.`active` = 1' : '').'
+		'.($active ? 'WHERE m.`active` = 1' : '')
+		.($group_by ? ' GROUP BY m.`id_manufacturer`' : '' ).'
 		ORDER BY m.`name` ASC
 		'.($p ? ' LIMIT '.(((int)$p - 1) * (int)$n).','.(int)$n : ''));
 		if ($manufacturers === false)

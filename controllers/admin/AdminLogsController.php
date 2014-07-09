@@ -108,7 +108,7 @@ class AdminLogsControllerCore extends AdminController
 		$this->toolbar_btn['delete'] = array(
 			'short' => 'Erase',
 			'desc' => $this->l('Erase all'),
-			'js' => 'if (confirm(\''.$this->l('Are you sure?').'\')) document.location = \''.$this->context->link->getAdminLink('AdminLogs').'&amp;token='.$this->token.'&deletelog=1\';'
+			'js' => 'if (confirm(\''.$this->l('Are you sure?').'\')) document.location = \''.Tools::safeOutput($this->context->link->getAdminLink('AdminLogs')).'&amp;token='.$this->token.'&amp;deletelog=1\';'
 		);
 		unset($this->toolbar_btn['new']);
 	}

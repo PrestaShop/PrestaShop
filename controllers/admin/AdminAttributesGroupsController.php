@@ -435,7 +435,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		
 		if (count($this->errors))
 			$this->setTypeAttribute();
-			
+		
+		if (Tools::isSubmit('updateattribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute') || Tools::isSubmit('submitBulkdeleteattribute'))
+			Tools::clearColorListCache();
+
 		return $object;
 	}
 
@@ -745,6 +748,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				$_POST['id_parent'] = 0;
 				$this->processSave($this->token);
 			}
+
+			if (Tools::getValue('id_attribute') && Tools::isSubmit('submitAddattribute') && Tools::getValue('color') && !Tools::getValue('filename'))
+				if (file_exists(_PS_IMG_DIR_.$this->fieldImageSettings['dir'].'/'.(int)Tools::getValue('id_attribute').'.jpg'))
+					unlink(_PS_IMG_DIR_.$this->fieldImageSettings['dir'].'/'.(int)Tools::getValue('id_attribute').'.jpg');
 		}
 		else
 		{

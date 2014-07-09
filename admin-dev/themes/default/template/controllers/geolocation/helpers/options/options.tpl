@@ -28,12 +28,12 @@
 	{if $field['type'] == 'checkbox_table'}
 		{*TODO : overflow*}
 		<div class="well margin-form" style="height: 300px; overflow-y: auto;">
-			<table class="table" cellspacing="0">
+			<table class="table" style="border-spacing : 0; border-collapse : collapse;">
 				<thead>
 					<tr>
 						<th><input type="checkbox" name="checkAll" onclick="checkDelBoxes(this.form, 'countries[]', this.checked)" /></th>
 						<th>{l s='Name'}</th>
-					<tr>
+					</tr>
 				</thead>
 				<tbody>
 					{foreach $field['list'] as $country}

@@ -41,6 +41,7 @@ class MediaCore
 		'ui.dialog' => array('fileName' => 'jquery.ui.dialog.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.position','ui.button'), 'theme' => true),
 		'ui.menu' => array('fileName' => 'jquery.ui.menu.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.position'), 'theme' => true),
 		'ui.slider' => array('fileName' => 'jquery.ui.slider.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.mouse'), 'theme' => true),
+		'ui.spinner' => array('fileName' => 'jquery.ui.spinner.min.js', 'dependencies' => array('ui.core', 'ui.widget', 'ui.button'), 'theme' => true),
 		'ui.tabs' => array('fileName' => 'jquery.ui.tabs.min.js', 'dependencies' => array('ui.core', 'ui.widget'), 'theme' => true),
 		'ui.datepicker' => array('fileName' => 'jquery.ui.datepicker.min.js', 'dependencies' => array('ui.core'), 'theme' => true),
 		'ui.progressbar' => array('fileName' => 'jquery.ui.progressbar.min.js', 'dependencies' => array('ui.core', 'ui.widget'), 'theme' => true),
@@ -160,10 +161,10 @@ class MediaCore
 			} catch (Exception $e) {
 				if (_PS_MODE_DEV_)
 					echo $e->getMessage();
-				return $js_content;
+				return ';'.trim($js_content, ';').';';
 			}
 		}
-		return $js_content;
+		return ';'.trim($js_content, ';').';';
 	}
 
 	public static function minifyCSS($css_content, $fileuri = false, &$import_url = array())
@@ -473,6 +474,10 @@ class MediaCore
 			}
 
 			$infos['path'] = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, '/', $url_data['path']);
+
+			if (!@filemtime($infos['path']))
+				$infos['path'] = _PS_CORE_DIR_.Tools::str_replace_once(__PS_BASE_URI__, '/', $url_data['path']);
+
 			$css_files_by_media[$media]['files'][] = $infos;
 			if (!array_key_exists('date', $css_files_by_media[$media]))
 				$css_files_by_media[$media]['date'] = 0;
@@ -593,6 +598,10 @@ class MediaCore
 				$infos['uri'] = $filename;
 				$url_data = parse_url($filename);
 				$infos['path'] = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, '/', $url_data['path']);
+
+				if (!@filemtime($info['path']))
+					$infos['path'] = _PS_CORE_DIR_.Tools::str_replace_once(__PS_BASE_URI__, '/', $url_data['path']);
+
 				$js_files_infos[] = $infos;
 
 				$js_files_date = max(
@@ -641,7 +650,11 @@ class MediaCore
 		}
 
 		// rebuild the original js_files array
-		$url = str_replace(_PS_ROOT_DIR_.'/', __PS_BASE_URI__, $compressed_js_path);
+		if (strpos($compressed_js_path, _PS_ROOT_DIR_) !== false)
+			$url = str_replace(_PS_ROOT_DIR_.'/', __PS_BASE_URI__, $compressed_js_path);
+
+		if (strpos($compressed_js_path, _PS_CORE_DIR_) !== false)
+			$url = str_replace(_PS_CORE_DIR_.'/', __PS_BASE_URI__, $compressed_js_path);
 
 		return array_merge(array($protocol_link.Tools::getMediaServer($url).$url), $js_external_files);
 	}
@@ -711,7 +724,7 @@ class MediaCore
 			foreach ($scripts as $script)
 				if ($src = $script->getAttribute('src'))
 				{
-			  		if (substr(src, 0, 2) == '//')
+			  		if (substr($src, 0, 2) == '//')
 						$src = Tools::getCurrentUrlProtocolPrefix().substr($src, 2);
 
 					$patterns = array(

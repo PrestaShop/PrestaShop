@@ -1465,7 +1465,7 @@ abstract class AdminTabCore
 
 		if ($this->shopLinkType)
 		{
-			echo '<th style="width: 80px">'.$this->l(($this->shopLinkType == 'shop') ? 'Shop' : 'Group shop').'</th>';
+			echo '<th style="width: 80px">'.$this->l(($this->shopLinkType == 'shop') ? 'Shop' : 'Shop group').'</th>';
 		}
 
 		/* Check if object can be modified, deleted or detailed */
@@ -2313,10 +2313,10 @@ abstract class AdminTabCore
 	protected function warnDomainName()
 	{
 		if ($_SERVER['HTTP_HOST'] != Configuration::get('PS_SHOP_DOMAIN') && $_SERVER['HTTP_HOST'] != Configuration::get('PS_SHOP_DOMAIN_SSL'))
-			$this->displayWarning($this->l('Your are currently connected with the following domain name:').' <span style="color: #CC0000;">'.$_SERVER['HTTP_HOST'].'</span><br />'.
-			$this->l('This one is different from the main shop domain name set in "Preferences > SEO & URLs":').' <span style="color: #CC0000;">'.Configuration::get('PS_SHOP_DOMAIN').'</span><br />
+			$this->displayWarning($this->l('You are currently connected with the following domain name:').' <span style="color: #CC0000;">'.$_SERVER['HTTP_HOST'].'</span><br />'.
+			$this->l('This one is different from the main shop\'s domain name set in "Preferences > SEO & URLs":').' <span style="color: #CC0000;">'.Configuration::get('PS_SHOP_DOMAIN').'</span><br />
 			<a href="index.php?tab=AdminMeta&token='.Tools::getAdminTokenLite('AdminMeta').'#SEO%20%26%20URLs">'.
-			$this->l('Click here if you want to modify the main shop domain name').'</a>');
+			$this->l('Click here if you want to modify the main shop\'s domain name').'</a>');
 	}
 
 	protected function displayAssoShop()
@@ -2325,8 +2325,8 @@ abstract class AdminTabCore
 			return;
 
 		$assos = array();
-		$sql = 'SELECT id_shop, `'.pSQL($this->identifier).'`
-				FROM `'._DB_PREFIX_.pSQL($this->table).'_shop`';
+		$sql = 'SELECT id_shop, `'.bqSQL($this->identifier).'`
+				FROM `'._DB_PREFIX_.bqSQL($this->table).'_shop`';
 		foreach (Db::getInstance()->executeS($sql) as $row)
 			$assos[$row['id_shop']][] = $row[$this->identifier];
 

@@ -25,7 +25,7 @@
 
 {* Generate HTML code for printing OrderSlip Icon with link *}
 
-<a class="btn btn-default" target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&submitAction=generateOrderSlipPDF&id_order_slip={$order_slip->id}">
+<a class="btn btn-default" target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateOrderSlipPDF&amp;id_order_slip={$order_slip->id|intval}">
 	<i class="icon-file-text"></i>
 	{l s='Download credit slip'}
 </a>

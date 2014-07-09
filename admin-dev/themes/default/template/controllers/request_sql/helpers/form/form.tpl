@@ -64,7 +64,7 @@
 				data: {
 					table: table,
 					controller: 'adminrequestsql',
-					token: '{$token}',
+					token: '{$token|escape:'html':'UTF-8'}',
 					action: 'addrequest_sql',
 					ajax: true
 				},

@@ -45,7 +45,7 @@
 	$(document).ready(function() {
 		$('#iso_code').keyup(function(e) {
 			e.preventDefault();
-			checkLangPack("{$token}");
+			checkLangPack("{$token|escape:'html':'UTF-8'}");
 		});
 	});
 

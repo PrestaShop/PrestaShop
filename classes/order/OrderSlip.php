@@ -83,7 +83,7 @@ class OrderSlipCore extends ObjectModel
 			'id_order' => array('xlink_resource'=> 'orders'),
 		),
 		'associations' => array(
-			'order_slip_details' => array('resource' => 'order_slip_detail', 'setter' => false, 'virtual_entity' => true,
+			'order_slip_details' => array('resource' => 'order_slip_details', 'setter' => false, 'virtual_entity' => true,
 				'fields' => array(
 					'id' =>  array(),
 					'id_order_detail' => array('required' => true),

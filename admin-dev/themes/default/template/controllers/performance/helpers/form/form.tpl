@@ -67,7 +67,6 @@
 				</div>
 			</div>
 			<div id="formMemcachedServer" style="display:none;">
-				<form action="{$current}&amp;token={$token}" method="post" class="form-horizontal">
 					<div class="form-group">
 						<label class="control-label col-lg-3">{l s='IP Address'} </label>
 						<div class="col-lg-9">
@@ -92,7 +91,6 @@
 							<input type="button" value="{l s='Test Server'}" id="testMemcachedServer" class="btn btn-default" />
 	                	</div>
 					</div>
-				</form>
 			</div>
 			{if $servers}
 			<div class="form-group">
@@ -114,7 +112,7 @@
 						<td>{$server.port}</td>
 						<td>{$server.weight}</td>
 						<td>
-							<a class="btn btn-default" href="{$current}&amp;token={$token}&amp;deleteMemcachedServer={$server.id_memcached_server}" onclick="if (!confirm('{l s='Do you really want to remove the server %s:%s' sprintf=[$server.ip, $server.port] js=1}')) return false;"><i class="icon-minus-sign-alt"></i> {l s='Remove'}</a>
+							<a class="btn btn-default" href="{$currentIndex|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;deleteMemcachedServer={$server.id_memcached_server}" onclick="if (!confirm('{l s='Do you really want to remove the server %s:%s' sprintf=[$server.ip, $server.port] js=1}')) return false;"><i class="icon-minus-sign-alt"></i> {l s='Remove'}</a>
 						</td>
 					</tr>
 				{/foreach}
@@ -178,7 +176,7 @@
 					data:
 					{
 						controller: 'adminperformance',
-						token: '{$token}',
+						token: '{$token|escape:'html':'UTF-8'}',
 						action: 'test_server',
 						sHost: host,
 						sPort: port,

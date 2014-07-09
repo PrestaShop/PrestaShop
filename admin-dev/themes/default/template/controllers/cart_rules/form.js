@@ -117,20 +117,20 @@ $('#product_restriction').click(function() {
 
 	if ($(this).prop('checked'))
 	{
-		$('#apply_discount_to_selection').removeAttr('disabled');
+		$('#apply_discount_to_selection').prop('disabled', false);
 		$('#apply_discount_to_selection_warning').hide();
 	}
 	else
 	{
-		$('#apply_discount_to_selection').attr('disabled', 'disabled');
+		$('#apply_discount_to_selection').prop('disabled', true);
 		$('#apply_discount_to_selection_warning').show();
 	}
 });
 
-$('#apply_discount_to_selection_shortcut').click(function() {
+$('#apply_discount_to_selection_shortcut').click(function(e) {
 	displayCartRuleTab('conditions');
 	$('#product_restriction').focus();
-	return false;
+	e.preventDefault();
 });
 
 function toggleApplyDiscount(percent, amount, apply_to)
@@ -158,10 +158,10 @@ function toggleApplyDiscount(percent, amount, apply_to)
 			toggleApplyDiscountTo();
 		$('#apply_discount_to_cheapest').hide();
 		$('*[for=apply_discount_to_cheapest]').hide();
-		$('#apply_discount_to_cheapest').removeAttr('checked');
+		$('#apply_discount_to_cheapest').prop('checked', false);
 		$('#apply_discount_to_selection').hide();
 		$('*[for=apply_discount_to_selection]').hide();
-		$('#apply_discount_to_selection').removeAttr('checked');
+		$('#apply_discount_to_selection').prop('checked', false);
 	}
 	else
 	{
@@ -170,7 +170,7 @@ function toggleApplyDiscount(percent, amount, apply_to)
 
 		if ($('#apply_discount_off').prop('checked'))
 		{
-			$('#apply_discount_to_product').removeProp('checked')
+			$('#apply_discount_to_product').prop('checked', false)
 			toggleApplyDiscountTo();
 		}
 	}
@@ -213,36 +213,54 @@ function toggleGiftProduct()
 	}
 }
 
-$('#apply_discount_percent').click(function() {toggleApplyDiscount(true, false, true);});
+$('#apply_discount_percent').click(function(){
+	toggleApplyDiscount(true, false, true);
+});
 if ($('#apply_discount_percent').prop('checked'))
 	toggleApplyDiscount(true, false, true);
 
-$('#apply_discount_amount').click(function() {toggleApplyDiscount(false, true, true);});
+$('#apply_discount_amount').click(function(){
+	toggleApplyDiscount(false, true, true);
+});
 if ($('#apply_discount_amount').prop('checked'))
 	toggleApplyDiscount(false, true, true);
 
-$('#apply_discount_off').click(function() {toggleApplyDiscount(false, false, false);});
+$('#apply_discount_off').click(function(){
+	toggleApplyDiscount(false, false, false);
+});
 if ($('#apply_discount_off').prop('checked'))
 	toggleApplyDiscount(false, false, false);
 
-$('#apply_discount_to_order').click(function() {toggleApplyDiscountTo();});
+$('#apply_discount_to_order').click(function(){
+	toggleApplyDiscountTo();}
+);
 if ($('#apply_discount_to_order').prop('checked'))
 	toggleApplyDiscountTo();
 	
-$('#apply_discount_to_product').click(function() {toggleApplyDiscountTo();});
+$('#apply_discount_to_product').click(function(){
+	toggleApplyDiscountTo();}
+);
 if ($('#apply_discount_to_product').prop('checked'))
 	toggleApplyDiscountTo();
 	
-$('#apply_discount_to_cheapest').click(function() {toggleApplyDiscountTo();});
+$('#apply_discount_to_cheapest').click(function(){
+	toggleApplyDiscountTo();}
+);
 if ($('#apply_discount_to_cheapest').prop('checked'))
 	toggleApplyDiscountTo();
 	
-$('#apply_discount_to_selection').click(function() {toggleApplyDiscountTo();});
+$('#apply_discount_to_selection').click(function(){
+	toggleApplyDiscountTo();}
+);
 if ($('#apply_discount_to_selection').prop('checked'))
 	toggleApplyDiscountTo();
 	
-$('#free_gift_on').click(function() {toggleGiftProduct();});
-$('#free_gift_off').click(function() {toggleGiftProduct();});
+$('#free_gift_on').click(function(){
+	toggleGiftProduct();}
+);
+$('#free_gift_off').click(function(){
+	toggleGiftProduct();}
+);
 toggleGiftProduct();
 
 // Main form submit
@@ -253,17 +271,17 @@ $('#cart_rule_form').submit(function() {
 	for (i in restrictions)
 	{
 		if ($('#' + restrictions[i] + '_select_1 option').length == 0)
-			$('#' + restrictions[i] + '_restriction').removeAttr('checked');
+			$('#' + restrictions[i] + '_restriction').prop('checked', false);
 		else
 		{
 			$('#' + restrictions[i] + '_select_2 option').each(function(i) {
-				$(this).attr('selected', true);
+				$(this).prop('selected', true);
 			});
 		}
 	}
 	
 	$('.product_rule_toselect option').each(function(i) {
-		$(this).attr('selected', true);
+		$(this).prop('selected', true);
 	});
 });
 	

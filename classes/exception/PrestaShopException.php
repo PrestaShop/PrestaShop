@@ -131,8 +131,8 @@ class PrestaShopExceptionCore extends Exception
 		echo '<div class="psArgs" id="psArgs_'.$id.'"><pre>';
 		foreach ($args as $arg => $value)
 		{
-			echo '<b>Argument ['.$arg."]</b>\n";
-			print_r($value);
+			echo '<b>Argument ['.Tools::safeOutput($arg)."]</b>\n";
+			echo Tools::safeOutput(print_r($value, true));
 			echo "\n";
 		}
 		echo '</pre>';

@@ -626,6 +626,7 @@ abstract class ModuleCore
 		if (Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module` WHERE `id_module` = '.(int)$this->id))
 		{
 			Cache::clean('Module::isInstalled'.$this->name);
+			Cache::clean('Module::getModuleIdByName_'.pSQL($this->name));
 			return true;
 		}
 		
@@ -883,7 +884,7 @@ abstract class ModuleCore
 		// Unregister module on hook by id
 		$sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module`
 			WHERE `id_module` = '.(int)$this->id.' AND `id_hook` = '.(int)$hook_id
-			.(($shop_list) ? ' AND `id_shop` IN('.implode(', ', $shop_list).')' : '');
+			.(($shop_list) ? ' AND `id_shop` IN('.implode(', ', array_map('intval', $shop_list)).')' : '');
 		$result = Db::getInstance()->execute($sql);
 
 		// Clean modules position
@@ -905,7 +906,7 @@ abstract class ModuleCore
 	{
 		$sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module_exceptions`
 			WHERE `id_module` = '.(int)$this->id.' AND `id_hook` = '.(int)$hook_id
-			.(($shop_list) ? ' AND `id_shop` IN('.implode(', ', $shop_list).')' : '');
+			.(($shop_list) ? ' AND `id_shop` IN('.implode(', ', array_map('intval', $shop_list)).')' : '');
 		return Db::getInstance()->execute($sql);
 	}
 
@@ -1814,7 +1815,7 @@ abstract class ModuleCore
 		$sql = 'SELECT `id_module`, `id_shop`
 			FROM `'._DB_PREFIX_.'hook_module`
 			WHERE `id_hook` = '.(int)$id_hook.'
-			'.((!is_null($shop_list) && $shop_list) ? ' AND `id_shop` IN('.implode(', ', $shop_list).')' : '').'
+			'.((!is_null($shop_list) && $shop_list) ? ' AND `id_shop` IN('.implode(', ', array_map('intval', $shop_list)).')' : '').'
 			ORDER BY `position`';
 		$results = Db::getInstance()->executeS($sql);
 		$position = array();
@@ -2420,11 +2421,11 @@ abstract class ModuleCore
 				
 			// Make a reflection of the override class and the module override class
 			$override_file = file($override_path);
-			eval(preg_replace(array('#^\s*<\?(?:php)?\s#', '#class\s+'.$classname.'\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'), array(' ', 'class '.$classname.'OverrideOriginal'.$uniq), implode('', $override_file)));
+			eval(preg_replace(array('#^\s*<\?(?:php)?#', '#class\s+'.$classname.'\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'), array(' ', 'class '.$classname.'OverrideOriginal'.$uniq), implode('', $override_file)));
 			$override_class = new ReflectionClass($classname.'OverrideOriginal'.$uniq);
 
 			$module_file = file($this->getLocalPath().'override'.DIRECTORY_SEPARATOR.$path);
-			eval(preg_replace(array('^\s*<\?(?:php)?\s#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array(' ', 'class '.$classname.'Override'.$uniq), implode('', $module_file)));
+			eval(preg_replace(array('#^\s*<\?(?:php)?#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array(' ', 'class '.$classname.'Override'.$uniq), implode('', $module_file)));
 			$module_class = new ReflectionClass($classname.'Override'.$uniq);
 
 			// Check if none of the methods already exists in the override class
@@ -2480,11 +2481,11 @@ abstract class ModuleCore
 			
 		// Make a reflection of the override class and the module override class
 		$override_file = file($override_path);
-		eval(preg_replace(array('#^\s*<\?(?:php)?\s#', '#class\s+'.$classname.'\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'), array(' ', 'class '.$classname.'OverrideOriginal_remove'.$uniq), implode('', $override_file)));
+		eval(preg_replace(array('#^\s*<\?(?:php)?#', '#class\s+'.$classname.'\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'), array(' ', 'class '.$classname.'OverrideOriginal_remove'.$uniq), implode('', $override_file)));
 		$override_class = new ReflectionClass($classname.'OverrideOriginal_remove'.$uniq);
 
 		$module_file = file($this->getLocalPath().'override/'.$path);
-		eval(preg_replace(array('#^\s*<\?(?:php)?\s#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array(' ', 'class '.$classname.'Override_remove'.$uniq), implode('', $module_file)));
+		eval(preg_replace(array('#^\s*<\?(?:php)?#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array(' ', 'class '.$classname.'Override_remove'.$uniq), implode('', $module_file)));
 		$module_class = new ReflectionClass($classname.'Override_remove'.$uniq);
 
 		// Remove methods from override file

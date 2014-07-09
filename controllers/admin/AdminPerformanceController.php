@@ -327,18 +327,18 @@ class AdminPerformanceControllerCore extends AdminController
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Move JavaScript at the end'),
+					'label' => $this->l('Move JavaScript to the end'),
 					'name' => 'PS_JS_DEFER',
 					'values' => array(
 						array(
 							'id' => 'PS_JS_DEFER_1',
 							'value' => 1,
-							'label' => $this->l('Move JavaScript at the end of the HTML document')
+							'label' => $this->l('Move JavaScript to the end of the HTML document')
 						),
 						array(
 							'id' => 'PS_JS_DEFER_0',
 							'value' => 0,
-							'label' => $this->l('Keep JavaScript in HTML as original')
+							'label' => $this->l('Keep JavaScript in HTML at its original position')
 						)
 					)
 				),
@@ -815,7 +815,7 @@ class AdminPerformanceControllerCore extends AdminController
 				$new_settings = $prev_settings = file_get_contents(_PS_ROOT_DIR_.'/config/settings.inc.php');
 				$cache_active = (bool)Tools::getValue('cache_active');
 				
-				if ($caching_system = Tools::getValue('caching_system'))
+				if ($caching_system = preg_replace('[^a-zA-Z0-9]', '', Tools::getValue('caching_system')))
 				{
 					$new_settings = preg_replace(
 						'/define\(\'_PS_CACHING_SYSTEM_\', \'([a-z0-9=\/+-_]*)\'\);/Ui',

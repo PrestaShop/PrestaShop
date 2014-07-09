@@ -25,7 +25,7 @@
 
 <div id="referrersContainer">
 	<div id="calendar">
-		<form action="{$current}&amp;token={$token}{if $action && $table}&amp;{$action}{$table}{/if}{if $identifier && $id}&amp;{$identifier}={$id}{/if}" method="post" id="calendar_form" name="calendar_form" class="form-horizontal">
+		<form action="{$current|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}{if $action && $table}&amp;{$action}{$table}{/if}{if $identifier && $id}&amp;{$identifier}={$id|escape:'html':'UTF-8'}{/if}" method="post" id="calendar_form" name="calendar_form" class="form-horizontal">
 			<input type="submit" name="submitDateDay" class="btn btn-default submitDateDay" value="{$translations.Day}" />
 			<input type="submit" name="submitDateMonth" class="btn btn-default submitDateMonth" value="{$translations.Month}" />
 			<input type="submit" name="submitDateYear" class="btn btn-default submitDateYear" value="{$translations.Year}" />

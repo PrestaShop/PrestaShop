@@ -167,8 +167,10 @@ class AdminThemesControllerCore extends AdminController
 				{
 					if (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml'))
 						$config_file = _PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml';
-					else
+					elseif ($theme->name == 'default-bootstrap')
 						$config_file = _PS_ROOT_DIR_.'/config/xml/themes/default.xml';
+					else
+						$config_file = false;
 
 					if ($config_file)
 					{
@@ -186,6 +188,13 @@ class AdminThemesControllerCore extends AdminController
 							if ($cur_theme['theme_name'] == 'default-bootstrap')
 								$cur_theme['tc'] = Module::isEnabled('themeconfigurator');
 						}
+					}
+					else
+					{
+						// If no xml we use data from database
+						$cur_theme['theme_id'] = $theme->id;
+						$cur_theme['theme_name'] = $theme->name;
+						$cur_theme['theme_directory'] = $theme->directory;
 					}
 				}
 				else
@@ -306,26 +315,33 @@ class AdminThemesControllerCore extends AdminController
 				'after_tabs' => array(
 					'cur_theme' => $cur_theme,
 				),
-				'submit' => array('title' => $this->l('Save'))
+				'submit' => array('title' => $this->l('Save')),
+				'buttons' => array(
+					'storeLink' => array(
+						'title' => $this->l('Visit PrestaShop Addons'),
+						'icon' => 'process-icon-themes',
+						'href' => 'http://addons.prestashop.com/en/3-templates-prestashop?utm_source=back-office&utm_medium=theme-button&utm_campaign=back-office-'.$iso_lang_uc,
+						'js' => 'return !window.open(this.href)'
+					)
+				)
 			),
 		);
 
 		if (!empty($other_themes))
 		{
 			$this->fields_options['theme'] = array(
-					'title' => sprintf($this->l('Select a theme for the "%s" shop'), $this->context->shop->name),
-					'description' => (!$this->can_display_themes) ? $this->l('You must select a shop from the above list if you wish to choose a theme.') : '',
-					'fields' => array(
-						'theme_for_shop' => array(
-							'type' => 'theme',
-							'themes' => $other_themes,
-							'id_theme' => $this->context->shop->id_theme,
-							'can_display_themes' => $this->can_display_themes,
-							'no_multishop_checkbox' => true,
-							'addons_link' => 'http://addons.prestashop.com/en/3-templates-prestashop?utm_source=back-office&utm_medium=theme-button&utm_campaign=back-office-'.$iso_lang_uc,
-						),
+				'title' => sprintf($this->l('Select a theme for the "%s" shop'), $this->context->shop->name),
+				'description' => (!$this->can_display_themes) ? $this->l('You must select a shop from the above list if you wish to choose a theme.') : '',
+				'fields' => array(
+					'theme_for_shop' => array(
+						'type' => 'theme',
+						'themes' => $other_themes,
+						'id_theme' => $this->context->shop->id_theme,
+						'can_display_themes' => $this->can_display_themes,
+						'no_multishop_checkbox' => true
 					),
-				);
+				),
+			);
 		}
 	}
 
@@ -578,9 +594,9 @@ class AdminThemesControllerCore extends AdminController
 	protected static function copyTheme($base_theme_dir, $target_theme_dir)
 	{
 		$res = true;
-		$base_theme_dir = rtrim($base_theme_dir, '/').'/';
+		$base_theme_dir = Tools::normalizeDirectory($base_theme_dir);
 		$base_dir = _PS_ALL_THEMES_DIR_.$base_theme_dir;
-		$target_theme_dir = rtrim($target_theme_dir, '/').'/';
+		$target_theme_dir = Tools::normalizeDirectory($target_theme_dir);
 		$target_dir = _PS_ALL_THEMES_DIR_.$target_theme_dir;
 		$files = scandir($base_dir);
 
@@ -595,7 +611,7 @@ class AdminThemesControllerCore extends AdminController
 
 					$res &= AdminThemesController::copyTheme($base_theme_dir.$file, $target_theme_dir.$file);
 				}
-				elseif (!file_exists($target_theme_dir.$file))
+				elseif (!file_exists($target_dir.$file))
 					$res &= copy($base_dir.$file, $target_dir.$file);
 			}
 		}
@@ -923,16 +939,31 @@ class AdminThemesControllerCore extends AdminController
 				$this->errors[] = $this->l('Can\'t create config file.');
 
 			if (isset($_FILES['documentation']))
-				if (!$zip->addFile($_FILES['documentation']['tmp_name'], 'doc/'.$_POST['documentation']['name']))
-					$this->error = $this->l('Can\'t copy documentation.');
+				if (!empty($_FILES['documentation']['tmp_name']) && 
+					!empty($_FILES['documentation']['name']) && 
+					!$zip->addFile($_FILES['documentation']['tmp_name'], 'doc/'.$_FILES['documentation']['name']))
+					$this->errors[] = $this->l('Can\'t copy documentation.');
 
-			$this->archiveThisFile($zip, Tools::getValue('theme_directory'), _PS_ALL_THEMES_DIR_, 'themes/');
-
-			foreach ($this->to_export as $row)
+			$given_path = realpath(_PS_ALL_THEMES_DIR_.Tools::getValue('theme_directory'));
+			
+			if ($given_path !== false)
 			{
-				if (!in_array($row, $this->native_modules))
-					$this->archiveThisFile($zip, $row, _PS_ROOT_DIR_.'/modules/', 'modules/');
+				$ps_all_theme_dir_lenght = strlen(realpath(_PS_ALL_THEMES_DIR_));
+				$to_compare_path = substr($given_path, 0, $ps_all_theme_dir_lenght);
+				if ($to_compare_path != realpath(_PS_ALL_THEMES_DIR_))
+					$this->errors[] = $this->l('Wrong theme directory path');
+				else
+				{
+					$this->archiveThisFile($zip, Tools::getValue('theme_directory'), _PS_ALL_THEMES_DIR_, 'themes/');			
+					foreach ($this->to_export as $row)
+					{
+						if (!in_array($row, $this->native_modules))
+							$this->archiveThisFile($zip, $row, _PS_ROOT_DIR_.'/modules/', 'modules/');
+					}
+				}
 			}
+			else
+				$this->errors[] = $this->l('Wrong theme directory path');
 
 			$zip->close();
 
@@ -1613,6 +1644,11 @@ class AdminThemesControllerCore extends AdminController
 	 */
 	protected function importThemeXmlConfig(SimpleXMLElement $xml, $theme_dir = false)
 	{
+		$attr = $xml->attributes();
+		$th_name = (string)$attr->name;
+		if ($this->isThemeInstalled($th_name))
+			return array(sprintf($this->l('Theme %s already installed.'), $th_name));
+
 		$new_theme_array = array();
 		foreach ($xml->variations->variation as $variation)
 		{
@@ -1630,10 +1666,7 @@ class AdminThemesControllerCore extends AdminController
 			}
 
 			if ($this->isThemeInstalled($new_theme->name))
-			{
-				$new_theme_array[] = sprintf($this->l('Theme %s already installed.'), $new_theme->name);
 				continue;
-			}
 
 			$new_theme->product_per_page = Configuration::get('PS_PRODUCTS_PER_PAGE');
 
@@ -1843,7 +1876,6 @@ class AdminThemesControllerCore extends AdminController
 		}
 		else
 		{
-
 			$content = '';
 			if (Configuration::hasKey('PS_LOGO') && trim(Configuration::get('PS_LOGO')) != ''
 				&& file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO')) && filesize(_PS_IMG_DIR_.Configuration::get('PS_LOGO')))
@@ -2372,7 +2404,6 @@ class AdminThemesControllerCore extends AdminController
 
 			$helper->override_folder = $this->tpl_folder;
 
-
 			return $helper->generateForm(array($fields_form));
 		}
 
@@ -2411,9 +2442,9 @@ class AdminThemesControllerCore extends AdminController
 	private function hookModule($id_module, $module_hooks, $shop)
 	{
 
-		Db::getInstance()->execute('INSERT IGNORE INTO '._DB_PREFIX_.'module_shop (id_module, id_shop) VALUES('.$id_module.', '.(int)$shop.')');
+		Db::getInstance()->execute('INSERT IGNORE INTO '._DB_PREFIX_.'module_shop (id_module, id_shop) VALUES('.(int)$id_module.', '.(int)$shop.')');
 
-		Db::getInstance()->execute($sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module` WHERE `id_module` = '.pSQL($id_module).' AND id_shop = '.(int)$shop);
+		Db::getInstance()->execute($sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module` WHERE `id_module` = '.(int)$id_module.' AND id_shop = '.(int)$shop);
 
 		foreach ($module_hooks as $hooks)
 		{
@@ -2946,5 +2977,11 @@ class AdminThemesControllerCore extends AdminController
 
 			return $options;
 		}
+	}
+
+	public function setMedia()
+	{
+		parent::setMedia();
+		$this->addJS(_PS_JS_DIR_.'admin_themes.js');
 	}
 }
