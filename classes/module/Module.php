@@ -2101,9 +2101,13 @@ abstract class ModuleCore
 	 */
 	protected function _clearCache($template, $cache_id = null, $compile_id = null)
 	{
-		Tools::enableCache();
+		if (Configuration::get('PS_SMARTY_CLEAR_CACHE') == 'never')
+			return 0;
+
 		if ($cache_id === null)
 			$cache_id = $this->name;
+
+		Tools::enableCache();
 		$number_of_template_cleared = Tools::clearCache(Context::getContext()->smarty, $this->getTemplatePath($template), $cache_id, $compile_id);
 		Tools::restoreCacheSettings();
 
