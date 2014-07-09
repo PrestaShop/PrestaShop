@@ -12,5 +12,6 @@ CREATE TABLE `PREFIX_smarty_cache` (
   KEY `modified` (`modified`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-INSERT INTO `PREFIX_configuration` (`name` , `value` , `date_add` , `date_upd`)
-VALUES ('PS_SMARTY_CACHING_TYPE', 'filesystem', NOW(), NOW());
+INSERT INTO `PREFIX_configuration` (`name` , `value` , `date_add` , `date_upd`) VALUES
+('PS_SMARTY_CACHING_TYPE', 'filesystem', NOW(), NOW()),
+('PS_SMARTY_CLEAR_CACHE', 'everytime', NOW(), NOW());
