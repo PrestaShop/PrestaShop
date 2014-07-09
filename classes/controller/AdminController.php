@@ -2318,7 +2318,12 @@ class AdminControllerCore extends Controller
 		{
 			if (isset($this->context->employee))
 				$this->context->employee->logout();
-			Tools::redirectAdmin($this->context->link->getAdminLink('AdminLogin').((!isset($_GET['logout']) && $this->controller_name != 'AdminNotFound' && Tools::getValue('controller')) ? '&redirect='.$this->controller_name : ''));
+			
+			$email = false;
+			if (Tools::getValue('email') && Validate::isEmail(Tools::getValue('email')))
+				$email = Tools::getValue('email');
+			
+			Tools::redirectAdmin($this->context->link->getAdminLink('AdminLogin').((!isset($_GET['logout']) && $this->controller_name != 'AdminNotFound' && Tools::getValue('controller')) ? '&redirect='.$this->controller_name : '').($email ? '&email='.$email : ''));
 		}
 
 		// Set current index
