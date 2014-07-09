@@ -93,11 +93,11 @@ class AdminCustomersControllerCore extends AdminController
 				'filter_type' => 'int',
 				'order_key' => 'gl!name'
 			),
-			'lastname' => array(
-				'title' => $this->l('Last name')
-			),
 			'firstname' => array(
 				'title' => $this->l('First name')
+			),
+			'lastname' => array(
+				'title' => $this->l('Last name')
 			),
 			'email' => array(
 				'title' => $this->l('Email address')
