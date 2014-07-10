@@ -1023,7 +1023,7 @@ abstract class ModuleCore
 
 		if (!isset(self::$_INSTANCE[$module_name]))
 		{
-			if (Tools::file_exists_cache(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php'))
+			if (Tools::file_exists_no_cache(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php'))
 			{
 				include_once(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php');
 
