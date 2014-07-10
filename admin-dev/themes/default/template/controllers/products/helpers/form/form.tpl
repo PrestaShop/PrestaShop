@@ -66,9 +66,7 @@
 		<div class="productTabs col-lg-2">
 			<div class="list-group">
 			{foreach $product_tabs key=numStep item=tab}
-				{if $tab.name != "Pack"}
-					<a class="list-group-item {if $tab.selected}active{/if}" id="link-{$tab.id}" href="{$tab.href|escape:'html':'UTF-8'}&amp;updateproduct">{$tab.name}</a>
-				{/if}
+				<a class="list-group-item {if $tab.selected}active{/if}" id="link-{$tab.id}" href="{$tab.href|escape:'html':'UTF-8'}&amp;updateproduct">{$tab.name}</a>
 			{/foreach}
 			</div>
 		</div>
@@ -302,12 +300,10 @@
 
 			{* all input are here *}
 			{foreach $product_tabs key=numStep item=tab}
-				{if $tab.name != "Pack" }
 				<div id="product-tab-content-{$tab.id}" class="{if !$tab.selected}not-loaded{/if} product-tab-content" {if !$tab.selected}style="display:none"{/if}>
 					{if $tab.selected}
 						{$custom_form}
 					{/if}
-				</div>
 				{/if}
 			{/foreach}
 			<input type="hidden" name="id_product_attribute" id="id_product_attribute" value="0" />
