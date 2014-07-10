@@ -545,11 +545,18 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$messages = CustomerThread::getMessageCustomerThreads($id_customer_thread);
 		
 		foreach ($messages as $key => $mess)
+		{	
+			if ($mess['id_employee'])
+			{
+				$employee = new Employee($mess['id_employee']);
+				$messages[$key]['employee_image'] = $employee->getImage();
+			}
 			if (isset($mess['file_name']) && $mess['file_name'] != '')
 				$messages[$key]['file_name'] = _THEME_PROD_PIC_DIR_.$mess['file_name'];
 			else
 				unset($messages[$key]['file_name']);
-
+		}
+		
 		$next_thread = CustomerThread::getNextThread((int)$thread->id);
 		
 		$contacts = Contact::getContacts($this->context->language->id);
