@@ -49,7 +49,7 @@
 			<ol>
 				<li>{l s='PrestaShop is not responsible for your database, its backups and/or recovery.'}</li>
 				<li>{l s='PrestaShop is open-source software. You are using it at your own risk under the license agreement.'}</li>
-				<li>{l s='You should backup your data on a regular basis (both files and database).'}</li>
+				<li>{l s='You should back up your data on a regular basis (both files and database).'}</li>
 				<li>{l s='This function only backs up your database, not your files.'}</li>
 				<li>{l s='By default, your existing database tables will be dropped during the backup recovery (see "Backup options" below).'}</li>
 				<li>{l s='Always verify the quality and integrity of your backup files!'}</li>
@@ -77,7 +77,7 @@
 				<li>{l s='At the top of the screen, please select the "Import" tab'}</li>
 				<li>{l s='Click on the "Browse" button and select the backup file from your hard drive.'}</li>
 				<li>{l s='Check the maximum filesize allowed (e.g. Max: 16MB)'}<br />{l s='If your backup file exceeds this limit, contact your hosting provider for assistance. '}</li>
-				<li>{l s='Click on the "Go" button and please wait patiently for the import  process to conclude. This may take several minutes.'}</li>
+				<li>{l s='Click on the "Go" button and please wait patiently for the import process to conclude. This may take several minutes.'}</li>
 			</ol>
 		</div>
 

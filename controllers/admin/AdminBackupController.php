@@ -167,7 +167,7 @@ class AdminBackupControllerCore extends AdminController
 
 		// Test if the backup dir is writable
 		if (!is_writable(PrestaShopBackup::getBackupPath()))
-			$this->warnings[] = $this->l('The "Backups" directory located in the admin directory must be writeable 
+			$this->warnings[] = $this->l('The "Backups" directory located in the admin directory must be writable 
 				(CHMOD 755 / 777).');
 		elseif ($this->display == 'add')
 			{

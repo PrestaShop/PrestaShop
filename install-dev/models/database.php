@@ -70,7 +70,7 @@ class InstallModelDatabase extends InstallAbstractModel
 						$errors[] = $this->language->l('At least one table with same prefix was already found, please change your prefix or drop your database');
 					if (($create_error = Db::checkCreatePrivilege($server, $login, $password, $database, $prefix)) !== true)
 					{
-						$errors[] = $this->language->l(sprintf('Your database login don\'t have the privileges to create table on the database "%s". Ask your hosting provider:', $database));
+						$errors[] = $this->language->l(sprintf('Your database login does not have the privileges to create table on the database "%s". Ask your hosting provider:', $database));
 						if ($create_error != false)
 							$errors[] = $create_error;
 					}
