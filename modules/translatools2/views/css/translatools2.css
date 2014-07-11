@@ -1,0 +1,26 @@
+#not-active {
+	border: 1px solid #999;
+	padding: 30px;
+	border-radius: 3px;
+	background-color: #ccc;
+	box-shadow: 2px 2px 10px #ccc;
+	font-size: 1.5em;
+}
+
+#not-active-alert
+{
+	display:inline-block;
+	font-size: 1.5em;
+	border-bottom: 1px solid black;
+	padding-bottom: 10px;
+}
+
+#activate
+{
+	padding: 15px;
+	font-size: 1.2em;
+}
+
+.center-text {
+	text-align: center;
+}
