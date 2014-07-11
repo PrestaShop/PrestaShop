@@ -263,7 +263,7 @@ class AdminEmployeesControllerCore extends AdminController
 			$this->fields_form['input'][] = array(
 				'type' => 'password',
 				'label' => $this->l('Password'),
-				'hint' => sprintf($this->l('Minimum of %s characters.'), Validate::ADMIN_PASSWORD_LENGTH),
+				'hint' => sprintf($this->l('Password should be at least %s characters long.'), Validate::ADMIN_PASSWORD_LENGTH),
 				'name' => 'passwd'
 				);	
 		$this->fields_form['input'][] = array(
@@ -321,7 +321,7 @@ class AdminEmployeesControllerCore extends AdminController
 					'name' => 'name'
 				),
 				'onchange' => 'var value_array = $(this).val().split("|"); $("link").first().attr("href", "themes/" + value_array[0] + "/css/" + value_array[1]);',
-				'hint' => $this->l('Back Office theme.')
+				'hint' => $this->l('Back-office theme.')
 			),
 			array(
 				'type' => 'radio',
@@ -479,7 +479,7 @@ class AdminEmployeesControllerCore extends AdminController
 			if (Tools::getValue('passwd') && (empty($current_password) || !Validate::isPasswdAdmin($current_password) || !$employee->getByEmail($employee->email, $current_password)))
 				$this->errors[] = Tools::displayError('Your current password is invalid.');
 			elseif (Tools::getValue('passwd') && (!Tools::getValue('passwd2') || Tools::getValue('passwd') !== Tools::getValue('passwd2')))
-				$this->errors[] = Tools::displayError('The confirmation password doesn\'t match.');
+				$this->errors[] = Tools::displayError('The confirmation password does not match.');
 
 			$_POST['id_profile'] = $_GET['id_profile'] = $employee->id_profile;
 			$_POST['active'] = $_GET['active'] = $employee->active;
@@ -572,7 +572,7 @@ class AdminEmployeesControllerCore extends AdminController
 		$employee = new Employee((int)Tools::getValue('id_employee'));
 
 		if (!Validate::isLoadedObject($employee) && !Validate::isPasswd(Tools::getvalue('passwd'), Validate::ADMIN_PASSWORD_LENGTH))
-			return !($this->errors[] = sprintf(Tools::displayError('You must specify a password with a minimum of %s characters.'),
+			return !($this->errors[] = sprintf(Tools::displayError('The password must be at least %s characters long.'),
 				Validate::ADMIN_PASSWORD_LENGTH));
 
 		return parent::validateRules($class_name);
