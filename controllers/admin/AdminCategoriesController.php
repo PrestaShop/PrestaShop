@@ -785,7 +785,7 @@ class AdminCategoriesControllerCore extends AdminController
 		$id_category_to_move = (int)(Tools::getValue('id_category_to_move'));
 		$id_category_parent = (int)(Tools::getValue('id_category_parent'));
 		$way = (int)(Tools::getValue('way'));
-		$positions = Tools::getValue('category');
+		$positions = Tools::getValue('table-category');
 		if (is_array($positions))
 			foreach ($positions as $key => $value)
 			{
