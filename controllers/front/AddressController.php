@@ -333,7 +333,7 @@ class AddressControllerCore extends FrontController
 	 */
 	protected function assignAddressFormat()
 	{
-		$id_country = is_null($this->_address) ? Configuration::get('PS_COUNTRY_DEFAULT') : (int)$this->_address->id_country;
+		$id_country = is_null($this->_address) ? (int)Configuration::get('PS_COUNTRY_DEFAULT') : (int)$this->_address->id_country;
 		$ordered_adr_fields = AddressFormat::getOrderedAddressFields($id_country, true, true);
 		$this->context->smarty->assign('ordered_adr_fields', $ordered_adr_fields);
 	}
