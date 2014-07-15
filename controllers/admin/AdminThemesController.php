@@ -2498,7 +2498,6 @@ class AdminThemesControllerCore extends AdminController
 
 				$exceptions = (isset($row['exceptions']) ? explode(',', strval($row['exceptions'])) : array());
 
-				if (Hook::getIdByName(strval($row['hook'])))
 					$module_hook[$name]['hook'][] = array(
 						'hook' => strval($row['hook']),
 						'position' => strval($row['position']),
