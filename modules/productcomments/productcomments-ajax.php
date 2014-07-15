@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -49,6 +49,15 @@ if (Tools::getValue('action') && Tools::getValue('id_product_comment') && Contex
 												 Context::getContext()->cookie->id_customer))
 			die('0');
 	}
+}
+else if (Tools::getValue('action') && Tools::getValue('id_product') && Context::getContext()->cookie->id_customer)
+{
+ //set product usefulness ....
+	if (!ProductComment::ProductisAlreadyUsefulness(Tools::getValue('id_product'), Context::getContext()->cookie->id_customer) &&
+			ProductComment::setProductUsefulness((int)Tools::getValue('id_product'),
+												 (bool)Tools::getValue('value'),
+												 Context::getContext()->cookie->id_customer))
+			die('0');
 }
 else if (Tools::getValue('action') && Tools::getValue('secure_key') == $productCom->secure_key)
 {

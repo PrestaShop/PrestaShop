@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,15 +18,20 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <script type="text/javascript">
 var productcomments_controller_url = '{$productcomments_controller_url}';
-var confirm_report_message = "{l s='Are you sure you want report this comment?' mod='productcomments'}";
-var secure_key = "{$secure_key}";
+var confirm_report_message = '{l s='Are you sure that you want to report this comment?' mod='productcomments' js=1}';
+var secure_key = '{$secure_key}';
 var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
+var productcomment_added = '{l s='Your comment has been added!' mod='productcomments' js=1}';
+var productcomment_added_moderation = '{l s='Your comment has been submitted and will be available once approved by a moderator.' mod='productcomments' js=1}';
+var productcomment_title = '{l s='New comment' mod='productcomments' js=1}';
+var productcomment_ok = '{l s='OK' mod='productcomments' js=1}';
+var moderation_active = {$moderation_active};
 </script>
 
 <div id="idTab5">
@@ -58,7 +63,7 @@ var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
 						{if $comment.total_advice > 0}
 							<li>{l s='%1$d out of %2$d people found this review useful.' sprintf=[$comment.total_useful,$comment.total_advice] mod='productcomments'}</li>
 						{/if}
-						{if $logged == 1}
+						{if $logged}
 							{if !$comment.customer_advice}
 							<li>{l s='Was this comment useful to you?' mod='productcomments'}<button class="usefulness_btn" data-is-usefull="1" data-id-product-comment="{$comment.id_product_comment}">{l s='yes' mod='productcomments'}</button><button class="usefulness_btn" data-is-usefull="0" data-id-product-comment="{$comment.id_product_comment}">{l s='no' mod='productcomments'}</button></li>
 							{/if}
@@ -71,11 +76,13 @@ var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
 			</div>
 			{/if}
 		{/foreach}
+        {if (!$too_early AND ($logged OR $allow_guests))}
 		<p class="align_center">
 			<a id="new_comment_tab_btn" class="open-comment-form" href="#new_comment_form">{l s='Write your review' mod='productcomments'} !</a>
 		</p>
+        {/if}
 	{else}
-		{if ($too_early == false AND ($logged OR $allow_guests))}
+		{if (!$too_early AND ($logged OR $allow_guests))}
 		<p class="align_center">
 			<a id="new_comment_tab_btn" class="open-comment-form" href="#new_comment_form">{l s='Be the first to write your review' mod='productcomments'} !</a>
 		</p>
@@ -86,23 +93,25 @@ var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
 	</div>
 </div>
 
+{if isset($product) && $product}
 <!-- Fancybox -->
 <div style="display: none;">
 	<div id="new_comment_form">
-		<form action="#">
+		<form id="id_new_comment_form" action="#">
 			<h2 class="title">{l s='Write your review' mod='productcomments'}</h2>
+			{if isset($product) && $product}
 			<div class="product clearfix">
-				<img src="{$link->getImageLink($product->link_rewrite, $productcomment_cover, 'home_default')|escape:'html'}" height="{$homeSize.height}" width="{$homeSize.width}" alt="{$product->name|escape:html:'UTF-8'}" />
+				<img src="{$productcomment_cover_image}" height="{$mediumSize.height}" width="{$mediumSize.width}" alt="{$product->name|escape:html:'UTF-8'}" />
 				<div class="product_desc">
 					<p class="product_name"><strong>{$product->name}</strong></p>
 					{$product->description_short}
 				</div>
 			</div>
-
+			{/if}
 			<div class="new_comment_form_content">
 				<h2>{l s='Write your review' mod='productcomments'}</h2>
 
-				<div id="new_comment_form_error" class="error" style="display: none;">
+				<div id="new_comment_form_error" class="error" style="display: none; padding: 15px 25px">
 					<ul></ul>
 				</div>
 
@@ -110,7 +119,7 @@ var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
 					<ul id="criterions_list">
 					{foreach from=$criterions item='criterion'}
 						<li>
-							<label>{$criterion.name|escape:'html':'UTF-8'}:</label>
+							<label>{$criterion.name|escape:'html':'UTF-8'}</label>
 							<div class="star_content">
 								<input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="1" />
 								<input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="2" />
@@ -123,20 +132,19 @@ var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
 					{/foreach}
 					</ul>
 				{/if}
-
-				<label for="comment_title">{l s='Title' mod='productcomments'}: <sup class="required">*</sup></label>
+				<label for="comment_title">{l s='Title for your review' mod='productcomments'}<sup class="required">*</sup></label>
 				<input id="comment_title" name="title" type="text" value=""/>
 
-				<label for="content">{l s='Comment' mod='productcomments'}: <sup class="required">*</sup></label>
+				<label for="content">{l s='Your review' mod='productcomments'}<sup class="required">*</sup></label>
 				<textarea id="content" name="content"></textarea>
 
-				{if $allow_guests == true && $logged == 0}
-				<label>{l s='Your name' mod='productcomments'}: <sup class="required">*</sup></label>
+				{if $allow_guests == true && !$logged}
+				<label>{l s='Your name' mod='productcomments'}<sup class="required">*</sup></label>
 				<input id="commentCustomerName" name="customer_name" type="text" value=""/>
 				{/if}
 
 				<div id="new_comment_form_footer">
-					<input id="id_product_comment_send" name="id_product" type="hidden" value='{$id_product_comment_form}'></input>
+					<input id="id_product_comment_send" name="id_product" type="hidden" value='{$id_product_comment_form}' />
 					<p class="fl required"><sup>*</sup> {l s='Required fields' mod='productcomments'}</p>
 					<p class="fr">
 						<button id="submitNewMessage" name="submitMessage" type="submit">{l s='Send' mod='productcomments'}</button>&nbsp;
@@ -149,3 +157,4 @@ var productcomments_url_rewrite = '{$productcomments_url_rewriting_activated}';
 	</div>
 </div>
 <!-- End fancybox -->
+{/if}

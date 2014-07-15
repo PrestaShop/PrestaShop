@@ -1,11 +1,28 @@
 $(function() {
-	$('input[@type=radio].star').rating();
+	$('input.star').rating();
 	$('.auto-submit-star').rating();
 
 	$('.open-comment-form').fancybox({
 		'hideOnContentClick': false
 	});
 
+	$('button.product_usefulness_btn').click(function() {
+		var id_product = $(this).data('id-product');
+		var is_usefull = $(this).data('is-usefull');
+		var parent = $(this).parent();
+
+		$.ajax({
+			url: productcomments_controller_url + '?rand=' + new Date().getTime(),
+			data: {
+				id_product: id_product,
+				action: 'product_is_usefull',
+				value: is_usefull
+			},
+			type: 'POST',
+			headers: { "cache-control": "no-cache" }
+		});
+	});
+	
 	$('button.usefulness_btn').click(function() {
 		var id_product_comment = $(this).data('id-product-comment');
 		var is_usefull = $(this).data('is-usefull');
@@ -57,10 +74,13 @@ $(function() {
 
 		// Form element
 
-		url_options = parseInt(productcomments_url_rewrite) ? '?' : '&';
+        url_options = '?';
+        if (!productcomments_url_rewrite)
+            url_options = '&';
+
 		$.ajax({
 			url: productcomments_controller_url + url_options + 'action=add_comment&secure_key=' + secure_key + '&rand=' + new Date().getTime(),
-			data: $('#fancybox-content form').serialize(),
+			data: $('#id_new_comment_form').serialize(),
 			type: 'POST',
 			headers: { "cache-control": "no-cache" },
 			dataType: "json",
@@ -68,7 +88,9 @@ $(function() {
 				if (data.result)
 				{
 					$.fancybox.close();
-					document.location.href = document.location.href;
+                    var buttons = {};
+                    buttons[productcomment_ok] = "productcommentRefreshPage";
+                    fancyChooseBox(moderation_active ? productcomment_added_moderation : productcomment_added, productcomment_title, buttons);
 				}
 				else
 				{
@@ -83,3 +105,7 @@ $(function() {
 		return false;
 	});
 });
+
+function productcommentRefreshPage() {
+    window.location.reload();
+}

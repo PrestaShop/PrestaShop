@@ -1,5 +1,5 @@
  {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
@@ -34,7 +34,7 @@ $(function(){
 	});
 });
 </script>
-
+ {if (!$content_only && (($nbComments == 0 && $too_early == false && ($logged || $allow_guests)) || ($nbComments != 0)))}
 <div id="product_comments_block_extra">
 	{if $nbComments != 0}
 	<div class="comments_note">
@@ -60,4 +60,5 @@ $(function(){
 		{/if}
 	</div>
 </div>
+{/if}
 <!--  /Module ProductComments -->
