@@ -58,12 +58,13 @@ function initTableDnD(table)
 				var ids = row.id.split('_');
 				var tableDrag = table;
 				var params = '';
+				table.id = table.id.replace('table-', '');
 				if (table.id == 'cms_block_0' || table.id == 'cms_block_1')
 					params = {
 						updatePositions: true,
 						configure: 'blockcms'
 					};
-				else if (table.id == 'table-category')
+				else if (table.id == 'category')
 				{
 					params = {
 						action: 'updatePositions',
