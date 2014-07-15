@@ -36,7 +36,7 @@
                             {if Tools::strlen($category->description) > 350}
                                 <div id="category_description_short">{$description_short}</div>
                                 <div id="category_description_full" class="unvisible">{$category->description}</div>
-                                <a href="{$link->getCategoryLink($category->id_category, $category.link_rewrite)|escape:'html':'UTF-8'}" class="lnk_more">{l s='More'}</a>
+                                <a href="{$link->getCategoryLink($category->id_category, $category->link_rewrite)|escape:'html':'UTF-8'}" class="lnk_more">{l s='More'}</a>
                             {else}
                                 <div>{$category->description}</div>
                             {/if}
