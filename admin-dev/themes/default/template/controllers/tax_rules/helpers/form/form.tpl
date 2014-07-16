@@ -41,6 +41,7 @@
 		});
 
 		$('#tax_rule_form').hide();
+		$('#id_tax_rules_group').clone().attr('id', '').insertAfter('#id_tax_rule');
 
 		$('#page-header-desc-tax_rule-new').click(function() {
 			initForm();

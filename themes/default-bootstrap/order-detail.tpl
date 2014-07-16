@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {if isset($order)}
-{if $reorderingAllowed}
+{if isset($reorderingAllowed) && $reorderingAllowed}
 <div class="box box-small clearfix">
 	<form id="submitReorder" action="{if isset($opc) && $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" class="submit">
 			<input type="hidden" value="{$order->id}" name="id_order"/>
