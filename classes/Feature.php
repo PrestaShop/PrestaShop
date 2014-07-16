@@ -253,7 +253,7 @@ class FeatureCore extends ObjectModel
 			WHERE fp.`id_product` IN ('.$ids.')
 			AND `id_lang` = '.(int)$id_lang.'
 			GROUP BY f.`id_feature`
-			ORDER BY nb DESC
+			ORDER BY nb DESC, position ASC
 		');
 	}
 

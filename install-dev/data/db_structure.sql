@@ -1595,7 +1595,7 @@ CREATE TABLE `PREFIX_profile_lang` (
 CREATE TABLE `PREFIX_quick_access` (
   `id_quick_access` int(10) unsigned NOT NULL auto_increment,
   `new_window` tinyint(1) NOT NULL default '0',
-  `link` varchar(128) NOT NULL,
+  `link` varchar(255) NOT NULL,
   PRIMARY KEY (`id_quick_access`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
