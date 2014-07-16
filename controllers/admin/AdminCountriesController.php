@@ -403,6 +403,8 @@ class AdminCountriesControllerCore extends AdminController
 	
 	public function processSave()
 	{
+		$return = parent::processSave();
+		
 		if (!count($this->errors))
 		{
 			$id_country = Tools::getValue('id_country');
@@ -435,7 +437,7 @@ class AdminCountriesControllerCore extends AdminController
 			unset($tmp_addr_format);
 		}
 
-		return parent::processSave();
+		return $return;
 	}
 	
 	public function processStatus()
