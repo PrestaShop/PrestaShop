@@ -148,6 +148,7 @@ class AdminControllerCore extends Controller
 
 	/** @var array WHERE clause determined by filter fields */
 	protected $_filter;
+	protected $_filterHaving;
 
 	/** @var array Temporary SQL table WHERE clause determinated by filter fields */
 	protected $_tmpTableFilter = '';
