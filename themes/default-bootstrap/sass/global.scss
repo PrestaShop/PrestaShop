@@ -2473,9 +2473,7 @@ table#cart_summary .gift-icon {
 				&.delivery_option_carrier {
 					margin-top: 10px;
 					width: 100%;
-					background: $state-info-bg;
-					color: $state-info-text;
-					border: 1px solid $state-info-border;
+					border: 1px solid $table-border-color;
 					font-weight: bold;
 					td {
 						padding: 8px 11px 7px 11px;
@@ -2675,6 +2673,9 @@ p.cheque-indent {
 .delivery_option_carrier.not-displayable {
 	display: none;
 }
+
+.table-bordered.not-displayable {
+  display: none; }
 
 //PAGES ADRESSES, IDENTITY
 #address,
