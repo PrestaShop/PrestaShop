@@ -67,7 +67,7 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 						'type' => 'bool'
 					),
 					'PS_CART_FOLLOWING' => array(
-						'title' => $this->l('Re-display cart at log in'),
+						'title' => $this->l('Re-display cart at login'),
 						'hint' => $this->l('After a customer logs in, you can recall and display the content of his/her last shopping cart.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
