@@ -58,19 +58,21 @@ function initTableDnD(table)
 				var ids = row.id.split('_');
 				var tableDrag = table;
 				var params = '';
-
+				table.id = table.id.replace('table-', '');
 				if (table.id == 'cms_block_0' || table.id == 'cms_block_1')
 					params = {
 						updatePositions: true,
 						configure: 'blockcms'
 					};
 				else if (table.id == 'category')
+				{
 					params = {
 						action: 'updatePositions',
 						id_category_parent: ids[1],
 						id_category_to_move: ids[2],
 						way: way
 					};
+				}
 				else if (table.id == 'cms_category')
 					params = {
 						action: 'updateCmsCategoriesPositions',
