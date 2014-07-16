@@ -492,7 +492,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 		{
 			/* PrestaShop demo mode */
 			if (_PS_MODE_DEMO_)
-				die('{"hasError" : true, "errors" : ["Live Edit: This functionnality has been disabled."]}');
+				die('{"hasError" : true, "errors" : ["Live Edit: This functionality has been disabled."]}');
 
 			if (!count(Tools::getValue('hooks_list')))
 				die('{"hasError" : true, "errors" : ["Live Edit: no module on this page."]}');
@@ -534,7 +534,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 		{
 			/* PrestaShop demo mode */
 			if (_PS_MODE_DEMO_)
-				die('{"hasError" : true, "errors" : ["Live Edit: This functionnality has been disabled."]}');
+				die('{"hasError" : true, "errors" : ["Live Edit: This functionality has been disabled."]}');
 			/* PrestaShop demo mode*/
 
 			$hook_name = Tools::getValue('hook');
@@ -561,7 +561,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 		{
 				/* PrestaShop demo mode */
 			if (_PS_MODE_DEMO_)
-				die('{"hasError" : true, "errors" : ["Live Edit: This functionnality has been disabled."]}');
+				die('{"hasError" : true, "errors" : ["Live Edit: This functionality has been disabled."]}');
 
 			$hooks_list = explode(',', Tools::getValue('hooks_list'));
 			$id_shop = (int)Tools::getValue('id_shop');
