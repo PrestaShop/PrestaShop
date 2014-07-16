@@ -2085,7 +2085,7 @@ class ToolsCore
 				fwrite($write_fd, "RewriteRule ^.*$ - [NC,L]\n");
 				if (Shop::isFeatureActive())
 					fwrite($write_fd, $domain_rewrite_cond);
-				fwrite($write_fd, "RewriteRule ^.*\$ %{ENV:REWRITEBASE}index.php [NC,L]\n");
+				fwrite($write_fd, "RewriteRule ^(.*)\$ %{ENV:REWRITEBASE}index.php/\$1 [NC,L]\n");
 			}
 		}
 
