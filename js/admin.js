@@ -1443,3 +1443,7 @@ function isCleanHtml(content)
 
 	return true;
 }
+
+function parseDate(date){
+	return $.datepicker.parseDate("yy-mm-dd", date);
+}
