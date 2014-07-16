@@ -604,7 +604,7 @@ function updatePrice()
 		basePriceWithoutTax = combination.specific_price.price;
 
 	// Apply group reduction
-	priceWithGroupReductionWithoutTax = ps_round(basePriceWithoutTax * (1 - group_reduction), 2);
+	priceWithGroupReductionWithoutTax = basePriceWithoutTax * (1 - group_reduction);
 	var priceWithDiscountsWithoutTax = priceWithGroupReductionWithoutTax;
 
 	// Apply Tax if necessary
@@ -650,9 +650,7 @@ function updatePrice()
 		var discountPercentage = (1-(priceWithDiscountsDisplay/basePriceDisplay))*100;
 	}
 
-	/*  *****************************************************************
-			Update the page content, no price calculation happens after
-		***************************************************************** */
+	/*  Update the page content, no price calculation happens after */
 
 	// Hide everything then show what needs to be shown
 	$('#reduction_percent').hide();
