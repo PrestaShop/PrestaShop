@@ -1240,13 +1240,13 @@ class AdminTranslationsControllerCore extends AdminController
 	{
 		$this->translations_informations = array(
 			'front' => array(
-				'name' => $this->l('Front Office translations'),
+				'name' => $this->l('Front-office translations'),
 				'var' => '_LANG',
 				'dir' => defined('_PS_THEME_SELECTED_DIR_') ? _PS_THEME_SELECTED_DIR_.'lang/' : '',
 				'file' => $this->lang_selected->iso_code.'.php'
 			),
 			'back' => array(
-				'name' => $this->l('Back Office translations'),
+				'name' => $this->l('Back-office translations'),
 				'var' => '_LANGADM',
 				'dir' => _PS_TRANSLATIONS_DIR_.$this->lang_selected->iso_code.'/',
 				'file' => 'admin.php'
@@ -1931,7 +1931,7 @@ class AdminTranslationsControllerCore extends AdminController
 					{
 						if (empty($english_string))
 						{
-							$this->errors[] = sprintf($this->l('There\'s an error in template,  an empty string  has been found. Please edit: "%s"'), $file_path);
+							$this->errors[] = sprintf($this->l('There is an error in template, an empty string has been found. Please edit: "%s"'), $file_path);
 							$new_lang[$english_string] = '';
 						}
 						else

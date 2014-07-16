@@ -318,7 +318,7 @@ class AdminThemesControllerCore extends AdminController
 				'submit' => array('title' => $this->l('Save')),
 				'buttons' => array(
 					'storeLink' => array(
-						'title' => $this->l('Visit PrestaShop Addons'),
+						'title' => $this->l('Visit the theme catalog'),
 						'icon' => 'process-icon-themes',
 						'href' => 'http://addons.prestashop.com/en/3-templates-prestashop?utm_source=back-office&utm_medium=theme-button&utm_campaign=back-office-'.$iso_lang_uc,
 						'js' => 'return !window.open(this.href)'
