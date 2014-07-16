@@ -114,6 +114,11 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	 */
 	public function init()
 	{
+		if (Tools::isSubmit('submitFilterorders'))
+			$this->list_id = 'orders';
+		elseif (Tools::isSubmit('submitFiltertemplates'))
+			$this->list_id = 'templates';
+
 		parent::init();
 
 		if (Tools::isSubmit('addsupply_order') ||
@@ -490,6 +495,17 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		}
 
 		$this->list_id = 'orders';
+		$this->_filterHaving = null;
+
+		if (Tools::isSubmit('submitFilter'.$this->list_id) 
+			|| $this->context->cookie->{'submitFilter'.$this->list_id} !== false
+			|| Tools::getValue($this->list_id.'Orderby')
+			|| Tools::getValue($this->list_id.'Orderway'))
+		{
+			$this->filter = true;
+			parent::processFilter();
+		}
+
 		$first_list = parent::renderList();
 
 		if (Tools::isSubmit('csv_orders') || Tools::isSubmit('csv_orders_details') || Tools::isSubmit('csv_order_details'))
@@ -546,6 +562,16 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		);
 
 		$this->list_id = 'templates';
+		$this->_filterHaving = null;
+
+		if (Tools::isSubmit('submitFilter'.$this->list_id) 
+			|| $this->context->cookie->{'submitFilter'.$this->list_id} !== false
+			|| Tools::getValue($this->list_id.'Orderby')
+			|| Tools::getValue($this->list_id.'Orderway'))
+		{
+			$this->filter = true;
+			parent::processFilter();
+		}
 		// inits list
 		$second_list = parent::renderList();
 
@@ -2171,7 +2197,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 		return $status;
 	}
-	
+
 	public function initProcess()
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
