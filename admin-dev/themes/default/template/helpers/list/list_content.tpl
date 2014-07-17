@@ -168,7 +168,7 @@
 			{if $compiled_actions|count > 0}
 				{if $compiled_actions|count > 1}<div class="btn-group-action">{/if}
 				<div class="btn-group pull-right">
-					{$compiled_actions[0]|regex_replace:'/class\s*=\s*"(\w*)"/':'class="$1 btn btn-default"'}
+					{$compiled_actions[0]}
 					{if $compiled_actions|count > 1}
 					<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 						<i class="icon-caret-down"></i>&nbsp;

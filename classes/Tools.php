@@ -1147,9 +1147,9 @@ class ToolsCore
 
 		// Remove all non-whitelist chars.
 		if ($allow_accented_chars)
-			$str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]-\pL]/u', '', $str);
+			$str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]\-\pL]/u', '', $str);
 		else
-			$str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]-]/','', $str);
+			$str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]\-]/','', $str);
 
 		$str = preg_replace('/[\s\'\:\/\[\]\-]+/', ' ', $str);
 		$str = str_replace(array(' ', '/'), '-', $str);
