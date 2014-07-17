@@ -36,8 +36,8 @@
 			<i class="process-icon-back{if isset($back_button.class)} {$back_button.class}{/if}" ></i> <span{if isset($back_button.force_desc) && $back_button.force_desc == true } class="locked"{/if}>{$back_button.desc}</span>
 		</a>
 	{/if}
-	<a href="" class="btn btn-default pull-right" onclick="if (confirm('Update selected items?'))sendBulkAction($(this).closest('form').get(0), 'submitBulkUpdatesupply_order_detail'); return false;">
-		<i class="process-icon-refresh"></i> <span>{l s='Update selected items'}</span>
+	<a href="" class="btn btn-default pull-right" onclick="if (confirm('{l s='Update selected items ?'}'))sendBulkAction($(this).closest('form').get(0), 'submitBulkUpdatesupply_order_detail'); return false;">
+		<i class="process-icon-refresh" ></i> <span>{l s='Update selected items'}</span>
 	</a>
 </div>
 {/block}
