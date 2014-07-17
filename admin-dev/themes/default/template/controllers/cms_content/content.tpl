@@ -30,3 +30,11 @@
 {/if}
 
 {$content}
+<script type="text/javascript">
+$(document).ready(function () {
+	var re = /url_cms_preview=(.*)/;
+	var url = re.exec(document.URL);
+	if (typeof(url[1]) != "undifined" && url[1])
+		window.open(url[1], "_blank");
+});
+</script>
