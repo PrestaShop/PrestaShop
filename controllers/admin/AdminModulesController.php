@@ -953,7 +953,7 @@ class AdminModulesControllerCore extends AdminController
 			$updated = '&updated=1';
 			if (Tools::getValue('checkAndUpdate'))
 			{
-				$updated = '';
+				$updated = '&check=1';
 				if (Tools::getValue('module_name'))
 				{
 					$module = Module::getInstanceByName(Tools::getValue('module_name'));
