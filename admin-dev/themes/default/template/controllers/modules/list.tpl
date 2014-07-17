@@ -112,9 +112,15 @@
 										{/if}
 									{else}
 										{if isset($module->trusted) && $module->trusted}
-										<a class="btn btn-success" href="{$module->options.install_url|escape:'html':'UTF-8'}">
-											<i class="icon-plus-sign-alt"></i>&nbsp;{l s='Install'}
-										</a>
+											{if $module->trusted == 2}
+												<a class="btn btn-success untrustedaddon" href="#" data-target="#moduleNotTrustedCountry" data-toggle="modal" data-link="{$module->options.install_url|escape:'html':'UTF-8'}" data-module-name="{$module->displayName}">
+													<i class="icon-plus-sign-alt"></i>&nbsp;{l s='Install'}
+												</a>
+											{else}
+												<a class="btn btn-success" href="{$module->options.install_url|escape:'html':'UTF-8'}">
+													<i class="icon-plus-sign-alt"></i>&nbsp;{l s='Install'}
+												</a>
+											{/if}
 										{else}
 										<a class="btn btn-success untrustedaddon" href="#" data-target="#moduleNotTrusted" data-toggle="modal" data-link="{$module->options.install_url|escape:'html':'UTF-8'}" data-module-name="{$module->displayName}">
 											<i class="icon-plus-sign-alt"></i>&nbsp;{l s='Install'}
