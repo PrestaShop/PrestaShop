@@ -101,9 +101,8 @@
         var shopID = obj.attr('id').replace(/\D/g, '');
         var val = obj.val();
         var str = '';
-        if(val != null) {
-            str = val.join(', ')
-        }
+        if (val)
+            str = val.join(', ');
         obj.closest('form').find('#em_text_' + shopID).val(str);
     }
 	$(document).ready(function(){
