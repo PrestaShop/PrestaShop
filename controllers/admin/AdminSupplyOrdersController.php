@@ -1937,8 +1937,8 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				.'&submitAction=generateSupplyOrderFormPDF&id_supply_order='.(int)$supply_order->id.'" title="'.$this->l('Export as PDF')
 				.'"><i class="icon-print"></i></a>';
 		if ($supply_order_state->enclosed == true && $supply_order_state->receipt_state == true)
-			$content .= '<a href="'.$this->context->link->getAdminLink('AdminSupplyOrders').'&id_supply_order='.(int)$supply_order->id.'
-						 &csv_order_details" title='.$this->l('Export as CSV').'">
+			$content .= '&nbsp;<a href="'.$this->context->link->getAdminLink('AdminSupplyOrders').'&id_supply_order='.(int)$supply_order->id.'
+						 &csv_order_details" class="btn btn-default" title='.$this->l('Export as CSV').'">
 						 <i class="icon-table"></i></a>';
 
 
