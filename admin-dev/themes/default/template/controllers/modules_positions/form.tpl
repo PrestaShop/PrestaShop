@@ -96,12 +96,16 @@
 		for (var i = 0; i < len; i++)
 			list.find('option[value="' + $.trim(values[i]) + '"]').prop('selected', true);
 	}
-	function position_exception_listchange() {
-		var obj = $(this);
-		var shopID = obj.attr('id').replace(/\D/g, '');
-		var str = obj.val().join(', ');
-		obj.closest('form').find('#em_text_' + shopID).val(str);
-	}
+    function position_exception_listchange() {
+        var obj = $(this);
+        var shopID = obj.attr('id').replace(/\D/g, '');
+        var val = obj.val();
+        var str = '';
+        if(val != null) {
+            str = val.join(', ')
+        }
+        obj.closest('form').find('#em_text_' + shopID).val(str);
+    }
 	$(document).ready(function(){
 		$('form[id="hook_module_form"] input[id^="em_text_"]').each(function(){
 			$(this).change(position_exception_textchange).change();
