@@ -1265,7 +1265,7 @@ class AdminModulesControllerCore extends AdminController
 			'module_languages' => Language::getLanguages(false),
 			'module_name' => Tools::getValue('module_name'),
 		));
-		
+
 		$modal_content = $this->context->smarty->fetch('controllers/modules/modal_translation.tpl');
 		$this->modals[] = array(
 			'modal_id' => "moduleTradLangSelect",
@@ -1279,6 +1279,14 @@ class AdminModulesControllerCore extends AdminController
 			'modal_id' => "moduleNotTrusted",
 			'modal_class' => "modal-lg",
 			'modal_title' => $this->l('This module is Untrusted'),
+			'modal_content' => $modal_content
+		);
+
+		$modal_content = $this->context->smarty->fetch('controllers/modules/modal_not_trusted_country.tpl');
+		$this->modals[] = array(
+			'modal_id' => "moduleNotTrustedCountry",
+			'modal_class' => "modal-lg",
+			'modal_title' => $this->l('This module is Untrusted for your country'),
 			'modal_content' => $modal_content
 		);
 	}
