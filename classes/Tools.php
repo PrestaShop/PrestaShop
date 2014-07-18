@@ -3124,6 +3124,7 @@ exit;
 				$config->set('Attr.EnableID', true);
 				$config->set('HTML.Trusted', true);
 				$config->set('Cache.SerializerPath', _PS_CACHE_DIR_.'purifier');
+				$config->getHTMLDefinition(true)->addAttribute('a', 'target', 'Enum#_blank,_self,_target,_top');
 
 				if (Configuration::get('PS_ALLOW_HTML_IFRAME'))
 				{
