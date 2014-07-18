@@ -135,14 +135,14 @@
 													</td>
 												{/if}
 												{assign var="first" value=current($option.carrier_list)}
-												<td class="delivery_option_logo">
+												<td class="delivery_option_logo{if $first.product_list[0].carrier_list[0] eq 0} not-displayable{/if}">
 													{if $first.logo}
 														<img src="{$first.logo|escape:'htmlall':'UTF-8'}" alt="{$first.instance->name|escape:'htmlall':'UTF-8'}"/>
 													{else if !$option.unique_carrier}
 														{$first.instance->name|escape:'htmlall':'UTF-8'}
 													{/if}
 												</td>
-												<td{if $option.unique_carrier} class="first_item"{/if}>
+												<td class="{if $option.unique_carrier}first_item{/if}{if $first.product_list[0].carrier_list[0] eq 0} not-displayable{/if}">
 													<input type="hidden" value="{$first.instance->id|intval}" name="id_carrier" />
 													{if isset($first.instance->delay[$cookie->id_lang])}
 														<i class="icon-info-sign"></i>{$first.instance->delay[$cookie->id_lang]|escape:'htmlall':'UTF-8'}
@@ -200,10 +200,9 @@
 												</td>
 											</tr>
 											<tr>
-												<td class="delivery_option_logo">
+												<td class="delivery_option_logo{if $carrier.product_list[0].carrier_list[0] eq 0} not-displayable{/if}">
 													{foreach $option.carrier_list as $carrier}
-														{if $carrier@iteration == 1}
-														{else}
+														{if $carrier@iteration != 1}
 															{if $carrier.logo}
 																<img src="{$carrier.logo|escape:'htmlall':'UTF-8'}" alt="{$carrier.instance->name|escape:'htmlall':'UTF-8'}"/>
 															{else if !$option.unique_carrier}
@@ -212,7 +211,7 @@
 														{/if}
 													{/foreach}
 												</td>
-												<td{if $option.unique_carrier} class="first_item"{/if}>
+												<td class="{if $option.unique_carrier} first_item{/if}{if $carrier.product_list[0].carrier_list[0] eq 0} not-displayable{/if}">
 													<input type="hidden" value="{$first.instance->id|intval}" name="id_carrier" />
 													{if isset($carrier.instance->delay[$cookie->id_lang])}
 														<i class="icon-info-sign"></i>
