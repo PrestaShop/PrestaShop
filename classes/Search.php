@@ -400,8 +400,7 @@ class SearchCore
 		$max_possibilities = $total_languages * count(Shop::getShops(true));
 		$limit = max($max_possibilities, floor($limit / $max_possibilities) * $max_possibilities);
 
-		$sql = 'SELECT p.id_product, pl.id_lang, pl.id_shop, pl.name pname, p.reference, p.ean13, p.upc,
-				pl.description_short, pl.description, cl.name cname, m.name mname, l.iso_code';
+		$sql = 'SELECT p.id_product, pl.id_lang, pl.id_shop, l.iso_code';
 
 		if (is_array($weight_array))
 			foreach($weight_array as $key => $weight)
@@ -412,7 +411,7 @@ class SearchCore
 							$sql .= ', pl.name pname';
 						break;
 						case 'reference':
-							$sql .= ', p.reference';
+							$sql .= ', p.reference, pa.reference AS pa_reference';
 						break;
 						case 'ean13':
 							$sql .= ', p.ean13';
@@ -435,6 +434,8 @@ class SearchCore
 					}
 
 		$sql .= ' FROM '._DB_PREFIX_.'product p
+			LEFT JOIN '._DB_PREFIX_.'product_attribute pa
+				ON pa.id_product = p.id_product
 			LEFT JOIN '._DB_PREFIX_.'product_lang pl
 				ON p.id_product = pl.id_product
 			'.Shop::addSqlAssociation('product', 'p').'
@@ -492,6 +493,7 @@ class SearchCore
 		$weight_array = array(
 			'pname' => Configuration::get('PS_SEARCH_WEIGHT_PNAME'),
 			'reference' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
+			'pa_reference' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
 			'ean13' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
 			'upc' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
 			'description_short' => Configuration::get('PS_SEARCH_WEIGHT_SHORTDESC'),
