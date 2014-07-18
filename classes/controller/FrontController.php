@@ -892,12 +892,15 @@ class FrontControllerCore extends Controller
 		if ((int)Tools::getValue('n') && (int)$total_products > 0)
 			$nArray[] = $total_products;
 		// Retrieve the current number of products per page (either the default, the GET parameter or the one in the cookie)
+		// If a GET parameter exists, then update the cookie.
 		$this->n = $default_products_per_page;
+		if (isset($this->context->cookie->nb_item_per_page) && in_array($this->context->cookie->nb_item_per_page, $nArray))
+			$this->n = (int)$this->context->cookie->nb_item_per_page;
+
 		if ((int)Tools::getValue('n') && in_array((int)Tools::getValue('n'), $nArray))
 		{
 			$this->n = (int)Tools::getValue('n');
-			if (isset($this->context->cookie->nb_item_per_page) && in_array($this->context->cookie->nb_item_per_page, $nArray))
-				$this->n = (int)$this->context->cookie->nb_item_per_page;
+			$this->context->cookie->nb_item_per_page = $this->n;
 		}
 
 		// Retrieve the page number (either the GET parameter or the first page)
@@ -908,9 +911,6 @@ class FrontControllerCore extends Controller
 
 		// Remove the page parameter in order to get a clean URL for the pagination template
 		$current_url = preg_replace('/(\?)?(&amp;)?p=\d+/', '$1', Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']));
-
-		if ($this->n != $default_products_per_page)
-			$this->context->cookie->nb_item_per_page = $this->n;
 
 		$pages_nb = ceil($total_products / (int)$this->n);
 		if ($this->p > $pages_nb && $total_products != 0)
