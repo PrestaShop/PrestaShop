@@ -1949,7 +1949,7 @@ class CartCore extends ObjectModel
 			foreach ($packages as $id_package => $package)
 			{
 				// No carriers available
-				if (count($package['carrier_list']) == 1 && current($package['carrier_list']) == 0)
+				if (count($packages) == 1 && count($package['carrier_list']) == 1 && current($package['carrier_list']) == 0)
 				{	
 					$cache = array();
 					return $cache;
