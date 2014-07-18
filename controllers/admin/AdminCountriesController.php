@@ -403,18 +403,16 @@ class AdminCountriesControllerCore extends AdminController
 	
 	public function processSave()
 	{
+		$country =  parent::processSave();
+
 		if (!count($this->errors))
 		{
-			$id_country = Tools::getValue('id_country');
-			$tmp_addr_format = new AddressFormat($id_country);
+			$tmp_addr_format = new AddressFormat($country->id);
 
-			$save_status = false;
-
-			$is_new = is_null($tmp_addr_format->id_country);
-			if ($is_new)
+			if (is_null($tmp_addr_format->id_country))
 			{
 				$tmp_addr_format = new AddressFormat();
-				$tmp_addr_format->id_country = $id_country;
+				$tmp_addr_format->id_country = $country->id;
 			}
 
 			$tmp_addr_format->format = Tools::getValue('address_layout');
@@ -435,7 +433,7 @@ class AdminCountriesControllerCore extends AdminController
 			unset($tmp_addr_format);
 		}
 
-		return parent::processSave();
+		return $country;
 	}
 	
 	public function processStatus()
