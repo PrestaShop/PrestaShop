@@ -212,9 +212,9 @@ class HelperCore
 		if (count($selected_cat) > 0)
 		{
 			if (isset($selected_cat[0]))
-				$html .= '			var selectedCat = '.(int)implode(',', $selected_cat).';'."\n";
+				$html .= '			var selectedCat = "'.implode(',', array_map('intval', $selected_cat)).'";'."\n";
 			else
-				$html .= '			var selectedCat = '.(int)implode(',', array_keys($selected_cat)).';'."\n";
+				$html .= '			var selectedCat = "'.implode(',', array_map('intval', array_keys($selected_cat))).'";'."\n";
 		}
 		else
 			$html .= '			var selectedCat = \'\';'."\n";
