@@ -179,8 +179,10 @@ function initFilters()
 							from = ui.values[0] + $(event.target).data('unit');
 							to = ui.values[1] + $(event.target).data('unit');
 						}
-
-						$('#layered_' + $(event.target).data('type') + '_range').html(from + ' - ' + to);
+						
+						//if RTL, reverse to+from
+						var range_value = rtl ? to + ' - ' + from : from + ' - ' + to;
+						$('#layered_' + $(event.target).data('type') + '_range').html(range_value);
 					},
 					stop: function () {
 						reloadContent(true);
@@ -253,7 +255,9 @@ function initSliders()
 				to = $('#layered_'+slider['type']+'_slider').slider('values', 1)+slider['unit'];
 				break;
 		}
-		$('#layered_'+slider['type']+'_range').html(from+' - '+to);
+		//if RTL, reverse to+from
+		var range_value = rtl ? to + ' - ' + from : from + ' - ' + to;
+		$('#layered_'+slider['type']+'_range').html(range_value);
 	});
 }
 

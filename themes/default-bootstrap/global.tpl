@@ -45,4 +45,5 @@
 {addJsDef instantsearch=Configuration::get('PS_INSTANT_SEARCH')|boolval}
 {addJsDef quickView=$quick_view|boolval}
 {addJsDef displayList=Configuration::get('PS_GRID_PRODUCT')|boolval}
+{addJsDef rtl=$is_rtl|boolval}
 {/strip}
