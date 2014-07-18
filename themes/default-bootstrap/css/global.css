@@ -7389,10 +7389,7 @@ p.cheque-indent {
 .delivery_option_carrier.selected {
   display: table; }
 
-.delivery_option_carrier.not-displayable {
-  display: none; }
-
-.table-bordered.not-displayable {
+.not-displayable {
   display: none; }
 
 #address .box,
