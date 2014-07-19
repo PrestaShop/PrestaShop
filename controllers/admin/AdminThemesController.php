@@ -2064,7 +2064,7 @@ class AdminThemesControllerCore extends AdminController
 					break;
 			}
 
-			if (count($natives > 0))
+			if (count($natives) > 0)
 				return $natives;
 		}
 
