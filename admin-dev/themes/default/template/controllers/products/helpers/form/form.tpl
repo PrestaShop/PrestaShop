@@ -33,12 +33,12 @@
 			setup : function(ed) {
 				ed.on('init', function(ed)
 				{
-					if (typeof ProductMultishop.load_tinymce[ed.id] != 'undefined')
+					if (typeof ProductMultishop.load_tinymce[ed.target.id] != 'undefined')
 					{
-						if (typeof ProductMultishop.load_tinymce[ed.id])
-							ed.hide();
+						if (typeof ProductMultishop.load_tinymce[ed.target.id])
+							tinyMCE.get(ed.target.id).hide();
 						else
-							ed.show();
+							tinyMCE.get(ed.taget.id).show();
 					}
 				});
 
@@ -316,3 +316,4 @@
 	</div>
 
 {/block}
+
