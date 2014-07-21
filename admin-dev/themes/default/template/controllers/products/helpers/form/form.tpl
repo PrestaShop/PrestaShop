@@ -38,7 +38,7 @@
 						if (typeof ProductMultishop.load_tinymce[ed.target.id])
 							tinyMCE.get(ed.target.id).hide();
 						else
-							tinyMCE.get(ed.taget.id).show();
+							tinyMCE.get(ed.target.id).show();
 					}
 				});
 
