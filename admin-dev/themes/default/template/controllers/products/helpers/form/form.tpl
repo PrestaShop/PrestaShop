@@ -302,7 +302,7 @@
 
 			{* all input are here *}
 			{foreach $product_tabs key=numStep item=tab}
-				{if $tab.name != "Pack" }
+				{if $tab.id != "Pack" }
 				<div id="product-tab-content-{$tab.id}" class="{if !$tab.selected}not-loaded{/if} product-tab-content" {if !$tab.selected}style="display:none"{/if}>
 					{if $tab.selected}
 						{$custom_form}
