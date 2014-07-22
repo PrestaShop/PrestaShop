@@ -33,12 +33,12 @@
 			setup : function(ed) {
 				ed.on('init', function(ed)
 				{
-					if (typeof ProductMultishop.load_tinymce[ed.id] != 'undefined')
+					if (typeof ProductMultishop.load_tinymce[ed.target.id] != 'undefined')
 					{
-						if (typeof ProductMultishop.load_tinymce[ed.id])
-							ed.hide();
+						if (typeof ProductMultishop.load_tinymce[ed.target.id])
+							tinyMCE.get(ed.target.id).hide();
 						else
-							ed.show();
+							tinyMCE.get(ed.target.id).show();
 					}
 				});
 
@@ -302,7 +302,7 @@
 
 			{* all input are here *}
 			{foreach $product_tabs key=numStep item=tab}
-				{if $tab.name != "Pack" }
+				{if $tab.id != "Pack" }
 				<div id="product-tab-content-{$tab.id}" class="{if !$tab.selected}not-loaded{/if} product-tab-content" {if !$tab.selected}style="display:none"{/if}>
 					{if $tab.selected}
 						{$custom_form}
@@ -316,3 +316,4 @@
 	</div>
 
 {/block}
+

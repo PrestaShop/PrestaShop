@@ -1189,16 +1189,16 @@ class CarrierCore extends ObjectModel
 		}
 
 		// Does the product is linked with carriers?
-		$query = new DbQuery();
-		$query->select('id_carrier');
-		$query->from('product_carrier', 'pc');
-		$query->innerJoin('carrier', 'c', 'c.id_reference = pc.id_carrier_reference AND c.deleted = 0');
-		$query->where('pc.id_product = '.(int)$product->id);
-		$query->where('pc.id_shop = '.(int)$id_shop);
-
 		$cache_id = 'Carrier::getAvailableCarrierList_'.(int)$product->id.'-'.(int)$id_shop;
 		if (!Cache::isStored($cache_id))
 		{
+			$query = new DbQuery();
+			$query->select('id_carrier');
+			$query->from('product_carrier', 'pc');
+			$query->innerJoin('carrier', 'c', 'c.id_reference = pc.id_carrier_reference AND c.deleted = 0');
+			$query->where('pc.id_product = '.(int)$product->id);
+			$query->where('pc.id_shop = '.(int)$id_shop);
+
 			$carriers_for_product = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 			Cache::store($cache_id, $carriers_for_product);
 		}

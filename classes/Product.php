@@ -1472,7 +1472,7 @@ class ProductCore extends ObjectModel
 
 		$combination->save();
 
-		if (!empty($id_images))
+		if (is_array($id_images) && count($id_images))
 			$combination->setImages($id_images);
 
 		$id_default_attribute = (int)Product::updateDefaultAttribute($this->id);
