@@ -68,7 +68,7 @@
 				if (key == 13)
 				{
 					e.preventDefault();
-					formSubmit(event, 'submitFilterButton{$list_id}');
+					formSubmit(e, 'submitFilterButton{$list_id}');
 				}
 			})
 			$('#submitFilterButton{$list_id}').click(function() {
