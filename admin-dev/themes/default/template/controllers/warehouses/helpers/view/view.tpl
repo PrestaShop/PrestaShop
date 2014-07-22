@@ -43,11 +43,11 @@
 		</div>
 		<div class="row">
 			<label class="control-label col-lg-3">{l s='Country:'}</label>
-			<div class="col-lg-9"><p class="form-control-static">{if $address->country != ''}{$address->country}{else}{l s='N/D'}{/if}</p></div>
+			<div class="col-lg-9"><p class="form-control-static">{if $address->country != ''}{$address->country}{else}{l s='N/A'}{/if}</p></div>
 		</div>
 		<div class="row">
 			<label class="control-label col-lg-3">{l s='Phone:'}</label>
-			<div class="col-lg-9"><p class="form-control-static">{if $address->phone != ''}{$address->phone}{else}{l s='N/D'}{/if}</p></div>
+			<div class="col-lg-9"><p class="form-control-static">{if $address->phone != ''}{$address->phone}{else}{l s='N/A'}{/if}</p></div>
 		</div>
 		<div class="row">
 			<label class="control-label col-lg-3">{l s='Management type:'}</label>
