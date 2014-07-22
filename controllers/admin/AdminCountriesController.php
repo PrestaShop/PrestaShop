@@ -403,34 +403,35 @@ class AdminCountriesControllerCore extends AdminController
 	
 	public function processSave()
 	{
+		if (!$this->id_object)
+		{
+			$tmp_addr_format = new AddressFormat();
+		}
+		else
+		{
+			$tmp_addr_format = new AddressFormat($this->id_object);
+		}
+
+		$tmp_addr_format->format = Tools::getValue('address_layout');
+
+		if (!$tmp_addr_format->checkFormatFields())
+		{
+			$error_list = $tmp_addr_format->getErrorList();
+			foreach ($error_list as $num_error => $error)
+				$this->errors[] = $error;
+		}
+		if (strlen($tmp_addr_format->format) <= 0)
+				$this->errors[] = $this->l("Address format invalid");
+
 		$country =  parent::processSave();
 
 		if (!count($this->errors))
 		{
-			$tmp_addr_format = new AddressFormat($country->id);
-
 			if (is_null($tmp_addr_format->id_country))
-			{
-				$tmp_addr_format = new AddressFormat();
 				$tmp_addr_format->id_country = $country->id;
-			}
 
-			$tmp_addr_format->format = Tools::getValue('address_layout');
-			if (strlen($tmp_addr_format->format) > 0)
-			{
-				if ($tmp_addr_format->checkFormatFields())
-					$address_format_result = $tmp_addr_format->save();
-				else
-				{
-					$error_list = $tmp_addr_format->getErrorList();
-					foreach ($error_list as $num_error => $error)
-						$this->errors[] = $error;
-				}
-
-				if (!isset($address_format_result) || !$address_format_result)
-					$this->errors[] = Tools::displayError('Invalid address layout '.Db::getInstance()->getMsgError());
-			}
-			unset($tmp_addr_format);
+			if (!$tmp_addr_format->save())
+				$this->errors[] = Tools::displayError('Invalid address layout '.Db::getInstance()->getMsgError());
 		}
 
 		return $country;
