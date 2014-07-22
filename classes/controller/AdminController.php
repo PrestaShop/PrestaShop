@@ -1553,29 +1553,14 @@ class AdminControllerCore extends Controller
 						$admin_tab[1] = substr($admin_tab[1], 0, strpos($admin_tab[1], '&'));
 
 					$token = Tools::getAdminToken($admin_tab[1].(int)Tab::getIdFromClassName($admin_tab[1]).(int)$this->context->employee->id);
+					$quick_access[$index]['target'] = $admin_tab[1];
 					$quick_access[$index]['link'] .= '&token='.$token;
 				}
 			}
 		}
 
-		$name = $this->l('New Bookmark');
-		if (isset($this->context->smarty->tpl_vars['breadcrumbs2']) && $this->context->smarty->tpl_vars['breadcrumbs2']->value['tab']['name'])
-		{
-			if ($this->context->smarty->tpl_vars['breadcrumbs2']->value['action']['name'])
-				$name = $this->context->smarty->tpl_vars['breadcrumbs2']->value['tab']['name'].' > '.$this->context->smarty->tpl_vars['breadcrumbs2']->value['action']['name'];
-			else
-				$name = $this->context->smarty->tpl_vars['breadcrumbs2']->value['tab']['name'];
-		}
-		elseif (isset($this->context->smarty->tpl_vars['breadcrumbs2']) && is_string($this->context->smarty->tpl_vars['breadcrumbs2']->value))
-			$name = $this->context->smarty->tpl_vars['breadcrumbs2']->value;
-
-		$link = preg_replace('/&token=[a-z0-9]{32}/', '', basename($_SERVER['REQUEST_URI']));
-
-		$quick_access[] = array(
-			'name' => $this->l('Bookmark this page'),
-			'link' => $this->context->link->getAdminLink('AdminQuickAccesses').'&new_window=0&name_'.(int)Configuration::get('PS_LANG_DEFAULT').'='.urlencode($name).'&link='.urlencode($link).'&submitAddquick_access=1',
-			'new_window' => 0
-		);
+		//$link = preg_replace('/&token=[a-z0-9]{32}/', '', basename($_SERVER['REQUEST_URI']));
+		//$currentPage = 'index.php?controller='.$this->context->controller->controller_name."&".$this->display.$this->table;
 
 		// Tab list
 		$tabs = Tab::getTabs($this->context->language->id, 0);
