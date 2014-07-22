@@ -639,5 +639,26 @@ class LinkCore
 
 		return $base.$shop->getBaseURI();
 	}
+
+	public static function getQuickLink($url)
+	{
+		$parsedUrl = parse_url($url);
+		parse_str($parsedUrl['query'], $output);
+		unset($output['token'],$output['conf'],$output['id_quick_access']);
+		return http_build_query($output);
+	}
+
+	public function matchQuickLink($url)
+	{
+		$quicklink = $this->getQuickLink($url);
+		if ( isset($quicklink) && $quicklink === ($this->getQuickLink($_SERVER['REQUEST_URI'])))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }
 

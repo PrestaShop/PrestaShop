@@ -28,7 +28,8 @@
 
 {block name=pageTitle}
 <h2 class="page-title">
-	{l s='List of modules'}
+	{capture "title"}{l s='List of modules'}{/capture}
+	{$smarty.capture.title}
 </h2>
 {/block}
 

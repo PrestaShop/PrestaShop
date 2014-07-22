@@ -145,12 +145,61 @@ class AdminQuickAccessesControllerCore extends AdminController
 		parent::initProcess();
 	}
 	
-	public function processAdd()
+	public function addQuickLink()
 	{
-		// Enable the creation of quick links from the URL
-		$_POST = array_merge($_POST, $_GET);
+		if (!isset($this->className) || empty($this->className))
+			return false;
+		$this->validateRules();
+		if (count($this->errors) <= 0)
+		{
+			$this->object = new $this->className();
+			$this->copyFromPost($this->object, $this->table);
+			$this->beforeAdd($this->object);
+			if (method_exists($this->object, 'add') && !$this->object->add())
+			{
+				$this->errors[] = Tools::displayError('An error occurred while creating an object.').
+					' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
+			}
+			/* voluntary do affectation here */
+			elseif (($_POST[$this->identifier] = $this->object->id) && $this->postImage($this->object->id) && !count($this->errors) && $this->_redirect)
+			{
+				PrestaShopLogger::addLog(sprintf($this->l('%s addition', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
+				$this->afterAdd($this->object);
+			}
+		}
+		$this->errors = array_unique($this->errors);
+		if (!empty($this->errors))
+		{
+			d($this->errors);
+			return false;
+		}
+		return Tools::jsonEncode(QuickAccess::getQuickAccesses($this->context->language->id));
+	}
 
-		return parent::processAdd();
+	public function processDelete()
+	{
+		parent::processDelete();
+		return Tools::jsonEncode(QuickAccess::getQuickAccesses($this->context->language->id));
+	}
+
+	public function ajaxProcessGetUrl()
+	{
+		if (Tools::strtolower(Tools::getValue('method')) === 'add')
+		{
+			$params['new_window'] = 0;
+			$params['name_'.(int)Configuration::get('PS_LANG_DEFAULT')] = Tools::getValue('name');
+			$params['link'] = 'index.php?'.Tools::getValue('url');
+			$params['submitAddquick_access'] = 1;
+			unset($_POST['name']);
+			$_POST = array_merge($_POST, $params);
+			die($this->addQuickLink());
+		}
+		else if (Tools::strtolower(Tools::getValue('method')) === 'remove')
+		{
+			$params['deletequick_access'] = 1;
+			$_POST = array_merge($_POST, $params);
+			die($this->processDelete());
+		}
 	}
 
 	public function processNewWindow()
