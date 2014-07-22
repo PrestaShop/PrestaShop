@@ -528,7 +528,7 @@ class AdminCategoriesControllerCore extends AdminController
 			),
 			'submit' => array(
 				'title' => $this->l('Save'),
-				'name' => 'submitAdd'.$this->table.'AndBackToParent'
+				'name' => 'submitAdd'.$this->table.($this->_category->is_root_category && !Tools::isSubmit('add'.$this->table) ? '' : 'AndBackToParent')
 			)
 		);
 
