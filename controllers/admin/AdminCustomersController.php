@@ -240,7 +240,7 @@ class AdminCustomersControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
-		if (empty($this->display))
+		if (empty($this->display) && $this->can_add_customer)
 			$this->page_header_toolbar_btn['new_customer'] = array(
 				'href' => self::$currentIndex.'&addcustomer&token='.$this->token,
 				'desc' => $this->l('Add new customer', null, null, false),
