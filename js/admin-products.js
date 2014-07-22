@@ -642,6 +642,9 @@ product_tabs['Seo'] = new function(){
 	var self = this;
 
 	this.onReady = function() {
+		if ($('#link_rewrite_'+id_lang_default).val().replace(/^\s+|\s+$/gm,'') == '') {
+			updateFriendlyURLByName();
+		}
 		// Enable writing of the product name when the friendly url field in tab SEO is loaded
 		$('.copy2friendlyUrl').removeAttr('disabled');
 

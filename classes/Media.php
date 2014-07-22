@@ -82,7 +82,6 @@ class MediaCore
 	{
 		if (strlen($html_content) > 0)
 		{
-
 			//set an alphabetical order for args
 			// $html_content = preg_replace_callback(
 				// '/(<[a-zA-Z0-9]+)((\s*[a-zA-Z0-9]+=[\"\\\'][^\"\\\']*[\"\\\']\s*)*)>/',
@@ -150,7 +149,6 @@ class MediaCore
 		return $output;
 	}
 
-
 	public static function packJS($js_content)
 	{
 		if (!empty($js_content))
@@ -176,7 +174,7 @@ class MediaCore
 		{
 			$limit  = Media::getBackTrackLimit();
 			$css_content = preg_replace('#/\*.*?\*/#s', '', $css_content, $limit);
-			$css_content = preg_replace_callback('#(url\((?!data:)(?!http://)(?!https://)(?:\'|")?)([^\)\'"]*(?:\'|")?\))#s', array('Tools', 'replaceByAbsoluteURL'), $css_content, $limit); 
+			$css_content = preg_replace_callback('#(url\((?![\\\'"]?data:)(?!http://)(?!https://)(?:\'|")?)([^\)\'"]*(?:\'|")?\))#s', array('Tools', 'replaceByAbsoluteURL'), $css_content, $limit); 
 			$css_content = preg_replace('#\s+#', ' ', $css_content, $limit);		
 			$css_content = str_replace(array("\t", "\n", "\r"), '', $css_content);
 			$css_content = str_replace(array('; ', ': '), array(';', ':'), $css_content);

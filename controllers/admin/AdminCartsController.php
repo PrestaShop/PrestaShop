@@ -91,7 +91,7 @@ class AdminCartsControllerCore extends AdminController
 				'align' => 'text-center',
 				'type' => 'bool',
 				'havingFilter' => true,
-				'icon' => array(0 => 'blank.gif', 1 => 'tab-customers.gif')
+				'icon' => array(0 => 'icon-', 1 => 'icon-user')
 			)
 		);
  		$this->shopLinkType = 'shop';

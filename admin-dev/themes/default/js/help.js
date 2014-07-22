@@ -299,7 +299,7 @@ $(function() {
 			comment: null
 		};
 		$('#help-container .helpful-labels li').on('click', function(){
-			var percentageMap = {0:'Not at all', 25:'Not very', 50:'Somewhat', 75:'Very', 100:'Extremly'};
+			var percentageMap = {0:'Not at all', 25:'Not very', 50:'Somewhat', 75:'Very', 100:'Extremely'};
 			var percentage = parseInt($(this).data('percentage'));
 			arr_feedback.helpful = percentageMap[percentage];
 			$('#help-container .slider-cursor').removeClass('hide');
