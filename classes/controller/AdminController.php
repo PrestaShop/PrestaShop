@@ -457,7 +457,11 @@ class AdminControllerCore extends Controller
 				break;
 		}
 
-		$this->context->smarty->assign('breadcrumbs2', $breadcrumbs2);
+		$this->context->smarty->assign(array(
+			'breadcrumbs2' => $breadcrumbs2,
+			'quick_access_current_link_name' => $breadcrumbs2['tab']['name'].(isset($breadcrumbs2['action']) ? ' - '. $breadcrumbs2['action']['name'] : ''),
+			'quick_access_current_link_icon' => $breadcrumbs2['container']['icon']
+		));
 
 		/* BEGIN - Backward compatibility < 1.6.0.3 */
 		$this->breadcrumbs[] = $tabs[0]['name'];
@@ -1669,7 +1673,7 @@ class AdminControllerCore extends Controller
 				'is_multishop' => $is_multishop,
 				'multishop_context' => $this->multishop_context,
 				'default_tab_link' => $this->context->link->getAdminLink(Tab::getClassNameById((int)Context::getContext()->employee->default_tab)),
-				'collapse_menu' => isset($this->context->cookie->collapse_menu) ? (int)$this->context->cookie->collapse_menu : 0
+				'collapse_menu' => isset($this->context->cookie->collapse_menu) ? (int)$this->context->cookie->collapse_menu : 0,
 			));
 		}
 		else

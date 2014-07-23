@@ -198,7 +198,6 @@
 					</li>
 {/if}
 				</ul>
-
 {if count($quick_access) >= 0}
 				<ul id="header_quick">
 					<li class="dropdown">
@@ -245,7 +244,8 @@
 								url: "{$link->getAdminLink('AdminQuickAccesses')}" + "&action=GetUrl" + "&rand={1|rand:200}" + "&ajax=1" + "&method=" + $(this).data('method') + "&id_quick_access=" + $(this).data('quicklink-id'),
 								data: {
 									"url": "{$link->getQuickLink($smarty.server['REQUEST_URI'])}",
-									"name": "{$smarty.capture.title}",
+									"name": "{$quick_access_current_link_name}",
+									"icon": "{$quick_access_current_link_icon}"
 								},
 								dataType: "json",
 								success: function(data) {
