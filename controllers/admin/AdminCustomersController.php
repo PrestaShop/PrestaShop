@@ -286,7 +286,7 @@ class AdminCustomersControllerCore extends AdminController
 
 	public function renderList()
 	{
-		if (Tools::isSubmit('submitBulkdelete'.$this->table) || Tools::isSubmit('delete'.$this->table))
+		if ((Tools::isSubmit('submitBulkdelete'.$this->table) || Tools::isSubmit('delete'.$this->table)) && $this->tabAccess['delete'] === '1')
 			$this->tpl_list_vars = array(
 				'delete_customer' => true,
 				'REQUEST_URI' => $_SERVER['REQUEST_URI'],
@@ -762,7 +762,7 @@ class AdminCustomersControllerCore extends AdminController
 		$total_connections = count($connections);
 		for ($i = 0; $i < $total_connections; $i++)
 			$connections[$i]['http_referer'] = $connections[$i]['http_referer'] ? preg_replace('/^www./', '', parse_url($connections[$i]['http_referer'], PHP_URL_HOST)) : $this->l('Direct link');
-		
+
 		$referrers = Referrer::getReferrers($customer->id);
 		$total_referrers = count($referrers);
 		for ($i = 0; $i < $total_referrers; $i++)
@@ -822,7 +822,7 @@ class AdminCustomersControllerCore extends AdminController
 		$this->_setDeletedMode();
 		parent::processDelete();
 	}
-	
+
 	protected function _setDeletedMode()
 	{
 		if ($this->delete_mode == 'real')
@@ -835,7 +835,7 @@ class AdminCustomersControllerCore extends AdminController
 			return;
 		}
 	}
-		
+
 	protected function processBulkDelete()
 	{
 		$this->_setDeletedMode();
@@ -1029,10 +1029,10 @@ class AdminCustomersControllerCore extends AdminController
 
 		$this->content = Tools::jsonEncode($to_return);
 	}
-	
+
 	/**
 	 * Uodate the customer note
-	 * 
+	 *
 	 * @return void
 	 */
 	public function ajaxProcessUpdateCustomerNote()
