@@ -204,7 +204,7 @@ abstract class ObjectModelCore
 				$sql->where('a.'.$this->def['primary'].' = '.(int)$id);
 
 				// Get lang informations
-				if ($id_lang)
+				if ($id_lang && isset($this->def['multilang']) && $this->def['multilang'])
 				{
 					$sql->leftJoin($this->def['table'].'_lang', 'b', 'a.'.$this->def['primary'].' = b.'.$this->def['primary'].' AND b.id_lang = '.(int)$id_lang);
 					if ($this->id_shop && !empty($this->def['multilang_shop']))
