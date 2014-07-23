@@ -643,8 +643,12 @@ class LinkCore
 	public static function getQuickLink($url)
 	{
 		$parsedUrl = parse_url($url);
-		parse_str($parsedUrl['query'], $output);
-		unset($output['token'],$output['conf'],$output['id_quick_access']);
+		$output = array();
+		if (is_array($parsedUrl) && isset($parsedUrl['query']))
+		{
+			parse_str($parsedUrl['query'], $output);
+			unset($output['token'], $output['conf'], $output['id_quick_access']);
+		}
 		return http_build_query($output);
 	}
 
