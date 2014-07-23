@@ -442,8 +442,6 @@ class WebserviceRequestCore
 		// set the output object which manage the content and header structure and informations
 		$this->objOutput = new WebserviceOutputBuilder($this->wsUrl);
 
-
-
 		$this->_key = trim($key);
 
 		$this->outputFormat = isset($params['output_format']) ? $params['output_format'] : $this->outputFormat;
@@ -454,14 +452,13 @@ class WebserviceRequestCore
 		if ($this->webserviceChecks())
 		{
 			if ($bad_class_name)
-				$this->setError(500, 'Bad override class name for this key. Please update class_name field', 126);
+				$this->setError(500, 'Class "'.html_special_chars($bad_class_name).'" not found. Please update the class_name field in the webservice_account table.', 126);
 			// parse request url
 			$this->method = $method;
 			$this->urlSegment = explode('/', $url);
 			$this->urlFragments = $params;
 			$this->_inputXml = $inputXml;
 			$this->depth = isset($this->urlFragments['depth']) ? (int)$this->urlFragments['depth'] : $this->depth;
-
 
 			try {
 				// Method below set a particular fonction to use on the price field for products entity
