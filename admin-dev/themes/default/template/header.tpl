@@ -227,7 +227,7 @@
 							{/if}
 							<li {if isset($matchQuickLink)}class="hide"{/if}>
 								<a href="javascript:void(0);" class="ajax-quick-link" data-method="add">
-									<i class="icon-flash"></i>
+									<i class="icon-plus-circle"></i>
 									{l s='Add current page to QuickAccess'}
 								</a>
 							</li>
@@ -249,14 +249,12 @@
 								},
 								dataType: "json",
 								success: function(data) {
-									if( $(this).data('method') === 'add' ){
-										alert('add');
-									};
 									var quicklink_list ='';
 									$.each(data,function(index,value){
-										quicklink_list += '<li><a href="' + data[index]['link']"><i class="icon-chevron-right"></i> ' + data[index]['name'] + '</a></li>';
+										quicklink_list += '<li><a href="' + data[index]['link'] + '&token=' + data[index]['token'] + '"><i class="icon-chevron-right"></i> ' + data[index]['name'] + '</a></li>';
 									});
 									$("#header_quick ul.dropdown-menu").html(quicklink_list);
+									showSuccessMessage(update_success_msg);
 								}
 							});
 						});
