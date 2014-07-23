@@ -2576,7 +2576,18 @@ class AdminControllerCore extends Controller
 			{
 				if (Tools::isSubmit('submitBulk'.$bulk_action.$this->table) || Tools::isSubmit('submitBulk'.$bulk_action))
 				{
-					if ($this->tabAccess['edit'] === '1')
+					if ($bulk_action === 'delete')
+					{
+						if ($this->tabAccess['delete'] === '1')
+						{
+							$this->action = 'bulk'.$bulk_action;
+							$this->boxes = Tools::getValue($this->table.'Box');
+						}
+						else
+							$this->errors[] = Tools::displayError('You do not have permission to delete this.');
+						break;
+					}
+					elseif ($this->tabAccess['edit'] === '1')
 					{
 						$this->action = 'bulk'.$bulk_action;
 						$this->boxes = Tools::getValue($this->table.'Box');
