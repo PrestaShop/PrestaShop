@@ -8,3 +8,5 @@ VALUES (NULL , 'displayAdminOrderTabOrder', 'Display new elements in Back Office
 
 INSERT INTO `PREFIX_configuration` (`name` , `value` , `date_add` , `date_upd`)
 VALUES ('PS_SET_DISPLAY_SUBCATEGORIES', '1', NOW(), NOW());
+
+UPDATE `PREFIX_hook` SET `live_edit` = 0 WHERE `name`='displayOverrideTemplate';
