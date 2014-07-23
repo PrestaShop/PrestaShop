@@ -211,7 +211,11 @@ class AdminCategoriesControllerCore extends AdminController
 		if (!Shop::isFeatureActive() && count(Category::getCategoriesWithoutParent()) > 1 && !Tools::isSubmit('id_category'))
 			$categories_tree = array(get_object_vars($this->_category->getTopCategory()));
 		else
+		{
 			$categories_tree = $this->_category->getParentsCategories();
+			$categories_tree = array_merge($categories_tree, array(get_object_vars($this->_category->getTopCategory())));
+		}
+
 		if (empty($categories_tree)
 			&& ($this->_category->id != 1 || Tools::isSubmit('id_category'))
 			&& (Shop::getContext() == Shop::CONTEXT_SHOP && !Shop::isFeatureActive() && $count_categories_without_parent > 1))
