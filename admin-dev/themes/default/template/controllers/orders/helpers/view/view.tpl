@@ -482,11 +482,12 @@
 										</div>
 									</td>
 									<td>
-										<select name="payment_method" class="payment_method">
+										<input name="payment_method" list="payment_method" class="payment_method">
+										<datalist id="payment_method">
 										{foreach from=$payment_methods item=payment_method}
-											<option value="{$payment_method}">{$payment_method}</option>
+											<option value="{$payment_method}">
 										{/foreach}
-										</select>
+										</datalist>
 									</td>
 									<td>
 										<input type="text" name="payment_transaction_id" value="" class="form-control fixed-width-sm"/>
