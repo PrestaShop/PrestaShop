@@ -213,7 +213,8 @@ class AdminCategoriesControllerCore extends AdminController
 		else
 		{
 			$categories_tree = $this->_category->getParentsCategories();
-			$categories_tree = array_merge($categories_tree, array(get_object_vars($this->_category->getTopCategory())));
+			if (!Shop::isFeatureActive())
+				$categories_tree = array_merge($categories_tree, array(get_object_vars($this->_category->getTopCategory())));
 		}
 
 		if (empty($categories_tree)
