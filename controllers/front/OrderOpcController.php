@@ -351,8 +351,6 @@ class OrderOpcControllerCore extends ParentOrderController
 		// WRAPPING AND TOS
 		$this->_assignWrappingAndTOS();
 
-		$selectedCountry = (int)(Configuration::get('PS_COUNTRY_DEFAULT'));
-
 		if (Configuration::get('PS_RESTRICT_DELIVERED_COUNTRIES'))
 			$countries = Carrier::getDeliveredCountries($this->context->language->id, true, true);
 		else
@@ -371,7 +369,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			'free_shipping' => $free_shipping,
 			'isGuest' => isset($this->context->cookie->is_guest) ? $this->context->cookie->is_guest : 0,
 			'countries' => $countries,
-			'sl_country' => isset($selectedCountry) ? $selectedCountry : 0,
+			'sl_country' => (int)Tools::getCountry(),
 			'PS_GUEST_CHECKOUT_ENABLED' => Configuration::get('PS_GUEST_CHECKOUT_ENABLED'),
 			'errorCarrier' => Tools::displayError('You must choose a carrier.', false),
 			'errorTOS' => Tools::displayError('You must accept the Terms of Service.', false),

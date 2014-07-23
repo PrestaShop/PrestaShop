@@ -33,6 +33,7 @@ class AuthControllerCore extends FrontController
 	 * @var bool create_account
 	 */
 	protected $create_account;
+	protected $id_country;
 
 	/**
 	 * Initialize auth controller
@@ -107,23 +108,12 @@ class AuthControllerCore extends FrontController
 				$countries = Carrier::getDeliveredCountries($this->context->language->id, true, true);
 			else
 				$countries = Country::getCountries($this->context->language->id, true);
-			
-			if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
-			{
-				// get all countries as language (xy) or language-country (wz-XY)
-				$array = array();
-				preg_match("#(?<=-)\w\w|\w\w(?!-)#", $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array);
-				if (!Validate::isLanguageIsoCode($array[0]) || !($sl_country = Country::getByIso($array[0])))
-					$sl_country = (int)Configuration::get('PS_COUNTRY_DEFAULT');
-			}
-			else
-				$sl_country = (int)Tools::getValue('id_country', Configuration::get('PS_COUNTRY_DEFAULT'));
-			
+			d($this->id_country);
 			$this->context->smarty->assign(array(
 					'inOrderProcess' => true,
 					'PS_GUEST_CHECKOUT_ENABLED' => Configuration::get('PS_GUEST_CHECKOUT_ENABLED'),
 					'PS_REGISTRATION_PROCESS_TYPE' => Configuration::get('PS_REGISTRATION_PROCESS_TYPE'),
-					'sl_country' => (int)$sl_country,
+					'sl_country' => (int)$this->id_country,
 					'countries' => $countries
 				));
 		}
@@ -170,27 +160,22 @@ class AuthControllerCore extends FrontController
 	 */
 	protected function assignDate()
 	{
-		// Generate years, months and days
-		if (isset($_POST['years']) && is_numeric($_POST['years']))
-			$selectedYears = (int)($_POST['years']);
+		$selectedYears = (int)(Tools::getValue('years', 0));
 		$years = Tools::dateYears();
-		if (isset($_POST['months']) && is_numeric($_POST['months']))
-			$selectedMonths = (int)($_POST['months']);
+		$selectedMonths = (int)(Tools::getValue('months', 0));
 		$months = Tools::dateMonths();
-
-		if (isset($_POST['days']) && is_numeric($_POST['days']))
-			$selectedDays = (int)($_POST['days']);
+		$selectedDays = (int)(Tools::getValue('days', 0));
 		$days = Tools::dateDays();
 
 		$this->context->smarty->assign(array(
 				'one_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'),
 				'onr_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'), //retro compat
 				'years' => $years,
-				'sl_year' => (isset($selectedYears) ? $selectedYears : 0),
+				'sl_year' => $selectedYears,
 				'months' => $months,
-				'sl_month' => (isset($selectedMonths) ? $selectedMonths : 0),
+				'sl_month' => $selectedMonths,
 				'days' => $days,
-				'sl_day' => (isset($selectedDays) ? $selectedDays : 0)
+				'sl_day' => $selectedDays
 			));
 	}
 
@@ -199,12 +184,7 @@ class AuthControllerCore extends FrontController
 	 */
 	protected function assignCountries()
 	{
-			// Select the most appropriate country
-			if (isset($_POST['id_country']) && is_numeric($_POST['id_country']))
-				$selectedCountry = (int)($_POST['id_country']);
-			if (!isset($selectedCountry))
-				$selectedCountry = (int)(Configuration::get('PS_COUNTRY_DEFAULT'));
-
+			$this->id_country = (int)Tools::getCountry();
 			if (Configuration::get('PS_RESTRICT_DELIVERED_COUNTRIES'))
 				$countries = Carrier::getDeliveredCountries($this->context->language->id, true, true);
 			else
@@ -212,7 +192,7 @@ class AuthControllerCore extends FrontController
 			$this->context->smarty->assign(array(
 				'countries' => $countries,
 				'PS_REGISTRATION_PROCESS_TYPE' => Configuration::get('PS_REGISTRATION_PROCESS_TYPE'),
-				'sl_country' => (isset($selectedCountry) ? $selectedCountry : 0),
+				'sl_country' => (int)$this->id_country,
 				'vat_management' => Configuration::get('VATNUMBER_MANAGEMENT')
 			));
 	}
@@ -223,7 +203,7 @@ class AuthControllerCore extends FrontController
 	protected function assignAddressFormat()
 	{
 		$addressItems = array();
-		$addressFormat = AddressFormat::getOrderedAddressFields(Configuration::get('PS_COUNTRY_DEFAULT'), false, true);
+		$addressFormat = AddressFormat::getOrderedAddressFields((int)$this->id_country, false, true);
 		$requireFormFieldsList = AddressFormat::$requireFormFieldsList;
 
 		foreach ($addressFormat as $addressline)
@@ -377,8 +357,8 @@ class AuthControllerCore extends FrontController
 			$this->errors[] = Tools::displayError('You cannot create a guest account..');
 		if (!Tools::getValue('is_new_customer', 1))
 			$_POST['passwd'] = md5(time()._COOKIE_KEY_);
-		if (isset($_POST['guest_email']) && $_POST['guest_email'])
-			$_POST['email'] = $_POST['guest_email'];
+		if ($guest_email = Tools::getValue('guest_email'))
+			$_POST['email'] = $guest_email;
 		// Checked the user address in case he changed his email address
 		if (Validate::isEmail($email = Tools::getValue('email')) && !empty($email))
 			if (Customer::customerExists($email))
@@ -424,7 +404,7 @@ class AuthControllerCore extends FrontController
 					$this->processCustomerNewsletter($customer);
 
 				$customer->firstname = Tools::ucwords($customer->firstname);
-				$customer->birthday = (empty($_POST['years']) ? '' : (int)$_POST['years'].'-'.(int)$_POST['months'].'-'.(int)$_POST['days']);
+				$customer->birthday = (empty($_POST['years']) ? '' : (int)Tools::getValue('years').'-'.(int)Tools::getValue('months').'-'.(int)Tools::getValue('days'));
 				if (!Validate::isBirthDate($customer->birthday))
 					$this->errors[] = Tools::displayError('Invalid date of birth.');
 
@@ -489,8 +469,8 @@ class AuthControllerCore extends FrontController
 
 				if ($addresses_type == 'address_invoice')
 					foreach($_POST as $key => &$post)
-						if (isset($_POST[$key.'_invoice']))
-							$post = $_POST[$key.'_invoice'];
+						if ($tmp = Tools::getValue($key.'_invoice'))
+							$post = $tmp;
 
 				$this->errors = array_unique(array_merge($this->errors, $$addresses_type->validateController()));
 				if ($addresses_type == 'address_invoice')
@@ -536,7 +516,7 @@ class AuthControllerCore extends FrontController
 			if (Tools::isSubmit('newsletter'))
 				$this->processCustomerNewsletter($customer);
 
-			$customer->birthday = (empty($_POST['years']) ? '' : (int)$_POST['years'].'-'.(int)$_POST['months'].'-'.(int)$_POST['days']);
+			$customer->birthday = (empty($_POST['years']) ? '' : (int)Tools::getValue('years').'-'.(int)Tools::getValue('months').'-'.(int)Tools::getValue('days'));
 			if (!Validate::isBirthDate($customer->birthday))
 					$this->errors[] = Tools::displayError('Invalid date of birth');
 
@@ -557,8 +537,8 @@ class AuthControllerCore extends FrontController
 						$$addresses_type->id_customer = (int)$customer->id;				
 						if ($addresses_type == 'address_invoice')
 							foreach($_POST as $key => &$post)
-								if (isset($_POST[$key.'_invoice']))
-									$post = $_POST[$key.'_invoice'];
+								if ($tmp = Tools::getValue($key.'_invoice'))
+									$post = $tmp;
 		
 						$this->errors = array_unique(array_merge($this->errors, $$addresses_type->validateController()));
 						if ($addresses_type == 'address_invoice')
@@ -668,7 +648,7 @@ class AuthControllerCore extends FrontController
 		elseif (Customer::customerExists($email))
 		{
 			$this->errors[] = Tools::displayError('An account using this email address has already been registered. Please enter a valid password or request a new one. ', false);
-			$_POST['email'] = $_POST['email_create'];
+			$_POST['email'] = Tools::getValue('email_create');
 			unset($_POST['email_create']);
 		}
 		else
