@@ -145,6 +145,19 @@ class AdminQuickAccessesControllerCore extends AdminController
 		parent::initProcess();
 	}
 	
+	public function getQuickAccessesList()
+	{
+		$links = QuickAccess::getQuickAccesses($this->context->language->id);
+		return Tools::jsonEncode(array_map(array($this, 'getLinkToken'), $links));
+	}
+	public function getLinkToken($item){
+		$url = parse_url($item['link']);
+		parse_str($url['query'], $query);
+		$controller = $query['controller'];
+		$item['token'] = Tools::getAdminTokenLite($controller);
+		return $item;
+	}
+
 	public function addQuickLink()
 	{
 		if (!isset($this->className) || empty($this->className))
@@ -173,13 +186,13 @@ class AdminQuickAccessesControllerCore extends AdminController
 			d($this->errors);
 			return false;
 		}
-		return Tools::jsonEncode(QuickAccess::getQuickAccesses($this->context->language->id));
+		return $this->getQuickAccessesList();
 	}
 
 	public function processDelete()
 	{
 		parent::processDelete();
-		return Tools::jsonEncode(QuickAccess::getQuickAccesses($this->context->language->id));
+		return $this->getQuickAccessesList();
 	}
 
 	public function ajaxProcessGetUrl()
