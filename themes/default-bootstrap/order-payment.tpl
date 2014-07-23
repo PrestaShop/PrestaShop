@@ -153,7 +153,7 @@
 											{/if}
 										</td>
 									</tr>
-									{if $use_taxes}
+									{if $use_taxes && $show_taxes}
 										{if $priceDisplay && $total_tax != 0}
 											<tr class="cart_total_tax">
 												<td colspan="4" class="text-right">{l s='Total tax:'}</td>
