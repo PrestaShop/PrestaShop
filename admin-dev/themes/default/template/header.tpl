@@ -254,7 +254,7 @@
 									};
 									var quicklink_list ='';
 									$.each(data,function(index,value){
-										quicklink_list += '<li><a href="' + data[index]['link']"><i class="icon-chevron-right"></i> ' + data[index]['name'] + '</a></li>';
+										quicklink_list += '<li><a href="' + data[index]['link'] + '&token=' + data[index]['token'] + '"><i class="icon-chevron-right"></i> ' + data[index]['name'] + '</a></li>';
 									});
 									$("#header_quick ul.dropdown-menu").html(quicklink_list);
 								}
