@@ -101,7 +101,7 @@ class WebserviceKeyCore extends ObjectModel
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT active
 		FROM `'._DB_PREFIX_.'webservice_account`
-		WHERE key = "'.pSQL($auth_key).'"');
+		WHERE `key` = "'.pSQL($auth_key).'"');
 	}
 
 	public static function getClassFromKey($auth_key)
@@ -109,7 +109,7 @@ class WebserviceKeyCore extends ObjectModel
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT class_name
 		FROM `'._DB_PREFIX_.'webservice_account`
-		WHERE key = "'.pSQL($auth_key).'"');
+		WHERE `key` = "'.pSQL($auth_key).'"');
 	}
 
 	public static function setPermissionForAccount($id_account, $permissions_to_set)

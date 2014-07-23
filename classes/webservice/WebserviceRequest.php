@@ -737,33 +737,18 @@ class WebserviceRequestCore
 			else
 			{
 				if (empty($this->_key))
-				{
 					$this->setError(401, 'Authentication key is empty', 17);
-				}
 				elseif (strlen($this->_key) != '32')
-				{
 					$this->setError(401, 'Invalid authentication key format', 18);
-				}
 				else
 				{
-					$keyValidation = WebserviceKey::isKeyActive($this->_key);
-					if (is_null($keyValidation))
-					{
-						$this->setError(401, 'Authentification key does not exist', 19);
-					}
-					elseif($keyValidation === true)
-					{
+					if (WebserviceKey::isKeyActive($this->_key))
 						$this->keyPermissions = WebserviceKey::getPermissionForAccount($this->_key);
-					}
 					else
-					{
 						$this->setError(401, 'Authentification key is not active', 20);
-					}
 
 					if (!$this->keyPermissions)
-					{
 						$this->setError(401, 'No permission for this authentication key', 21);
-					}
 				}
 			}
 			if ($this->hasErrors())
