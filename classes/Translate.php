@@ -63,7 +63,7 @@ class TranslateCore
 			// if the class is extended by a module, use modules/[module_name]/xx.php lang file
 			if (class_exists($class_name_controller) && Module::getModuleNameFromClass($class_name_controller))
 			{
-				return Translate::getModuleTranslation(Module::$classInModule[$class_name_controller], $string, $class_name_controller,null,$addslashes);
+				return Translate::getModuleTranslation(Module::$classInModule[$class_name_controller], $string, $class_name_controller,$sprintf,$addslashes);
 			}
 		}
 
