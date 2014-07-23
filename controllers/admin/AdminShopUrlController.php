@@ -292,8 +292,7 @@ class AdminShopUrlControllerCore extends AdminController
 
 			$this->page_header_toolbar_btn['new'] = array(
 				'desc' => $this->l('Add a new URL'),
-				'href' => $this->context->link->getAdminLink('AdminShopUrl').'&add'.$this->table.'&id_shop='
-					.$this->id_shop,
+				'href' => $this->context->link->getAdminLink('AdminShopUrl').'&add'.$this->table.'&id_shop='.(int)$this->id_shop,
 			);
 		}
 	}
@@ -312,8 +311,7 @@ class AdminShopUrlControllerCore extends AdminController
 
 			$this->toolbar_btn['new'] = array(
 				'desc' => $this->l('Add a new URL'),
-				'href' => $this->context->link->getAdminLink('AdminShopUrl').'&amp;add'.$this->table.'&amp;id_shop='
-					.$this->id_shop,
+				'href' => $this->context->link->getAdminLink('AdminShopUrl').'&add'.$this->table.'&id_shop='.(int)$this->id_shop,
 			);
 		}
 	}
