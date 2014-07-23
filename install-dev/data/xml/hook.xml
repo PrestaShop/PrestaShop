@@ -304,5 +304,8 @@
     <hook id="displayNav" live_edit="1">
       <name>displayNav</name><title>Navigation</title><description></description>
     </hook>
+    <hook id="displayOverrideTemplate" live_edit="0">
+      <name>displayOverrideTemplate</name><title>Change the default template of current controller</title><description></description>
+    </hook>
   </entities>
 </entity_hook>
