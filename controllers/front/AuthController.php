@@ -240,6 +240,7 @@ class AuthControllerCore extends FrontController
 	 */
 	protected function processSubmitLogin()
 	{
+		
 		Hook::exec('actionBeforeAuthentication');
 		$passwd = trim(Tools::getValue('passwd'));
 		$email = trim(Tools::getValue('email'));
@@ -255,7 +256,9 @@ class AuthControllerCore extends FrontController
 		{
 			$customer = new Customer();
 			$authentication = $customer->getByEmail(trim($email), trim($passwd));
-			if (!$authentication || !$customer->id)
+			if (isset($authentication->active) && !$authentication->active)
+				$this->errors[] = Tools::displayError('Your account isn\'t available at this time, please contact us');
+			else if (!$authentication || !$customer->id)
 				$this->errors[] = Tools::displayError('Authentication failed.');
 			else
 			{
@@ -321,6 +324,7 @@ class AuthControllerCore extends FrontController
 		}
 		else
 			$this->context->smarty->assign('authentification_error', $this->errors);
+			
 	}
 
 	/**
