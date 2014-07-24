@@ -881,7 +881,7 @@ class CartCore extends ObjectModel
 
 		if ((int)$quantity <= 0)
 			return $this->deleteProduct($id_product, $id_product_attribute, (int)$id_customization);
-		elseif (!$product->available_for_order || Configuration::get('PS_CATALOG_MODE'))
+		elseif (!$product->available_for_order || (Configuration::get('PS_CATALOG_MODE') && !defined('_PS_ADMIN_DIR_')))
 			return false;
 		else
 		{
@@ -3004,7 +3004,7 @@ class CartCore extends ObjectModel
 
 	public function checkQuantities()
 	{
-		if (Configuration::get('PS_CATALOG_MODE'))
+		if (Configuration::get('PS_CATALOG_MODE') && !defined('_PS_ADMIN_DIR_'))
 			return false;
 
 		foreach ($this->getProducts() as $product)

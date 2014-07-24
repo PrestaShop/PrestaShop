@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<entity_configuration>
+  <configuration id="PS_INVOICE_PREFIX">
+    <value>CU</value>
+  </configuration>
+  <configuration id="PS_DELIVERY_PREFIX">
+    <value>EN</value>
+  </configuration>
+  <configuration id="PS_SEARCH_BLACKLIST">
+    <value>de|los|las|lo|la|en|de|y|el|a</value>
+  </configuration>
+  <configuration id="PS_META_KEYWORDS">
+    <value>0</value>
+  </configuration>
+  <configuration id="PS_CUSTOMER_SERVICE_SIGNATURE">
+    <value>Estimado cliente,&#xD;
+&#xD;
+Un cordial saludo,&#xD;
+Atenci&#xF3;n al cliente</value>
+  </configuration>
+</entity_configuration>
