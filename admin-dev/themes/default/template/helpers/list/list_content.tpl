@@ -44,10 +44,10 @@
 					{if isset($params.position)}
 						id="td_{if !empty($position_group_identifier)}{$position_group_identifier}{else}0{/if}_{$tr.$identifier}{if $smarty.capture.tr_count > 1}_{($smarty.capture.tr_count - 1)|intval}{/if}"
 					{/if}
-					class="{if !$no_link}pointer{/if}
+					class="{strip}{if !$no_link}pointer{/if}
 					{if isset($params.position) && $order_by == 'position'  && $order_way != 'DESC'} dragHandle{/if}
 					{if isset($params.class)} {$params.class}{/if}
-					{if isset($params.align)} {$params.align}{/if}"
+					{if isset($params.align)} {$params.align}{/if}{/strip}"
 					{if (!isset($params.position) && !$no_link && !isset($params.remove_onclick))}
 						onclick="document.location = '{$current_index|escape:'html':'UTF-8'}&amp;{$identifier|escape:'html':'UTF-8'}={$tr.$identifier|escape:'html':'UTF-8'}{if $view}&amp;view{else}&amp;update{/if}{$table|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}'">
 					{else}
