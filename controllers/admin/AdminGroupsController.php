@@ -334,6 +334,9 @@ class AdminGroupsControllerCore extends AdminController
 			);
 		}
 
+		if (Tools::getIsset('addgroup'))
+			$this->fields_value['price_display_method'] = Configuration::get('PRICE_DISPLAY_METHOD');
+
 		$this->fields_value['reduction'] = isset($group->reduction) ? $group->reduction : 0;
 
 		$tree = new HelperTreeCategories('categories-tree');
