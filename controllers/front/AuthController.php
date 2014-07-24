@@ -108,7 +108,7 @@ class AuthControllerCore extends FrontController
 				$countries = Carrier::getDeliveredCountries($this->context->language->id, true, true);
 			else
 				$countries = Country::getCountries($this->context->language->id, true);
-			d($this->id_country);
+
 			$this->context->smarty->assign(array(
 					'inOrderProcess' => true,
 					'PS_GUEST_CHECKOUT_ENABLED' => Configuration::get('PS_GUEST_CHECKOUT_ENABLED'),
