@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<entity_product>
+  <product id="Faded_Short_Sleeve_T-shirts" id_shop="1">
+    <description>&lt;p&gt;Fashion a crée collections bien conçus depuis 2010. La marque propose des modèles féminins à livrer des ensembles branchés et robes tendance qui a depuis évolué en une collection de prêt-à-porter complète dans laquelle chaque élément est une partie essentielle de la garde-robe d'une femme. Le résultat? Cool, facile, look chic avec une élégance jeune et style incomparable. Toutes ces belles pièces sont élaborées en Italie et fabriquées avec la plus grande attention. Maintenant Fashion étend sa gamme aux accessoires avec notamment les chaussures, chapeaux, ceintures et plus!&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;T-shirt à manches courtes délavés à haute encolure. Matériau souple et extensible pour un ajustement confortable. Accessorize avec un chapeau de paille et vous êtes prêt pour l'été!&lt;/p&gt;</description_short>
+    <link_rewrite>T-shirts-a-manches-courtes-delaves</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>T-shirts à manches courtes délavés</name>
+    <available_now>En stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Blouse" id_shop="1">
+    <description>&lt;p&gt;Fashion a crée collections bien conçus depuis 2010. La marque propose des modèles féminins à livrer des ensembles branchés et robes tendance qui a depuis évolué en une collection de prêt-à-porter complète dans laquelle chaque élément est une partie essentielle de la garde-robe d'une femme. Le résultat? Cool, facile, look chic avec une élégance jeune et style incomparable. Toutes ces belles pièces sont élaborées en Italie et fabriquées avec la plus grande attention. Maintenant Fashion étend sa gamme aux accessoires avec notamment les chaussures, chapeaux, ceintures et plus!&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;Chemisier à manches courtes avec détail féminin manches drapée.&lt;/p&gt;</description_short>
+    <link_rewrite>blouse</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Blouse</name>
+    <available_now>En stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Printed_Dress" id_shop="1">
+    <description>&lt;p&gt;Fashion a crée collections bien conçus depuis 2010. La marque propose des modèles féminins à livrer des ensembles branchés et robes tendance qui a depuis évolué en une collection de prêt-à-porter complète dans laquelle chaque élément est une partie essentielle de la garde-robe d'une femme. Le résultat? Cool, facile, look chic avec une élégance jeune et style incomparable. Toutes ces belles pièces sont élaborées en Italie et fabriquées avec la plus grande attention. Maintenant Fashion étend sa gamme aux accessoires avec notamment les chaussures, chapeaux, ceintures et plus!&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;100% coton robe imprimée. Top rayé noir et blanc et jupe orange à taille haute, ample et courte.&lt;/p&gt;</description_short>
+    <link_rewrite>Robe-imprimee</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Robe imprimée</name>
+    <available_now>En stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Printed_Dress_1" id_shop="1">
+    <description>&lt;p&gt;Fashion a crée collections bien conçus depuis 2010. La marque propose des modèles féminins à livrer des ensembles branchés et robes tendance qui a depuis évolué en une collection de prêt-à-porter complète dans laquelle chaque élément est une partie essentielle de la garde-robe d'une femme. Le résultat? Cool, facile, look chic avec une élégance jeune et style incomparable. Toutes ces belles pièces sont élaborées en Italie et fabriquées avec la plus grande attention. Maintenant Fashion étend sa gamme aux accessoires avec notamment les chaussures, chapeaux, ceintures et plus!&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;Robe de soirée imprimée à volants, manches courtes, lisseret et ceinture noir.&lt;/p&gt;</description_short>
+    <link_rewrite>robe-imprimee</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Robe imprimée</name>
+    <available_now>En stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Printed_Summer_Dress" id_shop="1">
+    <description>&lt;p&gt;Fashion a crée collections bien conçus depuis 2010. La marque propose des modèles féminins à livrer des ensembles branchés et robes tendance qui a depuis évolué en une collection de prêt-à-porter complète dans laquelle chaque élément est une partie essentielle de la garde-robe d'une femme. Le résultat? Cool, facile, look chic avec une élégance jeune et style incomparable. Toutes ces belles pièces sont élaborées en Italie et fabriquées avec la plus grande attention. Maintenant Fashion étend sa gamme aux accessoires avec notamment les chaussures, chapeaux, ceintures et plus!&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;Robe mousseline longue imprimée à fines bretelles réglables. Encolure en V et resserage derrière le buste avec des volants au bas de la robe.&lt;/p&gt;</description_short>
+    <link_rewrite>robe-d-ete-imprimee</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Robe d'été imprimée</name>
+    <available_now>En stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Printed_Summer_Dress_1" id_shop="1">
+    <description>&lt;p&gt;Fashion a crée collections bien conçus depuis 2010. La marque propose des modèles féminins à livrer des ensembles branchés et robes tendance qui a depuis évolué en une collection de prêt-à-porter complète dans laquelle chaque élément est une partie essentielle de la garde-robe d'une femme. Le résultat? Cool, facile, look chic avec une élégance jeune et style incomparable. Toutes ces belles pièces sont élaborées en Italie et fabriquées avec la plus grande attention. Maintenant Fashion étend sa gamme aux accessoires avec notamment les chaussures, chapeaux, ceintures et plus!&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;Robe mousseline longueur genou. Encolure en V avec élastique sous la poitrine.&lt;/p&gt;</description_short>
+    <link_rewrite>robe-d-ete-imprimee</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Robe d'été imprimée</name>
+    <available_now>En stock</available_now>
+    <available_later/>
+  </product>
+  <product id="Printed_Chiffon_Dress" id_shop="1">
+    <description>&lt;p&gt;Fashion a crée collections bien conçus depuis 2010. La marque propose des modèles féminins à livrer des ensembles branchés et robes tendance qui a depuis évolué en une collection de prêt-à-porter complète dans laquelle chaque élément est une partie essentielle de la garde-robe d'une femme. Le résultat? Cool, facile, look chic avec une élégance jeune et style incomparable. Toutes ces belles pièces sont élaborées en Italie et fabriquées avec la plus grande attention. Maintenant Fashion étend sa gamme aux accessoires avec notamment les chaussures, chapeaux, ceintures et plus!&lt;/p&gt;</description>
+    <description_short>&lt;p&gt;Robe mousseline imprimée longueur genou avec lanières de serrage. Décolleté en V.&lt;/p&gt;</description_short>
+    <link_rewrite>robe-de-soie-imprimee</link_rewrite>
+    <meta_description/>
+    <meta_keywords/>
+    <meta_title/>
+    <name>Robe de soie imprimée</name>
+    <available_now>En stock</available_now>
+    <available_later/>
+  </product>
+</entity_product>
