@@ -40,21 +40,24 @@
 			populateStates($(this).val(), '');
 		});
 
+		$('#id_tax_rules_group').clone().attr('id', '').insertAfter('#id_tax_rule');
+
+
 		if ($('#id_tax_rules_group').val() != '' && $('table.tax_rule tbody tr').length == 0)
 		{
+			initForm();
 			$('#tax_rule_form').show();
 			$('#country').focus();
 		}
 		else
+		{
 			$('#tax_rule_form').hide();
-
-		$('#id_tax_rules_group').clone().attr('id', '').insertAfter('#id_tax_rule');
-
-		$('#page-header-desc-tax_rule-new').click(function() {
-			initForm();
-			$('#tax_rule_form').slideToggle();
-			return false;
-		});
+			$('#page-header-desc-tax_rule-new').click(function() {
+				initForm();
+				$('#tax_rule_form').slideToggle();
+				return false;
+			});
+		}
 	});
 
 	function populateStates(id_country, id_state)
