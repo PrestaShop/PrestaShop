@@ -662,6 +662,23 @@ function updatePrice()
 		var discountPercentage = (1-(priceWithDiscountsDisplay/basePriceDisplay))*100;
 	}
 
+	var unit_impact = parseFloat(combination.unit_impact);
+	if (productUnitPriceRatio > 0 || unit_impact)
+	{
+		if (unit_impact)
+		{
+			baseUnitPrice = productBasePriceTaxExcl / productUnitPriceRatio;
+			unit_price = baseUnitPrice + unit_impact;
+
+			if (!noTaxForThisProduct || !customerGroupWithoutTax)
+				unit_price = unit_price * (taxRate/100 + 1);
+		}
+		else
+			unit_price = priceWithDiscountsDisplay / productUnitPriceRatio;
+	}
+
+
+
 	/*  Update the page content, no price calculation happens after */
 
 	// Hide everything then show what needs to be shown
@@ -718,7 +735,6 @@ function updatePrice()
 	// It doesn't modify the price, it's only for display
 	if (productUnitPriceRatio > 0)
 	{
-		unit_price = priceWithDiscountsDisplay / productUnitPriceRatio;
 		$('#unit_price_display').text(formatCurrency(unit_price * currencyRate, currencyFormat, currencySign, currencyBlank));
 		$('.unit-price').show();
 	}
