@@ -312,7 +312,7 @@ class WebserviceRequestCore
 			'supply_order_states' => array('description' => 'Supply Order Statuses', 'class' => 'SupplyOrderState', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
 			'supply_order_histories' => array('description' => 'Supply Order Histories', 'class' => 'SupplyOrderHistory', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
 			'supply_order_receipt_histories' => array('description' => 'Supply Order Receipt Histories', 'class' => 'SupplyOrderReceiptHistory', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
-			'product_suppliers' => array('description' => 'Product Suppliers', 'class' => 'ProductSupplier', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
+			'product_suppliers' => array('description' => 'Product Suppliers', 'class' => 'ProductSupplier'),
 			'tax_rules' => array('description' => 'Tax rules entity', 'class' => 'TaxRule'),
 			'tax_rule_groups' => array('description' => 'Tax rule groups', 'class' => 'TaxRulesGroup'),
 			'specific_prices' => array('description' => 'Specific price management', 'class' => 'SpecificPrice'),
