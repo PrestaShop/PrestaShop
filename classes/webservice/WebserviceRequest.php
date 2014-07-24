@@ -319,6 +319,7 @@ class WebserviceRequestCore
 			'specific_price_rules' => array('description' => 'Specific price management', 'class' => 'SpecificPriceRule'),
 			'shop_urls' => array('description' => 'Shop URLs from multi-shop feature', 'class' => 'ShopUrl'),
 			'product_customization_fields' => array('description' => 'Customization Field', 'class' => 'CustomizationField'),
+			'customizations' => array('description' => 'Customization values', 'class' => 'Customization'),
 		);
 		ksort($resources);
 		return $resources;
