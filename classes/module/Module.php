@@ -1023,7 +1023,7 @@ abstract class ModuleCore
 
 		if (!isset(self::$_INSTANCE[$module_name]))
 		{
-			if (Tools::file_exists_cache(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php'))
+			if (Tools::file_exists_no_cache(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php'))
 			{
 				include_once(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php');
 
@@ -1514,7 +1514,7 @@ abstract class ModuleCore
 	 *
 	 * @param string $name The module name (the folder name)
 	 * @param string $key The key provided by addons
-	 * @return boolean
+	 * @return integer
 	 */
 	public static function isModuleTrusted($module_name)
 	{
@@ -1530,9 +1530,13 @@ abstract class ModuleCore
 			self::generateTrustedXml();
 
 		if (strstr(Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST), $module_name))
-			return true;
+		{
+			if (strstr(Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST), '<name><![CDATA['.$module_name.']]></name>'))
+				return 1;
+			return 2;
+		}
 		elseif (strstr(Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_UNTRUSTED_MODULES_LIST), $module_name))
-			return false;
+			return 0;
 		else
 		{
 			// If the module isn't in one of the xml files
@@ -1541,7 +1545,7 @@ abstract class ModuleCore
 			Tools::deleteFile(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST);
 			Tools::deleteFile(_PS_ROOT_DIR_.self::CACHE_FILE_UNTRUSTED_MODULES_LIST);
 
-			return Module::checkModuleFromAddonsApi($module_name);
+			return (int)Module::checkModuleFromAddonsApi($module_name);
 		}
 	}
 
@@ -2101,9 +2105,13 @@ abstract class ModuleCore
 	 */
 	protected function _clearCache($template, $cache_id = null, $compile_id = null)
 	{
-		Tools::enableCache();
+		if (Configuration::get('PS_SMARTY_CLEAR_CACHE') == 'never')
+			return 0;
+
 		if ($cache_id === null)
 			$cache_id = $this->name;
+
+		Tools::enableCache();
 		$number_of_template_cleared = Tools::clearCache(Context::getContext()->smarty, $this->getTemplatePath($template), $cache_id, $compile_id);
 		Tools::restoreCacheSettings();
 

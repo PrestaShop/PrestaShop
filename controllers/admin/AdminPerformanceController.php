@@ -96,16 +96,33 @@ class AdminPerformanceControllerCore extends AdminController
 					'name' => 'smarty_caching_type',
 					'values' => array(
 						array(
-							'id' => 'filesystem',
+							'id' => 'smarty_caching_type_filesystem',
 							'value' => 'filesystem',
 							'label' => $this->l('File System').(is_writable(_PS_CACHE_DIR_.'smarty/cache') ? '' : ' '.sprintf($this->l('(the directory %s must be writable)'), realpath(_PS_CACHE_DIR_.'smarty/cache')))
 						),
 						array(
-							'id' => 'mysql',
+							'id' => 'smarty_caching_type_mysql',
 							'value' => 'mysql',
 							'label' => $this->l('MySQL')
 						),
 						
+					)
+				),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('Clear cache'),
+					'name' => 'smarty_clear_cache',
+					'values' => array(
+						array(
+							'id' => 'smarty_clear_cache_never',
+							'value' => 'never',
+							'label' => $this->l('Never clear cache files'),
+						),
+						array(
+							'id' => 'smarty_clear_cache_everytime',
+							'value' => 'everytime',
+							'label' => $this->l('Clear cache everytime something has been modified'),
+						),
 					)
 				),
 			),
@@ -117,6 +134,7 @@ class AdminPerformanceControllerCore extends AdminController
 		$this->fields_value['smarty_force_compile'] = Configuration::get('PS_SMARTY_FORCE_COMPILE');
 		$this->fields_value['smarty_cache'] = Configuration::get('PS_SMARTY_CACHE');
 		$this->fields_value['smarty_caching_type'] = Configuration::get('PS_SMARTY_CACHING_TYPE');
+		$this->fields_value['smarty_clear_cache'] = Configuration::get('PS_SMARTY_CLEAR_CACHE');
 		$this->fields_value['smarty_console'] = Configuration::get('PS_SMARTY_CONSOLE');
 		$this->fields_value['smarty_console_key'] = Configuration::get('PS_SMARTY_CONSOLE_KEY');
 	}
@@ -689,8 +707,13 @@ class AdminPerformanceControllerCore extends AdminController
 			if ($this->tabAccess['edit'] === '1')
 			{
 				Configuration::updateValue('PS_SMARTY_FORCE_COMPILE', Tools::getValue('smarty_force_compile', _PS_SMARTY_NO_COMPILE_));
+				
+				if (Configuration::get('PS_SMARTY_CACHE') != Tools::getValue('smarty_cache') || Configuration::get('PS_SMARTY_CACHING_TYPE') != Tools::getValue('smarty_caching_type'))
+					Tools::clearSmartyCache();
+				
 				Configuration::updateValue('PS_SMARTY_CACHE', Tools::getValue('smarty_cache', 0));
-				Configuration::updateValue('PS_SMARTY_CACHING_TYPE', Tools::getValue('smarty_caching_type', 0));
+				Configuration::updateValue('PS_SMARTY_CACHING_TYPE', Tools::getValue('smarty_caching_type'));
+				Configuration::updateValue('PS_SMARTY_CLEAR_CACHE', Tools::getValue('smarty_clear_cache'));
 				$redirectAdmin = true;
 			}
 			else

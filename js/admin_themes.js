@@ -38,8 +38,8 @@ function toggleShopModuleCheckbox(id_shop, toggle){
 $(function(){
 	$('div.thumbnail-wrapper').hover(
 		function() {
-			var w = $(this).children('img').outerWidth(true);
-			var h = $(this).children('img').outerHeight(true);
+			var w = $(this).parent('div').outerWidth(true);
+			var h = $(this).parent('div').outerHeight(true);
 			$(this).children('.action-wrapper').css('width', w+'px');
 			$(this).children('.action-wrapper').css('height', h+'px');
 			$(this).children('.action-wrapper').show();

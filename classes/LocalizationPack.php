@@ -411,6 +411,8 @@ class LocalizationPackCore
 			$attributes = $xml->group_default->attributes();
 			if (isset($attributes['price_display_method']) && in_array((int)$attributes['price_display_method'], array(0, 1)))
 			{
+				Configuration::updateValue('PRICE_DISPLAY_METHOD', (int)$attributes['price_display_method']);
+
 				foreach (array((int)Configuration::get('PS_CUSTOMER_GROUP'), (int)Configuration::get('PS_GUEST_GROUP'), (int)Configuration::get('PS_UNIDENTIFIED_GROUP')) as $id_group)
 				{
 					$group = new Group((int)$id_group);

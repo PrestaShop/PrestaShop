@@ -37,7 +37,6 @@
 		<h2 class="page-title">
 			{*if isset($toolbar_btn['back'])}
 			<a id="page-header-desc-{$table}{if isset($toolbar_btn['back'].imgclass)}-{$toolbar_btn['back'].imgclass}{/if}" class="page-header-toolbar-back" {if isset($toolbar_btn['back'].href)}href="{$toolbar_btn['back'].href}"{/if} title="{$toolbar_btn['back'].desc}" {if isset($toolbar_btn['back'].target) && $toolbar_btn['back'].target}target="_blank"{/if}{if isset($toolbar_btn['back'].js) && $toolbar_btn['back'].js}onclick="{$toolbar_btn['back'].js}"{/if}>
-				
 			</a>
 			{/if*}
 			{if is_array($title)}{$title|end|escape}{else}{$title|escape}{/if}

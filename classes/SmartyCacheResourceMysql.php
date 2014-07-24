@@ -41,7 +41,7 @@ class Smarty_CacheResource_Mysql extends Smarty_CacheResource_Custom
 	 */
 	protected function fetch($id, $name, $cache_id, $compile_id, &$content, &$mtime)
 	{
-		$row = Db::getInstance()->getRow('SELECT modified, content FROM '._DB_PREFIX_.'smarty_cache WHERE id = "'.pSQL($id, true).'"');
+		$row = Db::getInstance()->getRow('SELECT modified, content FROM '._DB_PREFIX_.'smarty_cache WHERE id_smarty_cache = "'.pSQL($id, true).'"');
 		if ($row)
 		{
 			$content = $row['content'];
@@ -66,7 +66,7 @@ class Smarty_CacheResource_Mysql extends Smarty_CacheResource_Custom
 	 */
 	protected function fetchTimestamp($id, $name, $cache_id, $compile_id)
 	{
-		$value = Db::getInstance()->getValue('SELECT modified FROM '._DB_PREFIX_.'smarty_cache WHERE id = "'.pSQL($id, true).'"');
+		$value = Db::getInstance()->getValue('SELECT modified FROM '._DB_PREFIX_.'smarty_cache WHERE id_smarty_cache = "'.pSQL($id, true).'"');
 		$mtime = strtotime($value);
 		return $mtime;
 	}
@@ -85,12 +85,11 @@ class Smarty_CacheResource_Mysql extends Smarty_CacheResource_Custom
 	protected function save($id, $name, $cache_id, $compile_id, $exp_time, $content)
 	{
 		Db::getInstance()->execute('
-		REPLACE INTO '._DB_PREFIX_.'smarty_cache (id, name, cache_id, compile_id, content)
+		REPLACE INTO '._DB_PREFIX_.'smarty_cache (id_smarty_cache, name, cache_id, content)
 		VALUES (
 			"'.pSQL($id, true).'",
-			"'.pSQL($name, true).'",
+			"'.pSQL(sha1($name)).'",
 			"'.pSQL($cache_id, true).'",
-			"'.pSQL($compile_id, true).'",
 			"'.pSQL($content, true).'"
 		)');
 	  
@@ -117,9 +116,7 @@ class Smarty_CacheResource_Mysql extends Smarty_CacheResource_Custom
 
 		$where = array();
 		if ($name !== null)
-			$where[] = 'name = "'.pSQL($name, true).'"';
-		if ($compile_id !== null)
-			$where[] = 'compile_id = "'.pSQL($compile_id, true).'"';
+			$where[] = 'name = "'.pSQL(sha1($name)).'"';
 		if ($exp_time !== null)
 			$where[] = 'modified < DATE_SUB(NOW(), INTERVAL '.(int)$exp_time.' SECOND)';
 		if ($cache_id !== null)
