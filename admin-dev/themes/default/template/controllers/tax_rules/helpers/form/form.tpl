@@ -40,7 +40,15 @@
 			populateStates($(this).val(), '');
 		});
 
-		$('#tax_rule_form').hide();
+		if ($('#id_tax_rules_group').val() != '' && $('table.tax_rule tbody tr').length == 0)
+		{
+			$('#tax_rule_form').show();
+			$('#country').focus();
+		}
+		else
+			$('#tax_rule_form').hide();
+
+		$('#id_tax_rules_group').clone().attr('id', '').insertAfter('#id_tax_rule');
 
 		$('#page-header-desc-tax_rule-new').click(function() {
 			initForm();
