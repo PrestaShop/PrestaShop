@@ -99,7 +99,7 @@ a.fancybox-nav {
   @media (max-width: 767px) {
     .pb-left-column #views_block {
       width: 280px;
-      margin: 0 auto; } }
+      margin: 10px auto 0px auto; } }
 
 #thumbs_list {
   overflow: hidden;
@@ -107,13 +107,13 @@ a.fancybox-nav {
   width: 392px; }
   @media (min-width: 992px) and (max-width: 1199px) {
     #thumbs_list {
-      width: 290px; } }
+      width: 294px; } }
   @media (min-width: 768px) and (max-width: 991px) {
     #thumbs_list {
       width: 164px; } }
   @media (max-width: 767px) {
     #thumbs_list {
-      width: 194px; } }
+      width: 196px; } }
   #thumbs_list ul#thumbs_list_frame {
     list-style-type: none;
     padding-left: 0;
@@ -133,11 +133,8 @@ a.fancybox-nav {
     @media (min-width: 768px) and (max-width: 991px) {
       #thumbs_list li {
         width: 76px;
-        height: 76px; } }
-    #thumbs_list li:first-child {
-      margin: 0 9px 0 0; }
-    #thumbs_list li.last {
-      margin-right: 0; }
+        height: 76px;
+        margin-right: 6px; } }
     #thumbs_list li a {
       display: block;
       border: 3px solid white;

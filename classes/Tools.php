@@ -411,6 +411,22 @@ class ToolsCore
 		}
 	}
 
+	public static function getCountry($address = null)
+	{
+		if ($id_country = Tools::getValue('id_country'));
+		elseif (isset($address) && isset($address->id_country) && $address->id_country)
+			$id_country = $address->id_country;
+		elseif (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
+		{
+			preg_match("#(?<=-)\w\w|\w\w(?!-)#", $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array);
+			if (is_array($array) && isset($array[0]) && Validate::isLanguageIsoCode($array[0]))
+				$id_country = Country::getByIso($array[0], true);
+		}
+		if (!isset($id_country) || !$id_country)
+			$id_country = Configuration::get('PS_COUNTRY_DEFAULT');
+		return (int)$id_country;
+	}
+
 	/**
 	 * Set cookie currency from POST or default currency
 	 *
@@ -418,13 +434,12 @@ class ToolsCore
 	 */
 	public static function setCurrency($cookie)
 	{
-		if (Tools::isSubmit('SubmitCurrency'))
-			if (isset($_POST['id_currency']) && is_numeric($_POST['id_currency']))
-			{
-				$currency = Currency::getCurrencyInstance($_POST['id_currency']);
-				if (is_object($currency) && $currency->id && !$currency->deleted && $currency->isAssociatedToShop())
-					$cookie->id_currency = (int)$currency->id;
-			}
+		if (Tools::isSubmit('SubmitCurrency') && ($id_currency = Tools::getValue('id_currency')))
+		{
+			$currency = Currency::getCurrencyInstance((int)$id_currency);
+			if (is_object($currency) && $currency->id && !$currency->deleted && $currency->isAssociatedToShop())
+				$cookie->id_currency = (int)$currency->id;
+		}
 		
 		$currency = null;
 		if ((int)$cookie->id_currency)
@@ -1147,9 +1162,9 @@ class ToolsCore
 
 		// Remove all non-whitelist chars.
 		if ($allow_accented_chars)
-			$str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]-\pL]/u', '', $str);
+			$str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]\-\pL]/u', '', $str);
 		else
-			$str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]-]/','', $str);
+			$str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]\-]/','', $str);
 
 		$str = preg_replace('/[\s\'\:\/\[\]\-]+/', ' ', $str);
 		$str = str_replace(array(' ', '/'), '-', $str);
@@ -1549,6 +1564,9 @@ class ToolsCore
 	{
 		foreach ($array as &$row)
 			$row['price_tmp'] = Product::getPriceStatic($row['id_product'], true, ((isset($row['id_product_attribute']) && !empty($row['id_product_attribute'])) ? (int)$row['id_product_attribute'] : null), 2);
+		
+		unset($row);		
+
 		if (Tools::strtolower($order_way) == 'desc')
 			uasort($array, 'cmpPriceDesc');
 		else
@@ -3124,6 +3142,7 @@ exit;
 				$config->set('Attr.EnableID', true);
 				$config->set('HTML.Trusted', true);
 				$config->set('Cache.SerializerPath', _PS_CACHE_DIR_.'purifier');
+				$config->getHTMLDefinition(true)->addAttribute('a', 'target', 'Enum#_blank,_self,_target,_top');
 
 				if (Configuration::get('PS_ALLOW_HTML_IFRAME'))
 				{

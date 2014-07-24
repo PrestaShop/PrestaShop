@@ -226,7 +226,7 @@ class ParentOrderControllerCore extends FrontController
 				$this->errors[] = Tools::displayError('No zone matches your address.');
 		}
 		else
-			$id_zone = Country::getIdZone((int)Configuration::get('PS_COUNTRY_DEFAULT'));
+			$id_zone = Country::getIdZone((int)Tools::getCountry());
 		
 		if (Tools::getIsset('delivery_option'))
 		{

@@ -207,6 +207,7 @@ class HelperListCore extends Helper
 			if ($this->shopLinkType)
 				$this->_list[$index]['short_shop_name'] = Tools::strlen($tr['shop_name']) > 15 ? Tools::substr($tr['shop_name'], 0, 15).'...' : $tr['shop_name'];
 
+			$is_first = true;
 			// Check all available actions to add to the current list row
 			foreach ($this->actions as $action)
 			{
@@ -221,6 +222,17 @@ class HelperListCore extends Helper
 						$this->_list[$index][$action] = $this->module->$method_name($this->token, $id, $name);
 					elseif (method_exists($this, $method_name))
 						$this->_list[$index][$action] = $this->$method_name($this->token, $id, $name);
+				}
+
+				if ($is_first && isset($this->_list[$index][$action])) {
+					$is_first = false;
+
+					if (!preg_match('/a\s*.*class/', $this->_list[$index][$action]))
+						$this->_list[$index][$action] = preg_replace('/href\s*=\s*\"([^\"]*)\"/',
+							'href="$1" class="btn btn-default"', $this->_list[$index][$action]);
+					else if (!preg_match('/a\s*.*class\s*=\s*\".*btn.*\"/', $this->_list[$index][$action]))
+						$this->_list[$index][$action] = preg_replace('/a(\s*.*)class\s*=\s*\"(.*)\"/',
+							'a $1 class="$2 btn btn-default"', $this->_list[$index][$action]);
 				}
 			}
 

@@ -939,13 +939,13 @@ class AdminThemesControllerCore extends AdminController
 				$this->errors[] = $this->l('Can\'t create config file.');
 
 			if (isset($_FILES['documentation']))
-				if (!empty($_FILES['documentation']['tmp_name']) && 
-					!empty($_FILES['documentation']['name']) && 
+				if (!empty($_FILES['documentation']['tmp_name']) &&
+					!empty($_FILES['documentation']['name']) &&
 					!$zip->addFile($_FILES['documentation']['tmp_name'], 'doc/'.$_FILES['documentation']['name']))
 					$this->errors[] = $this->l('Can\'t copy documentation.');
 
 			$given_path = realpath(_PS_ALL_THEMES_DIR_.Tools::getValue('theme_directory'));
-			
+
 			if ($given_path !== false)
 			{
 				$ps_all_theme_dir_lenght = strlen(realpath(_PS_ALL_THEMES_DIR_));
@@ -954,7 +954,7 @@ class AdminThemesControllerCore extends AdminController
 					$this->errors[] = $this->l('Wrong theme directory path');
 				else
 				{
-					$this->archiveThisFile($zip, Tools::getValue('theme_directory'), _PS_ALL_THEMES_DIR_, 'themes/');			
+					$this->archiveThisFile($zip, Tools::getValue('theme_directory'), _PS_ALL_THEMES_DIR_, 'themes/');
 					foreach ($this->to_export as $row)
 					{
 						if (!in_array($row, $this->native_modules))
@@ -2064,7 +2064,7 @@ class AdminThemesControllerCore extends AdminController
 					break;
 			}
 
-			if (count($natives > 0))
+			if (count($natives) > 0)
 				return $natives;
 		}
 
@@ -2498,7 +2498,6 @@ class AdminThemesControllerCore extends AdminController
 
 				$exceptions = (isset($row['exceptions']) ? explode(',', strval($row['exceptions'])) : array());
 
-				if (Hook::getIdByName(strval($row['hook'])))
 					$module_hook[$name]['hook'][] = array(
 						'hook' => strval($row['hook']),
 						'position' => strval($row['position']),
@@ -2718,11 +2717,36 @@ class AdminThemesControllerCore extends AdminController
 				if (!@ImageManager::resize($tmp_name, _PS_IMG_DIR_.$logo_name))
 					$this->errors[] = Tools::displayError('An error occurred while attempting to copy your logo.');
 			}
-
+			$id_shop = null;
+			$id_shop_group = null;
 			if (!count($this->errors) && @filemtime(_PS_IMG_DIR_.Configuration::get($field_name)))
-				@unlink(_PS_IMG_DIR_.Configuration::get($field_name));
-
-			Configuration::updateValue($field_name, $logo_name);
+			{
+				if (Shop::getContext() == Shop::CONTEXT_SHOP)
+				{
+					$id_shop = Shop::getContextShopID();
+					$id_shop_group = Shop::getContextShopGroupID();
+					Shop::setContext(Shop::CONTEXT_ALL);
+					$logo_all = Configuration::get($field_name);
+					Shop::setContext(Shop::CONTEXT_GROUP);
+					$logo_group = Configuration::get($field_name);
+					Shop::setContext(Shop::CONTEXT_SHOP);
+					$logo_shop = Configuration::get($field_name);
+					if ($logo_all != $logo_shop && $logo_group != $logo_shop && $logo_shop != false)
+						@unlink(_PS_IMG_DIR_.Configuration::get($field_name));
+				}
+				elseif (Shop::getContext() == Shop::CONTEXT_GROUP)
+				{
+					$id_shop_group = Shop::getContextShopGroupID();
+					Shop::setContext(Shop::CONTEXT_ALL);
+					$logo_all = Configuration::get($field_name);
+					Shop::setContext(Shop::CONTEXT_GROUP);
+					if ($logo_all != Configuration::get($field_name))
+						@unlink(_PS_IMG_DIR_.Configuration::get($field_name));
+				}
+				else
+					@unlink(_PS_IMG_DIR_.Configuration::get($field_name));
+			}
+			Configuration::updateValue($field_name, $logo_name, false, $id_shop_group, $id_shop);
 			@unlink($tmp_name);
 		}
 	}
