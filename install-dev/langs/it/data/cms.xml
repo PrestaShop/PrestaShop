@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<entity_cms>
+  <cms id="Delivery">
+    <meta_title>Consegna</meta_title>
+    <meta_description>I nostri termini e condizioni di consegna</meta_description>
+    <meta_keywords>condizioni, consegna, tempo, spedizione, pacco</meta_keywords>
+    <content>&lt;h2&gt;Spedizioni e resi&lt;/h2&gt;&lt;h3&gt;Spedizione del tuo pacco&lt;/h3&gt;&lt;p&gt;I pacchi sono solitamente spediti entro 2 giorni dopo il ricevimento del pagamento e inviati tramite UPS con controllo e consegna senza firma. Se preferisci una consegna con UPS Extra con richiesta di firma, sar&#xE0; applicato un costo aggiuntivo, pertanto contattaci prima di scegliere questo mezzo. Qualunque tipo di spedizione tu scelga, ti garantiremo un link per controllare online il percorso del tuo pacco.&lt;/p&gt;&lt;p&gt;Le spese di spedizione comprendono le spese di imballaggio e affrancatura. Le spese di imballaggio sono fisse, mentre quelle di trasporto variano in base al peso totale della spedizione. Ti consigliamo di raggruppare i tuoi articoli in un unico ordine. Non possiamo raggruppare due ordini distinti eseguiti separatamente, e ad ognuno di esso saranno applicate le spese di spedizione. Il tuo pacco sar&#xE0; inviato sotto la tua responsabilit&#xE0;, ma un'attenzione particolare &#xE8; riservata agli oggetti fragili.&lt;br /&gt;&lt;br /&gt;Le scatole hanno dimensioni ragionevoli e i tuoi articoli sono ben protetti.&lt;/p&gt;</content>
+    <link_rewrite>consegna</link_rewrite>
+  </cms>
+  <cms id="Legal_Notice">
+    <meta_title>Nota Legale</meta_title>
+    <meta_description>Nota legale</meta_description>
+    <meta_keywords>nota, legale, crediti</meta_keywords>
+    <content>&lt;h2&gt;Legale&lt;/h2&gt;&lt;h3&gt;Crediti&lt;/h3&gt;&lt;p&gt;Creazione e produzione:&lt;/p&gt;&lt;p&gt;Questo sito web &#xE8; stato realizzato usando un software open-source&lt;a href="http://www.prestashop.com"&gt;PrestaShop&lt;/a&gt;&amp;trade;.&lt;/p&gt;</content>
+    <link_rewrite>nota-legale</link_rewrite>
+  </cms>
+  <cms id="Terms_and_conditions_of_use">
+    <meta_title>Termini e condizioni d'uso</meta_title>
+    <meta_description>I nostri termini e condizioni d'uso</meta_description>
+    <meta_keywords>condizioni, termini, uso, vendi</meta_keywords>
+    <content>&lt;h2&gt;I tuoi termini e condizioni d'uso&lt;/h2&gt;&lt;h3&gt;Regola 1&lt;/h3&gt;&lt;p&gt;Ecco il contenuto della regola 1&lt;/p&gt;&#xD;
+&lt;h3&gt;Regola 2&lt;/h3&gt;&lt;p&gt;Ecco il contenuto della regola 2&lt;/p&gt;&#xD;
+&lt;h3&gt;Regola 3&lt;/h3&gt;&lt;p&gt;Ecco il contenuto della regola 3&lt;/p&gt;</content>
+    <link_rewrite>termini-e-condizioni-di-uso</link_rewrite>
+  </cms>
+  <cms id="About_us">
+    <meta_title>Chi siamo</meta_title>
+    <meta_description>Per sapere chi siamo</meta_description>
+    <meta_keywords>chi siamo, informazioni</meta_keywords>
+    <content>&lt;h2&gt;Chi siamo&lt;/h2&gt;&#xD;
+&lt;h3&gt;La nostra azienda&lt;/h3&gt;&lt;p&gt;La nostra azienda&lt;/p&gt;&#xD;
+&lt;h3&gt;Il nostro team&lt;/h3&gt;&lt;p&gt;Il nostro team&lt;/p&gt;&#xD;
+&lt;h3&gt;Informazioni&lt;/h3&gt;&lt;p&gt;Informazioni&lt;/p&gt;</content>
+    <link_rewrite>chi-siamo</link_rewrite>
+  </cms>
+  <cms id="Secure_payment">
+    <meta_title>Pagamento sicuro</meta_title>
+    <meta_description>Il nostro mezzo di pagamento sicuro</meta_description>
+    <meta_keywords>pagamento sicuro, ssl, visa, mastercard, paypal</meta_keywords>
+    <content>&lt;h2&gt;Pagamento sicuro&lt;/h2&gt;&#xD;
+&lt;h3&gt;Il nostro pagamento sicuro&lt;/h3&gt;&lt;p&gt;Con SSL&lt;/p&gt;&#xD;
+&lt;h3&gt;Usando Visa/Mastercard/Paypal&lt;/h3&gt;&lt;p&gt;Cosa sono questi servizi&lt;/p&gt;</content>
+    <link_rewrite>pagamento-sicuro</link_rewrite>
+  </cms>
+</entity_cms>
