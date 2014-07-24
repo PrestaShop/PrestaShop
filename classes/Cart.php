@@ -88,6 +88,7 @@ class CartCore extends ObjectModel
 
 	protected $_products = null;
 	protected static $_totalWeight = array();
+	protected static $_packageDimensions = array();
 	protected $_taxCalculationMethod = PS_TAX_EXC;
 	protected static $_carriers = null;
 	protected static $_taxes_rate = null;
@@ -194,6 +195,9 @@ class CartCore extends ObjectModel
 
 		if (isset(self::$_totalWeight[$this->id]))
 			unset(self::$_totalWeight[$this->id]);
+
+		if (isset(self::$_packageDimensions[$this->id]))
+			unset(self::$_packageDimensions[$this->id]);
 
 		$this->_products = null;
 		$return = parent::update();
@@ -879,6 +883,9 @@ class CartCore extends ObjectModel
 		if (isset(self::$_totalWeight[$this->id]))
 			unset(self::$_totalWeight[$this->id]);
 
+		if (isset(self::$_packageDimensions[$this->id]))
+			unset(self::$_packageDimensions[$this->id]);
+
 		if ((int)$quantity <= 0)
 			return $this->deleteProduct($id_product, $id_product_attribute, (int)$id_customization);
 		elseif (!$product->available_for_order || Configuration::get('PS_CATALOG_MODE'))
@@ -1163,6 +1170,9 @@ class CartCore extends ObjectModel
 
 		if (isset(self::$_totalWeight[$this->id]))
 			unset(self::$_totalWeight[$this->id]);
+
+		if (isset(self::$_packageDimensions[$this->id]))
+			unset(self::$_packageDimensions[$this->id]);
 
 		if ((int)$id_customization)
 		{
@@ -2857,6 +2867,61 @@ class CartCore extends ObjectModel
 		}
 
 		return self::$_totalWeight[$this->id];
+	}
+
+	/**
+	 * Return cart weight, width, height, depth
+	 * @return array (weight, width, height, depth)
+	 */
+	public function getPackageDimensions($products = null)
+	{
+		$null_products = is_null($products);
+		if ((!isset(self::$_packageDimensions[$this->id])) || (!$null_products))
+		{
+			if ($null_products)
+				$products = $this->getProducts();
+
+			$dimensions = array();
+			$total_weight = 0;
+			foreach ($products as $product)
+			{
+				if (!isset($product['weight_attribute']) || is_null($product['weight_attribute']))
+					$total_weight += $product['weight'] * $product['cart_quantity'];
+				else
+					$total_weight += $product['weight_attribute'] * $product['cart_quantity'];
+
+				for ($j = 0; $j < $product['cart_quantity']; $j++)
+				{
+					$product_dimensions = array();
+					$product_dimensions['depth'] = (float)$product['depth'];
+					$product_dimensions['width'] = (float)$product['width'];
+					$product_dimensions['height'] = (float)$product['height'];
+					rsort($product_dimensions);
+					$dimensions[] = $product_dimensions;
+				}
+			}
+
+			$result = array(
+				'weight' => $total_weight,
+				'depth' => 0,
+				'width' => 0,
+				'height' => 0
+			);
+
+			foreach ($dimensions as $d)
+			{
+				($d[0] > $result['depth']) ? $result['depth'] = $d[0] : '';
+				($d[1] > $result['width']) ? $result['width'] = $d[1] : '';
+				$result['height'] += $d[2];
+			}
+
+			if ($null_products)
+				self::$_packageDimensions[$this->id] = $result;
+			else
+				return $result;
+		}
+
+		return self::$_packageDimensions[$this->id];
 	}
 
 	/**
