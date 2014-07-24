@@ -287,7 +287,7 @@ class AdminShopUrlControllerCore extends AdminController
 
 			$this->page_header_toolbar_btn['edit'] = array(
 				'desc' => $this->l('Edit this shop'),
-				'href' => $this->context->link->getAdminLink('AdminShop').'&updateshop&id_shop='.$this->id_shop,
+				'href' => $this->context->link->getAdminLink('AdminShop').'&updateshop&id_shop='.(int)$this->id_shop,
 			);
 
 			$this->page_header_toolbar_btn['new'] = array(
@@ -488,7 +488,7 @@ class AdminShopUrlControllerCore extends AdminController
 
 		$data = array(
 			$this->identifier => $id,
-			'href' => Tools::safeOutput(self::$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&id_shop='.$this->id_shop.'&token='.($token != null ? $token : $this->token)),
+			'href' => self::$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&id_shop='.(int)$this->id_shop.'&token='.($token != null ? $token : $this->token),
 			'action' => self::$cache_lang['Delete'],
 		);
 		
