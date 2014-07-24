@@ -36,7 +36,7 @@
 
 {block name="script"}
 	$(document).ready(function() {
-		$('#country').click(function() {
+		$('#country').change(function() {
 			populateStates($(this).val(), '');
 		});
 
