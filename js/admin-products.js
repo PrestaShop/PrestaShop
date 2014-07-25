@@ -157,17 +157,17 @@ function ProductTabsManager(){
 		if (this.current_request !== undefined)
 		{
 			this.current_request.complete(function(request, status) {
+				var wrong_status_code = new Array(400, 401, 403, 404, 405, 406, 408, 410, 413, 429, 499, 500, 502, 503, 504);
+
 				if (status === 'abort' || status === 'error')
 					self.stack_error.push(stack.shift());
 				else
-					stack.shift()
-				if (stack.length !== 0 && status !== 'abort')
+					stack.shift();
+
+				if (request.responseText.length == 0 || in_array(request.status, wrong_status_code) || (self.stack_error.length !== 0
+					&& !self.page_reloading))
 				{
-					self.displayBulk(stack);
-				}
-				else if (self.stack_error.length !== 0 && !self.page_reloading)
-				{
-					jConfirm(reload_tab_description, reload_tab_title, function(confirm) {
+					jConfirm('Tab : ' + stack[0] + ' (' + request.status + ')\n' + reload_tab_description, reload_tab_title, function(confirm) {
 						if (confirm === true)
 						{
 							self.displayBulk(self.stack_error.slice(0));
@@ -175,6 +175,18 @@ function ProductTabsManager(){
 						}
 						else
 							return false;
+					});
+				}
+				else if (stack.length !== 0 && status !== 'abort')
+					self.displayBulk(stack);
+
+				if (stack.length == 0)
+				{
+					$('[name="submitAddproductAndStay"]').each(function() {
+						$(this).prop('disabled', false).find('i').removeClass('process-icon-loading').addClass('process-icon-save');
+					});
+					$('[name="submitAddproduct"]').each(function() {
+						$(this).prop('disabled', false).find('i').removeClass('process-icon-loading').addClass('process-icon-save');
 					});
 				}
 			});
@@ -644,9 +656,11 @@ product_tabs['Seo'] = new function(){
 	var self = this;
 
 	this.onReady = function() {
-		if ($('#link_rewrite_'+id_lang_default).val().replace(/^\s+|\s+$/gm,'') == '') {
-			updateFriendlyURLByName();
-		}
+		if ($('#link_rewrite_'+id_lang_default).length)
+			if ($('#link_rewrite_'+id_lang_default).val().replace(/^\s+|\s+$/gm,'') == '') {
+				updateFriendlyURLByName();
+			}
+
 		// Enable writing of the product name when the friendly url field in tab SEO is loaded
 		$('.copy2friendlyUrl').removeAttr('disabled');
 
