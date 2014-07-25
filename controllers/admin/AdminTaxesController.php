@@ -94,7 +94,7 @@ class AdminTaxesControllerCore extends AdminController
 			),
 		);
 
-		if (Configuration::get('PS_USE_ECOTAX'))
+		if (Configuration::get('PS_USE_ECOTAX') || Tools::getValue('PS_USE_ECOTAX'))
 			$this->fields_options['general']['fields']['PS_ECOTAX_TAX_RULES_GROUP_ID'] = array(
 				'title' => $this->l('Ecotax'),
 				'hint' => $this->l('Define the ecotax (e.g. French ecotax: 19.6%).'),
