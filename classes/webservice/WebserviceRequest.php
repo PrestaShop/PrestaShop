@@ -465,7 +465,7 @@ class WebserviceRequestCore
 				// Method below set a particular fonction to use on the price field for products entity
 				// @see WebserviceRequest::getPriceForProduct() method
 				// @see WebserviceOutputBuilder::setSpecificField() method
-				$this->objOutput->setSpecificField($this, 'getPriceForProduct', 'price', 'products');
+				//$this->objOutput->setSpecificField($this, 'getPriceForProduct', 'price', 'products');
 				if (isset($this->urlFragments['price']))
 				{
 					$this->objOutput->setVirtualField($this, 'specificPriceForCombination', 'combinations', $this->urlFragments['price']);
