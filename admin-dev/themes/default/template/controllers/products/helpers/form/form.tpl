@@ -299,7 +299,6 @@
 				<input type="hidden" name="fakeSubmitAddProductAndPreview" id="fakeSubmitAddProductAndPreview" />
 			</div>
 			{/if}
-(digestion)
 			{* all input are here *}
 			{foreach $product_tabs key=numStep item=tab}
 				{if $tab.id != "Pack" }
