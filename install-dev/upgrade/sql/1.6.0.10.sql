@@ -14,6 +14,8 @@ CREATE TABLE `PREFIX_smarty_cache` (
 
 INSERT INTO `PREFIX_configuration` (`name` , `value` , `date_add` , `date_upd`) VALUES
 ('PS_SMARTY_CACHING_TYPE', 'filesystem', NOW(), NOW()),
-('PS_SMARTY_CLEAR_CACHE', 'everytime', NOW(), NOW());
+('PS_SMARTY_CLEAR_CACHE', 'everytime', NOW(), NOW()),
+('PS_DETECT_LANG', '1', NOW(), NOW()),
+('PS_DETECT_COUNTRY', '1', NOW(), NOW());
 
 ALTER TABLE `PREFIX_quick_access` CHANGE `link` `link` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL; 
