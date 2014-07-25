@@ -3464,6 +3464,7 @@ class AdminControllerCore extends Controller
 		$helper = new Helper();
 		$helper->currentIndex = self::$currentIndex;
 		$helper->token = $this->token;
+		$helper->override_folder = $this->override_folder;
 		return $helper->renderRequiredFields($this->className, $this->identifier, $this->required_fields);
 	}
 
