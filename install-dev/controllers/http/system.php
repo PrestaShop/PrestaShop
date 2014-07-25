@@ -87,7 +87,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 						'phpversion' => $this->l('PHP 5.1.2 or later is not enabled'),
 						'upload' => $this->l('Cannot upload files'),
 						'system' => $this->l('Cannot create new files and folders'),
-						'gd' => $this->l('GD Library is not installed'),
+						'gd' => $this->l('GD library is not installed'),
 						'mysql_support' => $this->l('MySQL support is not activated')
 					)
 				),
@@ -95,7 +95,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 					'title' => $this->l('Files'),
 					'success' => 1,
 					'checks' => array(
-						'files' => $this->l('All files are not successfully uploaded on your server')
+						'files' => $this->l('Not all files were successfully uploaded on your server')
 					)
 				),
 				array(
