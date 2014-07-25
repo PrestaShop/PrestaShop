@@ -1108,6 +1108,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 							throw new WebserviceException('Error while creating image', array(76, 400));
 						if (!Validate::isLoadedObject($product))
 							throw new WebserviceException('Product '.(int)$this->wsObject->urlSegment[2].' doesn\'t exists', array(76, 400));
+						Hook::exec('updateProduct', array('id_product' => (int)$this->wsObject->urlSegment[2]));
 					}
 
 					// copy image
