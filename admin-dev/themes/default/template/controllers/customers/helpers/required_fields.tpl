@@ -32,7 +32,7 @@
     <div class="alert alert-info">
       {l s='Select the fields you would like to be required for this section.'}
       <br/>
-      {l s='Please inform you about the legistation in force in your country.'}
+      {l s='Please make sure you are complying with the opt-in legislation applicable in your country.'}
     </div>
     <div class="row">
       <table class="table">
