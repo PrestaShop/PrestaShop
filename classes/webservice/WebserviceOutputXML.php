@@ -188,10 +188,20 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
 		$more = '';
 		if ($this->schemaToDisplay != 'blank')
 		{
-			$more .= (isset($params['associations'][$assoc_name]['virtual_entity']) && $params['associations'][$assoc_name]['virtual_entity'] ? ' virtualEntity="true"' : '');
 			if (array_key_exists('setter', $params['associations'][$assoc_name]) && !$params['associations'][$assoc_name]['setter'])
 				$more .= ' readOnly="true"';
 			$more .= ' nodeType="'.$params['associations'][$assoc_name]['resource'].'"';
+			if (isset($params['associations'][$assoc_name]['virtual_entity']) && $params['associations'][$assoc_name]['virtual_entity'])
+			{
+				$more .= ' virtualEntity="true"';
+			}
+			else
+			{
+				if (isset($params['associations'][$assoc_name]['api']))
+					$more .= ' api="'.$params['associations'][$assoc_name]['api'].'"';
+				else
+					$more .= ' api="'.$assoc_name.'"';
+			}
 		}
 		return '<'.$assoc_name.$more.$end_tag."\n";
 	}

@@ -147,7 +147,7 @@ class CustomerCore extends ObjectModel
 			'passwd' => array('setter' => 'setWsPasswd'),
 		),
 		'associations' => array(
-			'groups' => array('resource' => 'groups'),
+			'groups' => array('resource' => 'group'),
 		)
 	);
 
