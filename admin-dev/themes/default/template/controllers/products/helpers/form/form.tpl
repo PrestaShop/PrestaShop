@@ -86,7 +86,7 @@
 			var empty_name_msg = '{l s='The product name is empty. You will at least need to enter a name for the default language before you can save the product.' js=1}';
 			var empty_link_rewrite_msg = '{l s='The friendly URL is empty. You will at least need to enter a friendly URL for the default language before you can save the product.' slashes=1}';
 			var reload_tab_title = '{l s='Confirmation' slashes=1}';
-			var reload_tab_description = '{l s='Some tabs was not loaded correctly. Would you like to reload them?' slashes=1}';
+			var reload_tab_description = '{l s='Some tabs were not loaded correctly. Would you like to reload them?' slashes=1}';
 
 			$('#product-tab-content-wait').show();
 			var post_data = {$post_data};
@@ -197,7 +197,7 @@
 
 				$('.confirm_leave').live('click', function(){
 					// Double quotes are necessary when the translated string has single quotes
-					return confirm("{l s='You will lose all unsaved modifications. Are you sure that you\'d like to proceed?' js=1}");
+					return confirm("{l s='You will lose all unsaved modifications. Are you sure that you want to proceed?' js=1}");
 				});
 
 				$('#toolbar-footer').appendTo($('#product-tab-content-Informations').children('.product-tab'));
@@ -299,7 +299,7 @@
 				<input type="hidden" name="fakeSubmitAddProductAndPreview" id="fakeSubmitAddProductAndPreview" />
 			</div>
 			{/if}
-
+(digestion)
 			{* all input are here *}
 			{foreach $product_tabs key=numStep item=tab}
 				{if $tab.id != "Pack" }
