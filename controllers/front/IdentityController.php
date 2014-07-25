@@ -58,7 +58,7 @@ class IdentityControllerCore extends FrontController
 
 			if (Tools::getIsset('old_passwd'))
 				$old_passwd = trim(Tools::getValue('old_passwd'));
-			
+
 			if (!Validate::isEmail($email))
 				$this->errors[] = Tools::displayError('This email address is not valid');
 			elseif ($this->customer->email != $email && Customer::customerExists($email, true))
@@ -139,6 +139,8 @@ class IdentityControllerCore extends FrontController
 
 		if (Module::isInstalled('blocknewsletter'))
 			$this->context->smarty->assign('newsletter', (int)Module::getInstanceByName('blocknewsletter')->active);
+
+		$this->context->smarty->assign('field_required', $this->context->customer->validateFieldsRequiredDatabase());
 
 		$this->setTemplate(_PS_THEME_DIR_.'identity.tpl');
 	}
