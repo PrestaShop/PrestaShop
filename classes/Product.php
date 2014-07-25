@@ -385,29 +385,29 @@ class ProductCore extends ObjectModel
 		),
 		'associations' => array(
 			'categories' => array(
-				'resource' => 'categories',
+				'resource' => 'category',
 				'fields' => array(
 					'id' => array('required' => true),
 				)
 			),
 			'images' => array(
-				'resource' => 'images',
+				'resource' => 'image',
 				'fields' => array('id' => array())
 			),
 			'combinations' => array(
-				'resource' => 'combinations',
+				'resource' => 'combination',
 				'fields' => array(
 					'id' => array('required' => true),
 				)
 			),
 			'product_option_values' => array(
-				'resource' => 'product_option_values',
+				'resource' => 'product_option_value',
 				'fields' => array(
 					'id' => array('required' => true),
 				)
 			),
 			'product_features' => array(
-				'resource' => 'product_features',
+				'resource' => 'product_feature',
 				'fields' => array(
 					'id' => array('required' => true),
 					'custom' => array('required' => false),
@@ -417,11 +417,11 @@ class ProductCore extends ObjectModel
 					),
 				)
 			),
-			'tags' => array('resource' => 'tags',
+			'tags' => array('resource' => 'tag',
 				'fields' => array(
 					'id' => array('required' => true),
 			)),
-			'stock_availables' => array('resource' => 'stock_availables',
+			'stock_availables' => array('resource' => 'stock_available',
 				'fields' => array(
 					'id' => array('required' => true),
 					'id_product_attribute' => array('required' => true),
@@ -429,7 +429,8 @@ class ProductCore extends ObjectModel
 				'setter' => false
 			),
 			'accessories' => array(
-				'resource' => 'products',
+				'resource' => 'product',
+				'api' => 'products',
 				'fields' => array(
 					'id' => array(
 						'required' => true,
@@ -437,7 +438,8 @@ class ProductCore extends ObjectModel
 				)
 			),
 			'product_bundle' => array(
-				'resource' => 'products',
+				'resource' => 'product',
+				'api' => 'products',
 				'fields' => array(
 					'id' => array('required' => true),
 					'quantity' => array(),

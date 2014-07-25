@@ -80,12 +80,12 @@ class CustomizationCore extends ObjectModel
 			),
 		),
 		'associations' => array(
-			'customized_data_text_fields' => array('resource' => 'customized_data_text_fields', 'virtual_entity' => true, 'fields' => array(
+			'customized_data_text_fields' => array('resource' => 'customized_data_text_field', 'virtual_entity' => true, 'fields' => array(
 				'id_customization_field' => array('required' => true, 'xlink_resource' => 'product_customization_fields'),
 				'value' => array(),
 				)
 			),
-			'customized_data_images' => array('resource' => 'customized_data_images', 'virtual_entity' => true, 'setter' => false, 'fields' => array(
+			'customized_data_images' => array('resource' => 'customized_data_image', 'virtual_entity' => true, 'setter' => false, 'fields' => array(
 				'id_customization_field' => array('xlink_resource' => 'product_customization_fields'),
 				'value' => array(),
 				)
