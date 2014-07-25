@@ -100,8 +100,10 @@ function ProductTabsManager(){
 
 		// send $_POST array with the request to be able to retrieve posted data if there was an error while saving product
 		var data;
+		var send_type = 'GET';
 		if (save_error)
 		{
+			send_type = 'POST';
 			data = post_data;
 			// set key_tab so that the ajax call returns the display for the current tab
 			data.key_tab = tab_name;
@@ -111,7 +113,7 @@ function ProductTabsManager(){
 			url : $('#link-'+tab_name).attr("href")+"&ajax=1" + '&rand=' + new Date().getTime(),
 			async : true,
 			cache: false, // cache needs to be set to false or IE will cache the page with outdated product values
-			type: 'POST',
+			type: send_type,
 			headers: { "cache-control": "no-cache" },
 			data: data,
 			success : function(data)
