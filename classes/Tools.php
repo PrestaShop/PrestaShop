@@ -1155,6 +1155,9 @@ class ToolsCore
 
 		if ($allow_accented_chars === null)
 			$allow_accented_chars = Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
+		
+		if (!is_string($str))
+			return false;
 
 		$str = trim($str);
 
