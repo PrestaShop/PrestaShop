@@ -90,7 +90,7 @@ class CombinationCore extends ObjectModel
 			'id_product' => array('required' => true, 'xlink_resource'=> 'products'),
 		),
 		'associations' => array(
-			'product_option_values' => array('resource' => 'product_option_values'),
+			'product_option_values' => array('resource' => 'product_option_value'),
 			'images' => array('resource' => 'image'),
 		),
 	);

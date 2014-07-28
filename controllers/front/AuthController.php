@@ -95,13 +95,15 @@ class AuthControllerCore extends FrontController
 
 		$back = Tools::getValue('back');
 		$key = Tools::safeOutput(Tools::getValue('key'));
+
 		if (!empty($key))
 			$back .= (strpos($back, '?') !== false ? '&' : '?').'key='.$key;
+
 		if ($back == Tools::secureReferrer(Tools::getValue('back')))
 			$this->context->smarty->assign('back', html_entity_decode($back));
 		else
 			$this->context->smarty->assign('back', Tools::safeOutput($back));
-	
+
 		if (Tools::getValue('display_guest_checkout'))
 		{
 			if (Configuration::get('PS_RESTRICT_DELIVERED_COUNTRIES'))
@@ -125,7 +127,9 @@ class AuthControllerCore extends FrontController
 			$this->context->smarty->assign('multi_shipping', true);
 		else
 			$this->context->smarty->assign('multi_shipping', false);
-		
+
+		$this->context->smarty->assign('field_required', $this->context->customer->validateFieldsRequiredDatabase());
+
 		$this->assignAddressFormat();
 
 		// Call a hook to display more information on form
@@ -133,7 +137,7 @@ class AuthControllerCore extends FrontController
 				'HOOK_CREATE_ACCOUNT_FORM' => Hook::exec('displayCustomerAccountForm'),
 				'HOOK_CREATE_ACCOUNT_TOP' => Hook::exec('displayCustomerAccountFormTop')
 			));
-		
+
 		// Just set $this->template value here in case it's used by Ajax
 		$this->setTemplate(_PS_THEME_DIR_.'authentication.tpl');
 
@@ -240,7 +244,7 @@ class AuthControllerCore extends FrontController
 	 */
 	protected function processSubmitLogin()
 	{
-		
+
 		Hook::exec('actionBeforeAuthentication');
 		$passwd = trim(Tools::getValue('passwd'));
 		$email = trim(Tools::getValue('email'));
@@ -271,10 +275,10 @@ class AuthControllerCore extends FrontController
 				$this->context->cookie->is_guest = $customer->isGuest();
 				$this->context->cookie->passwd = $customer->passwd;
 				$this->context->cookie->email = $customer->email;
-				
+
 				// Add customer to the context
 				$this->context->customer = $customer;
-				
+
 				if (Configuration::get('PS_CART_FOLLOWING') && (empty($this->context->cookie->id_cart) || Cart::getNbProducts($this->context->cookie->id_cart) == 0) && $id_cart = (int)Cart::lastNoneOrderedCart($this->context->customer->id))
 					$this->context->cart = new Cart($id_cart);
 				else
@@ -324,7 +328,7 @@ class AuthControllerCore extends FrontController
 		}
 		else
 			$this->context->smarty->assign('authentification_error', $this->errors);
-			
+
 	}
 
 	/**
@@ -370,7 +374,7 @@ class AuthControllerCore extends FrontController
 		// Preparing customer
 		$customer = new Customer();
 		$lastnameAddress = Tools::getValue('lastname');
-		$firstnameAddress = Tools::getValue('firstname');		
+		$firstnameAddress = Tools::getValue('firstname');
 		$_POST['lastname'] = Tools::getValue('customer_lastname', $lastnameAddress);
 		$_POST['firstname'] = Tools::getValue('customer_firstname', $firstnameAddress);
 		$addresses_types = array('address');
@@ -385,7 +389,7 @@ class AuthControllerCore extends FrontController
 				if (!Tools::getValue('phone') && !Tools::getValue('phone_mobile'))
 					$error_phone = true;
 			}
-			elseif (((Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && Configuration::get('PS_ORDER_PROCESS_TYPE')) 
+			elseif (((Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && Configuration::get('PS_ORDER_PROCESS_TYPE'))
 					|| (Configuration::get('PS_ORDER_PROCESS_TYPE') && !Tools::getValue('email_create'))
 					|| (Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && Tools::getValue('email_create')))
 					&& (!Tools::getValue('phone') && !Tools::getValue('phone_mobile')))
@@ -486,7 +490,7 @@ class AuthControllerCore extends FrontController
 				if (!$country->active)
 					$this->errors[] = Tools::displayError('This country is not active.');
 
-				$postcode = Tools::getValue('postcode');		
+				$postcode = Tools::getValue('postcode');
 				/* Check zip code format */
 				if ($country->zip_code_format && !$country->checkZipCode($postcode))
 					$this->errors[] = sprintf(Tools::displayError('The Zip/Postal code you\'ve entered is invalid. It must follow this format: %s'), str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format))));
@@ -494,7 +498,7 @@ class AuthControllerCore extends FrontController
 					$this->errors[] = Tools::displayError('A Zip / Postal code is required.');
 				elseif ($postcode && !Validate::isPostCode($postcode))
 					$this->errors[] = Tools::displayError('The Zip / Postal code is invalid.');
-	
+
 				if ($country->need_identification_number && (!Tools::getValue('dni') || !Validate::isDniLite(Tools::getValue('dni'))))
 					$this->errors[] = Tools::displayError('The identification number is incorrect or has already been used.');
 				elseif (!$country->need_identification_number)
@@ -538,12 +542,12 @@ class AuthControllerCore extends FrontController
 				{
 					foreach($addresses_types as $addresses_type)
 					{
-						$$addresses_type->id_customer = (int)$customer->id;				
+						$$addresses_type->id_customer = (int)$customer->id;
 						if ($addresses_type == 'address_invoice')
 							foreach($_POST as $key => &$post)
 								if ($tmp = Tools::getValue($key.'_invoice'))
 									$post = $tmp;
-		
+
 						$this->errors = array_unique(array_merge($this->errors, $$addresses_type->validateController()));
 						if ($addresses_type == 'address_invoice')
 							$_POST = $post_back;
@@ -605,7 +609,7 @@ class AuthControllerCore extends FrontController
 						// if registration type is in two steps, we redirect to register address
 						if (!Configuration::get('PS_REGISTRATION_PROCESS_TYPE') && !$this->ajax && !Tools::isSubmit('submitGuestAccount'))
 							Tools::redirect('index.php?controller=address');
-							
+
 						if (($back = Tools::getValue('back')) && $back == Tools::secureReferrer($back))
 							Tools::redirect(html_entity_decode($back));
 
@@ -625,7 +629,7 @@ class AuthControllerCore extends FrontController
 			//for retro compatibility to display guest account creation form on authentication page
 			if (Tools::getValue('submitGuestAccount'))
 				$_GET['display_guest_checkout'] = 1;
-			
+
 			if (!Tools::getValue('is_new_customer'))
 				unset($_POST['passwd']);
 			if ($this->ajax)

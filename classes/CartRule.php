@@ -631,8 +631,9 @@ class CartRuleCore extends ObjectModel
 			foreach ($productRuleGroups as $id_product_rule_group => $productRuleGroup)
 			{
 				$eligibleProductsList = array();
-				foreach ($context->cart->getProducts() as $product)
-					$eligibleProductsList[] = (int)$product['id_product'].'-'.(int)$product['id_product_attribute'];
+				if (isset($context->cart) && is_object($context->cart) && is_array($products = $context->cart->getProducts()))
+					foreach ($products as $product)
+						$eligibleProductsList[] = (int)$product['id_product'].'-'.(int)$product['id_product_attribute'];
 				if (!count($eligibleProductsList))
 					return (!$display_error) ? false : Tools::displayError('You cannot use this voucher in an empty cart');
 				
