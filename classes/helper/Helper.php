@@ -212,9 +212,9 @@ class HelperCore
 		if (count($selected_cat) > 0)
 		{
 			if (isset($selected_cat[0]))
-				$html .= '			var selectedCat = '.(int)implode(',', $selected_cat).';'."\n";
+				$html .= '			var selectedCat = "'.implode(',', array_map('intval', $selected_cat)).'";'."\n";
 			else
-				$html .= '			var selectedCat = '.(int)implode(',', array_keys($selected_cat)).';'."\n";
+				$html .= '			var selectedCat = "'.implode(',', array_map('intval', array_keys($selected_cat))).'";'."\n";
 		}
 		else
 			$html .= '			var selectedCat = \'\';'."\n";
@@ -350,10 +350,15 @@ class HelperCore
 			'modules_list' => $modules_list,
 			'modules_uri' => __PS_BASE_URI__.basename(_PS_MODULE_DIR_)
 		);
+		// The translations for this are defined by AdminModules, so override the context for the translations
+		$override_controller_name_for_translations = Context::getContext()->override_controller_name_for_translations;
+		Context::getContext()->override_controller_name_for_translations = 'AdminModules';
 		$tpl = $this->createTemplate('helpers/modules_list/list.tpl');
 		$tpl->assign($this->tpl_vars);
-
-		return $tpl->fetch();
+		$html = $tpl->fetch();
+		// Restore the previous context
+		Context::getContext()->override_controller_name_for_translations = $override_controller_name_for_translations;
+		return $html;
 	}
 
 	public static function renderShopList()
@@ -378,18 +383,19 @@ class HelperCore
 		$shop = new Shop(Shop::getContextShopID());
 
 		// $html = '<a href="#"><i class="icon-home"></i> '.$shop->name.'</a>';
-		$html = '<select class="shopList" onchange="location.href = \''.$url.'\'+$(this).val();">';
+		$html = '<select class="shopList" onchange="location.href = \''.htmlspecialchars($url).'\'+$(this).val();">';
 		$html .= '<option value="" class="first">'.Translate::getAdminTranslation('All shops').'</option>';
+
 		foreach ($tree as $gID => $group_data)
 		{
 			if ((!isset($context->controller->multishop_context) || $context->controller->multishop_context & Shop::CONTEXT_GROUP))
-				$html .= '<option class="group" value="g-'.$gID.'" '.(($value == 'g-'.$gID) ? 'selected="selected"' : '').' '.($context->controller->multishop_context_group == false ? 'disabled="disabled"' : '').'>'.Translate::getAdminTranslation('Group:').' '.htmlspecialchars($group_data['name']).'</option>';
+				$html .= '<option class="group" value="g-'.$gID.'"'.(((empty($value) && $shop_context == Shop::CONTEXT_GROUP) || $value == 'g-'.$gID) ? ' selected="selected"' : '').($context->controller->multishop_context_group == false ? ' disabled="disabled"' : '').'>'.Translate::getAdminTranslation('Group:').' '.htmlspecialchars($group_data['name']).'</option>';
 			else
-				$html .= '<optgroup class="group" label="'.Translate::getAdminTranslation('Group:').' '.htmlspecialchars($group_data['name']).'" '.($context->controller->multishop_context_group == false ? 'disabled="disabled"' : '').'>';
+				$html .= '<optgroup class="group" label="'.Translate::getAdminTranslation('Group:').' '.htmlspecialchars($group_data['name']).'"'.($context->controller->multishop_context_group == false ? ' disabled="disabled"' : '').'>';
 			if (!isset($context->controller->multishop_context) || $context->controller->multishop_context & Shop::CONTEXT_SHOP)
 				foreach ($group_data['shops'] as $sID => $shopData)
 					if ($shopData['active'])
-						$html .= '<option value="s-'.$sID.'" class="shop" '.(($value == 's-'.$sID) ? 'selected="selected"' : '').'>'.($context->controller->multishop_context_group == false ? htmlspecialchars($group_data['name']).' - ' : '').$shopData['name'].'</option>';
+						$html .= '<option value="s-'.$sID.'" class="shop"'.(($value == 's-'.$sID) ? ' selected="selected"' : '').'>'.($context->controller->multishop_context_group == false ? htmlspecialchars($group_data['name']).' - ' : '').$shopData['name'].'</option>';
 			if (!(!isset($context->controller->multishop_context) || $context->controller->multishop_context & Shop::CONTEXT_GROUP))
 				$html .= '</optgroup>';
 		}
@@ -398,4 +404,3 @@ class HelperCore
 		return $html;
 	}
 }
-

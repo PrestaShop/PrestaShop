@@ -54,19 +54,28 @@ class ShopUrlCore extends ObjectModel
 		),
 	);
 
+	protected $webserviceParameters = array(
+		'fields' => array(
+			'id_shop' => array('xlink_resource' => 'shops'),
+		),
+	);
+
 	/**
 	 * @see ObjectModel::getFields()
 	 * @return array
 	 */
 	public function getFields()
 	{
-		$this->physical_uri = trim($this->physical_uri, '/');
+		$this->domain = trim($this->domain);
+		$this->domain_ssl = trim($this->domain_ssl);
+		$this->physical_uri = trim(str_replace(' ', '', $this->physical_uri), '/');
+
 		if ($this->physical_uri)
 			$this->physical_uri = preg_replace('#/+#', '/', '/'.$this->physical_uri.'/');
 		else
 			$this->physical_uri = '/';
 
-		$this->virtual_uri = trim($this->virtual_uri, '/');
+		$this->virtual_uri = trim(str_replace(' ', '', $this->virtual_uri), '/');
 		if ($this->virtual_uri)
 			$this->virtual_uri = preg_replace('#/+#', '/', trim($this->virtual_uri, '/')).'/';
 
@@ -151,7 +160,7 @@ class ShopUrlCore extends ObjectModel
 			SELECT domain, domain_ssl
 			FROM '._DB_PREFIX_.'shop_url
 			WHERE main = 1
-			AND id_shop = '.($id_shop !== null ? (int)$id_shop : Context::getContext()->shop->id));
+			AND id_shop = '.($id_shop !== null ? (int)$id_shop : (int)Context::getContext()->shop->id));
 			self::$main_domain[(int)$id_shop] = $row['domain'];
 			self::$main_domain_ssl[(int)$id_shop] = $row['domain_ssl'];
 		}

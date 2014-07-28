@@ -80,7 +80,6 @@ class ProductSaleCore
 		}
 		$interval = Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
 
-		// Subquery: get product ids in a separate query to (greatly!) improve performances and RAM usage
 		$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT cp.`id_product`
 		FROM `'._DB_PREFIX_.'category_group` cg

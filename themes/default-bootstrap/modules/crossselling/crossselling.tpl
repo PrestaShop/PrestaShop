@@ -34,17 +34,12 @@
     	<div id="crossselling_list">
             <ul id="crossselling_list_car" class="clearfix">
                 {foreach from=$orderProducts item='orderProduct' name=orderProduct}
-                    <li class="product-box item">
-                        <a 
-                        class="lnk_img product-image" 
-                        href="{$orderProduct.link|escape:'html':'UTF-8'}" 
-                        title="{$orderProduct.name|htmlspecialchars}" >
-                            <img src="{$orderProduct.image}" alt="{$orderProduct.name|htmlspecialchars}" />
+                    <li class="product-box item" itemprop="isRelatedTo" itemscope itemtype="http://schema.org/Product">
+                        <a class="lnk_img product-image" href="{$orderProduct.link|escape:'html':'UTF-8'}" title="{$orderProduct.name|htmlspecialchars}" >
+                            <img itemprop="image" src="{$orderProduct.image}" alt="{$orderProduct.name|htmlspecialchars}" />
                         </a>
-                        <p class="product_name">
-                            <a 
-                            href="{$orderProduct.link|escape:'html':'UTF-8'}" 
-                            title="{$orderProduct.name|htmlspecialchars}">
+                        <p itemprop="name" class="product_name">
+                            <a itemprop="url" href="{$orderProduct.link|escape:'html':'UTF-8'}" title="{$orderProduct.name|htmlspecialchars}">
                                 {$orderProduct.name|truncate:15:'...'|escape:'html':'UTF-8'}
                             </a>
                         </p>

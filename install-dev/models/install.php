@@ -97,8 +97,15 @@ class InstallModelInstall extends InstallAbstractModel
 		}
 
 		$settings_content = "<?php\n";
+
 		foreach ($settings_constants as $constant => $value)
+		{
+			if ($constant == '_PS_VERSION_')
+				$settings_content .= 'if (!defined(\''.$constant.'\'))'."\n\t";
+
 			$settings_content .= "define('$constant', '".str_replace('\'', '\\\'', $value)."');\n";
+		}
+
 		if (!file_put_contents(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE, $settings_content))
 		{
 			$this->setError($this->language->l('Cannot write settings file'));
@@ -188,6 +195,7 @@ class InstallModelInstall extends InstallAbstractModel
 		$id_lang =  (!empty($flip_languages[$this->language->getLanguageIso()])) ? $flip_languages[$this->language->getLanguageIso()] : 1;
 		Configuration::updateGlobalValue('PS_LANG_DEFAULT', $id_lang);
 		Configuration::updateGlobalValue('PS_VERSION_DB', _PS_INSTALL_VERSION_);
+		Configuration::updateGlobalValue('PS_INSTALL_VERSION', _PS_INSTALL_VERSION_);
 		return true;
 	}
 
@@ -334,7 +342,7 @@ class InstallModelInstall extends InstallAbstractModel
 
 		$list = array(
 			'products' =>		_PS_PROD_IMG_DIR_,
-			'categories',		_PS_CAT_IMG_DIR_,
+			'categories' =>		_PS_CAT_IMG_DIR_,
 			'manufacturers' =>	_PS_MANU_IMG_DIR_,
 			'suppliers' =>		_PS_SUPP_IMG_DIR_,
 			'scenes' =>			_PS_SCENE_IMG_DIR_,
@@ -698,7 +706,7 @@ class InstallModelInstall extends InstallAbstractModel
 			$xml_loader = new $class();
 			if (!$xml_loader instanceof InstallXmlLoader)
 			{
-				$this->setError($this->language->l('"%s" must be an instane of "InstallXmlLoader"', $class));
+				$this->setError($this->language->l('"%s" must be an instance of "InstallXmlLoader"', $class));
 				return false;
 			}
 		}

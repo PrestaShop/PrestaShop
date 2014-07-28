@@ -127,18 +127,20 @@ class OrderStateCore extends ObjectModel
 	}
 
 	/**
-	* Check if we can make a facture when order is in this state
+	* Check if we can make a invoice when order is in this state
 	*
 	* @param integer $id_order_state State ID
 	* @return boolean availability
 	*/
 	public static function invoiceAvailable($id_order_state)
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT `invoice` AS ok
-		FROM `'._DB_PREFIX_.'order_state`
-		WHERE `id_order_state` = '.(int)$id_order_state);
-		return $result['ok'];
+		$result = false;
+		if (Configuration::get('PS_INVOICE'))
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT `invoice`
+			FROM `'._DB_PREFIX_.'order_state`
+			WHERE `id_order_state` = '.(int)$id_order_state);
+		return (bool)$result;
 	}
 
 	public function isRemovable()

@@ -370,45 +370,6 @@ function viewTemplates(id_select, prefix, ext)
 	}
 }
 
-function validateImportation(mandatory)
-{
-    var type_value = [];
-	var seted_value = [];
-	var elem;
-	var col = 'unknow';
-
-	toggle(getE('error_duplicate_type'), false);
-	toggle(getE('required_column'), false);
-    for (i = 0; elem = getE('type_value['+i+']'); i++)
-    {
-		if (seted_value[elem.options[elem.selectedIndex].value])
-		{
-			scroll(0,0);
-			toggle(getE('error_duplicate_type'), true);
-			return false;
-		}
-		else if (elem.options[elem.selectedIndex].value != 'no')
-			seted_value[elem.options[elem.selectedIndex].value] = true;
-	}
-	for (needed in mandatory)
-		if (!seted_value[mandatory[needed]])
-		{
-			scroll(0,0);
-			toggle(getE('required_column'), true);
-			getE('missing_column').innerHTML = mandatory[needed];
-			elem = getE('type_value[0]');
-			for (i = 0; i < elem.length; ++i)
-			{
-				if (elem.options[i].value == mandatory[needed])
-				{
-					getE('missing_column').innerHTML = elem.options[i].innerHTML;
-					break ;
-				}
-			}
-			return false
-		}
-}
-
 function orderDeleteProduct(txtConfirm, txtExplain)
 {
 	ret = true;
@@ -655,16 +616,16 @@ function checkMultishopDefaultValue(obj, key)
 {
 	if (!$(obj).prop('checked') || $('#'+key).hasClass('isInvisible'))
 	{
-		$('#conf_id_'+key+' input, #conf_id_'+key+' textarea, #conf_id_'+key+' select').attr('disabled', true);
+		$('#conf_id_'+key+' input, #conf_id_'+key+' textarea, #conf_id_'+key+' select, #conf_id_'+key+' button').prop('disabled', true);
 		$('#conf_id_'+key+' label.conf_title').addClass('isDisabled');
-		$(obj).attr('disabled', false);
+		$(obj).prop('disabled', false);
 	}
 	else
 	{
-		$('#conf_id_'+key+' input, #conf_id_'+key+' textarea, #conf_id_'+key+' select').attr('disabled', false);
+		$('#conf_id_'+key+' input, #conf_id_'+key+' textarea, #conf_id_'+key+' select, #conf_id_'+key+' button').prop('disabled', false);
 		$('#conf_id_'+key+' label.conf_title').removeClass('isDisabled');
 	}
-	$('#conf_id_'+key+' .preference_default_multishop input').attr('disabled', false);
+	$('#conf_id_'+key+' .preference_default_multishop input').prop('disabled', false);
 }
 
 function toggleAllMultishopDefaultValue($container, value)
@@ -733,9 +694,39 @@ function showNoticeMessage(msg) {
 
 $(document).ready(function()
 {
+	if (typeof helper_tabs != 'undefined' && typeof unique_field_id != 'undefined')
+	{
+		$.each(helper_tabs, function(index) {
+			$('#'+unique_field_id+'fieldset_'+index+' .form-wrapper').prepend('<div class="tab-content panel" />');
+			$('#'+unique_field_id+'fieldset_'+index+' .form-wrapper').prepend('<ul class="nav nav-tabs" />');
+			$.each(helper_tabs[index], function(key, value) {
+				// Move every form-group into the correct .tab-content > .tab-pane
+				$('#'+unique_field_id+'fieldset_'+index+' .tab-content').append('<div id="'+key+'" class="tab-pane" />');
+				var elemts = $('#'+unique_field_id+'fieldset_'+index).find("[data-tab-id='" + key + "']");
+				$(elemts).appendTo('#'+key);
+				// Add the item to the .nav-tabs
+				if (elemts.length != 0)
+					$('#'+unique_field_id+'fieldset_'+index+' .nav-tabs').append('<li><a href="#'+key+'" data-toggle="tab">'+value+'</a></li>');
+			});
+			// Activate the first tab
+			$('#'+unique_field_id+'fieldset_'+index+' .tab-content div').first().addClass('active');
+			$('#'+unique_field_id+'fieldset_'+index+' .nav-tabs li').first().addClass('active');
+		});
+	}
+
+	if (typeof formToMove != 'undefined' && typeof formDestination != 'undefined' )
+	{
+		$('<hr style="margin 24px 0;" />').appendTo('#'+formDestination)
+		$('#theme_fieldset_'+formToMove+' .form-wrapper').appendTo('#'+formDestination);
+	}
+
 	$('select.chosen').each(function(k, item){
 		$(item).chosen({disable_search_threshold: 10});
 	});
+	// Apply chosen() when modal is loaded
+	$(document).on('shown.bs.modal', function (e) {
+		$('select.chosen-modal').chosen();
+	})
 
 	$('.isInvisible input, .isInvisible select, .isInvisible textarea').attr('disabled', true);
 	$('.isInvisible label.conf_title').addClass('isDisabled');
@@ -772,26 +763,6 @@ $(document).ready(function()
 	$(document).on('keyup change', '.copyMeta2friendlyURL', function(e){
 		if (!isArrowKey(e))
 			return copyMeta2friendlyURL()
-	});
-
-	// Adding a button to top
-	var scroll = $('#scrollTop a');
-	var view = $(window);
-
-	scroll.click(function(){
-		$.scrollTo('#top_container', 1200, { offset: -100 });
-	});
-
-	view.bind("scroll", function(e) {
-		var heightView = view.height();
-		if (scroll.offset())
-			var btnPlace = scroll.offset().top;
-		else
-			var btnPlace = 0;
-		if (heightView < btnPlace)
-			scroll.show();
-		else
-			scroll.hide();
 	});
 
 	$('#ajax_running').ajaxStart(function() {
@@ -877,6 +848,17 @@ $(document).ready(function()
 			}
 		});
 	}); // end bind
+
+	$(document).on('click', '.untrustedaddon', function(e){
+		e.preventDefault();
+		var moduleName = $(this).data('module-name');
+		var moduleLink = $(this).data('link');
+		var addonsSearchLink = 'http://addons.prestashop.com/en/search?search_query='+encodeURIComponent(moduleName)+'&utm_source=back-office&utm_medium=addons-certified&utm_campaign=back-office-'+iso_user.toUpperCase();
+
+		$('.modal .module-name-placeholder').text(moduleName);
+		$('.modal #proceed-install-anyway').attr('href', moduleLink);
+		$('.modal .catalog-link').attr('href', addonsSearchLink);
+	});
 
 	// if count errors
 	$('#hideError').on('click', function(e)
@@ -1149,7 +1131,7 @@ function openModulesList()
 			},
 			success : function(data)
 			{
-				$('#modules_list_container_tab').html(data).slideDown();
+				$('#modules_list_container_tab_modal').html(data).slideDown();
 				$('#modules_list_loader').hide();
 				modules_list_loaded = true;
 				$('.help-tooltip').tooltip();
@@ -1158,7 +1140,7 @@ function openModulesList()
 	}
 	else
 	{
-		$('#modules_list_container_tab').slideDown();
+		$('#modules_list_container_tab_modal').slideDown();
 		$('#modules_list_loader').hide();
 	}
 	return false;
@@ -1175,11 +1157,10 @@ function bindAddonsButtons()
 		{
 			resAjax = $.ajax({
 				type:"POST",
-				url : ajaxCurrentIndex,
+				url : admin_modules_link,
 				async: true,
 				data : {
 					ajax : "1",
-					token : token,
 					controller : "AdminModules",
 					action : "logOnAddonsWebservices",
 					username_addons : username_addons,
@@ -1193,7 +1174,7 @@ function bindAddonsButtons()
 					{
 						$('#addons_loading').html('');
 						$('#addons_login_div').fadeOut();
-						window.location.href = currentIndexWithToken + '&conf=32';
+						window.location.href = admin_modules_link + '&conf=32';
 					}
 					else
 						$('#addons_loading').html(errorLogin);
@@ -1211,11 +1192,10 @@ function bindAddonsButtons()
 		{
 			resAjax = $.ajax({
 				type:"POST",
-				url : ajaxCurrentIndex,
+				url : admin_modules_link,
 				async: true,
 				data : {
 					ajax : "1",
-					token : token,
 					controller : "AdminModules",
 					action : "logOutAddonsWebservices"
 				},
@@ -1227,7 +1207,7 @@ function bindAddonsButtons()
 					{
 						$('#addons_loading').html('');
 						$('#addons_login_div').fadeOut();
-						window.location.href = currentIndexWithToken;
+						window.location.reload();
 					}
 					else
 						$('#addons_loading').html(errorLogin);
@@ -1441,4 +1421,29 @@ function saveCustomerNote(customerId){
 			showSuccessMessage(update_success_msg);
 		}
 	});
+}
+
+function isCleanHtml(content)
+{
+	var events = 'onmousedown|onmousemove|onmmouseup|onmouseover|onmouseout|onload|onunload|onfocus|onblur|onchange';
+	events += '|onsubmit|ondblclick|onclick|onkeydown|onkeyup|onkeypress|onmouseenter|onmouseleave|onerror|onselect|onreset|onabort|ondragdrop|onresize|onactivate|onafterprint|onmoveend';
+	events += '|onafterupdate|onbeforeactivate|onbeforecopy|onbeforecut|onbeforedeactivate|onbeforeeditfocus|onbeforepaste|onbeforeprint|onbeforeunload|onbeforeupdate|onmove';
+	events += '|onbounce|oncellchange|oncontextmenu|oncontrolselect|oncopy|oncut|ondataavailable|ondatasetchanged|ondatasetcomplete|ondeactivate|ondrag|ondragend|ondragenter|onmousewheel';
+	events += '|ondragleave|ondragover|ondragstart|ondrop|onerrorupdate|onfilterchange|onfinish|onfocusin|onfocusout|onhashchange|onhelp|oninput|onlosecapture|onmessage|onmouseup|onmovestart';
+	events += '|onoffline|ononline|onpaste|onpropertychange|onreadystatechange|onresizeend|onresizestart|onrowenter|onrowexit|onrowsdelete|onrowsinserted|onscroll|onsearch|onselectionchange';
+	events += '|onselectstart|onstart|onstop';
+	
+	var script1 = /<[\s]*script/im;
+	var script2 = new RegExp('('+events+')[\s]*=', 'im');
+	var script3 = /.*script\:/im;
+	var script4 = /<[\s]*(i?frame|embed|object)/im;
+
+	if (script1.test(content) || script2.test(content) || script3.test(content) || script4.test(content))
+		return false;
+
+	return true;
+}
+
+function parseDate(date){
+	return $.datepicker.parseDate("yy-mm-dd", date);
 }

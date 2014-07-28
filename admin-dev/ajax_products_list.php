@@ -53,17 +53,40 @@ else
 $excludeVirtuals = (bool)Tools::getValue('excludeVirtuals', false);
 $exclude_packs = (bool)Tools::getValue('exclude_packs', false);
 
-$sql = 'SELECT p.`id_product`, `reference`, pl.name
+$sql = 'SELECT p.`id_product`, pl.`link_rewrite`, p.`reference`, pl.`name`, MAX(image_shop.`id_image`) id_image, il.`legend`
 		FROM `'._DB_PREFIX_.'product` p
 		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.id_product = p.id_product AND pl.id_lang = '.(int)Context::getContext()->language->id.Shop::addSqlRestrictionOnLang('pl').')
+		LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)'.
+		Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
+		LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)Context::getContext()->language->id.')
 		WHERE (pl.name LIKE \'%'.pSQL($query).'%\' OR p.reference LIKE \'%'.pSQL($query).'%\')'.
 		(!empty($excludeIds) ? ' AND p.id_product NOT IN ('.$excludeIds.') ' : ' ').
 		($excludeVirtuals ? 'AND p.id_product NOT IN (SELECT pd.id_product FROM `'._DB_PREFIX_.'product_download` pd WHERE (pd.id_product = p.id_product))' : '').
-		($exclude_packs ? 'AND (p.cache_is_pack IS NULL OR p.cache_is_pack = 0)' : '');
+		($exclude_packs ? 'AND (p.cache_is_pack IS NULL OR p.cache_is_pack = 0)' : '').
+		' GROUP BY p.id_product';
 
 $items = Db::getInstance()->executeS($sql);
 
-if ($items)
+$acc = (bool)Tools::isSubmit('excludeIds');
+
+if ($items && $acc)
 	foreach ($items AS $item)
 		echo trim($item['name']).(!empty($item['reference']) ? ' (ref: '.$item['reference'].')' : '').'|'.(int)($item['id_product'])."\n";
-
+elseif ($items)
+{
+	// packs
+	$results = array();
+	foreach ($items AS $item)
+	{
+		$product = array(
+			'id' => (int)($item['id_product']),
+			'name' => $item['name'],
+			'ref' => (!empty($item['reference']) ? $item['reference'] : ''),
+			'image' => str_replace('http://', Tools::getShopProtocol(), Context::getContext()->link->getImageLink($item['link_rewrite'], $item['id_image'], 'home_default')),
+		);
+		array_push($results, $product);
+	}
+	echo Tools::jsonEncode($results);
+}
+else
+	json_encode(new stdClass);

@@ -181,31 +181,31 @@
 		<div class="col-lg-9" id="authorized-modules">			
 			{foreach $input['values']['auth_modules'] key=key item=module }
 			<div class="form-group">
-				<label class="control-label col-lg-4"><img src="../modules/{$module->name}/logo.gif" height="16px" width="16px"> {$module->displayName}</label>
+				<label class="control-label col-lg-4"><img src="../modules/{$module->name|escape:'html':'UTF-8'}/logo.gif" height="16" width="16" alt="{$module->displayName|escape:'html':'UTF-8'}" /> {$module->displayName|escape:'html':'UTF-8'}</label>
 				<div class="input-group col-lg-8">
 					<span class="switch prestashop-switch fixed-width-lg">
-						<input type="radio" name="{$module->name}" id="{$module->name}_on" value="1" checked="checked">
-						<label for="{$module->name}_on">{l s='Yes'}</label>
-						<input type="radio" name="{$module->name}" id="{$module->name}_off" value="0">
-						<label for="{$module->name}_off">{l s='No'}</label>
+						<input type="radio" name="{$module->name|escape:'html':'UTF-8'}" id="{$module->name|escape:'html':'UTF-8'}_on" value="1" checked="checked"/>
+						<label for="{$module->name|escape:'html':'UTF-8'}_on">{l s='Yes'}</label>
+						<input type="radio" name="{$module->name|escape:'html':'UTF-8'}" id="{$module->name|escape:'html':'UTF-8'}_off" value="0"/>
+						<label for="{$module->name|escape:'html':'UTF-8'}_off">{l s='No'}</label>
 						<a class="slide-button btn"></a>
 					</span>
-					<input type="hidden" name="modulesBoxAuth[]" value="{$module->id}">
+					<input type="hidden" name="modulesBoxAuth[]" value="{$module->id|intval}"/>
 				</div>
 			</div>
 			{/foreach}
 			{foreach $input['values']['unauth_modules'] key=key item=module }
 			<div class="form-group">
-				<label class="control-label col-lg-4"><img src="../modules/{$module->name}/logo.gif" height="16px" width="16px"> {$module->displayName}</label>
+				<label class="control-label col-lg-4"><img src="../modules/{$module->name|escape:'html':'UTF-8'}/logo.gif" height="16" width="16" alt="{$module->displayName|escape:'html':'UTF-8'}"/> {$module->displayName|escape:'html':'UTF-8'}</label>
 				<div class="input-group col-lg-8">
 					<span class="switch prestashop-switch fixed-width-lg">
-						<input type="radio" name="{$module->name}" id="{$module->name}_on" value="1">
-						<label for="{$module->name}_on">{l s='Yes'}</label>
-						<input type="radio" name="{$module->name}" id="{$module->name}_off" value="0" checked="checked">
-						<label for="{$module->name}_off">{l s='No'}</label>
+						<input type="radio" name="{$module->name|escape:'html':'UTF-8'}" id="{$module->name|escape:'html':'UTF-8'}_on" value="1"/>
+						<label for="{$module->name|escape:'html':'UTF-8'}_on">{l s='Yes'}</label>
+						<input type="radio" name="{$module->name|escape:'html':'UTF-8'}" id="{$module->name|escape:'html':'UTF-8'}_off" value="0" checked="checked"/>
+						<label for="{$module->name|escape:'html':'UTF-8'}_off">{l s='No'}</label>
 						<a class="slide-button btn"></a>
 					</span>
-					<input type="hidden" name="modulesBoxUnauth[]" value="{$module->id}">
+					<input type="hidden" name="modulesBoxUnauth[]" value="{$module->id|intval}"/>
 				</div>
 			</div>
 			{/foreach}

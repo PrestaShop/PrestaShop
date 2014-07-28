@@ -337,7 +337,7 @@ class ConfigurationTestCore
 			'/controllers/admin/AdminLoginController.php',
 			'/css/index.php',
 			'/download/index.php',
-			'/img/logo.jpg',
+			'/img/404.gif',
 			'/js/tools.js',
 			'/js/jquery/plugins/fancybox/jquery.fancybox.js',
 			'/localization/fr.xml',

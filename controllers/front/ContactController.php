@@ -60,13 +60,15 @@ class ContactControllerCore extends FrontController
 
 				$contact = new Contact($id_contact, $this->context->language->id);
 
+				$id_order = (int)$this->getOrder();
+
 				if (!((
 						($id_customer_thread = (int)Tools::getValue('id_customer_thread'))
 						&& (int)Db::getInstance()->getValue('
 						SELECT cm.id_customer_thread FROM '._DB_PREFIX_.'customer_thread cm
 						WHERE cm.id_customer_thread = '.(int)$id_customer_thread.' AND cm.id_shop = '.(int)$this->context->shop->id.' AND token = \''.pSQL(Tools::getValue('token')).'\'')
 					) || (
-						$id_customer_thread = CustomerThread::getIdCustomerThreadByEmailAndIdOrder($from, (int)Tools::getValue('id_order'))
+						$id_customer_thread = CustomerThread::getIdCustomerThreadByEmailAndIdOrder($from, $id_order)
 					)))
 				{
 					$fields = Db::getInstance()->executeS('
@@ -74,14 +76,14 @@ class ContactControllerCore extends FrontController
 					FROM '._DB_PREFIX_.'customer_thread cm
 					WHERE email = \''.pSQL($from).'\' AND cm.id_shop = '.(int)$this->context->shop->id.' AND ('.
 						($customer->id ? 'id_customer = '.(int)($customer->id).' OR ' : '').'
-						id_order = '.(int)(Tools::getValue('id_order')).')');
+						id_order = '.(int)$id_order.')');
 					$score = 0;
 					foreach ($fields as $key => $row)
 					{
 						$tmp = 0;
 						if ((int)$row['id_customer'] && $row['id_customer'] != $customer->id && $row['email'] != $from)
 							continue;
-						if ($row['id_order'] != 0 && Tools::getValue('id_order') != $row['id_order'])
+						if ($row['id_order'] != 0 && $id_order != $row['id_order'])
 							continue;
 						if ($row['email'] == $from)
 							$tmp += 4;
@@ -116,8 +118,7 @@ class ContactControllerCore extends FrontController
 						$ct->status = 'open';
 						$ct->id_lang = (int)$this->context->language->id;
 						$ct->id_contact = (int)($id_contact);
-						if ($id_order = (int)Tools::getValue('id_order'))
-							$ct->id_order = $id_order;
+						$ct->id_order = (int)$id_order;
 						if ($id_product = (int)Tools::getValue('id_product'))
 							$ct->id_product = $id_product;
 						$ct->update();
@@ -128,8 +129,7 @@ class ContactControllerCore extends FrontController
 						if (isset($customer->id))
 							$ct->id_customer = (int)($customer->id);
 						$ct->id_shop = (int)$this->context->shop->id;
-						if ($id_order = (int)Tools::getValue('id_order'))
-							$ct->id_order = $id_order;
+						$ct->id_order = (int)$id_order;
 						if ($id_product = (int)Tools::getValue('id_product'))
 							$ct->id_product = $id_product;
 						$ct->id_contact = (int)($id_contact);
@@ -145,8 +145,11 @@ class ContactControllerCore extends FrontController
 						$cm = new CustomerMessage();
 						$cm->id_customer_thread = $ct->id;
 						$cm->message = $message;
-						if (isset($fileAttachment['rename']) && !empty($fileAttachment['rename']) && rename($fileAttachment['tmp_name'], _PS_MODULE_DIR_.'../upload/'.basename($fileAttachment['rename'])))
+						if (isset($fileAttachment['rename']) && !empty($fileAttachment['rename']) && rename($fileAttachment['tmp_name'], _PS_UPLOAD_DIR_.basename($fileAttachment['rename'])))
+						{
 							$cm->file_name = $fileAttachment['rename'];
+							@chmod(_PS_UPLOAD_DIR_.basename($fileAttachment['rename']), 0664);
+						}
 						$cm->ip_address = ip2long(Tools::getRemoteAddr());
 						$cm->user_agent = $_SERVER['HTTP_USER_AGENT'];
 						if (!$cm->add())
@@ -168,19 +171,14 @@ class ContactControllerCore extends FrontController
 
 					if (isset($fileAttachment['name']))
 						$var_list['{attached_file}'] = $fileAttachment['name'];
-
-					$id_order = (int)Tools::getValue('id_order');
 					
 					$id_product = (int)Tools::getValue('id_product');
 					
 					if (isset($ct) && Validate::isLoadedObject($ct) && $ct->id_order)
-						$id_order = $ct->id_order;
-
-					if ($id_order)
 					{
-						$order = new Order((int)$id_order);
+						$order = new Order((int)$ct->id_order);
 						$var_list['{order_name}'] = $order->getUniqReference();
-						$var_list['{id_order}'] = $id_order;
+						$var_list['{id_order}'] = (int)$order->id;
 					}
 					
 					if ($id_product)
@@ -272,6 +270,7 @@ class ContactControllerCore extends FrontController
 			FROM '._DB_PREFIX_.'orders
 			WHERE id_customer = '.(int)$this->context->customer->id.' ORDER BY date_add');
 			$orders = array();
+
 			foreach ($result as $row)
 			{
 				$order = new Order($row['id_order']);
@@ -279,11 +278,30 @@ class ContactControllerCore extends FrontController
 				$tmp = $order->getProducts();
 				foreach ($tmp as $key => $val)
 					$products[$row['id_order']][$val['product_id']] = array('value' => $val['product_id'], 'label' => $val['product_name']);
-				$orders[] = array('value' => $order->id, 'label' => $order->getUniqReference().' - '.Tools::displayDate($date[0],null) , 'selected' => (int)Tools::getValue('id_order') == $order->id);
+
+				$orders[] = array('value' => $order->id, 'label' => $order->getUniqReference().' - '.Tools::displayDate($date[0], null) , 'selected' => (int)$this->getOrder() == $order->id);
 			}
 
 			$this->context->smarty->assign('orderList', $orders);
 			$this->context->smarty->assign('orderedProductList', $products);
 		}
+	}
+
+	protected function getOrder()
+	{
+		$id_order = false;
+		if (!is_numeric($reference = Tools::getValue('id_order')))
+		{
+			$orders = Order::getByReference($reference);
+			if ($orders)
+				foreach ($orders as $order)
+				{
+					$id_order = $order->id;
+					break;
+				}
+		}
+		else
+			$id_order = Tools::getValue('id_order');
+		return (int)$id_order;	
 	}
 }

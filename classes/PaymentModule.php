@@ -30,6 +30,8 @@ abstract class PaymentModuleCore extends Module
 	public	$currentOrder;
 	public	$currencies = true;
 	public	$currencies_mode = 'checkbox';
+	
+	const DEBUG_MODE = false;
 
 	public function install()
 	{
@@ -151,6 +153,9 @@ abstract class PaymentModuleCore extends Module
 		$message = null, $extra_vars = array(), $currency_special = null, $dont_touch_amount = false,
 		$secure_key = false, Shop $shop = null)
 	{
+		if (self::DEBUG_MODE)
+			PrestaShopLogger::addLog('PaymentModule::validateOrder - Function called', 1, null, 'Cart', (int)$id_cart, true);
+	
 		$this->context->cart = new Cart($id_cart);
 		$this->context->customer = new Customer($this->context->cart->id_customer);
 		$this->context->language = new Language($this->context->cart->id_lang);
@@ -164,15 +169,25 @@ abstract class PaymentModuleCore extends Module
 
 		$order_status = new OrderState((int)$id_order_state, (int)$this->context->language->id);
 		if (!Validate::isLoadedObject($order_status))
+		{
+			PrestaShopLogger::addLog('PaymentModule::validateOrder - Order Status cannot be loaded', 3, null, 'Cart', (int)$id_cart, true);
 			throw new PrestaShopException('Can\'t load Order status');
+		}
 
 		if (!$this->active)
+		{
+			PrestaShopLogger::addLog('PaymentModule::validateOrder - Module is not active', 3, null, 'Cart', (int)$id_cart, true);
 			die(Tools::displayError());
+		}
+
 		// Does order already exists ?
 		if (Validate::isLoadedObject($this->context->cart) && $this->context->cart->OrderExists() == false)
 		{
 			if ($secure_key !== false && $secure_key != $this->context->cart->secure_key)
+			{
+				PrestaShopLogger::addLog('PaymentModule::validateOrder - Secure key does not match', 3, null, 'Cart', (int)$id_cart, true);
 				die(Tools::displayError());
+			}
 
 			// For each package, generate an order
 			$delivery_option_list = $this->context->cart->getDeliveryOptionList();
@@ -210,6 +225,29 @@ abstract class PaymentModuleCore extends Module
 					}
 			// Make sure CarRule caches are empty
 			CartRule::cleanCache();
+			$cart_rules = $this->context->cart->getCartRules();
+			foreach ($cart_rules as $cart_rule)
+			{
+				if (($rule = new CartRule((int)$cart_rule['obj']->id)) && Validate::isLoadedObject($rule))
+				{
+					if ($error = $rule->checkValidity($this->context, true, true))
+					{
+						$this->context->cart->removeCartRule((int)$rule->id);
+						if (isset($this->context->cookie) && isset($this->context->cookie->id_customer) && $this->context->cookie->id_customer && !empty($rule->code))
+						{
+							if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
+								Tools::redirect('index.php?controller=order-opc&submitAddDiscount=1&discount_name='.urlencode($rule->code));
+							Tools::redirect('index.php?controller=order&submitAddDiscount=1&discount_name='.urlencode($rule->code));
+						}
+						else
+						{
+							$rule_name = isset($rule->name[(int)$this->context->cart->id_lang]) ? $rule->name[(int)$this->context->cart->id_lang] : $rule->code;
+							$error = Tools::displayError(sprintf('CartRule ID %1s (%2s) used in this cart is not valid and has been withdrawn from cart', (int)$rule->id, $rule_name));
+							PrestaShopLogger::addLog($error, 3, '0000002', 'Cart', (int)$this->context->cart->id);
+						}
+					}
+				}
+			}
 
 			foreach ($package_list as $id_address => $packageByAddress)
 				foreach ($packageByAddress as $id_package => $package)
@@ -221,6 +259,8 @@ abstract class PaymentModuleCore extends Module
 					{
 						$address = new Address($id_address);
 						$this->context->country = new Country($address->id_country, $this->context->cart->id_lang);
+						if (!$this->context->country->active)
+							throw new PrestaShopException('The delivery address country is not active.');
 					}
 
 					$carrier = null;
@@ -283,11 +323,17 @@ abstract class PaymentModuleCore extends Module
 					$order->invoice_date = '0000-00-00 00:00:00';
 					$order->delivery_date = '0000-00-00 00:00:00';
 
+					if (self::DEBUG_MODE)
+						PrestaShopLogger::addLog('PaymentModule::validateOrder - Order is about to be added', 1, null, 'Cart', (int)$id_cart, true);
+			
 					// Creating order
 					$result = $order->add();
 
 					if (!$result)
+					{
+						PrestaShopLogger::addLog('PaymentModule::validateOrder - Order cannot be created', 3, null, 'Cart', (int)$id_cart, true);
 						throw new PrestaShopException('Can\'t save Order');
+					}
 
 					// Amount paid by customer is not the right one -> Status = payment error
 					// We don't use the following condition to avoid the float precision issues : http://www.php.net/manual/en/language.types.float.php
@@ -298,10 +344,16 @@ abstract class PaymentModuleCore extends Module
 
 					$order_list[] = $order;
 
+					if (self::DEBUG_MODE)
+						PrestaShopLogger::addLog('PaymentModule::validateOrder - OrderDetail is about to be added', 1, null, 'Cart', (int)$id_cart, true);
+
 					// Insert new Order detail list using cart for the current order
 					$order_detail = new OrderDetail(null, null, $this->context);
 					$order_detail->createList($order, $this->context->cart, $id_order_state, $order->product_list, 0, true, $package_list[$id_address][$id_package]['id_warehouse']);
 					$order_detail_list[] = $order_detail;
+
+					if (self::DEBUG_MODE)
+						PrestaShopLogger::addLog('PaymentModule::validateOrder - OrderCarrier is about to be added', 1, null, 'Cart', (int)$id_cart, true);
 
 					// Adding an entry in order_carrier table
 					if (!is_null($carrier))
@@ -320,6 +372,15 @@ abstract class PaymentModuleCore extends Module
 			if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_delivery')
 				$this->context->country = $context_country;
 
+			if (!$this->context->country->active)
+			{
+				PrestaShopLogger::addLog('PaymentModule::validateOrder - Country is not active', 3, null, 'Cart', (int)$id_cart, true);
+				throw new PrestaShopException('The order address country is not active.');
+			}
+
+			if (self::DEBUG_MODE)
+				PrestaShopLogger::addLog('PaymentModule::validateOrder - Payment is about to be added', 1, null, 'Cart', (int)$id_cart, true);
+
 			// Register Payment only if the order status validate the order
 			if ($order_status->logable)
 			{
@@ -332,14 +393,16 @@ abstract class PaymentModuleCore extends Module
 					$transaction_id = null;
 
 				if (!$order->addOrderPayment($amount_paid, null, $transaction_id))
+				{
+					PrestaShopLogger::addLog('PaymentModule::validateOrder - Cannot save Order Payment', 3, null, 'Cart', (int)$id_cart, true);
 					throw new PrestaShopException('Can\'t save Order Payment');
+				}
 			}
 
 			// Next !
 			$only_one_gift = false;
 			$cart_rule_used = array();
 			$products = $this->context->cart->getProducts();
-			$cart_rules = $this->context->cart->getCartRules();
 
 			// Make sure CarRule caches are empty
 			CartRule::cleanCache();
@@ -357,6 +420,8 @@ abstract class PaymentModuleCore extends Module
 						$message = strip_tags($message, '<br>');
 						if (Validate::isCleanHtml($message))
 						{
+							if (self::DEBUG_MODE)
+								PrestaShopLogger::addLog('PaymentModule::validateOrder - Message is about to be added', 1, null, 'Cart', (int)$id_cart, true);
 							$msg->message = $message;
 							$msg->id_order = intval($order->id);
 							$msg->private = 1;
@@ -501,7 +566,7 @@ abstract class PaymentModuleCore extends Module
 								Mail::Send(
 									(int)$order->id_lang,
 									'voucher',
-									sprintf(Mail::l('New voucher regarding your order %s', (int)$order->id_lang), $order->reference),
+									sprintf(Mail::l('New voucher for your order %s', (int)$order->id_lang), $order->reference),
 									$params,
 									$this->context->customer->email,
 									$this->context->customer->firstname.' '.$this->context->customer->lastname,
@@ -572,6 +637,9 @@ abstract class PaymentModuleCore extends Module
 							$this->errors[] = Tools::displayError('An error occurred while saving message');
 					}
 
+					if (self::DEBUG_MODE)
+						PrestaShopLogger::addLog('PaymentModule::validateOrder - Hook validateOrder is about to be called', 1, null, 'Cart', (int)$id_cart, true);
+
 					// Hook validate order
 					Hook::exec('actionValidateOrder', array(
 						'cart' => $this->context->cart,
@@ -584,6 +652,9 @@ abstract class PaymentModuleCore extends Module
 					foreach ($this->context->cart->getProducts() as $product)
 						if ($order_status->logable)
 							ProductSale::addProductSale((int)$product['id_product'], (int)$product['cart_quantity']);
+
+					if (self::DEBUG_MODE)
+						PrestaShopLogger::addLog('PaymentModule::validateOrder - Order Status is about to be added', 1, null, 'Cart', (int)$id_cart, true);
 
 					// Set the order status
 					$new_history = new OrderHistory();
@@ -652,7 +723,7 @@ abstract class PaymentModuleCore extends Module
 						'{invoice_other}' => $invoice->other,
 						'{order_name}' => $order->getUniqReference(),
 						'{date}' => Tools::displayDate(date('Y-m-d H:i:s'), null, 1),
-						'{carrier}' => $virtual_product ? Tools::displayError('No carrier') : $carrier->name,
+						'{carrier}' => ($virtual_product || !isset($carrier->name)) ? Tools::displayError('No carrier') : $carrier->name,
 						'{payment}' => Tools::substr($order->payment, 0, 32),
 						'{products}' => $product_list_html,
 						'{products_txt}' => $product_list_txt,
@@ -678,6 +749,9 @@ abstract class PaymentModuleCore extends Module
 						}
 						else
 							$file_attachement = null;
+
+						if (self::DEBUG_MODE)
+							PrestaShopLogger::addLog('PaymentModule::validateOrder - Mail is about to be sent', 1, null, 'Cart', (int)$id_cart, true);
 
 						if (Validate::isEmail($this->context->customer->email))
 							Mail::Send(
@@ -718,6 +792,10 @@ abstract class PaymentModuleCore extends Module
 			} // End foreach $order_detail_list
 			// Use the last order as currentOrder
 			$this->currentOrder = (int)$order->id;
+
+			if (self::DEBUG_MODE)
+				PrestaShopLogger::addLog('PaymentModule::validateOrder - End of validateOrder', 1, null, 'Cart', (int)$id_cart, true);
+
 			return true;
 		}
 		else
@@ -826,8 +904,7 @@ abstract class PaymentModuleCore extends Module
 		{
 			return Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'module_currency` (`id_module`, `id_currency`)
-			VALUES '.rtrim($values, ',')
-			);
+			VALUES '.rtrim($values, ','));
 		}
 
 		return true;
@@ -847,15 +924,13 @@ abstract class PaymentModuleCore extends Module
 			$hook_payment = 'displayPayment';
 
 		return Db::getInstance()->executeS('
-			SELECT DISTINCT m.`id_module`, h.`id_hook`, m.`name`, hm.`position`
-			FROM `'._DB_PREFIX_.'module` m
-			LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
-			LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
-			INNER JOIN `'._DB_PREFIX_.'module_shop` ms ON (m.`id_module` = ms.`id_module` AND ms.id_shop='.(int)Context::getContext()->shop->id.')
-			WHERE h.`name` = \''.pSQL($hook_payment).'\'
-		');
+		SELECT DISTINCT m.`id_module`, h.`id_hook`, m.`name`, hm.`position`
+		FROM `'._DB_PREFIX_.'module` m
+		LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
+		LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
+		INNER JOIN `'._DB_PREFIX_.'module_shop` ms ON (m.`id_module` = ms.`id_module` AND ms.id_shop='.(int)Context::getContext()->shop->id.')
+		WHERE h.`name` = \''.pSQL($hook_payment).'\'');
 	}
-
 
 	public static function preCall($module_name)
 	{
@@ -885,21 +960,16 @@ abstract class PaymentModuleCore extends Module
 			return '';
 
 		$theme_template_path = _PS_THEME_DIR_.'mails'.DIRECTORY_SEPARATOR.$this->context->language->iso_code.DIRECTORY_SEPARATOR.$template_name;
-
 		$default_mail_template_path = _PS_MAIL_DIR_.$this->context->language->iso_code.DIRECTORY_SEPARATOR.$template_name;
 
 		if (Tools::file_exists_cache($theme_template_path))
 			$default_mail_template_path = $theme_template_path;
 
-		$this->context->smarty->assign(
-			array(
-				'list' => $var
-			)
-		);
-
 		if (Tools::file_exists_cache($default_mail_template_path))
+		{
+			$this->context->smarty->assign('list', $var);
 			return $this->context->smarty->fetch($default_mail_template_path);
-
+		}
 		return '';
 	}
 }

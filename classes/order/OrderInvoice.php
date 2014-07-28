@@ -120,7 +120,7 @@ class OrderInvoiceCore extends ObjectModel
 		ON p.id_product = od.product_id
 		LEFT JOIN `'._DB_PREFIX_.'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = od.id_shop)
 		WHERE od.`id_order` = '.(int)$this->id_order.'
-		AND od.`id_order_invoice` = '.(int)$this->id);
+		AND od.`id_order_invoice` ='.($this->id && $this->number ? (int)$this->id : '0'));
 	}
 
 	public static function getInvoiceByNumber($id_invoice)
@@ -343,8 +343,13 @@ class OrderInvoiceCore extends ObjectModel
 						'total_price_tax_excl' => 0
 					);
 
-				$ratio = $tax_infos['total_price_tax_excl'] / $this->total_products;
-				$order_reduction_amount = $this->total_discount_tax_excl * $ratio;
+				$ratio = 0;
+				$order_reduction_amount = 0;
+				if ($this->total_products)
+				{
+					$ratio = $tax_infos['total_price_tax_excl'] / $this->total_products;
+					$order_reduction_amount = $this->total_discount_tax_excl * $ratio;
+				}					
 				$tmp_tax_infos[$tax_infos['rate']]['total_amount'] += ($tax_infos['total_amount'] - Tools::ps_round($tax_infos['ecotax'] * $tax_infos['product_quantity'] * $tax_infos['ecotax_tax_rate'] / 100, 2));
 				$tmp_tax_infos[$tax_infos['rate']]['name'] = $tax_infos['name'];
 				$tmp_tax_infos[$tax_infos['rate']]['total_price_tax_excl'] += $tax_infos['total_price_tax_excl'] - $order_reduction_amount - Tools::ps_round($tax_infos['ecotax'] * $tax_infos['product_quantity'], 2);
@@ -442,6 +447,7 @@ class OrderInvoiceCore extends ObjectModel
 			WHERE DATE_ADD(oi.date_add, INTERVAL -1 DAY) <= \''.pSQL($date_to).'\'
 			AND oi.date_add >= \''.pSQL($date_from).'\'
 			'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
+			AND oi.number > 0
 			ORDER BY oi.date_add ASC
 		');
 
@@ -462,6 +468,7 @@ class OrderInvoiceCore extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = oi.`id_order`)
 			WHERE '.(int)$id_order_state.' = o.current_state 
 			'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').' 
+			AND oi.number > 0
 			ORDER BY oi.`date_add` ASC
 		');
 

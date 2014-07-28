@@ -29,7 +29,7 @@
 	{/if}
 {/capture}
 <h1 class="page-heading">{if !isset($email_create)}{l s='Authentication'}{else}{l s='Create an account'}{/if}</h1>
-{if isset($display_guest_checkout)}{assign var='current_step' value='login'}{include file="$tpl_dir./order-steps.tpl"}{/if}
+{if isset($back) && preg_match("/^http/", $back)}{assign var='current_step' value='login'}{include file="$tpl_dir./order-steps.tpl"}{/if}
 {include file="$tpl_dir./errors.tpl"}
 {assign var='stateExist' value=false}
 {assign var="postCodeExist" value=false}
@@ -122,13 +122,11 @@
 					</div>
 					<div class="required form-group">
 						<label for="firstname">{l s='First name'} <sup>*</sup></label>
-						<input type="text" class="is_required validate form-control" data-validate="isName" id="firstname" name="firstname" onblur="$('#customer_firstname').val($(this).val());" value="{if isset($smarty.post.firstname)}{$smarty.post.firstname}{/if}" />
-						<input type="hidden" id="customer_firstname" name="customer_firstname" value="{if isset($smarty.post.firstname)}{$smarty.post.firstname}{/if}" />
+						<input type="text" class="is_required validate form-control" data-validate="isName" id="firstname" name="firstname" value="{if isset($smarty.post.firstname)}{$smarty.post.firstname}{/if}" />
 					</div>
 					<div class="required form-group">
 						<label for="lastname">{l s='Last name'} <sup>*</sup></label>
-						<input type="text" class="is_required validate form-control" data-validate="isName" id="lastname" name="lastname" onblur="$('#customer_lastname').val($(this).val());" value="{if isset($smarty.post.lastname)}{$smarty.post.lastname}{/if}" />
-						<input type="hidden" id="customer_lastname" name="customer_lastname" value="{if isset($smarty.post.lastname)}{$smarty.post.lastname}{/if}" />
+						<input type="text" class="is_required validate form-control" data-validate="isName" id="lastname" name="lastname" value="{if isset($smarty.post.lastname)}{$smarty.post.lastname}{/if}" />
 					</div>
 					<div class="form-group date-select">
 						<label>{l s='Date of Birth'}</label>
@@ -220,7 +218,7 @@
 							{assign var='postCodeExist' value=true}
 							<div class="required postcode form-group">
 								<label for="postcode">{l s='Zip/Postal Code'} <sup>*</sup></label>
-								<input type="text" class="form-control" name="postcode" id="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{/if}" onblur="$('#postcode').val($('#postcode').val().toUpperCase());" />
+								<input type="text" class="form-control" name="postcode" id="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
 							</div>
 						{elseif $field_name eq "city"}
 							<div class="required form-group">
@@ -258,7 +256,7 @@
 					{if $postCodeExist eq false}
 						<div class="required postcode unvisible form-group">
 							<label for="postcode">{l s='Zip/Postal Code'} <sup>*</sup></label>
-							<input type="text" class="form-control" name="postcode" id="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{/if}" onblur="$('#postcode').val($('#postcode').val().toUpperCase());" />
+							<input type="text" class="form-control" name="postcode" id="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
 						</div>
 					{/if}
 					{if $dniExist eq false}
@@ -359,7 +357,7 @@
 							<label for="postcode_invoice">{l s='Zip/Postal Code'} <sup>*</sup></label>
 							<input type="text" class="form-control" name="postcode_invoice" id="postcode_invoice" value="" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
 						</div>
-						{/if}					
+						{/if}
 						{if !$stateExist}
 						<div class="required id_state_invoice form-group unvisible">
 							<label for="id_state_invoice">{l s='State'} <sup>*</sup></label>
@@ -374,7 +372,7 @@
 						</div>
 						{if isset($one_phone_at_least) && $one_phone_at_least}
 							<p class="inline-infos required is_customer_param">{l s='You must register at least one phone number.'}</p>
-						{/if}					
+						{/if}
 						<div class="form-group is_customer_param">
 							<label for="phone_invoice">{l s='Home phone'}</label>
 							<input type="text" class="form-control" name="phone_invoice" id="phone_invoice" value="{if isset($guestInformations) && $guestInformations.phone_invoice}{$guestInformations.phone_invoice}{/if}" />
@@ -448,7 +446,7 @@
 				<label for="passwd">{l s='Password'} <sup>*</sup></label>
 				<input type="password" class="is_required validate form-control" data-validate="isPasswd" name="passwd" id="passwd" />
 				<span class="form_info">{l s='(Five characters minimum)'}</span>
-			</div> 
+			</div>
 			<div class="form-group">
 				<label>{l s='Date of Birth'}</label>
 				<div class="row">
@@ -496,10 +494,16 @@
 				<div class="checkbox">
 					<input type="checkbox" name="newsletter" id="newsletter" value="1" {if isset($smarty.post.newsletter) AND $smarty.post.newsletter == 1} checked="checked"{/if} />
 					<label for="newsletter">{l s='Sign up for our newsletter!'}</label>
+					{if array_key_exists('newsletter', $field_required)}
+						<sup> *</sup>
+					{/if}
 				</div>
 				<div class="checkbox">
-					<input type="checkbox"name="optin" id="optin" value="1" {if isset($smarty.post.optin) AND $smarty.post.optin == 1} checked="checked"{/if} />
+					<input type="checkbox" name="optin" id="optin" value="1" {if isset($smarty.post.optin) AND $smarty.post.optin == 1} checked="checked"{/if} />
 					<label for="optin">{l s='Receive special offers from our partners!'}</label>
+					{if array_key_exists('optin', $field_required)}
+						<sup> *</sup>
+					{/if}
 				</div>
 			{/if}
 		</div>
@@ -601,7 +605,7 @@
 						<label for="postcode">{l s='Zip/Postal Code'} <sup>*</sup></label>
 						<input type="text" class="form-control" name="postcode" id="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
 					</p>
-				{/if}		
+				{/if}
 				{if $stateExist eq false}
 					<p class="required id_state select unvisible form-group">
 						<label for="id_state">{l s='State'} <sup>*</sup></label>

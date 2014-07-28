@@ -439,7 +439,7 @@ class CartCore extends ObjectModel
 						stock.`quantity` AS quantity_available, p.`width`, p.`height`, p.`depth`, stock.`out_of_stock`, p.`weight`,
 						p.`date_add`, p.`date_upd`, IFNULL(stock.quantity, 0) as quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
 						CONCAT(LPAD(cp.`id_product`, 10, 0), LPAD(IFNULL(cp.`id_product_attribute`, 0), 10, 0), IFNULL(cp.`id_address_delivery`, 0)) AS unique_id, cp.id_address_delivery,
-						product_shop.`wholesale_price`, product_shop.advanced_stock_management, ps.product_supplier_reference supplier_reference');
+						product_shop.`wholesale_price`, product_shop.advanced_stock_management, ps.product_supplier_reference supplier_reference, IFNULL(sp.`reduction_type`, 0) AS reduction_type');
 
 		// Build FROM
 		$sql->from('cart_product', 'cp');
@@ -459,6 +459,8 @@ class CartCore extends ObjectModel
 
 		$sql->leftJoin('product_supplier', 'ps', 'ps.`id_product` = cp.`id_product` AND ps.`id_product_attribute` = cp.`id_product_attribute` AND ps.`id_supplier` = p.`id_supplier`');
 
+		$sql->leftJoin('specific_price', 'sp', 'sp.`id_product` = cp.`id_product`'); // AND 'sp.`id_shop` = cp.`id_shop`
+
 		// @todo test if everything is ok, then refactorise call of this method
 		$sql->join(Product::sqlStock('cp', 'cp'));
 
@@ -472,7 +474,7 @@ class CartCore extends ObjectModel
 		$sql->groupBy('unique_id');
 
 		// Build ORDER BY
-		$sql->orderBy('p.`id_product`, cp.`id_product_attribute`, cp.`date_add` ASC');
+		$sql->orderBy('cp.`date_add`, p.`id_product`, cp.`id_product_attribute` ASC');
 
 		if (Customization::isFeatureActive())
 		{
@@ -879,7 +881,7 @@ class CartCore extends ObjectModel
 
 		if ((int)$quantity <= 0)
 			return $this->deleteProduct($id_product, $id_product_attribute, (int)$id_customization);
-		elseif (!$product->available_for_order || Configuration::get('PS_CATALOG_MODE'))
+		elseif (!$product->available_for_order || (Configuration::get('PS_CATALOG_MODE') && !defined('_PS_ADMIN_DIR_')))
 			return false;
 		else
 		{
@@ -1353,7 +1355,7 @@ class CartCore extends ObjectModel
 		if ($virtual && $type == Cart::BOTH)
 			$type = Cart::BOTH_WITHOUT_SHIPPING;
 
-		if ($with_shipping)
+		if ($with_shipping || $type == Cart::ONLY_DISCOUNTS)
 		{
 			if (is_null($products) && is_null($id_carrier))
 				$shipping_fees = $this->getTotalShippingCost(null, (boolean)$with_taxes);
@@ -1570,15 +1572,21 @@ class CartCore extends ObjectModel
 	{
 		static $address = null;
 
-		if ($id_address === null)
-			$id_address = (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
-
-		if ($address === null)
-			$address = Address::initialize($id_address);
-
 		$wrapping_fees = (float)Configuration::get('PS_GIFT_WRAPPING_PRICE');
 		if ($with_taxes && $wrapping_fees > 0)
 		{
+			if ($address === null)
+			{
+				if ($id_address === null)
+					$id_address = (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+				try {
+					$address = Address::initialize($id_address);
+				} catch (Exception $e) {
+					$address = new Address();
+					$address->id_country = Configuration::get('PS_COUNTRY_DEFAULT');
+				}
+			}
+
 			$tax_manager = TaxManagerFactory::getManager($address, (int)Configuration::get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'));
 			$tax_calculator = $tax_manager->getTaxCalculator();
 			$wrapping_fees = $tax_calculator->addTaxes($wrapping_fees);
@@ -1715,7 +1723,7 @@ class CartCore extends ObjectModel
 			$id_warehouse = 0;
 			foreach ($warehouse_count_by_address[$product['id_address_delivery']] as $id_war => $val)
 			{
-				if (in_array((int)$id_war, $product['warehouse_list']))
+				if (in_array((int)$id_war, $product['warehouse_list']) && !$product['is_virtual'])
 				{
 					$product['carrier_list'] = array_merge($product['carrier_list'], Carrier::getAvailableCarrierList(new Product($product['id_product']), $id_war, $product['id_address_delivery'], null, $this));
 					if (!$id_warehouse)
@@ -1941,7 +1949,7 @@ class CartCore extends ObjectModel
 			foreach ($packages as $id_package => $package)
 			{
 				// No carriers available
-				if (count($package['carrier_list']) == 1 && current($package['carrier_list']) == 0)
+				if (count($packages) == 1 && count($package['carrier_list']) == 1 && current($package['carrier_list']) == 0)
 				{	
 					$cache = array();
 					return $cache;
@@ -2252,9 +2260,9 @@ class CartCore extends ObjectModel
 		return $carriers;
 	}
 
-	public function simulateCarrierSelectedOutput()
+	public function simulateCarrierSelectedOutput($use_cache = true)
 	{
-		$delivery_option = $this->getDeliveryOption();
+		$delivery_option = $this->getDeliveryOption(null, false, $use_cache);
 
 		if (count($delivery_option) > 1 || empty($delivery_option))
 			return 0;
@@ -2906,6 +2914,7 @@ class CartCore extends ObjectModel
 		// The cart content is altered for display
 		foreach ($cart_rules as &$cart_rule)
 		{
+
 			// If the cart rule is automatic (wihtout any code) and include free shipping, it should not be displayed as a cart rule but only set the shipping cost to 0
 			if ($cart_rule['free_shipping'] && (empty($cart_rule['code']) || preg_match('/^'.CartRule::BO_ORDER_CODE_PREFIX.'[0-9]+/', $cart_rule['code'])))
 			{
@@ -2974,7 +2983,7 @@ class CartCore extends ObjectModel
 			'formattedAddresses' => $formatted_addresses,
 			'products' => array_values($products),
 			'gift_products' => $gift_products,
-			'discounts' => $cart_rules,
+			'discounts' => array_values($cart_rules),
 			'is_virtual_cart' => (int)$this->isVirtualCart(),
 			'total_discounts' => $total_discounts,
 			'total_discounts_tax_exc' => $total_discounts_tax_exc,
@@ -2995,7 +3004,7 @@ class CartCore extends ObjectModel
 
 	public function checkQuantities()
 	{
-		if (Configuration::get('PS_CATALOG_MODE'))
+		if (Configuration::get('PS_CATALOG_MODE') && !defined('_PS_ADMIN_DIR_'))
 			return false;
 
 		foreach ($this->getProducts() as $product)
@@ -3185,6 +3194,13 @@ class CartCore extends ObjectModel
 		$cart->id = null;
 		$cart->id_shop = $this->id_shop;
 		$cart->id_shop_group = $this->id_shop_group;
+
+		if (!Customer::customerHasAddress((int)$cart->id_customer, (int)$cart->id_address_delivery))
+			$cart->id_address_delivery = (int)Address::getFirstCustomerAddressId((int)$cart->id_customer);
+
+		if (!Customer::customerHasAddress((int)$cart->id_customer, (int)$cart->id_address_invoice))
+			$cart->id_address_invoice = (int)Address::getFirstCustomerAddressId((int)$cart->id_customer);
+
 		$cart->add();
 
 		if (!Validate::isLoadedObject($cart))
@@ -3193,16 +3209,26 @@ class CartCore extends ObjectModel
 		$success = true;
 		$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM `'._DB_PREFIX_.'cart_product` WHERE `id_cart` = '.(int)$this->id);
 
+		$id_address_delivery = Configuration::get('PS_ALLOW_MULTISHIPPING') ? $cart->id_address_delivery : 0;
+		
 		foreach ($products as $product)
+		{
+			if ($id_address_delivery)
+			{
+				if (Customer::customerHasAddress((int)$cart->id_customer, $product['id_address_delivery']))
+					$id_address_delivery = $product['id_address_delivery'];
+			}
+			
 			$success &= $cart->updateQty(
 				$product['quantity'],
 				(int)$product['id_product'],
 				(int)$product['id_product_attribute'],
 				null,
 				'up',
-				(int)$product['id_address_delivery'],
+				(int)$id_address_delivery,
 				new Shop($cart->id_shop)
 			);
+		}
 
 		// Customized products
 		$customs = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
@@ -3230,7 +3256,7 @@ class CartCore extends ObjectModel
 		{
 			Db::getInstance()->execute('
 				INSERT INTO `'._DB_PREFIX_.'customization` (id_cart, id_product_attribute, id_product, `id_address_delivery`, quantity, `quantity_refunded`, `quantity_returned`, `in_cart`)
-				VALUES('.(int)$cart->id.', '.(int)$val['id_product_attribute'].', '.(int)$val['id_product'].', '.(int)$this->id_address_delivery.', '.(int)$val['quantity'].', 0, 0, 1)'
+				VALUES('.(int)$cart->id.', '.(int)$val['id_product_attribute'].', '.(int)$val['id_product'].', '.(int)$id_address_delivery.', '.(int)$val['quantity'].', 0, 0, 1)'
 			);
 			$custom_ids[$customization_id] = Db::getInstance(_PS_USE_SQL_SLAVE_)->Insert_ID();
 		}
@@ -3506,7 +3532,7 @@ class CartCore extends ObjectModel
 		WHERE `id_cart` = '.(int)$this->id.'
 		'.(Configuration::get('PS_ALLOW_MULTISHIPPING') ? ' AND `id_shop` = '.(int)$this->id_shop : '');
 
-		$cache_id = 'Cart::setNoMultishipping'.(int)$this->id.'-'.(int)$this->id_shop;
+		$cache_id = 'Cart::setNoMultishipping'.(int)$this->id.'-'.(int)$this->id_shop.(isset($this->id_address_delivery)? '-'.(int)$this->id_address_delivery : '');
 		if (!Cache::isStored($cache_id))
 		{
 			if ($result = (bool)Db::getInstance()->execute($sql))

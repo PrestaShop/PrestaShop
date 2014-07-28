@@ -27,12 +27,15 @@
 
 <script type="text/javascript">
 	id_language = Number({$current_id_lang});
+	{if isset($tabs) && $tabs|count}
+		var helper_tabs= {$tabs|json_encode};
+		var unique_field_id = '{$table}_';
+	{/if}
 </script>
 {block name="defaultOptions"}
-<form action="{$current}&amp;token={$token}"
-	id="{if $table == null}configuration_form{else}{$table}_form{/if}"
-	method="post"
-	enctype="multipart/form-data" class="form-horizontal">
+{if isset($table_bk) && $table_bk == $table}{capture name='table_count'}{counter name='table_count'}{/capture}{/if}
+{assign var='table_bk' value=$table scope='parent'}
+<form action="{$current|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}" id="{if $table == null}configuration_form{else}{$table}_form{/if}{if isset($smarty.capture.table_count) && $smarty.capture.table_count}_{$smarty.capture.table_count|intval}{/if}" method="post" enctype="multipart/form-data" class="form-horizontal">
 	{foreach $option_list AS $category => $categoryData}
 		{if isset($categoryData['top'])}{$categoryData['top']}{/if}
 		<div class="panel {if isset($categoryData['class'])}{$categoryData['class']}{/if}" id="{$table}_fieldset_{$category}">
@@ -49,7 +52,7 @@
 			{/if}
 			{* Category info *}
 			{if (isset($categoryData['info']) && $categoryData['info'])}
-				<p>{$categoryData['info']}</p>
+				<div>{$categoryData['info']}</div>
 			{/if}
 
 			{if !$categoryData['hide_multishop_checkbox'] && $use_multishop}
@@ -59,14 +62,16 @@
 				</label>
 				<div class="col-lg-9">
 					<span class="switch prestashop-switch fixed-width-lg">
-						<input type="radio" name="{$table}_multishop_{$category}" id="{$table}_multishop_{$category}_on" value="1" onclick="toggleAllMultishopDefaultValue($('#{$table}_fieldset_{$category}'), true)">
+						{strip}
+						<input type="radio" name="{$table}_multishop_{$category}" id="{$table}_multishop_{$category}_on" value="1" onclick="toggleAllMultishopDefaultValue($('#{$table}_fieldset_{$category}'), true)"/>
 						<label for="{$table}_multishop_{$category}_on">
 							{l s='Yes'}
 						</label>
-						<input type="radio" name="{$table}_multishop_{$category}" id="{$table}_multishop_{$category}_off" value="0" checked="checked" onclick="toggleAllMultishopDefaultValue($('#{$table}_fieldset_{$category}'), false)">
+						<input type="radio" name="{$table}_multishop_{$category}" id="{$table}_multishop_{$category}_off" value="0" checked="checked" onclick="toggleAllMultishopDefaultValue($('#{$table}_fieldset_{$category}'), false)"/>
 						<label for="{$table}_multishop_{$category}_off">
 							{l s='No'}
 						</label>
+						{/strip}
 						<a class="slide-button btn"></a>
 					</span>
 					<div class="row">
@@ -81,17 +86,18 @@
 			</div>
 			{/if}
 
+			<div class="form-wrapper">
 			{foreach $categoryData['fields'] AS $key => $field}
 					{if $field['type'] == 'hidden'}
 						<input type="hidden" name="{$key}" value="{$field['value']}" />
 					{else}
-						<div class="form-group {if isset($field.form_group_class)} {$field.form_group_class} {/if}">
-							<div id="conf_id_{$key}" {if $field['is_invisible']} class="isInvisible"{/if}>								
+						<div class="form-group{if isset($field.form_group_class)} {$field.form_group_class}{/if}"{if isset($tabs) && isset($field.tab)} data-tab-id="{$field.tab}"{/if}>
+							<div id="conf_id_{$key}"{if $field['is_invisible']} class="isInvisible"{/if}>								
 								{block name="label"}
 									{if isset($field['title']) && isset($field['hint'])}
-										<label class="control-label col-lg-3 {if isset($field['required']) && $field['required'] && $field['type'] != 'radio'}required{/if}" for="{$key}">
+										<label class="control-label col-lg-3{if isset($field['required']) && $field['required'] && $field['type'] != 'radio'} required{/if}">
 											{if !$categoryData['hide_multishop_checkbox'] && $field['multishop_default'] && empty($field['no_multishop_checkbox'])}
-											<input type="checkbox" name="multishopOverrideOption[{$key}]" value="1" {if !$field['is_disabled']}checked="checked"{/if} onclick="toggleMultishopDefaultValue(this, '{$key}')"/>
+											<input type="checkbox" name="multishopOverrideOption[{$key}]" value="1"{if !$field['is_disabled']} checked="checked"{/if} onclick="toggleMultishopDefaultValue(this, '{$key}')"/>
 											{/if}
 											<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="
 												{if is_array($field['hint'])}
@@ -110,9 +116,9 @@
 											</span>
 										</label>
 									{elseif isset($field['title'])}
-										<label class="control-label col-lg-3" for="{$key}">
+										<label class="control-label col-lg-3">
 											{if !$categoryData['hide_multishop_checkbox'] && $field['multishop_default'] && empty($field['no_multishop_checkbox'])}
-											<input type="checkbox" name="multishopOverrideOption[{$key}]" value="1" {if !$field['is_disabled']}checked="checked"{/if} onclick="checkMultishopDefaultValue(this, '{$key}')" />
+											<input type="checkbox" name="multishopOverrideOption[{$key}]" value="1"{if !$field['is_disabled']} checked="checked"{/if} onclick="checkMultishopDefaultValue(this, '{$key}')" />
 											{/if}
 											{$field['title']}
 										</label>
@@ -136,6 +142,7 @@
 									{elseif $field['type'] == 'bool'}
 										<div class="col-lg-9">
 											<span class="switch prestashop-switch fixed-width-lg">
+												{strip}
 												<input type="radio" name="{$key}" id="{$key}_on" value="1" {if $field['value']} checked="checked"{/if}{if isset($field['js']['on'])} {$field['js']['on']}{/if}/>
 												<label for="{$key}_on" class="radioCheck">
 													{l s='Yes'}
@@ -144,6 +151,7 @@
 												<label for="{$key}_off" class="radioCheck">
 													{l s='No'}
 												</label>
+												{/strip}
 												<a class="slide-button btn"></a>
 											</span>
 										</div>
@@ -151,10 +159,12 @@
 										<div class="col-lg-9">
 											{foreach $field['choices'] AS $k => $v}
 												<p class="radio">
+													{strip}
 													<label for="{$key}_{$k}">
 														<input type="radio" name="{$key}" id="{$key}_{$k}" value="{$k}"{if $k == $field['value']} checked="checked"{/if}{if isset($field['js'][$k])} {$field['js'][$k]}{/if}/>
 													 	{$v}
 													</label>
+													{/strip}
 												</p>
 											{/foreach}
 										</div>
@@ -162,8 +172,12 @@
 										<div class="col-lg-9">
 											{foreach $field['choices'] AS $k => $v}
 												<p class="checkbox">
-													<input type="checkbox" name="{$key}" id="{$key}{$k}_on" value="{$k|intval}"{if $k == $field['value']} checked="checked"{/if}{if isset($field['js'][$k])} {$field['js'][$k]}{/if}/>
-													<label class="col-lg-3" for="{$key}{$k}_on"> {$v}</label>
+													{strip}
+													<label class="col-lg-3" for="{$key}{$k}_on">
+														<input type="checkbox" name="{$key}" id="{$key}{$k}_on" value="{$k|intval}"{if $k == $field['value']} checked="checked"{/if}{if isset($field['js'][$k])} {$field['js'][$k]}{/if}/>
+													 	{$v}
+													</label>
+													{/strip}
 												</p>
 											{/foreach}
 										</div>
@@ -179,7 +193,7 @@
 										</div>
 									{elseif $field['type'] == 'password'}
 										<div class="col-lg-9">{if isset($field['suffix'])}<div class="input-group">{/if}
-											<input type="{$field['type']}"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="" {if isset($field['autocomplete']) && !$field['autocomplete']}autocomplete="off"{/if} />
+											<input type="{$field['type']}"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value=""{if isset($field['autocomplete']) && !$field['autocomplete']} autocomplete="off"{/if} />
 											{if isset($field['suffix'])}
 											<span class="input-group-addon">
 												{$field['suffix']|strval}
@@ -294,7 +308,7 @@
 									{/if}
 									{if isset($field['desc']) && !empty($field['desc'])}
 									<div class="col-lg-9 col-lg-offset-3">
-										<p class="help-block">
+										<div class="help-block">
 											{if is_array($field['desc'])}
 												{foreach $field['desc'] as $p}
 													{if is_array($p)}
@@ -306,7 +320,7 @@
 											{else}
 												{$field['desc']}
 											{/if}
-										</p>
+										</div>
 									</div>
 									{/if}
 								{/block}{* end block input *}
@@ -322,6 +336,8 @@
 						</div>
 				{/if}
 			{/foreach}
+			</div><!-- /.form-wrapper -->
+
 			{if isset($categoryData['bottom'])}{$categoryData['bottom']}{/if}
 			{block name="footer"}
 				{if isset($categoryData['submit']) || isset($categoryData['buttons'])}
@@ -331,7 +347,11 @@
 						{/if}
 						{if isset($categoryData['buttons'])}
 						{foreach from=$categoryData['buttons'] item=btn key=k}
+						{if isset($btn.href) && trim($btn.href) != ''}
+							<a href="{$btn.href|escape:'html':'UTF-8'}" {if isset($btn['id'])}id="{$btn['id']}"{/if} class="btn btn-default{if isset($btn['class'])} {$btn['class']}{/if}" {if isset($btn.js) && $btn.js} onclick="{$btn.js}"{/if}>{if isset($btn['icon'])}<i class="{$btn['icon']}" ></i> {/if}{$btn.title}</a>
+						{else}
 							<button type="{if isset($btn['type'])}{$btn['type']}{else}button{/if}" {if isset($btn['id'])}id="{$btn['id']}"{/if} class="{if isset($btn['class'])}{$btn['class']}{else}btn btn-default{/if}" name="{if isset($btn['name'])}{$btn['name']}{else}submitOptions{$table}{/if}"{if isset($btn.js) && $btn.js} onclick="{$btn.js}"{/if}>{if isset($btn['icon'])}<i class="{$btn['icon']}" ></i> {/if}{$btn.title}</button>
+						{/if}
 						{/foreach}
 						{/if}
 					</div>

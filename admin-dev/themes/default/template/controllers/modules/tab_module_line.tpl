@@ -23,11 +23,9 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-
 <tr>
 	<td class="fixed-width-sm center">
-		<img class="img-thumbnail" alt="{$module->name}" src="{if isset($module->image)}{$module->image}{else}{$smarty.const._MODULE_DIR_}{$module->name}/{$module->logo}{/if}">
+		<img class="img-thumbnail" alt="{$module->name}" src="{if isset($module->image)}{$module->image}{else}{$smarty.const._MODULE_DIR_}{$module->name}/{$module->logo}{/if}" />
 	</td>
 	<td>
 		<div id="anchor{$module->name|ucfirst}" title="{$module->displayName}">
@@ -52,27 +50,26 @@
 					{$module->description}
 				{/if}
 				{if isset($module->show_quick_view) &&  $module->show_quick_view}
-					<br><a href="{$currentIndex}&token={$token}&ajax=1&action=GetModuleQuickView&module={$module->name}" class="fancybox-quick-view"><i class="icon-search"></i> {l s='Read more'}</a>
+					<br><a href="{$currentIndex|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;ajax=1&amp;action=GetModuleQuickView&amp;module={$module->name|urlencode}" class="fancybox-quick-view"><i class="icon-search"></i> {l s='Read more'}</a>
 				{/if}
 			</p>
 			{if isset($module->message) && (empty($module->name) !== false) && (!isset($module->type) || ($module->type != 'addonsMustHave' || $module->type !== 'addonsNative'))}<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>{$module->message}</div>{/if}
 		</div>
-
 	</td>
 	{if isset($module->type) && $module->type == 'addonsMustHave'}
 		<td>&nbsp;</td>
-		<td align="right">
+		<td style="text-align: right;">
 			<p>
-				<a href="{$module->addons_buy_url}" target="_blank" class="button updated">
+				<a href="{$module->addons_buy_url|replace:' ':'+'|escape:'html':'UTF-8'}" target="_blank" class="button updated">
 					<span class="btn btn-default">
-						<i class="icon-shopping-cart"></i> &nbsp;&nbsp;{displayPrice price=$module->price currency=$module->id_currency}
+						<i class="icon-shopping-cart"></i>{if isset($module->price) && isset($module->id_currency)} &nbsp;&nbsp;{displayPrice price=$module->price currency=$module->id_currency}{/if}
 					</span>
 				</a>
 			</p>
 		</td>
 	{else if !isset($module->not_on_disk)}
 		<td>&nbsp;</td>
-		<td>
+		<td class="actions">
 			<div class="btn-group-action">
 				{if $module->optionsHtml|count > 0}
 				<div class="btn-group">
@@ -82,10 +79,15 @@
 					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
 						<span class="caret">&nbsp;</span>
 					</button>
-					<ul class="dropdown-menu">
+					<ul class="dropdown-menu pull-right">
+
 					{foreach $module->optionsHtml key=key item=option}
 						{if $key != 0}
-							<li>{$option}</li>
+							{if strpos($option, 'title="divider"') !== false}
+								<li class="divider"></li>
+							{else}
+								<li>{$option}</li>
+							{/if}
 						{/if}
 					{/foreach}
 					</ul>
@@ -96,9 +98,9 @@
 		</td>
 	{else}
 		<td>&nbsp;</td>
-		<td align="right">
+		<td style="text-align: right;">
 			<p>
-				<a href="{$module->options.install_url}" class="btn btn-success">
+				<a href="{$module->options.install_url|escape:'html':'UTF-8'}" class="btn btn-success">
 					<i class="icon-plus-sign-alt"></i>
 					{l s='Install'}
 				</a>

@@ -506,6 +506,33 @@ class SupplyOrderCore extends ObjectModel
 		return (pSQL($ref));
 	}
 
+	public function getAllExpectedQuantity()
+	{
+		return Db::getInstance()->getValue('
+			SELECT SUM(`quantity_expected`)
+			FROM `'._DB_PREFIX_.'supply_order_detail`
+			WHERE `id_supply_order` = '.(int)$this->id
+		);
+	}
+
+	public function getAllReceivedQuantity()
+	{
+		return Db::getInstance()->getValue('
+			SELECT SUM(`quantity_received`)
+			FROM `'._DB_PREFIX_.'supply_order_detail`
+			WHERE `id_supply_order` = '.(int)$this->id
+		);
+	}
+
+	public function getAllPendingQuantity()
+	{
+		return Db::getInstance()->getValue('
+			SELECT (SUM(`quantity_expected`) - SUM(`quantity_received`))
+			FROM `'._DB_PREFIX_.'supply_order_detail`
+			WHERE `id_supply_order` = '.(int)$this->id
+		);
+	}
+
 	/*********************************\
 	 *
 	 * Webservices Specific Methods

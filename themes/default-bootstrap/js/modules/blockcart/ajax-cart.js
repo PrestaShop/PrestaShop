@@ -134,7 +134,7 @@ var ajaxCart = {
 		//for product page 'add' button...
 		$(document).on('click', '#add_to_cart button', function(e){
 			e.preventDefault();
-			ajaxCart.add( $('#product_page_product_id').val(), $('#idCombination').val(), true, null, $('#quantity_wanted').val(), null);
+			ajaxCart.add($('#product_page_product_id').val(), $('#idCombination').val(), true, null, $('#quantity_wanted').val(), null);
 		});
 
 		//for 'delete' buttons in the cart block...
@@ -271,6 +271,13 @@ var ajaxCart = {
 	add : function(idProduct, idCombination, addedFromProductPage, callerElement, quantity, whishlist){
 		if (addedFromProductPage && !checkCustomizations())
 		{
+			if (contentOnly) 
+			{
+				var productUrl = window.document.location.href + '';
+				var data = productUrl.replace('content_only=1', '');
+				window.parent.document.location.href = data;
+				return;
+			}
 			if (!!$.prototype.fancybox)
 			    $.fancybox.open([
 			        {
@@ -292,7 +299,6 @@ var ajaxCart = {
 		{
 			$('#add_to_cart button').prop('disabled', 'disabled').addClass('disabled');
 			$('.filled').removeClass('filled');
-
 		}
 		else
 			$(callerElement).prop('disabled', 'disabled');
@@ -316,7 +322,10 @@ var ajaxCart = {
 				
 				if (!jsonData.hasError)
 				{
-					window.parent.ajaxCart.updateCartInformation(jsonData, addedFromProductPage);
+					if (contentOnly)
+						window.parent.ajaxCart.updateCartInformation(jsonData, addedFromProductPage);
+					else
+						ajaxCart.updateCartInformation(jsonData, addedFromProductPage);
 
 					if (jsonData.crossSelling)
 						$('.crossseling').html(jsonData.crossSelling);
@@ -324,18 +333,28 @@ var ajaxCart = {
 					if (idCombination)
 						$(jsonData.products).each(function(){
 							if (this.id != undefined && this.id == parseInt(idProduct) && this.idCombination == parseInt(idCombination))
-								window.parent.ajaxCart.updateLayer(this);
+								if (contentOnly)
+									window.parent.ajaxCart.updateLayer(this);	
+								else
+									ajaxCart.updateLayer(this);
 						});
 					else
 						$(jsonData.products).each(function(){
 							if (this.id != undefined && this.id == parseInt(idProduct))
-								window.parent.ajaxCart.updateLayer(this);
+								if (contentOnly)
+									window.parent.ajaxCart.updateLayer(this);
+								else
+									ajaxCart.updateLayer(this);					
 						});
 					if (contentOnly)
 						parent.$.fancybox.close();
 				}
 				else 
 				{
+					if (contentOnly)
+						window.parent.ajaxCart.updateCart(jsonData);
+					else
+						ajaxCart.updateCart(jsonData);	
 					if (addedFromProductPage)
 						$('#add_to_cart button').removeProp('disabled').removeClass('disabled');
 					else

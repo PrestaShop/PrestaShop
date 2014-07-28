@@ -95,9 +95,9 @@ class ImageTypeCore extends ObjectModel
 		{
 			$where = 'WHERE 1';
 			if (!empty($type))
-				$where .= ' AND '.pSQL($type).' = 1 ';
+				$where .= ' AND `'.bqSQL($type).'` = 1 ';
 
-			$query = 'SELECT * FROM `'._DB_PREFIX_.'image_type`'.$where.' ORDER BY `name` ASC';
+			$query = 'SELECT * FROM `'._DB_PREFIX_.'image_type` '.$where.' ORDER BY `name` ASC';
 			self::$images_types_cache[$type] = Db::getInstance()->executeS($query);
 		}
 		return self::$images_types_cache[$type];

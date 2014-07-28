@@ -358,6 +358,15 @@ class EmployeeCore extends ObjectModel
 		}
 		$this->id = null;
 	}
+	
+	public function favoriteModulesList()
+	{
+		return Db::getInstance()->executeS('
+			SELECT module
+			FROM `'._DB_PREFIX_.'module_preference` 
+			WHERE `id_employee` = '.(int)$this->id.' AND `favorite` = 1 AND (`interest` = 1 OR `interest` IS NULL)'
+		);
+	}
 
 	/**
 	 * Check if the employee is associated to a specific shop

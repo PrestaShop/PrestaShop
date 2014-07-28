@@ -23,10 +23,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <script type="text/javascript">
-	var there_are = '{l s='There are'}';
-	var there_is = '{l s='There is'}';
-	var label_errors = '{l s='errors'}';
-	var label_error = '{l s='error'}';
+	var one_error = '{l s='There is one error.'}';
+	var more_errors = '{l s='There are several errors.'}';
 </script>
 <div id="login-panel">
 	<div id="login-header">
@@ -162,7 +160,7 @@
 			<a class="link-social link-facebook" href="https://www.facebook.com/prestashop" target="_blank" title="Facebook">
 				<i class="icon-facebook"></i>
 			</a>
-			<a class="link-social link-github" href="https://github.com/PrestaShop/PrestaShop/" target="_blank" title="Github">
+			<a class="link-social link-github" href="https://www.prestashop.com/github" target="_blank" title="Github">
 				<i class="icon-github"></i>
 			</a>
 			<a class="link-social link-google" href="https://plus.google.com/+prestashop/" target="_blank" title="Google">

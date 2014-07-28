@@ -23,13 +23,13 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div class="col-lg-8">
-	<input id="{$id}" type="file" name="{$name}"{if isset($url)} data-url="{$url}"{/if} class="hide" />
-	<button class="btn btn-default" data-style="expand-right" data-size="s" type="button" id="{$id}-add-button">
+	<input id="{$id|escape:'html':'UTF-8'}" type="file" name="{$name|escape:'html':'UTF-8'}"{if isset($url)} data-url="{$url|escape:'html':'UTF-8'}"{/if} class="hide" />
+	<button class="btn btn-default" data-style="expand-right" data-size="s" type="button" id="{$id|escape:'html':'UTF-8'}-add-button">
 		<i class="icon-plus-sign"></i> {l s='Add file'}
 	</button>
 <!--
-	<div class="alert alert-success" id="{$id}-success" style="display:none">{l s='Upload successful'}</div>
-	<div class="alert alert-danger" id="{$id}-errors" style="display:none"></div>
+	<div class="alert alert-success" id="{$id|escape:'html':'UTF-8'}-success" style="display:none">{l s='Upload successful'}</div>
+	<div class="alert alert-danger" id="{$id|escape:'html':'UTF-8'}-errors" style="display:none"></div>
 -->
 </div>
 
@@ -52,11 +52,11 @@
 	}
 
 	$( document ).ready(function() {
-		var {$id}_add_button = Ladda.create( document.querySelector('#{$id}-add-button' ));
-		var {$id}_total_files = 0;
+		var {$id|escape:'html':'UTF-8'}_add_button = Ladda.create( document.querySelector('#{$id|escape:'html':'UTF-8'}-add-button' ));
+		var {$id|escape:'html':'UTF-8'}_total_files = 0;
 		var success_message = '{l s='Upload successful' js=1}';
 
-		$('#{$id}').fileupload({
+		$('#{$id|escape:'html':'UTF-8'}').fileupload({
 			dataType: 'json',
 			autoUpload: true,
 			singleFileUploads: true,
@@ -65,7 +65,7 @@
 				//showSuccessMessage(success_message);
 			},
 			start: function (e) {				
-				{$id}_add_button.start();
+				{$id|escape:'html':'UTF-8'}_add_button.start();
 			},
 			fail: function (e, data) {
 				showErrorMessage(data.errorThrown.message);
@@ -85,11 +85,11 @@
 				}
 			},
 		}).on('fileuploadalways', function (e, data) {
-			{$id}_add_button.stop();
+			{$id|escape:'html':'UTF-8'}_add_button.stop();
 		}).on('fileuploadprocessalways', function (e, data) {
 			var index = data.index,	file = data.files[index];
 			//if (file.error)
-				//$('#{$id}-errors').append('<div class="row"><strong>'+file.name+'</strong> ('+humanizeSize(file.size)+') : '+file.error+'</div>').show();
+				//$('#{$id|escape:'html':'UTF-8'}-errors').append('<div class="row"><strong>'+file.name+'</strong> ('+humanizeSize(file.size)+') : '+file.error+'</div>').show();
 		}).on('fileuploadsubmit', function (e, data) {
 			var params = new Object();
 
@@ -109,11 +109,11 @@
 			data.formData = params;			
 		});
 
-		$('#{$id}-add-button').on('click', function() {
-			//$('#{$id}-success').hide();
-			//$('#{$id}-errors').html('').hide();
-			{$id}_total_files = 0;
-			$('#{$id}').trigger('click');
+		$('#{$id|escape:'html':'UTF-8'}-add-button').on('click', function() {
+			//$('#{$id|escape:'html':'UTF-8'}-success').hide();
+			//$('#{$id|escape:'html':'UTF-8'}-errors').html('').hide();
+			{$id|escape:'html':'UTF-8'}_total_files = 0;
+			$('#{$id|escape:'html':'UTF-8'}').trigger('click');
 		});
 	});
 </script>

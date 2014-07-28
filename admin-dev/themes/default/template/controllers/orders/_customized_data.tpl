@@ -37,14 +37,14 @@
 		<td>
 			<a href="index.php?controller=adminproducts&amp;id_product={$product['product_id']|intval}&amp;updateproduct&amp;token={getAdminToken tab='AdminProducts'}">
 			<span class="productName">{$product['product_name']} - {l s='Customized'}</span><br />
-			{if ($product['product_reference'])}{l s='Ref:'} {$product['product_reference']}<br />{/if}
-			{if ($product['product_supplier_reference'])}{l s='Ref Supplier:'} {$product['product_supplier_reference']}{/if}
+			{if ($product['product_reference'])}{l s='Reference number:'} {$product['product_reference']}<br />{/if}
+			{if ($product['product_supplier_reference'])}{l s='Supplier reference:'} {$product['product_supplier_reference']}{/if}
 			</a>
 		</td>
 		<td>
 			<span class="product_price_show">{displayPrice price=$product_price currency=$currency->id|intval}</span>
 			{if $can_edit}
-			<span class="product_price_edit" style="display:none;">
+			<div class="product_price_edit" style="display:none;">
 				<input type="hidden" name="product_id_order_detail" class="edit_product_id_order_detail" value="{$product['id_order_detail']|intval}" />
 				<div class="form-group">
 					<div class="fixed-width-xl">
@@ -63,7 +63,7 @@
 						</div>
 					</div>
 				</div>
-			</span>
+			</div>
 			{/if}
 		</td>
 		<td class="productQuantity">{$product['customizationQuantityTotal']}</td>
@@ -82,7 +82,7 @@
 			&nbsp;
 		</td>
 		<td class="edit_product_fields" colspan="2" style="display:none">&nbsp;</td>
-		<td class="partial_refund_fields current-edit" style="text-align:left;display:none"></td>
+		<td class="partial_refund_fields current-edit" style="text-align:left;display:none;"></td>
 		{if ($can_edit && !$order->hasBeenDelivered())}
 			<td class="product_action text-right">
 				{* edit/delete controls *}
@@ -127,7 +127,7 @@
 									<div class="form-group">
 										<span class="col-lg-4 control-label"><strong>{if $data['name']}{$data['name']}{else}{l s='Picture #'}{$data@iteration}{/if}</strong></span>
 										<div class="col-lg-8">
-											<a href="displayImage.php?img={$data['value']}&name={$order->id|intval}-file{$data@iteration}" target="_blank">
+											<a href="displayImage.php?img={$data['value']}&amp;name={$order->id|intval}-file{$data@iteration}" target="_blank">
 												<img class="img-thumbnail" src="{$smarty.const._THEME_PROD_PIC_DIR_}{$data['value']}_small" alt="" />
 											</a>
 										</div>
@@ -183,7 +183,7 @@
 					<input type="text" id="cancelQuantity_{$customizationId|intval}" name="cancelCustomizationQuantity[{$customizationId|intval}]" size="2" onclick="selectCheckbox(this);" value="" />0/{$customization['quantity']-$customization['quantity_refunded']}
 				{/if}
 				</td>
-				<td class="partial_refund_fields current-edit" style="display:none; width: 250px;" colspan="2">
+				<td class="partial_refund_fields current-edit" style="display:none; width: 250px;">
 					<div class="form-group">
 						<div class="col-lg-4">
 							<label class="control-label">

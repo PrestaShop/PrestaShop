@@ -28,6 +28,8 @@ var categoryMenu = $('ul.sf-menu');
 var mCategoryGrover = $('.sf-contener .cat-title');
 
 $(document).ready(function(){
+	categoryMenu = $('ul.sf-menu');
+	mCategoryGrover = $('.sf-contener .cat-title');
 	responsiveMenu();
 	$(window).resize(responsiveMenu);
 });
@@ -78,7 +80,7 @@ function mobileInit()
 	categoryMenu.superfish('destroy');
 	$('.sf-menu').removeAttr('style');
 
-	mCategoryGrover.on('click', function(){
+	mCategoryGrover.on('click touchstart', function(){
 		$(this).toggleClass('active').parent().find('ul.menu-content').stop().slideToggle('medium');
 	});
 
@@ -99,17 +101,30 @@ function mobileInit()
 		return false;
 	});
 
-	if ('ontouchstart' in document.documentElement)
-	{
-		$('#block_top_menu > ul:first > li > a').on('click', function(e){
-			if ($(this).parent('li').find('ul').length)
-				e.preventDefault();
-		});
-	}
+	
+	$('#block_top_menu > ul:first > li > a').on('click touchstart', function(e){
+		if ($(this).parent('li').find('ul').length)
+		{
+			e.preventDefault();
+			var mobCatSubUl = $(this).next('.menu-mobile');
+			var mobMenuGrover = $(this).next('.menu-mobile-grover');
+			if (mobCatSubUl.is(':hidden'))
+			{
+				mobCatSubUl.slideDown();
+				mobMenuGrover.addClass('active');
+			}
+			else
+			{
+				mobCatSubUl.slideUp();
+				mobMenuGrover.removeClass('active');
+			}
+		}
+	});
+	
 }
 
 // change the menu display at different resolutions
 function menuChange(status)
 {
-	status == 'enable'? mobileInit(): desktopInit();
+	status == 'enable' ? mobileInit(): desktopInit();
 }

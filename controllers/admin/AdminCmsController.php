@@ -87,7 +87,7 @@ class AdminCmsControllerCore extends AdminController
 			'href' => '#',
 			'desc' => $this->l('Save and stay', null, null, false),
 		);
-		
+
 		return parent::initPageHeaderToolbar();
 	}
 
@@ -264,17 +264,14 @@ class AdminCmsControllerCore extends AdminController
 		/* Close list table and submit button */
 		$this->displayListFooter($token);
 	}
-	
+
 	public function postProcess()
 	{
 		if (Tools::isSubmit('viewcms') && ($id_cms = (int)Tools::getValue('id_cms')))
 		{
 			parent::postProcess();
 			if (($cms = new CMS($id_cms, $this->context->language->id)) && Validate::isLoadedObject($cms))
-			{
-				$this->redirect_after = $this->getPreviewUrl($cms);			
-				Tools::redirectAdmin($this->redirect_after);
-			}
+				Tools::redirectAdmin(self::$currentIndex.'&id_cms='.$id_cms.'&conf=4&updatecms&token='.Tools::getAdminTokenLite('AdminCmsContent').'&url_cms_preview='.$this->getPreviewUrl($cms));
 		}
 		elseif (Tools::isSubmit('deletecms'))
 		{
@@ -340,8 +337,8 @@ class AdminCmsControllerCore extends AdminController
                 else
                     $this->updateAssoShop($cms->id);
             }
-            if (Tools::isSubmit('submitAddcmsAndPreview'))
-					$this->redirect_after = $this->previewUrl($cms);
+            if (Tools::isSubmit('view'.$this->table))
+								Tools::redirectAdmin(self::$currentIndex.'&id_cms='.$id_cms.'&conf=4&updatecms&token='.Tools::getAdminTokenLite('AdminCmsContent').'&url_cms_preview='.$this->getPreviewUrl($cms));
             elseif (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
                 Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$cms->id.'&conf=4&update'.$this->table.'&token='.Tools::getAdminTokenLite('AdminCmsContent'));
             else
@@ -402,7 +399,7 @@ class AdminCmsControllerCore extends AdminController
 	}
 
 	public function getPreviewUrl(CMS $cms)
-	{			
+	{
 		$preview_url = $this->context->link->getCMSLink($cms, null, null, $this->context->language->id);
 		if (!$cms->active)
 		{
@@ -418,5 +415,3 @@ class AdminCmsControllerCore extends AdminController
 		return $preview_url;
 	}
 }
-
-

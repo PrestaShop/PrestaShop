@@ -25,7 +25,7 @@
 {extends file="helpers/view/view.tpl"}
 {block name="override_tpl"}
 	<script type="text/javascript">
-		var errorEmpty = '{l s='Please name your mapping configuration in order to save it.' js=1}';
+		var errorEmpty = '{l s='Please name your data matching configuration in order to save it.' js=1}';
 		var current = 0;
 		function showTable(nb) {
 			$('#btn_left').disabled = null;
@@ -60,11 +60,11 @@
 	<div id="container-customer" class="panel">
 		<h3><i class="icon-list-alt"></i> {l s='View your data'}</h3>
 		<div class="alert alert-info">
-			<p>{l s='Please map each column of your source CSV file to one of the destination columns.'}</p>
+			<p>{l s='Please match each column of your source CSV file to one of the destination columns.'}</p>
 		</div>
 		<div class="form-horizontal">
 			<div class="form-group" {if !$import_matchs}style="display:none"{/if}>
-				<label class="control-label col-lg-3">{l s='Load a mapping configuration'}</label>
+				<label class="control-label col-lg-3">{l s='Load a data matching configuration'}</label>
 				<div id="selectDivImportMatchs" class="col-lg-7">
 					<select id="valueImportMatchs">
 						{foreach $import_matchs as $match}
@@ -78,7 +78,7 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="control-label col-lg-3" for="newImportMatchs">{l s='Save your mapping configuration'}</label>
+				<label class="control-label col-lg-3" for="newImportMatchs">{l s='Save your data matching configuration'}</label>
 				<div class="col-lg-7">
 					<input type="text" name="newImportMatchs" id="newImportMatchs" />		
 				</div>
@@ -88,12 +88,12 @@
 			</div>
 		</div>
 		<div id="error_duplicate_type" class="alert alert-warning" style="display:none;">
-			{l s='Columns cannot have the same value type'}
+			{l s='Two columns cannot have the same type of values'}
 		</div>
 		<div id="required_column" class="alert alert-warning" style="display:none;">
-			{l s='Column'} <span id="missing_column">&nbsp;</span> {l s='must be set'}
+			{l s='This column must be set:'} <span id="missing_column">&nbsp;</span>
 		</div>
-		<form action="{$current}&amp;token={$token}" method="post" id="import_form" name="import_form" class="form-horizontal">
+		<form action="{$current|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}" method="post" id="import_form" name="import_form" class="form-horizontal">
 			<input type="hidden" name="csv" value="{$fields_value.csv}" />
 			<input type="hidden" name="convert" value="{$fields_value.convert}" />
 			<input type="hidden" name="regenerate" value="{$fields_value.regenerate}" />

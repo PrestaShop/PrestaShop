@@ -38,13 +38,13 @@
 			</div>			
 			<div class="row">
 				<div class="col-lg-12">
-					<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='This will restore your last registered address format.'}" data-html="true"><a id="useLastDefaultLayout" href="javascript:void(0)" onClick="resetLayout('{$input.encoding_address_layout}', 'lastDefault');" class="btn btn-default">
+					<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='This will restore your last registered address format.'}" data-html="true"><a id="useLastDefaultLayout" href="javascript:void(0)" onclick="resetLayout('{$input.encoding_address_layout}', 'lastDefault');" class="btn btn-default">
 						{l s='Use the last registered format'}</a></span>
-					<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='This will restore the default address format for this country.'}" data-html="true"><a id="useDefaultLayoutSystem" href="javascript:void(0)" onClick="resetLayout('{$input.encoding_default_layout}', 'defaultSystem');" class="btn btn-default">
+					<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='This will restore the default address format for this country.'}" data-html="true"><a id="useDefaultLayoutSystem" href="javascript:void(0)" onclick="resetLayout('{$input.encoding_default_layout}', 'defaultSystem');" class="btn btn-default">
 						{l s='Use the default format'}</a></span>
-					<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='This will restore your current address format.'}" data-html="true"><a id="useCurrentLastModifiedLayout" href="javascript:void(0)" onClick="resetLayout(lastLayoutModified, 'currentModified')" class="btn btn-default">
+					<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='This will restore your current address format.'}" data-html="true"><a id="useCurrentLastModifiedLayout" href="javascript:void(0)" onclick="resetLayout(lastLayoutModified, 'currentModified')" class="btn btn-default">
 						{l s='Use my current modified format'}</a></span>
-					<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='This will delete the current address format'}" data-html="true"><a id="eraseCurrentLayout" href="javascript:void(0)" onClick="resetLayout('', 'erase');" class="btn btn-default">
+					<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='This will delete the current address format'}" data-html="true"><a id="eraseCurrentLayout" href="javascript:void(0)" onclick="resetLayout('', 'erase');" class="btn btn-default">
 						<i class="icon-eraser"></i> {l s='Clear format'}</a></span>
 				</div>
 			</div>
@@ -57,14 +57,14 @@
 {block name="input_row"}
 	{if $input.name == 'standardization'}
 		<div class="form-group" id="TAASC" style="display: none;">
-			<label for="{$input.name}" class="control-label col-lg-3 ">{$input.label}</label>
+			<label for="{$input.name}" class="control-label col-lg-3">{$input.label}</label>
 			<div class="col-lg-9">
 				<span class="switch prestashop-switch fixed-width-lg">
-					<input type="radio" name="{$input.name}" id="{$input.name}_on" value="1">
+					<input type="radio" name="{$input.name}" id="{$input.name}_on" value="1" />
 					<label for="{$input.name}_on">
 						{l s='Yes'}
 					</label>
-					<input type="radio" name="{$input.name}" id="{$input.name}_off" value="0" checked="checked">
+					<input type="radio" name="{$input.name}" id="{$input.name}_off" value="0" checked="checked" />
 					<label for="{$input.name}_off">
 						{l s='No'}
 					</label>

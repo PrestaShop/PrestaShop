@@ -23,9 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <script type="text/javascript">
-	{if isset($smarty.get.ad) && isset($smarty.get.live_edit)}
-		var ad = '{$smarty.get.ad}';
-	{/if}
+	var ad = '{$ad|@addcslashes:'\''}';
 	var lastMove = '';
 	var saveOK = '{l s='Module position saved' js=1}';
 	var confirmClose = '{l s='Are you sure? If you close this window, its position will not be saved'  js=1}';
@@ -38,13 +36,14 @@
 	var loadFail = '{l s='Failed to load module list' js=1}';
 </script>
 
-<div style=" background-color:000; background-color: rgba(0,0,0, 0.7); border-bottom: 1px solid #000; width:100%;height:30px; padding:5px 10px; position:fixed;top:0;left:0;z-index:9999;">
+<div style=" background-color:000; background-color: rgba(0,0,0, 0.7); border-bottom: 1px solid #000; width:100%;height:45px; padding:5px 10px; position:fixed;top:0;left:0;z-index:9999;">
 <form id="liveEdit-action-form" action="./{$ad}/index.php" method="post">
 	<input type="hidden" name="ajax" value="1" />
 	<input type="hidden" name="id_shop" value="{$id_shop}" />
 	<input type="hidden" name="token" value="{$smarty.get.liveToken|escape:'html':'UTF-8'}" />
 	<input type="hidden" name="tab" value="AdminModulesPositions" />
 	<input type="hidden" name="action" value="saveHook" />
+
 	{foreach from=$hook_list key=hook_id item=hook_name}
 		<input class="hook_list" type="hidden" name="hook_list[{$hook_id}]" 
 			value="{$hook_name}" />

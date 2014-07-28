@@ -36,11 +36,13 @@
 		}
 	}
 }
-img{
+.primary_block .pb-left-column img {
 	max-width: 100%;
 	height: auto;
 }
-
+a.fancybox-nav {
+	outline:0
+}
 /* .pb-left-column ***************************************************************************** */
 .pb-left-column {
 
@@ -117,7 +119,7 @@ img{
 	margin-top: 10px;
 	@media (max-width: $screen-xs-max) { //max 767px	
 		width: 280px;
-		margin: 0 auto;
+		margin-left: 10px auto 0px auto;
 	}	
 }
 #thumbs_list {
@@ -125,13 +127,13 @@ img{
 	float: left;
 	width: 392px;
 	@media (min-width: $screen-md) and (max-width: $screen-md-max) { //min 992px max 1199px
-		width: 290px;		
+		width: 294px;		
 	}
 	@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { // min 768px max 991px
 		width: 164px;		
 	}
 	@media (max-width: $screen-xs-max) { //max 767px
-		width: 194px;	
+		width: 196px;	
 	}
 	ul#thumbs_list_frame {
 		list-style-type: none;
@@ -151,12 +153,7 @@ img{
 		@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { //min 768px max 991px
 			width: 76px;	
 			height: 76px;
-		}
-		&:first-child{
-			margin: 0 9px 0 0;
-		}
-		&.last{
-			margin-right: 0;
+			margin-right: 6px;
 		}
 		a{
 			display: block;
@@ -407,7 +404,8 @@ span.view_scroll_spacer {
 	padding: 0 20px 20px;
 	word-wrap: break-word;
 	p{
-		margin-bottom: 0;
+		margin-bottom: 1em;
+		min-height: 1px
 	}
 }
 #attributes{
@@ -452,11 +450,18 @@ span.view_scroll_spacer {
 				padding: 1px;
 				border: 1px solid $base-border-color;
 				clear: none;
+      			width: 26px;
+      			height: 26px;
 				a.color_pick {
 					display: block;
 					height: 22px;
 					width: 22px;
 					cursor: pointer;
+					img {
+						display: block;
+						height: 22px;
+						width: 22px;
+					}
 				}
 				&.selected{
 					border:1px solid #4d4d4d;
@@ -530,6 +535,7 @@ span.view_scroll_spacer {
 		&.added.disabled, 
 		&.disabled {
 			&:before {
+				height: 51px;
 				content: "\f110";
 				animation: 2s linear 0s normal none infinite spin;
 				-webkit-animation: 2s linear 0s normal none infinite spin;

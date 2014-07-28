@@ -38,9 +38,9 @@
     <h1 class="page-subheading">
         {l s='Your personal information'}
     </h1>
-    
+
     {include file="$tpl_dir./errors.tpl"}
-    
+
     {if isset($confirmation) && $confirmation}
         <p class="alert alert-success">
             {l s='Your personal information has been successfully updated.'}
@@ -56,7 +56,7 @@
         <form action="{$link->getPageLink('identity', true)|escape:'html':'UTF-8'}" method="post" class="std">
             <fieldset>
                 <div class="clearfix">
-                    <label>{l s='Title'}</label>
+                    <label>{l s='Social title'}</label>
                     <br />
                     {foreach from=$genders key=k item=gender}
                         <div class="radio-inline">
@@ -68,19 +68,19 @@
                 </div>
                 <div class="required form-group">
                     <label for="firstname" class="required">
-                        {l s='First name'} 
+                        {l s='First name'}
                     </label>
                     <input class="is_required validate form-control" data-validate="isName" type="text" id="firstname" name="firstname" value="{$smarty.post.firstname}" />
                 </div>
                 <div class="required form-group">
                     <label for="lastname" class="required">
-                        {l s='Last name'} 
+                        {l s='Last name'}
                     </label>
                     <input class="is_required validate form-control" data-validate="isName" type="text" name="lastname" id="lastname" value="{$smarty.post.lastname}" />
                 </div>
                 <div class="required form-group">
                     <label for="email" class="required">
-                        {l s='E-mail address'} 
+                        {l s='E-mail address'}
                     </label>
                     <input class="is_required validate form-control" data-validate="isEmail" type="email" name="email" id="email" value="{$smarty.post.email}" />
                 </div>
@@ -118,7 +118,7 @@
                 </div>
                 <div class="required form-group">
                     <label for="old_passwd" class="required">
-                        {l s='Current Password'} 
+                        {l s='Current Password'}
                     </label>
                     <input class="is_required validate form-control" type="password" data-validate="isPasswd" name="old_passwd" id="old_passwd" />
                 </div>
@@ -139,12 +139,18 @@
                         <label for="newsletter">
                             <input type="checkbox" id="newsletter" name="newsletter" value="1" {if isset($smarty.post.newsletter) && $smarty.post.newsletter == 1} checked="checked"{/if}/>
                             {l s='Sign up for our newsletter!'}
+                            {if array_key_exists('newsletter', $field_required)}
+                              <sup> *</sup>
+                            {/if}
                         </label>
                     </div>
                     <div class="checkbox">
                         <label for="optin">
                             <input type="checkbox" name="optin" id="optin" value="1" {if isset($smarty.post.optin) && $smarty.post.optin == 1} checked="checked"{/if}/>
                             {l s='Receive special offers from our partners!'}
+                            {if array_key_exists('optin', $field_required)}
+                              <sup> *</sup>
+                            {/if}
                         </label>
                     </div>
                 {/if}

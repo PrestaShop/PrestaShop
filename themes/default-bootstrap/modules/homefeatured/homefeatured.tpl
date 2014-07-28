@@ -22,11 +22,10 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{counter name=active_ul assign=active_ul}
 {if isset($products) && $products}
-	{include file="$tpl_dir./product-list.tpl" class='homefeatured tab-pane' id='homefeatured' active=$active_ul}
+	{include file="$tpl_dir./product-list.tpl" class='homefeatured tab-pane' id='homefeatured'}
 {else}
-<ul id="homefeatured" class="homefeatured tab-pane{if isset($active_ul) && $active_ul == 1} active{/if}">
+<ul id="homefeatured" class="homefeatured tab-pane">
 	<li class="alert alert-info">{l s='No featured products at this time.' mod='homefeatured'}</li>
 </ul>
 {/if}

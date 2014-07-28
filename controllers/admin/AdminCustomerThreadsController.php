@@ -240,6 +240,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				ON (cl.`id_contact` = a.`id_contact` AND cl.`id_lang` = '.(int)$this->context->language->id.')';
 
 		$this->_group = 'GROUP BY cm.id_customer_thread';
+		$this->_orderBy = 'id_customer_thread';
+		$this->_orderWay = 'DESC';
 
 		$contacts = CustomerThread::getContacts();
 
@@ -543,10 +545,22 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$messages = CustomerThread::getMessageCustomerThreads($id_customer_thread);
 		
 		foreach ($messages as $key => $mess)
+		{
 			if (isset($mess['file_name']) && $mess['file_name'] != '')
 				$messages[$key]['file_name'] = _THEME_PROD_PIC_DIR_.$mess['file_name'];
 			else
 				unset($messages[$key]['file_name']);
+			
+			if ($mess['id_product'])
+			{
+				$product = new Product((int)$mess['id_product'], false, $this->context->language->id);
+				if (Validate::isLoadedObject($product))
+				{
+					$messages[$key]['product_name'] = $product->name;
+					$messages[$key]['product_link'] = $this->context->link->getAdminLink('AdminProducts').'&updateproduct&id_product='.(int)$product->id;
+				}
+			}
+		}
 
 		$next_thread = CustomerThread::getNextThread((int)$thread->id);
 		
@@ -672,7 +686,14 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$timeline = array();
 		foreach ($messages as $message)
 		{
-			$content = $this->l('Message to: ').' <span class="badge">'.(!$message['id_employee'] ? $message['subject'] : $message['customer_name']).'</span></br>'.$message['message'];
+			$product = new Product((int)$message['id_product'], false, $this->context->language->id);
+			$link_product = $this->context->link->getAdminLink('AdminOrders').'&vieworder&id_order='.(int)$product->id;
+			
+			
+			$content = $this->l('Message to: ').' <span class="badge">'.(!$message['id_employee'] ? $message['subject'] : $message['customer_name']).'</span><br/>';
+			if (Validate::isLoadedObject($product))
+				$content .= '<br/>'.$this->l('Product: ').'<span class="label label-info">'.$product->name.'</span><br/><br/>';
+			$content .= Tools::safeOutput($message['message']);
 			
 			$timeline[$message['date_add']][] = array(
 				'arrow' => 'left',
@@ -689,8 +710,10 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			$order_history = $order->getHistory($this->context->language->id);
 			foreach ($order_history as $history)
 			{
-				$link = $this->context->link->getAdminLink('AdminOrders').'&vieworder&id_order='.(int)$order->id;
-				$content = '<a class="badge" target="_blank" href="'.$link.'">'.$this->l('Order').' #'.(int)$order->id.'</a></br></br>';
+				$link_order = $this->context->link->getAdminLink('AdminOrders').'&vieworder&id_order='.(int)$order->id;
+				
+				$content = '<a class="badge" target="_blank" href="'.Tools::safeOutput($link_order).'">'.$this->l('Order').' #'.(int)$order->id.'</a><br/><br/>';
+				
 				$content .= '<span>'.$this->l('Status:').' '.$history['ostate_name'].'</span>';
 
 				$timeline[$history['date_add']][] = array(
@@ -700,11 +723,11 @@ class AdminCustomerThreadsControllerCore extends AdminController
 					'icon' => 'icon-credit-card',
 					'content' => $content,
 					'date' => $history['date_add'],
-					'see_more_link' => $link,
+					'see_more_link' => $link_order,
 				);
 			}
 		}
-		ksort($timeline);
+		krsort($timeline);
 		return $timeline;
 	}
 	
@@ -808,7 +831,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$id_thread = Tools::getValue('id_thread');
 		$messages = CustomerThread::getMessageCustomerThreads($id_thread);		
 		if (count($messages))
-			Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'customer_message set `read` = 1');
+			Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customer_message` set `read` = 1 WHERE `id_employee` = '.(int)$this->context->employee->id.' AND `id_customer_thread` = '.(int)$id_thread);
 	}
 	
 	public function ajaxProcessSyncImap()

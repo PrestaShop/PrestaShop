@@ -22,9 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 {extends file="helpers/view/view.tpl"}
-
 {block name="override_tpl"}
 	<script type="text/javascript">
 		function chooseTypeTranslation(id_lang)
@@ -74,7 +72,6 @@
 			});
 		});
 	</script>
-	
 	<form method="get" action="index.php" id="typeTranslationForm" class="form-horizontal">
 		<div class="panel">
 			<h3>
@@ -122,7 +119,7 @@
 						{/foreach}
 					</ul>
 				</div>
-				<input type="hidden" name="token" value="{$token}" />
+				<input type="hidden" name="token" value="{$token|escape:'html':'UTF-8'}" />
 			</div>
 			<div class="panel-footer">
 				<button type="button" class="btn btn-default pull-right" id="modify-translations">
@@ -131,7 +128,7 @@
 			</div>
 		</div>
 	</form>
-	<form action="{$url_submit}" method="post" enctype="multipart/form-data" class="form-horizontal">
+	<form action="{$url_submit|escape:'html':'UTF-8'}" method="post" enctype="multipart/form-data" class="form-horizontal">
 		<div class="panel">
 			<h3>
 				<i class="icon-download"></i>
@@ -174,8 +171,7 @@
 			</div>
 		</div>
 	</form>
-	
-	<form action="{$url_submit}" method="post" enctype="multipart/form-data" class="form-horizontal">
+	<form action="{$url_submit|escape:'html':'UTF-8'}" method="post" enctype="multipart/form-data" class="form-horizontal">
 		<div class="panel">
 			<h3>
 				<i class="icon-download"></i>
@@ -186,7 +182,7 @@
 				{l s='Warning: This will replace all of the existing data inside the destination language.'}
 			</p>
 			<div class="form-group">
-				<label for="importLanguage" class="control-label col-lg-3" for="importLanguage">{l s='Language pack to import'}</label>
+				<label for="importLanguage" class="control-label col-lg-3">{l s='Language pack to import'}</label>
 				<div class="col-lg-4">
 					<div class="form-group">
 						<div class="col-lg-12">
@@ -205,7 +201,7 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="selectThemeForImport" class="control-label col-lg-3" for="selectThemeForImport">{l s='Select your theme'}</label>
+				<label for="selectThemeForImport" class="control-label col-lg-3">{l s='Select your theme'}</label>
 				<div class="col-lg-4">
 					<select name="theme[]" id="selectThemeForImport" {if count($themes) > 1}multiple="multiple"{/if} >
 						{foreach $themes as $theme}
@@ -219,8 +215,7 @@
 			</div>
 		</div>
 	</form>
-	
-	<form action="{$url_submit}" method="post" enctype="multipart/form-data" class="form-horizontal">
+	<form action="{$url_submit|escape:'html':'UTF-8'}" method="post" enctype="multipart/form-data" class="form-horizontal">
 		<div class="panel">
 			<h3>
 				<i class="icon-upload"></i>
@@ -255,8 +250,7 @@
 			</div>
 		</div>
 	</form>
-	
-	<form action="{$url_submit}" method="post" class="form-horizontal">
+	<form action="{$url_submit|escape:'html':'UTF-8'}" method="post" class="form-horizontal">
 		<div class="panel">
 			<h3>
 				<i class="icon-copy"></i>
@@ -265,7 +259,7 @@
 			<p class="alert alert-info">
 				{l s='Copies data from one language to another.'}<br />
 				{l s='Warning: This will replace all of the existing data inside the destination language.'}<br />
-				{l s='If necessary'}, <b><a href="{$url_create_language}" class="btn btn-link"><i class="icon-external-link-sign"></i> {l s='you must first create a new language.'}</a></b>.
+				{l s='If necessary'}, <b><a href="{$url_create_language|escape:'html':'UTF-8'}" class="btn btn-link"><i class="icon-external-link-sign"></i> {l s='you must first create a new language.'}</a></b>.
 			</p>
 			<div class="form-group">
 				<label class="control-label col-lg-3 required" for="fromLang"> {l s='From'}</label>

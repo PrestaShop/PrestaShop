@@ -368,7 +368,7 @@ class ProductCore extends ObjectModel
 			),
 			'position_in_category' => array(
 				'getter' => 'getWsPositionInCategory',
-				'setter' => false
+				'setter' => 'setWsPositionInCategory'
 			),
 			'manufacturer_name' => array(
 				'getter' => 'getWsManufacturerName',
@@ -395,13 +395,13 @@ class ProductCore extends ObjectModel
 				'fields' => array('id' => array())
 			),
 			'combinations' => array(
-				'resource' => 'combinations',
+				'resource' => 'combination',
 				'fields' => array(
 					'id' => array('required' => true),
 				)
 			),
 			'product_option_values' => array(
-				'resource' => 'product_options_values',
+				'resource' => 'product_option_value',
 				'fields' => array(
 					'id' => array('required' => true),
 				)
@@ -430,6 +430,7 @@ class ProductCore extends ObjectModel
 			),
 			'accessories' => array(
 				'resource' => 'product',
+				'api' => 'products',
 				'fields' => array(
 					'id' => array(
 						'required' => true,
@@ -437,7 +438,8 @@ class ProductCore extends ObjectModel
 				)
 			),
 			'product_bundle' => array(
-				'resource' => 'products',
+				'resource' => 'product',
+				'api' => 'products',
 				'fields' => array(
 					'id' => array('required' => true),
 					'quantity' => array(),
@@ -500,6 +502,7 @@ class ProductCore extends ObjectModel
 		$fields = parent::getFieldsShop();
 		if (is_null($this->update_fields) || (!empty($this->update_fields['price']) && !empty($this->update_fields['unit_price'])))
 		$fields['unit_price_ratio'] = (float)$this->unit_price > 0 ? $this->price / $this->unit_price : 0;
+		$fields['unity'] = pSQL($this->unity);
 
 		return $fields;
 	}
@@ -528,7 +531,7 @@ class ProductCore extends ObjectModel
 		$return = parent::update($null_values);
 		$this->setGroupReduction();
 		Hook::exec('actionProductSave', array('id_product' => $this->id));
-
+		Hook::exec('actionProductUpdate', array('id_product' => $this->id));
 		if ($this->getType() == Product::PTYPE_VIRTUAL && $this->active && !Configuration::get('PS_VIRTUAL_PROD_FEATURE_ACTIVE'))
 			Configuration::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', '1');
 
@@ -650,7 +653,7 @@ class ProductCore extends ObjectModel
 		if (isset($combinations[$id_product][$minimum_quantity]))
 			return $combinations[$id_product][$minimum_quantity];
 
-		$sql = 'SELECT pa.id_product_attribute
+		$sql = 'SELECT product_attribute_shop.id_product_attribute
 				FROM '._DB_PREFIX_.'product_attribute pa
 				'.Shop::addSqlAssociation('product_attribute', 'pa').'
 				'.($minimum_quantity > 0 ? Product::sqlStock('pa', 'pa') : '').
@@ -661,31 +664,34 @@ class ProductCore extends ObjectModel
 
 		if (!$result)
 		{
-			$sql = 'SELECT pa.id_product_attribute
+			$sql = 'SELECT product_attribute_shop.id_product_attribute
 					FROM '._DB_PREFIX_.'product_attribute pa
 					'.Shop::addSqlAssociation('product_attribute', 'pa').'
 					'.($minimum_quantity > 0 ? Product::sqlStock('pa', 'pa') : '').
 					' WHERE pa.id_product = '.(int)$id_product
 					.($minimum_quantity > 0 ? ' AND IFNULL(stock.quantity, 0) >= '.(int)$minimum_quantity : '');
+
 			$result = Db::getInstance()->getValue($sql);
 		}
 
 		if (!$result)
 		{
-			$sql = 'SELECT pa.id_product_attribute
+			$sql = 'SELECT product_attribute_shop.id_product_attribute
 					FROM '._DB_PREFIX_.'product_attribute pa
 					'.Shop::addSqlAssociation('product_attribute', 'pa').'
 					WHERE product_attribute_shop.`default_on` = 1
 					AND pa.id_product = '.(int)$id_product;
+
 			$result = Db::getInstance()->getValue($sql);
 		}
 
 		if (!$result)
 		{
-			$sql = 'SELECT pa.id_product_attribute
+			$sql = 'SELECT product_attribute_shop.id_product_attribute
 					FROM '._DB_PREFIX_.'product_attribute pa
 					'.Shop::addSqlAssociation('product_attribute', 'pa').'
 					WHERE pa.id_product = '.(int)$id_product;
+
 			$result = Db::getInstance()->getValue($sql);
 		}
 
@@ -816,9 +822,7 @@ class ProductCore extends ObjectModel
 		// If there are still entries in product_shop, don't remove completly the product
 		if ($this->hasMultishopEntries())
 			return true;
-		
-		Product::cleanPositions($this->id);
-		
+			
 		Hook::exec('actionProductDelete', array('product' => $this));
 		if (!$result ||
 			!GroupReduction::deleteProductReduction($this->id) ||
@@ -1342,13 +1346,19 @@ class ProductCore extends ObjectModel
 	public static function updateDefaultAttribute($id_product)
 	{
 		$id_default_attribute = (int)Product::getDefaultAttribute($id_product);
+
 		$result =  Db::getInstance()->update('product_shop', array(
 			'cache_default_attribute' => $id_default_attribute,
-		), 'id_product = '.(int)$id_product);
+		), 'id_product = '.(int)$id_product. Shop::addSqlRestriction());
+
 		$result &=  Db::getInstance()->update('product', array(
 			'cache_default_attribute' => $id_default_attribute,
 		), 'id_product = '.(int)$id_product);
-		return $result;
+
+		if ($result && $id_default_attribute)
+			return $id_default_attribute;
+		else
+			return $result;
 	}
 
 	/**
@@ -1464,13 +1474,15 @@ class ProductCore extends ObjectModel
 
 		$combination->save();
 
-		if (!empty($id_images))
+		if (is_array($id_images) && count($id_images))
 			$combination->setImages($id_images);
 
-		Product::updateDefaultAttribute($this->id);
+		$id_default_attribute = (int)Product::updateDefaultAttribute($this->id);
+		if ($id_default_attribute)
+			$this->cache_default_attribute = $id_default_attribute;
 
 		Hook::exec('actionProductAttributeUpdate', array('id_product_attribute' => $id_product_attribute));
-
+		Tools::clearColorListCache($this->id);
 		return true;
 	}
 
@@ -1513,16 +1525,6 @@ class ProductCore extends ObjectModel
 		$combination->minimal_quantity = (int)$minimal_quantity;
 		$combination->available_date = $available_date;
 
-		// if we add a combination for this shop and this product does not use the combination feature in other shop,
-		// we clone the default combination in every shop linked to this product
-		if ($default && !$this->hasAttributesInOtherShops())
-		{
-			$id_shop_list_array = Product::getShopsByProduct($this->id);
-			foreach ($id_shop_list_array as $array_shop)
-				$id_shop_list[] = $array_shop['id_shop'];
-			$id_shop_list = array_unique($id_shop_list);
-		}
-
 		if (count($id_shop_list))
 			$combination->id_shop_list = array_unique($id_shop_list);
 
@@ -1531,11 +1533,14 @@ class ProductCore extends ObjectModel
 		if (!$combination->id)
 			return false;
 
-		Product::updateDefaultAttribute($this->id);
+		$id_default_attribute = Product::updateDefaultAttribute($this->id);
+		if ($id_default_attribute)
+			$this->cache_default_attribute = $id_default_attribute;
 
 		if (!empty($id_images))
 			$combination->setImages($id_images);
-
+		
+		Tools::clearColorListCache($this->id);
 		return (int)$combination->id;
 	}
 
@@ -1572,6 +1577,7 @@ class ProductCore extends ObjectModel
 		foreach ($combinations as $combination)
 			$result &= $combination->delete();
 		SpecificPriceRule::applyAllRules(array((int)$this->id));
+		Tools::clearColorListCache($this->id);
 		return $result;
 	}
 
@@ -2446,7 +2452,7 @@ class ProductCore extends ObjectModel
 	* @param integer $id_lang Language id for multilingual legends
 	* @return array Product images and legends
 	*/
-	public function	getImages($id_lang, Context $context = null)
+	public function getImages($id_lang, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
@@ -3106,18 +3112,22 @@ class ProductCore extends ObjectModel
 		if (!count($products))
 			return array();
 
+		$id_lang = Context::getContext()->language->id;
+
 		$check_stock = !Configuration::get('PS_DISP_UNAVAILABLE_ATTR');
 		if (!$res = Db::getInstance()->executeS('
-					SELECT pa.id_product, a.color, pac.id_product_attribute, '.($check_stock ? 'SUM(IF(stock.quantity > 0, 1, 0))' : '0').' qty
-					FROM '._DB_PREFIX_.'product_attribute pa
+					SELECT pa.`id_product`, a.`color`, pac.`id_product_attribute`, '.($check_stock ? 'SUM(IF(stock.`quantity` > 0, 1, 0))' : '0').' qty, a.`id_attribute`, al.`name`, IF(color = "", a.id_attribute, color) group_by
+					FROM `'._DB_PREFIX_.'product_attribute` pa
 					'.Shop::addSqlAssociation('product_attribute', 'pa').
 					($check_stock ? Product::sqlStock('pa', 'pa') : '').'
-					JOIN '._DB_PREFIX_.'product_attribute_combination pac ON (pac.id_product_attribute = product_attribute_shop.id_product_attribute)
-					JOIN '._DB_PREFIX_.'attribute a ON (a.id_attribute = pac.id_attribute)
-					JOIN '._DB_PREFIX_.'attribute_group ag ON (ag.id_attribute_group = ag.id_attribute_group)
-					WHERE pa.id_product IN ('.implode(array_map('intval', $products), ',').') AND ag.is_color_group = 1
-					GROUP BY pa.id_product, color
-					'.($check_stock ? 'HAVING qty > 0' : '')
+					JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.`id_product_attribute` = product_attribute_shop.`id_product_attribute`)
+					JOIN `'._DB_PREFIX_.'attribute` a ON (a.`id_attribute` = pac.`id_attribute`)
+					JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
+					JOIN `'._DB_PREFIX_.'attribute_group` ag ON (a.id_attribute_group = ag.`id_attribute_group`)
+					WHERE pa.`id_product` IN ('.implode(array_map('intval', $products), ',').') AND ag.`is_color_group` = 1
+					GROUP BY pa.`id_product`, `group_by`
+					'.($check_stock ? 'HAVING qty > 0' : '').'
+					ORDER BY a.`id_attribute` ASC;'
 				)
 			)
 				return false;
@@ -3125,10 +3135,10 @@ class ProductCore extends ObjectModel
 		$colors = array();
 		foreach ($res as $row)
 		{
-			if (Tools::isEmpty($row['color']))
+			if (Tools::isEmpty($row['color']) && !@filemtime(_PS_COL_IMG_DIR_.$row['id_attribute'].'.jpg'))
 				continue;
 
-			$colors[(int)$row['id_product']][] = array('id_product_attribute' => (int)$row['id_product_attribute'], 'color' => $row['color'], 'id_product' => $row['id_product']);
+			$colors[(int)$row['id_product']][] = array('id_product_attribute' => (int)$row['id_product_attribute'], 'color' => $row['color'], 'id_product' => $row['id_product'], 'name' => $row['name'], 'id_attribute' => $row['id_attribute']);
 		}
 		
 		return $colors;
@@ -3615,7 +3625,6 @@ class ProductCore extends ObjectModel
 			return true;
 
 		$data = array();
-		$res = true;
 		foreach ($results as $row)
 		{
 			$new_filename = ProductDownload::getNewFilename();
@@ -3632,10 +3641,8 @@ class ProductCore extends ObjectModel
 				'is_shareable' => (int)$row['is_shareable'],
 				'date_add' => date('Y-m-d H:i:s')
 			);
-			$res &= Db::getInstance()->insert('product_download', $data);
 		}
-
-		return $res;
+		return Db::getInstance()->insert('product_download', $data);
 	}
 
 	public static function duplicateAttachments($id_product_old, $id_product_new)
@@ -3969,6 +3976,11 @@ class ProductCore extends ObjectModel
 		if ($row['pack'] && !Pack::isInStock($row['id_product']))
 			$row['quantity'] = 0;
 
+		$row['customization_required'] = false;
+		if (isset($row['customizable']) && $row['customizable'] && Customization::isFeatureActive())
+			if (count(Product::getRequiredCustomizableFieldsStatic((int)$row['id_product'])))
+				$row['customization_required'] = true;
+
 		$row = Product::getTaxesInformations($row, $context);
 		self::$producPropertiesCache[$cache_key] = $row;
 		return self::$producPropertiesCache[$cache_key];
@@ -4130,13 +4142,17 @@ class ProductCore extends ObjectModel
 				else
 					$price_wt = $price * (1 + ((isset($product_update['tax_rate']) ? $product_update['tax_rate'] : $product_update['rate']) * 0.01));
 
-				if (isset($customized_datas[$product_id][$product_attribute_id]))
+				if (!isset($customized_datas[$product_id][$product_attribute_id][$id_address_delivery]))
+                                        $id_address_delivery = 0;
+				if (isset($customized_datas[$product_id][$product_attribute_id][$id_address_delivery]))
+				{
 					foreach ($customized_datas[$product_id][$product_attribute_id][$id_address_delivery] as $customization)
 					{
 						$customization_quantity += (int)$customization['quantity'];
 						$customization_quantity_refunded += (int)$customization['quantity_refunded'];
 						$customization_quantity_returned += (int)$customization['quantity_returned'];
 					}
+				}
 
 				$product_update['customizationQuantityTotal'] = $customization_quantity;
 				$product_update['customizationQuantityRefunded'] = $customization_quantity_refunded;
@@ -4351,10 +4367,17 @@ class ProductCore extends ObjectModel
 	{
 		if (!Customization::isFeatureActive())
 			return array();
+		return Product::getRequiredCustomizableFieldsStatic($this->id);
+	}
+
+	public static function getRequiredCustomizableFieldsStatic($id)
+	{
+		if (!$id || !Customization::isFeatureActive())
+			return array();
 		return Db::getInstance()->executeS('
 			SELECT `id_customization_field`, `type`
 			FROM `'._DB_PREFIX_.'customization_field`
-			WHERE `id_product` = '.(int)$this->id.'
+			WHERE `id_product` = '.(int)$id.'
 			AND `required` = 1'
 		);
 	}
@@ -4373,9 +4396,11 @@ class ProductCore extends ObjectModel
 		$fields_present = array();
 		foreach ($fields as $field)
 			$fields_present[] = array('id_customization_field' => $field['index'], 'type' => $field['type']);
-		foreach ($required_fields as $required_field)
-			if (!in_array($required_field, $fields_present))
-				return false;
+
+		if (is_array($required_fields) && count($required_fields))
+			foreach ($required_fields as $required_field)
+				if (!in_array($required_field, $fields_present))
+					return false;
 		return true;
 	}
 
@@ -4835,6 +4860,41 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
+	* Webservice setter : set virtual field position in category
+	*
+	* @return bool
+	*/
+	public function setWsPositionInCategory($position)
+	{
+		if ($position < 0)
+			WebserviceRequest::getInstance()->setError(500, Tools::displayError('You can\'t set a position under 0.'), 134);
+		$result = Db::getInstance()->executeS('
+			SELECT `id_product`
+			FROM `'._DB_PREFIX_.'category_product`
+			WHERE `id_category` = '.(int)$this->id_category_default.'
+			ORDER BY `position`
+		');
+		if ($position + 1 > count($result))
+			WebserviceRequest::getInstance()->setError(500, Tools::displayError('You can\'t set a position greater than total product in category - 1 (position start at 0).'), 135);
+
+		foreach ($result as &$value)
+			$value = $value['id_product'];
+		$currentPosition = $this->getWsPositionInCategory();
+
+		$save = $result[$currentPosition];
+		unset($result[$currentPosition]);
+		array_splice($result, $position, 0, $save);
+
+		foreach ($result as $position => $id_product)
+		{
+			Db::getInstance()->update('category_product', array(
+				'position' => $position,
+			), '`id_category` = '.(int)$this->id_category_default.' AND `id_product` = '.(int)$id_product);
+		}
+		return true;
+	}
+
+	/**
 	* Webservice getter : get virtual field id_default_image in category
 	*
 	* @return int
@@ -4867,7 +4927,7 @@ class ProductCore extends ObjectModel
 	*
 	* @return array
 	*/
-	public function	getWsImages()
+	public function getWsImages()
 	{
 		return Db::getInstance()->executeS('
 		SELECT i.`id_image` as id
@@ -5088,7 +5148,7 @@ class ProductCore extends ObjectModel
 	public static function getAttributesInformationsByProduct($id_product)
 	{
 		// if blocklayered module is installed we check if user has set custom attribute name
-		if (Module::isInstalled('blocklayered'))
+		if (Module::isInstalled('blocklayered') && Module::isEnabled('blocklayered'))
 		{
 			$nb_custom_values = Db::getInstance()->executeS('
 			SELECT DISTINCT la.`id_attribute`, la.`url_name` as `attribute`
@@ -5598,6 +5658,6 @@ class ProductCore extends ObjectModel
 		
 	public static function getColorsListCacheId($id_product)
 	{
-		return 'productlist_colors|'.(int)$id_product.'|'.(int)Context::getContext()->shop->id;
+		return 'productlist_colors|'.(int)$id_product.'|'.(int)Context::getContext()->shop->id.'|'.(int)Context::getContext()->cookie->id_lang;
 	}
 }

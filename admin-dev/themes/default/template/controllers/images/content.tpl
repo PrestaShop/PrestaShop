@@ -32,7 +32,7 @@
             <p>{l s='PrestaShop has detected that your server configuration is not compatible with the new storage system (directive "safe_mode" is activated). You should therefore continue to use the existing system.'}</p>
         </div>
     {else}
-        <form action="{$current}&amp;token={$token}" method="post" class="form-horizontal">
+        <form action="{$current|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}" method="post" class="form-horizontal">
             <div class="panel">
                 <h3>
                     <i class="icon-picture"></i>
@@ -57,7 +57,7 @@
 
 {if isset($display_regenerate)}
 
-	<form class="form-horizontal" action="{$current}&amp;token={$token}" method="post">
+	<form class="form-horizontal" action="{$current|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}" method="post">
 		<div class="panel">
 			<h3>
                 <i class="icon-picture"></i>

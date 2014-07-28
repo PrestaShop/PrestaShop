@@ -43,6 +43,14 @@ class AdminLocalizationControllerCore extends AdminController
 						'identifier' => 'id_lang',
 						'list' => Language::getLanguages(false)
 					),
+					'PS_DETECT_LANG' => array(
+						'title' => $this->l('Set language from browser'),
+						'desc' => $this->l('Set browser language as default language'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool',
+						'default' => '1'
+					),
 					'PS_COUNTRY_DEFAULT' => array(
 						'title' => $this->l('Default country'),
 						'hint' => $this->l('The default country used in your shop.'),
@@ -52,6 +60,14 @@ class AdminLocalizationControllerCore extends AdminController
 						'identifier' => 'id_country',
 						'list' => Country::getCountries($this->context->language->id)
 					),
+					'PS_DETECT_COUNTRY' => array(
+						'title' => $this->l('Set default country from browser language'),
+						'desc' => $this->l('Set country corresponding to browser language'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool',
+						'default' => '1'
+					),
 					'PS_CURRENCY_DEFAULT' => array(
 						'title' => $this->l('Default currency'),
 						'hint' =>
@@ -59,7 +75,7 @@ class AdminLocalizationControllerCore extends AdminController
 						'cast' => 'intval',
 						'type' => 'select',
 						'identifier' => 'id_currency',
-						'list' => Currency::getCurrencies()
+						'list' => Currency::getCurrencies(false, true, true)
 					),
 				),
 				'submit' => array('title' => $this->l('Save'))
@@ -153,17 +169,17 @@ class AdminLocalizationControllerCore extends AdminController
 			$version = str_replace('.', '', _PS_VERSION_);
 			$version = substr($version, 0, 2);
 
-			if (Validate::isFileName(Tools::getValue('iso_localization_pack')))
+			if (($iso_localization_pack = Tools::getValue('iso_localization_pack')) && Validate::isFileName($iso_localization_pack))
 			{
 				if (Tools::getValue('download_updated_pack') == '1' || defined('_PS_HOST_MODE_'))
-					$pack = @Tools::file_get_contents('http://api.prestashop.com/localization/'.$version.'/'.Tools::getValue('iso_localization_pack').'.xml');
+					$pack = @Tools::file_get_contents('http://api.prestashop.com/localization/'.$version.'/'.$iso_localization_pack.'.xml');
 				else
 					$pack = false;
 				
 				if (defined('_PS_HOST_MODE_'))
-					$path = _PS_CORE_DIR_.'/localization/'.Tools::getValue('iso_localization_pack').'.xml';
+					$path = _PS_CORE_DIR_.'/localization/'.$iso_localization_pack.'.xml';
 				else
-					$path = _PS_ROOT_DIR_.'/localization/'.Tools::getValue('iso_localization_pack').'.xml';
+					$path = _PS_ROOT_DIR_.'/localization/'.$iso_localization_pack.'.xml';
 
 				if (!$pack && !($pack = @Tools::file_get_contents($path)))
 					$this->errors[] = Tools::displayError('Cannot load the localization pack.');
@@ -179,7 +195,7 @@ class AdminLocalizationControllerCore extends AdminController
 							return;
 						}
 					$localization_pack = new LocalizationPack();
-					if (!$localization_pack->loadLocalisationPack($pack, $selection))
+					if (!$localization_pack->loadLocalisationPack($pack, $selection, false, $iso_localization_pack))
 						$this->errors = array_merge($this->errors, $localization_pack->getErrors());
 					else
 						Tools::redirectAdmin(self::$currentIndex.'&conf=23&token='.$this->token);

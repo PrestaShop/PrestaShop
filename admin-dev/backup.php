@@ -40,7 +40,7 @@ if ($tabAccess['view'] !== '1')
 $backupdir = realpath(PrestaShopBackup::getBackupPath());
 
 if ($backupdir === false)
-	die (Tools::displayError('A "Backup" directory does not exist.'));
+	die (Tools::displayError('There is no "/backup" directory.'));
 
 if (!$backupfile = Tools::getValue('filename'))
 	die (Tools::displayError('No file has been specified.'));

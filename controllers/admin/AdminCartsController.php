@@ -39,12 +39,17 @@ class AdminCartsControllerCore extends AdminController
 		$this->allow_export = true;
 		$this->_orderWay = 'DESC';
 
-		$this->_select = 'CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) `customer`, a.id_cart total, ca.name carrier, IFNULL(o.id_order, \''.$this->l('Non ordered').'\') id_order, IF(o.id_order, 1, 0) badge_success, IF(o.id_order, 0, 1) badge_danger, IF(co.id_guest, 1, 0) id_guest';
+		$this->_select = 'CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) `customer`, a.id_cart total, ca.name carrier, 
+		IF (IFNULL(o.id_order, \''.$this->l('Non ordered').'\') = \''.$this->l('Non ordered').'\', IF(TIME_TO_SEC(TIMEDIFF(NOW(), a.`date_add`)) > 86400, \''.$this->l('Abandoned cart').'\', \''.$this->l('Non ordered').'\'), o.id_order) id_order, IF(o.id_order, 1, 0) badge_success, IF(o.id_order, 0, 1) badge_danger, IF(co.id_guest, 1, 0) id_guest';
 		$this->_join = 'LEFT JOIN '._DB_PREFIX_.'customer c ON (c.id_customer = a.id_customer)
 		LEFT JOIN '._DB_PREFIX_.'currency cu ON (cu.id_currency = a.id_currency)
 		LEFT JOIN '._DB_PREFIX_.'carrier ca ON (ca.id_carrier = a.id_carrier)
 		LEFT JOIN '._DB_PREFIX_.'orders o ON (o.id_cart = a.id_cart)
 		LEFT JOIN `'._DB_PREFIX_.'connections` co ON (a.id_guest = co.id_guest AND TIME_TO_SEC(TIMEDIFF(NOW(), co.`date_add`)) < 1800)';
+
+		if (Tools::getValue('action') && Tools::getValue('action') == 'filterOnlyAbandonedCarts')
+			$this->_having = 'id_order = \''.$this->l('Abandoned cart').'\'';
+
 
 		$this->fields_list = array(
 			'id_cart' => array(
@@ -86,7 +91,7 @@ class AdminCartsControllerCore extends AdminController
 				'align' => 'text-center',
 				'type' => 'bool',
 				'havingFilter' => true,
-				'icon' => array(0 => 'blank.gif', 1 => 'tab-customers.gif')
+				'icon' => array(0 => 'icon-', 1 => 'icon-user')
 			)
 		);
  		$this->shopLinkType = 'shop';
@@ -142,8 +147,8 @@ class AdminCartsControllerCore extends AdminController
 		$helper->title = $this->l('Abandoned Carts', null, null, false);
 		$date_from = date(Context::getContext()->language->date_format_lite, strtotime('-2 day'));
 		$date_to = date(Context::getContext()->language->date_format_lite, strtotime('-1 day'));
-		$helper->subtitle = $this->l('From '.$date_from.' to '.$date_to, null, null, false);
-		$helper->href = $this->context->link->getAdminLink('AdminCarts');
+		$helper->subtitle = sprintf($this->l('From %s to %s', null, null, false), $date_from, $date_to);
+		$helper->href = $this->context->link->getAdminLink('AdminCarts').'&action=filterOnlyAbandonedCarts';
 		if (ConfigurationKPI::get('ABANDONED_CARTS') !== false)
 			$helper->value = ConfigurationKPI::get('ABANDONED_CARTS');
 		if (ConfigurationKPI::get('ABANDONED_CARTS_EXPIRE') < $time)
@@ -178,6 +183,7 @@ class AdminCartsControllerCore extends AdminController
 		$helper->kpis = $kpis;
 		return $helper->generate();
 	}
+
 
 	public function renderView()
 	{
@@ -238,13 +244,9 @@ class AdminCartsControllerCore extends AdminController
 			}
 			$image = array();
 			if (isset($product['id_product_attribute']) && (int)$product['id_product_attribute'])
-				$image = Db::getInstance()->getRow('SELECT id_image
-																FROM '._DB_PREFIX_.'product_attribute_image
-																WHERE id_product_attribute = '.(int)$product['id_product_attribute']);
+				$image = Db::getInstance()->getRow('SELECT id_image FROM '._DB_PREFIX_.'product_attribute_image WHERE id_product_attribute = '.(int)$product['id_product_attribute']);
 			if (!isset($image['id_image']))
-				$image = Db::getInstance()->getRow('SELECT id_image
-																FROM '._DB_PREFIX_.'image
-																WHERE id_product = '.(int)$product['id_product'].' AND cover = 1');
+				$image = Db::getInstance()->getRow('SELECT id_image FROM '._DB_PREFIX_.'image WHERE id_product = '.(int)$product['id_product'].' AND cover = 1');
 
 			$product_obj = new Product($product['id_product']);
 			$product['qty_in_stock'] = StockAvailable::getQuantityAvailableByProduct($product['id_product'], isset($product['id_product_attribute']) ? $product['id_product_attribute'] : null, (int)$id_shop);
@@ -253,7 +255,17 @@ class AdminCartsControllerCore extends AdminController
 			$product['image'] = (isset($image['id_image']) ? ImageManager::thumbnail(_PS_IMG_DIR_.'p/'.$image_product->getExistingImgPath().'.jpg', 'product_mini_'.(int)$product['id_product'].(isset($product['id_product_attribute']) ? '_'.(int)$product['id_product_attribute'] : '').'.jpg', 45, 'jpg') : '--');
 		}
 
+		$helper = new HelperKpi();
+		$helper->id = 'box-kpi-cart';
+		$helper->icon = 'icon-shopping-cart';
+		$helper->color = 'color1';
+		$helper->title = $this->l('Total Cart', null, null, false);
+		$helper->subtitle = sprintf($this->l('Cart #%06d', null, null, false), $cart->id);
+		$helper->value = Tools::displayPrice($total_price, $currency);
+		$kpi = $helper->generate();
+
 		$this->tpl_view_vars = array(
+			'kpi' => $kpi,
 			'products' => $products,
 			'discounts' => $cart->getCartRules(),
 			'order' => $order,

@@ -61,7 +61,7 @@ class PrestaShopAutoload
 	protected function __construct()
 	{
 		$this->root_dir = _PS_CORE_DIR_.'/';
-		$file = $this->root_dir.PrestaShopAutoload::INDEX_FILE;
+		$file = _PS_ROOT_DIR_.PrestaShopAutoload::INDEX_FILE;
 		if (@filemtime($file) && is_readable($file))
 			$this->index = include($file);
 		else
@@ -113,8 +113,12 @@ class PrestaShopAutoload
 				// request a non Core Class load the associated Core class if exists
 				if (isset($this->index[$classname.'Core']))
 					require_once($this->root_dir.$this->index[$classname.'Core']['path']);
+
+				$class_dir = (isset($this->index[$classname]['override'])
+					&& $this->index[$classname]['override'] === true) ? _PS_ROOT_DIR_ : $this->root_dir;
+
 				if (isset($this->index[$classname]))
-					require_once($this->root_dir.$this->index[$classname]['path']);
+					require_once($class_dir.$this->index[$classname]['path']);
 			}
 		}
 		// Call directly ProductCore, ShopCore class
@@ -135,15 +139,15 @@ class PrestaShopAutoload
 		if ($this->_include_override_path)
 			$classes = array_merge(
 				$classes,
-				$this->getClassesFromDir('override/classes/'),
-				$this->getClassesFromDir('override/controllers/')
+				$this->getClassesFromDir('override/classes/', defined('_PS_HOST_MODE_')),
+				$this->getClassesFromDir('override/controllers/', defined('_PS_HOST_MODE_'))
 			);
 
 		ksort($classes);
 		$content = '<?php return '.var_export($classes, true).'; ?>';
 
 		// Write classes index on disc to cache it
-		$filename = $this->root_dir.PrestaShopAutoload::INDEX_FILE;
+		$filename = _PS_ROOT_DIR_.PrestaShopAutoload::INDEX_FILE;
 		$filename_tmp = tempnam(dirname($filename), basename($filename.'.'));
 		if ($filename_tmp !== false && file_put_contents($filename_tmp, $content) !== false)
 		{
@@ -164,32 +168,35 @@ class PrestaShopAutoload
 	 * @param string $path Relativ path from root to the directory
 	 * @return array
 	 */
-	protected function getClassesFromDir($path)
+	protected function getClassesFromDir($path, $host_mode = false)
 	{
 		$classes = array();
+		$root_dir = $host_mode ? _PS_ROOT_DIR_ : $this->root_dir;
 
-		foreach (scandir($this->root_dir.$path) as $file)
+		foreach (scandir($root_dir.$path) as $file)
 		{
 			if ($file[0] != '.')
 			{
-				if (is_dir($this->root_dir.$path.$file))
-					$classes = array_merge($classes, $this->getClassesFromDir($path.$file.'/'));
+				if (is_dir($root_dir.$path.$file))
+					$classes = array_merge($classes, $this->getClassesFromDir($path.$file.'/', $host_mode));
 				else if (substr($file, -4) == '.php')
 				{
-					$content = file_get_contents($this->root_dir.$path.$file);
+					$content = file_get_contents($root_dir.$path.$file);
 			 		$pattern = '#\W((abstract\s+)?class|interface)\s+(?P<classname>'.basename($file, '.php').'(?:Core)?)'
 			 					.'(?:\s+extends\s+[a-z][a-z0-9_]*)?(?:\s+implements\s+[a-z][a-z0-9_]*(?:\s*,\s*[a-z][a-z0-9_]*)*)?\s*\{#i';
 			 		if (preg_match($pattern, $content, $m))
 			 		{
 			 			$classes[$m['classname']] = array(
 			 				'path' => $path.$file,
-			 				'type' => trim($m[1])
+			 				'type' => trim($m[1]),
+			 				'override' => $host_mode
 			 			);
 
 						if (substr($m['classname'], -4) == 'Core')
 							$classes[substr($m['classname'], 0, -4)] = array(
 								'path' => '',
-								'type' => $classes[$m['classname']]['type']
+								'type' => $classes[$m['classname']]['type'],
+								'override' => $host_mode
 							);
 			 		}
 				}

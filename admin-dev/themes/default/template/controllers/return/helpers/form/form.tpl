@@ -63,7 +63,7 @@
 						<td>{$returnedCustomization['name']}</td>
 						<td class="text-center">{$returnedCustomization['product_quantity']|intval}</td>
 						<td class="text-center">
-							<a class="btn btn-default" href="{$current}&amp;deleteorder_return_detail&amp;id_order_detail={$returnedCustomization['id_order_detail']}&amp;id_order_return={$id_order_return}&amp;id_customization={$returnedCustomization['id_customization']}&amp;token={$token}">
+							<a class="btn btn-default" href="{$current|escape:'html':'UTF-8'}&amp;deleteorder_return_detail&amp;id_order_detail={$returnedCustomization['id_order_detail']}&amp;id_order_return={$id_order_return}&amp;id_customization={$returnedCustomization['id_customization']}&amp;token={$token|escape:'html':'UTF-8'}">
 								<i class="icon-remove"></i>
 								{l s='Delete'}
 							</a>
@@ -82,7 +82,7 @@
 											<div class="form-group">
 												<span class="col-lg-3 control-label"><strong>{l s='Attachment'}</strong></span>
 												<div class="col-lg-9">
-													<a href="displayImage.php?img={$data['value']}&name={$returnedCustomization['id_order_detail']|intval}-file{$smarty.foreach.data.iteration.iteration}" target="_blank"><img class="img-thumbnail" src="{$picture_folder}{$data['value']}_small" alt="" /></a>
+													<a href="displayImage.php?img={$data['value']}&amp;name={$returnedCustomization['id_order_detail']|intval}-file{$smarty.foreach.data.iteration.iteration}" target="_blank"><img class="img-thumbnail" src="{$picture_folder}{$data['value']}_small" alt="" /></a>
 												</div>
 											</div>
 										{/foreach}
@@ -114,7 +114,7 @@
 							<td class="text-center">{$product['product_name']}</td>
 							<td class="text-center">{$product['product_quantity']}</td>
 							<td class="text-center">
-								<a class="btn btn-default"  href="{$current}&amp;deleteorder_return_detail&amp;id_order_detail={$product['id_order_detail']}&amp;id_order_return={$id_order_return}&amp;token={$token}">
+								<a class="btn btn-default"  href="{$current|escape:'html':'UTF-8'}&amp;deleteorder_return_detail&amp;id_order_detail={$product['id_order_detail']}&amp;id_order_return={$id_order_return}&amp;token={$token|escape:'html':'UTF-8'}">
 									<i class="icon-remove"></i>
 									{l s='Delete'}
 								</a>

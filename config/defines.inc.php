@@ -51,13 +51,24 @@ if (!defined('PHP_VERSION_ID'))
     define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
 }
 
+if (!defined('_PS_VERSION_') && (getenv('_PS_VERSION_') || getenv('REDIRECT__PS_VERSION_')))
+	define('_PS_VERSION_', getenv('_PS_VERSION_') ? getenv('_PS_VERSION_') : getenv('REDIRECT__PS_VERSION_'));
+
+if (!defined('_PS_HOST_MODE_') && (getenv('_PS_HOST_MODE_') || getenv('REDIRECT__PS_HOST_MODE_')))
+	define('_PS_HOST_MODE_', getenv('_PS_HOST_MODE_') ? getenv('_PS_HOST_MODE_') : getenv('REDIRECT__PS_HOST_MODE_'));
+
+if (!defined('_PS_ROOT_DIR_') && (getenv('_PS_ROOT_DIR_') || getenv('REDIRECT__PS_ROOT_DIR_')))
+	define('_PS_ROOT_DIR_', getenv('_PS_ROOT_DIR_') ? getenv('_PS_ROOT_DIR_') : getenv('REDIRECT__PS_ROOT_DIR_'));
+
 /* Directories */
 if (!defined('_PS_ROOT_DIR_'))
 {
 	define('_PS_ROOT_DIR_', realpath($currentDir.'/..'));
-	define('_PS_CORE_DIR_', _PS_ROOT_DIR_);
+
+	if (!defined('_PS_CORE_DIR_'))
+		define('_PS_CORE_DIR_', _PS_ROOT_DIR_);
 }
-else
+elseif (!defined('_PS_CORE_DIR_'))
 	define('_PS_CORE_DIR_', realpath($currentDir.'/..'));
 
 define('_PS_ALL_THEMES_DIR_',        _PS_ROOT_DIR_.'/themes/');
@@ -182,4 +193,3 @@ define('_PS_SMARTY_CONSOLE_OPEN_BY_URL_', 1);
 define('_PS_SMARTY_CONSOLE_OPEN_', 2);
 
 define('_PS_JQUERY_VERSION_', '1.11.0');
-

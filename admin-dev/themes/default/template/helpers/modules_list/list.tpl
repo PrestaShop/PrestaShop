@@ -22,29 +22,40 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 <div class="panel">
 	<h3>
 		<i class="icon-list-ul"></i>
-		{l s='Modules list'}
+		{if isset($panel_title)}{$panel_title|escape:'html':'UTF-8'}{else}{l s='Modules list'}{/if}
 	</h3>
-	<div id="modules_list_container_tab" class="row">
+	<div class="modules_list_container_tab row">
 		<div class="col-lg-12">
 			{if count($modules_list)}
 				<table class="table">
 					{counter start=1  assign="count"}
 						{foreach from=$modules_list item=module}	
-							<div>{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",row alt"}}</div>
-							{if $count %3 == 0}
-							{/if}
+							{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",row alt"}}
 						{counter}
 					{/foreach}
 				</table>
+				{if $controller_name == 'AdminPayment' && isset($view_all)}
+					<div class="panel-footer">
+						<div class="col-lg-4 col-lg-offset-4">
+							<a class="btn btn-default btn-block" href="index.php?tab=AdminModules&amp;token={getAdminToken tab='AdminModules'}&amp;filterCategory=payments_gateways">
+								<i class="process-icon-payment"></i>
+								{l s='View all available payments solutions'}
+							</a>
+						</div>
+					</div>
+				{/if}
 			{else}
 				<table class="table">
 					<tr>
 						<td>
-							<div class="alert alert-warning">{l s='No modules available in this section.'}</div>
+							<div class="alert alert-warning">
+							{if $controller_name == 'AdminPayment'}
+							{l s='It seems there are no recommended payment solutions for your country.'}<br />
+							<a target="_blank" href="http://www.prestashop.com/en/contribute-prestashop-localization">{l s='Do you think there should be one? Let us know!'}</a>
+							{else}{l s='No modules available in this section.'}{/if}</div>
 						</td>
 					</tr>
 				</table>
@@ -52,7 +63,6 @@
 		</div>
 	</div>
 </div>
-
 <script type="text/javascript">
 	$(document).ready(function(){
 		$('.fancybox-quick-view').fancybox({

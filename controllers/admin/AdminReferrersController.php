@@ -414,7 +414,13 @@ class AdminReferrersControllerCore extends AdminController
 		{
 			$tpl = $this->createTemplate('form_settings.tpl');
 
+			$statsdata = Module::getInstanceByName('statsdata');
+
+			$statsdata_name = false;
+			if (Validate::isLoadedObject($statsdata))
+				$statsdata_name = $statsdata->displayName;
 			$tpl->assign(array(
+				'statsdata_name' => $statsdata_name,
 				'current' => self::$currentIndex,
 				'token' => $this->token,
 				'tracking_dt' => (int)Tools::getValue('tracking_dt', Configuration::get('TRACKING_DIRECT_TRAFFIC'))

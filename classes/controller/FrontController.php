@@ -76,8 +76,12 @@ class FrontControllerCore extends Controller
 		if (isset($this->php_self)  && is_object(Context::getContext()->theme))
 		{
 			$colums = Context::getContext()->theme->hasColumns($this->php_self);
-			$this->display_column_left = $colums['left_column'];
-			$this->display_column_right = $colums['right_column'];
+			// don't use theme tables if not configurated in DB
+			if ($colums)
+			{
+				$this->display_column_left = $colums['left_column'];
+				$this->display_column_right = $colums['right_column'];
+			}
 		}
 	}
 
@@ -333,6 +337,7 @@ class FrontControllerCore extends Controller
 			'modules_dir' => _MODULE_DIR_,
 			'mail_dir' => _MAIL_DIR_,
 			'lang_iso' => $this->context->language->iso_code,
+			'language_code' => $this->context->language->language_code ? $this->context->language->language_code : $this->context->language->iso_code,
 			'come_from' => Tools::getHttpHost(true, true).Tools::htmlentitiesUTF8(str_replace(array('\'', '\\'), '', urldecode($_SERVER['REQUEST_URI']))),
 			'cart_qties' => (int)$cart->nbProducts(),
 			'currencies' => Currency::getCurrencies(),
@@ -480,7 +485,7 @@ class FrontControllerCore extends Controller
 
 		$this->context->smarty->assign(array(
 			'css_files' => $this->css_files,
-			'js_files' => $this->getLayout() ? array() : $this->js_files
+			'js_files' => ($this->getLayout() && (bool)Configuration::get('PS_JS_DEFER')) ? array() : $this->js_files
 		));
 
 		$this->display_header = $display;
@@ -535,30 +540,27 @@ class FrontControllerCore extends Controller
 
 		$this->context->smarty->assign(array(
 			'css_files' => $this->css_files,
-			'js_files' => $this->getLayout() ? array() : $this->js_files,
+			'js_files' => ($this->getLayout() && (bool)Configuration::get('PS_JS_DEFER')) ? array() : $this->js_files,
+			'js_defer' => (bool)Configuration::get('PS_JS_DEFER'),
 			'errors' => $this->errors,
 			'display_header' => $this->display_header,
 			'display_footer' => $this->display_footer,
 		));
-		
-		$live_edit_content = '';
-		// Don't use live edit if on mobile theme
-		if (!$this->useMobileTheme() && $this->checkLiveEditAccess())
-			$live_edit_content = $this->getLiveEditFooter();
-		
+				
 		$layout = $this->getLayout();
 		if ($layout)
 		{
 			if ($this->template)
-				$this->context->smarty->assign('template', $this->context->smarty->fetch($this->template).$live_edit_content);
+				$template = $this->context->smarty->fetch($this->template);
 			else // For retrocompatibility with 1.4 controller
 			{
 				ob_start();
 				$this->displayContent();
 				$template = ob_get_contents();
 				ob_clean();
-				$this->context->smarty->assign('template', $template.$live_edit_content);
+
 			}
+			$template = $this->context->smarty->assign('template', $template);
 			$this->smartyOutputContent($layout);
 		}
 		else
@@ -593,7 +595,9 @@ class FrontControllerCore extends Controller
 					'HOOK_MAINTENANCE' => Hook::exec('displayMaintenance', array()),
 				));
 
-				$this->smartyOutputContent($this->getTemplatePath($this->getThemeDir().'maintenance.tpl'));
+				// If the controller is a module, then getTemplatePath will try to find the template in the modules, so we need to instanciate a real frontcontroller
+				$front_controller = preg_match('/ModuleFrontController$/', get_class($this)) ? new FrontController() : $this;
+				$this->smartyOutputContent($front_controller->getTemplatePath($this->getThemeDir().'maintenance.tpl'));
 				exit;
 			}
 		}
@@ -731,7 +735,7 @@ class FrontControllerCore extends Controller
 			$this->addjqueryPlugin('fancybox');
 		}
 
-		if (!file_exists($this->getThemeDir().'js/autoload/'))
+		if (!file_exists($this->getThemeDir().'css/autoload/'))
 		{
 			$this->addCSS(_THEME_MOBILE_CSS_DIR_.'jquery.mobile-1.3.0.min.css', 'all');
 			$this->addCSS(_THEME_MOBILE_CSS_DIR_.'jqm-docs.css', 'all');
@@ -885,13 +889,16 @@ class FrontControllerCore extends Controller
 		// Retrieve the default number of products per page and the other available selections
 		$default_products_per_page = max(1, (int)Configuration::get('PS_PRODUCTS_PER_PAGE'));
 		$nArray = array($default_products_per_page, $default_products_per_page * 2, $default_products_per_page * 5);
-		
+
+		if ((int)Tools::getValue('n') && (int)$total_products > 0)
+			$nArray[] = $total_products;
 		// Retrieve the current number of products per page (either the default, the GET parameter or the one in the cookie)
 		$this->n = $default_products_per_page;
-		if ((int)Tools::getValue('n') > 0 && in_array((int)Tools::getValue('n'), $nArray))
+		if (isset($this->context->cookie->nb_item_per_page) && in_array($this->context->cookie->nb_item_per_page, $nArray))
+				$this->n = (int)$this->context->cookie->nb_item_per_page;
+			
+		if ((int)Tools::getValue('n') && in_array((int)Tools::getValue('n'), $nArray))
 			$this->n = (int)Tools::getValue('n');
-		elseif (isset($this->context->cookie->nb_item_per_page) && in_array($this->context->cookie->nb_item_per_page, $nArray))
-			$this->n = (int)$this->context->cookie->nb_item_per_page;
 
 		// Retrieve the page number (either the GET parameter or the first page)
 		$this->p = (int)Tools::getValue('p', 1);
@@ -902,7 +909,7 @@ class FrontControllerCore extends Controller
 		// Remove the page parameter in order to get a clean URL for the pagination template
 		$current_url = preg_replace('/(\?)?(&amp;)?p=\d+/', '$1', Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']));
 
-		if ($this->n != $default_products_per_page)
+		if ($this->n != $default_products_per_page || isset($this->context->cookie->nb_item_per_page))
 			$this->context->cookie->nb_item_per_page = $this->n;
 
 		$pages_nb = ceil($total_products / (int)$this->n);
@@ -1221,6 +1228,7 @@ class FrontControllerCore extends Controller
 		$this->context->smarty->assign('display_manufacturer_link', (bool)$blockmanufacturer->active);
 		$this->context->smarty->assign('display_supplier_link', (bool)$blocksupplier->active);
 		$this->context->smarty->assign('PS_DISPLAY_SUPPLIERS', Configuration::get('PS_DISPLAY_SUPPLIERS'));
+		$this->context->smarty->assign('PS_DISPLAY_BEST_SELLERS', Configuration::get('PS_DISPLAY_BEST_SELLERS'));
 		$this->context->smarty->assign('display_store', Configuration::get('PS_STORES_DISPLAY_SITEMAP'));
 		$this->context->smarty->assign('conditions', Configuration::get('PS_CONDITIONS'));
 		$this->context->smarty->assign('id_cgv', Configuration::get('PS_CONDITIONS_CMS_ID'));
@@ -1270,6 +1278,8 @@ class FrontControllerCore extends Controller
 		foreach ($products as &$product)
 			if (!$this->isCached(_PS_THEME_DIR_.'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product'])))
 				$products_need_cache[] = (int)$product['id_product']; 
+		
+		unset($product);
 
 		$colors = false;
 		if (count($products_need_cache))
@@ -1283,8 +1293,11 @@ class FrontControllerCore extends Controller
 					$tpl->assign(array(
 						'id_product' => $product['id_product'],
 						'colors_list' => $colors[$product['id_product']],
-						'link' => Context::getContext()->link
+						'link' => Context::getContext()->link,
+						'img_col_dir' => _THEME_COL_DIR_,
+						'col_img_dir' => _PS_COL_IMG_DIR_
 					));
+
 			if (!in_array($product['id_product'], $products_need_cache) || isset($colors[$product['id_product']]))
 				$product['color_list'] = $tpl->fetch(_PS_THEME_DIR_.'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']));
 			else

@@ -45,7 +45,7 @@ class AdminImportControllerCore extends AdminController
 
 	public $available_fields = array();
 
-	public $required_fields = array('name');
+	public $required_fields = array();
 
 	public $cache_image_deleted = array();
 
@@ -182,7 +182,7 @@ class AdminImportControllerCore extends AdminController
 					'no' => array('label' => $this->l('Ignore this column')),
 					'id' => array('label' => $this->l('ID')),
 					'active' => array('label' => $this->l('Active (0/1)')),
-					'name' => array('label' => $this->l('Name *')),
+					'name' => array('label' => $this->l('Name')),
 					'parent' => array('label' => $this->l('Parent category')),
 					'is_root_category' => array(
 						'label' => $this->l('Root category (0/1)'),
@@ -217,7 +217,7 @@ class AdminImportControllerCore extends AdminController
 					'no' => array('label' => $this->l('Ignore this column')),
 					'id' => array('label' => $this->l('ID')),
 					'active' => array('label' => $this->l('Active (0/1)')),
-					'name' => array('label' => $this->l('Name *')),
+					'name' => array('label' => $this->l('Name')),
 					'category' => array('label' => $this->l('Categories (x,y,z...)')),
 					'price_tex' => array('label' => $this->l('Price tax excluded')),
 					'price_tin' => array('label' => $this->l('Price tax included')),
@@ -243,8 +243,8 @@ class AdminImportControllerCore extends AdminController
 					'minimal_quantity' => array('label' => $this->l('Minimal quantity')),
 					'visibility' => array('label' => $this->l('Visibility')),
 					'additional_shipping_cost' => array('label' => $this->l('Additional shipping cost')),
-					'unity' => array('label' => $this->l('Unity')),
-					'unit_price_ratio' => array('label' => $this->l('Unit price ratio')),
+					'unity' => array('label' => $this->l('Unit for the unit price')),
+					'unit_price' => array('label' => $this->l('Unit price')),
 					'description_short' => array('label' => $this->l('Short description')),
 					'description' => array('label' => $this->l('Description')),
 					'tags' => array('label' => $this->l('Tags (x,y,z...)')),
@@ -262,7 +262,7 @@ class AdminImportControllerCore extends AdminController
 					'delete_existing_images' => array(
 						'label' => $this->l('Delete existing images (0 = No, 1 = Yes)')
 					),
-					'features' => array('label' => $this->l('Feature(Name:Value:Position:Customized)')),
+					'features' => array('label' => $this->l('Feature (Name:Value:Position:Customized)')),
 					'online_only' => array('label' => $this->l('Available online only (0 = No, 1 = Yes)')),
 					'condition' => array('label' => $this->l('Condition')),
 					'customizable' => array('label' => $this->l('Customizable (0 = No, 1 = Yes)')),
@@ -297,7 +297,7 @@ class AdminImportControllerCore extends AdminController
 					'weight' => 0.000000,
 					'visibility' => 'both',
 					'additional_shipping_cost' => 0.00,
-					'unit_price_ratio' => 0.000000,
+					'unit_price' => 0,
 					'quantity' => 0,
 					'minimal_quantity' => 1,
 					'price' => 0,
@@ -404,7 +404,7 @@ class AdminImportControllerCore extends AdminController
 					'no' => array('label' => $this->l('Ignore this column')),
 					'id' => array('label' => $this->l('ID')),
 					'active' => array('label' => $this->l('Active (0/1)')),
-					'name' => array('label' => $this->l('Name *')),
+					'name' => array('label' => $this->l('Name')),
 					'description' => array('label' => $this->l('Description')),
 					'short_description' => array('label' => $this->l('Short description')),
 					'meta_title' => array('label' => $this->l('Meta title')),
@@ -602,7 +602,7 @@ class AdminImportControllerCore extends AdminController
 
 		$this->tpl_form_vars = array(
 			'post_max_size' => (int)$bytes,
-			'module_confirmation' => (Tools::getValue('import')) && (isset($this->warnings) && !count($this->warnings)),
+			'module_confirmation' => Tools::isSubmit('import') && (isset($this->warnings) && !count($this->warnings)),
 			'path_import' => AdminImportController::getPath(),
 			'entities' => $this->entities,
 			'entity_selected' => $entity_selected,
@@ -652,12 +652,12 @@ class AdminImportControllerCore extends AdminController
 		elseif (!preg_match('/.*\.csv$/i', $_FILES['file']['name']))
 			$_FILES['file']['error'] = Tools::displayError('The extension of your file should be .csv.');
 		elseif (!@filemtime($_FILES['file']['tmp_name']) ||
-			!@move_uploaded_file($_FILES['file']['tmp_name'], AdminImportController::getPath().$filename_prefix.$_FILES['file']['name']))
+			!@move_uploaded_file($_FILES['file']['tmp_name'], AdminImportController::getPath().$filename_prefix.str_replace("\0", '', $_FILES['file']['name'])))
 			$_FILES['file']['error'] = $this->l('An error occurred while uploading / copying the file.');
 		else
 		{
 			@chmod(AdminImportController::getPath().$filename_prefix.$_FILES['file']['name'], 0664);
-			$_FILES['file']['filename'] = $filename_prefix.$_FILES['file']['name'];
+			$_FILES['file']['filename'] = $filename_prefix.str_replace('\0', '', $_FILES['file']['name']);
 		}
 
 		die(Tools::jsonEncode($_FILES));
@@ -927,9 +927,6 @@ class AdminImportControllerCore extends AdminController
 			foreach (self::$column_mask as $type => $nb)
 				$res[$type] = isset($row[$nb]) ? $row[$nb] : null;
 
-		if (Tools::getValue('forceIds')) // if you choose to force table before import the column id is removed from the CSV file.
-			unset($res['id']);
-
 		return $res;
 	}
 
@@ -1181,6 +1178,7 @@ class AdminImportControllerCore extends AdminController
 				if ($category->id == Configuration::get('PS_ROOT_CATEGORY'))
 					$this->errors[] = Tools::displayError('The root category cannot be modified.');
 				// If no id_category or update failed
+				$category->force_id = (bool)Tools::getValue('forceIDs');
 				if (!$res)
 					$res = $category->add();
 			}
@@ -1506,6 +1504,7 @@ class AdminImportControllerCore extends AdminController
 					$res = $product->update();
 				}
 				// If no id_product or update failed
+				$product->force_id = (bool)Tools::getValue('forceIDs');
 				if (!$res)
 				{
 					if (isset($product->date_add) && $product->date_add != '')
@@ -2373,6 +2372,7 @@ class AdminImportControllerCore extends AdminController
 			{
 				foreach ($customers_shop as $id_shop => $id_group)
 				{
+					$customer->force_id = (bool)Tools::getValue('forceIDs');
 					if ($id_shop == 'shared')
 					{
 						foreach ($id_group as $key => $id)
@@ -2632,7 +2632,8 @@ class AdminImportControllerCore extends AdminController
 					}
 				}
 				else
-				{
+				{						
+					$address->force_id = (bool)Tools::getValue('forceIDs');
 					if ($address->id && $address->addressExists($address->id))
 						$res = $address->update();
 					if (!$res)
@@ -2684,6 +2685,7 @@ class AdminImportControllerCore extends AdminController
 			{
 				if ($manufacturer->id && $manufacturer->manufacturerExists($manufacturer->id))
 					$res = $manufacturer->update();
+				$manufacturer->force_id = (bool)Tools::getValue('forceIDs');
 				if (!$res)
 					$res = $manufacturer->add();
 
@@ -2762,6 +2764,7 @@ class AdminImportControllerCore extends AdminController
 				$res = false;
 				if ($supplier->id && $supplier->supplierExists($supplier->id))
 					$res = $supplier->update();
+				$supplier->force_id = (bool)Tools::getValue('forceIDs');
 				if (!$res)
 					$res = $supplier->add();
 
@@ -2840,6 +2843,7 @@ class AdminImportControllerCore extends AdminController
 			{
 				if ($alias->id && $alias->aliasExists($alias->id))
 					$res = $alias->update();
+				$alias->force_id = (bool)Tools::getValue('forceIDs');
 				if (!$res)
 					$res = $alias->add();
 
@@ -2946,7 +2950,10 @@ class AdminImportControllerCore extends AdminController
 				if ((int)$supply_order->id && ($supply_order->exists((int)$supply_order->id) || $supply_order->exists($supply_order->reference)))
 					$res &= $supply_order->update();
 				else
+				{
+					$supply_order->force_id = (bool)Tools::getValue('forceIDs');
 					$res &= $supply_order->add();
+				}
 
 				// errors
 				if (!$res)
@@ -3059,7 +3066,7 @@ class AdminImportControllerCore extends AdminController
 					$supply_order_detail->reference = $product_infos['reference'];
 					$supply_order_detail->ean13 = $product_infos['ean13'];
 					$supply_order_detail->upc = $product_infos['upc'];
-
+					$supply_order_detail->force_id = (bool)Tools::getValue('forceIDs');
 					$supply_order_detail->add();
 					$supply_order->update();
 					unset($supply_order_detail);
@@ -3406,4 +3413,3 @@ class AdminImportControllerCore extends AdminController
 			.DIRECTORY_SEPARATOR.$file;
 	}
 }
-

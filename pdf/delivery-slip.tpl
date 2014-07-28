@@ -107,19 +107,44 @@
 					<td style="background-color: #4D4D4D; color: #FFF; text-align: left; font-weight: bold; width: 20%">{l s='REFERENCE' pdf='true'}</td>
 					<td style="background-color: #4D4D4D; color: #FFF; text-align: center; font-weight: bold; width: 20%">{l s='QTY' pdf='true'}</td>
 				</tr>
-				{foreach $order_details as $product}
+				{foreach $order_details as $order_detail}
 				{cycle values='#FFF,#DDD' assign=bgcolor}
 				<tr style="line-height:6px;background-color:{$bgcolor};">
-					<td style="text-align: left; width: 60%">{$product.product_name}</td>
+					<td style="text-align: left; width: 60%">{$order_detail.product_name}</td>
 					<td style="text-align: left; width: 20%">
-						{if empty($product.product_reference)}
+						{if empty($order_detail.product_reference)}
 							---
 						{else}
-							{$product.product_reference}
+							{$order_detail.product_reference}
 						{/if}
 					</td>
-					<td style="text-align: center; width: 20%">{$product.product_quantity}</td>
+					<td style="text-align: center; width: 20%">{$order_detail.product_quantity}</td>
 				</tr>
+					{foreach $order_detail.customizedDatas as $customizationPerAddress}
+						{foreach $customizationPerAddress as $customizationId => $customization}
+							<tr style="line-height:6px;background-color:{$bgcolor};">
+								<td style="line-height:3px; text-align: left; width: 60%; vertical-align: top">
+										<blockquote>
+											{if isset($customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_]) && count($customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_]) > 0}
+												{foreach $customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_] as $customization_infos}
+													{$customization_infos.name}: {$customization_infos.value}
+													{if !$smarty.foreach.custo_foreach.last}<br />
+													{else}
+													<div style="line-height:0.4pt">&nbsp;</div>
+													{/if}
+												{/foreach}
+											{/if}
+
+											{if isset($customization.datas[$smarty.const._CUSTOMIZE_FILE_]) && count($customization.datas[$smarty.const._CUSTOMIZE_FILE_]) > 0}
+												{count($customization.datas[$smarty.const._CUSTOMIZE_FILE_])} {l s='image(s)' pdf='true'}
+											{/if}
+										</blockquote>
+								</td>
+								<td style="text-align: right; width: 20%"></td>
+								<td style="text-align: center; width: 20%; vertical-align: top">({$customization.quantity})</td>
+							</tr>
+						{/foreach}
+					{/foreach}
 				{/foreach}
 			</table>
 		</td>

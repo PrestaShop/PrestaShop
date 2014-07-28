@@ -25,9 +25,10 @@
 {extends file="helpers/form/form.tpl"}
 
 {block name="input_row"}
-	{if $input.name == 'caching_system'}<div id="{$input.name}_wrapper"{if isset($_PS_CACHE_ENABLED_) && !$_PS_CACHE_ENABLED_} style="display: none;"{/if}>{/if}
+	{if $input.name == 'caching_system'}<div id="{$input.name}_wrapper"{if isset($_PS_CACHE_ENABLED_) && !$_PS_CACHE_ENABLED_} style="display:none"{/if}>{/if}
+	{if $input.name == 'smarty_caching_type' || $input.name == 'smarty_clear_cache'}<div id="{$input.name}_wrapper"{if isset($fields_value.smarty_cache) && !$fields_value.smarty_cache} style="display:none"{/if}>{/if}
 	{$smarty.block.parent}
-	{if $input.name == 'caching_system'}</div>{/if}
+	{if $input.name == 'caching_system' || $input.name == 'smarty_caching_type' || $input.name == 'smarty_clear_cache'}</div>{/if}
 {/block}
 
 {block name="input"}
@@ -67,7 +68,6 @@
 				</div>
 			</div>
 			<div id="formMemcachedServer" style="display:none;">
-				<form action="{$current}&amp;token={$token}" method="post" class="form-horizontal">
 					<div class="form-group">
 						<label class="control-label col-lg-3">{l s='IP Address'} </label>
 						<div class="col-lg-9">
@@ -92,7 +92,6 @@
 							<input type="button" value="{l s='Test Server'}" id="testMemcachedServer" class="btn btn-default" />
 	                	</div>
 					</div>
-				</form>
 			</div>
 			{if $servers}
 			<div class="form-group">
@@ -114,7 +113,7 @@
 						<td>{$server.port}</td>
 						<td>{$server.weight}</td>
 						<td>
-							<a class="btn btn-default" href="{$current}&amp;token={$token}&amp;deleteMemcachedServer={$server.id_memcached_server}" onclick="if (!confirm('{l s='Do you really want to remove the server %s:%s' sprintf=[$server.ip, $server.port] js=1}')) return false;"><i class="icon-minus-sign-alt"></i> {l s='Remove'}</a>
+							<a class="btn btn-default" href="{$currentIndex|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;deleteMemcachedServer={$server.id_memcached_server}" onclick="if (!confirm('{l s='Do you really want to remove the server %s:%s' sprintf=[$server.ip, $server.port] js=1}')) return false;"><i class="icon-minus-sign-alt"></i> {l s='Remove'}</a>
 						</td>
 					</tr>
 				{/foreach}
@@ -163,6 +162,11 @@
 				$('#ps_cache_fs_directory_depth').focus();
 		});
 
+		$('input[name="smarty_cache"]').change(function() {
+			$('#smarty_caching_type_wrapper').css('display', ($(this).val() == 1) ? 'block' : 'none');
+			$('#smarty_clear_cache_wrapper').css('display', ($(this).val() == 1) ? 'block' : 'none');
+		});
+
 		$('#addMemcachedServer').click(function() {
 			$('#formMemcachedServer').show();
 			return false;
@@ -178,7 +182,7 @@
 					data:
 					{
 						controller: 'adminperformance',
-						token: '{$token}',
+						token: '{$token|escape:'html':'UTF-8'}',
 						action: 'test_server',
 						sHost: host,
 						sPort: port,
@@ -203,7 +207,7 @@
 			return false;
 		});
 
-		$('input[name="smarty_force_compile"], input[name="smarty_cache"], input[name="smarty_console"], input[name="smarty_console_key"]').change(function(){
+		$('input[name="smarty_force_compile"], input[name="smarty_cache"], input[name="smarty_clear_cache"], input[name="smarty_caching_type"], input[name="smarty_console"], input[name="smarty_console_key"]').change(function(){
 			$('#smarty_up').val(1);
 		});
 

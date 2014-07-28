@@ -70,6 +70,18 @@
     <hook id="displayAdminOrder" live_edit="0">
       <name>displayAdminOrder</name><title>Display new elements in the Back Office, tab AdminOrder</title><description>This hook launches modules when the AdminOrder tab is displayed in the Back Office</description>
     </hook>
+    <hook id="displayAdminOrderTabOrder" live_edit="0">
+      <name>displayAdminOrderTabOrder</name><title>Display new elements in Back Office, AdminOrder, panel Order</title><description>This hook launches modules when the AdminOrder tab is displayed in the Back Office and extends / override Order panel tabs</description>
+    </hook>
+    <hook id="displayAdminOrderTabShip" live_edit="0">
+      <name>displayAdminOrderTabShip</name><title>Display new elements in Back Office, AdminOrder, panel Shipping</title><description>This hook launches modules when the AdminOrder tab is displayed in the Back Office and extends / override Shipping panel tabs</description>
+    </hook>
+    <hook id="displayAdminOrderContentOrder" live_edit="0">
+      <name>displayAdminOrderContentOrder</name><title>Display new elements in Back Office, AdminOrder, panel Order</title><description>This hook launches modules when the AdminOrder tab is displayed in the Back Office and extends / override Order panel content</description>
+    </hook>
+    <hook id="displayAdminOrderContentShip" live_edit="0">
+      <name>displayAdminOrderContentShip</name><title>Display new elements in Back Office, AdminOrder, panel Shipping</title><description>This hook launches modules when the AdminOrder tab is displayed in the Back Office and extends / override Shipping panel content</description>
+    </hook>
     <hook id="displayFooter" live_edit="0">
       <name>displayFooter</name><title>Footer</title><description>This hook displays new blocks in the footer</description>
     </hook>
@@ -291,6 +303,9 @@
     </hook>
     <hook id="displayNav" live_edit="1">
       <name>displayNav</name><title>Navigation</title><description></description>
+    </hook>
+    <hook id="displayOverrideTemplate" live_edit="0">
+      <name>displayOverrideTemplate</name><title>Change the default template of current controller</title><description></description>
     </hook>
   </entities>
 </entity_hook>

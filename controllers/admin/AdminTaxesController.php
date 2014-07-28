@@ -47,7 +47,7 @@ class AdminTaxesControllerCore extends AdminController
 			'id_tax' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
 			'name' => array('title' => $this->l('Name'), 'width' => 'auto'),
 			'rate' => array('title' => $this->l('Rate'), 'align' => 'center', 'suffix' => '%' , 'class' => 'fixed-width-md'),
-			'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'class' => 'fixed-width-sm')
+			'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'class' => 'fixed-width-sm', 'remove_onclick' => true)
 			);
 
 		$ecotax_desc = '';
@@ -94,7 +94,7 @@ class AdminTaxesControllerCore extends AdminController
 			),
 		);
 
-		if (Configuration::get('PS_USE_ECOTAX'))
+		if (Configuration::get('PS_USE_ECOTAX') || Tools::getValue('PS_USE_ECOTAX'))
 			$this->fields_options['general']['fields']['PS_ECOTAX_TAX_RULES_GROUP_ID'] = array(
 				'title' => $this->l('Ecotax'),
 				'hint' => $this->l('Define the ecotax (e.g. French ecotax: 19.6%).'),
@@ -133,7 +133,7 @@ class AdminTaxesControllerCore extends AdminController
 			self::$cache_lang['DeleteItem'] = $this->l('Delete item #', __CLASS__, true, false);
 
 		if (TaxRule::isTaxInUse($id))
-			$confirm = $this->l('This tax is currently in use as a tax rule. Are you sure you\'d like to continue?');
+			$confirm = $this->l('This tax is currently in use as a tax rule. Are you sure you\'d like to continue?', null, true, false);
 
 		$this->context->smarty->assign(array(
 			'href' => self::$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
@@ -157,8 +157,7 @@ class AdminTaxesControllerCore extends AdminController
 	public function displayEnableLink($token, $id, $value, $active, $id_category = null, $id_product = null)
 	{
 		if ($value && TaxRule::isTaxInUse($id))
-			$confirm = $this->l('This tax is currently in use as a tax rule. If you continue, this tax will be removed from the tax rule. Are you sure you\'d like to continue?');
-
+			$confirm = $this->l('This tax is currently in use as a tax rule. If you continue, this tax will be removed from the tax rule. Are you sure you\'d like to continue?', null, true, false);
 		$tpl_enable = $this->context->smarty->createTemplate('helpers/list/list_action_enable.tpl');
 		$tpl_enable->assign(array(
 			'enabled' => (bool)$value,

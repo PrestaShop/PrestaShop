@@ -5577,22 +5577,18 @@ span.exclusive {
 
 .button.button-medium.exclusive {
   border-color: #db8600 #d98305 #c86d26 #d98305;
-  background: #fdaa02;
-  background: -moz-linear-gradient(top, #fdaa02 0%, #fe9702 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fdaa02), color-stop(100%, #fe9702));
-  background: -webkit-linear-gradient(top, #fdaa02 0%, #fe9702 100%);
-  background: -o-linear-gradient(top, #fdaa02 0%, #fe9702 100%);
-  background: -ms-linear-gradient(top, #fdaa02 0%, #fe9702 100%);
-  background: linear-gradient(to bottom, #fdaa02 0%, #fe9702 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fdaa02', endColorstr='#fe9702',GradientType=0 ); }
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #fdaa02), color-stop(100%, #fe9702));
+  background-image: -webkit-linear-gradient(top, #fdaa02, #fe9702);
+  background-image: -moz-linear-gradient(top, #fdaa02, #fe9702);
+  background-image: -o-linear-gradient(top, #fdaa02, #fe9702);
+  background-image: linear-gradient(top, #fdaa02, #fe9702); }
   .button.button-medium.exclusive span {
     border-color: #fec133 #febc33 #feb233 #febc33; }
-    .button.button-medium.exclusive span:hover {
-      filter: none;
-      background: #f89609;
-      border-color: #a6550c #ba6708 #db8600 #ba6708; }
-      .button.button-medium.exclusive span:hover span {
-        border-color: #fec133; }
+  .button.button-medium.exclusive:hover {
+    background: #f89609;
+    border-color: #a6550c #ba6708 #db8600 #ba6708; }
+    .button.button-medium.exclusive:hover span {
+      border-color: #fec133; }
 
 .link-button {
   font-weight: bold; }
@@ -6795,7 +6791,8 @@ div.star a:hover {
     .footer-container #footer h4 {
       font: 600 18px/22px "Open Sans", sans-serif;
       color: white;
-      margin: 0 0 13px 0; }
+      margin: 0 0 13px 0;
+      cursor: pointer; }
       @media (max-width: 767px) {
         .footer-container #footer h4 {
           position: relative;
@@ -6927,10 +6924,12 @@ div.star a:hover {
   margin-left: 20px; }
 
 .rte ul {
-  list-style-type: disc; }
+  list-style-type: disc;
+  padding-left: 15px; }
 
 .rte ol {
-  list-style-type: decimal; }
+  list-style-type: decimal;
+  padding-left: 15px; }
 
 .block_hidden_only_for_screen {
   display: none; }
@@ -7053,6 +7052,12 @@ a.price_discount_delete {
 
 #cart_summary .stock-management-on tbody td.cart_description {
   width: 480px; }
+
+.cart_discount_price {
+  text-align: right; }
+
+.cart_discount_delete {
+  text-align: center; }
 
 @media (max-width: 767px) {
   #order-detail-content #cart_summary table, #order-detail-content #cart_summary thead, #order-detail-content #cart_summary tbody, #order-detail-content #cart_summary th, #order-detail-content #cart_summary td, #order-detail-content #cart_summary tr {
@@ -7236,9 +7241,7 @@ table#cart_summary .gift-icon {
       #order-opc .delivery_option > div > table.resume.delivery_option_carrier {
         margin-top: 10px;
         width: 100%;
-        background: #5192f3;
-        color: white;
-        border: 1px solid #4b80c3;
+        border: 1px solid #d6d4d4;
         font-weight: bold; }
         #order .delivery_option > div > table.resume.delivery_option_carrier td,
         #order-opc .delivery_option > div > table.resume.delivery_option_carrier td {
@@ -7386,7 +7389,7 @@ p.cheque-indent {
 .delivery_option_carrier.selected {
   display: table; }
 
-.delivery_option_carrier.not-displayable {
+.not-displayable {
   display: none; }
 
 #address .box,

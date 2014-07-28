@@ -34,6 +34,7 @@ define('_PS_SSL_PORT_', 443);
 ini_set('upload_max_filesize', '100M');
 ini_set('default_charset', 'utf-8');
 ini_set('magic_quotes_runtime', 0);
+ini_set('magic_quotes_sybase', 0);
 
 /* correct Apache charset (except if it's too late */
 if (!headers_sent())
@@ -114,6 +115,9 @@ $_MODULES = array();
 
 /* Load configuration */
 Configuration::loadConfiguration();
+
+if (Configuration::get('PS_USE_HTMLPURIFIER'))
+	require_once (_PS_TOOL_DIR_.'htmlpurifier/HTMLPurifier.standalone.php');
 
 /* Load all languages */
 Language::loadLanguages();

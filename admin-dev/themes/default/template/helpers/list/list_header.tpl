@@ -62,9 +62,14 @@
 		<script type="text/javascript" src="../js/admin-dnd.js"></script>
 	{/if}
 	<script type="text/javascript">
-		$(document).ready(function() {
-			$('table.{$list_id} .filter').keypress(function(event){
-				formSubmit(event, 'submitFilterButton{$list_id}')
+		$(function() {
+			$('table.{$list_id} .filter').keypress(function(e){
+				var key = (e.keyCode ? e.keyCode : e.which);
+				if (key == 13)
+				{
+					e.preventDefault();
+					formSubmit(e, 'submitFilterButton{$list_id}');
+				}
 			})
 			$('#submitFilterButton{$list_id}').click(function() {
 				$('#submitFilter{$list_id}').val(1);
@@ -73,7 +78,7 @@
 				$("table.{$list_id} .datepicker").datepicker({
 					prevText: '',
 					nextText: '',
-					dateFormat: 'yy-mm-dd'
+					altFormat: 'yy-mm-dd'
 				});
 			}
 		});
@@ -101,7 +106,7 @@
 <div class="alert alert-warning" id="{$list_id}-empty-filters-alert" style="display:none;">{l s='Please fill at least one field to perform a search in this list.'}</div>
 
 {block name="startForm"}
-	<form method="post" action="{$action}" class="form-horizontal clearfix" id="{$list_id}">
+	<form method="post" action="{$action|escape:'html':'UTF-8'}" class="form-horizontal clearfix" id="form-{$list_id}">
 {/block}
 
 {if !$simple_header}
@@ -115,14 +120,14 @@
 				<span class="panel-heading-action">
 				{foreach from=$toolbar_btn item=btn key=k}
 					{if $k != 'modules-list' && $k != 'back'}
-						<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="list-toolbar-btn" {if isset($btn.href)}href="{$btn.href}"{/if} {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if}>
+						<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="list-toolbar-btn"{if isset($btn.href)} href="{$btn.href|escape:'html':'UTF-8'}"{/if}{if isset($btn.target) && $btn.target} target="_blank"{/if}{if isset($btn.js) && $btn.js} onclick="{$btn.js}"{/if}>
 							<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s=$btn.desc}" data-html="true" data-placement="left">
-								<i class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if} {if isset($btn.class)}{$btn.class}{/if}" ></i>
+								<i class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}{if isset($btn.class)} {$btn.class}{/if}" ></i>
 							</span>
 						</a>
 					{/if}
 				{/foreach}
-					<a id="desc-{$table}-refresh" class="list-toolbar-btn" href="javascript:location.reload();">
+					<a class="list-toolbar-btn" href="javascript:location.reload();">
 						<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Refresh list'}" data-html="true" data-placement="left">
 							<i class="process-icon-refresh" ></i>
 						</span>
@@ -131,7 +136,7 @@
 			{/if}
 		</div>
 		{if $show_toolbar}
-			<script language="javascript" type="text/javascript">
+			<script type="text/javascript">
 				//<![CDATA[
 				var submited = false;
 				$(function() {
@@ -197,7 +202,7 @@
 {/if}
 	{block name="preTable"}{/block}
 	<div class="table-responsive clearfix{if isset($use_overflow) && $use_overflow} overflow-y{/if}">
-		<table {if $table_id} id={$table_id}{/if} class="table {if $table_dnd}tableDnD{/if} {$table}" >
+		<table{if $table_id} id="table-{$table_id}"{/if} class="table{if $table_dnd} tableDnD{/if} {$table}" >
 			<thead>
 				<tr class="nodrag nodrop">
 					{if $bulk_actions && $has_bulk_actions}
@@ -205,7 +210,7 @@
 					{/if}
 					{foreach $fields_display AS $key => $params}
 					<th class="{if isset($params.class)}{$params.class}{/if}{if isset($params.align)} {$params.align}{/if}">
-						<span class="title_box {if isset($order_by) && ($key == $order_by)} active{/if}">
+						<span class="title_box{if isset($order_by) && ($key == $order_by)} active{/if}">
 							{if isset($params.hint)}
 								<span class="label-tooltip" data-toggle="tooltip"
 									title="
@@ -228,10 +233,10 @@
 							{/if}
 
 							{if (!isset($params.orderby) || $params.orderby) && !$simple_header && $show_filters}
-								<a {if isset($order_by) && ($key == $order_by) && ($order_way == 'DESC')}class="active"{/if}  href="{$currentIndex}&amp;{$list_id}Orderby={$key|urlencode}&amp;{$list_id}Orderway=desc&amp;token={$token}{if isset($smarty.get.$identifier)}&{$identifier}={$smarty.get.$identifier|intval}{/if}">
+								<a {if isset($order_by) && ($key == $order_by) && ($order_way == 'DESC')}class="active"{/if}  href="{$current|escape:'html':'UTF-8'}&amp;{$list_id}Orderby={$key|urlencode}&amp;{$list_id}Orderway=desc&amp;token={$token|escape:'html':'UTF-8'}{if isset($smarty.get.$identifier)}&amp;{$identifier}={$smarty.get.$identifier|intval}{/if}">
 									<i class="icon-caret-down"></i>
 								</a>
-								<a {if isset($order_by) && ($key == $order_by) && ($order_way == 'ASC')}class="active"{/if} href="{$currentIndex}&amp;{$list_id}Orderby={$key|urlencode}&amp;{$list_id}Orderway=asc&amp;token={$token}{if isset($smarty.get.$identifier)}&{$identifier}={$smarty.get.$identifier|intval}{/if}">
+								<a {if isset($order_by) && ($key == $order_by) && ($order_way == 'ASC')}class="active"{/if} href="{$current|escape:'html':'UTF-8'}&amp;{$list_id}Orderby={$key|urlencode}&amp;{$list_id}Orderway=asc&amp;token={$token|escape:'html':'UTF-8'}{if isset($smarty.get.$identifier)}&amp;{$identifier}={$smarty.get.$identifier|intval}{/if}">
 									<i class="icon-caret-up"></i>
 								</a>
 							{/if}
@@ -244,7 +249,7 @@
 							{if $shop_link_type == 'shop'}
 								{l s='Shop'}
 							{else}
-								{l s='Group shop'}
+								{l s='Shop group'}
 							{/if}
 							</span>
 						</th>
@@ -274,18 +279,38 @@
 									</select>
 								{elseif $params.type == 'date' || $params.type == 'datetime'}
 									<div class="date_range row">
-										<div class="input-group fixed-width-md row-margin-bottom">
-											<input type="text" class="filter datepicker date-input form-control" id="{$params.id_date}_0" name="{$params.name_date}[0]" value="{if isset($params.value.0)}{$params.value.0}{/if}" placeholder="{l s='From'}"/>
+ 										<div class="input-group fixed-width-md">
+											<input type="text" class="filter datepicker date-input form-control" id="local_{$params.id_date}_0" name="local_{$params.name_date}[0]"  placeholder="{l s='From'}" />
+											<input type="hidden" id="{$params.id_date}_0" name="{$params.name_date}[0]" value="{if isset($params.value.0)}{$params.value.0}{/if}">
 											<span class="input-group-addon">
 												<i class="icon-calendar"></i>
 											</span>
 										</div>
-										<div class="input-group fixed-width-md">
-											<input type="text" class="filter datepicker date-input form-control" id="{$params.id_date}_1" name="{$params.name_date}[1]" value="{if isset($params.value.1)}{$params.value.1}{/if}" placeholder="{l s='To'}" />
+ 										<div class="input-group fixed-width-md">
+											<input type="text" class="filter datepicker date-input form-control" id="local_{$params.id_date}_1" name="local_{$params.name_date}[1]"  placeholder="{l s='To'}" />
+											<input type="hidden" id="{$params.id_date}_1" name="{$params.name_date}[1]" value="{if isset($params.value.1)}{$params.value.1}{/if}">
 											<span class="input-group-addon">
 												<i class="icon-calendar"></i>
 											</span>
 										</div>
+										<script>
+											$(function() {
+												var dateStart = parseDate($("#{$params.id_date}_0").val());
+												var dateEnd = parseDate($("#{$params.id_date}_1").val());
+												$("#local_{$params.id_date}_0").datepicker({
+													altField: "#{$params.id_date}_0"
+												});
+												$("#local_{$params.id_date}_1").datepicker({
+													altField: "#{$params.id_date}_1"
+												});
+												if (dateStart !== null){
+													$("#local_{$params.id_date}_0").datepicker("setDate", dateStart);
+												}
+												if (dateEnd !== null){
+													$("#local_{$params.id_date}_1").datepicker("setDate", dateEnd);
+												}
+											});
+										</script>
 									</div>
 								{elseif $params.type == 'select'}
 									{if isset($params.filter_key)}

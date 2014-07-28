@@ -43,11 +43,11 @@ class QuickAccessCore extends ObjectModel
 		'primary' => 'id_quick_access',
 		'multilang' => true,
 		'fields' => array(
-			'link' => 		array('type' => self::TYPE_STRING, 'validate' => 'isUrl', 'required' => true, 'size' => 128),
+			'link' => 		array('type' => self::TYPE_STRING, 'validate' => 'isUrl', 'required' => true, 'size' => 255),
 			'new_window' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
 
 			// Lang fields
-			'name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+			'name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 32),
 		),
 	);
 

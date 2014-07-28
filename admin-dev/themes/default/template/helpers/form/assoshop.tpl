@@ -93,8 +93,8 @@ function check_all_shop() {
 					<label>
 						<input class="input_shop_group"
 							type="checkbox"
-							name="checkBoxShopGroupAsso_{$table}[{$groupID}]"
-							value="{$groupID}"
+							name="checkBoxShopGroupAsso_{$table}[{$groupID|intval}]"
+							value="{$groupID|intval}"
 							{if $groupChecked} checked="checked"{/if} />
 						{l s='Group:'} {$groupData['name']}
 					</label>
@@ -115,10 +115,10 @@ function check_all_shop() {
 							<label class="child">
 								<input class="input_shop"
 									type="checkbox"
-									value="{$groupID}"
-									shop_id="{$shopID}"
-									name="checkBoxShopAsso_{$table}[{$shopID}]"
-									id="checkedBox_{$shopID}"
+									value="{$groupID|intval}"
+									shop_id="{$shopID|intval}"
+									name="checkBoxShopAsso_{$table}[{$shopID|intval}]"
+									id="checkedBox_{$shopID|intval}"
 									{if $checked} checked="checked"{/if} 
 									{if $groupData['disable_shops']} readonly="readonly" onclick="return false"{/if}
 									/>

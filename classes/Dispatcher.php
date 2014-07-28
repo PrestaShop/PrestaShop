@@ -651,7 +651,7 @@ class DispatcherCore
 				continue;
 
 			if (!array_key_exists($key, $params))
-				die('Dispatcher::createUrl() miss required parameter "'.$key.'" for route "'.$route_id.'"');
+				throw new PrestaShopException('Dispatcher::createUrl() miss required parameter "'.$key.'" for route "'.$route_id.'"');
 			if (isset($this->default_routes[$route_id]))
 				$query_params[$this->default_routes[$route_id]['keywords'][$key]['param']] = $params[$key];
 		}
@@ -813,7 +813,7 @@ class DispatcherCore
 		$modules_controllers = array();
 		if (is_null($module))
 			$modules = Module::getModulesOnDisk(true);
-		else if (!is_array($modules))
+		else if (!is_array($module))
 			$modules = array(Module::getInstanceByName($module));
 		else
 		{

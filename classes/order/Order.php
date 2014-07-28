@@ -230,6 +230,10 @@ class OrderCore extends ObjectModel
 			'valid' => array(),
 			'date_add' => array(),
 			'date_upd' => array(),
+			'shipping_number' => array(
+				'getter' => 'getWsShippingNumber',
+				'setter' => 'setWsShippingNumber'
+			),
 		),
 		'associations' => array(
 			'order_rows' => array('resource' => 'order_row', 'setter' => false, 'virtual_entity' => true,
@@ -860,8 +864,8 @@ class OrderCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'orders`
 				WHERE DATE_ADD(date_upd, INTERVAL -1 DAY) <= \''.pSQL($date_to).'\' AND date_upd >= \''.pSQL($date_from).'\'
 					'.Shop::addSqlRestriction()
-					.($type ? ' AND '.pSQL(strval($type)).'_number != 0' : '')
-					.($id_customer ? ' AND id_customer = '.(int)($id_customer) : '');
+					.($type ? ' AND `'.bqSQL($type).'_number` != 0' : '')
+					.($id_customer ? ' AND id_customer = '.(int)$id_customer : '');
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
 		$orders = array();
@@ -881,7 +885,7 @@ class OrderCore extends ObjectModel
 					WHERE osl.`id_order_state` = o.`current_state`
 					AND osl.`id_lang` = '.(int)$context->language->id.'
 					LIMIT 1
-				) AS `state_name`
+				) AS `state_name`, o.`date_add` AS `date_add`, o.`date_upd` AS `date_upd`
 				FROM `'._DB_PREFIX_.'orders` o
 				LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = o.`id_customer`)
 				WHERE 1
@@ -909,7 +913,7 @@ class OrderCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'orders`
 				WHERE DATE_ADD(invoice_date, INTERVAL -1 DAY) <= \''.pSQL($date_to).'\' AND invoice_date >= \''.pSQL($date_from).'\'
 					'.Shop::addSqlRestriction()
-					.($type ? ' AND '.pSQL(strval($type)).'_number != 0' : '')
+					.($type ? ' AND `'.bqSQL($type).'_number` != 0' : '')
 					.($id_customer ? ' AND id_customer = '.(int)($id_customer) : '').
 				' ORDER BY invoice_date ASC';
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
@@ -1141,15 +1145,18 @@ class OrderCore extends ObjectModel
 	 */
 	public function setInvoice($use_existing_payment = false)
 	{
-		if (!$this->hasInvoice())
+		if (Configuration::get('PS_INVOICE') && !$this->hasInvoice())
 		{
-			$order_invoice = new OrderInvoice();
+			if ($id = (int)$this->hasDelivery())
+				$order_invoice = new OrderInvoice($id);
+			else
+				$order_invoice = new OrderInvoice();
 			$order_invoice->id_order = $this->id;
-			$order_invoice->number = 0;
+			if (!$id)
+				$order_invoice->number = 0;
 			$address = new Address((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 			$carrier = new Carrier((int)$this->id_carrier);
 			$tax_calculator = $carrier->getTaxCalculator($address);
-
 			$order_invoice->total_discount_tax_excl = $this->total_discounts_tax_excl;
 			$order_invoice->total_discount_tax_incl = $this->total_discounts_tax_incl;
 			$order_invoice->total_paid_tax_excl = $this->total_paid_tax_excl;
@@ -1163,7 +1170,8 @@ class OrderCore extends ObjectModel
 			$order_invoice->total_wrapping_tax_incl = $this->total_wrapping_tax_incl;
 
 			// Save Order invoice
-			$order_invoice->add();
+
+			$order_invoice->save();
 			$this->setLastInvoiceNumber($order_invoice->id, $this->id_shop);
 
 			$order_invoice->saveCarrierTaxCalculator($tax_calculator->getTaxesAmount($order_invoice->total_shipping_tax_excl));
@@ -1221,6 +1229,23 @@ class OrderCore extends ObjectModel
 			// Keep it for backward compatibility, to remove on 1.6 version
 			$this->invoice_date = $order_invoice->date_add;
 			$this->invoice_number = $this->getInvoiceNumber($order_invoice->id);
+			$this->update();
+		}
+	}
+
+	/**
+	 * This method allows to generate first delivery slip of the current order
+	 */
+	public function setDeliverySlip()
+	{
+		if (!$this->hasInvoice())
+		{
+			$order_invoice = new OrderInvoice();
+			$order_invoice->id_order = $this->id;
+			$order_invoice->number = 0;
+			$order_invoice->add();
+			$this->delivery_date = $order_invoice->date_add;
+			$this->delivery_number = $this->getDeliveryNumber($order_invoice->id);
 			$this->update();
 		}
 	}
@@ -1574,12 +1599,17 @@ class OrderCore extends ObjectModel
 	public function getDocuments()
 	{
 		$invoices = $this->getInvoicesCollection()->getResults();
+		foreach($invoices as $key => $invoice)
+		if (!$invoice->number)
+			unset($invoices[$key]);
 		$delivery_slips = $this->getDeliverySlipsCollection()->getResults();
 		// @TODO review
-		foreach ($delivery_slips as $delivery)
+		foreach ($delivery_slips as $key => $delivery)
 		{
 			$delivery->is_delivery = true;
 			$delivery->date_add = $delivery->delivery_date;
+			if (!$invoice->delivery_number)
+				unset($delivery_slips[$key]);
 		}
 		$order_slips = $this->getOrderSlipsCollection()->getResults();
 
@@ -1856,11 +1886,28 @@ class OrderCore extends ObjectModel
 	 */
 	public function hasInvoice()
 	{
-		if (Db::getInstance()->getRow('
-				SELECT *
+		if ($res = (int)Db::getInstance()->getvalue('
+				SELECT `id_order_invoice`
 				FROM `'._DB_PREFIX_.'order_invoice`
-				WHERE `id_order` =  '.(int)$this->id))
-			return true;
+				WHERE `id_order` =  '.(int)$this->id.' 
+				AND `number` > 0'));
+			return $res;
+		return false;
+	}
+
+	/**
+	 *
+	 * Has Delivery return true if this order has already a delivery slip
+	 * @return bool
+	 */
+	public function hasDelivery()
+	{
+		if ($res = (int)Db::getInstance()->getValue('
+				SELECT `id_order_invoice`
+				FROM `'._DB_PREFIX_.'order_invoice`
+				WHERE `id_order` =  '.(int)$this->id.'
+				AND `delivery_number` > 0'));
+			return $res;
 		return false;
 	}
 
@@ -1986,5 +2033,36 @@ class OrderCore extends ObjectModel
 		if ($a->date_add == $b->date_add)
 			return 0;
 		return ($a->date_add < $b->date_add) ? -1 : 1;
+	}
+
+	public function getWsShippingNumber()
+	{
+		$id_order_carrier = Db::getInstance()->getValue('
+			SELECT `id_order_carrier`
+			FROM `'._DB_PREFIX_.'order_carrier`
+			WHERE `id_order` = '.(int)$this->id);
+		if ($id_order_carrier)
+		{
+			$order_carrier = new OrderCarrier($id_order_carrier);
+			return $order_carrier->tracking_number;
+		}
+		return $this->shipping_number;
+	}
+
+	public function setWsShippingNumber($shipping_number)
+	{
+		$id_order_carrier = Db::getInstance()->getValue('
+			SELECT `id_order_carrier`
+			FROM `'._DB_PREFIX_.'order_carrier`
+			WHERE `id_order` = '.(int)$this->id);
+		if ($id_order_carrier)
+		{
+			$order_carrier = new OrderCarrier($id_order_carrier);
+			$order_carrier->tracking_number = $shipping_number;
+			$order_carrier->update();
+		}
+		else
+			$this->shipping_number = $shipping_number;
+		return true;
 	}
 }

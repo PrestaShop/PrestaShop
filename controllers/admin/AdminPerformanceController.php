@@ -90,6 +90,41 @@ class AdminPerformanceControllerCore extends AdminController
 					),
 					'hint' => $this->l('Should be enabled except for debugging.')
 				),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('Caching type'),
+					'name' => 'smarty_caching_type',
+					'values' => array(
+						array(
+							'id' => 'smarty_caching_type_filesystem',
+							'value' => 'filesystem',
+							'label' => $this->l('File System').(is_writable(_PS_CACHE_DIR_.'smarty/cache') ? '' : ' '.sprintf($this->l('(the directory %s must be writable)'), realpath(_PS_CACHE_DIR_.'smarty/cache')))
+						),
+						array(
+							'id' => 'smarty_caching_type_mysql',
+							'value' => 'mysql',
+							'label' => $this->l('MySQL')
+						),
+						
+					)
+				),
+				array(
+					'type' => 'radio',
+					'label' => $this->l('Clear cache'),
+					'name' => 'smarty_clear_cache',
+					'values' => array(
+						array(
+							'id' => 'smarty_clear_cache_never',
+							'value' => 'never',
+							'label' => $this->l('Never clear cache files'),
+						),
+						array(
+							'id' => 'smarty_clear_cache_everytime',
+							'value' => 'everytime',
+							'label' => $this->l('Clear cache everytime something has been modified'),
+						),
+					)
+				),
 			),
 			'submit' => array(
 				'title' => $this->l('Save')
@@ -98,6 +133,8 @@ class AdminPerformanceControllerCore extends AdminController
 
 		$this->fields_value['smarty_force_compile'] = Configuration::get('PS_SMARTY_FORCE_COMPILE');
 		$this->fields_value['smarty_cache'] = Configuration::get('PS_SMARTY_CACHE');
+		$this->fields_value['smarty_caching_type'] = Configuration::get('PS_SMARTY_CACHING_TYPE');
+		$this->fields_value['smarty_clear_cache'] = Configuration::get('PS_SMARTY_CLEAR_CACHE');
 		$this->fields_value['smarty_console'] = Configuration::get('PS_SMARTY_CONSOLE');
 		$this->fields_value['smarty_console_key'] = Configuration::get('PS_SMARTY_CONSOLE_KEY');
 	}
@@ -327,33 +364,54 @@ class AdminPerformanceControllerCore extends AdminController
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Apache optimization'),
-					'name' => 'PS_HTACCESS_CACHE_CONTROL',
-					'hint' => $this->l('This will add directives to your .htaccess file, which should improve caching and compression.'),
+					'label' => $this->l('Move JavaScript to the end'),
+					'name' => 'PS_JS_DEFER',
 					'values' => array(
 						array(
-							'id' => 'PS_HTACCESS_CACHE_CONTROL_1',
+							'id' => 'PS_JS_DEFER_1',
 							'value' => 1,
-							'label' => $this->l('Yes'),
+							'label' => $this->l('Move JavaScript to the end of the HTML document')
 						),
 						array(
-							'id' => 'PS_HTACCESS_CACHE_CONTROL_0',
+							'id' => 'PS_JS_DEFER_0',
 							'value' => 0,
-							'label' => $this->l('No'),
-						),
-					),
-				)
+							'label' => $this->l('Keep JavaScript in HTML at its original position')
+						)
+					)
+				),
+				
 			),
 			'submit' => array(
 				'title' => $this->l('Save')
 			)
 		);
 
+		if (!defined('_PS_HOST_MODE_'))
+			$this->fields_form[3]['form']['input'][] = array(
+				'type' => 'switch',
+				'label' => $this->l('Apache optimization'),
+				'name' => 'PS_HTACCESS_CACHE_CONTROL',
+				'hint' => $this->l('This will add directives to your .htaccess file, which should improve caching and compression.'),
+				'values' => array(
+					array(
+						'id' => 'PS_HTACCESS_CACHE_CONTROL_1',
+						'value' => 1,
+						'label' => $this->l('Yes'),
+					),
+					array(
+						'id' => 'PS_HTACCESS_CACHE_CONTROL_0',
+						'value' => 0,
+						'label' => $this->l('No'),
+					),
+				),
+			);
+
 		$this->fields_value['PS_CSS_THEME_CACHE'] = Configuration::get('PS_CSS_THEME_CACHE');
 		$this->fields_value['PS_JS_THEME_CACHE'] = Configuration::get('PS_JS_THEME_CACHE');
 		$this->fields_value['PS_HTML_THEME_COMPRESSION'] = Configuration::get('PS_HTML_THEME_COMPRESSION');
 		$this->fields_value['PS_JS_HTML_THEME_COMPRESSION'] = Configuration::get('PS_JS_HTML_THEME_COMPRESSION');
 		$this->fields_value['PS_HTACCESS_CACHE_CONTROL'] = Configuration::get('PS_HTACCESS_CACHE_CONTROL');
+		$this->fields_value['PS_JS_DEFER'] = Configuration::get('PS_JS_DEFER');
 		$this->fields_value['ccc_up'] = 1;
 	}
 
@@ -545,19 +603,17 @@ class AdminPerformanceControllerCore extends AdminController
 
 	public function renderForm()
 	{
-		// Initialize fieldset for a form
 		$this->initFieldsetSmarty();
-
 		$this->initFieldsetDebugMode();
-
 		$this->initFieldsetFeaturesDetachables();
 		$this->initFieldsetCCC();
 
 		if (!defined('_PS_HOST_MODE_'))
+		{
 			$this->initFieldsetMediaServer();
-
-		$this->initFieldsetCiphering();
-		$this->initFieldsetCaching();
+			$this->initFieldsetCiphering();
+			$this->initFieldsetCaching();
+		}
 
 		// Reindex fields
 		$this->fields_form = array_values($this->fields_form);
@@ -651,7 +707,13 @@ class AdminPerformanceControllerCore extends AdminController
 			if ($this->tabAccess['edit'] === '1')
 			{
 				Configuration::updateValue('PS_SMARTY_FORCE_COMPILE', Tools::getValue('smarty_force_compile', _PS_SMARTY_NO_COMPILE_));
+				
+				if (Configuration::get('PS_SMARTY_CACHE') != Tools::getValue('smarty_cache') || Configuration::get('PS_SMARTY_CACHING_TYPE') != Tools::getValue('smarty_caching_type'))
+					Tools::clearSmartyCache();
+				
 				Configuration::updateValue('PS_SMARTY_CACHE', Tools::getValue('smarty_cache', 0));
+				Configuration::updateValue('PS_SMARTY_CACHING_TYPE', Tools::getValue('smarty_caching_type'));
+				Configuration::updateValue('PS_SMARTY_CLEAR_CACHE', Tools::getValue('smarty_clear_cache'));
 				$redirectAdmin = true;
 			}
 			else
@@ -688,6 +750,7 @@ class AdminPerformanceControllerCore extends AdminController
 					!Configuration::updateValue('PS_JS_THEME_CACHE', (int)Tools::getValue('PS_JS_THEME_CACHE')) ||
 					!Configuration::updateValue('PS_HTML_THEME_COMPRESSION', (int)Tools::getValue('PS_HTML_THEME_COMPRESSION')) ||
 					!Configuration::updateValue('PS_JS_HTML_THEME_COMPRESSION', (int)Tools::getValue('PS_JS_HTML_THEME_COMPRESSION')) ||
+					!Configuration::updateValue('PS_JS_DEFER', (int)Tools::getValue('PS_JS_DEFER')) ||
 					!Configuration::updateValue('PS_HTACCESS_CACHE_CONTROL', (int)Tools::getValue('PS_HTACCESS_CACHE_CONTROL')))
 					$this->errors[] = Tools::displayError('Unknown error.');
 				else
@@ -795,7 +858,7 @@ class AdminPerformanceControllerCore extends AdminController
 				$new_settings = $prev_settings = file_get_contents(_PS_ROOT_DIR_.'/config/settings.inc.php');
 				$cache_active = (bool)Tools::getValue('cache_active');
 				
-				if ($caching_system = Tools::getValue('caching_system'))
+				if ($caching_system = preg_replace('[^a-zA-Z0-9]', '', Tools::getValue('caching_system')))
 				{
 					$new_settings = preg_replace(
 						'/define\(\'_PS_CACHING_SYSTEM_\', \'([a-z0-9=\/+-_]*)\'\);/Ui',
@@ -869,18 +932,14 @@ class AdminPerformanceControllerCore extends AdminController
 			Tools::clearSmartyCache();
 			Tools::clearXMLCache();
 			Media::clearCache();
-			PrestaShopAutoload::getInstance()->generateIndex();
+			Tools::generateIndex();
 		}
 
-		if (Tools::isSubmit('submitAddconfiguration') && _PS_MODE_DEV_)
+		if (Tools::isSubmit('submitAddconfiguration'))
 		{
 			Configuration::updateGlobalValue('PS_DISABLE_NON_NATIVE_MODULE', (int)Tools::getValue('native_module'));
 			Configuration::updateGlobalValue('PS_DISABLE_OVERRIDES', (int)Tools::getValue('overrides'));
-
-			if (Tools::getValue('overrides'))
-				PrestaShopAutoload::getInstance()->_include_override_path = false;
-
-			PrestaShopAutoload::getInstance()->generateIndex();
+			Tools::generateIndex();
 		}
 
 		if ($redirectAdmin && (!isset($this->errors) || !count($this->errors)))

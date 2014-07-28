@@ -31,4 +31,4 @@ return s["return"];var id="#"+this.href.split('#')[1];var aList=[];var idList=[]
 $(this).addClass("selected");$(id).removeClass('block_hidden_only_for_screen');return s["return"];});var test;if(typeof s.start=="number"&&(test=list.filter(":eq("+s.start+")")).length)
 test.click();else if(typeof s.start=="string"&&(test=list.filter("[href='#"+s.start+"']")).length)
 test.click();else if((test=list.filter(".selected")).length)
-test.removeClass("selected").click();else list.filter(":first").click();return this;};$(function(){$(".idTabs").each(function(){$(this).idTabs();});});})(jQuery)
+test.removeClass("selected").click();else list.filter(":first").click();return this;};$(function(){$(".idTabs").each(function(){$(this).idTabs();});});})(jQuery);

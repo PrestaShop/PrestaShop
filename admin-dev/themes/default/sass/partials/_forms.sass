@@ -94,6 +94,17 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 			@include margin-right(-3px)
 		i
 			font-size: 14px
+//form file upload
+.dummyfile
+	position: relative
+	padding-top: 8px
+	.hide-file-upload
+		position: absolute
+		top: 0
+		left: 0
+		width: 100%
+		height: 100%
+		@include opacity(0)
 
 //typeahead
 .tt-query
@@ -140,7 +151,8 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 	> input
 		margin-top: 2px
 		border: 0 none
-		width: 100px
+		width: 140px
+		height: auto
 		@include box-shadow(none)
 	> input:focus
 		outline: 0

@@ -695,7 +695,7 @@ class AdminOrdersControllerCore extends AdminController
 									$params['{voucher_amount}'] = Tools::displayPrice($cart_rule->reduction_amount, $currency, false);
 									$params['{voucher_num}'] = $cart_rule->code;
 									$customer = new Customer((int)$order->id_customer);
-									@Mail::Send((int)$order->id_lang, 'voucher', sprintf(Mail::l('New voucher regarding your order %s', (int)$order->id_lang), $order->reference),
+									@Mail::Send((int)$order->id_lang, 'voucher', sprintf(Mail::l('New voucher for your order #%s', (int)$order->id_lang), $order->reference),
 										$params, $customer->email, $customer->firstname.' '.$customer->lastname, null, null, null,
 										null, _PS_MAIL_DIR_, true, (int)$order->id_shop);
 								}
@@ -913,7 +913,7 @@ class AdminOrdersControllerCore extends AdminController
 									$currency = $this->context->currency;
 									$params['{voucher_amount}'] = Tools::displayPrice($cartrule->reduction_amount, $currency, false);
 									$params['{voucher_num}'] = $cartrule->code;
-									@Mail::Send((int)$order->id_lang, 'voucher', sprintf(Mail::l('New voucher regarding your order %s', (int)$order->id_lang), $order->reference),
+									@Mail::Send((int)$order->id_lang, 'voucher', sprintf(Mail::l('New voucher for your order #%s', (int)$order->id_lang), $order->reference),
 									$params, $customer->email, $customer->firstname.' '.$customer->lastname, null, null, null,
 									null, _PS_MAIL_DIR_, true, (int)$order->id_shop);
 								}
@@ -1410,7 +1410,7 @@ class AdminOrdersControllerCore extends AdminController
 		$helper->color = 'color2';
 		$helper->title = $this->l('Abandoned Carts', null, null, false);
 		$helper->subtitle = $this->l('Today', null, null, false);
-		$helper->href = $this->context->link->getAdminLink('AdminCarts');
+		$helper->href = $this->context->link->getAdminLink('AdminCarts').'&action=filterOnlyAbandonedCarts';
 		if (ConfigurationKPI::get('ABANDONED_CARTS') !== false)
 			$helper->value = ConfigurationKPI::get('ABANDONED_CARTS');
 		if (ConfigurationKPI::get('ABANDONED_CARTS_EXPIRE') < $time)
@@ -1430,15 +1430,15 @@ class AdminOrdersControllerCore extends AdminController
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
-		$helper->id = 'box-net-profit-visitor';
+		$helper->id = 'box-net-profit-visit';
 		$helper->icon = 'icon-user';
 		$helper->color = 'color4';
-		$helper->title = $this->l('Net Profit per Visitor', null, null, false);
+		$helper->title = $this->l('Net Profit per Visit', null, null, false);
 		$helper->subtitle = $this->l('30 days', null, null, false);
-		if (ConfigurationKPI::get('NETPROFIT_VISITOR') !== false)
-			$helper->value = ConfigurationKPI::get('NETPROFIT_VISITOR');
-		if (ConfigurationKPI::get('NETPROFIT_VISITOR_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=netprofit_visitor';
+		if (ConfigurationKPI::get('NETPROFIT_VISIT') !== false)
+			$helper->value = ConfigurationKPI::get('NETPROFIT_VISIT');
+		if (ConfigurationKPI::get('NETPROFIT_VISIT_EXPIRE') < $time)
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=netprofit_visit';
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpiRow();
@@ -1597,7 +1597,27 @@ class AdminOrdersControllerCore extends AdminController
 			'not_paid_invoices_collection' => $order->getNotPaidInvoicesCollection(),
 			'payment_methods' => $payment_methods,
 			'invoice_management_active' => Configuration::get('PS_INVOICE', null, null, $order->id_shop),
-			'display_warehouse' => (int)Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
+			'display_warehouse' => (int)Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'),
+			'HOOK_CONTENT_ORDER' => Hook::exec('displayAdminOrderContentOrder', array(
+				'order' => $order,
+				'products' => $products,
+				'customer' => $customer)
+			),
+			'HOOK_CONTENT_SHIP' => Hook::exec('displayAdminOrderContentShip', array(
+				'order' => $order,
+				'products' => $products,
+				'customer' => $customer)
+			),
+			'HOOK_TAB_ORDER' => Hook::exec('displayAdminOrderTabOrder', array(
+				'order' => $order,
+				'products' => $products,
+				'customer' => $customer)
+			),
+			'HOOK_TAB_SHIP' => Hook::exec('displayAdminOrderTabShip', array(
+				'order' => $order,
+				'products' => $products,
+				'customer' => $customer)
+			),
 		);
 
 		return parent::renderView();
@@ -2068,7 +2088,7 @@ class AdminOrdersControllerCore extends AdminController
 			foreach (Tools::getValue('product_quantity') as $id_customization => $qty)
 			{
 				// Update quantity of each customization
-				Db::getInstance()->update('customization', array('quantity' => $qty), 'id_customization = '.(int)$id_customization);
+				Db::getInstance()->update('customization', array('quantity' => (int)$qty), 'id_customization = '.(int)$id_customization);
 				// Calculate the real quantity of the product
 				$product_quantity += $qty;
 			}

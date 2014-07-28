@@ -145,9 +145,9 @@ class ProductControllerCore extends FrontController
 					// If the previous page was a category and is a parent category of the product use this category as parent category
 					$id_object = false;
 					if (isset($regs[1]) && is_numeric($regs[1]))
-						$id_object = (int)$regs[2];
+						$id_object = (int)$regs[1];
 					elseif (isset($regs[5]) && is_numeric($regs[5]))
-						$id_object = (int)$regs[6];
+						$id_object = (int)$regs[5];
 					if ($id_object)
 					{
 						$referers = array($_SERVER['HTTP_REFERER'],urldecode($_SERVER['HTTP_REFERER']));
@@ -222,6 +222,13 @@ class ProductControllerCore extends FrontController
 				'pictures' => $pictures,
 				'textFields' => $text_fields));
 
+			$this->product->customization_required = false;
+			$customizationFields = $this->product->customizable ? $this->product->getCustomizationFields($this->context->language->id) : false;
+			if (is_array($customizationFields))
+				foreach($customizationFields as $customizationField)
+					if ($this->product->customization_required = $customizationField['required'])
+						break;
+
 			// Assign template vars related to the category + execute hooks related to the category
 			$this->assignCategory();
 			// Assign template vars related to the price and tax
@@ -247,7 +254,7 @@ class ProductControllerCore extends FrontController
 
 			$this->context->smarty->assign(array(
 				'stock_management' => Configuration::get('PS_STOCK_MANAGEMENT'),
-				'customizationFields' => $this->product->customizable ? $this->product->getCustomizationFields($this->context->language->id) : false,
+				'customizationFields' => $customizationFields,
 				'accessories' => $this->product->getAccessories($this->context->language->id),
 				'return_link' => $return_link,
 				'product' => $this->product,
@@ -293,7 +300,7 @@ class ProductControllerCore extends FrontController
 	{
 		$id_customer = (isset($this->context->customer) ? (int)$this->context->customer->id : 0);
 		$id_group = (int)Group::getCurrent()->id;
-		$id_country = (int)$id_customer ? Customer::getCurrentCountry($id_customer) : Configuration::get('PS_COUNTRY_DEFAULT');
+		$id_country = $id_customer ? (int)Customer::getCurrentCountry($id_customer) : (int)Tools::getCountry();
 
 		$group_reduction = GroupReduction::getValueForProduct($this->product->id, $id_group);
 		if ($group_reduction === false)
@@ -343,7 +350,8 @@ class ProductControllerCore extends FrontController
 			'group_reduction' => $group_reduction,
 			'no_tax' => Tax::excludeTaxeOption() || !$this->product->getTaxesRate($address),
 			'ecotax' => (!count($this->errors) && $this->product->ecotax > 0 ? Tools::convertPrice((float)$this->product->ecotax) : 0),
-			'tax_enabled' => Configuration::get('PS_TAX')
+			'tax_enabled' => Configuration::get('PS_TAX'),
+			'customer_group_without_tax' => Group::getPriceDisplayMethod($this->context->customer->id_default_group),
 		));
 	}
 
@@ -386,7 +394,7 @@ class ProductControllerCore extends FrontController
 		}
 		$size = Image::getSize(ImageType::getFormatedName('large'));
 		$this->context->smarty->assign(array(
-			'have_image' => isset($cover['id_image'])? array((int)$cover['id_image']) : Product::getCover((int)Tools::getValue('id_product')),
+			'have_image' => (isset($cover['id_image']) && (int)$cover['id_image'])? array((int)$cover['id_image']) : Product::getCover((int)Tools::getValue('id_product')),
 			'cover' => $cover,
 			'imgWidth' => (int)$size['width'],
 			'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),

@@ -33,25 +33,25 @@
 			setup : function(ed) {
 				ed.on('init', function(ed)
 				{
-					if (typeof ProductMultishop.load_tinymce[ed.id] != 'undefined')
+					if (typeof ProductMultishop.load_tinymce[ed.target.id] != 'undefined')
 					{
-						if (typeof ProductMultishop.load_tinymce[ed.id])
-							ed.hide();
+						if (typeof ProductMultishop.load_tinymce[ed.target.id])
+							tinyMCE.get(ed.target.id).hide();
 						else
-							ed.show();
+							tinyMCE.get(ed.target.id).show();
 					}
 				});
 
 				ed.on('keydown', function(ed, e) {
 					tinyMCE.triggerSave();
 					textarea = $('#'+tinymce.activeEditor.id);
-					max = textarea.parent('div').find('span.counter').attr('max');
+					var max = textarea.parent('div').find('span.counter').data('max');
 					if (max != 'none')
 					{
 						count = tinyMCE.activeEditor.getBody().textContent.length;
 						rest = max - count;
 						if (rest < 0)
-							textarea.parent('div').find('span.counter').html('<span style="color:red;">{l s='Maximum'} '+max+' {l s='characters'} : '+rest+'</span>');
+							textarea.parent('div').find('span.counter').html('<span style="color:red;">{l s='Maximum'} '+ max +' {l s='characters'} : '+rest+'</span>');
 						else
 							textarea.parent('div').find('span.counter').html(' ');
 					}
@@ -66,7 +66,9 @@
 		<div class="productTabs col-lg-2">
 			<div class="list-group">
 			{foreach $product_tabs key=numStep item=tab}
-				<a class="list-group-item {if $tab.selected}active{/if}" id="link-{$tab.id}" href="{$tab.href}&amp;updateproduct">{$tab.name}</a>
+				{if $tab.name != "Pack"}
+					<a class="list-group-item {if $tab.selected}active{/if}" id="link-{$tab.id}" href="{$tab.href|escape:'html':'UTF-8'}&amp;updateproduct">{$tab.name}</a>
+				{/if}
 			{/foreach}
 			</div>
 		</div>
@@ -80,8 +82,8 @@
 			var has_combinations = {$has_combinations};
 
 			var toload = new Array();
-			var empty_pack_msg = '{l s='This pack is empty. You will need to add at least one product to the pack before you can save.' slashes=1}';
-			var empty_name_msg = '{l s='The product name is empty. You will at least need to enter a name for the default language before you can save the product.' slashes=1}';
+			var empty_pack_msg = '{l s='This pack is empty. You will need to add at least one product to the pack before you can save.' js=1}';
+			var empty_name_msg = '{l s='The product name is empty. You will at least need to enter a name for the default language before you can save the product.' js=1}';
 			var empty_link_rewrite_msg = '{l s='The friendly URL is empty. You will at least need to enter a friendly URL for the default language before you can save the product.' slashes=1}';
 			var reload_tab_title = '{l s='Confirmation' slashes=1}';
 			var reload_tab_description = '{l s='Some tabs was not loaded correctly. Would you like to reload them?' slashes=1}';
@@ -89,6 +91,8 @@
 			$('#product-tab-content-wait').show();
 			var post_data = {$post_data};
 			var save_error = {if $save_error}true{else}false{/if};
+			var error_heading_msg = '{l s='Error' js=1}';
+			var error_continue_msg = '{l s='Continue' js=1}';
 
 			var product_type = {$product_type};
 			{*var mce_maximum = '{l s='Maximum'}';*}
@@ -103,11 +107,13 @@
 				if (product_type == product_type_pack)
 				{
 					$('a[id*="VirtualProduct"]').hide();
+					$('a[id*="Combinations"]').hide();
 				}
 				else if (product_type == product_type_virtual)
 				{
 					$('a[id*="Pack"]').hide();
 					$('a[id*="Shipping"]').hide();
+					$('a[id*="Combinations"]').hide();
 				}
 				else
 				{
@@ -219,8 +225,50 @@
 				// Recursively load tabs starting with the first element of stack
 				tabs_manager.displayBulk(tabs_to_preload);
 				$('.productTabs').show();
-				$('#product_form').show();
 				$('#product-tab-content-wait').hide();
+
+				function checkIfProductTypeIsPack() {
+					var typeIsPack = $('#pack_product').is(':checked');
+					if (typeIsPack && $('#inputPackItems').val()=='' ) {
+						$('.pack-empty-warning').removeClass('alert-warning').addClass('alert-danger');
+						$('#curPackItemName').select2('open');
+					}
+					return typeIsPack;
+				}
+				$("#product_form").validate({
+					ignore: '.updateCurrentText',
+					rules: {
+						inputPackItems: {
+							required: {
+								depends: checkIfProductTypeIsPack
+							},
+						}
+					},
+					messages: {
+						inputPackItems: {
+							required: ""
+						}
+					},
+					submitHandler: function(form) {
+						form.submit();
+					},
+					// override jquery validate plugin defaults for bootstrap 3
+					highlight: function(element) {
+						$(element).closest('.form-group').addClass('has-error');
+					},
+					unhighlight: function(element) {
+						$(element).closest('.form-group').removeClass('has-error');
+					},
+					errorElement: 'span',
+					errorClass: 'help-block',
+					errorPlacement: function(error, element) {
+						if(element.parent('.input-group').length) {
+							error.insertAfter(element.parent());
+						} else {
+							error.insertAfter(element);
+						}
+					}
+				});
 			});
 		</script>
 
@@ -240,9 +288,9 @@
 			<div id="loading"><i class="icon-refresh icon-spin"></i>&nbsp;{l s='Loading...'}</div>
 		</div>
 
-		<form id="product_form" class="form-horizontal col-lg-10" action="{$form_action}" method="post" enctype="multipart/form-data" name="product" style="display:none;">
+		<form id="product_form" class="form-horizontal col-lg-10" action="{$form_action|escape:'html':'UTF-8'}" method="post" enctype="multipart/form-data" name="product" novalidate>
 			<input type="hidden" name="id_product" value="{$id_product}" />
-			<input type="hidden" id="is_virtual" name="is_virtual" value="{$product->is_virtual|escape:html:'UTF-8'}" />
+			<input type="hidden" id="is_virtual" name="is_virtual" value="{$product->is_virtual|escape:'html':'UTF-8'}" />
 
 			{if !$product->active && $product->isAssociatedToShop()}
 			<div class="alert alert-info draft" >
@@ -254,11 +302,13 @@
 
 			{* all input are here *}
 			{foreach $product_tabs key=numStep item=tab}
+				{if $tab.id != "Pack" }
 				<div id="product-tab-content-{$tab.id}" class="{if !$tab.selected}not-loaded{/if} product-tab-content" {if !$tab.selected}style="display:none"{/if}>
 					{if $tab.selected}
 						{$custom_form}
 					{/if}
 				</div>
+				{/if}
 			{/foreach}
 			<input type="hidden" name="id_product_attribute" id="id_product_attribute" value="0" />
 			<input type="hidden" name="key_tab" id="key_tab" value="Informations" />
@@ -266,3 +316,4 @@
 	</div>
 
 {/block}
+

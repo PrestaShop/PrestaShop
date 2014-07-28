@@ -23,7 +23,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {$header}
-
 {if isset($conf)}
 	<div class="bootstrap">
 		<div class="alert alert-success">
@@ -51,33 +50,39 @@
 	</div>
 {/if}
 {if isset($informations) && count($informations) && $informations}
-	<div class="alert alert-info">
-		<button type="button" class="close" data-dismiss="alert">&times;</button>
-		<ul id="infos_block" class="list-unstyled">
-			{foreach $informations as $info}
-				<li>{$info}</li>
-			{/foreach}
-		</ul>
+	<div class="bootstrap">
+		<div class="alert alert-info">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			<ul id="infos_block" class="list-unstyled">
+				{foreach $informations as $info}
+					<li>{$info}</li>
+				{/foreach}
+			</ul>
+		</div>
 	</div>
 {/if}
 {if isset($confirmations) && count($confirmations) && $confirmations}
-	<div class="alert alert-success" style="display:block;">
-		{foreach $confirmations as $conf}
-			{$conf}
-		{/foreach}
+	<div class="bootstrap">
+		<div class="alert alert-success" style="display:block;">
+			{foreach $confirmations as $conf}
+				{$conf}
+			{/foreach}
+		</div>
 	</div>
 {/if}
 {if count($warnings)}
-	<div class="alert alert-warning">
-		<button type="button" class="close" data-dismiss="alert">&times;</button>
-		{if count($warnings) > 1}
-			<h4>{l s='There are %d warnings:' sprintf=count($warnings)}</h4>
-		{/if}
-		<ul class="list-unstyled">
-			{foreach $warnings as $warning}
-				<li>{$warning}</li>
-			{/foreach}
-		</ul>
+	<div class="bootstrap">
+		<div class="alert alert-warning">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
+			{if count($warnings) > 1}
+				<h4>{l s='There are %d warnings:' sprintf=count($warnings)}</h4>
+			{/if}
+			<ul class="list-unstyled">
+				{foreach $warnings as $warning}
+					<li>{$warning}</li>
+				{/foreach}
+			</ul>
+		</div>
 	</div>
 {/if}
 {$page}

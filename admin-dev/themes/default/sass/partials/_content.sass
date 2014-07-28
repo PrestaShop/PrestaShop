@@ -5,7 +5,6 @@ html, body
 body
 	font: 400 #{$font-size-base}/#{$line-height-base} $font-family-base
 	color: $text-color
-	min-width: 450px
 	background-color: $body-bg
 	-webkit-tap-highlight-color: rgba(0,0,0,0)
 
@@ -174,3 +173,29 @@ body.display-modal
 	.panel-footer
 		margin: 15px 0 0!important
 		height: 40px!important
+
+//help containers
+#main.helpOpen
+	width: 70%
+	@media (max-width: $screen-lg)
+		width: 100%
+
+#help-container
+	position: relative
+	margin: 0
+	padding: 0
+	float: right
+	width: 30%
+	margin-top: 120px
+	margin-bottom: 50px
+	background-color: white
+	box-sizing: border-box
+	overflow-x: hidden
+	@media (max-width: $screen-lg)
+		display: none	
+
+.page-topbar
+	#help-container
+		margin-top: 140px
+
+

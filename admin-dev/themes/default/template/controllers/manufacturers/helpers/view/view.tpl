@@ -36,7 +36,7 @@
 			<div class="panel-heading">
 				{$addresse.firstname} {$addresse.lastname}
 				<div class="pull-right">
-					<a class="btn btn-default" href="{$link->getAdminLink('AdminManufacturers')}&id_address={$addresse.id_address}&editaddresses=1">
+					<a class="btn btn-default" href="{$link->getAdminLink('AdminManufacturers')|escape:'html':'UTF-8'}&amp;id_address={$addresse.id_address}&amp;editaddresses=1">
 						<i class="icon-edit"></i>
 						{l s='Edit'}</a>
 				</div>
@@ -73,10 +73,10 @@
 				<div class="panel-heading">
 					{$product->name}
 					<div class="pull-right">
-						<a href="?tab=AdminProducts&amp;id_product={$product->id}&amp;updateproduct&amp;token={getAdminToken tab='AdminProducts'}" class="btn btn-default btn-sm">
+						<a href="?tab=AdminProducts&amp;id_product={$product->id|intval}&amp;updateproduct&amp;token={getAdminToken tab='AdminProducts'}" class="btn btn-default btn-sm">
 							<i class="icon-edit"></i> {l s='Edit'}
 						</a>
-						<a href="?tab=AdminProducts&amp;id_product={$product->id}&amp;deleteproduct&amp;token={getAdminToken tab='AdminProducts'}" class="btn btn-default btn-sm" onclick="return confirm('{l s='Delete item #'}{$product->id} ?');">
+						<a href="?tab=AdminProducts&amp;id_product={$product->id|intval}&amp;deleteproduct&amp;token={getAdminToken tab='AdminProducts'}" class="btn btn-default btn-sm" onclick="return confirm('{l s='Delete item #'}{$product->id} ?');">
 							<i class="icon-trash"></i> {l s='Delete'}
 						</a>
 					</div>
@@ -97,15 +97,15 @@
 			<div class="panel">
 				<div class="panel-heading">
 
-					<a href="?tab=AdminProducts&amp;id_product={$product->id}&amp;updateproduct&amp;token={getAdminToken tab='AdminProducts'}">
+					<a href="?tab=AdminProducts&amp;id_product={$product->id|intval}&amp;updateproduct&amp;token={getAdminToken tab='AdminProducts'}">
 						{$product->name}
 					</a>
 					<div class="pull-right">
-						<a href="?tab=AdminProducts&amp;id_product={$product->id}&amp;updateproduct&amp;token={getAdminToken tab='AdminProducts'}" class="btn btn-default btn-sm">
+						<a href="?tab=AdminProducts&amp;id_product={$product->id|intval}&amp;updateproduct&amp;token={getAdminToken tab='AdminProducts'}" class="btn btn-default btn-sm">
 							<i class="icon-edit"></i>
 							{l s='Edit'}
 						</a>
-						<a href="?tab=AdminProducts&amp;id_product={$product->id}&amp;deleteproduct&amp;token={getAdminToken tab='AdminProducts'}" class="btn btn-default btn-sm" onclick="return confirm('{l s='Delete item #'}{$product->id} ?');">
+						<a href="?tab=AdminProducts&amp;id_product={$product->id|intval}&amp;deleteproduct&amp;token={getAdminToken tab='AdminProducts'}" class="btn btn-default btn-sm" onclick="return confirm('{l s='Delete item #'}{$product->id} ?');">
 							<i class="icon-trash"></i>
 							{l s='Delete'}
 						</a>

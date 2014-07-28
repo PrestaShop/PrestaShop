@@ -163,6 +163,7 @@ ul.sf-menu li li li.sfHover ul {
 	}
 	@media (max-width: $screen-xs - 1) { // max 479px
 		width: 100%;
+		padding-bottom: 20px;
 	}
 	@media (min-width: $screen-sm) { // min 768px
 		&.first-in-line-lg {

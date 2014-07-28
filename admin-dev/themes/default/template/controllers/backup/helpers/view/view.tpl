@@ -30,9 +30,9 @@
 	<div class="panel">
 		<h3><i class="icon-download"></i> {l s='Download'}</h3>
 		<div class="alert alert-success">{l s='Beginning the download ...'}</div>
-		<p>{l s='Backup files should automatically download.'}</p>
+		<p>{l s='Backup files should automatically start downloading.'}</p>
 		<p>{l s='If not,'} <b><a href="{$url_backup}" class="btn btn-default"><i class="icon-download"></i> {l s='please click here!'}</a></b></p>
-		<iframe width="0" height="0" scrolling="no" frameborder="0" src="{$url_backup}"></iframe>
+		<iframe  style="width:0px; height:0px; overflow:hidden; border:none;" src="{$url_backup}"></iframe>
 	</div>
 	{/if}
 {/block}

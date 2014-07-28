@@ -33,7 +33,11 @@
 						<div class="col-lg-6">
 							<select id="select_submitBulk" name="select_submitBulk" >
 								{foreach $bulk_actions as $key => $params}
-									<option value="{$key}"{if isset($params.confirm)} data-confirm="{$params.confirm}"{/if}>{$params.text}</option>
+									{if $params.text == 'divider'}
+										<option value="" disabled="disabled" class="{$params.text|escape:'html':'UTF-8'}">--</option>
+									{else}
+										<option value="{$key}"{if isset($params.confirm)} data-confirm="{$params.confirm}"{/if}>{$params.text|escape:'html':'UTF-8'}</option>
+									{/if}
 								{/foreach}
 							</select>
 						</div>
@@ -64,8 +68,8 @@
 				{if !$simple_header && $list_total > 20}
 				<div class="col-lg-4">
 					{* Choose number of results per page *}
-					<span class="pagination">
-						{l s='Display'}: 
+					<div class="pagination">
+						{l s='Display'} 
 						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 							{$selected_pagination}
 							<i class="icon-caret-down"></i>
@@ -79,7 +83,7 @@
 						</ul>
 						/ {$list_total} {l s='result(s)'}
 						<input type="hidden" id="pagination-items-page" name="{$table}_pagination" value="{$selected_pagination|intval}" />
-					</span>
+					</div>
 					<script type="text/javascript">
 						$('.pagination-items-page').on('click',function(e){
 							e.preventDefault();
@@ -135,12 +139,9 @@
 				</div>
 				{/if}
 			</div>
-		</td>
-	</tr>
-</table>
 </div>
 
-<input type="hidden" name="token" value="{$token}" />
+<input type="hidden" name="token" value="{$token|escape:'html':'UTF-8'}" />
 </form>
 
 <script type="text/javascript">
@@ -168,7 +169,7 @@
 			$.ajax({
 				type: 'POST',
 				url: 'ajax.php',
-				data: 'getZones=true&token={$token}',
+				data: 'getZones=true&token={$token|escape:'html':'UTF-8'}',
 				async : true,
 				cache: false,
 				dataType: 'json',

@@ -32,7 +32,7 @@
 			</a>
 		</div>
 	</div>
-	<img id="carrier_logo_img" src="{if $carrier_logo}{$carrier_logo}{else}../img/admin/carrier-default.jpg{/if}" class="img-thumbnail" />
+	<img id="carrier_logo_img" src="{if $carrier_logo}{$carrier_logo}{else}../img/admin/carrier-default.jpg{/if}" class="img-thumbnail" alt=""/>
 </div>
 
 <script type="text/javascript">

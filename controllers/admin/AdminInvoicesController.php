@@ -142,7 +142,7 @@ class AdminInvoicesControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'checkboxStatuses',
-					'label' => $this->l('Statuses'),
+					'label' => $this->l('Order statuses'),
 					'name' => 'id_order_state',
 					'values' => array(
 						'query' => OrderState::getOrderStates($this->context->language->id),
@@ -164,6 +164,7 @@ class AdminInvoicesControllerCore extends AdminController
 			FROM `'._DB_PREFIX_.'order_invoice` oi
 			LEFT JOIN `'._DB_PREFIX_.'orders` o ON  oi.id_order = o.id_order 
 			WHERE o.id_shop IN('.implode(', ', Shop::getContextListShopID()).')
+			AND oi.number > 0
 			GROUP BY o.current_state
 		 ');
 
