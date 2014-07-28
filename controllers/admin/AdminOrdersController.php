@@ -244,7 +244,9 @@ class AdminOrdersControllerCore extends AdminController
 			'show_toolbar' => $this->show_toolbar,
 			'toolbar_btn' => $this->toolbar_btn,
 			'toolbar_scroll' => $this->toolbar_scroll,
+			'PS_CATALOG_MODE' => Configuration::get('PS_CATALOG_MODE'),
 			'title' => array($this->l('Orders'), $this->l('Create order'))
+			
 		));
 		$this->content .= $this->createTemplate('form.tpl')->fetch();
 	}
