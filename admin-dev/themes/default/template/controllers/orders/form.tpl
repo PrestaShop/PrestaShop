@@ -1476,6 +1476,7 @@
 					</div>
 				</div>
 				<div class="form-group">
+					{if !$PS_CATALOG_MODE}
 					<div class="col-lg-9 col-lg-offset-3">
 						<a href="javascript:void(0);" id="send_email_to_customer" class="btn btn-default">
 							<i class="icon-credit-card"></i>
@@ -1486,14 +1487,19 @@
 							<i class="icon-external-link"></i>
 						</a>
 					</div>
+					{/if}
 				</div>
 				<div class="form-group">
 					<label class="control-label col-lg-3">{l s='Payment'}</label>
 					<div class="col-lg-9">
 						<select name="payment_module_name" id="payment_module_name">
+							{if !$PS_CATALOG_MODE}
 							{foreach from=$payment_modules item='module'}
 								<option value="{$module->name}" {if isset($smarty.post.payment_module_name) && $module->name == $smarty.post.payment_module_name}selected="selected"{/if}>{$module->displayName}</option>
 							{/foreach}
+							{else}
+								<option value="{l s='Back-office order'}">{l s='Back-office order'}</option>
+							{/if}
 						</select>
 					</div>
 				</div>
