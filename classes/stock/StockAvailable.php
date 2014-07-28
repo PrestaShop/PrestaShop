@@ -464,6 +464,8 @@ class StockAvailableCore extends ObjectModel
 		$stock_available->quantity = $stock_available->quantity + $delta_quantity;
 		$stock_available->update();
 
+		Cache::clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$id_product.'*');
+
 		Hook::exec('actionUpdateQuantity',
 				   array(
 				   	'id_product' => $id_product,
@@ -471,8 +473,6 @@ class StockAvailableCore extends ObjectModel
 				   	'quantity' => $stock_available->quantity
 				   )
 				  );
-
-		Cache::clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$id_product.'*');
 
 		return true;
 	}
