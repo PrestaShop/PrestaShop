@@ -127,55 +127,139 @@
 												</td>
 											</tr>
 										</table>
-										<table class="delivery_option_carrier {if isset($delivery_option[$id_address]) && $delivery_option[$id_address] == $key}selected{/if} {if $option.unique_carrier}not-displayable{/if}">
-											{foreach $option.carrier_list as $carrier}
+										{if !$option.unique_carrier}
+											<table class="delivery_option_carrier{if isset($delivery_option[$id_address]) && $delivery_option[$id_address] == $key} selected{/if} resume table table-bordered{if $option.unique_carrier} not-displayable{/if}">
 												<tr>
 													{if !$option.unique_carrier}
-														<td class="first_item">
-															<input type="hidden" value="{$carrier.instance->id}" name="id_carrier" />
-															{if $carrier.logo}
-																<img src="{$carrier.logo}" alt="{$carrier.instance->name}"/>
-															{/if}
-														</td>
-														<td>
-															{$carrier.instance->name}
+														<td rowspan="{$option.carrier_list|@count}" class="delivery_option_radio first_item">
+															<input id="delivery_option_{$id_address|intval}_{$option@index}" class="delivery_option_radio" type="radio" name="delivery_option[{$id_address|intval}]" data-key="{$key}" data-id_address="{$id_address|intval}" value="{$key}"{if isset($delivery_option[$id_address]) && $delivery_option[$id_address] == $key} checked="checked"{/if} />
 														</td>
 													{/if}
-													<td {if $option.unique_carrier}class="first_item" {/if}>
-														<input type="hidden" value="{$carrier.instance->id}" name="id_carrier" />
+													{assign var="first" value=current($option.carrier_list)}
+													<td class="delivery_option_logo{if $first.product_list[0].carrier_list[0] eq 0} not-displayable{/if}">
+														{if $first.logo}
+															<img src="{$first.logo|escape:'htmlall':'UTF-8'}" alt="{$first.instance->name|escape:'htmlall':'UTF-8'}"/>
+														{else if !$option.unique_carrier}
+															{$first.instance->name|escape:'htmlall':'UTF-8'}
+														{/if}
+													</td>
+													<td class="{if $option.unique_carrier}first_item{/if}{if $first.product_list[0].carrier_list[0] eq 0} not-displayable{/if}">
+														<input type="hidden" value="{$first.instance->id|intval}" name="id_carrier" />
+														{if isset($first.instance->delay[$cookie->id_lang])}
+															<i class="icon-info-sign"></i>{$first.instance->delay[$cookie->id_lang]|escape:'htmlall':'UTF-8'}
+															{if count($first.product_list) <= 1}
+																({l s='Product concerned:'}
+															{else}
+																({l s='Products concerned:'}
+															{/if}
+															{foreach $first.product_list as $product}
+																{if $product@index == 4}
+																	<acronym title="
+																{/if}
+																{strip}
+																	{if $product@index >= 4}
+																		{$product.name|escape:'htmlall':'UTF-8'}
+																		{if isset($product.attributes) && $product.attributes}
+																			{$product.attributes|escape:'htmlall':'UTF-8'}
+																		{/if}
+																		{if !$product@last}
+																			,&nbsp;
+																		{else}
+																			">&hellip;</acronym>)
+																		{/if}
+																	{else}
+																		{$product.name|escape:'htmlall':'UTF-8'}
+																		{if isset($product.attributes) && $product.attributes}
+																			{$product.attributes|escape:'htmlall':'UTF-8'}
+																		{/if}
+																		{if !$product@last}
+																			,&nbsp;
+																		{else}
+																			)
+																		{/if}
+																	{/if}
+																{strip}
+															{/foreach}
+														{/if}
+													</td>
+													<td rowspan="{$option.carrier_list|@count}" class="delivery_option_price">
+														<div class="delivery_option_price">
+															{if $option.total_price_with_tax && !$option.is_free && (!isset($free_shipping) || (isset($free_shipping) && !$free_shipping))}
+																{if $use_taxes == 1}
+																	{if $priceDisplay == 1}
+																		{convertPrice price=$option.total_price_without_tax} {l s='(tax excl.)'}
+																	{else}
+																		{convertPrice price=$option.total_price_with_tax} {l s='(tax incl.)'}
+																	{/if}
+																{else}
+																	{convertPrice price=$option.total_price_without_tax}
+																{/if}
+															{else}
+																{l s='Free'}
+															{/if}
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td class="delivery_option_logo{if $carrier.product_list[0].carrier_list[0] eq 0} not-displayable{/if}">
+														{foreach $option.carrier_list as $carrier}
+															{if $carrier@iteration != 1}
+																{if $carrier.logo}
+																	<img src="{$carrier.logo|escape:'htmlall':'UTF-8'}" alt="{$carrier.instance->name|escape:'htmlall':'UTF-8'}"/>
+																{else if !$option.unique_carrier}
+																	{$carrier.instance->name|escape:'htmlall':'UTF-8'}
+																{/if}
+															{/if}
+														{/foreach}
+													</td>
+													<td class="{if $option.unique_carrier} first_item{/if}{if $carrier.product_list[0].carrier_list[0] eq 0} not-displayable{/if}">
+														<input type="hidden" value="{$first.instance->id|intval}" name="id_carrier" />
 														{if isset($carrier.instance->delay[$cookie->id_lang])}
-															<i class="icon-info-sign"></i>{$carrier.instance->delay[$cookie->id_lang]}
+															<i class="icon-info-sign"></i>
+															{$first.instance->delay[$cookie->id_lang]|escape:'htmlall':'UTF-8'}
 															{if count($carrier.product_list) <= 1}
 																({l s='Product concerned:'}
 															{else}
 																({l s='Products concerned:'}
 															{/if}
-															{* This foreach is on one line, to avoid tabulation in the title attribute of the acronym *}
+
 															{foreach $carrier.product_list as $product}
 																{if $product@index == 4}
 																	<acronym title="
 																{/if}
-																{if $product@index >= 4}
-																	{$product.name}{if isset($product.attributes) && $product.attributes} {$product.attributes|escape:'htmlall':'UTF-8'}{/if}
-																	{if !$product@last}
-																		,&nbsp;
+
+																{strip}
+																	{if $product@index >= 4}
+																		{$product.name|escape:'htmlall':'UTF-8'}
+																		{if isset($product.attributes) && $product.attributes}
+																			{$product.attributes|escape:'htmlall':'UTF-8'}
+																		{/if}
+																		{if !$product@last}
+																			,&nbsp;
+																		{else}
+																			">&hellip;</acronym>)
+																		{/if}
+
 																	{else}
-																		">&hellip;</acronym>)
+																		{$product.name|escape:'htmlall':'UTF-8'}
+																		{if isset($product.attributes) && $product.attributes}
+																			{$product.attributes|escape:'htmlall':'UTF-8'}
+																		{/if}
+																		{if !$product@last}
+																			,&nbsp;
+																		{else}
+																			)
+																		{/if}
 																	{/if}
-																{else}
-																	{$product.name}{if isset($product.attributes) && $product.attributes} {$product.attributes|escape:'htmlall':'UTF-8'}{/if}
-																	{if !$product@last}
-																		,&nbsp;
-																	{else}
-																		)
-																	{/if}
-																{/if}
+
+																{strip}
+
 															{/foreach}
 														{/if}
 													</td>
 												</tr>
-											{/foreach}
-										</table>
+											</table>
+										{/if}
 									</div>
 								</div> <!-- end delivery_option -->
 							{/foreach}
@@ -263,7 +347,7 @@
 					<input type="hidden" name="back" value="{$back}" />
 					{if !$is_guest}
 						{if $back}
-							<a 
+							<a
 								href="{$link->getPageLink('order', true, NULL, "step=1&back={$back}&multi-shipping={$multi_shipping}")|escape:'html':'UTF-8'}"
 								title="{l s='Previous'}"
 								class="button-exclusive btn btn-default">
