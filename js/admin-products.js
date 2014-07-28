@@ -1330,7 +1330,6 @@ product_tabs['Pack'] = new function() {
 
 		function getSelectedIds()
 		{
-			//console.log($('#inputPackItems').val());
 			if ($('#inputPackItems').val() === undefined)
 				return '';
 			var ids = '';
