@@ -312,13 +312,14 @@ class WebserviceRequestCore
 			'supply_order_states' => array('description' => 'Supply Order Statuses', 'class' => 'SupplyOrderState', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
 			'supply_order_histories' => array('description' => 'Supply Order Histories', 'class' => 'SupplyOrderHistory', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
 			'supply_order_receipt_histories' => array('description' => 'Supply Order Receipt Histories', 'class' => 'SupplyOrderReceiptHistory', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
-			'product_suppliers' => array('description' => 'Product Suppliers', 'class' => 'ProductSupplier', 'forbidden_method' => array('PUT', 'POST', 'DELETE')),
+			'product_suppliers' => array('description' => 'Product Suppliers', 'class' => 'ProductSupplier'),
 			'tax_rules' => array('description' => 'Tax rules entity', 'class' => 'TaxRule'),
 			'tax_rule_groups' => array('description' => 'Tax rule groups', 'class' => 'TaxRulesGroup'),
 			'specific_prices' => array('description' => 'Specific price management', 'class' => 'SpecificPrice'),
 			'specific_price_rules' => array('description' => 'Specific price management', 'class' => 'SpecificPriceRule'),
 			'shop_urls' => array('description' => 'Shop URLs from multi-shop feature', 'class' => 'ShopUrl'),
 			'product_customization_fields' => array('description' => 'Customization Field', 'class' => 'CustomizationField'),
+			'customizations' => array('description' => 'Customization values', 'class' => 'Customization'),
 		);
 		ksort($resources);
 		return $resources;
@@ -464,7 +465,7 @@ class WebserviceRequestCore
 				// Method below set a particular fonction to use on the price field for products entity
 				// @see WebserviceRequest::getPriceForProduct() method
 				// @see WebserviceOutputBuilder::setSpecificField() method
-				$this->objOutput->setSpecificField($this, 'getPriceForProduct', 'price', 'products');
+				//$this->objOutput->setSpecificField($this, 'getPriceForProduct', 'price', 'products');
 				if (isset($this->urlFragments['price']))
 				{
 					$this->objOutput->setVirtualField($this, 'specificPriceForCombination', 'combinations', $this->urlFragments['price']);

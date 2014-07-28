@@ -347,6 +347,9 @@ class ToolsCore
 				$cookie->id_lang = null;
 		}
 
+		if (!Configuration::get('PS_DETECT_LANG'))
+			unset($cookie->detect_language);
+
 		/* Automatically detect language if not already defined, detect_language is set in Cookie::update */
 		if ((!$cookie->id_lang || isset($cookie->detect_language)) && isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
 		{
@@ -416,7 +419,7 @@ class ToolsCore
 		if ($id_country = Tools::getValue('id_country'));
 		elseif (isset($address) && isset($address->id_country) && $address->id_country)
 			$id_country = $address->id_country;
-		elseif (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
+		elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
 		{
 			preg_match("#(?<=-)\w\w|\w\w(?!-)#", $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array);
 			if (is_array($array) && isset($array[0]) && Validate::isLanguageIsoCode($array[0]))
@@ -1152,6 +1155,9 @@ class ToolsCore
 
 		if ($allow_accented_chars === null)
 			$allow_accented_chars = Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
+		
+		if (!is_string($str))
+			return false;
 
 		$str = trim($str);
 
