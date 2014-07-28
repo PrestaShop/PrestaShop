@@ -89,7 +89,6 @@ function mobileInit()
 	$('.sf-menu > li > ul').addClass('menu-mobile clearfix').parent().prepend('<span class="menu-mobile-grover"></span>');
 
 	$(".sf-menu .menu-mobile-grover").on('click touchstart', function(e){
-		console.log(e.target)
 		var catSubUl = $(this).next().next('.menu-mobile');
 		if (catSubUl.is(':hidden'))
 		{
