@@ -36,7 +36,7 @@ $(document).ready(function()
 	// Click on color
 	$(document).on('click', '#layered_form input[type=button], #layered_form label.layered_color', function(e) {
 		if (!$('input[name='+$(this).attr('name')+'][type=hidden]').length)
-			$('<input />').attr('type', 'hidden').attr('name', $(this).attr('name')).val($(this).attr('rel')).appendTo('#layered_form');
+			$('<input />').attr('type', 'hidden').attr('name', $(this).attr('name')).val($(this).data('rel')).appendTo('#layered_form');
 		else
 			$('input[name='+$(this).attr('name')+'][type=hidden]').remove();
 		reloadContent(true);
@@ -347,31 +347,31 @@ function cancelFilter()
 {
 	$(document).on('click', '#enabled_filters a', function(e)
 	{
-		if ($(this).attr('rel').search(/_slider$/) > 0)
+		if ($(this).data('rel').search(/_slider$/) > 0)
 		{
-			if ($('#'+$(this).attr('rel')).length)
+			if ($('#'+$(this).data('rel')).length)
 			{
-				$('#'+$(this).attr('rel')).slider('values' , 0, $('#'+$(this).attr('rel')).slider('option' , 'min' ));
-				$('#'+$(this).attr('rel')).slider('values' , 1, $('#'+$(this).attr('rel')).slider('option' , 'max' ));
-				$('#'+$(this).attr('rel')).slider('option', 'slide')(0,{values:[$('#'+$(this).attr('rel')).slider( 'option' , 'min' ), $('#'+$(this).attr('rel')).slider( 'option' , 'max' )]});
+				$('#'+$(this).data('rel')).slider('values' , 0, $('#'+$(this).data('rel')).slider('option' , 'min' ));
+				$('#'+$(this).data('rel')).slider('values' , 1, $('#'+$(this).data('rel')).slider('option' , 'max' ));
+				$('#'+$(this).data('rel')).slider('option', 'slide')(0,{values:[$('#'+$(this).data('rel')).slider( 'option' , 'min' ), $('#'+$(this).data('rel')).slider( 'option' , 'max' )]});
 			}
-			else if($('#'+$(this).attr('rel').replace(/_slider$/, '_range_min')).length)
+			else if($('#'+$(this).data('rel').replace(/_slider$/, '_range_min')).length)
 			{
-				$('#'+$(this).attr('rel').replace(/_slider$/, '_range_min')).val($('#'+$(this).attr('rel').replace(/_slider$/, '_range_min')).attr('limitValue'));
-				$('#'+$(this).attr('rel').replace(/_slider$/, '_range_max')).val($('#'+$(this).attr('rel').replace(/_slider$/, '_range_max')).attr('limitValue'));
+				$('#'+$(this).data('rel').replace(/_slider$/, '_range_min')).val($('#'+$(this).data('rel').replace(/_slider$/, '_range_min')).attr('limitValue'));
+				$('#'+$(this).data('rel').replace(/_slider$/, '_range_max')).val($('#'+$(this).data('rel').replace(/_slider$/, '_range_max')).attr('limitValue'));
 			}
 		}
 		else
 		{
-			if ($('option#'+$(this).attr('rel')).length)
+			if ($('option#'+$(this).data('rel')).length)
 			{
-				$('#'+$(this).attr('rel')).parent().val('');
+				$('#'+$(this).data('rel')).parent().val('');
 			}
 			else
 			{
-				$('#'+$(this).attr('rel')).attr('checked', false);
-				$('.'+$(this).attr('rel')).attr('checked', false);
-				$('#layered_form input[type=hidden][name='+$(this).attr('rel')+']').remove();
+				$('#'+$(this).data('rel')).attr('checked', false);
+				$('.'+$(this).data('rel')).attr('checked', false);
+				$('#layered_form input[type=hidden][name='+$(this).data('rel')+']').remove();
 			}
 		}
 		reloadContent(true);
@@ -385,13 +385,13 @@ function openCloseFilter()
 	{
 		if ($(this).html() == '&lt;')
 		{
-			$('#'+$(this).attr('rel')).show();
+			$('#'+$(this).data('rel')).show();
 			$(this).html('v');
 			$(this).parent().removeClass('closed');
 		}
 		else
 		{
-			$('#'+$(this).attr('rel')).hide();
+			$('#'+$(this).data('rel')).hide();
 			$(this).html('&lt;');
 			$(this).parent().addClass('closed');
 		}

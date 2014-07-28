@@ -1595,7 +1595,7 @@ CREATE TABLE `PREFIX_profile_lang` (
 CREATE TABLE `PREFIX_quick_access` (
   `id_quick_access` int(10) unsigned NOT NULL auto_increment,
   `new_window` tinyint(1) NOT NULL default '0',
-  `link` varchar(128) NOT NULL,
+  `link` varchar(255) NOT NULL,
   PRIMARY KEY (`id_quick_access`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
@@ -2503,7 +2503,6 @@ CREATE TABLE `PREFIX_tab_module_preference` (
 	PRIMARY KEY (`id_carrier`, `id_tax_rules_group`, `id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
-
 CREATE TABLE `PREFIX_order_invoice_payment` (
 	`id_order_invoice` int(11) unsigned NOT NULL,
 	`id_order_payment` int(11) unsigned NOT NULL,
@@ -2513,4 +2512,14 @@ CREATE TABLE `PREFIX_order_invoice_payment` (
 	KEY `id_order` (`id_order`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-
+CREATE TABLE `PREFIX_smarty_cache` (
+  `id_smarty_cache` char(40) NOT NULL,
+  `name` char(40) NOT NULL,
+  `cache_id` varchar(254) DEFAULT NULL,
+  `modified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `content` longtext NOT NULL,
+  PRIMARY KEY (`id_smarty_cache`),
+  KEY `name` (`name`),
+  KEY `cache_id` (`cache_id`),
+  KEY `modified` (`modified`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;

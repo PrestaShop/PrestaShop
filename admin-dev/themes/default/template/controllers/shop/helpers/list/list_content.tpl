@@ -25,6 +25,14 @@
 
 {extends file="helpers/list/list_content.tpl"}
 
+{block name="open_td"}
+	{if $key == 'url'}
+		<td{if isset($params.position)} id="td_{if !empty($position_group_identifier)}{$position_group_identifier}{else}0{/if}_{$tr.$identifier}{if $smarty.capture.tr_count > 1}_{($smarty.capture.tr_count - 1)|intval}{/if}"{/if} class="{if !$no_link}pointer{/if}{if isset($params.class)} {$params.class}{/if}{if isset($params.align)} {$params.align}{/if}">
+	{else}
+		{$smarty.block.parent}
+	{/if}
+{/block}
+
 {block name="td_content"}
 	{if $key == 'url'}
 		{if isset($tr.$key)}

@@ -127,8 +127,8 @@ class CategoryCore extends ObjectModel
 			'nb_products_recursive' => array('getter' => 'getWsNbProductsRecursive', 'setter' => false),
 		),
 		'associations' => array(
-			'categories' => array('getter' => 'getChildrenWs', 'resource' => 'categories', ),
-			'products' => array('getter' => 'getProductsWs', 'resource' => 'products', ),
+			'categories' => array('getter' => 'getChildrenWs', 'resource' => 'category', ),
+			'products' => array('getter' => 'getProductsWs', 'resource' => 'product', ),
 		),
 	);
 

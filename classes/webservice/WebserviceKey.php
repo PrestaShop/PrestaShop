@@ -57,16 +57,15 @@ class WebserviceKeyCore extends ObjectModel
 
 	public static function keyExists($key)
 	{
-		return (!Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `key`
-			FROM '._DB_PREFIX_.'webservice_account
-			WHERE `key` = \''.pSQL($key).'\'') ? false : true);
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		SELECT `key`
+		FROM '._DB_PREFIX_.'webservice_account
+		WHERE `key` = "'.pSQL($key).'"');
 	}
 
 	public function delete()
 	{
-		if (!parent::delete() || $this->deleteAssociations() === false)
-			return false;
-		return true;
+		return (parent::delete() && ($this->deleteAssociations() !== false));
 	}
 
 	public function deleteAssociations()
@@ -99,28 +98,18 @@ class WebserviceKeyCore extends ObjectModel
 
 	public static function isKeyActive($auth_key)
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT a.active
-			FROM `'._DB_PREFIX_.'webservice_account` a
-			WHERE a.key = \''.pSQL($auth_key).'\'
-		');
-		if (!isset($result[0]))
-			return null;
-		else
-			return isset($result[0]['active']) && $result[0]['active'];
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		SELECT active
+		FROM `'._DB_PREFIX_.'webservice_account`
+		WHERE `key` = "'.pSQL($auth_key).'"');
 	}
 
 	public static function getClassFromKey($auth_key)
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT a.class_name as class
-			FROM `'._DB_PREFIX_.'webservice_account` a
-			WHERE a.key = \''.pSQL($auth_key).'\'
-		');
-		if (!isset($result[0]))
-			return null;
-		else
-			return $result[0]['class'];
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		SELECT class_name
+		FROM `'._DB_PREFIX_.'webservice_account`
+		WHERE `key` = "'.pSQL($auth_key).'"');
 	}
 
 	public static function setPermissionForAccount($id_account, $permissions_to_set)
@@ -153,5 +142,3 @@ class WebserviceKeyCore extends ObjectModel
 		return $ok;
 	}
 }
-
-

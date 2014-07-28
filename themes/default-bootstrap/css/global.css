@@ -7241,9 +7241,7 @@ table#cart_summary .gift-icon {
       #order-opc .delivery_option > div > table.resume.delivery_option_carrier {
         margin-top: 10px;
         width: 100%;
-        background: #5192f3;
-        color: white;
-        border: 1px solid #4b80c3;
+        border: 1px solid #d6d4d4;
         font-weight: bold; }
         #order .delivery_option > div > table.resume.delivery_option_carrier td,
         #order-opc .delivery_option > div > table.resume.delivery_option_carrier td {
@@ -7391,7 +7389,7 @@ p.cheque-indent {
 .delivery_option_carrier.selected {
   display: table; }
 
-.delivery_option_carrier.not-displayable {
+.not-displayable {
   display: none; }
 
 #address .box,

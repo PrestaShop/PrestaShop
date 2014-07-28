@@ -131,7 +131,7 @@ class CartCore extends ObjectModel
 			'id_lang' => array('xlink_resource' => 'languages'),
 		),
 		'associations' => array(
-			'cart_rows' => array('resource' => 'cart_rows', 'virtual_entity' => true, 'fields' => array(
+			'cart_rows' => array('resource' => 'cart_row', 'virtual_entity' => true, 'fields' => array(
 				'id_product' => array('required' => true, 'xlink_resource' => 'products'),
 				'id_product_attribute' => array('required' => true, 'xlink_resource' => 'combinations'),
 				'id_address_delivery' => array('required' => true, 'xlink_resource' => 'addresses'),
@@ -881,7 +881,7 @@ class CartCore extends ObjectModel
 
 		if ((int)$quantity <= 0)
 			return $this->deleteProduct($id_product, $id_product_attribute, (int)$id_customization);
-		elseif (!$product->available_for_order || Configuration::get('PS_CATALOG_MODE'))
+		elseif (!$product->available_for_order || (Configuration::get('PS_CATALOG_MODE') && !defined('_PS_ADMIN_DIR_')))
 			return false;
 		else
 		{
@@ -1723,7 +1723,7 @@ class CartCore extends ObjectModel
 			$id_warehouse = 0;
 			foreach ($warehouse_count_by_address[$product['id_address_delivery']] as $id_war => $val)
 			{
-				if (in_array((int)$id_war, $product['warehouse_list']))
+				if (in_array((int)$id_war, $product['warehouse_list']) && !$product['is_virtual'])
 				{
 					$product['carrier_list'] = array_merge($product['carrier_list'], Carrier::getAvailableCarrierList(new Product($product['id_product']), $id_war, $product['id_address_delivery'], null, $this));
 					if (!$id_warehouse)
@@ -1949,7 +1949,7 @@ class CartCore extends ObjectModel
 			foreach ($packages as $id_package => $package)
 			{
 				// No carriers available
-				if (count($package['carrier_list']) == 1 && current($package['carrier_list']) == 0)
+				if (count($packages) == 1 && count($package['carrier_list']) == 1 && current($package['carrier_list']) == 0)
 				{	
 					$cache = array();
 					return $cache;
@@ -3004,7 +3004,7 @@ class CartCore extends ObjectModel
 
 	public function checkQuantities()
 	{
-		if (Configuration::get('PS_CATALOG_MODE'))
+		if (Configuration::get('PS_CATALOG_MODE') && !defined('_PS_ADMIN_DIR_'))
 			return false;
 
 		foreach ($this->getProducts() as $product)

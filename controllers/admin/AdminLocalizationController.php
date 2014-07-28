@@ -43,6 +43,14 @@ class AdminLocalizationControllerCore extends AdminController
 						'identifier' => 'id_lang',
 						'list' => Language::getLanguages(false)
 					),
+					'PS_DETECT_LANG' => array(
+						'title' => $this->l('Set language from browser'),
+						'desc' => $this->l('Set browser language as default language'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool',
+						'default' => '1'
+					),
 					'PS_COUNTRY_DEFAULT' => array(
 						'title' => $this->l('Default country'),
 						'hint' => $this->l('The default country used in your shop.'),
@@ -51,6 +59,14 @@ class AdminLocalizationControllerCore extends AdminController
 						'class' => 'chosen',
 						'identifier' => 'id_country',
 						'list' => Country::getCountries($this->context->language->id)
+					),
+					'PS_DETECT_COUNTRY' => array(
+						'title' => $this->l('Set default country from browser language'),
+						'desc' => $this->l('Set country corresponding to browser language'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool',
+						'default' => '1'
 					),
 					'PS_CURRENCY_DEFAULT' => array(
 						'title' => $this->l('Default currency'),

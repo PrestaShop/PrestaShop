@@ -266,7 +266,7 @@
 				</tr>
 				{if $use_taxes && $show_taxes}
 					<tr class="cart_total_price">
-						<td colspan="{$col_span_subtotal}" class="text-right">{l s='Total (tax excl.)'}</td>
+						<td colspan="{$col_span_subtotal}" class="text-right">{if $display_tax_label}{l s='Total (tax excl.)'}{else}{l s='Total'}{/if}</td>
 						<td colspan="2" class="price" id="total_price_without_tax">{displayPrice price=$total_price_without_tax}</td>
 					</tr>
 					<tr class="cart_total_tax">
