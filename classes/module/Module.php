@@ -1526,16 +1526,23 @@ abstract class ModuleCore
 		if (!(file_exists(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST)
 			&& filesize(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST) > 0 
 			&& ((time() - filemtime(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST)) < 86400)
-			&& strstr(Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST), $theme->name)))
+			&& strpos(Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST), $theme->name) !== false))
 			self::generateTrustedXml();
 
-		if (strstr(Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST), $module_name))
+		// If the module is trusted, which includes both partner modules and modules bought on Addons	
+		if (strpos(Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST), $module_name) !== false)
 		{
-			if (strstr(Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST), '<name><![CDATA['.$module_name.']]></name>'))
+			// If the module is not a partner, then return 1 (which means the module is "trusted")
+			if (strpos(Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_MODULES_LIST), '<module name="'.$module_name.'"/>')== false)
 				return 1;
+			// The module is a parter. If the module is in the file that contains module for this country then return 1 (which means the module is "trusted")
+			elseif (strpos(Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST), '<name><![CDATA['.$module_name.']]></name>') !== false)
+				return 1;
+			// The module seems to be trusted, but it does not seem to be dedicated to this country
 			return 2;
 		}
-		elseif (strstr(Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_UNTRUSTED_MODULES_LIST), $module_name))
+		// If the module is already in the untrusted list, then return 0 (untrusted)
+		elseif (strpos(Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_UNTRUSTED_MODULES_LIST), $module_name) !== false)
 			return 0;
 		else
 		{
