@@ -158,6 +158,7 @@ function ProductTabsManager(){
 		{
 			this.current_request.complete(function(request, status) {
 				var wrong_status_code = new Array(400, 401, 403, 404, 405, 406, 408, 410, 413, 429, 499, 500, 502, 503, 504);
+				var current_tab = stack[0];
 
 				if (status === 'abort' || status === 'error')
 					self.stack_error.push(stack.shift());
@@ -167,7 +168,7 @@ function ProductTabsManager(){
 				if (request.responseText.length == 0 || in_array(request.status, wrong_status_code) || (self.stack_error.length !== 0
 					&& !self.page_reloading))
 				{
-					jConfirm('Tab : ' + stack[0] + ' (' + request.status + ')\n' + reload_tab_description, reload_tab_title, function(confirm) {
+					jConfirm('Tab : ' + current_tab + ' (' + request.status + ')\n' + reload_tab_description, reload_tab_title, function(confirm) {
 						if (confirm === true)
 						{
 							self.displayBulk(self.stack_error.slice(0));
