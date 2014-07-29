@@ -86,7 +86,7 @@
 			var empty_name_msg = '{l s='The product name is empty. You will at least need to enter a name for the default language before you can save the product.' js=1}';
 			var empty_link_rewrite_msg = '{l s='The friendly URL is empty. You will at least need to enter a friendly URL for the default language before you can save the product.' slashes=1}';
 			var reload_tab_title = '{l s='Confirmation' slashes=1}';
-			var reload_tab_description = '{l s='Some tabs was not loaded correctly. Would you like to reload them?' slashes=1}';
+			var reload_tab_description = '{l s='A server error occurred while loading the tabs: some tabs could not be loaded.' js=1}'+'\n'+'{l s='Please try again by refreshing the page.' js=1}'+'\n'+'{l s='If you are still encountering this problem, please check your server logs or contact your hosting provider for assistance.' js=1}';
 
 			$('#product-tab-content-wait').show();
 			var post_data = {$post_data};
