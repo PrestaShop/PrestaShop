@@ -65,7 +65,6 @@ class AdminEmailsControllerCore extends AdminController
 							2 => 'onclick="$(\'#configuration_fieldset_smtp\').slideDown();"',
 							3 => 'onclick="$(\'#configuration_fieldset_smtp\').slideUp();"'
 						),
-						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_MAIL_TYPE' => array('title' => '', 'validation' => 'isGenericName', 'type' => 'radio', 'required' => true, 'choices' => array(
 						Mail::TYPE_HTML => $this->l('Send email in HTML format'), 
@@ -85,28 +84,24 @@ class AdminEmailsControllerCore extends AdminController
 						'empty' => true, 'validation' =>
 						'isUrl',
 						'type' => 'text',
-						'visibility' => Shop::CONTEXT_ALL
 						),
 					'PS_MAIL_SERVER' => array(
 						'title' => $this->l('SMTP server'),
 						'hint' => $this->l('IP address or server name (e.g. smtp.mydomain.com).'),
 						'validation' => 'isGenericName',
 						'type' => 'text',
-						'visibility' => Shop::CONTEXT_ALL
 						),
 					'PS_MAIL_USER' => array(
 						'title' => $this->l('SMTP user'),
 						'hint' => $this->l('Leave blank if not applicable.'),
 						'validation' => 'isGenericName',
 						'type' => 'text',
-						'visibility' => Shop::CONTEXT_ALL
 						),
 					'PS_MAIL_PASSWD' => array(
 						'title' => $this->l('SMTP password'),
 						'hint' => $this->l('Leave blank if not applicable.'),
 						'validation' => 'isAnything',
 						'type' => 'password',
-						'visibility' => Shop::CONTEXT_ALL,
 						'autocomplete' => false
 						),
 					'PS_MAIL_SMTP_ENCRYPTION' => array(
@@ -130,7 +125,6 @@ class AdminEmailsControllerCore extends AdminController
 								'name' => $this->l('SSL')
 								)
 							),
-						'visibility' => Shop::CONTEXT_ALL
 						),
 					'PS_MAIL_SMTP_PORT' => array(
 						'title' => $this->l('Port'),
@@ -138,7 +132,6 @@ class AdminEmailsControllerCore extends AdminController
 						'validation' => 'isInt',
 						'type' => 'text',
 						'cast' => 'intval',
-						'visibility' => Shop::CONTEXT_ALL
 						),
 				),
 				'submit' => array('title' => $this->l('Save'))
