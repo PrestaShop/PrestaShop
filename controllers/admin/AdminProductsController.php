@@ -2446,11 +2446,15 @@ class AdminProductsControllerCore extends AdminController
 	 * @param array $current Current category
 	 * @param integer $id_category Current category id
 	 */
-	public static function recurseCategoryForInclude($id_obj, $indexedCategories, $categories, $current, $id_category = 1, $id_category_default = null, $has_suite = array())
+	public static function recurseCategoryForInclude($id_obj, $indexedCategories, $categories, $current, $id_category = null, $id_category_default = null, $has_suite = array())
 	{
 		global $done;
 		static $irow;
 		$content = '';
+
+		if (!$category)
+			$id_category = (int)Configuration::get('PS_ROOT_CATEGORY');
+
 		if (!isset($done[$current['infos']['id_parent']]))
 			$done[$current['infos']['id_parent']] = 0;
 		$done[$current['infos']['id_parent']] += 1;

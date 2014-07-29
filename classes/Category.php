@@ -266,8 +266,11 @@ class CategoryCore extends ObjectModel
 		);
 	}
 
-	public static function recurseCategory($categories, $current, $id_category = 1, $id_selected = 1)
+	public static function recurseCategory($categories, $current, $id_category = null, $id_selected = 1)
 	{
+		if (!$category)
+			$id_category = (int)Configuration::get('PS_ROOT_CATEGORY');
+	
 		echo '<option value="'.$id_category.'"'.(($id_selected == $id_category) ? ' selected="selected"' : '').'>'.
 		str_repeat('&nbsp;', $current['infos']['level_depth'] * 5).stripslashes($current['infos']['name']).'</option>';
 		if (isset($categories[$id_category]))
@@ -306,7 +309,7 @@ class CategoryCore extends ObjectModel
 
 	public function delete()
 	{
-		if ((int)$this->id === 0 || (int)$this->id === 1)
+		if ((int)$this->id === 0 || (int)$this->id === (int)Configuration::get('PS_ROOT_CATEGORY'))
 			return false;
 
 		$this->clearCache();
@@ -1020,7 +1023,7 @@ class CategoryCore extends ObjectModel
 		$categories = null;
 		$id_current = $this->id;
 		if (count(Category::getCategoriesWithoutParent()) > 1 && Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && count(Shop::getShops(true, null, true)) != 1)
-			$context->shop->id_category = Category::getTopCategory()->id;
+			$context->shop->id_category = (int)Configuration::get('PS_ROOT_CATEGORY');
 		elseif (!$context->shop->id)
 			$context->shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
 		$id_shop = $context->shop->id;
