@@ -512,7 +512,7 @@ class CategoryCore extends ObjectModel
 			$buff = array();
 
 			if (!isset($root_category))
-				$root_category = 1;
+				$root_category = Category::getRootCategory()->id;
 
 			foreach ($result as $row)
 			{
