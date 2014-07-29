@@ -1254,7 +1254,7 @@ product_tabs['Pack'] = new function() {
 			selectedProduct = e.object
 		});
 
-		$('#add_pack_item').on('click', addPackItem);
+		$('#add_pack_item').unbind('click').on('click', addPackItem);
 
 		function addPackItem() {
 
