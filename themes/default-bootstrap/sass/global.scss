@@ -915,7 +915,7 @@ table.table_block td {
 	> li {
 		margin-bottom: 0;
 		// min 768px
-		@media (min-width: $screen-sm) {
+		@media (min-width: $screen-sm-max) {
 			border-left: 1px solid $base-border-color;
 			margin: 0 0px 0 9px;
 			padding: 0 0px 0 9px;
@@ -936,6 +936,9 @@ table.table_block td {
 			@media (min-width: $screen-sm) {
 				padding: 1px 10px;
 			}
+			@media (min-width: $screen-sm) and (max-width: $screen-sm-max) {
+				padding: 10px 10px;
+			}
 		}
 		&:first-child {
 			border: none;
@@ -949,6 +952,9 @@ table.table_block td {
 		// min 768px
 		@media (min-width: $screen-sm) {
 			margin: -9px 0;
+		}
+		@media (min-width: $screen-sm) and (max-width: $screen-sm-max) {
+			margin: 0px 0;
 		}
 	}
 }
