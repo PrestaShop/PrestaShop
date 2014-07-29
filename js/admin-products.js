@@ -167,8 +167,7 @@ function ProductTabsManager(){
 				else
 					stack.shift();
 
-				if (request.responseText.length == 0 || in_array(request.status, wrong_status_code) || (self.stack_error.length !== 0
-					&& !self.page_reloading))
+				if ((request.responseText.length == 0 || in_array(request.status, wrong_status_code) || self.stack_error.length !== 0) && !self.page_reloading)
 				{
 					jConfirm('Tab : ' + stack[0] + ' (' + request.status + ')\n' + reload_tab_description, reload_tab_title, function(confirm) {
 						if (confirm === true)
