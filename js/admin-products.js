@@ -25,6 +25,9 @@
 /**
  * Handles loading of product tabs
  */
+
+var all_tabs_are_loaded = false;
+
 function ProductTabsManager(){
 	var self = this;
 	this.product_tabs = [];
@@ -89,7 +92,7 @@ function ProductTabsManager(){
 		var tab_selector = $("#product-tab-content-"+tab_name);
 
 		// Is the tab already being loaded?
-		if (!tab_selector.hasClass('not-loaded') || !tab_selector.hasClass('loading'))
+		if (tab_selector.hasClass('not-loaded') || !tab_selector.hasClass('loading'))
 		{
 			// Mark the tab as being currently loading
 			tab_selector.addClass('loading');
@@ -182,6 +185,7 @@ function ProductTabsManager(){
 
 				if (stack.length == 0)
 				{
+					all_tabs_are_loaded = true;
 					$('[name="submitAddproductAndStay"]').each(function() {
 						$(this).prop('disabled', false).find('i').removeClass('process-icon-loading').addClass('process-icon-save');
 					});

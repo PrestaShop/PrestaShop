@@ -102,6 +102,9 @@
 				var display_multishop_checkboxes = false;
 			{/if}
 
+			var tabs_preloaded = new Array();
+			var tabs_to_preload = new Array();
+
 			$(document).ready(function()
 			{
 				if (product_type == product_type_pack)
@@ -157,6 +160,17 @@
 
 					tabs_manager.onLoad(id, function(){
 						$("#product-tab-content-"+id).show(0, function(){
+							$("#product-tab-content-"+id).on('displayed', function() {
+								if (all_tabs_are_loaded) 
+								{
+									$(this).find('[name="submitAddproductAndStay"]').each(function() {
+										$(this).prop('disabled', false).find('i').removeClass('process-icon-loading').addClass('process-icon-save');
+									});
+									$(this).find('[name="submitAddproduct"]').each(function() {
+										$(this).prop('disabled', false).find('i').removeClass('process-icon-loading').addClass('process-icon-save');
+									});
+								}
+							});
 							$(this).trigger('displayed');
 						});
 						$("#link-"+id).addClass('active');
@@ -208,12 +222,10 @@
 
 			});
 
-			var tabs_preloaded = new Array();
-
 			// Listen to the load event that is fired each time an ajax call to load a tab has completed
 			$(window).bind("load", function() {
 				{* Fill an array with tabs that need to be preloaded *}
-				var tabs_to_preload = new Array();
+
 				{foreach $tabs_preloaded as $tab_name => $value}
 					{* If the tab was not given a loading priority number it will not be preloaded *}
 					{if (is_numeric($value))}
