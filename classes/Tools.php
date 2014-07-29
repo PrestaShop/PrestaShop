@@ -636,11 +636,11 @@ class ToolsCore
 		{
             $conversion_rate = ($currency_from->conversion_rate == 0 ? 1 : $currency_from->conversion_rate);
 			// Convert amount to default currency (using the old currency rate)
-			$amount = Tools::ps_round($amount / $conversion_rate, 2);
+			$amount = $amount / $conversion_rate;
 			// Convert to new currency
 			$amount *= $currency_to->conversion_rate;
 		}
-		return Tools::ps_round($amount, 2);
+		return Tools::ps_round($amount, _PS_PRICE_DISPLAY_PRECISION_);
 	}
 
 	/**
