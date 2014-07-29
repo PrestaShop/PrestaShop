@@ -301,6 +301,13 @@ class AdminShopControllerCore extends AdminController
 	protected function afterUpdate($new_shop)
 	{
 		$categories = Tools::getValue('categoryBox');
+
+		if (!is_array($categories))
+		{
+			$this->errors[] = $this->l('Please create some sub-categories for this root category.');
+			return false;
+		}
+
 		array_unshift($categories, Configuration::get('PS_ROOT_CATEGORY'));
 
 		if (!Category::updateFromShop($categories, $new_shop->id))
