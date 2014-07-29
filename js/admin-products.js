@@ -89,10 +89,10 @@ function ProductTabsManager(){
 	 */
 	this.display = function (tab_name, selected)
 	{
-		var tab_selector = $("#product-tab-content-"+tab_name);
+		var tab_selector = $("#product-tab-content-" + tab_name);
 
 		// Is the tab already being loaded?
-		if (tab_selector.hasClass('not-loaded') || !tab_selector.hasClass('loading'))
+		if (tab_selector.hasClass('not-loaded') && !tab_selector.hasClass('loading'))
 		{
 			// Mark the tab as being currently loading
 			tab_selector.addClass('loading');
