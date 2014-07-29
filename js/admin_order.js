@@ -145,7 +145,7 @@ function editProductRefreshTotal(element)
 {
 	element = element.parent().parent().parent();
 	var element_list = [];
-	
+
 	// Customized product
 	if(element.hasClass('customized'))
 	{
@@ -163,7 +163,7 @@ function editProductRefreshTotal(element)
 
 	if (price < 0 || isNaN(price))
 		price = 0;
-	
+
 	// Customized product
 	if (element_list.length)
 	{
@@ -176,7 +176,7 @@ function editProductRefreshTotal(element)
 				$(elm).find('.total_product').html(formatCurrency(subtotal, currency_format, currency_sign, currency_blank));
 			}
 		});
-		
+
 		var total = makeTotalProductCaculation(qty, price);
 		element.find('td.total_product').html(formatCurrency(total, currency_format, currency_sign, currency_blank));
 		element.find('td.productQuantity').html(qty);
@@ -215,7 +215,7 @@ function refreshProductLineView(element, view)
 {
 	var new_product_line = $(view);
 	new_product_line.find('td').hide();
-	
+
 	var element_list = [];
 	if (element.parent().parent().find('.edit_product_id_order_detail').length)
 		var element_list = $('.customized-' + element.parent().parent().find('.edit_product_id_order_detail').val());
@@ -317,7 +317,7 @@ function init()
 		$('#message').hide();
 		e.preventDefault();
 	});
-	
+
 	$('#add_product').unbind('click').click(function(e) {
 		$('.cancel_product_change_link:visible').trigger('click');
 		$('.add_product_fields').show();
@@ -597,14 +597,21 @@ function init()
 				if (data.result)
 				{
 					current_product = data;
-					
+
 					var element_list = $('.customized-' + element.parent().parent().find('.edit_product_id_order_detail').val());
 					if (!element_list.length)
+					{
 						element_list = element.parent().parent().parent();
+						element_list.parent().parent().find('td .product_quantity_show').hide();
+						element_list.parent().parent().find('td .product_quantity_edit').show();
+					}
+					else
+					{
+						element_list.find('td .product_quantity_show').hide();
+						element_list.find('td .product_quantity_edit').show();
+					}
 					element_list.find('td .product_price_show').hide();
-					element_list.find('td .product_quantity_show').hide();
 					element_list.find('td .product_price_edit').show();
-					element_list.find('td .product_quantity_edit').show();
 					element_list.find('td.cancelCheck').hide();
 					element_list.find('td.cancelQuantity').hide();
 					element_list.find('td.product_invoice').show();
