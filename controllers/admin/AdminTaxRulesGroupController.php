@@ -422,6 +422,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 		$tax_rules_group = new TaxRulesGroup((int)$id_tax_rules_group);
 		foreach ($this->selected_countries as $id_country)
 		{
+			$first = true;
 			foreach ($this->selected_states as $id_state)
 			{
 				if ($tax_rules_group->hasUniqueTaxRuleForCountry($id_country, $id_state, $id_rule))
@@ -432,8 +433,11 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				$tr = new TaxRule();
 
 				// update or creation?
-				if (isset($id_rule))
+				if (isset($id_rule) && $first)
+				{
 					$tr->id = $id_rule;
+					$first = false;
+				}
 
 				$tr->id_tax = $id_tax;
 				$tr->id_tax_rules_group = (int)$id_tax_rules_group;
