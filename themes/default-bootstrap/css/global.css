@@ -6010,7 +6010,7 @@ table.table_block td {
       margin: 0 0 0 -18px; } }
   #home-page-tabs > li {
     margin-bottom: 0; }
-    @media (min-width: 768px) {
+    @media (min-width: 991px) {
       #home-page-tabs > li {
         border-left: 1px solid #d6d4d4;
         margin: 0 0px 0 9px;
@@ -6029,6 +6029,9 @@ table.table_block td {
       @media (min-width: 768px) {
         #home-page-tabs > li a {
           padding: 1px 10px; } }
+      @media (min-width: 768px) and (max-width: 991px) {
+        #home-page-tabs > li a {
+          padding: 10px 10px; } }
     #home-page-tabs > li:first-child {
       border: none; }
   #home-page-tabs > li.active a,
@@ -6040,6 +6043,10 @@ table.table_block td {
       #home-page-tabs > li.active a,
       #home-page-tabs > li a:hover {
         margin: -9px 0; } }
+    @media (min-width: 768px) and (max-width: 991px) {
+      #home-page-tabs > li.active a,
+      #home-page-tabs > li a:hover {
+        margin: 0px 0; } }
 
 .block {
   margin-bottom: 30px; }
