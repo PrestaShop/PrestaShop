@@ -627,7 +627,7 @@ function handleSaveButtons(e)
 			{
 				if (do_not_save == false)
 				{
-					$("#product_form").append('<div id="disableSaveMessage" class="alert alert-danger"></div>');
+					$("#product_form").prepend('<div id="disableSaveMessage" class="alert alert-danger"></div>');
 					warnDiv = $("#disableSaveMessage");
 					do_not_save = true;
 				}
