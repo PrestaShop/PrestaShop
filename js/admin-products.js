@@ -41,7 +41,7 @@ function ProductTabsManager(){
 	 */
 	this.init = function() {
 		for (var tab_name in this.product_tabs) {
-			if (this.product_tabs[tab_name].onReady !== undefined && this.product_tabs[tab_name] !== this.product_tabs['Pack'] )
+			if (this.product_tabs[tab_name].onReady !== undefined)
 				this.onLoad(tab_name, this.product_tabs[tab_name].onReady);
 		}
 
@@ -627,7 +627,7 @@ function handleSaveButtons(e)
 			{
 				if (do_not_save == false)
 				{
-					$(".leadin").append('<div id="disableSaveMessage" class="alert alert-danger"></div>');
+					$("#product_form").append('<div id="disableSaveMessage" class="alert alert-danger"></div>');
 					warnDiv = $("#disableSaveMessage");
 					do_not_save = true;
 				}
@@ -1105,6 +1105,7 @@ product_tabs['Informations'] = new function(){
 
 					$('a[id*="Combinations"]').hide();
 					$('a[id*="Shipping"]').show();
+					$('a[id*="Pack"]').show();
 
 					$('#condition').removeAttr('disabled');
 					$('#condition option[value=new]').removeAttr('selected');
@@ -1135,6 +1136,7 @@ product_tabs['Informations'] = new function(){
 
 					$('a[id*="Combinations"]').hide();
 					$('a[id*="Shipping"]').hide();
+					$('a[id*="Pack"]').hide();
 
 					tabs_manager.onLoad('Informations', function(){
 						$('#condition').attr('disabled', true);
@@ -1148,6 +1150,7 @@ product_tabs['Informations'] = new function(){
 				// 3rd case : product_type is PTYPE_SIMPLE (0)
 				$('a[id*="Combinations"]').show();
 				$('a[id*="Shipping"]').show();
+				$('a[id*="Pack"]').hide();
 				$('#condition').removeAttr('disabled');
 				$('#condition option[value=new]').removeAttr('selected');
 				$('.stockForVirtualProduct').show();
