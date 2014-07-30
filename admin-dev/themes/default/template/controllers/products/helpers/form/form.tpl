@@ -84,7 +84,7 @@
 			var empty_name_msg = '{l s='The product name is empty. You will at least need to enter a name for the default language before you can save the product.' js=1}';
 			var empty_link_rewrite_msg = '{l s='The friendly URL is empty. You will at least need to enter a friendly URL for the default language before you can save the product.' slashes=1}';
 			var reload_tab_title = '{l s='Confirmation' slashes=1}';
-			var reload_tab_description = '{l s='Some tabs was not loaded correctly. Would you like to reload them?' slashes=1}';
+			var reload_tab_description = '{l s='A server error occurred while loading the tabs: some tabs could not be loaded.' js=1}'+'\n'+'{l s='Please try again by refreshing the page.' js=1}'+'\n'+'{l s='If you are still encountering this problem, please check your server logs or contact your hosting provider for assistance.' js=1}';
 
 			$('#product-tab-content-wait').show();
 			var post_data = {$post_data};
@@ -99,6 +99,9 @@
 			{else}
 				var display_multishop_checkboxes = false;
 			{/if}
+
+			var tabs_preloaded = new Array();
+			var tabs_to_preload = new Array();
 
 			$(document).ready(function()
 			{
@@ -155,6 +158,17 @@
 
 					tabs_manager.onLoad(id, function(){
 						$("#product-tab-content-"+id).show(0, function(){
+							$("#product-tab-content-"+id).on('displayed', function() {
+								if (all_tabs_are_loaded) 
+								{
+									$(this).find('[name="submitAddproductAndStay"]').each(function() {
+										$(this).prop('disabled', false).find('i').removeClass('process-icon-loading').addClass('process-icon-save');
+									});
+									$(this).find('[name="submitAddproduct"]').each(function() {
+										$(this).prop('disabled', false).find('i').removeClass('process-icon-loading').addClass('process-icon-save');
+									});
+								}
+							});
 							$(this).trigger('displayed');
 						});
 						$("#link-"+id).addClass('active');
@@ -206,12 +220,10 @@
 
 			});
 
-			var tabs_preloaded = new Array();
-
 			// Listen to the load event that is fired each time an ajax call to load a tab has completed
 			$(window).bind("load", function() {
 				{* Fill an array with tabs that need to be preloaded *}
-				var tabs_to_preload = new Array();
+
 				{foreach $tabs_preloaded as $tab_name => $value}
 					{* If the tab was not given a loading priority number it will not be preloaded *}
 					{if (is_numeric($value))}

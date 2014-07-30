@@ -416,8 +416,26 @@ class AdminTranslationsControllerCore extends AdminController
 		$content = "<?php\n\n\$tabs = array();";
 		if (!empty($tabs))
 			foreach ($tabs as $tab)
+			{
+				/**
+				 * We don't export tab translations that are identical to the default
+				 * tab translations to avoid a problem that would occur in the followin scenario:
+				 * 
+				 * 1) install PrestaShop in, say, Spanish => tabs are by default in Spanish
+				 * 2) create a new language, say, Klingon => tabs are populated using the default, Spanish, tabs
+				 * 3) export the Klingon language pack
+				 *
+				 * => Since you have not yet translated the tabs into Klingon,
+				 * without the condition below, you would get tabs exported, but in Spanish.
+				 * This would lead to a Klingon pack actually containing Spanish.
+				 *
+				 * This has caused many issues in the past, so, as a precaution, tabs from
+				 * the default language are not exported.
+				 * 
+				 */
 				if ($tabs_default[$tab['class_name']] != pSQL($tab['name']))
-				$content .= "\n\$tabs['".$tab['class_name']."'] = '".pSQL($tab['name'])."';";
+					$content .= "\n\$tabs['".$tab['class_name']."'] = '".pSQL($tab['name'])."';";
+			}
 		$content .= "\n\nreturn \$tabs;";
 
 		$dir = _PS_TRANSLATIONS_DIR_.$this->lang_selected->iso_code.DIRECTORY_SEPARATOR;
