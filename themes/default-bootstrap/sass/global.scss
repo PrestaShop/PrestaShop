@@ -1796,6 +1796,9 @@ div.star a:hover {
 		.row {
 			position: relative;
 		}
+		ul.row{
+			position: static;
+		}
 		.footer-block {
 			margin-top: 45px;
 			// max 767px
