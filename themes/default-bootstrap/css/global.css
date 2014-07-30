@@ -6786,6 +6786,8 @@ div.star a:hover {
     color: #777777; }
     .footer-container #footer .row {
       position: relative; }
+    .footer-container #footer ul.row {
+      position: static; }
     .footer-container #footer .footer-block {
       margin-top: 45px; }
       @media (max-width: 767px) {
