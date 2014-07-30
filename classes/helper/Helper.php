@@ -183,7 +183,6 @@ class HelperCore
 			'search' => $this->l('Find a category')
 		);
 
-		$top_category = Category::getTopCategory();
 		if (Tools::isSubmit('id_shop'))
 			$id_shop = Tools::getValue('id_shop');
 		else
@@ -196,7 +195,7 @@ class HelperCore
 					$id_shop = 0;
 		$shop = new Shop($id_shop);
 		$root_category = Category::getRootCategory(null, $shop);
-		$disabled_categories[] = $top_category->id;
+		$disabled_categories[] = (int)Configuration::get('PS_ROOT_CATEGORY');
 		if (!$root)
 			$root = array('name' => $root_category->name, 'id_category' => $root_category->id);
 
@@ -261,7 +260,7 @@ class HelperCore
 		}
 
 		$root_input = '';
-		if ($root['id_category'] != $top_category->id || (Tools::isSubmit('ajax') && Tools::getValue('action') == 'getCategoriesFromRootCategory'))
+		if ($root['id_category'] != (int)Configuration::get('PS_ROOT_CATEGORY') || (Tools::isSubmit('ajax') && Tools::getValue('action') == 'getCategoriesFromRootCategory'))
 			$root_input = '
 				<p class="checkbox"><i class="icon-folder-open"></i><label>
 					<input type="'.(!$use_radio ? 'checkbox' : 'radio').'" name="'

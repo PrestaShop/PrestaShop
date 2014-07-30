@@ -17,6 +17,9 @@ ul.product_list .availability span {
   ul.product_list .availability span.out-of-stock {
     background: #fe9126;
     border: 1px solid #e4752b; }
+  ul.product_list .availability span.available-dif {
+    background: #fe9126;
+    border: 1px solid #e4752b; }
 ul.product_list .color-list-container {
   margin-bottom: 12px; }
   ul.product_list .color-list-container ul li {
@@ -28,11 +31,11 @@ ul.product_list .color-list-container {
       display: block;
       width: 22px;
       height: 22px;
-      margin:1px; }
-	    ul.product_list .color-list-container ul li a img {
-	      display: block;
-	      width: 22px;
-	      height: 22px; }
+      margin: 1px; }
+      ul.product_list .color-list-container ul li a img {
+        display: block;
+        width: 22px;
+        height: 22px; }
 ul.product_list .product-image-container {
   text-align: center; }
   ul.product_list .product-image-container img {

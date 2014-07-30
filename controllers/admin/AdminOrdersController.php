@@ -269,6 +269,9 @@ class AdminOrdersControllerCore extends AdminController
 			$order = $this->loadObject();
 			$customer = $this->context->customer;
 
+			if (!Validate::isLoadedObject($order))
+				Tools::redirectAdmin($this->context->link->getAdminLink('AdminOrders'));
+
 			$this->toolbar_title[] = sprintf($this->l('Order %1$s from %2$s %3$s'), $order->reference, $customer->firstname, $customer->lastname);
 
 			if ($order->hasBeenShipped())
