@@ -319,7 +319,7 @@ class OrderCore extends ObjectModel
 
 	/**
 	 * This function return products of the orders
-	 * It's similar to Order::getProducts but witrh similar outputs of Cart::getProducts
+	 * It's similar to Order::getProducts but with similar outputs of Cart::getProducts
 	 *
 	 * @return array
 	 */
