@@ -1388,9 +1388,10 @@ product_tabs['Quantities'] = new function(){
 				}
 				showSuccessMessage(quantities_ajax_success);
 			},
-			error: function(msg)
+			error: function(jqXHR, textStatus, errorThrown)
 			{
-				showErrorMessage(msg.error);				
+				if (textStatus != 'error' || errorThrown != '')
+					showErrorMessage(textStatus + ': ' + errorThrown);				
 			}
 		});
 	};
