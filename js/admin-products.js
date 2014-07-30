@@ -89,10 +89,10 @@ function ProductTabsManager(){
 	 */
 	this.display = function (tab_name, selected)
 	{
-		var tab_selector = $("#product-tab-content-"+tab_name);
+		var tab_selector = $("#product-tab-content-" + tab_name);
 
 		// Is the tab already being loaded?
-		if (tab_selector.hasClass('not-loaded') || !tab_selector.hasClass('loading'))
+		if (tab_selector.hasClass('not-loaded') && !tab_selector.hasClass('loading'))
 		{
 			// Mark the tab as being currently loading
 			tab_selector.addClass('loading');
@@ -167,8 +167,7 @@ function ProductTabsManager(){
 				else
 					stack.shift();
 
-				if (request.responseText.length == 0 || in_array(request.status, wrong_status_code) || (self.stack_error.length !== 0
-					&& !self.page_reloading))
+				if ((request.responseText.length == 0 || in_array(request.status, wrong_status_code) || self.stack_error.length !== 0) && !self.page_reloading)
 				{
 					jConfirm('Tab : ' + stack[0] + ' (' + request.status + ')\n' + reload_tab_description, reload_tab_title, function(confirm) {
 						if (confirm === true)

@@ -155,13 +155,14 @@ abstract class PaymentModuleCore extends Module
 	{
 		if (self::DEBUG_MODE)
 			PrestaShopLogger::addLog('PaymentModule::validateOrder - Function called', 1, null, 'Cart', (int)$id_cart, true);
-	
+		
+		if (!isset($this->context))
+			$this->context = Context::getContext();
 		$this->context->cart = new Cart($id_cart);
 		$this->context->customer = new Customer($this->context->cart->id_customer);
 		$this->context->language = new Language($this->context->cart->id_lang);
-		$this->context->shop = ($shop ? $shop : new Shop($this->context->cart->id_shop));
+		$this->context->shop = ($shop ? $shop : new Shop($this->context->cart->id_shop));		
 		ShopUrl::resetMainDomainCache();
-
 		$id_currency = $currency_special ? (int)$currency_special : (int)$this->context->cart->id_currency;
 		$this->context->currency = new Currency($id_currency, null, $this->context->shop->id);
 		if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_delivery')

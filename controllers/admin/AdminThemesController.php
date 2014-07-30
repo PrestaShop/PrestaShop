@@ -160,7 +160,7 @@ class AdminThemesControllerCore extends AdminController
 		$cur_theme = array();
 		foreach ($all_themes as $theme)
 		{
-			if (file_exists(_PS_ALL_THEMES_DIR_.$theme->directory.'/preview.jpg'))
+			if (is_dir(_PS_ALL_THEMES_DIR_.$theme->directory))
 			{
 				$themes[] = array('id' => $theme->id, 'name' => $theme->name, 'preview' => '../themes/'.$theme->directory.'/preview.jpg');
 				if ($theme->id == $this->context->shop->id_theme)
