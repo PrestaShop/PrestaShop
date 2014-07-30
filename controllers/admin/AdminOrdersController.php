@@ -24,6 +24,17 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+class BoOrder extends PaymentModule
+{
+	public $active = 1;
+	public $name = 'bo_order';
+	
+	public function __construct()
+	{
+		$this->displayName = $this->l('Back-office order');
+	}
+}
+
 class AdminOrdersControllerCore extends AdminController
 {
 	public $toolbar_title;
@@ -1001,7 +1012,11 @@ class AdminOrdersControllerCore extends AdminController
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
-				$payment_module = Module::getInstanceByName($module_name);
+				if (!Configuration::get('PS_CATALOG_MODE'))
+					$payment_module = Module::getInstanceByName($module_name);
+				else
+					$payment_module = new BoOrder();
+				
 				$cart = new Cart((int)$id_cart);
 				Context::getContext()->currency = new Currency((int)$cart->id_currency);
 				Context::getContext()->customer = new Customer((int)$cart->id_customer);
