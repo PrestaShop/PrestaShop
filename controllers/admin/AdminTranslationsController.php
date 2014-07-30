@@ -1136,8 +1136,8 @@ class AdminTranslationsControllerCore extends AdminController
 				// Get all files for folders classes/ and override/classes/ recursively
 				$directories['php'] = array_merge($directories['php'], $this->listFiles(_PS_CLASS_DIR_, array(), 'php'));
 				$directories['php'] = array_merge($directories['php'], $this->listFiles(_PS_OVERRIDE_DIR_.'classes/', array(), 'php'));
-
-				$directories['php'] = array_merge($directories['php'], $this->getModulesHasMails());
+				$directories['php'] = array_merge($directories['php'], $this->listFiles(_PS_MODULE_DIR_, array(), 'php'));
+				
 				break;
 
 		}
