@@ -610,6 +610,7 @@ class AdminTranslationsControllerCore extends AdminController
 	public static function addNewTabs($iso_code, $files)
 	{
 		$errors = array();
+
 		foreach ($files as $file)
 		{
 			// Check if file is a file theme
@@ -621,7 +622,7 @@ class AdminTranslationsControllerCore extends AdminController
 				if (file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$file['filename']))
 					 include_once(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$file['filename']);
 				
-				if (count($_TABS))
+				if (is_array($_TABS) && count($_TABS))
 				{
 					foreach ($_TABS as $class_name => $translations)
 					{
@@ -632,7 +633,7 @@ class AdminTranslationsControllerCore extends AdminController
 						{
 							$id_lang = Language::getIdByIso($iso_code);
 							$tab->name[(int)$id_lang] = $translations;
-							
+
 							// Do not crash at intall
 							if (!isset($tab->name[Configuration::get('PS_LANG_DEFAULT')]))
 								$tab->name[(int)Configuration::get('PS_LANG_DEFAULT')] = $translations;

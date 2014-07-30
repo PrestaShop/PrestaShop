@@ -24,10 +24,21 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+class BoOrder extends PaymentModule
+{
+	public $active = 1;
+	public $name = 'bo_order';
+	
+	public function __construct()
+	{
+		$this->displayName = $this->l('Back-office order');
+	}
+}
+
 class AdminOrdersControllerCore extends AdminController
 {
 	public $toolbar_title;
-	
+
 	protected $statuses_array = array();
 
 	public function __construct()
@@ -134,7 +145,7 @@ class AdminOrdersControllerCore extends AdminController
 				'remove_onclick' => true
 			)
 		));
-		
+
 		if (Country::isCurrentlyUsed('country', true))
 		{
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
@@ -149,7 +160,7 @@ class AdminOrdersControllerCore extends AdminController
 			$country_array = array();
 			foreach ($result as $row)
 				$country_array[$row['id_country']] = $row['name'];
-				
+
 			$part1 = array_slice($this->fields_list, 0, 3);
 			$part2 = array_slice($this->fields_list, 3);
 			$part1['cname'] = array(
@@ -197,7 +208,7 @@ class AdminOrdersControllerCore extends AdminController
 				'desc' => $this->l('Add new order', null, null, false),
 				'icon' => 'process-icon-new'
 			);
-		
+
 		if ($this->display == 'add')
 			unset($this->page_header_toolbar_btn['save']);
 
@@ -246,7 +257,7 @@ class AdminOrdersControllerCore extends AdminController
 			'toolbar_scroll' => $this->toolbar_scroll,
 			'PS_CATALOG_MODE' => Configuration::get('PS_CATALOG_MODE'),
 			'title' => array($this->l('Orders'), $this->l('Create order'))
-			
+
 		));
 		$this->content .= $this->createTemplate('form.tpl')->fetch();
 	}
@@ -285,7 +296,7 @@ class AdminOrdersControllerCore extends AdminController
 					'desc' => $type,
 					'class' => 'process-icon-standardRefund'
 				);
-			
+
 			if ($order->hasInvoice() && !$this->lite_display)
 				$this->toolbar_btn['partial_refund'] = array(
 					'short' => 'Create',
@@ -331,7 +342,7 @@ class AdminOrdersControllerCore extends AdminController
 
 		return $this->createTemplate('_print_pdf_icon.tpl')->fetch();
 	}
-	
+
 	public function processBulkUpdateOrderStatus()
 	{
 		if (Tools::isSubmit('submitUpdateOrderStatus')
@@ -355,7 +366,7 @@ class AdminOrdersControllerCore extends AdminController
 						else
 						{
 							$current_order_state = $order->getCurrentOrderState();
-							if ($current_order_state->id == $order_state->id)	
+							if ($current_order_state->id == $order_state->id)
 								$this->errors[] = sprintf(Tools::displayError('Order #%d has already been assigned this status.'), $id_order);
 							else
 							{
@@ -370,7 +381,7 @@ class AdminOrdersControllerCore extends AdminController
 								$templateVars = array();
 								if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') && $order->shipping_number)
 									$templateVars = array('{followup}' => str_replace('@', $order->shipping_number, $carrier->url));
-		
+
 								if ($history->addWithemail(true, $templateVars))
 								{
 									if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
@@ -389,14 +400,14 @@ class AdminOrdersControllerCore extends AdminController
 				Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
 		}
 	}
-	
+
 	public function renderList()
 	{
 		if (Tools::isSubmit('submitBulkupdateOrderStatus'.$this->table))
 		{
 			if (Tools::getIsset('cancel'))
 				Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token);
-		
+
 			$this->tpl_list_vars['updateOrderStatus_mode'] = true;
 			$this->tpl_list_vars['order_statuses'] = $this->statuses_array;
 			$this->tpl_list_vars['REQUEST_URI'] = $_SERVER['REQUEST_URI'];
@@ -642,8 +653,8 @@ class AdminOrdersControllerCore extends AdminController
 					{
 						$order_carrier->weight = (float)$order->getTotalWeight();
 						if ($order_carrier->update())
-							$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);							
-					}																		
+							$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);
+					}
 
 					if ($amount > 0)
 					{
@@ -735,15 +746,15 @@ class AdminOrdersControllerCore extends AdminController
 					$productList = Tools::getValue('id_order_detail');
 					if ($productList)
 						$productList = array_map('intval', $productList);
-					
+
 					$customizationList = Tools::getValue('id_customization');
 					if ($customizationList)
 						$customizationList = array_map('intval', $customizationList);
-						
+
 					$qtyList = Tools::getValue('cancelQuantity');
 					if ($qtyList)
 						$qtyList = array_map('intval', $qtyList);
-						
+
 					$customizationQtyList = Tools::getValue('cancelCustomizationQuantity');
 					if ($customizationQtyList)
 						$customizationQtyList = array_map('intval', $customizationQtyList);
@@ -807,7 +818,7 @@ class AdminOrdersControllerCore extends AdminController
 
 								if (!$order->hasBeenDelivered() || ($order->hasBeenDelivered() && Tools::isSubmit('reinjectQuantities')) && $qty_cancel_product > 0)
 									$this->reinjectQuantity($order_detail, $qty_cancel_product);
-								
+
 								// Delete product
 								$order_detail = new OrderDetail((int)$id_order_detail);
 								if (!$order->deleteProduct($order, $order_detail, $qty_cancel_product))
@@ -818,7 +829,7 @@ class AdminOrdersControllerCore extends AdminController
 								{
 									$order_carrier->weight = (float)$order->getTotalWeight();
 									if ($order_carrier->update())
-										$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);									
+										$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);
 								}
 								Hook::exec('actionProductCancel', array('order' => $order, 'id_order_detail' => (int)$id_order_detail), null, false, true, false, $order->id_shop);
 							}
@@ -1001,7 +1012,11 @@ class AdminOrdersControllerCore extends AdminController
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
-				$payment_module = Module::getInstanceByName($module_name);
+				if (!Configuration::get('PS_CATALOG_MODE'))
+					$payment_module = Module::getInstanceByName($module_name);
+				else
+					$payment_module = new BoOrder();
+				
 				$cart = new Cart((int)$id_cart);
 				Context::getContext()->currency = new Currency((int)$cart->id_currency);
 				Context::getContext()->customer = new Customer((int)$cart->id_customer);
@@ -1069,7 +1084,7 @@ class AdminOrdersControllerCore extends AdminController
 							'unit_price_tax_incl',
 							'unit_price_tax_excl',
 							'original_product_price'
-							
+
 						);
 						foreach ($fields as $field)
 							$order_detail->{$field} = Tools::convertPriceFull($order_detail->{$field}, $old_currency, $currency);
@@ -1386,7 +1401,7 @@ class AdminOrdersControllerCore extends AdminController
 
 		parent::postProcess();
 	}
-	
+
 	public function renderKpis()
 	{
 		$time = time();
@@ -1533,14 +1548,14 @@ class AdminOrdersControllerCore extends AdminController
 		foreach ($products as &$product)
 		{
 			$product['current_stock'] = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], $product['id_shop']);
-			
+
 			$resume = OrderSlip::getProductSlipResume($product['id_order_detail']);
 			$product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
 			$product['amount_refundable'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
 			$product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl'], $currency);
 			$product['refund_history'] = OrderSlip::getProductSlipDetail($product['id_order_detail']);
 			$product['return_history'] = OrderReturn::getProductReturnDetail($product['id_order_detail']);
-			
+
 			// if the current stock requires a warning
 			if ($product['current_stock'] == 0 && $display_out_of_stock_warning)
 				$this->displayWarning($this->l('This product is out of stock: ').' '.$product['product_name']);
@@ -1644,7 +1659,7 @@ class AdminOrdersControllerCore extends AdminController
 				$productObj = new Product((int)$product['id_product'], false, (int)$this->context->language->id);
 				$combinations = array();
 				$attributes = $productObj->getAttributesGroups((int)$this->context->language->id);
-				
+
 				// Tax rate for this customer
 				if (Tools::isSubmit('id_address'))
 					$product['tax_rate'] = $productObj->getTaxesRate(new Address(Tools::getValue('id_address')));
@@ -1688,7 +1703,7 @@ class AdminOrdersControllerCore extends AdminController
 				foreach ($combinations as &$combination)
 					$combination['attributes'] = rtrim($combination['attributes'], ' - ');
 				$product['combinations'] = $combinations;
-				
+
 				if ($product['customizable'])
 				{
 					$product_instance = new Product((int)$product['id_product']);
@@ -1824,7 +1839,7 @@ class AdminOrdersControllerCore extends AdminController
 		// Add product to cart
 		$update_quantity = $cart->updateQty($product_informations['product_quantity'], $product->id, isset($product_informations['product_attribute_id']) ? $product_informations['product_attribute_id'] : null,
 			isset($combination) ? $combination->id : null, 'up', 0, new Shop($cart->id_shop));
-			
+
 		if ($update_quantity < 0)
 		{
 			// If product has attribute, minimal quantity is set with minimal quantity of attribute
@@ -1833,7 +1848,7 @@ class AdminOrdersControllerCore extends AdminController
 		}
 		elseif (!$update_quantity)
 			die(Tools::jsonEncode(array('error' => Tools::displayError('You already have the maximum quantity available for this product.', false))));
-		
+
 		// If order is valid, we can create a new invoice or edit an existing invoice
 		if ($order->hasInvoice())
 		{
@@ -1934,7 +1949,7 @@ class AdminOrdersControllerCore extends AdminController
 		$order->total_paid += Tools::ps_round((float)($cart->getOrderTotal(true, $total_method)), 2);
 		$order->total_paid_tax_excl += Tools::ps_round((float)($cart->getOrderTotal(false, $total_method)), 2);
 		$order->total_paid_tax_incl += Tools::ps_round((float)($cart->getOrderTotal($use_taxes, $total_method)), 2);
-		
+
 		if (isset($order_invoice) && Validate::isLoadedObject($order_invoice))
 		{
 			$order->total_shipping = $order_invoice->total_shipping_tax_incl;
@@ -1948,15 +1963,15 @@ class AdminOrdersControllerCore extends AdminController
 
 		// Save changes of order
 		$order->update();
-		
+
 		// Update weight SUM
 		$order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
 		if (Validate::isLoadedObject($order_carrier))
 		{
-			$order_carrier->weight = (float)$order->getTotalWeight();			
+			$order_carrier->weight = (float)$order->getTotalWeight();
 			if ($order_carrier->update())
-				$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);	
-		}		
+				$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);
+		}
 
 		// Update Tax lines
 		$order_detail->updateTaxAmount($order);
@@ -2005,7 +2020,7 @@ class AdminOrdersControllerCore extends AdminController
 			'current_index' => self::$currentIndex,
 			'display_warehouse' => (int)Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')
 		));
-		
+
 		$this->sendChangedNotification($order);
 
 		die(Tools::jsonEncode(array(
@@ -2019,19 +2034,19 @@ class AdminOrdersControllerCore extends AdminController
 			'discount_form_html' => $this->createTemplate('_discount_form.tpl')->fetch()
 		)));
 	}
-	
+
 	public function sendChangedNotification(Order $order = null)
 	{
 		if (is_null($order))
 			$order = new Order(Tools::getValue('id_order'));
-		
+
 		$data = array(
 			'{lastname}' => $order->getCustomer()->lastname,
 			'{firstname}' => $order->getCustomer()->firstname,
 			'{id_order}' => (int)$order->id,
 			'{order_name}' => $order->getUniqReference()
 		);
-		
+
 		Mail::Send(
 			(int)$order->id_lang,
 			'order_changed',
@@ -2166,13 +2181,13 @@ class AdminOrdersControllerCore extends AdminController
 		$old_quantity = $order_detail->product_quantity;
 
 		$order_detail->product_quantity = $product_quantity;
-		
+
 		// update taxes
 		$res &= $order_detail->updateTaxAmount($order);
-	
+
 		// Save order detail
 		$res &= $order_detail->update();
-		
+
 		// Update weight SUM
 		$order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
 		if (Validate::isLoadedObject($order_carrier))
@@ -2180,9 +2195,9 @@ class AdminOrdersControllerCore extends AdminController
 			$order_carrier->weight = (float)$order->getTotalWeight();
 			$res &= $order_carrier->update();
 			if ($res)
-				$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);	
+				$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);
 		}
-		
+
 		// Save order invoice
 		if (isset($order_invoice))
 			 $res &= $order_invoice->update();
@@ -2240,7 +2255,7 @@ class AdminOrdersControllerCore extends AdminController
 			$view = $this->createTemplate('_customized_data.tpl')->fetch();
 		else
 			$view = $this->createTemplate('_product_line.tpl')->fetch();
-			
+
 		$this->sendChangedNotification($order);
 
 		die(Tools::jsonEncode(array(
@@ -2290,7 +2305,7 @@ class AdminOrdersControllerCore extends AdminController
 
 		// Delete OrderDetail
 		$res &= $order_detail->delete();
-		
+
 		// Update weight SUM
 		$order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
 		if (Validate::isLoadedObject($order_carrier))
@@ -2298,7 +2313,7 @@ class AdminOrdersControllerCore extends AdminController
 			$order_carrier->weight = (float)$order->getTotalWeight();
 			$res &= $order_carrier->update();
 			if ($res)
-				$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);				
+				$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);
 		}
 
 		if (!$res)
@@ -2326,7 +2341,7 @@ class AdminOrdersControllerCore extends AdminController
 			'link' => Context::getContext()->link,
 			'current_index' => self::$currentIndex
 		));
-		
+
 		$this->sendChangedNotification($order);
 
 		die(Tools::jsonEncode(array(
@@ -2449,7 +2464,7 @@ class AdminOrdersControllerCore extends AdminController
 
 		return $products;
 	}
-	
+
 	protected function reinjectQuantity($order_detail, $qty_cancel_product)
 	{
 		// Reinject product
@@ -2476,7 +2491,7 @@ class AdminOrdersControllerCore extends AdminController
 						$quantity_to_reinject = $movement['physical_quantity'];
 
 					$left_to_reinject -= $quantity_to_reinject;
-										
+
 					$manager->addProduct(
 						$order_detail->product_id,
 						$order_detail->product_attribute_id,
@@ -2510,5 +2525,33 @@ class AdminOrdersControllerCore extends AdminController
 		$order_invoice->total_paid_tax_incl -= $value_tax_incl;
 		$order_invoice->total_paid_tax_excl -= $value_tax_excl;
 		$order_invoice->update();
+	}
+
+	public function ajaxProcessChangePaymentMethod()
+	{
+		$customer = new Customer(Tools::getValue('id_customer'));
+		$modules = Module::getAuthorizedModules($customer->id_default_group);
+		$authorized_modules = array();
+
+		if (!Validate::isLoadedObject($customer) || !is_array($modules))
+			die(Tools::jsonEncode(array('result' => false)));
+
+		foreach ($modules as $module)
+			$authorized_modules[] = (int)$module['id_module'];
+
+		$payment_modules = array();
+
+		foreach (PaymentModule::getInstalledPaymentModules() as $p_module)
+			if (in_array((int)$p_module['id_module'], $authorized_modules))
+				$payment_modules[] = Module::getInstanceById((int)$p_module['id_module']);
+
+		$this->context->smarty->assign(array(
+			'payment_modules' => $payment_modules,
+		));
+
+		die(Tools::jsonEncode(array(
+			'result' => true,
+			'view' => $this->createTemplate('_select_payment.tpl')->fetch(),
+		)));
 	}
 }
