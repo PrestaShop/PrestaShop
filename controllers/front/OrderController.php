@@ -117,6 +117,9 @@ class OrderControllerCore extends ParentOrderController
 		if ($this->nbProducts)
 			$this->context->smarty->assign('virtual_cart', $this->context->cart->isVirtualCart());
 
+		if (!Tools::getValue('multi-shipping'))
+			$this->context->cart->setNoMultishipping();
+
 		// 4 steps to the order
 		switch ((int)$this->step)
 		{
@@ -262,9 +265,6 @@ class OrderControllerCore extends ParentOrderController
 	 */
 	public function processAddress()
 	{
-		if (!Tools::getValue('multi-shipping'))
-			$this->context->cart->setNoMultishipping();
-		
 		$same = Tools::isSubmit('same');
 		if(!Tools::getValue('id_address_invoice', false) && !$same)
 			$same = true;

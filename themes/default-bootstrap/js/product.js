@@ -618,12 +618,13 @@ function updatePrice()
 		basePriceDisplay = basePriceWithoutTax * (taxRate/100 + 1);
 		priceWithDiscountsDisplay = priceWithDiscountsWithoutTax * (taxRate/100 + 1);
 
-		if (default_eco_tax)
-		{
-			// combination.ecotax doesn't modify the price but only the display
-			basePriceDisplay = basePriceDisplay + default_eco_tax * (1 + ecotaxTax_rate / 100);
-			priceWithDiscountsDisplay = priceWithDiscountsDisplay + default_eco_tax * (1 + ecotaxTax_rate / 100);
-		}
+	}
+
+	if (default_eco_tax)
+	{
+		// combination.ecotax doesn't modify the price but only the display
+		basePriceDisplay = basePriceDisplay + default_eco_tax * (1 + ecotaxTax_rate / 100);
+		priceWithDiscountsDisplay = priceWithDiscountsDisplay + default_eco_tax * (1 + ecotaxTax_rate / 100);
 	}
 
 	// Apply specific price (discount)
