@@ -92,9 +92,9 @@
 					{foreach from=$toolbar_btn item=btn key=k}
 					{if $k != 'back' && $k != 'modules-list'}
 					<li>
-						<a id="page-header-desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass|escape}{else}{$k}{/if}" class="toolbar_btn" {if isset($btn.href)}href="{$btn.href|escape}"{/if} title="{$btn.desc|escape}" {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if} {if isset($btn.modal_target) && $btn.modal_target}data-target="{$btn.modal_target}" data-toggle="modal"{/if}>
-							<i class="{if isset($btn.icon)}{$btn.icon|escape}{else}process-icon-{if isset($btn.imgclass)}{$btn.imgclass|escape}{else}{$k}{/if}{/if} {if isset($btn.class)}{$btn.class|escape}{/if}"></i>
-							<span {if isset($btn.force_desc) && $btn.force_desc == true } class="locked" {/if}>{$btn.desc|escape}</span>
+						<a id="page-header-desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass|escape}{else}{$k}{/if}" class="toolbar_btn" {if isset($btn.href)}href="{$btn.href|escape}"{/if} title="{$btn.desc|escape}"{if isset($btn.target) && $btn.target} target="_blank"{/if}{if isset($btn.js) && $btn.js} onclick="{$btn.js}"{/if}{if isset($btn.modal_target) && $btn.modal_target} data-target="{$btn.modal_target}" data-toggle="modal"{/if}>
+							<i class="{if isset($btn.icon)}{$btn.icon|escape}{else}process-icon-{if isset($btn.imgclass)}{$btn.imgclass|escape}{else}{$k}{/if}{/if}{if isset($btn.class)} {$btn.class|escape}{/if}"></i>
+							<span {if isset($btn.force_desc) && $btn.force_desc == true } class="locked"{/if}>{$btn.desc|escape}</span>
 						</a>
 					</li>
 					{/if}
@@ -102,8 +102,8 @@
 					{if isset($toolbar_btn['modules-list'])}
 					<li>
 						<a id="page-header-desc-{$table}-{if isset($toolbar_btn['modules-list'].imgclass)}{$toolbar_btn['modules-list'].imgclass}{else}modules-list{/if}" class="toolbar_btn{if isset($toolbar_btn['modules-list'].class)} {$toolbar_btn['modules-list'].class}{/if}" {if isset($toolbar_btn['modules-list'].href)}href="{$toolbar_btn['modules-list'].href}"{/if} title="{$toolbar_btn['modules-list'].desc}" {if isset($toolbar_btn['modules-list'].target) && $toolbar_btn['modules-list'].target}target="_blank"{/if}{if isset($toolbar_btn['modules-list'].js) && $toolbar_btn['modules-list'].js}onclick="{$toolbar_btn['modules-list'].js}"{/if}>
-							<i class="{if isset($toolbar_btn['modules-list'].icon)}{$toolbar_btn['modules-list'].icon}{else}process-icon-{if isset($toolbar_btn['modules-list'].imgclass)}{$toolbar_btn['modules-list'].imgclass}{else}modules-list{/if}{/if}" ></i>
-							<span {if isset($toolbar_btn['modules-list'].force_desc) && $toolbar_btn['modules-list'].force_desc == true } class="locked" {/if}>{$toolbar_btn['modules-list'].desc}</span>
+							<i class="{if isset($toolbar_btn['modules-list'].icon)}{$toolbar_btn['modules-list'].icon}{else}process-icon-{if isset($toolbar_btn['modules-list'].imgclass)}{$toolbar_btn['modules-list'].imgclass}{else}modules-list{/if}{/if}"></i>
+							<span{if isset($toolbar_btn['modules-list'].force_desc) && $toolbar_btn['modules-list'].force_desc == true } class="locked"{/if}>{$toolbar_btn['modules-list'].desc}</span>
 						</a>
 					</li>
 					{/if}

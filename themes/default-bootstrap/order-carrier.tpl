@@ -113,9 +113,9 @@
 														{if $option.total_price_with_tax && !$option.is_free && (!isset($free_shipping) || (isset($free_shipping) && !$free_shipping))}
 															{if $use_taxes == 1}
 																{if $priceDisplay == 1}
-																	{convertPrice price=$option.total_price_without_tax} {l s='(tax excl.)'}
+																	{convertPrice price=$option.total_price_without_tax}{if $display_tax_label} {l s='(tax excl.)'}{/if}
 																{else}
-																	{convertPrice price=$option.total_price_with_tax} {l s='(tax incl.)'}
+																	{convertPrice price=$option.total_price_with_tax}{if $display_tax_label} {l s='(tax incl.)'}{/if}
 																{/if}
 															{else}
 																{convertPrice price=$option.total_price_without_tax}
@@ -187,9 +187,9 @@
 															{if $option.total_price_with_tax && !$option.is_free && (!isset($free_shipping) || (isset($free_shipping) && !$free_shipping))}
 																{if $use_taxes == 1}
 																	{if $priceDisplay == 1}
-																		{convertPrice price=$option.total_price_without_tax} {l s='(tax excl.)'}
+																		{convertPrice price=$option.total_price_without_tax}{if $display_tax_label} {l s='(tax excl.)'}{/if}
 																	{else}
-																		{convertPrice price=$option.total_price_with_tax} {l s='(tax incl.)'}
+																		{convertPrice price=$option.total_price_with_tax}{if $display_tax_label} {l s='(tax incl.)'}{/if}
 																	{/if}
 																{else}
 																	{convertPrice price=$option.total_price_without_tax}
@@ -306,7 +306,7 @@
 											{convertPrice price=$total_wrapping_cost}
 										{/if}
 									</span>
-									{if $use_taxes}
+									{if $use_taxes && $display_tax_label}
 										{if $priceDisplay == 1}
 											{l s='(tax excl.)'}
 										{else}

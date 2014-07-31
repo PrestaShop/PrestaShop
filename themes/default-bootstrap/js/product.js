@@ -678,8 +678,6 @@ function updatePrice()
 			unit_price = priceWithDiscountsDisplay / productUnitPriceRatio;
 	}
 
-
-
 	/*  Update the page content, no price calculation happens after */
 
 	// Hide everything then show what needs to be shown

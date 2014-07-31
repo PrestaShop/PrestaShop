@@ -539,7 +539,7 @@ class AdminModulesControllerCore extends AdminController
 		                $this->errors[] = $this->l('File upload was not completed.');
 		                break;
 		            case UPLOAD_ERR_NO_FILE:
-		                $this->errors[] = $this->l('Zero-length file uploaded.');
+		                $this->errors[] = $this->l('No file was uploaded.');
 		                break;
 		            default:
 		                $this->errors[] = sprintf($this->l('Internal error #%s'), $_FILES['newfile']['error']);
@@ -778,7 +778,7 @@ class AdminModulesControllerCore extends AdminController
 					elseif ($key == 'uninstall' && !Module::isInstalled($module->name))
 						$this->errors[] = Tools::displayError('This module has already been uninstalled:').' '.$module->name;
 					else if ($key == 'update' && !Module::isInstalled($module->name))
-						$this->errors[] = Tools::displayError('This module need to be installed in order to be updated:').' '.$module->name;
+						$this->errors[] = Tools::displayError('This module needs to be installed in order to be updated:').' '.$module->name;
 					else
 					{
 						// If we install a module, force temporary global context for multishop
@@ -799,7 +799,7 @@ class AdminModulesControllerCore extends AdminController
 						{
 						// We check if method of module exists
 							if (!method_exists($module, $method))
-								throw new PrestaShopException('Method of module can\'t be found');
+								throw new PrestaShopException('Method of module cannot be found');
 
 							// Get the return value of current method
 							$echo = $module->{$method}();

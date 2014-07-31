@@ -211,7 +211,7 @@
 
 				$('.confirm_leave').live('click', function(){
 					// Double quotes are necessary when the translated string has single quotes
-					return confirm("{l s='You will lose all unsaved modifications. Are you sure that you\'d like to proceed?' js=1}");
+					return confirm("{l s='You will lose all unsaved modifications. Are you sure that you want to proceed?' js=1}");
 				});
 
 				$('#toolbar-footer').appendTo($('#product-tab-content-Informations').children('.product-tab'));
@@ -225,7 +225,7 @@
 			// Listen to the load event that is fired each time an ajax call to load a tab has completed
 			$(window).bind("load", function() {
 				{* Fill an array with tabs that need to be preloaded *}
-
+				var tabs_to_preload = new Array();
 				{foreach $tabs_preloaded as $tab_name => $value}
 					{* If the tab was not given a loading priority number it will not be preloaded *}
 					{if (is_numeric($value))}
@@ -311,7 +311,6 @@
 				<input type="hidden" name="fakeSubmitAddProductAndPreview" id="fakeSubmitAddProductAndPreview" />
 			</div>
 			{/if}
-
 			{* all input are here *}
 			{foreach $product_tabs key=numStep item=tab}
 				{if $tab.id != "Pack" }
