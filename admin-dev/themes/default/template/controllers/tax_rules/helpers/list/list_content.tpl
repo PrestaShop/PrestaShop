@@ -90,7 +90,7 @@
 						{if $tr.$key == 0}
 							{l s='This tax only'}
 						{elseif $tr.$key == 1}
-							{l s='Compute with others'}
+							{l s='Combine'}
 						{elseif $tr.$key == 2}
 							{l s='One after another'}
 						{/if}

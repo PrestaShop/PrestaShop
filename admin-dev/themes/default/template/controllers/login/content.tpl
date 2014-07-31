@@ -130,7 +130,7 @@
 		</div>
 		{else}
 		<div class="alert alert-danger">
-			<p>{l s='For security reasons, you cannot connect to the Back Office until you have:'}</p>
+			<p>{l s='For security reasons, you cannot connect to the back-office until you have:'}</p>
 			<ul>
 				{if isset($wrong_install_name) && $wrong_install_name == true}
 					<li>{l s='deleted the /install folder'}</li>

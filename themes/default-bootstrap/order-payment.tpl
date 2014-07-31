@@ -156,7 +156,7 @@
 									{if $use_taxes && $show_taxes}
 										{if $priceDisplay && $total_tax != 0}
 											<tr class="cart_total_tax">
-												<td colspan="4" class="text-right">{l s='Total tax:'}</td>
+												<td colspan="4" class="text-right">{l s='Tax'}</td>
 												<td colspan="2" class="price" id="total_tax" >{displayPrice price=$total_tax}</td>
 											</tr>
 										{/if}

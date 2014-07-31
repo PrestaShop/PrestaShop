@@ -754,26 +754,23 @@ class ProductCore extends ObjectModel
 			'is_virtual' => (int)$id_product,
 		), 'id_product = '.(int)$id_product);
 	}
-
-	/**
-	 * @see ObjectModel::validateFieldsLang()
-	 */
-	public function validateFieldsLang($die = true, $error_return = false)
-	{
-		$limit = (int)Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT');
-		if ($limit <= 0)
-			$limit = 800;
-		$this->def['fields']['description_short']['size'] = $limit;
-
-		return parent::validateFieldsLang($die, $error_return);
-	}
 	
 	/**
 	 * @see ObjectModel::validateField()
 	 */
 	public function validateField($field, $value, $id_lang = null, $skip = array(), $human_errors = false)
 	{
-		$value = ($field == 'description_short' ? strip_tags($value) : $value);
+		if ($field == 'description_short')
+		{
+			$limit = (int)Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT');
+			if ($limit <= 0)
+				$limit = 800;
+
+			$size_without_html = Tools::strlen(strip_tags($value));
+			$size_with_html = Tools::strlen($value);
+			$this->def['fields']['description_short']['size'] = $limit + $size_with_html - $size_without_html;
+		}
+
 		return parent::validateField($field, $value, $id_lang, $skip, $human_errors);
 	}
 
@@ -4867,7 +4864,7 @@ class ProductCore extends ObjectModel
 	public function setWsPositionInCategory($position)
 	{
 		if ($position < 0)
-			WebserviceRequest::getInstance()->setError(500, Tools::displayError('You can\'t set a position under 0.'), 134);
+			WebserviceRequest::getInstance()->setError(500, Tools::displayError('You cannot set a negative position, the minimum for a position is 0.'), 134);
 		$result = Db::getInstance()->executeS('
 			SELECT `id_product`
 			FROM `'._DB_PREFIX_.'category_product`
@@ -4875,7 +4872,7 @@ class ProductCore extends ObjectModel
 			ORDER BY `position`
 		');
 		if ($position + 1 > count($result))
-			WebserviceRequest::getInstance()->setError(500, Tools::displayError('You can\'t set a position greater than total product in category - 1 (position start at 0).'), 135);
+			WebserviceRequest::getInstance()->setError(500, Tools::displayError('You cannot set a position greater than the total number of products in the category, minus 1 (position numbering starts at 0).'), 135);
 
 		foreach ($result as &$value)
 			$value = $value['id_product'];
