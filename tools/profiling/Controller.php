@@ -24,58 +24,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-function developpementErrorHandler($errno, $errstr, $errfile, $errline)
-{
-	if (!(error_reporting() & $errno))
-		return;
-	switch($errno)
-	{
-		case E_ERROR:
-			echo '[PHP Error #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_WARNING:
-			echo '[PHP Warning #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_PARSE:
-			echo '[PHP Parse #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_NOTICE:
-			echo '[PHP Notice #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_CORE_ERROR:
-			echo '[PHP Core #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_CORE_WARNING:
-			echo '[PHP Core warning #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_COMPILE_ERROR:
-			echo '[PHP Compile #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_COMPILE_WARNING:
-			echo '[PHP Compile warning #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_USER_ERROR:
-			echo '[PHP Error #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_USER_WARNING:
-			echo '[PHP User warning #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_USER_NOTICE:
-			echo '[PHP User notice #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_STRICT:
-			echo '[PHP Strict #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_RECOVERABLE_ERROR:
-			echo '[PHP Recoverable error #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		default:
-			echo '[PHP Unknown error #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-	}
-	die;
-	return true;
-}
-
 abstract class Controller extends ControllerCore
 {
 	public $_memory = array();
@@ -172,11 +120,6 @@ abstract class Controller extends ControllerCore
 
 	public function __construct()
 	{
-		//set_error_handler('developpementErrorHandler');
-		ini_set('html_errors', 'on');
-		ini_set('display_errors', 'on');
-		error_reporting(E_ALL | E_STRICT);
-
 		if (!self::$_footer)
 			return;
 
@@ -255,24 +198,6 @@ abstract class Controller extends ControllerCore
 		}
 	}
 
-	function ini_get_display_errors()
-	{
-		$a = 'display_errors';
-		$b = ini_get($a);
-		switch (strtolower($b))
-		{
-			case 'on':
-			case 'yes':
-			case 'true':
-				return 'assert.active' !== $a;
-			case 'stdout':
-			case 'stderr':
-				return 'display_errors' === $a;
-			default:
-				return (bool)(int)$b;
-		}
-	}
-	
 	private function sizeofvar($var)
 	{
 		$start_memory = memory_get_usage();
@@ -300,9 +225,6 @@ abstract class Controller extends ControllerCore
 		$this->_memory['display'] = memory_get_usage();
 		$this->_mempeak['display'] = memory_get_peak_usage();
 		$this->_time['display'] = microtime(true);
-
-		if (!$this->ini_get_display_errors())
-			return;
 
 		$memory_peak_usage = memory_get_peak_usage();
 			
