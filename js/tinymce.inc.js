@@ -23,6 +23,7 @@ function tinySetup(config)
 		statusbar: false,
 		relative_urls : false,
 		convert_urls: false,
+		entity_encoding: "raw",
 		extended_valid_elements : "em[class|name|id]",
 		menu: {
 			edit: {title: 'Edit', items: 'undo redo | cut copy paste | selectall'},

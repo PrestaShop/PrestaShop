@@ -26,6 +26,8 @@
  * Handles loading of product tabs
  */
 
+var all_tabs_are_loaded = false;
+
 function ProductTabsManager(){
 	var self = this;
 	this.product_tabs = [];
@@ -90,34 +92,18 @@ function ProductTabsManager(){
 		var tab_selector = $("#product-tab-content-" + tab_name);
 
 		// Is the tab already being loaded?
-		if (!tab_selector.hasClass('not-loaded') || tab_selector.hasClass('loading'))
-			return;
-
-		// Mark the tab as being currently loading
-		tab_selector.addClass('loading');
-
-		if (selected)
-			$('#product-tab-content-wait').show();
-
-		// send $_POST array with the request to be able to retrieve posted data if there was an error while saving product
-		var data;
-		var send_type = 'GET';
-		if (save_error)
+		if (tab_selector.hasClass('not-loaded') && !tab_selector.hasClass('loading'))
 		{
-			send_type = 'POST';
-			data = post_data;
-			// set key_tab so that the ajax call returns the display for the current tab
-			data.key_tab = tab_name;
-		}
+			// Mark the tab as being currently loading
+			tab_selector.addClass('loading');
 
-		return $.ajax({
-			url : $('#link-'+tab_name).attr("href")+"&ajax=1" + '&rand=' + new Date().getTime(),
-			async : true,
-			cache: false, // cache needs to be set to false or IE will cache the page with outdated product values
-			type: send_type,
-			headers: { "cache-control": "no-cache" },
-			data: data,
-			success : function(data)
+			if (selected)
+				$('#product-tab-content-wait').show();
+
+			// send $_POST array with the request to be able to retrieve posted data if there was an error while saving product
+			var data;
+			var send_type = 'GET';
+			if (save_error)
 			{
 				send_type = 'POST';
 				data = post_data;
@@ -1417,10 +1403,10 @@ product_tabs['Quantities'] = new function(){
 				showSuccessMessage(quantities_ajax_success);
 			},
 			error: function(jqXHR, textStatus, errorThrown)
-			{
+  			{
 				if (textStatus != 'error' || errorThrown != '')
 					showErrorMessage(textStatus + ': ' + errorThrown);				
-			}
+  			}
 		});
 	};
 
