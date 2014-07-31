@@ -28,6 +28,13 @@
   margin: 4px 0 17px;
   max-width: 100%;
   height: auto; }
+#cms #center_column ul,
+#cms #center_column ol,
+#cms #center_column dl { 
+  margin-left:25px; 
+  margin-bottom:20px }
+#cms #center_column li { 
+  margin-bottom:5px }
 #cms #center_column .testimonials {
   border: 1px solid;
   border-color: #dfdede #d2d0d0 #b0afaf #d2d0d0;
@@ -119,3 +126,11 @@
           border-color: #9e9e9e #9e9e9e #c8c8c8 #9e9e9e;
           filter: none;
           background: #e7e7e7; }
+.rte ul,
+.rte ol,
+.rte dl { 
+  margin-left:25px; 
+  margin-bottom:20px }
+
+.rte li { margin-bottom:5px }
+.rte p { padding-bottom:20px; }
