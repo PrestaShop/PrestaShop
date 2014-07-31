@@ -26,7 +26,7 @@
 {extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}
-	<script language="javascript" type="text/javascript">
+	<script type="text/javascript">
 		$(function() {
 			var btn_save_calendar = $('span[class~="process-icon-save-calendar"]').parent();
 			var btn_submit_calendar = $('#submitDatePicker');
@@ -56,7 +56,7 @@
 					ajaxReferrers:1,
 					ajaxProductFilter:1,
 					id_employee:{$id_employee},
-					token:'{$token}',
+					token:'{$token|escape:'html':'UTF-8'}',
 					id_referrer:{$referrer->id},
 					id_product:id_product
 				},
@@ -77,7 +77,7 @@
 					ajaxReferrers:1,
 					ajaxFillProducts:1,
 					id_employee:{$id_employee},
-					token:'{$token}',
+					token:'{$token|escape:'html':'UTF-8'}',
 					id_lang:{$id_lang},
 					filter:filter
 				},

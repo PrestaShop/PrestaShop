@@ -1151,7 +1151,7 @@ class ToolsCore
 		else
 			$str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]-]/','', $str);
 
-		$str = preg_replace('/[\s\'\:\/\[\]-]+/', ' ', $str);
+		$str = preg_replace('/[\s\'\:\/\[\]\-]+/', ' ', $str);
 		$str = str_replace(array(' ', '/'), '-', $str);
 
 		// If it was not possible to lowercase the string with mb_strtolower, we do it after the transformations.
@@ -3118,18 +3118,28 @@ exit;
 
 		if ($use_html_purifier)
 		{
-			$config = HTMLPurifier_Config::createDefault();
-			$config->set('Attr.EnableID', true);
-			$config->set('Cache.SerializerPath', _PS_CACHE_DIR_.'purifier');
-
-			if (Configuration::get('PS_ALLOW_HTML_IFRAME'))
+			if ($purifier === null)
 			{
-				$config->set('HTML.SafeIframe', true);
-				$config->set('HTML.SafeObject', true);
-				$config->set('URI.SafeIframeRegexp','/.*/');
+				$config = HTMLPurifier_Config::createDefault();
+				$config->set('Attr.EnableID', true);
+				$config->set('HTML.Trusted', true);
+				$config->set('Cache.SerializerPath', _PS_CACHE_DIR_.'purifier');
+
+				if (Configuration::get('PS_ALLOW_HTML_IFRAME'))
+				{
+					$config->set('HTML.SafeIframe', true);
+					$config->set('HTML.SafeObject', true);
+					$config->set('URI.SafeIframeRegexp','/.*/');
+				}
+				$purifier = new HTMLPurifier($config);
 			}
-			$purifier = new HTMLPurifier($config);
+			if (_PS_MAGIC_QUOTES_GPC_)
+				$html = stripslashes($html);
+
 			$html = $purifier->purify($html);
+
+			if (_PS_MAGIC_QUOTES_GPC_)
+				$html = addslashes($html);
 		}
 
 		return $html;

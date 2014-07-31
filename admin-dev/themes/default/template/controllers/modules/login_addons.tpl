@@ -39,23 +39,23 @@
 				<div>
 					<img class="img-responsive center-block" src="themes/default/img/prestashop-addons-logo.png" alt="Logo PrestaShop Addons"/>
 					<h3 class="text-center">{l s="Connect your shop with PrestaShop's marketplace in order to automatically import all your Addons purchases."}</h3>
-					<hr>
+					<hr />
 				</div>
 				<div class="row">
 					<div class="col-md-6 col-md-push-6">
-						<h4>Connect to PrestaShop Addons</h4>
+						<h4>{l s='Connect to PrestaShop Addons'}</h4>
 						<div class="form-group">
 							<div class="input-group">
 								<span class="input-group-addon"><i class="icon-user"></i></span>
-								<input id="username_addons" class="form-control" name="username_addons" type="text" value=""  autocomplete="off" class="form-control ac_input">
+								<input id="username_addons" name="username_addons" type="text" value="" autocomplete="off" class="form-control ac_input">
 							</div>
 						</div>
 						<div class="form-group">
 							<div class="input-group">
 								<span class="input-group-addon"><i class="icon-key"></i></span>
-								<input id="password_addons" class="form-control" name="password_addons" type="password" value=""  autocomplete="off" class="form-control ac_input">
+								<input id="password_addons" name="password_addons" type="password" value="" autocomplete="off" class="form-control ac_input">
 							</div>
-							<a class="btn btn-link pull-right" href="{$addons_forgot_password_link}" target="_blank" >I forgot my password</a>
+							<a class="btn btn-link pull-right" href="{$addons_forgot_password_link}" target="_blank" >{l s='I forgot my password'}</a>
 							<br>
 						</div>
 						<div class="form-group">
@@ -67,12 +67,12 @@
 					<div class="col-md-5 col-md-pull-6">
 						<h4>{l s="Don't have an account?"}</h4>
 						<p class='text-justify'>{l s="Discover the Power of PrestaShop Addons! Explore the PrestaShop Official Marketplace and find over 3 500 innovative modules and themes that optimize conversion rates, increase traffic, build customer loyalty and maximize your productivity"}</p>
-						<a class="btn btn-default btn-block" target="_blank" href="{$addons_register_link}">
+						<a class="btn btn-default btn-block" target="_blank" href="{$addons_register_link|escape:'html':'UTF-8'}">
 							{l s="Create an Account"}
 							<i class="icon-external-link"></i>
 						</a>
 					</div>
-				</div>					
+				</div>
 
 				<div id="addons_loading" class="help-block"></div>
 

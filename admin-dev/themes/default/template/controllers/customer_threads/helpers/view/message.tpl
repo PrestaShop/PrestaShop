@@ -36,7 +36,7 @@
 			{if $type == 'customer'}
 				<i class="icon-user icon-3x"></i>
 			{else}
-				{if isset($current_employee->firstname)}<img src="{$current_employee->getImage()}">{/if}
+				{if isset($current_employee->firstname)}<img src="{$message.employee_image}" alt="{$current_employee->firstname|escape:'html':'UTF-8'}" />{/if}
 			{/if}
 		</div>
 	</div>
@@ -46,14 +46,14 @@
 			<h4 class="message-item-heading">
 				<i class="icon-mail-reply text-muted"></i> 
 					{if $type == 'customer'}
-						{$message.customer_name}
+						{$message.customer_name|escape:'html':'UTF-8'}
 					{else}
-						{$message.employee_name}
+						{$message.employee_name|escape:'html':'UTF-8'}
 					{/if}
 			</h4>
 		{/if}
 		<span class="message-date">&nbsp;<i class="icon-calendar"></i> - {dateFormat date=$message.date_add full=0} - <i class="icon-time"></i> {$message.date_add|substr:11:5}</span>
-		{if isset($message.file_name)} <span class="message-attachment">&nbsp;<i class="icon-link"></i> <a href="{$message.file_name}" target="_blank">{l s="Attachment"}</a>{/if}
-		<p class="message-item-text">{$message.message}</p>
+		{if isset($message.file_name)} <span class="message-attachment">&nbsp;<i class="icon-link"></i> <a href="{$message.file_name|escape:'html':'UTF-8'}" target="_blank">{l s="Attachment"}</a></span>{/if}
+		<p class="message-item-text">{$message.message|escape:'html':'UTF-8'}</p>
 	</div>
 </div>

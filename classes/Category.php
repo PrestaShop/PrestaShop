@@ -127,8 +127,8 @@ class CategoryCore extends ObjectModel
 			'nb_products_recursive' => array('getter' => 'getWsNbProductsRecursive', 'setter' => false),
 		),
 		'associations' => array(
-			'categories' => array('getter' => 'getChildrenWs', 'resource' => 'category', ),
-			'products' => array('getter' => 'getProductsWs', 'resource' => 'product', ),
+			'categories' => array('getter' => 'getChildrenWs', 'resource' => 'categories', ),
+			'products' => array('getter' => 'getProductsWs', 'resource' => 'products', ),
 		),
 	);
 
@@ -512,7 +512,7 @@ class CategoryCore extends ObjectModel
 			$buff = array();
 
 			if (!isset($root_category))
-				$root_category = 1;
+				$root_category = Category::getRootCategory()->id;
 
 			foreach ($result as $row)
 			{

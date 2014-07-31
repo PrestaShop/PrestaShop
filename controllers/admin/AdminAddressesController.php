@@ -338,10 +338,10 @@ class AdminAddressesControllerCore extends AdminController
 			if (Validate::isLoadedObject($customer))
 				$_POST['id_customer'] = $customer->id;
 			else
-				$this->errors[] = Tools::displayError('Unknown customer');
+				$this->errors[] = Tools::displayError('This customer ID is not recognized.');
 		}
 		else
-			$this->errors[] = Tools::displayError('Unknown customer');
+			$this->errors[] = Tools::displayError('This email address is not valid. Please use an address like bob@example.com.');
 		if (Country::isNeedDniByCountryId(Tools::getValue('id_country')) && !Tools::getValue('dni'))
 			$this->errors[] = Tools::displayError('The identification number is incorrect or has already been used.');
 

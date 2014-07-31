@@ -143,7 +143,7 @@ class AdminPreferencesControllerCore extends AdminController
 				),
 				'PS_DISPLAY_BEST_SELLERS' => array(
 					'title' => $this->l('Display best sellers'),
-					'desc' => $this->l('Enable best sellers page on your Front Office even when it\'s respective module is disabled.'),
+					'desc' => $this->l('Enable best sellers page on your Front Office even when its respective module is disabled.'),
 					'validation' => 'isBool',
 					'cast' => 'intval',
 					'type' => 'bool'

@@ -25,6 +25,7 @@
 /**
  * Handles loading of product tabs
  */
+
 function ProductTabsManager(){
 	var self = this;
 	this.product_tabs = [];
@@ -100,8 +101,10 @@ function ProductTabsManager(){
 
 		// send $_POST array with the request to be able to retrieve posted data if there was an error while saving product
 		var data;
+		var send_type = 'GET';
 		if (save_error)
 		{
+			send_type = 'POST';
 			data = post_data;
 			// set key_tab so that the ajax call returns the display for the current tab
 			data.key_tab = tab_name;
@@ -111,7 +114,7 @@ function ProductTabsManager(){
 			url : $('#link-'+tab_name).attr("href")+"&ajax=1" + '&rand=' + new Date().getTime(),
 			async : true,
 			cache: false, // cache needs to be set to false or IE will cache the page with outdated product values
-			type: 'POST',
+			type: send_type,
 			headers: { "cache-control": "no-cache" },
 			data: data,
 			success : function(data)
@@ -211,8 +214,9 @@ product_tabs['Customization'] = new function(){
 product_tabs['Combinations'] = new function(){
 	var self = this;
 	this.bindEdit = function(){
-		$('table[id=combinations-list]').delegate('a.edit', 'click', function(e){
+		$('table.configuration').delegate('a.edit', 'click', function(e){
 			e.preventDefault();
+			e.stopPropagation();
 			editProductAttribute(this.href, $(this).closest('tr'));
 		});
 
@@ -319,7 +323,7 @@ product_tabs['Combinations'] = new function(){
 	};
 
 	this.bindDefault = function(){
-		$('table[id=combinations-list]').delegate('a.default', 'click', function(e){
+		$('table.configuration').delegate('a.default', 'click', function(e){
 			e.preventDefault();
 			self.defaultProductAttribute(this.href, this);
 		});
@@ -350,7 +354,7 @@ product_tabs['Combinations'] = new function(){
 	};
 
 	this.bindDelete = function() {
-		$('table[id=combinations-list]').delegate('a.delete', 'click', function(e){
+		$('table.configuration').delegate('a.delete', 'click', function(e){
 			e.preventDefault();
 			self.deleteProductAttribute(this.href, $(this).closest('tr'));
 		});
@@ -641,6 +645,11 @@ product_tabs['Seo'] = new function(){
 	var self = this;
 
 	this.onReady = function() {
+		if ($('#link_rewrite_'+id_lang_default).length)
+			if ($('#link_rewrite_'+id_lang_default).val().replace(/^\s+|\s+$/gm,'') == '') {
+				updateFriendlyURLByName();
+			}
+
 		// Enable writing of the product name when the friendly url field in tab SEO is loaded
 		$('.copy2friendlyUrl').removeAttr('disabled');
 
@@ -1310,7 +1319,6 @@ product_tabs['Pack'] = new function() {
 
 		function getSelectedIds()
 		{
-			//console.log($('#inputPackItems').val());
 			if ($('#inputPackItems').val() === undefined)
 				return '';
 			var ids = '';
@@ -1380,9 +1388,10 @@ product_tabs['Quantities'] = new function(){
 				}
 				showSuccessMessage(quantities_ajax_success);
 			},
-			error: function(msg)
+			error: function(jqXHR, textStatus, errorThrown)
 			{
-				showErrorMessage(msg.error);				
+				if (textStatus != 'error' || errorThrown != '')
+					showErrorMessage(textStatus + ': ' + errorThrown);				
 			}
 		});
 	};

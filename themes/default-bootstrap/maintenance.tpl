@@ -36,7 +36,6 @@
 {/if}
 		<meta name="robots" content="{if isset($nobots)}no{/if}index,follow" />
 		<link rel="shortcut icon" href="{$favicon_url}" />
-        <link href="{$css_dir}/bootstrap_lib/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
         <link href="{$css_dir}maintenance.css" rel="stylesheet" type="text/css" />
         <link href='//fonts.googleapis.com/css?family=Open+Sans:600' rel='stylesheet' type='text/css' />
 	</head>

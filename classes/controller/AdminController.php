@@ -148,6 +148,7 @@ class AdminControllerCore extends Controller
 
 	/** @var array WHERE clause determined by filter fields */
 	protected $_filter;
+	protected $_filterHaving;
 
 	/** @var array Temporary SQL table WHERE clause determinated by filter fields */
 	protected $_tmpTableFilter = '';
@@ -597,7 +598,6 @@ class AdminControllerCore extends Controller
 		}
 
 		$filters = $this->context->cookie->getFamily($prefix.$this->list_id.'Filter_');
-
 		foreach ($filters as $key => $value)
 		{
 			/* Extracting filters from $_POST on key filter_ */
@@ -610,7 +610,8 @@ class AdminControllerCore extends Controller
 
 				if ($field = $this->filterToField($key, $filter))
 				{
-					$type = (array_key_exists('filter_type', $field) ? $field['filter_type'] : (array_key_exists('type', $field) ? $field['type'] : false));					if (($type == 'date' || $type == 'datetime') && is_string($value))
+					$type = (array_key_exists('filter_type', $field) ? $field['filter_type'] : (array_key_exists('type', $field) ? $field['type'] : false));
+					if (($type == 'date' || $type == 'datetime') && is_string($value))
 						$value = Tools::unSerialize($value);
 					$key = isset($tmp_tab[1]) ? $tmp_tab[0].'.`'.$tmp_tab[1].'`' : '`'.$tmp_tab[0].'`';
 
@@ -699,7 +700,7 @@ class AdminControllerCore extends Controller
 			else
 			{
 				// Process list filtering
-				if ($this->filter)
+				if ($this->filter && $this->action != 'reset_filters')
 					$this->processFilter();
 
 				// If the method named after the action exists, call "before" hooks, then call action method, then call "after" hooks
@@ -778,6 +779,11 @@ class AdminControllerCore extends Controller
 					if ($path_to_image)
 						$field_value = $path_to_image;  
 				}
+				if (isset($params['callback']))
+                                {
+                                	$callback_obj = (isset($params['callback_object'])) ? $params['callback_object'] : $this->context->controller;
+                                	$field_value = call_user_func_array(array($callback_obj, $params['callback']), array($field_value, $row));
+                                }
 				$content[$i][] = $field_value;
 			}
 		}
@@ -863,7 +869,7 @@ class AdminControllerCore extends Controller
 	{
 		if (!isset($this->className) || empty($this->className))
 			return false;
-		/* Checking fields validity */
+
 		$this->validateRules();
 		if (count($this->errors) <= 0)
 		{
@@ -905,7 +911,6 @@ class AdminControllerCore extends Controller
 
 		return $this->object;
 	}
-
 
 	/**
 	 * Object update
@@ -1321,12 +1326,12 @@ class AdminControllerCore extends Controller
 				break;
 			default: // list
 				$this->toolbar_btn['new'] = array(
-					'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
+					'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
 					'desc' => $this->l('Add new')
 				);
 				if ($this->allow_export)
 					$this->toolbar_btn['export'] = array(
-						'href' => self::$currentIndex.'&amp;export'.$this->table.'&amp;token='.$this->token,
+						'href' => self::$currentIndex.'&export'.$this->table.'&token='.$this->token,
 						'desc' => $this->l('Export')
 					);
 		}
@@ -1552,6 +1557,25 @@ class AdminControllerCore extends Controller
 				}
 			}
 		}
+
+		$name = $this->l('New Bookmark');
+		if (isset($this->context->smarty->tpl_vars['breadcrumbs2']) && $this->context->smarty->tpl_vars['breadcrumbs2']->value['tab']['name'])
+		{
+			if ($this->context->smarty->tpl_vars['breadcrumbs2']->value['action']['name'])
+				$name = $this->context->smarty->tpl_vars['breadcrumbs2']->value['tab']['name'].' > '.$this->context->smarty->tpl_vars['breadcrumbs2']->value['action']['name'];
+			else
+				$name = $this->context->smarty->tpl_vars['breadcrumbs2']->value['tab']['name'];
+		}
+		elseif (isset($this->context->smarty->tpl_vars['breadcrumbs2']) && is_string($this->context->smarty->tpl_vars['breadcrumbs2']->value))
+			$name = $this->context->smarty->tpl_vars['breadcrumbs2']->value;
+
+		$link = preg_replace('/&token=[a-z0-9]{32}/', '', basename($_SERVER['REQUEST_URI']));
+
+		$quick_access[] = array(
+			'name' => $this->l('Bookmark this page'),
+			'link' => $this->context->link->getAdminLink('AdminQuickAccesses').'&new_window=0&name_'.(int)Configuration::get('PS_LANG_DEFAULT').'='.urlencode($name).'&link='.urlencode($link).'&submitAddquick_access=1',
+			'new_window' => 0
+		);
 
 		// Tab list
 		$tabs = Tab::getTabs($this->context->language->id, 0);
@@ -2295,7 +2319,12 @@ class AdminControllerCore extends Controller
 		{
 			if (isset($this->context->employee))
 				$this->context->employee->logout();
-			Tools::redirectAdmin($this->context->link->getAdminLink('AdminLogin').((!isset($_GET['logout']) && $this->controller_name != 'AdminNotFound' && Tools::getValue('controller')) ? '&redirect='.$this->controller_name : ''));
+			
+			$email = false;
+			if (Tools::getValue('email') && Validate::isEmail(Tools::getValue('email')))
+				$email = Tools::getValue('email');
+			
+			Tools::redirectAdmin($this->context->link->getAdminLink('AdminLogin').((!isset($_GET['logout']) && $this->controller_name != 'AdminNotFound' && Tools::getValue('controller')) ? '&redirect='.$this->controller_name : '').($email ? '&email='.$email : ''));
 		}
 
 		// Set current index
@@ -2808,7 +2837,6 @@ class AdminControllerCore extends Controller
 			{
 				break;
 			}
-
 		} while (empty($this->_list));
 
 		Hook::exec('action'.$this->controller_name.'ListingResultsModifier', array(
@@ -3789,11 +3817,11 @@ class AdminControllerCore extends Controller
 					if (isset($option['style']))
 						$html .= ' style="'.$option['style'].'"';
 
-					$html .= ' href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'" onclick="'.$option['onclick'].'"  title="'.$option['title'].'"><i class="icon-'.(isset($option['icon']) && $option['icon'] ? $option['icon']:'cog' ).'"></i> '.$option['text'].'</a>';
+					$html .= ' href="'.htmlentities($option['href']).(!is_null($back) ? '&back='.urlencode($back) : '').'" onclick="'.$option['onclick'].'"  title="'.$option['title'].'"><i class="icon-'.(isset($option['icon']) && $option['icon'] ? $option['icon']:'cog' ).'"></i> '.$option['text'].'</a>';
 					$return[] = $html;
 				}
 				elseif ($output_type == 'select')
-					$return .= '<option id="'.$option_name.'" data-href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'" data-onclick="'.$option['onclick'].'">'.$option['text'].'</option>';
+					$return .= '<option id="'.$option_name.'" data-href="'.htmlentities($option['href']).(!is_null($back) ? '&back='.urlencode($back) : '').'" data-onclick="'.$option['onclick'].'">'.$option['text'].'</option>';
 			}
 		}
 
@@ -3802,7 +3830,7 @@ class AdminControllerCore extends Controller
 
 		return $return;
 	}
-	
+		
 	public function ajaxProcessGetModuleQuickView()
 	{
 		$modules = Module::getModulesOnDisk();

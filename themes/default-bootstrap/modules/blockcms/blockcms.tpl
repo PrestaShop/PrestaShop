@@ -107,7 +107,7 @@
 			{foreach from=$cmslinks item=cmslink}
 				{if $cmslink.meta_title != ''}
 					<li class="item">
-						<a href="{$cmslink.link|addslashes|escape:'html':'UTF-8'}" title="{$cmslink.meta_title|escape:'html':'UTF-8'}">
+						<a href="{$cmslink.link|escape:'html':'UTF-8'}" title="{$cmslink.meta_title|escape:'html':'UTF-8'}">
 							{$cmslink.meta_title|escape:'html':'UTF-8'}
 						</a>
 					</li>

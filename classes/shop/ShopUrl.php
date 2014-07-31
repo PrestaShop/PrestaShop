@@ -54,6 +54,12 @@ class ShopUrlCore extends ObjectModel
 		),
 	);
 
+	protected $webserviceParameters = array(
+		'fields' => array(
+			'id_shop' => array('xlink_resource' => 'shops'),
+		),
+	);
+
 	/**
 	 * @see ObjectModel::getFields()
 	 * @return array
@@ -154,7 +160,7 @@ class ShopUrlCore extends ObjectModel
 			SELECT domain, domain_ssl
 			FROM '._DB_PREFIX_.'shop_url
 			WHERE main = 1
-			AND id_shop = '.($id_shop !== null ? (int)$id_shop : Context::getContext()->shop->id));
+			AND id_shop = '.($id_shop !== null ? (int)$id_shop : (int)Context::getContext()->shop->id));
 			self::$main_domain[(int)$id_shop] = $row['domain'];
 			self::$main_domain_ssl[(int)$id_shop] = $row['domain_ssl'];
 		}

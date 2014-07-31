@@ -22,14 +22,13 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 <a class="btn btn-default" href="#" onclick="if ($('.requiredFieldsParameters:visible').length == 0) $('.requiredFieldsParameters').slideDown('slow'); else $('.requiredFieldsParameters').slideUp('slow'); return false;">
 	<i class="icon-plus-sign"></i> {l s='Set required fields for this section'}
 </a>
 <div class="clearfix">&nbsp;</div>
 <div style="display:none" class="panel requiredFieldsParameters">
 	<h3><i class="icon-asterisk"></i> {l s='Required Fields'}</h3>
-	<form name="updateFields" action="{$current}&amp;submitFields=1&amp;token={$token}" method="post">
+	<form name="updateFields" action="{$current|escape:'html':'UTF-8'}&amp;submitFields=1&amp;token={$token|escape:'html':'UTF-8'}" method="post">
 		<div class="alert alert-info">
 			{l s='Select the fields you would like to be required for this section.'}
 		</div>

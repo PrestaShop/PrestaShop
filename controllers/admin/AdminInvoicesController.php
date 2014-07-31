@@ -142,7 +142,7 @@ class AdminInvoicesControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'checkboxStatuses',
-					'label' => $this->l('Statuses'),
+					'label' => $this->l('Order statuses'),
 					'name' => 'id_order_state',
 					'values' => array(
 						'query' => OrderState::getOrderStates($this->context->language->id),

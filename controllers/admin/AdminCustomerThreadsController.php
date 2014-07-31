@@ -545,11 +545,18 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$messages = CustomerThread::getMessageCustomerThreads($id_customer_thread);
 		
 		foreach ($messages as $key => $mess)
+		{	
+			if ($mess['id_employee'])
+			{
+				$employee = new Employee($mess['id_employee']);
+				$messages[$key]['employee_image'] = $employee->getImage();
+			}
 			if (isset($mess['file_name']) && $mess['file_name'] != '')
 				$messages[$key]['file_name'] = _THEME_PROD_PIC_DIR_.$mess['file_name'];
 			else
 				unset($messages[$key]['file_name']);
-
+		}
+		
 		$next_thread = CustomerThread::getNextThread((int)$thread->id);
 		
 		$contacts = Contact::getContacts($this->context->language->id);
@@ -674,7 +681,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$timeline = array();
 		foreach ($messages as $message)
 		{
-			$content = $this->l('Message to: ').' <span class="badge">'.(!$message['id_employee'] ? $message['subject'] : $message['customer_name']).'</span></br>'.$message['message'];
+			$content = $this->l('Message to: ').' <span class="badge">'.(!$message['id_employee'] ? $message['subject'] : $message['customer_name']).'</span><br/>'.Tools::safeOutput($message['message']);
 			
 			$timeline[$message['date_add']][] = array(
 				'arrow' => 'left',
@@ -692,7 +699,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			foreach ($order_history as $history)
 			{
 				$link = $this->context->link->getAdminLink('AdminOrders').'&vieworder&id_order='.(int)$order->id;
-				$content = '<a class="badge" target="_blank" href="'.$link.'">'.$this->l('Order').' #'.(int)$order->id.'</a></br></br>';
+				$content = '<a class="badge" target="_blank" href="'.Tools::safeOutput($link).'">'.$this->l('Order').' #'.(int)$order->id.'</a><br/><br/>';
 				$content .= '<span>'.$this->l('Status:').' '.$history['ostate_name'].'</span>';
 
 				$timeline[$history['date_add']][] = array(

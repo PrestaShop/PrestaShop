@@ -202,7 +202,10 @@ class AdminManufacturersControllerCore extends AdminController
 	public function processExport($text_delimiter = '"')
 	{
 		if (strtolower($this->table) == 'address')
-			$this->_orderBy = null;
+		{
+			$this->_defaultOrderBy = 'id_manufacturer';
+			$this->_where = 'AND a.`id_customer` = 0 AND a.`id_supplier` = 0 AND a.`id_warehouse` = 0 AND a.`deleted`= 0';
+		}
 
 		return parent::processExport($text_delimiter);
 	}
@@ -490,8 +493,8 @@ class AdminManufacturersControllerCore extends AdminController
 			'name' => 'id_address',
 		);
 
-		$form['input'][] = (in_array('company', $required_fields) ? 
-			array(
+		 if (in_array('company', $required_fields))
+			$form['input'][] = array(
 				'type' => 'text',
 				'label' => $this->l('Company'),
 				'name' => 'company',
@@ -500,7 +503,7 @@ class AdminManufacturersControllerCore extends AdminController
 				'maxlength' => 16,
 				'col' => 4,
 				'hint' => $this->l('Company name for this supplier')
-			) : null);
+			);
 		
 		$form['input'][] = array(
 			'type' => 'text',

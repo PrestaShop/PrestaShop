@@ -27,15 +27,13 @@
 		<i class="icon-list-ul"></i>
 		{if isset($panel_title)}{$panel_title|escape:'html':'UTF-8'}{else}{l s='Modules list'}{/if}
 	</h3>
-	<div id="modules_list_container_tab" class="row">
+	<div class="modules_list_container_tab row">
 		<div class="col-lg-12">
 			{if count($modules_list)}
 				<table class="table">
 					{counter start=1  assign="count"}
 						{foreach from=$modules_list item=module}	
-							<div>{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",row alt"}}</div>
-							{if $count %3 == 0}
-							{/if}
+							{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",row alt"}}
 						{counter}
 					{/foreach}
 				</table>
@@ -65,7 +63,6 @@
 		</div>
 	</div>
 </div>
-
 <script type="text/javascript">
 	$(document).ready(function(){
 		$('.fancybox-quick-view').fancybox({

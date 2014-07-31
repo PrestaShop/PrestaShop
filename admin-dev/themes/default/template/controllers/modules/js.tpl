@@ -30,8 +30,8 @@
     var body_confirm_reset = '{l s='Would you like to delete the content related to this module ?'}';
     var left_button_confirm_reset = '{l s='No - reset only the parameters'}';
     var right_button_confirm_reset = '{l s='Yes - reset everything'}';
-	var currentIndex = '{$currentIndex}';
-	var currentIndexWithToken = '{$currentIndex}&token={$token}';
+	var currentIndex = '{$currentIndex|escape:'html':'UTF-8'}';
+	var currentIndexWithToken = '{$currentIndex|escape:'html':'UTF-8'}&token={$token|escape:'html':'UTF-8'}';
 	var dirNameCurrentIndex = '{$dirNameCurrentIndex}';
 	var ajaxCurrentIndex = '{$ajaxCurrentIndex}';
 	var installed_modules = {if isset($installed_modules) && count($installed_modules)}{$installed_modules}{else}false{/if};
@@ -39,7 +39,7 @@
 	var confirmPreferencesSaved = '{l s='Preferences saved'}';
 	{if isset($smarty.get.anchor) && !isset($error_module)}var anchor = '{$smarty.get.anchor|htmlentities|replace:'(':''|replace:')':''|replace:'{':''|replace:'}':''|replace:'\'':''|replace:'/':''}';{else}var anchor = '';{/if}
 
-	{if isset($smarty.get.module_name) && !isset($error_module)}var module_name = '{$smarty.get.module_name|htmlentities|replace:'(':''|replace:')':''|replace:'{':''|replace:'}':''|replace:'\'':''|replace:'/':''}';{else}var module_name = '';{/if}
+	{if isset($smarty.get.module_name) && !isset($error_module) && (!isset($dont_filter) || !$dont_filter)}var module_name = '{$smarty.get.module_name|htmlentities|replace:'(':''|replace:')':''|replace:'{':''|replace:'}':''|replace:'\'':''|replace:'/':''}';{else}var module_name = '';{/if}
 
 	{literal}
 
@@ -53,7 +53,7 @@
 		{
 			if (modules[i].checked == true)
 			{
-				rel = modules[i].getAttribute('rel');
+				rel = modules[i].getAttribute('data-rel');
 				if (rel != "false" && action == "uninstall")
 				{
 					if (!confirm(rel))

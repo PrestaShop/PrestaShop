@@ -334,6 +334,9 @@ class AdminGroupsControllerCore extends AdminController
 			);
 		}
 
+		if (Tools::getIsset('addgroup'))
+			$this->fields_value['price_display_method'] = Configuration::get('PRICE_DISPLAY_METHOD');
+
 		$this->fields_value['reduction'] = isset($group->reduction) ? $group->reduction : 0;
 
 		$tree = new HelperTreeCategories('categories-tree');
@@ -541,7 +544,7 @@ class AdminGroupsControllerCore extends AdminController
 		$group = new Group($tr['id_group']);
 		if (!Validate::isLoadedObject($group))
 			return;
-		return '<a class="list-action-enable'.($group->show_prices ? ' action-enabled' : ' action-disabled').'" href="index.php?tab=AdminGroups&id_group='.(int)$group->id.'&changeShowPricesVal&token='.Tools::getAdminTokenLite('AdminGroups').'">
+		return '<a class="list-action-enable'.($group->show_prices ? ' action-enabled' : ' action-disabled').'" href="index.php?tab=AdminGroups&amp;id_group='.(int)$group->id.'&amp;changeShowPricesVal&amp;token='.Tools::getAdminTokenLite('AdminGroups').'">
 				'.($group->show_prices ? '<i class="icon-check"></i>' : '<i class="icon-remove"></i>').
 			'</a>';
 	}
@@ -553,11 +556,11 @@ class AdminGroupsControllerCore extends AdminController
 		$default = new Group(Configuration::get('PS_CUSTOMER_GROUP'));
 
 		$unidentified_group_information = sprintf(
-			$this->l('%s - All persons without a customer account or unauthenticated.'),
+			$this->l('%s - All persons without a customer account or customers that are not logged in.'),
 			'<b>'.$unidentified->name[$this->context->language->id].'</b>'
 		);
 		$guest_group_information = sprintf(
-			$this->l('%s - Customer who placed an order through Guest Checkout.'),
+			$this->l('%s - All persons who placed an order through Guest Checkout.'),
 			'<b>'.$guest->name[$this->context->language->id].'</b>'
 		);
 		$default_group_information = sprintf(
@@ -565,7 +568,7 @@ class AdminGroupsControllerCore extends AdminController
 			'<b>'.$default->name[$this->context->language->id].'</b>'
 		);
 
-		$this->displayInformation($this->l('PrestaShop implements three default customer groups:'));
+		$this->displayInformation($this->l('PrestaShop has three default customer groups:'));
 		$this->displayInformation($unidentified_group_information);
 		$this->displayInformation($guest_group_information);
 		$this->displayInformation($default_group_information);

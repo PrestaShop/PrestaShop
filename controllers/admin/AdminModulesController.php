@@ -100,7 +100,6 @@ class AdminModulesControllerCore extends AdminController
 		$this->list_modules_categories['slideshows']['name'] = $this->l('Slideshows');
 		$this->list_modules_categories['smart_shopping']['name'] = $this->l('Comparison site & Feed management');
 		$this->list_modules_categories['market_place']['name'] = $this->l('Marketplace');
-		$this->list_modules_categories['social_networks']['name'] = $this->l('Social Networks');
 		$this->list_modules_categories['others']['name'] = $this->l('Other Modules');
 		$this->list_modules_categories['mobile']['name'] = $this->l('Mobile');
 		$this->list_modules_categories['dashboard']['name'] = $this->l('Dashboard');
@@ -540,7 +539,7 @@ class AdminModulesControllerCore extends AdminController
 		                $this->errors[] = $this->l('File upload was not completed.');
 		                break;
 		            case UPLOAD_ERR_NO_FILE:
-		                $this->errors[] = $this->l('Zero-length file uploaded.');
+		                $this->errors[] = $this->l('No file was uploaded.');
 		                break;
 		            default:
 		                $this->errors[] = sprintf($this->l('Internal error #%s'), $_FILES['newfile']['error']);
@@ -631,26 +630,29 @@ class AdminModulesControllerCore extends AdminController
 
 	public function postProcessDelete()
 	{
-		 	if ($this->tabAccess['delete'] === '1')
+		if ($this->tabAccess['delete'] === '1')
+		{
+			if (Tools::getValue('module_name') != '')
 			{
-				if (Tools::getValue('module_name') != '')
+				$module = Module::getInstanceByName(Tools::getValue('module_name'));
+				if (Validate::isLoadedObject($module) && !$module->getPermission('configure'))
+					$this->errors[] = Tools::displayError('You do not have the permission to use this module.');
+				else
 				{
-					$module = Module::getInstanceByName(Tools::getValue('module_name'));
-					if (Validate::isLoadedObject($module) && !$module->getPermission('configure'))
-						$this->errors[] = Tools::displayError('You do not have the permission to use this module.');
-					else
-					{
-						// Uninstall the module before deleting the files, but do not block the process if uninstall returns false
-						if (Module::isInstalled($module->name))
-							$module->uninstall();
-						$moduleDir = _PS_MODULE_DIR_.str_replace(array('.', '/', '\\'), array('', '', ''), Tools::getValue('module_name'));
-						$this->recursiveDeleteOnDisk($moduleDir);
+					// Uninstall the module before deleting the files, but do not block the process if uninstall returns false
+					if (Module::isInstalled($module->name))
+						$module->uninstall();
+					$moduleDir = _PS_MODULE_DIR_.str_replace(array('.', '/', '\\'), array('', '', ''), Tools::getValue('module_name'));
+					$this->recursiveDeleteOnDisk($moduleDir);
+					if (!file_exists($moduleDir))
 						Tools::redirectAdmin(self::$currentIndex.'&conf=22&token='.$this->token.'&tab_module='.Tools::getValue('tab_module').'&module_name='.Tools::getValue('module_name'));
-					}
+					else
+						$this->errors[] = Tools::displayError('Sorry, the module cannot be deleted. Please check if you have the right permissions on this folder.');
 				}
 			}
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to delete this.');
+		}
+		else
+			$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 	}
 
 	public function postProcessCallback()
@@ -695,10 +697,10 @@ class AdminModulesControllerCore extends AdminController
 			}
 
 			$module_errors = array();
-			$module_to_update = array();
 			if (isset($modules))
 				foreach ($modules as $name)
 				{
+					$module_to_update = array();
 					$module_to_update[$name] = null;
 					$full_report = null;
 					// If Addons module, download and unzip it before installing it
@@ -743,7 +745,7 @@ class AdminModulesControllerCore extends AdminController
 									$download_ok = true;
 
 								if (!$download_ok)
-									$this->errors[] = sprintf(Tools::displayError("Module %s can't be upgraded: Error on downloading the latest version"), '<strong>'.$attr['displayName'].'</strong>');
+									$this->errors[] = sprintf(Tools::displayError("Module %s can't be upgraded: Error on downloading the latest version."), '<strong>'.$attr['displayName'].'</strong>');
 								elseif (!$this->extractArchive(_PS_MODULE_DIR_.$name.'.zip', false))
 									$this->errors[] = sprintf(Tools::displayError("Module %s can't be upgraded: Error on extracting the latest version"), '<strong>'.$attr['displayName'].'</strong>');
 								else
@@ -776,7 +778,7 @@ class AdminModulesControllerCore extends AdminController
 					elseif ($key == 'uninstall' && !Module::isInstalled($module->name))
 						$this->errors[] = Tools::displayError('This module has already been uninstalled:').' '.$module->name;
 					else if ($key == 'update' && !Module::isInstalled($module->name))
-						$this->errors[] = Tools::displayError('This module need to be installed in order to be updated:').' '.$module->name;
+						$this->errors[] = Tools::displayError('This module needs to be installed in order to be updated:').' '.$module->name;
 					else
 					{
 						// If we install a module, force temporary global context for multishop
@@ -797,7 +799,7 @@ class AdminModulesControllerCore extends AdminController
 						{
 						// We check if method of module exists
 							if (!method_exists($module, $method))
-								throw new PrestaShopException('Method of module can\'t be found');
+								throw new PrestaShopException('Method of module cannot be found');
 
 							// Get the return value of current method
 							$echo = $module->{$method}();
@@ -1263,7 +1265,7 @@ class AdminModulesControllerCore extends AdminController
 			'module_languages' => Language::getLanguages(false),
 			'module_name' => Tools::getValue('module_name'),
 		));
-		
+
 		$modal_content = $this->context->smarty->fetch('controllers/modules/modal_translation.tpl');
 		$this->modals[] = array(
 			'modal_id' => "moduleTradLangSelect",
@@ -1277,6 +1279,14 @@ class AdminModulesControllerCore extends AdminController
 			'modal_id' => "moduleNotTrusted",
 			'modal_class' => "modal-lg",
 			'modal_title' => $this->l('This module is Untrusted'),
+			'modal_content' => $modal_content
+		);
+
+		$modal_content = $this->context->smarty->fetch('controllers/modules/modal_not_trusted_country.tpl');
+		$this->modals[] = array(
+			'modal_id' => "moduleNotTrustedCountry",
+			'modal_class' => "modal-lg",
+			'modal_title' => $this->l('This module is Untrusted for your country'),
 			'modal_content' => $modal_content
 		);
 	}
@@ -1334,6 +1344,7 @@ class AdminModulesControllerCore extends AdminController
 		$module_errors = array();
 		$module_success = array();
 		$upgrade_available = array();
+		$dont_filter = false;
 
 		// Browse modules list
 		foreach ($modules as $km => $module)
@@ -1385,12 +1396,14 @@ class AdminModulesControllerCore extends AdminController
 				unset($object);
 			}
 			//Add succes message for one module update
-			else if (Tools::getValue('updated') && Tools::getValue('module_name'))
+			elseif (Tools::getValue('updated') && Tools::getValue('module_name'))
 			{
 				$module_names = (string)Tools::getValue('module_name');
-
 				if (strpos($module_names, '|'))
+				{
 					$module_names = explode('|', $module_names);
+					$dont_filter = true;
+				}
 
 				if (!is_array($module_names))
 					$module_names = (array)$module_names;
@@ -1468,37 +1481,38 @@ class AdminModulesControllerCore extends AdminController
 			$this->confirmations[] = $this->l('Everything is up-to-date');
 
 		// Init tpl vars for smarty
-		$tpl_vars = array();
-
-		$tpl_vars['token'] = $this->token;
-		$tpl_vars['upgrade_available'] = $upgrade_available;
-		$tpl_vars['currentIndex'] = self::$currentIndex;
-		$tpl_vars['dirNameCurrentIndex'] = dirname(self::$currentIndex);
-		$tpl_vars['ajaxCurrentIndex'] = str_replace('index', 'ajax-tab', self::$currentIndex);
-		$tpl_vars['autocompleteList'] = rtrim($autocompleteList, ' ,').'];';
-		$tpl_vars['showTypeModules'] = $this->filter_configuration['PS_SHOW_TYPE_MODULES_'.(int)$this->id_employee];
-		$tpl_vars['showCountryModules'] = $this->filter_configuration['PS_SHOW_COUNTRY_MODULES_'.(int)$this->id_employee];
-		$tpl_vars['showInstalledModules'] = $this->filter_configuration['PS_SHOW_INSTALLED_MODULES_'.(int)$this->id_employee];
-		$tpl_vars['showEnabledModules'] = $this->filter_configuration['PS_SHOW_ENABLED_MODULES_'.(int)$this->id_employee];
-		$tpl_vars['nameCountryDefault'] = Country::getNameById($this->context->language->id, Configuration::get('PS_COUNTRY_DEFAULT'));
-		$tpl_vars['isoCountryDefault'] = $this->iso_default_country;
-		$tpl_vars['categoryFiltered'] = $categoryFiltered;
-		$tpl_vars['modules'] = $modules;
-		$tpl_vars['nb_modules'] = $this->nb_modules_total;
-		$tpl_vars['nb_modules_favorites'] = Db::getInstance()->getValue('SELECT COUNT(`id_module_preference`) FROM `'._DB_PREFIX_.'module_preference` WHERE `id_employee` = '.(int)$this->id_employee.' AND `favorite` = 1 AND (`interest` = 1 OR `interest` IS NULL)');
-		$tpl_vars['nb_modules_installed'] = $this->nb_modules_installed;
-		$tpl_vars['nb_modules_uninstalled'] = $tpl_vars['nb_modules'] - $tpl_vars['nb_modules_installed'];
-		$tpl_vars['nb_modules_activated'] = $this->nb_modules_activated;
-		$tpl_vars['nb_modules_unactivated'] = $tpl_vars['nb_modules_installed'] - $tpl_vars['nb_modules_activated'];
-		$tpl_vars['list_modules_categories'] = $cleaned_list;
-		$tpl_vars['list_modules_authors'] = $this->modules_authors;
-		$tpl_vars['add_permission'] = $this->tabAccess['add'];
-		$tpl_vars['tab_modules_preferences'] = $tab_modules_preferences;
-		$tpl_vars['kpis'] = $this->renderKpis();
-		$tpl_vars['module_name'] = Tools::getValue('module_name');
-		$tpl_vars['page_header_toolbar_title'] = $this->page_header_toolbar_title;
-		$tpl_vars['page_header_toolbar_btn'] = $this->page_header_toolbar_btn;
-		$tpl_vars['modules_uri'] = __PS_BASE_URI__.basename(_PS_MODULE_DIR_);
+		$tpl_vars = array(
+			'token' => $this->token,
+			'upgrade_available' => $upgrade_available,
+			'currentIndex' => self::$currentIndex,
+			'dirNameCurrentIndex' => dirname(self::$currentIndex),
+			'ajaxCurrentIndex' => str_replace('index', 'ajax-tab', self::$currentIndex),
+			'autocompleteList' => rtrim($autocompleteList, ' ,').'];',
+			'showTypeModules' => $this->filter_configuration['PS_SHOW_TYPE_MODULES_'.(int)$this->id_employee],
+			'showCountryModules' => $this->filter_configuration['PS_SHOW_COUNTRY_MODULES_'.(int)$this->id_employee],
+			'showInstalledModules' => $this->filter_configuration['PS_SHOW_INSTALLED_MODULES_'.(int)$this->id_employee],
+			'showEnabledModules' => $this->filter_configuration['PS_SHOW_ENABLED_MODULES_'.(int)$this->id_employee],
+			'nameCountryDefault' => Country::getNameById($this->context->language->id, Configuration::get('PS_COUNTRY_DEFAULT')),
+			'isoCountryDefault' => $this->iso_default_country,
+			'categoryFiltered' => $categoryFiltered,
+			'modules' => $modules,
+			'nb_modules' => $this->nb_modules_total,
+			'nb_modules_favorites' => count($this->context->employee->favoriteModulesList()),
+			'nb_modules_installed' => $this->nb_modules_installed,
+			'nb_modules_uninstalled' => $this->nb_modules_total - $this->nb_modules_installed,
+			'nb_modules_activated' => $this->nb_modules_activated,
+			'nb_modules_unactivated' => $this->nb_modules_installed - $this->nb_modules_activated,
+			'list_modules_categories' => $cleaned_list,
+			'list_modules_authors' => $this->modules_authors,
+			'add_permission' => $this->tabAccess['add'],
+			'tab_modules_preferences' => $tab_modules_preferences,
+			'kpis' => $this->renderKpis(),
+			'module_name' => Tools::getValue('module_name'),
+			'page_header_toolbar_title' => $this->page_header_toolbar_title,
+			'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
+			'modules_uri' => __PS_BASE_URI__.basename(_PS_MODULE_DIR_),
+			'dont_filter' => $dont_filter,
+		);		
 
 		if ($this->logged_on_addons)
 		{

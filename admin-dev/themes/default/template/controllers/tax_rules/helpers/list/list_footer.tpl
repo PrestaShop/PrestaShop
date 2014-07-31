@@ -59,8 +59,8 @@
 	{if !$simple_header && $list_total > $pagination[0]}
 	<div class="col-lg-4">
 		{* Choose number of results per page *}
-		<span class="pagination">
-			{l s='Display'}: 
+		<div class="pagination">
+			{l s='Display'} 
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 				{$selected_pagination}
 				<i class="icon-caret-down"></i>
@@ -74,7 +74,7 @@
 			</ul>
 			/ {$list_total} {l s='result(s)'}
 			<input type="hidden" id="{$list_id}-pagination-items-page" name="{$list_id}_pagination" value="{$selected_pagination|intval}" />
-		</span>
+		</div>
 		<script type="text/javascript">
 			$('.pagination-items-page').on('click',function(e){
 				e.preventDefault();
@@ -133,7 +133,7 @@
 	{/if}
 </div>
 {if !$simple_header}
-		<input type="hidden" name="token" value="{$token}" />
+		<input type="hidden" name="token" value="{$token|escape:'html':'UTF-8'}" />
 	</div>
 </form>
 {/if}

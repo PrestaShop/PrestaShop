@@ -93,7 +93,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 	public static function getInstalledModules()
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT COUNT(*)
+		SELECT COUNT(DISTINCT m.`id_module`)
 		FROM `'._DB_PREFIX_.'module` m
 		'.Shop::addSqlAssociation('module', 'm'));
 	}
@@ -624,9 +624,9 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				if ($value === false)
 					$value = $this->l('No customers', null, null, false);
 				elseif ($value['type'] == 'female')
-					$value = sprintf($this->l('%d%% Women Customers', null, null, false), $value['value']);
+					$value = sprintf($this->l('%d%% Female Customers', null, null, false), $value['value']);
 				elseif ($value['type'] == 'male')
-					$value = sprintf($this->l('%d%% Men Customers', null, null, false), $value['value']);
+					$value = sprintf($this->l('%d%% Male Customers', null, null, false), $value['value']);
 				else
 					$value = sprintf($this->l('%d%% Neutral Customers', null, null, false), $value['value']);
 

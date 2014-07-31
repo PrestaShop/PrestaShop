@@ -22,6 +22,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<a href="{$href}" title="{$action}" class="btn btn-default">
+<a href="{$href|escape:'html':'UTF-8'}" title="{$action}" class="btn btn-default">
 	<i class="icon-cloud-upload"></i> {$action}
 </a>

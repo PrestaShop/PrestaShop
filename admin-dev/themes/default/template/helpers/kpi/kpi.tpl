@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<{if isset($href) && $href}a style="display:block" href="{$href|escape}"{else}div{/if} id="{$id|escape}" class="box-stats {$color|escape}" >
+<{if isset($href) && $href}a style="display:block" href="{$href|escape:'html':'UTF-8'}"{else}div{/if} id="{$id|escape:'html':'UTF-8'}" class="box-stats {$color|escape}" >
 	<div class="kpi-content">
 	{if isset($icon) && $icon}
 		<i class="{$icon|escape}"></i>

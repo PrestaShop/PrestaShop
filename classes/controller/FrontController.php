@@ -594,7 +594,9 @@ class FrontControllerCore extends Controller
 					'HOOK_MAINTENANCE' => Hook::exec('displayMaintenance', array()),
 				));
 
-				$this->smartyOutputContent($this->getTemplatePath($this->getThemeDir().'maintenance.tpl'));
+				// If the controller is a module, then getTemplatePath will try to find the template in the modules, so we need to instanciate a real frontcontroller
+				$front_controller = preg_match('/ModuleFrontController$/', get_class($this)) ? new FrontController() : $this;
+				$this->smartyOutputContent($front_controller->getTemplatePath($this->getThemeDir().'maintenance.tpl'));
 				exit;
 			}
 		}
@@ -891,12 +893,11 @@ class FrontControllerCore extends Controller
 			$nArray[] = $total_products;
 		// Retrieve the current number of products per page (either the default, the GET parameter or the one in the cookie)
 		$this->n = $default_products_per_page;
-		if ((int)Tools::getValue('n') && in_array((int)Tools::getValue('n'), $nArray))
-		{
-			$this->n = (int)Tools::getValue('n');
-			if (isset($this->context->cookie->nb_item_per_page) && in_array($this->context->cookie->nb_item_per_page, $nArray))
+		if (isset($this->context->cookie->nb_item_per_page) && in_array($this->context->cookie->nb_item_per_page, $nArray))
 				$this->n = (int)$this->context->cookie->nb_item_per_page;
-		}
+			
+		if ((int)Tools::getValue('n') && in_array((int)Tools::getValue('n'), $nArray))
+			$this->n = (int)Tools::getValue('n');
 
 		// Retrieve the page number (either the GET parameter or the first page)
 		$this->p = (int)Tools::getValue('p', 1);
@@ -907,7 +908,7 @@ class FrontControllerCore extends Controller
 		// Remove the page parameter in order to get a clean URL for the pagination template
 		$current_url = preg_replace('/(\?)?(&amp;)?p=\d+/', '$1', Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']));
 
-		if ($this->n != $default_products_per_page)
+		if ($this->n != $default_products_per_page || isset($this->context->cookie->nb_item_per_page))
 			$this->context->cookie->nb_item_per_page = $this->n;
 
 		$pages_nb = ceil($total_products / (int)$this->n);

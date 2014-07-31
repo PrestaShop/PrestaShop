@@ -368,7 +368,7 @@ class ProductCore extends ObjectModel
 			),
 			'position_in_category' => array(
 				'getter' => 'getWsPositionInCategory',
-				'setter' => false
+				'setter' => 'setWsPositionInCategory'
 			),
 			'manufacturer_name' => array(
 				'getter' => 'getWsManufacturerName',
@@ -385,13 +385,13 @@ class ProductCore extends ObjectModel
 		),
 		'associations' => array(
 			'categories' => array(
-				'resource' => 'category',
+				'resource' => 'categories',
 				'fields' => array(
 					'id' => array('required' => true),
 				)
 			),
 			'images' => array(
-				'resource' => 'image',
+				'resource' => 'images',
 				'fields' => array('id' => array())
 			),
 			'combinations' => array(
@@ -401,13 +401,13 @@ class ProductCore extends ObjectModel
 				)
 			),
 			'product_option_values' => array(
-				'resource' => 'product_options_values',
+				'resource' => 'product_option_values',
 				'fields' => array(
 					'id' => array('required' => true),
 				)
 			),
 			'product_features' => array(
-				'resource' => 'product_feature',
+				'resource' => 'product_features',
 				'fields' => array(
 					'id' => array('required' => true),
 					'custom' => array('required' => false),
@@ -417,11 +417,11 @@ class ProductCore extends ObjectModel
 					),
 				)
 			),
-			'tags' => array('resource' => 'tag',
+			'tags' => array('resource' => 'tags',
 				'fields' => array(
 					'id' => array('required' => true),
 			)),
-			'stock_availables' => array('resource' => 'stock_available',
+			'stock_availables' => array('resource' => 'stock_availables',
 				'fields' => array(
 					'id' => array('required' => true),
 					'id_product_attribute' => array('required' => true),
@@ -429,7 +429,7 @@ class ProductCore extends ObjectModel
 				'setter' => false
 			),
 			'accessories' => array(
-				'resource' => 'product',
+				'resource' => 'products',
 				'fields' => array(
 					'id' => array(
 						'required' => true,
@@ -500,6 +500,7 @@ class ProductCore extends ObjectModel
 		$fields = parent::getFieldsShop();
 		if (is_null($this->update_fields) || (!empty($this->update_fields['price']) && !empty($this->update_fields['unit_price'])))
 		$fields['unit_price_ratio'] = (float)$this->unit_price > 0 ? $this->price / $this->unit_price : 0;
+		$fields['unity'] = pSQL($this->unity);
 
 		return $fields;
 	}
@@ -751,26 +752,23 @@ class ProductCore extends ObjectModel
 			'is_virtual' => (int)$id_product,
 		), 'id_product = '.(int)$id_product);
 	}
-
-	/**
-	 * @see ObjectModel::validateFieldsLang()
-	 */
-	public function validateFieldsLang($die = true, $error_return = false)
-	{
-		$limit = (int)Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT');
-		if ($limit <= 0)
-			$limit = 800;
-		$this->def['fields']['description_short']['size'] = $limit;
-
-		return parent::validateFieldsLang($die, $error_return);
-	}
 	
 	/**
 	 * @see ObjectModel::validateField()
 	 */
 	public function validateField($field, $value, $id_lang = null, $skip = array(), $human_errors = false)
 	{
-		$value = ($field == 'description_short' ? strip_tags($value) : $value);
+		if ($field == 'description_short')
+		{
+			$limit = (int)Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT');
+			if ($limit <= 0)
+				$limit = 800;
+
+			$size_without_html = Tools::strlen(strip_tags($value));
+			$size_with_html = Tools::strlen($value);
+			$this->def['fields']['description_short']['size'] = $limit + $size_with_html - $size_without_html;
+		}
+
 		return parent::validateField($field, $value, $id_lang, $skip, $human_errors);
 	}
 
@@ -3123,7 +3121,8 @@ class ProductCore extends ObjectModel
 					JOIN `'._DB_PREFIX_.'attribute_group` ag ON (a.id_attribute_group = ag.`id_attribute_group`)
 					WHERE pa.`id_product` IN ('.implode(array_map('intval', $products), ',').') AND ag.`is_color_group` = 1
 					GROUP BY pa.`id_product`, `group_by`
-					'.($check_stock ? 'HAVING qty > 0' : '')
+					'.($check_stock ? 'HAVING qty > 0' : '').'
+					ORDER BY a.`id_attribute` ASC;'
 				)
 			)
 				return false;
@@ -3621,7 +3620,6 @@ class ProductCore extends ObjectModel
 			return true;
 
 		$data = array();
-		$res = true;
 		foreach ($results as $row)
 		{
 			$new_filename = ProductDownload::getNewFilename();
@@ -3638,10 +3636,8 @@ class ProductCore extends ObjectModel
 				'is_shareable' => (int)$row['is_shareable'],
 				'date_add' => date('Y-m-d H:i:s')
 			);
-			$res &= Db::getInstance()->insert('product_download', $data);
 		}
-
-		return $res;
+		return Db::getInstance()->insert('product_download', $data);
 	}
 
 	public static function duplicateAttachments($id_product_old, $id_product_new)
@@ -3975,6 +3971,11 @@ class ProductCore extends ObjectModel
 		if ($row['pack'] && !Pack::isInStock($row['id_product']))
 			$row['quantity'] = 0;
 
+		$row['customization_required'] = false;
+		if (isset($row['customizable']) && $row['customizable'] && Customization::isFeatureActive())
+			if (count(Product::getRequiredCustomizableFieldsStatic((int)$row['id_product'])))
+				$row['customization_required'] = true;
+
 		$row = Product::getTaxesInformations($row, $context);
 		self::$producPropertiesCache[$cache_key] = $row;
 		return self::$producPropertiesCache[$cache_key];
@@ -4136,13 +4137,17 @@ class ProductCore extends ObjectModel
 				else
 					$price_wt = $price * (1 + ((isset($product_update['tax_rate']) ? $product_update['tax_rate'] : $product_update['rate']) * 0.01));
 
+				if (!isset($customized_datas[$product_id][$product_attribute_id][$id_address_delivery]))
+                                        $id_address_delivery = 0;
 				if (isset($customized_datas[$product_id][$product_attribute_id][$id_address_delivery]))
+				{
 					foreach ($customized_datas[$product_id][$product_attribute_id][$id_address_delivery] as $customization)
 					{
 						$customization_quantity += (int)$customization['quantity'];
 						$customization_quantity_refunded += (int)$customization['quantity_refunded'];
 						$customization_quantity_returned += (int)$customization['quantity_returned'];
 					}
+				}
 
 				$product_update['customizationQuantityTotal'] = $customization_quantity;
 				$product_update['customizationQuantityRefunded'] = $customization_quantity_refunded;
@@ -4357,10 +4362,17 @@ class ProductCore extends ObjectModel
 	{
 		if (!Customization::isFeatureActive())
 			return array();
+		return Product::getRequiredCustomizableFieldsStatic($this->id);
+	}
+
+	public static function getRequiredCustomizableFieldsStatic($id)
+	{
+		if (!$id || !Customization::isFeatureActive())
+			return array();
 		return Db::getInstance()->executeS('
 			SELECT `id_customization_field`, `type`
 			FROM `'._DB_PREFIX_.'customization_field`
-			WHERE `id_product` = '.(int)$this->id.'
+			WHERE `id_product` = '.(int)$id.'
 			AND `required` = 1'
 		);
 	}
@@ -4379,9 +4391,11 @@ class ProductCore extends ObjectModel
 		$fields_present = array();
 		foreach ($fields as $field)
 			$fields_present[] = array('id_customization_field' => $field['index'], 'type' => $field['type']);
-		foreach ($required_fields as $required_field)
-			if (!in_array($required_field, $fields_present))
-				return false;
+
+		if (is_array($required_fields) && count($required_fields))
+			foreach ($required_fields as $required_field)
+				if (!in_array($required_field, $fields_present))
+					return false;
 		return true;
 	}
 
@@ -4838,6 +4852,41 @@ class ProductCore extends ObjectModel
 		if (count($result) > 0)
 			return $result[0]['position'];
 		return '';
+	}
+
+	/**
+	* Webservice setter : set virtual field position in category
+	*
+	* @return bool
+	*/
+	public function setWsPositionInCategory($position)
+	{
+		if ($position < 0)
+			WebserviceRequest::getInstance()->setError(500, Tools::displayError('You cannot set a negative position, the minimum for a position is 0.'), 134);
+		$result = Db::getInstance()->executeS('
+			SELECT `id_product`
+			FROM `'._DB_PREFIX_.'category_product`
+			WHERE `id_category` = '.(int)$this->id_category_default.'
+			ORDER BY `position`
+		');
+		if ($position + 1 > count($result))
+			WebserviceRequest::getInstance()->setError(500, Tools::displayError('You cannot set a position greater than the total number of products in the category, minus 1 (position numbering starts at 0).'), 135);
+
+		foreach ($result as &$value)
+			$value = $value['id_product'];
+		$currentPosition = $this->getWsPositionInCategory();
+
+		$save = $result[$currentPosition];
+		unset($result[$currentPosition]);
+		array_splice($result, $position, 0, $save);
+
+		foreach ($result as $position => $id_product)
+		{
+			Db::getInstance()->update('category_product', array(
+				'position' => $position,
+			), '`id_category` = '.(int)$this->id_category_default.' AND `id_product` = '.(int)$id_product);
+		}
+		return true;
 	}
 
 	/**

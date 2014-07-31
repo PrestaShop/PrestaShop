@@ -24,7 +24,7 @@
 *}
 {extends file="helpers/list/list_header.tpl"}
 {block name=override_header}
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
 $(document).ready(function() {
 	$('input.quantity_received_today').live('click', function() {
 		/* checks checkbox when the input is clicked */

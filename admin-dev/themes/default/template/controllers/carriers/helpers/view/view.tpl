@@ -36,9 +36,9 @@
 	
 		<div class="col-lg-12">
 			<form action="" id="configuration_form" method="post" enctype="multipart/form-data" class="form-horizontal">
-				<div class="form-group ">
+				<div class="form-group">
 					<label class="control-label col-lg-3">{l s="Create a custom carrier"}</label>
-					<a class="btn btn-default" href="{$link->getAdminLink('AdminCarrierWizard')}">{l s="Add new carrier"}</a>
+					<a class="btn btn-default" href="{$link->getAdminLink('AdminCarrierWizard')|escape:'html':'UTF-8'}">{l s="Add new carrier"}</a>
 					<div class="col-lg-9 col-lg-offset-3">
 						<p class="help-block">{l s="Use this tool to allow PrestaShop to know how an unknown carrier works. You can configure its shipping rates, its regional zones, its size and weight limits, etc."}</p>
 					</div>

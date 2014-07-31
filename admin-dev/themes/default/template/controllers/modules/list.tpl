@@ -45,33 +45,24 @@
 	{if count($modules)}
 		<tbody>
 			{foreach from=$modules item=module}
-			
-{capture name="moduleStatutClass"}
-{if isset($module->id) && $module->id gt 0 && $module->active == 1}
-module_active
-{else}
-module_inactive
-{/if}
-{/capture}
+				{capture name="moduleStatutClass"}{if isset($module->id) && $module->id gt 0 && $module->active == 1}module_active{else}module_inactive{/if}{/capture}
 				<tr>
-					<td class="{{$smarty.capture.moduleStatutClass}} text-center" width="1%">
+					<td class="{{$smarty.capture.moduleStatutClass}} text-center" style="width: 1%;">
 						{if (isset($module->id) && $module->id > 0) || !isset($module->type) || $module->type != 'addonsMustHave'}
-						<input type="checkbox" name="modules" value="{$module->name}"
-							{if !isset($module->confirmUninstall) OR empty($module->confirmUninstall)}rel="false"{else}rel="{$module->confirmUninstall|addslashes}"{/if}
-							class="noborder" title="{l s='Module %1s '|sprintf:$module->name}" />
+						<input type="checkbox" name="modules" value="{$module->name|escape:'html':'UTF-8'}" class="noborder" title="{l s='Module %1s '|sprintf:$module->name}"{if !isset($module->confirmUninstall) OR empty($module->confirmUninstall)} data-rel="false"{else} data-rel="{$module->confirmUninstall|addslashes}"{/if}/>
 						{/if}
 					</td>
 					<td class="fixed-width-xs">
-						<img width="32" alt="{$module->displayName}" title="{$module->displayName}" src="{if isset($module->image)}{$module->image}{else}{$modules_uri}/{$module->name}/{$module->logo}{/if}" />
+						<img width="32" alt="{$module->displayName|escape:'html':'UTF-8'}" title="{$module->displayName|escape:'html':'UTF-8'}" src="{if isset($module->image)}{$module->image}{else}{$modules_uri}/{$module->name}/{$module->logo}{/if}" />
 					</td>
 					<td>
-						<div id="anchor{$module->name|ucfirst}" title="{$module->displayName}">
+						<div id="anchor{$module->name|ucfirst}" title="{$module->displayName|escape:'html':'UTF-8'}">
 							<div class="text-muted">
 								{$module->categoryName}
 							</div>
 							<div class="module_name">
-								<span style="display:none">{$module->name}</span>
-								{$module->displayName}
+								<span style="display:none">{$module->name|escape:'html':'UTF-8'}</span>
+								{$module->displayName|escape:'html':'UTF-8'}
 								<small class="text-muted">v{$module->version} - by {$module->author}</small>
 								{if isset($module->type) && $module->type == 'addonsBought'}
 								- <span class="module-badge-bought help-tooltip text-warning" data-title="{l s="You bought this module on PrestaShop Addons. Thank You."}"><i class="icon-pushpin"></i> <small>{l s="Bought"}</small></span>
@@ -90,7 +81,7 @@ module_inactive
 									{$module->description}
 								{/if}
 								{if isset($module->show_quick_view) &&  $module->show_quick_view}
-									<br><a href="{$currentIndex}&token={$token}&ajax=1&action=GetModuleQuickView&module={$module->name}" class="fancybox-quick-view"><i class="icon-search"></i> {l s='Read more'}</a>
+									<br><a href="{$currentIndex|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;ajax=1&amp;action=GetModuleQuickView&amp;module={$module->name|urlencode}" class="fancybox-quick-view"><i class="icon-search"></i> {l s='Read more'}</a>
 								{/if}
 							</p>
 							{if isset($module->message) && (empty($module->name) !== false) && (!isset($module->type) || ($module->type != 'addonsMustHave' || $module->type !== 'addonsNative'))}<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>{$module->message}</div>{/if}
@@ -100,13 +91,13 @@ module_inactive
 						<div class="btn-group-action">
 							<div class="btn-group pull-right">
 								{if isset($module->type) && $module->type == 'addonsMustHave'}
-									<a class="btn btn-default" href="{$module->addons_buy_url}" target="_blank">
+									<a class="btn btn-default" href="{$module->addons_buy_url|replace:' ':'+'|escape:'html':'UTF-8'}" target="_blank">
 										<i class="icon-shopping-cart"></i> &nbsp;{if isset($module->id_currency) && isset($module->price)}{displayPrice price=$module->price currency=$module->id_currency}{/if}
 									</a>
 								{else}
 									{if isset($module->id) && $module->id gt 0}
 										{if isset($module->version_addons) && $module->version_addons}
-											<a class="btn btn-warning" href="{$module->options.update_url}">
+											<a class="btn btn-warning" href="{$module->options.update_url|escape:'html':'UTF-8'}">
 												<i class="icon-refresh"></i> {l s='Update it!'}
 											</a>
 										{elseif !isset($module->not_on_disk)}
@@ -115,17 +106,23 @@ module_inactive
 												{$option}
 											{/if}
 										{else}
-											<a class="btn btn-danger" {if !empty($module->options.uninstall_onclick)}onclick="{$module->options.uninstall_onclick}"{/if} href="{$module->options.uninstall_url}">
+											<a class="btn btn-danger" {if !empty($module->options.uninstall_onclick)}onclick="{$module->options.uninstall_onclick}"{/if} href="{$module->options.uninstall_url|escape:'html':'UTF-8'}">
 												<i class="icon-minus-sign-alt"></i>&nbsp;{l s='Uninstall'}
 											</a>
 										{/if}
 									{else}
 										{if isset($module->trusted) && $module->trusted}
-										<a class="btn btn-success" href="{$module->options.install_url}">
-											<i class="icon-plus-sign-alt"></i>&nbsp;{l s='Install'}
-										</a>
+											{if $module->trusted == 2}
+												<a class="btn btn-success untrustedaddon" href="#" data-target="#moduleNotTrustedCountry" data-toggle="modal" data-link="{$module->options.install_url|escape:'html':'UTF-8'}" data-module-name="{$module->displayName|escape:'html':'UTF-8'}">
+													<i class="icon-plus-sign-alt"></i>&nbsp;{l s='Install'}
+												</a>
+											{else}
+												<a class="btn btn-success" href="{$module->options.install_url|escape:'html':'UTF-8'}">
+													<i class="icon-plus-sign-alt"></i>&nbsp;{l s='Install'}
+												</a>
+											{/if}
 										{else}
-										<a class="btn btn-success untrustedaddon" href="#" data-target="#moduleNotTrusted" data-toggle="modal" data-link="{$module->options.install_url}" data-module-name="{$module->displayName}">
+										<a class="btn btn-success untrustedaddon" href="#" data-target="#moduleNotTrusted" data-toggle="modal" data-link="{$module->options.install_url|escape:'html':'UTF-8'}" data-module-name="{$module->displayName|escape:'html':'UTF-8'}">
 											<i class="icon-plus-sign-alt"></i>&nbsp;{l s='Install'}
 										</a>
 										{/if}

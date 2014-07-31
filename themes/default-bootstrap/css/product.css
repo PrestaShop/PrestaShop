@@ -33,10 +33,13 @@
     .accessories-block .product-name a:hover {
       color: #515151; }
 
-img {
-  max-width: 100%;
-  height: auto; }
-
+.primary_block .pb-left-column img{
+	max-width: 100%;
+	height: auto;
+}
+a.fancybox-nav {
+	outline:0
+}
 /* .pb-left-column ***************************************************************************** */
 .pb-left-column #image-block {
   position: relative;

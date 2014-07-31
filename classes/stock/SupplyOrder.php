@@ -163,7 +163,7 @@ class SupplyOrderCore extends ObjectModel
  		),
  		'associations' => array(
 			'supply_order_details' => array(
-				'resource' => 'supply_order_detail',
+				'resource' => 'supply_order_details',
 				'fields' => array(
 					'id' => array(),
  					'id_product' => array(),
@@ -504,6 +504,33 @@ class SupplyOrderCore extends ObjectModel
 		$ref = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 
 		return (pSQL($ref));
+	}
+
+	public function getAllExpectedQuantity()
+	{
+		return Db::getInstance()->getValue('
+			SELECT SUM(`quantity_expected`)
+			FROM `'._DB_PREFIX_.'supply_order_detail`
+			WHERE `id_supply_order` = '.(int)$this->id
+		);
+	}
+
+	public function getAllReceivedQuantity()
+	{
+		return Db::getInstance()->getValue('
+			SELECT SUM(`quantity_received`)
+			FROM `'._DB_PREFIX_.'supply_order_detail`
+			WHERE `id_supply_order` = '.(int)$this->id
+		);
+	}
+
+	public function getAllPendingQuantity()
+	{
+		return Db::getInstance()->getValue('
+			SELECT (SUM(`quantity_expected`) - SUM(`quantity_received`))
+			FROM `'._DB_PREFIX_.'supply_order_detail`
+			WHERE `id_supply_order` = '.(int)$this->id
+		);
 	}
 
 	/*********************************\

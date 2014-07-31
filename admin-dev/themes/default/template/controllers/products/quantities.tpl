@@ -169,9 +169,9 @@
 			{/if}
 		{/if}
 		<div class="panel-footer">
-			<a href="{$link->getAdminLink('AdminProducts')}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
-			<button type="submit" name="submitAddproduct" class="btn btn-default pull-right product_quantities_button"><i class="process-icon-save"></i> {l s='Save'}</button>
-			<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right product_quantities_button"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
+			<a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
+			<button type="submit" name="submitAddproduct" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save'}</button>
+			<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
 		</div>
 	</div>
 	<div class="panel">
@@ -179,8 +179,8 @@
 
 		{if !$has_attribute}
 			<div class="form-group">
-				<label class="control-label col-lg-3" for="minimal_quantity">
-					{include file="controllers/products/multishop/checkbox.tpl" field="minimal_quantity" type="default"}
+				<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="minimal_quantity" type="default"}</span></div>
+				<label class="control-label col-lg-2" for="minimal_quantity">
 					{l s='Minimum quantity'}
 				</label>
 				<div class="col-lg-9">
@@ -192,10 +192,9 @@
 
 		{if $ps_stock_management}			
 			<div class="form-group">
-				<label class="control-label col-lg-3" for="available_now_{$default_language}">
-					{include file="controllers/products/multishop/checkbox.tpl" field="available_now" type="default" multilang="true"}
-					<span class="label-tooltip" data-toggle="tooltip"
-						title="{l s='Forbidden characters:'} &#60;&#62;;&#61;#&#123;&#125;">
+				<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="available_now" type="default" multilang="true"}</span></div>
+				<label class="control-label col-lg-2" for="available_now_{$default_language}">
+					<span class="label-tooltip" data-toggle="tooltip" title="{l s='Forbidden characters:'} &#60;&#62;;&#61;#&#123;&#125;">
 						{l s='Displayed text when in-stock'}
 					</span>
 				</label>
@@ -207,13 +206,12 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label class="control-label col-lg-3" for="available_later_{$default_language}">
-					{include file="controllers/products/multishop/checkbox.tpl" field="available_later" type="default" multilang="true"}
+				<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="available_later" type="default" multilang="true"}</span></div>
+				<label class="control-label col-lg-2" for="available_later_{$default_language}">
 					<span class="label-tooltip" data-toggle="tooltip"
 						title="{l s='If empty, the message "in stock" will be displayed.'} {l s='Forbidden characters:'} &#60;&#62;;&#61;#&#123;&#125;">
 						{l s='Displayed text when backordering is allowed'}
 					</span>
-					
 				</label>
 				<div class="col-lg-9">
 					{include file="controllers/products/input_text_lang.tpl"
@@ -225,8 +223,8 @@
 			
 			{if !$countAttributes}
 			<div class="form-group">
-				<label class="control-label col-lg-3" for="available_date">
-					{include file="controllers/products/multishop/checkbox.tpl" field="available_date" type="default"}
+				<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="available_date" type="default"}</span></div>
+				<label class="control-label col-lg-2" for="available_date">
 					{l s='Available date:'}
 				</label>
 				<div class="col-lg-9">
@@ -243,9 +241,9 @@
 			{/if}
 		{/if}
 		<div class="panel-footer">
-			<a href="{$link->getAdminLink('AdminProducts')}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
-			<button type="submit" name="submitAddproduct" class="btn btn-default pull-right product_quantities_button"><i class="process-icon-save"></i> {l s='Save'}</button>
-			<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right product_quantities_button"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
+			<a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
+			<button type="submit" name="submitAddproduct" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save'}</button>
+			<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
 		</div>
 		<script type="text/javascript">
 			var quantities_ajax_success = '{l s='Data saved' js=1}';

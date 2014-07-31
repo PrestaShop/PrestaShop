@@ -54,15 +54,15 @@
 				{/if}
 			</div>
 		</div>
-		<hr>
+		<hr />
 		<h3>{l s="Description"}</h3>
 		<p class="text-justify">{$description_full}</p>
 		{if isset($additional_description) && trim($additional_description) != ''}
-			<hr>
+			<hr />
 			<h3>{l s="Merchant benefits"}</h3>
 			<p class="text-justify">{$additional_description}</p>
 		{/if}
-		<hr>
+		<hr />
 		{if $is_addons_partner}
 			<a class="btn btn-success btn-lg pull-right" href="{$url}">{l s='Install module'}</a>
 		{else}

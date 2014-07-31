@@ -39,7 +39,7 @@
 										<div class="action-overlay"></div>
 										<div class="action-buttons">
 											<div class="btn-group">
-												<a href="{$link->getAdminLink('AdminThemes')|addslashes}&submitOptionstheme&id_theme={$theme.id}" class="btn btn-default">
+												<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;submitOptionstheme&amp;id_theme={$theme.id}" class="btn btn-default">
 													<i class="icon-check"></i> {l s='Use this theme'}
 												</a>
 												<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -47,7 +47,7 @@
 												</button>
 												<ul class="dropdown-menu">
 													<li>
-														<a href="{$link->getAdminLink('AdminThemes')|addslashes}&deletetheme&id_theme={$theme.id}" title="Delete this theme" class="delete">
+														<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;deletetheme&amp;id_theme={$theme.id}" title="Delete this theme" class="delete">
 															<i class="icon-trash"></i> {l s='Delete this theme'}
 														</a>
 													</li>
@@ -78,7 +78,7 @@
 
 			<div class="col-md-3">
 				<a class="" href="{$base_url}">
-					<img class="center-block img-thumbnail" src="../themes/{$cur_theme.theme_directory}/preview.jpg">
+					<img class="center-block img-thumbnail" src="../themes/{$cur_theme.theme_directory}/preview.jpg" alt="{$cur_theme.theme_name}" />
 				</a>
 			</div>
 
@@ -91,29 +91,28 @@
 				{/if}
 
 				{if isset($cur_theme.tc) && $cur_theme.tc}
-				<hr>
+				<hr />
 				<h4>{l s='Customize your theme'}</h4>
 				<div class="row">
 					<div class="col-sm-8">
 						<p>{l s='Customize the main elements of your theme: sliders, banners, colors, etc.'}</p>
 					</div>
 					<div class="col-sm-4">
-						<a class="btn btn-default pull-right" href="{$link->getAdminLink('AdminModules')|addslashes}&configure=themeconfigurator">
+						<a class="btn btn-default pull-right" href="{$link->getAdminLink('AdminModules')|escape:'html':'UTF-8'}&amp;configure=themeconfigurator">
 							<i class="icon icon-list-alt"></i> 
 							{l s='Theme Configurator'}
 						</a>
 					</div>
 				</div>
 				{/if}
-
-				<hr>
+				<hr />
 				<h4>{l s='Configure your theme'}</h4>
 				<div class="row">
 					<div class="col-sm-8">
 						<p>{l s='Configure your theme\'s advanced settings, such as the number of columns you want for each page. This setting is mostly for advanced users.'}</p>
 					</div>
 					<div class="col-sm-4">
-						<a class="btn btn-default pull-right" href="{$link->getAdminLink('AdminThemes')|addslashes}&updatetheme&id_theme={$cur_theme.theme_id}">
+						<a class="btn btn-default pull-right" href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;updatetheme&amp;id_theme={$cur_theme.theme_id}">
 							<i class="icon icon-cog"></i> 
 							{l s='Advanced settings'}
 						</a>
@@ -141,7 +140,7 @@
 			dataType : "html",
 			data: {
 				tab: 'AdminThemes',
-				token: '{$token}',
+				token: '{$token|escape:'html':'UTF-8'}',
 				ajax: '1',
 				action:'getAddonsThemes',
 				page:'themes'

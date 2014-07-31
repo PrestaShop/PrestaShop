@@ -265,7 +265,7 @@ class AdminThemesControllerCore extends AdminController
 					),
 					'PS_LOGO_MAIL' => array(
 						'title' => $this->l('Mail logo'),
-						'desc' => ((Configuration::get('PS_LOGO_MAIL') === false) ? '<span class="light-warning">'.$this->l('Warning: No email logo has been identified. The header logo will be used instead.').'</span><br />' : ''),
+						'desc' => ((Configuration::get('PS_LOGO_MAIL') === false) ? '<span class="light-warning">'.$this->l('Warning: if no email logo is available, the main logo will be used instead.').'</span><br />' : ''),
 						'hint' => $this->l('Will appear on email headers. If undefined, the header logo will be used.'),
 						'type' => 'file',
 						'name' => 'PS_LOGO_MAIL',
@@ -274,7 +274,7 @@ class AdminThemesControllerCore extends AdminController
 					),
 					'PS_LOGO_INVOICE' => array(
 						'title' => $this->l('Invoice logo'),
-						'desc' => ((Configuration::get('PS_LOGO_INVOICE') === false) ? '<span class="light-warning">'.$this->l('Warning: No invoice logo has been defined. The header logo will be used instead.').'</span><br />' : ''),
+						'desc' => ((Configuration::get('PS_LOGO_INVOICE') === false) ? '<span class="light-warning">'.$this->l('Warning: if no invoice logo is available, the main logo will be used instead.').'</span><br />' : ''),
 						'hint' => $this->l('Will appear on invoice headers.').' '.$this->l('Warning: you can use a PNG file for transparency, but it can take up to 1 second per page for processing. Please consider using JPG instead.'),
 						'type' => 'file',
 						'name' => 'PS_LOGO_INVOICE',
@@ -318,7 +318,7 @@ class AdminThemesControllerCore extends AdminController
 				'submit' => array('title' => $this->l('Save')),
 				'buttons' => array(
 					'storeLink' => array(
-						'title' => $this->l('Visit the theme store'),
+						'title' => $this->l('Visit the theme catalog'),
 						'icon' => 'process-icon-themes',
 						'href' => 'http://addons.prestashop.com/en/3-templates-prestashop?utm_source=back-office&utm_medium=theme-button&utm_campaign=back-office-'.$iso_lang_uc,
 						'js' => 'return !window.open(this.href)'
@@ -611,8 +611,8 @@ class AdminThemesControllerCore extends AdminController
 
 					$res &= AdminThemesController::copyTheme($base_theme_dir.$file, $target_theme_dir.$file);
 				}
-				elseif (!file_exists($target_theme_dir.$file))
-					$res &= copy($base_dir.$file, $target_theme_dir.$file);
+				elseif (!file_exists($target_dir.$file))
+					$res &= copy($base_dir.$file, $target_dir.$file);
 			}
 		}
 
@@ -903,7 +903,7 @@ class AdminThemesControllerCore extends AdminController
 		$website = Tools::getValue('website');
 
 		if ($mail && !preg_match('#^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,6}$#', $mail))
-			$this->errors[] = $this->l('There is an error in your e-mail syntax!');
+			$this->errors[] = $this->l('There is an error in your email syntax!');
 		elseif ($website && (!Validate::isURL($website) || !Validate::isAbsoluteUrl($website)))
 			$this->errors[] = $this->l('There is an error in your URL syntax!');
 		elseif (!$this->checkVersionsAndCompatibility() || !$this->checkNames() || !$this->checkDocumentation())
@@ -993,7 +993,7 @@ class AdminThemesControllerCore extends AdminController
 
 	private function generateXML($theme_to_export, $metas)
 	{
-		$theme = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><!-- Copyright Prestashop --><theme></theme>');
+		$theme = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><!-- Copyright PrestaShop --><theme></theme>');
 		$theme->addAttribute('version', Tools::getValue('theme_version'));
 		$theme->addAttribute('name', Tools::htmlentitiesUTF8(Tools::getValue('theme_name')));
 		$theme->addAttribute('directory', Tools::htmlentitiesUTF8(Tools::getValue('theme_directory')));
@@ -1876,7 +1876,6 @@ class AdminThemesControllerCore extends AdminController
 		}
 		else
 		{
-
 			$content = '';
 			if (Configuration::hasKey('PS_LOGO') && trim(Configuration::get('PS_LOGO')) != ''
 				&& file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO')) && filesize(_PS_IMG_DIR_.Configuration::get('PS_LOGO')))
@@ -2065,7 +2064,7 @@ class AdminThemesControllerCore extends AdminController
 					break;
 			}
 
-			if (count($natives > 0))
+			if (count($natives) > 0)
 				return $natives;
 		}
 
@@ -2404,7 +2403,6 @@ class AdminThemesControllerCore extends AdminController
 			$helper->table = 'theme';
 
 			$helper->override_folder = $this->tpl_folder;
-
 
 			return $helper->generateForm(array($fields_form));
 		}

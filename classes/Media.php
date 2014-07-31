@@ -82,7 +82,6 @@ class MediaCore
 	{
 		if (strlen($html_content) > 0)
 		{
-
 			//set an alphabetical order for args
 			// $html_content = preg_replace_callback(
 				// '/(<[a-zA-Z0-9]+)((\s*[a-zA-Z0-9]+=[\"\\\'][^\"\\\']*[\"\\\']\s*)*)>/',
@@ -150,7 +149,6 @@ class MediaCore
 		return $output;
 	}
 
-
 	public static function packJS($js_content)
 	{
 		if (!empty($js_content))
@@ -176,7 +174,7 @@ class MediaCore
 		{
 			$limit  = Media::getBackTrackLimit();
 			$css_content = preg_replace('#/\*.*?\*/#s', '', $css_content, $limit);
-			$css_content = preg_replace_callback('#(url\((?!data:)(?!http://)(?!https://)(?:\'|")?)([^\)\'"]*(?:\'|")?\))#s', array('Tools', 'replaceByAbsoluteURL'), $css_content, $limit); 
+			$css_content = preg_replace_callback('#(url\((?![\\\'"]?data:)(?!http://)(?!https://)(?:\'|")?)([^\)\'"]*(?:\'|")?\))#s', array('Tools', 'replaceByAbsoluteURL'), $css_content, $limit); 
 			$css_content = preg_replace('#\s+#', ' ', $css_content, $limit);		
 			$css_content = str_replace(array("\t", "\n", "\r"), '', $css_content);
 			$css_content = str_replace(array('; ', ': '), array(';', ':'), $css_content);
@@ -474,6 +472,10 @@ class MediaCore
 			}
 
 			$infos['path'] = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, '/', $url_data['path']);
+
+			if (!@filemtime($infos['path']))
+				$infos['path'] = _PS_CORE_DIR_.Tools::str_replace_once(__PS_BASE_URI__, '/', $url_data['path']);
+
 			$css_files_by_media[$media]['files'][] = $infos;
 			if (!array_key_exists('date', $css_files_by_media[$media]))
 				$css_files_by_media[$media]['date'] = 0;
@@ -594,6 +596,10 @@ class MediaCore
 				$infos['uri'] = $filename;
 				$url_data = parse_url($filename);
 				$infos['path'] = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, '/', $url_data['path']);
+
+				if (!@filemtime($info['path']))
+					$infos['path'] = _PS_CORE_DIR_.Tools::str_replace_once(__PS_BASE_URI__, '/', $url_data['path']);
+
 				$js_files_infos[] = $infos;
 
 				$js_files_date = max(
@@ -642,7 +648,11 @@ class MediaCore
 		}
 
 		// rebuild the original js_files array
-		$url = str_replace(_PS_ROOT_DIR_.'/', __PS_BASE_URI__, $compressed_js_path);
+		if (strpos($compressed_js_path, _PS_ROOT_DIR_) !== false)
+			$url = str_replace(_PS_ROOT_DIR_.'/', __PS_BASE_URI__, $compressed_js_path);
+
+		if (strpos($compressed_js_path, _PS_CORE_DIR_) !== false)
+			$url = str_replace(_PS_CORE_DIR_.'/', __PS_BASE_URI__, $compressed_js_path);
 
 		return array_merge(array($protocol_link.Tools::getMediaServer($url).$url), $js_external_files);
 	}

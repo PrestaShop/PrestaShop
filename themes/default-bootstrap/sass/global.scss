@@ -915,7 +915,7 @@ table.table_block td {
 	> li {
 		margin-bottom: 0;
 		// min 768px
-		@media (min-width: $screen-sm) {
+		@media (min-width: $screen-sm-max) {
 			border-left: 1px solid $base-border-color;
 			margin: 0 0px 0 9px;
 			padding: 0 0px 0 9px;
@@ -936,6 +936,9 @@ table.table_block td {
 			@media (min-width: $screen-sm) {
 				padding: 1px 10px;
 			}
+			@media (min-width: $screen-sm) and (max-width: $screen-sm-max) {
+				padding: 10px 10px;
+			}
 		}
 		&:first-child {
 			border: none;
@@ -949,6 +952,9 @@ table.table_block td {
 		// min 768px
 		@media (min-width: $screen-sm) {
 			margin: -9px 0;
+		}
+		@media (min-width: $screen-sm) and (max-width: $screen-sm-max) {
+			margin: 0px 0;
 		}
 	}
 }
@@ -2013,7 +2019,7 @@ div.star a:hover {
 
 .rte ol {
 	list-style-type: decimal;
-	padding-left: 15px;	
+	padding-left: 15px;
 }
 
 .block_hidden_only_for_screen {
@@ -2133,7 +2139,7 @@ a.price_discount_delete {
 		td {
 			padding: 7px 8px 9px 18px;
 			&.cart_product {
-				@extend .text-center;			
+				@extend .text-center;
 				padding: 7px;
 				width: 137px;
 				img {
@@ -2166,7 +2172,7 @@ a.price_discount_delete {
 			}
 			&.cart_total {
 				@extend .text-right;
-			}	
+			}
 		}
 	}
 	tfoot {
@@ -2473,9 +2479,7 @@ table#cart_summary .gift-icon {
 				&.delivery_option_carrier {
 					margin-top: 10px;
 					width: 100%;
-					background: $state-info-bg;
-					color: $state-info-text;
-					border: 1px solid $state-info-border;
+					border: 1px solid $table-border-color;
 					font-weight: bold;
 					td {
 						padding: 8px 11px 7px 11px;
@@ -2672,7 +2676,7 @@ p.cheque-indent {
 	display: table;
 }
 
-.delivery_option_carrier.not-displayable {
+.not-displayable {
 	display: none;
 }
 

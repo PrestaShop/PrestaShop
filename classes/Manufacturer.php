@@ -92,7 +92,7 @@ class ManufacturerCore extends ObjectModel
 			'link_rewrite' => array('getter' => 'getLink', 'setter' => false),
 		),
 		'associations' => array(
-			'addresses' => array('resource' => 'address', 'setter' => false, 'fields' => array(
+			'addresses' => array('resource' => 'addresses', 'setter' => false, 'fields' => array(
 				'id' => array('xlink_resource' => 'addresses'),
 			)),
 		),

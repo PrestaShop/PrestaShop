@@ -219,9 +219,10 @@ $(document).ready(function(){
 
 		$(document).on('click', '#image-block', function(e){
 			e.preventDefault();
-			var productUrl= window.document.location.href + '';
+			var productUrl = window.document.location.href + '';
 			var data = productUrl.replace('content_only=1', '');
 			window.parent.document.location.href = data;
+			return;
 		});
 
 		if (typeof ajax_allowed != 'undefined' && !ajax_allowed)
@@ -247,27 +248,24 @@ $(document).ready(function(){
         e.preventDefault();
         fieldName = $(this).data('field-qty');
         var currentVal = parseInt($('input[name='+fieldName+']').val());
-		if (quantityAvailable > 0) {
-				quantityAvailableT = quantityAvailable;
-		} else {
-				quantityAvailableT = 100000000;
-		}
-        if (!isNaN(currentVal) && currentVal < quantityAvailableT) {
+		if (quantityAvailable > 0)
+			quantityAvailableT = quantityAvailable;
+		else
+			quantityAvailableT = 100000000;
+        if (!isNaN(currentVal) && currentVal < quantityAvailableT)
             $('input[name='+fieldName+']').val(currentVal + 1).trigger('keyup');
-        } else {
+        else
             $('input[name='+fieldName+']').val(quantityAvailableT);
-        }
     });
 	 // The button to decrement the product value
     $(document).on('click', '.product_quantity_down', function(e){
         e.preventDefault();
         fieldName = $(this).data('field-qty');
         var currentVal = parseInt($('input[name='+fieldName+']').val());
-        if (!isNaN(currentVal) && currentVal > 1) {
+        if (!isNaN(currentVal) && currentVal > 1)
             $('input[name='+fieldName+']').val(currentVal - 1).trigger('keyup');
-        } else {
+        else
             $('input[name='+fieldName+']').val(1);
-        }
     });
 
 	if (typeof minimalQuantity != 'undefined' && minimalQuantity)
@@ -606,7 +604,7 @@ function updatePrice()
 		basePriceWithoutTax = combination.specific_price.price;
 
 	// Apply group reduction
-	priceWithGroupReductionWithoutTax = ps_round(basePriceWithoutTax * (1 - group_reduction), 2);
+	priceWithGroupReductionWithoutTax = basePriceWithoutTax * (1 - group_reduction);
 	var priceWithDiscountsWithoutTax = priceWithGroupReductionWithoutTax;
 
 	// Apply Tax if necessary
@@ -620,12 +618,13 @@ function updatePrice()
 		basePriceDisplay = basePriceWithoutTax * (taxRate/100 + 1);
 		priceWithDiscountsDisplay = priceWithDiscountsWithoutTax * (taxRate/100 + 1);
 
-		if (default_eco_tax)
-		{
-			// combination.ecotax doesn't modify the price but only the display
-			basePriceDisplay = basePriceDisplay + default_eco_tax * (1 + ecotaxTax_rate / 100);
-			priceWithDiscountsDisplay = priceWithDiscountsDisplay + default_eco_tax * (1 + ecotaxTax_rate / 100);
-		}
+	}
+
+	if (default_eco_tax)
+	{
+		// combination.ecotax doesn't modify the price but only the display
+		basePriceDisplay = basePriceDisplay + default_eco_tax * (1 + ecotaxTax_rate / 100);
+		priceWithDiscountsDisplay = priceWithDiscountsDisplay + default_eco_tax * (1 + ecotaxTax_rate / 100);
 	}
 
 	// Apply specific price (discount)
@@ -652,9 +651,7 @@ function updatePrice()
 		var discountPercentage = (1-(priceWithDiscountsDisplay/basePriceDisplay))*100;
 	}
 
-	/*  *****************************************************************
-			Update the page content, no price calculation happens after
-		***************************************************************** */
+	/*  Update the page content, no price calculation happens after */
 
 	// Hide everything then show what needs to be shown
 	$('#reduction_percent').hide();
@@ -870,7 +867,7 @@ function submitPublishProduct(url, redirect, token)
 		function(data)
 		{
 			if (data.indexOf('error') === -1)
-			document.location.href = data;
+				document.location.href = data;
 		}
 	);
 	return true;
@@ -974,7 +971,7 @@ function checkUrl()
 			for (var z in tabValues)
 				for (var a in attributesCombinations)
 					if (attributesCombinations[a]['group'] === decodeURIComponent(tabValues[z][0])
-						&& attributesCombinations[a]['attribute'] === tabValues[z][1])
+						&& attributesCombinations[a]['attribute'] === decodeURIComponent(tabValues[z][1]))
 					{
 						count++;
 						// add class 'selected' to the selected color
