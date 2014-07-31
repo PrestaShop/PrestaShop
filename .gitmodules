@@ -305,6 +305,3 @@
 [submodule "modules/sendtoafriend"]
 	path = modules/sendtoafriend
 	url = https://github.com/PrestaShop/sendtoafriend
-[submodule "modules/cronjobs"]
-	path = modules/cronjobs
-	url = https://github.com/PrestaShop/cronjobs
