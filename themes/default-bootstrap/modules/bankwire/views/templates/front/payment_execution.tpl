@@ -24,7 +24,7 @@
 *}
 
 {capture name=path}
-    {l s='Bank-wire payment.' mod='bankwire'}
+    {l s='Bank-wire payment' mod='bankwire'}
 {/capture}
 
 <h1 class="page-heading">
@@ -78,7 +78,7 @@
             <p>
                 - {l s='Bank wire account information will be displayed on the next page.' mod='bankwire'}
                 <br />
-                - {l s='Please confirm your order by clicking "I confirm my order."' mod='bankwire'}.
+                - {l s='Please confirm your order by clicking "I confirm my order".' mod='bankwire'}
             </p>
         </div><!-- .cheque-box -->
 
