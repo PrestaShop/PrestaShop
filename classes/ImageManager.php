@@ -101,7 +101,7 @@ class ImageManagerCore
 		$infos = @getimagesize($image);
 
 		if (!is_array($infos) || !isset($infos['bits']))
-			return false;
+			return true;
 
 		$memory_limit = Tools::getMemoryLimit();
 		// memory_limit == -1 => unlimited memory

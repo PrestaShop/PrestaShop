@@ -24,6 +24,158 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.6
 --------------------------------
 ####################################
+#   v1.6.0.9 - (2014-07-30)
+####################################
+
+	Fixed bugs:
+
+	[-] INSTALLER : don't launch sessions on smarty compilation to avoid race conditions
+	[-] INSTALLER : Fix bug #PSCSX-2573 updating Israel ZIP format
+	[-] INSTALLER : correct field name into Theme XML
+
+	[-] FO : extend mobile reponsive behavior to tablet #PSCSX-2842
+	[-] FO : Correct responsive issue on category images #PSCSX-2843
+	[-] FO : Fix #PSCSX-2484, Add style for .available-dif class
+	[-] FO : Correct left column responsive issue #PSCSX-1862
+	[-] FO : fixed cache id for tax calculation
+	[-] FO : Bug #PSCSX-2519, Display thumbnail slider
+	[-] FO : fixed css compression base64 issue #PSCSX-2772
+	[-] FO : Fix #PSCSX-2735 - product.js, fix price calculation with 6 decimals
+	[-] FO : Fix bug #PSCSX-2694, mail encoding
+	[-] FO : Fix bug #PSCSX-2653, cols and rows in adresses
+	[-] FO : Fix bug #PSCFV-12189, color picker is not working with accented characters
+	[-] FO : changed the order between external/internal files in CCC #PSCFV-12286
+	[-] FO : fixed maintenance mode on module pages #PSCSX-2447
+	[-] FO : Fix bug #PSCSX-2425 Enlargement of link
+	[-] FO : Fix bug #PSCFV-12219, could not contact with order ref when not logged
+	[-] FO : Fix bug #PSCSX-2467, dni not hidden
+	[-] FO : Fix bug #PSCSX-2424, no products in delivery slip
+	[-] FO : Fix bug #PSCSX-2418, no thickbow when only one image
+	[-] FO : Fix bug #PSCFV-12204, bad deletion of cart rule
+	[-] FO : Fix bug #PSCSX-2388, fancybox on visible thumbs
+	[-] FO : Fix bug #PSCSX-1730, could not translate customization upload inputs
+	[-] FO : Improve performance of some SQL requests #PSCSX-2321
+	[-] FO : Fix bug #PSCSX-2327, customization and quick view
+	[-] FO : Fix bug #PSCSX-2308, email validation
+	[-] FO : Fix bug #PSCSX-2318, submitGuestAccount onblur
+	[-] FO : Fix undefined 'li_width' on scenes.js
+	[-] FO : Fix bug #PSCSX-2182, outline on fancybox
+	[-] FO : Fix display issue #PSCSX-2229 on homeslider
+	[-] FO : Fix bug #PSCSX-2025, no texture in product-list
+	[-] FO : Fix bug #PSCSX-2142, bad state selected
+
+	[-] BO : catch useless warning (aborted request)
+	[-] BO : #PSCSX-2827 Fatal error
+	[-] BO : FixBug #PSCSX-1257 - Tabs not loaded correctly
+	[-] BO : Fix bug #PSCFV-12359 first part
+	[-] BO : Fix PSCSX-2620 breadcrumb if multiple root categories in monoshop
+	[-] BO : Fix PSCSX-2620 when edit home category and save don't go back in root category
+	[-] BO : Fix #PSCSX-2690, Set correct id_country for address format with error management
+	[-] BO : fixed bug : getNativeModule() always return $natives even if the list is empty
+	[-] BO : FixBug #PSCSX-1257 - Link rewrite error after save
+	[-] BO : FixBug #PSCSX-2668, #PSCFV-12258, #PSCSX-2555 - Pack creation
+	[-] BO : Fix #PSCSX-2690, Set id_country correct in address_format
+	[-] BO : FixBug #PSCSX-2698
+	[-] BO : FixBug #PSCFV-11624
+	[-] BO : FixBug #PSCFV-11624 StockManagement Filter
+	[-] BO : Fix bug #PSCSX-2430, virtual to normal product
+	[-] BO : Fix bug #PSCSX-2684, bad icon on adminshops
+	[-] BO : Fix bug #PSCSX-2681 #PSCSX-2575 , dnd inactive
+	[-] BO : Fix bug #PSCSX-2659, tax rule form
+	[-] BO : Fix #PSCSX-2575
+	[-] BO : fixed bug #PSCSX-1832 - customer employee image in SAV
+	[-] BO : Fix bug #PSCSX-2658, combinations edition
+	[-] BO : Fix #PSCSX-2605 option tmpTableFilter work for renderList
+	[-] BO : fixed crash when accessing a cart with paid gift wrapping and an address that does not exist
+	[-] BO : added error message when a module cannot be removed
+	[-] BO : Fix bug #PSCSX-2520 add cancel button
+	[-] BO : fixed badly designed dynamic include in smarty block
+	[-] BO : HTMLPurifier allow form elements and improve performance
+	[-] BO : module list was empty on updating multiple modules
+	[-] BO : fixed warning with controllers that does not exist
+	[-] BO : fixed theme copy #PSCSX-2536
+	[-] BO : Fixed module update loop
+	[-] BO : Fix bug #PSCSX-2071, unity field in mutlishop
+	[-] BO : Fix bug duplicate manufacturers, follow up https://github.com/PrestaShop/PrestaShop/pull/1892
+	[-] BO : Fix bug #PSCSX-2419, could not force id
+	[-] BO : Fix #PSCSX-2432, Display theme info from DB if no XML
+	[-] BO : Fix Invalid date Exception on AdminCustomers
+	[-] BO : Fix bug #PSCFV-12205, checked property for specific product selection
+	[-] BO : Filemanager prevents null byte
+	[-] BO : Fix export theme path check
+	[-] BO : Fix error message on same variation
+	[-] BO : Fix TinyMCE alignment buttons
+	[-] BO : fileupload safari/pc fix #PSCSX-2279
+	[-] BO : Fix bug #PSCSX-2152, collapse / expand categories tree
+	[-] BO : contextual help toc fix
+	[-] BO : Fix bug #PSCFV-12120, unit price ratio during import
+	[-] BO : Fix bug #PSCSX-2219, could not chenge from texture to color in Attributes
+	[-] BO : Fix bug #PSCFV-12030, false positive on extract return when pclzip
+	[-] BO : Fix bug #PSCSX-2047, chmod on contact attachment
+	[-] BO : Footer github link updated
+	[-] BO : Footer github link is now redirected to prestashop to avoid HTTP_REFERER security issue
+
+	[-] CORE : FixBug #PSCSX-1818
+	[-] CORE : don't cache the file_exists in Module::getInstanceByName
+	[-] CORE : Follow up #PSCSX-2500
+	[-] CORE : Fix bug #PSCSX-2500, additionnal spaces for addOverride
+	[-] CORE : Fix bug #PSCFV-12169, bad call to Product::cleanPositions
+	[-] CORE : Fix bug #PSCSX-2307, again lang detect conflict
+	[-] CORE : Fix bug #PSCSX-2307, lang detect conflict
+	[-] CORE : fix mails copy for translation #PSCSX-2133
+	[-] CORE : Fix bug #PSCSX-1677, ProductUpdate not called when saving product
+
+	[-] MO : blocklayered - No more breadcrumb on Category banner
+	[-] MO : blocklayered - Correct filtering issues #PSCSX-2030
+	[-] MO : Product comments comparison
+
+	[-] WS : Fix #PSCSX-1845
+	[-] WS : #PSCFV-10283, #PSCFV-7498 Fix product images behavior [-] WS : #PSCFV-11895, #PSCFV-10748 Fix ampersand issue [-] WS : Fix node_type behavior for associations, now the node_type attribute is linked to plural entities name (eg: category is now categories) [*] WS : #PSCFV-12162 Webservices now work in conjunction with watermark module [*] WS : #PSCSX-1563 Webservices allow to set position_in_category of products entity [+] WS : Add JSON output, add "io_format=JSON" to your request
+	[-] WS : Fix #PSCSX-2344 preg_match(): Compilation failed
+
+	Improved/changed features:
+
+	[*] INSTALLER : improved a string in the Romanian translation
+	[*] INSTALLER : Romanian translation
+	[*] INSTALLER : hover on print login information
+
+	[*] FO : product.js: apply ecotax even if there is no other tax
+	[*] FO : kick display sub categorie in theme configurator #PSCSX-943
+	[*] FO : you can now choose the number of product display in the module blockbestsellers
+	[*] FO : Follow up https://github.com/PrestaShop/PrestaShop/pull/1888
+	[*] FO : better small screen quickview handling #PSCSX-2029
+	[*] FO : Bug #PSCSX-2210, Spaced out gift message and career message
+	[*] FO : Better schema.org support
+	[*] FO :  Add more schema.org attributes
+	[*] FO : Refresh page when removing product to compare
+
+	[*] BO : Add TaxRulesGroup if multiple state selected
+	[*] BO : ameloration of the description #PSCSX-2621
+	[*] BO : added MySQL related information to the "Informations" tab
+	[*] BO : updated github link on login page
+	[*] BO : HelperFrom, improved html type behavior
+	[*] BO : move validateImportation() JS function
+	[*] BO : hide hooks without module
+
+	[*] CORE : Smarty updated to 3.1.19 (mostly bugfixes including #PSCSX-2610)
+	[*] CORE : Mobile_Detect upgrade to 2.8.2
+	[*] CORE : added a bit of log and a debug mode in validate order (in order to save time when debugging is needed)
+	[*] CORE : Follow up https://github.com/PrestaShop/PrestaShop/pull/1881
+
+	[*] MO : open social links in new tabs in blocksocial #PSCSX-2538
+
+	Added Features:
+
+	[+] FO : missing style on maintenance page (cf https://github.com/PrestaShop/PrestaShop/pull/2003)
+
+	[+] BO : added a shortcut to create a shortcurt to the current page :]
+	[+] BO : contextual help
+	[+] BO : Added hooks to extend / override Order and Shipping panels on order view
+
+	[+] WS : New shop_urls entity as asked on #PSCFV-10416
+
+
+####################################
 #   v1.6.0.8 - (2014-06-20)  #
 ####################################
 

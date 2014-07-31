@@ -25,6 +25,7 @@
 /**
  * Handles loading of product tabs
  */
+
 function ProductTabsManager(){
 	var self = this;
 	this.product_tabs = [];
@@ -86,7 +87,7 @@ function ProductTabsManager(){
 	 */
 	this.display = function (tab_name, selected)
 	{
-		var tab_selector = $("#product-tab-content-"+tab_name);
+		var tab_selector = $("#product-tab-content-" + tab_name);
 
 		// Is the tab already being loaded?
 		if (!tab_selector.hasClass('not-loaded') || tab_selector.hasClass('loading'))
@@ -118,32 +119,48 @@ function ProductTabsManager(){
 			data: data,
 			success : function(data)
 			{
-				tab_selector.html(data).find('.dropdown-toggle').dropdown();
-				tab_selector.removeClass('not-loaded');
-
-				if (selected)
-				{
-					$("#link-"+tab_name).addClass('selected');
-					tab_selector.show();
-				}
-				tab_selector.trigger('loaded');
-			},
-			complete : function(data)
-			{
-				tab_selector.removeClass('loading');
-				if (selected)
-				{
-					$('#product-tab-content-wait').hide();
-					tab_selector.trigger('displayed');
-				}
-			},
-			beforeSend : function(data)
-			{
-				// don't display the loading notification bar
-				if (typeof(ajax_running_timeout) !== 'undefined')
-					clearTimeout(ajax_running_timeout);
+				send_type = 'POST';
+				data = post_data;
+				// set key_tab so that the ajax call returns the display for the current tab
+				data.key_tab = tab_name;
 			}
-		});
+
+			return $.ajax({
+				url : $('#link-'+tab_name).attr("href")+"&ajax=1" + '&rand=' + new Date().getTime(),
+				async : true,
+				cache: false, // cache needs to be set to false or IE will cache the page with outdated product values
+				type: send_type,
+				headers: { "cache-control": "no-cache" },
+				data: data,
+				success : function(data)
+				{
+					tab_selector.html(data).find('.dropdown-toggle').dropdown();
+					tab_selector.removeClass('not-loaded');
+
+					if (selected)
+					{
+						$("#link-"+tab_name).addClass('selected');
+						tab_selector.show();
+					}
+					tab_selector.trigger('loaded');
+				},
+				complete : function(data)
+				{
+					tab_selector.removeClass('loading');
+					if (selected)
+					{
+						$('#product-tab-content-wait').hide();
+						tab_selector.trigger('displayed');
+					}
+				},
+				beforeSend : function(data)
+				{
+					// don't display the loading notification bar
+					if (typeof(ajax_running_timeout) !== 'undefined')
+						clearTimeout(ajax_running_timeout);
+				}
+			});
+		}
 	}
 
 	/**
@@ -164,8 +181,7 @@ function ProductTabsManager(){
 				else
 					stack.shift();
 
-				if (request.responseText.length == 0 || in_array(request.status, wrong_status_code) || (self.stack_error.length !== 0
-					&& !self.page_reloading))
+				if ((request.responseText.length == 0 || in_array(request.status, wrong_status_code) || self.stack_error.length !== 0) && !self.page_reloading)
 				{
 					jConfirm('Tab : ' + stack[0] + ' (' + request.status + ')\n' + reload_tab_description, reload_tab_title, function(confirm) {
 						if (confirm === true)
@@ -182,6 +198,7 @@ function ProductTabsManager(){
 
 				if (stack.length == 0)
 				{
+					all_tabs_are_loaded = true;
 					$('[name="submitAddproductAndStay"]').each(function() {
 						$(this).prop('disabled', false).find('i').removeClass('process-icon-loading').addClass('process-icon-save');
 					});
@@ -1330,7 +1347,6 @@ product_tabs['Pack'] = new function() {
 
 		function getSelectedIds()
 		{
-			//console.log($('#inputPackItems').val());
 			if ($('#inputPackItems').val() === undefined)
 				return '';
 			var ids = '';
@@ -1400,9 +1416,10 @@ product_tabs['Quantities'] = new function(){
 				}
 				showSuccessMessage(quantities_ajax_success);
 			},
-			error: function(msg)
+			error: function(jqXHR, textStatus, errorThrown)
 			{
-				showErrorMessage(msg.error);				
+				if (textStatus != 'error' || errorThrown != '')
+					showErrorMessage(textStatus + ': ' + errorThrown);				
 			}
 		});
 	};

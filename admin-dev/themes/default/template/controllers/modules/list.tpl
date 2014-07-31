@@ -53,16 +53,16 @@
 						{/if}
 					</td>
 					<td class="fixed-width-xs">
-						<img width="32" alt="{$module->displayName}" title="{$module->displayName}" src="{if isset($module->image)}{$module->image}{else}{$modules_uri}/{$module->name}/{$module->logo}{/if}" />
+						<img width="32" alt="{$module->displayName|escape:'html':'UTF-8'}" title="{$module->displayName|escape:'html':'UTF-8'}" src="{if isset($module->image)}{$module->image}{else}{$modules_uri}/{$module->name}/{$module->logo}{/if}" />
 					</td>
 					<td>
-						<div id="anchor{$module->name|ucfirst}" title="{$module->displayName}">
+						<div id="anchor{$module->name|ucfirst}" title="{$module->displayName|escape:'html':'UTF-8'}">
 							<div class="text-muted">
 								{$module->categoryName}
 							</div>
 							<div class="module_name">
-								<span style="display:none">{$module->name}</span>
-								{$module->displayName}
+								<span style="display:none">{$module->name|escape:'html':'UTF-8'}</span>
+								{$module->displayName|escape:'html':'UTF-8'}
 								<small class="text-muted">v{$module->version} - by {$module->author}</small>
 								{if isset($module->type) && $module->type == 'addonsBought'}
 								- <span class="module-badge-bought help-tooltip text-warning" data-title="{l s="You bought this module on PrestaShop Addons. Thank You."}"><i class="icon-pushpin"></i> <small>{l s="Bought"}</small></span>
@@ -113,7 +113,7 @@
 									{else}
 										{if isset($module->trusted) && $module->trusted}
 											{if $module->trusted == 2}
-												<a class="btn btn-success untrustedaddon" href="#" data-target="#moduleNotTrustedCountry" data-toggle="modal" data-link="{$module->options.install_url|escape:'html':'UTF-8'}" data-module-name="{$module->displayName}">
+												<a class="btn btn-success untrustedaddon" href="#" data-target="#moduleNotTrustedCountry" data-toggle="modal" data-link="{$module->options.install_url|escape:'html':'UTF-8'}" data-module-name="{$module->displayName|escape:'html':'UTF-8'}">
 													<i class="icon-plus-sign-alt"></i>&nbsp;{l s='Install'}
 												</a>
 											{else}
@@ -122,7 +122,7 @@
 												</a>
 											{/if}
 										{else}
-										<a class="btn btn-success untrustedaddon" href="#" data-target="#moduleNotTrusted" data-toggle="modal" data-link="{$module->options.install_url|escape:'html':'UTF-8'}" data-module-name="{$module->displayName}">
+										<a class="btn btn-success untrustedaddon" href="#" data-target="#moduleNotTrusted" data-toggle="modal" data-link="{$module->options.install_url|escape:'html':'UTF-8'}" data-module-name="{$module->displayName|escape:'html':'UTF-8'}">
 											<i class="icon-plus-sign-alt"></i>&nbsp;{l s='Install'}
 										</a>
 										{/if}

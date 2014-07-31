@@ -1199,15 +1199,12 @@ class AdminProductsControllerCore extends AdminController
 			$this->id_object = (int)Tools::getValue('id_product');
 			$this->object = new Product($this->id_object);
 
-			if ((bool)$this->object->is_virtual && (int)Tools::getValue('type_product') != 2)
+			if ($this->object->is_virtual && (int)Tools::getValue('type_product') != 2)
 			{
-				if (!($id_product_download = ProductDownload::getIdFromIdProduct($this->id_object)))
-					$this->errors[] = Tools::displayError('Cannot retrieve file');
-				else
+				if ($id_product_download = (int)ProductDownload::getIdFromIdProduct($this->id_object))
 				{
-					$product_download = new ProductDownload((int)$id_product_download);
-
-					if (!$product_download->deleteFile((int)$id_product_download))
+					$product_download = new ProductDownload($id_product_download);
+					if (!$product_download->deleteFile($id_product_download))
 						$this->errors[] = Tools::displayError('Cannot delete file');
 				}
 
@@ -2446,11 +2443,15 @@ class AdminProductsControllerCore extends AdminController
 	 * @param array $current Current category
 	 * @param integer $id_category Current category id
 	 */
-	public static function recurseCategoryForInclude($id_obj, $indexedCategories, $categories, $current, $id_category = 1, $id_category_default = null, $has_suite = array())
+	public static function recurseCategoryForInclude($id_obj, $indexedCategories, $categories, $current, $id_category = null, $id_category_default = null, $has_suite = array())
 	{
 		global $done;
 		static $irow;
 		$content = '';
+
+		if (!$category)
+			$id_category = (int)Configuration::get('PS_ROOT_CATEGORY');
+
 		if (!isset($done[$current['infos']['id_parent']]))
 			$done[$current['infos']['id_parent']] = 0;
 		$done[$current['infos']['id_parent']] += 1;
