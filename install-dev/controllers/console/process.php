@@ -160,7 +160,17 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 	public function processInstallDefaultData()
 	{
 		$this->initializeContext();
-		return $this->model_install->installDefaultData($this->datas->shop_name, true);
+		if (!$res = $this->model_install->installDefaultData($this->datas->shop_name, true))
+			return false;
+
+		if ($this->datas->base_uri != '/')
+		{
+			$shop_url = new ShopUrl(1);
+			$shop_url->physical_uri = $this->datas->base_uri;
+			$shop_url->save();
+		}
+
+		return $res;
 	}
 
 	/**
