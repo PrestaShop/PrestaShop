@@ -43,6 +43,11 @@ class Datas
 			'default' => 'Europe/Paris',
 			'alias' => 't',
 		),
+		'base_uri' => array(
+			'name' => 'base_uri',
+			'validate' => 'isUrl',
+			'default' => '/',
+		),
 		'http_host' => array(
 			'name' => 'domain',
 			'validate' => 'isGenericName',

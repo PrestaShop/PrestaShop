@@ -351,7 +351,7 @@ class AddressCore extends ObjectModel
 	* @param int $id_address
 	* @return Address address
 	*/
-	public static function initialize($id_address = null)
+	public static function initialize($id_address = null, $with_geoloc = false)
 	{
 		// if an id_address has been specified retrieve the address
 		if ($id_address)
@@ -360,6 +360,12 @@ class AddressCore extends ObjectModel
 
 			if (!Validate::isLoadedObject($address))
 				throw new PrestaShopException('Invalid address');
+		}
+		elseif ($with_geoloc && isset($context->customer->geoloc_id_country))
+		{
+			$id_country = (int)$context->customer->geoloc_id_country;
+			$id_state = (int)$context->customer->id_state;
+			$zipcode = (int)$context->customer->postcode;
 		}
 		else
 		{
