@@ -2525,7 +2525,6 @@ CREATE TABLE `PREFIX_order_invoice_payment` (
 	KEY `id_order` (`id_order`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-<<<<<<< HEAD
 CREATE TABLE `PREFIX_smarty_cache` (
   `id_smarty_cache` char(40) NOT NULL,
   `name` char(40) NOT NULL,
