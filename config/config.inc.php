@@ -146,15 +146,16 @@ if (defined('_PS_ADMIN_DIR_'))
 	$cookie = new Cookie('psAdmin', '', $cookie_lifetime);
 else
 {
+	$force_ssl = Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE');
 	if ($context->shop->getGroup()->share_order)
-		$cookie = new Cookie('ps-sg'.$context->shop->getGroup()->id, '', $cookie_lifetime, $context->shop->getUrlsSharedCart());
+		$cookie = new Cookie('ps-sg'.$context->shop->getGroup()->id, '', $cookie_lifetime, $context->shop->getUrlsSharedCart(), false, $force_ssl);
 	else
 	{
 		$domains = null;
 		if ($context->shop->domain != $context->shop->domain_ssl)
 		  $domains = array($context->shop->domain_ssl, $context->shop->domain);
 		
-		$cookie = new Cookie('ps-s'.$context->shop->id, '', $cookie_lifetime, $domains);
+		$cookie = new Cookie('ps-s'.$context->shop->id, '', $cookie_lifetime, $domains, false, $force_ssl);
 	}
 }
 
