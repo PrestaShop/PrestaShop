@@ -137,7 +137,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				$this->fields_list['color'] = array(
 					'title' => $this->l('Color'),
 					'filter_key' => 'a!color',
-
 				);
 
 			$this->fields_list['position'] = array(
