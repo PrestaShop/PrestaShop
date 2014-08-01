@@ -2721,27 +2721,30 @@ class AdminThemesControllerCore extends AdminController
 			$id_shop_group = null;
 			if (!count($this->errors) && @filemtime(_PS_IMG_DIR_.Configuration::get($field_name)))
 			{
-				if (Shop::getContext() == Shop::CONTEXT_SHOP)
+				if(Shop::isFeatureActive())
 				{
-					$id_shop = Shop::getContextShopID();
-					$id_shop_group = Shop::getContextShopGroupID();
-					Shop::setContext(Shop::CONTEXT_ALL);
-					$logo_all = Configuration::get($field_name);
-					Shop::setContext(Shop::CONTEXT_GROUP);
-					$logo_group = Configuration::get($field_name);
-					Shop::setContext(Shop::CONTEXT_SHOP);
-					$logo_shop = Configuration::get($field_name);
-					if ($logo_all != $logo_shop && $logo_group != $logo_shop && $logo_shop != false)
-						@unlink(_PS_IMG_DIR_.Configuration::get($field_name));
-				}
-				elseif (Shop::getContext() == Shop::CONTEXT_GROUP)
-				{
-					$id_shop_group = Shop::getContextShopGroupID();
-					Shop::setContext(Shop::CONTEXT_ALL);
-					$logo_all = Configuration::get($field_name);
-					Shop::setContext(Shop::CONTEXT_GROUP);
-					if ($logo_all != Configuration::get($field_name))
-						@unlink(_PS_IMG_DIR_.Configuration::get($field_name));
+					if (Shop::getContext() == Shop::CONTEXT_SHOP)
+					{
+						$id_shop = Shop::getContextShopID();
+						$id_shop_group = Shop::getContextShopGroupID();
+						Shop::setContext(Shop::CONTEXT_ALL);
+						$logo_all = Configuration::get($field_name);
+						Shop::setContext(Shop::CONTEXT_GROUP);
+						$logo_group = Configuration::get($field_name);
+						Shop::setContext(Shop::CONTEXT_SHOP);
+						$logo_shop = Configuration::get($field_name);
+						if ($logo_all != $logo_shop && $logo_group != $logo_shop && $logo_shop != false)
+							@unlink(_PS_IMG_DIR_.Configuration::get($field_name));
+					}
+					elseif (Shop::getContext() == Shop::CONTEXT_GROUP)
+					{
+						$id_shop_group = Shop::getContextShopGroupID();
+						Shop::setContext(Shop::CONTEXT_ALL);
+						$logo_all = Configuration::get($field_name);
+						Shop::setContext(Shop::CONTEXT_GROUP);
+						if ($logo_all != Configuration::get($field_name))
+							@unlink(_PS_IMG_DIR_.Configuration::get($field_name));
+					}
 				}
 				else
 					@unlink(_PS_IMG_DIR_.Configuration::get($field_name));
