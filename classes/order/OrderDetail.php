@@ -349,9 +349,23 @@ class OrderDetailCore extends ObjectModel
 		$values = '';
 		foreach ($this->tax_calculator->getTaxesAmount($discounted_price_tax_excl) as $id_tax => $amount)
 		{
-			$unit_amount = (float)Tools::ps_round($amount, 2);
-			$total_amount = $unit_amount * $this->product_quantity;
-			$values .= '('.(int)$this->id.','.(float)$id_tax.','.$unit_amount.','.(float)$total_amount.'),';
+			switch (Configuration::get('PS_ROUND_TYPE'))
+			{
+				case Order::ROUND_ITEM:
+					$unit_amount = (float)Tools::ps_round($amount, _PS_PRICE_DISPLAY_PRECISION_);
+					$total_amount = $unit_amount * $this->product_quantity;
+					break;
+				case Order::ROUND_LINE:
+					$unit_amount = $amount;
+					$total_amount = Tools::ps_round($unit_amount * $this->product_quantity, _PS_PRICE_DISPLAY_PRECISION_);
+					break;
+				case Order::ROUND_TOTAL:
+					$unit_amount = $amount;
+					$total_amount = $unit_amount * $this->product_quantity;
+					break;
+			}
+
+			$values .= '('.(int)$this->id.','.(int)$id_tax.','.(float)$unit_amount.','.(float)$total_amount.'),';
 		}
 
 		if ($replace)
@@ -553,7 +567,7 @@ class OrderDetailCore extends ObjectModel
 
 		$this->id = null;
 
-		$this->product_id = (int)($product['id_product']);
+		$this->product_id = (int)$product['id_product'];
 		$this->product_attribute_id = (int)($product['id_product_attribute'] ? (int)($product['id_product_attribute']) : null);
 		$this->product_name = $product['name'].
 			((isset($product['attributes']) && $product['attributes'] != null) ?
@@ -567,9 +581,9 @@ class OrderDetailCore extends ObjectModel
 		$this->product_weight = (float)($product['id_product_attribute'] ? $product['weight_attribute'] : $product['weight']);
 		$this->id_warehouse = $id_warehouse;
 
-		$productQuantity = (int)(Product::getQuantity($this->product_id, $this->product_attribute_id));
-		$this->product_quantity_in_stock = ($productQuantity - (int)($product['cart_quantity']) < 0) ?
-			$productQuantity : (int)($product['cart_quantity']);
+		$productQuantity = (int)Product::getQuantity($this->product_id, $this->product_attribute_id);
+		$this->product_quantity_in_stock = ($productQuantity - (int)$product['cart_quantity'] < 0) ?
+			$productQuantity : (int)$product['cart_quantity'];
 
 		$this->setVirtualProductInformation($product);
 		$this->checkProductStock($product, $id_order_state);
