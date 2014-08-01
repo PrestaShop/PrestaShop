@@ -2522,7 +2522,20 @@ class ProductCore extends ObjectModel
 			die(Tools::displayError());
 
 		// Initializations
-		$id_group = (int)Group::getCurrent()->id;
+		/* 
+		* When a non-user calls directly this method (e.g., payment module...) is on PrestaShop, 
+		* the context does not have customer but the customer ID is present so load the customer and assign the customer's default group
+		*/
+
+		if(isset($id_customer) && !Validate::isLoadedObject($context->customer))
+		{
+			$context->customer = new Customer($id_customer);
+            $id_group = (int)$context->customer->id_default_group;
+		}
+		else
+		{
+            $id_group = (int)Group::getCurrent()->id;
+        }
 
 		// If there is cart in context or if the specified id_cart is different from the context cart id
 		if (!is_object($cur_cart) || (Validate::isUnsignedInt($id_cart) && $id_cart && $cur_cart->id != $id_cart))
