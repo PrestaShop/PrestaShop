@@ -200,8 +200,25 @@
 	<div class="panel col-lg-12">
 		{if isset($title)}<h3>{if isset($icon)}<i class="{$icon}"></i> {/if}{if is_array($title)}{$title|end}{else}{$title}{/if}</h3>{/if}
 {/if}
+
+
+	{if $bulk_actions && $has_bulk_actions}
+		{assign var=y value=2}
+	{else}
+		{assign var=y value=1}
+	{/if}
+	<style>
+	@media (max-width: 992px) {
+		{foreach from=$fields_display item=param name=params}
+			.table-responsive-row td:nth-of-type({math equation="x+y" x=$smarty.foreach.params.index y=$y}):before {
+				content: "{$param.title}";
+			}
+		{/foreach}
+	}
+	</style>
+
 	{block name="preTable"}{/block}
-	<div class="table-responsive clearfix{if isset($use_overflow) && $use_overflow} overflow-y{/if}">
+	<div class="table-responsive-row clearfix{if isset($use_overflow) && $use_overflow} overflow-y{/if}">
 		<table{if $table_id} id="table-{$table_id}"{/if} class="table{if $table_dnd} tableDnD{/if} {$table}" >
 			<thead>
 				<tr class="nodrag nodrop">
@@ -232,7 +249,7 @@
 								{$params.title}
 							{/if}
 							{if (!isset($params.orderby) || $params.orderby) && !$simple_header && $show_filters}
-								<a {if isset($order_by) && ($key == $order_by) && ($order_way == 'DESC')}class="active"{/if}  href="{$current|escape:'html':'UTF-8'}&amp;{$list_id}Orderby={$key|urlencode}&amp;{$list_id}Orderway=desc&amp;token={$token|escape:'html':'UTF-8'}{if isset($smarty.get.$identifier)}&amp;{$identifier}={$smarty.get.$identifier|intval}{/if}">
+								<a {if isset($order_by) && ($key == $order_by) && ($order_way == 'DESC')}class="active"{/if} href="{$current|escape:'html':'UTF-8'}&amp;{$list_id}Orderby={$key|urlencode}&amp;{$list_id}Orderway=desc&amp;token={$token|escape:'html':'UTF-8'}{if isset($smarty.get.$identifier)}&amp;{$identifier}={$smarty.get.$identifier|intval}{/if}">
 									<i class="icon-caret-down"></i>
 								</a>
 								<a {if isset($order_by) && ($key == $order_by) && ($order_way == 'ASC')}class="active"{/if} href="{$current|escape:'html':'UTF-8'}&amp;{$list_id}Orderby={$key|urlencode}&amp;{$list_id}Orderway=asc&amp;token={$token|escape:'html':'UTF-8'}{if isset($smarty.get.$identifier)}&amp;{$identifier}={$smarty.get.$identifier|intval}{/if}">
