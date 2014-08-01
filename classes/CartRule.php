@@ -844,7 +844,7 @@ class CartRuleCore extends ObjectModel
 				// Do not give a reduction on free products!
 				$order_total = $context->cart->getOrderTotal($use_tax, Cart::ONLY_PRODUCTS, $package_products);
 				foreach ($context->cart->getCartRules(CartRule::FILTER_ACTION_GIFT) as $cart_rule)
-					$order_total -= Tools::ps_round($cart_rule['obj']->getContextualValue($use_tax, $context, CartRule::FILTER_ACTION_GIFT, $package), 2);
+					$order_total -= Tools::ps_round($cart_rule['obj']->getContextualValue($use_tax, $context, CartRule::FILTER_ACTION_GIFT, $package), _PS_PRICE_DISPLAY_PRECISION_);
 
 				$reduction_value += $order_total * $this->reduction_percent / 100;
 			}
@@ -922,7 +922,7 @@ class CartRuleCore extends ObjectModel
 
 					// Then we convert the voucher value in the default currency into the cart currency
 					$reduction_amount *= $context->currency->conversion_rate;
-					$reduction_amount = Tools::ps_round($reduction_amount);
+					$reduction_amount = Tools::ps_round($reduction_amount, _PS_PRICE_DISPLAY_PRECISION_);
 				}
 
 				// If it has the same tax application that you need, then it's the right value, whatever the product!

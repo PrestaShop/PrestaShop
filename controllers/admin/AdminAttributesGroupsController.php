@@ -136,7 +136,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			if ($obj->group_type == 'color')
 				$this->fields_list['color'] = array(
 					'title' => $this->l('Color'),
-					'filter_key' => 'b!color'
+					'filter_key' => 'a!color',
 				);
 
 			$this->fields_list['position'] = array(
