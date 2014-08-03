@@ -872,4 +872,23 @@ class DispatcherCore
 
 		return $controllers;
 	}
+	
+	/**
+	 * Gets a list of required parameters in the default routes.
+	 *
+	 * @return array
+	 */
+	public function getRequiredParams()
+	{
+		$req = array();
+		
+		foreach ($this->default_routes as $route)
+			foreach ($route['keywords'] as $keyword)
+			{
+				if (isset($keyword['param']))
+					$req[] = $keyword['param'];
+			}
+		
+		return $req;
+	}
 }
