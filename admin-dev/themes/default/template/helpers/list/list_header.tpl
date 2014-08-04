@@ -132,6 +132,9 @@
 							<i class="process-icon-refresh" ></i>
 						</span>
 					</a>
+				{if $smarty.const._PS_MODE_DEV_ && isset($sql) && $sql}
+					<a class="list-toolbar-btn" href="javascript:void(0);" onclick="$('.leadin').append('<div class=\'alert alert-info\'>{$sql|addslashes}</div>'); $(this).attr('onclick', '');"><i class="process-icon-preview"></i></a>
+				{/if}
 				</span>
 			{/if}
 		</div>
