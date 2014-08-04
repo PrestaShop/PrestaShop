@@ -799,10 +799,10 @@ Country</value>
 	<configuration id="PS_SMARTY_CLEAR_CACHE" name="PS_SMARTY_CLEAR_CACHE">
 		<value>everytime</value>
 	</configuration>
-	<configuration id="PS_DETECT_LANG" name="PS_SMARTY_CACHING_TYPE">
+	<configuration id="PS_DETECT_LANG" name="PS_DETECT_LANG">
 		<value>1</value>
 	</configuration>
-	<configuration id="PS_DETECT_COUNTRY" name="PS_SMARTY_CACHING_TYPE">
+	<configuration id="PS_DETECT_COUNTRY" name="PS_DETECT_COUNTRY">
 		<value>1</value>
 	</configuration>
 	<configuration id="PS_ROUND_TYPE" name="PS_ROUND_TYPE">
