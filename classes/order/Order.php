@@ -147,7 +147,7 @@ class OrderCore extends ObjectModel
 	/** @var string Delivery creation date */
 	public $delivery_date;
 
-	/** @var boolean Order validity (paid and not canceled) */
+	/** @var boolean Order validity: current order status is logable (usually paid and not canceled) */
 	public $valid;
 
 	/** @var string Object creation date */
