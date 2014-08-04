@@ -26,7 +26,6 @@
 
 class AdminPreferencesControllerCore extends AdminController
 {
-
 	public function __construct()
 	{
 		$this->bootstrap = true;
@@ -40,27 +39,27 @@ class AdminPreferencesControllerCore extends AdminController
 			$round_mode = array(
 				array(
 					'value' => PS_ROUND_HALF_UP,
-					'name' => $this->l('classical superior')
+					'name' => $this->l('Round up away from zero, when it is half way there (recommended)')
 				),
 				array(
 					'value' => PS_ROUND_HALF_DOWN,
-					'name' => $this->l('classical inferior')
+					'name' => $this->l('Round down towards zero, when it is half way there')
 				),
 				array(
 					'value' => PS_ROUND_HALF_EVEN,
-					'name' => $this->l('classical to the next even value')
+					'name' => $this->l('Round towards the next even value')
 				),
 				array(
 					'value' => PS_ROUND_HALF_ODD,
-					'name' => $this->l('classical to the next odd value')
+					'name' => $this->l('Round towards the next odd value')
 				),
 				array(
 					'value' => PS_ROUND_UP,
-					'name' => $this->l('superior')
+					'name' => $this->l('Round up to the nearest whole number')
 				),
 				array(
 					'value' => PS_ROUND_DOWN,
-					'name' => $this->l('inferior')
+					'name' => $this->l('Round down to the nearest whole number')
 				),
 			);
 			$activities1 = array(
