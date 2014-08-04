@@ -20,11 +20,11 @@ INSERT INTO `PREFIX_configuration` (`name` , `value` , `date_add` , `date_upd`) 
 
 ALTER TABLE `PREFIX_quick_access` CHANGE `link` `link` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
 
-ALTER TABLE  `PREFIX_order_slip_detail` CHANGE `amount_tax_excl` `amount_tax_excl` DECIMAL(20, 6) NULL DEFAULT NULL;
+ALTER TABLE `PREFIX_order_slip_detail` CHANGE `amount_tax_excl` `amount_tax_excl` DECIMAL(20, 6) NULL DEFAULT NULL;
 
-ALTER TABLE  `PREFIX_order_slip_detail` CHANGE  `amount_tax_incl`  `amount_tax_incl` DECIMAL( 20, 6 ) NULL DEFAULT NULL;
+ALTER TABLE `PREFIX_order_slip_detail` CHANGE  `amount_tax_incl`  `amount_tax_incl` DECIMAL( 20, 6 ) NULL DEFAULT NULL;
 
-INSERT INTO `PREFIX_configuration` (`name`, `value`) VALUES ('PS_ROUND_TYPE', 1)
+INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_ROUND_TYPE', 1, now(), now());
 
 ALTER TABLE `PREFIX_order_slip` ADD `total_products_tax_excl` DECIMAL(20, 6) NULL AFTER `id_order`, ADD `total_products_tax_incl` DECIMAL(20, 6) NULL AFTER `total_products_tax_excl`,ADD `total_shipping_tax_excl` DECIMAL(20, 6) NULL AFTER `total_products_tax_incl`, ADD `total_shipping_tax_incl` DECIMAL(20, 6) NULL AFTER `total_shipping_tax_excl`;
 ALTER TABLE `PREFIX_order_slip_detail` ADD `unit_price_tax_excl` DECIMAL(20, 6) NULL AFTER `product_quantity`, ADD `unit_price_tax_incl` DECIMAL(20, 6) NULL AFTER  `unit_price_tax_excl`, ADD `total_price_tax_excl` DECIMAL(20, 6) NULL AFTER `unit_price_tax_incl`, ADD `total_price_tax_incl` DECIMAL(20, 6) NULL AFTER `total_price_tax_excl`;
@@ -38,6 +38,6 @@ CREATE TABLE IF NOT EXISTS `PREFIX_order_slip_detail_tax` (
   KEY `id_tax` (`id_tax`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-ALTER TABLE  `PREFIX_tax_rules_group` ADD `deleted` TINYINT(1) UNSIGNED NOT NULL, ADD `date_add` DATETIME NOT NULL, ADD `date_upd` DATETIME NOT NULL;
-ALTER TABLE  `PREFIX_order_detail` ADD `id_tax_rules_group` INT(11) UNSIGNED NOT NULL AFTER  `product_weight`, ADD INDEX `id_tax_rules_group` (`id_tax_rules_group`);
+ALTER TABLE `PREFIX_tax_rules_group` ADD `deleted` TINYINT(1) UNSIGNED NOT NULL, ADD `date_add` DATETIME NOT NULL, ADD `date_upd` DATETIME NOT NULL;
+ALTER TABLE `PREFIX_order_detail` ADD `id_tax_rules_group` INT(11) UNSIGNED NOT NULL AFTER  `product_weight`, ADD INDEX `id_tax_rules_group` (`id_tax_rules_group`);
  
