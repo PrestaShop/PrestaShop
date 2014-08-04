@@ -4558,7 +4558,7 @@ class ProductCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'product_shop`
 				WHERE `id_product` = '.(int)$id_product.' AND id_shop='.(int)$context->shop->id));
 
-		return Cache::retrieve($key);
+		return (int)Cache::retrieve($key);
 	}
 
 	/**

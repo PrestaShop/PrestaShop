@@ -1192,7 +1192,7 @@ CREATE TABLE `PREFIX_order_detail` (
   `product_reference` varchar(32) default NULL,
   `product_supplier_reference` varchar(32) default NULL,
   `product_weight` DECIMAL(20,6) NOT NULL,
-  `id_tax_rules_group` INT(11) UNSIGNED NOT NULL,
+  `id_tax_rules_group` INT(11) UNSIGNED DEFAULT '0',
   `tax_computation_method` tinyint(1) unsigned NOT NULL default '0',
   `tax_name` varchar(16) NOT NULL,
   `tax_rate` DECIMAL(10,3) NOT NULL DEFAULT '0.000',
