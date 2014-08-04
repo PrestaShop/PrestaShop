@@ -49,7 +49,7 @@
 	var statesShipped = new Array();
 	var has_voucher = {if count($discounts)}1{else}0{/if};
 	{foreach from=$states item=state}
-		{if (!$currentState->shipped && $state['shipped'])}
+		{if (isset($currentState->shipped) && !$currentState->shipped && $state['shipped'])}
 			statesShipped.push({$state['id_order_state']});
 		{/if}
 	{/foreach}
