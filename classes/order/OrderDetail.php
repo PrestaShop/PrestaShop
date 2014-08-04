@@ -152,6 +152,9 @@ class OrderDetailCore extends ObjectModel
 	/** @var float */
 	public $purchase_supplier_price;
 
+	/** @var int Id tax rules group */
+	public $id_tax_rules_group;
+
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -197,7 +200,8 @@ class OrderDetailCore extends ObjectModel
 			'total_price_tax_incl' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 			'total_price_tax_excl' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 			'purchase_supplier_price' => 	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-			'original_product_price' => 	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice')
+			'original_product_price' => 	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'id_tax_rules_group' => 		array('type' => self::TYPE_INT, 'validate' => 'isInt')
 		),
 	);
 
@@ -453,9 +457,9 @@ class OrderDetailCore extends ObjectModel
 		if (!Tax::excludeTaxeOption())
 		{
 			$this->setContext((int)$product['id_shop']);
-			$id_tax_rules = (int)Product::getIdTaxRulesGroupByIdProduct((int)$product['id_product'], $this->context);
+			$this->id_tax_rules_group = (int)Product::getIdTaxRulesGroupByIdProduct((int)$product['id_product'], $this->context);
 
-			$tax_manager = TaxManagerFactory::getManager($this->vat_address, $id_tax_rules);
+			$tax_manager = TaxManagerFactory::getManager($this->vat_address, $this->id_tax_rules_group);
 			$this->tax_calculator = $tax_manager->getTaxCalculator();
 			$this->tax_computation_method = (int)$this->tax_calculator->computation_method;
 		}
