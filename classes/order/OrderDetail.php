@@ -140,6 +140,9 @@ class OrderDetailCore extends ObjectModel
 	/** @var float $tax_computation_method **/
 	public $tax_computation_method;
 
+	/** @var int Id tax rules group */
+	public $id_tax_rules_group;
+
 	/** @var int Id warehouse */
 	public $id_warehouse;
 
@@ -151,9 +154,6 @@ class OrderDetailCore extends ObjectModel
 
 	/** @var float */
 	public $purchase_supplier_price;
-
-	/** @var int Id tax rules group */
-	public $id_tax_rules_group;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -189,6 +189,7 @@ class OrderDetailCore extends ObjectModel
 			'tax_name' => 					array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
 			'tax_rate' => 					array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
 			'tax_computation_method' =>		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'id_tax_rules_group' => 		array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 			'ecotax' => 					array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
 			'ecotax_tax_rate' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
 			'discount_quantity_applied' => 	array('type' => self::TYPE_INT, 'validate' => 'isInt'),
@@ -200,8 +201,7 @@ class OrderDetailCore extends ObjectModel
 			'total_price_tax_incl' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 			'total_price_tax_excl' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 			'purchase_supplier_price' => 	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-			'original_product_price' => 	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
-			'id_tax_rules_group' => 		array('type' => self::TYPE_INT, 'validate' => 'isInt')
+			'original_product_price' => 	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice')
 		),
 	);
 
