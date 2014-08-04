@@ -2046,6 +2046,8 @@ class AdminControllerCore extends Controller
 				$this->actions[] = $action;
 		}
 		$helper->is_cms = $this->is_cms;
+		if (_PS_MODE_DEV_)
+			$helper->sql = $this->_listsql;
 		$list = $helper->generateList($this->_list, $this->fields_list);
 
 		return $list;
