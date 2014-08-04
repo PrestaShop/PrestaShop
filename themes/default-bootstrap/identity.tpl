@@ -96,9 +96,22 @@
                                     <option value="{$v}" {if ($sl_day == $v)}selected="selected"{/if}>{$v}&nbsp;&nbsp;</option>
                                 {/foreach}
                             </select>
-
                         </div>
                         <div class="col-xs-4">
+							{*
+								{l s='January'}
+								{l s='February'}
+								{l s='March'}
+								{l s='April'}
+								{l s='May'}
+								{l s='June'}
+								{l s='July'}
+								{l s='August'}
+								{l s='September'}
+								{l s='October'}
+								{l s='November'}
+								{l s='December'}
+							*}
                             <select id="months" name="months" class="form-control">
                                 <option value="">-</option>
                                 {foreach from=$months key=k item=v}
