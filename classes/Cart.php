@@ -1416,7 +1416,8 @@ class CartCore extends ObjectModel
 						break;
 					case Order::ROUND_ITEM:
 					default:
-						$products_total[$id_tax_rules_group] += Tools::ps_round($tax_calculator->addTaxes($price), _PS_PRICE_DISPLAY_PRECISION_) * (int)$product['cart_quantity'];
+						if (isset($products_total[$id_tax_rules_group]))
+							$products_total[$id_tax_rules_group] += Tools::ps_round($tax_calculator->addTaxes($price), _PS_PRICE_DISPLAY_PRECISION_) * (int)$product['cart_quantity'];
 						if ($ecotax)
 							$ecotax_total += Tools::ps_round($ecotax_tax_calculator->addTaxes($ecotax), _PS_PRICE_DISPLAY_PRECISION_) * (int)$product['cart_quantity'];
 						break;
