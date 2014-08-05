@@ -49,7 +49,7 @@
 	var statesShipped = new Array();
 	var has_voucher = {if count($discounts)}1{else}0{/if};
 	{foreach from=$states item=state}
-		{if (!$currentState->shipped && $state['shipped'])}
+		{if (isset($currentState->shipped) && !$currentState->shipped && $state['shipped'])}
 			statesShipped.push({$state['id_order_state']});
 		{/if}
 	{/foreach}
@@ -121,7 +121,7 @@
 						{l s='Print order'}
 					</a>
 					&nbsp;
-					{if Configuration::get('PS_INVOICE') && count($invoices_collection) && (($currentState && $currentState->invoice && $order->invoice_number) || $order->invoice_number)}
+					{if Configuration::get('PS_INVOICE') && count($invoices_collection) && ((isset($currentState) && $currentState->invoice && $order->invoice_number) || $order->invoice_number)}
 						<a class="btn btn-default" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateInvoicePDF&amp;id_order={$order->id|intval}" target="_blank">
 							<i class="icon-file"></i>
 							{l s='View invoice'}
@@ -133,7 +133,7 @@
 						</span>
 					{/if}
 					&nbsp;
-					{if (($currentState && $currentState->delivery && $order->delivery_number) || $order->delivery_number)}
+					{if ((isset($currentState) && $currentState->delivery && $order->delivery_number) || $order->delivery_number)}
 						<a class="btn btn-default"  href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateDeliverySlipPDF&amp;id_order={$order->id|intval}" target="_blank">
 							<i class="icon-truck"></i>
 							{l s='View delivery slip'}
@@ -217,7 +217,7 @@
 								<div class="col-lg-9">
 									<select id="id_order_state" class="chosen form-control" name="id_order_state">
 									{foreach from=$states item=state}
-										<option value="{$state['id_order_state']|intval}"{if $state['id_order_state'] == $currentState->id} selected="selected" disabled="disabled"{/if}>{$state['name']|escape}</option>
+										<option value="{$state['id_order_state']|intval}"{if isset($currentState) && $state['id_order_state'] == $currentState->id} selected="selected" disabled="disabled"{/if}>{$state['name']|escape}</option>
 									{/foreach}
 									</select>
 									<input type="hidden" name="id_order" value="{$order->id}" />
@@ -374,7 +374,7 @@
 					{l s="Payment"} <span class="badge">{$order->getOrderPayments()|@count}</span>
 				</div>
 				{if count($order->getOrderPayments()) > 0}
-					<p class="alert alert-danger" style="{if round($orders_total_paid_tax_incl, 2) == round($total_paid, 2) || $currentState->id == 6}display: none;{/if}">
+					<p class="alert alert-danger"{if round($orders_total_paid_tax_incl, 2) == round($total_paid, 2) || (isset($currentState) && $currentState->id == 6)} style="display: none;"{/if}>
 						{l s='Warning'}
 						<strong>{displayPrice price=$total_paid currency=$currency->id}</strong>
 						{l s='paid instead of'}
@@ -1223,7 +1223,7 @@
 			$(".textarea-autosize").autosize();
 
 			geocoder.geocode({
-				address: '{$addresses.delivery->address1},{$addresses.delivery->postcode},{$addresses.delivery->city}{if ($addresses.delivery->id_state)},{$addresses.deliveryState->name}{/if},{$addresses.delivery->country}'
+				address: '{$addresses.delivery->address1},{$addresses.delivery->postcode},{$addresses.delivery->city}{if isset($addresses.deliveryState->name) && $addresses.delivery->id_state},{$addresses.deliveryState->name}{/if},{$addresses.delivery->country}'
 				}, function(results, status) {
 				if (status === google.maps.GeocoderStatus.OK)
 				{
@@ -1235,7 +1235,7 @@
 					var delivery_marker = new google.maps.Marker({
 						map: delivery_map,
 						position: results[0].geometry.location,
-						url: 'http://maps.google.com?q={$addresses.delivery->address1|urlencode},{$addresses.delivery->postcode|urlencode},{$addresses.delivery->city|urlencode}{if ($addresses.delivery->id_state)},{$addresses.deliveryState->name|urlencode}{/if},{$addresses.delivery->country|urlencode}'
+						url: 'http://maps.google.com?q={$addresses.delivery->address1|urlencode},{$addresses.delivery->postcode|urlencode},{$addresses.delivery->city|urlencode}{if isset($addresses.deliveryState->name) && $addresses.delivery->id_state},{$addresses.deliveryState->name|urlencode}{/if},{$addresses.delivery->country|urlencode}'
 					});
 					google.maps.event.addListener(delivery_marker, 'click', function() {
 						window.open(delivery_marker.url);
@@ -1244,7 +1244,7 @@
 			});
 
 			geocoder.geocode({
-				address: '{$addresses.invoice->address1},{$addresses.invoice->postcode},{$addresses.invoice->city}{if ($addresses.invoice->id_state)},{$addresses.deliveryState->name}{/if},{$addresses.invoice->country}'
+				address: '{$addresses.invoice->address1},{$addresses.invoice->postcode},{$addresses.invoice->city}{if isset($addresses.deliveryState->name) && $addresses.invoice->id_state},{$addresses.deliveryState->name}{/if},{$addresses.invoice->country}'
 				}, function(results, status) {
 				if (status === google.maps.GeocoderStatus.OK)
 				{
@@ -1256,7 +1256,7 @@
 					invoice_marker = new google.maps.Marker({
 						map: invoice_map,
 						position: results[0].geometry.location,
-						url: 'http://maps.google.com?q={$addresses.invoice->address1|urlencode},{$addresses.invoice->postcode|urlencode},{$addresses.invoice->city|urlencode}{if ($addresses.invoice->id_state)},{$addresses.deliveryState->name|urlencode}{/if},{$addresses.invoice->country|urlencode}'
+						url: 'http://maps.google.com?q={$addresses.invoice->address1|urlencode},{$addresses.invoice->postcode|urlencode},{$addresses.invoice->city|urlencode}{if isset($addresses.deliveryState->name) && $addresses.invoice->id_state},{$addresses.deliveryState->name|urlencode}{/if},{$addresses.invoice->country|urlencode}'
 					});
 					google.maps.event.addListener(invoice_marker, 'click', function() {
 						window.open(invoice_marker.url);

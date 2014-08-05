@@ -59,7 +59,7 @@ class AdminOrdersControllerCore extends AdminController
 		CONCAT(LEFT(c.`firstname`, 1), \'. \', c.`lastname`) AS `customer`,
 		osl.`name` AS `osname`,
 		os.`color`,
-		IF((SELECT COUNT(so.id_order) FROM `'._DB_PREFIX_.'orders` so WHERE so.id_customer = a.id_customer) > 1, 0, 1) as new,
+		IF((SELECT so.id_order FROM `'._DB_PREFIX_.'orders` so WHERE so.id_customer = a.id_customer AND so.id_order < a.id_order LIMIT 1) > 0, 0, 1) as new,
 		country_lang.name as cname,
 		IF(a.valid, 1, 0) badge_success';
 
@@ -91,7 +91,8 @@ class AdminOrdersControllerCore extends AdminController
 				'align' => 'text-center',
 				'type' => 'bool',
 				'tmpTableFilter' => true,
-				'orderby' => false
+				'orderby' => false,
+				'callback' => 'printNewCustomer'
 			),
 			'customer' => array(
 				'title' => $this->l('Customer'),
@@ -341,6 +342,11 @@ class AdminOrdersControllerCore extends AdminController
 		));
 
 		return $this->createTemplate('_print_pdf_icon.tpl')->fetch();
+	}
+	
+	public function printNewCustomer($id_order, $tr)
+	{
+		return ($tr['new'] ? $this->l('Yes') : $this->l('No'));
 	}
 
 	public function processBulkUpdateOrderStatus()

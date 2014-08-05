@@ -449,8 +449,7 @@ abstract class ControllerCore
 		{
 			case E_USER_ERROR:
 			case E_ERROR:
-				$type = 'Fatal error';
-				die;
+				die('Fatal error: '.$errstr.' in '.$errfile.' on line '.$errline);
 			break;
 			case E_USER_WARNING:
 			case E_WARNING:
