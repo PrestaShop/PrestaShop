@@ -315,7 +315,7 @@ CREATE TABLE `PREFIX_cart_product` (
 CREATE TABLE `PREFIX_category` (
   `id_category` int(10) unsigned NOT NULL auto_increment,
   `id_parent` int(10) unsigned NOT NULL,
-  `id_shop_DEFAULT` int(10) unsigned NOT NULL DEFAULT 1,
+  `id_shop_default` int(10) unsigned NOT NULL DEFAULT 1,
   `level_depth` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `nleft` int(10) unsigned NOT NULL DEFAULT '0',
   `nright` int(10) unsigned NOT NULL DEFAULT '0',
@@ -563,7 +563,7 @@ CREATE TABLE `PREFIX_customer` (
   `id_shop_group` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1',
   `id_gender` int(10) unsigned NOT NULL,
-  `id_DEFAULT_group` int(10) unsigned NOT NULL DEFAULT '1',
+  `id_default_group` int(10) unsigned NOT NULL DEFAULT '1',
   `id_lang` int(10) unsigned NULL,
   `id_risk` int(10) unsigned NOT NULL DEFAULT '1',
   `company` varchar(64),
@@ -732,7 +732,7 @@ CREATE TABLE `PREFIX_employee` (
   `bo_color` varchar(32) DEFAULT NULL,
   `bo_theme` varchar(32) DEFAULT NULL,
   `bo_css` varchar(64) DEFAULT NULL,
-  `DEFAULT_tab` int(10) unsigned NOT NULL DEFAULT '0',
+  `default_tab` int(10) unsigned NOT NULL DEFAULT '0',
   `bo_width` int(10) unsigned NOT NULL DEFAULT '0',
   `bo_menu` tinyint(1) NOT NULL DEFAULT '1',
   `active` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -1301,7 +1301,7 @@ CREATE TABLE `PREFIX_order_slip` (
   `total_products_tax_excl` DECIMAL(20, 6) NULL,
   `total_products_tax_incl` DECIMAL(20, 6) NULL,
   `total_shipping_tax_excl` DECIMAL(20, 6) NULL,
-  `total_shipping_tax_incl` DECIMAL(20, 6) NULL,  
+  `total_shipping_tax_incl` DECIMAL(20, 6) NULL,
   `shipping_cost` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `amount` DECIMAL(10,2) NOT NULL,
   `shipping_cost_amount` DECIMAL(10,2) NOT NULL,
@@ -1404,8 +1404,8 @@ CREATE TABLE `PREFIX_product` (
   `id_product` int(10) unsigned NOT NULL auto_increment,
   `id_supplier` int(10) unsigned DEFAULT NULL,
   `id_manufacturer` int(10) unsigned DEFAULT NULL,
-  `id_category_DEFAULT` int(10) unsigned DEFAULT NULL,
-  `id_shop_DEFAULT` int(10) unsigned NOT NULL DEFAULT 1,
+  `id_category_default` int(10) unsigned DEFAULT NULL,
+  `id_shop_default` int(10) unsigned NOT NULL DEFAULT 1,
   `id_tax_rules_group` INT(11) UNSIGNED NOT NULL,
   `on_sale` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `online_only` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -1443,14 +1443,14 @@ CREATE TABLE `PREFIX_product` (
   `cache_is_pack` tinyint(1) NOT NULL DEFAULT '0',
   `cache_has_attachments` tinyint(1) NOT NULL DEFAULT '0',
   `is_virtual` tinyint(1) NOT NULL DEFAULT '0',
-  `cache_DEFAULT_attribute` int(10) unsigned DEFAULT NULL,
+  `cache_default_attribute` int(10) unsigned DEFAULT NULL,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
   `advanced_stock_management` tinyint(1) DEFAULT '0' NOT NULL,
   PRIMARY KEY (`id_product`),
   KEY `product_supplier` (`id_supplier`),
   KEY `product_manufacturer` (`id_manufacturer`),
-  KEY `id_category_DEFAULT` (`id_category_DEFAULT`),
+  KEY `id_category_default` (`id_category_default`),
   KEY `indexed` (`indexed`),
   KEY `date_add` (`date_add`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
@@ -1458,7 +1458,7 @@ CREATE TABLE `PREFIX_product` (
 CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   `id_product` int(10) unsigned NOT NULL,
   `id_shop` int(10) unsigned NOT NULL,
-  `id_category_DEFAULT` int(10) unsigned DEFAULT NULL,
+  `id_category_default` int(10) unsigned DEFAULT NULL,
   `id_tax_rules_group` INT(11) UNSIGNED NOT NULL,
   `on_sale` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `online_only` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -1481,12 +1481,12 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   `show_price` tinyint(1) NOT NULL DEFAULT '1',
   `indexed` tinyint(1) NOT NULL DEFAULT '0',
   `visibility` enum('both','catalog','search','none') NOT NULL DEFAULT 'both',
-  `cache_DEFAULT_attribute` int(10) unsigned DEFAULT NULL,
+  `cache_default_attribute` int(10) unsigned DEFAULT NULL,
   `advanced_stock_management` tinyint(1) DEFAULT '0' NOT NULL,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
   PRIMARY KEY (`id_product`, `id_shop`),
-  KEY `id_category_DEFAULT` (`id_category_DEFAULT`),
+  KEY `id_category_default` (`id_category_default`),
   KEY `date_add` (`date_add` , `active` , `visibility`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
@@ -1504,14 +1504,14 @@ CREATE TABLE `PREFIX_product_attribute` (
   `quantity` int(10) NOT NULL DEFAULT '0',
   `weight` DECIMAL(20,6) NOT NULL DEFAULT '0',
   `unit_price_impact` decimal(17,2) NOT NULL DEFAULT '0.00',
-  `DEFAULT_on` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `default_on` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `minimal_quantity` int(10) unsigned NOT NULL DEFAULT '1',
   `available_date` date NOT NULL,
   PRIMARY KEY (`id_product_attribute`),
   KEY `product_attribute_product` (`id_product`),
   KEY `reference` (`reference`),
   KEY `supplier_reference` (`supplier_reference`),
-  KEY `product_DEFAULT` (`id_product`,`DEFAULT_on`),
+  KEY `product_default` (`id_product`,`default_on`),
   KEY `id_product_id_product_attribute` (`id_product_attribute` , `id_product`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
@@ -1523,7 +1523,7 @@ CREATE TABLE `PREFIX_product_attribute_shop` (
   `ecotax` decimal(17,6) NOT NULL DEFAULT '0.00',
   `weight` DECIMAL(20,6) NOT NULL DEFAULT '0',
   `unit_price_impact` decimal(17,2) NOT NULL DEFAULT '0.00',
-  `DEFAULT_on` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `default_on` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `minimal_quantity` int(10) unsigned NOT NULL DEFAULT '1',
   `available_date` date NOT NULL,
   PRIMARY KEY (`id_product_attribute`, `id_shop`)
@@ -1949,8 +1949,8 @@ CREATE TABLE `PREFIX_tax_rules_group` (
 `id_tax_rules_group` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 `name` VARCHAR( 50 ) NOT NULL,
 `active` INT NOT NULL,
-`deleted` TINYINT(1) UNSIGNED NOT NULL, 
-`date_add` DATETIME NOT NULL, 
+`deleted` TINYINT(1) UNSIGNED NOT NULL,
+`date_add` DATETIME NOT NULL,
 `date_upd` DATETIME NOT NULL
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
@@ -2028,8 +2028,8 @@ CREATE TABLE IF NOT EXISTS `PREFIX_theme` (
   `name` varchar(64) NOT NULL,
   `directory` varchar(64) NOT NULL,
   `responsive` tinyint(1) NOT NULL DEFAULT '0',
-  `DEFAULT_left_column` tinyint(1) NOT NULL DEFAULT '0',
-  `DEFAULT_right_column` tinyint(1) NOT NULL DEFAULT '0',
+  `default_left_column` tinyint(1) NOT NULL DEFAULT '0',
+  `default_right_column` tinyint(1) NOT NULL DEFAULT '0',
   `product_per_page` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id_theme`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
