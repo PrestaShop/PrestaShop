@@ -594,10 +594,6 @@ span.view_scroll_spacer {
 			border: 1px solid #d2d0d0;
 			border-top: 1px solid #b0afaf;
 			border-bottom: 1px solid #b0afaf;
-			p{
-				margin-bottom: 7px;
-				padding: 15px 10px 0
-			} 
 			.exclusive{
 				padding: 0;
 				border-top: 1px solid #0079b6;
@@ -866,8 +862,7 @@ table.table-product-discounts{
 }
 
 #reduction_percent, 
-#reduction_amount {
-	display: inline-block;	
+#reduction_amount {	
 	margin-right: 10px;
 	padding: 1px 2px;
 	font-weight: 600;
@@ -879,6 +874,9 @@ table.table-product-discounts{
 	border: 1px solid #d02a2c;
 	span{
 		display:block;	
+	}
+	.hide-left-column.hide-right-column & {
+		display: inline-block;
 	}
 }
 
