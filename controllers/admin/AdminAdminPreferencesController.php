@@ -124,21 +124,6 @@ class AdminAdminPreferencesControllerCore extends AdminController
 				),
 				'submit' => array('title' => $this->l('Save'))
 			),
-			'help' => array(
-				'title' =>	$this->l('Help'),
-				'icon' =>	'icon-question-sign',
-				'fields' =>	array(
-					'PS_HELPBOX' => array(
-						'title' => $this->l('Back Office help boxes'),
-						'hint' => $this->l('Allow yellow help boxes to be displayed under the form fields in the Back Office.'),
-						'validation' => 'isBool',
-						'cast' => 'intval',
-						'type' => 'bool',
-						'visibility' => Shop::CONTEXT_ALL
-					),
-				),
-				'submit' => array('title' => $this->l('Save'))
-			),
 			'notifications' => array(
 				'title' =>	$this->l('Notifications'),
 				'icon' =>	'icon-list-alt',
