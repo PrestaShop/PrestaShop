@@ -35,9 +35,6 @@
 	<configuration id="PS_CART_REDIRECT" name="PS_CART_REDIRECT">
 		<value>1</value>
 	</configuration>
-	<configuration id="PS_HELPBOX" name="PS_HELPBOX">
-		<value>1</value>
-	</configuration>
 	<configuration id="PS_CONDITIONS" name="PS_CONDITIONS">
 		<value>1</value>
 	</configuration>
