@@ -152,12 +152,12 @@
 			{/if}
 			<h1 itemprop="name">{$product->name|escape:'html':'UTF-8'}</h1>
 			<p id="product_reference"{if empty($product->reference) || !$product->reference} style="display: none;"{/if}>
-				<label>{l s='Model'} </label>
+				<label>{l s='Reference:'} </label>
 				<span class="editable" itemprop="sku">{if !isset($groups)}{$product->reference|escape:'html':'UTF-8'}{/if}</span>
 			</p>
 			{if $product->condition}
 			<p id="product_condition">
-				<label>{l s='Condition'} </label>
+				<label>{l s='Condition:'} </label>
 				{if $product->condition == 'new'}
 					<link itemprop="itemCondition" href="http://schema.org/NewCondition"/>
 					<span class="editable">{l s='New'}</span>
