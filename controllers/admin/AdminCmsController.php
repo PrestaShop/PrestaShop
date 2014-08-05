@@ -244,7 +244,7 @@ class AdminCmsControllerCore extends AdminController
 		$this->position_group_identifier = (int)$this->id_cms_category;
 		$this->toolbar_title = $this->l('Pages in this category');
 		$this->toolbar_btn['new'] = array(
-			'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;id_cms_category='.(int)$this->id_cms_category.'&amp;token='.$this->token,
+			'href' => self::$currentIndex.'&add'.$this->table.'&id_cms_category='.(int)$this->id_cms_category.'&token='.$this->token,
 			'desc' => $this->l('Add new')
 		);
 

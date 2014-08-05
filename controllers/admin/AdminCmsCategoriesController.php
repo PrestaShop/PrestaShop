@@ -80,7 +80,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 	{
 		$this->initToolbar();
 		if (isset($this->toolbar_btn['new']))
-        	$this->toolbar_btn['new']['href'] .= '&amp;id_parent='.(int)Tools::getValue('id_cms_category');
+        	$this->toolbar_btn['new']['href'] .= '&id_parent='.(int)Tools::getValue('id_cms_category');
 		return parent::renderList();
 	}
 
