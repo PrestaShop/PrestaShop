@@ -270,7 +270,11 @@ class AdminTranslationsControllerCore extends AdminController
 	protected function writeTranslationFile($override_file = false)
 	{
 		$type = Tools::toCamelCase($this->type_selected, true);
-		$translation_informations = $this->translations_informations[$this->type_selected];
+		
+		if (isset($this->translations_informations[$this->type_selected]))
+			$translation_informations = $this->translations_informations[$this->type_selected];
+		else
+			return;
 
 		if ($override_file)
 			$file_path = $translation_informations['override']['dir'].$translation_informations['override']['file'];
