@@ -473,7 +473,7 @@ class AdminCategoriesControllerCore extends AdminController
 					'tree'  => array(
 						'id'                  => 'categories-tree',
 						'selected_categories' => $selected_categories,
-						'disabled_categories' => !Tools::isSubmit('add'.$this->table) ? array($this->_category->id) : null
+						'disabled_categories' => (!Tools::isSubmit('add'.$this->table) && !Tools::isSubmit('submitAdd'.$this->table)) ? array($this->_category->id) : null
 					)
 				),
 				array(
