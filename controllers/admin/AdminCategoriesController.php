@@ -495,17 +495,21 @@ class AdminCategoriesControllerCore extends AdminController
 					'hint' => $this->l('Upload a category logo from your computer.'),
 				),
 				array(
-					'type' => 'text',
+					'type' => 'textarea',
 					'label' => $this->l('Meta title'),
 					'name' => 'meta_title',
 					'lang' => true,
+					'rows' => 5,
+					'cols' => 100,
 					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
 				),
 				array(
-					'type' => 'text',
+					'type' => 'textarea',
 					'label' => $this->l('Meta description'),
 					'name' => 'meta_description',
 					'lang' => true,
+					'rows' => 5,
+					'cols' => 100,
 					'hint' => $this->l('Forbidden characters:').' <>;=#{}'
 				),
 				array(
