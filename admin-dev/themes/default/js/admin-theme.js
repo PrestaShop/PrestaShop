@@ -94,7 +94,7 @@ function scroll_if_anchor(href) {
 		if($target.length) {
 			$('html, body').animate({ scrollTop: $target.offset().top - fromTop });
 			if(history && "pushState" in history) {
-				history.pushState({}, document.title, window.location.href + href);
+				history.pushState({}, document.title, window.location.pathname + href);
 				return false;
 			}
 		}

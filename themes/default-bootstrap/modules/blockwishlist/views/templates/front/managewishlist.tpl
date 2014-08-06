@@ -26,7 +26,7 @@
 {if $products}
     {if !$refresh}
         <div class="wishlistLinkTop">
-        <a id="hideWishlist" class="button_account icon pull-right" href="#" onclick="WishlistVisibility('wishlistLinkTop', 'Wishlist'); return false;" rel="nofollow" title="{l s='Close this wishlist' mod='blockwishlist'}">
+        <a id="hideSendWishlist" class="button_account icon"  href="#" onclick="WishlistVisibility('wishlistLinkTop', 'SendWishlist'); return false;" rel="nofollow" title="{l s='Close this wishlist' mod='blockwishlist'}">
             <i class="icon-remove"></i>
         </a>
         <ul class="clearfix display_list">
@@ -54,11 +54,9 @@
             <input type="text" class="form-control" value="{$link->getModuleLink('blockwishlist', 'view', ['token' => $token_wish])|escape:'html':'UTF-8'}" readonly="readonly"/>
         </p>
         <p class="submit">
-            <div id="showSendWishlist">
-                <a class="btn btn-default button button-small" href="#" onclick="WishlistVisibility('wl_send', 'SendWishlist'); return false;" title="{l s='Send this wishlist' mod='blockwishlist'}">
-                    <span>{l s='Send this wishlist' mod='blockwishlist'}</span>
-                </a>
-            </div>
+            <a id="showSendWishlist" class="btn btn-default button button-small" href="#" onclick="WishlistVisibility('wl_send', 'SendWishlist'); return false;" title="{l s='Send this wishlist' mod='blockwishlist'}">
+                <span>{l s='Send this wishlist' mod='blockwishlist'}</span>
+            </a>
         </p>
     {/if}
     <div class="wlp_bought">
@@ -138,9 +136,6 @@
     </div>
     {if !$refresh}
         <form method="post" class="wl_send box unvisible" onsubmit="return (false);">
-        <a id="hideSendWishlist" class="button_account btn icon"  href="#" onclick="WishlistVisibility('wl_send', 'SendWishlist'); return false;" rel="nofollow" title="{l s='Close this wishlist' mod='blockwishlist'}">
-            <i class="icon-remove"></i>
-        </a>
             <fieldset>
                 <div class="required form-group">
                     <label for="email1">{l s='Email' mod='blockwishlist'}1 <sup>*</sup></label>

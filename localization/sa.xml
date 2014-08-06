@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<localizationPack name="Saudi Arabia" version="1.0">
+<localizationPack name="Saoudi Arabie" version="1.0">
 	<currencies>
 		<currency name="Riyal" iso_code="SAR" iso_code_num="682" sign="﷼" blank="1" conversion_rate="5.10682" format="2" decimals="1" />
 	</currencies>

@@ -5,7 +5,7 @@
 	</currencies>
 	<languages>
 		<language iso_code="en" />
-		<language iso_code="ms" />
+		<language iso_code="tw" />
 		<language iso_code="zh" />
 	</languages>
 	<taxes>
@@ -16,10 +16,10 @@
 		</taxRulesGroup>
 	</taxes>
 	<units>
-		<unit type="weight" value="kg"/>
-	    <unit type="volume" value="L"/>
-	    <unit type="short_distance" value="cm"/>
-	    <unit type="base_distance" value="m"/>
-	    <unit type="long_distance" value="km"/>
+		<unit type="weight" value="市制" />
+		<unit type="volume" value="市升" />
+		<unit type="short_distance" value="市厘" />
+		<unit type="base_distance" value="里" />
+		<unit type="long_distance" value="市里" />
 	</units>
 </localizationPack>

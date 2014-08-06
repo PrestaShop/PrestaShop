@@ -3433,10 +3433,7 @@ class ProductCore extends ObjectModel
 		{
 			$sql->leftJoin('product_attribute', 'pa', 'pa.`id_product` = p.`id_product`');
 			$sql->join(Shop::addSqlAssociation('product_attribute', 'pa', false));
-			$where .= ' OR pa.`reference` LIKE \'%'.pSQL($query).'%\'
-			OR pa.`supplier_reference` LIKE \'%'.pSQL($query).'%\'
-			OR pa.`ean13` LIKE \'%'.pSQL($query).'%\'
-			OR pa.`upc` LIKE \'%'.pSQL($query).'%\'';
+			$where .= ' OR pa.`reference` LIKE \'%'.pSQL($query).'%\' OR pa.`ean13` LIKE \'%'.pSQL($query).'%\'';
 		}
 		$sql->where($where);
 		$sql->join(Product::sqlStock('p', 'pa', false, $context->shop));
@@ -4874,7 +4871,7 @@ class ProductCore extends ObjectModel
 			WHERE `id_category` = '.(int)$this->id_category_default.'
 			ORDER BY `position`
 		');
-		if (($position > 0) && ($position + 1 > count($result)))
+		if ($position + 1 > count($result))
 			WebserviceRequest::getInstance()->setError(500, Tools::displayError('You cannot set a position greater than the total number of products in the category, minus 1 (position numbering starts at 0).'), 135);
 
 		foreach ($result as &$value)

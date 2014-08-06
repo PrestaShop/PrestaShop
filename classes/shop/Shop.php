@@ -468,11 +468,13 @@ class ShopCore extends ObjectModel
 
 	/**
 	 * Get shop URI
- 	 *
+	 *
 	 * @return string
 	 */
 	public function getBaseURI()
 	{
+		if (defined('_PS_ADMIN_DIR_'))
+			return $this->physical_uri;
 		return $this->physical_uri.$this->virtual_uri;
 	}
 

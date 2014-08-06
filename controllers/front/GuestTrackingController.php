@@ -58,7 +58,7 @@ class GuestTrackingControllerCore extends FrontController
 				{
 					$order = new Order((int)$id_order);
 					if (Validate::isLoadedObject($order))
-						$order_collection = Order::getByReference($order->reference);
+						$order_collection[] = $order;
 				}
 				else
 					$order_collection = Order::getByReference($id_order);

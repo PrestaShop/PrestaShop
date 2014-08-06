@@ -8,7 +8,7 @@
 	</languages>
 	<taxes>
 		<tax id="1" name="PVN LV 21%" rate="21" />
-		<tax id="2" name="PVN LV 12%" rate="12" />
+		<tax id="2" name="PVN LV 10%" rate="10" />
 		
 		<taxRulesGroup name="LV Standard Rate (21%)">
 			<taxRule iso_code_country="be" id_tax="1" />
@@ -40,7 +40,7 @@
 			<taxRule iso_code_country="uk" id_tax="1" />
 		</taxRulesGroup>
 
-		<taxRulesGroup name="LV Reduced Rate (12%)">
+		<taxRulesGroup name="LV Reduced Rate (10%)">
 			<taxRule iso_code_country="be" id_tax="2" />
 			<taxRule iso_code_country="bg" id_tax="2" />
 			<taxRule iso_code_country="cz" id_tax="2" />
@@ -100,7 +100,7 @@
 			<taxRule iso_code_country="uk" id_tax="1" />
 		</taxRulesGroup>
 
-		<taxRulesGroup name="LV Books Rate (12%)">
+		<taxRulesGroup name="LV Books Rate (10%)">
 			<taxRule iso_code_country="be" id_tax="2" />
 			<taxRule iso_code_country="bg" id_tax="2" />
 			<taxRule iso_code_country="cz" id_tax="2" />

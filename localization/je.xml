@@ -8,9 +8,9 @@
 		<language iso_code="en" />
 	</languages>
 	<taxes>
-		<tax id="1" name="GST JE 5%" rate="5" />
+		<tax id="1" name="GST JE 3%" rate="3" />
 		
-		<taxRulesGroup name="JE Standard Rate (5%)">
+		<taxRulesGroup name="JE Standard Rate (3%)">
 			<taxRule iso_code_country="je" id_tax="1" />
 		</taxRulesGroup>
 	</taxes>

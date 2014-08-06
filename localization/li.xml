@@ -7,19 +7,19 @@
 		<language iso_code="de" />
 	</languages>
 	<taxes>
-		<tax id="1" name="TVA CH 8%" rate="8" />
-		<tax id="2" name="TVA CH 3.8%" rate="3.8" />
-		<tax id="3" name="TVA CH 2.5%" rate="2.5" />
+		<tax id="1" name="TVA CH 7.6%" rate="7.6" />
+		<tax id="2" name="TVA CH 3.6%" rate="3.6" />
+		<tax id="3" name="TVA CH 2.4%" rate="2.4" />
 		
-		<taxRulesGroup name="CH Standard Rate (8%)">
+		<taxRulesGroup name="CH Standard Rate (7.6%)">
 			<taxRule iso_code_country="li" id_tax="1" />
 		</taxRulesGroup>
 		
-		<taxRulesGroup name="CH Reduced Rate (3.8%)">
+		<taxRulesGroup name="CH Reduced Rate (3.6%)">
 			<taxRule iso_code_country="li" id_tax="2" />
 		</taxRulesGroup>
 		
-		<taxRulesGroup name="CH Super Reduced Rate (2.5%)">
+		<taxRulesGroup name="CH Super Reduced Rate (2.4%)">
 			<taxRule iso_code_country="li" id_tax="3" />
 		</taxRulesGroup>
 	</taxes>
