@@ -288,7 +288,7 @@ class EmployeeCore extends ObjectModel
 	  */
 	public static function checkPassword($id_employee, $passwd)
 	{
-	 	if (!Validate::isUnsignedId($id_employee) || !Validate::isPasswd($passwd, 8))
+	 	if (!Validate::isUnsignedId($id_employee) || !Validate::isMd5($passwd))
 	 		die (Tools::displayError());
 
 		return Db::getInstance()->getValue('
