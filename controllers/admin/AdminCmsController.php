@@ -231,6 +231,9 @@ class AdminCmsControllerCore extends AdminController
 			);
 		}
 
+		if (Validate::isLoadedObject($this->object))
+			$this->context->smarty->assign('url_prev' , $this->getPreviewUrl($this->object));
+
 		$this->tpl_form_vars = array(
 			'active' => $this->object->active,
 			'PS_ALLOW_ACCENTED_CHARS_URL', (int)Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL')
@@ -271,7 +274,7 @@ class AdminCmsControllerCore extends AdminController
 		{
 			parent::postProcess();
 			if (($cms = new CMS($id_cms, $this->context->language->id)) && Validate::isLoadedObject($cms))
-				Tools::redirectAdmin(self::$currentIndex.'&id_cms='.$id_cms.'&conf=4&updatecms&token='.Tools::getAdminTokenLite('AdminCmsContent').'&url_cms_preview='.$this->getPreviewUrl($cms));
+				Tools::redirectAdmin(self::$currentIndex.'&id_cms='.$id_cms.'&conf=4&updatecms&token='.Tools::getAdminTokenLite('AdminCmsContent').'&url_preview=1');
 		}
 		elseif (Tools::isSubmit('deletecms'))
 		{
@@ -338,7 +341,7 @@ class AdminCmsControllerCore extends AdminController
                     $this->updateAssoShop($cms->id);
             }
             if (Tools::isSubmit('view'.$this->table))
-								Tools::redirectAdmin(self::$currentIndex.'&id_cms='.$id_cms.'&conf=4&updatecms&token='.Tools::getAdminTokenLite('AdminCmsContent').'&url_cms_preview='.$this->getPreviewUrl($cms));
+							Tools::redirectAdmin(self::$currentIndex.'&id_cms='.$cms->id.'&conf=4&updatecms&token='.Tools::getAdminTokenLite('AdminCmsContent').'&url_preview=1');
             elseif (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
                 Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$cms->id.'&conf=4&update'.$this->table.'&token='.Tools::getAdminTokenLite('AdminCmsContent'));
             else
