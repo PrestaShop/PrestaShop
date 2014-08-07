@@ -185,7 +185,7 @@
 					{/if}
 					<h3 class="page-heading bottom-indent top-indent">{l s='Delivery address'}</h3>
 					{foreach from=$dlv_all_fields item=field_name}
-						{if $field_name eq "company" && $b2b_enable}
+						{if $field_name eq "company"}
 							<div class="form-group">
 								<label for="company">{l s='Company'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
 								<input type="text" class="form-control" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{/if}" />
@@ -282,7 +282,7 @@
 						{assign var=postCodeExist value=false}
 						<h3 class="page-subheading top-indent">{l s='Invoice address'}</h3>
 						{foreach from=$inv_all_fields item=field_name}
-						{if $field_name eq "company" && $b2b_enable}
+						{if $field_name eq "company"}
 						<div class="form-group">
 							<label for="company_invoice">{l s='Company'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
 							<input type="text" class="text form-control" id="company_invoice" name="company_invoice" value="" />
