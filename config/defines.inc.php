@@ -159,6 +159,12 @@ define('PS_ROUND_HALF', PS_ROUND_HALF_UP);
 define('PS_REGISTRATION_PROCESS_STANDARD', 0);
 define('PS_REGISTRATION_PROCESS_AIO', 1);
 
+
+/* Passwords behavior */
+define('PS_PASSWORD_ALL', 0);
+define('PS_PASSWORD_ALPA_NUMBER', 1);
+define('PS_PASSWORD_ALPA_NUMBER_SPECIAL', 2);
+
 /* Carrier::getCarriers() filter */
 // these defines are DEPRECATED since 1.4.5 version
 define('PS_CARRIERS_ONLY', 1);
