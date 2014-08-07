@@ -153,13 +153,13 @@
 				{foreach from=$dlv_all_fields item=field_name}
 				{if $field_name eq "company" && $b2b_enable}
 					<div class="text form-group">
-						<label for="company">{l s='Company'}</label>
+						<label for="company">{l s='Company'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
 						<input type="text" class="text form-control validate" id="company" name="company" data-validate="isName" value="{if isset($guestInformations) && isset($guestInformations.company) && $guestInformations.company}{$guestInformations.company}{/if}" />
 					</div>
 				{elseif $field_name eq "vat_number"}
 				<div id="vat_number_block" style="display:none;">
 					<div class="form-group">
-						<label for="vat_number">{l s='VAT number'}</label>
+						<label for="vat_number">{l s='VAT number'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
 						<input type="text" class="text form-control" name="vat_number" id="vat_number" value="{if isset($guestInformations) && isset($guestInformations.vat_number) && $guestInformations.vat_number}{$guestInformations.vat_number}{/if}" />
 					</div>
 				</div>
@@ -187,7 +187,7 @@
 				</div>
 				{elseif $field_name eq "address2"}
 				<div class="text is_customer_param form-group">
-					<label for="address2">{l s='Address (Line 2)'}</label>
+					<label for="address2">{l s='Address (Line 2)'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
 					<input type="text" class="text form-control validate" name="address2" id="address2" data-validate="isAddress" value="{if isset($guestInformations) && isset($guestInformations.address2) && isset($guestInformations) && isset($guestInformations.address2) && $guestInformations.address2}{$guestInformations.address2}{/if}" />
 				</div>
 				{elseif $field_name eq "postcode"}
@@ -272,13 +272,13 @@
 					{foreach from=$inv_all_fields item=field_name}
 					{if $field_name eq "company" && $b2b_enable}
 					<div class="form-group">
-						<label for="company_invoice">{l s='Company'}</label>
+						<label for="company_invoice">{l s='Company'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
 						<input type="text" class="text form-control validate" id="company_invoice" name="company_invoice"  data-validate="isName" value="" />
 					</div>
 					{elseif $field_name eq "vat_number"}
 					<div id="vat_number_block_invoice" class="is_customer_param" style="display:none;">
 						<div class="form-group">
-							<label for="vat_number_invoice">{l s='VAT number'}</label>
+							<label for="vat_number_invoice">{l s='VAT number'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
 							<input type="text" class="form-control" id="vat_number_invoice" name="vat_number_invoice" value="" />
 						</div>
 					</div>
@@ -306,7 +306,7 @@
 					</div>
 					{elseif $field_name eq "address2"}
 					<div class="form-group is_customer_param">
-						<label for="address2_invoice">{l s='Address (Line 2)'}</label>
+						<label for="address2_invoice">{l s='Address (Line 2)'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
 						<input type="text" class="form-control address" name="address2_invoice" id="address2_invoice" data-validate="isAddress" value="{if isset($guestInformations) && isset($guestInformations.address2_invoice) && isset($guestInformations) && isset($guestInformations.address2_invoice) && $guestInformations.address2_invoice}{$guestInformations.address2_invoice}{/if}" />
 					</div>
 					{elseif $field_name eq "postcode"}

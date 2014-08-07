@@ -145,7 +145,7 @@ class AddressControllerCore extends FrontController
 			if (!$country->active)
 				$this->errors[] = Tools::displayError('This country is not active.');
 
-			$postcode = Tools::getValue('postcode');		
+			$postcode = Tools::getValue('postcode');
 			/* Check zip code format */
 			if ($country->zip_code_format && !$country->checkZipCode($postcode))
 				$this->errors[] = sprintf(Tools::displayError('The Zip/Postal code you\'ve entered is invalid. It must follow this format: %s'), str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format))));
@@ -168,7 +168,7 @@ class AddressControllerCore extends FrontController
 				$id_address = Tools::getValue('opc_id_address_'.Tools::getValue('type'));
 
 			if (Address::aliasExist(Tools::getValue('alias'), (int)$id_address, (int)$this->context->customer->id))
-				$this->errors[] = sprintf(Tools::displayError('The alias "%s" has already been used. Please select another one.'), Tools::safeOutput(Tools::getValue('alias')));		
+				$this->errors[] = sprintf(Tools::displayError('The alias "%s" has already been used. Please select another one.'), Tools::safeOutput(Tools::getValue('alias')));
 		}
 
 		// Check the requires fields which are settings in the BO
@@ -195,10 +195,10 @@ class AddressControllerCore extends FrontController
 				}
 			}
 		}
-		
+
 		if ($this->ajax && Tools::getValue('type') == 'invoice' && Configuration::get('PS_ORDER_PROCESS_TYPE'))
 		{
-			$this->errors = array_unique(array_merge($this->errors, $address->validateController()));			
+			$this->errors = array_unique(array_merge($this->errors, $address->validateController()));
 			if (count($this->errors))
 			{
 				$return = array(
@@ -208,10 +208,10 @@ class AddressControllerCore extends FrontController
 				die(Tools::jsonEncode($return));
 			}
 		}
-		
+
 		// Save address
 		if ($result = $address->save())
-		{			
+		{
 			// Update id address of the current cart if necessary
 			if (isset($address_old) && $address_old->isUsed())
 				$this->context->cart->updateAddressId($address_old->id, $address->id);
@@ -245,7 +245,7 @@ class AddressControllerCore extends FrontController
 			}
 			else
 				Tools::redirect('index.php?controller=addresses');
-		}		
+		}
 		$this->errors[] = Tools::displayError('An error occurred while updating your address.');
 	}
 
@@ -261,6 +261,18 @@ class AddressControllerCore extends FrontController
 		$this->assignVatNumber();
 		$this->assignAddressFormat();
 
+		if ($this->_address)
+			$required = $this->_address->getFieldsRequiredDatabase();
+		else
+		{
+			$object = new Address;
+			$required = $object->getFieldsRequiredDatabase();
+		}
+		$fields = array();
+
+		foreach ($required as $field)
+			$fields[] = $field['field_name'];
+
 		// Assign common vars
 		$this->context->smarty->assign(array(
 			'address_validation' => Address::$definition['fields'],
@@ -272,6 +284,7 @@ class AddressControllerCore extends FrontController
 			'select_address' => (int)Tools::getValue('select_address'),
 			'address' => $this->_address,
 			'id_address' => (Validate::isLoadedObject($this->_address)) ? $this->_address->id : 0,
+			'required_fields' => $fields,
 		));
 
 		if ($back = Tools::getValue('back'))
