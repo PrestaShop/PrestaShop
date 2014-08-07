@@ -2538,10 +2538,21 @@ CREATE TABLE `PREFIX_smarty_cache` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `PREFIX_order_slip_detail_tax` (
-  `id_order_slip_detail` int(11) NOT NULL,
-  `id_tax` int(11) NOT NULL,
+  `id_order_slip_detail` int(11) unsigned NOT NULL,
+  `id_tax` int(11) unsigned NOT NULL,
   `unit_amount` decimal(16,6) NOT NULL DEFAULT '0.000000',
   `total_amount` decimal(16,6) NOT NULL DEFAULT '0.000000',
   KEY (`id_order_slip_detail`),
   KEY `id_tax` (`id_tax`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `PREFIX_mail` (
+  `id_mail` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `recipient` varchar(126) NOT NULL,
+  `template` varchar(62) NOT NULL,
+  `subject` varchar(254) NOT NULL,
+  `id_lang` int(11) unsigned NOT NULL,
+  `date_add` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_mail`),
+  KEY `recipient` (`recipient`(10))
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;

@@ -7,7 +7,7 @@
     <value>DE</value>
   </configuration>
   <configuration id="PS_SEARCH_BLACKLIST">
-    <value>a|the|of|on|in|and|to</value>
+    <value></value>
   </configuration>
   <configuration id="PS_META_KEYWORDS">
     <value>0</value>

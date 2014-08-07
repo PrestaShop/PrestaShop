@@ -35,9 +35,6 @@
 	<configuration id="PS_CART_REDIRECT" name="PS_CART_REDIRECT">
 		<value>1</value>
 	</configuration>
-	<configuration id="PS_HELPBOX" name="PS_HELPBOX">
-		<value>1</value>
-	</configuration>
 	<configuration id="PS_CONDITIONS" name="PS_CONDITIONS">
 		<value>1</value>
 	</configuration>
@@ -807,6 +804,9 @@ Country</value>
 	</configuration>
 	<configuration id="PS_ROUND_TYPE" name="PS_ROUND_TYPE">
 		<value>3</value>
+	</configuration>
+	<configuration id="PS_LOG_EMAILS" name="PS_LOG_EMAILS">
+		<value>1</value>
 	</configuration>
   </entities>
 </entity_configuration>

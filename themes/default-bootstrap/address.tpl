@@ -27,7 +27,7 @@
 	<h1 class="page-subheading">{l s='Your addresses'}</h1>
 	<p class="info-title">
 		{if isset($id_address) && (isset($smarty.post.alias) || isset($address->alias))}
-			{l s='Modify address'} 
+			{l s='Modify address'}
 			{if isset($smarty.post.alias)}
 				"{$smarty.post.alias}"
 			{else}
@@ -50,7 +50,7 @@
 		{foreach from=$ordered_adr_fields item=field_name}
 			{if $field_name eq 'company'}
 				<div class="form-group">
-					<label for="company">{l s='Company'}</label>
+					<label for="company">{l s='Company'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
 					<input class="form-control validate" data-validate="{$address_validation.$field_name.validate}" type="text" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{else}{if isset($address->company)}{$address->company|escape:'html':'UTF-8'}{/if}{/if}" />
 				</div>
 			{/if}
@@ -58,7 +58,7 @@
 				<div id="vat_area">
 					<div id="vat_number">
 						<div class="form-group">
-							<label for="vat-number">{l s='VAT number'}</label>
+							<label for="vat-number">{l s='VAT number'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
 							<input type="text" class="form-control validate" data-validate="{$address_validation.$field_name.validate}" id="vat-number" name="vat_number" value="{if isset($smarty.post.vat_number)}{$smarty.post.vat_number}{else}{if isset($address->vat_number)}{$address->vat_number|escape:'html':'UTF-8'}{/if}{/if}" />
 						</div>
 					</div>
@@ -92,7 +92,7 @@
 			{/if}
 			{if $field_name eq 'address2'}
 				<div class="required form-group">
-					<label for="address2">{l s='Address (Line 2)'}</label>
+					<label for="address2">{l s='Address (Line 2)'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
 					<input class="validate form-control" data-validate="{$address_validation.$field_name.validate}" type="text" id="address2" name="address2" value="{if isset($smarty.post.address2)}{$smarty.post.address2}{else}{if isset($address->address2)}{$address->address2|escape:'html':'UTF-8'}{/if}{/if}" />
 				</div>
 			{/if}
@@ -150,7 +150,7 @@
 				<label for="postcode">{l s='Zip/Postal Code'} <sup>*</sup></label>
 				<input class="is_required validate form-control" data-validate="{$address_validation.postcode.validate}" type="text" id="postcode" name="postcode" value="{if isset($smarty.post.postcode)}{$smarty.post.postcode}{else}{if isset($address->postcode)}{$address->postcode|escape:'html':'UTF-8'}{/if}{/if}" />
 			</div>
-		{/if}		
+		{/if}
 		{if !$stateExist}
 			<div class="required id_state form-group unvisible">
 				<label for="id_state">{l s='State'} <sup>*</sup></label>
@@ -195,7 +195,7 @@
 			{if isset($back)}<input type="hidden" name="back" value="{$back}" />{/if}
 			{if isset($mod)}<input type="hidden" name="mod" value="{$mod}" />{/if}
 			{if isset($select_address)}<input type="hidden" name="select_address" value="{$select_address|intval}" />{/if}
-			<input type="hidden" name="token" value="{$token}" />		
+			<input type="hidden" name="token" value="{$token}" />
 			<button type="submit" name="submitAddress" id="submitAddress" class="btn btn-default button button-medium">
 				<span>
 					{l s='Save'}

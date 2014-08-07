@@ -982,7 +982,7 @@ product_tabs['Informations'] = new function(){
 	this.bindAvailableForOrder = function (){
 		$("#available_for_order").click(function()
 		{
-			if ($(this).is(':checked') || ($('input[name=\'multishop_check[show_price]\']').lenght && !$('input[name=\'multishop_check[show_price]\']').prop('checked')))
+			if ($(this).is(':checked') || ($('input[name=\'multishop_check[show_price]\']').length && !$('input[name=\'multishop_check[show_price]\']').prop('checked')))
 			{
 				$('#show_price').attr('checked', true);
 				$('#show_price').attr('disabled', true);
