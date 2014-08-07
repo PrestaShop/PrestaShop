@@ -132,6 +132,15 @@ class AuthControllerCore extends FrontController
 
 		$this->assignAddressFormat();
 
+		$object = new Address;
+		$required = $object->getFieldsRequiredDatabase();
+		$fields = array();
+
+		foreach ($required as $field)
+			$fields[] = $field['field_name'];
+
+		$this->context->smarty->assign('required_fields', $fields);
+
 		// Call a hook to display more information on form
 		$this->context->smarty->assign(array(
 				'HOOK_CREATE_ACCOUNT_FORM' => Hook::exec('displayCustomerAccountForm'),
