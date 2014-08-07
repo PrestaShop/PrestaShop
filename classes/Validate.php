@@ -433,6 +433,34 @@ class ValidateCore
 	{
 		return (Tools::strlen($passwd) >= $size && Tools::strlen($passwd) < 255);
 	}
+	
+	/**
+	 * Check for password force
+	 *
+	 * @param string $passwd Password to validate
+	 * @param int $min_size : to override config value
+	 * @param int $max_size : to override config value
+	 * @param int $rule : to override config value ( config/defines.inc.php )
+	 * @return boolean Validity is ok or not
+	 */	
+	public static function isPasswdStrongEnough($passwd, $min_size = Validate::PASSWORD_LENGTH,  $max_size = 255, $rule = 0)
+	{
+		$size = max((int)Configuration::get('PS_CUSTOMER_PASSWORD_MIN_LENGTH'), $min_size);
+		$max_size = min((int)Configuration::get('PS_CUSTOMER_PASSWORD_MAX_LENGTH'), $max_size);
+
+		if (!$rule)
+			$rule = Configuration::get('PS_CUSTOMER_PASSWORD_CHARS');
+	
+		if (Tools::strlen($passwd) < $size || Tools::strlen($passwd) > $max_size)
+			return false;
+		if ($rule == PS_PASSWORD_ALPA_NUMBER && (!preg_match("/[a-zA-Z]/",$passwd) || !preg_match("/[0-9]/",$passwd)))
+			return false;
+		if ($rule == PS_PASSWORD_ALPA_NUMBER_SPECIAL && (!preg_match("/[a-zA-Z]/",$passwd) || !preg_match("/[0-9]/",$passwd) || !preg_match("/[^a-zA-Z0-9]/",$passwd)))
+			return false;
+		
+		return true;
+	}
+	
 
 	public static function isPasswdAdmin($passwd)
 	{

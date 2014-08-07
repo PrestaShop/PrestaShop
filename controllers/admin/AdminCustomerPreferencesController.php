@@ -44,6 +44,21 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 				'name' => $this->l('Standard (account creation and address creation)')
 			)
 		);
+		
+		$customer_password_chars = array(
+			array(
+				'value' => PS_PASSWORD_ALL,
+				'name' => $this->l('Accept all')
+			),
+			array(
+				'value' => PS_PASSWORD_ALPA_NUMBER,
+				'name' => $this->l('Alpha and number required')
+			),
+			array(
+				'value' => PS_PASSWORD_ALPA_NUMBER_SPECIAL,
+				'name' => $this->l('Alpha, number and special required')
+			)
+		);
 
 		$this->fields_options = array(
 			'general' => array(
@@ -95,6 +110,38 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
+					),
+				),
+				'submit' => array('title' => $this->l('Save')),
+			),
+			'passwords' => array(
+				'title' =>	$this->l('Password options'),
+				'icon' =>	'icon-cogs',
+				'fields' =>	array(
+					'PS_CUSTOMER_PASSWORD_MIN_LENGTH' => array(
+						'title' => $this->l('Password min lenght'),
+						'hint' => $this->l('Password minimum size.'),
+						'validation' => 'isUnsignedInt',
+						'cast' => 'intval',
+						'size' => 5,
+						'type' => 'text',
+					),
+					'PS_CUSTOMER_PASSWORD_MAX_LENGTH' => array(
+						'title' => $this->l('Password max lenght'),
+						'hint' => $this->l('Password maximum size.'),
+						'validation' => 'isUnsignedInt',
+						'cast' => 'intval',
+						'size' => 5,
+						'type' => 'text',
+					),
+					'PS_CUSTOMER_PASSWORD_CHARS' => array(
+						'title' => $this->l('Password rule'),
+						'hint' => $this->l('Chars needed for a valid password.'),
+						'validation' => 'isInt',
+						'cast' => 'intval',
+						'type' => 'select',
+						'list' => $customer_password_chars,
+						'identifier' => 'value'
 					),
 				),
 				'submit' => array('title' => $this->l('Save')),

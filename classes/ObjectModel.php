@@ -1041,7 +1041,11 @@ abstract class ObjectModelCore
 			// Hack for postcode required for country which does not have postcodes
 			if (!empty($value) || $value === '0' || ($field == 'postcode' && $value == '0'))
 			{
-				if (isset($data['validate']) && !Validate::$data['validate']($value) && (!empty($value) || $data['required']))
+				if ($field == 'passwd' && !Validate::isPasswdStrongEnough($value) && (!empty($value) || $data['required']))
+				{
+					$errors[$field] = '<b>'.Tools::displayError('is not strongh enough.').'</b> ';
+				}
+				else if (isset($data['validate']) && !Validate::$data['validate']($value) && (!empty($value) || $data['required']))
 					$errors[$field] = '<b>'.self::displayFieldName($field, get_class($this), $htmlentities).'</b> '.Tools::displayError('is invalid.');
 				else
 				{

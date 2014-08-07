@@ -39,8 +39,11 @@ class ToolsCore
 	* @param string $flag Output type (NUMERIC, ALPHANUMERIC, NO_NUMERIC)
 	* @return string Password
 	*/
-	public static function passwdGen($length = 8, $flag = 'ALPHANUMERIC')
+	public static function passwdGen($length = 8, $flag = 'ALPHANUMERIC', $customer_valid = false)
 	{
+		if ($customer_valid)
+			$length = max((int)Configuration::get('PS_CUSTOMER_PASSWORD_MIN_LENGTH'), $length);
+			
 		switch ($flag)
 		{
 			case 'NUMERIC':
@@ -49,6 +52,9 @@ class ToolsCore
 			case 'NO_NUMERIC':
 				$str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 				break;
+			case 'SPECIALS':
+				$str = '?!%+$&()-_*';
+				break;
 			default:
 				$str = 'abcdefghijkmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 				break;
@@ -56,6 +62,23 @@ class ToolsCore
 
 		for ($i = 0, $passwd = ''; $i < $length; $i++)
 			$passwd .= Tools::substr($str, mt_rand(0, Tools::strlen($str) - 1), 1);
+		
+		
+		if ($customer_valid)
+		{
+			$rule = Configuration::get('PS_CUSTOMER_PASSWORD_CHARS');
+			if ($rule == PS_PASSWORD_ALPA_NUMBER)
+			{
+				$passwd  .=  Tools::passwdGen('1', 'NUMERIC');
+				$passwd  .=  Tools::passwdGen('1', 'NO_NUMERIC');
+			}
+			if ($rule == PS_PASSWORD_ALPA_NUMBER_SPECIAL)
+			{
+				$passwd  .=  Tools::passwdGen('1', 'SPECIALS');
+				$passwd  .=  Tools::passwdGen('1', 'NUMERIC');
+				$passwd  .=  Tools::passwdGen('1', 'NO_NUMERIC');
+			}
+		}
 		return $passwd;
 	}
 
