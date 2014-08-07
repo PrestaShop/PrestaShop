@@ -275,7 +275,7 @@ $(document).on('click', '.product_quantity_up', function(e){
     e.preventDefault();
     fieldName = $(this).data('field-qty');
     var currentVal = parseInt($('input[name='+fieldName+']').val());
-	if (quantityAvailable > 0)
+	if (!allowBuyWhenOutOfStock && quantityAvailable > 0)
 		quantityAvailableT = quantityAvailable;
 	else
 		quantityAvailableT = 100000000;
