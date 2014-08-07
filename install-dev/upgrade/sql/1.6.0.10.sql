@@ -30,8 +30,8 @@ ALTER TABLE `PREFIX_order_slip` ADD `total_products_tax_excl` DECIMAL(20, 6) NUL
 ALTER TABLE `PREFIX_order_slip_detail` ADD `unit_price_tax_excl` DECIMAL(20, 6) NULL AFTER `product_quantity`, ADD `unit_price_tax_incl` DECIMAL(20, 6) NULL AFTER  `unit_price_tax_excl`, ADD `total_price_tax_excl` DECIMAL(20, 6) NULL AFTER `unit_price_tax_incl`, ADD `total_price_tax_incl` DECIMAL(20, 6) NULL AFTER `total_price_tax_excl`;
 
 CREATE TABLE IF NOT EXISTS `PREFIX_order_slip_detail_tax` (
-  `id_order_slip_detail` int(11) NOT NULL,
-  `id_tax` int(11) NOT NULL,
+  `id_order_slip_detail` int(11) unsigned NOT NULL,
+  `id_tax` int(11) unsigned NOT NULL,
   `unit_amount` decimal(16,6) NOT NULL DEFAULT '0.000000',
   `total_amount` decimal(16,6) NOT NULL DEFAULT '0.000000',
   KEY (`id_order_slip_detail`),
@@ -41,3 +41,14 @@ CREATE TABLE IF NOT EXISTS `PREFIX_order_slip_detail_tax` (
 ALTER TABLE `PREFIX_tax_rules_group` ADD `deleted` TINYINT(1) UNSIGNED NOT NULL, ADD `date_add` DATETIME NOT NULL, ADD `date_upd` DATETIME NOT NULL;
 ALTER TABLE `PREFIX_order_detail` ADD `id_tax_rules_group` INT(11) UNSIGNED DEFAULT '0' AFTER `product_weight`, ADD INDEX `id_tax_rules_group` (`id_tax_rules_group`);
  
+CREATE TABLE IF NOT EXISTS `PREFIX_mail` (
+  `id_mail` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `recipient` varchar(126) NOT NULL,
+  `template` varchar(62) NOT NULL,
+  `subject` varchar(254) NOT NULL,
+  `id_lang` int(11) unsigned NOT NULL,
+  `date_add` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_mail`),
+  KEY `recipient` (`recipient`(10))
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_LOG_EMAILS', 1, now(), now());

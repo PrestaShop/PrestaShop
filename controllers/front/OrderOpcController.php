@@ -405,6 +405,18 @@ class OrderOpcControllerCore extends ParentOrderController
 		$this->context->smarty->assign('field_required', $this->context->customer->validateFieldsRequiredDatabase());
 
 		$this->_processAddressFormat();
+		if (!$this->context->customer->isLogged(true))
+		{
+			$object = new Address;
+			$required = $object->getFieldsRequiredDatabase();
+			$fields = array();
+
+			foreach ($required as $field)
+				$fields[] = $field['field_name'];
+
+			$this->context->smarty->assign('required_fields', $fields);
+		}
+
 		$this->setTemplate(_PS_THEME_DIR_.'order-opc.tpl');
 	}
 
