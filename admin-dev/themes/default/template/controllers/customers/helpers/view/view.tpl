@@ -457,7 +457,7 @@
 			{if count($emails)}
 			<div class="panel">
 				<div class="panel-heading">
-					<i class="icon-time"></i> {l s='Last emails'}
+					<i class="icon-envelope"></i> {l s='Last emails'}
 				</div>
 				<table class="table">
 					<thead>
