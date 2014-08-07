@@ -757,6 +757,8 @@ class AdminCustomersControllerCore extends AdminController
 			$interested[$i]['name'] = Tools::htmlentitiesUTF8($product->name);
 		}
 
+		$emails = $customer->getLastEmails();
+
 		$connections = $customer->getLastConnections();
 		if (!is_array($connections))
 			$connections = array();
@@ -808,6 +810,8 @@ class AdminCustomersControllerCore extends AdminController
 			'carts' => $carts,
 			// Interested
 			'interested' => $interested,
+			// Emails
+			'emails' => $emails,
 			// Connections
 			'connections' => $connections,
 			// Referrers
