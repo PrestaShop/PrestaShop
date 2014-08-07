@@ -679,10 +679,12 @@ class AdminMetaControllerCore extends AdminController
 			$helper = new HelperOptions($this);
 			$this->setHelperDisplay($helper);
 			$helper->toolbar_scroll = true;
-			$helper->toolbar_btn = array('save' => array(
-								'href' => '#',
-								'desc' => $this->l('Save')
-							));
+			$helper->toolbar_btn = array(
+				'save' => array(
+					'href' => '#',
+					'desc' => $this->l('Save')
+				)
+			);
 			$helper->id = $this->id;
 			$helper->tpl_vars = $this->tpl_option_vars;
 			$options = $helper->generateOptions($this->fields_options);

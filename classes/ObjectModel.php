@@ -450,7 +450,6 @@ abstract class ObjectModelCore
 		if ($autodate && property_exists($this, 'date_upd'))
 			$this->date_upd = date('Y-m-d H:i:s');
 
-
 		if (Shop::isTableAssociated($this->def['table']))
 		{
 			$id_shop_list = Shop::getContextListShopID();
@@ -495,7 +494,7 @@ abstract class ObjectModelCore
 				{
 					foreach (array_keys($field) as $key)
 						if (!Validate::isTableOrIdentifier($key))
-							throw new PrestaShopException('key '.$key.' is not table or identifier, ');
+							throw new PrestaShopException('key '.$key.' is not table or identifier');
 					$field[$this->def['primary']] = (int)$this->id;
 
 					if ($asso !== false && $asso['type'] == 'fk_shop')
