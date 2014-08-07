@@ -562,8 +562,23 @@ class CustomerCore extends ObjectModel
 		return $result;
 	}
 
+	public function getLastEmails()
+	{
+		if (!$this->id)
+			return array();
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		SELECT m.*, l.name as language
+		FROM `'._DB_PREFIX_.'mail` m
+		LEFT JOIN `'._DB_PREFIX_.'lang` l ON m.id_lang = l.id_lang
+		WHERE `recipient` = "'.pSQL($this->email).'"
+		ORDER BY m.date_add DESC
+		LIMIT 10');
+	}
+
 	public function getLastConnections()
 	{
+		if (!$this->id)
+			return array();
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT c.date_add, COUNT(cp.id_page) AS pages, TIMEDIFF(MAX(cp.time_end), c.date_add) as time, http_referer,INET_NTOA(ip_address) as ipaddress
 		FROM `'._DB_PREFIX_.'guest` g

@@ -48,6 +48,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_mail` (
   `subject` varchar(254) NOT NULL,
   `id_lang` int(11) unsigned NOT NULL,
   `date_add` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id_mail`)
+  PRIMARY KEY (`id_mail`),
+  KEY `recipient` (`recipient`(10))
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_LOG_EMAILS', 1, now(), now());
