@@ -37,7 +37,7 @@ class RequestSqlCore extends ObjectModel
 		'primary' => 'id_request_sql',
 		'fields' => array(
 			'name' => 	array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true, 'size' => 200),
-			'sql' => 	array('type' => self::TYPE_STRING, 'validate' => 'isString', 'required' => true),
+			'sql' => 	array('type' => self::TYPE_SQL, 'validate' => 'isString', 'required' => true),
 		),
 	);
 
@@ -127,14 +127,12 @@ class RequestSqlCore extends ObjectModel
 	{
 		if (!$tab)
 			return false;
-		else if (isset($tab['UNION']))
+		elseif (isset($tab['UNION']))
 		{
 			$union = $tab['UNION'];
 			foreach ($union as $tab)
-			{
 				if (!$this->validateSql($tab, $in, $sql))
 					return false;
-			}
 			return true;
 		}
 		else
@@ -153,41 +151,40 @@ class RequestSqlCore extends ObjectModel
 	{
 		if (!$this->testedRequired($tab))
 			return false;
-		else if (!$this->testedUnauthorized($tab))
+		elseif (!$this->testedUnauthorized($tab))
 			return false;
-		else if (!$this->checkedFrom($tab['FROM']))
+		elseif (!$this->checkedFrom($tab['FROM']))
 			return false;
-		else if (!$this->checkedSelect($tab['SELECT'], $tab['FROM'], $in))
+		elseif (!$this->checkedSelect($tab['SELECT'], $tab['FROM'], $in))
 			return false;
-		else if (isset($tab['WHERE']))
+		elseif (isset($tab['WHERE']))
 		{
 			if (!$this->checkedWhere($tab['WHERE'], $tab['FROM'], $sql))
 				return false;
 		}
-		else if (isset($tab['HAVING']))
+		elseif (isset($tab['HAVING']))
 		{
 			if (!$this->checkedHaving($tab['HAVING'], $tab['FROM']))
 				return false;
 		}
-		else if (isset($tab['ORDER']))
+		elseif (isset($tab['ORDER']))
 		{
 			if (!$this->checkedOrder($tab['ORDER'], $tab['FROM']))
 				return false;
 		}
-		else if (isset($tab['GROUP']))
+		elseif (isset($tab['GROUP']))
 		{
 			if (!$this->checkedGroupBy($tab['GROUP'], $tab['FROM']))
 				return false;
 		}
-		else if (isset($tab['LIMIT']))
+		elseif (isset($tab['LIMIT']))
 		{
 			if (!$this->checkedLimit($tab['LIMIT']))
 				return false;
 		}
-		if (empty($this->_errors))
-			if (!Db::getInstance()->executeS($sql))
-				return false;
 
+		if (empty($this->_errors) && !Db::getInstance()->executeS($sql))
+			return false;
 		return true;
 	}
 
@@ -227,11 +224,19 @@ class RequestSqlCore extends ObjectModel
 	 */
 	public function cutJoin($attrs, $from)
 	{
-		$attrs = explode('=', str_replace(' ', '', $attrs));
-		foreach ($attrs as $attr)
+		$tab = array();
+		$components = explode(' AND ', $attrs);
+		foreach ($components as $component)
 		{
-			if ($attribut = $this->cutAttribute(trim($attr), $from))
-				$tab[] = $attribut;
+			$attrs = explode('=', str_replace(' ', '', $component));
+			foreach ($attrs as $attr)
+			{
+				$attr = trim($attr);
+				if (Validate::isUnsignedInt($attr))
+					continue;
+				if ($attribut = $this->cutAttribute($attr, $from))
+					$tab[] = $attribut;
+			}
 		}
 		return $tab;
 	}
@@ -249,26 +254,25 @@ class RequestSqlCore extends ObjectModel
 		if (preg_match('/((`(\()?([a-z0-9_])+`(\))?)|((\()?([a-z0-9_])+(\))?))\.((`(\()?([a-z0-9_])+`(\))?)|((\()?([a-z0-9_])+(\))?))$/i', $attr, $matches, PREG_OFFSET_CAPTURE))
 		{
 			$tab = explode('.', str_replace(array('`', '(', ')'), '', $matches[0][0]));
-			if (!$table = $this->returnNameTable($tab[0], $from))
-				return false;
-			else
-				return array ('table' => $table,
-							'alias' => $tab[0],
-							'attribut' => $tab[1],
-							'string' => $attr);
+			if ($table = $this->returnNameTable($tab[0], $from))
+				return array(
+					'table' => $table,
+					'alias' => $tab[0],
+					'attribut' => $tab[1],
+					'string' => $attr
+				);
 		}
 		elseif (preg_match('/((`(\()?([a-z0-9_])+`(\))?)|((\()?([a-z0-9_])+(\))?))$/i', $attr, $matches, PREG_OFFSET_CAPTURE))
 		{
 			$attribut = str_replace(array('`', '(', ')'), '', $matches[0][0]);
-			if (!$table = $this->returnNameTable(false, $from))
-				return false;
-			else
-				return array('table' => $table,
-							'attribut' => $attribut,
-							'string' => $attr);
+			if ($table = $this->returnNameTable(false, $from, $attr))
+				return array(
+					'table' => $table,
+					'attribut' => $attribut,
+					'string' => $attr
+				);
 		}
-		else
-			return false;
+		return false;
 	}
 
 	/**
@@ -278,23 +282,32 @@ class RequestSqlCore extends ObjectModel
 	 * @param $tables
 	 * @return array|bool
 	 */
-	public function returnNameTable($alias = false, $tables)
+	public function returnNameTable($alias = false, $tables, $attr = null)
 	{
 		if ($alias)
 		{
 			foreach ($tables as $table)
-			{
 				if ($table['alias'] == $alias)
 					return array($table['table']);
-			}
 		}
-		else if (!$alias && (count($tables) > 1))
+		elseif (count($tables) > 1)
 		{
+			if ($attr !== null)
+			{
+				$tab = array();
+				foreach ($tables as $table)
+					if ($this->attributExistInTable($attr, $table['table']))
+						$tab = $table['table'];
+				if (count($tab) == 1)
+					return $tab;
+			}
+
 			$this->error_sql['returnNameTable'] = false;
 			return false;
 		}
 		else
 		{
+			$tab = array();
 			foreach ($tables as $table)
 				$tab[] = $table['table'];
 			return $tab;
@@ -310,11 +323,13 @@ class RequestSqlCore extends ObjectModel
 	 */
 	public function attributExistInTable($attr, $table)
 	{
+		if (!$attr)
+			return true;
 		if (is_array($table) && (count($table) == 1))
 			$table = $table[0];
 		$attributs = $this->getAttributesByTable($table);
 		foreach ($attributs as $attribut)
-			if ($attribut['Field'] == trim($attr))
+			if ($attribut['Field'] == trim($attr, ' `'))
 				return true;
 		return false;
 	}
@@ -442,13 +457,10 @@ class RequestSqlCore extends ObjectModel
 					}
 				}
 			}
-			else
+			elseif ($in)
 			{
-				if ($in)
-				{
-					$this->error_sql['checkedSelect']['*'] = false;
-					return false;
-				}
+				$this->error_sql['checkedSelect']['*'] = false;
+				return false;
 			}
 		}
 		return true;
@@ -649,4 +661,3 @@ class RequestSqlCore extends ObjectModel
 		return true;
 	}
 }
-
