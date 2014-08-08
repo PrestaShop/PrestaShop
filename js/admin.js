@@ -1447,3 +1447,35 @@ function isCleanHtml(content)
 function parseDate(date){
 	return $.datepicker.parseDate("yy-mm-dd", date);
 }
+
+function createSqlQueryName()
+{
+	var container = false;
+	if ($('.breadcrumb-container'))
+		container = $('.breadcrumb-container').first().text().replace(/\s+/g, ' ').trim();
+	var current = false;
+	if ($('.breadcrumb-current'))
+		current = $('.breadcrumb-current').first().text().replace(/\s+/g, ' ').trim();
+	var title = false;
+	if ($('.page-title'))
+		title = $('.page-title').first().text().replace(/\s+/g, ' ').trim();
+	
+	var name = false;
+	if (container && current && container != current)
+		name = container + ' > ' + current;
+	else if (container)
+		name = container;
+	else if (current)
+		name = current;
+	
+	if (title && title != current && title != container)
+	{
+		if (name)
+			name = name + ' > ' + title;
+		else
+			name = title;
+	}
+
+	return name.trim();
+}
+
