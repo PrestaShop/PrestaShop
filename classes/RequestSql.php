@@ -225,19 +225,15 @@ class RequestSqlCore extends ObjectModel
 	public function cutJoin($attrs, $from)
 	{
 		$tab = array();
-		$components = explode(' AND ', $attrs);
-		foreach ($components as $component)
+
+		foreach ($attrs as $attr)
 		{
-			$attrs = explode('=', str_replace(' ', '', $component));
-			foreach ($attrs as $attr)
-			{
-				$attr = trim($attr);
-				if (Validate::isUnsignedInt($attr))
-					continue;
-				if ($attribut = $this->cutAttribute($attr, $from))
-					$tab[] = $attribut;
-			}
+			if (in_array($attr['expr_type'], array('operator', 'const')))
+				continue;
+			if ($attribut = $this->cutAttribute($attr['base_expr'], $from))
+				$tab[] = $attribut;
 		}
+
 		return $tab;
 	}
 
@@ -287,7 +283,7 @@ class RequestSqlCore extends ObjectModel
 		if ($alias)
 		{
 			foreach ($tables as $table)
-				if ($table['alias'] == $alias)
+				if (isset($table['alias']) && $table['alias']['no_quotes'] == $alias)
 					return array($table['table']);
 		}
 		elseif (count($tables) > 1)
@@ -432,7 +428,7 @@ class RequestSqlCore extends ObjectModel
 			$attribut = $select[$i];
 			if ($attribut['base_expr'] != '*')
 			{
-				if ($attribut['expr_type'] == 'colref' || $attribut['expr_type'] == 'reserved')
+				if ($attribut['expr_type'] == 'colref')
 				{
 					if ($attr = $this->cutAttribute(trim($attribut['base_expr']), $from))
 					{
