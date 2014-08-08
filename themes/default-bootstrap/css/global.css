@@ -5702,7 +5702,7 @@ span.exclusive {
     border-color: #01314e #004b74 #0079b6 #004b74; }
     .button.ajax_add_to_cart_button:hover span {
       filter: none;
-      background: #0084bf; }
+      background: purple; }
 
 .button.lnk_view {
   font: 700 17px/21px Arial, Helvetica, sans-serif;
