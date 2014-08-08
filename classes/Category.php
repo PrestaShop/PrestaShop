@@ -183,7 +183,7 @@ class CategoryCore extends ObjectModel
 	public function update($null_values = false)
 	{
 		if ($this->id_parent == $this->id)
-			throw new PrestaShopException('a category cannot be it\'s own parent');
+			throw new PrestaShopException('a category cannot be its own parent');
 
 		if ($this->is_root_category)
 			$this->id_parent = (int)Configuration::get('PS_ROOT_CATEGORY');
