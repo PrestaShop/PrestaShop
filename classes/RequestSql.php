@@ -426,7 +426,7 @@ class RequestSqlCore extends ObjectModel
 		for ($i = 0; $i < $nb; $i++)
 		{
 			$attribut = $select[$i];
-			if ($attribut['base_expr'] != '*')
+			if ($attribut['base_expr'] != '*' && !preg_match('/\.*$/', $attribut['base_expr']))
 			{
 				if ($attribut['expr_type'] == 'colref')
 				{
