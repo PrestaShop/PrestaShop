@@ -326,7 +326,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 				return true;
 				break;
 			default:
-				$exception = new WebserviceException(sprintf('Image of type "%s" does not exists', $this->wsObject->urlSegment[1]), array(48, 400));
+				$exception = new WebserviceException(sprintf('Image of type "%s" does not exist', $this->wsObject->urlSegment[1]), array(48, 400));
 				throw $exception->setDidYouMean($this->wsObject->urlSegment[1], array_keys($this->imageTypes));
 		}
 	}
@@ -401,7 +401,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
 			// If the image type does not exist...
 			default:
-				$exception = new WebserviceException(sprintf('General image of type "%s" does not exists', $this->wsObject->urlSegment[2]), array(53, 400));
+				$exception = new WebserviceException(sprintf('General image of type "%s" does not exist', $this->wsObject->urlSegment[2]), array(53, 400));
 				throw $exception->setDidYouMean($this->wsObject->urlSegment[2], array_keys($this->imageTypes['general']));
 		}
 		// The general image type is valid, now we try to do action in relation to the method
@@ -756,7 +756,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 					WHERE id_customization_field = '.(int)$this->wsObject->urlSegment[4].'
 					AND type = 0');
 				if (empty($results))
-					throw new WebserviceException('Customization field does not exists.', array(61, 500));
+					throw new WebserviceException('Customization field does not exist.', array(61, 500));
 				$results = Db::getInstance()->executeS(
 					'SELECT * 
 					FROM `'._DB_PREFIX_.'customized_data` 
@@ -1057,7 +1057,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
 				// Check mime content type
 				if(!$mime_type || !in_array($mime_type, $this->acceptedImgMimeTypes))
-					throw new WebserviceException('This type of image format not recognized, allowed formats are: '.implode('", "', $this->acceptedImgMimeTypes), array(73, 400));
+					throw new WebserviceException('This type of image format is not recognized, allowed formats are: '.implode('", "', $this->acceptedImgMimeTypes), array(73, 400));
 				// Check error while uploading
 				elseif ($file['error'])
 					throw new WebserviceException('Error while uploading image. Please change your server\'s settings', array(74, 400));
@@ -1094,7 +1094,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 					{
 						$product = new Product((int)$this->wsObject->urlSegment[2]);
 						if (!Validate::isLoadedObject($product))
-							throw new WebserviceException('Product '.(int)$this->wsObject->urlSegment[2].' doesn\'t exists', array(76, 400));
+							throw new WebserviceException('Product '.(int)$this->wsObject->urlSegment[2].' does not exist', array(76, 400));
 						$image = new Image();
 						$image->id_product = (int)($product->id);
 						$image->position = Image::getHighestPosition($product->id) + 1;
@@ -1107,7 +1107,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 						if (!$image->add())
 							throw new WebserviceException('Error while creating image', array(76, 400));
 						if (!Validate::isLoadedObject($product))
-							throw new WebserviceException('Product '.(int)$this->wsObject->urlSegment[2].' doesn\'t exists', array(76, 400));
+							throw new WebserviceException('Product '.(int)$this->wsObject->urlSegment[2].' does not exist', array(76, 400));
 						Hook::exec('updateProduct', array('id_product' => (int)$this->wsObject->urlSegment[2]));
 					}
 
