@@ -2041,13 +2041,11 @@ class AdminControllerCore extends Controller
 
 		// For compatibility reasons, we have to check standard actions in class attributes
 		foreach ($this->actions_available as $action)
-		{
 			if (!in_array($action, $this->actions) && isset($this->$action) && $this->$action)
 				$this->actions[] = $action;
-		}
+
 		$helper->is_cms = $this->is_cms;
-		if (_PS_MODE_DEV_)
-			$helper->sql = $this->_listsql;
+		$helper->sql = $this->_listsql;
 		$list = $helper->generateList($this->_list, $this->fields_list);
 
 		return $list;

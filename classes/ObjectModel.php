@@ -36,6 +36,7 @@ abstract class ObjectModelCore
 	const TYPE_DATE = 5;
 	const TYPE_HTML = 6;
 	const TYPE_NOTHING = 7;
+	const TYPE_SQL = 8;
 
 	/**
 	 * List of data to format
@@ -398,6 +399,11 @@ abstract class ObjectModelCore
 			case self::TYPE_HTML:
 				if ($purify)
 					$value = Tools::purifyHTML($value);
+				if ($with_quotes)
+					return '\''.pSQL($value, true).'\'';
+				return pSQL($value, true);
+
+			case self::TYPE_SQL:
 				if ($with_quotes)
 					return '\''.pSQL($value, true).'\'';
 				return pSQL($value, true);
