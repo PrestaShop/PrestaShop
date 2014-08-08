@@ -77,8 +77,9 @@
 					<div class="row">
 						<div class="col-lg-12">
 							<p class="help-block">
-								<strong>{l s='Check / Uncheck all'}</strong>
-								{l s='(If you are editing this page for several shops, some fields may be disabled. If you need to edit them, you will need to check the box for each field)'}
+								<strong>{l s='Check / Uncheck all'}</strong><br />
+								{l s='You are editing this page for a specific shop or group. Click "Yes" to check all fields, "No" to uncheck all.'}<br />
+ 								{l s='If you check a field, change its value, and save, the multistore behavior will not apply to this shop (or group), for this particular parameter.'}
 							</p>
 						</div>
 					</div>
