@@ -68,6 +68,13 @@
         		</a>
         	</li>
         {/if}
+        {if isset($vimeo_url) && $vimeo_url != ''}
+        	<li class="vimeo">
+        		<a target="_blank"  href="{$vimeo_url|escape:html:'UTF-8'}">
+        			<span>{l s='Vimeo' mod='blocksocial'}</span>
+        		</a>
+        	</li>
+        {/if}
 	</ul>
     <h4>{l s='Follow us' mod='blocksocial'}</h4>
 </section>
