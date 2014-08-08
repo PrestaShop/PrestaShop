@@ -1973,6 +1973,13 @@ div.star a:hover {
 							}
 						}
 					}
+					&.vimeo {
+						a {
+							&:before {
+								content: "\f194";
+							}
+						}
+					}
 				}
 			}
 			h4 {
