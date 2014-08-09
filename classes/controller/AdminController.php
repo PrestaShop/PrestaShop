@@ -2415,12 +2415,17 @@ class AdminControllerCore extends Controller
 
 		// Replace existing shop if necessary
 		if (!$shop_id)
+		{
 			$this->context->shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+			// Replace current default country
+			$this->context->country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
+		}
 		elseif ($this->context->shop->id != $shop_id)
+		{
 			$this->context->shop = new Shop($shop_id);
-
-		// Replace current default country
-		$this->context->country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
+			// Replace current default country
+			$this->context->country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
+		}
 	}
 
 	/**
