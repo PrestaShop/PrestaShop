@@ -65,6 +65,7 @@ class AdminShopUrlControllerCore extends AdminController
 				'title' => $this->l('Is it the main URL?'),
 				'align' => 'center',
 				'activeVisu' => 'main',
+				'active' => 'status',
 				'type' => 'bool',
 				'orderby' => false,
 				'filter_key' => 'main',
@@ -148,6 +149,7 @@ class AdminShopUrlControllerCore extends AdminController
 							'type' => 'switch',
 							'label' => $this->l('Is it the main URL for this shop?'),
 							'name' => 'main',
+							'is_bool' => true,
 							'class' => 't',
 							'values' => array(
 								array(
@@ -176,6 +178,7 @@ class AdminShopUrlControllerCore extends AdminController
 							'label' => $this->l('Enabled'),
 							'name' => 'active',
 							'required' => false,
+							'is_bool' => true,
 							'class' => 't',
 							'values' => array(
 								array(
@@ -257,7 +260,7 @@ class AdminShopUrlControllerCore extends AdminController
 		if (!($obj = $this->loadObject(true)))
 			return;
 
-		self::$currentIndex = self::$currentIndex.($obj->id ? '&shop_id='.(int)$obj->id : '');
+		self::$currentIndex = self::$currentIndex.($obj->id ? '&shop_id='.(int)$obj->id_shop : '');
 
 		$current_shop = Shop::initialize();
 
@@ -273,7 +276,7 @@ class AdminShopUrlControllerCore extends AdminController
 			'domain' => trim(Validate::isLoadedObject($obj) ? $this->getFieldValue($obj, 'domain') : $current_shop->domain),
 			'domain_ssl' => trim(Validate::isLoadedObject($obj) ? $this->getFieldValue($obj, 'domain_ssl') : $current_shop->domain_ssl),
 			'physical_uri' => trim(Validate::isLoadedObject($obj) ? $this->getFieldValue($obj, 'physical_uri') : $current_shop->physical_uri),
-			'active' => true
+			'active' => trim(Validate::isLoadedObject($obj) ? $this->getFieldValue($obj, 'active') : true)
 		);
 
 		return parent::renderForm();
