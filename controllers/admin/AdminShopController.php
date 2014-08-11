@@ -43,7 +43,7 @@ class AdminShopControllerCore extends AdminController
 
 		$this->list_skip_actions['delete'] = array((int)Configuration::get('PS_SHOP_DEFAULT'));
 		$this->fields_list = array(
-			'shop_id' => array(
+			'id_shop' => array(
 				'title' => $this->l('Shop ID'),
 				'align' => 'center',
 				'class' => 'fixed-width-xs'
