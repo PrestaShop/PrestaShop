@@ -41,6 +41,10 @@ $(document).on('click', '.lnk_more', function(e){
 function resizeCatimg()
 {
 	var div = $('.cat_desc').parent('div');
+	
+	if (div.css('background-image') == 'none')
+		return;
+
 	var image = new Image;
 	$(image).load(function(){
 	    var width  = image.width;
