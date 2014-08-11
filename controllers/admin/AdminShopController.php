@@ -668,7 +668,8 @@ class AdminShopControllerCore extends AdminController
 		$categories = Tools::getValue('categoryBox');
 		array_unshift($categories, Configuration::get('PS_ROOT_CATEGORY'));
 		Category::updateFromShop($categories, $object->id);
-		Search::indexation(true);
+		if (Tools::getValue('useImportData') && ($import_data = Tools::getValue('importData')) && is_array($import_data) && isset($import_data['product']))
+			Search::indexation(true);
 		return $object;
 	}
 
