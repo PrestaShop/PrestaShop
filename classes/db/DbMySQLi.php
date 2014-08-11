@@ -225,11 +225,13 @@ class DbMySQLiCore extends Db
 		if (mysqli_connect_error())
 			return false;
 
-		$sql = '
-			CREATE TABLE `'.$prefix.'test` (
+		if ($engine === null)
+			$engine = 'MyISAM';
+
+		$result = $link->query('
+		CREATE TABLE `'.$prefix.'test` (
 			`test` tinyint(1) unsigned NOT NULL
-			) ENGINE=MyISAM';
-		$result = $link->query($sql);
+		) ENGINE='.$engine);
 
 		if (!$result)
 			return $link->error;
@@ -245,6 +247,15 @@ class DbMySQLiCore extends Db
 	{
 		$link = @new mysqli($server, $user, $pwd, $db);
 		$ret = $link->query("SET NAMES 'UTF8'");
+		$link->close();
+		return $ret;
+	}
+
+	public static function checkAutoIncrement($server, $user, $pwd)
+	{
+		$link = @new mysqli($server, $user, $pwd);
+		$ret = (bool)(($result = $link->query('SELECT @@auto_increment_increment as aii')) && ($row = $result->fetch_assoc()) && $row['aii'] == 1);
+		$ret &= (bool)(($result = $link->query('SELECT @@auto_increment_offset as aio')) && ($row = $result->fetch_assoc()) && $row['aio'] == 1);
 		$link->close();
 		return $ret;
 	}
