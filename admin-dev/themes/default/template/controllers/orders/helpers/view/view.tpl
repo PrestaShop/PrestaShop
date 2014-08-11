@@ -1223,7 +1223,7 @@
 			$(".textarea-autosize").autosize();
 
 			geocoder.geocode({
-				address: '{$addresses.delivery->address1},{$addresses.delivery->postcode},{$addresses.delivery->city}{if isset($addresses.deliveryState->name) && $addresses.delivery->id_state},{$addresses.deliveryState->name}{/if},{$addresses.delivery->country}'
+				address: '{$addresses.delivery->address1|escape:javascript},{$addresses.delivery->postcode|escape:javascript},{$addresses.delivery->city|escape:javascript}{if isset($addresses.deliveryState->name) && $addresses.delivery->id_state},{$addresses.deliveryState->name|escape:javascript}{/if},{$addresses.delivery->country|escape:javascript}'
 				}, function(results, status) {
 				if (status === google.maps.GeocoderStatus.OK)
 				{
@@ -1244,7 +1244,7 @@
 			});
 
 			geocoder.geocode({
-				address: '{$addresses.invoice->address1},{$addresses.invoice->postcode},{$addresses.invoice->city}{if isset($addresses.deliveryState->name) && $addresses.invoice->id_state},{$addresses.deliveryState->name}{/if},{$addresses.invoice->country}'
+				address: '{$addresses.invoice->address1|escape:javascript},{$addresses.invoice->postcode|escape:javascript},{$addresses.invoice->city|escape:javascript}{if isset($addresses.deliveryState->name) && $addresses.invoice->id_state},{$addresses.deliveryState->name|escape:javascript}{/if},{$addresses.invoice->country|escape:javascript}'
 				}, function(results, status) {
 				if (status === google.maps.GeocoderStatus.OK)
 				{
