@@ -42,7 +42,7 @@ class InstallSession
 
 	public function __construct()
 	{
-		session_name('install_'.md5($_SERVER['HTTP_HOST']));
+		session_name('install_'.substr(md5($_SERVER['HTTP_HOST']), 0, 12));
 		$session_started = session_start();
 		if (!($session_started)
 		|| (!isset($_SESSION['session_mode']) && (isset($_GET['_']) || isset($_POST['submitNext']) || isset($_POST['submitPrevious']) || isset($_POST['language']))))
