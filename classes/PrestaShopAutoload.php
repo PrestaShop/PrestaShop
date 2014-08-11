@@ -61,7 +61,7 @@ class PrestaShopAutoload
 	protected function __construct()
 	{
 		$this->root_dir = _PS_CORE_DIR_.'/';
-		$file = _PS_ROOT_DIR_.'/'.PrestaShopAutoload::INDEX_FILE;
+		$file = $this->normalizeDirectory(_PS_ROOT_DIR_).PrestaShopAutoload::INDEX_FILE;
 		if (@filemtime($file) && is_readable($file))
 			$this->index = include($file);
 		else
@@ -115,7 +115,7 @@ class PrestaShopAutoload
 					require_once($this->root_dir.$this->index[$classname.'Core']['path']);
 
 				$class_dir = (isset($this->index[$classname]['override'])
-					&& $this->index[$classname]['override'] === true) ? _PS_ROOT_DIR_.'/' : $this->root_dir;
+					&& $this->index[$classname]['override'] === true) ? $this->normalizeDirectory(_PS_ROOT_DIR_) : $this->root_dir;
 
 				if (isset($this->index[$classname]))
 					require_once($class_dir.$this->index[$classname]['path']);
@@ -147,7 +147,7 @@ class PrestaShopAutoload
 		$content = '<?php return '.var_export($classes, true).'; ?>';
 
 		// Write classes index on disc to cache it
-		$filename = _PS_ROOT_DIR_.'/'.PrestaShopAutoload::INDEX_FILE;
+		$filename = $this->normalizeDirectory(_PS_ROOT_DIR_).PrestaShopAutoload::INDEX_FILE;
 		$filename_tmp = tempnam(dirname($filename), basename($filename.'.'));
 		if ($filename_tmp !== false && file_put_contents($filename_tmp, $content) !== false)
 		{
@@ -171,7 +171,7 @@ class PrestaShopAutoload
 	protected function getClassesFromDir($path, $host_mode = false)
 	{
 		$classes = array();
-		$root_dir = $host_mode ? _PS_ROOT_DIR_.'/' : $this->root_dir;
+		$root_dir = $host_mode ? $this->normalizeDirectory(_PS_ROOT_DIR_) : $this->root_dir;
 
 		foreach (scandir($root_dir.$path) as $file)
 		{
@@ -209,5 +209,19 @@ class PrestaShopAutoload
 	public function getClassPath($classname)
 	{
 		return (isset($this->index[$classname]) && isset($this->index[$classname]['path'])) ? $this->index[$classname]['path'] : null;
+	}
+
+	private function normalizeDirectory($directory)
+	{
+		$last = $directory[strlen($directory) - 1];
+
+		if (in_array($last, array('/', '\\')))
+		{
+			$directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
+			return $directory;
+		}
+
+		$directory .= DIRECTORY_SEPARATOR;
+		return $directory;
 	}
 }
