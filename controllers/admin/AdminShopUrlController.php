@@ -34,7 +34,12 @@ class AdminShopUrlControllerCore extends AdminController
 	 	$this->lang = false;
 		$this->requiredDatabase = true;
 		$this->multishop_context = Shop::CONTEXT_ALL;
-		$this->id_shop = Tools::getValue('id_shop');
+
+		/* if $_GET['id_shop'] is transmitted, virtual url can be loaded in config.php, so we wether transmit shop_id in herfs */
+		if ($this->id_shop = (int)Tools::getValue('shop_id'))
+			$_GET['id_shop'] = $this->id_shop;
+		else
+			$this->id_shop = (int)Tools::getValue('id_shop');
 
 		$this->context = Context::getContext();
 
@@ -252,7 +257,8 @@ class AdminShopUrlControllerCore extends AdminController
 		if (!($obj = $this->loadObject(true)))
 			return;
 
-		self::$currentIndex = self::$currentIndex.'&id_shop='.$obj->id;
+		self::$currentIndex = self::$currentIndex.($obj->id ? '&shop_id='.(int)$obj->id : '');
+
 		$current_shop = Shop::initialize();
 
 		$list_shop_with_url = array();
@@ -287,12 +293,12 @@ class AdminShopUrlControllerCore extends AdminController
 
 			$this->page_header_toolbar_btn['edit'] = array(
 				'desc' => $this->l('Edit this shop'),
-				'href' => $this->context->link->getAdminLink('AdminShop').'&updateshop&id_shop='.(int)$this->id_shop,
+				'href' => $this->context->link->getAdminLink('AdminShop').'&updateshop&shop_id='.(int)$this->id_shop,
 			);
 
 			$this->page_header_toolbar_btn['new'] = array(
 				'desc' => $this->l('Add a new URL'),
-				'href' => $this->context->link->getAdminLink('AdminShopUrl').'&add'.$this->table.'&id_shop='.(int)$this->id_shop,
+				'href' => $this->context->link->getAdminLink('AdminShopUrl').'&add'.$this->table.'&shop_id='.(int)$this->id_shop,
 			);
 		}
 	}
@@ -311,7 +317,7 @@ class AdminShopUrlControllerCore extends AdminController
 
 			$this->toolbar_btn['new'] = array(
 				'desc' => $this->l('Add a new URL'),
-				'href' => $this->context->link->getAdminLink('AdminShopUrl').'&add'.$this->table.'&id_shop='.(int)$this->id_shop,
+				'href' => $this->context->link->getAdminLink('AdminShopUrl').'&add'.$this->table.'&shop_id='.(int)$this->id_shop,
 			);
 		}
 	}
@@ -402,7 +408,7 @@ class AdminShopUrlControllerCore extends AdminController
 			$result = parent::postProcess();
 
 		if ($this->redirect_after)
-			$this->redirect_after .= '&id_shop='.$this->id_shop;
+			$this->redirect_after .= '&shop_id='.(int)$this->id_shop;
 
 		return $result;
 	}
@@ -488,7 +494,7 @@ class AdminShopUrlControllerCore extends AdminController
 
 		$data = array(
 			$this->identifier => $id,
-			'href' => self::$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&id_shop='.(int)$this->id_shop.'&token='.($token != null ? $token : $this->token),
+			'href' => self::$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&shop_id='.(int)$this->id_shop.'&token='.($token != null ? $token : $this->token),
 			'action' => self::$cache_lang['Delete'],
 		);
 		
