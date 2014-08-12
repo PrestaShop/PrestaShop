@@ -43,7 +43,7 @@ class AdminShopControllerCore extends AdminController
 
 		$this->list_skip_actions['delete'] = array((int)Configuration::get('PS_SHOP_DEFAULT'));
 		$this->fields_list = array(
-			'shop_id' => array(
+			'id_shop' => array(
 				'title' => $this->l('Shop ID'),
 				'align' => 'center',
 				'class' => 'fixed-width-xs'
@@ -668,7 +668,11 @@ class AdminShopControllerCore extends AdminController
 		$categories = Tools::getValue('categoryBox');
 		array_unshift($categories, Configuration::get('PS_ROOT_CATEGORY'));
 		Category::updateFromShop($categories, $object->id);
-		Search::indexation(true);
+		if (Tools::getValue('useImportData') && ($import_data = Tools::getValue('importData')) && is_array($import_data) && isset($import_data['product']))
+		{
+			ini_set('max_execution_time', 7200); // like searchcron.php
+			Search::indexation(true);
+		}
 		return $object;
 	}
 

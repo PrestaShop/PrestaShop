@@ -2229,7 +2229,7 @@ class AdminControllerCore extends Controller
 		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/overrides.css', 'all', 99);
 
 		$this->addJquery();
-		$this->addjQueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox', 'storageapi' ));
+		$this->addjQueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox' ));
 		$this->addjQueryPlugin('growl', null, false);
 		$this->addJqueryUI(array('ui.slider', 'ui.datepicker'));
 
@@ -3365,7 +3365,6 @@ class AdminControllerCore extends Controller
 				<link href='//help.prestashop.com/css/help.css' rel='stylesheet'>
 				<link href='//fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet'>
 				<script src='"._PS_JS_DIR_."jquery/jquery-1.11.0.min.js'></script>
-				<script src='"._PS_JS_DIR_."jquery/plugins/jquery.storageapi.js'></script>
 				<script src='"._PS_JS_DIR_."admin.js'></script>
 				<script src='"._PS_JS_DIR_."tools.js'></script>
 				<script>
