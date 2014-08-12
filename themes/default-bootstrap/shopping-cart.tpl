@@ -97,10 +97,34 @@
 				</tr>
 			</thead>
 			<tfoot>
+				{assign var='rowspan_total' value=2+$total_discounts_num+$total_wrapping_taxes_num}
+
+				{if $use_taxes && $show_taxes && $total_tax != 0}
+					{assign var='rowspan_total' value=$rowspan_total+1}
+				{/if}
+
+				{if $priceDisplay != 0}
+					{assign var='rowspan_total' value=$rowspan_total+1}
+				{/if}
+
+				{if $total_shipping_tax_exc <= 0 && !isset($virtualCart)}
+					{assign var='rowspan_total' value=$rowspan_total+1}
+				{else}
+					{if $use_taxes && $total_shipping_tax_exc != $total_shipping}
+						{if $priceDisplay && $total_shipping_tax_exc > 0}
+							{assign var='rowspan_total' value=$rowspan_total+1}
+						{elseif $total_shipping > 0}
+							{assign var='rowspan_total' value=$rowspan_total+1}
+						{/if}
+					{elseif $total_shipping_tax_exc > 0}
+						{assign var='rowspan_total' value=$rowspan_total+1}
+					{/if}
+				{/if}
+
 				{if $use_taxes}
 					{if $priceDisplay}
 						<tr class="cart_total_price">
-							<td rowspan="{3+$total_discounts_num+$use_show_taxes+$total_wrapping_taxes_num}" colspan="3" id="cart_voucher" class="cart_voucher">
+							<td rowspan="{$rowspan_total}" colspan="3" id="cart_voucher" class="cart_voucher">
 								{if $voucherAllowed}
 									{if isset($errors_discount) && $errors_discount}
 										<ul class="alert alert-danger">
@@ -132,7 +156,7 @@
 						</tr>
 					{else}
 						<tr class="cart_total_price">
-							<td rowspan="{3+$total_discounts_num+$use_show_taxes+$total_wrapping_taxes_num}" colspan="2" id="cart_voucher" class="cart_voucher">
+							<td rowspan="{$rowspan_total}" colspan="2" id="cart_voucher" class="cart_voucher">
 								{if $voucherAllowed}
 									{if isset($errors_discount) && $errors_discount}
 										<ul class="alert alert-danger">
@@ -165,7 +189,7 @@
 					{/if}
 				{else}
 					<tr class="cart_total_price">
-						<td rowspan="{3+$total_discounts_num+$use_show_taxes+$total_wrapping_taxes_num}" colspan="2" id="cart_voucher" class="cart_voucher">
+						<td rowspan="{$rowspan_total}" colspan="2" id="cart_voucher" class="cart_voucher">
 							{if $voucherAllowed}
 								{if isset($errors_discount) && $errors_discount}
 									<ul class="alert alert-danger">
