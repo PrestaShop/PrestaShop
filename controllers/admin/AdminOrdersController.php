@@ -28,7 +28,7 @@ class BoOrder extends PaymentModule
 {
 	public $active = 1;
 	public $name = 'bo_order';
-	
+
 	public function __construct()
 	{
 		$this->displayName = $this->l('Back-office order');
@@ -343,7 +343,7 @@ class AdminOrdersControllerCore extends AdminController
 
 		return $this->createTemplate('_print_pdf_icon.tpl')->fetch();
 	}
-	
+
 	public function printNewCustomer($id_order, $tr)
 	{
 		return ($tr['new'] ? $this->l('Yes') : $this->l('No'));
@@ -516,6 +516,7 @@ class AdminOrdersControllerCore extends AdminController
 						$templateVars = array();
 						if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') && $order->shipping_number)
 							$templateVars = array('{followup}' => str_replace('@', $order->shipping_number, $carrier->url));
+
 						// Save all changes
 						if ($history->addWithemail(true, $templateVars))
 						{
@@ -1027,7 +1028,7 @@ class AdminOrdersControllerCore extends AdminController
 					$payment_module = Module::getInstanceByName($module_name);
 				else
 					$payment_module = new BoOrder();
-				
+
 				$cart = new Cart((int)$id_cart);
 				Context::getContext()->currency = new Currency((int)$cart->id_currency);
 				Context::getContext()->customer = new Customer((int)$cart->id_customer);
