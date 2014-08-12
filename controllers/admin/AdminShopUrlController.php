@@ -65,7 +65,7 @@ class AdminShopUrlControllerCore extends AdminController
 				'title' => $this->l('Is it the main URL?'),
 				'align' => 'center',
 				'activeVisu' => 'main',
-				'active' => 'status',
+				'active' => 'main',
 				'type' => 'bool',
 				'orderby' => false,
 				'filter_key' => 'main',
@@ -388,7 +388,8 @@ class AdminShopUrlControllerCore extends AdminController
 		$token = Tools::getValue('token') ? Tools::getValue('token') : $this->token;
 
 		$result = true;
-		if ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools::getValue($this->identifier))
+
+		if ((Tools::isSubmit('status'.$this->table) || Tools::isSubmit('status')) && Tools::getValue($this->identifier))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
@@ -400,6 +401,26 @@ class AdminShopUrlControllerCore extends AdminController
 						Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.$token);
 					else
 						$this->errors[] = Tools::displayError('An error occurred while updating the status.');
+				}
+				else
+					$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+			}
+			else
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
+		}
+		elseif (Tools::isSubmit('main'.$this->table) && Tools::getValue($this->identifier))
+		{
+			if ($this->tabAccess['edit'] === '1')
+			{
+				if (Validate::isLoadedObject($object = $this->loadObject()))
+				{	
+					if (!$object->main)
+					{
+						$result = $object->setMain();
+						Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$token);
+					}
+					else
+						$this->errors[] = Tools::displayError('You cannot change a main URL to a non-main URL. You have to set another URL as your Main URL for the selected shop.');
 				}
 				else
 					$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
@@ -438,17 +459,11 @@ class AdminShopUrlControllerCore extends AdminController
 	public function processAdd()
 	{
 		$object = $this->loadObject(true);
-				
+		
 		if ($object->canAddThisUrl(Tools::getValue('domain'), Tools::getValue('domain_ssl'), Tools::getValue('physical_uri'), Tools::getValue('virtual_uri')))
 			$this->errors[] = Tools::displayError('A shop URL that uses this domain already exists.');
-		
-		if ($object->id && Tools::getValue('main'))
-			$object->setMain();
 
-		if ($object->main && !Tools::getValue('main'))
-			$this->errors[] = Tools::displayError('You cannot change a main URL to a non-main URL. You have to set another URL as your Main URL for the selected shop.');
-
-		if (($object->main || Tools::getValue('main')) && !Tools::getValue('active'))
+		if (Tools::getValue('main') && !Tools::getValue('active'))
 			$this->errors[] = Tools::displayError('You cannot disable the Main URL.');
 
 		return parent::processAdd();
@@ -461,12 +476,20 @@ class AdminShopUrlControllerCore extends AdminController
 		if (trim(dirname(dirname($current_url['path'])), '/') == trim($this->object->getBaseURI(), '/'))
 			$this->redirect_shop_url = true;
 
+		$object = $this->loadObject(true);
+
+		if ($object->main && !Tools::getValue('main'))
+			$this->errors[] = Tools::displayError('You cannot change a main URL to a non-main URL. You have to set another URL as your Main URL for the selected shop.');
+
+		if (($object->main || Tools::getValue('main')) && !Tools::getValue('active'))
+			$this->errors[] = Tools::displayError('You cannot disable the Main URL.');
+
 		return parent::processUpdate();
 	}
 
 	protected function afterUpdate($object)
 	{
-		if (Tools::getValue('main'))
+		if ($object->id && Tools::getValue('main'))
 			$object->setMain();
 
 		if ($this->redirect_shop_url)
@@ -509,5 +532,3 @@ class AdminShopUrlControllerCore extends AdminController
 		return $tpl->fetch();
 	}
 }
-
-
