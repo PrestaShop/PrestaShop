@@ -1656,7 +1656,7 @@ abstract class ModuleCore
 				'module_key' => $obj->module_key,
 			);
 			$xml = Tools::addonsRequest('check_module', $params);
-			return (bool)stristr($xml, 'success');
+			return (bool)strpos($xml, 'success');
 		}
 	}
 
