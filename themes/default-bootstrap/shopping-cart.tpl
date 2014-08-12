@@ -90,17 +90,41 @@
 					{else}
 						{assign var='col_span_subtotal' value='2'}
 					{/if}
-					<th class="cart_unit item">{l s='Unit price'}</th>
-					<th class="cart_quantity item">{l s='Qty'}</th>
-					<th class="cart_total item">{l s='Total'}</th>
+					<th class="cart_unit item text-right">{l s='Unit price'}</th>
+					<th class="cart_quantity item text-center">{l s='Qty'}</th>
 					<th class="cart_delete last_item">&nbsp;</th>
+					<th class="cart_total item text-right">{l s='Total'}</th>					
 				</tr>
 			</thead>
 			<tfoot>
+				{assign var='rowspan_total' value=2+$total_discounts_num+$total_wrapping_taxes_num}
+
+				{if $use_taxes && $show_taxes && $total_tax != 0}
+					{assign var='rowspan_total' value=$rowspan_total+1}
+				{/if}
+
+				{if $priceDisplay != 0}
+					{assign var='rowspan_total' value=$rowspan_total+1}
+				{/if}
+
+				{if $total_shipping_tax_exc <= 0 && !isset($virtualCart)}
+					{assign var='rowspan_total' value=$rowspan_total+1}
+				{else}
+					{if $use_taxes && $total_shipping_tax_exc != $total_shipping}
+						{if $priceDisplay && $total_shipping_tax_exc > 0}
+							{assign var='rowspan_total' value=$rowspan_total+1}
+						{elseif $total_shipping > 0}
+							{assign var='rowspan_total' value=$rowspan_total+1}
+						{/if}
+					{elseif $total_shipping_tax_exc > 0}
+						{assign var='rowspan_total' value=$rowspan_total+1}
+					{/if}
+				{/if}
+
 				{if $use_taxes}
 					{if $priceDisplay}
 						<tr class="cart_total_price">
-							<td rowspan="{3+$total_discounts_num+$use_show_taxes+$total_wrapping_taxes_num}" colspan="3" id="cart_voucher" class="cart_voucher">
+							<td rowspan="{$rowspan_total}" colspan="3" id="cart_voucher" class="cart_voucher">
 								{if $voucherAllowed}
 									{if isset($errors_discount) && $errors_discount}
 										<ul class="alert alert-danger">
@@ -132,7 +156,7 @@
 						</tr>
 					{else}
 						<tr class="cart_total_price">
-							<td rowspan="{3+$total_discounts_num+$use_show_taxes+$total_wrapping_taxes_num}" colspan="2" id="cart_voucher" class="cart_voucher">
+							<td rowspan="{$rowspan_total}" colspan="2" id="cart_voucher" class="cart_voucher">
 								{if $voucherAllowed}
 									{if isset($errors_discount) && $errors_discount}
 										<ul class="alert alert-danger">
@@ -165,7 +189,7 @@
 					{/if}
 				{else}
 					<tr class="cart_total_price">
-						<td rowspan="{3+$total_discounts_num+$use_show_taxes+$total_wrapping_taxes_num}" colspan="2" id="cart_voucher" class="cart_voucher">
+						<td rowspan="{$rowspan_total}" colspan="2" id="cart_voucher" class="cart_voucher">
 							{if $voucherAllowed}
 								{if isset($errors_discount) && $errors_discount}
 									<ul class="alert alert-danger">
@@ -265,6 +289,12 @@
 					</td>
 				</tr>
 				{if $use_taxes && $show_taxes && $total_tax != 0 }
+					{if $priceDisplay != 0}
+					<tr class="cart_total_price">
+						<td colspan="{$col_span_subtotal}" class="text-right">{if $display_tax_label}{l s='Total (tax excl.)'}{else}{l s='Total'}{/if}</td>
+						<td colspan="2" class="price" id="total_price_without_tax">{displayPrice price=$total_price_without_tax}</td>
+					</tr>
+					{/if}
 					<tr class="cart_total_tax">
 						<td colspan="{$col_span_subtotal}" class="text-right">{l s='Tax'}</td>
 						<td colspan="2" class="price" id="total_tax">{displayPrice price=$total_tax}</td>
@@ -414,9 +444,6 @@
 								</span>
 							</td>
 							<td class="cart_discount_delete">1</td>
-							<td class="cart_discount_price">
-								<span class="price-discount price">{if !$priceDisplay}{displayPrice price=$discount.value_real*-1}{else}{displayPrice price=$discount.value_tax_exc*-1}{/if}</span>
-							</td>
 							<td class="price_discount_del text-center">
 								{if strlen($discount.code)}
 									<a
@@ -426,6 +453,9 @@
 										<i class="icon-trash"></i>
 									</a>
 								{/if}
+							</td>
+							<td class="cart_discount_price">
+								<span class="price-discount price">{if !$priceDisplay}{displayPrice price=$discount.value_real*-1}{else}{displayPrice price=$discount.value_tax_exc*-1}{/if}</span>
 							</td>
 						</tr>
 					{/foreach}

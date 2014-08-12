@@ -477,7 +477,9 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				if (count($this->errors) == 0)
 				{
 					$tax_rules_group = $this->updateTaxRulesGroup($tax_rules_group);
+					$tr->id = (int)$tax_rules_group->getIdTaxRuleGroupFromHistorizedId((int)$tr->id);
 					$tr->id_tax_rules_group = (int)$tax_rules_group->id;
+
 					if (!$tr->save())
 						$this->errors[] = Tools::displayError('An error has occurred: Cannot save the current tax rule.');
 				}
