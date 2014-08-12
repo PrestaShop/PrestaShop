@@ -23,10 +23,35 @@
 */
 
 $(function() {
+		var storage = getStorageAvailable();
+
+		initHelp = function(){
+			$('#main').addClass('helpOpen');
+			//first time only
+			if( $('#help-container').length === 0) {
+				//add css
+				$('head').append('<link href="//help.prestashop.com/css/help.css" rel="stylesheet">');
+				//add container
+				$('#main').after('<div id="help-container"></div>');
+			}
+			//init help (it use a global javascript variable to get actual controller)
+			pushContent(help_class_name);
+			$('#help-container').on('click', '.popup', function(e){
+				e.preventDefault();
+				if (storage)
+					storage.setItem('helpOpen', false);
+				$('.toolbarBox a.btn-help').trigger('click');
+				var helpWindow = window.open("index.php?controller=" + help_class_name + "?token=" + token + "&ajax=1&action=OpenHelp", "helpWindow", "width=450, height=650, scrollbars=yes");
+			});
+		};
+
+
 		//init
 		$('.toolbarBox a.btn-help').on('click', function(e) {
 			e.preventDefault();
 			if( !$('#main').hasClass('helpOpen') && document.body.clientWidth > 1200) {
+				if (storage)
+					storage.setItem('helpOpen', true);
 				$('.toolbarBox a.btn-help i').removeClass('process-icon-help').addClass('process-icon-loading');
 				initHelp();
 			} else if(!$('#main').hasClass('helpOpen') && document.body.clientWidth < 1200){
@@ -35,8 +60,15 @@ $(function() {
 				$('#main').removeClass('helpOpen');
 				$('#help-container').html('');
 				$('.toolbarBox a.btn-help i').removeClass('process-icon-close').addClass('process-icon-help');
+				if (storage)
+					storage.setItem('helpOpen', false);
 			}
 		});
+		
+		// Help persistency
+		if (storage && storage.getItem('helpOpen') == "true") {
+		 	$('a.btn-help').trigger('click');
+		}
 
 		//switch home
 		var language = iso_user;
@@ -65,23 +97,20 @@ $(function() {
 			['fr','20840479']
 		];
 
-	initHelp = function(){
-			$('#main').addClass('helpOpen');
-			//first time only
-			if( $('#help-container').length === 0) {
-				//add css
-				$('head').append('<link href="//help.prestashop.com/css/help.css" rel="stylesheet">');
-				//add container
-				$('#main').after('<div id="help-container"></div>');
-			}
-			//init help (it use a global javascript variable to get actual controller)
-			pushContent(help_class_name);
-			$('#help-container').on('click', '.popup', function(e){
-				e.preventDefault();
-				$('.toolbarBox a.btn-help').trigger('click');
-				var helpWindow = window.open("index.php?controller=" + help_class_name + "?token=" + token + "&ajax=1&action=OpenHelp", "helpWindow", "width=450, height=650, scrollbars=yes");
-			});
-		};
+
+	function getStorageAvailable() {
+		test = 'foo'; 
+		storage =  window.localStorage || window.sessionStorage;
+	    try {
+	        storage.setItem(test, test);
+	        storage.removeItem(test);
+	        		//open help if localstorage helpOpen = true;
+	        return storage;
+	    } 
+	    catch (error) {
+	        return null;
+	    }
+	}
 
 	// change help icon
 	function iconCloseHelp(){
