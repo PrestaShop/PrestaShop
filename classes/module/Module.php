@@ -1198,7 +1198,7 @@ abstract class ModuleCore
 					$item->onclick_option = false;
 
 					$item->trusted = Module::isModuleTrusted($item->name);
-					
+
 					$module_list[] = $item;
 					$module_name_list[] = '\''.pSQL($item->name).'\'';
 					$modulesNameToCursor[strval($item->name)] = $item;
@@ -1655,7 +1655,7 @@ abstract class ModuleCore
 				'module_key' => $obj->module_key,
 			);
 			$xml = Tools::addonsRequest('check_module', $params);
-			return (stristr($xml, 'success'));
+			return (bool)stristr($xml, 'success');
 		}
 	}
 
