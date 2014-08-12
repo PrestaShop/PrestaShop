@@ -589,7 +589,7 @@ class AdminOrdersControllerCore extends AdminController
 							$customer_thread->id_order = (int)$order->id;
 							$customer_thread->id_lang = (int)$this->context->language->id;
 							$customer_thread->email = $customer->email;
-							$customer_thread->status = 'closed';
+							$customer_thread->status = 'open';
 							$customer_thread->token = Tools::passwdGen(12);
 							$customer_thread->add();
 						}
