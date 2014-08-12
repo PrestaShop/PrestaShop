@@ -45,8 +45,14 @@ class ModuleFrontControllerCore extends FrontController
 
 		parent::__construct();
 
-		$this->display_column_left = ((isset($this->page_name) && is_object(Context::getContext()->theme)) ? Context::getContext()->theme->hasLeftColumn($this->page_name) : true);
-		$this->display_column_right = ((isset($this->page_name) && is_object(Context::getContext()->theme)) ? Context::getContext()->theme->hasRightColumn($this->page_name) : true);
+		$in_base = isset($this->page_name) && is_object(Context::getContext()->theme) && Context::getContext()->theme->hasColumnsSettings($this->page_name);
+
+		$tmp = isset($this->display_column_left) ? (bool)$this->display_column_left : true;
+		$this->display_column_left =  $in_base ? Context::getContext()->theme->hasLeftColumn($this->page_name) : $tmp;
+
+		$tmp = isset($this->display_column_right) ? (bool)$this->display_column_right : true;
+		$this->display_column_right = $in_base ? Context::getContext()->theme->hasRightColumn($this->page_name) : $tmp;
+
 	}
 
 	/**
