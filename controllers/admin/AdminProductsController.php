@@ -3088,13 +3088,41 @@ class AdminProductsControllerCore extends AdminController
 			$product->id_tax_rules_group = (int)Product::getIdTaxRulesGroupMostUsed();
 			$data->assign('ecotax_tax_excl', 0);
 		}
+		
+		$address = new Address();
+		$address->id_country = (int)$this->context->country->id;
+		$tax_rules_groups = TaxRulesGroup::getTaxRulesGroups(true);
+		$tax_rates = array(
+			0 => array (
+				'id_tax_rules_group' => 0,
+				'rates' => array(0),
+				'computation_method' => 0
+			)
+		);
 
+		foreach ($tax_rules_groups as $tax_rules_group)
+		{
+			$id_tax_rules_group = (int)$tax_rules_group['id_tax_rules_group'];
+			$tax_calculator = TaxManagerFactory::getManager($address, $id_tax_rules_group)->getTaxCalculator();
+			$tax_rates[$id_tax_rules_group] = array(
+				'id_tax_rules_group' => $id_tax_rules_group,
+				'rates' => array(),
+				'computation_method' => (int)$tax_calculator->computation_method
+			);
+	
+			if (isset($tax_calculator->taxes) && count($tax_calculator->taxes))
+				foreach ($tax_calculator->taxes as $tax)
+					$tax_rates[$id_tax_rules_group]['rates'][] = (float)$tax->rate;
+			else
+				$tax_rates[$id_tax_rules_group]['rates'][] = 0;
+		}
+		
 		// prices part
 		$data->assign(array(
 			'link' => $this->context->link,
 			'currency' => $currency = $this->context->currency,
-			'tax_rules_groups' => TaxRulesGroup::getTaxRulesGroups(true),
-			'taxesRatesByGroup' => TaxRulesGroup::getAssociatedTaxRatesByIdCountry($this->context->country->id),
+			'tax_rules_groups' => $tax_rules_groups,
+			'taxesRatesByGroup' => $tax_rates,
 			'ecotaxTaxRate' => Tax::getProductEcotaxRate(),
 			'tax_exclude_taxe_option' => Tax::excludeTaxeOption(),
 			'ps_use_ecotax' => Configuration::get('PS_USE_ECOTAX'),
