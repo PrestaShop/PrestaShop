@@ -62,9 +62,9 @@
 										{if $PS_STOCK_MANAGEMENT}
 											<th class="cart_availability item">{l s='Avail.'}</th>
 										{/if}
-										<th class="cart_unit item">{l s='Unit price'}</th>
-										<th class="cart_quantity item">{l s='Qty'}</th>
-										<th class="cart_total last_item">{l s='Total'}</th>
+										<th class="cart_unit item text-right">{l s='Unit price'}</th>
+										<th class="cart_quantity item text-center">{l s='Qty'}</th>
+										<th class="cart_total last_item text-right">{l s='Total'}</th>
 									</tr>
 								</thead>
 								<tfoot>
@@ -161,6 +161,12 @@
 									</tr>
 									{if $use_taxes}
 										{if $total_tax != 0 && $show_taxes}
+											{if $priceDisplay != 0}
+											<tr class="cart_total_price">
+												<td colspan="4" class="text-right">{if $display_tax_label}{l s='Total (tax excl.)'}{else}{l s='Total'}{/if}</td>
+												<td colspan="2" class="price" id="total_price_without_tax">{displayPrice price=$total_price_without_tax}</td>
+											</tr>
+											{/if}
 											<tr class="cart_total_tax">
 												<td colspan="4" class="text-right">{l s='Tax'}</td>
 												<td colspan="2" class="price" id="total_tax" >{displayPrice price=$total_tax}</td>
