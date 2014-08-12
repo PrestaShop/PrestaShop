@@ -517,14 +517,6 @@ class AdminOrdersControllerCore extends AdminController
 						if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') && $order->shipping_number)
 							$templateVars = array('{followup}' => str_replace('@', $order->shipping_number, $carrier->url));
 
-						if ($order_state->id == _PS_OS_REFUND_)
-						{
-							$orderReturn = new OrderReturn();
-							$orderReturn->id_customer = $order->id_customer;
-							$orderReturn->id_order = $order->id;
-							$orderReturn->state = 1;
-							$orderReturn->add();
-						}
 						// Save all changes
 						if ($history->addWithemail(true, $templateVars))
 						{
