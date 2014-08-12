@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div class="row">
-	<div class="col-xs-12 col-md-6">
+	<div class="col-xs-12 {if !$hide_left_column && !$hide_right_column}col-md-6{else if !$hide_left_column || !$hide_right_column}col-md-8{else}col-md-12{/if}">
         <p class="payment_module">
             <a class="cheque" href="{$link->getModuleLink('cheque', 'payment', [], true)|escape:'html':'UTF-8'}" title="{l s='Pay by check.' mod='cheque'}">
                 {l s='Pay by check' mod='cheque'} <span>{l s='(order processing will be longer)' mod='cheque'}</span>
