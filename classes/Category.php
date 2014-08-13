@@ -149,8 +149,8 @@ class CategoryCore extends ObjectModel
 		if (!isset($this->level_depth))
 			$this->level_depth = $this->calcLevelDepth();
 
-		if ($this->is_root_category && ($id_root_category = (int)Configuration::get('PS_ROOT_CATEGORY')))
-			$this->id_parent = $id_root_category;
+		if ($this->is_root_category)
+			$this->id_parent = (int)Configuration::get('PS_ROOT_CATEGORY');
 
 		$ret = parent::add($autodate, $null_values);
 		if (Tools::isSubmit('checkBoxShopAsso_category'))
@@ -185,9 +185,9 @@ class CategoryCore extends ObjectModel
 		if ($this->id_parent == $this->id)
 			throw new PrestaShopException('a category cannot be its own parent');
 
-		if ($this->is_root_category)
-			$this->id_parent = (int)Configuration::get('PS_ROOT_CATEGORY');
-		
+		if ($this->is_root_category && $this->id_parent != (int)Configuration::get('PS_ROOT_CATEGORY'))
+			$this->is_root_category = 0;
+
 		// Update group selection
 		$this->updateGroup($this->groupBox);
 		$this->level_depth = $this->calcLevelDepth();
@@ -250,13 +250,13 @@ class CategoryCore extends ObjectModel
 					$children[] = $categ->recurseLiteCategTree($max_depth, $current_depth + 1, $id_lang, $excluded_ids_array);
 				}
 			}
-		
+
 		if (is_array($this->description))
 			foreach ($this->description as $lang => $description)
 				$this->description[$lang] = Category::getDescriptionClean($description);
 		else
 			$this->description = Category::getDescriptionClean($this->description);
-			
+
 		return array(
 			'id' => (int)$this->id,
 			'link' => Context::getContext()->link->getCategoryLink($this->id, $this->link_rewrite),
@@ -270,7 +270,7 @@ class CategoryCore extends ObjectModel
 	{
 		if (!$category)
 			$id_category = (int)Configuration::get('PS_ROOT_CATEGORY');
-	
+
 		echo '<option value="'.$id_category.'"'.(($id_selected == $id_category) ? ' selected="selected"' : '').'>'.
 		str_repeat('&nbsp;', $current['infos']['level_depth'] * 5).stripslashes($current['infos']['name']).'</option>';
 		if (isset($categories[$id_category]))
@@ -332,13 +332,13 @@ class CategoryCore extends ObjectModel
 					GroupReduction::deleteCategory($cat->id);
 			}
 		}
-		
+
 		/* Rebuild the nested tree */
 		if (!$this->hasMultishopEntries() && (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree))
 			Category::regenerateEntireNtree();
 
 		Hook::exec('actionCategoryDelete', array('category' => $this));
-			
+
 		return true;
 	}
 
@@ -609,11 +609,11 @@ class CategoryCore extends ObjectModel
 			$context = Context::getContext();
 		if ($check_access && !$this->checkAccess($context->customer->id))
 			return false;
-		
+
 		$front = true;
 		if (!in_array($context->controller->controller_type, array('front', 'modulefront')))
 			$front = false;
-			
+
 		if ($p < 1) $p = 1;
 
 		if (empty($order_by))
@@ -624,7 +624,7 @@ class CategoryCore extends ObjectModel
 
 		if (empty($order_way))
 			$order_way = 'ASC';
-			
+
 		$order_by_prefix = false;
 		if ($order_by == 'id_product' || $order_by == 'date_add' || $order_by == 'date_upd')
 			$order_by_prefix = 'p';
@@ -1076,7 +1076,7 @@ class CategoryCore extends ObjectModel
 	{
 		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_group` WHERE `id_category` = '.(int)$this->id);
 	}
-	
+
 	public function cleanAssoProducts()
 	{
 		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_product` WHERE `id_category` = '.(int)$this->id);
@@ -1130,7 +1130,7 @@ class CategoryCore extends ObjectModel
 				SELECT ctg.`id_group`
 				FROM '._DB_PREFIX_.'category_group ctg
 				WHERE ctg.`id_category` = '.(int)$this->id.' AND ctg.`id_group` = '.(int)Group::getCurrent()->id);
-			else 
+			else
 				$result = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT ctg.`id_group`
 				FROM '._DB_PREFIX_.'category_group ctg
@@ -1296,7 +1296,7 @@ class CategoryCore extends ObjectModel
 			return false;
 		return ($this->nleft >= $interval['nleft'] && $this->nright <= $interval['nright']);
 	}
-	
+
 	public static function inShopStatic($id_category, Shop $shop = null)
 	{
 		if (!$shop || !is_object($shop))
