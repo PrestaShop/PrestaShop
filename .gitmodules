@@ -305,3 +305,6 @@
 [submodule "modules/sendtoafriend"]
 	path = modules/sendtoafriend
 	url = https://github.com/PrestaShop/sendtoafriend
+[submodule "modules/stncore"]
+	path = modules/stncore
+	url = git@github.com:stoysnet/stncore.git
