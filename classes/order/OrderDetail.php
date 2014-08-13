@@ -525,8 +525,8 @@ class OrderDetailCore extends ObjectModel
 		$this->total_price_tax_excl = (float)$product['total'];
 
         $this->purchase_supplier_price = (float)$product['wholesale_price'];
-        if ($product['id_supplier'] > 0)
-            $this->purchase_supplier_price = (float)ProductSupplier::getProductPrice((int)$product['id_supplier'], $product['id_product'], $product['id_product_attribute'], true);
+        if ($product['id_supplier'] > 0 && ($supplier_price = ProductSupplier::getProductPrice((int)$product['id_supplier'], $product['id_product'], $product['id_product_attribute'], true)) > 0 )
+            $this->purchase_supplier_price = (float)$supplier_price;
 
 		$this->setSpecificPrice($order, $product);
 
