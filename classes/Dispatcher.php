@@ -51,6 +51,7 @@ class DispatcherCore
 			'keywords' => array(
 				'id' =>				array('regexp' => '[0-9]+', 'param' => 'id_category'),
 				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+				'categories' =>		array('regexp' => '[/_a-zA-Z0-9-\pL]*'),
 				'meta_keywords' =>	array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 				'meta_title' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 			),
@@ -91,6 +92,7 @@ class DispatcherCore
 			'keywords' => array(
 				'id' =>				array('regexp' => '[0-9]+', 'param' => 'id_cms_category'),
 				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+				'categories' =>		array('regexp' => '[/_a-zA-Z0-9-\pL]*'),
 				'meta_keywords' =>	array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 				'meta_title' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 			),
@@ -133,6 +135,7 @@ class DispatcherCore
 				/* Selected filters is used by the module blocklayered */
 				'selected_filters' =>		array('regexp' => '.*', 'param' => 'selected_filters'),
 				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+				'categories' =>		array('regexp' => '[/_a-zA-Z0-9-\pL]*'),
 				'meta_keywords' =>	array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 				'meta_title' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 			),
