@@ -182,7 +182,17 @@ class LinkCore
 			$params['selected_filters'] = $selected_filters;
 		}
 
-		return $url.Dispatcher::getInstance()->createUrl($rule, $id_lang, $params, $this->allow, '', $id_shop);
+		$dispatcher = Dispatcher::getInstance();
+		if ($dispatcher->hasKeyword($rule, $id_lang, 'categories', $id_shop))
+		{
+			$cats = array();
+			foreach ($category->getParentsCategories() as $cat)
+				if (!in_array($cat['id_category'], Link::$category_disable_rewrite))//remove root and home category from the URL
+					$cats[] = $cat['link_rewrite'];
+			$params['categories'] = implode('/', array_reverse($cats));
+		}
+		
+		return $url.$dispatcher->createUrl($rule, $id_lang, $params, $this->allow, '', $id_shop);
 	}
 
 	/**
@@ -214,6 +224,15 @@ class LinkCore
 		$params['rewrite'] = (!$alias) ? $cms_category->link_rewrite : $alias;
 		$params['meta_keywords'] =	Tools::str2url($cms_category->meta_keywords);
 		$params['meta_title'] = Tools::str2url($cms_category->meta_title);
+		
+		if ($dispatcher->hasKeyword($rule, $id_lang, 'categories', $id_shop))
+		{
+			$cats = array();
+			foreach ($cms_category->getParentsCategories() as $cat)
+				if (!in_array($cat['id_category'], Link::$category_disable_rewrite))//remove root and home category from the URL
+					$cats[] = $cat['link_rewrite'];
+			$params['categories'] = implode('/', array_reverse($cats));
+		}
 
 		return $url.$dispatcher->createUrl('cms_category_rule', $id_lang, $params, $this->allow, '', $id_shop);
 	}
