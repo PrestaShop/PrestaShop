@@ -74,8 +74,9 @@
 			$('#submitFilterButton{$list_id}').click(function() {
 				$('#submitFilter{$list_id}').val(1);
 			});
-			if ($("table.{$list_id} .datepicker").length > 0) {
-				$("table.{$list_id} .datepicker").datepicker({
+
+			if ($("table .datepicker").length > 0) {
+				$("table .datepicker").datepicker({
 					prevText: '',
 					nextText: '',
 					altFormat: 'yy-mm-dd'
@@ -334,12 +335,8 @@
 											$(function() {
 												var dateStart = parseDate($("#{$params.id_date}_0").val());
 												var dateEnd = parseDate($("#{$params.id_date}_1").val());
-												$("#local_{$params.id_date}_0").datepicker({
-													altField: "#{$params.id_date}_0"
-												});
-												$("#local_{$params.id_date}_1").datepicker({
-													altField: "#{$params.id_date}_1"
-												});
+												$("#local_{$params.id_date}_0").datepicker("option", "altField", "#{$params.id_date}_0");
+												$("#local_{$params.id_date}_1").datepicker("option", "altField", "#{$params.id_date}_1");
 												if (dateStart !== null){
 													$("#local_{$params.id_date}_0").datepicker("setDate", dateStart);
 												}
