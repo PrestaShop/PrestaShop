@@ -2350,6 +2350,8 @@ class AdminControllerCore extends Controller
 			'submit_form_ajax' => (int)Tools::getValue('submitFormAjax')
 		));
 
+		Employee::setLastConnectionDate($this->context->employee->id);
+
 		$this->initProcess();
 		$this->initBreadcrumbs();
 		$this->initModal();
