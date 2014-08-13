@@ -142,14 +142,9 @@ $(document).ready(function () {
 		<div class="col-lg-8">
 			<script type="text/javascript">
 				noTax = {if $tax_exclude_taxe_option}true{else}false{/if};
-				taxesArray = new Array ();
-				taxesArray[0] = 0;
-				{foreach $tax_rules_groups as $tax_rules_group}
-					{if isset($taxesRatesByGroup[$tax_rules_group['id_tax_rules_group']])}
-					taxesArray[{$tax_rules_group.id_tax_rules_group}] = {$taxesRatesByGroup[$tax_rules_group['id_tax_rules_group']]};
-						{else}
-					taxesArray[{$tax_rules_group.id_tax_rules_group}] = 0;
-					{/if}
+				taxesArray = new Array();
+				{foreach $taxesRatesByGroup as $tax_by_group}
+					taxesArray[{$tax_by_group.id_tax_rules_group}] = {$tax_by_group|json_encode};
 				{/foreach}
 				ecotaxTaxRate = {$ecotaxTaxRate / 100};
 			</script>
