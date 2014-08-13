@@ -32,7 +32,7 @@ class PrestaShopAutoload
 	/**
 	 * File where classes index is stored
 	 */
-	const INDEX_FILE = 'cache/class_index.php';
+	const INDEX_FILE = 'class_index.php';
 
 	/**
 	 * @var Autoload
@@ -60,8 +60,8 @@ class PrestaShopAutoload
 
 	protected function __construct()
 	{
-		$this->root_dir = _PS_CORE_DIR_.'/';
-		$file = $this->normalizeDirectory(_PS_ROOT_DIR_).PrestaShopAutoload::INDEX_FILE;
+		$this->root_dir = $this->normalizeDirectory(_PS_CORE_DIR_);
+		$file = $this->normalizeDirectory(_PS_CACHE_DIR_).PrestaShopAutoload::INDEX_FILE;
 		if (@filemtime($file) && is_readable($file))
 			$this->index = include($file);
 		else
@@ -93,8 +93,8 @@ class PrestaShopAutoload
 			return eval('class '.$classname.' extends '.PrestaShopAutoload::$class_aliases[$classname].' {}');
 
 		// regenerate the class index if the requested file doesn't exists
-		if ((isset($this->index[$classname]) && $this->index[$classname]['path'] && !is_file($this->root_dir.$this->index[$classname]['path']))
-			|| (isset($this->index[$classname.'Core']) && $this->index[$classname.'Core']['path'] && !is_file($this->root_dir.$this->index[$classname.'Core']['path'])))
+		if ((isset($this->index[$classname]) && $this->index[$classname]['path'] && !is_file($this->index[$classname]['path']))
+			|| (isset($this->index[$classname.'Core']) && $this->index[$classname.'Core']['path'] && !is_file($this->index[$classname.'Core']['path'])))
 			$this->generateIndex();
 
 		// If $classname has not core suffix (E.g. Shop, Product)
@@ -103,7 +103,7 @@ class PrestaShopAutoload
 			// If requested class does not exist, load associated core class
 			if (isset($this->index[$classname]) && !$this->index[$classname]['path'])
 			{
-				require($this->root_dir.$this->index[$classname.'Core']['path']);
+				require($this->index[$classname.'Core']['path']);
 
 				if ($this->index[$classname.'Core']['type'] != 'interface')
 					eval($this->index[$classname.'Core']['type'].' '.$classname.' extends '.$classname.'Core {}');
@@ -112,18 +112,16 @@ class PrestaShopAutoload
 			{
 				// request a non Core Class load the associated Core class if exists
 				if (isset($this->index[$classname.'Core']))
-					require_once($this->root_dir.$this->index[$classname.'Core']['path']);
+					require_once($this->index[$classname.'Core']['path']);
 
-				$class_dir = (isset($this->index[$classname]['override'])
-					&& $this->index[$classname]['override'] === true) ? $this->normalizeDirectory(_PS_ROOT_DIR_) : $this->root_dir;
-
+				// request extended Class from Override folder
 				if (isset($this->index[$classname]))
-					require_once($class_dir.$this->index[$classname]['path']);
+					require_once($this->index[$classname]['path']);
 			}
 		}
 		// Call directly ProductCore, ShopCore class
 		elseif (isset($this->index[$classname]['path']) && $this->index[$classname]['path'])
-			require($this->root_dir.$this->index[$classname]['path']);
+			require($this->index[$classname]['path']);
 	}
 
 	/**
@@ -132,22 +130,22 @@ class PrestaShopAutoload
 	public function generateIndex()
 	{
 		$classes = array_merge(
-			$this->getClassesFromDir('classes/'),
-			$this->getClassesFromDir('controllers/')
+			$this->getClassesFromDir($this->root_dir.'classes/'),
+			$this->getClassesFromDir($this->root_dir.'controllers/')
 		);
 
 		if ($this->_include_override_path)
 			$classes = array_merge(
 				$classes,
-				$this->getClassesFromDir('override/classes/', defined('_PS_HOST_MODE_')),
-				$this->getClassesFromDir('override/controllers/', defined('_PS_HOST_MODE_'))
+				$this->getClassesFromDir($this->normalizeDirectory(_PS_OVERRIDE_DIR_).'classes/'),
+				$this->getClassesFromDir($this->normalizeDirectory(_PS_OVERRIDE_DIR_).'controllers/')
 			);
 
 		ksort($classes);
 		$content = '<?php return '.var_export($classes, true).'; ?>';
 
 		// Write classes index on disc to cache it
-		$filename = $this->normalizeDirectory(_PS_ROOT_DIR_).PrestaShopAutoload::INDEX_FILE;
+		$filename = $this->normalizeDirectory(_PS_CACHE_DIR_).PrestaShopAutoload::INDEX_FILE;
 		$filename_tmp = tempnam(dirname($filename), basename($filename.'.'));
 		if ($filename_tmp !== false && file_put_contents($filename_tmp, $content) !== false)
 		{
@@ -168,35 +166,32 @@ class PrestaShopAutoload
 	 * @param string $path Relativ path from root to the directory
 	 * @return array
 	 */
-	protected function getClassesFromDir($path, $host_mode = false)
+	protected function getClassesFromDir($path)
 	{
 		$classes = array();
-		$root_dir = $host_mode ? $this->normalizeDirectory(_PS_ROOT_DIR_) : $this->root_dir;
 
-		foreach (scandir($root_dir.$path) as $file)
+		foreach (scandir($path) as $file)
 		{
 			if ($file[0] != '.')
 			{
-				if (is_dir($root_dir.$path.$file))
-					$classes = array_merge($classes, $this->getClassesFromDir($path.$file.'/', $host_mode));
+				if (is_dir($path.$file))
+					$classes = array_merge($classes, $this->getClassesFromDir($path.$file.'/'));
 				else if (substr($file, -4) == '.php')
 				{
-					$content = file_get_contents($root_dir.$path.$file);
+					$content = file_get_contents($path.$file);
 			 		$pattern = '#\W((abstract\s+)?class|interface)\s+(?P<classname>'.basename($file, '.php').'(?:Core)?)'
 			 					.'(?:\s+extends\s+[a-z][a-z0-9_]*)?(?:\s+implements\s+[a-z][a-z0-9_]*(?:\s*,\s*[a-z][a-z0-9_]*)*)?\s*\{#i';
 			 		if (preg_match($pattern, $content, $m))
 			 		{
 			 			$classes[$m['classname']] = array(
 			 				'path' => $path.$file,
-			 				'type' => trim($m[1]),
-			 				'override' => $host_mode
+			 				'type' => trim($m[1])
 			 			);
 
 						if (substr($m['classname'], -4) == 'Core')
 							$classes[substr($m['classname'], 0, -4)] = array(
 								'path' => '',
-								'type' => $classes[$m['classname']]['type'],
-								'override' => $host_mode
+								'type' => $classes[$m['classname']]['type']
 							);
 			 		}
 				}
