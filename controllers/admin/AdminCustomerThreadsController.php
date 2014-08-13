@@ -311,7 +311,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				$cm = new CustomerMessage();
 				$cm->id_employee = (int)$this->context->employee->id;
 				$cm->id_customer_thread = (int)Tools::getValue('id_customer_thread');
-				$cm->ip_address = ip2long(Tools::getRemoteAddr());
+				$cm->ip_address = (int)ip2long(Tools::getRemoteAddr());
 				$current_employee = $this->context->employee;
 				$id_employee = (int)Tools::getValue('id_employee_forward');
 				$employee = new Employee($id_employee);
@@ -377,7 +377,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				$cm = new CustomerMessage();
 				$cm->id_employee = (int)$this->context->employee->id;
 				$cm->id_customer_thread = $ct->id;
-				$cm->ip_address = ip2long(Tools::getRemoteAddr());
+				$cm->ip_address = (int)ip2long(Tools::getRemoteAddr());
 				$cm->message = Tools::getValue('reply_message');
 				if (($error = $cm->validateField('message', $cm->message, null, array(), true)) !== true)
 					$this->errors[] = $error;
