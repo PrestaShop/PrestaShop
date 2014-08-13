@@ -450,4 +450,13 @@ class EmployeeCore extends ObjectModel
 
 		return (int)$max;
 	}
+
+	public static function setLastConnectionDate($id_employee)
+	{
+		return  Db::getInstance()->execute('
+			UPDATE `'._DB_PREFIX_.'employee`
+			SET `last_connection_date` = CURRENT_DATE()
+			WHERE `id_employee` = '.(int)$id_employee.' AND `last_connection_date`< CURRENT_DATE()
+		');
+	}
 }
