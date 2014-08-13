@@ -144,7 +144,7 @@ $(document).ready(function () {
 				noTax = {if $tax_exclude_taxe_option}true{else}false{/if};
 				taxesArray = new Array();
 				{foreach $taxesRatesByGroup as $tax_by_group}
-					taxesArray[{$tax_by_group.id_tax_rules_group}] = {$tax_by_group|json_encode}
+					taxesArray[{$tax_by_group.id_tax_rules_group}] = {$tax_by_group|json_encode};
 				{/foreach}
 				ecotaxTaxRate = {$ecotaxTaxRate / 100};
 			</script>
