@@ -50,7 +50,6 @@ class ModuleFrontControllerCore extends FrontController
 		$tmp = isset($this->display_column_left) ? (bool)$this->display_column_left : true;
 		$this->display_column_left =  $in_base ? Context::getContext()->theme->hasLeftColumn($this->page_name) : $tmp;
 
-
 		$tmp = isset($this->display_column_right) ? (bool)$this->display_column_right : true;
 		$this->display_column_right = $in_base ? Context::getContext()->theme->hasRightColumn($this->page_name) : $tmp;
 
