@@ -55,4 +55,4 @@ INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VAL
 
 ALTER TABLE `PREFIX_employee` ADD `last_connection_date` date NOT NULL DEFAULT '0000-00-00';
 
-UPDATE `PREFIX_category` SET `is_root_category` = 0 WHERE `id_parent` != 1 AND `is_root_category` = 1;
+UPDATE `ps_category` SET `is_root_category` = 0 WHERE `id_parent` != 1 AND `is_root_category` = (SELECT `value` FROM `ps_configuration` WHERE `name` = 'PS_ROOT_CATEGORY' LIMIT 1);
