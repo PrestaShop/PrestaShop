@@ -40,6 +40,7 @@ class HelperKpiCore extends Helper
 	public $source;
 	public $refresh = true;
 	public $href;
+	public $tooltip;
 
 	public function generate()
 	{
@@ -56,7 +57,8 @@ class HelperKpiCore extends Helper
 			'data' => $this->data,
 			'source' => $this->source,
 			'refresh' => $this->refresh,
-			'href' => $this->href
+			'href' => $this->href,
+			'tooltip' => $this->tooltip
 		));
 		return $this->tpl->fetch();
 	}
