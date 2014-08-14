@@ -630,7 +630,7 @@ class CategoryCore extends ObjectModel
 			$order_by_prefix = 'p';
 		elseif ($order_by == 'name')
 			$order_by_prefix = 'pl';
-		elseif ($order_by == 'manufacturer')
+		elseif ($order_by == 'manufacturer_name')
 		{
 			$order_by_prefix = 'm';
 			$order_by = 'name';
