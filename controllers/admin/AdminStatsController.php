@@ -577,7 +577,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				break;
 
 			case 'disabled_products':
-				$value = AdminStatsController::getDisabledProducts();
+				$value = round(100 * AdminStatsController::getDisabledProducts() / AdminStatsController::getTotalProducts(), 2).'%';
 				ConfigurationKPI::updateValue('DISABLED_PRODUCTS', $value);
 				ConfigurationKPI::updateValue('DISABLED_PRODUCTS_EXPIRE', strtotime('+2 hour'));
 				break;

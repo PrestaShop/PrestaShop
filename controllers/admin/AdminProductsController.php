@@ -2416,6 +2416,8 @@ class AdminProductsControllerCore extends AdminController
 			$helper->value = ConfigurationKPI::get('DISABLED_PRODUCTS');
 		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=disabled_products';
 		$helper->refresh = (bool)(ConfigurationKPI::get('DISABLED_PRODUCTS_EXPIRE') < $time);
+		$helper->tooltip = $this->l('X% of your products are disabled and not visible to your customers', null, null, false);
+		$helper->href = Context::getContext()->link->getAdminLink('AdminProducts').'&productFilter_active=0&submitFilterproduct=1';
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpiRow();
