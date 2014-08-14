@@ -2372,8 +2372,8 @@ class AdminProductsControllerCore extends AdminController
 			$helper->title = $this->l('Items in Stock', null, null, false);
 			if (ConfigurationKPI::get('PERCENT_PRODUCT_STOCK') !== false)
 				$helper->value = ConfigurationKPI::get('PERCENT_PRODUCT_STOCK');
-			if (ConfigurationKPI::get('PERCENT_PRODUCT_STOCK_EXPIRE') < $time)
-				$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=percent_product_stock';
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=percent_product_stock';
+			$helper->refresh = (bool)(ConfigurationKPI::get('PERCENT_PRODUCT_STOCK_EXPIRE') < $time);
 			$kpis[] = $helper->generate();
 		}
 
@@ -2384,8 +2384,8 @@ class AdminProductsControllerCore extends AdminController
 		$helper->title = $this->l('Average Gross Margin', null, null, false);
 		if (ConfigurationKPI::get('PRODUCT_AVG_GROSS_MARGIN') !== false)
 			$helper->value = ConfigurationKPI::get('PRODUCT_AVG_GROSS_MARGIN');
-		if (ConfigurationKPI::get('PRODUCT_AVG_GROSS_MARGIN_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=product_avg_gross_margin';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=product_avg_gross_margin';
+		$helper->refresh = (bool)(ConfigurationKPI::get('PRODUCT_AVG_GROSS_MARGIN_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -2396,8 +2396,8 @@ class AdminProductsControllerCore extends AdminController
 		$helper->subtitle = $this->l('30 days', null, null, false);
 		if (ConfigurationKPI::get('8020_SALES_CATALOG') !== false)
 			$helper->value = ConfigurationKPI::get('8020_SALES_CATALOG');
-		if (ConfigurationKPI::get('8020_SALES_CATALOG_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=8020_sales_catalog';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=8020_sales_catalog';
+		$helper->refresh = (bool)(ConfigurationKPI::get('8020_SALES_CATALOG_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -2408,8 +2408,8 @@ class AdminProductsControllerCore extends AdminController
 		$helper->title = $this->l('Disabled Products', null, null, false);
 		if (ConfigurationKPI::get('DISABLED_PRODUCTS') !== false)
 			$helper->value = ConfigurationKPI::get('DISABLED_PRODUCTS');
-		if (ConfigurationKPI::get('DISABLED_PRODUCTS_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=disabled_products';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=disabled_products';
+		$helper->refresh = (bool)(ConfigurationKPI::get('DISABLED_PRODUCTS_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpiRow();

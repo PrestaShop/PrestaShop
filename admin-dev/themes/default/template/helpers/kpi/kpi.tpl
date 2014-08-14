@@ -43,25 +43,31 @@
 
 {if isset($source) && $source != ''}
 <script>
-	$.ajax({
-		url: '{$source|addslashes}' + '&rand=' + new Date().getTime(),
-		dataType: 'json',
-		type: 'GET',
-		cache: false,
-		headers: { 'cache-control': 'no-cache' },
-		success: function(jsonData){
-			if (!jsonData.has_errors)
-			{
-				if (jsonData.value != undefined)
-					$('#{$id|addslashes} .value').html(jsonData.value);
-				if (jsonData.data != undefined)
+	function refresh_{$id|replace:'-':'_'|addslashes}()
+	{
+		$.ajax({
+			url: '{$source|addslashes}' + '&rand=' + new Date().getTime(),
+			dataType: 'json',
+			type: 'GET',
+			cache: false,
+			headers: { 'cache-control': 'no-cache' },
+			success: function(jsonData){
+				if (!jsonData.has_errors)
 				{
-					$("#{$id|addslashes} .boxchart svg").remove();
-					set_d3_{$id|str_replace:'-':'_'|addslashes}(jsonData.data);
+					if (jsonData.value != undefined)
+						$('#{$id|addslashes} .value').html(jsonData.value);
+					if (jsonData.data != undefined)
+					{
+						$("#{$id|addslashes} .boxchart svg").remove();
+						set_d3_{$id|replace:'-':'_'|addslashes}(jsonData.data);
+					}
 				}
 			}
-		}
-	});
+		});
+	}
+	{if isset($refresh) && $refresh != ''}
+		refresh_{$id|replace:'-':'_'|addslashes}();
+	{/if}
 </script>
 {/if}
 
@@ -94,7 +100,7 @@
 	}
 	
 	{if $data}
-		set_d3_{$id|str_replace:'-':'_'|addslashes}($.parseJSON("{$data|addslashes}"));
+		set_d3_{$id|replace:'-':'_'|addslashes}($.parseJSON("{$data|addslashes}"));
 	{/if}
 </script>
 {/if}
