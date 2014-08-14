@@ -141,7 +141,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		FROM `'._DB_PREFIX_.'product` p
 		'.Shop::addSqlAssociation('product', 'p').'
 		LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON p.id_product = pa.id_product
-		'.Shop::addSqlAssociation('product_attribute', 'pa'));
+		'.Shop::addSqlAssociation('product_attribute', 'pa', false).'
+		WHERE product_shop.active = 1');
 		return round(100 * $value, 2).'%';
 	}
 	
