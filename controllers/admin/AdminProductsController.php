@@ -2375,6 +2375,7 @@ class AdminProductsControllerCore extends AdminController
 			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=percent_product_stock';
 			$helper->tooltip = $this->l('X% of your products for sale are out of stock.', null, null, false);
 			$helper->refresh = (bool)(ConfigurationKPI::get('PERCENT_PRODUCT_STOCK_EXPIRE') < $time);
+			$helper->href = Context::getContext()->link->getAdminLink('AdminProducts').'&productFilter_sav!quantity=0&productFilter_active=1&submitFilterproduct=1';
 			$kpis[] = $helper->generate();
 		}
 
