@@ -2336,7 +2336,7 @@ class AdminProductsControllerCore extends AdminController
 				}
 			}
 			if (!$id_category)
-				$id_category = 1;
+				$id_category = Configuration::get('PS_ROOT_CATEGORY');
 			$this->tpl_list_vars['is_category_filter'] = (bool)$this->id_current_category;
 
 			// Generate category selection tree
@@ -3088,7 +3088,7 @@ class AdminProductsControllerCore extends AdminController
 			$product->id_tax_rules_group = (int)Product::getIdTaxRulesGroupMostUsed();
 			$data->assign('ecotax_tax_excl', 0);
 		}
-		
+
 		$address = new Address();
 		$address->id_country = (int)$this->context->country->id;
 		$tax_rules_groups = TaxRulesGroup::getTaxRulesGroups(true);
@@ -3109,14 +3109,14 @@ class AdminProductsControllerCore extends AdminController
 				'rates' => array(),
 				'computation_method' => (int)$tax_calculator->computation_method
 			);
-	
+
 			if (isset($tax_calculator->taxes) && count($tax_calculator->taxes))
 				foreach ($tax_calculator->taxes as $tax)
 					$tax_rates[$id_tax_rules_group]['rates'][] = (float)$tax->rate;
 			else
 				$tax_rates[$id_tax_rules_group]['rates'][] = 0;
 		}
-		
+
 		// prices part
 		$data->assign(array(
 			'link' => $this->context->link,
