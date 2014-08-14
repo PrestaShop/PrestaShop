@@ -585,6 +585,11 @@ class AdminControllerCore extends Controller
 			}
 
 			foreach ($_GET as $key => $value)
+			{
+				if (stripos($key, $this->list_id.'Filter_') === 0)
+					$this->context->cookie->{$prefix.$key} = !is_array($value) ? $value : serialize($value);
+				elseif (stripos($key, 'submitFilter') === 0)
+					$this->context->cookie->$key = !is_array($value) ? $value : serialize($value);
 				if (stripos($key, $this->list_id.'Orderby') === 0 && Validate::isOrderBy($value))
 				{
 					if ($value === '' || $value == $this->_defaultOrderBy)
@@ -599,6 +604,7 @@ class AdminControllerCore extends Controller
 					else
 						$this->context->cookie->{$prefix.$key} = $value;
 				}
+			}
 		}
 
 		$filters = $this->context->cookie->getFamily($prefix.$this->list_id.'Filter_');
