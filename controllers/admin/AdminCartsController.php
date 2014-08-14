@@ -136,8 +136,8 @@ class AdminCartsControllerCore extends AdminController
 			$helper->value = ConfigurationKPI::get('CONVERSION_RATE');
 		if (ConfigurationKPI::get('CONVERSION_RATE_CHART') !== false)
 			$helper->data = ConfigurationKPI::get('CONVERSION_RATE_CHART');
-		if (ConfigurationKPI::get('CONVERSION_RATE_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=conversion_rate';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=conversion_rate';
+		$helper->refresh = (bool)(ConfigurationKPI::get('CONVERSION_RATE_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -151,8 +151,8 @@ class AdminCartsControllerCore extends AdminController
 		$helper->href = $this->context->link->getAdminLink('AdminCarts').'&action=filterOnlyAbandonedCarts';
 		if (ConfigurationKPI::get('ABANDONED_CARTS') !== false)
 			$helper->value = ConfigurationKPI::get('ABANDONED_CARTS');
-		if (ConfigurationKPI::get('ABANDONED_CARTS_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=abandoned_cart';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=abandoned_cart';
+		$helper->refresh = (bool)(ConfigurationKPI::get('ABANDONED_CARTS_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -175,8 +175,8 @@ class AdminCartsControllerCore extends AdminController
 		$helper->subtitle = $this->l('30 days', null, null, false);
 		if (ConfigurationKPI::get('NETPROFIT_VISITOR') !== false)
 			$helper->value = ConfigurationKPI::get('NETPROFIT_VISITOR');
-		if (ConfigurationKPI::get('NETPROFIT_VISITOR_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=netprofit_visitor';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=netprofit_visitor';
+		$helper->refresh = (bool)(ConfigurationKPI::get('NETPROFIT_VISITOR_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpiRow();
