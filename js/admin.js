@@ -1448,6 +1448,13 @@ function parseDate(date){
 	return $.datepicker.parseDate("yy-mm-dd", date);
 }
 
+function refresh_kpis()
+{
+	$('.box-stats').each(function(){
+		window['refresh_' + $(this).attr('id').replace(/-/g, '_')]();
+	});
+}
+
 function createSqlQueryName()
 {
 	var container = false;
