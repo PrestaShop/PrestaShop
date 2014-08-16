@@ -1866,8 +1866,8 @@ class AdminProductsControllerCore extends AdminController
 				$this->copyFromPost($object, $this->table);
 				$object->indexed = 0;
 
-				if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP && Tools::getValue('multishop_check'))
-					$object->setFieldsToUpdate((array)Tools::getValue('multishop_check'));
+				if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP)
+					$object->setFieldsToUpdate((array)Tools::getValue('multishop_check',array()));
 
 				// Duplicate combinations if not associated to shop
 				if ($this->context->shop->getContext() == Shop::CONTEXT_SHOP && !$object->isAssociatedToShop())
