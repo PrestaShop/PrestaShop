@@ -567,6 +567,11 @@ class AdminControllerCore extends Controller
 	 */
 	public function processFilter()
 	{
+		$this->_processFilter__AdminControllerCore();
+	}
+
+	protected function _processFilter__AdminControllerCore()
+	{
 		if (!isset($this->list_id))
 			$this->list_id = $this->table;
 
@@ -680,6 +685,11 @@ class AdminControllerCore extends Controller
 	 */
 	public function postProcess()
 	{
+		return $this->_postProcess__AdminControllerCore();
+	}
+
+	protected function _postProcess__AdminControllerCore()
+	{
 		try {
 			if ($this->ajax)
 			{
@@ -738,6 +748,11 @@ class AdminControllerCore extends Controller
 	 */
 	public function processDeleteImage()
 	{
+		return $this->_processDeletedImage__AdminControllerCore();
+	}
+
+	protected function _processDeletedImage__AdminControllerCore()
+	{
 		if (Validate::isLoadedObject($object = $this->loadObject()))
 		{
 			if (($object->deleteImage()))
@@ -755,7 +770,11 @@ class AdminControllerCore extends Controller
 
 	public function processExport($text_delimiter = '"')
 	{
+		$this->_processExport__AdminControllerCore($text_delimiter);
+	}
 
+	protected function _processExport__AdminControllerCore($text_delimiter = '"')
+	{
 		// clean buffer
 		if (ob_get_level() && ob_get_length() > 0)
 			ob_clean();
@@ -814,6 +833,11 @@ class AdminControllerCore extends Controller
 	 */
 	public function processDelete()
 	{
+		return $this->_processDelete__AdminControllerCore();
+	}
+
+	protected function _processDelete__AdminControllerCore()
+	{
 		if (Validate::isLoadedObject($object = $this->loadObject()))
 		{
 			$res = true;
@@ -863,6 +887,11 @@ class AdminControllerCore extends Controller
 	 */
 	public function processSave()
 	{
+		return $this->_processSave__AdminControllerCore();
+	}
+
+	protected function _processSave__AdminControllerCore()
+	{
 		if ($this->id_object)
 		{
 			$this->object = $this->loadObject();
@@ -876,6 +905,11 @@ class AdminControllerCore extends Controller
 	 * Object creation
 	 */
 	public function processAdd()
+	{
+		return $this->_processAdd__AdminControllerCore();
+	}
+
+	protected function _processAdd__AdminControllerCore()
 	{
 		if (!isset($this->className) || empty($this->className))
 			return false;
@@ -926,6 +960,11 @@ class AdminControllerCore extends Controller
 	 * Object update
 	 */
 	public function processUpdate()
+	{
+		return $this->_processUpdate__AdminControllerCore();
+	}
+
+	protected function _processUpdate__AdminControllerCore()
 	{
 		/* Checking fields validity */
 		$this->validateRules();
@@ -1019,6 +1058,11 @@ class AdminControllerCore extends Controller
 	 */
 	public function processUpdateFields()
 	{
+		return $this->_processUpdateFields__AdminControllerCore();
+	}
+
+	protected function _processUpdateFields__AdminControllerCore()
+	{
 		if (!is_array($fields = Tools::getValue('fieldsBox')))
 			$fields = array();
 
@@ -1035,6 +1079,11 @@ class AdminControllerCore extends Controller
 	 * Change object status (active, inactive)
 	 */
 	public function processStatus()
+	{
+		return $this->_processStatus__AdminControllerCore();
+	}
+
+	protected function _processStatus__AdminControllerCore()
 	{
 		if (Validate::isLoadedObject($object = $this->loadObject()))
 		{
@@ -1066,6 +1115,11 @@ class AdminControllerCore extends Controller
 	 */
 	public function processPosition()
 	{
+		return $this->_processPosition__AdminControllerCore();
+	}
+
+	protected function _processPosition__AdminControllerCore()
+	{
 		if (!Validate::isLoadedObject($object = $this->loadObject()))
 		{
 			$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').
@@ -1086,6 +1140,11 @@ class AdminControllerCore extends Controller
 	 * Cancel all filters for this tab
 	 */
 	public function processResetFilters($list_id = null)
+	{
+		$this->_processResetFilters__AdminControllerCore($list_id);
+	}
+
+	protected function _processResetFilters__AdminControllerCore($list_id = null)
 	{
 		if ($list_id === null)
 			$list_id = isset($this->list_id) ? $this->list_id : $this->table;
@@ -1118,6 +1177,11 @@ class AdminControllerCore extends Controller
 	 * Update options and preferences
 	 */
 	protected function processUpdateOptions()
+	{
+		$this->_processUpdateOptions__AdminControllerCore();
+	}
+
+	protected function _processUpdateOptions__AdminControllerCore()
 	{
 		$this->beforeUpdateOptions();
 
@@ -1238,6 +1302,11 @@ class AdminControllerCore extends Controller
 
 	public function initPageHeaderToolbar()
 	{
+		$this->_initPageHeaderToolbar__AdminControllerCore();
+	}
+
+	protected function _initPageHeaderToolbar__AdminControllerCore()
+	{
 		if (empty($this->toolbar_title))
 			$this->initToolbarTitle();
 
@@ -1294,6 +1363,11 @@ class AdminControllerCore extends Controller
 	 *
 	 */
 	public function initToolbar()
+	{
+		$this->_initToolbar__AdminControllerCore();
+	}
+
+	protected function _initToolbar__AdminControllerCore()
 	{
 		switch ($this->display)
 		{
@@ -1356,6 +1430,11 @@ class AdminControllerCore extends Controller
 	 * @return object|boolean
 	 */
 	protected function loadObject($opt = false)
+	{
+		return $this->_loadObject__AdminControllerCore($opt);
+	}
+
+	protected function _loadObject__AdminControllerCore($opt = false)
 	{
 		if (!isset($this->className) || empty($this->className))
 			return true;
@@ -1424,6 +1503,11 @@ class AdminControllerCore extends Controller
 
 	public function displayAjax()
 	{
+		return $this->_displayAjax__AdminControllerCore();
+	}
+
+	protected function _displayAjax__AdminControllerCore()
+	{
 		if ($this->json)
 		{
 			$this->context->smarty->assign(array(
@@ -1444,6 +1528,11 @@ class AdminControllerCore extends Controller
 	}
 
 	public function display()
+	{
+		$this->_display__AdminControllerCore();
+	}
+
+	protected function _display__AdminControllerCore()
 	{
 		$this->context->smarty->assign(array(
 			'display_header' => $this->display_header,
@@ -1519,6 +1608,11 @@ class AdminControllerCore extends Controller
 	 */
 	protected function displayWarning($msg)
 	{
+		$this->_displayWarning__AdminControllerCore($msg);
+	}
+
+	protected function _displayWarning__AdminControllerCore($msg)
+	{
 		$this->warnings[] = $msg;
 	}
 
@@ -1529,6 +1623,11 @@ class AdminControllerCore extends Controller
 	 */
 	protected function displayInformation($msg)
 	{
+		$this->_displayInformation__AdminControllerCore($msg);
+	}
+
+	protected function _displayInformation__AdminControllerCore($msg)
+	{
 		$this->informations[] = $msg;
 	}
 
@@ -1536,6 +1635,11 @@ class AdminControllerCore extends Controller
 	 * Assign smarty variables for the header
 	 */
 	public function initHeader()
+	{
+		$this->_initHeader__AdminControllerCore();
+	}
+
+	protected function _initHeader__AdminControllerCore()
 	{
 		// Multishop
 		$is_multishop = Shop::isFeatureActive();
@@ -1755,6 +1859,11 @@ class AdminControllerCore extends Controller
 	 */
 	public function initContent()
 	{
+		$this->_initContent__AdminControllerCore();
+	}
+
+	protected function _initContent__AdminControllerCore()
+	{
 		if (!$this->viewAccess())
 		{
 			$this->errors[] = Tools::displayError('You do not have permission to view this.');
@@ -1812,6 +1921,11 @@ class AdminControllerCore extends Controller
 	 * init tab modules list and add button in toolbar
 	 */
 	protected function initTabModuleList()
+	{
+		$this->_initTabModuleList__AdminControllerCore();
+	}
+
+	protected function _initTabModuleList__AdminControllerCore()
 	{
 		if (!$this->isFresh(Module::CACHE_FILE_MUST_HAVE_MODULES_LIST, 86400))
 			@file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_MUST_HAVE_MODULES_LIST, Tools::addonsRequest('must-have'));
@@ -1901,6 +2015,11 @@ class AdminControllerCore extends Controller
 	 */
 	public function initCursedPage()
 	{
+		$this->_initCursedPage__AdminControllerCore();
+	}
+
+	protected function _initCursedPage__AdminControllerCore()
+	{
 		$this->layout = 'invalid_token.tpl';
 	}
 
@@ -1908,6 +2027,11 @@ class AdminControllerCore extends Controller
 	 * Assign smarty variables for the footer
 	 */
 	public function initFooter()
+	{
+		$this->_initFooter__AdminControllerCore();
+	}
+
+	protected function _initFooter__AdminControllerCore()
 	{
 		//RTL Support
 		//rtl.js overrides inline styles
@@ -1931,6 +2055,11 @@ class AdminControllerCore extends Controller
 	}
 
 	public function initModal()
+	{
+		$this->_initModal__AdminControllerCore();
+	}
+
+	protected function _initModal__AdminControllerCore()
 	{
 		if ($this->logged_on_addons)
 		{
@@ -1962,6 +2091,11 @@ class AdminControllerCore extends Controller
 
 	public function renderModal()
 	{
+		return $this->_renderModal__AdminControllerCore();
+	}
+
+	protected function _renderModal__AdminControllerCore()
+	{
 		$modal_render = '';
 		if (is_array($this->modals) && count($this->modals))
 		{
@@ -1975,6 +2109,11 @@ class AdminControllerCore extends Controller
 	}
 
 	public function renderModulesList()
+	{
+		return $this->_renderModulesList__AdminControllerCore();
+	}
+
+	protected function _renderModulesList__AdminControllerCore()
 	{
 		// Load cache file modules list (natives and partners modules)
 		$xmlModules = false;
@@ -2009,6 +2148,11 @@ class AdminControllerCore extends Controller
 	 * Function used to render the list to display for this controller
 	 */
 	public function renderList()
+	{
+		return $this->_renderList__AdminControllerCore();
+	}
+
+	protected function _renderList__AdminControllerCore()
 	{
 		if (!($this->fields_list && is_array($this->fields_list)))
 			return false;
@@ -2066,6 +2210,11 @@ class AdminControllerCore extends Controller
 	 */
 	public function renderView()
 	{
+		return $this->_renderView__AdminControllerCore();
+	}
+
+	protected function _renderView__AdminControllerCore()
+	{
 		$helper = new HelperView($this);
 		$this->setHelperDisplay($helper);
 		$helper->tpl_vars = $this->tpl_view_vars;
@@ -2081,6 +2230,11 @@ class AdminControllerCore extends Controller
 	 */
 	public function renderDetails()
 	{
+		return $this->_renderDetails__AdminControllerCore();
+	}
+
+	protected function _renderDetails__AdminControllerCore()
+	{
 		return $this->renderList();
 	}
 
@@ -2088,6 +2242,11 @@ class AdminControllerCore extends Controller
 	 * Function used to render the form for this controller
 	 */
 	public function renderForm()
+	{
+		return $this->_renderForm__AdminControllerCore();
+	}
+
+	protected function _renderForm__AdminControllerCore()
 	{
 		if (!$this->default_form_language)
 			$this->getLanguages();
@@ -2148,6 +2307,11 @@ class AdminControllerCore extends Controller
 	 * Function used to render the options for this controller
 	 */
 	public function renderOptions()
+	{
+		return $this->_renderOptions__AdminControllerCore();
+	}
+
+	protected function _renderOptions__AdminControllerCore()
 	{
 		Hook::exec('action'.$this->controller_name.'OptionsModifier', array(
 			'options' => &$this->fields_options,
@@ -2289,6 +2453,11 @@ class AdminControllerCore extends Controller
 	 */
 	public function init()
 	{
+		$this->_init__AdminControllerCore();
+	}
+
+	protected function _init__AdminControllerCore()
+	{
 		// Has to be removed for the next Prestashop version
 		global $currentIndex;
 
@@ -2369,6 +2538,11 @@ class AdminControllerCore extends Controller
 
 	public function initShopContext()
 	{
+		$this->_initShopContext__AdminControllerCore();
+	}
+
+	protected function _initShopContext__AdminControllerCore()
+	{
 		if (!$this->context->employee->isLoggedBack())
 			return;
 
@@ -2440,6 +2614,11 @@ class AdminControllerCore extends Controller
 	 * Retrieve GET and POST value and translate them to actions
 	 */
 	public function initProcess()
+	{
+		$this->_initProcess__AdminControllerCore();
+	}
+
+	protected function _initProcess__AdminControllerCore()
 	{
 		if (!isset($this->list_id))
 			$this->list_id = $this->table;
@@ -3310,6 +3489,11 @@ class AdminControllerCore extends Controller
 	 */
 	protected function processBulkDelete()
 	{
+		return $this->_processBulkDelete__AdminControllerCore();
+	}
+
+	protected function _processBulkDelete__AdminControllerCore()
+	{
 		if (is_array($this->boxes) && !empty($this->boxes))
 		{
 			$object = new $this->className();
@@ -3422,6 +3606,11 @@ class AdminControllerCore extends Controller
 	 */
 	protected function processBulkStatusSelection($status)
 	{
+		return $this->_processBulkStatusSelection__AdminControllerCore($status);
+	}
+
+	protected function _processBulkStatusSelection__AdminControllerCore($status)
+	{
 		$result = true;
 		if (is_array($this->boxes) && !empty($this->boxes))
 		{
@@ -3436,6 +3625,11 @@ class AdminControllerCore extends Controller
 	}
 
 	protected function processBulkAffectZone()
+	{
+		return $this->_processBulkAffectZone__AdminControllerCore();
+	}
+
+	protected function _processBulkAffectZone__AdminControllerCore()
 	{
 		$result = false;
 		if (is_array($this->boxes) && !empty($this->boxes))
@@ -3468,6 +3662,11 @@ class AdminControllerCore extends Controller
 	 * prepare the view to display the required fields form
 	 */
 	public function displayRequiredFields()
+	{
+		return $this->_displayRequiredFields__AdminControllerCore();
+	}
+
+	protected function _displayRequiredFields__AdminControllerCore()
 	{
 		if (!$this->tabAccess['add'] || !$this->tabAccess['delete'] === '1' || !$this->required_database)
 			return;
@@ -3587,6 +3786,11 @@ class AdminControllerCore extends Controller
 	 */
 	protected $translationsTab = array();
 	public function displayModuleOptions($module, $output_type = 'link', $back = null)
+	{
+		return $this->_displayModuleOptions__AdminControllerCore($module, $output_type, $back);
+	}
+
+	protected function _displayModuleOptions__AdminControllerCore($module, $output_type = 'link', $back = null)
 	{
 		if (!isset($module->enable_device))
 			$module->enable_device = Context::DEVICE_COMPUTER | Context::DEVICE_TABLET | Context::DEVICE_MOBILE;

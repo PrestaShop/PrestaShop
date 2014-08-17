@@ -95,6 +95,11 @@ abstract class ControllerCore
 	 */
 	public function init()
 	{
+		$this->_init__ControllerCore();
+	}
+
+	protected function _init__ControllerCore()
+	{
 		if (_PS_MODE_DEV_ && $this->controller_type == 'admin')
 			set_error_handler(array(__CLASS__, 'myErrorHandler'));
 		if (!defined('_PS_BASE_URL_'))
@@ -159,6 +164,11 @@ abstract class ControllerCore
 	 * Start controller process (this method shouldn't be overriden !)
 	 */
 	public function run()
+	{
+		$this->_run__ControllerCore();
+	}
+
+	protected function _run__ControllerCore()
 	{
 		$this->init();
 		if ($this->checkAccess())
