@@ -894,7 +894,8 @@ $(document).ready(function()
 	});
 
 	// js for the buttons of swap helper
-	$("#addSwap").on('click', function() {
+	$("#addSwap").on('click', function(e) {
+		e.preventDefault();
 		$('#availableSwap option:selected').each( function() {
 			$('#selectedSwap').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
 			$(this).remove();
@@ -902,7 +903,8 @@ $(document).ready(function()
 		$('#selectedSwap option').prop('selected', true);
 	});
 
-	$("#removeSwap").on('click', function() {
+	$("#removeSwap").on('click', function(e) {
+		e.preventDefault();
 		$('#selectedSwap option:selected').each( function() {
 			$('#availableSwap').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
 			$(this).remove();
