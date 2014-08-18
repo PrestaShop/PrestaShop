@@ -328,7 +328,7 @@
 														{/foreach}
 													{/foreach}
 													</select>
-												<a href="#" id="addSwap" class="btn btn-default btn-block">{l s='Add'}<i class="icon-arrow-right"></i></a>
+													<a href="#" id="addSwap" class="btn btn-default btn-block">{l s='Add'} <i class="icon-arrow-right"></i></a>
 												</div>
 												<div class="col-xs-6">
 													<select {if isset($input.size)}size="{$input.size|escape:'html':'utf-8'}"{/if}{if isset($input.onchange)}onchange="{$input.onchange|escape:'html':'utf-8'}"{/if} class="{if isset($input.class)}{$input.class|escape:'html':'utf-8'}{/if}" id="selectedSwap" name="{$input.name|escape:'html':'utf-8'}_selected[]" multiple="multiple">
@@ -348,7 +348,7 @@
 														{/foreach}
 													{/foreach}
 													</select>
-												<a href="#" id="removeSwap" class="btn btn-default btn-block">{l s='Remove'} <i class="icon-arrow-right"></i></a>
+													<a href="#" id="removeSwap" class="btn btn-default btn-block"><i class="icon-arrow-left"></i> {l s='Remove'}</a>
 												</div>
 											</div>
 										</div>
