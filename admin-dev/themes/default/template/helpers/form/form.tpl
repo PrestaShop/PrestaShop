@@ -233,7 +233,7 @@
 										  {$input.suffix}
 										</span>
 										{/if}
-										
+
 										{if isset($input.maxchar) || isset($input.prefix) || isset($input.suffix)}
 										</div>
 										{/if}
@@ -306,6 +306,53 @@
 										});
 									</script>
 									{/if}
+								{elseif $input.type == 'swap'}
+									<div class="form-group">
+										<div class="col-lg-9">
+											<div class="form-control-static row">
+												<div class="col-xs-6">
+													<select {if isset($input.size)}size="{$input.size|escape:'html':'utf-8'}"{/if}{if isset($input.onchange)}onchange="{$input.onchange|escape:'html':'utf-8'}"{/if} class="{if isset($input.class)}{$input.class|escape:'html':'utf-8'}{/if}" id="availableSwap" name="{$input.name|escape:'html':'utf-8'}_available[]" multiple="multiple">
+													{foreach $input.options.query AS $option}
+														{foreach $fields_value[$input.name] as $field_value}
+															{if is_object($option)}
+																{if $field_value != $option->$input.options.id}
+																	<option value="{$option->$input.options.id}">{$option->$input.options.name}</option>
+																{/if}
+															{elseif $option == "-"}
+																<option value="">-</option>
+															{else}
+																{if $field_value != $option[$input.options.id]}
+																	<option value="{$option[$input.options.id]}">{$option[$input.options.name]}</option>
+																{/if}
+															{/if}
+														{/foreach}
+													{/foreach}
+													</select>
+												<a href="#" id="addSwap" class="btn btn-default btn-block">{l s='Add'}<i class="icon-arrow-right"></i></a>
+												</div>
+												<div class="col-xs-6">
+													<select {if isset($input.size)}size="{$input.size|escape:'html':'utf-8'}"{/if}{if isset($input.onchange)}onchange="{$input.onchange|escape:'html':'utf-8'}"{/if} class="{if isset($input.class)}{$input.class|escape:'html':'utf-8'}{/if}" id="selectedSwap" name="{$input.name|escape:'html':'utf-8'}_selected[]" multiple="multiple">
+													{foreach $input.options.query AS $option}
+														{foreach $fields_value[$input.name] as $field_value}
+																{if is_object($option)}
+																	{if $field_value == $option->$input.options.id}
+																		<option value="{$option->$input.options.id}">{$option->$input.options.name}</option>
+																	{/if}
+																{elseif $option == "-"}
+																	<option value="">-</option>
+																{else}
+																	{if $field_value == $option[$input.options.id]}
+																		<option value="{$option[$input.options.id]}">{$option[$input.options.name]}</option>
+																	{/if}
+																{/if}
+														{/foreach}
+													{/foreach}
+													</select>
+												<a href="#" id="removeSwap" class="btn btn-default btn-block">{l s='Remove'} <i class="icon-arrow-right"></i></a>
+												</div>
+											</div>
+										</div>
+									</div>
 								{elseif $input.type == 'select'}
 									{if isset($input.options.query) && !$input.options.query && isset($input.empty_message)}
 										{$input.empty_message}
@@ -412,7 +459,7 @@
 										<div class="col-lg-9">
 									{/if}
 											<textarea name="{$input.name}_{$language.id_lang}" class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte{if isset($input.class)} {$input.class}{/if}{else}{if isset($input.class)} {$input.class}{else} textarea-autosize{/if}{/if}">{$fields_value[$input.name][$language.id_lang]|escape:'html':'UTF-8'}</textarea>
-									{if $languages|count > 1}	
+									{if $languages|count > 1}
 										</div>
 										<div class="col-lg-2">
 											<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
@@ -487,7 +534,7 @@
 												<hr />
 												<div class="form-group">
 													<label for="{$input.name}" class="required control-label col-lg-2">
-														<span class="label-tooltip" data-toggle="tooltip" data-html="true" title="" data-original-title="Password should be at least 8 characters long.">						
+														<span class="label-tooltip" data-toggle="tooltip" data-html="true" title="" data-original-title="Password should be at least 8 characters long.">
 															{l s='New password'}
 														</span>
 													</label>
@@ -552,7 +599,7 @@
 											var $generateBtn = $('#{$input.name}-generate-btn');
 											var $generateField = $('#{$input.name}-generate-field');
 											var $cancelBtn = $('#{$input.name}-cancel-btn');
-											
+
 											var feedback = [
 												{ badge: 'text-danger', text: '{l s="Invalid" js=1}' },
 												{ badge: 'text-warning', text: '{l s="Okay" js=1}' },
