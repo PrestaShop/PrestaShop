@@ -911,6 +911,12 @@ $(document).ready(function()
 		});
 		$('#selectedSwap option').prop('selected', true);
 	});
+
+	if ($('#selectedSwap').length != 0) {
+		$('button:submit').click(function() {
+			$('#selectedSwap option').attr('selected', 'selected');
+		});
+	}
 });
 
 
