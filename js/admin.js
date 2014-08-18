@@ -135,14 +135,14 @@ function copy2friendlyURL()
 {
 	if (typeof(id_product) == 'undefined')
 		id_product = false;
-	
+
 	if (ps_force_friendly_product || !$('#link_rewrite_' + id_language).val().length || !id_product)//check if user didn't type anything in rewrite field, to prevent overwriting
 	{
 		$('#link_rewrite_' + id_language).val(str2url($('#name_' + id_language).val().replace(/^[0-9]+\./, ''), 'UTF-8').replace('%', ''));
 		if ($('#friendly-url'))
 			$('#friendly-url').html($('#link_rewrite_' + id_language).val());
 		// trigger onchange event to use anything binded there
-		$('#link_rewrite_' + id_language).change(); 
+		$('#link_rewrite_' + id_language).change();
 	}
 	return;
 }
@@ -540,7 +540,7 @@ function showRedirectProductOptions(show)
 		$('.redirect_product_options').fadeIn();
 	else
 		$('.redirect_product_options').fadeOut();
-	
+
 	redirectSelectChange();
 }
 
@@ -579,7 +579,7 @@ function showRedirectProductSelectOptions(show)
 		$('.redirect_product_options_product_choise').hide();
 		removeRelatedProduct();
 	}
-		
+
 }
 
 function showOptions(show)
@@ -780,11 +780,11 @@ $(document).ready(function()
 		setTimeout(function(){element.hide()}, 1000);
 		clearTimeout(ajax_running_timeout);
 	});
-	
+
 	bindTabModuleListAction();
-	
+
 	bindAddonsButtons();
-	
+
 	//Check filters value on submit filter
 	$("[name='submitFilter']").click(function(event) {
 		var list_id = $(this).data('list-id');
@@ -835,7 +835,7 @@ $(document).ready(function()
 				{
 					$(this).css('width', $(this).width());
 					// fixing parent height will prevent that annoying "pagequake" thing
-					// the order is important : this has to be set before adding class fix-toolbar 
+					// the order is important : this has to be set before adding class fix-toolbar
 					$(this).parent().css('height', $(this).parent().height());
 					$(this).addClass("fix-toolbar");
 				}
@@ -892,6 +892,23 @@ $(document).ready(function()
 		});
 		return false;
 	});
+
+	// js for the buttons of swap helper
+	$("#addSwap").on('click', function() {
+		$('#availableSwap option:selected').each( function() {
+			$('#selectedSwap').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
+			$(this).remove();
+		});
+		$('#selectedSwap option').prop('selected', true);
+	});
+
+	$("#removeSwap").on('click', function() {
+		$('#selectedSwap option:selected').each( function() {
+			$('#availableSwap').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
+			$(this).remove();
+		});
+		$('#selectedSwap option').prop('selected', true);
+	});
 });
 
 
@@ -902,7 +919,7 @@ function bindTabModuleListAction()
 			option = $('#'+$(this).data('option')+' :selected');
 			if ($(option).data('onclick') != '')
 			{
-				
+
 				var f = eval("(function(){ "+$(option).data('onclick')+"})");
 				if (f.call())
 					window.location.href = $(option).data('href');
@@ -910,7 +927,7 @@ function bindTabModuleListAction()
 			else
 				window.location.href = $(option).data('href');
 			return false;
-		});			
+		});
 	});
 }
 
@@ -1037,7 +1054,7 @@ function display_action_details(row_id, controller, token, action, params)
 				}
 				current_element.data('dataMaped', true);
 				current_element.data('opened', false);
-				
+
 				if (typeof(initTableDnD) != 'undefined')
 					initTableDnD('.details_'+id+' table.tableDnD');
 			}
@@ -1073,7 +1090,7 @@ function changeEmployeeLanguage()
 {
 	if (typeof allowEmployeeFormLang !== 'undefined' && allowEmployeeFormLang)
 		$.post("index.php", {
-			action: 'formLanguage', 
+			action: 'formLanguage',
 			tab: 'AdminEmployees',
 			ajax: 1,
 			token: employee_token,
@@ -1114,7 +1131,7 @@ function sendBulkAction(form, action)
 	$(form).submit();
 }
 
-function openModulesList() 
+function openModulesList()
 {
 	if (!modules_list_loaded)
 	{
@@ -1184,7 +1201,7 @@ function bindAddonsButtons()
 		catch(e){}
 		return false;
 	});
-	
+
 	// Method to log out PrestaShop Addons WebServices
 	$('#addons_logout_button').click(function()
 	{
@@ -1263,7 +1280,7 @@ function check_for_all_accesses(tabsize, tabnumber)
 	var i = 0;
 	var res = 0;
 	var right = 0;
-	var rights = new Array('view', 'add', 'edit', 'delete', 'all'); 
+	var rights = new Array('view', 'add', 'edit', 'delete', 'all');
 
 	while (i != parseInt(tabsize) + 1)
 	{
@@ -1379,7 +1396,7 @@ function checkLangPack(token){
 				action:'checkLangPack',
 				token:token,
 				ajax:1,
-				iso_lang:($('#iso_code').val()).toLowerCase(), 
+				iso_lang:($('#iso_code').val()).toLowerCase(),
 				ps_version:$('#ps_version').val()
 			},
 			function(ret)
@@ -1432,7 +1449,7 @@ function isCleanHtml(content)
 	events += '|ondragleave|ondragover|ondragstart|ondrop|onerrorupdate|onfilterchange|onfinish|onfocusin|onfocusout|onhashchange|onhelp|oninput|onlosecapture|onmessage|onmouseup|onmovestart';
 	events += '|onoffline|ononline|onpaste|onpropertychange|onreadystatechange|onresizeend|onresizestart|onrowenter|onrowexit|onrowsdelete|onrowsinserted|onscroll|onsearch|onselectionchange';
 	events += '|onselectstart|onstart|onstop';
-	
+
 	var script1 = /<[\s]*script/im;
 	var script2 = new RegExp('('+events+')[\s]*=', 'im');
 	var script3 = /.*script\:/im;
@@ -1466,7 +1483,7 @@ function createSqlQueryName()
 	var title = false;
 	if ($('.page-title'))
 		title = $('.page-title').first().text().replace(/\s+/g, ' ').trim();
-	
+
 	var name = false;
 	if (container && current && container != current)
 		name = container + ' > ' + current;
@@ -1474,7 +1491,7 @@ function createSqlQueryName()
 		name = container;
 	else if (current)
 		name = current;
-	
+
 	if (title && title != current && title != container)
 	{
 		if (name)
@@ -1485,4 +1502,3 @@ function createSqlQueryName()
 
 	return name.trim();
 }
-
