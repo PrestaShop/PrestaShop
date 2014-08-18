@@ -108,14 +108,16 @@ class PrestaShopExceptionCore extends Exception
 			$offset = 0;
 		}
 		$lines = array_slice($lines, $offset, $total);
-
+		++$offset;
+		
 		echo '<div class="psTrace" id="psTrace_'.$id.'" '.((is_null($id) ? 'style="display: block"' : '')).'><pre>';
 		foreach ($lines as $k => $l)
 		{
-			if ($offset + $k == $line - 1)
-				echo '<span class="selected">'.($offset + $k).'. '.htmlspecialchars($l).'</span>';
+			$string = ($offset + $k).'. '.htmlspecialchars($l);
+			if ($offset + $k == $line)
+				echo '<span class="selected">'.$string.'</span>';
 			else
-				echo ($offset + $k).'. '.htmlspecialchars($l);
+				echo $string;
 		}
 		echo '</pre></div>';
 	}
