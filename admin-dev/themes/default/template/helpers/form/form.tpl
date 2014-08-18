@@ -311,44 +311,40 @@
 										<div class="col-lg-9">
 											<div class="form-control-static row">
 												<div class="col-xs-6">
-													<select {if isset($input.size)}size="{$input.size|escape:'html':'utf-8'}"{/if}{if isset($input.onchange)}onchange="{$input.onchange|escape:'html':'utf-8'}"{/if} class="{if isset($input.class)}{$input.class|escape:'html':'utf-8'}{/if}" id="availableSwap" name="{$input.name|escape:'html':'utf-8'}_available[]" multiple="multiple">
+													<select {if isset($input.size)}size="{$input.size|escape:'html':'utf-8'}"{/if}{if isset($input.onchange)} onchange="{$input.onchange|escape:'html':'utf-8'}"{/if} class="{if isset($input.class)}{$input.class|escape:'html':'utf-8'}{/if}" id="availableSwap" name="{$input.name|escape:'html':'utf-8'}_available[]" multiple="multiple">
 													{foreach $input.options.query AS $option}
-														{foreach $fields_value[$input.name] as $field_value}
-															{if is_object($option)}
-																{if $field_value != $option->$input.options.id}
-																	<option value="{$option->$input.options.id}">{$option->$input.options.name}</option>
-																{/if}
-															{elseif $option == "-"}
-																<option value="">-</option>
-															{else}
-																{if $field_value != $option[$input.options.id]}
-																	<option value="{$option[$input.options.id]}">{$option[$input.options.name]}</option>
-																{/if}
+														{if is_object($option)}
+															{if !in_array($option->$input.options.id, $fields_value[$input.name])}
+																<option value="{$option->$input.options.id}">{$option->$input.options.name}</option>
 															{/if}
-														{/foreach}
+														{elseif $option == "-"}
+															<option value="">-</option>
+														{else}
+															{if !in_array($option[$input.options.id], $fields_value[$input.name])}
+																<option value="{$option[$input.options.id]}">{$option[$input.options.name]}</option>
+															{/if}
+														{/if}
 													{/foreach}
 													</select>
-												<a href="#" id="addSwap" class="btn btn-default btn-block">{l s='Add'}<i class="icon-arrow-right"></i></a>
+													<a href="#" id="addSwap" class="btn btn-default btn-block">{l s='Add'} <i class="icon-arrow-right"></i></a>
 												</div>
 												<div class="col-xs-6">
-													<select {if isset($input.size)}size="{$input.size|escape:'html':'utf-8'}"{/if}{if isset($input.onchange)}onchange="{$input.onchange|escape:'html':'utf-8'}"{/if} class="{if isset($input.class)}{$input.class|escape:'html':'utf-8'}{/if}" id="selectedSwap" name="{$input.name|escape:'html':'utf-8'}_selected[]" multiple="multiple">
+													<select {if isset($input.size)}size="{$input.size|escape:'html':'utf-8'}"{/if}{if isset($input.onchange)} onchange="{$input.onchange|escape:'html':'utf-8'}"{/if} class="{if isset($input.class)}{$input.class|escape:'html':'utf-8'}{/if}" id="selectedSwap" name="{$input.name|escape:'html':'utf-8'}_selected[]" multiple="multiple">
 													{foreach $input.options.query AS $option}
-														{foreach $fields_value[$input.name] as $field_value}
-																{if is_object($option)}
-																	{if $field_value == $option->$input.options.id}
-																		<option value="{$option->$input.options.id}">{$option->$input.options.name}</option>
-																	{/if}
-																{elseif $option == "-"}
-																	<option value="">-</option>
-																{else}
-																	{if $field_value == $option[$input.options.id]}
-																		<option value="{$option[$input.options.id]}">{$option[$input.options.name]}</option>
-																	{/if}
-																{/if}
-														{/foreach}
+														{if is_object($option)}
+															{if in_array($option->$input.options.id, $fields_value[$input.name])}
+																<option value="{$option->$input.options.id}">{$option->$input.options.name}</option>
+															{/if}
+														{elseif $option == "-"}
+															<option value="">-</option>
+														{else}
+															{if in_array($option[$input.options.id], $fields_value[$input.name])}
+																<option value="{$option[$input.options.id]}">{$option[$input.options.name]}</option>
+															{/if}
+														{/if}
 													{/foreach}
 													</select>
-												<a href="#" id="removeSwap" class="btn btn-default btn-block">{l s='Remove'} <i class="icon-arrow-right"></i></a>
+													<a href="#" id="removeSwap" class="btn btn-default btn-block"><i class="icon-arrow-left"></i> {l s='Remove'}</a>
 												</div>
 											</div>
 										</div>
