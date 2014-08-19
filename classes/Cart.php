@@ -1692,7 +1692,7 @@ class CartCore extends ObjectModel
 			$id_warehouse = 0;
 			foreach ($warehouse_count_by_address[$product['id_address_delivery']] as $id_war => $val)
 			{
-				if (in_array((int)$id_war, $product['warehouse_list']) && !$product['is_virtual'])
+				if (in_array((int)$id_war, $product['warehouse_list'])
 				{
 					$product['carrier_list'] = array_merge($product['carrier_list'], Carrier::getAvailableCarrierList(new Product($product['id_product']), $id_war, $product['id_address_delivery'], null, $this));
 					if (!$id_warehouse)
@@ -1789,7 +1789,7 @@ class CartCore extends ObjectModel
 					{
 						foreach ($carrier_count as $id_carrier => $rate)
 						{
-							if ($id_carrier && in_array($id_carrier, $data['carrier_list']))
+							if (in_array($id_carrier, $data['carrier_list']))
 							{
 								if (!isset($package_list[$id_address_delivery][$key][$id_warehouse][$id_carrier]))
 									$package_list[$id_address_delivery][$key][$id_warehouse][$id_carrier] = array(
