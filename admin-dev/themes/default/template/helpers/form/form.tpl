@@ -912,8 +912,8 @@
 				nextText: '',
 				dateFormat: 'yy-mm-dd',
 				// Define a custom regional settings in order to use PrestaShop translation tools
-				currentText: '{l s='Now'}',
-				closeText: '{l s='Done'}',
+				currentText: '{l s='Now' js=1}',
+				closeText: '{l s='Done' js=1}',
 				ampm: false,
 				amNames: ['AM', 'A'],
 				pmNames: ['PM', 'P'],

@@ -109,7 +109,7 @@ class AdminCategoriesControllerCore extends AdminController
 			$this->_category = new Category($id_category);
 		else
 		{
-			if (Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP)
+			if (Shop::getContext() == Shop::CONTEXT_SHOP)
 				$this->_category = new Category($this->context->shop->id_category);
 			elseif (count(Category::getCategoriesWithoutParent()) > 1 && Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && count(Shop::getShops(true, null, true)) != 1)
 				$this->_category = Category::getTopCategory();
@@ -118,19 +118,19 @@ class AdminCategoriesControllerCore extends AdminController
 		}
 
 		$count_categories_without_parent = count(Category::getCategoriesWithoutParent());
-		$top_category = Category::getTopCategory();
+
 		if (Tools::isSubmit('id_category'))
 			$id_parent = $this->_category->id;
 		elseif (!Shop::isFeatureActive() && $count_categories_without_parent > 1)
-			$id_parent = $top_category->id;
+			$id_parent = (int)Configuration::get('PS_ROOT_CATEGORY');
 		elseif (Shop::isFeatureActive() && $count_categories_without_parent == 1)
-			$id_parent = Configuration::get('PS_HOME_CATEGORY');
+			$id_parent = (int)Configuration::get('PS_HOME_CATEGORY');
 		elseif (Shop::isFeatureActive() && $count_categories_without_parent > 1 && Shop::getContext() != Shop::CONTEXT_SHOP)
 		{
 			if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && count(Shop::getShops(true, null, true)) == 1)
 				$id_parent = $this->context->shop->id_category;
 			else
-				$id_parent = $top_category->id;
+				$id_parent = (int)Configuration::get('PS_ROOT_CATEGORY');
 		}
 		else
 			$id_parent = $this->context->shop->id_category;
@@ -219,7 +219,7 @@ class AdminCategoriesControllerCore extends AdminController
 		}
 
 		if (empty($categories_tree)
-			&& ($this->_category->id != 1 || Tools::isSubmit('id_category'))
+			&& ($this->_category->id != (int)Configuration::get('PS_ROOT_CATEGORY') || Tools::isSubmit('id_category'))
 			&& (Shop::getContext() == Shop::CONTEXT_SHOP && !Shop::isFeatureActive() && $count_categories_without_parent > 1))
 			$categories_tree = array(array('name' => $this->_category->name[$this->context->language->id]));
 
@@ -299,7 +299,7 @@ class AdminCategoriesControllerCore extends AdminController
 				'desc' => $this->l('Add New')
 			);
 		parent::initToolbar();
-		if ($this->_category->id == Category::getTopCategory()->id && isset($this->toolbar_btn['new']))
+		if ($this->_category->id == (int)Configuration::get('PS_ROOT_CATEGORY') && isset($this->toolbar_btn['new']))
 			unset($this->toolbar_btn['new']);
 		// after adding a category
 		if (empty($this->display))
@@ -473,7 +473,7 @@ class AdminCategoriesControllerCore extends AdminController
 					'tree'  => array(
 						'id'                  => 'categories-tree',
 						'selected_categories' => $selected_categories,
-						'disabled_categories' => !Tools::isSubmit('add'.$this->table) ? array($this->_category->id) : null
+						'disabled_categories' => (!Tools::isSubmit('add'.$this->table) && !Tools::isSubmit('submitAdd'.$this->table)) ? array($this->_category->id) : null
 					)
 				),
 				array(
@@ -578,7 +578,7 @@ class AdminCategoriesControllerCore extends AdminController
 			);
 
 		// remove category tree and radio button "is_root_category" if this category has the root category as parent category to avoid any conflict
-		if ($this->_category->id_parent == Category::getTopCategory()->id && Tools::isSubmit('updatecategory'))
+		if ($this->_category->id_parent == (int)Configuration::get('PS_ROOT_CATEGORY') && Tools::isSubmit('updatecategory'))
 			foreach ($this->fields_form['input'] as $k => $input)
 				if (in_array($input['name'], array('id_parent', 'is_root_category')))
 					unset($this->fields_form['input'][$k]);
@@ -658,7 +658,7 @@ class AdminCategoriesControllerCore extends AdminController
 
 		//if we create a you root category you have to associate to a shop before to add sub categories in. So we redirect to AdminCategories listing
 		if ($object && Tools::getValue('is_root_category'))
-			Tools::redirectAdmin(self::$currentIndex.'&id_category='.(int)Category::getTopCategory()->id.'&token='.Tools::getAdminTokenLite('AdminCategories').'&conf=3');
+			Tools::redirectAdmin(self::$currentIndex.'&id_category='.(int)Configuration::get('PS_ROOT_CATEGORY').'&token='.Tools::getAdminTokenLite('AdminCategories').'&conf=3');
 		return $object;
 	}
 

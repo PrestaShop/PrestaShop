@@ -454,6 +454,34 @@
 				{/if}
 			</div>
 
+			{if count($emails)}
+			<div class="panel">
+				<div class="panel-heading">
+					<i class="icon-envelope"></i> {l s='Last emails'}
+				</div>
+				<table class="table">
+					<thead>
+					<tr>
+						<th><span class="title_box">{l s='Date'}</span></th>
+						<th><span class="title_box">{l s='Language'}</span></th>
+						<th><span class="title_box">{l s='Subject'}</span></th>
+						<th><span class="title_box">{l s='Template'}</span></th>
+					</tr>
+					</thead>
+					<tbody>
+					{foreach $emails as $email}
+						<tr>
+							<td>{dateFormat date=$email['date_add'] full=1}</td>
+							<td>{$email['language']}</td>
+							<td>{$email['subject']}</td>
+							<td>{$email['template']}</td>
+						</tr>
+					{/foreach}
+					</tbody>
+				</table>
+			</div>
+			{/if}
+
 			{if count($connections)}
 			<div class="panel">
 				<div class="panel-heading">

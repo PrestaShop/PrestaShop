@@ -90,7 +90,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		$this->addRowAction('view');
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-		
+
 
 		return parent::renderList();
 	}
@@ -107,12 +107,18 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			$this->list_id    = 'attribute_values';
 			$this->lang       = true;
 
+
+
+			$this->context->smarty->assign(array(
+				'current' => self::$currentIndex.'&id_attribute_group='.(int)$id.'&viewattribute_group'
+			));
+
 			if (!Validate::isLoadedObject($obj = new AttributeGroup((int)$id)))
 			{
 				$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 				return;
 			}
-			
+
 			$this->attribute_name = $obj->name;
 			$this->fields_list = array(
 				'id_attribute' => array(
@@ -130,7 +136,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			if ($obj->group_type == 'color')
 				$this->fields_list['color'] = array(
 					'title' => $this->l('Color'),
-					'filter_key' => 'b!color'
+					'filter_key' => 'a!color',
 				);
 
 			$this->fields_list['position'] = array(
@@ -151,7 +157,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			return parent::renderList();
 		}
 	}
-	
+
 	/**
 	 * AdminController::renderForm() override
 	 * @see AdminController::renderForm()
@@ -315,7 +321,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			'label' => $this->l('Current texture'),
 			'name' => 'current_texture'
 		);
-		
+
 		$this->fields_form['input'][] = array(
 			'type' => 'closediv',
 			'name' => ''
@@ -410,10 +416,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			else
 				$this->redirect_after = self::$currentIndex.'&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&conf=3&update'.$this->table.'&token='.$this->token;
 		}
-		
+
 		if (count($this->errors))
 			$this->setTypeAttribute();
-		
+
 		return $object;
 	}
 
@@ -432,10 +438,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			else
 				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&conf=3&update'.$this->table.'&token='.$this->token;
 		}
-		
+
 		if (count($this->errors))
 			$this->setTypeAttribute();
-		
+
 		if (Tools::isSubmit('updateattribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute') || Tools::isSubmit('submitBulkdeleteattribute'))
 			Tools::clearColorListCache();
 
@@ -638,7 +644,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			$this->id_attribute = (int)Tools::getValue('id_attribute');
 		}
 	}
-	
+
 	protected function setTypeAttribute()
 	{
 		if (Tools::isSubmit('updateattribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute') || Tools::isSubmit('submitBulkdeleteattribute'))
@@ -646,7 +652,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			$this->table = 'attribute';
 			$this->className = 'Attribute';
 			$this->identifier = 'id_attribute';
-			
+
 			if ($this->display == 'edit')
 				$this->display = 'editAttributes';
 		}

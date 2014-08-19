@@ -36,7 +36,7 @@
                             <button type="submit" class="btn btn-default button button-medium exclusive" id="opc_guestCheckout"><span>{l s='Guest checkout'}</span></button>
                         </p>
                     </div>
-    
+
                     <div class="col-xs-12 col-md-6">
                         <p class="title_block">{l s='Create your account today and enjoy:'}</p>
                         <ul class="bullet">
@@ -70,7 +70,7 @@
 				</div>
 				<div class="required clearfix gender-line">
 					<label>{l s='Social title'}</label>
-					{foreach from=$genders key=k item=gender}	
+					{foreach from=$genders key=k item=gender}
                     	<div class="radio-inline">
                     	<label for="id_gender{$gender->id_gender}" class="top">
 						<input type="radio" name="id_gender" id="id_gender{$gender->id_gender}" value="{$gender->id_gender}"{if isset($smarty.post.id_gender) && $smarty.post.id_gender == $gender->id_gender || (isset($guestInformations) && $guestInformations.id_gender == $gender->id_gender)} checked="checked"{/if} />
@@ -133,11 +133,17 @@
                 	<label for="newsletter">
 					<input type="checkbox" name="newsletter" id="newsletter" value="1"{if isset($guestInformations) && isset($guestInformations.newsletter) && $guestInformations.newsletter} checked="checked"{/if} autocomplete="off"/>
 					{l s='Sign up for our newsletter!'}</label>
+					{if array_key_exists('newsletter', $field_required)}
+						<sup> *</sup>
+					{/if}
 				</div>
 				<div class="checkbox">
                 	<label for="optin">
 					<input type="checkbox" name="optin" id="optin" value="1"{if isset($guestInformations) && isset($guestInformations.optin) && $guestInformations.optin} checked="checked"{/if} autocomplete="off"/>
 					{l s='Receive special offers from our partners!'}</label>
+					{if array_key_exists('optin', $field_required)}
+						<sup> *</sup>
+					{/if}
 				</div>
 				{/if}
 				<h3 class="page-subheading top-indent">{l s='Delivery address'}</h3>
@@ -145,15 +151,15 @@
 				{$postCodeExist = false}
 				{$dniExist = false}
 				{foreach from=$dlv_all_fields item=field_name}
-				{if $field_name eq "company" && $b2b_enable}
+				{if $field_name eq "company"}
 					<div class="text form-group">
-						<label for="company">{l s='Company'}</label>
+						<label for="company">{l s='Company'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
 						<input type="text" class="text form-control validate" id="company" name="company" data-validate="isName" value="{if isset($guestInformations) && isset($guestInformations.company) && $guestInformations.company}{$guestInformations.company}{/if}" />
 					</div>
-				{elseif $field_name eq "vat_number"}	
+				{elseif $field_name eq "vat_number"}
 				<div id="vat_number_block" style="display:none;">
 					<div class="form-group">
-						<label for="vat_number">{l s='VAT number'}</label>
+						<label for="vat_number">{l s='VAT number'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
 						<input type="text" class="text form-control" name="vat_number" id="vat_number" value="{if isset($guestInformations) && isset($guestInformations.vat_number) && $guestInformations.vat_number}{$guestInformations.vat_number}{/if}" />
 					</div>
 				</div>
@@ -180,8 +186,8 @@
 					<input type="text" class="text form-control validate" name="address1" id="address1" data-validate="isAddress" value="{if isset($guestInformations) && isset($guestInformations.address1) && isset($guestInformations) && isset($guestInformations.address1) && $guestInformations.address1}{$guestInformations.address1}{/if}" />
 				</div>
 				{elseif $field_name eq "address2"}
-				<div class="text is_customer_param form-group">
-					<label for="address2">{l s='Address (Line 2)'}</label>
+				<div class="text{if !in_array($field_name, $required_fields)} is_customer_param{/if} form-group">
+					<label for="address2">{l s='Address (Line 2)'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
 					<input type="text" class="text form-control validate" name="address2" id="address2" data-validate="isAddress" value="{if isset($guestInformations) && isset($guestInformations.address2) && isset($guestInformations) && isset($guestInformations.address2) && $guestInformations.address2}{$guestInformations.address2}{/if}" />
 				</div>
 				{elseif $field_name eq "postcode"}
@@ -219,7 +225,7 @@
 					<label for="postcode">{l s='Zip/Postal code'} <sup>*</sup></label>
 					<input type="text" class="text form-control validate" name="postcode" id="postcode" data-validate="isPostCode" value="{if isset($guestInformations) && isset($guestInformations.postcode) && $guestInformations.postcode}{$guestInformations.postcode}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
 				</div>
-				{/if}				
+				{/if}
 				{if !$stateExist}
 				<div class="required id_state form-group unvisible">
 					<label for="id_state">{l s='State'} <sup>*</sup></label>
@@ -241,7 +247,7 @@
 				</div>
 				{if isset($one_phone_at_least) && $one_phone_at_least}
 					<p class="inline-infos required is_customer_param">{l s='You must register at least one phone number.'}</p>
-				{/if}								
+				{/if}
 				<div class="form-group is_customer_param">
 					<label for="phone">{l s='Home phone'}</label>
 					<input type="text" class="text form-control validate" name="phone" id="phone"  data-validate="isPhoneNumber" value="{if isset($guestInformations) && isset($guestInformations.phone) && $guestInformations.phone}{$guestInformations.phone}{/if}" />
@@ -264,15 +270,15 @@
 					{assign var='dniExist' value=false}
 					<h3 class="page-subheading top-indent">{l s='Invoice address'}</h3>
 					{foreach from=$inv_all_fields item=field_name}
-					{if $field_name eq "company" && $b2b_enable}
+					{if $field_name eq "company"}
 					<div class="form-group">
-						<label for="company_invoice">{l s='Company'}</label>
+						<label for="company_invoice">{l s='Company'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
 						<input type="text" class="text form-control validate" id="company_invoice" name="company_invoice"  data-validate="isName" value="" />
 					</div>
 					{elseif $field_name eq "vat_number"}
 					<div id="vat_number_block_invoice" class="is_customer_param" style="display:none;">
 						<div class="form-group">
-							<label for="vat_number_invoice">{l s='VAT number'}</label>
+							<label for="vat_number_invoice">{l s='VAT number'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
 							<input type="text" class="form-control" id="vat_number_invoice" name="vat_number_invoice" value="" />
 						</div>
 					</div>
@@ -299,8 +305,8 @@
 						<input type="text" class="form-control validate" name="address1_invoice" id="address1_invoice" data-validate="isAddress" value="{if isset($guestInformations) && isset($guestInformations.address1_invoice) && isset($guestInformations) && isset($guestInformations.address1_invoice) && $guestInformations.address1_invoice}{$guestInformations.address1_invoice}{/if}" />
 					</div>
 					{elseif $field_name eq "address2"}
-					<div class="form-group is_customer_param">
-						<label for="address2_invoice">{l s='Address (Line 2)'}</label>
+					<div class="form-group{if !in_array($field_name, $required_fields)} is_customer_param{/if}">
+						<label for="address2_invoice">{l s='Address (Line 2)'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
 						<input type="text" class="form-control address" name="address2_invoice" id="address2_invoice" data-validate="isAddress" value="{if isset($guestInformations) && isset($guestInformations.address2_invoice) && isset($guestInformations) && isset($guestInformations.address2_invoice) && $guestInformations.address2_invoice}{$guestInformations.address2_invoice}{/if}" />
 					</div>
 					{elseif $field_name eq "postcode"}
@@ -339,7 +345,7 @@
 						<label for="postcode_invoice">{l s='Zip/Postal Code'} <sup>*</sup></label>
 						<input type="text" class="form-control validate" name="postcode_invoice" id="postcode_invoice" data-validate="isPostCode" value="" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
 					</div>
-					{/if}					
+					{/if}
 					{if !$stateExist}
 					<div class="required id_state_invoice form-group unvisible">
 						<label for="id_state_invoice">{l s='State'} <sup>*</sup></label>
@@ -361,7 +367,7 @@
 					</div>
 					{if isset($one_phone_at_least) && $one_phone_at_least}
 						<p class="inline-infos required is_customer_param">{l s='You must register at least one phone number.'}</p>
-					{/if}					
+					{/if}
 					<div class="form-group is_customer_param">
 						<label for="phone_invoice">{l s='Home phone'}</label>
 						<input type="text" class="form-control validate" name="phone_invoice" id="phone_invoice" data-validate="isPhoneNumber" value="{if isset($guestInformations) && isset($guestInformations.phone_invoice) && $guestInformations.phone_invoice}{$guestInformations.phone_invoice}{/if}" />
@@ -378,7 +384,7 @@
                             <sup>*</sup>{l s='Required field'}
                         </p>
                     <button type="submit" name="submitAccount" id="submitAccount" class="btn btn-default button button-medium"><span>{l s='Save'}<i class="icon-chevron-right right"></i></span></button>
-                    
+
 				</div>
 				<div style="display: none;" id="opc_account_saved" class="alert alert-success">
 					{l s='Account information saved successfully'}

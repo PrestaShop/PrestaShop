@@ -74,7 +74,7 @@ class AdminMetaControllerCore extends AdminController
 				'validation' => 'isBool',
 				'cast' => 'intval',
 				'type' => 'bool',
-				'mod_rewrite' => $mod_rewrite
+				'desc' => (!$mod_rewrite ? $this->l('URL rewriting (mod_rewrite) is not active on your server, or it is not possible to check your server configuration. If you want to use Friendly URLs, you must activate this mod.') : '')
 			),
 			'PS_ALLOW_ACCENTED_CHARS_URL' => array(
 				'title' => $this->l('Accented URL'),
@@ -679,10 +679,12 @@ class AdminMetaControllerCore extends AdminController
 			$helper = new HelperOptions($this);
 			$this->setHelperDisplay($helper);
 			$helper->toolbar_scroll = true;
-			$helper->toolbar_btn = array('save' => array(
-								'href' => '#',
-								'desc' => $this->l('Save')
-							));
+			$helper->toolbar_btn = array(
+				'save' => array(
+					'href' => '#',
+					'desc' => $this->l('Save')
+				)
+			);
 			$helper->id = $this->id;
 			$helper->tpl_vars = $this->tpl_option_vars;
 			$options = $helper->generateOptions($this->fields_options);

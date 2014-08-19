@@ -24,7 +24,7 @@
 *}
 
 {capture name=path}
-    {l s='Bank-wire payment.' mod='bankwire'}
+	<a href="{$link->getPageLink('order', true, NULL, "step=3")|escape:'html':'UTF-8'}" title="{l s='Go back to the Checkout' mod='bankwire'}">{l s='Checkout' mod='bankwire'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='Bank-wire payment' mod='bankwire'}
 {/capture}
 
 <h1 class="page-heading">
@@ -42,7 +42,7 @@
     <form action="{$link->getModuleLink('bankwire', 'validation', [], true)|escape:'html':'UTF-8'}" method="post">
         <div class="box cheque-box">
             <h3 class="page-subheading">
-                {l s='Bank-wire payment.' mod='bankwire'}
+                {l s='Bank-wire payment' mod='bankwire'}
             </h3>
             <p class="cheque-indent">
                 <strong class="dark">
@@ -78,7 +78,7 @@
             <p>
                 - {l s='Bank wire account information will be displayed on the next page.' mod='bankwire'}
                 <br />
-                - {l s='Please confirm your order by clicking "I confirm my order."' mod='bankwire'}.
+                - {l s='Please confirm your order by clicking "I confirm my order".' mod='bankwire'}
             </p>
         </div><!-- .cheque-box -->
 

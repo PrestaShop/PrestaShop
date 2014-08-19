@@ -77,6 +77,7 @@ class GuestCore extends ObjectModel
 	{
 		$userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 		$acceptLanguage = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '';
+		$this->accept_language = $this->getLanguage($acceptLanguage);
 		$this->id_operating_system = $this->getOs($userAgent);
 		$this->id_web_browser = $this->getBrowser($userAgent);
 		$this->mobile_theme = Context::getContext()->getMobileDevice();

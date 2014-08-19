@@ -226,7 +226,7 @@ class ParentOrderControllerCore extends FrontController
 				$this->errors[] = Tools::displayError('No zone matches your address.');
 		}
 		else
-			$id_zone = Country::getIdZone((int)Configuration::get('PS_COUNTRY_DEFAULT'));
+			$id_zone = Country::getIdZone((int)Tools::getCountry());
 		
 		if (Tools::getIsset('delivery_option'))
 		{
@@ -329,9 +329,9 @@ class ParentOrderControllerCore extends FrontController
 				$cart_product_context);
 
 			if (Product::getTaxCalculationMethod())
-				$product['is_discounted'] = $product['price_without_specific_price'] != $product['price'];
+				$product['is_discounted'] = $product['price_without_specific_price'] != Tools::ps_round($product['price'], _PS_PRICE_DISPLAY_PRECISION_);
 			else
-				$product['is_discounted'] = $product['price_without_specific_price'] != $product['price_wt'];
+				$product['is_discounted'] = $product['price_without_specific_price'] != Tools::ps_round($product['price_wt'], _PS_PRICE_DISPLAY_PRECISION_);
 		}
 		
 		// Get available cart rules and unset the cart rules already in the cart

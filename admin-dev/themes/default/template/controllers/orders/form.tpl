@@ -25,6 +25,7 @@
 <script type="text/javascript">
 	var id_cart = {$cart->id|intval};
 	var id_customer = 0;
+	var admin_order_tab_link = "{$link->getAdminLink('AdminOrders')|addslashes}";
 	var changed_shipping_price = false;
 	var shipping_price_selected_carrier = '';
 	var current_index = '{$current|escape:'html':'UTF-8'}&token={$token|escape:'html':'UTF-8'}';
@@ -42,12 +43,12 @@
 	var currency_sign = '';
 	var currency_blank = false;
 	var priceDisplayPrecision = {$smarty.const._PS_PRICE_DISPLAY_PRECISION_|intval};
-	
+
 	{foreach from=$defaults_order_state key='module' item='id_order_state'}
 		defaults_order_state['{$module}'] = '{$id_order_state}';
 	{/foreach}
 	$(document).ready(function() {
-				
+
 		$('#customer').typeWatch({
 			captureLength: 1,
 			highlight: true,
@@ -246,6 +247,19 @@
 			$('.selected-customer .panel-heading').prepend('<i class="icon-ok text-success"></i>');
 			$('.customerCard').not('.selected-customer').remove();
 			$('#search-customer-form-group').hide();
+			var query = 'ajax=1&token='+token+'&action=changePaymentMethod&id_customer='+$(this).data('customer');
+			$.ajax({
+				type: 'POST',
+				url: admin_order_tab_link,
+				headers: { "cache-control": "no-cache" },
+				cache: false,
+				dataType: 'json',
+				data : query,
+				success : function(data) {
+					if (data.result)
+						$('#payment_module_name').replaceWith(data.view)
+				}
+			});
 		});
 
 		$('#customer_part').on('click','button.change-customer',function(e){
@@ -262,7 +276,7 @@
 			'width': '90%',
 			'height': '90%',
 		});
-		
+
 		$('.fancybox_customer').fancybox({
 			'type': 'iframe',
 			'width': '90%',
@@ -644,7 +658,7 @@
 					});
 					products_found += '</select></div>';
 					$('#products_found #product_list').html(products_found);
-					$('#products_found #attributes_list').html(attributes_html);		
+					$('#products_found #attributes_list').html(attributes_html);
 					$('link[rel="stylesheet"]').each(function (i, element) {
 						sheet = $(element).clone();
 						$('#products_found #customization_list').contents().find('head').append(sheet);
@@ -702,7 +716,7 @@
 			cart_content += (!this.id_customization ? '<input type="text" rel="'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" class="cart_quantity" value="'+this.cart_quantity+'" />' : '');
 			cart_content += (!this.id_customization ? '<div class="input-group-btn"><a href="#" class="delete_product btn btn-default" rel="delete_'+this.id_product+'_'+this.id_product_attribute+'_'+(this.id_customization ? this.id_customization : 0)+'" ><i class="icon-remove text-danger"></i></a></div></div>' : '');
 			cart_content += '</td><td>' + formatCurrency(this.numeric_total, currency_format, currency_sign, currency_blank) + '</td></tr>';
-			
+
 			if (this.id_customization && this.id_customization != 0)
 			{
 				$.each(this.customized_datas[this.id_product][this.id_product_attribute][id_address_delivery], function() {
@@ -772,7 +786,7 @@
 		currency_sign = jsonSummary.currency.sign;
 		currency_blank = jsonSummary.currency.blank;
 		priceDisplayPrecision = jsonSummary.currency.decimals ? 2 : 0;
-	
+
 		updateCartProducts(jsonSummary.summary.products, jsonSummary.summary.gift_products, jsonSummary.cart.id_address_delivery);
 		updateCartVouchers(jsonSummary.summary.discounts);
 		updateAddressesList(jsonSummary.addresses, jsonSummary.cart.id_address_delivery, jsonSummary.cart.id_address_invoice);
@@ -1197,7 +1211,7 @@
 		</div>
 
 		<div id="products_err" class="hide alert alert-danger"></div>
-		
+
 		<hr/>
 
 		<div class="row">
@@ -1263,7 +1277,7 @@
 		</div>
 		<div class="form-group">
 			<label class="control-label col-lg-3">
-				{l s='Search for a voucher'} 
+				{l s='Search for a voucher'}
 			</label>
 			<div class="col-lg-9">
 				<div class="row">
@@ -1355,7 +1369,7 @@
 		<div id="carrier_form">
 			<div class="form-group">
 				<label class="control-label col-lg-3">
-					{l s='Delivery option'} 
+					{l s='Delivery option'}
 				</label>
 				<div class="col-lg-9">
 					<select name="delivery_option" id="delivery_option">
@@ -1476,6 +1490,7 @@
 					</div>
 				</div>
 				<div class="form-group">
+					{if !$PS_CATALOG_MODE}
 					<div class="col-lg-9 col-lg-offset-3">
 						<a href="javascript:void(0);" id="send_email_to_customer" class="btn btn-default">
 							<i class="icon-credit-card"></i>
@@ -1486,14 +1501,19 @@
 							<i class="icon-external-link"></i>
 						</a>
 					</div>
+					{/if}
 				</div>
 				<div class="form-group">
 					<label class="control-label col-lg-3">{l s='Payment'}</label>
 					<div class="col-lg-9">
 						<select name="payment_module_name" id="payment_module_name">
+							{if !$PS_CATALOG_MODE}
 							{foreach from=$payment_modules item='module'}
 								<option value="{$module->name}" {if isset($smarty.post.payment_module_name) && $module->name == $smarty.post.payment_module_name}selected="selected"{/if}>{$module->displayName}</option>
 							{/foreach}
+							{else}
+								<option value="boorder">{l s='Back-office order'}</option>
+							{/if}
 						</select>
 					</div>
 				</div>

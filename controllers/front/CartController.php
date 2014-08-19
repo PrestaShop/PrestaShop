@@ -332,7 +332,7 @@ class CartControllerCore extends FrontController
 				$groups = (Validate::isLoadedObject($this->context->customer)) ? $this->context->customer->getGroups() : array(1);
 				if ($this->context->cart->id_address_delivery)
 					$deliveryAddress = new Address($this->context->cart->id_address_delivery);
-				$id_country = (isset($deliveryAddress) && $deliveryAddress->id) ? $deliveryAddress->id_country : Configuration::get('PS_COUNTRY_DEFAULT');
+				$id_country = (isset($deliveryAddress) && $deliveryAddress->id) ? (int)$deliveryAddress->id_country : (int)Tools::getCountry();
 
 				Cart::addExtraCarriers($result);
 			}

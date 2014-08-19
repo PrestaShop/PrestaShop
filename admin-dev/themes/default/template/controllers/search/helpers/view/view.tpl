@@ -41,17 +41,6 @@ $(function() {
 	</h2>
 {/if}
 
-<div class="panel">
-	<h3>Search</h3>
-
-	<div class="row">
-		<div class="col-lg-4">
-			{include file="search_form.tpl" id="in_content"}
-		</div>
-	</div>
-</div>
-
-
 {if $query && isset($nb_results) && $nb_results}
 
 	{if isset($features)}

@@ -33,7 +33,7 @@
 		<div class="radio">
 			<label for="apply_discount_off">
 				<input type="radio" name="apply_discount" id="apply_discount_off" value="off" {if !$currentTab->getFieldValue($currentObject, 'reduction_amount')|floatval > 0 && !$currentTab->getFieldValue($currentObject, 'reduction_percent')|floatval > 0}checked="checked"{/if} />
-				<i class="icon-ban-circle color_danger"></i> {l s='None'}
+				<i class="icon-remove color_danger"></i> {l s='None'}
 			</label>
 		</div>
 	</div>
