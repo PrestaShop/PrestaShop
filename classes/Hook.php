@@ -482,7 +482,7 @@ class HookCore extends ObjectModel
 				);
 				if (isset($matching_name[$controller]) && in_array($matching_name[$controller], $exceptions))
 					continue;
-				if (Validate::isLoadedObject($context->employee) && !Module::getPermissionStatic($array['id_module'], $variable, $employee);('view', $context->employee))
+				if (!Module::getPermissionStatic($array['id_module'], 'view', $context->employee))
 					continue;
 			}
 			
