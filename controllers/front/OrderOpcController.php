@@ -405,17 +405,6 @@ class OrderOpcControllerCore extends ParentOrderController
 		$this->context->smarty->assign('field_required', $this->context->customer->validateFieldsRequiredDatabase());
 
 		$this->_processAddressFormat();
-		if (!$this->context->customer->isLogged(true))
-		{
-			$object = new Address;
-			$required = $object->getFieldsRequiredDatabase();
-			$fields = array();
-
-			foreach ($required as $field)
-				$fields[] = $field['field_name'];
-
-			$this->context->smarty->assign('required_fields', $fields);
-		}
 
 		$this->setTemplate(_PS_THEME_DIR_.'order-opc.tpl');
 	}
@@ -661,7 +650,7 @@ class OrderOpcControllerCore extends ParentOrderController
 
 		$inv_adr_fields = AddressFormat::getOrderedAddressFields((int)$address_delivery->id_country, false, true);
 		$dlv_adr_fields = AddressFormat::getOrderedAddressFields((int)$address_invoice->id_country, false, true);
-		$requireFormFieldsList = AddressFormat::$requireFormFieldsList;
+		$requireFormFieldsList = AddressFormat::getFieldsRequired();
 
 		// Add missing require fields for a new user susbscription form
 		foreach ($requireFormFieldsList as $fieldName)
@@ -684,8 +673,11 @@ class OrderOpcControllerCore extends ParentOrderController
 			${$adr_type.'_adr_fields'} = array_unique(${$adr_type.'_adr_fields'});
 			${$adr_type.'_all_fields'} = array_unique(${$adr_type.'_all_fields'});
 
-			$this->context->smarty->assign($adr_type.'_adr_fields', ${$adr_type.'_adr_fields'});
-			$this->context->smarty->assign($adr_type.'_all_fields', ${$adr_type.'_all_fields'});
+			$this->context->smarty->assign(array(
+				$adr_type.'_adr_fields' => ${$adr_type.'_adr_fields'},
+				$adr_type.'_all_fields' => ${$adr_type.'_all_fields'},
+				'required_fields' => $requireFormFieldsList
+			));
 		}
 	}
 

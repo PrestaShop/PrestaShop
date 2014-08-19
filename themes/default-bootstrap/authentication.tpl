@@ -211,7 +211,7 @@
 							</div>
 						{elseif $field_name eq "address2"}
 							<div class="form-group is_customer_param">
-								<label for="address2">{l s='Address (Line 2)'} <sup>*</sup></label>
+								<label for="address2">{l s='Address (Line 2)'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
 								<input type="text" class="form-control" name="address2" id="address2" value="{if isset($smarty.post.address2)}{$smarty.post.address2}{/if}" />
 							</div>
 						{elseif $field_name eq "postcode"}
