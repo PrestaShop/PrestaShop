@@ -28,7 +28,7 @@ class BoOrder extends PaymentModule
 {
 	public $active = 1;
 	public $name = 'bo_order';
-	
+
 	public function __construct()
 	{
 		$this->displayName = $this->l('Back-office order');
@@ -343,7 +343,7 @@ class AdminOrdersControllerCore extends AdminController
 
 		return $this->createTemplate('_print_pdf_icon.tpl')->fetch();
 	}
-	
+
 	public function printNewCustomer($id_order, $tr)
 	{
 		return ($tr['new'] ? $this->l('Yes') : $this->l('No'));
@@ -516,6 +516,7 @@ class AdminOrdersControllerCore extends AdminController
 						$templateVars = array();
 						if ($history->id_order_state == Configuration::get('PS_OS_SHIPPING') && $order->shipping_number)
 							$templateVars = array('{followup}' => str_replace('@', $order->shipping_number, $carrier->url));
+
 						// Save all changes
 						if ($history->addWithemail(true, $templateVars))
 						{
@@ -1027,7 +1028,7 @@ class AdminOrdersControllerCore extends AdminController
 					$payment_module = Module::getInstanceByName($module_name);
 				else
 					$payment_module = new BoOrder();
-				
+
 				$cart = new Cart((int)$id_cart);
 				Context::getContext()->currency = new Currency((int)$cart->id_currency);
 				Context::getContext()->customer = new Customer((int)$cart->id_customer);
@@ -1431,8 +1432,8 @@ class AdminOrdersControllerCore extends AdminController
 			$helper->value = ConfigurationKPI::get('CONVERSION_RATE');
 		if (ConfigurationKPI::get('CONVERSION_RATE_CHART') !== false)
 			$helper->data = ConfigurationKPI::get('CONVERSION_RATE_CHART');
-		if (ConfigurationKPI::get('CONVERSION_RATE_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=conversion_rate';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=conversion_rate';
+		$helper->refresh = (bool)(ConfigurationKPI::get('CONVERSION_RATE_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -1444,8 +1445,8 @@ class AdminOrdersControllerCore extends AdminController
 		$helper->href = $this->context->link->getAdminLink('AdminCarts').'&action=filterOnlyAbandonedCarts';
 		if (ConfigurationKPI::get('ABANDONED_CARTS') !== false)
 			$helper->value = ConfigurationKPI::get('ABANDONED_CARTS');
-		if (ConfigurationKPI::get('ABANDONED_CARTS_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=abandoned_cart';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=abandoned_cart';
+		$helper->refresh = (bool)(ConfigurationKPI::get('ABANDONED_CARTS_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -1456,8 +1457,8 @@ class AdminOrdersControllerCore extends AdminController
 		$helper->subtitle = $this->l('30 days', null, null, false);
 		if (ConfigurationKPI::get('AVG_ORDER_VALUE') !== false)
 			$helper->value = ConfigurationKPI::get('AVG_ORDER_VALUE');
-		if (ConfigurationKPI::get('AVG_ORDER_VALUE_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=average_order_value';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=average_order_value';
+		$helper->refresh = (bool)(ConfigurationKPI::get('AVG_ORDER_VALUE_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -1468,8 +1469,8 @@ class AdminOrdersControllerCore extends AdminController
 		$helper->subtitle = $this->l('30 days', null, null, false);
 		if (ConfigurationKPI::get('NETPROFIT_VISIT') !== false)
 			$helper->value = ConfigurationKPI::get('NETPROFIT_VISIT');
-		if (ConfigurationKPI::get('NETPROFIT_VISIT_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=netprofit_visit';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=netprofit_visit';
+		$helper->refresh = (bool)(ConfigurationKPI::get('NETPROFIT_VISIT_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpiRow();

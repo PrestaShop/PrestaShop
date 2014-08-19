@@ -740,6 +740,7 @@ CREATE TABLE `PREFIX_employee` (
   `id_last_order` int(10) unsigned NOT NULL DEFAULT '0',
   `id_last_customer_message` int(10) unsigned NOT NULL DEFAULT '0',
   `id_last_customer` int(10) unsigned NOT NULL DEFAULT '0',
+  `last_connection_date` date DEFAULT '0000-00-00',
   PRIMARY KEY (`id_employee`),
   KEY `employee_login` (`email`,`passwd`),
   KEY `id_employee_passwd` (`id_employee`,`passwd`),
@@ -1004,8 +1005,7 @@ CREATE TABLE `PREFIX_meta` (
   `page` varchar(64) NOT NULL,
 	`configurable` TINYINT(1) UNSIGNED NOT NULL DEFAULT '1',
   PRIMARY KEY (`id_meta`),
-  UNIQUE KEY `page` (`page`),
-  KEY `meta_name` (`page`)
+  UNIQUE KEY `page` (`page`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PREFIX_meta_lang` (

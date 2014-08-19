@@ -1,10 +1,14 @@
 SET NAMES 'utf8';
 
-INSERT IGNORE INTO `PREFIX_meta` (`id_meta`, `page`, `configurable`) VALUES (NULL, 'index', '0'), (NULL, 'product', '0'), (NULL, 'category', '0'), (NULL, 'cms', '0');
+INSERT INTO `PREFIX_meta` (`page`, `configurable`) SELECT * FROM (SELECT 'product', '0') AS tmp WHERE NOT EXISTS (SELECT `page` FROM `PREFIX_meta` WHERE `page` = 'product');
+INSERT INTO `PREFIX_meta` (`page`, `configurable`) SELECT * FROM (SELECT 'index', '0') AS tmp WHERE NOT EXISTS (SELECT `page` FROM `PREFIX_meta` WHERE `page` = 'index');
+INSERT INTO `PREFIX_meta` (`page`, `configurable`) SELECT * FROM (SELECT 'category', '0') AS tmp WHERE NOT EXISTS (SELECT `page` FROM `PREFIX_meta` WHERE `page` = 'category');
+INSERT INTO `PREFIX_meta` (`page`, `configurable`) SELECT * FROM (SELECT 'cms', '0') AS tmp WHERE NOT EXISTS (SELECT `page` FROM `PREFIX_meta` WHERE `page` = 'cms');
 
 ALTER TABLE `PREFIX_employee` ADD `optin` tinyint(1) unsigned NOT NULL default '1' AFTER `active`;
 
 ALTER IGNORE TABLE `PREFIX_meta` ADD UNIQUE (`page`);
+ALTER TABLE `PREFIX_meta` DROP INDEX `meta_name`;
 
 UPDATE `PREFIX_orders` SET module = 'free_order' WHERE total_paid = 0 AND module LIKE '';
 

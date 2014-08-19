@@ -36,6 +36,7 @@ abstract class ObjectModelCore
 	const TYPE_DATE = 5;
 	const TYPE_HTML = 6;
 	const TYPE_NOTHING = 7;
+	const TYPE_SQL = 8;
 
 	/**
 	 * List of data to format
@@ -398,6 +399,11 @@ abstract class ObjectModelCore
 			case self::TYPE_HTML:
 				if ($purify)
 					$value = Tools::purifyHTML($value);
+				if ($with_quotes)
+					return '\''.pSQL($value, true).'\'';
+				return pSQL($value, true);
+
+			case self::TYPE_SQL:
 				if ($with_quotes)
 					return '\''.pSQL($value, true).'\'';
 				return pSQL($value, true);
@@ -1205,11 +1211,11 @@ abstract class ObjectModelCore
 		'.(!$all ? 'WHERE object_name = \''.pSQL(get_class($this)).'\'' : ''));
 	}
 
-	public function cacheFieldsRequiredDatabase()
+	public function cacheFieldsRequiredDatabase($all = true)
 	{
 		if (!is_array(self::$fieldsRequiredDatabase))
 		{
-			$fields = $this->getfieldsRequiredDatabase(true);
+			$fields = $this->getfieldsRequiredDatabase((bool)$all);
 			if ($fields)
 				foreach ($fields as $row)
 					self::$fieldsRequiredDatabase[$row['object_name']][(int)$row['id_required_field']] = pSQL($row['field_name']);

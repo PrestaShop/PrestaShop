@@ -1151,7 +1151,7 @@ class AdminProductsControllerCore extends AdminController
 		if (!count($this->errors) && !$product->updateLabels())
 			$this->errors[] = Tools::displayError('An error occurred while updating customization fields.');
 		$product->customizable = ($product->uploadable_files > 0 || $product->text_fields > 0) ? 1 : 0;
-		if (!count($this->errors) && !$product->update())
+		if (($product->uploadable_files != $files_count || $product->text_fields != $text_count) && !count($this->errors) && !$product->update())
 			$this->errors[] = Tools::displayError('An error occurred while updating the custom configuration.');
 	}
 
@@ -2336,7 +2336,7 @@ class AdminProductsControllerCore extends AdminController
 				}
 			}
 			if (!$id_category)
-				$id_category = 1;
+				$id_category = Configuration::get('PS_ROOT_CATEGORY');
 			$this->tpl_list_vars['is_category_filter'] = (bool)$this->id_current_category;
 
 			// Generate category selection tree
@@ -2369,11 +2369,13 @@ class AdminProductsControllerCore extends AdminController
 			$helper->id = 'box-products-stock';
 			$helper->icon = 'icon-archive';
 			$helper->color = 'color1';
-			$helper->title = $this->l('Items in Stock', null, null, false);
+			$helper->title = $this->l('Items out of stock', null, null, false);
 			if (ConfigurationKPI::get('PERCENT_PRODUCT_STOCK') !== false)
 				$helper->value = ConfigurationKPI::get('PERCENT_PRODUCT_STOCK');
-			if (ConfigurationKPI::get('PERCENT_PRODUCT_STOCK_EXPIRE') < $time)
-				$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=percent_product_stock';
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=percent_product_stock';
+			$helper->tooltip = $this->l('X% of your products for sale are out of stock.', null, null, false);
+			$helper->refresh = (bool)(ConfigurationKPI::get('PERCENT_PRODUCT_STOCK_EXPIRE') < $time);
+			$helper->href = Context::getContext()->link->getAdminLink('AdminProducts').'&productFilter_sav!quantity=0&productFilter_active=1&submitFilterproduct=1';
 			$kpis[] = $helper->generate();
 		}
 
@@ -2384,20 +2386,24 @@ class AdminProductsControllerCore extends AdminController
 		$helper->title = $this->l('Average Gross Margin', null, null, false);
 		if (ConfigurationKPI::get('PRODUCT_AVG_GROSS_MARGIN') !== false)
 			$helper->value = ConfigurationKPI::get('PRODUCT_AVG_GROSS_MARGIN');
-		if (ConfigurationKPI::get('PRODUCT_AVG_GROSS_MARGIN_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=product_avg_gross_margin';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=product_avg_gross_margin';
+		$helper->tooltip = $this->l('The gross margin is the margin made on the sold of a product regarding its purchase price, on all your products for sale.', null, null, false);
+		$helper->refresh = (bool)(ConfigurationKPI::get('PRODUCT_AVG_GROSS_MARGIN_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
 		$helper->id = 'box-8020-sales-catalog';
 		$helper->icon = 'icon-beaker';
 		$helper->color = 'color3';
-		$helper->title = $this->l('80% of your sales', null, null, false);
+		$helper->title = $this->l('Purchased references', null, null, false);
 		$helper->subtitle = $this->l('30 days', null, null, false);
 		if (ConfigurationKPI::get('8020_SALES_CATALOG') !== false)
 			$helper->value = ConfigurationKPI::get('8020_SALES_CATALOG');
-		if (ConfigurationKPI::get('8020_SALES_CATALOG_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=8020_sales_catalog';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=8020_sales_catalog';
+		$helper->tooltip = $this->l('X% of your references have been purchased for the past 30 days', null, null, false);
+		$helper->refresh = (bool)(ConfigurationKPI::get('8020_SALES_CATALOG_EXPIRE') < $time);
+		if (Module::isInstalled('statsbestproducts'))
+			$helper->href = Context::getContext()->link->getAdminLink('AdminStats').'&module=statsbestproducts&datepickerFrom='.date('Y-m-d', strtotime('-30 days')).'&datepickerTo='.date('Y-m-d');
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -2408,8 +2414,10 @@ class AdminProductsControllerCore extends AdminController
 		$helper->title = $this->l('Disabled Products', null, null, false);
 		if (ConfigurationKPI::get('DISABLED_PRODUCTS') !== false)
 			$helper->value = ConfigurationKPI::get('DISABLED_PRODUCTS');
-		if (ConfigurationKPI::get('DISABLED_PRODUCTS_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=disabled_products';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=disabled_products';
+		$helper->refresh = (bool)(ConfigurationKPI::get('DISABLED_PRODUCTS_EXPIRE') < $time);
+		$helper->tooltip = $this->l('X% of your products are disabled and not visible to your customers', null, null, false);
+		$helper->href = Context::getContext()->link->getAdminLink('AdminProducts').'&productFilter_active=0&submitFilterproduct=1';
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpiRow();
@@ -3089,12 +3097,40 @@ class AdminProductsControllerCore extends AdminController
 			$data->assign('ecotax_tax_excl', 0);
 		}
 
+		$address = new Address();
+		$address->id_country = (int)$this->context->country->id;
+		$tax_rules_groups = TaxRulesGroup::getTaxRulesGroups(true);
+		$tax_rates = array(
+			0 => array (
+				'id_tax_rules_group' => 0,
+				'rates' => array(0),
+				'computation_method' => 0
+			)
+		);
+
+		foreach ($tax_rules_groups as $tax_rules_group)
+		{
+			$id_tax_rules_group = (int)$tax_rules_group['id_tax_rules_group'];
+			$tax_calculator = TaxManagerFactory::getManager($address, $id_tax_rules_group)->getTaxCalculator();
+			$tax_rates[$id_tax_rules_group] = array(
+				'id_tax_rules_group' => $id_tax_rules_group,
+				'rates' => array(),
+				'computation_method' => (int)$tax_calculator->computation_method
+			);
+
+			if (isset($tax_calculator->taxes) && count($tax_calculator->taxes))
+				foreach ($tax_calculator->taxes as $tax)
+					$tax_rates[$id_tax_rules_group]['rates'][] = (float)$tax->rate;
+			else
+				$tax_rates[$id_tax_rules_group]['rates'][] = 0;
+		}
+
 		// prices part
 		$data->assign(array(
 			'link' => $this->context->link,
 			'currency' => $currency = $this->context->currency,
-			'tax_rules_groups' => TaxRulesGroup::getTaxRulesGroups(true),
-			'taxesRatesByGroup' => TaxRulesGroup::getAssociatedTaxRatesByIdCountry($this->context->country->id),
+			'tax_rules_groups' => $tax_rules_groups,
+			'taxesRatesByGroup' => $tax_rates,
 			'ecotaxTaxRate' => Tax::getProductEcotaxRate(),
 			'tax_exclude_taxe_option' => Tax::excludeTaxeOption(),
 			'ps_use_ecotax' => Configuration::get('PS_USE_ECOTAX'),

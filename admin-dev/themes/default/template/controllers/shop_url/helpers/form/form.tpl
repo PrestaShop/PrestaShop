@@ -77,7 +77,10 @@
 	function checkMainUrlInfo(shopID)
 	{
 		if (!shopID)
-			shopID = $('#id_shop').val();
+			if ($('#shop_id').length)
+				shopID = $('#shop_id').val();
+			else	
+				shopID = $('#id_shop').val();
 
 		if (!shopUrl[shopID])
 		{
