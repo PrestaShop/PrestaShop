@@ -1151,7 +1151,7 @@ class AdminProductsControllerCore extends AdminController
 		if (!count($this->errors) && !$product->updateLabels())
 			$this->errors[] = Tools::displayError('An error occurred while updating customization fields.');
 		$product->customizable = ($product->uploadable_files > 0 || $product->text_fields > 0) ? 1 : 0;
-		if (!count($this->errors) && !$product->update())
+		if (($product->uploadable_files != $files_count || $product->text_fields != $text_count) && !count($this->errors) && !$product->update())
 			$this->errors[] = Tools::displayError('An error occurred while updating the custom configuration.');
 	}
 
