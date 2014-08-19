@@ -696,6 +696,7 @@ class AdminModulesControllerCore extends AdminController
 					$modules = (array)$modules;
 			}
 
+			$module_upgraded = array();
 			$module_errors = array();
 			if (isset($modules))
 				foreach ($modules as $name)
@@ -731,7 +732,6 @@ class AdminModulesControllerCore extends AdminController
 
 						}
 
-						$module_upgraded = array();
 						foreach ($module_to_update as $name => $attr)
 						{
 							if ((is_null($attr) && $this->logged_on_addons == 0) || ($attr['need_loggedOnAddons'] == 1 && $this->logged_on_addons == 0))
@@ -754,7 +754,6 @@ class AdminModulesControllerCore extends AdminController
 							else
 								$this->errors[] = sprintf(Tools::displayError("You don’t have the rights to update the %s module. Please make sure you are logged in to the PrestaShop Addons account that purchased the module."), '<strong>'.$name.'</strong>');
 						}
-						$module_upgraded = implode('|', $module_upgraded);
 					}
 
 					if (count($this->errors))
@@ -953,7 +952,7 @@ class AdminModulesControllerCore extends AdminController
 			$updated = '&updated=1';
 			if (Tools::getValue('checkAndUpdate'))
 			{
-				$updated = '';
+				$updated = '&check=1';
 				if (Tools::getValue('module_name'))
 				{
 					$module = Module::getInstanceByName(Tools::getValue('module_name'));
@@ -961,6 +960,9 @@ class AdminModulesControllerCore extends AdminController
 						unset($module);
 				}
 			}
+
+
+			$module_upgraded = implode('|', $module_upgraded);
 
 			if (isset($module_upgraded) && $module_upgraded != '')
 				Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.'&updated=1&module_name='.$module_upgraded);

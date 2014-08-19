@@ -29,11 +29,54 @@ class AdminEmailsControllerCore extends AdminController
 	public function __construct()
 	{
 		$this->bootstrap = true;
-		$this->className = 'Configuration';
-		$this->table = 'configuration';
+
+		if (Configuration::get('PS_LOG_EMAILS'))
+		{
+			$this->table = 'mail';
+			$this->className = 'Mail';
+
+			$this->lang = false;
+			$this->noLink = true;
+			$this->list_no_link = true;
+			$this->explicitSelect = true;
+			$this->addRowAction('delete');
+
+			$this->bulk_actions = array(
+				'delete' => array(
+					'text' => $this->l('Delete selected'),
+					'confirm' => $this->l('Delete selected items?'),
+					'icon' => 'icon-trash'
+				)
+			);
+
+			foreach (Language::getLanguages() as $language)
+				$languages[$language['id_lang']] = $language['name'];
+
+			$this->fields_list = array(
+				'id_mail' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+				'recipient' => array('title' => $this->l('Recipient')),
+				'template' => array('title' => $this->l('Template')),
+				'language' => array(
+					'title' => $this->l('Language'),
+					'type' => 'select',
+					'color' => 'color',
+					'list' => $languages,
+					'filter_key' => 'a!id_lang',
+					'filter_type' => 'int',
+					'order_key' => 'language'
+				),
+				'subject' => array('title' => $this->l('Subject')),
+				'date_add' => array(
+					'title' => $this->l('Sent'),
+					'type' => 'datetime',
+				)
+			);
+			$this->_select .= 'l.name as language';
+			$this->_join .= ' LEFT JOIN '._DB_PREFIX_.'lang l ON (a.id_lang = l.id_lang)';
+		}
 
 		parent::__construct();
-				
+
 		foreach (Contact::getContacts($this->context->language->id) as $contact)
 			$arr[] = array('email_message' => $contact['id_contact'], 'name' => $contact['name']);
 
@@ -65,13 +108,23 @@ class AdminEmailsControllerCore extends AdminController
 							2 => 'onclick="$(\'#configuration_fieldset_smtp\').slideDown();"',
 							3 => 'onclick="$(\'#configuration_fieldset_smtp\').slideUp();"'
 						),
-						'visibility' => Shop::CONTEXT_ALL
 					),
-					'PS_MAIL_TYPE' => array('title' => '', 'validation' => 'isGenericName', 'type' => 'radio', 'required' => true, 'choices' => array(
-						Mail::TYPE_HTML => $this->l('Send email in HTML format'), 
-						Mail::TYPE_TEXT => $this->l('Send email in text format'), 
-						Mail::TYPE_BOTH => $this->l('Both')
+					'PS_MAIL_TYPE' => array(
+						'title' => '',
+						'validation' => 'isGenericName',
+						'type' => 'radio',
+						'required' => true,
+						'choices' => array(
+							Mail::TYPE_HTML => $this->l('Send email in HTML format'), 
+							Mail::TYPE_TEXT => $this->l('Send email in text format'), 
+							Mail::TYPE_BOTH => $this->l('Both')
 						)
+					),
+					'PS_LOG_EMAILS' => array(
+						'title' => $this->l('Log Emails'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool'
 					),
 				),
 				'submit' => array('title' => $this->l('Save'))
@@ -85,34 +138,30 @@ class AdminEmailsControllerCore extends AdminController
 						'empty' => true, 'validation' =>
 						'isUrl',
 						'type' => 'text',
-						'visibility' => Shop::CONTEXT_ALL
-						),
+					),
 					'PS_MAIL_SERVER' => array(
 						'title' => $this->l('SMTP server'),
 						'hint' => $this->l('IP address or server name (e.g. smtp.mydomain.com).'),
 						'validation' => 'isGenericName',
 						'type' => 'text',
-						'visibility' => Shop::CONTEXT_ALL
-						),
+					),
 					'PS_MAIL_USER' => array(
 						'title' => $this->l('SMTP user'),
 						'hint' => $this->l('Leave blank if not applicable.'),
 						'validation' => 'isGenericName',
 						'type' => 'text',
-						'visibility' => Shop::CONTEXT_ALL
-						),
+					),
 					'PS_MAIL_PASSWD' => array(
 						'title' => $this->l('SMTP password'),
 						'hint' => $this->l('Leave blank if not applicable.'),
 						'validation' => 'isAnything',
 						'type' => 'password',
-						'visibility' => Shop::CONTEXT_ALL,
 						'autocomplete' => false
-						),
+					),
 					'PS_MAIL_SMTP_ENCRYPTION' => array(
 						'title' => $this->l('Encryption'),
 						'hint' => $this->l('Use an encrypt protocol'),
-						'desc' => Tools::apacheModExists('mod_ssl') ? '/!\\  '.$this->l('SSL mod seems to not be installed on your server.') : '',
+						'desc' => extension_loaded('openssl') ? '' : '/!\\ '.$this->l('SSL does not seem to be available on your server.'),
 						'type' => 'select',
 						'cast' => 'strval',
 						'identifier' => 'mode',
@@ -120,26 +169,25 @@ class AdminEmailsControllerCore extends AdminController
 							array(
 								'mode' => 'off',
 								'name' => $this->l('None')
-								),
+							),
 							array(
 								'mode' => 'tls',
 								'name' => $this->l('TLS')
-								),
+							),
 							array(
 								'mode' => 'ssl',
 								'name' => $this->l('SSL')
-								)
-							),
-						'visibility' => Shop::CONTEXT_ALL
+							)
 						),
+					),
 					'PS_MAIL_SMTP_PORT' => array(
 						'title' => $this->l('Port'),
 						'hint' => $this->l('Port number to use.'),
 						'validation' => 'isInt',
 						'type' => 'text',
 						'cast' => 'intval',
-						'visibility' => Shop::CONTEXT_ALL
-						),
+						'class' => 'fixed-width-sm'
+					),
 				),
 				'submit' => array('title' => $this->l('Save'))
 			),
@@ -152,7 +200,7 @@ class AdminEmailsControllerCore extends AdminController
 						'type' => 'text',
 						'id' => 'testEmail',
 						'no_multishop_checkbox' => true
-						),
+					),
 				),
 				'bottom' => '<div class="row"><div class="col-lg-9 col-lg-offset-3">
 					<div class="alert" id="mailResultCheck" style="display:none;"></div>
@@ -174,7 +222,23 @@ class AdminEmailsControllerCore extends AdminController
 
 		ksort($this->fields_options['email']['fields']['PS_MAIL_METHOD']['choices']);
 	}
+	
+	public function processDelete()
+	{
+		return Mail::eraseAllLogs();
+	}
 
+	public function initToolbar()
+	{
+		parent::initToolbar();
+		$this->toolbar_btn['delete'] = array(
+			'short' => 'Erase',
+			'desc' => $this->l('Erase all'),
+			'js' => 'if (confirm(\''.$this->l('Are you sure?').'\')) document.location = \''.Tools::safeOutput($this->context->link->getAdminLink('AdminEmails')).'&amp;token='.$this->token.'&amp;deletemail=1\';'
+		);
+		unset($this->toolbar_btn['new']);
+	}
+	
 	public function updateOptionPsMailPasswd($value)
 	{
 		if (Tools::getValue('PS_MAIL_PASSWD') == '' && Configuration::get('PS_MAIL_PASSWD'))
@@ -201,7 +265,7 @@ class AdminEmailsControllerCore extends AdminController
 			'desc' => $this->l('Back to the dashboard')
 		);
 		
-		$this->content .= $this->renderOptions();
+		// $this->content .= $this->renderOptions();
 
 		$this->context->smarty->assign(array(
 			'content' => $this->content,
@@ -210,6 +274,8 @@ class AdminEmailsControllerCore extends AdminController
 			'page_header_toolbar_title' => $this->page_header_toolbar_title,
 			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
 		));
+		
+		return parent::initContent();
 	}
 
 	public function beforeUpdateOptions()
@@ -254,7 +320,7 @@ class AdminEmailsControllerCore extends AdminController
 				array('&lt;', '&gt;', '&quot;', '&amp;'), 
 				array('<', '>', '"', '&'), 
 				Tools::htmlentitiesUTF8($smtpPassword)
-				);
+			);
 			
 			$smtpPort = Tools::getValue('smtpPort');
 			$smtpEncryption = Tools::getValue('smtpEnc');

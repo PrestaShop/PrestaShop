@@ -26,6 +26,11 @@
 
 class OrderCore extends ObjectModel
 {
+	const ROUND_ITEM = 1;
+	const ROUND_LINE = 2;
+	const ROUND_TOTAL = 3;
+
+	
 	/** @var integer Delivery address id */
 	public $id_address_delivery;
 
@@ -142,7 +147,7 @@ class OrderCore extends ObjectModel
 	/** @var string Delivery creation date */
 	public $delivery_date;
 
-	/** @var boolean Order validity (paid and not canceled) */
+	/** @var boolean Order validity: current order status is logable (usually paid and not canceled) */
 	public $valid;
 
 	/** @var string Object creation date */
@@ -236,7 +241,7 @@ class OrderCore extends ObjectModel
 			),
 		),
 		'associations' => array(
-			'order_rows' => array('resource' => 'order_rows', 'setter' => false, 'virtual_entity' => true,
+			'order_rows' => array('resource' => 'order_row', 'setter' => false, 'virtual_entity' => true,
 				'fields' => array(
 					'id' =>  array(),
 					'product_id' => array('required' => true),

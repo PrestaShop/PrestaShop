@@ -99,7 +99,10 @@
 	function position_exception_listchange() {
 		var obj = $(this);
 		var shopID = obj.attr('id').replace(/\D/g, '');
-		var str = obj.val().join(', ');
+		var val = obj.val();
+		var str = '';
+		if (val)
+			str = val.join(', ');
 		obj.closest('form').find('#em_text_' + shopID).val(str);
 	}
 	$(document).ready(function(){

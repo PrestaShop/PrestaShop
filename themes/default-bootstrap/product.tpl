@@ -152,12 +152,12 @@
 			{/if}
 			<h1 itemprop="name">{$product->name|escape:'html':'UTF-8'}</h1>
 			<p id="product_reference"{if empty($product->reference) || !$product->reference} style="display: none;"{/if}>
-				<label>{l s='Model'} </label>
+				<label>{l s='Reference:'} </label>
 				<span class="editable" itemprop="sku">{if !isset($groups)}{$product->reference|escape:'html':'UTF-8'}{/if}</span>
 			</p>
 			{if $product->condition}
 			<p id="product_condition">
-				<label>{l s='Condition'} </label>
+				<label>{l s='Condition:'} </label>
 				{if $product->condition == 'new'}
 					<link itemprop="itemCondition" href="http://schema.org/NewCondition"/>
 					<span class="editable">{l s='New'}</span>
@@ -328,7 +328,7 @@
 						{/if}
 						<!-- minimal quantity wanted -->
 						<p id="minimal_quantity_wanted_p"{if $product->minimal_quantity <= 1 || !$product->available_for_order || $PS_CATALOG_MODE} style="display: none;"{/if}>
-							{l s='This product is not sold individually. You must select at least'} <b id="minimal_quantity_label">{$product->minimal_quantity}</b> {l s='quantity for this product.'}
+							{l s='The minimum purchase order quantity for the product is'} <b id="minimal_quantity_label">{$product->minimal_quantity}</b>
 						</p>
 						{if isset($groups)}
 							<!-- attributes -->

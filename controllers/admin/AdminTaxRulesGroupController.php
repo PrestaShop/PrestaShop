@@ -67,6 +67,8 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			)
 		);
 
+		$this->_where .= ' AND a.deleted = 0';
+
 		parent::__construct();
 	}
 
@@ -148,6 +150,8 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 
 		$this->show_toolbar = false;
 		$this->tpl_list_vars = array('id_tax_rules_group' => (int)$id_group);
+
+		$this->_filter = false;
 
 		return parent::renderList();
 	}
@@ -440,7 +444,8 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				}
 
 				$tr->id_tax = $id_tax;
-				$tr->id_tax_rules_group = (int)$id_tax_rules_group;
+				$tax_rules_group = new TaxRulesGroup((int)$id_tax_rules_group);
+				$tr->id_tax_rules_group = (int)$tax_rules_group->id;
 				$tr->id_country = (int)$id_country;
 				$tr->id_state = (int)$id_state;
 				list($tr->zipcode_from, $tr->zipcode_to) = $tr->breakDownZipCode($zip_code);
@@ -472,14 +477,20 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				$this->errors = array_merge($this->errors, $this->validateTaxRule($tr));
 
 				if (count($this->errors) == 0)
+				{
+					$tax_rules_group = $this->updateTaxRulesGroup($tax_rules_group);
+					$tr->id = (int)$tax_rules_group->getIdTaxRuleGroupFromHistorizedId((int)$tr->id);
+					$tr->id_tax_rules_group = (int)$tax_rules_group->id;
+
 					if (!$tr->save())
 						$this->errors[] = Tools::displayError('An error has occurred: Cannot save the current tax rule.');
+				}
 			}
 		}
 
 		if (count($this->errors) == 0)
 			Tools::redirectAdmin(
-				self::$currentIndex.'&'.$this->identifier.'='.(int)$id_tax_rules_group.'&conf=4&update'.$this->table.'&token='.$this->token
+				self::$currentIndex.'&'.$this->identifier.'='.(int)$tax_rules_group->id.'&conf=4&update'.$this->table.'&token='.$this->token
 			);
 		else
 			$this->display = 'edit';
@@ -503,11 +514,17 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 		{
 			$tax_rule = new TaxRule((int)$id_tax_rule);
 			if (Validate::isLoadedObject($tax_rule))
-				$result &= $tax_rule->delete();
+			{
+				$tax_rules_group = new TaxRulesGroup((int)$tax_rule->id_tax_rules_group);
+				$tax_rules_group = $this->updateTaxRulesGroup($tax_rules_group);
+				$tax_rule = new TaxRule($tax_rules_group->getIdTaxRuleGroupFromHistorizedId((int)$id_tax_rule));
+				if (Validate::isLoadedObject($tax_rule))
+					$result &= $tax_rule->delete();
+			}
 		}
 
 		Tools::redirectAdmin(
-			self::$currentIndex.'&'.$this->identifier.'='.(int)$tax_rule->id_tax_rules_group.'&conf=4&update'.$this->table.'&token='.$this->token
+			self::$currentIndex.'&'.$this->identifier.'='.(int)$tax_rules_group->id.'&conf=4&update'.$this->table.'&token='.$this->token
 		);
 	}
 
@@ -534,5 +551,16 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			die(Tools::jsonEncode($output));
 		}
 	}
-}
 
+	protected function updateTaxRulesGroup($object)
+	{
+		static $tax_rules_group = null;
+		if ($tax_rules_group === null)
+		{
+			$object->update();
+			$tax_rules_group = $object;
+		}
+
+		return $tax_rules_group;
+	}
+}

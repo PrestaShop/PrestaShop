@@ -80,7 +80,7 @@ class CustomerThreadCore extends ObjectModel
 		),
 		'associations' => array(
 			'customer_messages' => array(
-				'resource' => 'customer_messages',
+				'resource' => 'customer_message',
 				'id' => array('required' => true)),
 		)
 	);

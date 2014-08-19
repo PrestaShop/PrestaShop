@@ -40,7 +40,7 @@ class OrderControllerCore extends ParentOrderController
 
 		$this->step = (int)(Tools::getValue('step'));
 		if (!$this->nbProducts)
-			$this->step = -1;		
+			$this->step = -1;
 
 		// If some products have disappear
 		if (!$this->context->cart->checkQuantities())
@@ -235,17 +235,31 @@ class OrderControllerCore extends ParentOrderController
 			if (count($this->context->cart->getDeliveryOptionList()) == 0)
 				$redirect = true;
 
-			if (!$this->context->cart->isMultiAddressDelivery())
+			$delivery_option = $this->context->cart->getDeliveryOption();
+			if (is_array($delivery_option))
+				$carrier = explode(',', $delivery_option[(int)$this->context->cart->id_address_delivery]);
+
+			if (!$redirect && !$this->context->cart->isMultiAddressDelivery())
 				foreach ($this->context->cart->getProducts() as $product)
-					if (!in_array($this->context->cart->id_carrier, Carrier::getAvailableCarrierList(new Product($product['id_product']), null, $this->context->cart->id_address_delivery)))
+				{
+					$carrier_list = Carrier::getAvailableCarrierList(new Product($product['id_product']), null, $this->context->cart->id_address_delivery);
+					foreach ($carrier as $id_carrier)
 					{
-						$redirect = true;
-						break;
+							if (!in_array($id_carrier, $carrier_list))
+								$redirect = true;
+							else
+							{
+								$redirect = false;
+								break;
+							}
 					}
-			
+					if ($redirect)
+						break;
+				}
+
 			if ($redirect)
 				Tools::redirect('index.php?controller=order&step=2');
-		} 
+		}
 
 		$delivery = new Address((int)$this->context->cart->id_address_delivery);
 		$invoice = new Address((int)$this->context->cart->id_address_invoice);
@@ -277,10 +291,10 @@ class OrderControllerCore extends ParentOrderController
 		{
 			$this->context->cart->id_address_delivery = (int)Tools::getValue('id_address_delivery');
 			$this->context->cart->id_address_invoice = $same ? $this->context->cart->id_address_delivery : (int)Tools::getValue('id_address_invoice');
-			
+
 			CartRule::autoRemoveFromCart($this->context);
 			CartRule::autoAddToCart($this->context);
-			
+
 			if (!$this->context->cart->update())
 				$this->errors[] = Tools::displayError('An error occurred while updating your cart.', !Tools::getValue('ajax'));
 
@@ -289,7 +303,7 @@ class OrderControllerCore extends ParentOrderController
 
 			if (Tools::isSubmit('message'))
 				$this->_updateMessage(Tools::getValue('message'));
-						
+
 			// Add checking for all addresses
 			$address_without_carriers = $this->context->cart->getDeliveryAddressesWithoutCarriers();
 			if (count($address_without_carriers) && !$this->context->cart->isVirtualCart())
@@ -302,7 +316,7 @@ class OrderControllerCore extends ParentOrderController
 					$this->errors[] = sprintf(Tools::displayError('There are no carriers that deliver to the address you selected.', !Tools::getValue('ajax')));
 			}
 		}
-		
+
 		if ($this->errors)
 		{
 			if (Tools::getValue('ajax'))
