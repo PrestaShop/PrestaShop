@@ -410,4 +410,12 @@ class AddressCore extends ObjectModel
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 	}
+
+	public function getFieldsRequiredDB()
+	{
+		$this->cacheFieldsRequiredDatabase(false);
+		if (isset(self::$fieldsRequiredDatabase['Address']))
+			return self::$fieldsRequiredDatabase['Address'];
+		return array();
+	}
 }
