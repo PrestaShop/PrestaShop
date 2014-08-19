@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_order_slip_detail_tax` (
 
 ALTER TABLE `PREFIX_tax_rules_group` ADD `deleted` TINYINT(1) UNSIGNED NOT NULL, ADD `date_add` DATETIME NOT NULL, ADD `date_upd` DATETIME NOT NULL;
 ALTER TABLE `PREFIX_order_detail` ADD `id_tax_rules_group` INT(11) UNSIGNED DEFAULT '0' AFTER `product_weight`, ADD INDEX `id_tax_rules_group` (`id_tax_rules_group`);
- 
+
 CREATE TABLE IF NOT EXISTS `PREFIX_mail` (
   `id_mail` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `recipient` varchar(126) NOT NULL,
@@ -52,3 +52,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_mail` (
   KEY `recipient` (`recipient`(10))
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_LOG_EMAILS', 1, now(), now());
+
+ALTER TABLE `PREFIX_employee` ADD `last_connection_date` date NOT NULL DEFAULT '0000-00-00';
+
+UPDATE `PREFIX_category` SET `is_root_category` = 0 WHERE `id_parent` != (SELECT `value` FROM `PREFIX_configuration` WHERE `name` = 'PS_ROOT_CATEGORY' LIMIT 1) AND `is_root_category` = 1;

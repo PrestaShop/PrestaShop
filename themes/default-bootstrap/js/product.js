@@ -609,11 +609,11 @@ function updatePrice()
 
 	// Apply combination price impact
 	// 0 by default, +x if price is inscreased, -x if price is decreased
-	basePriceWithoutTax = basePriceWithoutTax + combination.price;
+	basePriceWithoutTax = basePriceWithoutTax + parseFloat(combination.price);
 
 	// If a specific price redefine the combination base price
 	if (combination.specific_price && combination.specific_price.price > 0)
-		basePriceWithoutTax = combination.specific_price.price;
+		basePriceWithoutTax = parseFloat(combination.specific_price.price);
 
 	// Apply group reduction
 	priceWithGroupReductionWithoutTax = basePriceWithoutTax * (1 - group_reduction);
@@ -644,13 +644,14 @@ function updatePrice()
 	if (combination.specific_price && combination.specific_price.reduction > 0)
 		if (combination.specific_price.reduction_type == 'amount')
 		{
-			priceWithDiscountsDisplay = priceWithDiscountsDisplay - combination.specific_price.reduction;
+			var reduction = parseFloat(combination.specific_price.reduction) / currencyRate;
+			priceWithDiscountsDisplay = priceWithDiscountsDisplay - reduction;
 			// We recalculate the price without tax in order to keep the data consistency
 			priceWithDiscountsWithoutTax = priceWithDiscountsDisplay * ( 1/(1+taxRate) / 100 );
 		}
 		else if (combination.specific_price.reduction_type == 'percentage')
 		{
-			priceWithDiscountsDisplay = priceWithDiscountsDisplay * (1 - combination.specific_price.reduction);
+			priceWithDiscountsDisplay = priceWithDiscountsDisplay * (1 - parseFloat(combination.specific_price.reduction));
 			// We recalculate the price without tax in order to keep the data consistency
 			priceWithDiscountsWithoutTax = priceWithDiscountsDisplay * ( 1/(1+taxRate) / 100 );
 		}
@@ -702,7 +703,7 @@ function updatePrice()
 		{
 			if (combination.specific_price.reduction_type == 'amount')
 			{
-				$('#reduction_amount_display').html('-' + formatCurrency(parseFloat(discountValue), currencyFormat, currencySign, currencyBlank));
+				$('#reduction_amount_display').html('-' + formatCurrency(parseFloat(discountValue) * currencyRate, currencyFormat, currencySign, currencyBlank));
 				$('#reduction_amount').show();
 			}
 			else
@@ -721,7 +722,7 @@ function updatePrice()
 
 		// If the default product ecotax is overridden by the combination
 		if (combination.ecotax)
-			ecotax = combination.ecotax;
+			ecotax = parseFloat(combination.ecotax);
 
 		if (!noTaxForThisProduct)
 			ecotax = ecotax * (1 + ecotaxTax_rate/100)

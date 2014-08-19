@@ -245,14 +245,14 @@ abstract class ModuleCore
 		// Check module name validation
 		if (!Validate::isModuleName($this->name))
 		{
-			$this->_errors[] = $this->l('Unable to install the module (Module name is not valid).');
+			$this->_errors[] = Tools::displayError('Unable to install the module (Module name is not valid).');
 			return false;
 		}
 
 		// Check PS version compliancy
 		if (!$this->checkCompliancy())
 		{
-			$this->_errors[] = $this->l('The version of your module is not compliant with your PrestaShop version.');
+			$this->_errors[] = Tools::displayError('The version of your module is not compliant with your PrestaShop version.');
 			return false;
 		}
 
@@ -261,7 +261,7 @@ abstract class ModuleCore
 			foreach ($this->dependencies as $dependency)
 				if (!Db::getInstance()->getRow('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($dependency).'\''))
 				{
-					$error = $this->l('Before installing this module, you have to install this/these module(s) first:').'<br />';
+					$error = Tools::displayError('Before installing this module, you have to install this/these module(s) first:').'<br />';
 					foreach ($this->dependencies as $d)
 						$error .= '- '.$d.'<br />';
 					$this->_errors[] = $error;
@@ -272,7 +272,7 @@ abstract class ModuleCore
 		$result = Module::isInstalled($this->name);
 		if ($result)
 		{
-			$this->_errors[] = $this->l('This module has already been installed.');
+			$this->_errors[] = Tools::displayError('This module has already been installed.');
 			return false;
 		}
 
@@ -292,7 +292,7 @@ abstract class ModuleCore
 		$result = Db::getInstance()->insert($this->table, array('name' => $this->name, 'active' => 1, 'version' => $this->version));
 		if (!$result)
 		{
-			$this->_errors[] = $this->l('Technical error: PrestaShop could not installed this module.');
+			$this->_errors[] = Tools::displayError('Technical error: PrestaShop could not installed this module.');
 			return false;
 		}
 		$this->id = Db::getInstance()->Insert_ID();
@@ -361,23 +361,23 @@ abstract class ModuleCore
 		{
 			if ($upgrade_detail['success'])
 			{
-				$this->_confirmations[] = sprintf($this->l('Current version: %s'), $this->version);
-				$this->_confirmations[] = $upgrade_detail['number_upgraded'].' '.$this->l('file upgrade applied');
+				$this->_confirmations[] = sprintf(Tools::displayError('Current version: %s'), $this->version);
+				$this->_confirmations[] = sprintf(Tools::displayError('%i file upgrade applied'), $upgrade_detail['number_upgraded']);
 			}
 			else
 			{
 				if (!$upgrade_detail['number_upgraded'])
-					$this->_errors[] = $this->l('No upgrade has been applied');
+					$this->_errors[] = Tools::displayError('No upgrade has been applied');
 				else
 				{
-					$this->_errors[] = sprintf($this->l('Upgraded from: %S to %s'), $upgrade_detail['upgraded_from'], $upgrade_detail['upgraded_to']);
-					$this->_errors[] = $upgrade_detail['number_upgrade_left'].' '.$this->l('upgrade left');
+					$this->_errors[] = sprintf(Tools::displayError('Upgraded from: %s to %s'), $upgrade_detail['upgraded_from'], $upgrade_detail['upgraded_to']);
+					$this->_errors[] = sprintf(Tools::displayError('%i upgrade left'), $upgrade_detail['number_upgrade_left']);
 				}
 
 				if (isset($upgrade_detail['duplicate']) && $upgrade_detail['duplicate'])
 					$this->_errors[] = sprintf(Tools::displayError('Module %s cannot be upgraded this time: please refresh this page to update it.'), $this->name);
 				else
-					$this->_errors[] = $this->l('To prevent any problem, this module has been turned off');
+					$this->_errors[] = Tools::displayError('To prevent any problem, this module has been turned off');
 			}
 		}
 	}
@@ -584,7 +584,7 @@ abstract class ModuleCore
 		// Check module installation id validation
 		if (!Validate::isUnsignedId($this->id))
 		{
-			$this->_errors[] = $this->l('The module is not installed.');
+			$this->_errors[] = Tools::displayError('The module is not installed.');
 			return false;
 		}
 
@@ -745,6 +745,7 @@ abstract class ModuleCore
 
 	/**
 	  * Display flags in forms for translations
+	  * @deprecated since 1.6.0.10
 	  *
 	  * @param array $languages All languages available
 	  * @param integer $default_language Default language id
@@ -1198,7 +1199,7 @@ abstract class ModuleCore
 					$item->onclick_option = false;
 
 					$item->trusted = Module::isModuleTrusted($item->name);
-					
+
 					$module_list[] = $item;
 					$module_name_list[] = '\''.pSQL($item->name).'\'';
 					$modulesNameToCursor[strval($item->name)] = $item;
@@ -1655,7 +1656,7 @@ abstract class ModuleCore
 				'module_key' => $obj->module_key,
 			);
 			$xml = Tools::addonsRequest('check_module', $params);
-			return (stristr($xml, 'success'));
+			return (bool)(strpos($xml, 'success') !== false);
 		}
 	}
 
@@ -1874,10 +1875,11 @@ abstract class ModuleCore
 	/*
 	 * Return exceptions for module in hook
 	 *
+	 * @param int $id_module Module ID
 	 * @param int $id_hook Hook ID
 	 * @return array Exceptions
 	 */
-	public function getExceptions($id_hook, $dispatch = false)
+	public static function getExceptionsStatic($id_module, $id_hook, $dispatch = false)
 	{
 		$cache_id = 'exceptionsCache';
 		if (!Cache::isStored($cache_id))
@@ -1903,7 +1905,7 @@ abstract class ModuleCore
 		else
 			$exceptionsCache = Cache::retrieve($cache_id);
 
-		$key = $id_hook.'-'.$this->id;
+		$key = $id_hook.'-'.$id_module;
 		$array_return = array();
 		if ($dispatch)
 		{
@@ -1920,6 +1922,16 @@ abstract class ModuleCore
 							$array_return[] = $file;
 		}
 		return $array_return;
+	}
+	/*
+	 * Return exceptions for module in hook
+	 *
+	 * @param int $id_hook Hook ID
+	 * @return array Exceptions
+	 */
+	public function getExceptions($id_hook, $dispatch = false)
+	{
+		return Module::getExceptionsStatic($this->id, $id_hook, $dispatch);
 	}
 
 	public static function isInstalled($module_name)

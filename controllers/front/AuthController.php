@@ -132,20 +132,11 @@ class AuthControllerCore extends FrontController
 
 		$this->assignAddressFormat();
 
-		$object = new Address;
-		$required = $object->getFieldsRequiredDatabase();
-		$fields = array();
-
-		foreach ($required as $field)
-			$fields[] = $field['field_name'];
-
-		$this->context->smarty->assign('required_fields', $fields);
-
 		// Call a hook to display more information on form
 		$this->context->smarty->assign(array(
-				'HOOK_CREATE_ACCOUNT_FORM' => Hook::exec('displayCustomerAccountForm'),
-				'HOOK_CREATE_ACCOUNT_TOP' => Hook::exec('displayCustomerAccountFormTop')
-			));
+			'HOOK_CREATE_ACCOUNT_FORM' => Hook::exec('displayCustomerAccountForm'),
+			'HOOK_CREATE_ACCOUNT_TOP' => Hook::exec('displayCustomerAccountFormTop')
+		));
 
 		// Just set $this->template value here in case it's used by Ajax
 		$this->setTemplate(_PS_THEME_DIR_.'authentication.tpl');
@@ -217,11 +208,11 @@ class AuthControllerCore extends FrontController
 	{
 		$addressItems = array();
 		$addressFormat = AddressFormat::getOrderedAddressFields((int)$this->id_country, false, true);
-		$requireFormFieldsList = AddressFormat::$requireFormFieldsList;
+		$requireFormFieldsList = AddressFormat::getFieldsRequired();
 
 		foreach ($addressFormat as $addressline)
 			foreach (explode(' ', $addressline) as $addressItem)
-			$addressItems[] = trim($addressItem);
+				$addressItems[] = trim($addressItem);
 
 		// Add missing require fields for a new user susbscription form
 		foreach ($requireFormFieldsList as $fieldName)
@@ -229,7 +220,11 @@ class AuthControllerCore extends FrontController
 				$addressItems[] = trim($fieldName);
 
 		foreach (array('inv', 'dlv') as $addressType)
-			$this->context->smarty->assign(array($addressType.'_adr_fields' => $addressFormat, $addressType.'_all_fields' => $addressItems));
+			$this->context->smarty->assign(array(
+				$addressType.'_adr_fields' => $addressFormat, 
+				$addressType.'_all_fields' => $addressItems,
+				'required_fields' => $requireFormFieldsList
+			));
 	}
 
 	/**
