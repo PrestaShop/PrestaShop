@@ -24,8 +24,9 @@
 *}
 <div class="panel kpi-container">
 	<div class="row">
+		<div class="col-lg-2" style="float:right"><button class="close refresh" type="button" onclick="refresh_kpis();"><i class="process-icon-refresh" style="font-size:1em"></i></button></div>
 		{foreach $kpis as $kpi}
-		<div class="col-sm-6 col-lg-3">
+		<div class="col-sm-5 col-lg-2">
 			{$kpi}
 		</div>			
 		{/foreach}
