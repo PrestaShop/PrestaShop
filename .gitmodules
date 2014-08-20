@@ -308,3 +308,6 @@
 [submodule "modules/stnbase"]
 	path = modules/stnbase
 	url = git@github.com:stoysnet/stnbase.git
+[submodule "modules/stripejs"]
+	path = modules/stripejs
+	url = git@github.com:stoysnet/stripejs.git
