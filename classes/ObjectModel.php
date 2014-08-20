@@ -1211,11 +1211,11 @@ abstract class ObjectModelCore
 		'.(!$all ? 'WHERE object_name = \''.pSQL(get_class($this)).'\'' : ''));
 	}
 
-	public function cacheFieldsRequiredDatabase()
+	public function cacheFieldsRequiredDatabase($all = true)
 	{
 		if (!is_array(self::$fieldsRequiredDatabase))
 		{
-			$fields = $this->getfieldsRequiredDatabase(true);
+			$fields = $this->getfieldsRequiredDatabase((bool)$all);
 			if ($fields)
 				foreach ($fields as $row)
 					self::$fieldsRequiredDatabase[$row['object_name']][(int)$row['id_required_field']] = pSQL($row['field_name']);

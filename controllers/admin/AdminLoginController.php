@@ -178,7 +178,7 @@ class AdminLoginControllerCore extends AdminController
 			}
 			else
 			{
-				$this->context->employee->remote_addr = ip2long(Tools::getRemoteAddr());
+				$this->context->employee->remote_addr = (int)ip2long(Tools::getRemoteAddr());
 				// Update cookie
 				$cookie = Context::getContext()->cookie;
 				$cookie->id_employee = $this->context->employee->id;
