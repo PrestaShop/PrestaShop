@@ -311,3 +311,6 @@
 [submodule "modules/stripejs"]
 	path = modules/stripejs
 	url = git@github.com:stoysnet/stripejs.git
+[submodule "modules/storeimporter"]
+	path = modules/storeimporter
+	url = git@github.com:stoysnet/storeimporter.git
