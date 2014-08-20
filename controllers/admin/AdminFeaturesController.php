@@ -257,7 +257,7 @@ class AdminFeaturesControllerCore extends AdminController
 					'desc' => $this->l('Back to the list')
 				);
 				break;
-			default:				
+			default:
 				parent::initToolbar();
 		}
 	}
@@ -287,7 +287,7 @@ class AdminFeaturesControllerCore extends AdminController
 					{
 						if (Validate::isLoadedObject($obj = new Feature((int)$id)))
 							$bread_extended[] = '<a href="'.Context::getContext()->link->getAdminLink('AdminFeatures').'&id_feature='.$id.'&viewfeature">'.$obj->name[$this->context->employee->id_lang].'</a>';
-						
+
 						if (Validate::isLoadedObject($obj = new FeatureValue((int)Tools::getValue('id_feature_value'))))
 							$bread_extended[] =  sprintf($this->l('Edit: %s'), $obj->value[$this->context->employee->id_lang]);
 					}
@@ -520,7 +520,7 @@ class AdminFeaturesControllerCore extends AdminController
 
 		if (Tools::isSubmit('submitAdd'.$this->table.'AndStay') && !count($this->errors))
 			$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&conf=3&update'.$this->table.'&token='.$this->token;
-		
+
 		return $object;
 	}
 
@@ -555,11 +555,11 @@ class AdminFeaturesControllerCore extends AdminController
 	 * AdminController::getList() override
 	 * @see AdminController::getList()
 	 */
-	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = false, $id_lang_shop = false)
+	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
 		if ($this->table == 'feature_value')
 			$this->_where .= ' AND (a.custom = 0 OR a.custom IS NULL)';
-		
+
 		parent::getList($id_lang, $order_by, $order_way, $start, $limit, $id_lang_shop);
 
 		if ($this->table == 'feature')
