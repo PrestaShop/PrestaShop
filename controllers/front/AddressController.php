@@ -261,18 +261,6 @@ class AddressControllerCore extends FrontController
 		$this->assignVatNumber();
 		$this->assignAddressFormat();
 
-		if ($this->_address)
-			$required = $this->_address->getFieldsRequiredDatabase();
-		else
-		{
-			$object = new Address;
-			$required = $object->getFieldsRequiredDatabase();
-		}
-		$fields = array();
-
-		foreach ($required as $field)
-			$fields[] = $field['field_name'];
-
 		// Assign common vars
 		$this->context->smarty->assign(array(
 			'address_validation' => Address::$definition['fields'],
@@ -283,8 +271,7 @@ class AddressControllerCore extends FrontController
 			'token' => Tools::getToken(false),
 			'select_address' => (int)Tools::getValue('select_address'),
 			'address' => $this->_address,
-			'id_address' => (Validate::isLoadedObject($this->_address)) ? $this->_address->id : 0,
-			'required_fields' => $fields,
+			'id_address' => (Validate::isLoadedObject($this->_address)) ? $this->_address->id : 0
 		));
 
 		if ($back = Tools::getValue('back'))
@@ -333,8 +320,14 @@ class AddressControllerCore extends FrontController
 	protected function assignAddressFormat()
 	{
 		$id_country = is_null($this->_address)? (int)$this->id_country : (int)$this->_address->id_country;
+		$requireFormFieldsList = AddressFormat::getFieldsRequired();
 		$ordered_adr_fields = AddressFormat::getOrderedAddressFields($id_country, true, true);
-		$this->context->smarty->assign('ordered_adr_fields', $ordered_adr_fields);
+		$ordered_adr_fields = array_unique(array_merge($ordered_adr_fields, $requireFormFieldsList));
+
+		$this->context->smarty->assign(array(
+			'ordered_adr_fields' => $ordered_adr_fields,
+			'required_fields' => $requireFormFieldsList
+		));
 	}
 
 	/**

@@ -1875,10 +1875,11 @@ abstract class ModuleCore
 	/*
 	 * Return exceptions for module in hook
 	 *
+	 * @param int $id_module Module ID
 	 * @param int $id_hook Hook ID
 	 * @return array Exceptions
 	 */
-	public function getExceptions($id_hook, $dispatch = false)
+	public static function getExceptionsStatic($id_module, $id_hook, $dispatch = false)
 	{
 		$cache_id = 'exceptionsCache';
 		if (!Cache::isStored($cache_id))
@@ -1904,7 +1905,7 @@ abstract class ModuleCore
 		else
 			$exceptionsCache = Cache::retrieve($cache_id);
 
-		$key = $id_hook.'-'.$this->id;
+		$key = $id_hook.'-'.$id_module;
 		$array_return = array();
 		if ($dispatch)
 		{
@@ -1921,6 +1922,16 @@ abstract class ModuleCore
 							$array_return[] = $file;
 		}
 		return $array_return;
+	}
+	/*
+	 * Return exceptions for module in hook
+	 *
+	 * @param int $id_hook Hook ID
+	 * @return array Exceptions
+	 */
+	public function getExceptions($id_hook, $dispatch = false)
+	{
+		return Module::getExceptionsStatic($this->id, $id_hook, $dispatch);
 	}
 
 	public static function isInstalled($module_name)

@@ -585,6 +585,11 @@ class AdminControllerCore extends Controller
 			}
 
 			foreach ($_GET as $key => $value)
+			{
+				if (stripos($key, $this->list_id.'Filter_') === 0)
+					$this->context->cookie->{$prefix.$key} = !is_array($value) ? $value : serialize($value);
+				elseif (stripos($key, 'submitFilter') === 0)
+					$this->context->cookie->$key = !is_array($value) ? $value : serialize($value);
 				if (stripos($key, $this->list_id.'Orderby') === 0 && Validate::isOrderBy($value))
 				{
 					if ($value === '' || $value == $this->_defaultOrderBy)
@@ -599,6 +604,7 @@ class AdminControllerCore extends Controller
 					else
 						$this->context->cookie->{$prefix.$key} = $value;
 				}
+			}
 		}
 
 		$filters = $this->context->cookie->getFamily($prefix.$this->list_id.'Filter_');
@@ -1679,6 +1685,9 @@ class AdminControllerCore extends Controller
 		else
 			$this->context->smarty->assign('default_tab_link', $this->context->link->getAdminLink('AdminDashboard'));
 
+		// Shop::initialize() in config.php may empty $this->context->shop->virtual_uri so using a new shop instance for getBaseUrl()
+		$this->context->shop = new Shop((int)$this->context->shop->id);
+
 		$this->context->smarty->assign(array(
 			'img_dir' => _PS_IMG_,
 			'iso' => $this->context->language->iso_code,
@@ -1706,6 +1715,7 @@ class AdminControllerCore extends Controller
 		$lang = '';
 		if (Configuration::get('PS_REWRITING_SETTINGS') && count(Language::getLanguages(true)) > 1)
 			$lang = Language::getIsoById($this->context->employee->id_lang).'/';
+
 		if (is_object($module) && $module->active && (int)Configuration::get('PS_TC_ACTIVE') == 1 && $this->context->shop->getBaseURL())
 			$this->context->smarty->assign('base_url_tc', $this->context->shop->getBaseUrl()
 				.(Configuration::get('PS_REWRITING_SETTINGS') ? '' : 'index.php')

@@ -129,7 +129,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		FROM `'._DB_PREFIX_.'product` p
 		'.Shop::addSqlAssociation('product', 'p').'
 		LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON p.id_product = pa.id_product
-		'.Product::sqlStock('p', 'pa'));
+		'.Product::sqlStock('p', 'pa').'
+		WHERE product_shop.active = 1');
 		return round($row['products'] ? 100 * $row['with_stock'] / $row['products'] : 0, 2).'%';
 	}
 	
@@ -140,7 +141,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		FROM `'._DB_PREFIX_.'product` p
 		'.Shop::addSqlAssociation('product', 'p').'
 		LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON p.id_product = pa.id_product
-		'.Shop::addSqlAssociation('product_attribute', 'pa'));
+		'.Shop::addSqlAssociation('product_attribute', 'pa', false).'
+		WHERE product_shop.active = 1');
 		return round(100 * $value, 2).'%';
 	}
 	
@@ -219,40 +221,15 @@ class AdminStatsControllerCore extends AdminStatsTabController
 	
 	public static function get8020SalesCatalog($date_from, $date_to)
 	{
-		$total_sales = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT SUM(total_price_tax_excl / o.conversion_rate) as product_sales
+		$distinct_products = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		SELECT COUNT(DISTINCT od.product_id)
 		FROM `'._DB_PREFIX_.'orders` o
 		LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
 		WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
 		'.Shop::addSqlRestriction(false, 'o'));
-		if (!$total_sales)
+		if (!$distinct_products)
 			return '0%';
-
-		$total_products = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT COUNT(*)
-		FROM `'._DB_PREFIX_.'product` p
-		'.Shop::addSqlAssociation('product', 'p'));
-
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT SUM(total_price_tax_excl / o.conversion_rate) as product_sales
-		FROM `'._DB_PREFIX_.'orders` o
-		LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
-		WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
-		'.Shop::addSqlRestriction(false, 'o').'
-		GROUP BY od.product_id, od.product_attribute_id
-		ORDER BY SUM(total_price_tax_excl) DESC');
-
-		$products = 0;
-		$products_sales = 0;
-		foreach ($result as $row)
-		{
-			++$products;
-			$products_sales += $row['product_sales'];
-			if ($products_sales > $total_sales)
-				break;
-		}
-
-		return round(100 * $products / $total_products).'%';
+		return round(100 * $distinct_products / AdminStatsController::getTotalProducts()).'%';
 	}
 
 	public static function getOrders($date_from, $date_to, $granularity = false)
@@ -600,13 +577,13 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				break;
 
 			case 'disabled_products':
-				$value = AdminStatsController::getDisabledProducts();
+				$value = round(100 * AdminStatsController::getDisabledProducts() / AdminStatsController::getTotalProducts(), 2).'%';
 				ConfigurationKPI::updateValue('DISABLED_PRODUCTS', $value);
 				ConfigurationKPI::updateValue('DISABLED_PRODUCTS_EXPIRE', strtotime('+2 hour'));
 				break;
 
 			case '8020_sales_catalog':
-				$value = AdminStatsController::get8020SalesCatalog(date('Y-m-d', strtotime('-1 month')), date('Y-m-d'));
+				$value = AdminStatsController::get8020SalesCatalog(date('Y-m-d', strtotime('-30 days')), date('Y-m-d'));
 				$value = sprintf($this->l('%d%% of your Catalog'), $value);
 				ConfigurationKPI::updateValue('8020_SALES_CATALOG', $value);
 				ConfigurationKPI::updateValue('8020_SALES_CATALOG_EXPIRE', strtotime('+12 hour'));

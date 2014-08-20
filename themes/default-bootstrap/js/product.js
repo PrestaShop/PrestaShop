@@ -644,7 +644,8 @@ function updatePrice()
 	if (combination.specific_price && combination.specific_price.reduction > 0)
 		if (combination.specific_price.reduction_type == 'amount')
 		{
-			priceWithDiscountsDisplay = priceWithDiscountsDisplay - parseFloat(combination.specific_price.reduction);
+			var reduction = parseFloat(combination.specific_price.reduction) / currencyRate;
+			priceWithDiscountsDisplay = priceWithDiscountsDisplay - reduction;
 			// We recalculate the price without tax in order to keep the data consistency
 			priceWithDiscountsWithoutTax = priceWithDiscountsDisplay * ( 1/(1+taxRate) / 100 );
 		}
@@ -702,7 +703,7 @@ function updatePrice()
 		{
 			if (combination.specific_price.reduction_type == 'amount')
 			{
-				$('#reduction_amount_display').html('-' + formatCurrency(parseFloat(discountValue), currencyFormat, currencySign, currencyBlank));
+				$('#reduction_amount_display').html('-' + formatCurrency(parseFloat(discountValue) * currencyRate, currencyFormat, currencySign, currencyBlank));
 				$('#reduction_amount').show();
 			}
 			else

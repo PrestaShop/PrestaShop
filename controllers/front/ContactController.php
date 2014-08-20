@@ -150,7 +150,7 @@ class ContactControllerCore extends FrontController
 							$cm->file_name = $fileAttachment['rename'];
 							@chmod(_PS_UPLOAD_DIR_.basename($fileAttachment['rename']), 0664);
 						}
-						$cm->ip_address = ip2long(Tools::getRemoteAddr());
+						$cm->ip_address = (int)ip2long(Tools::getRemoteAddr());
 						$cm->user_agent = $_SERVER['HTTP_USER_AGENT'];
 						if (!$cm->add())
 							$this->errors[] = Tools::displayError('An error occurred while sending the message.');
