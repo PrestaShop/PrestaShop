@@ -314,3 +314,6 @@
 [submodule "modules/storeimporter"]
 	path = modules/storeimporter
 	url = git@github.com:stoysnet/storeimporter.git
+[submodule "modules/qbsync"]
+	path = modules/qbsync
+	url = git@github.com:stoysnet/qbsync.git
