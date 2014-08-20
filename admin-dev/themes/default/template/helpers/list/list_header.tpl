@@ -105,6 +105,13 @@
 
 <div class="alert alert-warning" id="{$list_id}-empty-filters-alert" style="display:none;">{l s='Please fill at least one field to perform a search in this list.'}</div>
 
+{if isset($sql) && $sql}
+	<form id="sql_form" action="{$link->getAdminLink('AdminRequestSql')|escape}&amp;addrequest_sql" method="post" class="hide">
+		<input type="hidden" id="sql_query" name="sql" value="{$sql|escape}" />
+		<input type="hidden" id="sql_name" name="name" value="Plop" />
+	</form>
+{/if}
+
 {block name="startForm"}
 	<form method="post" action="{$action|escape:'html':'UTF-8'}" class="form-horizontal clearfix" id="form-{$list_id}">
 {/block}
@@ -132,6 +139,20 @@
 							<i class="process-icon-refresh" ></i>
 						</span>
 					</a>
+				{if isset($sql) && $sql}
+					{if $smarty.const._PS_MODE_DEV_}
+						<a class="list-toolbar-btn" href="javascript:void(0);" onclick="$('.leadin').first().append('<div class=\'alert alert-info\'>' + $('#sql_query').val() + '</div>'); $(this).attr('onclick', '');">
+							<span class="label-tooltip" data-toggle="tooltip" data-original-title="{l s='Show SQL query'}" data-html="true" data-placement="left" >
+								<i class="process-icon-terminal"></i>
+							</span>
+						</a>
+					{/if}
+					<a class="list-toolbar-btn" href="javascript:void(0);" onclick="$('#sql_name').val(createSqlQueryName()); $('#sql_query').val($('#sql_query').val().replace(/\s+limit\s+[0-9,\s]+$/ig, '').trim()); $('#sql_form').submit();">
+						<span class="label-tooltip" data-toggle="tooltip" data-original-title="{l s='Export to SQL Manager'}" data-html="true" data-placement="left" >
+							<i class="process-icon-database"></i>
+						</span>
+					</a>
+				{/if}
 				</span>
 			{/if}
 		</div>

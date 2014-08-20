@@ -67,10 +67,11 @@ class AdminCustomersControllerCore extends AdminController
 
 		$this->_select = '
 		a.date_add, gl.name as title, (
-			SELECT SUM(total_paid_real / conversion_rate) FROM '._DB_PREFIX_.'orders o
+			SELECT SUM(total_paid_real / conversion_rate)
+			FROM '._DB_PREFIX_.'orders o
 			WHERE o.id_customer = a.id_customer
 			'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
-			AND a.active = 1
+			AND o.valid = 1
 		) as total_spent, (
 			SELECT c.date_add FROM '._DB_PREFIX_.'guest g
 			LEFT JOIN '._DB_PREFIX_.'connections c ON c.id_guest = g.id_guest
@@ -601,8 +602,8 @@ class AdminCustomersControllerCore extends AdminController
 		$helper->subtitle = $this->l('All Time', null, null, false);
 		if (ConfigurationKPI::get('CUSTOMER_MAIN_GENDER', $this->context->language->id) !== false)
 			$helper->value = ConfigurationKPI::get('CUSTOMER_MAIN_GENDER', $this->context->language->id);
-		if (ConfigurationKPI::get('CUSTOMER_MAIN_GENDER_EXPIRE', $this->context->language->id) < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=customer_main_gender';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=customer_main_gender';
+		$helper->refresh = (bool)(ConfigurationKPI::get('CUSTOMER_MAIN_GENDER_EXPIRE', $this->context->language->id) < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -613,8 +614,8 @@ class AdminCustomersControllerCore extends AdminController
 		$helper->subtitle = $this->l('All Time', null, null, false);
 		if (ConfigurationKPI::get('AVG_CUSTOMER_AGE', $this->context->language->id) !== false)
 			$helper->value = ConfigurationKPI::get('AVG_CUSTOMER_AGE', $this->context->language->id);
-		if (ConfigurationKPI::get('AVG_CUSTOMER_AGE_EXPIRE', $this->context->language->id) < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=avg_customer_age';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=avg_customer_age';
+		$helper->refresh = (bool)(ConfigurationKPI::get('AVG_CUSTOMER_AGE_EXPIRE', $this->context->language->id) < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -625,8 +626,8 @@ class AdminCustomersControllerCore extends AdminController
 		$helper->subtitle = $this->l('All Time', null, null, false);
 		if (ConfigurationKPI::get('ORDERS_PER_CUSTOMER') !== false)
 			$helper->value = ConfigurationKPI::get('ORDERS_PER_CUSTOMER');
-		if (ConfigurationKPI::get('ORDERS_PER_CUSTOMER_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=orders_per_customer';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=orders_per_customer';
+		$helper->refresh = (bool)(ConfigurationKPI::get('ORDERS_PER_CUSTOMER_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -637,8 +638,8 @@ class AdminCustomersControllerCore extends AdminController
 		$helper->subtitle = $this->l('All Time', null, null, false);
 		if (ConfigurationKPI::get('NEWSLETTER_REGISTRATIONS') !== false)
 			$helper->value = ConfigurationKPI::get('NEWSLETTER_REGISTRATIONS');
-		if (ConfigurationKPI::get('NEWSLETTER_REGISTRATIONS_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=newsletter_registrations';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=newsletter_registrations';
+		$helper->refresh = (bool)(ConfigurationKPI::get('NEWSLETTER_REGISTRATIONS_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpiRow();
@@ -756,6 +757,8 @@ class AdminCustomersControllerCore extends AdminController
 			$interested[$i]['name'] = Tools::htmlentitiesUTF8($product->name);
 		}
 
+		$emails = $customer->getLastEmails();
+
 		$connections = $customer->getLastConnections();
 		if (!is_array($connections))
 			$connections = array();
@@ -807,6 +810,8 @@ class AdminCustomersControllerCore extends AdminController
 			'carts' => $carts,
 			// Interested
 			'interested' => $interested,
+			// Emails
+			'emails' => $emails,
 			// Connections
 			'connections' => $connections,
 			// Referrers

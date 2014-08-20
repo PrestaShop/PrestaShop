@@ -113,6 +113,9 @@ class QqUploadedFileForm
 				$image->cover = 1;
 			else
 				$image->cover = 0;
+
+			if (($validate = $image->validateFieldsLang(false, true)) !== true)
+				return array('error' => Tools::displayError($validate));
 			if (!$image->add())
 				return array('error' => Tools::displayError('Error while creating additional image'));
 			else
@@ -202,6 +205,9 @@ class QqUploadedFileXhr
 				$image->cover = 1;
 			else
 				$image->cover = 0;
+			
+			if (($validate = $image->validateFieldsLang(false, true)) !== true)
+				return array('error' => Tools::displayError($validate));
 			if (!$image->add())
 				return array('error' => Tools::displayError('Error while creating additional image'));
 			else

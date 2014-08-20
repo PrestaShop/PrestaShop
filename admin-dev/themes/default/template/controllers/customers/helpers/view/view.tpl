@@ -365,7 +365,7 @@
 				<form id="customer_note" class="form-horizontal" action="ajax.php" method="post" onsubmit="saveCustomerNote({$customer->id|intval});return false;" >
 					<div class="form-group">
 						<div class="col-lg-12">
-							<textarea name="note" id="noteContent" onkeyup="$(this).val().length > 0 ? $('#submitCustomerNote').removeAttr('disabled') : $('#submitCustomerNote').attr('disabled', 'disabled')">{$customer_note}</textarea>
+							<textarea name="note" id="noteContent" onkeyup="$('#submitCustomerNote').removeAttr('disabled');">{$customer_note}</textarea>
 						</div>
 					</div>
 					<div class="row">
@@ -453,6 +453,34 @@
 				</p>
 				{/if}
 			</div>
+
+			{if count($emails)}
+			<div class="panel">
+				<div class="panel-heading">
+					<i class="icon-envelope"></i> {l s='Last emails'}
+				</div>
+				<table class="table">
+					<thead>
+					<tr>
+						<th><span class="title_box">{l s='Date'}</span></th>
+						<th><span class="title_box">{l s='Language'}</span></th>
+						<th><span class="title_box">{l s='Subject'}</span></th>
+						<th><span class="title_box">{l s='Template'}</span></th>
+					</tr>
+					</thead>
+					<tbody>
+					{foreach $emails as $email}
+						<tr>
+							<td>{dateFormat date=$email['date_add'] full=1}</td>
+							<td>{$email['language']}</td>
+							<td>{$email['subject']}</td>
+							<td>{$email['template']}</td>
+						</tr>
+					{/foreach}
+					</tbody>
+				</table>
+			</div>
+			{/if}
 
 			{if count($connections)}
 			<div class="panel">

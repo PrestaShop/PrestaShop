@@ -178,7 +178,7 @@ class AdminLoginControllerCore extends AdminController
 			}
 			else
 			{
-				$this->context->employee->remote_addr = ip2long(Tools::getRemoteAddr());
+				$this->context->employee->remote_addr = (int)ip2long(Tools::getRemoteAddr());
 				// Update cookie
 				$cookie = Context::getContext()->cookie;
 				$cookie->id_employee = $this->context->employee->id;
@@ -234,7 +234,7 @@ class AdminLoginControllerCore extends AdminController
 		if (!count($this->errors))
 		{	
 			$pwd = Tools::passwdGen();
-			$employee->passwd = md5(pSQL(_COOKIE_KEY_.$pwd));
+			$employee->passwd = Tools::encrypt($pwd);
 			$employee->last_passwd_gen = date('Y-m-d H:i:s', time());
 
 			$params = array(

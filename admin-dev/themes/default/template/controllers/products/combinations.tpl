@@ -146,8 +146,9 @@
 					</span>
 					<input type="text" name="attribute_wholesale_price" id="attribute_wholesale_price" value="0" onKeyUp="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.');" />
 				</div>
+				<span style="display:none;" id="attribute_wholesale_price_full" class="help-block">{l s='Overrides the wholesale price from the "Prices" tab.'}</span>
 			</div>
-			<span style="display:none;" id="attribute_wholesale_price_full">({l s='Overrides the wholesale price from the "Prices" tab.'})</span>
+			
 		</div>
 		<div class="form-group">
 			<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="attribute_price_impact" type="attribute_price_impact"}</span></div>

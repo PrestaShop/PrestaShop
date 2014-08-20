@@ -185,15 +185,15 @@
 					{/if}
 					<h3 class="page-heading bottom-indent top-indent">{l s='Delivery address'}</h3>
 					{foreach from=$dlv_all_fields item=field_name}
-						{if $field_name eq "company" && $b2b_enable}
+						{if $field_name eq "company"}
 							<div class="form-group">
-								<label for="company">{l s='Company'}</label>
+								<label for="company">{l s='Company'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
 								<input type="text" class="form-control" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{/if}" />
 							</div>
 						{elseif $field_name eq "vat_number"}
 							<div id="vat_number" style="display:none;">
 								<div class="form-group">
-									<label for="vat-number">{l s='VAT number'}</label>
+									<label for="vat-number">{l s='VAT number'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
 									<input id="vat-number" type="text" class="form-control" name="vat_number" value="{if isset($smarty.post.vat_number)}{$smarty.post.vat_number}{/if}" />
 								</div>
 							</div>
@@ -211,7 +211,7 @@
 							</div>
 						{elseif $field_name eq "address2"}
 							<div class="form-group is_customer_param">
-								<label for="address2">{l s='Address (Line 2)'} <sup>*</sup></label>
+								<label for="address2">{l s='Address (Line 2)'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
 								<input type="text" class="form-control" name="address2" id="address2" value="{if isset($smarty.post.address2)}{$smarty.post.address2}{/if}" />
 							</div>
 						{elseif $field_name eq "postcode"}
@@ -282,15 +282,15 @@
 						{assign var=postCodeExist value=false}
 						<h3 class="page-subheading top-indent">{l s='Invoice address'}</h3>
 						{foreach from=$inv_all_fields item=field_name}
-						{if $field_name eq "company" && $b2b_enable}
+						{if $field_name eq "company"}
 						<div class="form-group">
-							<label for="company_invoice">{l s='Company'}</label>
+							<label for="company_invoice">{l s='Company'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
 							<input type="text" class="text form-control" id="company_invoice" name="company_invoice" value="" />
 						</div>
 						{elseif $field_name eq "vat_number"}
 						<div id="vat_number_block_invoice" class="is_customer_param" style="display:none;">
 							<div class="form-group">
-								<label for="vat_number_invoice">{l s='VAT number'}</label>
+								<label for="vat_number_invoice">{l s='VAT number'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
 								<input type="text" class="form-control" id="vat_number_invoice" name="vat_number_invoice" value="" />
 							</div>
 						</div>
@@ -318,7 +318,7 @@
 						</div>
 						{elseif $field_name eq "address2"}
 						<div class="form-group is_customer_param">
-							<label for="address2_invoice">{l s='Address (Line 2)'}</label>
+							<label for="address2_invoice">{l s='Address (Line 2)'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
 							<input type="text" class="form-control" name="address2_invoice" id="address2_invoice" value="{if isset($guestInformations) && $guestInformations.address2_invoice}{$guestInformations.address2_invoice}{/if}" />
 						</div>
 						{elseif $field_name eq "postcode"}
@@ -535,14 +535,14 @@
 					{if $field_name eq "company"}
 						{if !$b2b_enable}
 							<p class="form-group">
-								<label for="company">{l s='Company'}</label>
+								<label for="company">{l s='Company'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
 								<input type="text" class="form-control" id="company" name="company" value="{if isset($smarty.post.company)}{$smarty.post.company}{/if}" />
 							</p>
 						{/if}
 					{elseif $field_name eq "vat_number"}
 						<div id="vat_number" style="display:none;">
 							<p class="form-group">
-								<label for="vat_number">{l s='VAT number'}</label>
+								<label for="vat_number">{l s='VAT number'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
 								<input type="text" class="form-control" name="vat_number" value="{if isset($smarty.post.vat_number)}{$smarty.post.vat_number}{/if}" />
 							</p>
 						</div>
@@ -564,7 +564,7 @@
 						</p>
 					{elseif $field_name eq "address2"}
 						<p class="form-group is_customer_param">
-							<label for="address2">{l s='Address (Line 2)'}</label>
+							<label for="address2">{l s='Address (Line 2)'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
 							<input type="text" class="form-control" name="address2" id="address2" value="{if isset($smarty.post.address2)}{$smarty.post.address2}{/if}" />
 							<span class="inline-infos">{l s='Apartment, suite, unit, building, floor, etc...'}</span>
 						</p>

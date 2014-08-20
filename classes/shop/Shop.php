@@ -132,14 +132,14 @@ class ShopCore extends ObjectModel
 		if ($this->id)
 			$this->setUrl();
 	}
-	
+
 	/**
 	 * Initialize an array with all the multistore associations in the database
 	 */
 	protected static function init()
 	{
 		Shop::$id_shop_default_tables = array('product', 'category');
-		
+
 		$asso_tables = array(
 			'carrier' => array('type' => 'shop'),
 			'carrier_lang' => array('type' => 'fk_shop'),
@@ -178,7 +178,7 @@ class ShopCore extends ObjectModel
 			'manufacturer' => array('type' => 'shop'),
 			'supplier' => array('type' => 'shop'),
 		);
-		
+
 		foreach ($asso_tables as $table_name => $table_details)
 			Shop::addTableAssociation($table_name, $table_details);
 
@@ -373,9 +373,8 @@ class ShopCore extends ObjectModel
 			if (!Validate::isLoadedObject($shop))
 				$shop = new Shop((int)Configuration::get('PS_SHOP_DEFAULT'));
 
-			$shop->physical_uri = preg_replace('#/+#', '/', str_replace('\\', '/', dirname(dirname($_SERVER['SCRIPT_NAME']))).'/');
 			$shop->virtual_uri = '';
-			
+
 			// Define some $_SERVER variables like HTTP_HOST if PHP is launched with php-cli
 			if (Tools::isPHPCLI())
 			{
@@ -469,13 +468,11 @@ class ShopCore extends ObjectModel
 
 	/**
 	 * Get shop URI
-	 *
+ 	 *
 	 * @return string
 	 */
 	public function getBaseURI()
 	{
-		if (defined('_PS_ADMIN_DIR_'))
-			return $this->physical_uri;
 		return $this->physical_uri.$this->virtual_uri;
 	}
 
@@ -548,7 +545,7 @@ class ShopCore extends ObjectModel
 			Shop::init();
 		return (isset(Shop::$asso_tables[$table]) ? Shop::$asso_tables[$table] : false);
 	}
-	
+
 	/**
 	 * check if the table has an id_shop_default
 	 *
@@ -572,7 +569,7 @@ class ShopCore extends ObjectModel
 			Shop::init();
 		return Shop::$asso_tables;
 	}
-	
+
 	/**
 	 * Add table associated to shop
 	 *
@@ -588,7 +585,7 @@ class ShopCore extends ObjectModel
 			return false;
 		return true;
 	}
-	
+
 	/**
 	 * Check if given table is associated to shop
 	 *
@@ -701,12 +698,12 @@ class ShopCore extends ObjectModel
 
 		return $results;
 	}
-	
+
 	public function getUrlsSharedCart()
 	{
 		if (!$this->getGroup()->share_order)
 			return false;
-		
+
 		$query = new DbQuery();
 		$query->select('domain');
 		$query->from('shop_url');
@@ -915,7 +912,7 @@ class ShopCore extends ObjectModel
 
 		return self::$context_id_shop_group;
 	}
-	
+
 	public static function getContextShopGroup()
 	{
 		static $context_shop_group = null;

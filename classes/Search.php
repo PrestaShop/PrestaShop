@@ -411,13 +411,28 @@ class SearchCore
 							$sql .= ', pl.name pname';
 						break;
 						case 'reference':
-							$sql .= ', p.reference, pa.reference AS pa_reference';
+							$sql .= ', p.reference';
+						break;
+						case 'pa_reference':
+							$sql .= ', pa.reference AS pa_reference';
+						break;
+						case 'supplier_reference':
+							$sql .= ', p.supplier_reference';
+						break;
+						case 'pa_supplier_reference':
+							$sql .= ', pa.supplier_reference AS pa_supplier_reference';
 						break;
 						case 'ean13':
 							$sql .= ', p.ean13';
 						break;
+						case 'pa_ean13':
+							$sql .= ', pa.ean13 AS pa_ean13';
+						break;
 						case 'upc':
 							$sql .= ', p.upc';
+						break;
+						case 'pa_upc':
+							$sql .= ', pa.upc AS pa_upc';
 						break;
 						case 'description_short':
 							$sql .= ', pl.description_short';
@@ -494,8 +509,12 @@ class SearchCore
 			'pname' => Configuration::get('PS_SEARCH_WEIGHT_PNAME'),
 			'reference' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
 			'pa_reference' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
+			'supplier_reference' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
+			'pa_supplier_reference' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
 			'ean13' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
+			'pa_ean13' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
 			'upc' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
+			'pa_upc' => Configuration::get('PS_SEARCH_WEIGHT_REF'),
 			'description_short' => Configuration::get('PS_SEARCH_WEIGHT_SHORTDESC'),
 			'description' => Configuration::get('PS_SEARCH_WEIGHT_DESC'),
 			'cname' => Configuration::get('PS_SEARCH_WEIGHT_CNAME'),

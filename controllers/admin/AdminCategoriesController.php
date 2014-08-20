@@ -109,7 +109,7 @@ class AdminCategoriesControllerCore extends AdminController
 			$this->_category = new Category($id_category);
 		else
 		{
-			if (Shop::isFeatureActive() && Shop::getContext() == Shop::CONTEXT_SHOP)
+			if (Shop::getContext() == Shop::CONTEXT_SHOP)
 				$this->_category = new Category($this->context->shop->id_category);
 			elseif (count(Category::getCategoriesWithoutParent()) > 1 && Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && count(Shop::getShops(true, null, true)) != 1)
 				$this->_category = Category::getTopCategory();
@@ -365,8 +365,8 @@ class AdminCategoriesControllerCore extends AdminController
 		$helper->title = $this->l('Disabled Categories', null, null, false);
 		if (ConfigurationKPI::get('DISABLED_CATEGORIES') !== false)
 			$helper->value = ConfigurationKPI::get('DISABLED_CATEGORIES');
-		if (ConfigurationKPI::get('DISABLED_CATEGORIES_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=disabled_categories';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=disabled_categories';
+		$helper->refresh = (bool)(ConfigurationKPI::get('DISABLED_CATEGORIES_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -377,8 +377,8 @@ class AdminCategoriesControllerCore extends AdminController
 		$helper->title = $this->l('Empty Categories', null, null, false);
 		if (ConfigurationKPI::get('EMPTY_CATEGORIES') !== false)
 			$helper->value = ConfigurationKPI::get('EMPTY_CATEGORIES');
-		if (ConfigurationKPI::get('EMPTY_CATEGORIES_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=empty_categories';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=empty_categories';
+		$helper->refresh = (bool)(ConfigurationKPI::get('EMPTY_CATEGORIES_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -389,8 +389,8 @@ class AdminCategoriesControllerCore extends AdminController
 		$helper->subtitle = $this->l('30 days', null, null, false);
 		if (ConfigurationKPI::get('TOP_CATEGORY', $this->context->employee->id_lang) !== false)
 			$helper->value = ConfigurationKPI::get('TOP_CATEGORY', $this->context->employee->id_lang);
-		if (ConfigurationKPI::get('TOP_CATEGORY_EXPIRE', $this->context->employee->id_lang) < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=top_category';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=top_category';
+		$helper->refresh = (bool)(ConfigurationKPI::get('TOP_CATEGORY_EXPIRE', $this->context->employee->id_lang) < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -400,8 +400,8 @@ class AdminCategoriesControllerCore extends AdminController
 		$helper->title = $this->l('Average number of products per category', null, null, false);
 		if (ConfigurationKPI::get('PRODUCTS_PER_CATEGORY') !== false)
 			$helper->value = ConfigurationKPI::get('PRODUCTS_PER_CATEGORY');
-		if (ConfigurationKPI::get('PRODUCTS_PER_CATEGORY_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=products_per_category';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=products_per_category';
+		$helper->refresh = (bool)(ConfigurationKPI::get('PRODUCTS_PER_CATEGORY_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpiRow();
@@ -473,7 +473,7 @@ class AdminCategoriesControllerCore extends AdminController
 					'tree'  => array(
 						'id'                  => 'categories-tree',
 						'selected_categories' => $selected_categories,
-						'disabled_categories' => !Tools::isSubmit('add'.$this->table) ? array($this->_category->id) : null
+						'disabled_categories' => (!Tools::isSubmit('add'.$this->table) && !Tools::isSubmit('submitAdd'.$this->table)) ? array($this->_category->id) : null
 					)
 				),
 				array(

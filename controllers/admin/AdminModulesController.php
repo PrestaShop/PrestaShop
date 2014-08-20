@@ -696,6 +696,7 @@ class AdminModulesControllerCore extends AdminController
 					$modules = (array)$modules;
 			}
 
+			$module_upgraded = array();
 			$module_errors = array();
 			if (isset($modules))
 				foreach ($modules as $name)
@@ -731,7 +732,6 @@ class AdminModulesControllerCore extends AdminController
 
 						}
 
-						$module_upgraded = array();
 						foreach ($module_to_update as $name => $attr)
 						{
 							if ((is_null($attr) && $this->logged_on_addons == 0) || ($attr['need_loggedOnAddons'] == 1 && $this->logged_on_addons == 0))
@@ -754,7 +754,6 @@ class AdminModulesControllerCore extends AdminController
 							else
 								$this->errors[] = sprintf(Tools::displayError("You don’t have the rights to update the %s module. Please make sure you are logged in to the PrestaShop Addons account that purchased the module."), '<strong>'.$name.'</strong>');
 						}
-						$module_upgraded = implode('|', $module_upgraded);
 					}
 
 					if (count($this->errors))
@@ -961,6 +960,9 @@ class AdminModulesControllerCore extends AdminController
 						unset($module);
 				}
 			}
+
+
+			$module_upgraded = implode('|', $module_upgraded);
 
 			if (isset($module_upgraded) && $module_upgraded != '')
 				Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.'&updated=1&module_name='.$module_upgraded);
@@ -1225,8 +1227,8 @@ class AdminModulesControllerCore extends AdminController
 		$helper->title = $this->l('Installed Modules', null, null, false);
 		if (ConfigurationKPI::get('INSTALLED_MODULES') !== false && ConfigurationKPI::get('INSTALLED_MODULES') != '')
 			$helper->value = ConfigurationKPI::get('INSTALLED_MODULES');
-		if (ConfigurationKPI::get('INSTALLED_MODULES_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=installed_modules';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=installed_modules';
+		$helper->refresh = (bool)(ConfigurationKPI::get('INSTALLED_MODULES_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -1236,8 +1238,8 @@ class AdminModulesControllerCore extends AdminController
 		$helper->title = $this->l('Disabled Modules', null, null, false);
 		if (ConfigurationKPI::get('DISABLED_MODULES') !== false && ConfigurationKPI::get('DISABLED_MODULES') != '')
 			$helper->value = ConfigurationKPI::get('DISABLED_MODULES');
-		if (ConfigurationKPI::get('DISABLED_MODULES_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=disabled_modules';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=disabled_modules';
+		$helper->refresh = (bool)(ConfigurationKPI::get('DISABLED_MODULES_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -1247,8 +1249,8 @@ class AdminModulesControllerCore extends AdminController
 		$helper->title = $this->l('Modules to update', null, null, false);
 		if (ConfigurationKPI::get('UPDATE_MODULES') !== false && ConfigurationKPI::get('UPDATE_MODULES') != '')
 			$helper->value = ConfigurationKPI::get('UPDATE_MODULES');
-		if (ConfigurationKPI::get('UPDATE_MODULES_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=update_modules';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=update_modules';
+		$helper->refresh = (bool)(ConfigurationKPI::get('UPDATE_MODULES_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpiRow();
