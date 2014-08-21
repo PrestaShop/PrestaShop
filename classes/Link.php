@@ -274,6 +274,15 @@ class LinkCore
 		if (isset($cms->meta_title) && !empty($cms->meta_title))
 			$params['meta_title'] = is_array($cms->meta_title) ? Tools::str2url($cms->meta_title[(int)$id_lang]) : Tools::str2url($cms->meta_title);
 
+		if ($dispatcher->hasKeyword($rule, $id_lang, 'categories', $id_shop))
+		{
+			$cats = array();
+			foreach (CMSCategory::getParentsCategories($id_lang, $cms->id_cms_category) as $cat)
+				if (!in_array($cat['id_category'], Link::$category_disable_rewrite))//remove root and home category from the URL
+					$cats[] = $cat['link_rewrite'];
+			$params['categories'] = implode('/', array_reverse($cats));
+		}
+
 		return $url.$dispatcher->createUrl('cms_rule', $id_lang, $params, $this->allow, '', $id_shop);
 	}
 
