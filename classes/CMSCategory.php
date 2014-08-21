@@ -518,13 +518,12 @@ class CMSCategoryCore extends ObjectModel
 	  * @param integer $id_lang Language ID
 	  * @return array Corresponding categories
 	  */
-	public function getParentsCategories($id_lang = null)
+	public function getParentsCategories($id_lang = null, $id_current = $this->id)
 	{
 		if (is_null($id_lang))
 			$id_lang = Context::getContext()->language->id;
 
 		$categories = null;
-		$id_current = $this->id;
 		while (true)
 		{
 			$query = '
