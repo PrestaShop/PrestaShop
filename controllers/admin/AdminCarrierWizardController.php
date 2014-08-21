@@ -38,10 +38,10 @@ class AdminCarrierWizardControllerCore extends AdminController
 		$this->lang = false;
 		$this->deleted = true;
 		$this->step_number = 0;
-		
+
 		$this->multishop_context = Shop::CONTEXT_ALL;
 		$this->context = Context::getContext();
-		
+
 		$this->fieldImageSettings = array(
 			'name' => 'logo',
 			'dir' => 's'
@@ -131,16 +131,16 @@ class AdminCarrierWizardControllerCore extends AdminController
 		$this->context->smarty->assign(array(
 				'carrier_logo' => (Validate::isLoadedObject($carrier) && file_exists(_PS_SHIP_IMG_DIR_.$carrier->id.'.jpg') ? _THEME_SHIP_DIR_.$carrier->id.'.jpg' : false),
  			));
- 			
+
  		$this->context->smarty->assign(array(
  			'logo_content' => $this->createTemplate('logo.tpl')->fetch()
  		));
- 		
+
 		$this->addjQueryPlugin(array('ajaxfileupload'));
 
 		return parent::renderView();
 	}
-	
+
 	public function initBreadcrumbs($tab_id = null,$tabs = null)
 	{
 		if (Tools::getValue('id_carrier'))
@@ -149,7 +149,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 			$this->display = 'add';
 
 		parent::initBreadcrumbs((int)Tab::getIdFromClassName('AdminCarriers'));
-		
+
 		$this->display = 'view';
 	}
 
@@ -221,6 +221,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 		$this->fields_form = array(
 			'form' => array(
 				'id_form' => 'step_carrier_shops',
+				'force' => true,
 				'input' => array(
 					array(
 						'type' => 'shop',
@@ -230,6 +231,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 				))
 		);
 		$fields_value = $this->getStepTwoFieldsValues($carrier);
+
 		return $this->renderGenericForm(array('form' => $this->fields_form), $fields_value);
 	}
 
@@ -500,6 +502,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 
 	public function renderGenericForm($fields_form, $fields_value, $tpl_vars = array())
 	{
+
 		$helper = new HelperForm();
 		$helper->show_toolbar = false;
 		$helper->table =  $this->table;
@@ -707,7 +710,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 						);
 					}
 				}
-				
+
 				if (count($price_list) && !$carrier->addDeliveryPrice($price_list, true))
 					return false;
 			}
@@ -750,7 +753,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 				$return['errors'][] = Tools::displayError('You do not have permission to use this wizard.')
 			);
 		else
-		{	
+		{
 			$this->validateForm(false);
 			if ($id_carrier = Tools::getValue('id_carrier'))
 			{
@@ -771,11 +774,11 @@ class AdminCarrierWizardControllerCore extends AdminController
 					$this->updateAssoShop((int)$new_carrier->id);
 					$this->duplicateLogo((int)$new_carrier->id, (int)$current_carrier->id);
 					$this->changeGroups((int)$new_carrier->id);
-					
+
 					//Copy default carrier
 					if (Configuration::get('PS_CARRIER_DEFAULT') == $current_carrier->id)
 						Configuration::updateValue('PS_CARRIER_DEFAULT', (int)$new_carrier->id);
-					
+
 					// Call of hooks
 					Hook::exec('actionCarrierUpdate', array(
 							'id_carrier' => (int)$current_carrier->id,
