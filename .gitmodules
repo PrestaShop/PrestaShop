@@ -320,3 +320,6 @@
 [submodule "modules/stnimporter"]
 	path = modules/stnimporter
 	url = git@github.com:stoysnet/stnimporter.git
+[submodule "modules/upscarrier"]
+	path = modules/upscarrier
+	url = git@github.com:stoysnet/upscarrier.git
