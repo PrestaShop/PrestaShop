@@ -10,3 +10,5 @@ INSERT INTO `PREFIX_configuration` (`name` , `value` , `date_add` , `date_upd`)
 VALUES ('PS_SET_DISPLAY_SUBCATEGORIES', '1', NOW(), NOW());
 
 UPDATE `PREFIX_hook` SET `live_edit` = 0 WHERE `name`='displayOverrideTemplate';
+
+ALTER TABLE  `PREFIX_cart_rule` ADD  `reduction_exclude_special` TINYINT(1) UNSIGNED NOT NULL DEFAULT  '0' AFTER  `reduction_percent`;
