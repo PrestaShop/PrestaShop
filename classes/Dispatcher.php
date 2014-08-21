@@ -82,6 +82,7 @@ class DispatcherCore
 			'keywords' => array(
 				'id' =>				array('regexp' => '[0-9]+', 'param' => 'id_cms'),
 				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+				'categories' =>		array('regexp' => '[/_a-zA-Z0-9-\pL]*'),
 				'meta_keywords' =>	array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 				'meta_title' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 			),
