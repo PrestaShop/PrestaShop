@@ -323,3 +323,6 @@
 [submodule "modules/upscarrier"]
 	path = modules/upscarrier
 	url = git@github.com:stoysnet/upscarrier.git
+[submodule "modules/uspscarrier"]
+	path = modules/uspscarrier
+	url = git@github.com:stoysnet/uspscarrier.git
