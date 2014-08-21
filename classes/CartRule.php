@@ -578,6 +578,23 @@ class CartRuleCore extends ObjectModel
 			if ($cartTotal < $minimum_amount)
 				return (!$display_error) ? false : Tools::displayError('You have not reached the minimum amount required to use this voucher');
 		}
+                
+                //check if not only products with specials in the cart
+                if ($this->reduction_exclude_special) 
+                {
+                    $products = $context->cart->getProducts();
+                    $is_ok = false;
+                    foreach ($products as $product) 
+                    {
+                        if (!$product['reduction_applies']) 
+                        {
+                            $is_ok = true;
+                            break;
+                        }
+                    }
+                    if(!$is_ok)
+                       return (!$display_error) ? false : Tools::displayError('You cannot use this voucher on reduced products'); 
+                }
 		
 		/* This loop checks:
 			- if the voucher is already in the cart
@@ -847,7 +864,20 @@ class CartRuleCore extends ObjectModel
 				$order_total = $context->cart->getOrderTotal($use_tax, Cart::ONLY_PRODUCTS, $package_products);
 				foreach ($context->cart->getCartRules(CartRule::FILTER_ACTION_GIFT) as $cart_rule)
 					$order_total -= Tools::ps_round($cart_rule['obj']->getContextualValue($use_tax, $context, CartRule::FILTER_ACTION_GIFT, $package), _PS_PRICE_DISPLAY_PRECISION_);
-
+				//remove products that are on special
+                                if ($this->reduction_exclude_special) 
+                                {
+					foreach ($package_products as $product) 
+					{
+						if ($product['reduction_applies']) 
+						{
+							if ($use_tax)
+								$order_total -= Tools::ps_round($product['total_wt'],2);
+							else
+								$order_total -= Tools::ps_round($product['total'],2);
+						}
+					}
+                                }
 				$reduction_value += $order_total * $this->reduction_percent / 100;
 			}
 
@@ -855,7 +885,7 @@ class CartRuleCore extends ObjectModel
 			if ($this->reduction_percent && $this->reduction_product > 0)
 			{
 				foreach ($package_products as $product)
-					if ($product['id_product'] == $this->reduction_product)
+					if ($product['id_product'] == $this->reduction_product && (($this->reduction_exclude_special && !$product['reduction_applies']) || !$this->reduction_exclude_special))
 						$reduction_value += ($use_tax ? $product['total_wt'] : $product['total']) * $this->reduction_percent / 100;
 			}
 
@@ -867,7 +897,7 @@ class CartRuleCore extends ObjectModel
 				foreach ($all_products as $product)
 				{
 					$price = ($use_tax ? $product['price_wt'] : $product['price']);
-					if ($price > 0 && ($minPrice === false || $minPrice > $price))
+					if ($price > 0 && ($minPrice === false || $minPrice > $price) && (($this->reduction_exclude_special && !$product['reduction_applies']) || !$this->reduction_exclude_special))
 					{
 						$minPrice = $price;
 						$cheapest_product = $product['id_product'].'-'.$product['id_product_attribute'];
@@ -890,8 +920,8 @@ class CartRuleCore extends ObjectModel
 				$selected_products = $this->checkProductRestrictions($context, true);
 				if (is_array($selected_products))
 					foreach ($package_products as $product)
-						if (in_array($product['id_product'].'-'.$product['id_product_attribute'], $selected_products)
-							|| in_array($product['id_product'].'-0', $selected_products))
+						if ((in_array($product['id_product'].'-'.$product['id_product_attribute'], $selected_products)
+							|| in_array($product['id_product'].'-0', $selected_products)) && (($this->reduction_exclude_special && !$product['reduction_applies']) || !$this->reduction_exclude_special))
 						{
 							$price = ($use_tax ? $product['price_wt'] : $product['price']);
 							$selected_products_reduction += $price * $product['cart_quantity'];
