@@ -93,7 +93,7 @@
 					<th class="cart_unit item text-right">{l s='Unit price'}</th>
 					<th class="cart_quantity item text-center">{l s='Qty'}</th>
 					<th class="cart_delete last_item">&nbsp;</th>
-					<th class="cart_total item text-right">{l s='Total'}</th>					
+					<th class="cart_total item text-right">{l s='Total'}</th>
 				</tr>
 			</thead>
 			<tfoot>
@@ -408,7 +408,7 @@
 												href="{$link->getPageLink('cart', true, NULL, "delete=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_customization={$id_customization}&amp;id_address_delivery={$product.id_address_delivery}&amp;token={$token_cart}")|escape:'html':'UTF-8'}"
 												rel="nofollow"
 												title="{l s='Delete'}">
-												<i class=" icon-trash"></i>
+												<i class="icon-trash"></i>
 											</a>
 										</div>
 									{/if}
