@@ -106,6 +106,24 @@ class CartControllerCore extends FrontController
 	 */
 	protected function processDeleteProductInCart()
 	{
+		$customization_product = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'customization`
+		WHERE `id_product` = '.(int)$this->id_product.' AND `id_customization` != '.(int)$this->customization_id);
+
+		if (count($customization_product))
+		{
+			$product = new Product((int)$this->id_product);
+
+			$total_quantity = 0;
+			foreach ($customization_product as $custom)
+				$total_quantity += $custom['quantity'];
+
+			if ($total_quantity < $product->minimal_quantity)
+				die(Tools::jsonEncode(array(
+						'hasError' => true,
+						'errors' => array(sprintf(Tools::displayError('You must add %d minimum quantity', !Tools::getValue('ajax')), $product->minimal_quantity)),
+				)));
+		}
+
 		if ($this->context->cart->deleteProduct($this->id_product, $this->id_product_attribute, $this->customization_id, $this->id_address_delivery))
 		{
 			if (!Cart::getNbProducts((int)($this->context->cart->id)))
@@ -135,7 +153,7 @@ class CartControllerCore extends FrontController
 				'hasErrors' => true,
 				'error' => Tools::displayError('It is not possible to deliver this product to the selected address.', false),
 			)));
-		
+
 		$this->context->cart->setProductAddressDelivery(
 			$this->id_product,
 			$this->id_product_attribute,
@@ -320,7 +338,7 @@ class CartControllerCore extends FrontController
 			die(Tools::jsonEncode(array('hasError' => true, 'errors' => $this->errors)));
 		if ($this->ajax_refresh)
 			die(Tools::jsonEncode(array('refresh' => true)));
-		
+
 		// write cookie if can't on destruct
 		$this->context->cookie->write();
 
