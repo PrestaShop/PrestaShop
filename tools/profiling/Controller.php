@@ -382,8 +382,7 @@ abstract class Controller extends ControllerCore
 			}
 			#ps_profiling td pre{
 				padding: 6px;
-				max-width: 600px;
-				max-height: 140px;
+				margin-right: 10px;
 				border-radius: 5px;
 				overflow: auto;
 				display: block;
@@ -394,6 +393,11 @@ abstract class Controller extends ControllerCore
 				word-wrap: break-word;
 				background-color: whitesmoke;
 				border: 1px solid #cccccc;
+				max-width: 960px;
+			}
+			#ps_profiling td .qbt{
+				max-height: 140px;
+				overflow: auto;
 			}
 			#ps_profiling table{
 				width: 100%;
@@ -411,6 +415,9 @@ abstract class Controller extends ControllerCore
 				padding: 6px;
 			}
 
+			.sortable thead th{
+				cursor:pointer;
+			}
 			#ps_profiling table .text-right{
 				text-align: right
 			}
@@ -555,31 +562,35 @@ abstract class Controller extends ControllerCore
 		<div class="ps_profiling_row">
 		<span class="ps_profiling_title"><a name="stopwatch">Stopwatch (with SQL_NO_CACHE) (total = '.count(Db::getInstance()->queries).')</a></span>';
 		$i = 1;
-		echo '<table><thead>
+		echo '
+		<script type="text/javascript" src="https://raw.githubusercontent.com/drvic10k/bootstrap-sortable/master/Scripts/bootstrap-sortable.js"></script>
+		<table class="table table-striped table-condensed sortable">
+			<thead>
 				<tr>
-				<th class="text-left">Query</th>
-				<th class="text-left" width="80px">Time (ms)</th>
-				<th class="text-left" width="40px">Rows</th>
-				<th class="text-left" width="70px">Filesort</th>
-				<th class="text-left" width="70px">Group By</th>
-				<th class="text-left" width="300px">Location</th>
+					<th class="text-left col-lg-6">Query</th>
+					<th class="text-left col-lg-1">Time (ms)</th>
+					<th class="text-left col-lg-1">Rows</th>
+					<th class="text-left col-lg-1">Filesort</th>
+					<th class="text-left col-lg-1">Group By</th>
+					<th class="text-left col-lg-2">Location</th>
 				</tr>
-				<thead><tbody>';
+			<thead>
+			<tbody>';
 		foreach ($array_queries as $data)
 		{
 			$echo_stack = '';
 			array_shift($data['stack']);
 			foreach ($data['stack'] as $call)
 				$echo_stack .= 'from '.str_replace('\\', '/', substr($call['file'], strlen(_PS_ROOT_DIR_))).':'.$call['line'].'<br />';
-
-			echo '<tr>';
-			echo '<td><pre>'.preg_replace("/(^[\s]*)/m", "", htmlspecialchars($data['query'], ENT_NOQUOTES, 'utf-8', false)).'</pre></td>';
-			echo '<td><span '.$this->getTimeColor($data['time'] * 1000).'>'.round($data['time'] * 1000, 3).'</span></td>';
-			echo '<td>'.$data['rows'].'</td>';
-			echo '<td>'.($data['filesort'] ? '<span style="color:green">Yes</span>' : '').'</td>';
-			echo '<td>'.($data['group_by'] ? '<span style="color:red">Yes</span>' : '').'</td>';
-			echo '<td>in '.$data['location'].'<br><br><div id="qbt'.($i++).'">'.$echo_stack.'</div></td>';
-			echo '</tr>';
+			echo '
+			<tr>
+				<td><pre>'.preg_replace("/(^[\s]*)/m", "", htmlspecialchars($data['query'], ENT_NOQUOTES, 'utf-8', false)).'</pre></td>
+				<td><span '.$this->getTimeColor($data['time'] * 1000).'>'.round($data['time'] * 1000, 3).'</span></td>
+				<td>'.$data['rows'].'</td>
+				<td>'.($data['filesort'] ? '<span style="color:green">Yes</span>' : '').'</td>
+				<td>'.($data['group_by'] ? '<span style="color:red">Yes</span>' : '').'</td>
+				<td>in '.$data['location'].'<br /><div class="qbt" id="qbt'.($i++).'">'.$echo_stack.'</div></td>
+			</tr>';
 		}
 		echo '</table>';
 		$queries = Db::getInstance()->uniqQueries;
