@@ -378,6 +378,11 @@ class LinkCore
 	public function getImageLink($name, $ids, $type = null)
 	{
 		$not_default = false;
+
+		// Check if module is installed, enabled, customer is logged in and watermark logged option is on
+		if (Configuration::get('WATERMARK_LOGGED') && (Module::isInstalled('watermark') && Module::isEnabled('watermark')) && isset(Context::getContext()->customer->id))
+			$type .= '-'.Configuration::get('WATERMARK_HASH');
+
 		// legacy mode or default image
 		$theme = ((Shop::isFeatureActive() && file_exists(_PS_PROD_IMG_DIR_.$ids.($type ? '-'.$type : '').'-'.(int)Context::getContext()->shop->id_theme.'.jpg')) ? '-'.Context::getContext()->shop->id_theme : '');
 		if ((Configuration::get('PS_LEGACY_IMAGES')
