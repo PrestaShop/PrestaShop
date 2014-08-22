@@ -151,7 +151,7 @@ class SearchCore
 					$letters .= $mb_word.' ';
 				else
 					$symbols .= $mb_word.' ';
-		
+
 			if (preg_match_all('/./u', $symbols, $matches))
 				$symbols = implode(' ', $matches[0]);
 
@@ -302,7 +302,7 @@ class SearchCore
 			$alias = 'product_shop.';
 		else if ($order_by == 'date_upd')
 			$alias = 'p.';
-		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, 
+		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
 				pl.`description_short`, pl.`available_now`, pl.`available_later`, pl.`link_rewrite`, pl.`name`,
 			 MAX(image_shop.`id_image`) id_image, il.`legend`, m.`name` manufacturer_name '.$score.', MAX(product_attribute_shop.`id_product_attribute`) id_product_attribute,
 				DATEDIFF(
@@ -464,7 +464,9 @@ class SearchCore
 			AND product_shop.visibility IN ("both", "search")
 			'.($id_product ? 'AND p.id_product = '.(int)$id_product : '').'
 			AND product_shop.`active` = 1
+			AND pl.`id_shop` = product_shop.`id_shop`
 			LIMIT '.(int)$limit;
+
 		return Db::getInstance()->executeS($sql);
 	}
 
@@ -488,6 +490,7 @@ class SearchCore
 				SELECT p.id_product
 				FROM '._DB_PREFIX_.'product p
 				'.Shop::addSqlAssociation('product', 'p').'
+				INNER JOIN '._DB_PREFIX_.'product_lang pl ON pl.`id_shop` = product_shop.`id_shop`
 				WHERE product_shop.visibility IN ("both", "search")
 				AND product_shop.`active` = 1
 				AND '.($id_product ? 'p.id_product = '.(int)$id_product : 'product_shop.indexed = 0')
@@ -696,7 +699,7 @@ class SearchCore
 
 		$id = Context::getContext()->shop->id;
 		$id_shop = $id ? $id : Configuration::get('PS_SHOP_DEFAULT');
-		
+
 		$sql_groups = '';
 		if (Group::isFeatureActive())
 		{
@@ -738,7 +741,7 @@ class SearchCore
 				)
 				'.Shop::addSqlAssociation('product', 'p', false).'
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)'.
-				Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'		
+				Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
 				LEFT JOIN `'._DB_PREFIX_.'product_tag` pt ON (p.`id_product` = pt.`id_product`)
