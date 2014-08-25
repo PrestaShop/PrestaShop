@@ -1381,6 +1381,9 @@ class AdminImportControllerCore extends AdminController
 			else if (isset($product->price_tin) && isset($product->price_tex))
 				$product->price = $product->price_tex;
 
+			if (!Configuration::get('PS_USE_ECOTAX'))
+				$product->ecotax = 0;
+
 			if (isset($product->category) && is_array($product->category) && count($product->category))
 			{
 				$product->id_category = array(); // Reset default values array
@@ -2081,7 +2084,7 @@ class AdminImportControllerCore extends AdminController
 											(float)$info['price'],
 											(float)$info['weight'],
 											0,
-											(float)$info['ecotax'],
+											(Configuration::get('PS_USE_ECOTAX') ? (float)$info['ecotax'] : 0),
 											$id_image,
 											strval($info['reference']),
 											strval($info['ean13']),
@@ -2109,7 +2112,7 @@ class AdminImportControllerCore extends AdminController
 								(float)$info['price'],
 								(float)$info['weight'],
 								0,
-								(float)$info['ecotax'],
+								(Configuration::get('PS_USE_ECOTAX') ? (float)$info['ecotax'] : 0),
 								(int)$info['quantity'],
 								$id_image,
 								strval($info['reference']),
