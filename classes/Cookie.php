@@ -385,6 +385,11 @@ class CookieCore
 			unset($this->$member);
 	}
 
+	public function getAll()
+	{
+		return $this->_content;
+	}
+
 	/**
 	 * @return String name of cookie
 	 */
