@@ -27,6 +27,31 @@
 class ConfigurationTestCore
 {
 
+	public static $test_files = array(
+		'/cache/smarty/compile/index.php',
+		'/classes/log/index.php',
+		'/classes/cache/index.php',
+		'/config/index.php',
+		'/tools/tar/Archive_Tar.php',
+		'/tools/pear/PEAR.php',
+		'/controllers/admin/AdminLoginController.php',
+		'/css/index.php',
+		'/download/index.php',
+		'/img/404.gif',
+		'/js/tools.js',
+		'/js/jquery/plugins/fancybox/jquery.fancybox.js',
+		'/localization/fr.xml',
+		'/mails/index.php',
+		'/modules/index.php',
+		'/override/controllers/front/index.php',
+		'/pdf/order-return.tpl',
+		'/themes/default-bootstrap/css/global.css',
+		'/translations/export/index.php',
+		'/webservice/dispatcher.php',
+		'/upload/index.php',
+		'/index.php'
+	);
+
 	/**
 	 * getDefaultTests return an array of tests to executes.
 	 * key are method name, value are parameters (false for no parameter)
@@ -327,33 +352,20 @@ class ConfigurationTestCore
 	
 	public static function test_files()
 	{
-		$files = array(
-			'/cache/smarty/compile/index.php',
-			'/classes/log/index.php',
-			'/classes/cache/index.php',
-			'/config/index.php',
-			'/tools/tar/Archive_Tar.php',
-			'/tools/pear/PEAR.php',
-			'/controllers/admin/AdminLoginController.php',
-			'/css/index.php',
-			'/download/index.php',
-			'/img/404.gif',
-			'/js/tools.js',
-			'/js/jquery/plugins/fancybox/jquery.fancybox.js',
-			'/localization/fr.xml',
-			'/mails/index.php',
-			'/modules/index.php',
-			'/override/controllers/front/index.php',
-			'/pdf/order-return.tpl',
-			'/themes/default-bootstrap/css/global.css',
-			'/translations/export/index.php',
-			'/webservice/dispatcher.php',
-			'/upload/index.php',
-			'/index.php'
-		);
-		foreach ($files as $file)
+		$return = ConfigurationTest::test_files_();
+		return empty($return);	
+	}
+
+	public static function test_files_($first_only = true)
+	{
+		$return = array();
+		foreach (ConfigurationTest::$test_files as $file)
 			if (!file_exists(rtrim(_PS_ROOT_DIR_, DIRECTORY_SEPARATOR).str_replace('/', DIRECTORY_SEPARATOR, $file)))
-				return false;
-		return true;		
+			{
+				if ($first_only)
+					return $file;
+				array_push($return, $file);
+			}
+		return $return;
 	}
 }
