@@ -362,7 +362,7 @@
 										{/if}
 									{/foreach}
 								</td>
-								<td class="cart_quantity" colspan="2">
+								<td class="cart_quantity" colspan="1">
 									{if isset($cannotModify) AND $cannotModify == 1}
 										<span>{if $quantityDisplayed == 0 AND isset($customizedDatas.$productId.$productAttributeId)}{$customizedDatas.$productId.$productAttributeId|@count}{else}{$product.cart_quantity-$quantityDisplayed}{/if}</span>
 									{else}
@@ -398,20 +398,20 @@
 										</div>
 									{/if}
 								</td>
-								<td class="cart_delete">
+								<td class="cart_delete text-center">
 									{if isset($cannotModify) AND $cannotModify == 1}
 									{else}
-										<div>
-											<a
-												id="{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}"
-												class="cart_quantity_delete"
-												href="{$link->getPageLink('cart', true, NULL, "delete=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_customization={$id_customization}&amp;id_address_delivery={$product.id_address_delivery}&amp;token={$token_cart}")|escape:'html':'UTF-8'}"
-												rel="nofollow"
-												title="{l s='Delete'}">
-												<i class="icon-trash"></i>
-											</a>
-										</div>
+										<a
+											id="{$product.id_product}_{$product.id_product_attribute}_{$id_customization}_{$product.id_address_delivery|intval}"
+											class="cart_quantity_delete"
+											href="{$link->getPageLink('cart', true, NULL, "delete=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_customization={$id_customization}&amp;id_address_delivery={$product.id_address_delivery}&amp;token={$token_cart}")|escape:'html':'UTF-8'}"
+											rel="nofollow"
+											title="{l s='Delete'}">
+											<i class="icon-trash"></i>
+										</a>
 									{/if}
+								</td>
+								<td>
 								</td>
 							</tr>
 							{assign var='quantityDisplayed' value=$quantityDisplayed+$customization.quantity}
