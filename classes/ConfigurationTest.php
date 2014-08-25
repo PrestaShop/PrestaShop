@@ -350,22 +350,20 @@ class ConfigurationTestCore
 		return extension_loaded('Dom');
 	}
 	
-	public static function test_files()
-	{
-		$return = ConfigurationTest::test_files_();
-		return empty($return);	
-	}
-
-	public static function test_files_($first_only = true)
+	public static function test_files($full = false)
 	{
 		$return = array();
 		foreach (ConfigurationTest::$test_files as $file)
 			if (!file_exists(rtrim(_PS_ROOT_DIR_, DIRECTORY_SEPARATOR).str_replace('/', DIRECTORY_SEPARATOR, $file)))
 			{
-				if ($first_only)
-					return $file;
-				array_push($return, $file);
+				if ($full)
+					array_push($return, $file);
+				else
+					return false;
 			}
-		return $return;
+
+		if ($full)
+			return $return;
+		return true;
 	}
 }
