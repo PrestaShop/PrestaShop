@@ -38,7 +38,8 @@ class AdminCarrierWizardControllerCore extends AdminController
 		$this->lang = false;
 		$this->deleted = true;
 		$this->step_number = 0;
-
+		$this->type_context = Shop::getContext();
+		$this->old_context = Context::getContext();
 		$this->multishop_context = Shop::CONTEXT_ALL;
 		$this->context = Context::getContext();
 
@@ -105,7 +106,9 @@ class AdminCarrierWizardControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('You do not have permission to use this wizard.');
 			return ;
 		}
-		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+
+		$currency = $this->getActualCurrency();
+
 		$this->tpl_view_vars = array(
 			'currency_sign' => $currency->sign,
 			'PS_WEIGHT_UNIT' => Configuration::get('PS_WEIGHT_UNIT'),
@@ -345,7 +348,9 @@ class AdminCarrierWizardControllerCore extends AdminController
 
 		$tpl_vars = array();
 		$tpl_vars['PS_WEIGHT_UNIT'] = Configuration::get('PS_WEIGHT_UNIT');
-		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+
+		$currency = $this->getActualCurrency();
+
 		$tpl_vars['currency_sign'] = $currency->sign;
 
 		$fields_value = $this->getStepThreeFieldsValues($carrier);
@@ -595,7 +600,8 @@ class AdminCarrierWizardControllerCore extends AdminController
 		$template->assign('fields_value', $fields_value);
 		$template->assign('input', array('type' => 'zone', 'name' => 'zones' ));
 
-		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+		$currency = $this->getActualCurrency();
+
 		$template->assign('currency_sign', $currency->sign);
 		$template->assign('PS_WEIGHT_UNIT', Configuration::get('PS_WEIGHT_UNIT'));
 
@@ -938,5 +944,19 @@ class AdminCarrierWizardControllerCore extends AdminController
 				copy($old_tmp_logo, _PS_TMP_IMG_DIR_.'/carrier_mini_'.$new_id.'.jpg');
 			unlink($old_tmp_logo);
 		}
+	}
+
+	public function getActualCurrency()
+	{
+		if ($this->type_context == Shop::CONTEXT_SHOP)
+			Shop::setContext($this->type_context, $this->old_context->shop->id);
+		elseif ($this->type_context == Shop::CONTEXT_GROUP)
+			Shop::setContext($this->type_context, $this->old_context->shop->id_shop_group);
+
+		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+
+		Shop::setContext(Shop::CONTEXT_ALL);
+
+		return $currency;
 	}
 }
