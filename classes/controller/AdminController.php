@@ -1803,7 +1803,7 @@ class AdminControllerCore extends Controller
 			'show_page_header_toolbar' => $this->show_page_header_toolbar,
 			'page_header_toolbar_title' => $this->page_header_toolbar_title,
 			'title' => $this->page_header_toolbar_title,
-			'toolbar_btn' => $this->page_header_toolbar_btn,
+			'toolbar_btn' => $this->toolbar_btn,
 			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
 		));
 	}
