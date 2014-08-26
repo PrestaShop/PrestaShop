@@ -62,7 +62,7 @@ class HelperImageUploaderCore extends HelperUploader
 
 		if ($file['size'] > $this->getMaxSize())
 		{
-			$file['error'] = Tools::displayError('File is too big');
+			$file['error'] = Tools::displayError(sprintf('File (size : %1s) is too big (max : %2s)', $file['size'], $this->getMaxSize()));
 			return false;
 		}
 
