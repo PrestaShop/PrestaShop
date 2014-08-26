@@ -3455,7 +3455,7 @@ class AdminProductsControllerCore extends AdminController
 				$content .= '
 				currencies['.$currency['id_currency'].'] = new Array();
 				currencies['.$currency['id_currency'].']["sign"] = "'.$currency['sign'].'";
-				currencies['.$currency['id_currency'].']["format"] = '.$currency['format'].';
+				currencies['.$currency['id_currency'].']["format"] = '.intval($currency['format']).';
 				';
 			}
 			$content .= '
