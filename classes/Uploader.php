@@ -75,7 +75,7 @@ class UploaderCore
 
 	public function getMaxSize()
 	{
-		if (!isset($this->_max_size))
+		if (!isset($this->_max_size) || empty($this->_max_size))
 			$this->setMaxSize(self::DEFAULT_MAX_SIZE);
 
 		return $this->_max_size;
@@ -98,7 +98,9 @@ class UploaderCore
 		return $this;
 	}
 
-	public function getPostMaxSizeBytes() {
+	public function getPostMaxSizeBytes()
+	{
+
 		$post_max_size = ini_get('post_max_size');
 		$bytes         = trim($post_max_size);
 		$last          = strtolower($post_max_size[strlen($post_max_size) - 1]);
@@ -112,7 +114,6 @@ class UploaderCore
 
 		if ($bytes == '')
 			$bytes = null;
-
 		return $bytes;
 	}
 
@@ -251,7 +252,7 @@ class UploaderCore
 
 		if ($file['size'] > $this->getMaxSize())
 		{
-			$file['error'] = Tools::displayError('File is too big');
+			$file['error'] = Tools::displayError(sprintf('File (size : %1s) is too big (max : %2s)', $file['size'], $this->getMaxSize()));
 			return false;
 		}
 
