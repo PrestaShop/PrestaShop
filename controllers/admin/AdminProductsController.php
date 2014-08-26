@@ -3456,7 +3456,7 @@ class AdminProductsControllerCore extends AdminController
 			var currencies = new Array();
 			currencies[0] = new Array();
 			currencies[0]["sign"] = "'.$defaultCurrency->sign.'";
-			currencies[0]["format"] = '.$defaultCurrency->format.';
+			currencies[0]["format"] = '.intval($defaultCurrency->format).';
 			';
 			foreach ($currencies as $currency)
 			{
