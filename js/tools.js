@@ -434,7 +434,7 @@ function dbg(value)
 * Function : print_r()
 * Arguments: The element  - array,hash(associative array),object
 *            The limit - OPTIONAL LIMIT
-*			 The depth - OPTIONAL
+*            The depth - OPTIONAL
 * Returns  : The textual representation of the array.
 * This function was inspired by the print_r function of PHP.
 * This will accept some data as the argument and return a
