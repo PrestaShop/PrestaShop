@@ -30,6 +30,11 @@
 {assign var='current_step' value='payment'}
 {include file="$tpl_dir./order-steps.tpl"}
 
+{if $nbProducts <= 0}
+	<p class="alert alert-warning">
+        {l s='Your shopping cart is empty.' mod='cashondelivery'}
+    </p>
+{else}
 <form action="{$link->getModuleLink('cashondelivery', 'validation', [], true)|escape:'html'}" method="post">
 	<div class="box">
         <input type="hidden" name="confirm" value="1" />
@@ -52,3 +57,4 @@
         <button type="submit" class="button btn btn-default button-medium"><span>{l s='I confirm my order' mod='cashondelivery'}</span></button>
     </p>
 </form>
+{/if}
