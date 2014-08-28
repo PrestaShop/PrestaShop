@@ -392,7 +392,7 @@ class ParentOrderControllerCore extends FrontController
 			Tools::redirect('');
 		}
 		else if (!Customer::getAddressesTotalById($this->context->customer->id))
-			Tools::redirect('index.php?controller=address&back='.urlencode('order.php?step=1&multi-shipping='.(int)Tools::getValue('multi-shipping')));
+			Tools::redirect('index.php?controller=address&back='.urlencode('order.php?step=1'.($multi = (int)Tools::getValue('multi-shipping') ? '&multi-shipping='.$multi : '')));
 		$customer = $this->context->customer;
 		if (Validate::isLoadedObject($customer))
 		{
@@ -423,8 +423,17 @@ class ParentOrderControllerCore extends FrontController
 				$bad_delivery = false;
 				if (($bad_delivery = (bool)!Address::isCountryActiveById((int)$this->context->cart->id_address_delivery)) || !Address::isCountryActiveById((int)$this->context->cart->id_address_invoice))
 				{
-					$back_url = $this->context->link->getPageLink('order', true, (int)$this->context->language->id, array('step' => Tools::getValue('step'), 'multi-shipping' => (int)Tools::getValue('multi-shipping')));
-					$params = array('multi-shipping' => (int)Tools::getValue('multi-shipping'), 'id_address' => ($bad_delivery ? (int)$this->context->cart->id_address_delivery : (int)$this->context->cart->id_address_invoice), 'back' => $back_url);
+					$params = array();
+					if ($this->step)
+						$params['step'] = (int)$this->step;
+					if ($multi = (int)Tools::getValue('multi-shipping'))
+						$params['multi-shipping'] = $multi;
+					$back_url = $this->context->link->getPageLink('order', true, (int)$this->context->language->id, $params);
+
+					$params = array('back' => $back_url, 'id_address' => ($bad_delivery ? (int)$this->context->cart->id_address_delivery : (int)$this->context->cart->id_address_invoice));
+					if ($multi)
+						$params['multi-shipping'] = $multi;
+
 					Tools::redirect($this->context->link->getPageLink('address', true, (int)$this->context->language->id, $params));
 				}
 			}
