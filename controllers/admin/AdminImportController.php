@@ -1271,8 +1271,10 @@ class AdminImportControllerCore extends AdminController
 			{
 				$product->loadStockData();
 				$category_data = Product::getProductCategories((int)$product->id);
-				foreach ($category_data as $tmp)
-					$product->category[] = $tmp;
+
+				if (is_array($product->category))
+					foreach ($category_data as $tmp)
+						$product->category[] = $tmp;
 			}
 
 			AdminImportController::setEntityDefaultValues($product);
