@@ -233,7 +233,7 @@ ul.sf-menu li li li.sfHover ul {
   #block_top_menu .category-thumbnail div {
     float: left;
     width: 33.33333%; }
-    #block_top_menu .category-thumbnail div:last-child {
-      margin-right: 0; }
+    #block_top_menu .category-thumbnail div img {
+      max-width: 100%; }
 #block_top_menu li.category-thumbnail {
   padding-right: 0; }
