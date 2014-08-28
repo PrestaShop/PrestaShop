@@ -276,7 +276,7 @@ abstract class ModuleGraphCore extends Module
 		if (!isset($params['type']))
 			$params['type'] = 'column';
 		if (!isset($params['width']))
-			$params['width'] = 550;
+			$params['width'] = '100%';
 		if (!isset($params['height']))
 			$params['height'] = 270;
 
