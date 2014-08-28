@@ -647,13 +647,17 @@ function updatePrice()
 			var reduction = parseFloat(combination.specific_price.reduction) / currencyRate;
 			priceWithDiscountsDisplay = priceWithDiscountsDisplay - reduction;
 			// We recalculate the price without tax in order to keep the data consistency
-			priceWithDiscountsWithoutTax = priceWithDiscountsDisplay * ( 1/(1+taxRate) / 100 );
+			 if(priceDisplayMethod == 0){
+			    priceWithDiscountsWithoutTax = priceWithDiscountsDisplay / ( 1+(taxRate/100) );
+            		 }
 		}
 		else if (combination.specific_price.reduction_type == 'percentage')
 		{
 			priceWithDiscountsDisplay = priceWithDiscountsDisplay * (1 - parseFloat(combination.specific_price.reduction));
 			// We recalculate the price without tax in order to keep the data consistency
-			priceWithDiscountsWithoutTax = priceWithDiscountsDisplay * ( 1/(1+taxRate) / 100 );
+			 if(priceDisplayMethod == 0){
+			    priceWithDiscountsWithoutTax = priceWithDiscountsDisplay / ( 1+(taxRate/100) );
+            	          }
 		}
 
 	// Compute discount value and percentage
