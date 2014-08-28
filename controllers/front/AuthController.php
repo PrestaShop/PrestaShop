@@ -248,7 +248,6 @@ class AuthControllerCore extends FrontController
 	 */
 	protected function processSubmitLogin()
 	{
-
 		Hook::exec('actionBeforeAuthentication');
 		$passwd = trim(Tools::getValue('passwd'));
 		$email = trim(Tools::getValue('email'));
@@ -313,11 +312,13 @@ class AuthControllerCore extends FrontController
 				CartRule::autoRemoveFromCart($this->context);
 				CartRule::autoAddToCart($this->context);
 
-				if (!$this->ajax)
+				if (!$this->ajax && $back = Tools::getValue('back'))
 				{
-					if (($back = Tools::getValue('back')) && $back == Tools::secureReferrer($back))
+					if ($back == Tools::secureReferrer(Tools::getValue('back')))
 						Tools::redirect(html_entity_decode($back));
-					Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? urlencode($this->authRedirection) : 'my-account'));
+
+					$back = $back ? $back : 'my-account';
+					Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? urlencode($this->authRedirection) : $back));
 				}
 			}
 		}
@@ -457,7 +458,7 @@ class AuthControllerCore extends FrontController
 							Tools::redirect(html_entity_decode($back));
 						// redirection: if cart is not empty : redirection to the cart
 						if (count($this->context->cart->getProducts(true)) > 0)
-							Tools::redirect('index.php?controller=order&multi-shipping='.(int)Tools::getValue('multi-shipping'));
+							Tools::redirect('index.php?controller=order'.($multi = (int)Tools::getValue('multi-shipping') ? '&multi-shipping='.$multi : ''));
 						// else : redirection to the account
 						else
 							Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? urlencode($this->authRedirection) : 'my-account'));
@@ -619,7 +620,7 @@ class AuthControllerCore extends FrontController
 
 						// redirection: if cart is not empty : redirection to the cart
 						if (count($this->context->cart->getProducts(true)) > 0)
-							Tools::redirect('index.php?controller=order&multi-shipping='.(int)Tools::getValue('multi-shipping'));
+							Tools::redirect('index.php?controller=order'.($multi = (int)Tools::getValue('multi-shipping') ? '&multi-shipping='.$multi : ''));
 						// else : redirection to the account
 						else
 							Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? urlencode($this->authRedirection) : 'my-account'));

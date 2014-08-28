@@ -333,7 +333,7 @@ class CartCore extends ObjectModel
 		if (!Cache::isStored($cache_key))
 		{
 			$result = Db::getInstance()->executeS('
-				SELECT *
+				SELECT cr.*, crl.`id_lang`, crl.`name`, cd.`id_cart`
 				FROM `'._DB_PREFIX_.'cart_cart_rule` cd
 				LEFT JOIN `'._DB_PREFIX_.'cart_rule` cr ON cd.`id_cart_rule` = cr.`id_cart_rule`
 				LEFT JOIN `'._DB_PREFIX_.'cart_rule_lang` crl ON (
