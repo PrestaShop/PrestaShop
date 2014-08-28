@@ -313,11 +313,13 @@ class AuthControllerCore extends FrontController
 				CartRule::autoRemoveFromCart($this->context);
 				CartRule::autoAddToCart($this->context);
 
-				if (!$this->ajax)
+				if (!$this->ajax && $back = Tools::getValue('back'))
 				{
-					if (($back = Tools::getValue('back')) && $back == Tools::secureReferrer($back))
+					if ($back == Tools::secureReferrer(Tools::getValue('back')))
 						Tools::redirect(html_entity_decode($back));
-					Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? urlencode($this->authRedirection) : 'my-account'));
+
+					$back = $back ? $back : 'my-account';
+					Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? urlencode($this->authRedirection) : $back));
 				}
 			}
 		}
