@@ -1,12 +1,15 @@
 <?php
 session_start();
-mb_internal_encoding('UTF-8');
 
 if (!defined('_PS_ADMIN_DIR_'))
 		define('_PS_ADMIN_DIR_', getcwd().'/../');
 
 require_once(_PS_ADMIN_DIR_.'/../config/config.inc.php');
 require_once(_PS_ADMIN_DIR_.'/init.php');
+
+if (function_exists('mb_internal_encoding'))
+	mb_internal_encoding('UTF-8');
+
 $products_accesses = Profile::getProfileAccess(Context::getContext()->employee->id_profile, Tab::getIdFromClassName('AdminProducts'));
 $cms_accesses = Profile::getProfileAccess(Context::getContext()->employee->id_profile, Tab::getIdFromClassName('AdminCmsContent'));
 
@@ -32,7 +35,7 @@ if (!$products_accesses['edit'] && !$cms_accesses['edit'])
 
 
 $base_url= Tools::getHttpHost(true);  // DON'T TOUCH (base url (only domain) of site (without final /)).
-$upload_dir = '/img/cms/'; // path from base_url to base of upload folder (with start and final /)
+$upload_dir = __PS_BASE_URI__.'/img/cms/'; // path from base_url to base of upload folder (with start and final /)
 $current_path = _PS_ROOT_DIR_.'/img/cms/'; // relative path from filemanager folder to upload folder (with final /)
 //thumbs folder can't put inside upload folder
 $thumbs_base_path = _PS_ROOT_DIR_.'/img/tmp/cms/'; // relative path from filemanager folder to thumbs folder (with final /)

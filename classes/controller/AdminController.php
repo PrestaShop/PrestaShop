@@ -559,7 +559,25 @@ class AdminControllerCore extends Controller
 	public function checkToken()
 	{
 		$token = Tools::getValue('token');
-		return (!empty($token) && $token === $this->token);
+		if (!empty($token) && $token === $this->token)
+			return true;
+
+		if (count($_POST) || !isset($_GET['controller']) || !Validate::isControllerName($_GET['controller']) || $token)
+			return false;
+
+		foreach ($_GET as $key => $value)
+			if (is_array($value) || !in_array($key, array('controller', 'controllerUri')))
+				return false;
+
+		$cookie = Context::getContext()->cookie;
+		$whitelist = array('date_add', 'id_lang', 'id_employee', 'email', 'profile', 'passwd', 'remote_addr', 'shopContext', 'collapse_menu', 'checksum');
+		foreach ($cookie->getAll() as $key => $value)
+			if (!in_array($key, $whitelist))
+				unset($cookie->$key);
+
+		$cookie->write();
+
+		return true;
 	}
 
 	/**
@@ -3201,14 +3219,14 @@ class AdminControllerCore extends Controller
 		if (!Shop::isTableAssociated($this->table))
 			return;
 
-		$assos_data = $this->getSelectedAssoShop($this->table, $id_object);
+		$assos_data = $this->getSelectedAssoShop($this->table);
 
 		// Get list of shop id we want to exclude from asso deletion
 		$exclude_ids = $assos_data;
 		foreach (Db::getInstance()->executeS('SELECT id_shop FROM '._DB_PREFIX_.'shop') as $row)
 			if (!$this->context->employee->hasAuthOnShop($row['id_shop']))
 				$exclude_ids[] = $row['id_shop'];
-		Db::getInstance()->delete($this->table.'_shop', '`'.$this->identifier.'` = '.(int)$id_object.($exclude_ids ? ' AND id_shop NOT IN ('.implode(', ', $exclude_ids).')' : ''));
+		Db::getInstance()->delete($this->table.'_shop', '`'.bqSQL($this->identifier).'` = '.(int)$id_object.($exclude_ids ? ' AND id_shop NOT IN ('.implode(', ', array_map('intval', $exclude_ids)).')' : ''));
 
 		$insert = array();
 		foreach ($assos_data as $id_shop)

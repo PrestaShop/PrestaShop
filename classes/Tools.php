@@ -1616,15 +1616,94 @@ class ToolsCore
 			case PS_ROUND_DOWN:
 				return Tools::floorf($value, $precision);
 			case PS_ROUND_HALF_DOWN:
-				return round($value, $precision, PHP_ROUND_HALF_DOWN);
 			case PS_ROUND_HALF_EVEN:
-				return round($value, $precision, PHP_ROUND_HALF_EVEN);
 			case PS_ROUND_HALF_ODD:
-				return round($value, $precision, PHP_ROUND_HALF_ODD);
+				return Tools::math_round($value, $precision, $method);
 			case PS_ROUND_HALF_UP:
 			default:
-				return round($value, $precision, PHP_ROUND_HALF_UP);
+				return Tools::math_round($value, $precision, PS_ROUND_HALF_UP);
 		}
+	}
+
+	public static function math_round($value, $places, $mode = PS_ROUND_HALF_UP)
+	{
+		//If PHP_ROUND_HALF_UP exist (PHP 5.3) use it and pass correct mode value (PrestaShop define - 1)
+		if (defined('PHP_ROUND_HALF_UP'))
+			return round($value, $places, $mode-1);
+
+		$precision_places = 14 - floor(log10(abs($value)));
+		$f1 = pow(10.0, (double)abs($places));
+
+		/* If the decimal precision guaranteed by FP arithmetic is higher than
+		* the requested places BUT is small enough to make sure a non-zero value
+		* is returned, pre-round the result to the precision */
+		if ($precision_places > $places && $precision_places - $places < 15)
+		{
+			$f2 = pow(10.0, (double)abs($precision_places));
+
+			if ($precision_places >= 0)
+				$tmp_value = $value * $f2;
+			else
+				$tmp_value = $value / $f2;
+
+			/* preround the result (tmp_value will always be something * 1e14,
+			* thus never larger than 1e15 here) */
+			$tmp_value = Tools::round_helper($tmp_value, $mode);
+			/* now correctly move the decimal point */
+			$f2 = pow(10.0, (double)abs($places - $precision_places));
+			/* because places < precision_places */
+			$tmp_value = $tmp_value / $f2;
+		}
+		else
+		{
+			/* adjust the value */
+			if ($places >= 0)
+				$tmp_value = $value * $f1;
+			else
+				$tmp_value = $value / $f1;
+
+			/* This value is beyond our precision, so rounding it is pointless */
+			if (abs($tmp_value) >= 1e15)
+				return $value;
+		}
+
+		/* round the temp value */
+		$tmp_value = Tools::round_helper($tmp_value, $mode);
+
+		/* see if it makes sense to use simple division to round the value */
+		if (abs($places) < 23)
+		{
+			if ($places > 0)
+				$tmp_value /= $f1;
+			else
+				$tmp_value *= $f1;
+		}
+
+		return $tmp_value;
+	}
+
+	public static function round_helper($value, $mode)
+	{
+		if ($value >= 0.0)
+		{
+			$tmp_value = floor($value + 0.5);
+
+			if (($mode == PS_ROUND_HALF_DOWN && $value == (-0.5 + $tmp_value )) ||
+				($mode == PS_ROUND_HALF_EVEN && $value == (0.5 + 2 * floor($tmp_value /2.0))) ||
+				($mode == PS_ROUND_HALF_ODD  && $value == (0.5 + 2 * floor($tmp_value /2.0) - 1.0)))
+				$tmp_value  = $tmp_value  - 1.0;
+		}
+		else
+		{
+			$tmp_value  = ceil($value - 0.5);
+
+			if (($mode == PS_ROUND_HALF_DOWN && $value == (0.5 + $tmp_value )) ||
+				($mode == PS_ROUND_HALF_EVEN && $value == (-0.5 + 2 * ceil($tmp_value /2.0))) ||
+				($mode == PS_ROUND_HALF_ODD  && $value == (-0.5 + 2 * ceil($tmp_value /2.0) + 1.0)))
+				$tmp_value  = $tmp_value  + 1.0;
+		}
+
+		return $tmp_value;
 	}
 
 	/**

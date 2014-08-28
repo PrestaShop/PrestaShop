@@ -64,8 +64,19 @@ class OrderControllerCore extends ParentOrderController
 		}
 		if (!$this->context->customer->isLogged(true) && in_array($this->step, array(1, 2, 3)))
 		{
-			$back_url = $this->context->link->getPageLink('order', true, (int)$this->context->language->id, array('step' => $this->step, 'multi-shipping' => (int)Tools::getValue('multi-shipping')));
-			$params = array('multi-shipping' => (int)Tools::getValue('multi-shipping'), 'display_guest_checkout' => (int)Configuration::get('PS_GUEST_CHECKOUT_ENABLED'), 'back' => $back_url);
+
+			$params = array();
+			if ($this->step)
+				$params['step'] = (int)$this->step;
+			if ($multi = (int)Tools::getValue('multi-shipping'))
+				$params['multi-shipping'] = $multi;
+			$back_url = $this->context->link->getPageLink('order', true, (int)$this->context->language->id, $params);
+
+			$params = array('back' => $back_url);
+			if ($multi)
+				$params['multi-shipping'] = $multi;
+			if ($guest = (int)Configuration::get('PS_GUEST_CHECKOUT_ENABLED'))
+				$params['display_guest_checkout'] = $guest;
 			Tools::redirect($this->context->link->getPageLink('authentication', true, (int)$this->context->language->id, $params));
 		}
 

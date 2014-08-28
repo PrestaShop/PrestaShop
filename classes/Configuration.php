@@ -172,9 +172,9 @@ class ConfigurationCore extends ObjectModel
 				return Db::getInstance()->getValue('SELECT `value` FROM `'._DB_PREFIX_.bqSQL(self::$definition['table']).'` WHERE `name` = "'.pSQL($key).'"');
 		}
 		$id_lang = (int)$id_lang;
-		if ($id_shop === null)
+		if ($id_shop === null || !Shop::isFeatureActive())
 			$id_shop = Shop::getContextShopID(true);
-		if ($id_shop_group === null)
+		if ($id_shop_group === null || !Shop::isFeatureActive())
 			$id_shop_group = Shop::getContextShopGroupID(true);
 
 		if (!isset(self::$_cache[self::$definition['table']][$id_lang]))
@@ -331,9 +331,9 @@ class ConfigurationCore extends ObjectModel
 		if (!Validate::isConfigName($key))
 			die(sprintf(Tools::displayError('[%s] is not a valid configuration key'), $key));
 
-		if ($id_shop === null)
+		if ($id_shop === null || !Shop::isFeatureActive())
 			$id_shop = Shop::getContextShopID(true);
-		if ($id_shop_group === null)
+		if ($id_shop_group === null || !Shop::isFeatureActive())
 			$id_shop_group = Shop::getContextShopGroupID(true);
 
 		if (!is_array($values))
