@@ -258,6 +258,9 @@ ul.sf-menu li li li.sfHover ul {
 		div {
 			float: left;
 			width: 100 / 3 * 1%;
+			img {
+				max-width: 100%;
+			}
 		}
 	}
 	li.category-thumbnail {
