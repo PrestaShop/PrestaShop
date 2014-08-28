@@ -35,10 +35,11 @@ function submitFunction()
 	$('#create_account_error').html('').hide();
 	$.ajax({
 		type: 'POST',
-		url: baseUri,
+		url: baseUri + '?rand=' + new Date().getTime(),
 		async: true,
 		cache: false,
 		dataType : "json",
+		headers: { "cache-control": "no-cache" },
 		data: 
 		{
 			controller: 'authentication',
