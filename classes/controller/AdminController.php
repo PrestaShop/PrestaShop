@@ -3219,14 +3219,14 @@ class AdminControllerCore extends Controller
 		if (!Shop::isTableAssociated($this->table))
 			return;
 
-		$assos_data = $this->getSelectedAssoShop($this->table, $id_object);
+		$assos_data = $this->getSelectedAssoShop($this->table);
 
 		// Get list of shop id we want to exclude from asso deletion
 		$exclude_ids = $assos_data;
 		foreach (Db::getInstance()->executeS('SELECT id_shop FROM '._DB_PREFIX_.'shop') as $row)
 			if (!$this->context->employee->hasAuthOnShop($row['id_shop']))
 				$exclude_ids[] = $row['id_shop'];
-		Db::getInstance()->delete($this->table.'_shop', '`'.$this->identifier.'` = '.(int)$id_object.($exclude_ids ? ' AND id_shop NOT IN ('.implode(', ', $exclude_ids).')' : ''));
+		Db::getInstance()->delete($this->table.'_shop', '`'.bqSQL($this->identifier).'` = '.(int)$id_object.($exclude_ids ? ' AND id_shop NOT IN ('.implode(', ', array_map('intval', $exclude_ids)).')' : ''));
 
 		$insert = array();
 		foreach ($assos_data as $id_shop)
