@@ -257,6 +257,9 @@
 								<p class="our_price_display" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
 									{if $product->quantity > 0}<link itemprop="availability" href="http://schema.org/InStock"/>{/if}
 									{if $priceDisplay >= 0 && $priceDisplay <= 2}
+										{if isset($lowest_price)}
+											<span>{convertPrice price=$lowest_price} -</span>
+										{/if}
 										<span id="our_price_display" itemprop="price">{convertPrice price=$productPrice}</span>
 										<!--{if $tax_enabled  && ((isset($display_tax_label) && $display_tax_label == 1) || !isset($display_tax_label))}
 											{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}
