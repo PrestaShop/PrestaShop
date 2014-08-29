@@ -565,7 +565,12 @@ class HelperListCore extends Helper
 		{
 			if (!isset($params['type']))
 				$params['type'] = 'text';
-			$value = Context::getContext()->cookie->{$prefix.$this->list_id.'Filter_'.(array_key_exists('filter_key', $params) && $key != 'active' ? $params['filter_key'] : $key)};
+			
+			$valueKey = $prefix.$this->list_id.'Filter_'.(array_key_exists('filter_key', $params) && $key != 'active' ? $params['filter_key'] : $key);
+			$value = Context::getContext()->cookie->{$valueKey};
+			if(!$value && Tools::getIsset($valueKey))
+				$value = Tools::getValue($valueKey);
+				
 			switch ($params['type'])
 			{
 				case 'bool':
