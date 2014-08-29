@@ -29,6 +29,7 @@
 <div id="login-panel">
 	<div id="login-header">
 		<h1 class="text-center">
+			SPECIALTY TOYS NETWORK <br/>
 			<img id="logo" width="40px" src="{$img_dir}icon-prestashop.svg"/>
 			PRESTASHOP
 		</h1>
@@ -154,17 +155,14 @@
 			</a>
 		</p>
 		<p class="text-center">
-			<a class="link-social link-twitter" href="https://twitter.com/PrestaShop" target="_blank" title="Twitter">
+			<a class="link-social link-twitter" href="https://twitter.com/stntweetnews" target="_blank" title="Twitter">
 				<i class="icon-twitter"></i>
 			</a>
-			<a class="link-social link-facebook" href="https://www.facebook.com/prestashop" target="_blank" title="Facebook">
+			<a class="link-social link-facebook" href="https://www.facebook.com/specialtytoysnetwork" target="_blank" title="Facebook">
 				<i class="icon-facebook"></i>
 			</a>
-			<a class="link-social link-github" href="https://www.prestashop.com/github" target="_blank" title="Github">
-				<i class="icon-github"></i>
-			</a>
-			<a class="link-social link-google" href="https://plus.google.com/+prestashop/" target="_blank" title="Google">
-				<i class="icon-google-plus"></i>
+			<a class="link-social link-youtube" href="https://www.youtube.com/user/SpecialtyToysNetwork" target="_blank" title="Google">
+				<i class="icon-youtube"></i>
 			</a>
 		</p>
 	</div>
