@@ -618,22 +618,15 @@ class ProductCore extends ObjectModel
 	 */
 	public static function cleanPositions($id_category)
 	{
-		$return = true;
-
-		$result = Db::getInstance()->executeS('
-			SELECT `id_product`
-			FROM `'._DB_PREFIX_.'category_product`
-			WHERE `id_category` = '.(int)$id_category.'
-			ORDER BY `position`
+		$result = Db::getInstance()->execute('
+		update `'._DB_PREFIX_.'category_product` cp1 join (
+		select id_category, id_product, @i := @i+1 new_position
+		from `'._DB_PREFIX_.'category_product`, (select @i:=0) temp
+		where id_category = '.(int)$id_category.' order by position asc
+		) cp2 on cp1.id_category = cp2.id_category and cp1.id_product = cp2.id_product set cp1.position = cp2.new_position
 		');
-		$total = count($result);
 
-		for ($i = 0; $i < $total; $i++)
-			$return &= Db::getInstance()->update('category_product', array(
-				'position' => $i,
-			), '`id_category` = '.(int)$id_category.' AND `id_product` = '.(int)$result[$i]['id_product']);
-
-		return $return;
+		return true;
 	}
 
 	/**
