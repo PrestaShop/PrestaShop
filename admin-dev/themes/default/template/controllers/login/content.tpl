@@ -150,6 +150,11 @@
 	</div>
 	<div id="login-footer">
 		<p class="text-center text-muted">
+			<a href="http://stoysnet.com/" onclick="return !window.open(this.href);">
+				Specialty Toys Network {$smarty.now|date_format:"%Y"} - All rights reserved
+			</a>
+		</p>
+		<p class="text-center text-muted">
 			<a href="http://www.prestashop.com/" onclick="return !window.open(this.href);">
 				&copy; PrestaShop&#8482; 2007-{$smarty.now|date_format:"%Y"} - All rights reserved
 			</a>
