@@ -626,7 +626,7 @@ class ProductCore extends ObjectModel
 		) cp2 on cp1.id_category = cp2.id_category and cp1.id_product = cp2.id_product set cp1.position = cp2.new_position
 		');
 
-		return true;
+		return $result;
 	}
 
 	/**
