@@ -29,8 +29,8 @@
 <div id="login-panel">
 	<div id="login-header">
 		<h1 class="text-center">
-			SPECIALTY TOYS NETWORK <br/>
-			<img id="logo" width="40px" src="{$img_dir}icon-prestashop.svg"/>
+			SPECIALTY TOYS NETWORK &amp;<br/>
+			<!--<img id="logo" width="40px" src="{$img_dir}icon-prestashop.svg"/>-->
 			PRESTASHOP
 		</h1>
 		<hr/>
@@ -151,7 +151,7 @@
 	<div id="login-footer">
 		<p class="text-center text-muted">
 			<a href="http://stoysnet.com/" onclick="return !window.open(this.href);">
-				Specialty Toys Network {$smarty.now|date_format:"%Y"} - All rights reserved
+				Services from Specialty Toys Network
 			</a>
 		</p>
 		<p class="text-center text-muted">
