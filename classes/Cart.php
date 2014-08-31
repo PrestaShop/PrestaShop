@@ -3425,13 +3425,17 @@ class CartCore extends ObjectModel
 					'.$customization['in_cart'].')';
 			Db::getInstance()->execute($sql);
 
-			$sql = 'INSERT INTO '._DB_PREFIX_.'customized_data(`id_customization`, `type`, `index`, `value`)
-				(
-					SELECT '.(int)Db::getInstance()->Insert_ID().' `id_customization`, `type`, `index`, `value`
-					FROM customized_data
-					WHERE id_customization = '.$customization['id_customization'].'
-				)';
-			Db::getInstance()->execute($sql);
+            		// Get data from duplicated customizations
+            		$sql = new DbQuery();
+            		$sql->select('type, index, value');
+            		$sql->from('customized_data');
+            		$sql->where('id_customization = '.$customization['id_customization']);
+            		$last_row = Db::getInstance()->getRow($sql);
+            		
+            		// Insert new copied data with new customization ID into customized_data table
+            		$last_id = (int)Db::getInstance()->Insert_ID();
+            		$last_row['id_customization'] = $last_id;
+            		Db::getInstance()->insert('customized_data', $last_row);
 		}
 
 		$customization_count = count($results);
