@@ -3427,7 +3427,7 @@ class CartCore extends ObjectModel
 
             		// Get data from duplicated customizations
             		$sql = new DbQuery();
-            		$sql->select('type, index, value');
+            		$sql->select('`type`, `index`, `value`');
             		$sql->from('customized_data');
             		$sql->where('id_customization = '.$customization['id_customization']);
             		$last_row = Db::getInstance()->getRow($sql);
