@@ -3424,6 +3424,9 @@ class CartCore extends ObjectModel
 					'.$quantity.',
 					'.$customization['in_cart'].')';
 			Db::getInstance()->execute($sql);
+			
+			// Save last insert ID before doing another query
+            		$last_id = (int)Db::getInstance()->Insert_ID();
 
             		// Get data from duplicated customizations
             		$sql = new DbQuery();
@@ -3433,7 +3436,6 @@ class CartCore extends ObjectModel
             		$last_row = Db::getInstance()->getRow($sql);
             		
             		// Insert new copied data with new customization ID into customized_data table
-            		$last_id = (int)Db::getInstance()->Insert_ID();
             		$last_row['id_customization'] = $last_id;
             		Db::getInstance()->insert('customized_data', $last_row);
 		}
