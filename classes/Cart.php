@@ -3322,7 +3322,7 @@ class CartCore extends ObjectModel
 		// Changing the address
 		$sql = 'UPDATE '._DB_PREFIX_.'cart_product
 			SET `id_address_delivery` = '.(int)$new_id_address_delivery.',
-			`quantity` = `quantity` + '.(int)$result['sum'].'
+			`quantity` = `quantity` + '.(int)$result.'
 			WHERE id_product = '.(int)$id_product.'
 			AND id_product_attribute = '.(int)$id_product_attribute.'
 			AND id_address_delivery = '.(int)$old_id_address_delivery.'
