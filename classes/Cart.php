@@ -3438,7 +3438,7 @@ class CartCore extends ObjectModel
 		if ($customization_count > 0)
 		{
 			$sql = 'UPDATE '._DB_PREFIX_.'cart_product
-				SET `quantity` = `quantity` = '.(int)$customization_count * $quantity.'
+				SET `quantity` = `quantity` + '.(int)$customization_count * $quantity.'
 				WHERE id_cart = '.(int)$this->id.'
 				AND id_product = '.(int)$id_product.'
 				AND id_shop = '.(int)$this->id_shop.'
