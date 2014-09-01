@@ -787,8 +787,13 @@ class AdminControllerCore extends Controller
 		header('Content-disposition: attachment; filename="'.$this->table.'_'.date('Y-m-d_His').'.csv"');
 
 		$headers = array();
-		foreach ($this->fields_list as $datas)
-			$headers[] = Tools::htmlentitiesDecodeUTF8($datas['title']);
+		foreach ($this->fields_list as $key => $datas)
+		{
+			if ($datas['title'] == 'PDF')
+				unset($this->fields_list[$key]);
+			else
+				$headers[] = Tools::htmlentitiesDecodeUTF8($datas['title']);
+		}
 		$content = array();
 		foreach ($this->_list as $i => $row)
 		{
@@ -808,10 +813,10 @@ class AdminControllerCore extends Controller
 						$field_value = $path_to_image;
 				}
 				if (isset($params['callback']))
-                                {
-                                	$callback_obj = (isset($params['callback_object'])) ? $params['callback_object'] : $this->context->controller;
-                                	$field_value = call_user_func_array(array($callback_obj, $params['callback']), array($field_value, $row));
-                                }
+				{
+					$callback_obj = (isset($params['callback_object'])) ? $params['callback_object'] : $this->context->controller;
+					$field_value = call_user_func_array(array($callback_obj, $params['callback']), array($field_value, $row));
+				}
 				$content[$i][] = $field_value;
 			}
 		}
