@@ -197,6 +197,8 @@ class SearchCore
 			{
 				$word = str_replace('%', '\\%', $word);
 				$word = str_replace('_', '\\_', $word);
+				$start_search = Configuration::get('PS_SEARCH_START') ? '%': '';
+
 				$intersect_array[] = 'SELECT si.id_product
 					FROM '._DB_PREFIX_.'search_word sw
 					LEFT JOIN '._DB_PREFIX_.'search_index si ON sw.id_word = si.id_word
@@ -204,12 +206,12 @@ class SearchCore
 						AND sw.id_shop = '.$context->shop->id.'
 						AND sw.word LIKE
 					'.($word[0] == '-'
-						? ' \''.pSQL(Tools::substr($word, 1, PS_SEARCH_MAX_WORD_LENGTH)).'%\''
-						: '\''.pSQL(Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH)).'%\''
+						? ' \''.$start_search.pSQL(Tools::substr($word, 1, PS_SEARCH_MAX_WORD_LENGTH)).'%\''
+						: ' \''.$start_search.pSQL(Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH)).'%\''
 					);
 
 				if ($word[0] != '-')
-					$score_array[] = 'sw.word LIKE \''.pSQL(Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH)).'%\'';
+					$score_array[] = 'sw.word LIKE \''.$start_search.pSQL(Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH)).'%\'';
 			}
 			else
 				unset($words[$key]);
