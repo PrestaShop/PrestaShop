@@ -127,6 +127,16 @@ class AdminSearchConfControllerCore extends AdminController
 							$this->l('With instant search, the results will appear immediately as the user writes a query.')
 						)
 					),
+					'PS_SEARCH_START' => array(
+						'title' => $this->l('Search start'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool',
+						'hint' => array(
+							$this->l('Enable searching in whole word rather than onmly from begining'),
+							$this->l('The search word will be looked into whole indexed word, this may however be ressources consuming.')
+						)
+					),
 					'PS_SEARCH_MINWORDLEN' => array(
 						'title' => $this->l('Minimum word length (in characters)'),
 						'hint' => $this->l('Only words this size or larger will be indexed.'),
