@@ -844,7 +844,7 @@
 							<button type="submit" id="submitMessage" class="btn btn-primary pull-right" name="submitMessage">
 								{l s='Send message'}
 							</button>
-							<a class="btn btn-default" href="{$link->getAdminLink('AdminCustomerThreads')|escape:'html':'UTF-8'}">
+							<a class="btn btn-default" href="{$link->getAdminLink('AdminCustomerThreads')|escape:'html':'UTF-8'}&amp;id_order={$order->id|intval}">
 								{l s='Show all messages'}
 								<i class="icon-external-link"></i>
 							</a>
