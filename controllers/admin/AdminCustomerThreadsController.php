@@ -239,6 +239,9 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			LEFT JOIN `'._DB_PREFIX_.'contact_lang` cl
 				ON (cl.`id_contact` = a.`id_contact` AND cl.`id_lang` = '.(int)$this->context->language->id.')';
 
+		if ($id_order = Tools::getValue('id_order'))
+			$this->_where .= ' AND id_order = '.(int)$id_order;
+
 		$this->_group = 'GROUP BY cm.id_customer_thread';
 		$this->_orderBy = 'id_customer_thread';
 		$this->_orderWay = 'DESC';
