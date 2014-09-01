@@ -292,7 +292,7 @@ abstract class ModuleCore
 		$result = Db::getInstance()->insert($this->table, array('name' => $this->name, 'active' => 1, 'version' => $this->version));
 		if (!$result)
 		{
-			$this->_errors[] = Tools::displayError('Technical error: PrestaShop could not installed this module.');
+			$this->_errors[] = Tools::displayError('Technical error: PrestaShop could not install this module.');
 			return false;
 		}
 		$this->id = Db::getInstance()->Insert_ID();
