@@ -91,7 +91,7 @@ class CombinationCore extends ObjectModel
 		),
 		'associations' => array(
 			'product_option_values' => array('resource' => 'product_option_value'),
-			'images' => array('resource' => 'image'),
+			'images' => array('resource' => 'image', 'api' => 'images/products'),
 		),
 	);
 
