@@ -584,7 +584,7 @@ function upQuantity(id, qty)
 			else
 			{
 				if (jsonData.refresh)
-					location.reload();
+					window.location.href = window.location.href;
 				updateCartSummary(jsonData.summary);
 				if (window.ajaxCart != undefined)
 					ajaxCart.updateCart(jsonData);
@@ -696,8 +696,9 @@ function downQuantity(id, qty)
 				else
 				{
 					if (jsonData.refresh)
-						location.reload();
+						window.location.href = window.location.href;
 					updateCartSummary(jsonData.summary);
+
 					if (window.ajaxCart !== undefined)
 						ajaxCart.updateCart(jsonData);
 					if (customizationId !== 0)					
