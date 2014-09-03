@@ -4889,7 +4889,7 @@ class ProductCore extends ObjectModel
 
 		$save = $result[$currentPosition];
 		unset($result[$currentPosition]);
-		array_splice($result, $position, 0, $save);
+		array_splice($result, (int)$position, 0, $save);
 
 		foreach ($result as $position => $id_product)
 		{
