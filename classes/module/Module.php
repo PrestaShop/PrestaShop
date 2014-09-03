@@ -1519,31 +1519,53 @@ abstract class ModuleCore
 	 */
 	public static function isModuleTrusted($module_name)
 	{
+		static $trusted_modules_list_content = null;
+		static $modules_list_content =  null;
+		static $default_country_modules_list_content = null;
+		static $untrusted_modules_list_content = null;
+
 		$context = Context::getContext();
 		$theme = new Theme($context->shop->id_theme);
+
 		// If the xml file exist, isn't empty, isn't too old
 		// and if the theme hadn't change
 		// we use the file, otherwise we regenerate it 
 		if (!(file_exists(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST)
 			&& filesize(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST) > 0 
 			&& ((time() - filemtime(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST)) < 86400)
-			&& strpos(Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST), $theme->name) !== false))
+			))
 			self::generateTrustedXml();
 
+		if ($trusted_modules_list_content === null)
+		{
+			$trusted_modules_list_content = Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST);
+			if (strpos($trusted_modules_list_content, $theme->name) === false)
+				self::generateTrustedXml();
+		}
+
+		if ($modules_list_content === null)
+			$modules_list_content = Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_MODULES_LIST);
+
+		if ($default_country_modules_list_content === null)
+			$default_country_modules_list_content = Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
+		
+		if ($untrusted_modules_list_content === null)
+			$untrusted_modules_list_content = Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_UNTRUSTED_MODULES_LIST);
+
 		// If the module is trusted, which includes both partner modules and modules bought on Addons	
-		if (strpos(Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST), $module_name) !== false)
+		if (strpos($trusted_modules_list_content, $module_name) !== false)
 		{
 			// If the module is not a partner, then return 1 (which means the module is "trusted")
-			if (strpos(Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_MODULES_LIST), '<module name="'.$module_name.'"/>')== false)
+			if (strpos($modules_list_content, '<module name="'.$module_name.'"/>')== false)
 				return 1;
 			// The module is a parter. If the module is in the file that contains module for this country then return 1 (which means the module is "trusted")
-			elseif (strpos(Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST), '<name><![CDATA['.$module_name.']]></name>') !== false)
+			elseif (strpos($default_country_modules_list_content, '<name><![CDATA['.$module_name.']]></name>') !== false)
 				return 1;
 			// The module seems to be trusted, but it does not seem to be dedicated to this country
 			return 2;
 		}
 		// If the module is already in the untrusted list, then return 0 (untrusted)
-		elseif (strpos(Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_UNTRUSTED_MODULES_LIST), $module_name) !== false)
+		elseif (strpos($untrusted_modules_list_content, $module_name) !== false)
 			return 0;
 		else
 		{
