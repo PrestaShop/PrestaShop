@@ -58,3 +58,6 @@ ALTER TABLE `PREFIX_employee` ADD `last_connection_date` date NOT NULL DEFAULT '
 UPDATE `PREFIX_category` SET `is_root_category` = 0 WHERE `id_parent` != (SELECT `value` FROM `PREFIX_configuration` WHERE `name` = 'PS_ROOT_CATEGORY' LIMIT 1) AND `is_root_category` = 1;
 
 ALTER TABLE  `PREFIX_orders` ADD INDEX (`reference`);
+
+/* PHP:ps16010_price_decimals_update(); */;
+/* PHP:ps16010_fix_products_price_te(); */;

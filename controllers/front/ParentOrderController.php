@@ -314,7 +314,7 @@ class ParentOrderControllerCore extends FrontController
 				$product['id_product'], 
 				!Product::getTaxCalculationMethod(), 
 				$product['id_product_attribute'], 
-				2, 
+				10, 
 				null, 
 				false, 
 				false,
@@ -329,9 +329,9 @@ class ParentOrderControllerCore extends FrontController
 				$cart_product_context);
 
 			if (Product::getTaxCalculationMethod())
-				$product['is_discounted'] = $product['price_without_specific_price'] != Tools::ps_round($product['price'], _PS_PRICE_DISPLAY_PRECISION_);
+				$product['is_discounted'] = $product['price_without_specific_price'] != $product['price'];
 			else
-				$product['is_discounted'] = $product['price_without_specific_price'] != Tools::ps_round($product['price_wt'], _PS_PRICE_DISPLAY_PRECISION_);
+				$product['is_discounted'] = $product['price_without_specific_price'] != $product['price_wt'];
 		}
 		
 		// Get available cart rules and unset the cart rules already in the cart

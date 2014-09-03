@@ -317,8 +317,8 @@ abstract class PaymentModuleCore extends Module
 					$order->total_wrapping_tax_incl = (float)abs($this->context->cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $order->product_list, $id_carrier));
 					$order->total_wrapping = $order->total_wrapping_tax_incl;
 
-					$order->total_paid_tax_excl = (float)Tools::ps_round((float)$this->context->cart->getOrderTotal(false, Cart::BOTH, $order->product_list, $id_carrier), 2);
-					$order->total_paid_tax_incl = (float)Tools::ps_round((float)$this->context->cart->getOrderTotal(true, Cart::BOTH, $order->product_list, $id_carrier), 2);
+					$order->total_paid_tax_excl = (float)$this->context->cart->getOrderTotal(false, Cart::BOTH, $order->product_list, $id_carrier);
+					$order->total_paid_tax_incl = (float)$this->context->cart->getOrderTotal(true, Cart::BOTH, $order->product_list, $id_carrier);
 					$order->total_paid = $order->total_paid_tax_incl;
 
 					$order->invoice_date = '0000-00-00 00:00:00';
@@ -441,10 +441,10 @@ abstract class PaymentModuleCore extends Module
 					$product_var_tpl_list = array();
 					foreach ($order->product_list as $product)
 					{
-						$price = Product::getPriceStatic((int)$product['id_product'], false, ($product['id_product_attribute'] ? (int)$product['id_product_attribute'] : null), 6, null, false, true, $product['cart_quantity'], false, (int)$order->id_customer, (int)$order->id_cart, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+						$price = Product::getPriceStatic((int)$product['id_product'], false, ($product['id_product_attribute'] ? (int)$product['id_product_attribute'] : null), 10, null, false, true, $product['cart_quantity'], false, (int)$order->id_customer, (int)$order->id_cart, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 						$price_wt = Product::getPriceStatic((int)$product['id_product'], true, ($product['id_product_attribute'] ? (int)$product['id_product_attribute'] : null), 2, null, false, true, $product['cart_quantity'], false, (int)$order->id_customer, (int)$order->id_cart, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 
-						$product_price = Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, 2) : $price_wt;
+						$product_price = Product::getTaxCalculationMethod() == PS_TAX_EXC ? $price : $price_wt;
 
 						$product_var_tpl = array(
 							'reference' => $product['reference'],

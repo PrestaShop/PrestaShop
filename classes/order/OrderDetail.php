@@ -356,12 +356,12 @@ class OrderDetailCore extends ObjectModel
 			switch (Configuration::get('PS_ROUND_TYPE'))
 			{
 				case Order::ROUND_ITEM:
-					$unit_amount = (float)Tools::ps_round($amount, _PS_PRICE_DISPLAY_PRECISION_);
+					$unit_amount = (float)$amount;
 					$total_amount = $unit_amount * $this->product_quantity;
 					break;
 				case Order::ROUND_LINE:
 					$unit_amount = $amount;
-					$total_amount = Tools::ps_round($unit_amount * $this->product_quantity, _PS_PRICE_DISPLAY_PRECISION_);
+					$total_amount = $unit_amount * $this->product_quantity;
 					break;
 				case Order::ROUND_TOTAL:
 					$unit_amount = $amount;
@@ -500,7 +500,7 @@ class OrderDetailCore extends ObjectModel
 					$this->tax_calculator = $tax_manager->getTaxCalculator();
 
 					$this->reduction_amount_tax_incl = $this->reduction_amount;
-					$this->reduction_amount_tax_excl = Tools::ps_round($this->tax_calculator->removeTaxes($this->reduction_amount_tax_incl), 2);
+					$this->reduction_amount_tax_excl = $this->tax_calculator->removeTaxes($this->reduction_amount_tax_incl);
 				break;
 			}
 	}
@@ -514,10 +514,10 @@ class OrderDetailCore extends ObjectModel
 	protected function setDetailProductPrice(Order $order, Cart $cart, $product)
 	{
 		$this->setContext((int)$product['id_shop']);
-		Product::getPriceStatic((int)$product['id_product'], true, (int)$product['id_product_attribute'], 6, null, false, true, $product['cart_quantity'], false, (int)$order->id_customer, (int)$order->id_cart, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}, $specific_price, true, true, $this->context);
+		Product::getPriceStatic((int)$product['id_product'], true, (int)$product['id_product_attribute'], 10, null, false, true, $product['cart_quantity'], false, (int)$order->id_customer, (int)$order->id_cart, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}, $specific_price, true, true, $this->context);
 		$this->specificPrice = $specific_price;
 
-		$this->original_product_price = Product::getPriceStatic($product['id_product'], false, (int)$product['id_product_attribute'], 6, null, false, false, 1, false, null, null, null, $null, true, true, $this->context);
+		$this->original_product_price = Product::getPriceStatic($product['id_product'], false, (int)$product['id_product_attribute'], 10, null, false, false, 1, false, null, null, null, $null, true, true, $this->context);
 		$this->product_price = $this->original_product_price;
 		$this->unit_price_tax_incl = (float)$product['price_wt'];
 		$this->unit_price_tax_excl = (float)$product['price'];
@@ -540,13 +540,13 @@ class OrderDetailCore extends ObjectModel
 
 		$unitPrice = Product::getPriceStatic((int)$product['id_product'], true,
 			($product['id_product_attribute'] ? intval($product['id_product_attribute']) : null),
-			2, null, false, true, 1, false, (int)$order->id_customer, null, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}, $null, true, true, $this->context);
+			10, null, false, true, 1, false, (int)$order->id_customer, null, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}, $null, true, true, $this->context);
 		$this->product_quantity_discount = 0.00;
 		if ($quantityDiscount)
 		{
 			$this->product_quantity_discount = $unitPrice;
 			if (Product::getTaxCalculationMethod((int)$order->id_customer) == PS_TAX_EXC)
-				$this->product_quantity_discount = Tools::ps_round($unitPrice, 2);
+				$this->product_quantity_discount = $unitPrice;
 
 			if (isset($this->tax_calculator))
 				$this->product_quantity_discount -= $this->tax_calculator->addTaxes($quantityDiscount['price']);
@@ -660,7 +660,6 @@ class OrderDetailCore extends ObjectModel
 
         $this->total_shipping_price_tax_excl = (float)$product['additional_shipping_cost'];
         $this->total_shipping_price_tax_incl = (float)($this->total_shipping_price_tax_excl * (1 + ($tax_rate / 100)));
-        $this->total_shipping_price_tax_incl = Tools::ps_round($this->total_shipping_price_tax_incl, 2);
     }
 
     public function getWsTaxes()

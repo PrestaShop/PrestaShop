@@ -2508,7 +2508,7 @@ class ProductCore extends ObjectModel
 	* @param boolean $with_ecotax insert ecotax in price output.
 	* @return float Product price
 	*/
-	public static function getPriceStatic($id_product, $usetax = true, $id_product_attribute = null, $decimals = 6, $divisor = null,
+	public static function getPriceStatic($id_product, $usetax = true, $id_product_attribute = null, $decimals = 10, $divisor = null,
 		$only_reduc = false, $usereduc = true, $quantity = 1, $force_associated_tax = false, $id_customer = null, $id_cart = null,
 		$id_address = null, &$specific_price_output = null, $with_ecotax = true, $use_group_reduction = true, Context $context = null,
 		$use_customer_price = true)
