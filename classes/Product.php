@@ -4718,9 +4718,11 @@ class ProductCore extends ObjectModel
 					INSERT INTO `'._DB_PREFIX_.'category_product` (`id_category`, `id_product`, `position`)
 					VALUES '.implode(',', $sql_values)
 				);
+				Hook::exec('updateProduct', array('id_product' => (int)$this->id));
 				return $result;
 			}
 		}
+		Hook::exec('updateProduct', array('id_product' => (int)$this->id));
 		return true;
 	}
 
@@ -5328,6 +5330,7 @@ class ProductCore extends ObjectModel
 		$success = parent::update($null_values);
 		if ($success && Configuration::get('PS_SEARCH_INDEXATION'))
 			Search::indexation(false, $this->id);
+		Hook::exec('updateProduct', array('id_product' => (int)$this->id));
 		return $success;
 	}
 
