@@ -80,7 +80,7 @@
 				<div class="kpi-content">
 					<i class="icon-comments"></i>
 					<span class="title">{l s='Messages'}</span>
-					<span class="value"><a href="{$link->getAdminLink('AdminCustomerThreads')|escape:'html':'UTF-8'}">{sizeof($customer_thread_message)}</a></span>
+					<span class="value"><a href="{$link->getAdminLink('AdminCustomerThreads')|escape:'html':'UTF-8'}&amp;id_order={$order->id|intval}">{sizeof($customer_thread_message)}</a></span>
 				</div>
 			</div>
 			<div class="col-xs-6 col-sm-3 box-stats color1" >
