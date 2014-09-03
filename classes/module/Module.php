@@ -1520,14 +1520,13 @@ abstract class ModuleCore
 	public static function isModuleTrusted($module_name)
 	{
 		$context = Context::getContext();
-		$theme = new Theme($context->shop->id_theme);
 		// If the xml file exist, isn't empty, isn't too old
 		// and if the theme hadn't change
 		// we use the file, otherwise we regenerate it 
 		if (!(file_exists(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST)
 			&& filesize(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST) > 0 
 			&& ((time() - filemtime(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST)) < 86400)
-			&& strpos(Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST), $theme->name) !== false))
+			&& strpos(Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST), $context->theme->name) !== false))
 			self::generateTrustedXml();
 
 		// If the module is trusted, which includes both partner modules and modules bought on Addons	
