@@ -666,9 +666,18 @@ class WebserviceOutputBuilderCore
 		if (isset($this->wsResource[$assoc_name]) && is_null($this->schemaToDisplay))
 		{
 			if ($assoc_name == 'images')
-				$more_attr['xlink_resource'] = $this->wsUrl.$assoc_name.'/'.$parent_details['entities_name'].'/'.$parent_details['object_id'].'/'.$object_assoc['id'];
+			{
+				if ($parent_details['entities_name'] == 'combinations')
+				{
+					$more_attr['xlink_resource'] = $this->wsUrl.$assoc_name.'/products/'.$object->id_product.'/'.$object_assoc['id'];
+				}
+				else
+					$more_attr['xlink_resource'] = $this->wsUrl.$assoc_name.'/'.$parent_details['entities_name'].'/'.$parent_details['object_id'].'/'.$object_assoc['id'];
+			}
 			else
+			{
 				$more_attr['xlink_resource'] = $this->wsUrl.$assoc_name.'/'.$object_assoc['id'];
+			}
 		}
 		$output .= $this->setIndent($depth-1).$this->objectRender->renderNodeHeader($resource_name, array(), $more_attr);
 

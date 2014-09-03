@@ -545,8 +545,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 			foreach ($languages as $language)
 				foreach (Image::getImages($language['id_lang'], $object_id) as $image)
 					$available_image_ids[] = $image['id_image'];
-
-
+			$available_image_ids = array_unique($available_image_ids, SORT_NUMERIC);
+			
 			// If an image id is specified
 			if ($this->wsObject->urlSegment[3] != '')
 			{
