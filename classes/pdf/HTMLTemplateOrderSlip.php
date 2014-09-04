@@ -198,9 +198,17 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 				foreach ($tax_amount as $tax_id => $amount)
 				{
 					$tax = new Tax((int)$tax_id);
-					$tax_rate = $tax->rate;
-					$infos['total_price_tax_excl'] += (float)Tools::ps_round($order_slip_details['amount_tax_excl'], 2);
-					$infos['total_amount'] += (float)Tools::ps_round($amount, 2);
+					if (!isset($total_tax_amount[$tax->rate]))
+					{
+						$tmp_tax_infos[$tax->rate]['name'] = $tax->name;
+						$tmp_tax_infos[$tax->rate]['total_price_tax_excl'] = $order_slip_details['amount_tax_excl'];
+						$tmp_tax_infos[$tax->rate]['total_amount'] = $amount;
+					}
+					else
+					{
+						$tmp_tax_infos[$tax->rate]['total_price_tax_excl'] += $order_slip_details['amount_tax_excl'];
+						$tmp_tax_infos[$tax->rate]['total_amount'] += $amount;
+					}
 				}
 				$tmp_tax_infos[(string)number_format($tax_rate, 3)] = $infos;
 			}
