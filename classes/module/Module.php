@@ -2379,7 +2379,7 @@ abstract class ModuleCore
 
 			$meta = New Meta();
 			$meta->page = $page;
-			$meta->configurable = 0;
+			$meta->configurable = 1;
 			$meta->save();
 			if ((int)$meta->id > 0)
 			{
