@@ -57,6 +57,9 @@ abstract class ModuleCore
 	/** @var string author of the module */
 	public $author;
 
+	/** @var string URI author of the module */
+	public $author_uri;
+
 	/** @var string Module key provided by addons.prestashop.com */
 	public $module_key = '';
 
@@ -1191,6 +1194,7 @@ abstract class ModuleCore
 					$item->displayName = stripslashes(Translate::getModuleTranslation((string)$xml_module->name, Module::configXmlStringFormat($xml_module->displayName), (string)$xml_module->name));
 					$item->description = stripslashes(Translate::getModuleTranslation((string)$xml_module->name, Module::configXmlStringFormat($xml_module->description), (string)$xml_module->name));
 					$item->author = stripslashes(Translate::getModuleTranslation((string)$xml_module->name, Module::configXmlStringFormat($xml_module->author), (string)$xml_module->name));
+					$item->author_uri = (isset($xml_module->author_uri) && $xml_module->author_uri) ? stripslashes($xml_module->author_uri) : false;
 
 					if (isset($xml_module->confirmUninstall))
 						$item->confirmUninstall = Translate::getModuleTranslation((string)$xml_module->name, html_entity_decode(Module::configXmlStringFormat($xml_module->confirmUninstall)), (string)$xml_module->name);
@@ -1243,6 +1247,7 @@ abstract class ModuleCore
 					$item->displayName = $tmp_module->displayName;
 					$item->description = stripslashes($tmp_module->description);
 					$item->author = $tmp_module->author;
+					$item->author_uri = (isset($tmp_module->author_uri) && $tmp_module->author_uri) ? $tmp_module->author_uri : false;
 					$item->limited_countries = $tmp_module->limited_countries;
 					$item->parent_class = get_parent_class($module);
 					$item->is_configurable = $tmp_module->is_configurable = method_exists($tmp_module, 'getContent') ? 1 : 0;
@@ -2153,13 +2158,18 @@ abstract class ModuleCore
 
 	protected function _generateConfigXml()
 	{
+		$author_uri = '';
+		if (isset($this->author_uri) && $this->author_uri)
+			$author_uri = '<author_uri><![CDATA['.Tools::htmlentitiesUTF8($this->author_uri).']]></author_uri>';
+
 		$xml = '<?xml version="1.0" encoding="UTF-8" ?>
 <module>
 	<name>'.$this->name.'</name>
 	<displayName><![CDATA['.Tools::htmlentitiesUTF8($this->displayName).']]></displayName>
 	<version><![CDATA['.$this->version.']]></version>
 	<description><![CDATA['.Tools::htmlentitiesUTF8($this->description).']]></description>
-	<author><![CDATA['.Tools::htmlentitiesUTF8($this->author).']]></author>
+	<author><![CDATA['.Tools::htmlentitiesUTF8($this->author).']]></author>'
+	.$author_uri.'
 	<tab><![CDATA['.Tools::htmlentitiesUTF8($this->tab).']]></tab>'.(isset($this->confirmUninstall) ? "\n\t".'<confirmUninstall><![CDATA['.$this->confirmUninstall.']]></confirmUninstall>' : '').'
 	<is_configurable>'.(isset($this->is_configurable) ? (int)$this->is_configurable : 0).'</is_configurable>
 	<need_instance>'.(int)$this->need_instance.'</need_instance>'.(isset($this->limited_countries) ? "\n\t".'<limited_countries>'.(count($this->limited_countries) == 1 ? $this->limited_countries[0] : '').'</limited_countries>' : '').'
