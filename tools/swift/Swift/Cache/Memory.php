@@ -28,7 +28,7 @@ class Swift_Cache_Memory extends Swift_Cache
    * @var string
    */
   protected $requested;
-  
+
   /**
    * Write data to the cache
    * @param string The cache key
@@ -66,7 +66,7 @@ class Swift_Cache_Memory extends Swift_Cache
   public function read($key, $size=null)
   {
     if (!$this->has($key)) return false;
-    
+
     if ($this->requested == $key)
     {
       $this->requested = null;

@@ -287,7 +287,7 @@ class AdminStockCoverControllerCore extends AdminController
 					$item['upc'] = '--';
 				}
 			}
-		} 	
+		}
 	}
 
 	/**
@@ -369,7 +369,7 @@ class AdminStockCoverControllerCore extends AdminController
 		$quantity = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 		return $quantity;
 	}
-	
+
 	public function initContent()
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
@@ -379,7 +379,7 @@ class AdminStockCoverControllerCore extends AdminController
 		}
 		parent::initContent();
 	}
-	
+
 	public function initProcess()
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
@@ -393,6 +393,6 @@ class AdminStockCoverControllerCore extends AdminController
 		else
 			$this->list_id = 'product';
 
-		parent::initProcess();	
+		parent::initProcess();
 	}
 }

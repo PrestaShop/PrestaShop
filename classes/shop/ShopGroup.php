@@ -93,7 +93,7 @@ class ShopGroupCore extends ObjectModel
 				WHERE id_shop_group='.(int)$this->id;
 		return (int)Db::getInstance()->getValue($sql);
 	}
-	
+
 	public static function getShopsFromGroup($id_group)
 	{
 		$sql = 'SELECT s.`id_shop`

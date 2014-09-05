@@ -38,7 +38,7 @@ class InstallControllerHttpWelcome extends InstallControllerHttp
 	{
 		return true;
 	}
-	
+
 	/**
 	 * Change language
 	 */

@@ -93,7 +93,7 @@ class AdminSearchEnginesControllerCore extends AdminController
 			);
 
 		$this->identifier_name = 'server';
-		
+
 		parent::initPageHeaderToolbar();
 	}
 }

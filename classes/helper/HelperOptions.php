@@ -115,7 +115,7 @@ class HelperOptionsCore extends Helper
 
 					if (isset($field['files']) && $field['files'])
 						$uploader->setFiles($field['files']);
-					elseif (isset($field['image']) && $field['image']) // Use for retrocompatibility							
+					elseif (isset($field['image']) && $field['image']) // Use for retrocompatibility
 						$uploader->setFiles(array(
 							0 => array(
 							'type'       => HelperUploader::TYPE_IMAGE,
@@ -124,7 +124,7 @@ class HelperOptionsCore extends Helper
 							'delete_url' => isset($field['delete_url'])?$field['delete_url']:null
 						)));
 
-					if (isset($field['file']) && $field['file']) // Use for retrocompatibility							
+					if (isset($field['file']) && $field['file']) // Use for retrocompatibility
 						$uploader->setFiles(array(
 							0 => array(
 							'type'       => HelperUploader::TYPE_FILE,
@@ -133,7 +133,7 @@ class HelperOptionsCore extends Helper
 							'download_url' => isset($field['file'])?$field['file']:null
 						)));
 
-					if (isset($field['thumb']) && $field['thumb']) // Use for retrocompatibility							
+					if (isset($field['thumb']) && $field['thumb']) // Use for retrocompatibility
 						$uploader->setFiles(array(
 							0 => array(
 							'type'       => HelperUploader::TYPE_IMAGE,

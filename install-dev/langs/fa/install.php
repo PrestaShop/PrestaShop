@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  'informations' => 
+  'informations' =>
   array (
     'phone' => '+1 (888) 947-6543',
     'documentation' => 'http://doc.prestashop.com/',
@@ -10,7 +10,7 @@ return array (
     'blog' => 'http://www.prestashop.com/blog/',
     'support' => 'https://www.prestashop.com/en/support',
   ),
-  'translations' => 
+  'translations' =>
   array (
     'An SQL error occurred for entity <i>%1$s</i>: <i>%2$s</i>' => 'یک خطای SQL رخ داده است برای موجودی <i>%1$s</i> : <i>%2$s</i>',
     'Cannot create image "%1$s" for entity "%2$s"' => 'نمیتوان برای "%1$s" عکس ایجاد کرد برای موجودی "%2$s"',

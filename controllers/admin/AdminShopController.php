@@ -34,7 +34,7 @@ class AdminShopControllerCore extends AdminController
 		$this->table = 'shop';
 		$this->className = 'Shop';
 		$this->multishop_context = Shop::CONTEXT_ALL;
-		
+
 		$this->id_shop_group = (int)Tools::getValue('id_shop_group');
 
 		/* if $_GET['id_shop'] is transmitted, virtual url can be loaded in config.php, so we wether transmit shop_id in herfs */
@@ -244,7 +244,7 @@ class AdminShopControllerCore extends AdminController
 			else if (Shop::getTotalShops() == 1)
 				$this->errors[] = Tools::displayError('You cannot disable the last shop.');
 		}*/
-		
+
 		if (Tools::isSubmit('submitAddshopAndStay') || Tools::isSubmit('submitAddshop'))
 		{
 			$shop_group = new ShopGroup((int)Tools::getValue('id_shop_group'));
@@ -457,7 +457,7 @@ class AdminShopControllerCore extends AdminController
 			$root_category = new Category($root_categories[0]['id_category']);
 			$children = $root_category->getAllChildren($this->context->language->id);
 			$selected_cat[] = $root_categories[0]['id_category'];
-			
+
 			foreach ($children as $child)
 				$selected_cat[] = $child->id;
 		}
@@ -554,7 +554,7 @@ class AdminShopControllerCore extends AdminController
 			'zone' => $this->l('Zones'),
 			'cart_rule' => $this->l('Cart rules'),
 		);
-		
+
 		// Hook for duplication of shop data
 		$modules_list = Hook::getHookModuleExecList('actionShopDataDuplication');
 		if (is_array($modules_list) && count($modules_list) > 0)
@@ -562,7 +562,7 @@ class AdminShopControllerCore extends AdminController
 				$import_data['Module'.ucfirst($m['module'])] = Module::getModuleName($m['module']);
 
 		asort($import_data);
-				
+
 		if (!$this->object->id)
 			$this->fields_import_form = array(
 				'radio' => array(
@@ -624,7 +624,7 @@ class AdminShopControllerCore extends AdminController
 
 		if (Tools::isSubmit('id_category_default'))
 			$_POST['id_category'] = (int)Tools::getValue('id_category_default');
-	
+
 		/* Checking fields validity */
 		$this->validateRules();
 
@@ -683,13 +683,13 @@ class AdminShopControllerCore extends AdminController
 			$tpl = $this->createTemplate('helpers/list/list_action_edit.tpl');
 			if (!array_key_exists('Edit', self::$cache_lang))
 				self::$cache_lang['Edit'] = $this->l('Edit', 'Helper');
-	
+
 			$tpl->assign(array(
 				'href' => $this->context->link->getAdminLink('AdminShop').'&shop_id='.(int)$id.'&update'.$this->table,
 				'action' => self::$cache_lang['Edit'],
 				'id' => $id
 			));
-	
+
 			return $tpl->fetch();
 		}
 		else
@@ -710,7 +710,7 @@ class AdminShopControllerCore extends AdminController
 			$root_category = new Category($root_categories[0]['id_category']);
 			$children = $root_category->getAllChildren($this->context->language->id);
 			$selected_cat[] = $root_categories[0]['id_category'];
-			
+
 			foreach ($children as $child)
 				$selected_cat[] = $child->id;
 		}

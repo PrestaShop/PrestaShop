@@ -29,17 +29,17 @@ class Hook extends HookCore
 	private static $executedModules = array();
 	private static $hookTime = array();
 	private static $hookMemoryUsage = array();
-	
+
 	public static function getHookTime()
 	{
 		return self::$hookTime;
 	}
-	
+
 	public static function getHookMemoryUsage()
 	{
 		return self::$hookMemoryUsage;
 	}
-	
+
 	public static function getExecutedModules()
 	{
 		return self::$executedModules;

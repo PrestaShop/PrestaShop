@@ -22,7 +22,7 @@ class Swift_Events_ConnectEvent extends Swift_Events
    * @var Swift_Connection
    */
   protected $connection = null;
-  
+
   /**
    * Constructor
    * @param Swift_Connection The new connection

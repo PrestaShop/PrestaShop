@@ -58,7 +58,7 @@ class Swift_Message extends Swift_Message_Mime
     "mixed" => array(),
     "related" => array()
   );
-  
+
   /**
    * Ctor.
    * @param string Message subject
@@ -88,21 +88,21 @@ class Swift_Message extends Swift_Message_Mime
       $this->headers->set("X-LibVersion", $this->libVersion);
     }
     $this->headers->set("MIME-Version", "1.0");
-    $this->setContentType($type);	
+    $this->setContentType($type);
     $this->setCharset($charset);
     $this->setFlowed(true);
     $this->setEncoding($encoding);
-    
+
     foreach (array_keys($this->references["parent"]) as $key)
     {
       $this->setReference("parent", $key, $this);
     }
-    
+
     $this->setMimeWarning(
     "This is a message in multipart MIME format.  Your mail client should not be displaying this. " .
     "Consider upgrading your mail client to view this message correctly."
     );
-    
+
     if ($body !== null)
     {
       $this->setData($body);
@@ -599,7 +599,7 @@ class Swift_Message extends Swift_Message_Mime
     $new = new Swift_Message_Part();
     $new->setContentType($type);
     $this->getReference("parent", $new_branch)->addChild($new, $tag, -1);
-    
+
     switch ($new_branch)
     {
       case "related": $this->setReference("related", $tag, $new);//relatedRefs[$tag] = $new;
@@ -607,7 +607,7 @@ class Swift_Message extends Swift_Message_Mime
       case "mixed": $this->setReference("mixed", $tag, $new);//mixedRefs[$tag] = $new;
         break;
     }
-    
+
     foreach ($from as $id => $ref)
     {
       if (!$ref) $ref = $this;
@@ -790,7 +790,7 @@ class Swift_Message extends Swift_Message_Mime
         $this->setData($this->getMimeWarning());
         $this->setLineWrap(76);
       }
-      
+
       if ($this->getCharset() !== null) $this->setCharset(null);
       if ($this->isFlowed()) $this->setFlowed(false);
       $this->setEncoding("7bit");

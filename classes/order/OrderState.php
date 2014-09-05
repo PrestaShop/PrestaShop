@@ -59,7 +59,7 @@ class OrderStateCore extends ObjectModel
 
 	/** @var boolean Paid */
 	public $paid;
-	
+
 	/** @var boolean True if carrier has been deleted (staying in database as deleted) */
 	public $deleted = 0;
 
@@ -96,13 +96,13 @@ class OrderStateCore extends ObjectModel
 			'hidden' => array(),
 		),
 	);
-	
+
 	const FLAG_NO_HIDDEN	= 1;  /* 00001 */
 	const FLAG_LOGABLE		= 2;  /* 00010 */
 	const FLAG_DELIVERY		= 4;  /* 00100 */
 	const FLAG_SHIPPED		= 8;  /* 01000 */
 	const FLAG_PAID			= 16; /* 10000 */
-	
+
 
 	/**
 	* Get all available order statuses

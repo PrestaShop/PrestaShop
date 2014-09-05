@@ -25,7 +25,7 @@ class Swift_Cache_OutputStream
    * @var Swift_Cache
    */
   protected $cache;
-  
+
   /**
    * Ctor.
    * @param Swift_Cache The cache to read from

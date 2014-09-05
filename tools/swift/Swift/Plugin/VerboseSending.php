@@ -27,7 +27,7 @@ class Swift_Plugin_VerboseSending implements Swift_Events_SendListener
    * @var Swift_Plugin_VerboseSending_AbstractView
    */
   protected $view;
-  
+
   /**
    * Ctor.
    * @param Swift_Plugin_VerboseSending_AbstractView The view object to display the result

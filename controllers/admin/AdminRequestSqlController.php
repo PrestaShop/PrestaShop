@@ -173,7 +173,7 @@ class AdminRequestSqlControllerCore extends AdminController
 		}
 		return parent::postProcess();
 	}
-	
+
 	/**
 	 * method call when ajax request is made with the details row action
 	 * @see AdminController::postProcess()
@@ -295,7 +295,7 @@ class AdminRequestSqlControllerCore extends AdminController
 
 		$this->context->smarty->assign(array(
 			'content' => $this->content,
-			'url_post' => self::$currentIndex.'&token='.$this->token,			
+			'url_post' => self::$currentIndex.'&token='.$this->token,
 			'show_page_header_toolbar' => $this->show_page_header_toolbar,
 			'page_header_toolbar_title' => $this->page_header_toolbar_title,
 			'page_header_toolbar_btn' => $this->page_header_toolbar_btn

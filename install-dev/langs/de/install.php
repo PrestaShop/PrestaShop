@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  'informations' => 
+  'informations' =>
   array (
     'phone' => '+33 (0)1.40.18.30.04',
     'documentation' => 'http://doc.prestashop.com/display/PS16/PrestaShop+1.6+documentation',
@@ -10,7 +10,7 @@ return array (
     'blog' => 'http://www.prestashop.com/blog/',
     'support' => 'https://www.prestashop.com/de/support',
   ),
-  'translations' => 
+  'translations' =>
   array (
     'An SQL error occurred for entity <i>%1$s</i>: <i>%2$s</i>' => 'SQL-Fehler bei Element <i>%1$s</i>: <i>%2$s</i> aufgetreten',
     'Cannot create image "%1$s" for entity "%2$s"' => 'Bild "%1$s" für "%2$s" kann nicht erstellt werden',

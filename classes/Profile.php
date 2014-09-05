@@ -116,7 +116,7 @@ class ProfileCore extends ObjectModel
 
 		if (!isset(self::$_cache_accesses[$id_profile]))
 			self::$_cache_accesses[$id_profile] = array();
-			
+
 		if (!isset(self::$_cache_accesses[$id_profile][$type]))
 		{
 			self::$_cache_accesses[$id_profile][$type] = array();

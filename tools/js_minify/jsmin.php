@@ -7,14 +7,14 @@
  * </code>
  *
  * This is a modified port of jsmin.c. Improvements:
- * 
+ *
  * Does not choke on some regexp literals containing quote characters. E.g. /'/
- * 
- * Spaces are preserved after some add/sub operators, so they are not mistakenly 
+ *
+ * Spaces are preserved after some add/sub operators, so they are not mistakenly
  * converted to post-inc/dec. E.g. a + ++b -> a+ ++b
  *
  * Preserves multi-line comments that begin with /*!
- * 
+ *
  * PHP 5 or higher is required.
  *
  * Permission is hereby granted to use this version of the library under the
@@ -116,7 +116,7 @@ class JSMin {
             // determine next command
             $command = self::ACTION_KEEP_A; // default
             if ($this->a === ' ') {
-                if (($this->lastByteOut === '+' || $this->lastByteOut === '-') 
+                if (($this->lastByteOut === '+' || $this->lastByteOut === '-')
                     && ($this->b === $this->lastByteOut)) {
                     // Don't delete this space. If we do, the addition/subtraction
                     // could be parsed as a post-increment
@@ -135,7 +135,7 @@ class JSMin {
                 }
             } elseif (! $this->isAlphaNum($this->a)) {
                 if ($this->b === ' '
-                    || ($this->b === "\n" 
+                    || ($this->b === "\n"
                         && (false === strpos('}])+-"\'', $this->a)))) {
                     $command = self::ACTION_DELETE_A_B;
                 }
@@ -160,7 +160,7 @@ class JSMin {
      */
     protected function action($command)
     {
-        if ($command === self::ACTION_DELETE_A_B 
+        if ($command === self::ACTION_DELETE_A_B
             && $this->b === ' '
             && ($this->a === '+' || $this->a === '-')) {
             // Note: we're at an addition/substraction operator; the inputIndex
@@ -174,7 +174,7 @@ class JSMin {
             case self::ACTION_KEEP_A:
                 $this->output .= $this->a;
                 $this->lastByteOut = $this->a;
-                
+
                 // fallthrough
             case self::ACTION_DELETE_A:
                 $this->a = $this->b;
@@ -183,7 +183,7 @@ class JSMin {
                     while (true) {
                         $this->output .= $this->a;
                         $this->lastByteOut = $this->a;
-                        
+
                         $this->a       = $this->get();
                         if ($this->a === $this->b) { // end quote
                             break;
@@ -197,7 +197,7 @@ class JSMin {
                         if ($this->a === '\\') {
                             $this->output .= $this->a;
                             $this->lastByteOut = $this->a;
-                            
+
                             $this->a       = $this->get();
                             $str .= $this->a;
                         }

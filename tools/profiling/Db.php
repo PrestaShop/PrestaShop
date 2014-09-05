@@ -28,7 +28,7 @@ abstract class Db extends DbCore
 {
 	/**
 	 * Add SQL_NO_CACHE in SELECT queries
-	 * 
+	 *
 	 * @var unknown_type
 	 */
 	public $disableCache = true;
@@ -46,14 +46,14 @@ abstract class Db extends DbCore
 	 * @var array
 	 */
 	public $queries = array();
-	
+
 	/**
 	 * List of uniq queries (replace numbers by XX)
-	 * 
+	 *
 	 * @var array
 	 */
 	public $uniqQueries = array();
-	
+
 	/**
 	 * List of tables
 	 *
@@ -71,7 +71,7 @@ abstract class Db extends DbCore
 		$explain = false;
 		if (preg_match('/^\s*explain\s+/i', $sql))
 			$explain = true;
-			
+
 		if (!$explain)
 		{
 			$uniqSql = preg_replace('/[0-9]+/', '<span style="color:blue">XX</span>', $sql);
@@ -108,14 +108,14 @@ abstract class Db extends DbCore
 			$stack_light = array();
 			foreach ($stack as $call)
 				$stack_light[] = array('file' => isset($call['file']) ? $call['file'] : 'undefined', 'line' => isset($call['line']) ? $call['line'] : 'undefined');
-			
+
 			$this->queries[] = array(
 				'query' => $sql,
 				'time' => $end - $start,
 				'stack' => $stack_light
 			);
 		}
-		
+
 		return $result;
 	}
 }

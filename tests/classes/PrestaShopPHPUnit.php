@@ -37,7 +37,7 @@ class	PrestaShopPHPUnit extends PHPUnit_Framework_TestCase
 
 		return $reflexion_method->invokeArgs($object, $params);
 	}
-	
+
 	protected function getProperty($object, $property)
 	{
 		$reflexion = new ReflectionClass($this->getClass());
@@ -46,7 +46,7 @@ class	PrestaShopPHPUnit extends PHPUnit_Framework_TestCase
 
 		return $reflexion_property->getValue($object);
 	}
-	
+
 	protected function setProperty($object, $property, $value)
 	{
 		$reflexion = new ReflectionClass($this->getClass());

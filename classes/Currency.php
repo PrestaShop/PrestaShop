@@ -300,7 +300,7 @@ class CurrencyCore extends ObjectModel
 		{
 			$query = Currency::getIdByQuery($id_shop);
 			$query->where('iso_code = \''.pSQL($iso_code).'\'');
-	
+
 			$result = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
 			Cache::store($cache_id, $result);
 		}
@@ -430,7 +430,7 @@ class CurrencyCore extends ObjectModel
 			self::$currencies[(int)($id)] = new Currency($id);
 		return self::$currencies[(int)($id)];
 	}
-	
+
 	public static function countActiveCurrencies($id_shop = null)
 	{
 		if ($id_shop === null)

@@ -529,7 +529,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 				}
 			}
 	}
-	
+
 	public function initContent()
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
@@ -539,7 +539,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 		}
 		parent::initContent();
 	}
-	
+
 	public function initProcess()
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
@@ -547,7 +547,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate the Advanced Stock Management feature before you can use this feature.');
 			return false;
 		}
-		parent::initProcess();	
+		parent::initProcess();
 	}
 
 	public function ajaxProcessEditableSupplyOrderState()

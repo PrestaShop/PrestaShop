@@ -151,5 +151,5 @@ class CompareControllerCore extends FrontController
 
 		$this->setTemplate(_PS_THEME_DIR_.'products-comparison.tpl');
 	}
-	
+
 }

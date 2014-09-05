@@ -240,7 +240,7 @@ abstract class Controller extends ControllerCore
 			if ($this->ajax)
 			{
 				$action = Tools::toCamelCase(Tools::getValue('action'), true);
-				if (!empty($action) && method_exists($this, 'displayAjax'.$action)) 
+				if (!empty($action) && method_exists($this, 'displayAjax'.$action))
 					$this->{'displayAjax'.$action}();
 				elseif (method_exists($this, 'displayAjax'))
 					$this->displayAjax();
@@ -272,7 +272,7 @@ abstract class Controller extends ControllerCore
 				return (bool)(int)$b;
 		}
 	}
-	
+
 	private function sizeofvar($var)
 	{
 		$start_memory = memory_get_usage();
@@ -284,7 +284,7 @@ abstract class Controller extends ControllerCore
 		$size = memory_get_usage() - $start_memory;
 		return $size;
 	}
-	
+
 	private function getVarData($var)
 	{
 		if (is_object($var))
@@ -305,7 +305,7 @@ abstract class Controller extends ControllerCore
 			return;
 
 		$memory_peak_usage = memory_get_peak_usage();
-			
+
 		$hr = '<hr>';
 
 		$totalSize = 0;

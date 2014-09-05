@@ -92,7 +92,7 @@ class Smarty_CacheResource_Mysql extends Smarty_CacheResource_Custom
 			"'.pSQL($cache_id, true).'",
 			"'.pSQL($content, true).'"
 		)');
-	  
+
 		return (bool)Db::getInstance()->Affected_Rows();
 	}
 

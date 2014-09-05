@@ -194,7 +194,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				'stay' => true
 			)
 		);
-		
+
 		if (Shop::isFeatureActive())
 		{
 			$this->fields_form['input'][] = array(
@@ -536,7 +536,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 		// TODO: check if the rule already exists
 		return $tr->validateController();
 	}
-	
+
 	protected function displayAjaxUpdateTaxRule()
 	{
 		if ($this->tabAccess['view'] === '1')

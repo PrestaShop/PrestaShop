@@ -40,7 +40,7 @@ class Swift_Plugin_ConnectionRotator implements Swift_Events_SendListener, Swift
    * @var boolean
    */
   protected $called = false;
-  
+
   /**
    * Constructor
    * @param int The number of emails to send before rotating

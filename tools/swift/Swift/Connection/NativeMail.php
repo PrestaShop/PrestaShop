@@ -35,7 +35,7 @@ class Swift_Connection_NativeMail extends Swift_ConnectionBase
    * @var Swift_Plugin_MailSend
    */
   protected $plugin = null;
-  
+
   /**
    * Ctor.
    * @param string The 5th parameter in mail() as a sprintf() formatted string where %s is the sender address. This only comes into effect if safe_mode is OFF.

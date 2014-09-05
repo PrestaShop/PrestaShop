@@ -22,7 +22,7 @@
  */
 
 /**
- * This class provides support for RSS 2.0 entries. It will usually be 
+ * This class provides support for RSS 2.0 entries. It will usually be
  * called by XML_Feed_Parser_RSS2 with which it shares many methods.
  *
  * @author    James Stewart <james@jystewart.net>
@@ -39,7 +39,7 @@ class XML_Feed_Parser_RSS2Element extends XML_Feed_Parser_RSS2
     protected $parent;
 
     /**
-     * Our specific element map 
+     * Our specific element map
      * @var array
      */
     protected $map = array(
@@ -95,7 +95,7 @@ class XML_Feed_Parser_RSS2Element extends XML_Feed_Parser_RSS2
      */
     protected function getGuid($method, $params)
     {
-        $attribute = (isset($params[0]) and $params[0] == 'ispermalink') ? 
+        $attribute = (isset($params[0]) and $params[0] == 'ispermalink') ?
             true : false;
         $tag = $this->model->getElementsByTagName('guid');
         if ($tag->length > 0) {

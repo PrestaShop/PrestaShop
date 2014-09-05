@@ -60,7 +60,7 @@ class AdminImagesControllerCore extends AdminController
 			'scenes' => array('title' => $this->l('Scenes'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
 			'stores' => array('title' => $this->l('Stores'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false)
 		);
-		
+
 		// No need to display the old image system migration tool except if product images are in _PS_PROD_IMG_DIR_
 		$this->display_move = false;
 		$dir = _PS_PROD_IMG_DIR_;
@@ -164,7 +164,7 @@ class AdminImagesControllerCore extends AdminController
 				'submit' => array('title' => $this->l('Save')),
 			),
 		);
-		
+
 		if ($this->display_move)
 			$this->fields_options['product_images']['fields']['PS_LEGACY_IMAGES'] = array(
 				'title' => $this->l('Use the legacy image filesystem'),
@@ -435,10 +435,10 @@ class AdminImagesControllerCore extends AdminController
 
 		foreach ($toDel as $d)
 			foreach ($type as $imageType)
-				if (preg_match('/^[0-9]+\-'.($product ? '[0-9]+\-' : '').$imageType['name'].'\.jpg$/', $d) 
-					|| (count($type) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.jpg$/', $d))					
+				if (preg_match('/^[0-9]+\-'.($product ? '[0-9]+\-' : '').$imageType['name'].'\.jpg$/', $d)
+					|| (count($type) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.jpg$/', $d))
 					|| preg_match('/^([[:lower:]]{2})\-default\-'.$imageType['name'].'\.jpg$/', $d))
-					if (file_exists($dir.$d))		
+					if (file_exists($dir.$d))
 						unlink($dir.$d);
 
 		// delete product images using new filesystem.
@@ -506,7 +506,7 @@ class AdminImagesControllerCore extends AdminController
 				$existing_img = $dir.$imageObj->getExistingImgPath().'.jpg';
 				if (file_exists($existing_img) && filesize($existing_img))
 				{
-					foreach ($type as $imageType)				
+					foreach ($type as $imageType)
 						if (!file_exists($dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg'))
 							if (!ImageManager::resize($existing_img, $dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg', (int)($imageType['width']), (int)($imageType['height'])))
 								$this->errors[] = Tools::displayError(sprintf('Original image is corrupt (%s) for product ID %2$d or bad permission on folder', $existing_img, (int)$imageObj->id_product));
@@ -651,7 +651,7 @@ class AdminImagesControllerCore extends AdminController
 				'desc' => $this->l('Add new image type', null, null, false),
 				'icon' => 'process-icon-new'
 			);
-		
+
 		parent::initPageHeaderToolbar();
 	}
 

@@ -165,7 +165,7 @@ class AdminPaymentControllerCore extends AdminController
 	{
 		$this->toolbar_title = $this->l('Payment');
 		unset($this->toolbar_btn['back']);
-		
+
 		$shop_context = (!Shop::isFeatureActive() || Shop::getContext() == Shop::CONTEXT_SHOP);
 		if (!$shop_context)
 		{
@@ -266,11 +266,11 @@ class AdminPaymentControllerCore extends AdminController
 					$this->modules_list[$key]->type = 'addonsPartner';
 				if (isset($module->description_full) && trim($module->description_full) != '')
 					$module->show_quick_view = true;
-				
+
 				if ($module->active)
-					$active_list[] = $module; 
+					$active_list[] = $module;
 				else
-					$unactive_list[] = $module; 
+					$unactive_list[] = $module;
 			}
 
 			$helper = new Helper();

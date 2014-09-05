@@ -33,19 +33,19 @@ class XML_Feed_Parser_AtomElement extends XML_Feed_Parser_Atom
 {
     /**
      * This will be a reference to the parent object for when we want
-     * to use a 'fallback' rule 
+     * to use a 'fallback' rule
      * @var XML_Feed_Parser_Atom
      */
     protected $parent;
 
     /**
-     * When performing XPath queries we will use this prefix 
+     * When performing XPath queries we will use this prefix
      * @var string
      */
     private $xpathPrefix = '';
-    
+
     /**
-     * xml:base values inherited by the element 
+     * xml:base values inherited by the element
      * @var string
      */
     protected $xmlBase;
@@ -54,7 +54,7 @@ class XML_Feed_Parser_AtomElement extends XML_Feed_Parser_Atom
      * Here we provide a few mappings for those very special circumstances in
      * which it makes sense to map back to the RSS2 spec or to manage other
      * compatibilities (eg. with the Univeral Feed Parser). Key is the other version's
-     * name for the command, value is an array consisting of the equivalent in our atom 
+     * name for the command, value is an array consisting of the equivalent in our atom
      * api and any attributes needed to make the mapping.
      * @var array
      */
@@ -63,9 +63,9 @@ class XML_Feed_Parser_AtomElement extends XML_Feed_Parser_Atom
         'links' => array('link'),
         'tags' => array('category'),
         'contributors' => array('contributor'));
-        
+
     /**
-     * Our specific element map 
+     * Our specific element map
      * @var array
      */
     protected $map = array(
@@ -116,13 +116,13 @@ class XML_Feed_Parser_AtomElement extends XML_Feed_Parser_Atom
         } else {
             $parameter = 'name';
         }
-        
+
         $test = $this->model->getElementsByTagName('author');
         if ($test->length > 0) {
             $item = $test->item(0);
             return $item->getElementsByTagName($parameter)->item(0)->nodeValue;
         }
-        
+
         $source = $this->model->getElementsByTagName('source');
         if ($source->length > 0) {
             $test = $this->model->getElementsByTagName('author');
@@ -146,7 +146,7 @@ class XML_Feed_Parser_AtomElement extends XML_Feed_Parser_Atom
      * eg. $item->content("type") will return the type of the content. It is
      * recommended that all users check the type before getting the content to
      * ensure that their script is capable of handling the type of returned data.
-     * (data carried in the content element can be either 'text', 'html', 'xhtml', 
+     * (data carried in the content element can be either 'text', 'html', 'xhtml',
      * or any standard MIME type).
      *
      * @return  string|false
@@ -199,7 +199,7 @@ class XML_Feed_Parser_AtomElement extends XML_Feed_Parser_Atom
     function getEnclosure($method, $arguments = array())
     {
         $offset = isset($arguments[0]) ? $arguments[0] : 0;
-        $query = "//atom:entry[atom:id='" . $this->getText('id', false) . 
+        $query = "//atom:entry[atom:id='" . $this->getText('id', false) .
             "']/atom:link[@rel='enclosure']";
 
         $encs = $this->parent->xpath->query($query);
@@ -209,7 +209,7 @@ class XML_Feed_Parser_AtomElement extends XML_Feed_Parser_Atom
                     return false;
                 }
                 $attrs = $encs->item($offset)->attributes;
-                $length = $encs->item($offset)->hasAttribute('length') ? 
+                $length = $encs->item($offset)->hasAttribute('length') ?
                     $encs->item($offset)->getAttribute('length') : false;
                 return array(
                     'url' => $attrs->getNamedItem('href')->value,
@@ -221,7 +221,7 @@ class XML_Feed_Parser_AtomElement extends XML_Feed_Parser_Atom
         }
         return false;
     }
-    
+
     /**
      * Get details of this entry's source, if available/relevant
      *
@@ -245,12 +245,12 @@ class XML_Feed_Parser_AtomElement extends XML_Feed_Parser_Atom
     /**
      * Get the entry as an XML string
      *
-     * Return an XML serialization of the feed, should it be required. Most 
-     * users however, will already have a serialization that they used when 
+     * Return an XML serialization of the feed, should it be required. Most
+     * users however, will already have a serialization that they used when
      * instantiating the object.
      *
      * @return    string    XML serialization of element
-     */    
+     */
     function __toString()
     {
         $simple = simplexml_import_dom($this->model);

@@ -42,7 +42,7 @@ class	PrestaShopAutoloadTest extends PrestaShopPHPUnit
 		$this->assertTrue(file_exists($this->file_index));
 		$this->assertEquals($this->file_index_content, md5(file_get_contents($this->file_index)));
 	}
-	
+
 	public function testLoad()
 	{
 		PrestaShopAutoload::getInstance()->load('RequestSql');

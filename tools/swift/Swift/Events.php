@@ -21,7 +21,7 @@ abstract class Swift_Events
    * @var Swift
    */
   protected $swift = null;
-  
+
   /**
    * Provide a reference to te currently running Swift this event was generated from
    * @param Swift

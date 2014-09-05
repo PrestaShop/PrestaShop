@@ -33,10 +33,10 @@ class AdminPatternsControllerCore extends AdminController
 		$this->bootstrap = true;
 		$this->show_toolbar = false;
 		$this->context = Context::getContext();
-		
+
 		parent::__construct();
 	}
-	
+
 	public function viewAccess()
 	{
 		return true;
@@ -417,7 +417,7 @@ class AdminPatternsControllerCore extends AdminController
 
 		return parent::renderForm();
 	}
-	
+
 	public function setMedia()
 	{
 		parent::setMedia();
@@ -431,7 +431,7 @@ class AdminPatternsControllerCore extends AdminController
 		$return .= $this->renderListSimpleHeader();
 		$return .= $this->renderListSmallColumns();
 		$return .= $this->renderListWithParentClass();
-		
+
 		return $return;
 	}
 
@@ -626,7 +626,7 @@ class AdminPatternsControllerCore extends AdminController
 
 		return $helper->generateList($content, $fields_list);
 	}
-	
+
 	public function renderListWithParentClass()
 	{
 		$this->bulk_actions = array(
@@ -654,7 +654,7 @@ class AdminPatternsControllerCore extends AdminController
 				'title' => 'Name'
 			),
 		);
-		
+
 		return parent::renderList();
 	}
 
@@ -675,13 +675,13 @@ class AdminPatternsControllerCore extends AdminController
 	{
 		$this->display = 'view';
 		$this->page_header_toolbar_title = $this->toolbar_title = 'Kevin';
-		
+
 		parent::initContent();
 
 		$this->content .= $this->renderForm();
 		$this->content .= $this->renderList();
 		$this->content .= $this->renderOptions();
-		
+
 		$this->context->smarty->assign(array('content' => $this->content));
 	}
 }

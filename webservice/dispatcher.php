@@ -110,6 +110,6 @@ if (isset($result['type']))
 	{
 		echo $result['content'];
 	}
-		
+
 }
 ob_end_flush();

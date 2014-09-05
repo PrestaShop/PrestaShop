@@ -31,9 +31,9 @@ class AdminPerformanceControllerCore extends AdminController
 	{
 		$this->bootstrap = true;
 		$this->className = 'Configuration';
-		parent::__construct();		
+		parent::__construct();
 	}
-	
+
 	public function initFieldsetSmarty()
 	{
 		$this->fields_form[0]['form'] = array(
@@ -105,7 +105,7 @@ class AdminPerformanceControllerCore extends AdminController
 							'value' => 'mysql',
 							'label' => $this->l('MySQL')
 						),
-						
+
 					)
 				),
 				array(
@@ -379,7 +379,7 @@ class AdminPerformanceControllerCore extends AdminController
 						)
 					)
 				),
-				
+
 			),
 			'submit' => array(
 				'title' => $this->l('Save')
@@ -465,7 +465,7 @@ class AdminPerformanceControllerCore extends AdminController
 		$warning_mcrypt = ' '.$this->l('(you must install the [a]Mcrypt extension[/a])');
 		$warning_mcrypt = str_replace('[a]', '<a href="http://www.php.net/manual/'.substr($php_lang, 0, 2).'/book.mcrypt.php" target="_blank">', $warning_mcrypt);
 		$warning_mcrypt = str_replace('[/a]', '</a>', $warning_mcrypt);
-	
+
 		$this->fields_form[5]['form'] = array(
 
 			'legend' => array(
@@ -577,7 +577,7 @@ class AdminPerformanceControllerCore extends AdminController
 							'value' => 'CacheXcache',
 							'label' => $this->l('Xcache').(extension_loaded('xcache') ? '' : $warning_xcache)
 						),
-						
+
 					)
 				),
 				array(
@@ -634,7 +634,7 @@ class AdminPerformanceControllerCore extends AdminController
 
 		$this->context->smarty->assign(array(
 			'content' => $this->content,
-			'url_post' => self::$currentIndex.'&token='.$this->token,			
+			'url_post' => self::$currentIndex.'&token='.$this->token,
 			'show_page_header_toolbar' => $this->show_page_header_toolbar,
 			'page_header_toolbar_title' => $this->page_header_toolbar_title,
 			'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
@@ -707,10 +707,10 @@ class AdminPerformanceControllerCore extends AdminController
 			if ($this->tabAccess['edit'] === '1')
 			{
 				Configuration::updateValue('PS_SMARTY_FORCE_COMPILE', Tools::getValue('smarty_force_compile', _PS_SMARTY_NO_COMPILE_));
-				
+
 				if (Configuration::get('PS_SMARTY_CACHE') != Tools::getValue('smarty_cache') || Configuration::get('PS_SMARTY_CACHING_TYPE') != Tools::getValue('smarty_caching_type'))
 					Tools::clearSmartyCache();
-				
+
 				Configuration::updateValue('PS_SMARTY_CACHE', Tools::getValue('smarty_cache', 0));
 				Configuration::updateValue('PS_SMARTY_CACHING_TYPE', Tools::getValue('smarty_caching_type'));
 				Configuration::updateValue('PS_SMARTY_CLEAR_CACHE', Tools::getValue('smarty_clear_cache'));
@@ -743,7 +743,7 @@ class AdminPerformanceControllerCore extends AdminController
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
-				$theme_cache_directory = _PS_ALL_THEMES_DIR_.$this->context->shop->theme_directory.'/cache/';							
+				$theme_cache_directory = _PS_ALL_THEMES_DIR_.$this->context->shop->theme_directory.'/cache/';
 				if (((bool)Tools::getValue('PS_CSS_THEME_CACHE') || (bool)Tools::getValue('PS_JS_THEME_CACHE')) && !is_writable($theme_cache_directory))
 					$this->errors[] = Tools::displayError(sprintf($this->l('To use Smart Cache directory %s must be writable.'), realpath($theme_cache_directory)));
 				if (!Configuration::updateValue('PS_CSS_THEME_CACHE', (int)Tools::getValue('PS_CSS_THEME_CACHE')) ||
@@ -798,7 +798,7 @@ class AdminPerformanceControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 		if ((bool)Tools::getValue('ciphering_up') && Configuration::get('PS_CIPHER_ALGORITHM') != (int)Tools::getValue('PS_CIPHER_ALGORITHM'))
-		{				
+		{
 			if ($this->tabAccess['edit'] === '1')
 			{
 				$algo = (int)Tools::getValue('PS_CIPHER_ALGORITHM');
@@ -857,7 +857,7 @@ class AdminPerformanceControllerCore extends AdminController
 			{
 				$new_settings = $prev_settings = file_get_contents(_PS_ROOT_DIR_.'/config/settings.inc.php');
 				$cache_active = (bool)Tools::getValue('cache_active');
-				
+
 				if ($caching_system = preg_replace('[^a-zA-Z0-9]', '', Tools::getValue('caching_system')))
 				{
 					$new_settings = preg_replace(
@@ -884,7 +884,7 @@ class AdminPerformanceControllerCore extends AdminController
 							<a href="http://xcache.lighttpd.net">http://xcache.lighttpd.net</a>';
 					elseif ($caching_system == 'CacheXcache' && !ini_get('xcache.var_size'))
 						$this->errors[] = Tools::displayError('To use Xcache, you must configure "xcache.var_size" for the Xcache extension (recommended value 16M to 64M).').'
-							<a href="http://xcache.lighttpd.net/wiki/XcacheIni">http://xcache.lighttpd.net/wiki/XcacheIni</a>';						
+							<a href="http://xcache.lighttpd.net/wiki/XcacheIni">http://xcache.lighttpd.net/wiki/XcacheIni</a>';
 					elseif ($caching_system == 'CacheFs')
 						if (!is_dir(_PS_CACHEFS_DIRECTORY_))
 							@mkdir(_PS_CACHEFS_DIRECTORY_, 0777, true);

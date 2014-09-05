@@ -116,12 +116,12 @@ class SceneCore extends ObjectModel
 	}
 
 	public function deleteImage($force_delete = false)
-	{	
-		if (file_exists($this->image_dir.'thumbs/'.$this->id.'-m_scene_default.'.$this->image_format) 
+	{
+		if (file_exists($this->image_dir.'thumbs/'.$this->id.'-m_scene_default.'.$this->image_format)
 			&& !unlink($this->image_dir.'thumbs/'.$this->id.'-m_scene_default.'.$this->image_format))
 			return false;
 		if (!(isset($_FILES) && count($_FILES)))
-			return parent::deleteImage();		
+			return parent::deleteImage();
 		return true;
 	}
 
@@ -204,7 +204,7 @@ class SceneCore extends ObjectModel
 			if (!$context)
 				$context = Context::getContext();
 			$id_lang = is_null($id_lang) ? $context->language->id : $id_lang;
-	
+
 			$sql = 'SELECT s.*
 					FROM `'._DB_PREFIX_.'scene_category` sc
 					LEFT JOIN `'._DB_PREFIX_.'scene` s ON (sc.id_scene = s.id_scene)
@@ -215,7 +215,7 @@ class SceneCore extends ObjectModel
 						.($only_active ? ' AND s.active = 1' : '').'
 					ORDER BY sl.name ASC';
 			$scenes = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-	
+
 			if (!$lite_result && $scenes)
 				foreach ($scenes as &$scene)
 					$scene = new Scene($scene['id_scene'], $id_lang, false, $hide_scene_position);

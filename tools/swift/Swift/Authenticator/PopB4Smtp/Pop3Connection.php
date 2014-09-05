@@ -41,7 +41,7 @@ class Swift_Authenticator_PopB4Smtp_Pop3Connection
    * @var resource
    */
   protected $handle = null;
-  
+
   /**
    * Constructor
    * @param string The name of the POP3 server
@@ -123,7 +123,7 @@ class Swift_Authenticator_PopB4Smtp_Pop3Connection
   {
     $url = $this->getServer();
     if ($this->getEncryption() == self::ENC_SSL) $url = "ssl://" . $url;
-    
+
     if ((false === $this->handle = fsockopen($url, $this->getPort(), $errno, $errstr, $timeout)))
     {
       Swift_ClassLoader::load("Swift_ConnectionException");

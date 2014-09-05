@@ -198,7 +198,7 @@ class ImageCore extends ObjectModel
 
 		if (file_exists(_PS_TMP_IMG_DIR_.'product_'.$id_product.'.jpg'))
 			unlink(_PS_TMP_IMG_DIR_.'product_'.$id_product.'.jpg');
-		
+
 		return (Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'image`
 			SET `cover` = 0
@@ -377,13 +377,13 @@ class ImageCore extends ObjectModel
 			');
 	 	return self::$_cacheGetSize[$type];
 	}
-	
+
 	public static function getWidth($params, &$smarty)
 	{
 		$result = self::getSize($params['type']);
 		return $result['width'];
 	}
-	
+
 	public static function getHeight($params, &$smarty)
 	{
 		$result = self::getSize($params['type']);

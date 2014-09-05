@@ -181,7 +181,7 @@ class AdminSlipControllerCore extends AdminController
 			'desc' => $this->l('Generate PDF file')
 		);
 	}
-	
+
 	public function printPDFIcons($id_order_slip, $tr)
 	{
 		$order_slip = new OrderSlip((int)$id_order_slip);

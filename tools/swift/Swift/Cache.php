@@ -7,7 +7,7 @@
  * @package Swift_Cache
  * @license GNU Lesser General Public License
  */
- 
+
 require_once dirname(__FILE__) . "/ClassLoader.php";
 
 /**

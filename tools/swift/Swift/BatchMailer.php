@@ -41,7 +41,7 @@ class Swift_BatchMailer
    * @var array
    */
   protected $headers = array();
-  
+
   /**
    * Constructor.
    * @param Swift The current instance of Swift
@@ -189,7 +189,7 @@ class Swift_BatchMailer
   {
     $sent = 0;
     $successive_fails = 0;
-    
+
     $it = $recipients->getIterator("to");
     while ($it->hasNext())
     {
@@ -223,7 +223,7 @@ class Swift_BatchMailer
         }
       }
     }
-    
+
     return $sent;
   }
 }

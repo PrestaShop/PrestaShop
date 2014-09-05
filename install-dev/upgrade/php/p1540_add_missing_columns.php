@@ -36,9 +36,9 @@ function p1540_add_missing_columns()
 
 		if (in_array('id_discount', $list_fields))
 			if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'loyalty` CHANGE `id_discount` `id_cart_rule` INT( 10 ) UNSIGNED NULL DEFAULT NULL'))
-				$errors[] = Db::getInstance()->getMsgError();				
+				$errors[] = Db::getInstance()->getMsgError();
 	}
-	
+
 	$id_module = Db::getInstance()->getValue('SELECT id_module FROM `'._DB_PREFIX_.'module` WHERE name LIKE "blocklayered"');
 	if ($id_module)
 	{
@@ -50,19 +50,19 @@ function p1540_add_missing_columns()
 			if (!in_array('id_shop', $list_fields))
 				if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'layered_product_attribute` ADD `id_shop` INT( 10 ) UNSIGNED NOT NULL DEFAULT "1" AFTER `id_attribute_group`'))
 					$errors[] = Db::getInstance()->getMsgError();
-		}			
+		}
 	}
-	
+
 	$key_exists = Db::getInstance()->executeS('SHOW INDEX FROM `'._DB_PREFIX_.'stock_available` WHERE KEY_NAME = "product_sqlstock"');;
 	if (is_array($key_exists) && count($key_exists))
 		if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'stock_available` DROP INDEX `product_sqlstock`'))
 			$errors[] = Db::getInstance()->getMsgError();
-			
+
 	$key_exists = Db::getInstance()->executeS('SHOW INDEX FROM `'._DB_PREFIX_.'stock_available` WHERE KEY_NAME = "id_product_2"');;
 	if (is_array($key_exists) && count($key_exists))
 		if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'stock_available` DROP INDEX `id_product_2`'))
-			$errors[] = Db::getInstance()->getMsgError();			
+			$errors[] = Db::getInstance()->getMsgError();
 
 	if (count($errors))
-		return array('error' => 1, 'msg' => implode(',', $errors)) ;	
+		return array('error' => 1, 'msg' => implode(',', $errors)) ;
 }

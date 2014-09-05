@@ -25,7 +25,7 @@ class Swift_Plugin_EasySwiftResponseTracker implements Swift_Events_ResponseList
    * @var EasySwift
    */
   protected $target = null;
-  
+
   /**
    * Constructor
    * @param EasySwift The instance of EasySwift to run against

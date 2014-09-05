@@ -34,7 +34,7 @@ class AdminEmployeesControllerCore extends AdminController
 
 	/** @var array tabs list*/
 	protected $tabs_list = array();
-	
+
 	protected $restrict_edition = false;
 
 	public function __construct()
@@ -426,12 +426,12 @@ class AdminEmployeesControllerCore extends AdminController
 		if (Tools::getValue('id_profile') == _PS_ADMIN_PROFILE_ && $this->context->employee->id_profile != _PS_ADMIN_PROFILE_)
 			$this->errors[] = Tools::displayError('The provided profile is invalid');
 
-		$email = $this->getFieldValue($obj, 'email');			
+		$email = $this->getFieldValue($obj, 'email');
 		if (Validate::isEmail($email) && Employee::employeeExists($email) && (!Tools::getValue('id_employee')
 			|| ($employee = new Employee((int)Tools::getValue('id_employee'))) && $employee->email != $email))
 			$this->errors[] = Tools::displayError('An account already exists for this email address:').' '.$email;
 	}
-	
+
 	public function processDelete()
 	{
 		if (!$this->canModifyEmployee())
@@ -439,15 +439,15 @@ class AdminEmployeesControllerCore extends AdminController
 
 		return parent::processDelete();
 	}
-	
+
 	public function processStatus()
 	{
 		if (!$this->canModifyEmployee())
 			return false;
-			
+
 		parent::processStatus();
 	}
-	
+
 	protected function canModifyEmployee()
 	{
 		if ($this->restrict_edition)
@@ -470,10 +470,10 @@ class AdminEmployeesControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('You cannot delete this account because it manages warehouses. Check your warehouses first.');
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	public function processSave()
 	{
 		$employee = new Employee((int)Tools::getValue('id_employee'));
@@ -489,7 +489,7 @@ class AdminEmployeesControllerCore extends AdminController
 
 			$_POST['id_profile'] = $_GET['id_profile'] = $employee->id_profile;
 			$_POST['active'] = $_GET['active'] = $employee->active;
-			
+
 			// Unset set shops
 			foreach ($_POST as $postkey => $postvalue)
 				if (strstr($postkey, 'checkBoxShopAsso_'.$this->table) !== false)
@@ -626,7 +626,7 @@ class AdminEmployeesControllerCore extends AdminController
 
 		return $res;
 	}
-	
+
 	protected function ajaxProcessFormLanguage()
 	{
 		$this->context->cookie->employee_form_lang = (int)Tools::getValue('form_language_id');
@@ -634,7 +634,7 @@ class AdminEmployeesControllerCore extends AdminController
 			die ('Error while updating cookie.');
 		die ('Form language updated.');
 	}
-	
+
 	protected function ajaxProcessToggleMenu()
 	{
 		$this->context->cookie->collapse_menu = (int)Tools::getValue('collapse');

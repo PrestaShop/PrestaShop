@@ -22,7 +22,7 @@ class Swift_ClassLoader
    * @var array
    */
   protected static $located = array();
-  
+
   /**
    * Load a new class into memory
    * @param string The name of the class, case SenSItivE
@@ -31,7 +31,7 @@ class Swift_ClassLoader
   {
     if (in_array($name, self::$located) || class_exists($name, false) || interface_exists($name, false))
       return;
-    
+
     require_once SWIFT_ABS_PATH . "/" . str_replace("_", "/", $name) . ".php";
     self::$located[] = $name;
   }

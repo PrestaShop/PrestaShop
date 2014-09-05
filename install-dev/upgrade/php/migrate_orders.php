@@ -93,12 +93,12 @@ function migrate_orders()
 				$products = mo_setProductPrices($order_details, $price_display_method);
 				$tax_rate = 1 + ((float)$products['tax_rate'] / 100);
 				$reduction_amount_tax_incl = (float)$products['reduction_amount'];
-	
+
 				// cart::getTaxesAverageUsed equivalent
 				$sum_total_products += $products['total_price'];
-				
+
 				$sum_tax_amount += $products['total_wt'] - $products['total_price'];
-	
+
 				$order_details['reduction_amount_tax_incl'] = $reduction_amount_tax_incl;
 				$order_details['reduction_amount_tax_excl'] = (float)mo_ps_round($reduction_amount_tax_incl / $tax_rate);
 				$order_details['total_price_tax_incl'] = (float)$products['total_wt'];
@@ -128,19 +128,19 @@ function migrate_orders()
 			$carrier_tax_rate = 1;
 			if (isset($order['carrier_tax_rate']))
 				$carrier_tax_rate + ((float)$order['carrier_tax_rate'] / 100);
-	
+
 			$total_discount_tax_excl = $order['total_discounts'] / $average_tax_used;
 			$order['total_discounts_tax_incl'] = (float)$order['total_discounts'];
 			$order['total_discounts_tax_excl'] = (float)$total_discount_tax_excl;
-	
+
 			$order['total_shipping_tax_incl'] = (float)$order['total_shipping'];
 			$order['total_shipping_tax_excl'] = (float)($order['total_shipping'] / $carrier_tax_rate);
 			$shipping_taxes = $order['total_shipping_tax_incl'] - $order['total_shipping_tax_excl'];
-	
+
 			$order['total_wrapping_tax_incl'] = (float)$order['total_wrapping'];
 			$order['total_wrapping_tax_excl'] = ((float)$order['total_wrapping'] / $wrapping_tax_rate);
 			$wrapping_taxes = $order['total_wrapping_tax_incl'] - $order['total_wrapping_tax_excl'];
-	
+
 			$product_taxes = $order['total_products_wt'] - $order['total_products'];
 			$order['total_paid_tax_incl'] = (float)$order['total_paid'];
 			$order['total_paid_tax_excl'] = (float)$order['total_paid'] - $shipping_taxes - $wrapping_taxes - $product_taxes;
@@ -148,13 +148,13 @@ function migrate_orders()
 			$order['gift_message'] = Db::getInstance()->escape($order['gift_message']);
 			$order['payment'] = Db::getInstance()->escape($order['payment']);
 			$order['module'] = Db::getInstance()->escape($order['module']);
-	
+
 			$values_order[] = '(\''.implode('\', \'', $order).'\')';
-	
+
 			unset($order);
 			$cpt++;
-			
-			// limit to $cpt 
+
+			// limit to $cpt
 			if ($cpt >= $flush_limit)
 			{
 				$cpt = 0;

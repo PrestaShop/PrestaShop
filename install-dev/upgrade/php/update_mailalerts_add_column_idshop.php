@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-/* 
+/*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */

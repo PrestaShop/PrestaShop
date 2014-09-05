@@ -97,7 +97,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 							&& !empty($address->vat_number)
 							&& $address->id_country != Configuration::get('VATNUMBER_COUNTRY');
 		$carrier = new Carrier($this->order->id_carrier);
-			
+
 		$data = array(
 			'tax_exempt' => $tax_exempt,
 			'use_one_after_another_method' => $this->order_invoice->useOneAfterAnotherTaxComputationMethod(),

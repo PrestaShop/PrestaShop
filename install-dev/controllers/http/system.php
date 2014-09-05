@@ -139,7 +139,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 			foreach ($category['checks'] as $id => $check)
 				if ($this->tests['required']['checks'][$id] != 'ok')
 					$category['success'] = 0;
-		
+
 		// If required tests failed, disable next button
 		if (!$this->tests['required']['success'])
 			$this->next_button = false;

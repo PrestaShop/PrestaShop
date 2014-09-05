@@ -220,7 +220,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 
 		foreach ($attributes as $k => $attribute)
 			$attribute_js[$attribute['id_attribute_group']][$attribute['id_attribute']] = $attribute['name'];
-		
+
 		$attribute_groups = AttributeGroup::getAttributesGroups($this->context->language->id);
 		$this->product = new Product((int)Tools::getValue('id_product'));
 

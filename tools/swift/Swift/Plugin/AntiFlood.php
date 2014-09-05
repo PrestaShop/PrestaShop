@@ -34,7 +34,7 @@ class Swift_Plugin_AntiFlood implements Swift_Events_SendListener
    * @var int
    */
   protected $count = 0;
-  
+
   /**
    * Constructor
    * @param int Number of emails to send before re-connecting

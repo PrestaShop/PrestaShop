@@ -26,7 +26,7 @@ class Swift_Events_ResponseEvent extends Swift_Events
    * @var int
    */
   protected $code = null;
-  
+
   /**
    * Constructor
    * @param string The received response

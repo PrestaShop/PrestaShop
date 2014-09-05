@@ -33,11 +33,11 @@
 require_once(dirname(__FILE__) . '/InsertProcessor.php');
 
 /**
- * 
+ *
  * This class processes the REPLACE statements.
- * 
+ *
  * @author arothe
- * 
+ *
  */
 class ReplaceProcessor extends InsertProcessor {
 

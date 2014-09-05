@@ -310,7 +310,7 @@ class WarehouseCore extends ObjectModel
 			{
 				$shop_group = Context::getContext()->shop->getGroup();
 				$id_shop = (int)Context::getContext()->shop->id;
-			}	
+			}
 			$share_stock = $shop_group->share_stock;
 		}
 		else
@@ -536,7 +536,7 @@ class WarehouseCore extends ObjectModel
 			$res = call_user_func_array('array_intersect', $list);
 		return $res;
 	}
-	
+
 	public function resetStockAvailable()
 	{
 		$products = WarehouseProductLocation::getProducts((int)$this->id);

@@ -316,7 +316,7 @@ class AdminModulesControllerCore extends AdminController
 			if (is_array($values) && count($values))
 				foreach($values as $value)
 					Db::getInstance()->execute('
-						INSERT INTO `'._DB_PREFIX_.'tab_module_preference` (`id_tab_module_preference`, `id_employee`, `id_tab`, `module`) 
+						INSERT INTO `'._DB_PREFIX_.'tab_module_preference` (`id_tab_module_preference`, `id_employee`, `id_tab`, `module`)
 						VALUES (NULL, '.(int)$this->id_employee.', '.(int)$value.', \''.pSQL($module).'\');');
 		}
 		die('OK');
@@ -1013,7 +1013,7 @@ class AdminModulesControllerCore extends AdminController
 				}
 			}
 		}
-		
+
 		return $modules_list;
 	}
 
@@ -1209,7 +1209,7 @@ class AdminModulesControllerCore extends AdminController
 				|| (!is_array($module->limited_countries) && strtolower($this->iso_default_country) != strval($module->limited_countries)))))
 			return true;
 
-		// Module has not been filtered		
+		// Module has not been filtered
 		return false;
 	}
 
@@ -1454,7 +1454,7 @@ class AdminModulesControllerCore extends AdminController
 			unset($object);
 			if ($module->installed && isset($module->version_addons) && $module->version_addons)
 				$upgrade_available[] = array('anchor' => ucfirst($module->name), 'name' => $module->name, 'displayName' => $module->displayName);
-				
+
 			if (in_array($module->name, $this->list_partners_modules))
 				$module->type = 'addonsPartner';
 
@@ -1517,7 +1517,7 @@ class AdminModulesControllerCore extends AdminController
 			'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
 			'modules_uri' => __PS_BASE_URI__.basename(_PS_MODULE_DIR_),
 			'dont_filter' => $dont_filter,
-		);		
+		);
 
 		if ($this->logged_on_addons)
 		{

@@ -65,7 +65,7 @@ class EmployeeCore extends ObjectModel
 
 	/** @var string employee's chosen theme */
 	public $bo_theme;
-	
+
 	/** @var string employee's chosen css file */
 	public $bo_css = 'admin-theme.css';
 
@@ -74,7 +74,7 @@ class EmployeeCore extends ObjectModel
 
 	/** @var bool, false */
 	public $bo_menu = 1;
-	
+
 	/* Deprecated */
 	public $bo_show_screencast = false;
 
@@ -211,7 +211,7 @@ class EmployeeCore extends ObjectModel
 				$this->bo_css = $bo_css;
 		}
 	}
-	
+
 	protected function saveOptin()
 	{
 		if ($this->optin && !defined('PS_INSTALLATION_IN_PROGRESS'))
@@ -358,12 +358,12 @@ class EmployeeCore extends ObjectModel
 		}
 		$this->id = null;
 	}
-	
+
 	public function favoriteModulesList()
 	{
 		return Db::getInstance()->executeS('
 			SELECT module
-			FROM `'._DB_PREFIX_.'module_preference` 
+			FROM `'._DB_PREFIX_.'module_preference`
 			WHERE `id_employee` = '.(int)$this->id.' AND `favorite` = 1 AND (`interest` = 1 OR `interest` IS NULL)'
 		);
 	}
@@ -429,7 +429,7 @@ class EmployeeCore extends ObjectModel
 	{
 		return $this->id_profile == _PS_ADMIN_PROFILE_;
 	}
-	
+
 	public function getImage()
 	{
 		if (!Validate::isLoadedObject($this))

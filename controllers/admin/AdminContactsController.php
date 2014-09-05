@@ -112,7 +112,7 @@ class AdminContactsControllerCore extends AdminController
 				'title' => $this->l('Save'),
 			)
 		);
-		
+
 		if (Shop::isFeatureActive())
 		{
 			$this->fields_form['input'][] = array(
@@ -137,5 +137,5 @@ class AdminContactsControllerCore extends AdminController
 
 		parent::initPageHeaderToolbar();
 	}
-	
+
 }

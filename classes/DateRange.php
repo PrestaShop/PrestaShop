@@ -25,7 +25,7 @@
 */
 
 class DateRangeCore extends ObjectModel
-{	
+{
 	public $time_start;
 	public $time_end;
 

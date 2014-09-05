@@ -108,7 +108,7 @@ class ProductControllerCore extends FrontController
 					$this->context->smarty->assign('adminActionDisplay', false);
 					if ($this->product->id_product_redirected == $this->product->id)
 						$this->product->redirect_type = '404';
-					
+
 					switch ($this->product->redirect_type)
 					{
 						case '301':
@@ -151,7 +151,7 @@ class ProductControllerCore extends FrontController
 					if ($id_object)
 					{
 						$referers = array($_SERVER['HTTP_REFERER'],urldecode($_SERVER['HTTP_REFERER']));
-						if (in_array($this->context->link->getCategoryLink($id_object), $referers))	
+						if (in_array($this->context->link->getCategoryLink($id_object), $referers))
 							$id_category = (int)$id_object;
 						elseif (isset($this->context->cookie->last_visited_category) && (int)$this->context->cookie->last_visited_category && in_array($this->context->link->getProductLink($id_object), $referers))
 							$id_category = (int)$this->context->cookie->last_visited_category;
@@ -203,7 +203,7 @@ class ProductControllerCore extends FrontController
 			else if (Tools::getIsset('deletePicture') && !$this->context->cart->deleteCustomizationToProduct($this->product->id, Tools::getValue('deletePicture')))
 				$this->errors[] = Tools::displayError('An error occurred while deleting the selected picture.');
 
-			
+
 			$pictures = array();
 			$text_fields = array();
 			if ($this->product->customizable)
@@ -282,7 +282,7 @@ class ProductControllerCore extends FrontController
 				'outOfStockAllowed' => (int)Configuration::get('PS_ORDER_OUT_OF_STOCK'),
 				'errors' => $this->errors,
 				'body_classes' => array(
-					$this->php_self.'-'.$this->product->id, 
+					$this->php_self.'-'.$this->product->id,
 					$this->php_self.'-'.$this->product->link_rewrite,
 					'category-'.(isset($this->category) ? $this->category->id : ''),
 					'category-'.(isset($this->category) ? $this->category->getFieldByLang('link_rewrite') : '')
@@ -484,7 +484,7 @@ class ProductControllerCore extends FrontController
 
 						if (is_array($combination_images[$row['id_product_attribute']]))
 						{
-							foreach ($combination_images[$row['id_product_attribute']] as $tmp) 
+							foreach ($combination_images[$row['id_product_attribute']] as $tmp)
 								if ($tmp['id_image'] == $current_cover['id_image'])
 								{
 									$combinations[$row['id_product_attribute']]['id_image'] = $id_image = (int)$tmp['id_image'];
@@ -657,12 +657,12 @@ class ProductControllerCore extends FrontController
 	{
 		if (!$field_ids = $this->product->getCustomizationFieldIds())
 			return false;
-			
+
 		$authorized_text_fields = array();
 		foreach ($field_ids as $field_id)
 			if ($field_id['type'] == Product::CUSTOMIZE_TEXTFIELD)
 				$authorized_text_fields[(int)$field_id['id_customization_field']] = 'textField'.(int)$field_id['id_customization_field'];
-				
+
 		$indexes = array_flip($authorized_text_fields);
 		foreach ($_POST as $field_name => $value)
 			if (in_array($field_name, $authorized_text_fields) && $value != '')
@@ -712,12 +712,12 @@ class ProductControllerCore extends FrontController
 		}
 		return $specific_prices;
 	}
-	
+
 	public function getProduct()
 	{
 	    return $this->product;
 	}
-	
+
 	public function getCategory()
 	{
 	    return $this->category;

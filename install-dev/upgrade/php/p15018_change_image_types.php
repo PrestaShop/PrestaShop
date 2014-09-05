@@ -55,7 +55,7 @@ function p15018_change_image_types()
 					FROM `'._DB_PREFIX_.'image_type` WHERE name = "'.$old_type.'" LIMIT 1)');
 
 	$option = (bool)Db::getInstance()->getValue('SELECT id_theme FROM `'._DB_PREFIX_.'theme` WHERE directory != "default" AND directory != "prestashop"');
-		
+
 	// If there is another theme than the default one, duplicate
 	if ($option)
 		foreach ($replace_types as $type => $type_array)
@@ -97,7 +97,7 @@ function p15018_change_image_types()
 							$option
 						);
 		}
-		
+
 		// Then the other entities (if there is less than 500 products, that should not be a problem)
 		$directories = array('p', 'c', 'm', 's', 'su', 'scenes', 'scenes'.DIRECTORY_SEPARATOR.'thumbs', 'st');
 		foreach ($directories as $directory)

@@ -144,7 +144,7 @@ class PackCore extends Product
 
 		foreach ($result as &$line)
 			$line = Product::getTaxesInformations($line);
-			
+
 		if (!$full)
 			return $result;
 

@@ -28,19 +28,19 @@ class OrderReturnCore extends ObjectModel
 {
 	/** @var integer */
 	public $id;
-	
+
 	/** @var integer */
 	public $id_customer;
-	
+
 	/** @var integer */
 	public $id_order;
-	
+
 	/** @var integer */
 	public $state;
-	
+
 	/** @var string message content */
 	public $question;
-	
+
 	/** @var string Object creation date */
 	public $date_add;
 
@@ -77,7 +77,7 @@ class OrderReturnCore extends ObjectModel
 					if ($quantity = (int)$customizationQtyInput[(int)$customizationId])
 						Db::getInstance()->insert('order_return_detail', array('id_order_return' => (int)$this->id, 'id_order_detail' => (int)$orderDetailId, 'product_quantity' => $quantity, 'id_customization' => (int)$customizationId));
 	}
-	
+
 	public function checkEnoughProduct($orderDetailList, $productQtyList, $customizationIds, $customizationQtyInput)
 	{
 		$order = new Order((int)($this->id_order));
@@ -148,7 +148,7 @@ class OrderReturnCore extends ObjectModel
 		}
 		return $data;
 	}
-	
+
 	public static function getOrdersReturnDetail($id_order_return)
 	{
 		return Db::getInstance()->executeS('
@@ -156,7 +156,7 @@ class OrderReturnCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'order_return_detail`
 		WHERE `id_order_return` = '.(int)($id_order_return));
 	}
-	
+
 	public static function getOrdersReturnProducts($orderReturnId, $order)
 	{
 		$productsRet = OrderReturn::getOrdersReturnDetail($orderReturnId);
@@ -201,9 +201,9 @@ class OrderReturnCore extends ObjectModel
 	{
 		return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'order_return_detail` WHERE `id_order_detail` = '.(int)($id_order_detail).' AND `id_order_return` = '.(int)($id_order_return).' AND `id_customization` = '.(int)($id_customization));
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * Get return details for one product line
 	 * @param $id_order_detail
 	 */
@@ -220,7 +220,7 @@ class OrderReturnCore extends ObjectModel
 	}
 
 	/**
-	 * 
+	 *
 	 * Add returned quantity to products list
 	 * @param array $products
 	 * @param int $id_order
@@ -237,11 +237,11 @@ class OrderReturnCore extends ObjectModel
 		);
 		if (!$details)
 			return;
-		
+
 		$detail_list = array();
 		foreach ($details as $detail)
 			$detail_list[$detail['id_order_detail']] = $detail;
-		
+
 		foreach ($products as &$product)
 			if (isset($detail_list[$product['id_order_detail']]['qty_returned']))
 				$product['qty_returned'] = $detail_list[$product['id_order_detail']]['qty_returned'];

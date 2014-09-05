@@ -94,9 +94,9 @@ class StoresControllerCore extends FrontController
 		LEFT JOIN '._DB_PREFIX_.'country_lang cl ON (cl.id_country = s.id_country)
 		LEFT JOIN '._DB_PREFIX_.'state st ON (st.id_state = s.id_state)
 		WHERE s.active = 1 AND cl.id_lang = '.(int)$this->context->language->id);
-		
+
 		$addresses_formated = array();
-		
+
 		foreach ($stores as &$store)
 		{
 			$address = new Address();
@@ -105,9 +105,9 @@ class StoresControllerCore extends FrontController
 			$address->address2 = $store['address2'];
 			$address->postcode = $store['postcode'];
 			$address->city = $store['city'];
-			
-			$addresses_formated[$store['id_store']] = AddressFormat::getFormattedLayoutData($address); 
-			
+
+			$addresses_formated[$store['id_store']] = AddressFormat::getFormattedLayoutData($address);
+
 			$store['has_picture'] = file_exists(_PS_STORE_IMG_DIR_.(int)($store['id_store']).'.jpg');
 			if ($working_hours = $this->renderStoreWorkingHours($store))
 				$store['working_hours'] = $working_hours;
@@ -119,11 +119,11 @@ class StoresControllerCore extends FrontController
 			'addresses_formated' => $addresses_formated,
 		));
 	}
-	
+
 	public function renderStoreWorkingHours($store)
 	{
 		global $smarty;
-		
+
 		$days[1] = 'Monday';
 		$days[2] = 'Tuesday';
 		$days[3] = 'Wednesday';
@@ -131,7 +131,7 @@ class StoresControllerCore extends FrontController
 		$days[5] = 'Friday';
 		$days[6] = 'Saturday';
 		$days[7] = 'Sunday';
-		
+
 		$days_datas = array();
 		$hours = array_filter(unserialize($store['hours']));
 		if (!empty($hours))
@@ -152,7 +152,7 @@ class StoresControllerCore extends FrontController
 		}
 		return false;
 	}
-	
+
 	public function getStores()
 	{
 		$distanceUnit = Configuration::get('PS_DISTANCE_UNIT');

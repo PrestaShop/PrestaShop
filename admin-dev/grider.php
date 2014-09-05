@@ -51,7 +51,7 @@ if (!Validate::isModuleName($module))
 if (!Tools::file_exists_cache($module_path = _PS_ROOT_DIR_.'/modules/'.$module.'/'.$module.'.php'))
 	die(Tools::displayError());
 
-	
+
 $shop_id = '';
 Shop::setContext(Shop::CONTEXT_ALL);
 if (Context::getContext()->cookie->shopContext)
@@ -96,8 +96,8 @@ if (!$shop_id)
 	Context::getContext()->shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
 elseif (Context::getContext()->shop->id != $shop_id)
 	Context::getContext()->shop = new Shop($shop_id);
-	
-	
+
+
 require_once($module_path);
 
 $grid = new $module();
@@ -105,6 +105,6 @@ $grid->setEmployee($id_employee);
 $grid->setLang($id_lang);
 if ($option)
 	$grid->setOption($option);
-	
+
 $grid->create($render, $type, $width, $height, $start, $limit, $sort, $dir);
 $grid->render();

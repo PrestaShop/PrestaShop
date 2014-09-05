@@ -32,19 +32,19 @@
 abstract class XML_Feed_Parser_Type
 {
     /**
-     * Where we store our DOM object for this feed 
+     * Where we store our DOM object for this feed
      * @var DOMDocument
      */
     public $model;
 
     /**
-     * For iteration we'll want a count of the number of entries 
+     * For iteration we'll want a count of the number of entries
      * @var int
      */
     public $numberEntries;
 
     /**
-     * Where we store our entry objects once instantiated 
+     * Where we store our entry objects once instantiated
      * @var array
      */
     public $entries = array();
@@ -127,8 +127,8 @@ abstract class XML_Feed_Parser_Type
      *
      * We have other methods which will traverse the DOM and work out the different
      * xml:base declarations we need to be aware of. We then need to combine them.
-     * If a declaration starts with a protocol then we restart the string. If it 
-     * starts with a / then we add on to the domain name. Otherwise we simply tag 
+     * If a declaration starts with a protocol then we restart the string. If it
+     * starts with a / then we add on to the domain name. Otherwise we simply tag
      * it on to the end.
      *
      * @param   string  $base - the base to add the link to
@@ -187,7 +187,7 @@ abstract class XML_Feed_Parser_Type
      * As well as allowing the items to be iterated over we want to allow
      * users to be able to access a specific entry. This is one of two ways of
      * doing that, the other being by ID.
-     * 
+     *
      * @param   int $offset
      * @return  XML_Feed_Parser_RSS1Element
      */
@@ -215,7 +215,7 @@ abstract class XML_Feed_Parser_Type
      *
      * Get a date construct. We use PHP's strtotime to return it as a unix datetime, which
      * is the number of seconds since 1970-01-01 00:00:00.
-     * 
+     *
      * @link    http://php.net/strtotime
      * @param    string    $method        The name of the date construct we want
      * @param    array     $arguments    Included for compatibility with our __call usage
@@ -231,7 +231,7 @@ abstract class XML_Feed_Parser_Type
     }
 
     /**
-     * Get a text construct. 
+     * Get a text construct.
      *
      * @param    string    $method    The name of the text construct we want
      * @param    array     $arguments    Included for compatibility with our __call usage
@@ -250,9 +250,9 @@ abstract class XML_Feed_Parser_Type
     /**
      * Apply various rules to retrieve category data.
      *
-     * There is no single way of declaring a category in RSS1/1.1 as there is in RSS2 
-     * and  Atom. Instead the usual approach is to use the dublin core namespace to 
-     * declare  categories. For example delicious use both: 
+     * There is no single way of declaring a category in RSS1/1.1 as there is in RSS2
+     * and  Atom. Instead the usual approach is to use the dublin core namespace to
+     * declare  categories. For example delicious use both:
      * <dc:subject>PEAR</dc:subject> and: <taxo:topics><rdf:Bag>
      * <rdf:li resource="http://del.icio.us/tag/PEAR" /></rdf:Bag></taxo:topics>
      * to declare a categorisation of 'PEAR'.
@@ -286,7 +286,7 @@ abstract class XML_Feed_Parser_Type
      *
      * This function will tell us how many times the element $type
      * appears at this level of the feed.
-     * 
+     *
      * @param    string    $type    the element we want to get a count of
      * @return    int
      */
@@ -301,7 +301,7 @@ abstract class XML_Feed_Parser_Type
     /**
      * Part of our xml:base processing code
      *
-     * We need a couple of methods to access XHTML content stored in feeds. 
+     * We need a couple of methods to access XHTML content stored in feeds.
      * This is because we dereference all xml:base references before returning
      * the element. This method handles the attributes.
      *
@@ -327,11 +327,11 @@ abstract class XML_Feed_Parser_Type
 
     /**
      * Convert HTML entities based on the current character set.
-     * 
+     *
      * @param String
      * @return String
      */
-    function processEntitiesForNodeValue($node) 
+    function processEntitiesForNodeValue($node)
     {
         if (function_exists('iconv')) {
           $current_encoding = $node->ownerDocument->encoding;
@@ -349,7 +349,7 @@ abstract class XML_Feed_Parser_Type
     /**
      * Part of our xml:base processing code
      *
-     * We need a couple of methods to access XHTML content stored in feeds. 
+     * We need a couple of methods to access XHTML content stored in feeds.
      * This is because we dereference all xml:base references before returning
      * the element. This method recurs through the tree descending from the node
      * and builds our string.
@@ -363,7 +363,7 @@ abstract class XML_Feed_Parser_Type
 
         /* Add the opening of this node to the content */
         if ($node instanceof DOMElement) {
-            $content .= '<' . $node->tagName . 
+            $content .= '<' . $node->tagName .
                 $this->processXHTMLAttributes($node) . '>';
         }
 
@@ -391,7 +391,7 @@ abstract class XML_Feed_Parser_Type
      *
      * The official way to include full content in an RSS1 entry is to use
      * the content module's element 'encoded', and RSS2 feeds often duplicate that.
-     * Often, however, the 'description' element is used instead. We will offer that 
+     * Often, however, the 'description' element is used instead. We will offer that
      * as a fallback. Atom uses its own approach and overrides this method.
      *
      * @return  string|false
@@ -436,20 +436,20 @@ abstract class XML_Feed_Parser_Type
     }
 
     /**
-     * Return an XML serialization of the feed, should it be required. Most 
-     * users however, will already have a serialization that they used when 
+     * Return an XML serialization of the feed, should it be required. Most
+     * users however, will already have a serialization that they used when
      * instantiating the object.
      *
      * @return    string    XML serialization of element
-     */    
+     */
     function __toString()
     {
         $simple = simplexml_import_dom($this->model);
         return $simple->asXML();
     }
-    
+
     /**
-     * Get directory holding RNG schemas. Method is based on that 
+     * Get directory holding RNG schemas. Method is based on that
      * found in Contact_AddressBook.
      *
      * @return string PEAR data directory.

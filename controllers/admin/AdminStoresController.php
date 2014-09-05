@@ -140,7 +140,7 @@ class AdminStoresControllerCore extends AdminController
 				'desc' => $this->l('Add new store', null, null, false),
 				'icon' => 'process-icon-new'
 			);
-		
+
 		parent::initPageHeaderToolbar();
 	}
 
@@ -302,7 +302,7 @@ class AdminStoresControllerCore extends AdminController
 				'title' => $this->l('Save'),
 			)
 		);
-		
+
 		if (Shop::isFeatureActive())
 		{
 			$this->fields_form['input'][] = array(
@@ -365,8 +365,8 @@ class AdminStoresControllerCore extends AdminController
 
 			if (empty($latitude) || empty($longitude))
 			   $this->errors[] = Tools::displayError('Latitude and longitude are required.');
-			
-			$postcode = Tools::getValue('postcode');		
+
+			$postcode = Tools::getValue('postcode');
 			/* Check zip code format */
 			if ($country->zip_code_format && !$country->checkZipCode($postcode))
 				$this->errors[] = Tools::displayError('Your Zip/postal code is incorrect.').'<br />'.Tools::displayError('It must be entered as follows:').' '.str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)));
@@ -495,7 +495,7 @@ class AdminStoresControllerCore extends AdminController
 	{
 		// You cannot do that, because the fields must be sorted for the country you've selected.
 		// Simple example: the current country is France, where we don't display the state. You choose "US" as a country in the form. The state is not dsplayed at the right place...
-		
+
 		// $associatedOrderKey = array(
 			// 'PS_SHOP_NAME' => 'company',
 			// 'PS_SHOP_ADDR1' => 'address1',

@@ -299,10 +299,10 @@ class AdminModulesPositionsControllerCore extends AdminController
 			'href' => self::$currentIndex.'&addToHook'.($this->display_key ? '&show_modules='.$this->display_key : '').'&token='.$this->token,
 			'desc' => $this->l('Transplant a module')
 		);
-						
+
 		$live_edit_params = array(
-									'live_edit' => true, 
-									'ad' => $admin_dir, 
+									'live_edit' => true,
+									'ad' => $admin_dir,
 									'liveToken' => $this->token,
 									'id_employee' => (int)$this->context->employee->id,
 									'id_shop' => (int)$this->context->shop->id
@@ -328,12 +328,12 @@ class AdminModulesPositionsControllerCore extends AdminController
 
 		return $this->createTemplate('list_modules.tpl')->fetch();
 	}
-	
+
 	public function getLiveEditUrl($live_edit_params)
 	{
 		$lang = '';
 		$admin_dir = dirname($_SERVER['PHP_SELF']);
-		$admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);		
+		$admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);
 		$dir = str_replace($admin_dir, '', dirname($_SERVER['SCRIPT_NAME']));
 		if (Configuration::get('PS_REWRITING_SETTINGS') && count(Language::getLanguages(true)) > 1)
 			$lang = Language::getIsoById($this->context->employee->id_lang).'/';
@@ -344,7 +344,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 
 		return $url;
 	}
-	
+
 	public function renderForm()
 	{
 		// Init toolbar
@@ -436,7 +436,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 			$shop = new Shop($shop_id);
 			$content .= ' ('.$shop->name.')';
 		}
-		
+
 		$content .= '<p>
 					<select size="25" id="em_list_'.$shop_id.'" multiple="multiple">
 					<option disabled="disabled">'.$this->l('___________ CUSTOM ___________').'</option>';
@@ -444,7 +444,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 		// @todo do something better with controllers
 		$controllers = Dispatcher::getControllers(_PS_FRONT_CONTROLLER_DIR_);
 		ksort($controllers);
-		
+
 		foreach ($file_list as $k => $v)
 			if ( ! array_key_exists ($v, $controllers))
 				$content .= '<option value="'.$v.'">'.$v.'</option>';
@@ -453,7 +453,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 
 		foreach ($controllers as $k => $v)
 			$content .= '<option value="'.$k.'">'.$k.'</option>';
-		
+
 		$modules_controllers_type = array('admin' => $this->l('Admin modules controller'), 'front' => $this->l('Front modules controller'));
 		foreach ($modules_controllers_type as $type => $label)
 		{
@@ -463,7 +463,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 				foreach ($modules_controllers as $cont)
 				$content .= '<option value="module-'.$module.'-'.$cont.'">module-'.$module.'-'.$cont.'</option>';
 		}
-					
+
 		$content .= '</select>
 					</p>';
 
@@ -489,7 +489,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 				die('{"hasError" : true, "errors" : "This module cannot be loaded."}');
 		}
 	}
-	
+
 	public function ajaxProcessGetHookableList()
 	{
 		if ($this->tabAccess['view'] === '1')
@@ -513,7 +513,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 
 				if (!Validate::isModuleName($module))
 						die('{"hasError" : true, "errors" : ["Live Edit: module is invalid."]}');
-						
+
 				$moduleInstance = Module::getInstanceByName($module);
 				foreach ($hooks_list as $hook_name)
 				{

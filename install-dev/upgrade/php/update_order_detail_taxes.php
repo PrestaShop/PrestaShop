@@ -46,12 +46,12 @@ function update_order_detail_taxes()
 			FROM `'._DB_PREFIX_.'tax` t
 			LEFT JOIN `'._DB_PREFIX_.'tax_lang` tl ON (tl.id_tax = t.id_tax)
 			WHERE tl.`name` = \''.pSQL($alternative_tax_name).'\' ');
-			
+
 		if ( $id_tax || $id_tax_alt)
 		{
-			$create_tax = !(bool)Db::getInstance()->getValue('SELECT count(*) 
-				FROM `'._DB_PREFIX_.'tax` 
-				WHERE id_tax = '. (int)$id_tax .' 
+			$create_tax = !(bool)Db::getInstance()->getValue('SELECT count(*)
+				FROM `'._DB_PREFIX_.'tax`
+				WHERE id_tax = '. (int)$id_tax .'
 					AND rate = "'.pSql($order_detail_tax['tax_rate']).'"
 			');
 		}

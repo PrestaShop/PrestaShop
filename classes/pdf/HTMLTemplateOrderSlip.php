@@ -101,7 +101,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 		$tax->rate = $this->order->carrier_tax_rate;
 		$tax_calculator = new TaxCalculator(array($tax));
 		$this->order->total_shipping_tax_excl = Tools::ps_round($tax_calculator->removeTaxes($this->order_slip->shipping_cost_amount), 2);
-		
+
 
 		$this->order->total_paid_tax_incl += $this->order->total_shipping_tax_incl;
 		$this->order->total_paid_tax_excl += $this->order->total_shipping_tax_excl;
@@ -191,8 +191,8 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 						$tmp_tax_infos[$tax->rate]['total_amount'] += $amount;
 					}
 				}
-			} 
-			else 
+			}
+			else
 			{
 				$tax_rate = 0;
 				foreach ($tax_amount as $tax_id => $amount)
@@ -205,7 +205,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 				$tmp_tax_infos[(string)number_format($tax_rate, 3)] = $infos;
 			}
 		}
-		
+
 		// Delete ecotax from the total
 		$ecotax =  $this->order_slip->getEcoTaxTaxesBreakdown();
 		if ($ecotax)
@@ -216,7 +216,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 				$row['total_price_tax_excl'] -= $ecotax[$rate]['ecotax_tax_excl'];
 				$row['total_amount'] -= ($ecotax[$rate]['ecotax_tax_incl'] - $ecotax[$rate]['ecotax_tax_excl']);
 			}
-		
+
 		return $tmp_tax_infos;
 	}
 

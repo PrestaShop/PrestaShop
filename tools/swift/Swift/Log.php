@@ -66,7 +66,7 @@ abstract class Swift_Log
    * @var int
    */
   protected $logLevel = self::LOG_NOTHING;
-  
+
   /**
    * Add a new entry to the log
    * @param string The information to log

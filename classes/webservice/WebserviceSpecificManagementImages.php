@@ -128,19 +128,19 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 			$imageResource = false;
 			$types = array(
 				'jpg' => array(
-					'function' => 'imagecreatefromjpeg', 
+					'function' => 'imagecreatefromjpeg',
 					'Content-Type' => 'image/jpeg'
 				),
 				'jpeg' => array(
-					'function' => 'imagecreatefromjpeg', 
+					'function' => 'imagecreatefromjpeg',
 					'Content-Type' => 'image/jpeg'
 				),
-				'png' => array('function' => 
-					'imagecreatefrompng', 
+				'png' => array('function' =>
+					'imagecreatefrompng',
 					'Content-Type' => 'image/png'
 				),
 				'gif' => array(
-					'function' => 'imagecreatefromgif', 
+					'function' => 'imagecreatefromgif',
 					'Content-Type' => 'image/gif'
 				)
 			);
@@ -546,7 +546,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 				foreach (Image::getImages($language['id_lang'], $object_id) as $image)
 					$available_image_ids[] = $image['id_image'];
 			$available_image_ids = array_unique($available_image_ids, SORT_NUMERIC);
-			
+
 			// If an image id is specified
 			if ($this->wsObject->urlSegment[3] != '')
 			{
@@ -676,7 +676,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 		if (!$results = Db::getInstance()->executeS('
 			SELECT DISTINCT c.`id_customization`
 			FROM `'._DB_PREFIX_.'customization` c
-			NATURAL JOIN `'._DB_PREFIX_.'customization_field` cf 
+			NATURAL JOIN `'._DB_PREFIX_.'customization_field` cf
 			WHERE c.`id_cart` = '.(int)$this->wsObject->urlSegment[2].'
 			AND type = 0'))
 			return array();
@@ -720,10 +720,10 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 			if ($this->wsObject->method == 'GET')
 			{
 				$results = Db::getInstance()->executeS(
-					'SELECT * 
-					FROM `'._DB_PREFIX_.'customized_data` 
+					'SELECT *
+					FROM `'._DB_PREFIX_.'customized_data`
 					WHERE id_customization = '.(int)$this->wsObject->urlSegment[3].' AND type = 0');
-				
+
 				$this->output .= $this->objOutput->getObjectRender()->renderNodeHeader('images', array());
 				foreach ($results as $result)
 					$this->output .= $this->objOutput->getObjectRender()->renderNodeHeader('image', array(), array('id' => $result['index'], 'xlink_resource'=>$this->wsObject->wsUrl.'images/'.$this->imageType.'/'.$id), false);
@@ -736,9 +736,9 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 			if ($this->wsObject->method == 'GET')
 			{
 				$results = Db::getInstance()->executeS(
-					'SELECT * 
-					FROM `'._DB_PREFIX_.'customized_data` 
-					WHERE id_customization = '.(int)$this->wsObject->urlSegment[3].' 
+					'SELECT *
+					FROM `'._DB_PREFIX_.'customized_data`
+					WHERE id_customization = '.(int)$this->wsObject->urlSegment[3].'
 					AND `index` = '.(int)$this->wsObject->urlSegment[4]);
 				if (empty($results[0]) || empty($results[0]['value']))
 					throw new WebserviceException('This image does not exist on disk', array(61, 500));
@@ -751,16 +751,16 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 				if (!in_array((int)$this->wsObject->urlSegment[3], $customizations))
 					throw new WebserviceException('Customization does not exist', array(61, 500));
 				$results = Db::getInstance()->executeS(
-					'SELECT id_customization_field 
-					FROM `'._DB_PREFIX_.'customization_field` 
+					'SELECT id_customization_field
+					FROM `'._DB_PREFIX_.'customization_field`
 					WHERE id_customization_field = '.(int)$this->wsObject->urlSegment[4].'
 					AND type = 0');
 				if (empty($results))
 					throw new WebserviceException('Customization field does not exist.', array(61, 500));
 				$results = Db::getInstance()->executeS(
-					'SELECT * 
-					FROM `'._DB_PREFIX_.'customized_data` 
-					WHERE id_customization = '.(int)$this->wsObject->urlSegment[3].' 
+					'SELECT *
+					FROM `'._DB_PREFIX_.'customized_data`
+					WHERE id_customization = '.(int)$this->wsObject->urlSegment[3].'
 					AND `index` = '.(int)$this->wsObject->urlSegment[4].'
 					AND type = 0');
 				if (!empty($results)) // customization field exists and has no value
@@ -768,9 +768,9 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 				return $this->manageDeclinatedImagesCRUD(false, '', $normal_image_sizes, _PS_UPLOAD_DIR_);
 			}
 			$results = Db::getInstance()->executeS(
-				'SELECT * 
-				FROM `'._DB_PREFIX_.'customized_data` 
-				WHERE id_customization = '.(int)$this->wsObject->urlSegment[3].' 
+				'SELECT *
+				FROM `'._DB_PREFIX_.'customized_data`
+				WHERE id_customization = '.(int)$this->wsObject->urlSegment[3].'
 				AND `index` = '.(int)$this->wsObject->urlSegment[4]);
 			if (empty($results[0]) || empty($results[0]['value']))
 				throw new WebserviceException('This image does not exist on disk', array(61, 500));
@@ -1103,7 +1103,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 							$image->cover = 1;
 						else
 							$image->cover = 0;
-							
+
 						if (!$image->add())
 							throw new WebserviceException('Error while creating image', array(76, 400));
 						if (!Validate::isLoadedObject($product))

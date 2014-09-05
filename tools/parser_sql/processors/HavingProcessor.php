@@ -33,11 +33,11 @@
 require_once(dirname(__FILE__) . '/ExpressionListProcessor.php');
 
 /**
- * 
+ *
  * This class processes the HAVING statements.
- * 
+ *
  * @author arothe
- * 
+ *
  */
 class HavingProcessor extends ExpressionListProcessor {
 

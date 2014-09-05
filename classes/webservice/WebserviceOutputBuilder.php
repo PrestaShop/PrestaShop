@@ -47,7 +47,7 @@ class WebserviceOutputBuilderCore
 	protected $virtualFields = array();
 	protected $statusInt;
 	protected $wsParamOverrides;
-	
+
 	protected static $_cache_ws_parameters = array();
 
 	// Header properties
@@ -189,7 +189,7 @@ class WebserviceOutputBuilderCore
 	{
 		return $this->status;
 	}
-	
+
 	public function getStatusInt()
 	{
 		return $this->statusInt;
@@ -456,12 +456,12 @@ class WebserviceOutputBuilderCore
 	public function renderEntity($object, $depth)
 	{
 		$output = '';
-		
+
 		$class = get_class($object);
 		if (!isset(WebserviceOutputBuilder::$_cache_ws_parameters[$class]))
 			WebserviceOutputBuilder::$_cache_ws_parameters[$class] = $object->getWebserviceParameters();
 		$ws_params = WebserviceOutputBuilder::$_cache_ws_parameters[$class];
-		
+
 		foreach ($this->wsParamOverrides AS $p)
 		{
 			$o = $p['object'];
@@ -595,7 +595,7 @@ class WebserviceOutputBuilderCore
 						'entity_name'	=> $ws_params['objectNodeName'],
 						'entities_name'	=> $ws_params['objectsNodeName'],
 					);
-					
+
 				if (is_array($getter))
 				{
 					$association_resources = call_user_func($getter, $object);
@@ -782,12 +782,12 @@ class WebserviceOutputBuilderCore
 
 		$this->virtualFields[$entity_name][] = array('parameters' => $parameters, 'object' => $object, 'method' => $method, 'type' => gettype($object));
 	}
-	
+
 	public function getVirtualFields()
 	{
 		return $this->virtualFields;
 	}
-		
+
 	public function addVirtualFields($entity_name, $entity_object)
 	{
 		$arr_return = array();

@@ -328,7 +328,7 @@ class ValidateCore
 			return preg_match('/^[_a-zA-Z0-9\-\pL]+$/u', $link);
 		return preg_match('/^[_a-zA-Z0-9\-]+$/', $link);
 	}
-	
+
 	/**
 	 * Check for a route pattern validity
 	 *
@@ -341,7 +341,7 @@ class ValidateCore
 			return preg_match('/^[_a-zA-Z0-9\(\)\.{}:\/\-\pL]+$/u', $pattern);
 		return preg_match('/^[_a-zA-Z0-9\(\)\.{}:\/\-]+$/', $pattern);
 	}
-	
+
 	/**
 	 * Check for a postal address validity
 	 *
@@ -666,7 +666,7 @@ class ValidateCore
 	{
 		return (preg_match('#^[0-9]+$#', (string)$value) && $value < 4294967296 && $value >= 0);
 	}
-	
+
 	/**
 	 * Check for an percentage validity (between 0 and 100)
 	 *
@@ -791,8 +791,8 @@ class ValidateCore
 	}
 
 	/**
-	 * Check for standard name directory validity 
-	 * 
+	 * Check for standard name directory validity
+	 *
 	 * @param string $dir Directory to validate
 	 * @return boolean Validity is ok or not
 	 */
@@ -1062,12 +1062,12 @@ class ValidateCore
 	{
 		return (bool)preg_match('/^[0-9]{3,4}[a-zA-Z]{1}$/s', $ape);
 	}
-	
+
 	public static function isControllerName($name)
 	{
 		return (bool)(is_string($name) && preg_match('/^[0-9a-zA-Z-_]*$/u', $name));
 	}
-	
+
 	public static function isPrestaShopVersion($version)
 	{
 		return (preg_match('/^[0-1]\.[0-9]{1,2}(\.[0-9]{1,2}){0,2}$/', $version) && ip2long($version));

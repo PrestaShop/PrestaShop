@@ -40,7 +40,7 @@ class AdminSuppliersControllerCore extends AdminController
 
 		$this->_defaultOrderBy = 'name';
 		$this->_defaultOrderWay = 'ASC';
-		
+
 		$this->bulk_actions = array(
 			'delete' => array(
 				'text' => $this->l('Delete selected'),
@@ -121,7 +121,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'col' => 4,
 					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}',
 				),
-				(in_array('company', $required_fields) ? 
+				(in_array('company', $required_fields) ?
 					array(
 						'type' => 'text',
 						'label' => $this->l('Company'),
@@ -131,7 +131,7 @@ class AdminSuppliersControllerCore extends AdminController
 						'maxlength' => 16,
 						'col' => 4,
 						'hint' => $this->l('Company name for this supplier')
-					) 
+					)
 					: null
 				),
 				array(
@@ -492,8 +492,8 @@ class AdminSuppliersControllerCore extends AdminController
 			else
 			{
 				//delete all product_supplier linked to this supplier
-				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_supplier` WHERE `id_supplier`='.(int)$obj->id); 
-				
+				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_supplier` WHERE `id_supplier`='.(int)$obj->id);
+
 				$id_address = Address::getAddressIdBySupplierId($obj->id);
 				$address = new Address($id_address);
 				if (Validate::isLoadedObject($address))

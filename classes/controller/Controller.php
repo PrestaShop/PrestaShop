@@ -77,9 +77,9 @@ abstract class ControllerCore
 	protected $status = '';
 
 	protected $redirect_after = null;
-	
+
 	public $controller_type;
-	public $php_self;	
+	public $php_self;
 	/**
 	 * check that the controller is available for the current user/visitor
 	 */
@@ -189,7 +189,7 @@ abstract class ControllerCore
 			if ($this->ajax)
 			{
 				$action = Tools::toCamelCase(Tools::getValue('action'), true);
-				if (!empty($action) && method_exists($this, 'displayAjax'.$action)) 
+				if (!empty($action) && method_exists($this, 'displayAjax'.$action))
 					$this->{'displayAjax'.$action}();
 				elseif (method_exists($this, 'displayAjax'))
 					$this->displayAjax();
@@ -257,7 +257,7 @@ abstract class ControllerCore
 				$css_path = Media::getCSSPath($css_file, $media);
 			else
 				$css_path = Media::getCSSPath($media, $css_media_type);
-			
+
 			$key = is_array($css_path) ? key($css_path) : $css_path;
 			if ($css_path && (!isset($this->css_files[$key]) || ($this->css_files[$key] != reset($css_path))))
 			{
@@ -391,7 +391,7 @@ abstract class ControllerCore
 	{
 		return (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
 	}
-	
+
 	protected function smartyOutputContent($content)
 	{
 		$this->context->cookie->write();
@@ -432,7 +432,7 @@ abstract class ControllerCore
 		else
 			echo $html;
 	}
-	
+
 	protected function isCached($template, $cacheId = null, $compileId = null)
 	{
 		Tools::enableCache();

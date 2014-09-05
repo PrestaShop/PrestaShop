@@ -172,7 +172,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				'icon' => 'process-icon-new'
 			);
 		}
-		
+
 		parent::initPageHeaderToolbar();
 	}
 
@@ -304,7 +304,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 						),
 					),
 				),
-				'submit' => (!$update ? array('title' => $this->l('Save order')) : array()), 
+				'submit' => (!$update ? array('title' => $this->l('Save order')) : array()),
 				'buttons' => (!$update ?
 					array(
 						'save-and-stay' => array(
@@ -498,7 +498,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$this->list_id = 'orders';
 		$this->_filterHaving = null;
 
-		if (Tools::isSubmit('submitFilter'.$this->list_id) 
+		if (Tools::isSubmit('submitFilter'.$this->list_id)
 			|| $this->context->cookie->{'submitFilter'.$this->list_id} !== false
 			|| Tools::getValue($this->list_id.'Orderby')
 			|| Tools::getValue($this->list_id.'Orderway'))
@@ -566,7 +566,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 		$this->list_id = 'templates';
 		$this->_filterHaving = null;
 
-		if (Tools::isSubmit('submitFilter'.$this->list_id) 
+		if (Tools::isSubmit('submitFilter'.$this->list_id)
 			|| $this->context->cookie->{'submitFilter'.$this->list_id} !== false
 			|| Tools::getValue($this->list_id.'Orderby')
 			|| Tools::getValue($this->list_id.'Orderway'))
@@ -672,7 +672,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 		$this->context->smarty->assign(array(
 			'content' => $content,
-			'url_post' => self::$currentIndex.'&token='.$this->token,			
+			'url_post' => self::$currentIndex.'&token='.$this->token,
 			'show_page_header_toolbar' => $this->show_page_header_toolbar,
 			'page_header_toolbar_title' => $this->page_header_toolbar_title,
 			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
@@ -1439,7 +1439,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 					$manager = StockManagerFactory::getManager();
 					$res = $manager->addProduct($supply_order_detail->id_product,
-						$supply_order_detail->id_product_attribute,	$warehouse, (int)$quantity, 
+						$supply_order_detail->id_product_attribute,	$warehouse, (int)$quantity,
 						Configuration::get('PS_STOCK_MVT_SUPPLY_ORDER'), $price, true, $supply_order->id);
 
 					$location = Warehouse::getProductLocation($supply_order_detail->id_product,
@@ -2193,6 +2193,6 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				$this->l('You need to activate advanced stock management prior to using this feature.');
 			return false;
 		}
-		parent::initProcess();	
+		parent::initProcess();
 	}
 }

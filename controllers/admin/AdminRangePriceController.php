@@ -129,7 +129,7 @@ class AdminRangePriceControllerCore extends AdminController
 
 	public function postProcess()
 	{
-		$id = (int)Tools::getValue('id_'.$this->table);	
+		$id = (int)Tools::getValue('id_'.$this->table);
 		if (Tools::getValue('submitAdd'.$this->table))
 		{
 			if (Tools::getValue('delimiter1') >= Tools::getValue('delimiter2'))

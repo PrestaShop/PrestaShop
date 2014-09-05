@@ -83,7 +83,7 @@ class AdminCmsContentControllerCore extends AdminController
 	{
 		$this->initTabModuleList();
 		$this->renderPageHeaderToolbar();
-		
+
 		$this->admin_cms_categories->token = $this->token;
 		$this->admin_cms->token = $this->token;
 
@@ -111,11 +111,11 @@ class AdminCmsContentControllerCore extends AdminController
 				'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
 				'page_header_toolbar_title' => $this->toolbar_title,
 			));
-			
+
 			$this->content .= $this->admin_cms_categories->renderList();
 			$this->admin_cms->id_cms_category = $id_cms_category;
 			$this->content .= $this->admin_cms->renderList();
-			
+
 		}
 
 		$this->context->smarty->assign(array(

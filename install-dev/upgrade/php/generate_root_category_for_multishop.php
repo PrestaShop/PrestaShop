@@ -74,7 +74,7 @@ function generate_root_category_for_multishop()
 	');
 	$data = array();
 	if(is_array($shops) && is_array($categories))
-	{	
+	{
 		foreach ($categories as $category)
 			foreach ($shops as $shop)
 				$data[] = array(
@@ -94,6 +94,6 @@ function generate_root_category_for_multishop()
 		SET `id_category` = 1
 		WHERE `id_shop` = 1
 	');
-	
+
 	generate_ntree();
 }

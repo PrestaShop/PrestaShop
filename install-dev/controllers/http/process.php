@@ -225,7 +225,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		$this->session->process_validated = array_merge($this->session->process_validated, array('installModules' => true));
 		$this->ajaxJsonAnswer(true);
 	}
-	
+
 	/**
 	 * PROCESS : installModulesAddons
 	 * Install modules from addons
@@ -321,13 +321,13 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 			foreach ($this->model_install->getModulesList() as $module)
 				$install_modules['subtasks'][] = array('module' => $module);
 		$this->process_steps[] = $install_modules;
-		
+
 		$install_modules = array('key' => 'installModulesAddons', 'lang' => $this->l('Install Addons modules'));
 
 		$params = array(
-			'iso_lang' => $this->language->getLanguageIso(), 
-			'iso_country' => $this->session->shop_country, 
-			'email' => $this->session->admin_email, 
+			'iso_lang' => $this->language->getLanguageIso(),
+			'iso_country' => $this->session->shop_country,
+			'email' => $this->session->admin_email,
 			'shop_url' => Tools::getHttpHost(),
 			'version' => _PS_INSTALL_VERSION_
 		);

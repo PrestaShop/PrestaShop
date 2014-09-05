@@ -175,7 +175,7 @@ class AdminLocalizationControllerCore extends AdminController
 					$pack = @Tools::file_get_contents('http://api.prestashop.com/localization/'.$version.'/'.$iso_localization_pack.'.xml');
 				else
 					$pack = false;
-				
+
 				if (defined('_PS_HOST_MODE_'))
 					$path = _PS_CORE_DIR_.'/localization/'.$iso_localization_pack.'.xml';
 				else
@@ -205,8 +205,8 @@ class AdminLocalizationControllerCore extends AdminController
 
 		// Remove the module list cache if the default country changed
 		if (Tools::isSubmit('submitOptionsconfiguration') && file_exists(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST))
-			@unlink(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);			
-		
+			@unlink(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
+
 		parent::postProcess();
 	}
 
@@ -369,7 +369,7 @@ class AdminLocalizationControllerCore extends AdminController
 	{
 		$this->initTabModuleList();
 		if (!$this->loadObject(true))
-			return;	
+			return;
 
 		$this->initToolbar();
 		$this->initPageHeaderToolbar();
@@ -382,7 +382,7 @@ class AdminLocalizationControllerCore extends AdminController
 			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
 		));
 	}
-	
+
 	public function display()
 	{
 		$this->initContent();

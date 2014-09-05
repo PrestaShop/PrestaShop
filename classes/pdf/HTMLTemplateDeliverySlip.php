@@ -60,7 +60,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 			$invoice_address = new Address((int)$this->order->id_address_invoice);
 			$formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
 		}
-		
+
 		$carrier = new Carrier($this->order->id_carrier);
 		$carrier->name = ($carrier->name == '0' ? Configuration::get('PS_SHOP_NAME') : $carrier->name);
 		$this->smarty->assign(array(

@@ -210,9 +210,9 @@ class CustomizationCore extends ObjectModel
 	public function getWsCustomizedDataTextFields()
 	{
 		if (!$results = Db::getInstance()->executeS('
-			SELECT id_customization_field, value 
-			FROM `'._DB_PREFIX_.'customization_field` cf 
-			LEFT JOIN `'._DB_PREFIX_.'customized_data` cd ON (cf.id_customization_field = cd.index) 
+			SELECT id_customization_field, value
+			FROM `'._DB_PREFIX_.'customization_field` cf
+			LEFT JOIN `'._DB_PREFIX_.'customized_data` cd ON (cf.id_customization_field = cd.index)
 			WHERE `id_product` = '.(int)$this->id_product.'
 			AND cf.type = 1'))
 			return array();
@@ -222,9 +222,9 @@ class CustomizationCore extends ObjectModel
 	public function getWsCustomizedDataImages()
 	{
 		if (!$results = Db::getInstance()->executeS('
-			SELECT id_customization_field, value 
-			FROM `'._DB_PREFIX_.'customization_field` cf 
-			LEFT JOIN `'._DB_PREFIX_.'customized_data` cd ON (cf.id_customization_field = cd.index) 
+			SELECT id_customization_field, value
+			FROM `'._DB_PREFIX_.'customization_field` cf
+			LEFT JOIN `'._DB_PREFIX_.'customized_data` cd ON (cf.id_customization_field = cd.index)
 			WHERE `id_product` = '.(int)$this->id_product.'
 			AND cf.type = 0'))
 			return array();

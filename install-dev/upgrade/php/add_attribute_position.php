@@ -41,7 +41,7 @@ function add_attribute_position()
 				foreach ($attributes as $attribute)
 				{
 					Db::getInstance()->execute('
-					UPDATE `'._DB_PREFIX_.'attribute` 
+					UPDATE `'._DB_PREFIX_.'attribute`
 					SET `position` = '.$i++.'
 					WHERE `id_attribute` = '.(int)$attribute['id_attribute'].'
 					AND `id_attribute_group` = '.(int)$attribute['id_attribute_group']);

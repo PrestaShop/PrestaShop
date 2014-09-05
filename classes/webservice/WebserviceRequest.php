@@ -29,7 +29,7 @@ class WebserviceRequestCore
 	const HTTP_GET = 1;
 	const HTTP_POST = 2;
 	const HTTP_PUT = 4;
-	
+
 	protected $_available_languages = null;
 	/**
 	 * Errors triggered at execution
@@ -646,7 +646,7 @@ class WebserviceRequestCore
 		$display_errors = strtolower(ini_get('display_errors')) != 'off';
 		if (!(error_reporting() & $errno) || $display_errors)
 			return;
-			
+
 		$errortype = array (
                 E_ERROR              => 'Error',
                 E_WARNING            => 'Warning',
@@ -1245,7 +1245,7 @@ class WebserviceRequestCore
 		/* If we only need to display the synopsis, analyzing the first row is sufficient */
 		if (isset($this->urlFragments['schema']) && in_array($this->urlFragments['schema'], array('blank', 'synopsis')))
 			$filters = array('sql_join' => '', 'sql_filter' => '', 'sql_sort' => '', 'sql_limit' => ' LIMIT 1');
-			
+
 		$this->resourceConfiguration['retrieveData']['params'][] = $filters['sql_join'];
 		$this->resourceConfiguration['retrieveData']['params'][] = $filters['sql_filter'];
 		$this->resourceConfiguration['retrieveData']['params'][] = $filters['sql_sort'];
@@ -1537,7 +1537,7 @@ class WebserviceRequestCore
 
 			// Apply the modifiers if they exist
 			foreach ($this->resourceConfiguration['fields'] as $fieldName => $fieldProperties)
-			{				
+			{
 				if (isset($fieldProperties['modifier']) && isset($fieldProperties['modifier']['modifier']) && $fieldProperties['modifier']['http_method'] & constant('WebserviceRequest::HTTP_'.$this->method))
 					$object->{$fieldProperties['modifier']['modifier']}();
 			}
@@ -1841,7 +1841,7 @@ class WebserviceRequestCore
 	{
 		$retarr = array();
 		$headers = array();
-		
+
 		if (function_exists('apache_request_headers'))
 		{
 			$headers = apache_request_headers();

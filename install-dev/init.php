@@ -96,15 +96,15 @@ function psinstall_get_octets($option)
 function psinstall_get_memory_limit()
 {
 	$memory_limit = @ini_get('memory_limit');
-	
+
 	if (preg_match('/[0-9]+k/i', $memory_limit))
 		return 1024 * (int)$memory_limit;
-	
+
 	if (preg_match('/[0-9]+m/i', $memory_limit))
 		return 1024 * 1024 * (int)$memory_limit;
-	
+
 	if (preg_match('/[0-9]+g/i', $memory_limit))
 		return 1024 * 1024 * 1024 * (int)$memory_limit;
-	
+
 	return $memory_limit;
 }

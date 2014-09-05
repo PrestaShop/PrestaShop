@@ -35,7 +35,7 @@ class LinkCore
 	public $protocol_content;
 
 	protected $ssl_enable;
-	
+
 	protected static $category_disable_rewrite = null;
 
 	/**
@@ -52,7 +52,7 @@ class LinkCore
 			define('_PS_BASE_URL_', Tools::getShopDomain(true));
 		if (!defined('_PS_BASE_URL_SSL_'))
 			define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
-		
+
 		if (Link::$category_disable_rewrite === null)
 			Link::$category_disable_rewrite = array(Configuration::get('PS_HOME_CATEGORY'), Configuration::get('PS_ROOT_CATEGORY'));
 
@@ -124,7 +124,7 @@ class LinkCore
 
 		if ($dispatcher->hasKeyword('product_rule', $id_lang, 'tags', $id_shop))
 			$params['tags'] = Tools::str2url($product->getTags($id_lang));
-		
+
 		if ($dispatcher->hasKeyword('product_rule', $id_lang, 'category', $id_shop))
 			$params['category'] = (!is_null($product->category) && !empty($product->category)) ? Tools::str2url($product->category) : Tools::str2url($category);
 
@@ -158,7 +158,7 @@ class LinkCore
 	{
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
-		
+
 		$url = $this->getBaseLink($id_shop).$this->getLangLink($id_lang, null, $id_shop);
 
 		if (!is_object($category))
@@ -273,7 +273,7 @@ class LinkCore
 
 
 		$url = $this->getBaseLink($id_shop).$this->getLangLink($id_lang, null, $id_shop);
-		
+
 		$dispatcher = Dispatcher::getInstance();
 		if (!is_object($supplier))
 		{
@@ -340,11 +340,11 @@ class LinkCore
 			$id_lang = Context::getContext()->language->id;
 
 		$url = $this->getBaseLink($id_shop, $ssl).$this->getLangLink($id_lang, null, $id_shop);
-		
+
 		// Set available keywords
 		$params['module'] = $module;
 		$params['controller'] = $controller ? $controller : 'default';
-			
+
 		// If the module has its own route ... just use it !
 		if (Dispatcher::getInstance()->hasRoute('module-'.$module.'-'.$controller, $id_lang, $id_shop))
 			return $this->getPageLink('module-'.$module.'-'.$controller, $ssl, $id_lang, $params);
@@ -362,7 +362,7 @@ class LinkCore
 	public function getAdminLink($controller, $with_token = true)
 	{
 		$id_lang = Context::getContext()->language->id;
-		
+
 		$params = $with_token ? array('token' => Tools::getAdminTokenLite($controller)) : array();
 		return Dispatcher::getInstance()->createUrl($controller, $id_lang, $params, false);
 	}
@@ -429,18 +429,18 @@ class LinkCore
 			$request_url_encode = false;
 			$controller = substr($controller, 0, $p);
 		}
-		
+
 		$controller = Tools::strReplaceFirst('.php', '', $controller);
 		if (!$id_lang)
 			$id_lang = (int)Context::getContext()->language->id;
-		
+
 		//need to be unset because getModuleLink need those params when rewrite is enable
 		if (is_array($request))
 		{
 			if (isset($request['module']))
 				unset($request['module']);
 			if (isset($request['controller']))
-				unset($request['controller']);	
+				unset($request['controller']);
 		}
 		else
 		{
@@ -485,7 +485,7 @@ class LinkCore
 			unset($params['id_lang']);
 
 		$controller = Dispatcher::getInstance()->getController();
-	
+
 		if (!empty(Context::getContext()->controller->php_self))
 			$controller = Context::getContext()->controller->php_self;
 
@@ -509,7 +509,7 @@ class LinkCore
 				unset($params['fc'], $params['module']);
 				return $this->getModuleLink($module, $controller, $params, null, (int)$id_lang);
 			}
-		}		
+		}
 
 		return $this->getPageLink($controller, null, $id_lang, $params);
 	}
@@ -589,12 +589,12 @@ class LinkCore
 				return $url.(($this->allow == 1 || $url == $this->url) ? '?' : '&').http_build_query($vars, '', '&');
 			else
 				return $url;
-		
+
 		$vars['requestUrl'] = $url;
 
 		if ($type && $id_object)
 			$vars['id_'.$type] = (is_object($id_object) ? (int)$id_object->id : (int)$id_object);
-			
+
 		if (!$this->allow == 1)
 			$vars['controller'] = Dispatcher::getInstance()->getController();
 		return $vars;
@@ -618,11 +618,11 @@ class LinkCore
 
 		return Language::getIsoById($id_lang).'/';
 	}
-	
+
 	protected function getBaseLink($id_shop = null, $ssl = null)
 	{
 		static $force_ssl = null;
-		
+
 		if ($ssl === null)
 		{
 			if ($force_ssl === null)

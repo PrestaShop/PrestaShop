@@ -374,14 +374,14 @@ class OrderDetailCore extends ObjectModel
 
 		if ($replace)
 			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'order_detail_tax` WHERE id_order_detail='.(int)$this->id);
-			
+
 		$values = rtrim($values, ',');
 		$sql = 'INSERT INTO `'._DB_PREFIX_.'order_detail_tax` (id_order_detail, id_tax, unit_amount, total_amount)
 				VALUES '.$values;
-		
+
 		return Db::getInstance()->execute($sql);
 	}
-	
+
 	public function updateTaxAmount($order)
 	{
 		$this->setContext((int)$this->id_shop);
@@ -599,10 +599,10 @@ class OrderDetailCore extends ObjectModel
 
 		// Set order invoice id
 		$this->id_order_invoice = (int)$id_order_invoice;
-		
+
 		// Set shop id
 		$this->id_shop = (int)$product['id_shop'];
-		
+
 		// Add new entry to the table
 		$this->save();
 

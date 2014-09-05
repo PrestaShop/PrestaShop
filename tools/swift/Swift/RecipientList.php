@@ -42,7 +42,7 @@ class Swift_RecipientList extends Swift_AddressContainer
    * @var array,Swift_Iterator
    */
   protected $iterators = array("to" => null, "cc" => null, "bcc" => null);
-  
+
   /**
    * Add a recipient.
    * @param string The address
@@ -55,7 +55,7 @@ class Swift_RecipientList extends Swift_AddressContainer
     {
       $address_str = trim(strtolower($address->getAddress()));
     }
-    
+
     elseif (is_array($address))
     {
       foreach ($address as $a) $this->add($a, $name, $where);
@@ -67,7 +67,7 @@ class Swift_RecipientList extends Swift_AddressContainer
       $address_str = trim(strtolower($address_str));
       $address = new Swift_Address($address_str, $name);
     }
-    
+
     if (in_array($where, array("to", "cc", "bcc")))
     {
       $container =& $this->$where;
@@ -86,7 +86,7 @@ class Swift_RecipientList extends Swift_AddressContainer
       $key = trim(strtolower($address->getAddress()));
     }
     else $key = trim(strtolower((string) $address));
-    
+
     if (in_array($where, array("to", "cc", "bcc")))
     {
       if (array_key_exists($key, $this->$where)) unset($this->{$where}[$key]);

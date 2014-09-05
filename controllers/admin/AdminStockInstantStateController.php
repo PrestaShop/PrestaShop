@@ -502,7 +502,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 			}
 		}
 	}
-	
+
 	public function initContent()
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
@@ -512,7 +512,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 		}
 		parent::initContent();
 	}
-	
+
 	public function initProcess()
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
@@ -526,7 +526,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 		else
 			$this->list_id = 'stock';
 
-		parent::initProcess();	
+		parent::initProcess();
 	}
 
 }

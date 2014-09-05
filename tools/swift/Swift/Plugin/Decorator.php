@@ -42,7 +42,7 @@ class Swift_Plugin_Decorator implements Swift_Events_BeforeSendListener
    * @var boolean
    */
   protected $permittedInHeaders = true;
-  
+
   /**
    * Ctor.
    * @param mixed Replacements as a 2-d array or Swift_Plugin_Decorator_Replacements instance.
@@ -110,14 +110,14 @@ class Swift_Plugin_Decorator implements Swift_Events_BeforeSendListener
   {
     $message = $e->getMessage();
     $this->recursiveRestore($message, $this->store); //3.3.3 bugfix
-    
+
     $recipients = $e->getRecipients();
     $to = array_keys($recipients->getTo());
     if (count($to) > 0) $to = $to[0];
     else return;
-    
+
     $replacements = (array)$this->replacements->getReplacementsFor($to);
-    
+
     $this->store = array(
       "headers" => array(),
       "body" => false,
@@ -201,7 +201,7 @@ class Swift_Plugin_Decorator implements Swift_Events_BeforeSendListener
     {
       return;
     }
-    
+
     //Restore headers
     foreach ($store["headers"] as $name => $array)
     {

@@ -28,7 +28,7 @@ function add_new_groups($french, $standard)
 {
 	$res = Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'group` (`id_group`, `date_add`, `date_upd`) VALUES (NULL, NOW(), NOW())');
 	$last_id = Db::getInstance()->Insert_ID();
-	
+
 	$languages = Db::getInstance()->executeS('SELECT id_lang, iso_code FROM `'._DB_PREFIX_.'lang`');
 
 	$sql = '';

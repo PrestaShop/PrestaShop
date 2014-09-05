@@ -32,11 +32,11 @@ class DiscountCore extends CartRule
 	const PERCENT = 1;
 	const AMOUNT = 2;
 	const FREE_SHIPPING = 3;
-	
+
 	public function __get($key)
 	{
 		Tools::displayAsDeprecated();
-		
+
 		if ($key == 'id_group')
 			return 0;
 		if ($key == 'id_discount_type')
@@ -72,11 +72,11 @@ class DiscountCore extends CartRule
 
 		return $this->{$key};
 	}
-	
+
 	public function __set($key, $value)
 	{
 		Tools::displayAsDeprecated();
-		
+
 		if ($key == 'id_discount_type')
 		{
 			if ($value == Discount::FREE_SHIPPING)
@@ -98,10 +98,10 @@ class DiscountCore extends CartRule
 				$this->reduction_amount = true;
 			}
 		}
-		
+
 		if ($key == 'code')
 			$this->name[Configuration::get('PS_LANG_DEFAULT')] = $value;
-		
+
 		if ($key == 'value')
 		{
 			if ($this->reduction_percent)
@@ -117,10 +117,10 @@ class DiscountCore extends CartRule
 			$this->reduction_tax = $value;
 		if ($key == 'behavior_not_exhausted')
 			$this->partial_use = $value;
-		
+
 		$this->{$key} = $value;
 	}
-	
+
 	public function __call($method, $args)
 	{
 		Tools::displayAsDeprecated();
@@ -139,7 +139,7 @@ class DiscountCore extends CartRule
 		// Todo : manage categories
 		return $r;
 	}
-	
+
 	/**
 	  * @deprecated 1.5.0.1
 	  */
@@ -165,7 +165,7 @@ class DiscountCore extends CartRule
 	{
 		return parent::getCustomerCartRules($id_lang, $id_customer, $active, $includeGenericOnes, $hasStock, $cart);
 	}
-	
+
 	/**
 	  * @deprecated 1.5.0.1
 	  */
@@ -201,7 +201,7 @@ class DiscountCore extends CartRule
 	  * @deprecated 1.5.0.1
 	  */
 	public static function createOrderDiscount($order, $productList, $qtyList, $name, $shipping_cost = false, $id_category = 0, $subcategory = 0)
-	{		
+	{
 		$languages = Language::getLanguages($order);
 		$products = $order->getProducts(false, $productList, $qtyList);
 

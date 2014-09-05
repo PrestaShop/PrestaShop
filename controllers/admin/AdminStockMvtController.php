@@ -301,7 +301,7 @@ class AdminStockMvtControllerCore extends AdminController
 			echo sprintf("%s\n", implode(';', array_map(array('CSVCore', 'wrap'), $row_csv)));
 		}
 	}
-	
+
 	public function initContent()
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
@@ -311,7 +311,7 @@ class AdminStockMvtControllerCore extends AdminController
 		}
 		parent::initContent();
 	}
-	
+
 	public function initProcess()
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
@@ -319,7 +319,7 @@ class AdminStockMvtControllerCore extends AdminController
 			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management before using this feature.');
 			return false;
 		}
-		parent::initProcess();	
+		parent::initProcess();
 	}
 
 }

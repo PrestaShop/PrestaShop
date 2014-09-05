@@ -50,7 +50,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 				$this->loadObject(true);
 			$this->content .= $this->renderView();
 		}
-		
+
 		$this->content .= $this->displayMenu();
 		$this->content .= $this->displayCalendar();
 		$this->content .= $this->displayStats();
@@ -58,7 +58,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
 		$this->context->smarty->assign(array(
 			'content' => $this->content,
-			'url_post' => self::$currentIndex.'&token='.$this->token,			
+			'url_post' => self::$currentIndex.'&token='.$this->token,
 			'show_page_header_toolbar' => $this->show_page_header_toolbar,
 			'page_header_toolbar_title' => $this->page_header_toolbar_title,
 			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
@@ -97,9 +97,9 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 			$identifier = 'module';
 			$id = Tools::getValue('module');
 		}
-		
+
 		$action = Context::getContext()->link->getAdminLink('AdminStats');
-		$action .= ($action && $table ? '&'.Tools::safeOutput($action) : '');		
+		$action .= ($action && $table ? '&'.Tools::safeOutput($action) : '');
 		$action .= ($identifier && $id ? '&'.Tools::safeOutput($identifier).'='.(int)$id : '');
 		$module = Tools::getValue('module');
 		$action .= ($module ? '&module='.Tools::safeOutput($module) : '');
@@ -174,7 +174,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
 		return $tpl->fetch();
 	}
-	
+
 	public function checkModulesNames($a, $b)
 	{
 		return (bool)($a['displayName'] > $b['displayName']);
@@ -206,7 +206,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 
 			if (!isset($module_instance))
 				$module_instance = Module::getInstanceByName($module_name);
-				
+
 			if ($module_instance && $module_instance->active)
 				$hook = Hook::exec('displayAdminStatsModules', null, $module_instance->id);
 		}
@@ -223,9 +223,9 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 	public function postProcess()
 	{
 		$this->context = Context::getContext();
-		
+
 		$this->processDateRange();
-		
+
 		if (Tools::getValue('submitSettings'))
 		{
 		 	if ($this->tabAccess['edit'] === '1')
@@ -239,7 +239,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 	}
-	
+
 	public function processDateRange()
 	{
 		if (Tools::isSubmit('submitDatePicker'))
@@ -289,11 +289,11 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 				Tools::redirectAdmin($_SERVER['REQUEST_URI']);
 		}
 	}
-	
+
 	public function ajaxProcessSetDashboardDateRange()
 	{
 		$this->processDateRange();
-		
+
 		if ($this->isXmlHttpRequest())
 		{
 			if (is_array($this->errors) && count($this->errors))

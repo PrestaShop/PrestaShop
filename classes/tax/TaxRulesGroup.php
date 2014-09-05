@@ -88,19 +88,19 @@ class TaxRulesGroupCore extends ObjectModel
 	{
 		$this->deleted = true;
 
-		return parent::update() && 
+		return parent::update() &&
 		Db::getInstance()->execute('
-		INSERT INTO '._DB_PREFIX_.'tax_rule 
+		INSERT INTO '._DB_PREFIX_.'tax_rule
 		(id_tax_rules_group, id_country, id_state, zipcode_from, zipcode_to, id_tax, behavior, description)
 		(
 			SELECT '.(int)$tax_rules_group->id.', id_country, id_state, zipcode_from, zipcode_to, id_tax, behavior, description
-			FROM '._DB_PREFIX_.'tax_rule 
+			FROM '._DB_PREFIX_.'tax_rule
 			WHERE id_tax_rules_group='.(int)$this->id.'
-		)') && 
+		)') &&
 		Db::getInstance()->execute('
 		UPDATE '._DB_PREFIX_.'product
 		SET id_tax_rules_group='.(int)$tax_rules_group->id.'
-		WHERE id_tax_rules_group='.(int)$this->id) && 
+		WHERE id_tax_rules_group='.(int)$this->id) &&
 		Db::getInstance()->execute('
 		UPDATE '._DB_PREFIX_.'product_shop
 		SET id_tax_rules_group='.(int)$tax_rules_group->id.'
@@ -113,9 +113,9 @@ class TaxRulesGroupCore extends ObjectModel
 		UPDATE '._DB_PREFIX_.'carrier_tax_rules_group_shop
 		SET id_tax_rules_group='.(int)$tax_rules_group->id.'
 		WHERE id_tax_rules_group='.(int)$this->id);
-		
+
 	}
-	
+
 	public function getIdTaxRuleGroupFromHistorizedId($id_tax_rule)
 	{
 		$params = Db::getInstance()->getRow('
@@ -127,7 +127,7 @@ class TaxRulesGroupCore extends ObjectModel
 		return Db::getInstance()->getValue('
 		SELECT id_tax_rule
 		FROM '._DB_PREFIX_.'tax_rule
-		WHERE 
+		WHERE
 			id_tax_rules_group = '.(int)$this->id.' AND
 			id_country='.(int)$params['id_country'].' AND id_state='.(int)$params['id_state'].' AND id_tax='.(int)$params['id_tax'].' AND
 			zipcode_from=\''.pSQL($params['zipcode_from']).'\' AND zipcode_to=\''.pSQL($params['zipcode_to']).'\' AND behavior='.(int)$params['behavior']
@@ -195,7 +195,7 @@ class TaxRulesGroupCore extends ObjectModel
 	    WHERE `name` = \''.pSQL($name).'\''
 	    );
 	}
-	
+
 	public function hasUniqueTaxRuleForCountry($id_country, $id_state, $id_tax_rule = false)
 	{
 		$rules = TaxRule::getTaxRulesByGroupId((int)Context::getContext()->language->id, (int)$this->id);

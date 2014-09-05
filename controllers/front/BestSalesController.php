@@ -33,14 +33,14 @@ class BestSalesControllerCore extends FrontController
 		if (Configuration::get('PS_DISPLAY_BEST_SELLERS'))
 		{
 			parent::initContent();
-	
+
 			$this->productSort();
 			$nbProducts = (int)ProductSale::getNbSales();
 			$this->pagination($nbProducts);
-	
+
 			$products = ProductSale::getBestSales($this->context->language->id, $this->p - 1, $this->n, $this->orderBy, $this->orderWay);
 			$this->addColorsToProductList($products);
-	
+
 			$this->context->smarty->assign(array(
 				'products' => $products,
 				'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
@@ -48,7 +48,7 @@ class BestSalesControllerCore extends FrontController
 				'homeSize' => Image::getSize(ImageType::getFormatedName('home')),
 				'comparator_max_item' => Configuration::get('PS_COMPARATOR_MAX_ITEM')
 			));
-	
+
 			$this->setTemplate(_PS_THEME_DIR_.'best-sales.tpl');
 		}
 		else

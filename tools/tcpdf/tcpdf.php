@@ -141,7 +141,7 @@
  * @version 5.9.179
  */
 
-/* 
+/*
 	PrestaShop
 	all calls to file_exists replaced by Tools::file_exists_no_cache()
 */

@@ -55,7 +55,7 @@ class CmsControllerCore extends FrontController
 
 		if (Configuration::get('PS_SSL_ENABLED') && Tools::getValue('content_only') && Tools::getValue('id_cms') == (int)Configuration::get('PS_CONDITIONS_CMS_ID') && Validate::isLoadedObject($this->cms))
 			$this->ssl = true;
-		
+
 		parent::init();
 
 		$this->canonicalRedirection();

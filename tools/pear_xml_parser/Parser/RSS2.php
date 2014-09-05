@@ -23,7 +23,7 @@
 
 /**
  * This class handles RSS2 feeds.
- * 
+ *
  * @author    James Stewart <james@jystewart.net>
  * @version    Release: @package_version@
  * @package XML_Feed_Parser
@@ -51,11 +51,11 @@ class XML_Feed_Parser_RSS2 extends XML_Feed_Parser_Type
     /**
      * The class used to represent individual items
      * @var string
-     */     
+     */
     protected $itemClass = 'XML_Feed_Parser_RSS2Element';
-    
+
     /**
-     * The element containing entries 
+     * The element containing entries
      * @var string
      */
     protected $itemElement = 'item';
@@ -107,7 +107,7 @@ class XML_Feed_Parser_RSS2 extends XML_Feed_Parser_Type
 
     /**
      * Our constructor does nothing more than its parent.
-     * 
+     *
      * @param    DOMDocument    $xml    A DOM object representing the feed
      * @param    bool (optional) $string    Whether or not to validate this feed
      */
@@ -156,7 +156,7 @@ class XML_Feed_Parser_RSS2 extends XML_Feed_Parser_Type
             }
             $this->idMappings[$id] = $entry;
             return $entry;
-        }        
+        }
     }
 
     /**
@@ -199,9 +199,9 @@ class XML_Feed_Parser_RSS2 extends XML_Feed_Parser_Type
             $image = $images->item(0);
             $desc = $image->getElementsByTagName('description');
             $description = $desc->length ? $desc->item(0)->nodeValue : false;
-            $heigh = $image->getElementsByTagName('height'); 
+            $heigh = $image->getElementsByTagName('height');
             $height = $heigh->length ? $heigh->item(0)->nodeValue : false;
-            $widt = $image->getElementsByTagName('width'); 
+            $widt = $image->getElementsByTagName('width');
             $width = $widt->length ? $widt->item(0)->nodeValue : false;
             return array(
                 'title' => $image->getElementsByTagName('title')->item(0)->nodeValue,
@@ -227,7 +227,7 @@ class XML_Feed_Parser_RSS2 extends XML_Feed_Parser_Type
             $input = $inputs->item(0);
             return array(
                 'title' => $input->getElementsByTagName('title')->item(0)->value,
-                'description' => 
+                'description' =>
                     $input->getElementsByTagName('description')->item(0)->value,
                 'name' => $input->getElementsByTagName('name')->item(0)->value,
                 'link' => $input->getElementsByTagName('link')->item(0)->value);
@@ -266,7 +266,7 @@ class XML_Feed_Parser_RSS2 extends XML_Feed_Parser_Type
      * not be checked. We return an array of those hours (integers, 24 hour clock)
      *
      * @return  array
-     */    
+     */
     function getSkipHours()
     {
         return $this->getSkips('skipHours');
@@ -305,12 +305,12 @@ class XML_Feed_Parser_RSS2 extends XML_Feed_Parser_Type
         }
         return $cloudData;
     }
-    
+
     /**
      * Get link URL
      *
      * In RSS2 a link is a text element but in order to ensure that we resolve
-     * URLs properly we have a special function for them. We maintain the 
+     * URLs properly we have a special function for them. We maintain the
      * parameter used by the atom getLink method, though we only use the offset
      * parameter.
      *

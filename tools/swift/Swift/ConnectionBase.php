@@ -31,7 +31,7 @@ abstract class Swift_ConnectionBase implements Swift_Connection
    * @var boolean
    */
   protected $isESMTP = false;
-  
+
   /**
    * Set an extension which the connection reports to support
    * @param string Extension name

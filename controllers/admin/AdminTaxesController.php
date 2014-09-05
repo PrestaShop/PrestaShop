@@ -34,7 +34,7 @@ class AdminTaxesControllerCore extends AdminController
 	 	$this->lang = true;
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-		
+
 		$this->bulk_actions = array(
 			'delete' => array(
 				'text' => $this->l('Delete selected'),
@@ -105,7 +105,7 @@ class AdminTaxesControllerCore extends AdminController
 				);
 
 		parent::__construct();
-		
+
 		$this->_where .= ' AND a.deleted = 0';
 	}
 

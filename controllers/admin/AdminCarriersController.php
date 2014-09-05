@@ -106,7 +106,7 @@ class AdminCarriersControllerCore extends AdminController
 			)
 		);
 		parent::__construct();
-		
+
 		if (Tools::isSubmit('onboarding_carrier'))
 			$this->display = 'view';
 	}
@@ -114,7 +114,7 @@ class AdminCarriersControllerCore extends AdminController
 	public function initToolbar()
 	{
 		parent::initToolbar();
-		
+
 		if (isset($this->toolbar_btn['new']) && $this->display != 'view')
 			$this->toolbar_btn['new']['href'] = $this->context->link->getAdminLink('AdminCarriers').'&onboarding_carrier';
 	}
@@ -131,7 +131,7 @@ class AdminCarriersControllerCore extends AdminController
 
 		parent::initPageHeaderToolbar();
 	}
-	
+
 	public function renderView()
 	{
 		$this->initTabModuleList();
@@ -141,7 +141,7 @@ class AdminCarriersControllerCore extends AdminController
 		unset($this->page_header_toolbar_btn['modules-list']);
 		return parent::renderView();
 	}
-	
+
 	public function renderList()
 	{
 		$this->_select = 'b.*';
@@ -406,7 +406,7 @@ class AdminCarriersControllerCore extends AdminController
 	{
 		if (Tools::getValue('action') == 'GetModuleQuickView' && Tools::getValue('ajax') == '1')
 			$this->ajaxProcessGetModuleQuickView();
-		
+
 		if (Tools::getValue('submitAdd'.$this->table))
 		{
 			/* Checking fields validity */
@@ -424,7 +424,7 @@ class AdminCarriersControllerCore extends AdminController
 							$current_carrier = new Carrier($id);
 							if (!Validate::isLoadedObject($current_carrier))
 								throw new PrestaShopException('Cannot load Carrier object');
-							
+
 							// Duplicate current Carrier
 							$new_carrier = $current_carrier->duplicateObject();
 							if (Validate::isLoadedObject($new_carrier))
@@ -685,7 +685,7 @@ else if ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tool
 		else
 			return;
 	}
-	
+
 	public function displayDeleteLink($token = null, $id, $name = null)
 	{
 		if ($this->tabAccess['delete'] == 1)
@@ -720,7 +720,7 @@ else if ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tool
 		else
 			return;
 	}
-	
+
 	protected function initTabModuleList()
 	{
 		if (Tools::isSubmit('onboarding_carrier'))

@@ -33,7 +33,7 @@ class Swift_Cache_Disk extends Swift_Cache
    * @var string
    */
   protected static $save_path = "/tmp";
-  
+
   /**
    * Ctor
    */
@@ -92,7 +92,7 @@ class Swift_Cache_Disk extends Swift_Cache
   {
     if ($size === null) $size = 8190;
     if (!$this->has($key)) return false;
-    
+
     if (!isset($this->open[$key]))
     {
       $this->open[$key] = fopen(self::$save_path . "/" . $this->prefix . $key, "rb");

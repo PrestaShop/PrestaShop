@@ -69,7 +69,7 @@ class Swift_Message_Headers
    * @var string
    */
   protected $LE = "\r\n";
-  
+
   /**
    * Set the line ending character to use
    * @param string The line ending sequence
@@ -323,10 +323,10 @@ class Swift_Message_Headers
       "Cannot locate attribute '" . $name . "' for header '" . $header . "' as the header does not exist. " .
       "Consider using Swift_Message_Headers-&gt;has() to check.");
     }
-    
+
     $name = strtolower($name);
     $lheader = strtolower($header);
-    
+
     if ($this->hasAttribute($header, $name))
     {
       return $this->attributes[$lheader][$name];
@@ -371,24 +371,24 @@ class Swift_Message_Headers
     if (!$this->getCharset()) $this->setCharset("iso-8859-1");
     Swift_ClassLoader::load("Swift_Message_Encoder");
     //I'll try as best I can to walk through this...
-    
+
     $lname = strtolower($name);
-    
+
     if ($this->cached[$lname] !== null) return $this->cached[$lname];
-    
+
     $value = $this->get($name);
-    
+
     $is_email = in_array($name, $this->emailContainingHeaders);
-    
+
     $encoded_value = (array) $value; //Turn strings into arrays (just to make the following logic simpler)
-    
+
     //Look at each value in this header
     // There will only be 1 value if it was a string to begin with, and usually only address lists will be multiple
     foreach ($encoded_value as $key => $row)
     {
       $spec = ""; //The bit which specifies the encoding of the header (if any)
       $end = ""; //The end delimiter for an encoded header
-      
+
       //If the header is 7-bit printable it's at no risk of injection
       if (Swift_Message_Encoder::instance()->isHeaderSafe($row) && !$this->forceEncoding)
       {
@@ -402,11 +402,11 @@ class Swift_Message_Headers
         $end = "?=";
         //Calculate the length of, for example: "From: =?iso-8859-1?Q??="
         $used_length = strlen($name) + 2 + strlen($spec) + 2;
-        
+
         //Encode to QP, excluding the specification for now but keeping the lines short enough to be compliant
         $encoded_value[$key] = str_replace(" ", "_", Swift_Message_Encoder::instance()->QPEncode(
           $row, (75-(strlen($spec)+6)), ($key > 0 ? 0 : (75-$used_length)), true, $this->LE));
-        
+
       }
       elseif ($this->encoding == "B") //Need to Base64 encode
       {
@@ -417,15 +417,15 @@ class Swift_Message_Headers
         $encoded_value[$key] = Swift_Message_Encoder::instance()->base64Encode(
           $row, (75-(strlen($spec)+5)), ($key > 0 ? 0 : (76-($used_length+3))), true, $this->LE);
       }
-      
+
       if (false !== $p = strpos($encoded_value[$key], $this->LE))
       {
         $encoded_value[$key] = preg_replace_callback("/<([^>]+)>/", array($this, 'prestaShopReplace'), $encoded_value[$key]);
       }
-      
+
       //Turn our header into an array of lines ready for wrapping around the encoding specification
       $lines = explode($this->LE, $encoded_value[$key]);
-      
+
       for ($i = 0, $len = count($lines); $i < $len; $i++)
       {
         //Don't allow commas in address fields without quotes unless they're encoded
@@ -443,9 +443,9 @@ class Swift_Message_Headers
             $lines[$i] = "\"" . $lines[$i] . "\"";
           }
         }
-        
+
         if ($this->encoding == "Q") $lines[$i] = rtrim($lines[$i], "=");
-        
+
         if ($lines[$i] == "" && $i > 0)
         {
           unset($lines[$i]); //Empty line, we'd rather not have these in the headers thank you!
@@ -466,13 +466,13 @@ class Swift_Message_Headers
       $encoded_value[$key] = implode($this->LE, $lines);
       $lines = null;
     }
-    
+
     //If there are multiple values in this header, put them on separate lines, cleared by commas
     $this->cached[$lname] = implode("," . $this->LE . " ", $encoded_value);
-    
+
     //Append attributes if there are any
     if (!empty($this->attributes[$lname])) $this->cached[$lname] .= $this->buildAttributes($this->cached[$lname], $lname);
-    
+
     return $this->cached[$lname];
   }
   /**
@@ -507,7 +507,7 @@ class Swift_Message_Headers
         if (preg_match("~[\\s\";,<>\\(\\)@:\\\\/\\[\\]\\?=]~", $line)) $lines[$i] = '"' . $line . '"';
       }
       $encoded = implode($this->LE, $lines);
-      
+
       //If we can fit this entire attribute onto the same line as the header then do it!
       if ((strlen($encoded) + $used_len + strlen($attribute) + 4) < 74)
       {
@@ -552,12 +552,12 @@ class Swift_Message_Headers
     }
     return $ret;
   }
-  
+
   public function prestaShopReplace($matches)
   {
 		return str_replace("' . $this->LE . '", "", "<$matches[1]>");
   }
-  
+
   /**
    * Compile the list of headers which have been set and return an ascii string
    * The return value should always be 7-bit ascii and will have been cleaned for header injection

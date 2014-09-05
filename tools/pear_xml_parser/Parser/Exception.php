@@ -20,7 +20,7 @@
  * @version    CVS: $Id: Exception.php 6844 2011-06-03 14:46:51Z dMetzger $
  * @link       http://pear.php.net/package/XML_Feed_Parser/
  */
- 
+
 /**
  * We are extending PEAR_Exception
  */
@@ -33,7 +33,7 @@ require_once(dirname(__FILE__).'/../../pear/PEAR.php');
  * @author  James Stewart <james@jystewart.net>
  * @version Release: @package_version@
  * @package XML_Feed_Parser
- */ 
+ */
 class XML_Feed_Parser_Exception extends PEAR_Exception
 {
 

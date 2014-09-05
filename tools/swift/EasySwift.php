@@ -97,7 +97,7 @@ class EasySwift
    * @var string
    */
   public $lastError = null;
-  
+
   /**
    * Constructor
    * @param Swift_Connection The connection to use
@@ -340,7 +340,7 @@ class EasySwift
   public function command($command)
   {
     if (substr($command, -2) == "\r\n") $command = substr($command, 0, -2);
-    
+
     try {
       $rs = $this->swift->command($command);
       return $rs->getString();
@@ -448,7 +448,7 @@ class EasySwift
       $address = trim($string);
     }
     else return false;
-    
+
     $swift_address = new Swift_Address($address, $name);
     return $swift_address;
   }
@@ -610,7 +610,7 @@ class EasySwift
   {
     if (!in_array($type, array("To", "Cc", "Bcc"))) return false;
     $method = "add" . $type;
-    
+
     if ($address instanceof Swift_Address)
     {
       $this->recipients->$method($address);
@@ -633,7 +633,7 @@ class EasySwift
           elseif (count($addr) == 1) $addr = $addr[0];
           else continue;
         }
-        
+
         if (is_string($addr))
         {
           $addr = $this->stringToAddress($addr);
@@ -922,12 +922,12 @@ class EasySwift
   public function send($recipients, $from, $subject, $body=null)
   {
     $this->addTo($recipients);
-    
+
     $sender = false;
     if (is_string($from)) $sender = $this->stringToAddress($from);
     elseif ($from instanceof Swift_Address) $sender = $from;
     if (!$sender) return false;
-    
+
     $this->message->setSubject($subject);
     if ($body) $this->message->setBody($body);
     try {

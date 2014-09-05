@@ -33,13 +33,13 @@ class XML_Feed_Parser_RSS1Element extends XML_Feed_Parser_RSS1
 {
     /**
      * This will be a reference to the parent object for when we want
-     * to use a 'fallback' rule 
+     * to use a 'fallback' rule
      * @var XML_Feed_Parser_RSS1
      */
     protected $parent;
 
     /**
-     * Our specific element map 
+     * Our specific element map
      * @var array
      */
     protected $map = array(
@@ -87,7 +87,7 @@ class XML_Feed_Parser_RSS1Element extends XML_Feed_Parser_RSS1
     /**
      * If an rdf:about attribute is specified, return it as an ID
      *
-     * There is no established way of showing an ID for an RSS1 entry. We will 
+     * There is no established way of showing an ID for an RSS1 entry. We will
      * simulate it using the rdf:about attribute of the entry element. This cannot
      * be relied upon for unique IDs but may prove useful.
      *

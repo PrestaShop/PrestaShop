@@ -34,7 +34,7 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 	public $tax_calculator;
 
 	/**
-	 * 
+	 *
 	 * @param Address $address
 	 * @param mixed An additional parameter for the tax manager (ex: tax rules id for TaxRuleTaxManager)
 	 */
@@ -68,10 +68,10 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 
 		if ($tax_enabled === null)
 			$tax_enabled = Configuration::get('PS_TAX');
-		
+
 		if (!$tax_enabled)
 			return new TaxCalculator(array());
-	
+
 		$taxes = array();
 		$postcode = 0;
 		if (!empty($this->address->postcode))

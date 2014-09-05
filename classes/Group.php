@@ -76,7 +76,7 @@ class GroupCore extends ObjectModel
 		if ($this->id && !isset(Group::$group_price_display_method[$this->id]))
 			self::$group_price_display_method[$this->id] = $this->price_display_method;
 	}
-	
+
 	public static function getGroups($id_lang, $id_shop = false)
 	{
 		$shop_criteria = '';
@@ -263,13 +263,13 @@ class GroupCore extends ObjectModel
 
 		// Delete all record for this group
 		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_group` WHERE `id_group` = '.(int)$id_group);
-		
+
 		$sql = 'INSERT INTO `'._DB_PREFIX_.'module_group` (`id_module`, `id_shop`, `id_group`) VALUES ';
 		foreach ($modules as $module)
 			foreach ($shops as $shop)
 				$sql .= '("'.(int)$module.'", "'.(int)$shop.'", "'.(int)$id_group.'"),';
 		$sql = rtrim($sql, ',');
-		
+
 		return (bool)Db::getInstance()->execute($sql);
 	}
 
@@ -283,7 +283,7 @@ class GroupCore extends ObjectModel
 	{
 		if (!is_array($shops) || !count($shops))
 			return false;
-		
+
 		$res = true;
 		foreach ($shops as $shop)
 			$res &= Db::getInstance()->execute('
@@ -310,7 +310,7 @@ class GroupCore extends ObjectModel
 
 		if (!isset($groups[$id_group]))
 			$groups[$id_group] = new Group($id_group);
-			
+
 		if (!$groups[$id_group]->isAssociatedToShop(Context::getContext()->shop->id))
 		{
 			$id_group = (int)Configuration::get('PS_CUSTOMER_GROUP');

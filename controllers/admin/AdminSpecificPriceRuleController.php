@@ -277,7 +277,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 				'title' => $this->l('Save')
 			),
 		);
-		if (($value = $this->getFieldValue($this->object, 'price')) != -1)	
+		if (($value = $this->getFieldValue($this->object, 'price')) != -1)
 			$price = number_format($value, 6);
 		else
 			$price = '';

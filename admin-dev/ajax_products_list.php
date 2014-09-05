@@ -35,8 +35,8 @@ if (!$query OR $query == '' OR strlen($query) < 1)
 
 /*
  * In the SQL request the "q" param is used entirely to match result in database.
- * In this way if string:"(ref : #ref_pattern#)" is displayed on the return list, 
- * they are no return values just because string:"(ref : #ref_pattern#)" 
+ * In this way if string:"(ref : #ref_pattern#)" is displayed on the return list,
+ * they are no return values just because string:"(ref : #ref_pattern#)"
  * is not write in the name field of the product.
  * So the ref pattern will be cut for the search request.
  */

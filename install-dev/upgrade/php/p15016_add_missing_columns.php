@@ -34,7 +34,7 @@ function p15016_add_missing_columns()
 		$list_fields = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'reinsurance`');
 		foreach ($list_fields as $k => $field)
 			$list_fields[$k] = $field['Field'];
-			
+
 		if (in_array('id_contactinfos', $list_fields))
 			if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'reinsurance` CHANGE `id_contactinfos` `id_reinsurance` INT( 10 ) UNSIGNED NOT NULL AUTO_INCREMENT'))
 				$errors[] = Db::getInstance()->getMsgError();
@@ -44,9 +44,9 @@ function p15016_add_missing_columns()
 		if (in_array('filename', $list_fields))
 			if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'reinsurance` CHANGE `filename` `file_name` VARCHAR(100) NOT NULL'))
 				$errors[] = Db::getInstance()->getMsgError();
-		
+
 		$list_fields = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'reinsurance_lang`');
-		
+
 		if (!is_array($list_fields) || $list_fields == false)
 		{
 			$return = Db::getInstance()->execute('
@@ -56,11 +56,11 @@ function p15016_add_missing_columns()
 					`text` VARCHAR(300) NOT NULL,
 					PRIMARY KEY (`id_reinsurance`, `id_lang`)
 				) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8 ;');
-			if (!$return)		
+			if (!$return)
 				$errors[] = Db::getInstance()->getMsgError();
 		}
 	}
-	
+
 	$id_module = Db::getInstance()->getValue('SELECT id_module FROM `'._DB_PREFIX_.'module` WHERE name="blocktopmenu"');
 	if ($id_module)
 	{
@@ -71,7 +71,7 @@ function p15016_add_missing_columns()
 		if (in_array('id_link', $list_fields) && !in_array('id_linksmenutop', $list_fields))
 			if (!Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'linksmenutop` CHANGE `id_link` `id_linksmenutop` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT'))
 				$errors[] = Db::getInstance()->getMsgError();
-				
+
 		$list_fields = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'linksmenutop_lang`');
 		foreach ($list_fields as $k => $field)
 			$list_fields[$k] = $field['Field'];

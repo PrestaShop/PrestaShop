@@ -24,7 +24,7 @@ class Swift_Log_DefaultLog extends Swift_Log
    * @var array
    */
   protected $entries = array();
-  
+
   /**
    * Add a log entry
    * @param string The text for this entry

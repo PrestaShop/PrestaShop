@@ -134,7 +134,7 @@ class GroupReductionCore extends ObjectModel
 	{
 		if (!Group::isFeatureActive())
 			return 0;
-	
+
 		if (!isset(self::$reduction_cache[$id_product.'-'.$id_group]))
 			self::$reduction_cache[$id_product.'-'.$id_group] = Db::getInstance()->getValue('
 			SELECT `reduction`
@@ -158,9 +158,9 @@ class GroupReductionCore extends ObjectModel
 			SELECT gr.`id_group` as id_group, gr.`reduction` as reduction, id_group_reduction
 			FROM `'._DB_PREFIX_.'group_reduction` gr
 			WHERE `id_category` = '.(int)$id_category
-		);	
+		);
 	}
-	
+
 	public static function getGroupByCategoryId($id_category)
 	{
 		Tools::displayAsDeprecated('Use GroupReduction::getGroupsByCategoryId($id_category)');
@@ -179,7 +179,7 @@ class GroupReductionCore extends ObjectModel
 			WHERE `id_category` = '.(int)$id_category
 		);
 	}
-	
+
 	public static function getGroupReductionByCategoryId($id_category)
 	{
 		Tools::displayAsDeprecated('Use GroupReduction::getGroupsByCategoryId($id_category)');

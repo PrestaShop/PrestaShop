@@ -71,7 +71,7 @@ class AddressFormatCore extends ObjectModel
 		'active',
 		'is_guest',
 		'date_upd',
-		'country',		
+		'country',
 		'years',
 		'days',
 		'months',

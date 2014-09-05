@@ -3941,7 +3941,7 @@ class Smarty_Internal_Templateparser #line 80 "smarty_internal_templateparser.ph
             $smarty_var = $this->compiler->compileTag('private_special_variable', array(), $this->yystack[$this->yyidx + 0]->minor['smarty_internal_index']);
             $this->_retvalue = $smarty_var;
         } else {
-            // used for array reset,next,prev,end,current 
+            // used for array reset,next,prev,end,current
             $this->last_variable = $this->yystack[$this->yyidx + 0]->minor['var'];
             $this->last_index = $this->yystack[$this->yyidx + 0]->minor['smarty_internal_index'];
             $this->_retvalue = $this->compileVariable($this->yystack[$this->yyidx + 0]->minor['var']) . $this->yystack[$this->yyidx + 0]->minor['smarty_internal_index'];

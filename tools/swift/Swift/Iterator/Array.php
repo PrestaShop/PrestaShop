@@ -34,7 +34,7 @@ class Swift_Iterator_Array implements Swift_Iterator
    * @var int
    */
   protected $pos = -1;
-  
+
   /**
    * Ctor.
    * @param array The array to iterate over.
@@ -72,7 +72,7 @@ class Swift_Iterator_Array implements Swift_Iterator
       ++$this->pos;
       return true;
     }
-    
+
     return false;
   }
   /**
@@ -87,7 +87,7 @@ class Swift_Iterator_Array implements Swift_Iterator
       $this->pos = $pos;
       return true;
     }
-    
+
     return false;
   }
   /**

@@ -42,7 +42,7 @@ class Swift_Events_SendEvent extends Swift_Events
    * @var array
    */
   protected $failed = array();
-  
+
   /**
    * Constructor
    * @param Swift_Message The message being sent

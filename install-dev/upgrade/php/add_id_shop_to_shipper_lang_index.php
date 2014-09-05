@@ -27,7 +27,7 @@
 function add_id_shop_to_shipper_lang_index()
 {
 	$res = true;
-	
+
 	$key_exists = Db::getInstance()->executeS('
 	SHOW INDEX
 	FROM `'._DB_PREFIX_.'carrier_lang`

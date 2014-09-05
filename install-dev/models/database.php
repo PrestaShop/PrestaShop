@@ -94,13 +94,13 @@ class InstallModelDatabase extends InstallAbstractModel
 
 		return $errors;
 	}
-	
+
 	public function createDatabase($server, $database, $login, $password, $dropit = false)
 	{
 		$class = Db::getClass();
 		return call_user_func(array($class, 'createDatabase'), $server, $login, $password, $database, $dropit);
 	}
-	
+
 	public function getBestEngine($server, $database, $login, $password)
 	{
 		$class = Db::getClass();

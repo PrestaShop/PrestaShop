@@ -125,8 +125,8 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
 		}
 
 		if (isset($field['encode']))
-			$ret .= ' encode="'.$field['encode'].'"'; 
-			
+			$ret .= ' encode="'.$field['encode'].'"';
+
 		if (isset($field['synopsis_details']) && !empty($field['synopsis_details']) && $this->schemaToDisplay !== 'blank')
 		{
 			foreach ($field['synopsis_details'] as $name => $detail)

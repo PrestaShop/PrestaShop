@@ -163,7 +163,7 @@ class ConfigurationCore extends ObjectModel
 	{
 		if (defined('_PS_DO_NOT_LOAD_CONFIGURATION_') && _PS_DO_NOT_LOAD_CONFIGURATION_)
 			return false;
-		
+
 		// If conf if not initialized, try manual query
 		if (!isset(self::$_cache[self::$definition['table']]))
 		{
@@ -179,7 +179,7 @@ class ConfigurationCore extends ObjectModel
 
 		if (!isset(self::$_cache[self::$definition['table']][$id_lang]))
 			$id_lang = 0;
-			
+
 		if ($id_shop && Configuration::hasKey($key, $id_lang, null, $id_shop))
 			return self::$_cache[self::$definition['table']][$id_lang]['shop'][$id_shop][$key];
 		elseif ($id_shop_group && Configuration::hasKey($key, $id_lang, $id_shop_group))
@@ -188,7 +188,7 @@ class ConfigurationCore extends ObjectModel
 			return self::$_cache[self::$definition['table']][$id_lang]['global'][$key];
 		return false;
 	}
-	
+
 	public static function getGlobalValue($key, $id_lang = null)
 	{
 		return Configuration::get($key, $id_lang, 0, 0);
@@ -430,9 +430,9 @@ class ConfigurationCore extends ObjectModel
 		$result2 = Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.bqSQL(self::$definition['table']).'`
 		WHERE `name` = "'.pSQL($key).'"');
-		
+
 		self::$_cache[self::$definition['table']] = null;
-		
+
 		return ($result && $result2);
 	}
 
@@ -445,7 +445,7 @@ class ConfigurationCore extends ObjectModel
 	{
 		if (Shop::getContext() == Shop::CONTEXT_ALL)
 			return;
-		
+
 		$id_shop = null;
 		$id_shop_group = Shop::getContextShopGroupID(true);
 		if (Shop::getContext() == Shop::CONTEXT_SHOP)
@@ -458,7 +458,7 @@ class ConfigurationCore extends ObjectModel
 		Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.bqSQL(self::$definition['table']).'_lang`
 		WHERE `'.bqSQL(self::$definition['primary']).'` = '.(int)$id);
-		
+
 		self::$_cache[self::$definition['table']] = null;
 	}
 

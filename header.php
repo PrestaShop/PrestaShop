@@ -30,7 +30,7 @@ else
 {
 	$controller = new FrontController();
 	$controller->init();
-	$controller->setMedia();	
+	$controller->setMedia();
 }
 Tools::displayFileAsDeprecated();
 $controller->displayHeader();

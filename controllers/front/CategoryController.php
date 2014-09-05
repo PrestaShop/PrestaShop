@@ -98,13 +98,13 @@ class CategoryControllerCore extends FrontController
 			$this->customer_access = false;
 		}
 	}
-	
+
 	public function initContent()
 	{
 		parent::initContent();
-		
+
 		$this->setTemplate(_PS_THEME_DIR_.'category.tpl');
-		
+
 		if (!$this->customer_access)
 			return;
 
@@ -112,7 +112,7 @@ class CategoryControllerCore extends FrontController
 			$this->context->smarty->assign('compareProducts', CompareProduct::getCompareProducts((int)$this->context->cookie->id_compare));
 
 		$this->productSort(); // Product sort must be called before assignProductList()
-		
+
 		$this->assignScenes();
 		$this->assignSubcategories();
 		$this->assignProductList();
@@ -217,7 +217,7 @@ class CategoryControllerCore extends FrontController
 
 		$this->context->smarty->assign('nb_products', $this->nbProducts);
 	}
-	
+
 	/**
 	 * Get instance of current category
 	 */

@@ -40,7 +40,7 @@ class Swift_File
    * @var boolean
    */
   protected $magic_quotes = false;
-  
+
   /**
    * Constructor
    * @param string The path the the file
@@ -167,8 +167,8 @@ class Swift_File
       $ret = fread($this->handle, $bytes);
     }
     else $ret = false;
-    
-    
+
+
     return $ret;
   }
   /**

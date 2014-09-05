@@ -29,12 +29,12 @@ class Swift_Message_Part extends Swift_Message_Mime
   public function __construct($data=null, $type="text/plain", $encoding=null, $charset=null)
   {
     parent::__construct();
-    
+
     $this->setContentType($type);
     $this->setEncoding($encoding);
     $this->setCharset($charset);
     $this->setFlowed(false);
-    
+
     if ($data !== null)
     {
       $this->setData($data);

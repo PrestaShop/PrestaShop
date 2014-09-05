@@ -172,7 +172,7 @@ class UploaderCore
 			else
 				// Non-multipart uploads (PUT method support)
 				file_put_contents($file_path, fopen('php://input', 'r'));
-			
+
 			$file_size = $this->_getFileSize($file_path, true);
 
 			if ($file_size === $file['size'])
@@ -273,12 +273,12 @@ class UploaderCore
 	protected function _normalizeDirectory($directory)
 	{
 		$last = $directory[strlen($directory) - 1];
-		
+
 		if (in_array($last, array('/', '\\'))) {
 			$directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
 			return $directory;
 		}
-		
+
 		$directory .= DIRECTORY_SEPARATOR;
 		return $directory;
 	}

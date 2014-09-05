@@ -27,7 +27,7 @@
 class ImageTypeCore extends ObjectModel
 {
 	public $id;
-	
+
 	/** @var string Name */
 	public $name;
 
@@ -78,7 +78,7 @@ class ImageTypeCore extends ObjectModel
 	 * @var array Image types cache
 	 */
 	protected static $images_types_cache = array();
-	
+
 	protected static $images_types_name_cache = array();
 
 	protected $webserviceParameters = array();
@@ -132,9 +132,9 @@ class ImageTypeCore extends ObjectModel
 		if (!isset(self::$images_types_name_cache[$name.'_'.$type.'_'.$order]))
 		{
 			self::$images_types_name_cache[$name.'_'.$type.'_'.$order] = Db::getInstance()->getRow('
-				SELECT `id_image_type`, `name`, `width`, `height`, `products`, `categories`, `manufacturers`, `suppliers`, `scenes` 
-				FROM `'._DB_PREFIX_.'image_type` 
-				WHERE 
+				SELECT `id_image_type`, `name`, `width`, `height`, `products`, `categories`, `manufacturers`, `suppliers`, `scenes`
+				FROM `'._DB_PREFIX_.'image_type`
+				WHERE
 				`name` LIKE \''.pSQL($name).'\''
 				.(!is_null($type) ? ' AND `'.pSQL($type).'` = 1' : '')
 				.(!is_null($order) ? ' ORDER BY `'.bqSQL($order).'` ASC' : '')
@@ -142,7 +142,7 @@ class ImageTypeCore extends ObjectModel
 		}
 		return self::$images_types_name_cache[$name.'_'.$type.'_'.$order];
 	}
-	
+
 	public static function getFormatedName($name)
 	{
 		$theme_name = Context::getContext()->shop->theme_name;
@@ -158,5 +158,5 @@ class ImageTypeCore extends ObjectModel
 		else
 			return $name_without_theme_name.'_default';
 	}
-	
+
 }

@@ -261,7 +261,7 @@ class ManufacturerCore extends ObjectModel
 		$front = true;
 		if (!in_array($context->controller->controller_type, array('front', 'modulefront')))
 			$front = false;
-			
+
 		if ($p < 1)
 			$p = 1;
 
@@ -373,7 +373,7 @@ class ManufacturerCore extends ObjectModel
 		$front = true;
 		if (!in_array($context->controller->controller_type, array('front', 'modulefront')))
 			$front = false;
-			
+
 		return Db::getInstance()->executeS('
 		SELECT p.`id_product`,  pl.`name`
 		FROM `'._DB_PREFIX_.'product` p

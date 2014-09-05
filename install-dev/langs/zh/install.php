@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  'informations' => 
+  'informations' =>
   array (
     'phone' => '',
     'documentation' => '',
@@ -10,7 +10,7 @@ return array (
     'blog' => '',
     'support' => '',
   ),
-  'translations' => 
+  'translations' =>
   array (
     'An SQL error occurred for entity <i>%1$s</i>: <i>%2$s</i>' => '',
     'Cannot create image "%1$s" for entity "%2$s"' => '不能在"%2$s" 创建图片"%1$s"',

@@ -310,7 +310,7 @@ class AdminScenesControllerCore extends AdminController
 			if (!Tools::isSubmit('zones') || !count(Tools::getValue('zones')))
 				$this->errors[] = Tools::displayError('You should create at least one zone.');
 		}
-		
+
 		if (Tools::isSubmit('delete'.$this->table))
 		{
 			if (Validate::isLoadedObject($object = $this->loadObject()))

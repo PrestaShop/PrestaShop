@@ -35,7 +35,7 @@ function p15010_drop_column_id_address_if_exists()
 			$fields[$k] = $field['Field'];
 
 		if (in_array('id_address', $fields))
-			$res &= Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'supplier` 
+			$res &= Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'supplier`
 				DROP `id_address`');
 	}
 	return $res;

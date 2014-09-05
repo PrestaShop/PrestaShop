@@ -83,7 +83,7 @@ function latin1_database_to_utf8()
 					array('name' => 'tax_lang', 'id' => 'id_tax', 'lang' => true, 'fields' => array('name')),
 					array('name' => 'zone', 'id' => 'id_zone', 'fields' => array('name'))
 				);
-	
+
 	foreach ($tables AS $table)
 	{
 		/* Latin1 datas' selection */
@@ -106,7 +106,7 @@ function latin1_database_to_utf8()
 					<sqlNumberError><![CDATA['.htmlentities(Db::getInstance()->getNumberError()).']]></sqlNumberError>
 				</request>'."\n";
 		}
-	
+
 		if (Db::getInstance()->NumRows())
 		{
 			/* Utf-8 datas' restitution */

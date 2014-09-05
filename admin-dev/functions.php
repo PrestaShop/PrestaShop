@@ -60,7 +60,7 @@ function includeDatepicker($id, $time = false)
 	Tools::displayAsDeprecated();
 	echo '<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/ui/jquery.ui.core.min.js"></script>';
 	echo '<link type="text/css" rel="stylesheet" href="'.__PS_BASE_URI__.'js/jquery/ui/themes/ui-lightness/jquery.ui.theme.css" />';
-	echo '<link type="text/css" rel="stylesheet" href="'.__PS_BASE_URI__.'js/jquery/ui/themes/ui-lightness/jquery.ui.datepicker.css" />';	
+	echo '<link type="text/css" rel="stylesheet" href="'.__PS_BASE_URI__.'js/jquery/ui/themes/ui-lightness/jquery.ui.datepicker.css" />';
 	$iso = Db::getInstance()->getValue('SELECT iso_code FROM '._DB_PREFIX_.'lang WHERE `id_lang` = '.(int)Context::getContext()->language->id);
 	if ($iso != 'en')
 		echo '<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/ui/i18n/jquery.ui.datepicker-'.Tools::htmlentitiesUTF8($iso).'.js"></script>';
@@ -97,7 +97,7 @@ function rewriteSettingsFile($baseUrls = null, $theme = null, $arrayDB = null)
 	$defines['_COOKIE_KEY_'] = addslashes(_COOKIE_KEY_);
 	$defines['_COOKIE_IV_'] = addslashes(_COOKIE_IV_);
 	$defines['_PS_CREATION_DATE_'] = addslashes(_PS_CREATION_DATE_);
-	
+
 	if (defined('_RIJNDAEL_KEY_'))
 		$defines['_RIJNDAEL_KEY_'] = addslashes(_RIJNDAEL_KEY_);
 	if (defined('_RIJNDAEL_IV_'))
@@ -239,7 +239,7 @@ function checkPSVersion()
 function translate($string)
 {
 	Tools::displayAsDeprecated();
-	
+
 	global $_LANGADM;
 	if (!is_array($_LANGADM))
 		return str_replace('"', '&quot;', $string);

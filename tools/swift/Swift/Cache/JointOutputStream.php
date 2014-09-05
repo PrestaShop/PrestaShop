@@ -28,7 +28,7 @@ class Swift_Cache_JointOutputStream extends Swift_Cache_OutputStream
    * @var int
    */
   protected $pointer = 0;
-  
+
   /**
    * Ctor
    * @param array An array of Swift_Cache_OutputStream instances

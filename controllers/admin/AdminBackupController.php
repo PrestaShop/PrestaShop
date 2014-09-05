@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014  
+* 2007-2014
 *
 * NOTICE OF LICENSE
 *
@@ -167,7 +167,7 @@ class AdminBackupControllerCore extends AdminController
 
 		// Test if the backup dir is writable
 		if (!is_writable(PrestaShopBackup::getBackupPath()))
-			$this->warnings[] = $this->l('The "Backups" directory located in the admin directory must be writable 
+			$this->warnings[] = $this->l('The "Backups" directory located in the admin directory must be writable
 				(CHMOD 755 / 777).');
 		elseif ($this->display == 'add')
 			{
@@ -177,7 +177,7 @@ class AdminBackupControllerCore extends AdminController
 						$this->errors[] = $object->error;
 					else
 						$this->context->smarty->assign(array(
-							'conf' => $this->l('It appears the backup was successful, however you must download and 
+							'conf' => $this->l('It appears the backup was successful, however you must download and
 								carefully verify the backup file before proceeding. '),
 							'backup_url' => $object->getBackupURL(),
 							'backup_weight' => number_format((filesize($object->id) * 0.000001), 2, '.', '')
@@ -222,7 +222,7 @@ class AdminBackupControllerCore extends AdminController
 				$order_way = 'desc';
 		}
 		if (empty($limit))
-			$limit = ((!isset($this->context->cookie->{$this->table.'_pagination'})) ? $this->_pagination[0] : $limit = 
+			$limit = ((!isset($this->context->cookie->{$this->table.'_pagination'})) ? $this->_pagination[0] : $limit =
 				$this->context->cookie->{$this->table.'_pagination'});
 		$limit = (int)Tools::getValue('pagination', $limit);
 		$this->context->cookie->{$this->table.'_pagination'} = $limit;
@@ -255,7 +255,7 @@ class AdminBackupControllerCore extends AdminController
 			else if ($age < 86400)
 			{
 				$age = floor($age / 3600);
-				$age = $age.' '.(($age == 1) ? $this->l('Hour', 'AdminTab', false, false) : 
+				$age = $age.' '.(($age == 1) ? $this->l('Hour', 'AdminTab', false, false) :
 					$this->l('Hours', 'AdminTab', false, false));
 			}
 			else

@@ -46,7 +46,7 @@ class MySQLCore extends Db
 
 		return $this->link;
 	}
-	
+
 	public static function createDatabase($host, $user, $password, $dbname, $dropit = false)
 	{
 		$link = mysql_connect($host, $user, $password);
@@ -82,7 +82,7 @@ class MySQLCore extends Db
 			$return = mysql_fetch_assoc($result);
 		elseif(is_resource($this->_result) && $this->_result)
 			$return = mysql_fetch_assoc($this->_result);
-		return $return;	
+		return $return;
 	}
 
 	/**
@@ -177,11 +177,11 @@ class MySQLCore extends Db
 		@mysql_close($link);
 		return 0;
 	}
-		
+
 	public function getBestEngine()
 	{
 		$value = 'InnoDB';
-		
+
 		$sql = 'SHOW VARIABLES WHERE Variable_name = \'have_innodb\'';
 		$result = mysql_query($sql);
 		if (!$result)
@@ -189,7 +189,7 @@ class MySQLCore extends Db
 		$row = mysql_fetch_assoc($result);
 		if (!$row || strtolower($row['Value']) != 'yes')
 			$value = 'MyISAM';
-		
+
 		/* MySQL >= 5.6 */
 		$sql = 'SHOW ENGINES';
 		$result = mysql_query($sql);
@@ -202,7 +202,7 @@ class MySQLCore extends Db
 			}
 		return $value;
 	}
-	
+
 	public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
 	{
 		ini_set('mysql.connect_timeout', 5);
@@ -218,7 +218,7 @@ class MySQLCore extends Db
 		CREATE TABLE `'.$prefix.'test` (
 			`test` tinyint(1) unsigned NOT NULL
 		) ENGINE='.$engine, $link);
-		
+
 		if (!$result)
 			return mysql_error($link);
 

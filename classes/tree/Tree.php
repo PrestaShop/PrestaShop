@@ -331,7 +331,7 @@ class TreeCore
 			));
 			$template->assign('header', $headerTemplate->fetch());
 		}
-		
+
 		//Assign Tree nodes
 		$template->assign($this->getAttributes())->assign(array(
 			'id'    => $this->getId(),
@@ -392,12 +392,12 @@ class TreeCore
 	private function _normalizeDirectory($directory)
 	{
 		$last = $directory[strlen($directory) - 1];
-        
+
         if (in_array($last, array('/', '\\'))) {
             $directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
             return $directory;
         }
-        
+
         $directory .= DIRECTORY_SEPARATOR;
         return $directory;
 	}

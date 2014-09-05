@@ -44,6 +44,6 @@ function p15017_add_id_shop_to_primary_key()
 			Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.$table.'_lang` DROP PRIMARY KEY');
 		Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.$table.'_lang` ADD PRIMARY KEY (`id_'.$table.'`, `id_shop`, `id_lang`)');
 	}
-	
+
 	return true;
 }

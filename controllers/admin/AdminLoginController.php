@@ -52,7 +52,7 @@ class AdminLoginControllerCore extends AdminController
 		$this->addJS(_PS_JS_DIR_.'vendor/spin.js');
 		$this->addJS(_PS_JS_DIR_.'vendor/ladda.js');
 	}
-	
+
 	public function initContent()
 	{
 		if (!Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED'))
@@ -66,7 +66,7 @@ class AdminLoginControllerCore extends AdminController
 			if ($clientIsMaintenanceOrLocal)
 				$warningSslMessage = Tools::displayError('SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.');
 			else
-			{	
+			{
 				$url = 'https://'.Tools::safeOutput(Tools::getServerName()).Tools::safeOutput($_SERVER['REQUEST_URI']);
 				$warningSslMessage = sprintf(Tools::displayError('SSL is activated. Please connect using the following link to <a href="%s">log into secure mode (https://)</a>', false), $url);
 			}
@@ -75,9 +75,9 @@ class AdminLoginControllerCore extends AdminController
 
 		if (file_exists(_PS_ADMIN_DIR_.'/../install'))
 			$this->context->smarty->assign('wrong_install_name', true);
-		
+
 		if (basename(_PS_ADMIN_DIR_) == 'admin' && file_exists(_PS_ADMIN_DIR_.'/../admin/'))
-		{	
+		{
 			$rand = 'admin'.sprintf('%04d', rand(0, 9999)).'/';
 			if (@rename(_PS_ADMIN_DIR_.'/../admin/', _PS_ADMIN_DIR_.'/../'.$rand))
 				Tools::redirectAdmin('../'.$rand);
@@ -121,7 +121,7 @@ class AdminLoginControllerCore extends AdminController
 		parent::initContent();
 		$this->initFooter();
 	}
-	
+
 	public function checkToken()
 	{
 		return true;
@@ -136,7 +136,7 @@ class AdminLoginControllerCore extends AdminController
 	{
 		return true;
 	}
-	
+
 	public function postProcess()
 	{
 		if (Tools::isSubmit('submitLogin'))
@@ -144,7 +144,7 @@ class AdminLoginControllerCore extends AdminController
 		elseif (Tools::isSubmit('submitForgot'))
 			$this->processForgot();
 	}
-	
+
 	public function processLogin()
 	{
 		/* Check fields validity */
@@ -159,7 +159,7 @@ class AdminLoginControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('The password field is blank.');
 		elseif (!Validate::isPasswd($passwd))
 			$this->errors[] = Tools::displayError('Invalid password.');
-			
+
 		if (!count($this->errors))
 		{
 			// Find employee
@@ -210,7 +210,7 @@ class AdminLoginControllerCore extends AdminController
 		if (Tools::isSubmit('ajax'))
 			die(Tools::jsonEncode(array('hasErrors' => true, 'errors' => $this->errors)));
 	}
-	
+
 	public function processForgot()
 	{
 		if (_PS_MODE_DEMO_)
@@ -232,7 +232,7 @@ class AdminLoginControllerCore extends AdminController
 		}
 
 		if (!count($this->errors))
-		{	
+		{
 			$pwd = Tools::passwdGen();
 			$employee->passwd = Tools::encrypt($pwd);
 			$employee->last_passwd_gen = date('Y-m-d H:i:s', time());
@@ -243,7 +243,7 @@ class AdminLoginControllerCore extends AdminController
 				'{firstname}' => $employee->firstname,
 				'{passwd}' => $pwd
 			);
-						
+
 			if (Mail::Send($employee->id_lang, 'password', Mail::l('Your new password', $employee->id_lang), $params, $employee->email, $employee->firstname.' '.$employee->lastname))
 			{
 				// Update employee only if the mail can be sent
@@ -263,7 +263,7 @@ class AdminLoginControllerCore extends AdminController
 					'hasErrors' => true,
 					'errors' => array(Tools::displayError('An error occurred while attempting to change your password.'))
 				)));
-		
+
 		}
 		else if (Tools::isSubmit('ajax'))
 			die(Tools::jsonEncode(array('hasErrors' => true, 'errors' => $this->errors)));

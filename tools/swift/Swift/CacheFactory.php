@@ -22,7 +22,7 @@ class Swift_CacheFactory
    * @var string Case SenSITivE
    */
   protected static $className = "Swift_Cache_Memory";
-  
+
   /**
    * Set the name of the class which is supposed to be used
    * This also includes the file

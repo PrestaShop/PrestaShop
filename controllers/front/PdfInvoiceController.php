@@ -60,7 +60,7 @@ class PdfInvoiceControllerCore extends FrontController
 	}
 
 	public function display()
-	{	
+	{
 		$order_invoice_list = $this->order->getInvoicesCollection();
 		Hook::exec('actionPDFInvoiceRender', array('order_invoice_list' => $order_invoice_list));
 

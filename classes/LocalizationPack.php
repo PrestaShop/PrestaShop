@@ -289,7 +289,7 @@ class LocalizationPackCore
 					PaymentModule::addCurrencyPermissions($currency->id);
 				}
 			}
-            
+
 			if (($error = Currency::refreshCurrencies()) !== null)
                 $this->_errors[] = $error;
 
@@ -398,7 +398,7 @@ class LocalizationPackCore
 
 		return true;
 	}
-	
+
 	protected function _installGroups($xml)
 	{
 		return $this->updateDefaultGroupDisplayMethod($xml);

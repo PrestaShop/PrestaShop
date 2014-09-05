@@ -48,13 +48,13 @@ class AdminProfilesControllerCore extends AdminController
 
 		$this->fields_list = array(
 			'id_profile' => array(
-						'title' => $this->l('ID'), 
+						'title' => $this->l('ID'),
 						'align' => 'center',
 						'class' => 'fixed-width-xs'
 						),
 			'name' => array('title' => $this->l('Name'))
 			);
-			
+
 		$this->identifier = 'id_profile';
 
 		$this->fields_form = array(
@@ -107,7 +107,7 @@ class AdminProfilesControllerCore extends AdminController
 				'desc' => $this->l('Add new profile', null, null, false),
 				'icon' => 'process-icon-new'
 			);
-		
+
 		parent::initPageHeaderToolbar();
 	}
 }

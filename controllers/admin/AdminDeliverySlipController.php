@@ -83,7 +83,7 @@ class AdminDeliverySlipControllerCore extends AdminController
 			),
 			'submit' => array(
 				'title' => $this->l('Generate PDF file'),
-				'icon' => 'process-icon-download-alt'	
+				'icon' => 'process-icon-download-alt'
 			)
 		);
 
@@ -120,7 +120,7 @@ class AdminDeliverySlipControllerCore extends AdminController
 		$this->initTabModuleList();
 		$this->initPageHeaderToolbar();
 		$this->show_toolbar = false;
-		$this->content .= $this->renderForm();		
+		$this->content .= $this->renderForm();
 		$this->content .= $this->renderOptions();
 		$this->context->smarty->assign(array(
 			'content' => $this->content,

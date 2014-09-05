@@ -59,7 +59,7 @@ class CustomerThreadCore extends ObjectModel
 			'date_upd' => 	array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
 	);
-	
+
 	protected $webserviceParameters = array(
 		'fields' => array(
 			'id_lang' => array(
@@ -84,7 +84,7 @@ class CustomerThreadCore extends ObjectModel
 				'id' => array('required' => true)),
 		)
 	);
-	
+
 	public function getWsCustomerMessages()
 	{
 		return Db::getInstance()->executeS('
@@ -97,10 +97,10 @@ class CustomerThreadCore extends ObjectModel
 	{
 		if (!Validate::isUnsignedId($this->id))
 			return false;
- 		
-		$return = true;			
+
+		$return = true;
 		$result = Db::getInstance()->executeS('
-			SELECT `id_customer_message` 
+			SELECT `id_customer_message`
 			FROM `'._DB_PREFIX_.'customer_message`
 			WHERE `id_customer_thread` = '.(int)$this->id
 		);

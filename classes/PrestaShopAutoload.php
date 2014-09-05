@@ -50,7 +50,7 @@ class PrestaShopAutoload
 	public $index = array();
 
 	public $_include_override_path = true;
-	
+
 	protected static $class_aliases = array(
 		'Collection' => 'PrestaShopCollection',
 		'Autoload' => 'PrestaShopAutoload',
@@ -88,7 +88,7 @@ class PrestaShopAutoload
 	 */
 	public function load($classname)
 	{
-		// Retrocompatibility 
+		// Retrocompatibility
 		if (isset(PrestaShopAutoload::$class_aliases[$classname]) && !interface_exists($classname, false) && !class_exists($classname, false))
 			return eval('class '.$classname.' extends '.PrestaShopAutoload::$class_aliases[$classname].' {}');
 

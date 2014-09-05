@@ -39,7 +39,7 @@ class Swift_Iterator_MySQLResult implements Swift_Iterator
    * @var int
    */
   protected $numRows = 0;
-  
+
   /**
    * Ctor.
    * @param resource The resultset iterate over.
@@ -77,7 +77,7 @@ class Swift_Iterator_MySQLResult implements Swift_Iterator
       $this->pos++;
       return true;
     }
-    
+
     return false;
   }
   /**
@@ -95,7 +95,7 @@ class Swift_Iterator_MySQLResult implements Swift_Iterator
       $this->pos = $pos;
       return true;
     }
-    
+
     return false;
   }
   /**

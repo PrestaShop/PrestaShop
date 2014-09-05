@@ -33,13 +33,13 @@ class XML_Feed_Parser_RSS09Element extends XML_Feed_Parser_RSS09
 {
     /**
      * This will be a reference to the parent object for when we want
-     * to use a 'fallback' rule 
+     * to use a 'fallback' rule
      * @var XML_Feed_Parser_RSS09
      */
     protected $parent;
 
     /**
-     * Our specific element map 
+     * Our specific element map
      * @var array
      */
     protected $map = array(

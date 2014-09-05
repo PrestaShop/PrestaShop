@@ -52,7 +52,7 @@ class DbMySQLiCore extends Db
 
 		return $this->link;
 	}
-	
+
 	public static function createDatabase($host, $user, $password, $dbname, $dropit = false)
 	{
 		if (strpos($host, ':') !== false)
@@ -193,11 +193,11 @@ class DbMySQLiCore extends Db
 		$link->close();
 		return 0;
 	}
-	
+
 	public function getBestEngine()
 	{
 		$value = 'InnoDB';
-		
+
 		$sql = 'SHOW VARIABLES WHERE Variable_name = \'have_innodb\'';
 		$result = $this->link->query($sql);
 		if (!$result)
@@ -205,7 +205,7 @@ class DbMySQLiCore extends Db
 		$row = $result->fetch_assoc();
 		if (!$row || strtolower($row['Value']) != 'yes')
 			$value = 'MyISAM';
-			
+
 		/* MySQL >= 5.6 */
 		$sql = 'SHOW ENGINES';
 		$result = $this->link->query($sql);
@@ -218,7 +218,7 @@ class DbMySQLiCore extends Db
 			}
 		return $value;
 	}
-	
+
 	public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
 	{
 		$link = @new mysqli($server, $user, $pwd, $db);

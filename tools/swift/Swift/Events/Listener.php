@@ -8,7 +8,7 @@
  * @package Swift_Events
  * @license GNU Lesser General Public License
  */
- 
+
 /**
  * Used for identity only
  * @package Swift_Events

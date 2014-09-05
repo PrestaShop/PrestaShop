@@ -164,7 +164,7 @@ abstract class DbCore
 
 	/* do not remove, useful for some modules */
 	abstract public function set_db($db_name);
-	
+
 	abstract public function getBestEngine();
 
 	/**
@@ -549,7 +549,7 @@ abstract class DbCore
 			$result = false;
 		else
 			$result = $this->nextRow($this->result);
-		$this->last_cached = false;		
+		$this->last_cached = false;
 		if (is_null($result))
 			$result = false;
 		if ($use_cache && $this->is_cache_enabled)

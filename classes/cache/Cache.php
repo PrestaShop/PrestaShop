@@ -265,7 +265,7 @@ abstract class CacheCore
 		else
 			return false;
 	}
-	
+
 	/**
 	 * Delete a query from cache
 	 *

@@ -86,12 +86,12 @@ class AdminEmailsControllerCore extends AdminController
 				'icon' => 'icon-envelope',
 				'fields' =>	array(
 					'PS_MAIL_EMAIL_MESSAGE' => array(
-						'title' => $this->l('Send email to'), 
-						'desc' => $this->l('Where customers send messages from the order page.'), 
-						'validation' => 'isUnsignedId', 
-						'type' => 'select', 
-						'cast' => 'intval', 
-						'identifier' => 'email_message', 
+						'title' => $this->l('Send email to'),
+						'desc' => $this->l('Where customers send messages from the order page.'),
+						'validation' => 'isUnsignedId',
+						'type' => 'select',
+						'cast' => 'intval',
+						'identifier' => 'email_message',
 						'list' => $arr
 					),
 					'PS_MAIL_METHOD' => array(
@@ -104,7 +104,7 @@ class AdminEmailsControllerCore extends AdminController
 							2 => $this->l('Set my own SMTP parameters (for advanced users ONLY)')
 						),
 						'js' => array(
-							1 => 'onclick="$(\'#configuration_fieldset_smtp\').slideUp();"', 
+							1 => 'onclick="$(\'#configuration_fieldset_smtp\').slideUp();"',
 							2 => 'onclick="$(\'#configuration_fieldset_smtp\').slideDown();"',
 							3 => 'onclick="$(\'#configuration_fieldset_smtp\').slideUp();"'
 						),
@@ -115,8 +115,8 @@ class AdminEmailsControllerCore extends AdminController
 						'type' => 'radio',
 						'required' => true,
 						'choices' => array(
-							Mail::TYPE_HTML => $this->l('Send email in HTML format'), 
-							Mail::TYPE_TEXT => $this->l('Send email in text format'), 
+							Mail::TYPE_HTML => $this->l('Send email in HTML format'),
+							Mail::TYPE_TEXT => $this->l('Send email in text format'),
 							Mail::TYPE_BOTH => $this->l('Both')
 						)
 					),
@@ -222,7 +222,7 @@ class AdminEmailsControllerCore extends AdminController
 
 		ksort($this->fields_options['email']['fields']['PS_MAIL_METHOD']['choices']);
 	}
-	
+
 	public function processDelete()
 	{
 		return Mail::eraseAllLogs();
@@ -238,7 +238,7 @@ class AdminEmailsControllerCore extends AdminController
 		);
 		unset($this->toolbar_btn['new']);
 	}
-	
+
 	public function updateOptionPsMailPasswd($value)
 	{
 		if (Tools::getValue('PS_MAIL_PASSWD') == '' && Configuration::get('PS_MAIL_PASSWD'))
@@ -259,12 +259,12 @@ class AdminEmailsControllerCore extends AdminController
 		$this->addToolBarModulesListButton();
 		unset($this->toolbar_btn['save']);
 		$back = $this->context->link->getAdminLink('AdminDashboard');
-		
+
 		$this->toolbar_btn['back'] = array(
 			'href' => $back,
 			'desc' => $this->l('Back to the dashboard')
 		);
-		
+
 		// $this->content .= $this->renderOptions();
 
 		$this->context->smarty->assign(array(
@@ -274,7 +274,7 @@ class AdminEmailsControllerCore extends AdminController
 			'page_header_toolbar_title' => $this->page_header_toolbar_title,
 			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
 		));
-		
+
 		return parent::initContent();
 	}
 
@@ -317,14 +317,14 @@ class AdminEmailsControllerCore extends AdminController
 			$smtpPassword = Tools::getValue('smtpPassword');
 			$smtpPassword = (!empty($smtpPassword)) ? urldecode($smtpPassword) : Configuration::get('PS_MAIL_PASSWD');
 			$smtpPassword = str_replace(
-				array('&lt;', '&gt;', '&quot;', '&amp;'), 
-				array('<', '>', '"', '&'), 
+				array('&lt;', '&gt;', '&quot;', '&amp;'),
+				array('<', '>', '"', '&'),
 				Tools::htmlentitiesUTF8($smtpPassword)
 			);
-			
+
 			$smtpPort = Tools::getValue('smtpPort');
 			$smtpEncryption = Tools::getValue('smtpEnc');
-			
+
 			$result = Mail::sendMailTest(Tools::htmlentitiesUTF8($smtpChecked), Tools::htmlentitiesUTF8($smtpServer), Tools::htmlentitiesUTF8($content), Tools::htmlentitiesUTF8($subject), Tools::htmlentitiesUTF8($type), Tools::htmlentitiesUTF8($to), Tools::htmlentitiesUTF8($from), Tools::htmlentitiesUTF8($smtpLogin), $smtpPassword, Tools::htmlentitiesUTF8($smtpPort), Tools::htmlentitiesUTF8($smtpEncryption));
 			die($result === true ? 'ok' : $result);
 		}

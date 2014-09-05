@@ -41,7 +41,7 @@ class AdminStatesControllerCore extends AdminController
 
 		if (!Tools::getValue('realedit'))
 			$this->deleted = false;
-		
+
 		$this->bulk_actions = array(
 			'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
 			'affectzone' => array('text' => $this->l('Affect a new zone'))
@@ -51,7 +51,7 @@ class AdminStatesControllerCore extends AdminController
 		$this->_join = '
 		LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = a.`id_zone`)
 		LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (cl.`id_country` = a.`id_country` AND cl.id_lang = '.(int)$this->context->language->id.')';
-		
+
 		$countries_array = $zones_array = array();
 		$this->zones = Zone::getZones();
 		$this->countries = Country::getCountries($this->context->language->id, false, true, false);
@@ -59,7 +59,7 @@ class AdminStatesControllerCore extends AdminController
 			$zones_array[$zone['id_zone']] = $zone['name'];
 		foreach ($this->countries as $country)
 			$countries_array[$country['id_country']] = $country['name'];
-		
+
 		$this->fields_list = array(
 			'id_state' => array(
 				'title' => $this->l('ID'),

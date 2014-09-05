@@ -342,7 +342,7 @@ class HelperCore
 
 		return $tpl->fetch();
 	}
-	
+
 	public function renderModulesList($modules_list)
 	{
 		$this->tpl_vars = array(

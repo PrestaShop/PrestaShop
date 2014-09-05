@@ -24,7 +24,7 @@ class Swift_Plugin_Decorator_Replacements
    * @var array,array
    */
   protected $replacements;
-  
+
   /**
    * Ctor.
    * @param array The replacements as a 2-d array, optional

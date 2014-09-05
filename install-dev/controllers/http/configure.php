@@ -29,9 +29,9 @@
  */
 class InstallControllerHttpConfigure extends InstallControllerHttp
 {
-	
+
 	public $list_countries = array();
-	
+
 	/**
 	 * @see InstallAbstractModel::processNextStep()
 	 */
@@ -88,18 +88,18 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 			$this->errors['shop_name'] = $this->l('Invalid shop name');
 		else if (strlen($this->session->shop_name) > 64)
 			$this->errors['shop_name'] = $this->l('The field %s is limited to %d characters', $this->l('shop name'), 64);
-			
+
 		// Check admin name
 		if ($this->session->admin_firstname && !Validate::isName($this->session->admin_firstname))
 			$this->errors['admin_firstname'] = $this->l('Your firstname contains some invalid characters');
 		else if (strlen($this->session->admin_firstname) > 32)
 			$this->errors['admin_firstname'] = $this->l('The field %s is limited to %d characters', $this->l('firstname'), 32);
-		
+
 		if ($this->session->admin_lastname && !Validate::isName($this->session->admin_lastname))
 			$this->errors['admin_lastname'] = $this->l('Your lastname contains some invalid characters');
 		else if (strlen($this->session->admin_lastname) > 32)
 			$this->errors['admin_lastname'] = $this->l('The field %s is limited to %d characters', $this->l('lastname'), 32);
-		
+
 		// Check passwords
 		if ($this->session->admin_password)
 		{
@@ -139,14 +139,14 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 				$tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
 				if (!$tmp_name || !move_uploaded_file($file['tmp_name'], $tmp_name))
 					return false;
-				
+
 				list($width, $height, $type) = getimagesize($tmp_name);
-				
+
 				$newheight = ($height > 500) ? 500 : $height;
 				$percent = $newheight / $height;
 				$newwidth = $width * $percent;
 				$newheight = $height * $percent;
-				
+
 				if (!is_writable(_PS_ROOT_DIR_.'/img/'))
 					$error = $this->l('Image folder %s is not writable', _PS_ROOT_DIR_.'/img/');
 				if (!$error)

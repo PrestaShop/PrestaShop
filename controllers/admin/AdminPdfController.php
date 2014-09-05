@@ -44,7 +44,7 @@ class AdminPdfControllerCore extends AdminController
 		else
 			$this->errors[] = Tools::displayError('You do not have permission to view this.');
 	}
-	
+
 	public function checkCacheFolder()
 	{
 		if (!is_dir(_PS_CACHE_DIR_.'tcpdf/'))

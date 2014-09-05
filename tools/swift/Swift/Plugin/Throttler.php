@@ -40,7 +40,7 @@ class Swift_Plugin_Throttler extends Swift_Plugin_BandwidthMonitor implements Sw
    * @var int
    */
   protected $time = null;
-  
+
   /**
    * Part of the interface which is notified after a command is sent.
    * @param Swift_Events_CommandEvent
@@ -49,7 +49,7 @@ class Swift_Plugin_Throttler extends Swift_Plugin_BandwidthMonitor implements Sw
   {
     parent::commandSent($e);
     if (null === $rate = $this->getBytesPerMinute()) return;
-    
+
     $duration = $this->getTimeLapse();
     $bytes_sent = $this->getBytesOut();
     $bytes_per_sec = $rate / 60;
@@ -68,7 +68,7 @@ class Swift_Plugin_Throttler extends Swift_Plugin_BandwidthMonitor implements Sw
   {
     $this->setSent($this->getSent() + 1);
     if (null === $rate = $this->getEmailsPerMinute()) return;
-    
+
     $duration = $this->getTimeLapse();
     $emails_sent = $this->getSent();
     $emails_per_sec = $rate / 60;

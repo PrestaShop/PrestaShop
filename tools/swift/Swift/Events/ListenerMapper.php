@@ -33,7 +33,7 @@ class Swift_Events_ListenerMapper
     );
     return $map;
   }
-  
+
   /**
    * Get the name of the method which needs running based upon the listener name
    * @return string

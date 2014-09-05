@@ -237,13 +237,13 @@ class SmartyLazyRegister
 		else
 		{
 			$args = array();
-			
+
 			foreach($arguments as $a => $argument)
 				if($a == 0)
-					$args[] = $arguments[0]; 
+					$args[] = $arguments[0];
 				else
-					$args[] = &$arguments[$a]; 
-			
+					$args[] = &$arguments[$a];
+
 			return call_user_func_array($item, $args);
 		}
 	}

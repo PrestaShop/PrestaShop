@@ -52,7 +52,7 @@ class TranslateCore
 		{
 			$iso = Context::getContext()->language->iso_code;
 			if (empty($iso))
-				$iso = Language::getIsoById((int)(Configuration::get('PS_LANG_DEFAULT')));			
+				$iso = Language::getIsoById((int)(Configuration::get('PS_LANG_DEFAULT')));
 			if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php'))
 				include_once(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
 		}
@@ -133,8 +133,8 @@ class TranslateCore
 		{
 			$filesByPriority = array(
 				// Translations in theme
-				_PS_THEME_DIR_.'modules/'.$name.'/translations/'.Context::getContext()->language->iso_code.'.php', 
-				_PS_THEME_DIR_.'modules/'.$name.'/'.Context::getContext()->language->iso_code.'.php', 
+				_PS_THEME_DIR_.'modules/'.$name.'/translations/'.Context::getContext()->language->iso_code.'.php',
+				_PS_THEME_DIR_.'modules/'.$name.'/'.Context::getContext()->language->iso_code.'.php',
 				// PrestaShop 1.5 translations
 				_PS_MODULE_DIR_.$name.'/translations/'.Context::getContext()->language->iso_code.'.php',
 				// PrestaShop 1.4 translations
@@ -183,8 +183,8 @@ class TranslateCore
 				$ret = htmlspecialchars($ret, ENT_COMPAT, 'UTF-8');
 
 			if ($sprintf === null)
-				$lang_cache[$cache_key] = $ret; 
-			else    
+				$lang_cache[$cache_key] = $ret;
+			else
          	return $ret;
 
 		}

@@ -35,11 +35,11 @@ require_once(dirname(__FILE__) . '/UnionProcessor.php');
 require_once(dirname(__FILE__) . '/SQLProcessor.php');
 
 /**
- * 
+ *
  * This class processes the incoming sql string.
- * 
+ *
  * @author arothe
- * 
+ *
  */
 class DefaultProcessor extends AbstractProcessor {
 

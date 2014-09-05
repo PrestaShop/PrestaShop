@@ -144,7 +144,7 @@ class AdminQuickAccessesControllerCore extends AdminController
 
 		parent::initProcess();
 	}
-	
+
 	public function getQuickAccessesList()
 	{
 		$links = QuickAccess::getQuickAccesses($this->context->language->id);

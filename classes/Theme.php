@@ -32,9 +32,9 @@ class ThemeCore extends ObjectModel
 	public $default_left_column;
 	public $default_right_column;
 	public $product_per_page;
-	
+
 	const CACHE_FILE_CUSTOMER_THEMES_LIST = '/config/xml/customer_themes_list.xml';
-	
+
 	const CACHE_FILE_MUST_HAVE_THEMES_LIST = '/config/xml/must_have_themes_list.xml';
 
 	/** @var int access rights of created folders (octal) */
@@ -64,7 +64,7 @@ class ThemeCore extends ObjectModel
 
 	/**
 	 * return an array of all available theme (installed or not)
-	 * 
+	 *
 	 * @param boolean $installed_only
 	 * @return array string (directory)
 	 */
@@ -99,18 +99,18 @@ class ThemeCore extends ObjectModel
 
 	/**
 	 * check if a theme is used by a shop
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function isUsed()
 	{
-		return Db::getInstance()->getValue('SELECT count(*) 
+		return Db::getInstance()->getValue('SELECT count(*)
 			FROM '._DB_PREFIX_.'shop WHERE id_theme = '.(int)$this->id);
 	}
 
 	/**
 	 * add only theme if the directory exists
-	 * 
+	 *
 	 * @param bool $null_values
 	 * @param bool $autodate
 	 * @return boolean Insertion result

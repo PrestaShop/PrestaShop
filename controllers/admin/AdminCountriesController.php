@@ -38,12 +38,12 @@ class AdminCountriesControllerCore extends AdminController
 		$this->addRowAction('edit');
 
 		$this->context = Context::getContext();
-		
+
 		$this->bulk_actions = array(
 			'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
 			'affectzone' => array('text' => $this->l('Assign to a new zone'))
 		);
-		
+
 		$this->fieldImageSettings = array(
 			'name' => 'logo',
 			'dir' => 'st'
@@ -63,7 +63,7 @@ class AdminCountriesControllerCore extends AdminController
 				'submit' => array('title' => $this->l('Save'))
 			)
 		);
-		
+
 		$zones_array = array();
 		$this->zones = Zone::getZones();
 		foreach ($this->zones as $zone)
@@ -285,7 +285,7 @@ class AdminCountriesControllerCore extends AdminController
 						)
 					),
 					'hint' => $this->l('Display this country to your customers (the selected country will always be displayed in the Back Office).')
-				),			
+				),
 				array(
 					'type' => 'switch',
 					'label' => $this->l('Contains states'),
@@ -341,7 +341,7 @@ class AdminCountriesControllerCore extends AdminController
 					)
 				)
 			)
-			
+
 		);
 
 		if (Shop::isFeatureActive())
@@ -356,10 +356,10 @@ class AdminCountriesControllerCore extends AdminController
 		$this->fields_form['submit'] = array(
 			'title' => $this->l('Save')
 		);
-		
+
 		return parent::renderForm();
 	}
-	
+
 	public function processUpdate()
 	{
 		$country = $this->loadObject();
@@ -373,11 +373,11 @@ class AdminCountriesControllerCore extends AdminController
 				$ids = array();
 				foreach ($results as $res)
 					$ids[] = (int)$res['id_state'];
-				
+
 				if (count($ids))
 					$res = Db::getInstance()->execute(
-							'UPDATE `'._DB_PREFIX_.'state` 
-							SET `id_zone` = '.(int)Tools::getValue('id_zone').' 
+							'UPDATE `'._DB_PREFIX_.'state`
+							SET `id_zone` = '.(int)Tools::getValue('id_zone').'
 							WHERE `id_state` IN ('.implode(',', $ids).')');
 			}
 		}
@@ -400,7 +400,7 @@ class AdminCountriesControllerCore extends AdminController
 
 		return parent::postProcess();
 	}
-	
+
 	public function processSave()
 	{
 		if (!$this->id_object)
@@ -436,15 +436,15 @@ class AdminCountriesControllerCore extends AdminController
 
 		return $country;
 	}
-	
+
 	public function processStatus()
 	{
 		parent::processStatus();
 		if (Validate::isLoadedObject($object = $this->loadObject()) &&  $object->active == 1)
-			return Country::addModuleRestrictions(array(), array(array('id_country' => $object->id)), array());				
+			return Country::addModuleRestrictions(array(), array(array('id_country' => $object->id)), array());
 		return false;
 	}
-	
+
 	public function processBulkStatusSelection($way)
 	{
 		if (is_array($this->boxes) && !empty($this->boxes))
@@ -486,7 +486,7 @@ class AdminCountriesControllerCore extends AdminController
 			$fields = array();
 			$html_tabnav .= '<li'.($class_tab_active ? ' class="'.$class_tab_active.'"' : '').'>
 				<a href="#availableListFieldsFor_'.$class_name.'"><i class="icon-caret-down"></i>&nbsp;'.Translate::getAdminTranslation($class_name, 'AdminCountries').'</a></li>';
-			
+
 			foreach (AddressFormat::getValidateFields($class_name) as $name)
 				$fields[] = '<a href="javascript:void(0);" class="addPattern btn btn-default btn-xs" id="'.($class_name == 'Address' ? $name : $class_name.':'.$name).'">
 					<i class="icon-plus-sign"></i>&nbsp;'.ObjectModel::displayFieldName($name, $class_name).'</a>';

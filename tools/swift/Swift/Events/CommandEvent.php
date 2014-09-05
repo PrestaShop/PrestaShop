@@ -27,7 +27,7 @@ class Swift_Events_CommandEvent extends Swift_Events
    * @var int
    */
   protected $code = null;
-  
+
   /**
    * Constructor
    * @param string The command being sent

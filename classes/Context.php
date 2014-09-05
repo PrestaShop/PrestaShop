@@ -113,11 +113,11 @@ class ContextCore
 	 * @var boolean|string mobile device of the customer
 	 */
 	protected $mobile_device = null;
-	
+
 	const DEVICE_COMPUTER = 1;
-	
+
 	const DEVICE_TABLET = 2;
-	
+
 	const DEVICE_MOBILE = 4;
 
 	public function getMobileDetect()
@@ -163,7 +163,7 @@ class ContextCore
 
 		return $this->mobile_device;
 	}
-	
+
 	public function getDevice()
 	{
 		static $device = null;
@@ -224,10 +224,10 @@ class ContextCore
 			self::$instance = new Context();
 		return self::$instance;
 	}
-	
+
 	/**
 	 * Clone current context
-	 * 
+	 *
 	 * @return Context
 	 */
 	public function cloneContext()

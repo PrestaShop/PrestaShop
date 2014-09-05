@@ -221,7 +221,7 @@ class AuthControllerCore extends FrontController
 
 		foreach (array('inv', 'dlv') as $addressType)
 			$this->context->smarty->assign(array(
-				$addressType.'_adr_fields' => $addressFormat, 
+				$addressType.'_adr_fields' => $addressFormat,
 				$addressType.'_all_fields' => $addressItems,
 				'required_fields' => $requireFormFieldsList
 			));

@@ -54,13 +54,13 @@ class AttachmentCore extends ObjectModel
 			'description' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml'),
 		),
 	);
-	
+
 	public function add($autodate = true, $null_values = false)
 	{
 		$this->file_size = filesize(_PS_DOWNLOAD_DIR_.$this->file);
 		return parent::add($autodate, $null_values);
 	}
-	
+
 	public function update($null_values = false)
 	{
 		$this->file_size = filesize(_PS_DOWNLOAD_DIR_.$this->file);
@@ -124,26 +124,26 @@ class AttachmentCore extends ObjectModel
 		WHERE id_product = '.(int)$id_product);
 
 		Product::updateCacheAttachment((int)$id_product);
-		
+
 		return $res;
 	}
 
 	/**
 	 * associate $id_product to the current object.
-	 * 
+	 *
 	 * @param int $id_product id of the product to associate
 	 * @return boolean true if succed
 	 */
 	public function attachProduct($id_product)
 	{
 		$res = Db::getInstance()->execute('
-			INSERT INTO '._DB_PREFIX_.'product_attachment 
+			INSERT INTO '._DB_PREFIX_.'product_attachment
 				(id_attachment, id_product) VALUES
 				('.(int)$this->id.', '.(int)$id_product.')');
-			
+
 		Product::updateCacheAttachment((int)$id_product);
-		
-		return $res;			
+
+		return $res;
 	}
 
 	/**
@@ -170,11 +170,11 @@ class AttachmentCore extends ObjectModel
 				$result2 = Db::getInstance()->insert('product_attachment', $ids);
 
 		}
-		
+
 		Product::updateCacheAttachment((int)$id_product);
 		if (is_array($array))
 			return ($result1 && (!isset($result2) || $result2));
-			
+
 		return $result1;
 	}
 

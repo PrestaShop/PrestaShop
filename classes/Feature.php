@@ -182,7 +182,7 @@ class FeatureCore extends ObjectModel
 		return Db::getInstance()->getValue('
 		SELECT COUNT(*) as nb
 		FROM `'._DB_PREFIX_.'feature` ag
-		LEFT JOIN `'._DB_PREFIX_.'feature_lang` agl 
+		LEFT JOIN `'._DB_PREFIX_.'feature_lang` agl
 		ON (ag.`id_feature` = agl.`id_feature` AND `id_lang` = '.(int)$id_lang.')
 		');
 	}
@@ -335,7 +335,7 @@ class FeatureCore extends ObjectModel
 		}
 
 		$shiftTable[] = array('minId' => $minId, 'delta' => $currentDelta);
-		
+
 		//Executing generated queries
 		foreach ($shiftTable as $line)
 		{

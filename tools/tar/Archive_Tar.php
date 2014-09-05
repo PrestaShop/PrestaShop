@@ -92,7 +92,7 @@ class Archive_Tar extends PEAR
     /**
      * @var object PEAR_Error object
      */
-    var $error_object=null; 
+    var $error_object=null;
 
     // {{{ constructor
     /**
@@ -659,7 +659,7 @@ class Archive_Tar extends PEAR
     // {{{ _warning()
     function _warning($p_message)
     {
-        $this->error_object = &$this->raiseError($p_message); 
+        $this->error_object = &$this->raiseError($p_message);
 		return $this->error_object;
     }
     // }}}
@@ -1068,7 +1068,7 @@ class Archive_Tar extends PEAR
 
       // ----- Calculate the stored filename
       $p_filename = $this->_translateWinPath($p_filename, false);;
-      
+
       // ----- If datetime is not specified, set current time
       if ($p_datetime === false) {
           $p_datetime = time();
@@ -1125,12 +1125,12 @@ class Archive_Tar extends PEAR
         $v_magic = 'ustar ';
 
         $v_version = ' ';
-        
+
         if (function_exists('posix_getpwuid'))
         {
           $userinfo = posix_getpwuid($v_info[4]);
           $groupinfo = posix_getgrgid($v_info[5]);
-          
+
           $v_uname = $userinfo['name'];
           $v_gname = $groupinfo['name'];
         }
@@ -1214,7 +1214,7 @@ class Archive_Tar extends PEAR
         {
           $userinfo = posix_getpwuid($p_uid);
           $groupinfo = posix_getgrgid($p_gid);
-          
+
           $v_uname = $userinfo['name'];
           $v_gname = $groupinfo['name'];
         }
@@ -1223,7 +1223,7 @@ class Archive_Tar extends PEAR
           $v_uname = '';
           $v_gname = '';
         }
-        
+
         $v_devmajor = '';
 
         $v_devminor = '';
@@ -1698,7 +1698,7 @@ class Archive_Tar extends PEAR
             }
 
             @fclose($v_dest_file);
-            
+
             if ($p_preserve) {
                 @chown($v_header['filename'], $v_header['uid']);
                 @chgrp($v_header['filename'], $v_header['gid']);
@@ -1720,7 +1720,7 @@ class Archive_Tar extends PEAR
                             .'does not exist. Archive may be corrupted.');
               return false;
           }
-          
+
           $filesize = filesize($v_header['filename']);
           if ($filesize != $v_header['size']) {
               return $this->_error('Extracted file '.$v_header['filename']
@@ -1799,7 +1799,7 @@ class Archive_Tar extends PEAR
 
             if ($this->_compress_type == 'gz') {
                 $end_blocks = 0;
-                
+
                 while (!@gzeof($v_temp_tar)) {
                     $v_buffer = @gzread($v_temp_tar, 512);
                     if ($v_buffer == ARCHIVE_TAR_END_BLOCK || strlen($v_buffer) == 0) {
@@ -1821,7 +1821,7 @@ class Archive_Tar extends PEAR
             }
             elseif ($this->_compress_type == 'bz2') {
                 $end_blocks = 0;
-                
+
                 while (strlen($v_buffer = @bzread($v_temp_tar, 512)) > 0) {
                     if ($v_buffer == ARCHIVE_TAR_END_BLOCK || strlen($v_buffer) == 0) {
                         $end_blocks++;
@@ -1963,11 +1963,11 @@ class Archive_Tar extends PEAR
                 }
             }
         }
-        
+
         if (defined('OS_WINDOWS') && OS_WINDOWS) {
             $v_result = strtr($v_result, '\\', '/');
         }
-        
+
         return $v_result;
     }
 

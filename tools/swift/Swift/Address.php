@@ -29,7 +29,7 @@ class Swift_Address extends Swift_AddressContainer
    * @var string
    */
   protected $name = null;
-  
+
   /**
    * Constructor
    * @param string The address portion

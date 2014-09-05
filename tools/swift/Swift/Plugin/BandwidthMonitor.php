@@ -30,7 +30,7 @@ class Swift_Plugin_BandwidthMonitor implements Swift_Events_CommandListener, Swi
    * @var int
    */
   protected $out = 0;
-  
+
   /**
    * Part of the interface which is notified after a command is sent.
    * @param Swift_Events_CommandEvent

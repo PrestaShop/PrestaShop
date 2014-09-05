@@ -205,7 +205,7 @@ class QqUploadedFileXhr
 				$image->cover = 1;
 			else
 				$image->cover = 0;
-			
+
 			if (($validate = $image->validateFieldsLang(false, true)) !== true)
 				return array('error' => Tools::displayError($validate));
 			if (!$image->add())

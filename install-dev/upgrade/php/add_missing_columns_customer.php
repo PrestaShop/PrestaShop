@@ -33,7 +33,7 @@ function add_missing_columns_customer()
 		$current_fields[$k] = $field['Field'];
 
 	$missing_fields = array(
-		'id_risk' => 'ALTER TABLE `'._DB_PREFIX_.'customer` 
+		'id_risk' => 'ALTER TABLE `'._DB_PREFIX_.'customer`
 			ADD `id_risk` int(10) unsigned NOT NULL DEFAULT "1"',
 		'company' => 'ALTER TABLE `'._DB_PREFIX_.'customer` ADD `company` varchar(64)',
 		'siret' => 'ALTER TABLE `'._DB_PREFIX_.'customer` ADD `siret` varchar(14)',
@@ -46,7 +46,7 @@ function add_missing_columns_customer()
 		'max_payment_days' => 'ALTER TABLE `'._DB_PREFIX_.'customer`
 			ADD `max_payment_days` int(10) unsigned NOT NULL default "60"'
 	);
-	
+
 	foreach ($missing_fields as $field => $query)
 		if (!in_array($field, $current_fields))
 			$res &= $db->execute($query);

@@ -34,7 +34,7 @@ class AdminZonesControllerCore extends AdminController
 	 	$this->table = 'zone';
 		$this->className = 'Zone';
 	 	$this->lang = false;
-		
+
 		$this->fields_list = array(
 			'id_zone' => array(
 				'title' => $this->l('ID'),
@@ -60,7 +60,7 @@ class AdminZonesControllerCore extends AdminController
 				'icon' => 'icon-trash'
 			)
 		);
-			
+
 		parent::__construct();
 	}
 

@@ -136,7 +136,7 @@ class ManufacturerControllerCore extends FrontController
 		else
 			$this->context->smarty->assign('nbManufacturers', 0);
 	}
-	
+
 	/**
 	 * Get instance of current manufacturer
 	 */

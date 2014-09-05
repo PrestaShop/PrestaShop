@@ -38,7 +38,7 @@ class AdminShippingControllerCore extends AdminController
 		foreach ($carriers as $key => $carrier)
 			if ($carrier['is_free'])
 				unset($carriers[$key]);
-		
+
 		$carrier_default_sort = array(
 			array('value' => Carrier::SORT_BY_PRICE, 'name' => $this->l('Price')),
 			array('value' => Carrier::SORT_BY_POSITION, 'name' => $this->l('Position'))
@@ -48,7 +48,7 @@ class AdminShippingControllerCore extends AdminController
 			array('value' => Carrier::SORT_BY_ASC, 'name' => $this->l('Ascending')),
 			array('value' => Carrier::SORT_BY_DESC, 'name' => $this->l('Descending'))
 		);
-		
+
 		$this->fields_options = array(
 			'handling' => array(
 				'title' =>	$this->l('Handling'),
@@ -115,7 +115,7 @@ class AdminShippingControllerCore extends AdminController
 				),
 				'submit' => array('title' => $this->l('Save'))
 			)
-		);		
+		);
 	}
 
 	public function postProcess()

@@ -167,7 +167,7 @@ class AdminReferrersControllerCore extends AdminController
 				'desc' => $this->l('Add new referrer', null, null, false),
 				'icon' => 'process-icon-new'
 			);
-		
+
 		parent::initPageHeaderToolbar();
 	}
 
@@ -310,7 +310,7 @@ class AdminReferrersControllerCore extends AdminController
 					'rows' => 1
 				)
 			),
-			'desc' => $this->l('If you know how to use MySQL regular expressions, you can use the').' 
+			'desc' => $this->l('If you know how to use MySQL regular expressions, you can use the').'
 					<a style="cursor: pointer; font-weight: bold;" onclick="$(\'#tracking_expert\').slideToggle();">'.$this->l('expert mode').'.</a>',
 			'submit' => array(
 				'title' => $this->l('Save'),

@@ -103,7 +103,7 @@ class ReferrerCore extends ObjectModel
 
 	/**
 	 * Get list of referrers connections of a customer
-	 * 
+	 *
 	 * @param int $id_customer
 	 */
 	public static function getReferrers($id_customer)
@@ -122,7 +122,7 @@ class ReferrerCore extends ObjectModel
 
 	/**
 	 * Get some statistics on visitors connection for current referrer
-	 * 
+	 *
 	 * @param int $id_product
 	 * @param int $employee
 	 * @param Context $context
@@ -160,7 +160,7 @@ class ReferrerCore extends ObjectModel
 
 	/**
 	 * Get some statistics on customers registrations for current referrer
-	 * 
+	 *
 	 * @param int $id_product
 	 * @param int $employee
 	 * @param Context $context
@@ -198,7 +198,7 @@ class ReferrerCore extends ObjectModel
 
 	/**
 	 * Get some statistics on orders for current referrer
-	 * 
+	 *
 	 * @param int $id_product
 	 * @param int $employee
 	 */

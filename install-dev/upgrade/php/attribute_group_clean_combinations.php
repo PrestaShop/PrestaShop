@@ -27,9 +27,9 @@
 function attribute_group_clean_combinations()
 {
 	$attributeCombinations = Db::getInstance()->executeS('SELECT
-		pac.`id_attribute`, pa.`id_product_attribute` 
-		FROM `'._DB_PREFIX_.'product_attribute` pa 
-		LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac 
+		pac.`id_attribute`, pa.`id_product_attribute`
+		FROM `'._DB_PREFIX_.'product_attribute` pa
+		LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac
 			ON (pa.`id_product_attribute` = pac.`id_product_attribute`)');
 	$toRemove = array();
 	foreach ($attributeCombinations AS $attributeCombination)

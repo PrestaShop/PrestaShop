@@ -23,7 +23,7 @@ class Swift_LogContainer
    * @var Swift_Log
    */
   protected static $log = null;
-  
+
   /**
    * Registers the logger.
    * @param Swift_Log The log

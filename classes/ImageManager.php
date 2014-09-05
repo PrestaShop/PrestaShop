@@ -134,7 +134,7 @@ class ImageManagerCore
 			clearstatcache();
 		else
 			clearstatcache(true, $src_file);
-		
+
 		if (!file_exists($src_file) || !filesize($src_file))
 			return !($error = self::ERROR_FILE_NOT_EXIST);
 
@@ -182,7 +182,7 @@ class ImageManagerCore
 
 		if (!ImageManager::checkImageMemoryLimit($src_file))
 			return !($error = self::ERROR_MEMORY_LIMIT);
-		
+
 		$dest_image = imagecreatetruecolor($dst_width, $dst_height);
 
 		// If image is a PNG and the output is PNG, fill with transparency. Else fill with white background.
@@ -450,7 +450,7 @@ class ImageManagerCore
 						'image/gif' => array('gif'),
 						'image/jpeg' => array('jpg', 'jpeg'),
 						'image/png' => array('png')
-					);	
+					);
 		$extension = substr($file_name, strrpos($file_name, '.') + 1);
 
 		$mime_type = null;

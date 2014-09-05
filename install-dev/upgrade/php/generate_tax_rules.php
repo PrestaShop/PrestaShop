@@ -55,9 +55,9 @@ function generate_tax_rules()
 		{
 			foreach ($countries AS $country)
 			{
-				$res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'tax_rule` 
+				$res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'tax_rule`
 					(`id_tax_rules_group`, `id_country`, `id_state`, `state_behavior`, `id_tax`)
-					VALUES 
+					VALUES
 					('.$id_tax_rules_group.', '.(int)$country['id_country'].', 0, 0, '.(int)$id_tax. ')');
 			}
 		}
@@ -100,7 +100,7 @@ function generate_tax_rules()
 		WHERE `id_tax` = '.(int)$id_tax
 		);
 
-		$socolissimo_overcost_tax = Db::getInstance()->getValue('SELECT value 
+		$socolissimo_overcost_tax = Db::getInstance()->getValue('SELECT value
 			FROM `'._DB_PREFIX_.'configuration`
 			WHERE name="SOCOLISSIMO_OVERCOST_TAX"');
 		if ($socolissimo_overcost_tax == $id_tax)

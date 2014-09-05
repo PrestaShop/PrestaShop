@@ -81,7 +81,7 @@ abstract class InstallControllerConsole
 			}
 			exit;
 		}
-		
+
 		$errors = Datas::getInstance()->getAndCheckArgs($argv);
 		if (Datas::getInstance()->show_license)
 		{
@@ -118,7 +118,7 @@ abstract class InstallControllerConsole
 	{
 		$this->step = $step;
 		$this->datas = Datas::getInstance();
-		
+
 		// Set current language
 		$this->language = InstallLanguages::getInstance();
 		if (!$this->datas->language)
