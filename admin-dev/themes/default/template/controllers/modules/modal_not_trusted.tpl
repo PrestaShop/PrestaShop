@@ -31,8 +31,7 @@
 		<div class="alert alert-warning">
 			<h4>{l s='Do you want to install this module that could not be verified by PrestaShop?'}</h4>
 
-			<p>{l s="This generally happens when the module isn't distributed through our official marketplace, PrestaShop Addons - or when your server failed to communicate with PrestaShop Addons."}
-			<strong>{l s='Use at your own risk.'}</strong></p>
+			<p>{l s="This generally happens when the module isn't distributed through our official marketplace, PrestaShop Addons - or when your server failed to communicate with PrestaShop Addons."}</p>
 		</div>
 
 		<div class="row">
