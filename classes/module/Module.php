@@ -1599,6 +1599,9 @@ abstract class ModuleCore
 									_PS_ROOT_DIR_.self::CACHE_FILE_MUST_HAVE_MODULES_LIST,
 								);
 
+		if (file_exists(_PS_ROOT_DIR_.self::CACHE_FILE_CUSTOMER_MODULES_LIST))
+			$trusted_modules_xml[] = _PS_ROOT_DIR_.self::CACHE_FILE_CUSTOMER_MODULES_LIST;
+
 		// Create 2 arrays with trusted and untrusted modules
 		foreach ($trusted_modules_xml as $file)
 		{
