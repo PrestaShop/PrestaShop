@@ -75,6 +75,7 @@ abstract class HTMLTemplateCore
 			'shop_address' => $shop_address,
 			'shop_fax' => Configuration::get('PS_SHOP_FAX', null, null, (int)$this->order->id_shop),
 			'shop_phone' => Configuration::get('PS_SHOP_PHONE', null, null, (int)$this->order->id_shop),
+			'shop_email' => Configuration::get('PS_SHOP_EMAIL', null, null, (int)$this->order->id_shop),
 			'shop_details' => Configuration::get('PS_SHOP_DETAILS', null, null, (int)$this->order->id_shop),
 			'free_text' => Configuration::get('PS_INVOICE_FREE_TEXT', (int)Context::getContext()->language->id, null, (int)$this->order->id_shop)
 		));
@@ -106,8 +107,6 @@ abstract class HTMLTemplateCore
 	protected function getLogo()
 	{
 		$logo = '';
-
-		$physical_uri = Context::getContext()->shop->physical_uri.'img/';
 
 		if (Configuration::get('PS_LOGO_INVOICE', null, null, (int)$this->order->id_shop) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, (int)$this->order->id_shop)))
 			$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, (int)$this->order->id_shop);
