@@ -3456,14 +3456,14 @@ class AdminProductsControllerCore extends AdminController
 			var currencies = new Array();
 			currencies[0] = new Array();
 			currencies[0]["sign"] = "'.$defaultCurrency->sign.'";
-			currencies[0]["format"] = '.$defaultCurrency->format.';
+			currencies[0]["format"] = '.intval($defaultCurrency->format).';
 			';
 			foreach ($currencies as $currency)
 			{
 				$content .= '
 				currencies['.$currency['id_currency'].'] = new Array();
 				currencies['.$currency['id_currency'].']["sign"] = "'.$currency['sign'].'";
-				currencies['.$currency['id_currency'].']["format"] = '.$currency['format'].';
+				currencies['.$currency['id_currency'].']["format"] = '.intval($currency['format']).';
 				';
 			}
 			$content .= '

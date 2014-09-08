@@ -239,6 +239,9 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			LEFT JOIN `'._DB_PREFIX_.'contact_lang` cl
 				ON (cl.`id_contact` = a.`id_contact` AND cl.`id_lang` = '.(int)$this->context->language->id.')';
 
+		if ($id_order = Tools::getValue('id_order'))
+			$this->_where .= ' AND id_order = '.(int)$id_order;
+
 		$this->_group = 'GROUP BY cm.id_customer_thread';
 		$this->_orderBy = 'id_customer_thread';
 		$this->_orderWay = 'DESC';
@@ -877,19 +880,23 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			$mbox = @imap_open('{'.$url.':'.$port.$conf_str.'}', $user, $password);
 
 			//checks if there is no error when connecting imap server
-			$errors = imap_errors();
+			$errors = array_unique(imap_errors());
 			$str_errors = '';
 			$str_error_delete = '';
+
 			if (sizeof($errors) && is_array($errors))
 			{
 				$str_errors = '';
 				foreach($errors as $error)
-					$str_errors .= '"'.$error.'",';
-				$str_errors = rtrim($str_errors, ',').'';
+					$str_errors .= $error.', ';
+				$str_errors = rtrim(trim($str_errors), ',');
 			}
 			//checks if imap connexion is active
 			if (!$mbox)
-				die('{"hasError" : true, "errors" : ["Cannot connect to the mailbox:.<br />'.addslashes($str_errors).'"]}');
+			{
+				$array = array('hasError' => true, 'errors' => array('Cannot connect to the mailbox :<br />'.($str_errors)));
+				die(Tools::jsonEncode($array));
+			}
 
 			//Returns information about the current mailbox. Returns FALSE on failure.
 			$check = imap_check($mbox);
@@ -917,7 +924,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				 {
 					if (Configuration::get('PS_SAV_IMAP_DELETE_MSG'))
 						if (!imap_delete($mbox, $overview->msgno))
-							$str_error_delete = ', "Fail to delete message"';
+							$str_error_delete = ', Fail to delete message';
 				 }
 				 else
 				 {
@@ -986,7 +993,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			}
 			imap_expunge($mbox);
 			imap_close($mbox);
-			die('{"hasError" : false, "errors" : ["'.$str_errors.$str_error_delete.'"]}');
+			$array = array('hasError' => false, 'errors' => array($str_errors.$str_error_delete));
+			die(Tools::jsonEncode($array));
 		}
 	}
 }

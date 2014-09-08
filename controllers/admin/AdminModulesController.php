@@ -1280,7 +1280,7 @@ class AdminModulesControllerCore extends AdminController
 		$this->modals[] = array(
 			'modal_id' => "moduleNotTrusted",
 			'modal_class' => "modal-lg",
-			'modal_title' => $this->l('This module is Untrusted'),
+			'modal_title' => $this->l('Important Notice'),
 			'modal_content' => $modal_content
 		);
 
@@ -1348,6 +1348,25 @@ class AdminModulesControllerCore extends AdminController
 		$upgrade_available = array();
 		$dont_filter = false;
 
+		//Add succes message for one module update
+		if (Tools::getValue('updated') && Tools::getValue('module_name'))
+		{
+			$module_names = (string)Tools::getValue('module_name');
+			if (strpos($module_names, '|'))
+			{
+				$module_names = explode('|', $module_names);
+				$dont_filter = true;
+			}
+
+			if (!is_array($module_names))
+				$module_names = (array)$module_names;
+
+			foreach ($modules as $km => $module)
+				if (in_array($module->name, $module_names))
+					$module_success[] = array('name' => $module->displayName, 'message' => array(
+						0 => sprintf($this->l('Current version: %s'), $module->version)));
+		}
+
 		// Browse modules list
 		foreach ($modules as $km => $module)
 		{
@@ -1397,23 +1416,7 @@ class AdminModulesControllerCore extends AdminController
 						continue;
 				unset($object);
 			}
-			//Add succes message for one module update
-			elseif (Tools::getValue('updated') && Tools::getValue('module_name'))
-			{
-				$module_names = (string)Tools::getValue('module_name');
-				if (strpos($module_names, '|'))
-				{
-					$module_names = explode('|', $module_names);
-					$dont_filter = true;
-				}
 
-				if (!is_array($module_names))
-					$module_names = (array)$module_names;
-
-				if (in_array($module->name, $module_names))
-					$module_success[] = array('name' => $module->displayName, 'message' => array(
-						0 => sprintf($this->l('Current version: %s'), $module->version)));
-			}
 
 			// Make modules stats
 			$this->makeModulesStats($module);
