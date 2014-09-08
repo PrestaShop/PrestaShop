@@ -52,11 +52,7 @@
 					<input type="text" id="name" name="name" class="inputTxt form-control" value="{if isset($smarty.post.name) and $errors|@count > 0}{$smarty.post.name|escape:'html':'UTF-8'}{/if}" />
 				</div>
 				<p class="submit">
-                    <button
-                    id="submitWishlist"
-                    class="btn btn-default button button-medium"
-                    type="submit"
-                    name="submitWishlist">
+                    <button id="submitWishlist" class="btn btn-default button button-medium" type="submit" name="submitWishlist">
                     	<span>{l s='Save' mod='blockwishlist'}<i class="icon-chevron-right right"></i></span>
                     </button>
 				</p>
