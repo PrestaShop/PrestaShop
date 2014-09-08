@@ -58,7 +58,7 @@ abstract class ModuleCore
 	public $author;
 
 	/** @var string URI author of the module */
-	public $author_uri;
+	public $author_uri = '';
 
 	/** @var string Module key provided by addons.prestashop.com */
 	public $module_key = '';
