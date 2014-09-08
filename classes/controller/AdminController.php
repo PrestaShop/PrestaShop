@@ -815,7 +815,8 @@ class AdminControllerCore extends Controller
 				if (isset($params['callback']))
 				{
 					$callback_obj = (isset($params['callback_object'])) ? $params['callback_object'] : $this->context->controller;
-					$field_value = call_user_func_array(array($callback_obj, $params['callback']), array($field_value, $row));
+					if (!preg_match('/<([a-z]+)([^<]+)*(?:>(.*)<\/\1>|\s+\/>)/ism', call_user_func_array(array($callback_obj, $params['callback']), array($field_value, $row))))
+						$field_value = call_user_func_array(array($callback_obj, $params['callback']), array($field_value, $row));
 				}
 				$content[$i][] = $field_value;
 			}
