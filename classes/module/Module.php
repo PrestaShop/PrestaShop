@@ -2594,7 +2594,7 @@ abstract class ModuleCore
 			$replace = true;
 			if (preg_match('/\* module: ('.$this->name.')/ism', $override_file[$method->getStartLine() - 5]))
 			{
-				$override_file[$method->getStartLine - 7] = $override_file[$method->getStartLine() - 6] = $override_file[$method->getStartLine() - 5] = $override_file[$method->getStartLine() - 4] = $override_file[$method->getStartLine() - 3] =  $override_file[$method->getStartLine() - 2] = '#--remove--#';
+				$override_file[$method->getStartLine() - 7] = $override_file[$method->getStartLine() - 6] = $override_file[$method->getStartLine() - 5] = $override_file[$method->getStartLine() - 4] = $override_file[$method->getStartLine() - 3] =  $override_file[$method->getStartLine() - 2] = '#--remove--#';
 				$replace = false;
 			}
 
@@ -2612,7 +2612,7 @@ abstract class ModuleCore
 				if (preg_match('/(public|private|protected|const)\s+(static\s+)?(\$)?'.$property->getName().'/i', $line_content))
 				{
 					if (preg_match('/\* module: ('.$this->name.')/ism', $override_file[$line_number - 5]))
-						$override_file[$method->getStartLine - 7] = $override_file[$line_number - 6] = $override_file[$line_number - 5] = $override_file[$line_number - 4] = $override_file[$line_number - 3] =  $override_file[$line_number - 2] = '#--remove--#';
+						$override_file[$line_number - 7] = $override_file[$line_number - 6] = $override_file[$line_number - 5] = $override_file[$line_number - 4] = $override_file[$line_number - 3] =  $override_file[$line_number - 2] = '#--remove--#';
 					$line_content = '#--remove--#';
 					break;
 				}
