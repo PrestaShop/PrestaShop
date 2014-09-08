@@ -22,7 +22,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 {if $wishlists|count == 1}
 <p class="buttons_bottom_block no-print">
 	<a id="wishlist_button" href="#" onclick="WishlistCart('wishlist_block_list', 'add', '{$id_product|intval}', $('#idCombination').val(), document.getElementById('quantity_wanted').value); return false;" rel="nofollow"  title="{l s='Add to my wishlist' mod='blockwishlist'}">
@@ -34,23 +33,31 @@
 	<div id="wishlist_button">
 		<div class="btn-group">
 			{foreach name=wl from=$wishlists item=wishlist}
-				{if $smarty.foreach.wl.first}
+				{if $wishlist.default == 1}
 					<button type="button" class="btn btn-default" onclick="WishlistCart('wishlist_block_list', 'add', '{$id_product|intval}', $('#idCombination').val(), document.getElementById('quantity_wanted').value, {$wishlist.id_wishlist}); return false;">
 						{l s='Add to %s'|sprintf:$wishlist.name mod='blockwishlist'}
 					</button>
 					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 						<span class="caret"></span>
 					</button>
+				{/if}
+			{/foreach}
+			{foreach name=wl from=$wishlists item=wishlist}
+				{if $smarty.foreach.wl.first}
 					<ul class="dropdown-menu" role="menu">
-				{else}
-						<li>
-							<a onclick="WishlistCart('wishlist_block_list', 'add', '{$id_product|intval}', $('#idCombination').val(), document.getElementById('quantity_wanted').value, {$wishlist.id_wishlist}); return false;">
-								{l s='Add to %s'|sprintf:$wishlist.name mod='blockwishlist'}
-							</a>
-						</li>
+				{/if}
+				{if $wishlist.default != 1}
+					<li>
+						<a onclick="WishlistCart('wishlist_block_list', 'add', '{$id_product|intval}', $('#idCombination').val(), document.getElementById('quantity_wanted').value, {$wishlist.id_wishlist}); return false;">
+							{l s='Add to %s'|sprintf:$wishlist.name mod='blockwishlist'}
+						</a>
+					</li>
+				{/if}
+				{if $smarty.foreach.wl.last}
+					</ul>
 				{/if}
 			{foreachelse}
-				<a id="wishlist_button" href="#" onclick="WishlistCart('wishlist_block_list', 'add', '{$id_product|intval}', $('#idCombination').val(), document.getElementById('quantity_wanted').value); return false;" rel="nofollow"  title="{l s='Add to my wishlist' mod='blockwishlist'}">
+				<a href="#" onclick="WishlistCart('wishlist_block_list', 'add', '{$id_product|intval}', $('#idCombination').val(), document.getElementById('quantity_wanted').value); return false;" rel="nofollow"  title="{l s='Add to my wishlist' mod='blockwishlist'}">
 					{l s='Add to wishlist' mod='blockwishlist'}
 				</a>
 			{/foreach}
