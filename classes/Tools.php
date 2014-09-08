@@ -3009,7 +3009,7 @@ exit;
 	{
 		if (!defined('PREG_BAD_UTF8_OFFSET'))
 			return $pattern;
-		return preg_replace('/\\\[px]\{[a-z]\}{1,2}|(\/[a-z]*)u([a-z]*)$/i', "$1$2", $pattern);
+		return preg_replace('/\\\[px]\{[a-z]{1,2}\}|(\/[a-z]*)u([a-z]*)$/i', "$1$2", $pattern);
 	}
 
 	protected static $is_addons_up = true;
