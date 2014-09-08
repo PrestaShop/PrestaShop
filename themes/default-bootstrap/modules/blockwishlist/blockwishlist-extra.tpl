@@ -25,7 +25,7 @@
 
 {if $wishlists|count == 1}
 <p class="buttons_bottom_block no-print">
-	<a id="wishlist_button" href="#" onclick="WishlistCart('wishlist_block_list', 'add', '{$id_product|intval}', $('#idCombination').val(), document.getElementById('quantity_wanted').value, {$wishlists.0.id_wishlist}); return false;" rel="nofollow"  title="{l s='Add to my wishlist' mod='blockwishlist'}">
+	<a id="wishlist_button" href="#" onclick="WishlistCart('wishlist_block_list', 'add', '{$id_product|intval}', $('#idCombination').val(), document.getElementById('quantity_wanted').value); return false;" rel="nofollow"  title="{l s='Add to my wishlist' mod='blockwishlist'}">
 		{l s='Add to wishlist' mod='blockwishlist'}
 	</a>
 </p>
@@ -49,8 +49,12 @@
 							</a>
 						</li>
 				{/if}
+			{foreachelse}
+				<a id="wishlist_button" href="#" onclick="WishlistCart('wishlist_block_list', 'add', '{$id_product|intval}', $('#idCombination').val(), document.getElementById('quantity_wanted').value); return false;" rel="nofollow"  title="{l s='Add to my wishlist' mod='blockwishlist'}">
+					{l s='Add to wishlist' mod='blockwishlist'}
+				</a>
 			{/foreach}
-					</ul>
+			</ul>
 		</div>
 	</div>
 </div>
