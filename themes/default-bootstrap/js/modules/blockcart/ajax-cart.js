@@ -188,6 +188,7 @@ var ajaxCart = {
 			$('.cart_block_list.collapsed').slideDown({
 				duration: 450,
 				complete: function(){
+					$(this).parent().show(); // parent is hidden in global.js::accordion()
 					$(this).addClass('expanded').removeClass('collapsed');
 				}
 			});
