@@ -5,7 +5,7 @@
 	</fields>
 	<entities>
 		<meta id="404">
-			<page>404</page>
+			<page>pagenotfound</page>
 			<configurable>1</configurable>
 		</meta>
 		<meta id="best-sales">

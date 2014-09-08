@@ -346,10 +346,6 @@ class OrderInvoiceCore extends ObjectModel
 	{
 		$taxes_breakdown = array();
 
-		// shipping cost are added in the product taxes breakdown
-		if ($this->useOneAfterAnotherTaxComputationMethod())
-			return $taxes_breakdown;
-		
 		// No shipping breakdown if it's free!
 		foreach ($order->getCartRules() as $cart_rule)
 			if ($cart_rule['free_shipping'])

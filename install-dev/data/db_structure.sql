@@ -1112,6 +1112,7 @@ CREATE TABLE `PREFIX_orders` (
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
   PRIMARY KEY (`id_order`),
+  KEY `reference` (`reference`),
   KEY `id_customer` (`id_customer`),
   KEY `id_cart` (`id_cart`),
   KEY `invoice_number` (`invoice_number`),
