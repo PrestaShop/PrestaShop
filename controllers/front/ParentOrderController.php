@@ -31,7 +31,7 @@ class FreeOrder extends PaymentModule
 {
 	public $active = 1;
 	public $name = 'free_order';
-	public $displayName = 'free_order';	
+	public $displayName = 'free_order';
 }
 
 class ParentOrderControllerCore extends FrontController
@@ -48,7 +48,7 @@ class ParentOrderControllerCore extends FrontController
 	public function init()
 	{
 		$this->isLogged = (bool)($this->context->customer->id && Customer::customerIdExistsStatic((int)$this->context->cookie->id_customer));
-		
+
 		parent::init();
 
 		/* Disable some cache related bugs on the cart/order */
@@ -56,14 +56,14 @@ class ParentOrderControllerCore extends FrontController
 		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 
 		$this->nbProducts = $this->context->cart->nbProducts();
-		
+
 		if (!$this->context->customer->isLogged(true) && $this->useMobileTheme() && Tools::getValue('step'))
 			Tools::redirect($this->context->link->getPageLink('authentication', true, (int)$this->context->language->id));
-		
+
 		// Redirect to the good order process
 		if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 0 && Dispatcher::getInstance()->getController() != 'order')
 			Tools::redirect('index.php?controller=order');
-			
+
 		if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1 && Dispatcher::getInstance()->getController() != 'orderopc')
 		{
 			if (Tools::getIsset('step') && Tools::getValue('step') == 3)
@@ -85,6 +85,9 @@ class ParentOrderControllerCore extends FrontController
 			else
 			{
 				$this->context->cookie->id_cart = $duplication['cart']->id;
+				$context = $this->context;
+				$context->cart = $duplication['cart'];
+				CartRule::autoAddToCart($context);
 				$this->context->cookie->write();
 				if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
 					Tools::redirect('index.php?controller=order-opc');
@@ -151,7 +154,7 @@ class ParentOrderControllerCore extends FrontController
 		if ((Configuration::get('PS_ORDER_PROCESS_TYPE') == 0 && Tools::getValue('step') == 1) || Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
 			$this->addJS(_THEME_JS_DIR_.'order-address.js');
 		$this->addJqueryPlugin('fancybox');
-		
+
 		if (in_array((int)Tools::getValue('step'), array(0, 2)) || Configuration::get('PS_ORDER_PROCESS_TYPE'))
 		{
 			$this->addJqueryPlugin('typewatch');
@@ -227,7 +230,7 @@ class ParentOrderControllerCore extends FrontController
 		}
 		else
 			$id_zone = Country::getIdZone((int)Tools::getCountry());
-		
+
 		if (Tools::getIsset('delivery_option'))
 		{
 			if ($this->validateDeliveryOption(Tools::getValue('delivery_option')))
@@ -249,8 +252,8 @@ class ParentOrderControllerCore extends FrontController
 						if(isset($this->context->cookie->id_country))
 							unset($this->context->cookie->id_country);
 						if(isset($this->context->cookie->id_state))
-							unset($this->context->cookie->id_state);							
-							
+							unset($this->context->cookie->id_state);
+
 					}
 			}
 		}
@@ -263,10 +266,10 @@ class ParentOrderControllerCore extends FrontController
 		// Carrier has changed, so we check if the cart rules still apply
 		CartRule::autoRemoveFromCart($this->context);
 		CartRule::autoAddToCart($this->context);
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Validate get/post param delivery option
 	 * @param array $delivery_option
@@ -275,11 +278,11 @@ class ParentOrderControllerCore extends FrontController
 	{
 		if (!is_array($delivery_option))
 			return false;
-		
+
 		foreach ($delivery_option as $option)
 			if (!preg_match('/(\d+,)?\d+/', $option))
 				return false;
-		
+
 		return true;
 	}
 
@@ -311,12 +314,12 @@ class ParentOrderControllerCore extends FrontController
 			if ($cart_product_context->shop->id != $product['id_shop'])
 				$cart_product_context->shop = new Shop((int)$product['id_shop']);
 			$product['price_without_specific_price'] = Product::getPriceStatic(
-				$product['id_product'], 
-				!Product::getTaxCalculationMethod(), 
-				$product['id_product_attribute'], 
-				2, 
-				null, 
-				false, 
+				$product['id_product'],
+				!Product::getTaxCalculationMethod(),
+				$product['id_product_attribute'],
+				2,
+				null,
+				false,
 				false,
 				1,
 				false,
@@ -333,7 +336,7 @@ class ParentOrderControllerCore extends FrontController
 			else
 				$product['is_discounted'] = $product['price_without_specific_price'] != Tools::ps_round($product['price_wt'], _PS_PRICE_DISPLAY_PRECISION_);
 		}
-		
+
 		// Get available cart rules and unset the cart rules already in the cart
 		$available_cart_rules = CartRule::getCustomerCartRules($this->context->language->id, (isset($this->context->customer->id) ? $this->context->customer->id : 0), true, true, true, $this->context->cart);
 		$cart_cart_rules = $this->context->cart->getCartRules();
@@ -374,7 +377,7 @@ class ParentOrderControllerCore extends FrontController
 			'currencyBlank' => $this->context->currency->blank,
 			'show_option_allow_separate_package' => $show_option_allow_separate_package,
 			'smallSize' => Image::getSize(ImageType::getFormatedName('small')),
-				
+
 		));
 
 		$this->context->smarty->assign(array(
@@ -392,7 +395,7 @@ class ParentOrderControllerCore extends FrontController
 			Tools::redirect('');
 		}
 		else if (!Customer::getAddressesTotalById($this->context->customer->id))
-			Tools::redirect('index.php?controller=address&back='.urlencode('order.php?step=1&multi-shipping='.(int)Tools::getValue('multi-shipping')));
+			Tools::redirect('index.php?controller=address&back='.urlencode('order.php?step=1'.($multi = (int)Tools::getValue('multi-shipping') ? '&multi-shipping='.$multi : '')));
 		$customer = $this->context->customer;
 		if (Validate::isLoadedObject($customer))
 		{
@@ -405,7 +408,7 @@ class ParentOrderControllerCore extends FrontController
 			foreach ($customerAddresses as $i => $address)
 			{
 				if (!Address::isCountryActiveById((int)($address['id_address'])))
-					unset($customerAddresses[$i]);										
+					unset($customerAddresses[$i]);
 				$tmpAddress = new Address($address['id_address']);
 				$formatedAddressFieldsValuesList[$address['id_address']]['ordered_fields'] = AddressFormat::getOrderedAddressFields($address['id_country']);
 				$formatedAddressFieldsValuesList[$address['id_address']]['formated_fields_values'] = AddressFormat::getFormattedAddressFieldsValues(
@@ -423,8 +426,17 @@ class ParentOrderControllerCore extends FrontController
 				$bad_delivery = false;
 				if (($bad_delivery = (bool)!Address::isCountryActiveById((int)$this->context->cart->id_address_delivery)) || !Address::isCountryActiveById((int)$this->context->cart->id_address_invoice))
 				{
-					$back_url = $this->context->link->getPageLink('order', true, (int)$this->context->language->id, array('step' => Tools::getValue('step'), 'multi-shipping' => (int)Tools::getValue('multi-shipping')));
-					$params = array('multi-shipping' => (int)Tools::getValue('multi-shipping'), 'id_address' => ($bad_delivery ? (int)$this->context->cart->id_address_delivery : (int)$this->context->cart->id_address_invoice), 'back' => $back_url);
+					$params = array();
+					if ($this->step)
+						$params['step'] = (int)$this->step;
+					if ($multi = (int)Tools::getValue('multi-shipping'))
+						$params['multi-shipping'] = $multi;
+					$back_url = $this->context->link->getPageLink('order', true, (int)$this->context->language->id, $params);
+
+					$params = array('back' => $back_url, 'id_address' => ($bad_delivery ? (int)$this->context->cart->id_address_delivery : (int)$this->context->cart->id_address_invoice));
+					if ($multi)
+						$params['multi-shipping'] = $multi;
+
 					Tools::redirect($this->context->link->getPageLink('address', true, (int)$this->context->language->id, $params));
 				}
 			}
@@ -482,7 +494,7 @@ class ParentOrderControllerCore extends FrontController
 	}
 
 	protected function _assignCarrier()
-	{	
+	{
 		$address = new Address($this->context->cart->id_address_delivery);
 		$id_zone = Address::getZoneById($address->id);
 		$carriers = $this->context->cart->simulateCarriersOutput(null, true);
@@ -491,7 +503,7 @@ class ParentOrderControllerCore extends FrontController
 		$delivery_option = $this->context->cart->getDeliveryOption(null, false);
 		$this->setDefaultCarrierSelection($delivery_option_list);
 
-		$this->context->smarty->assign(array(		
+		$this->context->smarty->assign(array(
 			'address_collection' => $this->context->cart->getAddressCollection(),
 			'delivery_option_list' => $delivery_option_list,
 			'carriers' => $carriers,
@@ -507,9 +519,9 @@ class ParentOrderControllerCore extends FrontController
 				'delivery_option' => $delivery_option
 			))
 		);
-		
+
 		Cart::addExtraCarriers($vars);
-		
+
 		$this->context->smarty->assign($vars);
 	}
 
@@ -526,7 +538,7 @@ class ParentOrderControllerCore extends FrontController
 			$this->link_conditions .= '?content_only=1';
 		else
 			$this->link_conditions .= '&content_only=1';
-		
+
 		$free_shipping = false;
 		foreach ($this->context->cart->getCartRules() as $rule)
 		{
@@ -534,8 +546,8 @@ class ParentOrderControllerCore extends FrontController
 			{
 				$free_shipping = true;
 				break;
-			}			
-		}	
+			}
+		}
 		$this->context->smarty->assign(array(
 			'free_shipping' => $free_shipping,
 			'checkedTOS' => (int)($this->context->cookie->checkedTOS),
@@ -576,16 +588,16 @@ class ParentOrderControllerCore extends FrontController
 	 * Decides what the default carrier is and update the cart with it
 	 *
 	 * @todo this function must be modified - id_carrier is now delivery_option
-	 * 
+	 *
 	 * @param array $carriers
-	 * 
+	 *
 	 * @deprecated since 1.5.0
-	 * 
+	 *
 	 * @return number the id of the default carrier
 	 */
 	protected function setDefaultCarrierSelection($carriers)
 	{
-		if (!$this->context->cart->getDeliveryOption(null, true))		
+		if (!$this->context->cart->getDeliveryOption(null, true))
 			$this->context->cart->setDeliveryOption($this->context->cart->getDeliveryOption());
 	}
 
@@ -593,9 +605,9 @@ class ParentOrderControllerCore extends FrontController
 	 * Decides what the default carrier is and update the cart with it
 	 *
 	 * @param array $carriers
-	 * 
+	 *
 	 * @deprecated since 1.5.0
-	 * 
+	 *
 	 * @return number the id of the default carrier
 	 */
 	protected function _setDefaultCarrierSelection($carriers)
@@ -608,4 +620,3 @@ class ParentOrderControllerCore extends FrontController
 	}
 
 }
-

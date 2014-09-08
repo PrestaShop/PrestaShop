@@ -333,7 +333,7 @@ class CartCore extends ObjectModel
 		if (!Cache::isStored($cache_key))
 		{
 			$result = Db::getInstance()->executeS('
-				SELECT *
+				SELECT cr.*, crl.`id_lang`, crl.`name`, cd.`id_cart`
 				FROM `'._DB_PREFIX_.'cart_cart_rule` cd
 				LEFT JOIN `'._DB_PREFIX_.'cart_rule` cr ON cd.`id_cart_rule` = cr.`id_cart_rule`
 				LEFT JOIN `'._DB_PREFIX_.'cart_rule_lang` crl ON (
@@ -3178,24 +3178,29 @@ class CartCore extends ObjectModel
 		$success = true;
 		$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM `'._DB_PREFIX_.'cart_product` WHERE `id_cart` = '.(int)$this->id);
 
+		$product_gift = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT cr.`gift_product`, cr.`gift_product_attribute` FROM `'._DB_PREFIX_.'cart_rule` cr LEFT JOIN `'._DB_PREFIX_.'order_cart_rule` ocr ON (ocr.`id_order` = '.(int)$this->id.') WHERE ocr.`id_cart_rule` = cr.`id_cart_rule`');
+
 		$id_address_delivery = Configuration::get('PS_ALLOW_MULTISHIPPING') ? $cart->id_address_delivery : 0;
 
 		foreach ($products as $product)
 		{
 			if ($id_address_delivery)
-			{
 				if (Customer::customerHasAddress((int)$cart->id_customer, $product['id_address_delivery']))
 					$id_address_delivery = $product['id_address_delivery'];
-			}
+
+			foreach ($product_gift as $gift)
+				if (isset($gift['gift_product']) && isset($gift['gift_product_attribute']) && (int)$gift['gift_product'] == (int)$product['id_product'] && (int)$gift['gift_product_attribute'] == (int)$product['id_product_attribute'])
+					$product['quantity'] = (int)$product['quantity'] - 1;
 
 			$success &= $cart->updateQty(
-				$product['quantity'],
+				(int)$product['quantity'],
 				(int)$product['id_product'],
 				(int)$product['id_product_attribute'],
 				null,
 				'up',
 				(int)$id_address_delivery,
-				new Shop($cart->id_shop)
+				new Shop((int)$cart->id_shop),
+				false
 			);
 		}
 

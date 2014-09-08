@@ -29,7 +29,7 @@
 		<h1 class="page-heading">{l s='Shipping:'}</h1>
 		{include file="$tpl_dir./order-steps.tpl"}
 		{include file="$tpl_dir./errors.tpl"}
-		<form id="form" action="{$link->getPageLink('order', true, NULL, "multi-shipping={$multi_shipping}")|escape:'html':'UTF-8'}" method="post" name="carrier_area">
+		<form id="form" action="{$link->getPageLink('order', true, NULL, "{if $multi_shipping}multi-shipping={$multi_shipping}{/if}")|escape:'html':'UTF-8'}" method="post" name="carrier_area">
 {else}
 	<div id="carrier_area" class="opc-main-block">
 		<h1 class="page-heading step-num"><span>2</span> {l s='Delivery methods'}</h1>
@@ -342,18 +342,18 @@
 					<input type="hidden" name="back" value="{$back}" />
 					{if !$is_guest}
 						{if $back}
-							<a href="{$link->getPageLink('order', true, NULL, "step=1&back={$back}&multi-shipping={$multi_shipping}")|escape:'html':'UTF-8'}" title="{l s='Previous'}" class="button-exclusive btn btn-default">
+							<a href="{$link->getPageLink('order', true, NULL, "step=1&back={$back}{if $multi_shipping}&multi-shipping={$multi_shipping}{/if}")|escape:'html':'UTF-8'}" title="{l s='Previous'}" class="button-exclusive btn btn-default">
 								<i class="icon-chevron-left"></i>
 								{l s='Continue shopping'}
 							</a>
 						{else}
-							<a href="{$link->getPageLink('order', true, NULL, "step=1&multi-shipping={$multi_shipping}")|escape:'html':'UTF-8'}" title="{l s='Previous'}" class="button-exclusive btn btn-default">
+							<a href="{$link->getPageLink('order', true, NULL, "step=1{if $multi_shipping}&multi-shipping={$multi_shipping}{/if}")|escape:'html':'UTF-8'}" title="{l s='Previous'}" class="button-exclusive btn btn-default">
 								<i class="icon-chevron-left"></i>
 								{l s='Continue shopping'}
 							</a>
 						{/if}
 					{else}
-						<a href="{$link->getPageLink('order', true, NULL, "multi-shipping={$multi_shipping}")|escape:'html':'UTF-8'}" title="{l s='Previous'}" class="button-exclusive btn btn-default">
+						<a href="{$link->getPageLink('order', true, NULL, "{if $multi_shipping}multi-shipping={$multi_shipping}{/if}")|escape:'html':'UTF-8'}" title="{l s='Previous'}" class="button-exclusive btn btn-default">
 							<i class="icon-chevron-left"></i>
 							{l s='Continue shopping'}
 						</a>

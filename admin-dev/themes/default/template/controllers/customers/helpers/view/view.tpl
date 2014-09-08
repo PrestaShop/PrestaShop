@@ -200,7 +200,7 @@
 							</div>
 						</div>
 					</div>
-					
+
 					{if $count_ok}
 						<table class="table">
 							<thead>
@@ -258,7 +258,7 @@
 								</tr>
 								{/foreach}
 							</tbody>
-						</table>	
+						</table>
 					{/if}
 				{else}
 				<p class="text-muted text-center">
@@ -276,7 +276,7 @@
 						<thead>
 							<tr>
 								<th><span class="title_box ">{l s='ID'}</span></th>
-								<th><span class="title_box ">{l s='Date'}</a></span></th>
+								<th><span class="title_box ">{l s='Date'}</span></th>
 								<th><span class="title_box ">{l s='Carrier'}</span></th>
 								<th><span class="title_box ">{l s='Total'}</span></th>
 							</tr>
@@ -347,7 +347,7 @@
 					{foreach $interested as $key => $p}
 						<tr onclick="document.location = '{$p['url']|escape:'html':'UTF-8'}'">
 							<td>{$p['id']}</td>
-							<td><a href="{$p['url']}">{$p['name']}</a></td>
+							<td><a href="{$p['url']|escape:'html':'UTF-8'}">{$p['name']}</a></td>
 						</tr>
 					{/foreach}
 					</tbody>
@@ -549,7 +549,7 @@
 
 	<div class="row">
 		<div class="col-lg-6">
-			
+
 		</div>
 		<div class="col-lg-6">
 			{if count($referrers)}
