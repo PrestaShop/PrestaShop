@@ -2496,7 +2496,7 @@ abstract class ModuleCore
 				if ($override_class->hasMethod($method->getName()))
 					throw new Exception(sprintf(Tools::displayError('The method %1$s in the class %2$s is already overridden.'), $method->getName(), $classname));
 				else
-					$module_file = preg_replace('/(^.*?function\s+'.$method->getName().')/ism', "\n\t/*\n\t* module: ".$this->name."\n\t* version: ".$this->version."\n\t*/\n$1", $module_file);
+					$module_file = preg_replace('/(^.*?function\s+'.$method->getName().')/ism', "\n\t/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n$1", $module_file);
 			}
 
 			// Check if none of the properties already exists in the override class
@@ -2505,7 +2505,7 @@ abstract class ModuleCore
 				if ($override_class->hasProperty($property->getName()))
 					throw new Exception(sprintf(Tools::displayError('The property %1$s in the class %2$s is already defined.'), $property->getName(), $classname));
 				else
-					$module_file = preg_replace('/(public|private|protected|const)\s+(static\s+)?(\$?'.$property->getName().')/ism', "\n\*\n* module: ".$this->name."\n* version: ".$this->version."\n*/\n\t$1 $2 $3" , $module_file);
+					$module_file = preg_replace('/(public|private|protected|const)\s+(static\s+)?(\$?'.$property->getName().')/ism', "\n\t/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n$1 $2 $3" , $module_file);
 			}
 
 			// Insert the methods from module override in override
@@ -2529,11 +2529,11 @@ abstract class ModuleCore
 
 			// Add foreach function a comment with the module name and the module version like it permit us to know wich module do the override and permit an update
 			foreach ($module_class->getMethods() as $method)
-				$module_file = preg_replace('/(^.*?function\s+'.$method->getName().')/ism', "\n\t/*\n\t* module: ".$this->name."\n\t* version: ".$this->version."\n\t*/\n$1", $module_file);
+				$module_file = preg_replace('/(^.*?function\s+'.$method->getName().')/ism', "\n\t/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n$1", $module_file);
 
 			// same as precedent but for variable
 			foreach ($module_class->getProperties() as $property)
-				$module_file = preg_replace('/(public|private|protected|const)\s+(static\s+)?(\$?'.$property->getName().')/ism', "\n\*\n* module: ".$this->name."\n* version: ".$this->version."\n*/\n\t$1 $2 $3" , $module_file);
+				$module_file = preg_replace('/(public|private|protected|const)\s+(static\s+)?(\$?'.$property->getName().')/ism', "\n\t/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n$1 $2 $3" , $module_file);
 
 			file_put_contents($override_dest, $module_file);
 			// Re-generate the class index
@@ -2592,9 +2592,9 @@ abstract class ModuleCore
 			$module_content = preg_replace("/\s/", '', implode('', array_splice($module_file, $module_method->getStartLine() - 1, $length, array_pad(array(), $length, '#--remove--#'))));
 
 			$replace = true;
-			if (preg_match('/\* module: ('.$this->name.')/ism', $override_file[$method->getStartLine() - 4]))
+			if (preg_match('/\* module: ('.$this->name.')/ism', $override_file[$method->getStartLine() - 5]))
 			{
-				$override_file[$method->getStartLine() - 5] = $override_file[$method->getStartLine() - 4] = $override_file[$method->getStartLine() - 3] =  $override_file[$method->getStartLine() - 2] = '#--remove--#';
+				$override_file[$method->getStartLine - 7] = $override_file[$method->getStartLine() - 6] = $override_file[$method->getStartLine() - 5] = $override_file[$method->getStartLine() - 4] = $override_file[$method->getStartLine() - 3] =  $override_file[$method->getStartLine() - 2] = '#--remove--#';
 				$replace = false;
 			}
 
@@ -2611,13 +2611,12 @@ abstract class ModuleCore
 			foreach ($override_file as $line_number => &$line_content)
 				if (preg_match('/(public|private|protected|const)\s+(static\s+)?(\$)?'.$property->getName().'/i', $line_content))
 				{
-					if (preg_match('/\* module: ('.$this->name.')/ism', $override_file[$line_number - 4]))
-						$override_file[$line_number - 5] = $override_file[$line_number - 4] = $override_file[$line_number - 3] =  $override_file[$line_number - 2] = '#--remove--#';
+					if (preg_match('/\* module: ('.$this->name.')/ism', $override_file[$line_number - 5]))
+						$override_file[$method->getStartLine - 7] = $override_file[$line_number - 6] = $override_file[$line_number - 5] = $override_file[$line_number - 4] = $override_file[$line_number - 3] =  $override_file[$line_number - 2] = '#--remove--#';
 					$line_content = '#--remove--#';
 					break;
 				}
 		}
-
 		// Rewrite nice code
 		$code = '';
 		foreach ($override_file as $line)
