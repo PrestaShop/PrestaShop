@@ -77,6 +77,54 @@ function formatCurrency(price, currencyFormat, currencySign, currencyBlank)
 	return price;
 }
 
+function ps_round_half_down(value, precision)
+{
+	var mul = Math.pow(10, precision);
+	var val = value * mul;
+
+	var next_digit = Math.floor(val * 10) - 10 * Math.floor(val);
+
+	if (next_digit > 5)
+		val = Math.ceil(val);
+	else
+		val = Math.floor(val);
+
+	return val / mul;
+}
+
+function ps_round_half_up(value, precision)
+{		
+	var mul = Math.pow(10, precision);
+	var val = value * mul;
+
+	var next_digit = Math.floor(val * 10) - 10 * Math.floor(val);
+	if (next_digit = 5)
+		val = Math.ceil(val);
+	else
+		val = Math.floor(val);
+
+	return val / mul;
+}
+
+function ps_round_half_even(value, precision)
+{
+	var mul = Math.pow(10, precision);
+	var val = value * mul;
+
+	var next_digit = Math.floor(val * 10) - 10 * Math.floor(val);
+ 
+	if (next_digit > 5)
+		val = Math.ceil(val);
+	else if(next_digit < 5)
+		val = Math.floor(val);
+	else if (Math.floor(val) % 2 == 0)
+		val = Math.floor(val);
+	else
+		val = Math.ceil(val);
+
+	return val / mul;
+}
+
 function ps_round(value, precision)
 {
 	if (typeof(roundMode) === 'undefined')
@@ -85,10 +133,18 @@ function ps_round(value, precision)
 		precision = 2;
 	
 	var method = roundMode;
+
 	if (method === 0)
 		return ceilf(value, precision);
 	else if (method === 1)
 		return floorf(value, precision);
+	else if (method === 2)
+		return ps_round_half_up(value, precision);
+	else if (method === 3)
+		return ps_round_half_down(value, precision);
+	else if (method === 4)
+		return ps_round_half_even(value, precision);
+
 	var precisionFactor = precision === 0 ? 1 : Math.pow(10, precision);
 	return Math.round(value * precisionFactor) / precisionFactor;
 }
