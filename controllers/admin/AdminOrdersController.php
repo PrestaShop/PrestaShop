@@ -866,7 +866,21 @@ class AdminOrdersControllerCore extends AdminController
 						// Generate credit slip
 						if (Tools::isSubmit('generateCreditSlip') && !count($this->errors))
 						{
-							if (!OrderSlip::createOrderSlip($order, $full_product_list, $full_quantity_list, Tools::isSubmit('shippingBack')))
+							$product_list = array();
+							foreach ($full_product_list as $id_order_detail)
+							{
+								$order_detail = new OrderDetail((int)$id_order_detail);
+								$product_list[$id_order_detail] = array(
+									'id_order_detail' => $id_order_detail,
+									'quantity' => $full_quantity_list[$id_order_detail],
+									'unit_price' => $order_detail->unit_price_tax_excl,
+									'amount' => $order_detail->unit_price_tax_incl * $full_quantity_list[$id_order_detail],
+								);
+							}
+
+							$shipping = Tools::isSubmit('shippingBack') ? null : false;
+
+							if (!OrderSlip::create($order, $product_list, $shipping))
 								$this->errors[] = Tools::displayError('A credit slip cannot be generated. ');
 							else
 							{
