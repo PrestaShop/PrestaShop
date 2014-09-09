@@ -860,11 +860,6 @@ function refreshProductImages(id_product_attribute)
 function saveCustomization()
 {
 	$('#quantityBackup').val($('#quantity_wanted').val());
-	customAction = $('#customizationForm').attr('action');
-	$('body select[id^="group_"]').each(function() {
-		customAction = customAction.replace(new RegExp(this.id + '=\\d+'), this.id +'=' + this.value);
-	});
-	$('#customizationForm').attr('action', customAction);
 	$('#customizationForm').submit();
 }
 
@@ -949,8 +944,15 @@ function getProductAttribute()
 	if (url.indexOf('#') != -1)
 		url = url.substring(0, url.indexOf('#'));
 
-	// set ipa to the customization form
-	$('#customizationForm').attr('action', $('#customizationForm').attr('action') + request);
+	if ($('#customizationForm').length)
+	{
+		// set ipa to the customization form
+		customAction = $('#customizationForm').attr('action');
+		if (customAction.indexOf('#') != -1)
+			customAction = customAction.substring(0, customAction.indexOf('#'));
+		$('#customizationForm').attr('action', customAction + request);
+	}
+
 	window.location = url + request;
 }
 
