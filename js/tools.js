@@ -98,7 +98,7 @@ function ps_round_half_up(value, precision)
 	var val = value * mul;
 
 	var next_digit = Math.floor(val * 10) - 10 * Math.floor(val);
-	if (next_digit = 5)
+	if (next_digit >= 5)
 		val = Math.ceil(val);
 	else
 		val = Math.floor(val);
