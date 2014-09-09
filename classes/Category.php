@@ -268,7 +268,7 @@ class CategoryCore extends ObjectModel
 
 	public static function recurseCategory($categories, $current, $id_category = null, $id_selected = 1)
 	{
-		if (!$category)
+		if (!$id_category)
 			$id_category = (int)Configuration::get('PS_ROOT_CATEGORY');
 
 		echo '<option value="'.$id_category.'"'.(($id_selected == $id_category) ? ' selected="selected"' : '').'>'.
