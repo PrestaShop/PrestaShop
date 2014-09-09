@@ -115,6 +115,9 @@ class HelperFormCore extends Helper
 
 								if (isset($params['tree']['use_checkbox']))
 									$tree->setUseCheckBox($params['tree']['use_checkbox']);
+									
+								if (isset($params['tree']['set_data']))
+									$tree->setData($params['tree']['set_data']);
 
 								$this->context->smarty->assign('categories_tree', $tree->render());
 								$categories = false;
