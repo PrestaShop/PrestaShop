@@ -23,13 +23,11 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{assign var=module_name value='<strong><span class="module-name-placeholder"></span></strong>'}
-
 <div class="untrusted-content-action">
 
 	<div class="modal-body">
 		<div class="alert alert-warning">
-			<h4>{l s='Do you want to install this module that could not be verified by PrestaShop?'}</h4>
+			<h3>{l s='Do you want to install this module that could not be verified by PrestaShop?'}</h3>
 
 			<p>{l s="This generally happens when the module isn't distributed through our official marketplace, PrestaShop Addons - or when your server failed to communicate with PrestaShop Addons."}</p>
 		</div>
@@ -41,11 +39,11 @@
 			<div class="col-sm-10">
 				<table class="table">
 					<tr>
-						<td>Module</td>
+						<td>{l s='Module'}</td>
 						<td><strong><span class="module-display-name-placeholder"></span></strong></td>
 					</tr>
 					<tr>
-						<td>Author</td>
+						<td>{l s='Author'}</td>
 						<td><strong><span class="author-name-placeholder"></span></strong></td>
 					</tr>
 				</table>

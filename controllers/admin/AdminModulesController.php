@@ -701,6 +701,8 @@ class AdminModulesControllerCore extends AdminController
 			if (isset($modules))
 				foreach ($modules as $name)
 				{
+					
+					
 					$module_to_update = array();
 					$module_to_update[$name] = null;
 					$full_report = null;
@@ -780,6 +782,7 @@ class AdminModulesControllerCore extends AdminController
 						$this->errors[] = Tools::displayError('This module needs to be installed in order to be updated:').' '.$module->name;
 					else
 					{
+
 						// If we install a module, force temporary global context for multishop
 						if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && $method != 'getContent')
 						{
@@ -799,7 +802,12 @@ class AdminModulesControllerCore extends AdminController
 						// We check if method of module exists
 							if (!method_exists($module, $method))
 								throw new PrestaShopException('Method of module cannot be found');
-
+							
+							if ($key == 'uninstall' && !Module::getPermissionStatic($module->id, 'uninstall'))
+								$this->errors[] = Tools::displayError('You do not have permission to uninstall this module.');
+	
+							if (count($this->errors))
+								continue;
 							// Get the return value of current method
 							$echo = $module->{$method}();
 
@@ -807,7 +815,7 @@ class AdminModulesControllerCore extends AdminController
 							if ($key == 'install' && $echo === true && strpos(Tools::getValue('install'), '|') === false && method_exists($module, 'getContent'))
 								Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.'&configure='.$module->name.'&conf=12');
 						}
-
+												
 						// If the method called is "configure" (getContent method), we show the html code of configure page
 						if ($key == 'configure' && Module::isInstalled($module->name))
 						{
@@ -872,7 +880,6 @@ class AdminModulesControllerCore extends AdminController
 								'is_multishop' => Shop::isFeatureActive(),
 								'multishop_context' => Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP
 							));
-
 
 							if (Shop::isFeatureActive() && isset(Context::getContext()->tmpOldShop))
 							{
@@ -1280,7 +1287,7 @@ class AdminModulesControllerCore extends AdminController
 		$this->modals[] = array(
 			'modal_id' => "moduleNotTrusted",
 			'modal_class' => "modal-lg",
-			'modal_title' => $this->l('Important Notice'),
+			'modal_title' => (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_) ? $this->l('This module cannot be installed') : $this->l('Important Notice'),
 			'modal_content' => $modal_content
 		);
 

@@ -2473,7 +2473,7 @@ class ProductCore extends ObjectModel
 	{
 		if (!$context)
 			$context = Context::getContext();
-		$cache_id = 'Product::getOrderStates_'.(int)$id_product.'-'.(int)$context->shop->id;
+		$cache_id = 'Product::getCover_'.(int)$id_product.'-'.(int)$context->shop->id;
 		if (!Cache::isStored($cache_id))
 		{
 			$sql = 'SELECT image_shop.`id_image`
@@ -2587,7 +2587,7 @@ class ProductCore extends ObjectModel
 		{
 			$id_country = (int)$context->customer->geoloc_id_country;
 			$id_state = (int)$context->customer->id_state;
-			$zipcode = (int)$context->customer->postcode;
+			$zipcode = $context->customer->postcode;
 		}
 
 		if (Tax::excludeTaxeOption())

@@ -8,3 +8,6 @@ INSERT INTO `PREFIX_order_state_lang` (`id_order_state`, `id_lang`, `name`, `tem
 INSERT IGNORE INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES
 ('PS_OS_OUTOFSTOCK_PAID', @id_order_state_oos, NOW(), NOW()),
 ('PS_OS_OUTOFSTOCK_UNPAID', @id_order_state, NOW(), NOW());
+SET NAMES 'utf8';
+
+ALTER TABLE  `PREFIX_module_access` ADD  `uninstall` TINYINT( 1 ) NOT NULL AFTER  `configure`;
