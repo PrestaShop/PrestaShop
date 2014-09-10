@@ -853,13 +853,14 @@ $(document).ready(function()
 		e.preventDefault();
 		var moduleName = $(this).data('module-name');
 		var moduleDisplayName = $(this).data('module-display-name');
+		var moduleImage = $(this).data('module-image');
 		var authorName = $(this).data('author-name');
 		var moduleLink = $(this).data('link');
 		var authorUri = $(this).data('author-uri');
 		var isValidUri = /(https?):\/\/([a-z0-9\.]*)?(prestashop.com).*/gi;
 		var addonsSearchLink = 'http://addons.prestashop.com/en/search?search_query='+encodeURIComponent(moduleDisplayName)+'&utm_source=back-office&utm_medium=addons-certified&utm_campaign=back-office-'+iso_user.toUpperCase();
 
-		$('.modal #untrusted-module-logo').attr('src', '/modules/'+moduleName+'/logo.png');
+		$('.modal #untrusted-module-logo').attr('src', moduleImage);
 		$('.modal .module-display-name-placeholder').text(moduleDisplayName);
 		$('.modal .author-name-placeholder').text(authorName);
 
@@ -868,6 +869,7 @@ $(document).ready(function()
 
 		$('.modal #proceed-install-anyway').attr('href', moduleLink);
 		$('.modal .catalog-link').attr('href', addonsSearchLink);
+		$('.modal .catalog-link').attr('onclick', 'window.open(this.href);return false;');
 	});
 
 	$(document).on('click', '#untrusted-show-risk', function(e){
