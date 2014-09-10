@@ -1035,6 +1035,7 @@ CREATE TABLE `PREFIX_module_access` (
   `id_module` int(10) unsigned NOT NULL,
   `view` tinyint(1) NOT NULL,
   `configure` tinyint(1) NOT NULL,
+  `uninstall` tinyint(1) NOT NULL,
   PRIMARY KEY (`id_profile`,`id_module`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
