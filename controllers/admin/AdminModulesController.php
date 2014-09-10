@@ -1287,7 +1287,7 @@ class AdminModulesControllerCore extends AdminController
 		$this->modals[] = array(
 			'modal_id' => "moduleNotTrusted",
 			'modal_class' => "modal-lg",
-			'modal_title' => $this->l('Important Notice'),
+			'modal_title' => (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_) ? $this->l('This module cannot be installed') : $this->l('Important Notice'),
 			'modal_content' => $modal_content
 		);
 
