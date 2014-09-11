@@ -58,7 +58,7 @@ abstract class ModuleCore
 	public $author;
 
 	/** @var string URI author of the module */
-	public $author_uri;
+	public $author_uri = '';
 
 	/** @var string Module key provided by addons.prestashop.com */
 	public $module_key = '';
@@ -307,8 +307,8 @@ abstract class ModuleCore
 
 		// Permissions management
 		Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_module`, `view`, `configure`) (
-				SELECT id_profile, '.(int)$this->id.', 1, 1
+			INSERT INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_module`, `view`, `configure`, `uninstall`) (
+				SELECT id_profile, '.(int)$this->id.', 1, 1, 1
 				FROM '._DB_PREFIX_.'access a
 				WHERE id_tab = (
 					SELECT `id_tab` FROM '._DB_PREFIX_.'tab
@@ -316,8 +316,8 @@ abstract class ModuleCore
 				AND a.`view` = 1)');
 
 		Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_module`, `view`, `configure`) (
-				SELECT id_profile, '.(int)$this->id.', 1, 0
+			INSERT INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_module`, `view`, `configure`, `uninstall`) (
+				SELECT id_profile, '.(int)$this->id.', 1, 0, 1
 				FROM '._DB_PREFIX_.'access a
 				WHERE id_tab = (
 					SELECT `id_tab` FROM '._DB_PREFIX_.'tab
@@ -2230,8 +2230,9 @@ abstract class ModuleCore
 	 */
 	public static function getPermissionStatic($id_module, $variable, $employee = null)
 	{
-		if (!in_array($variable, array('view', 'configure')))
+		if (!in_array($variable, array('view', 'configure', 'uninstall')))
 			return false;
+		
 		if (!$employee)
 			$employee = Context::getContext()->employee;
 
@@ -2241,11 +2242,12 @@ abstract class ModuleCore
 		if (!isset(self::$cache_permissions[$employee->id_profile]))
 		{
 			self::$cache_permissions[$employee->id_profile] = array();
-			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `id_module`, `view`, `configure` FROM `'._DB_PREFIX_.'module_access` WHERE `id_profile` = '.(int)$employee->id_profile);
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `id_module`, `view`, `configure`, `uninstall` FROM `'._DB_PREFIX_.'module_access` WHERE `id_profile` = '.(int)$employee->id_profile);
 			foreach ($result as $row)
 			{
 				self::$cache_permissions[$employee->id_profile][$row['id_module']]['view'] = $row['view'];
 				self::$cache_permissions[$employee->id_profile][$row['id_module']]['configure'] = $row['configure'];
+				self::$cache_permissions[$employee->id_profile][$row['id_module']]['uninstall'] = $row['uninstall'];
 			}
 		}
 
