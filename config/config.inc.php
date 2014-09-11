@@ -227,6 +227,8 @@ define('_PS_OS_CANCELED_',    Configuration::get('PS_OS_CANCELED'));
 define('_PS_OS_REFUND_',      Configuration::get('PS_OS_REFUND'));
 define('_PS_OS_ERROR_',       Configuration::get('PS_OS_ERROR'));
 define('_PS_OS_OUTOFSTOCK_',  Configuration::get('PS_OS_OUTOFSTOCK'));
+define('_PS_OS_OUTOFSTOCK_PAID_',  Configuration::get('PS_OS_OUTOFSTOCK_PAID'));
+define('_PS_OS_OUTOFSTOCK_UNPAID_',  Configuration::get('PS_OS_OUTOFSTOCK_UNPAID'));
 define('_PS_OS_BANKWIRE_',    Configuration::get('PS_OS_BANKWIRE'));
 define('_PS_OS_PAYPAL_',      Configuration::get('PS_OS_PAYPAL'));
 define('_PS_OS_WS_PAYMENT_', Configuration::get('PS_OS_WS_PAYMENT'));
