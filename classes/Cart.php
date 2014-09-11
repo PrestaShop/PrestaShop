@@ -664,7 +664,7 @@ class CartCore extends ObjectModel
 				AND agl.`id_lang` = '.(int)$id_lang.'
 			)
 			WHERE pac.`id_product_attribute` IN ('.implode(',', $pa_implode).')
-			ORDER BY agl.`public_name` ASC'
+			ORDER BY ag.`position` ASC, a.`position` ASC'
 		);
 
 		foreach ($result as $row)
