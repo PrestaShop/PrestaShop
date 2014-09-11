@@ -359,12 +359,19 @@ class CartControllerCore extends FrontController
 					false,
 					false
 				);
+
+				if ($product['reduction_type'] == 'amount')
+				{
+					$reduction = (float)$product['price_wt'] - (float)$product['price_without_quantity_discount'];
+					$product['reduction_formatted'] = Tools::displayPrice($reduction);
+				}
 			}
 			if ($result['customizedDatas'])
 				Product::addCustomizationPrice($result['summary']['products'], $result['customizedDatas']);
 
 			Hook::exec('actionCartListOverride', array('summary' => $result, 'json' => &$json));
 			die(Tools::jsonEncode(array_merge($result, (array)Tools::jsonDecode($json, true))));
+
 		}
 		// @todo create a hook
 		elseif (file_exists(_PS_MODULE_DIR_.'/blockcart/blockcart-ajax.php'))

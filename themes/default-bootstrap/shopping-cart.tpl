@@ -90,7 +90,7 @@
 					{else}
 						{assign var='col_span_subtotal' value='2'}
 					{/if}
-					<th class="cart_unit item text-right">{l s='Unit price'}</th>
+					<th class="cart_unit item">{l s='Unit price'}</th>
 					<th class="cart_quantity item text-center">{l s='Qty'}</th>
 					<th class="cart_delete last_item">&nbsp;</th>
 					<th class="cart_total item text-right">{l s='Total'}</th>					
