@@ -157,7 +157,16 @@ function ProductTabsManager(){
 	 */
 	this.displayBulk = function(stack){
 		if (stack.length == 0)
+		{
+			$('[name="submitAddproductAndStay"]').each(function() {
+				$(this).prop('disabled', false).find('i').removeClass('process-icon-loading').addClass('process-icon-save');
+			});
+			$('[name="submitAddproduct"]').each(function() {
+				$(this).prop('disabled', false).find('i').removeClass('process-icon-loading').addClass('process-icon-save');
+			});
+
 			return false;
+		}
 
 		this.current_request = 	this.display(stack[0], false);
 
@@ -200,16 +209,6 @@ function ProductTabsManager(){
 		{
 			stack.shift();
 			self.displayBulk(stack);
-		}
-
-		if (stack.length == 1)
-		{
-			$('[name="submitAddproductAndStay"]').each(function() {
-				$(this).prop('disabled', false).find('i').removeClass('process-icon-loading').addClass('process-icon-save');
-			});
-			$('[name="submitAddproduct"]').each(function() {
-				$(this).prop('disabled', false).find('i').removeClass('process-icon-loading').addClass('process-icon-save');
-			});
 		}
 	}
 }
