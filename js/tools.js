@@ -559,6 +559,16 @@ function isCleanHtml(content)
 	return true;
 }
 
+function sleep(seconds) {
+	var start = new Date().getTime();
+
+	for (var i = 0; i < 1e7; i++) {
+		if ((new Date().getTime() - start) > seconds*1000){
+			break;
+		}
+	}
+}
+
 $(document).ready(function()
 {
 	// Hide all elements with .hideOnSubmit class when parent form is submit
