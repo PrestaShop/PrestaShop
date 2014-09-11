@@ -25,15 +25,13 @@
 /**
  * Handles loading of product tabs
  */
-
-var all_tabs_are_loaded = false;
-
 function ProductTabsManager(){
 	var self = this;
 	this.product_tabs = [];
 	this.current_request;
 	this.stack_error = [];
 	this.page_reloading = false;
+	this.has_error_loading_tabs = false;
 
 	this.setTabs = function(tabs){
 		this.product_tabs = tabs;
@@ -89,6 +87,9 @@ function ProductTabsManager(){
 	 */
 	this.display = function (tab_name, selected)
 	{
+		if (mod_evasive || mod_security)
+			sleep(1);
+
 		var tab_selector = $("#product-tab-content-" + tab_name);
 
 		// Is the tab already being loaded?
@@ -155,43 +156,59 @@ function ProductTabsManager(){
 	 * @param array stack contains tab names as strings
 	 */
 	this.displayBulk = function(stack){
-		this.current_request = this.display(stack[0], false);
+		if (stack.length == 0)
+			return false;
+
+		this.current_request = 	this.display(stack[0], false);
 
 		if (this.current_request !== undefined)
 		{
 			this.current_request.complete(function(request, status) {
 				var wrong_status_code = new Array(400, 401, 403, 404, 405, 406, 408, 410, 413, 429, 499, 500, 502, 503, 504);
 
-				if (status === 'abort' || status === 'error')
-					self.stack_error.push(stack.shift());
-				else
-					stack.shift();
-
-				if ((request.responseText.length == 0 || in_array(request.status, wrong_status_code) || self.stack_error.length !== 0) && !self.page_reloading)
+				if ((status === 'abort' || status === 'error' || request.responseText.length == 0 || in_array(request.status, wrong_status_code) || self.stack_error.length !== 0) && !self.page_reloading)
 				{
-					jConfirm('Tab : ' + stack[0] + ' (' + request.status + ')\n' + reload_tab_description, reload_tab_title, function(confirm) {
+					var current_tab = stack[0];
+					self.stack_error.push(stack.shift());
+					self.has_error_loading_tabs = true;
+					jConfirm('Tab : ' + current_tab + ' (' + request.status + ')\n' + reload_tab_description, reload_tab_title, function(confirm) {
 						if (confirm === true)
 						{
-							self.displayBulk(self.stack_error.slice(0));
-							self.stack_error = [];
+							self.page_reloading = true;
+							self.displayBulk(stack);
 						}
 						else
+						{
+							$('[name="submitAddproductAndStay"]').each(function() {
+								$(this).prop('disabled', false).find('i').removeClass('process-icon-loading').addClass('process-icon-save');
+							});
+							$('[name="submitAddproduct"]').each(function() {
+								$(this).prop('disabled', false).find('i').removeClass('process-icon-loading').addClass('process-icon-save');
+							});
 							return false;
+						}
 					});
 				}
 				else if (stack.length !== 0 && status !== 'abort')
-					self.displayBulk(stack);
-
-				if (stack.length == 0)
 				{
-					all_tabs_are_loaded = true;
-					$('[name="submitAddproductAndStay"]').each(function() {
-						$(this).prop('disabled', false).find('i').removeClass('process-icon-loading').addClass('process-icon-save');
-					});
-					$('[name="submitAddproduct"]').each(function() {
-						$(this).prop('disabled', false).find('i').removeClass('process-icon-loading').addClass('process-icon-save');
-					});
+					stack.shift();
+					self.displayBulk(stack);
 				}
+			});
+		}
+		else
+		{
+			stack.shift();
+			self.displayBulk(stack);
+		}
+
+		if (stack.length == 1)
+		{
+			$('[name="submitAddproductAndStay"]').each(function() {
+				$(this).prop('disabled', false).find('i').removeClass('process-icon-loading').addClass('process-icon-save');
+			});
+			$('[name="submitAddproduct"]').each(function() {
+				$(this).prop('disabled', false).find('i').removeClass('process-icon-loading').addClass('process-icon-save');
 			});
 		}
 	}
@@ -205,7 +222,7 @@ function loadPack() {
 		url : "index.php?controller=AdminProducts" + "&token=" + token + "&id_product=" + id_product + "&action=Pack" + "&updateproduct" + "&ajax=1" + '&rand=' + new Date().getTime(),
 		async : true,
 		cache: false, // cache needs to be set to false or IE will cache the page with outdated product values
-		type: 'POST',
+		type: 'GET',
 		headers: { "cache-control": "no-cache" },
 		data: data,
 		success : function(data){
