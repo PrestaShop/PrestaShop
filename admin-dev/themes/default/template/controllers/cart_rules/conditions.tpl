@@ -136,7 +136,7 @@
 									<option value="{$country.id_country|intval}">&nbsp;{$country.name|escape}</option>
 								{/foreach}
 							</select>
-							<a id="country_select_add" class="btn btn-block clearfix">{l s='Add'} <i class="icon-arrow-right"></i></a>
+							<a id="country_select_add" class="btn  btn-default btn-block clearfix">{l s='Add'} <i class="icon-arrow-right"></i></a>
 						</td>
 						<td>
 							<p>{l s='Selected countries'}</p>
@@ -145,7 +145,7 @@
 									<option value="{$country.id_country|intval}">&nbsp;{$country.name|escape}</option>
 								{/foreach}
 							</select>
-							<a id="country_select_remove" class="btn btn-block clearfix"><i class="icon-arrow-left"></i> {l s='Remove'} </a>
+							<a id="country_select_remove" class="btn btn-default btn-block clearfix"><i class="icon-arrow-left"></i> {l s='Remove'} </a>
 						</td>
 					</tr>
 				</table>
