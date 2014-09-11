@@ -59,7 +59,13 @@ class OrderStateCore extends ObjectModel
 
 	/** @var boolean Paid */
 	public $paid;
-	
+
+	/** @var boolean Attach PDF Invoice */
+	public $pdf_invoice;
+
+	/** @var boolean Attach PDF Delivery Slip */
+	public $pdf_delivery;
+
 	/** @var boolean True if carrier has been deleted (staying in database as deleted) */
 	public $deleted = 0;
 
@@ -81,6 +87,8 @@ class OrderStateCore extends ObjectModel
 			'delivery' =>	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'hidden' =>		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'paid' =>		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'pdf_delivery' =>		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'pdf_invoice' =>		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'deleted' =>	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
 			// Lang fields
