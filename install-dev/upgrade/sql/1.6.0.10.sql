@@ -60,5 +60,3 @@ UPDATE `PREFIX_category` SET `is_root_category` = 0 WHERE `id_parent` != (SELECT
 ALTER TABLE  `PREFIX_orders` ADD INDEX (`reference`);
 
 UPDATE `PREFIX_meta` SET `page` = 'pagenotfound' WHERE `page` = '404';
-
-ALTER TABLE  `PREFIX_module_access` ADD  `uninstall` TINYINT( 1 ) NOT NULL AFTER  `configure`;

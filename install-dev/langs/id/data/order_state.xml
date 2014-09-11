@@ -32,7 +32,11 @@
     <name>Pembayaran eror</name>
     <template>payment_error</template>
   </order_state>
-  <order_state id='On_backorder'>
+  <order_state id='On_backorder_paid'>
+    <name>Sedang dipesan</name>
+    <template>outofstock</template>
+  </order_state>
+  <order_state id='On_backorder_unpaid'>
     <name>Sedang dipesan</name>
     <template>outofstock</template>
   </order_state>
