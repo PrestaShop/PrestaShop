@@ -375,7 +375,7 @@ class OrderHistoryCore extends ObjectModel
 			return false;
 
 		$result = Db::getInstance()->getRow('
-			SELECT osl.`template`, c.`lastname`, c.`firstname`, osl.`name` AS osname, c.`email`, os.`module_name`, os.`id_order_state`
+			SELECT osl.`template`, c.`lastname`, c.`firstname`, osl.`name` AS osname, c.`email`, os.`module_name`, os.`id_order_state`, os.`pdf_invoice`, os.`pdf_delivery`
 			FROM `'._DB_PREFIX_.'order_history` oh
 				LEFT JOIN `'._DB_PREFIX_.'orders` o ON oh.`id_order` = o.`id_order`
 				LEFT JOIN `'._DB_PREFIX_.'customer` c ON o.`id_customer` = c.`id_customer`
@@ -408,14 +408,27 @@ class OrderHistoryCore extends ObjectModel
 
 			if (Validate::isLoadedObject($order))
 			{
-				// Join PDF invoice if order status is "payment accepted"
-				if ((int)$result['id_order_state'] === 2 && (int)Configuration::get('PS_INVOICE') && $order->invoice_number)
+				// Attach invoice and / or delivery-slip if they exists and status is set to attach them
+				if (($result['pdf_invoice'] || $result['pdf_delivery']))
 				{
 					$context = Context::getContext();
-					$pdf = new PDF($order->getInvoicesCollection(), PDF::TEMPLATE_INVOICE, $context->smarty);
-					$file_attachement['content'] = $pdf->render(false);
-					$file_attachement['name'] = Configuration::get('PS_INVOICE_PREFIX', (int)$order->id_lang, null, $order->id_shop).sprintf('%06d', $order->invoice_number).'.pdf';
-					$file_attachement['mime'] = 'application/pdf';
+					$invoice = $order->getInvoicesCollection();
+					$file_attachement = array();
+
+					if ($result['pdf_invoice'] && (int)Configuration::get('PS_INVOICE') && $order->invoice_number)
+					{
+						$pdf = new PDF($invoice, PDF::TEMPLATE_INVOICE, $context->smarty);
+						$file_attachement['invoice']['content'] = $pdf->render(false);
+						$file_attachement['invoice']['name'] = Configuration::get('PS_INVOICE_PREFIX', (int)$order->id_lang, null, $order->id_shop).sprintf('%06d', $order->invoice_number).'.pdf';
+						$file_attachement['invoice']['mime'] = 'application/pdf';
+					}
+					if ($result['pdf_delivery'] && $order->delivery_number)
+					{
+						$pdf = new PDF($invoice, PDF::TEMPLATE_DELIVERY_SLIP, $context->smarty);
+						$file_attachement['delivery']['content'] = $pdf->render(false);
+						$file_attachement['delivery']['name'] = Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order->delivery_number).'.pdf';
+						$file_attachement['delivery']['mime'] = 'application/pdf';
+					}
 				}
 				else
 					$file_attachement = null;

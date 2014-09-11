@@ -328,6 +328,28 @@ class AdminStatusesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'checkbox',
+					'name' => 'pdf_invoice',
+					'values' => array(
+						'query' => array(
+							array('id' => 'on',  'name' => $this->l('Attach invoice pdf to email'), 'val' => '1'),
+							),
+						'id' => 'id',
+						'name' => 'name'
+					),
+				),
+				array(
+					'type' => 'checkbox',
+					'name' => 'pdf_delivery',
+					'values' => array(
+						'query' => array(
+							array('id' => 'on',  'name' => $this->l('Attach delivery slip pdf to email'), 'val' => '1'),
+							),
+						'id' => 'id',
+						'name' => 'name'
+					),
+				),
+				array(
+					'type' => 'checkbox',
 					'name' => 'shipped',
 					'values' => array(
 						'query' => array(
@@ -401,6 +423,8 @@ class AdminStatusesControllerCore extends AdminController
 			'shipped_on' => $this->getFieldValue($obj, 'shipped'),
 			'paid_on' => $this->getFieldValue($obj, 'paid'),
 			'delivery_on' => $this->getFieldValue($obj, 'delivery'),
+			'pdf_delivery_on' => $this->getFieldValue($obj, 'pdf_delivery'),
+			'pdf_invoice_on' => $this->getFieldValue($obj, 'pdf_invoice'),
 		);
 
 		if ($this->getFieldValue($obj, 'color') !== false)
@@ -528,6 +552,8 @@ class AdminStatusesControllerCore extends AdminController
 			$_POST['shipped'] = (int)Tools::getValue('shipped_on');
 			$_POST['paid'] = (int)Tools::getValue('paid_on');
 			$_POST['delivery'] = (int)Tools::getValue('delivery_on');
+			$_POST['pdf_delivery'] = (int)Tools::getValue('pdf_delivery_on');
+			$_POST['pdf_invoice'] = (int)Tools::getValue('pdf_invoice_on');
 			if (!$_POST['send_email'])
 			{
 				$languages = Language::getLanguages(false);
