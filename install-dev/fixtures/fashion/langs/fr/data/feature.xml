@@ -1,24 +1,24 @@
-<?xml version="1.0"?>
+<?xml version='1.0'?>
 <entity_feature>
-  <feature id="Height">
+  <feature id='Height'>
     <name>Hauteur</name>
   </feature>
-  <feature id="Width">
+  <feature id='Width'>
     <name>Largeur</name>
   </feature>
-  <feature id="Depth">
+  <feature id='Depth'>
     <name>Profondeur</name>
   </feature>
-  <feature id="Weight">
+  <feature id='Weight'>
     <name>Poids</name>
   </feature>
-  <feature id="Compositions">
+  <feature id='Compositions'>
     <name>Compositions</name>
   </feature>
-  <feature id="Styles">
+  <feature id='Styles'>
     <name>Styles</name>
   </feature>
-  <feature id="Properties">
+  <feature id='Properties'>
     <name>Propriétés</name>
   </feature>
 </entity_feature>
