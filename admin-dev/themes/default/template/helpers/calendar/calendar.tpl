@@ -90,6 +90,6 @@
 		daysShort: ['{l s='Sun' js=1}', '{l s='Mon' js=1}', '{l s='Tue' js=1}', '{l s='Wed' js=1}', '{l s='Thu' js=1}', '{l s='Fri' js=1}', '{l s='Sat' js=1}', '{l s='Sun' js=1}'],
 		daysMin: ['{l s='Su' js=1}', '{l s='Mo' js=1}', '{l s='Tu' js=1}', '{l s='We' js=1}', '{l s='Th' js=1}', '{l s='Fr' js=1}', '{l s='Sa' js=1}', '{l s='Su' js=1}'],
 		months: ['{l s='January' js=1}', '{l s='February' js=1}', '{l s='March' js=1}', '{l s='April' js=1}', '{l s='May' js=1}', '{l s='June' js=1}', '{l s='July' js=1}', '{l s='August' js=1}', '{l s='September' js=1}', '{l s='October' js=1}', '{l s='November' js=1}', '{l s='December' js=1}'],
-		monthsShort: ['{l s='Jan' js=1}', '{l s='Feb' js=1}', '{l s='Mar' js=1}', '{l s='Apr' js=1}', '{l s='May' js=1}', '{l s='Jun' js=1}', '{l s='Jul' js=1}', '{l s='Aug' js=1}', '{l s='Sep' js=1}', '{l s='Oct' js=1}', '{l s='Nov' js=1}', '{l s='Dec' js=1}']
+		monthsShort: ['{l s='Jan' js=1}', '{l s='Feb' js=1}', '{l s='Mar' js=1}', '{l s='Apr' js=1}', '{l s='May ' js=1}', '{l s='Jun' js=1}', '{l s='Jul' js=1}', '{l s='Aug' js=1}', '{l s='Sep' js=1}', '{l s='Oct' js=1}', '{l s='Nov' js=1}', '{l s='Dec' js=1}']
 	};
 </script>
