@@ -386,6 +386,12 @@
 	<configuration id="PS_OS_WS_PAYMENT" name="PS_OS_WS_PAYMENT">
 		<value>12</value>
 	</configuration>
+	<configuration id="PS_OS_OUTOFSTOCK_PAID" name="PS_OS_OUTOFSTOCK_PAID">
+		<value>9</value>
+	</configuration>
+	<configuration id="PS_OS_OUTOFSTOCK_UNPAID" name="PS_OS_OUTOFSTOCK_UNPAID">
+		<value>13</value>
+	</configuration>
 	<configuration id="PS_LEGACY_IMAGES" name="PS_LEGACY_IMAGES">
 		<value>0</value>
 	</configuration>

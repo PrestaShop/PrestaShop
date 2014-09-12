@@ -1225,7 +1225,7 @@ function bindAddonsButtons()
 						window.location.href = admin_modules_link + '&conf=32';
 					}
 					else
-						$('#addons_loading').html(errorLogin);
+						$('#addons_loading').html('<br><div class="alert alert-danger">'+errorLogin+'</div>');
 				}
 			});
 		}
