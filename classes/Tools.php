@@ -1615,8 +1615,9 @@ class ToolsCore
 				return Tools::ceilf($value, $precision);
 			case PS_ROUND_DOWN:
 				return Tools::floorf($value, $precision);
-			case PS_ROUND_HALF_DOWN:
 			case PS_ROUND_HALF_EVEN:
+				return Tools::bankers_round($value, $precision);
+			case PS_ROUND_HALF_DOWN:
 			case PS_ROUND_HALF_ODD:
 				return Tools::math_round($value, $precision, $method);
 			case PS_ROUND_HALF_UP:
@@ -1624,7 +1625,32 @@ class ToolsCore
 				return Tools::math_round($value, $precision, PS_ROUND_HALF_UP);
 		}
 	}
-
+	
+	public static function bankers_round($dvalue,$iprecision) 
+	{
+	// financial rounding or round-half-even
+	// (round down when even number is left of 5, otherwise round up)
+	// $dvalue is decimal value to round
+	// $iprecision specifies number of decimal places to retain
+	
+	static $dFuzz=0.00001; // to deal with floating-point iprecision loss
+	
+	$iRoundup=0; // amount to round up by
+	$iSign=($dvalue!=0.0) ? intval($dvalue/abs($dvalue)) : 1;
+	$dvalue=abs($dvalue);
+	
+	// get decimal digit in question and amount to right of it as a fraction
+	$dWorking = $dvalue*pow(10.0,$iprecision+1)-floor($dvalue*pow(10.0,$iprecision))*10.0;
+	$iEvenOddDigit = floor($dvalue*pow(10.0,$iprecision))-floor($dvalue*pow(10.0,$iprecision-1))*10.0;
+	
+	if (abs($dWorking-5.0)<$dFuzz) 
+	    $iRoundup = ($iEvenOddDigit & 1) ? 1 : 0;
+	else 
+	    $iRoundup=($dWorking>5.0) ? 1 : 0;
+	
+	return $iSign*((floor($dvalue*pow(10.0,$iprecision))+$iRoundup)/pow(10.0,$iprecision));
+	}
+	
 	public static function math_round($value, $places, $mode = PS_ROUND_HALF_UP)
 	{
 		//If PHP_ROUND_HALF_UP exist (PHP 5.3) use it and pass correct mode value (PrestaShop define - 1)
