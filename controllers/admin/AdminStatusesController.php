@@ -469,7 +469,7 @@ class AdminStatusesControllerCore extends AdminController
 			$iso_code = $language['iso_code'];
 
 			// If there is no folder for the given iso_code in /mails or in /themes/[theme_name]/mails, we bypass this language
-			if (!file_exists(_PS_ADMIN_DIR_.'/'.$default_path.$iso_code) && !file_exists(_PS_ADMIN_DIR_.'/'.$theme_path.$iso_code))
+			if (!@filemtime(_PS_ADMIN_DIR_.'/'.$default_path.$iso_code) && !@filemtime(_PS_ADMIN_DIR_.'/'.$theme_path.$iso_code))
 				continue;
 			
 			$theme_templates = scandir(_PS_ADMIN_DIR_.'/'.$theme_path.$iso_code);
