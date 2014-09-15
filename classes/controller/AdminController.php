@@ -1018,7 +1018,7 @@ class AdminControllerCore extends Controller
 						if (empty($this->redirect_after) && $this->redirect_after !== false)
 							$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=4&token='.$this->token;
 					}
-					PrestaShopLogger::addLog(sprintf($this->l('%s edition', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$object->id, true, (int)$this->context->employee->id);
+					PrestaShopLogger::addLog(sprintf($this->l('%s modification', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$object->id, true, (int)$this->context->employee->id);
 				}
 				else
 					$this->errors[] = Tools::displayError('An error occurred while updating an object.').
