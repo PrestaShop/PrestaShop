@@ -630,7 +630,7 @@ class CategoryCore extends ObjectModel
 			$order_by_prefix = 'p';
 		elseif ($order_by == 'name')
 			$order_by_prefix = 'pl';
-		elseif ($order_by == 'manufacturer')
+		elseif ($order_by == 'manufacturer' || $order_by == 'manufacturer_name')
 		{
 			$order_by_prefix = 'm';
 			$order_by = 'name';
@@ -993,7 +993,7 @@ class CategoryCore extends ObjectModel
 				if ($id_parent_category)
 					$category = Category::searchByNameAndParentCategoryId($id_lang, $category_name, $id_parent_category);
 				else
-					$category = Category::searchByName($id_lang,$category_name,true);
+					$category = Category::searchByName($id_lang, $category_name, true);
 
 				if (!$category && $object_to_create && $method_to_create)
 				{

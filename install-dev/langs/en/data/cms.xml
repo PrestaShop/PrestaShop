@@ -71,11 +71,11 @@
   </cms>
   <cms id="Secure_payment">
     <meta_title>Secure payment</meta_title>
-    <meta_description>Our secure payment mean</meta_description>
+    <meta_description>Our secure payment method</meta_description>
     <meta_keywords>secure payment, ssl, visa, mastercard, paypal</meta_keywords>
     <content>&lt;h2&gt;Secure payment&lt;/h2&gt;&#xD;
 &lt;h3&gt;Our secure payment&lt;/h3&gt;&lt;p&gt;With SSL&lt;/p&gt;&#xD;
-&lt;h3&gt;Using Visa/Mastercard/Paypal&lt;/h3&gt;&lt;p&gt;About this services&lt;/p&gt;</content>
+&lt;h3&gt;Using Visa/Mastercard/Paypal&lt;/h3&gt;&lt;p&gt;About this service&lt;/p&gt;</content>
     <link_rewrite>secure-payment</link_rewrite>
   </cms>
 </entity_cms>
