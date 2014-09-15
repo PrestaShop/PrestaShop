@@ -68,9 +68,6 @@ INSERT INTO `PREFIX_hook_module` (`id_module`, `id_shop`, `id_hook`, `position`)
 INSERT INTO `PREFIX_hook_module` (`id_module`, `id_shop`, `id_hook`, `position`) (
 	SELECT m.id_module, s.id_shop, h.id_hook, 3 FROM `PREFIX_module` m, `PREFIX_shop` s, `PREFIX_hook` h WHERE m.name IN ('dashproducts') AND h.name IN ('dashboardZoneTwo')
 );
-INSERT INTO `PREFIX_hook_module` (`id_module`, `id_shop`, `id_hook`, `position`) (
-	SELECT m.id_module, s.id_shop, h.id_hook, 0 FROM `PREFIX_module` m, `PREFIX_shop` s, `PREFIX_hook` h WHERE m.name IN ('graphnvd3') AND h.name IN ('GraphEngine', 'actionAdminControllerSetMedia')
-);
 
 INSERT INTO `PREFIX_configuration` (`id_shop_group`, `id_shop`, `name`, `value`, `date_add`, `date_upd`) VALUES (NULL, NULL, 'CONF_AVERAGE_PRODUCT_MARGIN', '40', NOW(), NOW());
 

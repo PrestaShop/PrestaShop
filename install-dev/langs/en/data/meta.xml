@@ -38,7 +38,7 @@
   </meta>
   <meta id="password" id_shop="1">
     <title>Forgot your password</title>
-    <description>Enter your e-mail address used to register in goal to get e-mail with your new password</description>
+    <description>Enter the e-mail address you use to sign in to receive an e-mail with a new password</description>
     <keywords/>
     <url_rewrite>password-recovery</url_rewrite>
   </meta>

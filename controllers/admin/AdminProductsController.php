@@ -1903,7 +1903,7 @@ class AdminProductsControllerCore extends AdminController
 						StockAvailable::setProductDependsOnStock((int)$this->object->id, $depends_on_stock, $this->context->shop->id);
 					}
 
-					PrestaShopLogger::addLog(sprintf($this->l('%s edition', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
+					PrestaShopLogger::addLog(sprintf($this->l('%s modification', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
 					if (in_array($this->context->shop->getContext(), array(Shop::CONTEXT_SHOP, Shop::CONTEXT_ALL)))
 					{
 						if ($this->isTabSubmitted('Shipping'))
@@ -2643,7 +2643,8 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['PS_ALLOW_ACCENTED_CHARS_URL'] = (int)Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
 		$this->tpl_form_vars['post_data'] = Tools::jsonEncode($_POST);
 		$this->tpl_form_vars['save_error'] = !empty($this->errors);
-
+		$this->tpl_form_vars['mod_evasive'] = Tools::apacheModExists('evasive');
+		$this->tpl_form_vars['mod_security'] = Tools::apacheModExists('security');
 		$this->tpl_form_vars['ps_force_friendly_product'] = Configuration::get('PS_FORCE_FRIENDLY_PRODUCT');
 
 		// autoload rich text editor (tiny mce)
@@ -3096,7 +3097,7 @@ class AdminProductsControllerCore extends AdminController
 			$product->id_tax_rules_group = (int)Product::getIdTaxRulesGroupMostUsed();
 			$data->assign('ecotax_tax_excl', 0);
 		}
-
+		
 		$address = new Address();
 		$address->id_country = (int)$this->context->country->id;
 		$tax_rules_groups = TaxRulesGroup::getTaxRulesGroups(true);
