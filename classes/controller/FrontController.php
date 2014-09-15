@@ -1018,9 +1018,9 @@ class FrontControllerCore extends Controller
 					if (strrpos($override_path, $type.'/'.basename($file)) !== false)
 						$override_path_css = str_replace($type.'/'.basename($file) , basename($file), $override_path, $different_css);
 
-					if ($different && file_exists($override_path))
+					if ($different && @filemtime($override_path))
 						$file = str_replace(__PS_BASE_URI__.'modules/', __PS_BASE_URI__.'themes/'._THEME_NAME_.'/'.$type.'/modules/', $file, $different);
-					elseif ($different_css && file_exists($override_path_css))
+					elseif ($different_css && @filemtime($override_path_css))
 						$file = $override_path_css;
 					if ($css_media_type)
 						$list_uri[$file] = $media;
