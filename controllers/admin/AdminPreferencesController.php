@@ -55,11 +55,11 @@ class AdminPreferencesControllerCore extends AdminController
 				),
 				array(
 					'value' => PS_ROUND_UP,
-					'name' => $this->l('Round up to the nearest whole number')
+					'name' => $this->l('Round up to the nearest value')
 				),
 				array(
 					'value' => PS_ROUND_DOWN,
-					'name' => $this->l('Round down to the nearest whole number')
+					'name' => $this->l('Round down to the nearest value')
 				),
 			);
 			$activities1 = array(

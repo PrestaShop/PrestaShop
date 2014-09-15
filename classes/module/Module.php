@@ -295,7 +295,7 @@ abstract class ModuleCore
 		$result = Db::getInstance()->insert($this->table, array('name' => $this->name, 'active' => 1, 'version' => $this->version));
 		if (!$result)
 		{
-			$this->_errors[] = Tools::displayError('Technical error: PrestaShop could not installed this module.');
+			$this->_errors[] = Tools::displayError('Technical error: PrestaShop could not install this module.');
 			return false;
 		}
 		$this->id = Db::getInstance()->Insert_ID();
@@ -1553,11 +1553,12 @@ abstract class ModuleCore
 
 		if ($default_country_modules_list_content === null)
 			$default_country_modules_list_content = Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
-
+		
 		if ($untrusted_modules_list_content === null)
 			$untrusted_modules_list_content = Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_UNTRUSTED_MODULES_LIST);
 
-		// If the module is trusted, which includes both partner modules and modules bought on Addons
+		// If the module is trusted, which includes both partner modules and modules bought on Addons	
+
 		if (strpos($trusted_modules_list_content, $module_name) !== false)
 		{
 			// If the module is not a partner, then return 1 (which means the module is "trusted")

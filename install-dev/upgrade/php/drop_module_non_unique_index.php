@@ -33,5 +33,5 @@ function drop_module_non_unique_index()
 		Db::getInstance()->execute('SET SESSION old_alter_table="ON"');
 	Db::getInstance()->execute('ALTER IGNORE TABLE `'._DB_PREFIX_.'module` ADD UNIQUE `name` (`name`)');
 	if (is_array($tmp) && $tmp)
-		Db::getInstance()->execute('SET SESSION old_alter_table="0FF"');
+		Db::getInstance()->execute('SET SESSION old_alter_table="OFF"');
 }

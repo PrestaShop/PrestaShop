@@ -146,12 +146,16 @@
 													<td class="{if $option.unique_carrier}first_item{/if}{if $first.product_list[0].carrier_list[0] eq 0} hide{/if}">
 														<input type="hidden" value="{$first.instance->id|intval}" name="id_carrier" />
 														{if isset($first.instance->delay[$cookie->id_lang])}
-															<i class="icon-info-sign"></i>{$first.instance->delay[$cookie->id_lang]|escape:'htmlall':'UTF-8'}
-															{if count($first.product_list) <= 1}
-																({l s='Product concerned:'}
-															{else}
-																({l s='Products concerned:'}
-															{/if}
+															<i class="icon-info-sign"></i>
+															{strip}
+																{$first.instance->delay[$cookie->id_lang]|escape:'htmlall':'UTF-8'}
+																&nbsp;
+																{if count($first.product_list) <= 1}
+																	({l s='For this product:'}
+																{else}
+																	({l s='For these products:'}
+																{/if}
+															{/strip}
 															{foreach $first.product_list as $product}
 																{if $product@index == 4}
 																	<acronym title="
@@ -216,12 +220,15 @@
 														<input type="hidden" value="{$first.instance->id|intval}" name="id_carrier" />
 														{if isset($carrier.instance->delay[$cookie->id_lang])}
 															<i class="icon-info-sign"></i>
-															{$first.instance->delay[$cookie->id_lang]|escape:'htmlall':'UTF-8'}
-															{if count($carrier.product_list) <= 1}
-																({l s='Product concerned:'}
-															{else}
-																({l s='Products concerned:'}
-															{/if}
+															{strip}
+																{$first.instance->delay[$cookie->id_lang]|escape:'htmlall':'UTF-8'}
+																&nbsp;
+																{if count($first.product_list) <= 1}
+																	({l s='For this product:'}
+																{else}
+																	({l s='For these products:'}
+																{/if}
+															{/strip}
 															{foreach $carrier.product_list as $product}
 																{if $product@index == 4}
 																	<acronym title="

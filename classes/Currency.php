@@ -105,6 +105,8 @@ class CurrencyCore extends ObjectModel
 		// price sign before or after the price number
 		$this->prefix =	$this->format % 2 != 0 ? $this->sign.' ' : '';
 		$this->suffix =	$this->format % 2 == 0 ? ' '.$this->sign : '';
+		if (!$this->conversion_rate)
+			$this->conversion_rate = 1;
 	}
 	/**
 	 * Overriding check if currency rate is not empty and if currency with the same iso code already exists.
@@ -353,6 +355,7 @@ class CurrencyCore extends ObjectModel
 	{
 		// fetch the exchange rate of the default currency
 		$exchange_rate = 1;
+		$tmp = $this->conversion_rate;
 		if ($defaultCurrency->iso_code != $isoCodeSource)
 		{
 			foreach ($data->currency as $currency)
@@ -382,7 +385,9 @@ class CurrencyCore extends ObjectModel
 			if (isset($rate))
 				$this->conversion_rate = round($rate / $exchange_rate, 6);
 		}
-		$this->update();
+
+		if ($tmp != $this->conversion_rate)
+			$this->update();
 	}
 
 	public static function getDefaultCurrency()
@@ -406,7 +411,7 @@ class CurrencyCore extends ObjectModel
 		if (!$default_currency = Currency::getDefaultCurrency())
 			return Tools::displayError('No default currency');
 
-		$currencies = Currency::getCurrencies(true, false);
+		$currencies = Currency::getCurrencies(true, false, true);
 		foreach ($currencies as $currency)
 			if ($currency->id != $default_currency->id)
 				$currency->refreshCurrency($feed->list, $isoCodeSource, $default_currency);

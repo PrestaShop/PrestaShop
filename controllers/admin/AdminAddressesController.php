@@ -166,6 +166,7 @@ class AdminAddressesControllerCore extends AdminController
 
 		// get required field
 		$required_fields = AddressFormat::getFieldsRequired();
+
 		// Merge with field required
 		$addresses_fields = array_unique(array_merge($addresses_fields, $required_fields));
 

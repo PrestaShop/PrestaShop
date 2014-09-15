@@ -281,13 +281,14 @@ class AdminTranslationsControllerCore extends AdminController
 		else
 			$file_path = $translation_informations['dir'].$translation_informations['file'];
 
-		if (!file_exists($file_path))
+		if ($file_path && !file_exists($file_path))
 		{
 			if (!file_exists(dirname($file_path)) && !mkdir(dirname($file_path), 0777, true))
 				throw new PrestaShopException(sprintf(Tools::displayError('Directory "%s" cannot be created'), dirname($file_path)));
 			elseif (!touch($file_path))
 				throw new PrestaShopException(sprintf(Tools::displayError('File "%s" cannot be created'), $file_path));
 		}
+
 		$thm_name = str_replace('.', '', Tools::getValue('theme'));
 		$kpi_key = substr(strtoupper($thm_name.'_'.Tools::getValue('lang')), 0, 16);
 
@@ -450,7 +451,7 @@ class AdminTranslationsControllerCore extends AdminController
 			if (!mkdir($dir, 0777, true))
 				throw new PrestaShopException('The file '.$dir.' cannot be created.');
 		if (!file_put_contents($path, $content))
-				throw new PrestaShopException('File "'.$path.'" doesn not exist and cannot be created in '.$dir);
+				throw new PrestaShopException('File "'.$path.'" does not exist and cannot be created in '.$dir);
 		if (!is_writable($path))
 			$this->displayWarning(sprintf(Tools::displayError('This file must be writable: %s'), $path));
 	}
