@@ -139,6 +139,13 @@ class MailCore extends ObjectModel
 			Tools::dieOrLog(Tools::displayError('Error: parameter "to" is corrupted'), $die);
 			return false;
 		}
+		
+		// if bcc is not null, make sure it's a vaild e-mail
+		if (!is_null($bcc) && !is_array($bcc) && !Validate::isEmail($bcc))
+		{
+			Tools::dieOrLog(Tools::displayError('Error: parameter "bcc" is corrupted'), $die);
+			return false;
+		}
 
 		if (!is_array($template_vars))
 			$template_vars = array();
