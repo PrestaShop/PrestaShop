@@ -132,22 +132,6 @@ class AdminAddressesControllerCore extends AdminController
 					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
 				),
 				array(
-					'type' => 'text',
-					'label' => $this->l('Home phone'),
-					'name' => 'phone',
-					'required' => false,
-					'col' => '4',
-					'hint' => Configuration::get('PS_ONE_PHONE_AT_LEAST') ? sprintf($this->l('You must register at least one phone number.')) : ''
-				),
-				array(
-					'type' => 'text',
-					'label' => $this->l('Mobile phone'),
-					'name' => 'phone_mobile',
-					'required' => false,
-					'col' => '4',
-					'hint' => Configuration::get('PS_ONE_PHONE_AT_LEAST') ? sprintf($this->l('You must register at least one phone number.')) : ''
-				),
-				array(
 					'type' => 'textarea',
 					'label' => $this->l('Other'),
 					'name' => 'other',
@@ -228,7 +212,7 @@ class AdminAddressesControllerCore extends AdminController
 					'default_value' => $default_value,
 				);
 			}
-			else if ($addr_field_item == 'firstname')
+			elseif ($addr_field_item == 'firstname')
 			{
 				if (isset($customer) &&
 					!Tools::isSubmit('submit'.strtoupper($this->table)) &&
@@ -248,7 +232,7 @@ class AdminAddressesControllerCore extends AdminController
 					'default_value' => $default_value,
 				);
 			}
-			else if ($addr_field_item == 'address1')
+			elseif ($addr_field_item == 'address1')
 			{
 				$temp_fields[] = array(
 					'type' => 'text',
@@ -258,7 +242,7 @@ class AdminAddressesControllerCore extends AdminController
 					'required' => true,
 				);
 			}
-			else if ($addr_field_item == 'address2')
+			elseif ($addr_field_item == 'address2')
 			{
 				$temp_fields[] = array(
 					'type' => 'text',
@@ -278,7 +262,7 @@ class AdminAddressesControllerCore extends AdminController
 					'required' => true,
 				);
 			}
-			else if ($addr_field_item == 'city')
+			elseif ($addr_field_item == 'city')
 			{
 				$temp_fields[] = array(
 					'type' => 'text',
@@ -288,7 +272,7 @@ class AdminAddressesControllerCore extends AdminController
 					'required' => true,
 				);
 			}
-			else if ($addr_field_item == 'country' || $addr_field_item == 'Country:name')
+			elseif ($addr_field_item == 'country' || $addr_field_item == 'Country:name')
 			{
 				$temp_fields[] = array(
 					'type' => 'select',
@@ -314,6 +298,28 @@ class AdminAddressesControllerCore extends AdminController
 						'id' => 'id_state',
 						'name' => 'name'
 					)
+				);
+			}
+			elseif ($addr_field_item == 'phone')
+			{
+				$temp_fields[] = array(
+					'type' => 'text',
+					'label' => $this->l('Home phone'),
+					'name' => 'phone',
+					'required' => in_array('phone', $required_fields) || Configuration::get('PS_ONE_PHONE_AT_LEAST'),
+					'col' => '4',
+					'hint' => Configuration::get('PS_ONE_PHONE_AT_LEAST') ? sprintf($this->l('You must register at least one phone number.')) : ''
+				);
+			}
+			elseif ($addr_field_item == 'phone_mobile')
+			{
+				$temp_fields[] = array(
+					'type' => 'text',
+					'label' => $this->l('Mobile phone'),
+					'name' => 'phone_mobile',
+					'required' =>  in_array('phone_mobile', $required_fields) || Configuration::get('PS_ONE_PHONE_AT_LEAST'),
+					'col' => '4',
+					'hint' => Configuration::get('PS_ONE_PHONE_AT_LEAST') ? sprintf($this->l('You must register at least one phone number.')) : ''
 				);
 			}
 		}

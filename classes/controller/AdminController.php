@@ -815,7 +815,8 @@ class AdminControllerCore extends Controller
 				if (isset($params['callback']))
 				{
 					$callback_obj = (isset($params['callback_object'])) ? $params['callback_object'] : $this->context->controller;
-					$field_value = call_user_func_array(array($callback_obj, $params['callback']), array($field_value, $row));
+					if (!preg_match('/<([a-z]+)([^<]+)*(?:>(.*)<\/\1>|\s+\/>)/ism', call_user_func_array(array($callback_obj, $params['callback']), array($field_value, $row))))
+						$field_value = call_user_func_array(array($callback_obj, $params['callback']), array($field_value, $row));
 				}
 				$content[$i][] = $field_value;
 			}
@@ -1017,7 +1018,7 @@ class AdminControllerCore extends Controller
 						if (empty($this->redirect_after) && $this->redirect_after !== false)
 							$this->redirect_after = self::$currentIndex.($parent_id ? '&'.$this->identifier.'='.$object->id : '').'&conf=4&token='.$this->token;
 					}
-					PrestaShopLogger::addLog(sprintf($this->l('%s edition', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$object->id, true, (int)$this->context->employee->id);
+					PrestaShopLogger::addLog(sprintf($this->l('%s modification', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$object->id, true, (int)$this->context->employee->id);
 				}
 				else
 					$this->errors[] = Tools::displayError('An error occurred while updating an object.').

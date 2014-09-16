@@ -149,6 +149,11 @@ $(document).ready(function()
 
 	//set jqZoom parameters if needed
 	if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
+	{
+		var new_src = $('#thumbs_list .shown img').attr('src').replace('cart_', 'large_');
+		if ($('.jqzoom img').attr('src')!= new_src)
+			$('.jqzoom img').attr('src', new_src).parent().attr('href', new_src);
+
 		$('.jqzoom').jqzoom({
 			zoomType: 'innerzoom', //innerzoom/standard/reverse/drag
 			zoomWidth: 458, //zooming div default width(default width value is 200)
@@ -158,6 +163,7 @@ $(document).ready(function()
 			title: false
 		});
 
+	}
 	if (typeof(contentOnly) != 'undefined' && !contentOnly)
 	{
 		if (!!$.prototype.fancybox)
@@ -188,6 +194,13 @@ $(document).ready(function()
 		$.uniform.defaults.fileDefaultHtml = product_fileDefaultHtml;
 	if (typeof product_fileButtonHtml !== 'undefined')
 		$.uniform.defaults.fileButtonHtml = product_fileButtonHtml;
+
+	if ($('#customizationForm').length)
+	{
+		var url = window.location + '';
+		if (url.indexOf('#') != -1)
+			getProductAttribute();
+	}
 });
 
 $(window).resize(function(){	
@@ -462,14 +475,8 @@ function updateDisplay()
 		$('#availability_date').fadeOut();
 
 		//availability value management
-		if (availableNowValue != '')
-		{
-			//update the availability statut of the product
-			$('#availability_value').removeClass('warning_inline');
-			$('#availability_value').text(availableNowValue);
-			if (stock_management == 1)
-				$('#availability_statut:hidden').show();
-		}
+		if (stock_management && availableNowValue != '')
+			$('#availability_value').removeClass('warning_inline').text(availableNowValue).show();
 		else
 			$('#availability_statut:visible').hide();
 
@@ -531,7 +538,8 @@ function updateDisplay()
 			$('#availability_value').text(doesntExist).addClass('warning_inline');
 			$('#oosHook').hide();
 		}
-		if (stock_management == 1 && !allowBuyWhenOutOfStock)
+
+		if ((stock_management == 1 && !allowBuyWhenOutOfStock) || (!stock_management && selectedCombination['unavailable']))
 			$('#availability_statut:hidden').show();
 
 		if (typeof(selectedCombination['available_date']) != 'undefined' && selectedCombination['available_date']['date'].length != 0)
@@ -559,12 +567,8 @@ function updateDisplay()
 		{
 			$('#add_to_cart:hidden').fadeIn(600);
 
-			if (availableLaterValue != '')
-			{
-				$('#availability_value').text(availableLaterValue);
-				if (stock_management == 1)
-					$('#availability_statut:hidden').show('slow');
-			}
+			if (stock_management && availableLaterValue != '')
+				$('#availability_value').removeClass('warning_inline').text(availableLaterValue).show('slow');
 			else
 				$('#availability_statut:visible').hide('slow');
 		}
@@ -749,12 +753,12 @@ function displayImage(domAAroundImgThumb, no_animation)
 {
 	if (typeof(no_animation) == 'undefined')
 		no_animation = false;
-	if (domAAroundImgThumb.prop('href'))
+	if (domAAroundImgThumb.attr('href'))
 	{
 		var new_src = domAAroundImgThumb.attr('href').replace('thickbox', 'large');
 		var new_title = domAAroundImgThumb.attr('title');
 		var new_href = domAAroundImgThumb.attr('href');
-		if ($('#bigpic').prop('src') != new_src)
+		if ($('#bigpic').attr('src') != new_src)
 		{
 			$('#bigpic').attr({
 				'src' : new_src,
@@ -869,11 +873,6 @@ function refreshProductImages(id_product_attribute)
 function saveCustomization()
 {
 	$('#quantityBackup').val($('#quantity_wanted').val());
-	customAction = $('#customizationForm').attr('action');
-	$('body select[id^="group_"]').each(function() {
-		customAction = customAction.replace(new RegExp(this.id + '=\\d+'), this.id +'=' + this.value);
-	});
-	$('#customizationForm').attr('action', customAction);
 	$('#customizationForm').submit();
 }
 
@@ -952,14 +951,21 @@ function getProductAttribute()
 			if (attributesCombinations[i]['id_attribute'] === tab_attributes[a])
 				request += '/'+attributesCombinations[i]['group'] + attribute_anchor_separator + attributesCombinations[i]['attribute'];
 	request = request.replace(request.substring(0, 1), '#/');
-	url = window.location + '';
+	var url = window.location + '';
 
 	// redirection
 	if (url.indexOf('#') != -1)
 		url = url.substring(0, url.indexOf('#'));
 
-	// set ipa to the customization form
-	$('#customizationForm').attr('action', $('#customizationForm').attr('action') + request);
+	if ($('#customizationForm').length)
+	{
+		// set ipa to the customization form
+		customAction = $('#customizationForm').attr('action');
+		if (customAction.indexOf('#') != -1)
+			customAction = customAction.substring(0, customAction.indexOf('#'));
+		$('#customizationForm').attr('action', customAction + request);
+	}
+
 	window.location = url + request;
 }
 
@@ -974,7 +980,7 @@ function checkUrl()
 	if (original_url != window.location || first_url_check)
 	{
 		first_url_check = false;
-		url = window.location + '';
+		var url = window.location + '';
 		// if we need to load a specific combination
 		if (url.indexOf('#/') != -1)
 		{
