@@ -550,7 +550,7 @@ class CartRuleCore extends ObjectModel
 		if ($this->id_customer && $context->cart->id_customer != $this->id_customer)
 		{
 			if (!Context::getContext()->customer->isLogged())
-				return (!$display_error) ? false : (Tools::displayError('You cannot use this voucher').' - '.Tools::displayError('Please log in'));
+				return (!$display_error) ? false : (Tools::displayError('You cannot use this voucher').' - '.Tools::displayError('Please log in first'));
 			return (!$display_error) ? false : Tools::displayError('You cannot use this voucher');
 		}
 

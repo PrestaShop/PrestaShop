@@ -295,7 +295,7 @@ abstract class ModuleCore
 		$result = Db::getInstance()->insert($this->table, array('name' => $this->name, 'active' => 1, 'version' => $this->version));
 		if (!$result)
 		{
-			$this->_errors[] = Tools::displayError('Technical error: PrestaShop could not installed this module.');
+			$this->_errors[] = Tools::displayError('Technical error: PrestaShop could not install this module.');
 			return false;
 		}
 		$this->id = Db::getInstance()->Insert_ID();
@@ -307,8 +307,8 @@ abstract class ModuleCore
 
 		// Permissions management
 		Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_module`, `view`, `configure`) (
-				SELECT id_profile, '.(int)$this->id.', 1, 1
+			INSERT INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_module`, `view`, `configure`, `uninstall`) (
+				SELECT id_profile, '.(int)$this->id.', 1, 1, 1
 				FROM '._DB_PREFIX_.'access a
 				WHERE id_tab = (
 					SELECT `id_tab` FROM '._DB_PREFIX_.'tab
@@ -316,8 +316,8 @@ abstract class ModuleCore
 				AND a.`view` = 1)');
 
 		Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_module`, `view`, `configure`) (
-				SELECT id_profile, '.(int)$this->id.', 1, 0
+			INSERT INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_module`, `view`, `configure`, `uninstall`) (
+				SELECT id_profile, '.(int)$this->id.', 1, 0, 1
 				FROM '._DB_PREFIX_.'access a
 				WHERE id_tab = (
 					SELECT `id_tab` FROM '._DB_PREFIX_.'tab
@@ -1558,6 +1558,7 @@ abstract class ModuleCore
 			$untrusted_modules_list_content = Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_UNTRUSTED_MODULES_LIST);
 
 		// If the module is trusted, which includes both partner modules and modules bought on Addons
+
 		if (strpos($trusted_modules_list_content, $module_name) !== false)
 		{
 			// If the module is not a partner, then return 1 (which means the module is "trusted")
@@ -2135,11 +2136,10 @@ abstract class ModuleCore
 	{
 		if (Tools::getIsset('live_edit'))
 			return false;
-
 		Tools::enableCache();
-		$is_cached = $this->getCurrentSubTemplate($this->getTemplatePath($template), $cacheId, $compileId)->isCached($this->getTemplatePath($template), $cacheId, $compileId);
+		$new_tpl = $this->getTemplatePath($template);
+		$is_cached = $this->getCurrentSubTemplate($template, $cacheId, $compileId)->isCached($new_tpl, $cacheId, $compileId);
 		Tools::restoreCacheSettings();
-
 		return $is_cached;
 	}
 
@@ -2230,8 +2230,9 @@ abstract class ModuleCore
 	 */
 	public static function getPermissionStatic($id_module, $variable, $employee = null)
 	{
-		if (!in_array($variable, array('view', 'configure')))
+		if (!in_array($variable, array('view', 'configure', 'uninstall')))
 			return false;
+
 		if (!$employee)
 			$employee = Context::getContext()->employee;
 
@@ -2241,11 +2242,12 @@ abstract class ModuleCore
 		if (!isset(self::$cache_permissions[$employee->id_profile]))
 		{
 			self::$cache_permissions[$employee->id_profile] = array();
-			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `id_module`, `view`, `configure` FROM `'._DB_PREFIX_.'module_access` WHERE `id_profile` = '.(int)$employee->id_profile);
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `id_module`, `view`, `configure`, `uninstall` FROM `'._DB_PREFIX_.'module_access` WHERE `id_profile` = '.(int)$employee->id_profile);
 			foreach ($result as $row)
 			{
 				self::$cache_permissions[$employee->id_profile][$row['id_module']]['view'] = $row['view'];
 				self::$cache_permissions[$employee->id_profile][$row['id_module']]['configure'] = $row['configure'];
+				self::$cache_permissions[$employee->id_profile][$row['id_module']]['uninstall'] = $row['uninstall'];
 			}
 		}
 

@@ -175,7 +175,7 @@
 										<tr class="cart_total_price">
 											<td colspan="4" class="total_price_container text-right"><span>{l s='Total'}</span></td>
 											<td colspan="2" class="price" id="total_price_container">
-												<span id="total_price">{displayPrice price=$total_price}</span>
+												<span id="total_price" data-selenium-total-price="{$total_price}">{displayPrice price=$total_price}</span>
 											</td>
 										</tr>
 									{else}
@@ -215,7 +215,7 @@
 											<span>{l s='Total'}</span>
 										</td>
 										<td colspan="2" class="price total_price_container" id="total_price_container">
-											<span id="total_price">{displayPrice price=$total_price_without_tax}</span>
+											<span id="total_price" data-selenium-total-price="{$total_price_without_tax}">{displayPrice price=$total_price_without_tax}</span>
 										</td>
 									</tr>
 									{/if}

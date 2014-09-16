@@ -32,7 +32,11 @@
         <name>خطای پرداخت</name>
         <template>payment_error</template>
     </order_state>
-    <order_state id="On_backorder">
+    <order_state id="On_backorder_paid">
+        <name>خارج از موجودی</name>
+        <template>outofstock</template>
+    </order_state>
+    <order_state id="On_backorder_unpaid">
         <name>خارج از موجودی</name>
         <template>outofstock</template>
     </order_state>
