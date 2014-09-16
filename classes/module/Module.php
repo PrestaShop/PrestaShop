@@ -1553,11 +1553,11 @@ abstract class ModuleCore
 
 		if ($default_country_modules_list_content === null)
 			$default_country_modules_list_content = Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
-		
+
 		if ($untrusted_modules_list_content === null)
 			$untrusted_modules_list_content = Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_UNTRUSTED_MODULES_LIST);
 
-		// If the module is trusted, which includes both partner modules and modules bought on Addons	
+		// If the module is trusted, which includes both partner modules and modules bought on Addons
 
 		if (strpos($trusted_modules_list_content, $module_name) !== false)
 		{
@@ -2136,11 +2136,10 @@ abstract class ModuleCore
 	{
 		if (Tools::getIsset('live_edit'))
 			return false;
-
 		Tools::enableCache();
-		$is_cached = $this->getCurrentSubTemplate($this->getTemplatePath($template), $cacheId, $compileId)->isCached($this->getTemplatePath($template), $cacheId, $compileId);
+		$new_tpl = $this->getTemplatePath($template);
+		$is_cached = $this->getCurrentSubTemplate($template, $cacheId, $compileId)->isCached($new_tpl, $cacheId, $compileId);
 		Tools::restoreCacheSettings();
-
 		return $is_cached;
 	}
 
@@ -2233,7 +2232,7 @@ abstract class ModuleCore
 	{
 		if (!in_array($variable, array('view', 'configure', 'uninstall')))
 			return false;
-		
+
 		if (!$employee)
 			$employee = Context::getContext()->employee;
 
