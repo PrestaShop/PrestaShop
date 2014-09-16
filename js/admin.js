@@ -358,14 +358,15 @@ function gencode(size)
 }
 
 var tpl_viewing_window = null;
-function viewTemplates(id_select, prefix, ext)
+function viewTemplates(id_select, lang, ext)
 {
 	var loc = $(id_select).val();
 	if (loc != 0)
 	{
 		if (tpl_viewing_window != null && !tpl_viewing_window.closed)
 			tpl_viewing_window.close();
-		tpl_viewing_window = window.open(prefix + loc + ext, 'tpl_viewing', 'toolbar=0,location=0,directories=0,statfr=no,menubar=0,scrollbars=yes,resizable=yes,width=520,height=400,top=50,left=300');
+		var url_preview = $("option[value="+loc+"]", id_select).data('preview');
+		tpl_viewing_window = window.open(url_preview + lang + loc + ext, 'tpl_viewing', 'toolbar=0,location=0,directories=0,statfr=no,menubar=0,scrollbars=yes,resizable=yes,width=520,height=400,top=50,left=300');
 		tpl_viewing_window.focus();
 	}
 }
@@ -852,12 +853,35 @@ $(document).ready(function()
 	$(document).on('click', '.untrustedaddon', function(e){
 		e.preventDefault();
 		var moduleName = $(this).data('module-name');
+		var moduleDisplayName = $(this).data('module-display-name');
+		var moduleImage = $(this).data('module-image');
+		var authorName = $(this).data('author-name');
 		var moduleLink = $(this).data('link');
-		var addonsSearchLink = 'http://addons.prestashop.com/en/search?search_query='+encodeURIComponent(moduleName)+'&utm_source=back-office&utm_medium=addons-certified&utm_campaign=back-office-'+iso_user.toUpperCase();
+		var authorUri = $(this).data('author-uri');
+		var isValidUri = /(https?):\/\/([a-z0-9\.]*)?(prestashop.com).*/gi;
+		var addonsSearchLink = 'http://addons.prestashop.com/en/search?search_query='+encodeURIComponent(moduleDisplayName)+'&utm_source=back-office&utm_medium=addons-certified&utm_campaign=back-office-'+iso_user.toUpperCase();
 
-		$('.modal .module-name-placeholder').text(moduleName);
+		$('.modal #untrusted-module-logo').attr('src', moduleImage);
+		$('.modal .module-display-name-placeholder').text(moduleDisplayName);
+		$('.modal .author-name-placeholder').text(authorName);
+
+		if (isValidUri.test(authorUri))
+			$('.modal .author-name-placeholder').wrap('<a href="'+authorUri+'" onclick="window.open(this.href);return false;"></a>');
+
 		$('.modal #proceed-install-anyway').attr('href', moduleLink);
 		$('.modal .catalog-link').attr('href', addonsSearchLink);
+		$('.modal .catalog-link').attr('onclick', 'window.open(this.href);return false;');
+	});
+
+	$(document).on('click', '#untrusted-show-risk', function(e){
+		e.preventDefault();
+		$('.untrusted-content-action').hide();
+		$('.untrusted-content-more-info').show();
+	});
+	$(document).on('click', '#untrusted-show-action', function(e){
+		e.preventDefault();
+		$('.untrusted-content-more-info').hide();
+		$('.untrusted-content-action').show();
 	});
 
 	// if count errors
@@ -1202,7 +1226,7 @@ function bindAddonsButtons()
 						window.location.href = admin_modules_link + '&conf=32';
 					}
 					else
-						$('#addons_loading').html(errorLogin);
+						$('#addons_loading').html('<br><div class="alert alert-danger">'+errorLogin+'</div>');
 				}
 			});
 		}

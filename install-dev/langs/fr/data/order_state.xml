@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <entity_order_state>
   <order_state id="Awaiting_cheque_payment">
-    <name>En attente du paiement par ch&#xE8;que</name>
+    <name>En attente du paiement par chèque</name>
     <template>cheque</template>
   </order_state>
   <order_state id="Payment_accepted">
-    <name>Paiement accept&#xE9;</name>
+    <name>Paiement accepté</name>
     <template>payment</template>
   </order_state>
   <order_state id="Preparation_in_progress">
-    <name>Pr&#xE9;paration en cours</name>
+    <name>Préparation en cours</name>
     <template>preparation</template>
   </order_state>
   <order_state id="Shipped">
@@ -17,23 +17,27 @@
     <template>shipped</template>
   </order_state>
   <order_state id="Delivered">
-    <name>Livr&#xE9;</name>
+    <name>Livré</name>
     <template/>
   </order_state>
   <order_state id="Canceled">
-    <name>Annul&#xE9;</name>
+    <name>Annulé</name>
     <template>order_canceled</template>
   </order_state>
   <order_state id="Refund">
-    <name>Rembours&#xE9;</name>
+    <name>Remboursé</name>
     <template>refund</template>
   </order_state>
   <order_state id="Payment_error">
     <name>Erreur de paiement</name>
     <template>payment_error</template>
   </order_state>
-  <order_state id="On_backorder">
-    <name>En attente de r&#xE9;approvisionnement</name>
+  <order_state id="On_backorder_paid">
+    <name>En attente de réapprovisionnement (payé)</name>
+    <template>outofstock</template>
+  </order_state>
+  <order_state id="On_backorder_unpaid">
+    <name>En attente de réapprovisionnement (non payé)</name>
     <template>outofstock</template>
   </order_state>
   <order_state id="Awaiting_bank_wire_payment">
@@ -45,7 +49,7 @@
     <template/>
   </order_state>
   <order_state id="Payment_remotely_accepted">
-    <name>Paiement &#xE0; distance accept&#xE9;</name>
+    <name>Paiement à distance accepté</name>
     <template>payment</template>
   </order_state>
 </entity_order_state>

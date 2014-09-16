@@ -104,6 +104,8 @@
 
 			var tabs_preloaded = new Array();
 			var tabs_to_preload = new Array();
+			var mod_evasive = {if isset($mod_evasive) && $mod_evasive}true{else}false{/if};
+			var mod_security = {if isset($mod_security) && $mod_security}true{else}false{/if};
 
 			$(document).ready(function()
 			{
@@ -160,17 +162,6 @@
 
 					tabs_manager.onLoad(id, function(){
 						$("#product-tab-content-"+id).show(0, function(){
-							$("#product-tab-content-"+id).on('displayed', function() {
-								if (all_tabs_are_loaded) 
-								{
-									$(this).find('[name="submitAddproductAndStay"]').each(function() {
-										$(this).prop('disabled', false).find('i').removeClass('process-icon-loading').addClass('process-icon-save');
-									});
-									$(this).find('[name="submitAddproduct"]').each(function() {
-										$(this).prop('disabled', false).find('i').removeClass('process-icon-loading').addClass('process-icon-save');
-									});
-								}
-							});
 							$(this).trigger('displayed');
 						});
 						$("#link-"+id).addClass('active');

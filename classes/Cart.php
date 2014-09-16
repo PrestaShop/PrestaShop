@@ -1384,54 +1384,54 @@ class CartCore extends ObjectModel
 			else
 				$ecotax = 0;
 
+			$address = Address::initialize($id_address, true);
+
 			if ($with_taxes)
 			{
-				$address = Address::initialize($id_address, true);
-
 				$id_tax_rules_group = Product::getIdTaxRulesGroupByIdProduct((int)$product['id_product'], $virtual_context);
 				$tax_calculator = TaxManagerFactory::getManager($address, $id_tax_rules_group)->getTaxCalculator();
 
 				if ($ecotax)
 					$ecotax_tax_calculator = TaxManagerFactory::getManager($address, (int)Configuration::get('PS_ECOTAX_TAX_RULES_GROUP_ID'))->getTaxCalculator();
-
-				if (in_array(Configuration::get('PS_ROUND_TYPE'), array(Order::ROUND_ITEM, Order::ROUND_LINE)))
-				{
-					if (!isset($products_total[$id_tax_rules_group]))
-						$products_total[$id_tax_rules_group] = 0;
-				}
-				else
-					if (!isset($products_total[$id_tax_rules_group.'_'.$id_address]))
-						$products_total[$id_tax_rules_group.'_'.$id_address] = 0;
-
-				switch (Configuration::get('PS_ROUND_TYPE'))
-				{
-					case Order::ROUND_TOTAL:
-						$products_total[$id_tax_rules_group.'_'.$id_address] += $price * (int)$product['cart_quantity'];
-						if ($ecotax)
-							$ecotax_total += $ecotax * (int)$product['cart_quantity'];
-						break;
-					case Order::ROUND_LINE:
-						$products_total[$id_tax_rules_group] += Tools::ps_round($tax_calculator->addTaxes($price) * (int)$product['cart_quantity'], _PS_PRICE_DISPLAY_PRECISION_);
-						if ($ecotax)
-							$ecotax_total += Tools::ps_round($ecotax_tax_calculator->addTaxes($ecotax) * (int)$product['cart_quantity'], _PS_PRICE_DISPLAY_PRECISION_);
-						break;
-					case Order::ROUND_ITEM:
-					default:
-						if (isset($products_total[$id_tax_rules_group]))
-							$products_total[$id_tax_rules_group] += Tools::ps_round($tax_calculator->addTaxes($price), _PS_PRICE_DISPLAY_PRECISION_) * (int)$product['cart_quantity'];
-						if ($ecotax)
-							$ecotax_total += Tools::ps_round($ecotax_tax_calculator->addTaxes($ecotax), _PS_PRICE_DISPLAY_PRECISION_) * (int)$product['cart_quantity'];
-						break;
-				}
 			}
 			else
-			{
-				if (!isset($products_total[0]))
-					$products_total[0] = 0;
-				$products_total[0] += $price * (int)$product['cart_quantity'];
+				$id_tax_rules_group = 0;
 
-				if ($ecotax)
-					$ecotax_total += $ecotax * (int)$product['cart_quantity'];
+			if (in_array(Configuration::get('PS_ROUND_TYPE'), array(Order::ROUND_ITEM, Order::ROUND_LINE)))
+			{
+				if (!isset($products_total[$id_tax_rules_group]))
+					$products_total[$id_tax_rules_group] = 0;
+			}
+			else
+				if (!isset($products_total[$id_tax_rules_group.'_'.$id_address]))
+					$products_total[$id_tax_rules_group.'_'.$id_address] = 0;
+
+			switch (Configuration::get('PS_ROUND_TYPE'))
+			{
+				case Order::ROUND_TOTAL:
+					$products_total[$id_tax_rules_group.'_'.$id_address] += $price * (int)$product['cart_quantity'];
+					if ($ecotax)
+						$ecotax_total += $ecotax * (int)$product['cart_quantity'];
+					break;
+				case Order::ROUND_LINE:
+					$product_price = $with_taxes ? $tax_calculator->addTaxes($price) : $price;
+					$products_total[$id_tax_rules_group] += Tools::ps_round($product_price * (int)$product['cart_quantity'], _PS_PRICE_DISPLAY_PRECISION_);
+					if ($ecotax)
+					{
+						$ecotax_price = $with_taxes ? $ecotax_tax_calculator->addTaxes($ecotax) : $ecotax;
+						$ecotax_total += Tools::ps_round($ecotax_price * (int)$product['cart_quantity'], _PS_PRICE_DISPLAY_PRECISION_);
+					}
+					break;
+				case Order::ROUND_ITEM:
+				default:
+						$product_price = $with_taxes ? $tax_calculator->addTaxes($price) : $price;
+						$products_total[$id_tax_rules_group] += Tools::ps_round($product_price, _PS_PRICE_DISPLAY_PRECISION_) * (int)$product['cart_quantity'];
+					if ($ecotax)
+					{
+						$ecotax_price = $with_taxes ? $ecotax_tax_calculator->addTaxes($ecotax) : $ecotax;
+						$ecotax_total += Tools::ps_round($ecotax_price, _PS_PRICE_DISPLAY_PRECISION_) * (int)$product['cart_quantity'];
+					}
+					break;
 			}
 		}
 
@@ -3178,24 +3178,29 @@ class CartCore extends ObjectModel
 		$success = true;
 		$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT * FROM `'._DB_PREFIX_.'cart_product` WHERE `id_cart` = '.(int)$this->id);
 
+		$product_gift = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT cr.`gift_product`, cr.`gift_product_attribute` FROM `'._DB_PREFIX_.'cart_rule` cr LEFT JOIN `'._DB_PREFIX_.'order_cart_rule` ocr ON (ocr.`id_order` = '.(int)$this->id.') WHERE ocr.`id_cart_rule` = cr.`id_cart_rule`');
+
 		$id_address_delivery = Configuration::get('PS_ALLOW_MULTISHIPPING') ? $cart->id_address_delivery : 0;
 
 		foreach ($products as $product)
 		{
 			if ($id_address_delivery)
-			{
 				if (Customer::customerHasAddress((int)$cart->id_customer, $product['id_address_delivery']))
 					$id_address_delivery = $product['id_address_delivery'];
-			}
+
+			foreach ($product_gift as $gift)
+				if (isset($gift['gift_product']) && isset($gift['gift_product_attribute']) && (int)$gift['gift_product'] == (int)$product['id_product'] && (int)$gift['gift_product_attribute'] == (int)$product['id_product_attribute'])
+					$product['quantity'] = (int)$product['quantity'] - 1;
 
 			$success &= $cart->updateQty(
-				$product['quantity'],
+				(int)$product['quantity'],
 				(int)$product['id_product'],
 				(int)$product['id_product_attribute'],
 				null,
 				'up',
 				(int)$id_address_delivery,
-				new Shop($cart->id_shop)
+				new Shop((int)$cart->id_shop),
+				false
 			);
 		}
 

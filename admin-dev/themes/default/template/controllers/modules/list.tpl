@@ -111,7 +111,7 @@
 												</a>
 											{/if}
 										{else}
-										<a class="btn btn-success untrustedaddon" href="#" data-target="#moduleNotTrusted" data-toggle="modal" data-link="{$module->options.install_url|escape:'html':'UTF-8'}" data-module-name="{$module->displayName|escape:'html':'UTF-8'}">
+										<a class="btn btn-success untrustedaddon" href="#" data-target="#moduleNotTrusted" data-toggle="modal" data-link="{$module->options.install_url|escape:'html':'UTF-8'}" data-module-display-name="{$module->displayName|escape:'html':'UTF-8'}" data-module-name="{$module->name|escape:'html':'UTF-8'}" data-module-image="{if isset($module->image)}{$module->image}{else}{$modules_uri}/{$module->name}/{$module->logo}{/if}" data-author-name="{$module->author|escape:'html':'UTF-8'}" data-author-uri="{if isset($module->author_uri)}{$module->author_uri|escape:'html':'UTF-8'}{/if}">
 											<i class="icon-plus-sign-alt"></i>&nbsp;{l s='Install'}
 										</a>
 										{/if}

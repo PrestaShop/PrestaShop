@@ -30,8 +30,9 @@ class Datas
 	protected static $available_args = array(
 		'step' => array(
 			'name' => 'step',
-			'default' => 'process',
+			'default' => 'all',
 			'validate' => 'isGenericName',
+			'help' => 'all / database,fixtures,theme,modules,addons_modules',
 		),
 		'language' => array(
 			'default' => 'en',
@@ -212,7 +213,7 @@ class Datas
 					$this->$key = $row['default'];
 			}
 			elseif (isset($row['validate']) && !call_user_func(array('Validate', $row['validate']), $args_ok[$name]))
-					$errors[] = 'Field '.$row['name'].' is not valid';
+					$errors[] = 'Field '.$key.' is not valid';
 			else
 				$this->$key = $args_ok[$name];
 		}

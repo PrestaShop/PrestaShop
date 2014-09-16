@@ -97,16 +97,12 @@ abstract class InstallControllerConsole
 			exit;
 		}
 
-		// Include all controllers
-		foreach (self::$steps as $step)
-		{
-			if (!file_exists(_PS_INSTALL_CONTROLLERS_PATH_.'console/'.$step.'.php'))
-				throw new PrestashopInstallerException("Controller file 'console/{$step}.php' not found");
+		if (!file_exists(_PS_INSTALL_CONTROLLERS_PATH_.'console/process.php'))
+			throw new PrestashopInstallerException("Controller file 'console/process.php' not found");
 
-			require_once _PS_INSTALL_CONTROLLERS_PATH_.'console/'.$step.'.php';
-			$classname = 'InstallControllerConsole'.$step;
-			self::$instances[$step] = new $classname($step);
-		}
+		require_once _PS_INSTALL_CONTROLLERS_PATH_.'console/process.php';
+		$classname = 'InstallControllerConsoleProcess';
+		self::$instances['process'] = new InstallControllerConsoleProcess('process');
 
 		$datas = Datas::getInstance();
 
@@ -115,10 +111,7 @@ abstract class InstallControllerConsole
 
 		@date_default_timezone_set($datas->timezone);
 
-		if (!$current_step = $datas->step)
-			return false;
-
-		self::$instances[$current_step]->process();
+		self::$instances['process']->process();
 	}
 
 	final public function __construct($step)

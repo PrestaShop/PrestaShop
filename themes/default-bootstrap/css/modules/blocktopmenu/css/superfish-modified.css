@@ -163,25 +163,25 @@ ul.sf-menu li li li.sfHover ul {
     .sf-menu > li > ul > li.first-in-line-xs {
       clear: left; } }
 
-.sf-menu > li > ul > li#category-thumbnail {
+.sf-menu > li > ul > li.category-thumbnail {
   width: 100% !important;
   float: none;
   clear: both;
   overflow: hidden;
   padding-right: 0; }
-  .sf-menu > li > ul > li#category-thumbnail > div {
+  .sf-menu > li > ul > li.category-thumbnail > div {
     float: left;
     padding-left: 10px;
     width: 33.333%; }
     @media (max-width: 479px) {
-      .sf-menu > li > ul > li#category-thumbnail > div {
+      .sf-menu > li > ul > li.category-thumbnail > div {
         width: 100%;
         padding-left: 0;
         padding-top: 10px;
         text-align: center; } }
-    .sf-menu > li > ul > li#category-thumbnail > div:first-child {
+    .sf-menu > li > ul > li.category-thumbnail > div:first-child {
       padding-left: 0; }
-    .sf-menu > li > ul > li#category-thumbnail > div img {
+    .sf-menu > li > ul > li.category-thumbnail > div img {
       max-width: 100%;
       display: block; }
 
