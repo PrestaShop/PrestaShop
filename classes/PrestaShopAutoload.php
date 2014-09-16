@@ -100,10 +100,13 @@ class PrestaShopAutoload
 		// If $classname has not core suffix (E.g. Shop, Product)
 		if (substr($classname, -4) != 'Core')
 		{
+			$class_dir = (isset($this->index[$classname]['override'])
+				&& $this->index[$classname]['override'] === true) ? $this->normalizeDirectory(_PS_ROOT_DIR_) : $this->root_dir;
+	
 			// If requested class does not exist, load associated core class
 			if (isset($this->index[$classname]) && !$this->index[$classname]['path'])
 			{
-				require($this->root_dir.$this->index[$classname.'Core']['path']);
+				require($class_dir.$this->index[$classname.'Core']['path']);
 
 				if ($this->index[$classname.'Core']['type'] != 'interface')
 					eval($this->index[$classname.'Core']['type'].' '.$classname.' extends '.$classname.'Core {}');
@@ -113,9 +116,6 @@ class PrestaShopAutoload
 				// request a non Core Class load the associated Core class if exists
 				if (isset($this->index[$classname.'Core']))
 					require_once($this->root_dir.$this->index[$classname.'Core']['path']);
-
-				$class_dir = (isset($this->index[$classname]['override'])
-					&& $this->index[$classname]['override'] === true) ? $this->normalizeDirectory(_PS_ROOT_DIR_) : $this->root_dir;
 
 				if (isset($this->index[$classname]))
 					require_once($class_dir.$this->index[$classname]['path']);

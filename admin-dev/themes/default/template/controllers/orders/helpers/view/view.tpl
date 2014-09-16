@@ -122,7 +122,7 @@
 					</a>
 					&nbsp;
 					{if Configuration::get('PS_INVOICE') && count($invoices_collection) && ((isset($currentState) && $currentState->invoice && $order->invoice_number) || $order->invoice_number)}
-						<a class="btn btn-default" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateInvoicePDF&amp;id_order={$order->id|intval}" target="_blank">
+						<a data-selenium-id="view_invoice" class="btn btn-default" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateInvoicePDF&amp;id_order={$order->id|intval}" target="_blank">
 							<i class="icon-file"></i>
 							{l s='View invoice'}
 						</a>

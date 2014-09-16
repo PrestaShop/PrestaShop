@@ -142,3 +142,6 @@ ul.wlp_bought_list li .lnkdel {
   right: 0;
   display: block;
   font-size: 14px; }
+
+.wish_select {
+  width: 75%; }
