@@ -2705,12 +2705,12 @@ class AdminThemesControllerCore extends AdminController
 				return false;
 
 			$ext = ($field_name == 'PS_STORES_ICON') ? '.gif' : '.jpg';
-			$logo_name = Tools::link_rewrite(Context::getContext()->shop->name).'-'
+			$logo_name = $logo_prefix.Tools::link_rewrite(Context::getContext()->shop->name).'-'
 				.Configuration::get('PS_IMG_UPDATE_TIME').'-'.(int)$id_shop.$ext;
 
 			if (Context::getContext()->shop->getContext() == Shop::CONTEXT_ALL || $id_shop == 0
 				|| Shop::isFeatureActive() == false)
-				$logo_name = Tools::link_rewrite(Context::getContext()->shop->name).'-'
+				$logo_name = $logo_prefix.Tools::link_rewrite(Context::getContext()->shop->name).'-'
 					.Configuration::get('PS_IMG_UPDATE_TIME').$ext;
 
 			if ($field_name == 'PS_STORES_ICON')
