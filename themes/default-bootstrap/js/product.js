@@ -194,6 +194,13 @@ $(document).ready(function()
 		$.uniform.defaults.fileDefaultHtml = product_fileDefaultHtml;
 	if (typeof product_fileButtonHtml !== 'undefined')
 		$.uniform.defaults.fileButtonHtml = product_fileButtonHtml;
+
+	if ($('#customizationForm').length)
+	{
+		var url = window.location + '';
+		if (url.indexOf('#') != -1)
+			getProductAttribute();
+	}
 });
 
 $(window).resize(function(){	
@@ -944,7 +951,7 @@ function getProductAttribute()
 			if (attributesCombinations[i]['id_attribute'] === tab_attributes[a])
 				request += '/'+attributesCombinations[i]['group'] + attribute_anchor_separator + attributesCombinations[i]['attribute'];
 	request = request.replace(request.substring(0, 1), '#/');
-	url = window.location + '';
+	var url = window.location + '';
 
 	// redirection
 	if (url.indexOf('#') != -1)
@@ -973,7 +980,7 @@ function checkUrl()
 	if (original_url != window.location || first_url_check)
 	{
 		first_url_check = false;
-		url = window.location + '';
+		var url = window.location + '';
 		// if we need to load a specific combination
 		if (url.indexOf('#/') != -1)
 		{
