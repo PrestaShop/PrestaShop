@@ -232,10 +232,14 @@ class AdminCategoriesControllerCore extends AdminController
 		if (Tools::isSubmit('submitBulkdelete'.$this->table) || Tools::isSubmit('delete'.$this->table))
 		{
 			$category = new Category(Tools::getValue('id_category'));
+			
 			if ($category->is_root_category)
 				$this->tpl_list_vars['need_delete_mode'] = false;
-			else
+			elseif(!$category->getProducts(null, null, null, null, null, true, true, false, 1, false))
+				$this->tpl_list_vars['empty_category'] = true;
+			else{
 				$this->tpl_list_vars['need_delete_mode'] = true;
+			}
 			$this->tpl_list_vars['delete_category'] = true;
 			$this->tpl_list_vars['REQUEST_URI'] = $_SERVER['REQUEST_URI'];
 			$this->tpl_list_vars['POST'] = $_POST;

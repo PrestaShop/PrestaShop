@@ -53,14 +53,14 @@
 		<div class="panel">
 			<form action="{$REQUEST_URI}" method="post">
 			<div class="panel-heading">
-				{if $need_delete_mode}
+				{if isset($need_delete_mode) && $need_delete_mode}
 					{l s='What do you want to do with the products associated with this category?'}
 				{else}
 					{l s='Deleting multiple categories'}
 				{/if}
 			</div>
 
-			{if $need_delete_mode}
+			{if isset($need_delete_mode) && $need_delete_mode}
 				<div class="radio">
 					<label for="deleteMode_linkanddisable">
 						<input type="radio" name="deleteMode" value="linkanddisable" id="deleteMode_linkanddisable" checked="checked" />
@@ -79,6 +79,9 @@
 						{l s='I want to remove the products which are listed only within this category and no others.'}
 					</label>
 				</div>
+			{elseif isset($empty_category) && $empty_category}
+				<div class="alert alert-warning">{l s='Are you sure you want to delete this category?'}</div>
+				<input type="hidden" name="deleteMode" value="delete" id="deleteMode_delete" />
 			{else}
 				<div class="alert alert-warning">{l s='Deleting this category will remove products linked only within this category and no others. Are you sure you want to continue?'}</div>
 				<input type="hidden" name="deleteMode" value="delete" id="deleteMode_delete" />
