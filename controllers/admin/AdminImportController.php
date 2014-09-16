@@ -2066,16 +2066,20 @@ class AdminImportControllerCore extends AdminController
 						$info['ecotax'] = str_replace(',', '.', $info['ecotax']);
 						$info['weight'] = str_replace(',', '.', $info['weight']);
 
+						// reset default combination if already have one
+						if($info['default_on']) 
+							$product->deleteDefaultAttributes();
+
 						// if a reference is specified for this product, get the associate id_product_attribute to UPDATE
 						if (isset($info['reference']) && !empty($info['reference']))
 						{
 							$id_product_attribute = Combination::getIdByReference($product->id, strval($info['reference']));
-
 							// updates the attribute
 							if ($id_product_attribute)
 							{
 								// gets all the combinations of this product
 								$attribute_combinations = $product->getAttributeCombinations($default_language);
+
 								foreach ($attribute_combinations as $attribute_combination)
 								{
 									if ($id_product_attribute && in_array($id_product_attribute, $attribute_combination))
@@ -2144,6 +2148,7 @@ class AdminImportControllerCore extends AdminController
 			$product->checkDefaultAttributes();
 			if (!$product->cache_default_attribute)
 				Product::updateDefaultAttribute($product->id);
+
 			if ($id_product_attribute)
 			{
 				// now adds the attributes in the attribute_combination table
