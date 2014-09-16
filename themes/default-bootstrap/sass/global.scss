@@ -1980,6 +1980,13 @@ div.star a:hover {
 							}
 						}
 					}
+					&.instagram {
+						a {
+							&:before {
+								content: "\f16d";
+							}
+						}
+					}					
 				}
 			}
 			h4 {
