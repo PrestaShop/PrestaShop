@@ -5125,6 +5125,9 @@ td.visible-print {
 .icon-vimeo-square:before {
   content: "\f194"; }
 
+.icon-instagram-square:before {
+  content: "\f16d"; }
+
 .icon-turkish-lira:before,
 .icon-try:before {
   content: "\f195"; }
@@ -7045,6 +7048,8 @@ div.star a:hover {
             content: "\f0d2"; }
           .footer-container #footer #social_block ul li.vimeo a:before {
             content: "\f194"; }
+          .footer-container #footer #social_block ul li.instagram a:before {
+            content: "\f16d"; }
       .footer-container #footer #social_block h4 {
         float: right;
         margin-bottom: 0;

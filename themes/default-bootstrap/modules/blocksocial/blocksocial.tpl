@@ -75,6 +75,13 @@
         		</a>
         	</li>
         {/if}
+        {if isset($instagram_url) && $instagram_url != ''}
+        	<li class="instagram">
+        		<a target="_blank"  href="{$instagram_url|escape:html:'UTF-8'}">
+        			<span>{l s='Instagram' mod='blocksocial'}</span>
+        		</a>
+        	</li>
+        {/if}
 	</ul>
     <h4>{l s='Follow us' mod='blocksocial'}</h4>
 </section>
