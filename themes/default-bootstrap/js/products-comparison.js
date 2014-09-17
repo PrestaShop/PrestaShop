@@ -111,7 +111,7 @@ function reloadProductComparison()
 function compareButtonsStatusRefresh()
 {
 	$('.add_to_compare').each(function() {
-		if ($.inArray(parseInt($(this).data('id-product')), comparedProductsIds) !== -1)
+		if ($.inArray($(this).data('id-product').toString(), comparedProductsIds) !== -1)
 			$(this).addClass('checked');
 		else
 			$(this).removeClass('checked');
