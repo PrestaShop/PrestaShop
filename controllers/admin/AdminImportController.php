@@ -1050,35 +1050,48 @@ class AdminImportControllerCore extends AdminController
 		$handle = $this->openCsvFile();
 		$default_language_id = (int)Configuration::get('PS_LANG_DEFAULT');
 		$id_lang = Language::getIdByIso(Tools::getValue('iso_lang'));
+		$force_ids = (bool)Tools::getValue('forceIDs');
 		if (!Validate::isUnsignedId($id_lang))
 			$id_lang = $default_language_id;
 		AdminImportController::setLocale();
+
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
 			if (Tools::getValue('convert'))
 				$line = $this->utf8EncodeArray($line);
 			$info = AdminImportController::getMaskedRow($line);
 
-			$tab_categ = array(Configuration::get('PS_HOME_CATEGORY'), Configuration::get('PS_ROOT_CATEGORY'));
-			if (isset($info['id']) && in_array((int)$info['id'], $tab_categ))
+			$default_categories = array(Configuration::get('PS_HOME_CATEGORY'), Configuration::get('PS_ROOT_CATEGORY'));
+
+			$category_id = (isset($info['id']) && (int)$info['id'] ? (int)$info['id'] : NULL);
+			$category_exists = Category::existsInDatabase($category_id, 'category');
+			if ($category_id && $force_ids && in_array($category_id, $default_categories))
 			{
+				// IDs are forced, and this category uses one of the default IDs
 				$this->errors[] = Tools::displayError('The category ID cannot be the same as the Root category ID or the Home category ID.');
 				continue;
 			}
+
 			AdminImportController::setDefaultValues($info);
 
-			if (Tools::getValue('forceIDs') && isset($info['id']) && (int)$info['id'])
-				$category = new Category((int)$info['id']);
+			if ($category_id && $force_ids)
+			{
+				// We're forcing IDs, load it
+				$category = new Category($category_id);
+			}
 			else
 			{
-				if (isset($info['id']) && (int)$info['id'] && Category::existsInDatabase((int)$info['id'], 'category'))
-					$category = new Category((int)$info['id']);
-				else
-					$category = new Category();
+				// Generate a new ID
+				$category = new Category();
 			}
 
 			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $category);
 
+			// If we're not forcing IDs, drop the number that was loaded from fillInfo
+			if (!$force_ids)
+				$category->id = NULL;
+
+			// Let's set up our parent category relationship
 			if (isset($category->parent) && is_numeric($category->parent))
 			{
 				if (isset($cat_moved[$category->parent]))
@@ -1102,8 +1115,11 @@ class AdminImportControllerCore extends AdminController
 					$category_to_create->link_rewrite = AdminImportController::createMultiLangField($category_link_rewrite);
 					$category_to_create->id_parent = Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
 					if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-						($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $category_to_create->add())
+						($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true &&
+						$category_to_create->add())
+					{
 						$category->id_parent = $category_to_create->id;
+					}
 					else
 					{
 						$this->errors[] = sprintf(
@@ -1116,15 +1132,18 @@ class AdminImportControllerCore extends AdminController
 					}
 				}
 			}
-			if (isset($category->link_rewrite) && !empty($category->link_rewrite[$default_language_id]))
-				$valid_link = Validate::isLinkRewrite($category->link_rewrite[$default_language_id]);
-			else
-				$valid_link = false;
 
+			// Shop relationship
 			if (!Shop::isFeatureActive())
 				$category->id_shop_default = 1;
 			else
 				$category->id_shop_default = (int)Context::getContext()->shop->id;
+
+			// Prepare the category's permalink
+			if (isset($category->link_rewrite) && !empty($category->link_rewrite[$default_language_id]))
+				$valid_link = Validate::isLinkRewrite($category->link_rewrite[$default_language_id]);
+			else
+				$valid_link = false;
 
 			$bak = $category->link_rewrite[$default_language_id];
 			if ((isset($category->link_rewrite) && empty($category->link_rewrite[$default_language_id])) || !$valid_link)
@@ -1139,15 +1158,20 @@ class AdminImportControllerCore extends AdminController
 			}
 
 			if (!$valid_link)
+			{
 				$this->warnings[] = sprintf(
 					Tools::displayError('Rewrite link for %1$s (ID: %2$s) was re-written as %3$s.'),
 					$bak,
 					(isset($info['id']) && !empty($info['id']))? $info['id'] : 'null',
 					$category->link_rewrite[$default_language_id]
 				);
+			}
+
+			// Insert or update imported category
 			$res = false;
 			if (($field_error = $category->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-				($lang_field_error = $category->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && empty($this->errors))
+				($lang_field_error = $category->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true &&
+				empty($this->errors))
 			{
 				$category_already_created = Category::searchByNameAndParentCategoryId(
 					$id_lang,
@@ -1168,25 +1192,28 @@ class AdminImportControllerCore extends AdminController
 					continue;
 				}
 
-				/* No automatic nTree regeneration for import */
+				// Don't update category tree while importing
 				$category->doNotRegenerateNTree = true;
 
 				// If id category AND id category already in base, trying to update
-				$categories_home_root = array(Configuration::get('PS_ROOT_CATEGORY'), Configuration::get('PS_HOME_CATEGORY'));
-				if ($category->id && $category->categoryExists($category->id) && !in_array($category->id, $categories_home_root))
+				if ($category->id && $category->categoryExists($category->id) && !in_array($category->id, $default_categories))
 					$res = $category->update();
+
 				if ($category->id == Configuration::get('PS_ROOT_CATEGORY'))
 					$this->errors[] = Tools::displayError('The root category cannot be modified.');
+
 				// If no id_category or update failed
-				$category->force_id = (bool)Tools::getValue('forceIDs');
+				$category->force_id = $force_ids;
 				if (!$res)
 					$res = $category->add();
 			}
+
 			//copying images of categories
 			if (isset($category->image) && !empty($category->image))
 				if (!(AdminImportController::copyImg($category->id, null, $category->image, 'categories', !Tools::getValue('regenerate'))))
 					$this->warnings[] = $category->image.' '.Tools::displayError('cannot be copied.');
-			// If both failed, mysql error
+
+			// If both update and add above failed, report an error
 			if (!$res)
 			{
 				$this->errors[] = sprintf(
@@ -1225,7 +1252,7 @@ class AdminImportControllerCore extends AdminController
 			}
 		}
 
-		/* Import has finished, we can regenerate the categories nested tree */
+		// Import completed, we can regenerate the nested categories tree
 		Category::regenerateEntireNtree();
 
 		$this->closeCsvFile($handle);
