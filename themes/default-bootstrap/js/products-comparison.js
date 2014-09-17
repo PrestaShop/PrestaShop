@@ -38,7 +38,7 @@ function addToCompare(productId)
 {
 	var totalValueNow = parseInt($('.bt_compare').next('.compare_product_count').val());
 	var action, totalVal;
-	if($.inArray(parseInt(productId),comparedProductsIds) === -1)
+	if($.inArray(productId.toString(),comparedProductsIds) === -1)
 		action = 'add';
 	else
 		action = 'remove';
@@ -49,14 +49,14 @@ function addToCompare(productId)
 		cache: false,
 		success: function(data) {
 			if (action === 'add' && comparedProductsIds.length < comparator_max_item) {
-				comparedProductsIds.push(parseInt(productId)),
+				comparedProductsIds.push(productId.toString()),
 				compareButtonsStatusRefresh(),
 				totalVal = totalValueNow +1,
 				$('.bt_compare').next('.compare_product_count').val(totalVal),
 				totalValue(totalVal);
 			}
 			else if (action === 'remove') {
-				comparedProductsIds.splice($.inArray(parseInt(productId), comparedProductsIds), 1),
+				comparedProductsIds.splice($.inArray(productId.toString(), comparedProductsIds), 1),
 				compareButtonsStatusRefresh(),
 				totalVal = totalValueNow -1,
 				$('.bt_compare').next('.compare_product_count').val(totalVal),
