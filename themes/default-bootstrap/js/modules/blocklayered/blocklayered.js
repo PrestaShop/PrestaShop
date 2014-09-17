@@ -454,7 +454,7 @@ function reloadContent(params_plus)
 	}
 
 	var slideUp = true;
-	if (params_plus == undefined)
+	if (params_plus == undefined || !(typeof params_plus == 'string'))
 	{
 		params_plus = '';
 		slideUp = false;
