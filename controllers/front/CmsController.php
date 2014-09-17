@@ -53,7 +53,7 @@ class CmsControllerCore extends FrontController
 		else if ($id_cms_category = (int)Tools::getValue('id_cms_category'))
 			$this->cms_category = new CMSCategory($id_cms_category, $this->context->language->id);
 
-		if (Configuration::get('PS_SSL_ENABLED') && Tools::getValue('content_only') && Tools::getValue('id_cms') == (int)Configuration::get('PS_CONDITIONS_CMS_ID') && Validate::isLoadedObject($this->cms))
+		if (Configuration::get('PS_SSL_ENABLED') && Tools::getValue('content_only') && ( Tools::getValue('id_cms') == (int)Configuration::get('PS_CONDITIONS_CMS_ID') || Tools::getValue('id_cms') == (int)Configuration::get('LEGAL_CMS_ID_REVOCATION' ) ) && Validate::isLoadedObject($this->cms))
 			$this->ssl = true;
 		
 		parent::init();
