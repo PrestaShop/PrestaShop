@@ -38,7 +38,7 @@ function addToCompare(productId)
 {
 	var totalValueNow = parseInt($('.bt_compare').next('.compare_product_count').val());
 	var action, totalVal;
-	if(in_array(parseInt(productId),comparedProductsIds) === -1)
+	if($.inArray(parseInt(productId),comparedProductsIds) === -1)
 		action = 'add';
 	else
 		action = 'remove';
@@ -56,7 +56,7 @@ function addToCompare(productId)
 				totalValue(totalVal);
 			}
 			else if (action === 'remove') {
-				comparedProductsIds.splice(in_array(parseInt(productId), comparedProductsIds), 1),
+				comparedProductsIds.splice($.inArray(parseInt(productId), comparedProductsIds), 1),
 				compareButtonsStatusRefresh(),
 				totalVal = totalValueNow -1,
 				$('.bt_compare').next('.compare_product_count').val(totalVal),
@@ -111,7 +111,7 @@ function reloadProductComparison()
 function compareButtonsStatusRefresh()
 {
 	$('.add_to_compare').each(function() {
-		if (in_array(parseInt($(this).data('id-product')), comparedProductsIds) !== -1)
+		if ($.inArray(parseInt($(this).data('id-product')), comparedProductsIds) !== -1)
 			$(this).addClass('checked');
 		else
 			$(this).removeClass('checked');
