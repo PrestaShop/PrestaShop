@@ -1561,6 +1561,8 @@ class AdminControllerCore extends Controller
 	 */
 	public function initHeader()
 	{
+		header('Cache-Control: no-store, no-cache');
+
 		// Multishop
 		$is_multishop = Shop::isFeatureActive();
 
