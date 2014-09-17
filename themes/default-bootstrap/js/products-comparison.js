@@ -38,18 +38,17 @@ function addToCompare(productId)
 {
 	var totalValueNow = parseInt($('.bt_compare').next('.compare_product_count').val());
 	var action, totalVal;
-	if($.inArray(productId.toString(),comparedProductsIds) === -1)
-		action = 'add';
-	else
+	if(in_array(parseInt(productId),comparedProductsIds))
 		action = 'remove';
-
+	else
+		action = 'add';
 	$.ajax({
 		url: 'index.php?controller=products-comparison&ajax=1&action='+action+'&id_product=' + productId,
 		async: true,
 		cache: false,
 		success: function(data) {
 			if (action === 'add' && comparedProductsIds.length < comparator_max_item) {
-				comparedProductsIds.push(productId.toString()),
+				comparedProductsIds.push(productId),
 				compareButtonsStatusRefresh(),
 				totalVal = totalValueNow +1,
 				$('.bt_compare').next('.compare_product_count').val(totalVal),
@@ -111,7 +110,7 @@ function reloadProductComparison()
 function compareButtonsStatusRefresh()
 {
 	$('.add_to_compare').each(function() {
-		if ($.inArray($(this).data('id-product').toString(), comparedProductsIds) !== -1)
+		if (in_array(parseInt($(this).data('id-product')), comparedProductsIds))
 			$(this).addClass('checked');
 		else
 			$(this).removeClass('checked');
