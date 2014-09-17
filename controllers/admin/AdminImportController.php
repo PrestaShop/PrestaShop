@@ -1211,7 +1211,7 @@ class AdminImportControllerCore extends AdminController
 			//copying images of categories
 			if (isset($category->image) && !empty($category->image))
 				if (!(AdminImportController::copyImg($category->id, null, $category->image, 'categories', !Tools::getValue('regenerate'))))
-					$this->warnings[] = $category->image.' '.Tools::displayError('cannot be copied.');
+					$this->warnings[] = sprintf(Tools::displayError('"%1$s cannot be copied.'), $category->image);
 
 			// If both update and add above failed, report an error
 			if (!$res)
