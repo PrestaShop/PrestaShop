@@ -373,7 +373,7 @@ class AdminOrdersControllerCore extends AdminController
 						{
 							$current_order_state = $order->getCurrentOrderState();
 							if ($current_order_state->id == $order_state->id)
-								$this->errors[] = sprintf(Tools::displayError('Order #%d has already been assigned this status.'), $id_order);
+								$this->errors[] = sprintf(Tools::displayWarning('Order #%d has already been assigned this status.'), $id_order);
 							else
 							{
 								$history = new OrderHistory();
