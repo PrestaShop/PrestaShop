@@ -703,11 +703,16 @@ class MediaCore
 	 * @param mixed $js_def
 	 * @return void
 	 */
-	public static function addJsDefL($params, $content, $smarty, &$repeat)
+	public static function addJsDefL($params, $content, $smarty = null, &$repeat = false)
 	{
-		if (!$repeat && isset($params) && is_array($params) && Tools::strlen($content))
+		if (!$repeat && isset($params) && Tools::strlen($content))
+		{
+			if (!is_array($params))
+				$params = (array)$params;
+
 			foreach($params as $param)
 				Media::$js_def[$param] = $content;
+		}
 	}
 	
 	public static function deferInlineScripts($output)
