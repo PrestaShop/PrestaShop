@@ -340,7 +340,9 @@ class AdminProductsControllerCore extends AdminController
 			$object->unit_price = str_replace(',', '.', Tools::getValue('unit_price'));
 		if (Tools::getIsset('ecotax') != null)
 			$object->ecotax = str_replace(',', '.', Tools::getValue('ecotax'));
-		$object->available_for_order = (int)Tools::getValue('available_for_order');
+
+		if ($this->isTabSubmitted('Informations'))
+			$object->available_for_order = (int)Tools::getValue('available_for_order');
 		$object->show_price = $object->available_for_order ? 1 : (int)Tools::getValue('show_price');
 		$object->on_sale = (int)Tools::getValue('on_sale');
 		$object->online_only = (int)Tools::getValue('online_only');
@@ -3097,7 +3099,7 @@ class AdminProductsControllerCore extends AdminController
 			$product->id_tax_rules_group = (int)Product::getIdTaxRulesGroupMostUsed();
 			$data->assign('ecotax_tax_excl', 0);
 		}
-		
+
 		$address = new Address();
 		$address->id_country = (int)$this->context->country->id;
 		$tax_rules_groups = TaxRulesGroup::getTaxRulesGroups(true);
