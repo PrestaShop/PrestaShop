@@ -999,11 +999,7 @@ class OrderCore extends ObjectModel
 	 */
 	public function getCustomer()
 	{
-		static $customer = null;
-		if (is_null($customer))
-			$customer = new Customer((int)$this->id_customer);
-		
-		return $customer;
+		return new Customer((int)$this->id_customer;
 	}
 
 	/**
