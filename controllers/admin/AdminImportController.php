@@ -1044,7 +1044,7 @@ class AdminImportControllerCore extends AdminController
 
 	public function categoryImport()
 	{
-		$cat_moved = array();
+		$temporary_categories = array();
 
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
@@ -1108,6 +1108,9 @@ class AdminImportControllerCore extends AdminController
 				}
 				else
 				{
+					// That parent wasn't found, let's create a placeholder
+					// If we encounter it later, it'll get overwritten.
+					// Otherwise, it's completely missing and we'll issue a warning.
 					$category_to_create = new Category();
 					$category_to_create->name = AdminImportController::createMultiLangField($category->parent);
 					$category_to_create->active = 1;
@@ -1118,7 +1121,9 @@ class AdminImportControllerCore extends AdminController
 						($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true &&
 						$category_to_create->add())
 					{
+						// Set the current category parent as our placeholder and store its id so we can find it later
 						$category->id_parent = $category_to_create->id;
+						$temporary_categories[$category_to_create->name[$id_lang]] = $category_to_create->id;
 					}
 					else
 					{
@@ -1127,8 +1132,7 @@ class AdminImportControllerCore extends AdminController
 							$category_to_create->name[$id_lang],
 							(isset($category_to_create->id) && !empty($category_to_create->id))? $category_to_create->id : 'null'
 						);
-						$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
-							Db::getInstance()->getMsgError();
+						$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').Db::getInstance()->getMsgError();
 					}
 				}
 			}
@@ -1173,17 +1177,14 @@ class AdminImportControllerCore extends AdminController
 				($lang_field_error = $category->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true &&
 				empty($this->errors))
 			{
-				$category_already_created = Category::searchByNameAndParentCategoryId(
-					$id_lang,
-					$category->name[$id_lang],
-					$category->id_parent
-				);
-
-				// If category already in base, get id category back
-				if ($category_already_created['id_category'])
+				$placeholder_id = isset($temporary_categories[$category->name[$id_lang]]) ? $temporary_categories[$category->name[$id_lang]] : NULL;
+				if ($placeholder_id !== NULL)
 				{
-					$cat_moved[$category->id] = (int)$category_already_created['id_category'];
-					$category->id =	(int)$category_already_created['id_category'];
+
+					// If that category was imported as a placeholder, swap the ID so the current one
+					// (which comes from the file) overwrites it, and drop it from our list.
+					$category->id = $placeholder_id;
+					unset($temporary_categories[$category->name[$id_lang]]);
 				}
 
 				if ($category->id && $category->id == $category->id_parent)
@@ -1208,7 +1209,7 @@ class AdminImportControllerCore extends AdminController
 					$res = $category->add();
 			}
 
-			//copying images of categories
+			// Copy the image
 			if (isset($category->image) && !empty($category->image))
 				if (!(AdminImportController::copyImg($category->id, null, $category->image, 'categories', !Tools::getValue('regenerate'))))
 					$this->warnings[] = sprintf(Tools::displayError('"%1$s cannot be copied.'), $category->image);
@@ -1250,6 +1251,12 @@ class AdminImportControllerCore extends AdminController
 							$category->addShop($shop);
 				}
 			}
+		}
+
+		// Throw warnings for each temporary category that wasn't overwritten
+		foreach ($temporary_categories as $placeholder_name => $placeholder_id)
+		{
+			$this->warnings[] = sprintf(Tools::displayError('A placeholder was imported for category %1$s (ID: %2$s).'), $placeholder_name, $placeholder_id);
 		}
 
 		// Import completed, we can regenerate the nested categories tree
