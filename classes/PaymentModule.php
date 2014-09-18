@@ -792,7 +792,8 @@ abstract class PaymentModuleCore extends Module
 				}
 			} // End foreach $order_detail_list
 			// Use the last order as currentOrder
-			$this->currentOrder = (int)$order->id;
+			if (isset($order) && $order->id)
+				$this->currentOrder = (int)$order->id;
 
 			if (self::DEBUG_MODE)
 				PrestaShopLogger::addLog('PaymentModule::validateOrder - End of validateOrder', 1, null, 'Cart', (int)$id_cart, true);

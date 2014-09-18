@@ -231,6 +231,17 @@
 			addProduct();
 		});
 
+		$('#product').bind('keypress', function(e) {
+			var code = (e.keyCode ? e.keyCode : e.which);
+			if(code == 13)
+			{
+				e.stopPropagation();
+				e.preventDefault();
+				if ($('#submitAddProduct').length)
+					addProduct();
+			}			
+		});
+
 		$('#send_email_to_customer').on('click',function(){
 			sendMailToCustomer();
 			return false;
