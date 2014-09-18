@@ -428,7 +428,7 @@
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="tags_{$id_lang}">
 			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='Each tag has to be followed by a comma. The following characters are forbidden: %s' sprintf='!&lt;;&gt;;?=+#&quot;&deg;{}_$%'}">
+				title="{l s='Appear on the shop in the "Tags" block, when enabled. Tags help customers easily find your products.'}">
 				{l s='Tags:'}
 			</span>
 		</label>
@@ -474,6 +474,10 @@
 			{if $languages|count > 1}
 			</div>
 			{/if}
+		</div>
+		<div class="col-lg-9 col-lg-offset-3">
+			<div class="help-block">{l s='Each tag has to be followed by a comma. The following characters are forbidden: %s' sprintf='!&lt;;&gt;;?=+#&quot;&deg;{}_$%.'}
+			</div>
 		</div>
 	</div>
 	<div class="panel-footer">
