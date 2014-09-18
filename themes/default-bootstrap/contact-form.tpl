@@ -80,6 +80,10 @@
                     {/foreach}
                 {/if}
                 <p class="form-group">
+                    <label for="name">{l s='Name'}</label>
+                        <input class="form-control grey validate" type="text" id="name" name="customerName" data-validate="isName" value="{$customerName|escape:'html':'UTF-8'}" />
+                </p>
+                <p class="form-group">
                     <label for="email">{l s='Email address'}</label>
                     {if isset($customerThread.email)}
                         <input class="form-control grey" type="text" id="email" name="from" value="{$customerThread.email|escape:'html':'UTF-8'}" readonly="readonly" />
