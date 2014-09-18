@@ -326,11 +326,11 @@ function arrayUnique(a)
 };
 
 //check if a function exists
-function function_exists(function_name)
-{
-	if (typeof function_name == 'string')
-		return (typeof window[function_name] == 'function');
-	return (function_name instanceof Function);
+function function_exists(function_name) {
+	if (typeof function_name === 'string') {
+		function_name = this.window[function_name];
+	}
+	return typeof function_name === 'function';
 }
 
 //execute oosHook js code
