@@ -52,6 +52,8 @@ class ContactControllerCore extends FrontController
 				$this->errors[] = Tools::displayError('An error occurred during the file-upload process.');
 			else if (!empty($fileAttachment['name']) && !in_array( Tools::strtolower(substr($fileAttachment['name'], -4)), $extension) && !in_array( Tools::strtolower(substr($fileAttachment['name'], -5)), $extension))
 				$this->errors[] = Tools::displayError('Bad file extension');
+			else if (!($customerName = pSQL(Tools::getValue('customerName'))) || !Validate::isName($customerName))
+				$this->errors[] = Tools::displayError('Invalid contact name.');
 			else
 			{
 				$customer = $this->context->customer;
@@ -166,6 +168,7 @@ class ContactControllerCore extends FrontController
 									'{attached_file}' => '-',
 									'{message}' => Tools::nl2br(stripslashes($message)),
 									'{email}' =>  $from,
+									'{customerName}' => $customerName,
 									'{product_name}' => '',
 								);
 
