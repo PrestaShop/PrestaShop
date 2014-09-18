@@ -1472,6 +1472,7 @@ class AdminControllerCore extends Controller
 		$this->context->smarty->assign(array(
 			'display_header' => $this->display_header,
 			'display_footer' => $this->display_footer,
+			'js_def' => Media::getJsDef(),
 		));
 
 		// Use page title from meta_title if it has been set else from the breadcrumbs array
