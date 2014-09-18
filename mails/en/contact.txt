@@ -3,11 +3,15 @@
 
 Message from a {shop_name} customer 
 
+CUSTOMER NAME: {customerName}
+
 CUSTOMER E-MAIL ADDRESS: {email}
 
 CUSTOMER MESSAGE: {message}
 
 ORDER ID: {order_name}
+
+PRODUCT NAME: {product_name}
 
 ATTACHED FILE: {attached_file} 		 
 
