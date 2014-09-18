@@ -81,6 +81,8 @@
 		var errorLogin = '{l s='PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.'}';
 		var search_product_msg = '{l s='Search for a product' js=1}';
 	</script>
+
+	{include file=$smarty.const._PS_ALL_THEMES_DIR_|cat:"javascript.tpl"}
 {/if}
 {if isset($css_files)}
 {foreach from=$css_files key=css_uri item=media}
