@@ -62,11 +62,23 @@ if (!empty($_FILES))
 		$targetFileThumb = $targetPathThumb.$_FILES['file']['name'];
 
 		if (in_array(fix_strtolower($info['extension']), $ext_img) && @getimagesize($tempFile) != false)
-			$is_img = true;
-		else
+				$is_img = true;
+	        elseif (in_array(fix_strtolower($info['extension']), $ext_file))
+	        {
 			$is_img = false;
-
-		if ($is_img)
+			$is_file = true;
+		}
+		else
+		{
+			$is_img = false;
+	                $is_file = false;
+		}
+	        if ($is_file) {
+	            move_uploaded_file($tempFile, $targetFile);
+	            chmod($targetFile, 0755);
+	            $memory_error = false;
+	        }
+		elseif ($is_img)
 		{
 			move_uploaded_file($tempFile, $targetFile);
 			chmod($targetFile, 0755);
