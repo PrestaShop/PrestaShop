@@ -106,7 +106,7 @@ class ProductControllerCore extends FrontController
 				else
 				{
 					$this->context->smarty->assign('adminActionDisplay', false);
-					if ($this->product->id_product_redirected == $this->product->id)
+					if (!$this->product->id_product_redirected || $this->product->id_product_redirected == $this->product->id)
 						$this->product->redirect_type = '404';
 					
 					switch ($this->product->redirect_type)
