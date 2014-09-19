@@ -81,19 +81,15 @@
 		var errorLogin = '{l s='PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.'}';
 		var search_product_msg = '{l s='Search for a product' js=1}';
 	</script>
-
-	{include file=$smarty.const._PS_ALL_THEMES_DIR_|cat:"javascript.tpl"}
 {/if}
 {if isset($css_files)}
 {foreach from=$css_files key=css_uri item=media}
 	<link href="{$css_uri|escape:'html':'UTF-8'}" rel="stylesheet" type="text/css"/>
 {/foreach}
 {/if}
-{if isset($js_files)}
-{foreach from=$js_files item=js_uri}
-	<script type="text/javascript" src="{$js_uri|escape:'html':'UTF-8'}"></script>
-{/foreach}
-{/if}
+	{if (isset($js_def) && count($js_def) || isset($js_files) && count($js_files))}
+		{include file=$smarty.const._PS_ALL_THEMES_DIR_|cat:"javascript.tpl"}
+	{/if}
 
 	{if isset($displayBackOfficeHeader)}
 		{$displayBackOfficeHeader}
