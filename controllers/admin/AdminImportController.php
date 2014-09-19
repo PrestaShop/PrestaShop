@@ -2066,6 +2066,9 @@ class AdminImportControllerCore extends AdminController
 						$info['ecotax'] = str_replace(',', '.', $info['ecotax']);
 						$info['weight'] = str_replace(',', '.', $info['weight']);
 
+						if ($info['default_on'])
+							$product->deleteDefaultAttributes();
+
 						// if a reference is specified for this product, get the associate id_product_attribute to UPDATE
 						if (isset($info['reference']) && !empty($info['reference']))
 						{
