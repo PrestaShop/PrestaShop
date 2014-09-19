@@ -2,7 +2,6 @@
 <localizationPack name="Estonia" version="1.0">
 	<currencies>
 		<currency name="Euro" iso_code="EUR" iso_code_num="978" sign="€" blank="1" conversion_rate="1.00" format="2" decimals="1" />
-		<currency name="Estonian kroon" iso_code="EEK" iso_code_num="233" sign="kr" blank="1" conversion_rate="15.6466" format="2" decimals="1" />
 	</currencies>
 	<languages>
 		<language iso_code="et" />
