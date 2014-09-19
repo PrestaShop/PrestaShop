@@ -342,10 +342,13 @@ class AdminProductsControllerCore extends AdminController
 			$object->ecotax = str_replace(',', '.', Tools::getValue('ecotax'));
 
 		if ($this->isTabSubmitted('Informations'))
+		{
 			$object->available_for_order = (int)Tools::getValue('available_for_order');
-		$object->show_price = $object->available_for_order ? 1 : (int)Tools::getValue('show_price');
-		$object->on_sale = (int)Tools::getValue('on_sale');
-		$object->online_only = (int)Tools::getValue('online_only');
+			$object->show_price = $object->available_for_order ? 1 : (int)Tools::getValue('show_price');
+			$object->online_only = (int)Tools::getValue('online_only');
+		}
+		if ($this->isTabSubmitted('Prices'))
+			$object->on_sale = (int)Tools::getValue('on_sale');
 	}
 
 	public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0, $limit = null, $id_lang_shop = null)
