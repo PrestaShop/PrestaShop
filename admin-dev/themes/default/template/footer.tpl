@@ -36,21 +36,24 @@
 
 	<div class="col-sm-2 hidden-xs">
 		<div class="social-networks">
-			<a class="link-social link-twitter" href="https://twitter.com/stntweetnews" target="_blank" title="Twitter">
+			<a class="link-social link-twitter" href="https://twitter.com/PrestaShop" target="_blank" title="Twitter">
 				<i class="icon-twitter"></i>
 			</a>
-			<a class="link-social link-facebook" href="https://www.facebook.com/specialtytoysnetwork" target="_blank" title="Facebook">
+			<a class="link-social link-facebook" href="https://www.facebook.com/prestashop" target="_blank" title="Facebook">
 				<i class="icon-facebook"></i>
 			</a>
-			<a class="link-social link-youtube" href="https://www.youtube.com/user/SpecialtyToysNetwork" target="_blank" title="Google">
-				<i class="icon-youtube"></i>
+			<a class="link-social link-github" href="https://www.prestashop.com/github" target="_blank" title="Github">
+				<i class="icon-github"></i>
+			</a>
+			<a class="link-social link-google" href="https://plus.google.com/+prestashop/" target="_blank" title="Google">
+				<i class="icon-google-plus"></i>
 			</a>
 		</div>
 	</div>	
 
 	<div class="col-sm-5">
 		<div class="footer-contact">
-			<a href="http://stoysnet.com/contact-specialty-toys-network/?utm_source=backoffice_footer" target="_blank" class="footer_link">
+			<a href="http://www.prestashop.com/en/contact_us?utm_source=backoffice_footer" target="_blank" class="footer_link">
 				<i class="icon-envelope"></i>
 				{l s='Contact'}
 			</a>
@@ -65,10 +68,20 @@
 				{l s='Forum'}
 			</a>
 			/&nbsp;
+			<a href="http://addons.prestashop.com/?utm_source=backoffice_footer" target="_blank" class="footer_link">
+				<i class="icon-puzzle-piece"></i>
+				{l s='Addons'}
+			</a>
+			/&nbsp;
 			<a href="http://www.prestashop.com/en/training-prestashop?utm_source=backoffice_footer" target="_blank" class="footer_link">
 				<i class="icon-book"></i>
 				{l s='Training'}
 			</a>
+			{if $iso_is_fr}
+			<p>Questions • Renseignements • Formations : 
+				<strong>+33 (0)1.40.18.30.04</strong>
+			</p>
+			{/if}
 		</div>
 	</div>
 
