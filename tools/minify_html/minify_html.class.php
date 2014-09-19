@@ -139,7 +139,7 @@ class Minify_HTML {
 
         // trim each line.
         // @todo take into account attribute values that span multiple lines.
-        $this->_html = preg_replace('/^\\s+|\\s+$/mu', '', $this->_html);
+        $this->_html = preg_replace(Tools::cleanNonUnicodeSupport('/^\\s+|\\s+$/mu'), '', $this->_html);
 
         // remove ws around block/undisplayed elements
         $this->_html = preg_replace('/\\s+(<\\/?(?:area|base(?:font)?|blockquote|body'
