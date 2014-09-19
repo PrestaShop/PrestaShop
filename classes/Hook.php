@@ -400,6 +400,9 @@ class HookCore extends ObjectModel
 	 */
 	public static function exec($hook_name, $hook_args = array(), $id_module = null, $array_return = false, $check_exceptions = true, $use_push = false, $id_shop = null)
 	{
+		if (defined('PS_INSTALLATION_IN_PROGRESS'))
+			return;
+		
 		static $disable_non_native_modules = null;
 		if ($disable_non_native_modules === null)
 			$disable_non_native_modules = (bool)Configuration::get('PS_DISABLE_NON_NATIVE_MODULE');
