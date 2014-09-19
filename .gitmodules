@@ -305,3 +305,27 @@
 [submodule "modules/sendtoafriend"]
 	path = modules/sendtoafriend
 	url = https://github.com/PrestaShop/sendtoafriend
+[submodule "modules/stnbase"]
+	path = modules/stnbase
+	url = git@github.com:stoysnet/stnbase.git
+[submodule "modules/stripejs"]
+	path = modules/stripejs
+	url = git@github.com:stoysnet/stripejs.git
+[submodule "modules/storeimporter"]
+	path = modules/storeimporter
+	url = git@github.com:stoysnet/storeimporter.git
+[submodule "modules/qbsync"]
+	path = modules/qbsync
+	url = git@github.com:stoysnet/qbsync.git
+[submodule "modules/stnimporter"]
+	path = modules/stnimporter
+	url = git@github.com:stoysnet/stnimporter.git
+[submodule "modules/upscarrier"]
+	path = modules/upscarrier
+	url = git@github.com:stoysnet/upscarrier.git
+[submodule "modules/uspscarrier"]
+	path = modules/uspscarrier
+	url = git@github.com:stoysnet/uspscarrier.git
+[submodule "modules/facebookgallery"]
+	path = modules/facebookgallery
+	url = git@github.com:stoysnet/facebookgallery.git

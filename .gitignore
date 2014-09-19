@@ -107,15 +107,12 @@ modules/shipwire
 modules/shoppingfeedexport
 modules/shoppingfluxexport
 modules/socolissimo
-modules/stripejs
 modules/themeinstallator
 modules/tntcarrier
 modules/treepodia
 modules/trustedshops
 modules/trustly
 modules/twenga
-modules/upscarrier
-modules/uspscarrier
 modules/wexpay
 modules/yotpo
 modules/zingaya
