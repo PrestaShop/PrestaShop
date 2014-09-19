@@ -1085,7 +1085,8 @@ class CategoryCore extends ObjectModel
 	public function addGroups($groups)
 	{
 		foreach ($groups as $group)
-			Db::getInstance()->insert('category_group', array('id_category' => (int)$this->id, 'id_group' => (int)$group));
+			if ($group !== false)
+				Db::getInstance()->insert('category_group', array('id_category' => (int)$this->id, 'id_group' => (int)$group));
 	}
 
 	public function getGroups()
