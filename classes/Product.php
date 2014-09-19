@@ -1271,7 +1271,6 @@ class ProductCore extends ObjectModel
 		$id_product_attribute = $this->addAttribute(
 			$price, $weight, $unit_impact, $ecotax, $id_images,
 			$reference, $ean13, $default, $location, $upc, $minimal_quantity, $id_shop_list, $available_date);
-
 		$this->addSupplierReference($id_supplier, $id_product_attribute);
 		$result = ObjectModel::updateMultishopTable('Combination', array(
 			'wholesale_price' => (float)$wholesale_price,
@@ -1529,6 +1528,16 @@ class ProductCore extends ObjectModel
 
 		if (!$combination->id)
 			return false;
+
+		$total_quantity = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT SUM(quantity) as quantity
+			FROM '._DB_PREFIX_.'stock_available
+			WHERE id_product = '.(int)$this->id.'
+			AND id_product_attribute <> 0 '
+		);
+
+		if (!$total_quantity)
+			Db ::getInstance()->update('stock_available', array('quantity' => 0), '`id_product` = '.$this->id);
 
 		$id_default_attribute = Product::updateDefaultAttribute($this->id);
 		if ($id_default_attribute)
