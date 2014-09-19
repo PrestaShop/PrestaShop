@@ -326,3 +326,6 @@
 [submodule "modules/uspscarrier"]
 	path = modules/uspscarrier
 	url = git@github.com:stoysnet/uspscarrier.git
+[submodule "modules/facebookgallery"]
+	path = modules/facebookgallery
+	url = git@github.com:stoysnet/facebookgallery.git
