@@ -255,7 +255,7 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="regenerate" class="control-label col-lg-4">{l s='Do not regenerate thumbnails'}</label>
+					<label for="regenerate" class="control-label col-lg-4">{l s='Skip thumbnails regeneration'}</label>
 					<div class="col-lg-8">
 						<label class="switch-light prestashop-switch fixed-width-lg">
 							<input id="regenerate" name="regenerate" type="checkbox" />

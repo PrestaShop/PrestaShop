@@ -77,7 +77,7 @@
 		<div class="row row-padding-top">
 
 			<div class="col-md-3">
-				<a class="" href="{$base_url}">
+				<a href="{$base_url}" class="_blank">
 					<img class="center-block img-thumbnail" src="../themes/{$cur_theme.theme_directory}/preview.jpg" alt="{$cur_theme.theme_name}" />
 				</a>
 			</div>
