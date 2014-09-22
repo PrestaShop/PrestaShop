@@ -2625,6 +2625,8 @@ class AdminControllerCore extends Controller
 						{
 							$this->action = 'bulk'.$bulk_action;
 							$this->boxes = Tools::getValue($this->table.'Box');
+							if (empty($this->boxes) && $this->table == 'attribute')
+								$this->boxes = Tools::getValue($this->table.'_valuesBox');
 						}
 						else
 							$this->errors[] = Tools::displayError('You do not have permission to delete this.');
