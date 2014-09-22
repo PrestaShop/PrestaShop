@@ -353,28 +353,17 @@ class AdminThemesControllerCore extends AdminController
 		$metas = Meta::getMetas();
 		$formated_metas = array();
 
-		foreach ($metas as $meta)
-		{
-			$meta_object = New Meta($meta['id_meta']);
-
-			$title = $meta['page'];
-			if (isset($meta_object->title[(int)$this->context->language->id]) && $meta_object->title[(int)$this->context->language->id] != '')
-				$title = $meta_object->title[(int)$this->context->language->id];
-
-			$formated_metas[$meta['id_meta']] = array(
-				'title' => $title,
-				'left' => 0,
-				'right' => 0,
-			);
-		}
-
 		$image_url = false;
 		if ($this->object)
 		{
 			if ((int)$this->object->id > 0)
 			{
 				$theme = New Theme((int)$this->object->id);
-				$theme_metas = $theme->getMetas();
+				$theme_metas = Db::getInstance()->executeS('SELECT ml.`title`, tm.`left_column` as `left`, tm.`right_column` as `right`, m.`id_meta`, tm.`id_theme_meta`
+					FROM '._DB_PREFIX_.'theme_meta as tm
+					LEFT JOIN '._DB_PREFIX_.'meta m ON (m.`id_meta` = tm.`id_meta`)
+					LEFT JOIN '._DB_PREFIX_.'meta_lang ml ON(ml.id_meta = m.id_meta AND ml.id_lang = '.(int)$this->context->language->id.')
+					WHERE tm.`id_theme` = '.(int)$this->object->id);
 
 				// if no theme_meta are found, we must create them
 				if (empty($theme_metas))
@@ -389,17 +378,18 @@ class AdminThemesControllerCore extends AdminController
 						$metas_default[] = $tmp_meta;
 					}
 					$theme->updateMetas($metas_default);
-					$theme_metas = $theme->getMetas();
+					$theme_metas = Db::getInstance()->executeS('SELECT ml.`title`, tm.`left_column` as `left`, tm.`right_column` as `right`, m.`id_meta`, tm.`id_theme_meta`
+						FROM '._DB_PREFIX_.'theme_meta as tm
+						LEFT JOIN '._DB_PREFIX_.'meta m ON (m.`id_meta` = tm.`id_meta`)
+						LEFT JOIN '._DB_PREFIX_.'meta_lang ml ON(ml.id_meta = m.id_meta AND ml.id_lang = '.(int)$this->context->language->id.')
+						WHERE tm.`id_theme` = '.(int)$this->object->id);
 				}
-
 				$image_url = '<img alt="preview" src="'.__PS_BASE_URI__.'themes/'.$theme->directory.'/preview.jpg">';
-				foreach ($theme_metas as $theme_meta)
-				{
-					$formated_metas[$theme_meta['id_meta']]['id_theme_meta'] = (int)$theme_meta['id_theme_meta'];
-					$formated_metas[$theme_meta['id_meta']]['id_meta'] = (int)$theme_meta['id_meta'];
-					$formated_metas[$theme_meta['id_meta']]['left'] = (int)$theme_meta['left_column'];
-					$formated_metas[$theme_meta['id_meta']]['right'] = (int)$theme_meta['right_column'];
-				}
+
+				foreach ($theme_metas as $key => $meta)
+					if (!isset($meta['title']) || !$meta['title'] || $meta['title'] == '')
+						unset($theme_metas[$key]);
+				$formated_metas = $theme_metas;
 			}
 			$selected_theme_dir = $this->object->directory;
 		}
