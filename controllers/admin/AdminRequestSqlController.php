@@ -320,10 +320,11 @@ class AdminRequestSqlControllerCore extends AdminController
 	public function generateExport()
 	{
 		$id = Tools::getValue($this->identifier);
+		$export_dir = defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_.'/export/' : _PS_ADMIN_DIR_.'/export/';
 		if (!Validate::isFileName($id))
 			die(Tools::displayError());
 		$file = 'request_sql_'.$id.'.csv';
-		if ($csv = fopen(_PS_ADMIN_DIR_.'/export/'.$file, 'w'))
+		if ($csv = fopen($export_dir.$file, 'w'))
 		{
 			$sql = RequestSql::getRequestSqlById($id);
 
@@ -341,9 +342,9 @@ class AdminRequestSqlControllerCore extends AdminController
 					foreach ($tab_key as $name)
 						fputs($csv, '"'.strip_tags($result[$name]).'";');
 				}
-				if (file_exists(_PS_ADMIN_DIR_.'/export/'.$file))
+				if (file_exists($export_dir.$file))
 				{
-					$filesize = filesize(_PS_ADMIN_DIR_.'/export/'.$file);
+					$filesize = filesize($export_dir.$file);
 					$upload_max_filesize = Tools::convertBytes(ini_get('upload_max_filesize'));
 					if ($filesize < $upload_max_filesize)
 					{
@@ -356,7 +357,7 @@ class AdminRequestSqlControllerCore extends AdminController
 						header('Cache-Control: no-store, no-cache');
 						header('Content-Disposition: attachment; filename="'.$file.'"');
 						header('Content-Length: '.$filesize);
-						readfile(_PS_ADMIN_DIR_.'/export/'.$file);
+						readfile($export_dir.$file);
 						die();
 					}
 					else
