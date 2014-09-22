@@ -94,6 +94,12 @@ $(document).ready(function(){
 			next     : '<a title="' + FancyboxI18nNext + '" class="fancybox-nav fancybox-next" href="javascript:;"><span></span></a>',
 			prev     : '<a title="' + FancyboxI18nPrev + '" class="fancybox-nav fancybox-prev" href="javascript:;"><span></span></a>'
 		});
+	
+		// Close Alert messages
+	$(".alert").on('click', this, function(e){
+		e.preventDefault();
+		$(this).fadeOut();
+	});
 });
 
 function highdpiInit()
