@@ -1084,11 +1084,7 @@ class CartCore extends ObjectModel
 		Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_REDUCTION);
 		Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_GIFT);
 
-		$result = Db::getInstance()->execute('
-		DELETE FROM `'._DB_PREFIX_.'cart_cart_rule`
-		WHERE `id_cart_rule` = '.(int)$id_cart_rule.'
-		AND `id_cart` = '.(int)$this->id.'
-		LIMIT 1');
+ 		$result = Db::getInstance()->delete('cart_cart_rule', '`id_cart_rule` = '.(int)$id_cart_rule.' AND `id_cart` = '.(int)$this->id, 1);
 
 		$cart_rule = new CartRule($id_cart_rule, Configuration::get('PS_LANG_DEFAULT'));
 		if ((int)$cart_rule->gift_product)
