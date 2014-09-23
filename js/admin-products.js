@@ -376,6 +376,8 @@ product_tabs['Combinations'] = new function(){
 				{
 					showSuccessMessage(data.message);
 					parent.remove();
+					if (data.id_product_attribute)
+						$('#qty_' + data.id_product_attribute).parent().hide();
 				}
 				else
 					showErrorMessage(data.message);
@@ -391,7 +393,7 @@ product_tabs['Combinations'] = new function(){
 	};
 
 	this.removeButtonCombination = function(item)
-	{		
+	{
 		$('#add_new_combination').show();
 		$('#desc-product-newCombination').children('i').first().removeClass('process-icon-new');
 		$('#desc-product-newCombination').children('i').first().addClass('process-icon-minus');
@@ -967,7 +969,7 @@ product_tabs['Shipping'] = new function(){
 				$(this).remove();
 			});
 			$('#selectedCarriers option').prop('selected', true);
-		   
+
 			if ($('#selectedCarriers').find("option").length == 0)
 				$('#no-selected-carries-alert').show();
 			else
@@ -1008,7 +1010,7 @@ product_tabs['Informations'] = new function(){
 				$('#show_price').attr('disabled', false);
 			}
 		});
-				
+
 		if ($('#active_on').prop('checked'))
 		{
 			showRedirectProductOptions(false);
@@ -1016,11 +1018,11 @@ product_tabs['Informations'] = new function(){
 		}
 		else
 			showRedirectProductOptions(true);
-			
+
 		$('#redirect_type').change(function () {
 			redirectSelectChange();
 		});
-		
+
 		$('#related_product_autocomplete_input')
 			.autocomplete('ajax_products_list.php?excludeIds='+id_product, {
 				minChars: 1,
@@ -1033,7 +1035,7 @@ product_tabs['Informations'] = new function(){
 				formatItem: function(item) {
 					return item[0]+' - '+item[1];
 				}
-			}).result(function(e, i){  
+			}).result(function(e, i){
 				if(i != undefined)
 					addRelatedProduct(i[1], i[0]);
 				$(this).val('');
@@ -1090,7 +1092,7 @@ product_tabs['Informations'] = new function(){
 		{
 			// Reset settings
 			$('a[id*="VirtualProduct"]').hide();
-			
+
 			$('#product-pack-container').hide();
 
 			$('div.is_virtual_good').hide();
@@ -1421,7 +1423,7 @@ product_tabs['Quantities'] = new function(){
 			error: function(jqXHR, textStatus, errorThrown)
   			{
 				if (textStatus != 'error' || errorThrown != '')
-					showErrorMessage(textStatus + ': ' + errorThrown);				
+					showErrorMessage(textStatus + ': ' + errorThrown);
   			}
 		});
 	};
@@ -1820,7 +1822,7 @@ var ProductMultishop = new function()
 			ProductMultishop.checkField($('input[name=\'multishop_check[link_rewrite]['+v.id_lang+']\']').prop('checked'), 'link_rewrite_'+v.id_lang, 'seo_friendly_url');
 		});
 	};
-	
+
 	this.checkAllQuantities = function()
 	{
 		$.each(languages, function(k, v)

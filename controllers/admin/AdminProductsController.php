@@ -1421,7 +1421,8 @@ class AdminProductsControllerCore extends AdminController
 
 				$json = array(
 					'status' => 'ok',
-					'message'=> $this->_conf[1]
+					'message'=> $this->_conf[1],
+					'id_product_attribute' => (int)$id_product_attribute
 				);
 			}
 			else
