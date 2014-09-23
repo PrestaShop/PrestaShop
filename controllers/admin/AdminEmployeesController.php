@@ -253,18 +253,20 @@ class AdminEmployeesControllerCore extends AdminController
 			),
 		);
 
-		if ($this->restrict_edition && Tab::checkTabRights(Tab::getIdFromClassName('AdminModulesController')))
+		if ($this->restrict_edition)
 		{
 			$this->fields_form['input'][] = array(
 				'type' => 'change-password',
 				'label' => $this->l('Password'),
 				'name' => 'passwd'
 				);
-			$this->fields_form['input'][] = array(
-				'type' => 'prestashop_addons',
-				'label' => 'PrestaShop Addons',
-				'name' => 'prestashop_addons',
-			);
+
+			if(Tab::checkTabRights(Tab::getIdFromClassName('AdminModulesController'))
+				$this->fields_form['input'][] = array(
+					'type' => 'prestashop_addons',
+					'label' => 'PrestaShop Addons',
+					'name' => 'prestashop_addons',
+				);
 		}
 		else
 			$this->fields_form['input'][] = array(
