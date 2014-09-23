@@ -1238,7 +1238,7 @@ class CartRuleCore extends ObjectModel
 
 		// If the product rule group were the only restrictions of a cart rule, update de cart rule restriction cache
 		if (Db::getInstance()->Affected_Rows() > 0)
-				Db::getInstance()->execute('
+			Db::getInstance()->execute('
 				UPDATE `'._DB_PREFIX_.'cart_rule` cr
 				LEFT JOIN `'._DB_PREFIX_.'cart_rule_product_rule_group` crprg ON cr.id_cart_rule = crprg.id_cart_rule
 				SET product_restriction = IF(crprg.id_product_rule_group IS NULL, 0, 1)');
