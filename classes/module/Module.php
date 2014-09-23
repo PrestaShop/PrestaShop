@@ -1027,6 +1027,19 @@ abstract class ModuleCore
 
 		if (!isset(self::$_INSTANCE[$module_name]))
 		{
+			if (Tools::file_exists_no_cache(_PS_OVERRIDE_DIR_ . 'modules/'.$module_name.'/'.$module_name.'.php'))
+			{
+				include_once(_PS_OVERRIDE_DIR_ . 'modules/'.$module_name.'/'.$module_name.'.php');
+				if (class_exists($module_name . 'Override', false))
+				{
+					include_once(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php');
+					$c = $module_name . 'Override';
+					return self::$_INSTANCE[$module_name] = new $c;
+				}
+
+				if (class_exists($module_name, false))
+					return self::$_INSTANCE[$module_name] = new $module_name;
+			}
 			if (Tools::file_exists_no_cache(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php'))
 			{
 				include_once(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php');
