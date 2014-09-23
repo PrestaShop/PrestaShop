@@ -176,8 +176,19 @@ class FrontControllerCore extends Controller
 			throw new PrestaShopException((sprintf(Tools::displayError('Current theme unavailable "%s". Please check your theme directory name and permissions.'), basename(rtrim(_PS_THEME_DIR_, '/\\')))));
 
 		if (Configuration::get('PS_GEOLOCATION_ENABLED'))
+		{
 			if (($newDefault = $this->geolocationManagement($this->context->country)) && Validate::isLoadedObject($newDefault))
 				$this->context->country = $newDefault;
+		}
+		elseif (!isset($this->context->cookie->id_currency) && Configuration::get('PS_DETECT_COUNTRY'))
+		{
+			$country = new Country((int)Tools::getCountry());
+			if (validate::isLoadedObject($country))
+			{
+				$this->context->country = $country;
+				$this->context->cookie->id_currency = (int)$this->context->country->id_currency;
+			}
+		}
 
 		$currency = Tools::setCurrency($this->context->cookie);
 
