@@ -52,6 +52,8 @@ a.fancybox-nav {
     .pb-left-column #image-block {
       width: 280px;
       margin: 0 auto; } }
+  .pb-left-column #image-block .jqzoom {
+  position: relative; }
   .pb-left-column #image-block img {
     background: #fbfbfb;
     width: 100%; }

@@ -56,7 +56,11 @@ a.fancybox-nav {
 		@media (max-width: $screen-xs-max) { //max 767px
 			width: 280px;
 			margin: 0 auto;		
-		}	
+		}
+		
+		.jqzoom {
+			position: relative;
+		}
 		img {
 			background: $base-box-bg;
 			width: 100%;

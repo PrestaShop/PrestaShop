@@ -37,8 +37,8 @@ $plugins = array(
 					array('new_file' => $plugins_folder.'jquery.jqminmax.js', 'name' => 'jqminmax'),
 				'jquery.fancybox-1.3.4.js' => 
 					array('new_file' => $plugins_folder.'fancybox/jquery.fancybox.js', 'name' => 'fancybox'),
-				'jquery.jqzoom.js' => 
-					array('new_file' => $plugins_folder.'jquery.jqzoom.js', 'name' => 'jqzoom'),
+				'jquery.elevatezoom.js' => 
+					array('new_file' => $plugins_folder.'jquery.elevatezoom.js', 'name' => 'elevatezoom'),
 				'jquery.serialScroll-1.2.2-min.js' => 
 					array('new_file' => $plugins_folder.'jquery.serialScroll.js', 'name' => 'serialScroll'),
 				'ifxtransfer.js' => 
