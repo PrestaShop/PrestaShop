@@ -1735,7 +1735,8 @@ class AdminControllerCore extends Controller
 			'controller_name' => htmlentities(Tools::getValue('controller')),
 			'currentIndex' => self::$currentIndex,
 			'bootstrap' => $this->bootstrap,
-			'default_language' => (int)Configuration::get('PS_LANG_DEFAULT')
+			'default_language' => (int)Configuration::get('PS_LANG_DEFAULT'),
+			'display_addons_connection' => Tab::checkTabRights(Tab::getIdFromClassName('AdminModulesController'))
 		));
 
 		$module = Module::getInstanceByName('themeconfigurator');

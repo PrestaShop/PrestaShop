@@ -253,7 +253,7 @@ class AdminEmployeesControllerCore extends AdminController
 			),
 		);
 
-		if ($this->restrict_edition)
+		if ($this->restrict_edition && Tab::checkTabRights(Tab::getIdFromClassName('AdminModulesController')))
 		{
 			$this->fields_form['input'][] = array(
 				'type' => 'change-password',
