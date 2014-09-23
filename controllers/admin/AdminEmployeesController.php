@@ -261,7 +261,7 @@ class AdminEmployeesControllerCore extends AdminController
 				'name' => 'passwd'
 				);
 
-			if(Tab::checkTabRights(Tab::getIdFromClassName('AdminModulesController'))
+			if(Tab::checkTabRights(Tab::getIdFromClassName('AdminModulesController')))
 				$this->fields_form['input'][] = array(
 					'type' => 'prestashop_addons',
 					'label' => 'PrestaShop Addons',
