@@ -260,7 +260,7 @@
 				</script>
 {/if}
 				<ul id="header_employee_box">
-					{if !isset($logged_on_addons) || !$logged_on_addons}
+					{if (!isset($logged_on_addons) || !$logged_on_addons) && (isset($display_addons_connection) && $display_addons_connection)}
 						<li>
 							<a href="#" class="addons_connect toolbar_btn" data-toggle="modal" data-target="#modal_addons_connect" title="{l s='Addons'}">
 								<i class="icon-chain-broken"></i>

@@ -5465,6 +5465,8 @@ p.info-account {
 
 .alert {
   font-weight: bold; }
+.alert:before {
+  cursor:  pointer; }
   .alert ul, .alert ol {
     padding-left: 15px;
     margin-left: 27px; }

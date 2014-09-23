@@ -137,6 +137,9 @@ p.info-account {
 
 .alert {
 	font-weight: bold;
+	&:before {
+		cursor:  pointer;
+	}
 	ul, ol {
 		padding-left: 15px;
 		margin-left: 27px;

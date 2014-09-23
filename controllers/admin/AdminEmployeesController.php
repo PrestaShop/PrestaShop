@@ -260,11 +260,13 @@ class AdminEmployeesControllerCore extends AdminController
 				'label' => $this->l('Password'),
 				'name' => 'passwd'
 				);
-			$this->fields_form['input'][] = array(
-				'type' => 'prestashop_addons',
-				'label' => 'PrestaShop Addons',
-				'name' => 'prestashop_addons',
-			);
+
+			if(Tab::checkTabRights(Tab::getIdFromClassName('AdminModulesController')))
+				$this->fields_form['input'][] = array(
+					'type' => 'prestashop_addons',
+					'label' => 'PrestaShop Addons',
+					'name' => 'prestashop_addons',
+				);
 		}
 		else
 			$this->fields_form['input'][] = array(
