@@ -32,7 +32,7 @@ class PrestaShopAutoload
 	/**
 	 * File where classes index is stored
 	 */
-	const INDEX_FILE = 'cache/class_index.php';
+	const INDEX_FILE = '/cache/class_index.php';
 
 	/**
 	 * @var Autoload
