@@ -127,9 +127,12 @@ var ajaxCart = {
 		//for every 'add' buttons...
 		$(document).on('click', '.ajax_add_to_cart_button', function(e){
 			e.preventDefault();
-			var idProduct =  $(this).data('id-product');
+			var idProduct =  parseInt($(this).data('id-product'));
+			var minimalQuantity =  parseInt($(this).data('minimal_quantity'));
+			if (!minimalQuantity)
+				minimalQuantity = 1;
 			if ($(this).prop('disabled') != 'disabled')
-				ajaxCart.add(idProduct, null, false, this);
+				ajaxCart.add(idProduct, null, false, this, minimalQuantity);
 		});
 		//for product page 'add' button...
 		$(document).on('click', '#add_to_cart button', function(e){
@@ -307,6 +310,7 @@ var ajaxCart = {
 		if ($('.cart_block_list').hasClass('collapsed'))
 			this.expand();
 		//send the ajax request to the server
+
 		$.ajax({
 			type: 'POST',
 			headers: { "cache-control": "no-cache" },
