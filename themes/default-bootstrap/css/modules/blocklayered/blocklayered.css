@@ -46,16 +46,11 @@
   padding: 5px 0; }
 
 #layered_block_left ul li {
-  padding: 2px 0; }
+  padding: 2px 0;
+  list-style-type: none; }
 
 #layered_block_left ul li label {
   cursor: pointer; }
-
-#layered_block_left ul {
-  padding-left: 0; }
-
-#layered_block_left ul li {
-  list-style-type: none; }
 
 #layered_block_left div > form > div > div {
   margin-top: 5px; }
