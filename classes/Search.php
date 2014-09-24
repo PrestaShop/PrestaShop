@@ -313,7 +313,7 @@ class SearchCore
 						NOW(),
 						INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY
 					)
-				) > 0 new
+				) > 0 new, product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity
 				FROM '._DB_PREFIX_.'product p
 				'.Shop::addSqlAssociation('product', 'p').'
 				INNER JOIN `'._DB_PREFIX_.'product_lang` pl ON (
@@ -573,7 +573,7 @@ class SearchCore
 							{
 								$word = Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH);
 								// Remove accents
-								$word = Tools::replaceAccentedChars($word);
+							//	$word = Tools::replaceAccentedChars($word);
 
 								if (!isset($product_array[$word]))
 									$product_array[$word] = 0;
