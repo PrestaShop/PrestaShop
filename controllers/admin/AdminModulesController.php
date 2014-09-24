@@ -630,6 +630,13 @@ class AdminModulesControllerCore extends AdminController
 
 	public function postProcessDelete()
 	{
+	 	// PrestaShop demo mode
+		if (_PS_MODE_DEMO_)
+		{
+			$this->errors[] = Tools::displayError('This functionality has been disabled.');
+			return;
+		}
+
 		if ($this->tabAccess['delete'] === '1')
 		{
 			if (Tools::getValue('module_name') != '')
@@ -664,6 +671,13 @@ class AdminModulesControllerCore extends AdminController
 		{
 			if (!Tools::getValue($key))
 				continue;
+
+		 	// PrestaShop demo mode
+			if (_PS_MODE_DEMO_)
+			{
+				$this->errors[] = Tools::displayError('This functionality has been disabled.');
+				return;
+			}
 
 			if ($key == 'check')
 				$this->ajaxProcessRefreshModuleList(true);
