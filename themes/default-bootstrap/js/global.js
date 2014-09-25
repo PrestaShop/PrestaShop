@@ -35,7 +35,6 @@ $(document).ready(function(){
 		viewport.setAttribute('content', 'initial-scale=1.0,maximum-scale=1.0,user-scalable=0,width=device-width,height=device-height');
 		window.scrollTo(0, 1);
 	}
-	blockHover();
 	if (typeof quickView !== 'undefined' && quickView)
 		quick_view();
 	dropDown();
@@ -56,7 +55,7 @@ $(document).ready(function(){
 			$(this.form).submit();
 		});
 
-		$(document).on('change', 'select[name="manufacturer_list"], select[name="supplier_list"]', function() {
+		$(document).on('change', 'select[name="manufacturer_list"], select[name="supplier_list"]', function(){
 			if (this.value != '')
 				location.href = this.value;
 		});
@@ -164,13 +163,20 @@ function responsiveResize()
 		accordionFooter('disable');
 	    responsiveflag = false;
 	}
+	blockHover();
 }
 
 function blockHover(status)
 {
-	$(document).off('mouseenter').on('mouseenter', '.product_list.grid li.ajax_block_product .product-container', function(e){
+	var screenLg = $('body').find('.container').width() == 1170;
 
-		if ($('body').find('.container').width() == 1170)
+	if (screenLg)
+		$('.button-container').hide();
+	else
+		$('.button-container').show();
+
+	$(document).off('mouseenter').on('mouseenter', '.product_list.grid li.ajax_block_product .product-container', function(e){
+		if (screenLg)
 		{
 			var pcHeight = $(this).parent().outerHeight();
 			var pcPHeight = $(this).parent().find('.button-container').outerHeight() + $(this).parent().find('.comments_note').outerHeight() + $(this).parent().find('.functional-buttons').outerHeight();
@@ -179,15 +185,14 @@ function blockHover(status)
 	});
 
 	$(document).off('mouseleave').on('mouseleave', '.product_list.grid li.ajax_block_product .product-container', function(e){
-		if ($('body').find('.container').width() == 1170)
+		if (screenLg)
 			$(this).parent().removeClass('hovered').css({'height':'auto', 'margin-bottom':'0'});
 	});
 }
 
 function quick_view()
 {
-	$(document).on('click', '.quick-view:visible, .quick-view-mobile:visible', function(e) 
-	{
+	$(document).on('click', '.quick-view:visible, .quick-view-mobile:visible', function(e){
 		e.preventDefault();
 		var url = this.rel;
 		if (url.indexOf('?') != -1)
