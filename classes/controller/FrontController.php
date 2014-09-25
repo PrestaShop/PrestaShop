@@ -1038,9 +1038,10 @@ class FrontControllerCore extends Controller
 					else
 						$list_uri[] = $file;
 				}
-				else
-					$list_uri[$file] = $media;
 			}
+			else
+				$list_uri[$file] = $media;
+			
 		}
 
 		if ($remove)
