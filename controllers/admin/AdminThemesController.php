@@ -112,7 +112,7 @@ class AdminThemesControllerCore extends AdminController
 		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 
 		parent::init();
-		$this->can_display_themes = (!Shop::isFeatureActive() || Shop::getContext() == Shop::CONTEXT_SHOP) ? true : false;
+		$this->can_display_themes = (!Shop::isFeatureActive() || Shop::getContext() == Shop::CONTEXT_SHOP);
 
 		libxml_use_internal_errors(true);
 
@@ -2795,7 +2795,7 @@ class AdminThemesControllerCore extends AdminController
 				$this->errors[] = sprintf(Tools::displayError('An error occurred while uploading the favicon: cannot copy file "%s" to folder "%s".'), $_FILES[$name]['tmp_name'], $dest);
 		}
 
-		return !count($this->errors) ? true : false;
+		return !count($this->errors);
 	}
 
 	public function initProcess()
