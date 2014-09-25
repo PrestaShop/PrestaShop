@@ -1034,7 +1034,7 @@ abstract class ModuleCore
 				if (Tools::file_exists_no_cache(_PS_OVERRIDE_DIR_.'modules/'.$module_name.'/'.$module_name.'.php'))
 				{
 					include_once(_PS_OVERRIDE_DIR_.'modules/'.$module_name.'/'.$module_name.'.php');
-					$module_name = $module_name.'Override';
+					$override = $module_name.'Override';
 
 					if (class_exists($override, false))
 						return self::$_INSTANCE[$module_name] = new $override;
