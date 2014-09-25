@@ -516,7 +516,7 @@ class ValidateCore
 	 */
 	public static function isBool($bool)
 	{
-		return $bool === null || is_bool($bool) || preg_match('/^0|1$/', $bool);
+		return $bool === null || is_bool($bool) || preg_match('/^(0|1)$/', $bool);
 	}
 
 	/**
