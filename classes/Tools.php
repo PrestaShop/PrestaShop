@@ -621,25 +621,17 @@ class ToolsCore
 	 */
 	public static function convertPriceFull($amount, Currency $currency_from = null, Currency $currency_to = null)
 	{
-		if ($currency_from === $currency_to)
-			return $amount;
-
-		if ($currency_from === null)
-			$currency_from = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-
-		if ($currency_to === null)
-			$currency_to = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
-
-		if ($currency_from->id == Configuration::get('PS_CURRENCY_DEFAULT'))
-			$amount *= $currency_to->conversion_rate;
-		else
-		{
-            $conversion_rate = ($currency_from->conversion_rate == 0 ? 1 : $currency_from->conversion_rate);
-			// Convert amount to default currency (using the old currency rate)
-			$amount = $amount / $conversion_rate;
-			// Convert to new currency
-			$amount *= $currency_to->conversion_rate;
-		}
+		if ($currency_from !== $currency_to)
+			if ($currency_from === null) {
+				$amount = self::convertPrice($amount, $currency_to);
+			} else if ($currency_to === null) {
+				$amount = self::convertPrice($amount, $currency_from, false);
+			} else {
+				$conversion_rate = $currency_from->conversion_rate == 0 ?
+						1 : $currency_from->conversion_rate;
+				$amount *= ($currency_to->conversion_rate / $conversion_rate);
+			}
+		
 		return Tools::ps_round($amount, _PS_PRICE_DISPLAY_PRECISION_);
 	}
 
