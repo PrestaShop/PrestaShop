@@ -1013,7 +1013,7 @@ class FrontControllerCore extends Controller
 		$list_uri = array();
 		foreach ($media_uri as $file => $media)
 		{
-			if (!preg_match('/^https?:\/\/|\/\//i', $media))
+			if (!Validate::isAbsoluteUrl($media))
 			{
 				$different = 0;
                 $different_css = 0;
