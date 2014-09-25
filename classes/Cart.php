@@ -669,7 +669,7 @@ class CartCore extends ObjectModel
 
 		foreach ($result as $row)
 		{
-			self::$_attributesLists[$row['id_product_attribute'].'-'.$id_lang]['attributes'] .= $row['public_group_name'].' : '.$row['attribute_name'].', ';
+			self::$_attributesLists[$row['id_product_attribute'].'-'.$id_lang]['attributes'] .= $row['public_group_name'].':'.$row['attribute_name'].', ';
 			self::$_attributesLists[$row['id_product_attribute'].'-'.$id_lang]['attributes_small'] .= $row['attribute_name'].', ';
 		}
 
