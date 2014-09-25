@@ -333,8 +333,8 @@ class HookCore extends ObjectModel
 				{
 					$sql->leftJoin('module_group', 'mg', 'mg.`id_module` = m.`id_module`');
 					if (Validate::isLoadedObject($context->shop))
-						$sql->where('mg.id_shop = '.((int)$context->shop->id).' AND  mg.`id_group` IN ('.implode(', ', $groups).')');
-					else
+						$sql->where('mg.id_shop = '.((int)$context->shop->id).(count($groups) ? ' AND  mg.`id_group` IN ('.implode(', ', $groups).')' : ''));
+					elseif (count($groups))
 						$sql->where('mg.`id_group` IN ('.implode(', ', $groups).')');
 				}
 			}
