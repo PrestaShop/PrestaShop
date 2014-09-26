@@ -377,7 +377,16 @@ product_tabs['Combinations'] = new function(){
 					showSuccessMessage(data.message);
 					parent.remove();
 					if (data.id_product_attribute)
-						$('#qty_' + data.id_product_attribute).parent().hide();
+						if (data.attribute)
+						{
+							var td = $('#qty_' + data.id_product_attribute);
+							console.log(td);
+							td.attr('id', 'qty_0');
+							td.children('input').val('0').attr('name', 'qty_0');
+							td.next('td').text(data.attribute[0].name);
+						}
+						else
+							$('#qty_' + data.id_product_attribute).parent().hide();
 				}
 				else
 					showErrorMessage(data.message);
