@@ -791,6 +791,23 @@ class CategoryCore extends ObjectModel
 		$categories->where('nright', '<', $this->nright);
 		return $categories;
 	}
+	
+	/**
+	 * Return an array of all parents of the current category
+	 *
+	 * @param int $id_lang
+	 * @return PrestaShopCollection Collection of Category
+	 */
+	public function getAllParents($id_lang = null)
+	{
+		if (is_null($id_lang))
+			$id_lang = Context::getContext()->language->id;
+
+		$categories = new PrestaShopCollection('Category', $id_lang);
+		$categories->where('nleft', '<', $this->nleft);
+		$categories->where('nright', '>', $this->nright);
+		return $categories;
+	}
 
 	/**
 	 * This method allow to return children categories with the number of sub children selected for a product
