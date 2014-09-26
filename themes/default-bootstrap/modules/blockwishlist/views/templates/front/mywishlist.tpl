@@ -102,10 +102,12 @@
 								</td>
 								<td class="wishlist_default">
 									{if isset($wishlists[i].default) && $wishlists[i].default == 1}
-										<p class="is_wish_list_default">{l s='Is default' mod='blockwishlist'}</p>
+										<p class="is_wish_list_default">
+											<i class="icon icon-check-square"></i>
+										</p>
 									{else}
 										<a href="#" onclick="javascript:event.preventDefault();(WishlistDefault('wishlist_{$wishlists[i].id_wishlist|intval}', '{$wishlists[i].id_wishlist|intval}'));">
-											{l s='Set as default' mod='blockwishlist'}
+											<i class="icon icon-square"></i>
 										</a>
 									{/if}
 								</td>
