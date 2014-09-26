@@ -525,7 +525,7 @@ function init()
 	});
 
 	$('.edit_shipping_number_link').unbind('click').click(function(e) {
-		$(this).parent().find('.shipping_number_show').hide();
+		$(this).parent().parent().find('.shipping_number_show').hide();
 		$(this).parent().find('.shipping_number_edit').show();
 
 		$(this).parent().find('.edit_shipping_number_link').hide();
@@ -534,7 +534,7 @@ function init()
 	});
 
 	$('.cancel_shipping_number_link').unbind('click').click(function(e) {
-		$(this).parent().find('.shipping_number_show').show();
+		$(this).parent().parent().find('.shipping_number_show').show();
 		$(this).parent().find('.shipping_number_edit').hide();
 
 		$(this).parent().find('.edit_shipping_number_link').show();
