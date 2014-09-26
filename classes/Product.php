@@ -4678,8 +4678,21 @@ class ProductCore extends ObjectModel
 	public function setWsCategories($category_ids)
 	{
 		$ids = array();
-		foreach ($category_ids as $value)
-			$ids[] = $value['id'];
+		foreach ($category_ids as $value) {
+            		$position_now = Db::getInstance()->getValue('SELECT position
+								FROM `'._DB_PREFIX_.'category_product`
+								WHERE id_category = '.(int)$value['id'].'
+								AND id_product = '.(int)$this->id);
+		       if($position_now)
+		                $ids[$position_now] = $value['id'];
+		       else 
+		                $idsWithoutPosition[] = $value['id'];
+        	}
+        
+        	foreach($idsWithoutPosition as $value)
+            		$ids[] = $value;
+		
+		
 		if ($this->deleteCategories())
 		{
 			if ($ids)
