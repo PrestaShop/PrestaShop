@@ -92,6 +92,7 @@ class CartCore extends ObjectModel
 	protected static $_carriers = null;
 	protected static $_taxes_rate = null;
 	protected static $_attributesLists = array();
+	protected static $_customer = null;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -163,6 +164,8 @@ class CartCore extends ObjectModel
 				$customer = Context::getContext()->customer;
 			else
 				$customer = new Customer((int)$this->id_customer);
+			
+			Cart::$_customer = $customer;
 
 			if ((!$this->secure_key || $this->secure_key == '-1') && $customer->secure_key)
 			{
@@ -3165,6 +3168,9 @@ class CartCore extends ObjectModel
 
 		if (!Customer::customerHasAddress((int)$cart->id_customer, (int)$cart->id_address_invoice))
 			$cart->id_address_invoice = (int)Address::getFirstCustomerAddressId((int)$cart->id_customer);
+
+		if ($cart->id_customer)
+			$cart->secure_key = Cart::$_customer->secure_key;
 
 		$cart->add();
 
