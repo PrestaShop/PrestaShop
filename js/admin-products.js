@@ -804,7 +804,7 @@ product_tabs['Associations'] = new function(){
 				autoFill: true,
 				max:20,
 				matchContains: true,
-				mustMatch:true,
+				mustMatch:false,
 				scroll:false,
 				cacheLength:0,
 				formatItem: function(item) {
@@ -1038,7 +1038,7 @@ product_tabs['Informations'] = new function(){
 				autoFill: true,
 				max:20,
 				matchContains: true,
-				mustMatch:true,
+				mustMatch:false,
 				scroll:false,
 				cacheLength:0,
 				formatItem: function(item) {
