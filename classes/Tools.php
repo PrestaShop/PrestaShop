@@ -634,7 +634,7 @@ class ToolsCore
 			$amount *= $currency_to->conversion_rate;
 		else
 		{
-            $conversion_rate = ($currency_from->conversion_rate == 0 ? 1 : $currency_from->conversion_rate);
+			$conversion_rate = ($currency_from->conversion_rate == 0 ? 1 : $currency_from->conversion_rate);
 			// Convert amount to default currency (using the old currency rate)
 			$amount = $amount / $conversion_rate;
 			// Convert to new currency
