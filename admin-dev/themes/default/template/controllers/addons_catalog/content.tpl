@@ -25,5 +25,5 @@
 {if $display_addons_content}
 	{$addons_content}
 {else}
-	<iframe frameborder="no" class="clearfix" style="margin:0px;padding:0px;width:100%;height:920px" src="//addons.prestashop.com/iframe/search.php?isoLang={$iso_lang}&isoCurrency={$iso_currency}&isoCountry={$iso_country}&parentUrl={$parent_domain}"></iframe>
+	<iframe class="clearfix" style="margin:0px;padding:0px;width:100%;height:920px;overflow:hidden;border:none" src="//addons.prestashop.com/iframe/search.php?isoLang={$iso_lang}&amp;isoCurrency={$iso_currency}&amp;isoCountry={$iso_country}&amp;parentUrl={$parent_domain}"></iframe>
 {/if}

@@ -36,7 +36,7 @@
                             {if Tools::strlen($category->description) > 350}
                                 <div id="category_description_short">{$description_short}</div>
                                 <div id="category_description_full" class="unvisible">{$category->description}</div>
-                                <a href="{$link->getCategoryLink($category->id_category, $category.link_rewrite)|escape:'html':'UTF-8'}" class="lnk_more">{l s='More'}</a>
+                                <a href="{$link->getCategoryLink($category->id_category, $category->link_rewrite)|escape:'html':'UTF-8'}" class="lnk_more">{l s='More'}</a>
                             {else}
                                 <div>{$category->description}</div>
                             {/if}
@@ -45,7 +45,7 @@
                     </div>
 				{else}
                     <!-- Category image -->
-                    <div class="content_scene_cat_bg"{if $category->id_image} style="background:url({$link->getCatImageLink($category->link_rewrite, $category->id_image, 'category_default')|escape:'html':'UTF-8'}) 0 top no-repeat; background-size:contain; min-height:{$categorySize.height}px;"{/if}>
+                    <div class="content_scene_cat_bg"{if $category->id_image} style="background:url({$link->getCatImageLink($category->link_rewrite, $category->id_image, 'category_default')|escape:'html':'UTF-8'}) right center no-repeat; background-size:cover; min-height:{$categorySize.height}px;"{/if}>
                         {if $category->description}
                             <div class="cat_desc">
                             <span class="category-name">
@@ -71,6 +71,7 @@
 		{/if}
 		<h1 class="page-heading{if (isset($subcategories) && !$products) || (isset($subcategories) && $products) || !isset($subcategories) && $products} product-listing{/if}"><span class="cat-name">{$category->name|escape:'html':'UTF-8'}{if isset($categoryNameComplement)}&nbsp;{$categoryNameComplement|escape:'html':'UTF-8'}{/if}</span>{include file="$tpl_dir./category-count.tpl"}</h1>
 		{if isset($subcategories)}
+        {if (isset($display_subcategories) && $display_subcategories eq 1) || !isset($display_subcategories) }
 		<!-- Subcategories -->
 		<div id="subcategories">
 			<p class="subcategory-heading">{l s='Subcategories'}</p>
@@ -94,6 +95,7 @@
 			{/foreach}
 			</ul>
 		</div>
+        {/if}
 		{/if}
 		{if $products}
 			<div class="content_sortPagiBar clearfix">

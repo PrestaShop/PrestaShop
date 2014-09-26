@@ -120,17 +120,20 @@ class AdminSuppliersControllerCore extends AdminController
 					'required' => true,
 					'col' => 4,
 					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}',
-				),(in_array('company', $required_fields) ? 
-				array(
-					'type' => 'text',
-					'label' => $this->l('Company'),
-					'name' => 'company',
-					'display' => in_array('company', $required_fields),
-					'required' => in_array('company', $required_fields),
-					'maxlength' => 16,
-					'col' => 4,
-					'hint' => $this->l('Company name for this supplier')
-				) : null),
+				),
+				(in_array('company', $required_fields) ? 
+					array(
+						'type' => 'text',
+						'label' => $this->l('Company'),
+						'name' => 'company',
+						'display' => in_array('company', $required_fields),
+						'required' => in_array('company', $required_fields),
+						'maxlength' => 16,
+						'col' => 4,
+						'hint' => $this->l('Company name for this supplier')
+					) 
+					: null
+				),
 				array(
 					'type' => 'textarea',
 					'label' => $this->l('Description'),

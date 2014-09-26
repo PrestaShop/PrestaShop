@@ -84,7 +84,7 @@ class AdminEmployeesControllerCore extends AdminController
 			'email' => array('title' => $this->l('Email address')),
 			'profile' => array('title' => $this->l('Profile'), 'type' => 'select', 'list' => $this->profiles_array,
 				'filter_key' => 'pl!name', 'class' => 'fixed-width-lg'),
-			'active' => array('title' => $this->l('Can log in'), 'align' => 'center', 'active' => 'status',
+			'active' => array('title' => $this->l('Active'), 'align' => 'center', 'active' => 'status',
 				'type' => 'bool', 'class' => 'fixed-width-sm'),
 		);
 
@@ -238,8 +238,8 @@ class AdminEmployeesControllerCore extends AdminController
 				array(
 					'type' => 'html',
 					'name' => 'employee_avatar',
-					'html_content' => '<div id="employee-thumbnail"><a href="http://www.prestashop.com/forums/index.php?app=core&module=usercp" target="_blank" style="background-image:url('.$obj->getImage().')"></a></div>
-					<div class="alert alert-info">'.sprintf($this->l('Your avatar in PrestaShop 1.6.x is your profile picture on %1$s. To change your avatar, log in to PrestaShop.com with your email %2$s and follow the on-screen instructions.'), '<a href="http://www.prestashop.com/forums/index.php?app=core&module=usercp" class="alert-link" target="_blank">PrestaShop.com</a>', $obj->email).'</div>',
+					'html_content' => '<div id="employee-thumbnail"><a href="http://www.prestashop.com/forums/index.php?app=core&amp;module=usercp" target="_blank" style="background-image:url('.$obj->getImage().')"></a></div>
+					<div class="alert alert-info">'.sprintf($this->l('Your avatar in PrestaShop 1.6.x is your profile picture on %1$s. To change your avatar, log in to PrestaShop.com with your email %2$s and follow the on-screen instructions.'), '<a href="http://www.prestashop.com/forums/index.php?app=core&amp;module=usercp" class="alert-link" target="_blank">PrestaShop.com</a>', $obj->email).'</div>',
 				),
 				array(
 					'type' => 'text',
@@ -254,23 +254,27 @@ class AdminEmployeesControllerCore extends AdminController
 		);
 
 		if ($this->restrict_edition)
+		{
 			$this->fields_form['input'][] = array(
 				'type' => 'change-password',
 				'label' => $this->l('Password'),
 				'name' => 'passwd'
 				);
+
+			if(Tab::checkTabRights(Tab::getIdFromClassName('AdminModulesController')))
+				$this->fields_form['input'][] = array(
+					'type' => 'prestashop_addons',
+					'label' => 'PrestaShop Addons',
+					'name' => 'prestashop_addons',
+				);
+		}
 		else
 			$this->fields_form['input'][] = array(
 				'type' => 'password',
 				'label' => $this->l('Password'),
-				'hint' => sprintf($this->l('Minimum of %s characters.'), Validate::ADMIN_PASSWORD_LENGTH),
+				'hint' => sprintf($this->l('Password should be at least %s characters long.'), Validate::ADMIN_PASSWORD_LENGTH),
 				'name' => 'passwd'
-				);	
-		$this->fields_form['input'][] = array(
-			'type' => 'prestashop_addons',
-			'label' => 'PrestaShop Addons',
-			'name' => 'prestashop_addons',
-		);
+				);
 
 		$this->fields_form['input'] = array_merge($this->fields_form['input'], array(
 			array(
@@ -321,7 +325,7 @@ class AdminEmployeesControllerCore extends AdminController
 					'name' => 'name'
 				),
 				'onchange' => 'var value_array = $(this).val().split("|"); $("link").first().attr("href", "themes/" + value_array[0] + "/css/" + value_array[1]);',
-				'hint' => $this->l('Back Office theme.')
+				'hint' => $this->l('Back-office theme.')
 			),
 			array(
 				'type' => 'radio',
@@ -348,7 +352,7 @@ class AdminEmployeesControllerCore extends AdminController
 		{
 			$this->fields_form['input'][] = array(
 				'type' => 'switch',
-				'label' => $this->l('Status'),
+				'label' => $this->l('Active'),
 				'name' => 'active',
 				'required' => false,
 				'is_bool' => true,
@@ -420,7 +424,11 @@ class AdminEmployeesControllerCore extends AdminController
 	{
 		if (!($obj = $this->loadObject(true)))
 			return false;
-		$email = $this->getFieldValue($obj, 'email');
+
+		if (Tools::getValue('id_profile') == _PS_ADMIN_PROFILE_ && $this->context->employee->id_profile != _PS_ADMIN_PROFILE_)
+			$this->errors[] = Tools::displayError('The provided profile is invalid');
+
+		$email = $this->getFieldValue($obj, 'email');			
 		if (Validate::isEmail($email) && Employee::employeeExists($email) && (!Tools::getValue('id_employee')
 			|| ($employee = new Employee((int)Tools::getValue('id_employee'))) && $employee->email != $email))
 			$this->errors[] = Tools::displayError('An account already exists for this email address:').' '.$email;
@@ -475,11 +483,11 @@ class AdminEmployeesControllerCore extends AdminController
 		// If the employee is editing its own account
 		if ($this->restrict_edition)
 		{
-			$current_password = Tools::getValue('old_passwd');
+			$current_password = trim(Tools::getValue('old_passwd'));
 			if (Tools::getValue('passwd') && (empty($current_password) || !Validate::isPasswdAdmin($current_password) || !$employee->getByEmail($employee->email, $current_password)))
 				$this->errors[] = Tools::displayError('Your current password is invalid.');
 			elseif (Tools::getValue('passwd') && (!Tools::getValue('passwd2') || Tools::getValue('passwd') !== Tools::getValue('passwd2')))
-				$this->errors[] = Tools::displayError('The confirmation password doesn\'t match.');
+				$this->errors[] = Tools::displayError('The confirmation password does not match.');
 
 			$_POST['id_profile'] = $_GET['id_profile'] = $employee->id_profile;
 			$_POST['active'] = $_GET['active'] = $employee->active;
@@ -572,7 +580,7 @@ class AdminEmployeesControllerCore extends AdminController
 		$employee = new Employee((int)Tools::getValue('id_employee'));
 
 		if (!Validate::isLoadedObject($employee) && !Validate::isPasswd(Tools::getvalue('passwd'), Validate::ADMIN_PASSWORD_LENGTH))
-			return !($this->errors[] = sprintf(Tools::displayError('You must specify a password with a minimum of %s characters.'),
+			return !($this->errors[] = sprintf(Tools::displayError('The password must be at least %s characters long.'),
 				Validate::ADMIN_PASSWORD_LENGTH));
 
 		return parent::validateRules($class_name);

@@ -75,10 +75,27 @@ class AttributeCore extends ObjectModel
 		if (!$this->hasMultishopEntries() || Shop::getContext() == Shop::CONTEXT_ALL)
 		{
 			$result = Db::getInstance()->executeS('SELECT id_product_attribute FROM '._DB_PREFIX_.'product_attribute_combination WHERE id_attribute = '.(int)$this->id);
+			$products = array();
+
 			foreach ($result as $row)
 			{
 				$combination = new Combination($row['id_product_attribute']);
+				$new_request = Db::getInstance()->executeS('SELECT id_product, default_on FROM '._DB_PREFIX_.'product_attribute WHERE id_product_attribute = '.(int)$row['id_product_attribute']);
+				foreach ($new_request as $value)
+					if ($value['default_on'] == 1)
+						$products[] = $value['id_product'];
 				$combination->delete();
+			}
+
+			foreach ($products as $product)
+			{
+				$result = Db::getInstance()->executeS('SELECT id_product_attribute FROM '._DB_PREFIX_.'product_attribute WHERE id_product = '.(int)$product.' LIMIT 1');
+				foreach ($result as $row)
+					if (Validate::isLoadedObject($product = new Product((int)$product)))
+					{
+						$product->deleteDefaultAttributes();
+						$product->setDefaultAttribute($row['id_product_attribute']);
+					}
 			}
 
 			// Delete associated restrictions on cart rules

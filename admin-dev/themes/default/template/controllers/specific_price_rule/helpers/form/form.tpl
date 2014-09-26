@@ -35,115 +35,111 @@
 <div class="clearfix">&nbsp;</div>
 <div class="panel" id="conditions-panel" style="display:none;">
 	<h3><i class="icon-tasks"></i> {l s='Conditions'}</h3>
-	<form class="form-horizontal">
-		<div class="form-group">
-			<label for="id_category" class="control-label col-lg-3">{l s='Category'}</label>
-			<div class="col-lg-9">
-				<div class="col-lg-8">
-					<select id="id_category" name="id_category">
-						{foreach from=$categories item='category'}
-						<option value="{$category.id_category|intval}">({$category.id_category|intval}) {$category.name}</option>
-						{/foreach}
-					</select>
-				</div>
-				<div class="col-lg-1">
-					<a class="btn btn-default" href="#" id="add_condition_category">
-						<i class="icon-plus-sign"></i> {l s='Add condition'}
-					</a>
-				</div>
+	<div class="form-group">
+		<label for="id_category" class="control-label col-lg-3">{l s='Category'}</label>
+		<div class="col-lg-9">
+			<div class="col-lg-8">
+				<select id="id_category" name="id_category">
+					{foreach from=$categories item='category'}
+					<option value="{$category.id_category|intval}">({$category.id_category|intval}) {$category.name}</option>
+					{/foreach}
+				</select>
+			</div>
+			<div class="col-lg-1">
+				<a class="btn btn-default" href="#" id="add_condition_category">
+					<i class="icon-plus-sign"></i> {l s='Add condition'}
+				</a>
 			</div>
 		</div>
-		<div class="form-group">
-			<label for="id_manufacturer" class="control-label col-lg-3">{l s='Manufacturer'}</label>
-			<div class="col-lg-9">
-				<div class="col-lg-8">
-					<select id="id_manufacturer" name="id_manufacturer">
-						{foreach from=$manufacturers item='manufacturer'}
-							<option value="{$manufacturer.id_manufacturer}">{$manufacturer.name}</option>
-						{/foreach}
-					</select>
-				</div>
-				<div class="col-lg-1">
-					<a class="btn btn-default" href="#" id="add_condition_manufacturer">
-						<i class="icon-plus-sign"></i> {l s='Add condition'}
-					</a>
-				</div>
+	</div>
+	<div class="form-group">
+		<label for="id_manufacturer" class="control-label col-lg-3">{l s='Manufacturer'}</label>
+		<div class="col-lg-9">
+			<div class="col-lg-8">
+				<select id="id_manufacturer" name="id_manufacturer">
+					{foreach from=$manufacturers item='manufacturer'}
+						<option value="{$manufacturer.id_manufacturer}">{$manufacturer.name}</option>
+					{/foreach}
+				</select>
+			</div>
+			<div class="col-lg-1">
+				<a class="btn btn-default" href="#" id="add_condition_manufacturer">
+					<i class="icon-plus-sign"></i> {l s='Add condition'}
+				</a>
 			</div>
 		</div>
-		<div class="form-group">
-			<label for="id_supplier" class="control-label col-lg-3">{l s='Supplier'}</label>
-			<div class="col-lg-9">
-				<div class="col-lg-8">
-					<select id="id_supplier" name="id_supplier">
-						{foreach from=$suppliers item='supplier'}
-							<option value="{$supplier.id_supplier}">{$supplier.name}</option>
-						{/foreach}
-					</select>
-				</div>
-				<div class="col-lg-1">
-					<a class="btn btn-default" href="#" id="add_condition_supplier">
-						<i class="icon-plus-sign"></i> {l s='Add condition'}
-					</a>
-				</div>
+	</div>
+	<div class="form-group">
+		<label for="id_supplier" class="control-label col-lg-3">{l s='Supplier'}</label>
+		<div class="col-lg-9">
+			<div class="col-lg-8">
+				<select id="id_supplier" name="id_supplier">
+					{foreach from=$suppliers item='supplier'}
+						<option value="{$supplier.id_supplier}">{$supplier.name}</option>
+					{/foreach}
+				</select>
+			</div>
+			<div class="col-lg-1">
+				<a class="btn btn-default" href="#" id="add_condition_supplier">
+					<i class="icon-plus-sign"></i> {l s='Add condition'}
+				</a>
 			</div>
 		</div>
-		<div class="form-group">
-			<label for="id_attribute" class="control-label col-lg-3">{l s='Attributes'}</label>
-			<div class="col-lg-9">
-				<div class="col-lg-4">
-					<select id="id_attribute_group">
-						{foreach from=$attributes_group item='attribute_group'}
-							<option value="{$attribute_group.id_attribute_group}">{$attribute_group.name}</option>
-						{/foreach}
-					</select>
-				</div>
-				<div class="col-lg-4">
+	</div>
+	<div class="form-group">
+		<label for="id_attribute_group" class="control-label col-lg-3">{l s='Attributes'}</label>
+		<div class="col-lg-9">
+			<div class="col-lg-4">
+				<select id="id_attribute_group">
 					{foreach from=$attributes_group item='attribute_group'}
-						<select class="id_attribute" style="display:none;" id="id_attribute_{$attribute_group.id_attribute_group}">
-							{foreach from=$attribute_group.attributes item='attribute'}
-								<option value="{$attribute.id_attribute}">{$attribute.name}</option>
-							{/foreach}
-						</select>
+						<option value="{$attribute_group.id_attribute_group}">{$attribute_group.name}</option>
 					{/foreach}
-					</select>
-				</div>
-				<div class="col-lg-1">
-					<a class="btn btn-default" href="#" id="add_condition_attribute">
-						<i class="icon-plus-sign"></i> {l s='Add condition'}
-					</a>
-				</div>
+				</select>
 			</div>
-		</div>
-		<div class="form-group">
-			<label for="id_attribute" class="control-label col-lg-3">{l s='Features'}</label>
-			<div class="col-lg-9">
-				<div class="col-lg-4">
-					<select id="id_feature">
-						{foreach from=$features item='feature'}
-							<option value="{$feature.id_feature}">{$feature.name}</option>
+			<div class="col-lg-4">
+				{foreach from=$attributes_group item='attribute_group'}
+					<select class="id_attribute" style="display:none;" id="id_attribute_{$attribute_group.id_attribute_group}">
+						{foreach from=$attribute_group.attributes item='attribute'}
+							<option value="{$attribute.id_attribute}">{$attribute.name}</option>
 						{/foreach}
 					</select>
-				</div>
-				<div class="col-lg-4">
-					{foreach from=$features item='feature'}
-						<select class="id_feature_value" style="display:none;" id="id_feature_{$feature.id_feature}">
-							{foreach from=$feature.values item='value'}
-								<option value="{$value.id_feature_value}">{$value.value}</option>
-							{/foreach}
-						</select>
-					{/foreach}
-					</select>
-				</div>
-				<div class="col-lg-1">
-					<a class="btn btn-default" href="#" id="add_condition_feature">
-						<i class="icon-plus-sign"></i> {l s='Add condition'}
-					</a>
-				</div>
+				{/foreach}
+			</div>
+			<div class="col-lg-1">
+				<a class="btn btn-default" href="#" id="add_condition_attribute">
+					<i class="icon-plus-sign"></i> {l s='Add condition'}
+				</a>
 			</div>
 		</div>
-	</form>
+	</div>
+	<div class="form-group">
+		<label for="id_feature" class="control-label col-lg-3">{l s='Features'}</label>
+		<div class="col-lg-9">
+			<div class="col-lg-4">
+				<select id="id_feature">
+					{foreach from=$features item='feature'}
+						<option value="{$feature.id_feature}">{$feature.name}</option>
+					{/foreach}
+				</select>
+			</div>
+			<div class="col-lg-4">
+				{foreach from=$features item='feature'}
+					<select class="id_feature_value" style="display:none;" id="id_feature_{$feature.id_feature}">
+						{foreach from=$feature.values item='value'}
+							<option value="{$value.id_feature_value}">{$value.value}</option>
+						{/foreach}
+					</select>
+				{/foreach}
+			</div>
+			<div class="col-lg-1">
+				<a class="btn btn-default" href="#" id="add_condition_feature">
+					<i class="icon-plus-sign"></i> {l s='Add condition'}
+				</a>
+			</div>
+		</div>
+	</div>
 {if !$is_multishop}
-	<input type="hidden" name="id_shop" value=1 />
+	<input type="hidden" name="id_shop" value="1" />
 {/if}
 </div>
 {/block}
@@ -208,7 +204,7 @@ function new_condition_group()
 function appendConditionToGroup(html)
 {
 	if ($('#condition_group_'+current_id_condition_group+' table tbody tr').length > 0)
-		$('#condition_group_'+current_id_condition_group+' table tbody').append('<tr><td align="center" class="btn_delete_condition" colspan="3"><b>{l s='AND' js=1}</b></td></tr>');
+		$('#condition_group_'+current_id_condition_group+' table tbody').append('<tr><td class="text-center btn_delete_condition" colspan="3"><b>{l s='AND' js=1}</b></td></tr>');
 	$('#condition_group_'+current_id_condition_group+' table tbody').append(html);
 }
 

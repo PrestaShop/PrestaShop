@@ -31,6 +31,7 @@ function ProductTabsManager(){
 	this.current_request;
 	this.stack_error = [];
 	this.page_reloading = false;
+	this.has_error_loading_tabs = false;
 
 	this.setTabs = function(tabs){
 		this.product_tabs = tabs;
@@ -86,62 +87,67 @@ function ProductTabsManager(){
 	 */
 	this.display = function (tab_name, selected)
 	{
-		var tab_selector = $("#product-tab-content-"+tab_name);
+		if (mod_evasive || mod_security)
+			sleep(1);
+
+		var tab_selector = $("#product-tab-content-" + tab_name);
 
 		// Is the tab already being loaded?
-		if (!tab_selector.hasClass('not-loaded') || tab_selector.hasClass('loading'))
-			return;
-
-		// Mark the tab as being currently loading
-		tab_selector.addClass('loading');
-
-		if (selected)
-			$('#product-tab-content-wait').show();
-
-		// send $_POST array with the request to be able to retrieve posted data if there was an error while saving product
-		var data;
-		if (save_error)
+		if (tab_selector.hasClass('not-loaded') && !tab_selector.hasClass('loading'))
 		{
-			data = post_data;
-			// set key_tab so that the ajax call returns the display for the current tab
-			data.key_tab = tab_name;
-		}
+			// Mark the tab as being currently loading
+			tab_selector.addClass('loading');
 
-		return $.ajax({
-			url : $('#link-'+tab_name).attr("href")+"&ajax=1" + '&rand=' + new Date().getTime(),
-			async : true,
-			cache: false, // cache needs to be set to false or IE will cache the page with outdated product values
-			type: 'POST',
-			headers: { "cache-control": "no-cache" },
-			data: data,
-			success : function(data)
-			{
-				tab_selector.html(data).find('.dropdown-toggle').dropdown();
-				tab_selector.removeClass('not-loaded');
+			if (selected)
+				$('#product-tab-content-wait').show();
 
-				if (selected)
-				{
-					$("#link-"+tab_name).addClass('selected');
-					tab_selector.show();
-				}
-				tab_selector.trigger('loaded');
-			},
-			complete : function(data)
+			// send $_POST array with the request to be able to retrieve posted data if there was an error while saving product
+			var data;
+			var send_type = 'GET';
+			if (save_error)
 			{
-				tab_selector.removeClass('loading');
-				if (selected)
-				{
-					$('#product-tab-content-wait').hide();
-					tab_selector.trigger('displayed');
-				}
-			},
-			beforeSend : function(data)
-			{
-				// don't display the loading notification bar
-				if (typeof(ajax_running_timeout) !== 'undefined')
-					clearTimeout(ajax_running_timeout);
+				send_type = 'POST';
+				data = post_data;
+				// set key_tab so that the ajax call returns the display for the current tab
+				data.key_tab = tab_name;
 			}
-		});
+
+			return $.ajax({
+				url : $('#link-'+tab_name).attr("href")+"&ajax=1" + '&rand=' + new Date().getTime(),
+				async : true,
+				cache: false, // cache needs to be set to false or IE will cache the page with outdated product values
+				type: send_type,
+				headers: { "cache-control": "no-cache" },
+				data: data,
+				success : function(data)
+				{
+					tab_selector.html(data).find('.dropdown-toggle').dropdown();
+					tab_selector.removeClass('not-loaded');
+
+					if (selected)
+					{
+						$("#link-"+tab_name).addClass('selected');
+						tab_selector.show();
+					}
+					tab_selector.trigger('loaded');
+				},
+				complete : function(data)
+				{
+					tab_selector.removeClass('loading');
+					if (selected)
+					{
+						$('#product-tab-content-wait').hide();
+						tab_selector.trigger('displayed');
+					}
+				},
+				beforeSend : function(data)
+				{
+					// don't display the loading notification bar
+					if (typeof(ajax_running_timeout) !== 'undefined')
+						clearTimeout(ajax_running_timeout);
+				}
+			});
+		}
 	}
 
 	/**
@@ -150,32 +156,59 @@ function ProductTabsManager(){
 	 * @param array stack contains tab names as strings
 	 */
 	this.displayBulk = function(stack){
-		this.current_request = this.display(stack[0], false);
+		if (stack.length == 0)
+		{
+			$('[name="submitAddproductAndStay"]').each(function() {
+				$(this).prop('disabled', false).find('i').removeClass('process-icon-loading').addClass('process-icon-save');
+			});
+			$('[name="submitAddproduct"]').each(function() {
+				$(this).prop('disabled', false).find('i').removeClass('process-icon-loading').addClass('process-icon-save');
+			});
+
+			return false;
+		}
+
+		this.current_request = 	this.display(stack[0], false);
 
 		if (this.current_request !== undefined)
 		{
 			this.current_request.complete(function(request, status) {
-				if (status === 'abort' || status === 'error')
+				var wrong_status_code = new Array(400, 401, 403, 404, 405, 406, 408, 410, 413, 429, 499, 500, 502, 503, 504);
+
+				if ((status === 'abort' || status === 'error' || request.responseText.length == 0 || in_array(request.status, wrong_status_code) || self.stack_error.length !== 0) && !self.page_reloading)
+				{
+					var current_tab = stack[0];
 					self.stack_error.push(stack.shift());
-				else
-					stack.shift()
-				if (stack.length !== 0 && status !== 'abort')
-				{
-					self.displayBulk(stack);
-				}
-				else if (self.stack_error.length !== 0 && !self.page_reloading)
-				{
-					jConfirm(reload_tab_description, reload_tab_title, function(confirm) {
+					self.has_error_loading_tabs = true;
+					jConfirm('Tab : ' + current_tab + ' (' + request.status + ')\n' + reload_tab_description, reload_tab_title, function(confirm) {
 						if (confirm === true)
 						{
-							self.displayBulk(self.stack_error.slice(0));
-							self.stack_error = [];
+							self.page_reloading = true;
+							self.displayBulk(stack);
 						}
 						else
+						{
+							$('[name="submitAddproductAndStay"]').each(function() {
+								$(this).prop('disabled', false).find('i').removeClass('process-icon-loading').addClass('process-icon-save');
+							});
+							$('[name="submitAddproduct"]').each(function() {
+								$(this).prop('disabled', false).find('i').removeClass('process-icon-loading').addClass('process-icon-save');
+							});
 							return false;
+						}
 					});
 				}
+				else if (stack.length !== 0 && status !== 'abort')
+				{
+					stack.shift();
+					self.displayBulk(stack);
+				}
 			});
+		}
+		else
+		{
+			stack.shift();
+			self.displayBulk(stack);
 		}
 	}
 }
@@ -188,7 +221,7 @@ function loadPack() {
 		url : "index.php?controller=AdminProducts" + "&token=" + token + "&id_product=" + id_product + "&action=Pack" + "&updateproduct" + "&ajax=1" + '&rand=' + new Date().getTime(),
 		async : true,
 		cache: false, // cache needs to be set to false or IE will cache the page with outdated product values
-		type: 'POST',
+		type: 'GET',
 		headers: { "cache-control": "no-cache" },
 		data: data,
 		success : function(data){
@@ -211,8 +244,9 @@ product_tabs['Customization'] = new function(){
 product_tabs['Combinations'] = new function(){
 	var self = this;
 	this.bindEdit = function(){
-		$('table[id=combinations-list]').delegate('a.edit', 'click', function(e){
+		$('table.configuration').delegate('a.edit', 'click', function(e){
 			e.preventDefault();
+			e.stopPropagation();
 			editProductAttribute(this.href, $(this).closest('tr'));
 		});
 
@@ -319,7 +353,7 @@ product_tabs['Combinations'] = new function(){
 	};
 
 	this.bindDefault = function(){
-		$('table[id=combinations-list]').delegate('a.default', 'click', function(e){
+		$('table.configuration').delegate('a.default', 'click', function(e){
 			e.preventDefault();
 			self.defaultProductAttribute(this.href, this);
 		});
@@ -342,6 +376,17 @@ product_tabs['Combinations'] = new function(){
 				{
 					showSuccessMessage(data.message);
 					parent.remove();
+					if (data.id_product_attribute)
+						if (data.attribute)
+						{
+							var td = $('#qty_' + data.id_product_attribute);
+							console.log(td);
+							td.attr('id', 'qty_0');
+							td.children('input').val('0').attr('name', 'qty_0');
+							td.next('td').text(data.attribute[0].name);
+						}
+						else
+							$('#qty_' + data.id_product_attribute).parent().hide();
 				}
 				else
 					showErrorMessage(data.message);
@@ -350,14 +395,14 @@ product_tabs['Combinations'] = new function(){
 	};
 
 	this.bindDelete = function() {
-		$('table[id=combinations-list]').delegate('a.delete', 'click', function(e){
+		$('table.configuration').delegate('a.delete', 'click', function(e){
 			e.preventDefault();
 			self.deleteProductAttribute(this.href, $(this).closest('tr'));
 		});
 	};
 
 	this.removeButtonCombination = function(item)
-	{		
+	{
 		$('#add_new_combination').show();
 		$('#desc-product-newCombination').children('i').first().removeClass('process-icon-new');
 		$('#desc-product-newCombination').children('i').first().addClass('process-icon-minus');
@@ -641,6 +686,11 @@ product_tabs['Seo'] = new function(){
 	var self = this;
 
 	this.onReady = function() {
+		if ($('#link_rewrite_'+id_lang_default).length)
+			if ($('#link_rewrite_'+id_lang_default).val().replace(/^\s+|\s+$/gm,'') == '') {
+				updateFriendlyURLByName();
+			}
+
 		// Enable writing of the product name when the friendly url field in tab SEO is loaded
 		$('.copy2friendlyUrl').removeAttr('disabled');
 
@@ -754,7 +804,7 @@ product_tabs['Associations'] = new function(){
 				autoFill: true,
 				max:20,
 				matchContains: true,
-				mustMatch:true,
+				mustMatch:false,
 				scroll:false,
 				cacheLength:0,
 				formatItem: function(item) {
@@ -928,7 +978,7 @@ product_tabs['Shipping'] = new function(){
 				$(this).remove();
 			});
 			$('#selectedCarriers option').prop('selected', true);
-		   
+
 			if ($('#selectedCarriers').find("option").length == 0)
 				$('#no-selected-carries-alert').show();
 			else
@@ -959,7 +1009,7 @@ product_tabs['Informations'] = new function(){
 	this.bindAvailableForOrder = function (){
 		$("#available_for_order").click(function()
 		{
-			if ($(this).is(':checked') || ($('input[name=\'multishop_check[show_price]\']').lenght && !$('input[name=\'multishop_check[show_price]\']').prop('checked')))
+			if ($(this).is(':checked') || ($('input[name=\'multishop_check[show_price]\']').length && !$('input[name=\'multishop_check[show_price]\']').prop('checked')))
 			{
 				$('#show_price').attr('checked', true);
 				$('#show_price').attr('disabled', true);
@@ -969,7 +1019,7 @@ product_tabs['Informations'] = new function(){
 				$('#show_price').attr('disabled', false);
 			}
 		});
-				
+
 		if ($('#active_on').prop('checked'))
 		{
 			showRedirectProductOptions(false);
@@ -977,24 +1027,24 @@ product_tabs['Informations'] = new function(){
 		}
 		else
 			showRedirectProductOptions(true);
-			
+
 		$('#redirect_type').change(function () {
 			redirectSelectChange();
 		});
-		
+
 		$('#related_product_autocomplete_input')
 			.autocomplete('ajax_products_list.php?excludeIds='+id_product, {
 				minChars: 1,
 				autoFill: true,
 				max:20,
 				matchContains: true,
-				mustMatch:true,
+				mustMatch:false,
 				scroll:false,
 				cacheLength:0,
 				formatItem: function(item) {
 					return item[0]+' - '+item[1];
 				}
-			}).result(function(e, i){  
+			}).result(function(e, i){
 				if(i != undefined)
 					addRelatedProduct(i[1], i[0]);
 				$(this).val('');
@@ -1051,7 +1101,7 @@ product_tabs['Informations'] = new function(){
 		{
 			// Reset settings
 			$('a[id*="VirtualProduct"]').hide();
-			
+
 			$('#product-pack-container').hide();
 
 			$('div.is_virtual_good').hide();
@@ -1310,7 +1360,6 @@ product_tabs['Pack'] = new function() {
 
 		function getSelectedIds()
 		{
-			//console.log($('#inputPackItems').val());
 			if ($('#inputPackItems').val() === undefined)
 				return '';
 			var ids = '';
@@ -1380,10 +1429,11 @@ product_tabs['Quantities'] = new function(){
 				}
 				showSuccessMessage(quantities_ajax_success);
 			},
-			error: function(msg)
-			{
-				showErrorMessage(msg.error);				
-			}
+			error: function(jqXHR, textStatus, errorThrown)
+  			{
+				if (textStatus != 'error' || errorThrown != '')
+					showErrorMessage(textStatus + ': ' + errorThrown);
+  			}
 		});
 	};
 
@@ -1781,7 +1831,7 @@ var ProductMultishop = new function()
 			ProductMultishop.checkField($('input[name=\'multishop_check[link_rewrite]['+v.id_lang+']\']').prop('checked'), 'link_rewrite_'+v.id_lang, 'seo_friendly_url');
 		});
 	};
-	
+
 	this.checkAllQuantities = function()
 	{
 		$.each(languages, function(k, v)

@@ -44,9 +44,9 @@
 				<tr>
 					{foreach $view['key'] AS $name}
 						{if isset($view['attributes'][$name])}
-							<td>{$view['attributes'][$name]}</td>
+							<td>{$view['attributes'][$name]|escape:'html':'UTF-8'}</td>
 						{else}
-							<td>{$result[$name]}</td>
+							<td>{$result[$name]|escape:'html':'UTF-8'}</td>
 						{/if}
 					{/foreach}
 				</tr>

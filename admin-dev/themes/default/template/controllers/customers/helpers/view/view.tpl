@@ -41,7 +41,7 @@
 						{$customer->email}
 					</a>
 					<div class="panel-heading-action">
-						<a class="btn btn-default" href="{$current}&amp;updatecustomer&amp;id_customer={$customer->id}&amp;token={$token}">
+						<a class="btn btn-default" href="{$current|escape:'html':'UTF-8'}&amp;updatecustomer&amp;id_customer={$customer->id|intval}&amp;token={$token|escape:'html':'UTF-8'}">
 							<i class="icon-edit"></i>
 							{l s='Edit'}
 						</a>
@@ -164,7 +164,7 @@
 				{if $customer->isGuest()}
 					{l s='This customer is registered as a Guest.'}
 					{if !$customer_exists}
-					<form method="post" action="index.php?tab=AdminCustomers&amp;id_customer={$customer->id}&amp;token={getAdminToken tab='AdminCustomers'}">
+					<form method="post" action="index.php?tab=AdminCustomers&amp;id_customer={$customer->id|intval}&amp;token={getAdminToken tab='AdminCustomers'}">
 						<input type="hidden" name="id_lang" value="{$id_lang}" />
 						<p class="text-center">
 							<input class="button" type="submit" name="submitGuestToCustomer" value="{l s='Transform to a customer account'}" />
@@ -200,7 +200,7 @@
 							</div>
 						</div>
 					</div>
-					
+
 					{if $count_ok}
 						<table class="table">
 							<thead>
@@ -216,7 +216,7 @@
 							</thead>
 							<tbody>
 							{foreach $orders_ok AS $key => $order}
-								<tr onclick="document.location = '?tab=AdminOrders&id_order={$order['id_order']}&vieworder&token={getAdminToken tab='AdminOrders'}'">
+								<tr onclick="document.location = '?tab=AdminOrders&amp;id_order={$order['id_order']|intval}&amp;vieworder&amp;token={getAdminToken tab='AdminOrders'}'">
 									<td>{$order['id_order']}</td>
 									<td>{dateFormat date=$order['date_add'] full=0}</td>
 									<td>{$order['payment']}</td>
@@ -224,7 +224,7 @@
 									<td>{$order['nb_products']}</td>
 									<td>{$order['total_paid_real']}</td>
 									<td>
-										<a class="btn btn-default" href="?tab=AdminOrders&amp;id_order={$order['id_order']}&amp;vieworder&amp;token={getAdminToken tab='AdminOrders'}">
+										<a class="btn btn-default" href="?tab=AdminOrders&amp;id_order={$order['id_order']|intval}&amp;vieworder&amp;token={getAdminToken tab='AdminOrders'}">
 											<i class='icon-search'></i> {l s='View'}
 										</a>
 									</td>
@@ -248,7 +248,7 @@
 							</thead>
 							<tbody>
 								{foreach $orders_ko AS $key => $order}
-								<tr onclick="document.location = '?tab=AdminOrders&id_order={$order['id_order']}&vieworder&token={getAdminToken tab='AdminOrders'}'">
+								<tr onclick="document.location = '?tab=AdminOrders&amp;id_order={$order['id_order']|intval}&amp;vieworder&amp;token={getAdminToken tab='AdminOrders'}'">
 									<td>{$order['id_order']}</td>
 									<td><a href="?tab=AdminOrders&amp;id_order={$order['id_order']}&amp;vieworder&amp;token={getAdminToken tab='AdminOrders'}">{dateFormat date=$order['date_add'] full=0}</a></td>
 									<td>{$order['payment']}</td>
@@ -258,7 +258,7 @@
 								</tr>
 								{/foreach}
 							</tbody>
-						</table>	
+						</table>
 					{/if}
 				{else}
 				<p class="text-muted text-center">
@@ -276,14 +276,14 @@
 						<thead>
 							<tr>
 								<th><span class="title_box ">{l s='ID'}</span></th>
-								<th><span class="title_box ">{l s='Date'}</a></span></th>
+								<th><span class="title_box ">{l s='Date'}</span></th>
 								<th><span class="title_box ">{l s='Carrier'}</span></th>
 								<th><span class="title_box ">{l s='Total'}</span></th>
 							</tr>
 						</thead>
 						<tbody>
 						{foreach $carts AS $key => $cart}
-							<tr onclick="document.location = '?tab=AdminCarts&id_cart={$cart['id_cart']}&viewcart&token={getAdminToken tab='AdminCarts'}'">
+							<tr onclick="document.location = '?tab=AdminCarts&amp;id_cart={$cart['id_cart']|intval}&amp;viewcart&amp;token={getAdminToken tab='AdminCarts'}'">
 								<td>{$cart['id_cart']}</td>
 								<td>
 									<a href="index.php?tab=AdminCarts&amp;id_cart={$cart['id_cart']}&amp;viewcart&amp;token={getAdminToken tab='AdminCarts'}">
@@ -317,7 +317,7 @@
 					</thead>
 					<tbody>
 						{foreach $products AS $key => $product}
-						<tr onclick="document.location = '?tab=AdminOrders&id_order={$product['id_order']}&vieworder&token={getAdminToken tab='AdminOrders'}'">
+						<tr onclick="document.location = '?tab=AdminOrders&amp;id_order={$product['id_order']|intval}&amp;vieworder&amp;token={getAdminToken tab='AdminOrders'}'">
 							<td>{dateFormat date=$product['date_add'] full=0}</td>
 							<td>
 								<a href="?tab=AdminOrders&amp;id_order={$product['id_order']}&amp;vieworder&amp;token={getAdminToken tab='AdminOrders'}">
@@ -345,9 +345,9 @@
 					</thead>
 					<tbody>
 					{foreach $interested as $key => $p}
-						<tr onclick="document.location = '{$p['url']}'">
+						<tr onclick="document.location = '{$p['url']|escape:'html':'UTF-8'}'">
 							<td>{$p['id']}</td>
-							<td><a href="{$p['url']}">{$p['name']}</a></td>
+							<td><a href="{$p['url']|escape:'html':'UTF-8'}">{$p['name']}</a></td>
 						</tr>
 					{/foreach}
 					</tbody>
@@ -362,15 +362,15 @@
 					<i class="icon-eye-close"></i> {l s='Add a private note'}
 				</div>
 				<div class="alert alert-info">{l s='This note will be displayed to all employees but not to customers.'}</div>
-				<form id="customer_note" class="form-horizontal" action="ajax.php" method="post" onsubmit="saveCustomerNote({$customer->id});return false;" >
+				<form id="customer_note" class="form-horizontal" action="ajax.php" method="post" onsubmit="saveCustomerNote({$customer->id|intval});return false;" >
 					<div class="form-group">
 						<div class="col-lg-12">
-							<textarea name="note" id="noteContent" onkeyup="$(this).val().length > 0 ? $('#submitCustomerNote').removeAttr('disabled') : $('#submitCustomerNote').attr('disabled', 'disabled')">{$customer_note}</textarea>
+							<textarea name="note" id="noteContent" onkeyup="$('#submitCustomerNote').removeAttr('disabled');">{$customer_note}</textarea>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-lg-12">
-							<button type="submit" id="submitCustomerNote" class="btn btn-default pull-right" disabled="disabled" />
+							<button type="submit" id="submitCustomerNote" class="btn btn-default pull-right" disabled="disabled">
 								<i class="icon-save"></i>
 								{l s='Save'}
 							</button>
@@ -454,6 +454,34 @@
 				{/if}
 			</div>
 
+			{if count($emails)}
+			<div class="panel">
+				<div class="panel-heading">
+					<i class="icon-envelope"></i> {l s='Last emails'}
+				</div>
+				<table class="table">
+					<thead>
+					<tr>
+						<th><span class="title_box">{l s='Date'}</span></th>
+						<th><span class="title_box">{l s='Language'}</span></th>
+						<th><span class="title_box">{l s='Subject'}</span></th>
+						<th><span class="title_box">{l s='Template'}</span></th>
+					</tr>
+					</thead>
+					<tbody>
+					{foreach $emails as $email}
+						<tr>
+							<td>{dateFormat date=$email['date_add'] full=1}</td>
+							<td>{$email['language']}</td>
+							<td>{$email['subject']}</td>
+							<td>{$email['template']}</td>
+						</tr>
+					{/foreach}
+					</tbody>
+				</table>
+			</div>
+			{/if}
+
 			{if count($connections)}
 			<div class="panel">
 				<div class="panel-heading">
@@ -489,7 +517,7 @@
 					<i class="icon-group"></i>
 					{l s='Groups'}
 					<span class="badge">{count($groups)}</span>
-					<a class="btn btn-default pull-right" href="{$current}&amp;updatecustomer&amp;id_customer={$customer->id}&amp;token={$token}">
+					<a class="btn btn-default pull-right" href="{$current|escape:'html':'UTF-8'}&amp;updatecustomer&amp;id_customer={$customer->id|intval}&amp;token={$token|escape:'html':'UTF-8'}">
 						<i class="icon-edit"></i> {l s='Edit'}
 					</a>
 				</div>
@@ -503,7 +531,7 @@
 					</thead>
 					<tbody>
 						{foreach $groups AS $key => $group}
-						<tr onclick="document.location = '?tab=AdminGroups&amp;id_group={$group['id_group']}&amp;viewgroup&amp;token={getAdminToken tab='AdminGroups'}'">
+						<tr onclick="document.location = '?tab=AdminGroups&amp;id_group={$group['id_group']|intval}&amp;viewgroup&amp;token={getAdminToken tab='AdminGroups'}'">
 							<td>{$group['id_group']}</td>
 							<td>
 								<a href="?tab=AdminGroups&amp;id_group={$group['id_group']}&amp;viewgroup&amp;token={getAdminToken tab='AdminGroups'}">
@@ -521,7 +549,7 @@
 
 	<div class="row">
 		<div class="col-lg-6">
-			
+
 		</div>
 		<div class="col-lg-6">
 			{if count($referrers)}
@@ -554,7 +582,7 @@
 
 	<div class="row">
 		{* display hook specified to this page : AdminCustomers *}
-		{hook h="displayAdminCustomers" id_customer=$customer->id}
+		{hook h="displayAdminCustomers" id_customer=$customer->id|intval}
 		<div class="col-lg-12">
 			<div class="panel">
 				<div class="panel-heading">

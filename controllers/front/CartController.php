@@ -106,6 +106,24 @@ class CartControllerCore extends FrontController
 	 */
 	protected function processDeleteProductInCart()
 	{
+		$customization_product = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'customization`
+		WHERE `id_product` = '.(int)$this->id_product.' AND `id_customization` != '.(int)$this->customization_id);
+
+		if (count($customization_product))
+		{
+			$product = new Product((int)$this->id_product);
+
+			$total_quantity = 0;
+			foreach ($customization_product as $custom)
+				$total_quantity += $custom['quantity'];
+
+			if ($total_quantity < $product->minimal_quantity)
+				die(Tools::jsonEncode(array(
+						'hasError' => true,
+						'errors' => array(sprintf(Tools::displayError('You must add %d minimum quantity', !Tools::getValue('ajax')), $product->minimal_quantity)),
+				)));
+		}
+
 		if ($this->context->cart->deleteProduct($this->id_product, $this->id_product_attribute, $this->customization_id, $this->id_address_delivery))
 		{
 			if (!Cart::getNbProducts((int)($this->context->cart->id)))
@@ -135,7 +153,7 @@ class CartControllerCore extends FrontController
 				'hasErrors' => true,
 				'error' => Tools::displayError('It is not possible to deliver this product to the selected address.', false),
 			)));
-		
+
 		$this->context->cart->setProductAddressDelivery(
 			$this->id_product,
 			$this->id_product_attribute,
@@ -320,7 +338,7 @@ class CartControllerCore extends FrontController
 			die(Tools::jsonEncode(array('hasError' => true, 'errors' => $this->errors)));
 		if ($this->ajax_refresh)
 			die(Tools::jsonEncode(array('refresh' => true)));
-		
+
 		// write cookie if can't on destruct
 		$this->context->cookie->write();
 
@@ -332,7 +350,7 @@ class CartControllerCore extends FrontController
 				$groups = (Validate::isLoadedObject($this->context->customer)) ? $this->context->customer->getGroups() : array(1);
 				if ($this->context->cart->id_address_delivery)
 					$deliveryAddress = new Address($this->context->cart->id_address_delivery);
-				$id_country = (isset($deliveryAddress) && $deliveryAddress->id) ? $deliveryAddress->id_country : Configuration::get('PS_COUNTRY_DEFAULT');
+				$id_country = (isset($deliveryAddress) && $deliveryAddress->id) ? (int)$deliveryAddress->id_country : (int)Tools::getCountry();
 
 				Cart::addExtraCarriers($result);
 			}
@@ -359,12 +377,19 @@ class CartControllerCore extends FrontController
 					false,
 					false
 				);
+
+				if ($product['reduction_type'] == 'amount')
+				{
+					$reduction = (float)$product['price_wt'] - (float)$product['price_without_quantity_discount'];
+					$product['reduction_formatted'] = Tools::displayPrice($reduction);
+				}
 			}
 			if ($result['customizedDatas'])
 				Product::addCustomizationPrice($result['summary']['products'], $result['customizedDatas']);
 
 			Hook::exec('actionCartListOverride', array('summary' => $result, 'json' => &$json));
 			die(Tools::jsonEncode(array_merge($result, (array)Tools::jsonDecode($json, true))));
+
 		}
 		// @todo create a hook
 		elseif (file_exists(_PS_MODULE_DIR_.'/blockcart/blockcart-ajax.php'))

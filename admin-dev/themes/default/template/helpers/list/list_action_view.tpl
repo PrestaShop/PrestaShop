@@ -22,6 +22,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<a href="{$href}" class="" title="{$action}" >
-	<i class="icon-search-plus"></i> {$action}
+<a href="{$href|escape:'html':'UTF-8'}" title="{$action|escape:'html':'UTF-8'}" >
+	<i class="icon-search-plus"></i> {$action|escape:'html':'UTF-8'}
 </a>

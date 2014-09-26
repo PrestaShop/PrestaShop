@@ -51,12 +51,10 @@ class AddressFormatCore extends ObjectModel
 
 	public static $requireFormFieldsList = array(
 		'firstname',
-		'name',
+		'lastname',
 		'address1',
 		'city',
-		'postcode',
-		'Country:name',
-		'State:name');
+		'Country:name');
 
 	public static $forbiddenPropertyList = array(
 		'deleted',
@@ -259,7 +257,7 @@ class AddressFormatCore extends ObjectModel
 					{
 						// Check if we need to use an older modified pattern if a key has already be matched before
 						$replacedValue = empty($mainFormattedKey) ? $pattern : $formattedValueList[$mainFormattedKey];
-						if (($formattedValue = preg_replace('/'.$key.'/', $formattedValueList[$key], $replacedValue, -1, $count)))
+						if (($formattedValue = preg_replace('/^'.$key.'$/', $formattedValueList[$key], $replacedValue, -1, $count)))
 							if ($count)
 							{
 								// Allow to check multiple key in the same pattern,
@@ -545,5 +543,11 @@ class AddressFormatCore extends ObjectModel
 			Cache::store('AddressFormat::_getFormatDB'.$id_country, trim($format));
 		}
 		return Cache::retrieve('AddressFormat::_getFormatDB'.$id_country);
+	}
+
+	public static function getFieldsRequired()
+	{
+		$address = new Address;
+		return array_unique(array_merge($address->getFieldsRequiredDB(), AddressFormat::$requireFormFieldsList));
 	}
 }

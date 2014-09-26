@@ -43,15 +43,15 @@
 			{/foreach}
 			{assign var='modules' value=$modules|substr:0:-1}
 			<li>
-				<a id="desc-module-update-all" class="toolbar_btn" href="{$currentIndex}&amp;token={$token}&amp;update={$modules}" title="{l s='Update all'}">
-					<i class="process-icon-refresh" ></i>
+				<a id="desc-module-update-all" class="toolbar_btn" href="{$currentIndex|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;update={$modules|urlencode}" title="{l s='Update all'}">
+					<i class="process-icon-refresh"></i>
 					<div>{l s='Update all'}</div>
 				</a>
 			</li>
 			{else}
 			<li>
-				<a id="desc-module-check-and-update-all" class="toolbar_btn" href="{$currentIndex}&amp;token={$token}&amp;check=1" title="{l s='Check for update'}">
-					<i class="process-icon-refresh" ></i>
+				<a id="desc-module-check-and-update-all" class="toolbar_btn" href="{$currentIndex|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;check=1" title="{l s='Check for update'}">
+					<i class="process-icon-refresh"></i>
 					<div>{l s='Check for update'}</div>
 				</a>
 			</li>
@@ -59,7 +59,7 @@
 			{if $add_permission eq '1' && !$host_mode}
 			<li>
 				<a id="desc-module-new" class="toolbar_btn anchor" href="#module_install" onclick="$('#module_install').slideToggle();" title="{l s='Add a new module'}">
-					<i class="process-icon-new" ></i>
+					<i class="process-icon-new"></i>
 					<div>{l s='Add a new module'}</div>
 				</a>
 			</li>

@@ -69,17 +69,29 @@ class AdminSearchConfControllerCore extends AdminController
 			'indexation' => array(
 				'title' => $this->l('Indexing'),
 				'icon' => 'icon-cogs',
-				'info' =>
-						$this->l('The "indexed" products have been analyzed by PrestaShop and will appear in the results of a Front Office search.').'<br />
+				'info' => '<p>
+						'.$this->l('The "indexed" products have been analyzed by PrestaShop and will appear in the results of a Front Office search.').'<br />
 						'.$this->l('Indexed products').' <strong>'.(int)$indexed.' / '.(int)$total.'</strong>.
-						</p>
-						<p>'.$this->l('Building the product index may take a few minutes.')
-						.$this->l('If your server stops before the process ends, you can resume the indexing by clicking "Add missing products."').'</p>
-						<a href="searchcron.php?token='.substr(_COOKIE_KEY_, 34, 8).'&redirect=1" class="btn-link"><i class="icon-external-link-sign"></i> '.
-							$this->l('Add missing products to the index.').'</a><br />
-						<a href="searchcron.php?full=1&token='.substr(_COOKIE_KEY_, 34, 8).'&redirect=1" class="btn-link"><i class="icon-external-link-sign"></i> '.
-							$this->l('Re-build the entire index.').'</a><br /><br />
-						'.$this->l('You can set a cron job that will rebuild your index using the following URL:').' <a href="'.$cron_url.'"><i class="icon-external-link-sign"></i> '.$cron_url.'</a>',
+					</p>
+					<p>
+						'.$this->l('Building the product index may take a few minutes.').'
+						'.$this->l('If your server stops before the process ends, you can resume the indexing by clicking "Add missing products to the index".').'
+					</p>
+					<a href="searchcron.php?token='.substr(_COOKIE_KEY_, 34, 8).'&amp;redirect=1" class="btn-link">
+						<i class="icon-external-link-sign"></i>
+						'.$this->l('Add missing products to the index').'
+					</a><br />
+					<a href="searchcron.php?full=1&amp;token='.substr(_COOKIE_KEY_, 34, 8).'&amp;redirect=1" class="btn-link">
+						<i class="icon-external-link-sign"></i>
+						'.$this->l('Re-build the entire index').'
+					</a><br /><br />
+					<p>
+						'.$this->l('You can set a cron job that will rebuild your index using the following URL:').'<br />
+						<a href="'.Tools::safeOutput($cron_url).'">
+							<i class="icon-external-link-sign"></i>
+							'.Tools::safeOutput($cron_url).'
+						</a>
+					</p><br />',
 				'fields' =>	array(
 					'PS_SEARCH_INDEXATION' => array(
 						'title' => $this->l('Indexing'),
@@ -113,6 +125,16 @@ class AdminSearchConfControllerCore extends AdminController
 						'hint' => array(
 							$this->l('Enable instant search for your visitors?'),
 							$this->l('With instant search, the results will appear immediately as the user writes a query.')
+						)
+					),
+					'PS_SEARCH_START' => array(
+						'title' => $this->l('Search start'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool',
+						'hint' => array(
+							$this->l('Enable searching in whole word rather than onmly from begining'),
+							$this->l('The search word will be looked into whole indexed word, this may however be ressources consuming.')
 						)
 					),
 					'PS_SEARCH_MINWORDLEN' => array(

@@ -108,14 +108,16 @@ class PrestaShopExceptionCore extends Exception
 			$offset = 0;
 		}
 		$lines = array_slice($lines, $offset, $total);
-
+		++$offset;
+		
 		echo '<div class="psTrace" id="psTrace_'.$id.'" '.((is_null($id) ? 'style="display: block"' : '')).'><pre>';
 		foreach ($lines as $k => $l)
 		{
-			if ($offset + $k == $line - 1)
-				echo '<span class="selected">'.($offset + $k).'. '.htmlspecialchars($l).'</span>';
+			$string = ($offset + $k).'. '.htmlspecialchars($l);
+			if ($offset + $k == $line)
+				echo '<span class="selected">'.$string.'</span>';
 			else
-				echo ($offset + $k).'. '.htmlspecialchars($l);
+				echo $string;
 		}
 		echo '</pre></div>';
 	}
@@ -131,8 +133,8 @@ class PrestaShopExceptionCore extends Exception
 		echo '<div class="psArgs" id="psArgs_'.$id.'"><pre>';
 		foreach ($args as $arg => $value)
 		{
-			echo '<b>Argument ['.$arg."]</b>\n";
-			print_r($value);
+			echo '<b>Argument ['.Tools::safeOutput($arg)."]</b>\n";
+			echo Tools::safeOutput(print_r($value, true));
 			echo "\n";
 		}
 		echo '</pre>';

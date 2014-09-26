@@ -516,7 +516,7 @@ class ValidateCore
 	 */
 	public static function isBool($bool)
 	{
-		return $bool === null || is_bool($bool) || preg_match('/^0|1$/', $bool);
+		return $bool === null || is_bool($bool) || preg_match('/^(0|1)$/', $bool);
 	}
 
 	/**
@@ -759,7 +759,7 @@ class ValidateCore
 	public static function isAbsoluteUrl($url)
 	{
 		if (!empty($url))
-			return preg_match('/^https?:\/\/[$~:;#,%&_=\(\)\[\]\.\? \+\-@\/a-zA-Z0-9]+$/', $url);
+			return preg_match('/^(https?:)?\/\/[$~:;#,%&_=\(\)\[\]\.\? \+\-@\/a-zA-Z0-9]+$/', $url);
 		return true;
 	}
 

@@ -55,8 +55,6 @@ class SearchControllerCore extends FrontController
 	 */
 	public function initContent()
 	{
-		parent::initContent();
-
 		$query = Tools::replaceAccentedChars(urldecode(Tools::getValue('q')));
 		$original_query = Tools::getValue('q');
 		if ($this->ajax_search)
@@ -66,6 +64,9 @@ class SearchControllerCore extends FrontController
 				$product['product_link'] = $this->context->link->getProductLink($product['id_product'], $product['prewrite'], $product['crewrite']);
 			die(Tools::jsonEncode($searchResults));
 		}
+		
+		//Only controller content initialization when the user use the normal search
+		parent::initContent();
 
 		if ($this->instant_search && !is_array($query))
 		{

@@ -239,6 +239,9 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			LEFT JOIN `'._DB_PREFIX_.'contact_lang` cl
 				ON (cl.`id_contact` = a.`id_contact` AND cl.`id_lang` = '.(int)$this->context->language->id.')';
 
+		if ($id_order = Tools::getValue('id_order'))
+			$this->_where .= ' AND id_order = '.(int)$id_order;
+
 		$this->_group = 'GROUP BY cm.id_customer_thread';
 		$this->_orderBy = 'id_customer_thread';
 		$this->_orderWay = 'DESC';
@@ -311,7 +314,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				$cm = new CustomerMessage();
 				$cm->id_employee = (int)$this->context->employee->id;
 				$cm->id_customer_thread = (int)Tools::getValue('id_customer_thread');
-				$cm->ip_address = ip2long(Tools::getRemoteAddr());
+				$cm->ip_address = (int)ip2long(Tools::getRemoteAddr());
 				$current_employee = $this->context->employee;
 				$id_employee = (int)Tools::getValue('id_employee_forward');
 				$employee = new Employee($id_employee);
@@ -377,7 +380,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				$cm = new CustomerMessage();
 				$cm->id_employee = (int)$this->context->employee->id;
 				$cm->id_customer_thread = $ct->id;
-				$cm->ip_address = ip2long(Tools::getRemoteAddr());
+				$cm->ip_address = (int)ip2long(Tools::getRemoteAddr());
 				$cm->message = Tools::getValue('reply_message');
 				if (($error = $cm->validateField('message', $cm->message, null, array(), true)) !== true)
 					$this->errors[] = $error;
@@ -497,8 +500,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$helper->title = $this->l('Pending Discussion Threads', null, null, false);
 		if (ConfigurationKPI::get('PENDING_MESSAGES') !== false)
 			$helper->value = ConfigurationKPI::get('PENDING_MESSAGES');
-		if (ConfigurationKPI::get('PENDING_MESSAGES_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=pending_messages';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=pending_messages';
+		$helper->refresh = (bool)(ConfigurationKPI::get('PENDING_MESSAGES_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -509,8 +512,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$helper->subtitle = $this->l('30 days', null, null, false);
 		if (ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME') !== false)
 			$helper->value = ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME');
-		if (ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=avg_msg_response_time';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=avg_msg_response_time';
+		$helper->refresh = (bool)(ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -521,8 +524,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$helper->subtitle = $this->l('30 day', null, null, false);
 		if (ConfigurationKPI::get('MESSAGES_PER_THREAD') !== false)
 			$helper->value = ConfigurationKPI::get('MESSAGES_PER_THREAD');
-		if (ConfigurationKPI::get('MESSAGES_PER_THREAD_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=messages_per_thread';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=messages_per_thread';
+		$helper->refresh = (bool)(ConfigurationKPI::get('MESSAGES_PER_THREAD_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpiRow();
@@ -545,13 +548,30 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$messages = CustomerThread::getMessageCustomerThreads($id_customer_thread);
 		
 		foreach ($messages as $key => $mess)
+		{	
+			if ($mess['id_employee'])
+			{
+				$employee = new Employee($mess['id_employee']);
+				$messages[$key]['employee_image'] = $employee->getImage();
+			}
 			if (isset($mess['file_name']) && $mess['file_name'] != '')
 				$messages[$key]['file_name'] = _THEME_PROD_PIC_DIR_.$mess['file_name'];
 			else
 				unset($messages[$key]['file_name']);
 
-		$next_thread = CustomerThread::getNextThread((int)$thread->id);
+			if ($mess['id_product'])
+			{
+				$product = new Product((int)$mess['id_product'], false, $this->context->language->id);
+				if (Validate::isLoadedObject($product))
+				{
+					$messages[$key]['product_name'] = $product->name;
+					$messages[$key]['product_link'] = $this->context->link->getAdminLink('AdminProducts').'&updateproduct&id_product='.(int)$product->id;
+				}
+			}
+		}
 		
+		$next_thread = CustomerThread::getNextThread((int)$thread->id);
+
 		$contacts = Contact::getContacts($this->context->language->id);
 
 		$actions = array();
@@ -674,7 +694,14 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$timeline = array();
 		foreach ($messages as $message)
 		{
-			$content = $this->l('Message to: ').' <span class="badge">'.(!$message['id_employee'] ? $message['subject'] : $message['customer_name']).'</span></br>'.$message['message'];
+			$product = new Product((int)$message['id_product'], false, $this->context->language->id);
+			$link_product = $this->context->link->getAdminLink('AdminOrders').'&vieworder&id_order='.(int)$product->id;
+			
+			
+			$content = $this->l('Message to: ').' <span class="badge">'.(!$message['id_employee'] ? $message['subject'] : $message['customer_name']).'</span><br/>';
+			if (Validate::isLoadedObject($product))
+				$content .= '<br/>'.$this->l('Product: ').'<span class="label label-info">'.$product->name.'</span><br/><br/>';
+			$content .= Tools::safeOutput($message['message']);
 			
 			$timeline[$message['date_add']][] = array(
 				'arrow' => 'left',
@@ -691,8 +718,10 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			$order_history = $order->getHistory($this->context->language->id);
 			foreach ($order_history as $history)
 			{
-				$link = $this->context->link->getAdminLink('AdminOrders').'&vieworder&id_order='.(int)$order->id;
-				$content = '<a class="badge" target="_blank" href="'.$link.'">'.$this->l('Order').' #'.(int)$order->id.'</a></br></br>';
+				$link_order = $this->context->link->getAdminLink('AdminOrders').'&vieworder&id_order='.(int)$order->id;
+				
+				$content = '<a class="badge" target="_blank" href="'.Tools::safeOutput($link_order).'">'.$this->l('Order').' #'.(int)$order->id.'</a><br/><br/>';
+				
 				$content .= '<span>'.$this->l('Status:').' '.$history['ostate_name'].'</span>';
 
 				$timeline[$history['date_add']][] = array(
@@ -702,7 +731,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 					'icon' => 'icon-credit-card',
 					'content' => $content,
 					'date' => $history['date_add'],
-					'see_more_link' => $link,
+					'see_more_link' => $link_order,
 				);
 			}
 		}
@@ -851,19 +880,23 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			$mbox = @imap_open('{'.$url.':'.$port.$conf_str.'}', $user, $password);
 
 			//checks if there is no error when connecting imap server
-			$errors = imap_errors();
+			$errors = array_unique(imap_errors());
 			$str_errors = '';
 			$str_error_delete = '';
+
 			if (sizeof($errors) && is_array($errors))
 			{
 				$str_errors = '';
 				foreach($errors as $error)
-					$str_errors .= '"'.$error.'",';
-				$str_errors = rtrim($str_errors, ',').'';
+					$str_errors .= $error.', ';
+				$str_errors = rtrim(trim($str_errors), ',');
 			}
 			//checks if imap connexion is active
 			if (!$mbox)
-				die('{"hasError" : true, "errors" : ["Cannot connect to the mailbox:.<br />'.addslashes($str_errors).'"]}');
+			{
+				$array = array('hasError' => true, 'errors' => array('Cannot connect to the mailbox :<br />'.($str_errors)));
+				die(Tools::jsonEncode($array));
+			}
 
 			//Returns information about the current mailbox. Returns FALSE on failure.
 			$check = imap_check($mbox);
@@ -891,7 +924,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				 {
 					if (Configuration::get('PS_SAV_IMAP_DELETE_MSG'))
 						if (!imap_delete($mbox, $overview->msgno))
-							$str_error_delete = ', "Fail to delete message"';
+							$str_error_delete = ', Fail to delete message';
 				 }
 				 else
 				 {
@@ -960,7 +993,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			}
 			imap_expunge($mbox);
 			imap_close($mbox);
-			die('{"hasError" : false, "errors" : ["'.$str_errors.$str_error_delete.'"]}');
+			$array = array('hasError' => false, 'errors' => array($str_errors.$str_error_delete));
+			die(Tools::jsonEncode($array));
 		}
 	}
 }

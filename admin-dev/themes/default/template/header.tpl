@@ -84,14 +84,12 @@
 {/if}
 {if isset($css_files)}
 {foreach from=$css_files key=css_uri item=media}
-	<link href="{$css_uri}" rel="stylesheet" type="text/css"/>
+	<link href="{$css_uri|escape:'html':'UTF-8'}" rel="stylesheet" type="text/css"/>
 {/foreach}
 {/if}
-{if isset($js_files)}
-{foreach from=$js_files item=js_uri}
-	<script type="text/javascript" src="{$js_uri}"></script>
-{/foreach}
-{/if}
+	{if (isset($js_def) && count($js_def) || isset($js_files) && count($js_files))}
+		{include file=$smarty.const._PS_ALL_THEMES_DIR_|cat:"javascript.tpl"}
+	{/if}
 
 	{if isset($displayBackOfficeHeader)}
 		{$displayBackOfficeHeader}
@@ -107,7 +105,7 @@
 </head>
 
 {if $display_header}
-	<body class="ps_back-office {if $employee->bo_menu}page-sidebar {if $collapse_menu}page-sidebar-closed{/if}{else}page-topbar{/if} {$smarty.get.controller|escape|strtolower}">
+	<body class="ps_back-office{if $employee->bo_menu} page-sidebar{if $collapse_menu} page-sidebar-closed{/if}{else} page-topbar{/if} {$smarty.get.controller|escape|strtolower}">
 	{* begin  HEADER *}
 	<header id="header" class="bootstrap">
 		<nav id="header_infos" role="navigation">
@@ -198,23 +196,73 @@
 					</li>
 {/if}
 				</ul>
-
-{if count($quick_access) > 0}
+{if count($quick_access) >= 0}
 				<ul id="header_quick">
 					<li class="dropdown">
-						<a href="#" id="quick_select" class="dropdown-toggle" data-toggle="dropdown">{l s='Quick Access'} <i class="icon-caret-down"></i></a>
+						<a href="javascript:void(0)" id="quick_select" class="dropdown-toggle" data-toggle="dropdown">{l s='Quick Access'} <i class="icon-caret-down"></i></a>
 						<ul class="dropdown-menu">
-						{foreach $quick_access as $quick}
-							<li><a href="{$quick.link|escape:'html':'UTF-8'}" {if $quick.new_window} onclick="return !window.open(this.href);"{/if}><i class="icon-chevron-right"></i> {$quick.name}</a></li>
-						{/foreach}
+							{foreach $quick_access as $quick}
+								<li {if $link->matchQuickLink({$quick.link})}{assign "matchQuickLink" $quick.id_quick_access}class="active"{/if}>
+									<a href="{$quick.link|escape:'html':'UTF-8'}" {if $quick.new_window} target="_blank"{/if}>
+										{if isset($quick.icon)}
+											<i class="icon-{$quick.icon} icon-fw"></i> 
+										{else}
+											<i class="icon-chevron-right icon-fw"></i> 
+										{/if}
+										{$quick.name}
+									</a>
+								</li>
+							{/foreach}
+							<li class="divider"></li>
+							{if isset($matchQuickLink)}
+								<li>
+									<a href="javascript:void(0);" class="ajax-quick-link" data-method="remove" data-quicklink-id="{$matchQuickLink}">
+										<i class="icon-minus-circle"></i>
+										{l s='Remove from QuickAccess'}
+									</a>
+								</li>
+							{/if}
+							<li {if isset($matchQuickLink)}class="hide"{/if}>
+								<a href="javascript:void(0);" class="ajax-quick-link" data-method="add">
+									<i class="icon-plus-circle"></i>
+									{l s='Add current page to QuickAccess'}
+								</a>
+							</li>
 						</ul>
 					</li>
 				</ul>
+				<script>
+					$(function() {
+						$('.ajax-quick-link').on('click', function(e){
+							e.preventDefault();
+							$.ajax({
+								type: 'POST',
+								headers: { "cache-control": "no-cache" },
+								async: false,
+								url: "{$link->getAdminLink('AdminQuickAccesses')}" + "&action=GetUrl" + "&rand={1|rand:200}" + "&ajax=1" + "&method=" + $(this).data('method') + "&id_quick_access=" + $(this).data('quicklink-id'),
+								data: {
+									"url": "{$link->getQuickLink($smarty.server['REQUEST_URI'])}",
+									"name": "{$quick_access_current_link_name}",
+									"icon": "{$quick_access_current_link_icon}"
+								},
+								dataType: "json",
+								success: function(data) {
+									var quicklink_list ='';
+									$.each(data,function(index,value){
+										quicklink_list += '<li><a href="' + data[index]['link'] + '&token=' + data[index]['token'] + '"><i class="icon-chevron-right"></i> ' + data[index]['name'] + '</a></li>';
+									});
+									$("#header_quick ul.dropdown-menu").html(quicklink_list);
+									showSuccessMessage(update_success_msg);
+								}
+							});
+						});
+					});
+				</script>
 {/if}
 				<ul id="header_employee_box">
-					{if !isset($logged_on_addons) || !$logged_on_addons}
+					{if (!isset($logged_on_addons) || !$logged_on_addons) && (isset($display_addons_connection) && $display_addons_connection)}
 						<li>
-							<a href="#" class="addons_connect" data-toggle="modal" data-target="#modal_addons_connect" class="toolbar_btn" title="{l s='Addons'}">
+							<a href="#" class="addons_connect toolbar_btn" data-toggle="modal" data-target="#modal_addons_connect" title="{l s='Addons'}">
 								<i class="icon-chain-broken"></i>
 								<span class="string-long">{l s='Not connected to PrestaShop Addons'}</span>
 								<span class="string-short">{l s='Addons'}</span>
@@ -223,7 +271,7 @@
 					{/if}
 {if {$base_url}}
 					<li>
-						<a href="{if isset($base_url_tc)}{$base_url_tc}{else}{$base_url}{/if}" id="header_foaccess" target="_blank" title="{l s='View my shop'}">
+						<a href="{if isset($base_url_tc)}{$base_url_tc|escape:'html':'UTF-8'}{else}{$base_url|escape:'html':'UTF-8'}{/if}" id="header_foaccess" target="_blank" title="{l s='View my shop'}">
 							<i class="icon-star"></i>
 							<span class="string-long">{l s='My shop'}</span>
 							<span class="string-short">{l s='Shop'}</span>
@@ -231,7 +279,7 @@
 					</li>
 {/if}
 					<li id="employee_infos" class="dropdown">
-						<a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&id_employee={$employee->id}&amp;updateemployee" class="employee_name dropdown-toggle" data-toggle="dropdown">
+						<a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee" class="employee_name dropdown-toggle" data-toggle="dropdown">
 							<span class="employee_avatar_small">
 								{if isset($employee)}
 								<img class="imgm img-thumbnail" alt="" src="{$employee->getImage()}" width="32" height="32" />
@@ -249,9 +297,9 @@
 							</li>
 							<li class="text-center">{$employee->firstname} {$employee->lastname}</li>
 							<li class="divider"></li>
-							<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&id_employee={$employee->id}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences'}</a></li>
+							<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences'}</a></li>
 							<li class="divider"></li>
-							<li><a id="header_logout" href="{$default_tab_link}&amp;logout"><i class="icon-signout"></i> {l s='Sign out'}</a></li>
+							<li><a id="header_logout" href="{$default_tab_link|escape:'html':'UTF-8'}&amp;logout"><i class="icon-signout"></i> {l s='Sign out'}</a></li>
 						</ul>
 					</li>
 				</ul>

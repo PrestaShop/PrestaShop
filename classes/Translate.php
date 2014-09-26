@@ -246,7 +246,7 @@ class TranslateCore
 	/**
 	* Perform operations on translations after everything is escaped and before displaying it
 	*/
-	public static function smartyPostProcessTranslation($string, $params)
+	public static function postProcessTranslation($string, $params)
 	{
 		// If tags were explicitely provided, we want to use them *after* the translation string is escaped.
 		if (!empty($params['tags']))
@@ -270,6 +270,23 @@ class TranslateCore
 		}
 
 		return $string;
+	}
+
+	/**
+	 * Compatibility method that just calls postProcessTranslation.
+	 * @deprecated renamed this to postProcessTranslation, since it is not only used in relation to smarty.
+	 */
+	public static function smartyPostProcessTranslation($string, $params)
+	{
+		return Translate::postProcessTranslation($string, $params);
+	}
+
+	/**
+	 * Helper function to make calls to postProcessTranslation more readable.
+	 */
+	public static function ppTags($string, $tags)
+	{
+		return Translate::postProcessTranslation($string, array('tags' => $tags));
 	}
 }
 

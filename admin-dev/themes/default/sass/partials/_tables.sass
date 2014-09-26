@@ -19,6 +19,12 @@
 					text-decoration: none
 				a.active
 					color: black
+				.label-tooltip
+					color: #3586AE
+					background-color: lighten(#D8EDF7,5%)
+					border: none
+					border-bottom: solid 1px #D8EDF7
+					padding: 0 5px
 		> tr.filter > th
 			background-color: lighten(#CAE5F4,8%)
 			input[type="text"].filter, input[type="password"].filter, select.filter
@@ -145,6 +151,92 @@ tr.highlighted td
 	margin-bottom: 5px
 
 @media (max-width: $screen-sm-max)
+	.table-responsive-row
+		overflow: visible
+		table, thead, tbody, th, td, tr
+			display: block
+		thead tr
+			position: absolute
+			top: -9999px
+			left: -9999px
+		tr
+			border: 1px solid #ccc
+			@include box-shadow(#EAEDEF 0 2px 0 0 )
+			width: 100%
+			margin-bottom: 6px
+			&:last-child
+				border-bottom: 1px solid #ccc
+		td
+			position: relative
+			padding-left: 35% !important
+			width: 100% !important
+			text-align: left !important
+			line-height: 2em !important
+			font-size: 1.15em !important
+			white-space: nowrap
+			overflow: hidden
+			text-overflow: ellipsis
+			&:last-child
+				border: none				
+			.btn-group-action
+				.dropdown-toggle
+					display: none !important
+				ul.dropdown-menu, .dropdown-menu li
+					position: relative
+					padding: 0
+					margin: 0
+					float: right
+					display: inline-block
+					background: transparent
+					border: none
+					z-index: 13
+					@include box-shadow(none)
+			.dropdown-menu li a, a.btn, button.btn
+				background-color: white
+				border: none
+				padding: 12px 10px !important
+				margin-right: 5px
+				display: inline-block
+				margin: 0 !important
+				float: right
+				border-left: 1px solid #EAEDEF
+				z-index: 13
+				color: $brand-primary
+				font-weight: bold
+				@include box-shadow(none)
+				@include border-radius(0)
+				i
+					color: $brand-primary
+				&:hover
+					background-color: $brand-primary
+					color: white
+					i
+						color: white
+		.odd td
+			background-color: #FCFDFE !important
+		td.row-selector
+			display: none
+		td:before
+			position: absolute
+			top: 4px
+			left: 12px
+			width: 30%
+			border-right: 1px solid #EAEDEF
+			padding-right: 10px
+			white-space: nowrap
+			color: #aaa
+			text-align: right
+			font-size: 0.9em
+			font-style: italic
+		td:last-child
+			text-align: right !important
+			padding: 0 !important
+			&:before
+				content: none !important
+		.btn-group
+			float: none !important
+
+
 	.table-responsive
 		width: 100%
 		margin-bottom: ($line-height-computed * 0.75)

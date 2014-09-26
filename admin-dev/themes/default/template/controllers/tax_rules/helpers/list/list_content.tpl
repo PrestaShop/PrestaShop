@@ -45,12 +45,12 @@
 					{if isset($params.position)}
 						id="td_{if $id_category}{$id_category}{else}0{/if}_{$tr.$identifier}"
 					{/if}
-					class="{if !$no_link}pointer{/if}
+					class="{strip}{if !$no_link}pointer{/if}
 						   {if isset($params.position) && $order_by == 'position'} dragHandle{/if}
-						   {if isset($params.align)} {$params.align}{/if}"
+						   {if isset($params.align)} {$params.align}{/if}{/strip}"
 
 				{if (!isset($params.position) && !$no_link)}
-					onclick="document.location = '{$current_index}&{$identifier}={$tr.$identifier}{if $view}&view{else}&update{/if}{$table}&token={$token}'">{if isset($params.prefix)}{$params.prefix}{/if}
+					onclick="document.location = '{$current_index|escape:'html':'UTF-8'}&amp;{$identifier|escape:'html':'UTF-8'}={$tr.$identifier|escape:'html':'UTF-8'}{if $view}&amp;view{else}&amp;update{/if}{$table}&amp;token={$token|escape:'html':'UTF-8'}'">{if isset($params.prefix)}{$params.prefix}{/if}
 				{else}
 					>
 				{/if}
@@ -90,7 +90,7 @@
 						{if $tr.$key == 0}
 							{l s='This tax only'}
 						{elseif $tr.$key == 1}
-							{l s='Compute with others'}
+							{l s='Combine'}
 						{elseif $tr.$key == 2}
 							{l s='One after another'}
 						{/if}

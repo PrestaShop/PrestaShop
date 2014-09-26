@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 if($_SESSION["verify"] != "RESPONSIVEfilemanager") die('forbiden');
 
@@ -53,9 +53,9 @@ function create_img_gd($imgfile, $imgthumb, $newwidth, $newheight="") {
 
 function create_img($imgfile, $imgthumb, $newwidth, $newheight="") {
     if(image_check_memory_usage($imgfile,$newwidth,$newheight)){
-	require_once('php_image_magician.php');  
+	require_once('php_image_magician.php');
 	$magicianObj = new imageLib($imgfile);
-	$magicianObj -> resizeImage($newwidth, $newheight, 'auto');  
+	$magicianObj -> resizeImage($newwidth, $newheight, 'auto');
 	$magicianObj -> saveImage($imgthumb,80);
 	return true;
     }else{
@@ -89,7 +89,7 @@ function foldersize($path) {
                 $size = filesize($currentFile);
                 $total_size += $size;
             }
-        }   
+        }
     }
 
     return $total_size;
@@ -98,22 +98,26 @@ function foldersize($path) {
 function create_folder($path=false,$path_thumbs=false){
     $oldumask = umask(0);
     if ($path && !file_exists($path))
-        mkdir($path, 0777, true); // or even 01777 so you get the sticky bit set 
-    if($path_thumbs && !file_exists($path_thumbs)) 
-        mkdir($path_thumbs, 0777, true) or die("$path_thumbs cannot be found"); // or even 01777 so you get the sticky bit set 
+        mkdir($path, 0777, true); // or even 01777 so you get the sticky bit set
+    if($path_thumbs && !file_exists($path_thumbs))
+        mkdir($path_thumbs, 0777, true) or die("$path_thumbs cannot be found"); // or even 01777 so you get the sticky bit set
     umask($oldumask);
 }
 
 function check_files_extensions_on_path($path,$ext){
     if(!is_dir($path)){
-	$fileinfo = pathinfo($path);
-	if(!in_array(mb_strtolower($fileinfo['extension']),$ext))
-	    unlink($path);
+        $fileinfo = pathinfo($path);
+        if (function_exists('mb_strtolower'))
+            if(!in_array(mb_strtolower($fileinfo['extension']),$ext))
+                unlink($path);
+        else
+            if(!in_array(Tools::strtolower($fileinfo['extension']),$ext))
+                unlink($path);
     }else{
-	$files = scandir($path);
-	foreach($files as $file){
-	    check_files_extensions_on_path(trim($path,'/')."/".$file,$ext);
-	}
+        $files = scandir($path);
+        foreach($files as $file){
+            check_files_extensions_on_path(trim($path,'/')."/".$file,$ext);
+        }
     }
 }
 
@@ -122,10 +126,12 @@ function check_files_extensions_on_phar( $phar, &$files, $basepath, $ext ) {
     {
         if( $file->isFile() )
         {
-            if(in_array(mb_strtolower($file->getExtension()),$ext))
-            {
-                $files[] = $basepath.$file->getFileName( );
-            }
+            if (function_exists('mb_strtolower'))
+                if(in_array(mb_strtolower($file->getExtension()),$ext))
+                    $files[] = $basepath.$file->getFileName( );
+            else
+                if(in_array(Tools::strtolower($file->getExtension()),$ext))
+                    $files[] = $basepath.$file->getFileName( );
         }
         else if( $file->isDir() )
         {
@@ -145,13 +151,13 @@ function fix_filename($str,$transliteration){
 	{
 	   $str = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $str);
 	}
-		
+
 	$str = preg_replace( "/[^a-zA-Z0-9\.\[\]_| -]/", '', $str );
     }
-    
+
     $str=str_replace(array('"',"'","/","\\"),"",$str);
     $str=strip_tags($str);
-			   
+
     // Empty or incorrectly transliterated filename.
     // Here is a point: a good file UNKNOWN_LANGUAGE.jpg could become .jpg in previous code.
     // So we add that default 'file' name to fix that issue.
@@ -159,7 +165,7 @@ function fix_filename($str,$transliteration){
     {
        $str = 'file'.$str;
     }
-	    
+
     return trim( $str );
 }
 
@@ -184,14 +190,14 @@ function fix_strtolower($str){
 
 function fix_path($path,$transliteration){
     $info=pathinfo($path);
-    if (($s = strrpos($path, '/')) !== false) $s++; 
+    if (($s = strrpos($path, '/')) !== false) $s++;
     if (($e = strrpos($path, '.') - $s) !== strlen($info['filename']))
     {
-       $info['filename'] = substr($path, $s, $e); 
-       $info['basename'] = substr($path, $s); 
+       $info['filename'] = substr($path, $s, $e);
+       $info['basename'] = substr($path, $s);
     }
     $tmp_path = $info['dirname'].DIRECTORY_SEPARATOR.$info['basename'];
-    
+
     $str=fix_filename($info['filename'],$transliteration);
     if($tmp_path!="")
 	return $tmp_path.DIRECTORY_SEPARATOR.$str;
@@ -216,7 +222,7 @@ function config_loading($current_path,$fld){
     if($parent!="." && !empty($parent)){
 	config_loading($current_path,$parent);
     }
-    
+
     return false;
 }
 
@@ -233,7 +239,7 @@ function image_check_memory_usage($img, $max_breedte, $max_hoogte){
 	$image_memory_usage = $K64 + ($image_width * $image_height * ($image_bits )  * 2);
 	$thumb_memory_usage = $K64 + ($max_breedte * $max_hoogte * ($image_bits ) * 2);
 	$memory_needed = intval($memory_usage + $image_memory_usage + $thumb_memory_usage);
- 
+
         if($memory_needed > $memory_limit){
                 ini_set('memory_limit',(intval($memory_needed/1024/1024)+5) . 'M');
                 if(ini_get('memory_limit') == (intval($memory_needed/1024/1024)+5) . 'M'){
@@ -267,7 +273,7 @@ function new_thumbnails_creation($targetPath,$targetFile,$name,$current_path,$re
 		    $all_ok=false;
 	}
     }
-    
+
     //create fixed thumbs
     if($fixed_image_creation){
 	foreach($fixed_path_from_filemanager as $k=>$path){
@@ -291,7 +297,7 @@ function get_file_by_url($url) {
     if (!function_exists('curl_version')) {
         return false;
     }
-    
+
     $ch = curl_init();
 
     curl_setopt($ch, CURLOPT_HEADER, 0);

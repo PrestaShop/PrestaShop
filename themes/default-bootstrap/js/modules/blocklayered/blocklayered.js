@@ -36,7 +36,7 @@ $(document).ready(function()
 	// Click on color
 	$(document).on('click', '#layered_form input[type=button], #layered_form label.layered_color', function(e) {
 		if (!$('input[name='+$(this).attr('name')+'][type=hidden]').length)
-			$('<input />').attr('type', 'hidden').attr('name', $(this).attr('name')).val($(this).attr('rel')).appendTo('#layered_form');
+			$('<input />').attr('type', 'hidden').attr('name', $(this).attr('name')).val($(this).data('rel')).appendTo('#layered_form');
 		else
 			$('input[name='+$(this).attr('name')+'][type=hidden]').remove();
 		reloadContent(true);
@@ -48,15 +48,14 @@ $(document).ready(function()
 	});
 
 	// Changing content of an input text
-	$(document).on('keyup', '#layered_form input.layered_input_range', function(e)
-	{
+	$(document).on('keyup', '#layered_form input.layered_input_range', function(e){
 		if ($(this).attr('timeout_id'))
 			window.clearTimeout($(this).attr('timeout_id'));
 
 		// IE Hack, setTimeout do not acept the third parameter
 		var reference = this;
 
-		$(this).attr('timeout_id', window.setTimeout(function(it) {
+		$(this).attr('timeout_id', window.setTimeout(function(it){
 			if (!$(it).attr('id'))
 				it = reference;
 
@@ -80,13 +79,11 @@ $(document).ready(function()
 		}, 500, this));
 	});
 
-	$(document).on('click', '#layered_block_left .radio', function(e) 
-	{
+	$(document).on('click', '#layered_block_left .radio', function(e){
 		var name = $(this).attr('name');
 		$.each($(this).parent().parent().find('input[type=button]'), function (it, item) {
-			if ($(item).hasClass('on') && $(item).attr('name') != name) {
+			if ($(item).hasClass('on') && $(item).attr('name') != name)
 				$(item).click();
-			}
 		});
 		return true;
 	});
@@ -107,16 +104,11 @@ $(document).ready(function()
 	});
 
 	layered_hidden_list = {};
-	$('.hide-action').on('click', function(e)
-	{
+	$('.hide-action').on('click', function(e){
 		if (typeof(layered_hidden_list[$(this).parent().find('ul').attr('id')]) == 'undefined' || layered_hidden_list[$(this).parent().find('ul').attr('id')] == false)
-		{
 			layered_hidden_list[$(this).parent().find('ul').attr('id')] = true;
-		}
 		else
-		{
 			layered_hidden_list[$(this).parent().find('ul').attr('id')] = false;
-		}
 		hideFilterValueAction(this);
 	});
 	$('.hide-action').each(function() {
@@ -195,7 +187,6 @@ function initFilters()
 			
 			$('.layered_' + filter.type).show();
 		}
-
 		initUniform();
 	}
 }
@@ -270,20 +261,22 @@ function initLayered()
 	}
 }
 
-function paginationButton(nbProductsIn, nbProductOut) {
+function paginationButton(nbProductsIn, nbProductOut)
+{
 	if (typeof(current_friendly_url) === 'undefined')
 		current_friendly_url = '#';
 
 	$('div.pagination a').not(':hidden').each(function () {
-		if ($(this).attr('href').search('&p=') == -1) {
+
+		if ($(this).attr('href').search(/(\?|&)p=/) == -1)
 			var page = 1;
-		}
-		else {
-			var page = $(this).attr('href').replace(/^.*&p=(\d+).*$/, '$1');
-		}
+		else
+			var page = parseInt($(this).attr('href').replace(/^.*(\?|&)p=(\d+).*$/, '$2'));
+		
 		var location = window.location.href.replace(/#.*$/, '');
-		$(this).attr('href', location+current_friendly_url.replace(/\/page-(\d+)/, '')+'/page-'+page);
+		$(this).attr('href', location + current_friendly_url.replace(/\/page-(\d+)/, '') + '/page-' + page);
 	});
+
 	$('div.pagination li').not('.current, .disabled').each(function () {
 		var nbPage = 0;
 		if ($(this).hasClass('pagination_next'))
@@ -304,10 +297,11 @@ function paginationButton(nbProductsIn, nbProductOut) {
 		});
 	});
 
-
 	//product count refresh
-	if(nbProductsIn!=false){
-		if(isNaN(nbProductsIn) == 0) {
+	if(nbProductsIn!=false)
+	{
+		if(isNaN(nbProductsIn) == 0)
+		{
 			// add variables
 			var productCountRow = $('.product-count').html();
 			var nbPage = parseInt($('div.pagination li.current').children().children().html());
@@ -326,52 +320,57 @@ function paginationButton(nbProductsIn, nbProductOut) {
 			//insert values into a .product-count
 			productCountRow = $.trim(productCountRow);
 			productCountRow = productCountRow.split(' ');
-			productCountRow[1] = productShowingStart;
-			productCountRow[3] = (nbProductOut != 'undefined') && (nbProductOut > productShowing) ? nbProductOut : productShowing;
-			productCountRow[5] = nb_products;
 
-			if (productCountRow[3] > productCountRow[5])
-				productCountRow[3] = productCountRow[5];
+			var backStart = new Array;
+			for (row in productCountRow)
+				if (parseInt(productCountRow[row]) + 0 == parseInt(productCountRow[row]))
+					backStart.push(row);
+
+			if (typeof backStart[0] !== 'undefined')
+				productCountRow[backStart[0]] = productShowingStart;
+			if (typeof backStart[1] !== 'undefined')
+				productCountRow[backStart[1]] = (nbProductOut != 'undefined') && (nbProductOut > productShowing) ? nbProductOut : productShowing;
+			if (typeof backStart[2] !== 'undefined')
+				productCountRow[backStart[2]] = nb_products;
+
+			if (typeof backStart[1] !== 'undefined' && typeof backStart[2] !== 'undefined' && productCountRow[backStart[1]] > productCountRow[backStart[2]])
+				productCountRow[backStart[1]] = productCountRow[backStart[2]];
 
 			productCountRow = productCountRow.join(' ');
 			$('.product-count').html(productCountRow);
 			$('.product-count').show();
 		}
-		else {
+		else
 			$('.product-count').hide();
-		}
 	}
 }
 
 function cancelFilter()
 {
-	$(document).on('click', '#enabled_filters a', function(e)
-	{
-		if ($(this).attr('rel').search(/_slider$/) > 0)
+	$(document).on('click', '#enabled_filters a', function(e){
+		if ($(this).data('rel').search(/_slider$/) > 0)
 		{
-			if ($('#'+$(this).attr('rel')).length)
+			if ($('#'+$(this).data('rel')).length)
 			{
-				$('#'+$(this).attr('rel')).slider('values' , 0, $('#'+$(this).attr('rel')).slider('option' , 'min' ));
-				$('#'+$(this).attr('rel')).slider('values' , 1, $('#'+$(this).attr('rel')).slider('option' , 'max' ));
-				$('#'+$(this).attr('rel')).slider('option', 'slide')(0,{values:[$('#'+$(this).attr('rel')).slider( 'option' , 'min' ), $('#'+$(this).attr('rel')).slider( 'option' , 'max' )]});
+				$('#'+$(this).data('rel')).slider('values' , 0, $('#'+$(this).data('rel')).slider('option' , 'min' ));
+				$('#'+$(this).data('rel')).slider('values' , 1, $('#'+$(this).data('rel')).slider('option' , 'max' ));
+				$('#'+$(this).data('rel')).slider('option', 'slide')(0,{values:[$('#'+$(this).data('rel')).slider( 'option' , 'min' ), $('#'+$(this).data('rel')).slider( 'option' , 'max' )]});
 			}
-			else if($('#'+$(this).attr('rel').replace(/_slider$/, '_range_min')).length)
+			else if($('#'+$(this).data('rel').replace(/_slider$/, '_range_min')).length)
 			{
-				$('#'+$(this).attr('rel').replace(/_slider$/, '_range_min')).val($('#'+$(this).attr('rel').replace(/_slider$/, '_range_min')).attr('limitValue'));
-				$('#'+$(this).attr('rel').replace(/_slider$/, '_range_max')).val($('#'+$(this).attr('rel').replace(/_slider$/, '_range_max')).attr('limitValue'));
+				$('#'+$(this).data('rel').replace(/_slider$/, '_range_min')).val($('#'+$(this).data('rel').replace(/_slider$/, '_range_min')).attr('limitValue'));
+				$('#'+$(this).data('rel').replace(/_slider$/, '_range_max')).val($('#'+$(this).data('rel').replace(/_slider$/, '_range_max')).attr('limitValue'));
 			}
 		}
 		else
 		{
-			if ($('option#'+$(this).attr('rel')).length)
-			{
-				$('#'+$(this).attr('rel')).parent().val('');
-			}
+			if ($('option#'+$(this).data('rel')).length)
+				$('#'+$(this).data('rel')).parent().val('');
 			else
 			{
-				$('#'+$(this).attr('rel')).attr('checked', false);
-				$('.'+$(this).attr('rel')).attr('checked', false);
-				$('#layered_form input[type=hidden][name='+$(this).attr('rel')+']').remove();
+				$('#'+$(this).data('rel')).attr('checked', false);
+				$('.'+$(this).data('rel')).attr('checked', false);
+				$('#layered_form input[type=hidden][name='+$(this).data('rel')+']').remove();
 			}
 		}
 		reloadContent(true);
@@ -385,13 +384,13 @@ function openCloseFilter()
 	{
 		if ($(this).html() == '&lt;')
 		{
-			$('#'+$(this).attr('rel')).show();
+			$('#'+$(this).data('rel')).show();
 			$(this).html('v');
 			$(this).parent().removeClass('closed');
 		}
 		else
 		{
-			$('#'+$(this).attr('rel')).hide();
+			$('#'+$(this).data('rel')).hide();
 			$(this).html('&lt;');
 			$(this).parent().addClass('closed');
 		}
@@ -430,16 +429,12 @@ function reloadContent(params_plus)
 	$(['price', 'weight']).each(function(it, sliderType)
 	{
 		if ($('#layered_'+sliderType+'_range_min').length)
-		{
 			data += '&layered_'+sliderType+'_slider='+$('#layered_'+sliderType+'_range_min').val()+'_'+$('#layered_'+sliderType+'_range_max').val();
-		}
 	});
 
 	$('#layered_form .select option').each( function () {
 		if($(this).attr('id') && $(this).parent().val() == $(this).val())
-		{
 			data += '&'+$(this).attr('id') + '=' + $(this).val();
-		}
 	});
 
 	if ($('.selectProductSort').length && $('.selectProductSort').val())
@@ -468,7 +463,7 @@ function reloadContent(params_plus)
 	}
 
 	var slideUp = true;
-	if (params_plus == undefined)
+	if (params_plus == undefined || !(typeof params_plus == 'string'))
 	{
 		params_plus = '';
 		slideUp = false;
@@ -502,10 +497,7 @@ function reloadContent(params_plus)
 				$('title').html(result.meta_title);
 
 			if (result.heading != '')
-			{
 				$('h1.page-heading .cat-name').html(result.heading);
-				$('span.category-name').html(result.heading);
-			}
 
 			$('#layered_block_left').replaceWith(utf8_decode(result.filtersBlock));
 			$('.category-product-count, .heading-counter').html(result.categoryCount);
@@ -522,7 +514,8 @@ function reloadContent(params_plus)
 			if ($.browser.msie) // Fix bug with IE8 and aliasing
 				$('.product_list').css('filter', '');
 
-			if (result.pagination.search(/[^\s]/) >= 0) {
+			if (result.pagination.search(/[^\s]/) >= 0)
+			{
 				var pagination = $('<div/>').html(result.pagination)
 				var pagination_bottom = $('<div/>').html(result.pagination_bottom);
 
@@ -532,9 +525,7 @@ function reloadContent(params_plus)
 					$('#pagination').replaceWith(pagination.find('#pagination'));
 				}
 				else
-				{
 					$('#pagination').hide();
-				}
 
 				if ($('<div/>').html(pagination_bottom).find('#pagination_bottom').length)
 				{
@@ -542,9 +533,7 @@ function reloadContent(params_plus)
 					$('#pagination_bottom').replaceWith(pagination_bottom.find('#pagination_bottom'));
 				}
 				else
-				{
 					$('#pagination_bottom').hide();
-				}
 			}
 			else
 			{
@@ -593,7 +582,7 @@ function reloadContent(params_plus)
 				if ($('#layered_'+sliderType+'_slider').length)
 				{
 					// Check if slider is enable & if slider is used
-					if(typeof($('#layered_'+sliderType+'_slider').slider('values', 0)) != 'object')
+					if (typeof($('#layered_'+sliderType+'_slider').slider('values', 0)) != 'object')
 					{
 						if ($('#layered_'+sliderType+'_slider').slider('values', 0) != $('#layered_'+sliderType+'_slider').slider('option' , 'min')
 						|| $('#layered_'+sliderType+'_slider').slider('values', 1) != $('#layered_'+sliderType+'_slider').slider('option' , 'max'))
@@ -601,13 +590,8 @@ function reloadContent(params_plus)
 					}
 				}
 				else if ($('#layered_'+sliderType+'_range_min').length)
-				{
 					current_friendly_url += '/'+blocklayeredSliderName[sliderType]+'-'+$('#layered_'+sliderType+'_range_min').val()+'-'+$('#layered_'+sliderType+'_range_max').val();
-				}
 			});
-
-			if (current_friendly_url == '#')
-				current_friendly_url = '#/';
 
 			window.location.href = current_friendly_url;
 
@@ -616,7 +600,7 @@ function reloadContent(params_plus)
 			
 			lockLocationChecking = true;
 
-			if(slideUp)
+			if (slideUp)
 				$.scrollTo('.product_list', 400);
 			updateProductUrl();
 
@@ -637,7 +621,8 @@ function reloadContent(params_plus)
 
 function initLocationChange(func, time)
 {
-	if(!time) time = 500;
+	if (!time)
+		time = 500;
 	var current_friendly_url = getUrlParams();
 	setInterval(function()
 	{
@@ -650,7 +635,8 @@ function initLocationChange(func, time)
 			lockLocationChecking = true;
 			reloadContent('&selected_filters='+getUrlParams().replace(/^#/, ''));
 		}
-		else {
+		else
+		{
 			lockLocationChecking = false;
 			current_friendly_url = getUrlParams();
 		}
@@ -684,7 +670,8 @@ function updateProductUrl()
 /**
  * Copy of the php function utf8_decode()
  */
-function utf8_decode (utfstr) {
+function utf8_decode (utfstr)
+{
 	var res = '';
 	for (var i = 0; i < utfstr.length;) {
 		var c = utfstr.charCodeAt(i);

@@ -26,6 +26,11 @@
 
 class OrderCore extends ObjectModel
 {
+	const ROUND_ITEM = 1;
+	const ROUND_LINE = 2;
+	const ROUND_TOTAL = 3;
+
+	
 	/** @var integer Delivery address id */
 	public $id_address_delivery;
 
@@ -142,7 +147,7 @@ class OrderCore extends ObjectModel
 	/** @var string Delivery creation date */
 	public $delivery_date;
 
-	/** @var boolean Order validity (paid and not canceled) */
+	/** @var boolean Order validity: current order status is logable (usually paid and not canceled) */
 	public $valid;
 
 	/** @var string Object creation date */
@@ -221,7 +226,11 @@ class OrderCore extends ObjectModel
 			'id_lang' => array('xlink_resource'=> 'languages'),
 			'id_customer' => array('xlink_resource'=> 'customers'),
 			'id_carrier' => array('xlink_resource'=> 'carriers'),
-			'current_state' => array('xlink_resource'=> 'order_states'),
+			'current_state' => array(
+				'xlink_resource'=> 'order_states',
+				'getter' => 'getWsCurrentState',
+				'setter' => 'setWsCurrentState'
+			),
 			'module' => array('required' => true),
 			'invoice_number' => array(),
 			'invoice_date' => array(),
@@ -230,6 +239,10 @@ class OrderCore extends ObjectModel
 			'valid' => array(),
 			'date_add' => array(),
 			'date_upd' => array(),
+			'shipping_number' => array(
+				'getter' => 'getWsShippingNumber',
+				'setter' => 'setWsShippingNumber'
+			),
 		),
 		'associations' => array(
 			'order_rows' => array('resource' => 'order_row', 'setter' => false, 'virtual_entity' => true,
@@ -2029,5 +2042,47 @@ class OrderCore extends ObjectModel
 		if ($a->date_add == $b->date_add)
 			return 0;
 		return ($a->date_add < $b->date_add) ? -1 : 1;
+	}
+
+	public function getWsShippingNumber()
+	{
+		$id_order_carrier = Db::getInstance()->getValue('
+			SELECT `id_order_carrier`
+			FROM `'._DB_PREFIX_.'order_carrier`
+			WHERE `id_order` = '.(int)$this->id);
+		if ($id_order_carrier)
+		{
+			$order_carrier = new OrderCarrier($id_order_carrier);
+			return $order_carrier->tracking_number;
+		}
+		return $this->shipping_number;
+	}
+
+	public function setWsShippingNumber($shipping_number)
+	{
+		$id_order_carrier = Db::getInstance()->getValue('
+			SELECT `id_order_carrier`
+			FROM `'._DB_PREFIX_.'order_carrier`
+			WHERE `id_order` = '.(int)$this->id);
+		if ($id_order_carrier)
+		{
+			$order_carrier = new OrderCarrier($id_order_carrier);
+			$order_carrier->tracking_number = $shipping_number;
+			$order_carrier->update();
+		}
+		else
+			$this->shipping_number = $shipping_number;
+		return true;
+	}
+
+	public function getWsCurrentState($state)
+	{
+		return $this->getCurrentState();
+	}
+
+	public function setWsCurrentState($state)
+	{
+		$this->setCurrentState($state);
+		return true;
 	}
 }

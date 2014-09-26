@@ -333,8 +333,8 @@ class HookCore extends ObjectModel
 				{
 					$sql->leftJoin('module_group', 'mg', 'mg.`id_module` = m.`id_module`');
 					if (Validate::isLoadedObject($context->shop))
-						$sql->where('mg.id_shop = '.((int)$context->shop->id).' AND  mg.`id_group` IN ('.implode(', ', $groups).')');
-					else
+						$sql->where('mg.id_shop = '.((int)$context->shop->id).(count($groups) ? ' AND  mg.`id_group` IN ('.implode(', ', $groups).')' : ''));
+					elseif (count($groups))
 						$sql->where('mg.`id_group` IN ('.implode(', ', $groups).')');
 				}
 			}
@@ -400,6 +400,9 @@ class HookCore extends ObjectModel
 	 */
 	public static function exec($hook_name, $hook_args = array(), $id_module = null, $array_return = false, $check_exceptions = true, $use_push = false, $id_shop = null)
 	{
+		if (defined('PS_INSTALLATION_IN_PROGRESS'))
+			return;
+		
 		static $disable_non_native_modules = null;
 		if ($disable_non_native_modules === null)
 			$disable_non_native_modules = (bool)Configuration::get('PS_DISABLE_NON_NATIVE_MODULE');
@@ -460,13 +463,10 @@ class HookCore extends ObjectModel
 			if ((bool)$disable_non_native_modules && Hook::$native_module && count(Hook::$native_module) && !in_array($array['module'], self::$native_module))
 				continue;
 
-			if (!($moduleInstance = Module::getInstanceByName($array['module'])))
-				continue;
-
 			// Check permissions
 			if ($check_exceptions)
 			{
-				$exceptions = $moduleInstance->getExceptions($array['id_hook']);
+				$exceptions = Module::getExceptionsStatic($array['id_module'], $array['id_hook']);
 
 				$controller = Dispatcher::getInstance()->getController();
 				$controller_obj = Context::getContext()->controller;
@@ -485,9 +485,12 @@ class HookCore extends ObjectModel
 				);
 				if (isset($matching_name[$controller]) && in_array($matching_name[$controller], $exceptions))
 					continue;
-				if (Validate::isLoadedObject($context->employee) && !$moduleInstance->getPermission('view', $context->employee))
+				if (Validate::isLoadedObject($context->employee) && !Module::getPermissionStatic($array['id_module'], 'view', $context->employee))
 					continue;
 			}
+			
+			if (!($moduleInstance = Module::getInstanceByName($array['module'])))
+				continue;
 
 			if ($use_push && !$moduleInstance->allow_push)
 				continue;

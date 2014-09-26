@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<a onclick="loadTaxRule('{$id}'); return false;" href="#" class="btn btn-default">
+<a onclick="loadTaxRule('{$id|escape:'html':'UTF-8'}'); return false;" href="#" class="btn btn-default">
 	<i class="icon-pencil"></i> 
 	{$action}
 </a>

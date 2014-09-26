@@ -635,6 +635,18 @@ class AdminStockManagementControllerCore extends AdminController
 				if ($stock_manager->addProduct($id_product, $id_product_attribute, $warehouse, $quantity, $id_stock_mvt_reason, $price, $usable))
 				{
 					StockAvailable::synchronize($id_product);
+
+					// Create warehouse_product_location entry if we add stock to a new warehouse
+					$id_wpl = (int)WarehouseProductLocation::getIdByProductAndWarehouse($id_product, $id_product_attribute, $id_warehouse);
+					if(!$id_wpl)
+					{
+						$wpl = new WarehouseProductLocation();
+						$wpl->id_product = (int)$id_product;
+						$wpl->id_product_attribute = (int)$id_product_attribute;
+						$wpl->id_warehouse = (int)$id_warehouse;
+						$wpl->save();
+					}
+
 					if (Tools::isSubmit('addstockAndStay'))
 					{
 						$redirect = self::$currentIndex.'&id_product='.(int)$id_product;

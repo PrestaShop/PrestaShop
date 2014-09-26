@@ -45,7 +45,7 @@
 	$(document).ready(function() {
 		$('#iso_code').keyup(function(e) {
 			e.preventDefault();
-			checkLangPack("{$token}");
+			checkLangPack("{$token|escape:'html':'UTF-8'}");
 		});
 	});
 
@@ -61,7 +61,7 @@
 						{if isset($field.image)}<img src="{$field.image}" alt="{$field.title}" />{/if}
 						{$field.title}
 					</legend>
-					<p>{l s='This language pack  is NOT complete and cannot be used in the Front or Back Office because some files are missing.'}</p>
+					<p>{l s='This language pack  is NOT complete and cannot be used in the front or back-office because some files are missing.'}</p>
 					<br />
 				{elseif $key == 'list_files'}
 					{foreach $field as $list}

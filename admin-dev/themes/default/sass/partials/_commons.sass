@@ -118,11 +118,53 @@
 	@include alert-panel(icon-puzzle-piece, $brand-addons)
 
 .alert.alert-onboarding
-	$alert-addons-border: lighten($brand-primary,10%)
-	$alert-addons-text: $brand-primary
+	$alert-addons-border: lighten($brand-info,10%)
+	$alert-addons-text: $brand-info
 	@include alert-variant(white, $alert-addons-border, $alert-addons-text)
-	@include alert-panel(icon-rocket, $brand-primary)
-	border: solid 1px lighten($brand-info,25%)
+	@include alert-panel(icon-rocket, white)
+	&:before
+		left: 25px
+		top: 40px
+		font-size: 98px
+	border: solid 2px $brand-info
+	box-shadow: inset 140px 0 0 $brand-info
+	padding: 20px 20px 20px 160px
+	.onboarding-step
+		width: 100%
+		height: 2em
+		&.step-success
+			background-color: $brand-success
+		&.step-in-progress
+			@include gradient-striped(lighten($brand-success,20%))
+			@include animation(progress-bar-stripes 2s linear infinite)
+			background-color: $brand-success
+		&.step-todo
+			background-color: #eee
+		&.step-first
+			@include border-radius(3em 0 0 3em)
+		&.step-final
+			@include border-radius(0 3em 3em 0)
+
+	h4
+		font-weight: 100
+		font-size: 2.1em
+		color: #383F50
+		margin-bottom: .4em
+	p
+		font-size: 1.1em
+		color: lighten(#383F50,30%)
+		margin-bottom: 1em
+	.onboarding-action-container
+		padding-top: 3em
+
+	hr
+		border-color: lighten($brand-info,30%)
+	.progress
+		@include border-radius(3em)
+		height: 2em
+		box-shadow: none
+	.progress-bar
+		box-shadow: none
 
 .alert.alert-message
 	@include alert-panel(icon-comment, $brand-warning)
@@ -157,3 +199,8 @@
 
 #mColorPickerInput
 	color: #000000
+
+//modals
+.modal-content-overflow
+	max-height: 400px
+	overflow-y: scroll

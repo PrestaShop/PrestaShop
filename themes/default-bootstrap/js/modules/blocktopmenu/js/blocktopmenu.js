@@ -58,13 +58,13 @@ function desktopInit()
 	$('.sf-menu').removeAttr('style');
 	categoryMenu.superfish('init');
 	//add class for width define
-	$('.sf-menu > li > ul').addClass('submenu-container clearfix'); 
+	$('.sf-menu > li > ul').addClass('submenu-container clearfix');
 	 // loop through each sublist under each top list item
     $('.sf-menu > li > ul').each(function(){
         i = 0;
         //add classes for clearing
-        $(this).each(function(){ 
-            if ($(this).attr('id') != "category-thumbnail"){
+        $(this).each(function(){
+            if ($(this).attr('class') != "category-thumbnail"){
                 i++;
                 if(i % 2 == 1)
                     $(this).addClass('first-in-line-xs');
@@ -77,16 +77,18 @@ function desktopInit()
 
 function mobileInit()
 {
+
 	categoryMenu.superfish('destroy');
 	$('.sf-menu').removeAttr('style');
 
-	mCategoryGrover.on('click touchstart', function(){
+	mCategoryGrover.on('click touchstart', function(e){
 		$(this).toggleClass('active').parent().find('ul.menu-content').stop().slideToggle('medium');
+		return false;
 	});
 
 	$('.sf-menu > li > ul').addClass('menu-mobile clearfix').parent().prepend('<span class="menu-mobile-grover"></span>');
 
-	$(".sf-menu .menu-mobile-grover").on('click touchstart', function(){
+	$(".sf-menu .menu-mobile-grover").on('click touchstart', function(e){
 		var catSubUl = $(this).next().next('.menu-mobile');
 		if (catSubUl.is(':hidden'))
 		{
@@ -101,13 +103,15 @@ function mobileInit()
 		return false;
 	});
 
-	
+
 	$('#block_top_menu > ul:first > li > a').on('click touchstart', function(e){
-		if ($(this).parent('li').find('ul').length)
+		var parentOffset = $(this).prev().offset();
+	   	var relX = parentOffset.left - e.pageX;
+		if ($(this).parent('li').find('ul').length && relX >= 0 && relX <= 20)
 		{
 			e.preventDefault();
 			var mobCatSubUl = $(this).next('.menu-mobile');
-			var mobMenuGrover = $(this).next('.menu-mobile-grover');
+			var mobMenuGrover = $(this).prev();
 			if (mobCatSubUl.is(':hidden'))
 			{
 				mobCatSubUl.slideDown();
@@ -120,7 +124,7 @@ function mobileInit()
 			}
 		}
 	});
-	
+
 }
 
 // change the menu display at different resolutions

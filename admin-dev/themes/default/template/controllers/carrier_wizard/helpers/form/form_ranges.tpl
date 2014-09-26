@@ -5,7 +5,7 @@
 				<tbody>
 					<tr class="range_inf">
 						<td class="range_type"></td>
-						<td class="border_left border_bottom range_sign">&gt;=</th>
+						<td class="border_left border_bottom range_sign">&gt;=</td>
 						{foreach from=$ranges key=r item=range}
 						<td class="border_bottom">
 							<div class="input-group fixed-width-md">

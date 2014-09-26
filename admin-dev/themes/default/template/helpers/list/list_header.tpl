@@ -68,14 +68,15 @@
 				if (key == 13)
 				{
 					e.preventDefault();
-					formSubmit(event, 'submitFilterButton{$list_id}');
+					formSubmit(e, 'submitFilterButton{$list_id}');
 				}
 			})
 			$('#submitFilterButton{$list_id}').click(function() {
 				$('#submitFilter{$list_id}').val(1);
 			});
-			if ($("table.{$list_id} .datepicker").length > 0) {
-				$("table.{$list_id} .datepicker").datepicker({
+
+			if ($("table .datepicker").length > 0) {
+				$("table .datepicker").datepicker({
 					prevText: '',
 					nextText: '',
 					altFormat: 'yy-mm-dd'
@@ -105,8 +106,15 @@
 
 <div class="alert alert-warning" id="{$list_id}-empty-filters-alert" style="display:none;">{l s='Please fill at least one field to perform a search in this list.'}</div>
 
+{if isset($sql) && $sql}
+	<form id="sql_form" action="{$link->getAdminLink('AdminRequestSql')|escape}&amp;addrequest_sql" method="post" class="hide">
+		<input type="hidden" id="sql_query" name="sql" value="{$sql|escape}" />
+		<input type="hidden" id="sql_name" name="name" value="Plop" />
+	</form>
+{/if}
+
 {block name="startForm"}
-	<form method="post" action="{$action}" class="form-horizontal clearfix" id="{$list_id}">
+	<form method="post" action="{$action|escape:'html':'UTF-8'}" class="form-horizontal clearfix" id="form-{$list_id}">
 {/block}
 
 {if !$simple_header}
@@ -120,23 +128,37 @@
 				<span class="panel-heading-action">
 				{foreach from=$toolbar_btn item=btn key=k}
 					{if $k != 'modules-list' && $k != 'back'}
-						<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="list-toolbar-btn" {if isset($btn.href)}href="{$btn.href}"{/if} {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if}>
+						<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="list-toolbar-btn"{if isset($btn.href)} href="{$btn.href|escape:'html':'UTF-8'}"{/if}{if isset($btn.target) && $btn.target} target="_blank"{/if}{if isset($btn.js) && $btn.js} onclick="{$btn.js}"{/if}>
 							<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s=$btn.desc}" data-html="true" data-placement="left">
-								<i class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if} {if isset($btn.class)}{$btn.class}{/if}" ></i>
+								<i class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}{if isset($btn.class)} {$btn.class}{/if}"></i>
 							</span>
 						</a>
 					{/if}
 				{/foreach}
-					<a id="desc-{$table}-refresh" class="list-toolbar-btn" href="javascript:location.reload();">
+					<a class="list-toolbar-btn" href="javascript:location.reload();">
 						<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='Refresh list'}" data-html="true" data-placement="left">
 							<i class="process-icon-refresh" ></i>
 						</span>
 					</a>
+				{if isset($sql) && $sql}
+					{if $smarty.const._PS_MODE_DEV_}
+						<a class="list-toolbar-btn" href="javascript:void(0);" onclick="$('.leadin').first().append('<div class=\'alert alert-info\'>' + $('#sql_query').val() + '</div>'); $(this).attr('onclick', '');">
+							<span class="label-tooltip" data-toggle="tooltip" data-original-title="{l s='Show SQL query'}" data-html="true" data-placement="left" >
+								<i class="process-icon-terminal"></i>
+							</span>
+						</a>
+					{/if}
+					<a class="list-toolbar-btn" href="javascript:void(0);" onclick="$('#sql_name').val(createSqlQueryName()); $('#sql_query').val($('#sql_query').val().replace(/\s+limit\s+[0-9,\s]+$/ig, '').trim()); $('#sql_form').submit();">
+						<span class="label-tooltip" data-toggle="tooltip" data-original-title="{l s='Export to SQL Manager'}" data-html="true" data-placement="left" >
+							<i class="process-icon-database"></i>
+						</span>
+					</a>
+				{/if}
 				</span>
 			{/if}
 		</div>
 		{if $show_toolbar}
-			<script language="javascript" type="text/javascript">
+			<script type="text/javascript">
 				//<![CDATA[
 				var submited = false;
 				$(function() {
@@ -200,9 +222,26 @@
 	<div class="panel col-lg-12">
 		{if isset($title)}<h3>{if isset($icon)}<i class="{$icon}"></i> {/if}{if is_array($title)}{$title|end}{else}{$title}{/if}</h3>{/if}
 {/if}
+
+
+	{if $bulk_actions && $has_bulk_actions}
+		{assign var=y value=2}
+	{else}
+		{assign var=y value=1}
+	{/if}
+	<style>
+	@media (max-width: 992px) {
+		{foreach from=$fields_display item=param name=params}
+			.table-responsive-row td:nth-of-type({math equation="x+y" x=$smarty.foreach.params.index y=$y}):before {
+				content: "{$param.title}";
+			}
+		{/foreach}
+	}
+	</style>
+
 	{block name="preTable"}{/block}
-	<div class="table-responsive clearfix{if isset($use_overflow) && $use_overflow} overflow-y{/if}">
-		<table {if $table_id} id={$table_id}{/if} class="table {if $table_dnd}tableDnD{/if} {$table}" >
+	<div class="table-responsive-row clearfix{if isset($use_overflow) && $use_overflow} overflow-y{/if}">
+		<table{if $table_id} id="table-{$table_id}"{/if} class="table{if $table_dnd} tableDnD{/if} {$table}" >
 			<thead>
 				<tr class="nodrag nodrop">
 					{if $bulk_actions && $has_bulk_actions}
@@ -210,7 +249,7 @@
 					{/if}
 					{foreach $fields_display AS $key => $params}
 					<th class="{if isset($params.class)}{$params.class}{/if}{if isset($params.align)} {$params.align}{/if}">
-						<span class="title_box {if isset($order_by) && ($key == $order_by)} active{/if}">
+						<span class="title_box{if isset($order_by) && ($key == $order_by)} active{/if}">
 							{if isset($params.hint)}
 								<span class="label-tooltip" data-toggle="tooltip"
 									title="
@@ -231,12 +270,11 @@
 							{else}
 								{$params.title}
 							{/if}
-
 							{if (!isset($params.orderby) || $params.orderby) && !$simple_header && $show_filters}
-								<a {if isset($order_by) && ($key == $order_by) && ($order_way == 'DESC')}class="active"{/if}  href="{$currentIndex}&amp;{$list_id}Orderby={$key|urlencode}&amp;{$list_id}Orderway=desc&amp;token={$token}{if isset($smarty.get.$identifier)}&{$identifier}={$smarty.get.$identifier|intval}{/if}">
+								<a {if isset($order_by) && ($key == $order_by) && ($order_way == 'DESC')}class="active"{/if} href="{$currentIndex|escape:'html':'UTF-8'}&amp;{$list_id}Orderby={$key|urlencode}&amp;{$list_id}Orderway=desc&amp;token={$token|escape:'html':'UTF-8'}{if isset($smarty.get.$identifier)}&amp;{$identifier}={$smarty.get.$identifier|intval}{/if}">
 									<i class="icon-caret-down"></i>
 								</a>
-								<a {if isset($order_by) && ($key == $order_by) && ($order_way == 'ASC')}class="active"{/if} href="{$currentIndex}&amp;{$list_id}Orderby={$key|urlencode}&amp;{$list_id}Orderway=asc&amp;token={$token}{if isset($smarty.get.$identifier)}&{$identifier}={$smarty.get.$identifier|intval}{/if}">
+								<a {if isset($order_by) && ($key == $order_by) && ($order_way == 'ASC')}class="active"{/if} href="{$currentIndex|escape:'html':'UTF-8'}&amp;{$list_id}Orderby={$key|urlencode}&amp;{$list_id}Orderway=asc&amp;token={$token|escape:'html':'UTF-8'}{if isset($smarty.get.$identifier)}&amp;{$identifier}={$smarty.get.$identifier|intval}{/if}">
 									<i class="icon-caret-up"></i>
 								</a>
 							{/if}
@@ -294,9 +332,6 @@
 											</span>
 										</div>
 										<script>
-											function parseDate(date){
-												return $.datepicker.parseDate("yy-mm-dd", date);
-											}
 											$(function() {
 												var dateStart = parseDate($("#{$params.id_date}_0").val());
 												var dateEnd = parseDate($("#{$params.id_date}_1").val());

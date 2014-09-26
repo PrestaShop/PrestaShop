@@ -281,11 +281,16 @@ class AdminModulesPositionsControllerCore extends AdminController
 			// Get all modules for this hook or only the filtered module
 			$hooks[$key]['modules'] = Hook::getModulesFromHook($hook['id_hook'], $this->display_key);
 			$hooks[$key]['module_count'] = count($hooks[$key]['modules']);
-			// If modules were found, link to the previously created Module instances
-			if (is_array($hooks[$key]['modules']) && !empty($hooks[$key]['modules']))
-				foreach ($hooks[$key]['modules'] as $module_key => $module)
-					if (isset($assoc_modules_id[$module['id_module']]))
-						$hooks[$key]['modules'][$module_key]['instance'] = $module_instances[$assoc_modules_id[$module['id_module']]];
+			if($hooks[$key]['module_count'])
+			{
+				// If modules were found, link to the previously created Module instances
+				if (is_array($hooks[$key]['modules']) && !empty($hooks[$key]['modules']))
+					foreach ($hooks[$key]['modules'] as $module_key => $module)
+						if (isset($assoc_modules_id[$module['id_module']]))
+							$hooks[$key]['modules'][$module_key]['instance'] = $module_instances[$assoc_modules_id[$module['id_module']]];
+			}
+			else
+				unset($hooks[$key]);
 		}
 
 		$this->addJqueryPlugin('tablednd');
@@ -332,7 +337,11 @@ class AdminModulesPositionsControllerCore extends AdminController
 		$dir = str_replace($admin_dir, '', dirname($_SERVER['SCRIPT_NAME']));
 		if (Configuration::get('PS_REWRITING_SETTINGS') && count(Language::getLanguages(true)) > 1)
 			$lang = Language::getIsoById($this->context->employee->id_lang).'/';
-		$url = Tools::getCurrentUrlProtocolPrefix().Tools::getHttpHost().$dir.$lang.Dispatcher::getInstance()->createUrl('index', (int)$this->context->language->id, $live_edit_params);
+
+		// Shop::initialize() in config.php may empty $this->context->shop->virtual_uri so using a new shop instance for getBaseUrl()
+		$this->context->shop = new Shop((int)$this->context->shop->id);
+		$url = $this->context->shop->getBaseURL().$lang.Dispatcher::getInstance()->createUrl('index', (int)$this->context->language->id, $live_edit_params);
+
 		return $url;
 	}
 	
@@ -487,7 +496,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 		{
 			/* PrestaShop demo mode */
 			if (_PS_MODE_DEMO_)
-				die('{"hasError" : true, "errors" : ["Live Edit: This functionnality has been disabled."]}');
+				die('{"hasError" : true, "errors" : ["Live Edit: This functionality has been disabled."]}');
 
 			if (!count(Tools::getValue('hooks_list')))
 				die('{"hasError" : true, "errors" : ["Live Edit: no module on this page."]}');
@@ -529,7 +538,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 		{
 			/* PrestaShop demo mode */
 			if (_PS_MODE_DEMO_)
-				die('{"hasError" : true, "errors" : ["Live Edit: This functionnality has been disabled."]}');
+				die('{"hasError" : true, "errors" : ["Live Edit: This functionality has been disabled."]}');
 			/* PrestaShop demo mode*/
 
 			$hook_name = Tools::getValue('hook');
@@ -556,7 +565,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 		{
 				/* PrestaShop demo mode */
 			if (_PS_MODE_DEMO_)
-				die('{"hasError" : true, "errors" : ["Live Edit: This functionnality has been disabled."]}');
+				die('{"hasError" : true, "errors" : ["Live Edit: This functionality has been disabled."]}');
 
 			$hooks_list = explode(',', Tools::getValue('hooks_list'));
 			$id_shop = (int)Tools::getValue('id_shop');

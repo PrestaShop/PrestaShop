@@ -7,7 +7,7 @@
 	</label>
 	<div class="col-lg-9">
 		<div class="input-group col-lg-12">		
-			<span class="input-group-addon"><i class="icon-user"></i></i></span>
+			<span class="input-group-addon"><i class="icon-user"></i></span>
 			<input type="hidden" id="id_customer" name="id_customer" value="{$currentTab->getFieldValue($currentObject, 'id_customer')|intval}" />
 			<input type="text" id="customerFilter" class="input-xlarge" name="customerFilter" value="{$customerFilter|escape:'html':'UTF-8'}" />
 			<span class="input-group-addon"><i class="icon-search"></i></span>
@@ -136,7 +136,7 @@
 									<option value="{$country.id_country|intval}">&nbsp;{$country.name|escape}</option>
 								{/foreach}
 							</select>
-							<a id="country_select_add" class="btn btn-block clearfix">{l s='Add'} <i class="icon-arrow-right"></i></a>
+							<a id="country_select_add" class="btn  btn-default btn-block clearfix">{l s='Add'} <i class="icon-arrow-right"></i></a>
 						</td>
 						<td>
 							<p>{l s='Selected countries'}</p>
@@ -145,7 +145,7 @@
 									<option value="{$country.id_country|intval}">&nbsp;{$country.name|escape}</option>
 								{/foreach}
 							</select>
-							<a id="country_select_remove" class="btn btn-block clearfix"><i class="icon-arrow-left"></i> {l s='Remove'} </a>
+							<a id="country_select_remove" class="btn btn-default btn-block clearfix"><i class="icon-arrow-left"></i> {l s='Remove'} </a>
 						</td>
 					</tr>
 				</table>

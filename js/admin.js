@@ -135,14 +135,14 @@ function copy2friendlyURL()
 {
 	if (typeof(id_product) == 'undefined')
 		id_product = false;
-	
+
 	if (ps_force_friendly_product || !$('#link_rewrite_' + id_language).val().length || !id_product)//check if user didn't type anything in rewrite field, to prevent overwriting
 	{
 		$('#link_rewrite_' + id_language).val(str2url($('#name_' + id_language).val().replace(/^[0-9]+\./, ''), 'UTF-8').replace('%', ''));
 		if ($('#friendly-url'))
 			$('#friendly-url').html($('#link_rewrite_' + id_language).val());
 		// trigger onchange event to use anything binded there
-		$('#link_rewrite_' + id_language).change(); 
+		$('#link_rewrite_' + id_language).change();
 	}
 	return;
 }
@@ -358,55 +358,17 @@ function gencode(size)
 }
 
 var tpl_viewing_window = null;
-function viewTemplates(id_select, prefix, ext)
+function viewTemplates(id_select, lang, ext)
 {
 	var loc = $(id_select).val();
 	if (loc != 0)
 	{
 		if (tpl_viewing_window != null && !tpl_viewing_window.closed)
 			tpl_viewing_window.close();
-		tpl_viewing_window = window.open(prefix + loc + ext, 'tpl_viewing', 'toolbar=0,location=0,directories=0,statfr=no,menubar=0,scrollbars=yes,resizable=yes,width=520,height=400,top=50,left=300');
+		var url_preview = $("option[value="+loc+"]", id_select).data('preview');
+		tpl_viewing_window = window.open(url_preview + lang + loc + ext, 'tpl_viewing', 'toolbar=0,location=0,directories=0,statfr=no,menubar=0,scrollbars=yes,resizable=yes,width=520,height=400,top=50,left=300');
 		tpl_viewing_window.focus();
 	}
-}
-
-function validateImportation(mandatory)
-{
-    var type_value = [];
-	var seted_value = [];
-	var elem;
-	var col = 'unknow';
-
-	toggle(getE('error_duplicate_type'), false);
-	toggle(getE('required_column'), false);
-    for (i = 0; elem = getE('type_value['+i+']'); i++)
-    {
-		if (seted_value[elem.options[elem.selectedIndex].value])
-		{
-			scroll(0,0);
-			toggle(getE('error_duplicate_type'), true);
-			return false;
-		}
-		else if (elem.options[elem.selectedIndex].value != 'no')
-			seted_value[elem.options[elem.selectedIndex].value] = true;
-	}
-	for (needed in mandatory)
-		if (!seted_value[mandatory[needed]])
-		{
-			scroll(0,0);
-			toggle(getE('required_column'), true);
-			getE('missing_column').innerHTML = mandatory[needed];
-			elem = getE('type_value[0]');
-			for (i = 0; i < elem.length; ++i)
-			{
-				if (elem.options[i].value == mandatory[needed])
-				{
-					getE('missing_column').innerHTML = elem.options[i].innerHTML;
-					break ;
-				}
-			}
-			return false
-		}
 }
 
 function orderDeleteProduct(txtConfirm, txtExplain)
@@ -579,7 +541,7 @@ function showRedirectProductOptions(show)
 		$('.redirect_product_options').fadeIn();
 	else
 		$('.redirect_product_options').fadeOut();
-	
+
 	redirectSelectChange();
 }
 
@@ -618,7 +580,7 @@ function showRedirectProductSelectOptions(show)
 		$('.redirect_product_options_product_choise').hide();
 		removeRelatedProduct();
 	}
-		
+
 }
 
 function showOptions(show)
@@ -655,16 +617,16 @@ function checkMultishopDefaultValue(obj, key)
 {
 	if (!$(obj).prop('checked') || $('#'+key).hasClass('isInvisible'))
 	{
-		$('#conf_id_'+key+' input, #conf_id_'+key+' textarea, #conf_id_'+key+' select').attr('disabled', true);
+		$('#conf_id_'+key+' input, #conf_id_'+key+' textarea, #conf_id_'+key+' select, #conf_id_'+key+' button').prop('disabled', true);
 		$('#conf_id_'+key+' label.conf_title').addClass('isDisabled');
-		$(obj).attr('disabled', false);
+		$(obj).prop('disabled', false);
 	}
 	else
 	{
-		$('#conf_id_'+key+' input, #conf_id_'+key+' textarea, #conf_id_'+key+' select').attr('disabled', false);
+		$('#conf_id_'+key+' input, #conf_id_'+key+' textarea, #conf_id_'+key+' select, #conf_id_'+key+' button').prop('disabled', false);
 		$('#conf_id_'+key+' label.conf_title').removeClass('isDisabled');
 	}
-	$('#conf_id_'+key+' .preference_default_multishop input').attr('disabled', false);
+	$('#conf_id_'+key+' .preference_default_multishop input').prop('disabled', false);
 }
 
 function toggleAllMultishopDefaultValue($container, value)
@@ -819,11 +781,11 @@ $(document).ready(function()
 		setTimeout(function(){element.hide()}, 1000);
 		clearTimeout(ajax_running_timeout);
 	});
-	
+
 	bindTabModuleListAction();
-	
+
 	bindAddonsButtons();
-	
+
 	//Check filters value on submit filter
 	$("[name='submitFilter']").click(function(event) {
 		var list_id = $(this).data('list-id');
@@ -874,7 +836,7 @@ $(document).ready(function()
 				{
 					$(this).css('width', $(this).width());
 					// fixing parent height will prevent that annoying "pagequake" thing
-					// the order is important : this has to be set before adding class fix-toolbar 
+					// the order is important : this has to be set before adding class fix-toolbar
 					$(this).parent().css('height', $(this).parent().height());
 					$(this).addClass("fix-toolbar");
 				}
@@ -891,12 +853,35 @@ $(document).ready(function()
 	$(document).on('click', '.untrustedaddon', function(e){
 		e.preventDefault();
 		var moduleName = $(this).data('module-name');
+		var moduleDisplayName = $(this).data('module-display-name');
+		var moduleImage = $(this).data('module-image');
+		var authorName = $(this).data('author-name');
 		var moduleLink = $(this).data('link');
-		var addonsSearchLink = 'http://addons.prestashop.com/en/search?search_query='+encodeURIComponent(moduleName)+'&utm_source=back-office&utm_medium=addons-certified&utm_campaign=back-office-'+iso_user.toUpperCase();
+		var authorUri = $(this).data('author-uri');
+		var isValidUri = /(https?):\/\/([a-z0-9\.]*)?(prestashop.com).*/gi;
+		var addonsSearchLink = 'http://addons.prestashop.com/en/search?search_query='+encodeURIComponent(moduleDisplayName)+'&utm_source=back-office&utm_medium=addons-certified&utm_campaign=back-office-'+iso_user.toUpperCase();
 
-		$('.modal .module-name-placeholder').text(moduleName);
+		$('.modal #untrusted-module-logo').attr('src', moduleImage);
+		$('.modal .module-display-name-placeholder').text(moduleDisplayName);
+		$('.modal .author-name-placeholder').text(authorName);
+
+		if (isValidUri.test(authorUri))
+			$('.modal .author-name-placeholder').wrap('<a href="'+authorUri+'" onclick="window.open(this.href);return false;"></a>');
+
 		$('.modal #proceed-install-anyway').attr('href', moduleLink);
 		$('.modal .catalog-link').attr('href', addonsSearchLink);
+		$('.modal .catalog-link').attr('onclick', 'window.open(this.href);return false;');
+	});
+
+	$(document).on('click', '#untrusted-show-risk', function(e){
+		e.preventDefault();
+		$('.untrusted-content-action').hide();
+		$('.untrusted-content-more-info').show();
+	});
+	$(document).on('click', '#untrusted-show-action', function(e){
+		e.preventDefault();
+		$('.untrusted-content-more-info').hide();
+		$('.untrusted-content-action').show();
 	});
 
 	// if count errors
@@ -931,6 +916,31 @@ $(document).ready(function()
 		});
 		return false;
 	});
+
+	// js for the buttons of swap helper
+	$("#addSwap").on('click', function(e) {
+		e.preventDefault();
+		$('#availableSwap option:selected').each( function() {
+			$('#selectedSwap').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
+			$(this).remove();
+		});
+		$('#selectedSwap option').prop('selected', true);
+	});
+
+	$("#removeSwap").on('click', function(e) {
+		e.preventDefault();
+		$('#selectedSwap option:selected').each( function() {
+			$('#availableSwap').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
+			$(this).remove();
+		});
+		$('#selectedSwap option').prop('selected', true);
+	});
+
+	if ($('#selectedSwap').length != 0) {
+		$('button:submit').click(function() {
+			$('#selectedSwap option').attr('selected', 'selected');
+		});
+	}
 });
 
 
@@ -941,7 +951,7 @@ function bindTabModuleListAction()
 			option = $('#'+$(this).data('option')+' :selected');
 			if ($(option).data('onclick') != '')
 			{
-				
+
 				var f = eval("(function(){ "+$(option).data('onclick')+"})");
 				if (f.call())
 					window.location.href = $(option).data('href');
@@ -949,7 +959,7 @@ function bindTabModuleListAction()
 			else
 				window.location.href = $(option).data('href');
 			return false;
-		});			
+		});
 	});
 }
 
@@ -1076,7 +1086,7 @@ function display_action_details(row_id, controller, token, action, params)
 				}
 				current_element.data('dataMaped', true);
 				current_element.data('opened', false);
-				
+
 				if (typeof(initTableDnD) != 'undefined')
 					initTableDnD('.details_'+id+' table.tableDnD');
 			}
@@ -1112,7 +1122,7 @@ function changeEmployeeLanguage()
 {
 	if (typeof allowEmployeeFormLang !== 'undefined' && allowEmployeeFormLang)
 		$.post("index.php", {
-			action: 'formLanguage', 
+			action: 'formLanguage',
 			tab: 'AdminEmployees',
 			ajax: 1,
 			token: employee_token,
@@ -1153,7 +1163,7 @@ function sendBulkAction(form, action)
 	$(form).submit();
 }
 
-function openModulesList() 
+function openModulesList()
 {
 	if (!modules_list_loaded)
 	{
@@ -1170,7 +1180,7 @@ function openModulesList()
 			},
 			success : function(data)
 			{
-				$('#modules_list_container_tab').html(data).slideDown();
+				$('#modules_list_container_tab_modal').html(data).slideDown();
 				$('#modules_list_loader').hide();
 				modules_list_loaded = true;
 				$('.help-tooltip').tooltip();
@@ -1179,7 +1189,7 @@ function openModulesList()
 	}
 	else
 	{
-		$('#modules_list_container_tab').slideDown();
+		$('#modules_list_container_tab_modal').slideDown();
 		$('#modules_list_loader').hide();
 	}
 	return false;
@@ -1216,14 +1226,14 @@ function bindAddonsButtons()
 						window.location.href = admin_modules_link + '&conf=32';
 					}
 					else
-						$('#addons_loading').html(errorLogin);
+						$('#addons_loading').html('<br><div class="alert alert-danger">'+errorLogin+'</div>');
 				}
 			});
 		}
 		catch(e){}
 		return false;
 	});
-	
+
 	// Method to log out PrestaShop Addons WebServices
 	$('#addons_logout_button').click(function()
 	{
@@ -1302,7 +1312,7 @@ function check_for_all_accesses(tabsize, tabnumber)
 	var i = 0;
 	var res = 0;
 	var right = 0;
-	var rights = new Array('view', 'add', 'edit', 'delete', 'all'); 
+	var rights = new Array('view', 'add', 'edit', 'delete', 'all');
 
 	while (i != parseInt(tabsize) + 1)
 	{
@@ -1418,7 +1428,7 @@ function checkLangPack(token){
 				action:'checkLangPack',
 				token:token,
 				ajax:1,
-				iso_lang:($('#iso_code').val()).toLowerCase(), 
+				iso_lang:($('#iso_code').val()).toLowerCase(),
 				ps_version:$('#ps_version').val()
 			},
 			function(ret)
@@ -1471,7 +1481,7 @@ function isCleanHtml(content)
 	events += '|ondragleave|ondragover|ondragstart|ondrop|onerrorupdate|onfilterchange|onfinish|onfocusin|onfocusout|onhashchange|onhelp|oninput|onlosecapture|onmessage|onmouseup|onmovestart';
 	events += '|onoffline|ononline|onpaste|onpropertychange|onreadystatechange|onresizeend|onresizestart|onrowenter|onrowexit|onrowsdelete|onrowsinserted|onscroll|onsearch|onselectionchange';
 	events += '|onselectstart|onstart|onstop';
-	
+
 	var script1 = /<[\s]*script/im;
 	var script2 = new RegExp('('+events+')[\s]*=', 'im');
 	var script3 = /.*script\:/im;
@@ -1481,4 +1491,46 @@ function isCleanHtml(content)
 		return false;
 
 	return true;
+}
+
+function parseDate(date){
+	return $.datepicker.parseDate("yy-mm-dd", date);
+}
+
+function refresh_kpis()
+{
+	$('.box-stats').each(function(){
+		window['refresh_' + $(this).attr('id').replace(/-/g, '_')]();
+	});
+}
+
+function createSqlQueryName()
+{
+	var container = false;
+	if ($('.breadcrumb-container'))
+		container = $('.breadcrumb-container').first().text().replace(/\s+/g, ' ').trim();
+	var current = false;
+	if ($('.breadcrumb-current'))
+		current = $('.breadcrumb-current').first().text().replace(/\s+/g, ' ').trim();
+	var title = false;
+	if ($('.page-title'))
+		title = $('.page-title').first().text().replace(/\s+/g, ' ').trim();
+
+	var name = false;
+	if (container && current && container != current)
+		name = container + ' > ' + current;
+	else if (container)
+		name = container;
+	else if (current)
+		name = current;
+
+	if (title && title != current && title != container)
+	{
+		if (name)
+			name = name + ' > ' + title;
+		else
+			name = title;
+	}
+
+	return name.trim();
 }

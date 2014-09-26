@@ -26,6 +26,10 @@ ul.product_list {
 				background: #fe9126;
 				border: 1px solid #e4752b;
 			}
+			&.available-dif{
+				background: #fe9126;
+				border: 1px solid #e4752b;
+			}
 		}
 	}
 	.color-list-container {
@@ -277,9 +281,6 @@ ul.product_list.grid {
 			}
 			.button-container {
 				margin-bottom: 14px;
-				@media (min-width: $screen-lg) { // min 1200px
-					display: none;
-				}
 				.ajax_add_to_cart_button, 
 				span.button,
 				.lnk_view { 

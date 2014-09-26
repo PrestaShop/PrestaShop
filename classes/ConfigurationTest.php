@@ -27,6 +27,31 @@
 class ConfigurationTestCore
 {
 
+	public static $test_files = array(
+		'/cache/smarty/compile/index.php',
+		'/classes/log/index.php',
+		'/classes/cache/index.php',
+		'/config/index.php',
+		'/tools/tar/Archive_Tar.php',
+		'/tools/pear/PEAR.php',
+		'/controllers/admin/AdminLoginController.php',
+		'/css/index.php',
+		'/download/index.php',
+		'/img/404.gif',
+		'/js/tools.js',
+		'/js/jquery/plugins/fancybox/jquery.fancybox.js',
+		'/localization/fr.xml',
+		'/mails/index.php',
+		'/modules/index.php',
+		'/override/controllers/front/index.php',
+		'/pdf/order-return.tpl',
+		'/themes/default-bootstrap/css/global.css',
+		'/translations/export/index.php',
+		'/webservice/dispatcher.php',
+		'/upload/index.php',
+		'/index.php'
+	);
+
 	/**
 	 * getDefaultTests return an array of tests to executes.
 	 * key are method name, value are parameters (false for no parameter)
@@ -169,7 +194,7 @@ class ConfigurationTestCore
 		$dir = rtrim(_PS_ROOT_DIR_, '\\/').DIRECTORY_SEPARATOR.trim($relative_dir, '\\/');
 		if (!file_exists($dir) || !$dh = @opendir($dir))
 		{
-			$full_report = sprintf('Directory %s does not exists or is not writable', $dir); // sprintf for future translation
+			$full_report = sprintf('Directory %s does not exist or is not writable', $dir); // sprintf for future translation
 			return false;
 		}
 		$dummy = rtrim($dir, '\\/').DIRECTORY_SEPARATOR.uniqid();
@@ -325,35 +350,20 @@ class ConfigurationTestCore
 		return extension_loaded('Dom');
 	}
 	
-	public static function test_files()
+	public static function test_files($full = false)
 	{
-		$files = array(
-			'/cache/smarty/compile/index.php',
-			'/classes/log/index.php',
-			'/classes/cache/index.php',
-			'/config/index.php',
-			'/tools/tar/Archive_Tar.php',
-			'/tools/pear/PEAR.php',
-			'/controllers/admin/AdminLoginController.php',
-			'/css/index.php',
-			'/download/index.php',
-			'/img/404.gif',
-			'/js/tools.js',
-			'/js/jquery/plugins/fancybox/jquery.fancybox.js',
-			'/localization/fr.xml',
-			'/mails/index.php',
-			'/modules/index.php',
-			'/override/controllers/front/index.php',
-			'/pdf/order-return.tpl',
-			'/themes/default-bootstrap/css/global.css',
-			'/translations/export/index.php',
-			'/webservice/dispatcher.php',
-			'/upload/index.php',
-			'/index.php'
-		);
-		foreach ($files as $file)
+		$return = array();
+		foreach (ConfigurationTest::$test_files as $file)
 			if (!file_exists(rtrim(_PS_ROOT_DIR_, DIRECTORY_SEPARATOR).str_replace('/', DIRECTORY_SEPARATOR, $file)))
-				return false;
-		return true;		
+			{
+				if ($full)
+					array_push($return, $file);
+				else
+					return false;
+			}
+
+		if ($full)
+			return $return;
+		return true;
 	}
 }

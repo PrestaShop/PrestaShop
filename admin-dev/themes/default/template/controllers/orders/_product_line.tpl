@@ -43,7 +43,7 @@
 	<td>
 		<span class="product_price_show">{displayPrice price=$product_price currency=$currency->id}</span>
 		{if $can_edit}
-		<span class="product_price_edit" style="display:none;">
+		<div class="product_price_edit" style="display:none;">
 			<input type="hidden" name="product_id_order_detail" class="edit_product_id_order_detail" value="{$product['id_order_detail']}" />
 			<div class="form-group">
 				<div class="fixed-width-xl">
@@ -62,7 +62,7 @@
 					</div>
 				</div>
 			</div>
-		</span>
+		</div>
 		{/if}
 	</td>
 	<td class="productQuantity text-center">
@@ -142,7 +142,7 @@
 		0/{$productQuantity}
 	{/if}
 	</td>
-	<td class="partial_refund_fields current-edit" style="display:none; width: 250px" colspan="2">
+	<td class="partial_refund_fields current-edit" style="display:none; width: 250px;">
 		<div class="form-group">
 			<div class="col-lg-4">
 				<label class="control-label">
@@ -176,7 +176,7 @@
 	
 	</td>
 	{if ($can_edit && !$order->hasBeenDelivered())}
-	<td class="product_invoice" colspan="2" style="display: none;">
+	<td class="product_invoice" style="display: none;">
 		{if sizeof($invoices_collection)}
 		<select name="product_invoice" class="edit_product_invoice">
 			{foreach from=$invoices_collection item=invoice}

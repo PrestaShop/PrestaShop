@@ -28,7 +28,7 @@
 		<input type="radio" name="{$input_name}" value="{$node['id_category']}"{if isset($node['disabled']) && $node['disabled'] == true} disabled="disabled"{/if} />
 		{/if}
 		<i class="icon-folder-close"></i>
-		<label class="tree-toggler ">{$node['name']}</label>
+		<label class="tree-toggler">{$node['name']}</label>
 	</span>
 	<ul class="tree">
 		{$children}

@@ -41,17 +41,6 @@ $(function() {
 	</h2>
 {/if}
 
-<div class="panel">
-	<h3>Search</h3>
-
-	<div class="row">
-		<div class="col-lg-4">
-			{include file="search_form.tpl" id="in_content"}
-		</div>
-	</div>
-</div>
-
-
 {if $query && isset($nb_results) && $nb_results}
 
 	{if isset($features)}
@@ -109,7 +98,7 @@ $(function() {
 				{l s='%d categories' sprintf=$categories|@count}
 			{/if}
 		</h3>
-		<table cellspacing="0" cellpadding="0" class="table">
+		<table class="table" style="border-spacing : 0; border-collapse : collapse;">
 			{foreach $categories key=key item=category}
 				<tr>
 					<td>{$category}</td>
@@ -171,14 +160,14 @@ $(function() {
 			<tbody>
 			{foreach $addons key=key item=addon}
 				<tr>
-					<td><a href="{$addon.href|escape:'html':'UTF-8'}&utm_source=backoffice_search" target="_blank"><strong><i class="icon-external-link-sign"></i> {$addon.title|escape:'html':'UTF-8'}</strong></a></td>
-					<td><a href="{$addon.href|escape:'html':'UTF-8'}&utm_source=backoffice_search" target="_blank">{$addon.description|truncate:256:'...'|escape:'html':'UTF-8'}</a></td>
+					<td><a href="{$addon.href|escape:'html':'UTF-8'}&amp;utm_source=backoffice_search" target="_blank"><strong><i class="icon-external-link-sign"></i> {$addon.title|escape:'html':'UTF-8'}</strong></a></td>
+					<td><a href="{$addon.href|escape:'html':'UTF-8'}&amp;utm_source=backoffice_search" target="_blank">{$addon.description|truncate:256:'...'|escape:'html':'UTF-8'}</a></td>
 				</tr>
 			{/foreach}
 		</tbody>
 			<tfoot>
 				<tr>
-					<td colspan="2" class="text-center"><a href="http://addons.prestashop.com/search.php?search_query={$query|urlencode}&utm_source=backoffice_search" target="_blank"><strong>{l s='Show more results...'}</strong></a></td>
+					<td colspan="2" class="text-center"><a href="http://addons.prestashop.com/search.php?search_query={$query|urlencode}&amp;utm_source=backoffice_search" target="_blank"><strong>{l s='Show more results...'}</strong></a></td>
 				</tr>
 			</tfoot>
 		</table>
@@ -190,13 +179,13 @@ $(function() {
 	<div class="col-lg-4">
 		<div class="panel">
 			<h3>{l s='Search doc.prestashop.com'}</h3>
-			<a href="http://doc.prestashop.com/dosearchsite.action?spaceSearch=true&queryString={$query}&utm_source=backoffice_search" target="_blank" class="btn btn-default">{l s='Go to the documentation'}</a>
+			<a href="http://doc.prestashop.com/dosearchsite.action?spaceSearch=true&amp;queryString={$query}&amp;utm_source=backoffice_search" target="_blank" class="btn btn-default">{l s='Go to the documentation'}</a>
 		</div>
 	</div>
 	<div class="col-lg-4">
 		<div class="panel">
 			<h3>{l s='Search addons.prestashop.com'}</h3>
-			<a href="http://addons.prestashop.com/search.php?search_query={$query}&utm_source=backoffice_search" target="_blank" class="btn btn-default">{l s='Go to Addons'}</a>
+			<a href="http://addons.prestashop.com/search.php?search_query={$query}&amp;utm_source=backoffice_search" target="_blank" class="btn btn-default">{l s='Go to Addons'}</a>
 		</div>
 	</div>
 	<div class="col-lg-4">

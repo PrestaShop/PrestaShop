@@ -88,7 +88,7 @@ class OrderDetailControllerCore extends FrontController
 						$ct = new CustomerThread((int)$id_customer_thread);
 					$cm->id_customer_thread = $ct->id;
 					$cm->message = $msgText;
-					$cm->ip_address = ip2long($_SERVER['REMOTE_ADDR']);
+					$cm->ip_address = (int)ip2long($_SERVER['REMOTE_ADDR']);
 					$cm->add();
 
 					if (!Configuration::get('PS_MAIL_EMAIL_MESSAGE'))

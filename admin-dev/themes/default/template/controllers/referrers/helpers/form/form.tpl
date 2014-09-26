@@ -83,7 +83,6 @@
 	{/if}
 {/block}
 
-
 {block name="fieldset"}
 	{if $f == 3}
 		<div id="tracking_expert" style="display: none;">
@@ -100,7 +99,7 @@
 	{/if}
 
 	{if isset($input.label)}
-		<label class="control-label col-lg-3" for="{$input.name}">{$input.label}</label>
+		<label class="control-label col-lg-3" for="{if isset($input.id) && $input.id}{$input.id|escape:'html':'UTF-8'}{elseif isset($input.name) && $input.name}{$input.name|escape:'html':'UTF-8'}{/if}">{$input.label}</label>
 	{/if}
 {/block}
 

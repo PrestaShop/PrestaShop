@@ -244,7 +244,7 @@ class FeatureCore extends ObjectModel
 			return false;
 
 		return Db::getInstance()->executeS('
-			SELECT * , COUNT(*) as nb
+			SELECT f.*, fl.*
 			FROM `'._DB_PREFIX_.'feature` f
 			LEFT JOIN `'._DB_PREFIX_.'feature_product` fp
 				ON f.`id_feature` = fp.`id_feature`
@@ -253,7 +253,7 @@ class FeatureCore extends ObjectModel
 			WHERE fp.`id_product` IN ('.$ids.')
 			AND `id_lang` = '.(int)$id_lang.'
 			GROUP BY f.`id_feature`
-			ORDER BY nb DESC
+			ORDER BY f.`position` ASC
 		');
 	}
 

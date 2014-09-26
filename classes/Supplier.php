@@ -263,7 +263,7 @@ class SupplierCore extends ObjectModel
 					il.`legend`,
 					s.`name` AS supplier_name,
 					DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.($nb_days_new_product).' DAY)) > 0 AS new,
-					m.`name` AS manufacturer_name
+					m.`name` AS manufacturer_name, product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity
 				FROM `'._DB_PREFIX_.'product` p
 				'.Shop::addSqlAssociation('product', 'p').'
 				JOIN `'._DB_PREFIX_.'product_supplier` ps ON (ps.id_product = p.id_product

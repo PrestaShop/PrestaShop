@@ -106,7 +106,7 @@ class ProductControllerCore extends FrontController
 				else
 				{
 					$this->context->smarty->assign('adminActionDisplay', false);
-					if ($this->product->id_product_redirected == $this->product->id)
+					if (!$this->product->id_product_redirected || $this->product->id_product_redirected == $this->product->id)
 						$this->product->redirect_type = '404';
 					
 					switch ($this->product->redirect_type)
@@ -114,11 +114,13 @@ class ProductControllerCore extends FrontController
 						case '301':
 							header('HTTP/1.1 301 Moved Permanently');
 							header('Location: '.$this->context->link->getProductLink($this->product->id_product_redirected));
+							exit;
 						break;
 						case '302':
 							header('HTTP/1.1 302 Moved Temporarily');
 							header('Cache-Control: no-cache');
 							header('Location: '.$this->context->link->getProductLink($this->product->id_product_redirected));
+							exit;
 						break;
 						case '404':
 						default:
@@ -300,7 +302,7 @@ class ProductControllerCore extends FrontController
 	{
 		$id_customer = (isset($this->context->customer) ? (int)$this->context->customer->id : 0);
 		$id_group = (int)Group::getCurrent()->id;
-		$id_country = (int)$id_customer ? Customer::getCurrentCountry($id_customer) : Configuration::get('PS_COUNTRY_DEFAULT');
+		$id_country = $id_customer ? (int)Customer::getCurrentCountry($id_customer) : (int)Tools::getCountry();
 
 		$group_reduction = GroupReduction::getValueForProduct($this->product->id, $id_group);
 		if ($group_reduction === false)

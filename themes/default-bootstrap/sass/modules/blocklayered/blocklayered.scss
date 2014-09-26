@@ -96,7 +96,7 @@
 #layered_block_left .color-option.disable {
 	opacity: 0.5;
 	filter:alpha(opacity=50);
-	-moz-opacity:0.5; 
+	-moz-opacity:0.5;
 }
 #layered_block_left .nomargin a {
 	display: inline;
@@ -171,4 +171,8 @@
 	layered_subtitle {
 		font-size: 1.2 em;
 	}
+}
+#layered_block_left ul li{
+  min-width: 50%;
+  width: auto;
 }

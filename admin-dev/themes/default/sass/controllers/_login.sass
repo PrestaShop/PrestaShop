@@ -1,9 +1,12 @@
+@mixin background-image-with-ms($image)
+	@include background-image($image) // Compass default version, for everything but IE 10.
+	background-image: -ms-#{$image} // Vendor prefixes for IE 10.
 
 #login
 	min-height: 100%
-	background-color: #092756
 	padding-bottom: 45px
-	@include background(radial-gradient(color-stops(rgba(104,128,138,.4) 10%,rgba(138,114,76,0) 40%), top left),linear-gradient(top,rgba(57,173,219,.25),rgba(42,60,87,.4)),linear-gradient(left top,#670D10,#092756))
+	background-color: #4D394B // Old browsers
+	@include background-image-with-ms(linear-gradient(top left,#2C3042,#4D394B))
 	
 #login-header
 	padding-top: 40px
@@ -16,6 +19,7 @@
 #login-panel
 	margin: 0 auto
 	width: 420px
+
 	@media (max-width: $screen-phone)
 		width: 90%
 	.panel
@@ -26,24 +30,33 @@
 	.flip-container
 		height: 370px
 		@include perspective(1000px)
+		transform-style: preserve-3d
 		//@include animate(fadeInDown, 0.3s)
-		&.flip .flipper
-			@include rotateY(180deg)
+		&.flip
+			.flipper
+				@include rotateY(180deg)
+			.back
+				@include backface-visibility(visible)
 	.flipper
 		position: relative
+		transform-style: preserve-3d
 		@include transition-duration(0.6s)
 		@include transform-style
 	.front, .back
 		width: 100%
 		padding: 20px
 		position: absolute
+		transition: 0.6s
+		transform-style: preserve-3d
 		top: 0
 		@include backface-visibility(hidden)
 		@include left(0)
 	.front
+		@include rotateY(0)
 		z-index: 2
 	.back
 		display: none
+		z-index: 1
 		@include rotateY(180deg)
 	#remind-me
 		margin-top: 0

@@ -26,7 +26,7 @@
 	{if isset($header)}{$header}{/if}
 	<div id="block_category_tree"{if !$is_category_filter} style="display:none"{/if}>
 		{if isset($nodes)}
-		<ul id="{$id}" class="tree">
+		<ul id="{$id|escape:'html':'UTF-8'}" class="tree">
 			{$nodes}
 		</ul>
 		{/if}
@@ -57,8 +57,8 @@
 		}
 	{/if}
 	{if isset($use_search) && $use_search == true}
-		$("#{$id}-categories-search").bind("typeahead:selected", function(obj, datum) {
-		    $("#{$id}").find(":input").each(
+		$("#{$id|escape:'html':'UTF-8'}-categories-search").bind("typeahead:selected", function(obj, datum) {
+		    $("#{$id|escape:'html':'UTF-8'}").find(":input").each(
 				function()
 				{
 					if ($(this).val() == datum.id_category)
@@ -80,18 +80,18 @@
 		});
 	{/if}
 	$(document).ready(function () {
-		var tree = $("#{$id}").tree("collapseAll");
+		var tree = $("#{$id|escape:'html':'UTF-8'}").tree("collapseAll");
 
 		tree.on('collapse', function() {
-			$('#expand-all-{$id}').show();
+			$('#expand-all-{$id|escape:'html':'UTF-8'}').show();
 		});
 
 		tree.on('expand', function() {
-			$('#collapse-all-{$id}').show();
+			$('#collapse-all-{$id|escape:'html':'UTF-8'}').show();
 		});
 
-		$('#collapse-all-{$id}').hide();
-		$("#{$id}").find(":input[type=radio]").click(
+		$('#collapse-all-{$id|escape:'html':'UTF-8'}').hide();
+		$("#{$id|escape:'html':'UTF-8'}").find(":input[type=radio]").click(
 			function()
 			{
 				location.href = location.href.replace(
@@ -104,7 +104,7 @@
 			{assign var=imploded_selected_categories value='","'|implode:$selected_categories}
 			var selected_categories = new Array("{$imploded_selected_categories}");
 
-			$("#{$id}").find(":input").each(
+			$("#{$id|escape:'html':'UTF-8'}").find(":input").each(
 				function()
 				{
 					if ($.inArray($(this).val(), selected_categories) != -1)

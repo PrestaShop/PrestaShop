@@ -154,12 +154,13 @@ class AdminShopGroupControllerCore extends AdminController
 		{
 			$this->page_header_toolbar_btn['new'] = array(
 				'desc' => $this->l('Add a new shop group'),
-				'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
+				'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token
 			);
 			$this->page_header_toolbar_btn['new_2'] = array(
 				'desc' => $this->l('Add a new shop'),
 				'href' => $this->context->link->getAdminLink('AdminShop').'&addshop',
-				'imgclass' => 'new'
+				'imgclass' => 'new_2',
+				'icon' => 'process-icon-new'
 			);
 		}
 	}

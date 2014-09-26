@@ -68,7 +68,13 @@ class AdminLoginControllerCore extends AdminController
 			else
 			{	
 				$url = 'https://'.Tools::safeOutput(Tools::getServerName()).Tools::safeOutput($_SERVER['REQUEST_URI']);
-				$warningSslMessage = sprintf(Tools::displayError('SSL is activated. Please connect using the following link to <a href="%s">log into secure mode (https://)</a>', false), $url);
+				$warningSslMessage = sprintf(
+					Translate::ppTags(
+						Tools::displayError('SSL is activated. Please connect using the following link to [1]log into secure mode (https://)[/1]', false),
+						array('<a href="%s">')
+					),
+					$url
+				);
 			}
 			$this->context->smarty->assign('warningSslMessage', $warningSslMessage);
 		}
@@ -178,7 +184,7 @@ class AdminLoginControllerCore extends AdminController
 			}
 			else
 			{
-				$this->context->employee->remote_addr = ip2long(Tools::getRemoteAddr());
+				$this->context->employee->remote_addr = (int)ip2long(Tools::getRemoteAddr());
 				// Update cookie
 				$cookie = Context::getContext()->cookie;
 				$cookie->id_employee = $this->context->employee->id;
@@ -234,7 +240,7 @@ class AdminLoginControllerCore extends AdminController
 		if (!count($this->errors))
 		{	
 			$pwd = Tools::passwdGen();
-			$employee->passwd = md5(pSQL(_COOKIE_KEY_.$pwd));
+			$employee->passwd = Tools::encrypt($pwd);
 			$employee->last_passwd_gen = date('Y-m-d H:i:s', time());
 
 			$params = array(
@@ -244,7 +250,7 @@ class AdminLoginControllerCore extends AdminController
 				'{passwd}' => $pwd
 			);
 						
-			if (Mail::Send($employee->id_lang, 'password', Mail::l('Your new password', $employee->id_lang), $params, $employee->email, $employee->firstname.' '.$employee->lastname))
+			if (Mail::Send($employee->id_lang, 'employee_password', Mail::l('Your new password', $employee->id_lang), $params, $employee->email, $employee->firstname.' '.$employee->lastname))
 			{
 				// Update employee only if the mail can be sent
 				Shop::setContext(Shop::CONTEXT_SHOP, (int)min($employee->getAssociatedShops()));

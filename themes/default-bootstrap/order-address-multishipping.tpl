@@ -76,9 +76,9 @@
 				<input type="hidden" class="hidden" name="step" value="2" />
 				<input type="hidden" name="back" value="{$back}" />
 				{if $back}
-					<a href="{$link->getPageLink('order', true, NULL, "step=0&amp;back={$back}")|escape:'html':'UTF-8'}" title="{l s='Previous'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Continue Shopping'}</a>
+					<a href="{$link->getPageLink('order', true, NULL, "back={$back}")|escape:'html':'UTF-8'}" title="{l s='Previous'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Continue Shopping'}</a>
 				{else}
-					<a href="{$link->getPageLink('order', true, NULL, "step=0")|escape:'html':'UTF-8'}" title="{l s='Previous'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Continue Shopping'}</a>
+					<a href="{$link->getPageLink('order', true, NULL)|escape:'html':'UTF-8'}" title="{l s='Previous'}" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Continue Shopping'}</a>
 				{/if}
 		        <button type="submit" name="processAddress" class="button btn btn-default button-medium"><span>{l s='Proceed to checkout'}<i class="icon-chevron-right right"></i></span></button>
 			</p>
@@ -99,7 +99,7 @@
 	{addJsDefL name=txtSelectAnAddressFirst}{l s='Please start by selecting an address' js=1}{/addJsDefL}
 {/if}
 {capture}{if $back}&mod={$back|urlencode}{/if}{/capture}
-{capture name=addressUrl}{$link->getPageLink('address', true, NULL, 'back='|cat:$back_order_page|cat:'?step=1'|cat:$smarty.capture.default)|addslashes}{/capture}
+{capture name=addressUrl}{$link->getPageLink('address', true, NULL, 'back='|cat:$back_order_page|cat:'?step=1'|cat:$smarty.capture.default)|escape:'quotes':'UTF-8'}{/capture}
 {addJsDef addressUrl=$smarty.capture.addressUrl}
 {capture}{'&multi-shipping=1'|urlencode}{/capture}
 {addJsDef addressMultishippingUrl=$smarty.capture.addressUrl|cat:$smarty.capture.default}
