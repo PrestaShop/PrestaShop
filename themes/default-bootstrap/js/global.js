@@ -171,9 +171,9 @@ function blockHover(status)
 	var screenLg = $('body').find('.container').width() == 1170;
 
 	if (screenLg)
-		$('.button-container').hide();
+		$('.product_list .button-container').hide();
 	else
-		$('.button-container').show();
+		$('.product_list .button-container').show();
 
 	$(document).off('mouseenter').on('mouseenter', '.product_list.grid li.ajax_block_product .product-container', function(e){
 		if (screenLg)
