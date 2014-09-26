@@ -109,8 +109,19 @@ class CustomerMessageCore extends ObjectModel
 	
 	public function delete()
 	{
-		if (!empty($this->file_name))
-			@unlink(_PS_UPLOAD_DIR_.$this->file_name);
-		return parent::delete();
+		if (!empty($this->file_name)) 
+		{
+                    if (strpos($this->file_name,"{")!==false) 
+                    {
+                        $arr = Tools::jsonDecode($this->file_name);
+                        foreach ($arr as $fN => $n)
+                            @unlink(_PS_UPLOAD_DIR_.$fN);
+                    } 
+                    else 
+                    {
+                        @unlink(_PS_UPLOAD_DIR_.$this->file_name);
+                    }
+                }
+                return parent::delete();
 	}  
 }
