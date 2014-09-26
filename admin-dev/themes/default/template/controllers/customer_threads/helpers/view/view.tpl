@@ -109,6 +109,16 @@
 			</div>
 		</div>
 	</div>
+        <div class="row">
+            <div class="form-group">
+			<label class="control-label col-lg-1">
+				{l s='Attachement :'}
+			</label>
+			<div class="col-lg-11">
+				{$file_uploader}
+			</div>
+		</div>
+	</div>
 	<div class="panel-footer">
 		<!--
 		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
