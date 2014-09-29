@@ -103,7 +103,7 @@ class ProductSaleCore
 					MAX(image_shop.`id_image`) id_image, il.`legend`,
 					ps.`quantity` AS sales, t.`rate`, pl.`meta_keywords`, pl.`meta_title`, pl.`meta_description`,
 					DATEDIFF(p.`date_add`, DATE_SUB(NOW(),
-					INTERVAL '.$interval.' DAY)) > 0 AS new, product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity
+					INTERVAL '.$interval.' DAY)) > 0 AS new, MAX(product_attribute_shop.minimal_quantity) AS product_attribute_minimal_quantity
 				FROM `'._DB_PREFIX_.'product_sale` ps
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON ps.`id_product` = p.`id_product`
 				'.Shop::addSqlAssociation('product', 'p', false).'
@@ -183,7 +183,7 @@ class ProductSaleCore
 			ps.`quantity` AS sales, p.`ean13`, p.`upc`, cl.`link_rewrite` AS category, p.show_price, p.available_for_order, IFNULL(stock.quantity, 0) as quantity, p.customizable,
 			IFNULL(pa.minimal_quantity, p.minimal_quantity) as minimal_quantity, stock.out_of_stock,
 			product_shop.`date_add` > "'.date('Y-m-d', strtotime('-'.(Configuration::get('PS_NB_DAYS_NEW_PRODUCT') ? (int)Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY')).'" as new, 
-			product_shop.`on_sale`, product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity
+			product_shop.`on_sale`, MAX(product_attribute_shop.minimal_quantity) AS product_attribute_minimal_quantity
 		FROM `'._DB_PREFIX_.'product_sale` ps
 		LEFT JOIN `'._DB_PREFIX_.'product` p ON ps.`id_product` = p.`id_product`
 		'.Shop::addSqlAssociation('product', 'p').'
