@@ -313,7 +313,7 @@ class SearchCore
 						NOW(),
 						INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY
 					)
-				) > 0 new, product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity
+				) > 0 new, MAX(product_attribute_shop.minimal_quantity) AS product_attribute_minimal_quantity
 				FROM '._DB_PREFIX_.'product p
 				'.Shop::addSqlAssociation('product', 'p').'
 				INNER JOIN `'._DB_PREFIX_.'product_lang` pl ON (
