@@ -268,6 +268,9 @@ class SupplierCore extends ObjectModel
 				'.Shop::addSqlAssociation('product', 'p').'
 				JOIN `'._DB_PREFIX_.'product_supplier` ps ON (ps.id_product = p.id_product
 					AND ps.id_product_attribute = 0)
+				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa
+					ON (p.`id_product` = pa.`id_product`)
+				'.Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.`default_on` = 1').'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product`
 					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').')
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)'.
@@ -276,7 +279,7 @@ class SupplierCore extends ObjectModel
 					AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'supplier` s ON s.`id_supplier` = p.`id_supplier`
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
-				'.Product::sqlStock('p').'
+				'.Product::sqlStock('p', 0).'
 				WHERE ps.`id_supplier` = '.(int)$id_supplier.'
 					'.($active ? ' AND product_shop.`active` = 1' : '').'
 					'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
