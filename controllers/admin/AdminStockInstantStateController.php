@@ -122,14 +122,14 @@ class AdminStockInstantStateControllerCore extends AdminController
 				'short' => $this->l('Export this list as CSV', null, null, false),
 				'href' => $this->context->link->getAdminLink('AdminStockInstantState').'&csv_quantities&id_warehouse='.(int)$this->getCurrentCoverageWarehouse(),
 				'desc' => $this->l('Export Quantities (CSV)', null, null, false),
-				'imgclass' => 'export'
+				'class' => 'process-icon-export'
 			);
 
 			$this->page_header_toolbar_btn['export-stock-state-prices-csv'] = array(
 				'short' => $this->l('Export this list as CSV', null, null, false),
 				'href' => $this->context->link->getAdminLink('AdminStockInstantState').'&csv_prices&id_warehouse='.(int)$this->getCurrentCoverageWarehouse(),
 				'desc' => $this->l('Export Prices (CSV)', null, null, false),
-				'imgclass' => 'export'
+				'class' => 'process-icon-export'
 			);
 		}
 
@@ -406,14 +406,14 @@ class AdminStockInstantStateControllerCore extends AdminController
 				'short' => 'Export this list as CSV',
 				'href' => $this->context->link->getAdminLink('AdminStockInstantState').'&csv_quantities&id_warehouse='.(int)$this->getCurrentCoverageWarehouse(),
 				'desc' => $this->l('Export Quantities (CSV)'),
-				'imgclass' => 'export'
+				'class' => 'process-icon-export'
 			);
 
 			$this->toolbar_btn['export-stock-state-prices-csv'] = array(
 				'short' => 'Export this list as CSV',
 				'href' => $this->context->link->getAdminLink('AdminStockInstantState').'&csv_prices&id_warehouse='.(int)$this->getCurrentCoverageWarehouse(),
 				'desc' => $this->l('Export Prices (CSV)'),
-				'imgclass' => 'export'
+				'class' => 'process-icon-export'
 			);
 		}
 		parent::initToolbar();
