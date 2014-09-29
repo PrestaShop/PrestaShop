@@ -545,7 +545,8 @@ class CarrierCore extends ObjectModel
 		$id_lang = $context->language->id;
 		if (is_null($cart))
 			$cart = $context->cart;
-		$id_currency = $context->currency->id;
+		if (isset($context->currency))
+			$id_currency = $context->currency->id;
 
 		if (is_array($groups) && !empty($groups))
 			$result = Carrier::getCarriers($id_lang, true, false, (int)$id_zone, $groups, self::PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
