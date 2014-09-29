@@ -404,14 +404,14 @@ class AdminStockInstantStateControllerCore extends AdminController
 		{
 			$this->toolbar_btn['export-stock-state-quantities-csv'] = array(
 				'short' => 'Export this list as CSV',
-				'href' => $this->context->link->getAdminLink('AdminStockInstantState').'&amp;csv_quantities&amp;id_warehouse='.(int)$this->getCurrentCoverageWarehouse(),
+				'href' => $this->context->link->getAdminLink('AdminStockInstantState').'&csv_quantities&id_warehouse='.(int)$this->getCurrentCoverageWarehouse(),
 				'desc' => $this->l('Export Quantities (CSV)'),
 				'imgclass' => 'export'
 			);
 
 			$this->toolbar_btn['export-stock-state-prices-csv'] = array(
 				'short' => 'Export this list as CSV',
-				'href' => $this->context->link->getAdminLink('AdminStockInstantState').'&amp;csv_prices&amp;id_warehouse='.(int)$this->getCurrentCoverageWarehouse(),
+				'href' => $this->context->link->getAdminLink('AdminStockInstantState').'&csv_prices&id_warehouse='.(int)$this->getCurrentCoverageWarehouse(),
 				'desc' => $this->l('Export Prices (CSV)'),
 				'imgclass' => 'export'
 			);
@@ -440,7 +440,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 
 			// header
 			header('Content-type: text/csv');
-			header('Cache-Control: no-store, no-cache');
+			header('Cache-Control: no-store, no-cache must-revalidate');
 			header('Content-disposition: attachment; filename="'.$filename);
 
 			// puts keys
@@ -467,7 +467,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 
 			// header
 			header('Content-type: text/csv');
-			header('Cache-Control: no-store, no-cache');
+			header('Cache-Control: no-store, no-cache must-revalidate');
 			header('Content-disposition: attachment; filename="'.$filename);
 
 			// puts keys
@@ -502,7 +502,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 			}
 		}
 	}
-	
+
 	public function initContent()
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
@@ -512,7 +512,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 		}
 		parent::initContent();
 	}
-	
+
 	public function initProcess()
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
@@ -526,7 +526,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 		else
 			$this->list_id = 'stock';
 
-		parent::initProcess();	
+		parent::initProcess();
 	}
 
 }
