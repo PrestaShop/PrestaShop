@@ -3094,7 +3094,8 @@ class AdminProductsControllerCore extends AdminController
 				'groups' => $groups,
 				'combinations' => $combinations,
 				'multi_shop' => Shop::isFeatureActive(),
-				'link' => new Link()
+				'link' => new Link(),
+				'pack' => new Pack()
 			));
 		}
 		else
