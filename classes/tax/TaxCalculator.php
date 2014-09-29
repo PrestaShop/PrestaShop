@@ -150,5 +150,22 @@ class TaxCalculatorCore
 
 		return $taxes_amounts;
 	}
+
+	/**
+	 * Return the total taxes amount
+	 *
+	 * @param float $price_te
+	 * @return float $amount
+	 */
+	public function getTaxesTotalAmount($price_te)
+	{
+		$amount = 0;
+
+		$taxes = $this->getTaxesAmount($price_te);
+		foreach ($taxes as $tax)
+			$amount += $tax;
+
+		return $amount;
+	}
 }
 
