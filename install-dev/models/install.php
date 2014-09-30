@@ -124,12 +124,16 @@ class InstallModelInstall extends InstallAbstractModel
 		require_once _PS_ROOT_DIR_.'/'.self::SETTINGS_FILE;
 		if ($clear_database)
 			$this->clearDatabase();
-
+		
+		$allowed_collation = array('utf8_general_ci', 'utf8_unicode_ci', 'utf8_bin');
+		$collation_database = Db::getInstance()->getValue('SELECT @@collation_database');
+		
 		// Install database structure
 		$sql_loader = new InstallSqlLoader();
 		$sql_loader->setMetaData(array(
 			'PREFIX_' => _DB_PREFIX_,
 			'ENGINE_TYPE' => _MYSQL_ENGINE_,
+			'COLLATION' => (empty($collation_database) || !in_array($collation_database, $allowed_collation)) ? '' : 'COLLATE '.$collation_database
 		));
 
 		try
