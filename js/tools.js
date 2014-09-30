@@ -106,7 +106,7 @@ function ps_log10(value)
 }
 
 function ps_round_half_up(value, precision)
-{		
+{
 	var mul = Math.pow(10, precision);
 	var val = value * mul;
 
@@ -123,8 +123,8 @@ function ps_round(value, places)
 {
 	if (typeof(roundMode) === 'undefined')
 		roundMode = 2;
-	if (typeof(precision) === 'undefined')
-		precision = 2;
+	if (typeof(places) === 'undefined')
+		places = 2;
 
 	var method = roundMode;
 
