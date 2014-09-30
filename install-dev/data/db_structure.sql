@@ -8,7 +8,7 @@ CREATE TABLE `PREFIX_access` (
   `edit` int(11) NOT NULL,
   `delete` int(11) NOT NULL,
   PRIMARY KEY (`id_profile`,`id_tab`)
-) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATION;
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_accessory` (
   `id_product_1` int(10) unsigned NOT NULL,
