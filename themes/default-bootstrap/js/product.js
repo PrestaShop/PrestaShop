@@ -122,7 +122,7 @@ $(document).ready(function()
 		else
 			refreshProductImages(0);
 	}
-	
+
 	initLocationChange();
 	serialScrollSetNbImages();
 
@@ -203,7 +203,7 @@ $(document).ready(function()
 	}
 });
 
-$(window).resize(function(){	
+$(window).resize(function(){
 	serialScrollSetNbImages();
 	$('#thumbs_list').trigger('goto', 0);
 	serialScrollFixLock('', '', '', '', 0);
@@ -692,8 +692,7 @@ function updatePrice()
 	$('.price-ecotax').hide();
 	$('.unit-price').hide();
 
-
-	$('#our_price_display').text(formatCurrency(priceWithDiscountsDisplay * currencyRate, currencyFormat, currencySign, currencyBlank));
+	$('#our_price_display').text(formatCurrency(priceWithDiscountsDisplay * currencyRate, currencyFormat, currencySign, currencyBlank)).trigger('change');
 
 	// If the calculated price (after all discounts) is different than the base price
 	// we show the old price striked through
@@ -845,7 +844,7 @@ function serialScrollSetNbImages()
 
 // Change the current product images regarding the combination selected
 function refreshProductImages(id_product_attribute)
-{	
+{
 	id_product_attribute = parseInt(id_product_attribute);
 
 	if (id_product_attribute > 0 && typeof(combinationImages) != 'undefined' && typeof(combinationImages[id_product_attribute]) != 'undefined')
