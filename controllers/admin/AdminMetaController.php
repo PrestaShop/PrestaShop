@@ -148,56 +148,58 @@ class AdminMetaControllerCore extends AdminController
 		if (isset($robots_submit))
 			$robots_options['submit'] = $robots_submit;
 
-		// Options for shop URL if multishop is disabled
-		$shop_url_options = array(
-			'title' => $this->l('Set shop URL'),
-			'fields' => array(),
-		);
-
-		if (!Shop::isFeatureActive())
+		if (!defined('_PS_HOST_MODE_'))
 		{
-			$this->url = ShopUrl::getShopUrls($this->context->shop->id)->where('main', '=', 1)->getFirst();
-			if ($this->url)
-			{
-				$shop_url_options['description'] = $this->l('Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.');
-				$shop_url_options['fields'] = array(
-					'domain' => array(
-						'title' =>	$this->l('Shop domain'),
-						'validation' => 'isString',
-						'type' => 'text',
-						'defaultValue' => $this->url->domain,
-					),
-					'domain_ssl' => array(
-						'title' =>	$this->l('SSL domain'),
-						'validation' => 'isString',
-						'type' => 'text',
-						'defaultValue' => $this->url->domain_ssl,
-					),
-				);
+			// Options for shop URL if multishop is disabled
+			$shop_url_options = array(
+				'title' => $this->l('Set shop URL'),
+				'fields' => array(),
+			);
 
-				if(!defined('_PS_HOST_MODE_'))
-					$shop_url_options['fields']['uri'] = array(
-						'title' =>	$this->l('Base URI'),
-						'validation' => 'isString',
-						'type' => 'text',
-						'defaultValue' => $this->url->physical_uri,
+			if (!Shop::isFeatureActive())
+			{
+				$this->url = ShopUrl::getShopUrls($this->context->shop->id)->where('main', '=', 1)->getFirst();
+				if ($this->url)
+				{
+					$shop_url_options['description'] = $this->l('Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.');
+					$shop_url_options['fields'] = array(
+						'domain' => array(
+							'title' =>	$this->l('Shop domain'),
+							'validation' => 'isString',
+							'type' => 'text',
+							'defaultValue' => $this->url->domain,
+						),
+						'domain_ssl' => array(
+							'title' =>	$this->l('SSL domain'),
+							'validation' => 'isString',
+							'type' => 'text',
+							'defaultValue' => $this->url->domain_ssl,
+						),
+						'uri' => array(
+							'title' =>	$this->l('Base URI'),
+							'validation' => 'isString',
+							'type' => 'text',
+							'defaultValue' => $this->url->physical_uri,
+						)
 					);
-				$shop_url_options['submit'] = array('title' => $this->l('Save'));
+					$shop_url_options['submit'] = array('title' => $this->l('Save'));
+				}
 			}
+			else
+				$shop_url_options['description'] = $this->l('The multistore option is enabled. If you want to change the URL of your shop, you must go to the "Multistore" page under the "Advanced Parameters" menu.');
 		}
-		else
-			$shop_url_options['description'] = $this->l('The multistore option is enabled. If you want to change the URL of your shop, you must go to the "Multistore" page under the "Advanced Parameters" menu.');
 
 		// List of options
-		$this->fields_options = array(
-			'general' => array(
-				'title' =>	$this->l('Set up URLs'),
-				'description' => $url_description,
-				'fields' =>	$general_fields,
-				'submit' => array('title' => $this->l('Save'))
-			),
-			'shop_url' => $shop_url_options
-		);
+		if (!defined('_PS_HOST_MODE_'))
+			$this->fields_options = array(
+				'general' => array(
+					'title' =>	$this->l('Set up URLs'),
+					'description' => $url_description,
+					'fields' =>	$general_fields,
+					'submit' => array('title' => $this->l('Save'))
+				),
+				'shop_url' => $shop_url_options
+			);
 
 		// Add display route options to options form
 		if (Configuration::get('PS_REWRITING_SETTINGS'))
