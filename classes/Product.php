@@ -4678,6 +4678,7 @@ class ProductCore extends ObjectModel
 	public function setWsCategories($category_ids)
 	{
 		$ids = array();
+		$idsWithoutPosition = array();
 		foreach ($category_ids as $value) {
             		$position_now = Db::getInstance()->getValue('SELECT position
 								FROM `'._DB_PREFIX_.'category_product`
