@@ -125,7 +125,7 @@ class InstallModelInstall extends InstallAbstractModel
 		if ($clear_database)
 			$this->clearDatabase();
 		
-		$allowed_collation = array('utf8_general_ci', 'utf8_unicode_ci');
+		$allowed_collation = array('utf8_general_ci', 'utf8_unicode_ci', 'utf8_bin');
 		$collation_database = Db::getInstance()->getValue('SELECT @@collation_database');
 		
 		// Install database structure
