@@ -351,7 +351,7 @@ class ToolsCore
 			unset($cookie->detect_language);
 
 		/* Automatically detect language if not already defined, detect_language is set in Cookie::update */
-		if ((!$cookie->id_lang || isset($cookie->detect_language)) && isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
+		if (!Tools::getValue('isolang') && !Tools::getValue('id_lang') && (!$cookie->id_lang || isset($cookie->detect_language)) && isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
 		{
 			$array  = explode(',', Tools::strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
 			$string = $array[0];
