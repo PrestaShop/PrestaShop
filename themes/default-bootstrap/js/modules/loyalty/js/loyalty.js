@@ -22,6 +22,13 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
+
+$(document).ready(function() {
+	$(document).on('change', '#our_price_display', function(e){
+		updateLoyaltyView(parseInt($('#our_price_display').text()));
+	})
+});
+
 function updateLoyaltyView(new_price) {
 	if (typeof(new_price) == 'undefined' || typeof(productPriceWithoutReduction) == 'undefined')
 			return;
@@ -29,8 +36,6 @@ function updateLoyaltyView(new_price) {
 	var points = Math.round(new_price / point_rate);
 	var total_points = points_in_cart + points;
 	var voucher = total_points * point_value;
-
-
 
 	if (!none_award && productPriceWithoutReduction != new_price) {
 		$('#loyalty').html(loyalty_already);
