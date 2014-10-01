@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {if isset($products) && $products}
-	{*define numbers of product per line in other page for desktop*}
+	{*define number of products per line in other page for desktop*}
 	{if $page_name !='index' && $page_name !='product'}
 		{assign var='nbItemsPerLine' value=3}
 		{assign var='nbItemsPerLineTablet' value=2}
