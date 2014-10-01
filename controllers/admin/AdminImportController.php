@@ -1,28 +1,29 @@
 <?php
+
 /*
-* 2007-2014 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+ * 2007-2014 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author PrestaShop SA <contact@prestashop.com>
+ *  @copyright  2007-2014 PrestaShop SA
+ *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 @ini_set('max_execution_time', 0);
 /** No max line limit since the lines can be more than 4096. Performance impact is not significant. */
@@ -37,26 +38,20 @@ define('MAX_COLUMNS', 6);
 /** correct Mac error on eof */
 @ini_set('auto_detect_line_endings', '1');
 
-class AdminImportControllerCore extends AdminController
-{
+class AdminImportControllerCore extends AdminController {
+
 	public static $column_mask;
-
 	public $entities = array();
-
 	public $available_fields = array();
-
 	public $required_fields = array();
-
 	public $cache_image_deleted = array();
-
 	public static $default_values = array();
-
 	public static $validators = array(
 		'active' => array('AdminImportController', 'getBoolean'),
 		'tax_rate' => array('AdminImportController', 'getPrice'),
-		 /** Tax excluded */
+		/** Tax excluded */
 		'price_tex' => array('AdminImportController', 'getPrice'),
-		 /** Tax included */
+		/** Tax included */
 		'price_tin' => array('AdminImportController', 'getPrice'),
 		'reduction_price' => array('AdminImportController', 'getPrice'),
 		'reduction_percent' => array('AdminImportController', 'getPrice'),
@@ -74,7 +69,6 @@ class AdminImportControllerCore extends AdminController
 		'category' => array('AdminImportController', 'split'),
 		'online_only' => array('AdminImportController', 'getBoolean')
 	);
-
 	public $separator;
 	public $multiple_value_separator;
 
@@ -96,11 +90,10 @@ class AdminImportControllerCore extends AdminController
 		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 		{
 			$this->entities = array_merge(
-				$this->entities,
-				array(
-					$this->l('Supply Orders'),
-					$this->l('Supply Order Details'),
-				)
+					$this->entities, array(
+				$this->l('Supply Orders'),
+				$this->l('Supply Order Details'),
+					)
 			);
 		}
 
@@ -175,7 +168,7 @@ class AdminImportControllerCore extends AdminController
 					'advanced_stock_management' => 0,
 					'depends_on_stock' => 0,
 				);
-			break;
+				break;
 
 			case $this->entities[$this->l('Categories')]:
 				$this->available_fields = array(
@@ -187,7 +180,7 @@ class AdminImportControllerCore extends AdminController
 					'is_root_category' => array(
 						'label' => $this->l('Root category (0/1)'),
 						'help' => $this->l('A category root is where a category tree can begin. This is used with multistore.')
-						),
+					),
 					'description' => array('label' => $this->l('Description')),
 					'meta_title' => array('label' => $this->l('Meta title')),
 					'meta_keywords' => array('label' => $this->l('Meta keywords')),
@@ -205,7 +198,7 @@ class AdminImportControllerCore extends AdminController
 					'parent' => Configuration::get('PS_HOME_CATEGORY'),
 					'link_rewrite' => ''
 				);
-			break;
+				break;
 
 			case $this->entities[$this->l('Products')]:
 				self::$validators['image'] = array(
@@ -315,7 +308,7 @@ class AdminImportControllerCore extends AdminController
 					'advanced_stock_management' => 0,
 					'depends_on_stock' => 0,
 				);
-			break;
+				break;
 
 			case $this->entities[$this->l('Customers')]:
 				//Overwrite required_fields AS only email is required whereas other entities
@@ -345,7 +338,7 @@ class AdminImportControllerCore extends AdminController
 					'active' => '1',
 					'id_shop' => Configuration::get('PS_SHOP_DEFAULT'),
 				);
-			break;
+				break;
 
 			case $this->entities[$this->l('Addresses')]:
 				//Overwrite required_fields
@@ -388,7 +381,7 @@ class AdminImportControllerCore extends AdminController
 					'alias' => 'Alias',
 					'postcode' => 'X'
 				);
-			break;
+				break;
 			case $this->entities[$this->l('Manufacturers')]:
 			case $this->entities[$this->l('Suppliers')]:
 				//Overwrite validators AS name is not MultiLangField
@@ -420,7 +413,7 @@ class AdminImportControllerCore extends AdminController
 				self::$default_values = array(
 					'shop' => Shop::getGroupFromShop(Configuration::get('PS_SHOP_DEFAULT')),
 				);
-			break;
+				break;
 			case $this->entities[$this->l('Alias')]:
 				//Overwrite required_fields
 				$this->required_fields = array(
@@ -433,11 +426,11 @@ class AdminImportControllerCore extends AdminController
 					'alias' => array('label' => $this->l('Alias *')),
 					'search' => array('label' => $this->l('Search *')),
 					'active' => array('label' => $this->l('Active')),
-					);
+				);
 				self::$default_values = array(
 					'active' => '1',
 				);
-			break;
+				break;
 		}
 
 		// @since 1.5.0
@@ -472,7 +465,7 @@ class AdminImportControllerCore extends AdminController
 						'discount_rate' => '0',
 						'is_template' => '0',
 					);
-				break;
+					break;
 				case $this->entities[$this->l('Supply Order Details')]:
 					// required fields
 					$this->required_fields = array(
@@ -497,22 +490,20 @@ class AdminImportControllerCore extends AdminController
 						'discount_rate' => '0',
 						'tax_rate' => '0',
 					);
-				break;
-
+					break;
 			}
 
-		$this->separator = ($separator = Tools::substr(strval(trim(Tools::getValue('separator'))), 0, 1)) ? $separator :  ';';
-		$this->multiple_value_separator = ($separator = Tools::substr(strval(trim(Tools::getValue('multiple_value_separator'))), 0, 1)) ? $separator :  ',';
+		$this->separator = ($separator = Tools::substr(strval(trim(Tools::getValue('separator'))), 0, 1)) ? $separator : ';';
+		$this->multiple_value_separator = ($separator = Tools::substr(strval(trim(Tools::getValue('multiple_value_separator'))), 0, 1)) ? $separator : ',';
 		parent::__construct();
 	}
 
 	public function setMedia()
 	{
-		$bo_theme = ((Validate::isLoadedObject($this->context->employee)
-			&& $this->context->employee->bo_theme) ? $this->context->employee->bo_theme : 'default');
+		$bo_theme = ((Validate::isLoadedObject($this->context->employee) && $this->context->employee->bo_theme) ? $this->context->employee->bo_theme : 'default');
 
 		if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$bo_theme.DIRECTORY_SEPARATOR
-			.'template'))
+						.'template'))
 			$bo_theme = 'default';
 
 		// We need to set parent media first, so that jQuery is loaded before the dependant plugins
@@ -544,7 +535,7 @@ class AdminImportControllerCore extends AdminController
 		$files_to_import = scandir(AdminImportController::getPath());
 		uasort($files_to_import, array('AdminImportController', 'usortFiles'));
 		foreach ($files_to_import as $k => &$filename)
-			//exclude .  ..  .svn and index.php and all hidden files
+		//exclude .  ..  .svn and index.php and all hidden files
 			if (preg_match('/^\..*|index\.php/i', $filename))
 				unset($files_to_import[$k]);
 		unset($filename);
@@ -568,7 +559,7 @@ class AdminImportControllerCore extends AdminController
 
 		$csv_selected = '';
 		if (isset($this->context->cookie->csv_selected) && @filemtime(AdminImportController::getPath(
-			urldecode($this->context->cookie->csv_selected))))
+								urldecode($this->context->cookie->csv_selected))))
 			$csv_selected = urldecode($this->context->cookie->csv_selected);
 		else
 			$this->context->cookie->csv_selected = $csv_selected;
@@ -587,8 +578,8 @@ class AdminImportControllerCore extends AdminController
 
 		//get post max size
 		$post_max_size = ini_get('post_max_size');
-		$bytes         = trim($post_max_size);
-		$last          = strtolower($post_max_size[strlen($post_max_size) - 1]);
+		$bytes = trim($post_max_size);
+		$last = strtolower($post_max_size[strlen($post_max_size) - 1]);
 
 		switch ($last)
 		{
@@ -634,25 +625,25 @@ class AdminImportControllerCore extends AdminController
 				case UPLOAD_ERR_FORM_SIZE:
 					$_FILES['file']['error'] = Tools::displayError('The uploaded file exceeds the post_max_size directive in php.ini.
 						If your server configuration allows it, you may add a directive in your .htaccess, for example:')
-					.'<br/><a href="'.$this->context->link->getAdminLink('AdminMeta').'" >
+							.'<br/><a href="'.$this->context->link->getAdminLink('AdminMeta').'" >
 					<code>php_value post_max_size 20M</code> '.
-					Tools::displayError('(click to open "Generators" page)').'</a>';
+							Tools::displayError('(click to open "Generators" page)').'</a>';
 					break;
-				break;
+					break;
 				case UPLOAD_ERR_PARTIAL:
 					$_FILES['file']['error'] = Tools::displayError('The uploaded file was only partially uploaded.');
 					break;
-				break;
+					break;
 				case UPLOAD_ERR_NO_FILE:
 					$_FILES['file']['error'] = Tools::displayError('No file was uploaded.');
 					break;
-				break;
+					break;
 			}
 		}
 		elseif (!preg_match('/.*\.csv$/i', $_FILES['file']['name']))
 			$_FILES['file']['error'] = Tools::displayError('The extension of your file should be .csv.');
 		elseif (!@filemtime($_FILES['file']['tmp_name']) ||
-			!@move_uploaded_file($_FILES['file']['tmp_name'], AdminImportController::getPath().$filename_prefix.str_replace("\0", '', $_FILES['file']['name'])))
+				!@move_uploaded_file($_FILES['file']['tmp_name'], AdminImportController::getPath().$filename_prefix.str_replace("\0", '', $_FILES['file']['name'])))
 			$_FILES['file']['error'] = $this->l('An error occurred while uploading / copying the file.');
 		else
 		{
@@ -832,7 +823,9 @@ class AdminImportControllerCore extends AdminController
 		if (is_null($separator) || trim($separator) == '')
 			$separator = ',';
 
-		do $uniqid_path = _PS_UPLOAD_DIR_.uniqid(); while (file_exists($uniqid_path));
+		do
+			$uniqid_path = _PS_UPLOAD_DIR_.uniqid();
+		while (file_exists($uniqid_path));
 		file_put_contents($uniqid_path, $field);
 		$tab = '';
 		if (!empty($uniqid_path))
@@ -878,11 +871,12 @@ class AdminImportControllerCore extends AdminController
 	}
 
 	/*
-	* Return fields to be display AS piece of advise
-	*
-	* @param $in_array boolean
-	* @return string or return array
-	*/
+	 * Return fields to be display AS piece of advise
+	 *
+	 * @param $in_array boolean
+	 * @return string or return array
+	 */
+
 	public function getAvailableFields($in_array = false)
 	{
 		$i = 0;
@@ -898,7 +892,6 @@ class AdminImportControllerCore extends AdminController
 			else
 			{
 				if (isset($field['help']))
-
 					$html = '&nbsp;<a href="#" class="help-tooltip" data-toggle="tooltip" title="'.$field['help'].'"><i class="icon-info-sign"></i></a>';
 				else
 					$html = '';
@@ -957,8 +950,8 @@ class AdminImportControllerCore extends AdminController
 					$entity->{$key}[$id_lang_tmp] = $value;
 		}
 		else
-			if (!empty($infos) || $infos == '0') // ($infos == '0') => if you want to disable a product by using "0" in active because empty('0') return true
-				$entity->{$key} = isset(self::$validators[$key]) ? call_user_func(self::$validators[$key], $infos) : $infos;
+		if (!empty($infos) || $infos == '0') // ($infos == '0') => if you want to disable a product by using "0" in active because empty('0') return true
+			$entity->{$key} = isset(self::$validators[$key]) ? call_user_func(self::$validators[$key], $infos) : $infos;
 
 		return true;
 	}
@@ -971,7 +964,8 @@ class AdminImportControllerCore extends AdminController
 	 */
 	public static function arrayWalk(&$array, $funcname, &$user_data = false)
 	{
-		if (!is_callable($funcname)) return false;
+		if (!is_callable($funcname))
+			return false;
 
 		foreach ($array as $k => $row)
 			if (!call_user_func_array($funcname, array($row, $k, $user_data)))
@@ -1001,18 +995,38 @@ class AdminImportControllerCore extends AdminController
 			case 'products':
 				$image_obj = new Image($id_image);
 				$path = $image_obj->getPathForCreation();
-			break;
+				break;
 			case 'categories':
 				$path = _PS_CAT_IMG_DIR_.(int)$id_entity;
-			break;
+				break;
 			case 'manufacturers':
 				$path = _PS_MANU_IMG_DIR_.(int)$id_entity;
-			break;
+				break;
 			case 'suppliers':
 				$path = _PS_SUPP_IMG_DIR_.(int)$id_entity;
-			break;
+				break;
 		}
-		$url = str_replace(' ', '%20', trim($url));
+		$url = urldecode(trim($url));
+		$parced_url = parse_url($url);
+
+		if (isset($parced_url['path']))
+		{
+			$path = ltrim($parced_url['path'], '/');
+			$parts = explode('/', $path);
+			foreach ($parts as &$part)
+				$part = urlencode($part);
+			unset($part);
+			$parced_url['path'] = implode('/', $parts);
+		}
+
+		if (isset($parced_url['query']))
+		{
+			$query_parts = array();
+			parse_str($parced_url['query'], $query_parts);
+			$parced_url['query'] = http_build_query($query_parts);
+		}
+
+		$url = http_build_url('', $parced_url);
 
 		// Evaluate the memory required to resize the image: if it's too much, you can't resize it.
 		if (!ImageManager::checkImageMemoryLimit($url))
@@ -1102,17 +1116,15 @@ class AdminImportControllerCore extends AdminController
 					$category_to_create->link_rewrite = AdminImportController::createMultiLangField($category_link_rewrite);
 					$category_to_create->id_parent = Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
 					if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-						($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $category_to_create->add())
+							($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $category_to_create->add())
 						$category->id_parent = $category_to_create->id;
 					else
 					{
 						$this->errors[] = sprintf(
-							Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-							$category_to_create->name[$id_lang],
-							(isset($category_to_create->id) && !empty($category_to_create->id))? $category_to_create->id : 'null'
+								Tools::displayError('%1$s (ID: %2$s) cannot be saved'), $category_to_create->name[$id_lang], (isset($category_to_create->id) && !empty($category_to_create->id)) ? $category_to_create->id : 'null'
 						);
 						$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
-							Db::getInstance()->getMsgError();
+								Db::getInstance()->getMsgError();
 					}
 				}
 			}
@@ -1140,26 +1152,21 @@ class AdminImportControllerCore extends AdminController
 
 			if (!$valid_link)
 				$this->warnings[] = sprintf(
-					Tools::displayError('Rewrite link for %1$s (ID: %2$s) was re-written as %3$s.'),
-					$bak,
-					(isset($info['id']) && !empty($info['id']))? $info['id'] : 'null',
-					$category->link_rewrite[$default_language_id]
+						Tools::displayError('Rewrite link for %1$s (ID: %2$s) was re-written as %3$s.'), $bak, (isset($info['id']) && !empty($info['id'])) ? $info['id'] : 'null', $category->link_rewrite[$default_language_id]
 				);
 			$res = false;
 			if (($field_error = $category->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-				($lang_field_error = $category->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && empty($this->errors))
+					($lang_field_error = $category->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && empty($this->errors))
 			{
 				$category_already_created = Category::searchByNameAndParentCategoryId(
-					$id_lang,
-					$category->name[$id_lang],
-					$category->id_parent
+								$id_lang, $category->name[$id_lang], $category->id_parent
 				);
 
 				// If category already in base, get id category back
 				if ($category_already_created['id_category'])
 				{
 					$cat_moved[$category->id] = (int)$category_already_created['id_category'];
-					$category->id =	(int)$category_already_created['id_category'];
+					$category->id = (int)$category_already_created['id_category'];
 				}
 
 				if ($category->id && $category->id == $category->id_parent)
@@ -1190,9 +1197,7 @@ class AdminImportControllerCore extends AdminController
 			if (!$res)
 			{
 				$this->errors[] = sprintf(
-					Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-					(isset($info['name']) && !empty($info['name']))? Tools::safeOutput($info['name']) : 'No Name',
-					(isset($info['id']) && !empty($info['id']))? Tools::safeOutput($info['id']) : 'No ID'
+						Tools::displayError('%1$s (ID: %2$s) cannot be saved'), (isset($info['name']) && !empty($info['name'])) ? Tools::safeOutput($info['name']) : 'No Name', (isset($info['id']) && !empty($info['id'])) ? Tools::safeOutput($info['id']) : 'No ID'
 				);
 				$error_tmp = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').Db::getInstance()->getMsgError();
 				if ($error_tmp != '')
@@ -1251,19 +1256,19 @@ class AdminImportControllerCore extends AdminController
 				$product = new Product((int)$info['id']);
 			elseif (Tools::getValue('match_ref') && array_key_exists('reference', $info))
 			{
-					$datas = Db::getInstance()->getRow('
+				$datas = Db::getInstance()->getRow('
 						SELECT p.`id_product`
 						FROM `'._DB_PREFIX_.'product` p
 						'.Shop::addSqlAssociation('product', 'p').'
 						WHERE p.`reference` = "'.pSQL($info['reference']).'"
 					');
-					if (isset($datas['id_product']) && $datas['id_product'])
-						$product = new Product((int)$datas['id_product']);
-					else
-						$product = new Product();
+				if (isset($datas['id_product']) && $datas['id_product'])
+					$product = new Product((int)$datas['id_product']);
+				else
+					$product = new Product();
 			}
 			elseif (array_key_exists('id', $info) && (int)$info['id'] && Product::existsInDatabase((int)$info['id'], 'product'))
-					$product = new Product((int)$info['id']);
+				$product = new Product((int)$info['id']);
 			else
 				$product = new Product();
 
@@ -1309,9 +1314,7 @@ class AdminImportControllerCore extends AdminController
 				}
 				else
 					$this->addProductWarning(
-						'id_tax_rules_group',
-						$product->id_tax_rules_group,
-						Tools::displayError('Invalid tax rule group ID. You first need to create a group with this ID.')
+							'id_tax_rules_group', $product->id_tax_rules_group, Tools::displayError('Invalid tax rule group ID. You first need to create a group with this ID.')
 					);
 			}
 			if (isset($product->manufacturer) && is_numeric($product->manufacturer) && Manufacturer::manufacturerExists((int)$product->manufacturer))
@@ -1325,17 +1328,15 @@ class AdminImportControllerCore extends AdminController
 					$manufacturer = new Manufacturer();
 					$manufacturer->name = $product->manufacturer;
 					if (($field_error = $manufacturer->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-						($lang_field_error = $manufacturer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $manufacturer->add())
+							($lang_field_error = $manufacturer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $manufacturer->add())
 						$product->id_manufacturer = (int)$manufacturer->id;
 					else
 					{
 						$this->errors[] = sprintf(
-							Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-							$manufacturer->name,
-							(isset($manufacturer->id) && !empty($manufacturer->id))? $manufacturer->id : 'null'
+								Tools::displayError('%1$s (ID: %2$s) cannot be saved'), $manufacturer->name, (isset($manufacturer->id) && !empty($manufacturer->id)) ? $manufacturer->id : 'null'
 						);
 						$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
-							Db::getInstance()->getMsgError();
+								Db::getInstance()->getMsgError();
 					}
 				}
 			}
@@ -1353,7 +1354,7 @@ class AdminImportControllerCore extends AdminController
 					$supplier->active = true;
 
 					if (($field_error = $supplier->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-						($lang_field_error = $supplier->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $supplier->add())
+							($lang_field_error = $supplier->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $supplier->add())
 					{
 						$product->id_supplier = (int)$supplier->id;
 						$supplier->associateTo($product->id_shop_list);
@@ -1361,12 +1362,10 @@ class AdminImportControllerCore extends AdminController
 					else
 					{
 						$this->errors[] = sprintf(
-							Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-							$supplier->name,
-							(isset($supplier->id) && !empty($supplier->id))? $supplier->id : 'null'
+								Tools::displayError('%1$s (ID: %2$s) cannot be saved'), $supplier->name, (isset($supplier->id) && !empty($supplier->id)) ? $supplier->id : 'null'
 						);
 						$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
-							Db::getInstance()->getMsgError();
+								Db::getInstance()->getMsgError();
 					}
 				}
 			}
@@ -1398,12 +1397,10 @@ class AdminImportControllerCore extends AdminController
 						else
 						{
 							$this->errors[] = sprintf(
-								Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-								$category_to_create->name[$default_language_id],
-								(isset($category_to_create->id) && !empty($category_to_create->id))? $category_to_create->id : 'null'
+									Tools::displayError('%1$s (ID: %2$s) cannot be saved'), $category_to_create->name[$default_language_id], (isset($category_to_create->id) && !empty($category_to_create->id)) ? $category_to_create->id : 'null'
 							);
 							$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
-								Db::getInstance()->getMsgError();
+									Db::getInstance()->getMsgError();
 							$category_to_create = new Category();
 							$category_to_create->id = (int)$value;
 							$category_to_create->name = AdminImportController::createMultiLangField($value);
@@ -1412,17 +1409,15 @@ class AdminImportControllerCore extends AdminController
 							$category_link_rewrite = Tools::link_rewrite($category_to_create->name[$default_language_id]);
 							$category_to_create->link_rewrite = AdminImportController::createMultiLangField($category_link_rewrite);
 							if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-								($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $category_to_create->add())
+									($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $category_to_create->add())
 								$product->id_category[] = (int)$category_to_create->id;
 							else
 							{
 								$this->errors[] = sprintf(
-									Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-									$category_to_create->name[$default_language_id],
-									(isset($category_to_create->id) && !empty($category_to_create->id))? $category_to_create->id : 'null'
+										Tools::displayError('%1$s (ID: %2$s) cannot be saved'), $category_to_create->name[$default_language_id], (isset($category_to_create->id) && !empty($category_to_create->id)) ? $category_to_create->id : 'null'
 								);
 								$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
-									Db::getInstance()->getMsgError();
+										Db::getInstance()->getMsgError();
 							}
 						}
 					}
@@ -1452,10 +1447,7 @@ class AdminImportControllerCore extends AdminController
 
 			if (!$valid_link)
 				$this->warnings[] = sprintf(
-					Tools::displayError('Rewrite link for %1$s (ID: %2$s) was re-written as %3$s.'),
-					$product->name[$id_lang],
-					(isset($info['id']) && !empty($info['id']))? $info['id'] : 'null',
-					$link_rewrite
+						Tools::displayError('Rewrite link for %1$s (ID: %2$s) was re-written as %3$s.'), $product->name[$id_lang], (isset($info['id']) && !empty($info['id'])) ? $info['id'] : 'null', $link_rewrite
 				);
 
 			if (!Tools::getValue('match_ref') || !(is_array($product->link_rewrite) && count($product->link_rewrite) && !empty($product->link_rewrite[$id_lang])))
@@ -1540,13 +1532,10 @@ class AdminImportControllerCore extends AdminController
 			if (!$res)
 			{
 				$this->errors[] = sprintf(
-					Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-					(isset($info['name']) && !empty($info['name']))? Tools::safeOutput($info['name']) : 'No Name',
-					(isset($info['id']) && !empty($info['id']))? Tools::safeOutput($info['id']) : 'No ID'
+						Tools::displayError('%1$s (ID: %2$s) cannot be saved'), (isset($info['name']) && !empty($info['name'])) ? Tools::safeOutput($info['name']) : 'No Name', (isset($info['id']) && !empty($info['id'])) ? Tools::safeOutput($info['id']) : 'No ID'
 				);
 				$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
-					Db::getInstance()->getMsgError();
-
+						Db::getInstance()->getMsgError();
 			}
 			else
 			{
@@ -1584,7 +1573,7 @@ class AdminImportControllerCore extends AdminController
 						$id_shop_list[] = $shop;
 
 				if ((isset($info['reduction_price']) && $info['reduction_price'] > 0) || (isset($info['reduction_percent']) && $info['reduction_percent'] > 0))
-					foreach($id_shop_list as $id_shop)
+					foreach ($id_shop_list as $id_shop)
 					{
 						$specific_price = SpecificPrice::getSpecificPrice($product->id, $id_shop, 0, 0, 0, 1, 0, 0, 0, 0);
 
@@ -1604,7 +1593,7 @@ class AdminImportControllerCore extends AdminController
 						$specific_price->reduction = (isset($info['reduction_price']) && $info['reduction_price']) ? $info['reduction_price'] : $info['reduction_percent'] / 100;
 						$specific_price->reduction_type = (isset($info['reduction_price']) && $info['reduction_price']) ? 'amount' : 'percentage';
 						$specific_price->from = (isset($info['reduction_from']) && Validate::isDate($info['reduction_from'])) ? $info['reduction_from'] : '0000-00-00 00:00:00';
-						$specific_price->to = (isset($info['reduction_to']) && Validate::isDate($info['reduction_to']))  ? $info['reduction_to'] : '0000-00-00 00:00:00';
+						$specific_price->to = (isset($info['reduction_to']) && Validate::isDate($info['reduction_to'])) ? $info['reduction_to'] : '0000-00-00 00:00:00';
 						if (!$specific_price->save())
 							$this->addProductWarning(Tools::safeOutput($info['name']), $product->id, $this->l('Discount is invalid'));
 					}
@@ -1665,8 +1654,8 @@ class AdminImportControllerCore extends AdminController
 				if (isset($product->delete_existing_images))
 					if ((bool)$product->delete_existing_images)
 						$product->deleteImages();
-				else if (isset($product->image) && is_array($product->image) && count($product->image))
-					$product->deleteImages();
+					else if (isset($product->image) && is_array($product->image) && count($product->image))
+						$product->deleteImages();
 
 				if (isset($product->image) && is_array($product->image) && count($product->image))
 				{
@@ -1685,7 +1674,7 @@ class AdminImportControllerCore extends AdminController
 							$image->cover = (!$key && !$product_has_images) ? true : false;
 							// file_exists doesn't work with HTTP protocol
 							if (($field_error = $image->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-								($lang_field_error = $image->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $image->add())
+									($lang_field_error = $image->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $image->add())
 							{
 								// associate image to selected shops
 								$image->associateTo($shops);
@@ -1725,7 +1714,7 @@ class AdminImportControllerCore extends AdminController
 						$feature_value = isset($tab_feature[1]) ? trim($tab_feature[1]) : '';
 						$position = isset($tab_feature[2]) ? (int)$tab_feature[2] - 1 : false;
 						$custom = isset($tab_feature[3]) ? (int)$tab_feature[3] : false;
-						if(!empty($feature_name) && !empty($feature_value))
+						if (!empty($feature_name) && !empty($feature_value))
 						{
 							$id_feature = (int)Feature::addFeatureImport($feature_name, $position);
 							$id_product = null;
@@ -1742,9 +1731,9 @@ class AdminImportControllerCore extends AdminController
 				if (isset($product->advanced_stock_management))
 				{
 					if ($product->advanced_stock_management != 1 && $product->advanced_stock_management != 0)
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management has incorrect value. Not set for product %1$s '),$product->name[$default_language_id]);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management has incorrect value. Not set for product %1$s '), $product->name[$default_language_id]);
 					elseif (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $product->advanced_stock_management == 1)
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, can not enable on product %1$s '),$product->name[$default_language_id]);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, can not enable on product %1$s '), $product->name[$default_language_id]);
 					else
 						$product->setAdvancedStockManagement($product->advanced_stock_management);
 					// automaticly disable depends on stock, if a_s_m set to disabled
@@ -1756,7 +1745,7 @@ class AdminImportControllerCore extends AdminController
 				if (isset($product->warehouse) && $product->warehouse)
 				{
 					if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, warehouse not set on product %1$s '),$product->name[$default_language_id]);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, warehouse not set on product %1$s '), $product->name[$default_language_id]);
 					else
 					{
 						if (Warehouse::exists($product->warehouse))
@@ -1768,16 +1757,16 @@ class AdminImportControllerCore extends AdminController
 								$awc->delete();
 							$warehouse_location_entity = new WarehouseProductLocation();
 							$warehouse_location_entity->id_product = $product->id;
-							$warehouse_location_entity->id_product_attribute =  0;
+							$warehouse_location_entity->id_product_attribute = 0;
 							$warehouse_location_entity->id_warehouse = $product->warehouse;
-								if (WarehouseProductLocation::getProductLocation($product->id, 0, $product->warehouse) !== false)
-									$warehouse_location_entity->update();
-								else
-									$warehouse_location_entity->save();
+							if (WarehouseProductLocation::getProductLocation($product->id, 0, $product->warehouse) !== false)
+								$warehouse_location_entity->update();
+							else
+								$warehouse_location_entity->save();
 							StockAvailable::synchronize($product->id);
 						}
 						else
-							$this->warnings[] = sprintf(Tools::displayError('Warehouse did not exist, can not set on product %1$s.'),$product->name[$default_language_id]);
+							$this->warnings[] = sprintf(Tools::displayError('Warehouse did not exist, can not set on product %1$s.'), $product->name[$default_language_id]);
 					}
 				}
 
@@ -1785,9 +1774,9 @@ class AdminImportControllerCore extends AdminController
 				if (isset($product->depends_on_stock))
 				{
 					if ($product->depends_on_stock != 0 && $product->depends_on_stock != 1)
-						$this->warnings[] = sprintf(Tools::displayError('Incorrect value for "depends on stock" for product %1$s '),$product->name[$default_language_id]);
+						$this->warnings[] = sprintf(Tools::displayError('Incorrect value for "depends on stock" for product %1$s '), $product->name[$default_language_id]);
 					elseif ((!$product->advanced_stock_management || $product->advanced_stock_management == 0) && $product->depends_on_stock == 1)
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management not enabled, can not set "depends on stock" for product %1$s '),$product->name[$default_language_id]);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management not enabled, can not set "depends on stock" for product %1$s '), $product->name[$default_language_id]);
 					else
 						StockAvailable::setProductDependsOnStock($product->id, $product->depends_on_stock);
 
@@ -1827,7 +1816,7 @@ class AdminImportControllerCore extends AdminController
 		$this->closeCsvFile($handle);
 	}
 
-	public function productImportCreateCat($default_language_id, $category_name, $id_parent_category=null)
+	public function productImportCreateCat($default_language_id, $category_name, $id_parent_category = null)
 	{
 		$category_to_create = new Category();
 		if (!Shop::isFeatureActive())
@@ -1836,21 +1825,19 @@ class AdminImportControllerCore extends AdminController
 			$category_to_create->id_shop_default = (int)Context::getContext()->shop->id;
 		$category_to_create->name = AdminImportController::createMultiLangField(trim($category_name));
 		$category_to_create->active = 1;
-		$category_to_create->id_parent =  (int)$id_parent_category ? (int)$id_parent_category : (int)Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
+		$category_to_create->id_parent = (int)$id_parent_category ? (int)$id_parent_category : (int)Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
 		$category_link_rewrite = Tools::link_rewrite($category_to_create->name[$default_language_id]);
 		$category_to_create->link_rewrite = AdminImportController::createMultiLangField($category_link_rewrite);
 		if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-			($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $category_to_create->add())
+				($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $category_to_create->add())
 			$product->id_category[] = (int)$category_to_create->id;
 		else
 		{
 			$this->errors[] = sprintf(
-				Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-				$category_to_create->name[$default_language_id],
-				(isset($category_to_create->id) && !empty($category_to_create->id))? $category_to_create->id : 'null'
+					Tools::displayError('%1$s (ID: %2$s) cannot be saved'), $category_to_create->name[$default_language_id], (isset($category_to_create->id) && !empty($category_to_create->id)) ? $category_to_create->id : 'null'
 			);
 			$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
-				Db::getInstance()->getMsgError();
+					Db::getInstance()->getMsgError();
 		}
 	}
 
@@ -1897,7 +1884,7 @@ class AdminImportControllerCore extends AdminController
 					elseif (!empty($shop))
 						$id_shop_list[] = $shop;
 
-			if(isset($info['id_product']))
+			if (isset($info['id_product']))
 				$product = new Product((int)$info['id_product'], false, $default_language);
 			else
 				continue;
@@ -1938,8 +1925,7 @@ class AdminImportControllerCore extends AdminController
 				else
 				{
 					$this->warnings[] = sprintf(
-						Tools::displayError('%s cannot be saved'),
-						(isset($image->id_product) ? ' ('.$image->id_product.')' : '')
+							Tools::displayError('%s cannot be saved'), (isset($image->id_product) ? ' ('.$image->id_product.')' : '')
 					);
 					$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').mysql_error();
 				}
@@ -1957,16 +1943,14 @@ class AdminImportControllerCore extends AdminController
 						}
 				if (!$id_image)
 					$this->warnings[] = sprintf(
-						Tools::displayError('No image was found for combination with id_product = %s and image position = %s.'),
-						$product->id,
-						(int)$info['image_position']
+							Tools::displayError('No image was found for combination with id_product = %s and image position = %s.'), $product->id, (int)$info['image_position']
 					);
 			}
 
 			$id_attribute_group = 0;
 			// groups
 			$groups_attributes = array();
-			if(isset($info['group']))
+			if (isset($info['group']))
 				foreach (explode($this->multiple_value_separator, $info['group']) as $key => $group)
 				{
 					if (empty($group))
@@ -1997,7 +1981,7 @@ class AdminImportControllerCore extends AdminController
 						$obj->position = (!$position) ? AttributeGroup::getHigherPosition() + 1 : $position;
 
 						if (($field_error = $obj->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-							($lang_field_error = $obj->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
+								($lang_field_error = $obj->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
 						{
 							$obj->add();
 							$obj->associateTo($id_shop_list);
@@ -2023,7 +2007,7 @@ class AdminImportControllerCore extends AdminController
 			$attributes_to_add = array();
 
 			// for each attribute
-			if(isset($info['attribute']))
+			if (isset($info['attribute']))
 				foreach (explode($this->multiple_value_separator, $info['attribute']) as $key => $attribute)
 				{
 					if (empty($attribute))
@@ -2049,7 +2033,7 @@ class AdminImportControllerCore extends AdminController
 							$obj->position = (!$position && isset($groups[$group])) ? Attribute::getHigherPosition($groups[$group]) + 1 : $position;
 
 							if (($field_error = $obj->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-								($lang_field_error = $obj->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
+									($lang_field_error = $obj->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
 							{
 								$obj->add();
 								$obj->associateTo($id_shop_list);
@@ -2084,22 +2068,7 @@ class AdminImportControllerCore extends AdminController
 									if ($id_product_attribute && in_array($id_product_attribute, $attribute_combination))
 									{
 										$product->updateAttribute(
-											$id_product_attribute,
-											(float)$info['wholesale_price'],
-											(float)$info['price'],
-											(float)$info['weight'],
-											0,
-											(Configuration::get('PS_USE_ECOTAX') ? (float)$info['ecotax'] : 0),
-											$id_image,
-											strval($info['reference']),
-											strval($info['ean13']),
-											(int)$info['default_on'],
-											0,
-											strval($info['upc']),
-											(int)$info['minimal_quantity'],
-											0,
-											null,
-											$id_shop_list
+												$id_product_attribute, (float)$info['wholesale_price'], (float)$info['price'], (float)$info['weight'], 0, (Configuration::get('PS_USE_ECOTAX') ? (float)$info['ecotax'] : 0), $id_image, strval($info['reference']), strval($info['ean13']), (int)$info['default_on'], 0, strval($info['upc']), (int)$info['minimal_quantity'], 0, null, $id_shop_list
 										);
 										$id_product_attribute_update = true;
 										if (isset($info['supplier_reference']) && !empty($info['supplier_reference']))
@@ -2113,28 +2082,14 @@ class AdminImportControllerCore extends AdminController
 						if (!$id_product_attribute)
 						{
 							$id_product_attribute = $product->addCombinationEntity(
-								(float)$info['wholesale_price'],
-								(float)$info['price'],
-								(float)$info['weight'],
-								0,
-								(Configuration::get('PS_USE_ECOTAX') ? (float)$info['ecotax'] : 0),
-								(int)$info['quantity'],
-								$id_image,
-								strval($info['reference']),
-								0,
-								strval($info['ean13']),
-								(int)$info['default_on'],
-								0,
-								strval($info['upc']),
-								(int)$info['minimal_quantity'],
-								$id_shop_list
+									(float)$info['wholesale_price'], (float)$info['price'], (float)$info['weight'], 0, (Configuration::get('PS_USE_ECOTAX') ? (float)$info['ecotax'] : 0), (int)$info['quantity'], $id_image, strval($info['reference']), 0, strval($info['ean13']), (int)$info['default_on'], 0, strval($info['upc']), (int)$info['minimal_quantity'], $id_shop_list
 							);
 							if (isset($info['supplier_reference']) && !empty($info['supplier_reference']))
 								$product->addSupplierReference($product->id_supplier, $id_product_attribute, $info['supplier_reference']);
 						}
 
 						// fills our attributes array, in order to add the attributes to the product_attribute afterwards
-						if(isset($attributes[$group.'_'.$attribute]))
+						if (isset($attributes[$group.'_'.$attribute]))
 							$attributes_to_add[] = (int)$attributes[$group.'_'.$attribute];
 
 						// after insertion, we clean attribute position and group attribute position
@@ -2168,28 +2123,28 @@ class AdminImportControllerCore extends AdminController
 				if (isset($info['advanced_stock_management']))
 				{
 					if ($info['advanced_stock_management'] != 1 && $info['advanced_stock_management'] != 0)
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management has incorrect value. Not set for product with id %s.'),$product->id);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management has incorrect value. Not set for product with id %s.'), $product->id);
 					elseif (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $info['advanced_stock_management'] == 1)
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, can not enable on product with id %s.'),$product->id);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, can not enable on product with id %s.'), $product->id);
 					else
 						$product->setAdvancedStockManagement($info['advanced_stock_management']);
 					// automaticly disable depends on stock, if a_s_m set to disabled
 					if (StockAvailable::dependsOnStock($product->id) == 1 && $info['advanced_stock_management'] == 0)
-						StockAvailable::setProductDependsOnStock($product->id, 0,null,$id_product_attribute);
+						StockAvailable::setProductDependsOnStock($product->id, 0, null, $id_product_attribute);
 				}
 
 				// Check if warehouse exists
 				if (isset($info['warehouse']) && $info['warehouse'])
 				{
 					if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, warehouse is not set on product with id %s.'),$product->id);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, warehouse is not set on product with id %s.'), $product->id);
 					else
 					{
 						if (Warehouse::exists($info['warehouse']))
 						{
 							$warehouse_location_entity = new WarehouseProductLocation();
 							$warehouse_location_entity->id_product = $product->id;
-							$warehouse_location_entity->id_product_attribute =  $id_product_attribute;
+							$warehouse_location_entity->id_product_attribute = $id_product_attribute;
 							$warehouse_location_entity->id_warehouse = $info['warehouse'];
 							if (WarehouseProductLocation::getProductLocation($product->id, $id_product_attribute, $info['warehouse']) !== false)
 								$warehouse_location_entity->update();
@@ -2198,7 +2153,7 @@ class AdminImportControllerCore extends AdminController
 							StockAvailable::synchronize($product->id);
 						}
 						else
-							$this->warnings[] = sprintf(Tools::displayError('Warehouse did not exist, cannot set on product %1$s.'),$product->name[$default_language_id]);
+							$this->warnings[] = sprintf(Tools::displayError('Warehouse did not exist, cannot set on product %1$s.'), $product->name[$default_language_id]);
 					}
 				}
 
@@ -2206,11 +2161,11 @@ class AdminImportControllerCore extends AdminController
 				if (isset($info['depends_on_stock']))
 				{
 					if ($info['depends_on_stock'] != 0 && $info['depends_on_stock'] != 1)
-						$this->warnings[] = sprintf(Tools::displayError('Incorrect value for depends on stock for product %1$s '),$product->name[$default_language_id]);
+						$this->warnings[] = sprintf(Tools::displayError('Incorrect value for depends on stock for product %1$s '), $product->name[$default_language_id]);
 					elseif ((!$info['advanced_stock_management'] || $info['advanced_stock_management'] == 0) && $info['depends_on_stock'] == 1)
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, cannot set depends on stock %1$s '),$product->name[$default_language_id]);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, cannot set depends on stock %1$s '), $product->name[$default_language_id]);
 					else
-						StockAvailable::setProductDependsOnStock($product->id, $info['depends_on_stock'],null,$id_product_attribute);
+						StockAvailable::setProductDependsOnStock($product->id, $info['depends_on_stock'], null, $id_product_attribute);
 
 					// This code allows us to set qty and disable depends on stock
 					if (isset($info['quantity']) && $info['depends_on_stock'] == 0)
@@ -2244,7 +2199,6 @@ class AdminImportControllerCore extends AdminController
 					else
 						StockAvailable::setQuantity((int)$product->id, $id_product_attribute, (int)$info['quantity'], $this->context->shop->id);
 				}
-
 			}
 		}
 
@@ -2295,35 +2249,35 @@ class AdminImportControllerCore extends AdminController
 				foreach (explode($this->multiple_value_separator, $info['group']) as $key => $group)
 				{
 					$group = trim($group);
-					if(empty($group))
+					if (empty($group))
 						continue;
 					$id_group = false;
 					if (is_numeric($group) && $group)
 					{
-						$myGroup = new Group((int)$group);
-						if (Validate::isLoadedObject($myGroup))
+						$my_group = new Group((int)$group);
+						if (Validate::isLoadedObject($my_group))
 							$customer_groups[] = (int)$group;
 						continue;
 					}
-					$myGroup = Group::searchByName($group);
-					if (isset($myGroup['id_group']) && $myGroup['id_group'])
-						$id_group = (int)$myGroup['id_group'];
+					$my_group = Group::searchByName($group);
+					if (isset($my_group['id_group']) && $my_group['id_group'])
+						$id_group = (int)$my_group['id_group'];
 					if (!$id_group)
 					{
-						$myGroup = new Group();
-						$myGroup->name = Array($id_lang => $group);
+						$my_group = new Group();
+						$my_group->name = Array($id_lang => $group);
 						if ($id_lang != $default_language_id)
-							$myGroup->name = $myGroup->name + array($default_language_id => $group);
-						$myGroup->price_display_method = 1;
-						$myGroup->add();
-						if (Validate::isLoadedObject($myGroup))
-							$id_group = (int)$myGroup->id;
+							$my_group->name = $my_group->name + array($default_language_id => $group);
+						$my_group->price_display_method = 1;
+						$my_group->add();
+						if (Validate::isLoadedObject($my_group))
+							$id_group = (int)$my_group->id;
 					}
 					if ($id_group)
 						$customer_groups[] = (int)$id_group;
 				}
 			}
-			elseif(empty($info['group']) && isset($customer->id) && $customer->id)
+			elseif (empty($info['group']) && isset($customer->id) && $customer->id)
 				$customer_groups = array(0 => Configuration::get('PS_CUSTOMER_GROUP'));
 
 			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $customer);
@@ -2365,18 +2319,18 @@ class AdminImportControllerCore extends AdminController
 			if (isset($info['id_default_group']) && !empty($info['id_default_group']) && !is_numeric($info['id_default_group']))
 			{
 				$info['id_default_group'] = trim($info['id_default_group']);
-				$myGroup = Group::searchByName($info['id_default_group']);
-				if (isset($myGroup['id_group']) && $myGroup['id_group'])
-					$info['id_default_group'] = (int)$myGroup['id_group'];
+				$my_group = Group::searchByName($info['id_default_group']);
+				if (isset($my_group['id_group']) && $my_group['id_group'])
+					$info['id_default_group'] = (int)$my_group['id_group'];
 			}
-			$myGroup = new Group($customer->id_default_group);
-			if (!Validate::isLoadedObject($myGroup))
+			$my_group = new Group($customer->id_default_group);
+			if (!Validate::isLoadedObject($my_group))
 				$customer->id_default_group = (int)Configuration::get('PS_CUSTOMER_GROUP');
 			$customer_groups[] = (int)$customer->id_default_group;
 			$customer_groups = array_flip(array_flip($customer_groups));
 			$res = true;
 			if (($field_error = $customer->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-				($lang_field_error = $customer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
+					($lang_field_error = $customer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
 			{
 				foreach ($customers_shop as $id_shop => $id_group)
 				{
@@ -2399,7 +2353,7 @@ class AdminImportControllerCore extends AdminController
 									foreach ($addresses as $address)
 									{
 										$address['id_customer'] = $customer->id;
-										unset($address['country'], $address['state'], $address['state_iso'], $address['id_address']	);
+										unset($address['country'], $address['state'], $address['state_iso'], $address['id_address']);
 										Db::getInstance()->insert('address', $address);
 									}
 							}
@@ -2437,12 +2391,10 @@ class AdminImportControllerCore extends AdminController
 			if (!$res)
 			{
 				$this->errors[] = sprintf(
-					Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-					$info['email'],
-					(isset($info['id']) && !empty($info['id']))? $info['id'] : 'null'
+						Tools::displayError('%1$s (ID: %2$s) cannot be saved'), $info['email'], (isset($info['id']) && !empty($info['id'])) ? $info['id'] : 'null'
 				);
 				$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
-					Db::getInstance()->getMsgError();
+						Db::getInstance()->getMsgError();
 			}
 		}
 		$this->closeCsvFile($handle);
@@ -2483,13 +2435,13 @@ class AdminImportControllerCore extends AdminController
 					$country->contains_states = 0; // Default value for country to create
 					$lang_field_error = $country->validateFieldsLang(UNFRIENDLY_ERROR, true);
 					if (($field_error = $country->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-						($lang_field_error = $country->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $country->add())
+							($lang_field_error = $country->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $country->add())
 						$address->id_country = (int)$country->id;
 					else
 					{
 						$this->errors[] = sprintf(Tools::displayError('%s cannot be saved'), $country->name[$default_language_id]);
 						$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
-							Db::getInstance()->getMsgError();
+								Db::getInstance()->getMsgError();
 					}
 				}
 			}
@@ -2513,13 +2465,13 @@ class AdminImportControllerCore extends AdminController
 					$state->iso_code = Tools::strtoupper(Tools::substr($address->state, 0, 2)); // Default iso for state to create
 					$state->tax_behavior = 0;
 					if (($field_error = $state->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-						($lang_field_error = $state->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $state->add())
+							($lang_field_error = $state->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $state->add())
 						$address->id_state = (int)$state->id;
 					else
 					{
 						$this->errors[] = sprintf(Tools::displayError('%s cannot be saved'), $state->name);
 						$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
-							Db::getInstance()->getMsgError();
+								Db::getInstance()->getMsgError();
 					}
 				}
 			}
@@ -2533,10 +2485,7 @@ class AdminImportControllerCore extends AdminController
 
 					if (count($customer_list) == 0)
 						$this->errors[] = sprintf(
-							Tools::displayError('%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be saved.'),
-							Db::getInstance()->getMsgError(),
-							$address->customer_email,
-							(isset($info['id']) && !empty($info['id']))? $info['id'] : 'null'
+								Tools::displayError('%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be saved.'), Db::getInstance()->getMsgError(), $address->customer_email, (isset($info['id']) && !empty($info['id'])) ? $info['id'] : 'null'
 						);
 				}
 				else
@@ -2556,10 +2505,7 @@ class AdminImportControllerCore extends AdminController
 
 					if (count($customer_list) == 0)
 						$this->errors[] = sprintf(
-							Tools::displayError('%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be saved.'),
-							Db::getInstance()->getMsgError(),
-							$customer->email,
-							(int)$address->id_customer
+								Tools::displayError('%1$s does not exist in database %2$s (ID: %3$s), and therefore cannot be saved.'), Db::getInstance()->getMsgError(), $customer->email, (int)$address->id_customer
 						);
 				}
 				else
@@ -2578,17 +2524,15 @@ class AdminImportControllerCore extends AdminController
 				$manufacturer = new Manufacturer();
 				$manufacturer->name = $address->manufacturer;
 				if (($field_error = $manufacturer->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-					($lang_field_error = $manufacturer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $manufacturer->add())
+						($lang_field_error = $manufacturer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $manufacturer->add())
 					$address->id_manufacturer = (int)$manufacturer->id;
 				else
 				{
 					$this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
-						Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-						$manufacturer->name,
-						(isset($manufacturer->id) && !empty($manufacturer->id))? $manufacturer->id : 'null'
+									Tools::displayError('%1$s (ID: %2$s) cannot be saved'), $manufacturer->name, (isset($manufacturer->id) && !empty($manufacturer->id)) ? $manufacturer->id : 'null'
 					);
 					$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
-						Db::getInstance()->getMsgError();
+							Db::getInstance()->getMsgError();
 				}
 			}
 
@@ -2599,23 +2543,21 @@ class AdminImportControllerCore extends AdminController
 				$supplier = new Supplier();
 				$supplier->name = $address->supplier;
 				if (($field_error = $supplier->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-					($lang_field_error = $supplier->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $supplier->add())
+						($lang_field_error = $supplier->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $supplier->add())
 					$address->id_supplier = (int)$supplier->id;
 				else
 				{
 					$this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
-						Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-						$supplier->name,
-						(isset($supplier->id) && !empty($supplier->id))? $supplier->id : 'null'
+									Tools::displayError('%1$s (ID: %2$s) cannot be saved'), $supplier->name, (isset($supplier->id) && !empty($supplier->id)) ? $supplier->id : 'null'
 					);
 					$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
-						Db::getInstance()->getMsgError();
+							Db::getInstance()->getMsgError();
 				}
 			}
 
 			$res = false;
 			if (($field_error = $address->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-				($lang_field_error = $address->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
+					($lang_field_error = $address->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
 			{
 				if (isset($customer_list) && count($customer_list) > 0)
 				{
@@ -2633,9 +2575,7 @@ class AdminImportControllerCore extends AdminController
 
 						if (!$res)
 							$this->errors[] = sprintf(
-								Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-								$info['alias'],
-								(isset($info['id']) && !empty($info['id']))? $info['id'] : 'null'
+									Tools::displayError('%1$s (ID: %2$s) cannot be saved'), $info['alias'], (isset($info['id']) && !empty($info['id'])) ? $info['id'] : 'null'
 							);
 					}
 				}
@@ -2651,12 +2591,10 @@ class AdminImportControllerCore extends AdminController
 			if (!$res)
 			{
 				$this->errors[] = sprintf(
-					Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-					$info['alias'],
-					(isset($info['id']) && !empty($info['id']))? $info['id'] : 'null'
+						Tools::displayError('%1$s (ID: %2$s) cannot be saved'), $info['alias'], (isset($info['id']) && !empty($info['id'])) ? $info['id'] : 'null'
 				);
 				$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
-					Db::getInstance()->getMsgError();
+						Db::getInstance()->getMsgError();
 			}
 		}
 		$this->closeCsvFile($handle);
@@ -2689,7 +2627,7 @@ class AdminImportControllerCore extends AdminController
 
 			$res = false;
 			if (($field_error = $manufacturer->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-				($lang_field_error = $manufacturer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
+					($lang_field_error = $manufacturer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
 			{
 				if ($manufacturer->id && $manufacturer->manufacturerExists($manufacturer->id))
 					$res = $manufacturer->update();
@@ -2699,8 +2637,8 @@ class AdminImportControllerCore extends AdminController
 
 				//copying images of manufacturer
 				if (isset($manufacturer->image) && !empty($manufacturer->image))
-				if (!AdminImportController::copyImg($manufacturer->id, null, $manufacturer->image, 'manufacturers', !Tools::getValue('regenerate')))
-					$this->warnings[] = $manufacturer->image.' '.Tools::displayError('cannot be copied.');
+					if (!AdminImportController::copyImg($manufacturer->id, null, $manufacturer->image, 'manufacturers', !Tools::getValue('regenerate')))
+						$this->warnings[] = $manufacturer->image.' '.Tools::displayError('cannot be copied.');
 
 				if ($res)
 				{
@@ -2730,12 +2668,10 @@ class AdminImportControllerCore extends AdminController
 			if (!$res)
 			{
 				$this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
-					Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-					(isset($info['name']) && !empty($info['name']))? Tools::safeOutput($info['name']) : 'No Name',
-					(isset($info['id']) && !empty($info['id']))? Tools::safeOutput($info['id']) : 'No ID'
+								Tools::displayError('%1$s (ID: %2$s) cannot be saved'), (isset($info['name']) && !empty($info['name'])) ? Tools::safeOutput($info['name']) : 'No Name', (isset($info['id']) && !empty($info['id'])) ? Tools::safeOutput($info['id']) : 'No ID'
 				);
 				$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
-					Db::getInstance()->getMsgError();
+						Db::getInstance()->getMsgError();
 			}
 		}
 		$this->closeCsvFile($handle);
@@ -2764,10 +2700,9 @@ class AdminImportControllerCore extends AdminController
 					$supplier = new Supplier();
 			}
 
-
 			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $supplier);
 			if (($field_error = $supplier->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-				($lang_field_error = $supplier->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
+					($lang_field_error = $supplier->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
 			{
 				$res = false;
 				if ($supplier->id && $supplier->supplierExists($supplier->id))
@@ -2778,14 +2713,12 @@ class AdminImportControllerCore extends AdminController
 
 				//copying images of suppliers
 				if (isset($supplier->image) && !empty($supplier->image))
-				if (!AdminImportController::copyImg($supplier->id, null, $supplier->image, 'suppliers', !Tools::getValue('regenerate')))
-					$this->warnings[] = $supplier->image.' '.Tools::displayError('cannot be copied.');
+					if (!AdminImportController::copyImg($supplier->id, null, $supplier->image, 'suppliers', !Tools::getValue('regenerate')))
+						$this->warnings[] = $supplier->image.' '.Tools::displayError('cannot be copied.');
 
 				if (!$res)
 					$this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
-						Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-						(isset($info['name']) && !empty($info['name']))? Tools::safeOutput($info['name']) : 'No Name',
-						(isset($info['id']) && !empty($info['id']))? Tools::safeOutput($info['id']) : 'No ID'
+									Tools::displayError('%1$s (ID: %2$s) cannot be saved'), (isset($info['name']) && !empty($info['name'])) ? Tools::safeOutput($info['name']) : 'No Name', (isset($info['id']) && !empty($info['id'])) ? Tools::safeOutput($info['id']) : 'No ID'
 					);
 				else
 				{
@@ -2847,7 +2780,7 @@ class AdminImportControllerCore extends AdminController
 
 			$res = false;
 			if (($field_error = $alias->validateFields(UNFRIENDLY_ERROR, true)) === true &&
-				($lang_field_error = $alias->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
+					($lang_field_error = $alias->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
 			{
 				if ($alias->id && $alias->aliasExists($alias->id))
 					$res = $alias->update();
@@ -2857,9 +2790,7 @@ class AdminImportControllerCore extends AdminController
 
 				if (!$res)
 					$this->errors[] = Db::getInstance()->getMsgError().' '.sprintf(
-						Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-						$info['name'],
-						(isset($info['id']) ? $info['id'] : 'null')
+									Tools::displayError('%1$s (ID: %2$s) cannot be saved'), $info['name'], (isset($info['id']) ? $info['id'] : 'null')
 					);
 			}
 			else
@@ -3015,25 +2946,21 @@ class AdminImportControllerCore extends AdminController
 
 				// checks if one product/attribute is there only once
 				if (isset($products[$id_product][$id_product_attribute]))
-					$this->errors[] = sprintf($this->l('Product/Attribute (%d/%d) cannot be added twice (at line %d).'), $id_product,
-						$id_product_attribute, $current_line + 1);
+					$this->errors[] = sprintf($this->l('Product/Attribute (%d/%d) cannot be added twice (at line %d).'), $id_product, $id_product_attribute, $current_line + 1);
 				else
 					$products[$id_product][$id_product_attribute] = $quantity_expected;
 
 				// checks parameters
 				if (false === ($supplier_reference = ProductSupplier::getProductSupplierReference($id_product, $id_product_attribute, $supply_order->id_supplier)))
-					$this->errors[] = sprintf($this->l('Product (%d/%d) is not available for this order (at line %d).'), $id_product,
-						$id_product_attribute, $current_line + 1);
+					$this->errors[] = sprintf($this->l('Product (%d/%d) is not available for this order (at line %d).'), $id_product, $id_product_attribute, $current_line + 1);
 				if ($unit_price_te < 0)
 					$this->errors[] = sprintf($this->l('Unit Price (tax excl.) (%d) is not valid (at line %d).'), $unit_price_te, $current_line + 1);
 				if ($quantity_expected < 0)
 					$this->errors[] = sprintf($this->l('Quantity Expected (%d) is not valid (at line %d).'), $quantity_expected, $current_line + 1);
 				if ($discount_rate < 0 || $discount_rate > 100)
-				$this->errors[] = sprintf($this->l('Discount rate (%d) is not valid (at line %d). %s.'), $discount_rate,
-										   $current_line + 1, $this->l('Format: Between 0 and 100'));
+					$this->errors[] = sprintf($this->l('Discount rate (%d) is not valid (at line %d). %s.'), $discount_rate, $current_line + 1, $this->l('Format: Between 0 and 100'));
 				if ($tax_rate < 0 || $tax_rate > 100)
-				$this->errors[] = sprintf($this->l('Quantity Expected (%d) is not valid (at line %d).'), $tax_rate,
-										   $current_line + 1, $this->l('Format: Between 0 and 100'));
+					$this->errors[] = sprintf($this->l('Quantity Expected (%d) is not valid (at line %d).'), $tax_rate, $current_line + 1, $this->l('Format: Between 0 and 100'));
 
 				// if no errors, sets supply order details
 				if (empty($this->errors))
@@ -3078,7 +3005,6 @@ class AdminImportControllerCore extends AdminController
 					$supply_order_detail->add();
 					$supply_order->update();
 					unset($supply_order_detail);
-
 				}
 			}
 		}
@@ -3138,15 +3064,15 @@ class AdminImportControllerCore extends AdminController
 				Db::getInstance()->execute('
 					DELETE FROM `'._DB_PREFIX_.'category`
 					WHERE id_category NOT IN ('.(int)Configuration::get('PS_HOME_CATEGORY').
-					', '.(int)Configuration::get('PS_ROOT_CATEGORY').')');
+						', '.(int)Configuration::get('PS_ROOT_CATEGORY').')');
 				Db::getInstance()->execute('
 					DELETE FROM `'._DB_PREFIX_.'category_lang`
 					WHERE id_category NOT IN ('.(int)Configuration::get('PS_HOME_CATEGORY').
-					', '.(int)Configuration::get('PS_ROOT_CATEGORY').')');
+						', '.(int)Configuration::get('PS_ROOT_CATEGORY').')');
 				Db::getInstance()->execute('
 					DELETE FROM `'._DB_PREFIX_.'category_shop`
 					WHERE `id_category` NOT IN ('.(int)Configuration::get('PS_HOME_CATEGORY').
-					', '.(int)Configuration::get('PS_ROOT_CATEGORY').')');
+						', '.(int)Configuration::get('PS_ROOT_CATEGORY').')');
 				Db::getInstance()->execute('ALTER TABLE `'._DB_PREFIX_.'category` AUTO_INCREMENT = 3');
 				foreach (scandir(_PS_CAT_IMG_DIR_) as $d)
 					if (preg_match('/^[0-9]+(\-(.*))?\.jpg$/', $d))
@@ -3323,30 +3249,30 @@ class AdminImportControllerCore extends AdminController
 		elseif ($filename = Tools::getValue('csvfilename'))
 		{
 			$filename = urldecode($filename);
-			$file =  AdminImportController::getPath(basename($filename));
+			$file = AdminImportController::getPath(basename($filename));
 			if (realpath(dirname($file)) != realpath(AdminImportController::getPath()))
 				exit();
 			if (!empty($filename))
 			{
-				$bName = basename($filename);
+				$b_name = basename($filename);
 				if (Tools::getValue('delete') && file_exists($file))
 					@unlink($file);
 				elseif (file_exists($file))
 				{
-					$bName = explode('.', $bName);
-					$bName = strtolower($bName[count($bName) - 1]);
-					$mimeTypes = array('csv' => 'text/csv');
+					$b_name = explode('.', $b_name);
+					$b_name = strtolower($b_name[count($b_name) - 1]);
+					$mime_types = array('csv' => 'text/csv');
 
-					if (isset($mimeTypes[$bName]))
-						$mimeType = $mimeTypes[$bName];
+					if (isset($mime_types[$b_name]))
+						$mime_type = $mime_types[$b_name];
 					else
-						$mimeType = 'application/octet-stream';
+						$mime_type = 'application/octet-stream';
 
 					if (ob_get_level() && ob_get_length() > 0)
 						ob_end_clean();
 
 					header('Content-Transfer-Encoding: binary');
-					header('Content-Type: '.$mimeType);
+					header('Content-Type: '.$mime_type);
 					header('Content-Length: '.filesize($file));
 					header('Content-Disposition: attachment; filename="'.$filename.'"');
 					$fp = fopen($file, 'rb');
@@ -3361,7 +3287,7 @@ class AdminImportControllerCore extends AdminController
 
 	public static function setLocale()
 	{
-		$iso_lang  = trim(Tools::getValue('iso_lang'));
+		$iso_lang = trim(Tools::getValue('iso_lang'));
 		setlocale(LC_COLLATE, strtolower($iso_lang).'_'.strtoupper($iso_lang).'.UTF-8');
 		setlocale(LC_CTYPE, strtolower($iso_lang).'_'.strtoupper($iso_lang).'.UTF-8');
 	}
@@ -3369,7 +3295,7 @@ class AdminImportControllerCore extends AdminController
 	protected function addProductWarning($product_name, $product_id = null, $message = '')
 	{
 		$this->warnings[] = $product_name.(isset($product_id) ? ' (ID '.$product_id.')' : '').' '
-			.Tools::displayError($message);
+				.Tools::displayError($message);
 	}
 
 	public function ajaxProcessSaveImportMatchs()
@@ -3399,9 +3325,9 @@ class AdminImportControllerCore extends AdminController
 		if ($this->tabAccess['edit'] === '1')
 		{
 			$return = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'import_match` WHERE `id_import_match` = '
-				.(int)Tools::getValue('idImportMatchs'));
+					.(int)Tools::getValue('idImportMatchs'));
 			die('{"id" : "'.$return[0]['id_import_match'].'", "matchs" : "'.$return[0]['match'].'", "skip" : "'
-				.$return[0]['skip'].'"}');
+					.$return[0]['skip'].'"}');
 		}
 	}
 
@@ -3410,7 +3336,7 @@ class AdminImportControllerCore extends AdminController
 		if ($this->tabAccess['edit'] === '1')
 		{
 			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'import_match` WHERE `id_import_match` = '
-				.(int)Tools::getValue('idImportMatchs'));
+					.(int)Tools::getValue('idImportMatchs'));
 			die;
 		}
 	}
@@ -3418,6 +3344,7 @@ class AdminImportControllerCore extends AdminController
 	public static function getPath($file = '')
 	{
 		return (defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_).DIRECTORY_SEPARATOR.'import'
-			.DIRECTORY_SEPARATOR.$file;
+				.DIRECTORY_SEPARATOR.$file;
 	}
+
 }
