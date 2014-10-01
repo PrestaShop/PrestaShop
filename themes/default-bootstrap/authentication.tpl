@@ -260,9 +260,9 @@
 						</div>
 					{/if}
 					{if $dniExist eq false}
-						<div class="required form-group dni_invoice">
+						<div class="required form-group dni">
 							<label for="dni">{l s='Identification number'} <sup>*</sup></label>
-							<input type="text" class="text form-control" name="dni_invoice" id="dni_invoice" value="{if isset($guestInformations) && $guestInformations.dni_invoice}{$guestInformations.dni_invoice}{/if}" />
+							<input type="text" class="text form-control" name="dni" id="dni" value="{if isset($guestInformations) && $guestInformations.dni}{$guestInformations.dni}{/if}" />
 							<span class="form_info">{l s='DNI / NIF / NIE'}</span>
 						</div>
 					{/if}
@@ -280,6 +280,7 @@
 					<div id="opc_invoice_address"  class="unvisible">
 						{assign var=stateExist value=false}
 						{assign var=postCodeExist value=false}
+						{assign var=dniExist value=false}
 						<h3 class="page-subheading top-indent">{l s='Invoice address'}</h3>
 						{foreach from=$inv_all_fields item=field_name}
 						{if $field_name eq "company"}
@@ -365,6 +366,13 @@
 								<option value="">-</option>
 							</select>
 						</div>
+						{/if}
+						{if $dniExist eq false}
+							<div class="required form-group dni_invoice">
+								<label for="dni">{l s='Identification number'} <sup>*</sup></label>
+								<input type="text" class="text form-control" name="dni_invoice" id="dni_invoice" value="{if isset($guestInformations) && $guestInformations.dni_invoice}{$guestInformations.dni_invoice}{/if}" />
+								<span class="form_info">{l s='DNI / NIF / NIE'}</span>
+							</div>
 						{/if}
 						<div class="form-group is_customer_param">
 							<label for="other_invoice">{l s='Additional information'}</label>
