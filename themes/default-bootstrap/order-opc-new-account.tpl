@@ -273,13 +273,13 @@
 					{if $field_name eq "company"}
 					<div class="form-group">
 						<label for="company_invoice">{l s='Company'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
-						<input type="text" class="text form-control validate" id="company_invoice" name="company_invoice"  data-validate="isName" value="" />
+						<input type="text" class="text form-control validate" id="company_invoice" name="company_invoice"  data-validate="isName" value="{if isset($guestInformations) && isset($guestInformations.company_invoice) && $guestInformations.company_invoice}{$guestInformations.company_invoice}{/if}" />
 					</div>
 					{elseif $field_name eq "vat_number"}
 					<div id="vat_number_block_invoice" class="is_customer_param" style="display:none;">
 						<div class="form-group">
 							<label for="vat_number_invoice">{l s='VAT number'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
-							<input type="text" class="form-control" id="vat_number_invoice" name="vat_number_invoice" value="" />
+							<input type="text" class="form-control" id="vat_number_invoice" name="vat_number_invoice" value="{if isset($guestInformations) && isset($guestInformations.vat_number_invoice) && $guestInformations.vat_number_invoice}{$guestInformations.vat_number_invoice}{/if}" />
 						</div>
 					</div>
 					{elseif $field_name eq "dni"}
@@ -343,7 +343,7 @@
 					{if !$postCodeExist}
 					<div class="required postcode_invoice form-group unvisible">
 						<label for="postcode_invoice">{l s='Zip/Postal Code'} <sup>*</sup></label>
-						<input type="text" class="form-control validate" name="postcode_invoice" id="postcode_invoice" data-validate="isPostCode" value="" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
+						<input type="text" class="form-control validate" name="postcode_invoice" id="postcode_invoice" data-validate="isPostCode" value="{if isset($guestInformations) && isset($guestInformations.postcode_invoice) && $guestInformations.postcode_invoice}{$guestInformations.postcode_invoice}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
 					</div>
 					{/if}
 					{if !$stateExist}
