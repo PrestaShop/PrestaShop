@@ -219,9 +219,6 @@ abstract class Controller extends ControllerCore
 			$this->_mempeak['postProcess'] = memory_get_peak_usage();
 			$this->_time['postProcess'] = microtime(true);
 
-			if (!empty($this->redirect_after))
-				$this->redirect();
-
 			if (!$this->content_only && ($this->display_header || (isset($this->className) && $this->className)))
 				$this->initHeader();
 			$this->_memory['initHeader'] = memory_get_usage();
@@ -465,8 +462,11 @@ abstract class Controller extends ControllerCore
 			}
 		</style>';
 
+		echo '<div id="ps_profiling">';
+		if (!empty($this->redirect_after))
+			echo '<div class="ps_profiling_row"><div class="ps_profiling_col12"><h2>Caught redirection to <a href="'.htmlspecialchars($this->redirect_after).'">'.htmlspecialchars($this->redirect_after).'</a></h2></div></div>';
+		
 		echo '
-		<div id="ps_profiling">
 		<div class="ps_profiling_row">
 		<div class="ps_profiling_col4">
 			<div class="ps_profiling_infobox"><b>Load time</b>: '.$this->displayLoadTimeColor($this->_time['display'] - $start_time, true).'</div>';
@@ -595,9 +595,9 @@ abstract class Controller extends ControllerCore
 			echo '
 			<tr>
 				<td><pre>'.preg_replace("/(^[\s]*)/m", "", htmlspecialchars($data['query'], ENT_NOQUOTES, 'utf-8', false)).'</pre></td>
-				<td><span '.$this->getTimeColor($data['time'] * 1000).'>'.round($data['time'] * 1000, 3).'</span></td>
+				<td><span '.$this->getTimeColor($data['time'] * 1000).'>'.(round($data['time'] * 1000, 1) < 0.1 ? '< 1' : round($data['time'] * 1000, 1)).'</span></td>
 				<td>'.$data['rows'].'</td>
-				<td>'.($data['filesort'] ? '<span style="color:green">Yes</span>' : '').'</td>
+				<td>'.($data['filesort'] ? '<span style="color:red">Yes</span>' : '').'</td>
 				<td>'.($data['group_by'] ? '<span style="color:red">Yes</span>' : '').'</td>
 				<td>in '.$data['location'].'<br /><div class="qbt" id="qbt'.($i++).'">'.$echo_stack.'</div></td>
 			</tr>';
