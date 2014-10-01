@@ -477,11 +477,14 @@ class AdminStatusesControllerCore extends AdminController
 			$templates = array_unique(array_merge(scandir(_PS_ADMIN_DIR_.'/'.$default_path.$iso_code), $theme_templates));
 			foreach ($templates as $key => $template)
 				if (!strncmp(strrev($template), 'lmth.', 5))
+				{
+					$search_result = array_search($template, $theme_templates);
 					$array[$iso_code][] = array(
 								'id' => substr($template, 0, -5),
 								'name' => substr($template, 0, -5),
-								'folder' => ((!empty(array_search($template, $theme_templates))?$theme_path:$default_path))
+								'folder' => ((!empty($search_result)?$theme_path:$default_path))
 					);
+				}
 		}
 
 		return $array;
