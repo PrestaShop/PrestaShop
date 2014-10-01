@@ -1014,7 +1014,27 @@ class AdminImportControllerCore extends AdminController
 				$path = _PS_SUPP_IMG_DIR_.(int)$id_entity;
 			break;
 		}
-		$url = str_replace(' ', '%20', trim($url));
+		$url = urldecode(trim($url));
+		$parced_url = parse_url($url);
+
+		if (isset($parced_url['path']))
+		{
+			$path = ltrim($parced_url['path'], '/');
+			$parts = explode('/', $path);
+			foreach ($parts as &$part)
+				$part = urlencode ($part);
+			unset($part);
+			$parced_url['path'] = implode('/', $parts);
+		}
+
+		if (isset($parced_url['query']))
+		{
+			$query_parts = array();
+			parse_str($parced_url['query'], $query_parts);
+			$parced_url['query'] = http_build_query($query_parts);
+		}
+
+		$url = http_build_url('', $parced_url);
 
 		// Evaluate the memory required to resize the image: if it's too much, you can't resize it.
 		if (!ImageManager::checkImageMemoryLimit($url))
