@@ -92,9 +92,11 @@ abstract class Controller extends ControllerCore
 		$n /= 1048576;
 		if ($n > 3)
 			return '<span style="color:red">'.sprintf('%0.2f', $n).'</span>';
-		if ($n > 1)
+		elseif ($n > 1)
 			return '<span style="color:orange">'.sprintf('%0.2f', $n).'</span>';
-		return '<span style="color:green">'.sprintf('%0.2f', $n).'</span>';
+		elseif (round($n, 2) > 0)
+			return '<span style="color:green">'.sprintf('%0.2f', $n).'</span>';
+		return '<span style="color:green">-</span>';
 	}
 
 	private function displayPeakMemoryColor($n)
@@ -129,9 +131,11 @@ abstract class Controller extends ControllerCore
 	{
 		if ($n > 1)
 			return '<span style="color:red">'.round($n * 1000).'</span>'.($kikoo ? ' ms<br />You\'d better run your shop on a toaster' : '');
-		if ($n > 0.5)
+		elseif ($n > 0.5)
 			return '<span style="color:orange">'.round($n * 1000).'</span>'.($kikoo ? ' ms<br />I hope it is a shared hosting' : '');
-		return '<span style="color:green">'.round($n * 1000).'</span>'.($kikoo ? ' ms<br />Good boy! That\'s what I call a webserver!' : '');
+		elseif ($n > 0)
+			return '<span style="color:green">'.round($n * 1000).'</span>'.($kikoo ? ' ms<br />Good boy! That\'s what I call a webserver!' : '');
+		return '<span style="color:green">-</span>'.($kikoo ? ' ms<br />Faster than light' : '');
 	}
 
 	private function getTimeColor($n)
@@ -336,7 +340,7 @@ abstract class Controller extends ControllerCore
 			{
 				$totalGlobalSize += ($size = $this->sizeofvar($value));
 				if ($size > 1024)
-					$globalSize[$key] = round($size / 1024, 1);
+					$globalSize[$key] = round($size / 1024);
 			}
 		arsort($globalSize);
 
@@ -506,19 +510,25 @@ abstract class Controller extends ControllerCore
 		echo '
  	 	</div>';
 
+		$compile = array(
+			0 => 'green">never recompile',
+			1 => 'orange">auto',
+			2 => 'red">force compile'
+		);
+		
 		echo '
 		<div class="ps_profiling_col4">
-			<div class="ps_profiling_infobox"><b>Total cache size (in Cache class)</b>: '.$this->displayMemoryColor($totalCacheSize).' Mb</div>
-			<div class="ps_profiling_infobox"><b>DB type</b>: '.get_class(Db::getInstance()).'</div>
-			<div class="ps_profiling_infobox"><b>SQL Queries</b>: '.$this->displaySQLQueries(count(Db::getInstance()->queries)).'</div>
-			<div class="ps_profiling_infobox"><b>Time spent querying</b>: '.$this->displayLoadTimeColor($totalQueryTime).' ms</div>
-			<div class="ps_profiling_infobox"><b>Included files</b>: '.sizeof(get_included_files()).'</div>
-			<div class="ps_profiling_infobox"><b>Size of included files</b>: '.$this->displayMemoryColor($totalSize).' Mb</div>
-			<div class="ps_profiling_infobox"><b>Globals</b> (&gt; 1 Ko only): '.round($totalGlobalSize / 1024).' Ko
-			<ul>';
+			<div class="ps_profiling_infobox"><b>Total cache size in Cache class</b>: '.$this->displayMemoryColor($totalCacheSize).' Mb</div>
+			<div class="ps_profiling_infobox"><b>Smarty cache</b>: <span style="color:'.(Configuration::get('PS_SMARTY_CACHE') ? 'green">enabled' : 'red">disabled').'</span></div>
+			<div class="ps_profiling_infobox"><b>Smarty compilation</b>: <span style="color:'.$compile[Configuration::get('PS_SMARTY_FORCE_COMPILE')].'</span></div>
+			<div class="ps_profiling_infobox"><b>SQL Queries</b>: '.$this->displaySQLQueries(count(Db::getInstance()->queries)).' in '.$this->displayLoadTimeColor($totalQueryTime).' ms</div>
+			<div class="ps_profiling_infobox"><b>Included files</b>: '.sizeof(get_included_files()).' ('.$this->displayMemoryColor($totalSize).' Mb)</div>
+			<div class="ps_profiling_infobox"><b>Global vars</b> : '.$this->displayMemoryColor($totalGlobalSize).' Mb
+				<ul>';
 			foreach ($globalSize as $global => $size)
-				echo '<li>'.$global.' &asymp; '.$size.' Ko</li>';
-			echo '</ul></div>
+				echo '<li>$'.$global.' &asymp; '.$size.'k</li>';
+			echo '</ul>
+			</div>
 		</div>';
 
 		$array_queries = array();
