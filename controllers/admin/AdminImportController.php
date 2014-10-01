@@ -54,9 +54,9 @@ class AdminImportControllerCore extends AdminController
 	public static $validators = array(
 		'active' => array('AdminImportController', 'getBoolean'),
 		'tax_rate' => array('AdminImportController', 'getPrice'),
-		 /** Tax excluded */
+		/** Tax excluded */
 		'price_tex' => array('AdminImportController', 'getPrice'),
-		 /** Tax included */
+		/** Tax included */
 		'price_tin' => array('AdminImportController', 'getPrice'),
 		'reduction_price' => array('AdminImportController', 'getPrice'),
 		'reduction_percent' => array('AdminImportController', 'getPrice'),
@@ -832,7 +832,9 @@ class AdminImportControllerCore extends AdminController
 		if (is_null($separator) || trim($separator) == '')
 			$separator = ',';
 
-		do $uniqid_path = _PS_UPLOAD_DIR_.uniqid(); while (file_exists($uniqid_path));
+		do
+			$uniqid_path = _PS_UPLOAD_DIR_.uniqid();
+		while (file_exists($uniqid_path));
 		file_put_contents($uniqid_path, $field);
 		$tab = '';
 		if (!empty($uniqid_path))
@@ -1584,7 +1586,7 @@ class AdminImportControllerCore extends AdminController
 						$id_shop_list[] = $shop;
 
 				if ((isset($info['reduction_price']) && $info['reduction_price'] > 0) || (isset($info['reduction_percent']) && $info['reduction_percent'] > 0))
-					foreach($id_shop_list as $id_shop)
+					foreach ($id_shop_list as $id_shop)
 					{
 						$specific_price = SpecificPrice::getSpecificPrice($product->id, $id_shop, 0, 0, 0, 1, 0, 0, 0, 0);
 
@@ -1725,7 +1727,7 @@ class AdminImportControllerCore extends AdminController
 						$feature_value = isset($tab_feature[1]) ? trim($tab_feature[1]) : '';
 						$position = isset($tab_feature[2]) ? (int)$tab_feature[2] - 1 : false;
 						$custom = isset($tab_feature[3]) ? (int)$tab_feature[3] : false;
-						if(!empty($feature_name) && !empty($feature_value))
+						if (!empty($feature_name) && !empty($feature_value))
 						{
 							$id_feature = (int)Feature::addFeatureImport($feature_name, $position);
 							$id_product = null;
@@ -1742,9 +1744,9 @@ class AdminImportControllerCore extends AdminController
 				if (isset($product->advanced_stock_management))
 				{
 					if ($product->advanced_stock_management != 1 && $product->advanced_stock_management != 0)
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management has incorrect value. Not set for product %1$s '),$product->name[$default_language_id]);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management has incorrect value. Not set for product %1$s '), $product->name[$default_language_id]);
 					elseif (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $product->advanced_stock_management == 1)
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, can not enable on product %1$s '),$product->name[$default_language_id]);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, can not enable on product %1$s '), $product->name[$default_language_id]);
 					else
 						$product->setAdvancedStockManagement($product->advanced_stock_management);
 					// automaticly disable depends on stock, if a_s_m set to disabled
@@ -1756,7 +1758,7 @@ class AdminImportControllerCore extends AdminController
 				if (isset($product->warehouse) && $product->warehouse)
 				{
 					if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, warehouse not set on product %1$s '),$product->name[$default_language_id]);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, warehouse not set on product %1$s '), $product->name[$default_language_id]);
 					else
 					{
 						if (Warehouse::exists($product->warehouse))
@@ -1768,7 +1770,7 @@ class AdminImportControllerCore extends AdminController
 								$awc->delete();
 							$warehouse_location_entity = new WarehouseProductLocation();
 							$warehouse_location_entity->id_product = $product->id;
-							$warehouse_location_entity->id_product_attribute =  0;
+							$warehouse_location_entity->id_product_attribute = 0;
 							$warehouse_location_entity->id_warehouse = $product->warehouse;
 								if (WarehouseProductLocation::getProductLocation($product->id, 0, $product->warehouse) !== false)
 									$warehouse_location_entity->update();
@@ -1777,7 +1779,7 @@ class AdminImportControllerCore extends AdminController
 							StockAvailable::synchronize($product->id);
 						}
 						else
-							$this->warnings[] = sprintf(Tools::displayError('Warehouse did not exist, can not set on product %1$s.'),$product->name[$default_language_id]);
+							$this->warnings[] = sprintf(Tools::displayError('Warehouse did not exist, can not set on product %1$s.'), $product->name[$default_language_id]);
 					}
 				}
 
@@ -1785,9 +1787,9 @@ class AdminImportControllerCore extends AdminController
 				if (isset($product->depends_on_stock))
 				{
 					if ($product->depends_on_stock != 0 && $product->depends_on_stock != 1)
-						$this->warnings[] = sprintf(Tools::displayError('Incorrect value for "depends on stock" for product %1$s '),$product->name[$default_language_id]);
+						$this->warnings[] = sprintf(Tools::displayError('Incorrect value for "depends on stock" for product %1$s '), $product->name[$default_language_id]);
 					elseif ((!$product->advanced_stock_management || $product->advanced_stock_management == 0) && $product->depends_on_stock == 1)
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management not enabled, can not set "depends on stock" for product %1$s '),$product->name[$default_language_id]);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management not enabled, can not set "depends on stock" for product %1$s '), $product->name[$default_language_id]);
 					else
 						StockAvailable::setProductDependsOnStock($product->id, $product->depends_on_stock);
 
@@ -1827,7 +1829,7 @@ class AdminImportControllerCore extends AdminController
 		$this->closeCsvFile($handle);
 	}
 
-	public function productImportCreateCat($default_language_id, $category_name, $id_parent_category=null)
+	public function productImportCreateCat($default_language_id, $category_name, $id_parent_category = null)
 	{
 		$category_to_create = new Category();
 		if (!Shop::isFeatureActive())
@@ -1836,7 +1838,7 @@ class AdminImportControllerCore extends AdminController
 			$category_to_create->id_shop_default = (int)Context::getContext()->shop->id;
 		$category_to_create->name = AdminImportController::createMultiLangField(trim($category_name));
 		$category_to_create->active = 1;
-		$category_to_create->id_parent =  (int)$id_parent_category ? (int)$id_parent_category : (int)Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
+		$category_to_create->id_parent = (int)$id_parent_category ? (int)$id_parent_category : (int)Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
 		$category_link_rewrite = Tools::link_rewrite($category_to_create->name[$default_language_id]);
 		$category_to_create->link_rewrite = AdminImportController::createMultiLangField($category_link_rewrite);
 		if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true &&
@@ -1897,7 +1899,7 @@ class AdminImportControllerCore extends AdminController
 					elseif (!empty($shop))
 						$id_shop_list[] = $shop;
 
-			if(isset($info['id_product']))
+			if (isset($info['id_product']))
 				$product = new Product((int)$info['id_product'], false, $default_language);
 			else
 				continue;
@@ -1966,7 +1968,7 @@ class AdminImportControllerCore extends AdminController
 			$id_attribute_group = 0;
 			// groups
 			$groups_attributes = array();
-			if(isset($info['group']))
+			if (isset($info['group']))
 				foreach (explode($this->multiple_value_separator, $info['group']) as $key => $group)
 				{
 					if (empty($group))
@@ -2023,7 +2025,7 @@ class AdminImportControllerCore extends AdminController
 			$attributes_to_add = array();
 
 			// for each attribute
-			if(isset($info['attribute']))
+			if (isset($info['attribute']))
 				foreach (explode($this->multiple_value_separator, $info['attribute']) as $key => $attribute)
 				{
 					if (empty($attribute))
@@ -2134,7 +2136,7 @@ class AdminImportControllerCore extends AdminController
 						}
 
 						// fills our attributes array, in order to add the attributes to the product_attribute afterwards
-						if(isset($attributes[$group.'_'.$attribute]))
+						if (isset($attributes[$group.'_'.$attribute]))
 							$attributes_to_add[] = (int)$attributes[$group.'_'.$attribute];
 
 						// after insertion, we clean attribute position and group attribute position
@@ -2168,28 +2170,28 @@ class AdminImportControllerCore extends AdminController
 				if (isset($info['advanced_stock_management']))
 				{
 					if ($info['advanced_stock_management'] != 1 && $info['advanced_stock_management'] != 0)
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management has incorrect value. Not set for product with id %s.'),$product->id);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management has incorrect value. Not set for product with id %s.'), $product->id);
 					elseif (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $info['advanced_stock_management'] == 1)
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, can not enable on product with id %s.'),$product->id);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, can not enable on product with id %s.'), $product->id);
 					else
 						$product->setAdvancedStockManagement($info['advanced_stock_management']);
 					// automaticly disable depends on stock, if a_s_m set to disabled
 					if (StockAvailable::dependsOnStock($product->id) == 1 && $info['advanced_stock_management'] == 0)
-						StockAvailable::setProductDependsOnStock($product->id, 0,null,$id_product_attribute);
+						StockAvailable::setProductDependsOnStock($product->id, 0, null, $id_product_attribute);
 				}
 
 				// Check if warehouse exists
 				if (isset($info['warehouse']) && $info['warehouse'])
 				{
 					if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, warehouse is not set on product with id %s.'),$product->id);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, warehouse is not set on product with id %s.'), $product->id);
 					else
 					{
 						if (Warehouse::exists($info['warehouse']))
 						{
 							$warehouse_location_entity = new WarehouseProductLocation();
 							$warehouse_location_entity->id_product = $product->id;
-							$warehouse_location_entity->id_product_attribute =  $id_product_attribute;
+							$warehouse_location_entity->id_product_attribute = $id_product_attribute;
 							$warehouse_location_entity->id_warehouse = $info['warehouse'];
 							if (WarehouseProductLocation::getProductLocation($product->id, $id_product_attribute, $info['warehouse']) !== false)
 								$warehouse_location_entity->update();
@@ -2198,7 +2200,7 @@ class AdminImportControllerCore extends AdminController
 							StockAvailable::synchronize($product->id);
 						}
 						else
-							$this->warnings[] = sprintf(Tools::displayError('Warehouse did not exist, cannot set on product %1$s.'),$product->name[$default_language_id]);
+							$this->warnings[] = sprintf(Tools::displayError('Warehouse did not exist, cannot set on product %1$s.'), $product->name[$default_language_id]);
 					}
 				}
 
@@ -2206,11 +2208,11 @@ class AdminImportControllerCore extends AdminController
 				if (isset($info['depends_on_stock']))
 				{
 					if ($info['depends_on_stock'] != 0 && $info['depends_on_stock'] != 1)
-						$this->warnings[] = sprintf(Tools::displayError('Incorrect value for depends on stock for product %1$s '),$product->name[$default_language_id]);
+						$this->warnings[] = sprintf(Tools::displayError('Incorrect value for depends on stock for product %1$s '), $product->name[$default_language_id]);
 					elseif ((!$info['advanced_stock_management'] || $info['advanced_stock_management'] == 0) && $info['depends_on_stock'] == 1)
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, cannot set depends on stock %1$s '),$product->name[$default_language_id]);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, cannot set depends on stock %1$s '), $product->name[$default_language_id]);
 					else
-						StockAvailable::setProductDependsOnStock($product->id, $info['depends_on_stock'],null,$id_product_attribute);
+						StockAvailable::setProductDependsOnStock($product->id, $info['depends_on_stock'], null, $id_product_attribute);
 
 					// This code allows us to set qty and disable depends on stock
 					if (isset($info['quantity']) && $info['depends_on_stock'] == 0)
@@ -2295,35 +2297,35 @@ class AdminImportControllerCore extends AdminController
 				foreach (explode($this->multiple_value_separator, $info['group']) as $key => $group)
 				{
 					$group = trim($group);
-					if(empty($group))
+					if (empty($group))
 						continue;
 					$id_group = false;
 					if (is_numeric($group) && $group)
 					{
-						$myGroup = new Group((int)$group);
-						if (Validate::isLoadedObject($myGroup))
+						$my_group = new Group((int)$group);
+						if (Validate::isLoadedObject($my_group))
 							$customer_groups[] = (int)$group;
 						continue;
 					}
-					$myGroup = Group::searchByName($group);
-					if (isset($myGroup['id_group']) && $myGroup['id_group'])
-						$id_group = (int)$myGroup['id_group'];
+					$my_group = Group::searchByName($group);
+					if (isset($my_group['id_group']) && $my_group['id_group'])
+						$id_group = (int)$my_group['id_group'];
 					if (!$id_group)
 					{
-						$myGroup = new Group();
-						$myGroup->name = Array($id_lang => $group);
+						$my_group = new Group();
+						$my_group->name = Array($id_lang => $group);
 						if ($id_lang != $default_language_id)
-							$myGroup->name = $myGroup->name + array($default_language_id => $group);
-						$myGroup->price_display_method = 1;
-						$myGroup->add();
-						if (Validate::isLoadedObject($myGroup))
-							$id_group = (int)$myGroup->id;
+							$my_group->name = $my_group->name + array($default_language_id => $group);
+						$my_group->price_display_method = 1;
+						$my_group->add();
+						if (Validate::isLoadedObject($my_group))
+							$id_group = (int)$my_group->id;
 					}
 					if ($id_group)
 						$customer_groups[] = (int)$id_group;
 				}
 			}
-			elseif(empty($info['group']) && isset($customer->id) && $customer->id)
+			elseif (empty($info['group']) && isset($customer->id) && $customer->id)
 				$customer_groups = array(0 => Configuration::get('PS_CUSTOMER_GROUP'));
 
 			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $customer);
@@ -2365,12 +2367,12 @@ class AdminImportControllerCore extends AdminController
 			if (isset($info['id_default_group']) && !empty($info['id_default_group']) && !is_numeric($info['id_default_group']))
 			{
 				$info['id_default_group'] = trim($info['id_default_group']);
-				$myGroup = Group::searchByName($info['id_default_group']);
-				if (isset($myGroup['id_group']) && $myGroup['id_group'])
-					$info['id_default_group'] = (int)$myGroup['id_group'];
+				$my_group = Group::searchByName($info['id_default_group']);
+				if (isset($my_group['id_group']) && $my_group['id_group'])
+					$info['id_default_group'] = (int)$my_group['id_group'];
 			}
-			$myGroup = new Group($customer->id_default_group);
-			if (!Validate::isLoadedObject($myGroup))
+			$my_group = new Group($customer->id_default_group);
+			if (!Validate::isLoadedObject($my_group))
 				$customer->id_default_group = (int)Configuration::get('PS_CUSTOMER_GROUP');
 			$customer_groups[] = (int)$customer->id_default_group;
 			$customer_groups = array_flip(array_flip($customer_groups));
@@ -2764,7 +2766,6 @@ class AdminImportControllerCore extends AdminController
 					$supplier = new Supplier();
 			}
 
-
 			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $supplier);
 			if (($field_error = $supplier->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 				($lang_field_error = $supplier->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
@@ -3030,10 +3031,10 @@ class AdminImportControllerCore extends AdminController
 					$this->errors[] = sprintf($this->l('Quantity Expected (%d) is not valid (at line %d).'), $quantity_expected, $current_line + 1);
 				if ($discount_rate < 0 || $discount_rate > 100)
 				$this->errors[] = sprintf($this->l('Discount rate (%d) is not valid (at line %d). %s.'), $discount_rate,
-										   $current_line + 1, $this->l('Format: Between 0 and 100'));
+						$current_line + 1, $this->l('Format: Between 0 and 100'));
 				if ($tax_rate < 0 || $tax_rate > 100)
 				$this->errors[] = sprintf($this->l('Quantity Expected (%d) is not valid (at line %d).'), $tax_rate,
-										   $current_line + 1, $this->l('Format: Between 0 and 100'));
+						$current_line + 1, $this->l('Format: Between 0 and 100'));
 
 				// if no errors, sets supply order details
 				if (empty($this->errors))
@@ -3323,30 +3324,30 @@ class AdminImportControllerCore extends AdminController
 		elseif ($filename = Tools::getValue('csvfilename'))
 		{
 			$filename = urldecode($filename);
-			$file =  AdminImportController::getPath(basename($filename));
+			$file = AdminImportController::getPath(basename($filename));
 			if (realpath(dirname($file)) != realpath(AdminImportController::getPath()))
 				exit();
 			if (!empty($filename))
 			{
-				$bName = basename($filename);
+				$b_name = basename($filename);
 				if (Tools::getValue('delete') && file_exists($file))
 					@unlink($file);
 				elseif (file_exists($file))
 				{
-					$bName = explode('.', $bName);
-					$bName = strtolower($bName[count($bName) - 1]);
-					$mimeTypes = array('csv' => 'text/csv');
+					$b_name = explode('.', $b_name);
+					$b_name = strtolower($b_name[count($b_name) - 1]);
+					$mime_types = array('csv' => 'text/csv');
 
-					if (isset($mimeTypes[$bName]))
-						$mimeType = $mimeTypes[$bName];
+					if (isset($mime_types[$b_name]))
+						$mime_type = $mime_types[$b_name];
 					else
-						$mimeType = 'application/octet-stream';
+						$mime_type = 'application/octet-stream';
 
 					if (ob_get_level() && ob_get_length() > 0)
 						ob_end_clean();
 
 					header('Content-Transfer-Encoding: binary');
-					header('Content-Type: '.$mimeType);
+					header('Content-Type: '.$mime_type);
 					header('Content-Length: '.filesize($file));
 					header('Content-Disposition: attachment; filename="'.$filename.'"');
 					$fp = fopen($file, 'rb');
