@@ -124,10 +124,9 @@ class InstallModelInstall extends InstallAbstractModel
 		require_once _PS_ROOT_DIR_.'/'.self::SETTINGS_FILE;
 		if ($clear_database)
 			$this->clearDatabase();
-		
+
 		$allowed_collation = array('utf8_general_ci', 'utf8_unicode_ci', 'utf8_bin');
 		$collation_database = Db::getInstance()->getValue('SELECT @@collation_database');
-		
 		// Install database structure
 		$sql_loader = new InstallSqlLoader();
 		$sql_loader->setMetaData(array(
@@ -319,7 +318,7 @@ class InstallModelInstall extends InstallAbstractModel
 
 			if (!$xml = @simplexml_load_file(_PS_INSTALL_LANGS_PATH_.$iso.'/language.xml'))
 				throw new PrestashopInstallerException($this->language->l('File "language.xml" not valid for language iso "%s"', $iso));
-			
+
 			$params_lang = array(
 				'name' => (string)$xml->name,
 				'iso_code' => substr((string)$xml->language_code, 0, 2),
@@ -329,6 +328,8 @@ class InstallModelInstall extends InstallAbstractModel
 			if (!InstallSession::getInstance()->safe_mode || !Language::downloadAndInstallLanguagePack($iso, _PS_INSTALL_VERSION_, $params_lang))
 				Language::checkAndAddLanguage($iso, false, true, $params_lang);
 
+			Language::loadLanguages();
+			Tools::clearCache();
 			if (!$id_lang = Language::getIdByIso($iso))
 				throw new PrestashopInstallerException($this->language->l('Cannot install language "%s"', ($xml->name) ? $xml->name : $iso));
 			$languages[$id_lang] = $iso;
@@ -409,7 +410,7 @@ class InstallModelInstall extends InstallAbstractModel
 		// use the old image system if the safe_mod is enabled otherwise the installer will fail with the fixtures installation
 		if (InstallSession::getInstance()->safe_mode)
 			Configuration::updateGlobalValue('PS_LEGACY_IMAGES', 1);
-	
+
 		$id_country = Country::getByIso($data['shop_country']);
 
 		// Set default configuration
@@ -428,7 +429,7 @@ class InstallModelInstall extends InstallAbstractModel
 		Configuration::updateGlobalValue('PS_MAIL_METHOD', 			($data['use_smtp']) ? 2 : 1);
 		Configuration::updateGlobalValue('PS_MAIL_SMTP_ENCRYPTION', $data['smtp_encryption']);
 		Configuration::updateGlobalValue('PS_MAIL_SMTP_PORT', 		$data['smtp_port']);
-		
+
 		// Set default rewriting settings
 		Configuration::updateGlobalValue('PS_REWRITING_SETTINGS', $data['rewrite_engine']);
 
@@ -442,7 +443,7 @@ class InstallModelInstall extends InstallAbstractModel
 			Configuration::updateGlobalValue('SHOP_LOGO_WIDTH', round($width));
 			Configuration::updateGlobalValue('SHOP_LOGO_HEIGHT', round($height));
 		}
-		
+
 		// Disable cache for debug mode
 		if (_PS_MODE_DEV_)
 			Configuration::updateGlobalValue('PS_SMARTY_CACHE', 1);
@@ -595,20 +596,20 @@ class InstallModelInstall extends InstallAbstractModel
 		}
 		return $modules;
 	}
-	
+
 	public function getAddonsModulesList($params = array())
 	{
 		$addons_modules = array();
 		$content = Tools::addonsRequest('install-modules', $params);
 		$xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
-			
+
 		if ($xml !== false and isset($xml->module))
 			foreach ($xml->module as $modaddons)
 				$addons_modules[] = array('id_module' => $modaddons->id, 'name' => $modaddons->name);
-		
+
 		return $addons_modules;
 	}
-	
+
 	/**
 	 * PROCESS : installModules
 	 * Download module from addons and Install all modules in ~/modules/ directory
@@ -616,7 +617,7 @@ class InstallModelInstall extends InstallAbstractModel
 	public function installModulesAddons($module = null)
 	{
 		$addons_modules = $module ? array($module) : $this->getAddonsModulesList();
-		$modules = array();	
+		$modules = array();
 		if (!InstallSession::getInstance()->safe_mode)
 		{
 			foreach($addons_modules as $addons_module)
@@ -626,11 +627,11 @@ class InstallModelInstall extends InstallAbstractModel
 						$modules[] = (string)$addons_module['name'];//if the module has been unziped we add the name in the modules list to install
 						unlink(_PS_MODULE_DIR_.$addons_module['name'].'.zip');
 					}
-		}		
+		}
 
 		return count($modules) ? $this->installModules($modules) : true;
 	}
-	
+
 	/**
 	 * PROCESS : installModules
 	 * Download module from addons and Install all modules in ~/modules/ directory
@@ -656,7 +657,7 @@ class InstallModelInstall extends InstallAbstractModel
 		}
 
 		if ($errors)
-		{	
+		{
 			$this->setError($errors);
 			return false;
 		}
