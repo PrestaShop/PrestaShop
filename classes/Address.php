@@ -363,9 +363,10 @@ class AddressCore extends ObjectModel
 		}
 		elseif ($with_geoloc && isset($context->customer->geoloc_id_country))
 		{
-			$id_country = (int)$context->customer->geoloc_id_country;
-			$id_state = (int)$context->customer->id_state;
-			$zipcode = $context->customer->postcode;
+			$address = new Address();
+			$address->id_country = (int)$context->customer->geoloc_id_country;
+			$address->id_state = (int)$context->customer->id_state;
+			$address->zipcode = $context->customer->postcode;
 		}
 		else
 		{
