@@ -807,6 +807,13 @@ product_tabs['Associations'] = new function(){
 				mustMatch:false,
 				scroll:false,
 				cacheLength:0,
+				dataType: 'json',
+                                parse: function(data) {
+                                        var items = new Array();
+                                        for (var i = 0; data && i < data.length; ++i)
+                                                items[items.length] = { data: [data[i].name, data[i].id], value: data[i].name  };
+                                        return items;
+                                },
 				formatItem: function(item) {
 					return item[1]+' - '+item[0];
 				}
@@ -820,11 +827,11 @@ product_tabs['Associations'] = new function(){
 	};
 
 	this.getAccessoriesIds = function()
-	{
-		if ($('#inputAccessories').val() === undefined)
-			return '';
-		return $('#inputAccessories').val().replace(/\-/g,',');
-	}
+        {
+                if ($('#inputAccessories').val() === undefined)
+                        return id_product;
+                return id_product + ',' + $('#inputAccessories').val().replace(/\-/g,',');
+        }
 
 	this.addAccessory = function(event, data, formatted)
 	{
@@ -893,14 +900,6 @@ product_tabs['Associations'] = new function(){
 		$.ajax({
 				url: 'ajax-tab.php',
 				cache: false,
-				dataType: 'json',
-				data: {
-					ajaxProductManufacturers:"1",
-					ajax : '1',
-					token : token,
-					controller : 'AdminProducts',
-					action : 'productManufacturers'
-				},
 				success: function(j) {
 					var options;
 					if (j) {
