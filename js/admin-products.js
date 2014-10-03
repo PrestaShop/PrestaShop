@@ -850,14 +850,6 @@ product_tabs['Associations'] = new function(){
 		$.ajax({
 				url: 'ajax-tab.php',
 				cache: false,
-				dataType: 'json',
-				data: {
-					ajaxProductManufacturers:"1",
-					ajax : '1',
-					token : token,
-					controller : 'AdminProducts',
-					action : 'productManufacturers'
-				},
 				success: function(j) {
 					var options;
 					if (j) {
