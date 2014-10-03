@@ -154,16 +154,25 @@ $(document).ready(function()
 		if ($('.jqzoom img').attr('src')!= new_src)
 			$('.jqzoom img').attr('src', new_src).parent().attr('href', new_src);
 
-		$('.jqzoom').jqzoom({
-			zoomType: 'innerzoom', //innerzoom/standard/reverse/drag
-			zoomWidth: 458, //zooming div default width(default width value is 200)
-			zoomHeight: 458, //zooming div default width(default height value is 200)
-			xOffset: 21, //zooming div default offset(default offset value is 10)
-			yOffset: 0,
-			title: false
-		});
 
+		$(".jqzoom img").elevateZoom({
+			gallery:'thumbs_list_frame', 
+			galleryActiveClass: 'active', 
+			imageCrossfade: true, 
+			cursor: "crosshair",
+			zoomWindowFadeIn: 500,
+			zoomWindowFadeOut: 300,
+			zoomType: "inner"
+		}); 
+
+		//pass the images to Fancybox
+		$("#view_full_size img").on("click", function(e) {
+			var gal = $('#view_full_size img').data('elevateZoom');	
+			$.fancybox(gal.getGalleryList());
+			return false;
+		});
 	}
+		
 	if (typeof(contentOnly) != 'undefined' && !contentOnly)
 	{
 		if (!!$.prototype.fancybox)
