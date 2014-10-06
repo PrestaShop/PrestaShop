@@ -472,7 +472,8 @@ class AdminStatusesControllerCore extends AdminController
 			if (!@filemtime(_PS_ADMIN_DIR_.'/'.$default_path.$iso_code) && !@filemtime(_PS_ADMIN_DIR_.'/'.$theme_path.$iso_code))
 				continue;
 			
-			$theme_templates = scandir(_PS_ADMIN_DIR_.'/'.$theme_path.$iso_code);
+			$theme_templates_dir = _PS_ADMIN_DIR_.'/'.$theme_path.$iso_code;
+			$theme_templates = is_dir($theme_templates_dir) ? scandir($theme_templates_dir) : array();
 			// We merge all available emails in one array 
 			$templates = array_unique(array_merge(scandir(_PS_ADMIN_DIR_.'/'.$default_path.$iso_code), $theme_templates));
 			foreach ($templates as $key => $template)
