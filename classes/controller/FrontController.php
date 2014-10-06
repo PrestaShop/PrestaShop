@@ -128,17 +128,7 @@ class FrontControllerCore extends Controller
 		$css_files = $this->css_files;
 		$js_files = $this->js_files;
 
-		// If we call a SSL controller without SSL or a non SSL controller with SSL, we redirect with the right protocol
-		if (Configuration::get('PS_SSL_ENABLED') && $_SERVER['REQUEST_METHOD'] != 'POST' && $this->ssl != Tools::usingSecureMode())
-		{
-			header('HTTP/1.1 301 Moved Permanently');
-			header('Cache-Control: no-cache');
-			if ($this->ssl)
-				header('Location: '.Tools::getShopDomainSsl(true).$_SERVER['REQUEST_URI']);
-			else
-				header('Location: '.Tools::getShopDomain(true).$_SERVER['REQUEST_URI']);
-			exit();
-		}
+		$this->sslRedirection();
 
 		if ($this->ajax)
 		{
@@ -625,6 +615,21 @@ class FrontControllerCore extends Controller
 		));
 		$this->smartyOutputContent($this->getTemplatePath($this->getThemeDir().'restricted-country.tpl'));
 		exit;
+	}
+
+	protected function sslRedirection()
+	{
+		// If we call a SSL controller without SSL or a non SSL controller with SSL, we redirect with the right protocol
+		if (Configuration::get('PS_SSL_ENABLED') && $_SERVER['REQUEST_METHOD'] != 'POST' && $this->ssl != Tools::usingSecureMode())
+		{
+			header('HTTP/1.1 301 Moved Permanently');
+			header('Cache-Control: no-cache');
+			if ($this->ssl)
+				header('Location: '.Tools::getShopDomainSsl(true).$_SERVER['REQUEST_URI']);
+			else
+				header('Location: '.Tools::getShopDomain(true).$_SERVER['REQUEST_URI']);
+			exit();
+		}
 	}
 
 	protected function canonicalRedirection($canonical_url = '')
