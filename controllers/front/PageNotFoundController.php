@@ -113,10 +113,14 @@ class PageNotFoundControllerCore extends FrontController
 
 		$this->setTemplate(_PS_THEME_DIR_.'404.tpl');
 	}
-	
-	public function canonicalRedirection($canonical_url = '')
+
+	protected function canonicalRedirection($canonical_url = '')
 	{
 		// 404 - no need to redirect to the canonical url
 	}
-}
 
+	protected function sslRedirection()
+	{
+		// 404 - no need to redirect
+	}
+}
