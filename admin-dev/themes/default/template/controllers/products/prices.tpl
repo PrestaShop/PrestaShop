@@ -120,7 +120,7 @@ $(document).ready(function () {
 		</label>
 		<div class="input-group col-lg-2">
 			<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
-			<input maxlength="14" name="wholesale_price" id="wholesale_price" type="text" value="{{toolsConvertPrice price=$product->wholesale_price}|string_format:$priceDisplayPrecisionFormat}" onchange="this.value = this.value.replace(/,/g, '.');" />
+			<input maxlength="27" name="wholesale_price" id="wholesale_price" type="text" value="{{toolsConvertPrice price=$product->wholesale_price}|string_format:$priceDisplayPrecisionFormat}" onchange="this.value = this.value.replace(/,/g, '.');" />
 		</div>
 	</div>
 	<div class="form-group">
@@ -131,7 +131,7 @@ $(document).ready(function () {
 		<div class="input-group col-lg-2">
 			<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
 			<input type="hidden" id="priceTEReal" name="price" value="{toolsConvertPrice price=$product->price}"/>
-			<input size="11" maxlength="14" id="priceTE" name="price_displayed" type="text" value="{{toolsConvertPrice price=$product->price}|string_format:'%.6f'}" onchange="noComma('priceTE'); $('#priceTEReal').val(this.value);" onkeyup="$('#priceType').val('TE'); $('#priceTEReal').val(this.value.replace(/,/g, '.')); if (isArrowKey(event)) return; calcPriceTI();" />
+			<input size="11" maxlength="27" id="priceTE" name="price_displayed" type="text" value="{{toolsConvertPrice price=$product->price}|string_format:'%.6f'}" onchange="noComma('priceTE'); $('#priceTEReal').val(this.value);" onkeyup="$('#priceType').val('TE'); $('#priceTEReal').val(this.value.replace(/,/g, '.')); if (isArrowKey(event)) return; calcPriceTI();" />
 		</div>
 	</div>
 	<div class="form-group">
@@ -185,7 +185,7 @@ $(document).ready(function () {
 		</label>
 		<div class="input-group col-lg-2">
 			<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
-			<input maxlength="14" id="ecotax" name="ecotax" type="text" value="{$product->ecotax|string_format:$priceDisplayPrecisionFormat}" onkeyup="$('#priceType').val('TI');if (isArrowKey(event))return; calcPriceTE(); this.value = this.value.replace(/,/g, '.'); if (parseInt(this.value) > getE('priceTE').value) this.value = getE('priceTE').value; if (isNaN(this.value)) this.value = 0;" />
+			<input maxlength="27" id="ecotax" name="ecotax" type="text" value="{$product->ecotax|string_format:$priceDisplayPrecisionFormat}" onkeyup="$('#priceType').val('TI');if (isArrowKey(event))return; calcPriceTE(); this.value = this.value.replace(/,/g, '.'); if (parseInt(this.value) > getE('priceTE').value) this.value = getE('priceTE').value; if (isNaN(this.value)) this.value = 0;" />
 		</div>
 	</div>
 	<div class="form-group" {if !$country_display_tax_label || $tax_exclude_taxe_option}style="display:none;"{/if} >
@@ -193,7 +193,7 @@ $(document).ready(function () {
 		<div class="input-group col-lg-2">
 			<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
 			<input id="priceType" name="priceType" type="hidden" value="TE" />
-			<input id="priceTI" name="priceTI" type="text" value="" onchange="noComma('priceTI');" maxlength="14" onkeyup="$('#priceType').val('TI');if (isArrowKey(event)) return;  calcPriceTE();" />
+			<input id="priceTI" name="priceTI" type="text" value="" onchange="noComma('priceTI');" maxlength="27" onkeyup="$('#priceType').val('TI');if (isArrowKey(event)) return;  calcPriceTE();" />
 		</div>
 	</div>
 
@@ -204,7 +204,7 @@ $(document).ready(function () {
 		</label>
 		<div class="input-group col-lg-4">
 			<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
-			<input id="unit_price" name="unit_price" type="text" value="{$unit_price|string_format:'%.2f'}" maxlength="14" onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); unitPriceWithTax('unit');"/>
+			<input id="unit_price" name="unit_price" type="text" value="{$unit_price|string_format:'%.2f'}" maxlength="27" onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); unitPriceWithTax('unit');"/>
 			<span class="input-group-addon">{l s='per'}</span>
 			<input id="unity" name="unity" type="text" value="{$product->unity|htmlentitiesUTF8}"  maxlength="10" onkeyup="if (isArrowKey(event)) return ;unitySecond();" onchange="unitySecond();"/>
 		</div>
