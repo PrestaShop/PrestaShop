@@ -66,10 +66,10 @@ class ProductSaleCore
 		if ($page_number < 0) $page_number = 0;
 		if ($nb_products < 1) $nb_products = 10;
 		$final_order_by = $order_by;
-		$order_table = ''; 		
+		$order_table = '';
 		if (is_null($order_by) || $order_by == 'position' || $order_by == 'price') $order_by = 'sales';
 		if ($order_by == 'date_add' || $order_by == 'date_upd')
-			$order_table = 'product_shop'; 				
+			$order_table = 'product_shop';
 		if (is_null($order_way) || $order_by == 'sales') $order_way = 'DESC';
 
 		$sql_groups = '';
@@ -85,7 +85,7 @@ class ProductSaleCore
 		FROM `'._DB_PREFIX_.'category_group` cg
 		INNER JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
 		'.$sql_groups);
-	
+
 		$ids = array();
 		foreach ($products as $product)
 			if (Validate::isUnsignedId($product['id_product']))
@@ -94,7 +94,7 @@ class ProductSaleCore
 		$ids = array_filter($ids);
 		sort($ids);
 		$ids = count($ids) > 0 ? implode(',', $ids) : 'NULL';
-		
+
 		//Main query
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
 					pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`,
@@ -103,14 +103,15 @@ class ProductSaleCore
 					MAX(image_shop.`id_image`) id_image, il.`legend`,
 					ps.`quantity` AS sales, t.`rate`, pl.`meta_keywords`, pl.`meta_title`, pl.`meta_description`,
 					DATEDIFF(p.`date_add`, DATE_SUB(NOW(),
-					INTERVAL '.$interval.' DAY)) > 0 AS new, MAX(product_attribute_shop.minimal_quantity) AS product_attribute_minimal_quantity
-				FROM `'._DB_PREFIX_.'product_sale` ps
+					INTERVAL '.$interval.' DAY)) > 0 AS new'.(Combination::isFeatureActive() ? ', MAX(product_attribute_shop.minimal_quantity) AS product_attribute_minimal_quantity' : '')
+				.' FROM `'._DB_PREFIX_.'product_sale` ps
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON ps.`id_product` = p.`id_product`
 				'.Shop::addSqlAssociation('product', 'p', false).'
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa
 				ON (p.`id_product` = pa.`id_product`)
-				'.Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.`default_on` = 1').'
-				'.Product::sqlStock('p', 'product_attribute_shop', false, Context::getContext()->shop).'
+				'.(Combination::isFeatureActive() ?
+				Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.`default_on` = 1').'
+				'.Product::sqlStock('p', 'product_attribute_shop', false, Context::getContext()->shop) : 'LEFT JOIN ps_stock_available stock ON (stock.`id_product` = p.`id_product`)').'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 					ON p.`id_product` = pl.`id_product`
 					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
@@ -166,12 +167,12 @@ class ProductSaleCore
 		FROM `'._DB_PREFIX_.'category_product` cp
 		LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)
 		WHERE cg.`id_group` '.$sql_groups);
-		
+
 		$ids = array();
 		foreach ($products as $product)
 			$ids[$product['id_product']] = 1;
 
-		$ids = array_keys($ids);		
+		$ids = array_keys($ids);
 		sort($ids);
 		$ids = count($ids) > 0 ? implode(',', $ids) : 'NULL';
 
@@ -182,7 +183,7 @@ class ProductSaleCore
 			MAX(image_shop.`id_image`) id_image, il.`legend`,
 			ps.`quantity` AS sales, p.`ean13`, p.`upc`, cl.`link_rewrite` AS category, p.show_price, p.available_for_order, IFNULL(stock.quantity, 0) as quantity, p.customizable,
 			IFNULL(pa.minimal_quantity, p.minimal_quantity) as minimal_quantity, stock.out_of_stock,
-			product_shop.`date_add` > "'.date('Y-m-d', strtotime('-'.(Configuration::get('PS_NB_DAYS_NEW_PRODUCT') ? (int)Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY')).'" as new, 
+			product_shop.`date_add` > "'.date('Y-m-d', strtotime('-'.(Configuration::get('PS_NB_DAYS_NEW_PRODUCT') ? (int)Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY')).'" as new,
 			product_shop.`on_sale`, MAX(product_attribute_shop.minimal_quantity) AS product_attribute_minimal_quantity
 		FROM `'._DB_PREFIX_.'product_sale` ps
 		LEFT JOIN `'._DB_PREFIX_.'product` p ON ps.`id_product` = p.`id_product`
@@ -244,4 +245,3 @@ class ProductSaleCore
 		return true;
 	}
 }
-
