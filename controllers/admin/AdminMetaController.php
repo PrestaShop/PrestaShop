@@ -40,7 +40,7 @@ class AdminMetaControllerCore extends AdminController
 		$this->identifier_name = 'page';
 		$this->ht_file = _PS_ROOT_DIR_.'/.htaccess';
 		$this->rb_file = _PS_ROOT_DIR_.'/robots.txt';
-		$this->sm_file = _PS_ROOT_DIR_.'/sitemap.xml';
+		$this->sm_file = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . $this->context->shop->id . '_index_sitemap.xml';
 		$this->rb_data = $this->getRobotsContent();
 
 		$this->explicitSelect = true;
@@ -262,7 +262,7 @@ class AdminMetaControllerCore extends AdminController
 	public function renderForm()
 	{
 		$files = Meta::getPages(true, ($this->object->page ? $this->object->page : false));
-		
+
 		$is_index = false;
 		if (is_object($this->object) && is_array($this->object->url_rewrite) &&  count($this->object->url_rewrite))
 			foreach ($this->object->url_rewrite as $rewrite)
@@ -465,7 +465,7 @@ class AdminMetaControllerCore extends AdminController
 
 			// User-Agent
 			fwrite($write_fd, "User-agent: *\n");
-			
+
 			// Private pages
 			if (count($this->rb_data['GB']))
 			{
@@ -473,7 +473,7 @@ class AdminMetaControllerCore extends AdminController
 				foreach ($this->rb_data['GB'] as $gb)
 					fwrite($write_fd, 'Disallow: /*'.$gb."\n");
 			}
-			
+
 			// Directories
 			if (count($this->rb_data['Directories']))
 			{
@@ -481,7 +481,7 @@ class AdminMetaControllerCore extends AdminController
 				foreach ($this->rb_data['Directories'] as $dir)
 					fwrite($write_fd, 'Disallow: */'.$dir."\n");
 			}
-			
+
 			// Files
 			if (count($this->rb_data['Files']))
 			{
@@ -494,12 +494,13 @@ class AdminMetaControllerCore extends AdminController
 						else
 							fwrite($write_fd, 'Disallow: /'.$file."\n");
 			}
-			
+
 			// Sitemap
 			if (file_exists($this->sm_file) && filesize($this->sm_file))
 			{
 				fwrite($write_fd, "# Sitemap\n");
-				fwrite($write_fd, 'Sitemap: '.(Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://').$_SERVER['SERVER_NAME'].__PS_BASE_URI__.'sitemap.xml'."\n");
+				$sitemap_filename = basename($this->sm_file);
+				fwrite($write_fd, 'Sitemap: '.(Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://').$_SERVER['SERVER_NAME'].__PS_BASE_URI__.$sitemap_filename."\n");
 			}
 
 			fclose($write_fd);
@@ -512,7 +513,7 @@ class AdminMetaControllerCore extends AdminController
 	{
 		parent::getList($id_lang, $orderBy, $orderWay, $start, $limit, Context::getContext()->shop->id);
 	}
-	
+
 	public function renderList()
 	{
 		if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP)
@@ -542,7 +543,7 @@ class AdminMetaControllerCore extends AdminController
 				Configuration::updateValue('PS_ROUTE_'.$route_id, '');
 				return;
 			}
-	
+
 			$errors = array();
 			if (!Dispatcher::getInstance()->validateRoute($route_id, $rule, $errors))
 			{
