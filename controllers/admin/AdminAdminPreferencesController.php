@@ -127,6 +127,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 			'notifications' => array(
 				'title' =>	$this->l('Notifications'),
 				'icon' =>	'icon-list-alt',
+				'description' => $this->l('Notifications are numbered bubbles displayed at the very top of your back-office, right next to the shop\'s name. They display the number of new items since you last clicked on them.'),
 				'fields' =>	array(
 					'PS_SHOW_NEW_ORDERS' => array(
 						'title' => $this->l('Show notifications for new orders'),
