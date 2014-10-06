@@ -115,7 +115,7 @@ class HelperFormCore extends Helper
 
 								if (isset($params['tree']['use_checkbox']))
 									$tree->setUseCheckBox($params['tree']['use_checkbox']);
-									
+
 								if (isset($params['tree']['set_data']))
 									$tree->setData($params['tree']['set_data']);
 
@@ -234,7 +234,7 @@ class HelperFormCore extends Helper
 			'fields' => $this->fields_form,
 			'fields_value' => $this->fields_value,
 			'required_fields' => $this->getFieldsRequired(),
-			'vat_number' => file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php'),
+			'vat_number' => Module::isInstalled('vatnumber') && file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php'),
 			'module_dir' => _MODULE_DIR_,
 			'base_url' => $this->context->shop->getBaseURL(),
 			'contains_states' => (isset($this->fields_value['id_country']) && isset($this->fields_value['id_state'])) ? Country::containsStates($this->fields_value['id_country']) : null,
