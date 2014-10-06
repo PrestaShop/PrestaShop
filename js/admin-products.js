@@ -822,8 +822,8 @@ product_tabs['Associations'] = new function(){
 	this.getAccessoriesIds = function()
 	{
 		if ($('#inputAccessories').val() === undefined)
-			return '';
-		return $('#inputAccessories').val().replace(/\-/g,',');
+			return id_product;
+		return id_product + ',' + $('#inputAccessories').val().replace(/\-/g,',');
 	}
 
 	this.addAccessory = function(event, data, formatted)
