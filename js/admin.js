@@ -210,7 +210,7 @@ function changeFormLanguage(id_language_new, iso_code, employee_cookie)
 		$(this).find('.lang_' + id_language_new)
 			.show()
 			.siblings('div:not(.displayed_flag):not(.clear)').hide();
-		$('.language_current').attr('src', '../img/l/' + id_language_new + '.jpg');
+		$(this).find('.language_current').attr('src', '../img/l/' + id_language_new + '.jpg');
 	});
 
 	// For multishop checkboxes
