@@ -158,3 +158,13 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 	> input:focus
 		outline: 0
 		@include box-shadow(none)
+
+.form-group
+	@media (max-width: $screen-lg)
+		input[type="text"],input[type="search"],input[type="password"], textarea, select
+			margin: 4px 0
+		.input-group
+			margin: 4px 0
+		.input-group
+			input[type="text"],input[type="search"],input[type="password"], textarea, select
+				margin: 0
