@@ -722,7 +722,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 						if (preg_match('@^[0-9a-z-_/\\\\]+\.php$@i', $file2check['filename']))
 						{
-							if (!AdminTranslationsController::checkTranslationFile(file_get_contents($sandbox.$file2check['filename'])))
+							if (!@filemtime($sandbox.$file2check['filename']) || !AdminTranslationsController::checkTranslationFile(file_get_contents($sandbox.$file2check['filename'])))
 								$this->errors[] = sprintf(Tools::displayError('Validation failed for: %s'), $file2check['filename']);
 						}
 						elseif (!preg_match('@^[0-9a-z-_/\\\\]+\.(html|tpl|txt)$@i', $file2check['filename']))
