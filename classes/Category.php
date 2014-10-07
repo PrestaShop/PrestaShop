@@ -190,9 +190,12 @@ class CategoryCore extends ObjectModel
 
 		// Update group selection
 		$this->updateGroup($this->groupBox);
+
 		$this->level_depth = $this->calcLevelDepth();
+
 		// If the parent category was changed, we don't want to have 2 categories with the same position
-		if ($this->getDuplicatePosition())
+		$changed = $this->getDuplicatePosition();
+		if ($changed)
 		{
 			if (Tools::isSubmit('checkBoxShopAsso_category'))
 				foreach (Tools::getValue('checkBoxShopAsso_category') as $id_asso_object => $row)
@@ -202,10 +205,11 @@ class CategoryCore extends ObjectModel
 				foreach (Shop::getShops(true) as $shop)
 					$this->addPosition(max(1, Category::getLastPosition((int)$this->id_parent, $shop['id_shop'])), $shop['id_shop']);
 		}
-		$this->cleanPositions((int)$this->id_parent);
+
 		$ret = parent::update($null_values);
-		if (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree)
+		if ($changed && (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree))
 		{
+			$this->cleanPositions((int)$this->id_parent);
 			Category::regenerateEntireNtree();
 			$this->recalculateLevelDepth($this->id);
 		}
@@ -673,7 +677,7 @@ class CategoryCore extends ObjectModel
 				(Combination::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa
 				ON (p.`id_product` = pa.`id_product`)
 				'.Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.`default_on` = 1').'
-				'.Product::sqlStock('p', 'product_attribute_shop', false, $context->shop) : 'LEFT JOIN ps_stock_available stock ON (stock.`id_product` = p.`id_product`)').'
+				'.Product::sqlStock('p', 'product_attribute_shop', false, $context->shop) :  Product::sqlStock('p', 'product', false, Context::getContext()->shop)).'
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
 					ON (product_shop.`id_category_default` = cl.`id_category`
 					AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').')
