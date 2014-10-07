@@ -255,15 +255,20 @@ abstract class ControllerCore
 
 		foreach ($css_uri as $css_file => $media)
 		{
-			if ($check_path)
-			{
 				if (is_string($css_file) && strlen($css_file) > 1)
-					$css_path = Media::getCSSPath($css_file, $media);
+				{
+					if ($check_path)
+						$css_path = Media::getCSSPath($css_file, $media);
+					else
+						$css_path = array($css_file => $media);
+				}
 				else
-					$css_path = Media::getCSSPath($media, $css_media_type);
-			}
-			else
-				$css_path = $css_file;
+				{
+					if ($check_path)
+						$css_path = Media::getCSSPath($media, $css_media_type);
+					else
+						$css_path = array($media => $css_media_type);
+				}
 
 			$key = is_array($css_path) ? key($css_path) : $css_path;
 			if ($css_path && (!isset($this->css_files[$key]) || ($this->css_files[$key] != reset($css_path))))
@@ -277,17 +282,28 @@ abstract class ControllerCore
 		}
 	}
 
-	public function removeCSS($css_uri, $css_media_type = 'all')
+	public function removeCSS($css_uri, $css_media_type = 'all', $check_path = true)
 	{
 		if (!is_array($css_uri))
 			$css_uri = array($css_uri);
 
 		foreach ($css_uri as $css_file => $media)
 		{
-			if (is_string($css_file) && strlen($css_file) > 1)
-				$css_path = Media::getCSSPath($css_file, $media);
-			else
-				$css_path = Media::getCSSPath($media, $css_media_type);
+				if (is_string($css_file) && strlen($css_file) > 1)
+				{
+					if ($check_path)
+						$css_path = Media::getCSSPath($css_file, $media);
+					else
+						$css_path = array($css_file => $media);
+				}
+				else
+				{
+					if ($check_path)
+						$css_path = Media::getCSSPath($media, $css_media_type);
+					else
+						$css_path = array($media => $css_media_type);
+				}
+
 			if ($css_path && isset($this->css_files[key($css_path)]) && ($this->css_files[key($css_path)] == reset($css_path)))
 				unset($this->css_files[key($css_path)]);
 		}
@@ -306,18 +322,19 @@ abstract class ControllerCore
 		if (is_array($js_uri))
 			foreach ($js_uri as $js_file)
 			{
+				$js_path = $js_file;
 				if ($check_path)
 					$js_path = Media::getJSPath($js_file);
+
 				$key = is_array($js_path) ? key($js_path) : $js_path;
 				if ($js_path && !in_array($js_path, $this->js_files))
 					$this->js_files[] = $js_path;
 			}
 		else
 		{
+			$js_path = $js_uri;
 			if ($check_path)
 				$js_path = Media::getJSPath($js_uri);
-			else
-				$js_path = $js_uri;
 
 			if ($js_path && !in_array($js_path, $this->js_files))
 				$this->js_files[] = $js_path;
@@ -329,13 +346,18 @@ abstract class ControllerCore
 		if (is_array($js_uri))
 			foreach ($js_uri as $js_file)
 			{
-				$js_path = Media::getJSPath($js_file);
+				$js_path = $js_file;
+				if ($check_path)
+					$js_path = Media::getJSPath($js_file);
 				if ($js_path && in_array($js_path, $this->js_files))
 					unset($this->js_files[array_search($js_path,$this->js_files)]);
 			}
 		else
 		{
-			$js_path = Media::getJSPath($js_uri);
+			$js_path = $js_uri;
+			if ($check_path)
+				$js_path = Media::getJSPath($js_uri);
+
 			if ($js_path)
 				unset($this->js_files[array_search($js_path,$this->js_files)]);
 		}
