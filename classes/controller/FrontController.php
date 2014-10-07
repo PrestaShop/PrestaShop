@@ -1005,7 +1005,7 @@ class FrontControllerCore extends Controller
 		return (strcasecmp(Tools::getToken(false), Tools::getValue('token')) == 0);
 	}
 
-	public function addMedia($media_uri, $css_media_type = null, $offset = null, $remove = false)
+	public function addMedia($media_uri, $css_media_type = null, $offset = null, $remove = false, $check_path = true)
 	{
 		if (!is_array($media_uri))
 		{
@@ -1058,43 +1058,47 @@ class FrontControllerCore extends Controller
 		}
 
 		if ($css_media_type)
-			return parent::addCSS($list_uri, $css_media_type, $offset);
-		return parent::addJS($list_uri);
+			return parent::addCSS($list_uri, $css_media_type, $offset, $check_path);
+		return parent::addJS($list_uri, $check_path);
 	}
 
-	public function removeMedia($media_uri, $css_media_type = null)
+	public function removeMedia($media_uri, $css_media_type = null, $check_path = true)
 	{
-		Frontcontroller::addMedia($media_uri, $css_media_type, null, true);
+		Frontcontroller::addMedia($media_uri, $css_media_type, null, true, $check_path);
 	}
 
 	/**
 	 * Add one or several CSS for front, checking if css files are overriden in theme/css/modules/ directory
 	 *
 	 * @see Controller::addCSS()
+	 * @param string $css_media_type
+	 * @param integer $offset
+	 * @param bool $check_path
 	 */
-	public function addCSS($css_uri, $css_media_type = 'all', $offset = null)
+	public function addCSS($css_uri, $css_media_type = 'all', $offset = null, $check_path = true)
 	{
-		return Frontcontroller::addMedia($css_uri, $css_media_type, $offset = null);
+		return Frontcontroller::addMedia($css_uri, $css_media_type, $offset = null, false, $check_path);
 	}
 
-	public function removeCSS($css_uri, $css_media_type = 'all')
+	public function removeCSS($css_uri, $css_media_type = 'all', $check_path = true)
 	{
-		return Frontcontroller::removeMedia($css_uri, $css_media_type);
+		return Frontcontroller::removeMedia($css_uri, $css_media_type, $check_path);
 	}
 
 	/**
 	 * Add one or several JS files for front, checking if js files are overriden in theme/js/modules/ directory
 	 *
 	 * @see Controller::addJS()
+	 * @param bool $check_path
 	 */
-	public function addJS($js_uri)
+	public function addJS($js_uri, $check_path = true)
 	{
-		return Frontcontroller::addMedia($js_uri);
+		return Frontcontroller::addMedia($js_uri, null, null, false, $check_path);
 	}
 
-	public function removeJS($js_uri)
+	public function removeJS($js_uri, $check_path = true)
 	{
-		return Frontcontroller::removeMedia($js_uri);
+		return Frontcontroller::removeMedia($js_uri, $check_path);
 	}
 
 	protected function recoverCart()

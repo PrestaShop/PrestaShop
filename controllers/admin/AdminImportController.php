@@ -1031,6 +1031,8 @@ class AdminImportControllerCore extends AdminController
 		{
 			$query_parts = array();
 			parse_str($parced_url['query'], $query_parts);
+			if (!function_exists('http_build_url'))
+				require_once(_PS_TOOL_DIR_.'http_build_query/http_build_query.php');
 			$parced_url['query'] = http_build_query($query_parts);
 		}
 
