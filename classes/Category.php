@@ -190,9 +190,12 @@ class CategoryCore extends ObjectModel
 
 		// Update group selection
 		$this->updateGroup($this->groupBox);
+
 		$this->level_depth = $this->calcLevelDepth();
+
 		// If the parent category was changed, we don't want to have 2 categories with the same position
-		if ($this->getDuplicatePosition())
+		$changed = $this->getDuplicatePosition();
+		if ($changed)
 		{
 			if (Tools::isSubmit('checkBoxShopAsso_category'))
 				foreach (Tools::getValue('checkBoxShopAsso_category') as $id_asso_object => $row)
@@ -202,10 +205,11 @@ class CategoryCore extends ObjectModel
 				foreach (Shop::getShops(true) as $shop)
 					$this->addPosition(max(1, Category::getLastPosition((int)$this->id_parent, $shop['id_shop'])), $shop['id_shop']);
 		}
-		$this->cleanPositions((int)$this->id_parent);
+
 		$ret = parent::update($null_values);
-		if (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree)
+		if ($changed && (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree))
 		{
+			$this->cleanPositions((int)$this->id_parent);
 			Category::regenerateEntireNtree();
 			$this->recalculateLevelDepth($this->id);
 		}
