@@ -1071,8 +1071,11 @@ class FrontControllerCore extends Controller
 	 * Add one or several CSS for front, checking if css files are overriden in theme/css/modules/ directory
 	 *
 	 * @see Controller::addCSS()
+	 * @param string $css_media_type
+	 * @param integer $offset
+	 * @param bool $check_path // only because of parent definition
 	 */
-	public function addCSS($css_uri, $css_media_type = 'all', $offset = null)
+	public function addCSS($css_uri, $css_media_type = 'all', $offset = null, $check_path = true)
 	{
 		return Frontcontroller::addMedia($css_uri, $css_media_type, $offset = null);
 	}
@@ -1086,8 +1089,9 @@ class FrontControllerCore extends Controller
 	 * Add one or several JS files for front, checking if js files are overriden in theme/js/modules/ directory
 	 *
 	 * @see Controller::addJS()
+	 * @param bool $check_path // only because of parent definition
 	 */
-	public function addJS($js_uri)
+	public function addJS($js_uri, $check_path = true)
 	{
 		return Frontcontroller::addMedia($js_uri);
 	}
