@@ -677,7 +677,7 @@ class CategoryCore extends ObjectModel
 				(Combination::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa
 				ON (p.`id_product` = pa.`id_product`)
 				'.Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.`default_on` = 1').'
-				'.Product::sqlStock('p', 'product_attribute_shop', false, $context->shop) : 'LEFT JOIN ps_stock_available stock ON (stock.`id_product` = p.`id_product`)').'
+				'.Product::sqlStock('p', 'product_attribute_shop', false, $context->shop) :  Product::sqlStock('p', 'product', false, Context::getContext()->shop)).'
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
 					ON (product_shop.`id_category_default` = cl.`id_category`
 					AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').')

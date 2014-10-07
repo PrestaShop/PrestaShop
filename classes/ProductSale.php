@@ -111,7 +111,7 @@ class ProductSaleCore
 				ON (p.`id_product` = pa.`id_product`)
 				'.(Combination::isFeatureActive() ?
 				Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.`default_on` = 1').'
-				'.Product::sqlStock('p', 'product_attribute_shop', false, Context::getContext()->shop) : 'LEFT JOIN ps_stock_available stock ON (stock.`id_product` = p.`id_product`)').'
+				'.Product::sqlStock('p', 'product_attribute_shop', false, Context::getContext()->shop) : Product::sqlStock('p', 'product', false, Context::getContext()->shop)).'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 					ON p.`id_product` = pl.`id_product`
 					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
