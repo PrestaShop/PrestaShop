@@ -40,7 +40,6 @@ class AdminMetaControllerCore extends AdminController
 		$this->identifier_name = 'page';
 		$this->ht_file = _PS_ROOT_DIR_.'/.htaccess';
 		$this->rb_file = _PS_ROOT_DIR_.'/robots.txt';
-		$this->sm_file = _PS_ROOT_DIR_ . DIRECTORY_SEPARATOR . $this->context->shop->id . '_index_sitemap.xml';
 		$this->rb_data = $this->getRobotsContent();
 
 		$this->explicitSelect = true;
@@ -65,6 +64,7 @@ class AdminMetaControllerCore extends AdminController
 
 		parent::__construct();
 
+		$this->sm_file = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$this->context->shop->id.'_index_sitemap.xml';
 		// Options to generate friendly urls
 		$mod_rewrite = Tools::modRewriteActive();
 		$general_fields = array(
@@ -190,15 +190,29 @@ class AdminMetaControllerCore extends AdminController
 		}
 
 		// List of options
+		$this->fields_options = array(
+			'general' => array(
+				'title' =>	$this->l('Set up URLs'),
+				'description' => $url_description,
+				'fields' =>	$general_fields,
+				'submit' => array('title' => $this->l('Save'))
+			)
+		);
+
 		if (!defined('_PS_HOST_MODE_'))
-			$this->fields_options = array(
-				'general' => array(
-					'title' =>	$this->l('Set up URLs'),
-					'description' => $url_description,
-					'fields' =>	$general_fields,
-					'submit' => array('title' => $this->l('Save'))
-				),
-				'shop_url' => $shop_url_options
+			$this->fields_options['shop_url'] = $shop_url_options;
+		else
+			$this->fields_options['manage_domain_name'] = array(
+				'title' => $this->l('Manage domain name'),
+				'description' => $this->l('You can search for a new domain name or add a domain name that you already own. You will be redirected to your PrestaShop account.'),
+				'buttons' => array(
+					array(
+						'title' => $this->l('Add a domain name'),
+						'href' => 'https://www.prestashop.com/ondemand/',
+						'class' => 'pull-right', 'icon' => 'process-icon-new',
+						'js' => 'return !window.open(this.href);'
+					)
+				)
 			);
 
 		// Add display route options to options form
