@@ -3,7 +3,7 @@ session_start();
 mb_internal_encoding('UTF-8');
 
 if (!defined('_PS_ADMIN_DIR_'))
-		define('_PS_ADMIN_DIR_', getcwd().'/../');
+		define('_PS_ADMIN_DIR_',dirname(__FILE__).'/../../');
 
 require_once(_PS_ADMIN_DIR_.'/../config/config.inc.php');
 require_once(_PS_ADMIN_DIR_.'/init.php');
