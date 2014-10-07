@@ -208,7 +208,7 @@ class AdminMetaControllerCore extends AdminController
 				'buttons' => array(
 					array(
 						'title' => $this->l('Add a domain name'),
-						'href' => 'https://www.prestashop.com/ondemand',
+						'href' => 'https://www.prestashop.com/ondemand/',
 						'class' => 'pull-right', 'icon' => 'process-icon-new',
 						'js' => 'return !window.open(this.href);'
 					)
