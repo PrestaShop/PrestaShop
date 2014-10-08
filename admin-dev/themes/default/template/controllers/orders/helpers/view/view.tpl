@@ -122,7 +122,7 @@
 					</a>
 					&nbsp;
 					{if Configuration::get('PS_INVOICE') && count($invoices_collection) && ((isset($currentState) && $currentState->invoice && $order->invoice_number) || $order->invoice_number)}
-						<a data-selenium-id="view_invoice" class="btn btn-default" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateInvoicePDF&amp;id_order={$order->id|intval}" target="_blank">
+						<a data-selenium-id="view_invoice" class="btn btn-default _blank" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateInvoicePDF&amp;id_order={$order->id|intval}">
 							<i class="icon-file"></i>
 							{l s='View invoice'}
 						</a>
@@ -134,7 +134,7 @@
 					{/if}
 					&nbsp;
 					{if ((isset($currentState) && $currentState->delivery && $order->delivery_number) || $order->delivery_number)}
-						<a class="btn btn-default"  href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateDeliverySlipPDF&amp;id_order={$order->id|intval}" target="_blank">
+						<a class="btn btn-default _blank"  href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateDeliverySlipPDF&amp;id_order={$order->id|intval}">
 							<i class="icon-truck"></i>
 							{l s='View delivery slip'}
 						</a>
@@ -767,9 +767,9 @@
 									</div>
 								</div>
 								<div class="message-body">
-									
+
 									<span class="message-date">&nbsp;<i class="icon-calendar"></i>
-										{dateFormat date=$message['date_add']} - 
+										{dateFormat date=$message['date_add']} -
 									</span>
 									<h4 class="message-item-heading">
 										{if ($message['elastname']|escape:'html':'UTF-8')}{$message['efirstname']|escape:'html':'UTF-8'}
@@ -821,7 +821,7 @@
 										<label for="visibility_on">
 											{l s='Yes'}
 										</label>
-										<input type="radio" name="visibility" id="visibility_off" value="1" checked="checked" /> 
+										<input type="radio" name="visibility" id="visibility_off" value="1" checked="checked" />
 										<label for="visibility_off">
 											{l s='No'}
 										</label>
@@ -1263,7 +1263,7 @@
 					});
 				}
 			});
-			
+
 			var date = new Date();
 			var hours = date.getHours();
 			if (hours < 10)

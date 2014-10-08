@@ -55,10 +55,10 @@
 						</div>
 					</div>
 					<br/>
-					<div class="fixed-width-xl">				
+					<div class="fixed-width-xl">
 						<div class="input-group">
 							{if $currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax incl.'}</div>{/if}
-							<input type="text" name="product_price_tax_incl" class="edit_product_price_tax_incl edit_product_price" value="{Tools::ps_round($product['unit_price_tax_incl'], 2)}" size="5" /> 
+							<input type="text" name="product_price_tax_incl" class="edit_product_price_tax_incl edit_product_price" value="{Tools::ps_round($product['unit_price_tax_incl'], 2)}" size="5" />
 							{if !$currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax incl.'}</div>{/if}
 						</div>
 					</div>
@@ -127,8 +127,8 @@
 									<div class="form-group">
 										<span class="col-lg-4 control-label"><strong>{if $data['name']}{$data['name']}{else}{l s='Picture #'}{$data@iteration}{/if}</strong></span>
 										<div class="col-lg-8">
-											<a href="displayImage.php?img={$data['value']}&amp;name={$order->id|intval}-file{$data@iteration}" target="_blank">
-												<img class="img-thumbnail" src="{$smarty.const._THEME_PROD_PIC_DIR_}{$data['value']}_small" alt="" />
+											<a href="displayImage.php?img={$data['value']}&amp;name={$order->id|intval}-file{$data@iteration}" class="_blank">
+												<img class="img-thumbnail" src="{$smarty.const._THEME_PROD_PIC_DIR_}{$data['value']}_small" alt=""/>
 											</a>
 										</div>
 									</div>
@@ -165,7 +165,7 @@
 					{else}
 						{displayPrice price=Tools::ps_round($product['product_price_wt'] * $customization['quantity'], 2) currency=$currency->id|intval}
 					{/if}
-				</td>				
+				</td>
 				<td class="cancelCheck standard_refund_fields current-edit" style="display:none">
 					<input type="hidden" name="totalQtyReturn" id="totalQtyReturn" value="{$customization['quantity_returned']|intval}" />
 					<input type="hidden" name="totalQty" id="totalQty" value="{$customization['quantity']|intval}" />
@@ -212,7 +212,7 @@
 							({l s='%s refund' sprintf=$product['amount_refund']})
 						{/if}
 						<input type="hidden" value="{$product['quantity_refundable']}" class="partialRefundProductQuantity" />
-						<input type="hidden" value="{$product['amount_refundable']}" class="partialRefundProductAmount" />		
+						<input type="hidden" value="{$product['amount_refundable']}" class="partialRefundProductAmount" />
 					</div>
 				</td>
 				{if ($can_edit && !$order->hasBeenDelivered())}

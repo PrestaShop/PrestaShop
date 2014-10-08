@@ -30,7 +30,7 @@
 {if $doc|count > 0}
     <ul>
         {foreach $doc as $key => $item}
-        <li><i><a target="_blank" href="{$item}">{$key}</a></i>
+        <li><i><a class="_blank" href="{$item}">{$key}</a></i>
         {/foreach}
     </ul>
 {/if}
