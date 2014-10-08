@@ -32,7 +32,7 @@
 			{if count($modules_list)}
 				<table class="table">
 					{counter start=1  assign="count"}
-						{foreach from=$modules_list item=module}	
+						{foreach from=$modules_list item=module}
 							{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",row alt"}}
 						{counter}
 					{/foreach}
@@ -54,7 +54,7 @@
 							<div class="alert alert-warning">
 							{if $controller_name == 'AdminPayment'}
 							{l s='It seems there are no recommended payment solutions for your country.'}<br />
-							<a target="_blank" href="http://www.prestashop.com/en/contribute-prestashop-localization">{l s='Do you think there should be one? Let us know!'}</a>
+							<a class="_blank" href="http://www.prestashop.com/en/contribute-prestashop-localization">{l s='Do you think there should be one? Let us know!'}</a>
 							{else}{l s='No modules available in this section.'}{/if}</div>
 						</td>
 					</tr>

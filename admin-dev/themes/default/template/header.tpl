@@ -30,7 +30,7 @@
 <html lang="{$iso}">
 <head>
 	<meta charset="utf-8">
-	
+
 	<meta name="viewport" content="width=device-width, initial-scale=0.75, maximum-scale=0.75, user-scalable=0">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<link rel="icon" type="image/x-icon" href="{$img_dir}favicon.ico" />
@@ -203,11 +203,11 @@
 						<ul class="dropdown-menu">
 							{foreach $quick_access as $quick}
 								<li {if $link->matchQuickLink({$quick.link})}{assign "matchQuickLink" $quick.id_quick_access}class="active"{/if}>
-									<a href="{$quick.link|escape:'html':'UTF-8'}" {if $quick.new_window} target="_blank"{/if}>
+									<a href="{$quick.link|escape:'html':'UTF-8'}"{if $quick.new_window} class="_blank"{/if}>
 										{if isset($quick.icon)}
-											<i class="icon-{$quick.icon} icon-fw"></i> 
+											<i class="icon-{$quick.icon} icon-fw"></i>
 										{else}
-											<i class="icon-chevron-right icon-fw"></i> 
+											<i class="icon-chevron-right icon-fw"></i>
 										{/if}
 										{$quick.name}
 									</a>
@@ -271,7 +271,7 @@
 					{/if}
 {if {$base_url}}
 					<li>
-						<a href="{if isset($base_url_tc)}{$base_url_tc|escape:'html':'UTF-8'}{else}{$base_url|escape:'html':'UTF-8'}{/if}" id="header_foaccess" target="_blank" title="{l s='View my shop'}">
+						<a href="{if isset($base_url_tc)}{$base_url_tc|escape:'html':'UTF-8'}{else}{$base_url|escape:'html':'UTF-8'}{/if}" id="header_foaccess" class="_blank" title="{l s='View my shop'}">
 							<i class="icon-star"></i>
 							<span class="string-long">{l s='My shop'}</span>
 							<span class="string-short">{l s='Shop'}</span>
@@ -330,7 +330,7 @@
 {* end display_header*}
 
 {else}
-	<body{if isset($lite_display) && $lite_display} class="ps_back-office display-modal"{/if}>		
+	<body{if isset($lite_display) && $lite_display} class="ps_back-office display-modal"{/if}>
 		<div id="main">
 			<div id="content" class="{if !$bootstrap}nobootstrap{else}bootstrap{/if}">
 {/if}

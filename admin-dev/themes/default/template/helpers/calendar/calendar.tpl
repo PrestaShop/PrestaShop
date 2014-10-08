@@ -1,7 +1,7 @@
 <div id="datepicker" class="row row-padding-top hide">
 	<div class="col-lg-12">
 		<div class="daterangepicker-days">
-			<div class="row">	
+			<div class="row">
 				{if $is_rtl}
 				<div class="col-sm-6 col-lg-4">
 					<div class="datepicker2" data-date="{$date_to}" data-date-format="{$date_format}"></div>
@@ -63,7 +63,7 @@
 								<label>{l s='From'}</label>
 								<input id="date-start-compare" class="date-input form-control" type="text" placeholder="Start" name="compare_date_from" value="{$compare_date_from}" data-date-format="{$date_format}" tabindex="4" />
 								<label>{l s='to'}</label>
-								<input id="date-end-compare" class="date-input form-control" type="text" placeholder="End" name="compare_date_to" value="{$compare_date_to}" data-date-format="{$date_format}" 
+								<input id="date-end-compare" class="date-input form-control" type="text" placeholder="End" name="compare_date_to" value="{$compare_date_to}" data-date-format="{$date_format}"
 								tabindex="5" />
 							</div>
 						</div>
