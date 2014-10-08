@@ -1976,14 +1976,24 @@ class AdminControllerCore extends Controller
 			'check_url_fopen' => (ini_get('allow_url_fopen') ? 'ok' : 'ko'),
 			'check_openssl' => (extension_loaded('openssl') ? 'ok' : 'ko'),
 			'add_permission' => 1,
-			'addons_register_link' => "//addons.prestashop.com/".$language->iso_code."/login?email=".urlencode($this->context->employee->email)."&firstname=".urlencode($this->context->employee->firstname)."&lastname=".urlencode($this->context->employee->lastname)."&website=".urlencode($this->context->shop->getBaseURL())."&utm_source=back-office&utm_medium=connect-to-addons&utm_campaign=back-office-".$iso_code_caps."#createnow",
+			'addons_register_link' => '//addons.prestashop.com/'.$language->iso_code.'/login?'
+				.'email='.urlencode($this->context->employee->email)
+				.'&firstname='.urlencode($this->context->employee->firstname)
+				.'&lastname='.urlencode($this->context->employee->lastname)
+				.'&website='.urlencode($this->context->shop->getBaseURL())
+				.'&utm_source=back-office&utm_medium=connect-to-addons'
+				.'&utm_campaign=back-office-'.Tools::strtoupper($language->iso_code)
+				.'&utm_content='.(defined('_PS_HOST_MODE_') ? 'ondemand' : 'download').'#createnow',
 			'addons_forgot_password_link' => "//addons.prestashop.com/".$language->iso_code."/forgot-your-password"
 		));
 
 		$this->modals[] = array(
 			'modal_id' => "modal_addons_connect",
 			'modal_class' => "modal-md",
-			'modal_title' => '<i class="icon-puzzle-piece"></i> <a target="_blank" href="http://addons.prestashop.com/?utm_source=backoffice_modules">PrestaShop Addons</a>',
+			'modal_title' => '<i class="icon-puzzle-piece"></i> <a target="_blank" href="http://addons.prestashop.com/'
+			.'?utm_source=back-office&utm_medium=modules'
+			.'&utm_campaign=back-office-'.Tools::strtoupper($language->iso_code)
+			.'&utm_content='.(defined('_PS_HOST_MODE_') ? 'ondemand' : 'download').'>PrestaShop Addons</a>',
 			'modal_content' => $this->context->smarty->fetch('controllers/modules/login_addons.tpl'),
 		);
 	}
