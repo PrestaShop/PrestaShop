@@ -78,7 +78,7 @@
 						</button>
 					</div>
 					{$calendar}
-				</form>	
+				</form>
 			</div>
 		</div>
 	</div>
@@ -89,7 +89,7 @@
 		<div class="col-md-8 col-lg-7" id="hookDashboardZoneTwo">
 			{$hookDashboardZoneTwo}
 			<div id="dashaddons" class="row-margin-bottom">
-				<a href="http://addons.prestashop.com/en/209-dashboards?utm_source=backoffice_dashboard" target="_blank">
+				<a href="http://addons.prestashop.com/en/209-dashboards?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}ondemand{else}download{/if}" target="_blank">
 					<i class="icon-plus"></i> {l s='Add more dashboard modules'}
 				</a>
 			</div>
@@ -106,23 +106,23 @@
 			<section class="dash_links panel">
 				<h3><i class="icon-link"></i> {l s="Useful Links"}</h3>
 					<dl>
-						<dt><a href="http://doc.prestashop.com/display/PS16?utm_source=backoffice_dashboard" target="_blank">{l s="Official Documentation"}</a></dt>
+						<dt><a href="http://doc.prestashop.com/display/PS16?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}ondemand{else}download{/if}" target="_blank">{l s="Official Documentation"}</a></dt>
 						<dd>{l s="User, Developer and Designer Guides"}</dd>
 					</dl>
 					<dl>
-						<dt><a href="http://www.prestashop.com/forums?utm_source=backoffice_dashboard" target="_blank">{l s="PrestaShop Forum"}</a></dt>
+						<dt><a href="http://www.prestashop.com/forums?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}ondemand{else}download{/if}" target="_blank">{l s="PrestaShop Forum"}</a></dt>
 						<dd>{l s="Connect with the PrestaShop community"}</dd>
 					</dl>
 					<dl>
-						<dt><a href="http://addons.prestashop.com?utm_source=backoffice_dashboard" target="_blank">{l s="PrestaShop Addons"}</a></dt>
+						<dt><a href="http://addons.prestashop.com?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}ondemand{else}download{/if}" target="_blank">{l s="PrestaShop Addons"}</a></dt>
 						<dd>{l s="Enhance your store with templates & modules"}</dd>
 					</dl>
 					<dl>
-						<dt><a href="http://forge.prestashop.com?utm_source=backoffice_dashboard" target="_blank">{l s="The Forge"}</a></dt>
+						<dt><a href="http://forge.prestashop.com?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}ondemand{else}download{/if}" target="_blank">{l s="The Forge"}</a></dt>
 						<dd>{l s="Report issues in the Bug Tracker"}</dd>
 					</dl>
 					<dl>
-						<dt><a href="http://www.prestashop.com/en/contact-us?utm_source=backoffice_dashboard" target="_blank">{l s="Contact Us!"}</a></dt>
+						<dt><a href="http://www.prestashop.com/en/contact-us?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}ondemand{else}download{/if}" target="_blank">{l s="Contact Us!"}</a></dt>
 						<dd></dd>
 					</dl>
 			</section>

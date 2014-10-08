@@ -67,5 +67,5 @@
 	</div>
 {/if}
 <div class="alert alert-addons row-margin-top">
-	<a href="http://addons.prestashop.com/?utm_source=backoffice_dispatch" target="_blank">{l s='More modules on addons.prestashop.com'}</a>
+	<a href="http://addons.prestashop.com/?utm_source=back-office&amp;utm_medium=dispatch&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}ondemand{else}download{/if}" target="_blank">{l s='More modules on addons.prestashop.com'}</a>
 </div>
