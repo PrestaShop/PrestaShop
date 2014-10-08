@@ -2107,6 +2107,7 @@ class ToolsCore
 			$physicals = array();
 			foreach ($list_uri as $uri)
 			{
+				fwrite($write_fd, PHP_EOL.PHP_EOL.'#Domain: '.$domain.PHP_EOL);
 				if (Shop::isFeatureActive())
 					fwrite($write_fd, 'RewriteCond %{HTTP_HOST} ^'.$domain.'$'."\n");
 				fwrite($write_fd, 'RewriteRule . - [E=REWRITEBASE:'.$uri['physical'].']'."\n");
