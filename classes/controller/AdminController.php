@@ -2084,6 +2084,8 @@ class AdminControllerCore extends Controller
 		}
 
 		$this->setHelperDisplay($helper);
+		$helper->_default_pagination = $this->_default_pagination;
+		$helper->_pagination = $this->_pagination;
 		$helper->tpl_vars = $this->tpl_list_vars;
 		$helper->tpl_delete_link_vars = $this->tpl_delete_link_vars;
 
