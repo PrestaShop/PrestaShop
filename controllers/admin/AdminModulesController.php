@@ -316,7 +316,7 @@ class AdminModulesControllerCore extends AdminController
 			if (is_array($values) && count($values))
 				foreach($values as $value)
 					Db::getInstance()->execute('
-						INSERT INTO `'._DB_PREFIX_.'tab_module_preference` (`id_tab_module_preference`, `id_employee`, `id_tab`, `module`) 
+						INSERT INTO `'._DB_PREFIX_.'tab_module_preference` (`id_tab_module_preference`, `id_employee`, `id_tab`, `module`)
 						VALUES (NULL, '.(int)$this->id_employee.', '.(int)$value.', \''.pSQL($module).'\');');
 		}
 		die('OK');
@@ -715,8 +715,8 @@ class AdminModulesControllerCore extends AdminController
 			if (isset($modules))
 				foreach ($modules as $name)
 				{
-					
-					
+
+
 					$module_to_update = array();
 					$module_to_update[$name] = null;
 					$full_report = null;
@@ -816,10 +816,10 @@ class AdminModulesControllerCore extends AdminController
 						// We check if method of module exists
 							if (!method_exists($module, $method))
 								throw new PrestaShopException('Method of module cannot be found');
-							
+
 							if ($key == 'uninstall' && !Module::getPermissionStatic($module->id, 'uninstall'))
 								$this->errors[] = Tools::displayError('You do not have permission to uninstall this module.');
-	
+
 							if (count($this->errors))
 								continue;
 							// Get the return value of current method
@@ -829,7 +829,7 @@ class AdminModulesControllerCore extends AdminController
 							if ($key == 'install' && $echo === true && strpos(Tools::getValue('install'), '|') === false && method_exists($module, 'getContent'))
 								Tools::redirectAdmin(self::$currentIndex.'&token='.$this->token.'&configure='.$module->name.'&conf=12');
 						}
-												
+
 						// If the method called is "configure" (getContent method), we show the html code of configure page
 						if ($key == 'configure' && Module::isInstalled($module->name))
 						{
@@ -915,7 +915,8 @@ class AdminModulesControllerCore extends AdminController
 								{
 									if (isset($module->addons_buy_url))
 										$module->addons_buy_url = str_replace('utm_source=v1trunk_api', 'utm_source=back-office', $module->addons_buy_url)
-											.'&utm_medium=related-modules&utm_campaign=back-office-'.strtoupper($this->context->language->iso_code);
+											.'&utm_medium=related-modules&utm_campaign=back-office-'.strtoupper($this->context->language->iso_code)
+											.'&utm_content='.(defined('_PS_HOST_MODE_') ? 'ondemand' : 'download');
 									if (isset($module->description_full) && trim($module->description_full) != '')
 										$module->show_quick_view = true;
 								}
@@ -1034,7 +1035,7 @@ class AdminModulesControllerCore extends AdminController
 				}
 			}
 		}
-		
+
 		return $modules_list;
 	}
 
@@ -1230,7 +1231,7 @@ class AdminModulesControllerCore extends AdminController
 				|| (!is_array($module->limited_countries) && strtolower($this->iso_default_country) != strval($module->limited_countries)))))
 			return true;
 
-		// Module has not been filtered		
+		// Module has not been filtered
 		return false;
 	}
 
@@ -1475,7 +1476,7 @@ class AdminModulesControllerCore extends AdminController
 			unset($object);
 			if ($module->installed && isset($module->version_addons) && $module->version_addons)
 				$upgrade_available[] = array('anchor' => ucfirst($module->name), 'name' => $module->name, 'displayName' => $module->displayName);
-				
+
 			if (in_array($module->name, $this->list_partners_modules))
 				$module->type = 'addonsPartner';
 
@@ -1538,7 +1539,7 @@ class AdminModulesControllerCore extends AdminController
 			'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
 			'modules_uri' => __PS_BASE_URI__.basename(_PS_MODULE_DIR_),
 			'dont_filter' => $dont_filter,
-		);		
+		);
 
 		if ($this->logged_on_addons)
 		{

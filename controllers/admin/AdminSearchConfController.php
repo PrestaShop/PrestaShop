@@ -148,7 +148,7 @@ class AdminSearchConfControllerCore extends AdminController
 						'title' => $this->l('Blacklisted words'),
 						'validation' => 'isGenericName',
 						'hint' => $this->l('Please enter the index words separated by a "|".'),
-						'type' => 'textLang'
+						'type' => 'textareaLang'
 					)
 				),
 				'submit' => array('title' => $this->l('Save'))

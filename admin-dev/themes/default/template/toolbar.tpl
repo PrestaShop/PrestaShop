@@ -29,7 +29,7 @@
 			<ul>
 				{foreach from=$toolbar_btn item=btn key=k}
 					<li>
-						<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="toolbar_btn" {if isset($btn.href)}href="{$btn.href}"{/if} title="{$btn.desc}" {if isset($btn.target) && $btn.target}target="_blank"{/if}{if isset($btn.js) && $btn.js}onclick="{$btn.js}"{/if}>
+						<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="toolbar_btn{if isset($btn.target) && $btn.target} _blank{/if}"{if isset($btn.href)} href="{$btn.href}"{/if} title="{$btn.desc}"{if isset($btn.js) && $btn.js} onclick="{$btn.js}"{/if}>
 							<span class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}{if isset($btn.class)} {$btn.class}{/if}"></span>
 							<div{if isset($btn.force_desc) && $btn.force_desc == true } class="locked"{/if}>{$btn.desc}</div>
 						</a>
@@ -96,7 +96,7 @@
 								if (submited)
 									return false;
 								submited = true;
-								
+
 								//add hidden input to emulate submit button click when posting the form -> field name posted
 								btn_submit.before('<input type="hidden" name="'+btn_submit.attr("name")+'" value="1" />');
 

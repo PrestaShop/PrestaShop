@@ -56,7 +56,7 @@ if (isset($_GET['action']))
 
 			if (isset($_POST['name']))
 				$put_contents_path .= str_replace("\0", "", $_POST['name']);
-			
+
 			file_put_contents($put_contents_path, $image_data);
 			//new thumb creation
 			//try{
@@ -104,7 +104,7 @@ if (isset($_GET['action']))
 							}
 						}
 						$zip->close();
-					} 
+					}
 					else
 						echo 'failed to open file';
 					break;
@@ -179,7 +179,7 @@ if (isset($_GET['action']))
 					<div class="jp-no-solution">
 						<span>Update Required</span>
 						To play the media you will need to either update your browser to a recent version or update your
-						<a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>.
+						<a href="http://get.adobe.com/flashplayer/" class="_blank">Flash plugin</a>.
 					</div>
 				</div>
 			</div>
