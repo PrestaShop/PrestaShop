@@ -2086,7 +2086,7 @@ class AdminControllerCore extends Controller
 		$this->setHelperDisplay($helper);
 		$helper->_default_pagination = $this->_default_pagination;
 		$helper->_pagination = $this->_pagination;
-		$helper->tpl_vars = $this->tpl_list_vars;
+		$helper->tpl_vars = $this->getTemplateListVars();
 		$helper->tpl_delete_link_vars = $this->tpl_delete_link_vars;
 
 		// For compatibility reasons, we have to check standard actions in class attributes
@@ -2101,6 +2101,11 @@ class AdminControllerCore extends Controller
 		return $list;
 	}
 
+	public function getTemplateListVars()
+	{
+		return $this->tpl_list_vars;
+	}
+
 	/**
 	 * Override to render the view page
 	 */
@@ -2108,12 +2113,17 @@ class AdminControllerCore extends Controller
 	{
 		$helper = new HelperView($this);
 		$this->setHelperDisplay($helper);
-		$helper->tpl_vars = $this->tpl_view_vars;
+		$helper->tpl_vars = $this->getTemplateViewVars();
 		if (!is_null($this->base_tpl_view))
 			$helper->base_tpl = $this->base_tpl_view;
 		$view = $helper->generateView();
 
 		return $view;
+	}
+
+	public function getTemplateViewVars()
+	{
+		return $this->tpl_View_vars;
 	}
 
 	/**
@@ -2156,7 +2166,7 @@ class AdminControllerCore extends Controller
 			$this->setHelperDisplay($helper);
 			$helper->fields_value = $fields_value;
 			$helper->submit_action = $this->submit_action;
-			$helper->tpl_vars = $this->tpl_form_vars;
+			$helper->tpl_vars = $this->getTemplateFormVars();
 			$helper->show_cancel_button = (isset($this->show_form_cancel_button)) ? $this->show_form_cancel_button : ($this->display == 'add' || $this->display == 'edit');
 
 			$back = Tools::safeOutput(Tools::getValue('back', ''));
@@ -2178,6 +2188,11 @@ class AdminControllerCore extends Controller
 
 			return $form;
 		}
+	}
+
+	public function getTemplateFormVars()
+	{
+		return $this->tpl_form_vars;
 	}
 
 	public function renderKpis()
