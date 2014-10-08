@@ -2123,7 +2123,7 @@ class AdminControllerCore extends Controller
 
 	public function getTemplateViewVars()
 	{
-		return $this->tpl_View_vars;
+		return $this->tpl_view_vars;
 	}
 
 	/**
