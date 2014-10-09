@@ -69,7 +69,7 @@ class MailCore extends ObjectModel
 
 	/**
 	 * Send Email
-	 * 
+	 *
 	 * @param int $id_lang Language of the email (to translate the template)
 	 * @param string $template Template: the name of template not be a var but a string !
 	 * @param string $subject
@@ -82,12 +82,15 @@ class MailCore extends ObjectModel
 	 * @param bool $modeSMTP
 	 * @param string $template_path
 	 * @param bool $die
-         * @param string $bcc Bcc recipient
+     * @param string $bcc Bcc recipient
 	 */
 	public static function Send($id_lang, $template, $subject, $template_vars, $to,
 		$to_name = null, $from = null, $from_name = null, $file_attachment = null, $mode_smtp = null,
 		$template_path = _PS_MAIL_DIR_, $die = false, $id_shop = null, $bcc = null)
 	{
+		if (!$id_shop)
+			$id_shop = Context::getContext()->shop->id;
+
 		$configuration = Configuration::getMultiple(array(
 			'PS_SHOP_EMAIL',
 			'PS_MAIL_METHOD',
@@ -99,7 +102,7 @@ class MailCore extends ObjectModel
 			'PS_MAIL_SMTP_PORT',
 			'PS_MAIL_TYPE'
 		), null, null, $id_shop);
-		
+
 		// Returns immediatly if emails are deactivated
 		if ($configuration['PS_MAIL_METHOD'] == 3)
 			return true;
@@ -323,7 +326,7 @@ class MailCore extends ObjectModel
 			$send = $swift->send($message, $to_list, new Swift_Address($from, $from_name));
 			$swift->disconnect();
 
-			ShopUrl::resetMainDomainCache();			
+			ShopUrl::resetMainDomainCache();
 
 			if ($send && Configuration::get('PS_LOG_EMAILS'))
 			{
@@ -338,13 +341,13 @@ class MailCore extends ObjectModel
 					$mail->add();
 				}
 			}
-			
+
 			return $send;
 		}
 		catch (Swift_Exception $e) {
 			return false;
 		}
-	}	
+	}
 
 	public static function eraseAllLogs()
 	{
@@ -357,7 +360,7 @@ class MailCore extends ObjectModel
 		try {
 			if ($smtpChecked)
 			{
-				$smtp = new Swift_Connection_SMTP($smtpServer, $smtpPort, ($smtpEncryption == 'off') ? 
+				$smtp = new Swift_Connection_SMTP($smtpServer, $smtpPort, ($smtpEncryption == 'off') ?
 					Swift_Connection_SMTP::ENC_OFF : (($smtpEncryption == 'tls') ? Swift_Connection_SMTP::ENC_TLS : Swift_Connection_SMTP::ENC_SSL));
 				$smtp->setUsername($smtpLogin);
 				$smtp->setpassword($smtpPassword);
@@ -386,13 +389,13 @@ class MailCore extends ObjectModel
 	 * This method is used to get the translation for email Object.
 	 * For an object is forbidden to use htmlentities,
 	 * we have to return a sentence with accents.
-	 * 
+	 *
 	 * @param string $string raw sentence (write directly in file)
 	 */
 	public static function l($string, $id_lang = null, Context $context = null)
 	{
 		global $_LANGMAIL;
-		
+
 		if (!$context)
 			$context = Context::getContext();
 		if ($id_lang == null)
@@ -409,7 +412,7 @@ class MailCore extends ObjectModel
 
 		if (!is_array($_LANGMAIL))
 			return (str_replace('"', '&quot;', $string));
-			
+
 		$key = str_replace('\'', '\\\'', $string);
 		return str_replace('"', '&quot;', stripslashes((array_key_exists($key, $_LANGMAIL) && !empty($_LANGMAIL[$key])) ? $_LANGMAIL[$key] : $string));
 	}
@@ -425,7 +428,7 @@ class MailCore extends ObjectModel
 		);
 		return vsprintf("<%s.%d.%s@%s>", $midparams);
 	}
-	
+
 	public static function isMultibyte($data)
 	{
 		$length = strlen($data);
