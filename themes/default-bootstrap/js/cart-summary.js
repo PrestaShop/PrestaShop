@@ -802,7 +802,10 @@ function updateCartSummary(json)
 				price_reduction = product_list[i].reduction_formatted;
 			else
 			{
-				price_reduction = ps_round((ps_round(product_list[i].price_without_quantity_discount) - ps_round(product_list[i].price_wt))/ps_round(product_list[i].price_without_quantity_discount) * -100);
+				if (priceDisplayMethod !== 0)
+					price_reduction = ps_round((ps_round(product_list[i].price_without_quantity_discount) - ps_round(product_list[i].price))/ps_round(product_list[i].price_without_quantity_discount) * -100);
+				else
+					price_reduction = ps_round((ps_round(product_list[i].price_without_quantity_discount) - ps_round(product_list[i].price_wt))/ps_round(product_list[i].price_without_quantity_discount) * -100);
 				reduction_symbol = '%';
 			}
 
