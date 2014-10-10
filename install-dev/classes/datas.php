@@ -187,11 +187,9 @@ class Datas
 		$args_ok = array();
 		foreach ($argv as $arg)
 		{
-			if (!preg_match('/^--([^=\'"><|`]+)(?:=([^=\'"><|`]+)|(?!license))/i', trim($arg), $res))
+			if (!preg_match('/^--([^=\'"><|`]+)(?:=([^=><|`]+)|(?!license))/i', trim($arg), $res))
 				continue;
 
-			if ($res[1] == 'firstname' || $res[1] == 'lastname')
-				preg_match('/^--([^=\'"><|`]+)(?:=([^=><|`]+)|(?!license))/i', trim($arg), $res);
 			if ($res[1] == 'license' && !isset($res[2]))
 				$res[2] = 1;
 			elseif (!isset($res[2]))
