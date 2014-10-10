@@ -81,13 +81,13 @@ class Datas
 			'name' => 'db_clear',
 			'default' => '1',
 			'validate' => 'isInt',
-			'help' => 'Drop existing tables' 
+			'help' => 'Drop existing tables'
 		),
 		'database_create' => array(
 			'name' => 'db_create',
 			'default' => '0',
 			'validate' => 'isInt',
-			'help' => 'Create the database if not exist' 
+			'help' => 'Create the database if not exist'
 		),
 		'database_prefix' => array(
 			'name' => 'prefix',
@@ -164,7 +164,7 @@ class Datas
 
 	public function __set($key, $value)
 	{
-		$this->datas[$key] = $value;		
+		$this->datas[$key] = $value;
 	}
 
 	public static function getInstance()
@@ -190,6 +190,8 @@ class Datas
 			if (!preg_match('/^--([^=\'"><|`]+)(?:=([^=\'"><|`]+)|(?!license))/i', trim($arg), $res))
 				continue;
 
+			if ($res[1] == 'firstname' || $res[1] == 'lastname')
+				preg_match('/^--([^=\'"><|`]+)(?:=([^=><|`]+)|(?!license))/i', trim($arg), $res);
 			if ($res[1] == 'license' && !isset($res[2]))
 				$res[2] = 1;
 			elseif (!isset($res[2]))
