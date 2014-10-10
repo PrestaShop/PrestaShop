@@ -38,13 +38,13 @@ function addToCompare(productId)
 {
 	var totalValueNow = parseInt($('.bt_compare').next('.compare_product_count').val());
 	var action, totalVal;
-	if($.inArray(parseInt(productId),comparedProductsIds) === -1)
+	if ($.inArray(parseInt(productId),comparedProductsIds) === -1)
 		action = 'add';
 	else
 		action = 'remove';
 
 	$.ajax({
-		url: 'index.php?controller=products-comparison&ajax=1&action='+action+'&id_product=' + productId,
+		url: baseUri + 'index.php?controller=products-comparison&ajax=1&action=' + action + '&id_product=' + productId,
 		async: true,
 		cache: false,
 		success: function(data) {
@@ -64,19 +64,17 @@ function addToCompare(productId)
 			}
 			else
 			{
-	            if (!!$.prototype.fancybox)
-	                $.fancybox.open([
-	                    {
-	                        type: 'inline',
-	                        autoScale: true,
-	                        minHeight: 30,
-	                        content: '<p class="fancybox-error">' + max_item + '</p>'
-	                    }
-	                ], {
-	                    padding: 0
-	                });
-	            else
-	                alert(max_item);
+				if (!!$.prototype.fancybox)
+					$.fancybox.open([{
+						type: 'inline',
+						autoScale: true,
+						minHeight: 30,
+						content: '<p class="fancybox-error">' + max_item + '</p>'
+					}], {
+						padding: 0
+					});
+				else
+					alert(max_item);
 			}
 			totalCompareButtons();
 		},
@@ -90,7 +88,7 @@ function reloadProductComparison()
 		e.preventDefault();
 		var idProduct = parseInt($(this).data('id-product'));
 		$.ajax({
-			url: 'index.php?controller=products-comparison&ajax=1&action=remove&id_product=' + idProduct,
+			url: baseUri + 'index.php?controller=products-comparison&ajax=1&action=remove&id_product=' + idProduct,
 			async: false,
 			cache: false
 		});
