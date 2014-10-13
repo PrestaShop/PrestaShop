@@ -248,24 +248,37 @@ class AdminDashboardControllerCore extends AdminController
 
 		if (Tools::isSubmit('submitDateRange'))
 		{
-			$this->context->employee->stats_date_from = Tools::getValue('date_from');
-			$this->context->employee->stats_date_to = Tools::getValue('date_to');
-			$this->context->employee->preselect_date_range = Tools::getValue('preselectDateRange');
+			if (!Validate::isDate(Tools::getValue('date_from'))
+				|| !Validate::isDate(Tools::getValue('date_to'))
+				|| !Validate::isDate(Tools::getValue('preselectDateRange')));
+				$this->errors[] = Tools::displayError('The selected date range is not valid.');
 
 			if (Tools::getValue('datepicker_compare'))
-			{
-				$this->context->employee->stats_compare_from = Tools::getValue('compare_date_from');
-				$this->context->employee->stats_compare_to = Tools::getValue('compare_date_to');
-				$this->context->employee->stats_compare_option = Tools::getValue('compare_date_option');
-			}
-			else
-			{
-				$this->context->employee->stats_compare_from = null;
-				$this->context->employee->stats_compare_to = null;
-				$this->context->employee->stats_compare_option = HelperCalendar::DEFAULT_COMPARE_OPTION;
-			}
+				if (!Validate::isDate(Tools::getValue('compare_date_from'))
+					|| !Validate::isDate(Tools::getValue('compare_date_to')));
+					$this->errors[] = Tools::displayError('The selected date range is not valid.');
 
-			$this->context->employee->update();
+			if (!count($this->errors))
+			{
+				$this->context->employee->stats_date_from = Tools::getValue('date_from');
+				$this->context->employee->stats_date_to = Tools::getValue('date_to');
+				$this->context->employee->preselect_date_range = Tools::getValue('preselectDateRange');
+
+				if (Tools::getValue('datepicker_compare'))
+				{
+					$this->context->employee->stats_compare_from = Tools::getValue('compare_date_from');
+					$this->context->employee->stats_compare_to = Tools::getValue('compare_date_to');
+					$this->context->employee->stats_compare_option = Tools::getValue('compare_date_option');
+				}
+				else
+				{
+					$this->context->employee->stats_compare_from = null;
+					$this->context->employee->stats_compare_to = null;
+					$this->context->employee->stats_compare_option = HelperCalendar::DEFAULT_COMPARE_OPTION;
+				}
+
+				$this->context->employee->update();
+			}
 		}
 
 		parent::postProcess();
