@@ -342,7 +342,7 @@ class ParentOrderControllerCore extends FrontController
 		$cart_cart_rules = $this->context->cart->getCartRules();
 		foreach ($available_cart_rules as $key => $available_cart_rule)
 		{
-			if (!$available_cart_rule['highlight'] || strpos($available_cart_rule['code'], 'BO_ORDER_') === 0)
+			if (!$available_cart_rule['highlight'] || strpos($available_cart_rule['code'], CartRule::BO_ORDER_CODE_PREFIX) === 0)
 			{
 				unset($available_cart_rules[$key]);
 				continue;
