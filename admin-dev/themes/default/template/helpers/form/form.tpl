@@ -530,7 +530,7 @@
 												<hr />
 												<div class="form-group">
 													<label for="{$input.name}" class="required control-label col-lg-2">
-														<span class="label-tooltip" data-toggle="tooltip" data-html="true" title="" data-original-title="Password should be at least 8 characters long.">
+														<span class="label-tooltip" data-toggle="tooltip" data-html="true" title="" data-original-title="{l s='Password should be at least 8 characters long.'}">
 															{l s='New password'}
 														</span>
 													</label>
