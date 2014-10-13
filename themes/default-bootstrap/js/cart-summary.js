@@ -796,13 +796,20 @@ function updateCartSummary(json)
 		}
 
 		var current_price_class ='price';
+		var price_reduction = '';
 		if (reduction && typeof(initial_price) !== 'undefined')
 		{
 			if (reduction_type == 'amount')
 				price_reduction = product_list[i].reduction_formatted;
 			else
 			{
-				price_reduction = ps_round((ps_round(product_list[i].price_without_quantity_discount) - ps_round(product_list[i].price_wt))/ps_round(product_list[i].price_without_quantity_discount) * -100);
+				var display_price = 0;
+				if (priceDisplayMethod !== 0)
+					display_price = ps_round(product_list[i].price);
+				else
+					display_price = ps_round(product_list[i].price_wt);
+
+				price_reduction = ps_round((ps_round(product_list[i].price_without_quantity_discount) - display_price)/ps_round(product_list[i].price_without_quantity_discount) * -100);
 				reduction_symbol = '%';
 			}
 
@@ -817,12 +824,12 @@ function updateCartSummary(json)
 		var key_for_blockcart_nocustom = product_list[i].id_product + '_' + product_list[i].id_product_attribute + '_' + ((product_list[i].id_customization && product_list[i].quantity_without_customization != product_list[i].quantity)? 'nocustom' : '0') + '_' + product_list[i].id_address_delivery;
 
 		$('#product_price_' + key_for_blockcart).html('<li class="' + current_price_class + '">' + current_price + '</li>' + initial_price_text);
-		if (typeof(product_list[i].customizationQuantityTotal) !== 'undefined' && product_list[i].customizationQuantityTotal > 0)			
+		if (typeof(product_list[i].customizationQuantityTotal) !== 'undefined' && product_list[i].customizationQuantityTotal > 0)
 			$('#total_product_price_' + key_for_blockcart).html(formatCurrency(product_customization_total, currencyFormat, currencySign, currencyBlank));
 		else
 			$('#total_product_price_' + key_for_blockcart).html(formatCurrency(product_total, currencyFormat, currencySign, currencyBlank));
 		if (product_list[i].quantity_without_customization != product_list[i].quantity)
-			$('#total_product_price_' + key_for_blockcart_nocustom).html(formatCurrency(product_total, currencyFormat, currencySign, currencyBlank));				
+			$('#total_product_price_' + key_for_blockcart_nocustom).html(formatCurrency(product_total, currencyFormat, currencySign, currencyBlank));
 
 		$('input[name=quantity_' + key_for_blockcart_nocustom + ']').val(product_list[i].id_customization? product_list[i].quantity_without_customization : product_list[i].cart_quantity);
 		$('input[name=quantity_' + key_for_blockcart_nocustom + '_hidden]').val(product_list[i].id_customization? product_list[i].quantity_without_customization : product_list[i].cart_quantity);
