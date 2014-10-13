@@ -2638,7 +2638,7 @@ abstract class ModuleCore
 			$code .= $line;
 		}
 
-		$to_delete = preg_match('/<\?(?:php)?\s+class\s+Product\s+extends\s+ProductCore\s*?[{]\s*?[}]/ism', $code);
+		$to_delete = preg_match('/<\?(?:php)?\s+class\s+'.$classname.'\s+extends\s+'.$classname.'Core\s*?[{]\s*?[}]/ism', $code);
 
 		if ($to_delete)
 			unlink($override_path);
