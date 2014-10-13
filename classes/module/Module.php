@@ -2637,7 +2637,13 @@ abstract class ModuleCore
 
 			$code .= $line;
 		}
-		file_put_contents($override_path, $code);
+
+		$to_delete = preg_match('/<\?(?:php)?\s+class\s+'.$classname.'\s+extends\s+'.$classname.'Core\s*?[{]\s*?[}]/ism', $code);
+
+		if ($to_delete)
+			unlink($override_path);
+		else
+			file_put_contents($override_path, $code);
 
 		// Re-generate the class index
 		Tools::generateIndex();
