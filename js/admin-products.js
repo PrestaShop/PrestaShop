@@ -235,12 +235,6 @@ function loadPack() {
 // The ProductTabsManager instance will make sure the onReady() methods of each tabs are executed once the tab has loaded
 var product_tabs = [];
 
-product_tabs['Customization'] = new function(){
-	this.onReady = function(){
-		if (display_multishop_checkboxes)
-		ProductMultishop.checkAllCustomization();
-	}
-}
 product_tabs['Combinations'] = new function(){
 	var self = this;
 	this.bindEdit = function(){
