@@ -2081,7 +2081,7 @@ class CartCore extends ObjectModel
 			if ($cart_rule['free_shipping'] && $cart_rule['carrier_restriction'])
 			{
 				$cr = new CartRule((int)$cart_rule['id_cart_rule']);
-				if (Validate::isLoadedObject($cr))
+				if (Validate::isLoadedObject($cr) && ($cr->minimum_amount < $this->getOrderTotal($cr->minimum_amount_tax, Cart::ONLY_PRODUCTS)))
 				{
 					$carriers = $cr->getAssociatedRestrictions('carrier', true, false);
 					if (is_array($carriers) && count($carriers) && isset($carriers['selected']))
