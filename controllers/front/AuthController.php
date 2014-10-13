@@ -367,7 +367,7 @@ class AuthControllerCore extends FrontController
 			$this->context->smarty->assign('email_create', 1);
 		// New Guest customer
 		if (!Tools::getValue('is_new_customer', 1) && !Configuration::get('PS_GUEST_CHECKOUT_ENABLED'))
-			$this->errors[] = Tools::displayError('You cannot create a guest account..');
+			$this->errors[] = Tools::displayError('You cannot create a guest account.');
 		if (!Tools::getValue('is_new_customer', 1))
 			$_POST['passwd'] = md5(time()._COOKIE_KEY_);
 		if ($guest_email = Tools::getValue('guest_email'))
