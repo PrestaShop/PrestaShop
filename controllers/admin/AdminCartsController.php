@@ -571,7 +571,7 @@ class AdminCartsControllerCore extends AdminController
 	{
 		if ($this->tabAccess['edit'] === '1')
 		{
-			if (!$id_cart_rule = CartRule::getIdByCode('BO_ORDER_'.(int)$this->context->cart->id))
+			if (!$id_cart_rule = CartRule::getIdByCode(CartRule::BO_ORDER_CODE_PREFIX.(int)$this->context->cart->id))
 			{
 				$cart_rule = new CartRule();
 				$cart_rule->code = CartRule::BO_ORDER_CODE_PREFIX.(int)$this->context->cart->id;
@@ -753,7 +753,7 @@ class AdminCartsControllerCore extends AdminController
 		$free_shipping = false;
 		if (count($cart_rules))
 			foreach ($cart_rules as $cart_rule)
-				if ($cart_rule['id_cart_rule'] == CartRule::getIdByCode('BO_ORDER_'.(int)$this->context->cart->id))
+				if ($cart_rule['id_cart_rule'] == CartRule::getIdByCode(CartRule::BO_ORDER_CODE_PREFIX.(int)$this->context->cart->id))
 				{
 					$free_shipping = true;
 					break;
