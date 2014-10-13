@@ -239,7 +239,7 @@
 				e.preventDefault();
 				if ($('#submitAddProduct').length)
 					addProduct();
-			}			
+			}
 		});
 
 		$('#send_email_to_customer').on('click',function(){
@@ -1507,7 +1507,7 @@
 							<i class="icon-credit-card"></i>
 							{l s='Send an email to the customer with the link to process the payment.'}
 						</a>
-						<a target="_blank" id="go_order_process" href="" class="btn btn-link">
+						<a id="go_order_process" href="" class="btn btn-link _blank">
 							{l s='Go on payment page to process the payment.'}
 							<i class="icon-external-link"></i>
 						</a>

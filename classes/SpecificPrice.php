@@ -296,7 +296,7 @@ class SpecificPriceCore extends ObjectModel
 						AND
 						(`to` = \'0000-00-00 00:00:00\' OR \''.$now.'\' <= `to`)
 					)
-					ORDER BY `id_product_attribute` DESC, `from_quantity` DESC, `id_specific_price_rule` ASC, `score` DESC
+					ORDER BY `from_quantity` ASC, `id_specific_price_rule` ASC, `score` DESC
 		');
 
 		$targeted_prices = array();

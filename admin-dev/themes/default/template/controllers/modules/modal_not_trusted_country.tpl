@@ -40,7 +40,7 @@
 	</p>
 	<p>
 		{l s='If you are unsure about this module, you can look for similar modules on the official marketplace.'}
-		<a target="_blank" href="http://addons.prestashop.com/">{l s='Click here to browse PrestaShop Addons.'}</a>
+		<a class="_blank" href="http://addons.prestashop.com/">{l s='Click here to browse PrestaShop Addons.'}</a>
 	</p>
 </div>
 
