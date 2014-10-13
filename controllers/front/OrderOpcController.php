@@ -107,13 +107,19 @@ class OrderOpcControllerCore extends ParentOrderController
 							break;
 
 						case 'editCustomer':
-							if (!$this->isLogged)
+							if (!$this->isLogged || !$this->context->customer->is_guest)
 								exit;
+
+							if (Validate::isEmail($email = Tools::getValue('email')) && !empty($email))
+								if (Customer::customerExists($email))
+									$this->errors[] = Tools::displayError('An account using this email address has already been registered.', false);
+
 							if (Tools::getValue('years'))
 								$this->context->customer->birthday = (int)Tools::getValue('years').'-'.(int)Tools::getValue('months').'-'.(int)Tools::getValue('days');
+
 							$_POST['lastname'] = $_POST['customer_lastname'];
 							$_POST['firstname'] = $_POST['customer_firstname'];
-							$this->errors = $this->context->customer->validateController();
+							$this->errors = array_merge($this->errors, $this->context->customer->validateController());
 							$this->context->customer->newsletter = (int)Tools::isSubmit('newsletter');
 							$this->context->customer->optin = (int)Tools::isSubmit('optin');
 							$return = array(
