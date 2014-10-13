@@ -167,8 +167,7 @@ class AdminBackupControllerCore extends AdminController
 
 		// Test if the backup dir is writable
 		if (!is_writable(PrestaShopBackup::getBackupPath()))
-			$this->warnings[] = $this->l('The "Backups" directory located in the admin directory must be writable 
-				(CHMOD 755 / 777).');
+			$this->warnings[] = $this->l('The "Backups" directory located in the admin directory must be writable (CHMOD 755 / 777).');
 		elseif ($this->display == 'add')
 			{
 				if (($object = $this->loadObject()))
@@ -177,8 +176,7 @@ class AdminBackupControllerCore extends AdminController
 						$this->errors[] = $object->error;
 					else
 						$this->context->smarty->assign(array(
-							'conf' => $this->l('It appears the backup was successful, however you must download and 
-								carefully verify the backup file before proceeding. '),
+							'conf' => $this->l('It appears the backup was successful, however you must download and carefully verify the backup file before proceeding.'),
 							'backup_url' => $object->getBackupURL(),
 							'backup_weight' => number_format((filesize($object->id) * 0.000001), 2, '.', '')
 						));
