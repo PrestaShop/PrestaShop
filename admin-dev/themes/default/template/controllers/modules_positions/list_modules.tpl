@@ -159,7 +159,7 @@
 				<p>{l s='You have to select a shop to use Live Edit'}</p>
 			{else}
 				<p>{l s='Click here to be redirected to the front-office of your shop where you can move and delete modules directly.'}</p>
-					<a class="btn btn-default" href="{$url_live_edit|escape:'html':'UTF-8'}" target="_blank">
+					<a class="btn btn-default _blank" href="{$url_live_edit|escape:'html':'UTF-8'}">
 						<i class="icon-edit"></i>
 						{l s='Run Live Edit'}
 					</a>

@@ -32,23 +32,21 @@
 <div class="buttons_bottom_block no-print">
 	<div id="wishlist_button">
 		<div class="btn-group">
-			<div class="wish_select">
-				{foreach name=wl from=$wishlists item=wishlist}
-					{if $smarty.foreach.wl.first}
-						<select id="wishlist_{$wishlist.id_wishlist}" class="form-control attribute_select no-print" onchange="WishlistCart('wishlist_block_list', 'add', '{$id_product|intval}', $('idCombination').val(), document.getElementById('quantity_wanted').value, this.value);">
-					{/if}
-					<option title="{$wishlist.name}" value="{$wishlist.id_wishlist}"{if $wishlist.default == 1} selected="selected"{/if}>
-						{l s='Add to %s'|sprintf:$wishlist.name mod='blockwishlist'}
-					</option>
-					{if $smarty.foreach.wl.last}
-						</select>
-					{/if}
-				{foreachelse}
-					<a href="#" onclick="WishlistCart('wishlist_block_list', 'add', '{$id_product|intval}', $('#idCombination').val(), document.getElementById('quantity_wanted').value); return false;" rel="nofollow"  title="{l s='Add to my wishlist' mod='blockwishlist'}">
-						{l s='Add to wishlist' mod='blockwishlist'}
-					</a>
-				{/foreach}
-			</div>
+			{foreach name=wl from=$wishlists item=wishlist}
+				{if $smarty.foreach.wl.first}
+					<select id="wishlist_{$wishlist.id_wishlist}" class="form-control attribute_select no-print">
+				{/if}
+				<option title="{$wishlist.name}" class="wish_select" value="{$wishlist.id_wishlist}"{if $wishlist.default == 1} selected="selected"{/if} onclick="WishlistCart('wishlist_block_list', 'add', '{$id_product|intval}', $('idCombination').val(), document.getElementById('quantity_wanted').value, 'wishlist_' + this.value);">
+					{l s='Add to %s'|sprintf:$wishlist.name mod='blockwishlist'}
+				</option>
+				{if $smarty.foreach.wl.last}
+					</select>
+				{/if}
+			{foreachelse}
+				<a href="#" onclick="WishlistCart('wishlist_block_list', 'add', '{$id_product|intval}', $('#idCombination').val(), document.getElementById('quantity_wanted').value); return false;" rel="nofollow"  title="{l s='Add to my wishlist' mod='blockwishlist'}">
+					{l s='Add to wishlist' mod='blockwishlist'}
+				</a>
+			{/foreach}
 		</div>
 	</div>
 </div>
