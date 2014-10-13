@@ -1851,8 +1851,8 @@ var ProductMultishop = new function()
 
 	this.checkAllCustomization = function()
 	{
-		ProductMultishop.checkField($('input[name=\'multishop_check[uploadable_files]\']').prop('checked'), 'uploadable_files');
-		ProductMultishop.checkField($('input[name=\'multishop_check[text_fields]\']').prop('checked'), 'text_fields');
+		/*ProductMultishop.checkField($('input[name=\'multishop_check[uploadable_files]\']').prop('checked'), 'uploadable_files');
+		ProductMultishop.checkField($('input[name=\'multishop_check[text_fields]\']').prop('checked'), 'text_fields');*/
 	};
 
 	this.checkAllCombinations = function()
