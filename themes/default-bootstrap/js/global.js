@@ -69,7 +69,7 @@ $(document).ready(function(){
 		e.preventDefault();
 		history.back();
 	});
-	
+
 	jQuery.curCSS = jQuery.css;
 	if (!!$.prototype.cluetip)
 		$('a.cluetip').cluetip({
@@ -81,7 +81,7 @@ $(document).ready(function(){
 			tracking: true,
 			sticky: false,
 			mouseOutClose: true,
-			fx: {             
+			fx: {
 		    	open:       'fadeIn',
 		    	openSpeed:  'fast'
 			}
@@ -95,8 +95,7 @@ $(document).ready(function(){
 		});
 
 	// Close Alert messages
-	$(".alert").on('click', this, function(e){
-		e.preventDefault();
+	$(".alert.alert-danger").on('click', this, function(e){
 		$(this).fadeOut();
 	});
 });
@@ -104,14 +103,14 @@ $(document).ready(function(){
 function highdpiInit()
 {
 	if($('.replace-2x').css('font-size') == "1px")
-	{		
+	{
 		var els = $("img.replace-2x").get();
 		for(var i = 0; i < els.length; i++)
 		{
 			src = els[i].src;
 			extension = src.substr( (src.lastIndexOf('.') +1) );
 			src = src.replace("." + extension, "2x." + extension);
-			
+
 			var img = new Image();
 			img.src = src;
 			img.height != 0 ? els[i].src = src : els[i].src = els[i].src;
@@ -121,7 +120,7 @@ function highdpiInit()
 
 
 // Used to compensante Chrome/Safari bug (they don't care about scroll bar for width)
-function scrollCompensate() 
+function scrollCompensate()
 {
     var inner = document.createElement('p');
     inner.style.width = "100%";
@@ -155,7 +154,7 @@ function responsiveResize()
 	{
 		accordion('enable');
 	    accordionFooter('enable');
-		responsiveflag = true;	
+		responsiveflag = true;
 	}
 	else if (($(window).width()+scrollCompensate()) >= 768)
 	{
@@ -218,7 +217,7 @@ function quick_view()
 function bindGrid()
 {
 	var view = $.totalStorage('display');
-	
+
 	if (!view && (typeof displayList != 'undefined') && displayList)
 		view = 'list';
 
@@ -226,7 +225,7 @@ function bindGrid()
 		display(view);
 	else
 		$('.display').find('li#grid').addClass('selected');
-	
+
 	$(document).on('click', '#grid', function(e){
 		e.preventDefault();
 		display('grid');
@@ -252,7 +251,7 @@ function display(view)
 					html += '<div class="product-flags">'+ $(element).find('.product-flags').html() + '</div>';
 					html += '<h5 itemprop="name">'+ $(element).find('h5').html() + '</h5>';
 					var rating = $(element).find('.comments_note').html(); // check : rating
-					if (rating != null) { 
+					if (rating != null) {
 						html += '<div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" class="comments_note">'+ rating + '</div>';
 					}
 					html += '<p class="product-desc">'+ $(element).find('.product-desc').html() + '</p>';
@@ -264,10 +263,10 @@ function display(view)
 					if (availability != null) {
 						html += '<span class="availability">'+ availability +'</span>';
 					}
-				html += '</div>';	
+				html += '</div>';
 				html += '<div class="right-block col-xs-4 col-xs-12 col-md-4"><div class="right-block-content row">';
 					var price = $(element).find('.content_price').html();       // check : catalog mode is enabled
-					if (price != null) { 
+					if (price != null) {
 						html += '<div class="content_price col-xs-5 col-md-12">'+ price + '</div>';
 					}
 					html += '<div class="button-container col-xs-7 col-md-12">'+ $(element).find('.button-container').html() +'</div>';
@@ -275,12 +274,12 @@ function display(view)
 				html += '</div>';
 			html += '</div></div>';
 		$(element).html(html);
-		});		
+		});
 		$('.display').find('li#list').addClass('selected');
 		$('.display').find('li#grid').removeAttr('class');
 		$.totalStorage('display', 'list');
 	}
-	else 
+	else
 	{
 		$('ul.product_list').removeClass('list').addClass('grid row');
 		$('.product_list > li').removeClass('col-xs-12').addClass('col-xs-12 col-sm-6 col-md-4');
@@ -292,12 +291,12 @@ function display(view)
 				html += '<div class="product-flags">'+ $(element).find('.product-flags').html() + '</div>';
 				html += '<h5 itemprop="name">'+ $(element).find('h5').html() + '</h5>';
 				var rating = $(element).find('.comments_note').html(); // check : rating
-					if (rating != null) { 
+					if (rating != null) {
 						html += '<div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" class="comments_note">'+ rating + '</div>';
 					}
 				html += '<p itemprop="description" class="product-desc">'+ $(element).find('.product-desc').html() + '</p>';
 				var price = $(element).find('.content_price').html(); // check : catalog mode is enabled
-					if (price != null) { 
+					if (price != null) {
 						html += '<div class="content_price">'+ price + '</div>';
 					}
 				html += '<div itemprop="offers" itemscope itemtype="http://schema.org/Offer" class="button-container">'+ $(element).find('.button-container').html() +'</div>';
@@ -311,20 +310,20 @@ function display(view)
 				}
 			html += '</div>';
 			html += '<div class="functional-buttons clearfix">' + $(element).find('.functional-buttons').html() + '</div>';
-		html += '</div>';		
+		html += '</div>';
 		$(element).html(html);
 		});
 		$('.display').find('li#grid').addClass('selected');
 		$('.display').find('li#list').removeAttr('class');
 		$.totalStorage('display', 'grid');
-	}	
+	}
 }
 
-function dropDown() 
+function dropDown()
 {
 	elementClick = '#header .current';
-	elementSlide =  'ul.toogle_content';       
-	activeClass = 'active';			 
+	elementSlide =  'ul.toogle_content';
+	activeClass = 'active';
 
 	$(elementClick).on('click', function(e){
 		e.stopPropagation();
@@ -332,7 +331,7 @@ function dropDown()
 		if(subUl.is(':hidden'))
 		{
 			subUl.slideDown();
-			$(this).addClass(activeClass);	
+			$(this).addClass(activeClass);
 		}
 		else
 		{
