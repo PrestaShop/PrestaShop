@@ -29,6 +29,7 @@ class AdminMetaControllerCore extends AdminController
 	public $table = 'meta';
 	public $className = 'Meta';
 	public $lang = true;
+	protected $url = false;
 	protected $toolbar_scroll = false;
 
 	public function __construct()
