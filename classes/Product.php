@@ -1224,7 +1224,6 @@ class ProductCore extends ObjectModel
 
 	public function generateMultipleCombinations($combinations, $attributes)
 	{
-		$attributes_list = array();
 		$res = true;
 		$default_on = 1;
 		foreach ($combinations as $key => $combination)
@@ -1832,7 +1831,6 @@ class ProductCore extends ObjectModel
 	{
 		if (!Combination::isFeatureActive())
 			return array();
-		$add_shop = '';
 
 		$combinations = Db::getInstance()->executeS('SELECT pa.*, product_attribute_shop.*
 				FROM `'._DB_PREFIX_.'product_attribute` pa
@@ -2460,16 +2458,14 @@ class ProductCore extends ObjectModel
 	*/
 	public function getImages($id_lang, Context $context = null)
 	{
-		if (!$context)
-			$context = Context::getContext();
-
-		$sql = 'SELECT image_shop.`cover`, i.`id_image`, il.`legend`, i.`position`
-				FROM `'._DB_PREFIX_.'image` i
-				'.Shop::addSqlAssociation('image', 'i').'
-				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
-				WHERE i.`id_product` = '.(int)$this->id.'
-				ORDER BY `position`';
-		return Db::getInstance()->executeS($sql);
+		return Db::getInstance()->executeS('
+			SELECT image_shop.`cover`, i.`id_image`, il.`legend`, i.`position`
+			FROM `'._DB_PREFIX_.'image` i
+			'.Shop::addSqlAssociation('image', 'i').'
+			LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
+			WHERE i.`id_product` = '.(int)$this->id.'
+			ORDER BY `position`'
+		);
 	}
 
 	/**
@@ -3214,20 +3210,17 @@ class ProductCore extends ObjectModel
 	 */
 	public static function getAccessoriesLight($id_lang, $id_product, Context $context = null)
 	{
-		if (!$context)
-			$context = Context::getContext();
-
-		$sql = 'SELECT p.`id_product`, p.`reference`, pl.`name`
-				FROM `'._DB_PREFIX_.'accessory`
-				LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product`= `id_product_2`)
-				'.Shop::addSqlAssociation('product', 'p').'
-				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
-					p.`id_product` = pl.`id_product`
-					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
-				)
-				WHERE `id_product_1` = '.(int)$id_product;
-
-		return Db::getInstance()->executeS($sql);
+		return Db::getInstance()->executeS('
+			SELECT p.`id_product`, p.`reference`, pl.`name`
+			FROM `'._DB_PREFIX_.'accessory`
+			LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product`= `id_product_2`)
+			'.Shop::addSqlAssociation('product', 'p').'
+			LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
+				p.`id_product` = pl.`id_product`
+				AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
+			)
+			WHERE `id_product_1` = '.(int)$id_product
+		);
 	}
 
 	/**
@@ -3238,9 +3231,6 @@ class ProductCore extends ObjectModel
 	 */
 	public function getAccessories($id_lang, $active = true, Context $context = null)
 	{
-		if (!$context)
-			$context = Context::getContext();
-
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description`, pl.`description_short`, pl.`link_rewrite`,
 					pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`,
 					MAX(image_shop.`id_image`) id_image, il.`legend`, m.`name` as manufacturer_name, cl.`name` AS category_default,
@@ -3273,8 +3263,10 @@ class ProductCore extends ObjectModel
 
 		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
 			return false;
+
 		foreach ($result as &$row)
 			$row['id_product_attribute'] = Product::getDefaultAttribute((int)$row['id_product']);
+
 		return $this->getProductsProperties($id_lang, $result);
 	}
 
@@ -3804,8 +3796,6 @@ class ProductCore extends ObjectModel
 
 			if (isset($customizations['labels']))
 			{
-				$query = 'INSERT INTO `'._DB_PREFIX_.'customization_field_lang` (`id_customization_field`, `id_lang`, `name`) VALUES ';
-				$data = array();
 				foreach ($customizations['labels'][$old_customization_field_id] as $customization_label)
 				{
 					$data = array(
