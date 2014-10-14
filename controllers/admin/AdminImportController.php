@@ -311,7 +311,6 @@ class AdminImportControllerCore extends AdminController
 					'customizable' => 0,
 					'uploadable_files' => 0,
 					'text_fields' => 0,
-					'out_of_stock' => '2',
 					'advanced_stock_management' => 0,
 					'depends_on_stock' => 0,
 				);
@@ -1533,6 +1532,7 @@ class AdminImportControllerCore extends AdminController
 				}
 				// If no id_product or update failed
 				$product->force_id = (bool)Tools::getValue('forceIDs');
+
 				if (!$res)
 				{
 					if (isset($product->date_add) && $product->date_add != '')
@@ -1540,6 +1540,12 @@ class AdminImportControllerCore extends AdminController
 					else
 						$res = $product->add();
 				}
+
+			if ($product->getType() == Product::PTYPE_VIRTUAL)
+				StockAvailable::setProductOutOfStock((int)$product->id, 1);
+			else
+				StockAvailable::setProductOutOfStock((int)$product->id, (int)$product->out_of_stock);
+
 			}
 
 			$shops = array();
