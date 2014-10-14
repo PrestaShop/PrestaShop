@@ -30,7 +30,7 @@
 <html lang="{$iso}">
 <head>
 	<meta charset="utf-8">
-	
+
 	<meta name="viewport" content="width=device-width, initial-scale=0.75, maximum-scale=0.75, user-scalable=0">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<link rel="icon" type="image/x-icon" href="{$img_dir}favicon.ico" />
@@ -207,9 +207,9 @@
 								<li {if $link->matchQuickLink({$quick.link})}{assign "matchQuickLink" $quick.id_quick_access}class="active"{/if}>
 									<a href="{$quick.link|escape:'html':'UTF-8'}" {if $quick.new_window} target="_blank"{/if}>
 										{if isset($quick.icon)}
-											<i class="icon-{$quick.icon} icon-fw"></i> 
+											<i class="icon-{$quick.icon} icon-fw"></i>
 										{else}
-											<i class="icon-chevron-right icon-fw"></i> 
+											<i class="icon-chevron-right icon-fw"></i>
 										{/if}
 										{$quick.name}
 									</a>
@@ -300,6 +300,9 @@
 							<li class="text-center">{$employee->firstname} {$employee->lastname}</li>
 							<li class="divider"></li>
 							<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences'}</a></li>
+							{if $host_mode}
+							<li><a href="https://www.prestashop.com/ondemand/" class="_blank"><i class="icon-wrench"></i> {l s='My PrestaShop account'}</a></li>
+							{/if}
 							<li class="divider"></li>
 							<li><a id="header_logout" href="{$default_tab_link|escape:'html':'UTF-8'}&amp;logout"><i class="icon-signout"></i> {l s='Sign out'}</a></li>
 						</ul>
@@ -332,7 +335,7 @@
 {* end display_header*}
 
 {else}
-	<body{if isset($lite_display) && $lite_display} class="ps_back-office display-modal"{/if}>		
+	<body{if isset($lite_display) && $lite_display} class="ps_back-office display-modal"{/if}>
 		<div id="main">
 			<div id="content" class="{if !$bootstrap}nobootstrap{else}bootstrap{/if}">
 {/if}
