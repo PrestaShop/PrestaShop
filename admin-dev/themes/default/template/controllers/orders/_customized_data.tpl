@@ -66,11 +66,11 @@
 			</div>
 			{/if}
 		</td>
-		<td class="productQuantity">{$product['customizationQuantityTotal']}</td>
+		<td class="productQuantity text-center">{$product['customizationQuantityTotal']}</td>
 		{if $display_warehouse}<td>&nbsp;</td>{/if}
-		{if ($order->hasBeenPaid())}<td class="productQuantity">{$product['customizationQuantityRefunded']}</td>{/if}
-		{if ($order->hasBeenDelivered() || $order->hasProductReturned())}<td class="productQuantity">{$product['customizationQuantityReturned']}</td>{/if}
-		{if $stock_management}<td class="">{$product['current_stock']}</td>{/if}
+		{if ($order->hasBeenPaid())}<td class="productQuantity text-center">{$product['customizationQuantityRefunded']}</td>{/if}
+		{if ($order->hasBeenDelivered() || $order->hasProductReturned())}<td class="productQuantity text-center">{$product['customizationQuantityReturned']}</td>{/if}
+		{if $stock_management}<td class="productQuantity product_stock text-center">{$product['current_stock']}</td>{/if}
 		<td class="total_product">
 		{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
 			{displayPrice price=Tools::ps_round($product['product_price'] * $product['customizationQuantityTotal'], 2) currency=$currency->id|intval}
@@ -147,7 +147,7 @@
 					</div>
 				</td>
 				<td>-</td>
-				<td class="productQuantity">
+				<td class="productQuantity text-center">
 					<span class="product_quantity_show{if (int)$customization['quantity'] > 1} red bold{/if}">{$customization['quantity']}</span>
 					{if $can_edit}
 					<span class="product_quantity_edit" style="display:none;">
@@ -156,9 +156,9 @@
 					{/if}
 				</td>
 				{if $display_warehouse}<td>&nbsp;</td>{/if}
-				{if ($order->hasBeenPaid())}<td>{$customization['quantity_refunded']}</td>{/if}
-				{if ($order->hasBeenDelivered())}<td>{$customization['quantity_returned']}</td>{/if}
-				<td>-</td>
+				{if ($order->hasBeenPaid())}<td class="productQuantity text-center">{$customization['quantity_refunded']}</td>{/if}
+				{if ($order->hasBeenDelivered())}<td class="productQuantity text-center">{$customization['quantity_returned']}</td>{/if}
+				{if $stock_management}<td class="productQuantity product_stock text-center">-</td>{/if}
 				<td class="total_product">
 					{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
 						{displayPrice price=Tools::ps_round($product['product_price'] * $customization['quantity'], 2) currency=$currency->id|intval}
