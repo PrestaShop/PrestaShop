@@ -298,6 +298,9 @@
 							<li class="text-center">{$employee->firstname} {$employee->lastname}</li>
 							<li class="divider"></li>
 							<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences'}</a></li>
+							{if !$host_mode}
+							<li><a href="https://www.prestashop.com/ondemand/" class="_blank"><i class="icon-wrench"></i> {l s='My PrestaShop account'}</a></li>
+							{/if}
 							<li class="divider"></li>
 							<li><a id="header_logout" href="{$default_tab_link|escape:'html':'UTF-8'}&amp;logout"><i class="icon-signout"></i> {l s='Sign out'}</a></li>
 						</ul>
