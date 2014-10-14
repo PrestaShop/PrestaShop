@@ -365,7 +365,7 @@ abstract class ModuleCore
 			if ($upgrade_detail['success'])
 			{
 				$this->_confirmations[] = sprintf(Tools::displayError('Current version: %s'), $this->version);
-				$this->_confirmations[] = sprintf(Tools::displayError('%i file upgrade applied'), $upgrade_detail['number_upgraded']);
+				$this->_confirmations[] = sprintf(Tools::displayError('%d file upgrade applied'), $upgrade_detail['number_upgraded']);
 			}
 			else
 			{
@@ -374,7 +374,7 @@ abstract class ModuleCore
 				else
 				{
 					$this->_errors[] = sprintf(Tools::displayError('Upgraded from: %s to %s'), $upgrade_detail['upgraded_from'], $upgrade_detail['upgraded_to']);
-					$this->_errors[] = sprintf(Tools::displayError('%i upgrade left'), $upgrade_detail['number_upgrade_left']);
+					$this->_errors[] = sprintf(Tools::displayError('%d upgrade left'), $upgrade_detail['number_upgrade_left']);
 				}
 
 				if (isset($upgrade_detail['duplicate']) && $upgrade_detail['duplicate'])
