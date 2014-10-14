@@ -164,7 +164,7 @@ class CartCore extends ObjectModel
 				$customer = Context::getContext()->customer;
 			else
 				$customer = new Customer((int)$this->id_customer);
-			
+
 			Cart::$_customer = $customer;
 
 			if ((!$this->secure_key || $this->secure_key == '-1') && $customer->secure_key)
@@ -2979,7 +2979,7 @@ class CartCore extends ObjectModel
 		);
 	}
 
-	public function checkQuantities()
+	public function checkQuantities($return_product = false)
 	{
 		if (Configuration::get('PS_CATALOG_MODE') && !defined('_PS_ADMIN_DIR_'))
 			return false;
@@ -2987,7 +2987,7 @@ class CartCore extends ObjectModel
 		foreach ($this->getProducts() as $product)
 			if (!$product['active'] || !$product['available_for_order']
 				|| (!$product['allow_oosp'] && $product['stock_quantity'] < $product['cart_quantity']))
-				return false;
+				return $return_product ? $product : false;
 
 		return true;
 	}
