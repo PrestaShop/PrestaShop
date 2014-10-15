@@ -25,7 +25,7 @@
 
 {if isset($id_product) && isset($product)}
 <div id="product-images" class="panel product-tab">
-	<input type="hidden" name="submitted_tabs[]" value="Images" />	
+	<input type="hidden" name="submitted_tabs[]" value="Images" />
 	<div class="panel-heading tab" >
 		{l s='Images'}
 		<span class="badge" id="countImage">{$countImages}</span>
@@ -47,7 +47,7 @@
 				<span class="label-tooltip" data-toggle="tooltip"
 					title="{l s='Invalid characters:'} <>;=#{}">
 					{l s='Caption'}
-				</span>			
+				</span>
 			</label>
 			<div class="col-lg-9">
 			{foreach from=$languages item=language}
@@ -55,12 +55,7 @@
 				<div class="translatable-field row lang-{$language.id_lang}">
 					<div class="col-lg-6">
 				{/if}
-						<input type="text"
-						id="legend_{$language.id_lang}"
-						{if isset($input_class)}class="{$input_class}"{/if}
-						name="legend_{$language.id_lang}"
-						value="{if $images|count > 0}{$images[0]->legend[$language.id_lang]|escape:'html':'UTF-8'}{else}{$product->name[$language.id_lang]|escape:'html':'UTF-8'}{/if}"
-						{if !$product->id}disabled="disabled"{/if} />
+						<input type="text" id="legend_{$language.id_lang}"{if isset($input_class)} class="{$input_class}"{/if} name="legend_{$language.id_lang}" value="{if $images|count}{$images[0]->legend[$language.id_lang]|escape:'html':'UTF-8'}{else}{$product->name[$language.id_lang]|escape:'html':'UTF-8'}{/if}"{if !$product->id} disabled="disabled"{/if}/>
 				{if $languages|count > 1}
 					</div>
 					<div class="col-lg-2">
@@ -84,7 +79,7 @@
 	</div>
 	<table class="table tableDnD" id="imageTable">
 		<thead>
-			<tr class="nodrag nodrop"> 
+			<tr class="nodrag nodrop">
 				<th class="fixed-width-lg"><span class="title_box">{l s='Image'}</span></th>
 				<th class="fixed-width-lg"><span class="title_box">{l s='Caption'}</span></th>
 				<th class="fixed-width-xs"><span class="title_box">{l s='Position'}</span></th>
@@ -229,7 +224,7 @@
 				}
 			});
 			/**
-			 * on success function 
+			 * on success function
 			 */
 			function afterDeleteProductImage(data)
 			{
@@ -267,7 +262,7 @@
 						"ajax" : 1 }, afterDeleteProductImage
 				);
 			});
-			
+
 			$('.covered').die().live('click', function(e)
 			{
 				e.preventDefault();
@@ -290,7 +285,7 @@
 					"ajax" : 1 }
 				);
 			});
-			
+
 			$('.image_shop').die().live('click', function()
 			{
 				active = false;
@@ -307,10 +302,10 @@
 					"active":active,
 					"token" : "{/literal}{$token|escape:'html':'UTF-8'}{literal}",
 					"tab" : "AdminProducts",
-					"ajax" : 1 
+					"ajax" : 1
 				});
 			});
-			
+
 			function updateImagePosition(json)
 			{
 				doAdminAjax(
@@ -322,14 +317,14 @@
 					"ajax" : 1
 				});
 			}
-			
+
 			function delQueue(id)
 			{
 				$("#img" + id).fadeOut("slow");
 				$("#img" + id).remove();
 			}
-			
-			
+
+
 			$('.fancybox').fancybox();
 		});
 
