@@ -573,7 +573,7 @@ class SearchCore
 							{
 								$word = Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH);
 								// Remove accents
-							//	$word = Tools::replaceAccentedChars($word);
+								$word = Tools::replaceAccentedChars($word);
 
 								if (!isset($product_array[$word]))
 									$product_array[$word] = 0;
