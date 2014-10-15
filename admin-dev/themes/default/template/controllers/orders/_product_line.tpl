@@ -54,7 +54,7 @@
 					</div>
 				</div>
 				<br/>
-				<div class="fixed-width-xl">				
+				<div class="fixed-width-xl">
 					<div class="input-group">
 						{if $currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax incl.'}</div>{/if}
 						<input type="text" name="product_price_tax_incl" class="edit_product_price_tax_incl edit_product_price" value="{Tools::ps_round($product['unit_price_tax_incl'], 2)}"/>
@@ -171,9 +171,9 @@
 				({l s='%s refund' sprintf=$product['amount_refund']})
 			{/if}
 			<input type="hidden" value="{$product['quantity_refundable']}" class="partialRefundProductQuantity" />
-			<input type="hidden" value="{$product['amount_refundable']}" class="partialRefundProductAmount" />		
+			<input type="hidden" value="{$product['amount_refundable']}" class="partialRefundProductAmount" />
 		</div>
-	
+
 	</td>
 	{if ($can_edit && !$order->hasBeenDelivered())}
 	<td class="product_invoice" style="display: none;">
