@@ -1633,7 +1633,7 @@ class AdminProductsControllerCore extends AdminController
 	{
 		$rules = call_user_func(array('FeatureValue', 'getValidationRules'), 'FeatureValue');
 		$feature = Feature::getFeature((int)Configuration::get('PS_LANG_DEFAULT'), $feature_id);
-		$val = 0;
+
 		foreach ($languages as $language)
 			if ($val = Tools::getValue('custom_'.$feature_id.'_'.$language['id_lang']))
 			{
@@ -2146,16 +2146,14 @@ class AdminProductsControllerCore extends AdminController
 
 	protected function _removeTaxFromEcotax()
 	{
-		$ecotaxTaxRate = Tax::getProductEcotaxRate();
 		if ($ecotax = Tools::getValue('ecotax'))
-			$_POST['ecotax'] = Tools::ps_round(Tools::getValue('ecotax') / (1 + $ecotaxTaxRate / 100), 6);
+			$_POST['ecotax'] = Tools::ps_round($ecotax / (1 + Tax::getProductEcotaxRate() / 100), 6);
 	}
 
 	protected function _applyTaxToEcotax($product)
 	{
-		$ecotaxTaxRate = Tax::getProductEcotaxRate();
 		if ($product->ecotax)
-			$product->ecotax = Tools::ps_round($product->ecotax * (1 + $ecotaxTaxRate / 100), 2);
+			$product->ecotax = Tools::ps_round($product->ecotax * (1 + Tax::getProductEcotaxRate() / 100), 2);
 	}
 
 	/**
@@ -2169,12 +2167,7 @@ class AdminProductsControllerCore extends AdminController
 		if ((int)Tools::getValue('is_virtual_file') == 1)
 		{
 			if (isset($_FILES['virtual_product_file_uploader']) && $_FILES['virtual_product_file_uploader']['size'] > 0)
-			{
 				$virtual_product_filename = ProductDownload::getNewFilename();
-				$helper = new HelperUploader('virtual_product_file_uploader');
-				$files = $helper->setPostMaxSize(Tools::getOctets(ini_get('upload_max_filesize')))
-					->setSavePath(_PS_DOWNLOAD_DIR_)->upload($_FILES['virtual_product_file_uploader'], $virtual_product_filename);
-			}
 			else
 				$virtual_product_filename = Tools::getValue('virtual_product_filename', ProductDownload::getNewFilename());
 
@@ -2308,8 +2301,6 @@ class AdminProductsControllerCore extends AdminController
 					$this->tab_display = $this->default_tab;
 
 				$advanced_stock_management_active = Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT');
-				$stock_management_active = Configuration::get('PS_STOCK_MANAGEMENT');
-
 				foreach ($this->available_tabs as $product_tab => $value)
 				{
 					// if it's the warehouses tab and advanced stock management is disabled, continue
@@ -3017,7 +3008,7 @@ class AdminProductsControllerCore extends AdminController
 
 		if ($post_accessories = Tools::getValue('inputAccessories'))
 		{
-			$post_accessories_tab = explode('-', Tools::getValue('inputAccessories'));
+			$post_accessories_tab = explode('-', $post_accessories);
 			foreach ($post_accessories_tab as $accessory_id)
 				if (!$this->haveThisAccessory($accessory_id, $accessories) && $accessory = Product::getAccessoryById($accessory_id))
 					$accessories[] = $accessory;
@@ -3342,13 +3333,12 @@ class AdminProductsControllerCore extends AdminController
 
 	protected function _displaySpecificPriceModificationForm($defaultCurrency, $shops, $currencies, $countries, $groups)
 	{
-		$content = '';
 		if (!($obj = $this->loadObject()))
 			return;
+	
+		$content = '';	
 		$specific_prices = SpecificPrice::getByProductId((int)$obj->id);
 		$specific_price_priorities = SpecificPrice::getPriority((int)$obj->id);
-
-		$tax_rate = $obj->getTaxesRate(Address::initialize());
 
 		$tmp = array();
 		foreach ($shops as $shop)
@@ -3706,9 +3696,8 @@ class AdminProductsControllerCore extends AdminController
 		$product_download = new ProductDownload();
 		if ($id_product_download = $product_download->getIdFromIdProduct($this->getFieldValue($product, 'id')))
 			$product_download = new ProductDownload($id_product_download);
-		$product->{'productDownload'} = $product_download;
 
-		$cache_default_attribute = (int)$this->getFieldValue($product, 'cache_default_attribute');
+		$product->{'productDownload'} = $product_download;
 
 		$product_props = array();
 		// global informations
@@ -4154,7 +4143,6 @@ class AdminProductsControllerCore extends AdminController
 				}
 			}
 
-			$irow = 0;
 			if (isset($comb_array))
 			{
 				foreach ($comb_array as $id_product_attribute => $product_attribute)
@@ -4778,7 +4766,6 @@ class AdminProductsControllerCore extends AdminController
 		{
 			if ($id_product = (int)Tools::getValue('id_product'))
 			{
-				$id_tab_catalog = (int)(Tab::getIdFromClassName('AdminProducts'));
 				$bo_product_url = dirname($_SERVER['PHP_SELF']).'/index.php?tab=AdminProducts&id_product='.$id_product.'&updateproduct&token='.$this->token;
 
 				if (Tools::getValue('redirect'))
