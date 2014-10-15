@@ -747,10 +747,10 @@ class ProductCore extends ObjectModel
 		return $result;
 	}
 
-	public static function updateIsVirtual($id_product)
+	public static function updateIsVirtual($id_product, $is_virtual = true)
 	{
 		Db::getInstance()->update('product', array(
-			'is_virtual' => (int)$id_product,
+			'is_virtual' => (bool)$is_virtual,
 		), 'id_product = '.(int)$id_product);
 	}
 
