@@ -311,7 +311,6 @@ class AdminImportControllerCore extends AdminController
 					'customizable' => 0,
 					'uploadable_files' => 0,
 					'text_fields' => 0,
-					'out_of_stock' => '2',
 					'advanced_stock_management' => 0,
 					'depends_on_stock' => 0,
 				);
@@ -1031,11 +1030,10 @@ class AdminImportControllerCore extends AdminController
 		{
 			$query_parts = array();
 			parse_str($parced_url['query'], $query_parts);
-			if (!function_exists('http_build_url'))
-				require_once(_PS_TOOL_DIR_.'http_build_query/http_build_query.php');
 			$parced_url['query'] = http_build_query($query_parts);
 		}
-
+		if (!function_exists('http_build_url'))
+			require_once(_PS_TOOL_DIR_.'http_build_url/http_build_url.php');
 		$url = http_build_url('', $parced_url);
 
 		// Evaluate the memory required to resize the image: if it's too much, you can't resize it.
@@ -1534,6 +1532,7 @@ class AdminImportControllerCore extends AdminController
 				}
 				// If no id_product or update failed
 				$product->force_id = (bool)Tools::getValue('forceIDs');
+
 				if (!$res)
 				{
 					if (isset($product->date_add) && $product->date_add != '')
@@ -1541,6 +1540,12 @@ class AdminImportControllerCore extends AdminController
 					else
 						$res = $product->add();
 				}
+
+			if ($product->getType() == Product::PTYPE_VIRTUAL)
+				StockAvailable::setProductOutOfStock((int)$product->id, 1);
+			else
+				StockAvailable::setProductOutOfStock((int)$product->id, (int)$product->out_of_stock);
+
 			}
 
 			$shops = array();

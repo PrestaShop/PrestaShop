@@ -133,7 +133,7 @@ class AdminSearchConfControllerCore extends AdminController
 						'cast' => 'intval',
 						'type' => 'bool',
 						'hint' => array(
-							$this->l('Enable searching in whole word rather than onmly from begining'),
+							$this->l('Enable searching in whole word rather than only from begining of the word.'),
 							$this->l('The search word will be looked into whole indexed word, this may however be ressources consuming.')
 						)
 					),

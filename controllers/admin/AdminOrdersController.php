@@ -1046,7 +1046,7 @@ class AdminOrdersControllerCore extends AdminController
 				$cart = new Cart((int)$id_cart);
 				Context::getContext()->currency = new Currency((int)$cart->id_currency);
 				Context::getContext()->customer = new Customer((int)$cart->id_customer);
-				
+
 				$bad_delivery = false;
 				if (($bad_delivery = (bool)!Address::isCountryActiveById((int)$cart->id_address_delivery))
 					|| !Address::isCountryActiveById((int)$cart->id_address_invoice))
@@ -1586,8 +1586,15 @@ class AdminOrdersControllerCore extends AdminController
 		// products current stock (from stock_available)
 		foreach ($products as &$product)
 		{
-			$product['current_stock'] = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], $product['id_shop']);
+			// Get total customized quantity for current product
+			$customized_product_quantity = 0;
 
+			foreach ($product['customizedDatas'] as $customizationPerAddress)
+				foreach ($customizationPerAddress as $customizationId => $customization)
+					$customized_product_quantity += (int)$customization['quantity'];
+
+			$product['customized_product_quantity'] = $customized_product_quantity;
+			$product['current_stock'] = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], $product['id_shop']);
 			$resume = OrderSlip::getProductSlipResume($product['id_order_detail']);
 			$product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
 			$product['amount_refundable'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
