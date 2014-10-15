@@ -1054,6 +1054,7 @@ class AdminProductsControllerCore extends AdminController
 		$price = Tools::getValue('leave_bprice') ? '-1' : Tools::getValue('sp_price');
 		$from_quantity = Tools::getValue('sp_from_quantity');
 		$reduction = (float)(Tools::getValue('sp_reduction'));
+		$reduction_tax = Tools::getValue('sp_reduction_tax');
 		$reduction_type = !$reduction ? 'amount' : Tools::getValue('sp_reduction_type');
 		$from = Tools::getValue('sp_from');
 		if (!$from)
@@ -1077,6 +1078,7 @@ class AdminProductsControllerCore extends AdminController
 			$specificPrice->price = (float)($price);
 			$specificPrice->from_quantity = (int)($from_quantity);
 			$specificPrice->reduction = (float)($reduction_type == 'percentage' ? $reduction / 100 : $reduction);
+			$specificPrice->reduction_tax = $reduction_tax;
 			$specificPrice->reduction_type = $reduction_type;
 			$specificPrice->from = $from;
 			$specificPrice->to = $to;
@@ -3383,7 +3385,13 @@ class AdminProductsControllerCore extends AdminController
 				if ($specific_price['reduction_type'] == 'percentage')
 					$impact = '- '.($specific_price['reduction'] * 100).' %';
 				elseif ($specific_price['reduction'] > 0)
-					$impact = '- '.Tools::displayPrice(Tools::ps_round($specific_price['reduction'], 2), $current_specific_currency);
+				{
+					$impact = '- '.Tools::displayPrice(Tools::ps_round($specific_price['reduction'], 2), $current_specific_currency).' ';
+					if ($specific_price['reduction_tax'])
+						$impact .= '('.$this->l('Tax incl.').')';
+					else
+						$impact .= '('.$this->l('Tax excl.').')';
+				}
 				else
 					$impact = '--';
 
