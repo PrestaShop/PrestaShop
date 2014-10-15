@@ -1931,9 +1931,8 @@ class AdminProductsControllerCore extends AdminController
 							$this->processCustomizationConfiguration();
 						if ($this->isTabSubmitted('Attachments'))
 							$this->processAttachments();
-						if($this->isTabSubmitted('Images')){
-						   $this->processImageLegends();
-						}
+						if ($this->isTabSubmitted('Images'))
+							$this->processImageLegends();
 
 						$this->updatePackItems($object);
 						// Disallow avanced stock management if the product become a pack
@@ -3338,8 +3337,8 @@ class AdminProductsControllerCore extends AdminController
 	{
 		if (!($obj = $this->loadObject()))
 			return;
-	
-		$content = '';	
+
+		$content = '';
 		$specific_prices = SpecificPrice::getByProductId((int)$obj->id);
 		$specific_price_priorities = SpecificPrice::getPriority((int)$obj->id);
 
@@ -4787,32 +4786,17 @@ class AdminProductsControllerCore extends AdminController
 			}
 		}
 	}
-	
+
 	public function processImageLegends()
 	{
- 
 		if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
 		{
- 
-			// add new objects
 			$languages = Language::getLanguages(false);
 			foreach ($_POST as $key => $val)
-			{
 				if (preg_match('/^legend_([0-9]+)/i', $key, $match))
-				{
-                                        
-                                        foreach ($languages as $language)
-                                        {
-                                            if($val && $language['id_lang'] == $match[1]){
-                                                
-                                                Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_lang SET legend = "'.pSQL($val).'" WHERE id_image IN '
-                                                        . '(SELECT id_image FROM '._DB_PREFIX_.'image WHERE id_product = '.$product->id.') AND id_lang = '.$language['id_lang']);
-                                            }
-                                        }
-                                    
-                                        
-				}
-			}
+					foreach ($languages as $language)
+						if ($val && $language['id_lang'] == $match[1])
+							Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_lang SET legend = "'.pSQL($val).'" WHERE id_image IN (SELECT id_image FROM '._DB_PREFIX_.'image WHERE id_product = '.(int)$product->id.') AND id_lang = '.(int)$language['id_lang']);
 		}
 	}
 }
