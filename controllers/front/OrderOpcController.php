@@ -155,7 +155,7 @@ class OrderOpcControllerCore extends ParentOrderController
 
 								// Wrapping fees
 								$wrapping_fees = $this->context->cart->getGiftWrappingPrice(false);
-								$wrapping_fees_tax_inc = $wrapping_fees = $this->context->cart->getGiftWrappingPrice();
+								$wrapping_fees_tax_inc = $this->context->cart->getGiftWrappingPrice();
 								$return = array_merge(array(
 									'order_opc_adress' => $this->context->smarty->fetch(_PS_THEME_DIR_.'order-address.tpl'),
 									'block_user_info' => (isset($blockUserInfo) ? $blockUserInfo->hookDisplayTop(array()) : ''),
@@ -244,7 +244,7 @@ class OrderOpcControllerCore extends ParentOrderController
 										$result = $this->_getCarrierList();
 										// Wrapping fees
 										$wrapping_fees = $this->context->cart->getGiftWrappingPrice(false);
-										$wrapping_fees_tax_inc = $wrapping_fees = $this->context->cart->getGiftWrappingPrice();
+										$wrapping_fees_tax_inc = $this->context->cart->getGiftWrappingPrice();
 										$result = array_merge($result, array(
 											'HOOK_TOP_PAYMENT' => Hook::exec('displayPaymentTop'),
 											'HOOK_PAYMENT' => $this->_getPaymentMethods(),
@@ -578,7 +578,7 @@ class OrderOpcControllerCore extends ParentOrderController
 		$delivery_option = $this->context->cart->getDeliveryOption(null, false, false);
 
 		$wrapping_fees = $this->context->cart->getGiftWrappingPrice(false);
-		$wrapping_fees_tax_inc = $wrapping_fees = $this->context->cart->getGiftWrappingPrice();
+		$wrapping_fees_tax_inc = $this->context->cart->getGiftWrappingPrice();
 		$oldMessage = Message::getMessageByCartId((int)($this->context->cart->id));
 
 		$free_shipping = false;

@@ -82,6 +82,15 @@ class PackCore extends Product
 			$sum += $item->getPrice($price_display_method) * $item->pack_quantity;
 		return $sum;
 	}
+	
+	public static function noPackWholesalePrice($id_product)
+	{
+		$sum = 0;
+		$items = Pack::getItems($id_product, Configuration::get('PS_LANG_DEFAULT'));
+		foreach ($items as $item)
+			$sum += $item->wholesale_price * $item->pack_quantity;
+		return $sum;
+	}
 
 	public static function getItems($id_product, $id_lang)
 	{

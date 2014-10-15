@@ -60,7 +60,7 @@ function includeDatepicker($id, $time = false)
 	Tools::displayAsDeprecated();
 	echo '<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/ui/jquery.ui.core.min.js"></script>';
 	echo '<link type="text/css" rel="stylesheet" href="'.__PS_BASE_URI__.'js/jquery/ui/themes/ui-lightness/jquery.ui.theme.css" />';
-	echo '<link type="text/css" rel="stylesheet" href="'.__PS_BASE_URI__.'js/jquery/ui/themes/ui-lightness/jquery.ui.datepicker.css" />';	
+	echo '<link type="text/css" rel="stylesheet" href="'.__PS_BASE_URI__.'js/jquery/ui/themes/ui-lightness/jquery.ui.datepicker.css" />';
 	$iso = Db::getInstance()->getValue('SELECT iso_code FROM '._DB_PREFIX_.'lang WHERE `id_lang` = '.(int)Context::getContext()->language->id);
 	if ($iso != 'en')
 		echo '<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/ui/i18n/jquery.ui.datepicker-'.Tools::htmlentitiesUTF8($iso).'.js"></script>';
@@ -83,9 +83,6 @@ function includeDatepicker($id, $time = false)
 function rewriteSettingsFile($baseUrls = null, $theme = null, $arrayDB = null)
 {
  	$defines = array();
-	$defines['_MEDIA_SERVER_1_'] = ($baseUrls && isset($baseUrls['_MEDIA_SERVER_1_'])) ? $baseUrls['_MEDIA_SERVER_1_'] : _MEDIA_SERVER_1_;
-	$defines['_MEDIA_SERVER_2_'] = ($baseUrls && isset($baseUrls['_MEDIA_SERVER_2_'])) ? $baseUrls['_MEDIA_SERVER_2_'] : _MEDIA_SERVER_2_;
-	$defines['_MEDIA_SERVER_3_'] = ($baseUrls && isset($baseUrls['_MEDIA_SERVER_3_'])) ? $baseUrls['_MEDIA_SERVER_3_'] : _MEDIA_SERVER_3_;
 	$defines['_PS_CACHING_SYSTEM_'] = _PS_CACHING_SYSTEM_;
 	$defines['_PS_CACHE_ENABLED_'] = _PS_CACHE_ENABLED_;
 	$defines['_DB_NAME_'] = (($arrayDB && isset($arrayDB['_DB_NAME_'])) ? $arrayDB['_DB_NAME_'] : _DB_NAME_);
@@ -97,7 +94,7 @@ function rewriteSettingsFile($baseUrls = null, $theme = null, $arrayDB = null)
 	$defines['_COOKIE_KEY_'] = addslashes(_COOKIE_KEY_);
 	$defines['_COOKIE_IV_'] = addslashes(_COOKIE_IV_);
 	$defines['_PS_CREATION_DATE_'] = addslashes(_PS_CREATION_DATE_);
-	
+
 	if (defined('_RIJNDAEL_KEY_'))
 		$defines['_RIJNDAEL_KEY_'] = addslashes(_RIJNDAEL_KEY_);
 	if (defined('_RIJNDAEL_IV_'))
@@ -239,7 +236,7 @@ function checkPSVersion()
 function translate($string)
 {
 	Tools::displayAsDeprecated();
-	
+
 	global $_LANGADM;
 	if (!is_array($_LANGADM))
 		return str_replace('"', '&quot;', $string);

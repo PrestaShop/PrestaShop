@@ -11,3 +11,5 @@ INSERT IGNORE INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_up
 SET NAMES 'utf8';
 
 ALTER TABLE  `PREFIX_module_access` ADD  `uninstall` TINYINT( 1 ) NOT NULL AFTER  `configure`;
+
+/* PHP:p16011_media_server(); */;
