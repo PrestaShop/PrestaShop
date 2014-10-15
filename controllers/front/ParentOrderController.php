@@ -529,7 +529,7 @@ class ParentOrderControllerCore extends FrontController
 	{
 		// Wrapping fees
 		$wrapping_fees = $this->context->cart->getGiftWrappingPrice(false);
-		$wrapping_fees_tax_inc = $wrapping_fees = $this->context->cart->getGiftWrappingPrice();
+		$wrapping_fees_tax_inc = $this->context->cart->getGiftWrappingPrice();
 
 		// TOS
 		$cms = new CMS(Configuration::get('PS_CONDITIONS_CMS_ID'), $this->context->language->id);
