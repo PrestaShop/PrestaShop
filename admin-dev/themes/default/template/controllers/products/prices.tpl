@@ -280,7 +280,7 @@ $(document).ready(function () {
 	<script type="text/javascript">
 		var product_prices = new Array();
 		{foreach from=$combinations item='combination'}
-			product_prices['{$combination.id_product_attribute}'] = '{$combination.price|@addcslashes:'\''}';
+			product_prices['{$combination.id_product_attribute}'] = "{$combination.price|@addcslashes:'\''}";
 		{/foreach}
 	</script>
 	<div id="add_specific_price" class="well clearfix" style="display: none;">
@@ -409,8 +409,14 @@ $(document).ready(function () {
 				<label class="control-label col-lg-2" for="sp_reduction">{l s='Apply a discount of'}</label>
 				<div class="col-lg-4">
 					<div class="row">
-						<div class="col-lg-6">
+						<div class="col-lg-3">
 							<input type="text" name="sp_reduction" id="sp_reduction" value="0.00"/>
+						</div>
+						<div class="col-lg-3">
+							<select name="sp_reduction_tax" id="sp_reduction_tax">
+								<option value="0">{l s='Tax excluded'}</option>
+								<option value="1" selected="selected">{l s='Tax included'}</option>
+							</select>
 						</div>
 						<div class="col-lg-6">
 							<select name="sp_reduction_type" id="sp_reduction_type">
@@ -421,7 +427,6 @@ $(document).ready(function () {
 						</div>
 					</div>
 				</div>
-				<p class="help-block">{l s='The discount is applied after the tax'}</p>
 			</div>
 		</div>
 	</div>
