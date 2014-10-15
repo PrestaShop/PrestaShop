@@ -280,7 +280,7 @@ if (typeof(contentOnly) != 'undefined' && contentOnly)
 		var data = productUrl.replace(/[\?|&]content_only=1/, '');
 
 		if (window.parent.page_name == 'search')
-			data = data + ((data.indexOf('?') < 0) ? '?' : '&') + 'HTTP_REFERER=' + encodeURIComponent(window.parent.document.location.href);
+			data += ((data.indexOf('?') < 0) ? '?' : '&') + 'HTTP_REFERER=' + encodeURIComponent(window.parent.document.location.href);
 
 		window.parent.document.location.href = data;
 		return;
