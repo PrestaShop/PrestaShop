@@ -307,5 +307,8 @@
     <hook id="displayOverrideTemplate" live_edit="0">
       <name>displayOverrideTemplate</name><title>Change the default template of current controller</title><description></description>
     </hook>
+   <hook id="actionProductListModifier" live_edit="0">
+      <name>actionProductListModifier</name><title>Modify products list for category</title><description>This hook assigns a products list to a category</description>
+    </hook>
   </entities>
 </entity_hook>
