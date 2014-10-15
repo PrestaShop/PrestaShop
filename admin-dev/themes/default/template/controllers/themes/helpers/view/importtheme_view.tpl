@@ -24,7 +24,7 @@
 *}
 <div class="panel">
     <h3>
-        <i class="icon-picture"></i>{$add_new_theme_label}
+        <i class="icon-picture"></i> {$add_new_theme_label}
     </h3>
     <a class="btn btn-default" href="{$add_new_theme_href}"><i class="icon-plus"></i> {$add_new_theme_label}</a>
 </div>
