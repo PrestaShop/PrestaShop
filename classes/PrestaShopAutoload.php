@@ -106,7 +106,7 @@ class PrestaShopAutoload
 			// If requested class does not exist, load associated core class
 			if (isset($this->index[$classname]) && !$this->index[$classname]['path'])
 			{
-				require($class_dir.$this->index[$classname.'Core']['path']);
+				require_once($class_dir.$this->index[$classname.'Core']['path']);
 
 				if ($this->index[$classname.'Core']['type'] != 'interface')
 					eval($this->index[$classname.'Core']['type'].' '.$classname.' extends '.$classname.'Core {}');
@@ -123,7 +123,7 @@ class PrestaShopAutoload
 		}
 		// Call directly ProductCore, ShopCore class
 		elseif (isset($this->index[$classname]['path']) && $this->index[$classname]['path'])
-			require($this->root_dir.$this->index[$classname]['path']);
+			require_once($this->root_dir.$this->index[$classname]['path']);
 	}
 
 	/**
