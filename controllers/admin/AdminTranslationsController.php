@@ -1208,7 +1208,7 @@ class AdminTranslationsControllerCore extends AdminController
 						$regex = '/->l\((\')'._PS_TRANS_PATTERN_.'\'(, ?\'(.+)\')?(, ?(.+))?\)/U';
 					else
 						// In tpl file look for something that should contain mod='module_name' according to the documentation
-						$regex = '/\{l\s*s=([\'\"])'._PS_TRANS_PATTERN_.'\1.*\s+mod=\''.$module_name.'\'.*\}/U';
+						$regex = '/\{l\s*s=([\'\"])'._PS_TRANS_PATTERN_.'\1.*\s+mod=([\'\"])'.$module_name.'([\'\"]).*\}/U';
 				break;
 
 			case 'pdf':
