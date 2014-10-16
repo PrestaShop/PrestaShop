@@ -13,5 +13,6 @@ SET NAMES 'utf8';
 ALTER TABLE  `PREFIX_module_access` ADD  `uninstall` TINYINT( 1 ) NOT NULL AFTER  `configure`;
 
 ALTER TABLE  `PREFIX_specific_price` ADD  `reduction_tax` TINYINT( 1 ) NOT NULL DEFAULT 1 AFTER  `reduction`;
+ALTER TABLE  `PREFIX_specific_price_rule` ADD  `reduction_tax` TINYINT( 1 ) NOT NULL DEFAULT 1 AFTER  `reduction`;
 
 /* PHP:p16011_media_server(); */;
