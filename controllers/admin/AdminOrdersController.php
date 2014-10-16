@@ -1589,9 +1589,10 @@ class AdminOrdersControllerCore extends AdminController
 			// Get total customized quantity for current product
 			$customized_product_quantity = 0;
 
-			foreach ($product['customizedDatas'] as $customizationPerAddress)
-				foreach ($customizationPerAddress as $customizationId => $customization)
-					$customized_product_quantity += (int)$customization['quantity'];
+			if (is_array($product['customizedDatas']))
+				foreach ($product['customizedDatas'] as $customizationPerAddress)
+					foreach ($customizationPerAddress as $customizationId => $customization)
+						$customized_product_quantity += (int)$customization['quantity'];
 
 			$product['customized_product_quantity'] = $customized_product_quantity;
 			$product['current_stock'] = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], $product['id_shop']);
