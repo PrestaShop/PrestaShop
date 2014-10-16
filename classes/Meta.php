@@ -321,7 +321,7 @@ class MetaCore extends ObjectModel
 					AND ml.id_manufacturer = '.(int)$id_manufacturer;
 		if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql))
 		{
-			if (empty($row['meta_description']))
+			if (!empty($row['meta_description']))
 				$row['meta_description'] = strip_tags($row['meta_description']);
 			$row['meta_title'] = ($row['meta_title'] ? $row['meta_title'] : $row['name']).(!empty($page_number) ? ' ('.$page_number.')' : '');
 			$row['meta_title'] .= ' - '.Configuration::get('PS_SHOP_NAME');
@@ -349,7 +349,7 @@ class MetaCore extends ObjectModel
 					AND sl.id_supplier = '.(int)$id_supplier;
 		if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql))
 		{
-			if (empty($row['meta_description']))
+			if (!empty($row['meta_description']))
 				$row['meta_description'] = strip_tags($row['meta_description']);
 			if (!empty($row['meta_title']))
 				$row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');
