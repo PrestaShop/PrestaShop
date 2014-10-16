@@ -2167,7 +2167,12 @@ class AdminProductsControllerCore extends AdminController
 		if ((int)Tools::getValue('is_virtual_file') == 1)
 		{
 			if (isset($_FILES['virtual_product_file_uploader']) && $_FILES['virtual_product_file_uploader']['size'] > 0)
+			{
 				$virtual_product_filename = ProductDownload::getNewFilename();
+				$helper = new HelperUploader('virtual_product_file_uploader');
+				$helper->setPostMaxSize(Tools::getOctets(ini_get('upload_max_filesize')))
+					->setSavePath(_PS_DOWNLOAD_DIR_)->upload($_FILES['virtual_product_file_uploader'], $virtual_product_filename);
+			}
 			else
 				$virtual_product_filename = Tools::getValue('virtual_product_filename', ProductDownload::getNewFilename());
 
@@ -3336,8 +3341,8 @@ class AdminProductsControllerCore extends AdminController
 	{
 		if (!($obj = $this->loadObject()))
 			return;
-	
-		$content = '';	
+
+		$content = '';
 		$specific_prices = SpecificPrice::getByProductId((int)$obj->id);
 		$specific_price_priorities = SpecificPrice::getPriority((int)$obj->id);
 
