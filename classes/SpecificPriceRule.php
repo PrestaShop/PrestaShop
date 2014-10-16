@@ -34,6 +34,7 @@ class SpecificPriceRuleCore extends ObjectModel
 	public	$from_quantity;
 	public	$price;
 	public	$reduction;
+	public	$reduction_tax;
 	public	$reduction_type;
 	public	$from;
 	public	$to;
@@ -55,6 +56,7 @@ class SpecificPriceRuleCore extends ObjectModel
 			'from_quantity' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
 			'price' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isNegativePrice', 'required' => true),
 			'reduction' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
+			'reduction_tax' => 			array('type' => self::TYPE_INT, 'validate' => 'isBool', 'required' => true),
 			'reduction_type' => array('type' => self::TYPE_STRING, 'validate' => 'isReductionType', 'required' => true),
 			'from' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat', 'required' => false),
 			'to' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat', 'required' => false),
@@ -303,6 +305,7 @@ class SpecificPriceRuleCore extends ObjectModel
 		$specific_price->from_quantity = (int)$rule->from_quantity;
 		$specific_price->price = (float)$rule->price;
 		$specific_price->reduction_type = $rule->reduction_type;
+		$specific_price->reduction_tax = $rule->reduction_tax;
 		$specific_price->reduction = ($rule->reduction_type == 'percentage' ? $rule->reduction / 100 : (float)$rule->reduction);
 		$specific_price->from = $rule->from;
 		$specific_price->to = $rule->to;
