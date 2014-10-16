@@ -1054,6 +1054,7 @@ class AdminProductsControllerCore extends AdminController
 		$price = Tools::getValue('leave_bprice') ? '-1' : Tools::getValue('sp_price');
 		$from_quantity = Tools::getValue('sp_from_quantity');
 		$reduction = (float)(Tools::getValue('sp_reduction'));
+		$reduction_tax = Tools::getValue('sp_reduction_tax');
 		$reduction_type = !$reduction ? 'amount' : Tools::getValue('sp_reduction_type');
 		$from = Tools::getValue('sp_from');
 		if (!$from)
@@ -1077,6 +1078,7 @@ class AdminProductsControllerCore extends AdminController
 			$specificPrice->price = (float)($price);
 			$specificPrice->from_quantity = (int)($from_quantity);
 			$specificPrice->reduction = (float)($reduction_type == 'percentage' ? $reduction / 100 : $reduction);
+			$specificPrice->reduction_tax = $reduction_tax;
 			$specificPrice->reduction_type = $reduction_type;
 			$specificPrice->from = $from;
 			$specificPrice->to = $to;
@@ -1931,7 +1933,8 @@ class AdminProductsControllerCore extends AdminController
 							$this->processCustomizationConfiguration();
 						if ($this->isTabSubmitted('Attachments'))
 							$this->processAttachments();
-
+						if ($this->isTabSubmitted('Images'))
+							$this->processImageLegends();
 
 						$this->updatePackItems($object);
 						// Disallow avanced stock management if the product become a pack
@@ -3379,7 +3382,13 @@ class AdminProductsControllerCore extends AdminController
 				if ($specific_price['reduction_type'] == 'percentage')
 					$impact = '- '.($specific_price['reduction'] * 100).' %';
 				elseif ($specific_price['reduction'] > 0)
-					$impact = '- '.Tools::displayPrice(Tools::ps_round($specific_price['reduction'], 2), $current_specific_currency);
+				{
+					$impact = '- '.Tools::displayPrice(Tools::ps_round($specific_price['reduction'], 2), $current_specific_currency).' ';
+					if ($specific_price['reduction_tax'])
+						$impact .= '('.$this->l('Tax incl.').')';
+					else
+						$impact .= '('.$this->l('Tax excl.').')';
+				}
 				else
 					$impact = '--';
 
@@ -4788,6 +4797,19 @@ class AdminProductsControllerCore extends AdminController
 					else
 						die('error: saving');
 			}
+		}
+	}
+
+	public function processImageLegends()
+	{
+		if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
+		{
+			$languages = Language::getLanguages(false);
+			foreach ($_POST as $key => $val)
+				if (preg_match('/^legend_([0-9]+)/i', $key, $match))
+					foreach ($languages as $language)
+						if ($val && $language['id_lang'] == $match[1])
+							Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_lang SET legend = "'.pSQL($val).'" WHERE id_image IN (SELECT id_image FROM '._DB_PREFIX_.'image WHERE id_product = '.(int)$product->id.') AND id_lang = '.(int)$language['id_lang']);
 		}
 	}
 }

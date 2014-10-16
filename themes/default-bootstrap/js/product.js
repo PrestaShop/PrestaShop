@@ -627,6 +627,25 @@ function updatePrice()
 	priceWithGroupReductionWithoutTax = basePriceWithoutTax * (1 - group_reduction);
 	var priceWithDiscountsWithoutTax = priceWithGroupReductionWithoutTax;
 
+	// Apply specific price (discount)
+	// We only apply percentage discount and discount amount given before tax
+	// Specific price give after tax will be handled after taxes are added
+	if (combination.specific_price && combination.specific_price.reduction > 0)
+	{
+		if (combination.specific_price.reduction_type == 'amount')
+		{
+			if (typeof combination.specific_price.reduction_tax !== 'undefined' && combination.specific_price.reduction_tax === "0")
+			{
+				var reduction = +combination.specific_price.reduction / currencyRate;
+				priceWithDiscountsWithoutTax -= reduction;
+			}
+		}
+		else if (combination.specific_price.reduction_type == 'percentage')
+		{
+			priceWithDiscountsWithoutTax = priceWithDiscountsWithoutTax * (1 - parseFloat(combination.specific_price.reduction));
+		}
+	}
+
 	// Apply Tax if necessary
 	if (noTaxForThisProduct || customerGroupWithoutTax)
 	{
@@ -647,22 +666,21 @@ function updatePrice()
 		priceWithDiscountsDisplay = priceWithDiscountsDisplay + default_eco_tax * (1 + ecotaxTax_rate / 100);
 	}
 
-	// Apply specific price (discount)
-	// Note: Reduction amounts are given after tax
+	// If the specific price was given after tax, we apply it now
 	if (combination.specific_price && combination.specific_price.reduction > 0)
+	{
 		if (combination.specific_price.reduction_type == 'amount')
 		{
-			var reduction = parseFloat(combination.specific_price.reduction) / currencyRate;
-			priceWithDiscountsDisplay = priceWithDiscountsDisplay - reduction;
-			// We recalculate the price without tax in order to keep the data consistency
-			priceWithDiscountsWithoutTax = priceWithDiscountsDisplay * ( 1/(1+taxRate) / 100 );
+			if (typeof combination.specific_price.reduction_tax === 'undefined' 
+				|| (typeof combination.specific_price.reduction_tax !== 'undefined' && combination.specific_price.reduction_tax === '1'))
+			{
+				var reduction = +combination.specific_price.reduction / currencyRate;
+				priceWithDiscountsDisplay -= reduction;
+				// We recalculate the price without tax in order to keep the data consistency
+				priceWithDiscountsWithoutTax = priceWithDiscountsDisplay - reduction * ( 1/(1+taxRate/100) );
+			}
 		}
-		else if (combination.specific_price.reduction_type == 'percentage')
-		{
-			priceWithDiscountsDisplay = priceWithDiscountsDisplay * (1 - parseFloat(combination.specific_price.reduction));
-			// We recalculate the price without tax in order to keep the data consistency
-			priceWithDiscountsWithoutTax = priceWithDiscountsDisplay * ( 1/(1+taxRate) / 100 );
-		}
+	}
 
 	// Compute discount value and percentage
 	// Done just before display update so we have final prices
