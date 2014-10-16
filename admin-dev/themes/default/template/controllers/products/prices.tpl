@@ -118,11 +118,13 @@ $(document).ready(function () {
 		<label class="control-label col-lg-2" for="wholesale_price">
 			<span class="label-tooltip" data-toggle="tooltip" title="{l s='The wholesale price is the price you paid for the product. Do not include the tax.'}">{if !$country_display_tax_label || $tax_exclude_taxe_option}{l s='Wholesale price'}{else}{l s='Pre-tax wholesale price'}{/if}</span>
 		</label>
-		<div class="input-group col-lg-2">
-			<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
-			<input maxlength="27" name="wholesale_price" id="wholesale_price" type="text" value="{{toolsConvertPrice price=$product->wholesale_price}|string_format:$priceDisplayPrecisionFormat}" onchange="this.value = this.value.replace(/,/g, '.');" />
+		<div class="col-lg-2">
+			<div class="input-group">
+				<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
+				<input maxlength="27" name="wholesale_price" id="wholesale_price" type="text" value="{{toolsConvertPrice price=$product->wholesale_price}|string_format:$priceDisplayPrecisionFormat}" onchange="this.value = this.value.replace(/,/g, '.');" />
+			</div>
+			{if $pack->isPack($product->id)}<p class="help-block">{l s='The sum of wholesale prices of the products in the pack is %s%s%s' sprintf=[$currency->prefix,{toolsConvertPrice price=$pack->noPackWholesalePrice($product->id)|string_format:$priceDisplayPrecisionFormat},$currency->suffix]}</p>{/if}
 		</div>
-		{if $pack->isPack($product->id)}<p class="help-block">{l s='The sum of wholesale prices of the products in the pack is %s%s%s' sprintf=[$currency->prefix,{toolsConvertPrice price=$pack->noPackWholesalePrice($product->id)|string_format:$priceDisplayPrecisionFormat},$currency->suffix]}</p>{/if}
 	</div>
 	<div class="form-group">
 		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="price" type="price"}</span></div>
@@ -136,7 +138,7 @@ $(document).ready(function () {
 		</div>
 	</div>
 	<div class="form-group">
-		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="id_tax_rules_group" type="default"}</span></div>		
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="id_tax_rules_group" type="default"}</span></div>
 		<label class="control-label col-lg-2" for="id_tax_rules_group">
 			{l s='Tax rule:'}
 		</label>
@@ -180,7 +182,7 @@ $(document).ready(function () {
 	</div>
 	{/if}
 	<div class="form-group" {if !$ps_use_ecotax} style="display:none;"{/if}>
-		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="ecotax" type="default"}</span></div>	
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="ecotax" type="default"}</span></div>
 		<label class="control-label col-lg-2" for="ecotax">
 			<span class="label-tooltip" data-toggle="tooltip" title="{l s='The ecotax is a local set of taxes intended to "promote ecologically sustainable activities via economic incentives". It is already included in retail price: the higher this ecotax is, the lower your margin will be.'}">{l s='Ecotax (tax incl.)'}</span>
 		</label>
@@ -200,7 +202,7 @@ $(document).ready(function () {
 	</div>
 
 	<div class="form-group">
-		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="unit_price" type="unit_price"}</span></div>	
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="unit_price" type="unit_price"}</span></div>
 		<label class="control-label col-lg-2" for="unit_price">
 			<span class="label-tooltip" data-toggle="tooltip" title="{l s='When selling a pack of items, you can indicate the unit price for each item of the pack. For instance, "per bottle" or "per pound".'}">{l s='Unit price'}</span>
 		</label>
@@ -411,8 +413,14 @@ $(document).ready(function () {
 				<label class="control-label col-lg-2" for="sp_reduction">{l s='Apply a discount of'}</label>
 				<div class="col-lg-4">
 					<div class="row">
-						<div class="col-lg-6">
+						<div class="col-lg-3">
 							<input type="text" name="sp_reduction" id="sp_reduction" value="0.00"/>
+						</div>
+						<div class="col-lg-3">
+							<select name="sp_reduction_tax" id="sp_reduction_tax">
+								<option value="0">{l s='Tax excluded'}</option>
+								<option value="1" selected="selected">{l s='Tax included'}</option>
+							</select>
 						</div>
 						<div class="col-lg-6">
 							<select name="sp_reduction_type" id="sp_reduction_type">
@@ -423,7 +431,6 @@ $(document).ready(function () {
 						</div>
 					</div>
 				</div>
-				<p class="help-block">{l s='The discount is applied after the tax'}</p>
 			</div>
 		</div>
 	</div>
