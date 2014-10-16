@@ -284,7 +284,7 @@ $(document).ready(function () {
 	<script type="text/javascript">
 		var product_prices = new Array();
 		{foreach from=$combinations item='combination'}
-			product_prices['{$combination.id_product_attribute}'] = "{$combination.price|@addcslashes:'\''}";
+			product_prices['{$combination.id_product_attribute}'] = '{$combination.price|@addcslashes:'\''}';
 		{/foreach}
 	</script>
 	<div id="add_specific_price" class="well clearfix" style="display: none;">
