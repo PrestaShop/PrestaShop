@@ -39,6 +39,7 @@ class SpecificPriceCore extends ObjectModel
 	public	$price;
 	public	$from_quantity;
 	public	$reduction;
+	public	$reduction_tax;
 	public	$reduction_type;
 	public	$from;
 	public	$to;
@@ -63,6 +64,7 @@ class SpecificPriceCore extends ObjectModel
 			'price' => 					array('type' => self::TYPE_FLOAT, 'validate' => 'isNegativePrice', 'required' => true),
 			'from_quantity' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
 			'reduction' => 				array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
+			'reduction_tax' => 			array('type' => self::TYPE_INT, 'validate' => 'isBool', 'required' => true),
 			'reduction_type' => 		array('type' => self::TYPE_STRING, 'validate' => 'isReductionType', 'required' => true),
 			'from' => 					array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat', 'required' => true),
 			'to' => 					array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat', 'required' => true),

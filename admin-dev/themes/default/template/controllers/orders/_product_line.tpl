@@ -30,7 +30,7 @@
 	{assign var=product_price value=$product['unit_price_tax_incl']}
 {/if}
 
-{if ($product['product_quantity'] > $product['customizationQuantityTotal'])}
+{if ($product['product_quantity'] > $product['customized_product_quantity'])}
 <tr class="product-line-row">
 	<td>{if isset($product.image) && $product.image->id}{$product.image_tag}{/if}</td>
 	<td>
@@ -54,7 +54,7 @@
 					</div>
 				</div>
 				<br/>
-				<div class="fixed-width-xl">				
+				<div class="fixed-width-xl">
 					<div class="input-group">
 						{if $currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax incl.'}</div>{/if}
 						<input type="text" name="product_price_tax_incl" class="edit_product_price_tax_incl edit_product_price" value="{Tools::ps_round($product['unit_price_tax_incl'], 2)}"/>
@@ -66,7 +66,7 @@
 		{/if}
 	</td>
 	<td class="productQuantity text-center">
-		<span class="product_quantity_show{if (int)$product['product_quantity'] > 1} badge{/if}">{$product['product_quantity']}</span>
+		<span class="product_quantity_show{if (int)$product['product_quantity'] - (int)$product['customized_product_quantity'] > 1} badge{/if}">{(int)$product['product_quantity'] - (int)$product['customized_product_quantity']}</span>
 		{if $can_edit}
 		<span class="product_quantity_edit" style="display:none;">
 			<input type="text" name="product_quantity" class="edit_product_quantity" value="{$product['product_quantity']|htmlentities}"/>
@@ -171,9 +171,9 @@
 				({l s='%s refund' sprintf=$product['amount_refund']})
 			{/if}
 			<input type="hidden" value="{$product['quantity_refundable']}" class="partialRefundProductQuantity" />
-			<input type="hidden" value="{$product['amount_refundable']}" class="partialRefundProductAmount" />		
+			<input type="hidden" value="{$product['amount_refundable']}" class="partialRefundProductAmount" />
 		</div>
-	
+
 	</td>
 	{if ($can_edit && !$order->hasBeenDelivered())}
 	<td class="product_invoice" style="display: none;">
