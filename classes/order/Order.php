@@ -993,17 +993,21 @@ class OrderCore extends ObjectModel
 	}
 	
 	/**
+	 * used to cache order customer
+	 */ 
+	protected $cacheCustomer = null;
+	
+	/**
 	 * Get order customer
 	 * 
 	 * @return Customer $customer
 	 */
 	public function getCustomer()
 	{
-		static $customer = null;
-		if (is_null($customer))
-			$customer = new Customer((int)$this->id_customer);
+		if (is_null($this->cacheCustomer))
+			$this->cacheCustomer = new Customer((int)$this->id_customer);
 		
-		return $customer;
+		return $this->cacheCustomer;
 	}
 
 	/**
