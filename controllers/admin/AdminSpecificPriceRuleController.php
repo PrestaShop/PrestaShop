@@ -267,6 +267,20 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 					),
 				),
 				array(
+					'type' => 'select',
+					'label' => $this->l('Reduction with or without taxes'),
+					'name' => 'reduction_tax',
+					'align' => 'center',
+					'options' => array(
+						'query' => array(
+										array('lab' => $this->l('Tax included'), 'val' => 1),
+										array('lab' => $this->l('Tax excluded'), 'val' => 0),
+									),
+						'id' => 'val',
+						'name' => 'lab',
+					)
+				),
+				array(
 					'type' => 'text',
 					'label' => $this->l('Reduction'),
 					'name' => 'reduction',
