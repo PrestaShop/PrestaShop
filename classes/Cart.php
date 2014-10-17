@@ -1556,11 +1556,14 @@ class CartCore extends ObjectModel
 			{
 				if ($id_address === null)
 					$id_address = (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
-				try {
-                    $address[$this->id] = Address::initialize($id_address);
-				} catch (Exception $e) {
-                    $address[$this->id] = new Address();
-                    $address[$this->id]->id_country = Configuration::get('PS_COUNTRY_DEFAULT');
+				try
+				{
+					$address[$this->id] = Address::initialize($id_address);
+				}
+				catch (Exception $e)
+				{
+					$address[$this->id] = new Address();
+					$address[$this->id]->id_country = Configuration::get('PS_COUNTRY_DEFAULT');
 				}
 			}
 
@@ -1581,11 +1584,12 @@ class CartCore extends ObjectModel
 	{
 		static $nb_packages = array();
 
-		if (!isset($nb_packages[$this->id])) {
-            $nb_packages[$this->id] = 0;
-            foreach ($this->getPackageList() as $by_address)
-                $nb_packages[$this->id] += count($by_address);
-        }
+		if (!isset($nb_packages[$this->id]))
+		{
+			$nb_packages[$this->id] = 0;
+			foreach ($this->getPackageList() as $by_address)
+				$nb_packages[$this->id] += count($by_address);
+		}
 
 		return $nb_packages[$this->id];
 	}
@@ -1930,7 +1934,7 @@ class CartCore extends ObjectModel
 				// No carriers available
 				if (count($packages) == 1 && count($package['carrier_list']) == 1 && current($package['carrier_list']) == 0)
 				{
-                    $cache[$this->id] = array();
+					$cache[$this->id] = array();
 					return $cache[$this->id];
 				}
 
@@ -2131,7 +2135,7 @@ class CartCore extends ObjectModel
 		foreach ($delivery_option_list as &$array)
 			uasort ($array, array('Cart', 'sortDeliveryOptionList'));
 
-        $cache[$this->id] = $delivery_option_list;
+		$cache[$this->id] = $delivery_option_list;
 		return $cache[$this->id];
 	}
 
@@ -2287,7 +2291,7 @@ class CartCore extends ObjectModel
 			$sql->from('cart_product', 'cp');
 			$sql->where('id_cart = '.(int)$this->id);
 
-            $cache[$this->id] = Db::getInstance()->getValue($sql) > 1;
+			$cache[$this->id] = Db::getInstance()->getValue($sql) > 1;
 		}
 		return $cache[$this->id];
 	}
