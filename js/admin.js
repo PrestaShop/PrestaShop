@@ -1365,7 +1365,7 @@ function verifyMail(testMsg, testSubject)
 	$("#mailResultCheck").slideDown("slow");
 
 	//local verifications
-	if ($("#testEmail[value=]").length > 0)
+	if (!($("#testEmail").val().length > 0))
 	{
 		$("#mailResultCheck").addClass("alert-danger").removeClass("alert-success").removeClass('userInfos').html(errorMail);
 		return false;
