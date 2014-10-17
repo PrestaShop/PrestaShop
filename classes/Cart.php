@@ -1547,24 +1547,24 @@ class CartCore extends ObjectModel
 	*/
 	public function getGiftWrappingPrice($with_taxes = true, $id_address = null)
 	{
-		static $address = null;
+		static $address = array();
 
 		$wrapping_fees = (float)Configuration::get('PS_GIFT_WRAPPING_PRICE');
 		if ($with_taxes && $wrapping_fees > 0)
 		{
-			if ($address === null)
+			if (!isset($address[$this->id]))
 			{
 				if ($id_address === null)
 					$id_address = (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
 				try {
-					$address = Address::initialize($id_address);
+                    $address[$this->id] = Address::initialize($id_address);
 				} catch (Exception $e) {
-					$address = new Address();
-					$address->id_country = Configuration::get('PS_COUNTRY_DEFAULT');
+                    $address[$this->id] = new Address();
+                    $address[$this->id]->id_country = Configuration::get('PS_COUNTRY_DEFAULT');
 				}
 			}
 
-			$tax_manager = TaxManagerFactory::getManager($address, (int)Configuration::get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'));
+			$tax_manager = TaxManagerFactory::getManager($address[$this->id], (int)Configuration::get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'));
 			$tax_calculator = $tax_manager->getTaxCalculator();
 			$wrapping_fees = $tax_calculator->addTaxes($wrapping_fees);
 		}
@@ -1579,13 +1579,15 @@ class CartCore extends ObjectModel
 	 */
 	public function getNbOfPackages()
 	{
-		static $nb_packages = 0;
+		static $nb_packages = array();
 
-		if (!$nb_packages)
-			foreach ($this->getPackageList() as $by_address)
-				$nb_packages += count($by_address);
+		if (!isset($nb_packages[$this->id])) {
+            $nb_packages[$this->id] = 0;
+            foreach ($this->getPackageList() as $by_address)
+                $nb_packages[$this->id] += count($by_address);
+        }
 
-		return $nb_packages;
+		return $nb_packages[$this->id];
 	}
 
 	/**
@@ -1893,9 +1895,9 @@ class CartCore extends ObjectModel
 	 */
 	public function getDeliveryOptionList(Country $default_country = null, $flush = false)
 	{
-		static $cache = null;
-		if ($cache !== null && !$flush)
-			return $cache;
+		static $cache = array();
+		if (isset($cache[$this->id]) && !$flush)
+			return $cache[$this->id];
 
 		$delivery_option_list = array();
 		$carriers_price = array();
@@ -1928,8 +1930,8 @@ class CartCore extends ObjectModel
 				// No carriers available
 				if (count($packages) == 1 && count($package['carrier_list']) == 1 && current($package['carrier_list']) == 0)
 				{
-					$cache = array();
-					return $cache;
+                    $cache[$this->id] = array();
+					return $cache[$this->id];
 				}
 
 				$carriers_price[$id_address][$id_package] = array();
@@ -2129,8 +2131,8 @@ class CartCore extends ObjectModel
 		foreach ($delivery_option_list as &$array)
 			uasort ($array, array('Cart', 'sortDeliveryOptionList'));
 
-		$cache = $delivery_option_list;
-		return $delivery_option_list;
+        $cache[$this->id] = $delivery_option_list;
+		return $cache[$this->id];
 	}
 
 	/**
@@ -2191,10 +2193,6 @@ class CartCore extends ObjectModel
 	 */
 	public function simulateCarriersOutput(Country $default_country = null, $flush = false)
 	{
-		static $cache = false;
-		if ($cache !== false && !$flush)
-			return $cache;
-
 		$delivery_option_list = $this->getDeliveryOptionList($default_country, $flush);
 
 		// This method cannot work if there is multiple address delivery
@@ -2280,18 +2278,18 @@ class CartCore extends ObjectModel
 	 */
 	public function isMultiAddressDelivery()
 	{
-		static $cache = null;
+		static $cache = array();
 
-		if (is_null($cache))
+		if (!isset($cache[$this->id]))
 		{
 			$sql = new DbQuery();
 			$sql->select('count(distinct id_address_delivery)');
 			$sql->from('cart_product', 'cp');
 			$sql->where('id_cart = '.(int)$this->id);
 
-			$cache = Db::getInstance()->getValue($sql) > 1;
+            $cache[$this->id] = Db::getInstance()->getValue($sql) > 1;
 		}
-		return $cache;
+		return $cache[$this->id];
 	}
 
 	/**
