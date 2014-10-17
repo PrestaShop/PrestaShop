@@ -1206,7 +1206,7 @@ class AdminProductsControllerCore extends AdminController
 			$this->id_object = (int)Tools::getValue('id_product');
 			$this->object = new Product($this->id_object);
 
-			if ($this->object->is_virtual && (int)Tools::getValue('type_product') != 2)
+			if ($this->isTabSubmitted('Informations') && $this->object->is_virtual && (int)Tools::getValue('type_product') != 2)
 			{
 				if ($id_product_download = (int)ProductDownload::getIdFromIdProduct($this->id_object))
 				{
