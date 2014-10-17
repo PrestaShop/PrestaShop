@@ -339,14 +339,13 @@ class AttributeCore extends ObjectModel
 	 */
 	public function cleanPositions($id_attribute_group, $use_last_attribute = true)
 	{
-		$return = true;
-		$sql = 'SET @i = 0;UPDATE `'._DB_PREFIX_.'attribute` SET `position` = @i:=@i+1 WHERE ';
-		
+		$sql = 'SET @i = 0; UPDATE `'._DB_PREFIX_.'attribute` SET `position` = @i:=@i+1 WHERE';
+
 		if ($use_last_attribute)
-			$sql .= ' `id_attribute` != '.(int)$this->id . ' AND ';
-			
-		$sql .= ' `id_attribute_group` = '.(int)$id_attribute_group.' ORDER BY `position` ASC';	
-		
+			$sql .= ' `id_attribute` != '.(int)$this->id.' AND';
+
+		$sql .= ' `id_attribute_group` = '.(int)$id_attribute_group.' ORDER BY `position` ASC';
+
 		$return = Db::getInstance()->execute($sql);
 	}
 
