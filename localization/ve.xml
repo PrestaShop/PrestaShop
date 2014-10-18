@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <localizationPack name="Venezuela" version="1.0">
 	<currencies>
-		<currency name="Bolívar fuerte" iso_code="VEF" iso_code_num="937" sign="Bs" blank="1" conversion_rate="5.84819" format="2" decimals="1" />
+		<currency name="Bolívar fuerte" iso_code="VEF" iso_code_num="937" sign="Bs" blank="1" conversion_rate="49.97000" format="2" decimals="1" />
 	</currencies>
 	<languages>
 		<language iso_code="es" />
@@ -18,6 +18,33 @@
 			<taxRule iso_code_country="ve" id_tax="2" />
 		</taxRulesGroup>
 	</taxes>
+	<states>
+		<state name="Dependencias Federales" iso_code="W" country="VE" zone="South America" />
+		<state name="Distrito Federal" iso_code="A" country="VE" zone="South America" />
+		<state name="Amazonas" iso_code="Z" country="VE" zone="South America" />
+		<state name="Anzoátegui" iso_code="B" country="VE" zone="South America" />
+		<state name="Apure" iso_code="C" country="VE" zone="South America" />
+		<state name="Aragua" iso_code="D" country="VE" zone="South America" />
+		<state name="Barinas" iso_code="E" country="VE" zone="South America" />
+		<state name="Bolívar" iso_code="F" country="VE" zone="South America" />
+		<state name="Carabobo" iso_code="G" country="VE" zone="South America" />
+		<state name="Cojedes" iso_code="H" country="VE" zone="South America" />
+		<state name="Delta Amacuro" iso_code="Y" country="VE" zone="South America" />
+		<state name="Falcón" iso_code="I" country="VE" zone="South America" />
+		<state name="Guárico" iso_code="J" country="VE" zone="South America" />
+		<state name="Lara" iso_code="K" country="VE" zone="South America" />
+		<state name="Mérida" iso_code="L" country="VE" zone="South America" />
+		<state name="Miranda" iso_code="M" country="VE" zone="South America" />
+		<state name="Monagas" iso_code="N" country="VE" zone="South America" />
+		<state name="Nueva Esparta" iso_code="O" country="VE" zone="South America" />
+		<state name="Portuguesa" iso_code="P" country="VE" zone="South America" />
+		<state name="Sucre" iso_code="R" country="VE" zone="South America" />
+		<state name="Táchira" iso_code="S" country="VE" zone="South America" />
+		<state name="Trujillo" iso_code="T" country="VE" zone="South America" />
+		<state name="Vargas" iso_code="X" country="VE" zone="South America" />
+		<state name="Yaracuy" iso_code="U" country="VE" zone="South America" />
+		<state name="Zulia" iso_code="V" country="VE" zone="South America" />
+	</states>
 	<units>
 		<unit type="weight" value="kg" />
 		<unit type="volume" value="L" />
