@@ -225,9 +225,9 @@
 				<tr{if $total_wrapping == 0} style="display: none;"{/if}>
 					<td colspan="3" class="text-right">
 						{if $use_taxes}
-							{if $display_tax_label}{l s='Total gift wrapping (tax incl.):'}{else}{l s='Total gift-wrapping cost:'}{/if}
+							{if $display_tax_label}{l s='Total gift wrapping (tax incl.)'}{else}{l s='Total gift-wrapping cost'}{/if}
 						{else}
-							{l s='Total gift-wrapping cost:'}
+							{l s='Total gift-wrapping cost'}
 						{/if}
 					</td>
 					<td colspan="2" class="price-discount price" id="total_wrapping">
@@ -271,7 +271,7 @@
 					<td colspan="{$col_span_subtotal}" class="text-right">
 						{if $display_tax_label}
 							{if $use_taxes && $priceDisplay == 0}
-								{l s='Total vouchers (tax incl.):'}
+								{l s='Total vouchers (tax incl.)'}
 							{else}
 								{l s='Total vouchers (tax excl.)'}
 							{/if}
