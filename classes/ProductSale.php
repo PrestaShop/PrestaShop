@@ -72,30 +72,8 @@ class ProductSaleCore
 			$order_table = 'product_shop'; 				
 		if (is_null($order_way) || $order_by == 'sales') $order_way = 'DESC';
 
-		$sql_groups = '';
-		if (Group::isFeatureActive())
-		{
-			$groups = FrontController::getCurrentCustomerGroups();
-			$sql_groups = 'WHERE cp.`id_product` IS NOT NULL AND cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
-		}
 		$interval = Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
 
-		$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT cp.`id_product`
-		FROM `'._DB_PREFIX_.'category_group` cg
-		INNER JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
-		'.$sql_groups);
-	
-		$ids = array();
-		foreach ($products as $product)
-			if (Validate::isUnsignedId($product['id_product']))
-				$ids[$product['id_product']] = 1;
-		$ids = array_keys($ids);
-		$ids = array_filter($ids);
-		sort($ids);
-		$ids = count($ids) > 0 ? implode(',', $ids) : 'NULL';
-		
-		//Main query
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
 					pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`,
 					pl.`meta_keywords`, pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`,
@@ -103,7 +81,8 @@ class ProductSaleCore
 					MAX(image_shop.`id_image`) id_image, il.`legend`,
 					ps.`quantity` AS sales, t.`rate`, pl.`meta_keywords`, pl.`meta_title`, pl.`meta_description`,
 					DATEDIFF(p.`date_add`, DATE_SUB(NOW(),
-					INTERVAL '.$interval.' DAY)) > 0 AS new
+
+					INTERVAL '.(int)$interval.' DAY)) > 0 AS new
 				FROM `'._DB_PREFIX_.'product_sale` ps
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON ps.`id_product` = p.`id_product`
 				'.Shop::addSqlAssociation('product', 'p', false).'
@@ -118,10 +97,19 @@ class ProductSaleCore
 					AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
 					AND tr.`id_state` = 0
 				LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
-				'.Product::sqlStock('p').'
+				'.Product::sqlStock('p');
+
+			if (Group::isFeatureActive())
+			{
+				$groups = FrontController::getCurrentCustomerGroups();
+				$sql .= '
+					JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)
+					JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.id_category = cg.id_category AND cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1').')';
+			}
+
+			$sql .= '
 				WHERE product_shop.`active` = 1
 					AND p.`visibility` != \'none\'
-					AND p.`id_product` IN ('.$ids.')
 				GROUP BY product_shop.id_product
 				ORDER BY '.(!empty($order_table) ? '`'.pSQL($order_table).'`.' : '').'`'.pSQL($order_by).'` '.pSQL($order_way).'
 				LIMIT '.(int)($page_number * $nb_products).', '.(int)$nb_products;
@@ -240,4 +228,3 @@ class ProductSaleCore
 		return true;
 	}
 }
-
