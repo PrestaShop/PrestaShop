@@ -1989,7 +1989,7 @@ div.star a:hover {
 								content: "\f16d";
 							}
 						}
-					}					
+					}
 				}
 			}
 			h4 {
@@ -2124,7 +2124,7 @@ div.star a:hover {
 		vertical-align: middle;
 		&.cart_quantity {
 			padding: 41px 14px 25px;
-			width: 88px;
+			width: 70px;
 			.cart_quantity_button {
 				margin-top: 3px;
 				a {
@@ -2156,9 +2156,17 @@ a.price_discount_delete {
 }
 
 #cart_summary {
+	thead {
+		th {
+			padding: 7px 8px 9px 8px;
+			&.cart_product {
+				@extend .text-center;
+			}
+		}
+	}
 	tbody {
 		td {
-			padding: 7px 8px 9px 18px;
+			padding: 7px 8px 9px 8px;
 			&.cart_product {
 				@extend .text-center;
 				padding: 7px;
@@ -2190,6 +2198,14 @@ a.price_discount_delete {
 			}
 			&.cart_avail{
 				@extend .text-center;
+				width: 1%;
+				span {
+					white-space: nowrap;
+				}
+			}
+			&.cart_delete{
+				@extend .text-center;
+				width: 1%;
 			}
 			&.cart_total {
 				@extend .text-right;
