@@ -365,8 +365,8 @@ class OrderInvoiceCore extends ObjectModel
 
 	/**
 	 * Returns the wrapping taxes breakdown
+	 *
 	 * @todo
-
 	 * @since 1.5
 	 * @return array
 	 */
