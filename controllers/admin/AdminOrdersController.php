@@ -1878,6 +1878,7 @@ class AdminOrdersControllerCore extends AdminController
 			$specific_price->from_quantity = 1;
 			$specific_price->reduction = 0;
 			$specific_price->reduction_type = 'amount';
+			$specific_price->reduction_tax = 0;
 			$specific_price->from = '0000-00-00 00:00:00';
 			$specific_price->to = '0000-00-00 00:00:00';
 			$specific_price->add();
