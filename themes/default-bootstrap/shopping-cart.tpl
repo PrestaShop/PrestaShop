@@ -86,14 +86,14 @@
 					<th class="cart_description item">{l s='Description'}</th>
 					{if $PS_STOCK_MANAGEMENT}
 						{assign var='col_span_subtotal' value='3'}
-						<th class="cart_avail item">{l s='Avail.'}</th>
+						<th class="cart_avail item text-center">{l s='Availability'}</th>
 					{else}
 						{assign var='col_span_subtotal' value='2'}
 					{/if}
-					<th class="cart_unit item">{l s='Unit price'}</th>
+					<th class="cart_unit item text-right">{l s='Unit price'}</th>
 					<th class="cart_quantity item text-center">{l s='Qty'}</th>
 					<th class="cart_delete last_item">&nbsp;</th>
-					<th class="cart_total item text-right">{l s='Total'}</th>					
+					<th class="cart_total item text-right">{l s='Total'}</th>
 				</tr>
 			</thead>
 			<tfoot>
@@ -225,9 +225,9 @@
 				<tr{if $total_wrapping == 0} style="display: none;"{/if}>
 					<td colspan="3" class="text-right">
 						{if $use_taxes}
-							{if $display_tax_label}{l s='Total gift wrapping (tax incl.):'}{else}{l s='Total gift-wrapping cost:'}{/if}
+							{if $display_tax_label}{l s='Total gift wrapping (tax incl.)'}{else}{l s='Total gift-wrapping cost'}{/if}
 						{else}
-							{l s='Total gift-wrapping cost:'}
+							{l s='Total gift-wrapping cost'}
 						{/if}
 					</td>
 					<td colspan="2" class="price-discount price" id="total_wrapping">
@@ -271,7 +271,7 @@
 					<td colspan="{$col_span_subtotal}" class="text-right">
 						{if $display_tax_label}
 							{if $use_taxes && $priceDisplay == 0}
-								{l s='Total vouchers (tax incl.):'}
+								{l s='Total vouchers (tax incl.)'}
 							{else}
 								{l s='Total vouchers (tax excl.)'}
 							{/if}
