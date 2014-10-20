@@ -280,17 +280,21 @@ class SupplierCore extends ObjectModel
 					AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'supplier` s ON s.`id_supplier` = p.`id_supplier`
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
-				'.Product::sqlStock('p', 0).'
+				'.Product::sqlStock('p', 0);
+
+				if (Group::isFeatureActive() || $active_category)
+				{
+					$sql .= 'JOIN `'._DB_PREFIX_.'category_product` cp ON (p.id_product = cp.id_product)';
+					if (Group::isFeatureActive())
+						$sql .= 'JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.`id_category` = cg.`id_category` AND cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1').')';
+					if ($active_category)
+						$sql .= 'JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1';
+				}
+
+				$sql .= '
 				WHERE ps.`id_supplier` = '.(int)$id_supplier.'
 					'.($active ? ' AND product_shop.`active` = 1' : '').'
 					'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
-					AND p.`id_product` IN (
-						SELECT cp.`id_product`
-						FROM `'._DB_PREFIX_.'category_product` cp
-						'.(Group::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.`id_category` = cg.`id_category`)' : '').'
-						'.($active_category ? ' INNER JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1' : '').'
-						'.$sql_groups.'
-					)
 				GROUP BY product_shop.id_product
 				ORDER BY '.$alias.pSQL($order_by).' '.pSQL($order_way).'
 				LIMIT '.(((int)$p - 1) * (int)$n).','.(int)$n;
