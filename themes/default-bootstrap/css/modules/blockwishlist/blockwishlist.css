@@ -4,15 +4,17 @@
   #wishlist_button:before {
     content: "\f08a";
     font: 400 15px/31px "FontAwesome";
-    color: #fff;
+    color: white;
     background: #929292;
     width: 30px;
     text-align: center;
     display: inline-block;
     height: 30px;
     margin: 0 6px 0 0;
-    -moz-border-radius: 50px;
     -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    -ms-border-radius: 50px;
+    -o-border-radius: 50px;
     border-radius: 50px; }
 
 /* wishlist block */
@@ -85,7 +87,7 @@
   margin-bottom: 20px; }
   #module-blockwishlist-mywishlist .wishlistLinkTop ul.display_list a {
     display: inline-block;
-    color: #333;
+    color: #333333;
     margin: 10px 10px 10px 0px;
     font-weight: bold; }
     #module-blockwishlist-mywishlist .wishlistLinkTop ul.display_list a:hover {

@@ -805,11 +805,11 @@ function updateCartSummary(json)
 			{
 				var display_price = 0;
 				if (priceDisplayMethod !== 0)
-					display_price = ps_round(product_list[i].price);
+					display_price = product_list[i].price;
 				else
-					display_price = ps_round(product_list[i].price_wt);
+					display_price = product_list[i].price_wt;
 
-				price_reduction = ps_round((ps_round(product_list[i].price_without_quantity_discount) - display_price)/ps_round(product_list[i].price_without_quantity_discount) * -100);
+				price_reduction = ps_round((product_list[i].price_without_quantity_discount - display_price)/product_list[i].price_without_quantity_discount * -100);
 				reduction_symbol = '%';
 			}
 

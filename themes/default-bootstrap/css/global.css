@@ -46,7 +46,7 @@ a img {
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary {
   display: block; }
 
-/*
+/*!
  * Bootstrap v3.0.0
  *
  * Copyright 2013 Twitter, Inc
@@ -55,7 +55,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, 
  *
  * Designed and built with all the love in the world by @mdo and @fat.
  */
-/* normalize.css v2.1.0 | MIT License | git.io/normalize */
+/*! normalize.css v2.1.0 | MIT License | git.io/normalize */
 article,
 aside,
 details,
@@ -349,7 +349,7 @@ cite {
 .text-right, #cart_summary tbody td.cart_unit, #cart_summary tbody td.cart_total {
   text-align: right; }
 
-.text-center, #cart_summary tbody td.cart_product, #cart_summary tbody td.cart_avail {
+.text-center, #cart_summary thead th.cart_product, #cart_summary tbody td.cart_product, #cart_summary tbody td.cart_avail, #cart_summary tbody td.cart_delete {
   text-align: center; }
 
 h1, h2, h3, h4, h5, h6,
@@ -3785,7 +3785,7 @@ td.visible-print {
   th.hidden-print,
   td.hidden-print {
     display: none !important; } }
-/*
+/*!
  *  Font Awesome 4.1.0 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
  */
@@ -5465,8 +5465,8 @@ p.info-account {
 
 .alert {
   font-weight: bold; }
-.alert:before {
-  cursor:  pointer; }
+  .alert:before {
+    cursor: pointer; }
   .alert ul, .alert ol {
     padding-left: 15px;
     margin-left: 27px; }
@@ -7048,7 +7048,7 @@ div.star a:hover {
           .footer-container #footer #social_block ul li.vimeo a:before {
             content: "\f194"; }
           .footer-container #footer #social_block ul li.instagram a:before {
-            content: "\f16d"; }			
+            content: "\f16d"; }
       .footer-container #footer #social_block h4 {
         float: right;
         margin-bottom: 0;
@@ -7159,7 +7159,7 @@ div.star a:hover {
   vertical-align: middle; }
   .table tbody > tr > td.cart_quantity {
     padding: 41px 14px 25px;
-    width: 88px; }
+    width: 70px; }
     .table tbody > tr > td.cart_quantity .cart_quantity_button {
       margin-top: 3px; }
       .table tbody > tr > td.cart_quantity .cart_quantity_button a {
@@ -7180,8 +7180,10 @@ a.price_discount_delete {
   a.price_discount_delete:hover {
     color: silver; }
 
+#cart_summary thead th {
+  padding: 7px 8px 9px 8px; }
 #cart_summary tbody td {
-  padding: 7px 8px 9px 18px; }
+  padding: 7px 8px 9px 8px; }
   #cart_summary tbody td.cart_product {
     padding: 7px;
     width: 137px; }
@@ -7197,6 +7199,12 @@ a.price_discount_delete {
   #cart_summary tbody td.cart_description small {
     display: block;
     padding: 5px 0 0 0; }
+  #cart_summary tbody td.cart_avail {
+    width: 1%; }
+    #cart_summary tbody td.cart_avail span {
+      white-space: nowrap; }
+  #cart_summary tbody td.cart_delete {
+    width: 1%; }
 #cart_summary tfoot td.text-right, #cart_summary tfoot tbody td.cart_unit, #cart_summary tbody tfoot td.cart_unit, #cart_summary tfoot tbody td.cart_total, #cart_summary tbody tfoot td.cart_total {
   font-weight: bold;
   color: #333333; }
