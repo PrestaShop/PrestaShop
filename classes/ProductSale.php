@@ -140,29 +140,6 @@ class ProductSaleCore
 		if ($page_number < 0) $page_number = 0;
 		if ($nb_products < 1) $nb_products = 10;
 
-		$sql_groups = '';
-		if (Group::isFeatureActive())
-		{
-			$groups = FrontController::getCurrentCustomerGroups();
-			$sql_groups = 'AND cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
-		}
-
-		//Subquery: get product ids in a separate query to (greatly!) improve performances and RAM usage
-		$products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT cp.`id_product`
-		FROM `'._DB_PREFIX_.'category_product` cp
-		LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)
-		WHERE cg.`id_group` '.$sql_groups);
-
-		$ids = array();
-		foreach ($products as $product)
-			$ids[$product['id_product']] = 1;
-
-		$ids = array_keys($ids);
-		sort($ids);
-		$ids = count($ids) > 0 ? implode(',', $ids) : 'NULL';
-
-		//Main query
 		$sql = '
 		SELECT
 			p.id_product,  MAX(product_attribute_shop.id_product_attribute) id_product_attribute, pl.`link_rewrite`, pl.`name`, pl.`description_short`, product_shop.`id_category_default`,
@@ -186,10 +163,19 @@ class ProductSaleCore
 		LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
 			ON cl.`id_category` = product_shop.`id_category_default`
-			AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').'
+			AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl');
+
+		if (Group::isFeatureActive())
+		{
+			$groups = FrontController::getCurrentCustomerGroups();
+			$sql .= '
+				JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)
+				JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.id_category = cg.id_category AND cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1').')';
+		}
+
+		$sql.= '
 		WHERE product_shop.`active` = 1
 		AND p.`visibility` != \'none\'
-		AND p.`id_product` IN ('.$ids.')
 		GROUP BY product_shop.id_product
 		ORDER BY sales DESC
 		LIMIT '.(int)($page_number * $nb_products).', '.(int)$nb_products;
