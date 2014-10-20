@@ -131,10 +131,12 @@ $(document).ready(function () {
 		<label class="control-label col-lg-2" for="priceTE">
 			<span class="label-tooltip" data-toggle="tooltip" title="{l s='The pre-tax retail price is the price for which you intend sell this product to your customers. It should be higher than the pre-tax wholesale price: the difference between the two will be your margin.'}">{if !$country_display_tax_label || $tax_exclude_taxe_option}{l s='Retail price'}{else}{l s='Pre-tax retail price'}{/if}</span>
 		</label>
-		<div class="input-group col-lg-2">
-			<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
-			<input type="hidden" id="priceTEReal" name="price" value="{toolsConvertPrice price=$product->price}"/>
-			<input size="11" maxlength="27" id="priceTE" name="price_displayed" type="text" value="{{toolsConvertPrice price=$product->price}|string_format:'%.6f'}" onchange="noComma('priceTE'); $('#priceTEReal').val(this.value);" onkeyup="$('#priceType').val('TE'); $('#priceTEReal').val(this.value.replace(/,/g, '.')); if (isArrowKey(event)) return; calcPriceTI();" />
+		<div class="col-lg-2">
+			<div class="input-group">
+				<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
+				<input type="hidden" id="priceTEReal" name="price" value="{toolsConvertPrice price=$product->price}"/>
+				<input size="11" maxlength="27" id="priceTE" name="price_displayed" type="text" value="{{toolsConvertPrice price=$product->price}|string_format:'%.6f'}" onchange="noComma('priceTE'); $('#priceTEReal').val(this.value);" onkeyup="$('#priceType').val('TE'); $('#priceTEReal').val(this.value.replace(/,/g, '.')); if (isArrowKey(event)) return; calcPriceTI();" />
+			</div>
 		</div>
 	</div>
 	<div class="form-group">
@@ -206,11 +208,13 @@ $(document).ready(function () {
 		<label class="control-label col-lg-2" for="unit_price">
 			<span class="label-tooltip" data-toggle="tooltip" title="{l s='When selling a pack of items, you can indicate the unit price for each item of the pack. For instance, "per bottle" or "per pound".'}">{l s='Unit price'}</span>
 		</label>
-		<div class="input-group col-lg-4">
-			<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
-			<input id="unit_price" name="unit_price" type="text" value="{$unit_price|string_format:'%.2f'}" maxlength="27" onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); unitPriceWithTax('unit');"/>
-			<span class="input-group-addon">{l s='per'}</span>
-			<input id="unity" name="unity" type="text" value="{$product->unity|htmlentitiesUTF8}"  maxlength="10" onkeyup="if (isArrowKey(event)) return ;unitySecond();" onchange="unitySecond();"/>
+		<div class="col-lg-4">
+			<div class="input-group">
+				<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
+				<input id="unit_price" name="unit_price" type="text" value="{$unit_price|string_format:'%.2f'}" maxlength="27" onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); unitPriceWithTax('unit');"/>
+				<span class="input-group-addon">{l s='per'}</span>
+				<input id="unity" name="unity" type="text" value="{$product->unity|htmlentitiesUTF8}"  maxlength="10" onkeyup="if (isArrowKey(event)) return ;unitySecond();" onchange="unitySecond();"/>
+			</div>
 		</div>
 	</div>
 	{if isset($product->unity) && $product->unity}
