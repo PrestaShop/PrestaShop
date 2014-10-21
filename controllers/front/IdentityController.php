@@ -137,6 +137,11 @@ class IdentityControllerCore extends FrontController
 				'genders' => Gender::getGenders(),
 			));
 
+		// Call a hook to display more information
+		$this->context->smarty->assign(array(
+			'HOOK_CUSTOMER_IDENTITY_FORM' => Hook::exec('displayCustomerIdentityForm'),
+		));
+
 		if (Module::isInstalled('blocknewsletter'))
 			$this->context->smarty->assign('newsletter', (int)Module::getInstanceByName('blocknewsletter')->active);
 
