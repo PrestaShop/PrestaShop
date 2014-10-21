@@ -100,6 +100,9 @@
     <hook id="displayCustomerAccount" live_edit="0">
       <name>displayCustomerAccount</name><title>Customer account displayed in Front Office</title><description>This hook displays new elements on the customer account page</description>
     </hook>
+    <hook id="displayCustomerIdentityForm" live_edit="0">
+      <name>displayCustomerIdentityForm</name><title>Customer identity form displayed in Front Office</title><description>This hook displays new elements on the form to update a customer identity</description>
+    </hook>
     <hook id="actionOrderSlipAdd" live_edit="0">
       <name>actionOrderSlipAdd</name><title>Order slip creation</title><description>This hook is called when a new credit slip is added regarding client order</description>
     </hook>
