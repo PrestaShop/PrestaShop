@@ -274,7 +274,7 @@ class OrderInvoiceCore extends ObjectModel
 	 * @since 1.5
 	 * @return array
 	 */
-	public function getProductTaxesBreakdown()
+	public function getProductTaxesBreakdown($order = null)
 	{
 		$tmp_tax_infos = array();
 		if ($this->useOneAfterAnotherTaxComputationMethod())
@@ -332,6 +332,22 @@ class OrderInvoiceCore extends ObjectModel
 
 		foreach ($tmp_tax_infos as &$tax)
 			$tax['total_amount'] = Tools::ps_round($tax['total_amount'], _PS_PRICE_DISPLAY_PRECISION_);
+
+		// Add shipping tax amount to tax infos if we have a free shipping cart rule
+		foreach ($order->getCartRules() as $cart_rule)
+			if ($cart_rule['free_shipping'])
+			{
+				$shipping_tax_amount = $this->total_shipping_tax_incl - $this->total_shipping_tax_excl;
+
+				if ($shipping_tax_amount > 0)
+				{
+					$tmp_tax_infos[$tax_infos['rate']]['total_amount'] += $shipping_tax_amount;
+					$tmp_tax_infos[$tax_infos['rate']]['name'] = $tax_infos['name'];
+					$tmp_tax_infos[$tax_infos['rate']]['total_price_tax_excl'] += $this->total_shipping_tax_excl;
+				}
+
+				break;
+			}
 
 		return $tmp_tax_infos;
 	}
