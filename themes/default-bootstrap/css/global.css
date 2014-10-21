@@ -7237,31 +7237,53 @@ a.price_discount_delete {
     left: -9999px; }
   #order-detail-content #cart_summary tr {
     border-bottom: 1px solid #cccccc;
-    overflow: hidden; }
+    padding-bottom: 7px;
+    overflow: hidden;
+    position: relative; }
   #order-detail-content #cart_summary td {
     border: none;
     position: relative;
-    width: 50%;
     float: left;
-    white-space: normal; }
+    white-space: normal;
+    padding: 7px 20px 7px 20px; }
+    #order-detail-content #cart_summary td.cart_product {
+      text-align: left; }
     #order-detail-content #cart_summary td.cart_avail {
+      display: none; }
+    #order-detail-content #cart_summary td.cart_unit {
+      width: 33%;
+      text-align: right;
+      min-height: 70px;
       clear: both; }
+      #order-detail-content #cart_summary td.cart_unit .price {
+        text-align: right; }
     #order-detail-content #cart_summary td.cart_quantity {
-      clear: both;
-      padding: 9px 8px 11px 18px; }
-    #order-detail-content #cart_summary td.cart_delete {
-      width: 100%;
-      clear: both;
+      width: 33%;
+      min-height: 70px;
+      border-left: 1px solid #cccccc;
+      border-right: 1px solid #cccccc; }
+      #order-detail-content #cart_summary td.cart_quantity div {
+        display: block; }
+      #order-detail-content #cart_summary td.cart_quantity > .form-control {
+        display: inline; }
+      #order-detail-content #cart_summary td.cart_quantity > .cart_quantity_button a {
+        margin-right: 0px;
+        float: none; }
+    #order-detail-content #cart_summary td.cart_total {
+      width: 33%;
+      min-height: 70px;
       text-align: right; }
+    #order-detail-content #cart_summary td.cart_delete {
+      position: absolute;
+      right: 20px;
+      top: 7px; }
       #order-detail-content #cart_summary td.cart_delete:before {
-        display: inline-block;
-        padding-right: 0.5em;
-        position: relative;
-        top: -3px; }
+        content: '' !important; }
     #order-detail-content #cart_summary td div {
       display: inline; }
   #order-detail-content #cart_summary td:before {
     content: attr(data-title);
+    font-weight: bold;
     display: block; }
   #order-detail-content #cart_summary tfoot td {
     float: none;

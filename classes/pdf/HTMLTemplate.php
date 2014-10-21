@@ -90,8 +90,10 @@ abstract class HTMLTemplateCore
 	protected function getShopAddress()
 	{
 		$shop_address = '';
+
 		if (Validate::isLoadedObject($this->shop))
 		{
+			Shop::setContext(Shop::CONTEXT_SHOP, $this->shop->id);
 			$shop_address_obj = $this->shop->getAddress();
 			if (isset($shop_address_obj) && $shop_address_obj instanceof Address)
 				$shop_address = AddressFormat::generateAddress($shop_address_obj, array(), ' - ', ' ');
