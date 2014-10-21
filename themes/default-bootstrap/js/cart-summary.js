@@ -644,6 +644,8 @@ function downQuantity(id, qty)
 	}
 	else if (qty < 0)
 		qty = -qty;
+	else
+		newVal = val - qty;
 
 	var customizationId = 0;
 	var productId = 0;
