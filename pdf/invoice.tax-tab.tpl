@@ -60,9 +60,9 @@
 					 <td style="width: 20%; text-align: right;">{if isset($is_order_slip) && $is_order_slip}- {/if}{displayPrice currency=$order->id_currency price=$product_tax_infos.total_amount}</td>
 					</tr>
 					{/foreach}
-					{/if}
+				{/if}
 
-					{if isset($shipping_tax_breakdown)}
+				{if isset($shipping_tax_breakdown)}
 					{foreach $shipping_tax_breakdown as $shipping_tax_infos}
 					<tr style="line-height:6px;background-color:{cycle values='#FFF,#DDD'};">
 					 <td style="width: 30%">
