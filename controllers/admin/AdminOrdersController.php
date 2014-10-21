@@ -657,7 +657,7 @@ class AdminOrdersControllerCore extends AdminController
 					}
 
 					if (Tools::isSubmit('refund_voucher_off'))
-						$amount -= (int)Tools::getValue('order_discount_price');
+						$amount -= (float)Tools::getValue('order_discount_price');
 
 					$shipping_cost_amount = (float)str_replace(',', '.', Tools::getValue('partialRefundShippingCost'));
 					if ($shipping_cost_amount > 0)
@@ -871,7 +871,7 @@ class AdminOrdersControllerCore extends AdminController
 						{
 							$product_list = array();
 							if (Tools::isSubmit('refund_voucher_off'))
-								$amount = $order_detail->unit_price_tax_incl * $full_quantity_list[$id_order_detail] - (int)Tools::getValue('order_discount_price');
+								$amount = $order_detail->unit_price_tax_incl * $full_quantity_list[$id_order_detail] - (float)Tools::getValue('order_discount_price');
 
 							foreach ($full_product_list as $id_order_detail)
 							{
@@ -942,7 +942,7 @@ class AdminOrdersControllerCore extends AdminController
 								$total += $order->total_shipping;
 
 							if (Tools::isSubmit('refund_voucher_off'))
-								$total -= (int)Tools::getValue('order_discount_price');
+								$total -= (float)Tools::getValue('order_discount_price');
 
 							$cartrule->reduction_amount = $total;
 							$cartrule->reduction_tax = true;
