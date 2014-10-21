@@ -145,13 +145,14 @@ class OrderSlipCore extends ObjectModel
 
 		$slip_quantity = array();
 		foreach ($productsRet as $slip_detail)
-			$slip_quantity[$slip_detail['id_order_detail']] = $slip_detail['product_quantity'];
+			$slip_quantity[$slip_detail['id_order_detail']] = $slip_detail;
+
 		$products = array();
 		foreach ($order_details as $key => $product)
-			if (isset($slip_quantity[$product['id_order_detail']]))
+			if (isset($slip_quantity[$product['id_order_detail']]) && $slip_quantity[$product['id_order_detail']]['product_quantity'])
 			{
 				$products[$key] = $product;
-				$products[$key]['product_quantity'] = $slip_quantity[$product['id_order_detail']];
+				$products[$key] = array_merge($products[$key], $slip_quantity[$product['id_order_detail']]);
 			}
 		return $order->getProducts($products);
 	}
@@ -279,12 +280,23 @@ class OrderSlipCore extends ObjectModel
 		{
 			$order_detail = new OrderDetail((int)$product['id_order_detail']);
 
+			$price = (float)$product['unit_price'];
+			$quantity = (int)$product['quantity'];
+
+			$order_slip_resume = OrderSlip::getProductSlipResume((int)$order_detail->id);
+			if ($quantity + $order_slip_resume['product_quantity'] > $order_detail->product_quantity)
+				$quantity = $order_detail->product_quantity - $order_slip_resume['product_quantity'];
+
+			if ($quantity == 0)
+				continue;
+
+			$order_detail->product_quantity_refunded += $quantity;
+			$order_detail->save();
+
 			$address = Address::initialize($order_detail->id_address, false);
 			$id_tax_rules_group = Product::getIdTaxRulesGroupByIdProduct((int)$order_detail->product_id);
 			$tax_calculator = TaxManagerFactory::getManager($address, $id_tax_rules_group)->getTaxCalculator();
 			
-			$price = (float)$product['unit_price'];
-			$quantity = (int)$product['quantity'];
 			
 			$order_slip->total_products_tax_excl += $price * $quantity;
 			
