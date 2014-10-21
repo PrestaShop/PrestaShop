@@ -133,7 +133,15 @@ class StoresControllerCore extends FrontController
 		$days[7] = 'Sunday';
 		
 		$days_datas = array();
-		$hours = array_filter(unserialize($store['hours']));
+		$hours = array();
+		
+		if ($store['hours'])
+		{
+			$hours = unserialize($store['hours']);
+			if (is_array($hours))
+				$hours = array_filter($hours);
+		}
+		
 		if (!empty($hours))
 		{
 			for ($i = 1; $i < 8; $i++)
