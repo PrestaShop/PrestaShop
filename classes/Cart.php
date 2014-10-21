@@ -3446,7 +3446,7 @@ class CartCore extends ObjectModel
 			$sql = 'INSERT INTO '._DB_PREFIX_.'customized_data(`id_customization`, `type`, `index`, `value`)
 				(
 					SELECT '.(int)Db::getInstance()->Insert_ID().' `id_customization`, `type`, `index`, `value`
-					FROM customized_data
+					FROM '._DB_PREFIX_.'customized_data
 					WHERE id_customization = '.$customization['id_customization'].'
 				)';
 			Db::getInstance()->execute($sql);
