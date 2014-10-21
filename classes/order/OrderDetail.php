@@ -346,8 +346,17 @@ class OrderDetailCore extends ObjectModel
 		if ($order->total_products <= 0)
 			return true;
 
+		$shipping_tax_amount = 0;
+
+		foreach ($order->getCartRules() as $cart_rule)
+			if ($cart_rule['free_shipping'])
+			{
+				$shipping_tax_amount = $order->total_shipping_tax_excl;
+				break;
+			}
+
 		$ratio = $this->unit_price_tax_excl / $order->total_products;
-		$order_reduction_amount = $order->total_discounts_tax_excl * $ratio;
+		$order_reduction_amount = ($order->total_discounts_tax_excl - $shipping_tax_amount) * $ratio;
 		$discounted_price_tax_excl = $this->unit_price_tax_excl - $order_reduction_amount;
 
 		$values = '';
@@ -374,14 +383,14 @@ class OrderDetailCore extends ObjectModel
 
 		if ($replace)
 			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'order_detail_tax` WHERE id_order_detail='.(int)$this->id);
-			
+
 		$values = rtrim($values, ',');
 		$sql = 'INSERT INTO `'._DB_PREFIX_.'order_detail_tax` (id_order_detail, id_tax, unit_amount, total_amount)
 				VALUES '.$values;
-		
+
 		return Db::getInstance()->execute($sql);
 	}
-	
+
 	public function updateTaxAmount($order)
 	{
 		$this->setContext((int)$this->id_shop);
@@ -599,10 +608,10 @@ class OrderDetailCore extends ObjectModel
 
 		// Set order invoice id
 		$this->id_order_invoice = (int)$id_order_invoice;
-		
+
 		// Set shop id
 		$this->id_shop = (int)$product['id_shop'];
-		
+
 		// Add new entry to the table
 		$this->save();
 

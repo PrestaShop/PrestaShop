@@ -312,6 +312,14 @@ class OrderInvoiceCore extends ObjectModel
 
 			// sum by taxes
 			$tmp_tax_infos = array();
+			$shipping_tax_amount = 0;
+			foreach ($order->getCartRules() as $cart_rule)
+				if ($cart_rule['free_shipping'])
+				{
+					$shipping_tax_amount = $this->total_shipping_tax_excl;
+					break;
+				}
+
 			foreach ($taxes_infos as $tax_infos)
 			{
 				if (!isset($tmp_tax_infos[$tax_infos['rate']]))
@@ -320,11 +328,9 @@ class OrderInvoiceCore extends ObjectModel
 						'name' => 0,
 						'total_price_tax_excl' => 0
 					);
-
 				$ratio = $tax_infos['total_price_tax_excl'] / $this->total_products;
-				$order_reduction_amount = $this->total_discount_tax_excl * $ratio;
+				$order_reduction_amount = ($this->total_discount_tax_excl - $shipping_tax_amount) * $ratio;
 				$tmp_tax_infos[$tax_infos['rate']]['total_amount'] += ($tax_infos['total_amount'] - Tools::ps_round($tax_infos['ecotax'] * $tax_infos['product_quantity'] * $tax_infos['ecotax_tax_rate'] / 100, _PS_PRICE_DISPLAY_PRECISION_));
-
 				$tmp_tax_infos[$tax_infos['rate']]['name'] = $tax_infos['name'];
 				$tmp_tax_infos[$tax_infos['rate']]['total_price_tax_excl'] += $tax_infos['total_price_tax_excl'] - $order_reduction_amount - Tools::ps_round($tax_infos['ecotax'] * $tax_infos['product_quantity'], _PS_PRICE_DISPLAY_PRECISION_);
 			}
@@ -332,22 +338,6 @@ class OrderInvoiceCore extends ObjectModel
 
 		foreach ($tmp_tax_infos as &$tax)
 			$tax['total_amount'] = Tools::ps_round($tax['total_amount'], _PS_PRICE_DISPLAY_PRECISION_);
-
-		// Add shipping tax amount to tax infos if we have a free shipping cart rule
-		foreach ($order->getCartRules() as $cart_rule)
-			if ($cart_rule['free_shipping'])
-			{
-				$shipping_tax_amount = $this->total_shipping_tax_incl - $this->total_shipping_tax_excl;
-
-				if ($shipping_tax_amount > 0)
-				{
-					$tmp_tax_infos[$tax_infos['rate']]['total_amount'] += $shipping_tax_amount;
-					$tmp_tax_infos[$tax_infos['rate']]['name'] = $tax_infos['name'];
-					$tmp_tax_infos[$tax_infos['rate']]['total_price_tax_excl'] += $this->total_shipping_tax_excl;
-				}
-
-				break;
-			}
 
 		return $tmp_tax_infos;
 	}
