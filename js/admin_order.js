@@ -856,7 +856,24 @@ $(document).ready(function() {
 			$('.partial_refund_fields').hide();
 			$('.standard_refund_fields').fadeIn();
 		}
+
+		if (order_discount_price)
+			$('.container-command-top-spacing').submit(function(e) {
+				e.preventDefault();
+				var that = $(this);
+				$.alerts.okButton= okButton;
+				$.alerts.cancelButton= cancelButton;
+				jConfirm(alertMsg, alertTitle, function(confirm){
+					if (confirm === false) {
+						that.append('<input type="hidden" name="refund_voucher_off"/>');
+						that.append('<input type="hidden" name="order_discount_price" value=' + order_discount_price + '/>');
+					}
+					that.append('<input type="hidden" name="cancelProduct" value="Refund products"/>');
+					that.unbind('submit').submit();
+				});
+			});
 	});
+
 	$('#desc-order-partial_refund').click(function() {
 		$('.cancel_product_change_link:visible').trigger('click');
 		closeAddProduct();
@@ -871,6 +888,22 @@ $(document).ready(function() {
 			$('.product_action').hide();
 			$('.partial_refund_fields').fadeIn();
 		}
+
+		if (order_discount_price)
+			$('.container-command-top-spacing').submit(function(e) {
+				e.preventDefault();
+				var that = $(this);
+				$.alerts.okButton= okButton;
+				$.alerts.cancelButton= cancelButton;
+				jConfirm(alertMsg, alertTitle, function(confirm){
+					if (confirm === false) {
+						that.append('<input type="hidden" name="refund_voucher_off"/>');
+						that.append('<input type="hidden" name="order_discount_price" value=' + order_discount_price + '/>');
+					}
+					that.append('<input type="hidden" name="partialRefund"/>');
+					that.unbind('submit').submit();
+				});
+			});
 	});
 });
 
