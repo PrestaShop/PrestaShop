@@ -188,14 +188,14 @@
 					<input type="text" class="form-control" id="website" name="website" value="{if isset($smarty.post.website)}{$smarty.post.website}{/if}" />
 				</div>
 			{/if}
+
+                {$HOOK_CUSTOMER_IDENTITY_FORM}
+
                 <div class="form-group">
                     <button type="submit" name="submitIdentity" class="btn btn-default button button-medium">
                         <span>{l s='Save'}<i class="icon-chevron-right right"></i></span>
                     </button>
                 </div>
-                <p id="security_informations" class="text-right">
-                    <i>{l s='[Insert customer data privacy clause here, if applicable]'}</i>
-                </p>
             </fieldset>
         </form> <!-- .std -->
     {/if}
