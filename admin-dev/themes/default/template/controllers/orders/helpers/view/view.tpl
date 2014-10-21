@@ -53,6 +53,15 @@
 			statesShipped.push({$state['id_order_state']});
 		{/if}
 	{/foreach}
+	var order_discount_price = {if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
+									{$order->total_discounts_tax_excl}
+								{else}
+									{$order->total_discounts_tax_incl}
+								{/if};
+	var okButton = "{l s='Yes'}";
+	var cancelButton = "{l s='No'}";
+	var alertTitle = "{l s='Voucher refund'}";
+	var alertMsg = "{l s='Do you want to refund the voucher?'}";
 	</script>
 
 	{assign var="hook_invoice" value={hook h="displayInvoice" id_order=$order->id}}
@@ -121,7 +130,7 @@
 						{l s='Print order'}
 					</a>
 					&nbsp;
-					{if Configuration::get('PS_INVOICE') && count($invoices_collection) && ((isset($currentState) && $currentState->invoice && $order->invoice_number) || $order->invoice_number)}
+					{if Configuration::get('PS_INVOICE') && count($invoices_collection) && $order->invoice_number}
 						<a data-selenium-id="view_invoice" class="btn btn-default _blank" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateInvoicePDF&amp;id_order={$order->id|intval}">
 							<i class="icon-file"></i>
 							{l s='View invoice'}
@@ -133,7 +142,7 @@
 						</span>
 					{/if}
 					&nbsp;
-					{if ((isset($currentState) && $currentState->delivery && $order->delivery_number) || $order->delivery_number)}
+					{if $order->delivery_number}
 						<a class="btn btn-default _blank"  href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateDeliverySlipPDF&amp;id_order={$order->id|intval}">
 							<i class="icon-truck"></i>
 							{l s='View delivery slip'}

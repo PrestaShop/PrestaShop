@@ -656,6 +656,9 @@ class AdminOrdersControllerCore extends AdminController
 							$this->reinjectQuantity($order_detail, $order_detail_list[$id_order_detail]['quantity']);
 					}
 
+					if (Tools::isSubmit('refund_voucher_off'))
+						$amount -= (float)Tools::getValue('order_discount_price');
+
 					$shipping_cost_amount = (float)str_replace(',', '.', Tools::getValue('partialRefundShippingCost'));
 					if ($shipping_cost_amount > 0)
 						$amount += $shipping_cost_amount;
@@ -867,6 +870,9 @@ class AdminOrdersControllerCore extends AdminController
 						if (Tools::isSubmit('generateCreditSlip') && !count($this->errors))
 						{
 							$product_list = array();
+							if (Tools::isSubmit('refund_voucher_off'))
+								$amount = $order_detail->unit_price_tax_incl * $full_quantity_list[$id_order_detail] - (float)Tools::getValue('order_discount_price');
+
 							foreach ($full_product_list as $id_order_detail)
 							{
 								$order_detail = new OrderDetail((int)$id_order_detail);
@@ -874,7 +880,7 @@ class AdminOrdersControllerCore extends AdminController
 									'id_order_detail' => $id_order_detail,
 									'quantity' => $full_quantity_list[$id_order_detail],
 									'unit_price' => $order_detail->unit_price_tax_excl,
-									'amount' => $order_detail->unit_price_tax_incl * $full_quantity_list[$id_order_detail],
+									'amount' => isset($amount) ? $amount : $order_detail->unit_price_tax_incl * $full_quantity_list[$id_order_detail],
 								);
 							}
 
@@ -934,6 +940,9 @@ class AdminOrdersControllerCore extends AdminController
 
 							if (Tools::isSubmit('shippingBack'))
 								$total += $order->total_shipping;
+
+							if (Tools::isSubmit('refund_voucher_off'))
+								$total -= (float)Tools::getValue('order_discount_price');
 
 							$cartrule->reduction_amount = $total;
 							$cartrule->reduction_tax = true;
