@@ -53,6 +53,15 @@
 			statesShipped.push({$state['id_order_state']});
 		{/if}
 	{/foreach}
+	var order_discount_price = {if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
+									{$order->total_discounts_tax_excl}
+								{else}
+									{$order->total_discounts_tax_incl}
+								{/if};
+	var okButton = "{l s='Yes'}";
+	var cancelButton = "{l s='No'}";
+	var alertTitle = "{l s='Voucher refund'}";
+	var alertMsg = "{l s='Do you want to refund the voucher?'}";
 	</script>
 
 	{assign var="hook_invoice" value={hook h="displayInvoice" id_order=$order->id}}
