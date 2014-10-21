@@ -15,4 +15,7 @@ ALTER TABLE  `PREFIX_module_access` ADD  `uninstall` TINYINT( 1 ) NOT NULL AFTER
 ALTER TABLE  `PREFIX_specific_price` ADD  `reduction_tax` TINYINT( 1 ) NOT NULL DEFAULT 1 AFTER  `reduction`;
 ALTER TABLE  `PREFIX_specific_price_rule` ADD  `reduction_tax` TINYINT( 1 ) NOT NULL DEFAULT 1 AFTER  `reduction`;
 
+INSERT INTO `PREFIX_hook` (`id_hook` , `name` , `title` , `description` , `position` , `live_edit`)
+VALUES (NULL , 'displayCustomerIdentityForm', 'Customer identity form displayed in Front Office', 'This hook displays new elements on the form to update a customer identity', '1', '0');
+
 /* PHP:p16011_media_server(); */;
