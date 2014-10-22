@@ -2782,6 +2782,37 @@ class CartCore extends ObjectModel
 				return false;
 			}
 		}
+		
+		
+		//Taking care about cart rules
+
+		$cart_rules = CartRule::getCustomerCartRules(Context::getContext()->cookie->id_lang, Context::getContext()->cookie->id_customer, true);
+
+		$free_carriers_rules = array();
+		foreach ($cart_rules as $key =>  $cart_rule)
+		{
+
+
+		
+			if ($cart_rule['free_shipping'] && $cart_rule['carrier_restriction'] )
+			{
+
+
+				$cr = new CartRule((int)$cart_rule['id_cart_rule']);
+
+				if (Validate::isLoadedObject($cr) && ($cr->minimum_amount < $this->getOrderTotal($cr->minimum_amount_tax, Cart::ONLY_PRODUCTS)))
+				{
+					$carriers = $cr->getAssociatedRestrictions('carrier', true, false);
+					if (is_array($carriers) && count($carriers) && isset($carriers['selected']))
+						foreach($carriers['selected'] as $carrier)
+							if (isset($carrier['id_carrier']) && $carrier['id_carrier'])
+								$free_carriers_rules[] = (int)$carrier['id_carrier'];
+				}
+			}
+		}
+
+		//Apply cart rule :
+		$shipping_cost = (in_array($id_carrier, $free_carriers_rules)) ? 0 : $shipping_cost ;
 
 		// Apply tax
 		if ($use_tax && isset($carrier_tax))
