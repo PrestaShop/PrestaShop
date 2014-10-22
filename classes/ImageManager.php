@@ -145,33 +145,43 @@ class ImageManagerCore
 		{
 			$exif = exif_read_data($src_file);
 
-			switch($exif['Orientation']) {
-				case 3:
-					$src_width = $tmp_height;
-					$src_height = $tmp_width;
-					$src_image = imagerotate($src_image, 180, 0);
-					break;
+			if (isset($exif['Orientation']))
+			{
+				switch($exif['Orientation']) {
+					case 3:
+						$src_width = $tmp_height;
+						$src_height = $tmp_width;
+						$src_image = imagerotate($src_image, 180, 0);
+						break;
 
-				case 6:
-					$src_width = $tmp_height;
-					$src_height = $tmp_width;
-					$src_image = imagerotate($src_image, -90, 0);
-					break;
+					case 6:
+						$src_width = $tmp_height;
+						$src_height = $tmp_width;
+						$src_image = imagerotate($src_image, -90, 0);
+						break;
 
-				case 8:
-					$src_width = $tmp_height;
-					$src_height = $tmp_width;
-					$src_image = imagerotate($src_image, 90, 0);
-					break;
+					case 8:
+						$src_width = $tmp_height;
+						$src_height = $tmp_width;
+						$src_image = imagerotate($src_image, 90, 0);
+						break;
 
-				default:
-					$src_width = $tmp_width;
-					$src_height = $tmp_height;
+					default:
+						$src_width = $tmp_width;
+						$src_height = $tmp_height;
+				}
+			}
+			else
+			{
+				$src_width = $tmp_width;
+				$src_height = $tmp_height;
 			}
 		}
 		else
+		{
 			$src_width = $tmp_width;
 			$src_height = $tmp_height;
+		}
 
 		// If PS_IMAGE_QUALITY is activated, the generated image will be a PNG with .jpg as a file extension.
 		// This allow for higher quality and for transparency. JPG source files will also benefit from a higher quality
