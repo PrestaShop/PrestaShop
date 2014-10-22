@@ -1,79 +1,79 @@
-<?xml version="1.0"?>
+<?xml version='1.0'?>
 <entity_category>
-  <category id="Women" id_shop="1">
-    <name>Women</name>
-    <description>&lt;p&gt;&lt;strong&gt;You will find here all woman fashion collections.&lt;/strong&gt;&lt;/p&gt;&#xD;
-&lt;p&gt;This category includes all the basics of your wardrobe and much more:&lt;/p&gt;&#xD;
-&lt;p&gt;shoes, accessories, printed t-shirts, feminine dresses, women's jeans!&lt;/p&gt;</description>
-    <link_rewrite>women</link_rewrite>
+  <category id='Women' id_shop='1'>
+    <name>Mujer</name>
+    <description>&lt;p&gt;&lt;strong&gt;Aquí encontrarás todas las colecciones de moda de mujer.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Esta categoría incluye todos los básicos de tu armario y mucho más:&lt;/p&gt;
+&lt;p&gt;¡zapatos, complementos, camisetas estampadas, vestidos muy femeninos y vaqueros para mujer!&lt;/p&gt;</description>
+    <link_rewrite>mujer</link_rewrite>
     <meta_title/>
     <meta_keywords/>
     <meta_description/>
   </category>
-  <category id="Tops" id_shop="1">
+  <category id='Tops' id_shop='1'>
     <name>Tops</name>
-    <description>&lt;p&gt;Choose from t-shirts, tops, blouses, short sleeves, long sleeves, tank tops, 3/4 sleeves and more.&lt;/p&gt;&#xD;
-&lt;p&gt;Find the cut that suits you the best!&lt;/p&gt;</description>
+    <description>&lt;p&gt;Aquí encontrarás camisetas, tops, blusas, camisetas de manga corta, de manga larga, sin mangas, de media manga y mucho más.&lt;/p&gt;
+&lt;p&gt;¡Encuentra el corte que mejor te quede!&lt;/p&gt;</description>
     <link_rewrite>tops</link_rewrite>
     <meta_title/>
     <meta_keywords/>
     <meta_description/>
   </category>
-  <category id="T-shirts" id_shop="1">
-    <name>T-shirts</name>
-    <description>&lt;p&gt;The must have of your wardrobe, take a look at our different colors,&lt;/p&gt;&#xD;
-&lt;p&gt;shapes and style of our collection!&lt;/p&gt;</description>
-    <link_rewrite>tshirts</link_rewrite>
+  <category id='T-shirts' id_shop='1'>
+    <name>Camisetas</name>
+    <description>&lt;p&gt;Los must have de tu armario; ¡échale un vistazo a los diferentes colores,&lt;/p&gt;
+&lt;p&gt;formas y estilos de nuestra colección!&lt;/p&gt;</description>
+    <link_rewrite>camisetas</link_rewrite>
     <meta_title/>
     <meta_keywords/>
     <meta_description/>
   </category>
-  <category id="Tops_1" id_shop="1">
+  <category id='Tops_1' id_shop='1'>
     <name>Tops</name>
-    <description>Choose the top that best suits you from the wide variety of tops we have. </description>
+    <description>Te ofrecemos una amplia variedad de tops para que puedas escoger el que mejor te quede.</description>
     <link_rewrite>top</link_rewrite>
     <meta_title/>
     <meta_keywords/>
     <meta_description/>
   </category>
-  <category id="Blouses" id_shop="1">
-    <name>Blouses</name>
-    <description>Match your favorites blouses with the right accessories for the perfect look.</description>
-    <link_rewrite>blouses</link_rewrite>
+  <category id='Blouses' id_shop='1'>
+    <name>Blusas</name>
+    <description>Combina tus blusas preferidas con los accesorios perfectos para un look deslumbrante.</description>
+    <link_rewrite>blusas</link_rewrite>
     <meta_title/>
     <meta_keywords/>
     <meta_description/>
   </category>
-  <category id="Dresses" id_shop="1">
-    <name>Dresses</name>
-    <description>&lt;p&gt;Find your favorites dresses from our wide choice of evening, casual or summer dresses!&lt;/p&gt;&#xD;
-&lt;p&gt;We offer dresses for every day, every style and every occasion.&lt;/p&gt;</description>
-    <link_rewrite>dresses</link_rewrite>
+  <category id='Dresses' id_shop='1'>
+    <name>Vestidos</name>
+    <description>&lt;p&gt;¡Encuentra tus vestidos favoritos entre nuestra amplia colección de vestidos de noche, vestidos informales y vestidos veraniegos!&lt;/p&gt;
+&lt;p&gt;Te ofrecemos vestidos para todos los días, para cualquier estilo y cualquier ocasión.&lt;/p&gt;</description>
+    <link_rewrite>vestidos</link_rewrite>
     <meta_title/>
     <meta_keywords/>
     <meta_description/>
   </category>
-  <category id="Casual_Dresses" id_shop="1">
-    <name>Casual Dresses</name>
-    <description>&lt;p&gt;You are looking for a dress for every day? Take a look at&lt;/p&gt;&#xD;
-&lt;p&gt;our selection of dresses to find one that suits you.&lt;/p&gt;</description>
-    <link_rewrite>casual-dresses</link_rewrite>
+  <category id='Casual_Dresses' id_shop='1'>
+    <name>Vestidos informales</name>
+    <description>&lt;p&gt;¿Estás buscando un vestido para todos los días? Échale un vistazo a&lt;/p&gt;
+&lt;p&gt;nuestra selección para encontrar el vestido perfecto.&lt;/p&gt;</description>
+    <link_rewrite>vestidos-informales</link_rewrite>
     <meta_title/>
     <meta_keywords/>
     <meta_description/>
   </category>
-  <category id="Evening_Dresses" id_shop="1">
-    <name>Evening Dresses</name>
-    <description>Browse our different dresses to choose the perfect dress for an unforgettable evening!</description>
-    <link_rewrite>evening-dresses</link_rewrite>
+  <category id='Evening_Dresses' id_shop='1'>
+    <name>Vestidos de noche</name>
+    <description>¡Descubre nuestra colección y encuentra el vestido perfecto para una velada inolvidable!</description>
+    <link_rewrite>vestidos-noche</link_rewrite>
     <meta_title/>
     <meta_keywords/>
     <meta_description/>
   </category>
-  <category id="Summer_Dresses" id_shop="1">
-    <name>Summer Dresses</name>
-    <description>Short dress, long dress, silk dress, printed dress, you will find the perfect dress for summer.</description>
-    <link_rewrite>summer-dresses</link_rewrite>
+  <category id='Summer_Dresses' id_shop='1'>
+    <name>Vestidos de verano</name>
+    <description>Cortos, largos, de seda, estampados... aquí encontrarás el vestido perfecto para el verano.</description>
+    <link_rewrite>vestidos-verano</link_rewrite>
     <meta_title/>
     <meta_keywords/>
     <meta_description/>
