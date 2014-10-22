@@ -1164,7 +1164,7 @@ class OrderCore extends ObjectModel
 	 */
 	public function setInvoice($use_existing_payment = false)
 	{
-		if (Configuration::get('PS_INVOICE') && !$this->hasInvoice())
+		if (!$this->hasInvoice())
 		{
 			if ($id = (int)$this->hasDelivery())
 				$order_invoice = new OrderInvoice($id);
@@ -1191,7 +1191,8 @@ class OrderCore extends ObjectModel
 			// Save Order invoice
 
 			$order_invoice->save();
-			$this->setLastInvoiceNumber($order_invoice->id, $this->id_shop);
+			if (Configuration::get('PS_INVOICE'))
+				$this->setLastInvoiceNumber($order_invoice->id, $this->id_shop);
 
 			$order_invoice->saveCarrierTaxCalculator($tax_calculator->getTaxesAmount($order_invoice->total_shipping_tax_excl));
 
@@ -1247,7 +1248,8 @@ class OrderCore extends ObjectModel
 
 			// Keep it for backward compatibility, to remove on 1.6 version
 			$this->invoice_date = $order_invoice->date_add;
-			$this->invoice_number = $this->getInvoiceNumber($order_invoice->id);
+			if (Configuration::get('PS_INVOICE'))
+				$this->invoice_number = $this->getInvoiceNumber($order_invoice->id);
 			$this->update();
 		}
 	}
