@@ -2103,6 +2103,7 @@ class CartCore extends ObjectModel
 		//    - Calculate the price
 		//    - Calculate the average position
 		foreach ($delivery_option_list as $id_address => $delivery_option)
+			$oneisfree=false;
 			foreach ($delivery_option as $key => $value)
 			{
 				$total_price_with_tax = 0;
@@ -2129,6 +2130,16 @@ class CartCore extends ObjectModel
 				$delivery_option_list[$id_address][$key]['total_price_without_tax'] = $total_price_without_tax;
 				$delivery_option_list[$id_address][$key]['is_free'] = !$total_price_without_tax_with_rules ? true : false;
 				$delivery_option_list[$id_address][$key]['position'] = $position / count($value['carrier_list']);
+			}
+			if($oneisfree){
+				foreach ($delivery_option as $key => $value){
+					if ($delivery_option_list[$id_address][$key]['is_free']){
+						$delivery_option_list[$id_address][$key]['is_best_price']=true;
+					}
+					else{
+						$delivery_option_list[$id_address][$key]['is_best_price']=false;
+					}
+				}
 			}
 
 		// Sort delivery option list
