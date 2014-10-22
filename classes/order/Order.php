@@ -30,7 +30,7 @@ class OrderCore extends ObjectModel
 	const ROUND_LINE = 2;
 	const ROUND_TOTAL = 3;
 
-	
+
 	/** @var integer Delivery address id */
 	public $id_address_delivery;
 
@@ -162,6 +162,11 @@ class OrderCore extends ObjectModel
 	public $reference;
 
 	/**
+	 * @var int Round mode method used for this order
+	 */
+	public $round_mode;
+
+	/**
 	 * @see ObjectModel::$definition
 	 */
 	public static $definition = array(
@@ -201,6 +206,7 @@ class OrderCore extends ObjectModel
 			'total_wrapping' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 			'total_wrapping_tax_incl' =>	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 			'total_wrapping_tax_excl' =>	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'round_mode' =>					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'shipping_number' => 			array('type' => self::TYPE_STRING, 'validate' => 'isTrackingNumber'),
 			'conversion_rate' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
 			'invoice_number' => 			array('type' => self::TYPE_INT),
@@ -366,7 +372,7 @@ class OrderCore extends ObjectModel
 	{
 		$product_price_tax_excl = $orderDetail->unit_price_tax_excl * $quantity;
 		$product_price_tax_incl = $orderDetail->unit_price_tax_incl * $quantity;
-		
+
 		/* Update cart */
 		$cart = new Cart($this->id_cart);
 		$cart->updateQty($quantity, $orderDetail->product_id, $orderDetail->product_attribute_id, false, 'down'); // customization are deleted in deleteCustomization
@@ -396,7 +402,7 @@ class OrderCore extends ObjectModel
 			'total_paid_tax_excl',
 			'total_paid_real'
 		);
-		
+
 		/* Prevent from floating precision issues (total_products has only 2 decimals) */
 		foreach ($fields as $field)
 			if ($this->{$field} < 0)
@@ -462,7 +468,7 @@ class OrderCore extends ObjectModel
 	{
 		if (!$id_order_state)
 			$id_order_state = 0;
-		
+
 		$logable = false;
 		$delivery = false;
 		$paid = false;
@@ -594,9 +600,9 @@ class OrderCore extends ObjectModel
 				// Get the display filename
 				$row['display_filename'] = ProductDownload::getFilenameFromFilename($row['filename']);
 			}
-			
+
 			$row['id_address_delivery'] = $this->id_address_delivery;
-			
+
 			/* Stock product */
 			$resultArray[(int)$row['id_order_detail']] = $row;
 		}
@@ -734,7 +740,7 @@ class OrderCore extends ObjectModel
 	}
 
 	public function getCartRules()
-	{	
+	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'order_cart_rule` ocr
@@ -784,7 +790,7 @@ class OrderCore extends ObjectModel
 	{
 		return count($this->getHistory((int)($this->id_lang), false, false, OrderState::FLAG_DELIVERY));
 	}
-	
+
 	/**
 	 * Has products returned by the merchant or by the customer?
 	 */
@@ -991,22 +997,22 @@ class OrderCore extends ObjectModel
 		}
 		return $return;
 	}
-	
+
 	/**
 	 * used to cache order customer
-	 */ 
+	 */
 	protected $cacheCustomer = null;
-	
+
 	/**
 	 * Get order customer
-	 * 
+	 *
 	 * @return Customer $customer
 	 */
 	public function getCustomer()
 	{
 		if (is_null($this->cacheCustomer))
 			$this->cacheCustomer = new Customer((int)$this->id_customer);
-		
+
 		return $this->cacheCustomer;
 	}
 
@@ -1195,7 +1201,7 @@ class OrderCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'order_carrier`
 				WHERE `id_order` = '.(int)$order_invoice->id_order.'
 				AND (`id_order_invoice` IS NULL OR `id_order_invoice` = 0)');
-			
+
 			if ($id_order_carrier)
 			{
 				$order_carrier = new OrderCarrier($id_order_carrier);
@@ -1213,10 +1219,10 @@ class OrderCore extends ObjectModel
 			if ($use_existing_payment)
 			{
 				$id_order_payments = Db::getInstance()->executeS('
-					SELECT DISTINCT op.id_order_payment 
+					SELECT DISTINCT op.id_order_payment
 					FROM `'._DB_PREFIX_.'order_payment` op
 					INNER JOIN `'._DB_PREFIX_.'orders` o ON (o.reference = op.order_reference)
-					LEFT JOIN `'._DB_PREFIX_.'order_invoice_payment` oip ON (oip.id_order_payment = op.id_order_payment)					
+					LEFT JOIN `'._DB_PREFIX_.'order_invoice_payment` oip ON (oip.id_order_payment = op.id_order_payment)
 					WHERE (oip.id_order != '.(int)$order_invoice->id_order.' OR oip.id_order IS NULL) AND o.id_order = '.(int)$order_invoice->id_order);
 
 				if (count($id_order_payments))
@@ -1308,7 +1314,7 @@ class OrderCore extends ObjectModel
 		{
 			if ($order_invoice->delivery_number)
 				continue;
-				
+
 			// Set delivery number on invoice
 			$order_invoice->delivery_number = 0;
 			$order_invoice->delivery_date = date('Y-m-d H:i:s');
@@ -1337,9 +1343,9 @@ class OrderCore extends ObjectModel
 
 	/**
 	 * Get a collection of orders using reference
-	 * 
+	 *
 	 * @since 1.5.0.14
-	 * 
+	 *
 	 * @param string $reference
 	 * @return PrestaShopCollection Collection of Order
 	 */
@@ -1404,18 +1410,18 @@ class OrderCore extends ObjectModel
 	public function getWsOrderRows()
 	{
 		$query = '
-			SELECT 
-			`id_order_detail` as `id`, 
-			`product_id`, 
-			`product_price`, 
-			`id_order`, 
-			`product_attribute_id`, 
-			`product_quantity`, 
-			`product_name`, 
+			SELECT
+			`id_order_detail` as `id`,
+			`product_id`,
+			`product_price`,
+			`id_order`,
+			`product_attribute_id`,
+			`product_quantity`,
+			`product_name`,
 			`product_reference`,
 			`product_ean13`,
 			`product_upc`,
-			`unit_price_tax_incl`, 
+			`unit_price_tax_incl`,
 			`unit_price_tax_excl`
 			FROM `'._DB_PREFIX_.'order_detail`
 			WHERE id_order = '.(int)$this->id;
@@ -1445,7 +1451,7 @@ class OrderCore extends ObjectModel
 		$this->delivery_number = $res['delivery_number'];
 		$this->update();
 
-		$history->addWithemail();		
+		$history->addWithemail();
 	}
 
 	public function addWs($autodate = true, $nullValues = false)
@@ -1584,10 +1590,10 @@ class OrderCore extends ObjectModel
 
 		// We put autodate parameter of add method to true if date_add field is null
 		$res = $order_payment->add(is_null($order_payment->date_add)) && $this->update();
-		
+
 		if (!$res)
 			return false;
-	
+
 		if (!is_null($order_invoice))
 		{
 			$res = Db::getInstance()->execute('
@@ -1597,7 +1603,7 @@ class OrderCore extends ObjectModel
 			// Clear cache
 			Cache::clean('order_invoice_paid_*');
 		}
-		
+
 		return $res;
 	}
 
@@ -1902,7 +1908,7 @@ class OrderCore extends ObjectModel
 		if ($res = (int)Db::getInstance()->getvalue('
 				SELECT `id_order_invoice`
 				FROM `'._DB_PREFIX_.'order_invoice`
-				WHERE `id_order` =  '.(int)$this->id.' 
+				WHERE `id_order` =  '.(int)$this->id.'
 				AND `number` > 0'));
 			return $res;
 		return false;
@@ -1965,10 +1971,10 @@ class OrderCore extends ObjectModel
 		$sql_filter .= Shop::addSqlRestriction(Shop::SHARE_ORDER, 'main');
 		return parent::getWebserviceObjectList($sql_join, $sql_filter, $sql_sort, $sql_limit);
 	}
-	
+
 	/**
 	 * Get all other orders with the same reference
-	 * 
+	 *
 	 * @since 1.5.0.13
 	 */
 	public function getBrother()
@@ -1978,10 +1984,10 @@ class OrderCore extends ObjectModel
 		$collection->where('id_order', '<>', $this->id);
 		return $collection;
 	}
-	
+
 	/**
 	 * Get a collection of order payments
-	 * 
+	 *
 	 * @since 1.5.0.13
 	 */
 	public function getOrderPayments()
@@ -1991,10 +1997,10 @@ class OrderCore extends ObjectModel
 
 	/**
 	 * Return a unique reference like : GWJTHMZUN#2
-	 * 
+	 *
 	 * With multishipping, order reference are the same for all orders made with the same cart
 	 * in this case this method suffix the order reference by a # and the order number
-	 * 
+	 *
 	 * @since 1.5.0.14
 	 */
 	public function getUniqReference()
@@ -2003,21 +2009,21 @@ class OrderCore extends ObjectModel
 		$query->select('MIN(id_order) as min, MAX(id_order) as max');
 		$query->from('orders');
 		$query->where('id_cart = '.(int)$this->id_cart);
-		
+
 		$order = Db::getInstance()->getRow($query);
-		
+
 		if ($order['min'] == $order['max'])
 			return $this->reference;
 		else
 			return $this->reference.'#'.($this->id + 1 - $order['min']);
 	}
-	
+
 	/**
 	 * Return a unique reference like : GWJTHMZUN#2
-	 * 
+	 *
 	 * With multishipping, order reference are the same for all orders made with the same cart
 	 * in this case this method suffix the order reference by a # and the order number
-	 * 
+	 *
 	 * @since 1.5.0.14
 	 */
 	public static function getUniqReferenceOf($id_order)
@@ -2025,15 +2031,15 @@ class OrderCore extends ObjectModel
 		$order = new Order($id_order);
 		return $order->getUniqReference();
 	}
-	
+
 	/**
 	 * Return id of carrier
-	 * 
+	 *
 	 * Get id of the carrier used in order
-	 * 
+	 *
 	 * @since 1.5.5.0
-	 */	
-	public function getIdOrderCarrier()	
+	 */
+	public function getIdOrderCarrier()
 	{
 		return (int)Db::getInstance()->getValue('
 				SELECT `id_order_carrier`

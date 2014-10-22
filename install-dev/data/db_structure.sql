@@ -1105,6 +1105,7 @@ CREATE TABLE `PREFIX_orders` (
   `total_wrapping` decimal(17,2) NOT NULL DEFAULT '0.00',
   `total_wrapping_tax_incl` decimal(17,2) NOT NULL DEFAULT '0.00',
   `total_wrapping_tax_excl` decimal(17,2) NOT NULL DEFAULT '0.00',
+  `round_mode` tinyint(1) NOT NULL DEFAULT '2',
   `invoice_number` int(10) unsigned NOT NULL DEFAULT '0',
   `delivery_number` int(10) unsigned NOT NULL DEFAULT '0',
   `invoice_date` datetime NOT NULL,
