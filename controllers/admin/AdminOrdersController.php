@@ -733,6 +733,8 @@ class AdminOrdersControllerCore extends AdminController
 							}
 						}
 					}
+					elseif (Tools::isSubmit('refund_voucher_off'))
+						$this->errors[] = Tools::displayError('You cannot generate a voucher for this refund as the amount is lower than the initial voucher from the order.');
 					else
 						$this->errors[] = Tools::displayError('You have to enter an amount if you want to create a partial credit slip.');
 
