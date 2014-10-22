@@ -1618,7 +1618,7 @@ class ToolsCore
 			case PS_ROUND_HALF_DOWN:
 			case PS_ROUND_HALF_EVEN:
 			case PS_ROUND_HALF_ODD:
-				return Tools::math_round($value, $precision, $method);
+				return Tools::math_round($value, $precision, Tools::$round_mode);
 			case PS_ROUND_HALF_UP:
 			default:
 				return Tools::math_round($value, $precision, PS_ROUND_HALF_UP);
