@@ -320,6 +320,7 @@ abstract class PaymentModuleCore extends Module
 					$order->total_paid_tax_excl = (float)Tools::ps_round((float)$this->context->cart->getOrderTotal(false, Cart::BOTH, $order->product_list, $id_carrier), 2);
 					$order->total_paid_tax_incl = (float)Tools::ps_round((float)$this->context->cart->getOrderTotal(true, Cart::BOTH, $order->product_list, $id_carrier), 2);
 					$order->total_paid = $order->total_paid_tax_incl;
+					$order->round_mode = Configuration::get('PS_PRICE_ROUND_MODE');
 
 					$order->invoice_date = '0000-00-00 00:00:00';
 					$order->delivery_date = '0000-00-00 00:00:00';

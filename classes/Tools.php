@@ -32,6 +32,8 @@ class ToolsCore
 	protected static $_user_plateform;
 	protected static $_user_browser;
 
+	public static $round_mode = null;
+
 	/**
 	* Random password generator
 	*
@@ -1604,12 +1606,10 @@ class ToolsCore
 	 */
 	public static function ps_round($value, $precision = 0)
 	{
-		static $method = null;
+		if (Tools::$round_mode == null)
+			Tools::$round_mode = (int)Configuration::get('PS_PRICE_ROUND_MODE');
 
-		if ($method == null)
-			$method = (int)Configuration::get('PS_PRICE_ROUND_MODE');
-
-		switch ($method)
+		switch (Tools::$round_mode)
 		{
 			case PS_ROUND_UP:
 				return Tools::ceilf($value, $precision);

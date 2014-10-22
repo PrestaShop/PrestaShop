@@ -276,6 +276,7 @@ class OrderInvoiceCore extends ObjectModel
 	 */
 	public function getProductTaxesBreakdown($order = null)
 	{
+		Tools::$round_mode = $order->round_mode;
 		$tmp_tax_infos = array();
 		if ($this->useOneAfterAnotherTaxComputationMethod())
 		{
