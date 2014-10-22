@@ -37,7 +37,10 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 
 		/* if $_GET['id_shop'] is transmitted, virtual url can be loaded in config.php, so we wether transmit shop_id in herfs */
 		if ($this->id_shop = (int)Tools::getValue('shop_id'))
+		{
 			$_GET['id_shop'] = $this->id_shop;
+			$_POST['id_shop'] = $this->id_shop;
+		}
 
 	 	$this->list_reduction_type = array(
 			'percentage' => $this->l('Percentage'),
@@ -291,7 +294,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 				'title' => $this->l('Save')
 			),
 		);
-		if (($value = $this->getFieldValue($this->object, 'price')) != -1)	
+		if (($value = $this->getFieldValue($this->object, 'price')) != -1)
 			$price = number_format($value, 6);
 		else
 			$price = '';
