@@ -134,11 +134,44 @@ class ImageManagerCore
 			clearstatcache();
 		else
 			clearstatcache(true, $src_file);
-		
+
 		if (!file_exists($src_file) || !filesize($src_file))
 			return !($error = self::ERROR_FILE_NOT_EXIST);
 
-		list($src_width, $src_height, $type) = getimagesize($src_file);
+		list($tmp_width, $tmp_height, $type) = getimagesize($src_file);
+		$src_image = ImageManager::create($type, $src_file);
+
+		if (function_exists('exif_read_data') && function_exists('mb_strtolower'))
+		{
+			$exif = exif_read_data($src_file);
+
+			switch($exif['Orientation']) {
+				case 3:
+					$src_width = $tmp_height;
+					$src_height = $tmp_width;
+					$src_image = imagerotate($src_image, 180, 0);
+					break;
+
+				case 6:
+					$src_width = $tmp_height;
+					$src_height = $tmp_width;
+					$src_image = imagerotate($src_image, -90, 0);
+					break;
+
+				case 8:
+					$src_width = $tmp_height;
+					$src_height = $tmp_width;
+					$src_image = imagerotate($src_image, 90, 0);
+					break;
+
+				default:
+					$src_width = $tmp_width;
+					$src_height = $tmp_height;
+			}
+		}
+		else
+			$src_width = $tmp_width;
+			$src_height = $tmp_height;
 
 		// If PS_IMAGE_QUALITY is activated, the generated image will be a PNG with .jpg as a file extension.
 		// This allow for higher quality and for transparency. JPG source files will also benefit from a higher quality
@@ -153,8 +186,6 @@ class ImageManagerCore
 			$dst_width = $src_width;
 		if (!$dst_height)
 			$dst_height = $src_height;
-
-		$src_image = ImageManager::create($type, $src_file);
 
 		$width_diff = $dst_width / $src_width;
 		$height_diff = $dst_height / $src_height;
@@ -182,7 +213,7 @@ class ImageManagerCore
 
 		if (!ImageManager::checkImageMemoryLimit($src_file))
 			return !($error = self::ERROR_MEMORY_LIMIT);
-		
+
 		$dest_image = imagecreatetruecolor($dst_width, $dst_height);
 
 		// If image is a PNG and the output is PNG, fill with transparency. Else fill with white background.
@@ -450,7 +481,7 @@ class ImageManagerCore
 						'image/gif' => array('gif'),
 						'image/jpeg' => array('jpg', 'jpeg'),
 						'image/png' => array('png')
-					);	
+					);
 		$extension = substr($file_name, strrpos($file_name, '.') + 1);
 
 		$mime_type = null;
