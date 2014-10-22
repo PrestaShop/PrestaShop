@@ -636,9 +636,8 @@ function upQuantity(id, qty)
 function downQuantity(id, qty)
 {
 	var val = $('input[name=quantity_' + id + ']').val();
-	if(typeof(qty) == 'undefined' || !qty{
+	if(typeof qty === 'undefined' || !qty)
 		qty = 1;
-	}
 	else if (qty < 0)
 		qty = -qty;
 
