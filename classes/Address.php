@@ -174,7 +174,7 @@ class AddressCore extends ObjectModel
 			Customer::resetAddressCache($this->id_customer);
 		return true;
 	}
-	
+
 	public function update($null_values = false)
 	{
 		// Empty related caches
@@ -359,7 +359,7 @@ class AddressCore extends ObjectModel
 			$address = new Address((int)$id_address);
 
 			if (!Validate::isLoadedObject($address))
-				throw new PrestaShopException('Invalid address');
+				throw new PrestaShopException('Invalid address #'.(int)$id_address);
 		}
 		elseif ($with_geoloc && isset($context->customer->geoloc_id_country))
 		{
@@ -398,7 +398,7 @@ class AddressCore extends ObjectModel
 		$query->where('id_warehouse = 0');
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 	}
-	
+
 	public static function aliasExist($alias, $id_address, $id_customer)
 	{
 		$query = new DbQuery();
