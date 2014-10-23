@@ -33,7 +33,10 @@
 {if isset($url_prev)}
 	<script type="text/javascript">
 	$(document).ready(function () {
-		window.open("{$url_prev}", "_blank");
+		var re = /url_preview=(.*)/;
+		var url = re.exec(window.location.href);
+		if (typeof url !== 'undefined' && url !== null && typeof url[1] !== 'undefined' && url[1] === "1")
+			window.open("{$url_prev}", "_blank");
 	});
 	</script>
 {/if}
