@@ -1105,7 +1105,7 @@
 							<p class="checkbox">
 								<label for="generateCreditSlip">
 									<input type="checkbox" id="generateCreditSlip" name="generateCreditSlip" onclick="toggleShippingCost()" />
-									{l s='Generate a credit card slip'}
+									{l s='Generate a credit slip'}
 								</label>
 							</p>
 							<p class="checkbox">
