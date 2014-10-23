@@ -20,4 +20,7 @@ VALUES (NULL , 'displayCustomerIdentityForm', 'Customer identity form displayed 
 
 ALTER TABLE `PREFIX_orders` ADD `round_mode` TINYINT(1) NOT NULL DEFAULT '2' AFTER `total_wrapping_tax_excl`;
 
+ALTER TABLE `PREFIX_product_attribute` MODIFY `unit_price_impact` DECIMAL(20,6);
+ALTER TABLE `PREFIX_product_attribute_shop` MODIFY `unit_price_impact` DECIMAL(20,6);
+
 /* PHP:p16011_media_server(); */;
