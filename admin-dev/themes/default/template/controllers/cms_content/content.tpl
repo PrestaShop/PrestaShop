@@ -33,10 +33,7 @@
 {if isset($url_prev)}
 	<script type="text/javascript">
 	$(document).ready(function () {
-		var re = /url_preview=(.*)/;
-		var url = re.exec(document.URL);
-		if (url[1] === "1")
-			window.open("{$url_prev}", "_blank");
+		window.open("{$url_prev}", "_blank");
 	});
 	</script>
 {/if}
