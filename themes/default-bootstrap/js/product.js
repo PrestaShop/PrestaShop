@@ -621,7 +621,12 @@ function updatePrice()
 
 	// If a specific price redefine the combination base price
 	if (combination.specific_price && combination.specific_price.price > 0)
-		basePriceWithoutTax = parseFloat(combination.specific_price.price);
+	{
+		if (combination.specific_price.id_product_attribute === 0)
+			basePriceWithoutTax = parseFloat(combination.specific_price.price);
+		else
+			basePriceWithoutTax = parseFloat(combination.specific_price.price) + parseFloat(combination.price);
+	}
 
 	// Apply group reduction
 	priceWithGroupReductionWithoutTax = basePriceWithoutTax * (1 - group_reduction);
@@ -671,7 +676,7 @@ function updatePrice()
 	{
 		if (combination.specific_price.reduction_type == 'amount')
 		{
-			if (typeof combination.specific_price.reduction_tax === 'undefined' 
+			if (typeof combination.specific_price.reduction_tax === 'undefined'
 				|| (typeof combination.specific_price.reduction_tax !== 'undefined' && combination.specific_price.reduction_tax === '1'))
 			{
 				var reduction = +combination.specific_price.reduction / currencyRate;
