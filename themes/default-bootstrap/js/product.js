@@ -606,8 +606,8 @@ function updateDisplay()
 function updatePrice()
 {
 	// Get combination prices
-	combID = $('#idCombination').val();
-	combination = combinationsFromController[combID];
+	var combID = $('#idCombination').val();
+	var combination = combinationsFromController[combID];
 	if (typeof combination == 'undefined')
 		return;
 
@@ -617,11 +617,16 @@ function updatePrice()
 
 	// Apply combination price impact
 	// 0 by default, +x if price is inscreased, -x if price is decreased
-	basePriceWithoutTax = basePriceWithoutTax + parseFloat(combination.price);
+	basePriceWithoutTax = basePriceWithoutTax + +combination.price;
 
 	// If a specific price redefine the combination base price
 	if (combination.specific_price && combination.specific_price.price > 0)
-		basePriceWithoutTax = parseFloat(combination.specific_price.price);
+	{
+		if (combination.specific_price.id_product_attribute === 0)
+			basePriceWithoutTax = +combination.specific_price.price;
+		else
+			basePriceWithoutTax = +combination.specific_price.price + +combination.price;
+	}
 
 	// Apply group reduction
 	priceWithGroupReductionWithoutTax = basePriceWithoutTax * (1 - group_reduction);
@@ -642,7 +647,7 @@ function updatePrice()
 		}
 		else if (combination.specific_price.reduction_type == 'percentage')
 		{
-			priceWithDiscountsWithoutTax = priceWithDiscountsWithoutTax * (1 - parseFloat(combination.specific_price.reduction));
+			priceWithDiscountsWithoutTax = priceWithDiscountsWithoutTax * (1 - +combination.specific_price.reduction);
 		}
 	}
 
@@ -671,7 +676,7 @@ function updatePrice()
 	{
 		if (combination.specific_price.reduction_type == 'amount')
 		{
-			if (typeof combination.specific_price.reduction_tax === 'undefined' 
+			if (typeof combination.specific_price.reduction_tax === 'undefined'
 				|| (typeof combination.specific_price.reduction_tax !== 'undefined' && combination.specific_price.reduction_tax === '1'))
 			{
 				var reduction = +combination.specific_price.reduction / currencyRate;
@@ -690,7 +695,7 @@ function updatePrice()
 		var discountPercentage = (1-(priceWithDiscountsDisplay/basePriceDisplay))*100;
 	}
 
-	var unit_impact = parseFloat(combination.unit_impact);
+	var unit_impact = +combination.unit_impact;
 	if (productUnitPriceRatio > 0 || unit_impact)
 	{
 		if (unit_impact)
@@ -728,7 +733,7 @@ function updatePrice()
 		{
 			if (combination.specific_price.reduction_type == 'amount')
 			{
-				$('#reduction_amount_display').html('-' + formatCurrency(parseFloat(discountValue) * currencyRate, currencyFormat, currencySign, currencyBlank));
+				$('#reduction_amount_display').html('-' + formatCurrency(+discountValue * currencyRate, currencyFormat, currencySign, currencyBlank));
 				$('#reduction_amount').show();
 			}
 			else
@@ -747,7 +752,7 @@ function updatePrice()
 
 		// If the default product ecotax is overridden by the combination
 		if (combination.ecotax)
-			ecotax = parseFloat(combination.ecotax);
+			ecotax = +combination.ecotax;
 
 		if (!noTaxForThisProduct)
 			ecotax = ecotax * (1 + ecotaxTax_rate/100)
