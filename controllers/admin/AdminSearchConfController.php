@@ -128,13 +128,15 @@ class AdminSearchConfControllerCore extends AdminController
 						)
 					),
 					'PS_SEARCH_START' => array(
-						'title' => $this->l('Search start'),
+						'title' => $this->l('Search within word'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool',
+						'desc' => $this->l('By default, to search for “blouse”, you have to enter “blous”, “blo”, etc (beginning of the word) – but not “lous” (within the word).').'<br/>'.
+	    						  $this->l('With this function enabled, it also gives the good result if you search for “lous”, “ouse”, or anything contained in the word.'),
 						'hint' => array(
-							$this->l('Enable searching in whole word rather than only from begining of the word.'),
-							$this->l('The search word will be looked into whole indexed word, this may however be ressources consuming.')
+							$this->l('Enable search within a whole word, rather than from its beginning only.'),
+							$this->l('It checks if the searched term is contained in the indexed word. This may be resource-consuming.')
 						)
 					),
 					'PS_SEARCH_MINWORDLEN' => array(
