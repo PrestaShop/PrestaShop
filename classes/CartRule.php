@@ -483,14 +483,14 @@ class CartRuleCore extends ObjectModel
 				return (!$display_error) ? false : Tools::displayError('You cannot use this voucher anymore (usage limit reached)');
 		}
 
-		// Get an intersection of the customer groups and the cart rule groups (if the customer is not logged in, the default group is 1)
+		// Get an intersection of the customer groups and the cart rule groups (if the customer is not logged in, the default group is Visitors)
 		if ($this->group_restriction)
 		{
 			$id_cart_rule = (int)Db::getInstance()->getValue('
 			SELECT crg.id_cart_rule
 			FROM '._DB_PREFIX_.'cart_rule_group crg
 			WHERE crg.id_cart_rule = '.(int)$this->id.'
-			AND crg.id_group '.($context->cart->id_customer ? 'IN (SELECT cg.id_group FROM '._DB_PREFIX_.'customer_group cg WHERE cg.id_customer = '.(int)$context->cart->id_customer.')' : '= 1'));
+			AND crg.id_group '.($context->cart->id_customer ? 'IN (SELECT cg.id_group FROM '._DB_PREFIX_.'customer_group cg WHERE cg.id_customer = '.(int)$context->cart->id_customer.')' : '= '.Configuration::get('PS_UNIDENTIFIED_GROUP')));
 			if (!$id_cart_rule)
 				return (!$display_error) ? false : Tools::displayError('You cannot use this voucher');
 		}
