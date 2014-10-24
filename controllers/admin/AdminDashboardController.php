@@ -170,6 +170,11 @@ class AdminDashboardControllerCore extends AdminController
 			'suffix' => $currency->iso_code
 		);
 
+		Media::addJsDef(array(
+				'dashboard_ajax_url' => $this->context->link->getAdminLink('AdminDashboard'),
+				'read_more' => '',
+			));
+
 		return $forms;
 	}
 
