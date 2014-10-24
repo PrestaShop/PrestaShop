@@ -99,23 +99,23 @@ class CombinationCore extends ObjectModel
 	{
 		if (!parent::delete())
 			return false;
-			
+
 		// Removes the product from StockAvailable, for the current shop
 		StockAvailable::removeProductFromStockAvailable((int)$this->id_product, (int)$this->id);
 
 		if ($specific_prices = SpecificPrice::getByProductId((int)$this->id_product, (int)$this->id))
 			foreach ($specific_prices as $specific_price)
-				{
-					$price = new SpecificPrice((int)$specific_price['id_specific_price']);
-					$price->delete();
-				}
+			{
+				$price = new SpecificPrice((int)$specific_price['id_specific_price']);
+				$price->delete();
+			}
 
 		if (!$this->hasMultishopEntries() && !$this->deleteAssociations())
 			return false;
 
 		$this->deleteFromSupplier($this->id_product);
 		Product::updateDefaultAttribute($this->id_product);
-		
+
 		return true;
 	}
 
@@ -137,9 +137,9 @@ class CombinationCore extends ObjectModel
 			StockAvailable::setProductOutOfStock((int)$this->id_product, StockAvailable::outOfStock((int)$this->id_product), null, $this->id);
 
 		SpecificPriceRule::applyAllRules(array((int)$this->id_product));
-		
+
 		Product::updateDefaultAttribute($this->id_product);
-		
+
 		return true;
 	}
 
@@ -163,7 +163,7 @@ class CombinationCore extends ObjectModel
 	public function setAttributes($ids_attribute)
 	{
 		$result = $this->deleteAssociations();
-		if ($result && !empty($ids_attribute)) 
+		if ($result && !empty($ids_attribute))
 		{
 			$sql_values = array();
 			foreach ($ids_attribute as $value)
@@ -254,7 +254,7 @@ class CombinationCore extends ObjectModel
 	public static function isFeatureActive()
 	{
 		static $feature_active = null;
-		
+
 		if ($feature_active === null)
 			$feature_active = Configuration::get('PS_COMBINATION_FEATURE_ACTIVE');
 		return $feature_active;
@@ -292,7 +292,7 @@ class CombinationCore extends ObjectModel
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 	}
-	
+
 	public function getColorsAttributes()
 	{
 		return Db::getInstance()->executeS('
