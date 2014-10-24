@@ -40,9 +40,9 @@ class PDFCore
 	const TEMPLATE_DELIVERY_SLIP = 'DeliverySlip';
 	const TEMPLATE_SUPPLY_ORDER_FORM = 'SupplyOrderForm';
 
-	public function __construct($objects, $template, $smarty)
+	public function __construct($objects, $template, $smarty, $orientation = 'P')
 	{
-		$this->pdf_renderer = new PDFGenerator((bool)Configuration::get('PS_PDF_USE_CACHE'));
+		$this->pdf_renderer = new PDFGenerator((bool)Configuration::get('PS_PDF_USE_CACHE'), $orientation);
 		$this->template = $template;
 		$this->smarty = $smarty;
 
