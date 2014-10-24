@@ -35,7 +35,7 @@ class CmsControllerCore extends FrontController
 	public function canonicalRedirection($canonicalURL = '')
 	{
 		if (Tools::getValue('live_edit'))
-			return ;
+			return;
 		if (Validate::isLoadedObject($this->cms) && ($canonicalURL = $this->context->link->getCMSLink($this->cms, $this->cms->link_rewrite, $this->ssl)))
 			parent::canonicalRedirection($canonicalURL);
 		else if (Validate::isLoadedObject($this->cms_category) && ($canonicalURL = $this->context->link->getCMSCategoryLink($this->cms_category)))
@@ -55,7 +55,7 @@ class CmsControllerCore extends FrontController
 
 		if (Configuration::get('PS_SSL_ENABLED') && Tools::getValue('content_only') && Tools::getValue('id_cms') == (int)Configuration::get('PS_CONDITIONS_CMS_ID') && Validate::isLoadedObject($this->cms))
 			$this->ssl = true;
-		
+
 		parent::init();
 
 		$this->canonicalRedirection();

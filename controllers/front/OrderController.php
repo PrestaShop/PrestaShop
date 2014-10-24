@@ -293,7 +293,7 @@ class OrderControllerCore extends ParentOrderController
 	public function processAddress()
 	{
 		$same = Tools::isSubmit('same');
-		if(!Tools::getValue('id_address_invoice', false) && !$same)
+		if (!Tools::getValue('id_address_invoice', false) && !$same)
 			$same = true;
 
 		if (!Customer::customerHasAddress($this->context->customer->id, (int)Tools::getValue('id_address_delivery'))
