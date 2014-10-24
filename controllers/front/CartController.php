@@ -33,7 +33,7 @@ class CartControllerCore extends FrontController
 	protected $id_address_delivery;
 	protected $customization_id;
 	protected $qty;
-	public    $ssl = true;
+	public $ssl = true;
 
 	protected $ajax_refresh = false;
 
@@ -53,7 +53,7 @@ class CartControllerCore extends FrontController
 		parent::init();
 
 		// Send noindex to avoid ghost carts by bots
-		header("X-Robots-Tag: noindex, nofollow", true);
+		header('X-Robots-Tag: noindex, nofollow', true);
 
 		// Get page main parameters
 		$this->id_product = (int)Tools::getValue('id_product', null);

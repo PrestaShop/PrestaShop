@@ -64,7 +64,7 @@ class SearchControllerCore extends FrontController
 				$product['product_link'] = $this->context->link->getProductLink($product['id_product'], $product['prewrite'], $product['crewrite']);
 			die(Tools::jsonEncode($searchResults));
 		}
-		
+
 		//Only controller content initialization when the user use the normal search
 		parent::initContent();
 
@@ -94,7 +94,7 @@ class SearchControllerCore extends FrontController
 			$this->n = abs((int)(Tools::getValue('n', Configuration::get('PS_PRODUCTS_PER_PAGE'))));
 			$this->p = abs((int)(Tools::getValue('p', 1)));
 			$original_query = $query;
-			$query = Tools::replaceAccentedChars(urldecode($query));			
+			$query = Tools::replaceAccentedChars(urldecode($query));
 			$search = Search::find($this->context->language->id, $query, $this->p, $this->n, $this->orderBy, $this->orderWay);
 			foreach ($search['result'] as &$product)
 				$product['link'] .= (strpos($product['link'], '?') === false ? '?' : '&').'search_query='.urlencode($query).'&results='.(int)$search['total'];
