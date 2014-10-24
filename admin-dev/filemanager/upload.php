@@ -126,6 +126,11 @@ if (!empty($_FILES))
 				exit();
 			}
 		}
+		else
+		{
+			move_uploaded_file($tempFile, $targetFile);
+			chmod($targetFile, 0755);
+		}
 	} else
 	{
 		header('HTTP/1.1 406 file not permitted', true, 406);
@@ -150,4 +155,4 @@ if (isset($_POST['submit']))
 	header('location: dialog.php?'.$query);
 }
 
-?>      
+?>

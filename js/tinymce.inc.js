@@ -13,7 +13,7 @@ function tinySetup(config)
 	default_config = {
 		selector: ".rte" ,
 		plugins : "colorpicker link image paste pagebreak table contextmenu filemanager table code media autoresize textcolor anchor",
-		toolbar1 : "code,|,bold,italic,underline,strikethrough,|,alignleft,aligncenter,alignright,alignfull,formatselect,|,blockquote,colorpicker,pasteword,|,bullist,numlist,|,outdent,indent,|,link,unlink,|,anchor,|,media,image",
+		toolbar1 : "code,|,bold,italic,underline,strikethrough,|,alignleft,aligncenter,alignright,alignfull,formatselect,|,blockquote,colorpicker,pasteword,|,bullist,numlist,|,outdent,indent,|,link,unlink,|,anchor,|,image",
 		toolbar2: "",
 		external_filemanager_path: ad+"/filemanager/",
 		filemanager_title: "File manager" ,
@@ -27,7 +27,7 @@ function tinySetup(config)
 		extended_valid_elements : "em[class|name|id]",
 		menu: {
 			edit: {title: 'Edit', items: 'undo redo | cut copy paste | selectall'},
-			insert: {title: 'Insert', items: 'media image link | pagebreak'},
+			insert: {title: 'Insert', items: 'image link | pagebreak'},
 			view: {title: 'View', items: 'visualaid'},
 			format: {title: 'Format', items: 'bold italic underline strikethrough superscript subscript | formats | removeformat'},
 			table: {title: 'Table', items: 'inserttable tableprops deletetable | cell row column'},
