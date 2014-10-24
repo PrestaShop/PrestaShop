@@ -23,11 +23,11 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div class="row">
-	<div class="col-xs-12 col-md-6">
+	<div class="col-xs-12 {if !$hide_left_column && !$hide_right_column}col-md-6{else if !$hide_left_column || !$hide_right_column}col-md-8{else}col-md-12{/if}">
         <p class="payment_module">
             <a class="cash" href="{$link->getModuleLink('cashondelivery', 'validation', [], true)|escape:'html'}" title="{l s='Pay with cash on delivery (COD)' mod='cashondelivery'}" rel="nofollow">
-            	{l s='Pay with cash on delivery (COD)' mod='cashondelivery'}<br />
-            	{l s='You pay for the merchandise upon delivery' mod='cashondelivery'}
+            	{l s='Pay with cash on delivery (COD)' mod='cashondelivery'}
+            	<span>({l s='You pay for the merchandise upon delivery' mod='cashondelivery'})</span>
             </a>
         </p>
     </div>
