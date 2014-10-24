@@ -46,11 +46,11 @@ class ContactControllerCore extends FrontController
 				$this->errors[] = Tools::displayError('The message cannot be blank.');
 			else if (!Validate::isCleanHtml($message))
 				$this->errors[] = Tools::displayError('Invalid message');
-			else if (!($id_contact = (int)(Tools::getValue('id_contact'))) || !(Validate::isLoadedObject($contact = new Contact($id_contact, $this->context->language->id))))
+			else if (!($id_contact = (int)Tools::getValue('id_contact')) || !(Validate::isLoadedObject($contact = new Contact($id_contact, $this->context->language->id))))
 				$this->errors[] = Tools::displayError('Please select a subject from the list provided. ');
 			else if (!empty($fileAttachment['name']) && $fileAttachment['error'] != 0)
 				$this->errors[] = Tools::displayError('An error occurred during the file-upload process.');
-			else if (!empty($fileAttachment['name']) && !in_array( Tools::strtolower(substr($fileAttachment['name'], -4)), $extension) && !in_array( Tools::strtolower(substr($fileAttachment['name'], -5)), $extension))
+			else if (!empty($fileAttachment['name']) && !in_array(Tools::strtolower(substr($fileAttachment['name'], -4)), $extension) && !in_array(Tools::strtolower(substr($fileAttachment['name'], -5)), $extension))
 				$this->errors[] = Tools::displayError('Bad file extension');
 			else
 			{
@@ -75,7 +75,7 @@ class ContactControllerCore extends FrontController
 					SELECT cm.id_customer_thread, cm.id_contact, cm.id_customer, cm.id_order, cm.id_product, cm.email
 					FROM '._DB_PREFIX_.'customer_thread cm
 					WHERE email = \''.pSQL($from).'\' AND cm.id_shop = '.(int)$this->context->shop->id.' AND ('.
-						($customer->id ? 'id_customer = '.(int)($customer->id).' OR ' : '').'
+						($customer->id ? 'id_customer = '.(int)$customer->id.' OR ' : '').'
 						id_order = '.(int)$id_order.')');
 					$score = 0;
 					foreach ($fields as $key => $row)
@@ -101,7 +101,7 @@ class ContactControllerCore extends FrontController
 				$old_message = Db::getInstance()->getValue('
 					SELECT cm.message FROM '._DB_PREFIX_.'customer_message cm
 					LEFT JOIN '._DB_PREFIX_.'customer_thread cc on (cm.id_customer_thread = cc.id_customer_thread)
-					WHERE cc.id_customer_thread = '.(int)($id_customer_thread).' AND cc.id_shop = '.(int)$this->context->shop->id.'
+					WHERE cc.id_customer_thread = '.(int)$id_customer_thread.' AND cc.id_shop = '.(int)$this->context->shop->id.'
 					ORDER BY cm.date_add DESC');
 				if ($old_message == $message)
 				{
@@ -117,7 +117,7 @@ class ContactControllerCore extends FrontController
 						$ct = new CustomerThread($id_customer_thread);
 						$ct->status = 'open';
 						$ct->id_lang = (int)$this->context->language->id;
-						$ct->id_contact = (int)($id_contact);
+						$ct->id_contact = (int)$id_contact;
 						$ct->id_order = (int)$id_order;
 						if ($id_product = (int)Tools::getValue('id_product'))
 							$ct->id_product = $id_product;
@@ -127,12 +127,12 @@ class ContactControllerCore extends FrontController
 					{
 						$ct = new CustomerThread();
 						if (isset($customer->id))
-							$ct->id_customer = (int)($customer->id);
+							$ct->id_customer = (int)$customer->id;
 						$ct->id_shop = (int)$this->context->shop->id;
 						$ct->id_order = (int)$id_order;
 						if ($id_product = (int)Tools::getValue('id_product'))
 							$ct->id_product = $id_product;
-						$ct->id_contact = (int)($id_contact);
+						$ct->id_contact = (int)$id_contact;
 						$ct->id_lang = (int)$this->context->language->id;
 						$ct->email = $from;
 						$ct->status = 'open';

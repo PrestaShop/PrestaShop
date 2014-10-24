@@ -47,7 +47,7 @@ class PasswordControllerCore extends FrontController
 					$this->errors[] = Tools::displayError('There is no account registered for this email address.');
 				elseif (!$customer->active)
 					$this->errors[] = Tools::displayError('You cannot regenerate the password for this account.');
-				elseif ((strtotime($customer->last_passwd_gen.'+'.(int)($min_time = Configuration::get('PS_PASSWD_TIME_FRONT')).' minutes') - time()) > 0)
+				elseif ((strtotime($customer->last_passwd_gen.'+'.($min_time = (int)Configuration::get('PS_PASSWD_TIME_FRONT')).' minutes') - time()) > 0)
 					$this->errors[] = sprintf(Tools::displayError('You can regenerate your password only every %d minute(s)'), (int)$min_time);
 				else
 				{

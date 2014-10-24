@@ -38,7 +38,7 @@ class OrderControllerCore extends ParentOrderController
 
 		parent::init();
 
-		$this->step = (int)(Tools::getValue('step'));
+		$this->step = (int)Tools::getValue('step');
 		if (!$this->nbProducts)
 			$this->step = -1;
 
@@ -404,8 +404,8 @@ class OrderControllerCore extends ParentOrderController
 		/* We may need to display an order summary */
 		$this->context->smarty->assign($this->context->cart->getSummaryDetails());
 		$this->context->smarty->assign(array(
-			'total_price' => (float)($orderTotal),
-			'taxes_enabled' => (int)(Configuration::get('PS_TAX'))
+			'total_price' => (float)$orderTotal,
+			'taxes_enabled' => (int)Configuration::get('PS_TAX')
 		));
 		$this->context->cart->checkedTOS = '1';
 

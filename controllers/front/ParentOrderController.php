@@ -47,7 +47,7 @@ class ParentOrderControllerCore extends FrontController
 	 */
 	public function init()
 	{
-		$this->isLogged = (bool)($this->context->customer->id && Customer::customerIdExistsStatic((int)$this->context->cookie->id_customer));
+		$this->isLogged = $this->context->customer->id && Customer::customerIdExistsStatic((int)$this->context->cookie->id_customer);
 
 		parent::init();
 
@@ -184,9 +184,9 @@ class ParentOrderControllerCore extends FrontController
 		{
 			if (!Validate::isMessage($messageContent))
 				$this->errors[] = Tools::displayError('Invalid message');
-			else if ($oldMessage = Message::getMessageByCartId((int)($this->context->cart->id)))
+			else if ($oldMessage = Message::getMessageByCartId((int)$this->context->cart->id))
 			{
-				$message = new Message((int)($oldMessage['id_message']));
+				$message = new Message((int)$oldMessage['id_message']);
 				$message->message = $messageContent;
 				$message->update();
 			}
@@ -194,8 +194,8 @@ class ParentOrderControllerCore extends FrontController
 			{
 				$message = new Message();
 				$message->message = $messageContent;
-				$message->id_cart = (int)($this->context->cart->id);
-				$message->id_customer = (int)($this->context->cart->id_customer);
+				$message->id_cart = (int)$this->context->cart->id;
+				$message->id_customer = (int)$this->context->cart->id_customer;
 				$message->add();
 			}
 		}
@@ -212,9 +212,9 @@ class ParentOrderControllerCore extends FrontController
 
 	protected function _processCarrier()
 	{
-		$this->context->cart->recyclable = (int)(Tools::getValue('recyclable'));
-		$this->context->cart->gift = (int)(Tools::getValue('gift'));
-		if ((int)(Tools::getValue('gift')))
+		$this->context->cart->recyclable = (int)Tools::getValue('recyclable');
+		$this->context->cart->gift = (int)Tools::getValue('gift');
+		if ((int)Tools::getValue('gift'))
 		{
 			if (!Validate::isMessage(Tools::getValue('gift_message')))
 				$this->errors[] = Tools::displayError('Invalid gift message.');
@@ -224,7 +224,7 @@ class ParentOrderControllerCore extends FrontController
 
 		if (isset($this->context->customer->id) && $this->context->customer->id)
 		{
-			$address = new Address((int)($this->context->cart->id_address_delivery));
+			$address = new Address((int)$this->context->cart->id_address_delivery);
 			if (!($id_zone = Address::getZoneById($address->id)))
 				$this->errors[] = Tools::displayError('No zone matches your address.');
 		}
@@ -296,8 +296,8 @@ class ParentOrderControllerCore extends FrontController
 		{
 			foreach ($summary['products'] as &$productUpdate)
 			{
-				$productId = (int)(isset($productUpdate['id_product']) ? $productUpdate['id_product'] : $productUpdate['product_id']);
-				$productAttributeId = (int)(isset($productUpdate['id_product_attribute']) ? $productUpdate['id_product_attribute'] : $productUpdate['product_attribute_id']);
+				$productId = (int)isset($productUpdate['id_product']) ? $productUpdate['id_product'] : $productUpdate['product_id'];
+				$productAttributeId = (int)isset($productUpdate['id_product_attribute']) ? $productUpdate['id_product_attribute'] : $productUpdate['product_attribute_id'];
 
 				if (isset($customizedDatas[$productId][$productAttributeId]))
 					$productUpdate['tax_rate'] = Tax::getProductTaxRate($productId, $this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
@@ -407,7 +407,7 @@ class ParentOrderControllerCore extends FrontController
 
 			foreach ($customerAddresses as $i => $address)
 			{
-				if (!Address::isCountryActiveById((int)($address['id_address'])))
+				if (!Address::isCountryActiveById((int)$address['id_address']))
 					unset($customerAddresses[$i]);
 				$tmpAddress = new Address($address['id_address']);
 				$formatedAddressFieldsValuesList[$address['id_address']]['ordered_fields'] = AddressFormat::getOrderedAddressFields($address['id_country']);
@@ -450,12 +450,12 @@ class ParentOrderControllerCore extends FrontController
 			{
 				if ((!isset($this->context->cart->id_address_delivery) || empty($this->context->cart->id_address_delivery)) || !Address::isCountryActiveById((int)$this->context->cart->id_address_delivery))
 				{
-					$this->context->cart->id_address_delivery = (int)($customerAddresses[0]['id_address']);
+					$this->context->cart->id_address_delivery = (int)$customerAddresses[0]['id_address'];
 					$update = 1;
 				}
 				if ((!isset($this->context->cart->id_address_invoice) || empty($this->context->cart->id_address_invoice)) || !Address::isCountryActiveById((int)$this->context->cart->id_address_invoice))
 				{
-					$this->context->cart->id_address_invoice = (int)($customerAddresses[0]['id_address']);
+					$this->context->cart->id_address_invoice = (int)$customerAddresses[0]['id_address'];
 					$update = 1;
 				}
 
@@ -471,12 +471,10 @@ class ParentOrderControllerCore extends FrontController
 				}
 			}
 
-
-
 			/* If delivery address is valid in cart, assign it to Smarty */
 			if (isset($this->context->cart->id_address_delivery))
 			{
-				$deliveryAddress = new Address((int)($this->context->cart->id_address_delivery));
+				$deliveryAddress = new Address((int)$this->context->cart->id_address_delivery);
 				if (Validate::isLoadedObject($deliveryAddress) && ($deliveryAddress->id_customer == $customer->id))
 					$this->context->smarty->assign('delivery', $deliveryAddress);
 			}
@@ -484,12 +482,12 @@ class ParentOrderControllerCore extends FrontController
 			/* If invoice address is valid in cart, assign it to Smarty */
 			if (isset($this->context->cart->id_address_invoice))
 			{
-				$invoiceAddress = new Address((int)($this->context->cart->id_address_invoice));
+				$invoiceAddress = new Address((int)$this->context->cart->id_address_invoice);
 				if (Validate::isLoadedObject($invoiceAddress) && ($invoiceAddress->id_customer == $customer->id))
 					$this->context->smarty->assign('invoice', $invoiceAddress);
 			}
 		}
-		if ($oldMessage = Message::getMessageByCartId((int)($this->context->cart->id)))
+		if ($oldMessage = Message::getMessageByCartId((int)$this->context->cart->id))
 			$this->context->smarty->assign('oldMessage', $oldMessage['message']);
 	}
 
@@ -550,13 +548,13 @@ class ParentOrderControllerCore extends FrontController
 		}
 		$this->context->smarty->assign(array(
 			'free_shipping' => $free_shipping,
-			'checkedTOS' => (int)($this->context->cookie->checkedTOS),
-			'recyclablePackAllowed' => (int)(Configuration::get('PS_RECYCLABLE_PACK')),
-			'giftAllowed' => (int)(Configuration::get('PS_GIFT_WRAPPING')),
-			'cms_id' => (int)(Configuration::get('PS_CONDITIONS_CMS_ID')),
-			'conditions' => (int)(Configuration::get('PS_CONDITIONS')),
+			'checkedTOS' => (int)$this->context->cookie->checkedTOS,
+			'recyclablePackAllowed' => (int)Configuration::get('PS_RECYCLABLE_PACK'),
+			'giftAllowed' => (int)Configuration::get('PS_GIFT_WRAPPING'),
+			'cms_id' => (int)Configuration::get('PS_CONDITIONS_CMS_ID'),
+			'conditions' => (int)Configuration::get('PS_CONDITIONS'),
 			'link_conditions' => $this->link_conditions,
-			'recyclable' => (int)($this->context->cart->recyclable),
+			'recyclable' => (int)$this->context->cart->recyclable,
 			'delivery_option_list' => $this->context->cart->getDeliveryOptionList(),
 			'carriers' => $this->context->cart->simulateCarriersOutput(),
 			'checked' => $this->context->cart->simulateCarrierSelectedOutput(),

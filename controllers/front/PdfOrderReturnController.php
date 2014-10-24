@@ -53,4 +53,3 @@ class PdfOrderReturnControllerCore extends FrontController
         $pdf->render();
 	}
 }
-
