@@ -4,12 +4,10 @@ function tinySetup(config)
 		config = {};
 
 	//var editor_selector = 'rte';
-	//if (typeof config['editor_selector'] !== 'undefined')
-		//var editor_selector = config['editor_selector'];
-	if (typeof config['editor_selector'] != 'undefined')
-		config['selector'] = '.'+config['editor_selector'];
 
-//    safari,pagebreak,style,table,advimage,advlink,inlinepopups,media,contextmenu,paste,fullscreen,xhtmlxtras,preview
+	if (typeof config.editor_selector != 'undefined')
+		config.selector = '.'+config.editor_selector;
+
 	default_config = {
 		selector: ".rte" ,
 		plugins : "colorpicker link image paste pagebreak table contextmenu filemanager table code media autoresize textcolor anchor",
@@ -33,8 +31,7 @@ function tinySetup(config)
 			table: {title: 'Table', items: 'inserttable tableprops deletetable | cell row column'},
 			tools: {title: 'Tools', items: 'code'}
 		}
-
-	}
+	};
 
 	$.each(default_config, function(index, el)
 	{
@@ -43,5 +40,4 @@ function tinySetup(config)
 	});
 
 	tinyMCE.init(config);
-
-};
+}

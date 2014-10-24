@@ -3,11 +3,11 @@
   <product id='Faded_Short_Sleeve_T-shirts' id_shop='1'>
     <description>&lt;p&gt;Fashion propose des vêtements de qualité depuis 2010. La marque propose une gamme féminine composée d&apos;élégants vêtements à coordonner et de robes originales et offre désormais une collection complète de prêt-à-porter, regroupant toutes les pièces qu&apos;une femme doit avoir dans sa garde-robe. Fashion se distingue avec des looks à la fois cool, simples et rafraîchissants, alliant élégance et chic, pour un style reconnaissable entre mille. Chacune des magnifiques pièces de la collection est fabriquée avec le plus grand soin en Italie. Fashion enrichit son offre avec une gamme d&apos;accessoires incluant chaussures, chapeaux, ceintures et bien plus encore !&lt;/p&gt;</description>
     <description_short>&lt;p&gt;T-shirt délavé à manches courtes et col rond. Matière douce et extensible pour un confort inégalé. Pour un look estival, portez-le avec un chapeau de paille !&lt;/p&gt;</description_short>
-    <link_rewrite>t-shirts-delave-manches-courtes</link_rewrite>
+    <link_rewrite>t-shirt-delave-manches-courtes</link_rewrite>
     <meta_description/>
     <meta_keywords/>
     <meta_title/>
-    <name>T-shirts délavé à manches courtes</name>
+    <name>T-shirt délavé à manches courtes</name>
     <available_now>En stock</available_now>
     <available_later/>
   </product>

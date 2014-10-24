@@ -170,6 +170,11 @@ class AdminDashboardControllerCore extends AdminController
 			'suffix' => $currency->iso_code
 		);
 
+		Media::addJsDef(array(
+				'dashboard_ajax_url' => $this->context->link->getAdminLink('AdminDashboard'),
+				'read_more' => '',
+			));
+
 		return $forms;
 	}
 
@@ -249,13 +254,12 @@ class AdminDashboardControllerCore extends AdminController
 		if (Tools::isSubmit('submitDateRange'))
 		{
 			if (!Validate::isDate(Tools::getValue('date_from'))
-				|| !Validate::isDate(Tools::getValue('date_to'))
-				|| !Validate::isDate(Tools::getValue('preselectDateRange')));
+				|| !Validate::isDate(Tools::getValue('date_to')))
 				$this->errors[] = Tools::displayError('The selected date range is not valid.');
 
 			if (Tools::getValue('datepicker_compare'))
 				if (!Validate::isDate(Tools::getValue('compare_date_from'))
-					|| !Validate::isDate(Tools::getValue('compare_date_to')));
+					|| !Validate::isDate(Tools::getValue('compare_date_to')))
 					$this->errors[] = Tools::displayError('The selected date range is not valid.');
 
 			if (!count($this->errors))

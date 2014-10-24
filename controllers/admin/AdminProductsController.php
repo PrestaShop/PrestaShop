@@ -3145,7 +3145,7 @@ class AdminProductsControllerCore extends AdminController
 
 		$product->price = Tools::convertPrice($product->price, $this->context->currency, true, $this->context);
 		if ($product->unit_price_ratio != 0)
-			$data->assign('unit_price', Tools::ps_round($product->price / $product->unit_price_ratio, 2));
+			$data->assign('unit_price', Tools::ps_round($product->price / $product->unit_price_ratio, 6));
 		else
 			$data->assign('unit_price', 0);
 		$data->assign('ps_tax', Configuration::get('PS_TAX'));
