@@ -26,6 +26,17 @@
 
 class AdminStatsControllerCore extends AdminStatsTabController
 {
+	
+	public function setMedia()
+	{
+		parent::setMedia();
+		$this->addJS(array(
+			_PS_JS_DIR_.'vendor/d3.v3.min.js',
+			__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/vendor/nv.d3.min.js',
+		));
+		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/vendor/nv.d3.css');
+	}
+	
 	public static function getVisits($unique = false, $date_from, $date_to, $granularity = false)
 	{
 		$visits = ($granularity == false) ? 0 : array();
