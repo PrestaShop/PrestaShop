@@ -113,15 +113,15 @@ class ContextCore
 	 * @var boolean|string mobile device of the customer
 	 */
 	protected $mobile_device = null;
-	
+
 	protected $is_mobile = null;
-	
+
 	protected $is_tablet = null;
-	
+
 	const DEVICE_COMPUTER = 1;
-	
+
 	const DEVICE_TABLET = 2;
-	
+
 	const DEVICE_MOBILE = 4;
 
 	public function getMobileDetect()
@@ -133,7 +133,7 @@ class ContextCore
 		}
 		return $this->mobile_detect;
 	}
-	
+
 	public function isMobile()
 	{
 		if ($this->is_mobile === null)
@@ -143,7 +143,7 @@ class ContextCore
 		}
 		return $this->is_mobile;
 	}
-	
+
 	public function isTablet()
 	{
 		if ($this->is_tablet === null)
@@ -153,7 +153,7 @@ class ContextCore
 		}
 		return $this->is_tablet;
 	}
-	
+
 	public function getMobileDevice()
 	{
 		if ($this->mobile_device === null)
@@ -161,7 +161,7 @@ class ContextCore
 			$this->mobile_device = false;
 			if ($this->checkMobileContext())
 			{
-				if (isset(Context::getContext()->cookie->no_mobile) && Context::getContext()->cookie->no_mobile == false AND (int)Configuration::get('PS_ALLOW_MOBILE_DEVICE') != 0)
+				if (isset(Context::getContext()->cookie->no_mobile) && Context::getContext()->cookie->no_mobile == false && (int)Configuration::get('PS_ALLOW_MOBILE_DEVICE') != 0)
 					$this->mobile_device = true;
 				else
 				{
@@ -184,10 +184,9 @@ class ContextCore
 				}
 			}
 		}
-
 		return $this->mobile_device;
 	}
-	
+
 	public function getDevice()
 	{
 		static $device = null;
@@ -202,7 +201,6 @@ class ContextCore
 			else
 				$device = Context::DEVICE_COMPUTER;
 		}
-
 		return $device;
 	}
 
@@ -248,10 +246,10 @@ class ContextCore
 			self::$instance = new Context();
 		return self::$instance;
 	}
-	
+
 	/**
 	 * Clone current context
-	 * 
+	 *
 	 * @return Context
 	 */
 	public function cloneContext()
