@@ -338,7 +338,7 @@ class OrderInvoiceCore extends ObjectModel
 		}
 
 		foreach ($tmp_tax_infos as &$tax)
-			$tax['total_amount'] = Tools::ps_round($tax['total_amount'], _PS_PRICE_COMPUTE_PRECISION_);
+			$tax['total_amount'] = Tools::ps_round($tax['total_amount'], _PS_PRICE_DISPLAY_PRECISION_);
 
 		return $tmp_tax_infos;
 	}
@@ -402,8 +402,8 @@ class OrderInvoiceCore extends ObjectModel
 		foreach ($result as $row)
 			if ($row['ecotax_tax_excl'] > 0)
 			{
-				$row['ecotax_tax_incl'] = Tools::ps_round($row['ecotax_tax_excl'] + ($row['ecotax_tax_excl'] * $row['rate'] / 100), 2);
-				$row['ecotax_tax_excl'] = Tools::ps_round($row['ecotax_tax_excl'], 2);
+				$row['ecotax_tax_incl'] = Tools::ps_round($row['ecotax_tax_excl'] + ($row['ecotax_tax_excl'] * $row['rate'] / 100), _PS_PRICE_DISPLAY_PRECISION_);
+				$row['ecotax_tax_excl'] = Tools::ps_round($row['ecotax_tax_excl'], _PS_PRICE_DISPLAY_PRECISION_);
 				$taxes[] = $row;
 			}
 		return $taxes;
