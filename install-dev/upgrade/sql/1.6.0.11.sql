@@ -24,3 +24,5 @@ ALTER TABLE `PREFIX_product_attribute` MODIFY `unit_price_impact` DECIMAL(20,6);
 ALTER TABLE `PREFIX_product_attribute_shop` MODIFY `unit_price_impact` DECIMAL(20,6);
 
 /* PHP:p16011_media_server(); */;
+
+INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_PRICE_DISPLAY_PRECISION', 2, NOW(), NOW());
