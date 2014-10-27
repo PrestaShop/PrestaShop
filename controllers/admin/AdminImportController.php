@@ -1460,9 +1460,7 @@ class AdminImportControllerCore extends AdminController
 			}
 
 			$product->id_category_default = isset($product->id_category[0]) ? (int)$product->id_category[0] : '';
-
 			$link_rewrite = (is_array($product->link_rewrite) && isset($product->link_rewrite[$id_lang])) ? trim($product->link_rewrite[$id_lang]) : '';
-
 			$valid_link = Validate::isLinkRewrite($link_rewrite);
 
 			if ((isset($product->link_rewrite[$id_lang]) && empty($product->link_rewrite[$id_lang])) || !$valid_link)
@@ -1480,7 +1478,7 @@ class AdminImportControllerCore extends AdminController
 					$link_rewrite
 				);
 
-			if (!Tools::getValue('match_ref') || !(is_array($product->link_rewrite) && count($product->link_rewrite) && !empty($product->link_rewrite[$id_lang])))
+			if (!(Tools::getValue('match_ref') || Tools::getValue('forceIDs')) || !(is_array($product->link_rewrite) && count($product->link_rewrite) && !empty($product->link_rewrite[$id_lang])))
 				$product->link_rewrite = AdminImportController::createMultiLangField($link_rewrite);
 
 			// replace the value of separator by coma
@@ -1821,16 +1819,16 @@ class AdminImportControllerCore extends AdminController
 						StockAvailable::setProductDependsOnStock($product->id, $product->depends_on_stock);
 
 					// This code allows us to set qty and disable depends on stock
-					if (isset($product->quantity) && $product->depends_on_stock == 0)
+					if (isset($product->quantity) && (int)$product->quantity && $product->depends_on_stock == 0)
 					{
 						if (Shop::isFeatureActive())
 							foreach ($shops as $shop)
-								StockAvailable::setQuantity((int)$product->id, 0, $product->quantity, (int)$shop);
+								StockAvailable::setQuantity((int)$product->id, 0, (int)$product->quantity, (int)$shop);
 						else
-							StockAvailable::setQuantity((int)$product->id, 0, $product->quantity, $this->context->shop->id);
+							StockAvailable::setQuantity((int)$product->id, 0, (int)$product->quantity, (int)$this->context->shop->id);
 					}
 					// elseif enable depends on stock and quantity, add quantity to stock
-					elseif (isset($product->quantity) && $product->quantity && $product->depends_on_stock == 1)
+					elseif (isset($product->quantity) && (int)$product->quantity && $product->depends_on_stock == 1)
 					{
 						// add stock
 						$stock_manager = StockManagerFactory::getManager();
@@ -1839,7 +1837,7 @@ class AdminImportControllerCore extends AdminController
 							$price = 0.000001;
 						$price = round(floatval($price), 6);
 						$warehouse = new Warehouse($product->warehouse);
-						if ($stock_manager->addProduct((int)$product->id, 0, $warehouse, $product->quantity, 1, $price, true))
+						if ($stock_manager->addProduct((int)$product->id, 0, $warehouse, (int)$product->quantity, 1, $price, true))
 							StockAvailable::synchronize((int)$product->id);
 					}
 				}
@@ -1847,9 +1845,9 @@ class AdminImportControllerCore extends AdminController
 				{
 					if (Shop::isFeatureActive())
 						foreach ($shops as $shop)
-							StockAvailable::setQuantity((int)$product->id, 0, $product->quantity, (int)$shop);
+							StockAvailable::setQuantity((int)$product->id, 0, (int)$product->quantity, (int)$shop);
 					else
-						StockAvailable::setQuantity((int)$product->id, 0, $product->quantity, $this->context->shop->id);
+						StockAvailable::setQuantity((int)$product->id, 0, (int)$product->quantity, (int)$this->context->shop->id);
 				}
 			}
 		}
@@ -3133,7 +3131,7 @@ class AdminImportControllerCore extends AdminController
 	{
 		if ($a == $b)
 			return 0;
-		return ($b < $a) ? 1 : -1;
+		return ($b < $a) ? 1 : - 1;
 	}
 
 	protected function openCsvFile()

@@ -115,6 +115,8 @@ $_MODULES = array();
 /* Load configuration */
 Configuration::loadConfiguration();
 
+define('_PS_PRICE_DISPLAY_PRECISION_', Configuration::get('PS_PRICE_DISPLAY_PRECISION'));
+
 if (Configuration::get('PS_USE_HTMLPURIFIER'))
 	require_once (_PS_TOOL_DIR_.'htmlpurifier/HTMLPurifier.standalone.php');
 

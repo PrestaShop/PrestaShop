@@ -97,14 +97,12 @@
 													{if count($option_list) > 1}
 														{if $option.is_best_grade}
 															{if $option.is_best_price}
-																{l s='The best price and speed'}
+																<span class="best_grade best_grade_price best_grade_speed">{l s='The best price and speed'}</span>
 															{else}
-																{l s='The fastest'}
+																<span class="best_grade best_grade_speed">{l s='The fastest'}</span>
 															{/if}
-														{else}
-															{if $option.is_best_price}
-																{l s='The best price'}
-															{/if}
+														{else if $option.is_best_price}
+															<span class="best_grade best_grade_price">{l s='The best price'}</span>
 														{/if}
 													{/if}
 												</td>
