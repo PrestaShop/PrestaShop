@@ -1460,9 +1460,7 @@ class AdminImportControllerCore extends AdminController
 			}
 
 			$product->id_category_default = isset($product->id_category[0]) ? (int)$product->id_category[0] : '';
-
 			$link_rewrite = (is_array($product->link_rewrite) && isset($product->link_rewrite[$id_lang])) ? trim($product->link_rewrite[$id_lang]) : '';
-
 			$valid_link = Validate::isLinkRewrite($link_rewrite);
 
 			if ((isset($product->link_rewrite[$id_lang]) && empty($product->link_rewrite[$id_lang])) || !$valid_link)
@@ -1480,7 +1478,7 @@ class AdminImportControllerCore extends AdminController
 					$link_rewrite
 				);
 
-			if (!Tools::getValue('match_ref') || !(is_array($product->link_rewrite) && count($product->link_rewrite) && !empty($product->link_rewrite[$id_lang])))
+			if (!(Tools::getValue('match_ref') || Tools::getValue('forceIDs')) || !(is_array($product->link_rewrite) && count($product->link_rewrite) && !empty($product->link_rewrite[$id_lang])))
 				$product->link_rewrite = AdminImportController::createMultiLangField($link_rewrite);
 
 			// replace the value of separator by coma
