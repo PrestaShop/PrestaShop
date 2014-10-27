@@ -165,6 +165,13 @@ class AdminPreferencesControllerCore extends AdminController
 						),
 					'identifier' => 'id'
 				),
+				'PS_PRICE_DISPLAY_PRECISION' => array(
+					'title' => $this->l('Number of decimals'),
+					'desc' => $this->l('Choose how many decimals you want to display'),
+					'validation' => 'isUnsignedInt',
+					'cast' => 'intval',
+					'type' => 'text'
+				),
 				'PS_DISPLAY_SUPPLIERS' => array(
 					'title' => $this->l('Display suppliers and manufacturers'),
 					'desc' => $this->l('Enable suppliers and manufacturers pages on your Front Office even when their respective modules are disabled.'),
