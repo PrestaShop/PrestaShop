@@ -1845,7 +1845,7 @@ class AdminImportControllerCore extends AdminController
 				{
 					if (Shop::isFeatureActive())
 						foreach ($shops as $shop)
-							StockAvailable::setQuantity((int)$product->id, 0,(int)$product->quantity, (int)$shop);
+							StockAvailable::setQuantity((int)$product->id, 0, (int)$product->quantity, (int)$shop);
 					else
 						StockAvailable::setQuantity((int)$product->id, 0, (int)$product->quantity, (int)$this->context->shop->id);
 				}
@@ -3131,7 +3131,7 @@ class AdminImportControllerCore extends AdminController
 	{
 		if ($a == $b)
 			return 0;
-		return ($b < $a) ? 1 : -1;
+		return ($b < $a) ? 1 : - 1;
 	}
 
 	protected function openCsvFile()
