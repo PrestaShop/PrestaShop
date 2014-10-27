@@ -39,7 +39,7 @@ class SupplierControllerCore extends FrontController
 	public function canonicalRedirection($canonicalURL = '')
 	{
 		if (Tools::getValue('live_edit'))
-			return ;
+			return;
 		if (Validate::isLoadedObject($this->supplier))
 			parent::canonicalRedirection($this->context->link->getSupplierLink($this->supplier));
 	}

@@ -160,7 +160,7 @@ class GuestTrackingControllerCore extends FrontController
 			$order->products = $order->getProducts();
 			$order->customizedDatas = Product::getAllCustomizedDatas((int)$order->id_cart);
 			Product::addCustomizationPrice($order->products, $order->customizedDatas);
-			$order->total_old = ($order->total_discounts > 0) ? (float)($order->total_paid - $order->total_discounts) : false;
+			$order->total_old = $order->total_discounts > 0 ? (float)$order->total_paid - (float)$order->total_discounts : false;
 
 			if ($order->carrier->url && $order->shipping_number)
 				$order->followup = str_replace('@', $order->shipping_number, $order->carrier->url);

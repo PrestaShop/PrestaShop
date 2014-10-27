@@ -38,7 +38,7 @@ class ManufacturerControllerCore extends FrontController
 	public function canonicalRedirection($canonicalURL = '')
 	{
 		if (Tools::getValue('live_edit'))
-			return ;
+			return;
 		if (Validate::isLoadedObject($this->manufacturer))
 			parent::canonicalRedirection($this->context->link->getManufacturerLink($this->manufacturer));
 	}
@@ -117,8 +117,8 @@ class ManufacturerControllerCore extends FrontController
 		{
 			$data = Manufacturer::getManufacturers(false, $this->context->language->id, true, false, false, false);
 			$nbProducts = count($data);
-			$this->n = abs((int)(Tools::getValue('n', Configuration::get('PS_PRODUCTS_PER_PAGE'))));
-			$this->p = abs((int)(Tools::getValue('p', 1)));
+			$this->n = abs((int)Tools::getValue('n', Configuration::get('PS_PRODUCTS_PER_PAGE')));
+			$this->p = abs((int)Tools::getValue('p', 1));
 			$data = Manufacturer::getManufacturers(true, $this->context->language->id, true, $this->p, $this->n, false);
 			$this->pagination($nbProducts);
 
@@ -126,7 +126,7 @@ class ManufacturerControllerCore extends FrontController
 				$item['image'] = (!file_exists(_PS_MANU_IMG_DIR_.$item['id_manufacturer'].'-'.ImageType::getFormatedName('medium').'.jpg')) ? $this->context->language->iso_code.'-default' : $item['id_manufacturer'];
 
 			$this->context->smarty->assign(array(
-				'pages_nb' => ceil($nbProducts / (int)($this->n)),
+				'pages_nb' => ceil($nbProducts / (int)$this->n),
 				'nbManufacturers' => $nbProducts,
 				'mediumSize' => Image::getSize(ImageType::getFormatedName('medium')),
 				'manufacturers' => $data,
@@ -136,7 +136,7 @@ class ManufacturerControllerCore extends FrontController
 		else
 			$this->context->smarty->assign('nbManufacturers', 0);
 	}
-	
+
 	/**
 	 * Get instance of current manufacturer
 	 */
