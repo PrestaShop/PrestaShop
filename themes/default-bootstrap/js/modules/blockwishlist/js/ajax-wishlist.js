@@ -283,7 +283,13 @@ function WishlistDefault(id, id_wishlist)
 		data: {rand:new Date().getTime(), default: 1, id_wishlist:id_wishlist},
 		success: function (data)
 		{
-			window.location.href=window.location.href;
+			var old_default_id = $(".is_wish_list_default").parents("tr").attr("id");
+			var td_check = $(".is_wish_list_default").parent();
+			$(".is_wish_list_default").remove();
+			td_check.append('<a href="#" onclick="javascript:event.preventDefault();(WishlistDefault(\''+old_default_id+'\', \''+old_default_id.replace("wishlist_", "")+'\'));"><i class="icon icon-square"></i></a>');
+			var td_default = $("#"+id+" > .wishlist_default");
+			$("#"+id+" > .wishlist_default > a").remove();
+			td_default.append('<p class="is_wish_list_default"><i class="icon icon-check-square"></i></p>');
 		}
 	});
 }
