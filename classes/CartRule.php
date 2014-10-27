@@ -571,7 +571,7 @@ class CartRuleCore extends ObjectModel
 				if ($cart_rule['gift_product'])
 					foreach ($products as $key => &$product)
 						if (empty($product['gift']) && $product['id_product'] == $cart_rule['gift_product'] && $product['id_product_attribute'] == $cart_rule['gift_product_attribute'])
-							$cartTotal = Tools::ps_round($cartTotal - $product[$this->minimum_amount_tax ? 'price_wt' : 'price'], (int)$context->currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
+							$cartTotal = Tools::ps_round($cartTotal - $product[$this->minimum_amount_tax ? 'price_wt' : 'price'], (int)$context->currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
 
 			if ($cartTotal < $minimum_amount)
 				return (!$display_error) ? false : Tools::displayError('You have not reached the minimum amount required to use this voucher');
@@ -844,7 +844,7 @@ class CartRuleCore extends ObjectModel
 				// Do not give a reduction on free products!
 				$order_total = $context->cart->getOrderTotal($use_tax, Cart::ONLY_PRODUCTS, $package_products);
 				foreach ($context->cart->getCartRules(CartRule::FILTER_ACTION_GIFT) as $cart_rule)
-					$order_total -= Tools::ps_round($cart_rule['obj']->getContextualValue($use_tax, $context, CartRule::FILTER_ACTION_GIFT, $package), _PS_PRICE_DISPLAY_PRECISION_);
+					$order_total -= Tools::ps_round($cart_rule['obj']->getContextualValue($use_tax, $context, CartRule::FILTER_ACTION_GIFT, $package), _PS_PRICE_COMPUTE_PRECISION_);
 
 				$reduction_value += $order_total * $this->reduction_percent / 100;
 			}
@@ -922,7 +922,7 @@ class CartRuleCore extends ObjectModel
 
 					// Then we convert the voucher value in the default currency into the cart currency
 					$reduction_amount *= $context->currency->conversion_rate;
-					$reduction_amount = Tools::ps_round($reduction_amount, _PS_PRICE_DISPLAY_PRECISION_);
+					$reduction_amount = Tools::ps_round($reduction_amount, _PS_PRICE_COMPUTE_PRECISION_);
 				}
 
 				// If it has the same tax application that you need, then it's the right value, whatever the product!

@@ -365,12 +365,12 @@ class OrderDetailCore extends ObjectModel
 			switch (Configuration::get('PS_ROUND_TYPE'))
 			{
 				case Order::ROUND_ITEM:
-					$unit_amount = (float)Tools::ps_round($amount, _PS_PRICE_DISPLAY_PRECISION_);
+					$unit_amount = (float)Tools::ps_round($amount, _PS_PRICE_COMPUTE_PRECISION_);
 					$total_amount = $unit_amount * $this->product_quantity;
 					break;
 				case Order::ROUND_LINE:
 					$unit_amount = $amount;
-					$total_amount = Tools::ps_round($unit_amount * $this->product_quantity, _PS_PRICE_DISPLAY_PRECISION_);
+					$total_amount = Tools::ps_round($unit_amount * $this->product_quantity, _PS_PRICE_COMPUTE_PRECISION_);
 					break;
 				case Order::ROUND_TOTAL:
 					$unit_amount = $amount;

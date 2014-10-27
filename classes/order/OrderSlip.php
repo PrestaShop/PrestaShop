@@ -265,7 +265,7 @@ class OrderSlipCore extends ObjectModel
 
 			$order_slip->total_shipping_tax_excl = ($shipping_cost === null ? $order->total_shipping_tax_excl : (float)$shipping_cost);
 			if ($tax_calculator instanceof TaxCalculator)
-				$order_slip->total_shipping_tax_incl = Tools::ps_round($tax_calculator->addTaxes($order_slip->total_shipping_tax_excl), _PS_PRICE_DISPLAY_PRECISION_);
+				$order_slip->total_shipping_tax_incl = Tools::ps_round($tax_calculator->addTaxes($order_slip->total_shipping_tax_excl), _PS_PRICE_COMPUTE_PRECISION_);
 			else
 				$order_slip->total_shipping_tax_incl = $order_slip->total_shipping_tax_excl;
 		}
@@ -309,11 +309,11 @@ class OrderSlipCore extends ObjectModel
 				if (!isset($products_total[$id_tax_rules_group.'_'.$id_address]))
 					$total_products[$id_tax_rules_group.'_'.$id_address] = 0;
 
-			$product_tax_incl_line = Tools::ps_round($tax_calculator->addTaxes($price) * $quantity, _PS_PRICE_DISPLAY_PRECISION_);
+			$product_tax_incl_line = Tools::ps_round($tax_calculator->addTaxes($price) * $quantity, _PS_PRICE_COMPUTE_PRECISION_);
 			switch (Configuration::get('PS_ROUND_TYPE'))
 			{
 				case Order::ROUND_ITEM:
-					$product_tax_incl = Tools::ps_round($tax_calculator->addTaxes($price), _PS_PRICE_DISPLAY_PRECISION_) * $quantity;
+					$product_tax_incl = Tools::ps_round($tax_calculator->addTaxes($price), _PS_PRICE_COMPUTE_PRECISION_) * $quantity;
 					$total_products[$id_tax_rules_group] += $product_tax_incl;
 					break;
 				case Order::ROUND_LINE:
@@ -327,10 +327,10 @@ class OrderSlipCore extends ObjectModel
 			}
 			
 			$product['unit_price_tax_excl'] = $price;
-			$product['unit_price_tax_incl'] = Tools::ps_round($tax_calculator->addTaxes($price), _PS_PRICE_DISPLAY_PRECISION_);
+			$product['unit_price_tax_incl'] = Tools::ps_round($tax_calculator->addTaxes($price), _PS_PRICE_COMPUTE_PRECISION_);
 
-			$product['total_price_tax_excl'] = Tools::ps_round($price * $quantity, _PS_PRICE_DISPLAY_PRECISION_);
-			$product['total_price_tax_incl'] = Tools::ps_round($product_tax_incl, _PS_PRICE_DISPLAY_PRECISION_);
+			$product['total_price_tax_excl'] = Tools::ps_round($price * $quantity, _PS_PRICE_COMPUTE_PRECISION_);
+			$product['total_price_tax_incl'] = Tools::ps_round($product_tax_incl, _PS_PRICE_COMPUTE_PRECISION_);
 			
 		}
 		unset($product);
@@ -342,7 +342,7 @@ class OrderSlipCore extends ObjectModel
 				$tmp = explode('_', $key);
 				$address = Address::initialize((int)$tmp[1], true);
 				$tax_calculator = TaxManagerFactory::getManager($address, $tmp[0])->getTaxCalculator();
-				$order_slip->total_products_tax_incl += Tools::ps_round($tax_calculator->addTaxes($price), _PS_PRICE_DISPLAY_PRECISION_);
+				$order_slip->total_products_tax_incl += Tools::ps_round($tax_calculator->addTaxes($price), _PS_PRICE_COMPUTE_PRECISION_);
 			}
 			else
 				$order_slip->total_products_tax_incl += $price;
