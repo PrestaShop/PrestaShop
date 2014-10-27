@@ -338,7 +338,10 @@ class OrderInvoiceCore extends ObjectModel
 		}
 
 		foreach ($tmp_tax_infos as &$tax)
+		{
 			$tax['total_amount'] = Tools::ps_round($tax['total_amount'], _PS_PRICE_DISPLAY_PRECISION_);
+			$tax['total_price_tax_excl'] = Tools::ps_round($tax['total_price_tax_excl'], _PS_PRICE_DISPLAY_PRECISION_);
+		}
 
 		return $tmp_tax_infos;
 	}
