@@ -43,14 +43,14 @@ class OrderFollowControllerCore extends FrontController
 			$order_qte_input = Tools::getValue('order_qte_input');
 			$customizationIds = Tools::getValue('customization_ids');
 
-			if (!$id_order = (int)(Tools::getValue('id_order')))
+			if (!$id_order = (int)Tools::getValue('id_order'))
 				Tools::redirect('index.php?controller=history');
 			if (!$order_qte_input && !$customizationQtyInput && !$customizationIds)
 				Tools::redirect('index.php?controller=order-follow&errorDetail1');
 			if (!$customizationIds && !$ids_order_detail = Tools::getValue('ids_order_detail'))
 				Tools::redirect('index.php?controller=order-follow&errorDetail2');
 
-			$order = new Order((int)($id_order));
+			$order = new Order((int)$id_order);
 			if (!$order->isReturnable()) Tools::redirect('index.php?controller=order-follow&errorNotReturnable');
 			if ($order->id_customer != $this->context->customer->id)
 				die(Tools::displayError());
@@ -115,7 +115,7 @@ class OrderFollowControllerCore extends FrontController
 		$this->addCSS(array(_THEME_CSS_DIR_.'history.css', _THEME_CSS_DIR_.'addresses.css'));
 		$this->addJqueryPlugin('scrollTo');
 		$this->addJS(array(
-			_THEME_JS_DIR_.'history.js', 
+			_THEME_JS_DIR_.'history.js',
 			_THEME_JS_DIR_.'tools.js') // retro compat themes 1.5
 		);
 		$this->addjqueryPlugin('footable');

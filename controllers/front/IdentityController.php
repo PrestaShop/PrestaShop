@@ -50,7 +50,7 @@ class IdentityControllerCore extends FrontController
 			$email = trim(Tools::getValue('email'));
 
 			if (Tools::getValue('months') != '' && Tools::getValue('days') != '' && Tools::getValue('years') != '')
-				$this->customer->birthday = (int)(Tools::getValue('years')).'-'.(int)(Tools::getValue('months')).'-'.(int)(Tools::getValue('days'));
+				$this->customer->birthday = (int)Tools::getValue('years').'-'.(int)Tools::getValue('months').'-'.(int)Tools::getValue('days');
 			elseif (Tools::getValue('months') == '' && Tools::getValue('days') == '' && Tools::getValue('years') == '')
 				$this->customer->birthday = null;
 			else

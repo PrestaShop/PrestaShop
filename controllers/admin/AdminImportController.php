@@ -1830,7 +1830,7 @@ class AdminImportControllerCore extends AdminController
 							StockAvailable::setQuantity((int)$product->id, 0, $product->quantity, $this->context->shop->id);
 					}
 					// elseif enable depends on stock and quantity, add quantity to stock
-					elseif (isset($product->quantity) && $product->depends_on_stock == 1)
+					elseif (isset($product->quantity) && $product->quantity && $product->depends_on_stock == 1)
 					{
 						// add stock
 						$stock_manager = StockManagerFactory::getManager();

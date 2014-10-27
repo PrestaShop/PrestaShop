@@ -33,7 +33,7 @@ class CartControllerCore extends FrontController
 	protected $id_address_delivery;
 	protected $customization_id;
 	protected $qty;
-	public    $ssl = true;
+	public $ssl = true;
 
 	protected $ajax_refresh = false;
 
@@ -53,7 +53,7 @@ class CartControllerCore extends FrontController
 		parent::init();
 
 		// Send noindex to avoid ghost carts by bots
-		header("X-Robots-Tag: noindex, nofollow", true);
+		header('X-Robots-Tag: noindex, nofollow', true);
 
 		// Get page main parameters
 		$this->id_product = (int)Tools::getValue('id_product', null);
@@ -126,7 +126,7 @@ class CartControllerCore extends FrontController
 
 		if ($this->context->cart->deleteProduct($this->id_product, $this->id_product_attribute, $this->customization_id, $this->id_address_delivery))
 		{
-			if (!Cart::getNbProducts((int)($this->context->cart->id)))
+			if (!Cart::getNbProducts((int)$this->context->cart->id))
 			{
 				$this->context->cart->setDeliveryOption(null);
 				$this->context->cart->gift = 0;

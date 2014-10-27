@@ -221,7 +221,7 @@ class AuthControllerCore extends FrontController
 
 		foreach (array('inv', 'dlv') as $addressType)
 			$this->context->smarty->assign(array(
-				$addressType.'_adr_fields' => $addressFormat, 
+				$addressType.'_adr_fields' => $addressFormat,
 				$addressType.'_all_fields' => $addressItems,
 				'required_fields' => $requireFormFieldsList
 			));
@@ -475,13 +475,13 @@ class AuthControllerCore extends FrontController
 			$_POST['firstname'] = $firstnameAddress;
 			$post_back = $_POST;
 			// Preparing addresses
-			foreach($addresses_types as $addresses_type)
+			foreach ($addresses_types as $addresses_type)
 			{
 				$$addresses_type = new Address();
 				$$addresses_type->id_customer = 1;
 
 				if ($addresses_type == 'address_invoice')
-					foreach($_POST as $key => &$post)
+					foreach ($_POST as $key => &$post)
 						if ($tmp = Tools::getValue($key.'_invoice'))
 							$post = $tmp;
 
@@ -499,7 +499,7 @@ class AuthControllerCore extends FrontController
 				/* Check zip code format */
 				if ($country->zip_code_format && !$country->checkZipCode($postcode))
 					$this->errors[] = sprintf(Tools::displayError('The Zip/Postal code you\'ve entered is invalid. It must follow this format: %s'), str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format))));
-				elseif(empty($postcode) && $country->need_zip_code)
+				elseif (empty($postcode) && $country->need_zip_code)
 					$this->errors[] = Tools::displayError('A Zip / Postal code is required.');
 				elseif ($postcode && !Validate::isPostCode($postcode))
 					$this->errors[] = Tools::displayError('The Zip / Postal code is invalid.');
@@ -514,7 +514,7 @@ class AuthControllerCore extends FrontController
 						$this->errors[] = Tools::displayError('Country is invalid');
 				$contains_state = isset($country) && is_object($country) ? (int)$country->contains_states: 0;
 				$id_state = isset($$addresses_type) && is_object($$addresses_type) ? (int)$$addresses_type->id_state: 0;
-				if ((Tools::isSubmit('submitAccount')|| Tools::isSubmit('submitGuestAccount')) && $contains_state && !$id_state)
+				if ((Tools::isSubmit('submitAccount') || Tools::isSubmit('submitGuestAccount')) && $contains_state && !$id_state)
 					$this->errors[] = Tools::displayError('This country requires you to choose a State.');
 			}
 		}
@@ -545,11 +545,11 @@ class AuthControllerCore extends FrontController
 					$this->errors[] = Tools::displayError('An error occurred while creating your account.');
 				else
 				{
-					foreach($addresses_types as $addresses_type)
+					foreach ($addresses_types as $addresses_type)
 					{
 						$$addresses_type->id_customer = (int)$customer->id;
 						if ($addresses_type == 'address_invoice')
-							foreach($_POST as $key => &$post)
+							foreach ($_POST as $key => &$post)
 								if ($tmp = Tools::getValue($key.'_invoice'))
 									$post = $tmp;
 
