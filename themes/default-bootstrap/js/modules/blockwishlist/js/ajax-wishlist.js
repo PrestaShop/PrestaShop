@@ -254,10 +254,17 @@ function WishlistDelete(id, id_wishlist, msg)
 	$.ajax({
 		type: 'GET',
 		async: true,
+		dataType: "json",
 		url: mywishlist_url,
 		headers: { "cache-control": "no-cache" },
 		cache: false,
-		data: {rand:new Date().getTime(),deleted:1, id_wishlist:id_wishlist},
+		data: {
+			rand: new Date().getTime(),
+			deleted: 1,
+			myajax: 1,
+			id_wishlist: id_wishlist,
+			action: 'deletelist'
+		},
 		success: function(data)
 		{
 			var mywishlist_siblings_count = $('#' + id).siblings().length;
@@ -265,6 +272,13 @@ function WishlistDelete(id, id_wishlist, msg)
 			$("#block-order-detail").html('');
 			if (mywishlist_siblings_count == 0)
 				$("#block-history").remove();
+
+			if (data.id_default)
+			{
+				var td_default = $("#wishlist_"+data.id_default+" > .wishlist_default");
+				$("#wishlist_"+data.id_default+" > .wishlist_default > a").remove();
+				td_default.append('<p class="is_wish_list_default"><i class="icon icon-check-square"></i></p>');
+			}
 		}
 	});
 }
@@ -280,7 +294,13 @@ function WishlistDefault(id, id_wishlist)
 		url: mywishlist_url,
 		headers: { "cache-control": "no-cache" },
 		cache: false,
-		data: {rand:new Date().getTime(), default: 1, id_wishlist:id_wishlist},
+		data: {
+			rand:new Date().getTime(),
+			default: 1,
+			id_wishlist:id_wishlist,
+			myajax: 1,
+			action: 'setdefault'
+		},
 		success: function (data)
 		{
 			var old_default_id = $(".is_wish_list_default").parents("tr").attr("id");
