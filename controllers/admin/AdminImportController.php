@@ -2264,33 +2264,36 @@ class AdminImportControllerCore extends AdminController
 						StockAvailable::setProductDependsOnStock($product->id, $info['depends_on_stock'], null, $id_product_attribute);
 
 					// This code allows us to set qty and disable depends on stock
-					if (isset($info['quantity']) && $info['depends_on_stock'] == 0)
+					if (isset($info['quantity']) && (int)$info['quantity'])
 					{
-						if (Shop::isFeatureActive())
-							foreach ($shops as $shop)
-								StockAvailable::setQuantity((int)$product->id, $id_product_attribute, (int)$info['quantity'], (int)$shop);
+						// if depends on stock and quantity, add quantity to stock
+						if ($info['depends_on_stock'] == 1)
+						{
+							$stock_manager = StockManagerFactory::getManager();
+							$price = str_replace(',', '.', $info['wholesale_price']);
+							if ($price == 0)
+								$price = 0.000001;
+							$price = round(floatval($price), 6);
+							$warehouse = new Warehouse($info['warehouse']);
+							if ($stock_manager->addProduct((int)$product->id, $id_product_attribute, $warehouse, (int)$info['quantity'], 1, $price, true))
+								StockAvailable::synchronize((int)$product->id);
+						}
 						else
-							StockAvailable::setQuantity((int)$product->id, $id_product_attribute, (int)$info['quantity'], $this->context->shop->id);
-					}
-					// elseif enable depends on stock and quantity, add quantity to stock
-					elseif (isset($info['quantity']) && $info['depends_on_stock'] == 1)
-					{
-						// add stock
-						$stock_manager = StockManagerFactory::getManager();
-						$price = str_replace(',', '.', $info['wholesale_price']);
-						if ($price == 0)
-							$price = 0.000001;
-						$price = round(floatval($price), 6);
-						$warehouse = new Warehouse($info['warehouse']);
-						if ($stock_manager->addProduct((int)$product->id, $id_product_attribute, $warehouse, (int)$info['quantity'], 1, $price, true))
-							StockAvailable::synchronize((int)$product->id);
+						{
+							if (Shop::isFeatureActive())
+								foreach ($id_shop_list as $shop)
+									StockAvailable::setQuantity((int)$product->id, $id_product_attribute, (int)$info['quantity'], (int)$shop);
+							else
+								StockAvailable::setQuantity((int)$product->id, $id_product_attribute, (int)$info['quantity'], $this->context->shop->id);
+						}
+
 					}
 				}
 				// if not depends_on_stock set, use normal qty
 				else
 				{
 					if (Shop::isFeatureActive())
-						foreach ($shops as $shop)
+						foreach ($id_shop_list as $shop)
 							StockAvailable::setQuantity((int)$product->id, $id_product_attribute, (int)$info['quantity'], (int)$shop);
 					else
 						StockAvailable::setQuantity((int)$product->id, $id_product_attribute, (int)$info['quantity'], $this->context->shop->id);
