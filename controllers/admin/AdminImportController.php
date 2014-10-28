@@ -135,6 +135,7 @@ class AdminImportControllerCore extends AdminController
 					'minimal_quantity' => array('label' => $this->l('Minimal quantity')),
 					'weight' => array('label' => $this->l('Impact on weight')),
 					'default_on' => array('label' => $this->l('Default (0 = No, 1 = Yes)')),
+					'available_date' => array('label' => $this->l('Combination available date')),
 					'image_position' => array(
 						'label' => $this->l('Image position')
 					),
@@ -174,6 +175,7 @@ class AdminImportControllerCore extends AdminController
 					'default_on' => 0,
 					'advanced_stock_management' => 0,
 					'depends_on_stock' => 0,
+					'available_date' => date('Y-m-d')
 				);
 			break;
 
@@ -2092,6 +2094,7 @@ class AdminImportControllerCore extends AdminController
 						$info['price'] = str_replace(',', '.', $info['price']);
 						$info['ecotax'] = str_replace(',', '.', $info['ecotax']);
 						$info['weight'] = str_replace(',', '.', $info['weight']);
+						$info['available_date'] = Validate::isDate($info['available_date']) ? $info['available_date'] : null;
 
 						if ($info['default_on'])
 							$product->deleteDefaultAttributes();
@@ -2124,7 +2127,7 @@ class AdminImportControllerCore extends AdminController
 											0,
 											strval($info['upc']),
 											(int)$info['minimal_quantity'],
-											0,
+											$info['available_date'],
 											null,
 											$id_shop_list
 										);
@@ -2139,6 +2142,7 @@ class AdminImportControllerCore extends AdminController
 						// if no attribute reference is specified, creates a new one
 						if (!$id_product_attribute)
 						{
+
 							$id_product_attribute = $product->addCombinationEntity(
 								(float)$info['wholesale_price'],
 								(float)$info['price'],
@@ -2154,8 +2158,10 @@ class AdminImportControllerCore extends AdminController
 								0,
 								strval($info['upc']),
 								(int)$info['minimal_quantity'],
-								$id_shop_list
+								$id_shop_list,
+								$info['available_date']
 							);
+
 							if (isset($info['supplier_reference']) && !empty($info['supplier_reference']))
 								$product->addSupplierReference($product->id_supplier, $id_product_attribute, $info['supplier_reference']);
 						}
@@ -2274,7 +2280,6 @@ class AdminImportControllerCore extends AdminController
 
 			}
 		}
-
 		$this->closeCsvFile($handle);
 	}
 
