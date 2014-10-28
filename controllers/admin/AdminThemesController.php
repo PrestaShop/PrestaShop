@@ -696,7 +696,7 @@ class AdminThemesControllerCore extends AdminController
 			if (Tools::deleteDirectory(_PS_ALL_THEMES_DIR_.$theme_dir.'/'))
 				Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminThemes').'&conf=2');
 			else
-				$this->errors[] = Tools::displayError('The folder cannot be removed');
+				$this->errors[] = Tools::displayError('The folder cannot be deleted');
 
 		}
 
@@ -870,13 +870,13 @@ class AdminThemesControllerCore extends AdminController
 		if ($zip->open(_PS_CACHE_DIR_.$zip_file_name, ZipArchive::OVERWRITE) === true)
 		{
 			if (!$zip->addFromString('Config.xml', $this->xml_file))
-				$this->errors[] = $this->l('Can\'t create config file.');
+				$this->errors[] = $this->l('Cannot create config file.');
 
 			if (isset($_FILES['documentation']))
 				if (!empty($_FILES['documentation']['tmp_name']) &&
 					!empty($_FILES['documentation']['name']) &&
 					!$zip->addFile($_FILES['documentation']['tmp_name'], 'doc/'.$_FILES['documentation']['name']))
-					$this->errors[] = $this->l('Can\'t copy documentation.');
+					$this->errors[] = $this->l('Cannot copy documentation.');
 
 			$given_path = realpath(_PS_ALL_THEMES_DIR_.Tools::getValue('theme_directory'));
 
