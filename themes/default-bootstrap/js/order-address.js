@@ -69,7 +69,7 @@ function updateAddressesDisplay(first_view)
 		{
 			$('ul#address_invoice').html($('ul#address_delivery').html());
 			$('ul#address_invoice li.address_title').html(txtInvoiceTitle);
-		}	
+		}
 	}
 	if(!first_view)
 	{
@@ -101,8 +101,8 @@ function updateAddresses()
 {
 	var idAddress_delivery = parseInt($('#id_address_delivery').val());
 	var idAddress_invoice = $('#addressesAreEquals:checked').length === 1 ? idAddress_delivery : parseInt($('#id_address_invoice').val());
-	
-   	if(isNaN(idAddress_delivery) == false && isNaN(idAddress_invoice) == false)	
+
+   	if(isNaN(idAddress_delivery) == false && isNaN(idAddress_invoice) == false)
 	{
 		$('.addresses .waitimage').show();
 		$('.button[name="processAddress"]').prop('disabled', 'disabled');
@@ -150,7 +150,7 @@ function updateAddresses()
 				$('.button[name="processAddress"]').prop('disabled', '');
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
-				$('.addresses .waitimage').hide();                        
+				$('.addresses .waitimage').hide();
 				$('.button[name="processAddress"]').prop('disabled', '');
 				if (textStatus !== 'abort')
 				{
@@ -224,7 +224,7 @@ function appendAddressList(dest_comp, values, fields_name)
 			new_li.className = '';
 			for (clas in classes)
 				new_li.className += 'address_' + classes[clas].toLowerCase().replace(":", "_") + ' ';
-			new_li.className = new_li.className.trim();
+			new_li.className = $.trim(new_li.className);
 			new_li.innerHTML = value;
 			dest_comp.append(new_li);
 		}
