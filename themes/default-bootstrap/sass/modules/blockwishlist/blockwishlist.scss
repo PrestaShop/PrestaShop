@@ -4,6 +4,9 @@
 /* lnk on detail product page */
 #wishlist_button {
 	font-weight: 700;
+	@include border-radius(5px);
+	margin-left: 55px;
+	margin-bottom: 5px;
 	&:before{
 		content: "\f08a";
 		font: 400 15px/31px $font-icon;
@@ -191,4 +194,18 @@ ul.wlp_bought_list li .lnkdel {
 
 #wishlist_button > .btn-group {
 	width: 80%;
+}
+[id=wishlist_button] + .popover {
+	padding: 0;
+	min-width: 150px;
+	 .popover-content {
+	 	padding: 0;
+	 }
+	 table {
+	 	margin-bottom: 2px;
+	 	td:hover {
+	 		background-color: rgb(204, 204, 204);
+	 		cursor: pointer;
+	 	}
+	 }
 }
