@@ -576,8 +576,8 @@ abstract class PaymentModuleCore extends Module
 								);
 							}
 
-							$values['tax_incl'] -= $values['tax_incl'] - $order->total_products_wt;
-							$values['tax_excl'] -= $values['tax_excl'] - $order->total_products;
+							$values['tax_incl'] = $order->total_products_wt - $total_reduction_value_ti;
+							$values['tax_excl'] = $order->total_products - $total_reduction_value_tex;
 
 						}
 						$total_reduction_value_ti += $values['tax_incl'];
