@@ -143,11 +143,12 @@ class ImageManagerCore
 
 		if (function_exists('exif_read_data') && function_exists('mb_strtolower'))
 		{
-			$exif = exif_read_data($src_file);
+			$exif = @exif_read_data($src_file);
 
-			if (isset($exif['Orientation']))
+			if ($exif && isset($exif['Orientation']))
 			{
-				switch($exif['Orientation']) {
+				switch ($exif['Orientation'])
+				{
 					case 3:
 						$src_width = $tmp_height;
 						$src_height = $tmp_width;
@@ -470,7 +471,7 @@ class ImageManagerCore
 			case 'jpeg':
 			default:
 				$quality = (Configuration::get('PS_JPEG_QUALITY') === false ? 90 : Configuration::get('PS_JPEG_QUALITY'));
-				imageinterlace($resource,1); /// make it PROGRESSIVE
+				imageinterlace($resource, 1); /// make it PROGRESSIVE
 				$success = imagejpeg($resource, $filename, (int)$quality);
 			break;
 		}

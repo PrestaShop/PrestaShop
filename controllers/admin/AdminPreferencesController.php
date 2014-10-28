@@ -170,7 +170,8 @@ class AdminPreferencesControllerCore extends AdminController
 					'desc' => $this->l('Choose how many decimals you want to display'),
 					'validation' => 'isUnsignedInt',
 					'cast' => 'intval',
-					'type' => 'text'
+					'type' => 'text',
+					'class' => 'fixed-width-xxl'
 				),
 				'PS_DISPLAY_SUPPLIERS' => array(
 					'title' => $this->l('Display suppliers and manufacturers'),
