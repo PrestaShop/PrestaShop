@@ -490,7 +490,7 @@ class CartRuleCore extends ObjectModel
 			SELECT crg.id_cart_rule
 			FROM '._DB_PREFIX_.'cart_rule_group crg
 			WHERE crg.id_cart_rule = '.(int)$this->id.'
-			AND crg.id_group '.($context->cart->id_customer ? 'IN (SELECT cg.id_group FROM '._DB_PREFIX_.'customer_group cg WHERE cg.id_customer = '.(int)$context->cart->id_customer.')' : '= '.Configuration::get('PS_UNIDENTIFIED_GROUP')));
+			AND crg.id_group '.($context->cart->id_customer ? 'IN (SELECT cg.id_group FROM '._DB_PREFIX_.'customer_group cg WHERE cg.id_customer = '.(int)$context->cart->id_customer.')' : '= '.(int)Configuration::get('PS_UNIDENTIFIED_GROUP')));
 			if (!$id_cart_rule)
 				return (!$display_error) ? false : Tools::displayError('You cannot use this voucher');
 		}
@@ -559,7 +559,7 @@ class CartRuleCore extends ObjectModel
 			// Minimum amount is converted to the contextual currency
 			$minimum_amount = $this->minimum_amount;
 			if ($this->minimum_amount_currency != Context::getContext()->currency->id)
-				$minimum_amount = Tools::convertPriceFull($minimum_amount , new Currency($this->minimum_amount_currency), Context::getContext()->currency);
+				$minimum_amount = Tools::convertPriceFull($minimum_amount, new Currency($this->minimum_amount_currency), Context::getContext()->currency);
 
 			$cartTotal = $context->cart->getOrderTotal($this->minimum_amount_tax, Cart::ONLY_PRODUCTS);
 			if ($this->minimum_amount_shipping)
