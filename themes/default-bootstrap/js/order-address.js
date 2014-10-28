@@ -224,7 +224,7 @@ function appendAddressList(dest_comp, values, fields_name)
 			new_li.className = '';
 			for (clas in classes)
 				new_li.className += 'address_' + classes[clas].toLowerCase().replace(":", "_") + ' ';
-			new_li.className = new_li.className.trim();
+			new_li.className = new_li.className.replace(/^\s+|\s+$/g, '');
 			new_li.innerHTML = value;
 			dest_comp.append(new_li);
 		}
