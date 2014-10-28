@@ -219,7 +219,7 @@ class AdminThemesControllerCore extends AdminController
 			),
 		);
 
-		$installed_theme = Theme::getAllThemes(array($this->context->theme->id));
+		$installed_theme = Theme::getAllThemes(array($this->context->shop->id_theme));
 		$non_installed_theme = Theme::getNonInstalledTheme();
 		if (count($installed_theme) || !empty($non_installed_theme))
 		{
