@@ -2808,6 +2808,15 @@ class AdminProductsControllerCore extends AdminController
 					$product_supplier->save();
 
 					$associated_suppliers[] = $product_supplier;
+					foreach ($attributes as $attribute)
+						if ((int)$attribute['id_product_attribute'] > 0)
+						{
+							$product_supplier = new ProductSupplier();
+							$product_supplier->id_product = $product->id;
+							$product_supplier->id_product_attribute = (int)$attribute['id_product_attribute'];
+							$product_supplier->id_supplier = $id;
+							$product_supplier->save();
+						}
 				}
 			}
 
