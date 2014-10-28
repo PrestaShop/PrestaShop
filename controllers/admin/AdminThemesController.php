@@ -1564,7 +1564,7 @@ class AdminThemesControllerCore extends AdminController
 					if (file_exists($theme_doc_dir))
 						Tools::deleteDirectory($theme_doc_dir);
 
-					Tools::recurseCopy($sandbox.$theme_dir.'/themes/'.$theme_dir, $target_dir);
+					Tools::recurseCopy($sandbox.$theme_dir.'/themes/'.$theme_dir.'/', $target_dir.'/');
 					Tools::recurseCopy($sandbox.$theme_dir.'/doc/', $theme_doc_dir);
 					Tools::recurseCopy($sandbox.$theme_dir.'/modules/', _PS_MODULE_DIR_);
 				}
