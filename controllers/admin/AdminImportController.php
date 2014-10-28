@@ -135,7 +135,7 @@ class AdminImportControllerCore extends AdminController
 					'minimal_quantity' => array('label' => $this->l('Minimal quantity')),
 					'weight' => array('label' => $this->l('Impact on weight')),
 					'default_on' => array('label' => $this->l('Default (0 = No, 1 = Yes)')),
-					'available_date' => array('label' => $this->l('Combination available date')),
+					'available_date' => array('label' => $this->l('Combination availability date')),
 					'image_position' => array(
 						'label' => $this->l('Choose among product images by position (1,2,3...)')
 					),
@@ -257,7 +257,7 @@ class AdminImportControllerCore extends AdminController
 					'available_now' => array('label' => $this->l('Text when in stock')),
 					'available_later' => array('label' => $this->l('Text when backorder allowed')),
 					'available_for_order' => array('label' => $this->l('Available for order (0 = No, 1 = Yes)')),
-					'available_date' => array('label' => $this->l('Product available date')),
+					'available_date' => array('label' => $this->l('Product availability date')),
 					'date_add' => array('label' => $this->l('Product creation date')),
 					'show_price' => array('label' => $this->l('Show price (0 = No, 1 = Yes)')),
 					'image' => array('label' => $this->l('Image URLs (x,y,z...)')),
