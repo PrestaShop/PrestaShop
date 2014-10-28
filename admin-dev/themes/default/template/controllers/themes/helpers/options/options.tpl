@@ -27,10 +27,39 @@
 {block name="input"}
 	{if $field['type'] == 'theme'}
 		{if $field['can_display_themes']}
-			{if $field.themes|count > 0}
 			<div class="col-lg-12">
 				<div class="row">
 					{foreach $field.themes as $theme}
+						<div class="col-sm-4 col-lg-3">
+							<div class="theme-container">
+								<h4 class="theme-title">{$theme->name}</h4>
+								<div class="thumbnail-wrapper">
+									<div class="action-wrapper">
+										<div class="action-overlay"></div>
+										<div class="action-buttons">
+											<div class="btn-group">
+												<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;submitOptionstheme&amp;id_theme={$theme->id}" class="btn btn-default">
+													<i class="icon-check"></i> {l s='Use this theme'}
+												</a>
+												<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+													<i class="icon-caret-down"></i>&nbsp;
+												</button>
+												<ul class="dropdown-menu">
+													<li>
+														<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;deletetheme&amp;id_theme={$theme->id}" title="Delete this theme" class="delete">
+															<i class="icon-trash"></i> {l s='Delete this theme'}
+														</a>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</div>
+									<img class="center-block img-thumbnail" src="../themes/{$theme->directory}/preview.jpg" alt="{$theme->name}" />
+								</div>
+							</div>
+						</div>
+					{/foreach}
+					{foreach $field.not_installed as $theme}
 						<div class="col-sm-4 col-lg-3">
 							<div class="theme-container">
 								<h4 class="theme-title">{$theme.name}</h4>
@@ -39,15 +68,15 @@
 										<div class="action-overlay"></div>
 										<div class="action-buttons">
 											<div class="btn-group">
-												<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;submitOptionstheme&amp;id_theme={$theme.id}" class="btn btn-default">
-													<i class="icon-check"></i> {l s='Use this theme'}
+												<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;installThemeFromFolder&amp;theme_dir={$theme.directory}" class="btn btn-default">
+													<i class="icon-check"></i> {l s='Install this theme'}
 												</a>
 												<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 													<i class="icon-caret-down"></i>&nbsp;
 												</button>
 												<ul class="dropdown-menu">
 													<li>
-														<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;deletetheme&amp;id_theme={$theme.id}" title="Delete this theme" class="delete">
+														<a href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;deletetheme&amp;theme_dir={$theme.directory}" title="Delete this theme" class="delete">
 															<i class="icon-trash"></i> {l s='Delete this theme'}
 														</a>
 													</li>
@@ -55,14 +84,13 @@
 											</div>
 										</div>
 									</div>
-									<img class="center-block img-thumbnail" src="{$theme.preview}" alt="{$theme.name}" />
+									<img class="center-block img-thumbnail" src="../themes/{$theme.directory}/themes/{$theme.directory}/preview.jpg" alt="{$theme.name}" />
 								</div>
 							</div>
 						</div>
 					{/foreach}
 				</div>
 			</div>
-			{/if}
 		{/if}
 	{else}
 		{$smarty.block.parent}
@@ -99,7 +127,7 @@
 					</div>
 					<div class="col-sm-4">
 						<a class="btn btn-default pull-right" href="{$link->getAdminLink('AdminModules')|escape:'html':'UTF-8'}&amp;configure=themeconfigurator">
-							<i class="icon icon-list-alt"></i> 
+							<i class="icon icon-list-alt"></i>
 							{l s='Theme Configurator'}
 						</a>
 					</div>
@@ -113,7 +141,7 @@
 					</div>
 					<div class="col-sm-4">
 						<a class="btn btn-default pull-right" href="{$link->getAdminLink('AdminThemes')|escape:'html':'UTF-8'}&amp;updatetheme&amp;id_theme={$cur_theme.theme_id}">
-							<i class="icon icon-cog"></i> 
+							<i class="icon icon-cog"></i>
 							{l s='Advanced settings'}
 						</a>
 					</div>
