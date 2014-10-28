@@ -36,6 +36,13 @@ $(document).ready(function(){
 	$(document).on('change', 'select[name=wishlists]', function(){
 		WishlistChangeDefault('wishlist_block_list', $(this).val());
 	});
+
+	$("#wishlist_button").popover({
+		html: true,
+		content: function () {
+        	return $("#popover-content").html();
+    	}
+  	});
 });
 
 function WishlistCart(id, action, id_product, id_product_attribute, quantity, id_wishlist)
