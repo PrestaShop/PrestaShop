@@ -64,8 +64,8 @@ class HistoryControllerCore extends FrontController
 			}
 		$this->context->smarty->assign(array(
 			'orders' => $orders,
-			'invoiceAllowed' => (int)(Configuration::get('PS_INVOICE')),
-			'reorderingAllowed' => !(int)(Configuration::get('PS_DISALLOW_HISTORY_REORDERING')),
+			'invoiceAllowed' => (int)Configuration::get('PS_INVOICE'),
+			'reorderingAllowed' => !(int)Configuration::get('PS_DISALLOW_HISTORY_REORDERING'),
 			'slowValidation' => Tools::isSubmit('slowvalidation')
 		));
 

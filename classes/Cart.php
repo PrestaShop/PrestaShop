@@ -580,14 +580,14 @@ class CartCore extends ObjectModel
 			{
 				case Order::ROUND_TOTAL:
 				case Order::ROUND_LINE:
-					$row['total'] = Tools::ps_round($row['price'] * (int)$row['cart_quantity'], _PS_PRICE_DISPLAY_PRECISION_);
-					$row['total_wt'] = Tools::ps_round($tax_calculator->addTaxes($row['price']) * (int)$row['cart_quantity'], _PS_PRICE_DISPLAY_PRECISION_);
+					$row['total'] = Tools::ps_round($row['price'] * (int)$row['cart_quantity'], _PS_PRICE_COMPUTE_PRECISION_);
+					$row['total_wt'] = Tools::ps_round($tax_calculator->addTaxes($row['price']) * (int)$row['cart_quantity'], _PS_PRICE_COMPUTE_PRECISION_);
 					break;
 
 				case Order::ROUND_ITEM:
 				default:
-					$row['total'] = Tools::ps_round($row['price'], _PS_PRICE_DISPLAY_PRECISION_) * (int)$row['cart_quantity'];
-					$row['total_wt'] = Tools::ps_round($tax_calculator->addTaxes($row['price']), _PS_PRICE_DISPLAY_PRECISION_) * (int)$row['cart_quantity'];
+					$row['total'] = Tools::ps_round($row['price'], _PS_PRICE_COMPUTE_PRECISION_) * (int)$row['cart_quantity'];
+					$row['total_wt'] = Tools::ps_round($tax_calculator->addTaxes($row['price']), _PS_PRICE_COMPUTE_PRECISION_) * (int)$row['cart_quantity'];
 					break;
 			}
 			$row['price_wt'] = $tax_calculator->addTaxes($row['price']);
@@ -1415,29 +1415,29 @@ class CartCore extends ObjectModel
 					break;
 				case Order::ROUND_LINE:
 					$product_price = $price * $product['cart_quantity'];
-					$products_total[$id_tax_rules_group] += Tools::ps_round($product_price, _PS_PRICE_DISPLAY_PRECISION_);
+					$products_total[$id_tax_rules_group] += Tools::ps_round($product_price, _PS_PRICE_COMPUTE_PRECISION_);
 
 					if ($with_taxes)
-						$products_total[$id_tax_rules_group] += Tools::ps_round($tax_calculator->getTaxesTotalAmount($product_price), _PS_PRICE_DISPLAY_PRECISION_);
+						$products_total[$id_tax_rules_group] += Tools::ps_round($tax_calculator->getTaxesTotalAmount($product_price), _PS_PRICE_COMPUTE_PRECISION_);
 
 					if ($ecotax)
 					{
 						$ecotax_price = $ecotax * (int)$product['cart_quantity'];
-						$ecotax_total += Tools::ps_round($ecotax_price, _PS_PRICE_DISPLAY_PRECISION_);
+						$ecotax_total += Tools::ps_round($ecotax_price, _PS_PRICE_COMPUTE_PRECISION_);
 
 						if ($with_taxes)
-							$ecotax_total += Tools::ps_round($ecotax_tax_calculator->getTaxesTotalAmount($ecotax_price), _PS_PRICE_DISPLAY_PRECISION_);
+							$ecotax_total += Tools::ps_round($ecotax_tax_calculator->getTaxesTotalAmount($ecotax_price), _PS_PRICE_COMPUTE_PRECISION_);
 					}
 					break;
 				case Order::ROUND_ITEM:
 				default:
 					$product_price = $with_taxes ? $tax_calculator->addTaxes($price) : $price;
-					$products_total[$id_tax_rules_group] += Tools::ps_round($product_price, _PS_PRICE_DISPLAY_PRECISION_) * (int)$product['cart_quantity'];
+					$products_total[$id_tax_rules_group] += Tools::ps_round($product_price, _PS_PRICE_COMPUTE_PRECISION_) * (int)$product['cart_quantity'];
 
 					if ($ecotax)
 					{
 						$ecotax_price = $with_taxes ? $ecotax_tax_calculator->addTaxes($ecotax) : $ecotax;
-						$ecotax_total += Tools::ps_round($ecotax_price, _PS_PRICE_DISPLAY_PRECISION_) * (int)$product['cart_quantity'];
+						$ecotax_total += Tools::ps_round($ecotax_price, _PS_PRICE_COMPUTE_PRECISION_) * (int)$product['cart_quantity'];
 					}
 					break;
 			}
@@ -1450,14 +1450,14 @@ class CartCore extends ObjectModel
 				$tmp = explode('_', $key);
 				$address = Address::initialize((int)$tmp[1], true);
 				$tax_calculator = TaxManagerFactory::getManager($address, $tmp[0])->getTaxCalculator();
-				$order_total += Tools::ps_round($price, _PS_PRICE_DISPLAY_PRECISION_) + Tools::ps_round($tax_calculator->getTaxesTotalAmount($price), _PS_PRICE_DISPLAY_PRECISION_);
+				$order_total += Tools::ps_round($price, _PS_PRICE_COMPUTE_PRECISION_) + Tools::ps_round($tax_calculator->getTaxesTotalAmount($price), _PS_PRICE_COMPUTE_PRECISION_);
 			}
 			else
 				$order_total += $price;
 		}
 
 		if ($ecotax_total && $with_taxes && Configuration::get('PS_ROUND_TYPE') == Order::ROUND_TOTAL)
-			$ecotax_total = Tools::ps_round($ecotax_total, _PS_PRICE_DISPLAY_PRECISION_) + Tools::ps_round($ecotax_tax_calculator->getTaxesTotalAmount($ecotax_total), _PS_PRICE_DISPLAY_PRECISION_);
+			$ecotax_total = Tools::ps_round($ecotax_total, _PS_PRICE_COMPUTE_PRECISION_) + Tools::ps_round($ecotax_tax_calculator->getTaxesTotalAmount($ecotax_total), _PS_PRICE_COMPUTE_PRECISION_);
 
 		$order_total += $ecotax_total;
 		$order_total_products = $order_total;
@@ -1468,7 +1468,7 @@ class CartCore extends ObjectModel
 		// Wrapping Fees
 		$wrapping_fees = 0;
 		if ($this->gift)
-			$wrapping_fees = Tools::convertPrice(Tools::ps_round($this->getGiftWrappingPrice($with_taxes), _PS_PRICE_DISPLAY_PRECISION_), Currency::getCurrencyInstance((int)$this->id_currency));
+			$wrapping_fees = Tools::convertPrice(Tools::ps_round($this->getGiftWrappingPrice($with_taxes), _PS_PRICE_COMPUTE_PRECISION_), Currency::getCurrencyInstance((int)$this->id_currency));
 		if ($type == Cart::ONLY_WRAPPING)
 			return $wrapping_fees;
 
@@ -1503,7 +1503,7 @@ class CartCore extends ObjectModel
 			{
 				// If the cart rule offers free shipping, add the shipping cost
 				if (($with_shipping || $type == Cart::ONLY_DISCOUNTS) && $cart_rule['obj']->free_shipping)
-					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_SHIPPING, ($param_product ? $package : null), $use_cache), _PS_PRICE_DISPLAY_PRECISION_);
+					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_SHIPPING, ($param_product ? $package : null), $use_cache), _PS_PRICE_COMPUTE_PRECISION_);
 
 				// If the cart rule is a free gift, then add the free gift value only if the gift is in this package
 				if ((int)$cart_rule['obj']->gift_product)
@@ -1522,7 +1522,7 @@ class CartCore extends ObjectModel
 
 				// If the cart rule offers a reduction, the amount is prorated (with the products in the package)
 				if ($cart_rule['obj']->reduction_percent > 0 || $cart_rule['obj']->reduction_amount > 0)
-					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_REDUCTION, $package, $use_cache), _PS_PRICE_DISPLAY_PRECISION_);
+					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_REDUCTION, $package, $use_cache), _PS_PRICE_COMPUTE_PRECISION_);
 			}
 			$order_total_discount = min(Tools::ps_round($order_total_discount, 2), $wrapping_fees + $order_total_products + $shipping_fees);
 			$order_total -= $order_total_discount;
@@ -1537,7 +1537,7 @@ class CartCore extends ObjectModel
 		if ($type == Cart::ONLY_DISCOUNTS)
 			return $order_total_discount;
 
-		return Tools::ps_round((float)$order_total, _PS_PRICE_DISPLAY_PRECISION_);
+		return Tools::ps_round((float)$order_total, _PS_PRICE_COMPUTE_PRECISION_);
 	}
 
 	/**
@@ -2899,8 +2899,8 @@ class CartCore extends ObjectModel
 			{
 				$cart_rule['value_real'] -= $total_shipping;
 				$cart_rule['value_tax_exc'] -= $total_shipping_tax_exc;
-				$cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'], (int)$context->currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
-				$cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'], (int)$context->currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
+				$cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'], (int)$context->currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
+				$cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'], (int)$context->currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
 				if ($total_discounts > $cart_rule['value_real'])
 					$total_discounts -= $total_shipping;
 				if ($total_discounts_tax_exc > $cart_rule['value_tax_exc'])
@@ -2916,20 +2916,20 @@ class CartCore extends ObjectModel
 					if (empty($product['gift']) && $product['id_product'] == $cart_rule['gift_product'] && $product['id_product_attribute'] == $cart_rule['gift_product_attribute'])
 					{
 						// Update total products
-						$total_products_wt = Tools::ps_round($total_products_wt - $product['price_wt'], (int)$context->currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
-						$total_products = Tools::ps_round($total_products - $product['price'], (int)$context->currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
+						$total_products_wt = Tools::ps_round($total_products_wt - $product['price_wt'], (int)$context->currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
+						$total_products = Tools::ps_round($total_products - $product['price'], (int)$context->currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
 
 						// Update total discounts
-						$total_discounts = Tools::ps_round($total_discounts - $product['price_wt'], (int)$context->currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
-						$total_discounts_tax_exc = Tools::ps_round($total_discounts_tax_exc - $product['price'], (int)$context->currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
+						$total_discounts = Tools::ps_round($total_discounts - $product['price_wt'], (int)$context->currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
+						$total_discounts_tax_exc = Tools::ps_round($total_discounts_tax_exc - $product['price'], (int)$context->currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
 
 						// Update cart rule value
-						$cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'] - $product['price_wt'], (int)$context->currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
-						$cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'] - $product['price'], (int)$context->currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
+						$cart_rule['value_real'] = Tools::ps_round($cart_rule['value_real'] - $product['price_wt'], (int)$context->currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
+						$cart_rule['value_tax_exc'] = Tools::ps_round($cart_rule['value_tax_exc'] - $product['price'], (int)$context->currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
 
 						// Update product quantity
-						$product['total_wt'] = Tools::ps_round($product['total_wt'] - $product['price_wt'], (int)$currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
-						$product['total'] = Tools::ps_round($product['total'] - $product['price'], (int)$currency->decimals * _PS_PRICE_DISPLAY_PRECISION_);
+						$product['total_wt'] = Tools::ps_round($product['total_wt'] - $product['price_wt'], (int)$currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
+						$product['total'] = Tools::ps_round($product['total'] - $product['price'], (int)$currency->decimals * _PS_PRICE_COMPUTE_PRECISION_);
 						$product['cart_quantity']--;
 
 						if (!$product['cart_quantity'])

@@ -644,7 +644,7 @@ class ToolsCore
 			// Convert to new currency
 			$amount *= $currency_to->conversion_rate;
 		}
-		return Tools::ps_round($amount, _PS_PRICE_DISPLAY_PRECISION_);
+		return Tools::ps_round($amount, _PS_PRICE_COMPUTE_PRECISION_);
 	}
 
 	/**
