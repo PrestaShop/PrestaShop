@@ -137,9 +137,9 @@ class AdminImportControllerCore extends AdminController
 					'default_on' => array('label' => $this->l('Default (0 = No, 1 = Yes)')),
 					'available_date' => array('label' => $this->l('Combination available date')),
 					'image_position' => array(
-						'label' => $this->l('Image position')
+						'label' => $this->l('Choose among product images by position (1,2,3...)')
 					),
-					'image_url' => array('label' => $this->l('Image URL')),
+					'image_url' => array('label' => $this->l('Image URLs (x,y,z...)')),
 					'delete_existing_images' => array(
 						'label' => $this->l('Delete existing images (0 = No, 1 = Yes).')
 					),
@@ -1015,17 +1015,19 @@ class AdminImportControllerCore extends AdminController
 				$path = _PS_SUPP_IMG_DIR_.(int)$id_entity;
 			break;
 		}
-		$url = urldecode(trim($url));
+
+		$url = str_replace(' ', '%20', trim($url));
+		$url = urldecode($url);
 		$parced_url = parse_url($url);
 
 		if (isset($parced_url['path']))
 		{
-			$path = ltrim($parced_url['path'], '/');
-			$parts = explode('/', $path);
+			$uri = ltrim($parced_url['path'], '/');
+			$parts = explode('/', $uri);
 			foreach ($parts as &$part)
 				$part = urlencode ($part);
 			unset($part);
-			$parced_url['path'] = implode('/', $parts);
+			$parced_url['path'] = '/'.implode('/', $parts);
 		}
 
 		if (isset($parced_url['query']))
@@ -1034,8 +1036,10 @@ class AdminImportControllerCore extends AdminController
 			parse_str($parced_url['query'], $query_parts);
 			$parced_url['query'] = http_build_query($query_parts);
 		}
+
 		if (!function_exists('http_build_url'))
 			require_once(_PS_TOOL_DIR_.'http_build_url/http_build_url.php');
+
 		$url = http_build_url('', $parced_url);
 
 		// Evaluate the memory required to resize the image: if it's too much, you can't resize it.
@@ -1690,12 +1694,11 @@ class AdminImportControllerCore extends AdminController
 						}
 					}
 				}
+
 				//delete existing images if "delete_existing_images" is set to 1
 				if (isset($product->delete_existing_images))
 					if ((bool)$product->delete_existing_images)
 						$product->deleteImages();
-				else if (isset($product->image) && is_array($product->image) && count($product->image))
-					$product->deleteImages();
 
 				if (isset($product->image) && is_array($product->image) && count($product->image))
 				{
@@ -1821,26 +1824,28 @@ class AdminImportControllerCore extends AdminController
 						StockAvailable::setProductDependsOnStock($product->id, $product->depends_on_stock);
 
 					// This code allows us to set qty and disable depends on stock
-					if (isset($product->quantity) && (int)$product->quantity && $product->depends_on_stock == 0)
+					if (isset($product->quantity) && (int)$product->quantity)
 					{
-						if (Shop::isFeatureActive())
-							foreach ($shops as $shop)
-								StockAvailable::setQuantity((int)$product->id, 0, (int)$product->quantity, (int)$shop);
+						// if depends on stock and quantity, add quantity to stock
+						if ($product->depends_on_stock == 1)
+						{
+							$stock_manager = StockManagerFactory::getManager();
+							$price = str_replace(',', '.', $product->wholesale_price);
+							if ($price == 0)
+								$price = 0.000001;
+							$price = round(floatval($price), 6);
+							$warehouse = new Warehouse($product->warehouse);
+							if ($stock_manager->addProduct((int)$product->id, 0, $warehouse, (int)$product->quantity, 1, $price, true))
+								StockAvailable::synchronize((int)$product->id);
+						}
 						else
-							StockAvailable::setQuantity((int)$product->id, 0, (int)$product->quantity, (int)$this->context->shop->id);
-					}
-					// elseif enable depends on stock and quantity, add quantity to stock
-					elseif (isset($product->quantity) && (int)$product->quantity && $product->depends_on_stock == 1)
-					{
-						// add stock
-						$stock_manager = StockManagerFactory::getManager();
-						$price = str_replace(',', '.', $product->wholesale_price);
-						if ($price == 0)
-							$price = 0.000001;
-						$price = round(floatval($price), 6);
-						$warehouse = new Warehouse($product->warehouse);
-						if ($stock_manager->addProduct((int)$product->id, 0, $warehouse, (int)$product->quantity, 1, $price, true))
-							StockAvailable::synchronize((int)$product->id);
+						{
+							if (Shop::isFeatureActive())
+								foreach ($shops as $shop)
+									StockAvailable::setQuantity((int)$product->id, 0, (int)$product->quantity, (int)$shop);
+							else
+								StockAvailable::setQuantity((int)$product->id, 0, (int)$product->quantity, (int)$this->context->shop->id);
+						}
 					}
 				}
 				else // if not depends_on_stock set, use normal qty
@@ -1931,7 +1936,7 @@ class AdminImportControllerCore extends AdminController
 			else
 				continue;
 
-			$id_image = null;
+			$id_image = array();
 
 			//delete existing images if "delete_existing_images" is set to 1
 			if (array_key_exists('delete_existing_images', $info) && $info['delete_existing_images'] && !isset($this->cache_image_deleted[(int)$product->id]))
@@ -1942,54 +1947,67 @@ class AdminImportControllerCore extends AdminController
 
 			if (isset($info['image_url']) && $info['image_url'])
 			{
-				$product_has_images = (bool)Image::getImages($this->context->language->id, $product->id);
+				$info['image_url'] = explode(',', $info['image_url']);
 
-				$url = $info['image_url'];
-				$image = new Image();
-				$image->id_product = (int)$product->id;
-				$image->position = Image::getHighestPosition($product->id) + 1;
-				$image->cover = (!$product_has_images) ? true : false;
-
-				$field_error = $image->validateFields(UNFRIENDLY_ERROR, true);
-				$lang_field_error = $image->validateFieldsLang(UNFRIENDLY_ERROR, true);
-
-				if ($field_error === true && $lang_field_error === true && $image->add())
-				{
-					$image->associateTo($id_shop_list);
-					if (!AdminImportController::copyImg($product->id, $image->id, $url, 'products', !Tools::getValue('regenerate')))
+				if (is_array($info['image_url'] ) && count($info['image_url'] ))
+					foreach ($info['image_url'] as $url)
 					{
-						$this->warnings[] = sprintf(Tools::displayError('Error copying image: %s'), $url);
-						$image->delete();
+						$url = trim($url);
+						$product_has_images = (bool)Image::getImages($this->context->language->id, $product->id);
+
+						$image = new Image();
+						$image->id_product = (int)$product->id;
+						$image->position = Image::getHighestPosition($product->id) + 1;
+						$image->cover = (!$product_has_images) ? true : false;
+
+						$field_error = $image->validateFields(UNFRIENDLY_ERROR, true);
+						$lang_field_error = $image->validateFieldsLang(UNFRIENDLY_ERROR, true);
+
+						if ($field_error === true && $lang_field_error === true && $image->add())
+						{
+							$image->associateTo($id_shop_list);
+							if (!AdminImportController::copyImg($product->id, $image->id, $url, 'products', !Tools::getValue('regenerate')))
+							{
+								$this->warnings[] = sprintf(Tools::displayError('Error copying image: %s'), $url);
+								$image->delete();
+							}
+							else
+								$id_image[] = (int)$image->id;
+						}
+						else
+						{
+							$this->warnings[] = sprintf(
+								Tools::displayError('%s cannot be saved'),
+								(isset($image->id_product) ? ' ('.$image->id_product.')' : '')
+							);
+							$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').mysql_error();
+						}
 					}
-					else
-						$id_image = array($image->id);
-				}
-				else
-				{
-					$this->warnings[] = sprintf(
-						Tools::displayError('%s cannot be saved'),
-						(isset($image->id_product) ? ' ('.$image->id_product.')' : '')
-					);
-					$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').mysql_error();
-				}
 			}
 			elseif (isset($info['image_position']) && $info['image_position'])
 			{
-				$images = $product->getImages($default_language);
+				$info['image_position'] = explode(',', $info['image_position']);
 
-				if ($images)
-					foreach ($images as $row)
-						if ($row['position'] == (int)$info['image_position'])
-						{
-							$id_image = array($row['id_image']);
-							break;
-						}
-				if (!$id_image)
-					$this->warnings[] = sprintf(
-						Tools::displayError('No image was found for combination with id_product = %s and image position = %s.'),
-						$product->id,
-						(int)$info['image_position']
-					);
+				if (is_array($info['image_position'] ) && count($info['image_position'] ))
+					foreach ($info['image_position'] as $position)
+					{
+						// choose images from product by position
+						$images = $product->getImages($default_language);
+
+						if ($images)
+							foreach ($images as $row)
+								if ($row['position'] == (int)$position)
+								{
+									$id_image[] = (int)$row['id_image'];
+									break;
+								}
+						if (empty($id_image))
+							$this->warnings[] = sprintf(
+								Tools::displayError('No image was found for combination with id_product = %s and image position = %s.'),
+								$product->id,
+								(int)$position
+							);
+					}
 			}
 
 			$id_attribute_group = 0;

@@ -1536,7 +1536,7 @@ class ProductCore extends ObjectModel
 		);
 
 		if (!$total_quantity)
-			Db ::getInstance()->update('stock_available', array('quantity' => 0), '`id_product` = '.$this->id);
+			Db::getInstance()->update('stock_available', array('quantity' => 0), '`id_product` = '.$this->id);
 
 		$id_default_attribute = Product::updateDefaultAttribute($this->id);
 		if ($id_default_attribute)
@@ -2038,7 +2038,7 @@ class ProductCore extends ObjectModel
 		if ($nb_products < 1) $nb_products = 10;
 		if (empty($order_by) || $order_by == 'position') $order_by = 'date_add';
 		if (empty($order_way)) $order_way = 'DESC';
-		if ($order_by == 'id_product' || $order_by == 'price' || $order_by == 'date_add'  || $order_by == 'date_upd')
+		if ($order_by == 'id_product' || $order_by == 'price' || $order_by == 'date_add' || $order_by == 'date_upd')
 			$order_by_prefix = 'p';
 		else if ($order_by == 'name')
 			$order_by_prefix = 'pl';
@@ -2255,7 +2255,7 @@ class ProductCore extends ObjectModel
 		if ($nb_products < 1) $nb_products = 10;
 		if (empty($order_by) || $order_by == 'position') $order_by = 'price';
 		if (empty($order_way)) $order_way = 'DESC';
-		if ($order_by == 'id_product' || $order_by == 'price' || $order_by == 'date_add'  || $order_by == 'date_upd')
+		if ($order_by == 'id_product' || $order_by == 'price' || $order_by == 'date_add' || $order_by == 'date_upd')
 			$order_by_prefix = 'p';
 		else if ($order_by == 'name')
 			$order_by_prefix = 'pl';
@@ -2441,8 +2441,8 @@ class ProductCore extends ObjectModel
 		);
 
 		$uniqueArray = array();
-		foreach($data as $subArray)
-			if(!in_array($subArray, $uniqueArray))
+		foreach ($data as $subArray)
+			if (!in_array($subArray, $uniqueArray))
 			  $uniqueArray[] = $subArray;
 
 		if (count($uniqueArray))
@@ -3124,21 +3124,21 @@ class ProductCore extends ObjectModel
 
 		$check_stock = !Configuration::get('PS_DISP_UNAVAILABLE_ATTR');
 		if (!$res = Db::getInstance()->executeS('
-					SELECT pa.`id_product`, a.`color`, pac.`id_product_attribute`, '.($check_stock ? 'SUM(IF(stock.`quantity` > 0, 1, 0))' : '0').' qty, a.`id_attribute`, al.`name`, IF(color = "", a.id_attribute, color) group_by
-					FROM `'._DB_PREFIX_.'product_attribute` pa
-					'.Shop::addSqlAssociation('product_attribute', 'pa').
-					($check_stock ? Product::sqlStock('pa', 'pa') : '').'
-					JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.`id_product_attribute` = product_attribute_shop.`id_product_attribute`)
-					JOIN `'._DB_PREFIX_.'attribute` a ON (a.`id_attribute` = pac.`id_attribute`)
-					JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
-					JOIN `'._DB_PREFIX_.'attribute_group` ag ON (a.id_attribute_group = ag.`id_attribute_group`)
-					WHERE pa.`id_product` IN ('.implode(array_map('intval', $products), ',').') AND ag.`is_color_group` = 1
-					GROUP BY pa.`id_product`, `group_by`
-					'.($check_stock ? 'HAVING qty > 0' : '').'
-					ORDER BY a.`position` ASC;'
-				)
+			SELECT pa.`id_product`, a.`color`, pac.`id_product_attribute`, '.($check_stock ? 'SUM(IF(stock.`quantity` > 0, 1, 0))' : '0').' qty, a.`id_attribute`, al.`name`, IF(color = "", a.id_attribute, color) group_by
+			FROM `'._DB_PREFIX_.'product_attribute` pa
+			'.Shop::addSqlAssociation('product_attribute', 'pa').
+			($check_stock ? Product::sqlStock('pa', 'pa') : '').'
+			JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON (pac.`id_product_attribute` = product_attribute_shop.`id_product_attribute`)
+			JOIN `'._DB_PREFIX_.'attribute` a ON (a.`id_attribute` = pac.`id_attribute`)
+			JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
+			JOIN `'._DB_PREFIX_.'attribute_group` ag ON (a.id_attribute_group = ag.`id_attribute_group`)
+			WHERE pa.`id_product` IN ('.implode(array_map('intval', $products), ',').') AND ag.`is_color_group` = 1
+			GROUP BY pa.`id_product`, `group_by`
+			'.($check_stock ? 'HAVING qty > 0' : '').'
+			ORDER BY a.`position` ASC;'
 			)
-				return false;
+		)
+			return false;
 
 		$colors = array();
 		foreach ($res as $row)
@@ -5537,7 +5537,7 @@ class ProductCore extends ObjectModel
 		if (empty($ean13))
 			return 0;
 
-		if(!Validate::isEan13($ean13))
+		if (!Validate::isEan13($ean13))
 			return 0;
 
 		$query = new DbQuery();
@@ -5603,13 +5603,13 @@ class ProductCore extends ObjectModel
 
 	public function setWsProductBundle($items)
 	{
-		if($this->is_virtual)
+		if ($this->is_virtual)
 			return false;
 
 		Pack::deleteItems($this->id);
 
 		foreach ($items as $item)
-			if((int)$item['id'] > 0)
+			if ((int)$item['id'] > 0)
 				Pack::addItem($this->id, (int)$item['id'], (int)$item['quantity']);
 		return true;
 	}
