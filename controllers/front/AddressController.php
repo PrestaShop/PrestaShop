@@ -190,7 +190,7 @@ class AddressControllerCore extends FrontController
 					$address_old->delete();
 				else
 				{
-					$address->id = (int)($address_old->id);
+					$address->id = (int)$address_old->id;
 					$address->date_add = $address_old->date_add;
 				}
 			}
@@ -218,7 +218,7 @@ class AddressControllerCore extends FrontController
 			else // Update cart address
 				$this->context->cart->autosetProductAddress();
 
-			if ((bool)(Tools::getValue('select_address', false)) == true || (Tools::getValue('type') == 'invoice' && Configuration::get('PS_ORDER_PROCESS_TYPE')))
+			if ((bool)Tools::getValue('select_address', false) == true || (Tools::getValue('type') == 'invoice' && Configuration::get('PS_ORDER_PROCESS_TYPE')))
 				$this->context->cart->id_address_invoice = (int)$address->id;
 			elseif (Configuration::get('PS_ORDER_PROCESS_TYPE'))
 				$this->context->cart->id_address_invoice = (int)$this->context->cart->id_address_delivery;

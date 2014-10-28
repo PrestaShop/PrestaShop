@@ -143,9 +143,9 @@ class ImageManagerCore
 
 		if (function_exists('exif_read_data') && function_exists('mb_strtolower'))
 		{
-			$exif = exif_read_data($src_file);
+			$exif = @exif_read_data($src_file);
 
-			if (isset($exif['Orientation']))
+			if ($exif && isset($exif['Orientation']))
 			{
 				switch($exif['Orientation']) {
 					case 3:

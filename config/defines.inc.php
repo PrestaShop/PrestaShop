@@ -138,7 +138,6 @@ define('PS_PRODUCT_TAX', 0);
 define('PS_STATE_TAX', 1);
 define('PS_BOTH_TAX', 2);
 
-define('_PS_PRICE_DISPLAY_PRECISION_', 2);
 define('PS_TAX_EXC', 1);
 define('PS_TAX_INC', 0);
 
