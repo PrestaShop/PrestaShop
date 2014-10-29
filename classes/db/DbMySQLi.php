@@ -91,9 +91,25 @@ class DbMySQLiCore extends Db
 	{
 		if (!$result)
 			$result = $this->result;
+
 		if (!is_object($result))
 			return false;
+
 		return $result->fetch_assoc();
+	}
+
+	/**
+	 * @see DbCore::getAll()
+	*/
+	protected function getAll($result = false)
+	{
+		if (!$result)
+			$result = $this->result;
+
+		if (!is_object($result))
+			return false;
+
+		return $result->fetch_all(MYSQLI_ASSOC);
 	}
 
 	/**
