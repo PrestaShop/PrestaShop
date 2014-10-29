@@ -53,7 +53,7 @@ $(document).ready(function(){
 		});
 	}
 
-	$(document).on('touchstart', '#header .shopping_cart a:first', function(){
+	$(document).on('click', '#header .shopping_cart a:first', function(){
 		if ($(this).next('.cart_block:visible').length)
 			$("#header .cart_block").stop(true, true).slideUp(450);
 		else

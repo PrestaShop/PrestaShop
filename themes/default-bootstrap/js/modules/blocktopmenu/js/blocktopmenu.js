@@ -81,7 +81,7 @@ function mobileInit()
 	categoryMenu.superfish('destroy');
 	$('.sf-menu').removeAttr('style');
 
-	mCategoryGrover.on('click touchstart', function(e){
+	mCategoryGrover.on('click', function(e){
 		$(this).toggleClass('active').parent().find('ul.menu-content').stop().slideToggle('medium');
 		return false;
 	});
