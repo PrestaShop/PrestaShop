@@ -459,7 +459,7 @@ class AdminMetaControllerCore extends AdminController
 			fwrite($write_fd, "# and Google. By telling these \"robots\" where not to go on your site,\n");
 			fwrite($write_fd, "# you save bandwidth and server resources.\n");
 			fwrite($write_fd, "# For more information about the robots.txt standard, see:\n");
-			fwrite($write_fd, "# http://www.robotstxt.org/wc/robots.html\n");
+			fwrite($write_fd, "# http://www.robotstxt.org/robotstxt.html\n");
 
 			// User-Agent
 			fwrite($write_fd, "User-agent: *\n");
