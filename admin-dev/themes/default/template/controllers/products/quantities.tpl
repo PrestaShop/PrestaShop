@@ -225,7 +225,7 @@
 			<div class="form-group">
 				<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="available_date" type="default"}</span></div>
 				<label class="control-label col-lg-2" for="available_date">
-					{l s='Available date:'}
+					{l s='Availability date:'}
 				</label>
 				<div class="col-lg-9">
 					<div class="input-group fixed-width-md">
