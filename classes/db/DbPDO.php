@@ -98,9 +98,25 @@ class DbPDOCore extends Db
 	{
 		if (!$result)
 			$result = $this->result;
+
 		if (!is_object($result))
 			return false;
+
 		return $result->fetch(PDO::FETCH_ASSOC);
+	}
+
+	/**
+	 * @see DbCore::getAll()
+	*/
+	protected function getAll($result = false)
+	{
+		if (!$result)
+			$result = $this->result;
+
+		if (!is_object($result))
+			return false;
+
+		return $result->fetchAll(PDO::FETCH_ASSOC);
 	}
 
 	/**
