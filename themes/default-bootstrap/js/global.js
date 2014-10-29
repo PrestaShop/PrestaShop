@@ -362,9 +362,12 @@ function accordion(status)
 	leftColumnBlocks = $('#left_column');
 	if(status == 'enable')
 	{
-		$('#right_column .block .title_block, #left_column .block .title_block, #left_column #newsletter_block_left h4').on('click', function(){
+		var accordion_selector = '#right_column .block .title_block, #left_column .block .title_block, #left_column #newsletter_block_left h4,' +
+								'#left_column .shopping_cart > a:first-child, #right_column .shopping_cart > a:first-child';
+
+		$(accordion_selector).on('click', function(e){
 			$(this).toggleClass('active').parent().find('.block_content').stop().slideToggle('medium');
-		})
+		});
 		$('#right_column, #left_column').addClass('accordion').find('.block .block_content').slideUp('fast');
 	}
 	else
