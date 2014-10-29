@@ -136,6 +136,14 @@ abstract class DbCore
 	 * @param mixed $result
 	 */
 	abstract public function nextRow($result = false);
+	
+	/**
+	 * Get all rows for a query which return an array
+	 *
+	 * @param mixed $result
+	 */
+	
+	abstract protected function getAll($result = false);
 
 	/**
 	 * Get database version
@@ -164,7 +172,7 @@ abstract class DbCore
 
 	/* do not remove, useful for some modules */
 	abstract public function set_db($db_name);
-	
+
 	abstract public function getBestEngine();
 
 	/**
@@ -510,11 +518,7 @@ abstract class DbCore
 				$result = $this->result;
 			}
 			else
-			{
-				$result = array();
-				while ($row = $this->nextRow($this->result))
-					$result[] = $row;
-			}
+				$result = $this->getAll($this->result);
 		}
 
 		$this->last_cached = false;
@@ -549,7 +553,7 @@ abstract class DbCore
 			$result = false;
 		else
 			$result = $this->nextRow($this->result);
-		$this->last_cached = false;		
+		$this->last_cached = false;
 		if (is_null($result))
 			$result = false;
 		if ($use_cache && $this->is_cache_enabled)
@@ -728,7 +732,6 @@ abstract class DbCore
 	{
 		Tools::displayAsDeprecated();
 		$ret = Db::s($sql, $use_cache);
-		p($ret);
 		return $ret;
 	}
 
