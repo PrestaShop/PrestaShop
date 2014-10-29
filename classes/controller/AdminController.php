@@ -1888,6 +1888,11 @@ class AdminControllerCore extends Controller
 
 	protected function filterTabModuleList()
 	{
+		static $list_is_filtered = null;
+
+		if ($list_is_filtered !== null)
+			return;
+
 		if (!$this->isFresh(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 86400))
 			file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, Tools::addonsRequest('native'));
 
@@ -1920,6 +1925,8 @@ class AdminControllerCore extends Controller
 		}
 
 		$this->tab_modules_list['slider_list'] = array_intersect($this->tab_modules_list['slider_list'], $all_module_list);
+
+		$list_is_filtered = true;
 	}
 
 	/**
