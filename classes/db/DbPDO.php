@@ -235,7 +235,8 @@ class DbPDOCore extends Db
 		try {
 			$link = DbPDO::_getPDO($server, $user, $pwd, $db, $timeout);
 		} catch (PDOException $e) {
-			return ($e->getCode() == 1049) ? 2 : 1;
+			// hhvm wrongly reports error status 42000 when the database does not exist - might change in the future
+			return ($e->getCode() == 1049 || (defined('HHVM_VERSION') && $e->getCode() == 42000)) ? 2 : 1;
 		}
 		unset($link);
 		return 0;
