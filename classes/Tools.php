@@ -278,6 +278,8 @@ class ToolsCore
 			return in_array(Tools::strtolower($_SERVER['REDIRECT_HTTPS']), array(1, 'on'));
 		if (isset($_SERVER['HTTP_SSL']))
 			return in_array(Tools::strtolower($_SERVER['HTTP_SSL']), array(1, 'on'));
+		if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']))
+			return Tools::strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) == 'https';
 
 		return false;
 	}

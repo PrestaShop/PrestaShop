@@ -976,19 +976,27 @@ class FrontControllerCore extends Controller
 
 	protected static function isInWhitelistForGeolocation()
 	{
+		static $allowed = null;
+
+		if ($allowed !== null)
+			return $allowed;
+
 		$allowed = false;
 		$user_ip = Tools::getRemoteAddr();
 		$ips = array();
+
 		// retrocompatibility
 		$ips_old = explode(';', Configuration::get('PS_GEOLOCATION_WHITELIST'));
 		if (is_array($ips_old) && count($ips_old))
 			foreach ($ips_old as $ip)
 				$ips = array_merge($ips, explode("\n", $ip));
+
 		$ips = array_map('trim', $ips);
 		if (is_array($ips) && count($ips))
 			foreach ($ips as $ip)
 				if (!empty($ip) && preg_match('/^'.$ip.'.*/', $user_ip))
 					$allowed = true;
+
 		return $allowed;
 	}
 

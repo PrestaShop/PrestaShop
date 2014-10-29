@@ -1409,23 +1409,38 @@ class AdminProductsControllerCore extends AdminController
 		{
 			$id_product = (int)Tools::getValue('id_product');
 			$id_product_attribute = (int)Tools::getValue('id_product_attribute');
+
 			if ($id_product && Validate::isUnsignedId($id_product) && Validate::isLoadedObject($product = new Product($id_product)))
 			{
-				$product->deleteAttributeCombination((int)$id_product_attribute);
-				$product->checkDefaultAttributes();
-				if (!$product->hasAttributes())
-				{
-					$product->cache_default_attribute = 0;
-					$product->update();
-				}
+				if (($depends_on_stock = StockAvailable::dependsOnStock($id_product)) && StockAvailable::getQuantityAvailableByProduct($id_product, $id_product_attribute))
+					$json = array(
+						'status' => 'error',
+						'message'=> $this->l('When product depend of StockAvaible you need to delete the quantity associate to the combination before delete combination')
+					);
 				else
-					Product::updateDefaultAttribute($id_product);
+				{
+					$product->deleteAttributeCombination((int)$id_product_attribute);
+					$product->checkDefaultAttributes();
+					if (!$product->hasAttributes())
+					{
+						$product->cache_default_attribute = 0;
+						$product->update();
+					}
+					else
+						Product::updateDefaultAttribute($id_product);
 
-				$json = array(
-					'status' => 'ok',
-					'message'=> $this->_conf[1],
-					'id_product_attribute' => (int)$id_product_attribute
-				);
+					if ($depends_on_stock && !Stock::deleteStockByIds($id_product, $id_product_attribute))
+						$json = array(
+							'status' => 'error',
+							'message'=> $this->l('Error while delete the stock')
+						);
+					else
+						$json = array(
+							'status' => 'ok',
+							'message'=> $this->_conf[1],
+							'id_product_attribute' => (int)$id_product_attribute
+						);
+				}
 			}
 			else
 				$json = array(
