@@ -112,9 +112,6 @@ require_once(dirname(__FILE__).'/defines_uri.inc.php');
 global $_MODULES;
 $_MODULES = array();
 
-/* Load configuration */
-Configuration::loadConfiguration();
-
 define('_PS_PRICE_DISPLAY_PRECISION_', Configuration::get('PS_PRICE_DISPLAY_PRECISION'));
 define('_PS_PRICE_COMPUTE_PRECISION_', _PS_PRICE_DISPLAY_PRECISION_);
 
