@@ -2114,6 +2114,12 @@ class AdminImportControllerCore extends AdminController
 						$info['weight'] = str_replace(',', '.', $info['weight']);
 						$info['available_date'] = Validate::isDate($info['available_date']) ? $info['available_date'] : null;
 
+						if (!Validate::isEan13($info['ean13']))
+						{
+							$this->warnings[] = sprintf(Tools::displayError('EAN13 "%1s" has incorrect value for product with id %2d.'), $info['ean13'] ,$product->id);
+							$info['ean13'] = '';
+						}
+
 						if ($info['default_on'])
 							$product->deleteDefaultAttributes();
 
@@ -2160,7 +2166,6 @@ class AdminImportControllerCore extends AdminController
 						// if no attribute reference is specified, creates a new one
 						if (!$id_product_attribute)
 						{
-
 							$id_product_attribute = $product->addCombinationEntity(
 								(float)$info['wholesale_price'],
 								(float)$info['price'],
@@ -2219,9 +2224,9 @@ class AdminImportControllerCore extends AdminController
 				if (isset($info['advanced_stock_management']))
 				{
 					if ($info['advanced_stock_management'] != 1 && $info['advanced_stock_management'] != 0)
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management has incorrect value. Not set for product with id %s.'), $product->id);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management has incorrect value. Not set for product with id %d.'), $product->id);
 					elseif (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $info['advanced_stock_management'] == 1)
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, can not enable on product with id %s.'), $product->id);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, can not enable on product with id %d.'), $product->id);
 					else
 						$product->setAdvancedStockManagement($info['advanced_stock_management']);
 					// automaticly disable depends on stock, if a_s_m set to disabled
@@ -2233,7 +2238,7 @@ class AdminImportControllerCore extends AdminController
 				if (isset($info['warehouse']) && $info['warehouse'])
 				{
 					if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, warehouse is not set on product with id %s.'), $product->id);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, warehouse is not set on product with id %d.'), $product->id);
 					else
 					{
 						if (Warehouse::exists($info['warehouse']))
