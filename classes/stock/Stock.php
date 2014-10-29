@@ -158,4 +158,12 @@ class StockCore extends ObjectModel
 		$quantity = $manager->getProductRealQuantities($this->id_product, $this->id_product_attribute, $this->id_warehouse, true);
 		return $quantity;
 	}
+
+	public static function deleteStockByIds($id_product = null, $id_product_attribute = null)
+	{
+		if (!$id_product || !$id_product_attribute)
+			return false;
+
+		return Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'stock WHERE `id_product` = '.(int)$id_product.' AND `id_product_attribute` = '.(int)$id_product_attribute);
+	}
 }

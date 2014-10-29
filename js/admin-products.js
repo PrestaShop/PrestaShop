@@ -374,7 +374,6 @@ product_tabs['Combinations'] = new function(){
 						if (data.attribute)
 						{
 							var td = $('#qty_' + data.id_product_attribute);
-							console.log(td);
 							td.attr('id', 'qty_0');
 							td.children('input').val('0').attr('name', 'qty_0');
 							td.next('td').text(data.attribute[0].name);
