@@ -330,14 +330,20 @@ class AdminOrdersControllerCore extends AdminController
 
 	public function printPDFIcons($id_order, $tr)
 	{
+		static $valid_order_state = array();
+
 		$order = new Order($id_order);
-		$order_state = $order->getCurrentOrderState();
-		if (!Validate::isLoadedObject($order_state) || !Validate::isLoadedObject($order))
+		if (!Validate::isLoadedObject($order))
+			return '';
+
+		if (!isset($valid_order_state[$order->current_state]))
+			$valid_order_state[$order->current_state] = Validate::isLoadedObject($order->getCurrentOrderState());
+
+		if (!$valid_order_state[$order->current_state])
 			return '';
 
 		$this->context->smarty->assign(array(
 			'order' => $order,
-			'order_state' => $order_state,
 			'tr' => $tr
 		));
 
