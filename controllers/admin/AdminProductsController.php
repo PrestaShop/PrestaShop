@@ -1415,7 +1415,7 @@ class AdminProductsControllerCore extends AdminController
 				if (($depends_on_stock = StockAvailable::dependsOnStock($id_product)) && StockAvailable::getQuantityAvailableByProduct($id_product, $id_product_attribute))
 					$json = array(
 						'status' => 'error',
-						'message'=> $this->l('When product depend of StockAvaible you need to delete the quantity associate to the combination before delete combination')
+						'message'=> $this->l('It is not possible to delete a combination while it still has some quantities in the Advanced Stock Management. You must delete its stock first.')
 					);
 				else
 				{
@@ -1432,7 +1432,7 @@ class AdminProductsControllerCore extends AdminController
 					if ($depends_on_stock && !Stock::deleteStockByIds($id_product, $id_product_attribute))
 						$json = array(
 							'status' => 'error',
-							'message'=> $this->l('Error while delete the stock')
+							'message'=> $this->l('Error while deleting the stock')
 						);
 					else
 						$json = array(
