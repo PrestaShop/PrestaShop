@@ -302,7 +302,7 @@
 			<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="available_date_attribute" type="default"}</span></div>
 			<label class="control-label col-lg-2" for="available_date_attribute">
 				<span class="label-tooltip" data-toggle="tooltip" title="{l s='If this product is out of stock, you can indicate when the product will be available again.'}">
-					{l s='Available date'}
+					{l s='Availability date'}
 				</span>
 			</label>
 			<div class="col-lg-9">

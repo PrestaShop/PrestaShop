@@ -150,8 +150,8 @@ class ImageManagerCore
 				switch ($exif['Orientation'])
 				{
 					case 3:
-						$src_width = $tmp_height;
-						$src_height = $tmp_width;
+						$src_width = $tmp_width;
+						$src_height = $tmp_height;
 						$src_image = imagerotate($src_image, 180, 0);
 						break;
 
