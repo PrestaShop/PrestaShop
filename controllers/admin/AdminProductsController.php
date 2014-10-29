@@ -3377,17 +3377,17 @@ class AdminProductsControllerCore extends AdminController
 			$tmp[$group['id_group']] = $group;
 		$groups = $tmp;
 
-		if (!is_array($specific_prices) || !count($specific_prices))
-			$content .= '
-				<tr>
-					<td class="text-center" colspan="13"><i class="icon-warning-sign"></i>&nbsp;'.$this->l('No specific prices.').'</td>
-				</tr>';
-		else
+		$length_before = strlen($content);
+		if (is_array($specific_prices) && count($specific_prices))
 		{
 			$i = 0;
 			foreach ($specific_prices as $specific_price)
 			{
-				$current_specific_currency = $currencies[($specific_price['id_currency'] ? $specific_price['id_currency'] : $defaultCurrency->id)];
+				$id_currency = $specific_price['id_currency'] ? $specific_price['id_currency'] : $defaultCurrency->id;
+				if (!isset($currencies[$id_currency]))
+					continue;
+
+				$current_specific_currency = $currencies[$id_currency];
 				if ($specific_price['reduction_type'] == 'percentage')
 					$impact = '- '.($specific_price['reduction'] * 100).' %';
 				elseif ($specific_price['reduction'] > 0)
@@ -3461,6 +3461,13 @@ class AdminProductsControllerCore extends AdminController
 				}
 			}
 		}
+
+		if($length_before === strlen($content))
+			$content .= '
+				<tr>
+					<td class="text-center" colspan="13"><i class="icon-warning-sign"></i>&nbsp;'.$this->l('No specific prices.').'</td>
+				</tr>';
+
 		$content .= '
 				</tbody>
 			</table>
