@@ -136,6 +136,14 @@ abstract class DbCore
 	 * @param mixed $result
 	 */
 	abstract public function nextRow($result = false);
+	
+	/**
+	 * Get all rows for a query which return an array
+	 *
+	 * @param mixed $result
+	 */
+	
+	abstract protected function getAll($result = false);
 
 	/**
 	 * Get database version
@@ -510,11 +518,7 @@ abstract class DbCore
 				$result = $this->result;
 			}
 			else
-			{
-				$result = array();
-				while ($row = $this->nextRow($this->result))
-					$result[] = $row;
-			}
+				$result = $this->getAll($this->result);
 		}
 
 		$this->last_cached = false;
