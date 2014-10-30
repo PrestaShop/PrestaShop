@@ -578,7 +578,7 @@ class OrderDetailCore extends ObjectModel
 		$this->id = null;
 
 		$this->product_id = (int)$product['id_product'];
-		$this->product_attribute_id = ($product['id_product_attribute'] ? (int)$product['id_product_attribute'] : 0);
+		$this->product_attribute_id = $product['id_product_attribute'] ? (int)$product['id_product_attribute'] : 0;
 		$this->product_name = $product['name'].
 			((isset($product['attributes']) && $product['attributes'] != null) ?
 				' - '.$product['attributes'] : '');
@@ -749,6 +749,6 @@ class OrderDetailCore extends ObjectModel
 			if ($this->validateField($field, $this->$field) !== true)
 				$this->$field = '';
 		}
-		parent::add();
+		return parent::add($autodate = true, $null_values = false);
 	}
 }
