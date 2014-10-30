@@ -192,7 +192,7 @@ class AdminAddressesControllerCore extends AdminController
 					'required' => in_array('vat_number', $required_fields)
 				);
 			}
-			else if ($addr_field_item == 'lastname')
+			elseif ($addr_field_item == 'lastname')
 			{
 				if (isset($customer) &&
 					!Tools::isSubmit('submit'.strtoupper($this->table)) &&
@@ -345,7 +345,7 @@ class AdminAddressesControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('This email address is not registered.');
 		}
-		else if ($id_customer = Tools::getValue('id_customer'))
+		elseif ($id_customer = Tools::getValue('id_customer'))
 		{
 			$customer = new Customer((int)$id_customer);
 			if (Validate::isLoadedObject($customer))

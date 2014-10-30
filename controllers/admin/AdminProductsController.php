@@ -4070,7 +4070,7 @@ class AdminProductsControllerCore extends AdminController
 		if (!Combination::isFeatureActive())
 			$this->displayWarning($this->l('This feature has been disabled. ').
 				' <a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performances').'</a>');
-		else if (Validate::isLoadedObject($product))
+		elseif (Validate::isLoadedObject($product))
 		{
 			if ($this->product_exists_in_shop)
 			{

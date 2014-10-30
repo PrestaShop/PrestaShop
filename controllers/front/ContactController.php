@@ -42,15 +42,15 @@ class ContactControllerCore extends FrontController
 			$message = Tools::getValue('message'); // Html entities is not usefull, iscleanHtml check there is no bad html tags.
 			if (!($from = trim(Tools::getValue('from'))) || !Validate::isEmail($from))
 				$this->errors[] = Tools::displayError('Invalid email address.');
-			else if (!$message)
+			elseif (!$message)
 				$this->errors[] = Tools::displayError('The message cannot be blank.');
-			else if (!Validate::isCleanHtml($message))
+			elseif (!Validate::isCleanHtml($message))
 				$this->errors[] = Tools::displayError('Invalid message');
-			else if (!($id_contact = (int)Tools::getValue('id_contact')) || !(Validate::isLoadedObject($contact = new Contact($id_contact, $this->context->language->id))))
+			elseif (!($id_contact = (int)Tools::getValue('id_contact')) || !(Validate::isLoadedObject($contact = new Contact($id_contact, $this->context->language->id))))
 				$this->errors[] = Tools::displayError('Please select a subject from the list provided. ');
-			else if (!empty($fileAttachment['name']) && $fileAttachment['error'] != 0)
+			elseif (!empty($fileAttachment['name']) && $fileAttachment['error'] != 0)
 				$this->errors[] = Tools::displayError('An error occurred during the file-upload process.');
-			else if (!empty($fileAttachment['name']) && !in_array(Tools::strtolower(substr($fileAttachment['name'], -4)), $extension) && !in_array(Tools::strtolower(substr($fileAttachment['name'], -5)), $extension))
+			elseif (!empty($fileAttachment['name']) && !in_array(Tools::strtolower(substr($fileAttachment['name'], -4)), $extension) && !in_array(Tools::strtolower(substr($fileAttachment['name'], -5)), $extension))
 				$this->errors[] = Tools::displayError('Bad file extension');
 			else
 			{

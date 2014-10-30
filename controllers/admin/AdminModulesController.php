@@ -792,7 +792,7 @@ class AdminModulesControllerCore extends AdminController
 						$this->errors[] = Tools::displayError('This module is already installed:').' '.$module->name;
 					elseif ($key == 'uninstall' && !Module::isInstalled($module->name))
 						$this->errors[] = Tools::displayError('This module has already been uninstalled:').' '.$module->name;
-					else if ($key == 'update' && !Module::isInstalled($module->name))
+					elseif ($key == 'update' && !Module::isInstalled($module->name))
 						$this->errors[] = Tools::displayError('This module needs to be installed in order to be updated:').' '.$module->name;
 					else
 					{
@@ -1105,9 +1105,9 @@ class AdminModulesControllerCore extends AdminController
 			// Check add permissions, if add permissions not set, addons modules and uninstalled modules will not be displayed
 			if ($this->tabAccess['add'] !== '1' && isset($module->type) && ($module->type != 'addonsNative' || $module->type != 'addonsBought'))
 				unset($modules[$k]);
-			else if ($this->tabAccess['add'] !== '1' && (!isset($module->id) || $module->id < 1))
+			elseif ($this->tabAccess['add'] !== '1' && (!isset($module->id) || $module->id < 1))
 				unset($modules[$k]);
-			else if ($module->id && !Module::getPermissionStatic($module->id, 'view') && !Module::getPermissionStatic($module->id, 'configure'))
+			elseif ($module->id && !Module::getPermissionStatic($module->id, 'view') && !Module::getPermissionStatic($module->id, 'configure'))
 				unset($modules[$k]);
 			else
 			{
@@ -1414,7 +1414,7 @@ class AdminModulesControllerCore extends AdminController
 					$object->runUpgradeModule();
 					if ((count($errors_module_list = $object->getErrors())))
 						$module_errors[] = array('name' => $module->displayName, 'message' => $errors_module_list);
-					else if ((count($conf_module_list = $object->getConfirmations())))
+					elseif ((count($conf_module_list = $object->getConfirmations())))
 						$module_success[] = array('name' => $module->displayName, 'message' => $conf_module_list);
 					unset($object);
 				}

@@ -293,7 +293,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 				unset($this->context->cookie->{$this->table.'Orderby'});
 				$order_by_valuation = true;
 			}
-			else if ($this->context->cookie->{$this->table.'Orderby'} == 'real_quantity')
+			elseif ($this->context->cookie->{$this->table.'Orderby'} == 'real_quantity')
 			{
 				unset($this->context->cookie->{$this->table.'Orderby'});
 				$order_by_real_quantity = true;
@@ -344,7 +344,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 
 			if ($this->getCurrentCoverageWarehouse() != -1 && $order_by_valuation)
 				usort($this->_list, array($this, 'valuationCmp'));
-			else if ($order_by_real_quantity)
+			elseif ($order_by_real_quantity)
 				usort($this->_list, array($this, 'realQuantityCmp'));
 		}
 	}
@@ -460,7 +460,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 			}
 		}
 		// if prices requested
-		else if (Tools::isSubmit('csv_prices'))
+		elseif (Tools::isSubmit('csv_prices'))
 		{
 			// sets filename
 			$filename = $this->l('stock_instant_state_prices').'_'.$warehouse_name.'.csv';

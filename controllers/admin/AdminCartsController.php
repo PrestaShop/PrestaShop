@@ -548,7 +548,7 @@ class AdminCartsControllerCore extends AdminController
 			$new_cart = $cart->duplicate();
 			if (!$new_cart || !Validate::isLoadedObject($new_cart['cart']))
 				$errors[] = Tools::displayError('The order cannot be renewed.');
-			else if (!$new_cart['success'])
+			elseif (!$new_cart['success'])
 				$errors[] = Tools::displayError('The order cannot be renewed.');
 			else
 			{

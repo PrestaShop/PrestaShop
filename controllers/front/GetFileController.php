@@ -59,7 +59,7 @@ class GetFileControllerCore extends FrontController
 			Tools::setCookieLanguage();
 			if (!$this->context->customer->isLogged() && !Tools::getValue('secure_key') && !Tools::getValue('id_order'))
 				Tools::redirect('index.php?controller=authentication&back=get-file.php&key='.$key);
-			else if (!$this->context->customer->isLogged() && Tools::getValue('secure_key') && Tools::getValue('id_order'))
+			elseif (!$this->context->customer->isLogged() && Tools::getValue('secure_key') && Tools::getValue('id_order'))
 			{
 				$order = new Order((int)Tools::getValue('id_order'));
 				if (!Validate::isLoadedObject($order))
@@ -118,9 +118,9 @@ class GetFileControllerCore extends FrontController
 			$mimeType = @finfo_file($finfo, $file);
 			@finfo_close($finfo);
 		}
-		else if (function_exists('mime_content_type'))
+		elseif (function_exists('mime_content_type'))
 			$mimeType = @mime_content_type($file);
-		else if (function_exists('exec'))
+		elseif (function_exists('exec'))
 		{
 			$mimeType = trim(@exec('file -b --mime-type '.escapeshellarg($file)));
 			if (!$mimeType)

@@ -382,14 +382,14 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 		}
-		else if (Tools::isSubmit('submitBulkdeletetax_rule'))
+		elseif (Tools::isSubmit('submitBulkdeletetax_rule'))
 		{
 			if ($this->tabAccess['delete'] === '1')
 				$this->action = 'bulk_delete_tax_rules';
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 		}
-		else if (Tools::getValue('action') == 'create_rule')
+		elseif (Tools::getValue('action') == 'create_rule')
 		{
 			if ($this->tabAccess['add'] === '1')
 				$this->action = 'create_rule';

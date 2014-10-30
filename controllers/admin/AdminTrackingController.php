@@ -38,7 +38,7 @@ class AdminTrackingControllerCore extends AdminController
 			$this->action = 'status';
 			$this->className = 'Product';
 		}
-		else if (Tools::getValue('id_category') && Tools::isSubmit('statuscategory'))
+		elseif (Tools::getValue('id_category') && Tools::isSubmit('statuscategory'))
 		{
 			$this->table = 'category';
 			$this->identifier = 'id_category';

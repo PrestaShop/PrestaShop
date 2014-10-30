@@ -38,7 +38,7 @@ class CmsControllerCore extends FrontController
 			return;
 		if (Validate::isLoadedObject($this->cms) && ($canonicalURL = $this->context->link->getCMSLink($this->cms, $this->cms->link_rewrite, $this->ssl)))
 			parent::canonicalRedirection($canonicalURL);
-		else if (Validate::isLoadedObject($this->cms_category) && ($canonicalURL = $this->context->link->getCMSCategoryLink($this->cms_category)))
+		elseif (Validate::isLoadedObject($this->cms_category) && ($canonicalURL = $this->context->link->getCMSCategoryLink($this->cms_category)))
 			parent::canonicalRedirection($canonicalURL);
 	}
 
@@ -50,7 +50,7 @@ class CmsControllerCore extends FrontController
 	{
 		if ($id_cms = (int)Tools::getValue('id_cms'))
 			$this->cms = new CMS($id_cms, $this->context->language->id);
-		else if ($id_cms_category = (int)Tools::getValue('id_cms_category'))
+		elseif ($id_cms_category = (int)Tools::getValue('id_cms_category'))
 			$this->cms_category = new CMSCategory($id_cms_category, $this->context->language->id);
 
 		if (Configuration::get('PS_SSL_ENABLED') && Tools::getValue('content_only') && Tools::getValue('id_cms') == (int)Configuration::get('PS_CONDITIONS_CMS_ID') && Validate::isLoadedObject($this->cms))
@@ -72,7 +72,7 @@ class CmsControllerCore extends FrontController
 			else
 				$this->assignCase = 1;
 		}
-		else if (Validate::isLoadedObject($this->cms_category))
+		elseif (Validate::isLoadedObject($this->cms_category))
 			$this->assignCase = 2;
 		else
 		{
@@ -105,7 +105,7 @@ class CmsControllerCore extends FrontController
 		$this->context->smarty->assign('cgv_id', Configuration::get('PS_CONDITIONS_CMS_ID'));
 		if (isset($this->cms->id_cms_category) && $this->cms->id_cms_category)
 			$path = Tools::getFullPath($this->cms->id_cms_category, $this->cms->meta_title, 'CMS');
-		else if (isset($this->cms_category->meta_title))
+		elseif (isset($this->cms_category->meta_title))
 			$path = Tools::getFullPath(1, $this->cms_category->meta_title, 'CMS');
 		if ($this->assignCase == 1)
 		{
@@ -119,7 +119,7 @@ class CmsControllerCore extends FrontController
 			if ($this->cms->indexation == 0)
 				$this->context->smarty->assign('nobots', true);
 		}
-		else if ($this->assignCase == 2)
+		elseif ($this->assignCase == 2)
 		{
 			$this->context->smarty->assign(array(
 				'category' => $this->cms_category, //for backward compatibility
