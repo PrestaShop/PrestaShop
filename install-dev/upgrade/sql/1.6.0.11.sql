@@ -26,3 +26,7 @@ ALTER TABLE `PREFIX_product_attribute_shop` MODIFY `unit_price_impact` DECIMAL(2
 /* PHP:p16011_media_server(); */;
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_PRICE_DISPLAY_PRECISION', 2, NOW(), NOW());
+
+ALTER IGNORE TABLE `PREFIX_product` CHANGE `ean13` `ean13` BIGINT( 15 ) NULL DEFAULT NULL ;
+
+ALTER TABLE `PREFIX_product` CHANGE `ean13` `ean13` VARCHAR( 13 ) NULL DEFAULT NULL ;
