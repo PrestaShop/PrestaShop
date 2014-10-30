@@ -500,7 +500,7 @@ class RequestSqlCore extends ObjectModel
 					}
 				}
 			}
-			else if ($attribut['expr_type'] == 'operator')
+			elseif ($attribut['expr_type'] == 'operator')
 			{
 				if (!in_array(strtoupper($attribut['base_expr']), $this->tested['operator']))
 				{
@@ -508,7 +508,7 @@ class RequestSqlCore extends ObjectModel
 					return false;
 				}
 			}
-			else if ($attribut['expr_type'] == 'subquery')
+			elseif ($attribut['expr_type'] == 'subquery')
 			{
 				$tab = $attribut['sub_tree'];
 				return $this->validateParser($tab, true, $sql);

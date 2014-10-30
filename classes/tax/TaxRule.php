@@ -153,13 +153,13 @@ class TaxRuleCore extends ObjectModel
 				$from = $zip_codes[1];
 				$to   = $zip_codes[0];
 			}
-			else if ($zip_codes[0] == $zip_codes[1])
+			elseif ($zip_codes[0] == $zip_codes[1])
 			{
 				$from = $zip_codes[0];
 				$to   = 0;
 			}
 		}
-		else if (count($zip_codes) == 1)
+		elseif (count($zip_codes) == 1)
 		{
 			$from = $zip_codes[0];
 			$to = 0;

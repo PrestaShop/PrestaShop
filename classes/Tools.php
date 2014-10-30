@@ -1090,7 +1090,7 @@ class ToolsCore
 				return $full_path.$path;
 			}
 		}
-		else if ($category_type === 'CMS')
+		elseif ($category_type === 'CMS')
 		{
 			$category = new CMSCategory($id_category, $context->language->id);
 			if (!Validate::isLoadedObject($category))
@@ -1123,7 +1123,7 @@ class ToolsCore
 			$default_category = $context->shop->getCategory();
 			$category = new Category($id_category, $context->language->id);
 		}
-		else if ($type_cat === 'CMS')
+		elseif ($type_cat === 'CMS')
 		    $category = new CMSCategory($id_category, $context->language->id);
 
 		if (!Validate::isLoadedObject($category))
@@ -2964,7 +2964,7 @@ exit;
 			$len = $len1 - $len2;
 			$str = &$v2;
 		}
-		else if ($len2 > $len1)
+		elseif ($len2 > $len1)
 		{
 			$len = $len2 - $len1;
 			$str = &$v1;

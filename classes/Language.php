@@ -346,7 +346,7 @@ class LanguageCore extends ObjectModel
 					// Lang file
 					if (file_exists($modDir.'/translations/'.(string)$iso_from.'.php'))
 						$files_modules[$modDir.'/translations/'.(string)$iso_from.'.php'] = ($copy ? $modDir.'/translations/'.(string)$iso_to.'.php' : ++$number);
-					else if (file_exists($modDir.'/'.(string)$iso_from.'.php'))
+					elseif (file_exists($modDir.'/'.(string)$iso_from.'.php'))
 						$files_modules[$modDir.'/'.(string)$iso_from.'.php'] = ($copy ? $modDir.'/'.(string)$iso_to.'.php' : ++$number);
 					// Mails files
 					$modMailDirFrom = $modDir.'/mails/'.(string)$iso_from;
@@ -364,7 +364,7 @@ class LanguageCore extends ObjectModel
 				$files = array_merge($files, $files_modules);
 			}
 		}
-		else if ($select == 'mail' || $select == 'tr')
+		elseif ($select == 'mail' || $select == 'tr')
 			return $files;
 
 		// Theme files

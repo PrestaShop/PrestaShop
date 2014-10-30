@@ -166,7 +166,7 @@ abstract class HTMLTemplateCore
 
 		if (file_exists($overriden_template))
 			$template = $overriden_template;
-		else if (file_exists($default_template))
+		elseif (file_exists($default_template))
 			$template = $default_template;
 
 		return $template;

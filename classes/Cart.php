@@ -862,7 +862,7 @@ class CartCore extends ObjectModel
 						if ($new_qty > $product_qty)
 							return false;
 				}
-				else if ($operator == 'down')
+				elseif ($operator == 'down')
 				{
 					$qty = '- '.(int)$quantity;
 					$new_qty = (int)$result['quantity'] - (int)$quantity;
@@ -875,7 +875,7 @@ class CartCore extends ObjectModel
 				/* Delete product from cart */
 				if ($new_qty <= 0)
 					return $this->deleteProduct((int)$id_product, (int)$id_product_attribute, (int)$id_customization);
-				else if ($new_qty < $minimal_quantity)
+				elseif ($new_qty < $minimal_quantity)
 					return -1;
 				else
 					Db::getInstance()->execute('

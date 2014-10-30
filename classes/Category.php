@@ -248,7 +248,7 @@ class CategoryCore extends ObjectModel
 			{
 				if (!$subcat['id_category'])
 					break;
-				else if (!is_array($excluded_ids_array) || !in_array($subcat['id_category'], $excluded_ids_array))
+				elseif (!is_array($excluded_ids_array) || !in_array($subcat['id_category'], $excluded_ids_array))
 				{
 					$categ = new Category($subcat['id_category'], $id_lang);
 					$children[] = $categ->recurseLiteCategTree($max_depth, $current_depth + 1, $id_lang, $excluded_ids_array);

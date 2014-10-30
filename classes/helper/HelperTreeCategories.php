@@ -325,7 +325,7 @@ class HelperTreeCategoriesCore extends TreeCore
 				if (array_key_exists('children', $category) && is_array($category['children']))
 					self::_disableCategories($category['children']);
 			}
-			else if (array_key_exists('children', $category) && is_array($category['children']))
+			elseif (array_key_exists('children', $category) && is_array($category['children']))
 				self::_disableCategories($category['children'], $disabled_categories);
 		}
 	}

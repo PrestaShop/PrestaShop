@@ -50,7 +50,7 @@ class AliasCore extends ObjectModel
 
 		if ($id)
 			parent::__construct($id);
-		else if ($alias && Validate::isValidSearch($alias))
+		elseif ($alias && Validate::isValidSearch($alias))
 		{
 			if (!Alias::isFeatureActive())
 			{

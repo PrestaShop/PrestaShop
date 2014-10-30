@@ -387,7 +387,7 @@ class DispatcherCore
 		// Get request uri (HTTP_X_REWRITE_URL is used by IIS)
 		if (isset($_SERVER['REQUEST_URI']))
 			$this->request_uri = $_SERVER['REQUEST_URI'];
-		else if (isset($_SERVER['HTTP_X_REWRITE_URL']))
+		elseif (isset($_SERVER['HTTP_X_REWRITE_URL']))
 			$this->request_uri = $_SERVER['HTTP_X_REWRITE_URL'];
 		$this->request_uri = rawurldecode($this->request_uri);
 
@@ -729,7 +729,7 @@ class DispatcherCore
 			$controller = $m[1];
 			if (isset($_GET['controller']))
 				$_GET[$m[2]] = $m[3];
-			else if (isset($_POST['controller']))
+			elseif (isset($_POST['controller']))
 				$_POST[$m[2]] = $m[3];
 		}
 
@@ -816,7 +816,7 @@ class DispatcherCore
 		$modules_controllers = array();
 		if (is_null($module))
 			$modules = Module::getModulesOnDisk(true);
-		else if (!is_array($module))
+		elseif (!is_array($module))
 			$modules = array(Module::getInstanceByName($module));
 		else
 		{
@@ -834,7 +834,7 @@ class DispatcherCore
 					if (strpos($controller, 'Admin') !== false)
 						$modules_controllers[$mod->name][] = $controller;
 				}
-				else if ($type == 'front')
+				elseif ($type == 'front')
 				{
 					if (strpos($controller, 'Admin') === false)
 						$modules_controllers[$mod->name][] = $controller;

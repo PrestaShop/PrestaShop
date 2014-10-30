@@ -477,7 +477,7 @@ class ImageCore extends ObjectModel
 		{
 			if (preg_match('/^[0-9]+(\-(.*))?\.'.$format.'$/', $file))
 				unlink($path.$file);
-			else if (is_dir($path.$file) && (preg_match('/^[0-9]$/', $file)))
+			elseif (is_dir($path.$file) && (preg_match('/^[0-9]$/', $file)))
 				Image::deleteAllImages($path.$file.'/', $format);
 		}
 

@@ -89,7 +89,7 @@ class HelperOptionsCore extends Helper
 						$isDisabled = true;
 						$isInvisible = true;
 					}
-					else if (Shop::getContext() != Shop::CONTEXT_ALL && !Configuration::isOverridenByCurrentContext($key))
+					elseif (Shop::getContext() != Shop::CONTEXT_ALL && !Configuration::isOverridenByCurrentContext($key))
 						$isDisabled = true;
 				}
 				$field['is_disabled'] = $isDisabled;
