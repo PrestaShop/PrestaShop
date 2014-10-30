@@ -317,8 +317,8 @@ abstract class PaymentModuleCore extends Module
 					$order->total_wrapping_tax_incl = (float)abs($this->context->cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $order->product_list, $id_carrier));
 					$order->total_wrapping = $order->total_wrapping_tax_incl;
 
-					$order->total_paid_tax_excl = (float)Tools::ps_round((float)$this->context->cart->getOrderTotal(false, Cart::BOTH, $order->product_list, $id_carrier), 2);
-					$order->total_paid_tax_incl = (float)Tools::ps_round((float)$this->context->cart->getOrderTotal(true, Cart::BOTH, $order->product_list, $id_carrier), 2);
+					$order->total_paid_tax_excl = (float)Tools::ps_round((float)$this->context->cart->getOrderTotal(false, Cart::BOTH, $order->product_list, $id_carrier), _PS_PRICE_COMPUTE_PRECISION_);
+					$order->total_paid_tax_incl = (float)Tools::ps_round((float)$this->context->cart->getOrderTotal(true, Cart::BOTH, $order->product_list, $id_carrier), _PS_PRICE_COMPUTE_PRECISION_);
 					$order->total_paid = $order->total_paid_tax_incl;
 					$order->round_mode = Configuration::get('PS_PRICE_ROUND_MODE');
 
@@ -341,7 +341,7 @@ abstract class PaymentModuleCore extends Module
 					// We don't use the following condition to avoid the float precision issues : http://www.php.net/manual/en/language.types.float.php
 					// if ($order->total_paid != $order->total_paid_real)
 					// We use number_format in order to compare two string
-					if ($order_status->logable && number_format($cart_total_paid, 2) != number_format($amount_paid, 2))
+					if ($order_status->logable && number_format($cart_total_paid, _PS_PRICE_COMPUTE_PRECISION_) != number_format($amount_paid, _PS_PRICE_COMPUTE_PRECISION_))
 						$id_order_state = Configuration::get('PS_OS_ERROR');
 
 					$order_list[] = $order;
