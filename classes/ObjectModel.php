@@ -125,6 +125,8 @@ abstract class ObjectModelCore
 	 */
 	public static $definition = array();
 
+	protected static $loaded_classes = array();
+
 	/**
 	 * @var array Contain current object definition
 	 */
@@ -176,8 +178,19 @@ abstract class ObjectModelCore
 		if (!ObjectModel::$db)
 			ObjectModel::$db = Db::getInstance();
 
-		$this->def = ObjectModel::getDefinition($this);
-		$this->setDefinitionRetrocompatibility();
+		$class_name = get_class($this);
+		if (!isset(ObjectModel::$loaded_classes[$class_name]))
+		{
+			$this->def = ObjectModel::getDefinition($class_name);
+			$this->setDefinitionRetrocompatibility();
+		 	if (!Validate::isTableOrIdentifier($this->def['primary']) || !Validate::isTableOrIdentifier($this->def['table']))
+					throw new PrestaShopException('Identifier or table format not valid for class '.$class_name);
+
+			ObjectModel::$loaded_classes[$class_name] = get_object_vars($this);
+		}
+		else
+			foreach (ObjectModel::$loaded_classes[$class_name] as $key => $value)
+				$this->{$key} = $value;
 
 		if ($id_lang !== null)
 			$this->id_lang = (Language::getLanguage($id_lang) !== false) ? $id_lang : Configuration::get('PS_LANG_DEFAULT');
@@ -190,9 +203,6 @@ abstract class ObjectModelCore
 
 		if ($this->isMultishop() && !$this->id_shop)
 			$this->id_shop = Context::getContext()->shop->id;
-
-	 	if (!Validate::isTableOrIdentifier($this->def['primary']) || !Validate::isTableOrIdentifier($this->def['table']))
-			throw new PrestaShopException('Identifier or table format not valid for class '.get_class($this));
 
 		if ($id)
 		{
@@ -226,10 +236,11 @@ abstract class ObjectModelCore
 							foreach ($object_datas_lang as $row)
 								foreach ($row as $key => $value)
 								{
-									if (array_key_exists($key, $this) && $key != $this->def['primary'])
+									if ($key != $this->def['primary'] && array_key_exists($key, $this))
 									{
 										if (!isset($object_datas[$key]) || !is_array($object_datas[$key]))
 											$object_datas[$key] = array();
+
 										$object_datas[$key][$row['id_lang']] = $value;
 									}
 								}

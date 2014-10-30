@@ -1187,7 +1187,9 @@ class AdminImportControllerCore extends AdminController
 				if ($category_already_created['id_category'])
 				{
 					$cat_moved[$category->id] = (int)$category_already_created['id_category'];
-					$category->id =	(int)$category_already_created['id_category'];
+					$category->id = (int)$category_already_created['id_category'];
+					if (Validate::isDate($category_already_created['date_add']))
+						$category->date_add = $category_already_created['date_add'];
 				}
 
 				if ($category->id && $category->id == $category->id_parent)
@@ -1776,7 +1778,7 @@ class AdminImportControllerCore extends AdminController
 					if ($product->advanced_stock_management != 1 && $product->advanced_stock_management != 0)
 						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management has incorrect value. Not set for product %1$s '), $product->name[$default_language_id]);
 					elseif (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $product->advanced_stock_management == 1)
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, can not enable on product %1$s '), $product->name[$default_language_id]);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, cannot enable on product %1$s '), $product->name[$default_language_id]);
 					else
 						$product->setAdvancedStockManagement($product->advanced_stock_management);
 					// automaticly disable depends on stock, if a_s_m set to disabled
@@ -1809,7 +1811,7 @@ class AdminImportControllerCore extends AdminController
 							StockAvailable::synchronize($product->id);
 						}
 						else
-							$this->warnings[] = sprintf(Tools::displayError('Warehouse did not exist, can not set on product %1$s.'), $product->name[$default_language_id]);
+							$this->warnings[] = sprintf(Tools::displayError('Warehouse did not exist, cannot set on product %1$s.'), $product->name[$default_language_id]);
 					}
 				}
 
@@ -1819,7 +1821,7 @@ class AdminImportControllerCore extends AdminController
 					if ($product->depends_on_stock != 0 && $product->depends_on_stock != 1)
 						$this->warnings[] = sprintf(Tools::displayError('Incorrect value for "depends on stock" for product %1$s '), $product->name[$default_language_id]);
 					elseif ((!$product->advanced_stock_management || $product->advanced_stock_management == 0) && $product->depends_on_stock == 1)
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management not enabled, can not set "depends on stock" for product %1$s '), $product->name[$default_language_id]);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management not enabled, cannot set "depends on stock" for product %1$s '), $product->name[$default_language_id]);
 					else
 						StockAvailable::setProductDependsOnStock($product->id, $product->depends_on_stock);
 
@@ -2116,7 +2118,7 @@ class AdminImportControllerCore extends AdminController
 
 						if (!Validate::isEan13($info['ean13']))
 						{
-							$this->warnings[] = sprintf(Tools::displayError('EAN13 "%1s" has incorrect value for product with id %2d.'), $info['ean13'] ,$product->id);
+							$this->warnings[] = sprintf(Tools::displayError('EAN13 "%1s" has incorrect value for product with id %2d.'), $info['ean13'], $product->id);
 							$info['ean13'] = '';
 						}
 
@@ -2226,7 +2228,7 @@ class AdminImportControllerCore extends AdminController
 					if ($info['advanced_stock_management'] != 1 && $info['advanced_stock_management'] != 0)
 						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management has incorrect value. Not set for product with id %d.'), $product->id);
 					elseif (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $info['advanced_stock_management'] == 1)
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, can not enable on product with id %d.'), $product->id);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, cannot enable on product with id %d.'), $product->id);
 					else
 						$product->setAdvancedStockManagement($info['advanced_stock_management']);
 					// automaticly disable depends on stock, if a_s_m set to disabled
