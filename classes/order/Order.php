@@ -403,14 +403,14 @@ class OrderCore extends ObjectModel
 			'total_paid_real'
 		);
 
-		/* Prevent from floating precision issues (total_products has only 2 decimals) */
+		/* Prevent from floating precision issues */
 		foreach ($fields as $field)
 			if ($this->{$field} < 0)
 				$this->{$field} = 0;
 
 		/* Prevent from floating precision issues */
 		foreach ($fields as $field)
-			$this->{$field} = number_format($this->{$field}, 2, '.', '');
+			$this->{$field} = number_format($this->{$field}, _PS_PRICE_COMPUTE_PRECISION_, '.', '');
 
 		/* Update order detail */
 		$orderDetail->product_quantity -= (int)$quantity;
