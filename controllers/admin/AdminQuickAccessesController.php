@@ -210,7 +210,7 @@ class AdminQuickAccessesControllerCore extends AdminController
 			$_POST = array_merge($_POST, $params);
 			die($this->addQuickLink());
 		}
-		else if (Tools::strtolower(Tools::getValue('method')) === 'remove')
+		elseif (Tools::strtolower(Tools::getValue('method')) === 'remove')
 		{
 			$params['deletequick_access'] = 1;
 			$_POST = array_merge($_POST, $params);

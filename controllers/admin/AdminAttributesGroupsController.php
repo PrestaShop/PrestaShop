@@ -379,9 +379,9 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	{
 		if (Tools::isSubmit('updateattribute'))
 			$this->display = 'editAttributes';
-		else if (Tools::isSubmit('submitAddattribute'))
+		elseif (Tools::isSubmit('submitAddattribute'))
 			$this->display = 'editAttributes';
-		else if (Tools::isSubmit('submitAddattribute_group'))
+		elseif (Tools::isSubmit('submitAddattribute_group'))
 			$this->display = 'add';
 
 		parent::init();
@@ -472,14 +472,14 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				return;
 			$this->content .= $this->renderForm();
 		}
-		else if ($this->display == 'editAttributes')
+		elseif ($this->display == 'editAttributes')
 		{
 			if (!$this->object = new Attribute((int)Tools::getValue('id_attribute')))
 				return;
 
 			$this->content .= $this->renderFormAttributes();
 		}
-		else if ($this->display != 'view' && !$this->ajax)
+		elseif ($this->display != 'view' && !$this->ajax)
 		{
 			$this->content .= $this->renderList();
 			$this->content .= $this->renderOptions();
@@ -718,7 +718,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		{
 			if ($this->tabAccess['edit'] !== '1')
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
-			else if (!$object = new Attribute((int)Tools::getValue($this->identifier)))
+			elseif (!$object = new Attribute((int)Tools::getValue($this->identifier)))
 				$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 
 			if (Tools::getValue('position') !== false && Tools::getValue('id_attribute'))
@@ -729,14 +729,14 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				else
 					Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.Tools::getAdminTokenLite('AdminAttributesGroups').'#details_details_'.$object->id_attribute_group);
 			}
-			else if (Tools::isSubmit('deleteattribute') && Tools::getValue('id_attribute'))
+			elseif (Tools::isSubmit('deleteattribute') && Tools::getValue('id_attribute'))
 			{
 				if (!$object->delete())
 					$this->errors[] = Tools::displayError('Failed to delete the attribute.');
 				else
 					Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.Tools::getAdminTokenLite('AdminAttributesGroups'));
 			}
-			else if (Tools::isSubmit('submitAddattribute'))
+			elseif (Tools::isSubmit('submitAddattribute'))
 			{
 				Hook::exec('actionObjectAttributeAddBefore');
 				$this->action = 'save';
@@ -780,7 +780,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				// clean position after delete
 				AttributeGroup::cleanPositions();
 			}
-			else if (Tools::isSubmit('submitAdd'.$this->table))
+			elseif (Tools::isSubmit('submitAdd'.$this->table))
 			{
 				Hook::exec('actionObjectAttributeGroupAddBefore');
 				$id_attribute_group = (int)Tools::getValue('id_attribute_group');

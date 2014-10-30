@@ -2497,7 +2497,7 @@ class AdminThemesControllerCore extends AdminController
 						}
 
 					}
-					else if (strncmp($key, 'to_enable', strlen('to_enable')) == 0)
+					elseif (strncmp($key, 'to_enable', strlen('to_enable')) == 0)
 					{
 						$module = Module::getInstanceByName($value);
 						if ($module)
@@ -2521,7 +2521,7 @@ class AdminThemesControllerCore extends AdminController
 						}
 
 					}
-					else if (strncmp($key, 'to_disable', strlen('to_disable')) == 0)
+					elseif (strncmp($key, 'to_disable', strlen('to_disable')) == 0)
 					{
 						$key_exploded = explode('_', $key);
 						$id_shop_module = (int)substr($key_exploded[2], 4);
@@ -2778,28 +2778,28 @@ class AdminThemesControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
-		else if ((isset($_GET['default_left_column'.$this->table]) || isset($_GET['default_left_column'])) && Tools::getValue($this->identifier))
+		elseif ((isset($_GET['default_left_column'.$this->table]) || isset($_GET['default_left_column'])) && Tools::getValue($this->identifier))
 		{
 			if ($this->tabAccess['edit'] === '1')
 				$this->action = 'defaultleftcolumn';
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
-		else if ((isset($_GET['default_right_column'.$this->table]) || isset($_GET['default_right_column'])) && Tools::getValue($this->identifier))
+		elseif ((isset($_GET['default_right_column'.$this->table]) || isset($_GET['default_right_column'])) && Tools::getValue($this->identifier))
 		{
 			if ($this->tabAccess['edit'] === '1')
 				$this->action = 'defaultrightcolumn';
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
-		else if (Tools::getIsset('id_theme_meta') && Tools::getIsset('leftmeta'))
+		elseif (Tools::getIsset('id_theme_meta') && Tools::getIsset('leftmeta'))
 		{
 			if ($this->tabAccess['edit'] === '1')
 				$this->action = 'leftmeta';
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
-		else if (Tools::getIsset('id_theme_meta') && Tools::getIsset('rightmeta'))
+		elseif (Tools::getIsset('id_theme_meta') && Tools::getIsset('rightmeta'))
 		{
 			if ($this->tabAccess['edit'] === '1')
 				$this->action = 'rightmeta';

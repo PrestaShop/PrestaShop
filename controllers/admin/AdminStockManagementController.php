@@ -684,7 +684,7 @@ class AdminStockManagementControllerCore extends AdminController
 					$not_usable_quantity = ($physical_quantity_in_stock - $usable_quantity_in_stock);
 					if ($usable_quantity_in_stock < $quantity)
 						$this->errors[] = sprintf(Tools::displayError('You don\'t have enough usable quantity. Cannot remove %d items out of %d.'), (int)$quantity, (int)$usable_quantity_in_stock);
-					else if ($not_usable_quantity < $quantity)
+					elseif ($not_usable_quantity < $quantity)
 						$this->errors[] = sprintf(Tools::displayError('You don\'t have enough usable quantity. Cannot remove %d items out of %d.'), (int)$quantity, (int)$not_usable_quantity);
 					else
 						$this->errors[] = Tools::displayError('It is not possible to remove the specified quantity. Therefore no stock was removed.');
@@ -902,7 +902,7 @@ class AdminStockManagementControllerCore extends AdminController
 
 			}
 			// If current product has variations
-			else if (array_key_exists('variations', $item) && (int)$item['variations'] > 0)
+			elseif (array_key_exists('variations', $item) && (int)$item['variations'] > 0)
 			{
 				// we have to desactivate stock actions on current row
 				$this->addRowActionSkipList('addstock', array($item['id']));

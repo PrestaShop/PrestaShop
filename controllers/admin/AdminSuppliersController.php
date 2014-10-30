@@ -483,11 +483,11 @@ class AdminSuppliersControllerCore extends AdminController
 			}
 			return parent::postProcess();
 		}
-		else if (Tools::isSubmit('delete'.$this->table))
+		elseif (Tools::isSubmit('delete'.$this->table))
 		{
 			if (!($obj = $this->loadObject(true)))
 				return;
-			else if (SupplyOrder::supplierHasPendingOrders($obj->id))
+			elseif (SupplyOrder::supplierHasPendingOrders($obj->id))
 				$this->errors[] = $this->l('It is not possible to delete a supplier if there are pending supplier orders.');
 			else
 			{

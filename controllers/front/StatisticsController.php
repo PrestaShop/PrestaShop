@@ -39,7 +39,7 @@ class StatisticsControllerCore extends FrontController
 
 		if ($_POST['type'] == 'navinfo')
 			$this->processNavigationStats();
-		else if ($_POST['type'] == 'pagetime')
+		elseif ($_POST['type'] == 'pagetime')
 			$this->processPageTime();
 		else
 			exit;

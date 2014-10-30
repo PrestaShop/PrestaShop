@@ -265,7 +265,7 @@ class AuthControllerCore extends FrontController
 			$authentication = $customer->getByEmail(trim($email), trim($passwd));
 			if (isset($authentication->active) && !$authentication->active)
 				$this->errors[] = Tools::displayError('Your account isn\'t available at this time, please contact us');
-			else if (!$authentication || !$customer->id)
+			elseif (!$authentication || !$customer->id)
 				$this->errors[] = Tools::displayError('Authentication failed.');
 			else
 			{

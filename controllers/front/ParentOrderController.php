@@ -80,7 +80,7 @@ class ParentOrderControllerCore extends FrontController
 			$duplication = $oldCart->duplicate();
 			if (!$duplication || !Validate::isLoadedObject($duplication['cart']))
 				$this->errors[] = Tools::displayError('Sorry. We cannot renew your order.');
-			else if (!$duplication['success'])
+			elseif (!$duplication['success'])
 				$this->errors[] = Tools::displayError('Some items are no longer available, and we are unable to renew your order.');
 			else
 			{
@@ -184,7 +184,7 @@ class ParentOrderControllerCore extends FrontController
 		{
 			if (!Validate::isMessage($messageContent))
 				$this->errors[] = Tools::displayError('Invalid message');
-			else if ($oldMessage = Message::getMessageByCartId((int)$this->context->cart->id))
+			elseif ($oldMessage = Message::getMessageByCartId((int)$this->context->cart->id))
 			{
 				$message = new Message((int)$oldMessage['id_message']);
 				$message->message = $messageContent;
@@ -394,7 +394,7 @@ class ParentOrderControllerCore extends FrontController
 			$this->context->customer->logout();
 			Tools::redirect('');
 		}
-		else if (!Customer::getAddressesTotalById($this->context->customer->id))
+		elseif (!Customer::getAddressesTotalById($this->context->customer->id))
 			Tools::redirect('index.php?controller=address&back='.urlencode('order.php?step=1'.($multi = (int)Tools::getValue('multi-shipping') ? '&multi-shipping='.$multi : '')));
 		$customer = $this->context->customer;
 		if (Validate::isLoadedObject($customer))

@@ -196,7 +196,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 			);
 		}
 		// else, if we are managing Supply Order Status
-		else if (Tools::isSubmit('addsupply_order_state') ||
+		elseif (Tools::isSubmit('addsupply_order_state') ||
 				 Tools::isSubmit('updatesupply_order_state') ||
 				 Tools::isSubmit('submitAddsupply_order_state') ||
 				 Tools::isSubmit('submitUpdatesupply_order_state'))
@@ -508,7 +508,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 		 	$this->_defaultOrderBy = 'id_supply_order_state';
 		}
 		// StockMvtReason
-		else if (Tools::isSubmit('delete'.$this->table))
+		elseif (Tools::isSubmit('delete'.$this->table))
 			$this->deleted = true;
 
 		return parent::postProcess();
