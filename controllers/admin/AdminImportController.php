@@ -1187,7 +1187,9 @@ class AdminImportControllerCore extends AdminController
 				if ($category_already_created['id_category'])
 				{
 					$cat_moved[$category->id] = (int)$category_already_created['id_category'];
-					$category->id =	(int)$category_already_created['id_category'];
+					$category->id = (int)$category_already_created['id_category'];
+					if (Validate::isDate($category_already_created['date_add']))
+						$category->date_add = $category_already_created['date_add'];
 				}
 
 				if ($category->id && $category->id == $category->id_parent)
@@ -2116,7 +2118,7 @@ class AdminImportControllerCore extends AdminController
 
 						if (!Validate::isEan13($info['ean13']))
 						{
-							$this->warnings[] = sprintf(Tools::displayError('EAN13 "%1s" has incorrect value for product with id %2d.'), $info['ean13'] ,$product->id);
+							$this->warnings[] = sprintf(Tools::displayError('EAN13 "%1s" has incorrect value for product with id %2d.'), $info['ean13'], $product->id);
 							$info['ean13'] = '';
 						}
 
