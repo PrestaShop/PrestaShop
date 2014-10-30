@@ -355,7 +355,7 @@ abstract class ObjectModelCore
 			{
 				if (!empty($value[$id_lang]))
 					$value = $value[$id_lang];
-				else if (!empty($data['required']))
+				elseif (!empty($data['required']))
 					$value = $value[Configuration::get('PS_LANG_DEFAULT')];
 				else
 					$value = '';
@@ -824,7 +824,7 @@ abstract class ObjectModelCore
 			if ((!$this->id_lang && isset($this->{$field_name}[$id_language]) && !empty($this->{$field_name}[$id_language]))
 			|| ($this->id_lang && isset($this->$field_name) && !empty($this->$field_name)))
 				$fields[$id_language][$field_name] = $this->id_lang ? pSQL($this->$field_name, $html) : pSQL($this->{$field_name}[$id_language], $html);
-			else if (in_array($field_name, $this->fieldsRequiredLang))
+			elseif (in_array($field_name, $this->fieldsRequiredLang))
 				$fields[$id_language][$field_name] = pSQL($this->id_lang ? $this->$field_name : $this->{$field_name}[Configuration::get('PS_LANG_DEFAULT')], $html);
 			else
 				$fields[$id_language][$field_name] = '';

@@ -181,9 +181,9 @@ class ConnectionCore extends ObjectModel
 
 		if ($period === 'week')
 			$interval = '1 WEEK';
-		else if ($period === 'month')
+		elseif ($period === 'month')
 			$interval = '1 MONTH';
-		else if ($period === 'year')
+		elseif ($period === 'year')
 			$interval = '1 YEAR';
 		else
 			return;

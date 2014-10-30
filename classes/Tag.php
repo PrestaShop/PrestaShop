@@ -58,7 +58,7 @@ class TagCore extends ObjectModel
 
 		if ($id)
 			parent::__construct($id);
-		else if ($name && Validate::isGenericName($name) && $id_lang && Validate::isUnsignedId($id_lang))
+		elseif ($name && Validate::isGenericName($name) && $id_lang && Validate::isUnsignedId($id_lang))
 		{
 			$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT *
@@ -78,7 +78,7 @@ class TagCore extends ObjectModel
 	{
 		if (!parent::add($autodate, $null_values))
 			return false;
-		else if (isset($_POST['products']))
+		elseif (isset($_POST['products']))
 			return $this->setProducts(Tools::getValue('products'));
 		return true;
 	}

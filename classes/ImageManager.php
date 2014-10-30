@@ -270,7 +270,7 @@ class ImageManagerCore
 			else
 				$file_mime_type = false;
 		}
-		else if (function_exists('finfo_open'))
+		elseif (function_exists('finfo_open'))
 		{
 			$const = defined('FILEINFO_MIME_TYPE') ? FILEINFO_MIME_TYPE : FILEINFO_MIME;
 			$finfo = finfo_open($const);

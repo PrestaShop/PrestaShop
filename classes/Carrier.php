@@ -737,7 +737,7 @@ class CarrierCore extends ObjectModel
 
 		if (Shop::getContext() == Shop::CONTEXT_ALL)
 			$where .= 'AND id_shop IS NULL AND id_shop_group IS NULL';
-		else if (Shop::getContext() == Shop::CONTEXT_GROUP)
+		elseif (Shop::getContext() == Shop::CONTEXT_GROUP)
 			$where .= 'AND id_shop IS NULL AND id_shop_group = '.(int)Shop::getContextShopGroupID();
 		else
 			$where .= 'AND id_shop = '.(int)Shop::getContextShopID();
@@ -786,7 +786,7 @@ class CarrierCore extends ObjectModel
 			{
 				if (is_null($v))
 					$sql .= 'NULL';
-				else if (is_int($v) || is_float($v))
+				elseif (is_int($v) || is_float($v))
 					$sql .= $v;
 				else
 					$sql .= '\''.$v.'\'';
@@ -1057,7 +1057,7 @@ class CarrierCore extends ObjectModel
 	{
 		if (Shop::getContext() == Shop::CONTEXT_ALL)
 			$where = 'AND d2.id_shop IS NULL AND d2.id_shop_group IS NULL';
-		else if (Shop::getContext() == Shop::CONTEXT_GROUP)
+		elseif (Shop::getContext() == Shop::CONTEXT_GROUP)
 			$where = 'AND ((d2.id_shop_group IS NULL OR d2.id_shop_group = '.Shop::getContextShopGroupID().') AND d2.id_shop IS NULL)';
 		else
 			$where = 'AND (d2.id_shop = '.Shop::getContextShopID().' OR (d2.id_shop_group = '.Shop::getContextShopGroupID().'

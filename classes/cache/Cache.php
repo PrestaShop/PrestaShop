@@ -197,7 +197,7 @@ abstract class CacheCore
 		$keys = array();
 		if ($key == '*')
 			$keys = $this->keys;
-		else if (strpos($key, '*') === false)
+		elseif (strpos($key, '*') === false)
 			$keys = array($key);
 		else
 		{

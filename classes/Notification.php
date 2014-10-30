@@ -108,7 +108,7 @@ class NotificationCore
 			$customer_name = '';
 			if (isset($value['firstname']) && isset($value['lastname']))
 				$customer_name = Tools::safeOutput($value['firstname'].' '.$value['lastname']);
-			else if (isset($value['email']))
+			elseif (isset($value['email']))
 				$customer_name = Tools::safeOutput($value['email']);
 			
 			$json['results'][] = array(

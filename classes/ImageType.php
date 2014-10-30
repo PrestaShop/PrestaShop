@@ -151,9 +151,9 @@ class ImageTypeCore extends ObjectModel
 		//check if the theme name is already in $name if yes only return $name
 		if (strstr($name, $theme_name) && self::getByNameNType($name))
 			return $name;
-		else if (self::getByNameNType($name_without_theme_name.'_'.$theme_name))
+		elseif (self::getByNameNType($name_without_theme_name.'_'.$theme_name))
 			return $name_without_theme_name.'_'.$theme_name;
-		else if (self::getByNameNType($theme_name.'_'.$name_without_theme_name))
+		elseif (self::getByNameNType($theme_name.'_'.$name_without_theme_name))
 			return $theme_name.'_'.$name_without_theme_name;
 		else
 			return $name_without_theme_name.'_default';

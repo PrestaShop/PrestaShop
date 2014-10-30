@@ -100,9 +100,9 @@ class TranslateCore
 
 		if (isset($lang_array['AdminController'.$key]))
 			$str = $lang_array['AdminController'.$key];
-		else if (isset($lang_array['Helper'.$key]))
+		elseif (isset($lang_array['Helper'.$key]))
 			$str = $lang_array['Helper'.$key];
-		else if (isset($lang_array['AdminTab'.$key]))
+		elseif (isset($lang_array['AdminTab'.$key]))
 			$str = $lang_array['AdminTab'.$key];
 		else
 			// note in 1.5, some translations has moved from AdminXX to helper/*.tpl
