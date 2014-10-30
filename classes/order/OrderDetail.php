@@ -423,11 +423,11 @@ class OrderDetailCore extends ObjectModel
 
 		if ($id_product_download = ProductDownload::getIdFromIdProduct((int)$product['id_product']))
 		{
-			$productDownload = new ProductDownload((int)$id_product_download);
-			$this->download_deadline = $productDownload->getDeadLine();
-			$this->download_hash = $productDownload->getHash();
+			$product_download = new ProductDownload((int)$id_product_download);
+			$this->download_deadline = $product_download->getDeadLine();
+			$this->download_hash = $product_download->getHash();
 
-			unset($productDownload);
+			unset($product_download);
 		}
 	}
 
@@ -522,7 +522,6 @@ class OrderDetailCore extends ObjectModel
 		$this->setContext((int)$product['id_shop']);
 		Product::getPriceStatic((int)$product['id_product'], true, (int)$product['id_product_attribute'], 6, null, false, true, $product['cart_quantity'], false, (int)$order->id_customer, (int)$order->id_cart, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}, $specific_price, true, true, $this->context);
 		$this->specificPrice = $specific_price;
-
 		$this->original_product_price = Product::getPriceStatic($product['id_product'], false, (int)$product['id_product_attribute'], 6, null, false, false, 1, false, null, null, null, $null, true, true, $this->context);
 		$this->product_price = $this->original_product_price;
 		$this->unit_price_tax_incl = (float)$product['price_wt'];
@@ -531,7 +530,7 @@ class OrderDetailCore extends ObjectModel
 		$this->total_price_tax_excl = (float)$product['total'];
 
 		$this->purchase_supplier_price = (float)$product['wholesale_price'];
-		if ($product['id_supplier'] > 0 && ($supplier_price = ProductSupplier::getProductPrice((int)$product['id_supplier'], $product['id_product'], $product['id_product_attribute'], true)) > 0 )
+		if ($product['id_supplier'] > 0 && ($supplier_price = ProductSupplier::getProductPrice((int)$product['id_supplier'], $product['id_product'], $product['id_product_attribute'], true)) > 0)
 			$this->purchase_supplier_price = (float)$supplier_price;
 
 		$this->setSpecificPrice($order, $product);
@@ -540,22 +539,22 @@ class OrderDetailCore extends ObjectModel
 
 		$shop_id = $this->context->shop->id;
 
-		$quantityDiscount = SpecificPrice::getQuantityDiscount((int)$product['id_product'], $shop_id,
+		$quantity_discount = SpecificPrice::getQuantityDiscount((int)$product['id_product'], $shop_id,
 		(int)$cart->id_currency, (int)$this->vat_address->id_country,
 		(int)$this->customer->id_default_group, (int)$product['cart_quantity'], false, null, null, $null, true, true, $this->context);
 
-		$unitPrice = Product::getPriceStatic((int)$product['id_product'], true,
+		$unit_price = Product::getPriceStatic((int)$product['id_product'], true,
 			($product['id_product_attribute'] ? intval($product['id_product_attribute']) : null),
 			2, null, false, true, 1, false, (int)$order->id_customer, null, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')}, $null, true, true, $this->context);
 		$this->product_quantity_discount = 0.00;
-		if ($quantityDiscount)
+		if ($quantity_discount)
 		{
-			$this->product_quantity_discount = $unitPrice;
+			$this->product_quantity_discount = $unit_price;
 			if (Product::getTaxCalculationMethod((int)$order->id_customer) == PS_TAX_EXC)
-				$this->product_quantity_discount = Tools::ps_round($unitPrice, 2);
+				$this->product_quantity_discount = Tools::ps_round($unit_price, 2);
 
 			if (isset($this->tax_calculator))
-				$this->product_quantity_discount -= $this->tax_calculator->addTaxes($quantityDiscount['price']);
+				$this->product_quantity_discount -= $this->tax_calculator->addTaxes($quantity_discount['price']);
 		}
 
 		$this->discount_quantity_applied = (($this->specificPrice && $this->specificPrice['from_quantity'] > 1) ? 1 : 0);
@@ -591,9 +590,9 @@ class OrderDetailCore extends ObjectModel
 		$this->product_weight = $product['id_product_attribute'] ? (float)$product['weight_attribute'] : (float)$product['weight'];
 		$this->id_warehouse = $id_warehouse;
 
-		$productQuantity = (int)Product::getQuantity($this->product_id, $this->product_attribute_id);
-		$this->product_quantity_in_stock = ($productQuantity - (int)$product['cart_quantity'] < 0) ?
-			$productQuantity : (int)$product['cart_quantity'];
+		$product_quantity = (int)Product::getQuantity($this->product_id, $this->product_attribute_id);
+		$this->product_quantity_in_stock = ($product_quantity - (int)$product['cart_quantity'] < 0) ?
+			$product_quantity : (int)$product['cart_quantity'];
 
 		$this->setVirtualProductInformation($product);
 		$this->checkProductStock($product, $id_order_state);
