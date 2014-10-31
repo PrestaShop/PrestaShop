@@ -364,7 +364,11 @@ class FrontControllerCore extends Controller
 			'quick_view' => (bool)Configuration::get('PS_QUICK_VIEW'),
 			'shop_phone' => Configuration::get('PS_SHOP_PHONE'),
 			'compared_products' => is_array($compared_products) ? $compared_products : array(),
-			'comparator_max_item' => (int)Configuration::get('PS_COMPARATOR_MAX_ITEM')
+			'comparator_max_item' => (int)Configuration::get('PS_COMPARATOR_MAX_ITEM'),
+			'currencyRate' => (float)$currency->getConversationRate(),
+			'currencySign' => $currency->sign,
+			'currencyFormat' => $currency->format,
+			'currencyBlank' => $currency->blank,
 		));
 
 		// Add the tpl files directory for mobile
