@@ -1210,7 +1210,7 @@ class AdminControllerCore extends Controller
 			{
 				foreach ($fields as $key => $options)
 				{
-					if (!$hide_multishop_checkbox && Shop::isFeatureActive() && isset($options['visibility']) && $options['visibility'] > Shop::getContext())
+					if (Shop::isFeatureActive() && isset($options['visibility']) && $options['visibility'] > Shop::getContext())
 						continue;
 
 					if (!$hide_multishop_checkbox && Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && empty($options['no_multishop_checkbox']) && empty($_POST['multishopOverrideOption'][$key]))
