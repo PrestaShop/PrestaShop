@@ -453,7 +453,7 @@ class AdminGroupsControllerCore extends AdminController
 			$result['errors'][] = Tools::displayError('Wrong category ID.');
 			$result['hasError'] = true;
 		}
-		else if (!$this->validateDiscount($category_reduction))
+		elseif (!$this->validateDiscount($category_reduction))
 		{
 			$result['errors'][] = Tools::displayError('The discount value is incorrect (must be a percentage).');
 			$result['hasError'] = true;

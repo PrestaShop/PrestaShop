@@ -91,7 +91,7 @@ class AdminBackupControllerCore extends AdminController
 
 		if ($object->id)
 			$this->tpl_view_vars = array('url_backup' => $object->getBackupURL());
-		else if ($object->error)
+		elseif ($object->error)
 		{
 			$this->errors[] = $object->error;
 			$this->tpl_view_vars = array('errors' => $this->errors);
@@ -250,7 +250,7 @@ class AdminBackupControllerCore extends AdminController
 			$age = time() - $timestamp;
 			if ($age < 3600)
 				$age = '< 1 '.$this->l('Hour', 'AdminTab', false, false);
-			else if ($age < 86400)
+			elseif ($age < 86400)
 			{
 				$age = floor($age / 3600);
 				$age = $age.' '.(($age == 1) ? $this->l('Hour', 'AdminTab', false, false) : 

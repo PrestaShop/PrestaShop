@@ -1187,7 +1187,9 @@ class AdminImportControllerCore extends AdminController
 				if ($category_already_created['id_category'])
 				{
 					$cat_moved[$category->id] = (int)$category_already_created['id_category'];
-					$category->id =	(int)$category_already_created['id_category'];
+					$category->id = (int)$category_already_created['id_category'];
+					if (Validate::isDate($category_already_created['date_add']))
+						$category->date_add = $category_already_created['date_add'];
 				}
 
 				if ($category->id && $category->id == $category->id_parent)
@@ -1344,7 +1346,7 @@ class AdminImportControllerCore extends AdminController
 			}
 			if (isset($product->manufacturer) && is_numeric($product->manufacturer) && Manufacturer::manufacturerExists((int)$product->manufacturer))
 				$product->id_manufacturer = (int)$product->manufacturer;
-			else if (isset($product->manufacturer) && is_string($product->manufacturer) && !empty($product->manufacturer))
+			elseif (isset($product->manufacturer) && is_string($product->manufacturer) && !empty($product->manufacturer))
 			{
 				if ($manufacturer = Manufacturer::getIdByName($product->manufacturer))
 					$product->id_manufacturer = (int)$manufacturer;
@@ -1370,7 +1372,7 @@ class AdminImportControllerCore extends AdminController
 
 			if (isset($product->supplier) && is_numeric($product->supplier) && Supplier::supplierExists((int)$product->supplier))
 				$product->id_supplier = (int)$product->supplier;
-			else if (isset($product->supplier) && is_string($product->supplier) && !empty($product->supplier))
+			elseif (isset($product->supplier) && is_string($product->supplier) && !empty($product->supplier))
 			{
 				if ($supplier = Supplier::getIdByName($product->supplier))
 					$product->id_supplier = (int)$supplier;
@@ -1401,14 +1403,14 @@ class AdminImportControllerCore extends AdminController
 
 			if (isset($product->price_tex) && !isset($product->price_tin))
 				$product->price = $product->price_tex;
-			else if (isset($product->price_tin) && !isset($product->price_tex))
+			elseif (isset($product->price_tin) && !isset($product->price_tex))
 			{
 				$product->price = $product->price_tin;
 				// If a tax is already included in price, withdraw it from price
 				if ($product->tax_rate)
 					$product->price = (float)number_format($product->price / (1 + $product->tax_rate / 100), 6, '.', '');
 			}
-			else if (isset($product->price_tin) && isset($product->price_tex))
+			elseif (isset($product->price_tin) && isset($product->price_tex))
 				$product->price = $product->price_tex;
 
 			if (!Configuration::get('PS_USE_ECOTAX'))
@@ -1454,7 +1456,7 @@ class AdminImportControllerCore extends AdminController
 							}
 						}
 					}
-					else if (is_string($value) && !empty($value))
+					elseif (is_string($value) && !empty($value))
 					{
 						$category = Category::searchByPath($default_language_id, trim($value), $this, 'productImportCreateCat');
 						if ($category['id_category'])
@@ -1524,7 +1526,7 @@ class AdminImportControllerCore extends AdminController
 					$product->date_add = pSQL($datas['date_add']);
 					$res = $product->update();
 				} // Else If id product && id product already in base, trying to update
-				else if ($product->id && Product::existsInDatabase((int)$product->id, 'product'))
+				elseif ($product->id && Product::existsInDatabase((int)$product->id, 'product'))
 				{
 					$datas = Db::getInstance()->getRow('
 						SELECT product_shop.`date_add`
@@ -1776,7 +1778,7 @@ class AdminImportControllerCore extends AdminController
 					if ($product->advanced_stock_management != 1 && $product->advanced_stock_management != 0)
 						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management has incorrect value. Not set for product %1$s '), $product->name[$default_language_id]);
 					elseif (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $product->advanced_stock_management == 1)
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, can not enable on product %1$s '), $product->name[$default_language_id]);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, cannot enable on product %1$s '), $product->name[$default_language_id]);
 					else
 						$product->setAdvancedStockManagement($product->advanced_stock_management);
 					// automaticly disable depends on stock, if a_s_m set to disabled
@@ -1809,7 +1811,7 @@ class AdminImportControllerCore extends AdminController
 							StockAvailable::synchronize($product->id);
 						}
 						else
-							$this->warnings[] = sprintf(Tools::displayError('Warehouse did not exist, can not set on product %1$s.'), $product->name[$default_language_id]);
+							$this->warnings[] = sprintf(Tools::displayError('Warehouse did not exist, cannot set on product %1$s.'), $product->name[$default_language_id]);
 					}
 				}
 
@@ -1819,7 +1821,7 @@ class AdminImportControllerCore extends AdminController
 					if ($product->depends_on_stock != 0 && $product->depends_on_stock != 1)
 						$this->warnings[] = sprintf(Tools::displayError('Incorrect value for "depends on stock" for product %1$s '), $product->name[$default_language_id]);
 					elseif ((!$product->advanced_stock_management || $product->advanced_stock_management == 0) && $product->depends_on_stock == 1)
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management not enabled, can not set "depends on stock" for product %1$s '), $product->name[$default_language_id]);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management not enabled, cannot set "depends on stock" for product %1$s '), $product->name[$default_language_id]);
 					else
 						StockAvailable::setProductDependsOnStock($product->id, $product->depends_on_stock);
 
@@ -2116,7 +2118,7 @@ class AdminImportControllerCore extends AdminController
 
 						if (!Validate::isEan13($info['ean13']))
 						{
-							$this->warnings[] = sprintf(Tools::displayError('EAN13 "%1s" has incorrect value for product with id %2d.'), $info['ean13'] ,$product->id);
+							$this->warnings[] = sprintf(Tools::displayError('EAN13 "%1s" has incorrect value for product with id %2d.'), $info['ean13'], $product->id);
 							$info['ean13'] = '';
 						}
 
@@ -2226,7 +2228,7 @@ class AdminImportControllerCore extends AdminController
 					if ($info['advanced_stock_management'] != 1 && $info['advanced_stock_management'] != 0)
 						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management has incorrect value. Not set for product with id %d.'), $product->id);
 					elseif (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $info['advanced_stock_management'] == 1)
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, can not enable on product with id %d.'), $product->id);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, cannot enable on product with id %d.'), $product->id);
 					else
 						$product->setAdvancedStockManagement($info['advanced_stock_management']);
 					// automaticly disable depends on stock, if a_s_m set to disabled
@@ -2527,7 +2529,7 @@ class AdminImportControllerCore extends AdminController
 				if (Country::getNameById(Configuration::get('PS_LANG_DEFAULT'), (int)$address->country))
 					$address->id_country = (int)$address->country;
 			}
-			else if (isset($address->country) && is_string($address->country) && !empty($address->country))
+			elseif (isset($address->country) && is_string($address->country) && !empty($address->country))
 			{
 				if ($id_country = Country::getIdByName(null, $address->country))
 					$address->id_country = (int)$id_country;
@@ -2557,7 +2559,7 @@ class AdminImportControllerCore extends AdminController
 				if (State::getNameById((int)$address->state))
 					$address->id_state = (int)$address->state;
 			}
-			else if (isset($address->state) && is_string($address->state) && !empty($address->state))
+			elseif (isset($address->state) && is_string($address->state) && !empty($address->state))
 			{
 				if ($id_state = State::getIdByName($address->state))
 					$address->id_state = (int)$id_state;
@@ -2631,7 +2633,7 @@ class AdminImportControllerCore extends AdminController
 
 			if (isset($address->manufacturer) && is_numeric($address->manufacturer) && Manufacturer::manufacturerExists((int)$address->manufacturer))
 				$address->id_manufacturer = (int)$address->manufacturer;
-			else if (isset($address->manufacturer) && is_string($address->manufacturer) && !empty($address->manufacturer))
+			elseif (isset($address->manufacturer) && is_string($address->manufacturer) && !empty($address->manufacturer))
 			{
 				$manufacturer = new Manufacturer();
 				$manufacturer->name = $address->manufacturer;
@@ -2652,7 +2654,7 @@ class AdminImportControllerCore extends AdminController
 
 			if (isset($address->supplier) && is_numeric($address->supplier) && Supplier::supplierExists((int)$address->supplier))
 				$address->id_supplier = (int)$address->supplier;
-			else if (isset($address->supplier) && is_string($address->supplier) && !empty($address->supplier))
+			elseif (isset($address->supplier) && is_string($address->supplier) && !empty($address->supplier))
 			{
 				$supplier = new Supplier();
 				$supplier->name = $address->supplier;
@@ -2953,7 +2955,7 @@ class AdminImportControllerCore extends AdminController
 			if (array_key_exists('id', $info) && (int)$info['id'] && SupplyOrder::exists((int)$info['id']))
 				$supply_order = new SupplyOrder((int)$info['id']);
 			// if a reference is set, instanciates a supply order with this reference if possible
-			else if (array_key_exists('reference', $info) && $info['reference'] && SupplyOrder::exists(pSQL($info['reference'])))
+			elseif (array_key_exists('reference', $info) && $info['reference'] && SupplyOrder::exists(pSQL($info['reference'])))
 				$supply_order = SupplyOrder::getSupplyOrderByReference(pSQL($info['reference']));
 			else // new supply order
 				$supply_order = new SupplyOrder();
@@ -2984,7 +2986,7 @@ class AdminImportControllerCore extends AdminController
 				$error = sprintf($this->l('Reference (%s) already exists (at line %d).'), $reference, $current_line + 1);
 			if (!Validate::isDateFormat($date_delivery_expected))
 				$error = sprintf($this->l('Date (%s) is not valid (at line %d). Format: %s.'), $date_delivery_expected, $current_line + 1, $this->l('YYYY-MM-DD'));
-			else if (new DateTime($date_delivery_expected) <= new DateTime('yesterday'))
+			elseif (new DateTime($date_delivery_expected) <= new DateTime('yesterday'))
 				$error = sprintf($this->l('Date (%s) cannot be in the past (at line %d). Format: %s.'), $date_delivery_expected, $current_line + 1, $this->l('YYYY-MM-DD'));
 			if ($discount_rate < 0 || $discount_rate > 100)
 				$error = sprintf($this->l('Discount rate (%d) is not valid (at line %d). %s.'), $discount_rate, $current_line + 1, $this->l('Format: Between 0 and 100'));

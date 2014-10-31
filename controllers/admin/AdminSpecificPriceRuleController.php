@@ -148,7 +148,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 		foreach ($this->_list as $k => $list)
 			if ($list['reduction_type'] == 'amount')
 				$this->_list[$k]['reduction_type'] = $this->list_reduction_type['amount'];
-			else if ($list['reduction_type'] == 'percentage')
+			elseif ($list['reduction_type'] == 'percentage')
 				$this->_list[$k]['reduction_type'] = $this->list_reduction_type['percentage'];
 	}
 

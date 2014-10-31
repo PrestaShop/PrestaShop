@@ -161,7 +161,7 @@ class AddressFormatCore extends ObjectModel
 			$totalNameUsed = count($associationName);
 			if ($totalNameUsed > 2)
 				$this->_errorFormatList[] = Tools::displayError('This association has too many elements.');
-			else if ($totalNameUsed == 1)
+			elseif ($totalNameUsed == 1)
 			{
 				$associationName[0] = strtolower($associationName[0]);
 				if (in_array($associationName[0], self::$forbiddenPropertyList) ||
@@ -169,7 +169,7 @@ class AddressFormatCore extends ObjectModel
 					$this->_errorFormatList[] = Tools::displayError('This name is not allowed.').': '.
 					$associationName[0];
 			}
-			else if ($totalNameUsed == 2)
+			elseif ($totalNameUsed == 2)
 			{
 				if (empty($associationName[0]) || empty($associationName[1]))
 					$this->_errorFormatList[] = Tools::displayError('Syntax error with this pattern.').': '.$patternName;

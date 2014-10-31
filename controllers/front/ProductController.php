@@ -201,7 +201,7 @@ class ProductControllerCore extends FrontController
 				$this->textRecord();
 				$this->formTargetFormat();
 			}
-			else if (Tools::getIsset('deletePicture') && !$this->context->cart->deleteCustomizationToProduct($this->product->id, Tools::getValue('deletePicture')))
+			elseif (Tools::getIsset('deletePicture') && !$this->context->cart->deleteCustomizationToProduct($this->product->id, Tools::getValue('deletePicture')))
 				$this->errors[] = Tools::displayError('An error occurred while deleting the selected picture.');
 
 			$pictures = array();
@@ -273,10 +273,6 @@ class ProductControllerCore extends FrontController
 				'HOOK_PRODUCT_CONTENT' =>  Hook::exec('displayProductContent', array('product' => $this->product)),
 				'display_qties' => (int)Configuration::get('PS_DISPLAY_QTIES'),
 				'display_ht' => !Tax::excludeTaxeOption(),
-				'currencySign' => $this->context->currency->sign,
-				'currencyRate' => $this->context->currency->conversion_rate,
-				'currencyFormat' => $this->context->currency->format,
-				'currencyBlank' => $this->context->currency->blank,
 				'jqZoomEnabled' => Configuration::get('PS_DISPLAY_JQZOOM'),
 				'ENT_NOQUOTES' => ENT_NOQUOTES,
 				'outOfStockAllowed' => (int)Configuration::get('PS_ORDER_OUT_OF_STOCK'),
@@ -671,7 +667,7 @@ class ProductControllerCore extends FrontController
 				else
 					$this->context->cart->addTextFieldToProduct($this->product->id, $indexes[$field_name], Product::CUSTOMIZE_TEXTFIELD, $value);
 			}
-			else if (in_array($field_name, $authorized_text_fields) && $value == '')
+			elseif (in_array($field_name, $authorized_text_fields) && $value == '')
 				$this->context->cart->deleteCustomizationToProduct((int)$this->product->id, $indexes[$field_name]);
 	}
 

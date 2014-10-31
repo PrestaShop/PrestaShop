@@ -384,7 +384,7 @@ class AdminDashboardControllerCore extends AdminController
 			{
 				if (Validate::isLoadedObject($module_obj) && method_exists($module_obj, 'saveDashConfig'))
 					$return['has_errors'] = $module_obj->saveDashConfig($configs);
-				else if (is_array($configs) && count($configs))
+				elseif (is_array($configs) && count($configs))
 					foreach ($configs as $name => $value)
 						if (Validate::isConfigName($name))
 							Configuration::updateValue($name, $value);

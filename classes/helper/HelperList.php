@@ -218,7 +218,7 @@ class HelperListCore extends Helper
 
 					if (method_exists($this->context->controller, $method_name))
 						$this->_list[$index][$action] = $this->context->controller->$method_name($this->token, $id, $name);
-					else if ($this->module instanceof Module && method_exists($this->module, $method_name))
+					elseif ($this->module instanceof Module && method_exists($this->module, $method_name))
 						$this->_list[$index][$action] = $this->module->$method_name($this->token, $id, $name);
 					elseif (method_exists($this, $method_name))
 						$this->_list[$index][$action] = $this->$method_name($this->token, $id, $name);
@@ -230,7 +230,7 @@ class HelperListCore extends Helper
 					if (!preg_match('/a\s*.*class/', $this->_list[$index][$action]))
 						$this->_list[$index][$action] = preg_replace('/href\s*=\s*\"([^\"]*)\"/',
 							'href="$1" class="btn btn-default"', $this->_list[$index][$action]);
-					else if (!preg_match('/a\s*.*class\s*=\s*\".*btn.*\"/', $this->_list[$index][$action]))
+					elseif (!preg_match('/a\s*.*class\s*=\s*\".*btn.*\"/', $this->_list[$index][$action]))
 						$this->_list[$index][$action] = preg_replace('/a(\s*.*)class\s*=\s*\"(.*)\"/',
 							'a $1 class="$2 btn btn-default"', $this->_list[$index][$action]);
 				}

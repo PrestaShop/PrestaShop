@@ -224,7 +224,7 @@ class AdminTranslationsControllerCore extends AdminController
 
 		if (!isset($_MODULE) && !isset($GLOBALS[$name_var]))
 			$GLOBALS[$name_var] = array();
-		else if (isset($_MODULE))
+		elseif (isset($_MODULE))
 			if (is_array($GLOBALS[$name_var]) && is_array($_MODULE))
 				$GLOBALS[$name_var] = array_merge($GLOBALS[$name_var], $_MODULE);
 			else
@@ -343,11 +343,11 @@ class AdminTranslationsControllerCore extends AdminController
 	{
 		if (!($from_lang = Tools::getValue('fromLang')) || !($to_lang = Tools::getValue('toLang')))
 			$this->errors[] = $this->l('You must select two languages in order to copy data from one to another.');
-		else if (!($from_theme = Tools::getValue('fromTheme')) || !($to_theme = Tools::getValue('toTheme')))
+		elseif (!($from_theme = Tools::getValue('fromTheme')) || !($to_theme = Tools::getValue('toTheme')))
 			$this->errors[] = $this->l('You must select two themes in order to copy data from one to another.');
-		else if (!Language::copyLanguageData(Language::getIdByIso($from_lang), Language::getIdByIso($to_lang)))
+		elseif (!Language::copyLanguageData(Language::getIdByIso($from_lang), Language::getIdByIso($to_lang)))
 			$this->errors[] = $this->l('An error occurred while copying data.');
-		else if ($from_lang == $to_lang && $from_theme == $to_theme)
+		elseif ($from_lang == $to_lang && $from_theme == $to_theme)
 			$this->errors[] = $this->l('There is nothing to copy (same language and theme).');
 		else
 		{
@@ -986,9 +986,9 @@ class AdminTranslationsControllerCore extends AdminController
 		{
 			if ($file{0} === '.' || in_array(substr($file, 0, strrpos($file, '.')), $this->all_iso_lang))
 				unset($files[$key]);
-			else if ($type_clear === 'file' && !in_array(substr($file, strrpos($file, '.')), $arr_good_ext))
+			elseif ($type_clear === 'file' && !in_array(substr($file, strrpos($file, '.')), $arr_good_ext))
 				unset($files[$key]);
-			else if ($type_clear === 'directory' && (!is_dir($path.$file) || in_array($file, $arr_exclude)))
+			elseif ($type_clear === 'directory' && (!is_dir($path.$file) || in_array($file, $arr_exclude)))
 				unset($files[$key]);
 		}
 
@@ -1191,7 +1191,7 @@ class AdminTranslationsControllerCore extends AdminController
 					// Parsing file in Back office
 					if ($type_file == 'php')
 						$regex = '/this->l\((\')'._PS_TRANS_PATTERN_.'\'[\)|\,]/U';
-					else if ($type_file == 'specific')
+					elseif ($type_file == 'specific')
 						$regex = '/Translate::getAdminTranslation\((\')'._PS_TRANS_PATTERN_.'\'(?:,.*)*\)/U';
 					else
 						$regex = '/\{l\s*s\s*=([\'\"])'._PS_TRANS_PATTERN_.'\1(\s*sprintf=.*)?(\s*js=1)?(\s*slashes=1)?.*\}/U';
@@ -1835,7 +1835,7 @@ class AdminTranslationsControllerCore extends AdminController
 					// -4 becomes -14 to remove the ending "Controller.php" from the filename
 					if (strpos($file, 'Controller.php') !== false)
 						$prefix_key = basename(substr($file, 0, -14));
-					else if (strpos($file, 'Helper') !== false)
+					elseif (strpos($file, 'Helper') !== false)
 						$prefix_key = 'Helper';
 
 					if ($prefix_key == 'Admin')
@@ -2665,7 +2665,7 @@ class AdminTranslationsControllerCore extends AdminController
 			}
 		}
 		// Or if is colder, we scan colder for check if find in folder and subfolder
-		else if (!in_array($file, self::$ignore_folder) && is_dir($dir.'/'.$file))
+		elseif (!in_array($file, self::$ignore_folder) && is_dir($dir.'/'.$file))
 			foreach( scandir($dir.'/'.$file ) as $temp )
 				$subject_mail = $this->getSubjectMail($dir.'/'.$file, $temp, $subject_mail);
 
@@ -2985,7 +2985,7 @@ class AdminTranslationsControllerCore extends AdminController
 			{
 				if (preg_match('#'.preg_quote($file_ext, '#').'$#i', $file))
 					$list[$dir][] = $file;
-				else if (is_dir($dir.$file))
+				elseif (is_dir($dir.$file))
 					$list = $this->listFiles($dir.$file, $list, $file_ext);
 			}
 		}

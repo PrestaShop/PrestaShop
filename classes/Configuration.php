@@ -145,7 +145,7 @@ class ConfigurationCore extends ObjectModel
 
 			if ($row['id_shop'])
 				self::$_cache[self::$definition['table']][$lang]['shop'][$row['id_shop']][$row['name']] = $row['value'];
-			else if ($row['id_shop_group'])
+			elseif ($row['id_shop_group'])
 				self::$_cache[self::$definition['table']][$lang]['group'][$row['id_shop_group']][$row['name']] = $row['value'];
 			else
 				self::$_cache[self::$definition['table']][$lang]['global'][$row['name']] = $row['value'];
@@ -296,7 +296,7 @@ class ConfigurationCore extends ObjectModel
 		{
 			if ($id_shop)
 				self::$_cache[self::$definition['table']][$lang]['shop'][$id_shop][$key] = $value;
-			else if ($id_shop_group)
+			elseif ($id_shop_group)
 				self::$_cache[self::$definition['table']][$lang]['group'][$id_shop_group][$key] = $value;
 			else
 				self::$_cache[self::$definition['table']][$lang]['global'][$key] = $value;

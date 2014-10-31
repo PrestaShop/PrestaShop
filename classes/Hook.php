@@ -516,7 +516,7 @@ class HookCore extends ObjectModel
 					$live_edit = true;
 					$output .= self::wrapLiveEdit($display, $moduleInstance, $array['id_hook']);
 				}
-				else if ($array_return)
+				elseif ($array_return)
 					$output[$moduleInstance->name] = $display;
 				else
 					$output .= $display;

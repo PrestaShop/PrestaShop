@@ -179,7 +179,7 @@ class PrestaShopAutoload
 			{
 				if (is_dir($root_dir.$path.$file))
 					$classes = array_merge($classes, $this->getClassesFromDir($path.$file.'/', $host_mode));
-				else if (substr($file, -4) == '.php')
+				elseif (substr($file, -4) == '.php')
 				{
 					$content = file_get_contents($root_dir.$path.$file);
 			 		$pattern = '#\W((abstract\s+)?class|interface)\s+(?P<classname>'.basename($file, '.php').'(?:Core)?)'

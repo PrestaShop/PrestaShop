@@ -278,16 +278,16 @@ class AdminRequestSqlControllerCore extends AdminController
 
 			$this->content .= $this->renderForm();
 		}
-		else if ($this->display == 'view')
+		elseif ($this->display == 'view')
 		{
 			// Some controllers use the view action without an object
 			if ($this->className)
 				$this->loadObject(true);
 			$this->content .= $this->renderView();
 		}
-		else if ($this->display == 'export')
+		elseif ($this->display == 'export')
 			$this->generateExport();
-		else if (!$this->ajax)
+		elseif (!$this->ajax)
 		{
 			$this->content .= $this->renderList();
 			$this->content .= $this->renderOptions();

@@ -332,6 +332,7 @@ class FrontControllerCore extends Controller
 			'hide_right_column' => !$this->display_column_right,
 			'base_dir' => _PS_BASE_URL_.__PS_BASE_URI__,
 			'base_dir_ssl' => $protocol_link.Tools::getShopDomainSsl().__PS_BASE_URI__,
+			'force_ssl' => Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE'),
 			'content_dir' => $protocol_content.Tools::getHttpHost().__PS_BASE_URI__,
 			'base_uri' => $protocol_content.Tools::getHttpHost().__PS_BASE_URI__.(!Configuration::get('PS_REWRITING_SETTINGS') ? 'index.php' : ''),
 			'tpl_dir' => _PS_THEME_DIR_,
@@ -363,7 +364,11 @@ class FrontControllerCore extends Controller
 			'quick_view' => (bool)Configuration::get('PS_QUICK_VIEW'),
 			'shop_phone' => Configuration::get('PS_SHOP_PHONE'),
 			'compared_products' => is_array($compared_products) ? $compared_products : array(),
-			'comparator_max_item' => (int)Configuration::get('PS_COMPARATOR_MAX_ITEM')
+			'comparator_max_item' => (int)Configuration::get('PS_COMPARATOR_MAX_ITEM'),
+			'currencyRate' => (float)$currency->getConversationRate(),
+			'currencySign' => $currency->sign,
+			'currencyFormat' => $currency->format,
+			'currencyBlank' => $currency->blank,
 		));
 
 		// Add the tpl files directory for mobile
@@ -623,6 +628,7 @@ class FrontControllerCore extends Controller
 		// If we call a SSL controller without SSL or a non SSL controller with SSL, we redirect with the right protocol
 		if (Configuration::get('PS_SSL_ENABLED') && $_SERVER['REQUEST_METHOD'] != 'POST' && $this->ssl != Tools::usingSecureMode())
 		{
+			$this->context->cookie->disallowWriting();
 			header('HTTP/1.1 301 Moved Permanently');
 			header('Cache-Control: no-cache');
 			if ($this->ssl)
