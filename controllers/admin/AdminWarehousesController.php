@@ -595,9 +595,9 @@ class AdminWarehousesControllerCore extends AdminController
 			// check if the warehouse exists and can be deleted
 			if (!($obj = $this->loadObject(true)))
 				return;
-			else if ($obj->getQuantitiesOfProducts() > 0) // not possible : products
+			elseif ($obj->getQuantitiesOfProducts() > 0) // not possible : products
 				$this->errors[] = $this->l('It is not possible to delete a warehouse when there are products in it.');
-			else if (SupplyOrder::warehouseHasPendingOrders($obj->id)) // not possible : supply orders
+			elseif (SupplyOrder::warehouseHasPendingOrders($obj->id)) // not possible : supply orders
 				$this->errors[] = $this->l('It is not possible to delete a Warehouse if it has pending supply orders.');
 			else // else, it can be deleted
 			{

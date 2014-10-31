@@ -260,9 +260,9 @@ class MailCore extends ObjectModel
 
 			if ($override_mail && file_exists($template_path.$iso.'/lang.php'))
 					include_once($template_path.$iso.'/lang.php');
-			else if ($module_name && file_exists($theme_path.'mails/'.$iso.'/lang.php'))
+			elseif ($module_name && file_exists($theme_path.'mails/'.$iso.'/lang.php'))
 				include_once($theme_path.'mails/'.$iso.'/lang.php');
-			else if (file_exists(_PS_MAIL_DIR_.$iso.'/lang.php'))
+			elseif (file_exists(_PS_MAIL_DIR_.$iso.'/lang.php'))
 				include_once(_PS_MAIL_DIR_.$iso.'/lang.php');
 			else
 			{

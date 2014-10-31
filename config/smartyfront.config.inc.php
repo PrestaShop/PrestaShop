@@ -36,10 +36,14 @@ function smartyTranslate($params, &$smarty)
 {
 	global $_LANG;
 
-	if (!isset($params['js'])) $params['js'] = false;
-	if (!isset($params['pdf'])) $params['pdf'] = false;
-	if (!isset($params['mod'])) $params['mod'] = false;
-	if (!isset($params['sprintf'])) $params['sprintf'] = null;
+	if (!isset($params['js']))
+		$params['js'] = false;
+	if (!isset($params['pdf']))
+		$params['pdf'] = false;
+	if (!isset($params['mod']))
+		$params['mod'] = false;
+	if (!isset($params['sprintf']))
+		$params['sprintf'] = null;
 
 	$string = str_replace('\'', '\\\'', $params['s']);
 	$filename = ((!isset($smarty->compiler_object) || !is_object($smarty->compiler_object->template)) ? $smarty->template_resource : $smarty->compiler_object->template->getTemplateFilepath());

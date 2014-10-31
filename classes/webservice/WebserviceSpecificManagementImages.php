@@ -578,7 +578,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 				}
 			}
 			// display the list of declinated images
-			else if ($this->wsObject->method == 'GET' || $this->wsObject->method == 'HEAD')
+			elseif ($this->wsObject->method == 'GET' || $this->wsObject->method == 'HEAD')
 			{
 				if ($available_image_ids)
 				{
@@ -1154,7 +1154,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 						@unlink(_PS_TMP_IMG_DIR_.$tmpName);
 						$this->imgToDisplay = $receptionPath;
 					}
-					else if ($this->imageType == 'customizations')
+					elseif ($this->imageType == 'customizations')
 					{
 						$filename = md5(uniqid(rand(), true));
 						$this->imgToDisplay = _PS_UPLOAD_DIR_.$filename;

@@ -436,6 +436,11 @@ class CurrencyCore extends ObjectModel
 		return self::$currencies[(int)($id)];
 	}
 	
+	public function getConversationRate()
+	{
+		return $this->id != (int)Configuration::get('PS_CURRENCY_DEFAULT') ? $this->conversion_rate : 1;
+	}
+
 	public static function countActiveCurrencies($id_shop = null)
 	{
 		if ($id_shop === null)

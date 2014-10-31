@@ -322,11 +322,13 @@ class ToolsCore
 	{
 		if (!isset($key) || empty($key) || !is_string($key))
 			return false;
+
 		$ret = (isset($_POST[$key]) ? $_POST[$key] : (isset($_GET[$key]) ? $_GET[$key] : $default_value));
 
-		if (is_string($ret) === true)
-			$ret = urldecode(preg_replace('/((\%5C0+)|(\%00+))/i', '', urlencode($ret)));
-		return !is_string($ret)? $ret : stripslashes($ret);
+		if (is_string($ret))
+			return stripslashes(urldecode(preg_replace('/((\%5C0+)|(\%00+))/i', '', urlencode($ret))));
+
+		return $ret;
 	}
 
 	public static function getIsset($key)
@@ -1090,7 +1092,7 @@ class ToolsCore
 				return $full_path.$path;
 			}
 		}
-		else if ($category_type === 'CMS')
+		elseif ($category_type === 'CMS')
 		{
 			$category = new CMSCategory($id_category, $context->language->id);
 			if (!Validate::isLoadedObject($category))
@@ -1123,7 +1125,7 @@ class ToolsCore
 			$default_category = $context->shop->getCategory();
 			$category = new Category($id_category, $context->language->id);
 		}
-		else if ($type_cat === 'CMS')
+		elseif ($type_cat === 'CMS')
 		    $category = new CMSCategory($id_category, $context->language->id);
 
 		if (!Validate::isLoadedObject($category))
@@ -2964,7 +2966,7 @@ exit;
 			$len = $len1 - $len2;
 			$str = &$v2;
 		}
-		else if ($len2 > $len1)
+		elseif ($len2 > $len1)
 		{
 			$len = $len2 - $len1;
 			$str = &$v1;

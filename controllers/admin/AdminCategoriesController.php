@@ -751,7 +751,7 @@ class AdminCategoriesControllerCore extends AdminController
 	{
 		if ($this->tabAccess['edit'] !== '1')
 			$this->errors[] = Tools::displayError('You do not have permission to edit this.');
-		else if (!Validate::isLoadedObject($object = new Category((int)Tools::getValue($this->identifier, Tools::getValue('id_category_to_move', 1)))))
+		elseif (!Validate::isLoadedObject($object = new Category((int)Tools::getValue($this->identifier, Tools::getValue('id_category_to_move', 1)))))
 			$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.
 				$this->table.'</b> '.Tools::displayError('(cannot load object)');
 		if (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))

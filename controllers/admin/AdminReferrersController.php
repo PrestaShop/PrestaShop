@@ -34,7 +34,7 @@ if (Tools::getValue('token') == Tools::getAdminToken('AdminReferrers'.(int)Tab::
 			(int)Tools::getValue('id_product'),
 			new Employee((int)Tools::getValue('id_employee'))
 		);
-	else if (Tools::isSubmit('ajaxFillProducts'))
+	elseif (Tools::isSubmit('ajaxFillProducts'))
 	{
 		$json_array = array();
 		$result = Db::getInstance()->executeS('

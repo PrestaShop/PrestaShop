@@ -289,7 +289,7 @@ class MediaCore
 		$add_no_conflict = false;
 		if ($version === null)
 			$version = _PS_JQUERY_VERSION_; //set default version
-		else if (preg_match('/^([0-9\.]+)$/Ui', $version))
+		elseif (preg_match('/^([0-9\.]+)$/Ui', $version))
 			$add_no_conflict = true;
 		else
 			return false;

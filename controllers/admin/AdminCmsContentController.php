@@ -89,9 +89,9 @@ class AdminCmsContentControllerCore extends AdminController
 
 		if ($this->display == 'edit_category')
 			$this->content .= $this->admin_cms_categories->renderForm();
-		else if ($this->display == 'edit_page')
+		elseif ($this->display == 'edit_page')
 			$this->content .= $this->admin_cms->renderForm();
-		else if ($this->display == 'view_page')
+		elseif ($this->display == 'view_page')
 			$fixme = 'fixme';// @FIXME
 		else
 		{
@@ -223,7 +223,7 @@ class AdminCmsContentControllerCore extends AdminController
 			|| Tools::isSubmit('updatecms_category')
 			|| Tools::isSubmit('addcms_category'))
 			$this->display = 'edit_category';
-		else if (((Tools::isSubmit('submitAddcms') || Tools::isSubmit('submitAddcmsAndStay')) && count($this->admin_cms->errors))
+		elseif (((Tools::isSubmit('submitAddcms') || Tools::isSubmit('submitAddcmsAndStay')) && count($this->admin_cms->errors))
 			|| Tools::isSubmit('updatecms')
 			|| Tools::isSubmit('addcms'))
 			$this->display = 'edit_page';

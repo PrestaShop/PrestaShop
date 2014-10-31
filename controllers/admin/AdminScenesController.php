@@ -260,7 +260,7 @@ class AdminScenesControllerCore extends AdminController
 			if (Tools::isSubmit('categories'))
 				foreach (Tools::getValue('categories') as $row)
 					$selected_cat[] = $row;
-			else if ($obj->id)
+			elseif ($obj->id)
 				foreach (Scene::getIndexedCategories($obj->id) as $row)
 					$selected_cat[] = $row['id_category'];
 

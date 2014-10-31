@@ -50,7 +50,7 @@ class CompareControllerCore extends FrontController
 				else
 					die('0');
 			}
-			else if (Tools::getValue('action') == 'remove')
+			elseif (Tools::getValue('action') == 'remove')
 			{
 				if (isset($this->context->cookie->id_compare))
 					CompareProduct::removeCompareProduct((int)$this->context->cookie->id_compare, (int)Tools::getValue('id_product'));

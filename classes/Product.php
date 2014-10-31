@@ -1079,9 +1079,9 @@ class ProductCore extends ObjectModel
 			die (Tools::displayError());
 		if ($order_by == 'id_product' || $order_by == 'price' || $order_by == 'date_add' || $order_by == 'date_upd')
 			$order_by_prefix = 'p';
-		else if ($order_by == 'name')
+		elseif ($order_by == 'name')
 			$order_by_prefix = 'pl';
-		else if ($order_by == 'position')
+		elseif ($order_by == 'position')
 			$order_by_prefix = 'c';
 
 		if (strpos($order_by, '.') > 0)
@@ -2040,7 +2040,7 @@ class ProductCore extends ObjectModel
 		if (empty($order_way)) $order_way = 'DESC';
 		if ($order_by == 'id_product' || $order_by == 'price' || $order_by == 'date_add' || $order_by == 'date_upd')
 			$order_by_prefix = 'p';
-		else if ($order_by == 'name')
+		elseif ($order_by == 'name')
 			$order_by_prefix = 'pl';
 		if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way))
 			die(Tools::displayError());
@@ -2257,7 +2257,7 @@ class ProductCore extends ObjectModel
 		if (empty($order_way)) $order_way = 'DESC';
 		if ($order_by == 'id_product' || $order_by == 'price' || $order_by == 'date_add' || $order_by == 'date_upd')
 			$order_by_prefix = 'p';
-		else if ($order_by == 'name')
+		elseif ($order_by == 'name')
 			$order_by_prefix = 'pl';
 		if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way))
 			die (Tools::displayError());
@@ -2586,7 +2586,7 @@ class ProductCore extends ObjectModel
 				$zipcode = $address_infos['postcode'];
 			}
 		}
-		else if (isset($context->customer->geoloc_id_country))
+		elseif (isset($context->customer->geoloc_id_country))
 		{
 			$id_country = (int)$context->customer->geoloc_id_country;
 			$id_state = (int)$context->customer->id_state;

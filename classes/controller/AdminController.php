@@ -2446,7 +2446,7 @@ class AdminControllerCore extends Controller
 		}
 		elseif (!Shop::isFeatureActive())
 			$this->context->cookie->shopContext = 's-'.Configuration::get('PS_SHOP_DEFAULT');
-		else if (Shop::getTotalShops(false, null) < 2)
+		elseif (Shop::getTotalShops(false, null) < 2)
 			$this->context->cookie->shopContext = 's-'.$this->context->employee->getDefaultShopID();
 
 		$shop_id = '';
@@ -2466,7 +2466,7 @@ class AdminControllerCore extends Controller
 						Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
 					}
 				}
-				else if (Shop::getShop($split[1]) && $this->context->employee->hasAuthOnShop($split[1]))
+				elseif (Shop::getShop($split[1]) && $this->context->employee->hasAuthOnShop($split[1]))
 				{
 					$shop_id = $split[1];
 					Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
@@ -3250,7 +3250,7 @@ class AdminControllerCore extends Controller
 		if (Tools::isSubmit('checkBoxShopAsso_'.$table))
 			foreach (Tools::getValue('checkBoxShopAsso_'.$table) as $id_shop => $value)
 				$assos[] = (int)$id_shop;
-		else if (Shop::getTotalShops(false) == 1)// if we do not have the checkBox multishop, we can have an admin with only one shop and being in multishop
+		elseif (Shop::getTotalShops(false) == 1)// if we do not have the checkBox multishop, we can have an admin with only one shop and being in multishop
 			$assos[] = (int)Shop::getContextShopID();
 		return $assos;
 	}
@@ -3841,7 +3841,7 @@ class AdminControllerCore extends Controller
 			else
 				$modules_options[] = $uninstall;
 		}
-		else if ($output_type == 'array')
+		elseif ($output_type == 'array')
 			if ($module->id)
 				$modules_options[] = $uninstall;
 

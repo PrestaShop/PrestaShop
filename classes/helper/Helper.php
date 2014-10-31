@@ -83,18 +83,18 @@ class HelperCore
 		{
 			if ($this->context->controller instanceof ModuleAdminController)
 				$override_tpl_path = $this->context->controller->getTemplatePath().$this->override_folder.$this->base_folder.$tpl_name;
-			else if ($this->module)
+			elseif ($this->module)
 				$override_tpl_path = _PS_MODULE_DIR_.$this->module->name.'/views/templates/admin/_configure/'.$this->override_folder.$this->base_folder.$tpl_name;
 			else
 			{
 				if (file_exists($this->context->smarty->getTemplateDir(1).$this->override_folder.$this->base_folder.$tpl_name))
 					$override_tpl_path = $this->context->smarty->getTemplateDir(1).$this->override_folder.$this->base_folder.$tpl_name;
-				else if (file_exists($this->context->smarty->getTemplateDir(0).'controllers'.DIRECTORY_SEPARATOR.$this->override_folder.$this->base_folder.$tpl_name))
+				elseif (file_exists($this->context->smarty->getTemplateDir(0).'controllers'.DIRECTORY_SEPARATOR.$this->override_folder.$this->base_folder.$tpl_name))
 					$override_tpl_path = $this->context->smarty->getTemplateDir(0).'controllers'.DIRECTORY_SEPARATOR.$this->override_folder.$this->base_folder.$tpl_name;
 
 			}
 		}
-		else if ($this->module)
+		elseif ($this->module)
 			$override_tpl_path = _PS_MODULE_DIR_.$this->module->name.'/views/templates/admin/_configure/'.$this->base_folder.$tpl_name;
 
 		if (isset($override_tpl_path) && file_exists($override_tpl_path))
@@ -130,7 +130,7 @@ class HelperCore
 		$helper = new Helper();
 		if (isset($translations['Root']))
 			$root = $translations['Root'];
-		else if (isset($translations['Home']))
+		elseif (isset($translations['Home']))
 			$root = array('name' => $translations['Home'], 'id_category' => 1);
 		else
 			throw new PrestaShopException('Missing root category parameter.');
@@ -373,7 +373,7 @@ class HelperCore
 		$shop_context = Shop::getContext();
 		if ($shop_context == Shop::CONTEXT_ALL || ($context->controller->multishop_context_group == false && $shop_context == Shop::CONTEXT_GROUP))
 			$value = '';
-		else if ($shop_context == Shop::CONTEXT_GROUP)
+		elseif ($shop_context == Shop::CONTEXT_GROUP)
 			$value = 'g-'.Shop::getContextShopGroupID();
 		else
 			$value = 's-'.Shop::getContextShopID();

@@ -123,16 +123,16 @@ class TreeToolbarCore implements ITreeToolbarCore
 				$this->getContext()->controller->getTemplatePath()).$this->getTemplateDirectory().$template))
 			return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath())
 				.$this->getTemplateDirectory().$template;
-		else if ($this->getContext()->controller instanceof AdminController && isset($controllerName)
+		elseif ($this->getContext()->controller instanceof AdminController && isset($controllerName)
 			&& file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)).'controllers'
 				.DIRECTORY_SEPARATOR.$controllerName.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template))
 			return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)).'controllers'
 				.DIRECTORY_SEPARATOR.$controllerName.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template;
-		else if (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
+		elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
 				.$this->getTemplateDirectory().$template))
 			return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
 					.$this->getTemplateDirectory().$template;
-		else if (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
+		elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
 				.$this->getTemplateDirectory().$template))
 			return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
 				.$this->getTemplateDirectory().$template;
