@@ -59,7 +59,7 @@ $(document).ready(function(){
 		{
 			if ($(this).next('.cart_block:visible').length && !cart_block.isHoveringOver())
 				$("#header .cart_block").stop(true, true).slideUp(450);
-			else
+			else if (ajaxCart.nb_total_products > 0 || cart_qty > 0)
 				$("#header .cart_block").stop(true, true).slideDown(450);
 
 			return;
