@@ -45,27 +45,21 @@ $(document).ready(function(){
 	/* roll over cart */
 	var cart_block = new HoverWatcher('#header .cart_block');
 	var shopping_cart = new HoverWatcher('#header .shopping_cart');
-	var is_touch_enabled = false;
 
 	if ('ontouchstart' in document.documentElement)
-		is_touch_enabled = true;
+	{
+		$('.shopping_cart > a:first').on('click', function(e){
+			e.preventDefault();
+		});
+	}
 
-	$(document).on('click', '#header .shopping_cart > a:first', function(e){
+	$(document).on('touchstart', '#header .shopping_cart a:first', function(){
+		if ($(this).next('.cart_block:visible').length)
+			$("#header .cart_block").stop(true, true).slideUp(450);
+		else
+			$("#header .cart_block").stop(true, true).slideDown(450);
 		e.preventDefault();
 		e.stopPropagation();
-
-		// Simulate hover when browser says device is touch based
-		if (is_touch_enabled)
-		{
-			if ($(this).next('.cart_block:visible').length && !cart_block.isHoveringOver())
-				$("#header .cart_block").stop(true, true).slideUp(450);
-			else
-				$("#header .cart_block").stop(true, true).slideDown(450);
-
-			return;
-		}
-		else
-			window.location.href = $(this).attr('href');
 	});
 
 	$("#header .shopping_cart a:first").hover(
