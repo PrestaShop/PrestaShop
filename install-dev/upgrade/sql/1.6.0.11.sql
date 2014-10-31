@@ -27,10 +27,27 @@ ALTER TABLE `PREFIX_product_attribute_shop` MODIFY `unit_price_impact` DECIMAL(2
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_PRICE_DISPLAY_PRECISION', 2, NOW(), NOW());
 
+/* Precision used to be 2, now it can be set freely, so the DB must be ready to accept more decimals */
+ALTER TABLE `PREFIX_orders` 
+CHANGE COLUMN `total_discounts` `total_discounts` DECIMAL(20,6) NOT NULL DEFAULT '0.00' ,
+CHANGE COLUMN `total_discounts_tax_incl` `total_discounts_tax_incl` DECIMAL(20,6) NOT NULL DEFAULT '0.00' ,
+CHANGE COLUMN `total_discounts_tax_excl` `total_discounts_tax_excl` DECIMAL(20,6) NOT NULL DEFAULT '0.00' ,
+CHANGE COLUMN `total_paid` `total_paid` DECIMAL(20,6) NOT NULL DEFAULT '0.00' ,
+CHANGE COLUMN `total_paid_tax_incl` `total_paid_tax_incl` DECIMAL(20,6) NOT NULL DEFAULT '0.00' ,
+CHANGE COLUMN `total_paid_tax_excl` `total_paid_tax_excl` DECIMAL(20,6) NOT NULL DEFAULT '0.00' ,
+CHANGE COLUMN `total_paid_real` `total_paid_real` DECIMAL(20,6) NOT NULL DEFAULT '0.00' ,
+CHANGE COLUMN `total_products` `total_products` DECIMAL(20,6) NOT NULL DEFAULT '0.00' ,
+CHANGE COLUMN `total_products_wt` `total_products_wt` DECIMAL(20,6) NOT NULL DEFAULT '0.00' ,
+CHANGE COLUMN `total_shipping` `total_shipping` DECIMAL(20,6) NOT NULL DEFAULT '0.00' ,
+CHANGE COLUMN `total_shipping_tax_incl` `total_shipping_tax_incl` DECIMAL(20,6) NOT NULL DEFAULT '0.00' ,
+CHANGE COLUMN `total_shipping_tax_excl` `total_shipping_tax_excl` DECIMAL(20,6) NOT NULL DEFAULT '0.00' ,
+CHANGE COLUMN `total_wrapping` `total_wrapping` DECIMAL(20,6) NOT NULL DEFAULT '0.00' ,
+CHANGE COLUMN `total_wrapping_tax_incl` `total_wrapping_tax_incl` DECIMAL(20,6) NOT NULL DEFAULT '0.00' ,
+CHANGE COLUMN `total_wrapping_tax_excl` `total_wrapping_tax_excl` DECIMAL(20,6) NOT NULL DEFAULT '0.00';
 ALTER IGNORE TABLE `PREFIX_product` CHANGE `ean13` `ean13` BIGINT( 15 ) NULL DEFAULT NULL;
 
 ALTER TABLE `PREFIX_product` CHANGE `ean13` `ean13` VARCHAR( 13 ) NULL DEFAULT NULL;
 
-ALTER IGNORE TABLE `PREFIX_product_attribute` CHANGE `ean13` `ean13` BIGINT( 15 ) NULL DEFAULT NULL ;
+ALTER IGNORE TABLE `PREFIX_product_attribute` CHANGE `ean13` `ean13` BIGINT( 15 ) NULL DEFAULT NULL;
 
-ALTER TABLE `PREFIX_product_attribute` CHANGE `ean13` `ean13` VARCHAR( 13 ) NULL DEFAULT NULL ;
+ALTER TABLE `PREFIX_product_attribute` CHANGE `ean13` `ean13` VARCHAR( 13 ) NULL DEFAULT NULL;
