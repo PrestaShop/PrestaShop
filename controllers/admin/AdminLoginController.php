@@ -273,7 +273,7 @@ class AdminLoginControllerCore extends AdminController
 				)));
 		
 		}
-		else if (Tools::isSubmit('ajax'))
+		elseif (Tools::isSubmit('ajax'))
 			die(Tools::jsonEncode(array('hasErrors' => true, 'errors' => $this->errors)));
 	}
 }

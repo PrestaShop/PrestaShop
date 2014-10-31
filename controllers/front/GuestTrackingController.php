@@ -74,20 +74,20 @@ class GuestTrackingControllerCore extends FrontController
 
 			if (empty($order_reference) && empty($id_order))
 				$this->errors[] = Tools::displayError('Please provide your order\'s reference number.');
-			else if (empty($email))
+			elseif (empty($email))
 				$this->errors[] = Tools::displayError('Please provide a valid email address.');
-			else if (!Validate::isEmail($email))
+			elseif (!Validate::isEmail($email))
 				$this->errors[] = Tools::displayError('Please provide a valid email address.');
-			else if (!Customer::customerExists($email, false, false))
+			elseif (!Customer::customerExists($email, false, false))
 				$this->errors[] = Tools::displayError('There is no account associated with this email address.');
-			else if (Customer::customerExists($email, false, true))
+			elseif (Customer::customerExists($email, false, true))
 			{
 				$this->errors[] = Tools::displayError('This page is for guest accounts only. Since your guest account has already been transformed into a customer account, you can no longer view your order here. Please log in to your customer account to view this order');
 				$this->context->smarty->assign('show_login_link', true);
 			}
-			else if (!count($order_collection))
+			elseif (!count($order_collection))
 				$this->errors[] = Tools::displayError('Invalid order reference');
-			else if (!$order_collection->getFirst()->isAssociatedAtGuest($email))
+			elseif (!$order_collection->getFirst()->isAssociatedAtGuest($email))
 				$this->errors[] = Tools::displayError('Invalid order reference');
 			else
 			{
@@ -97,9 +97,9 @@ class GuestTrackingControllerCore extends FrontController
 					$customer = new Customer((int)$order->id_customer);
 					if (!Validate::isLoadedObject($customer))
 						$this->errors[] = Tools::displayError('Invalid customer');
-					else if (!Tools::getValue('password'))
+					elseif (!Tools::getValue('password'))
 						$this->errors[] = Tools::displayError('Invalid password.');
-					else if (!$customer->transformToCustomer($this->context->language->id, Tools::getValue('password')))
+					elseif (!$customer->transformToCustomer($this->context->language->id, Tools::getValue('password')))
 						// @todo clarify error message
 						$this->errors[] = Tools::displayError('An error occurred while transforming a guest into a registered customer.');
 					else

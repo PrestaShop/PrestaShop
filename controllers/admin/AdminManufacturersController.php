@@ -744,20 +744,20 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->initPageHeaderToolbar();
 		if ($this->display == 'editaddresses' || $this->display == 'addaddress')
 			$this->content .= $this->renderFormAddress();
-		else if ($this->display == 'edit' || $this->display == 'add')
+		elseif ($this->display == 'edit' || $this->display == 'add')
 		{
 			if (!$this->loadObject(true))
 				return;
 			$this->content .= $this->renderForm();
 		}
-		else if ($this->display == 'view')
+		elseif ($this->display == 'view')
 		{
 			// Some controllers use the view action without an object
 			if ($this->className)
 				$this->loadObject(true);
 			$this->content .= $this->renderView();
 		}
-		else if (!$this->ajax)
+		elseif (!$this->ajax)
 		{
 			$this->content .= $this->renderList();
 			$this->content .= $this->renderOptions();
@@ -782,13 +782,13 @@ class AdminManufacturersControllerCore extends AdminController
 
 		if (Tools::isSubmit('editaddresses'))
 			$this->display = 'editaddresses';
-		else if (Tools::isSubmit('updateaddress'))
+		elseif (Tools::isSubmit('updateaddress'))
 			$this->display = 'editaddresses';
-		else if (Tools::isSubmit('addaddress'))
+		elseif (Tools::isSubmit('addaddress'))
 			$this->display = 'addaddress';
-		else if (Tools::isSubmit('submitAddaddress'))
+		elseif (Tools::isSubmit('submitAddaddress'))
 			$this->action = 'save';
-		else if (Tools::isSubmit('deleteaddress'))
+		elseif (Tools::isSubmit('deleteaddress'))
 			$this->action = 'delete';
 	}
 
