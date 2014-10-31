@@ -466,40 +466,41 @@ class AdminPerformanceControllerCore extends AdminController
 		$warning_mcrypt = str_replace('[a]', '<a href="http://www.php.net/manual/'.substr($php_lang, 0, 2).'/book.mcrypt.php" target="_blank">', $warning_mcrypt);
 		$warning_mcrypt = str_replace('[/a]', '</a>', $warning_mcrypt);
 
-		$this->fields_form[5]['form'] = array(
+		if (defined('_RIJNDAEL_KEY_') && defined('_RIJNDAEL_IV_'))
+			$this->fields_form[5]['form'] = array(
 
-			'legend' => array(
-				'title' => $this->l('Ciphering'),
-				'icon' => 'icon-desktop'
-			),
-			'input' => array(
-				array(
-					'type' => 'hidden',
-					'name' => 'ciphering_up'
+				'legend' => array(
+					'title' => $this->l('Ciphering'),
+					'icon' => 'icon-desktop'
 				),
-				array(
-					'type' => 'radio',
-					'label' => $this->l('Algorithm'),
-					'name' => 'PS_CIPHER_ALGORITHM',
-					'hint' => $this->l('Mcrypt is faster than our custom BlowFish class, but requires the "mcrypt" PHP extension. If you change this configuration, all cookies will be reset.'),
-					'values' => array(
-						array(
-							'id' => 'PS_CIPHER_ALGORITHM_1',
-							'value' => 1,
-							'label' => $this->l('Use Rijndael with mcrypt lib.').(!function_exists('mcrypt_encrypt') ? '' : $warning_mcrypt)
-						),
-						array(
-							'id' => 'PS_CIPHER_ALGORITHM_0',
-							'value' => 0,
-							'label' => $this->l('Use the custom BlowFish class.')
+				'input' => array(
+					array(
+						'type' => 'hidden',
+						'name' => 'ciphering_up'
+					),
+					array(
+						'type' => 'radio',
+						'label' => $this->l('Algorithm'),
+						'name' => 'PS_CIPHER_ALGORITHM',
+						'hint' => $this->l('Mcrypt is faster than our custom BlowFish class, but requires the "mcrypt" PHP extension. If you change this configuration, all cookies will be reset.'),
+						'values' => array(
+							array(
+								'id' => 'PS_CIPHER_ALGORITHM_1',
+								'value' => 1,
+								'label' => $this->l('Use Rijndael with mcrypt lib.').(!function_exists('mcrypt_encrypt') ? '' : $warning_mcrypt)
+							),
+							array(
+								'id' => 'PS_CIPHER_ALGORITHM_0',
+								'value' => 0,
+								'label' => $this->l('Use the custom BlowFish class.')
+							)
 						)
 					)
+				),
+				'submit' => array(
+					'title' => $this->l('Save')
 				)
-			),
-			'submit' => array(
-				'title' => $this->l('Save')
-			)
-		);
+			);
 
 		$this->fields_value['PS_CIPHER_ALGORITHM'] = Configuration::get('PS_CIPHER_ALGORITHM');
 	}
