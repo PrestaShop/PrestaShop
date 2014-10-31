@@ -167,7 +167,7 @@ class AdminReturnControllerCore extends AdminController
 		// If display list, we don't want the "add" button
 		if (!$this->display || $this->display == 'list')
 			return;
-		else if ($this->display != 'options')
+		elseif ($this->display != 'options')
 			$this->toolbar_btn['save-and-stay'] = array(
 				'short' => 'SaveAndStay',
 				'href' => '#',

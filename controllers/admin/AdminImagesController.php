@@ -672,7 +672,7 @@ class AdminImagesControllerCore extends AdminController
 			$result = Image::moveToNewFileSystem($this->max_execution_time);
 			if ($result === 'timeout')
 				$this->errors[] = Tools::displayError('Not all images have been moved. The server timed out before finishing. Click on "Move images" again to resume the moving process.');
-			else if ($result === false)
+			elseif ($result === false)
 				$this->errors[] = Tools::displayError('Error: Some -- or all -- images cannot be moved.');
 		}
 		return (count($this->errors) > 0 ? false : true);

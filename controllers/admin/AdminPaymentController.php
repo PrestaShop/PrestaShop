@@ -109,9 +109,9 @@ class AdminPaymentControllerCore extends AdminController
 		{
 			if (Tools::isSubmit('submitModulecountry'))
 				$this->action = 'country';
-			else if (Tools::isSubmit('submitModulecurrency'))
+			elseif (Tools::isSubmit('submitModulecurrency'))
 				$this->action = 'currency';
-			else if (Tools::isSubmit('submitModulegroup'))
+			elseif (Tools::isSubmit('submitModulegroup'))
 				$this->action = 'group';
 		}
 		else

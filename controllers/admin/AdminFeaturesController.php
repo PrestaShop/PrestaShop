@@ -406,21 +406,21 @@ class AdminFeaturesControllerCore extends AdminController
 					return;
 				$this->content .= $this->renderForm();
 			}
-			else if ($this->display == 'view')
+			elseif ($this->display == 'view')
 			{
 				// Some controllers use the view action without an object
 				if ($this->className)
 					$this->loadObject(true);
 				$this->content .= $this->renderView();
 			}
-			else if ($this->display == 'editFeatureValue')
+			elseif ($this->display == 'editFeatureValue')
 			{
 				if (!$this->object = new FeatureValue((int)Tools::getValue('id_feature_value')))
 					return;
 
 				$this->content .= $this->initFormFeatureValue();
 			}
-			else if (!$this->ajax)
+			elseif (!$this->ajax)
 			{
 				// If a feature value was saved, we need to reset the values to display the list
 				$this->setTypeFeature();

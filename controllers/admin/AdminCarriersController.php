@@ -491,7 +491,7 @@ class AdminCarriersControllerCore extends AdminController
 			parent::postProcess();
 		}
 		/*
-else if ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools::getValue($this->identifier))
+elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools::getValue($this->identifier))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
@@ -504,7 +504,7 @@ else if ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tool
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 */
-		else if (isset($_GET['isFree'.$this->table]))
+		elseif (isset($_GET['isFree'.$this->table]))
 		{
 			$this->processIsFree();
 		}
@@ -525,7 +525,7 @@ else if ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tool
 					$carrier = new Carrier((int)$id);
 					Warehouse::removeCarrier($carrier->id_reference);
 				}
-				else if (Tools::isSubmit($this->table.'Box') && count(Tools::isSubmit($this->table.'Box')) > 0)
+				elseif (Tools::isSubmit($this->table.'Box') && count(Tools::isSubmit($this->table.'Box')) > 0)
 				{
 					$ids = Tools::getValue($this->table.'Box');
 					array_walk($ids, 'intval');

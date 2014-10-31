@@ -418,7 +418,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				$item = &$this->_list[$i];
 				if ($item['quantity_received'] == $item['quantity_expected'])
 					$item['color'] = '#00bb35';
-				else if ($item['quantity_received'] > $item['quantity_expected'])
+				elseif ($item['quantity_received'] > $item['quantity_expected'])
 					$item['color'] = '#fb0008';
 			}
 		}
@@ -1115,7 +1115,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 				if ((int)SupplyOrder::exists($ref) != 0)
 					$this->errors[] = Tools::displayError('The reference has to be unique.');
 			}
-			else if (Tools::getValue('id_supply_order') == 0 && (int)SupplyOrder::exists($ref) != 0)
+			elseif (Tools::getValue('id_supply_order') == 0 && (int)SupplyOrder::exists($ref) != 0)
 				$this->errors[] = Tools::displayError('The reference has to be unique.');
 		}
 
@@ -1298,7 +1298,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
     		$csv->export();
 		}
 		// exports details for all orders
-		else if (Tools::isSubmit('csv_orders_details'))
+		elseif (Tools::isSubmit('csv_orders_details'))
 		{
 			// header
 			header('Content-type: text/csv');
@@ -1348,7 +1348,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 		}
 		// exports details for the given order
-		else if (Tools::isSubmit('csv_order_details') && Tools::getValue('id_supply_order'))
+		elseif (Tools::isSubmit('csv_order_details') && Tools::getValue('id_supply_order'))
 		{
 			$supply_order = new SupplyOrder((int)Tools::getValue('id_supply_order'));
 			if (Validate::isLoadedObject($supply_order))
@@ -1605,7 +1605,7 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 			return parent::renderList();
 		}
-		else if (Tools::isSubmit('id_supply_order') && Tools::isSubmit('display_product_history'))
+		elseif (Tools::isSubmit('id_supply_order') && Tools::isSubmit('display_product_history'))
 		{
 			$this->identifier = 'id_supply_order_receipt_history';
 			$this->table = 'supply_order_receipt_history';

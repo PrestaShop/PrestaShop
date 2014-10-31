@@ -129,19 +129,21 @@ class TranslateCore
 		static $translations_merged = array();
 
 		$name = $module instanceof Module ? $module->name : $module;
+		$language = Context::getContext()->language;
+
 		if (!isset($translations_merged[$name]) && isset(Context::getContext()->language))
 		{
 			$filesByPriority = array(
 				// Translations in theme
-				_PS_THEME_DIR_.'modules/'.$name.'/translations/'.Context::getContext()->language->iso_code.'.php', 
-				_PS_THEME_DIR_.'modules/'.$name.'/'.Context::getContext()->language->iso_code.'.php', 
+				_PS_THEME_DIR_.'modules/'.$name.'/translations/'.$language->iso_code.'.php',
+				_PS_THEME_DIR_.'modules/'.$name.'/'.$language->iso_code.'.php',
 				// PrestaShop 1.5 translations
-				_PS_MODULE_DIR_.$name.'/translations/'.Context::getContext()->language->iso_code.'.php',
+				_PS_MODULE_DIR_.$name.'/translations/'.$language->iso_code.'.php',
 				// PrestaShop 1.4 translations
-				_PS_MODULE_DIR_.$name.'/'.Context::getContext()->language->iso_code.'.php'
+				_PS_MODULE_DIR_.$name.'/'.$language->iso_code.'.php'
 			);
 			foreach ($filesByPriority as $file)
-				if (Tools::file_exists_cache($file))
+				if (file_exists($file))
 				{
 					include_once($file);
 					$_MODULES = !empty($_MODULES) ? $_MODULES + $_MODULE : $_MODULE; //we use "+" instead of array_merge() because array merge erase existing values.
@@ -289,4 +291,3 @@ class TranslateCore
 		return Translate::postProcessTranslation($string, array('tags' => $tags));
 	}
 }
-
