@@ -452,9 +452,9 @@ class AdminPerformanceControllerCore extends AdminController
 			)
 		);
 
-		$this->fields_value['_MEDIA_SERVER_1_'] = Configuration::get('PS_MEDIA_SERVER_1_');
-		$this->fields_value['_MEDIA_SERVER_2_'] = Configuration::get('PS_MEDIA_SERVER_2_');
-		$this->fields_value['_MEDIA_SERVER_3_'] = Configuration::get('PS_MEDIA_SERVER_3_');
+		$this->fields_value['_MEDIA_SERVER_1_'] = Configuration::get('PS_MEDIA_SERVER_1');
+		$this->fields_value['_MEDIA_SERVER_2_'] = Configuration::get('PS_MEDIA_SERVER_2');
+		$this->fields_value['_MEDIA_SERVER_3_'] = Configuration::get('PS_MEDIA_SERVER_3');
 	}
 
 	public function initFieldsetCiphering()
@@ -784,9 +784,9 @@ class AdminPerformanceControllerCore extends AdminController
 						Configuration::updateValue('PS_MEDIA_SERVERS', 1);
 					else
 						Configuration::updateValue('PS_MEDIA_SERVERS', 0);
-					Configuration::updateValue('PS_MEDIA_SERVER_1_', Tools::getValue('_MEDIA_SERVER_1_'));
-					Configuration::updateValue('PS_MEDIA_SERVER_2_', Tools::getValue('_MEDIA_SERVER_2_'));
-					Configuration::updateValue('PS_MEDIA_SERVER_3_', Tools::getValue('_MEDIA_SERVER_3_'));
+					Configuration::updateValue('PS_MEDIA_SERVER_1', Tools::getValue('_MEDIA_SERVER_1_'));
+					Configuration::updateValue('PS_MEDIA_SERVER_2', Tools::getValue('_MEDIA_SERVER_2_'));
+					Configuration::updateValue('PS_MEDIA_SERVER_3', Tools::getValue('_MEDIA_SERVER_3_'));
 					Tools::clearSmartyCache();
 					Media::clearCache();
 					Tools::generateHtaccess(null, null, null, '', null, array($base_urls['_MEDIA_SERVER_1_'], $base_urls['_MEDIA_SERVER_2_'], $base_urls['_MEDIA_SERVER_3_']));

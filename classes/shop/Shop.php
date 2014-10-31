@@ -364,7 +364,7 @@ class ShopCore extends ObjectModel
 		}
 
 		$http_host = Tools::getHttpHost();
-		$all_media = array_merge(Configuration::getMultiShopValues('PS_MEDIA_SERVER_1_'), Configuration::getMultiShopValues('PS_MEDIA_SERVER_2_'), Configuration::getMultiShopValues('PS_MEDIA_SERVER_3_'));
+		$all_media = array_merge(Configuration::getMultiShopValues('PS_MEDIA_SERVER_1'), Configuration::getMultiShopValues('PS_MEDIA_SERVER_2'), Configuration::getMultiShopValues('PS_MEDIA_SERVER_3'));
 
 		if ((!$id_shop && defined('_PS_ADMIN_DIR_')) || Tools::isPHPCLI() || in_array($http_host, $all_media))
 		{
