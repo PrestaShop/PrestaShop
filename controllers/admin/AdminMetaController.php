@@ -769,7 +769,8 @@ class AdminMetaControllerCore extends AdminController
 		}
 
 		$tab['GB'] = array(
-			'orderby=','orderway=','tag=','id_currency=','search_query=','back=','n='
+			'?orderby=','?orderway=','?tag=','?id_currency=','?search_query=','?back=','?n=',
+			'&orderby=','&orderway=','&tag=','&id_currency=','&search_query=','&back=','&n='
 		);
 
 		foreach ($disallow_controllers as $controller)
