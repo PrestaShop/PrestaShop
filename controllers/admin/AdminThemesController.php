@@ -220,7 +220,7 @@ class AdminThemesControllerCore extends AdminController
 		);
 
 		$installed_theme = Theme::getAllThemes(array($this->context->shop->id_theme));
-		$non_installed_theme = Theme::getNonInstalledTheme();
+		$non_installed_theme = (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_) ? array() : Theme::getNonInstalledTheme();
 		if (count($installed_theme) || !empty($non_installed_theme))
 		{
 			$this->fields_options['theme'] = array(
@@ -2582,9 +2582,10 @@ class AdminThemesControllerCore extends AdminController
 	 */
 	public function postProcess()
 	{
+		$host_mode = (bool)(defined('_PS_HOST_MODE_') && _PS_HOST_MODE_);
 		if (Tools::isSubmit('submitOptionstheme') && Tools::isSubmit('id_theme') && !Tools::isSubmit('deletetheme') && Tools::getValue('action') != 'ThemeInstall' && $this->context->shop->id_theme != Tools::getValue('id_theme'))
 			$this->display = "ChooseThemeModule";
-		elseif (Tools::isSubmit('installThemeFromFolder'))
+		elseif (Tools::isSubmit('installThemeFromFolder') && !$host_mode)
 		{
 			$theme_dir = Tools::getValue('theme_dir');
 			$this->installTheme($theme_dir);
