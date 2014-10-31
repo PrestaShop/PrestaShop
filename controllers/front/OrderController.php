@@ -212,13 +212,6 @@ class OrderControllerCore extends ParentOrderController
 				$this->setTemplate(_PS_THEME_DIR_.'shopping-cart.tpl');
 			break;
 		}
-
-		$this->context->smarty->assign(array(
-			'currencySign' => $this->context->currency->sign,
-			'currencyRate' => $this->context->currency->conversion_rate,
-			'currencyFormat' => $this->context->currency->format,
-			'currencyBlank' => $this->context->currency->blank,
-		));
 	}
 
 	protected function processAddressFormat()
