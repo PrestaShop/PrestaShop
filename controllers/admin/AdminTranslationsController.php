@@ -418,7 +418,7 @@ class AdminTranslationsControllerCore extends AdminController
 			$tabs_default[$tab['class_name']] = pSQL($tab['name']);
 
 		// Create content
-		$content = "<?php\n\n\$tabs = array();";
+		$content = "<?php\n\n\$_TABS = array();";
 		if (!empty($tabs))
 			foreach ($tabs as $tab)
 			{
@@ -439,9 +439,9 @@ class AdminTranslationsControllerCore extends AdminController
 				 *
 				 */
 				if ($tabs_default[$tab['class_name']] != pSQL($tab['name']))
-					$content .= "\n\$tabs['".$tab['class_name']."'] = '".pSQL($tab['name'])."';";
+					$content .= "\n\$_TABS['".$tab['class_name']."'] = '".pSQL($tab['name'])."';";
 			}
-		$content .= "\n\nreturn \$tabs;";
+		$content .= "\n\nreturn \$_TABS;";
 
 		$dir = _PS_TRANSLATIONS_DIR_.$this->lang_selected->iso_code.DIRECTORY_SEPARATOR;
 		$path = $dir.'tabs.php';
