@@ -743,7 +743,7 @@ class OrderDetailCore extends ObjectModel
 	{
 		foreach ($this->def['fields'] as $field => $data)
 		{
-			if ($data['required'] || !empty($data['lang']))
+			if (!empty($data['required']) || !empty($data['lang']))
 				continue;
 			if ($this->validateField($field, $this->$field) !== true)
 				$this->$field = '';
