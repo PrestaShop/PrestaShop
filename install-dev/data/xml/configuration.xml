@@ -679,6 +679,9 @@ Country</value>
 	<configuration id="HOMESLIDER_WIDTH" name="HOMESLIDER_WIDTH">
 		<value>535</value>
 	</configuration>
+	<configuration id="HOMESLIDER_HEIGHT" name="HOMESLIDER_HEIGHT">
+		<value>300</value>
+	</configuration>
 	<configuration id="HOMESLIDER_SPEED" name="HOMESLIDER_SPEED">
 		<value>1300</value>
 	</configuration>
