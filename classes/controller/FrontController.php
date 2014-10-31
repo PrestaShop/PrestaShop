@@ -131,6 +131,7 @@ class FrontControllerCore extends Controller
 		// If we call a SSL controller without SSL or a non SSL controller with SSL, we redirect with the right protocol
 		if (Configuration::get('PS_SSL_ENABLED') && $_SERVER['REQUEST_METHOD'] != 'POST' && $this->ssl != Tools::usingSecureMode())
 		{
+			$this->context->cookie->disallowWriting();
 			header('HTTP/1.1 301 Moved Permanently');
 			header('Cache-Control: no-cache');
 			if ($this->ssl)
