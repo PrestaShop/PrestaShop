@@ -518,7 +518,7 @@ class AdminThemesControllerCore extends AdminController
 			foreach ($customer_themes_list_xml->theme as $addons_theme)
 			{
 				//get addons theme if folder does not exist
-				$ids_themes = Tool::unSerialize(Configuration::get('PS_ADDONS_THEMES_IDS'));
+				$ids_themes = Tools::unSerialize(Configuration::get('PS_ADDONS_THEMES_IDS'));
 
 				if (!is_array($ids_themes) || (is_array($ids_themes) && !in_array((string)$addons_theme->id, $ids_themes)))
 				{
