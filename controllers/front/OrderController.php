@@ -124,7 +124,7 @@ class OrderControllerCore extends ParentOrderController
 					)
 				)
 			);
-			die(Tools::jsonEncode($return));
+			$this->ajaxDie(Tools::jsonEncode($return));
 		}
 
 		if ($this->nbProducts)
@@ -326,12 +326,12 @@ class OrderControllerCore extends ParentOrderController
 		if ($this->errors)
 		{
 			if (Tools::getValue('ajax'))
-				die('{"hasError" : true, "errors" : ["'.implode('\',\'', $this->errors).'"]}');
+				$this->ajaxDie('{"hasError" : true, "errors" : ["'.implode('\',\'', $this->errors).'"]}');
 			$this->step = 1;
 		}
 
 		if ($this->ajax)
-			die(true);
+			$this->ajaxDie(true);
 	}
 
 	/**
