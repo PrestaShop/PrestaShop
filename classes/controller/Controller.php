@@ -511,7 +511,7 @@ abstract class ControllerCore
 	    return true;
 	}
 
-	protected function ajaxDie($value, $controller = null, $method = null)
+	protected function ajaxDie($value = null, $controller = null, $method = null)
 	{
 		if ($controller === null)
 			$controller = get_class($this);
