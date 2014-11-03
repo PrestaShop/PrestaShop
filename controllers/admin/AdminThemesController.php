@@ -518,7 +518,7 @@ class AdminThemesControllerCore extends AdminController
 			foreach ($customer_themes_list_xml->theme as $addons_theme)
 			{
 				//get addons theme if folder does not exist
-				$ids_themes = unserialize(Configuration::get('PS_ADDONS_THEMES_IDS'));
+				$ids_themes = Tool::unSerialize(Configuration::get('PS_ADDONS_THEMES_IDS'));
 
 				if (!is_array($ids_themes) || (is_array($ids_themes) && !in_array((string)$addons_theme->id, $ids_themes)))
 				{
@@ -684,7 +684,7 @@ class AdminThemesControllerCore extends AdminController
 			if (is_dir(_PS_ALL_THEMES_DIR_.$obj->directory) && !in_array($obj->directory, $themes))
 				Tools::deleteDirectory(_PS_ALL_THEMES_DIR_.$obj->directory.'/');
 
-			$ids_themes = unserialize(Configuration::get('PS_ADDONS_THEMES_IDS'));
+			$ids_themes = Tools::unSerialize(Configuration::get('PS_ADDONS_THEMES_IDS'));
 			if (array_key_exists($obj->directory, $ids_themes))
 				unset($ids_themes[$obj->directory]);
 
