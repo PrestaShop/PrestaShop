@@ -225,14 +225,6 @@ class StoresControllerCore extends FrontController
 		$stores = $this->getStores();
 		$parnode = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><markers></markers>');
 
-		$days[1] = 'Monday';
-		$days[2] = 'Tuesday';
-		$days[3] = 'Wednesday';
-		$days[4] = 'Thursday';
-		$days[5] = 'Friday';
-		$days[6] = 'Saturday';
-		$days[7] = 'Sunday';
-
 		foreach ($stores as $store)
 		{
 			$other = '';
