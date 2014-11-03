@@ -60,8 +60,8 @@ class OrderOpcControllerCore extends ParentOrderController
 								$txtMessage = urldecode(Tools::getValue('message'));
 								$this->_updateMessage($txtMessage);
 								if (count($this->errors))
-									die('{"hasError" : true, "errors" : ["'.implode('\',\'', $this->errors).'"]}');
-								die(true);
+									$this->ajaxDie('{"hasError" : true, "errors" : ["'.implode('\',\'', $this->errors).'"]}');
+								$this->ajaxDie(true);
 							}
 							break;
 
@@ -81,12 +81,12 @@ class OrderOpcControllerCore extends ParentOrderController
 										$this->getFormatedSummaryDetail()
 									);
 									Cart::addExtraCarriers($return);
-									die(Tools::jsonEncode($return));
+									$this->ajaxDie(Tools::jsonEncode($return));
 								}
 								else
 									$this->errors[] = Tools::displayError('An error occurred while updating the cart.');
 								if (count($this->errors))
-									die('{"hasError" : true, "errors" : ["'.implode('\',\'', $this->errors).'"]}');
+									$this->ajaxDie('{"hasError" : true, "errors" : ["'.implode('\',\'', $this->errors).'"]}');
 								exit;
 							}
 							break;
@@ -95,7 +95,7 @@ class OrderOpcControllerCore extends ParentOrderController
 							if (Tools::isSubmit('checked'))
 							{
 								$this->context->cookie->checkedTOS = (int)Tools::getValue('checked');
-								die(Tools::jsonEncode(array(
+								$this->ajaxDie(Tools::jsonEncode(array(
 									'HOOK_TOP_PAYMENT' => Hook::exec('displayPaymentTop'),
 									'HOOK_PAYMENT' => $this->_getPaymentMethods()
 								)));
@@ -103,7 +103,7 @@ class OrderOpcControllerCore extends ParentOrderController
 							break;
 
 						case 'getCarrierList':
-							die(Tools::jsonEncode($this->_getCarrierList()));
+							$this->ajaxDie(Tools::jsonEncode($this->_getCarrierList()));
 							break;
 
 						case 'editCustomer':
@@ -132,7 +132,7 @@ class OrderOpcControllerCore extends ParentOrderController
 								$return['isSaved'] = (bool)$this->context->customer->update();
 							else
 								$return['isSaved'] = false;
-							die(Tools::jsonEncode($return));
+							$this->ajaxDie(Tools::jsonEncode($return));
 							break;
 
 						case 'getAddressBlockAndCarriersAndPayments':
@@ -140,7 +140,7 @@ class OrderOpcControllerCore extends ParentOrderController
 							{
 								// check if customer have addresses
 								if (!Customer::getAddressesTotalById($this->context->customer->id))
-									die(Tools::jsonEncode(array('no_address' => 1)));
+									$this->ajaxDie(Tools::jsonEncode(array('no_address' => 1)));
 								if (file_exists(_PS_MODULE_DIR_.'blockuserinfo/blockuserinfo.php'))
 								{
 									include_once(_PS_MODULE_DIR_.'blockuserinfo/blockuserinfo.php');
@@ -168,7 +168,7 @@ class OrderOpcControllerCore extends ParentOrderController
 									),
 									$this->getFormatedSummaryDetail()
 								);
-								die(Tools::jsonEncode($return));
+								$this->ajaxDie(Tools::jsonEncode($return));
 							}
 							die(Tools::displayError());
 							break;
@@ -181,7 +181,7 @@ class OrderOpcControllerCore extends ParentOrderController
 								$email = $this->context->customer->email;
 								if ($this->context->customer->is_guest)
 									$this->context->customer->logout(); // If guest we clear the cookie for security reason
-								die('freeorder:'.$order->reference.':'.$email);
+								$this->ajaxDie('freeorder:'.$order->reference.':'.$email);
 							}
 							exit;
 							break;
@@ -253,11 +253,11 @@ class OrderOpcControllerCore extends ParentOrderController
 											'refresh' => (bool)$this->ajax_refresh),
 											$this->getFormatedSummaryDetail()
 										);
-										die(Tools::jsonEncode($result));
+										$this->ajaxDie(Tools::jsonEncode($result));
 									}
 								}
 								if (count($this->errors))
-									die(Tools::jsonEncode(array(
+									$this->ajaxDie(Tools::jsonEncode(array(
 										'hasError' => true,
 										'errors' => $this->errors
 									)));
@@ -275,7 +275,7 @@ class OrderOpcControllerCore extends ParentOrderController
 								$this->context->smarty->assign('address_list', array());
 							$this->setTemplate(_PS_THEME_DIR_.'order-address-multishipping-products.tpl');
 							$this->display();
-							die();
+							$this->ajaxDie();
 							break;
 
 						case 'cartReload':
@@ -287,12 +287,12 @@ class OrderOpcControllerCore extends ParentOrderController
 							$this->context->smarty->assign('opc', true);
 							$this->setTemplate(_PS_THEME_DIR_.'shopping-cart.tpl');
 							$this->display();
-							die();
+							$this->ajaxDie();
 							break;
 
 						case 'noMultiAddressDelivery':
 							$this->context->cart->setNoMultishipping();
-							die();
+							$this->ajaxDie();
 							break;
 
 						default:
@@ -306,7 +306,7 @@ class OrderOpcControllerCore extends ParentOrderController
 		elseif (Tools::isSubmit('ajax'))
 		{
 			$this->errors[] = Tools::displayError('No product in your cart.');
-			die('{"hasError" : true, "errors" : ["'.implode('\',\'', $this->errors).'"]}');
+			$this->ajaxDie('{"hasError" : true, "errors" : ["'.implode('\',\'', $this->errors).'"]}');
 		}
 	}
 
