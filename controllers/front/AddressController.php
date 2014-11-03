@@ -311,6 +311,7 @@ class AddressControllerCore extends FrontController
 		$this->context->smarty->assign(array(
 			'countries_list' => $list,
 			'countries' => $countries,
+			'sl_country' => (int)$this->id_country,
 		));
 	}
 
