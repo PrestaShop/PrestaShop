@@ -137,7 +137,7 @@ class StoresControllerCore extends FrontController
 
 		if ($store['hours'])
 		{
-			$hours = unserialize($store['hours']);
+			$hours = Tools::unSerialize($store['hours']);
 			if (is_array($hours))
 				$hours = array_filter($hours);
 		}

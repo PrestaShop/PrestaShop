@@ -510,5 +510,22 @@ abstract class ControllerCore
 		Context::getContext()->smarty->assign('php_errors', Controller::$php_errors);
 	    return true;
 	}
+
+	protected function ajaxDie($value = null, $controller = null, $method = null)
+	{
+		if ($controller === null)
+			$controller = get_class($this);
+
+		if ($method === null)
+		{
+			$bt = debug_backtrace();
+			$method = $bt[1]['function'];
+		}
+
+		Hook::exec('actionBeforeAjaxDie', array('controller' => $controller, 'method' => $method, 'value' => $value));
+		Hook::exec('actionBeforeAjaxDie'.$controller.$method, array('value' => $value));
+
+		die($value);
+	}
 }
 ?>
