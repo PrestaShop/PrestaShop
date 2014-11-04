@@ -109,7 +109,7 @@ $(document).ready(function () {
 <div id="product-prices" class="panel product-tab">
 	<input type="hidden" name="submitted_tabs[]" value="Prices" />
 	<h3>{l s='Product price'}</h3>
-	<div class="alert alert-info">
+	<div class="alert alert-info" {if !$country_display_tax_label || $tax_exclude_taxe_option}style="display:none;"{/if}>
 		{l s='You must enter either the pre-tax retail price, or the retail price with tax. The input field will be automatically calculated.'}
 	</div>
 	{include file="controllers/products/multishop/check_fields.tpl" product_tab="Prices"}
