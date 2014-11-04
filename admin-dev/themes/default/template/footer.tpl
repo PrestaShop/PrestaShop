@@ -50,7 +50,6 @@
 			</a>
 		</div>
 	</div>
-
 	<div class="col-sm-5">
 		<div class="footer-contact">
 			<a href="http://www.prestashop.com/en/contact_us?utm_source=back-office&amp;utm_medium=footer&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}ondemand{else}download{/if}" class="footer_link _blank">
@@ -77,7 +76,7 @@
 				<i class="icon-book"></i>
 				{l s='Training'}
 			</a>
-			{if $iso_is_fr}
+			{if $iso_is_fr && host_mode == 0}
 			<p>Questions • Renseignements • Formations :
 				<strong>+33 (0)1.40.18.30.04</strong>
 			</p>
