@@ -4371,6 +4371,7 @@ class AdminProductsControllerCore extends AdminController
 					'product' => $obj,
 					'show_quantities' => $show_quantities,
 					'order_out_of_stock' => Configuration::get('PS_ORDER_OUT_OF_STOCK'),
+					'pack_stock_type' => Configuration::get('PS_PACK_STOCK_TYPE'),
 					'token_preferences' => Tools::getAdminTokenLite('AdminPPreferences'),
 					'token' => $this->token,
 					'languages' => $this->_languages,

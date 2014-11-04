@@ -225,6 +225,11 @@ class ProductCore extends ObjectModel
 	 */
 	public $category;
 
+	/**
+	 * @var int tell the type of stock management to apply on the pack
+	 */
+	public $pack_stock_type;
+
 	public static $_taxCalculationMethod = null;
 	protected static $_prices = array();
 	protected static $_pricesLevel2 = array();
@@ -296,6 +301,7 @@ class ProductCore extends ObjectModel
 			'advanced_stock_management' => 	array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
 			'date_add' => 					array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDateFormat'),
 			'date_upd' => 					array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDateFormat'),
+			'pack_stock_type' =>			array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'),
 
 			/* Lang fields */
 			'meta_description' => 			array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
