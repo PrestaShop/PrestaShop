@@ -53,7 +53,7 @@ else
 $excludeVirtuals = (bool)Tools::getValue('excludeVirtuals', false);
 $exclude_packs = (bool)Tools::getValue('exclude_packs', false);
 
-$sql = 'SELECT p.`id_product`, pl.`link_rewrite`, p.`reference`, pl.`name`, MAX(image_shop.`id_image`) id_image, il.`legend`
+$sql = 'SELECT p.`id_product`, pl.`link_rewrite`, p.`reference`, pl.`name`, MAX(image_shop.`id_image`) id_image, il.`legend`, p.`cache_default_attribute`
 		FROM `'._DB_PREFIX_.'product` p
 		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.id_product = p.id_product AND pl.id_lang = '.(int)Context::getContext()->language->id.Shop::addSqlRestrictionOnLang('pl').')
 		LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)'.
@@ -77,7 +77,7 @@ elseif ($items)
 	foreach ($items AS $item)
 	{
 		// check if product have combination
-		if (Combination::isFeatureActive())
+		if (Combination::isFeatureActive() && $item['cache_default_attribute'])
 		{
 			$sql = 'SELECT pa.`id_product_attribute`, pa.`reference`, ag.`id_attribute_group`, pai.`id_image`, agl.`name` AS group_name, al.`name` AS attribute_name,
 						a.`id_attribute`
