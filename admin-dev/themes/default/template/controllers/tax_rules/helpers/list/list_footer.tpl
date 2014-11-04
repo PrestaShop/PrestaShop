@@ -60,7 +60,7 @@
 	<div class="col-lg-4">
 		{* Choose number of results per page *}
 		<div class="pagination">
-			{l s='Display'} 
+			{l s='Display'}
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 				{$selected_pagination}
 				<i class="icon-caret-down"></i>
@@ -135,10 +135,9 @@
 {if !$simple_header}
 		<input type="hidden" name="token" value="{$token|escape:'html':'UTF-8'}" />
 	</div>
+	{hook h='displayAdminListAfter'}
 </form>
 {/if}
-
-{hook h='displayAdminListAfter'}
 {if isset($name_controller)}
 	{capture name=hookName assign=hookName}display{$name_controller|ucfirst}ListAfter{/capture}
 	{hook h=$hookName}
