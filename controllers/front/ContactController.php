@@ -244,6 +244,10 @@ class ContactControllerCore extends FrontController
 				AND cm.id_shop = '.(int)$this->context->shop->id.'
 				AND token = \''.pSQL($token).'\'
 			');
+
+			$order = new Order((int)$customerThread['id_order']);
+			if (Validate::isLoadedObject($order))
+				$customerThread['reference']= $order->getUniqReference();
 			$this->context->smarty->assign('customerThread', $customerThread);
 		}
 
