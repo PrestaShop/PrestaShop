@@ -315,7 +315,7 @@
 						<!-- quantity wanted -->
 						{if !$PS_CATALOG_MODE}
 						<p id="quantity_wanted_p"{if (!$allow_oosp && $product->quantity <= 0) || !$product->available_for_order || $PS_CATALOG_MODE} style="display: none;"{/if}>
-							<label>{l s='Quantity'}</label>
+							<label>{l s='Quantity'}:</label>
 							<input type="text" name="qty" id="quantity_wanted" class="text" value="{if isset($quantityBackup)}{$quantityBackup|intval}{else}{if $product->minimal_quantity > 1}{$product->minimal_quantity}{else}1{/if}{/if}" />
 							<a href="#" data-field-qty="qty" class="btn btn-default button-minus product_quantity_down">
 								<span><i class="icon-minus"></i></span>
@@ -337,7 +337,7 @@
 								{foreach from=$groups key=id_attribute_group item=group}
 									{if $group.attributes|@count}
 										<fieldset class="attribute_fieldset">
-											<label class="attribute_label" {if $group.group_type != 'color' && $group.group_type != 'radio'}for="group_{$id_attribute_group|intval}"{/if}>{$group.name|escape:'html':'UTF-8'}&nbsp;</label>
+											<label class="attribute_label" {if $group.group_type != 'color' && $group.group_type != 'radio'}for="group_{$id_attribute_group|intval}"{/if}>{$group.name|escape:'html':'UTF-8'}:&nbsp;</label>
 											{assign var="groupName" value="group_$id_attribute_group"}
 											<div class="attribute_list">
 												{if ($group.group_type == 'select')}

@@ -23,7 +23,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture name=path}{l s='Check payment' mod='cheque'}{/capture}
+{capture name=path}
+	<a href="{$link->getPageLink('order', true, NULL, "step=3")|escape:'html':'UTF-8'}" title="{l s='Go back to the Checkout' mod='cheque'}">{l s='Checkout' mod='cheque'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='Check payment' mod='cheque'}
+{/capture}
 
 <h1 class="page-heading">{l s='Order summary' mod='cheque'}</h1>
 
@@ -43,7 +45,7 @@
 				</strong>
 			</p>
 			<p>
-				- {l s='The total amount of your order comes to:' mod='cheque'}
+				- {l s='The total amount of your order comes to' mod='cheque'}
 				<span id="amount" class="price">{displayPrice price=$total}</span>
 				{if $use_taxes == 1}
 					{l s='(tax incl.)' mod='cheque'}
@@ -68,9 +70,9 @@
 				{/if}
 			</p>
 			<p>
-				- {l s='Check owner and address information will be displayed on the next page.' mod='cheque'}
+				- {l s='Check owner and address information will be displayed on the next page.' mod='cheque'}<br />
 				<br />
-				- {l s='Please confirm your order by clicking \'I confirm my order\'' mod='cheque'}.
+				<strong>{l s='Please confirm your order by clicking "I confirm my order".' mod='cheque'}</strong>
 			</p>
 		</div>
 		<p class="cart_navigation clearfix" id="cart_navigation">

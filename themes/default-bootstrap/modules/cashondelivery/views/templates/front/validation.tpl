@@ -23,32 +23,45 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{capture name=path}{l s='Shipping' mod='cashondelivery'}{/capture}
+{capture name=path}
+	<a href="{$link->getPageLink('order', true, NULL, "step=3")|escape:'html':'UTF-8'}" title="{l s='Go back to the Checkout' mod='cashondelivery'}">{l s='Checkout' mod='cashondelivery'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='Cash on delivery (COD) payment' mod='cashondelivery'}
+{/capture}
 
 <h1 class="page-heading">{l s='Order summary' mod='cashondelivery'}</h1>
 
 {assign var='current_step' value='payment'}
 {include file="$tpl_dir./order-steps.tpl"}
 
+{if $nbProducts <= 0}
+	<p class="alert alert-warning">
+        {l s='Your shopping cart is empty.' mod='cashondelivery'}
+    </p>
+{else}
 <form action="{$link->getModuleLink('cashondelivery', 'validation', [], true)|escape:'html'}" method="post">
 	<div class="box">
         <input type="hidden" name="confirm" value="1" />
         <h3 class="page-subheading">{l s='Cash on delivery (COD) payment' mod='cashondelivery'}</h3>
+            <p class="cheque-indent">
+                <strong class="dark">
+                    {l s='You have chosen the Cash on Delivery method.' mod='cashondelivery'} {l s='Here is a short summary of your order:' mod='cashondelivery'}
+                </strong>
+            </p>
+            
         <p>
-            - {l s='You have chosen the Cash on Delivery method.' mod='cashondelivery'}
-            <br/>
             - {l s='The total amount of your order is' mod='cashondelivery'}
             <span id="amount_{$currencies.0.id_currency}" class="price">{convertPrice price=$total}</span>
             {if $use_taxes == 1}
                 {l s='(tax incl.)' mod='cashondelivery'}
             {/if}
         </p>
+        <br />
         <p>
-            <b>{l s='Please confirm your order by clicking \'I confirm my order\'.' mod='cashondelivery'}.</b>
+            <strong>{l s='Please confirm your order by clicking "I confirm my order".' mod='cashondelivery'}</strong>
         </p>        
     </div>
     <p class="cart_navigation" id="cart_navigation">
         <a href="{$link->getPageLink('order', true)}?step=3" class="button-exclusive btn btn-default"><i class="icon-chevron-left"></i>{l s='Other payment methods' mod='cashondelivery'}</a>
-        <button type="submit" class="button btn btn-default button-medium"><span>{l s='I confirm my order' mod='cashondelivery'}</span></button>
+        <button type="submit" class="button btn btn-default button-medium"><span>{l s='I confirm my order' mod='cashondelivery'}<i class="icon-chevron-right right"></i></span></button>
     </p>
 </form>
+{/if}

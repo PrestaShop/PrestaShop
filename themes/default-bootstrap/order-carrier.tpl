@@ -52,7 +52,7 @@
 				<div class="checkbox">
 					<label for="recyclable">
 						<input type="checkbox" name="recyclable" id="recyclable" value="1" {if $recyclable == 1}checked="checked"{/if} />
-						{l s='I would like to receive my order in recycled packaging.'}.
+						{l s='I would like to receive my order in recycled packaging.'}
 					</label>
 				</div>
 			{/if}
@@ -91,7 +91,7 @@
 															<strong>{$carrier.instance->name|escape:'htmlall':'UTF-8'}</strong>
 														{/foreach}
 														{if isset($carrier.instance->delay[$cookie->id_lang])}
-															{$carrier.instance->delay[$cookie->id_lang]|escape:'htmlall':'UTF-8'}
+															<br />{l s='Delivery time:'}&nbsp;{$carrier.instance->delay[$cookie->id_lang]|escape:'htmlall':'UTF-8'}
 														{/if}
 													{/if}
 													{if count($option_list) > 1}
