@@ -119,7 +119,7 @@
 										</select>
 									{/foreach}
 								{elseif $customerThread.id_product > 0}
-									<input class="form-control grey" type="text" name="id_product" id="id_product" value="{$customerThread.id_product|intval}" readonly="readonly" />
+									<input  type="hidden" name="id_product" id="id_product" value="{$customerThread.id_product|intval}" readonly="readonly" />
 								{/if}
 							</div>
 						{/if}
