@@ -7,7 +7,7 @@
 #sitemap {
 	.sitemap_block {
 		.page-subheading {
-			margin-bottom: 16px;	
+			margin-bottom: 16px;
 		}
 		li {
 			line-height: 16px;
@@ -17,16 +17,16 @@
 					content: "\f105";
 					display: inline-block;
 					font-family: $font-icon;
-					padding-right: 10px;	
+					padding-right: 10px;
 				}
 				&:hover {
-					font-weight: bold;	
+					font-weight: bold;
 				}
 			}
 		}
 	}
 }
-	
+
 #listpage_content div.tree_top {
 	padding: 5px 0 0 27px;
 	a {
@@ -40,9 +40,9 @@
 		&:hover {
 			&:before {
 				color: $link-hover-color;
-			}	
+			}
 		}
-	}	
+	}
 }
 
 ul.tree {
@@ -53,7 +53,7 @@ ul.tree {
 		border-left: 1px solid $base-border-color;
 		background: url(../img/sitemap-horizontal.png) no-repeat left 15px transparent;
 		a:hover {
-			font-weight: bold;	
+			font-weight: bold;
 		}
 	}
 	> li {
