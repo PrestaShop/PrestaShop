@@ -2094,7 +2094,8 @@ class OrderCore extends ObjectModel
 
 	public function setWsCurrentState($state)
 	{
-		$this->setCurrentState($state);
+		if ($this->id)
+			$this->setCurrentState($state);
 		return true;
 	}
 }
