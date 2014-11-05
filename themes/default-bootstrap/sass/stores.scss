@@ -9,7 +9,7 @@
 	#map {
 		width: 100%;
 		height: 447px;
-		margin-bottom: 26px;	
+		margin-bottom: 26px;
 	}
 	input#addressInput {
 		display: inline-block;
@@ -30,22 +30,22 @@
 		float: left;
 		line-height: 23px;
 		margin-right: 20px;
-		
-		label, 
+
+		label,
 		.selector {
 			float: left;
 		}
-			
+
 		label {
 			margin-right: 10px;
 		}
-		
+
 		#radiusSelect {
-			width: 78px;	
+			width: 78px;
 		}
 	}
 	.store-content {
-		padding-bottom: 30px;	
+		padding-bottom: 30px;
 	}
 	.store-content-select {
 			.selector {
@@ -56,11 +56,11 @@
 				padding-top: 30px;
 				margin-bottom: 30px;
 				border-top: 1px solid $base-border-color;
-				
+
 			.selector {
 				visibility: visible;
 				display: block;
-			}	
+			}
 		}
 	}
 	.store-title {
@@ -85,11 +85,11 @@
 				padding: 20px;
 				&.num {
 					background: $table-background;
-					width: 46px;	
+					width: 46px;
 				}
 				&.name {
 					span {
-						padding-left: 15px;	
+						padding-left: 15px;
 					}
 					@media (max-width: $screen-xs-max) { // max 767px
 						img {display: none;}

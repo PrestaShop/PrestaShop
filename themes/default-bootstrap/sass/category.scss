@@ -18,7 +18,7 @@
 	}
 	span.category-name {
 		font: 600 42px/51px $font-custom;
-		color: $light-text-color;	
+		color: $light-text-color;
 		margin-bottom: 12px;
 		@media  (max-width: $screen-md-max) { // max 1199px
 			font-size: 25px;
@@ -41,7 +41,7 @@
 			a {
 				color: $link-color;
 				&:hover {
-					color: $link-hover-color;	
+					color: $link-hover-color;
 				}
 			}
 		}
@@ -85,19 +85,19 @@
 				color: $base-heading-color;
 				text-transform: uppercase;
 				&:hover {
-					color: $link-hover-color;	
+					color: $link-hover-color;
 				}
 			}
-			.cat_desc { 
+			.cat_desc {
 				display: none;
-			}	
+			}
 			&:hover {
 				.subcategory-image {
 					a {
 						border: 5px solid $dark-border-color;
 						padding: 5px;
 					}
-				}	
+				}
 			}
 		}
 	}
