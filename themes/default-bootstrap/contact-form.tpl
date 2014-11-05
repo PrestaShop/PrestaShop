@@ -50,7 +50,7 @@
 	</ul>
 {else}
 	{include file="$tpl_dir./errors.tpl"}
-	<form action="{$request_uri|escape:'html':'UTF-8'}" method="post" class="contact-form-box" enctype="multipart/form-data">
+	<form action="{$request_uri}" method="post" class="contact-form-box" enctype="multipart/form-data">
 		<fieldset>
 			<h3 class="page-subheading">{l s='send a message'}</h3>
 			<div class="clearfix">
@@ -102,7 +102,7 @@
 								{elseif !isset($customerThread.id_order) && empty($is_logged)}
 									<input class="form-control grey" type="text" name="id_order" id="id_order" value="{if isset($customerThread.id_order) && $customerThread.id_order|intval > 0}{$customerThread.id_order|intval}{else}{if isset($smarty.post.id_order) && !empty($smarty.post.id_order)}{$smarty.post.id_order|escape:'html':'UTF-8'}{/if}{/if}" />
 								{elseif $customerThread.id_order|intval > 0}
-									<input class="form-control grey" type="text" name="id_order" id="id_order" value="{$customerThread.id_order|intval}" readonly="readonly" />
+									<input class="form-control grey" type="text" name="id_order" id="id_order" value="{if isset($customerThread.reference) && $customerThread.reference}{$customerThread.reference|escape:'html':'UTF-8'}{else}{$customerThread.id_order|intval}{/if}" readonly="readonly" />
 								{/if}
 							</div>
 						{/if}
