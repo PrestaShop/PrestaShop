@@ -89,7 +89,7 @@
 			display: block;
 		}
 		img {
-			display: block;	
+			display: block;
 			max-width: 100%;
 			height: auto;
 		}
@@ -153,13 +153,13 @@
 	.bx-wrapper .bx-prev {
 		right: 60px;
 		&:after {
-			content: "\f053";	
+			content: "\f053";
 		}
 	}
 	.bx-wrapper .bx-next {
 		right: 10px;
 		&:after {
-			content: "\f054";	
+			content: "\f054";
 		}
 	}
 	.bx-wrapper .bx-controls-direction a {
@@ -184,7 +184,7 @@
 			top: 0;
 			z-index: 1;
 		}
-		&:after { 
+		&:after {
 			display: block;
 			width: 48px;
 			height: 48px;
@@ -202,7 +202,7 @@
 		&:hover {
 			&:before {
 				background: $dark-background;
-				opacity: 0.83;	
+				opacity: 0.83;
 			}
 		}
 	}
