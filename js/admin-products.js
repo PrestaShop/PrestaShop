@@ -1288,7 +1288,7 @@ product_tabs['Pack'] = new function() {
 					return false;
 				}
 				var divContent = $('#divPackItems').html();
-				divContent += '<li class="product-pack-item media-product-pack" data-product-name="' + selectedProduct.name + '" data-product-qty="' + selectedProduct.qty + '" data-product-id="' + selectedProduct.id + '">';
+				divContent += '<li class="product-pack-item media-product-pack" data-product-name="' + selectedProduct.name + '" data-product-qty="' + selectedProduct.qty + '" data-product-id="' + selectedProduct.id + '" data-product-id-attribute="' + selectedProduct.id_product_attribute + '">';
 				divContent += '<img class="media-product-pack-img" src="' + selectedProduct.image +'"/>';
 				divContent += '<span class="media-product-pack-title">' + selectedProduct.name + '</span>';
 				divContent += '<span class="media-product-pack-ref">REF: ' + selectedProduct.ref + '</span>';
@@ -1299,7 +1299,7 @@ product_tabs['Pack'] = new function() {
 				// QTYxID-QTYxID
 				// @todo : it should be better to create input for each items and each qty
 				// instead of only one separated by x, - and ¤
-				var line = selectedProduct.qty + 'x' + selectedProduct.id ;
+				var line = selectedProduct.qty + 'x' + selectedProduct.id + 'x' + selectedProduct.id_product_attribute;
 				var lineDisplay = selectedProduct.qty + 'x ' + selectedProduct.name;
 
 				$('#divPackItems').html(divContent);

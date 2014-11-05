@@ -1357,6 +1357,7 @@ CREATE TABLE `PREFIX_order_state_lang` (
 CREATE TABLE `PREFIX_pack` (
   `id_product_pack` int(10) unsigned NOT NULL,
   `id_product_item` int(10) unsigned NOT NULL,
+  `id_product_attribute_item` int(10) unsigned NOT NULL,
   `quantity` int(10) unsigned NOT NULL DEFAULT 1,
   PRIMARY KEY (`id_product_pack`,`id_product_item`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
