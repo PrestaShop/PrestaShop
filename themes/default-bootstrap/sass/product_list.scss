@@ -50,7 +50,7 @@ ul.product_list {
 						width: 22px;
 						height: 22px;
 					}
-				}	
+				}
 			}
 		}
 	}
@@ -77,7 +77,7 @@ ul.product_list {
 					-ms-transform: rotate(45deg);
 					transform: rotate(45deg);
 					zoom: 1;
-					pointer-events: all;		
+					pointer-events: all;
 					i {
 						position: relative;
 						top: 48px;
@@ -96,11 +96,11 @@ ul.product_list {
     		}
     		.quick-view-mobile:hover{
     			@media (max-width: $screen-md-max) {
-						background-color: rgba(167, 167, 167, 0.57);   
+						background-color: rgba(167, 167, 167, 0.57);
 				}
-			} 
+			}
     		@media (max-width: $screen-md-max) {
-	 			display: block; 
+	 			display: block;
 				background-color: transparent;
 				height: 155px;
 				width: 215px;
@@ -125,7 +125,7 @@ ul.product_list {
 			text-align: center;
 			@include box-shadow(rgba(black, 0.16) 0 2px 8px);
 			@media (max-width: $screen-md-max) {
-    			display: none;	
+    			display: none;
     		}
 			@media (min-width: $screen-lg) { // min 1200px
 				display: none;
@@ -152,11 +152,11 @@ ul.product_list {
 				font-weight: bold;
 				color: #777676;
 				cursor: pointer;
-				&:hover { 
+				&:hover {
 					color: #000;
-				}	
+				}
 			}
-			&.wishlist { 
+			&.wishlist {
 				border-right: 1px solid $base-border-color;
 				a:before {
 					display: inline-block;
@@ -166,7 +166,7 @@ ul.product_list {
 					padding: 0 3px;
 				}
 				a.checked:before {
-					content: "\f004";  
+					content: "\f004";
 				}
 				@media (min-width: $screen-md) and (max-width: $screen-md-max) { // min 992px max 1199px
 					border-right: 0;
@@ -191,7 +191,7 @@ ul.product_list {
 						@media (min-width: $screen-md) and (max-width: $screen-md-max) { // min 992px max 1199px
 							display: none;
 						}
-	
+
 						@media (min-width: $screen-xs) and (max-width: $screen-xs-max) { // min 480px max 767px
 							display: none;
 						}
@@ -200,7 +200,7 @@ ul.product_list {
 						&:before {
 							content: "\f068";
 						}
-					}	
+					}
 				}
 			}
 		}
@@ -208,7 +208,7 @@ ul.product_list {
 }
 
 /*******************************************************
-Product list(Grid) Styles 
+Product list(Grid) Styles
 ********************************************************/
 
 ul.product_list.grid {
@@ -231,7 +231,7 @@ ul.product_list.grid {
 				@media (max-width: $screen-xs-max) { // max 767px
 					max-width: 290px;
 					margin-left: auto;
-					margin-right: auto;	
+					margin-right: auto;
 				}
 				.content_price {
 					position: absolute;
@@ -262,14 +262,14 @@ ul.product_list.grid {
 				}
 			}
 			.product-desc {
-				display: none;	
+				display: none;
 			}
 			.content_price {
-				padding-bottom: 9px; 
+				padding-bottom: 9px;
 				line-height: 21px;
 			}
-			.old-price, 
-			.price, 
+			.old-price,
+			.price,
 			.price-percent-reduction {
 				display: inline-block;
 			}
@@ -281,11 +281,11 @@ ul.product_list.grid {
 			}
 			.button-container {
 				margin-bottom: 14px;
-				.ajax_add_to_cart_button, 
+				.ajax_add_to_cart_button,
 				span.button,
-				.lnk_view { 
+				.lnk_view {
 					margin: 0 6px 10px 6px;
-				}	
+				}
 			}
 			.functional-buttons {
 				background: url(../img/functional-bt-shadow.png) repeat-x;
@@ -311,14 +311,14 @@ ul.product_list.grid {
 					}
 					.product-image-container {
 						.content_price {
-							display: block;	
+							display: block;
 						}
 						.quick-view {
 							display: block;
 						}
 					}
-					.functional-buttons, 
-					.button-container, 
+					.functional-buttons,
+					.button-container,
 					.comments_note {
 						display: block;
 					}
@@ -365,19 +365,19 @@ ul.product_list.grid {
 }
 
 /*******************************************************
-Product list(List) Styles 
+Product list(List) Styles
 ********************************************************/
 
 ul.product_list.list {
 	> li {
 		.left-block {
 			@media (max-width: $screen-xs - 1) { // max 479px
-				width: 100%;	
+				width: 100%;
 			}
 		}
 		.product-container {
 			border-top: 1px solid $base-border-color;
-			padding: 30px 0 30px;	
+			padding: 30px 0 30px;
 		}
 		.product-image-container {
 			position: relative;
@@ -388,14 +388,14 @@ ul.product_list.list {
 				margin: 0 auto;
 			}
 			.content_price {
-				display: none !important;	
+				display: none !important;
 			}
 		}
 		.product-flags {
 			color: $base-text-color;
 			margin: -5px 0 10px 0;
 			.discount {
-				color: #f13340;	
+				color: #f13340;
 			}
 		}
 		h5 {
@@ -406,10 +406,10 @@ ul.product_list.list {
 		}
 		.center-block {
 			@media (max-width: $screen-xs - 1) { // max 479px
-				width: 100%;	
-			}	
+				width: 100%;
+			}
 			.comments_note {
-				margin-bottom: 12px;	
+				margin-bottom: 12px;
 			}
 		}
 		.right-block {
@@ -426,13 +426,13 @@ ul.product_list.list {
 				}
 
 				@media (max-width: $screen-xs - 1) { // max 479px
-					padding-top: 5px;	
+					padding-top: 5px;
 				}
 				.content_price {
 					padding-bottom: 10px;
 					@media (max-width: $screen-sm-max) { // max 991px
 						padding-top: 13px;
-						padding-bottom: 0;	
+						padding-bottom: 0;
 					}
 
 					@media (max-width: $screen-xs - 1) { // max 479px
@@ -458,7 +458,7 @@ ul.product_list.list {
 						margin-bottom: 10px;
 						@media (min-width: $screen-md) { // min 991px
 						float: left;
-						clear: both;	
+						clear: both;
 						}
 					}
 				}
@@ -487,13 +487,13 @@ ul.product_list.list {
 						cursor: pointer;
 					}
 					.wishlist {
-						border:none;		
+						border:none;
 					}
 					.compare {
 						padding-top: 10px;
 						a {
 							&:before {
-								margin-right:10px;	
+								margin-right:10px;
 							}
 						}
 					}
@@ -502,7 +502,7 @@ ul.product_list.list {
 		}
 		@media (min-width: $screen-lg) { // min 1200px
 			&:hover {
-				.product-image-container {	
+				.product-image-container {
 					.quick-view {
 						display: block;
 					}
@@ -510,13 +510,13 @@ ul.product_list.list {
 			}
 		}
 		@media (max-width: $screen-xs - 1) {	// max 479px
-			text-align: center;	
+			text-align: center;
 		}
 	}
 }
 
 /*******************************************************
-Product list(Index page) Styles 
+Product list(Index page) Styles
 ********************************************************/
 
 #index {
@@ -554,6 +554,6 @@ Product list(Index page) Styles
 .ie8 {
 	.quick-view	 {
 		background: #fff;
-		border: 1px solid $base-border-color;	
+		border: 1px solid $base-border-color;
 	}
 }
