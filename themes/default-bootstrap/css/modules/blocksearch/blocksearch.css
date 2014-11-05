@@ -27,9 +27,8 @@
       color: #6f6f6f; }
   #search_block_top #search_query_top {
     display: inline;
-    padding: 0 13px;
+    padding: 13px 60px 13px 13px;
     height: 45px;
-    line-height: 45px;
     background: #fbfbfb;
     margin-right: 1px; }
 

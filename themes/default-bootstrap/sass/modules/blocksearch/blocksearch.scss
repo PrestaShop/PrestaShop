@@ -34,9 +34,8 @@
 	}
 	#search_query_top {
 		display: inline;
-		padding: 0 13px;
+		padding: 13px 60px 13px 13px;
 		height: 45px;
-		line-height: 45px;
 		background: $base-box-bg;
 		margin-right: 1px;
 	}
@@ -57,10 +56,10 @@
 			background: $light-background;
 		}
 		&:hover, &.ac_over {
-			background: $base-box-bg;	
+			background: $base-box-bg;
 		}
 	}
-}	
+}
 
 form#searchbox {
 	position: relative;
