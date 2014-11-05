@@ -218,6 +218,7 @@ class ProductCore extends ObjectModel
 	public $cache_is_pack;
 	public $cache_has_attachments;
 	public $is_virtual;
+	public $id_pack_product_attribute;
 	public $cache_default_attribute;
 
 	/**
@@ -2004,6 +2005,25 @@ class ProductCore extends ObjectModel
 			$images[$row['id_product_attribute']][] = $row;
 
 		return $images;
+	}
+
+	public static function getCombinationImageById($id_product_attribute, $id_lang)
+	{
+		if (!Combination::isFeatureActive() || !$id_product_attribute)
+			return false;
+
+		$result = Db::getInstance()->executeS('
+			SELECT pai.`id_image`, pai.`id_product_attribute`, il.`legend`
+			FROM `'._DB_PREFIX_.'product_attribute_image` pai
+			LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (il.`id_image` = pai.`id_image`)
+			LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_image` = pai.`id_image`)
+			WHERE pai.`id_product_attribute` = '.(int)$id_product_attribute.' AND il.`id_lang` = '.(int)$id_lang.' ORDER by i.`position` LIMIT 1'
+		);
+
+		if (!$result)
+			return false;
+
+		return $result[0];
 	}
 
 	/**

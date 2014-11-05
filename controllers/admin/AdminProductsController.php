@@ -3247,8 +3247,8 @@ class AdminProductsControllerCore extends AdminController
 				$pack_items[$i]['name']	= $pack_item->name;
 				$pack_items[$i]['reference'] = $pack_item->reference;
 
-				$cover = Product::getCover($pack_item->id);
-				$pack_items[$i]['image'] = Context::getContext()->link->getImageLink($pack_item->link_rewrite, $cover['id_image'] , 'home_default');
+				$cover = $pack_item->id_pack_product_attribute ? Product::getCombinationImageById($pack_item->id_pack_product_attribute, Context::getContext()->language->id) : Product::getCover($pack_item->id);
+				$pack_items[$i]['image'] = Context::getContext()->link->getImageLink($pack_item->link_rewrite, $cover['id_image'], 'home_default');
 				// @todo: don't rely on 'home_default'
 				//$path_to_image = _PS_IMG_DIR_.'p/'.Image::getImgFolderStatic($cover['id_image']).(int)$cover['id_image'].'.jpg';
 				//$pack_items[$i]['image'] = ImageManager::thumbnail($path_to_image, 'pack_mini_'.$pack_item->id.'_'.$this->context->shop->id.'.jpg', 120);
@@ -4709,17 +4709,19 @@ class AdminProductsControllerCore extends AdminController
 			$product->setDefaultAttribute(0);//reset cache_default_attribute
 			$items = Tools::getValue('inputPackItems');
 			$lines = array_unique(explode('-', $items));
-			// lines is an array of string with format : QTYxID
+
+			// lines is an array of string with format : QTYxIDxID_PRODUCT_ATTRIBUTE
 			if (count($lines))
 				foreach ($lines as $line)
 					if (!empty($line))
 					{
-						list($qty, $item_id) = explode('x', $line);
+						$item_id_attribute = 0;
+						count($array = explode('x', $line)) == 3 ? list($qty, $item_id, $item_id_attribute) = $array : list($qty, $item_id) = $array;
 						if ($qty > 0 && isset($item_id))
 						{
 							if (Pack::isPack((int)$item_id))
 								$this->errors[] = Tools::displayError('You can\'t add product packs into a pack');
-							elseif (!Pack::addItem((int)$product->id, (int)$item_id, (int)$qty))
+							elseif (!Pack::addItem((int)$product->id, (int)$item_id, (int)$item_id_attribute,(int)$qty))
 								$this->errors[] = Tools::displayError('An error occurred while attempting to add products to the pack.');
 						}
 					}
