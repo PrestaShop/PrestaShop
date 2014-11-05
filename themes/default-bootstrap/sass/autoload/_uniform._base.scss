@@ -186,7 +186,7 @@ div#{$class-wrapper} {
 	&#{$class-button},
 	&#{$class-radio},
 	&#{$class-upload} {
-		
+
 		vertical-align: middle;
 
 		/* Keeping this as :focus to remove browser styles */
@@ -223,7 +223,7 @@ div#{$class-wrapper} {
 	outline: 0;
 
 	@include whenActive {
-		
+
 	}
 }
 
@@ -282,7 +282,7 @@ div#{$class-wrapper}#{$class-select} {
 			background-position: right (-1 * $select-height);
 		}
 
-		@include whenActive {	
+		@include whenActive {
 			span {
 				background-position: right (-1 * $select-height);
 			}
@@ -304,25 +304,25 @@ div#{$class-select1} {
 		span {
 			background-position: right (-3 * $select-height);
 		}
-	
+
 		@include whenActive {
 			span {
 				background-position: right (-4 * $select-height);
 			}
 		}
-	
+
 		@include whenHover {
 			span {
 				background-position: right (-4 * $select-height);
 			}
-	
-			@include whenActive {	
+
+			@include whenActive {
 				span {
 					background-position: right (-4 * $select-height);
 				}
 			}
 		}
-	
+
 		@include whenDisabled {
 			background-position: 0 (-5 * $select-height);
 			span {
@@ -340,25 +340,25 @@ div#{$class-select2} {
 		span {
 			background-position: right (-6 * $select-height);
 		}
-	
+
 		@include whenActive {
 			span {
 				background-position: right (-7 * $select-height);
 			}
 		}
-	
+
 		@include whenHover {
 			span {
 				background-position: right (-7 * $select-height);
 			}
-	
-			@include whenActive {	
+
+			@include whenActive {
 				span {
 					background-position: right (-7 * $select-height);
 				}
 			}
 		}
-	
+
 		@include whenDisabled {
 			background-position: 0 (-8 * $select-height);
 			span {
@@ -375,25 +375,25 @@ div#{$class-select3} {
 		span {
 			background-position: right (-11 * $select-height);
 		}
-	
+
 		@include whenActive {
 			span {
 				background-position: right (-12 * $select-height);
 			}
 		}
-	
+
 		@include whenHover {
 			span {
 				background-position: right (-12* $select-height);
 			}
-	
-			@include whenActive {	
+
+			@include whenActive {
 				span {
 					background-position: right (-12 * $select-height);
 				}
 			}
 		}
-	
+
 		@include whenDisabled {
 			background-position: 0 (-13 * $select-height);
 			span {
@@ -433,7 +433,7 @@ div#{$class-wrapper}#{$class-checkbox} {
 	@include whenActive {
 		span {
 			background-position: (-1 * $checkbox-width) ($checkbox-voffset + $radio-height);
-		
+
 			@include whenChecked {
 				background-position: (-1 * $checkbox-width) ($checkbox-voffset + $radio-height);
 			}
@@ -625,7 +625,7 @@ div#{$class-wrapper}#{$class-button} {
 		background-position: 0 ($button-voffset + (-6 * $button-height));
 
 		span {
-			background-position: right ($button-voffset + (-2 * $button-height)); 
+			background-position: right ($button-voffset + (-2 * $button-height));
 		}
 	}
 
