@@ -1,12 +1,14 @@
 /* lnk on detail product page */
-#wishlist_button {
+#wishlist_button, #wishlist_button_nopop {
   font-weight: 700;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
-  margin-left: 55px;
-  margin-bottom: 5px; }
-  #wishlist_button:before {
+  background-color: transparent;
+  border-color: transparent;
+  margin: auto;
+  outline: 0; }
+  #wishlist_button:before, #wishlist_button_nopop:before {
     content: "\f08a";
     font: 400 15px/31px "FontAwesome";
     color: #fff;
