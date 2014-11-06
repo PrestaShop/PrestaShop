@@ -173,8 +173,13 @@ class CartCore extends ObjectModel
 				$this->save();
 			}
 		}
-		$this->_taxCalculationMethod = Group::getPriceDisplayMethod(Group::getCurrent()->id);
 
+		$this->setTaxCalculationMethod();
+	}
+
+	public function setTaxCalculationMethod()
+	{
+		$this->_taxCalculationMethod = Group::getPriceDisplayMethod(Group::getCurrent()->id);
 	}
 
 	public function add($autodate = true, $null_values = false)
