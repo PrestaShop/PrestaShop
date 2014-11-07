@@ -125,7 +125,7 @@
 	{if ($product['product_quantity_return'] + $product['product_quantity_refunded'] >= $product['product_quantity'])}
 		<input type="hidden" name="cancelQuantity[{$product['id_order_detail']}]" value="0" />
 	{elseif (!$order->hasBeenDelivered() OR Configuration::get('PS_ORDER_RETURN'))}
-		<input type="text" id="cancelQuantity_{$product['id_order_detail']}" name="cancelQuantity[{$product['id_order_detail']}]" onclick="selectCheckbox(this);" value="" />
+		<input type="text" id="cancelQuantity_{$product['id_order_detail']}" name="cancelQuantity[{$product['id_order_detail']}]" onchange="checkTotalRefundProductQuantity(this)" value="" />
 	{/if}
 
 	{if $product['customizationQuantityTotal']}
