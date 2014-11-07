@@ -102,7 +102,7 @@
 		<value>0</value>
 	</configuration>
 	<configuration id="PS_ORDER_RETURN_NB_DAYS" name="PS_ORDER_RETURN_NB_DAYS">
-		<value>7</value>
+		<value>14</value>
 	</configuration>
 	<configuration id="PS_MAIL_TYPE" name="PS_MAIL_TYPE">
 		<value>3</value>
