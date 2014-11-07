@@ -662,8 +662,10 @@ class AdminOrdersControllerCore extends AdminController
 							$this->reinjectQuantity($order_detail, $order_detail_list[$id_order_detail]['quantity']);
 					}
 
-					if (Tools::isSubmit('refund_voucher_off'))
+					if ((int)Tools::getValue('refund_voucher_off') == 1)
 						$amount -= (float)Tools::getValue('order_discount_price');
+					elseif ((int)Tools::getValue('refund_voucher_off') == 2)
+						$amount = (float)Tools::getValue('refund_voucher_choose');
 
 					$shipping_cost_amount = (float)str_replace(',', '.', Tools::getValue('partialRefundShippingCost'));
 					if ($shipping_cost_amount > 0)
@@ -739,8 +741,6 @@ class AdminOrdersControllerCore extends AdminController
 							}
 						}
 					}
-					elseif (Tools::isSubmit('refund_voucher_off'))
-						$this->errors[] = Tools::displayError('You cannot generate a voucher for this refund as the amount is lower than the initial voucher from the order.');
 					else
 						$this->errors[] = Tools::displayError('You have to enter an amount if you want to create a partial credit slip.');
 
@@ -878,8 +878,12 @@ class AdminOrdersControllerCore extends AdminController
 						if (Tools::isSubmit('generateCreditSlip') && !count($this->errors))
 						{
 							$product_list = array();
-							if (Tools::isSubmit('refund_voucher_off'))
-								$amount = $order_detail->unit_price_tax_incl * $full_quantity_list[$id_order_detail] - (float)Tools::getValue('order_discount_price');
+							$amount = $order_detail->unit_price_tax_incl * $full_quantity_list[$id_order_detail];
+
+							if ((int)Tools::getValue('refund_total_voucher_off') == 1)
+								$amount -= (float)Tools::getValue('order_discount_price');
+							elseif ((int)Tools::getValue('refund_total_voucher_off') == 2)
+								$amount = (float)Tools::getValue('refund_voucher_choose');
 
 							foreach ($full_product_list as $id_order_detail)
 							{
@@ -949,8 +953,10 @@ class AdminOrdersControllerCore extends AdminController
 							if (Tools::isSubmit('shippingBack'))
 								$total += $order->total_shipping;
 
-							if (Tools::isSubmit('refund_voucher_off'))
+							if ((int)Tools::getValue('refund_total_voucher_off') == 1)
 								$total -= (float)Tools::getValue('order_discount_price');
+							elseif ((int)Tools::getValue('refund_total_voucher_off') == 2)
+								$total = (float)Tools::getValue('refund_total_voucher_choose');
 
 							$cartrule->reduction_amount = $total;
 							$cartrule->reduction_tax = true;
