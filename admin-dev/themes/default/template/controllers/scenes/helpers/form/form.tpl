@@ -38,8 +38,8 @@
 		startingData = new Array();
 		{foreach from=$products item=product key=key}
 			startingData[{$key}] = new Array(
-				'{$product.details->name}', 
-				'{$product.id_product}', 
+				'{$product.details->name|@addcslashes:'\''}',
+				'{$product.id_product|intval}',
 				{$product.x_axis},
 				{$product.y_axis},
 				{$product.zone_width},
