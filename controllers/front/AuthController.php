@@ -91,7 +91,9 @@ class AuthControllerCore extends FrontController
 
 		$this->assignCountries();
 
-		$this->context->smarty->assign('newsletter', 1);
+		$newsletter = Configuration::get('PS_CUSTOMER_NWSL') || (Module::isInstalled('blocknewsletter') && Module::getInstanceByName('blocknewsletter')->active);
+		$this->context->smarty->assign('newsletter', $newsletter);
+		$this->context->smarty->assign('optin', (bool)Configuration::get('PS_CUSTOMER_OPTIN'));
 
 		$back = Tools::getValue('back');
 		$key = Tools::safeOutput(Tools::getValue('key'));
