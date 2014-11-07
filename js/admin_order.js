@@ -856,22 +856,8 @@ $(document).ready(function() {
 			$('.partial_refund_fields').hide();
 			$('.standard_refund_fields').fadeIn();
 		}
-
 		if (order_discount_price)
-			$('.container-command-top-spacing').submit(function(e) {
-				e.preventDefault();
-				var that = $(this);
-				$.alerts.okButton= okButton;
-				$.alerts.cancelButton= cancelButton;
-				jConfirm(alertMsg, alertTitle, function(confirm){
-					if (confirm === false) {
-						that.append('<input type="hidden" name="refund_voucher_off"/>');
-						that.append('<input type="hidden" name="order_discount_price" value=' + order_discount_price + '/>');
-					}
-					that.append('<input type="hidden" name="cancelProduct" value="Refund products"/>');
-					that.unbind('submit').submit();
-				});
-			});
+			actualizeTotalRefundVoucher();
 	});
 
 	$('#desc-order-partial_refund').click(function() {
@@ -890,20 +876,7 @@ $(document).ready(function() {
 		}
 
 		if (order_discount_price)
-			$('.container-command-top-spacing').submit(function(e) {
-				e.preventDefault();
-				var that = $(this);
-				$.alerts.okButton= okButton;
-				$.alerts.cancelButton= cancelButton;
-				jConfirm(alertMsg, alertTitle, function(confirm){
-					if (confirm === false) {
-						that.append('<input type="hidden" name="refund_voucher_off"/>');
-						that.append('<input type="hidden" name="order_discount_price" value=' + order_discount_price + '/>');
-					}
-					that.append('<input type="hidden" name="partialRefund"/>');
-					that.unbind('submit').submit();
-				});
-			});
+			actualizeRefundVoucher();
 	});
 });
 
@@ -911,9 +884,83 @@ function checkPartialRefundProductQuantity(it)
 {
 	if (parseInt($(it).val()) > parseInt($(it).closest('td').find('.partialRefundProductQuantity').val()))
 		$(it).val($(it).closest('td').find('.partialRefundProductQuantity').val());
+	if (order_discount_price)
+		actualizeRefundVoucher();
 }
+
 function checkPartialRefundProductAmount(it)
 {
 	if (parseInt($(it).val()) > parseInt($(it).closest('td').find('.partialRefundProductAmount').val()))
 		$(it).val($(it).closest('td').find('.partialRefundProductAmount').val());
+	if (order_discount_price)
+		actualizeRefundVoucher();
+}
+
+
+function actualizeRefundVoucher()
+{
+	var total = 0.0;
+	$('.edit_product_price_tax_incl.edit_product_price').each(function(){
+		quantity_refund_product = parseFloat($(this).closest('td').parent().find('td.partial_refund_fields.current-edit').find('input[onchange="checkPartialRefundProductQuantity(this)"]').val());
+		if (quantity_refund_product > 0)
+		{
+			current_amount = parseFloat($(this).closest('td').parent().find('td.partial_refund_fields.current-edit').find('input[onchange="checkPartialRefundProductAmount(this)"]').val()) ?
+			parseFloat($(this).closest('td').parent().find('td.partial_refund_fields.current-edit').find('input[onchange="checkPartialRefundProductAmount(this)"]').val())
+			: parseFloat($(this).val());
+			total += current_amount * quantity_refund_product;
+		}
+	});
+	$('#total_refund_1').remove();
+	$('#lab_refund_1').append('<span id="total_refund_1">' + formatCurrency(total, currency_format, currency_sign, currency_blank) + '</span>');
+	$('#total_refund_2').remove();
+	if (parseFloat(total - order_discount_price) > 0.0) {
+		document.getElementById('refund_2').disabled = false;
+		$('#lab_refund_2').append('<span id="total_refund_2">' + formatCurrency((total - order_discount_price), currency_format, currency_sign, currency_blank) + '</span>');
+	}
+	else {
+		if (document.getElementById('refund_2').checked === true)
+			document.getElementById('refund_1').checked = true;
+		document.getElementById('refund_2').disabled = true;
+		$('#lab_refund_2').append('<span id="total_refund_2">' + errorRefund + '</span>');
+	}
+}
+
+function actualizeTotalRefundVoucher()
+{
+	var total = 0.0;
+	$('.edit_product_price_tax_incl.edit_product_price').each(function(){
+		quantity_refund_product = parseFloat($(this).closest('td').parent().find('td.cancelQuantity').children().val());
+		if (typeof quantity_refund_product !== 'undefined' && quantity_refund_product > 0)
+			total += $(this).val() * quantity_refund_product;
+	});
+	$('#total_refund_1').remove();
+	$('#lab_refund_total_1').append('<span id="total_refund_1">' + formatCurrency(total, currency_format, currency_sign, currency_blank) + '</span>');
+	$('#total_refund_2').remove();
+	if (parseFloat(total - order_discount_price) > 0.0) {
+		document.getElementById('refund_total_2').disabled = false;
+		$('#lab_refund_total_2').append('<span id="total_refund_2">' + formatCurrency((total - order_discount_price), currency_format, currency_sign, currency_blank) + '</span>');
+	}
+	else {
+		if (document.getElementById('refund_total_2').checked === true)
+			document.getElementById('refund_total_1').checked = true;
+		document.getElementById('refund_2').disabled = true;
+		$('#lab_refund_total_2').append('<span id="total_refund_2">' + errorRefund + '</span>');
+	}
+	console.log('test');
+}
+
+function setCancelQuantity(itself, id_order_detail, quantity)
+{
+	$('#cancelQuantity_' + id_order_detail).val($(itself).prop('checked') ? quantity : '');
+	if (order_discount_price)
+		actualizeTotalRefundVoucher();
+}
+
+function checkTotalRefundProductQuantity(it)
+{
+	$(it).parent().parent().find('td.cancelCheck input[type=checkbox]').attr("checked", true);
+	if (parseInt($(it).val()) > parseInt($(it).closest('td').find('.partialRefundProductQuantity').val()))
+		$(it).val($(it).closest('td').find('.partialRefundProductQuantity').val());
+	if (order_discount_price)
+		actualizeTotalRefundVoucher();
 }
