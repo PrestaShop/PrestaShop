@@ -414,6 +414,7 @@ class AdminCustomersControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
+					'disabled' =>  (bool)!Configuration::get('PS_CUSTOMER_NWSL'),
 					'hint' => $this->l('This customer will receive your newsletter via email.')
 				),
 				array(
@@ -435,6 +436,7 @@ class AdminCustomersControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
+					'disabled' =>  (bool)!Configuration::get('PS_CUSTOMER_OPTIN'),
 					'hint' => $this->l('This customer will receive your ads via email.')
 				),
 			)
