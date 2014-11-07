@@ -317,7 +317,7 @@ abstract class ModuleCore
 
 		Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_module`, `view`, `configure`, `uninstall`) (
-				SELECT id_profile, '.(int)$this->id.', 1, 0, 1
+				SELECT id_profile, '.(int)$this->id.', 1, 0, 0
 				FROM '._DB_PREFIX_.'access a
 				WHERE id_tab = (
 					SELECT `id_tab` FROM '._DB_PREFIX_.'tab
