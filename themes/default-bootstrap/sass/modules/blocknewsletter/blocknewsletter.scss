@@ -57,12 +57,11 @@
 			margin-bottom: 0;
 			.form-control {
 				height: 45px;
-				line-height: 30px;
 				max-width: 267px;
 				background: #3c3c3c;
 				border-color: #515151;
 				color: $light-text-color;
-				padding: 5px 43px 5px 12px;
+				padding: 10px 43px 10px 12px;
 				display: inline-block;
 				float: left;
 				&:focus {
