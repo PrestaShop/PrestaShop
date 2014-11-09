@@ -48,14 +48,6 @@
 		{if isset($isVirtualCart) && $isVirtualCart}
 			<p class="alert alert-warning">{l s='No carrier is needed for this order.'}</p>
 		{else}
-			{if $recyclablePackAllowed}
-				<div class="checkbox">
-					<label for="recyclable">
-						<input type="checkbox" name="recyclable" id="recyclable" value="1" {if $recyclable == 1}checked="checked"{/if} />
-						{l s='I would like to receive my order in recycled packaging.'}.
-					</label>
-				</div>
-			{/if}
 			<div class="delivery_options_address">
 				{if isset($delivery_option_list)}
 					{foreach $delivery_option_list as $id_address => $option_list}
