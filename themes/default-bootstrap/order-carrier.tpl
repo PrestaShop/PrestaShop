@@ -285,9 +285,23 @@
 							{if isset($oldMessage)}{$oldMessage|escape:'html':'UTF-8'}{/if}
 						{/strip}</textarea>
 					</div>
-					<hr style="" />
 				{/if}
+					{if $recyclablePackAllowed}
+						{if $opc}
+							<hr style="" />
+						{/if}
+						<p class="carrier_title">{l s='Recycled packaging' mod='eu_legal'}</p>
+						<p class="checkbox gift">
+							<input type="checkbox" name="recyclable" id="recyclable" value="1" {if $recyclable == 1}checked="checked"{/if} />
+							<label for="recyclable">
+								{l s='I would like to receive my order in recycled packaging.' mod='eu_legal'}
+							</label>
+						</p>
+					{/if}
 					{if $giftAllowed}
+						{if $opc}
+							<hr style="" />
+						{/if}
 						<p class="carrier_title">{l s='Gift'}</p>
 						<p class="checkbox gift">
 							<input type="checkbox" name="gift" id="gift" value="1" {if $cart->gift == 1}checked="checked"{/if} />
@@ -317,13 +331,13 @@
 							<label for="gift_message">{l s='If you\'d like, you can add a note to the gift:'}</label>
 							<textarea rows="2" cols="120" id="gift_message" class="form-control" name="gift_message">{$cart->gift_message|escape:'html':'UTF-8'}</textarea>
 						</p>
-						{if $opc}
-							<hr style="" />
-						{/if}
 					{/if}
 				{/if}
 			{/if}
 			{if $conditions AND $cms_id}
+				{if $opc}
+					<hr style="" />
+				{/if}
 				<p class="carrier_title">{l s='Terms of service'}</p>
 				<p class="checkbox">
 					<input type="checkbox" name="cgv" id="cgv" value="1" {if $checkedTOS}checked="checked"{/if} />
