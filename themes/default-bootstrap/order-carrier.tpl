@@ -295,7 +295,6 @@
 					</div>
 					<hr style="" />
 				{/if}
-				<div id="extra_carrier" style="display: none;"></div>
 					{if $giftAllowed}
 						<p class="carrier_title">{l s='Gift'}</p>
 						<p class="checkbox gift">
