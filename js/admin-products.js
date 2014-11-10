@@ -1214,7 +1214,7 @@ product_tabs['Pack'] = new function() {
 	this.bindPackEvents = function () {
 
 		$('.delPackItem').on('click', function() {
-			delPackItem($(this).data('delete'));
+			delPackItem($(this).data('delete'), $(this).data('delete-attr'));
 		});
 
 		function productFormatResult(item) {
@@ -1287,13 +1287,17 @@ product_tabs['Pack'] = new function() {
 					error_modal(error_heading_msg, msg_set_quantity);
 					return false;
 				}
+
+				if (typeof selectedProduct.id_product_attribute === 'undefined')
+					selectedProduct.id_product_attribute = 0;
+
 				var divContent = $('#divPackItems').html();
 				divContent += '<li class="product-pack-item media-product-pack" data-product-name="' + selectedProduct.name + '" data-product-qty="' + selectedProduct.qty + '" data-product-id="' + selectedProduct.id + '" data-product-id-attribute="' + selectedProduct.id_product_attribute + '">';
 				divContent += '<img class="media-product-pack-img" src="' + selectedProduct.image +'"/>';
 				divContent += '<span class="media-product-pack-title">' + selectedProduct.name + '</span>';
 				divContent += '<span class="media-product-pack-ref">REF: ' + selectedProduct.ref + '</span>';
 				divContent += '<span class="media-product-pack-quantity"><span class="text-muted">x</span> ' + selectedProduct.qty + '</span>';
-				divContent += '<button type="button" class="btn btn-default delPackItem media-product-pack-action" data-delete="' + selectedProduct.id + '" ><i class="icon-trash"></i></button>';
+				divContent += '<button type="button" class="btn btn-default delPackItem media-product-pack-action" data-delete="' + selectedProduct.id + '" data-delete-attr="' + selectedProduct.id_product_attribute + '"><i class="icon-trash"></i></button>';
 				divContent += '</li>';
 
 				// QTYxID-QTYxID
@@ -1309,7 +1313,7 @@ product_tabs['Pack'] = new function() {
 				$('.delPackItem').on('click', function(e){
 					e.preventDefault();
 					e.stopPropagation();
-					delPackItem($(this).data('delete'));
+					delPackItem($(this).data('delete'), $(this).data('delete-attr'));
 				})
 				selectedProduct = null;
 				$('#curPackItemName').select2("val", "");
@@ -1320,7 +1324,7 @@ product_tabs['Pack'] = new function() {
 			}
 		}
 
-		function delPackItem(id) {
+		function delPackItem(id, id_attribute) {
 
 			var reg = new RegExp('-', 'g');
 			var regx = new RegExp('x', 'g');
@@ -1333,17 +1337,16 @@ product_tabs['Pack'] = new function() {
 
 			input.val(null);
 			name.val(null);
-
 			for (var i = 0; i < inputCut.length; ++i)
 				if (inputCut[i]) {
 					var inputQty = inputCut[i].split(regx);
-					if (inputQty[1] != id) {
+					if (inputQty[1] != id || inputQty[2] != id_attribute) {
 						input.val( input.val() + inputCut[i] + '-' );
 						name.val( name.val() + nameCut[i] + '¤');
 					}
 				}
 
-			var elem = $('.product-pack-item[data-product-id = "' + id + '"]');
+			var elem = $('.product-pack-item[data-product-id="' + id + '"][data-product-id-attribute="' + id_attribute + '"]');
 			elem.remove();
 
 			if ($('.product-pack-item').length === 0){

@@ -3246,7 +3246,7 @@ class AdminProductsControllerCore extends AdminController
 				$pack_items[$i]['pack_quantity'] = $pack_item->pack_quantity;
 				$pack_items[$i]['name']	= $pack_item->name;
 				$pack_items[$i]['reference'] = $pack_item->reference;
-
+				$pack_items[$i]['id_product_attribute'] = isset($pack_item->id_pack_product_attribute) && $pack_item->id_pack_product_attribute ? $pack_item->id_pack_product_attribute : 0;
 				$cover = $pack_item->id_pack_product_attribute ? Product::getCombinationImageById($pack_item->id_pack_product_attribute, Context::getContext()->language->id) : Product::getCover($pack_item->id);
 				$pack_items[$i]['image'] = Context::getContext()->link->getImageLink($pack_item->link_rewrite, $cover['id_image'], 'home_default');
 				// @todo: don't rely on 'home_default'
@@ -3278,7 +3278,7 @@ class AdminProductsControllerCore extends AdminController
 			$input_pack_items = '';
 			foreach ($pack_items as $pack_item)
 			{
-				$input_pack_items .= $pack_item['pack_quantity'].'x'.$pack_item['id'].'-';
+				$input_pack_items .= $pack_item['pack_quantity'].'x'.$pack_item['id'].'x'.$pack_item['id_product_attribute'].'-';
 				$input_namepack_items .= $pack_item['pack_quantity'].' x '.$pack_item['name'].'¤';
 			}
 		}
