@@ -2654,26 +2654,27 @@ class AdminThemesControllerCore extends AdminController
 	protected function updateLogo($field_name, $logo_prefix)
 	{
 		$id_shop = Context::getContext()->shop->id;
-		if (isset($_FILES[$field_name]['tmp_name']) && $_FILES[$field_name]['tmp_name'])
+		if (isset($_FILES[$field_name]['tmp_name']) && $_FILES[$field_name]['tmp_name'] && $_FILES[$field_name]['size'])
 		{
 			if ($error = ImageManager::validateUpload($_FILES[$field_name], Tools::getMaxUploadSize()))
 			{
 				$this->errors[] = $error;
 				return false;
 			}
-
 			$tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
+
 			if (!$tmp_name || !move_uploaded_file($_FILES[$field_name]['tmp_name'], $tmp_name))
 				return false;
 
+			$file_name = basename(Tools::strtolower(str_replace('PS_', '', $field_name)));
 			$ext = ($field_name == 'PS_STORES_ICON') ? '.gif' : '.jpg';
 			$logo_name = Tools::link_rewrite(Context::getContext()->shop->name).'-'
-				.Configuration::get('PS_IMG_UPDATE_TIME').'-'.(int)$id_shop.$ext;
+				.$file_name.'-'.(int)Configuration::get('PS_IMG_UPDATE_TIME').(int)$id_shop.$ext;
 
 			if (Context::getContext()->shop->getContext() == Shop::CONTEXT_ALL || $id_shop == 0
 				|| Shop::isFeatureActive() == false)
 				$logo_name = Tools::link_rewrite(Context::getContext()->shop->name).'-'
-					.Configuration::get('PS_IMG_UPDATE_TIME').$ext;
+				.$file_name.'-'.(int)Configuration::get('PS_IMG_UPDATE_TIME').$ext;
 
 			if ($field_name == 'PS_STORES_ICON')
 			{
