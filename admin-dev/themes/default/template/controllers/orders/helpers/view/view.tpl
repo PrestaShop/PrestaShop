@@ -58,10 +58,8 @@
 								{else}
 									{$order->total_discounts_tax_incl}
 								{/if};
-	var okButton = "{l s='Yes'}";
-	var cancelButton = "{l s='No'}";
-	var alertTitle = "{l s='Voucher refund'}";
-	var alertMsg = "{l s='Do you want to refund the voucher?'}";
+
+	var errorRefund = "{l s='You can\'t refund without a voucher if the total of the selected product is less than the voucher that was apply on the order'}";
 	</script>
 
 	{assign var="hook_invoice" value={hook h="displayInvoice" id_order=$order->id}}
@@ -1120,7 +1118,34 @@
 									{l s='Repay shipping costs'}
 								</label>
 							</p>
+							{if $order->total_discounts_tax_excl > 0 || $order->total_discounts_tax_incl > 0}
+							<p class="radio">
+								<label id="lab_refund_total_1" for="refund_total_1">
+									<input type="radio" value="0" name="refund_total_voucher_off" id="refund_total_1" checked="checked" />
+									{l s='With voucher refund: '}
+								</label>
+							</p>
+							<p class="radio">
+								<label id="lab_refund_total_2" for="refund_total_2">
+									<input type="radio" value="1" name="refund_total_voucher_off" id="refund_total_2"/>
+									{l s='With voucher not refund: '}
+								</label>
+							</p>
+							<div class="radio-inline row">
+								<label id="lab_refund_total_3" class="col-lg-3" for="refund_total_3">
+									{l s='Amount of your choice: '}
+									<input type="radio" value="2" name="refund_total_voucher_off" id="refund_total_3"/>
+								</label>
+								<div class="input-group col-lg-9">
+									<div class="input-group-addon">
+										{$currency->prefix}
+										{$currency->suffix}
+									</div>
+									<input type="text" class="input fixed-width-md" name="refund_total_voucher_choose" value="0"/>
+								</div>
+							</div>
 							{/if}
+						{/if}
 						</div>
 						{if (!$order->hasBeenDelivered() || ($order->hasBeenDelivered() && Configuration::get('PS_ORDER_RETURN')))}
 						<div class="row">
@@ -1141,6 +1166,34 @@
 								{l s='Generate a voucher'}
 							</label>
 						</p>
+						{if $order->total_discounts_tax_excl > 0 || $order->total_discounts_tax_incl > 0}
+						<p class="radio">
+							<label id="lab_refund_1" for="refund_1">
+								<input type="radio" value="0" name="refund_voucher_off" id="refund_1" checked="checked" />
+								{l s='With voucher refund: '}
+							</label>
+						</p>
+						<p class="radio">
+							<label id="lab_refund_2" for="refund_2">
+								<input type="radio" value="1" name="refund_voucher_off" id="refund_2"/>
+								{l s='With voucher not refund: '}
+							</label>
+						</p>
+						<div class="radio-inline row">
+							<label id="lab_refund_3" class="col-lg-3" for="refund_3">
+								{l s='Amount of your choice: '}
+								<input type="radio" value="2" name="refund_voucher_off" id="refund_3"/>
+							</label>
+							<div class="input-group col-lg-9">
+								<div class="input-group-addon">
+									{$currency->prefix}
+									{$currency->suffix}
+								</div>
+								<input type="text" class="input fixed-width-md" name="refund_voucher_choose" value="0"/>
+							</div>
+						</div>
+						{/if}
+						<br/>
 						<button type="submit" name="partialRefund" class="btn btn-default">
 							<i class="icon-check"></i> {l s='Partial refund'}
 						</button>
