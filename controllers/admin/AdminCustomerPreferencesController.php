@@ -96,6 +96,20 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
+					'PS_CUSTOMER_NWSL' => array(
+						'title' => $this->l('Enable newsletter registration'),
+						'hint' => $this->l('Activate or deactivate newsletter registration.'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
+					'PS_CUSTOMER_OPTIN' => array(
+						'title' => $this->l('Enable optin registration'),
+						'hint' => $this->l('Activate or deactivate optin registration.'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
 				),
 				'submit' => array('title' => $this->l('Save')),
 			),
