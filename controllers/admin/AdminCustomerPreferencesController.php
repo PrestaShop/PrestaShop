@@ -104,8 +104,8 @@ class AdminCustomerPreferencesControllerCore extends AdminController
 						'type' => 'bool'
 					),
 					'PS_CUSTOMER_OPTIN' => array(
-						'title' => $this->l('Enable optin registration'),
-						'hint' => $this->l('Activate or deactivate optin registration.'),
+						'title' => $this->l('Enable opt-in registration'),
+						'hint' => $this->l('Activate or deactivate opt-in registration.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
