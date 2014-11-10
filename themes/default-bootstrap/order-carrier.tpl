@@ -291,7 +291,7 @@
 							<hr style="" />
 						{/if}
 						<p class="carrier_title">{l s='Recycled packaging'}</p>
-						<p class="checkbox gift">
+						<p class="checkbox recyclable">
 							<input type="checkbox" name="recyclable" id="recyclable" value="1" {if $recyclable == 1}checked="checked"{/if} />
 							<label for="recyclable">
 								{l s='I would like to receive my order in recycled packaging.'}
