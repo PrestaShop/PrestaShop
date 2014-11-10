@@ -52,5 +52,8 @@
     <order_state id="On_backorder_unpaid" invoice="0" send_email="1" color="#FF69B4" unremovable="1" hidden="0" logable="0" delivery="0" shipped="0" paid="0">
       <module_name/>
     </order_state>
+    <order_state id="Awaiting_cod_validation" invoice="0" send_email="0" color="#4169E1" unremovable="1" hidden="0" logable="0" delivery="0" shipped="0" paid="0">
+      <module_name>cashondelivery</module_name>
+    </order_state>
   </entities>
 </entity_order_state>

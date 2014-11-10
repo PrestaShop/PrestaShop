@@ -232,6 +232,7 @@ define('_PS_OS_OUTOFSTOCK_UNPAID_',  Configuration::get('PS_OS_OUTOFSTOCK_UNPAID
 define('_PS_OS_BANKWIRE_',    Configuration::get('PS_OS_BANKWIRE'));
 define('_PS_OS_PAYPAL_',      Configuration::get('PS_OS_PAYPAL'));
 define('_PS_OS_WS_PAYMENT_', Configuration::get('PS_OS_WS_PAYMENT'));
+define('_PS_OS_COD_VALIDATION_', Configuration::get('PS_OS_COD_VALIDATION'));
 
 if (!defined('_MEDIA_SERVER_1_'))
 	define('_MEDIA_SERVER_1_', Configuration::get('PS_MEDIA_SERVER_1'));

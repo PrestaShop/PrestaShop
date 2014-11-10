@@ -52,4 +52,8 @@
     <name>Betaling op afstand aanvaard</name>
     <template>payment</template>
   </order_state>
+  <order_state id="Awaiting_cod_validation">
+    <name>Awaiting cod validation</name>
+    <template>cashondelivery</template>
+  </order_state>
 </entity_order_state>
