@@ -8,7 +8,6 @@ INSERT INTO `PREFIX_order_state_lang` (`id_order_state`, `id_lang`, `name`, `tem
 INSERT IGNORE INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES
 ('PS_OS_OUTOFSTOCK_PAID', @id_order_state_oos, NOW(), NOW()),
 ('PS_OS_OUTOFSTOCK_UNPAID', @id_order_state, NOW(), NOW());
-SET NAMES 'utf8';
 
 ALTER TABLE  `PREFIX_module_access` ADD  `uninstall` TINYINT( 1 ) NOT NULL AFTER  `configure`;
 
@@ -28,7 +27,7 @@ ALTER TABLE `PREFIX_product_attribute_shop` MODIFY `unit_price_impact` DECIMAL(2
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_PRICE_DISPLAY_PRECISION', 2, NOW(), NOW());
 
 /* Precision used to be 2, now it can be set freely, so the DB must be ready to accept more decimals */
-ALTER TABLE `PREFIX_orders` 
+ALTER TABLE `PREFIX_orders`
 CHANGE COLUMN `total_discounts` `total_discounts` DECIMAL(20,6) NOT NULL DEFAULT '0.00' ,
 CHANGE COLUMN `total_discounts_tax_incl` `total_discounts_tax_incl` DECIMAL(20,6) NOT NULL DEFAULT '0.00' ,
 CHANGE COLUMN `total_discounts_tax_excl` `total_discounts_tax_excl` DECIMAL(20,6) NOT NULL DEFAULT '0.00' ,
