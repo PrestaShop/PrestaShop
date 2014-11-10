@@ -1119,16 +1119,17 @@
 								</label>
 							</p>
 							{if $order->total_discounts_tax_excl > 0 || $order->total_discounts_tax_incl > 0}
+							<p>{l s='This order has been partially paid by voucher / credit slip. Choose the amount you want to refund:'}</p>
 							<p class="radio">
 								<label id="lab_refund_total_1" for="refund_total_1">
 									<input type="radio" value="0" name="refund_total_voucher_off" id="refund_total_1" checked="checked" />
-									{l s='With voucher refund: '}
+									{l s='Include amount of initial voucher: '}
 								</label>
 							</p>
 							<p class="radio">
 								<label id="lab_refund_total_2" for="refund_total_2">
 									<input type="radio" value="1" name="refund_total_voucher_off" id="refund_total_2"/>
-									{l s='With voucher not refund: '}
+									{l s='Exclude amount of initial voucher: '}
 								</label>
 							</p>
 							<div class="radio-inline row">
@@ -1167,16 +1168,17 @@
 							</label>
 						</p>
 						{if $order->total_discounts_tax_excl > 0 || $order->total_discounts_tax_incl > 0}
+						<p>{l s='This order has been partially paid by voucher / credit slip. Choose the amount you want to refund:'}</p>
 						<p class="radio">
 							<label id="lab_refund_1" for="refund_1">
 								<input type="radio" value="0" name="refund_voucher_off" id="refund_1" checked="checked" />
-								{l s='With voucher refund: '}
+								{l s='Include amount of initial voucher: '}
 							</label>
 						</p>
 						<p class="radio">
 							<label id="lab_refund_2" for="refund_2">
 								<input type="radio" value="1" name="refund_voucher_off" id="refund_2"/>
-								{l s='With voucher not refund: '}
+								{l s='Exclude amount of initial voucher: '}
 							</label>
 						</p>
 						<div class="radio-inline row">
