@@ -48,14 +48,6 @@
 		{if isset($isVirtualCart) && $isVirtualCart}
 			<p class="alert alert-warning">{l s='No carrier is needed for this order.'}</p>
 		{else}
-			{if $recyclablePackAllowed}
-				<div class="checkbox">
-					<label for="recyclable">
-						<input type="checkbox" name="recyclable" id="recyclable" value="1" {if $recyclable == 1}checked="checked"{/if} />
-						{l s='I would like to receive my order in recycled packaging.'}.
-					</label>
-				</div>
-			{/if}
 			<div class="delivery_options_address">
 				{if isset($delivery_option_list)}
 					{foreach $delivery_option_list as $id_address => $option_list}
@@ -285,6 +277,7 @@
 						{/foreach}
 					{/if}
 				</div> <!-- end delivery_options_address -->
+				<div id="extra_carrier" style="display: none;"></div>
 				{if $opc}
 					<p class="carrier_title">{l s='Leave a message'}</p>
 					<div>
@@ -293,46 +286,55 @@
 							{if isset($oldMessage)}{$oldMessage|escape:'html':'UTF-8'}{/if}
 						{/strip}</textarea>
 					</div>
-					<hr style="" />
 				{/if}
-				<div id="extra_carrier" style="display: none;"></div>
-					{if $giftAllowed}
-						<p class="carrier_title">{l s='Gift'}</p>
-						<p class="checkbox gift">
-							<input type="checkbox" name="gift" id="gift" value="1" {if $cart->gift == 1}checked="checked"{/if} />
-							<label for="gift">
-								{l s='I would like my order to be gift wrapped.'}
-								{if $gift_wrapping_price > 0}
-									&nbsp;<i>({l s='Additional cost of'}
-									<span class="price" id="gift-price">
-										{if $priceDisplay == 1}
-											{convertPrice price=$total_wrapping_tax_exc_cost}
-										{else}
-											{convertPrice price=$total_wrapping_cost}
-										{/if}
-									</span>
-									{if $use_taxes && $display_tax_label}
-										{if $priceDisplay == 1}
-											{l s='(tax excl.)'}
-										{else}
-											{l s='(tax incl.)'}
-										{/if}
-									{/if})
-									</i>
-								{/if}
-							</label>
-						</p>
-						<p id="gift_div">
-							<label for="gift_message">{l s='If you\'d like, you can add a note to the gift:'}</label>
-							<textarea rows="2" cols="120" id="gift_message" class="form-control" name="gift_message">{$cart->gift_message|escape:'html':'UTF-8'}</textarea>
-						</p>
-						{if $opc}
-							<hr style="" />
-						{/if}
+				{if $recyclablePackAllowed}
+					<div class="checkbox">
+						<label for="recyclable">
+							<input type="checkbox" name="recyclable" id="recyclable" value="1"{if $recyclable == 1} checked="checked"{/if} />
+							{l s='I would like to receive my order in recycled packaging.'}.
+						</label>
+					</div>
+				{/if}
+				{if $giftAllowed}
+					{if $opc}
+						<hr style="" />
 					{/if}
+					<p class="carrier_title">{l s='Gift'}</p>
+					<p class="checkbox gift">
+						<input type="checkbox" name="gift" id="gift" value="1"{if $cart->gift == 1} checked="checked"{/if} />
+						<label for="gift">
+							{l s='I would like my order to be gift wrapped.'}
+							{if $gift_wrapping_price > 0}
+								&nbsp;<i>({l s='Additional cost of'}
+								<span class="price" id="gift-price">
+									{if $priceDisplay == 1}
+										{convertPrice price=$total_wrapping_tax_exc_cost}
+									{else}
+										{convertPrice price=$total_wrapping_cost}
+									{/if}
+								</span>
+								{if $use_taxes && $display_tax_label}
+									{if $priceDisplay == 1}
+										{l s='(tax excl.)'}
+									{else}
+										{l s='(tax incl.)'}
+									{/if}
+								{/if})
+								</i>
+							{/if}
+						</label>
+					</p>
+					<p id="gift_div">
+						<label for="gift_message">{l s='If you\'d like, you can add a note to the gift:'}</label>
+						<textarea rows="2" cols="120" id="gift_message" class="form-control" name="gift_message">{$cart->gift_message|escape:'html':'UTF-8'}</textarea>
+					</p>
+				{/if}
 				{/if}
 			{/if}
 			{if $conditions AND $cms_id}
+				{if $opc}
+					<hr style="" />
+				{/if}
 				<p class="carrier_title">{l s='Terms of service'}</p>
 				<p class="checkbox">
 					<input type="checkbox" name="cgv" id="cgv" value="1" {if $checkedTOS}checked="checked"{/if} />
