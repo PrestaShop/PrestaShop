@@ -262,11 +262,32 @@ class AdminModulesControllerCore extends AdminController
 		if ($tab_modules_list)
 		{
 			$tab_modules_list = explode(',', $tab_modules_list);
-			$modules_list = $this->getModulesByInstallation($tab_modules_list);
+			$modules_list_unsort = $this->getModulesByInstallation($tab_modules_list);
 		}
 
+		$installed = $uninstalled = array();
+		foreach ($tab_modules_list as $key => $value) {
+			$continue = 0;
+			foreach ($modules_list_unsort['installed'] as $mod_in)
+				if ($mod_in->name == $value)
+				{
+					$continue = 1;
+					$installed[] = $mod_in;
+				}
+			if ($continue)
+				continue;
+			foreach ($modules_list_unsort['not_installed'] as $mod_in)
+				if ($mod_in->name == $value)
+					$uninstalled[] = $mod_in;
+		}
+
+		$modules_list_sort = array(
+			'installed' => $installed,
+			'not_installed' => $uninstalled
+			);
+
 		$this->context->smarty->assign(array(
-			'tab_modules_list' => $modules_list,
+			'tab_modules_list' => $modules_list_sort,
 			'admin_module_favorites_view' => $this->context->link->getAdminLink('AdminModules').'&select=favorites',
 		));
 
