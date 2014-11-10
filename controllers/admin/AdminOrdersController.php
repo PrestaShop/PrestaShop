@@ -238,7 +238,7 @@ class AdminOrdersControllerCore extends AdminController
 
 		$defaults_order_state = array('cheque' => (int)Configuration::get('PS_OS_CHEQUE'),
 												'bankwire' => (int)Configuration::get('PS_OS_BANKWIRE'),
-												'cashondelivery' => (int)Configuration::get('PS_OS_PREPARATION'),
+												'cashondelivery' => Configuration::get('PS_OS_COD_VALIDATION') ? (int)Configuration::get('PS_OS_COD_VALIDATION') : (int)Configuration::get('PS_OS_PREPARATION'),
 												'other' => (int)Configuration::get('PS_OS_PAYMENT'));
 		$payment_modules = array();
 		foreach (PaymentModule::getInstalledPaymentModules() as $p_module)
