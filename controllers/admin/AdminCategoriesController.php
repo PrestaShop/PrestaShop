@@ -84,6 +84,7 @@ class AdminCategoriesControllerCore extends AdminController
 				'type' => 'bool',
 				'class' => 'fixed-width-xs',
 				'align' => 'center',
+				'ajax' => true,
 				'orderby' => false
 			)
 		);
@@ -819,5 +820,22 @@ class AdminCategoriesControllerCore extends AdminController
 		}
 		else
 			die('{"hasError" : true, "errors" : "This category can not be loaded"}');
+	}
+
+	public function ajaxProcessStatusCategory()
+	{
+		if (!$id_category = (int)Tools::getValue('id_category'))
+			die(Tools::jsonEncode(array('success' => false, 'error' => true, 'text' => $this->l('The status hasn\'t been updated successfully'))));
+		else
+		{
+			$category = new Category((int)$id_category);
+			if (Validate::isLoadedObject($category))
+			{
+				$category->active = $category->active == 1 ? 0 : 1;
+				$category->save() ?
+				die(Tools::jsonEncode(array('success' => true, 'text' => $this->l('The status has been updated successfully')))) :
+				die(Tools::jsonEncode(array('success' => false, 'error' => true, 'text' => $this->l('The status hasn\'t been updated successfully'))));
+			}
+		}
 	}
 }
