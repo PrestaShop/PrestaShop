@@ -300,7 +300,7 @@ class SearchCore
 		$alias = '';
 		if ($order_by == 'price')
 			$alias = 'product_shop.';
-		else if ($order_by == 'date_upd')
+		elseif (in_array($order_by, array('date_upd', 'date_add')))
 			$alias = 'p.';
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, 
 				pl.`description_short`, pl.`available_now`, pl.`available_later`, pl.`link_rewrite`, pl.`name`,
