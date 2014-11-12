@@ -543,7 +543,7 @@ class AdminProductsControllerCore extends AdminController
 				{
 					if ($_FILES['attachment_file']['size'] > (Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024))
 						$_FILES['attachment_file']['error'][] = sprintf(
-							$this->l('The file is too large. Maximum size allowed is: %1$d kB. The file you\'re trying to upload is: %2$d kB.'),
+							$this->l('The file is too large. Maximum size allowed is: %1$d kB. The file you are trying to upload is %2$d kB.'),
 							(Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024),
 							number_format(($_FILES['attachment_file']['size'] / 1024), 2, '.', '')
 						);
@@ -690,7 +690,7 @@ class AdminProductsControllerCore extends AdminController
 					$physical_quantity = $stock_manager->getProductPhysicalQuantities($object->id, 0);
 					$real_quantity = $stock_manager->getProductRealQuantities($object->id, 0);
 					if ($physical_quantity > 0 || $real_quantity > $physical_quantity)
-						$this->errors[] = Tools::displayError('You cannot delete this product because there\'s physical stock left.');
+						$this->errors[] = Tools::displayError('You cannot delete this product because there is physical stock left.');
 				}
 
 				if (!count($this->errors))
@@ -4717,7 +4717,7 @@ class AdminProductsControllerCore extends AdminController
 						if ($qty > 0 && isset($item_id))
 						{
 							if (Pack::isPack((int)$item_id))
-								$this->errors[] = Tools::displayError('You can\'t add product packs into a pack');
+								$this->errors[] = Tools::displayError('You cannot add product packs into a pack');
 							elseif (!Pack::addItem((int)$product->id, (int)$item_id, (int)$qty))
 								$this->errors[] = Tools::displayError('An error occurred while attempting to add products to the pack.');
 						}
