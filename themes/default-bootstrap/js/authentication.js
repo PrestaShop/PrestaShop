@@ -40,7 +40,7 @@ function submitFunction()
 		cache: false,
 		dataType : "json",
 		headers: { "cache-control": "no-cache" },
-		data: 
+		data:
 		{
 			controller: 'authentication',
 			SubmitCreate: 1,
@@ -51,7 +51,7 @@ function submitFunction()
 		},
 		success: function(jsonData)
 		{
-			if (jsonData.hasError) 
+			if (jsonData.hasError)
 			{
 				var errors = '';
 				for(error in jsonData.errors)
@@ -83,19 +83,19 @@ function submitFunction()
 			error = "TECHNICAL ERROR: unable to load form.\n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus;
 			if (!!$.prototype.fancybox)
 			{
-			    $.fancybox.open([
-		        {
-		            type: 'inline',
-		            autoScale: true,
-		            minHeight: 30,
-		            content: "<p class='fancybox-error'>" + error + '</p>'
-		        }],
+				$.fancybox.open([
 				{
-			        padding: 0
-			    });
+					type: 'inline',
+					autoScale: true,
+					minHeight: 30,
+					content: "<p class='fancybox-error'>" + error + '</p>'
+				}],
+				{
+					padding: 0
+				});
 			}
 			else
-			    alert(error);
+				alert(error);
 		}
 	});
 }
