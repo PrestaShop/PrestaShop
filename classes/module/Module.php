@@ -1531,7 +1531,7 @@ abstract class ModuleCore
 	 * @param string $key The key provided by addons
 	 * @return integer
 	 */
-	public static function isModuleTrusted($module_name)
+	final public static function isModuleTrusted($module_name)
 	{
 		static $trusted_modules_list_content = null;
 		static $modules_list_content =  null;
@@ -1598,7 +1598,7 @@ abstract class ModuleCore
 	 * Generate XML files for trusted and untrusted modules
 	 *
 	 */
-	public static function generateTrustedXml()
+	final public static function generateTrustedXml()
 	{
 		$modules_on_disk = Module::getModulesDirOnDisk();
 		$trusted   = array();
@@ -1681,7 +1681,7 @@ abstract class ModuleCore
 	 * @param string $name Module dir name
 	 * @return boolean Returns if the module is trusted by addons.prestashop.com
 	 */
-	public static function checkModuleFromAddonsApi($module_name)
+	final public static function checkModuleFromAddonsApi($module_name)
 	{
 		$obj = Module::getInstanceByName($module_name);
 
