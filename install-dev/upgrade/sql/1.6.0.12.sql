@@ -9,4 +9,4 @@ INSERT INTO `PREFIX_order_state_lang` (`id_order_state`, `id_lang`, `name`, `tem
 INSERT IGNORE INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES
 ('PS_OS_COD_VALIDATION', @id_order_state, NOW(), NOW());
 
-UPDATE `PREFIX_hook` set `position` = 1 where name in ('displayBanner', 'displayNav', 'displayTopColumn');
+UPDATE `PREFIX_hook` set `position` = 1 where `name` in ('displayBanner', 'displayNav', 'displayTopColumn');
