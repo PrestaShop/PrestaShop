@@ -725,7 +725,7 @@ class AdminTranslationsControllerCore extends AdminController
 							if (!@filemtime($sandbox.$file2check['filename']) || !AdminTranslationsController::checkTranslationFile(file_get_contents($sandbox.$file2check['filename'])))
 								$this->errors[] = sprintf(Tools::displayError('Validation failed for: %s'), $file2check['filename']);
 						}
-						elseif (!preg_match('@^[0-9a-z-_/\\\\]+\.(html|tpl|txt)$@i', $file2check['filename']))
+						elseif (!preg_match('@mails[0-9a-z-_/\\\\]+\.(html|tpl|txt)$@i', $file2check['filename']))
 							$this->errors[] = sprintf(Tools::displayError('Unidentified file found: %s'), $file2check['filename']);
 					}
 					Tools::deleteDirectory($sandbox, true);
@@ -1625,7 +1625,7 @@ class AdminTranslationsControllerCore extends AdminController
 							$path = str_replace('{module}', $module_name, $path);
 						if (!file_exists($path) && !mkdir($path, 0777, true))
 							throw new PrestaShopException(sprintf(Tools::displayError('Directory "%s" cannot be created'), dirname($path)));
-						file_put_contents($path.$mail_name.'.'.$type_content, $content);
+						file_put_contents($path.$mail_name.'.'.$type_content, Tools::purify($content));
 					}
 					else
 						throw new PrestaShopException(Tools::displayError('Your HTML email templates cannot contain JavaScript code.'));

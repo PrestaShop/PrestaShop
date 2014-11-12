@@ -738,14 +738,14 @@ abstract class ObjectModelCore
 		// Database deletion
 		$has_multishop_entries = $this->hasMultishopEntries();
 		if ($result && !$has_multishop_entries)
-			$result &= ObjectModel::$db->delete($this->def['table'], '`'.pSQL($this->def['primary']).'` = '.(int)$this->id);
+			$result &= ObjectModel::$db->delete($this->def['table'], '`'.bqSQL($this->def['primary']).'` = '.(int)$this->id);
 
 		if (!$result)
 			return false;
 
 		// Database deletion for multilingual fields related to the object
 		if (!empty($this->def['multilang']) && !$has_multishop_entries)
-			$result &= ObjectModel::$db->delete($this->def['table'].'_lang', '`'.pSQL($this->def['primary']).'` = '.(int)$this->id);
+			$result &= ObjectModel::$db->delete($this->def['table'].'_lang', '`'.bqSQL($this->def['primary']).'` = '.(int)$this->id);
 
 		// @hook actionObject*DeleteAfter
 		Hook::exec('actionObjectDeleteAfter', array('object' => $this));
