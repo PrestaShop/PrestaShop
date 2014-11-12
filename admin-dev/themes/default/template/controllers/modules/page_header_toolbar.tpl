@@ -24,7 +24,7 @@
 *}
 
 
-{extends file="page_header_toolbar.tpl"} 
+{extends file="page_header_toolbar.tpl"}
 
 {block name=pageTitle}
 <h2 class="page-title">
@@ -56,7 +56,7 @@
 				</a>
 			</li>
 			{/if}
-			{if $add_permission eq '1' && !$host_mode}
+			{if $add_permission eq '1' && (!$host_mode || $is_contributor)}
 			<li>
 				<a id="desc-module-new" class="toolbar_btn anchor" href="#module_install" onclick="$('#module_install').slideToggle();" title="{l s='Add a new module'}">
 					<i class="process-icon-new"></i>
