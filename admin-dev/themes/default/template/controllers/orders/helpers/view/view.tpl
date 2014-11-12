@@ -59,7 +59,7 @@
 									{$order->total_discounts_tax_incl}
 								{/if};
 
-	var errorRefund = "{l s='You can\'t refund without a voucher if the total of the selected product is less than the voucher that was apply on the order'}";
+	var errorRefund = "{l s='Error. You cannot refund a negative amount.'}";
 	</script>
 
 	{assign var="hook_invoice" value={hook h="displayInvoice" id_order=$order->id}}
