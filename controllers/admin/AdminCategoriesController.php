@@ -816,16 +816,16 @@ class AdminCategoriesControllerCore extends AdminController
 				die(true);
 			}
 			else
-				die('{"hasError" : true, errors : "Can not update categories position"}');
+				die('{"hasError" : true, errors : "Cannot update categories position"}');
 		}
 		else
-			die('{"hasError" : true, "errors" : "This category can not be loaded"}');
+			die('{"hasError" : true, "errors" : "This category cannot be loaded"}');
 	}
 
 	public function ajaxProcessStatusCategory()
 	{
 		if (!$id_category = (int)Tools::getValue('id_category'))
-			die(Tools::jsonEncode(array('success' => false, 'error' => true, 'text' => $this->l('The status hasn\'t been updated successfully'))));
+			die(Tools::jsonEncode(array('success' => false, 'error' => true, 'text' => $this->l('Failed to update the status'))));
 		else
 		{
 			$category = new Category((int)$id_category);
@@ -834,7 +834,7 @@ class AdminCategoriesControllerCore extends AdminController
 				$category->active = $category->active == 1 ? 0 : 1;
 				$category->save() ?
 				die(Tools::jsonEncode(array('success' => true, 'text' => $this->l('The status has been updated successfully')))) :
-				die(Tools::jsonEncode(array('success' => false, 'error' => true, 'text' => $this->l('The status hasn\'t been updated successfully'))));
+				die(Tools::jsonEncode(array('success' => false, 'error' => true, 'text' => $this->l('Failed to update the status'))));
 			}
 		}
 	}
