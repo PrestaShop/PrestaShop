@@ -1327,6 +1327,12 @@ class AdminProductsControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
+		elseif (Tools::isSubmit('id_product'))
+		{
+			$post_max_size = Tools::getMaxUploadSize(Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE') * 1024 * 1024);
+			if ($post_max_size && isset($_SERVER['CONTENT_LENGTH']) && $_SERVER['CONTENT_LENGTH'] && $_SERVER['CONTENT_LENGTH'] > $post_max_size)
+				$this->errors[] = sprintf(Tools::displayError('The uploaded file exceeds the "Maximum size for attachment" set In Preferences (%1dMB) or the post_max_size/ directive in php.ini (%2dMB).'), number_format((Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE'))), ($post_max_size / 1024 / 1024));
+		}
 
 		if (!$this->action)
 			parent::initProcess();
@@ -3709,7 +3715,6 @@ class AdminProductsControllerCore extends AdminController
 					'default_form_language' => (int)Configuration::get('PS_LANG_DEFAULT'),
 					'attachment_name' => $attachment_name,
 					'attachment_description' => $attachment_description,
-					'PS_ATTACHMENT_MAXIMUM_SIZE' => Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE'),
 					'attachment_uploader' => $attachment_uploader->render()
 				));
 			}
