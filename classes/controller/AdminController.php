@@ -2829,7 +2829,7 @@ class AdminControllerCore extends Controller
 			if (Shop::getContext() != Shop::CONTEXT_ALL || !$this->context->employee->isSuperAdmin())
 			{
 				$test_join = !preg_match('#`?'.preg_quote(_DB_PREFIX_.$this->table.'_shop').'`? *sa#', $this->_join);
-				if (Shop::isFeatureActive() && $test_join && Shop::isTableAssociated($this->table))
+				if (Shop::isFeatureActive() && !$test_join && Shop::isTableAssociated($this->table))
 				{
 					$this->_where .= ' AND a.'.$this->identifier.' IN (
 						SELECT sa.'.$this->identifier.'
