@@ -286,7 +286,7 @@
 						<td><label for="cb_{$product.id_order_detail|intval}">{if $product.product_reference}{$product.product_reference|escape:'html':'UTF-8'}{else}--{/if}</label></td>
 						<td class="bold">
 							<label for="cb_{$product.id_order_detail|intval}">
-								{if $product.download_hash && $invoice && $product.display_filename != '' && $product.product_quantity_refunded == 0 && $product.product_quantity_return == 0}
+								{if $product.download_hash && $logable && $product.display_filename != '' && $product.product_quantity_refunded == 0 && $product.product_quantity_return == 0}
 									{if isset($is_guest) && $is_guest}
 									<a href="{$link->getPageLink('get-file', true, NULL, "key={$product.filename|escape:'html':'UTF-8'}-{$product.download_hash|escape:'html':'UTF-8'}&amp;id_order={$order->id}&secure_key={$order->secure_key}")|escape:'html':'UTF-8'}" title="{l s='Download this product'}">
 									{else}
@@ -367,7 +367,8 @@
 	</div>
 {/if}
 </form>
-{if $order->getShipping()|count > 0}
+{assign var='carriers' value=$order->getShipping()}
+{if $carriers|count > 0 && isset($carriers.0.carrier_name) && $carriers.0.carrier_name}
 	<table class="table table-bordered footab">
 		<thead>
 			<tr>
@@ -379,7 +380,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			{foreach from=$order->getShipping() item=line}
+			{foreach from=$carriers item=line}
 			<tr class="item">
 				<td data-value="{$line.date_add|regex_replace:"/[\-\:\ ]/":""}">{dateFormat date=$line.date_add full=0}</td>
 				<td>{$line.carrier_name}</td>

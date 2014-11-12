@@ -35,7 +35,7 @@
 			{if isset($product['image']) && $product['image']->id|intval}{$product['image_tag']}{else}--{/if}
 		</td>
 		<td>
-			<a href="index.php?controller=adminproducts&amp;id_product={$product['product_id']|intval}&amp;updateproduct&amp;token={getAdminToken tab='AdminProducts'}">
+			<a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}&amp;id_product={$product['product_id']|intval}&amp;updateproduct&amp;token={getAdminToken tab='AdminProducts'}">
 			<span class="productName">{$product['product_name']} - {l s='Customized'}</span><br />
 			{if ($product['product_reference'])}{l s='Reference number:'} {$product['product_reference']}<br />{/if}
 			{if ($product['product_supplier_reference'])}{l s='Supplier reference:'} {$product['product_supplier_reference']}{/if}
