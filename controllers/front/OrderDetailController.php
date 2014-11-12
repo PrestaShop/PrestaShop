@@ -164,9 +164,9 @@ class OrderDetailControllerCore extends FrontController
 				Product::addCustomizationPrice($products, $customizedDatas);
 
 				OrderReturn::addReturnedQuantity($products, $order->id);
+				$order_status = new OrderState((int)$id_order_state, (int)$order->id_lang);
 
 				$customer = new Customer($order->id_customer);
-
 				$this->context->smarty->assign(array(
 					'shop_name' => strval(Configuration::get('PS_SHOP_NAME')),
 					'order' => $order,
@@ -175,6 +175,7 @@ class OrderDetailControllerCore extends FrontController
 					'order_state' => (int)$id_order_state,
 					'invoiceAllowed' => (int)Configuration::get('PS_INVOICE'),
 					'invoice' => (OrderState::invoiceAvailable($id_order_state) && count($order->getInvoicesCollection())),
+					'logable' => (bool)$order_status->logable,
 					'order_history' => $order->getHistory($this->context->language->id, false, true),
 					'products' => $products,
 					'discounts' => $order->getCartRules(),
