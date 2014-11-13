@@ -457,10 +457,7 @@ class StockAvailableCore extends ObjectModel
 				{
 					$products_pack = Pack::getItems($id_product, (int)Configuration::get('PS_LANG_DEFAULT'));
 					foreach ($products_pack as $product_pack)
-					{
-						$pack_id_product_attribute = Product::getDefaultAttribute($product_pack->id, 1);
-						StockAvailable::updateQuantity($product_pack->id, $pack_id_product_attribute, $product_pack->pack_quantity * $delta_quantity, $id_shop);
-					}
+						StockAvailable::updateQuantity($product_pack->id, $product_pack->id_pack_product_attribute, $product_pack->pack_quantity * $delta_quantity, $id_shop);
 				}
 
 
