@@ -227,6 +227,7 @@ class AdminModulesControllerCore extends AdminController
 			Configuration::updateValue('PS_LOGGED_ON_ADDONS', 1);
 			$this->context->cookie->username_addons = pSQL(trim(Tools::getValue('username_addons')));
 			$this->context->cookie->password_addons = pSQL(trim(Tools::getValue('password_addons')));
+			$this->context->cookie->is_contributor = (int)$xml->is_contributor;
 			$this->context->cookie->write();
 		}
 		die($result);
@@ -236,6 +237,7 @@ class AdminModulesControllerCore extends AdminController
 	{
 		$this->context->cookie->username_addons = '';
 		$this->context->cookie->password_addons = '';
+		$this->context->cookie->is_contributor = 0;
 		$this->context->cookie->write();
 		die('OK');
 	}
@@ -316,7 +318,7 @@ class AdminModulesControllerCore extends AdminController
 			if (is_array($values) && count($values))
 				foreach($values as $value)
 					Db::getInstance()->execute('
-						INSERT INTO `'._DB_PREFIX_.'tab_module_preference` (`id_tab_module_preference`, `id_employee`, `id_tab`, `module`) 
+						INSERT INTO `'._DB_PREFIX_.'tab_module_preference` (`id_tab_module_preference`, `id_employee`, `id_tab`, `module`)
 						VALUES (NULL, '.(int)$this->id_employee.', '.(int)$value.', \''.pSQL($module).'\');');
 		}
 		die('OK');
@@ -512,7 +514,7 @@ class AdminModulesControllerCore extends AdminController
 	public function postProcessDownload()
 	{
 	 	// PrestaShop demo mode
-		if (_PS_MODE_DEMO_ || defined('_PS_HOST_MODE_'))
+		if (_PS_MODE_DEMO_ || (defined('_PS_HOST_MODE_') && (int)$this->context->cookie->is_contributor === 0))
 		{
 			$this->errors[] = Tools::displayError('This functionality has been disabled.');
 			return;
@@ -766,7 +768,7 @@ class AdminModulesControllerCore extends AdminController
 						$this->errors[] = Tools::displayError('You do not have permission to access this module.');
 					elseif ($key == 'install' && $this->tabAccess['add'] !== '1')
 						$this->errors[] = Tools::displayError('You do not have permission to install this module.');
-					elseif ($key == 'install' && defined('_PS_HOST_MODE_') && _PS_HOST_MODE_ && !Module::isModuleTrusted($module->name))
+					elseif ($key == 'install' && defined('_PS_HOST_MODE_') && _PS_HOST_MODE_ && (int)$this->context->cookie->is_contributor === 0 && !Module::isModuleTrusted($module->name))
 						$this->errors[] = Tools::displayError('You do not have permission to install this module.');
 					elseif ($key == 'delete' && ($this->tabAccess['delete'] !== '1' || !$module->getPermission('configure')))
 						$this->errors[] = Tools::displayError('You do not have permission to delete this module.');
@@ -1013,7 +1015,7 @@ class AdminModulesControllerCore extends AdminController
 				}
 			}
 		}
-		
+
 		return $modules_list;
 	}
 
@@ -1209,7 +1211,7 @@ class AdminModulesControllerCore extends AdminController
 				|| (!is_array($module->limited_countries) && strtolower($this->iso_default_country) != strval($module->limited_countries)))))
 			return true;
 
-		// Module has not been filtered		
+		// Module has not been filtered
 		return false;
 	}
 
@@ -1276,11 +1278,11 @@ class AdminModulesControllerCore extends AdminController
 			'modal_content' => $modal_content
 		);
 
-		$modal_content = $this->context->smarty->fetch('controllers/modules/'.((defined('_PS_HOST_MODE_') && _PS_HOST_MODE_) ? 'modal_not_trusted_blocked.tpl' : 'modal_not_trusted.tpl'));
+		$modal_content = $this->context->smarty->fetch('controllers/modules/'.((defined('_PS_HOST_MODE_') && _PS_HOST_MODE_ && (int)$this->context->cookie->is_contributor === 0) ? 'modal_not_trusted_blocked.tpl' : 'modal_not_trusted.tpl'));
 		$this->modals[] = array(
 			'modal_id' => "moduleNotTrusted",
 			'modal_class' => "modal-lg",
-			'modal_title' => (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_) ? $this->l('This module cannot be installed') : $this->l('Important Notice'),
+			'modal_title' => (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_ && (int)$this->context->cookie->is_contributor === 0) ? $this->l('This module cannot be installed') : $this->l('Important Notice'),
 			'modal_content' => $modal_content
 		);
 
@@ -1454,7 +1456,7 @@ class AdminModulesControllerCore extends AdminController
 			unset($object);
 			if ($module->installed && isset($module->version_addons) && $module->version_addons)
 				$upgrade_available[] = array('anchor' => ucfirst($module->name), 'name' => $module->name, 'displayName' => $module->displayName);
-				
+
 			if (in_array($module->name, $this->list_partners_modules))
 				$module->type = 'addonsPartner';
 
@@ -1517,7 +1519,8 @@ class AdminModulesControllerCore extends AdminController
 			'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
 			'modules_uri' => __PS_BASE_URI__.basename(_PS_MODULE_DIR_),
 			'dont_filter' => $dont_filter,
-		);		
+			'is_contributor' => (int)$this->context->cookie->is_contributor
+		);
 
 		if ($this->logged_on_addons)
 		{
