@@ -2481,7 +2481,11 @@ class AdminTranslationsControllerCore extends AdminController
 					if ($with_module_name)
 						$arr_modules[$module_dir] = $dir;
 					else
+					{
+						if ($this->theme_selected)
+							$dir = $this->translations_informations['modules']['dir'].$module_dir.'/';
 						$arr_modules[$dir] = scandir($dir);
+					}
 				}
 			}
 		}
