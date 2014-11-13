@@ -229,7 +229,7 @@ class ProductCore extends ObjectModel
 	/**
 	 * @var int tell the type of stock management to apply on the pack
 	 */
-	public $pack_stock_type;
+	public $pack_stock_type = 3;
 
 	public static $_taxCalculationMethod = null;
 	protected static $_prices = array();
