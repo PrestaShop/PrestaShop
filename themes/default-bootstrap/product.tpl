@@ -160,7 +160,7 @@
 				<label>{l s='Condition:'} </label>
 				{if $product->condition == 'new'}
 					<link itemprop="itemCondition" href="http://schema.org/NewCondition"/>
-					<span class="editable">{l s='New'}</span>
+					<span class="editable">{l s='New product'}</span>
 				{elseif $product->condition == 'used'}
 					<link itemprop="itemCondition" href="http://schema.org/UsedCondition"/>
 					<span class="editable">{l s='Used'}</span>
