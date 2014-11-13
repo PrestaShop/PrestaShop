@@ -111,7 +111,7 @@ class AdminStockManagementControllerCore extends AdminController
 		// overrides query
 		$this->_select = 'a.id_product as id, COUNT(pa.id_product_attribute) as variations';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.id_product = a.id_product)'.Shop::addSqlAssociation('product_attribute', 'pa', false);
-		$this->_where = 'AND a.cache_is_pack = 0 AND a.is_virtual = 0';
+		$this->_where = 'AND a.is_virtual = 0';
 		$this->_group = 'GROUP BY a.id_product';
 
 		// displays informations
@@ -1036,7 +1036,7 @@ class AdminStockManagementControllerCore extends AdminController
 					}
 				}
 
-				if ($product_is_valid === true && $is_pack == false && $is_virtual == false)
+				if ($product_is_valid === true && $is_virtual == false)
 				{
 					// init form
 					$this->renderForm();
