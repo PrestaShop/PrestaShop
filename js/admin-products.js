@@ -1253,9 +1253,13 @@ product_tabs['Pack'] = new function() {
 					var returnIds = new Array();
 					if (data) {
 						for (var i = data.length - 1; i >= 0; i--) {
-							if ($.inArray(data[i].id, excludeIds) <= -1) {
-								returnIds.push(data[i]);
+							var is_in = 0;
+							for (var j = 0; j < excludeIds.length; j ++) {
+								if (data[i].id == excludeIds[j][0] && (typeof data[i].id_product_attribute == 'undefined' || data[i].id_product_attribute == excludeIds[j][1]))
+									is_in = 1;
 							}
+							if (!is_in)
+								returnIds.push(data[i]);
 						}
 						return {
 							results: returnIds
@@ -1356,20 +1360,28 @@ product_tabs['Pack'] = new function() {
 
 		function getSelectedIds()
 		{
-			if ($('#inputPackItems').val() === undefined)
+			var reg = new RegExp('-', 'g');
+			var regx = new RegExp('x', 'g');
+
+			var input = $('#inputPackItems');
+
+			if (input.val() === undefined)
 				return '';
-			var ids = '';
-			if (typeof(id_product) != 'undefined')
-				ids += id_product + ',';
 
-			ids += $('#inputPackItems').val().replace(/\d*x/g, '').replace(/\-/g,',');
-			ids = ids.replace(/\,$/,'');
-			ids = ids.split(',');
-			ints = new Array();
+			var inputCut = input.val().split(reg);
 
-			for (var i=0; i < ids.length; i++) {
-		        ints[i] = parseInt(ids[i]);
-		    }
+			var ints = new Array();
+
+			for (var i = 0; i < inputCut.length; ++i)
+			{
+				var in_ints = new Array();
+				if (inputCut[i]) {
+					var inputQty = inputCut[i].split(regx);
+					in_ints[0] = inputQty[1];
+					in_ints[1] = inputQty[2];
+				}
+				ints[i] = in_ints;
+			}
 
 			return ints;
 		}
