@@ -220,7 +220,8 @@ class AdminThemesControllerCore extends AdminController
 		);
 
 		$installed_theme = Theme::getAllThemes(array($this->context->shop->id_theme));
-		$non_installed_theme = (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_) ? array() : Theme::getNonInstalledTheme();
+		$non_installed_theme = (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_
+			&& (int)$this->context->cookie->is_contributor === 0) ? array() : Theme::getNonInstalledTheme();
 		if (count($installed_theme) || !empty($non_installed_theme))
 		{
 			$this->fields_options['theme'] = array(
@@ -709,14 +710,16 @@ class AdminThemesControllerCore extends AdminController
 
 		if (empty($this->display))
 		{
-			if (!defined('_PS_HOST_MODE_'))
+			if (!defined('_PS_HOST_MODE_') || (int)$this->context->cookie->is_contributor === 1)
 				$this->page_header_toolbar_btn['import_theme'] = array(
 					'href' => self::$currentIndex.'&action=importtheme&token='.$this->token,
 					'desc' => $this->l('Add new theme', null, null, false),
 					'icon' => 'process-icon-new'
 				);
-			if (defined('_PS_HOST_MODE_'))
+
+			if (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_ && (int)$this->context->cookie->is_contributor === 0)
 				unset($this->toolbar_btn['new']);
+
 			$this->page_header_toolbar_btn['export_theme'] = array(
 				'href' => self::$currentIndex.'&action=exporttheme&token='.$this->token,
 				'desc' => $this->l('Export theme', null, null, false),
@@ -1455,7 +1458,8 @@ class AdminThemesControllerCore extends AdminController
 	public function processImportTheme()
 	{
 		$this->display = 'importtheme';
-		if (defined('_PS_HOST_MODE_'))
+
+		if (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_ && (int)$this->context->cookie->is_contributor === 0)
 			return true;
 
 		if (isset($_FILES['themearchive']) && isset($_POST['filename']) && Tools::isSubmit('theme_archive_server'))
@@ -2583,9 +2587,11 @@ class AdminThemesControllerCore extends AdminController
 	public function postProcess()
 	{
 		$host_mode = (bool)(defined('_PS_HOST_MODE_') && _PS_HOST_MODE_);
-		if (Tools::isSubmit('submitOptionstheme') && Tools::isSubmit('id_theme') && !Tools::isSubmit('deletetheme') && Tools::getValue('action') != 'ThemeInstall' && $this->context->shop->id_theme != Tools::getValue('id_theme'))
-			$this->display = "ChooseThemeModule";
-		elseif (Tools::isSubmit('installThemeFromFolder') && !$host_mode)
+
+		if (Tools::isSubmit('submitOptionstheme') && Tools::isSubmit('id_theme') && !Tools::isSubmit('deletetheme')
+			&& Tools::getValue('action') != 'ThemeInstall' && $this->context->shop->id_theme != Tools::getValue('id_theme'))
+			$this->display = 'ChooseThemeModule';
+		elseif (Tools::isSubmit('installThemeFromFolder') && (!$host_mode || (int)$this->context->cookie->is_contributor === 1))
 		{
 			$theme_dir = Tools::getValue('theme_dir');
 			$this->installTheme($theme_dir);
