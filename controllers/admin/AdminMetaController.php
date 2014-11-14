@@ -205,7 +205,7 @@ class AdminMetaControllerCore extends AdminController
 		else
 			$this->fields_options['manage_domain_name'] = array(
 				'title' => $this->l('Manage domain name'),
-				'description' => $this->l('You can search for a new domain name or add a domain name that you already own. You will be redirected to your PrestaShop.com account.'),
+				'description' => $this->l('You can search for a new domain name or add a domain name that you already own. You will be redirected to your PrestaShop account.'),
 				'buttons' => array(
 					array(
 						'title' => $this->l('Add a domain name'),
