@@ -55,6 +55,7 @@ $exclude_packs = (bool)Tools::getValue('exclude_packs', false);
 
 $sql = 'SELECT p.`id_product`, pl.`link_rewrite`, p.`reference`, pl.`name`, MAX(image_shop.`id_image`) id_image, il.`legend`, p.`cache_default_attribute`
 		FROM `'._DB_PREFIX_.'product` p
+		'.Shop::addSqlAssociation('product', 'p').'
 		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.id_product = p.id_product AND pl.id_lang = '.(int)Context::getContext()->language->id.Shop::addSqlRestrictionOnLang('pl').')
 		LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)'.
 		Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
@@ -106,6 +107,16 @@ elseif ($items)
 					if (empty($results[$combination['id_product_attribute']]['image']))
 						$results[$combination['id_product_attribute']]['image'] = str_replace('http://', Tools::getShopProtocol(), Context::getContext()->link->getImageLink($item['link_rewrite'], $combination['id_image'], 'home_default'));
 				}
+			}
+			else
+			{
+				$product = array(
+					'id' => (int)($item['id_product']),
+					'name' => $item['name'],
+					'ref' => (!empty($item['reference']) ? $item['reference'] : ''),
+					'image' => str_replace('http://', Tools::getShopProtocol(), Context::getContext()->link->getImageLink($item['link_rewrite'], $item['id_image'], 'home_default')),
+				);
+				array_push($results, $product);
 			}
 		}
 		else
