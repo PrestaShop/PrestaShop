@@ -64,7 +64,9 @@ function getDefaultAttribute($id_product)
 			WHERE default_on = 1 AND id_product = '.(int)$id_product;
 	$result = Db::getInstance()->getValue($sql);
 
-	$combinations[$id_product]['default'] = $result;
+	$combinations[$id_product]['default'] = $result ? $result : ($result = Db::getInstance()->getValue('SELECT id_product_attribute
+			FROM '._DB_PREFIX_.'product_attribute
+			WHERE id_product = '.(int)$id_product));
 	return $result;
 }
 
