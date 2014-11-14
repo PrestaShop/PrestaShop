@@ -150,9 +150,13 @@ $(document).ready(function()
 	//set jqZoom parameters if needed
 	if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
 	{
-		var new_src = $('#thumbs_list .shown img').attr('src').replace('cart_', 'large_');
-		if ($('.jqzoom img').attr('src')!= new_src)
-			$('.jqzoom img').attr('src', new_src).parent().attr('href', new_src);
+		if ($('#thumbs_list .shown img').length)
+		{
+			var new_src = $('#thumbs_list .shown img').attr('src').replace('cart_', 'large_');
+			console.log(new_src);
+			if ($('.jqzoom img').attr('src')!= new_src)
+				$('.jqzoom img').attr('src', new_src).parent().attr('href', new_src);
+		}
 
 		$('.jqzoom').jqzoom({
 			zoomType: 'innerzoom', //innerzoom/standard/reverse/drag
