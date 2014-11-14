@@ -507,7 +507,7 @@ class AdminThemesControllerCore extends AdminController
 
 	public function downloadAddonsThemes()
 	{
-		if ($this->logged_on_addons)
+		if (!$this->logged_on_addons)
 			return false;
 
 		if (!$this->isFresh(Theme::CACHE_FILE_CUSTOMER_THEMES_LIST, 86400))
