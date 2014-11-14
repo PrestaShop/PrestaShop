@@ -191,7 +191,8 @@ class StockManagerCore implements StockManagerInterface
 								  $quantity,
 								  $id_stock_mvt_reason,
 								  $is_usable = true,
-								  $id_order = null)
+								  $id_order = null,
+								  $ignore_pack = 0)
 	{
 		$return = array();
 
@@ -204,17 +205,25 @@ class StockManagerCore implements StockManagerInterface
 		$context = Context::getContext();
 
 		// Special case of a pack
-		if (Pack::isPack((int)$id_product))
+		if (Pack::isPack((int)$id_product) && !$ignore_pack)
 		{
-			// Gets items
-			$products_pack = Pack::getItems((int)$id_product, (int)Configuration::get('PS_LANG_DEFAULT'));
-			// Foreach item
-			foreach ($products_pack as $product_pack)
+			if (Validate::isLoadedObject($product = new Product((int)$id_product)))
 			{
-				$pack_id_product_attribute = Product::getDefaultAttribute($product_pack->id, 1);
-				if ($product_pack->advanced_stock_management == 1)
-					$this->removeProduct($product_pack->id, $pack_id_product_attribute, $warehouse, $product_pack->pack_quantity * $quantity, $id_stock_mvt_reason, $is_usable, $id_order);
+				// Gets items
+				if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && Configuration::get('PS_STOCK_TYPE') > 0))
+				{
+					$products_pack = Pack::getItems((int)$id_product, (int)Configuration::get('PS_LANG_DEFAULT'));
+					// Foreach item
+					foreach ($products_pack as $product_pack)
+						if ($product_pack->advanced_stock_management == 1)
+							$this->removeProduct($product_pack->id, $product_pack->id_pack_product_attribute, $warehouse, $product_pack->pack_quantity * $quantity, $id_stock_mvt_reason, $is_usable, $id_order);
+				}
+				if ($product->pack_stock_type == 0 || $product->pack_stock_type == 2 ||
+					($product->pack_stock_type == 3 && (Configuration::get('PS_STOCK_TYPE') == 0 || Configuration::get('PS_STOCK_TYPE') == 2)))
+					$this->removeProduct($id_product, $id_product_attribute, $warehouse, $quantity, $id_stock_mvt_reason, $is_usable, $id_order, 1);
 			}
+			else
+				return false;
 		}
 		else
 		{
@@ -465,28 +474,67 @@ class StockManagerCore implements StockManagerInterface
 			$ids_warehouse = array_map('intval', $ids_warehouse);
 		}
 
-		// Gets client_orders_qty
-		$query = new DbQuery();
-		$query->select('od.product_quantity, od.product_quantity_refunded');
-		$query->from('order_detail', 'od');
-		$query->leftjoin('orders', 'o', 'o.id_order = od.id_order');
-		$query->where('od.product_id = '.(int)$id_product);
-		if (0 != $id_product_attribute)
-			$query->where('od.product_attribute_id = '.(int)$id_product_attribute);
-		$query->leftJoin('order_history', 'oh', 'oh.id_order = o.id_order AND oh.id_order_state = o.current_state');
-		$query->leftJoin('order_state', 'os', 'os.id_order_state = oh.id_order_state');
-		$query->where('os.shipped != 1');
-		$query->where('o.valid = 1 OR (os.id_order_state != '.(int)Configuration::get('PS_OS_ERROR').'
-					   AND os.id_order_state != '.(int)Configuration::get('PS_OS_CANCELED').')');
-		$query->groupBy('od.id_order_detail');
-		if (count($ids_warehouse))
-			$query->where('od.id_warehouse IN('.implode(', ', $ids_warehouse).')');
-		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 		$client_orders_qty = 0;
-		if (count($res))
-			foreach ($res as $row)
-				$client_orders_qty += ($row['product_quantity'] - $row['product_quantity_refunded']);
 
+		// check if product is present in a pack
+		if (!Pack::isPack($id_product) && $in_pack = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
+			'SELECT id_product_pack, quantity FROM '._DB_PREFIX_.'pack
+			WHERE id_product_item = '.(int)$id_product.'
+			AND id_product_attribute_item = '.($id_product_attribute ? (int)$id_product_attribute : '0')))
+		{
+			foreach ($in_pack as $value)
+			{
+				if (Validate::isLoadedObject($product = new Product((int)$value['id_product_pack'])) &&
+					($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && Configuration::get('PS_STOCK_TYPE') > 0)))
+				{
+					$query = new DbQuery();
+					$query->select('od.product_quantity, od.product_quantity_refunded');
+					$query->from('order_detail', 'od');
+					$query->leftjoin('orders', 'o', 'o.id_order = od.id_order');
+					$query->where('od.product_id = '.(int)$value['id_product_pack']);
+					$query->leftJoin('order_history', 'oh', 'oh.id_order = o.id_order AND oh.id_order_state = o.current_state');
+					$query->leftJoin('order_state', 'os', 'os.id_order_state = oh.id_order_state');
+					$query->where('os.shipped != 1');
+					$query->where('o.valid = 1 OR (os.id_order_state != '.(int)Configuration::get('PS_OS_ERROR').'
+								   AND os.id_order_state != '.(int)Configuration::get('PS_OS_CANCELED').')');
+					$query->groupBy('od.id_order_detail');
+					if (count($ids_warehouse))
+						$query->where('od.id_warehouse IN('.implode(', ', $ids_warehouse).')');
+					$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+					if (count($res))
+						foreach ($res as $row)
+							$client_orders_qty += ($row['product_quantity'] - $row['product_quantity_refunded']);
+				}
+			}
+		}
+
+
+		// skip if product is a pack without
+		if (!Pack::isPack($id_product) || (Pack::isPack($id_product) && Validate::isLoadedObject($product = new Product((int)$id_product))
+			&& $product->pack_stock_type == 0 || $product->pack_stock_type == 2 ||
+					($product->pack_stock_type == 3 && (Configuration::get('PS_STOCK_TYPE') == 0 || Configuration::get('PS_STOCK_TYPE') == 2))))
+		{
+			// Gets client_orders_qty
+			$query = new DbQuery();
+			$query->select('od.product_quantity, od.product_quantity_refunded');
+			$query->from('order_detail', 'od');
+			$query->leftjoin('orders', 'o', 'o.id_order = od.id_order');
+			$query->where('od.product_id = '.(int)$id_product);
+			if (0 != $id_product_attribute)
+				$query->where('od.product_attribute_id = '.(int)$id_product_attribute);
+			$query->leftJoin('order_history', 'oh', 'oh.id_order = o.id_order AND oh.id_order_state = o.current_state');
+			$query->leftJoin('order_state', 'os', 'os.id_order_state = oh.id_order_state');
+			$query->where('os.shipped != 1');
+			$query->where('o.valid = 1 OR (os.id_order_state != '.(int)Configuration::get('PS_OS_ERROR').'
+						   AND os.id_order_state != '.(int)Configuration::get('PS_OS_CANCELED').')');
+			$query->groupBy('od.id_order_detail');
+			if (count($ids_warehouse))
+				$query->where('od.id_warehouse IN('.implode(', ', $ids_warehouse).')');
+			$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+			if (count($res))
+				foreach ($res as $row)
+					$client_orders_qty += ($row['product_quantity'] - $row['product_quantity_refunded']);
+		}
 		// Gets supply_orders_qty
 		$query = new DbQuery();
 

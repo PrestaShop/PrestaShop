@@ -3252,9 +3252,9 @@ class AdminProductsControllerCore extends AdminController
 				$pack_items[$i]['pack_quantity'] = $pack_item->pack_quantity;
 				$pack_items[$i]['name']	= $pack_item->name;
 				$pack_items[$i]['reference'] = $pack_item->reference;
-
-				$cover = Product::getCover($pack_item->id);
-				$pack_items[$i]['image'] = Context::getContext()->link->getImageLink($pack_item->link_rewrite, $cover['id_image'] , 'home_default');
+				$pack_items[$i]['id_product_attribute'] = isset($pack_item->id_pack_product_attribute) && $pack_item->id_pack_product_attribute ? $pack_item->id_pack_product_attribute : 0;
+				$cover = $pack_item->id_pack_product_attribute ? Product::getCombinationImageById($pack_item->id_pack_product_attribute, Context::getContext()->language->id) : Product::getCover($pack_item->id);
+				$pack_items[$i]['image'] = Context::getContext()->link->getImageLink($pack_item->link_rewrite, $cover['id_image'], 'home_default');
 				// @todo: don't rely on 'home_default'
 				//$path_to_image = _PS_IMG_DIR_.'p/'.Image::getImgFolderStatic($cover['id_image']).(int)$cover['id_image'].'.jpg';
 				//$pack_items[$i]['image'] = ImageManager::thumbnail($path_to_image, 'pack_mini_'.$pack_item->id.'_'.$this->context->shop->id.'.jpg', 120);
@@ -3284,7 +3284,7 @@ class AdminProductsControllerCore extends AdminController
 			$input_pack_items = '';
 			foreach ($pack_items as $pack_item)
 			{
-				$input_pack_items .= $pack_item['pack_quantity'].'x'.$pack_item['id'].'-';
+				$input_pack_items .= $pack_item['pack_quantity'].'x'.$pack_item['id'].'x'.$pack_item['id_product_attribute'].'-';
 				$input_namepack_items .= $pack_item['pack_quantity'].' x '.$pack_item['name'].'¤';
 			}
 		}
@@ -4376,6 +4376,7 @@ class AdminProductsControllerCore extends AdminController
 					'product' => $obj,
 					'show_quantities' => $show_quantities,
 					'order_out_of_stock' => Configuration::get('PS_ORDER_OUT_OF_STOCK'),
+					'pack_stock_type' => Configuration::get('PS_PACK_STOCK_TYPE'),
 					'token_preferences' => Tools::getAdminTokenLite('AdminPPreferences'),
 					'token' => $this->token,
 					'languages' => $this->_languages,
@@ -4713,17 +4714,19 @@ class AdminProductsControllerCore extends AdminController
 			$product->setDefaultAttribute(0);//reset cache_default_attribute
 			$items = Tools::getValue('inputPackItems');
 			$lines = array_unique(explode('-', $items));
-			// lines is an array of string with format : QTYxID
+
+			// lines is an array of string with format : QTYxIDxID_PRODUCT_ATTRIBUTE
 			if (count($lines))
 				foreach ($lines as $line)
 					if (!empty($line))
 					{
-						list($qty, $item_id) = explode('x', $line);
+						$item_id_attribute = 0;
+						count($array = explode('x', $line)) == 3 ? list($qty, $item_id, $item_id_attribute) = $array : list($qty, $item_id) = $array;
 						if ($qty > 0 && isset($item_id))
 						{
 							if (Pack::isPack((int)$item_id))
-								$this->errors[] = Tools::displayError('You cannot add product packs into a pack');
-							elseif (!Pack::addItem((int)$product->id, (int)$item_id, (int)$qty))
+								$this->errors[] = Tools::displayError('You can\'t add product packs into a pack');
+							elseif (!Pack::addItem((int)$product->id, (int)$item_id, (int)$item_id_attribute,(int)$qty))
 								$this->errors[] = Tools::displayError('An error occurred while attempting to add products to the pack.');
 						}
 					}
