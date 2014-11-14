@@ -103,7 +103,10 @@ elseif ($items)
 					$results[$combination['id_product_attribute']]['id_product_attribute'] = $combination['id_product_attribute'];
 					!empty($results[$combination['id_product_attribute']]['name']) ? $results[$combination['id_product_attribute']]['name'] .= ' '.$combination['group_name'].'-'.$combination['attribute_name']
 					: $results[$combination['id_product_attribute']]['name'] = $item['name'].' '.$combination['group_name'].'-'.$combination['attribute_name'];
-					$results[$combination['id_product_attribute']]['ref'] = (!empty($combination['reference']) ? $combination['reference'] : !empty($item['reference']) ? $item['reference'] : '');
+					if (!empty($combination['reference'])
+						$results[$combination['id_product_attribute']]['ref'] = $combination['reference'];
+					else
+						$results[$combination['id_product_attribute']]['ref'] = !empty($item['reference']) ? $item['reference'] : '';
 					if (empty($results[$combination['id_product_attribute']]['image']))
 						$results[$combination['id_product_attribute']]['image'] = str_replace('http://', Tools::getShopProtocol(), Context::getContext()->link->getImageLink($item['link_rewrite'], $combination['id_image'], 'home_default'));
 				}
