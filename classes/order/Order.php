@@ -1482,7 +1482,8 @@ class OrderCore extends ObjectModel
 		return Db::getInstance()->getValue('
 			SELECT id_order
 			FROM '._DB_PREFIX_.'orders
-			WHERE id_order < '.(int)$this->id.'
+			WHERE id_order < '.(int)$this->id
+			.Shop::addSqlRestriction().'
 			ORDER BY id_order DESC');
 	}
 
@@ -1494,10 +1495,11 @@ class OrderCore extends ObjectModel
 	public function getNextOrderId()
 	{
 		return Db::getInstance()->getValue('
-		SELECT id_order
-		FROM '._DB_PREFIX_.'orders
-		WHERE id_order > '.(int)$this->id.'
-		ORDER BY id_order ASC');
+			SELECT id_order
+			FROM '._DB_PREFIX_.'orders
+			WHERE id_order > '.(int)$this->id
+			.Shop::addSqlRestriction().'
+			ORDER BY id_order ASC');
 	}
 
 	/**
