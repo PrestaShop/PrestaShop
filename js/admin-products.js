@@ -1214,7 +1214,7 @@ product_tabs['Pack'] = new function() {
 	this.bindPackEvents = function () {
 
 		$('.delPackItem').on('click', function() {
-			delPackItem($(this).data('delete'));
+			delPackItem($(this).data('delete'), $(this).data('delete-attr'));
 		});
 
 		function productFormatResult(item) {
@@ -1253,9 +1253,13 @@ product_tabs['Pack'] = new function() {
 					var returnIds = new Array();
 					if (data) {
 						for (var i = data.length - 1; i >= 0; i--) {
-							if ($.inArray(data[i].id, excludeIds) <= -1) {
-								returnIds.push(data[i]);
+							var is_in = 0;
+							for (var j = 0; j < excludeIds.length; j ++) {
+								if (data[i].id == excludeIds[j][0] && (typeof data[i].id_product_attribute == 'undefined' || data[i].id_product_attribute == excludeIds[j][1]))
+									is_in = 1;
 							}
+							if (!is_in)
+								returnIds.push(data[i]);
 						}
 						return {
 							results: returnIds
@@ -1287,19 +1291,23 @@ product_tabs['Pack'] = new function() {
 					error_modal(error_heading_msg, msg_set_quantity);
 					return false;
 				}
+
+				if (typeof selectedProduct.id_product_attribute === 'undefined')
+					selectedProduct.id_product_attribute = 0;
+
 				var divContent = $('#divPackItems').html();
-				divContent += '<li class="product-pack-item media-product-pack" data-product-name="' + selectedProduct.name + '" data-product-qty="' + selectedProduct.qty + '" data-product-id="' + selectedProduct.id + '">';
+				divContent += '<li class="product-pack-item media-product-pack" data-product-name="' + selectedProduct.name + '" data-product-qty="' + selectedProduct.qty + '" data-product-id="' + selectedProduct.id + '" data-product-id-attribute="' + selectedProduct.id_product_attribute + '">';
 				divContent += '<img class="media-product-pack-img" src="' + selectedProduct.image +'"/>';
 				divContent += '<span class="media-product-pack-title">' + selectedProduct.name + '</span>';
 				divContent += '<span class="media-product-pack-ref">REF: ' + selectedProduct.ref + '</span>';
 				divContent += '<span class="media-product-pack-quantity"><span class="text-muted">x</span> ' + selectedProduct.qty + '</span>';
-				divContent += '<button type="button" class="btn btn-default delPackItem media-product-pack-action" data-delete="' + selectedProduct.id + '" ><i class="icon-trash"></i></button>';
+				divContent += '<button type="button" class="btn btn-default delPackItem media-product-pack-action" data-delete="' + selectedProduct.id + '" data-delete-attr="' + selectedProduct.id_product_attribute + '"><i class="icon-trash"></i></button>';
 				divContent += '</li>';
 
 				// QTYxID-QTYxID
 				// @todo : it should be better to create input for each items and each qty
 				// instead of only one separated by x, - and ¤
-				var line = selectedProduct.qty + 'x' + selectedProduct.id ;
+				var line = selectedProduct.qty + 'x' + selectedProduct.id + 'x' + selectedProduct.id_product_attribute;
 				var lineDisplay = selectedProduct.qty + 'x ' + selectedProduct.name;
 
 				$('#divPackItems').html(divContent);
@@ -1309,7 +1317,7 @@ product_tabs['Pack'] = new function() {
 				$('.delPackItem').on('click', function(e){
 					e.preventDefault();
 					e.stopPropagation();
-					delPackItem($(this).data('delete'));
+					delPackItem($(this).data('delete'), $(this).data('delete-attr'));
 				})
 				selectedProduct = null;
 				$('#curPackItemName').select2("val", "");
@@ -1320,7 +1328,7 @@ product_tabs['Pack'] = new function() {
 			}
 		}
 
-		function delPackItem(id) {
+		function delPackItem(id, id_attribute) {
 
 			var reg = new RegExp('-', 'g');
 			var regx = new RegExp('x', 'g');
@@ -1333,17 +1341,16 @@ product_tabs['Pack'] = new function() {
 
 			input.val(null);
 			name.val(null);
-
 			for (var i = 0; i < inputCut.length; ++i)
 				if (inputCut[i]) {
 					var inputQty = inputCut[i].split(regx);
-					if (inputQty[1] != id) {
+					if (inputQty[1] != id || inputQty[2] != id_attribute) {
 						input.val( input.val() + inputCut[i] + '-' );
 						name.val( name.val() + nameCut[i] + '¤');
 					}
 				}
 
-			var elem = $('.product-pack-item[data-product-id = "' + id + '"]');
+			var elem = $('.product-pack-item[data-product-id="' + id + '"][data-product-id-attribute="' + id_attribute + '"]');
 			elem.remove();
 
 			if ($('.product-pack-item').length === 0){
@@ -1353,20 +1360,28 @@ product_tabs['Pack'] = new function() {
 
 		function getSelectedIds()
 		{
-			if ($('#inputPackItems').val() === undefined)
+			var reg = new RegExp('-', 'g');
+			var regx = new RegExp('x', 'g');
+
+			var input = $('#inputPackItems');
+
+			if (input.val() === undefined)
 				return '';
-			var ids = '';
-			if (typeof(id_product) != 'undefined')
-				ids += id_product + ',';
 
-			ids += $('#inputPackItems').val().replace(/\d*x/g, '').replace(/\-/g,',');
-			ids = ids.replace(/\,$/,'');
-			ids = ids.split(',');
-			ints = new Array();
+			var inputCut = input.val().split(reg);
 
-			for (var i=0; i < ids.length; i++) {
-		        ints[i] = parseInt(ids[i]);
-		    }
+			var ints = new Array();
+
+			for (var i = 0; i < inputCut.length; ++i)
+			{
+				var in_ints = new Array();
+				if (inputCut[i]) {
+					var inputQty = inputCut[i].split(regx);
+					in_ints[0] = inputQty[1];
+					in_ints[1] = inputQty[2];
+				}
+				ints[i] = in_ints;
+			}
 
 			return ints;
 		}
