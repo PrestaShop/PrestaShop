@@ -26,7 +26,7 @@
 <!-- Block search module -->
 <div id="search_block_left" class="block exclusive">
 	<p class="title_block">{l s='Search' mod='blocksearch'}</p>
-	<form method="get" action="{$link->getPageLink('search', true)|escape:'html':'UTF-8'}" id="searchbox">
+	<form method="get" action="{$link->getPageLink('search', true, null, null, false, null, true)|escape:'html':'UTF-8'}" id="searchbox">
     	<label for="search_query_block">{l s='Search products:' mod='blocksearch'}</label>
 		<p class="block_content clearfix">
 			<input type="hidden" name="orderby" value="position" />

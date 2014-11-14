@@ -155,18 +155,20 @@ class CountryCore extends ObjectModel
 	 * Get a country ID with its iso code
 	 *
 	 * @param string $iso_code Country iso code
+ 	 * @param bool $active return only active coutries
 	 * @return integer Country ID
 	 */
-	public static function getByIso($iso_code)
+	public static function getByIso($iso_code, $active = false)
 	{
 		if (!Validate::isLanguageIsoCode($iso_code))
 			die(Tools::displayError());
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT `id_country`
-		FROM `'._DB_PREFIX_.'country`
-		WHERE `iso_code` = \''.pSQL(strtoupper($iso_code)).'\'');
-
-		return $result['id_country'];
+			SELECT `id_country`
+			FROM `'._DB_PREFIX_.'country`
+			WHERE `iso_code` = \''.pSQL(strtoupper($iso_code)).'\''
+			.($active ? ' AND active = 1' : '')
+		);
+		return (int)$result['id_country'];
 	}
 
 	public static function getIdZone($id_country)
@@ -183,7 +185,7 @@ class CountryCore extends ObjectModel
 		WHERE `id_country` = '.(int)$id_country);
 
 		self::$_idZones[$id_country] = $result['id_zone'];
-		return $result['id_zone'];
+		return (int)$result['id_zone'];
 	}
 
 	/**

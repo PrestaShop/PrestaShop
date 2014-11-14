@@ -93,6 +93,9 @@ class HelperFormCore extends Helper
 						case 'categories':
 							if ($categories)
 							{
+								if (!isset($params['tree']['id']))
+									throw new PrestaShopException('Id must be filled for categories tree');
+
 								$tree = new HelperTreeCategories($params['tree']['id'], isset($params['tree']['title']) ? $params['tree']['title'] : null);
 
 								if (isset($params['name']))

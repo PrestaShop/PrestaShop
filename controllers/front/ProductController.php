@@ -300,7 +300,7 @@ class ProductControllerCore extends FrontController
 	{
 		$id_customer = (isset($this->context->customer) ? (int)$this->context->customer->id : 0);
 		$id_group = (int)Group::getCurrent()->id;
-		$id_country = (int)$id_customer ? Customer::getCurrentCountry($id_customer) : Configuration::get('PS_COUNTRY_DEFAULT');
+		$id_country = $id_customer ? (int)Customer::getCurrentCountry($id_customer) : (int)Tools::getCountry();
 
 		$group_reduction = GroupReduction::getValueForProduct($this->product->id, $id_group);
 		if ($group_reduction === false)

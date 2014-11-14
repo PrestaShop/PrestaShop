@@ -26,6 +26,11 @@
 
 class OrderCore extends ObjectModel
 {
+	const ROUND_ITEM = 1;
+	const ROUND_LINE = 2;
+	const ROUND_TOTAL = 3;
+
+	
 	/** @var integer Delivery address id */
 	public $id_address_delivery;
 
@@ -142,7 +147,7 @@ class OrderCore extends ObjectModel
 	/** @var string Delivery creation date */
 	public $delivery_date;
 
-	/** @var boolean Order validity (paid and not canceled) */
+	/** @var boolean Order validity: current order status is logable (usually paid and not canceled) */
 	public $valid;
 
 	/** @var string Object creation date */
@@ -221,7 +226,11 @@ class OrderCore extends ObjectModel
 			'id_lang' => array('xlink_resource'=> 'languages'),
 			'id_customer' => array('xlink_resource'=> 'customers'),
 			'id_carrier' => array('xlink_resource'=> 'carriers'),
-			'current_state' => array('xlink_resource'=> 'order_states'),
+			'current_state' => array(
+				'xlink_resource'=> 'order_states',
+				'getter' => 'getWsCurrentState',
+				'setter' => 'setWsCurrentState'
+			),
 			'module' => array('required' => true),
 			'invoice_number' => array(),
 			'invoice_date' => array(),
@@ -236,7 +245,7 @@ class OrderCore extends ObjectModel
 			),
 		),
 		'associations' => array(
-			'order_rows' => array('resource' => 'order_rows', 'setter' => false, 'virtual_entity' => true,
+			'order_rows' => array('resource' => 'order_row', 'setter' => false, 'virtual_entity' => true,
 				'fields' => array(
 					'id' =>  array(),
 					'product_id' => array('required' => true),
@@ -2063,6 +2072,17 @@ class OrderCore extends ObjectModel
 		}
 		else
 			$this->shipping_number = $shipping_number;
+		return true;
+	}
+
+	public function getWsCurrentState($state)
+	{
+		return $this->getCurrentState();
+	}
+
+	public function setWsCurrentState($state)
+	{
+		$this->setCurrentState($state);
 		return true;
 	}
 }

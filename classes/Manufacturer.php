@@ -92,7 +92,7 @@ class ManufacturerCore extends ObjectModel
 			'link_rewrite' => array('getter' => 'getLink', 'setter' => false),
 		),
 		'associations' => array(
-			'addresses' => array('resource' => 'addresses', 'setter' => false, 'fields' => array(
+			'addresses' => array('resource' => 'address', 'setter' => false, 'fields' => array(
 				'id' => array('xlink_resource' => 'addresses'),
 			)),
 		),
@@ -316,6 +316,7 @@ class ManufacturerCore extends ObjectModel
 			$alias = 'stock.';
 		else
 			$alias = 'p.';
+
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, MAX(product_attribute_shop.`id_product_attribute`) id_product_attribute,
 					pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`,
 					pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`, MAX(image_shop.`id_image`) id_image, il.`legend`, m.`name` AS manufacturer_name,
@@ -340,18 +341,21 @@ class ManufacturerCore extends ObjectModel
 					ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m
 					ON (m.`id_manufacturer` = p.`id_manufacturer`)
-				'.Product::sqlStock('p', 0).'
+				'.Product::sqlStock('p', 0);
+
+				if (Group::isFeatureActive() || $active_category)
+				{
+					$sql .= 'JOIN `'._DB_PREFIX_.'category_product` cp ON (p.id_product = cp.id_product)';
+					if (Group::isFeatureActive())
+						$sql .= 'JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.`id_category` = cg.`id_category` AND cg.`id_group` '.$sql_groups.')';
+					if ($active_category)
+						$sql .= 'JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1';
+				}
+
+		$sql .= '
 				WHERE p.`id_manufacturer` = '.(int)$id_manufacturer.'
 				'.($active ? ' AND product_shop.`active` = 1' : '').'
 				'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
-				AND p.`id_product` IN (
-					SELECT cp.`id_product`
-					FROM `'._DB_PREFIX_.'category_group` cg
-					LEFT JOIN `'._DB_PREFIX_.'category_product` cp
-						ON (cp.`id_category` = cg.`id_category`)'.
-					($active_category ? ' INNER JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1' : '').'
-					WHERE cg.`id_group` '.$sql_groups.'
-				)
 				GROUP BY product_shop.id_product
 				ORDER BY '.$alias.'`'.bqSQL($order_by).'` '.pSQL($order_way).'
 				LIMIT '.(((int)$p - 1) * (int)$n).','.(int)$n;

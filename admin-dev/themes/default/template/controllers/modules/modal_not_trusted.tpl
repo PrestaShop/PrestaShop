@@ -23,25 +23,70 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{assign var=module_name value='<strong><span class="module-name-placeholder"></span></strong>'}
+<div class="untrusted-content-action">
 
-<div class="modal-body">
+	<div class="modal-body">
+		<div class="alert alert-warning">
+			<h3>{l s='Do you want to install this module that could not be verified by PrestaShop?'}</h3>
 
-	<div class="alert alert-warning">
-		<h4>{l s='You are about to install "%s", a module that could not be securely identified by PrestaShop.' sprintf=$module_name}</h4>
+			<p>{l s="This generally happens when the module isn't distributed through our official marketplace, PrestaShop Addons - or when your server failed to communicate with PrestaShop Addons."}</p>
+		</div>
 
-		<p>{l s='This generally happens when the module is not distributed through our official marketplace, PrestaShop Addons - or when your server failed to communicate with PrestaShop Addons.'}
-		{l s='Since you did not download the module from PrestaShop Addons, we cannot assert that the module is safe (i.e. that it is not adding some undisclosed functionality like backdoors, ads, hidden links, spam, etc.).'}
-		<strong>{l s='Use at your own risk.'}</strong></p>
+		<div class="row">
+			<div class="col-sm-2" style="text-align: center;">
+				<img id="untrusted-module-logo" class="" src="" alt="">
+			</div>
+			<div class="col-sm-10">
+				<table class="table">
+					<tr>
+						<td>{l s='Module'}</td>
+						<td><strong><span class="module-display-name-placeholder"></span></strong></td>
+					</tr>
+					<tr>
+						<td>{l s='Author'}</td>
+						<td><strong><span class="author-name-placeholder"></span></strong></td>
+					</tr>
+				</table>
+			</div>
+
+			<div class="col-sm-12" style="text-align: center; padding-top: 12px;">
+				<a id="proceed-install-anyway" href="#" class="btn btn-warning">{l s='Proceed with the installation'}</a>
+				<button type="button" class="btn btn-default" data-dismiss="modal">{l s='Back to modules list'}</button>
+			</div>
+		</div>
 	</div>
 
-	<h3>{l s='What Should I Do?'}</h3>
-	<p>{l s='If you understand what this module does and you are certain that it is safe, you can proceed with the installation.'}</p>
+	<div class="modal-footer">
+		<div class="alert alert-info">
+			<p>
+				{l s='Since you may not have downloaded this module from PrestaShop Addons, we cannot assert that the module is not adding some undisclosed functionalities. We advise you to install it only if you trust the source of the content.'}
+				<a id="untrusted-show-risk" href="#"><strong>{l s="What's the risk?"}</strong></a>
+			</p>
+		</div>
+	</div>
 
-	<p>{l s='If you are unsure about the safety of this module, you can look for similar modules on the official marketplace.'} <a class="catalog-link" target="_blank" href="#">{l s='Click here to browse PrestaShop Addons.'}</a></p>
 </div>
 
-<div class="modal-footer">
-	<button type="button" class="btn btn-default" data-dismiss="modal">{l s='Back to safety'}</button>
-	<a id="proceed-install-anyway" href="#" class="btn btn-warning">{l s='Proceed with the installation'}</a>
+<div class="untrusted-content-more-info" style="display:none;">
+
+	<div class="modal-body">
+		<h4>{l s='Am I at Risk ?'}</h4>
+
+		<p>{l s="A module that hasn't been verified may be dangerous and could add hidden functionalities like backdoors, ads, hidden links, spam, etc.
+Don’t worry, this alert is simply a warning."}</p>
+
+		<p>{l s="PrestaShop, being an open-source software, has an awesome community with a long history of developing and sharing high quality modules. Before installing this module, making sure the author of this module is a known community member is always a good idea (by checking [1]our forum[/1] for instance)." tags=['<a href="http://forum.prestashop.com">']}</p>
+
+		<h4>{l s='What Should I Do ?'}</h4>
+		
+		<p>{l s="If you trust or find the author of this module to be an active community member, you can proceed with the installation."}
+
+		<p>{l s="Otherwise you can look for similar modules on the official marketplace. [1]Click here to browse PrestaShop Addons[/1]." tags=['<a class="catalog-link" href="#">']}
+
+	</div>
+
+	<div class="modal-footer">
+		<a id="untrusted-show-action" class="btn btn-default" href="#">{l s='Back'}</a>
+	</div>
+
 </div>

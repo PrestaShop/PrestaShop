@@ -195,11 +195,13 @@ class DbPDOCore extends Db
 			return false;
 		}
 
-		$sql = '
-			CREATE TABLE `'.$prefix.'test` (
+		if ($engine === null)
+			$engine = 'MyISAM';
+
+		$result = $link->query('
+		CREATE TABLE `'.$prefix.'test` (
 			`test` tinyint(1) unsigned NOT NULL
-			) ENGINE=MyISAM';
-		$result = $link->query($sql);
+		) ENGINE='.$engine);
 		if (!$result)
 		{
 			$error = $link->errorInfo();
@@ -262,5 +264,18 @@ class DbPDOCore extends Db
 		unset($link);
 
 		return ($result === false) ? false : true;
+	}
+	
+	public static function checkAutoIncrement($server, $user, $pwd)
+	{
+		try {
+			$link = DbPDO::_getPDO($server, $user, $pwd, false, 5);
+		} catch (PDOException $e) {
+			return false;
+		}
+		$ret = (bool)(($result = $link->query('SELECT @@auto_increment_increment as aii')) && ($row = $result->fetch()) && $row['aii'] == 1);
+		$ret &= (bool)(($result = $link->query('SELECT @@auto_increment_offset as aio')) && ($row = $result->fetch()) && $row['aio'] == 1);
+		unset($link);
+		return $ret;
 	}
 }

@@ -427,7 +427,7 @@ abstract class ControllerCore
 			));
 
 			$javascript = $this->context->smarty->fetch(_PS_ALL_THEMES_DIR_.'javascript.tpl');
-			echo ($defer ? $html.$javascript : str_replace($js_tag, $javascript, $html)).$live_edit_content.((!isset($this->ajax) || ! $this->ajax) ? '</body></html>' : '');
+			echo ($defer ? $html.$javascript : preg_replace('/(?<!\$)'.$js_tag.'/', $javascript, $html)).$live_edit_content.((!isset($this->ajax) || ! $this->ajax) ? '</body></html>' : '');
 		}
 		else
 			echo $html;
@@ -449,8 +449,7 @@ abstract class ControllerCore
 		{
 			case E_USER_ERROR:
 			case E_ERROR:
-				$type = 'Fatal error';
-				die;
+				die('Fatal error: '.$errstr.' in '.$errfile.' on line '.$errline);
 			break;
 			case E_USER_WARNING:
 			case E_WARNING:

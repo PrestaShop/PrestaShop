@@ -80,7 +80,7 @@ class CustomerThreadCore extends ObjectModel
 		),
 		'associations' => array(
 			'customer_messages' => array(
-				'resource' => 'customer_messages',
+				'resource' => 'customer_message',
 				'id' => array('required' => true)),
 		)
 	);
@@ -120,15 +120,18 @@ class CustomerThreadCore extends ObjectModel
 		return $return;
 	}
 
-	public static function getCustomerMessages($id_customer, $read = null)
+	public static function getCustomerMessages($id_customer, $read = null, $id_order = null)
 	{
 		$sql = 'SELECT *
 			FROM '._DB_PREFIX_.'customer_thread ct
 			LEFT JOIN '._DB_PREFIX_.'customer_message cm
 				ON ct.id_customer_thread = cm.id_customer_thread
 			WHERE id_customer = '.(int)$id_customer;
-		if (!is_null($read))
+
+		if ($read !== null)
 			$sql .= ' AND cm.`read` = '.(int)$read;
+		if ($id_order !== null)
+			$sql .= ' AND ct.`id_order` = '.(int)$id_order;
 
 		return Db::getInstance()->executeS($sql);
 	}

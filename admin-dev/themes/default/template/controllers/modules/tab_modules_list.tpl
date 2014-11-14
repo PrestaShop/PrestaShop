@@ -45,7 +45,7 @@
 			</ul>
 		</div>
 	</div>
-	<div id="modules_list_container_content" class="tab-content">
+	<div id="modules_list_container_content" class="tab-content modal-content-overflow">
 		{if count($tab_modules_list.not_installed)}
 		<div class="tab-pane active" id="tab_modules_list_not_installed">
 			<table id="tab_modules_list_not_installed" class="table">

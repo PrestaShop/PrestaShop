@@ -156,7 +156,7 @@ class CarrierCore extends ObjectModel
 				'getter' => 'getIdTaxRulesGroup',
 				'setter' => 'setTaxRulesGroup',
 				'xlink_resource' => array(
-					'resourceName' => 'tax_rules_group'
+					'resourceName' => 'tax_rule_groups'
 				)
 			),
 		),
@@ -212,7 +212,7 @@ class CarrierCore extends ObjectModel
 		Carrier::cleanPositions();
 		return (Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'cart_rule_carrier WHERE id_carrier = '.(int)$this->id) &&
 					$this->deleteTaxRulesGroup(Shop::getShops(true, null, true)));
-		
+
 	}
 
 	/**
@@ -468,7 +468,7 @@ class CarrierCore extends ObjectModel
 						SELECT COUNT(*) n, c.id_tax_rules_group
 						FROM '._DB_PREFIX_.'carrier c
 						JOIN '._DB_PREFIX_.'tax_rules_group trg ON (c.id_tax_rules_group = trg.id_tax_rules_group)
-						WHERE trg.active = 1
+						WHERE trg.active = 1 AND trg.deleted = 0
 						GROUP BY c.id_tax_rules_group
 						ORDER BY n DESC
 						LIMIT 1
@@ -487,7 +487,7 @@ class CarrierCore extends ObjectModel
 		ORDER BY s.`name` ASC');
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT cl.*,c.*, cl.`name` AS country, zz.`name` AS zone 
+			SELECT cl.*,c.*, cl.`name` AS country, zz.`name` AS zone
 			FROM `'._DB_PREFIX_.'country` c'.
 			Shop::addSqlAssociation('country', 'c').'
 			LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country` AND cl.`id_lang` = '.(int)$id_lang.')
@@ -771,8 +771,8 @@ class CarrierCore extends ObjectModel
 
 			if ($delete)
 				Db::getInstance()->execute('
-					DELETE FROM `'._DB_PREFIX_.'delivery` 
-					WHERE '.(is_null($values['id_shop']) ? 'ISNULL(`id_shop`) ' : 'id_shop = '.(int)$values['id_shop']).' 
+					DELETE FROM `'._DB_PREFIX_.'delivery`
+					WHERE '.(is_null($values['id_shop']) ? 'ISNULL(`id_shop`) ' : 'id_shop = '.(int)$values['id_shop']).'
 					AND '.(is_null($values['id_shop_group']) ? 'ISNULL(`id_shop`) ' : 'id_shop_group='.(int)$values['id_shop_group']).'
 					AND id_carrier='.(int)$values['id_carrier'].
 					($values['id_range_price'] !== null ? ' AND id_range_price='.(int)$values['id_range_price'] : ' AND (ISNULL(`id_range_price`) OR `id_range_price` = 0)').
@@ -969,7 +969,7 @@ class CarrierCore extends ObjectModel
 	{
 		return Carrier::getIdTaxRulesGroupByIdCarrier((int)$this->id, $context);
 	}
-	
+
 	public static function getIdTaxRulesGroupByIdCarrier($id_carrier, Context $context = null)
 	{
 		if (!$context)
@@ -981,7 +981,7 @@ class CarrierCore extends ObjectModel
 				SELECT `id_tax_rules_group`
 				FROM `'._DB_PREFIX_.'carrier_tax_rules_group_shop`
 				WHERE `id_carrier` = '.(int)$id_carrier.' AND id_shop='.(int)Context::getContext()->shop->id));
-			
+
 		return Cache::retrieve($key);
 	}
 
@@ -1005,9 +1005,9 @@ class CarrierCore extends ObjectModel
 			$shops = Shop::getContextListShopID();
 		else
 			$shops = Shop::getShops(true, null, true);
-			
+
 		$this->deleteTaxRulesGroup($shops);
-				
+
 		$values = array();
 		foreach ($shops as $id_shop)
 			$values[] = array(
@@ -1171,13 +1171,13 @@ class CarrierCore extends ObjectModel
 			$id_shop = Context::getContext()->shop->id;
 		if (is_null($cart))
 			$cart = Context::getContext()->cart;
-			
+
 		$id_address = (int)((!is_null($id_address_delivery) && $id_address_delivery != 0) ? $id_address_delivery :  $cart->id_address_delivery);
 		if ($id_address)
 		{
 			$address = new Address($id_address);
 			$id_zone = Address::getZoneById($address->id);
-			
+
 			// Check the country of the address is activated
 			if (!Address::isCountryActiveById($address->id))
 				return array();
@@ -1189,16 +1189,16 @@ class CarrierCore extends ObjectModel
 		}
 
 		// Does the product is linked with carriers?
-		$query = new DbQuery();
-		$query->select('id_carrier');
-		$query->from('product_carrier', 'pc');
-		$query->innerJoin('carrier', 'c', 'c.id_reference = pc.id_carrier_reference AND c.deleted = 0');
-		$query->where('pc.id_product = '.(int)$product->id);
-		$query->where('pc.id_shop = '.(int)$id_shop);
-
 		$cache_id = 'Carrier::getAvailableCarrierList_'.(int)$product->id.'-'.(int)$id_shop;
 		if (!Cache::isStored($cache_id))
 		{
+			$query = new DbQuery();
+			$query->select('id_carrier');
+			$query->from('product_carrier', 'pc');
+			$query->innerJoin('carrier', 'c', 'c.id_reference = pc.id_carrier_reference AND c.deleted = 0');
+			$query->where('pc.id_product = '.(int)$product->id);
+			$query->where('pc.id_shop = '.(int)$id_shop);
+
 			$carriers_for_product = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 			Cache::store($cache_id, $carriers_for_product);
 		}
@@ -1206,7 +1206,7 @@ class CarrierCore extends ObjectModel
 
 		$carrier_list = array();
 		if (!empty($carriers_for_product))
-		{				
+		{
 			//the product is linked with carriers
 			foreach ($carriers_for_product as $carrier) //check if the linked carriers are available in current zone
 				if (Carrier::checkCarrierZone($carrier['id_carrier'], $id_zone))
@@ -1226,36 +1226,38 @@ class CarrierCore extends ObjectModel
 		$available_carrier_list = array();
 		$customer = new Customer($cart->id_customer);
 		$carriers = Carrier::getCarriersForOrder($id_zone, $customer->getGroups(), $cart);
-				
+
 		foreach ($carriers as $carrier)
 			$available_carrier_list[] = $carrier['id_carrier'];
-		
+
 		if ($carrier_list)
 			$carrier_list = array_intersect($available_carrier_list, $carrier_list);
 		else
 			$carrier_list = $available_carrier_list;
-			 								
-		if (isset($warehouse_carrier_list))
+
+		if (isset($warehouse_carrier_list) && count($warehouse_carrier_list))
 			$carrier_list = array_intersect($carrier_list, $warehouse_carrier_list);
 
 		if ($product->width > 0 || $product->height > 0 || $product->depth > 0 || $product->weight > 0)
 		{
+			$total_weight = $cart->getTotalWeight();
+
 			foreach ($carrier_list as $key => $id_carrier)
 			{
 				$carrier = new Carrier($id_carrier);
 				if (($carrier->max_width > 0 && $carrier->max_width < $product->width)
 					|| ($carrier->max_height > 0 && $carrier->max_height < $product->height)
 					|| ($carrier->max_depth > 0 && $carrier->max_depth < $product->depth)
-					|| ($carrier->max_weight > 0 && $carrier->max_weight < $product->weight))
+					|| ($carrier->max_weight > 0 && $carrier->max_weight < $total_weight))
 					unset($carrier_list[$key]);
 			}
 		}
 		return $carrier_list;
 	}
-	
+
 	/**
 	 * Assign one (ore more) group to all carriers
-	 * 
+	 *
 	 * @since 1.5.0
 	 * @param int|array $id_group_list group id or list of group ids
 	 * @param array $exception list of id carriers to ignore
@@ -1264,16 +1266,16 @@ class CarrierCore extends ObjectModel
 	{
 		if (!is_array($id_group_list))
 			$id_group_list = array($id_group_list);
-		
+
 		Db::getInstance()->execute('
 			DELETE FROM `'._DB_PREFIX_.'carrier_group`
 			WHERE `id_group` IN ('.join(',', $id_group_list).')');
-		
+
 		$carrier_list = Db::getInstance()->executeS('
 			SELECT id_carrier FROM `'._DB_PREFIX_.'carrier`
 			WHERE deleted = 0
 			'.(is_array($exception) ? 'AND id_carrier NOT IN ('.join(',', $exception).')' : ''));
-		
+
 		if ($carrier_list)
 		{
 			$data = array();
@@ -1287,10 +1289,10 @@ class CarrierCore extends ObjectModel
 			}
 			return Db::getInstance()->insert('carrier_group', $data, false, false, Db::INSERT);
 		}
-		
+
 		return true;
 	}
-	
+
 	public function setGroups($groups, $delete = true)
 	{
 		if ($delete)

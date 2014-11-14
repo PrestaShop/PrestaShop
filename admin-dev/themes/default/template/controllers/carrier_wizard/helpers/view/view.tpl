@@ -42,6 +42,7 @@
 	var invalid_range = '{l s='This range is not valid' js=1}';
 	var overlapping_range = '{l s='Ranges are overlapping' js=1}';
 	var range_is_overlapping = '{l s='Ranges are overlapping' js=1}';
+	var select_at_least_one_zone = '{l s='Please select at least one zone' js=1}';
 	var multistore_enable = '{$multistore_enable}';
 </script>
 

@@ -369,10 +369,23 @@ if (mins < 10)
 var secs = date.getSeconds();
 if (secs < 10)
 	secs = "0" + secs;
-$('.datepicker').datepicker({
+
+$('.datepicker').datetimepicker({
 	prevText: '',
 	nextText: '',
-	dateFormat: 'yy-mm-dd ' + hours + ':' + mins + ':' + secs
+	dateFormat: 'yy-mm-dd',
+	// Define a custom regional settings in order to use PrestaShop translation tools
+	currentText: currentText,
+	closeText:closeText,
+	ampm: false,
+	amNames: ['AM', 'A'],
+	pmNames: ['PM', 'P'],
+	timeFormat: 'hh:mm:ss tt',
+	timeSuffix: '',
+	timeOnlyTitle: timeOnlyTitle,
+	timeText: timeText,
+	hourText: hourText,
+	minuteText: minuteText,
 });
 
 $('#giftProductFilter').typeWatch({

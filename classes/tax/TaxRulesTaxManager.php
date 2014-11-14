@@ -81,13 +81,15 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 		if (!Cache::isStored($cache_id))
 		{
 			$rows = Db::getInstance()->executeS('
-			SELECT *
-			FROM `'._DB_PREFIX_.'tax_rule`
-			WHERE `id_country` = '.(int)$this->address->id_country.'
-			AND `id_tax_rules_group` = '.(int)$this->type.'
-			AND `id_state` IN (0, '.(int)$this->address->id_state.')
-			AND (\''.pSQL($postcode).'\' BETWEEN `zipcode_from` AND `zipcode_to` OR (`zipcode_to` = 0 AND `zipcode_from` IN(0, \''.pSQL($postcode).'\')))
-			ORDER BY `zipcode_from` DESC, `zipcode_to` DESC, `id_state` DESC, `id_country` DESC');
+			SELECT tr.*
+			FROM `'._DB_PREFIX_.'tax_rule` tr
+			JOIN `'._DB_PREFIX_.'tax_rules_group` trg ON (tr.`id_tax_rules_group` = trg.`id_tax_rules_group`)
+			WHERE trg.`active` = 1
+			AND tr.`id_country` = '.(int)$this->address->id_country.'
+			AND tr.`id_tax_rules_group` = '.(int)$this->type.'
+			AND tr.`id_state` IN (0, '.(int)$this->address->id_state.')
+			AND (\''.pSQL($postcode).'\' BETWEEN tr.`zipcode_from` AND tr.`zipcode_to` OR (tr.`zipcode_to` = 0 AND tr.`zipcode_from` IN(0, \''.pSQL($postcode).'\')))
+			ORDER BY tr.`zipcode_from` DESC, tr.`zipcode_to` DESC, tr.`id_state` DESC, tr.`id_country` DESC');
 
 			$behavior = 0;
 			$first_row = true;

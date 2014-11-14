@@ -584,7 +584,7 @@ function upQuantity(id, qty)
 			else
 			{
 				if (jsonData.refresh)
-					location.reload();
+					window.location.href = window.location.href;
 				updateCartSummary(jsonData.summary);
 				if (window.ajaxCart != undefined)
 					ajaxCart.updateCart(jsonData);
@@ -696,8 +696,9 @@ function downQuantity(id, qty)
 				else
 				{
 					if (jsonData.refresh)
-						location.reload();
+						window.location.href = window.location.href;
 					updateCartSummary(jsonData.summary);
+
 					if (window.ajaxCart !== undefined)
 						ajaxCart.updateCart(jsonData);
 					if (customizationId !== 0)					
@@ -756,44 +757,62 @@ function updateCartSummary(json)
 	{
 		// if reduction, we need to show it in the cart by showing the initial price above the current one
 		var reduction = product_list[i].reduction_applies;
+		var reduction_type = product_list[i].reduction_type;
+		var reduction_symbol = '';
 		var initial_price_text = '';
 		initial_price = '';
+
 		if (typeof(product_list[i].price_without_quantity_discount) !== 'undefined')
 			initial_price = formatCurrency(product_list[i].price_without_quantity_discount, currencyFormat, currencySign, currencyBlank);
-			priceReductionPercent = ps_round((ps_round(product_list[i].price_without_quantity_discount) - ps_round(product_list[i].price_wt))/ps_round(product_list[i].price_without_quantity_discount) * -100);
-		var current_price = '';
-		if (priceDisplayMethod !== 0)
-			current_price = formatCurrency(product_list[i].price, currencyFormat, currencySign, currencyBlank);
-		else
-			current_price = formatCurrency(product_list[i].price_wt, currencyFormat, currencySign, currencyBlank);
 
+		var current_price = '';
+		var product_total = '';
+		var product_customization_total = '';
+
+		if (priceDisplayMethod !== 0)
+		{
+			current_price = formatCurrency(product_list[i].price, currencyFormat, currencySign, currencyBlank);
+			product_total = product_list[i].total;
+			product_customization_total = product_list[i].total_customization;
+		}
+		else
+		{
+			current_price = formatCurrency(product_list[i].price_wt, currencyFormat, currencySign, currencyBlank);
+			product_total = product_list[i].total_wt;
+			product_customization_total = product_list[i].total_customization_wt;
+		}
+
+		var current_price_class ='price';
 		if (reduction && typeof(initial_price) !== 'undefined')
+		{
+			if (reduction_type == 'amount')
+				price_reduction = product_list[i].reduction_formatted;
+			else
+			{
+				price_reduction = ps_round((ps_round(product_list[i].price_without_quantity_discount) - ps_round(product_list[i].price_wt))/ps_round(product_list[i].price_without_quantity_discount) * -100);
+				reduction_symbol = '%';
+			}
+
 			if (initial_price !== '' && product_list[i].price_without_quantity_discount > product_list[i].price)
-				initial_price_text = '<span class="price-percent-reduction small">'+priceReductionPercent+'%</span><span class="old-price">' + initial_price + '</span>';
+			{
+				initial_price_text = '<li class="price-percent-reduction small">&nbsp;'+price_reduction+reduction_symbol+'&nbsp;</li><li class="old-price">' + initial_price + '</li>';
+				current_price_class += ' special-price';
+			}
+		}
 
 		var key_for_blockcart = product_list[i].id_product + '_' + product_list[i].id_product_attribute + '_' + product_list[i].id_address_delivery;
 		var key_for_blockcart_nocustom = product_list[i].id_product + '_' + product_list[i].id_product_attribute + '_' + ((product_list[i].id_customization && product_list[i].quantity_without_customization != product_list[i].quantity)? 'nocustom' : '0') + '_' + product_list[i].id_address_delivery;
 
-		if (priceDisplayMethod !== 0)
-		{
-			$('#product_price_' + key_for_blockcart).html('<span class="price">' + current_price + '</span>' + initial_price_text);
-			if (typeof(product_list[i].customizationQuantityTotal) !== 'undefined' && product_list[i].customizationQuantityTotal > 0)			
-				$('#total_product_price_' + key_for_blockcart).html(formatCurrency(product_list[i].total_customization, currencyFormat, currencySign, currencyBlank));
-			else
-				$('#total_product_price_' + key_for_blockcart).html(formatCurrency(product_list[i].total, currencyFormat, currencySign, currencyBlank));
-			if (product_list[i].quantity_without_customization != product_list[i].quantity)
-				$('#total_product_price_' + key_for_blockcart_nocustom).html(formatCurrency(product_list[i].total, currencyFormat, currencySign, currencyBlank));				
-		}
+		$('#product_price_' + key_for_blockcart).html('<li class="' + current_price_class + '">' + current_price + '</li>' + initial_price_text);
+		if (typeof(product_list[i].customizationQuantityTotal) !== 'undefined' && product_list[i].customizationQuantityTotal > 0)			
+			$('#total_product_price_' + key_for_blockcart).html(formatCurrency(product_customization_total, currencyFormat, currencySign, currencyBlank));
 		else
-		{	
-			$('#product_price_' + key_for_blockcart).html('<span class="price">' + current_price + '</span>' + initial_price_text);
-			if (typeof(product_list[i].customizationQuantityTotal) !== 'undefined' && product_list[i].customizationQuantityTotal > 0)
-				$('#total_product_price_' + key_for_blockcart).html(formatCurrency(product_list[i].total_customization_wt, currencyFormat, currencySign, currencyBlank));
-			else
-				$('#total_product_price_' + key_for_blockcart).html(formatCurrency(product_list[i].total_wt, currencyFormat, currencySign, currencyBlank));
-			if (product_list[i].quantity_without_customization != product_list[i].quantity)
-				$('#total_product_price_' + key_for_blockcart_nocustom).html(formatCurrency(product_list[i].total_wt, currencyFormat, currencySign, currencyBlank));									
-		}
+			$('#total_product_price_' + key_for_blockcart).html(formatCurrency(product_total, currencyFormat, currencySign, currencyBlank));
+		if (product_list[i].quantity_without_customization != product_list[i].quantity)
+			$('#total_product_price_' + key_for_blockcart_nocustom).html(formatCurrency(product_total, currencyFormat, currencySign, currencyBlank));				
+
+
+
 		$('input[name=quantity_' + key_for_blockcart_nocustom + ']').val(product_list[i].id_customization? product_list[i].quantity_without_customization : product_list[i].cart_quantity);
 		$('input[name=quantity_' + key_for_blockcart_nocustom + '_hidden]').val(product_list[i].id_customization? product_list[i].quantity_without_customization : product_list[i].cart_quantity);
 		if (typeof(product_list[i].customizationQuantityTotal) !== 'undefined' && product_list[i].customizationQuantityTotal > 0)

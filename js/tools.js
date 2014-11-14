@@ -60,7 +60,7 @@ function formatCurrency(price, currencyFormat, currencySign, currencyBlank)
 {
 	// if you modified this function, don't forget to modify the PHP function displayPrice (in the Tools.php class)
 	var blank = '';
-	price = parseFloat(price.toFixed(6));
+	price = parseFloat(price.toFixed(10));
 	price = ps_round(price, priceDisplayPrecision);
 	if (currencyBlank > 0)
 		blank = ' ';
@@ -77,7 +77,49 @@ function formatCurrency(price, currencyFormat, currencySign, currencyBlank)
 	return price;
 }
 
-function ps_round(value, precision)
+function ps_round_helper(value, mode)
+{
+	// From PHP Math.c
+	if (value >= 0.0)
+	{
+		tmp_value = Math.floor(value + 0.5);
+		if ((mode == 3 && value == (-0.5 + tmp_value)) ||
+			(mode == 4 && value == (0.5 + 2 * Math.floor(tmp_value / 2.0))) ||
+			(mode == 5 && value == (0.5 + 2 * Math.floor(tmp_value / 2.0) - 1.0)))
+			tmp_value -= 1.0;
+	}
+	else 
+	{
+		tmp_value = Math.ceil(value - 0.5);
+		if ((mode == 3 && value == (0.5 + tmp_value)) ||
+			(mode == 4 && value == (-0.5 + 2 * Math.ceil(tmp_value / 2.0))) ||
+			(mode == 5 && value == (-0.5 + 2 * Math.ceil(tmp_value / 2.0) + 1.0)))
+			tmp_value += 1.0;
+	}
+
+	return tmp_value;
+}
+
+function ps_log10(value)
+{
+	return Math.log(value) / Math.LN10;
+}
+
+function ps_round_half_up(value, precision)
+{		
+	var mul = Math.pow(10, precision);
+	var val = value * mul;
+
+	var next_digit = Math.floor(val * 10) - 10 * Math.floor(val);
+	if (next_digit >= 5)
+		val = Math.ceil(val);
+	else
+		val = Math.floor(val);
+
+	return val / mul;
+}
+
+function ps_round(value, places)
 {
 	if (typeof(roundMode) === 'undefined')
 		roundMode = 2;
@@ -85,12 +127,54 @@ function ps_round(value, precision)
 		precision = 2;
 	
 	var method = roundMode;
+
 	if (method === 0)
-		return ceilf(value, precision);
+		return ceilf(value, places);
 	else if (method === 1)
-		return floorf(value, precision);
-	var precisionFactor = precision === 0 ? 1 : Math.pow(10, precision);
-	return Math.round(value * precisionFactor) / precisionFactor;
+		return floorf(value, places);
+	else if (method === 2)
+		return ps_round_half_up(value, places);
+	else if (method == 3 || method == 4 || method == 5)
+	{
+		// From PHP Math.c
+		var precision_places = 14 - Math.floor(ps_log10(Math.abs(value)));
+		var f1 = Math.pow(10, Math.abs(places));
+
+		if (precision_places > places && precision_places - places < 15) 
+		{
+			var f2 = Math.pow(10, Math.abs(precision_places));
+			if (precision_places >= 0) 
+				tmp_value = value * f2;
+			else
+				tmp_value = value / f2;
+
+			tmp_value = ps_round_helper(tmp_value, roundMode);
+
+			/* now correctly move the decimal point */
+			f2 = Math.pow(10, Math.abs(places - precision_places));
+			/* because places < precision_places */
+			tmp_value /= f2;
+		} 
+		else 
+		{
+			/* adjust the value */
+			if (places >= 0)
+				tmp_value = value * f1;
+			else
+				tmp_value = value / f1;
+
+			if (Math.abs(tmp_value) >= 1e15)
+				return value;
+		}
+
+		tmp_value = ps_round_helper(tmp_value, roundMode);
+		if (places > 0) 
+			tmp_value = tmp_value / f1;
+		else
+			tmp_value = tmp_value * f1;
+
+		return tmp_value;
+	}
 }
 
 function autoUrl(name, dest)
@@ -501,6 +585,16 @@ function isCleanHtml(content)
 		return false;
 
 	return true;
+}
+
+function sleep(seconds) {
+	var start = new Date().getTime();
+
+	for (var i = 0; i < 1e7; i++) {
+		if ((new Date().getTime() - start) > seconds*1000){
+			break;
+		}
+	}
 }
 
 $(document).ready(function()

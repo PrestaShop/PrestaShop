@@ -80,8 +80,8 @@ $class_name = WebserviceKey::getClassFromKey($key);
 $bad_class_name = false;
 if (!class_exists($class_name))
 {
+	$bad_class_name = $class_name;
 	$class_name = 'WebserviceRequest';
-	$bad_class_name = true;
 }
 // fetch the request
 WebserviceRequest::$ws_current_classname = $class_name;

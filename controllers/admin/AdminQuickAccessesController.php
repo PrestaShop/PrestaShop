@@ -145,12 +145,77 @@ class AdminQuickAccessesControllerCore extends AdminController
 		parent::initProcess();
 	}
 	
-	public function processAdd()
+	public function getQuickAccessesList()
 	{
-		// Enable the creation of quick links from the URL
-		$_POST = array_merge($_POST, $_GET);
+		$links = QuickAccess::getQuickAccesses($this->context->language->id);
+		return Tools::jsonEncode(array_map(array($this, 'getLinkToken'), $links));
+	}
+	public function getLinkToken($item){
+		$url = parse_url($item['link']);
+		parse_str($url['query'], $query);
+		$controller = $query['controller'];
+		$item['token'] = Tools::getAdminTokenLite($controller);
+		return $item;
+	}
 
-		return parent::processAdd();
+	public function addQuickLink()
+	{
+		if (!isset($this->className) || empty($this->className))
+			return false;
+		$this->validateRules();
+		if (count($this->errors) <= 0)
+		{
+			$this->object = new $this->className();
+			$this->copyFromPost($this->object, $this->table);
+			$exists = Db::getInstance()->getValue('SELECT id_quick_access FROM '._DB_PREFIX_.'quick_access WHERE link = "'.pSQL($this->object->link).'"');
+			if ($exists)
+				return true;
+			$this->beforeAdd($this->object);
+			if (method_exists($this->object, 'add') && !$this->object->add())
+			{
+				$this->errors[] = Tools::displayError('An error occurred while creating an object.').
+					' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
+			}
+			/* voluntary do affectation here */
+			elseif (($_POST[$this->identifier] = $this->object->id) && $this->postImage($this->object->id) && !count($this->errors) && $this->_redirect)
+			{
+				PrestaShopLogger::addLog(sprintf($this->l('%s addition', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
+				$this->afterAdd($this->object);
+			}
+		}
+		$this->errors = array_unique($this->errors);
+		if (!empty($this->errors))
+		{
+			d($this->errors);
+			return false;
+		}
+		return $this->getQuickAccessesList();
+	}
+
+	public function processDelete()
+	{
+		parent::processDelete();
+		return $this->getQuickAccessesList();
+	}
+
+	public function ajaxProcessGetUrl()
+	{
+		if (Tools::strtolower(Tools::getValue('method')) === 'add')
+		{
+			$params['new_window'] = 0;
+			$params['name_'.(int)Configuration::get('PS_LANG_DEFAULT')] = Tools::getValue('name');
+			$params['link'] = 'index.php?'.Tools::getValue('url');
+			$params['submitAddquick_access'] = 1;
+			unset($_POST['name']);
+			$_POST = array_merge($_POST, $params);
+			die($this->addQuickLink());
+		}
+		else if (Tools::strtolower(Tools::getValue('method')) === 'remove')
+		{
+			$params['deletequick_access'] = 1;
+			$_POST = array_merge($_POST, $params);
+			die($this->processDelete());
+		}
 	}
 
 	public function processNewWindow()

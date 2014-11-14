@@ -5,7 +5,8 @@
 @import "compass/reset";
 @import "theme_variables";
 @import "bootstrap";
-@import "font-awesome";
+@import "font-awesome/font-awesome";
+@import "icons";
 
 a:hover {
 	text-decoration: none;
@@ -1796,6 +1797,9 @@ div.star a:hover {
 		.row {
 			position: relative;
 		}
+		ul.row{
+			position: static;
+		}
 		.footer-block {
 			margin-top: 45px;
 			// max 767px
@@ -1966,6 +1970,13 @@ div.star a:hover {
 						a {
 							&:before {
 								content: "\f0d2";
+							}
+						}
+					}
+					&.vimeo {
+						a {
+							&:before {
+								content: "\f194";
 							}
 						}
 					}

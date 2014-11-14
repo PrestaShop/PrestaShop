@@ -98,6 +98,8 @@ class AdminAccessControllerCore extends AdminController
 		$this->tpl_form_vars = array(
 			'profiles' => $profiles,
 			'accesses' => $accesses,
+			'id_tab_parentmodule' => (int)Tab::getIdFromClassName('AdminParentModules'),
+			'id_tab_module' => (int)Tab::getIdFromClassName('AdminModules'),
 			'tabs' => $tabs,
 			'current_profile' => (int)$current_profile,
 			'admin_profile' => (int)_PS_ADMIN_PROFILE_,

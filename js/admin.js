@@ -616,16 +616,16 @@ function checkMultishopDefaultValue(obj, key)
 {
 	if (!$(obj).prop('checked') || $('#'+key).hasClass('isInvisible'))
 	{
-		$('#conf_id_'+key+' input, #conf_id_'+key+' textarea, #conf_id_'+key+' select').attr('disabled', true);
+		$('#conf_id_'+key+' input, #conf_id_'+key+' textarea, #conf_id_'+key+' select, #conf_id_'+key+' button').prop('disabled', true);
 		$('#conf_id_'+key+' label.conf_title').addClass('isDisabled');
-		$(obj).attr('disabled', false);
+		$(obj).prop('disabled', false);
 	}
 	else
 	{
-		$('#conf_id_'+key+' input, #conf_id_'+key+' textarea, #conf_id_'+key+' select').attr('disabled', false);
+		$('#conf_id_'+key+' input, #conf_id_'+key+' textarea, #conf_id_'+key+' select, #conf_id_'+key+' button').prop('disabled', false);
 		$('#conf_id_'+key+' label.conf_title').removeClass('isDisabled');
 	}
-	$('#conf_id_'+key+' .preference_default_multishop input').attr('disabled', false);
+	$('#conf_id_'+key+' .preference_default_multishop input').prop('disabled', false);
 }
 
 function toggleAllMultishopDefaultValue($container, value)
@@ -852,12 +852,35 @@ $(document).ready(function()
 	$(document).on('click', '.untrustedaddon', function(e){
 		e.preventDefault();
 		var moduleName = $(this).data('module-name');
+		var moduleDisplayName = $(this).data('module-display-name');
+		var moduleImage = $(this).data('module-image');
+		var authorName = $(this).data('author-name');
 		var moduleLink = $(this).data('link');
-		var addonsSearchLink = 'http://addons.prestashop.com/en/search?search_query='+encodeURIComponent(moduleName)+'&utm_source=back-office&utm_medium=addons-certified&utm_campaign=back-office-'+iso_user.toUpperCase();
+		var authorUri = $(this).data('author-uri');
+		var isValidUri = /(https?):\/\/([a-z0-9\.]*)?(prestashop.com).*/gi;
+		var addonsSearchLink = 'http://addons.prestashop.com/en/search?search_query='+encodeURIComponent(moduleDisplayName)+'&utm_source=back-office&utm_medium=addons-certified&utm_campaign=back-office-'+iso_user.toUpperCase();
 
-		$('.modal .module-name-placeholder').text(moduleName);
+		$('.modal #untrusted-module-logo').attr('src', moduleImage);
+		$('.modal .module-display-name-placeholder').text(moduleDisplayName);
+		$('.modal .author-name-placeholder').text(authorName);
+
+		if (isValidUri.test(authorUri))
+			$('.modal .author-name-placeholder').wrap('<a href="'+authorUri+'" onclick="window.open(this.href);return false;"></a>');
+
 		$('.modal #proceed-install-anyway').attr('href', moduleLink);
 		$('.modal .catalog-link').attr('href', addonsSearchLink);
+		$('.modal .catalog-link').attr('onclick', 'window.open(this.href);return false;');
+	});
+
+	$(document).on('click', '#untrusted-show-risk', function(e){
+		e.preventDefault();
+		$('.untrusted-content-action').hide();
+		$('.untrusted-content-more-info').show();
+	});
+	$(document).on('click', '#untrusted-show-action', function(e){
+		e.preventDefault();
+		$('.untrusted-content-more-info').hide();
+		$('.untrusted-content-action').show();
 	});
 
 	// if count errors
@@ -1447,3 +1470,35 @@ function isCleanHtml(content)
 function parseDate(date){
 	return $.datepicker.parseDate("yy-mm-dd", date);
 }
+
+function createSqlQueryName()
+{
+	var container = false;
+	if ($('.breadcrumb-container'))
+		container = $('.breadcrumb-container').first().text().replace(/\s+/g, ' ').trim();
+	var current = false;
+	if ($('.breadcrumb-current'))
+		current = $('.breadcrumb-current').first().text().replace(/\s+/g, ' ').trim();
+	var title = false;
+	if ($('.page-title'))
+		title = $('.page-title').first().text().replace(/\s+/g, ' ').trim();
+	
+	var name = false;
+	if (container && current && container != current)
+		name = container + ' > ' + current;
+	else if (container)
+		name = container;
+	else if (current)
+		name = current;
+	
+	if (title && title != current && title != container)
+	{
+		if (name)
+			name = name + ' > ' + title;
+		else
+			name = title;
+	}
+
+	return name.trim();
+}
+

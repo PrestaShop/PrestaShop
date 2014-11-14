@@ -127,8 +127,8 @@ class CategoryCore extends ObjectModel
 			'nb_products_recursive' => array('getter' => 'getWsNbProductsRecursive', 'setter' => false),
 		),
 		'associations' => array(
-			'categories' => array('getter' => 'getChildrenWs', 'resource' => 'categories', ),
-			'products' => array('getter' => 'getProductsWs', 'resource' => 'products', ),
+			'categories' => array('getter' => 'getChildrenWs', 'resource' => 'category', ),
+			'products' => array('getter' => 'getProductsWs', 'resource' => 'product', ),
 		),
 	);
 
@@ -183,11 +183,11 @@ class CategoryCore extends ObjectModel
 	public function update($null_values = false)
 	{
 		if ($this->id_parent == $this->id)
-			throw new PrestaShopException('a category cannot be it\'s own parent');
+			throw new PrestaShopException('a category cannot be its own parent');
 
-		if ($this->is_root_category)
-			$this->id_parent = (int)Configuration::get('PS_ROOT_CATEGORY');
-		
+		if ($this->is_root_category && $this->id_parent != (int)Configuration::get('PS_ROOT_CATEGORY'))
+			$this->is_root_category = 0;
+
 		// Update group selection
 		$this->updateGroup($this->groupBox);
 		$this->level_depth = $this->calcLevelDepth();
@@ -250,13 +250,13 @@ class CategoryCore extends ObjectModel
 					$children[] = $categ->recurseLiteCategTree($max_depth, $current_depth + 1, $id_lang, $excluded_ids_array);
 				}
 			}
-		
+
 		if (is_array($this->description))
 			foreach ($this->description as $lang => $description)
 				$this->description[$lang] = Category::getDescriptionClean($description);
 		else
 			$this->description = Category::getDescriptionClean($this->description);
-			
+
 		return array(
 			'id' => (int)$this->id,
 			'link' => Context::getContext()->link->getCategoryLink($this->id, $this->link_rewrite),
@@ -266,8 +266,11 @@ class CategoryCore extends ObjectModel
 		);
 	}
 
-	public static function recurseCategory($categories, $current, $id_category = 1, $id_selected = 1)
+	public static function recurseCategory($categories, $current, $id_category = null, $id_selected = 1)
 	{
+		if (!$id_category)
+			$id_category = (int)Configuration::get('PS_ROOT_CATEGORY');
+
 		echo '<option value="'.$id_category.'"'.(($id_selected == $id_category) ? ' selected="selected"' : '').'>'.
 		str_repeat('&nbsp;', $current['infos']['level_depth'] * 5).stripslashes($current['infos']['name']).'</option>';
 		if (isset($categories[$id_category]))
@@ -306,7 +309,7 @@ class CategoryCore extends ObjectModel
 
 	public function delete()
 	{
-		if ((int)$this->id === 0 || (int)$this->id === 1)
+		if ((int)$this->id === 0 || (int)$this->id === (int)Configuration::get('PS_ROOT_CATEGORY'))
 			return false;
 
 		$this->clearCache();
@@ -329,13 +332,13 @@ class CategoryCore extends ObjectModel
 					GroupReduction::deleteCategory($cat->id);
 			}
 		}
-		
+
 		/* Rebuild the nested tree */
 		if (!$this->hasMultishopEntries() && (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree))
 			Category::regenerateEntireNtree();
 
 		Hook::exec('actionCategoryDelete', array('category' => $this));
-			
+
 		return true;
 	}
 
@@ -606,11 +609,11 @@ class CategoryCore extends ObjectModel
 			$context = Context::getContext();
 		if ($check_access && !$this->checkAccess($context->customer->id))
 			return false;
-		
+
 		$front = true;
 		if (!in_array($context->controller->controller_type, array('front', 'modulefront')))
 			$front = false;
-			
+
 		if ($p < 1) $p = 1;
 
 		if (empty($order_by))
@@ -621,13 +624,13 @@ class CategoryCore extends ObjectModel
 
 		if (empty($order_way))
 			$order_way = 'ASC';
-			
+
 		$order_by_prefix = false;
 		if ($order_by == 'id_product' || $order_by == 'date_add' || $order_by == 'date_upd')
 			$order_by_prefix = 'p';
 		elseif ($order_by == 'name')
 			$order_by_prefix = 'pl';
-		elseif ($order_by == 'manufacturer')
+		elseif ($order_by == 'manufacturer' || $order_by == 'manufacturer_name')
 		{
 			$order_by_prefix = 'm';
 			$order_by = 'name';
@@ -659,7 +662,7 @@ class CategoryCore extends ObjectModel
 
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, MAX(product_attribute_shop.id_product_attribute) id_product_attribute, product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, pl.`description`, pl.`description_short`, pl.`available_now`,
 					pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, MAX(image_shop.`id_image`) id_image,
-					il.`legend`, m.`name` AS manufacturer_name, cl.`name` AS category_default,
+					MAX(il.`legend`) as legend, m.`name` AS manufacturer_name, cl.`name` AS category_default,
 					DATEDIFF(product_shop.`date_add`, DATE_SUB(NOW(),
 					INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).'
 						DAY)) > 0 AS new, product_shop.price AS orderprice
@@ -990,7 +993,7 @@ class CategoryCore extends ObjectModel
 				if ($id_parent_category)
 					$category = Category::searchByNameAndParentCategoryId($id_lang, $category_name, $id_parent_category);
 				else
-					$category = Category::searchByName($id_lang,$category_name,true);
+					$category = Category::searchByName($id_lang, $category_name, true);
 
 				if (!$category && $object_to_create && $method_to_create)
 				{
@@ -1020,7 +1023,7 @@ class CategoryCore extends ObjectModel
 		$categories = null;
 		$id_current = $this->id;
 		if (count(Category::getCategoriesWithoutParent()) > 1 && Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && count(Shop::getShops(true, null, true)) != 1)
-			$context->shop->id_category = Category::getTopCategory()->id;
+			$context->shop->id_category = (int)Configuration::get('PS_ROOT_CATEGORY');
 		elseif (!$context->shop->id)
 			$context->shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
 		$id_shop = $context->shop->id;
@@ -1073,7 +1076,7 @@ class CategoryCore extends ObjectModel
 	{
 		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_group` WHERE `id_category` = '.(int)$this->id);
 	}
-	
+
 	public function cleanAssoProducts()
 	{
 		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'category_product` WHERE `id_category` = '.(int)$this->id);
@@ -1127,7 +1130,7 @@ class CategoryCore extends ObjectModel
 				SELECT ctg.`id_group`
 				FROM '._DB_PREFIX_.'category_group ctg
 				WHERE ctg.`id_category` = '.(int)$this->id.' AND ctg.`id_group` = '.(int)Group::getCurrent()->id);
-			else 
+			else
 				$result = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT ctg.`id_group`
 				FROM '._DB_PREFIX_.'category_group ctg
@@ -1293,7 +1296,7 @@ class CategoryCore extends ObjectModel
 			return false;
 		return ($this->nleft >= $interval['nleft'] && $this->nright <= $interval['nright']);
 	}
-	
+
 	public static function inShopStatic($id_category, Shop $shop = null)
 	{
 		if (!$shop || !is_object($shop))

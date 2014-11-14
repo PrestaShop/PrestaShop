@@ -28,8 +28,8 @@ class OrderOpcControllerCore extends ParentOrderController
 {
 	public $php_self = 'order-opc';
 	public $isLogged;
-	
-	protected $ajax_refresh = false;	
+
+	protected $ajax_refresh = false;
 
 	/**
 	 * Initialize order opc controller
@@ -41,10 +41,10 @@ class OrderOpcControllerCore extends ParentOrderController
 
 		if ($this->nbProducts)
 			$this->context->smarty->assign('virtual_cart', $this->context->cart->isVirtualCart());
-		
+
 		$this->context->smarty->assign('is_multi_address_delivery', $this->context->cart->isMultiAddressDelivery() || ((int)Tools::getValue('multi-shipping') == 1));
 		$this->context->smarty->assign('open_multishipping_fancybox', (int)Tools::getValue('multi-shipping') == 1);
-		
+
 		if ($this->context->cart->nbProducts())
 		{
 			if (Tools::isSubmit('ajax'))
@@ -198,7 +198,7 @@ class OrderOpcControllerCore extends ParentOrderController
 									$this->context->cart->id_address_invoice = Tools::isSubmit('same') ? $this->context->cart->id_address_delivery : (int)(Tools::getValue('id_address_invoice'));
 									if (!$this->context->cart->update())
 										$this->errors[] = Tools::displayError('An error occurred while updating your cart.');
-										
+
 									$infos = Address::getCountryAndState((int)($this->context->cart->id_address_delivery));
 									if (isset($infos['id_country']) && $infos['id_country'])
 									{
@@ -228,8 +228,8 @@ class OrderOpcControllerCore extends ParentOrderController
 													break;
 												}
 										}
-									}									
-		
+									}
+
 									if (!$this->context->cart->isMultiAddressDelivery())
 										$this->context->cart->setNoMultishipping(); // As the cart is no multishipping, set each delivery address lines with the main delivery address
 
@@ -262,7 +262,7 @@ class OrderOpcControllerCore extends ParentOrderController
 						case 'multishipping':
 							$this->_assignSummaryInformations();
 							$this->context->smarty->assign('product_list', $this->context->cart->getProducts());
-							
+
 							if ($this->context->customer->id)
 								$this->context->smarty->assign('address_list', $this->context->customer->getAddresses($this->context->language->id));
 							else
@@ -334,7 +334,7 @@ class OrderOpcControllerCore extends ParentOrderController
 	public function initContent()
 	{
 		parent::initContent();
-		
+
 		/* id_carrier is not defined in database before choosing a carrier, set it to a default one to match a potential cart _rule */
 		if (empty($this->context->cart->id_carrier))
 		{
@@ -344,20 +344,18 @@ class OrderOpcControllerCore extends ParentOrderController
 			$this->context->cart->update();
 			CartRule::autoRemoveFromCart($this->context);
 			CartRule::autoAddToCart($this->context);
-		}				
+		}
 
 		// SHOPPING CART
 		$this->_assignSummaryInformations();
 		// WRAPPING AND TOS
 		$this->_assignWrappingAndTOS();
 
-		$selectedCountry = (int)(Configuration::get('PS_COUNTRY_DEFAULT'));
-
 		if (Configuration::get('PS_RESTRICT_DELIVERED_COUNTRIES'))
 			$countries = Carrier::getDeliveredCountries($this->context->language->id, true, true);
 		else
 			$countries = Country::getCountries($this->context->language->id, true);
-		
+
 		// If a rule offer free-shipping, force hidding shipping prices
 		$free_shipping = false;
 		foreach ($this->context->cart->getCartRules() as $rule)
@@ -371,7 +369,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			'free_shipping' => $free_shipping,
 			'isGuest' => isset($this->context->cookie->is_guest) ? $this->context->cookie->is_guest : 0,
 			'countries' => $countries,
-			'sl_country' => isset($selectedCountry) ? $selectedCountry : 0,
+			'sl_country' => (int)Tools::getCountry(),
 			'PS_GUEST_CHECKOUT_ENABLED' => Configuration::get('PS_GUEST_CHECKOUT_ENABLED'),
 			'errorCarrier' => Tools::displayError('You must choose a carrier.', false),
 			'errorTOS' => Tools::displayError('You must accept the Terms of Service.', false),
@@ -395,7 +393,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			$this->context->smarty->assign('guestInformations', $this->_getGuestInformations());
 		// ADDRESS
 		if ($this->isLogged)
-			$this->_assignAddress(); 
+			$this->_assignAddress();
 		// CARRIER
 		$this->_assignCarrier();
 		// PAYMENT
@@ -404,8 +402,10 @@ class OrderOpcControllerCore extends ParentOrderController
 
 		$blocknewsletter = Module::getInstanceByName('blocknewsletter');
 		$this->context->smarty->assign('newsletter', (bool)($blocknewsletter && $blocknewsletter->active));
+		$this->context->smarty->assign('field_required', $this->context->customer->validateFieldsRequiredDatabase());
 
 		$this->_processAddressFormat();
+
 		$this->setTemplate(_PS_THEME_DIR_.'order-opc.tpl');
 	}
 
@@ -532,7 +532,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			return '<p class="warning">'.Tools::displayError('Error: No currency has been selected.').'</p>';
 		if (!$this->context->cookie->checkedTOS && Configuration::get('PS_CONDITIONS'))
 			return '<p class="warning">'.Tools::displayError('Please accept the Terms of Service.').'</p>';
-		
+
 		/* If some products have disappear */
 		if (!$this->context->cart->checkQuantities())
 			return '<p class="warning">'.Tools::displayError('An item in your cart is no longer available. You cannot proceed with your order.').'</p>';
@@ -560,21 +560,21 @@ class OrderOpcControllerCore extends ParentOrderController
 	protected function _getCarrierList()
 	{
 		$address_delivery = new Address($this->context->cart->id_address_delivery);
-		
+
 		$cms = new CMS(Configuration::get('PS_CONDITIONS_CMS_ID'), $this->context->language->id);
 		$link_conditions = $this->context->link->getCMSLink($cms, $cms->link_rewrite, Configuration::get('PS_SSL_ENABLED'));
 		if (!strpos($link_conditions, '?'))
 			$link_conditions .= '?content_only=1';
 		else
 			$link_conditions .= '&content_only=1';
-		
+
 		$carriers = $this->context->cart->simulateCarriersOutput();
 		$delivery_option = $this->context->cart->getDeliveryOption(null, false, false);
 
 		$wrapping_fees = $this->context->cart->getGiftWrappingPrice(false);
 		$wrapping_fees_tax_inc = $wrapping_fees = $this->context->cart->getGiftWrappingPrice();
 		$oldMessage = Message::getMessageByCartId((int)($this->context->cart->id));
-		
+
 		$free_shipping = false;
 		foreach ($this->context->cart->getCartRules() as $rule)
 		{
@@ -582,9 +582,9 @@ class OrderOpcControllerCore extends ParentOrderController
 			{
 				$free_shipping = true;
 				break;
-			}			
+			}
 		}
-		
+
 		$this->context->smarty->assign('isVirtualCart', $this->context->cart->isVirtualCart());
 
 		$vars = array(
@@ -612,9 +612,9 @@ class OrderOpcControllerCore extends ParentOrderController
 				'delivery_option' => $delivery_option
 			))
 		);
-		
+
 		Cart::addExtraCarriers($vars);
-		
+
 		$this->context->smarty->assign($vars);
 
 		if (!Address::isCountryActiveById((int)($this->context->cart->id_address_delivery)) && $this->context->cart->id_address_delivery != 0)
@@ -650,7 +650,7 @@ class OrderOpcControllerCore extends ParentOrderController
 
 		$inv_adr_fields = AddressFormat::getOrderedAddressFields((int)$address_delivery->id_country, false, true);
 		$dlv_adr_fields = AddressFormat::getOrderedAddressFields((int)$address_invoice->id_country, false, true);
-		$requireFormFieldsList = AddressFormat::$requireFormFieldsList;
+		$requireFormFieldsList = AddressFormat::getFieldsRequired();
 
 		// Add missing require fields for a new user susbscription form
 		foreach ($requireFormFieldsList as $fieldName)
@@ -673,11 +673,14 @@ class OrderOpcControllerCore extends ParentOrderController
 			${$adr_type.'_adr_fields'} = array_unique(${$adr_type.'_adr_fields'});
 			${$adr_type.'_all_fields'} = array_unique(${$adr_type.'_all_fields'});
 
-			$this->context->smarty->assign($adr_type.'_adr_fields', ${$adr_type.'_adr_fields'});
-			$this->context->smarty->assign($adr_type.'_all_fields', ${$adr_type.'_all_fields'});
+			$this->context->smarty->assign(array(
+				$adr_type.'_adr_fields' => ${$adr_type.'_adr_fields'},
+				$adr_type.'_all_fields' => ${$adr_type.'_all_fields'},
+				'required_fields' => $requireFormFieldsList
+			));
 		}
 	}
-	
+
 	protected function getFormatedSummaryDetail()
 	{
 		$result = array('summary' => $this->context->cart->getSummaryDetails(),
@@ -694,11 +697,10 @@ class OrderOpcControllerCore extends ParentOrderController
 							$product['quantity_without_customization'] -= (int)$customization['quantity'];
 			}
 		}
-		
+
 		if ($result['customizedDatas'])
 			Product::addCustomizationPrice($result['summary']['products'], $result['customizedDatas']);
 		return $result;
 	}
-	
-}
 
+}

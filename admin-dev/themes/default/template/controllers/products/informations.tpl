@@ -363,8 +363,8 @@
 	<div class="form-group">
 		<div class="col-lg-9 col-lg-offset-3">
 			<div class="alert alert-info">
-				{l s='Would you like to add an image in your description?'}
-				<a class="addImageDescription" href="javascript:void(0);">{l s='Click here'}</a>.
+				{capture}<a class="addImageDescription" href="javascript:void(0);">{l s='Click here'}</a>{/capture}
+				{l s='Would you like to add an image in your description? %s and paste the given tag in the description.' sprintf=$smarty.capture.default}
 			</div>
 		</div>
 	</div>
@@ -478,8 +478,8 @@
 	</div>
 	<div class="panel-footer">
 		<a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
-		<button type="submit" name="submitAddproduct" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save'}</button>
-		<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
+		<button type="submit" name="submitAddproduct" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> {l s='Save'}</button>
+		<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> {l s='Save and stay'}</button>
 	</div>
 </div>
 <script type="text/javascript">

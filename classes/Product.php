@@ -385,29 +385,29 @@ class ProductCore extends ObjectModel
 		),
 		'associations' => array(
 			'categories' => array(
-				'resource' => 'categories',
+				'resource' => 'category',
 				'fields' => array(
 					'id' => array('required' => true),
 				)
 			),
 			'images' => array(
-				'resource' => 'images',
+				'resource' => 'image',
 				'fields' => array('id' => array())
 			),
 			'combinations' => array(
-				'resource' => 'combinations',
+				'resource' => 'combination',
 				'fields' => array(
 					'id' => array('required' => true),
 				)
 			),
 			'product_option_values' => array(
-				'resource' => 'product_option_values',
+				'resource' => 'product_option_value',
 				'fields' => array(
 					'id' => array('required' => true),
 				)
 			),
 			'product_features' => array(
-				'resource' => 'product_features',
+				'resource' => 'product_feature',
 				'fields' => array(
 					'id' => array('required' => true),
 					'custom' => array('required' => false),
@@ -417,11 +417,11 @@ class ProductCore extends ObjectModel
 					),
 				)
 			),
-			'tags' => array('resource' => 'tags',
+			'tags' => array('resource' => 'tag',
 				'fields' => array(
 					'id' => array('required' => true),
 			)),
-			'stock_availables' => array('resource' => 'stock_availables',
+			'stock_availables' => array('resource' => 'stock_available',
 				'fields' => array(
 					'id' => array('required' => true),
 					'id_product_attribute' => array('required' => true),
@@ -429,7 +429,8 @@ class ProductCore extends ObjectModel
 				'setter' => false
 			),
 			'accessories' => array(
-				'resource' => 'products',
+				'resource' => 'product',
+				'api' => 'products',
 				'fields' => array(
 					'id' => array(
 						'required' => true,
@@ -437,7 +438,8 @@ class ProductCore extends ObjectModel
 				)
 			),
 			'product_bundle' => array(
-				'resource' => 'products',
+				'resource' => 'product',
+				'api' => 'products',
 				'fields' => array(
 					'id' => array('required' => true),
 					'quantity' => array(),
@@ -1469,7 +1471,7 @@ class ProductCore extends ObjectModel
 
 		$combination->save();
 
-		if (!empty($id_images))
+		if (is_array($id_images) && count($id_images))
 			$combination->setImages($id_images);
 
 		$id_default_attribute = (int)Product::updateDefaultAttribute($this->id);
@@ -2090,12 +2092,11 @@ class ProductCore extends ObjectModel
 			$sql->where('product_shop.`visibility` IN ("both", "catalog")');
 		$sql->where('product_shop.`date_add` > "'.date('Y-m-d', strtotime('-'.(Configuration::get('PS_NB_DAYS_NEW_PRODUCT') ? (int)Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY')).'"');
 		if (Group::isFeatureActive())
-			$sql->where('p.`id_product` IN (
-				SELECT cp.`id_product`
-				FROM `'._DB_PREFIX_.'category_group` cg
-				LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
-				WHERE cg.`id_group` '.$sql_groups.'
-			)');
+		{
+			$sql->join('JOIN '._DB_PREFIX_.'category_product cp ON (cp.id_product = p.id_product)');
+			$sql->join('JOIN '._DB_PREFIX_.'category_group cg ON (cg.id_category = cp.id_category)');
+			$sql->where('cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1'));
+		}
 		$sql->groupBy('product_shop.id_product');
 
 		$sql->orderBy((isset($order_by_prefix) ? pSQL($order_by_prefix).'.' : '').'`'.pSQL($order_by).'` '.pSQL($order_way));
@@ -2522,7 +2523,11 @@ class ProductCore extends ObjectModel
 			die(Tools::displayError());
 
 		// Initializations
-		$id_group = (int)Group::getCurrent()->id;
+		$id_group = null;
+		if ($id_customer)
+			$id_group = Customer::getDefaultGroupId((int)$id_customer);
+		if (!$id_group)
+			$id_group = (int)Group::getCurrent()->id;
 
 		// If there is cart in context or if the specified id_cart is different from the context cart id
 		if (!is_object($cur_cart) || (Validate::isUnsignedInt($id_cart) && $id_cart && $cur_cart->id != $id_cart))
@@ -2580,7 +2585,7 @@ class ProductCore extends ObjectModel
 		{
 			$id_country = (int)$context->customer->geoloc_id_country;
 			$id_state = (int)$context->customer->id_state;
-			$zipcode = (int)$context->customer->postcode;
+			$zipcode = $context->customer->postcode;
 		}
 
 		if (Tax::excludeTaxeOption())
@@ -3431,7 +3436,10 @@ class ProductCore extends ObjectModel
 		{
 			$sql->leftJoin('product_attribute', 'pa', 'pa.`id_product` = p.`id_product`');
 			$sql->join(Shop::addSqlAssociation('product_attribute', 'pa', false));
-			$where .= ' OR pa.`reference` LIKE \'%'.pSQL($query).'%\' OR pa.`ean13` LIKE \'%'.pSQL($query).'%\'';
+			$where .= ' OR pa.`reference` LIKE \'%'.pSQL($query).'%\'
+			OR pa.`supplier_reference` LIKE \'%'.pSQL($query).'%\'
+			OR pa.`ean13` LIKE \'%'.pSQL($query).'%\'
+			OR pa.`upc` LIKE \'%'.pSQL($query).'%\'';
 		}
 		$sql->where($where);
 		$sql->join(Product::sqlStock('p', 'pa', false, $context->shop));
@@ -4556,7 +4564,7 @@ class ProductCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'product_shop`
 				WHERE `id_product` = '.(int)$id_product.' AND id_shop='.(int)$context->shop->id));
 
-		return Cache::retrieve($key);
+		return (int)Cache::retrieve($key);
 	}
 
 	/**
@@ -4869,7 +4877,7 @@ class ProductCore extends ObjectModel
 			WHERE `id_category` = '.(int)$this->id_category_default.'
 			ORDER BY `position`
 		');
-		if ($position + 1 > count($result))
+		if (($position > 0) && ($position + 1 > count($result)))
 			WebserviceRequest::getInstance()->setError(500, Tools::displayError('You cannot set a position greater than the total number of products in the category, minus 1 (position numbering starts at 0).'), 135);
 
 		foreach ($result as &$value)
@@ -5538,7 +5546,7 @@ class ProductCore extends ObjectModel
 						FROM '._DB_PREFIX_.'product p
 						'.Shop::addSqlAssociation('product', 'p').'
 						JOIN '._DB_PREFIX_.'tax_rules_group trg ON (product_shop.id_tax_rules_group = trg.id_tax_rules_group)
-						WHERE trg.active = 1
+						WHERE trg.active = 1 AND trg.deleted = 0
 						GROUP BY product_shop.id_tax_rules_group
 						ORDER BY n DESC
 						LIMIT 1

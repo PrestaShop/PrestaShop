@@ -142,14 +142,9 @@ $(document).ready(function () {
 		<div class="col-lg-8">
 			<script type="text/javascript">
 				noTax = {if $tax_exclude_taxe_option}true{else}false{/if};
-				taxesArray = new Array ();
-				taxesArray[0] = 0;
-				{foreach $tax_rules_groups as $tax_rules_group}
-					{if isset($taxesRatesByGroup[$tax_rules_group['id_tax_rules_group']])}
-					taxesArray[{$tax_rules_group.id_tax_rules_group}] = {$taxesRatesByGroup[$tax_rules_group['id_tax_rules_group']]};
-						{else}
-					taxesArray[{$tax_rules_group.id_tax_rules_group}] = 0;
-					{/if}
+				taxesArray = new Array();
+				{foreach $taxesRatesByGroup as $tax_by_group}
+					taxesArray[{$tax_by_group.id_tax_rules_group}] = {$tax_by_group|json_encode};
 				{/foreach}
 				ecotaxTaxRate = {$ecotaxTaxRate / 100};
 			</script>
@@ -262,8 +257,8 @@ $(document).ready(function () {
 	</div>
 	<div class="panel-footer">
 		<a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
-		<button type="submit" name="submitAddproduct" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save'}</button>
-		<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
+		<button type="submit" name="submitAddproduct" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> {l s='Save'}</button>
+		<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> {l s='Save and stay'}</button>
 	</div>
 </div>
 {if isset($specificPriceModificationForm)}
@@ -447,17 +442,17 @@ $(document).ready(function () {
 				nextText: '',
 				dateFormat: 'yy-mm-dd',
 				// Define a custom regional settings in order to use PrestaShop translation tools
-				currentText: '{l s='Now'}',
-				closeText: '{l s='Done'}',
+				currentText: '{l s='Now' js=1}',
+				closeText: '{l s='Done' js=1}',
 				ampm: false,
 				amNames: ['AM', 'A'],
 				pmNames: ['PM', 'P'],
 				timeFormat: 'hh:mm:ss tt',
 				timeSuffix: '',
-				timeOnlyTitle: '{l s='Choose Time'}',
-				timeText: '{l s='Time'}',
-				hourText: '{l s='Hour'}',
-				minuteText: '{l s='Minute'}',
+				timeOnlyTitle: '{l s='Choose Time' js=1}',
+				timeText: '{l s='Time' js=1}',
+				hourText: '{l s='Hour' js=1}',
+				minuteText: '{l s='Minute' js=1}',
 			});
 		});
 	</script>

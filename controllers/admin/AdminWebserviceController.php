@@ -39,7 +39,7 @@ class AdminWebserviceControllerCore extends AdminController
 	 	$this->edit = true;
 	 	$this->delete = true;
  		$this->id_lang_default = Configuration::get('PS_LANG_DEFAULT');
-		
+
 		$this->bulk_actions = array(
 			'delete' => array(
 				'text' => $this->l('Delete selected'),
@@ -47,7 +47,7 @@ class AdminWebserviceControllerCore extends AdminController
 				'icon' => 'icon-trash'
 			)
 		);
-		
+
 		$this->fields_list = array(
 			'key' => array(
 				'title' => $this->l('Key'),
@@ -80,15 +80,17 @@ class AdminWebserviceControllerCore extends AdminController
 												</ol>',
 							'cast' => 'intval',
 							'type' => 'bool'),
-						'PS_WEBSERVICE_CGI_HOST' => array(
-							'title' => $this->l('Enable CGI mode for PHP'),
-							'desc' => $this->l('Before choosing "Yes", check that PHP is not configured as an Apache module on your server.'),
-							'cast' => 'intval',
-							'type' => 'bool'
-						),
 					),
 					'submit' => array('title' => $this->l('Save'))
 				),
+			);
+
+		if (!defined('_PS_HOST_MODE_'))
+			$this->fields_options['general']['fields']['PS_WEBSERVICE_CGI_HOST'] = array(
+				'title' => $this->l('Enable CGI mode for PHP'),
+				'desc' => $this->l('Before choosing "Yes", check that PHP is not configured as an Apache module on your server.'),
+				'cast' => 'intval',
+				'type' => 'bool'
 			);
 
 		parent::__construct();
@@ -285,5 +287,4 @@ class AdminWebserviceControllerCore extends AdminController
 
 		$this->renderList();
 	}
-
 }

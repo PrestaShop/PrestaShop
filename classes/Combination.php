@@ -90,7 +90,7 @@ class CombinationCore extends ObjectModel
 			'id_product' => array('required' => true, 'xlink_resource'=> 'products'),
 		),
 		'associations' => array(
-			'product_option_values' => array('resource' => 'product_option_values'),
+			'product_option_values' => array('resource' => 'product_option_value'),
 			'images' => array('resource' => 'image'),
 		),
 	);
@@ -213,17 +213,18 @@ class CombinationCore extends ObjectModel
 			WHERE `id_product_attribute` = '.(int)$this->id) === false)
 		return false;
 
-		if (!empty($ids_image))
+		if (is_array($ids_image) && count($ids_image))
 		{
 			$sql_values = array();
 
 			foreach ($ids_image as $value)
 				$sql_values[] = '('.(int)$this->id.', '.(int)$value.')';
 
-			Db::getInstance()->execute('
-				INSERT INTO `'._DB_PREFIX_.'product_attribute_image` (`id_product_attribute`, `id_image`)
-				VALUES '.implode(',', $sql_values)
-			);
+			if (is_array($sql_values) && count($sql_values))
+				Db::getInstance()->execute('
+					INSERT INTO `'._DB_PREFIX_.'product_attribute_image` (`id_product_attribute`, `id_image`)
+					VALUES '.implode(',', $sql_values)
+				);
 		}
 		return true;
 	}

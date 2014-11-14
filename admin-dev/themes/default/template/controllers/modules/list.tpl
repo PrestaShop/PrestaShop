@@ -28,17 +28,6 @@
 		<tr>
 			<th colspan="4">
 				{include file='controllers/modules/filters.tpl'}
-				<!--
-				<input type="checkbox" rel="false" class="noborder" id="checkme">
-				<div class="pull-right">
-					<a class="btn btn-default {if !isset($smarty.get.select)} active{/if}" href="index.php?controller={$smarty.get.controller|htmlentities}&amp;token={$smarty.get.token|htmlentities}" title="{l s='Normal view'}">
-						<i class="icon-list"></i> 
-					</a>					
-					<a class="btn btn-default {if isset($smarty.get.select) && $smarty.get.select == 'favorites'} active{/if}" href="index.php?controller={$smarty.get.controller|htmlentities}&amp;token={$smarty.get.token|htmlentities}&select=favorites" title="{l s='Favorites view'}">
-						<i class="icon-star"></i>
-					</a>
-				</div> 
-				-->
 			</th>
 		</tr>
 	</thead>
@@ -122,7 +111,7 @@
 												</a>
 											{/if}
 										{else}
-										<a class="btn btn-success untrustedaddon" href="#" data-target="#moduleNotTrusted" data-toggle="modal" data-link="{$module->options.install_url|escape:'html':'UTF-8'}" data-module-name="{$module->displayName|escape:'html':'UTF-8'}">
+										<a class="btn btn-success untrustedaddon" href="#" data-target="#moduleNotTrusted" data-toggle="modal" data-link="{$module->options.install_url|escape:'html':'UTF-8'}" data-module-display-name="{$module->displayName|escape:'html':'UTF-8'}" data-module-name="{$module->name|escape:'html':'UTF-8'}" data-module-image="{if isset($module->image)}{$module->image}{else}{$modules_uri}/{$module->name}/{$module->logo}{/if}" data-author-name="{$module->author|escape:'html':'UTF-8'}" data-author-uri="{if isset($module->author_uri)}{$module->author_uri|escape:'html':'UTF-8'}{/if}">
 											<i class="icon-plus-sign-alt"></i>&nbsp;{l s='Install'}
 										</a>
 										{/if}

@@ -32,20 +32,20 @@
 		{if isset($product.attributes) && $product.attributes}<small><a href="{$link->getProductLink($product.id_product, $product.link_rewrite, $product.category, null, null, $product.id_shop, $product.id_product_attribute)|escape:'html':'UTF-8'}">{$product.attributes|escape:'html':'UTF-8'}</a></small>{/if}
 	</td>
 	{if $PS_STOCK_MANAGEMENT}
-		<td class="cart_avail"><span class="{if $product.quantity_available <= 0 && !$product.allow_oosp}label label-available_later{else}label label-success{/if}">{if $product.quantity_available <= 0}{if $product.allow_oosp}{if isset($product.available_later) && $product.available_later}{$product.available_later}{else}{l s='In Stock'}{/if}{else}{l s='Out of stock'}{/if}{else}{if isset($product.available_now) && $product.available_now}{$product.available_now}{else}{l s='In Stock'}{/if}{/if}</span>{hook h="displayProductDeliveryTime" product=$product}</td>
+		<td class="cart_avail"><span class="{if $product.quantity_available <= 0 && !$product.allow_oosp}label label-warning{else}label label-success{/if}">{if $product.quantity_available <= 0}{if $product.allow_oosp}{if isset($product.available_later) && $product.available_later}{$product.available_later}{else}{l s='In Stock'}{/if}{else}{l s='Out of stock'}{/if}{else}{if isset($product.available_now) && $product.available_now}{$product.available_now}{else}{l s='In Stock'}{/if}{/if}</span>{hook h="displayProductDeliveryTime" product=$product}</td>
 	{/if}
 	<td class="cart_unit" data-title="{l s='Unit price'}">
-		<span class="price" id="product_price_{$product.id_product}_{$product.id_product_attribute}{if $quantityDisplayed > 0}_nocustom{/if}_{$product.id_address_delivery|intval}{if !empty($product.gift)}_gift{/if}">
+		<ul class="price text-center" id="product_price_{$product.id_product}_{$product.id_product_attribute}{if $quantityDisplayed > 0}_nocustom{/if}_{$product.id_address_delivery|intval}{if !empty($product.gift)}_gift{/if}">
 			{if !empty($product.gift)}
-				<span class="gift-icon">{l s='Gift!'}</span>
+				<li class="gift-icon">{l s='Gift!'}</li>
 			{else}
             	{if !$priceDisplay}
-					<span class="price{if isset($product.is_discounted) && $product.is_discounted} special-price{/if}">{convertPrice price=$product.price_wt}</span>
+					<li class="price{if isset($product.is_discounted) && $product.is_discounted} special-price{/if}">{convertPrice price=$product.price_wt}</li>
 				{else}
-               	 	<span class="price{if isset($product.is_discounted) && $product.is_discounted} special-price{/if}">{convertPrice price=$product.price}</span>
+               	 	<li class="price{if isset($product.is_discounted) && $product.is_discounted} special-price{/if}">{convertPrice price=$product.price}</li>
 				{/if}
 				{if isset($product.is_discounted) && $product.is_discounted}
-                	<span class="price-percent-reduction small">
+                	<li class="price-percent-reduction small">
             			{if !$priceDisplay}
             				{if isset($product.reduction_type) && $product.reduction_type == 'amount'}
                     			{assign var='priceReduction' value=($product.price_wt - $product.price_without_specific_price)}
@@ -66,13 +66,13 @@
 						{if $symbol == '%'}
 							&nbsp;{$priceReduction|round|string_format:"%d"}{$symbol}&nbsp;
 						{else}
-							&nbsp;{$priceReduction|string_format:"%.2f"}{$symbol}&nbsp;
+							&nbsp;{convertPrice price=$priceReduction}&nbsp;
 						{/if}
-                    </span>
-					<span class="old-price">{convertPrice price=$product.price_without_specific_price}</span>
+                    </li>
+					<li class="old-price">{convertPrice price=$product.price_without_specific_price}</li>
 				{/if}
 			{/if}
-		</span>
+		</ul>
 	</td>
 
 	<td class="cart_quantity text-center">
@@ -107,6 +107,17 @@
 			{/if}
 		{/if}
 	</td>
+	{if !isset($noDeleteButton) || !$noDeleteButton}
+		<td class="cart_delete text-center" data-title="Delete">
+		{if (!isset($customizedDatas.$productId.$productAttributeId) OR $quantityDisplayed > 0) && empty($product.gift)}
+			<div>
+				<a rel="nofollow" title="{l s='Delete'}" class="cart_quantity_delete" id="{$product.id_product}_{$product.id_product_attribute}_{if $quantityDisplayed > 0}nocustom{else}0{/if}_{$product.id_address_delivery|intval}" href="{$link->getPageLink('cart', true, NULL, "delete=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_address_delivery={$product.id_address_delivery|intval}&amp;token={$token_cart}")|escape:'html':'UTF-8'}"><i class="icon-trash"></i></a>
+			</div>
+		{else}
+
+		{/if}
+		</td>
+	{/if}
 	<td class="cart_total" data-title="{l s='Total'}">
 		<span class="price" id="total_product_price_{$product.id_product}_{$product.id_product_attribute}{if $quantityDisplayed > 0}_nocustom{/if}_{$product.id_address_delivery|intval}{if !empty($product.gift)}_gift{/if}">
 			{if !empty($product.gift)}
@@ -120,15 +131,5 @@
 			{/if}
 		</span>
 	</td>
-	{if !isset($noDeleteButton) || !$noDeleteButton}
-		<td class="cart_delete text-center" data-title="Delete">
-		{if (!isset($customizedDatas.$productId.$productAttributeId) OR $quantityDisplayed > 0) && empty($product.gift)}
-			<div>
-				<a rel="nofollow" title="{l s='Delete'}" class="cart_quantity_delete" id="{$product.id_product}_{$product.id_product_attribute}_{if $quantityDisplayed > 0}nocustom{else}0{/if}_{$product.id_address_delivery|intval}" href="{$link->getPageLink('cart', true, NULL, "delete=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_address_delivery={$product.id_address_delivery|intval}&amp;token={$token_cart}")|escape:'html':'UTF-8'}"><i class="icon-trash"></i></a>
-			</div>
-		{else}
-
-		{/if}
-		</td>
-	{/if}
+	
 </tr>

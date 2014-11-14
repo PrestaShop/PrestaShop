@@ -1,51 +1,51 @@
-<?xml version="1.0"?>
+<?xml version='1.0'?>
 <entity_order_state>
-  <order_state id="Awaiting_cheque_payment">
-    <name>Awaiting cheque payment</name>
+  <order_state id='Awaiting_cheque_payment'>
+    <name>In afwachting van betaling per cheque</name>
     <template>cheque</template>
   </order_state>
-  <order_state id="Payment_accepted">
-    <name>Payment accepted</name>
+  <order_state id='Payment_accepted'>
+    <name>Betaling aanvaard</name>
     <template>payment</template>
   </order_state>
-  <order_state id="Preparation_in_progress">
-    <name>Preparation in progress</name>
+  <order_state id='Preparation_in_progress'>
+    <name>Wordt momenteel voorbereid</name>
     <template>preparation</template>
   </order_state>
-  <order_state id="Shipped">
-    <name>Shipped</name>
+  <order_state id='Shipped'>
+    <name>Verzonden</name>
     <template>shipped</template>
   </order_state>
-  <order_state id="Delivered">
-    <name>Delivered</name>
+  <order_state id='Delivered'>
+    <name>Afgeleverd</name>
     <template/>
   </order_state>
-  <order_state id="Canceled">
-    <name>Canceled</name>
+  <order_state id='Canceled'>
+    <name>Geannuleerd</name>
     <template>order_canceled</template>
   </order_state>
-  <order_state id="Refund">
-    <name>Refund</name>
+  <order_state id='Refund'>
+    <name>Terugbetaling</name>
     <template>refund</template>
   </order_state>
-  <order_state id="Payment_error">
-    <name>Payment error</name>
+  <order_state id='Payment_error'>
+    <name>Betalingsfout</name>
     <template>payment_error</template>
   </order_state>
-  <order_state id="On_backorder">
-    <name>On backorder</name>
+  <order_state id='On_backorder'>
+    <name>Nabestelling</name>
     <template>outofstock</template>
   </order_state>
-  <order_state id="Awaiting_bank_wire_payment">
-    <name>Awaiting bank wire payment</name>
+  <order_state id='Awaiting_bank_wire_payment'>
+    <name>In afwachting van bankoverschrijving</name>
     <template>bankwire</template>
   </order_state>
-  <order_state id="Awaiting_PayPal_payment">
-    <name>Awaiting PayPal payment</name>
+  <order_state id='Awaiting_PayPal_payment'>
+    <name>In afwachting van betaling via PayPal</name>
     <template/>
   </order_state>
-  <order_state id="Payment_remotely_accepted">
-    <name>Remote payment accepted</name>
+  <order_state id='Payment_remotely_accepted'>
+    <name>Betaling op afstand aanvaard</name>
     <template>payment</template>
   </order_state>
 </entity_order_state>

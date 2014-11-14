@@ -101,7 +101,7 @@
 				{foreach $attribute_groups as $k => $attribute_group}
 					{if isset($attribute_js[$attribute_group['id_attribute_group']])}
 					<div class="row">
-						<table class="table" style="display: none;">
+						<table class="table" style="display:none">
 							<thead>
 								<tr>
 									<th id="tab_h1" class="fixed-width-md"><span class="title_box">{$attribute_group['name']|escape:'html':'UTF-8'}</span></th>
@@ -112,7 +112,6 @@
 							<tbody id="table_{$attribute_group['id_attribute_group']}" name="result_table">
 							</tbody>
 						</table>
-						<hr />
 					</div>
 						{if isset($attributes[$attribute_group['id_attribute_group']])}
 							{foreach $attributes[$attribute_group['id_attribute_group']] AS $k => $attribute}

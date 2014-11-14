@@ -707,6 +707,11 @@ abstract class DbCore
 		return call_user_func_array(array(Db::getClass(), 'checkCreatePrivilege'), array($server, $user, $pwd, $db, $prefix, $engine));
 	}
 
+	public static function checkAutoIncrement($server, $user, $pwd)
+	{
+		return call_user_func_array(array(Db::getClass(), 'checkAutoIncrement'), array($server, $user, $pwd));
+	}
+
 	/**
 	 * @deprecated 1.5.0
 	 */

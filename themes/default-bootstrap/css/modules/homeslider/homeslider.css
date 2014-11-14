@@ -77,7 +77,8 @@
     max-width: 100%;
     height: auto; }
 #homepage-slider .bx-wrapper .bx-viewport {
-  width: 100%; }
+  width: 100%;
+  direction: ltr !important; }
 #homepage-slider .bx-wrapper .bx-pager,
 #homepage-slider .bx-wrapper .bx-controls-auto {
   position: absolute;

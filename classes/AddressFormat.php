@@ -51,12 +51,10 @@ class AddressFormatCore extends ObjectModel
 
 	public static $requireFormFieldsList = array(
 		'firstname',
-		'name',
+		'lastname',
 		'address1',
 		'city',
-		'postcode',
-		'Country:name',
-		'State:name');
+		'Country:name');
 
 	public static $forbiddenPropertyList = array(
 		'deleted',
@@ -545,5 +543,11 @@ class AddressFormatCore extends ObjectModel
 			Cache::store('AddressFormat::_getFormatDB'.$id_country, trim($format));
 		}
 		return Cache::retrieve('AddressFormat::_getFormatDB'.$id_country);
+	}
+
+	public static function getFieldsRequired()
+	{
+		$address = new Address;
+		return array_unique(array_merge($address->getFieldsRequiredDB(), AddressFormat::$requireFormFieldsList));
 	}
 }

@@ -96,8 +96,8 @@ class AdminTrackingControllerCore extends AdminController
 		$this->addRowAction('edit');
 		$this->addRowAction('view');
 		$this->addRowAction('delete');
-		$this->addRowActionSkipList('delete', array(Category::getTopCategory()->id));
-		$this->addRowActionSkipList('edit', array(Category::getTopCategory()->id));
+		$this->addRowActionSkipList('delete', array((int)Configuration::get('PS_ROOT_CATEGORY')));
+		$this->addRowActionSkipList('edit', array((int)Configuration::get('PS_ROOT_CATEGORY')));
 
 		$this->fields_list = (array(
 			'id_category' => array('title' => $this->l('ID'), 'class' => 'fixed-width-xs', 'align' => 'center'),
@@ -112,7 +112,7 @@ class AdminTrackingControllerCore extends AdminController
 			SELECT DISTINCT(cp.id_category)
 			FROM `'._DB_PREFIX_.'category_product` cp
 		)
-		AND a.`id_category` != '.(int)Category::getTopCategory()->id;
+		AND a.`id_category` != '.(int)Configuration::get('PS_ROOT_CATEGORY');
 		$this->toolbar_title = $this->l('List of empty categories:');
 		return $this->renderList();
 	}

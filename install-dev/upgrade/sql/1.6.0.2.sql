@@ -4,6 +4,10 @@ INSERT INTO `PREFIX_hook` (`id_hook` , `name` , `title` , `description` , `posit
 VALUES (NULL , 'actionAdminControllerSetMedia', 'Admin action setMedia', '', '0', '0');
 
 INSERT INTO `PREFIX_hook_module` (`id_module`, `id_shop`, `id_hook`, `position`) (
+	SELECT m.id_module, s.id_shop, h.id_hook, 0 FROM `PREFIX_module` m, `PREFIX_shop` s, `PREFIX_hook` h WHERE m.name IN ('graphnvd3') AND h.name IN ('GraphEngine', 'actionAdminControllerSetMedia')
+);
+
+INSERT INTO `PREFIX_hook_module` (`id_module`, `id_shop`, `id_hook`, `position`) (
   SELECT m.id_module, s.id_shop, h.id_hook, 0
   FROM `PREFIX_module` m, `PREFIX_shop` s, `PREFIX_hook` h
   WHERE m.name IN ('dashgoals', 'dashactivity', 'dashtrends', 'dashproducts')

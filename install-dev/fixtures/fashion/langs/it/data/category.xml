@@ -1,79 +1,79 @@
-<?xml version="1.0"?>
+<?xml version='1.0'?>
 <entity_category>
-  <category id="Women" id_shop="1">
-    <name>Women</name>
-    <description>&lt;p&gt;&lt;strong&gt;You will find here all woman fashion collections.&lt;/strong&gt;&lt;/p&gt;&#xD;
-&lt;p&gt;This category includes all the basics of your wardrobe and much more:&lt;/p&gt;&#xD;
-&lt;p&gt;shoes, accessories, printed t-shirts, feminine dresses, women's jeans!&lt;/p&gt;</description>
-    <link_rewrite>women</link_rewrite>
+  <category id='Women' id_shop='1'>
+    <name>Donna</name>
+    <description>&lt;p&gt;&lt;strong&gt;Qui troverete tutte le collezioni moda donna.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Questa categoria comprende tutti i capi base del vostro guardaroba e molto altro:&lt;/p&gt;
+&lt;p&gt;scarpe, accessori, T-shirt stampate, abiti femminili, jeans da donna!&lt;/p&gt;</description>
+    <link_rewrite>donna</link_rewrite>
     <meta_title/>
     <meta_keywords/>
     <meta_description/>
   </category>
-  <category id="Tops" id_shop="1">
-    <name>Tops</name>
-    <description>&lt;p&gt;Choose from t-shirts, tops, blouses, short sleeves, long sleeves, tank tops, 3/4 sleeves and more.&lt;/p&gt;&#xD;
-&lt;p&gt;Find the cut that suits you the best!&lt;/p&gt;</description>
-    <link_rewrite>tops</link_rewrite>
-    <meta_title/>
-    <meta_keywords/>
-    <meta_description/>
-  </category>
-  <category id="T-shirts" id_shop="1">
-    <name>T-shirts</name>
-    <description>&lt;p&gt;The must have of your wardrobe, take a look at our different colors,&lt;/p&gt;&#xD;
-&lt;p&gt;shapes and style of our collection!&lt;/p&gt;</description>
-    <link_rewrite>tshirts</link_rewrite>
-    <meta_title/>
-    <meta_keywords/>
-    <meta_description/>
-  </category>
-  <category id="Tops_1" id_shop="1">
-    <name>Tops</name>
-    <description>Choose the top that best suits you from the wide variety of tops we have. </description>
+  <category id='Tops' id_shop='1'>
+    <name>Top</name>
+    <description>&lt;p&gt;Scegliete tra T-shirt, top, camicette, maniche corte, maniche lunghe, canottiere, maniche a 3/4 e altro.&lt;/p&gt;
+&lt;p&gt;Trovate il modello più adatto a voi!&lt;/p&gt;</description>
     <link_rewrite>top</link_rewrite>
     <meta_title/>
     <meta_keywords/>
     <meta_description/>
   </category>
-  <category id="Blouses" id_shop="1">
-    <name>Blouses</name>
-    <description>Match your favorites blouses with the right accessories for the perfect look.</description>
-    <link_rewrite>blouses</link_rewrite>
+  <category id='T-shirts' id_shop='1'>
+    <name>T-shirt</name>
+    <description>&lt;p&gt;Il must del vostro guardaroba, date un&apos;occhiata ai vari colori,&lt;/p&gt;
+&lt;p&gt;forme e modelli della nostra collezione!&lt;/p&gt;</description>
+    <link_rewrite>tshirt</link_rewrite>
     <meta_title/>
     <meta_keywords/>
     <meta_description/>
   </category>
-  <category id="Dresses" id_shop="1">
-    <name>Dresses</name>
-    <description>&lt;p&gt;Find your favorites dresses from our wide choice of evening, casual or summer dresses!&lt;/p&gt;&#xD;
-&lt;p&gt;We offer dresses for every day, every style and every occasion.&lt;/p&gt;</description>
-    <link_rewrite>dresses</link_rewrite>
+  <category id='Tops_1' id_shop='1'>
+    <name>Top</name>
+    <description>Scegliete il capo più adatto a voi nell&apos;ampia varietà di top proposta.</description>
+    <link_rewrite>top</link_rewrite>
     <meta_title/>
     <meta_keywords/>
     <meta_description/>
   </category>
-  <category id="Casual_Dresses" id_shop="1">
-    <name>Casual Dresses</name>
-    <description>&lt;p&gt;You are looking for a dress for every day? Take a look at&lt;/p&gt;&#xD;
-&lt;p&gt;our selection of dresses to find one that suits you.&lt;/p&gt;</description>
-    <link_rewrite>casual-dresses</link_rewrite>
+  <category id='Blouses' id_shop='1'>
+    <name>Camicette</name>
+    <description>Abbinate le vostre camicette preferite agli accessori giusti per un look perfetto.</description>
+    <link_rewrite>camicette</link_rewrite>
     <meta_title/>
     <meta_keywords/>
     <meta_description/>
   </category>
-  <category id="Evening_Dresses" id_shop="1">
-    <name>Evening Dresses</name>
-    <description>Browse our different dresses to choose the perfect dress for an unforgettable evening!</description>
-    <link_rewrite>evening-dresses</link_rewrite>
+  <category id='Dresses' id_shop='1'>
+    <name>Abiti</name>
+    <description>&lt;p&gt;Trovate il vostro abbigliamento preferito nella nostra ampia scelta di abiti da sera, casual o estivi!&lt;/p&gt;
+&lt;p&gt;Proponiamo abiti per tutti i giorni, tutti gli stili e tutte le occasioni.&lt;/p&gt;</description>
+    <link_rewrite>abiti</link_rewrite>
     <meta_title/>
     <meta_keywords/>
     <meta_description/>
   </category>
-  <category id="Summer_Dresses" id_shop="1">
-    <name>Summer Dresses</name>
-    <description>Short dress, long dress, silk dress, printed dress, you will find the perfect dress for summer.</description>
-    <link_rewrite>summer-dresses</link_rewrite>
+  <category id='Casual_Dresses' id_shop='1'>
+    <name>Abiti casual</name>
+    <description>&lt;p&gt;State cercando un abito per tutti i giorni? Date un&apos;occhiata alla&lt;/p&gt;
+&lt;p&gt;nostra selezione di abiti per trovare quello adatto a voi.&lt;/p&gt;</description>
+    <link_rewrite>abiti-casual</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id='Evening_Dresses' id_shop='1'>
+    <name>Abiti da sera</name>
+    <description>Curiosate tra i nostri abiti per scegliere il capo perfetto per una serata indimenticabile!</description>
+    <link_rewrite>abiti-da-sera</link_rewrite>
+    <meta_title/>
+    <meta_keywords/>
+    <meta_description/>
+  </category>
+  <category id='Summer_Dresses' id_shop='1'>
+    <name>Abiti estivi</name>
+    <description>Abito corto, abito lungo, abito in seta, abito stampato... qui troverete l&apos;abito perfetto per l&apos;estate.</description>
+    <link_rewrite>abiti-estivi</link_rewrite>
     <meta_title/>
     <meta_keywords/>
     <meta_description/>

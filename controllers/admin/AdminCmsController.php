@@ -87,7 +87,7 @@ class AdminCmsControllerCore extends AdminController
 			'href' => '#',
 			'desc' => $this->l('Save and stay', null, null, false),
 		);
-		
+
 		return parent::initPageHeaderToolbar();
 	}
 
@@ -231,6 +231,9 @@ class AdminCmsControllerCore extends AdminController
 			);
 		}
 
+		if (Validate::isLoadedObject($this->object))
+			$this->context->smarty->assign('url_prev' , $this->getPreviewUrl($this->object));
+
 		$this->tpl_form_vars = array(
 			'active' => $this->object->active,
 			'PS_ALLOW_ACCENTED_CHARS_URL', (int)Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL')
@@ -244,7 +247,7 @@ class AdminCmsControllerCore extends AdminController
 		$this->position_group_identifier = (int)$this->id_cms_category;
 		$this->toolbar_title = $this->l('Pages in this category');
 		$this->toolbar_btn['new'] = array(
-			'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;id_cms_category='.(int)$this->id_cms_category.'&amp;token='.$this->token,
+			'href' => self::$currentIndex.'&add'.$this->table.'&id_cms_category='.(int)$this->id_cms_category.'&token='.$this->token,
 			'desc' => $this->l('Add new')
 		);
 
@@ -264,17 +267,14 @@ class AdminCmsControllerCore extends AdminController
 		/* Close list table and submit button */
 		$this->displayListFooter($token);
 	}
-	
+
 	public function postProcess()
 	{
 		if (Tools::isSubmit('viewcms') && ($id_cms = (int)Tools::getValue('id_cms')))
 		{
 			parent::postProcess();
 			if (($cms = new CMS($id_cms, $this->context->language->id)) && Validate::isLoadedObject($cms))
-			{
-				$this->redirect_after = $this->getPreviewUrl($cms);			
-				Tools::redirectAdmin($this->redirect_after);
-			}
+				Tools::redirectAdmin(self::$currentIndex.'&id_cms='.$id_cms.'&conf=4&updatecms&token='.Tools::getAdminTokenLite('AdminCmsContent').'&url_preview=1');
 		}
 		elseif (Tools::isSubmit('deletecms'))
 		{
@@ -319,36 +319,31 @@ class AdminCmsControllerCore extends AdminController
 		{
 			parent::validateRules();
 			if (count($this->errors))
-                return false;
-            if (!$id_cms = (int)Tools::getValue('id_cms'))
-            {
-                $cms = new CMS();
-                $this->copyFromPost($cms, 'cms');
-                if (!$cms->add())
-                    $this->errors[] = Tools::displayError('An error occurred while creating an object.')
-                        .' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
-                else
-                    $this->updateAssoShop($cms->id);
-            }
-            else
-            {
-                $cms = new CMS($id_cms);
-                $this->copyFromPost($cms, 'cms');
-                if (!$cms->update())
-                    $this->errors[] = Tools::displayError('An error occurred while updating an object.')
-                        .' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
-                else
-                    $this->updateAssoShop($cms->id);
-            }
-            if (Tools::isSubmit('view'.$this->table))
+				return false;
+			if (!$id_cms = (int)Tools::getValue('id_cms'))
 			{
-					$this->redirect_after = $this->getPreviewUrl($cms);
-					Tools::redirectAdmin($this->redirect_after);
+				$cms = new CMS();
+				$this->copyFromPost($cms, 'cms');
+				if (!$cms->add())
+					$this->errors[] = Tools::displayError('An error occurred while creating an object.').' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
+				else
+					$this->updateAssoShop($cms->id);
 			}
-            elseif (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
-                Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$cms->id.'&conf=4&update'.$this->table.'&token='.Tools::getAdminTokenLite('AdminCmsContent'));
-            else
-                Tools::redirectAdmin(self::$currentIndex.'&id_cms_category='.$cms->id_cms_category.'&conf=4&token='.Tools::getAdminTokenLite('AdminCmsContent'));
+			else
+			{
+				$cms = new CMS($id_cms);
+				$this->copyFromPost($cms, 'cms');
+				if (!$cms->update())
+					$this->errors[] = Tools::displayError('An error occurred while updating an object.').' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
+				else
+					$this->updateAssoShop($cms->id);
+			}
+			if (Tools::isSubmit('view'.$this->table))
+				Tools::redirectAdmin(self::$currentIndex.'&id_cms='.$cms->id.'&conf=4&updatecms&token='.Tools::getAdminTokenLite('AdminCmsContent').'&url_preview=1');
+			elseif (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
+				Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$cms->id.'&conf=4&update'.$this->table.'&token='.Tools::getAdminTokenLite('AdminCmsContent'));
+			else
+				Tools::redirectAdmin(self::$currentIndex.'&id_cms_category='.$cms->id_cms_category.'&conf=4&token='.Tools::getAdminTokenLite('AdminCmsContent'));
 		}
 		elseif (Tools::isSubmit('way') && Tools::isSubmit('id_cms') && (Tools::isSubmit('position')))
 		{
@@ -405,7 +400,7 @@ class AdminCmsControllerCore extends AdminController
 	}
 
 	public function getPreviewUrl(CMS $cms)
-	{			
+	{
 		$preview_url = $this->context->link->getCMSLink($cms, null, null, $this->context->language->id);
 		if (!$cms->active)
 		{
@@ -421,5 +416,3 @@ class AdminCmsControllerCore extends AdminController
 		return $preview_url;
 	}
 }
-
-

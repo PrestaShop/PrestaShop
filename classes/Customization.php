@@ -24,8 +24,75 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class CustomizationCore
+class CustomizationCore extends ObjectModel
 {
+	/** @var integer */
+	public $id_product_attribute;
+	/** @var integer */
+	public $id_address_delivery;
+	/** @var integer */
+	public $id_cart;
+	/** @var integer */
+	public $id_product;
+	/** @var integer */
+	public $quantity;
+	/** @var integer */
+	public $quantity_refunded;
+	/** @var integer */
+	public $quantity_returned;
+	/** @var boolean */
+	public $in_cart;
+
+	/**
+	 * @see ObjectModel::$definition
+	 */
+	public static $definition = array(
+		'table' => 'customization',
+		'primary' => 'id_customization',
+		'fields' => array(
+			/* Classic fields */
+			'id_product_attribute' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_address_delivery' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_cart' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_product' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'quantity' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'quantity_refunded' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'quantity_returned' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'in_cart' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
+		),
+	);
+	protected $webserviceParameters = array(
+		'fields' => array(
+			'id_address_delivery' => array(
+				'xlink_resource' => array(
+					'resourceName' => 'addresses'
+				)
+			),
+			'id_cart' => array(
+				'xlink_resource' => array(
+					'resourceName' => 'carts'
+				)
+			),
+			'id_product' => array(
+				'xlink_resource' => array(
+					'resourceName' => 'products'
+				)
+			),
+		),
+		'associations' => array(
+			'customized_data_text_fields' => array('resource' => 'customized_data_text_field', 'virtual_entity' => true, 'fields' => array(
+				'id_customization_field' => array('required' => true, 'xlink_resource' => 'product_customization_fields'),
+				'value' => array(),
+				)
+			),
+			'customized_data_images' => array('resource' => 'customized_data_image', 'virtual_entity' => true, 'setter' => false, 'fields' => array(
+				'id_customization_field' => array('xlink_resource' => 'product_customization_fields'),
+				'value' => array(),
+				)
+			),
+		),
+	);
+
 	public static function getReturnedCustomizations($id_order)
 	{
 		if (($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
@@ -138,6 +205,53 @@ class CustomizationCore
 			SELECT `id_customization_field`
 			FROM `'._DB_PREFIX_.'customization_field`
 		');
+	}
+
+	public function getWsCustomizedDataTextFields()
+	{
+		if (!$results = Db::getInstance()->executeS('
+			SELECT id_customization_field, value 
+			FROM `'._DB_PREFIX_.'customization_field` cf 
+			LEFT JOIN `'._DB_PREFIX_.'customized_data` cd ON (cf.id_customization_field = cd.index) 
+			WHERE `id_product` = '.(int)$this->id_product.'
+			AND cf.type = 1'))
+			return array();
+		return $results;
+	}
+
+	public function getWsCustomizedDataImages()
+	{
+		if (!$results = Db::getInstance()->executeS('
+			SELECT id_customization_field, value 
+			FROM `'._DB_PREFIX_.'customization_field` cf 
+			LEFT JOIN `'._DB_PREFIX_.'customized_data` cd ON (cf.id_customization_field = cd.index) 
+			WHERE `id_product` = '.(int)$this->id_product.'
+			AND cf.type = 0'))
+			return array();
+		return $results;
+	}
+
+	public function setWsCustomizedDataTextFields($values)
+	{
+		$cart = new Cart($this->id_cart);
+		if (!Validate::isLoadedObject($cart))
+		{
+			WebserviceRequest::getInstance()->setError(500, Tools::displayError('Could not load cart id='.$this->id_cart), 137);
+			return false;
+		}
+		Db::getInstance()->execute('
+		DELETE FROM `'._DB_PREFIX_.'customized_data`
+		WHERE id_customization = '.(int)$this->id.'
+		AND type = 1');
+		foreach ($values as $value)
+		{
+			$query = 'INSERT INTO `'._DB_PREFIX_.'customized_data` (`id_customization`, `type`, `index`, `value`)
+				VALUES ('.(int)$this->id.', 1, '.(int)$value['id_customization_field'].', \''.pSQL($value['value']).'\')';
+
+			if (!Db::getInstance()->execute($query))
+				return false;
+		}
+		return true;
 	}
 }
 

@@ -270,20 +270,25 @@ class AdminTranslationsControllerCore extends AdminController
 	protected function writeTranslationFile($override_file = false)
 	{
 		$type = Tools::toCamelCase($this->type_selected, true);
-		$translation_informations = $this->translations_informations[$this->type_selected];
+		
+		if (isset($this->translations_informations[$this->type_selected]))
+			$translation_informations = $this->translations_informations[$this->type_selected];
+		else
+			return;
 
 		if ($override_file)
 			$file_path = $translation_informations['override']['dir'].$translation_informations['override']['file'];
 		else
 			$file_path = $translation_informations['dir'].$translation_informations['file'];
 
-		if (!file_exists($file_path))
+		if ($file_path && !file_exists($file_path))
 		{
 			if (!file_exists(dirname($file_path)) && !mkdir(dirname($file_path), 0777, true))
 				throw new PrestaShopException(sprintf(Tools::displayError('Directory "%s" cannot be created'), dirname($file_path)));
 			elseif (!touch($file_path))
 				throw new PrestaShopException(sprintf(Tools::displayError('File "%s" cannot be created'), $file_path));
 		}
+
 		$thm_name = str_replace('.', '', Tools::getValue('theme'));
 		$kpi_key = substr(strtoupper($thm_name.'_'.Tools::getValue('lang')), 0, 16);
 
@@ -416,8 +421,26 @@ class AdminTranslationsControllerCore extends AdminController
 		$content = "<?php\n\n\$tabs = array();";
 		if (!empty($tabs))
 			foreach ($tabs as $tab)
+			{
+				/**
+				 * We don't export tab translations that are identical to the default
+				 * tab translations to avoid a problem that would occur in the followin scenario:
+				 * 
+				 * 1) install PrestaShop in, say, Spanish => tabs are by default in Spanish
+				 * 2) create a new language, say, Klingon => tabs are populated using the default, Spanish, tabs
+				 * 3) export the Klingon language pack
+				 *
+				 * => Since you have not yet translated the tabs into Klingon,
+				 * without the condition below, you would get tabs exported, but in Spanish.
+				 * This would lead to a Klingon pack actually containing Spanish.
+				 *
+				 * This has caused many issues in the past, so, as a precaution, tabs from
+				 * the default language are not exported.
+				 * 
+				 */
 				if ($tabs_default[$tab['class_name']] != pSQL($tab['name']))
-				$content .= "\n\$tabs['".$tab['class_name']."'] = '".pSQL($tab['name'])."';";
+					$content .= "\n\$tabs['".$tab['class_name']."'] = '".pSQL($tab['name'])."';";
+			}
 		$content .= "\n\nreturn \$tabs;";
 
 		$dir = _PS_TRANSLATIONS_DIR_.$this->lang_selected->iso_code.DIRECTORY_SEPARATOR;
@@ -428,7 +451,7 @@ class AdminTranslationsControllerCore extends AdminController
 			if (!mkdir($dir, 0777, true))
 				throw new PrestaShopException('The file '.$dir.' cannot be created.');
 		if (!file_put_contents($path, $content))
-				throw new PrestaShopException('File "'.$path.'" doesn\'t exists and cannot be created in '.$dir);
+				throw new PrestaShopException('File "'.$path.'" does not exist and cannot be created in '.$dir);
 		if (!is_writable($path))
 			$this->displayWarning(sprintf(Tools::displayError('This file must be writable: %s'), $path));
 	}
@@ -592,6 +615,7 @@ class AdminTranslationsControllerCore extends AdminController
 	public static function addNewTabs($iso_code, $files)
 	{
 		$errors = array();
+
 		foreach ($files as $file)
 		{
 			// Check if file is a file theme
@@ -603,7 +627,7 @@ class AdminTranslationsControllerCore extends AdminController
 				if (file_exists(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$file['filename']))
 					 include_once(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$file['filename']);
 				
-				if (count($_TABS))
+				if (is_array($_TABS) && count($_TABS))
 				{
 					foreach ($_TABS as $class_name => $translations)
 					{
@@ -614,7 +638,7 @@ class AdminTranslationsControllerCore extends AdminController
 						{
 							$id_lang = Language::getIdByIso($iso_code);
 							$tab->name[(int)$id_lang] = $translations;
-							
+
 							// Do not crash at intall
 							if (!isset($tab->name[Configuration::get('PS_LANG_DEFAULT')]))
 								$tab->name[(int)Configuration::get('PS_LANG_DEFAULT')] = $translations;
@@ -698,7 +722,7 @@ class AdminTranslationsControllerCore extends AdminController
 						
 						if (preg_match('@^[0-9a-z-_/\\\\]+\.php$@i', $file2check['filename']))
 						{
-							if (!AdminTranslationsController::checkTranslationFile(file_get_contents($sandbox.$file2check['filename'])))
+							if (!@filemtime($sandbox.$file2check['filename']) || !AdminTranslationsController::checkTranslationFile(file_get_contents($sandbox.$file2check['filename'])))
 								$this->errors[] = sprintf(Tools::displayError('Validation failed for: %s'), $file2check['filename']);
 						}
 						elseif (!preg_match('@^[0-9a-z-_/\\\\]+\.(html|tpl|txt)$@i', $file2check['filename']))
@@ -890,7 +914,7 @@ class AdminTranslationsControllerCore extends AdminController
 				file_put_contents($file_name, '');
 			if (!is_writable($file_name))
 				throw new PrestaShopException(sprintf(
-					Tools::displayError('Cannot write to the theme\'s language file (%s). Please check write permissions.'),
+					Tools::displayError('Cannot write to the theme\'s language file (%s). Please check writing permissions.'),
 					$file_name
 				));
 

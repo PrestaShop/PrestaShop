@@ -70,7 +70,7 @@
 							{foreach $option_list as $key => $option}
 								<div class="delivery_option {if ($option@index % 2)}alternate_{/if}item">
 									<div>
-										<table class="resume table table-bordered{if !$option.unique_carrier} not-displayable{/if}">
+										<table class="resume table table-bordered{if !$option.unique_carrier} hide{/if}">
 											<tr>
 												<td class="delivery_option_radio">
 													<input id="delivery_option_{$id_address|intval}_{$option@index}" class="delivery_option_radio" type="radio" name="delivery_option[{$id_address|intval}]" data-key="{$key}" data-id_address="{$id_address|intval}" value="{$key}"{if isset($delivery_option[$id_address]) && $delivery_option[$id_address] == $key} checked="checked"{/if} />
@@ -128,7 +128,7 @@
 											</tr>
 										</table>
 										{if !$option.unique_carrier}
-											<table class="delivery_option_carrier{if isset($delivery_option[$id_address]) && $delivery_option[$id_address] == $key} selected{/if} resume table table-bordered{if $option.unique_carrier} not-displayable{/if}">
+											<table class="delivery_option_carrier{if isset($delivery_option[$id_address]) && $delivery_option[$id_address] == $key} selected{/if} resume table table-bordered{if $option.unique_carrier} hide{/if}">
 												<tr>
 													{if !$option.unique_carrier}
 														<td rowspan="{$option.carrier_list|@count}" class="delivery_option_radio first_item">
@@ -136,22 +136,26 @@
 														</td>
 													{/if}
 													{assign var="first" value=current($option.carrier_list)}
-													<td class="delivery_option_logo{if $first.product_list[0].carrier_list[0] eq 0} not-displayable{/if}">
+													<td class="delivery_option_logo{if $first.product_list[0].carrier_list[0] eq 0} hide{/if}">
 														{if $first.logo}
 															<img src="{$first.logo|escape:'htmlall':'UTF-8'}" alt="{$first.instance->name|escape:'htmlall':'UTF-8'}"/>
 														{else if !$option.unique_carrier}
 															{$first.instance->name|escape:'htmlall':'UTF-8'}
 														{/if}
 													</td>
-													<td class="{if $option.unique_carrier}first_item{/if}{if $first.product_list[0].carrier_list[0] eq 0} not-displayable{/if}">
+													<td class="{if $option.unique_carrier}first_item{/if}{if $first.product_list[0].carrier_list[0] eq 0} hide{/if}">
 														<input type="hidden" value="{$first.instance->id|intval}" name="id_carrier" />
 														{if isset($first.instance->delay[$cookie->id_lang])}
-															<i class="icon-info-sign"></i>{$first.instance->delay[$cookie->id_lang]|escape:'htmlall':'UTF-8'}
-															{if count($first.product_list) <= 1}
-																({l s='Product concerned:'}
-															{else}
-																({l s='Products concerned:'}
-															{/if}
+															<i class="icon-info-sign"></i>
+															{strip}
+																{$first.instance->delay[$cookie->id_lang]|escape:'htmlall':'UTF-8'}
+																&nbsp;
+																{if count($first.product_list) <= 1}
+																	({l s='For this product:'}
+																{else}
+																	({l s='For these products:'}
+																{/if}
+															{/strip}
 															{foreach $first.product_list as $product}
 																{if $product@index == 4}
 																	<acronym title="
@@ -201,7 +205,7 @@
 													</td>
 												</tr>
 												<tr>
-													<td class="delivery_option_logo{if $carrier.product_list[0].carrier_list[0] eq 0} not-displayable{/if}">
+													<td class="delivery_option_logo{if $carrier.product_list[0].carrier_list[0] eq 0} hide{/if}">
 														{foreach $option.carrier_list as $carrier}
 															{if $carrier@iteration != 1}
 																{if $carrier.logo}
@@ -212,16 +216,19 @@
 															{/if}
 														{/foreach}
 													</td>
-													<td class="{if $option.unique_carrier} first_item{/if}{if $carrier.product_list[0].carrier_list[0] eq 0} not-displayable{/if}">
+													<td class="{if $option.unique_carrier} first_item{/if}{if $carrier.product_list[0].carrier_list[0] eq 0} hide{/if}">
 														<input type="hidden" value="{$first.instance->id|intval}" name="id_carrier" />
 														{if isset($carrier.instance->delay[$cookie->id_lang])}
 															<i class="icon-info-sign"></i>
-															{$first.instance->delay[$cookie->id_lang]|escape:'htmlall':'UTF-8'}
-															{if count($carrier.product_list) <= 1}
-																({l s='Product concerned:'}
-															{else}
-																({l s='Products concerned:'}
-															{/if}
+															{strip}
+																{$first.instance->delay[$cookie->id_lang]|escape:'htmlall':'UTF-8'}
+																&nbsp;
+																{if count($first.product_list) <= 1}
+																	({l s='For this product:'}
+																{else}
+																	({l s='For these products:'}
+																{/if}
+															{/strip}
 															{foreach $carrier.product_list as $product}
 																{if $product@index == 4}
 																	<acronym title="

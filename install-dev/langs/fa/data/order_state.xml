@@ -5,11 +5,11 @@
         <template>cheque</template>
     </order_state>
     <order_state id="Payment_accepted">
-        <name>پرداخت تاييد شده</name>
+        <name>پرداخت تایید شده</name>
         <template>payment</template>
     </order_state>
     <order_state id="Preparation_in_progress">
-        <name>در حال آماده سازي</name>
+        <name>در حال آماده سازی</name>
         <template>preparation</template>
     </order_state>
     <order_state id="Shipped">
@@ -17,7 +17,7 @@
         <template>shipped</template>
     </order_state>
     <order_state id="Delivered">
-        <name>به دست مشتري رسيده</name>
+        <name>به دست مشتری رسیده</name>
         <template/>
     </order_state>
     <order_state id="Canceled">
@@ -29,23 +29,23 @@
         <template>refund</template>
     </order_state>
     <order_state id="Payment_error">
-        <name>خطاي پرداخت</name>
+        <name>خطای پرداخت</name>
         <template>payment_error</template>
     </order_state>
     <order_state id="On_backorder">
-        <name>خارج از موجودي</name>
+        <name>خارج از موجودی</name>
         <template>outofstock</template>
     </order_state>
     <order_state id="Awaiting_bank_wire_payment">
-        <name>منتظر پرداخت فيش بانکي</name>
+        <name>منتظر پرداخت فیش بانکی</name>
         <template>bankwire</template>
     </order_state>
     <order_state id="Awaiting_PayPal_payment">
-        <name>منتظر پرداخت پي پال</name>
+        <name>منتظر پرداخت پی پال</name>
         <template/>
     </order_state>
     <order_state id="Payment_remotely_accepted">
-        <name>پرداخت از راه دور تاييد شده</name>
+        <name>پرداخت از راه دور تایید شده</name>
         <template>payment</template>
     </order_state>
 </entity_order_state>

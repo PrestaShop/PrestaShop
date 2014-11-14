@@ -237,9 +237,10 @@ class DispatcherCore
 		{
 			if (defined('_PS_ADMIN_DIR_'))
 			{
-				$this->default_controller = 'admindashboard';
 				if (isset(Context::getContext()->employee) && Validate::isLoadedObject(Context::getContext()->employee) && isset(Context::getContext()->employee->default_tab))
 					$this->default_controller = Tab::getClassNameById((int)Context::getContext()->employee->default_tab);
+				if (empty($this->default_controller))
+					$this->default_controller = 'AdminDashboard';
 			}
 			elseif (Tools::getValue('fc') == 'module')
 				$this->default_controller = 'default';
@@ -651,7 +652,7 @@ class DispatcherCore
 				continue;
 
 			if (!array_key_exists($key, $params))
-				die('Dispatcher::createUrl() miss required parameter "'.$key.'" for route "'.$route_id.'"');
+				throw new PrestaShopException('Dispatcher::createUrl() miss required parameter "'.$key.'" for route "'.$route_id.'"');
 			if (isset($this->default_routes[$route_id]))
 				$query_params[$this->default_routes[$route_id]['keywords'][$key]['param']] = $params[$key];
 		}

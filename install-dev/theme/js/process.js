@@ -172,18 +172,18 @@ function install_error(step, errors)
 		if ($.type(list_errors) == 'string')
 		{
 			list_errors = [];
-			list_errors[0] = [];
-			list_errors[0]['error'] = errors;
+			list_errors[0] = errors;
 		}
 		else if ($.type(list_errors) == 'array')
 			list_errors = list_errors[0];
+
 		var display = '<ol>';
 
 		$.each(list_errors, function(k, v)
 		{
 			if (typeof psuser_assistance != 'undefined')
-				psuser_assistance.setStep('install_process_error', {'error':v['error']});
-			display += '<li>'+v['error']+'</li>';
+				psuser_assistance.setStep('install_process_error', {'error':v});
+			display += '<li>' + v + '</li>';
 		});
 		display += '</ol>';
 		$('#process_step_'+step.key+' .error_log').html(display).show();

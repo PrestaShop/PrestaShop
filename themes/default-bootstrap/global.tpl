@@ -23,6 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {strip}
+{addJsDef isMobile=$mobile_device}
 {addJsDef baseDir=$content_dir}
 {addJsDef baseUri=$base_uri}
 {addJsDef static_token=$static_token}

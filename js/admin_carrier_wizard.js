@@ -229,6 +229,21 @@ function validateSteps(fromStep, toStep)
 	var is_ok = true;
 	if ((multistore_enable && fromStep == 3) || (!multistore_enable && fromStep == 2))
 	{
+		if (toStep > fromStep && !$('#is_free_on').attr('checked'))
+		{
+			is_ok = false;
+			$('.input_zone').each(function () {
+				if ($(this).prop('checked'))
+					is_ok = true;
+			});
+
+			if (!is_ok)
+			{
+				displayError([select_at_least_one_zone], fromStep);
+				return;
+			}
+		}
+		
 		if (toStep > fromStep && !$('#is_free_on').attr('checked') && !validateRange(2))
 			is_ok = false;
 	}
@@ -268,7 +283,7 @@ function validateSteps(fromStep, toStep)
 }
 
 function displayError(errors, step_number)
-{
+{	
 	$('#carrier_wizard .actionBar a.btn').removeClass('disabled');
 	$('.wizard_error').remove();
 	str_error = '<div class="error wizard_error" style="display:none"><ul>';

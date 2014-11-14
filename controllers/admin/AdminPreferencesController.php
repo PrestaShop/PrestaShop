@@ -26,7 +26,6 @@
 
 class AdminPreferencesControllerCore extends AdminController
 {
-
 	public function __construct()
 	{
 		$this->bootstrap = true;
@@ -39,17 +38,29 @@ class AdminPreferencesControllerCore extends AdminController
 		{
 			$round_mode = array(
 				array(
+					'value' => PS_ROUND_HALF_UP,
+					'name' => $this->l('Round up away from zero, when it is half way there (recommended)')
+				),
+				array(
+					'value' => PS_ROUND_HALF_DOWN,
+					'name' => $this->l('Round down towards zero, when it is half way there')
+				),
+				array(
+					'value' => PS_ROUND_HALF_EVEN,
+					'name' => $this->l('Round towards the next even value')
+				),
+				array(
+					'value' => PS_ROUND_HALF_ODD,
+					'name' => $this->l('Round towards the next odd value')
+				),
+				array(
 					'value' => PS_ROUND_UP,
-					'name' => $this->l('superior')
+					'name' => $this->l('Round up to the nearest value')
 				),
 				array(
 					'value' => PS_ROUND_DOWN,
-					'name' => $this->l('inferior')
+					'name' => $this->l('Round down to the nearest value')
 				),
-				array(
-					'value' => PS_ROUND_HALF,
-					'name' => $this->l('classical')
-				)
 			);
 			$activities1 = array(
 				0 => $this->l('-- Please choose your main activity --'),
@@ -133,6 +144,26 @@ class AdminPreferencesControllerCore extends AdminController
 					'type' => 'select',
 					'list' => $round_mode,
 					'identifier' => 'value'
+				),
+				'PS_ROUND_TYPE' => array(
+					'title' => $this->l('Round type'),
+					'cast' => 'intval',
+					'type' => 'select',
+					'list' => array(
+						array(
+							'name' => $this->l('Round on each item'),
+							'id' => Order::ROUND_ITEM
+							),
+						array(
+							'name' => $this->l('Round on each line'),
+							'id' => Order::ROUND_LINE
+							),
+						array(
+							'name' => $this->l('Round on the total'),
+							'id' => Order::ROUND_TOTAL
+							),
+						),
+					'identifier' => 'id'
 				),
 				'PS_DISPLAY_SUPPLIERS' => array(
 					'title' => $this->l('Display suppliers and manufacturers'),

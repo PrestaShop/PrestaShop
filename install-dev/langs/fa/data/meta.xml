@@ -2,19 +2,19 @@
 <entity_meta>
   <meta id="404" id_shop="1">
     <title>404 error</title>
-    <description>صفحه مورد نظر پيدا نشد</description>
+    <description>صفحه مورد نظر پیدا نشد</description>
     <keywords/>
     <url_rewrite>page-not-found</url_rewrite>
   </meta>
   <meta id="best-sales" id_shop="1">
-    <title>پرفروش ترين ها</title>
-    <description>پرفروش ترين محصولات ما</description>
+    <title>پرفروش ترین ها</title>
+    <description>پرفروش ترین محصولات ما</description>
     <keywords/>
     <url_rewrite>best-sales</url_rewrite>
   </meta>
   <meta id="contact" id_shop="1">
     <title>ارتباط با ما</title>
-    <description>براي ارتباط با ما از اين فرم استفاده کنيد</description>
+    <description>برای ارتباط با ما از این فرم استفاده کنید</description>
     <keywords/>
     <url_rewrite>contact-us</url_rewrite>
   </meta>
@@ -25,38 +25,38 @@
     <url_rewrite/>
   </meta>
   <meta id="manufacturer" id_shop="1">
-    <title>توليد کننده ها</title>
-    <description>ليست توليد کننده ها</description>
+    <title>تولید کننده ها</title>
+    <description>لیست تولید کننده ها</description>
     <keywords/>
     <url_rewrite>manufacturers</url_rewrite>
   </meta>
   <meta id="new-products" id_shop="1">
-    <title>محصولات جديد</title>
-    <description>جديدترين محصولات ما</description>
+    <title>محصولات جدید</title>
+    <description>جدیدترین محصولات ما</description>
     <keywords/>
     <url_rewrite>new-products</url_rewrite>
   </meta>
   <meta id="password" id_shop="1">
-    <title>فراموشي گذرواژه</title>
-    <description>براي دريافت رمز عبور خود توسط ايميل ميتوانيد پست الکترونيکي که با آن ثبت نام کرده بوديد را وارد کنيد</description>
+    <title>فراموشی گذرواژه</title>
+    <description>برای دریافت رمز عبور خود توسط ایمیل میتوانید پست الکترونیکی که با آن ثبت نام کرده بودید را وارد کنید</description>
     <keywords/>
     <url_rewrite>password-recovery</url_rewrite>
   </meta>
   <meta id="prices-drop" id_shop="1">
-    <title>کاهش قيمت ها</title>
-    <description>محصولات ويژه ما</description>
+    <title>کاهش قیمت ها</title>
+    <description>محصولات ویژه ما</description>
     <keywords/>
     <url_rewrite>prices-drop</url_rewrite>
   </meta>
   <meta id="sitemap" id_shop="1">
-    <title>نقشه سايت</title>
-    <description>گمشده ايد؟ آنچه را که به دنبالش هستيد پيدا کنيد</description>
+    <title>نقشه سایت</title>
+    <description>گمشده اید؟ آنچه را که به دنبالش هستید پیدا کنید</description>
     <keywords/>
     <url_rewrite>sitemap</url_rewrite>
   </meta>
   <meta id="supplier" id_shop="1">
-    <title>تامين کننده ها</title>
-    <description>ليست تامين کننده ها</description>
+    <title>تامین کننده ها</title>
+    <description>لیست تامین کننده ها</description>
     <keywords/>
     <url_rewrite>supplier</url_rewrite>
   </meta>
@@ -85,13 +85,13 @@
     <url_rewrite>cart</url_rewrite>
   </meta>
   <meta id="discount" id_shop="1">
-    <title>تخفيف</title>
+    <title>تخفیف</title>
     <description/>
     <keywords/>
     <url_rewrite>discount</url_rewrite>
   </meta>
   <meta id="history" id_shop="1">
-    <title>تاريخچه سفارش</title>
+    <title>تاریخچه سفارش</title>
     <description/>
     <keywords/>
     <url_rewrite>order-history</url_rewrite>
@@ -109,7 +109,7 @@
     <url_rewrite>my-account</url_rewrite>
   </meta>
   <meta id="order-follow" id_shop="1">
-    <title>پيگيري سفارش</title>
+    <title>پیگیری سفارش</title>
     <description/>
     <keywords/>
     <url_rewrite>order-follow</url_rewrite>

@@ -597,7 +597,7 @@ class MediaCore
 				$url_data = parse_url($filename);
 				$infos['path'] = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, '/', $url_data['path']);
 
-				if (!@filemtime($info['path']))
+				if (!@filemtime($infos['path']))
 					$infos['path'] = _PS_CORE_DIR_.Tools::str_replace_once(__PS_BASE_URI__, '/', $url_data['path']);
 
 				$js_files_infos[] = $infos;

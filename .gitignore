@@ -12,6 +12,7 @@ config.codekit
 robots.txt
 sitemap.xml
 cache/cachefs/*
+cache/purifier/HTML/*
 !cache/cachefs/index.php
 download/*
 !download/index.php

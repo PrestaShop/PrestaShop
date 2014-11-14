@@ -23,79 +23,99 @@
 */
 
 $(function() {
-	var storage = $.localStorage;
-	initHelp = function(){
-		$('#main').addClass('helpOpen');
-		//first time only
-		if( $('#help-container').length === 0) {
-			//add css
-			$('head').append('<link href="//help.prestashop.com/css/help.css" rel="stylesheet">');
-			//add container
-			$('#main').after('<div id="help-container"></div>');
-		}
-		//init help (it use a global javascript variable to get actual controller)
-		pushContent(help_class_name);
-		$('#help-container').on('click', '.popup', function(e){
+		var storage = getStorageAvailable();
+
+		initHelp = function(){
+			$('#main').addClass('helpOpen');
+			//first time only
+			if( $('#help-container').length === 0) {
+				//add css
+				$('head').append('<link href="//help.prestashop.com/css/help.css" rel="stylesheet">');
+				//add container
+				$('#main').after('<div id="help-container"></div>');
+			}
+			//init help (it use a global javascript variable to get actual controller)
+			pushContent(help_class_name);
+			$('#help-container').on('click', '.popup', function(e){
+				e.preventDefault();
+				if (storage)
+					storage.setItem('helpOpen', false);
+				$('.toolbarBox a.btn-help').trigger('click');
+				var helpWindow = window.open("index.php?controller=" + help_class_name + "?token=" + token + "&ajax=1&action=OpenHelp", "helpWindow", "width=450, height=650, scrollbars=yes");
+			});
+		};
+
+
+		//init
+		$('.toolbarBox a.btn-help').on('click', function(e) {
 			e.preventDefault();
-			storage.set('helpOpen', false);
-			$('.toolbarBox a.btn-help').trigger('click');
-			var helpWindow = window.open("index.php?controller=" + help_class_name + "?token=" + token + "&ajax=1&action=OpenHelp", "helpWindow", "width=450, height=650, scrollbars=yes");
+			if( !$('#main').hasClass('helpOpen') && document.body.clientWidth > 1200) {
+				if (storage)
+					storage.setItem('helpOpen', true);
+				$('.toolbarBox a.btn-help i').removeClass('process-icon-help').addClass('process-icon-loading');
+				initHelp();
+			} else if(!$('#main').hasClass('helpOpen') && document.body.clientWidth < 1200){
+				var helpWindow = window.open("index.php?controller=" + help_class_name + "?token=" + token + "&ajax=1&action=OpenHelp", "helpWindow", "width=450, height=650, scrollbars=yes");
+			} else {
+				$('#main').removeClass('helpOpen');
+				$('#help-container').html('');
+				$('.toolbarBox a.btn-help i').removeClass('process-icon-close').addClass('process-icon-help');
+				if (storage)
+					storage.setItem('helpOpen', false);
+			}
 		});
-	};
+		
+		// Help persistency
+		if (storage && storage.getItem('helpOpen') == "true") {
+		 	$('a.btn-help').trigger('click');
+		}
+
+		//switch home
+		var language = iso_user;
+		var home;
+		switch(language) {
+			case 'en':
+				home = '19726802';
+				break;
+			case 'fr':
+				home = '20840479';
+				break;
+			default:
+				language = 'en';
+				home = '19726802';
+		}
+
+		//feedback
+		var arr_feedback = {};
+		arr_feedback.page = 'page';
+		arr_feedback.helpful = 'helpful';
+
+		//toc
+		var toc = [];
+		var lang = [
+			['en','19726802'],
+			['fr','20840479']
+		];
+
+
+	function getStorageAvailable() {
+		test = 'foo'; 
+		storage =  window.localStorage || window.sessionStorage;
+	    try {
+	        storage.setItem(test, test);
+	        storage.removeItem(test);
+	        		//open help if localstorage helpOpen = true;
+	        return storage;
+	    } 
+	    catch (error) {
+	        return null;
+	    }
+	}
 
 	// change help icon
 	function iconCloseHelp(){
 		$('.toolbarBox a.btn-help i').removeClass('process-icon-loading').addClass('process-icon-close');
 	}
-
-	//init
-	$('.toolbarBox a.btn-help').on('click', function(e) {
-		e.preventDefault();
-		//localstorage : remember that user wants help
-		if( !$('#main').hasClass('helpOpen') && document.body.clientWidth > 1200) {
-			storage.set('helpOpen',true);
-			$('.toolbarBox a.btn-help i').removeClass('process-icon-help').addClass('process-icon-loading');
-			initHelp();
-		} else if(!$('#main').hasClass('helpOpen') && document.body.clientWidth < 1200){
-			var helpWindow = window.open("index.php?controller=" + help_class_name + "?token=" + token + "&ajax=1&action=OpenHelp", "helpWindow", "width=450, height=650, scrollbars=yes");
-		} else {
-			$('#main').removeClass('helpOpen');
-			$('#help-container').html('');
-			$('.toolbarBox a.btn-help i').removeClass('process-icon-close').addClass('process-icon-help');
-			storage.set('helpOpen', false);
-		}
-	});
-	//open help if localstorage helpOpen = true;
-	if ( storage.get('helpOpen') === true ) {
-	 	$('a.btn-help').trigger('click');
-	}
-
-	//switch home
-	var language = iso_user;
-	var home;
-	switch(language) {
-		case 'en':
-			home = '19726802';
-			break;
-		case 'fr':
-			home = '20840479';
-			break;
-		default:
-			language = 'en';
-			home = '19726802';
-	}
-
-	//feedback
-	var arr_feedback = {};
-	arr_feedback.page = 'page';
-	arr_feedback.helpful = 'helpful';
-
-	//toc
-	var toc = [];
-	var lang = [
-		['en','19726802'],
-		['fr','20840479']
-	];
 
 	//get content
 	function getHelp(pageController) {
@@ -118,7 +138,6 @@ $(function() {
 
 	//update content
 	function pushContent(target) {
-		//console.log('push ' + target);
 		$('#help-container').removeClass('openHelpNav');
 		$('#help-container').html('');
 		//@todo: track event
@@ -133,7 +152,6 @@ $(function() {
 	//build navigation
 	function initNavigation() {
 		var d = new $.Deferred();
-		//console.log('initNav');
 		var request = encodeURIComponent("api/content/" + home + "/child?expand=page");
 		$.ajax( {
 			url: "//help.prestashop.com/api/?request=" + request,
@@ -164,7 +182,6 @@ $(function() {
 
 	//build toc getting children from home page recursively
 	function initToc() {
-		//console.log('initToc');
 		var getLinksByLang = function(item) {
 			var d = new $.Deferred();
 			var request = encodeURIComponent("api/content/" + item[1] + "/child/page?expand=children.page&limit=100");

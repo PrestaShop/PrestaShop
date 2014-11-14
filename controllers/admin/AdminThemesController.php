@@ -116,120 +116,9 @@ class AdminThemesControllerCore extends AdminController
 
 		libxml_use_internal_errors(true);
 
-		//get addons themes
+		// Download user themes from Addons
 		if ($this->logged_on_addons)
-		{
-			if (!$this->isFresh(Theme::CACHE_FILE_CUSTOMER_THEMES_LIST, 86400))
-				file_put_contents(_PS_ROOT_DIR_.Theme::CACHE_FILE_CUSTOMER_THEMES_LIST, Tools::addonsRequest('customer_themes'));
-
-			$customer_themes_list = file_get_contents(_PS_ROOT_DIR_.Theme::CACHE_FILE_CUSTOMER_THEMES_LIST);
-			if (!empty($customer_themes_list) && $customer_themes_list_xml = simplexml_load_string($customer_themes_list))
-			{
-				foreach ($customer_themes_list_xml->theme as $addons_theme)
-				{
-					//get addons theme if folder does not exist
-					$ids_themes = unserialize(Configuration::get('PS_ADDONS_THEMES_IDS'));
-
-					if (!is_array($ids_themes) || (is_array($ids_themes) && !in_array((string)$addons_theme->id, $ids_themes)))
-					{
-						$zip_content = Tools::addonsRequest('module', array(
-							'id_module' => pSQL($addons_theme->id),
-							'username_addons' => pSQL(trim($this->context->cookie->username_addons)),
-							'password_addons' => pSQL(trim($this->context->cookie->password_addons)))
-							);
-
-						$uniqid = uniqid();
-						$sandbox = _PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR.$uniqid.DIRECTORY_SEPARATOR;
-						mkdir($sandbox);
-
-						file_put_contents($sandbox.(string)$addons_theme->name.'.zip', $zip_content);
-
-						if ($theme_directory = $this->extractTheme($sandbox.(string)$addons_theme->name.'.zip', $sandbox))
-							$ids_themes[$theme_directory] = (string)$addons_theme->id;
-
-						Tools::deleteDirectory($sandbox);
-					}
-					Configuration::updateValue('PS_ADDONS_THEMES_IDS', serialize($ids_themes));
-				}
-			}
-		}
-
-		$all_themes = Theme::getThemes();
-		$themes = array();
-		$other_themes = array();
-		$cur_theme = array();
-		foreach ($all_themes as $theme)
-		{
-			if (file_exists(_PS_ALL_THEMES_DIR_.$theme->directory.'/preview.jpg'))
-			{
-				$themes[] = array('id' => $theme->id, 'name' => $theme->name, 'preview' => '../themes/'.$theme->directory.'/preview.jpg');
-				if ($theme->id == $this->context->shop->id_theme)
-				{
-					if (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml'))
-						$config_file = _PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml';
-					elseif ($theme->name == 'default-bootstrap')
-						$config_file = _PS_ROOT_DIR_.'/config/xml/themes/default.xml';
-					else
-						$config_file = false;
-
-					if ($config_file)
-					{
-						$cur_theme['theme_id'] = $theme->id;
-						$xml_theme = @simplexml_load_file($config_file);
-
-						if ($xml_theme !== false)
-						{
-							foreach ($xml_theme->attributes() as $key => $value)
-								$cur_theme['theme_'.$key] = (string)$value;
-
-							foreach ($xml_theme->author->attributes() as $key => $value)
-								$cur_theme['author_'.$key] = (string)$value;
-
-							if ($cur_theme['theme_name'] == 'default-bootstrap')
-								$cur_theme['tc'] = Module::isEnabled('themeconfigurator');
-						}
-					}
-					else
-					{
-						// If no xml we use data from database
-						$cur_theme['theme_id'] = $theme->id;
-						$cur_theme['theme_name'] = $theme->name;
-						$cur_theme['theme_directory'] = $theme->directory;
-					}
-				}
-				else
-					$other_themes[] = array('id' => $theme->id, 'name' => $theme->name, 'preview' => '../themes/'.$theme->directory.'/preview.jpg');
-			}
-			$themes_directory[] = $theme->directory;
-		}
-
-		foreach (scandir(_PS_ALL_THEMES_DIR_) as $theme_dir)
-		{
-			if ($theme_dir[0] != '.' && Validate::isDirName($theme_dir)
-				&& is_dir(_PS_ALL_THEMES_DIR_.$theme_dir)
-				&& file_exists(_PS_ALL_THEMES_DIR_.$theme_dir.'/preview.jpg')
-				&& !in_array($theme_dir, $themes_directory)
-			)
-			{
-
-				$config_file = false;
-				$default_config = _PS_ROOT_DIR_.'/config/xml/themes/default.xml';
-				$theme_config = _PS_ROOT_DIR_.'/config/xml/themes/'.$theme_dir.'.xml';
-
-				if (file_exists($theme_config))
-					$config_file = $theme_config;
-				elseif (file_exists($default_config))
-					$config_file = $default_config;
-
-				if ($config_file)
-				{
-					$theme_installed = $this->importThemeXmlConfig(simplexml_load_file($config_file), $theme_dir);
-					foreach ($theme_installed as $item)
-						if (Validate::isLoadedObject($item) && file_exists(_PS_ALL_THEMES_DIR_.$item->directory.'/preview.jpg'))
-							$themes[] = array('id' => $item->id, 'name' => $item->name, 'preview' => '../themes/'.$item->directory.'/preview.jpg');
-				}
-			}
-		}
+			$this->downloadAddonsThemes();
 
 		// Employee languages used for link and utm_source
 		$lang = new Language($this->context->language->id);
@@ -313,7 +202,7 @@ class AdminThemesControllerCore extends AdminController
 					),
 				),
 				'after_tabs' => array(
-					'cur_theme' => $cur_theme,
+					'cur_theme' => Theme::getThemeInfo($this->context->shop->id_theme),
 				),
 				'submit' => array('title' => $this->l('Save')),
 				'buttons' => array(
@@ -327,7 +216,10 @@ class AdminThemesControllerCore extends AdminController
 			),
 		);
 
-		if (!empty($other_themes))
+		$installed_theme = Theme::getAllThemes(array($this->context->shop->id_theme));
+		$non_installed_theme = (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_
+			&& (int)$this->context->cookie->is_contributor === 0) ? array() : Theme::getNonInstalledTheme();
+		if (count($installed_theme) || !empty($non_installed_theme))
 		{
 			$this->fields_options['theme'] = array(
 				'title' => sprintf($this->l('Select a theme for the "%s" shop'), $this->context->shop->name),
@@ -335,7 +227,8 @@ class AdminThemesControllerCore extends AdminController
 				'fields' => array(
 					'theme_for_shop' => array(
 						'type' => 'theme',
-						'themes' => $other_themes,
+						'themes' => $installed_theme,
+						'not_installed' => $non_installed_theme,
 						'id_theme' => $this->context->shop->id_theme,
 						'can_display_themes' => $this->can_display_themes,
 						'no_multishop_checkbox' => true
@@ -619,6 +512,46 @@ class AdminThemesControllerCore extends AdminController
 		return $res;
 	}
 
+	public function downloadAddonsThemes()
+	{
+		if ($this->logged_on_addons)
+			return false;
+
+		if (!$this->isFresh(Theme::CACHE_FILE_CUSTOMER_THEMES_LIST, 86400))
+			file_put_contents(_PS_ROOT_DIR_.Theme::CACHE_FILE_CUSTOMER_THEMES_LIST, Tools::addonsRequest('customer_themes'));
+
+		$customer_themes_list = file_get_contents(_PS_ROOT_DIR_.Theme::CACHE_FILE_CUSTOMER_THEMES_LIST);
+		if (!empty($customer_themes_list) && $customer_themes_list_xml = simplexml_load_string($customer_themes_list))
+		{
+			foreach ($customer_themes_list_xml->theme as $addons_theme)
+			{
+				//get addons theme if folder does not exist
+				$ids_themes = unserialize(Configuration::get('PS_ADDONS_THEMES_IDS'));
+
+				if (!is_array($ids_themes) || (is_array($ids_themes) && !in_array((string)$addons_theme->id, $ids_themes)))
+				{
+					$zip_content = Tools::addonsRequest('module', array(
+						'id_module' => pSQL($addons_theme->id),
+						'username_addons' => pSQL(trim($this->context->cookie->username_addons)),
+						'password_addons' => pSQL(trim($this->context->cookie->password_addons)))
+						);
+
+					$uniqid = uniqid();
+					$sandbox = _PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR.$uniqid.DIRECTORY_SEPARATOR;
+					mkdir($sandbox);
+
+					file_put_contents($sandbox.(string)$addons_theme->name.'.zip', $zip_content);
+
+					if ($theme_directory = $this->extractTheme($sandbox.(string)$addons_theme->name.'.zip', $sandbox))
+						$ids_themes[$theme_directory] = (string)$addons_theme->id;
+
+					Tools::deleteDirectory($sandbox);
+				}
+				Configuration::updateValue('PS_ADDONS_THEMES_IDS', serialize($ids_themes));
+			}
+		}
+	}
+
 	public function processAdd()
 	{
 		if (Tools::getValue('directory') == '' || Tools::getValue('name') == '')
@@ -765,6 +698,15 @@ class AdminThemesControllerCore extends AdminController
 
 			$obj->removeMetas();
 		}
+		elseif ($obj === false && $theme_dir = Tools::getValue('theme_dir'))
+		{
+			$theme_dir = basename($theme_dir);
+			if (Tools::deleteDirectory(_PS_ALL_THEMES_DIR_.$theme_dir.'/'))
+				Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminThemes').'&conf=2');
+			else
+				$this->errors[] = Tools::displayError('The folder cannot be removed');
+
+		}
 
 		return parent::processDelete();
 	}
@@ -775,14 +717,16 @@ class AdminThemesControllerCore extends AdminController
 
 		if (empty($this->display))
 		{
-			if (!defined('_PS_HOST_MODE_'))
+			if (!defined('_PS_HOST_MODE_') || (int)$this->context->cookie->is_contributor === 1)
 				$this->page_header_toolbar_btn['import_theme'] = array(
 					'href' => self::$currentIndex.'&action=importtheme&token='.$this->token,
 					'desc' => $this->l('Add new theme', null, null, false),
 					'icon' => 'process-icon-new'
 				);
-			if (defined('_PS_HOST_MODE_'))
+
+			if (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_ && (int)$this->context->cookie->is_contributor === 0)
 				unset($this->toolbar_btn['new']);
+
 			$this->page_header_toolbar_btn['export_theme'] = array(
 				'href' => self::$currentIndex.'&action=exporttheme&token='.$this->token,
 				'desc' => $this->l('Export theme', null, null, false),
@@ -939,13 +883,13 @@ class AdminThemesControllerCore extends AdminController
 				$this->errors[] = $this->l('Can\'t create config file.');
 
 			if (isset($_FILES['documentation']))
-				if (!empty($_FILES['documentation']['tmp_name']) && 
-					!empty($_FILES['documentation']['name']) && 
+				if (!empty($_FILES['documentation']['tmp_name']) &&
+					!empty($_FILES['documentation']['name']) &&
 					!$zip->addFile($_FILES['documentation']['tmp_name'], 'doc/'.$_FILES['documentation']['name']))
 					$this->errors[] = $this->l('Can\'t copy documentation.');
 
 			$given_path = realpath(_PS_ALL_THEMES_DIR_.Tools::getValue('theme_directory'));
-			
+
 			if ($given_path !== false)
 			{
 				$ps_all_theme_dir_lenght = strlen(realpath(_PS_ALL_THEMES_DIR_));
@@ -954,7 +898,7 @@ class AdminThemesControllerCore extends AdminController
 					$this->errors[] = $this->l('Wrong theme directory path');
 				else
 				{
-					$this->archiveThisFile($zip, Tools::getValue('theme_directory'), _PS_ALL_THEMES_DIR_, 'themes/');			
+					$this->archiveThisFile($zip, Tools::getValue('theme_directory'), _PS_ALL_THEMES_DIR_, 'themes/');
 					foreach ($this->to_export as $row)
 					{
 						if (!in_array($row, $this->native_modules))
@@ -1474,9 +1418,9 @@ class AdminThemesControllerCore extends AdminController
 		return $helper->generateForm(array($fields_form));
 	}
 
-	private function checkXmlFields($sandbox)
+	private function checkXmlFields($xml_file)
 	{
-		if (!file_exists($sandbox.'uploaded/Config.xml') || !$xml = simplexml_load_file($sandbox.'uploaded/Config.xml'))
+		if (!file_exists($xml_file) || !$xml = simplexml_load_file($xml_file))
 			return false;
 		if (!$xml['version'] || !$xml['name'])
 			return false;
@@ -1521,8 +1465,10 @@ class AdminThemesControllerCore extends AdminController
 	public function processImportTheme()
 	{
 		$this->display = 'importtheme';
-		if (defined('_PS_HOST_MODE_'))
+
+		if (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_ && (int)$this->context->cookie->is_contributor === 0)
 			return true;
+
 		if (isset($_FILES['themearchive']) && isset($_POST['filename']) && Tools::isSubmit('theme_archive_server'))
 		{
 			$uniqid = uniqid();
@@ -1533,6 +1479,7 @@ class AdminThemesControllerCore extends AdminController
 			if (Tools::getValue('filename') != '')
 			{
 				$uploader = new Uploader('themearchive');
+				$uploader->setCheckFileSize(false);
 				$uploader->setAcceptTypes(array('zip'));
 				$uploader->setSavePath($sandbox);
 				$file = $uploader->process('uploaded.zip');
@@ -1591,37 +1538,58 @@ class AdminThemesControllerCore extends AdminController
 		if (!Tools::ZipExtract($theme_zip_file, $sandbox.'uploaded/'))
 			$this->errors[] = $this->l('Error during zip extraction');
 		else
-		{
-			if (!$this->checkXmlFields($sandbox))
-				$this->errors[] = $this->l('Bad configuration file');
-			else
-			{
-				$imported_theme = $this->importThemeXmlConfig(simplexml_load_file($sandbox.'uploaded/Config.xml'));
-				foreach ($imported_theme as $theme)
-				{
-					if (Validate::isLoadedObject($theme))
-					{
-						if (!copy($sandbox.'uploaded/Config.xml', _PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml'))
-							$this->errors[] = $this->l('Can\'t copy configuration file');
+			$this->installTheme('uploaded', $sandbox);
 
-						$target_dir = _PS_ALL_THEMES_DIR_.$theme->directory;
-
-						$theme_doc_dir = $target_dir.'/docs/';
-						if (file_exists($theme_doc_dir))
-							Tools::deleteDirectory($theme_doc_dir);
-
-						Tools::recurseCopy($sandbox.'uploaded/themes/'.$theme->directory, $target_dir);
-						Tools::recurseCopy($sandbox.'uploaded/doc/', $theme_doc_dir);
-						Tools::recurseCopy($sandbox.'uploaded/modules/', _PS_MODULE_DIR_);
-					}
-					else
-						$this->errors[] = $theme;
-				}
-			}
-		}
 		if (!count($this->errors))
 			return $theme->directory;
 		return false;
+	}
+
+	protected function installTheme($theme_dir, $sandbox = false)
+	{
+		if (!$sandbox)
+		{
+			$uniqid = uniqid();
+			$sandbox = _PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR.$uniqid.DIRECTORY_SEPARATOR;
+			mkdir($sandbox);
+			Tools::recurseCopy(_PS_ALL_THEMES_DIR_.$theme_dir, $sandbox.$theme_dir);
+		}
+
+		$xml_file = $sandbox.$theme_dir.'/Config.xml';
+		if (!$this->checkXmlFields($xml_file))
+			$this->errors[] = $this->l('Bad configuration file');
+		else
+		{
+			$imported_theme = $this->importThemeXmlConfig(simplexml_load_file($xml_file));
+			foreach ($imported_theme as $theme)
+			{
+				if (Validate::isLoadedObject($theme))
+				{
+					if (!copy($sandbox.$theme_dir.'/Config.xml', _PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml'))
+						$this->errors[] = $this->l('Can\'t copy configuration file');
+
+					$target_dir = _PS_ALL_THEMES_DIR_.$theme->directory;
+					if (file_exists($target_dir))
+						Tools::deleteDirectory($target_dir);
+
+					$theme_doc_dir = $target_dir.'/docs/';
+					if (file_exists($theme_doc_dir))
+						Tools::deleteDirectory($theme_doc_dir);
+
+					Tools::recurseCopy($sandbox.$theme_dir.'/themes/'.$theme_dir.'/', $target_dir.'/');
+					Tools::recurseCopy($sandbox.$theme_dir.'/doc/', $theme_doc_dir);
+					Tools::recurseCopy($sandbox.$theme_dir.'/modules/', _PS_MODULE_DIR_);
+				}
+				else
+					$this->errors[] = $theme;
+			}
+		}
+
+		Tools::deleteDirectory($sandbox);
+
+		if (!count($this->errors))
+			Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminThemes').'&conf=18');
+
 	}
 
 	protected function isThemeInstalled($theme_name)
@@ -2469,7 +2437,8 @@ class AdminThemesControllerCore extends AdminController
 
 	public function processThemeInstall()
 	{
-		if (Shop::isFeatureActive() && !Tools::getIsset('checkBoxShopAsso_theme'))
+		$shops_asso = $this->context->employee->getAssociatedShops();
+		if (Shop::isFeatureActive() && !Tools::getIsset('checkBoxShopAsso_theme') && count($shops_asso) > 1)
 		{
 			$this->errors[] = $this->l('You must choose at least one shop.');
 			$this->display = 'ChooseThemeModule';
@@ -2479,9 +2448,14 @@ class AdminThemesControllerCore extends AdminController
 
 		$theme = New Theme((int)Tools::getValue('id_theme'));
 
-		$shops = array(Configuration::get('PS_SHOP_DEFAULT'));
-		if (Tools::isSubmit('checkBoxShopAsso_theme'))
-			$shops = Tools::getValue('checkBoxShopAsso_theme');
+		if (count($shops_asso) == 1)
+			$shops = $shops_asso;
+		else
+		{
+			$shops = array(Configuration::get('PS_SHOP_DEFAULT'));
+			if (Tools::isSubmit('checkBoxShopAsso_theme'))
+				$shops = Tools::getValue('checkBoxShopAsso_theme');
+		}
 
 		$xml = false;
 		if (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml'))
@@ -2498,7 +2472,6 @@ class AdminThemesControllerCore extends AdminController
 
 				$exceptions = (isset($row['exceptions']) ? explode(',', strval($row['exceptions'])) : array());
 
-				if (Hook::getIdByName(strval($row['hook'])))
 					$module_hook[$name]['hook'][] = array(
 						'hook' => strval($row['hook']),
 						'position' => strval($row['position']),
@@ -2621,8 +2594,16 @@ class AdminThemesControllerCore extends AdminController
 	 */
 	public function postProcess()
 	{
-		if (Tools::isSubmit('submitOptionstheme') && Tools::isSubmit('id_theme') && !Tools::isSubmit('deletetheme') && Tools::getValue('action') != 'ThemeInstall' && $this->context->shop->id_theme != Tools::getValue('id_theme'))
-			$this->display = "ChooseThemeModule";
+		$host_mode = (bool)(defined('_PS_HOST_MODE_') && _PS_HOST_MODE_);
+
+		if (Tools::isSubmit('submitOptionstheme') && Tools::isSubmit('id_theme') && !Tools::isSubmit('deletetheme')
+			&& Tools::getValue('action') != 'ThemeInstall' && $this->context->shop->id_theme != Tools::getValue('id_theme'))
+			$this->display = 'ChooseThemeModule';
+		elseif (Tools::isSubmit('installThemeFromFolder') && (!$host_mode || (int)$this->context->cookie->is_contributor === 1))
+		{
+			$theme_dir = Tools::getValue('theme_dir');
+			$this->installTheme($theme_dir);
+		}
 		else
 		{
 			// new check compatibility theme feature (1.4) :
@@ -2718,11 +2699,39 @@ class AdminThemesControllerCore extends AdminController
 				if (!@ImageManager::resize($tmp_name, _PS_IMG_DIR_.$logo_name))
 					$this->errors[] = Tools::displayError('An error occurred while attempting to copy your logo.');
 			}
-
+			$id_shop = null;
+			$id_shop_group = null;
 			if (!count($this->errors) && @filemtime(_PS_IMG_DIR_.Configuration::get($field_name)))
-				@unlink(_PS_IMG_DIR_.Configuration::get($field_name));
-
-			Configuration::updateValue($field_name, $logo_name);
+			{
+				if(Shop::isFeatureActive())
+				{
+					if (Shop::getContext() == Shop::CONTEXT_SHOP)
+					{
+						$id_shop = Shop::getContextShopID();
+						$id_shop_group = Shop::getContextShopGroupID();
+						Shop::setContext(Shop::CONTEXT_ALL);
+						$logo_all = Configuration::get($field_name);
+						Shop::setContext(Shop::CONTEXT_GROUP);
+						$logo_group = Configuration::get($field_name);
+						Shop::setContext(Shop::CONTEXT_SHOP);
+						$logo_shop = Configuration::get($field_name);
+						if ($logo_all != $logo_shop && $logo_group != $logo_shop && $logo_shop != false)
+							@unlink(_PS_IMG_DIR_.Configuration::get($field_name));
+					}
+					elseif (Shop::getContext() == Shop::CONTEXT_GROUP)
+					{
+						$id_shop_group = Shop::getContextShopGroupID();
+						Shop::setContext(Shop::CONTEXT_ALL);
+						$logo_all = Configuration::get($field_name);
+						Shop::setContext(Shop::CONTEXT_GROUP);
+						if ($logo_all != Configuration::get($field_name))
+							@unlink(_PS_IMG_DIR_.Configuration::get($field_name));
+					}
+				}
+				else
+					@unlink(_PS_IMG_DIR_.Configuration::get($field_name));
+			}
+			Configuration::updateValue($field_name, $logo_name, false, $id_shop_group, $id_shop);
 			@unlink($tmp_name);
 		}
 	}

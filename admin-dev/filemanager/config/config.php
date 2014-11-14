@@ -3,7 +3,7 @@ session_start();
 mb_internal_encoding('UTF-8');
 
 if (!defined('_PS_ADMIN_DIR_'))
-		define('_PS_ADMIN_DIR_', getcwd().'/../');
+		define('_PS_ADMIN_DIR_',dirname(__FILE__).'/../../');
 
 require_once(_PS_ADMIN_DIR_.'/../config/config.inc.php');
 require_once(_PS_ADMIN_DIR_.'/init.php');
@@ -30,8 +30,9 @@ if (!$products_accesses['edit'] && !$cms_accesses['edit'])
 //    |   |   |   |- responsivefilemanager
 //    |   |   |   |   |- plugin.min.js
 
-$base_url="http://".$_SERVER['HTTP_HOST'];  // DON'T TOUCH (base url (only domain) of site (without final /)).
-$upload_dir = __PS_BASE_URI__.'img/cms/'; // path from base_url to base of upload folder (with start and final /)
+
+$base_url= Tools::getHttpHost(true);  // DON'T TOUCH (base url (only domain) of site (without final /)).
+$upload_dir = __PS_BASE_URI__.'/img/cms/'; // path from base_url to base of upload folder (with start and final /)
 $current_path = _PS_ROOT_DIR_.'/img/cms/'; // relative path from filemanager folder to upload folder (with final /)
 //thumbs folder can't put inside upload folder
 $thumbs_base_path = _PS_ROOT_DIR_.'/img/tmp/cms/'; // relative path from filemanager folder to thumbs folder (with final /)
@@ -78,7 +79,7 @@ $image_resizing_height=0;
 //******************
 $default_view=0;
 
-//set if the filename is truncated when overflow first row 
+//set if the filename is truncated when overflow first row
 $ellipsis_title_after_first_row=true;
 
 //*************************
@@ -97,7 +98,7 @@ $duplicate_files=true;
 //**********************
 $ext_img = array('jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'svg'); //Images
 $ext_file = array('doc', 'docx','rtf', 'pdf', 'xls', 'xlsx', 'txt', 'csv','html','xhtml','psd','sql','log','fla','xml','ade','adp','mdb','accdb','ppt','pptx','odt','ots','ott','odb','odg','otp','otg','odf','ods','odp','css','ai'); //Files
-$ext_video = array('mov', 'mpeg', 'mp4', 'avi', 'mpg','wma',"flv","webm"); //Video 
+$ext_video = array('mov', 'mpeg', 'mp4', 'avi', 'mpg','wma',"flv","webm"); //Video
 $ext_music = array('mp3', 'm4a', 'ac3', 'aiff', 'mid','ogg','wav'); //Audio
 $ext_misc = array('zip', 'rar','gz','tar','iso','dmg'); //Archives
 
@@ -128,7 +129,7 @@ $hidden_folders = array();
 $hidden_files = array('config.php');
 
 /*******************
- * JAVA upload 
+ * JAVA upload
  *******************/
 $java_upload=false;
 $JAVAMaxSizeUpload=200; //Gb
@@ -140,7 +141,7 @@ $JAVAMaxSizeUpload=200; //Gb
 
 
 // New image resized creation with fixed path from filemanager folder after uploading (thumbnails in fixed mode)
-// If you want create images resized out of upload folder for use with external script you can choose this method, 
+// If you want create images resized out of upload folder for use with external script you can choose this method,
 // You can create also more than one image at a time just simply add a value in the array
 // Remember than the image creation respect the folder hierarchy so if you are inside source/test/test1/ the new image will create at
 // path_from_filemanager/test/test1/

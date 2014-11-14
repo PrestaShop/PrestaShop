@@ -30,7 +30,13 @@
 	{addJsDefL name=txtProduct}{l s='product' js=1}{/addJsDefL}
 	{addJsDefL name=txtProducts}{l s='products' js=1}{/addJsDefL}
 	{capture name=path}{l s='Your payment method'}{/capture}
-	<h1 class="page-heading">{l s='Please choose your payment method'}</h1>
+	<h1 class="page-heading">{l s='Please choose your payment method'}
+		{if !isset($empty) && !$PS_CATALOG_MODE}
+			<span class="heading-counter">{l s='Your shopping cart contains:'}
+				<span id="summary_products_quantity">{$productNumber} {if $productNumber == 1}{l s='product'}{else}{l s='products'}{/if}</span>
+			</span>
+		{/if}
+	</h1>
 {else}
 	<h1 class="page-heading step-num"><span>3</span> {l s='Please choose your payment method'}</h1>
 {/if}
@@ -56,9 +62,9 @@
 										{if $PS_STOCK_MANAGEMENT}
 											<th class="cart_availability item">{l s='Avail.'}</th>
 										{/if}
-										<th class="cart_unit item">{l s='Unit price'}</th>
-										<th class="cart_quantity item">{l s='Qty'}</th>
-										<th class="cart_total last_item">{l s='Total'}</th>
+										<th class="cart_unit item text-right">{l s='Unit price'}</th>
+										<th class="cart_quantity item text-center">{l s='Qty'}</th>
+										<th class="cart_total last_item text-right">{l s='Total'}</th>
 									</tr>
 								</thead>
 								<tfoot>
@@ -106,7 +112,7 @@
 									</tr>
 									{if $total_shipping_tax_exc <= 0 && !isset($virtualCart)}
 										<tr class="cart_total_delivery">
-											<td colspan="4" class="text-right">{l s='Shipping:'}</td>
+											<td colspan="4" class="text-right">{l s='Total shipping'}</td>
 											<td colspan="2" class="price" id="total_shipping">{l s='Free Shipping!'}</td>
 										</tr>
 									{else}
@@ -153,8 +159,14 @@
 											{/if}
 										</td>
 									</tr>
-									{if $use_taxes && $show_taxes}
-										{if $priceDisplay && $total_tax != 0}
+									{if $use_taxes}
+										{if $total_tax != 0 && $show_taxes}
+											{if $priceDisplay != 0}
+											<tr class="cart_total_price">
+												<td colspan="4" class="text-right">{if $display_tax_label}{l s='Total (tax excl.)'}{else}{l s='Total'}{/if}</td>
+												<td colspan="2" class="price" id="total_price_without_tax">{displayPrice price=$total_price_without_tax}</td>
+											</tr>
+											{/if}
 											<tr class="cart_total_tax">
 												<td colspan="4" class="text-right">{l s='Tax'}</td>
 												<td colspan="2" class="price" id="total_tax" >{displayPrice price=$total_tax}</td>
@@ -163,7 +175,7 @@
 										<tr class="cart_total_price">
 											<td colspan="4" class="total_price_container text-right"><span>{l s='Total'}</span></td>
 											<td colspan="2" class="price" id="total_price_container">
-												<span id="total_price">{displayPrice price=$total_price}</span>
+												<span id="total_price" data-selenium-total-price="{$total_price}">{displayPrice price=$total_price}</span>
 											</td>
 										</tr>
 									{else}
@@ -199,11 +211,11 @@
 												</div>
 											</td>
 										{/if}
-										<td colspan="{if !$voucherAllowed}3{else}2{/if}" class="text-right total_price_container">
+										<td colspan="{if !$voucherAllowed}4{else}2{/if}" class="text-right total_price_container">
 											<span>{l s='Total'}</span>
 										</td>
-										<td colspan="1" class="price total_price_container" id="total_price_container">
-											<span id="total_price">{displayPrice price=$total_price_without_tax}</span>
+										<td colspan="2" class="price total_price_container" id="total_price_container">
+											<span id="total_price" data-selenium-total-price="{$total_price_without_tax}">{displayPrice price=$total_price_without_tax}</span>
 										</td>
 									</tr>
 									{/if}

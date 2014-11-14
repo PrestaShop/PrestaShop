@@ -28,6 +28,7 @@ class UploaderCore
 {
 	const DEFAULT_MAX_SIZE = 10485760;
 
+	private $_check_file_size;
 	private $_accept_types;
 	private $_files;
 	private $_max_size;
@@ -37,6 +38,7 @@ class UploaderCore
 	public function __construct($name = null)
 	{
 		$this->setName($name);
+		$this->setCheckFileSize(true);
 		$this->files = array();
 	}
 
@@ -49,6 +51,12 @@ class UploaderCore
 	public function getAcceptTypes()
 	{
 		return $this->_accept_types;
+	}
+
+	public function setCheckFileSize($value)
+	{
+		$this->_check_file_size = $value;
+		return $this;
 	}
 
 	public function getFilePath($file_name = null)
@@ -75,7 +83,7 @@ class UploaderCore
 
 	public function getMaxSize()
 	{
-		if (!isset($this->_max_size))
+		if (!isset($this->_max_size) || empty($this->_max_size))
 			$this->setMaxSize(self::DEFAULT_MAX_SIZE);
 
 		return $this->_max_size;
@@ -98,7 +106,9 @@ class UploaderCore
 		return $this;
 	}
 
-	public function getPostMaxSizeBytes() {
+	public function getPostMaxSizeBytes()
+	{
+
 		$post_max_size = ini_get('post_max_size');
 		$bytes         = trim($post_max_size);
 		$last          = strtolower($post_max_size[strlen($post_max_size) - 1]);
@@ -112,7 +122,6 @@ class UploaderCore
 
 		if ($bytes == '')
 			$bytes = null;
-
 		return $bytes;
 	}
 
@@ -127,6 +136,11 @@ class UploaderCore
 	public function getUniqueFileName($prefix = 'PS')
 	{
 		return uniqid($prefix, true);
+	}
+
+	public function checkFileSize()
+	{
+		return (isset($this->_check_file_size) && $this->_check_file_size);
 	}
 
 	public function process($dest = null)
@@ -249,9 +263,9 @@ class UploaderCore
 			return false;
 		}
 
-		if ($file['size'] > $this->getMaxSize())
+		if ($this->checkFileSize() && $file['size'] > $this->getMaxSize())
 		{
-			$file['error'] = Tools::displayError('File is too big');
+			$file['error'] = Tools::displayError(sprintf('File (size : %1s) is too big (max : %2s)', $file['size'], $this->getMaxSize()));
 			return false;
 		}
 

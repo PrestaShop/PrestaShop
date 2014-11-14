@@ -29,6 +29,7 @@ class AdminMetaControllerCore extends AdminController
 	public $table = 'meta';
 	public $className = 'Meta';
 	public $lang = true;
+	protected $url = false;
 	protected $toolbar_scroll = false;
 
 	public function __construct()
@@ -74,7 +75,7 @@ class AdminMetaControllerCore extends AdminController
 				'validation' => 'isBool',
 				'cast' => 'intval',
 				'type' => 'bool',
-				'mod_rewrite' => $mod_rewrite
+				'desc' => (!$mod_rewrite ? $this->l('URL rewriting (mod_rewrite) is not active on your server, or it is not possible to check your server configuration. If you want to use Friendly URLs, you must activate this mod.') : '')
 			),
 			'PS_ALLOW_ACCENTED_CHARS_URL' => array(
 				'title' => $this->l('Accented URL'),
@@ -148,45 +149,46 @@ class AdminMetaControllerCore extends AdminController
 		if (isset($robots_submit))
 			$robots_options['submit'] = $robots_submit;
 
-		// Options for shop URL if multishop is disabled
-		$shop_url_options = array(
-			'title' => $this->l('Set shop URL'),
-			'fields' => array(),
-		);
-
-		if (!Shop::isFeatureActive())
+		if (!defined('_PS_HOST_MODE_'))
 		{
-			$this->url = ShopUrl::getShopUrls($this->context->shop->id)->where('main', '=', 1)->getFirst();
-			if ($this->url)
-			{
-				$shop_url_options['description'] = $this->l('Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.');
-				$shop_url_options['fields'] = array(
-					'domain' => array(
-						'title' =>	$this->l('Shop domain'),
-						'validation' => 'isString',
-						'type' => 'text',
-						'defaultValue' => $this->url->domain,
-					),
-					'domain_ssl' => array(
-						'title' =>	$this->l('SSL domain'),
-						'validation' => 'isString',
-						'type' => 'text',
-						'defaultValue' => $this->url->domain_ssl,
-					),
-				);
+			// Options for shop URL if multishop is disabled
+			$shop_url_options = array(
+				'title' => $this->l('Set shop URL'),
+				'fields' => array(),
+			);
 
-				if(!defined('_PS_HOST_MODE_'))
-					$shop_url_options['fields']['uri'] = array(
-						'title' =>	$this->l('Base URI'),
-						'validation' => 'isString',
-						'type' => 'text',
-						'defaultValue' => $this->url->physical_uri,
+			if (!Shop::isFeatureActive())
+			{
+				$this->url = ShopUrl::getShopUrls($this->context->shop->id)->where('main', '=', 1)->getFirst();
+				if ($this->url)
+				{
+					$shop_url_options['description'] = $this->l('Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.');
+					$shop_url_options['fields'] = array(
+						'domain' => array(
+							'title' =>	$this->l('Shop domain'),
+							'validation' => 'isString',
+							'type' => 'text',
+							'defaultValue' => $this->url->domain,
+						),
+						'domain_ssl' => array(
+							'title' =>	$this->l('SSL domain'),
+							'validation' => 'isString',
+							'type' => 'text',
+							'defaultValue' => $this->url->domain_ssl,
+						),
+						'uri' => array(
+							'title' =>	$this->l('Base URI'),
+							'validation' => 'isString',
+							'type' => 'text',
+							'defaultValue' => $this->url->physical_uri,
+						)
 					);
-				$shop_url_options['submit'] = array('title' => $this->l('Save'));
+					$shop_url_options['submit'] = array('title' => $this->l('Save'));
+				}
 			}
+			else
+				$shop_url_options['description'] = $this->l('The multistore option is enabled. If you want to change the URL of your shop, you must go to the "Multistore" page under the "Advanced Parameters" menu.');
 		}
-		else
-			$shop_url_options['description'] = $this->l('The multistore option is enabled. If you want to change the URL of your shop, you must go to the "Multistore" page under the "Advanced Parameters" menu.');
 
 		// List of options
 		$this->fields_options = array(
@@ -195,9 +197,24 @@ class AdminMetaControllerCore extends AdminController
 				'description' => $url_description,
 				'fields' =>	$general_fields,
 				'submit' => array('title' => $this->l('Save'))
-			),
-			'shop_url' => $shop_url_options
+			)
 		);
+
+		if (!defined('_PS_HOST_MODE_'))
+			$this->fields_options['shop_url'] = $shop_url_options;
+		else
+			$this->fields_options['manage_domain_name'] = array(
+				'title' => $this->l('Manage domain name'),
+				'description' => $this->l('You can search for a new domain name or add a domain name that you already own. You will be redirected to your PrestaShop account.'),
+				'buttons' => array(
+					array(
+						'title' => $this->l('Add a domain name'),
+						'href' => 'https://www.prestashop.com/ondemand/',
+						'class' => 'pull-right', 'icon' => 'process-icon-new',
+						'js' => 'return !window.open(this.href);'
+					)
+				)
+			);
 
 		// Add display route options to options form
 		if (Configuration::get('PS_REWRITING_SETTINGS'))
@@ -260,7 +277,7 @@ class AdminMetaControllerCore extends AdminController
 	public function renderForm()
 	{
 		$files = Meta::getPages(true, ($this->object->page ? $this->object->page : false));
-		
+
 		$is_index = false;
 		if (is_object($this->object) && is_array($this->object->url_rewrite) &&  count($this->object->url_rewrite))
 			foreach ($this->object->url_rewrite as $rewrite)
@@ -463,7 +480,7 @@ class AdminMetaControllerCore extends AdminController
 
 			// User-Agent
 			fwrite($write_fd, "User-agent: *\n");
-			
+
 			// Private pages
 			if (count($this->rb_data['GB']))
 			{
@@ -471,7 +488,7 @@ class AdminMetaControllerCore extends AdminController
 				foreach ($this->rb_data['GB'] as $gb)
 					fwrite($write_fd, 'Disallow: /*'.$gb."\n");
 			}
-			
+
 			// Directories
 			if (count($this->rb_data['Directories']))
 			{
@@ -479,7 +496,7 @@ class AdminMetaControllerCore extends AdminController
 				foreach ($this->rb_data['Directories'] as $dir)
 					fwrite($write_fd, 'Disallow: */'.$dir."\n");
 			}
-			
+
 			// Files
 			if (count($this->rb_data['Files']))
 			{
@@ -492,7 +509,7 @@ class AdminMetaControllerCore extends AdminController
 						else
 							fwrite($write_fd, 'Disallow: /'.$file."\n");
 			}
-			
+
 			// Sitemap
 			if (file_exists($this->sm_file) && filesize($this->sm_file))
 			{
@@ -510,7 +527,7 @@ class AdminMetaControllerCore extends AdminController
 	{
 		parent::getList($id_lang, $orderBy, $orderWay, $start, $limit, Context::getContext()->shop->id);
 	}
-	
+
 	public function renderList()
 	{
 		if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP)
@@ -540,7 +557,7 @@ class AdminMetaControllerCore extends AdminController
 				Configuration::updateValue('PS_ROUTE_'.$route_id, '');
 				return;
 			}
-	
+
 			$errors = array();
 			if (!Dispatcher::getInstance()->validateRoute($route_id, $rule, $errors))
 			{
@@ -679,10 +696,12 @@ class AdminMetaControllerCore extends AdminController
 			$helper = new HelperOptions($this);
 			$this->setHelperDisplay($helper);
 			$helper->toolbar_scroll = true;
-			$helper->toolbar_btn = array('save' => array(
-								'href' => '#',
-								'desc' => $this->l('Save')
-							));
+			$helper->toolbar_btn = array(
+				'save' => array(
+					'href' => '#',
+					'desc' => $this->l('Save')
+				)
+			);
 			$helper->id = $this->id;
 			$helper->tpl_vars = $this->tpl_option_vars;
 			$options = $helper->generateOptions($this->fields_options);

@@ -60,7 +60,7 @@ class AttributeGroupCore extends ObjectModel
 		'fields' => array(),
 		'associations' => array(
 			'product_option_values' => array(
-				'resource' => 'product_option_values',
+				'resource' => 'product_option_value',
 				'fields' => array(
 					'id' => array()
 				),

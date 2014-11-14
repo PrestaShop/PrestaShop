@@ -118,7 +118,7 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
 			}
 
 			if (isset($field['getter']) && $this->schemaToDisplay != 'blank')
-				$ret .= ' not_filterable="true"';
+				$ret .= ' notFilterable="true"';
 
 			if ($field['value'] != '')
 				$node_content .= '<![CDATA['.$field['value'].']]>';
@@ -188,8 +188,20 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
 		$more = '';
 		if ($this->schemaToDisplay != 'blank')
 		{
-			$more .= (isset($params['associations'][$assoc_name]['virtual_entity']) && $params['associations'][$assoc_name]['virtual_entity'] ? ' virtual_entity="true"' : '');
-			$more .= ' node_type="'.$params['associations'][$assoc_name]['resource'].'"';
+			if (array_key_exists('setter', $params['associations'][$assoc_name]) && !$params['associations'][$assoc_name]['setter'])
+				$more .= ' readOnly="true"';
+			$more .= ' nodeType="'.$params['associations'][$assoc_name]['resource'].'"';
+			if (isset($params['associations'][$assoc_name]['virtual_entity']) && $params['associations'][$assoc_name]['virtual_entity'])
+			{
+				$more .= ' virtualEntity="true"';
+			}
+			else
+			{
+				if (isset($params['associations'][$assoc_name]['api']))
+					$more .= ' api="'.$params['associations'][$assoc_name]['api'].'"';
+				else
+					$more .= ' api="'.$assoc_name.'"';
+			}
 		}
 		return '<'.$assoc_name.$more.$end_tag."\n";
 	}

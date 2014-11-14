@@ -26,7 +26,7 @@
 <li class="tree-item">
 	<label class="tree-item-name">
 		<i class="tree-dot"></i>
-		<a href="{$url_shop|escape:'html':'UTF-8'}&amp;id_shop={$node['id_shop']}">{$node['name']}</a>
+		<a href="{$url_shop|escape:'html':'UTF-8'}&amp;shop_id={$node['id_shop']}">{$node['name']}</a>
 	</label>
 	{if isset($node['urls'])}
 		<ul class="tree">

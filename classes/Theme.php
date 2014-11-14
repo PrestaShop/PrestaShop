@@ -32,9 +32,9 @@ class ThemeCore extends ObjectModel
 	public $default_left_column;
 	public $default_right_column;
 	public $product_per_page;
-	
+
 	const CACHE_FILE_CUSTOMER_THEMES_LIST = '/config/xml/customer_themes_list.xml';
-	
+
 	const CACHE_FILE_MUST_HAVE_THEMES_LIST = '/config/xml/must_have_themes_list.xml';
 
 	/** @var int access rights of created folders (octal) */
@@ -62,9 +62,20 @@ class ThemeCore extends ObjectModel
 		return $themes;
 	}
 
+	public static function getAllThemes($excluded_ids = false)
+	{
+		$themes = new PrestaShopCollection('Theme');
+
+		if(is_array($excluded_ids) && !empty($excluded_ids))
+			$themes->where('id_theme', 'notin', $excluded_ids);
+
+		$themes->orderBy('name');
+		return $themes;
+	}
+
 	/**
 	 * return an array of all available theme (installed or not)
-	 * 
+	 *
 	 * @param boolean $installed_only
 	 * @return array string (directory)
 	 */
@@ -99,18 +110,18 @@ class ThemeCore extends ObjectModel
 
 	/**
 	 * check if a theme is used by a shop
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function isUsed()
 	{
-		return Db::getInstance()->getValue('SELECT count(*) 
+		return Db::getInstance()->getValue('SELECT count(*)
 			FROM '._DB_PREFIX_.'shop WHERE id_theme = '.(int)$this->id);
 	}
 
 	/**
 	 * add only theme if the directory exists
-	 * 
+	 *
 	 * @param bool $null_values
 	 * @param bool $autodate
 	 * @return boolean Insertion result
@@ -139,6 +150,80 @@ class ThemeCore extends ObjectModel
 
 			return new Theme($res['id_theme']);
 		}
+	}
+
+	public static function getInstalledThemeDirectories()
+	{
+		$list = array();
+		$tmp = Db::getInstance()->executeS('SELECT `directory` FROM '._DB_PREFIX_.'theme');
+		foreach ($tmp as $t)
+			$list[] = $t['directory'];
+
+		return $list;
+	}
+
+	public static function getThemeInfo($id_theme)
+	{
+		$theme = new Theme($id_theme);
+		$theme_arr = array();
+
+		if (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml'))
+			$config_file = _PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml';
+		elseif ($theme->name == 'default-bootstrap')
+			$config_file = _PS_ROOT_DIR_.'/config/xml/themes/default.xml';
+		else
+			$config_file = false;
+
+		if ($config_file)
+		{
+			$theme_arr['theme_id'] = $theme->id;
+			$xml_theme = @simplexml_load_file($config_file);
+
+			if ($xml_theme !== false)
+			{
+				foreach ($xml_theme->attributes() as $key => $value)
+					$theme_arr['theme_'.$key] = (string)$value;
+
+				foreach ($xml_theme->author->attributes() as $key => $value)
+					$theme_arr['author_'.$key] = (string)$value;
+
+				if ($theme_arr['theme_name'] == 'default-bootstrap')
+					$theme_arr['tc'] = Module::isEnabled('themeconfigurator');
+			}
+		}
+		else
+		{
+			// If no xml we use data from database
+			$theme_arr['theme_id'] = $theme->id;
+			$theme_arr['theme_name'] = $theme->name;
+			$theme_arr['theme_directory'] = $theme->directory;
+		}
+
+		return $theme_arr;
+	}
+
+	public static function getNonInstalledTheme()
+	{
+		$installed_theme_directories = Theme::getInstalledThemeDirectories();
+		$not_installed_theme = array();
+		foreach (glob(_PS_ALL_THEMES_DIR_.'*', GLOB_ONLYDIR) as $theme_dir)
+		{
+			$dir = basename($theme_dir);
+			$config_file = _PS_ALL_THEMES_DIR_.$dir.'/config.xml';
+			if(!in_array($dir, $installed_theme_directories) && @filemtime($config_file))
+			{
+				if ($xml_theme = @simplexml_load_file($config_file))
+				{
+					$theme = array();
+					foreach ($xml_theme->attributes() as $key => $value)
+						$theme[$key] = (string)$value;
+
+					$not_installed_theme[] = $theme;
+				}
+			}
+		}
+
+		return $not_installed_theme;
 	}
 
 	/**
@@ -175,6 +260,16 @@ class ThemeCore extends ObjectModel
 	{
 		return Db::getInstance()->getRow('
 		SELECT IFNULL(left_column, default_left_column) as left_column, IFNULL(right_column, default_right_column) as right_column
+		FROM '._DB_PREFIX_.'theme t
+		LEFT JOIN '._DB_PREFIX_.'theme_meta tm ON (t.id_theme = tm.id_theme)
+		LEFT JOIN '._DB_PREFIX_.'meta m ON (m.id_meta = tm.id_meta)
+		WHERE t.id_theme ='.(int)$this->id.' AND m.page = "'.pSQL($page).'"');
+	}
+
+	public function hasColumnsSettings($page)
+	{
+		return (bool)Db::getInstance()->getValue('
+		SELECT m.`id_meta`
 		FROM '._DB_PREFIX_.'theme t
 		LEFT JOIN '._DB_PREFIX_.'theme_meta tm ON (t.id_theme = tm.id_theme)
 		LEFT JOIN '._DB_PREFIX_.'meta m ON (m.id_meta = tm.id_meta)

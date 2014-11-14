@@ -163,7 +163,7 @@ class SupplyOrderCore extends ObjectModel
  		),
  		'associations' => array(
 			'supply_order_details' => array(
-				'resource' => 'supply_order_details',
+				'resource' => 'supply_order_detail',
 				'fields' => array(
 					'id' => array(),
  					'id_product' => array(),

@@ -64,6 +64,6 @@
 	<a href="{$link->getPageLink('address', true)|escape:'html':'UTF-8'}" title="{l s='Add an address'}" class="btn btn-default button button-medium"><span>{l s='Add a new address'}<i class="icon-chevron-right right"></i></span></a>
 </div>
 <ul class="footer_links clearfix">
-	<li><a class="btn btn-defaul button button-small" href="{$link->getPageLink('my-account', true)|escape:'html':'UTF-8'}"><span><i class="icon-chevron-left"></i> {l s='Back to your account'}</span></a></li>
-	<li><a class="btn btn-defaul button button-small" href="{$base_dir}"><span><i class="icon-chevron-left"></i> {l s='Home'}</span></a></li>
+	<li><a class="btn btn-default button button-small" href="{$link->getPageLink('my-account', true)|escape:'html':'UTF-8'}"><span><i class="icon-chevron-left"></i> {l s='Back to your account'}</span></a></li>
+	<li><a class="btn btn-default button button-small" href="{$base_dir}"><span><i class="icon-chevron-left"></i> {l s='Home'}</span></a></li>
 </ul>

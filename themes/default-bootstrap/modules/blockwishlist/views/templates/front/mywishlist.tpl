@@ -79,7 +79,7 @@
 						{section name=i loop=$wishlists}
 							<tr id="wishlist_{$wishlists[i].id_wishlist|intval}">
 								<td style="width:200px;">
-									<a href="javascript:;" onclick="javascript:WishlistManage('block-order-detail', '{$wishlists[i].id_wishlist|intval}');">
+									<a href="#" onclick="javascript:event.preventDefault();WishlistManage('block-order-detail', '{$wishlists[i].id_wishlist|intval}');">
 										{$wishlists[i].name|truncate:30:'...'|escape:'html':'UTF-8'}
 									</a>
 								</td>
@@ -99,15 +99,12 @@
 								<td>{$wishlists[i].counter|intval}</td>
 								<td>{$wishlists[i].date_add|date_format:"%Y-%m-%d"}</td>
 								<td>
-									<a  href="javascript:;"  onclick="javascript:WishlistManage('block-order-detail', '{$wishlists[i].id_wishlist|intval}');">
+									<a href="#" onclick="javascript:event.preventDefault();WishlistManage('block-order-detail', '{$wishlists[i].id_wishlist|intval}');">
 										{l s='View' mod='blockwishlist'}
 									</a>
 								</td>
 								<td class="wishlist_delete">
-									<a 
-									class="icon" 
-									href="javascript:;" 
-									onclick="return (WishlistDelete('wishlist_{$wishlists[i].id_wishlist|intval}', '{$wishlists[i].id_wishlist|intval}', '{l s='Do you really want to delete this wishlist ?' mod='blockwishlist' js=1}'));">
+									<a class="icon" href="#" onclick="javascript:event.preventDefault();return (WishlistDelete('wishlist_{$wishlists[i].id_wishlist|intval}', '{$wishlists[i].id_wishlist|intval}', '{l s='Do you really want to delete this wishlist ?' mod='blockwishlist' js=1}'));">
 										<i class="icon-remove"></i>
 									</a>
 								</td>

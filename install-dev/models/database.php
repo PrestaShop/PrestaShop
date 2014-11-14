@@ -68,6 +68,8 @@ class InstallModelDatabase extends InstallAbstractModel
 					// Check if a table with same prefix already exists
 					if (!$clear && Db::hasTableWithSamePrefix($server, $login, $password, $database, $prefix))
 						$errors[] = $this->language->l('At least one table with same prefix was already found, please change your prefix or drop your database');
+					if (!Db::checkAutoIncrement($server, $login, $password))
+						$errors[] = $this->language->l('The values of auto_increment increment and offset must be set to 1');
 					if (($create_error = Db::checkCreatePrivilege($server, $login, $password, $database, $prefix)) !== true)
 					{
 						$errors[] = $this->language->l(sprintf('Your database login does not have the privileges to create table on the database "%s". Ask your hosting provider:', $database));
