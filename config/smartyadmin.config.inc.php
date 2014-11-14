@@ -52,8 +52,9 @@ function smartyTranslate($params, &$smarty)
 	// If the tpl is at the root of the template folder
 	if (dirname($filename) == '.')
 		$class = 'index';
+	
 	// If the tpl is used by a Helper
-	elseif (strpos($filename, 'helpers') === 0)
+	if (strpos($filename, 'helpers') === 0)
 		$class = 'Helper';
 	// If the tpl is used by a Controller
 	else
@@ -67,7 +68,7 @@ function smartyTranslate($params, &$smarty)
 		}
 		else
 		{
-	// Split by \ and / to get the folder tree for the file
+		// Split by \ and / to get the folder tree for the file
 		$folder_tree = preg_split('#[/\\\]#', $filename);
 		$key = array_search('controllers', $folder_tree);
 
@@ -77,8 +78,6 @@ function smartyTranslate($params, &$smarty)
 			$class = 'Admin'.Tools::toCamelCase($folder_tree[$key + 1], true);
 		elseif (isset($folder_tree[0]))
 			$class = 'Admin'.Tools::toCamelCase($folder_tree[0], true);
-		else
-			$class = null;
 		}
 	}
 
