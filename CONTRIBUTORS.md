@@ -24,6 +24,7 @@ Axome
 Balestrino
 bellini13
 Benjamin PONGY
+Bersam Karbasion
 BigZ
 BluTiGeS
 Bruno Leveque
@@ -75,6 +76,7 @@ dSevere
 Dvir Julius
 edamart
 Edouard Gaulue
+eleazar
 Emilien Puget
 emilien-puget
 emily-d
@@ -143,6 +145,7 @@ Luca T.
 Lucas CERDAN
 LucasC
 LyoNick
+Leo
 M-Mommsen
 Madef
 Madman
@@ -173,6 +176,7 @@ Nicolas Sorosac
 Niklas Ekman
 Niko Wicaksono
 Nils-Helge Garli Hegvik
+NinjaOfWeb
 Nino Uzelac
 nturato
 oleacorner
@@ -188,6 +192,7 @@ Piotr Kaczor
 Piotr Moćko
 PrestaEdit
 PrestaLab
+prestamodule
 PrestanceDesign
 prestarocket
 Prestaspirit
@@ -197,6 +202,7 @@ pxls
 quadrateam
 Quentin Montant
 Quetzacoalt91
+Rafael Cunha
 Raphael Malie
 raulgundin
 rGaillard
@@ -207,8 +213,10 @@ romainberger
 runningz
 Remi Gaillard
 s-duval
+Sacha
 sadlyblue
 sagaradonis
+Samir Shah
 Samy Rabih
 Sarah Lorenzini
 Seb
@@ -224,6 +232,7 @@ soufyan
 soware
 Staging
 Stanislav Yordanov
+Stephan Obadia
 Steven "SDF" Sulley
 Sumh
 Sylvain Gougouzian
@@ -239,6 +248,7 @@ Thomas N
 Thomas Nabord
 Threef
 timsit
+tmackay
 TMMeilleur
 Tom Panier
 Tomasz Slominski

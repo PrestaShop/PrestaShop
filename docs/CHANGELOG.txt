@@ -24,6 +24,227 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.6
 --------------------------------
 ####################################
+#   v1.6.0.10 - (2014-11-14)
+####################################
+
+	Fixed bugs:
+
+	[-] INSTALLER : don't launch sessions on smarty compilation to avoid race conditions
+
+	[-] FO : https detection using HTTP_X_FORWARDED_PROTO (use by cloudflare)
+	[-] FO : Correct topmenu scrolling issue on touch devices #PNM-2943
+	[-] FO : Product::getNewProducts() perfs improvements
+	[-] FO : Fix PSCSX-3357 second part isCached bad call
+	[-] FO : Fix PSCSX-3357 part fix add media
+	[-] FO : Fix discount display issues #PSCSX-3308
+	[-] FO : Fix bug #PSCSX-3304, could not retrieve ipa after saving customizations
+	[-] FO : Fix bug #PSCSX-3281, display "doesntExist" warning even without stock management
+	[-] FO : Fix #PSCSX-3211 no more duplicate product when reorder with cart_rule
+	[-] FO : Fix bug #PSCSX-3243, blockcart hidden in colums on small screen
+	[-] FO : Fix bug #PSCFV-12462, bad legend group by
+	[-] FO : Fix bug #PSCFV-12465, AuthController $back param
+	[-] FO : Fix bug #PSCSX-3135, bad post cache on authentication.js
+	[-] FO : Fix uniform mobile issue #PSCSX-1632
+	[-] FO : Fix the value of the wholesale price with combinations on order_detail table #PSCFV-8506
+	[-] FO : Fix PSCSX-623 width in function of nb column diplayed
+	[-] FO : FixBug #PSCSX-2893 - Wrong rowspan in shopping cart summary
+	[-] FO : Fix bug #PSCSX-2991, 404 on cat image
+	[-] FO : Fix PSCSX-2836 good redirect if multishipping
+	[-] FO : Fix PSCSX-255 carrier not avaible if too heavy
+	[-] FO : Fix bug #PSCSX-2972, basePriceDisplay.toFixed is not a function
+	[-] FO : Fix PSCSX-2535 add asterisks for required fields
+	[-] FO : Fix bug #PSCSX-2947, qty input when allowBuyWhenOutOfStock
+	[-] FO : Fix PSCSX-2885 fix css width in blocklayered
+	[-] FO : Fix css bug #PSCSX-2935, reduction on same line
+	[-] FO : search combination upc, ean13 too
+	[-] FO : added month names in identity.tpl so that they appear in the translations
+	[-] FO : Fix PSCSX-2564 default set when deleting attributes default
+	[-] FO : Fix PSCSX-2877 bad entity encoding in tinyMCE
+	[-] FO : Fix bug #PSCSX-2651, debug smarty
+	[-] FO : Correct responsive issue on category images #PSCSX-2843
+	[-] FO : Fix #PSCSX-2484, Add style for .available-dif class
+	[-] FO : extend mobile reponsive behavior to tablet #PSCSX-2842
+	[-] FO : Correct left column responsive issue #PSCSX-1862
+	[-] FO : Fix PSCSX-2820 add PSCSX-2820 add * for optin and newsletter field if required
+	[-] FO : Bug #PSCSX-2519, Display thumbnail slider
+	[-] FO : fixed bug #PSCSX-2626 - No message when an user with a disabled account try to connect
+	[-] FO : Fix bug #PSCSX-2695, base uri in adminshop
+	[-] FO : Fix bug #PSCSX-2685, no selectected country in Address and Auth
+	[-] FO : fixed css compression base64 issue #PSCSX-2772
+	[-] FO : FixBug #PSCSX-2291
+	[-] FO : Fix #PSCSX-2405 change when shipping need multi-shipper
+	[-] FO : Fix #PSCSX-2735 - product.js, fix price calculation with 6 decimals
+	[-] FO : Fix bug #PSCSX-1140 Product thumbnails on resize
+
+	[-] BO : FixBug #PSCFV-12359 - Fix product tab loading for mod_security and mod_evasive
+	[-] BO : Fix PSCFV-11851 Error with firefox cache when use reload
+	[-] BO : carrier range validation when free shipping #PSCSX-3257
+	[-] BO : fixed bug #PSCSX-799
+	[-] BO : Fix #PSCSX-2652, show confirmation for multiple update (see https://github.com/PrestaShop/PrestaShop/commit/f72c6d71a9ee6ce8a11758a78c891c6458c959d3 )
+	[-] BO : Fix IOs stress on AdminModulesController
+	[-] BO : Fix bug #PSCSX-3143, List ordering in module page redirects to modules list
+	[-] BO : Fix bug #PSCFV-12472 do not use PS_PRODUCT_PICTURE_MAX_SIZE for product image upload
+	[-] BO : Fix bug #PSCFV-12193, live edit url with virtual url
+	[-] BO : Fix PSCSX-2998 category tree with product import
+	[-] BO : Fix PSCSX-2850 can't remove default order statuses
+	[-] BO : Fix bug #PSCSX-3049, filters on AdminTaxRulesGroup
+	[-] BO : Fix the mail sent by customer service tab with the right link to answer
+	[-] BO : Fix bug #PSCSX-2987, #PSCFV-11624 datepicker
+	[-] BO : Fix PSCSX-1360 root category where id_parent != 1
+	[-] BO : Handle combinated taxes on AdminProducts
+	[-] BO : shop main url update
+	[-] BO : FixBug #PSCSX-2945 - Wrong total price in cart summary
+	[-] BO : Fix PSCFV-12324 new order refund when refund since bo
+	[-] BO : Correct Help window persistency
+	[-] BO : Correct Help system for Safari private browsing
+	[-] BO : fixed default controller when employee's default controller is not found
+	[-] BO : Fix bug #PSCSX-2695, id_shop in url VS virtual urls
+	[-] BO : Fixed miss placed hint for wholesale_price - PSCSX-2157
+	[-] BO : Fixed multistore select icon - PSCSX-2568
+	[-] BO : Fix PSCSX-2919 bad id_parent after display a field error
+	[-] BO : Fix PSCSX-2899 change date_upd when change a product
+	[-] BO : search combination upc and supplier_reference
+	[-] BO : Fix bug #PSCSX-2934 &amp; in add links //w3c
+	[-] BO : fixed total spent in customer list/list_header.tpl #PSCSX-2805 [+] BO : added a button to show the sql query in dev mode
+	[-] BO : Fix PSCFV-12220 thumbnail in filemanager
+	[-] BO : removed excess <hr> in combination generator
+	[-] BO : Fix PSCSX-2879 can sort color attribute
+	[-] BO : AdminSearch removed duplicate search
+	[-] BO : Fix PSCSX-2883 can sort attribute
+	[-] BO : forgot password - Fix PSCSX-2372
+	[-] BO : Fix display of attribute list on adminspecificpricerules
+	[-] BO : Fix PSCSX-2825 link don't work if theme configurator footer edit
+	[-] BO : Fix PSCSX-2373 payment restriction when add a new order
+	[-] BO : SMTP config is now multistore compatible (see #PSCFV-11651)
+	[-] BO : Fix PSCSX-2816 change order for product custom
+	[-] BO : #PSCSX-2827 Fatal error
+	[-] BO : FixBug #PSCSX-1257 - Tabs not loaded correctly
+	[-] BO : Fix bug #PSCFV-12359 first part
+	[-] BO : Fix PSCSX-2819 add a information sentence
+	[-] BO : Fix Bug #PSCSX-2660 Test for permission on bulk_delete
+	[-] BO : Fixed Friendly URL switch + mod rewrite warning
+	[-] BO : FixBug #PSCSX-2806
+	[-] BO : Fix #PSCSX-2690, Set correct id_country for address format with error management
+	[-] BO : Fix PSCSX-2620 breadcrumb if multiple root categories in monoshop
+	[-] BO : Fix PSCSX-2620 when edit home category and save don't go back in root category
+	[-] BO : Make online user to display in AdminCarts
+	[-] BO : Fix PSCSX-2745 product description editable in multi shop context
+	[-] BO : FixBug #PSCSX-1257 - Link rewrite error after save
+	[-] BO : FixBug #PSCSX-2668, #PSCFV-12258, #PSCSX-2555 - Pack creation
+	[-] BO : fixed bug : getNativeModule() always return $natives even if the list is empty
+	[-] BO : Fix #PSCSX-2687 logo disapear with multishop
+	[-] BO : Fix #PSCSX-2690, Set id_country correct in address_format
+	[-] BO : fix #PSCSX-2752 add attributes to config html purifier
+	[-] BO : fixing a JS error when removing all exclusion in module position
+	[-] BO : FixBug #PSCSX-2698
+	[-] BO : FixBug #PSCFV-11624 StockManagement Filter
+	[-] BO : FixBug #PSCFV-11624
+	[-] BO : Fix bug #PSCSX-2681 #PSCSX-2575 , dnd inactive
+	[-] BO : Fix #PSCSX-2575
+	[-] BO : FIX #PSCSX-2683 add class
+	[-] BO : Fix bug #PSCSX-2427, could not enable files button in multishop
+	[-] BO : Fix bug #PSCSX-2237, currency cron on multishop
+	[-] BO : Fix bug #PSCSX-2658, combinations edition
+
+	[-] CORE : Don't apply disabled tax rules group
+	[-] CORE : Fix undefined $category into recurseCategory
+	[-] CORE : Fix Tools::cleanNonUnicodeSupport() regexp
+	[-] CORE : Fix bug #PSCSX-3124, duplicates in conf table
+	[-] CORE : FixBug #PSCSX-3058 - simulate PHP 5.3 Half Round Mode
+	[-] CORE : Fix group used by Price::getPriceStatic() when id_customer is provided
+	[-] CORE : Fix bug #PSCSX-2922, could not generate class_index
+	[-] CORE : Fix bug #PSCFV-12292, display precision in convertPriceFull
+	[-] CORE : FixBug #PSCSX-1818
+	[-] CORE : don't cache the file_exists in Module::getInstanceByName
+
+	[-] MO : changed $this->l() that could not work to Tools::displayError() in ModuleCore
+	[-] MO : homeslider - Fix css direction issue #PSCSX-2514
+	[-] MO : Bank-wire - added proper breacrumb route
+	[-] MO : Bank-wire module - removed useless dots
+
+	[-] WS : Fix #PSCFV-12454
+	[-] WS : allow adding product to empty category
+	[-] WS : Fix price field of product entity, now unaltered (use price parameter, see : http://doc.prestashop.com/display/PS15/Chapter+10+-+Price+management)
+	[-] WS : Fix #PSCFV-9245
+	[-] WS : Fix nodeType attribute, now singular [*] WS : Add "api" attribute, plural to name entity
+	[-] WS : Fix #PSCFV-9389, #PSCSX-2227, #PSCFV-10418, #PSCFV-9761
+	[-] WS : Fix Carrier xlink #PSCFV-10198
+
+	[-] LO : Fix bug #PSCSX-2840, additionnal message in order_return_state
+
+	Improved/changed features:
+
+	[*] INSTALLER : allow to install only some parts of the software with the cli installer
+	[*] INSTALLER : add an option to specify the base_uri on the PHP CLI installer
+
+	[*] FO : Fix #PSCSX-3026, Handle specific price for only one currency (product.js)
+	[*] FO : product.js: apply ecotax even if there is no other tax
+	[*] FO : setCookieLanguage & getCountry without HTTP_ACCEPT_LANGUAGE
+
+	[*] BO : Fix #PSCSX-3329, add timepicker to cart rules
+	[*] BO : Fix #HOSTED-581, fixes for unstrusted modal (see: #PSCSX-3245)
+	[*] BO : Introduce new untrusted modal window (see #PSCSX-3245)
+	[*] BO : The link from the orders view to the customer threads automatically filter the messages related to the order
+	[*] BO : Fix #PSCSX-3001, Automatically assign shop id if employee has access to only one shop
+	[*] BO : Fix display of untrusted module window
+	[*] BO : Fix #PSCSX-2978, Add slashes for Adresses (cf https://github.com/PrestaShop/PrestaShop/pull/2047)
+	[*] BO : improved name for exports to sql manager
+	[*] BO : fixed Typeahead search in product associations / tree - PSCSX-2153
+	[*] BO : Fix checkboxes for product information in multishop (cf #PSCSX-2891)
+	[*] BO : improved "new customer" label in order list #PSCSX-2596
+	[*] BO : Fix #PSCSX-2652, show confirmation for multiple update
+	[*] BO : improved rounding option labels
+	[*] BO : Fixed tooltip for helper list - Fix PSCSX-1979
+	[*] BO : Display themes even if they don't have any thumbnail
+	[*] BO : Redirect to Order list if $order is not loaded
+	[*] BO : Add TaxRulesGroup if multiple state selected
+	[*] BO : Seller now can add any payment name
+	[*] BO : Added the option to never clear smarty cache (may be useful if you want to bulk update something for example)
+	[*] BO : Theme installator custom hooks problem
+
+	[*] CORE : Add an option to use a relative protocol link in the class Link #PSCSX-3306
+	[*] CORE : updated PHP Parser SQL (not backward compatible if you are using it directly)
+	[*] CORE : Mobile_Detect upgrade to 2.8.3
+	[*] CORE : force secure option on the cookies if SSL is forced #PSCFV-12409
+	[*] CORE : switch a die to Exception in Dispatcher
+	[*] CORE : Added option to put smarty cache in the database instead of the filesystem
+	[*] CORE : Add options for taxes rounding
+
+	[*] MO : Fix #PSCSX-2949, if $display_column_xx not found in DB, use module settings instead of theme default value
+	[*] MO : added vimeo icon in blocksocial
+	[*] MO : blockcart - Better css for added to cart action #PSCSX-717
+
+	[*] WS : Add Customizations management (/api/product_customization_fields/, /api/customizations/, /api/images/customizations/) #PSCFV-9028 [-] WS : Fix attribute name, now normalized in lowerCamelCase (eg : not_filterable is now notFilterable) List: notFilterable, readOnly, virtualEntity, nodeType, shopName
+	[*] WS : improved WS error display for auth issues
+	[*] WS : Add product_customization_fields entity #PSCFV-12096
+
+	Added Features:
+
+	[+] FO : Add classes for facilitate integration
+	[+] FO : Indicate paginated content
+	[+] FO : Update Font-awesome to 4.1.0
+	[+] FO : Fix #PSCSX-2460, Send wishlist by email
+	[+] FO : missing style on maintenance page (cf https://github.com/PrestaShop/PrestaShop/pull/2003)
+	[+] FO : Fix #PSCSX-2731, Display Unit Price according to combination impact if set
+
+	[+] BO : Allow user to install theme from unzipped folder
+	[+] BO : Adding last employee connection date
+	[+] BO : New icons for SQL debug on helper list (dev mode)
+	[+] BO : export lists to SQL manager
+	[+] BO : added email log to the customer page
+	[+] BO : Emails can now be logged
+	[+] BO : Responsive tables - WIP (@todo: sorting)
+	[+] BO : Allow override of required_fields.tpl in Helper
+	[+] BO : Now you can create order from BO when PS_CATALOG_MODE is on
+	[+] BO : Added plugin Anchor to Tiny MCE
+
+	[+] CORE : File size check option on Uploader class
+	[+] CORE : Fix #PSCFV-12289, Create Warehouse_Product_Location if you add stock to a new warehouse
+
+	[+] LO : Added localization pack for Costa Rica
+
+
+####################################
 #   v1.6.0.9 - (2014-07-30)
 ####################################
 
