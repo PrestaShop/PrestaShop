@@ -1160,7 +1160,6 @@ class AdminTranslationsControllerCore extends AdminController
 				// Get all files for folders classes/ and override/classes/ recursively
 				$directories['php'] = array_merge($directories['php'], $this->listFiles(_PS_CLASS_DIR_, array(), 'php'));
 				$directories['php'] = array_merge($directories['php'], $this->listFiles(_PS_OVERRIDE_DIR_.'classes/', array(), 'php'));
-
 				$directories['php'] = array_merge($directories['php'], $this->getModulesHasMails());
 				break;
 
@@ -2374,10 +2373,12 @@ class AdminTranslationsControllerCore extends AdminController
 			}
 		}
 		else
+		{
 			$str_return .= '<p class="error">
 				'.$this->l('There was a problem getting the mail files.').'<br>
 				'.sprintf($this->l('English language files must exist in %s folder'), '<em>'.preg_replace('@/[a-z]{2}(/?)$@', '/en$1', $mails['directory']).'</em>').'
 			</p>';
+		}
 
 		$str_return .= '</div><!-- #'.$id_html.' --></div><!-- end .mails_field -->';
 		return $str_return;
@@ -2542,7 +2543,8 @@ class AdminTranslationsControllerCore extends AdminController
 
 		foreach ($modules_has_mails as $module_name => $module_path)
 		{
-			$module_mails[$module_name] = $this->getMailFiles($module_path.'mails/'.$this->lang_selected->iso_code.'/', 'module_mail');
+			$module_path = rtrim($module_path, '/');
+			$module_mails[$module_name] = $this->getMailFiles($module_path.'/mails/'.$this->lang_selected->iso_code.'/', 'module_mail');
 			$module_mails[$module_name]['subject'] = $core_mails['subject'];
 			$module_mails[$module_name]['display'] = $this->displayMailContent($module_mails[$module_name], $subject_mail, $this->lang_selected, Tools::strtolower($module_name), $module_name, $module_name);
 		}
@@ -2621,7 +2623,6 @@ class AdminTranslationsControllerCore extends AdminController
 						mkdir($folder);
 
 					$success = file_put_contents($file['to'], $content);
-
 					if ($success === false)
 						Tools::dieOrLog(sprintf("%s cannot be copied to %s", $file['from'], $file['to']), false);
 				}
@@ -2641,13 +2642,14 @@ class AdminTranslationsControllerCore extends AdminController
 	 */
 	protected function getSubjectMail($dir, $file, $subject_mail)
 	{
+		$dir = rtrim($dir, '/');
 		// If is file and is not in ignore_folder
 		if (is_file($dir.'/'.$file) && !in_array($file, self::$ignore_folder) && preg_match('/\.php$/', $file))
 		{
 			$content = file_get_contents($dir.'/'.$file);
 			$content = str_replace("\n", ' ', $content);
 
-			// Subject must match with a template, therefor we first grep the Mail::Send() function then the Mail::l() inside.
+			// Subject must match with a template, therefore we first grep the Mail::Send() function then the Mail::l() inside.
 			if (preg_match_all('/Mail::Send([^;]*);/si', $content, $tab))
 			{
 				for ($i = 0; isset($tab[1][$i]); $i++)
@@ -2668,10 +2670,11 @@ class AdminTranslationsControllerCore extends AdminController
 				}
 			}
 		}
-		// Or if is colder, we scan colder for check if find in folder and subfolder
+		// Or if is folder, we scan folder for check if found in folder and subfolder
 		elseif (!in_array($file, self::$ignore_folder) && is_dir($dir.'/'.$file))
-			foreach( scandir($dir.'/'.$file ) as $temp )
-				$subject_mail = $this->getSubjectMail($dir.'/'.$file, $temp, $subject_mail);
+			foreach(scandir($dir.'/'.$file ) as $temp)
+				if ($temp[0] != '.')
+					$subject_mail = $this->getSubjectMail($dir.'/'.$file, $temp, $subject_mail);
 
 		return $subject_mail;
 	}
