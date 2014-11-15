@@ -58,8 +58,6 @@ class ContactControllerCore extends FrontController
 				if (!$customer->id)
 					$customer->getByEmail($from);
 
-				$contact = new Contact($id_contact, $this->context->language->id);
-
 				$id_order = (int)$this->getOrder();
 
 				if (!((
