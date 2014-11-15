@@ -188,24 +188,8 @@ class ContactControllerCore extends FrontController
 							$var_list['{product_name}'] = $product->name[Context::getContext()->language->id];
 					}
 
-					if (empty($contact->email))
-					{
-						$sent_to_customer = Mail::Send(
-							$this->context->language->id,
-							'contact_form',
-							(isset($ct) && Validate::isLoadedObject($ct)
-								? sprintf(Mail::l('Your message has been correctly sent #ct%1$s #tc%2$s'), $ct->id, $ct->token)
-								: Mail::l('Your message has been correctly sent')
-							),
-							$var_list,
-							$from,
-							null,
-							null,
-							null,
-							$fileAttachment
-						);
-					}
-					else
+					// if we need send the email message to the employee
+					if (!empty($contact->email))
 					{
 						$sent_to_shop = Mail::Send(
 							$this->context->language->id,
@@ -219,24 +203,34 @@ class ContactControllerCore extends FrontController
 							$fileAttachment
 						);
 
-						$sent_to_customer = Mail::Send(
-							$this->context->language->id,
-							'contact_form',
-							(isset($ct) && Validate::isLoadedObject($ct)
-								? sprintf(Mail::l('Your message has been correctly sent #ct%1$s #tc%2$s'), $ct->id, $ct->token)
-								: Mail::l('Your message has been correctly sent')
-							),
-							$var_list,
-							$from,				// customer email
-							null,
-							null,				// from email: null because of sending a message from the shop and it is not doing an employee
-							null,
-							$fileAttachment
-						);
-
-						if (!$sent_to_customer || !$sent_to_shop)
+						// we should not display the error message to the customer when the email message is not sent to the employee
+						// but only when 'customer service' is enable for the employee
+						if (!$sent_to_shop && $contact->customer_service && Validate::isLoadedObject($ct))
+							PrestaShopLogger::addLog(Tools::displayError('An e-mail message is not sent from contact form to the employee.'), 3);
+						elseif (!$sent_to_shop && !$contact->customer_service)
 							$this->errors[] = Tools::displayError('An error occurred while sending the message.');
 					}
+
+					$sent_to_customer = Mail::Send(
+						$this->context->language->id,
+						'contact_form',
+						(isset($ct) && Validate::isLoadedObject($ct)
+							? sprintf(Mail::l('Your message has been correctly sent #ct%1$s #tc%2$s'), $ct->id, $ct->token)
+							: Mail::l('Your message has been correctly sent')
+						),
+						$var_list,
+						$from,				// customer email
+						null,
+						null,				// from email: null because of sending a message from the shop and it is not doing an employee
+						null,
+						$fileAttachment
+					);
+
+					// as well as for previous email message sending (to the employee)
+					if (!$sent_to_customer && $contact->customer_service && Validate::isLoadedObject($ct))
+						PrestaShopLogger::addLog(Tools::displayError('An e-mail message is not sent from contact form to the customer.'), 3);
+					elseif (!$sent_to_customer && !$contact->customer_service)
+						$this->errors[] = Tools::displayError('An error occurred while sending the message.');
 				}
 
 				if (count($this->errors) > 1)
