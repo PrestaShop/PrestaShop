@@ -189,14 +189,53 @@ class ContactControllerCore extends FrontController
 					}
 
 					if (empty($contact->email))
-						Mail::Send($this->context->language->id, 'contact_form', ((isset($ct) && Validate::isLoadedObject($ct)) ? sprintf(Mail::l('Your message has been correctly sent #ct%1$s #tc%2$s'), $ct->id, $ct->token) : Mail::l('Your message has been correctly sent')), $var_list, $from, null, null, null, $fileAttachment);
+					{
+						$sent_to_customer = Mail::Send(
+							$this->context->language->id,
+							'contact_form',
+							(isset($ct) && Validate::isLoadedObject($ct)
+								? sprintf(Mail::l('Your message has been correctly sent #ct%1$s #tc%2$s'), $ct->id, $ct->token)
+								: Mail::l('Your message has been correctly sent')
+							),
+							$var_list,
+							$from,
+							null,
+							null,
+							null,
+							$fileAttachment
+						);
+					}
 					else
 					{
-						if (!Mail::Send($this->context->language->id, 'contact', Mail::l('Message from contact form').' [no_sync]',
-							$var_list, $contact->email, $contact->name, null, null,
-									$fileAttachment) ||
-								!Mail::Send($this->context->language->id, 'contact_form', ((isset($ct) && Validate::isLoadedObject($ct)) ? sprintf(Mail::l('Your message has been correctly sent #ct%1$s #tc%2$s'), $ct->id, $ct->token) : Mail::l('Your message has been correctly sent')), $var_list, $from, null, null, null, $fileAttachment))
-									$this->errors[] = Tools::displayError('An error occurred while sending the message.');
+						$sent_to_shop = Mail::Send(
+							$this->context->language->id,
+							'contact',
+							Mail::l('Message from contact form').' [no_sync]',
+							$var_list,
+							$contact->email,	// employee email
+							$contact->name,
+							null,				// from email: null because of sending a message from the shop
+							null,
+							$fileAttachment
+						);
+
+						$sent_to_customer = Mail::Send(
+							$this->context->language->id,
+							'contact_form',
+							(isset($ct) && Validate::isLoadedObject($ct)
+								? sprintf(Mail::l('Your message has been correctly sent #ct%1$s #tc%2$s'), $ct->id, $ct->token)
+								: Mail::l('Your message has been correctly sent')
+							),
+							$var_list,
+							$from,				// customer email
+							null,
+							null,				// from email: null because of sending a message from the shop and it is not doing an employee
+							null,
+							$fileAttachment
+						);
+
+						if (!$sent_to_customer || !$sent_to_shop)
+							$this->errors[] = Tools::displayError('An error occurred while sending the message.');
 					}
 				}
 
