@@ -836,6 +836,18 @@ class CartCore extends ObjectModel
 		if (isset(self::$_totalWeight[$this->id]))
 			unset(self::$_totalWeight[$this->id]);
 
+		Hook::exec('actionBeforeCartUpdateQty', array(
+			'cart' => $this,
+			'product' => $product,
+			'id_product_attribute' => $id_product_attribute,
+			'id_customization' => $id_customization,
+			'quantity' => $quantity,
+			'operator' => $operator,
+			'id_address_delivery' => $id_address_delivery,
+			'shop' => $shop,
+			'auto_add_cart_rule' => $auto_add_cart_rule,
+		));
+
 		if ((int)$quantity <= 0)
 			return $this->deleteProduct($id_product, $id_product_attribute, (int)$id_customization);
 		elseif (!$product->available_for_order || (Configuration::get('PS_CATALOG_MODE') && !defined('_PS_ADMIN_DIR_')))
@@ -1848,7 +1860,7 @@ class CartCore extends ObjectModel
 						);
 					}
 		}
-		$cache[(int)$this->id] = $final_package_list;
+		$cache[(int)$this->id.'_'.(int)$this->id_address_delivery] = $final_package_list;
 		return $final_package_list;
 	}
 
