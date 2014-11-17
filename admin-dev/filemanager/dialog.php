@@ -16,7 +16,7 @@ else
 		&& !empty($_GET['fldr'])
 		&& preg_match('/\.{1,2}[\/|\\\]/', urldecode($_GET['fldr'])) === 0
 	)
-		$subdir = urldecode(trim(str_replace("\0", '', $_GET['fldr']), '/').'/');
+		$subdir = str_replace("\0", '', urldecode(trim($_GET['fldr'], '/').'/'));
 	else
 		$subdir = '';
 
