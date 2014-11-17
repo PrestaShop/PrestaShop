@@ -73,6 +73,7 @@ class ProductSaleCore
 		if (is_null($order_way) || $order_by == 'sales') $order_way = 'DESC';
 
 		$interval = Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
+
 		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
 					pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`,
 					pl.`meta_keywords`, pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`,
@@ -99,7 +100,8 @@ class ProductSaleCore
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (product_shop.`id_tax_rules_group` = tr.`id_tax_rules_group`)
 					AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
 					AND tr.`id_state` = 0
-				LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)';
+				LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
+				'.Product::sqlStock('p');
 
 			if (Group::isFeatureActive())
 			{
