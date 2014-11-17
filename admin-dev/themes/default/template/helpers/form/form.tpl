@@ -955,17 +955,17 @@
 				nextText: '',
 				dateFormat: 'yy-mm-dd',
 				// Define a custom regional settings in order to use PrestaShop translation tools
-				currentText: '{l s='Now' js=1}',
-				closeText: '{l s='Done' js=1}',
+				currentText: "{l s='Now' js=1}",
+				closeText: "{l s='Done' js=1}",
 				ampm: false,
 				amNames: ['AM', 'A'],
 				pmNames: ['PM', 'P'],
 				timeFormat: 'hh:mm:ss tt',
 				timeSuffix: '',
-				timeOnlyTitle: '{l s='Choose Time' js=1}',
-				timeText: '{l s='Time' js=1}',
-				hourText: '{l s='Hour' js=1}',
-				minuteText: '{l s='Minute' js=1}',
+				timeOnlyTitle: "{l s='Choose Time' js=1}",
+				timeText: "{l s='Time' js=1}",
+				hourText: "{l s='Hour' js=1}",
+				minuteText: "{l s='Minute' js=1}",
 			});
 			{if isset($use_textarea_autosize)}
 			$(".textarea-autosize").autosize();
