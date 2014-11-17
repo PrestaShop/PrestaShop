@@ -3440,19 +3440,19 @@ class CartCore extends ObjectModel
 			$sql = 'INSERT INTO '._DB_PREFIX_.'customization
 				(`id_product_attribute`, `id_address_delivery`, `id_cart`, `id_product`, `quantity`, `in_cart`)
 				VALUES (
-					'.$customization['id_product_attribute'].',
-					'.$new_id_address_delivery.',
-					'.$customization['id_cart'].',
-					'.$customization['id_product'].',
-					'.$quantity.',
-					'.$customization['in_cart'].')';
+					'.(int)$customization['id_product_attribute'].',
+					'.(int)$new_id_address_delivery.',
+					'.(int)$customization['id_cart'].',
+					'.(int)$customization['id_product'].',
+					'.(int)$quantity.',
+					'.(int)$customization['in_cart'].')';
 			Db::getInstance()->execute($sql);
 
 			$sql = 'INSERT INTO '._DB_PREFIX_.'customized_data(`id_customization`, `type`, `index`, `value`)
 				(
 					SELECT '.(int)Db::getInstance()->Insert_ID().' `id_customization`, `type`, `index`, `value`
 					FROM '._DB_PREFIX_.'customized_data
-					WHERE id_customization = '.$customization['id_customization'].'
+					WHERE id_customization = '.(int)$customization['id_customization'].'
 				)';
 			Db::getInstance()->execute($sql);
 		}
