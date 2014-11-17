@@ -506,7 +506,7 @@ class AdminThemesControllerCore extends AdminController
 
 	public function downloadAddonsThemes()
 	{
-		if ($this->logged_on_addons)
+		if (!$this->logged_on_addons)
 			return false;
 
 		if (!$this->isFresh(Theme::CACHE_FILE_CUSTOMER_THEMES_LIST, 86400))
@@ -693,7 +693,6 @@ class AdminThemesControllerCore extends AdminController
 				Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminThemes').'&conf=2');
 			else
 				$this->errors[] = Tools::displayError('The folder cannot be deleted');
-
 		}
 
 		return parent::processDelete();
@@ -2550,7 +2549,6 @@ class AdminThemesControllerCore extends AdminController
 	public function postProcess()
 	{
 		$host_mode = (bool)(defined('_PS_HOST_MODE_') && _PS_HOST_MODE_);
-
 		if (Tools::isSubmit('submitOptionstheme') && Tools::isSubmit('id_theme') && !Tools::isSubmit('deletetheme')
 			&& Tools::getValue('action') != 'ThemeInstall' && $this->context->shop->id_theme != Tools::getValue('id_theme'))
 			$this->display = 'ChooseThemeModule';
