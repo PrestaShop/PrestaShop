@@ -4726,7 +4726,7 @@ class AdminProductsControllerCore extends AdminController
 						{
 							if (Pack::isPack((int)$item_id))
 								$this->errors[] = Tools::displayError('You can\'t add product packs into a pack');
-							elseif (!Pack::addItem((int)$product->id, (int)$item_id, (int)$item_id_attribute,(int)$qty))
+							elseif (!Pack::addItem((int)$product->id, (int)$item_id, (int)$qty, (int)$item_id_attribute))
 								$this->errors[] = Tools::displayError('An error occurred while attempting to add products to the pack.');
 						}
 					}

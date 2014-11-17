@@ -636,12 +636,15 @@ function upQuantity(id, qty)
 function downQuantity(id, qty)
 {
 	var val = $('input[name=quantity_' + id + ']').val();
-	if(typeof qty === 'undefined' || !qty)
+	var newVal = val;
+	if(typeof(qty) == 'undefined' || !qty)
+	{
 		qty = 1;
+		newVal = val - 1;
+	}
 	else if (qty < 0)
 		qty = -qty;
 
-	var newVal = val - qty;
 	var customizationId = 0;
 	var productId = 0;
 	var productAttributeId = 0;

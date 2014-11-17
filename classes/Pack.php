@@ -47,7 +47,7 @@ class PackCore extends Product
 
 		if (!array_key_exists($id_product, self::$cacheIsPack))
 		{
-			$result = Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'pack WHERE id_product_pack = '.(int)$id_product);
+			$result = Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'pack` WHERE id_product_pack = '.(int)$id_product);
 			self::$cacheIsPack[$id_product] = ($result > 0);
 		}
 		return self::$cacheIsPack[$id_product];
@@ -67,7 +67,7 @@ class PackCore extends Product
 
 		if (!array_key_exists($id_product, self::$cacheIsPacked))
 		{
-			$result = Db::getInstance()->getValue('SELECT COUNT(*) FROM '._DB_PREFIX_.'pack WHERE id_product_item = '.(int)$id_product);
+			$result = Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'pack` WHERE id_product_item = '.(int)$id_product);
 			self::$cacheIsPacked[$id_product] = ($result > 0);
 		}
 		return self::$cacheIsPacked[$id_product];
@@ -99,7 +99,7 @@ class PackCore extends Product
 
 		if (array_key_exists($id_product, self::$cachePackItems))
 			return self::$cachePackItems[$id_product];
-		$result = Db::getInstance()->executeS('SELECT id_product_item, id_product_attribute_item, quantity FROM '._DB_PREFIX_.'pack where id_product_pack = '.(int)$id_product);
+		$result = Db::getInstance()->executeS('SELECT id_product_item, id_product_attribute_item, quantity FROM `'._DB_PREFIX_.'pack` where id_product_pack = '.(int)$id_product);
 		$array_result = array();
 		foreach ($result as $row)
 		{
@@ -265,8 +265,9 @@ class PackCore extends Product
 	* @param integer $qty
 	* @return boolean true if everything was fine
 	*/
-	public static function addItem($id_product, $id_item, $id_attribute_item = 0, $qty)
+	public static function addItem($id_product, $id_item, $qty, $id_attribute_item = 0)
 	{
+		$id_product_attribute = (int)$id_product_attribute ? (int)$id_product_attribute : Product::getDefaultAttribute((int)$id_item);
 		return Db::getInstance()->update('product', array('cache_is_pack' => 1), 'id_product = '.(int)$id_product) &&
 			Db::getInstance()->insert('pack', array('id_product_pack' => (int)$id_product, 'id_product_item' => (int)$id_item, 'id_product_attribute_item' => (int)$id_attribute_item,'quantity' => (int)$qty)) &&
 			Configuration::updateGlobalValue('PS_PACK_FEATURE_ACTIVE', '1');
@@ -274,8 +275,8 @@ class PackCore extends Product
 
 	public static function duplicate($id_product_old, $id_product_new)
 	{
-		Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'pack (id_product_pack, id_product_item, quantity)
-		(SELECT '.(int)$id_product_new.', id_product_item, quantity FROM '._DB_PREFIX_.'pack WHERE id_product_pack = '.(int)$id_product_old.')');
+		Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'pack` (`id_product_pack`, `id_product_item`, `id_product_attribute_item`, `quantity`)
+		(SELECT '.(int)$id_product_new.', `id_product_item`, `id_product_attribute_item`, `quantity` FROM `'._DB_PREFIX_.'pack` WHERE `id_product_pack` = '.(int)$id_product_old.')');
 
 		// If return query result, a non-pack product will return false
 		return true;
