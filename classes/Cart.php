@@ -834,7 +834,6 @@ class CartCore extends ObjectModel
 		Hook::exec('actionBeforeCartUpdateQty', array(
 			'cart' => $this,
 			'product' => $product,
-			'id_product' => $id_product,
 			'id_product_attribute' => $id_product_attribute,
 			'id_customization' => $id_customization,
 			'quantity' => $quantity,
