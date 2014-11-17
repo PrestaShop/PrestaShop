@@ -1860,7 +1860,7 @@ class CartCore extends ObjectModel
 						);
 					}
 		}
-		$cache[(int)$this->id] = $final_package_list;
+		$cache[(int)$this->id.'_'.(int)$this->id_address_delivery] = $final_package_list;
 		return $final_package_list;
 	}
 
