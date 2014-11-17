@@ -479,9 +479,9 @@ abstract class ModuleCore
 	public static function upgradeModuleVersion($name, $version)
 	{
 		return Db::getInstance()->execute('
-		UPDATE `'._DB_PREFIX_.'module` m
-		SET m.version = \''.bqSQL($version).'\'
-		WHERE m.name = \''.bqSQL($name).'\'');
+			UPDATE `'._DB_PREFIX_.'module` m
+			SET m.version = \''.pSQL($version).'\'
+			WHERE m.name = \''.pSQL($name).'\'');
 	}
 
 	/**
