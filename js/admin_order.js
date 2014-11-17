@@ -946,7 +946,6 @@ function actualizeTotalRefundVoucher()
 		document.getElementById('refund_2').disabled = true;
 		$('#lab_refund_total_2').append('<span id="total_refund_2">' + errorRefund + '</span>');
 	}
-	console.log('test');
 }
 
 function setCancelQuantity(itself, id_order_detail, quantity)
