@@ -61,6 +61,7 @@ class OrderHistoryCore extends ObjectModel
 	protected $webserviceParameters = array(
 		'objectsNodeName' => 'order_histories',
 		'fields' => array(
+			'id_employee' => array('xlink_resource'=> 'employees'),
 			'id_order_state' => array('required' => true, 'xlink_resource'=> 'order_states'),
 			'id_order' => array('xlink_resource' => 'orders'),
 		),
@@ -195,6 +196,10 @@ class OrderHistoryCore extends ObjectModel
 							 !in_array($old_os->id, $errorOrCanceledStatuses) &&
 							 !StockAvailable::dependsOnStock($product['id_product']))
 							 StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $order->id_shop);
+
+					if ((int)$this->id_employee)
+						$this->id_employee = Validate::isLoadedObject(new Employee((int)$this->id_employee)) ? $this->id_employee : 0;
+
 					// @since 1.5.0 : if the order is being shipped and this products uses the advanced stock management :
 					// decrements the physical stock using $id_warehouse
 					if ($new_os->shipped == 1 && $old_os->shipped == 0 &&
@@ -244,7 +249,8 @@ class OrderHistoryCore extends ObjectModel
 											$mvt['physical_quantity'],
 											null,
 											$mvt['price_te'],
-											true
+											true,
+											(int)$this->id_employee
 										);
 									}
 									if (!StockAvailable::dependsOnStock($product['id_product']))
