@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -27,9 +27,10 @@
 class AdminCarrierWizardControllerCore extends AdminController
 {
 	protected $wizard_access;
-	
+
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->display = 'view';
 		$this->table = 'carrier';
 		$this->identifier = 'id_carrier';
@@ -37,14 +38,18 @@ class AdminCarrierWizardControllerCore extends AdminController
 		$this->lang = false;
 		$this->deleted = true;
 		$this->step_number = 0;
-		
+		$this->type_context = Shop::getContext();
+		$this->old_context = Context::getContext();
+		$this->multishop_context = Shop::CONTEXT_ALL;
+		$this->context = Context::getContext();
+
 		$this->fieldImageSettings = array(
 			'name' => 'logo',
 			'dir' => 's'
 		);
 
 		parent::__construct();
-		
+
 		$this->tabAccess = Profile::getProfileAccess($this->context->employee->id_profile, Tab::getIdFromClassName('AdminCarriers'));
 	}
 
@@ -68,7 +73,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 					'title' => $this->l('Shipping locations and costs'),
 				),
 				array(
-                    'title' => $this->l('Size, weight, and group access'),
+					'title' => $this->l('Size, weight, and group access'),
 				),
 				array(
 					'title' => $this->l('Summary'),
@@ -95,13 +100,15 @@ class AdminCarrierWizardControllerCore extends AdminController
 			$carrier = $this->loadObject();
 		elseif ($this->tabAccess['add'])
 			$carrier = new Carrier();
-		
+
 		if ((!$this->tabAccess['edit'] && Tools::getValue('id_carrier')) ||  (!$this->tabAccess['add'] && !Tools::getValue('id_carrier')))
 		{
 			$this->errors[] = Tools::displayError('You do not have permission to use this wizard.');
 			return ;
 		}
-		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+
+		$currency = $this->getActualCurrency();
+
 		$this->tpl_view_vars = array(
 			'currency_sign' => $currency->sign,
 			'PS_WEIGHT_UNIT' => Configuration::get('PS_WEIGHT_UNIT'),
@@ -119,38 +126,46 @@ class AdminCarrierWizardControllerCore extends AdminController
 				)),
 			'labels' => array('next' => $this->l('Next'), 'previous' => $this->l('Previous'), 'finish' => $this->l('Finish'))
 		);
-		
-		
+
+
 		if (Shop::isFeatureActive())
 			array_splice($this->tpl_view_vars['wizard_contents']['contents'], 1, 0, array(0 => $this->renderStepTwo($carrier)));
-			
+
 		$this->context->smarty->assign(array(
-			'carrier_logo' => (Validate::isLoadedObject($carrier) && file_exists(_PS_SHIP_IMG_DIR_.$carrier->id.'.jpg') ? _THEME_SHIP_DIR_.$carrier->id.'.jpg' : false)
-		));
-		$this->content .= $this->createTemplate('logo.tpl')->fetch();
+				'carrier_logo' => (Validate::isLoadedObject($carrier) && file_exists(_PS_SHIP_IMG_DIR_.$carrier->id.'.jpg') ? _THEME_SHIP_DIR_.$carrier->id.'.jpg' : false),
+ 			));
+
+ 		$this->context->smarty->assign(array(
+ 			'logo_content' => $this->createTemplate('logo.tpl')->fetch()
+ 		));
+
 		$this->addjQueryPlugin(array('ajaxfileupload'));
 
 		return parent::renderView();
 	}
 
-	public function initToolbarTitle()
+	public function initBreadcrumbs($tab_id = null,$tabs = null)
 	{
-		$bread_extended = array_unique($this->breadcrumbs);
-		
 		if (Tools::getValue('id_carrier'))
-			$bread_extended[1] = $this->l('Edit');
+			$this->display = 'edit';
 		else
-			$bread_extended[1] = $this->l('Add new');
+			$this->display = 'add';
 
-		$this->toolbar_title = $bread_extended;
+		parent::initBreadcrumbs((int)Tab::getIdFromClassName('AdminCarriers'));
+
+		$this->display = 'view';
 	}
-	
-	public function initToolbar()
+
+	public function initPageHeaderToolbar()
 	{
-		parent::initToolbar();
-		$this->toolbar_btn['back']['href'] = $this->context->link->getAdminLink('AdminCarriers');
+		parent::initPageHeaderToolbar();
+
+		$this->page_header_toolbar_btn['cancel'] = array(
+			'href' => $this->context->link->getAdminLink('AdminCarriers'),
+			'desc' => $this->l('Cancel', null, null, false)
+		);
 	}
-	
+
 	public function renderStepOne($carrier)
 	{
 		$this->fields_form = array(
@@ -159,49 +174,46 @@ class AdminCarrierWizardControllerCore extends AdminController
 				'input' => array(
 					array(
 						'type' => 'text',
-						'label' => $this->l('Carrier name:'),
+						'label' => $this->l('Carrier name'),
 						'name' => 'name',
-						'size' => 25,
 						'required' => true,
-						'hint' => sprintf($this->l('Allowed characters: letters, spaces and %s'), '().-'),
-						'desc' => array(
-							$this->l('Carrier name displayed during checkout'),
+						'hint' => array(
+							sprintf($this->l('Allowed characters: letters, spaces and "%s".'), '().-'),
+							$this->l('The carrier\'s name will be displayed during checkout.'),
 							$this->l('For in-store pickup, enter 0 to replace the carrier name with your shop name.')
 						)
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Transit time:'),
+						'label' => $this->l('Transit time'),
 						'name' => 'delay',
 						'lang' => true,
 						'required' => true,
-						'size' => 41,
 						'maxlength' => 128,
-						'desc' => $this->l('Estimated delivery time will be displayed during checkout.')
+						'hint' => $this->l('The estimated delivery time will be displayed during checkout.')
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Speed grade:'),
+						'label' => $this->l('Speed grade'),
 						'name' => 'grade',
 						'required' => false,
 						'size' => 1,
-						'desc' => $this->l('Enter "0" for a longest shipping delay, or "9" for the shortest shipping delay.')
+						'hint' => $this->l('Enter "0" for a longest shipping delay, or "9" for the shortest shipping delay.')
 					),
 					array(
 						'type' => 'logo',
-						'label' => $this->l('Logo:'),
-						'name' => 'logo',
+						'label' => $this->l('Logo'),
+						'name' => 'logo'
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Tracking URL:'),
+						'label' => $this->l('Tracking URL'),
 						'name' => 'url',
-						'size' => 40,
-						'desc' => $this->l('Delivery tracking URL: Type \'@\' where the tracking number should appear. It will then be automatically replaced by the tracking number.')
+						'hint' => $this->l('Delivery tracking URL: Type \'@\' where the tracking number should appear. It will be automatically replaced by the tracking number.')
 					),
 				)),
 		);
-		
+
 		$tpl_vars = array('max_image_size' => (int)Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE') / 1024 / 1024);
 		$fields_value = $this->getStepOneFieldsValues($carrier);
 		return $this->renderGenericForm(array('form' => $this->fields_form), $fields_value, $tpl_vars);
@@ -212,15 +224,17 @@ class AdminCarrierWizardControllerCore extends AdminController
 		$this->fields_form = array(
 			'form' => array(
 				'id_form' => 'step_carrier_shops',
+				'force' => true,
 				'input' => array(
 					array(
 						'type' => 'shop',
-						'label' => $this->l('Shop association:'),
+						'label' => $this->l('Shop association'),
 						'name' => 'checkBoxShopAsso',
 					),
 				))
 		);
 		$fields_value = $this->getStepTwoFieldsValues($carrier);
+
 		return $this->renderGenericForm(array('form' => $this->fields_form), $fields_value);
 	}
 
@@ -231,8 +245,8 @@ class AdminCarrierWizardControllerCore extends AdminController
 				'id_form' => 'step_carrier_ranges',
 				'input' => array(
 					array(
-						'type' => 'radio',
-						'label' => $this->l('Shipping and handling:'),
+						'type' => 'switch',
+						'label' => $this->l('Add handling costs'),
 						'name' => 'shipping_handling',
 						'required' => false,
 						'class' => 't',
@@ -249,31 +263,30 @@ class AdminCarrierWizardControllerCore extends AdminController
 								'label' => $this->l('Disabled')
 							)
 						),
-						'desc' => $this->l('Include the shipping and handling costs in the carrier price.')
+						'hint' => $this->l('Include the handling costs (as set in Shipping > Preferences) in the final carrier price.')
 					),
 					array(
-						'type' => 'radio',
-						'label' => $this->l('Apply shipping cost:'),
+						'type' => 'switch',
+						'label' => $this->l('Free shipping'),
 						'name' => 'is_free',
 						'required' => false,
 						'class' => 't',
 						'values' => array(
 							array(
-								'id' => 'is_free_off',
-								'value' => 0,
-								'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />'
-							),
-							array(
 								'id' => 'is_free_on',
 								'value' => 1,
 								'label' => '<img src="../img/admin/disabled.gif" alt="'.$this->l('No').'" title="'.$this->l('No').'" />'
+							),
+							array(
+								'id' => 'is_free_off',
+								'value' => 0,
+								'label' => '<img src="../img/admin/enabled.gif" alt="'.$this->l('Yes').'" title="'.$this->l('Yes').'" />'
 							)
 						),
-						'desc' => $this->l('Apply both regular shipping cost and product-specific shipping costs.')
 					),
 					array(
 						'type' => 'radio',
-						'label' => $this->l('Billing:'),
+						'label' => $this->l('Billing'),
 						'name' => 'shipping_method',
 						'required' => false,
 						'class' => 't',
@@ -282,36 +295,32 @@ class AdminCarrierWizardControllerCore extends AdminController
 							array(
 								'id' => 'billing_price',
 								'value' => Carrier::SHIPPING_METHOD_PRICE,
-								'label' => $this->l('According to total price')
+								'label' => $this->l('According to total price.')
 							),
 							array(
 								'id' => 'billing_weight',
 								'value' => Carrier::SHIPPING_METHOD_WEIGHT,
-								'label' => $this->l('According to total weight')
+								'label' => $this->l('According to total weight.')
 							)
 						)
 					),
 					array(
 						'type' => 'select',
-						'label' => $this->l('Tax:'),
+						'label' => $this->l('Tax'),
 						'name' => 'id_tax_rules_group',
 						'options' => array(
 							'query' => TaxRulesGroup::getTaxRulesGroups(true),
 							'id' => 'id_tax_rules_group',
 							'name' => 'name',
 							'default' => array(
-								'label' => $this->l('No Tax'),
+								'label' => $this->l('No tax'),
 								'value' => 0
 							)
 						)
 					),
 					array(
-						'type' => 'zone',
-						'name' => 'zones'
-					),
-					array(
 						'type' => 'select',
-						'label' => $this->l('Out-of-range behavior:'),
+						'label' => $this->l('Out-of-range behavior'),
 						'name' => 'range_behavior',
 						'options' => array(
 							'query' => array(
@@ -327,20 +336,26 @@ class AdminCarrierWizardControllerCore extends AdminController
 							'id' => 'id',
 							'name' => 'name'
 						),
-						'desc' => $this->l('Out-of-range behavior occurs when no defined range matches the customer\'s cart (e.g. when the weight of the cart is greater than the highest weight limit defined by the weight ranges)')
-					)
+						'hint' => $this->l('Out-of-range behavior occurs when no defined range matches the customer\'s cart (e.g. when the weight of the cart is greater than the highest weight limit defined by the weight ranges).')
 					),
-					
-				));
-		
+					array(
+						'type' => 'zone',
+						'name' => 'zones'
+					)
+				),
+
+			));
+
 		$tpl_vars = array();
 		$tpl_vars['PS_WEIGHT_UNIT'] = Configuration::get('PS_WEIGHT_UNIT');
-		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+
+		$currency = $this->getActualCurrency();
+
 		$tpl_vars['currency_sign'] = $currency->sign;
-		
+
 		$fields_value = $this->getStepThreeFieldsValues($carrier);
 
-		$this->getTplRangesVarsAndValues($carrier, $tpl_vars, $fields_value);		
+		$this->getTplRangesVarsAndValues($carrier, $tpl_vars, $fields_value);
 		return $this->renderGenericForm(array('form' => $this->fields_form), $fields_value, $tpl_vars);
 	}
 
@@ -352,49 +367,42 @@ class AdminCarrierWizardControllerCore extends AdminController
 				'input' => array(
 					array(
 						'type' => 'text',
-						'label' => $this->l('Maximum package height ('.Configuration::get('PS_DIMENSION_UNIT').'):'),
+						'label' => sprintf($this->l('Maximum package height (%s)'), Configuration::get('PS_DIMENSION_UNIT')),
 						'name' => 'max_height',
 						'required' => false,
-						'size' => 10,
-						'desc' => $this->l('Maximum height managed by this carrier. Set the value to "0", or leave this field blank to ignore.').' '.$this->l('The value must be an integer
-.')
+						'hint' => $this->l('Maximum height managed by this carrier. Set the value to "0", or leave this field blank to ignore.').' '.$this->l('The value must be an integer.')
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Maximum package width ('.Configuration::get('PS_DIMENSION_UNIT').'):'),
+						'label' => sprintf($this->l('Maximum package width (%s)'), Configuration::get('PS_DIMENSION_UNIT')),
 						'name' => 'max_width',
 						'required' => false,
-						'size' => 10,
-						'desc' => $this->l('Maximum width managed by this carrier. Set the value to "0", or leave this field blank to ignore.').' '.$this->l('The value must be an integer
-.')
+						'hint' => $this->l('Maximum width managed by this carrier. Set the value to "0", or leave this field blank to ignore.').' '.$this->l('The value must be an integer.')
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Maximum package depth ('.Configuration::get('PS_DIMENSION_UNIT').'):'),
+						'label' => sprintf($this->l('Maximum package depth (%s)'), Configuration::get('PS_DIMENSION_UNIT')),
 						'name' => 'max_depth',
 						'required' => false,
-						'size' => 10,
-						'desc' => $this->l('Maximum depth managed by this carrier. Set the value to "0", or leave this field blank to ignore.').' '.$this->l('The value must be an integer
-.')
+						'hint' => $this->l('Maximum depth managed by this carrier. Set the value to "0", or leave this field blank to ignore.').' '.$this->l('The value must be an integer.')
 					),
 					array(
 						'type' => 'text',
-						'label' => $this->l('Maximum package weight ('.Configuration::get('PS_WEIGHT_UNIT').'):'),
+						'label' => sprintf($this->l('Maximum package weight (%s)'), Configuration::get('PS_WEIGHT_UNIT')),
 						'name' => 'max_weight',
 						'required' => false,
-						'size' => 10,
-						'desc' => $this->l('Maximum weight managed by this carrier. Set the value to "0", or leave this field blank to ignore.')
+						'hint' => $this->l('Maximum weight managed by this carrier. Set the value to "0", or leave this field blank to ignore.')
 					),
 					array(
 						'type' => 'group',
-						'label' => $this->l('Group access:'),
+						'label' => $this->l('Group access'),
 						'name' => 'groupBox',
 						'values' => Group::getGroups(Context::getContext()->language->id),
-						'desc' => $this->l('Mark the groups that are allowed access to this carrier.')
+						'hint' => $this->l('Mark the groups that are allowed access to this carrier.')
 					)
 				)
 			));
-		
+
 		$fields_value = $this->getStepFourFieldsValues($carrier);
 
 		// Added values of object Group
@@ -404,14 +412,14 @@ class AdminCarrierWizardControllerCore extends AdminController
 			foreach ($carrier_groups as $carrier_group)
 				$carrier_groups_ids[] = $carrier_group['id_group'];
 
-		$groups = Group::getGroups($this->context->language->id);
+			$groups = Group::getGroups($this->context->language->id);
 
 		foreach ($groups as $group)
 			$fields_value['groupBox_'.$group['id_group']] = Tools::getValue('groupBox_'.$group['id_group'], (in_array($group['id_group'], $carrier_groups_ids) || empty($carrier_groups_ids) && !$carrier->id));
 
 		return $this->renderGenericForm(array('form' => $this->fields_form), $fields_value);
 	}
-	
+
 	public function renderStepFive($carrier)
 	{
 		$this->fields_form = array(
@@ -419,8 +427,8 @@ class AdminCarrierWizardControllerCore extends AdminController
 				'id_form' => 'step_carrier_summary',
 				'input' => array(
 					array(
-						'type' => 'radio',
-						'label' => $this->l('Status:'),
+						'type' => 'switch',
+						'label' => $this->l('Enabled'),
 						'name' => 'active',
 						'required' => false,
 						'class' => 't',
@@ -428,33 +436,31 @@ class AdminCarrierWizardControllerCore extends AdminController
 						'values' => array(
 							array(
 								'id' => 'active_on',
-								'value' => 1,
-								'label' => $this->l('Enabled')
+								'value' => 1
 							),
 							array(
 								'id' => 'active_off',
-								'value' => 0,
-								'label' => $this->l('Disabled')
+								'value' => 0
 							)
 						),
-						'desc' => $this->l('Enable the carrier in the Front Office')
+						'hint' => $this->l('Enable the carrier in the Front Office.')
 					)
 				)
 			));
-		
+
 		$template = $this->createTemplate('controllers/carrier_wizard/summary.tpl');
-		
+
 		$fields_value = $this->getStepFiveFieldsValues($carrier);
-		
+
 		$active_form = $this->renderGenericForm(array('form' => $this->fields_form), $fields_value);
-		
+
 		$active_form =  str_replace(array('<fieldset id="fieldset_form">', '</fieldset>'), '', $active_form);
-		
+
 		$template->assign('active_form', $active_form);
-		
+
 		return $template->fetch('controllers/carrier_wizard/summary.tpl');
 	}
-	
+
 	protected function getTplRangesVarsAndValues($carrier, &$tpl_vars, &$fields_value)
 	{
 		$tpl_vars['zones'] = Zone::getZones(false);
@@ -464,13 +470,13 @@ class AdminCarrierWizardControllerCore extends AdminController
 			foreach ($carrier_zones as $carrier_zone)
 				$carrier_zones_ids[] = $carrier_zone['id_zone'];
 
-		$range_table = $carrier->getRangeTable();
+			$range_table = $carrier->getRangeTable();
 		$shipping_method = $carrier->getShippingMethod();
-		
+
 		$zones = Zone::getZones(false);
 		foreach ($zones as $zone)
 			$fields_value['zones'][$zone['id_zone']] = Tools::getValue('zone_'.$zone['id_zone'], (in_array($zone['id_zone'], $carrier_zones_ids)));
-		
+
 		if ($shipping_method == Carrier::SHIPPING_METHOD_FREE)
 		{
 			$range_obj = $carrier->getRangeObject($carrier->shipping_method);
@@ -501,6 +507,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 
 	public function renderGenericForm($fields_form, $fields_value, $tpl_vars = array())
 	{
+
 		$helper = new HelperForm();
 		$helper->show_toolbar = false;
 		$helper->table =  $this->table;
@@ -511,10 +518,10 @@ class AdminCarrierWizardControllerCore extends AdminController
 		$helper->id = (int)Tools::getValue('id_carrier');
 		$helper->identifier = $this->identifier;
 		$helper->tpl_vars = array_merge(array(
-			'fields_value' => $fields_value,
-			'languages' => $this->getLanguages(),
-			'id_language' => $this->context->language->id
-		), $tpl_vars);
+				'fields_value' => $fields_value,
+				'languages' => $this->getLanguages(),
+				'id_language' => $this->context->language->id
+			), $tpl_vars);
 		$helper->override_folder = 'carrier_wizard/';
 
 		return $helper->generateForm($fields_form);
@@ -540,9 +547,9 @@ class AdminCarrierWizardControllerCore extends AdminController
 	public function getStepThreeFieldsValues($carrier)
 	{
 		$id_tax_rules_group = (is_object($this->object) && !$this->object->id) ? Carrier::getIdTaxRulesGroupMostUsed() : $this->getFieldValue($carrier, 'id_tax_rules_group');
-		
+
 		$shipping_handling = (is_object($this->object) && !$this->object->id) ? 0 : $this->getFieldValue($carrier, 'shipping_handling');
-		
+
 		return array(
 			'is_free' => $this->getFieldValue($carrier, 'is_free'),
 			'id_tax_rules_group' => (int)$id_tax_rules_group,
@@ -561,15 +568,15 @@ class AdminCarrierWizardControllerCore extends AdminController
 			'max_width' => $this->getFieldValue($carrier, 'max_width'),
 			'max_depth' => $this->getFieldValue($carrier, 'max_depth'),
 			'max_weight' => $this->getFieldValue($carrier, 'max_weight'),
-			'group' => $this->getFieldValue($carrier, 'group'),			
+			'group' => $this->getFieldValue($carrier, 'group'),
 		);
 	}
-	
+
 	public function getStepFiveFieldsValues($carrier)
 	{
 		return array('active' => $this->getFieldValue($carrier, 'active'));
 	}
-	
+
 	public function ajaxProcessChangeRanges()
 	{
 		if ((Validate::isLoadedObject($this->object) && !$this->tabAccess['edit']) || !$this->tabAccess['add'])
@@ -589,18 +596,19 @@ class AdminCarrierWizardControllerCore extends AdminController
 		$template = $this->createTemplate('controllers/carrier_wizard/helpers/form/form_ranges.tpl');
 		$template->assign($tpl_vars);
 		$template->assign('change_ranges', 1);
-		
+
 		$template->assign('fields_value', $fields_value);
-		$template->assign('input', array('type' => 'zone',	'name' => 'zones'	));
-		
-		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+		$template->assign('input', array('type' => 'zone', 'name' => 'zones' ));
+
+		$currency = $this->getActualCurrency();
+
 		$template->assign('currency_sign', $currency->sign);
 		$template->assign('PS_WEIGHT_UNIT', Configuration::get('PS_WEIGHT_UNIT'));
-		
+
 		die($template->fetch());
 	}
-	
-	public function ajaxProcessValidateStep()
+
+	protected function validateForm($die = true)
 	{
 		$step_number = (int)Tools::getValue('step_number');
 		$return = array('has_error' => false);
@@ -618,7 +626,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 				}
 			}
 			else
-				$this->validateRules('AdminCarrierWizardControllerCore');
+				$this->validateRules();
 		}
 
 		if (count($this->errors))
@@ -626,9 +634,17 @@ class AdminCarrierWizardControllerCore extends AdminController
 			$return['has_error'] = true;
 			$return['errors'] = $this->errors;
 		}
-		die(Tools::jsonEncode($return));
+		if (count($this->errors) || $die)
+			die(Tools::jsonEncode($return));
+
 	}
-	
+
+
+	public function ajaxProcessValidateStep()
+	{
+			$this->validateForm(true);
+	}
+
 	public function processRanges($id_carrier)
 	{
 		if (!$this->tabAccess['edit'] || !$this->tabAccess['add'])
@@ -640,13 +656,13 @@ class AdminCarrierWizardControllerCore extends AdminController
 		$carrier = new Carrier((int)$id_carrier);
 		if (!Validate::isLoadedObject($carrier))
 			return false;
-	
+
 		$range_inf = Tools::getValue('range_inf');
 		$range_sup = Tools::getValue('range_sup');
 		$range_type = Tools::getValue('shipping_method');
 
 		$fees = Tools::getValue('fees');
-		
+
 		$carrier->deleteDeliveryPrice($carrier->getRangeTable());
 		if ($range_type != Carrier::SHIPPING_METHOD_FREE)
 		{
@@ -662,10 +678,10 @@ class AdminCarrierWizardControllerCore extends AdminController
 					else
 					{
 						$range = new RangeWeight((int)$key);
-						$add_range = false;	
+						$add_range = false;
 					}
 				}
-				
+
 				if ($range_type == Carrier::SHIPPING_METHOD_PRICE)
 				{
 					if (!RangePrice::rangeExist((int)$carrier->id, (float)$delimiter1, (float)$range_sup[$key]))
@@ -683,20 +699,22 @@ class AdminCarrierWizardControllerCore extends AdminController
 					$range->delimiter2 = (float)$range_sup[$key];
 					$range->save();
 				}
-				
+
 				if (!Validate::isLoadedObject($range))
 					return false;
 				$price_list = array();
 				if (is_array($fees) && count($fees))
 				{
 					foreach ($fees as $id_zone => $fee)
+					{
 						$price_list[] = array(
 							'id_range_price' => ($range_type == Carrier::SHIPPING_METHOD_PRICE ? (int)$range->id : null),
 							'id_range_weight' => ($range_type == Carrier::SHIPPING_METHOD_WEIGHT ? (int)$range->id : null),
 							'id_carrier' => (int)$carrier->id,
 							'id_zone' => (int)$id_zone,
-							'price' => (float)$fee[$key]
+							'price' => isset($fee[$key]) ? (float)$fee[$key] : 0,
 						);
+					}
 				}
 
 				if (count($price_list) && !$carrier->addDeliveryPrice($price_list, true))
@@ -705,20 +723,20 @@ class AdminCarrierWizardControllerCore extends AdminController
 		}
 		return true;
 	}
-	
+
 	public function ajaxProcessUploadLogo()
 	{
 		if (!$this->tabAccess['edit'])
 			die('<return result="error" message="'.Tools::displayError('You do not have permission to use this wizard.').'" />');
 
 		$allowedExtensions = array('jpeg', 'gif', 'png', 'jpg');
-		
+
 		$logo = (isset($_FILES['carrier_logo_input']) ? $_FILES['carrier_logo_input'] : false);
 		if ($logo && !empty($logo['tmp_name']) && $logo['tmp_name'] != 'none'
 			&& (!isset($logo['error']) || !$logo['error'])
 			&& preg_match('/\.(jpe?g|gif|png)$/', $logo['name'])
 			&& is_uploaded_file($logo['tmp_name'])
-			&& ImageManager::isRealImage($logo['tmp_name']))
+			&& ImageManager::isRealImage($logo['tmp_name'], $logo['type']))
 		{
 			$file = $logo['tmp_name'];
 			do $tmp_name = uniqid().'.jpg';
@@ -731,18 +749,18 @@ class AdminCarrierWizardControllerCore extends AdminController
 		else
 			die('<return result="error" message="Cannot upload file" />');
 	}
-	
+
 	public function ajaxProcessFinishStep()
 	{
 		$return = array('has_error' => false);
-		
 		if (!$this->tabAccess['edit'])
 			$return = array(
 				'has_error' =>  true,
 				$return['errors'][] = Tools::displayError('You do not have permission to use this wizard.')
 			);
 		else
-		{				
+		{
+			$this->validateForm(false);
 			if ($id_carrier = Tools::getValue('id_carrier'))
 			{
 				$current_carrier = new Carrier((int)$id_carrier);
@@ -762,11 +780,16 @@ class AdminCarrierWizardControllerCore extends AdminController
 					$this->updateAssoShop((int)$new_carrier->id);
 					$this->duplicateLogo((int)$new_carrier->id, (int)$current_carrier->id);
 					$this->changeGroups((int)$new_carrier->id);
+
+					//Copy default carrier
+					if (Configuration::get('PS_CARRIER_DEFAULT') == $current_carrier->id)
+						Configuration::updateValue('PS_CARRIER_DEFAULT', (int)$new_carrier->id);
+
 					// Call of hooks
 					Hook::exec('actionCarrierUpdate', array(
-						'id_carrier' => (int)$current_carrier->id,
-						'carrier' => $new_carrier
-					));
+							'id_carrier' => (int)$current_carrier->id,
+							'carrier' => $new_carrier
+						));
 					$this->postImage($new_carrier->id);
 					$this->changeZones($new_carrier->id);
 					$new_carrier->setTaxRulesGroup((int)Tools::getValue('id_tax_rules_group'));
@@ -783,14 +806,14 @@ class AdminCarrierWizardControllerCore extends AdminController
 					$return['errors'][] = $this->l('An error occurred while saving this carrier.');
 				}
 			}
-			
+
 			if ($carrier->is_free)
 			{
 				//if carrier is free delete shipping cost
 				$carrier->deleteDeliveryPrice('range_weight');
 				$carrier->deleteDeliveryPrice('range_price');
 			}
-			
+
 			if (Validate::isLoadedObject($carrier))
 			{
 				if (!$this->changeGroups((int)$carrier->id))
@@ -804,7 +827,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 					$return['has_error'] = true;
 					$return['errors'][] = $this->l('An error occurred while saving carrier zones.');
 				}
-				
+
 				if (!$carrier->is_free)
 					if (!$this->processRanges((int)$carrier->id))
 					{
@@ -843,7 +866,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 		}
 		die(Tools::jsonEncode($return));
 	}
-	
+
 	protected function changeGroups($id_carrier, $delete = true)
 	{
 		$carrier = new Carrier((int)$id_carrier);
@@ -866,54 +889,48 @@ class AdminCarrierWizardControllerCore extends AdminController
 				if (!isset($_POST['zone_'.$zone['id_zone']]) || !$_POST['zone_'.$zone['id_zone']])
 					$return &= $carrier->deleteZone((int)$zone['id_zone']);
 			}
-			else
-				if (isset($_POST['zone_'.$zone['id_zone']]) && $_POST['zone_'.$zone['id_zone']])
-					$return &= $carrier->addZone((int)$zone['id_zone']);
+		else
+			if (isset($_POST['zone_'.$zone['id_zone']]) && $_POST['zone_'.$zone['id_zone']])
+				$return &= $carrier->addZone((int)$zone['id_zone']);
 
-		return $return;
+			return $return;
 	}
-	
-	public static function getValidationRules()
+
+	public function getValidationRules()
 	{
-		$step_number = Tools::getValue('step_number');
-		
+		$step_number = (int)Tools::getValue('step_number');
+		if (!$step_number)
+			return;
+
 		if ($step_number == 4 && !Shop::isFeatureActive() || $step_number == 5 && Shop::isFeatureActive())
-			return array();
-		
+			return array('fields' => array());
+
 		$step_fields = array(
 			1 => array('name', 'delay', 'grade', 'url'),
 			2 => array('is_free', 'id_tax_rules_group', 'shipping_handling', 'shipping_method', 'range_behavior'),
 			3 => array('range_behavior', 'max_height', 'max_width', 'max_depth', 'max_weight'),
 			4 => array(),
 		);
-
 		if (Shop::isFeatureActive())
 		{
-			$multistore_field = array(array('shop'));
-			array_splice($step_fields, 1, 0, $multistore_field);
+			$tmp = $step_fields;
+			$step_fields = array_slice($tmp, 0, 1, true) + array(2 => array('shop'));
+			$step_fields[3] = $tmp[2];
+			$step_fields[4] = $tmp[3];
 		}
 
-		$rules = Carrier::getValidationRules('Carrier');
-
-		foreach ($rules as $key_r => $rule)
-			foreach ($rule as $key_f => $field)
-			{
-				if (in_array($key_r, array('required', 'requiredLang')))
-				{
-					if(!in_array($field, $step_fields[$step_number]))
-						unset($rules[$key_r][$key_f]);
-				} 
-				else if(!in_array($key_f, $step_fields[$step_number]))
-					unset($rules[$key_r][$key_f]);
-			}
-		return $rules;
+		$definition = ObjectModel::getDefinition('Carrier');
+		foreach ($definition['fields'] as $field => $def)
+			if (is_array($step_fields[$step_number]) && !in_array($field, $step_fields[$step_number]))
+				unset($definition['fields'][$field]);
+		return $definition;
 	}
-	
+
 	public static function displayFieldName($field)
 	{
 		return $field;
 	}
-	
+
 	public function duplicateLogo($new_id, $old_id)
 	{
 		$old_logo = _PS_SHIP_IMG_DIR_.'/'.(int)$old_id.'.jpg';
@@ -927,5 +944,19 @@ class AdminCarrierWizardControllerCore extends AdminController
 				copy($old_tmp_logo, _PS_TMP_IMG_DIR_.'/carrier_mini_'.$new_id.'.jpg');
 			unlink($old_tmp_logo);
 		}
+	}
+
+	public function getActualCurrency()
+	{
+		if ($this->type_context == Shop::CONTEXT_SHOP)
+			Shop::setContext($this->type_context, $this->old_context->shop->id);
+		elseif ($this->type_context == Shop::CONTEXT_GROUP)
+			Shop::setContext($this->type_context, $this->old_context->shop->id_shop_group);
+
+		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+
+		Shop::setContext(Shop::CONTEXT_ALL);
+
+		return $currency;
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -78,9 +78,9 @@ class MySQLCore extends Db
 	public function nextRow($result = false)
 	{
 		$return = false;
-		if(is_resource($result) && $result)
+		if (is_resource($result) && $result)
 			$return = mysql_fetch_assoc($result);
-		elseif(is_resource($this->_result) && $this->_result)
+		elseif (is_resource($this->_result) && $this->_result)
 			$return = mysql_fetch_assoc($this->_result);
 		return $return;	
 	}
@@ -148,6 +148,21 @@ class MySQLCore extends Db
 	{
 		return mysql_select_db($db_name, $this->link);
 	}
+	
+	/**
+	 * @see DbCore::getAll()
+	*/
+	protected function getAll($result = false)
+	{
+		if (!$result)
+			$result = $this->result;
+
+		$data = array();
+		while ($row = $this->nextRow($result))
+			$data[] = $row;
+
+		return $data;
+	}
 
 	/**
 	 * @see Db::hasTableWithSamePrefix()
@@ -211,12 +226,13 @@ class MySQLCore extends Db
 		if (!@mysql_select_db($db, $link))
 			return false;
 
-		$sql = '
-			CREATE TABLE `'.$prefix.'test` (
-			`test` tinyint(1) unsigned NOT NULL
-			) ENGINE=MyISAM';
+		if ($engine === null)
+			$engine = 'MyISAM';
 
-		$result = mysql_query($sql, $link);
+		$result = mysql_query('
+		CREATE TABLE `'.$prefix.'test` (
+			`test` tinyint(1) unsigned NOT NULL
+		) ENGINE='.$engine, $link);
 		
 		if (!$result)
 			return mysql_error($link);
@@ -228,13 +244,19 @@ class MySQLCore extends Db
 	/**
 	 * @see Db::checkEncoding()
 	 */
-	static public function tryUTF8($server, $user, $pwd)
+	public static function tryUTF8($server, $user, $pwd)
 	{
 		$link = @mysql_connect($server, $user, $pwd);
-		if (!mysql_query('SET NAMES \'utf8\'', $link))
-			$ret = false;
-		else
-			$ret = true;
+		$ret = mysql_query('SET NAMES \'utf8\'', $link);
+		@mysql_close($link);
+		return $ret;
+	}
+
+	public static function checkAutoIncrement($server, $user, $pwd)
+	{
+		$link = @mysql_connect($server, $user, $pwd);
+		$ret = (bool)(($result = mysql_query('SELECT @@auto_increment_increment as aii', $link)) && ($row = mysql_fetch_assoc($result)) && $row['aii'] == 1);
+		$ret &= (bool)(($result = mysql_query('SELECT @@auto_increment_offset as aio', $link)) && ($row = mysql_fetch_assoc($result)) && $row['aio'] == 1);
 		@mysql_close($link);
 		return $ret;
 	}

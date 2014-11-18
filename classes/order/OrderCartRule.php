@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -46,6 +46,9 @@ class OrderCartRuleCore extends ObjectModel
 
 	/** @var float value (tax excl.) of voucher */
 	public $value_tax_excl;
+	
+	/** @var boolean value : voucher gives free shipping or not */
+	public $free_shipping;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -59,7 +62,8 @@ class OrderCartRuleCore extends ObjectModel
 			'id_order_invoice' =>	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'name' => 				array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true),
 			'value' => 				array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
-			'value_tax_excl' => 	array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true)
+			'value_tax_excl' => 	array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
+			'free_shipping' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool')
 		)
 	);
 

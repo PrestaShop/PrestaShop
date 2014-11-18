@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -34,9 +34,12 @@ class SpecificPriceRuleCore extends ObjectModel
 	public	$from_quantity;
 	public	$price;
 	public	$reduction;
+	public	$reduction_tax;
 	public	$reduction_type;
 	public	$from;
 	public	$to;
+
+	protected static $rules_application_enable = true;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -53,6 +56,7 @@ class SpecificPriceRuleCore extends ObjectModel
 			'from_quantity' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
 			'price' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isNegativePrice', 'required' => true),
 			'reduction' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
+			'reduction_tax' => 			array('type' => self::TYPE_INT, 'validate' => 'isBool', 'required' => true),
 			'reduction_type' => array('type' => self::TYPE_STRING, 'validate' => 'isReductionType', 'required' => true),
 			'from' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat', 'required' => false),
 			'to' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat', 'required' => false),
@@ -89,6 +93,16 @@ class SpecificPriceRuleCore extends ObjectModel
 				Db::getInstance()->delete('specific_price_rule_condition', 'id_specific_price_rule_condition_group='.(int)$row['id_specific_price_rule_condition_group']);
 			}
 	}
+	
+	public static function disableAnyApplication()
+	{
+		SpecificPriceRule::$rules_application_enable = false;
+	}
+
+	public static function enableAnyApplication()
+	{
+		SpecificPriceRule::$rules_application_enable = true;
+	}
 
 	public function addConditions($conditions)
 	{
@@ -116,6 +130,9 @@ class SpecificPriceRuleCore extends ObjectModel
 
 	public function apply($products = false)
 	{
+		if (!SpecificPriceRule::$rules_application_enable)
+			return;
+
 		$this->resetApplication($products);
 		$products = $this->getAffectedProducts($products);
 		foreach ($products as $product)
@@ -130,9 +147,15 @@ class SpecificPriceRuleCore extends ObjectModel
 		return Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'specific_price WHERE id_specific_price_rule='.(int)$this->id.$where);
 	}
 
+	/**
+	 * @param array $products
+	 */
 	public static function applyAllRules($products = false)
 	{
-		$rules = new Collection('SpecificPriceRule');
+		if (!SpecificPriceRule::$rules_application_enable)
+			return;
+
+		$rules = new PrestaShopCollection('SpecificPriceRule');
 		foreach ($rules as $rule)
 			$rule->apply($products);
 	}
@@ -183,7 +206,7 @@ class SpecificPriceRuleCore extends ObjectModel
 
 		if ($conditions_group)
 		{
-			$where .= ' AND (';
+			$where .= ' AND ((';
 			foreach ($conditions_group as $id_condition_group => $condition_group)
 			{
 				$fields = array(
@@ -235,7 +258,7 @@ class SpecificPriceRuleCore extends ObjectModel
 				
 				$where = rtrim($where, ' AND ').') OR (';
 			}
-			$where = rtrim($where, 'OR (');
+			$where = rtrim($where, 'OR (').')';
 		}
 		if ($products && count($products))
 			$where .= ' AND p.id_product IN ('.implode(', ', array_map('intval', $products)).')';
@@ -267,7 +290,7 @@ class SpecificPriceRuleCore extends ObjectModel
 	public static function applyRuleToProduct($id_rule, $id_product, $id_product_attribute = null)
 	{
 		$rule = new SpecificPriceRule((int)$id_rule);
-		if (!Validate::isLoadedObject($rule))
+		if (!Validate::isLoadedObject($rule) || !$id_product)
 			return false;
 
 		$specific_price = new SpecificPrice();
@@ -282,6 +305,7 @@ class SpecificPriceRuleCore extends ObjectModel
 		$specific_price->from_quantity = (int)$rule->from_quantity;
 		$specific_price->price = (float)$rule->price;
 		$specific_price->reduction_type = $rule->reduction_type;
+		$specific_price->reduction_tax = $rule->reduction_tax;
 		$specific_price->reduction = ($rule->reduction_type == 'percentage' ? $rule->reduction / 100 : (float)$rule->reduction);
 		$specific_price->from = $rule->from;
 		$specific_price->to = $rule->to;

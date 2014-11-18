@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -35,6 +35,7 @@ class CustomerMessageCore extends ObjectModel
 	public $user_agent;
 	public $private;
 	public $date_add;
+	public $date_upd;
 	public $read;
 
 	/**
@@ -46,12 +47,13 @@ class CustomerMessageCore extends ObjectModel
 		'fields' => array(
 			'id_employee' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'id_customer_thread' => array('type' => self::TYPE_INT),
-			'ip_address' => 		array('type' => self::TYPE_INT, 'validate' => 'isIp2Long'),
+			'ip_address' => 		array('type' => self::TYPE_STRING, 'validate' => 'isIp2Long', 'size' => 15),
 			'message' => 			array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 65000),
 			'file_name' => 			array('type' => self::TYPE_STRING),
 			'user_agent' => 		array('type' => self::TYPE_STRING),
 			'private' => 			array('type' => self::TYPE_INT),
 			'date_add' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'date_upd' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'read' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool')
 		),
 	);

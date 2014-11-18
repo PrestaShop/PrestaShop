@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -49,7 +49,7 @@ class OrderPaymentCore extends ObjectModel
 			'id_currency' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'amount' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isNegativePrice', 'required' => true),
 			'payment_method' => 	array('type' => self::TYPE_STRING, 'validate' => 'isGenericName'),
-			'conversion_rate' => 	array('type' => self::TYPE_INT, 'validate' => 'isFloat'),
+			'conversion_rate' => 	array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat'),
 			'transaction_id' => 	array('type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 254),
 			'card_number' => 		array('type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 254),
 			'card_brand' => 		array('type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 254),
@@ -100,8 +100,8 @@ class OrderPaymentCore extends ObjectModel
 	/**
 	 * Get Order Payments By Invoice ID
 	 * @static
-	 * @param $id_invoice Invoice ID
-	 * @return Collection Collection
+	 * @param int $id_invoice Invoice ID
+	 * @return PrestaShopCollection Collection of OrderPayment
 	 */
 	public static function getByInvoiceId($id_invoice)
 	{
@@ -113,7 +113,7 @@ class OrderPaymentCore extends ObjectModel
 		foreach ($payments as $payment)
 			$payment_list[] = $payment['id_order_payment'];
 		
-		$payments = new Collection('OrderPayment');
+		$payments = new PrestaShopCollection('OrderPayment');
 		$payments->where('id_order_payment', 'IN', $payment_list);
 		return $payments;
 	}

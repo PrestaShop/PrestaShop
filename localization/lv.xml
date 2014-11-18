@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <localizationPack name="Latvia" version="1.0">
 	<currencies>
-		<currency name="Lats" iso_code="LVL" iso_code_num="428" sign="Ls" blank="1" conversion_rate="0.709095" format="2" decimals="1" />
+		<currency name="Euro" iso_code="EUR" iso_code_num="978" sign="€" blank="1" conversion_rate="1.00" format="2" decimals="1" />
 	</currencies>
 	<languages>
 		<language iso_code="lv" />
 	</languages>
 	<taxes>
 		<tax id="1" name="PVN LV 21%" rate="21" />
-		<tax id="2" name="PVN LV 10%" rate="10" />
+		<tax id="2" name="PVN LV 12%" rate="12" />
 		
 		<taxRulesGroup name="LV Standard Rate (21%)">
 			<taxRule iso_code_country="be" id_tax="1" />
@@ -40,7 +40,7 @@
 			<taxRule iso_code_country="uk" id_tax="1" />
 		</taxRulesGroup>
 
-		<taxRulesGroup name="LV Reduced Rate (10%)">
+		<taxRulesGroup name="LV Reduced Rate (12%)">
 			<taxRule iso_code_country="be" id_tax="2" />
 			<taxRule iso_code_country="bg" id_tax="2" />
 			<taxRule iso_code_country="cz" id_tax="2" />
@@ -100,7 +100,7 @@
 			<taxRule iso_code_country="uk" id_tax="1" />
 		</taxRulesGroup>
 
-		<taxRulesGroup name="LV Books Rate (10%)">
+		<taxRulesGroup name="LV Books Rate (12%)">
 			<taxRule iso_code_country="be" id_tax="2" />
 			<taxRule iso_code_country="bg" id_tax="2" />
 			<taxRule iso_code_country="cz" id_tax="2" />

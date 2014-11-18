@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -45,24 +45,23 @@
 	$(document).ready(function() {
 		$('#iso_code').keyup(function(e) {
 			e.preventDefault();
-			checkLangPack("{$token}");
+			checkLangPack("{$token|escape:'html':'UTF-8'}");
 		});
 	});
 
 {/block}
 
 {block name="other_fieldsets"}
-
 	{if isset($fields['new'])}
 		<br /><br />
-		<fieldset style="width:572px;">
+		<div class="panel" style="width:572px;">
 			{foreach $fields['new'] as $key => $field}
 				{if $key == 'legend'}
 					<legend>
 						{if isset($field.image)}<img src="{$field.image}" alt="{$field.title}" />{/if}
 						{$field.title}
 					</legend>
-					<p>{l s='This language pack  is NOT complete and cannot be used in the Front or Back Office because some files are missing.'}</p>
+					<p>{l s='This language pack  is NOT complete and cannot be used in the front or back-office because some files are missing.'}</p>
 					<br />
 				{elseif $key == 'list_files'}
 					{foreach $field as $list}
@@ -85,7 +84,6 @@
 			{/foreach}
 			<br />
 			<div class="small">{l s='Missing files are marked in red'}</div>
-		</fieldset>
+		</div>
 	{/if}
-
 {/block}

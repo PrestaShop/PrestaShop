@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -38,7 +38,7 @@ class AddressesControllerCore extends FrontController
 	{
 		parent::setMedia();
 		$this->addCSS(_THEME_CSS_DIR_.'addresses.css');
-		$this->addJS(_THEME_JS_DIR_.'tools.js');
+		$this->addJS(_THEME_JS_DIR_.'tools.js'); // retro compat themes 1.5
 	}
 
 	/**
@@ -99,7 +99,7 @@ class AddressesControllerCore extends FrontController
 			'addresses_style' => $addresses_style,
 			'multipleAddresses' => $multiple_addresses_formated,
 			'ordered_fields' => $ordered_fields,
-			'addresses' => $addresses, // Retro Compatibility Theme < 1.4.1
+			'addresses' => $addresses, // retro compat themes 1.5ibility Theme < 1.4.1
 		));
 
 		$this->setTemplate(_PS_THEME_DIR_.'addresses.tpl');

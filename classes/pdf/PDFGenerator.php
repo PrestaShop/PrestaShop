@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -72,9 +72,10 @@ class PDFGeneratorCore extends TCPDF
 		);
 
 
-	public function __construct($use_cache = false)
+	public function __construct($use_cache = false, $orientation = 'P')
 	{
-		parent::__construct('P', 'mm', 'A4', true, 'UTF-8', $use_cache, false);
+		parent::__construct($orientation, 'mm', 'A4', true, 'UTF-8', $use_cache, false);
+		$this->setRTL(Context::getContext()->language->is_rtl);
 	}
 
 	/**
@@ -170,6 +171,8 @@ class PDFGeneratorCore extends TCPDF
 			$output = 'D';
 		elseif ($display == 'S')
 			$output = 'S';
+		elseif ($display == 'F')
+			$output = 'F';
 		else 	
 			$output = 'I';
 			
@@ -184,7 +187,6 @@ class PDFGeneratorCore extends TCPDF
 		$this->SetHeaderMargin(5);
 		$this->SetFooterMargin(18);
 		$this->setMargins(10, 40, 10);
-		$this->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
 
 		$this->AddPage();
 

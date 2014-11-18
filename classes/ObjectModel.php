@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -36,6 +36,7 @@ abstract class ObjectModelCore
 	const TYPE_DATE = 5;
 	const TYPE_HTML = 6;
 	const TYPE_NOTHING = 7;
+	const TYPE_SQL = 8;
 
 	/**
 	 * List of data to format
@@ -124,6 +125,8 @@ abstract class ObjectModelCore
 	 */
 	public static $definition = array();
 
+	protected static $loaded_classes = array();
+
 	/**
 	 * @var array Contain current object definition
 	 */
@@ -133,11 +136,16 @@ abstract class ObjectModelCore
 	 * @var array List of specific fields to update (all fields if null)
 	 */
 	protected $update_fields = null;
-	
+
 	/**
 	 * @var Db An instance of the db in order to avoid calling Db::getInstance() thousands of time
 	 */
 	protected static $db = false;
+
+	/**
+	 * @var boolean, enable possibility to define an id before adding object
+	 */
+	public $force_id = false;
 
 	/**
 	 * Returns object validation rules (fields validity)
@@ -170,8 +178,19 @@ abstract class ObjectModelCore
 		if (!ObjectModel::$db)
 			ObjectModel::$db = Db::getInstance();
 
-		$this->def = ObjectModel::getDefinition($this);
-		$this->setDefinitionRetrocompatibility();
+		$class_name = get_class($this);
+		if (!isset(ObjectModel::$loaded_classes[$class_name]))
+		{
+			$this->def = ObjectModel::getDefinition($class_name);
+			$this->setDefinitionRetrocompatibility();
+		 	if (!Validate::isTableOrIdentifier($this->def['primary']) || !Validate::isTableOrIdentifier($this->def['table']))
+					throw new PrestaShopException('Identifier or table format not valid for class '.$class_name);
+
+			ObjectModel::$loaded_classes[$class_name] = get_object_vars($this);
+		}
+		else
+			foreach (ObjectModel::$loaded_classes[$class_name] as $key => $value)
+				$this->{$key} = $value;
 
 		if ($id_lang !== null)
 			$this->id_lang = (Language::getLanguage($id_lang) !== false) ? $id_lang : Configuration::get('PS_LANG_DEFAULT');
@@ -185,13 +204,10 @@ abstract class ObjectModelCore
 		if ($this->isMultishop() && !$this->id_shop)
 			$this->id_shop = Context::getContext()->shop->id;
 
-	 	if (!Validate::isTableOrIdentifier($this->def['primary']) || !Validate::isTableOrIdentifier($this->def['table']))
-			throw new PrestaShopException('Identifier or table format not valid for class '.get_class($this));
-
 		if ($id)
 		{
 			// Load object from database if object id is present
-			$cache_id = 'objectmodel_'.$this->def['classname'].'_'.(int)$id.'_'.(int)$id_shop.'_'.(int)$id_lang;
+			$cache_id = 'objectmodel_'.$this->def['classname'].'_'.(int)$id.'_'.(int)$this->id_shop.'_'.(int)$id_lang;
 			if (!Cache::isStored($cache_id))
 			{
 				$sql = new DbQuery();
@@ -214,16 +230,17 @@ abstract class ObjectModelCore
 					if (!$id_lang && isset($this->def['multilang']) && $this->def['multilang'])
 					{
 						$sql = 'SELECT * FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_lang`
-								WHERE `'.$this->def['primary'].'` = '.(int)$id
+								WHERE `'.bqSQL($this->def['primary']).'` = '.(int)$id
 								.(($this->id_shop && $this->isLangMultishop()) ? ' AND `id_shop` = '.$this->id_shop : '');
 						if ($object_datas_lang = ObjectModel::$db->executeS($sql))
 							foreach ($object_datas_lang as $row)
 								foreach ($row as $key => $value)
 								{
-									if (array_key_exists($key, $this) && $key != $this->def['primary'])
+									if ($key != $this->def['primary'] && array_key_exists($key, $this))
 									{
 										if (!isset($object_datas[$key]) || !is_array($object_datas[$key]))
 											$object_datas[$key] = array();
+
 										$object_datas[$key][$row['id_lang']] = $value;
 									}
 								}
@@ -239,7 +256,7 @@ abstract class ObjectModelCore
 				$this->id = (int)$id;
 				foreach ($object_datas as $key => $value)
 					if (array_key_exists($key, $this))
-						$this->{$key} = $value;	
+						$this->{$key} = $value;
 			}
 		}
 	}
@@ -349,14 +366,15 @@ abstract class ObjectModelCore
 			{
 				if (!empty($value[$id_lang]))
 					$value = $value[$id_lang];
-				else if (!empty($data['required']))
+				elseif (!empty($data['required']))
 					$value = $value[Configuration::get('PS_LANG_DEFAULT')];
 				else
 					$value = '';
 			}
 
+			$purify = (isset($data['validate']) && Tools::strtolower($data['validate']) == 'iscleanhtml') ? true : false;
 			// Format field value
-			$fields[$field] = ObjectModel::formatValue($value, $data['type']);
+			$fields[$field] = ObjectModel::formatValue($value, $data['type'], false, $purify);
 		}
 
 		return $fields;
@@ -368,20 +386,20 @@ abstract class ObjectModelCore
 	 * @param mixed $value
 	 * @param int $type
 	 */
-	public static function formatValue($value, $type, $with_quotes = false)
+	public static function formatValue($value, $type, $with_quotes = false, $purify = true)
 	{
 		switch ($type)
 		{
-			case self::TYPE_INT :
+			case self::TYPE_INT:
 				return (int)$value;
 
-			case self::TYPE_BOOL :
+			case self::TYPE_BOOL:
 				return (int)$value;
 
-			case self::TYPE_FLOAT :
+			case self::TYPE_FLOAT:
 				return (float)str_replace(',', '.', $value);
 
-			case self::TYPE_DATE :
+			case self::TYPE_DATE:
 				if (!$value)
 					return '0000-00-00';
 
@@ -389,15 +407,22 @@ abstract class ObjectModelCore
 					return '\''.pSQL($value).'\'';
 				return pSQL($value);
 
-			case self::TYPE_HTML :
+			case self::TYPE_HTML:
+				if ($purify)
+					$value = Tools::purifyHTML($value);
 				if ($with_quotes)
 					return '\''.pSQL($value, true).'\'';
 				return pSQL($value, true);
 
-			case self::TYPE_NOTHING :
+			case self::TYPE_SQL:
+				if ($with_quotes)
+					return '\''.pSQL($value, true).'\'';
+				return pSQL($value, true);
+
+			case self::TYPE_NOTHING:
 				return $value;
 
-			case self::TYPE_STRING :
+			case self::TYPE_STRING:
 			default :
 				if ($with_quotes)
 					return '\''.pSQL($value).'\'';
@@ -429,6 +454,9 @@ abstract class ObjectModelCore
 		if (!ObjectModel::$db)
 			ObjectModel::$db = Db::getInstance();
 
+		if (isset($this->id) && !$this->force_id)
+			unset($this->id);
+
 		// @hook actionObject*AddBefore
 		Hook::exec('actionObjectAddBefore', array('object' => $this));
 		Hook::exec('actionObject'.get_class($this).'AddBefore', array('object' => $this));
@@ -439,17 +467,14 @@ abstract class ObjectModelCore
 		if ($autodate && property_exists($this, 'date_upd'))
 			$this->date_upd = date('Y-m-d H:i:s');
 
-			
 		if (Shop::isTableAssociated($this->def['table']))
 		{
 			$id_shop_list = Shop::getContextListShopID();
 			if (count($this->id_shop_list) > 0)
 				$id_shop_list = $this->id_shop_list;
 		}
-		
+
 		// Database insertion
-		if (isset($this->id) && !Tools::getValue('forceIDs'))
-			unset($this->id);
 		if (Shop::checkIdShopDefault($this->def['table']))
 			$this->id_shop_default = min($id_shop_list);
 		if (!$result = ObjectModel::$db->insert($this->def['table'], $this->getFields(), $null_values))
@@ -486,7 +511,7 @@ abstract class ObjectModelCore
 				{
 					foreach (array_keys($field) as $key)
 						if (!Validate::isTableOrIdentifier($key))
-							throw new PrestaShopException('key '.$key.' is not table or identifier, ');
+							throw new PrestaShopException('key '.$key.' is not table or identifier');
 					$field[$this->def['primary']] = (int)$this->id;
 
 					if ($asso !== false && $asso['type'] == 'fk_shop')
@@ -509,7 +534,7 @@ abstract class ObjectModelCore
 
 		return $result;
 	}
-	
+
 	/**
 	 * Duplicate current object to database
 	 *
@@ -520,7 +545,7 @@ abstract class ObjectModelCore
 		$definition = ObjectModel::getDefinition($this);
 
 		$res = Db::getInstance()->getRow('
-					SELECT * 
+					SELECT *
 					FROM `'._DB_PREFIX_.bqSQL($definition['table']).'`
 					WHERE `'.bqSQL($definition['primary']).'` = '.(int)$this->id
 				);
@@ -533,23 +558,23 @@ abstract class ObjectModelCore
 
 		if (!Db::getInstance()->insert($definition['table'], $res))
 			return false;
-		
+
 		$object_id = Db::getInstance()->Insert_ID();
 
 		if (isset($definition['multilang']) && $definition['multilang'])
 		{
 			$result = Db::getInstance()->executeS('
-			SELECT * 
+			SELECT *
 			FROM `'._DB_PREFIX_.bqSQL($definition['table']).'_lang`
 			WHERE `'.bqSQL($definition['primary']).'` = '.(int)$this->id);
 			if (!$result)
 				return false;
-	
+
 			foreach ($result as &$row)
 				foreach ($row as $field => &$value)
 					if (isset($definition['fields'][$field]))
 						$value = ObjectModel::formatValue($value, $definition['fields'][$field]['type']);
-			
+
 			// Keep $row2, you cannot use $row because there is an unexplicated conflict with the previous usage of this variable
 			foreach ($result as $row2)
 			{
@@ -558,10 +583,10 @@ abstract class ObjectModelCore
 					return false;
 			}
 		}
-	
+
 		$object_duplicated = new $definition['classname']((int)$object_id);
 		$object_duplicated->duplicateShops((int)$this->id);
-		
+
 		return $object_duplicated;
 	}
 
@@ -584,8 +609,12 @@ abstract class ObjectModelCore
 
 		// Automatically fill dates
 		if (array_key_exists('date_upd', $this))
+		{
 			$this->date_upd = date('Y-m-d H:i:s');
-			
+			if (isset($this->update_fields) && is_array($this->update_fields) && count($this->update_fields))
+				$this->update_fields['date_upd'] = true;
+		}
+
 		$id_shop_list = Shop::getContextListShopID();
 		if (count($this->id_shop_list) > 0)
 			$id_shop_list = $this->id_shop_list;
@@ -806,7 +835,7 @@ abstract class ObjectModelCore
 			if ((!$this->id_lang && isset($this->{$field_name}[$id_language]) && !empty($this->{$field_name}[$id_language]))
 			|| ($this->id_lang && isset($this->$field_name) && !empty($this->$field_name)))
 				$fields[$id_language][$field_name] = $this->id_lang ? pSQL($this->$field_name, $html) : pSQL($this->{$field_name}[$id_language], $html);
-			else if (in_array($field_name, $this->fieldsRequiredLang))
+			elseif (in_array($field_name, $this->fieldsRequiredLang))
 				$fields[$id_language][$field_name] = pSQL($this->id_lang ? $this->$field_name : $this->{$field_name}[Configuration::get('PS_LANG_DEFAULT')], $html);
 			else
 				$fields[$id_language][$field_name] = '';
@@ -857,7 +886,7 @@ abstract class ObjectModelCore
 				continue;
 
 			$values = $this->$field;
-			
+
 			// If the object has not been loaded in multilanguage, then the value is the one for the current language of the object
 			if (!is_array($values))
 				$values = array($this->id_lang => $values);
@@ -893,7 +922,7 @@ abstract class ObjectModelCore
 	 * @param int $id_lang
 	 * @return bool|string
 	 */
-	public function validateField($field, $value, $id_lang = null)
+	public function validateField($field, $value, $id_lang = null, $skip = array(), $human_errors = false)
 	{
 		$this->cacheFieldsRequiredDatabase();
 		$data = $this->def['fields'][$field];
@@ -901,9 +930,12 @@ abstract class ObjectModelCore
 		// Check if field is required
 		$required_fields = (isset(self::$fieldsRequiredDatabase[get_class($this)])) ? self::$fieldsRequiredDatabase[get_class($this)] : array();
 		if (!$id_lang || $id_lang == Configuration::get('PS_LANG_DEFAULT'))
-			if (!empty($data['required']) || in_array($field, $required_fields))
+			if (!in_array('required', $skip) && (!empty($data['required']) || in_array($field, $required_fields)))
 				if (Tools::isEmpty($value))
-					return 'Property '.get_class($this).'->'.$field.' is empty';
+					if ($human_errors)
+						return sprintf(Tools::displayError('The %s field is required.'), $this->displayFieldName($field, get_class($this)));
+					else
+						return 'Property '.get_class($this).'->'.$field.' is empty';
 
 		// Default value
 		if (!$value && !empty($data['default']))
@@ -913,11 +945,11 @@ abstract class ObjectModelCore
 		}
 
 		// Check field values
-		if (!empty($data['values']) && is_array($data['values']) && !in_array($value, $data['values']))
-			return 'Property '.get_class($this).'->'.$field.' has bad value (allowed values are: '.implode(', ', $data['values']).')';
+		if (!in_array('values', $skip) && !empty($data['values']) && is_array($data['values']) && !in_array($value, $data['values']))
+				return 'Property '.get_class($this).'->'.$field.' has bad value (allowed values are: '.implode(', ', $data['values']).')';
 
 		// Check field size
-		if (!empty($data['size']))
+		if (!in_array('size', $skip) && !empty($data['size']))
 		{
 			$size = $data['size'];
 			if (!is_array($data['size']))
@@ -925,11 +957,24 @@ abstract class ObjectModelCore
 
 			$length = Tools::strlen($value);
 			if ($length < $size['min'] || $length > $size['max'])
-				return 'Property '.get_class($this).'->'.$field.' length ('.$length.') must be between '.$size['min'].' and '.$size['max'];
+			{
+				if ($human_errors)
+				{
+					if (isset($data['lang']) && $data['lang'])
+					{
+						$language = new Language((int)$id_lang);
+						return sprintf(Tools::displayError('The field %1$s (%2$s) is too long (%3$d chars max, html chars including).'), $this->displayFieldName($field, get_class($this)), $language->name, $size['max']);
+					}
+					else
+					 	return sprintf(Tools::displayError('The %1$s field is too long (%2$d chars max).'), $this->displayFieldName($field, get_class($this)), $size['max']);
+				}
+				else
+					return 'Property '.get_class($this).'->'.$field.' length ('.$length.') must be between '.$size['min'].' and '.$size['max'];
+			}
 		}
 
 		// Check field validator
-		if (!empty($data['validate']))
+		if (!in_array('validate', $skip) && !empty($data['validate']))
 		{
 			if (!method_exists('Validate', $data['validate']))
 				throw new PrestaShopException('Validation function not found. '.$data['validate']);
@@ -948,7 +993,12 @@ abstract class ObjectModelCore
 						$res = false;
 				}
 				if (!$res)
-					return 'Property '.get_class($this).'->'.$field.' is not valid';
+				{
+					if ($human_errors)
+							return sprintf(Tools::displayError('The %s field is invalid.'), $this->displayFieldName($field, get_class($this)));
+					else
+						return 'Property '.get_class($this).'->'.$field.' is not valid';
+				}
 			}
 		}
 
@@ -959,8 +1009,11 @@ abstract class ObjectModelCore
 	{
 		global $_FIELDS;
 
-		if ($_FIELDS === null && file_exists(_PS_TRANSLATIONS_DIR_.Context::getContext()->language->iso_code.'/fields.php'))
-			include_once(_PS_TRANSLATIONS_DIR_.Context::getContext()->language->iso_code.'/fields.php');
+		if(!isset($context))
+			$context = Context::getContext();
+
+		if ($_FIELDS === null && file_exists(_PS_TRANSLATIONS_DIR_.$context->language->iso_code.'/fields.php'))
+			include_once(_PS_TRANSLATIONS_DIR_.$context->language->iso_code.'/fields.php');
 
 		$key = $class.'_'.md5($field);
 		return ((is_array($_FIELDS) && array_key_exists($key, $_FIELDS)) ? ($htmlentities ? htmlentities($_FIELDS[$key], ENT_QUOTES, 'utf-8') : $_FIELDS[$key]) : $field);
@@ -983,11 +1036,11 @@ abstract class ObjectModelCore
 		$required_fields_database = (isset(self::$fieldsRequiredDatabase[get_class($this)])) ? self::$fieldsRequiredDatabase[get_class($this)] : array();
 		foreach ($this->def['fields'] as $field => $data)
 		{
-			$value = Tools::getValue($field, $this->{$field});		
+			$value = Tools::getValue($field, $this->{$field});
 			// Check if field is required by user
 			if (in_array($field, $required_fields_database))
 				$data['required'] = true;
-			
+
 			// Checking for required fields
 			if (isset($data['required']) && $data['required'] && empty($value) && $value !== '0')
 				if (!$this->id || $field != 'passwd')
@@ -1088,6 +1141,9 @@ abstract class ObjectModelCore
  							);
 			}
 			$resource_parameters['fields'][$field_name] = array_merge($resource_parameters['fields'][$field_name], $current_field);
+
+			if (isset($details['ws_modifier']))
+				$resource_parameters['fields'][$field_name]['modifier'] = $details['ws_modifier'];
 		}
 		if (isset($this->date_add))
 			$resource_parameters['fields']['date_add']['setter'] = false;
@@ -1118,8 +1174,8 @@ abstract class ObjectModelCore
 			{
 				$vars = get_class_vars($class_name);
 				foreach ($vars['shopIDs'] as $id_shop)
-					$or[] = ' main.id_shop = '.(int)$id_shop.' ';
-				
+					$or[] = '(main.id_shop = '.(int)$id_shop.(isset($this->def['fields']['id_shop_group']) ? ' OR (id_shop = 0 AND id_shop_group='.(int)Shop::getGroupFromShop((int)$id_shop).')' : '').')';
+
 				$prepend = '';
 				if (count($or))
 					$prepend = 'AND ('.implode('OR', $or).')';
@@ -1165,12 +1221,12 @@ abstract class ObjectModelCore
 		FROM '._DB_PREFIX_.'required_field
 		'.(!$all ? 'WHERE object_name = \''.pSQL(get_class($this)).'\'' : ''));
 	}
-	
-	public function cacheFieldsRequiredDatabase()
+
+	public function cacheFieldsRequiredDatabase($all = true)
 	{
 		if (!is_array(self::$fieldsRequiredDatabase))
 		{
-			$fields = $this->getfieldsRequiredDatabase(true);
+			$fields = $this->getfieldsRequiredDatabase((bool)$all);
 			if ($fields)
 				foreach ($fields as $row)
 					self::$fieldsRequiredDatabase[$row['object_name']][(int)$row['id_required_field']] = pSQL($row['field_name']);
@@ -1213,11 +1269,16 @@ abstract class ObjectModelCore
 		if ($id_shop === null)
 			$id_shop = Context::getContext()->shop->id;
 
-		$sql = 'SELECT id_shop
-				FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_shop`
-				WHERE `'.$this->def['primary'].'` = '.(int)$this->id.'
-					AND id_shop = '.(int)$id_shop;
-		return (bool)Db::getInstance()->getValue($sql);
+		$cache_id = 'objectmodel_shop_'.$this->def['classname'].'_'.(int)$this->id.'-'.(int)$id_shop;
+		if (!Cache::isStored($cache_id))
+		{
+			$sql = 'SELECT id_shop
+					FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_shop`
+					WHERE `'.$this->def['primary'].'` = '.(int)$this->id.'
+						AND id_shop = '.(int)$id_shop;
+			Cache::store($cache_id, (bool)Db::getInstance()->getValue($sql));
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	/**
@@ -1298,7 +1359,7 @@ abstract class ObjectModelCore
 	public function hasMultishopEntries()
 	{
 		if (!Shop::isTableAssociated($this->def['table']) || !Shop::isFeatureActive())
-			return false; 
+			return false;
 		return (bool)Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.$this->def['table'].'_shop` WHERE `'.$this->def['primary'].'` = '.(int)$this->id);
 	}
 
@@ -1306,7 +1367,7 @@ abstract class ObjectModelCore
 	{
 		return Shop::isTableAssociated($this->def['table']) || !empty($this->def['multilang_shop']);
 	}
-	
+
 	public function isMultiShopField($field)
 	{
 		return (isset($this->def['fields'][$field]) && isset($this->def['fields'][$field]['shop']) && $this->def['fields'][$field]['shop']);
@@ -1361,7 +1422,7 @@ abstract class ObjectModelCore
 	{
 		if (!$this->id)
 			return false;
-		
+
 		if ($force_delete || !$this->hasMultishopEntries())
 		{
 			/* Deleting object images and thumbnails (cache) */
@@ -1377,7 +1438,7 @@ abstract class ObjectModelCore
 			if (file_exists(_PS_TMP_IMG_DIR_.$this->def['table'].'_mini_'.$this->id.'.'.$this->image_format)
 				&& !unlink(_PS_TMP_IMG_DIR_.$this->def['table'].'_mini_'.$this->id.'.'.$this->image_format))
 				return false;
-	
+
 			$types = ImageType::getImagesTypes();
 			foreach ($types as $image_type)
 				if (file_exists($this->image_dir.$this->id.'-'.stripslashes($image_type['name']).'.'.$this->image_format)
@@ -1397,9 +1458,9 @@ abstract class ObjectModelCore
 	public static function existsInDatabase($id_entity, $table)
 	{
 		$row = Db::getInstance()->getRow('
-			SELECT `id_'.$table.'` as id
-			FROM `'._DB_PREFIX_.$table.'` e
-			WHERE e.`id_'.$table.'` = '.(int)$id_entity
+			SELECT `id_'.bqSQL($table).'` as id
+			FROM `'._DB_PREFIX_.bqSQL($table).'` e
+			WHERE e.`id_'.bqSQL($table).'` = '.(int)$id_entity
 		);
 
 		return isset($row['id']);
@@ -1418,7 +1479,7 @@ abstract class ObjectModelCore
 			$table = self::$definition['table'];
 
 		$query = new DbQuery();
-		$query->select('`id_'.pSQL($table).'`');
+		$query->select('`id_'.bqSQL($table).'`');
 		$query->from($table);
 		if ($has_active_column)
 			$query->where('`active` = 1');
@@ -1516,12 +1577,12 @@ abstract class ObjectModelCore
 			$definition['classname'] = $class;
 
 			if (!empty($definition['multilang']))
-				$definition['associations'][Collection::LANG_ALIAS] = array(
+				$definition['associations'][PrestaShopCollection::LANG_ALIAS] = array(
 					'type' => self::HAS_MANY,
 					'field' => $definition['primary'],
 					'foreign_field' => $definition['primary'],
 				);
-		
+
 			if ($field)
 				return isset($definition['fields'][$field]) ? $definition['fields'][$field] : null;
 

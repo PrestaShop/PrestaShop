@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -118,7 +118,7 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
 			}
 
 			if (isset($field['getter']) && $this->schemaToDisplay != 'blank')
-				$ret .= ' not_filterable="true"';
+				$ret .= ' notFilterable="true"';
 
 			if ($field['value'] != '')
 				$node_content .= '<![CDATA['.$field['value'].']]>';
@@ -188,8 +188,20 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
 		$more = '';
 		if ($this->schemaToDisplay != 'blank')
 		{
-			$more .= (isset($params['associations'][$assoc_name]['virtual_entity']) && $params['associations'][$assoc_name]['virtual_entity'] ? ' virtual_entity="true"' : '');
-			$more .= ' node_type="'.$params['associations'][$assoc_name]['resource'].'"';
+			if (array_key_exists('setter', $params['associations'][$assoc_name]) && !$params['associations'][$assoc_name]['setter'])
+				$more .= ' readOnly="true"';
+			$more .= ' nodeType="'.$params['associations'][$assoc_name]['resource'].'"';
+			if (isset($params['associations'][$assoc_name]['virtual_entity']) && $params['associations'][$assoc_name]['virtual_entity'])
+			{
+				$more .= ' virtualEntity="true"';
+			}
+			else
+			{
+				if (isset($params['associations'][$assoc_name]['api']))
+					$more .= ' api="'.$params['associations'][$assoc_name]['api'].'"';
+				else
+					$more .= ' api="'.$assoc_name.'"';
+			}
 		}
 		return '<'.$assoc_name.$more.$end_tag."\n";
 	}

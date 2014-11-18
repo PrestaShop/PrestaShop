@@ -10,7 +10,7 @@
 		<tax id="1" name="BTW NL 21%" rate="21" />
 		<tax id="2" name="BTW NL 6%"  rate="6"  />
 		
-		<taxRulesGroup name="NL Standard Rate (19%)">
+		<taxRulesGroup name="NL Standard Rate (21%)">
 			<taxRule iso_code_country="be" id_tax="1" />
 			<taxRule iso_code_country="bg" id_tax="1" />
 			<taxRule iso_code_country="cz" id_tax="1" />

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <entity_tab>
-  <tab id="Home" name="Home"/>
+  <tab id="Dashboard" name="Dashboard"/>
   <tab id="CMS_Pages" name="CMS Pages"/>
   <tab id="CMS_Categories" name="CMS Categories"/>
   <tab id="Combinations_Generator" name="Combinations Generator"/>
@@ -12,7 +12,7 @@
   <tab id="Orders" name="Orders"/>
   <tab id="Customers" name="Customers"/>
   <tab id="Price_Rules" name="Price Rules"/>
-  <tab id="Shipping" name="Preferences"/>
+  <tab id="Shipping" name="Shipping"/>
   <tab id="Localization" name="Localization"/>
   <tab id="Modules" name="Modules"/>
   <tab id="Preferences" name="Preferences"/>
@@ -27,7 +27,6 @@
   <tab id="Features" name="Features"/>
   <tab id="Manufacturers" name="Manufacturers"/>
   <tab id="Suppliers" name="Suppliers"/>
-  <tab id="Image_Mapping" name="Image Mapping"/>
   <tab id="Tags" name="Tags"/>
   <tab id="Attachments" name="Attachments"/>
   <tab id="Orders_1" name="Orders"/>
@@ -48,7 +47,7 @@
   <tab id="Cart_Rules" name="Cart Rules"/>
   <tab id="Catalog_Price_Rules" name="Catalog Price Rules"/>
   <tab id="Marketing" name="Marketing"/>
-  <tab id="Shipping_1" name="Shipping"/>
+  <tab id="Shipping_1" name="Preferences"/>
   <tab id="Carriers" name="Carriers"/>
   <tab id="Price_Ranges" name="Price Ranges"/>
   <tab id="Weight_Ranges" name="Weight Ranges"/>
@@ -102,4 +101,5 @@
   <tab id="Stock_Coverage" name="Stock Coverage"/>
   <tab id="Supply_orders" name="Supply orders"/>
   <tab id="Configuration" name="Configuration"/>
+  <tab id="CarrierWizard" name="Carrier"/>
 </entity_tab>

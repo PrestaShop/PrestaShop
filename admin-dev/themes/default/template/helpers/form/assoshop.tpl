@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -74,13 +74,15 @@ function check_all_shop() {
 </script>
 
 <div class="assoShop">
-	<table class="table" cellpadding="0" cellspacing="0" width="100%">
+	<table class="table">
 		<tr>
 			<th>{l s='Shop'}</th>
 		</tr>
 		<tr>
 			<td>
-				<label class="t"><input class="input_all_shop" type="checkbox" /> <b>{l s='All shops'}</b></label>
+				<label>
+					<input class="input_all_shop" type="checkbox" />{l s='All shops'}
+				</label>
 			</td>
 		</tr>
 		{foreach $input.values as $groupID => $groupData}
@@ -88,13 +90,13 @@ function check_all_shop() {
 			<tr {if $input.type == 'shop'}class="alt_row"{/if}>
 				<td>
 					<img style="vertical-align:middle;" alt="" src="../img/admin/lv2_b.gif" />
-					<label class="t">
+					<label>
 						<input class="input_shop_group"
 							type="checkbox"
-							name="checkBoxShopGroupAsso_{$table}[{$groupID}]"
-							value="{$groupID}"
+							name="checkBoxShopGroupAsso_{$table}[{$groupID|intval}]"
+							value="{$groupID|intval}"
 							{if $groupChecked} checked="checked"{/if} />
-						<b>{l s='Group:'} {$groupData['name']}</b>
+						{l s='Group:'} {$groupData['name']}
 					</label>
 				</td>
 			</tr>
@@ -113,10 +115,10 @@ function check_all_shop() {
 							<label class="child">
 								<input class="input_shop"
 									type="checkbox"
-									value="{$groupID}"
-									shop_id="{$shopID}"
-									name="checkBoxShopAsso_{$table}[{$shopID}]"
-									id="checkedBox_{$shopID}"
+									value="{$groupID|intval}"
+									shop_id="{$shopID|intval}"
+									name="checkBoxShopAsso_{$table}[{$shopID|intval}]"
+									id="checkedBox_{$shopID|intval}"
 									{if $checked} checked="checked"{/if} 
 									{if $groupData['disable_shops']} readonly="readonly" onclick="return false"{/if}
 									/>

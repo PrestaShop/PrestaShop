@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -33,7 +33,7 @@ class CartControllerCore extends FrontController
 	protected $id_address_delivery;
 	protected $customization_id;
 	protected $qty;
-	public 	 $ssl = false;
+	public $ssl = true;
 
 	protected $ajax_refresh = false;
 
@@ -52,6 +52,9 @@ class CartControllerCore extends FrontController
 	{
 		parent::init();
 
+		// Send noindex to avoid ghost carts by bots
+		header('X-Robots-Tag: noindex, nofollow', true);
+
 		// Get page main parameters
 		$this->id_product = (int)Tools::getValue('id_product', null);
 		$this->id_product_attribute = (int)Tools::getValue('id_product_attribute', Tools::getValue('ipa'));
@@ -67,13 +70,13 @@ class CartControllerCore extends FrontController
 		{
 			if (Tools::getIsset('add') || Tools::getIsset('update'))
 				$this->processChangeProductInCart();
-			else if (Tools::getIsset('delete'))
+			elseif (Tools::getIsset('delete'))
 				$this->processDeleteProductInCart();
-			else if (Tools::getIsset('changeAddressDelivery'))
+			elseif (Tools::getIsset('changeAddressDelivery'))
 				$this->processChangeProductAddressDelivery();
-			else if (Tools::getIsset('allowSeperatedPackage'))
+			elseif (Tools::getIsset('allowSeperatedPackage'))
 				$this->processAllowSeperatedPackage();
-			else if (Tools::getIsset('duplicate'))
+			elseif (Tools::getIsset('duplicate'))
 				$this->processDuplicateProduct();
 			// Make redirection
 			if (!$this->errors && !$this->ajax)
@@ -103,9 +106,27 @@ class CartControllerCore extends FrontController
 	 */
 	protected function processDeleteProductInCart()
 	{
+		$customization_product = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'customization`
+		WHERE `id_product` = '.(int)$this->id_product.' AND `id_customization` != '.(int)$this->customization_id);
+
+		if (count($customization_product))
+		{
+			$product = new Product((int)$this->id_product);
+
+			$total_quantity = 0;
+			foreach ($customization_product as $custom)
+				$total_quantity += $custom['quantity'];
+
+			if ($total_quantity < $product->minimal_quantity)
+				die(Tools::jsonEncode(array(
+						'hasError' => true,
+						'errors' => array(sprintf(Tools::displayError('You must add %d minimum quantity', !Tools::getValue('ajax')), $product->minimal_quantity)),
+				)));
+		}
+
 		if ($this->context->cart->deleteProduct($this->id_product, $this->id_product_attribute, $this->customization_id, $this->id_address_delivery))
 		{
-			if (!Cart::getNbProducts((int)($this->context->cart->id)))
+			if (!Cart::getNbProducts((int)$this->context->cart->id))
 			{
 				$this->context->cart->setDeliveryOption(null);
 				$this->context->cart->gift = 0;
@@ -113,7 +134,8 @@ class CartControllerCore extends FrontController
 				$this->context->cart->update();
 			}
 		}
-		$removed = CartRule::autoAddToCart();
+		$removed = CartRule::autoRemoveFromCart();
+		CartRule::autoAddToCart();
 		if (count($removed) && (int)Tools::getValue('allow_refresh'))
 			$this->ajax_refresh = true;
 	}
@@ -131,7 +153,7 @@ class CartControllerCore extends FrontController
 				'hasErrors' => true,
 				'error' => Tools::displayError('It is not possible to deliver this product to the selected address.', false),
 			)));
-		
+
 		$this->context->cart->setProductAddressDelivery(
 			$this->id_product,
 			$this->id_product_attribute,
@@ -178,14 +200,14 @@ class CartControllerCore extends FrontController
 		$mode = (Tools::getIsset('update') && $this->id_product) ? 'update' : 'add';
 
 		if ($this->qty == 0)
-			$this->errors[] = Tools::displayError('Null quantity.');
-		else if (!$this->id_product)
-			$this->errors[] = Tools::displayError('Product not found');
+			$this->errors[] = Tools::displayError('Null quantity.', !Tools::getValue('ajax'));
+		elseif (!$this->id_product)
+			$this->errors[] = Tools::displayError('Product not found', !Tools::getValue('ajax'));
 
 		$product = new Product($this->id_product, true, $this->context->language->id);
 		if (!$product->id || !$product->active)
 		{
-			$this->errors[] = Tools::displayError('This product is no longer available.', false);
+			$this->errors[] = Tools::displayError('This product is no longer available.', !Tools::getValue('ajax'));
 			return;
 		}
 
@@ -195,7 +217,7 @@ class CartControllerCore extends FrontController
 		if (is_array($cart_products))
 			foreach ($cart_products as $cart_product)
 			{
-				if ((isset($this->id_product_attribute) && $cart_product['id_product_attribute'] == $this->id_product_attribute) ||
+				if ((!isset($this->id_product_attribute) || $cart_product['id_product_attribute'] == $this->id_product_attribute) &&
 					(isset($this->id_product) && $cart_product['id_product'] == $this->id_product))
 				{
 					$qty_to_check = $cart_product['cart_quantity'];
@@ -213,20 +235,20 @@ class CartControllerCore extends FrontController
 		if ($this->id_product_attribute)
 		{
 			if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $qty_to_check))
-				$this->errors[] = Tools::displayError('There isn\'t enough product in stock.');
+				$this->errors[] = Tools::displayError('There isn\'t enough product in stock.', !Tools::getValue('ajax'));
 		}
-		else if ($product->hasAttributes())
+		elseif ($product->hasAttributes())
 		{
 			$minimumQuantity = ($product->out_of_stock == 2) ? !Configuration::get('PS_ORDER_OUT_OF_STOCK') : !$product->out_of_stock;
 			$this->id_product_attribute = Product::getDefaultAttribute($product->id, $minimumQuantity);
 			// @todo do something better than a redirect admin !!
 			if (!$this->id_product_attribute)
 				Tools::redirectAdmin($this->context->link->getProductLink($product));
-			else if (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $qty_to_check))
-				$this->errors[] = Tools::displayError('There isn\'t enough product in stock.');
+			elseif (!Product::isAvailableWhenOutOfStock($product->out_of_stock) && !Attribute::checkAttributeQty($this->id_product_attribute, $qty_to_check))
+				$this->errors[] = Tools::displayError('There isn\'t enough product in stock.', !Tools::getValue('ajax'));
 		}
-		else if (!$product->checkQty($qty_to_check))
-			$this->errors[] = Tools::displayError('There isn\'t enough product in stock.');
+		elseif (!$product->checkQty($qty_to_check))
+			$this->errors[] = Tools::displayError('There isn\'t enough product in stock.', !Tools::getValue('ajax'));
 
 		// If no errors, process product addition
 		if (!$this->errors && $mode == 'add')
@@ -246,7 +268,7 @@ class CartControllerCore extends FrontController
 
 			// Check customizable fields
 			if (!$product->hasAllRequiredCustomizableFields() && !$this->customization_id)
-				$this->errors[] = Tools::displayError('Please fill in all of the required fields, and then save your customizations.');
+				$this->errors[] = Tools::displayError('Please fill in all of the required fields, and then save your customizations.', !Tools::getValue('ajax'));
 
 			if (!$this->errors)
 			{
@@ -256,10 +278,10 @@ class CartControllerCore extends FrontController
 				{
 					// If product has attribute, minimal quantity is set with minimal quantity of attribute
 					$minimal_quantity = ($this->id_product_attribute) ? Attribute::getAttributeMinimalQty($this->id_product_attribute) : $product->minimal_quantity;
-					$this->errors[] = sprintf(Tools::displayError('You must add %d minimum quantity', false), $minimal_quantity);
+					$this->errors[] = sprintf(Tools::displayError('You must add %d minimum quantity', !Tools::getValue('ajax')), $minimal_quantity);
 				}
 				elseif (!$update_quantity)
-					$this->errors[] = Tools::displayError('You already have the maximum quantity available for this product.', false);
+					$this->errors[] = Tools::displayError('You already have the maximum quantity available for this product.', !Tools::getValue('ajax'));
 				elseif ((int)Tools::getValue('allow_refresh'))
 				{
 					// If the cart rules has changed, we need to refresh the whole cart
@@ -317,6 +339,9 @@ class CartControllerCore extends FrontController
 		if ($this->ajax_refresh)
 			die(Tools::jsonEncode(array('refresh' => true)));
 
+		// write cookie if can't on destruct
+		$this->context->cookie->write();
+
 		if (Tools::getIsset('summary'))
 		{
 			$result = array();
@@ -325,7 +350,7 @@ class CartControllerCore extends FrontController
 				$groups = (Validate::isLoadedObject($this->context->customer)) ? $this->context->customer->getGroups() : array(1);
 				if ($this->context->cart->id_address_delivery)
 					$deliveryAddress = new Address($this->context->cart->id_address_delivery);
-				$id_country = (isset($deliveryAddress) && $deliveryAddress->id) ? $deliveryAddress->id_country : Configuration::get('PS_COUNTRY_DEFAULT');
+				$id_country = (isset($deliveryAddress) && $deliveryAddress->id) ? (int)$deliveryAddress->id_country : (int)Tools::getCountry();
 
 				Cart::addExtraCarriers($result);
 			}
@@ -352,12 +377,19 @@ class CartControllerCore extends FrontController
 					false,
 					false
 				);
+
+				if ($product['reduction_type'] == 'amount')
+				{
+					$reduction = (float)$product['price_wt'] - (float)$product['price_without_quantity_discount'];
+					$product['reduction_formatted'] = Tools::displayPrice($reduction);
+				}
 			}
 			if ($result['customizedDatas'])
 				Product::addCustomizationPrice($result['summary']['products'], $result['customizedDatas']);
 
 			Hook::exec('actionCartListOverride', array('summary' => $result, 'json' => &$json));
 			die(Tools::jsonEncode(array_merge($result, (array)Tools::jsonDecode($json, true))));
+
 		}
 		// @todo create a hook
 		elseif (file_exists(_PS_MODULE_DIR_.'/blockcart/blockcart-ajax.php'))

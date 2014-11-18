@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -30,7 +30,7 @@ abstract class InstallControllerHttp
 	 * @var array List of installer steps
 	 */
 	protected static $steps = array('welcome', 'license', 'system', 'configure', 'database', 'process');
-
+	protected $phone;
 	protected static $instances = array();
 
 	/**
@@ -100,6 +100,11 @@ abstract class InstallControllerHttp
 			require_once (_PS_INSTALL_CONTROLLERS_PATH_.'http/smarty_compile.php');
 			exit;
 		}
+
+		$session = InstallSession::getInstance();
+		if (!$session->last_step || $session->last_step == 'welcome')
+			Tools::generateIndex();
+
 		// Include all controllers
 		foreach (self::$steps as $step)
 		{
@@ -111,7 +116,6 @@ abstract class InstallControllerHttp
 			self::$instances[$step] = new $classname($step);
 		}
 
-		$session = InstallSession::getInstance();
 		if (!$session->last_step || !in_array($session->last_step, self::$steps))
 			$session->last_step = self::$steps[0];
 
@@ -192,9 +196,6 @@ abstract class InstallControllerHttp
 		$this->init();
 	}
 
-	/**
-	 * Initialize model
-	 */
 	public function init()
 	{
 	}
@@ -318,7 +319,17 @@ abstract class InstallControllerHttp
 	 */
 	public function getPhone()
 	{
-		return $this->language->getInformation('phone', false);
+		if (InstallSession::getInstance()->support_phone != null)
+			return InstallSession::getInstance()->support_phone;
+		if ($this->phone === null)
+		{
+			$this->phone = $this->language->getInformation('phone', false);
+			if ($iframe = Tools::file_get_contents('http://api.prestashop.com/iframe/install.php?lang='.$this->language->getLanguageIso(), false, null, 3))
+				if (preg_match('/<img.+alt="([^"]+)".*>/Ui', $iframe, $matches) && isset($matches[1]))
+					$this->phone = $matches[1];
+		}
+		InstallSession::getInstance()->support_phone = $this->phone;
+		return $this->phone;
 	}
 
 	/**
@@ -404,7 +415,8 @@ abstract class InstallControllerHttp
 		if ($get_output)
 		{
 			$content = ob_get_contents();
-			ob_end_clean();
+			if (ob_get_level() && ob_get_length() > 0)
+				ob_end_clean();
 			return $content;
 		}
 	}

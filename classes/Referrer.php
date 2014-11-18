@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -139,21 +139,22 @@ class ReferrerCore extends ObjectModel
 		}
 
 		$sql = 'SELECT COUNT(DISTINCT cs.id_connections_source) AS visits,
-					COUNT(DISTINCT cs.id_connections) as visitors,
-					COUNT(DISTINCT c.id_guest) as uniqs,
-					COUNT(DISTINCT cp.time_start) as pages
-				FROM '._DB_PREFIX_.'referrer_cache rc
-				LEFT JOIN '._DB_PREFIX_.'referrer r ON rc.id_referrer = r.id_referrer
-				LEFT JOIN '._DB_PREFIX_.'referrer_shop rs ON r.id_referrer = rs.id_referrer
-				LEFT JOIN '._DB_PREFIX_.'connections_source cs ON rc.id_connections_source = cs.id_connections_source
-				LEFT JOIN '._DB_PREFIX_.'connections c ON cs.id_connections = c.id_connections
-				LEFT JOIN '._DB_PREFIX_.'connections_page cp ON cp.id_connections = c.id_connections
-				'.$join.'
-				WHERE cs.date_add BETWEEN '.ModuleGraph::getDateBetween($employee).'
-					'.Shop::addSqlRestriction(false, 'rs').'
-					'.Shop::addSqlRestriction(false, 'c').'
-					AND rc.id_referrer = '.(int)$this->id
-					.$where;
+			COUNT(DISTINCT cs.id_connections) as visitors,
+			COUNT(DISTINCT c.id_guest) as uniqs,
+			COUNT(DISTINCT cp.time_start) as pages
+			FROM '._DB_PREFIX_.'referrer_cache rc
+			LEFT JOIN '._DB_PREFIX_.'referrer r ON rc.id_referrer = r.id_referrer
+			LEFT JOIN '._DB_PREFIX_.'referrer_shop rs ON r.id_referrer = rs.id_referrer
+			LEFT JOIN '._DB_PREFIX_.'connections_source cs ON rc.id_connections_source = cs.id_connections_source
+			LEFT JOIN '._DB_PREFIX_.'connections c ON cs.id_connections = c.id_connections
+			LEFT JOIN '._DB_PREFIX_.'connections_page cp ON cp.id_connections = c.id_connections
+			'.$join.'
+			WHERE 1'.
+			((isset($employee->stats_date_from) && isset($employee->stats_date_from))? ' AND cs.date_add BETWEEN \''.pSQL($employee->stats_date_from).' 00:00:00\' AND \''.pSQL($employee->stats_date_to).' 23:59:59\'' : '').
+			Shop::addSqlRestriction(false, 'rs').
+			Shop::addSqlRestriction(false, 'c').
+			' AND rc.id_referrer = '.(int)$this->id.
+			$where;
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 	}
 
@@ -251,6 +252,7 @@ class ReferrerCore extends ObjectModel
 	 *
 	 * @param array $referrers
 	 * @param int $employee
+	 * @return true
 	 */
 	public static function refreshCache($referrers = null, $employee = null)
 	{
@@ -264,21 +266,20 @@ class ReferrerCore extends ObjectModel
 				if (!$referrer->isAssociatedToShop($shop_id))
 					continue;
 
-				$shop = new Shop($shop_id);
 				$stats_visits = $referrer->getStatsVisits(null, $employee);
 				$registrations = $referrer->getRegistrations(null, $employee);
 				$stats_sales = $referrer->getStatsSales(null, $employee);
 
 				Db::getInstance()->update('referrer_shop', array(
-					'cache_visitors' => $stats_visits['uniqs'],
-					'cache_visits' => $stats_visits['visits'],
-					'cache_pages' => $stats_visits['pages'],
-					'cache_registrations' => $registrations,
-					'cache_orders' => $stats_sales['orders'],
+					'cache_visitors' => (int)$stats_visits['uniqs'],
+					'cache_visits' => (int)$stats_visits['visits'],
+					'cache_pages' => (int)$stats_visits['pages'],
+					'cache_registrations' => (int)$registrations,
+					'cache_orders' => (int)$stats_sales['orders'],
 					'cache_sales' => number_format($stats_sales['sales'], 2, '.', ''),
 					'cache_reg_rate' => $stats_visits['uniqs'] ? $registrations / $stats_visits['uniqs'] : 0,
 					'cache_order_rate' => $stats_visits['uniqs'] ? $stats_sales['orders'] / $stats_visits['uniqs'] : 0,
-				), 'id_referrer = '.$referrer->id.' AND id_shop = '.$shop_id);
+				), 'id_referrer = '.(int)$referrer->id.' AND id_shop = '.(int)$shop_id);
 			}
 		}
 
@@ -314,6 +315,7 @@ class ReferrerCore extends ObjectModel
 					FROM '._DB_PREFIX_.'referrer r
 					LEFT JOIN '._DB_PREFIX_.'connections_source cs ON ('.self::$_join.')
 					WHERE id_referrer = '.(int)$row['id_referrer'].'
+					AND id_connections_source IS NOT NULL
 				)');
 			}
 	}

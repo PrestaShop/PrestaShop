@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -54,19 +54,28 @@ class ShopUrlCore extends ObjectModel
 		),
 	);
 
+	protected $webserviceParameters = array(
+		'fields' => array(
+			'id_shop' => array('xlink_resource' => 'shops'),
+		),
+	);
+
 	/**
 	 * @see ObjectModel::getFields()
 	 * @return array
 	 */
 	public function getFields()
 	{
-		$this->physical_uri = trim($this->physical_uri, '/');
+		$this->domain = trim($this->domain);
+		$this->domain_ssl = trim($this->domain_ssl);
+		$this->physical_uri = trim(str_replace(' ', '', $this->physical_uri), '/');
+
 		if ($this->physical_uri)
 			$this->physical_uri = preg_replace('#/+#', '/', '/'.$this->physical_uri.'/');
 		else
 			$this->physical_uri = '/';
 
-		$this->virtual_uri = trim($this->virtual_uri, '/');
+		$this->virtual_uri = trim(str_replace(' ', '', $this->virtual_uri), '/');
 		if ($this->virtual_uri)
 			$this->virtual_uri = preg_replace('#/+#', '/', trim($this->virtual_uri, '/')).'/';
 
@@ -91,11 +100,11 @@ class ShopUrlCore extends ObjectModel
 	 * Get list of shop urls
 	 *
 	 * @param bool $id_shop
-	 * @return Collection
+	 * @return PrestaShopCollection Collection of ShopUrl
 	 */
 	public static function getShopUrls($id_shop = false)
 	{
-		$urls = new Collection('ShopUrl');
+		$urls = new PrestaShopCollection('ShopUrl');
 		if ($id_shop)
 			$urls->where('id_shop', '=', $id_shop);
 		return $urls;
@@ -151,7 +160,7 @@ class ShopUrlCore extends ObjectModel
 			SELECT domain, domain_ssl
 			FROM '._DB_PREFIX_.'shop_url
 			WHERE main = 1
-			AND id_shop = '.($id_shop !== null ? (int)$id_shop : Context::getContext()->shop->id));
+			AND id_shop = '.($id_shop !== null ? (int)$id_shop : (int)Context::getContext()->shop->id));
 			self::$main_domain[(int)$id_shop] = $row['domain'];
 			self::$main_domain_ssl[(int)$id_shop] = $row['domain_ssl'];
 		}

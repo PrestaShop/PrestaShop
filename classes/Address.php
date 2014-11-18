@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -174,7 +174,7 @@ class AddressCore extends ObjectModel
 			Customer::resetAddressCache($this->id_customer);
 		return true;
 	}
-	
+
 	public function update($null_values = false)
 	{
 		// Empty related caches
@@ -182,6 +182,9 @@ class AddressCore extends ObjectModel
 			unset(self::$_idCountries[$this->id]);
 		if (isset(self::$_idZones[$this->id]))
 			unset(self::$_idZones[$this->id]);
+
+		if (Validate::isUnsignedId($this->id_customer))
+			Customer::resetAddressCache($this->id_customer);
 
 		return parent::update($null_values);
 	}
@@ -264,13 +267,17 @@ class AddressCore extends ObjectModel
 		if(!isset($id_address) || empty($id_address))
 			return false;
 
-		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT c.`active`
-		FROM `'._DB_PREFIX_.'address` a
-		LEFT JOIN `'._DB_PREFIX_.'country` c ON c.`id_country` = a.`id_country`
-		WHERE a.`id_address` = '.(int)$id_address))
-			return false;
-		return ($result['active']);
+		$cache_id = 'Address::isCountryActiveById_'.(int)$id_address;
+		if (!Cache::isStored($cache_id))
+		{
+			$result = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getvalue('
+			SELECT c.`active`
+			FROM `'._DB_PREFIX_.'address` a
+			LEFT JOIN `'._DB_PREFIX_.'country` c ON c.`id_country` = a.`id_country`
+			WHERE a.`id_address` = '.(int)$id_address);
+			Cache::store($cache_id, $result);
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	/**
@@ -306,7 +313,7 @@ class AddressCore extends ObjectModel
 	/**
 	* Specify if an address is already in base
 	*
-	* @param $id_address Address id
+	* @param int $id_address Address id
 	* @return boolean
 	*/
 	public static function addressExists($id_address)
@@ -324,12 +331,17 @@ class AddressCore extends ObjectModel
 	{
 		if (!$id_customer)
 			return false;
-
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT `id_address`
-			FROM `'._DB_PREFIX_.'address`
-			WHERE `id_customer` = '.(int)$id_customer.' AND `deleted` = 0'.($active ? ' AND `active` = 1' : '')
-		);
+		$cache_id = 'Address::getFirstCustomerAddressId_'.(int)$id_customer.'-'.(bool)$active;
+		if (!Cache::isStored($cache_id))
+		{
+			$result = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+				SELECT `id_address`
+				FROM `'._DB_PREFIX_.'address`
+				WHERE `id_customer` = '.(int)$id_customer.' AND `deleted` = 0'.($active ? ' AND `active` = 1' : '')
+			);
+			Cache::store($cache_id, $result);
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	/**
@@ -339,7 +351,7 @@ class AddressCore extends ObjectModel
 	* @param int $id_address
 	* @return Address address
 	*/
-	public static function initialize($id_address = null)
+	public static function initialize($id_address = null, $with_geoloc = false)
 	{
 		// if an id_address has been specified retrieve the address
 		if ($id_address)
@@ -347,7 +359,14 @@ class AddressCore extends ObjectModel
 			$address = new Address((int)$id_address);
 
 			if (!Validate::isLoadedObject($address))
-				throw new PrestaShopException('Invalid address');
+				throw new PrestaShopException('Invalid address #'.(int)$id_address);
+		}
+		elseif ($with_geoloc && isset($context->customer->geoloc_id_country))
+		{
+			$address = new Address();
+			$address->id_country = (int)$context->customer->geoloc_id_country;
+			$address->id_state = (int)$context->customer->id_state;
+			$address->zipcode = $context->customer->postcode;
 		}
 		else
 		{
@@ -379,5 +398,25 @@ class AddressCore extends ObjectModel
 		$query->where('id_warehouse = 0');
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 	}
-}
 
+	public static function aliasExist($alias, $id_address, $id_customer)
+	{
+		$query = new DbQuery();
+		$query->select('count(*)');
+		$query->from('address');
+		$query->where('alias = \''.pSQL($alias).'\'');
+		$query->where('id_address != '.(int)$id_address);
+		$query->where('id_customer = '.(int)$id_customer);
+		$query->where('deleted = 0');
+
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+	}
+
+	public function getFieldsRequiredDB()
+	{
+		$this->cacheFieldsRequiredDatabase(false);
+		if (isset(self::$fieldsRequiredDatabase['Address']))
+			return self::$fieldsRequiredDatabase['Address'];
+		return array();
+	}
+}

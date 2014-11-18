@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -190,11 +190,11 @@ class ProductSupplierCore extends ObjectModel
 	 *
 	 * @param int $id_product
 	 * @param int $group_by_supplier
-	 * @return Collection
+	 * @return PrestaShopCollection Collection of ProductSupplier
 	 */
 	public static function getSupplierCollection($id_product, $group_by_supplier = true)
 	{
-		$suppliers = new Collection('ProductSupplier');
+		$suppliers = new PrestaShopCollection('ProductSupplier');
 		$suppliers->where('id_product', '=', (int)$id_product);
 
 		if ($group_by_supplier)

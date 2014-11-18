@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -61,19 +61,19 @@ class PrestaShopExceptionCore extends Exception
 			{
 				$relative_file = (isset($trace['file'])) ? ltrim(str_replace(array(_PS_ROOT_DIR_, '\\'), array('', '/'), $trace['file']), '/') : '';
 				$current_line = (isset($trace['line'])) ? $trace['line'] : '';
-
+				if (defined('_PS_ADMIN_DIR_'))
+					$relative_file = str_replace(basename(_PS_ADMIN_DIR_).DIRECTORY_SEPARATOR, 'admin'.DIRECTORY_SEPARATOR, $relative_file);
 				echo '<li>';
 				echo '<b>'.((isset($trace['class'])) ? $trace['class'] : '').((isset($trace['type'])) ? $trace['type'] : '').$trace['function'].'</b>';
-				echo ' - <a href="#" style="font-size: 12px; color: #000000" onclick="document.getElementById(\'psTrace_'.$id.'\').style.display = (document.getElementById(\'psTrace_'.$id.'\').style.display != \'block\') ? \'block\' : \'none\'; return false">[line '.$current_line.' - '.$relative_file.']</a>';
+				echo ' - <a style="font-size: 12px; color: #000000; cursor:pointer; color: blue;" onclick="document.getElementById(\'psTrace_'.$id.'\').style.display = (document.getElementById(\'psTrace_'.$id.'\').style.display != \'block\') ? \'block\' : \'none\'; return false">[line '.$current_line.' - '.$relative_file.']</a>';
 
-				if (count($trace['args']))
-					echo ' - <a href="#" onclick="document.getElementById(\'psArgs_'.$id.'\').style.display = (document.getElementById(\'psArgs_'.$id.'\').style.display != \'block\') ? \'block\' : \'none\'; return false">['.count($trace['args']).' Arguments]</a>';
-				else
-					echo ' - <span style="font-size: 12px;">[0 Argument]</a>';
+				if (isset($trace['args']) && count($trace['args']))
+					echo ' - <a style="font-size: 12px; color: #000000; cursor:pointer; color: blue;" onclick="document.getElementById(\'psArgs_'.$id.'\').style.display = (document.getElementById(\'psArgs_'.$id.'\').style.display != \'block\') ? \'block\' : \'none\'; return false">['.count($trace['args']).' Arguments]</a>';
 
 				if ($relative_file)
 					$this->displayFileDebug($trace['file'], $trace['line'], $id);
-				$this->displayArgsDebug($trace['args'], $id);
+				if (isset($trace['args']) && count($trace['args']))
+					$this->displayArgsDebug($trace['args'], $id);
 				echo '</li>';
 			}
 			echo '</ul>';
@@ -108,14 +108,16 @@ class PrestaShopExceptionCore extends Exception
 			$offset = 0;
 		}
 		$lines = array_slice($lines, $offset, $total);
-
+		++$offset;
+		
 		echo '<div class="psTrace" id="psTrace_'.$id.'" '.((is_null($id) ? 'style="display: block"' : '')).'><pre>';
 		foreach ($lines as $k => $l)
 		{
-			if ($offset + $k == $line - 1)
-				echo '<span class="selected">'.($offset + $k).'. '.htmlspecialchars($l).'</span>';
+			$string = ($offset + $k).'. '.htmlspecialchars($l);
+			if ($offset + $k == $line)
+				echo '<span class="selected">'.$string.'</span>';
 			else
-				echo ($offset + $k).'. '.htmlspecialchars($l);
+				echo $string;
 		}
 		echo '</pre></div>';
 	}
@@ -131,8 +133,8 @@ class PrestaShopExceptionCore extends Exception
 		echo '<div class="psArgs" id="psArgs_'.$id.'"><pre>';
 		foreach ($args as $arg => $value)
 		{
-			echo '<b>Argument ['.$arg."]</b>\n";
-			print_r($value);
+			echo '<b>Argument ['.Tools::safeOutput($arg)."]</b>\n";
+			echo Tools::safeOutput(print_r($value, true));
 			echo "\n";
 		}
 		echo '</pre>';

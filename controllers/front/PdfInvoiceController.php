@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,13 +19,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class PdfInvoiceControllerCore extends FrontController
 {
+	public $php_self = 'pdf-invoice';
 	protected $display_header = false;
 	protected $display_footer = false;
 
@@ -59,27 +60,12 @@ class PdfInvoiceControllerCore extends FrontController
 	}
 
 	public function display()
-	{	
+	{
 		$order_invoice_list = $this->order->getInvoicesCollection();
 		Hook::exec('actionPDFInvoiceRender', array('order_invoice_list' => $order_invoice_list));
 
-		$pdf = new PDF($order_invoice_list, PDF::TEMPLATE_INVOICE, $this->context->smarty, $this->context->language->id);
+		$pdf = new PDF($order_invoice_list, PDF::TEMPLATE_INVOICE, $this->context->smarty);
 		$pdf->render();
 	}
 
-
-	/**
-	 * Returns the invoice template associated to the country iso_code
-	 * @param string $iso_user
-	 */
-	public function getTemplate($iso_country)
-	{
-		$template = _PS_THEME_PDF_DIR_.'/invoice.tpl';
-
-		$iso_template = _PS_THEME_PDF_DIR_.'/invoice.'.$iso_country.'.tpl';
-		if (file_exists($iso_template))
-			$template = $iso_template;
-
-		return $template;
-	}
 }

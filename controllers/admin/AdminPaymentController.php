@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -30,6 +30,7 @@ class AdminPaymentControllerCore extends AdminController
 
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		parent::__construct();
 
 		$shop_id = Context::getContext()->shop->id;
@@ -83,8 +84,21 @@ class AdminPaymentControllerCore extends AdminController
 			}
 	}
 
+	public function initToolbarTitle()
+	{
+		$this->toolbar_title = array_unique($this->breadcrumbs);
+	}
+
+	public function initPageHeaderToolbar()
+	{
+		parent::initPageHeaderToolbar();
+		$this->page_header_toolbar_btn = array();
+	}
+
 	public function postProcess()
 	{
+		if (Tools::getValue('action') == 'GetModuleQuickView' && Tools::getValue('ajax') == '1')
+			$this->ajaxProcessGetModuleQuickView();
 		if ($this->action)
 			$this->saveRestrictions($this->action);
 	}
@@ -95,9 +109,9 @@ class AdminPaymentControllerCore extends AdminController
 		{
 			if (Tools::isSubmit('submitModulecountry'))
 				$this->action = 'country';
-			else if (Tools::isSubmit('submitModulecurrency'))
+			elseif (Tools::isSubmit('submitModulecurrency'))
 				$this->action = 'currency';
-			else if (Tools::isSubmit('submitModulegroup'))
+			elseif (Tools::isSubmit('submitModulegroup'))
 				$this->action = 'group';
 		}
 		else
@@ -141,9 +155,15 @@ class AdminPaymentControllerCore extends AdminController
 		return parent::initContent();
 	}
 
+	public function setMedia()
+	{
+		parent::setMedia();
+		$this->addJqueryPlugin('fancybox');
+	}
+
 	public function renderView()
 	{
-		$this->toolbar_title = $this->l('Payment: ');
+		$this->toolbar_title = $this->l('Payment');
 		unset($this->toolbar_btn['back']);
 		
 		$shop_context = (!Shop::isFeatureActive() || Shop::getContext() == Shop::CONTEXT_SHOP);
@@ -152,7 +172,7 @@ class AdminPaymentControllerCore extends AdminController
 			$this->tpl_view_vars = array('shop_context' => $shop_context);
 			return parent::renderView();
 		}
-	
+
 		// link to modules page
 		if (isset($this->payment_modules[0]))
 			$token_modules = Tools::getAdminToken('AdminModules'.(int)Tab::getIdFromClassName('AdminModules').(int)$this->context->employee->id);
@@ -171,21 +191,21 @@ class AdminPaymentControllerCore extends AdminController
 						  'desc' => $this->l('Please mark each checkbox for the currency, or currencies, in which you want the payment module(s) to be available.'),
 						  'name_id' => 'currency',
 						  'identifier' => 'id_currency',
-						  'icon' => 'dollar',
+						  'icon' => 'icon-money',
 					),
 					array('items' => Group::getGroups($this->context->language->id),
 						  'title' => $this->l('Group restrictions'),
 						  'desc' => $this->l('Please mark each checkbox for the customer group(s), in which you want the payment module(s) to be available.'),
 						  'name_id' => 'group',
 						  'identifier' => 'id_group',
-						  'icon' => 'group',
+						  'icon' => 'icon-group',
 					),
 					array('items' =>Country::getCountries($this->context->language->id),
 						  'title' => $this->l('Country restrictions'),
 						  'desc' => $this->l('Please mark each checkbox for the country, or countries, in which you want the payment module(s) to be available.'),
 						  'name_id' => 'country',
 						  'identifier' => 'id_country',
-						  'icon' => 'world',
+						  'icon' => 'icon-globe',
 					)
 				);
 
@@ -213,6 +233,7 @@ class AdminPaymentControllerCore extends AdminController
 					if ($name_id == 'country'
 						&& isset($module->limited_countries)
 						&& !empty($module->limited_countries)
+						&& is_array($module->limited_countries)
 						&& !(in_array(strtoupper($item['iso_code']), array_map('strtoupper', $module->limited_countries))))
 						$list['items'][$key_item]['check_list'][$key_module] = null;
 				}
@@ -232,6 +253,42 @@ class AdminPaymentControllerCore extends AdminController
 		);
 
 		return parent::renderView();
+	}
+
+	public function renderModulesList()
+	{
+		if ($this->getModulesList($this->filter_modules_list))
+		{
+			$active_list = array();
+			foreach ($this->modules_list as $key => $module)
+			{
+				if (in_array($module->name, $this->list_partners_modules))
+					$this->modules_list[$key]->type = 'addonsPartner';
+				if (isset($module->description_full) && trim($module->description_full) != '')
+					$module->show_quick_view = true;
+				
+				if ($module->active)
+					$active_list[] = $module; 
+				else
+					$unactive_list[] = $module; 
+			}
+
+			$helper = new Helper();
+			$fetch = '';
+
+			if (isset($active_list))
+			{
+				$this->context->smarty->assign('panel_title', $this->l('Active payment'));
+				$fetch = $helper->renderModulesList($active_list);
+			}
+
+			$this->context->smarty->assign(array(
+				'panel_title' => $this->l('Recommended payment gateways'),
+				'view_all' => true
+			));
+			$fetch .= $helper->renderModulesList($unactive_list);
+			return $fetch;
+		}
 	}
 }
 

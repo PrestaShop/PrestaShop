@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -27,6 +27,9 @@
 ob_start();
 
 require_once(dirname(__FILE__).'/../config/config.inc.php');
+
+// Cart is needed for some requests
+Context::getContext()->cart = new Cart();
 
 //set http auth headers for apache+php-cgi work around
 if (isset($_SERVER['HTTP_AUTHORIZATION']) && preg_match('/Basic\s+(.*)$/i', $_SERVER['HTTP_AUTHORIZATION'], $matches))
@@ -56,25 +59,19 @@ else
 	die;
 }
 
-if (isset($_REQUEST['xml']))
-{
-	// if a XML is in POST
-	$input_xml = stripslashes($_REQUEST['xml']);
-}
-else
-{
-	// if no XML
-	$input_xml = NULL;
 
-	// if a XML is in PUT or in POST
-	if (($_SERVER['REQUEST_METHOD'] == 'PUT') || ($_SERVER['REQUEST_METHOD'] == 'POST'))
-	{
-		$putresource = fopen("php://input", "r");
-		while ($putData = fread($putresource, 1024))
-			$input_xml .= $putData;
-		fclose($putresource);
-	}
+$input_xml = NULL;
+
+// if a XML is in PUT or in POST
+if (($_SERVER['REQUEST_METHOD'] == 'PUT') || ($_SERVER['REQUEST_METHOD'] == 'POST'))
+{
+	$putresource = fopen("php://input", "r");
+	while ($putData = fread($putresource, 1024))
+		$input_xml .= $putData;
+	fclose($putresource);
 }
+if (isset($input_xml) && strncmp($input_xml, 'xml=', 4) == 0)
+	$input_xml = substr($input_xml, 4);
 
 $params = $_GET;
 unset($params['url']);
@@ -83,12 +80,13 @@ $class_name = WebserviceKey::getClassFromKey($key);
 $bad_class_name = false;
 if (!class_exists($class_name))
 {
+	$bad_class_name = $class_name;
 	$class_name = 'WebserviceRequest';
-	$bad_class_name = true;
 }
 // fetch the request
 WebserviceRequest::$ws_current_classname = $class_name;
 $request = call_user_func(array($class_name, 'getInstance'));
+
 $result = $request->fetch($key, $method, $_GET['url'], $params, $bad_class_name, $input_xml);
 
 // display result
@@ -100,10 +98,11 @@ if (isset($_SERVER['HTTP_LOCAL_CONTENT_SHA1']) && $_SERVER['HTTP_LOCAL_CONTENT_S
 	$result['status'] = $_SERVER['SERVER_PROTOCOL'].' 304 Not Modified';
 }
 
-foreach ($result['headers'] as $param_value)
-{
-	header($param_value);
-}
+if (is_array($result['headers']))
+	foreach ($result['headers'] as $param_value)
+	{
+		header($param_value);
+	}
 if (isset($result['type']))
 {
 //	header($result['content_sha1']);

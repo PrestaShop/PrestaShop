@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -60,7 +60,7 @@ class DbPDOCore extends Db
 	/**
 	 * @see DbCore::connect()
 	 */
-	public function	connect()
+	public function connect()
 	{
 		try {
 			$this->link = $this->_getPDO($this->server, $this->user, $this->password, $this->database, 5);
@@ -78,7 +78,7 @@ class DbPDOCore extends Db
 	/**
 	 * @see DbCore::disconnect()
 	 */
-	public function	disconnect()
+	public function disconnect()
 	{
 		unset($this->link);
 	}
@@ -98,7 +98,25 @@ class DbPDOCore extends Db
 	{
 		if (!$result)
 			$result = $this->result;
+
+		if (!is_object($result))
+			return false;
+
 		return $result->fetch(PDO::FETCH_ASSOC);
+	}
+
+	/**
+	 * @see DbCore::getAll()
+	*/
+	protected function getAll($result = false)
+	{
+		if (!$result)
+			$result = $this->result;
+
+		if (!is_object($result))
+			return false;
+
+		return $result->fetchAll(PDO::FETCH_ASSOC);
 	}
 
 	/**
@@ -112,7 +130,7 @@ class DbPDOCore extends Db
 	/**
 	 * @see DbCore::Insert_ID()
 	 */
-	public function	Insert_ID()
+	public function Insert_ID()
 	{
 		return $this->link->lastInsertId();
 	}
@@ -120,7 +138,7 @@ class DbPDOCore extends Db
 	/**
 	 * @see DbCore::Affected_Rows()
 	 */
-	public function	Affected_Rows()
+	public function Affected_Rows()
 	{
 		return $this->result->rowCount();
 	}
@@ -193,11 +211,13 @@ class DbPDOCore extends Db
 			return false;
 		}
 
-		$sql = '
-			CREATE TABLE `'.$prefix.'test` (
+		if ($engine === null)
+			$engine = 'MyISAM';
+
+		$result = $link->query('
+		CREATE TABLE `'.$prefix.'test` (
 			`test` tinyint(1) unsigned NOT NULL
-			) ENGINE=MyISAM';
-		$result = $link->query($sql);
+		) ENGINE='.$engine);
 		if (!$result)
 		{
 			$error = $link->errorInfo();
@@ -215,7 +235,8 @@ class DbPDOCore extends Db
 		try {
 			$link = DbPDO::_getPDO($server, $user, $pwd, $db, $timeout);
 		} catch (PDOException $e) {
-			return ($e->getCode() == 1049) ? 2 : 1;
+			// hhvm wrongly reports error status 42000 when the database does not exist - might change in the future
+			return ($e->getCode() == 1049 || (defined('HHVM_VERSION') && $e->getCode() == 42000)) ? 2 : 1;
 		}
 		unset($link);
 		return 0;
@@ -260,5 +281,18 @@ class DbPDOCore extends Db
 		unset($link);
 
 		return ($result === false) ? false : true;
+	}
+	
+	public static function checkAutoIncrement($server, $user, $pwd)
+	{
+		try {
+			$link = DbPDO::_getPDO($server, $user, $pwd, false, 5);
+		} catch (PDOException $e) {
+			return false;
+		}
+		$ret = (bool)(($result = $link->query('SELECT @@auto_increment_increment as aii')) && ($row = $result->fetch()) && $row['aii'] == 1);
+		$ret &= (bool)(($result = $link->query('SELECT @@auto_increment_offset as aio')) && ($row = $result->fetch()) && $row['aio'] == 1);
+		unset($link);
+		return $ret;
 	}
 }

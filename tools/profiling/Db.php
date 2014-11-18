@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -95,24 +95,24 @@ abstract class Db extends DbCore
 			// Execute query
 			$start = microtime(true);
 		}
-		
+
 		$result = parent::query($sql);
-		
+
 		if (!$explain)
 		{
 			$end = microtime(true);
-			
-			// Save details
-			$timeSpent = $end - $start;
-			$trace = debug_backtrace(false);
-			while (preg_match('@[/\\\\]classes[/\\\\]db[/\\\\]@i', $trace[0]['file']))
-				array_shift($trace);
+
+			$stack = debug_backtrace(false);
+			while (preg_match('@[/\\\\]classes[/\\\\]db[/\\\\]@i', $stack[0]['file']))
+				array_shift($stack);
+			$stack_light = array();
+			foreach ($stack as $call)
+				$stack_light[] = array('file' => isset($call['file']) ? $call['file'] : 'undefined', 'line' => isset($call['line']) ? $call['line'] : 'undefined');
 			
 			$this->queries[] = array(
 				'query' => $sql,
-				'time' => $timeSpent,
-				'file' => $trace[0]['file'],
-				'line' => $trace[0]['line'],
+				'time' => $end - $start,
+				'stack' => $stack_light
 			);
 		}
 		

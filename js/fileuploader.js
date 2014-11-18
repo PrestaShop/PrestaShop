@@ -276,7 +276,7 @@ qq.FileUploaderBasic = function(o){
             sizeError: "{file} is too large, maximum file size is {sizeLimit}.",
             minSizeError: "{file} is too small, minimum file size is {minSizeLimit}.",
             emptyError: "{file} is empty, please select files again without it.",
-            onLeave: "The files are being uploaded, if you leave now the upload will be cancelled."            
+            onLeave: "The files are being uploaded, if you leave now the upload will be canceled."            
         },
         showMessage: function(message){
            
@@ -871,7 +871,7 @@ qq.extend(qq.UploadHandlerForm.prototype, {
         var input = this._inputs[id];
         
         if (!input){
-            throw new Error('file with passed id was not added, or already uploaded or cancelled');
+            throw new Error('file with passed id was not added, or already uploaded or canceled');
         }                
 
         var fileName = this.getName(id);
@@ -1072,9 +1072,10 @@ qq.extend(qq.UploadHandlerXhr.prototype, {
         var queryString = qq.obj2url(params, this._options.action);
 
         xhr.open("POST", queryString, true);
+        xhr.setRequestHeader("Content-Type", "application/octet-stream");
+        xhr.setRequestHeader("processData", false);
         xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
         xhr.setRequestHeader("X-File-Name", encodeURIComponent(name));
-        xhr.setRequestHeader("Content-Type", "application/octet-stream");
         xhr.send(file);
     },
     _onComplete: function(id, xhr){
@@ -1095,7 +1096,6 @@ qq.extend(qq.UploadHandlerXhr.prototype, {
             try {
                 response = jQuery.parseJSON(xhr.responseText);
             } catch(err){
-            	console.log(err);
                 response = {};
             }
             

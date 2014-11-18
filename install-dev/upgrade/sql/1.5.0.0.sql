@@ -1,4 +1,5 @@
 SET NAMES 'utf8';
+
 CREATE TABLE IF NOT EXISTS `PREFIX_group_shop` (
   `id_group_shop` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(64) CHARACTER SET utf8 NOT NULL,

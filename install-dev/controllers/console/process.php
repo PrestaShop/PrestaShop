@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -28,13 +28,8 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 {
 	const SETTINGS_FILE = 'config/settings.inc.php';
 
-	/**
-	 * @var InstallModelInstall
-	 */
 	protected $model_install;
-	
 	public $process_steps = array();
-	
 	public $previous_button = false;
 
 	public function init()
@@ -63,6 +58,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 	public function initializeContext()
 	{
 		global $smarty;
+
 		// Clean all cache values
 		Cache::clean('*');
 
@@ -75,6 +71,9 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 		if (!isset(Context::getContext()->country) || !Validate::isLoadedObject(Context::getContext()->country))
 			if ($id_country = (int)Configuration::get('PS_COUNTRY_DEFAULT'))
 				Context::getContext()->country = new Country((int)$id_country);
+		if (!isset(Context::getContext()->currency) || !Validate::isLoadedObject(Context::getContext()->currency))
+			if ($id_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT'))
+				Context::getContext()->currency = new Currency((int)$id_currency);
 
 		Context::getContext()->cart = new Cart();
 		Context::getContext()->employee = new Employee(1);
@@ -87,31 +86,44 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 
 	public function process()
 	{
-		/*if (file_exists(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE))
-			@require_once _PS_ROOT_DIR_.'/'.self::SETTINGS_FILE;*/
+		$steps = explode(',', $this->datas->step);
+		if (in_array('all', $steps))
+			$steps = array('database','fixtures','theme','modules','addons_modules');
 
-		if (!$this->processGenerateSettingsFile())
-			$this->printErrors();
-		if (!$this->model_database->testDatabaseSettings($this->datas->database_server, $this->datas->database_name, $this->datas->database_login, $this->datas->database_password, $this->datas->database_prefix, $this->datas->database_engine, $this->datas->database_clear))
-			$this->printErrors();
-		if (!$this->processInstallDatabase())
-			$this->printErrors();
-		if (!$this->processInstallDefaultData())
-			$this->printErrors();
-		if (!$this->processPopulateDatabase())
-			$this->printErrors();
-		if (!$this->processConfigureShop())
-			$this->printErrors();
-		if (!$this->processInstallModules())
-			$this->printErrors();
-		if (!$this->processInstallAddonsModules())
-			$this->printErrors();
-		if (!$this->processInstallFixtures())
-			$this->printErrors();
-		if (!$this->processInstallTheme())
-			$this->printErrors();
-		if ($this->datas->send_email)
-			if (!$this->processSendEmail())
+		if (in_array('database', $steps))
+		{
+			if (!$this->processGenerateSettingsFile())
+				$this->printErrors();
+
+			if ($this->datas->database_create)
+				$this->model_database->createDatabase($this->datas->database_server, $this->datas->database_name, $this->datas->database_login, $this->datas->database_password);
+		
+			if (!$this->model_database->testDatabaseSettings($this->datas->database_server, $this->datas->database_name, $this->datas->database_login, $this->datas->database_password, $this->datas->database_prefix, $this->datas->database_engine, $this->datas->database_clear))
+				$this->printErrors();
+			if (!$this->processInstallDatabase())
+				$this->printErrors();
+			if (!$this->processInstallDefaultData())
+				$this->printErrors();
+			if (!$this->processPopulateDatabase())
+				$this->printErrors();
+			if (!$this->processConfigureShop())
+				$this->printErrors();
+		}
+
+		if (in_array('fixtures', $steps))
+			if (!$this->processInstallFixtures())
+				$this->printErrors();
+
+		if (in_array('modules', $steps))
+			if (!$this->processInstallModules())
+				$this->printErrors();
+
+		if (in_array('addons_modules', $steps))
+			if (!$this->processInstallAddonsModules())
+				$this->printErrors();
+
+		if (in_array('theme', $steps))
+			if (!$this->processInstallTheme())
 				$this->printErrors();
 
 		if ($this->datas->newsletter)
@@ -125,6 +137,10 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 				));
 			Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
 		}
+
+		if ($this->datas->send_email)
+	      if (!$this->processSendEmail())
+	        $this->printErrors();
 	}
 
 	/**
@@ -149,7 +165,6 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 	 */
 	public function processInstallDatabase()
 	{
-		$this->initializeContext();
 		return $this->model_install->installDatabase($this->datas->database_clear);
 	}
 
@@ -160,7 +175,17 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 	public function processInstallDefaultData()
 	{
 		$this->initializeContext();
-		return $this->model_install->installDefaultData($this->datas->shop_name, true);
+		if (!$res = $this->model_install->installDefaultData($this->datas->shop_name, true))
+			return false;
+
+		if ($this->datas->base_uri != '/')
+		{
+			$shop_url = new ShopUrl(1);
+			$shop_url->physical_uri = $this->datas->base_uri;
+			$shop_url->save();
+		}
+
+		return $res;
 	}
 
 	/**
@@ -174,6 +199,8 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 		$this->model_install->xml_loader_ids = $this->datas->xml_loader_ids;
 		$result = $this->model_install->populateDatabase();
 		$this->datas->xml_loader_ids = $this->model_install->xml_loader_ids;
+		Configuration::updateValue('PS_INSTALL_XML_LOADERS_ID', Tools::jsonEncode($this->datas->xml_loader_ids));
+
 		return $result;
 	}
 
@@ -191,16 +218,12 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 			'shop_country' =>			$this->datas->shop_country,
 			'shop_timezone' =>			$this->datas->timezone,
 			'use_smtp' =>				false,
-			'smtp_server' =>			null,
-			'smtp_login' =>				null,
-			'smtp_password' =>			null,
-			'smtp_encryption' =>		null,
-			'smtp_port' =>				null,
 			'admin_firstname' =>		$this->datas->admin_firstname,
 			'admin_lastname' =>			$this->datas->admin_lastname,
 			'admin_password' =>			$this->datas->admin_password,
 			'admin_email' =>			$this->datas->admin_email,
 			'configuration_agrement' =>	true,
+			'send_informations' => true,
 		));
 		
 	}
@@ -224,6 +247,9 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 	{
 		$this->initializeContext();
 
+		if ((!$this->datas->xml_loader_ids || !is_array($this->datas->xml_loader_ids)) && ($xml_ids = Tools::jsonDecode(Configuration::get('PS_INSTALL_XML_LOADERS_ID'), true)))
+			$this->datas->xml_loader_ids = $xml_ids;
+
 		$this->model_install->xml_loader_ids = $this->datas->xml_loader_ids;
 		$result = $this->model_install->installFixtures(null, array('shop_activity' => $this->datas->shop_activity, 'shop_country' => $this->datas->shop_country));
 		$this->datas->xml_loader_ids = $this->model_install->xml_loader_ids;
@@ -242,45 +268,6 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 	}
 
 	/**
-	 * PROCESS : sendEmail
-	 * Send information e-mail
-	 */
-	public function processSendEmail()
-	{
-		require_once _PS_INSTALL_MODELS_PATH_.'mail.php';
-		$mail = new InstallModelMail(
-			$this->datas->use_smtp,
-			$this->datas->smtp_server,
-			$this->datas->smtp_login,
-			$this->datas->smtp_password,
-			$this->datas->smtp_port,
-			$this->datas->smtp_encryption,
-			$this->datas->admin_email
-		);
-
-		if (file_exists(_PS_INSTALL_LANGS_PATH_.$this->language->getLanguageIso().'/mail_identifiers.txt'))
-			$content = file_get_contents(_PS_INSTALL_LANGS_PATH_.$this->language->getLanguageIso().'/mail_identifiers.txt');
-		else
-			$content = file_get_contents(_PS_INSTALL_LANGS_PATH_.InstallLanguages::DEFAULT_ISO.'/mail_identifiers.txt');
-
-		$vars = array(
-			'{firstname}' => $this->datas->admin_firstname,
-			'{lastname}' => $this->datas->admin_lastname,
-			'{shop_name}' => $this->datas->shop_name,
-			'{passwd}' => $this->datas->admin_password,
-			'{email}' => $this->datas->admin_email,
-			'{shop_url}' => Tools::getHttpHost(true).__PS_BASE_URI__,
-		);
-		$content = str_replace(array_keys($vars), array_values($vars), $content);
-
-		$mail->send(
-			$this->l('%s - Login information', $this->datas->shop_name),
-			$content
-		);
-
-		return true;
-	}
-		/**
 	 * PROCESS : installModulesAddons
 	 * Install modules from addons
 	 */
@@ -288,4 +275,44 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 	{
 		return $this->model_install->installModulesAddons();
 	}
+  
+  /**
+  * PROCESS : sendEmail
+  * Send information e-mail
+  */
+  public function processSendEmail()
+  {
+    require_once _PS_INSTALL_MODELS_PATH_.'mail.php';
+    $mail = new InstallModelMail(
+      false,
+      $this->datas->smtp_server,
+      $this->datas->smtp_login,
+      $this->datas->smtp_password,
+      $this->datas->smtp_port,
+      $this->datas->smtp_encryption,
+      $this->datas->admin_email
+    );
+
+    if (file_exists(_PS_INSTALL_LANGS_PATH_.$this->language->getLanguageIso().'/mail_identifiers.txt'))
+      $content = file_get_contents(_PS_INSTALL_LANGS_PATH_.$this->language->getLanguageIso().'/mail_identifiers.txt');
+    else
+      $content = file_get_contents(_PS_INSTALL_LANGS_PATH_.InstallLanguages::DEFAULT_ISO.'/mail_identifiers.txt');
+
+    $vars = array(
+      '{firstname}' => $this->datas->admin_firstname,
+      '{lastname}' => $this->datas->admin_lastname,
+      '{shop_name}' => $this->datas->shop_name,
+      '{passwd}' => $this->datas->admin_password,
+      '{email}' => $this->datas->admin_email,
+      '{shop_url}' => Tools::getHttpHost(true).__PS_BASE_URI__,
+    );
+    $content = str_replace(array_keys($vars), array_values($vars), $content);
+
+    $mail->send(
+      $this->l('%s Login information', $this->datas->shop_name),
+      $content
+    );
+
+    return true;
+  }
 }

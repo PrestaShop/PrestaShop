@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -32,82 +32,52 @@
 	{hook h=$hookName}
 {/if}
 
-<form method="post" action="{$currentIndex}&{$identifier}&token={$token}&id_tax_rules_group={$id_tax_rules_group}&updatetax_rules_group#{$table}" class="form">
-	<input type="hidden" id="submitFilter{$table}" name="submitFilter{$table}" value="0"/>
-	<table class="table_grid">
-		<tr>
-			<td style="vertical-align: bottom;">
-				<span style="float: left;">
-					{if $page > 1}
-						<input type="image" src="../img/admin/list-prev2.gif" onclick="getE('submitFilter{$table}').value=1"/>&nbsp;
-						<input type="image" src="../img/admin/list-prev.gif" onclick="getE('submitFilter{$table}').value={$page - 1}"/>
-					{/if}
-					{l s='Page'} <b>{$page}</b> / {$total_pages}
-					{if $page < $total_pages}
-						<input type="image" src="../img/admin/list-next.gif" onclick="getE('submitFilter{$table}').value={$page + 1};"/>&nbsp;
-						<input type="image" src="../img/admin/list-next2.gif" onclick="getE('submitFilter{$table}').value={$total_pages}"/>
-					{/if}
-					| {l s='Display'}
-					<select name="pagination" onchange="submit()">
-						{* Choose number of results per page *}
-						{foreach $pagination AS $value}
-							<option value="{$value|intval}"{if $selected_pagination == $value} selected="selected" {elseif $selected_pagination == NULL && $value == $pagination[1]} selected="selected2"{/if}>{$value|intval}</option>
+<form method="post" action="{$currentIndex|escape:'html':'UTF-8'}&amp;{$identifier}&amp;token={$token|escape:'html':'UTF-8'}&amp;id_tax_rules_group={$id_tax_rules_group}&amp;updatetax_rules_group#{$table}" class="form">
+	<div class="panel">
+		<input type="hidden" id="submitFilter{$list_id}" name="submitFilter{$list_id}" value="0"/>
+		<div class="table-responsive clearfix">
+			<table{if $table_id} id="table-{$table_id}"{/if} class="table{if $table_dnd} tableDnD{/if} {$list_id}">
+				{if $bulk_actions && $has_bulk_actions}
+				<col style="width: 10px;" />
+				{/if}
+				{foreach $fields_display AS $key => $params}
+					<col{if isset($params.width) && $params.width != 'auto'} width="{$params.width}px"{/if}/>
+				{/foreach}
+				{if $shop_link_type}
+					<col style="width: 80px;"/>
+				{/if}
+				{if $has_actions}
+					<col style="width: 52px;" />
+				{/if}
+				<thead>
+					<tr class="nodrag nodrop">
+						{if $bulk_actions && $has_bulk_actions}
+							<th class="center"></th>
+						{/if}
+						{foreach $fields_display AS $key => $params}
+							<th{if isset($params.align)} align="{$params.align}"{/if}{if isset($params.class)} class="{$params.class}"{/if}>
+								{if isset($params.hint)}<span class="hint" name="help_box">{$params.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
+								<span class="title_box">
+									{$params.title}
+								</span>
+							</th>
 						{/foreach}
-					</select>
-					/ {$list_total} {l s='result(s)'}
-				</span>
-				<span style="float: right;">
-					<input type="submit" name="submitReset{$table}" value="{l s='Reset'}" class="button" />
-				</span>
-				<span class="clear"></span>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<table
-				{if $table_id} id={$table_id}{/if}
-				class="table {if $table_dnd}tableDnD{/if} {$table}"
-				cellpadding="0" cellspacing="0"
-				style="width: 100%; margin-bottom:10px;"
-				>
-					<col width="10px" />
-					{foreach $fields_display AS $key => $params}
-						<col {if isset($params.width) && $params.width != 'auto'}width="{$params.width}px"{/if}/>
-					{/foreach}
-					{if $shop_link_type}
-						<col width="80px" />
-					{/if}
-					{if $has_actions}
-						<col width="52px" />
-					{/if}
-					<thead>
-						<tr class="nodrag nodrop">
-							<th class="center">
-								{if $has_bulk_actions}
-									<input type="checkbox" name="checkme" class="noborder" onclick="checkDelBoxes(this.form, '{$table}Box[]', this.checked)" />
+						{if $shop_link_type}
+							<th>
+								{if $shop_link_type == 'shop'}
+									{l s='Shop'}
+								{else}
+									{l s='Shop group'}
 								{/if}
 							</th>
-							{foreach $fields_display AS $key => $params}
-								<th {if isset($params.align)} class="{$params.align}"{/if}>
-									{if isset($params.hint)}<span class="hint" name="help_box">{$params.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
-									<span class="title_box">
-										{$params.title}
-									</span>
-										<br />&nbsp;
-								</th>
-							{/foreach}
-							{if $shop_link_type}
-								<th>
-									{if $shop_link_type == 'shop'}
-										{l s='Shop'}
-									{else}
-										{l s='Group shop'}
-									{/if}
-									<br />&nbsp;
-								</th>
-							{/if}
-							{if $has_actions}
-								<th class="center">{l s='Actions'}<br />&nbsp;</th>
-							{/if}
-						</tr>
-						</thead>
+						{/if}
+						{if $has_actions && $filters_has_value}
+							<th class="actions text-right"><button type="submit" name="submitReset{$list_id}" class="btn btn-warning">
+									<i class="icon-eraser"></i> {l s='Reset'}
+								</button>
+							</th>
+						{else}
+							<th class="actions text-right"></th>
+						{/if}
+					</tr>
+				</thead>

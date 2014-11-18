@@ -7,11 +7,11 @@
 		<language iso_code="hu" />
 	</languages>
 	<taxes>
-		<tax id="1" name="ÁFA HU 25%" rate="25" />
+		<tax id="1" name="ÁFA HU 27%" rate="27" />
 		<tax id="2" name="ÁFA HU 18%" rate="18" />
 		<tax id="3" name="ÁFA HU 5%" rate="5" />
 		
-		<taxRulesGroup name="HU Standard Rate (25%)">
+		<taxRulesGroup name="HU Standard Rate (27%)">
 			<taxRule iso_code_country="be" id_tax="1" />
 			<taxRule iso_code_country="bg" id_tax="1" />
 			<taxRule iso_code_country="cz" id_tax="1" />
@@ -101,7 +101,7 @@
 			<taxRule iso_code_country="uk" id_tax="3" />
 		</taxRulesGroup>
 
-		<taxRulesGroup name="HU Foodstuff Rate (25%)">
+		<taxRulesGroup name="HU Foodstuff Rate (27%)">
 			<taxRule iso_code_country="be" id_tax="1" />
 			<taxRule iso_code_country="bg" id_tax="1" />
 			<taxRule iso_code_country="cz" id_tax="1" />

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -29,7 +29,7 @@ class OrderHistoryCore extends ObjectModel
 	/** @var integer Order id */
 	public $id_order;
 
-	/** @var integer Order state id */
+	/** @var integer Order status id */
 	public $id_order_state;
 
 	/** @var integer Employee id for this history entry */
@@ -97,13 +97,10 @@ class OrderHistoryCore extends ObjectModel
 
 		// executes hook
 		if (in_array($new_os->id, array(Configuration::get('PS_OS_PAYMENT'), Configuration::get('PS_OS_WS_PAYMENT'))))
-			Hook::exec('actionPaymentConfirmation', array('id_order' => (int)$order->id));
+			Hook::exec('actionPaymentConfirmation', array('id_order' => (int)$order->id), null, false, true, false, $order->id_shop);
 
 		// executes hook
-		Hook::exec('actionOrderStatusUpdate', array(
-			'newOrderStatus' => $new_os,
-			'id_order' => (int)$order->id
-		));
+		Hook::exec('actionOrderStatusUpdate', array('newOrderStatus' => $new_os, 'id_order' => (int)$order->id), null, false, true, false, $order->id_shop);
 
 		if (Validate::isLoadedObject($order) && ($new_os instanceof OrderState))
 		{
@@ -126,37 +123,37 @@ class OrderHistoryCore extends ObjectModel
 							.'&secure_key='.$order->secure_key;
 						$assign[$key]['link'] = $dl_link;
 						if (isset($virtual_product['download_deadline']) && $virtual_product['download_deadline'] != '0000-00-00 00:00:00')
-							$assign[$key]['deadline'] = Tools::displayDate($virtual_product['download_deadline ']);
+							$assign[$key]['deadline'] = Tools::displayDate($virtual_product['download_deadline']);
 						if ($product_download->nb_downloadable != 0)
 							$assign[$key]['downloadable'] = (int)$product_download->nb_downloadable;
 					}
 				}
-								
+
 				$customer = new Customer((int)$order->id_customer);
 				
 				$links = '<ul>';
-				foreach($assign as $product)
+				foreach ($assign as $product)
 				{
 					$links .= '<li>';
 					$links .= '<a href="'.$product['link'].'">'.Tools::htmlentitiesUTF8($product['name']).'</a>';
 					if (isset($product['deadline']))
-						$links .= '&nbsp;'.Tools::htmlentitiesUTF8(Tools::displayError('expires on')).'&nbsp;'.$product['deadline'];
+						$links .= '&nbsp;'.Tools::htmlentitiesUTF8(Tools::displayError('expires on', false)).'&nbsp;'.$product['deadline'];
 					if (isset($product['downloadable']))
-						$links .= '&nbsp;'.Tools::htmlentitiesUTF8(sprintf(Tools::displayError('downloadable %d time(s)'), (int)$product['downloadable']));	
+						$links .= '&nbsp;'.Tools::htmlentitiesUTF8(sprintf(Tools::displayError('downloadable %d time(s)', false), (int)$product['downloadable']));	
 					$links .= '</li>';
 				}
 				$links .= '</ul>';
 				$data = array(
-						'{lastname}' => $customer->lastname,
-						'{firstname}' => $customer->firstname,
-						'{id_order}' => (int)$order->id,
-						'{order_name}' => $order->getUniqReference(),
-						'{nbProducts}' => count($virtual_products),
-						'{virtualProducts}' => $links
-					);
-				// If there's at least one downloadable file
+					'{lastname}' => $customer->lastname,
+					'{firstname}' => $customer->firstname,
+					'{id_order}' => (int)$order->id,
+					'{order_name}' => $order->getUniqReference(),
+					'{nbProducts}' => count($virtual_products),
+					'{virtualProducts}' => $links
+				);
+				// If there is at least one downloadable file
 				if (!empty($assign))
-					Mail::Send((int)$order->id_lang, 'download_product', Mail::l('Virtual product to download', $order->id_lang), $data, $customer->email, $customer->firstname.' '.$customer->lastname,
+					Mail::Send((int)$order->id_lang, 'download_product', Mail::l('The virtual product that you bought is available for download', $order->id_lang), $data, $customer->email, $customer->firstname.' '.$customer->lastname,
 						null, null, null, null, _PS_MAIL_DIR_, false, (int)$order->id_shop);
 			}
 
@@ -278,7 +275,7 @@ class OrderHistoryCore extends ObjectModel
 		
 		// changes invoice number of order ?
 		if (!Validate::isLoadedObject($new_os) || !Validate::isLoadedObject($order))
-			die(Tools::displayError('Invalid new order state'));
+			die(Tools::displayError('Invalid new order status'));
 
 		// the order is valid if and only if the invoice is available and the order is not cancelled
 		$order->current_state = $this->id_order_state;
@@ -287,6 +284,8 @@ class OrderHistoryCore extends ObjectModel
 
 		if ($new_os->invoice && !$order->invoice_number)
 			$order->setInvoice($use_existing_payment);
+		elseif ($new_os->delivery && !$order->delivery_number)
+			$order->setDeliverySlip();
 
 		// set orders as paid
 		if ($new_os->paid == 1)
@@ -320,7 +319,7 @@ class OrderHistoryCore extends ObjectModel
 					$payment->conversion_rate = 1;
 					$payment->save();
 					Db::getInstance()->execute('
-					INSERT INTO `'._DB_PREFIX_.'order_invoice_payment`
+					INSERT INTO `'._DB_PREFIX_.'order_invoice_payment` (`id_order_invoice`, `id_order_payment`, `id_order`)
 					VALUES('.(int)$invoice->id.', '.(int)$payment->id.', '.(int)$order->id.')');
 				}
 			}
@@ -331,16 +330,13 @@ class OrderHistoryCore extends ObjectModel
 			$order->setDelivery();
 
 		// executes hook
-		Hook::exec('actionOrderStatusPostUpdate', array(
-			'newOrderStatus' => $new_os,
-			'id_order' => (int)$order->id,
-		));
+		Hook::exec('actionOrderStatusPostUpdate', array('newOrderStatus' => $new_os,'id_order' => (int)$order->id,), null, false, true, false, $order->id_shop);
 
 		ShopUrl::resetMainDomainCache();
 	}
 
 	/**
-	 * Returns the last order state
+	 * Returns the last order status
 	 * @param int $id_order
 	 * @return OrderState|bool
 	 * @deprecated 1.5.0.4
@@ -412,7 +408,7 @@ class OrderHistoryCore extends ObjectModel
 
 			if (Validate::isLoadedObject($order))
 			{
-				// Join PDF invoice if order state is "payment accepted"
+				// Join PDF invoice if order status is "payment accepted"
 				if ((int)$result['id_order_state'] === 2 && (int)Configuration::get('PS_INVOICE') && $order->invoice_number)
 				{
 					$context = Context::getContext();
@@ -444,7 +440,7 @@ class OrderHistoryCore extends ObjectModel
 		$order->current_state = $this->id_order_state;
 		$order->update();
 
-		Hook::exec('actionOrderHistoryAddAfter', array('order_history' => $this));
+		Hook::exec('actionOrderHistoryAddAfter', array('order_history' => $this), null, false, true, false, $order->id_shop);
 
 		return true;
 	}
@@ -470,6 +466,8 @@ class OrderHistoryCore extends ObjectModel
 	public function addWs()
 	{
 	    $sendemail = (bool)Tools::getValue('sendemail', false);
+	    $this->changeIdOrderState($this->id_order_state, $this->id_order);
+	    
 	    if ($sendemail)
 	    {
 	        //Mail::Send requires link object on context and is not set when getting here

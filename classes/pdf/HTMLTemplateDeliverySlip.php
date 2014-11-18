@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -39,7 +39,8 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 
 		// header informations
 		$this->date = Tools::displayDate($this->order->invoice_date);
-		$this->title = HTMLTemplateDeliverySlip::l('Delivery').' #'.Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id).sprintf('%06d', $this->order_invoice->delivery_number);
+		$prefix = Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id);
+		$this->title = sprintf(HTMLTemplateDeliverySlip::l('Delivery #%1$s%2$06d'), $prefix, $this->order_invoice->delivery_number);
 
 		// footer informations
 		$this->shop = new Shop((int)$this->order->id_shop);
@@ -90,7 +91,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 	 */
 	public function getFilename()
 	{
-		return Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order->invoice_number).'.pdf';
+		return Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order->delivery_number).'.pdf';
 	}
 }
 

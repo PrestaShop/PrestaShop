@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,65 +18,66 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {if isset($json)}
+{strip}
 {
-	"status" : "{$status}",
-	"confirmations" : {$confirmations},
-	"informations" : {$informations},
-	"error" : {$errors},
-	"warnings" : {$warnings},
-	"content" : {$page}
+{if isset($status) && trim($status) != ''}{assign 'hasresult' 'ok'}"status" : "{$status}"{/if}
+{if isset($confirmations) && $confirmations|count > 0}{if $hasresult == 'ok'},{/if}{assign 'hasresult' 'ok'}"confirmations" : {$confirmations}{/if}
+{if isset($informations) && $informations|count > 0}{if $hasresult == 'ok'},{/if}{assign 'hasresult' 'ok'}"informations" : {$informations}{/if}
+{if isset($errors) && $errors|count > 0}{if $hasresult == 'ok'},{/if}{assign 'hasresult' 'ok'}"error" : {$errors}{/if}
+{if isset($warnings) && $warnings|count > 0}{if $hasresult == 'ok'},{/if}{assign 'hasresult' 'ok'}"warnings" : {$warnings}{/if}
+{if $hasresult == 'ok'},{/if}{assign 'hasresult' 'ok'}"content" : {$page}
 }
+{/strip}
 {else}
-
 	{if isset($conf)}
-		<div class="conf">
+		<div class="alert alert-success">
 			{$conf}
 		</div>
 	{/if}
 
 	{if count($errors)} {* @todo what is ??? AND $this->_includeContainer *}
-		<div class="error">
-			<span style="float:right"><a id="hideError" href=""><img alt="X" src="../img/admin/close.png" /></a></span>
+		<div class="alert alert-danger">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
 			{if count($errors) == 1}
 				{$errors[0]}
 			{else}
 				{l s='%d errors' sprintf=$errors|count}
 				<br/>
-				<ol>
+				<ul>
 					{foreach $errors AS $error}
 						<li>{$error}</li>
 					{/foreach}
-				</ol>
+				</ul>
 			{/if}
 		</div>
 	{/if}
 
 	{if isset($informations) && count($informations) && $informations}
-		<div class="hint clear" style="display:block;">
+		<div class="alert alert-info" style="display:block;">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
 			{foreach $informations as $info}
-				{$info}<br />
+				{$info}<br/>
 			{/foreach}
-		</div><br />
+		</div>
 	{/if}
 
 	{if isset($confirmations) && count($confirmations) && $confirmations}
-		<div class="conf" style="display:block;">
+		<div class="alert alert-success" style="display:block;">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
 			{foreach $confirmations as $confirm}
 				{$confirm}<br />
 			{/foreach}
-		</div><br />
+		</div>
 	{/if}
 
 	{if count($warnings)}
-		<div class="warn">
-			<span style="float:right">
-				<a id="hideWarn" href=""><img alt="X" src="../img/admin/close.png" /></a>
-			</span>
+		<div class="alert alert-warning">
+			<button type="button" class="close" data-dismiss="alert">&times;</button>
 			{if count($warnings) > 1}
 				{l s='There are %d warnings.' sprintf=count($warnings)}
 				<span style="margin-left:20px;" id="labelSeeMore">

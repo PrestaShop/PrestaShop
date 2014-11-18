@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -45,8 +45,9 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 		$this->smarty = $smarty;
 
 		// header informations
-		$this->date = Tools::displayDate($this->order_slip->date_add, (int)$this->order->id_lang);
-		$this->title = HTMLTemplateOrderSlip::l('Slip #').Configuration::get('PS_CREDIT_SLIP_PREFIX', Context::getContext()->language->id).sprintf('%06d', (int)$this->order_slip->id);
+		$this->date = Tools::displayDate($this->order_slip->date_add);
+		$prefix = Configuration::get('PS_CREDIT_SLIP_PREFIX', Context::getContext()->language->id);
+		$this->title = sprintf(HTMLTemplateOrderSlip::l('Credit Slip #%1$s%2$06d'), $prefix, (int)$this->order_slip->id);
 
 		// footer informations
 		$this->shop = new Shop((int)$this->order->id_shop);

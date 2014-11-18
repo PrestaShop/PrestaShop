@@ -4,8 +4,7 @@ ALTER TABLE  `PREFIX_store` CHANGE  `latitude`  `latitude` DECIMAL( 13, 8 ) NULL
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES('PS_CUSTOMER_CREATION_EMAIL', 1, NOW(), NOW());
 
-ALTER TABLE `PREFIX_webservice_account` CHANGE `class_name` `class_name` VARCHAR(64) NOT NULL DEFAULT 'WebserviceRequest',
-CHANGE `module_name` `module_name` VARCHAR(64) NULL DEFAULT NULL;
+ALTER TABLE `PREFIX_webservice_account` CHANGE `class_name` `class_name` VARCHAR(64) NOT NULL DEFAULT 'WebserviceRequest';
 
 /* PHP:add_module_to_hook(blockcart, actionCartListOverride); */;
 /* PHP:add_module_to_hook(blockmanufacturer, actionObjectManufacturerDeleteAfter); */;
@@ -34,6 +33,6 @@ ALTER TABLE `PREFIX_product_shop` DROP INDEX `date_add`, ADD INDEX `date_add` (`
 
 UPDATE `PREFIX_hook` SET `live_edit` = '1' WHERE `name` LIKE 'leftcolumn';
 
-UPDATE `PREFIX_configuration` SET `name` = '0' WHERE `name` LIKE 'PS_LEGACY_IMAGES' AND `value` LIKE '1';
+UPDATE `PREFIX_configuration` SET `value` = '0' WHERE `name` LIKE 'PS_LEGACY_IMAGES';
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES('PS_SMARTY_CONSOLE_KEY', 'SMARTY_DEBUG', NOW(), NOW());

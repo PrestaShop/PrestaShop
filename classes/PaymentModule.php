@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -30,6 +30,8 @@ abstract class PaymentModuleCore extends Module
 	public	$currentOrder;
 	public	$currencies = true;
 	public	$currencies_mode = 'checkbox';
+
+	const DEBUG_MODE = false;
 
 	public function install()
 	{
@@ -53,6 +55,15 @@ abstract class PaymentModuleCore extends Module
 		// Insert countries availability
 		$return = $this->addCheckboxCountryRestrictionsForModule();
 
+		if (!Configuration::get('CONF_'.strtoupper($this->name).'_FIXED'))
+			Configuration::updateValue('CONF_'.strtoupper($this->name).'_FIXED', '0.2');
+		if (!Configuration::get('CONF_'.strtoupper($this->name).'_VAR'))
+			Configuration::updateValue('CONF_'.strtoupper($this->name).'_VAR', '2');
+		if (!Configuration::get('CONF_'.strtoupper($this->name).'_FIXED_FOREIGN'))
+			Configuration::updateValue('CONF_'.strtoupper($this->name).'_FIXED_FOREIGN', '0.2');
+		if (!Configuration::get('CONF_'.strtoupper($this->name).'_VAR_FOREIGN'))
+			Configuration::updateValue('CONF_'.strtoupper($this->name).'_VAR_FOREIGN', '2');
+
 		return $return;
 	}
 
@@ -68,8 +79,9 @@ abstract class PaymentModuleCore extends Module
 
 	/**
 	 * Add checkbox currency restrictions for a new module
-	 * @param integer id_module
 	 * @param array $shops
+	 *
+	 * @return bool
 	 */
 	public function addCheckboxCurrencyRestrictionsForModule(array $shops = array())
 	{
@@ -88,8 +100,9 @@ abstract class PaymentModuleCore extends Module
 
 	/**
 	 * Add radio currency restrictions for a new module
-	 * @param integer id_module
 	 * @param array $shops
+	 *
+	 * @return bool
 	 */
 	public function addRadioCurrencyRestrictionsForModule(array $shops = array())
 	{
@@ -105,8 +118,9 @@ abstract class PaymentModuleCore extends Module
 
 	/**
 	 * Add checkbox country restrictions for a new module
-	 * @param integer id_module
 	 * @param array $shops
+	 *
+	 * @return bool
 	 */
 	public function addCheckboxCountryRestrictionsForModule(array $shops = array())
 	{
@@ -116,27 +130,42 @@ abstract class PaymentModuleCore extends Module
 			$country_ids[] = $country['id_country'];
 		return Country::addModuleRestrictions($shops, $countries, array(array('id_module' => (int)$this->id)));
 	}
-	
+
 	/**
-	* Validate an order in database
-	* Function called from a payment module
-	*
-	* @param integer $id_cart Value
-	* @param integer $id_order_state Value
-	* @param float $amount_paid Amount really paid by customer (in the default currency)
-	* @param string $payment_method Payment method (eg. 'Credit card')
-	* @param string $message Message to attach to order
-	*/
+	 * Validate an order in database
+	 * Function called from a payment module
+	 *
+	 * @param integer $id_cart
+	 * @param integer $id_order_state
+	 * @param float   $amount_paid    Amount really paid by customer (in the default currency)
+	 * @param string  $payment_method Payment method (eg. 'Credit card')
+	 * @param null    $message        Message to attach to order
+	 * @param array   $extra_vars
+	 * @param null    $currency_special
+	 * @param bool    $dont_touch_amount
+	 * @param bool    $secure_key
+	 * @param Shop    $shop
+	 *
+	 * @return bool
+	 * @throws PrestaShopException
+	 */
 	public function validateOrder($id_cart, $id_order_state, $amount_paid, $payment_method = 'Unknown',
 		$message = null, $extra_vars = array(), $currency_special = null, $dont_touch_amount = false,
 		$secure_key = false, Shop $shop = null)
 	{
+		if (self::DEBUG_MODE)
+			PrestaShopLogger::addLog('PaymentModule::validateOrder - Function called', 1, null, 'Cart', (int)$id_cart, true);
+
+		if (!isset($this->context))
+			$this->context = Context::getContext();
 		$this->context->cart = new Cart($id_cart);
 		$this->context->customer = new Customer($this->context->cart->id_customer);
+		// The tax cart is loaded before the customer so re-cache the tax calculation method
+		$this->context->cart->setTaxCalculationMethod();
+
 		$this->context->language = new Language($this->context->cart->id_lang);
 		$this->context->shop = ($shop ? $shop : new Shop($this->context->cart->id_shop));
 		ShopUrl::resetMainDomainCache();
-
 		$id_currency = $currency_special ? (int)$currency_special : (int)$this->context->cart->id_currency;
 		$this->context->currency = new Currency($id_currency, null, $this->context->shop->id);
 		if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_delivery')
@@ -144,15 +173,25 @@ abstract class PaymentModuleCore extends Module
 
 		$order_status = new OrderState((int)$id_order_state, (int)$this->context->language->id);
 		if (!Validate::isLoadedObject($order_status))
-			throw new PrestaShopException('Can\'t load Order state status');
+		{
+			PrestaShopLogger::addLog('PaymentModule::validateOrder - Order Status cannot be loaded', 3, null, 'Cart', (int)$id_cart, true);
+			throw new PrestaShopException('Can\'t load Order status');
+		}
 
 		if (!$this->active)
+		{
+			PrestaShopLogger::addLog('PaymentModule::validateOrder - Module is not active', 3, null, 'Cart', (int)$id_cart, true);
 			die(Tools::displayError());
+		}
+
 		// Does order already exists ?
 		if (Validate::isLoadedObject($this->context->cart) && $this->context->cart->OrderExists() == false)
 		{
 			if ($secure_key !== false && $secure_key != $this->context->cart->secure_key)
+			{
+				PrestaShopLogger::addLog('PaymentModule::validateOrder - Secure key does not match', 3, null, 'Cart', (int)$id_cart, true);
 				die(Tools::displayError());
+			}
 
 			// For each package, generate an order
 			$delivery_option_list = $this->context->cart->getDeliveryOptionList();
@@ -170,7 +209,11 @@ abstract class PaymentModuleCore extends Module
 
 			$order_list = array();
 			$order_detail_list = array();
+
+			do
 			$reference = Order::generateReference();
+			while (Order::getByReference($reference)->count());
+
 			$this->currentOrderReference = $reference;
 
 			$order_creation_failed = false;
@@ -184,21 +227,46 @@ abstract class PaymentModuleCore extends Module
 						$package_list[$id_address][$id_package]['id_warehouse'] = (int)$this->context->cart->getPackageIdWarehouse($package_list[$id_address][$id_package], (int)$id_carrier);
 						$package_list[$id_address][$id_package]['id_carrier'] = $id_carrier;
 					}
-			// Make sure CarRule caches are empty
+			// Make sure CartRule caches are empty
 			CartRule::cleanCache();
-			
+			$cart_rules = $this->context->cart->getCartRules();
+			foreach ($cart_rules as $cart_rule)
+			{
+				if (($rule = new CartRule((int)$cart_rule['obj']->id)) && Validate::isLoadedObject($rule))
+				{
+					if ($error = $rule->checkValidity($this->context, true, true))
+					{
+						$this->context->cart->removeCartRule((int)$rule->id);
+						if (isset($this->context->cookie) && isset($this->context->cookie->id_customer) && $this->context->cookie->id_customer && !empty($rule->code))
+						{
+							if (Configuration::get('PS_ORDER_PROCESS_TYPE') == 1)
+								Tools::redirect('index.php?controller=order-opc&submitAddDiscount=1&discount_name='.urlencode($rule->code));
+							Tools::redirect('index.php?controller=order&submitAddDiscount=1&discount_name='.urlencode($rule->code));
+						}
+						else
+						{
+							$rule_name = isset($rule->name[(int)$this->context->cart->id_lang]) ? $rule->name[(int)$this->context->cart->id_lang] : $rule->code;
+							$error = Tools::displayError(sprintf('CartRule ID %1s (%2s) used in this cart is not valid and has been withdrawn from cart', (int)$rule->id, $rule_name));
+							PrestaShopLogger::addLog($error, 3, '0000002', 'Cart', (int)$this->context->cart->id);
+						}
+					}
+				}
+			}
+
 			foreach ($package_list as $id_address => $packageByAddress)
 				foreach ($packageByAddress as $id_package => $package)
 				{
 					$order = new Order();
 					$order->product_list = $package['product_list'];
-					
+
 					if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_delivery')
 					{
 						$address = new Address($id_address);
 						$this->context->country = new Country($address->id_country, $this->context->cart->id_lang);
+						if (!$this->context->country->active)
+							throw new PrestaShopException('The delivery address country is not active.');
 					}
-					
+
 					$carrier = null;
 					if (!$this->context->cart->isVirtualCart() && isset($package['id_carrier']))
 					{
@@ -211,7 +279,7 @@ abstract class PaymentModuleCore extends Module
 						$order->id_carrier = 0;
 						$id_carrier = 0;
 					}
-					
+
 					$order->id_customer = (int)$this->context->cart->id_customer;
 					$order->id_address_invoice = (int)$this->context->cart->id_address_invoice;
 					$order->id_address_delivery = (int)$id_address;
@@ -233,7 +301,7 @@ abstract class PaymentModuleCore extends Module
 					$order->conversion_rate = $this->context->currency->conversion_rate;
 					$amount_paid = !$dont_touch_amount ? Tools::ps_round((float)$amount_paid, 2) : $amount_paid;
 					$order->total_paid_real = 0;
-					
+
 					$order->total_products = (float)$this->context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $order->product_list, $id_carrier);
 					$order->total_products_wt = (float)$this->context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $order->product_list, $id_carrier);
 
@@ -244,7 +312,7 @@ abstract class PaymentModuleCore extends Module
 					$order->total_shipping_tax_excl = (float)$this->context->cart->getPackageShippingCost((int)$id_carrier, false, null, $order->product_list);
 					$order->total_shipping_tax_incl = (float)$this->context->cart->getPackageShippingCost((int)$id_carrier, true, null, $order->product_list);
 					$order->total_shipping = $order->total_shipping_tax_incl;
-					
+
 					if (!is_null($carrier) && Validate::isLoadedObject($carrier))
 						$order->carrier_tax_rate = $carrier->getTaxesRate(new Address($this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 
@@ -252,32 +320,45 @@ abstract class PaymentModuleCore extends Module
 					$order->total_wrapping_tax_incl = (float)abs($this->context->cart->getOrderTotal(true, Cart::ONLY_WRAPPING, $order->product_list, $id_carrier));
 					$order->total_wrapping = $order->total_wrapping_tax_incl;
 
-					$order->total_paid_tax_excl = (float)Tools::ps_round((float)$this->context->cart->getOrderTotal(false, Cart::BOTH, $order->product_list, $id_carrier), 2);
-					$order->total_paid_tax_incl = (float)Tools::ps_round((float)$this->context->cart->getOrderTotal(true, Cart::BOTH, $order->product_list, $id_carrier), 2);
+					$order->total_paid_tax_excl = (float)Tools::ps_round((float)$this->context->cart->getOrderTotal(false, Cart::BOTH, $order->product_list, $id_carrier), _PS_PRICE_COMPUTE_PRECISION_);
+					$order->total_paid_tax_incl = (float)Tools::ps_round((float)$this->context->cart->getOrderTotal(true, Cart::BOTH, $order->product_list, $id_carrier), _PS_PRICE_COMPUTE_PRECISION_);
 					$order->total_paid = $order->total_paid_tax_incl;
+					$order->round_mode = Configuration::get('PS_PRICE_ROUND_MODE');
 
 					$order->invoice_date = '0000-00-00 00:00:00';
 					$order->delivery_date = '0000-00-00 00:00:00';
+
+					if (self::DEBUG_MODE)
+						PrestaShopLogger::addLog('PaymentModule::validateOrder - Order is about to be added', 1, null, 'Cart', (int)$id_cart, true);
 
 					// Creating order
 					$result = $order->add();
 
 					if (!$result)
+					{
+						PrestaShopLogger::addLog('PaymentModule::validateOrder - Order cannot be created', 3, null, 'Cart', (int)$id_cart, true);
 						throw new PrestaShopException('Can\'t save Order');
+					}
 
 					// Amount paid by customer is not the right one -> Status = payment error
 					// We don't use the following condition to avoid the float precision issues : http://www.php.net/manual/en/language.types.float.php
 					// if ($order->total_paid != $order->total_paid_real)
 					// We use number_format in order to compare two string
-					if ($order_status->logable && number_format($cart_total_paid, 2) != number_format($amount_paid, 2))
+					if ($order_status->logable && number_format($cart_total_paid, _PS_PRICE_COMPUTE_PRECISION_) != number_format($amount_paid, _PS_PRICE_COMPUTE_PRECISION_))
 						$id_order_state = Configuration::get('PS_OS_ERROR');
 
 					$order_list[] = $order;
+
+					if (self::DEBUG_MODE)
+						PrestaShopLogger::addLog('PaymentModule::validateOrder - OrderDetail is about to be added', 1, null, 'Cart', (int)$id_cart, true);
 
 					// Insert new Order detail list using cart for the current order
 					$order_detail = new OrderDetail(null, null, $this->context);
 					$order_detail->createList($order, $this->context->cart, $id_order_state, $order->product_list, 0, true, $package_list[$id_address][$id_package]['id_warehouse']);
 					$order_detail_list[] = $order_detail;
+
+					if (self::DEBUG_MODE)
+						PrestaShopLogger::addLog('PaymentModule::validateOrder - OrderCarrier is about to be added', 1, null, 'Cart', (int)$id_cart, true);
 
 					// Adding an entry in order_carrier table
 					if (!is_null($carrier))
@@ -291,10 +372,19 @@ abstract class PaymentModuleCore extends Module
 						$order_carrier->add();
 					}
 				}
-			
+
 			// The country can only change if the address used for the calculation is the delivery address, and if multi-shipping is activated
 			if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_delivery')
 				$this->context->country = $context_country;
+
+			if (!$this->context->country->active)
+			{
+				PrestaShopLogger::addLog('PaymentModule::validateOrder - Country is not active', 3, null, 'Cart', (int)$id_cart, true);
+				throw new PrestaShopException('The order address country is not active.');
+			}
+
+			if (self::DEBUG_MODE)
+				PrestaShopLogger::addLog('PaymentModule::validateOrder - Payment is about to be added', 1, null, 'Cart', (int)$id_cart, true);
 
 			// Register Payment only if the order status validate the order
 			if ($order_status->logable)
@@ -306,20 +396,21 @@ abstract class PaymentModuleCore extends Module
 					$transaction_id = $extra_vars['transaction_id'];
 				else
 					$transaction_id = null;
-				
+
 				if (!$order->addOrderPayment($amount_paid, null, $transaction_id))
+				{
+					PrestaShopLogger::addLog('PaymentModule::validateOrder - Cannot save Order Payment', 3, null, 'Cart', (int)$id_cart, true);
 					throw new PrestaShopException('Can\'t save Order Payment');
+				}
 			}
 
 			// Next !
 			$only_one_gift = false;
 			$cart_rule_used = array();
 			$products = $this->context->cart->getProducts();
-			$cart_rules = $this->context->cart->getCartRules();
-			
+
 			// Make sure CarRule caches are empty
 			CartRule::cleanCache();
-			
 			foreach ($order_detail_list as $key => $order_detail)
 			{
 				$order = $order_list[$key];
@@ -334,6 +425,8 @@ abstract class PaymentModuleCore extends Module
 						$message = strip_tags($message, '<br>');
 						if (Validate::isCleanHtml($message))
 						{
+							if (self::DEBUG_MODE)
+								PrestaShopLogger::addLog('PaymentModule::validateOrder - Message is about to be added', 1, null, 'Cart', (int)$id_cart, true);
 							$msg->message = $message;
 							$msg->id_order = intval($order->id);
 							$msg->private = 1;
@@ -349,56 +442,65 @@ abstract class PaymentModuleCore extends Module
 					$products_list = '';
 					$virtual_product = true;
 
-					foreach ($order->product_list as $key => $product)
+					$product_var_tpl_list = array();
+					foreach ($order->product_list as $product)
 					{
 						$price = Product::getPriceStatic((int)$product['id_product'], false, ($product['id_product_attribute'] ? (int)$product['id_product_attribute'] : null), 6, null, false, true, $product['cart_quantity'], false, (int)$order->id_customer, (int)$order->id_cart, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 						$price_wt = Product::getPriceStatic((int)$product['id_product'], true, ($product['id_product_attribute'] ? (int)$product['id_product_attribute'] : null), 2, null, false, true, $product['cart_quantity'], false, (int)$order->id_customer, (int)$order->id_cart, (int)$order->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 
-						$customization_quantity = 0;
+						$product_price = Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, 2) : $price_wt;
+
+						$product_var_tpl = array(
+							'reference' => $product['reference'],
+							'name' => $product['name'].(isset($product['attributes']) ? ' - '.$product['attributes'] : ''),
+							'unit_price' => Tools::displayPrice($product_price, $this->context->currency, false),
+							'price' => Tools::displayPrice($product_price * $product['quantity'], $this->context->currency, false),
+							'quantity' => $product['quantity'],
+							'customization' => array()
+						);
+
 						$customized_datas = Product::getAllCustomizedDatas((int)$order->id_cart);
 						if (isset($customized_datas[$product['id_product']][$product['id_product_attribute']]))
 						{
-							$customization_text = '';
+							$product_var_tpl['customization'] = array();
 							foreach ($customized_datas[$product['id_product']][$product['id_product_attribute']][$order->id_address_delivery] as $customization)
 							{
+								$customization_text = '';
 								if (isset($customization['datas'][Product::CUSTOMIZE_TEXTFIELD]))
 									foreach ($customization['datas'][Product::CUSTOMIZE_TEXTFIELD] as $text)
 										$customization_text .= $text['name'].': '.$text['value'].'<br />';
 
 								if (isset($customization['datas'][Product::CUSTOMIZE_FILE]))
 									$customization_text .= sprintf(Tools::displayError('%d image(s)'), count($customization['datas'][Product::CUSTOMIZE_FILE])).'<br />';
-								$customization_text .= '---<br />';
-							}
-							$customization_text = rtrim($customization_text, '---<br />');
 
-							$customization_quantity = (int)$product['customization_quantity'];
-							$products_list .=
-							'<tr style="background-color: '.($key % 2 ? '#DDE2E6' : '#EBECEE').';">
-								<td style="padding: 0.6em 0.4em;width: 15%;">'.$product['reference'].'</td>
-								<td style="padding: 0.6em 0.4em;width: 30%;"><strong>'.$product['name'].(isset($product['attributes']) ? ' - '.$product['attributes'] : '').' - '.Tools::displayError('Customized').(!empty($customization_text) ? ' - '.$customization_text : '').'</strong></td>
-								<td style="padding: 0.6em 0.4em; width: 20%;">'.Tools::displayPrice(Product::getTaxCalculationMethod() == PS_TAX_EXC ?  Tools::ps_round($price, 2) : $price_wt, $this->context->currency, false).'</td>
-								<td style="padding: 0.6em 0.4em; width: 15%;">'.$customization_quantity.'</td>
-								<td style="padding: 0.6em 0.4em; width: 20%;">'.Tools::displayPrice($customization_quantity * (Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, 2) : $price_wt), $this->context->currency, false).'</td>
-							</tr>';
+								$customization_quantity = (int)$product['customization_quantity'];
+
+								$product_var_tpl['customization'][] = array(
+									'customization_text' => $customization_text,
+									'customization_quantity' => $customization_quantity,
+									'quantity' => Tools::displayPrice($customization_quantity * $product_price, $this->context->currency, false)
+								);
+							}
 						}
 
-						if (!$customization_quantity || (int)$product['cart_quantity'] > $customization_quantity)
-							$products_list .=
-							'<tr style="background-color: '.($key % 2 ? '#DDE2E6' : '#EBECEE').';">
-								<td style="padding: 0.6em 0.4em;width: 15%;">'.$product['reference'].'</td>
-								<td style="padding: 0.6em 0.4em;width: 30%;"><strong>'.$product['name'].(isset($product['attributes']) ? ' - '.$product['attributes'] : '').'</strong></td>
-								<td style="padding: 0.6em 0.4em; width: 20%;">'.Tools::displayPrice(Product::getTaxCalculationMethod((int)$this->context->customer->id) == PS_TAX_EXC ? Tools::ps_round($price, 2) : $price_wt, $this->context->currency, false).'</td>
-								<td style="padding: 0.6em 0.4em; width: 15%;">'.((int)$product['cart_quantity'] - $customization_quantity).'</td>
-								<td style="padding: 0.6em 0.4em; width: 20%;">'.Tools::displayPrice(((int)$product['cart_quantity'] - $customization_quantity) * (Product::getTaxCalculationMethod() == PS_TAX_EXC ? Tools::ps_round($price, 2) : $price_wt), $this->context->currency, false).'</td>
-							</tr>';
-
+						$product_var_tpl_list[] = $product_var_tpl;
 						// Check if is not a virutal product for the displaying of shipping
 						if (!$product['is_virtual'])
 							$virtual_product &= false;
 
 					} // end foreach ($products)
 
-					$cart_rules_list = '';
+					$product_list_txt = '';
+					$product_list_html = '';
+					if (count($product_var_tpl_list) > 0)
+					{
+						$product_list_txt = $this->getEmailTemplateContent('order_conf_product_list.txt', Mail::TYPE_TEXT, $product_var_tpl_list);
+						$product_list_html = $this->getEmailTemplateContent('order_conf_product_list.tpl', Mail::TYPE_HTML, $product_var_tpl_list);
+					}
+
+					$cart_rules_list = array();
+					$total_reduction_value_ti = 0;
+					$total_reduction_value_tex = 0;
 					foreach ($cart_rules as $cart_rule)
 					{
 						$package = array('id_carrier' => $order->id_carrier, 'id_address' => $order->id_address_delivery, 'products' => $order->product_list);
@@ -419,7 +521,8 @@ abstract class PaymentModuleCore extends Module
 						** THEN
 						** The voucher is cloned with a new value corresponding to the remainder
 						*/
-						if (count($order_list) == 1 && $values['tax_incl'] > $order->total_products_wt && $cart_rule['obj']->partial_use == 1 && $cart_rule['obj']->reduction_amount > 0)
+
+						if (count($order_list) == 1 && $values['tax_incl'] > ($order->total_products_wt - $total_reduction_value_ti) && $cart_rule['obj']->partial_use == 1 && $cart_rule['obj']->reduction_amount > 0)
 						{
 							// Create a new voucher from the original
 							$voucher = new CartRule($cart_rule['obj']->id); // We need to instantiate the CartRule without lang parameter to allow saving it
@@ -432,9 +535,21 @@ abstract class PaymentModuleCore extends Module
 
 							// Set the new voucher value
 							if ($voucher->reduction_tax)
-								$voucher->reduction_amount = $values['tax_incl'] - $order->total_products_wt - ($voucher->free_shipping == 1 ? $order->total_shipping_tax_incl : 0);
+							{
+								$voucher->reduction_amount = $values['tax_incl'] - ($order->total_products_wt - $total_reduction_value_ti);
+
+								// Add total shipping amout only if reduction amount > total shipping
+								if ($voucher->free_shipping == 1 && $voucher->reduction_amount >= $order->total_shipping_tax_incl)
+									$voucher->reduction_amount -= $order->total_shipping_tax_incl;
+							}
 							else
-								$voucher->reduction_amount = $values['tax_excl'] - $order->total_products - ($voucher->free_shipping == 1 ? $order->total_shipping_tax_excl : 0);
+							{
+								$voucher->reduction_amount = $values['tax_excl'] - ($order->total_products - $total_reduction_value_tex);
+
+								// Add total shipping amout only if reduction amount > total shipping
+								if ($voucher->free_shipping == 1 && $voucher->reduction_amount >= $order->total_shipping_tax_excl)
+									$voucher->reduction_amount -= $order->total_shipping_tax_excl;
+							}
 
 							$voucher->id_customer = $order->id_customer;
 							$voucher->quantity = 1;
@@ -456,7 +571,7 @@ abstract class PaymentModuleCore extends Module
 								Mail::Send(
 									(int)$order->id_lang,
 									'voucher',
-									sprintf(Mail::l('New voucher regarding your order %s', (int)$order->id_lang), $order->reference),
+									sprintf(Mail::l('New voucher for your order %s', (int)$order->id_lang), $order->reference),
 									$params,
 									$this->context->customer->email,
 									$this->context->customer->firstname.' '.$this->context->customer->lastname,
@@ -464,9 +579,12 @@ abstract class PaymentModuleCore extends Module
 								);
 							}
 
-							$values['tax_incl'] -= $values['tax_incl'] - $order->total_products_wt;
-							$values['tax_excl'] -= $values['tax_excl'] - $order->total_products;
+							$values['tax_incl'] = $order->total_products_wt - $total_reduction_value_ti;
+							$values['tax_excl'] = $order->total_products - $total_reduction_value_tex;
+
 						}
+						$total_reduction_value_ti += $values['tax_incl'];
+						$total_reduction_value_tex += $values['tax_excl'];
 
 						$order->addCartRule($cart_rule['obj']->id, $cart_rule['obj']->name, $values, 0, $cart_rule['obj']->free_shipping);
 
@@ -480,11 +598,18 @@ abstract class PaymentModuleCore extends Module
 							$cart_rule_to_update->update();
 						}
 
-						$cart_rules_list .= '
-						<tr>
-							<td colspan="4" style="padding:0.6em 0.4em;text-align:right">'.Tools::displayError('Voucher name:').' '.$cart_rule['obj']->name.'</td>
-							<td style="padding:0.6em 0.4em;text-align:right">'.($values['tax_incl'] != 0.00 ? '-' : '').Tools::displayPrice($values['tax_incl'], $this->context->currency, false).'</td>
-						</tr>';
+						$cart_rules_list[] = array(
+							'voucher_name' => $cart_rule['obj']->name,
+							'voucher_reduction' => ($values['tax_incl'] != 0.00 ? '-' : '').Tools::displayPrice($values['tax_incl'], $this->context->currency, false)
+						);
+					}
+
+					$cart_rules_list_txt = '';
+					$cart_rules_list_html = '';
+					if (count($cart_rules_list) > 0)
+					{
+						$cart_rules_list_txt = $this->getEmailTemplateContent('order_conf_cart_rules.txt', Mail::TYPE_TEXT, $cart_rules_list);
+						$cart_rules_list_html = $this->getEmailTemplateContent('order_conf_cart_rules.tpl', Mail::TYPE_HTML, $cart_rules_list);
 					}
 
 					// Specify order id for message
@@ -517,6 +642,9 @@ abstract class PaymentModuleCore extends Module
 							$this->errors[] = Tools::displayError('An error occurred while saving message');
 					}
 
+					if (self::DEBUG_MODE)
+						PrestaShopLogger::addLog('PaymentModule::validateOrder - Hook validateOrder is about to be called', 1, null, 'Cart', (int)$id_cart, true);
+
 					// Hook validate order
 					Hook::exec('actionValidateOrder', array(
 						'cart' => $this->context->cart,
@@ -530,20 +658,23 @@ abstract class PaymentModuleCore extends Module
 						if ($order_status->logable)
 							ProductSale::addProductSale((int)$product['id_product'], (int)$product['cart_quantity']);
 
-					if (Configuration::get('PS_STOCK_MANAGEMENT') && $order_detail->getStockState())
-					{
-						$history = new OrderHistory();
-						$history->id_order = (int)$order->id;
-						$history->changeIdOrderState(Configuration::get('PS_OS_OUTOFSTOCK'), $order, true);
-						$history->addWithemail();
-					}
+					if (self::DEBUG_MODE)
+						PrestaShopLogger::addLog('PaymentModule::validateOrder - Order Status is about to be added', 1, null, 'Cart', (int)$id_cart, true);
 
-					// Set order state in order history ONLY even if the "out of stock" status has not been yet reached
-					// So you migth have two order states
+					// Set the order status
 					$new_history = new OrderHistory();
 					$new_history->id_order = (int)$order->id;
 					$new_history->changeIdOrderState((int)$id_order_state, $order, true);
 					$new_history->addWithemail(true, $extra_vars);
+
+					// Switch to back order if needed
+					if (Configuration::get('PS_STOCK_MANAGEMENT') && $order_detail->getStockState())
+					{
+						$history = new OrderHistory();
+						$history->id_order = (int)$order->id;
+						$history->changeIdOrderState(Configuration::get($order->valid ? 'PS_OS_OUTOFSTOCK_PAID' : 'PS_OS_OUTOFSTOCK_UNPAID'), $order, true);
+						$history->addWithemail();
+					}
 
 					unset($order_detail);
 
@@ -596,11 +727,13 @@ abstract class PaymentModuleCore extends Module
 						'{invoice_phone}' => ($invoice->phone) ? $invoice->phone : $invoice->phone_mobile,
 						'{invoice_other}' => $invoice->other,
 						'{order_name}' => $order->getUniqReference(),
-						'{date}' => Tools::displayDate(date('Y-m-d H:i:s'),null , 1),
-						'{carrier}' => $virtual_product ? Tools::displayError('No carrier') : $carrier->name,
+						'{date}' => Tools::displayDate(date('Y-m-d H:i:s'), null, 1),
+						'{carrier}' => ($virtual_product || !isset($carrier->name)) ? Tools::displayError('No carrier') : $carrier->name,
 						'{payment}' => Tools::substr($order->payment, 0, 32),
-						'{products}' => $this->formatProductAndVoucherForEmail($products_list),
-						'{discounts}' => $this->formatProductAndVoucherForEmail($cart_rules_list),
+						'{products}' => $product_list_html,
+						'{products_txt}' => $product_list_txt,
+						'{discounts}' => $cart_rules_list_html,
+						'{discounts_txt}' => $cart_rules_list_txt,
 						'{total_paid}' => Tools::displayPrice($order->total_paid, $this->context->currency, false),
 						'{total_products}' => Tools::displayPrice($order->total_paid - $order->total_shipping - $order->total_wrapping + $order->total_discounts, $this->context->currency, false),
 						'{total_discounts}' => Tools::displayPrice($order->total_discounts, $this->context->currency, false),
@@ -621,6 +754,9 @@ abstract class PaymentModuleCore extends Module
 						}
 						else
 							$file_attachement = null;
+
+						if (self::DEBUG_MODE)
+							PrestaShopLogger::addLog('PaymentModule::validateOrder - Mail is about to be sent', 1, null, 'Cart', (int)$id_cart, true);
 
 						if (Validate::isEmail($this->context->customer->email))
 							Mail::Send(
@@ -655,24 +791,38 @@ abstract class PaymentModuleCore extends Module
 				else
 				{
 					$error = Tools::displayError('Order creation failed');
-					Logger::addLog($error, 4, '0000002', 'Cart', intval($order->id_cart));
+					PrestaShopLogger::addLog($error, 4, '0000002', 'Cart', intval($order->id_cart));
 					die($error);
 				}
 			} // End foreach $order_detail_list
+
+			// Update Order Details Tax in case cart rules have free shipping
+			foreach ($order->getOrderDetailList() as $detail)
+			{
+				$order_detail = new OrderDetail($detail['id_order_detail']);
+					$order_detail->updateTaxAmount($order);
+			}
+
 			// Use the last order as currentOrder
-			$this->currentOrder = (int)$order->id;
+			if (isset($order) && $order->id)
+				$this->currentOrder = (int)$order->id;
+
+			if (self::DEBUG_MODE)
+				PrestaShopLogger::addLog('PaymentModule::validateOrder - End of validateOrder', 1, null, 'Cart', (int)$id_cart, true);
+
 			return true;
 		}
 		else
 		{
 			$error = Tools::displayError('Cart cannot be loaded or an order has already been placed using this cart');
-			Logger::addLog($error, 4, '0000001', 'Cart', intval($this->context->cart->id));
+			PrestaShopLogger::addLog($error, 4, '0000001', 'Cart', intval($this->context->cart->id));
 			die($error);
 		}
 	}
 
 	public function formatProductAndVoucherForEmail($content)
 	{
+		Tools::displayAsDeprecated();
 		return $content;
 	}
 
@@ -738,7 +888,8 @@ abstract class PaymentModuleCore extends Module
 		}
 		if (!isset($id_currency) || empty($id_currency))
 			return false;
-		return (new Currency($id_currency));
+		$currency = new Currency($id_currency);
+		return $currency;
 	}
 
 	/**
@@ -767,8 +918,7 @@ abstract class PaymentModuleCore extends Module
 		{
 			return Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'module_currency` (`id_module`, `id_currency`)
-			VALUES '.rtrim($values, ',')
-			);
+			VALUES '.rtrim($values, ','));
 		}
 
 		return true;
@@ -788,15 +938,13 @@ abstract class PaymentModuleCore extends Module
 			$hook_payment = 'displayPayment';
 
 		return Db::getInstance()->executeS('
-			SELECT DISTINCT m.`id_module`, h.`id_hook`, m.`name`, hm.`position`
-			FROM `'._DB_PREFIX_.'module` m
-			LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
-			LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
-			INNER JOIN `'._DB_PREFIX_.'module_shop` ms ON (m.`id_module` = ms.`id_module` AND ms.id_shop='.(int)Context::getContext()->shop->id.')
-			WHERE h.`name` = \''.pSQL($hook_payment).'\'
-		');
+		SELECT DISTINCT m.`id_module`, h.`id_hook`, m.`name`, hm.`position`
+		FROM `'._DB_PREFIX_.'module` m
+		LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
+		LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
+		INNER JOIN `'._DB_PREFIX_.'module_shop` ms ON (m.`id_module` = ms.`id_module` AND ms.id_shop='.(int)Context::getContext()->shop->id.')
+		WHERE h.`name` = \''.pSQL($hook_payment).'\'');
 	}
-
 
 	public static function preCall($module_name)
 	{
@@ -810,4 +958,32 @@ abstract class PaymentModuleCore extends Module
 		return false;
 	}
 
+	/**
+	 * Fetch the content of $template_name inside the folder current_theme/mails/current_iso_lang/ if found, otherwise in mails/current_iso_lang
+	 *
+	 * @param string  $template_name template name with extension
+	 * @param integer $mail_type     Mail::TYPE_HTML or Mail::TYPE_TXT
+	 * @param array   $var           list send to smarty
+	 *
+	 * @return string
+	 */
+	protected function getEmailTemplateContent($template_name, $mail_type, $var)
+	{
+		$email_configuration = Configuration::get('PS_MAIL_TYPE');
+		if ($email_configuration != $mail_type && $email_configuration != Mail::TYPE_BOTH)
+			return '';
+
+		$theme_template_path = _PS_THEME_DIR_.'mails'.DIRECTORY_SEPARATOR.$this->context->language->iso_code.DIRECTORY_SEPARATOR.$template_name;
+		$default_mail_template_path = _PS_MAIL_DIR_.$this->context->language->iso_code.DIRECTORY_SEPARATOR.$template_name;
+
+		if (Tools::file_exists_cache($theme_template_path))
+			$default_mail_template_path = $theme_template_path;
+
+		if (Tools::file_exists_cache($default_mail_template_path))
+		{
+			$this->context->smarty->assign('list', $var);
+			return $this->context->smarty->fetch($default_mail_template_path);
+		}
+		return '';
+	}
 }

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -40,7 +40,7 @@ class TagCore extends ObjectModel
 		'primary' => 'id_tag',
 		'fields' => array(
 			'id_lang' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-			'name' => 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
+			'name' => 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
 		),
 	);
 
@@ -58,7 +58,7 @@ class TagCore extends ObjectModel
 
 		if ($id)
 			parent::__construct($id);
-		else if ($name && Validate::isGenericName($name) && $id_lang && Validate::isUnsignedId($id_lang))
+		elseif ($name && Validate::isGenericName($name) && $id_lang && Validate::isUnsignedId($id_lang))
 		{
 			$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT *
@@ -78,7 +78,7 @@ class TagCore extends ObjectModel
 	{
 		if (!parent::add($autodate, $null_values))
 			return false;
-		else if (isset($_POST['products']))
+		elseif (isset($_POST['products']))
 			return $this->setProducts(Tools::getValue('products'));
 		return true;
 	}
@@ -100,22 +100,24 @@ class TagCore extends ObjectModel
 	 		$tag_list = array_filter(array_unique(array_map('trim', preg_split('#\\'.$separator.'#', $tag_list, null, PREG_SPLIT_NO_EMPTY))));
 
 	 	$list = array();
-		foreach ($tag_list as $tag)
-		{
-	 	 	if (!Validate::isGenericName($tag))
-	 	 		return false;
-			$tag_obj = new Tag(null, trim($tag), (int)$id_lang);
-
-			/* Tag does not exist in database */
-			if (!Validate::isLoadedObject($tag_obj))
+		if (is_array($tag_list))
+			foreach ($tag_list as $tag)
 			{
-				$tag_obj->name = trim($tag);
-				$tag_obj->id_lang = (int)$id_lang;
-				$tag_obj->add();
+		 	 	if (!Validate::isGenericName($tag))
+		 	 		return false;
+				$tag = trim(Tools::substr($tag, 0, self::$definition['fields']['name']['size']));
+				$tag_obj = new Tag(null, $tag, (int)$id_lang);
+	
+				/* Tag does not exist in database */
+				if (!Validate::isLoadedObject($tag_obj))
+				{
+					$tag_obj->name = $tag;
+					$tag_obj->id_lang = (int)$id_lang;
+					$tag_obj->add();
+				}
+				if (!in_array($tag_obj->id, $list))
+					$list[] = $tag_obj->id;
 			}
-			if (!in_array($tag_obj->id, $list))
-				$list[] = $tag_obj->id;
-		}
 		$data = '';
 		foreach ($list as $tag)
 			$data .= '('.(int)$tag.','.(int)$id_product.'),';
@@ -128,8 +130,18 @@ class TagCore extends ObjectModel
 
 	public static function getMainTags($id_lang, $nb = 10)
 	{
-		$groups = FrontController::getCurrentCustomerGroups();
-		$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
+		$sql_groups = '';
+		if (Group::isFeatureActive())
+		{
+			$groups = FrontController::getCurrentCustomerGroups();
+			$sql_groups = '
+			AND p.`id_product` IN (
+				SELECT cp.`id_product`
+				FROM `'._DB_PREFIX_.'category_product` cp
+				LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.`id_category` = cg.`id_category`)
+				WHERE cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1').'
+			)';
+		}
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT t.name, COUNT(pt.id_tag) AS times
@@ -139,15 +151,10 @@ class TagCore extends ObjectModel
 		'.Shop::addSqlAssociation('product', 'p').'
 		WHERE t.`id_lang` = '.(int)$id_lang.'
 		AND product_shop.`active` = 1
-		AND product_shop.`id_product` IN (
-			SELECT cp.`id_product`
-			FROM `'._DB_PREFIX_.'category_group` cg
-			LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
-			WHERE cg.`id_group` '.$sql_groups.'
-		)
+		'.$sql_groups.'
 		GROUP BY t.id_tag
 		ORDER BY times DESC
-		LIMIT 0, '.(int)$nb);
+		LIMIT '.(int)$nb);
 	}
 
 	public static function getProductTags($id_product)

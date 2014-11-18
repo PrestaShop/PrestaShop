@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -97,16 +97,12 @@ abstract class InstallControllerConsole
 			exit;
 		}
 
-		// Include all controllers
-		foreach (self::$steps as $step)
-		{
-			if (!file_exists(_PS_INSTALL_CONTROLLERS_PATH_.'console/'.$step.'.php'))
-				throw new PrestashopInstallerException("Controller file 'console/{$step}.php' not found");
+		if (!file_exists(_PS_INSTALL_CONTROLLERS_PATH_.'console/process.php'))
+			throw new PrestashopInstallerException("Controller file 'console/process.php' not found");
 
-			require_once _PS_INSTALL_CONTROLLERS_PATH_.'console/'.$step.'.php';
-			$classname = 'InstallControllerConsole'.$step;
-			self::$instances[$step] = new $classname($step);
-		}
+		require_once _PS_INSTALL_CONTROLLERS_PATH_.'console/process.php';
+		$classname = 'InstallControllerConsoleProcess';
+		self::$instances['process'] = new InstallControllerConsoleProcess('process');
 
 		$datas = Datas::getInstance();
 
@@ -115,10 +111,7 @@ abstract class InstallControllerConsole
 
 		@date_default_timezone_set($datas->timezone);
 
-		if (!$current_step = $datas->step)
-			return false;
-
-		self::$instances[$current_step]->process();
+		self::$instances['process']->process();
 	}
 
 	final public function __construct($step)
@@ -152,7 +145,7 @@ abstract class InstallControllerConsole
 			echo 'Errors :'."\n";
 			foreach ($errors as $error_process)
 				foreach ($error_process as $error)
-					echo $error."\n";
+					echo (is_string($error) ? $error : print_r($error, true))."\n";
 			die;
 		}
 	}

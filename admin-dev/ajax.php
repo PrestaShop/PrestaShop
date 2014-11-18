@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,56 +19,22 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-define('_PS_ADMIN_DIR_', getcwd());
+if (!defined('_PS_ADMIN_DIR_'))
+	define('_PS_ADMIN_DIR_', getcwd());
 include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
+
 /* Getting cookie or logout */
 require_once(_PS_ADMIN_DIR_.'/init.php');
 
 $context = Context::getContext();
 
-if (Tools::isSubmit('changeParentUrl'))
-	echo '<script type="text/javascript">parent.parent.document.location.href = "'.addslashes(urldecode(Tools::getValue('changeParentUrl'))).'";</script>';
-if (Tools::isSubmit('installBoughtModule'))
-{
-	$file = false;
-	while ($file === false OR file_exists(_PS_MODULE_DIR_.$file))
-		$file = uniqid();
-	$file = _PS_MODULE_DIR_.$file.'.zip';
-	$sourceFile = 'http://addons.prestashop.com/iframe/getboughtfile.php?id_order_detail='.Tools::getValue('id_order_detail').'&token='.Tools::getValue('token');
-	if (!copy($sourceFile, $file))
-	{
-		if (!($content = file_get_contents($sourceFile)))
-			die(displayJavascriptAlert('Access denied: Please download your module directly from PrestaShop Addons website'));
-		elseif (!file_put_contents($file, $content))
-			die(displayJavascriptAlert('Local error: your module directory is not writable'));
-	}
-	$first6 = fread($fd = fopen($file, 'r'), 6);
-	if (!strncmp($first6, 'Error:', 6))
-	{
-		$displayJavascriptAlert = displayJavascriptAlert(fread($fd, 1024));
-		fclose($fd);
-		unlink($file);
-		die($displayJavascriptAlert);
-	}
-	fclose($fd);
-	if (!Tools::ZipExtract($file, _PS_MODULE_DIR_))
-	{
-		unlink($file);
-		die(displayJavascriptAlert('Cannot unzip file'));
-	}
-	unlink($file);
-	die(displayJavascriptAlert('Module copied to disk'));
-}
-
 if (Tools::isSubmit('ajaxReferrers'))
-{
 	require(_PS_CONTROLLER_DIR_.'admin/AdminReferrersController.php');
-}
 
 if (Tools::getValue('page') == 'prestastore' AND @fsockopen('addons.prestashop.com', 80, $errno, $errst, 3))
 	readfile('http://addons.prestashop.com/adminmodules.php?lang='.$context->language->iso_code);
@@ -99,58 +65,6 @@ if (Tools::isSubmit('ajaxProductPackItems'))
 	foreach ($products AS $packItem)
 		$jsonArray[] = '{"value": "'.(int)($packItem['id_product']).'-'.addslashes($packItem['name']).'", "text":"'.(int)($packItem['id_product']).' - '.addslashes($packItem['name']).'"}';
 	die('['.implode(',', $jsonArray).']');
-}
-
-if (Tools::isSubmit('ajaxStates') AND Tools::isSubmit('id_country'))
-{
-	$states = Db::getInstance()->executeS('
-	SELECT s.id_state, s.name
-	FROM '._DB_PREFIX_.'state s
-	LEFT JOIN '._DB_PREFIX_.'country c ON (s.`id_country` = c.`id_country`)
-	WHERE s.id_country = '.(int)(Tools::getValue('id_country')).' AND s.active = 1 AND c.`contains_states` = 1
-	ORDER BY s.`name` ASC');
-
-	if (is_array($states) AND !empty($states))
-	{
-		$list = '';
-		if (Tools::getValue('no_empty') != true)
-		{
-			$empty_value = (Tools::isSubmit('empty_value')) ? Tools::getValue('empty_value') : '----------';
-			$list = '<option value="0">'.Tools::htmlentitiesUTF8($empty_value).'</option>'."\n";
-		}
-
-		foreach ($states AS $state)
-			$list .= '<option value="'.(int)($state['id_state']).'"'.((isset($_GET['id_state']) AND $_GET['id_state'] == $state['id_state']) ? ' selected="selected"' : '').'>'.$state['name'].'</option>'."\n";
-	}
-	else
-		$list = 'false';
-
-	die($list);
-}
-
-if (Tools::getValue('form_language_id'))
-{
-	if (!($context->cookie->employee_form_lang = (int)(Tools::getValue('form_language_id'))))
-		die ('Error while updating cookie.');
-	die ('Form language updated.');
-}
-
-if (Tools::isSubmit('submitTrackClickOnHelp'))
-{
-    $label = Tools::getValue('label');
-    $version = Tools::getValue('version');
-
-    if (!empty($label) && !empty($version))
-        HelpAccess::trackClick($label, $version);
-}
-
-if (Tools::isSubmit('toggleScreencast'))
-{
-	if (Validate::isLoadedObject($context->employee))
-	{
-		$context->employee->bo_show_screencast = !$context->employee->bo_show_screencast;
-		$context->employee->update();
-	}
 }
 
 if (Tools::isSubmit('getChildrenCategories') && Tools::isSubmit('id_category_parent'))
@@ -200,31 +114,12 @@ if (Tools::isSubmit('getParentCategoriesId') && $id_category = Tools::getValue('
 	die(Tools::jsonEncode($output));
 }
 
-/* Update attribute */
-if (Tools::isSubmit('ajaxUpdateTaxRule'))
-{
-	$id_tax_rule = Tools::getValue('id_tax_rule');
-	$tax_rules = new TaxRule((int)$id_tax_rule);
-	$output = array();
-	foreach ($tax_rules as $key => $result)
-		$output[$key] = $result;
-	die(Tools::jsonEncode($output));
-}
-
 if (Tools::isSubmit('getZones'))
 {
-	$zones = Zone::getZones();
 	$html = '<select id="zone_to_affect" name="zone_to_affect">';
-	foreach ($zones as $z)
-	{
+	foreach (Zone::getZones() as $z)
 		$html .= '<option value="'.$z['id_zone'].'">'.$z['name'].'</option>';
-	}
 	$html .= '</select>';
 	$array = array('hasError' => false, 'errors' => '', 'data' => $html);
-	die(Tools::jsonEncode($html));
-}
-
-function displayJavascriptAlert($s)
-{
-	echo '<script type="text/javascript">alert(\''.addslashes($s).'\');</script>';
+	die(Tools::jsonEncode($array));
 }

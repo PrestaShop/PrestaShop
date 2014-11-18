@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -91,7 +91,7 @@ class CombinationCore extends ObjectModel
 		),
 		'associations' => array(
 			'product_option_values' => array('resource' => 'product_option_value'),
-			'images' => array('resource' => 'image'),
+			'images' => array('resource' => 'image', 'api' => 'images/products'),
 		),
 	);
 
@@ -99,22 +99,32 @@ class CombinationCore extends ObjectModel
 	{
 		if (!parent::delete())
 			return false;
-			
+
 		// Removes the product from StockAvailable, for the current shop
 		StockAvailable::removeProductFromStockAvailable((int)$this->id_product, (int)$this->id);
 
 		if ($specific_prices = SpecificPrice::getByProductId((int)$this->id_product, (int)$this->id))
 			foreach ($specific_prices as $specific_price)
-				{
-					$price = new SpecificPrice((int)$specific_price['id_specific_price']);
-					$price->delete();
-				}
+			{
+				$price = new SpecificPrice((int)$specific_price['id_specific_price']);
+				$price->delete();
+			}
 
 		if (!$this->hasMultishopEntries() && !$this->deleteAssociations())
 			return false;
+
+		$this->deleteFromSupplier($this->id_product);
+		Product::updateDefaultAttribute($this->id_product);
+
 		return true;
 	}
-	
+
+	public function deleteFromSupplier($id_product)
+	{
+		return Db::getInstance()->delete('product_supplier', 'id_product = '.(int)$id_product
+			.' AND id_product_attribute = '.(int)$this->id);
+	}
+
 	public function add($autodate = true, $null_values = false)
 	{
 		if (!parent::add($autodate, $null_values))
@@ -127,14 +137,25 @@ class CombinationCore extends ObjectModel
 			StockAvailable::setProductOutOfStock((int)$this->id_product, StockAvailable::outOfStock((int)$this->id_product), null, $this->id);
 
 		SpecificPriceRule::applyAllRules(array((int)$this->id_product));
-		
+
+		Product::updateDefaultAttribute($this->id_product);
+
 		return true;
+	}
+
+	public function update($null_values = false)
+	{
+		$return = parent::update($null_values);
+		Product::updateDefaultAttribute($this->id_product);
+
+		return $return;
 	}
 
 	public function deleteAssociations()
 	{
 		$result = Db::getInstance()->delete('product_attribute_combination', '`id_product_attribute` = '.(int)$this->id);
 		$result &= Db::getInstance()->delete('cart_product', '`id_product_attribute` = '.(int)$this->id);
+		$result &= Db::getInstance()->delete('product_attribute_image', '`id_product_attribute` = '.(int)$this->id);
 
 		return $result;
 	}
@@ -142,7 +163,7 @@ class CombinationCore extends ObjectModel
 	public function setAttributes($ids_attribute)
 	{
 		$result = $this->deleteAssociations();
-		if ($result && !empty($ids_attribute)) 
+		if ($result && !empty($ids_attribute))
 		{
 			$sql_values = array();
 			foreach ($ids_attribute as $value)
@@ -192,15 +213,19 @@ class CombinationCore extends ObjectModel
 			WHERE `id_product_attribute` = '.(int)$this->id) === false)
 		return false;
 
-		$sql_values = array();
+		if (is_array($ids_image) && count($ids_image))
+		{
+			$sql_values = array();
 
-		foreach ($ids_image as $value)
-			$sql_values[] = '('.(int)$this->id.', '.(int)$value.')';
+			foreach ($ids_image as $value)
+				$sql_values[] = '('.(int)$this->id.', '.(int)$value.')';
 
-		Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'product_attribute_image` (`id_product_attribute`, `id_image`)
-			VALUES '.implode(',', $sql_values)
-		);
+			if (is_array($sql_values) && count($sql_values))
+				Db::getInstance()->execute('
+					INSERT INTO `'._DB_PREFIX_.'product_attribute_image` (`id_product_attribute`, `id_image`)
+					VALUES '.implode(',', $sql_values)
+				);
+		}
 		return true;
 	}
 
@@ -229,7 +254,7 @@ class CombinationCore extends ObjectModel
 	public static function isFeatureActive()
 	{
 		static $feature_active = null;
-		
+
 		if ($feature_active === null)
 			$feature_active = Configuration::get('PS_COMBINATION_FEATURE_ACTIVE');
 		return $feature_active;
@@ -266,6 +291,17 @@ class CombinationCore extends ObjectModel
 		$query->where('pa.id_product = '.(int)$id_product);
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+	}
+
+	public function getColorsAttributes()
+	{
+		return Db::getInstance()->executeS('
+			SELECT a.id_attribute
+			FROM '._DB_PREFIX_.'product_attribute_combination pac
+			JOIN '._DB_PREFIX_.'attribute a ON (pac.id_attribute = a.id_attribute)
+			JOIN '._DB_PREFIX_.'attribute_group ag ON (ag.id_attribute_group = a.id_attribute_group)
+			WHERE pac.id_product_attribute='.(int)$this->id.' AND ag.is_color_group = 1
+		');
 	}
 
 	/**

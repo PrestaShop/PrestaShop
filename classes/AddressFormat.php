@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -51,12 +51,10 @@ class AddressFormatCore extends ObjectModel
 
 	public static $requireFormFieldsList = array(
 		'firstname',
-		'name',
+		'lastname',
 		'address1',
 		'city',
-		'postcode',
-		'Country:name',
-		'State:name');
+		'Country:name');
 
 	public static $forbiddenPropertyList = array(
 		'deleted',
@@ -99,6 +97,7 @@ class AddressFormatCore extends ObjectModel
 		'outstanding_allow_amount',
 		'call_prefix',
 		'definition',
+		'debug_list'
 	);
 
 	public static $forbiddenClassList = array(
@@ -132,7 +131,7 @@ class AddressFormatCore extends ObjectModel
 			{
 				$propertyName = $property->getName();
 				if (($propertyName == $fieldName) && ($isIdField ||
-						(!preg_match('#id|id_\w#', $propertyName))))
+						(!preg_match('/\bid\b|id_\w+|\bid[A-Z]\w+/', $propertyName))))
 					$isValide = true;
 			}
 
@@ -162,7 +161,7 @@ class AddressFormatCore extends ObjectModel
 			$totalNameUsed = count($associationName);
 			if ($totalNameUsed > 2)
 				$this->_errorFormatList[] = Tools::displayError('This association has too many elements.');
-			else if ($totalNameUsed == 1)
+			elseif ($totalNameUsed == 1)
 			{
 				$associationName[0] = strtolower($associationName[0]);
 				if (in_array($associationName[0], self::$forbiddenPropertyList) ||
@@ -170,7 +169,7 @@ class AddressFormatCore extends ObjectModel
 					$this->_errorFormatList[] = Tools::displayError('This name is not allowed.').': '.
 					$associationName[0];
 			}
-			else if ($totalNameUsed == 2)
+			elseif ($totalNameUsed == 2)
 			{
 				if (empty($associationName[0]) || empty($associationName[1]))
 					$this->_errorFormatList[] = Tools::displayError('Syntax error with this pattern.').': '.$patternName;
@@ -226,6 +225,7 @@ class AddressFormatCore extends ObjectModel
 					}
 				}
 			}
+
 		return (count($this->_errorFormatList)) ? false : true;
 	}
 
@@ -257,7 +257,7 @@ class AddressFormatCore extends ObjectModel
 					{
 						// Check if we need to use an older modified pattern if a key has already be matched before
 						$replacedValue = empty($mainFormattedKey) ? $pattern : $formattedValueList[$mainFormattedKey];
-						if (($formattedValue = preg_replace('/'.$key.'/', $formattedValueList[$key], $replacedValue, -1, $count)))
+						if (($formattedValue = preg_replace('/^'.$key.'$/', $formattedValueList[$key], $replacedValue, -1, $count)))
 							if ($count)
 							{
 								// Allow to check multiple key in the same pattern,
@@ -378,7 +378,7 @@ class AddressFormatCore extends ObjectModel
 					$addressText .= (!empty($tmpText)) ? $tmpText.$newLine: '';
 				}
 
-		$addressText = rtrim($addressText, $newLine);
+		$addressText = preg_replace('/'.preg_quote($newLine,'/').'$/i', '', $addressText);
 		$addressText = rtrim($addressText, $separator);
 
 		return $addressText;
@@ -543,5 +543,11 @@ class AddressFormatCore extends ObjectModel
 			Cache::store('AddressFormat::_getFormatDB'.$id_country, trim($format));
 		}
 		return Cache::retrieve('AddressFormat::_getFormatDB'.$id_country);
+	}
+
+	public static function getFieldsRequired()
+	{
+		$address = new Address;
+		return array_unique(array_merge($address->getFieldsRequiredDB(), AddressFormat::$requireFormFieldsList));
 	}
 }

@@ -18,12 +18,12 @@
 	</accounting>
 
 	<taxes>
-        <tax id="1" name="TVA FR 19.6%" rate="19.6" account_number="445711" />
-        <tax id="2" name="TVA FR 7%" rate="7" account_number="" />
+        <tax id="1" name="TVA FR 20%" rate="20" account_number="445711" />
+        <tax id="2" name="TVA FR 10%" rate="10" account_number="" />
         <tax id="3" name="TVA FR 5.5%" rate="5.5" account_number="445712" />
         <tax id="4" name="TVA FR 2.1%" rate="2.1" account_number="445711" />
 
-        <taxRulesGroup name="FR Taux standard (19.6%)">
+        <taxRulesGroup name="FR Taux standard (20%)">
             <taxRule iso_code_country="be" id_tax="1" />
             <taxRule iso_code_country="bg" id_tax="1" />
             <taxRule iso_code_country="cz" id_tax="1" />
@@ -53,7 +53,7 @@
             <taxRule iso_code_country="uk" id_tax="1" />
         </taxRulesGroup>
 
-        <taxRulesGroup name="FR Taux réduit (7%)">
+        <taxRulesGroup name="FR Taux réduit (10%)">
             <taxRule iso_code_country="be" id_tax="2" />
             <taxRule iso_code_country="bg" id_tax="2" />
             <taxRule iso_code_country="cz" id_tax="2" />

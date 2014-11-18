@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -77,6 +77,7 @@ class GuestCore extends ObjectModel
 	{
 		$userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 		$acceptLanguage = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '';
+		$this->accept_language = $this->getLanguage($acceptLanguage);
 		$this->id_operating_system = $this->getOs($userAgent);
 		$this->id_web_browser = $this->getBrowser($userAgent);
 		$this->mobile_theme = Context::getContext()->getMobileDevice();
@@ -108,6 +109,7 @@ class GuestCore extends ObjectModel
 			'Safari iPad' => 'iPad',
 			'Firefox' => 'Firefox/',
 			'Opera' => 'Opera',
+			'IE 11' => 'Trident',
 			'IE 10' => 'MSIE 10',
 			'IE 9' => 'MSIE 9',
 			'IE 8' => 'MSIE 8',

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -34,10 +34,25 @@ function update_for_13version()
 	// Disable the Smarty 3
 	// Disable the URL rewritting
 	// Disable Canonical redirection
-	$res = Db::getInstance()->getValue('REPLACE INTO `'._DB_PREFIX_.'configuration`
-		(name, value) VALUES 
-		("PS_FORCE_SMARTY_2", "1"),
-		("PS_REWRITING_SETTINGS", "0")
-		("PS_CANONICAL_REDIRECT", "0")
-		');
+
+	$res = true;
+	$exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` LIKE \'PS_FORCE_SMARTY_2\'');
+	if ($exist)
+		$res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "1" WHERE `name` LIKE \'PS_FORCE_SMARTY_2\'');
+	else
+		$res &= Db::getInstance()->getValue('INSERT INTO `'._DB_PREFIX_.'configuration` (name, value) VALUES ("PS_FORCE_SMARTY_2", "1")');
+
+	$exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` LIKE \'PS_REWRITING_SETTINGS\'');
+	if ($exist)
+		$res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "0" WHERE `name` LIKE \'PS_REWRITING_SETTINGS\'');
+	else
+		$res &= Db::getInstance()->getValue('INSERT INTO `'._DB_PREFIX_.'configuration` (name, value) VALUES ("PS_REWRITING_SETTINGS", "0")');
+
+	$exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` LIKE \'PS_CANONICAL_REDIRECT\'');
+	if ($exist)
+		$res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "0" WHERE `name` LIKE \'PS_CANONICAL_REDIRECT\'');
+	else
+		$res &= Db::getInstance()->getValue('INSERT INTO `'._DB_PREFIX_.'configuration` (name, value) VALUES ("PS_CANONICAL_REDIRECT", "0")');
+
+	return $res;
 }

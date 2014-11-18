@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -143,9 +143,9 @@ class DispatcherCore
 	 * @var bool If true, use routes to build URL (mod rewrite must be activated)
 	 */
 	protected $use_routes = false;
-	
+
 	protected $multilang_activated = false;
-	
+
 	/**
 	 * @var array List of loaded routes
 	 */
@@ -169,7 +169,8 @@ class DispatcherCore
 	/**
 	 * @var string Set default controller, which will be used if http parameter 'controller' is empty
 	 */
-	protected $default_controller = 'index';
+	protected $default_controller;
+	protected $use_default_controller = false;
 
 	/**
 	 * @var string Controller to use if found controller doesn't exist
@@ -205,21 +206,18 @@ class DispatcherCore
 		{
 			$this->front_controller = self::FC_ADMIN;
 			$this->controller_not_found = 'adminnotfound';
-			$this->default_controller = 'adminhome';
 		}
 		elseif (Tools::getValue('fc') == 'module')
 		{
 			$this->front_controller = self::FC_MODULE;
 			$this->controller_not_found = 'pagenotfound';
-			$this->default_controller = 'default';
 		}
 		else
 		{
 			$this->front_controller = self::FC_FRONT;
 			$this->controller_not_found = 'pagenotfound';
-			$this->default_controller = 'index';
 		}
-		
+
 		$this->setRequestUri();
 
 		// Switch language if needed (only on front)
@@ -232,6 +230,26 @@ class DispatcherCore
 		$this->loadRoutes();
 	}
 
+	public function useDefaultController()
+	{
+		$this->use_default_controller = true;
+		if ($this->default_controller === null)
+		{
+			if (defined('_PS_ADMIN_DIR_'))
+			{
+				if (isset(Context::getContext()->employee) && Validate::isLoadedObject(Context::getContext()->employee) && isset(Context::getContext()->employee->default_tab))
+					$this->default_controller = Tab::getClassNameById((int)Context::getContext()->employee->default_tab);
+				if (empty($this->default_controller))
+					$this->default_controller = 'AdminDashboard';
+			}
+			elseif (Tools::getValue('fc') == 'module')
+				$this->default_controller = 'default';
+			else
+				$this->default_controller = 'index';
+		}
+		return $this->default_controller;
+	}
+
 	/**
 	 * Find the controller and instantiate it
 	 */
@@ -242,7 +260,7 @@ class DispatcherCore
 		// Get current controller
 		$this->getController();
 		if (!$this->controller)
-			$this->controller = $this->default_controller;
+			$this->controller = $this->useDefaultController();
 		// Dispatch with right front controller
 		switch ($this->front_controller)
 		{
@@ -283,7 +301,10 @@ class DispatcherCore
 
 			// Dispatch back office controller + module back office controller
 			case self::FC_ADMIN :
-				$tab = Tab::getInstanceFromClassName($this->controller);
+				if ($this->use_default_controller && !Tools::getValue('token') && Validate::isLoadedObject(Context::getContext()->employee) && Context::getContext()->employee->isLoggedBack())
+					Tools::redirectAdmin('index.php?controller='.$this->controller.'&token='.Tools::getAdminTokenLite($this->controller));
+
+				$tab = Tab::getInstanceFromClassName($this->controller, Configuration::get('PS_LANG_DEFAULT'));
 				$retrocompatibility_admin_tab = null;
 
 				if ($tab->module)
@@ -310,9 +331,14 @@ class DispatcherCore
 				else
 				{
 					$controllers = Dispatcher::getControllers(array(_PS_ADMIN_DIR_.'/tabs/', _PS_ADMIN_CONTROLLER_DIR_, _PS_OVERRIDE_DIR_.'controllers/admin/'));
-
 					if (!isset($controllers[strtolower($this->controller)]))
+					{
+						// If this is a parent tab, load the first child
+						if (Validate::isLoadedObject($tab) && $tab->id_parent == 0 && ($tabs = Tab::getTabs(Context::getContext()->language->id, $tab->id)) && isset($tabs[0]))
+							Tools::redirectAdmin(Context::getContext()->link->getAdminLink($tabs[0]['class_name']));
 						$this->controller = $this->controller_not_found;
+					}
+
 					$controller_class = $controllers[strtolower($this->controller)];
 					$params_hook_action_dispatcher = array('controller_type' => self::FC_ADMIN, 'controller_class' => $controller_class, 'is_module' => 0);
 
@@ -352,7 +378,7 @@ class DispatcherCore
 			$e->displayMessage();
 		}
 	}
-	
+
 	/**
 	 * Set request uri and iso lang
 	 */
@@ -361,15 +387,16 @@ class DispatcherCore
 		// Get request uri (HTTP_X_REWRITE_URL is used by IIS)
 		if (isset($_SERVER['REQUEST_URI']))
 			$this->request_uri = $_SERVER['REQUEST_URI'];
-		else if (isset($_SERVER['HTTP_X_REWRITE_URL']))
+		elseif (isset($_SERVER['HTTP_X_REWRITE_URL']))
 			$this->request_uri = $_SERVER['HTTP_X_REWRITE_URL'];
 		$this->request_uri = rawurldecode($this->request_uri);
-		
-		$this->request_uri = preg_replace('#^'.preg_quote(Context::getContext()->shop->getBaseURI(), '#').'#i', '/', $this->request_uri);
+
+		if (isset(Context::getContext()->shop) && is_object(Context::getContext()->shop))
+			$this->request_uri = preg_replace('#^'.preg_quote(Context::getContext()->shop->getBaseURI(), '#').'#i', '/', $this->request_uri);
 
 		// If there are several languages, get language from uri
 		if ($this->use_routes && Language::isMultiLanguageActivated())
-			if (preg_match('#^/([a-z]{2})/#', $this->request_uri, $m))
+			if (preg_match('#^/([a-z]{2})(?:/.*)?$#', $this->request_uri, $m))
 			{
 				$_GET['isolang'] = $m[1];
 				$this->request_uri = substr($this->request_uri, 3);
@@ -382,40 +409,49 @@ class DispatcherCore
 	protected function loadRoutes($id_shop = null)
 	{
 		$context = Context::getContext();
-		
+
 		// Load custom routes from modules
 		$modules_routes = Hook::exec('moduleRoutes', array('id_shop' => $id_shop), null, true, false);
 		if (is_array($modules_routes) && count($modules_routes))
 			foreach($modules_routes as $module_route)
-				foreach($module_route as $route => $route_details)
-					if (array_key_exists('controller', $route_details) && array_key_exists('rule', $route_details) 
-						&& array_key_exists('keywords', $route_details) && array_key_exists('params', $route_details))
-					{
-						if (!isset($this->default_routes[$route]))
-						$this->default_routes[$route] = array();
-						$this->default_routes[$route] = array_merge($this->default_routes[$route], $route_details);
-					}
-		
-		// Set default routes
-		foreach (Language::getLanguages() as $lang)
-			foreach ($this->default_routes as $id => $route)
-				$this->addRoute(
-					$id,
-					$route['rule'],
-					$route['controller'],
-					$lang['id_lang'],
-					$route['keywords'],
-					isset($route['params']) ? $route['params'] : array(),
-					$id_shop
-				);
-		
+			{
+				if (is_array($module_route) && count($module_route))
+					foreach($module_route as $route => $route_details)
+						if (array_key_exists('controller', $route_details) && array_key_exists('rule', $route_details)
+							&& array_key_exists('keywords', $route_details) && array_key_exists('params', $route_details))
+						{
+							if (!isset($this->default_routes[$route]))
+							$this->default_routes[$route] = array();
+							$this->default_routes[$route] = array_merge($this->default_routes[$route], $route_details);
+						}
+			}
+
+		$languages = array();
+		if (isset($context->language) && !in_array($context->language->id, $languages = Language::getLanguages()))
+		{
+			$languages[] = (int)$context->language->id;
+			// Set default routes
+			foreach ($languages as $lang)
+				foreach ($this->default_routes as $id => $route)
+					$this->addRoute(
+						$id,
+						$route['rule'],
+						$route['controller'],
+						$lang['id_lang'],
+						$route['keywords'],
+						isset($route['params']) ? $route['params'] : array(),
+						$id_shop
+					);
+		}
+
 		// Load the custom routes prior the defaults to avoid infinite loops
 		if ($this->use_routes)
 		{
 			// Get iso lang
 			$iso_lang = Tools::getValue('isolang');
-			$id_lang = $context->language->id;
-			if (!empty($iso_lang))
+			if (isset($context->language))
+				$id_lang = (int)$context->language->id;
+			if ((!empty($iso_lang) && Validate::isLanguageIsoCode($iso_lang)) || !isset($id_lang))
 				$id_lang = Language::getIdByIso($iso_lang);
 
 			// Load routes from meta table
@@ -441,7 +477,10 @@ class DispatcherCore
 			// Load custom routes
 			foreach ($this->default_routes as $route_id => $route_data)
 				if ($custom_route = Configuration::get('PS_ROUTE_'.$route_id, null, null, $id_shop))
-					foreach (Language::getLanguages() as $lang)
+				{
+					if (isset($context->language) && !in_array($context->language->id, $languages = Language::getLanguages()))
+						$languages[] = (int)$context->language->id;
+					foreach ($languages as $lang)
 						$this->addRoute(
 							$route_id,
 							$custom_route,
@@ -451,6 +490,7 @@ class DispatcherCore
 							isset($route_data['params']) ? $route_data['params'] : array(),
 							$id_shop
 						);
+				}
 		}
 	}
 
@@ -464,12 +504,12 @@ class DispatcherCore
 	 */
 	public function addRoute($route_id, $rule, $controller, $id_lang = null, array $keywords = array(), array $params = array(), $id_shop = null)
 	{
-		if ($id_lang === null)
+		if (isset(Context::getContext()->language) && $id_lang === null)
 			$id_lang = (int)Context::getContext()->language->id;
-		
-		if ($id_shop === null)
+
+		if (isset(Context::getContext()->shop) && $id_shop === null)
 			$id_shop = (int)Context::getContext()->shop->id;
-		
+
 		$regexp = preg_quote($rule, '#');
 		if ($keywords)
 		{
@@ -502,12 +542,12 @@ class DispatcherCore
 			$keywords = $transform_keywords;
 		}
 
-		$regexp = '#^/'.$regexp.'(\?.*)?$#u';
+		$regexp = '#^/'.$regexp.'$#u';
 		if (!isset($this->routes[$id_shop]))
 			$this->routes[$id_shop] = array();
 		if (!isset($this->routes[$id_shop][$id_lang]))
 			$this->routes[$id_shop][$id_lang] = array();
-		
+
 		$this->routes[$id_shop][$id_lang][$route_id] = array(
 			'rule' =>		$rule,
 			'regexp' =>		$regexp,
@@ -527,11 +567,11 @@ class DispatcherCore
 	 */
 	public function hasRoute($route_id, $id_lang = null, $id_shop = null)
 	{
-		if ($id_lang === null)
+		if (isset(Context::getContext()->language) && $id_lang === null)
 			$id_lang = (int)Context::getContext()->language->id;
-		if ($id_shop === null)
+		if (isset(Context::getContext()->shop) && $id_shop === null)
 			$id_shop = (int)Context::getContext()->shop->id;
-		
+
 		return isset($this->routes[$id_shop]) && isset($this->routes[$id_shop][$id_lang]) && isset($this->routes[$id_shop][$id_lang][$route_id]);
 	}
 
@@ -549,7 +589,7 @@ class DispatcherCore
 		if ($id_shop === null)
 			$id_shop = (int)Context::getContext()->shop->id;
 
-		if ($this->use_routes && !isset($this->routes[$id_shop]))
+		if (!isset($this->routes[$id_shop]))
 			$this->loadRoutes($id_shop);
 
 		if (!isset($this->routes[$id_shop]) || !isset($this->routes[$id_shop][$id_lang]) || !isset($this->routes[$id_shop][$id_lang][$route_id]))
@@ -593,15 +633,15 @@ class DispatcherCore
 			$id_lang = (int)Context::getContext()->language->id;
 		if ($id_shop === null)
 			$id_shop = (int)Context::getContext()->shop->id;
-		
-		if ($this->use_routes && !isset($this->routes[$id_shop]))
+
+		if (!isset($this->routes[$id_shop]))
 			$this->loadRoutes($id_shop);
-		
+
 		if (!isset($this->routes[$id_shop][$id_lang][$route_id]))
 		{
 			$query = http_build_query($params, '', '&');
 			$index_link = $this->use_routes ? '' : 'index.php';
-			return ($route_id == 'index') ? $index_link.(($query) ? '?'.$query : '') : 'index.php?controller='.$route_id.(($query) ? '&'.$query : '').$anchor;
+			return ($route_id == 'index') ? $index_link.(($query) ? '?'.$query : '') : ((trim($route_id) == '') ? '' : 'index.php?controller='.$route_id).(($query) ? '&'.$query : '').$anchor;
 		}
 		$route = $this->routes[$id_shop][$id_lang][$route_id];
 		// Check required fields
@@ -612,7 +652,7 @@ class DispatcherCore
 				continue;
 
 			if (!array_key_exists($key, $params))
-				die('Dispatcher::createUrl() miss required parameter "'.$key.'" for route "'.$route_id.'"');
+				throw new PrestaShopException('Dispatcher::createUrl() miss required parameter "'.$key.'" for route "'.$route_id.'"');
 			if (isset($this->default_routes[$route_id]))
 				$query_params[$this->default_routes[$route_id]['keywords'][$key]['param']] = $params[$key];
 		}
@@ -620,10 +660,10 @@ class DispatcherCore
 		// Build an url which match a route
 		if ($this->use_routes || $force_routes)
 		{
-			
+
 			$url = $route['rule'];
 			$add_param = array();
-			
+
 			foreach ($params as $key => $value)
 			{
 				if (!isset($route['keywords'][$key]))
@@ -658,7 +698,7 @@ class DispatcherCore
 			if ($this->multilang_activated)
 				$query .= (!empty($query) ? '&' : '').'id_lang='.(int)$id_lang;
 			$url = 'index.php?'.$query;
-			
+
 		}
 
 		return $url.$anchor;
@@ -670,83 +710,81 @@ class DispatcherCore
 	 * @return string
 	 */
 	public function getController($id_shop = null)
-	{	
+	{
 		if (defined('_PS_ADMIN_DIR_'))
-			$_GET['controllerUri'] = Tools::getvalue('controller');		
+			$_GET['controllerUri'] = Tools::getvalue('controller');
 		if ($this->controller)
 		{
 			$_GET['controller'] = $this->controller;
 			return $this->controller;
 		}
 
-		if ($id_shop === null)
+		if (isset(Context::getContext()->shop) && $id_shop === null)
 			$id_shop = (int)Context::getContext()->shop->id;
 
 		$controller = Tools::getValue('controller');
-	
+
 		if (isset($controller) && is_string($controller) && preg_match('/^([0-9a-z_-]+)\?(.*)=(.*)$/Ui', $controller, $m))
 		{
 			$controller = $m[1];
 			if (isset($_GET['controller']))
 				$_GET[$m[2]] = $m[3];
-			else if (isset($_POST['controller']))
+			elseif (isset($_POST['controller']))
 				$_POST[$m[2]] = $m[3];
 		}
 
 		if (!Validate::isControllerName($controller))
 			$controller = false;
-	
+
 		// Use routes ? (for url rewriting)
 		if ($this->use_routes && !$controller && !defined('_PS_ADMIN_DIR_'))
 		{
 			if (!$this->request_uri)
 				return strtolower($this->controller_not_found);
 			$controller = $this->controller_not_found;
-			
-			// If the request_uri matches a static file, then there is no need to check the routes, we keep "controller_not_found" (a static file should not go through the dispatcher) 
-			if (!preg_match('/\.(gif|jpe?g|png|css|js|ico)$/i', $this->request_uri))
+
+			// If the request_uri matches a static file, then there is no need to check the routes, we keep "controller_not_found" (a static file should not go through the dispatcher)
+			if (!preg_match('/\.(gif|jpe?g|png|css|js|ico)$/i', parse_url($this->request_uri, PHP_URL_PATH)))
 			{
 				// Add empty route as last route to prevent this greedy regexp to match request uri before right time
 				if ($this->empty_route)
 					$this->addRoute($this->empty_route['routeID'], $this->empty_route['rule'], $this->empty_route['controller'], Context::getContext()->language->id, array(), array(), $id_shop);
 
+				list($uri) = explode('?', $this->request_uri);
+
 				if (isset($this->routes[$id_shop][Context::getContext()->language->id]))
 					foreach ($this->routes[$id_shop][Context::getContext()->language->id] as $route)
-						if (preg_match($route['regexp'], $this->request_uri, $m))
+						if (preg_match($route['regexp'], $uri, $m))
 						{
 							// Route found ! Now fill $_GET with parameters of uri
 							foreach ($m as $k => $v)
 								if (!is_numeric($k))
 									$_GET[$k] = $v;
-		
+
 							$controller = $route['controller'] ? $route['controller'] : $_GET['controller'];
 							if (!empty($route['params']))
 								foreach ($route['params'] as $k => $v)
 									$_GET[$k] = $v;
-		
+
 							// A patch for module friendly urls
-							if (preg_match('#module-([a-z0-9_-]+)-([a-z0-9]+)$#i', $controller, $m))
+							if (preg_match('#module-([a-z0-9_-]+)-([a-z0-9_]+)$#i', $controller, $m))
 							{
 								$_GET['module'] = $m[1];
 								$_GET['fc'] = 'module';
 								$controller = $m[2];
 							}
-		
+
 							if (isset($_GET['fc']) && $_GET['fc'] == 'module')
 								$this->front_controller = self::FC_MODULE;
 							break;
 						}
 			}
-			
-			if ($controller == 'index' || $this->request_uri == '/index.php') 
-				$controller = $this->default_controller;
-			$this->controller = $controller;
-		}
-		// Default mode, take controller from url
-		else
-			$this->controller = $controller;
 
-		$this->controller = str_replace('-', '', $this->controller);
+			if ($controller == 'index' || preg_match('/^\/index.php(?:\?.*)?$/', $this->request_uri))
+				$controller = $this->useDefaultController();
+		}
+
+		$this->controller = str_replace('-', '', $controller);
 		$_GET['controller'] = $this->controller;
 		return $this->controller;
 	}
@@ -766,6 +804,46 @@ class DispatcherCore
 		foreach ($dirs as $dir)
 			$controllers = array_merge($controllers, Dispatcher::getControllersInDirectory($dir));
 		return $controllers;
+	}
+
+	/**
+	 * Get list of all available Module Front controllers
+	 *
+	 * @return array
+	 */
+	public static function getModuleControllers($type = 'all', $module = null)
+	{
+		$modules_controllers = array();
+		if (is_null($module))
+			$modules = Module::getModulesOnDisk(true);
+		elseif (!is_array($module))
+			$modules = array(Module::getInstanceByName($module));
+		else
+		{
+			$modules = array();
+			foreach ($module as $_mod)
+				$modules[] = Module::getInstanceByName($_mod);
+		}
+
+		foreach ($modules as $mod)
+		{
+			foreach (Dispatcher::getControllersInDirectory(_PS_MODULE_DIR_.$mod->name.'/controllers/') as $controller)
+			{
+				if ($type == 'admin')
+				{
+					if (strpos($controller, 'Admin') !== false)
+						$modules_controllers[$mod->name][] = $controller;
+				}
+				elseif ($type == 'front')
+				{
+					if (strpos($controller, 'Admin') === false)
+						$modules_controllers[$mod->name][] = $controller;
+				}
+				else
+					$modules_controllers[$mod->name][] = $controller;
+			}
+		}
+		return $modules_controllers;
 	}
 
 	/**

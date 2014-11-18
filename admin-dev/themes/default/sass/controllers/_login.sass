@@ -1,0 +1,66 @@
+@mixin background-image-with-ms($image)
+	@include background-image($image) // Compass default version, for everything but IE 10.
+	background-image: -ms-#{$image} // Vendor prefixes for IE 10.
+
+#login
+	min-height: 100%
+	padding-bottom: 45px
+	background-color: #4D394B // Old browsers
+	@include background-image-with-ms(linear-gradient(top left,#2C3042,#4D394B))
+	
+#login-header
+	padding-top: 40px
+	margin-bottom: 30px
+	color: white
+	h1, h4
+		margin: 0
+		padding: 0
+
+#login-panel
+	margin: 0 auto
+	width: 420px
+
+	@media (max-width: $screen-phone)
+		width: 90%
+	.panel
+		@include box-shadow(rgba(white,0.45) 0 0 0 6px)
+	.panel-footer
+		height: inherit
+		margin: 0 -20px -20px
+	.flip-container
+		height: 370px
+		@include perspective(1000px)
+		transform-style: preserve-3d
+		//@include animate(fadeInDown, 0.3s)
+		&.flip
+			.flipper
+				@include rotateY(180deg)
+			.back
+				@include backface-visibility(visible)
+	.flipper
+		position: relative
+		transform-style: preserve-3d
+		@include transition-duration(0.6s)
+		@include transform-style
+	.front, .back
+		width: 100%
+		padding: 20px
+		position: absolute
+		transition: 0.6s
+		transform-style: preserve-3d
+		top: 0
+		@include backface-visibility(hidden)
+		@include left(0)
+	.front
+		@include rotateY(0)
+		z-index: 2
+	.back
+		display: none
+		z-index: 1
+		@include rotateY(180deg)
+	#remind-me
+		margin-top: 0
+
+#login-footer
+	a
+		color: #A0AAB5

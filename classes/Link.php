@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -84,19 +84,15 @@ class LinkCore
 	 * @param int $ipa ID product attribute
 	 * @return string
 	 */
-	public function getProductLink($product, $alias = null, $category = null, $ean13 = null, $id_lang = null, $id_shop = null, $ipa = 0, $force_routes = false)
+	public function getProductLink($product, $alias = null, $category = null, $ean13 = null, $id_lang = null, $id_shop = null, $ipa = 0, $force_routes = false, $relative_protocol = false)
 	{
 		$dispatcher = Dispatcher::getInstance();
 
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
 
-		if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && $id_shop !== null)
-			$shop = new Shop($id_shop);
-		else
-			$shop = Context::getContext()->shop;
-		
-		$url = 'http://'.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang, null, $id_shop);
+
+		$url = $this->getBaseLink($id_shop, null, $relative_protocol).$this->getLangLink($id_lang, null, $id_shop);
 
 		if (!is_object($product))
 		{
@@ -158,16 +154,12 @@ class LinkCore
 	 * @param string $selected_filters Url parameter to autocheck filters of the module blocklayered
 	 * @return string
 	 */
-	public function getCategoryLink($category, $alias = null, $id_lang = null, $selected_filters = null, $id_shop = null)
+	public function getCategoryLink($category, $alias = null, $id_lang = null, $selected_filters = null, $id_shop = null, $relative_protocol = false)
 	{
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
 		
-		if ($id_shop === null)
-			$shop = Context::getContext()->shop;
-		else
-			$shop = new Shop($id_shop);
-		$url = 'http://'.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang, null, $id_shop);
+		$url = $this->getBaseLink($id_shop, null, $relative_protocol).$this->getLangLink($id_lang, null, $id_shop);
 
 		if (!is_object($category))
 			$category = new Category($category, $id_lang);
@@ -176,8 +168,8 @@ class LinkCore
 		$params = array();
 		$params['id'] = $category->id;
 		$params['rewrite'] = (!$alias) ? $category->link_rewrite : $alias;
-		$params['meta_keywords'] =	Tools::str2url($category->meta_keywords);
-		$params['meta_title'] = Tools::str2url($category->meta_title);
+		$params['meta_keywords'] =	Tools::str2url($category->getFieldByLang('meta_keywords'));
+		$params['meta_title'] = Tools::str2url($category->getFieldByLang('meta_title'));
 
 		// Selected filters is used by the module blocklayered
 		$selected_filters = is_null($selected_filters) ? '' : $selected_filters;
@@ -201,16 +193,12 @@ class LinkCore
 	 * @param int $id_lang
 	 * @return string
 	 */
-	public function getCMSCategoryLink($cms_category, $alias = null, $id_lang = null, $id_shop = null)
+	public function getCMSCategoryLink($cms_category, $alias = null, $id_lang = null, $id_shop = null, $relative_protocol = false)
 	{
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
 
-		if ($id_shop === null)
-			$shop = Context::getContext()->shop;
-		else
-			$shop = new Shop($id_shop);
-		$url = 'http://'.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang, null, $id_shop);
+		$url = $this->getBaseLink($id_shop, null, $relative_protocol = false).$this->getLangLink($id_lang, null, $id_shop);
 
 		$dispatcher = Dispatcher::getInstance();
 		if (!is_object($cms_category))
@@ -239,19 +227,12 @@ class LinkCore
 	 * @param int $id_lang
 	 * @return string
 	 */
-	public function getCMSLink($cms, $alias = null, $ssl = false, $id_lang = null, $id_shop = null)
+	public function getCMSLink($cms, $alias = null, $ssl = null, $id_lang = null, $id_shop = null, $relative_protocol = false)
 	{
-		$base = (($ssl && $this->ssl_enable) ? 'https://' : 'http://');
-
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
-		
-		if ($id_shop === null)
-			$shop = Context::getContext()->shop;
-		else
-			$shop = new Shop($id_shop);
-		$url = $base.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang, null, $id_shop);
 
+		$url = $this->getBaseLink($id_shop, $ssl, $relative_protocol).$this->getLangLink($id_lang, null, $id_shop);
 
 		$dispatcher = Dispatcher::getInstance();
 		if (!is_object($cms))
@@ -285,16 +266,13 @@ class LinkCore
 	 * @param int $id_lang
 	 * @return string
 	 */
-	public function getSupplierLink($supplier, $alias = null, $id_lang = null, $id_shop = null)
+	public function getSupplierLink($supplier, $alias = null, $id_lang = null, $id_shop = null, $relative_protocol = false)
 	{
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
 
-		if ($id_shop === null)
-			$shop = Context::getContext()->shop;
-		else
-			$shop = new Shop($id_shop);
-		$url = 'http://'.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang, null, $id_shop);
+
+		$url = $this->getBaseLink($id_shop, null, $relative_protocol).$this->getLangLink($id_lang, null, $id_shop);
 		
 		$dispatcher = Dispatcher::getInstance();
 		if (!is_object($supplier))
@@ -322,16 +300,12 @@ class LinkCore
 	 * @param int $id_lang
 	 * @return string
 	 */
-	public function getManufacturerLink($manufacturer, $alias = null, $id_lang = null, $id_shop = null)
+	public function getManufacturerLink($manufacturer, $alias = null, $id_lang = null, $id_shop = null, $relative_protocol = false)
 	{
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
 
-		if ($id_shop === null)
-			$shop = Context::getContext()->shop;
-		else
-			$shop = new Shop($id_shop);
-		$url = 'http://'.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang, null, $id_shop);
+		$url = $this->getBaseLink($id_shop, null, $relative_protocol).$this->getLangLink($id_lang, null, $id_shop);
 
 		$dispatcher = Dispatcher::getInstance();
 		if (!is_object($manufacturer))
@@ -360,29 +334,22 @@ class LinkCore
 	 * @param int $id_lang
 	 * @return string
 	 */
-	public function getModuleLink($module, $controller = 'default', array $params = array(), $ssl = false, $id_lang = null, $id_shop = null)
+	public function getModuleLink($module, $controller = 'default', array $params = array(), $ssl = null, $id_lang = null, $id_shop = null, $relative_protocol = false)
 	{
-		$base = (($ssl && $this->ssl_enable) ? 'https://' : 'http://');
-
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
 
-		if ($id_shop === null)
-			$shop = Context::getContext()->shop;
-		else
-			$shop = new Shop($id_shop);
-		$url = $base.$shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang, null, $id_shop);
-
+		$url = $this->getBaseLink($id_shop, $ssl, $relative_protocol).$this->getLangLink($id_lang, null, $id_shop);
+		
+		// Set available keywords
+		$params['module'] = $module;
+		$params['controller'] = $controller ? $controller : 'default';
+			
 		// If the module has its own route ... just use it !
 		if (Dispatcher::getInstance()->hasRoute('module-'.$module.'-'.$controller, $id_lang, $id_shop))
 			return $this->getPageLink('module-'.$module.'-'.$controller, $ssl, $id_lang, $params);
 		else
-		{
-			// Set available keywords
-			$params['module'] = $module;
-			$params['controller'] = $controller ? $controller : 'default';		
 			return $url.Dispatcher::getInstance()->createUrl('module', $id_lang, $params, $this->allow, '', $id_shop);
-		}
 	}
 
 	/**
@@ -390,7 +357,7 @@ class LinkCore
 	 *
 	 * @param string $controller
 	 * @param boolean $with_token include or not the token in the url
-	 * @return controller url
+	 * @return string url
 	 */
 	public function getAdminLink($controller, $with_token = true)
 	{
@@ -439,7 +406,7 @@ class LinkCore
 
 	public function getMediaLink($filepath)
 	{
-		return Tools::getProtocol().Tools::getMediaServer($filepath).$filepath;
+		return $this->protocol_content.Tools::getMediaServer($filepath).$filepath;
 	}
 
 	/**
@@ -453,14 +420,29 @@ class LinkCore
 	 *
 	 * @return string Page link
 	 */
-	public function getPageLink($controller, $ssl = false, $id_lang = null, $request = null, $request_url_encode = false, $id_shop = null)
+	public function getPageLink($controller, $ssl = null, $id_lang = null, $request = null, $request_url_encode = false, $id_shop = null, $relative_protocol = false)
 	{
+		//If $controller contains '&' char, it means that $controller contains request data and must be parsed first
+		$p = strpos($controller, '&');
+		if ($p !== false) {
+			$request = substr($controller, $p + 1);
+			$request_url_encode = false;
+			$controller = substr($controller, 0, $p);
+		}
+		
 		$controller = Tools::strReplaceFirst('.php', '', $controller);
-
 		if (!$id_lang)
 			$id_lang = (int)Context::getContext()->language->id;
-
-		if (!is_array($request))
+		
+		//need to be unset because getModuleLink need those params when rewrite is enable
+		if (is_array($request))
+		{
+			if (isset($request['module']))
+				unset($request['module']);
+			if (isset($request['controller']))
+				unset($request['controller']);	
+		}
+		else
 		{
 			// @FIXME html_entity_decode has been added due to '&amp;' => '%3B' ...
 			$request = html_entity_decode($request);
@@ -469,16 +451,9 @@ class LinkCore
 			parse_str($request, $request);
 		}
 
-		if ($id_shop === null)
-			$shop = Context::getContext()->shop;
-		else
-			$shop = new Shop($id_shop);
-
 		$uri_path = Dispatcher::getInstance()->createUrl($controller, $id_lang, $request, false, '', $id_shop);
-		$url = ($ssl && $this->ssl_enable) ? 'https://' : 'http://';
-		$url .= $shop->domain.$shop->getBaseURI().$this->getLangLink($id_lang, null, $id_shop).ltrim($uri_path, '/');
 
-		return $url;
+		return $this->getBaseLink($id_shop, $ssl, $relative_protocol).$this->getLangLink($id_lang, null, $id_shop).ltrim($uri_path, '/');
 	}
 
 	public function getCatImageLink($name, $id_category, $type = null)
@@ -532,16 +507,17 @@ class LinkCore
 			if (!empty($module))
 			{
 				unset($params['fc'], $params['module']);
-				return $this->getModuleLink($module, $controller, $params, false, (int)$id_lang);
+				return $this->getModuleLink($module, $controller, $params, null, (int)$id_lang);
 			}
 		}		
 
-		return $this->getPageLink($controller, false, $id_lang, $params);
+		return $this->getPageLink($controller, null, $id_lang, $params);
 	}
 
 	public function goPage($url, $p)
 	{
-		return $url.($p == 1 ? '' : (!strstr($url, '?') ? '?' : '&amp;').'p='.(int)$p);
+		$url = rtrim(str_replace('?&', '?', $url), '?');
+		return $url.($p == 1 ? '' : (!strstr($url, '?') ? '?' : '&').'p='.(int)$p);
 	}
 
 	/**
@@ -642,5 +618,53 @@ class LinkCore
 
 		return Language::getIsoById($id_lang).'/';
 	}
-}
+	
+	protected function getBaseLink($id_shop = null, $ssl = null, $relative_protocol = false)
+	{
+		static $force_ssl = null;
+		
+		if ($ssl === null)
+		{
+			if ($force_ssl === null)
+				$force_ssl = (Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE'));
+			$ssl = $force_ssl;
+		}
 
+		if (Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE') && $id_shop !== null)
+			$shop = new Shop($id_shop);
+		else
+			$shop = Context::getContext()->shop;
+
+		if ($relative_protocol)
+			$base = '//'.($ssl && $this->ssl_enable ? $shop->domain_ssl : $shop->domain);
+		else
+			$base = (($ssl && $this->ssl_enable) ? 'https://'.$shop->domain_ssl : 'http://'.$shop->domain);
+
+		return $base.$shop->getBaseURI();
+	}
+
+	public static function getQuickLink($url)
+	{
+		$parsedUrl = parse_url($url);
+		$output = array();
+		if (is_array($parsedUrl) && isset($parsedUrl['query']))
+		{
+			parse_str($parsedUrl['query'], $output);
+			unset($output['token'], $output['conf'], $output['id_quick_access']);
+		}
+		return http_build_query($output);
+	}
+
+	public function matchQuickLink($url)
+	{
+		$quicklink = $this->getQuickLink($url);
+		if ( isset($quicklink) && $quicklink === ($this->getQuickLink($_SERVER['REQUEST_URI'])))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+}

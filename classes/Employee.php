@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -52,6 +52,12 @@ class EmployeeCore extends ObjectModel
 	public $stats_date_from;
 	public $stats_date_to;
 
+	public $stats_compare_from;
+	public $stats_compare_to;
+	public $stats_compare_option = 1;
+
+	public $preselect_date_range;
+
 	/** @var string Display back office background in the specified color */
 	public $bo_color;
 
@@ -59,17 +65,31 @@ class EmployeeCore extends ObjectModel
 
 	/** @var string employee's chosen theme */
 	public $bo_theme;
+	
+	/** @var string employee's chosen css file */
+	public $bo_css = 'admin-theme.css';
 
 	/** @var integer employee desired screen width */
 	public $bo_width;
 
-	/** @var bool, true */
-	public $bo_show_screencast;
+	/** @var bool, false */
+	public $bo_menu = 1;
+	
+	/* Deprecated */
+	public $bo_show_screencast = false;
 
 	/** @var boolean Status */
 	public $active = 1;
 
+	/** @var boolean Optin status */
+	public $optin = 1;
+
 	public $remote_addr;
+
+	/* employee notifications */
+	public $id_last_order;
+	public $id_last_customer_message;
+	public $id_last_customer;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -78,21 +98,30 @@ class EmployeeCore extends ObjectModel
 		'table' => 'employee',
 		'primary' => 'id_employee',
 		'fields' => array(
-			'lastname' => 			array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
-			'firstname' => 			array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
-			'email' => 				array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'required' => true, 'size' => 128),
-			'id_lang' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
-			'passwd' => 			array('type' => self::TYPE_STRING, 'validate' => 'isPasswdAdmin', 'required' => true, 'size' => 32),
-			'last_passwd_gen' => 	array('type' => self::TYPE_STRING),
-			'active' => 			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-			'id_profile' => 		array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
-			'bo_color' => 			array('type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 32),
-			'default_tab' => 		array('type' => self::TYPE_INT, 'validate' => 'isInt'),
-			'bo_theme' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 32),
-			'bo_width' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-			'bo_show_screencast' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-			'stats_date_from' => 	array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-			'stats_date_to' => 		array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'lastname' =>					array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
+			'firstname' =>					array('type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 32),
+			'email' =>						array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'required' => true, 'size' => 128),
+			'id_lang' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
+			'passwd' => 					array('type' => self::TYPE_STRING, 'validate' => 'isPasswdAdmin', 'required' => true, 'size' => 32),
+			'last_passwd_gen' =>			array('type' => self::TYPE_STRING),
+			'active' => 					array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'optin' => 			  			array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'id_profile' => 		 		array('type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true),
+			'bo_color' => 			 		array('type' => self::TYPE_STRING, 'validate' => 'isColor', 'size' => 32),
+			'default_tab' => 		 		array('type' => self::TYPE_INT, 'validate' => 'isInt'),
+			'bo_theme' => 			 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 32),
+			'bo_css' => 					array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 64),
+			'bo_width' => 					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'bo_menu' => 					array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'stats_date_from' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'stats_date_to' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'stats_compare_from' =>			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'stats_compare_to' =>			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'stats_compare_option' =>		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'preselect_date_range' =>		array('type' => self::TYPE_STRING, 'size' => 32),
+			'id_last_order' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'id_last_customer_message' =>	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
+			'id_last_customer' =>			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 		),
 	);
 
@@ -102,6 +131,8 @@ class EmployeeCore extends ObjectModel
 			'last_passwd_gen' => array('setter' => null),
 			'stats_date_from' => array('setter' => null),
 			'stats_date_to' => array('setter' => null),
+			'stats_compare_from' => array('setter' => null),
+			'stats_compare_to' => array('setter' => null),
 			'passwd' => array('setter' => 'setWsPasswd'),
 		),
 	);
@@ -110,10 +141,15 @@ class EmployeeCore extends ObjectModel
 
 	public function __construct($id = null, $id_lang = null, $id_shop = null)
 	{
-		parent::__construct($id, $id_lang, $id_shop);
+		parent::__construct($id, null, $id_shop);
+
+		if (!is_null($id_lang))
+			$this->id_lang = (int)(Language::getLanguage($id_lang) !== false) ? $id_lang : Configuration::get('PS_LANG_DEFAULT');
 
 		if ($this->id)
 			$this->associated_shops = $this->getAssociatedShops();
+
+		$this->image_dir = _PS_EMPLOYEE_IMG_DIR_;
 	}
 
 	/**
@@ -122,11 +158,17 @@ class EmployeeCore extends ObjectModel
 	 */
 	public function getFields()
 	{
-		if (empty($this->stats_date_from))
-			$this->stats_date_from = date('Y-m-d 00:00:00');
+		if (empty($this->stats_date_from) || $this->stats_date_from == '0000-00-00')
+			$this->stats_date_from = date('Y-m-d', strtotime("-1 month"));
 
-		if (empty($this->stats_date_to))
-			$this->stats_date_to = date('Y-m-d 23:59:59');
+		if (empty($this->stats_compare_from) || $this->stats_compare_from == '0000-00-00')
+			$this->stats_compare_from = null;
+
+		if (empty($this->stats_date_to) || $this->stats_date_to == '0000-00-00')
+			$this->stats_date_to = date('Y-m-d');
+
+		if (empty($this->stats_compare_to) || $this->stats_compare_to == '0000-00-00')
+			$this->stats_compare_to = null;
 
 		return parent::getFields();
 	}
@@ -134,7 +176,56 @@ class EmployeeCore extends ObjectModel
 	public function add($autodate = true, $null_values = true)
 	{
 		$this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-'.Configuration::get('PS_PASSWD_TIME_BACK').'minutes'));
+		$this->saveOptin();
+		$this->updateTextDirection();
 	 	return parent::add($autodate, $null_values);
+	}
+
+	public function update($null_values = false)
+	{
+		if (empty($this->stats_date_from) || $this->stats_date_from == '0000-00-00')
+			$this->stats_date_from = date('Y-m-d');
+		if (empty($this->stats_date_to) || $this->stats_date_to == '0000-00-00')
+			$this->stats_date_to = date('Y-m-d');
+		$this->saveOptin();
+		$this->updateTextDirection();
+	 	return parent::update($null_values);
+	}
+
+	protected function updateTextDirection()
+	{
+		if (!defined('_PS_ADMIN_DIR_'))
+			return;
+		$path = _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR.$this->bo_theme.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR;
+		$language = new Language($this->id_lang);
+		if ($language->is_rtl && !strpos($this->bo_css, '_rtl'))
+		{
+			$bo_css = preg_replace('/^(.*)\.css$/', '$1_rtl.css', $this->bo_css);
+			if (file_exists($path.$bo_css))
+				$this->bo_css = $bo_css;
+		}
+		elseif (!$language->is_rtl && strpos($this->bo_css, '_rtl'))
+		{
+			$bo_css = preg_replace('/^(.*)_rtl\.css$/', '$1.css', $this->bo_css);
+			if (file_exists($path.$bo_css))
+				$this->bo_css = $bo_css;
+		}
+	}
+	
+	protected function saveOptin()
+	{
+		if ($this->optin && !defined('PS_INSTALLATION_IN_PROGRESS'))
+		{
+			$language = new Language($this->id_lang);
+			$params = http_build_query(array(
+				'email' => $this->email,
+				'method' => 'addMemberToNewsletter',
+				'language' => $language->iso_code,
+				'visitorType' => 1,
+				'source' => 'backoffice'
+			));
+			Tools::file_get_contents('http://www.prestashop.com/ajax/controller.php?'.$params);
+		}
 	}
 
 	/**
@@ -167,7 +258,7 @@ class EmployeeCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'employee`
 		WHERE `active` = 1
 		AND `email` = \''.pSQL($email).'\'
-		'.($passwd ? 'AND `passwd` = \''.Tools::encrypt($passwd).'\'' : ''));
+		'.($passwd !== null ? 'AND `passwd` = \''.Tools::encrypt($passwd).'\'' : ''));
 		if (!$result)
 			return false;
 		$this->id = $result['id_employee'];
@@ -267,6 +358,15 @@ class EmployeeCore extends ObjectModel
 		}
 		$this->id = null;
 	}
+	
+	public function favoriteModulesList()
+	{
+		return Db::getInstance()->executeS('
+			SELECT module
+			FROM `'._DB_PREFIX_.'module_preference` 
+			WHERE `id_employee` = '.(int)$this->id.' AND `favorite` = 1 AND (`interest` = 1 OR `interest` IS NULL)'
+		);
+	}
 
 	/**
 	 * Check if the employee is associated to a specific shop
@@ -328,5 +428,35 @@ class EmployeeCore extends ObjectModel
 	public function isSuperAdmin()
 	{
 		return $this->id_profile == _PS_ADMIN_PROFILE_;
+	}
+	
+	public function getImage()
+	{
+		if (!Validate::isLoadedObject($this))
+			return Tools::getAdminImageUrl('prestashop-avatar.png');
+		return Tools::getShopProtocol().'profile.prestashop.com/'.urlencode($this->email).'.jpg';
+	}
+
+	public function getLastElementsForNotify($element)
+	{
+		$element = bqSQL($element);
+		$max = Db::getInstance()->getValue('
+			SELECT MAX(`id_'.$element.'`) as `id_'.$element.'`
+			FROM `'._DB_PREFIX_.$element.($element == 'order' ? 's': '').'`');
+
+		// if no rows in table, set max to 0
+		if ((int)$max < 1)
+			$max = 0;
+
+		return (int)$max;
+	}
+
+	public static function setLastConnectionDate($id_employee)
+	{
+		return  Db::getInstance()->execute('
+			UPDATE `'._DB_PREFIX_.'employee`
+			SET `last_connection_date` = CURRENT_DATE()
+			WHERE `id_employee` = '.(int)$id_employee.' AND `last_connection_date`< CURRENT_DATE()
+		');
 	}
 }

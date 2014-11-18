@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,13 +19,18 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license	http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class OrderCore extends ObjectModel
 {
+	const ROUND_ITEM = 1;
+	const ROUND_LINE = 2;
+	const ROUND_TOTAL = 3;
+
+
 	/** @var integer Delivery address id */
 	public $id_address_delivery;
 
@@ -51,7 +56,7 @@ class OrderCore extends ObjectModel
 	/** @var integer Carrier id */
 	public $id_carrier;
 
-	/** @var integer Order State id */
+	/** @var integer Order Status id */
 	public $current_state;
 
 	/** @var string Secure key */
@@ -142,7 +147,7 @@ class OrderCore extends ObjectModel
 	/** @var string Delivery creation date */
 	public $delivery_date;
 
-	/** @var boolean Order validity (paid and not canceled) */
+	/** @var boolean Order validity: current order status is logable (usually paid and not canceled) */
 	public $valid;
 
 	/** @var string Object creation date */
@@ -155,6 +160,11 @@ class OrderCore extends ObjectModel
 	 * @var string Order reference, this reference is not unique, but unique for a payment
 	 */
 	public $reference;
+
+	/**
+	 * @var int Round mode method used for this order
+	 */
+	public $round_mode;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -196,6 +206,7 @@ class OrderCore extends ObjectModel
 			'total_wrapping' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 			'total_wrapping_tax_incl' =>	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 			'total_wrapping_tax_excl' =>	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
+			'round_mode' =>					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'shipping_number' => 			array('type' => self::TYPE_STRING, 'validate' => 'isTrackingNumber'),
 			'conversion_rate' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
 			'invoice_number' => 			array('type' => self::TYPE_INT),
@@ -221,7 +232,11 @@ class OrderCore extends ObjectModel
 			'id_lang' => array('xlink_resource'=> 'languages'),
 			'id_customer' => array('xlink_resource'=> 'customers'),
 			'id_carrier' => array('xlink_resource'=> 'carriers'),
-			'current_state' => array('xlink_resource'=> 'order_states'),
+			'current_state' => array(
+				'xlink_resource'=> 'order_states',
+				'getter' => 'getWsCurrentState',
+				'setter' => 'setWsCurrentState'
+			),
 			'module' => array('required' => true),
 			'invoice_number' => array(),
 			'invoice_date' => array(),
@@ -230,6 +245,10 @@ class OrderCore extends ObjectModel
 			'valid' => array(),
 			'date_add' => array(),
 			'date_upd' => array(),
+			'shipping_number' => array(
+				'getter' => 'getWsShippingNumber',
+				'setter' => 'setWsShippingNumber'
+			),
 		),
 		'associations' => array(
 			'order_rows' => array('resource' => 'order_row', 'setter' => false, 'virtual_entity' => true,
@@ -239,6 +258,9 @@ class OrderCore extends ObjectModel
 					'product_attribute_id' => array('required' => true),
 					'product_quantity' => array('required' => true),
 					'product_name' => array('setter' => false),
+					'product_reference' => array('setter' => false),
+					'product_ean13' => array('setter' => false),
+					'product_upc' => array('setter' => false),
 					'product_price' => array('setter' => false),
 					'unit_price_tax_incl' => array('setter' => false),
 					'unit_price_tax_excl' => array('setter' => false),
@@ -319,14 +341,20 @@ class OrderCore extends ObjectModel
 	public function getCartProducts()
 	{
 		$product_id_list = array();
-		foreach ($this->getProducts() as $product)
+        	$products = $this->getProducts();
+		foreach ($products as &$product)
+        	{
+			$product['id_product_attribute'] = $product['product_attribute_id'];
+			$product['cart_quantity'] = $product['product_quantity'];
 			$product_id_list[] = $this->id_address_delivery.'_'
 				.$product['product_id'].'_'
 				.$product['product_attribute_id'].'_'
 				.(isset($product['id_customization']) ? $product['id_customization'] : '0');
+	        }
+	        unset($product);
 
 		$product_list = array();
-		foreach ($this->getProducts() as $product)
+		foreach ($products as $product)
 		{
 			$key = $this->id_address_delivery.'_'
 				.$product['id_product'].'_'
@@ -344,7 +372,7 @@ class OrderCore extends ObjectModel
 	{
 		$product_price_tax_excl = $orderDetail->unit_price_tax_excl * $quantity;
 		$product_price_tax_incl = $orderDetail->unit_price_tax_incl * $quantity;
-		
+
 		/* Update cart */
 		$cart = new Cart($this->id_cart);
 		$cart->updateQty($quantity, $orderDetail->product_id, $orderDetail->product_attribute_id, false, 'down'); // customization are deleted in deleteCustomization
@@ -374,15 +402,15 @@ class OrderCore extends ObjectModel
 			'total_paid_tax_excl',
 			'total_paid_real'
 		);
-		
-		/* Prevent from floating precision issues (total_products has only 2 decimals) */
+
+		/* Prevent from floating precision issues */
 		foreach ($fields as $field)
 			if ($this->{$field} < 0)
 				$this->{$field} = 0;
 
 		/* Prevent from floating precision issues */
 		foreach ($fields as $field)
-			$this->{$field} = number_format($this->{$field}, 2, '.', '');
+			$this->{$field} = number_format($this->{$field}, _PS_PRICE_COMPUTE_PRECISION_, '.', '');
 
 		/* Update order detail */
 		$orderDetail->product_quantity -= (int)$quantity;
@@ -430,7 +458,7 @@ class OrderCore extends ObjectModel
 	 * Get order history
 	 *
 	 * @param integer $id_lang Language id
-	 * @param integer $id_order_state Filter a specific order state
+	 * @param integer $id_order_state Filter a specific order status
 	 * @param integer $no_hidden Filter no hidden status
 	 * @param integer $filters Flag to use specific field filter
 	 *
@@ -440,7 +468,7 @@ class OrderCore extends ObjectModel
 	{
 		if (!$id_order_state)
 			$id_order_state = 0;
-		
+
 		$logable = false;
 		$delivery = false;
 		$paid = false;
@@ -463,7 +491,7 @@ class OrderCore extends ObjectModel
 		{
 			$id_lang = $id_lang ? (int)($id_lang) : 'o.`id_lang`';
 			$result = Db::getInstance()->executeS('
-			SELECT oh.*, e.`firstname` AS employee_firstname, e.`lastname` AS employee_lastname, osl.`name` AS ostate_name
+			SELECT os.*, oh.*, e.`firstname` as employee_firstname, e.`lastname` as employee_lastname, osl.`name` as ostate_name
 			FROM `'._DB_PREFIX_.'orders` o
 			LEFT JOIN `'._DB_PREFIX_.'order_history` oh ON o.`id_order` = oh.`id_order`
 			LEFT JOIN `'._DB_PREFIX_.'order_state` os ON os.`id_order_state` = oh.`id_order_state`
@@ -572,9 +600,9 @@ class OrderCore extends ObjectModel
 				// Get the display filename
 				$row['display_filename'] = ProductDownload::getFilenameFromFilename($row['filename']);
 			}
-			
+
 			$row['id_address_delivery'] = $this->id_address_delivery;
-			
+
 			/* Stock product */
 			$resultArray[(int)$row['id_order_detail']] = $row;
 		}
@@ -716,23 +744,28 @@ class OrderCore extends ObjectModel
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'order_cart_rule` ocr
-		LEFT JOIN `'._DB_PREFIX_.'cart_rule` cr ON cr.`id_cart_rule` = ocr.`id_cart_rule`
 		WHERE ocr.`id_order` = '.(int)$this->id);
 	}
 
 	public static function getDiscountsCustomer($id_customer, $id_cart_rule)
 	{
-		return Db::getInstance()->getValue('
-		SELECT COUNT(*) FROM `'._DB_PREFIX_.'orders` o
-		LEFT JOIN '._DB_PREFIX_.'order_cart_rule ocr ON (ocr.id_order = o.id_order)
-		WHERE o.id_customer = '.(int)$id_customer.'
-		AND ocr.id_cart_rule = '.(int)$id_cart_rule);
+		$cache_id = 'Order::getDiscountsCustomer_'.(int)$id_customer.'-'.(int)$id_cart_rule;
+		if (!Cache::isStored($cache_id))
+		{
+			$result = (int)Db::getInstance()->getValue('
+			SELECT COUNT(*) FROM `'._DB_PREFIX_.'orders` o
+			LEFT JOIN '._DB_PREFIX_.'order_cart_rule ocr ON (ocr.id_order = o.id_order)
+			WHERE o.id_customer = '.(int)$id_customer.'
+			AND ocr.id_cart_rule = '.(int)$id_cart_rule);
+			Cache::store($cache_id, $result);
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	/**
-	 * Get current order state (eg. Awaiting payment, Delivered...)
+	 * Get current order status (eg. Awaiting payment, Delivered...)
 	 *
-	 * @return int Order state id
+	 * @return int Order status id
 	 */
 	public function getCurrentState()
 	{
@@ -740,9 +773,9 @@ class OrderCore extends ObjectModel
 	}
 
 	/**
-	 * Get current order state name (eg. Awaiting payment, Delivered...)
+	 * Get current order status name (eg. Awaiting payment, Delivered...)
 	 *
-	 * @return array Order state details
+	 * @return array Order status details
 	 */
 	public function getCurrentStateFull($id_lang)
 	{
@@ -757,7 +790,7 @@ class OrderCore extends ObjectModel
 	{
 		return count($this->getHistory((int)($this->id_lang), false, false, OrderState::FLAG_DELIVERY));
 	}
-	
+
 	/**
 	 * Has products returned by the merchant or by the customer?
 	 */
@@ -789,7 +822,7 @@ class OrderCore extends ObjectModel
 	}
 
 	/**
-	 * Checks if the current order state is paid and shipped
+	 * Checks if the current order status is paid and shipped
 	 *
 	 * @return bool
 	 */
@@ -825,7 +858,7 @@ class OrderCore extends ObjectModel
 		foreach ($res as $key => $val)
 		{
 			$res2 = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-				SELECT os.`id_order_state`, osl.`name` AS order_state, os.`invoice`
+				SELECT os.`id_order_state`, osl.`name` AS order_state, os.`invoice`, os.`color` as order_state_color
 				FROM `'._DB_PREFIX_.'order_history` oh
 				LEFT JOIN `'._DB_PREFIX_.'order_state` os ON (os.`id_order_state` = oh.`id_order_state`)
 				INNER JOIN `'._DB_PREFIX_.'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = '.(int)$context->language->id.')
@@ -846,8 +879,8 @@ class OrderCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'orders`
 				WHERE DATE_ADD(date_upd, INTERVAL -1 DAY) <= \''.pSQL($date_to).'\' AND date_upd >= \''.pSQL($date_from).'\'
 					'.Shop::addSqlRestriction()
-					.($type ? ' AND '.pSQL(strval($type)).'_number != 0' : '')
-					.($id_customer ? ' AND id_customer = '.(int)($id_customer) : '');
+					.($type ? ' AND `'.bqSQL($type).'_number` != 0' : '')
+					.($id_customer ? ' AND id_customer = '.(int)$id_customer : '');
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
 		$orders = array();
@@ -867,7 +900,7 @@ class OrderCore extends ObjectModel
 					WHERE osl.`id_order_state` = o.`current_state`
 					AND osl.`id_lang` = '.(int)$context->language->id.'
 					LIMIT 1
-				) AS `state_name`
+				) AS `state_name`, o.`date_add` AS `date_add`, o.`date_upd` AS `date_upd`
 				FROM `'._DB_PREFIX_.'orders` o
 				LEFT JOIN `'._DB_PREFIX_.'customer` c ON (c.`id_customer` = o.`id_customer`)
 				WHERE 1
@@ -895,7 +928,7 @@ class OrderCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'orders`
 				WHERE DATE_ADD(invoice_date, INTERVAL -1 DAY) <= \''.pSQL($date_to).'\' AND invoice_date >= \''.pSQL($date_from).'\'
 					'.Shop::addSqlRestriction()
-					.($type ? ' AND '.pSQL(strval($type)).'_number != 0' : '')
+					.($type ? ' AND `'.bqSQL($type).'_number` != 0' : '')
 					.($id_customer ? ' AND id_customer = '.(int)($id_customer) : '').
 				' ORDER BY invoice_date ASC';
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
@@ -932,7 +965,7 @@ class OrderCore extends ObjectModel
 	/**
 	 * Get product total without taxes
 	 *
-	 * @return Product total with taxes
+	 * @return Product total without taxes
 	 */
 	public function getTotalProductsWithoutTaxes($products = false)
 	{
@@ -964,19 +997,23 @@ class OrderCore extends ObjectModel
 		}
 		return $return;
 	}
-	
+
+	/**
+	 * used to cache order customer
+	 */
+	protected $cacheCustomer = null;
+
 	/**
 	 * Get order customer
-	 * 
+	 *
 	 * @return Customer $customer
 	 */
 	public function getCustomer()
 	{
-		static $customer = null;
-		if (is_null($customer))
-			$customer = new Customer((int)$this->id_customer);
-		
-		return $customer;
+		if (is_null($this->cacheCustomer))
+			$this->cacheCustomer = new Customer((int)$this->id_customer);
+
+		return $this->cacheCustomer;
 	}
 
 	/**
@@ -1087,6 +1124,41 @@ class OrderCore extends ObjectModel
 		');
 	}
 
+	public static function setLastInvoiceNumber($order_invoice_id, $id_shop)
+	{
+		if (!$order_invoice_id)
+			return false;
+
+		$number = Configuration::get('PS_INVOICE_START_NUMBER', null, null, $id_shop);
+		// If invoice start number has been set, you clean the value of this configuration
+		if ($number)
+			Configuration::updateValue('PS_INVOICE_START_NUMBER', false, false, null, $id_shop);
+
+		$sql = 'UPDATE `'._DB_PREFIX_.'order_invoice` SET number =';
+
+		if ($number)
+			$sql .= (int)$number;
+		else
+			$sql .= '(SELECT new_number FROM (SELECT (MAX(`number`) + 1) AS new_number
+			FROM `'._DB_PREFIX_.'order_invoice`) AS result)';
+
+		$sql .=' WHERE `id_order_invoice` = '.(int)$order_invoice_id;
+
+		return Db::getInstance()->execute($sql);
+	}
+
+	public function getInvoiceNumber($order_invoice_id)
+	{
+		if (!$order_invoice_id)
+			return false;
+
+		return Db::getInstance()->getValue('
+			SELECT `number`
+			FROM `'._DB_PREFIX_.'order_invoice`
+			WHERE `id_order_invoice` = '.(int)$order_invoice_id
+		);
+	}
+
 	/**
 	 * This method allows to generate first invoice of the current order
 	 */
@@ -1094,19 +1166,16 @@ class OrderCore extends ObjectModel
 	{
 		if (!$this->hasInvoice())
 		{
-			$order_invoice = new OrderInvoice();
-			$order_invoice->id_order = $this->id;
-			$order_invoice->number = Configuration::get('PS_INVOICE_START_NUMBER', null, null, $this->id_shop);
-			// If invoice start number has been set, you clean the value of this configuration
-			if ($order_invoice->number)
-				Configuration::updateValue('PS_INVOICE_START_NUMBER', false, false, null, $this->id_shop);
+			if ($id = (int)$this->hasDelivery())
+				$order_invoice = new OrderInvoice($id);
 			else
-				$order_invoice->number = Order::getLastInvoiceNumber() + 1;
-
-			$invoice_address = new Address((int)$this->id_address_invoice);
+				$order_invoice = new OrderInvoice();
+			$order_invoice->id_order = $this->id;
+			if (!$id)
+				$order_invoice->number = 0;
+			$address = new Address((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 			$carrier = new Carrier((int)$this->id_carrier);
-			$tax_calculator = $carrier->getTaxCalculator($invoice_address);
-
+			$tax_calculator = $carrier->getTaxCalculator($address);
 			$order_invoice->total_discount_tax_excl = $this->total_discounts_tax_excl;
 			$order_invoice->total_discount_tax_incl = $this->total_discounts_tax_incl;
 			$order_invoice->total_paid_tax_excl = $this->total_paid_tax_excl;
@@ -1120,7 +1189,10 @@ class OrderCore extends ObjectModel
 			$order_invoice->total_wrapping_tax_incl = $this->total_wrapping_tax_incl;
 
 			// Save Order invoice
-			$order_invoice->add();
+
+			$order_invoice->save();
+			if (Configuration::get('PS_INVOICE'))
+				$this->setLastInvoiceNumber($order_invoice->id, $this->id_shop);
 
 			$order_invoice->saveCarrierTaxCalculator($tax_calculator->getTaxesAmount($order_invoice->total_shipping_tax_excl));
 
@@ -1130,7 +1202,7 @@ class OrderCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'order_carrier`
 				WHERE `id_order` = '.(int)$order_invoice->id_order.'
 				AND (`id_order_invoice` IS NULL OR `id_order_invoice` = 0)');
-			
+
 			if ($id_order_carrier)
 			{
 				$order_carrier = new OrderCarrier($id_order_carrier);
@@ -1148,10 +1220,10 @@ class OrderCore extends ObjectModel
 			if ($use_existing_payment)
 			{
 				$id_order_payments = Db::getInstance()->executeS('
-					SELECT DISTINCT op.id_order_payment 
+					SELECT DISTINCT op.id_order_payment
 					FROM `'._DB_PREFIX_.'order_payment` op
 					INNER JOIN `'._DB_PREFIX_.'orders` o ON (o.reference = op.order_reference)
-					LEFT JOIN `'._DB_PREFIX_.'order_invoice_payment` oip ON (oip.id_order_payment = op.id_order_payment)					
+					LEFT JOIN `'._DB_PREFIX_.'order_invoice_payment` oip ON (oip.id_order_payment = op.id_order_payment)
 					WHERE (oip.id_order != '.(int)$order_invoice->id_order.' OR oip.id_order IS NULL) AND o.id_order = '.(int)$order_invoice->id_order);
 
 				if (count($id_order_payments))
@@ -1176,9 +1248,64 @@ class OrderCore extends ObjectModel
 
 			// Keep it for backward compatibility, to remove on 1.6 version
 			$this->invoice_date = $order_invoice->date_add;
-			$this->invoice_number = $order_invoice->number;
+			if (Configuration::get('PS_INVOICE'))
+				$this->invoice_number = $this->getInvoiceNumber($order_invoice->id);
 			$this->update();
 		}
+	}
+
+	/**
+	 * This method allows to generate first delivery slip of the current order
+	 */
+	public function setDeliverySlip()
+	{
+		if (!$this->hasInvoice())
+		{
+			$order_invoice = new OrderInvoice();
+			$order_invoice->id_order = $this->id;
+			$order_invoice->number = 0;
+			$order_invoice->add();
+			$this->delivery_date = $order_invoice->date_add;
+			$this->delivery_number = $this->getDeliveryNumber($order_invoice->id);
+			$this->update();
+		}
+	}
+
+	public function setDeliveryNumber($order_invoice_id, $id_shop)
+	{
+		if (!$order_invoice_id)
+			return false;
+
+		$id_shop = shop::getTotalShops() > 1 ? $id_shop : null;
+
+		$number = Configuration::get('PS_DELIVERY_NUMBER', null, null, $id_shop);
+		// If delivery slip start number has been set, you clean the value of this configuration
+		if ($number)
+			Configuration::updateValue('PS_DELIVERY_NUMBER', false, false, null, $id_shop);
+
+		$sql = 'UPDATE `'._DB_PREFIX_.'order_invoice` SET delivery_number =';
+
+		if ($number)
+			$sql .= (int)$number;
+		else
+			$sql .= '(SELECT new_number FROM (SELECT (MAX(`delivery_number`) + 1) AS new_number
+			FROM `'._DB_PREFIX_.'order_invoice`) AS result)';
+
+		$sql .=' WHERE `id_order_invoice` = '.(int)$order_invoice_id;
+
+		return Db::getInstance()->execute($sql);
+	}
+
+	public function getDeliveryNumber($order_invoice_id)
+	{
+		if (!$order_invoice_id)
+			return false;
+
+		return Db::getInstance()->getValue('
+			SELECT `delivery_number`
+			FROM `'._DB_PREFIX_.'order_invoice`
+			WHERE `id_order_invoice` = '.(int)$order_invoice_id
+		);
 	}
 
 	public function setDelivery()
@@ -1190,23 +1317,13 @@ class OrderCore extends ObjectModel
 			if ($order_invoice->delivery_number)
 				continue;
 
-			$number = (int)Configuration::get('PS_DELIVERY_NUMBER', null, null, $this->id_shop);
-			if (!$number)
-			{
-				//if delivery number is not set or wrong, we set a default one.
-				Configuration::updateValue('PS_DELIVERY_NUMBER', 1, false, null, $this->id_shop);
-				$number = 1;
-			}
-				
 			// Set delivery number on invoice
-			$order_invoice->delivery_number = $number;
+			$order_invoice->delivery_number = 0;
 			$order_invoice->delivery_date = date('Y-m-d H:i:s');
 			// Update Order Invoice
 			$order_invoice->update();
-
-			// Keep for backward compatibility
-			$this->delivery_number = $number;
-			Configuration::updateValue('PS_DELIVERY_NUMBER', $number + 1, false, null, $this->id_shop);
+			$this->setDeliveryNumber($order_invoice->id, $this->id_shop);
+			$this->delivery_number = $this->getDeliveryNumber($order_invoice->id);
 		}
 
 		// Keep it for backward compatibility, to remove on 1.6 version
@@ -1228,15 +1345,15 @@ class OrderCore extends ObjectModel
 
 	/**
 	 * Get a collection of orders using reference
-	 * 
+	 *
 	 * @since 1.5.0.14
-	 * 
+	 *
 	 * @param string $reference
-	 * @return Collection of Order
+	 * @return PrestaShopCollection Collection of Order
 	 */
 	public static function getByReference($reference)
 	{
-		$orders = new Collection('Order');
+		$orders = new PrestaShopCollection('Order');
 		$orders->where('reference', '=', $reference);
 		return $orders;
 	}
@@ -1294,14 +1411,27 @@ class OrderCore extends ObjectModel
 
 	public function getWsOrderRows()
 	{
-		$query = 'SELECT id_order_detail as `id`, `product_id`, `product_price`, `id_order`, `product_attribute_id`, `product_quantity`, `product_name`, `unit_price_tax_incl`, `unit_price_tax_excl`
-		FROM `'._DB_PREFIX_.'order_detail`
-		WHERE id_order = '.(int)$this->id;
+		$query = '
+			SELECT
+			`id_order_detail` as `id`,
+			`product_id`,
+			`product_price`,
+			`id_order`,
+			`product_attribute_id`,
+			`product_quantity`,
+			`product_name`,
+			`product_reference`,
+			`product_ean13`,
+			`product_upc`,
+			`unit_price_tax_incl`,
+			`unit_price_tax_excl`
+			FROM `'._DB_PREFIX_.'order_detail`
+			WHERE id_order = '.(int)$this->id;
 		$result = Db::getInstance()->executeS($query);
 		return $result;
 	}
 
-	/** Set current order state
+	/** Set current order status
 	 * @param int $id_order_state
 	 * @param int $id_employee (/!\ not optional except for Webservice.
 	 */
@@ -1323,7 +1453,7 @@ class OrderCore extends ObjectModel
 		$this->delivery_number = $res['delivery_number'];
 		$this->update();
 
-		$history->addWithemail();		
+		$history->addWithemail();
 	}
 
 	public function addWs($autodate = true, $nullValues = false)
@@ -1352,7 +1482,8 @@ class OrderCore extends ObjectModel
 		return Db::getInstance()->getValue('
 			SELECT id_order
 			FROM '._DB_PREFIX_.'orders
-			WHERE id_order < '.(int)$this->id.'
+			WHERE id_order < '.(int)$this->id
+			.Shop::addSqlRestriction().'
 			ORDER BY id_order DESC');
 	}
 
@@ -1364,10 +1495,11 @@ class OrderCore extends ObjectModel
 	public function getNextOrderId()
 	{
 		return Db::getInstance()->getValue('
-		SELECT id_order
-		FROM '._DB_PREFIX_.'orders
-		WHERE id_order > '.(int)$this->id.'
-		ORDER BY id_order ASC');
+			SELECT id_order
+			FROM '._DB_PREFIX_.'orders
+			WHERE id_order > '.(int)$this->id
+			.Shop::addSqlRestriction().'
+			ORDER BY id_order ASC');
 	}
 
 	/**
@@ -1420,11 +1552,11 @@ class OrderCore extends ObjectModel
 	/**
 	 * This method allows to get all Order Payment for the current order
 	 * @since 1.5.0.1
-	 * @return Collection of Order Payment
+	 * @return PrestaShopCollection Collection of OrderPayment
 	 */
 	public function getOrderPaymentCollection()
 	{
-		$order_payments = new Collection('OrderPayment');
+		$order_payments = new PrestaShopCollection('OrderPayment');
 		$order_payments->where('order_reference', '=', $this->reference);
 		return $order_payments;
 	}
@@ -1462,20 +1594,20 @@ class OrderCore extends ObjectModel
 
 		// We put autodate parameter of add method to true if date_add field is null
 		$res = $order_payment->add(is_null($order_payment->date_add)) && $this->update();
-		
+
 		if (!$res)
 			return false;
-	
+
 		if (!is_null($order_invoice))
 		{
 			$res = Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'order_invoice_payment`
+			INSERT INTO `'._DB_PREFIX_.'order_invoice_payment` (`id_order_invoice`, `id_order_payment`, `id_order`)
 			VALUES('.(int)$order_invoice->id.', '.(int)$order_payment->id.', '.(int)$this->id.')');
 
 			// Clear cache
 			Cache::clean('order_invoice_paid_*');
 		}
-		
+
 		return $res;
 	}
 
@@ -1490,25 +1622,22 @@ class OrderCore extends ObjectModel
 	public function getDocuments()
 	{
 		$invoices = $this->getInvoicesCollection()->getResults();
+		foreach($invoices as $key => $invoice)
+		if (!$invoice->number)
+			unset($invoices[$key]);
 		$delivery_slips = $this->getDeliverySlipsCollection()->getResults();
 		// @TODO review
-		foreach ($delivery_slips as $delivery)
+		foreach ($delivery_slips as $key => $delivery)
 		{
 			$delivery->is_delivery = true;
 			$delivery->date_add = $delivery->delivery_date;
+			if (!$invoice->delivery_number)
+				unset($delivery_slips[$key]);
 		}
 		$order_slips = $this->getOrderSlipsCollection()->getResults();
 
-		// @TODO review
-		function sortDocuments($a, $b)
-		{
-			if ($a->date_add == $b->date_add)
-				return 0;
-			return ($a->date_add < $b->date_add) ? -1 : 1;
-		}
-
 		$documents = array_merge($invoices, $order_slips, $delivery_slips);
-		usort($documents, 'sortDocuments');
+		usort($documents, array('Order', 'sortDocuments'));
 
 		return $documents;
 	}
@@ -1544,11 +1673,11 @@ class OrderCore extends ObjectModel
 	 *
 	 * Get all order_slips for the current order
 	 * @since 1.5.0.2
-	 * @return Collection of Order slip
+	 * @return PrestaShopCollection Collection of OrderSlip
 	 */
 	public function getOrderSlipsCollection()
 	{
-		$order_slips = new Collection('OrderSlip');
+		$order_slips = new PrestaShopCollection('OrderSlip');
 		$order_slips->where('id_order', '=', $this->id);
 		return $order_slips;
 	}
@@ -1557,11 +1686,11 @@ class OrderCore extends ObjectModel
 	 *
 	 * Get all invoices for the current order
 	 * @since 1.5.0.1
-	 * @return Collection of Order invoice
+	 * @return PrestaShopCollection Collection of OrderInvoice
 	 */
 	public function getInvoicesCollection()
 	{
-		$order_invoices = new Collection('OrderInvoice');
+		$order_invoices = new PrestaShopCollection('OrderInvoice');
 		$order_invoices->where('id_order', '=', $this->id);
 		return $order_invoices;
 	}
@@ -1570,11 +1699,11 @@ class OrderCore extends ObjectModel
 	 *
 	 * Get all delivery slips for the current order
 	 * @since 1.5.0.2
-	 * @return Collection of Order invoice
+	 * @return PrestaShopCollection Collection of OrderInvoice
 	 */
 	public function getDeliverySlipsCollection()
 	{
-		$order_invoices = new Collection('OrderInvoice');
+		$order_invoices = new PrestaShopCollection('OrderInvoice');
 		$order_invoices->where('id_order', '=', $this->id);
 		$order_invoices->where('delivery_number', '!=', '0');
 		return $order_invoices;
@@ -1583,7 +1712,7 @@ class OrderCore extends ObjectModel
 	/**
 	 * Get all not paid invoices for the current order
 	 * @since 1.5.0.2
-	 * @return Collection of Order invoice not paid
+	 * @return PrestaShopCollection Collection of Order invoice not paid
 	 */
 	public function getNotPaidInvoicesCollection()
 	{
@@ -1780,11 +1909,28 @@ class OrderCore extends ObjectModel
 	 */
 	public function hasInvoice()
 	{
-		if (Db::getInstance()->getRow('
-				SELECT *
+		if ($res = (int)Db::getInstance()->getvalue('
+				SELECT `id_order_invoice`
 				FROM `'._DB_PREFIX_.'order_invoice`
-				WHERE `id_order` =  '.(int)$this->id))
-			return true;
+				WHERE `id_order` =  '.(int)$this->id.'
+				AND `number` > 0'));
+			return $res;
+		return false;
+	}
+
+	/**
+	 *
+	 * Has Delivery return true if this order has already a delivery slip
+	 * @return bool
+	 */
+	public function hasDelivery()
+	{
+		if ($res = (int)Db::getInstance()->getValue('
+				SELECT `id_order_invoice`
+				FROM `'._DB_PREFIX_.'order_invoice`
+				WHERE `id_order` =  '.(int)$this->id.'
+				AND `delivery_number` > 0'));
+			return $res;
 		return false;
 	}
 
@@ -1829,23 +1975,23 @@ class OrderCore extends ObjectModel
 		$sql_filter .= Shop::addSqlRestriction(Shop::SHARE_ORDER, 'main');
 		return parent::getWebserviceObjectList($sql_join, $sql_filter, $sql_sort, $sql_limit);
 	}
-	
+
 	/**
 	 * Get all other orders with the same reference
-	 * 
+	 *
 	 * @since 1.5.0.13
 	 */
 	public function getBrother()
 	{
-		$collection = new Collection('order');
+		$collection = new PrestaShopCollection('order');
 		$collection->where('reference', '=', $this->reference);
 		$collection->where('id_order', '<>', $this->id);
 		return $collection;
 	}
-	
+
 	/**
 	 * Get a collection of order payments
-	 * 
+	 *
 	 * @since 1.5.0.13
 	 */
 	public function getOrderPayments()
@@ -1855,10 +2001,10 @@ class OrderCore extends ObjectModel
 
 	/**
 	 * Return a unique reference like : GWJTHMZUN#2
-	 * 
+	 *
 	 * With multishipping, order reference are the same for all orders made with the same cart
 	 * in this case this method suffix the order reference by a # and the order number
-	 * 
+	 *
 	 * @since 1.5.0.14
 	 */
 	public function getUniqReference()
@@ -1867,21 +2013,21 @@ class OrderCore extends ObjectModel
 		$query->select('MIN(id_order) as min, MAX(id_order) as max');
 		$query->from('orders');
 		$query->where('id_cart = '.(int)$this->id_cart);
-		
+
 		$order = Db::getInstance()->getRow($query);
-		
+
 		if ($order['min'] == $order['max'])
 			return $this->reference;
 		else
 			return $this->reference.'#'.($this->id + 1 - $order['min']);
 	}
-	
+
 	/**
 	 * Return a unique reference like : GWJTHMZUN#2
-	 * 
+	 *
 	 * With multishipping, order reference are the same for all orders made with the same cart
 	 * in this case this method suffix the order reference by a # and the order number
-	 * 
+	 *
 	 * @since 1.5.0.14
 	 */
 	public static function getUniqReferenceOf($id_order)
@@ -1889,21 +2035,68 @@ class OrderCore extends ObjectModel
 		$order = new Order($id_order);
 		return $order->getUniqReference();
 	}
-	
+
 	/**
-	 * Return a unique reference like : GWJTHMZUN#2
-	 * 
-	 * With multishipping, order reference are the same for all orders made with the same cart
-	 * in this case this method suffix the order reference by a # and the order number
-	 * 
+	 * Return id of carrier
+	 *
+	 * Get id of the carrier used in order
+	 *
 	 * @since 1.5.5.0
-	 */	
-	public function getIdOrderCarrier()	
+	 */
+	public function getIdOrderCarrier()
 	{
 		return (int)Db::getInstance()->getValue('
 				SELECT `id_order_carrier`
 				FROM `'._DB_PREFIX_.'order_carrier`
 				WHERE `id_order` = '.(int)$this->id);
-	}		
-}
+	}
 
+	public static function sortDocuments($a, $b)
+	{
+		if ($a->date_add == $b->date_add)
+			return 0;
+		return ($a->date_add < $b->date_add) ? -1 : 1;
+	}
+
+	public function getWsShippingNumber()
+	{
+		$id_order_carrier = Db::getInstance()->getValue('
+			SELECT `id_order_carrier`
+			FROM `'._DB_PREFIX_.'order_carrier`
+			WHERE `id_order` = '.(int)$this->id);
+		if ($id_order_carrier)
+		{
+			$order_carrier = new OrderCarrier($id_order_carrier);
+			return $order_carrier->tracking_number;
+		}
+		return $this->shipping_number;
+	}
+
+	public function setWsShippingNumber($shipping_number)
+	{
+		$id_order_carrier = Db::getInstance()->getValue('
+			SELECT `id_order_carrier`
+			FROM `'._DB_PREFIX_.'order_carrier`
+			WHERE `id_order` = '.(int)$this->id);
+		if ($id_order_carrier)
+		{
+			$order_carrier = new OrderCarrier($id_order_carrier);
+			$order_carrier->tracking_number = $shipping_number;
+			$order_carrier->update();
+		}
+		else
+			$this->shipping_number = $shipping_number;
+		return true;
+	}
+
+	public function getWsCurrentState($state)
+	{
+		return $this->getCurrentState();
+	}
+
+	public function setWsCurrentState($state)
+	{
+		$this->setCurrentState($state);
+		return true;
+	}
+}

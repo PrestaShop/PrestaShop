@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -28,18 +28,25 @@ class AdminContactsControllerCore extends AdminController
 {
 	public function __construct()
 	{
+		$this->bootstrap = true;
 	 	$this->table = 'contact';
 	 	$this->className = 'Contact';
 	 	$this->lang = true;
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+		$this->bulk_actions = array(
+			'delete' => array(
+				'text' => $this->l('Delete selected'),
+				'confirm' => $this->l('Delete selected items?'),
+				'icon' => 'icon-trash'
+			)
+		);
 
 		$this->fields_list = array(
-			'id_contact' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-			'name' => array('title' => $this->l('Title'), 'width' => 130),
-			'email' => array('title' => $this->l('Email address'), 'width' => 130),
-			'description' => array('title' => $this->l('Description'), 'width' => 150),
+			'id_contact' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+			'name' => array('title' => $this->l('Title')),
+			'email' => array('title' => $this->l('Email address')),
+			'description' => array('title' => $this->l('Description')),
 		);
 
 		parent::__construct();
@@ -50,34 +57,34 @@ class AdminContactsControllerCore extends AdminController
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Contacts'),
-				'image' => '../img/admin/contact.gif'
+				'icon' => 'icon-envelope-alt'
 			),
 			'input' => array(
 				array(
 					'type' => 'text',
 					'label' => $this->l('Title'),
 					'name' => 'name',
-					'size' => 33,
 					'required' => true,
 					'lang' => true,
-					'desc' => $this->l('Contact name (e.g. Customer Support)'),
+					'col' => 4,
+					'hint' => $this->l('Contact name (e.g. Customer Support).'),
 				),
 				array(
 					'type' => 'text',
 					'label' => $this->l('Email address'),
 					'name' => 'email',
-					'size' => 33,
 					'required' => false,
-					'desc' => $this->l('Emails will be sent to this address'),
+					'col' => 4,
+					'hint' => $this->l('Emails will be sent to this address.'),
 				),
 				array(
-					'type' => 'radio',
+					'type' => 'switch',
 					'label' => $this->l('Save messages?'),
 					'name' => 'customer_service',
 					'required' => false,
 					'class' => 't',
 					'is_bool' => true,
-					'desc' => $this->l('If enabled, all messages will be saved in the "Customer Service" page under the "Customer" menu.'),
+					'hint' => $this->l('If enabled, all messages will be saved in the "Customer Service" page under the "Customer" menu.'),
 					'values' => array(
 						array(
 							'id' => 'customer_service_on',
@@ -97,14 +104,12 @@ class AdminContactsControllerCore extends AdminController
 					'name' => 'description',
 					'required' => false,
 					'lang' => true,
-					'cols' => 36,
-					'rows' => 5,
-					'desc' => $this->l('Further information regarding this contact'),
+					'col' => 6,
+					'hint' => $this->l('Further information regarding this contact.'),
 				),
 			),
 			'submit' => array(
-				'title' => $this->l('Save   '),
-				'class' => 'button'
+				'title' => $this->l('Save'),
 			)
 		);
 		
@@ -112,7 +117,7 @@ class AdminContactsControllerCore extends AdminController
 		{
 			$this->fields_form['input'][] = array(
 				'type' => 'shop',
-				'label' => $this->l('Shop association:'),
+				'label' => $this->l('Shop association'),
 				'name' => 'checkBoxShopAsso',
 			);
 		}
@@ -120,6 +125,17 @@ class AdminContactsControllerCore extends AdminController
 		return parent::renderForm();
 	}
 
+	public function initPageHeaderToolbar()
+	{
+		$this->initToolbar();
+		if(empty($this->display))
+			$this->page_header_toolbar_btn['new_contact'] = array(
+				'href' => self::$currentIndex.'&addcontact&token='.$this->token,
+				'desc' => $this->l('Add new contact', null, null, false),
+				'icon' => 'process-icon-new'
+			);
+
+		parent::initPageHeaderToolbar();
+	}
+	
 }
-
-

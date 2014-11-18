@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,39 +19,68 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class AdminInformationControllerCore extends AdminController
 {
+
+	public function __construct()
+	{
+		$this->bootstrap = true;
+		parent::__construct();
+	}
+
 	public function initContent()
 	{
+		$this->show_toolbar = false;
 		$this->display = 'view';
 		parent::initContent();
 	}
 
+	public function initToolbarTitle()
+	{
+		$this->toolbar_title = array_unique($this->breadcrumbs);
+	}
+
+	public function initPageHeaderToolbar()
+	{
+		parent::initPageHeaderToolbar();
+		unset($this->page_header_toolbar_btn['back']);
+	}
+
 	public function renderView()
 	{
-		$this->tpl_view_vars = array(
-			'version' => array(
-				'php' => phpversion(),
-				'server' => $_SERVER['SERVER_SOFTWARE'],
-				'memory_limit' => ini_get('memory_limit'),
-				'max_execution_time' => ini_get('max_execution_time')
-			),
-			'database' => array(
-				'version' => Db::getInstance()->getVersion(),
-				'prefix' => _DB_PREFIX_,
-				'engine' => _MYSQL_ENGINE_,
-			),
-			'uname' => function_exists('php_uname') ? php_uname('s').' '.php_uname('v').' '.php_uname('m') : '',
-			'apache_instaweb' => Tools::apacheModExists('mod_instaweb'),
+		$this->initPageHeaderToolbar();
+		
+		$hosting_vars = array();
+		if (!defined('_PS_HOST_MODE_'))
+			$hosting_vars = array(
+				'version' => array(
+					'php' => phpversion(),
+					'server' => $_SERVER['SERVER_SOFTWARE'],
+					'memory_limit' => ini_get('memory_limit'),
+					'max_execution_time' => ini_get('max_execution_time')
+				),
+				'database' => array(
+					'version' => Db::getInstance()->getVersion(),
+					'server' => _DB_SERVER_,
+					'name' => _DB_NAME_,
+					'user' => _DB_USER_,
+					'prefix' => _DB_PREFIX_,
+					'engine' => _MYSQL_ENGINE_,
+				),
+				'uname' => function_exists('php_uname') ? php_uname('s').' '.php_uname('v').' '.php_uname('m') : '',
+				'apache_instaweb' => Tools::apacheModExists('mod_instaweb')
+			);
+		
+		$shop_vars = array(
 			'shop' => array(
 				'ps' => _PS_VERSION_,
-				'url' => Tools::getHttpHost(true).__PS_BASE_URI__,
-				'theme' => _THEME_NAME_,
+				'url' => $this->context->shop->getBaseURL(),
+				'theme' => $this->context->shop->theme_name,
 			),
 			'mail' => Configuration::get('PS_MAIL_METHOD') == 1,
 			'smtp' => array(
@@ -63,16 +92,11 @@ class AdminInformationControllerCore extends AdminController
 			),
 			'user_agent' => $_SERVER['HTTP_USER_AGENT'],
 		);
-		$this->tpl_view_vars = array_merge($this->getTestResult(), $this->tpl_view_vars);
+
+		$this->tpl_view_vars = array_merge($this->getTestResult(), array_merge($hosting_vars, $shop_vars));
 
 		return parent::renderView();
 	}
-	
-	public function initToolBar()
-	{
-		return;
-	}
-	
 
 	/**
 	 * get all tests
@@ -81,14 +105,9 @@ class AdminInformationControllerCore extends AdminController
 	 */
 	public function getTestResult()
 	{
-		// Functions list to test with 'test_system'
-		// Test to execute (function/args) : lets uses the default test
-		$tests = ConfigurationTest::getDefaultTests();
-		$tests_op = ConfigurationTest::getDefaultTestsOp();
-
 		$tests_errors = array(
-			'phpversion' => $this->l('Update your PHP version'),
-			'upload' => $this->l('Configure your server to allow file uploads'),
+			'phpversion' => $this->l('Update your PHP version.'),
+			'upload' => $this->l('Configure your server to allow file uploads.'),
 			'system' => $this->l('Configure your server to allow the creation of directories and files with write permissions.'),
 			'gd' => $this->l('Enable the GD library on your server.'),
 			'mysql_support' => $this->l('Enable the MySQL support on your server.'),
@@ -99,25 +118,45 @@ class AdminInformationControllerCore extends AdminController
 			'log_dir' => $this->l('Set write permissions for the "log" folder and subfolders.'),
 			'mails_dir' => $this->l('Set write permissions for the "mails" folder and subfolders.'),
 			'module_dir' => $this->l('Set write permissions for the "modules" folder and subfolders.'),
-			'theme_lang_dir' => $this->l('Set the write permissions for the "themes')._THEME_NAME_.$this->l('/lang/" folder and subfolders, recursively.'),
+			'theme_lang_dir' => sprintf($this->l('Set the write permissions for the "themes%s/lang/" folder and subfolders, recursively.'), _THEME_NAME_),
 			'translations_dir' => $this->l('Set write permissions for the "translations" folder and subfolders.'),
 			'customizable_products_dir' => $this->l('Set write permissions for the "upload" folder and subfolders.'),
 			'virtual_products_dir' => $this->l('Set write permissions for the "download" folder and subfolders.'),
-			'fopen' => $this->l('Allow the PHP fopen() function on your server'),
-			'register_globals' => $this->l('Set PHP "register_global" option to "Off"'),
-			'gz' => $this->l('Enable GZIP compression on your server.')
+			'fopen' => $this->l('Allow the PHP fopen() function on your server.'),
+			'register_globals' => $this->l('Set PHP "register_globals" option to "Off".'),
+			'gz' => $this->l('Enable GZIP compression on your server.'),
+			'files' => $this->l('All files from PrestaShop are not present on your server.')
 		);
 
-		$params_required_results = ConfigurationTest::check($tests);
-		$params_optional_results = ConfigurationTest::check($tests_op);
+		// Functions list to test with 'test_system'
+		// Test to execute (function/args): lets uses the default test
+		$params_required_results = ConfigurationTest::check(ConfigurationTest::getDefaultTests());
 
-		return array(
-			'failRequired' => in_array('fail', $params_required_results),
-			'failOptional' => in_array('fail', $params_optional_results),
+		if (!defined('_PS_HOST_MODE_'))
+			$params_optional_results = ConfigurationTest::check(ConfigurationTest::getDefaultTestsOp());
+
+		$failRequired = in_array('fail', $params_required_results);
+		
+		if ($failRequired && $params_required_results['files'] != 'ok')
+		{
+			$tmp = 	ConfigurationTest::test_files(true);
+			if (is_array($tmp) && count($tmp))
+				$tests_errors['files'] = $tests_errors['files'].'<br/>('.implode(', ', $tmp).')';
+ 		}
+
+		$results = array(
+			'failRequired' => $failRequired,
 			'testsErrors' => $tests_errors,
 			'testsRequired' => $params_required_results,
-			'testsOptional' => $params_optional_results,
 		);
+
+		if (!defined('_PS_HOST_MODE_'))
+			$results = array_merge($results, array(
+				'failOptional' => in_array('fail', $params_optional_results),
+				'testsOptional' => $params_optional_results,
+			));
+
+		return $results;
 	}
 
 	public function displayAjaxCheckFiles()
@@ -133,7 +172,7 @@ class AdminInformationControllerCore extends AdminController
 
 	public function getListOfUpdatedFiles(SimpleXMLElement $dir, $path = '')
 	{
-		$exclude_regexp = '(install(-dev|-new)?|themes|tools|cache|docs|download|img|localization|log|mails|translations|upload)';
+		$exclude_regexp = '(install(-dev|-new)?|themes|tools|cache|docs|download|img|localization|log|mails|translations|upload|modules|override/(:?.*)index.php$)';
 		$admin_dir = basename(_PS_ADMIN_DIR_);
 
 		foreach ($dir->md5file as $file)
@@ -156,4 +195,3 @@ class AdminInformationControllerCore extends AdminController
 			$this->getListOfUpdatedFiles($subdir, $path.$subdir['name'].'/');
 	}
 }
-

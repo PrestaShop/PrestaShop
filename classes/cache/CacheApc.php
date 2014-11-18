@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -34,9 +34,12 @@ class CacheApcCore extends Cache
 	public function __construct()
 	{
 		$this->keys = array();
-		$cache_info = apc_cache_info('user');
+		$cache_info = apc_cache_info((extension_loaded('apcu') === true )? '' : 'user' );
 		foreach ($cache_info['cache_list'] as $entry)
-			$this->keys[$entry['info']] = $entry['ttl'];
+			if ( extension_loaded('apcu') === true )
+				$this->keys[$entry['key']] = $entry['ttl'];
+			else
+				$this->keys[$entry['info']] = $entry['ttl'];
 	}
 
 	/**

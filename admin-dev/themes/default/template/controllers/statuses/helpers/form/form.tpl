@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -33,15 +33,18 @@
 
 {block name="input"}
 	{if $input.type == "select_template"}
-		<div class="translatable">
-			{foreach $languages as $language}
-				<div class="lang_{$language.id_lang}" id="{$input.name}_{$language.id_lang}" style="display:{if $language.id_lang == $defaultFormLanguage}block{else}none{/if}; float: left;">
+	<div class="col-lg-9">
+		<div class="row">
+		{foreach $languages as $language}
+			{assign var='value_text' value=$fields_value[$input.name][$language.id_lang]}
+			<div class="translatable-field lang-{$language.id_lang}" {if $language.id_lang != $defaultFormLanguage}style="display:none"{/if}>
+				<div class="col-lg-8">
 					<select name="{$input.name}_{$language.id_lang}"
 							id="{$input.name}_select_{$language.id_lang}"
 							{if isset($input.multiple)}multiple="multiple" {/if}
 							{if isset($input.size)}size="{$input.size}"{/if}
 							{if isset($input.onchange)}onchange="{$input.onchange}"{/if}>
-						{foreach $input.options.query AS $option}
+						{foreach $input.options.query[$language.iso_code] AS $option}
 							<option value="{$option[$input.options.id]}"
 								{if isset($input.multiple)}
 									{foreach $fields_value[$input.name] as $field_value}
@@ -50,15 +53,47 @@
 								{else}
 									{if isset($fields_value[$input.name][$language.id_lang]) && ($fields_value[$input.name][$language.id_lang] == $option[$input.options.id])}selected="selected"{/if}
 								{/if}
-							>{$option[$input.options.name]|escape:'htmlall':'UTF-8'}</option>
+								data-preview="{$option[$input.options.folder]}"
+							>{$option[$input.options.name]|escape:'html':'UTF-8'}</option>
 						{/foreach}
-					</select>
-					{if isset($input.hint)}<span class="hint" name="help_box">{$input.hint}<span class="hint-pointer">&nbsp;</span></span>{/if}
-					<img onclick="viewTemplates('#template_select_{$language.id_lang}', '../mails/{$language.iso_code}/', '.html');"
-						src="../img/t/AdminFeatures.gif" class="pointer" alt="{l s='Preview'}" title="{l s='Preview'}" />
+					</select>					
 				</div>
-			{/foreach}
+				<div class="col-lg-4">
+					<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
+						{$language.iso_code}
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu">
+						{foreach from=$languages item=language_flag}
+						<li>
+							<a href="javascript:hideOtherLanguage({$language_flag.id_lang});" tabindex="-1">{$language_flag.name}</a>
+						</li>
+						{/foreach}
+					</ul>
+					<button type="button" class="btn btn-default" onclick="viewTemplates('#template_select_{$language.id_lang}', '{$language.iso_code}/', '.html');">
+						<i class="icon-eye-open"></i>
+						{l s='Preview'}
+					</button>
+				</div>
+			</div>
+		{/foreach}
+			{if isset($input.hint)}
+			<div class="clearfix">&nbsp;</div>
+			<div class="col-lg-9">
+				<div class="alert alert-info">			
+				{if is_array($input.hint)}
+					{foreach from=$input.hint item=hint}
+						{$hint}<br/>
+					{/foreach}
+				{else}
+					{$input.hint}
+				{/if}
+				</div>
+			</div>
+		{/if}
 		</div>
+	</div>
+
 	{else}
 		{$smarty.block.parent}
 	{/if}

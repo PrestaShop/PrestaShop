@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -91,7 +91,25 @@ class DbMySQLiCore extends Db
 	{
 		if (!$result)
 			$result = $this->result;
+
+		if (!is_object($result))
+			return false;
+
 		return $result->fetch_assoc();
+	}
+
+	/**
+	 * @see DbCore::getAll()
+	*/
+	protected function getAll($result = false)
+	{
+		if (!$result)
+			$result = $this->result;
+
+		if (!is_object($result))
+			return false;
+
+		return $result->fetch_all(MYSQLI_ASSOC);
 	}
 
 	/**
@@ -155,7 +173,7 @@ class DbMySQLiCore extends Db
 	 */
 	public function set_db($db_name)
 	{
-		return $this->link->query('USE '.pSQL($db_name));
+		return $this->link->query('USE `'.bqSQL($db_name).'`');
 	}
 
 	/**
@@ -223,11 +241,13 @@ class DbMySQLiCore extends Db
 		if (mysqli_connect_error())
 			return false;
 
-		$sql = '
-			CREATE TABLE `'.$prefix.'test` (
+		if ($engine === null)
+			$engine = 'MyISAM';
+
+		$result = $link->query('
+		CREATE TABLE `'.$prefix.'test` (
 			`test` tinyint(1) unsigned NOT NULL
-			) ENGINE=MyISAM';
-		$result = $link->query($sql);
+		) ENGINE='.$engine);
 
 		if (!$result)
 			return $link->error;
@@ -243,6 +263,15 @@ class DbMySQLiCore extends Db
 	{
 		$link = @new mysqli($server, $user, $pwd, $db);
 		$ret = $link->query("SET NAMES 'UTF8'");
+		$link->close();
+		return $ret;
+	}
+
+	public static function checkAutoIncrement($server, $user, $pwd)
+	{
+		$link = @new mysqli($server, $user, $pwd);
+		$ret = (bool)(($result = $link->query('SELECT @@auto_increment_increment as aii')) && ($row = $result->fetch_assoc()) && $row['aii'] == 1);
+		$ret &= (bool)(($result = $link->query('SELECT @@auto_increment_offset as aio')) && ($row = $result->fetch_assoc()) && $row['aio'] == 1);
 		$link->close();
 		return $ret;
 	}

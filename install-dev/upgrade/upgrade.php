@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -74,7 +74,7 @@ define('_THEME_NAME_', 'default');
 
 require_once(dirname(__FILE__).'/../init.php');
 
-// set logger 
+// set logger
 require_once(_PS_INSTALL_PATH_.'upgrade/classes/AbstractLogger.php');
 eval('abstract class AbstractLogger extends AbstractLoggerCore{}');
 require_once(_PS_INSTALL_PATH_.'upgrade/classes/FileLogger.php');
@@ -157,7 +157,7 @@ if ($resultDB !== true)
 }
 */
 
-// 
+//
 //custom sql file creation
 $upgradeFiles = array();
 if (empty ($fail_result))
@@ -215,7 +215,7 @@ if (defined('_PS_CACHING_SYSTEM_') AND _PS_CACHING_SYSTEM_ == 'CacheFS')
 elseif (defined('_PS_CACHING_SYSTEM_') AND _PS_CACHING_SYSTEM_ != 'CacheMemcache')
 	$cache_engine = _PS_CACHING_SYSTEM_;
 else
-	$cache_engine = 'CacheMemcache';	
+	$cache_engine = 'CacheMemcache';
 $datas = array(
 	array('_DB_SERVER_', _DB_SERVER_),
 	array('_DB_NAME_', _DB_NAME_),
@@ -225,9 +225,6 @@ $datas = array(
 	array('_MYSQL_ENGINE_', $mysqlEngine),
 	array('_PS_CACHING_SYSTEM_', $cache_engine),
 	array('_PS_CACHE_ENABLED_', defined('_PS_CACHE_ENABLED_') ? _PS_CACHE_ENABLED_ : '0'),
-	array('_MEDIA_SERVER_1_', defined('_MEDIA_SERVER_1_') ? _MEDIA_SERVER_1_ : ''),
-	array('_MEDIA_SERVER_2_', defined('_MEDIA_SERVER_2_') ? _MEDIA_SERVER_2_ : ''),
-	array('_MEDIA_SERVER_3_', defined('_MEDIA_SERVER_3_') ? _MEDIA_SERVER_3_ : ''),
 	// 1.4 only
 	// array('__PS_BASE_URI__', __PS_BASE_URI__),
 	// 1.4 only
@@ -238,6 +235,14 @@ $datas = array(
 	array('_PS_CREATION_DATE_', defined("_PS_CREATION_DATE_") ? _PS_CREATION_DATE_ : date('Y-m-d')),
 	array('_PS_VERSION_', _PS_INSTALL_VERSION_)
 );
+
+if (version_compare(_PS_INSTALL_VERSION_, '1.6.0.11', '<'))
+{
+	$datas[] = array('_MEDIA_SERVER_1_', defined('_MEDIA_SERVER_1_') ? _MEDIA_SERVER_1_ : '');
+	$datas[] = array('_MEDIA_SERVER_2_', defined('_MEDIA_SERVER_2_') ? _MEDIA_SERVER_2_ : '');
+	$datas[] = array('_MEDIA_SERVER_3_', defined('_MEDIA_SERVER_3_') ? _MEDIA_SERVER_3_ : '');
+}
+
 if (defined('_RIJNDAEL_KEY_'))
 	$datas[] = array('_RIJNDAEL_KEY_', _RIJNDAEL_KEY_);
 if (defined('_RIJNDAEL_IV_'))
@@ -246,19 +251,19 @@ if(!defined('_PS_CACHE_ENABLED_'))
 	define('_PS_CACHE_ENABLED_', '0');
 if(!defined('_MYSQL_ENGINE_'))
 	define('_MYSQL_ENGINE_', 'MyISAM');
-	
+
 global $smarty;
 // Clean all cache values
 Cache::clean('*');
 
 Context::getContext()->shop = new Shop(1);
 Shop::setContext(Shop::CONTEXT_SHOP, 1);
-Configuration::loadConfiguration();
+
 if (!isset(Context::getContext()->language) || !Validate::isLoadedObject(Context::getContext()->language))
-	if ($id_lang = (int)Configuration::get('PS_LANG_DEFAULT'))
+	if ($id_lang = (int)getConfValue('PS_LANG_DEFAULT'))
 		Context::getContext()->language = new Language($id_lang);
 if (!isset(Context::getContext()->country) || !Validate::isLoadedObject(Context::getContext()->country))
-	if ($id_country = (int)Configuration::get('PS_COUNTRY_DEFAULT'))
+	if ($id_country = (int)getConfValue('PS_COUNTRY_DEFAULT'))
 		Context::getContext()->country = new Country((int)$id_country);
 
 Context::getContext()->cart = new Cart();
@@ -267,7 +272,7 @@ if (!defined('_PS_SMARTY_FAST_LOAD_'))
 	define('_PS_SMARTY_FAST_LOAD_', true);
 require_once _PS_ROOT_DIR_.'/config/smarty.config.inc.php';
 
-Context::getContext()->smarty = $smarty;	
+Context::getContext()->smarty = $smarty;
 
 if(isset($_GET['customModule']) AND $_GET['customModule'] == 'desactivate')
 {
@@ -346,7 +351,7 @@ if (empty($fail_result))
 					if (strpos($phpString, '::') === false)
 					{
 						$func_name = str_replace($pattern[0], '', $php[0]);
-						require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.$func_name.'.php');
+						require_once(_PS_INSTALLER_PHP_UPGRADE_DIR_.Tools::strtolower($func_name).'.php');
 						$phpRes = call_user_func_array($func_name, $parameters);
 					}
 					/* Or an object method */
@@ -410,7 +415,7 @@ if (empty($fail_result))
 					unlink($dir.DIRECTORY_SEPARATOR.$file);
 
 	// delete cache filesystem if activated
-	$depth = Configuration::get('PS_CACHEFS_DIRECTORY_DEPTH');
+	$depth = getConfValue('PS_CACHEFS_DIRECTORY_DEPTH');
 	if (defined('_PS_CACHE_ENABLED_') && _PS_CACHE_ENABLED_  && $depth)
 	{
 		CacheFs::deleteCacheDirectory();
@@ -433,10 +438,10 @@ else
 if (!isset($return_type))
 	$return_type = 'xml';
 
-// format available 
+// format available
 // 1) output on screen
 // - xml (default)
-// - json 
+// - json
 // 2) return value in php
 // - include : variable $result available after inclusion
 // 3) file_get_contents()
@@ -477,4 +482,24 @@ else
 				break;
 		}
 	}
+}
+function getConfValue($name)
+{
+	$full = version_compare('1.5.0.10', _PS_VERSION_) < 0;
+
+	$sql = 'SELECT IF(cl.`id_lang` IS NULL, c.`value`, cl.`value`) AS value
+			FROM `'._DB_PREFIX_.'configuration` c
+			LEFT JOIN `'._DB_PREFIX_.'configuration_lang` cl ON (c.`id_configuration` = cl.`id_configuration`)
+			WHERE c.`name` LIKE \''.pSQL($name).'\'';
+
+	if ($full)
+	{
+		$id_shop = Shop::getContextShopID(true);
+		$id_shop_group = Shop::getContextShopGroupID(true);
+		if ($id_shop)
+			$sql .= ' AND c.`id_shop` = '.(int)$id_shop;
+		if ($id_shop_group)
+			$sql .= ' AND c.`id_shop_group` = '.(int)$id_shop_group;
+	}
+	return Db::getInstance()->getValue($sql);
 }

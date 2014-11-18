@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,16 +19,16 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class AdminPreferencesControllerCore extends AdminController
 {
-
 	public function __construct()
 	{
+		$this->bootstrap = true;
 		$this->context = Context::getContext();
 		$this->className = 'Configuration';
 		$this->table = 'configuration';
@@ -38,21 +38,32 @@ class AdminPreferencesControllerCore extends AdminController
 		{
 			$round_mode = array(
 				array(
+					'value' => PS_ROUND_HALF_UP,
+					'name' => $this->l('Round up away from zero, when it is half way there (recommended)')
+				),
+				array(
+					'value' => PS_ROUND_HALF_DOWN,
+					'name' => $this->l('Round down towards zero, when it is half way there')
+				),
+				array(
+					'value' => PS_ROUND_HALF_EVEN,
+					'name' => $this->l('Round towards the next even value')
+				),
+				array(
+					'value' => PS_ROUND_HALF_ODD,
+					'name' => $this->l('Round towards the next odd value')
+				),
+				array(
 					'value' => PS_ROUND_UP,
-					'name' => $this->l('superior')
+					'name' => $this->l('Round up to the nearest value')
 				),
 				array(
 					'value' => PS_ROUND_DOWN,
-					'name' => $this->l('inferior')
+					'name' => $this->l('Round down to the nearest value')
 				),
-				array(
-					'value' => PS_ROUND_HALF,
-					'name' => $this->l('classical')
-				)
 			);
 			$activities1 = array(
 				0 => $this->l('-- Please choose your main activity --'),
-				1 => $this->l('Adult'),
 				2 => $this->l('Animals and Pets'),
 				3 => $this->l('Art and Culture'),
 				4 => $this->l('Babies'),
@@ -67,6 +78,7 @@ class AdminPreferencesControllerCore extends AdminController
 				13 => $this->l('Home and Garden'),
 				14 => $this->l('Home Appliances'),
 				15 => $this->l('Jewelry'),
+				1 => $this->l('Lingerie and Adult'),
 				16 => $this->l('Mobile and Telecom'),
 				17 => $this->l('Services'),
 				18 => $this->l('Shoes and accessories'),
@@ -86,6 +98,19 @@ class AdminPreferencesControllerCore extends AdminController
 					'type' => 'bool',
 					'default' => '0'
 				),
+			);
+
+			if (Tools::getValue('PS_SSL_ENABLED', Configuration::get('PS_SSL_ENABLED')))
+				$fields['PS_SSL_ENABLED_EVERYWHERE'] = array(
+					'title' => $this->l('Force the SSL on all the pages'),
+					'desc' => $this->l('Force all your store to use SSL.'),
+					'validation' => 'isBool',
+					'cast' => 'intval',
+					'type' => 'bool',
+					'default' => '0'
+				);
+
+			$fields = array_merge($fields, array(
 				'PS_TOKEN_ENABLE' => array(
 					'title' => $this->l('Increase Front Office security'),
 					'desc' => $this->l('Enable or disable token in the Front Office to improve PrestaShop\'s security.'),
@@ -96,8 +121,16 @@ class AdminPreferencesControllerCore extends AdminController
 					'visibility' => Shop::CONTEXT_ALL
 				),
 				'PS_ALLOW_HTML_IFRAME' => array(
-					'title' => $this->l('Allow iframes on html fields'),
-					'desc' => $this->l('Allow iframes on fields like product description. We recommend that you leave this option disabled'),
+					'title' => $this->l('Allow iframes on HTML fields'),
+					'desc' => $this->l('Allow iframes on text fields like product description. We recommend that you leave this option disabled.'),
+					'validation' => 'isBool',
+					'cast' => 'intval',
+					'type' => 'bool',
+					'default' => '0'
+				),
+				'PS_USE_HTMLPURIFIER' => array(
+					'title' => $this->l('Use HTMLPurifier Library'),
+					'desc' => $this->l('Clean the HTML content on text fields. We recommend that you leave this option enabled.'),
 					'validation' => 'isBool',
 					'cast' => 'intval',
 					'type' => 'bool',
@@ -105,16 +138,51 @@ class AdminPreferencesControllerCore extends AdminController
 				),
 				'PS_PRICE_ROUND_MODE' => array(
 					'title' => $this->l('Round mode'),
-					'desc' => $this->l('You can choose how to round prices: Always round superior, always round inferior or classic rounding.'),
+					'desc' => $this->l('You can choose how to round prices: always round up, always round down or classic rounding (up if > .5, down if < .5).'),
 					'validation' => 'isInt',
 					'cast' => 'intval',
 					'type' => 'select',
 					'list' => $round_mode,
 					'identifier' => 'value'
 				),
+				'PS_ROUND_TYPE' => array(
+					'title' => $this->l('Round type'),
+					'cast' => 'intval',
+					'type' => 'select',
+					'list' => array(
+						array(
+							'name' => $this->l('Round on each item'),
+							'id' => Order::ROUND_ITEM
+							),
+						array(
+							'name' => $this->l('Round on each line'),
+							'id' => Order::ROUND_LINE
+							),
+						array(
+							'name' => $this->l('Round on the total'),
+							'id' => Order::ROUND_TOTAL
+							),
+						),
+					'identifier' => 'id'
+				),
+				'PS_PRICE_DISPLAY_PRECISION' => array(
+					'title' => $this->l('Number of decimals'),
+					'desc' => $this->l('Choose how many decimals you want to display'),
+					'validation' => 'isUnsignedInt',
+					'cast' => 'intval',
+					'type' => 'text',
+					'class' => 'fixed-width-xxl'
+				),
 				'PS_DISPLAY_SUPPLIERS' => array(
 					'title' => $this->l('Display suppliers and manufacturers'),
-					'desc' => $this->l('Display the suppliers and manufacturers lists even if corresponding blocks are disabled.'),
+					'desc' => $this->l('Enable suppliers and manufacturers pages on your Front Office even when their respective modules are disabled.'),
+					'validation' => 'isBool',
+					'cast' => 'intval',
+					'type' => 'bool'
+				),
+				'PS_DISPLAY_BEST_SELLERS' => array(
+					'title' => $this->l('Display best sellers'),
+					'desc' => $this->l('Enable best sellers page on your Front Office even when its respective module is disabled.'),
 					'validation' => 'isBool',
 					'cast' => 'intval',
 					'type' => 'bool'
@@ -135,22 +203,22 @@ class AdminPreferencesControllerCore extends AdminController
 					'list' => $activities2,
 					'identifier' => 'value'
 				),
-			);
+			));
 
 			// No HTTPS activation if you haven't already.
 			if (!Tools::usingSecureMode() && !Configuration::get('PS_SSL_ENABLED'))
 			{
 				$fields['PS_SSL_ENABLED']['type'] = 'disabled';
-				$fields['PS_SSL_ENABLED']['disabled'] = '<a href="https://'.Tools::getShopDomainSsl().Tools::safeOutput($_SERVER['REQUEST_URI']).'">'.
+				$fields['PS_SSL_ENABLED']['disabled'] = '<a class="btn btn-link" href="https://'.Tools::getShopDomainSsl().Tools::safeOutput($_SERVER['REQUEST_URI']).'">'.
 					$this->l('Please click here to use HTTPS protocol before enabling SSL.').'</a>';
 			}
 
 			$this->fields_options = array(
 				'general' => array(
 					'title' =>	$this->l('General'),
-					'icon' =>	'tab-preferences',
+					'icon' =>	'icon-cogs',
 					'fields' =>	$fields,
-					'submit' => array('title' => $this->l('Save   '), 'class' => 'button'),
+					'submit' => array('title' => $this->l('Save')),
 				),
 			);
 		}

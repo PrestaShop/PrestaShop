@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -95,9 +95,9 @@ class ImageTypeCore extends ObjectModel
 		{
 			$where = 'WHERE 1';
 			if (!empty($type))
-				$where .= ' AND '.pSQL($type).' = 1 ';
+				$where .= ' AND `'.bqSQL($type).'` = 1 ';
 
-			$query = 'SELECT * FROM `'._DB_PREFIX_.'image_type`'.$where.' ORDER BY `name` ASC';
+			$query = 'SELECT * FROM `'._DB_PREFIX_.'image_type` '.$where.' ORDER BY `name` ASC';
 			self::$images_types_cache[$type] = Db::getInstance()->executeS($query);
 		}
 		return self::$images_types_cache[$type];
@@ -127,16 +127,20 @@ class ImageTypeCore extends ObjectModel
 	 * @param string $name
 	 * @param string $type
 	 */
-	public static function getByNameNType($name, $type = null)
+	public static function getByNameNType($name, $type = null, $order = null)
 	{
-		if (!isset(self::$images_types_name_cache[$name.'_'.$type]))
+		if (!isset(self::$images_types_name_cache[$name.'_'.$type.'_'.$order]))
 		{
-			self::$images_types_name_cache[$name.'_'.$type] = Db::getInstance()->getRow('
+			self::$images_types_name_cache[$name.'_'.$type.'_'.$order] = Db::getInstance()->getRow('
 				SELECT `id_image_type`, `name`, `width`, `height`, `products`, `categories`, `manufacturers`, `suppliers`, `scenes` 
 				FROM `'._DB_PREFIX_.'image_type` 
-				WHERE `name` = \''.pSQL($name).'\' '.(!is_null($type) ? 'AND `'.pSQL($type).'` = 1' : ''));
+				WHERE 
+				`name` LIKE \''.pSQL($name).'\''
+				.(!is_null($type) ? ' AND `'.pSQL($type).'` = 1' : '')
+				.(!is_null($order) ? ' ORDER BY `'.bqSQL($order).'` ASC' : '')
+			);
 		}
-		return self::$images_types_name_cache[$name.'_'.$type];
+		return self::$images_types_name_cache[$name.'_'.$type.'_'.$order];
 	}
 	
 	public static function getFormatedName($name)
@@ -147,9 +151,9 @@ class ImageTypeCore extends ObjectModel
 		//check if the theme name is already in $name if yes only return $name
 		if (strstr($name, $theme_name) && self::getByNameNType($name))
 			return $name;
-		else if (self::getByNameNType($name_without_theme_name.'_'.$theme_name))
+		elseif (self::getByNameNType($name_without_theme_name.'_'.$theme_name))
 			return $name_without_theme_name.'_'.$theme_name;
-		else if (self::getByNameNType($theme_name.'_'.$name_without_theme_name))
+		elseif (self::getByNameNType($theme_name.'_'.$name_without_theme_name))
 			return $theme_name.'_'.$name_without_theme_name;
 		else
 			return $name_without_theme_name.'_default';

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -47,7 +47,8 @@ class AttributeCore extends ObjectModel
 			'color' => 				array('type' => self::TYPE_STRING, 'validate' => 'isColor'),
 			'position' => 			array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 
-			'name' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
+			// Lang fields
+			'name' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
 		)
 	);
 
@@ -74,12 +75,29 @@ class AttributeCore extends ObjectModel
 		if (!$this->hasMultishopEntries() || Shop::getContext() == Shop::CONTEXT_ALL)
 		{
 			$result = Db::getInstance()->executeS('SELECT id_product_attribute FROM '._DB_PREFIX_.'product_attribute_combination WHERE id_attribute = '.(int)$this->id);
+			$products = array();
+
 			foreach ($result as $row)
 			{
 				$combination = new Combination($row['id_product_attribute']);
+				$new_request = Db::getInstance()->executeS('SELECT id_product, default_on FROM '._DB_PREFIX_.'product_attribute WHERE id_product_attribute = '.(int)$row['id_product_attribute']);
+				foreach ($new_request as $value)
+					if ($value['default_on'] == 1)
+						$products[] = $value['id_product'];
 				$combination->delete();
 			}
-		
+
+			foreach ($products as $product)
+			{
+				$result = Db::getInstance()->executeS('SELECT id_product_attribute FROM '._DB_PREFIX_.'product_attribute WHERE id_product = '.(int)$product.' LIMIT 1');
+				foreach ($result as $row)
+					if (Validate::isLoadedObject($product = new Product((int)$product)))
+					{
+						$product->deleteDefaultAttributes();
+						$product->setDefaultAttribute($row['id_product_attribute']);
+					}
+			}
+
 			// Delete associated restrictions on cart rules
 			CartRule::cleanProductRuleIntegrity('attributes', $this->id);
 
@@ -139,9 +157,32 @@ class AttributeCore extends ObjectModel
 				ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
 			'.Shop::addSqlAssociation('attribute_group', 'ag').'
 			'.Shop::addSqlAssociation('attribute', 'a').'
-			'.($not_null ? 'WHERE a.`id_attribute` IS NOT NULL AND al.`name` IS NOT NULL' : '').'
+			'.($not_null ? 'WHERE a.`id_attribute` IS NOT NULL AND al.`name` IS NOT NULL AND agl.`id_attribute_group` IS NOT NULL' : '').'
 			ORDER BY agl.`name` ASC, a.`position` ASC
 		');
+	}
+
+	public static function isAttribute($id_attribute_group, $name, $id_lang)
+	{
+		if (!Combination::isFeatureActive())
+			return array();
+
+		$result = Db::getInstance()->getValue('
+			SELECT COUNT(*)
+			FROM `'._DB_PREFIX_.'attribute_group` ag
+			LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl
+				ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)$id_lang.')
+			LEFT JOIN `'._DB_PREFIX_.'attribute` a
+				ON a.`id_attribute_group` = ag.`id_attribute_group`
+			LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al
+				ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
+			'.Shop::addSqlAssociation('attribute_group', 'ag').'
+			'.Shop::addSqlAssociation('attribute', 'a').'
+			WHERE al.`name` = \''.pSQL($name).'\' AND ag.`id_attribute_group` = '.(int)$id_attribute_group.'
+			ORDER BY agl.`name` ASC, a.`position` ASC
+		');
+
+		return ((int)$result > 0);
 	}
 
 	/**
@@ -298,31 +339,14 @@ class AttributeCore extends ObjectModel
 	 */
 	public function cleanPositions($id_attribute_group, $use_last_attribute = true)
 	{
-		$return = true;
+		$sql = 'SET @i = 0; UPDATE `'._DB_PREFIX_.'attribute` SET `position` = @i:=@i+1 WHERE';
 
-		$sql = '
-			SELECT `id_attribute`
-			FROM `'._DB_PREFIX_.'attribute`
-			WHERE `id_attribute_group` = '.(int)$id_attribute_group;
-
-		// when delete, you must use $use_last_attribute
 		if ($use_last_attribute)
-			$sql .= ' AND `id_attribute` != '.(int)$this->id;
+			$sql .= ' `id_attribute` != '.(int)$this->id.' AND';
 
-		$sql .= ' ORDER BY `position`';
+		$sql .= ' `id_attribute_group` = '.(int)$id_attribute_group.' ORDER BY `position` ASC';
 
-		$result = Db::getInstance()->executeS($sql);
-
-		$i = 0;
-		foreach ($result as $value)
-			$return = Db::getInstance()->execute('
-				UPDATE `'._DB_PREFIX_.'attribute`
-				SET `position` = '.(int)$i++.'
-				WHERE `id_attribute_group` = '.(int)$id_attribute_group.'
-				AND `id_attribute` = '.(int)$value['id_attribute']
-			);
-
-		return $return;
+		$return = Db::getInstance()->execute($sql);
 	}
 
 	/**

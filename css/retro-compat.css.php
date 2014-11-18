@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,13 +19,13 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 header('content-type: text/css');
-$css_folder = __DIR__.'/../js/jquery/';
+$css_folder = dirname(__FILE__).'/../js/jquery/';
 
 $css_files = array(
 				'datepicker.css' => 
@@ -50,8 +50,6 @@ $css_files = array(
 					array('new_file' => $css_folder.'plugins/thickbox/jquery.thickbox.css'),
 				'jquery.fancybox.css' => 
 					array('new_file' => $css_folder.'plugins/fancybox/jquery.fancybox.css'),
-				'jquery.autocomplete.css' => 
-					array('new_file' => $css_folder.'plugins/autocomplete/jquery.autocomplete.css')
 				);
 				
 				

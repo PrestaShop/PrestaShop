@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,12 +19,13 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-define('_PS_ADMIN_DIR_', getcwd());
+if (!defined('_PS_ADMIN_DIR_'))
+	define('_PS_ADMIN_DIR_', getcwd());
 include_once(_PS_ADMIN_DIR_.'/../config/config.inc.php');
 
 $module = Tools::getValue('module');
@@ -43,7 +44,7 @@ if (!isset($cookie->id_employee) || !$cookie->id_employee  || $cookie->id_employ
 if (!Validate::isModuleName($module))
 	die(Tools::displayError());
 
-if (!Tools::file_exists_cache($module_path = dirname(__FILE__).'/../modules/'.$module.'/'.$module.'.php'))
+if (!Tools::file_exists_cache($module_path = _PS_ROOT_DIR_.'/modules/'.$module.'/'.$module.'.php'))
 	die(Tools::displayError());
 
 $shop_id = '';

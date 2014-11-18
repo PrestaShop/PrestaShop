@@ -1,7 +1,7 @@
 Hello,
 
 Please read the documentation before trying to override something here.
-http://doc.prestashop.com/display/PS15/Overriding+default+behaviors
+http://doc.prestashop.com/display/PS16/Overriding+default+behaviors
 
 Frequently Asked Questions
 

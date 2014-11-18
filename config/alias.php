@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -73,9 +73,11 @@ function bqSQL($string)
 
 function displayFatalError()
 {
-	$error = error_get_last();
-	if ($error !== NULL && in_array($error['type'], array(E_ERROR, E_PARSE)))
-		echo '[PrestaShop] Fatal error in module '.substr(basename($error['file']), 0, -4).':<br />'.$error['message'];
+	$error = null;
+	if (function_exists('error_get_last'))
+		$error = error_get_last();
+	if ($error !== NULL && in_array($error['type'], array(E_ERROR, E_PARSE, E_COMPILE_ERROR )))
+		echo '[PrestaShop] Fatal error in module file :'.$error['file'].':<br />'.$error['message'];
 }
 
 /**

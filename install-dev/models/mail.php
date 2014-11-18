@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -39,9 +39,9 @@ class InstallModelMail extends InstallAbstractModel
 	{
 		parent::__construct();
 
-		require_once(_PS_INSTALL_PATH_.'../tools/swift/Swift.php');
-		require_once(_PS_INSTALL_PATH_.'../tools/swift/Swift/Connection/SMTP.php');
-		require_once(_PS_INSTALL_PATH_.'../tools/swift/Swift/Connection/NativeMail.php');
+		require_once(_PS_CORE_DIR_.'/tools/swift/Swift.php');
+		require_once(_PS_CORE_DIR_.'/tools/swift/Swift/Connection/SMTP.php');
+		require_once(_PS_CORE_DIR_.'/tools/swift/Swift/Connection/NativeMail.php');
 
 		$this->smtp_checked = $smtp_checked;
 		$this->server = $server;

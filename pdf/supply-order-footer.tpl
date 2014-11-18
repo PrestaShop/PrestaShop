@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
@@ -26,27 +26,27 @@
 <table>
 	<tr>
 		<td style="text-align: left; font-size: 6pt; color: #444">
-			{$shop_address|escape:'htmlall':'UTF-8'}<br />
+			{$shop_address|escape:'html':'UTF-8'}<br />
 
 			{if !empty($shop_phone) OR !empty($shop_fax)}
 				{l s='For more assistance, contact Support:' pdf='true'}<br />
 				{if !empty($shop_phone)}
-					Tel: {$shop_phone|escape:'htmlall':'UTF-8'}
+					Tel: {$shop_phone|escape:'html':'UTF-8'}
 				{/if}
 
 				{if !empty($shop_fax)}
-					Fax: {$shop_fax|escape:'htmlall':'UTF-8'}
+					Fax: {$shop_fax|escape:'html':'UTF-8'}
 				{/if}
 				<br />
 			{/if}
             
             {if isset($shop_details)}
-                {$shop_details|escape:'htmlall':'UTF-8'}<br />
+                {$shop_details|escape:'html':'UTF-8'}<br />
             {/if}
 
             {if isset($free_text)}
             	{foreach $free_text as $text}
-    				{$text|escape:'htmlall':'UTF-8'}<br />
+    				{$text|escape:'html':'UTF-8'}<br />
     			{/foreach}
             {/if}
 		</td>

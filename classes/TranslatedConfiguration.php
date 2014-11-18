@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -57,10 +57,9 @@ class TranslatedConfigurationCore extends Configuration
 		// Otherwise configuration is not set as translated configuration.
 		if ($id !== null)
 		{
-			$id_translated = Db::getInstance()->executeS('
-				SELECT `'.$this->def['primary'].'`
-				FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_lang`
-				WHERE `'.$this->def['primary'].'`='.pSQL($id).' LIMIT 0,1
+			$id_translated = Db::getInstance()->executeS('				SELECT `'.bqSQL($this->def['primary']).'`
+				FROM `'.bqSQL(_DB_PREFIX_.$this->def['table']).'_lang`
+				WHERE `'.bqSQL($this->def['primary']).'`='.(int)$id.' LIMIT 0,1
 			');
 
 			if (empty($id_translated))

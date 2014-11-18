@@ -33,8 +33,7 @@
   <tab id="General" name="Allgemein"/>
   <tab id="Geolocation" name="Geotargeting"/>
   <tab id="Groups" name="Gruppen"/>
-  <tab id="Home" name="Startseite"/>
-  <tab id="Image_Mapping" name="Bilder-Mapping"/>
+  <tab id="Dashboard" name="Dashboard"/>
   <tab id="Images" name="Bilder"/>
   <tab id="Instant_Stock_Status" name="aktueller Lagerstand"/>
   <tab id="Invoices" name="Rechnungen"/>
@@ -74,8 +73,8 @@
   <tab id="Search" name="Suche"/>
   <tab id="Search_Engines" name="Suchmaschinen"/>
   <tab id="SEO_URLs" name="SEO &amp; URLs"/>
-  <tab id="Shipping" name="Voreinstellungen"/>
-  <tab id="Shipping_1" name="Versand"/>
+  <tab id="Shipping" name="Versand"/>
+  <tab id="Shipping_1" name="Voreinstellungen"/>
   <tab id="Shop_URLs" name="Shop-URLs"/>
   <tab id="Shopping_Carts" name="Warenk&#xF6;rbe"/>
   <tab id="Shops" name="Shops"/>
@@ -100,4 +99,5 @@
   <tab id="Warehouses" name="Lagerort"/>
   <tab id="Webservice" name="Webdienste"/>
   <tab id="Zones" name="Zonen"/>
+  <tab id="CarrierWizard" name="Carrier"/>
 </entity_tab>

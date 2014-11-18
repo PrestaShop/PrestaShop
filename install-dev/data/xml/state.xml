@@ -804,145 +804,145 @@
     <state id="YO" id_country="ID" id_zone="Asia" iso_code="YO" tax_behavior="0" active="1">
       <name>Yogyakarta</name>
     </state>
-    <state id="23" id_country="JP" id_zone="Asia" iso_code="23" tax_behavior="0" active="1">
+    <state id="JP-23" id_country="JP" id_zone="Asia" iso_code="23" tax_behavior="0" active="1">
       <name>Aichi</name>
     </state>
-    <state id="05" id_country="JP" id_zone="Asia" iso_code="05" tax_behavior="0" active="1">
+    <state id="JP-05" id_country="JP" id_zone="Asia" iso_code="05" tax_behavior="0" active="1">
       <name>Akita</name>
     </state>
-    <state id="02" id_country="JP" id_zone="Asia" iso_code="02" tax_behavior="0" active="1">
+    <state id="JP-02" id_country="JP" id_zone="Asia" iso_code="02" tax_behavior="0" active="1">
       <name>Aomori</name>
     </state>
-    <state id="12" id_country="JP" id_zone="Asia" iso_code="12" tax_behavior="0" active="1">
+    <state id="JP-12" id_country="JP" id_zone="Asia" iso_code="12" tax_behavior="0" active="1">
       <name>Chiba</name>
     </state>
-    <state id="38" id_country="JP" id_zone="Asia" iso_code="38" tax_behavior="0" active="1">
+    <state id="JP-38" id_country="JP" id_zone="Asia" iso_code="38" tax_behavior="0" active="1">
       <name>Ehime</name>
     </state>
-    <state id="18" id_country="JP" id_zone="Asia" iso_code="18" tax_behavior="0" active="1">
+    <state id="JP-18" id_country="JP" id_zone="Asia" iso_code="18" tax_behavior="0" active="1">
       <name>Fukui</name>
     </state>
-    <state id="40" id_country="JP" id_zone="Asia" iso_code="40" tax_behavior="0" active="1">
+    <state id="JP-40" id_country="JP" id_zone="Asia" iso_code="40" tax_behavior="0" active="1">
       <name>Fukuoka</name>
     </state>
-    <state id="07" id_country="JP" id_zone="Asia" iso_code="07" tax_behavior="0" active="1">
+    <state id="JP-07" id_country="JP" id_zone="Asia" iso_code="07" tax_behavior="0" active="1">
       <name>Fukushima</name>
     </state>
-    <state id="21" id_country="JP" id_zone="Asia" iso_code="21" tax_behavior="0" active="1">
+    <state id="JP-21" id_country="JP" id_zone="Asia" iso_code="21" tax_behavior="0" active="1">
       <name>Gifu</name>
     </state>
-    <state id="10" id_country="JP" id_zone="Asia" iso_code="10" tax_behavior="0" active="1">
+    <state id="JP-10" id_country="JP" id_zone="Asia" iso_code="10" tax_behavior="0" active="1">
       <name>Gunma</name>
     </state>
-    <state id="34" id_country="JP" id_zone="Asia" iso_code="34" tax_behavior="0" active="1">
+    <state id="JP-34" id_country="JP" id_zone="Asia" iso_code="34" tax_behavior="0" active="1">
       <name>Hiroshima</name>
     </state>
-    <state id="01" id_country="JP" id_zone="Asia" iso_code="01" tax_behavior="0" active="1">
+    <state id="JP-01" id_country="JP" id_zone="Asia" iso_code="01" tax_behavior="0" active="1">
       <name>Hokkaido</name>
     </state>
-    <state id="28" id_country="JP" id_zone="Asia" iso_code="28" tax_behavior="0" active="1">
+    <state id="JP-28" id_country="JP" id_zone="Asia" iso_code="28" tax_behavior="0" active="1">
       <name>Hyogo</name>
     </state>
-    <state id="08" id_country="JP" id_zone="Asia" iso_code="08" tax_behavior="0" active="1">
+    <state id="JP-08" id_country="JP" id_zone="Asia" iso_code="08" tax_behavior="0" active="1">
       <name>Ibaraki</name>
     </state>
-    <state id="17" id_country="JP" id_zone="Asia" iso_code="17" tax_behavior="0" active="1">
+    <state id="JP-17" id_country="JP" id_zone="Asia" iso_code="17" tax_behavior="0" active="1">
       <name>Ishikawa</name>
     </state>
-    <state id="03" id_country="JP" id_zone="Asia" iso_code="03" tax_behavior="0" active="1">
+    <state id="JP-03" id_country="JP" id_zone="Asia" iso_code="03" tax_behavior="0" active="1">
       <name>Iwate</name>
     </state>
-    <state id="37" id_country="JP" id_zone="Asia" iso_code="37" tax_behavior="0" active="1">
+    <state id="JP-37" id_country="JP" id_zone="Asia" iso_code="37" tax_behavior="0" active="1">
       <name>Kagawa</name>
     </state>
-    <state id="46" id_country="JP" id_zone="Asia" iso_code="46" tax_behavior="0" active="1">
+    <state id="JP-46" id_country="JP" id_zone="Asia" iso_code="46" tax_behavior="0" active="1">
       <name>Kagoshima</name>
     </state>
-    <state id="14" id_country="JP" id_zone="Asia" iso_code="14" tax_behavior="0" active="1">
+    <state id="JP-14" id_country="JP" id_zone="Asia" iso_code="14" tax_behavior="0" active="1">
       <name>Kanagawa</name>
     </state>
-    <state id="39" id_country="JP" id_zone="Asia" iso_code="39" tax_behavior="0" active="1">
+    <state id="JP-39" id_country="JP" id_zone="Asia" iso_code="39" tax_behavior="0" active="1">
       <name>Kochi</name>
     </state>
-    <state id="43" id_country="JP" id_zone="Asia" iso_code="43" tax_behavior="0" active="1">
+    <state id="JP-43" id_country="JP" id_zone="Asia" iso_code="43" tax_behavior="0" active="1">
       <name>Kumamoto</name>
     </state>
-    <state id="26" id_country="JP" id_zone="Asia" iso_code="26" tax_behavior="0" active="1">
+    <state id="JP-26" id_country="JP" id_zone="Asia" iso_code="26" tax_behavior="0" active="1">
       <name>Kyoto</name>
     </state>
-    <state id="24" id_country="JP" id_zone="Asia" iso_code="24" tax_behavior="0" active="1">
+    <state id="JP-24" id_country="JP" id_zone="Asia" iso_code="24" tax_behavior="0" active="1">
       <name>Mie</name>
     </state>
-    <state id="04" id_country="JP" id_zone="Asia" iso_code="04" tax_behavior="0" active="1">
+    <state id="JP-04" id_country="JP" id_zone="Asia" iso_code="04" tax_behavior="0" active="1">
       <name>Miyagi</name>
     </state>
-    <state id="45" id_country="JP" id_zone="Asia" iso_code="45" tax_behavior="0" active="1">
+    <state id="JP-45" id_country="JP" id_zone="Asia" iso_code="45" tax_behavior="0" active="1">
       <name>Miyazaki</name>
     </state>
-    <state id="20" id_country="JP" id_zone="Asia" iso_code="20" tax_behavior="0" active="1">
+    <state id="JP-20" id_country="JP" id_zone="Asia" iso_code="20" tax_behavior="0" active="1">
       <name>Nagano</name>
     </state>
-    <state id="42" id_country="JP" id_zone="Asia" iso_code="42" tax_behavior="0" active="1">
+    <state id="JP-42" id_country="JP" id_zone="Asia" iso_code="42" tax_behavior="0" active="1">
       <name>Nagasaki</name>
     </state>
-    <state id="29" id_country="JP" id_zone="Asia" iso_code="29" tax_behavior="0" active="1">
+    <state id="JP-29" id_country="JP" id_zone="Asia" iso_code="29" tax_behavior="0" active="1">
       <name>Nara</name>
     </state>
-    <state id="15" id_country="JP" id_zone="Asia" iso_code="15" tax_behavior="0" active="1">
+    <state id="JP-15" id_country="JP" id_zone="Asia" iso_code="15" tax_behavior="0" active="1">
       <name>Niigata</name>
     </state>
-    <state id="44" id_country="JP" id_zone="Asia" iso_code="44" tax_behavior="0" active="1">
+    <state id="JP-44" id_country="JP" id_zone="Asia" iso_code="44" tax_behavior="0" active="1">
       <name>Oita</name>
     </state>
-    <state id="33" id_country="JP" id_zone="Asia" iso_code="33" tax_behavior="0" active="1">
+    <state id="JP-33" id_country="JP" id_zone="Asia" iso_code="33" tax_behavior="0" active="1">
       <name>Okayama</name>
     </state>
-    <state id="47" id_country="JP" id_zone="Asia" iso_code="47" tax_behavior="0" active="1">
+    <state id="JP-47" id_country="JP" id_zone="Asia" iso_code="47" tax_behavior="0" active="1">
       <name>Okinawa</name>
     </state>
-    <state id="27" id_country="JP" id_zone="Asia" iso_code="27" tax_behavior="0" active="1">
+    <state id="JP-27" id_country="JP" id_zone="Asia" iso_code="27" tax_behavior="0" active="1">
       <name>Osaka</name>
     </state>
-    <state id="41" id_country="JP" id_zone="Asia" iso_code="41" tax_behavior="0" active="1">
+    <state id="JP-41" id_country="JP" id_zone="Asia" iso_code="41" tax_behavior="0" active="1">
       <name>Saga</name>
     </state>
-    <state id="11" id_country="JP" id_zone="Asia" iso_code="11" tax_behavior="0" active="1">
+    <state id="JP-11" id_country="JP" id_zone="Asia" iso_code="11" tax_behavior="0" active="1">
       <name>Saitama</name>
     </state>
-    <state id="25" id_country="JP" id_zone="Asia" iso_code="25" tax_behavior="0" active="1">
+    <state id="JP-25" id_country="JP" id_zone="Asia" iso_code="25" tax_behavior="0" active="1">
       <name>Shiga</name>
     </state>
-    <state id="32" id_country="JP" id_zone="Asia" iso_code="32" tax_behavior="0" active="1">
+    <state id="JP-32" id_country="JP" id_zone="Asia" iso_code="32" tax_behavior="0" active="1">
       <name>Shimane</name>
     </state>
-    <state id="22" id_country="JP" id_zone="Asia" iso_code="22" tax_behavior="0" active="1">
+    <state id="JP-22" id_country="JP" id_zone="Asia" iso_code="22" tax_behavior="0" active="1">
       <name>Shizuoka</name>
     </state>
-    <state id="09" id_country="JP" id_zone="Asia" iso_code="09" tax_behavior="0" active="1">
+    <state id="JP-09" id_country="JP" id_zone="Asia" iso_code="09" tax_behavior="0" active="1">
       <name>Tochigi</name>
     </state>
-    <state id="36" id_country="JP" id_zone="Asia" iso_code="36" tax_behavior="0" active="1">
+    <state id="JP-36" id_country="JP" id_zone="Asia" iso_code="36" tax_behavior="0" active="1">
       <name>Tokushima</name>
     </state>
-    <state id="13" id_country="JP" id_zone="Asia" iso_code="13" tax_behavior="0" active="1">
+    <state id="JP-13" id_country="JP" id_zone="Asia" iso_code="13" tax_behavior="0" active="1">
       <name>Tokyo</name>
     </state>
-    <state id="31" id_country="JP" id_zone="Asia" iso_code="31" tax_behavior="0" active="1">
+    <state id="JP-31" id_country="JP" id_zone="Asia" iso_code="31" tax_behavior="0" active="1">
       <name>Tottori</name>
     </state>
-    <state id="16" id_country="JP" id_zone="Asia" iso_code="16" tax_behavior="0" active="1">
+    <state id="JP-16" id_country="JP" id_zone="Asia" iso_code="16" tax_behavior="0" active="1">
       <name>Toyama</name>
     </state>
-    <state id="30" id_country="JP" id_zone="Asia" iso_code="30" tax_behavior="0" active="1">
+    <state id="JP-30" id_country="JP" id_zone="Asia" iso_code="30" tax_behavior="0" active="1">
       <name>Wakayama</name>
     </state>
-    <state id="06" id_country="JP" id_zone="Asia" iso_code="06" tax_behavior="0" active="1">
+    <state id="JP-06" id_country="JP" id_zone="Asia" iso_code="06" tax_behavior="0" active="1">
       <name>Yamagata</name>
     </state>
-    <state id="35" id_country="JP" id_zone="Asia" iso_code="35" tax_behavior="0" active="1">
+    <state id="JP-35" id_country="JP" id_zone="Asia" iso_code="35" tax_behavior="0" active="1">
       <name>Yamaguchi</name>
     </state>
-    <state id="19" id_country="JP" id_zone="Asia" iso_code="19" tax_behavior="0" active="1">
+    <state id="JP-19" id_country="JP" id_zone="Asia" iso_code="19" tax_behavior="0" active="1">
       <name>Yamanashi</name>
     </state>
   </entities>

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -116,7 +116,7 @@ abstract class AdminTabCore
 	protected $_tmpTableFilter = '';
 
 	/** @var array Number of results in list per page (used in select field) */
-	protected $_pagination = array(20, 50, 100, 300);
+	protected $_pagination = array(20, 50, 100, 300, 1000);
 
 	/** @var string ORDER BY clause determined by field/arrows in list header */
 	protected $_orderBy;
@@ -254,7 +254,7 @@ abstract class AdminTabCore
                 $class = 'AdminTab';
 
 		$key = md5(str_replace('\'', '\\\'', $string));
-		$str = (key_exists(get_class($this).$key, $_LANGADM)) ? $_LANGADM[get_class($this).$key] : ((key_exists($class.$key, $_LANGADM)) ? $_LANGADM[$class.$key] : $string);
+		$str = (array_key_exists(get_class($this).$key, $_LANGADM)) ? $_LANGADM[get_class($this).$key] : ((array_key_exists($class.$key, $_LANGADM)) ? $_LANGADM[$class.$key] : $string);
 		$str = $htmlentities ? htmlentities($str, ENT_QUOTES, 'utf-8') : $str;
 		return str_replace('"', '&quot;', ($addslashes ? addslashes($str) : stripslashes($str)));
 	}
@@ -518,7 +518,7 @@ abstract class AdminTabCore
 		Tools::displayAsDeprecated();
 		$dir = null;
 		/* Deleting object images and thumbnails (cache) */
-		if (key_exists('dir', $this->fieldImageSettings))
+		if (array_key_exists('dir', $this->fieldImageSettings))
 		{
 			$dir = $this->fieldImageSettings['dir'].'/';
 			if (file_exists(_PS_IMG_DIR_.$dir.$id.'.'.$this->imageType) && !unlink(_PS_IMG_DIR_.$dir.$id.'.'.$this->imageType))
@@ -1001,7 +1001,7 @@ abstract class AdminTabCore
 						$method_name = 'updateOption'.Tools::toCamelCase($key, true);
 						if (method_exists($this, $method_name))
 							$this->$method_name(Tools::getValue($key));
-						else if (isset($options['type']) && in_array($options['type'], array('textLang', 'textareaLang')))
+						elseif (isset($options['type']) && in_array($options['type'], array('textLang', 'textareaLang')))
 						{
 							$list = array();
 							foreach ($languages as $language)
@@ -1127,7 +1127,7 @@ abstract class AdminTabCore
 	{
 		/* Classical fields */
 		foreach ($_POST as $key => $value)
-			if (key_exists($key, $object) && $key != 'id_'.$table)
+			if (array_key_exists($key, $object) && $key != 'id_'.$table)
 			{
 				/* Do not take care of password field if empty */
 				if ($key == 'passwd' && Tools::getValue('id_'.$table) && empty($value))
@@ -1219,7 +1219,7 @@ abstract class AdminTabCore
 				$str_output .= '<img src="../img/admin/warn2.png" />'.$warn;
 			else
 			{	$str_output .= '<span style="float:right"><a id="hideWarn" href=""><img alt="X" src="../img/admin/close.png" /></a></span><img src="../img/admin/warn2.png" />'.
-				(count($warn) > 1 ? $this->l('There are') : $this->l('There is')).' '.count($warn).' '.(count($warn) > 1 ? $this->l('warnings') : $this->l('warning'))
+				(count($warn) > 1 ? sprintf($this->l('There are %s warnings'), count($warn)) : $this->l('There is 1 warning'))
 				.'<span style="margin-left:20px;" id="labelSeeMore">
 				<a id="linkSeeMore" href="#" style="text-decoration:underline">'.$this->l('Click here to see more').'</a>
 				<a id="linkHide" href="#" style="text-decoration:underline;display:none">'.$this->l('Hide warning').'</a></span><ul style="display:none;" id="seeMore">';
@@ -1303,7 +1303,7 @@ abstract class AdminTabCore
 		}
 
 		$asso = Shop::getAssoTable($this->table);
-		if ($asso !== false && $assos['type'] == 'shop')
+		if ($asso !== false && $asso['type'] == 'shop')
 		{
 			$filterKey = $asso['type'];
 			$idenfierShop = Shop::getContextListShopID();
@@ -1314,7 +1314,7 @@ abstract class AdminTabCore
 		{
 			if (!$this->_group)
 				$this->_group = 'GROUP BY a.'.pSQL($this->identifier);
-			else if (!preg_match('#(\s|,)\s*a\.`?'.pSQL($this->identifier).'`?(\s|,|$)#', $this->_group))
+			elseif (!preg_match('#(\s|,)\s*a\.`?'.pSQL($this->identifier).'`?(\s|,|$)#', $this->_group))
 				$this->_group .= ', a.'.pSQL($this->identifier);
 
 			if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && !preg_match('#`?'.preg_quote(_DB_PREFIX_.$this->table.'_'.$filterKey).'`? *sa#', $this->_join))
@@ -1465,7 +1465,7 @@ abstract class AdminTabCore
 
 		if ($this->shopLinkType)
 		{
-			echo '<th style="width: 80px">'.$this->l(($this->shopLinkType == 'shop') ? 'Shop' : 'Group shop').'</th>';
+			echo '<th style="width: 80px">'.$this->l(($this->shopLinkType == 'shop') ? 'Shop' : 'Shop group').'</th>';
 		}
 
 		/* Check if object can be modified, deleted or detailed */
@@ -1500,7 +1500,7 @@ abstract class AdminTabCore
 				case 'bool':
 					echo '
 					<select name="'.$this->table.'Filter_'.$key.'">
-						<option value="">--</option>
+						<option value="">-</option>
 						<option value="1"'.($value == 1 ? ' selected="selected"' : '').'>'.$this->l('Yes').'</option>
 						<option value="0"'.(($value == 0 && $value != '') ? ' selected="selected"' : '').'>'.$this->l('No').'</option>
 					</select>';
@@ -1524,7 +1524,7 @@ abstract class AdminTabCore
 					if (isset($params['filter_key']))
 					{
 						echo '<select onchange="$(\'#submitFilter'.$this->table.'\').focus();$(\'#submitFilter'.$this->table.'\').click();" name="'.$this->table.'Filter_'.$params['filter_key'].'" '.(isset($params['width']) ? 'style="width: '.$params['width'].'px"' : '').'>
-								<option value=""'.(($value == 0 && $value != '') ? ' selected="selected"' : '').'>--</option>';
+								<option value=""'.(($value == 0 && $value != '') ? ' selected="selected"' : '').'>-</option>';
 						if (isset($params['select']) && is_array($params['select']))
 							foreach ($params['select'] as $optionValue => $optionDisplay)
 							{
@@ -1683,7 +1683,7 @@ abstract class AdminTabCore
 					{
 						if ($key == 'price')
 							$echo = round($tr[$key], 2);
-						else if (isset($params['maxlength']) && Tools::strlen($tr[$key]) > $params['maxlength'])
+						elseif (isset($params['maxlength']) && Tools::strlen($tr[$key]) > $params['maxlength'])
 							$echo = '<span title="'.$tr[$key].'">'.Tools::substr($tr[$key], 0, $params['maxlength']).'...</span>';
 						else
 							$echo = $tr[$key];
@@ -1737,7 +1737,7 @@ abstract class AdminTabCore
     protected function _displayDuplicate($token = NULL, $id)
     {
         $_cacheLang['Duplicate'] = $this->l('Duplicate');
-		$_cacheLang['Copy images too?'] = $this->l('Copy images too?', __CLASS__, TRUE, FALSE);
+		$_cacheLang['Copy images too?'] = $this->l('This will copy the images too. If you wish to proceed, click "OK". If not, click "Cancel".', __CLASS__, TRUE, FALSE);
 
     	$duplicate = self::$currentIndex.'&'.$this->identifier.'='.$id.'&duplicate'.$this->table;
 
@@ -1858,7 +1858,7 @@ abstract class AdminTabCore
 						$isDisabled = true;
 						$isInvisible = true;
 					}
-					else if (Shop::getContext() != Shop::CONTEXT_ALL && !Configuration::isOverridenByCurrentContext($key))
+					elseif (Shop::getContext() != Shop::CONTEXT_ALL && !Configuration::isOverridenByCurrentContext($key))
 						$isDisabled = true;
 				}
 
@@ -2295,6 +2295,11 @@ abstract class AdminTabCore
 		echo $output;
 	}
 
+	/**
+	 * @param $key
+	 * @param $filter
+	 * @return mixed
+	 */
 	protected function filterToField($key, $filter)
 	{
 		foreach ($this->fieldsDisplay as $field)
@@ -2307,11 +2312,11 @@ abstract class AdminTabCore
 
 	protected function warnDomainName()
 	{
-		if ($_SERVER['HTTP_HOST'] != Configuration::get('PS_SHOP_DOMAIN') && $_SERVER['HTTP_HOST'] != Configuration::get('PS_SHOP_DOMAIN_SSL'))
-			$this->displayWarning($this->l('Your are currently connected with the following domain name:').' <span style="color: #CC0000;">'.$_SERVER['HTTP_HOST'].'</span><br />'.
-			$this->l('This one is different from the main shop domain name set in "Preferences > SEO & URLs":').' <span style="color: #CC0000;">'.Configuration::get('PS_SHOP_DOMAIN').'</span><br />
+		if ($_SERVER['HTTP_HOST'] != Configuration::get('PS_SHOP_DOMAIN') && $_SERVER['HTTP_HOST'] != Configuration::get('PS_SHOP_DOMAIN_SSL') && !defined('_PS_HOST_MODE_'))
+			$this->displayWarning($this->l('You are currently connected with the following domain name:').' <span style="color: #CC0000;">'.$_SERVER['HTTP_HOST'].'</span><br />'.
+			$this->l('This one is different from the main shop\'s domain name set in "Preferences > SEO & URLs":').' <span style="color: #CC0000;">'.Configuration::get('PS_SHOP_DOMAIN').'</span><br />
 			<a href="index.php?tab=AdminMeta&token='.Tools::getAdminTokenLite('AdminMeta').'#SEO%20%26%20URLs">'.
-			$this->l('Click here if you want to modify the main shop domain name').'</a>');
+			$this->l('Click here if you want to modify the main shop\'s domain name').'</a>');
 	}
 
 	protected function displayAssoShop()
@@ -2320,8 +2325,8 @@ abstract class AdminTabCore
 			return;
 
 		$assos = array();
-		$sql = 'SELECT id_shop, `'.pSQL($this->identifier).'`
-				FROM `'._DB_PREFIX_.pSQL($this->table).'_shop`';
+		$sql = 'SELECT id_shop, `'.bqSQL($this->identifier).'`
+				FROM `'._DB_PREFIX_.bqSQL($this->table).'_shop`';
 		foreach (Db::getInstance()->executeS($sql) as $row)
 			$assos[$row['id_shop']][] = $row[$this->identifier];
 

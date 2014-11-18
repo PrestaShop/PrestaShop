@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,13 +19,15 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class OrderDetailControllerCore extends FrontController
 {
+	public $php_self = 'order-detail';
+
 	public $auth = true;
 	public $authRedirection = 'history';
 	public $ssl = true;
@@ -49,7 +51,7 @@ class OrderDetailControllerCore extends FrontController
 	{
 		if (Tools::isSubmit('submitMessage'))
 		{
-			$idOrder = (int)(Tools::getValue('id_order'));
+			$idOrder = (int)Tools::getValue('id_order');
 			$msgText = Tools::getValue('msgText');
 
 			if (!$idOrder || !Validate::isUnsignedId($idOrder))
@@ -86,14 +88,14 @@ class OrderDetailControllerCore extends FrontController
 						$ct = new CustomerThread((int)$id_customer_thread);
 					$cm->id_customer_thread = $ct->id;
 					$cm->message = $msgText;
-					$cm->ip_address = ip2long($_SERVER['REMOTE_ADDR']);
+					$cm->ip_address = (int)ip2long($_SERVER['REMOTE_ADDR']);
 					$cm->add();
 
 					if (!Configuration::get('PS_MAIL_EMAIL_MESSAGE'))
 						$to = strval(Configuration::get('PS_SHOP_EMAIL'));
 					else
 					{
-						$to = new Contact((int)(Configuration::get('PS_MAIL_EMAIL_MESSAGE')));
+						$to = new Contact((int)Configuration::get('PS_MAIL_EMAIL_MESSAGE'));
 						$to = strval($to->email);
 					}
 					$toName = strval(Configuration::get('PS_SHOP_NAME'));
@@ -105,7 +107,7 @@ class OrderDetailControllerCore extends FrontController
 							'{lastname}' => $customer->lastname,
 							'{firstname}' => $customer->firstname,
 							'{email}' => $customer->email,
-							'{id_order}' => (int)($order->id),
+							'{id_order}' => (int)$order->id,
 							'{order_name}' => $order->getUniqReference(),
 							'{message}' => Tools::nl2br($msgText)
 						),
@@ -142,10 +144,10 @@ class OrderDetailControllerCore extends FrontController
 			$order = new Order($id_order);
 			if (Validate::isLoadedObject($order) && $order->id_customer == $this->context->customer->id)
 			{
-				$id_order_state = (int)($order->getCurrentState());
-				$carrier = new Carrier((int)($order->id_carrier), (int)($order->id_lang));
-				$addressInvoice = new Address((int)($order->id_address_invoice));
-				$addressDelivery = new Address((int)($order->id_address_delivery));
+				$id_order_state = (int)$order->getCurrentState();
+				$carrier = new Carrier((int)$order->id_carrier, (int)$order->id_lang);
+				$addressInvoice = new Address((int)$order->id_address_invoice);
+				$addressDelivery = new Address((int)$order->id_address_delivery);
 
 				$inv_adr_fields = AddressFormat::getOrderedAddressFields($addressInvoice->id_country);
 				$dlv_adr_fields = AddressFormat::getOrderedAddressFields($addressDelivery->id_country);
@@ -154,11 +156,11 @@ class OrderDetailControllerCore extends FrontController
 				$deliveryAddressFormatedValues = AddressFormat::getFormattedAddressFieldsValues($addressDelivery, $dlv_adr_fields);
 
 				if ($order->total_discounts > 0)
-					$this->context->smarty->assign('total_old', (float)($order->total_paid - $order->total_discounts));
+					$this->context->smarty->assign('total_old', (float)$order->total_paid - $order->total_discounts);
 				$products = $order->getProducts();
 
 				/* DEPRECATED: customizedDatas @since 1.5 */
-				$customizedDatas = Product::getAllCustomizedDatas((int)($order->id_cart));
+				$customizedDatas = Product::getAllCustomizedDatas((int)$order->id_cart);
 				Product::addCustomizationPrice($products, $customizedDatas);
 
 				OrderReturn::addReturnedQuantity($products, $order->id);
@@ -168,10 +170,10 @@ class OrderDetailControllerCore extends FrontController
 				$this->context->smarty->assign(array(
 					'shop_name' => strval(Configuration::get('PS_SHOP_NAME')),
 					'order' => $order,
-					'return_allowed' => (int)($order->isReturnable()),
+					'return_allowed' => (int)$order->isReturnable(),
 					'currency' => new Currency($order->id_currency),
-					'order_state' => (int)($id_order_state),
-					'invoiceAllowed' => (int)(Configuration::get('PS_INVOICE')),
+					'order_state' => (int)$id_order_state,
+					'invoiceAllowed' => (int)Configuration::get('PS_INVOICE'),
 					'invoice' => (OrderState::invoiceAvailable($id_order_state) && count($order->getInvoicesCollection())),
 					'order_history' => $order->getHistory($this->context->language->id, false, true),
 					'products' => $products,
@@ -186,15 +188,16 @@ class OrderDetailControllerCore extends FrontController
 					'deliveryAddressFormatedValues' => $deliveryAddressFormatedValues,
 					'deliveryState' => (Validate::isLoadedObject($addressDelivery) && $addressDelivery->id_state) ? new State($addressDelivery->id_state) : false,
 					'is_guest' => false,
-					'messages' => CustomerMessage::getMessagesByOrderId((int)($order->id), false),
+					'messages' => CustomerMessage::getMessagesByOrderId((int)$order->id, false),
 					'CUSTOMIZE_FILE' => Product::CUSTOMIZE_FILE,
 					'CUSTOMIZE_TEXTFIELD' => Product::CUSTOMIZE_TEXTFIELD,
 					'isRecyclable' => Configuration::get('PS_RECYCLABLE_PACK'),
 					'use_tax' => Configuration::get('PS_TAX'),
 					'group_use_tax' => (Group::getPriceDisplayMethod($customer->id_default_group) == PS_TAX_INC),
 					/* DEPRECATED: customizedDatas @since 1.5 */
-					'customizedDatas' => $customizedDatas
+					'customizedDatas' => $customizedDatas,
 					/* DEPRECATED: customizedDatas @since 1.5 */
+					'reorderingAllowed' => !(int)Configuration::get('PS_DISALLOW_HISTORY_REORDERING')
 				));
 
 				if ($carrier->url && $order->shipping_number)
@@ -222,4 +225,3 @@ class OrderDetailControllerCore extends FrontController
 		}
 	}
 }
-

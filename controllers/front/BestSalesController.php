@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -30,30 +30,35 @@ class BestSalesControllerCore extends FrontController
 
 	public function initContent()
 	{
-		parent::initContent();
+		if (Configuration::get('PS_DISPLAY_BEST_SELLERS'))
+		{
+			parent::initContent();
 
-		$this->productSort();
-		$nbProducts = (int)ProductSale::getNbSales();
-		$this->pagination($nbProducts);
+			$this->productSort();
+			$nb_products = (int)ProductSale::getNbSales();
+			$this->pagination($nb_products);
 
-		$this->context->smarty->assign(array(
-			'products' => ProductSale::getBestSales($this->context->language->id, $this->p - 1, $this->n, $this->orderBy, $this->orderWay),
-			'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
-			'nbProducts' => $nbProducts,
-			'homeSize' => Image::getSize(ImageType::getFormatedName('home')),
-			'comparator_max_item' => Configuration::get('PS_COMPARATOR_MAX_ITEM')
-		));
+			$products = ProductSale::getBestSales($this->context->language->id, $this->p - 1, $this->n, $this->orderBy, $this->orderWay);
+			$this->addColorsToProductList($products);
 
-		$this->setTemplate(_PS_THEME_DIR_.'best-sales.tpl');
+			$this->context->smarty->assign(array(
+				'products' => $products,
+				'add_prod_display' => Configuration::get('PS_ATTRIBUTE_CATEGORY_DISPLAY'),
+				'nbProducts' => $nb_products,
+				'homeSize' => Image::getSize(ImageType::getFormatedName('home')),
+				'comparator_max_item' => Configuration::get('PS_COMPARATOR_MAX_ITEM')
+			));
+
+			$this->setTemplate(_PS_THEME_DIR_.'best-sales.tpl');
+		}
+		else
+			Tools::redirect('index.php?controller=404');
 	}
 
 	public function setMedia()
 	{
 		parent::setMedia();
 		$this->addCSS(_THEME_CSS_DIR_.'product_list.css');
-
-		if (Configuration::get('PS_COMPARATOR_MAX_ITEM'))
-			$this->addJS(_THEME_JS_DIR_.'products-comparison.js');
 	}
 }
 

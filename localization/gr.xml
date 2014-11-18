@@ -8,8 +8,8 @@
 	</languages>
 	<taxes>
 		<tax id="1" name="ΦΠΑ GR 23%" rate="23" />
-		<tax id="2" name="ΦΠΑ GR 11%" rate="11" />
-		<tax id="3" name="ΦΠΑ GR 5.5%" rate="5.5" />
+		<tax id="2" name="ΦΠΑ GR 13%" rate="13" />
+		<tax id="3" name="ΦΠΑ GR 6.5%" rate="6.5" />
 		<tax id="4" name="ΦΠΑ GR 16%" rate="16" />
 		<tax id="5" name="ΦΠΑ GR 8%" rate="8" />
 		<tax id="6" name="ΦΠΑ GR 4%" rate="4" />
@@ -44,7 +44,7 @@
 			<taxRule iso_code_country="uk" id_tax="1" />
 		</taxRulesGroup>
 
-		<taxRulesGroup name="GR Reduced Rate (11%)">
+		<taxRulesGroup name="GR Reduced Rate (13%)">
 			<taxRule iso_code_country="be" id_tax="2" />
 			<taxRule iso_code_country="bg" id_tax="2" />
 			<taxRule iso_code_country="cz" id_tax="2" />
@@ -74,7 +74,7 @@
 			<taxRule iso_code_country="uk" id_tax="2" />
 		</taxRulesGroup>
 
-		<taxRulesGroup name="GR Super Reduced Rate (5.5%)">
+		<taxRulesGroup name="GR Super Reduced Rate (6.5%)">
 			<taxRule iso_code_country="be" id_tax="3" />
 			<taxRule iso_code_country="bg" id_tax="3" />
 			<taxRule iso_code_country="cz" id_tax="3" />
@@ -193,66 +193,6 @@
 			<taxRule iso_code_country="se" id_tax="6" />
 			<taxRule iso_code_country="uk" id_tax="6" />
 		</taxRulesGroup>
-		
-		<taxRulesGroup name="GR Foodstuff Rate (11%)">
-			<taxRule iso_code_country="be" id_tax="2" />
-			<taxRule iso_code_country="bg" id_tax="2" />
-			<taxRule iso_code_country="cz" id_tax="2" />
-			<taxRule iso_code_country="dk" id_tax="2" />
-			<taxRule iso_code_country="de" id_tax="2" />
-			<taxRule iso_code_country="ee" id_tax="2" />
-			<taxRule iso_code_country="gr" id_tax="2" />
-			<taxRule iso_code_country="es" id_tax="2" />
-			<taxRule iso_code_country="fr" id_tax="2" />
-			<taxRule iso_code_country="ie" id_tax="2" />
-			<taxRule iso_code_country="it" id_tax="2" />
-			<taxRule iso_code_country="cy" id_tax="2" />
-			<taxRule iso_code_country="lv" id_tax="2" />
-			<taxRule iso_code_country="lt" id_tax="2" />
-			<taxRule iso_code_country="lu" id_tax="2" />
-			<taxRule iso_code_country="hu" id_tax="2" />
-			<taxRule iso_code_country="mt" id_tax="2" />
-			<taxRule iso_code_country="nl" id_tax="2" />
-			<taxRule iso_code_country="at" id_tax="2" />
-			<taxRule iso_code_country="pl" id_tax="2" />
-			<taxRule iso_code_country="pt" id_tax="2" />
-			<taxRule iso_code_country="ro" id_tax="2" />
-			<taxRule iso_code_country="si" id_tax="2" />
-			<taxRule iso_code_country="sk" id_tax="2" />
-			<taxRule iso_code_country="fi" id_tax="2" />
-			<taxRule iso_code_country="se" id_tax="2" />
-			<taxRule iso_code_country="uk" id_tax="2" />
-		</taxRulesGroup>
-
-		<taxRulesGroup name="GR Books Rate (5.5%)">
-			<taxRule iso_code_country="be" id_tax="3" />
-			<taxRule iso_code_country="bg" id_tax="3" />
-			<taxRule iso_code_country="cz" id_tax="3" />
-			<taxRule iso_code_country="dk" id_tax="3" />
-			<taxRule iso_code_country="de" id_tax="3" />
-			<taxRule iso_code_country="ee" id_tax="3" />
-			<taxRule iso_code_country="gr" id_tax="3" />
-			<taxRule iso_code_country="es" id_tax="3" />
-			<taxRule iso_code_country="fr" id_tax="3" />
-			<taxRule iso_code_country="ie" id_tax="3" />
-			<taxRule iso_code_country="it" id_tax="3" />
-			<taxRule iso_code_country="cy" id_tax="3" />
-			<taxRule iso_code_country="lv" id_tax="3" />
-			<taxRule iso_code_country="lt" id_tax="3" />
-			<taxRule iso_code_country="lu" id_tax="3" />
-			<taxRule iso_code_country="hu" id_tax="3" />
-			<taxRule iso_code_country="mt" id_tax="3" />
-			<taxRule iso_code_country="nl" id_tax="3" />
-			<taxRule iso_code_country="at" id_tax="3" />
-			<taxRule iso_code_country="pl" id_tax="3" />
-			<taxRule iso_code_country="pt" id_tax="3" />
-			<taxRule iso_code_country="ro" id_tax="3" />
-			<taxRule iso_code_country="si" id_tax="3" />
-			<taxRule iso_code_country="sk" id_tax="3" />
-			<taxRule iso_code_country="fi" id_tax="3" />
-			<taxRule iso_code_country="se" id_tax="3" />
-			<taxRule iso_code_country="uk" id_tax="3" />
-		</taxRulesGroup>
 	</taxes>
 	<units>
 		<unit type="weight" value="kg" />
@@ -261,4 +201,59 @@
 		<unit type="base_distance" value="m" />
 		<unit type="long_distance" value="km" />
 	</units>
+	
+	<state>
+		<state name="Άγιο Όρος" iso_code="GR-69" country="GR" zone="Europe"/>
+		<state name="Αιτωλοακαρνανίας" iso_code="GR-01" country="GR" zone="Europe"/>
+		<state name="Αργολίδας" iso_code="GR-11" country="GR" zone="Europe"/>
+		<state name="Αρκαδίας" iso_code="GR-12" country="GR" zone="Europe"/>
+		<state name="Άρτας" iso_code="GR-31" country="GR" zone="Europe"/>
+		<state name="Αττικής" iso_code="GR-A1" country="GR" zone="Europe"/>
+		<state name="Αχαΐας" iso_code="GR-13" country="GR" zone="Europe"/>
+		<state name="Βοιωτίας" iso_code="GR-03" country="GR" zone="Europe"/>
+		<state name="Γρεβενών" iso_code="GR-51" country="GR" zone="Europe"/>
+		<state name="Δράμας" iso_code="GR-52" country="GR" zone="Europe"/>
+		<state name="Δωδεκανήσου" iso_code="GR-81" country="GR" zone="Europe"/>
+		<state name="Ευρυτανίας" iso_code="GR-05" country="GR" zone="Europe"/>
+		<state name="Εύβοιας" iso_code="GR-04" country="GR" zone="Europe"/>
+		<state name="Έβρου" iso_code="GR-71" country="GR" zone="Europe"/>
+		<state name="Ζακύνθου" iso_code="GR-21" country="GR" zone="Europe"/>
+		<state name="Ηλείας" iso_code="GR-14" country="GR" zone="Europe"/>
+		<state name="Ημαθίας" iso_code="GR-53" country="GR" zone="Europe"/>
+		<state name="Ηρακλείου" iso_code="GR-91" country="GR" zone="Europe"/>
+		<state name="Θεσπρωτίας" iso_code="GR-32" country="GR" zone="Europe"/>
+		<state name="Θεσσαλονίκης" iso_code="GR-54" country="GR" zone="Europe"/>
+		<state name="Ιωαννίνων" iso_code="GR-33" country="GR" zone="Europe"/>
+		<state name="Κέρκυρας" iso_code="GR-22" country="GR" zone="Europe"/>
+		<state name="Καβάλας" iso_code="GR-55" country="GR" zone="Europe"/>
+		<state name="Καρδίτσας" iso_code="GR-41" country="GR" zone="Europe"/>
+		<state name="Καστοριάς" iso_code="GR-56" country="GR" zone="Europe"/>
+		<state name="Κεφαλληνίας" iso_code="GR-23" country="GR" zone="Europe"/>
+		<state name="Κιλκίς" iso_code="GR-57" country="GR" zone="Europe"/>
+		<state name="Κοζάνης" iso_code="GR-58" country="GR" zone="Europe"/>
+		<state name="Κορινθίας" iso_code="GR-15" country="GR" zone="Europe"/>
+		<state name="Κυκλάδων" iso_code="GR-82" country="GR" zone="Europe"/>
+		<state name="Λάρισας" iso_code="GR-42" country="GR" zone="Europe"/>
+		<state name="Λέσβου" iso_code="GR-83" country="GR" zone="Europe"/>
+		<state name="Λακωνίας" iso_code="GR-16" country="GR" zone="Europe"/>
+		<state name="Λασιθίου" iso_code="GR-92" country="GR" zone="Europe"/>
+		<state name="Λευκάδας" iso_code="GR-24" country="GR" zone="Europe"/>
+		<state name="Μαγνησίας" iso_code="GR-43" country="GR" zone="Europe"/>
+		<state name="Μεσσηνίας" iso_code="GR-17" country="GR" zone="Europe"/>
+		<state name="Ξάνθης" iso_code="GR-72" country="GR" zone="Europe"/>
+		<state name="Πέλλας" iso_code="GR-59" country="GR" zone="Europe"/>
+		<state name="Πιερίας" iso_code="GR-61" country="GR" zone="Europe"/>
+		<state name="Πρέβεζας" iso_code="GR-34" country="GR" zone="Europe"/>
+		<state name="Ρεθύμνου" iso_code="GR-93" country="GR" zone="Europe"/>
+		<state name="Ροδόπης" iso_code="GR-73" country="GR" zone="Europe"/>
+		<state name="Σάμου" iso_code="GR-84" country="GR" zone="Europe"/>
+		<state name="Σερρών" iso_code="GR-62" country="GR" zone="Europe"/>
+		<state name="Τρικάλων" iso_code="GR-44" country="GR" zone="Europe"/>
+		<state name="Φθιώτιδας" iso_code="GR-06" country="GR" zone="Europe"/>
+		<state name="Φλώρινας" iso_code="GR-63" country="GR" zone="Europe"/>
+		<state name="Φωκίδας" iso_code="GR-07" country="GR" zone="Europe"/>
+		<state name="Χίου" iso_code="GR-85" country="GR" zone="Europe"/>
+		<state name="Χαλκιδικής" iso_code="GR-64" country="GR" zone="Europe"/>
+		<state name="Χανίων" iso_code="GR-94" country="GR" zone="Europe"/>
+	</state>
 </localizationPack>

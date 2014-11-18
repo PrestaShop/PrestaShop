@@ -1,5 +1,5 @@
 {*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *	@author PrestaShop SA <contact@prestashop.com>
-*	@copyright	2007-2013 PrestaShop SA
+*	@copyright	2007-2014 PrestaShop SA
 *	@license		http://opensource.org/licenses/afl-3.0.php	Academic Free License (AFL 3.0)
 *	International Registered Trademark & Property of PrestaShop SA
 *}
@@ -34,35 +34,29 @@
 	var summary_translation_price = '<strong>{l s='according to the price' js=1}</strong>';
 	var summary_translation_weight = '<strong>{l s='according to the weight' js=1}</strong>';
 </script>
-<div class="defaultForm">
-	<fieldset>
-		{l s='Carrier name:'} <strong id="summary_name"></strong>
-		<div class="clear">&nbsp;</div>
-		<div id="summary_meta_informations"></div>
-		<div class="clear">&nbsp;</div>
-		<div id="summary_shipping_cost"></div>
-		<div class="clear">&nbsp;</div>
-		<div id="summary_range"></div>
-		<div class="clear">&nbsp;</div>
-		<div>
-			{l s='This carrier will be proposed for those delivery zones:'}
-			<ul id="summary_zones"></ul>
-		</div>
-		<div class="clear">&nbsp;</div>
-		<div>
-			{l s='And it will be proposed for those client groups:'}
-			<ul id="summary_groups"></ul>
-		</div>
-		{if $is_multishop}
-		<div class="clear">&nbsp;</div>
-		<div>
-			{l s='Finally, this carrier will be proposed in those shops:'}
-			<ul id="summary_shops"></ul>
-		</div>
-		{/if}
-		<div class="clear">&nbsp;</div>
-		{$active_form}
-	</fieldset>
-	</div>
-<div class="clear">&nbsp;</div>
 
+<div class="defaultForm">
+	<div class="panel">
+		<div class="panel-heading">{l s='Carrier name:'} <strong id="summary_name"></strong></div>
+		<div class="panel-body">
+			<p id="summary_meta_informations"></p>
+			<p id="summary_shipping_cost"></p>
+			<p id="summary_range"></p>
+			<div>
+			{l s='This carrier will be proposed for those delivery zones:'}
+				<ul id="summary_zones"></ul>
+			</div>
+			<div>
+				{l s='And it will be proposed for those client groups:'}
+				<ul id="summary_groups"></ul>
+			</div>
+			{if $is_multishop}
+			<div>
+				{l s='Finally, this carrier will be proposed in those shops:'}
+				<ul id="summary_shops"></ul>
+			</div>
+			{/if}
+		</div>
+	</div>
+	{$active_form}
+</div>

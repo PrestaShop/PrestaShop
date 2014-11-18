@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2013 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2013 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -124,9 +124,13 @@ class TaxRuleCore extends ObjectModel
 	*/
     public static function isTaxInUse($id_tax)
     {
-        return Db::getInstance()->getValue('
-        SELECT COUNT(*) FROM `'._DB_PREFIX_.'tax_rule` WHERE `id_tax` = '.(int)$id_tax
-        );
+		$cache_id = 'TaxRule::isTaxInUse_'.(int)$id_tax;
+		if (!Cache::isStored($cache_id))
+		{
+			$result = (int)Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.'tax_rule` WHERE `id_tax` = '.(int)$id_tax);
+			Cache::store($cache_id, $result);
+		}
+		return Cache::retrieve($cache_id);
     }
 
 
@@ -149,13 +153,13 @@ class TaxRuleCore extends ObjectModel
 				$from = $zip_codes[1];
 				$to   = $zip_codes[0];
 			}
-			else if ($zip_codes[0] == $zip_codes[1])
+			elseif ($zip_codes[0] == $zip_codes[1])
 			{
 				$from = $zip_codes[0];
 				$to   = 0;
 			}
 		}
-		else if (count($zip_codes) == 1)
+		elseif (count($zip_codes) == 1)
 		{
 			$from = $zip_codes[0];
 			$to = 0;
