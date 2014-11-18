@@ -50,7 +50,8 @@ class StockManagerCore implements StockManagerInterface
 							   $id_stock_mvt_reason,
 							   $price_te,
 							   $is_usable = true,
-							   $id_supply_order = null)
+							   $id_supply_order = null,
+							   $id_employee = null)
 	{
 		if (!Validate::isLoadedObject($warehouse) || !$price_te || !$quantity || !$id_product)
 			return false;
@@ -70,7 +71,7 @@ class StockManagerCore implements StockManagerInterface
 			'price_te' => $price_te,
 			'last_wa' => null,
 			'current_wa' => null,
-			'id_employee' => $context->employee->id,
+			'id_employee' => (int)$context->employee->id ? (int)$context->employee->id : $id_employee,
 			'employee_firstname' => $context->employee->firstname,
 			'employee_lastname' => $context->employee->lastname,
 			'sign' => 1
