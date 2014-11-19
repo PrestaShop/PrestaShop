@@ -3357,7 +3357,7 @@ class CartCore extends ObjectModel
 		// Changing the address
 		$sql = 'UPDATE '._DB_PREFIX_.'cart_product
 			SET `id_address_delivery` = '.(int)$new_id_address_delivery.',
-			`quantity` = `quantity` + '.(int)$result['sum'].'
+			`quantity` = `quantity` + '.(int)$result.'
 			WHERE id_product = '.(int)$id_product.'
 			AND id_product_attribute = '.(int)$id_product_attribute.'
 			AND id_address_delivery = '.(int)$old_id_address_delivery.'
@@ -3447,7 +3447,6 @@ class CartCore extends ObjectModel
 
 		foreach ($results as $customization)
 		{
-
 			// Duplicate customization
 			$sql = 'INSERT INTO '._DB_PREFIX_.'customization
 				(`id_product_attribute`, `id_address_delivery`, `id_cart`, `id_product`, `quantity`, `in_cart`)
@@ -3458,22 +3457,30 @@ class CartCore extends ObjectModel
 					'.(int)$customization['id_product'].',
 					'.(int)$quantity.',
 					'.(int)$customization['in_cart'].')';
+
 			Db::getInstance()->execute($sql);
 
-			$sql = 'INSERT INTO '._DB_PREFIX_.'customized_data(`id_customization`, `type`, `index`, `value`)
-				(
-					SELECT '.(int)Db::getInstance()->Insert_ID().' `id_customization`, `type`, `index`, `value`
-					FROM '._DB_PREFIX_.'customized_data
-					WHERE id_customization = '.(int)$customization['id_customization'].'
-				)';
-			Db::getInstance()->execute($sql);
+			// Save last insert ID before doing another query
+			$last_id = (int)Db::getInstance()->Insert_ID();
+
+			// Get data from duplicated customizations
+			$sql = new DbQuery();
+			$sql->select('`type`, `index`, `value`');
+			$sql->from('customized_data');
+			$sql->where('id_customization = '.$customization['id_customization']);
+			$last_row = Db::getInstance()->getRow($sql);
+
+			// Insert new copied data with new customization ID into customized_data table
+			$last_row['id_customization'] = $last_id;
+			Db::getInstance()->insert('customized_data', $last_row);
+
 		}
 
 		$customization_count = count($results);
 		if ($customization_count > 0)
 		{
 			$sql = 'UPDATE '._DB_PREFIX_.'cart_product
-				SET `quantity` = `quantity` = '.(int)$customization_count * $quantity.'
+				SET `quantity` = `quantity` + '.(int)$customization_count * $quantity.'
 				WHERE id_cart = '.(int)$this->id.'
 				AND id_product = '.(int)$id_product.'
 				AND id_shop = '.(int)$this->id_shop.'
