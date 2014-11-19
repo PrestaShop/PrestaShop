@@ -862,7 +862,7 @@ else
 						<div class="filetype"><?php echo $extension_lower ?></div><?php } ?>
 					<div class="img-container">
 						<span></span>
-						<img alt="<?php echo Tools::safeOutput($filename." thumbnails"); ?>" class="<?php echo $show_original ? "original" : "" ?> <?php echo $is_icon_thumb ? "icon" : "" ?>" src="<?php echo Tools::safeOutput($thumb); ?>">
+						<img alt="<?php echo Tools::safeOutput($filename." thumbnails"); ?>" class="<?php echo $show_original ? "original" : "" ?> <?php echo $is_icon_thumb ? "icon" : "" ?>" src="<?php echo Tools::safeOutput($src_thumb); ?>">
 					</div>
 				</div>
 				<div class="img-precontainer-mini <?php if ($is_img) echo 'original-thumb' ?>">
@@ -875,7 +875,7 @@ else
 						<?php if ($mini_src != "")
 						{
 							?>
-							<img alt="<?php echo Tools::safeOutput($filename." thumbnails"); ?>" class="<?php echo $show_original_mini ? "original" : "" ?> <?php echo $is_icon_thumb_mini ? "icon" : "" ?>" src="<?php echo Tools::safeOutput($mini); ?>">
+							<img alt="<?php echo Tools::safeOutput($filename." thumbnails"); ?>" class="<?php echo $show_original_mini ? "original" : "" ?> <?php echo $is_icon_thumb_mini ? "icon" : "" ?>" src="<?php echo Tools::safeOutput($mini_src); ?>">
 						<?php } ?>
 					</div>
 				</div>
@@ -927,7 +927,7 @@ else
 						{
 							echo "video";
 						} ?>"
-						   title="<?php echo lang_Preview ?>" data-url="ajax_calls.php?action=media_preview&title=<?php echo Tools::safeOutput($filename); ?>&file=<?php echo Tools::safeOutput($current_path.$subfolder.$subdir.$file); ?>"
+						   title="<?php echo lang_Preview ?>" data-url="ajax_calls.php?action=media_preview&title=<?php echo Tools::safeOutput($filename); ?>&file=<?php echo Tools::safeOutput($upload_dir.$file); ?>"
 						   href="javascript:void('');"><i class=" icon-eye-open"></i></a>
 					<?php
 					} else
