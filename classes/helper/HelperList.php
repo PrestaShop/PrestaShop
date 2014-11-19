@@ -40,7 +40,7 @@ class HelperListCore extends Helper
 
 	/** @var array Number of results in list per page (used in select field) */
 	public $_pagination = array(20, 50, 100, 300, 1000);
-	
+
 	/** @var integer Default number of results in list per page */
 	public $_default_pagination = 50;
 
@@ -486,7 +486,7 @@ class HelperListCore extends Helper
 
 		if ($this->specificConfirmDelete !== false)
 			$data['confirm'] = !is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : Tools::safeOutput(self::$cache_lang['DeleteItem'].$name);
-		
+
 		$tpl->assign(array_merge($this->tpl_delete_link_vars, $data));
 
 		return $tpl->fetch();
@@ -565,12 +565,12 @@ class HelperListCore extends Helper
 		{
 			if (!isset($params['type']))
 				$params['type'] = 'text';
-			
-			$valueKey = $prefix.$this->list_id.'Filter_'.(array_key_exists('filter_key', $params) && $key != 'active' ? $params['filter_key'] : $key);
-			$value = Context::getContext()->cookie->{$valueKey};
-			if(!$value && Tools::getIsset($valueKey))
-				$value = Tools::getValue($valueKey);
-				
+
+			$value_key = $prefix.$this->list_id.'Filter_'.(array_key_exists('filter_key', $params) && $key != 'active' ? $params['filter_key'] : $key);
+			$value = Context::getContext()->cookie->{$value_key};
+			if (!$value && Tools::getIsset($value_key))
+				$value = Tools::getValue($value_key);
+
 			switch ($params['type'])
 			{
 				case 'bool':
