@@ -10,9 +10,11 @@ function tinySetup(config)
 
 	default_config = {
 		selector: ".rte" ,
-		plugins : "colorpicker link image paste pagebreak table contextmenu filemanager table code media autoresize textcolor anchor",
-		toolbar1 : "code,|,bold,italic,underline,strikethrough,|,alignleft,aligncenter,alignright,alignfull,formatselect,|,blockquote,colorpicker,pasteword,|,bullist,numlist,|,outdent,indent,|,link,unlink,|,anchor,|,media,image",
-		toolbar2: "",
+		plugins : "visualblocks, preview searchreplace print insertdatetime, hr charmap colorpicker anchor code link image paste pagebreak table contextmenu filemanager table code media autoresize textcolor emoticons",
+		toolbar1 : "styleselect,|,formatselect,|,fontselect,|,fontsizeselect,",
+		toolbar2 : "newdocument,print,|,bold,italic,underline,|,strikethrough,superscript,subscript,|,forecolor,colorpicker,backcolor,|,bullist,numlist,outdent,indent",
+		toolbar3 : "code,|,table,|,cut,copy,pastetext,searchreplace,|,blockquote,|,undo,redo,|,link,unlink,anchor,|,image,emoticons,media,|,inserttime,|,preview ",
+		toolbar4 : "visualblocks,|,charmap,|,hr,",
 		external_filemanager_path: ad+"/filemanager/",
 		filemanager_title: "File manager" ,
 		external_plugins: { "filemanager" : ad+"/filemanager/plugin.min.js"},
