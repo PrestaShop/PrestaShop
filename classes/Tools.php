@@ -3076,11 +3076,10 @@ exit;
 					$protocols[] = 'http';
 				break;
 			case 'hosted_module':
-				$end_point .= '/'._PS_VERSION_.'/module/'.urlencode($params['id_module'])
-					.'/'.urlencode($params['hosted_email'])
-					.'/'.urlencode($params['password_addons'])
-					.'/'.(isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain())
-					.'/'.(isset($params['email']) ? $params['email'] : Configuration::get('PS_SHOP_EMAIL'));
+				$post_data .= '&method=module&id_module='.urlencode((int)$params['id_module']).'&username='.urlencode($params['hosted_email'])
+					.'&password='.urlencode($params['password_addons'])
+					.'&shop_url='.urlencode(isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain())
+					.'&mail='.urlencode(isset($params['email']) ? $params['email'] : Configuration::get('PS_SHOP_EMAIL'));
 				$protocols[] = 'https';
 				break;
 			case 'install-modules':
@@ -3254,6 +3253,11 @@ exit;
 			if ($purifier === null)
 			{
 				$config = HTMLPurifier_Config::createDefault();
+
+				// Set some HTML5 properties
+				$config->set('HTML.DefinitionID', 'html5-definitions'); // unqiue id
+				$config->set('HTML.DefinitionRev', 1);
+
 				$config->set('Attr.EnableID', true);
 				$config->set('HTML.Trusted', true);
 				$config->set('Cache.SerializerPath', _PS_CACHE_DIR_.'purifier');
@@ -3265,6 +3269,25 @@ exit;
 					$config->set('HTML.SafeObject', true);
 					$config->set('URI.SafeIframeRegexp','/.*/');
 				}
+
+				// http://developers.whatwg.org/the-video-element.html#the-video-element
+				if ($def = $config->maybeGetRawHTMLDefinition())
+				{
+				    $def->addElement('video', 'Block', 'Optional: (source, Flow) | (Flow, source) | Flow', 'Common', array(
+						'src' => 'URI',
+						'type' => 'Text',
+						'width' => 'Length',
+						'height' => 'Length',
+						'poster' => 'URI',
+						'preload' => 'Enum#auto,metadata,none',
+						'controls' => 'Bool',
+					));
+				    $def->addElement('source', 'Block', 'Flow', 'Common', array(
+						'src' => 'URI',
+						'type' => 'Text',
+					));
+				}
+
 				$purifier = new HTMLPurifier($config);
 			}
 			if (_PS_MAGIC_QUOTES_GPC_)
