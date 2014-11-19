@@ -494,7 +494,7 @@ class CategoryCore extends ObjectModel
 		if (isset($groups) && Group::isFeatureActive() && !is_array($groups))
 			$groups = (array)$groups;
 
-		$cache_id = 'Category::getNestedCategories_'.md5((int)$root_category.(int)$id_lang.(int)$active.(int)$active
+		$cache_id = 'Category::getNestedCategories_'.md5((int)$root_category.(int)$id_lang.(int)$active.(int)$use_shop_restriction
 			.(isset($groups) && Group::isFeatureActive() ? implode('', $groups) : ''));
 
 		if (!Cache::isStored($cache_id))
