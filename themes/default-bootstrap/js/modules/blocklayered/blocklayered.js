@@ -89,7 +89,7 @@ $(document).ready(function()
 	});
 
 	// Click on label
-	$('#layered_block_left label a').on({
+	$('#layered_block_left label:not(.layered_color) a').on({
 		click: function(e) {
 			e.preventDefault();
 			var disable = $(this).parent().parent().find('input').attr('disabled');
