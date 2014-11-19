@@ -414,8 +414,7 @@ class ParentOrderControllerCore extends FrontController
 				unset($tmpAddress);
 			}
 
-			if (key($customerAddresses) != 0)
-				$customerAddresses = array_values($customerAddresses);
+			$customerAddresses = array_values($customerAddresses);
 
 			if (!count($customerAddresses) && !Tools::isSubmit('ajax'))
 			{
