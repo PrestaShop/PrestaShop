@@ -46,7 +46,7 @@ function p16012_pack_rework()
 				break;
 			}
 		if ($work_with_stock)
-			Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'product SET `pack_stock_type` = 1 WHERE `id_product` = '.$value['id_product_pack']);
+			Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'product SET `pack_stock_type` = 1 WHERE `id_product` = '.(int)$value['id_product_pack']);
 	}
 }
 
@@ -76,7 +76,7 @@ function getItems($id_product)
 	$array_result = array();
 	foreach ($result as $row)
 	{
-		$p = Db::getInstance()->executeS('SELECT `advanced_stock_management` FROM '._DB_PREFIX_.'product WHERE `id_product` = '.$row['id_product_item']);
+		$p = Db::getInstance()->executeS('SELECT `advanced_stock_management` FROM '._DB_PREFIX_.'product WHERE `id_product` = '.(int)$row['id_product_item']);
 		$array_result[] = $p[0]['advanced_stock_management'];
 	}
 	return $array_result;

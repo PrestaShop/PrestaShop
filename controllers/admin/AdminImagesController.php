@@ -132,8 +132,8 @@ class AdminImagesControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_PRODUCT_PICTURE_MAX_SIZE' => array(
-						'title' => $this->l('Maximum file size of customization pictures'),
-						'hint' => $this->l('The maximum file size of product customization pictures that customers can upload (in bytes).'),
+						'title' => $this->l('Maximum file size of product customization pictures'),
+						'hint' => $this->l('The maximum file size of pictures that customers can upload to customize a product (in bytes).'),
 						'validation' => 'isUnsignedInt',
 						'required' => true,
 						'cast' => 'intval',
