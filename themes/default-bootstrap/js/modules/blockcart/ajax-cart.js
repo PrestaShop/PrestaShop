@@ -131,7 +131,7 @@ var ajaxCart = {
 	//override every button in the page in relation to the cart
 	overrideButtonsInThePage : function(){
 		//for every 'add' buttons...
-		$(document).on('click', '.ajax_add_to_cart_button', function(e){
+		$(document).off('click', '.ajax_add_to_cart_button').on('click', '.ajax_add_to_cart_button', function(e){
 			e.preventDefault();
 			var idProduct =  parseInt($(this).data('id-product'));
 			var minimalQuantity =  parseInt($(this).data('minimal_quantity'));
@@ -141,13 +141,13 @@ var ajaxCart = {
 				ajaxCart.add(idProduct, null, false, this, minimalQuantity);
 		});
 		//for product page 'add' button...
-		$(document).on('click', '#add_to_cart button', function(e){
+		$(document).off('click', '#add_to_cart button').on('click', '#add_to_cart button', function(e){
 			e.preventDefault();
 			ajaxCart.add($('#product_page_product_id').val(), $('#idCombination').val(), true, null, $('#quantity_wanted').val(), null);
 		});
 
 		//for 'delete' buttons in the cart block...
-		$(document).on('click', '.cart_block_list .ajax_cart_block_remove_link', function(e){
+		$(document).off('click', '.cart_block_list .ajax_cart_block_remove_link').on('click', '.cart_block_list .ajax_cart_block_remove_link', function(e){
 			e.preventDefault();
 			// Customized product management
 			var customizationId = 0;
