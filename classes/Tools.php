@@ -3075,11 +3075,10 @@ exit;
 					$protocols[] = 'http';
 				break;
 			case 'hosted_module':
-				$end_point .= '/'._PS_VERSION_.'/module/'.urlencode($params['id_module'])
-					.'/'.urlencode($params['hosted_email'])
-					.'/'.urlencode($params['password_addons'])
-					.'/'.(isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain())
-					.'/'.(isset($params['email']) ? $params['email'] : Configuration::get('PS_SHOP_EMAIL'));
+				$post_data .= '&method=module&id_module='.urlencode((int)$params['id_module']).'&username='.urlencode($params['hosted_email'])
+					.'&password='.urlencode($params['password_addons'])
+					.'&shop_url='.urlencode(isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain())
+					.'&mail='.urlencode(isset($params['email']) ? $params['email'] : Configuration::get('PS_SHOP_EMAIL'));
 				$protocols[] = 'https';
 				break;
 			case 'install-modules':
