@@ -163,7 +163,7 @@
 					<strong>{l s='SMTP server'}:</strong> {$smtp.server|escape:'html':'UTF-8'}
 				</p>
 				<p>
-					<strong>{l s='SMTP user'}:</strong>
+					<strong>{l s='SMTP username'}:</strong>
 					{if $smtp.user neq ''}
 						{l s='Defined'}
 					{else}

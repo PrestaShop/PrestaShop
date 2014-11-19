@@ -61,12 +61,13 @@ class OrderHistoryCore extends ObjectModel
 	protected $webserviceParameters = array(
 		'objectsNodeName' => 'order_histories',
 		'fields' => array(
+			'id_employee' => array('xlink_resource'=> 'employees'),
 			'id_order_state' => array('required' => true, 'xlink_resource'=> 'order_states'),
 			'id_order' => array('xlink_resource' => 'orders'),
 		),
 		'objectMethods' => array(
 			'add' => 'addWs',
-		), 
+		),
 	);
 
 	/**
@@ -93,7 +94,7 @@ class OrderHistoryCore extends ObjectModel
 		$new_os = new OrderState((int)$new_order_state, $order->id_lang);
 		$old_os = $order->getCurrentOrderState();
 		$is_validated = $this->isValidated();
-		
+
 
 		// executes hook
 		if (in_array($new_os->id, array(Configuration::get('PS_OS_PAYMENT'), Configuration::get('PS_OS_WS_PAYMENT'))))
@@ -130,7 +131,7 @@ class OrderHistoryCore extends ObjectModel
 				}
 
 				$customer = new Customer((int)$order->id_customer);
-				
+
 				$links = '<ul>';
 				foreach ($assign as $product)
 				{
@@ -139,7 +140,7 @@ class OrderHistoryCore extends ObjectModel
 					if (isset($product['deadline']))
 						$links .= '&nbsp;'.Tools::htmlentitiesUTF8(Tools::displayError('expires on', false)).'&nbsp;'.$product['deadline'];
 					if (isset($product['downloadable']))
-						$links .= '&nbsp;'.Tools::htmlentitiesUTF8(sprintf(Tools::displayError('downloadable %d time(s)', false), (int)$product['downloadable']));	
+						$links .= '&nbsp;'.Tools::htmlentitiesUTF8(sprintf(Tools::displayError('downloadable %d time(s)', false), (int)$product['downloadable']));
 					$links .= '</li>';
 				}
 				$links .= '</ul>';
@@ -161,11 +162,11 @@ class OrderHistoryCore extends ObjectModel
 			$manager = null;
 			if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 				$manager = StockManagerFactory::getManager();
-				
+
 			$errorOrCanceledStatuses = array(Configuration::get('PS_OS_ERROR'), Configuration::get('PS_OS_CANCELED'));
-			
+
 			// foreach products of the order
-			if (Validate::isLoadedObject($old_os))			
+			if (Validate::isLoadedObject($old_os))
 				foreach ($order->getProductsDetail() as $product)
 				{
 					// if becoming logable => adds sale
@@ -182,7 +183,7 @@ class OrderHistoryCore extends ObjectModel
 					elseif (!$new_os->logable && $old_os->logable)
 					{
 						ProductSale::removeProductSale($product['product_id'], $product['product_quantity']);
-	
+
 						// @since 1.5.0 - Stock Management
 						if (!Pack::isPack($product['product_id']) &&
 							in_array($new_os->id, $errorOrCanceledStatuses) &&
@@ -195,6 +196,10 @@ class OrderHistoryCore extends ObjectModel
 							 !in_array($old_os->id, $errorOrCanceledStatuses) &&
 							 !StockAvailable::dependsOnStock($product['id_product']))
 							 StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $order->id_shop);
+
+					if ((int)$this->id_employee)
+						$this->id_employee = Validate::isLoadedObject(new Employee((int)$this->id_employee)) ? $this->id_employee : 0;
+
 					// @since 1.5.0 : if the order is being shipped and this products uses the advanced stock management :
 					// decrements the physical stock using $id_warehouse
 					if ($new_os->shipped == 1 && $old_os->shipped == 0 &&
@@ -205,7 +210,7 @@ class OrderHistoryCore extends ObjectModel
 					{
 						// gets the warehouse
 						$warehouse = new Warehouse($product['id_warehouse']);
-	
+
 						// decrements the stock (if it's a pack, the StockManager does what is needed)
 						$manager->removeProduct(
 							$product['product_id'],
@@ -214,7 +219,9 @@ class OrderHistoryCore extends ObjectModel
 							$product['product_quantity'],
 							Configuration::get('PS_STOCK_CUSTOMER_ORDER_REASON'),
 							true,
-							(int)$order->id
+							(int)$order->id,
+							0,
+							(int)$this->id_employee
 						);
 					}
 					// @since.1.5.0 : if the order was shipped, and is not anymore, we need to restock products
@@ -242,7 +249,8 @@ class OrderHistoryCore extends ObjectModel
 											$mvt['physical_quantity'],
 											null,
 											$mvt['price_te'],
-											true
+											true,
+											(int)$this->id_employee
 										);
 									}
 									if (!StockAvailable::dependsOnStock($product['id_product']))
@@ -272,7 +280,7 @@ class OrderHistoryCore extends ObjectModel
 		}
 
 		$this->id_order_state = (int)$new_order_state;
-		
+
 		// changes invoice number of order ?
 		if (!Validate::isLoadedObject($new_os) || !Validate::isLoadedObject($order))
 			die(Tools::displayError('Invalid new order status'));
@@ -306,16 +314,16 @@ class OrderHistoryCore extends ObjectModel
 
 					if ($order->total_paid != 0)
 						$payment->payment_method = $payment_method->displayName;
-					else 
+					else
 						$payment->payment_method = null;
-					
+
 					// Update total_paid_real value for backward compatibility reasons
 					if ($payment->id_currency == $order->id_currency)
 						$order->total_paid_real += $payment->amount;
 					else
 						$order->total_paid_real += Tools::ps_round(Tools::convertPrice($payment->amount, $payment->id_currency, false), 2);
 					$order->save();
-						
+
 					$payment->conversion_rate = 1;
 					$payment->save();
 					Db::getInstance()->execute('
@@ -370,7 +378,7 @@ class OrderHistoryCore extends ObjectModel
 		if (!$context)
 			$context = Context::getContext();
 		$order = new Order($this->id_order);
-		
+
 		if (!$this->add($autodate))
 			return false;
 
@@ -385,7 +393,7 @@ class OrderHistoryCore extends ObjectModel
 		if (isset($result['template']) && Validate::isEmail($result['email']))
 		{
 			ShopUrl::cacheMainDomainForShop($order->id_shop);
-			
+
 			$topic = $result['osname'];
 			$data = array(
 				'{lastname}' => $result['lastname'],
@@ -402,7 +410,7 @@ class OrderHistoryCore extends ObjectModel
 				if (Validate::isLoadedObject($module) && isset($module->extra_mail_vars) && is_array($module->extra_mail_vars))
 					$data = array_merge($data, $module->extra_mail_vars);
 			}
-			
+
 			$data['{total_paid}'] = Tools::displayPrice((float)$order->total_paid, new Currency((int)$order->id_currency), false);
 			$data['{order_name}'] = $order->getUniqReference();
 
@@ -459,7 +467,7 @@ class OrderHistoryCore extends ObjectModel
 	}
 
     /**
-     * Add method for webservice create resource Order History      
+     * Add method for webservice create resource Order History
      * If sendemail=1 GET parameter is present sends email to customer otherwise does not
      * @return bool
      */
@@ -467,7 +475,7 @@ class OrderHistoryCore extends ObjectModel
 	{
 	    $sendemail = (bool)Tools::getValue('sendemail', false);
 	    $this->changeIdOrderState($this->id_order_state, $this->id_order);
-	    
+
 	    if ($sendemail)
 	    {
 	        //Mail::Send requires link object on context and is not set when getting here
@@ -478,7 +486,7 @@ class OrderHistoryCore extends ObjectModel
 	            $protocol_content = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
 	            $context->link = new Link($protocol_link, $protocol_content);
 	        }
-	        return $this->addWithemail();            
+	        return $this->addWithemail();
 	    }
 		else
 	        return $this->add();

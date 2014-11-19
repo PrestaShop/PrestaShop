@@ -2532,6 +2532,8 @@ class AdminOrdersControllerCore extends AdminController
 					$product['image_size'] = false;
 			}
 		}
+		
+		ksort($products);
 
 		return $products;
 	}
