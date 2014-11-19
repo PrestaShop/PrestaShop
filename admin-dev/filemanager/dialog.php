@@ -927,7 +927,7 @@ else
 						{
 							echo "video";
 						} ?>"
-						   title="<?php echo lang_Preview ?>" data-url="ajax_calls.php?action=media_preview&title=<?php echo Tools::safeOutput($filename); ?>&file=<?php echo Tools::safeOutput($current_path.$subfolder.$subdir.$file); ?>"
+						   title="<?php echo lang_Preview ?>" data-url="ajax_calls.php?action=media_preview&title=<?php echo Tools::safeOutput($filename); ?>&file=<?php echo Tools::safeOutput($cur_dir.$file); ?>"
 						   href="javascript:void('');"><i class=" icon-eye-open"></i></a>
 					<?php
 					} else
