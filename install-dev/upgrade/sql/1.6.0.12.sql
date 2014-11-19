@@ -1,6 +1,6 @@
 SET NAMES 'utf8';
 
-INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_CUSTOMER_NWSL', 1, NOW(), NOW()), VALUES ('PS_CUSTOMER_OPTIN', 1, NOW(), NOW());
+INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_CUSTOMER_NWSL', 1, NOW(), NOW()), ('PS_CUSTOMER_OPTIN', 1, NOW(), NOW());
 
 INSERT INTO `PREFIX_order_state` (`invoice`, `send_email`, `module_name`, `color`, `unremovable`, `hidden`, `logable`, `delivery`, `shipped`, `paid`, `deleted`) VALUES ('0', '0', 'cashondelivery', '#4169E1', '1', '0', '0', '0', '0', '0', '0');
 SET @id_order_state = LAST_INSERT_ID();
@@ -20,3 +20,5 @@ ALTER TABLE `PREFIX_pack` DROP PRIMARY KEY;
 
 ALTER TABLE `PREFIX_pack` ADD PRIMARY KEY (`id_product_pack`, `id_product_item`, `id_product_attribute_item`);
 
+ALTER TABLE `PREFIX_order_state` ADD `pdf_delivery` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER `paid`;
+ALTER TABLE `PREFIX_order_state` ADD `pdf_invoice` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0' AFTER `pdf_delivery`;
