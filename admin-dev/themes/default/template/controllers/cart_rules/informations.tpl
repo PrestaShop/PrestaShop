@@ -48,7 +48,7 @@
 <div class="form-group">
 	<label class="control-label col-lg-3">
 		<span class="label-tooltip" data-toggle="tooltip"
-		title="{l s='Caution! The rule will automatically be applied if you leave this field blank.'}">
+		title="{l s='This is the code users should enter to apply the voucher to a cart. Either create your own code or generate one by clicking on "Generate".'}">
 			{l s='Code'}
 		</span>
 	</label>
@@ -59,6 +59,7 @@
 				<a href="javascript:gencode(8);" class="btn btn-default"><i class="icon-random"></i> {l s='Generate'}</a>
 			</span>
 		</div>
+	<span class="help-block">{l s='Caution! If you leave this field blank, the rule will automatically be applied to benefiting customers.'}</span>
 	</div>
 </div>
 

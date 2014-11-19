@@ -1534,12 +1534,11 @@ abstract class ModuleCore
 	final public static function isModuleTrusted($module_name)
 	{
 		static $trusted_modules_list_content = null;
-		static $modules_list_content =  null;
+		static $modules_list_content = null;
 		static $default_country_modules_list_content = null;
 		static $untrusted_modules_list_content = null;
 
 		$context = Context::getContext();
-		$theme = new Theme($context->shop->id_theme);
 
 		// If the xml file exist, isn't empty, isn't too old
 		// and if the theme hadn't change
@@ -1553,7 +1552,7 @@ abstract class ModuleCore
 		if ($trusted_modules_list_content === null)
 		{
 			$trusted_modules_list_content = Tools::file_get_contents(_PS_ROOT_DIR_.self::CACHE_FILE_TRUSTED_MODULES_LIST);
-			if (strpos($trusted_modules_list_content, $theme->name) === false)
+			if (strpos($trusted_modules_list_content, $context->theme->name) === false)
 				self::generateTrustedXml();
 		}
 
@@ -1571,7 +1570,7 @@ abstract class ModuleCore
 		if (strpos($trusted_modules_list_content, $module_name) !== false)
 		{
 			// If the module is not a partner, then return 1 (which means the module is "trusted")
-			if (strpos($modules_list_content, '<module name="'.$module_name.'"/>')== false)
+			if (strpos($modules_list_content, '<module name="'.$module_name.'"/>') == false)
 				return 1;
 			// The module is a parter. If the module is in the file that contains module for this country then return 1 (which means the module is "trusted")
 			elseif (strpos($default_country_modules_list_content, '<name><![CDATA['.$module_name.']]></name>') !== false)
