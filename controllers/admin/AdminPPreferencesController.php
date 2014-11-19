@@ -265,7 +265,7 @@ class AdminPPreferencesControllerCore extends AdminController
 						'identifier' => 'id_warehouse'
 					),
 					'PS_PACK_STOCK_TYPE' => array(
-						'title' =>  $this->l('Default pack stock gestion'),
+						'title' =>  $this->l('Default pack stock management'),
 						'type' => 'select',
 						'list' =>array(
 							array(

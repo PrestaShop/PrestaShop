@@ -188,22 +188,29 @@ class ManufacturerCore extends ObjectModel
 				$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
 			}
 
-			foreach ($manufacturers as $key => $manufacturer)
-			{
-				$manufacturers[$key]['nb_products'] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT COUNT(DISTINCT p.`id_product`)
-				FROM `'._DB_PREFIX_.'product` p
-				'.Shop::addSqlAssociation('product', 'p').'
-				WHERE p.`id_manufacturer` = '.(int)$manufacturer['id_manufacturer'].'
-				AND product_shop.`visibility` NOT IN ("none")
-				'.($active ? ' AND product_shop.`active` = 1 ' : '').'
-				'.($all_group ? '' : ' AND p.`id_product` IN (
-					SELECT cp.`id_product`
-					FROM `'._DB_PREFIX_.'category_group` cg
-					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
-					WHERE cg.`id_group` '.$sql_groups.'
-				)'));
-			}
+			$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+					SELECT  p.`id_manufacturer`, COUNT(DISTINCT p.`id_product`) as nb_products
+					FROM `'._DB_PREFIX_.'product` p
+					'.Shop::addSqlAssociation('product', 'p').'
+					LEFT JOIN `'._DB_PREFIX_.'manufacturer` as m ON (m.`id_manufacturer`= p.`id_manufacturer`)
+					WHERE product_shop.`visibility` NOT IN ("none")
+					'.($active ? ' AND product_shop.`active` = 1 ' : '').'
+					'.($all_group ? '' : ' AND p.`id_product` IN (
+						SELECT cp.`id_product`
+						FROM `'._DB_PREFIX_.'category_group` cg
+						LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
+						WHERE cg.`id_group` '.$sql_groups.'
+					)
+					GROUP BY p.`id_manufacturer`'
+				));
+
+			$counts = array();
+			foreach ($results as $result)
+				$counts[(int)$result['id_manufacturer']] = (int)$result['nb_products'];
+
+			if (count($counts))
+				foreach ($manufacturers as $key => $manufacturer)
+					$manufacturers[$key]['nb_products'] = $counts[(int)$manufacturer['id_manufacturer']];
 		}
 
 		$total_manufacturers = count($manufacturers);
