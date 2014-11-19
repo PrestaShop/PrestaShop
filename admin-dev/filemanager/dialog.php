@@ -775,8 +775,6 @@ else
 		$src = $base_url.$cur_dir.rawurlencode($file);
 		$mini_src = $src_thumb = $thumbs_path.$subdir.$file;
 
-		if (strpos($src_thumb, _PS_ROOT_DIR_) === 0)
-			$mini = $thumb = __PS_BASE_URI__.substr($thumbs_path.$subdir.$file, strlen(_PS_ROOT_DIR_) + 1);
 		//add in thumbs folder if not exist
 		if (!file_exists($src_thumb))
 		{
@@ -844,6 +842,20 @@ else
 	{
 		$class_ext = 1;
 	}
+
+	/** prestashop
+	*
+	*
+	*/
+	if(isset($src_thumb) && $src_thumb)
+		$src_thumb = preg_replace('#('.$current_path.')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/cms/'), $src_thumb);
+	if(isset($mini_src) && $mini_src)
+		$mini_src = preg_replace('#('.$current_path.')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/cms/'), $mini_src);
+	/** prestashop
+	*
+	*
+	*/
+
 	if ((!(Tools::getValue('type') == 1 && !$is_img) && !((Tools::getValue('type') == 3 && !$is_video) && (Tools::getValue('type') == 3 && !$is_audio))) && $class_ext > 0){
 	?>
 	<li class="ff-item-type-<?php echo Tools::safeOutput($class_ext); ?> file" data-name="<?php echo Tools::safeOutput($file); ?>">
@@ -927,7 +939,7 @@ else
 						{
 							echo "video";
 						} ?>"
-						   title="<?php echo lang_Preview ?>" data-url="ajax_calls.php?action=media_preview&title=<?php echo Tools::safeOutput($filename); ?>&file=<?php echo Tools::safeOutput($upload_dir.$file); ?>"
+						   title="<?php echo lang_Preview ?>" data-url="ajax_calls.php?action=media_preview&title=<?php echo Tools::safeOutput($filename); ?>&file=<?php echo Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/cms/'.$subfolder.$subdir.$file); ?>"
 						   href="javascript:void('');"><i class=" icon-eye-open"></i></a>
 					<?php
 					} else
