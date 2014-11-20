@@ -198,6 +198,14 @@ function quick_view()
 	$(document).on('click', '.quick-view:visible, .quick-view-mobile:visible', function(e){
 		e.preventDefault();
 		var url = this.rel;
+		var anchor = '';
+
+		if (url.indexOf('#') != -1)
+		{
+			anchor = url.substring(url.indexOf('#'), url.length);
+			url = url.substring(0, url.indexOf('#'));
+		}
+
 		if (url.indexOf('?') != -1)
 			url += '&';
 		else
@@ -209,7 +217,7 @@ function quick_view()
 				'width':    1087,
 				'height':   610,
 				'type':     'iframe',
-				'href':     url + 'content_only=1'
+				'href':     url + 'content_only=1' + anchor
 			});
 	});
 }
