@@ -52,7 +52,7 @@ class TranslateCore
 		{
 			$iso = Context::getContext()->language->iso_code;
 			if (empty($iso))
-				$iso = Language::getIsoById((int)(Configuration::get('PS_LANG_DEFAULT')));			
+				$iso = Language::getIsoById((int)(Configuration::get('PS_LANG_DEFAULT')));
 			if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php'))
 				include_once(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
 		}
@@ -62,13 +62,11 @@ class TranslateCore
 			$class_name_controller = $class.'controller';
 			// if the class is extended by a module, use modules/[module_name]/xx.php lang file
 			if (class_exists($class_name_controller) && Module::getModuleNameFromClass($class_name_controller))
-			{
-				$string = str_replace('\'', '\\\'', $string);
-				return Translate::getModuleTranslation(Module::$classInModule[$class_name_controller], $string, $class_name_controller);
-			}
+				return Translate::getModuleTranslation(Module::$classInModule[$class_name_controller], $string, $class_name_controller, $sprintf, $addslashes);
 		}
 
-		$key = md5(str_replace('\'', '\\\'', $string));
+		$string = preg_replace("/\\*'/", "\'", $string);
+		$key = md5($string);
 		if (isset($_LANGADM[$class.$key]))
 			$str = $_LANGADM[$class.$key];
 		else
@@ -95,8 +93,9 @@ class TranslateCore
 	 */
 	public static function getGenericAdminTranslation($string, $key = null, &$lang_array)
 	{
+		$string = preg_replace("/\\*'/", "\'", $string);
 		if (is_null($key))
-			$key = md5(str_replace('\'', '\\\'', $string));
+			$key = md5($string);
 
 		if (isset($lang_array['AdminController'.$key]))
 			$str = $lang_array['AdminController'.$key];
@@ -133,7 +132,7 @@ class TranslateCore
 
 		if (!isset($translations_merged[$name]) && isset(Context::getContext()->language))
 		{
-			$filesByPriority = array(
+			$files_by_priority = array(
 				// Translations in theme
 				_PS_THEME_DIR_.'modules/'.$name.'/translations/'.$language->iso_code.'.php',
 				_PS_THEME_DIR_.'modules/'.$name.'/'.$language->iso_code.'.php',
@@ -142,7 +141,7 @@ class TranslateCore
 				// PrestaShop 1.4 translations
 				_PS_MODULE_DIR_.$name.'/'.$language->iso_code.'.php'
 			);
-			foreach ($filesByPriority as $file)
+			foreach ($files_by_priority as $file)
 				if (file_exists($file))
 				{
 					include_once($file);
@@ -150,7 +149,8 @@ class TranslateCore
 					$translations_merged[$name] = true;
 				}
 		}
-		$key = md5(str_replace('\'', '\\\'', $string));
+		$string = preg_replace("/\\*'/", "\'", $string);
+		$key = md5($string);
 
 		$cache_key = $name.'|'.$string.'|'.$source.'|'.(int)$js;
 
@@ -185,9 +185,9 @@ class TranslateCore
 				$ret = htmlspecialchars($ret, ENT_COMPAT, 'UTF-8');
 
 			if ($sprintf === null)
-				$lang_cache[$cache_key] = $ret; 
-			else    
-         	return $ret;
+				$lang_cache[$cache_key] = $ret;
+			else
+				return $ret;
 
 		}
 		return $lang_cache[$cache_key];
@@ -219,7 +219,8 @@ class TranslateCore
 		if (!isset($_LANGPDF) || !is_array($_LANGPDF))
 			return str_replace('"', '&quot;', $string);
 
-		$key = md5(str_replace('\'', '\\\'', $string));
+		$string = preg_replace("/\\*'/", "\'", $string);
+		$key = md5($string);
 
 		$str = (array_key_exists('PDF'.$key, $_LANGPDF) ? $_LANGPDF['PDF'.$key] : $string);
 

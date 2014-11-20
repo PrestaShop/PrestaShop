@@ -1238,7 +1238,7 @@ class AdminControllerCore extends Controller
 									$this->errors[] = Tools::displayError('Can not add configuration '.$key.' for lang '.Language::getIsoById((int)$language['id_lang']));
 							}
 						}
-						Configuration::updateValue($key, $list);
+						Configuration::updateValue($key, $list, isset($values['validation']) && $options['validation'] == 'isCleanHtml' ? true : false);
 					}
 					else
 					{
