@@ -52,7 +52,7 @@ class TranslateCore
 		{
 			$iso = Context::getContext()->language->iso_code;
 			if (empty($iso))
-				$iso = Language::getIsoById((int)(Configuration::get('PS_LANG_DEFAULT')));			
+				$iso = Language::getIsoById((int)(Configuration::get('PS_LANG_DEFAULT')));
 			if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php'))
 				include_once(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
 		}
@@ -133,7 +133,7 @@ class TranslateCore
 
 		if (!isset($translations_merged[$name]) && isset(Context::getContext()->language))
 		{
-			$filesByPriority = array(
+			$files_by_priority = array(
 				// Translations in theme
 				_PS_THEME_DIR_.'modules/'.$name.'/translations/'.$language->iso_code.'.php',
 				_PS_THEME_DIR_.'modules/'.$name.'/'.$language->iso_code.'.php',
@@ -142,7 +142,7 @@ class TranslateCore
 				// PrestaShop 1.4 translations
 				_PS_MODULE_DIR_.$name.'/'.$language->iso_code.'.php'
 			);
-			foreach ($filesByPriority as $file)
+			foreach ($files_by_priority as $file)
 				if (file_exists($file))
 				{
 					include_once($file);
@@ -185,9 +185,9 @@ class TranslateCore
 				$ret = htmlspecialchars($ret, ENT_COMPAT, 'UTF-8');
 
 			if ($sprintf === null)
-				$lang_cache[$cache_key] = $ret; 
-			else    
-         	return $ret;
+				$lang_cache[$cache_key] = $ret;
+			else
+				return $ret;
 
 		}
 		return $lang_cache[$cache_key];
