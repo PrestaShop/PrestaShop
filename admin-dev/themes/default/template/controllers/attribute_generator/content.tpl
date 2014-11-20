@@ -47,7 +47,7 @@
 			var element_price = element.val().replace(/,/g, '.');
 			var other_element_price = 0;
 
-			if (!isNaN(element_price) && element_price > 0)
+			if (!isNaN(element_price))
 			{
 				if (element_has_tax)
 					other_element_price = parseFloat(element_price / ((product_tax / 100) + 1)).toFixed(6);
