@@ -101,7 +101,6 @@
 			</div>
 		</div>
 	</div>
-	{hook h="displayAdminOrder" id_order=$order->id}
 	<div class="row">
 		<div class="col-lg-7">
 			<div class="panel">
@@ -547,6 +546,7 @@
 					</form>
 				{/if}
 			</div>
+			{hook h="displayAdminOrderLeft" id_order=$order->id}
 		</div>
 		<div class="col-lg-5">
 			<!-- Customer informations -->
@@ -859,9 +859,10 @@
 					</form>
 				</div>
 			</div>
+			{hook h="displayAdminOrderRight" id_order=$order->id}
 		</div>
 	</div>
-
+	{hook h="displayAdminOrder" id_order=$order->id}
 	<div class="row" id="start_products">
 		<div class="col-lg-12">
 			<form class="container-command-top-spacing" action="{$current_index}&amp;vieworder&amp;token={$smarty.get.token|escape:'html':'UTF-8'}&amp;id_order={$order->id|intval}" method="post" onsubmit="return orderDeleteProduct('{l s='This product cannot be returned.'}', '{l s='Quantity to cancel is greater than quantity available.'}');">
