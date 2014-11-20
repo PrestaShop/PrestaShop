@@ -521,7 +521,7 @@ class ProductCore extends ObjectModel
 			StockAvailable::setProductOutOfStock((int)$this->id, 2);
 
 		$this->setGroupReduction();
-		Hook::exec('actionProductSave', array('id_product' => $this->id));
+		Hook::exec('actionProductSave', array('id_product' => (int)$this->id, 'product' => $this->object));
 		return true;
 	}
 
@@ -529,8 +529,8 @@ class ProductCore extends ObjectModel
 	{
 		$return = parent::update($null_values);
 		$this->setGroupReduction();
-		Hook::exec('actionProductSave', array('id_product' => $this->id));
-		Hook::exec('actionProductUpdate', array('id_product' => $this->id));
+		Hook::exec('actionProductSave', array('id_product' => (int)$this->id, 'product' => $this->object));
+		Hook::exec('actionProductUpdate', array('id_product' => (int)$this->id, 'product' => $this->object));
 		if ($this->getType() == Product::PTYPE_VIRTUAL && $this->active && !Configuration::get('PS_VIRTUAL_PROD_FEATURE_ACTIVE'))
 			Configuration::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', '1');
 
@@ -819,7 +819,7 @@ class ProductCore extends ObjectModel
 		if ($this->hasMultishopEntries())
 			return true;
 
-		Hook::exec('actionProductDelete', array('product' => $this));
+		Hook::exec('actionProductDelete', array('id_product' => (int)$this->id, 'product' => $this));
 		if (!$result ||
 			!GroupReduction::deleteProductReduction($this->id) ||
 			!$this->deleteCategories(true) ||
@@ -1475,7 +1475,7 @@ class ProductCore extends ObjectModel
 		if ($id_default_attribute)
 			$this->cache_default_attribute = $id_default_attribute;
 
-		Hook::exec('actionProductAttributeUpdate', array('id_product_attribute' => $id_product_attribute));
+		Hook::exec('actionProductAttributeUpdate', array('id_product_attribute' => (int)$id_product_attribute));
 		Tools::clearColorListCache($this->id);
 
 		return true;
@@ -1574,7 +1574,7 @@ class ProductCore extends ObjectModel
 	*/
 	public function deleteProductAttributes()
 	{
-		Hook::exec('actionProductAttributeDelete', array('id_product_attribute' => 0, 'id_product' => $this->id, 'deleteAllAttributes' => true));
+		Hook::exec('actionProductAttributeDelete', array('id_product_attribute' => 0, 'id_product' => (int)$this->id, 'deleteAllAttributes' => true));
 
 		$result = true;
 		$combinations = new PrestaShopCollection('Combination');

@@ -658,7 +658,7 @@ class AdminProductsControllerCore extends AdminController
 					$this->errors[] = Tools::displayError('An error occurred while copying images.');
 				else
 				{
-					Hook::exec('actionProductAdd', array('product' => $product));
+					Hook::exec('actionProductAdd', array('id_product' => (int)$product->id, 'product' => $product));
 					if (in_array($product->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION'))
 						Search::indexation(false, $product->id);
 					$this->redirect_after = self::$currentIndex.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&conf=19&token='.$this->token;
@@ -1791,7 +1791,7 @@ class AdminProductsControllerCore extends AdminController
 					$this->errors[] = Tools::displayError('An error occurred while adding tags.');
 				else
 				{
-					Hook::exec('actionProductAdd', array('product' => $this->object));
+					Hook::exec('actionProductAdd', array('id_product' => (int)$this->object->id, 'product' => $this->object));
 					if (in_array($this->object->visibility, array('both', 'search')) && Configuration::get('PS_SEARCH_INDEXATION'))
 						Search::indexation(false, $this->object->id);
 				}
@@ -4605,7 +4605,7 @@ class AdminProductsControllerCore extends AdminController
 					die (Tools::jsonEncode(array('error' =>  $this->l('Undefined id product attribute'))));
 
 				StockAvailable::setQuantity($product->id, (int)Tools::getValue('id_product_attribute'), (int)Tools::getValue('value'));
-				Hook::exec('actionProductUpdate', array('product' => $this->object));
+				Hook::exec('actionProductUpdate', array('id_product' => (int)$this->object->id, 'product' => $this->object));
 
 				// Catch potential echo from modules
 				$error = ob_get_contents();
