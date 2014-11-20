@@ -121,6 +121,9 @@
 		<td style="width: 85%; text-align: right">
 			<table style="width: 100%; font-size: 8pt;">
 				<tr style="line-height:4px;">
+					{if Configuration::get('PS_PDF_IMG_INVOICE')}
+						<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: 10%">{l s='Image' pdf='true'}</td>
+					{/if}
 					<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: 45%">{l s='Product / Reference' pdf='true'}</td>
                     <!-- unit price tax excluded is mandatory -->
 					{if !$tax_excluded_display}
@@ -133,7 +136,10 @@
 				</tr>
 				{foreach $order_details as $order_detail}
 				{cycle values='#FFF,#DDD' assign=bgcolor}
-				<tr style="line-height:6px;background-color:{$bgcolor};">
+				<tr style="line-height:6px;background-color:{$bgcolor};" {if Configuration::get('PS_PDF_IMG_INVOICE') && isset($order_detail.image) && $order_detail.image->id && isset($order_detail.image_size)}height="{$order_detail['image_size'][1]}"{/if}>
+					{if Configuration::get('PS_PDF_IMG_INVOICE')}
+						<td style="text-align: left;">{if isset($order_detail.image) && $order_detail.image->id}{$order_detail.image_tag}{/if}</td>
+					{/if}
 					<td style="text-align: left; width: 45%">{$order_detail.product_name}{if isset($order_detail.product_reference) && !empty($order_detail.product_reference)} ({l s='Reference:' pdf='true'} {$order_detail.product_reference}){/if}</td>
                     <!-- unit price tax excluded is mandatory -->
 					{if !$tax_excluded_display}
