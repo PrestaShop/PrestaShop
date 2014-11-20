@@ -65,7 +65,8 @@ class TranslateCore
 				return Translate::getModuleTranslation(Module::$classInModule[$class_name_controller], $string, $class_name_controller, $sprintf, $addslashes);
 		}
 
-		$key = md5(str_replace('\'', '\\\'', $string));
+		$string = preg_replace("/\\*'/", "\'", $string);
+		$key = md5($string);
 		if (isset($_LANGADM[$class.$key]))
 			$str = $_LANGADM[$class.$key];
 		else
@@ -92,8 +93,9 @@ class TranslateCore
 	 */
 	public static function getGenericAdminTranslation($string, $key = null, &$lang_array)
 	{
+		$string = preg_replace("/\\*'/", "\'", $string);
 		if (is_null($key))
-			$key = md5(str_replace('\'', '\\\'', $string));
+			$key = md5($string);
 
 		if (isset($lang_array['AdminController'.$key]))
 			$str = $lang_array['AdminController'.$key];
@@ -147,7 +149,8 @@ class TranslateCore
 					$translations_merged[$name] = true;
 				}
 		}
-		$key = md5(str_replace('\'', '\\\'', $string));
+		$string = preg_replace("/\\*'/", "\'", $string);
+		$key = md5($string);
 
 		$cache_key = $name.'|'.$string.'|'.$source.'|'.(int)$js;
 
@@ -216,7 +219,8 @@ class TranslateCore
 		if (!isset($_LANGPDF) || !is_array($_LANGPDF))
 			return str_replace('"', '&quot;', $string);
 
-		$key = md5(str_replace('\'', '\\\'', $string));
+		$string = preg_replace("/\\*'/", "\'", $string);
+		$key = md5($string);
 
 		$str = (array_key_exists('PDF'.$key, $_LANGPDF) ? $_LANGPDF['PDF'.$key] : $string);
 
