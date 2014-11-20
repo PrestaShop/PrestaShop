@@ -22,6 +22,6 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<a href="#" title="{$action|escape:'html':'UTF-8'}" onclick="$.alerts.okButton = '{l s='Ok'}';$.alerts.cancelButton = '{l s='Cancel'}';jConfirm('{$confirm}', '', function(confirm){ if (confirm === true) { document.location = '{$location_ok|escape:'html':'UTF-8'}'; } else { document.location = '{$location_ko|escape:'html':'UTF-8'}'; } });">
+<a href="#" title="{$action|escape:'html':'UTF-8'}" onclick="confirm_link('', '{$confirm}', '{l s='Yes'}', '{l s='No'}', '{$location_ok|escape:'html':'UTF-8'}', '{$location_ko|escape:'html':'UTF-8'}')">
 	<i class="icon-copy"></i> {$action}
 </a>
