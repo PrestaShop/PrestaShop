@@ -22,6 +22,15 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+<div class="alert bg-info row">
+	<div class="col-xs-12 col-md-4 modules-addons-info">
+		<h4>{l s='Addons membership provides access to all our PrestaShop modules.'}</h4>
+		<p>{l s='Once connected, your new modules will be automatically installed.'}</p>
+	</div>
+	<div class="col-xs-12 col-md-8 modules-addons-buttons">
+		<a class="btn btn-default btn-primary _blank" href="{$addons_register_link|escape:'html':'UTF-8'}"><i class="icon-pencil"></i> {l s='Sign-up'}</a><a href="#" class="addons_connect btn btn-default" data-toggle="modal" data-target="#modal_addons_connect" title="{l s='Connect to Prestashop Marketplace account'}"><i class="icon-user"></i> {l s='Log in'}</a>
+	</div>
+</div>
 {$kpis}
 {if $add_permission eq '1'}
 <div id="module_install" class="row" style="{if !isset($smarty.post.downloadflag)}display: none;{/if}">
