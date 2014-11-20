@@ -1534,3 +1534,15 @@ function createSqlQueryName()
 
 	return name.trim();
 }
+
+function confirm_link(head_text, display_text, confirm_text, cancel_text, confirm_link, cancel_link)
+{
+	$.alerts.okButton = confirm_text;
+	$.alerts.cancelButton = cancel_text;
+	jConfirm(display_text, head_text, function(confirm){
+		if (confirm === true)
+			document.location = confirm_link;
+		else
+			document.location = cancel_link;
+	});
+}
