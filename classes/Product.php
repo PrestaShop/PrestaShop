@@ -521,7 +521,7 @@ class ProductCore extends ObjectModel
 			StockAvailable::setProductOutOfStock((int)$this->id, 2);
 
 		$this->setGroupReduction();
-		Hook::exec('actionProductSave', array('id_product' => (int)$this->id, 'product' => $this->object));
+		Hook::exec('actionProductSave', array('id_product' => (int)$this->id, 'product' => $this));
 		return true;
 	}
 
@@ -529,8 +529,8 @@ class ProductCore extends ObjectModel
 	{
 		$return = parent::update($null_values);
 		$this->setGroupReduction();
-		Hook::exec('actionProductSave', array('id_product' => (int)$this->id, 'product' => $this->object));
-		Hook::exec('actionProductUpdate', array('id_product' => (int)$this->id, 'product' => $this->object));
+		Hook::exec('actionProductSave', array('id_product' => (int)$this->id, 'product' => $this));
+		Hook::exec('actionProductUpdate', array('id_product' => (int)$this->id, 'product' => $this));
 		if ($this->getType() == Product::PTYPE_VIRTUAL && $this->active && !Configuration::get('PS_VIRTUAL_PROD_FEATURE_ACTIVE'))
 			Configuration::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', '1');
 
