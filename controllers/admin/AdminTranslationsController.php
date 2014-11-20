@@ -1146,7 +1146,7 @@ class AdminTranslationsControllerCore extends AdminController
 					)
 				);
 				$directories['tpl'] = array_merge($directories['tpl'], $this->getModulesHasPDF());
-                                $directories['php'] = array_merge($directories['php'], $this->getModulesHasPDF(true));
+				$directories['php'] = array_merge($directories['php'], $this->getModulesHasPDF(true));
 				break;
 
 			case 'mails':
@@ -2494,7 +2494,7 @@ class AdminTranslationsControllerCore extends AdminController
 		}
 		return $arr_modules;
 	}
-	
+
 	 /**
 	 * Check in each module if contains pdf folder.
 	 *
@@ -2504,31 +2504,28 @@ class AdminTranslationsControllerCore extends AdminController
 	{
 		$arr_modules = array();
 		foreach (scandir($this->translations_informations['modules']['dir']) as $module_dir)
-		{
 			if (!in_array($module_dir, self::$ignore_folder))
 			{
 				$dir = false;
-                                if($classes) {
-                                    if ($this->theme_selected && Tools::file_exists_cache($this->translations_informations['modules']['override']['dir'].$module_dir.'/classes/'))
-                                            $dir = $this->translations_informations['modules']['override']['dir'].$module_dir.'/classes/';
-                                    elseif (Tools::file_exists_cache($this->translations_informations['modules']['dir'].$module_dir.'/classes/'))
-                                            $dir = $this->translations_informations['modules']['dir'].$module_dir.'/classes/';
-                                    if ($dir !== false)
-                                    {
-                                            $arr_modules[$dir] = scandir($dir);
-                                    }
-                                } else {
-                                    if ($this->theme_selected && Tools::file_exists_cache($this->translations_informations['modules']['override']['dir'].$module_dir.'/pdf/'))
-                                            $dir = $this->translations_informations['modules']['override']['dir'].$module_dir.'/pdf/';
-                                    elseif (Tools::file_exists_cache($this->translations_informations['modules']['dir'].$module_dir.'/pdf/'))
-                                            $dir = $this->translations_informations['modules']['dir'].$module_dir.'/pdf/';
-                                    if ($dir !== false)
-                                    {
-                                            $arr_modules[$dir] = scandir($dir);
-                                    }
-                                }
+				if ($classes)
+				{
+					if ($this->theme_selected && Tools::file_exists_cache($this->translations_informations['modules']['override']['dir'].$module_dir.'/classes/'))
+						$dir = $this->translations_informations['modules']['override']['dir'].$module_dir.'/classes/';
+					elseif (Tools::file_exists_cache($this->translations_informations['modules']['dir'].$module_dir.'/classes/'))
+						$dir = $this->translations_informations['modules']['dir'].$module_dir.'/classes/';
+					if ($dir !== false)
+						$arr_modules[$dir] = scandir($dir);
+				}
+				else
+				{
+					if ($this->theme_selected && Tools::file_exists_cache($this->translations_informations['modules']['override']['dir'].$module_dir.'/pdf/'))
+						$dir = $this->translations_informations['modules']['override']['dir'].$module_dir.'/pdf/';
+					elseif (Tools::file_exists_cache($this->translations_informations['modules']['dir'].$module_dir.'/pdf/'))
+						$dir = $this->translations_informations['modules']['dir'].$module_dir.'/pdf/';
+					if ($dir !== false)
+						$arr_modules[$dir] = scandir($dir);
+				}
 			}
-		}
 		return $arr_modules;
 	}
 
