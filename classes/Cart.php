@@ -1740,7 +1740,18 @@ class CartCore extends ObjectModel
 			if (!$this->allow_seperated_package)
 				$key = 'in_stock';
 			else
+			{
 				$key = $product['in_stock'] ? 'in_stock' : 'out_of_stock';
+				if ($product['in_stock'])
+				{
+					$out_stock_part = $product['cart_quantity'] - $product['in_stock'];
+					$product_bis = $product;
+					$product_bis['cart_quantity'] = $out_stock_part;
+					$product_bis['in_stock'] = 0;
+					$product['cart_quantity'] -= $out_stock_part;
+					$grouped_by_warehouse[$product['id_address_delivery']]['out_of_stock'][$id_warehouse][] = $product_bis;
+				}
+			}
 
 			if (empty($product['carrier_list']))
 				$product['carrier_list'] = array(0);
@@ -3675,7 +3686,7 @@ class CartCore extends ObjectModel
 		{
 			if (!$exclusive)
 			{
-				if ((int)$product['quantity_available'] <= 0
+				if (((int)$product['quantity_available'] - (int)$product['cart_quantity']) <= 0
 					&& (!$ignore_virtual || !$product['is_virtual']))
 					return false;
 			}

@@ -1675,7 +1675,7 @@ class AdminControllerCore extends Controller
 					unset($sub_tabs[$index2]);
 			}
 
-			$tabs[$index]['sub_tabs'] = $sub_tabs;
+			$tabs[$index]['sub_tabs'] = array_values($sub_tabs);
 		}
 
 		if (Validate::isLoadedObject($this->context->employee))
