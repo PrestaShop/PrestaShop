@@ -130,7 +130,7 @@ class ProductControllerCore extends FrontController
 					}
 				}
 			}
-			elseif (!$this->product->checkAccess(isset($this->context->customer) ? $this->context->customer->id : 0))
+			elseif (!$this->product->checkAccess(isset($this->context->customer->id) && $this->context->customer->id ? (int)$this->context->customer->id : 0))
 			{
 				header('HTTP/1.1 403 Forbidden');
 				header('Status: 403 Forbidden');
