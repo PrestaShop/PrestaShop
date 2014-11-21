@@ -205,7 +205,7 @@ class CartControllerCore extends FrontController
 			$this->errors[] = Tools::displayError('Product not found', !Tools::getValue('ajax'));
 
 		$product = new Product($this->id_product, true, $this->context->language->id);
-		if (!$product->id || !$product->active || !$product->checkAccess($this->context->cart->id_customer))
+		if (!$product->id || !$product->active || $product->checkAccess($this->context->cart->id_customer))
 		{
 			$this->errors[] = Tools::displayError('This product is no longer available.', !Tools::getValue('ajax'));
 			return;
