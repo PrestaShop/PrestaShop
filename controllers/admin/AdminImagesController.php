@@ -549,7 +549,7 @@ class AdminImagesControllerCore extends AdminController
 	}
 
 	/* Hook watermark optimization */
-	protected function _regenerateWatermark($dir)
+	protected function _regenerateWatermark($dir, $type)
 	{
 		$result = Db::getInstance()->executeS('
 		SELECT m.`name` FROM `'._DB_PREFIX_.'module` m
@@ -568,7 +568,7 @@ class AdminImagesControllerCore extends AdminController
 					{
 						$moduleInstance = Module::getInstanceByName($module['name']);
 						if ($moduleInstance && is_callable(array($moduleInstance, 'hookActionWatermark')))
-							call_user_func(array($moduleInstance, 'hookActionWatermark'), array('id_image' => $imageObj->id, 'id_product' => $imageObj->id_product));
+							call_user_func(array($moduleInstance, 'hookActionWatermark'), array('id_image' => $imageObj->id, 'id_product' => $imageObj->id_product, 'image_type' => $type));
 
 						if (time() - $this->start_time > $this->max_execution_time - 4) // stop 4 seconds before the tiemout, just enough time to process the end of the page on a slow server
 							return 'timeout';
@@ -622,7 +622,7 @@ class AdminImagesControllerCore extends AdminController
 			else
 			{
 				if ($proc['type'] == 'products')
-					if ($this->_regenerateWatermark($proc['dir']) == 'timeout')
+					if ($this->_regenerateWatermark($proc['dir'], $formats) == 'timeout')
 						$this->errors[] = Tools::displayError('Server timed out. The watermark may not have been applied to all images.');
 				if (!count($this->errors))
 					if ($this->_regenerateNoPictureImages($proc['dir'], $formats, $languages))
