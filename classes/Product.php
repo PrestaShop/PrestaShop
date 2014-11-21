@@ -1552,6 +1552,17 @@ class ProductCore extends ObjectModel
 			$combination->setImages($id_images);
 
 		Tools::clearColorListCache($this->id);
+		
+		if (Configuration::get('PS_DEFAULT_WAREHOUSE_NEW_PRODUCT') != 0 && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+                {
+                        $warehouse_location_entity = new WarehouseProductLocation();
+                        $warehouse_location_entity->id_product = $this->id;
+                        $warehouse_location_entity->id_product_attribute = (int)$combination->id;
+                        $warehouse_location_entity->id_warehouse = Configuration::get('PS_DEFAULT_WAREHOUSE_NEW_PRODUCT');
+                        $warehouse_location_entity->location = pSQL('');
+                        $warehouse_location_entity->save();
+                }
+		
 		return (int)$combination->id;
 	}
 
