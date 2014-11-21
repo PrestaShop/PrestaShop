@@ -544,6 +544,9 @@ class OrderOpcControllerCore extends ParentOrderController
 		if (!$this->context->cart->checkQuantities())
 			return '<p class="warning">'.Tools::displayError('An item in your cart is no longer available. You cannot proceed with your order.').'</p>';
 
+		if ((int)$id_product = $this->context->cart->checkProductsAccess())
+			return '<p class="warning">'.sprintf(Tools::displayError('An item in your cart is no longer available (%s) . You cannot proceed with your order.'), Product::getProductName((int)$id_product)).'</p>';
+
 		/* Check minimal amount */
 		$currency = Currency::getCurrency((int)$this->context->cart->id_currency);
 

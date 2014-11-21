@@ -1552,7 +1552,7 @@ class ProductCore extends ObjectModel
 			$combination->setImages($id_images);
 
 		Tools::clearColorListCache($this->id);
-		
+
 		if (Configuration::get('PS_DEFAULT_WAREHOUSE_NEW_PRODUCT') != 0 && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
                 {
                         $warehouse_location_entity = new WarehouseProductLocation();
@@ -1562,7 +1562,7 @@ class ProductCore extends ObjectModel
                         $warehouse_location_entity->location = pSQL('');
                         $warehouse_location_entity->save();
                 }
-		
+
 		return (int)$combination->id;
 	}
 
@@ -4478,11 +4478,16 @@ class ProductCore extends ObjectModel
 	}
 
 	public function checkAccess($id_customer)
+ 	{
+		self::checkAccessStatic($this->id, $id_customer);
+	}
+
+	public static function checkAccessStatic($id_product, $id_customer)
 	{
 		if (!Group::isFeatureActive())
 			return true;
 
-		$cache_id = 'Product::checkAccess_'.(int)$this->id.'-'.(int)$id_customer.(!$id_customer ? '-'.(int)Group::getCurrent()->id : '');
+		$cache_id = 'Product::checkAccess_'.(int)$id_product.'-'.(int)$id_customer.(!$id_customer ? '-'.(int)Group::getCurrent()->id : '');
 		if (!Cache::isStored($cache_id))
 		{
 			if (!$id_customer)
@@ -4490,14 +4495,14 @@ class ProductCore extends ObjectModel
 				SELECT ctg.`id_group`
 				FROM `'._DB_PREFIX_.'category_product` cp
 				INNER JOIN `'._DB_PREFIX_.'category_group` ctg ON (ctg.`id_category` = cp.`id_category`)
-				WHERE cp.`id_product` = '.(int)$this->id.' AND ctg.`id_group` = '.(int)Group::getCurrent()->id);
+				WHERE cp.`id_product` = '.(int)$id_product.' AND ctg.`id_group` = '.(int)Group::getCurrent()->id);
 			else
 				$result = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT cg.`id_group`
 				FROM `'._DB_PREFIX_.'category_product` cp
 				INNER JOIN `'._DB_PREFIX_.'category_group` ctg ON (ctg.`id_category` = cp.`id_category`)
 				INNER JOIN `'._DB_PREFIX_.'customer_group` cg ON (cg.`id_group` = ctg.`id_group`)
-				WHERE cp.`id_product` = '.(int)$this->id.' AND cg.`id_customer` = '.(int)$id_customer);
+				WHERE cp.`id_product` = '.(int)$id_product.' AND cg.`id_customer` = '.(int)$id_customer);
 			Cache::store($cache_id, $result);
 		}
 		return Cache::retrieve($cache_id);
