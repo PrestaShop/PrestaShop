@@ -319,7 +319,8 @@ class InstallModelInstall extends InstallAbstractModel
 			$params_lang = array(
 				'name' => (string)$xml->name,
 				'iso_code' => substr((string)$xml->language_code, 0, 2),
-				'allow_accented_chars_url' => (string)$xml->allow_accented_chars_url
+				'allow_accented_chars_url' => (string)$xml->allow_accented_chars_url,
+				'is_rtl' => (bool)$xml->is_rtl
 			);
 
 			if (!InstallSession::getInstance()->safe_mode || !Language::downloadAndInstallLanguagePack($iso, _PS_INSTALL_VERSION_, $params_lang))
