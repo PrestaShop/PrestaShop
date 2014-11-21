@@ -541,7 +541,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			return '<p class="warning">'.Tools::displayError('Please accept the Terms of Service.').'</p>';
 
 		/* If some products have disappear */
-		if (is_array($product = $this->context->cart->checkQuantities(true)) ||)
+		if (is_array($product = $this->context->cart->checkQuantities(true)))
 			return '<p class="warning">'.sprintf(Tools::displayError('An item (%s) in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.'), $product['name']).'</p>';
 
 		if ((int)$id_product = $this->context->cart->checkProductsAccess())
