@@ -50,7 +50,7 @@ class PrestaShopAutoload
 	public $index = array();
 
 	public $_include_override_path = true;
-	
+
 	protected static $class_aliases = array(
 		'Collection' => 'PrestaShopCollection',
 		'Autoload' => 'PrestaShopAutoload',
@@ -88,7 +88,7 @@ class PrestaShopAutoload
 	 */
 	public function load($classname)
 	{
-		// Retrocompatibility 
+		// Retrocompatibility
 		if (isset(PrestaShopAutoload::$class_aliases[$classname]) && !interface_exists($classname, false) && !class_exists($classname, false))
 			return eval('class '.$classname.' extends '.PrestaShopAutoload::$class_aliases[$classname].' {}');
 
@@ -102,7 +102,7 @@ class PrestaShopAutoload
 		{
 			$class_dir = (isset($this->index[$classname]['override'])
 				&& $this->index[$classname]['override'] === true) ? $this->normalizeDirectory(_PS_ROOT_DIR_) : $this->root_dir;
-	
+
 			// If requested class does not exist, load associated core class
 			if (isset($this->index[$classname]) && !$this->index[$classname]['path'])
 			{
@@ -213,6 +213,6 @@ class PrestaShopAutoload
 
 	private function normalizeDirectory($directory)
 	{
-		return rtrim($directory, '/\\') .  DIRECTORY_SEPARATOR;
+		return rtrim($directory, '/\\').DIRECTORY_SEPARATOR;
 	}
 }
