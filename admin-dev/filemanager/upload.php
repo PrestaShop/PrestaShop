@@ -66,10 +66,12 @@ if (!empty($_FILES))
 		else
 			$is_img = false;
 
+
+		move_uploaded_file($tempFile, $targetFile);
+		chmod($targetFile, 0755);
 		if ($is_img)
 		{
-			move_uploaded_file($tempFile, $targetFile);
-			chmod($targetFile, 0755);
+			
 
 			$memory_error = false;
 			if (!create_img_gd($targetFile, $targetFileThumb, 122, 91))
