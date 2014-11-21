@@ -399,8 +399,6 @@ class OrderHistoryCore extends ObjectModel
 				'{id_order}' => (int)$this->id_order,
 				'{order_name}' => $order->getUniqReference()
 			);
-			if ($template_vars)
-				$data = array_merge($data, $template_vars);
 
 			if ($result['module_name'])
 			{
@@ -408,6 +406,9 @@ class OrderHistoryCore extends ObjectModel
 				if (Validate::isLoadedObject($module) && isset($module->extra_mail_vars) && is_array($module->extra_mail_vars))
 					$data = array_merge($data, $module->extra_mail_vars);
 			}
+
+			if ($template_vars)
+				$data = array_merge($data, $template_vars);
 
 			$data['{total_paid}'] = Tools::displayPrice((float)$order->total_paid, new Currency((int)$order->id_currency), false);
 			$data['{order_name}'] = $order->getUniqReference();
