@@ -64,9 +64,25 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 		
 		$carrier = new Carrier($this->order->id_carrier);
 		$carrier->name = ($carrier->name == '0' ? Configuration::get('PS_SHOP_NAME') : $carrier->name);
+
+		$order_details = $this->order_invoice->getProducts();
+		if (Configuration::get('PS_PDF_IMG_DELIVERY'))
+			foreach ($order_details as &$order_detail)
+			{
+				if ($order_detail['image'] != null)
+				{
+					$name = 'product_mini_'.(int)$order_detail['product_id'].(isset($order_detail['product_attribute_id']) ? '_'.(int)$order_detail['product_attribute_id'] : '').'.jpg';
+					$order_detail['image_tag'] = ImageManager::thumbnail(_PS_IMG_DIR_.'p/'.$order_detail['image']->getExistingImgPath().'.jpg', $name, 45, 'jpg', false);
+					if (file_exists(_PS_TMP_IMG_DIR_.$name))
+						$order_detail['image_size'] = getimagesize(_PS_TMP_IMG_DIR_.$name);
+					else
+						$order_detail['image_size'] = false;
+				}
+			}
+
 		$this->smarty->assign(array(
 			'order' => $this->order,
-			'order_details' => $this->order_invoice->getProducts(),
+			'order_details' => $order_details,
 			'delivery_address' => $formatted_delivery_address,
 			'invoice_address' => $formatted_invoice_address,
 			'order_invoice' => $this->order_invoice,

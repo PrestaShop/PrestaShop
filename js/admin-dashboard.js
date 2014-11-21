@@ -23,9 +23,9 @@
 */
 
 // This variables are defined in the dashboard view.tpl
-// dashboard_ajax_url 
-// adminstats_ajax_url 
-// no_results_translation 
+// dashboard_ajax_url
+// adminstats_ajax_url
+// no_results_translation
 // dashboard_use_push
 // read_more
 
@@ -140,7 +140,7 @@ function data_table(widget_name, data) {
 		}
 		tr += '</tr>';
 		$('#'+data_id+' thead').html(tr);
-		
+
 		//fill body
 		$('#'+data_id+' tbody').html('');
 
@@ -197,7 +197,7 @@ function getBlogRss() {
 		success : function(jsonData) {
 			if (typeof jsonData !== 'undefined' && jsonData !== null && !jsonData.has_errors) {
 				for (var article in jsonData.rss) {
-					var article_html = '<article><h4><a href="'+jsonData.rss[article].link+'">'+jsonData.rss[article].title+'</a></h4><span class="dash-news-date text-muted">'+jsonData.rss[article].date+'</span><p>'+jsonData.rss[article].short_desc+' <a href="'+jsonData.rss[article].link+'">'+read_more+'</a><p></article><hr/>';
+					var article_html = '<article><h4><a href="'+jsonData.rss[article].link+'" class="_blank">'+jsonData.rss[article].title+'</a></h4><span class="dash-news-date text-muted">'+jsonData.rss[article].date+'</span><p>'+jsonData.rss[article].short_desc+' <a href="'+jsonData.rss[article].link+'">'+read_more+'</a><p></article><hr/>';
 					$('.dash_news .dash_news_content').append(article_html);
 				}
 			}

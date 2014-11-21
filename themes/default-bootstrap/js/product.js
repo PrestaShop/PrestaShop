@@ -232,7 +232,7 @@ $(document).on('click', '#customizedDatas input', function(e){
 	$('#customizedDatas').append(uploading_in_progress);
 });
 
-$(document).on('click', 'a[name=resetImages]', function(e){
+$(document).on('click', 'a[data-id=resetImages]', function(e){
 	e.preventDefault();
 	refreshProductImages(0);
 });
