@@ -120,7 +120,7 @@ class WebserviceOutputXMLCore implements WebserviceOutputInterface
 			if (isset($field['getter']) && $this->schemaToDisplay != 'blank')
 				$ret .= ' notFilterable="true"';
 
-			if (isset($field['setter']) && $field['setter'] == false)
+			if (isset($field['setter']) && $field['setter'] == false && $this->schemaToDisplay != 'synopsis')
 				$ret .= ' read_only="true"';
 
 			if ($field['value'] != '')
