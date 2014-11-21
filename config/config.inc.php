@@ -51,7 +51,7 @@ if (!file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php'))
 		die('Error: "install" directory is missing');
 	exit;
 }
-//include settings file only if we are not in multi-tenancy mode
+/* include settings file only if we are not in multi-tenancy mode */
 require_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
 require_once(_PS_CONFIG_DIR_.'autoload.php');
 
@@ -122,8 +122,8 @@ if (Configuration::get('PS_USE_HTMLPURIFIER'))
 Language::loadLanguages();
 
 /* Loading default country */
-$defaultCountry = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
-$context->country = $defaultCountry;
+$default_country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
+$context->country = $default_country;
 
 /* It is not safe to rely on the system's timezone settings, and this would generate a PHP Strict Standards notice. */
 @date_default_timezone_set(Configuration::get('PS_TIMEZONE'));
@@ -137,7 +137,7 @@ setlocale(LC_TIME, $locale.'.UTF-8', $locale.'.utf8');
 setlocale(LC_NUMERIC, 'en_US.UTF-8', 'en_US.utf8');
 
 /* Instantiate cookie */
-$cookie_lifetime = (int)(defined('_PS_ADMIN_DIR_') ? Configuration::get('PS_COOKIE_LIFETIME_BO') : Configuration::get('PS_COOKIE_LIFETIME_FO'));
+$cookie_lifetime = defined('_PS_ADMIN_DIR_') ? (int)Configuration::get('PS_COOKIE_LIFETIME_BO') : (int)Configuration::get('PS_COOKIE_LIFETIME_FO');
 if ($cookie_lifetime > 0)
 	$cookie_lifetime = time() + (max($cookie_lifetime, 1) * 3600);
 
@@ -202,7 +202,7 @@ if (!defined('_PS_ADMIN_DIR_'))
 	{
 		$customer = new Customer();
 
-		// Change the default group
+		/* Change the default group */
 		if (Group::isFeatureActive())
 			$customer->id_default_group = (int)Configuration::get('PS_UNIDENTIFIED_GROUP');
 	}
@@ -214,19 +214,24 @@ if (!defined('_PS_ADMIN_DIR_'))
 $https_link = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
 $context->link = new Link($https_link, $https_link);
 
-define('_PS_OS_CHEQUE_',      Configuration::get('PS_OS_CHEQUE'));
-define('_PS_OS_PAYMENT_',     Configuration::get('PS_OS_PAYMENT'));
+/**
+ * @deprecated
+ * USE : Configuration::get() method in order to getting the id of order status
+ */
+
+define('_PS_OS_CHEQUE_', Configuration::get('PS_OS_CHEQUE'));
+define('_PS_OS_PAYMENT_', Configuration::get('PS_OS_PAYMENT'));
 define('_PS_OS_PREPARATION_', Configuration::get('PS_OS_PREPARATION'));
-define('_PS_OS_SHIPPING_',    Configuration::get('PS_OS_SHIPPING'));
-define('_PS_OS_DELIVERED_',   Configuration::get('PS_OS_DELIVERED'));
-define('_PS_OS_CANCELED_',    Configuration::get('PS_OS_CANCELED'));
-define('_PS_OS_REFUND_',      Configuration::get('PS_OS_REFUND'));
-define('_PS_OS_ERROR_',       Configuration::get('PS_OS_ERROR'));
-define('_PS_OS_OUTOFSTOCK_',  Configuration::get('PS_OS_OUTOFSTOCK'));
-define('_PS_OS_OUTOFSTOCK_PAID_',  Configuration::get('PS_OS_OUTOFSTOCK_PAID'));
-define('_PS_OS_OUTOFSTOCK_UNPAID_',  Configuration::get('PS_OS_OUTOFSTOCK_UNPAID'));
-define('_PS_OS_BANKWIRE_',    Configuration::get('PS_OS_BANKWIRE'));
-define('_PS_OS_PAYPAL_',      Configuration::get('PS_OS_PAYPAL'));
+define('_PS_OS_SHIPPING_', Configuration::get('PS_OS_SHIPPING'));
+define('_PS_OS_DELIVERED_', Configuration::get('PS_OS_DELIVERED'));
+define('_PS_OS_CANCELED_', Configuration::get('PS_OS_CANCELED'));
+define('_PS_OS_REFUND_', Configuration::get('PS_OS_REFUND'));
+define('_PS_OS_ERROR_', Configuration::get('PS_OS_ERROR'));
+define('_PS_OS_OUTOFSTOCK_', Configuration::get('PS_OS_OUTOFSTOCK'));
+define('_PS_OS_OUTOFSTOCK_PAID_', Configuration::get('PS_OS_OUTOFSTOCK_PAID'));
+define('_PS_OS_OUTOFSTOCK_UNPAID_', Configuration::get('PS_OS_OUTOFSTOCK_UNPAID'));
+define('_PS_OS_BANKWIRE_', Configuration::get('PS_OS_BANKWIRE'));
+define('_PS_OS_PAYPAL_', Configuration::get('PS_OS_PAYPAL'));
 define('_PS_OS_WS_PAYMENT_', Configuration::get('PS_OS_WS_PAYMENT'));
 define('_PS_OS_COD_VALIDATION_', Configuration::get('PS_OS_COD_VALIDATION'));
 
