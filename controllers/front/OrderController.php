@@ -44,6 +44,12 @@ class OrderControllerCore extends ParentOrderController
 
 		$product = $this->context->cart->checkQuantities(true);
 
+		if ($access = $this->context->cart->checkProductsAccess())
+		{
+			$this->step = 0;
+			$this->errors[] = sprintf(Tools::displayError('An item (%1s) in your cart is no longer available.'), Product::getProductName($access));
+		}
+
 		// If some products have disappear
 		if (is_array($product))
 		{
