@@ -211,9 +211,15 @@ class LinkCore
 		// Set available keywords
 		$params = array();
 		$params['id'] = $cms_category->id;
-		$params['rewrite'] = (!$alias) ? $cms_category->link_rewrite : $alias;
-		$params['meta_keywords'] =	Tools::str2url($cms_category->meta_keywords);
-		$params['meta_title'] = Tools::str2url($cms_category->meta_title);
+		$params['rewrite'] = (!$alias) ? (is_array($cms_category->link_rewrite) ? $cms_category->link_rewrite[(int)$id_lang] : $cms_category->link_rewrite) : $alias;
+
+		$params['meta_keywords'] = '';
+		if (isset($cms_category->meta_keywords) && !empty($cms_category->meta_keywords))
+			$params['meta_keywords'] = is_array($cms_category->meta_keywords) ?  Tools::str2url($cms_category->meta_keywords[(int)$id_lang]) :  Tools::str2url($cms_category->meta_keywords);
+
+		$params['meta_title'] = '';
+		if (isset($cms_category->meta_title) && !empty($cms_category->meta_title))
+			$params['meta_title'] = is_array($cms_category->meta_title) ? Tools::str2url($cms_category->meta_title[(int)$id_lang]) : Tools::str2url($cms_category->meta_title);
 
 		return $url.$dispatcher->createUrl('cms_category_rule', $id_lang, $params, $this->allow, '', $id_shop);
 	}
