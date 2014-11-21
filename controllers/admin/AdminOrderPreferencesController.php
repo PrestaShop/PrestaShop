@@ -132,14 +132,14 @@ class AdminOrderPreferencesControllerCore extends AdminController
 				'fields' => array(
 					'PS_PDF_IMG_INVOICE' => array(
 						'title' => $this->l('Enable product image on Invoice'),
-						'hint' => $this->l('Adds a image before productname on Invoice'),
+						'hint' => $this->l('Adds an image before product name on Invoice'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
 					'PS_PDF_IMG_DELIVERY' => array(
 						'title' => $this->l('Enable product image on Delivery-slip'),
-						'hint' => $this->l('Adds a image before productname on Delivery-slip'),
+						'hint' => $this->l('Adds an image before product name on Delivery-slip'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
