@@ -4474,12 +4474,12 @@ class ProductCore extends ObjectModel
 
 	public function getNoPackPrice()
 	{
-		return Pack::noPackPrice($this->id);
+		return Pack::noPackPrice((int)$this->id);
 	}
 
 	public function checkAccess($id_customer)
  	{
-		self::checkAccessStatic($this->id, $id_customer);
+		return Product::checkAccessStatic((int)$this->id, (int)$id_customer);
 	}
 
 	public static function checkAccessStatic($id_product, $id_customer)
@@ -4503,6 +4503,7 @@ class ProductCore extends ObjectModel
 				INNER JOIN `'._DB_PREFIX_.'category_group` ctg ON (ctg.`id_category` = cp.`id_category`)
 				INNER JOIN `'._DB_PREFIX_.'customer_group` cg ON (cg.`id_group` = ctg.`id_group`)
 				WHERE cp.`id_product` = '.(int)$id_product.' AND cg.`id_customer` = '.(int)$id_customer);
+
 			Cache::store($cache_id, $result);
 		}
 		return Cache::retrieve($cache_id);
