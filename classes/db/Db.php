@@ -330,7 +330,7 @@ abstract class DbCore
 
 		$this->result = $this->_query($sql);
 
-		if (!$this->result && $this->getNumberError() == CR_SERVER_GONE_ERROR)
+		if (!$this->result && $this->getNumberError() == 2006)
 		{
 			if ($this->connect())
 				$this->result = $this->_query($sql);
