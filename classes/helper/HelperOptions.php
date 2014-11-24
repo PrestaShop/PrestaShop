@@ -275,6 +275,6 @@ class HelperOptionsCore extends Helper
 
 		if (isset($field['defaultValue']) && !$value)
 			$value = $field['defaultValue'];
-		return Tools::purify($value);
+		return Tools::purifyHTML($value);
 	}
 }
