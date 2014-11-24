@@ -3016,7 +3016,7 @@ class CartCore extends ObjectModel
 
 		foreach ($this->getProducts() as $product)
 		{
-			if ($product['advanced_stock_management'])
+			if ($product['advanced_stock_management'] && (bool)Context::getContext()->customer->isLogged() && !empty($this->getDeliveryOption()))
 				$product['stock_quantity'] = StockManager::getStockByCarrier((int)$product['id_product'], (int)$product['id_product_attribute'], $this->getDeliveryOption());
 			if (!$product['active'] || !$product['available_for_order']
 				|| (!$product['allow_oosp'] && $product['stock_quantity'] < $product['cart_quantity']))
