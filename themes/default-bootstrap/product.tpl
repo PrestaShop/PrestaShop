@@ -389,7 +389,7 @@
 								</button>
 							</p>
 						</div>
-						{if isset($HOOK_PRODUCT_ACTIONS) && $HOOK_PRODUCT_ACTIONS}{$HOOK_PRODUCT_ACTIONS}{/if}<strong></strong>
+						{if isset($HOOK_PRODUCT_ACTIONS) && $HOOK_PRODUCT_ACTIONS}{$HOOK_PRODUCT_ACTIONS}{/if}
 					</div> <!-- end box-cart-bottom -->
 				</div> <!-- end box-info-product -->
 			</form>
