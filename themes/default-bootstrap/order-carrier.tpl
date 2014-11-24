@@ -87,6 +87,7 @@
 														{/if}
 													{/if}
 													{if count($option_list) > 1}
+													<br />
 														{if $option.is_best_grade}
 															{if $option.is_best_price}
 																<span class="best_grade best_grade_price best_grade_speed">{l s='The best price and speed'}</span>

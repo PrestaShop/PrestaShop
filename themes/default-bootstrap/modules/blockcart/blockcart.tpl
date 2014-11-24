@@ -207,7 +207,7 @@
 			<div class="layer_cart_product col-xs-12 col-md-6">
 				<span class="cross" title="{l s='Close window' mod='blockcart'}"></span>
 				<h2>
-					<i class="icon-ok"></i>{l s='Product successfully added to your shopping cart' mod='blockcart'}
+					<i class="icon-check"></i>{l s='Product successfully added to your shopping cart' mod='blockcart'}
 				</h2>
 				<div class="product-image-container layer_cart_img">
 				</div>
