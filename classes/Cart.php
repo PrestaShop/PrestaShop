@@ -189,7 +189,7 @@ class CartCore extends ObjectModel
 		if (!$this->id_shop)
 			$this->id_shop = Context::getContext()->shop->id;
 
-		$return = parent::add($autodate);
+		$return = parent::add($autodate, $null_values);
 		Hook::exec('actionCartSave');
 
 		return $return;
@@ -204,7 +204,7 @@ class CartCore extends ObjectModel
 			unset(self::$_totalWeight[$this->id]);
 
 		$this->_products = null;
-		$return = parent::update();
+		$return = parent::update($null_values);
 		Hook::exec('actionCartSave');
 
 		return $return;
