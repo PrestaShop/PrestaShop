@@ -708,4 +708,23 @@ class StockManagerCore implements StockManagerInterface
 		return $stocks;
 	}
 
+	/**
+	 * For a given product, retrieves the stock in function of the delivery option
+	 *
+	 * @param int $id_product
+	 * @param int $id_product_attribute optional
+	 * @param array $delivery_option
+	 * @return int quantity
+	 */
+	public static function getStockByCarrier($id_product = 0, $id_product_attribute = 0, $delivery_option = null)
+	{
+		if (!(int)$id_product || !is_array($delivery_option) || !is_int($id_product_attribute))
+			return false;
+
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT SUM(s.`usable_quantity`) as quantity
+				FROM '._DB_PREFIX_.'stock s
+				LEFT JOIN '._DB_PREFIX_.'warehouse_carrier wc ON wc.`id_warehouse` = s.`id_warehouse`
+				WHERE s.`id_product` = '.(int)$id_product.' AND s.`id_product_attribute` = '.(int)$id_product_attribute.' AND wc.`id_carrier` IN ('.rtrim($delivery_option[(int)Context::getContext()->cart->id_address_delivery], ',').') GROUP BY s.`id_product`');
+	}
+
 }
