@@ -339,7 +339,7 @@ class StockManagerCore implements StockManagerInterface
 							// break - in LIFO mode, checks only the necessary history to handle the global quantity for the current stock
 							if ($warehouse->management_type == 'LIFO')
 							{
-								$left_quantity_to_check -= (int)$row['physical_quantity'];
+								$left_quantity_to_check -= (int)$row['qty'];
 								if ($left_quantity_to_check <= 0)
 									break;
 							}
