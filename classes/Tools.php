@@ -2241,9 +2241,9 @@ class ToolsCore
 	ExpiresByType application/x-font-otf \"access plus 1 year\"
 </IfModule>
 
-<IfModule mod_header.c>
+<IfModule mod_headers.c>
 	Header unset Etag
-<IfModule mod_header.c>
+</IfModule mod_headers.c>
 FileETag none
 <IfModule mod_deflate.c>
 	<IfModule mod_filter.c>
