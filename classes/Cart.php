@@ -3022,6 +3022,19 @@ class CartCore extends ObjectModel
 		return true;
 	}
 
+	public function checkProductsAccess()
+	{
+		if (Configuration::get('PS_CATALOG_MODE'))
+			return true;
+
+		foreach ($this->getProducts() as $product)
+			if (!Product::checkAccessStatic($product['id_product'], $this->id_customer))
+				return $product['id_product'];
+
+		return false;
+	}
+
+
 	public static function lastNoneOrderedCart($id_customer)
 	{
 		$sql = 'SELECT c.`id_cart`

@@ -305,7 +305,7 @@ class OrderOpcControllerCore extends ParentOrderController
 		}
 		elseif (Tools::isSubmit('ajax'))
 		{
-			$this->errors[] = Tools::displayError('No product in your cart.');
+			$this->errors[] = Tools::displayError('There is no product in your cart.');
 			$this->ajaxDie('{"hasError" : true, "errors" : ["'.implode('\',\'', $this->errors).'"]}');
 		}
 	}
@@ -529,9 +529,9 @@ class OrderOpcControllerCore extends ParentOrderController
 		if (count($this->context->cart->getDeliveryOptionList()) == 0 && !$this->context->cart->isVirtualCart())
 		{
 			if ($this->context->cart->isMultiAddressDelivery())
-				return '<p class="warning">'.Tools::displayError('Error: None of your chosen carriers deliver to some of  the addresses you\'ve selected.').'</p>';
+				return '<p class="warning">'.Tools::displayError('Error: None of your chosen carriers deliver to some of the addresses you have selected.').'</p>';
 			else
-				return '<p class="warning">'.Tools::displayError('Error: None of your chosen carriers deliver to the address you\'ve selected.').'</p>';
+				return '<p class="warning">'.Tools::displayError('Error: None of your chosen carriers deliver to the address you have selected.').'</p>';
 		}
 		if (!$this->context->cart->getDeliveryOption(null, false) && !$this->context->cart->isVirtualCart())
 			return '<p class="warning">'.Tools::displayError('Error: Please choose a carrier.').'</p>';
@@ -541,8 +541,11 @@ class OrderOpcControllerCore extends ParentOrderController
 			return '<p class="warning">'.Tools::displayError('Please accept the Terms of Service.').'</p>';
 
 		/* If some products have disappear */
-		if (!$this->context->cart->checkQuantities())
-			return '<p class="warning">'.Tools::displayError('An item in your cart is no longer available. You cannot proceed with your order.').'</p>';
+		if (is_array($product = $this->context->cart->checkQuantities(true)))
+			return '<p class="warning">'.sprintf(Tools::displayError('An item (%s) in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.'), $product['name']).'</p>';
+
+		if ((int)$id_product = $this->context->cart->checkProductsAccess())
+			return '<p class="warning">'.sprintf(Tools::displayError('An item in your cart is no longer available (%s). You cannot proceed with your order.'), Product::getProductName((int)$id_product)).'</p>';
 
 		/* Check minimal amount */
 		$currency = Currency::getCurrency((int)$this->context->cart->id_currency);
@@ -550,7 +553,7 @@ class OrderOpcControllerCore extends ParentOrderController
 		$minimal_purchase = Tools::convertPrice((float)Configuration::get('PS_PURCHASE_MINIMUM'), $currency);
 		if ($this->context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS) < $minimal_purchase)
 			return '<p class="warning">'.sprintf(
-				Tools::displayError('A minimum purchase total of %1s (tax excl.) is required in order to validate your order, current purchase total is %2s (tax excl.).'),
+				Tools::displayError('A minimum purchase total of %1s (tax excl.) is required to validate your order, current purchase total is %2s (tax excl.).'),
 				Tools::displayPrice($minimal_purchase, $currency), Tools::displayPrice($this->context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS), $currency)
 			).'</p>';
 

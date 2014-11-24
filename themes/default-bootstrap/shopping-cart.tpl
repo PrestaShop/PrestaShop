@@ -466,8 +466,10 @@
 
 	{if $show_option_allow_separate_package}
 	<p>
-		<input type="checkbox" name="allow_seperated_package" id="allow_seperated_package" {if $cart->allow_seperated_package}checked="checked"{/if} autocomplete="off"/>
-		<label for="allow_seperated_package">{l s='Send available products first'}</label>
+		<label for="allow_seperated_package" class="checkbox inline">
+			<input type="checkbox" name="allow_seperated_package" id="allow_seperated_package" {if $cart->allow_seperated_package}checked="checked"{/if} autocomplete="off"/>
+			{l s='Send available products first'}
+		</label>
 	</p>
 	{/if}
 
