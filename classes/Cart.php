@@ -942,7 +942,7 @@ class CartCore extends ObjectModel
 
 		// refresh cache of self::_products
 		$this->_products = $this->getProducts(true);
-		$this->update(true);
+		$this->update();
 		$context = Context::getContext()->cloneContext();
 		$context->cart = $this;
 		Cache::clean('getContextualValue_*');
@@ -1007,7 +1007,7 @@ class CartCore extends ObjectModel
 		}
 		// refresh cache of self::_products
 		$this->_products = $this->getProducts(true);
-		$this->update(true);
+		$this->update();
 		return true;
 	}
 
@@ -1185,7 +1185,7 @@ class CartCore extends ObjectModel
 
 		if ($result)
 		{
-			$return = $this->update(true);
+			$return = $this->update();
 			// refresh cache of self::_products
 			$this->_products = $this->getProducts(true);
 			CartRule::autoRemoveFromCart();
