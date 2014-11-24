@@ -2444,9 +2444,9 @@ class AdminControllerCore extends Controller
 			$this->redirect_after = $url['path'].'?'.http_build_query($parse_query, '', '&');
 		}
 		elseif (!Shop::isFeatureActive())
-			$this->context->cookie->shopContext = 's-'.Configuration::get('PS_SHOP_DEFAULT');
+			$this->context->cookie->shopContext = 's-'.(int)Configuration::get('PS_SHOP_DEFAULT');
 		elseif (Shop::getTotalShops(false, null) < 2)
-			$this->context->cookie->shopContext = 's-'.$this->context->employee->getDefaultShopID();
+			$this->context->cookie->shopContext = 's-'.(int)$this->context->employee->getDefaultShopID();
 
 		$shop_id = '';
 		Shop::setContext(Shop::CONTEXT_ALL);
@@ -2489,12 +2489,12 @@ class AdminControllerCore extends Controller
 
 		// Replace existing shop if necessary
 		if (!$shop_id)
-			$this->context->shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+			$this->context->shop = new Shop((int)Configuration::get('PS_SHOP_DEFAULT'));
 		elseif ($this->context->shop->id != $shop_id)
-			$this->context->shop = new Shop($shop_id);
+			$this->context->shop = new Shop((int)$shop_id);
 
 		if ($this->context->shop->id_theme != $this->context->theme->id)
-			$this->context->theme = new Theme($this->context->shop->id_theme);
+			$this->context->theme = new Theme((int)$this->context->shop->id_theme);
 
 		// Replace current default country
 		$this->context->country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
@@ -2847,7 +2847,7 @@ class AdminControllerCore extends Controller
 			if ($id_lang_shop)
 			{
 				if (!Shop::isFeatureActive())
-					$lang_join .= ' AND b.`id_shop` = '.Configuration::get('PS_SHOP_DEFAULT');
+					$lang_join .= ' AND b.`id_shop` = '.(int)Configuration::get('PS_SHOP_DEFAULT');
 				elseif (Shop::getContext() == Shop::CONTEXT_SHOP)
 					$lang_join .= ' AND b.`id_shop` = '.(int)$id_lang_shop;
 				else
