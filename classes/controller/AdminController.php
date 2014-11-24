@@ -39,7 +39,7 @@ class AdminControllerCore extends Controller
 	public $allow_employee_form_lang;
 
 	public $layout = 'layout.tpl';
-	public $bootstrap = false ;
+	public $bootstrap = false;
 
 	protected $meta_title;
 
@@ -282,7 +282,7 @@ class AdminControllerCore extends Controller
 	 */
 	protected $breadcrumbs;
 
-	//Bootstrap variable
+	/* Bootstrap variable */
 	public $show_page_header_toolbar = false;
 	public $page_header_toolbar_title;
 	public $page_header_toolbar_btn = array();
@@ -459,7 +459,7 @@ class AdminControllerCore extends Controller
 
 		$this->context->smarty->assign(array(
 			'breadcrumbs2' => $breadcrumbs2,
-			'quick_access_current_link_name' => $breadcrumbs2['tab']['name'].(isset($breadcrumbs2['action']) ? ' - '. $breadcrumbs2['action']['name'] : ''),
+			'quick_access_current_link_name' => $breadcrumbs2['tab']['name'].(isset($breadcrumbs2['action']) ? ' - '.$breadcrumbs2['action']['name'] : ''),
 			'quick_access_current_link_icon' => $breadcrumbs2['container']['icon']
 		));
 
@@ -773,7 +773,6 @@ class AdminControllerCore extends Controller
 
 	public function processExport($text_delimiter = '"')
 	{
-
 		// clean buffer
 		if (ob_get_level() && ob_get_length() > 0)
 			ob_clean();
@@ -1065,7 +1064,7 @@ class AdminControllerCore extends Controller
 			if ($object->toggleStatus())
 			{
 				$matches = array();
-				if (preg_match('/[\?|&]controller=([^&]*)/', (string)$_SERVER['HTTP_REFERER'], $matches) !== FALSE
+				if (preg_match('/[\?|&]controller=([^&]*)/', (string)$_SERVER['HTTP_REFERER'], $matches) !== false
 					&& strtolower($matches[1]) != strtolower(preg_replace('/controller/i', '', get_class($this))))
 						$this->redirect_after = preg_replace('/[\?|&]conf=([^&]*)/i', '', (string)$_SERVER['HTTP_REFERER']);
 				else
@@ -1656,25 +1655,24 @@ class AdminControllerCore extends Controller
 					}
 				}
 
-				if (Tab::checkTabRights($sub_tab['id_tab']) === true && (bool)$sub_tab['active'] && $sub_tab['class_name'] != 'AdminCarrierWizard')
 				// class_name is the name of the class controller
+				if (Tab::checkTabRights($sub_tab['id_tab']) === true && (bool)$sub_tab['active'] && $sub_tab['class_name'] != 'AdminCarrierWizard')
 				{
 					$sub_tabs[$index2]['href'] = $this->context->link->getAdminLink($sub_tab['class_name']);
 					$sub_tabs[$index2]['current'] = ($sub_tab['class_name'].'Controller' == get_class($this) || $sub_tab['class_name'] == Tools::getValue('controller'));
 				}
 				elseif ($sub_tab['class_name'] == 'AdminCarrierWizard' && $sub_tab['class_name'].'Controller' == get_class($this))
 				{
-					foreach ($sub_tabs as $i => $tab) {
-						if($tab['class_name'] == 'AdminCarriers')
+					foreach ($sub_tabs as $i => $tab)
+						if ($tab['class_name'] == 'AdminCarriers')
 							break;
-					}
+
 					$sub_tabs[$i]['current'] = true;
 					unset($sub_tabs[$index2]);
 				}
 				else
 					unset($sub_tabs[$index2]);
 			}
-
 			$tabs[$index]['sub_tabs'] = array_values($sub_tabs);
 		}
 
@@ -1692,7 +1690,7 @@ class AdminControllerCore extends Controller
 				'bo_color' => isset($this->context->employee->bo_color) ? Tools::htmlentitiesUTF8($this->context->employee->bo_color) : null,
 				'show_new_orders' => Configuration::get('PS_SHOW_NEW_ORDERS') && isset($accesses['AdminOrders']) && $accesses['AdminOrders']['view'],
 				'show_new_customers' => Configuration::get('PS_SHOW_NEW_CUSTOMERS') && isset($accesses['AdminCustomers']) && $accesses['AdminCustomers']['view'],
-				'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES') && isset($accesses['AdminCustomerThreads'])&& $accesses['AdminCustomerThreads']['view'],
+				'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES') && isset($accesses['AdminCustomerThreads']) && $accesses['AdminCustomerThreads']['view'],
 				'employee' => $this->context->employee,
 				'search_type' => Tools::getValue('bo_search_type'),
 				'bo_query' => Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query'))),
@@ -1809,9 +1807,8 @@ class AdminControllerCore extends Controller
 			$this->content .= $this->renderView();
 		}
 		elseif ($this->display == 'details')
-		{
 			$this->content .= $this->renderDetails();
-		}
+
 		elseif (!$this->ajax)
 		{
 			$this->content .= $this->renderModulesList();
@@ -1990,12 +1987,12 @@ class AdminControllerCore extends Controller
 				.'&utm_source=back-office&utm_medium=connect-to-addons'
 				.'&utm_campaign=back-office-'.Tools::strtoupper($this->context->language->iso_code)
 				.'&utm_content='.(defined('_PS_HOST_MODE_') ? 'ondemand' : 'download').'#createnow',
-			'addons_forgot_password_link' => "//addons.prestashop.com/".$this->context->language->iso_code."/forgot-your-password"
+			'addons_forgot_password_link' => '//addons.prestashop.com/'.$this->context->language->iso_code.'/forgot-your-password'
 		));
 
 		$this->modals[] = array(
-			'modal_id' => "modal_addons_connect",
-			'modal_class' => "modal-md",
+			'modal_id' => 'modal_addons_connect',
+			'modal_class' => 'modal-md',
 			'modal_title' => '<i class="icon-puzzle-piece"></i> <a target="_blank" href="http://addons.prestashop.com/'
 			.'?utm_source=back-office&utm_medium=modules'
 			.'&utm_campaign=back-office-'.Tools::strtoupper($this->context->language->iso_code)
@@ -2290,8 +2287,11 @@ class AdminControllerCore extends Controller
 		$this->helper = $helper;
 	}
 
-	// @deprecated 1.6.0
-	public function setDeprecatedMedia(){}
+	/* @deprecated 1.6.0 */
+	public function setDeprecatedMedia()
+	{
+
+	}
 
 	public function setMedia()
 	{
@@ -2444,9 +2444,9 @@ class AdminControllerCore extends Controller
 			$this->redirect_after = $url['path'].'?'.http_build_query($parse_query, '', '&');
 		}
 		elseif (!Shop::isFeatureActive())
-			$this->context->cookie->shopContext = 's-'.Configuration::get('PS_SHOP_DEFAULT');
+			$this->context->cookie->shopContext = 's-'.(int)Configuration::get('PS_SHOP_DEFAULT');
 		elseif (Shop::getTotalShops(false, null) < 2)
-			$this->context->cookie->shopContext = 's-'.$this->context->employee->getDefaultShopID();
+			$this->context->cookie->shopContext = 's-'.(int)$this->context->employee->getDefaultShopID();
 
 		$shop_id = '';
 		Shop::setContext(Shop::CONTEXT_ALL);
@@ -2489,12 +2489,12 @@ class AdminControllerCore extends Controller
 
 		// Replace existing shop if necessary
 		if (!$shop_id)
-			$this->context->shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+			$this->context->shop = new Shop((int)Configuration::get('PS_SHOP_DEFAULT'));
 		elseif ($this->context->shop->id != $shop_id)
-			$this->context->shop = new Shop($shop_id);
+			$this->context->shop = new Shop((int)$shop_id);
 
 		if ($this->context->shop->id_theme != $this->context->theme->id)
-			$this->context->theme = new Theme($this->context->shop->id_theme);
+			$this->context->theme = new Theme((int)$this->context->shop->id_theme);
 
 		// Replace current default country
 		$this->context->country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
@@ -2847,7 +2847,7 @@ class AdminControllerCore extends Controller
 			if ($id_lang_shop)
 			{
 				if (!Shop::isFeatureActive())
-					$lang_join .= ' AND b.`id_shop` = 1';
+					$lang_join .= ' AND b.`id_shop` = '.(int)Configuration::get('PS_SHOP_DEFAULT');
 				elseif (Shop::getContext() == Shop::CONTEXT_SHOP)
 					$lang_join .= ' AND b.`id_shop` = '.(int)$id_lang_shop;
 				else
@@ -2923,9 +2923,8 @@ class AdminControllerCore extends Controller
 					break;
 			}
 			else
-			{
 				break;
-			}
+
 		} while (empty($this->_list));
 
 		Hook::exec('action'.$this->controller_name.'ListingResultsModifier', array(
@@ -3111,7 +3110,6 @@ class AdminControllerCore extends Controller
 					$this->errors[$field] = $error;
 		}
 
-
 		/* Overload this method for custom checking */
 		$this->_childValidation();
 
@@ -3219,14 +3217,11 @@ class AdminControllerCore extends Controller
 		if (isset($class_vars['definition']['fields']))
 			$fields = $class_vars['definition']['fields'];
 
-		foreach ($fields as $field => $params) {
-			if (array_key_exists('lang', $params) && $params['lang']) {
-				foreach ($languages as $language) {
+		foreach ($fields as $field => $params)
+			if (array_key_exists('lang', $params) && $params['lang'])
+				foreach ($languages as $language)
 					if (Tools::isSubmit($field.'_'.(int)$language['id_lang']))
 						$object->{$field}[(int)$language['id_lang']] = Tools::getValue($field.'_'.(int)$language['id_lang']);
-				}
-			}
-		}
 	}
 
 	/**
@@ -3434,7 +3429,7 @@ class AdminControllerCore extends Controller
 	protected function ajaxProcessOpenHelp()
 	{
 		$help_class_name = $_GET['controller'];
-		$popupContent = "<!doctype html>
+		$popup_content = "<!doctype html>
 		<html>
 			<head>
 				<meta charset='UTF-8'>
@@ -3457,7 +3452,7 @@ class AdminControllerCore extends Controller
 			</head>
 			<body><div id='help-container' class='help-popup'></div></body>
 		</html>";
-		die($popupContent);
+		die($popup_content);
 	}
 
 	/**
@@ -3673,8 +3668,8 @@ class AdminControllerCore extends Controller
 			$this->translationsTab['Configure'] = $this->l('Configure');
 			$this->translationsTab['Delete'] = $this->l('Delete');
 			$this->translationsTab['Install'] = $this->l('Install');
-			$this->translationsTab['Uninstall'] =  $this->l('Uninstall');
-			$this->translationsTab['Would you like to delete the content related to this module ?'] =  $this->l('Would you like to delete the content related to this module ?');
+			$this->translationsTab['Uninstall'] = $this->l('Uninstall');
+			$this->translationsTab['Would you like to delete the content related to this module ?'] = $this->l('Would you like to delete the content related to this module ?');
 			$this->translationsTab['This action will permanently remove the module from the server. Are you sure you want to do this?'] = $this->l('This action will permanently remove the module from the server. Are you sure you want to do this?');
 			$this->translationsTab['Remove from Favorites'] = $this->l('Remove from Favorites');
 			$this->translationsTab['Mark as Favorite'] = $this->l('Mark as Favorite');
@@ -3875,8 +3870,8 @@ class AdminControllerCore extends Controller
 				if ($output_type == 'link')
 				{
 					$return .= '<li><a class="'.$option_name.' action_module';
-					$return .='" href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'"';
-					$return .=' onclick="'.$option['onclick'].'"  title="'.$option['title'].'"><i class="icon-'.(isset($option['icon']) && $option['icon'] ? $option['icon']:'cog' ).'"></i>&nbsp;'.$option['text'].'</a></li>';
+					$return .= '" href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'"';
+					$return .= ' onclick="'.$option['onclick'].'"  title="'.$option['title'].'"><i class="icon-'.(isset($option['icon']) && $option['icon'] ? $option['icon']:'cog' ).'"></i>&nbsp;'.$option['text'].'</a></li>';
 				}
 				elseif ($output_type == 'array')
 				{
