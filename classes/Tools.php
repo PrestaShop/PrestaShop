@@ -2243,7 +2243,7 @@ class ToolsCore
 
 <IfModule mod_headers.c>
 	Header unset Etag
-</IfModule mod_headers.c>
+</IfModule>
 FileETag none
 <IfModule mod_deflate.c>
 	<IfModule mod_filter.c>
