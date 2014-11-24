@@ -339,6 +339,9 @@ class ConfigurationCore extends ObjectModel
 		if (!is_array($values))
 			$values = array($values);
 
+		if ($html)
+			$html = Tools::purifyHTML($html);
+
 		$result = true;
 		foreach ($values as $lang => $value)
 		{
@@ -395,7 +398,7 @@ class ConfigurationCore extends ObjectModel
 				{
 					$result &= Db::getInstance()->insert(self::$definition['table'].'_lang', array(
 						self::$definition['primary'] => $configID,
-						'id_lang' => $lang,
+						'id_lang' => (int)$lang,
 						'value' => pSQL($value, $html),
 						'date_upd' => date('Y-m-d H:i:s'),
 					));
