@@ -34,8 +34,8 @@
     <hook id="displayHome" live_edit="1">
       <name>displayHome</name><title>Homepage content</title><description>This hook displays new elements on the homepage</description>
     </hook>
-    <hook id="displayHeader" live_edit="0">
-      <name>displayHeader</name><title>Pages header</title><description>This hook displays additional elements in the header of your pages</description>
+    <hook id="Header" live_edit="0">
+      <name>Header</name><title>Pages html head section</title><description>This hook adds additional elements in the head section of your pages (head section of html)</description>
     </hook>
     <hook id="actionCartSave" live_edit="0">
       <name>actionCartSave</name><title>Cart creation and update</title><description>This hook is displayed when a product is added to the cart or if the cart's content is modified</description>
@@ -50,7 +50,7 @@
       <name>actionProductUpdate</name><title>Product update</title><description>This hook is displayed after a product has been updated</description>
     </hook>
     <hook id="displayTop" live_edit="0">
-      <name>displayTop</name><title>Top of pages</title><description>This hook displays  additional elements at the top of your pages</description>
+      <name>displayTop</name><title>Top of pages</title><description>This hook displays additional elements at the top of your pages</description>
     </hook>
     <hook id="displayRightColumnProduct" live_edit="0">
       <name>displayRightColumnProduct</name><title>New elements on the product page (right column)</title><description>This hook displays new elements in the right-hand column of the product page</description>
