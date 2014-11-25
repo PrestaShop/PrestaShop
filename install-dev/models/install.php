@@ -456,7 +456,7 @@ class InstallModelInstall extends InstallAbstractModel
 			foreach ($states as $key => $state)
 				if (Configuration::get($states_default[$key]) != $states[$key]['id_order_state'])
 					Configuration::updateGlobalValue($states_default[$key], (int)$states[$key]['id_order_state']);
-			/* deprectad order state */
+			/* deprecated order state */
 			Configuration::updateGlobalValue('PS_OS_OUTOFSTOCK_PAID', (int)Configuration::get('PS_OS_OUTOFSTOCK'));
 		}
 
