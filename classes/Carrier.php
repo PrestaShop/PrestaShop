@@ -1241,7 +1241,7 @@ class CarrierCore extends ObjectModel
 
 		foreach ($cart->getProducts(false, $product->id) as $cart_product)
 			if ($cart_product['id_product'] == $product->id)
-				$cart_quantity = $cart_product['cart_quantity'];
+				$cart_quantity += $cart_product['cart_quantity'];
 
 		if ($product->width > 0 || $product->height > 0 || $product->depth > 0 || $product->weight > 0)
 		{
