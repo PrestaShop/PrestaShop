@@ -721,10 +721,27 @@ class StockManagerCore implements StockManagerInterface
 		if (!(int)$id_product || !is_array($delivery_option) || !is_int($id_product_attribute))
 			return false;
 
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT SUM(s.`usable_quantity`) as quantity
-				FROM '._DB_PREFIX_.'stock s
-				LEFT JOIN '._DB_PREFIX_.'warehouse_carrier wc ON wc.`id_warehouse` = s.`id_warehouse`
-				WHERE s.`id_product` = '.(int)$id_product.' AND s.`id_product_attribute` = '.(int)$id_product_attribute.' AND wc.`id_carrier` IN ('.rtrim($delivery_option[(int)Context::getContext()->cart->id_address_delivery], ',').') GROUP BY s.`id_product`');
-	}
+		$results = Warehouse::getWarehousesByProductId($id_product, $id_product_attribute);
+		$stock_quantity = 0;
 
+		foreach ($results as $result)
+			if (isset($result['id_warehouse']) && (int)$result['id_warehouse'])
+			{
+				$ws = new Warehouse((int)$result['id_warehouse']);
+				$carriers = $ws->getWsCarriers();
+
+				if (is_array($carriers) && !empty($carriers))
+					$stock_quantity += Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT SUM(s.`usable_quantity`) as quantity
+						FROM '._DB_PREFIX_.'stock s
+						LEFT JOIN '._DB_PREFIX_.'warehouse_carrier wc ON wc.`id_warehouse` = s.`id_warehouse`
+						WHERE s.`id_product` = '.(int)$id_product.' AND s.`id_product_attribute` = '.(int)$id_product_attribute.' AND s.`id_warehouse` = '.$result['id_warehouse'].' AND wc.`id_carrier` IN ('.rtrim($delivery_option[(int)Context::getContext()->cart->id_address_delivery], ',').') GROUP BY s.`id_product`');
+				else
+					$stock_quantity += Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT SUM(s.`usable_quantity`) as quantity
+						FROM '._DB_PREFIX_.'stock s
+						WHERE s.`id_product` = '.(int)$id_product.' AND s.`id_product_attribute` = '.(int)$id_product_attribute.' AND s.`id_warehouse` = '.$result['id_warehouse'].' GROUP BY s.`id_product`');
+			}
+
+		return $stock_quantity;
+	}
+	
 }
