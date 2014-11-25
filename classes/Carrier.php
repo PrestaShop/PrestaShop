@@ -1239,6 +1239,8 @@ class CarrierCore extends ObjectModel
 		if (isset($warehouse_carrier_list) && count($warehouse_carrier_list))
 			$carrier_list = array_intersect($carrier_list, $warehouse_carrier_list);
 
+		$cart_quantity = 0;
+
 		foreach ($cart->getProducts(false, $product->id) as $cart_product)
 			if ($cart_product['id_product'] == $product->id)
 				$cart_quantity += $cart_product['cart_quantity'];
