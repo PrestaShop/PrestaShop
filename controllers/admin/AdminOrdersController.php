@@ -635,14 +635,17 @@ class AdminOrdersControllerCore extends AdminController
 		{
 			if ($this->tabAccess['edit'] == '1')
 			{
-				if (is_array($_POST['partialRefundProduct']))
+				if (Tools::isSubmit('partialRefundProduct') && ($refunds = Tools::getValue('partialRefundProduct')) && is_array($refunds))
 				{
 					$amount = 0;
 					$order_detail_list = array();
-					foreach ($_POST['partialRefundProduct'] as $id_order_detail => $amount_detail)
+					foreach ($refunds as $id_order_detail => $amount_detail)
 					{
+						if (!Tools::getValue('partialRefundProductQuantity')[$id_order_detail])
+							continue;
+
 						$order_detail_list[$id_order_detail] = array(
-							'quantity' => (int)$_POST['partialRefundProductQuantity'][$id_order_detail],
+							'quantity' => (int)Tools::getValue('partialRefundProductQuantity')[$id_order_detail],
 							'id_order_detail' => (int)$id_order_detail
 						);
 
