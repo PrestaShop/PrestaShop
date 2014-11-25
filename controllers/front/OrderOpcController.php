@@ -51,14 +51,13 @@ class OrderOpcControllerCore extends ParentOrderController
 			{
 				if (Tools::isSubmit('method'))
 				{
-
 					switch (Tools::getValue('method'))
 					{
 						case 'updateMessage':
 							if (Tools::isSubmit('message'))
 							{
-								$txtMessage = urldecode(Tools::getValue('message'));
-								$this->_updateMessage($txtMessage);
+								$txt_message = urldecode(Tools::getValue('message'));
+								$this->_updateMessage($txt_message);
 								if (count($this->errors))
 									$this->ajaxDie('{"hasError" : true, "errors" : ["'.implode('\',\'', $this->errors).'"]}');
 								$this->ajaxDie(true);
@@ -144,22 +143,22 @@ class OrderOpcControllerCore extends ParentOrderController
 								if (file_exists(_PS_MODULE_DIR_.'blockuserinfo/blockuserinfo.php'))
 								{
 									include_once(_PS_MODULE_DIR_.'blockuserinfo/blockuserinfo.php');
-									$blockUserInfo = new BlockUserInfo();
+									$block_user_info = new BlockUserInfo();
 								}
 								$this->context->smarty->assign('isVirtualCart', $this->context->cart->isVirtualCart());
 								$this->_processAddressFormat();
 								$this->_assignAddress();
 
-								if (!($formatedAddressFieldsValuesList = $this->context->smarty->getTemplateVars('formatedAddressFieldsValuesList')))
-									$formatedAddressFieldsValuesList = array();
+								if (!($formated_address_fields_values_list = $this->context->smarty->getTemplateVars('formatedAddressFieldsValuesList')))
+									$formated_address_fields_values_list = array();
 
 								// Wrapping fees
 								$wrapping_fees = $this->context->cart->getGiftWrappingPrice(false);
 								$wrapping_fees_tax_inc = $this->context->cart->getGiftWrappingPrice();
 								$return = array_merge(array(
 									'order_opc_adress' => $this->context->smarty->fetch(_PS_THEME_DIR_.'order-address.tpl'),
-									'block_user_info' => (isset($blockUserInfo) ? $blockUserInfo->hookDisplayTop(array()) : ''),
-									'formatedAddressFieldsValuesList' => $formatedAddressFieldsValuesList,
+									'block_user_info' => (isset($block_user_info) ? $block_user_info->hookDisplayTop(array()) : ''),
+									'formatedAddressFieldsValuesList' => $formated_address_fields_values_list,
 									'carrier_data' => $this->_getCarrierList(),
 									'HOOK_TOP_PAYMENT' => Hook::exec('displayPaymentTop'),
 									'HOOK_PAYMENT' => $this->_getPaymentMethods(),
@@ -248,7 +247,7 @@ class OrderOpcControllerCore extends ParentOrderController
 										$result = array_merge($result, array(
 											'HOOK_TOP_PAYMENT' => Hook::exec('displayPaymentTop'),
 											'HOOK_PAYMENT' => $this->_getPaymentMethods(),
-											'gift_price' => Tools::displayPrice(Tools::convertPrice(Product::getTaxCalculationMethod() == 1 ? $wrapping_fees : $wrapping_fees_tax_inc, new Currency((int)($this->context->cookie->id_currency)))),
+											'gift_price' => Tools::displayPrice(Tools::convertPrice(Product::getTaxCalculationMethod() == 1 ? $wrapping_fees : $wrapping_fees_tax_inc, new Currency((int)$this->context->cookie->id_currency))),
 											'carrier_data' => $this->_getCarrierList(),
 											'refresh' => (bool)$this->ajax_refresh),
 											$this->getFormatedSummaryDetail()
@@ -379,7 +378,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			'PS_GUEST_CHECKOUT_ENABLED' => Configuration::get('PS_GUEST_CHECKOUT_ENABLED'),
 			'errorCarrier' => Tools::displayError('You must choose a carrier.', false),
 			'errorTOS' => Tools::displayError('You must accept the Terms of Service.', false),
-			'isPaymentStep' => (bool)(isset($_GET['isPaymentStep']) && $_GET['isPaymentStep']),
+			'isPaymentStep' => isset($_GET['isPaymentStep']) && $_GET['isPaymentStep'],
 			'genders' => Gender::getGenders(),
 			'one_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'),
 			'HOOK_CREATE_ACCOUNT_FORM' => Hook::exec('displayCustomerAccountForm'),
@@ -489,11 +488,11 @@ class OrderOpcControllerCore extends ParentOrderController
 		if (!$this->isLogged)
 		{
 			$carriers = $this->context->cart->simulateCarriersOutput();
-			$oldMessage = Message::getMessageByCartId((int)$this->context->cart->id);
+			$old_message = Message::getMessageByCartId((int)$this->context->cart->id);
 			$this->context->smarty->assign(array(
 				'HOOK_EXTRACARRIER' => null,
 				'HOOK_EXTRACARRIER_ADDR' => null,
-				'oldMessage' => isset($oldMessage['message'])? $oldMessage['message'] : '',
+				'oldMessage' => isset($old_message['message'])? $old_message['message'] : '',
 				'HOOK_BEFORECARRIER' => Hook::exec('displayBeforeCarrier', array(
 					'carriers' => $carriers,
 					'checked' => $this->context->cart->simulateCarrierSelectedOutput(),
@@ -583,7 +582,7 @@ class OrderOpcControllerCore extends ParentOrderController
 
 		$wrapping_fees = $this->context->cart->getGiftWrappingPrice(false);
 		$wrapping_fees_tax_inc = $this->context->cart->getGiftWrappingPrice();
-		$oldMessage = Message::getMessageByCartId((int)$this->context->cart->id);
+		$old_message = Message::getMessageByCartId((int)$this->context->cart->id);
 
 		$free_shipping = false;
 		foreach ($this->context->cart->getCartRules() as $rule)
@@ -615,7 +614,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			'delivery_option' => $delivery_option,
 			'address_collection' => $this->context->cart->getAddressCollection(),
 			'opc' => true,
-			'oldMessage' => isset($oldMessage['message'])? $oldMessage['message'] : '',
+			'oldMessage' => isset($old_message['message'])? $old_message['message'] : '',
 			'HOOK_BEFORECARRIER' => Hook::exec('displayBeforeCarrier', array(
 				'carriers' => $carriers,
 				'delivery_option_list' => $this->context->cart->getDeliveryOptionList(),
@@ -627,7 +626,7 @@ class OrderOpcControllerCore extends ParentOrderController
 
 		$this->context->smarty->assign($vars);
 
-		if (!Address::isCountryActiveById((int)($this->context->cart->id_address_delivery)) && $this->context->cart->id_address_delivery != 0)
+		if (!Address::isCountryActiveById((int)$this->context->cart->id_address_delivery) && $this->context->cart->id_address_delivery != 0)
 			$this->errors[] = Tools::displayError('This address is not in a valid area.');
 		elseif ((!Validate::isLoadedObject($address_delivery) || $address_delivery->deleted) && $this->context->cart->id_address_delivery != 0)
 			$this->errors[] = Tools::displayError('This address is invalid.');
@@ -660,16 +659,16 @@ class OrderOpcControllerCore extends ParentOrderController
 
 		$inv_adr_fields = AddressFormat::getOrderedAddressFields((int)$address_delivery->id_country, false, true);
 		$dlv_adr_fields = AddressFormat::getOrderedAddressFields((int)$address_invoice->id_country, false, true);
-		$requireFormFieldsList = AddressFormat::getFieldsRequired();
+		$require_form_fields_list = AddressFormat::getFieldsRequired();
 
 		// Add missing require fields for a new user susbscription form
-		foreach ($requireFormFieldsList as $fieldName)
-			if (!in_array($fieldName, $dlv_adr_fields))
-				$dlv_adr_fields[] = trim($fieldName);
+		foreach ($require_form_fields_list as $field_name)
+			if (!in_array($field_name, $dlv_adr_fields))
+				$dlv_adr_fields[] = trim($field_name);
 
-		foreach ($requireFormFieldsList as $fieldName)
-			if (!in_array($fieldName, $inv_adr_fields))
-				$inv_adr_fields[] = trim($fieldName);
+		foreach ($require_form_fields_list as $field_name)
+			if (!in_array($field_name, $inv_adr_fields))
+				$inv_adr_fields[] = trim($field_name);
 
 		$inv_all_fields = array();
 		$dlv_all_fields = array();
@@ -686,7 +685,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			$this->context->smarty->assign(array(
 				$adr_type.'_adr_fields' => ${$adr_type.'_adr_fields'},
 				$adr_type.'_all_fields' => ${$adr_type.'_all_fields'},
-				'required_fields' => $requireFormFieldsList
+				'required_fields' => $require_form_fields_list
 			));
 		}
 	}
