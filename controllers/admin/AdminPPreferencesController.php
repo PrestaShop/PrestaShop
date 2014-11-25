@@ -173,7 +173,7 @@ class AdminPPreferencesControllerCore extends AdminController
 						'type' => 'text'
 					),
 					'PS_DISPLAY_JQZOOM' => array(
-						'title' => $this->l('Enable JqZoom instead of Thickbox on the product page'),
+						'title' => $this->l('Enable JqZoom instead of Fancybox on the product page'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'required' => false,
