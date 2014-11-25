@@ -2372,10 +2372,7 @@ class AdminOrdersControllerCore extends AdminController
 		$res &= $order->update();
 
 		// Reinject quantity in stock
-		$this->reinjectQuantity($order_detail, $order_detail->product_quantity);
-
-		// Delete OrderDetail
-		$res &= $order_detail->delete();
+		$this->reinjectQuantity($order_detail, $order_detail->product_quantity, true);
 
 		// Update weight SUM
 		$order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
@@ -2538,7 +2535,7 @@ class AdminOrdersControllerCore extends AdminController
 		return $products;
 	}
 
-	protected function reinjectQuantity($order_detail, $qty_cancel_product)
+	protected function reinjectQuantity($order_detail, $qty_cancel_product, $delete = false)
 	{
 		// Reinject product
 		$reinjectable_quantity = (int)$order_detail->product_quantity - (int)$order_detail->product_quantity_reinjected;
@@ -2575,7 +2572,11 @@ class AdminOrdersControllerCore extends AdminController
 						true
 					);
 				}
-					StockAvailable::synchronize($order_detail->product_id);
+
+				$id_product = $order_detail->product_id;
+				if ($delete)
+					$order_detail->delete();
+				StockAvailable::synchronize($id_product);
 			}
 			elseif ($order_detail->id_warehouse == 0)
 			{
