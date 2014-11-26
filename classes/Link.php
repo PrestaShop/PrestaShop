@@ -38,7 +38,7 @@ class LinkCore
 
 	protected static $category_disable_rewrite = null;
 
-	/**210
+	/**
 	  * Constructor (initialization only)
 	  */
 	public function __construct($protocol_link = null, $protocol_content = null)
