@@ -166,4 +166,15 @@ class StockCore extends ObjectModel
 
 		return Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'stock WHERE `id_product` = '.(int)$id_product.' AND `id_product_attribute` = '.(int)$id_product_attribute);
 	}
+
+	public static function productIsPresentInStock($id_product = 0, $id_product_attribute = 0, $id_warehouse = 0)
+	{
+		if (!(int)$id_product && !is_int($id_product_attribute) && !(int)$id_warehouse)
+			return false;
+
+		$result = Db::getInstance()->executeS('SELECT `id_stock` FROM '._DB_PREFIX_.'stock
+			WHERE `id_warehouse` = '.(int)$id_warehouse.' AND `id_product` = '.(int)$id_product.((int)$id_product_attribute ? ' AND `id_product_attribute` = '.$id_product_attribute : ''));
+
+		return (is_array($result) && !empty($result) ? true : false);
+	}
 }
