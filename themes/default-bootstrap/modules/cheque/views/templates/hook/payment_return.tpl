@@ -41,7 +41,7 @@
 	</div>
 {else}
 	<p class="alert alert-warning">
-		{l s='WWe noticed a problem with your order. If you think this is an error, feel free to contact our' mod='cheque'}
+		{l s='We noticed a problem with your order. If you think this is an error, feel free to contact our' mod='cheque'}
 		<a href="{$link->getPageLink('contact', true)|escape:'html':'UTF-8'}">{l s='customer service department.' mod='cheque'}</a>.
 	</p>
 {/if}
