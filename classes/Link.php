@@ -38,7 +38,7 @@ class LinkCore
 
 	protected static $category_disable_rewrite = null;
 
-	/**
+	/**210
 	  * Constructor (initialization only)
 	  */
 	public function __construct($protocol_link = null, $protocol_content = null)
@@ -206,12 +206,11 @@ class LinkCore
 				return $url.$dispatcher->createUrl('cms_category_rule', $id_lang, array('id' => (int)$cms_category, 'rewrite' => (string)$alias), $this->allow, '', $id_shop);
 			$cms_category = new CMSCategory($cms_category, $id_lang);
 		}
-
-		if (is_array($cms_category->$cms_category->link_rewrite) && isset($cms_category->link_rewrite[(int)$id_lang]))
+		if (is_array($cms_category->link_rewrite) && isset($cms_category->link_rewrite[(int)$id_lang]))
 			$cms_category->link_rewrite = $cms_category->link_rewrite[(int)$id_lang];
-		if (is_array($cms_category->$cms_category->meta_keywords) && isset($cms_category->meta_keywords[(int)$id_lang]))
+		if (is_array($cms_category->meta_keywords) && isset($cms_category->meta_keywords[(int)$id_lang]))
 			$cms_category->meta_keywords = $cms_category->meta_keywords[(int)$id_lang];
-		if (is_array($cms_category->$cms_category->meta_title) && isset($cms_category->meta_title[(int)$id_lang]))
+		if (is_array($cms_category->meta_title) && isset($cms_category->meta_title[(int)$id_lang]))
 			$cms_category->meta_title = $cms_category->meta_title[(int)$id_lang];
 
 		// Set available keywords
