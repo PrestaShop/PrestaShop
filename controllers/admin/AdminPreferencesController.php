@@ -97,7 +97,7 @@ class AdminPreferencesControllerCore extends AdminController
 				$domain_parts = array_reverse(explode('.', $this->context->shop->domain_ssl));
 
 				if (isset($host_mode_domains) && isset($domain_parts[1]) && isset($domain_parts[0])
-					&& !in_array($domain_parts[1].'.'.$domain_parts[1], $host_mode_domains))
+					&& !in_array($domain_parts[1].'.'.$domain_parts[0], $host_mode_domains))
 					$disable_ssl = true;
 			}
 
