@@ -420,10 +420,12 @@ function wishlistRefreshStatus()
 	});
 }
 
-function wishlistProductChange(id_product, id_product_attribute, quantity, priority, id_old_wishlist, id_new_wishlist)
+function wishlistProductChange(id_product, id_product_attribute, id_old_wishlist, id_new_wishlist)
 {
 	if (typeof mywishlist_url == 'undefined')
 		return (false);
+
+	var quantity = $('#quantity_' + id_product + '_' + id_product_attribute).val();
 
 	$.ajax({
 		type: 'GET',
@@ -436,7 +438,7 @@ function wishlistProductChange(id_product, id_product_attribute, quantity, prior
 			id_product:id_product,
 			id_product_attribute:id_product_attribute,
 			quantity: quantity,
-			priority: priority,
+			priority: $('#priority_' + id_product + '_' + id_product_attribute).val(),
 			id_old_wishlist:id_old_wishlist,
 			id_new_wishlist:id_new_wishlist,
 			myajax: 1,

@@ -139,7 +139,7 @@
                                                             <tbody>
                                             {/if}
                                             {if $id_wishlist != {$wishlist.id_wishlist}}
-                                                                <tr title="{$wishlist.name}" value="{$wishlist.id_wishlist}" onclick="wishlistProductChange({$product.id_product}, {$product.id_product_attribute}, {$product.quantity|intval}, {$product.priority}, '{$id_wishlist}', '{$wishlist.id_wishlist}');">
+                                                                <tr title="{$wishlist.name}" value="{$wishlist.id_wishlist}" onclick="wishlistProductChange({$product.id_product}, {$product.id_product_attribute}, '{$id_wishlist}', '{$wishlist.id_wishlist}');">
                                                                     <td>
                                                                         {l s='Change to %s'|sprintf:$wishlist.name mod='blockwishlist'}
                                                                     </td>
