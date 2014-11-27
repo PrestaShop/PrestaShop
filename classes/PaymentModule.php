@@ -536,7 +536,7 @@ abstract class PaymentModuleCore extends Module
 							// Set the new voucher value
 							if ($voucher->reduction_tax)
 							{
-								$voucher->reduction_amount = $values['tax_incl'] - ($order->total_products_wt - $total_reduction_value_ti);
+								$voucher->reduction_amount = $order->total_products_wt - $total_reduction_value_ti;
 
 								// Add total shipping amout only if reduction amount > total shipping
 								if ($voucher->free_shipping == 1 && $voucher->reduction_amount >= $order->total_shipping_tax_incl)
@@ -544,12 +544,14 @@ abstract class PaymentModuleCore extends Module
 							}
 							else
 							{
-								$voucher->reduction_amount = $values['tax_excl'] - ($order->total_products - $total_reduction_value_tex);
+								$voucher->reduction_amount = $order->total_products - $total_reduction_value_tex;
 
 								// Add total shipping amout only if reduction amount > total shipping
 								if ($voucher->free_shipping == 1 && $voucher->reduction_amount >= $order->total_shipping_tax_excl)
 									$voucher->reduction_amount -= $order->total_shipping_tax_excl;
 							}
+							if ($voucher->reduction_amount <= 0)
+								continue;
 
 							$voucher->id_customer = $order->id_customer;
 							$voucher->quantity = 1;
