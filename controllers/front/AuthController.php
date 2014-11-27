@@ -495,7 +495,7 @@ class AuthControllerCore extends FrontController
 				if (!$country->active)
 					$this->errors[] = Tools::displayError('This country is not active.');
 
-				$postcode = Tools::getValue('postcode');
+				$postcode = $$addresses_type->postcode;
 				/* Check zip code format */
 				if ($country->zip_code_format && !$country->checkZipCode($postcode))
 					$this->errors[] = sprintf(Tools::displayError('The Zip/Postal code you\'ve entered is invalid. It must follow this format: %s'), str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format))));
