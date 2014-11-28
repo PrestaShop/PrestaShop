@@ -36,7 +36,7 @@ class CacheApcCore extends Cache
 		$this->keys = array();
 		$cache_info = apc_cache_info((extension_loaded('apcu') === true )? '' : 'user' );
 		foreach ($cache_info['cache_list'] as $entry)
-			if ( extension_loaded('apcu') === true )
+			if (extension_loaded('apcu') === true)
 				$this->keys[$entry['key']] = $entry['ttl'];
 			else
 				$this->keys[$entry['info']] = $entry['ttl'];

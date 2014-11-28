@@ -1037,7 +1037,7 @@ class FrontControllerCore extends Controller
 			if (!Validate::isAbsoluteUrl($media))
 			{
 				$different = 0;
-                $different_css = 0;
+				$different_css = 0;
 				$type = 'css';
 				if (!$css_media_type)
 				{
@@ -1062,6 +1062,8 @@ class FrontControllerCore extends Controller
 				else
 					$list_uri[$file] = $media;
 			}
+			else
+				$list_uri[$file] = $media;
 		}
 
 		if ($remove)
