@@ -784,14 +784,14 @@ class AdminModulesControllerCore extends AdminController
 									$download_ok = true;
 
 								if (!$download_ok)
-									$this->errors[] = sprintf(Tools::displayError("Module %s can't be upgraded: Error on downloading the latest version."), '<strong>'.$attr['displayName'].'</strong>');
+									$this->errors[] = sprintf(Tools::displayError("Module %s cannot be upgraded: Error while downloading the latest version."), '<strong>'.$attr['displayName'].'</strong>');
 								elseif (!$this->extractArchive(_PS_MODULE_DIR_.$name.'.zip', false))
-									$this->errors[] = sprintf(Tools::displayError("Module %s can't be upgraded: Error on extracting the latest version"), '<strong>'.$attr['displayName'].'</strong>');
+									$this->errors[] = sprintf(Tools::displayError("Module %s cannot be upgraded: Error while extracting the latest version"), '<strong>'.$attr['displayName'].'</strong>');
 								else
 									$module_upgraded[] = $name;
 							}
 							else
-								$this->errors[] = sprintf(Tools::displayError("You don’t have the rights to update the %s module. Please make sure you are logged in to the PrestaShop Addons account that purchased the module."), '<strong>'.$name.'</strong>');
+								$this->errors[] = sprintf(Tools::displayError("You do not have the rights to update the %s module. Please make sure you are logged in to the PrestaShop Addons account that purchased the module."), '<strong>'.$name.'</strong>');
 						}
 					}
 
@@ -979,9 +979,9 @@ class AdminModulesControllerCore extends AdminController
 				// If error during module installation, no redirection
 				$html_error = $this->generateHtmlMessage($module_errors);
 				if ($key == 'uninstall' )
-					$this->errors[] = sprintf(Tools::displayError('The following module(s) were not uninstalled properly: %s'), $html_error);
+					$this->errors[] = sprintf(Tools::displayError('The following module(s) could not be uninstalled properly: %s'), $html_error);
 				else
-					$this->errors[] = sprintf(Tools::displayError('The following module(s) were not installed properly: %s'), $html_error);
+					$this->errors[] = sprintf(Tools::displayError('The following module(s) could not be installed properly: %s'), $html_error);
 				$this->context->smarty->assign('error_module', 'true');
 			}
 		}
