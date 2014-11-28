@@ -31,7 +31,6 @@ $start_time = microtime(true);
 define('_PS_SSL_PORT_', 443);
 
 /* Improve PHP configuration to prevent issues */
-ini_set('upload_max_filesize', '100M');
 ini_set('default_charset', 'utf-8');
 ini_set('magic_quotes_runtime', 0);
 ini_set('magic_quotes_sybase', 0);
@@ -51,9 +50,13 @@ if (!file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php'))
 		die('Error: "install" directory is missing');
 	exit;
 }
+
 /* include settings file only if we are not in multi-tenancy mode */
 require_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
 require_once(_PS_CONFIG_DIR_.'autoload.php');
+
+if (Tools::convertBytes(ini_get('upload_max_filesize')) < Tools::convertBytes('100M'))
+	ini_set('upload_max_filesize', '100M');
 
 if (_PS_DEBUG_PROFILING_)
 {
