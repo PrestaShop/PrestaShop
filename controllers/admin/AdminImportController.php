@@ -2436,7 +2436,7 @@ class AdminImportControllerCore extends AdminController
 				$customer->id_default_group = (int)Configuration::get('PS_CUSTOMER_GROUP');
 			$customer_groups[] = (int)$customer->id_default_group;
 			$customer_groups = array_flip(array_flip($customer_groups));
-			$res = true;
+			$res = false;
 			if (($field_error = $customer->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 				($lang_field_error = $customer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
 			{
@@ -2452,11 +2452,11 @@ class AdminImportControllerCore extends AdminController
 							if ($customer_exist && ($current_id_shop_group == $id || in_array($current_id_shop, ShopGroup::getShopsFromGroup($id))))
 							{
 								$customer->id = $current_id_customer;
-								$res &= $customer->update();
+								$res = $customer->update();
 							}
 							else
 							{
-								$res &= $customer->add();
+								$res = $customer->add();
 								if (isset($addresses))
 									foreach ($addresses as $address)
 									{
@@ -2476,11 +2476,11 @@ class AdminImportControllerCore extends AdminController
 						if ($customer_exist && $id_shop == $current_id_shop)
 						{
 							$customer->id = $current_id_customer;
-							$res &= $customer->update();
+							$res = $customer->update();
 						}
 						else
 						{
-							$res &= $customer->add();
+							$res = $customer->add();
 							if (isset($addresses))
 								foreach ($addresses as $address)
 								{
@@ -3014,14 +3014,14 @@ class AdminImportControllerCore extends AdminController
 
 				// updatesd($supply_order);
 
-				$res = true;
+				$res = false;
 
 				if ((int)$supply_order->id && ($supply_order->exists((int)$supply_order->id) || $supply_order->exists($supply_order->reference)))
-					$res &= $supply_order->update();
+					$res = $supply_order->update();
 				else
 				{
 					$supply_order->force_id = (bool)Tools::getValue('forceIDs');
-					$res &= $supply_order->add();
+					$res = $supply_order->add();
 				}
 
 				// errors
