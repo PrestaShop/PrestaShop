@@ -255,7 +255,7 @@ class AdminThemesControllerCore extends AdminController
 			if ((int)$this->object->id > 0)
 			{
 				$theme = New Theme((int)$this->object->id);
-				$theme_metas = Db::getInstance()->executeS('SELECT ml.`title`, tm.`left_column` as `left`, tm.`right_column` as `right`, m.`id_meta`, tm.`id_theme_meta`
+				$theme_metas = Db::getInstance()->executeS('SELECT ml.`title`, m.`page`, tm.`left_column` as `left`, tm.`right_column` as `right`, m.`id_meta`, tm.`id_theme_meta`
 					FROM '._DB_PREFIX_.'theme_meta as tm
 					LEFT JOIN '._DB_PREFIX_.'meta m ON (m.`id_meta` = tm.`id_meta`)
 					LEFT JOIN '._DB_PREFIX_.'meta_lang ml ON(ml.id_meta = m.id_meta AND ml.id_lang = '.(int)$this->context->language->id.')
@@ -274,7 +274,7 @@ class AdminThemesControllerCore extends AdminController
 						$metas_default[] = $tmp_meta;
 					}
 					$theme->updateMetas($metas_default);
-					$theme_metas = Db::getInstance()->executeS('SELECT ml.`title`, tm.`left_column` as `left`, tm.`right_column` as `right`, m.`id_meta`, tm.`id_theme_meta`
+					$theme_metas = Db::getInstance()->executeS('SELECT ml.`title`, m.`page`, tm.`left_column` as `left`, tm.`right_column` as `right`, m.`id_meta`, tm.`id_theme_meta`
 						FROM '._DB_PREFIX_.'theme_meta as tm
 						LEFT JOIN '._DB_PREFIX_.'meta m ON (m.`id_meta` = tm.`id_meta`)
 						LEFT JOIN '._DB_PREFIX_.'meta_lang ml ON(ml.id_meta = m.id_meta AND ml.id_lang = '.(int)$this->context->language->id.')
@@ -282,9 +282,10 @@ class AdminThemesControllerCore extends AdminController
 				}
 				$image_url = '<img alt="preview" src="'.__PS_BASE_URI__.'themes/'.$theme->directory.'/preview.jpg">';
 
-				foreach ($theme_metas as $key => $meta)
-					if (!isset($meta['title']) || !$meta['title'] || $meta['title'] == '')
-						unset($theme_metas[$key]);
+					foreach ($theme_metas as $key => &$meta)
+						if (!isset($meta['title']) || !$meta['title'] || $meta['title'] == '')
+								$meta['title'] = $meta['page'];
+
 				$formated_metas = $theme_metas;
 			}
 			$selected_theme_dir = $this->object->directory;
