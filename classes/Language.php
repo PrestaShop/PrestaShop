@@ -753,16 +753,14 @@ class LanguageCore extends ObjectModel
 				if ($key != 'iso_code' && isset(Language::$definition['fields'][$key]))
 					$lang->$key = $value;
 
+		if (!$lang->name && $lang->iso_code)
+			$lang->name = $lang->iso_code;
+
 		if (!$lang->validateFields() || !$lang->validateFieldsLang() || !$lang->add(true, false, $only_add))
 			return false;
 
-		if (isset($params_lang['allow_accented_chars_url']))
-		{
-			if (in_array($params_lang['allow_accented_chars_url'], array('1', 'true')))
-				Configuration::updateGlobalValue('PS_ALLOW_ACCENTED_CHARS_URL', 1);
-			else
-				Configuration::updateGlobalValue('PS_ALLOW_ACCENTED_CHARS_URL', 0);
-		}
+		if (isset($params_lang['allow_accented_chars_url']) && in_array($params_lang['allow_accented_chars_url'], array('1', 'true')))
+			Configuration::updateGlobalValue('PS_ALLOW_ACCENTED_CHARS_URL', 1);
 
 		$flag = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/flags/jpeg/'.$iso_code.'.jpg');
 		if ($flag != null && !preg_match('/<body>/', $flag))
@@ -835,6 +833,7 @@ class LanguageCore extends ObjectModel
 
 		if ($version == null)
 			$version = _PS_VERSION_;
+
 		$lang_pack = false;
 		$lang_pack_ok = false;
 		$errors = array();

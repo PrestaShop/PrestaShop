@@ -158,7 +158,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 	public function processInstallDefaultData()
 	{
 		// @todo remove true in populateDatabase for 1.5.0 RC version
-		$result = $this->model_install->installDefaultData($this->session->shop_name, true);
+		$result = $this->model_install->installDefaultData($this->session->shop_name, $this->session->shop_country, false, true);
 
 		if (!$result || $this->model_install->getErrors())
 			$this->ajaxJsonAnswer(false, $this->model_install->getErrors());

@@ -171,7 +171,7 @@ class InstallModelInstall extends InstallAbstractModel
 	 * PROCESS : installDefaultData
 	 * Create default shop and languages
 	 */
-	public function installDefaultData($shop_name, $clear_database = false)
+	public function installDefaultData($shop_name, $iso_country = false, $all_languages = false, $clear_database = false)
 	{
 		if ($clear_database)
 			$this->clearDatabase(true);
@@ -183,7 +183,27 @@ class InstallModelInstall extends InstallAbstractModel
 		// Install languages
 		try
 		{
-			$languages = $this->installLanguages(array($this->language->getLanguageIso()));
+			if (!$all_languages)
+			{
+				$iso_codes_to_install = array($this->language->getLanguageIso());
+				if ($iso_country)
+				{
+					$version = str_replace('.', '', _PS_VERSION_);
+					$version = substr($version, 0, 2);
+					$localization_file_content = $this->getLocalizationPackContent($version, $iso_country);
+
+					if ($xml = @simplexml_load_string($localization_file_content))
+					{
+						
+						foreach ($xml->languages->language as $language)
+							$iso_codes_to_install[] = (string)$language->attributes()->iso_code;
+					}
+				}
+			}
+			else
+				$iso_codes_to_install = null;
+
+			$languages = $this->installLanguages($iso_codes_to_install);
 		}
 		catch (PrestashopInstallerException $e)
 		{
@@ -307,9 +327,12 @@ class InstallModelInstall extends InstallAbstractModel
 		if ($languages_list == null || !is_array($languages_list) || !count($languages_list))
 			$languages_list = $this->language->getIsoList();
 
+		$languages_available = $this->language->getIsoList();
 		$languages = array();
 		foreach ($languages_list as $iso)
 		{
+			if (!in_array($iso, $languages_available))
+				continue;
 			if (!file_exists(_PS_INSTALL_LANGS_PATH_.$iso.'/language.xml'))
 				throw new PrestashopInstallerException($this->language->l('File "language.xml" not found for language iso "%s"', $iso));
 
@@ -372,6 +395,23 @@ class InstallModelInstall extends InstallAbstractModel
 					ImageManager::resize($img_path.$iso.'.jpg', $dst_path.$iso.'-default-'.$type['name'].'.jpg', $type['width'], $type['height']);
 			}
 		}
+	}
+
+	public function getLocalizationPackContent($version, $country)
+	{
+		$localization_file_content = @Tools::file_get_contents('http://api.prestashop.com/localization/'.$version.'/'.$country.'.xml');
+		if (!@simplexml_load_string($localization_file_content))
+			$localization_file_content = false;
+		if (!$localization_file_content)
+		{
+			$localization_file = _PS_ROOT_DIR_.'/localization/default.xml';
+			if (file_exists(_PS_ROOT_DIR_.'/localization/'.$country.'.xml'))
+				$localization_file = _PS_ROOT_DIR_.'/localization/'.$country.'.xml';
+
+			$localization_file_content = file_get_contents($localization_file);
+		}
+
+		return $localization_file_content;
 	}
 
 	/**
@@ -451,18 +491,7 @@ class InstallModelInstall extends InstallAbstractModel
 		// Set localization configuration
 		$version = str_replace('.', '', _PS_VERSION_);
 		$version = substr($version, 0, 2);
-
-		$localization_file_content = @Tools::file_get_contents('http://api.prestashop.com/localization/'.$version.'/'.$data['shop_country'].'.xml');
-		if (!@simplexml_load_string($localization_file_content))
-			$localization_file_content = false;
-		if (!$localization_file_content)
-		{
-			$localization_file = _PS_ROOT_DIR_.'/localization/default.xml';
-			if (file_exists(_PS_ROOT_DIR_.'/localization/'.$data['shop_country'].'.xml'))
-				$localization_file = _PS_ROOT_DIR_.'/localization/'.$data['shop_country'].'.xml';
-
-			$localization_file_content = file_get_contents($localization_file);
-		}
+		$localization_file_content = $this->getLocalizationPackContent($version, $data['shop_country']);
 
 		$locale = new LocalizationPackCore();
 		$locale->loadLocalisationPack($localization_file_content, '', true);
