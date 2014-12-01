@@ -438,11 +438,10 @@ else
 
 	$files = array();
 	if (!empty($prev_folder))
-		$files = $prev_folder;
+		$files = array($prev_folder);
 	if (!empty($current_folder))
-		$files = array_merge($current_folder, $files);
+		$files = array_merge($files, array($current_folder));
 	$files = array_merge($files, $sorted);
-	
 	?>
 	<!----- header div start ------->
 	<div class="navbar navbar-fixed-top">
