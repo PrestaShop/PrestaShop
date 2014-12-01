@@ -12,6 +12,9 @@
   <stock_mvt_reason id="Regulation_following_an_inventory_of_stock">
     <name>Regulariza&#231;&#227;o seguindo o invent&#225;rio de stock</name>
   </stock_mvt_reason>
+  <stock_mvt_reason id="Regulation_following_an_inventory_of_stock_1">
+    <name>Regulariza&#231;&#227;o seguindo o invent&#225;rio de stock</name>
+  </stock_mvt_reason>
   <stock_mvt_reason id="Transfer_to_another_warehouse">
     <name>Transferir para outro armaz&#233;m</name>
   </stock_mvt_reason>
