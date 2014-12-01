@@ -436,7 +436,13 @@ else
 		$sorted = array_reverse($sorted);
 	}
 
-	$files = array_merge(array($prev_folder), array($current_folder), $sorted);
+	$files = array();
+	if (!empty($prev_folder))
+		$files = $prev_folder;
+	if (!empty($current_folder))
+		$files = array_merge($current_folder, $files);
+	$files = array_merge($files, $sorted);
+	
 	?>
 	<!----- header div start ------->
 	<div class="navbar navbar-fixed-top">
