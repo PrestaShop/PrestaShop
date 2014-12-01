@@ -1467,7 +1467,9 @@ class AdminImportControllerCore extends AdminController
 				}
 			}
 
-			$product->id_category_default = isset($product->id_category[0]) ? (int)$product->id_category[0] : '';
+			if (!isset($product->id_category_default) || !$product->id_category_default)
+				$product->id_category_default = isset($product->id_category[0]) ? (int)$product->id_category[0] : (int)Configuration::get('PS_HOME_CATEGORY');
+
 			$link_rewrite = (is_array($product->link_rewrite) && isset($product->link_rewrite[$id_lang])) ? trim($product->link_rewrite[$id_lang]) : '';
 			$valid_link = Validate::isLinkRewrite($link_rewrite);
 
