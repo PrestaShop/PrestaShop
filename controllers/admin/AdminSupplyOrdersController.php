@@ -1256,9 +1256,11 @@ class AdminSupplyOrdersControllerCore extends AdminController
 
 									// if pending_receipt,
 									// or if the order is being canceled,
+									// or if the order is received completely
 									// synchronizes StockAvailable
 									if (($new_state->pending_receipt && !$new_state->receipt_state) ||
-										(($old_state->receipt_state || $old_state->pending_receipt) && $new_state->enclosed && !$new_state->receipt_state))
+										(($old_state->receipt_state || $old_state->pending_receipt) && $new_state->enclosed && !$new_state->receipt_state) ||
+										($new_state->receipt_state && $new_state->enclosed))
 									{
 										$supply_order_details = $supply_order->getEntries();
 										$products_done = array();
