@@ -32,7 +32,11 @@
     <name>Erro de pagamento</name>
     <template>payment_error</template>
   </order_state>
-  <order_state id="On_backorder">
+  <order_state id="On_backorder_paid">
+    <name>Sem stock (Pagamento aceite)</name>
+    <template>outofstock</template>
+  </order_state>
+  <order_state id="On_backorder_unpaid">
     <name>Sem stock</name>
     <template>outofstock</template>
   </order_state>
@@ -48,16 +52,8 @@
     <name>Pagamento remoto aceite</name>
     <template>payment</template>
   </order_state>
-	<order_state id="Awaiting_atm_payment">
-		<name>A aguardar pagamento por Multibanco</name>
-		<template>atm</template>
-	</order_state>
-	<order_state id="Atm_payment_accepted">
-		<name>Pagamento por Multibanco aceite</name>
-		<template>payment</template>
-	</order_state>
-	<order_state id="Pick_on_store">
-		<name>A aguardar levantamento na loja</name>
-		<template>pickonstore</template>
-	</order_state>
+  <order_state id="Awaiting_cod_validation">
+    <name>Awaiting cod validation</name>
+    <template>cashondelivery</template>
+  </order_state>
 </entity_order_state>
