@@ -41,10 +41,10 @@
             {if count($productsBoughts)}
                 <li>
                     <a id="hideBoughtProductsInfos" class="button_account" href="#" onclick="WishlistVisibility('wlp_bought_infos', 'BoughtProductsInfos'); return false;" title="{l s='Hide products' mod='blockwishlist'}">
-                        {l s="Hide bought product's info" mod='blockwishlist'}
+                        {l s="Hide bought products' info" mod='blockwishlist'}
                     </a>
                     <a id="showBoughtProductsInfos" class="button_account" href="#" onclick="WishlistVisibility('wlp_bought_infos', 'BoughtProductsInfos'); return false;" title="{l s='Show products' mod='blockwishlist'}">
-                        {l s="Show bought product's info" mod='blockwishlist'}
+                        {l s="Show bought products' info" mod='blockwishlist'}
                     </a>
                 </li>
             {/if}
@@ -131,8 +131,8 @@
                                     {if $wishlists|count > 1}
                                         {foreach name=wl from=$wishlists item=wishlist}
                                             {if $smarty.foreach.wl.first}
-                                                <a class="btn btn-default button button-small wishlist_change_button" tabindex="0" data-toggle="popover" data-trigger="focus" title="Change of wishlist" data-placement="bottom">
-                                                    <span>{l s='Change of wishlist' mod='blockwishlist'}</span>
+                                                <a class="btn btn-default button button-small wishlist_change_button" tabindex="0" data-toggle="popover" data-trigger="focus" title="Move to a wishlist" data-placement="bottom">
+                                                    <span>{l s='Move' mod='blockwishlist'}</span>
                                                     </a>
                                                     <div hidden class="popover-content">
                                                         <table class="table" border="1">
@@ -141,7 +141,7 @@
                                             {if $id_wishlist != {$wishlist.id_wishlist}}
                                                                 <tr title="{$wishlist.name}" value="{$wishlist.id_wishlist}" onclick="wishlistProductChange({$product.id_product}, {$product.id_product_attribute}, '{$id_wishlist}', '{$wishlist.id_wishlist}');">
                                                                     <td>
-                                                                        {l s='Change to %s'|sprintf:$wishlist.name mod='blockwishlist'}
+                                                                        {l s='Move to %s'|sprintf:$wishlist.name mod='blockwishlist'}
                                                                     </td>
                                                                 </tr>
                                             {/if}
