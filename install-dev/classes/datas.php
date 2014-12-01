@@ -40,6 +40,12 @@ class Datas
 			'alias' => 'l',
 			'help' => 'language iso code',
 		),
+		'all_languages' => array(
+			'default' => '0',
+			'validate' => 'isInt',
+			'alias' => 'l',
+			'help' => 'install all available languages',
+		),
 		'timezone' => array(
 			'default' => 'Europe/Paris',
 			'alias' => 't',
