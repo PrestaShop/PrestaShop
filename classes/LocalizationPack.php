@@ -302,6 +302,7 @@ class LocalizationPackCore
 
 	protected function _installLanguages($xml, $install_mode = false)
 	{
+		$attributes = array();
 		if (isset($xml->languages->language))
 			foreach ($xml->languages->language as $data)
 			{
