@@ -2440,6 +2440,7 @@ class AdminImportControllerCore extends AdminController
 			if (($field_error = $customer->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 				($lang_field_error = $customer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
 			{
+				$res = true;
 				foreach ($customers_shop as $id_shop => $id_group)
 				{
 					$customer->force_id = (bool)Tools::getValue('forceIDs');
@@ -2452,11 +2453,11 @@ class AdminImportControllerCore extends AdminController
 							if ($customer_exist && ($current_id_shop_group == $id || in_array($current_id_shop, ShopGroup::getShopsFromGroup($id))))
 							{
 								$customer->id = $current_id_customer;
-								$res = $customer->update();
+								$res &= $customer->update();
 							}
 							else
 							{
-								$res = $customer->add();
+								$res &= $customer->add();
 								if (isset($addresses))
 									foreach ($addresses as $address)
 									{
@@ -2476,11 +2477,11 @@ class AdminImportControllerCore extends AdminController
 						if ($customer_exist && $id_shop == $current_id_shop)
 						{
 							$customer->id = $current_id_customer;
-							$res = $customer->update();
+							$res &= $customer->update();
 						}
 						else
 						{
-							$res = $customer->add();
+							$res &= $customer->add();
 							if (isset($addresses))
 								foreach ($addresses as $address)
 								{
