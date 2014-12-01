@@ -850,11 +850,11 @@ else
 
 	/* PrestaShop */
 	if(isset($src_thumb) && $src_thumb)
-		if (($src_thumb = preg_replace('#('.$current_path.')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/cms/'), $src_thumb)) == $src_thumb)
-			$src_thumb = preg_replace('#('.$thumbs_base_path.')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/tmp/cms/'), $src_thumb);
+		if (($src_thumb = preg_replace('#('.addslashes($current_path).')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/cms/'), $src_thumb)) == $src_thumb)
+			$src_thumb = preg_replace('#('.addslashes($thumbs_base_path).')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/tmp/cms/'), $src_thumb);
 	if(isset($mini_src) && $mini_src)
-		if (($mini_src = preg_replace('#('.$current_path.')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/cms/'), $mini_src)) == $mini_src)
-			$mini_src = preg_replace('#('.$thumbs_base_path.')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/tmp/cms/'), $mini_src);
+		if (($mini_src = preg_replace('#('.addslashes($current_path).')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/cms/'), $mini_src)) == $mini_src)
+			$mini_src = preg_replace('#('.addslashes($thumbs_base_path).')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/tmp/cms/'), $mini_src);
 	/* END PrestaShop */
 
 	if ((!(Tools::getValue('type') == 1 && !$is_img) && !((Tools::getValue('type') == 3 && !$is_video) && (Tools::getValue('type') == 3 && !$is_audio))) && $class_ext > 0){
