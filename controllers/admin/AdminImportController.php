@@ -1467,7 +1467,9 @@ class AdminImportControllerCore extends AdminController
 				}
 			}
 
-			$product->id_category_default = isset($product->id_category[0]) ? (int)$product->id_category[0] : '';
+			if (!isset($product->id_category_default) || !$product->id_category_default)
+				$product->id_category_default = isset($product->id_category[0]) ? (int)$product->id_category[0] : (int)Configuration::get('PS_HOME_CATEGORY');
+
 			$link_rewrite = (is_array($product->link_rewrite) && isset($product->link_rewrite[$id_lang])) ? trim($product->link_rewrite[$id_lang]) : '';
 			$valid_link = Validate::isLinkRewrite($link_rewrite);
 
@@ -2434,10 +2436,11 @@ class AdminImportControllerCore extends AdminController
 				$customer->id_default_group = (int)Configuration::get('PS_CUSTOMER_GROUP');
 			$customer_groups[] = (int)$customer->id_default_group;
 			$customer_groups = array_flip(array_flip($customer_groups));
-			$res = true;
+			$res = false;
 			if (($field_error = $customer->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 				($lang_field_error = $customer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
 			{
+				$res = true;
 				foreach ($customers_shop as $id_shop => $id_group)
 				{
 					$customer->force_id = (bool)Tools::getValue('forceIDs');
@@ -3012,14 +3015,14 @@ class AdminImportControllerCore extends AdminController
 
 				// updatesd($supply_order);
 
-				$res = true;
+				$res = false;
 
 				if ((int)$supply_order->id && ($supply_order->exists((int)$supply_order->id) || $supply_order->exists($supply_order->reference)))
-					$res &= $supply_order->update();
+					$res = $supply_order->update();
 				else
 				{
 					$supply_order->force_id = (bool)Tools::getValue('forceIDs');
-					$res &= $supply_order->add();
+					$res = $supply_order->add();
 				}
 
 				// errors

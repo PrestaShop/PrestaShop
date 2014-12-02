@@ -8,6 +8,8 @@ with the reference {order_name}.
 
 CUSTOMER: {firstname} {lastname} ({email})
 
+PRODUCT: {product_name}
+
 {message}
 
 {shop_name} [{shop_url}] powered by
