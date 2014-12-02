@@ -1,6 +1,6 @@
 SET NAMES 'utf8';
 
-CREATE TABLE `PREFIX_smarty_cache` (
+CREATE TABLE IF NOT EXISTS `PREFIX_smarty_cache` (
   `id_smarty_cache` char(40) NOT NULL,
   `name` char(40),
   `cache_id` varchar(254) DEFAULT NULL,
