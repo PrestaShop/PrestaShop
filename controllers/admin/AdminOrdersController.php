@@ -682,13 +682,13 @@ class AdminOrdersControllerCore extends AdminController
 							$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);
 					}
 
-					if ($amount > 0)
+					if ($amount >= 0)
 					{
 						if (!OrderSlip::create($order, $order_detail_list, $shipping_cost_amount))
 							$this->errors[] = Tools::displayError('You cannot generate a partial credit slip.');
 
 						// Generate voucher
-						if (Tools::isSubmit('generateDiscountRefund') && !count($this->errors))
+						if (Tools::isSubmit('generateDiscountRefund') && !count($this->errors) && $amount > 0)
 						{
 							$cart_rule = new CartRule();
 							$cart_rule->description = sprintf($this->l('Credit slip for order #%d'), $order->id);
