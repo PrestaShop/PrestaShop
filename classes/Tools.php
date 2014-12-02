@@ -3010,6 +3010,7 @@ exit;
 			$fileAttachment['name'] = $_FILES[$input]['name'];
 			$fileAttachment['mime'] = $_FILES[$input]['type'];
 			$fileAttachment['error'] = $_FILES[$input]['error'];
+			$fileAttachment['size'] = $_FILES[$input]['size'];
 		}
 		return $fileAttachment;
 	}
