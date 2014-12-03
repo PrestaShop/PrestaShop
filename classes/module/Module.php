@@ -2647,7 +2647,6 @@ abstract class ModuleCore
 							$override_file[$i] = '#--remove--#';
 						$override_file[$i] = '#--remove--#';
 					}
-
 		}
 
 		// Rewrite nice code
