@@ -518,14 +518,18 @@ class ProductCore extends ObjectModel
 		if (!parent::add($autodate, $null_values))
 			return false;
 
+		$id_shop_list = Shop::getContextListShopID();
 		if ($this->getType() == Product::PTYPE_VIRTUAL)
 		{
-			StockAvailable::setProductOutOfStock((int)$this->id, 1);
+			foreach ($id_shop_list as $value)
+				StockAvailable::setProductOutOfStock((int)$this->id, 1, $value);
+
 			if ($this->active && !Configuration::get('PS_VIRTUAL_PROD_FEATURE_ACTIVE'))
 				Configuration::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', '1');
 		}
 		else
-			StockAvailable::setProductOutOfStock((int)$this->id, 2);
+			foreach ($id_shop_list as $value)
+				StockAvailable::setProductOutOfStock((int)$this->id, 2, $value);
 
 		$this->setGroupReduction();
 		Hook::exec('actionProductSave', array('id_product' => (int)$this->id, 'product' => $this));
