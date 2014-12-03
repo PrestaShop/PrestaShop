@@ -470,7 +470,6 @@ function updateDisplay()
 
 	if (!selectedCombination['unavailable'] && quantityAvailable > 0 && productAvailableForOrder == 1)
 	{
-
 		//show the choice of quantities
 		$('#quantity_wanted_p:hidden').show('slow');
 
