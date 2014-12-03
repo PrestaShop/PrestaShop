@@ -725,7 +725,7 @@ class ValidateCore
 	 */
 	public static function isUrl($url)
 	{
-		return preg_match(Tools::cleanNonUnicodeSupport('/^[~:#,$%&_=\(\)\.\? \+\-@\/a-zA-Z0-9]+$/'), $url);
+		return preg_match(Tools::cleanNonUnicodeSupport('/^[~:#,$%&_=\(\)\.\? \+\-@\/a-zA-Z0-9-\pL\pS]+$/u'), $url);
 	}
 
 	/**
