@@ -2632,6 +2632,24 @@ abstract class ModuleCore
 					break;
 				}
 		}
+
+		for ($i = 0; $i < count($override_file); ++$i)
+		{
+			if (preg_match('/(\/\/.*)/i', $override_file[$i]))
+				$override_file[$i] = '#--remove--#';
+			elseif (preg_match('/(^\s*\/\*)/i', $override_file[$i]))
+				if (!preg_match('/(^\s*\* module:)/i', $override_file[$i + 1])
+					&& !preg_match('/(^\s*\* date:)/i', $override_file[$i + 2])
+					&& !preg_match('/(^\s*\* version:)/i', $override_file[$i + 3])
+					&& !preg_match('/(^\s*\*\/)/i', $override_file[$i + 4]))
+					{
+						for (;$override_file[$i] && !preg_match('/(.*?\*\/)/i', $override_file[$i]); ++$i)
+							$override_file[$i] = '#--remove--#';
+						$override_file[$i] = '#--remove--#';
+					}
+
+		}
+
 		// Rewrite nice code
 		$code = '';
 		foreach ($override_file as $line)
