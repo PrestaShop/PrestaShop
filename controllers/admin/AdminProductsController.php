@@ -3042,9 +3042,9 @@ class AdminProductsControllerCore extends AdminController
 		$helper->identifier = $this->identifier;
 
 		// Accessories block
-		$post_accessories = Product::getAccessoriesLight($this->context->language->id, $product->id);
+		accessories = Product::getAccessoriesLight($this->context->language->id, $product->id);
 
-		if ($post_accessories == Tools::getValue('inputAccessories'))
+		if ($accessories == Tools::getValue('inputAccessories'))
 		{
 			$post_accessories_tab = explode('-', $post_accessories);
 			foreach ($post_accessories_tab as $accessory_id)
