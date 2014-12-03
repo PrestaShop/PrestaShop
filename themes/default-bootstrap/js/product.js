@@ -470,6 +470,7 @@ function updateDisplay()
 
 	if (!selectedCombination['unavailable'] && quantityAvailable > 0 && productAvailableForOrder == 1)
 	{
+
 		//show the choice of quantities
 		$('#quantity_wanted_p:hidden').show('slow');
 
@@ -483,7 +484,10 @@ function updateDisplay()
 
 		//availability value management
 		if (stock_management && availableNowValue != '')
+		{
 			$('#availability_value').removeClass('warning_inline').text(availableNowValue).show();
+			$('#availability_statut:hidden').show()
+		}
 		else
 			$('#availability_statut:visible').hide();
 
