@@ -50,7 +50,7 @@ class DispatcherCore
 			'rule' =>		'{id}-{rewrite}',
 			'keywords' => array(
 				'id' =>			array('regexp' => '[0-9]+', 'param' => 'id_category'),
-				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9-\pL\pS]*'),
+				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
 				'meta_keywords' =>	array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 				'meta_title' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 			),
@@ -60,7 +60,7 @@ class DispatcherCore
 			'rule' =>		'{id}__{rewrite}',
 			'keywords' => array(
 				'id' =>			array('regexp' => '[0-9]+', 'param' => 'id_supplier'),
-				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9-\pL\pS]*'),
+				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
 				'meta_keywords' =>	array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 				'meta_title' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 			),
@@ -70,7 +70,7 @@ class DispatcherCore
 			'rule' =>		'{id}_{rewrite}',
 			'keywords' => array(
 				'id' =>			array('regexp' => '[0-9]+', 'param' => 'id_manufacturer'),
-				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9-\pL\pS]*'),
+				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
 				'meta_keywords' =>	array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 				'meta_title' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 			),
@@ -80,7 +80,7 @@ class DispatcherCore
 			'rule' =>		'content/{id}-{rewrite}',
 			'keywords' => array(
 				'id' =>			array('regexp' => '[0-9]+', 'param' => 'id_cms'),
-				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9-\pL\pS]*'),
+				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
 				'meta_keywords' =>	array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 				'meta_title' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 			),
@@ -90,7 +90,7 @@ class DispatcherCore
 			'rule' =>		'content/category/{id}-{rewrite}',
 			'keywords' => array(
 				'id' =>			array('regexp' => '[0-9]+', 'param' => 'id_cms_category'),
-				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9-\pL\pS]*'),
+				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
 				'meta_keywords' =>	array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 				'meta_title' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 			),
@@ -111,7 +111,7 @@ class DispatcherCore
 			'rule' =>		'{category:/}{id}-{rewrite}{-:ean13}.html',
 			'keywords' => array(
 				'id' =>			array('regexp' => '[0-9]+', 'param' => 'id_product'),
-				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9-\pL\pS]*'),
+				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
 				'ean13' =>		array('regexp' => '[0-9\pL]*'),
 				'category' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 				'categories' =>		array('regexp' => '[/_a-zA-Z0-9-\pL]*'),
@@ -132,7 +132,7 @@ class DispatcherCore
 				'id' =>			array('regexp' => '[0-9]+', 'param' => 'id_category'),
 				/* Selected filters is used by the module blocklayered */
 				'selected_filters' =>	array('regexp' => '.*', 'param' => 'selected_filters'),
-				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9-\pL\pS]*'),
+				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
 				'meta_keywords' =>	array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 				'meta_title' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 			),
