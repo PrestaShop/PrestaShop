@@ -325,7 +325,7 @@ class ValidateCore
 	public static function isLinkRewrite($link)
 	{
 		if (Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL'))
-			return preg_match(Tools::cleanNonUnicodeSupport('/^[_a-zA-Z0-9\-\pL\pS]+$/u'), $link);
+			return preg_match(Tools::cleanNonUnicodeSupport('/^[_a-zA-Z0-9\pL\pS-]+$/u'), $link);
 		return preg_match('/^[_a-zA-Z0-9\-]+$/', $link);
 	}
 
@@ -338,7 +338,7 @@ class ValidateCore
 	public static function isRoutePattern($pattern)
 	{
 		if (Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL'))
-			return preg_match(Tools::cleanNonUnicodeSupport('/^[_a-zA-Z0-9\(\)\.{}:\/\-\pL\pS]+$/u'), $pattern);
+			return preg_match(Tools::cleanNonUnicodeSupport('/^[_a-zA-Z0-9\(\)\.{}:\/\pL\pS-]+$/u'), $pattern);
 		return preg_match('/^[_a-zA-Z0-9\(\)\.{}:\/\-]+$/', $pattern);
 	}
 
@@ -725,7 +725,7 @@ class ValidateCore
 	 */
 	public static function isUrl($url)
 	{
-		return preg_match(Tools::cleanNonUnicodeSupport('/^[~:#,$%&_=\(\)\.\? \+\-@\/a-zA-Z0-9-\pL\pS]+$/u'), $url);
+		return preg_match(Tools::cleanNonUnicodeSupport('/^[~:#,$%&_=\(\)\.\? \+\-@\/a-zA-Z0-9\pL\pS-]+$/u'), $url);
 	}
 
 	/**
