@@ -3122,6 +3122,7 @@ exit;
 			$file_attachment['name'] = $_FILES[$input]['name'];
 			$file_attachment['mime'] = $_FILES[$input]['type'];
 			$file_attachment['error'] = $_FILES[$input]['error'];
+			$file_attachment['size'] = $_FILES[$input]['size'];
 		}
 		return $file_attachment;
 	}
