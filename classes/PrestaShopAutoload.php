@@ -182,15 +182,15 @@ class PrestaShopAutoload
 				elseif (substr($file, -4) == '.php')
 				{
 					$content = file_get_contents($root_dir.$path.$file);
-			 		$pattern = '#\W((abstract\s+)?class|interface)\s+(?P<classname>'.basename($file, '.php').'(?:Core)?)'
-			 					.'(?:\s+extends\s+[a-z][a-z0-9_]*)?(?:\s+implements\s+[a-z][a-z0-9_\\]*(?:\s*,\s*[a-z][a-z0-9_\\]*)*)?\s*\{#i';
-			 		if (preg_match($pattern, $content, $m))
-			 		{
-			 			$classes[$m['classname']] = array(
-			 				'path' => $path.$file,
-			 				'type' => trim($m[1]),
-			 				'override' => $host_mode
-			 			);
+					$pattern = '#\W((abstract\s+)?class|interface)\s+(?P<classname>'.basename($file, '.php').'(?:Core)?)'
+								.'(?:\s+extends\s+[a-z][a-z0-9_]*)?(?:\s+implements\s+[a-z][\\a-z0-9_]*(?:\s*,\s*[a-z][\\a-z0-9_]*)*)?\s*\{#i';
+					if (preg_match($pattern, $content, $m))
+					{
+						$classes[$m['classname']] = array(
+							'path' => $path.$file,
+							'type' => trim($m[1]),
+							'override' => $host_mode
+						);
 
 						if (substr($m['classname'], -4) == 'Core')
 							$classes[substr($m['classname'], 0, -4)] = array(
@@ -198,7 +198,7 @@ class PrestaShopAutoload
 								'type' => $classes[$m['classname']]['type'],
 								'override' => $host_mode
 							);
-			 		}
+					}
 				}
 			}
 		}
