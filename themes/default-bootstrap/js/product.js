@@ -484,7 +484,7 @@ function updateDisplay()
 		//availability value management
 		if (stock_management && availableNowValue != '')
 		{
-			$('#availability_value').removeClass('warning_inline').text(availableNowValue).show();
+			$('#availability_value').removeClass('label-warning').addClass('label-success').text(availableNowValue).show();
 			$('#availability_statut:hidden').show()
 		}
 		else
@@ -541,11 +541,11 @@ function updateDisplay()
 		{
 			$('#availability_value').text(doesntExistNoMore + (globalQuantity > 0 ? ' ' + doesntExistNoMoreBut : ''));
 			if (!allowBuyWhenOutOfStock)
-				$('#availability_value').addClass('warning_inline');
+				$('#availability_value').removeClass('label-success').addClass('label-warning');
 		}
 		else
 		{
-			$('#availability_value').text(doesntExist).addClass('warning_inline');
+			$('#availability_value').text(doesntExist).removeClass('label-success').addClass('label-warning');
 			$('#oosHook').hide();
 		}
 
@@ -578,7 +578,7 @@ function updateDisplay()
 			$('#add_to_cart:hidden').fadeIn(600);
 
 			if (stock_management && availableLaterValue != '')
-				$('#availability_value').removeClass('warning_inline').text(availableLaterValue).show('slow');
+				$('#availability_value').addClass('label-warning').text(availableLaterValue).show('slow');
 			else
 				$('#availability_statut:visible').hide('slow');
 		}
