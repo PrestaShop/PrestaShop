@@ -66,7 +66,7 @@
                     		{/if}
 						{/if}
 						{if $symbol == '%'}
-							&nbsp;{$priceReduction|round|string_format:"%d"}{$symbol}&nbsp;
+							&nbsp;{$priceReduction|round:2|string_format:"%.2f"}{$symbol}&nbsp;
 						{else}
 							&nbsp;{convertPrice price=$priceReduction}&nbsp;
 						{/if}

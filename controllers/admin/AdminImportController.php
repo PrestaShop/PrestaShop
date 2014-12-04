@@ -110,14 +110,14 @@ class AdminImportControllerCore extends AdminController
 		{
 			case $this->entities[$this->l('Combinations')]:
 				$this->required_fields = array(
-					'id_product',
 					'group',
 					'attribute'
 				);
 
 				$this->available_fields = array(
 					'no' => array('label' => $this->l('Ignore this column')),
-					'id_product' => array('label' => $this->l('Product ID').'*'),
+					'id_product' => array('label' => $this->l('Product ID')),
+					'product_reference' => array('label' => $this->l('Product Reference')),
 					'group' => array(
 						'label' => $this->l('Attribute (Name:Type:Position)').'*'
 					),
@@ -1467,7 +1467,9 @@ class AdminImportControllerCore extends AdminController
 				}
 			}
 
-			$product->id_category_default = isset($product->id_category[0]) ? (int)$product->id_category[0] : '';
+			if (!isset($product->id_category_default) || !$product->id_category_default)
+				$product->id_category_default = isset($product->id_category[0]) ? (int)$product->id_category[0] : (int)Configuration::get('PS_HOME_CATEGORY');
+
 			$link_rewrite = (is_array($product->link_rewrite) && isset($product->link_rewrite[$id_lang])) ? trim($product->link_rewrite[$id_lang]) : '';
 			$valid_link = Validate::isLinkRewrite($link_rewrite);
 
@@ -1514,7 +1516,7 @@ class AdminImportControllerCore extends AdminController
 					$product->quantity = 0;
 
 				// If match ref is specified && ref product && ref product already in base, trying to update
-				if (Tools::getValue('match_ref') == 1 && $product->reference && $product->existsRefInDatabase($product->reference))
+				if (Tools::getValue('match_ref') && $product->reference && $product->existsRefInDatabase($product->reference))
 				{
 					$datas = Db::getInstance()->getRow('
 						SELECT product_shop.`date_add`, p.`id_product`
@@ -1933,8 +1935,19 @@ class AdminImportControllerCore extends AdminController
 					elseif (!empty($shop))
 						$id_shop_list[] = $shop;
 
-			if (isset($info['id_product']))
+			if (isset($info['id_product']) && $info['id_product'])
 				$product = new Product((int)$info['id_product'], false, $default_language);
+			elseif (Tools::getValue('match_ref') && isset($info['product_reference']) && $info['product_reference'])
+			{
+				$datas = Db::getInstance()->getRow('
+					SELECT p.`id_product`
+					FROM `'._DB_PREFIX_.'product` p
+					'.Shop::addSqlAssociation('product', 'p').'
+					WHERE p.`reference` = "'.pSQL($info['product_reference']).'"
+				');
+				if (isset($datas['id_product']) && $datas['id_product'])
+					$product = new Product((int)$datas['id_product'], false, $default_language);
+			}
 			else
 				continue;
 
@@ -2434,10 +2447,11 @@ class AdminImportControllerCore extends AdminController
 				$customer->id_default_group = (int)Configuration::get('PS_CUSTOMER_GROUP');
 			$customer_groups[] = (int)$customer->id_default_group;
 			$customer_groups = array_flip(array_flip($customer_groups));
-			$res = true;
+			$res = false;
 			if (($field_error = $customer->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 				($lang_field_error = $customer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
 			{
+				$res = true;
 				foreach ($customers_shop as $id_shop => $id_group)
 				{
 					$customer->force_id = (bool)Tools::getValue('forceIDs');
@@ -3012,14 +3026,14 @@ class AdminImportControllerCore extends AdminController
 
 				// updatesd($supply_order);
 
-				$res = true;
+				$res = false;
 
 				if ((int)$supply_order->id && ($supply_order->exists((int)$supply_order->id) || $supply_order->exists($supply_order->reference)))
-					$res &= $supply_order->update();
+					$res = $supply_order->update();
 				else
 				{
 					$supply_order->force_id = (bool)Tools::getValue('forceIDs');
-					$res &= $supply_order->add();
+					$res = $supply_order->add();
 				}
 
 				// errors
