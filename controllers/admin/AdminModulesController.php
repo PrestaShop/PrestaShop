@@ -527,7 +527,7 @@ class AdminModulesControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('Cannot load the module\'s object.');
 
-			if ($errors = $module->getErrors() && is_array($errors))
+			if (($errors = $module->getErrors()) && is_array($errors))
 				$this->errors = array_merge($this->errors, $errors);
 		}
 		else
