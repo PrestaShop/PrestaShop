@@ -500,7 +500,7 @@
 				$(".import_supply_orders_details").hide();
 				$('input[name=multiple_value_separator]').val('{if isset($multiple_value_separator_selected)}{$multiple_value_separator_selected}{else},{/if}');
 			}
-			if ($("#entity > option:selected").val() == 1) {
+			if ($("#entity > option:selected").val() == 1 || $("#entity > option:selected").val() == 2) {
 				$("#match_ref").closest('.form-group').show();
 			}
 			else {
