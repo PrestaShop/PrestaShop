@@ -110,14 +110,14 @@ class AdminImportControllerCore extends AdminController
 		{
 			case $this->entities[$this->l('Combinations')]:
 				$this->required_fields = array(
-					'id_product',
 					'group',
 					'attribute'
 				);
 
 				$this->available_fields = array(
 					'no' => array('label' => $this->l('Ignore this column')),
-					'id_product' => array('label' => $this->l('Product ID').'*'),
+					'id_product' => array('label' => $this->l('Product ID')),
+					'product_reference' => array('label' => $this->l('Product Reference')),
 					'group' => array(
 						'label' => $this->l('Attribute (Name:Type:Position)').'*'
 					),
@@ -1516,7 +1516,7 @@ class AdminImportControllerCore extends AdminController
 					$product->quantity = 0;
 
 				// If match ref is specified && ref product && ref product already in base, trying to update
-				if (Tools::getValue('match_ref') == 1 && $product->reference && $product->existsRefInDatabase($product->reference))
+				if (Tools::getValue('match_ref') && $product->reference && $product->existsRefInDatabase($product->reference))
 				{
 					$datas = Db::getInstance()->getRow('
 						SELECT product_shop.`date_add`, p.`id_product`
@@ -1935,8 +1935,19 @@ class AdminImportControllerCore extends AdminController
 					elseif (!empty($shop))
 						$id_shop_list[] = $shop;
 
-			if (isset($info['id_product']))
+			if (isset($info['id_product']) && $info['id_product'])
 				$product = new Product((int)$info['id_product'], false, $default_language);
+			elseif (Tools::getValue('match_ref') && isset($info['product_reference']) && $info['product_reference'])
+			{
+				$datas = Db::getInstance()->getRow('
+					SELECT p.`id_product`
+					FROM `'._DB_PREFIX_.'product` p
+					'.Shop::addSqlAssociation('product', 'p').'
+					WHERE p.`reference` = "'.pSQL($info['product_reference']).'"
+				');
+				if (isset($datas['id_product']) && $datas['id_product'])
+					$product = new Product((int)$datas['id_product'], false, $default_language);
+			}
 			else
 				continue;
 
