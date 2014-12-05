@@ -774,7 +774,18 @@ class AdminPerformanceControllerCore extends AdminController
 				{
 					$redirectAdmin = true;
 					if (Configuration::get('PS_HTACCESS_CACHE_CONTROL'))
-						Tools::generateHtaccess();
+					{
+						if (is_writable(_PS_ROOT_DIR_.'/.htaccess'))
+							Tools::generateHtaccess();
+						else
+						{
+							$message = $this->l('Before being able to use this tool, you need to:');
+							$message .= '<br />- '.$this->l('Create a blank .htaccess in your root directory.');
+							$message .= '<br />- '.$this->l('Give it write permissions (CHMOD 666 on Unix system).');
+							$this->errors[] = Tools::displayError($message, false);
+							Configuration::updateValue('PS_HTACCESS_CACHE_CONTROL', false);
+						}
+					}
 				}
 			}
 			else
