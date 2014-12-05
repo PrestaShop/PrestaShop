@@ -712,6 +712,12 @@ class AdminThemesControllerCore extends AdminController
 
 		if (empty($this->display))
 		{
+			$this->page_header_toolbar_btn['create_theme'] = array(
+				'href' => self::$currentIndex.'&addtheme&token='.$this->token,
+				'desc' => $this->l('Create theme', null, null, false),
+				'icon' => 'process-icon-new'
+			);
+
 			if (!defined('_PS_HOST_MODE_') || (int)$this->context->cookie->is_contributor === 1)
 				$this->page_header_toolbar_btn['import_theme'] = array(
 					'href' => self::$currentIndex.'&action=importtheme&token='.$this->token,
