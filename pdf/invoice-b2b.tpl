@@ -72,15 +72,15 @@
 		<td style="width: 15%"></td>
 		<td style="width: 85%">
 		{if $customer->siret}
-		<b>{l s='Company:'}</b> {$customer->company}
+		<b>{l s='Company:' pdf='true'}</b> {$customer->company}
 		{/if}
 		{if $customer->siret}
 		<br />
-		<b>{l s='SIRET:'}</b> {$customer->siret}
+		<b>{l s='SIRET:' pdf='true'}</b> {$customer->siret}
 		{/if}
 		{if $customer->ape}
 		<br />
-		<b>{l s='APE:'}</b> {$customer->ape}
+		<b>{l s='APE:' pdf='true'}</b> {$customer->ape}
 		{/if}
 		</td>
 		<td style="width: 15%"></td>
