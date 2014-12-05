@@ -3331,11 +3331,13 @@ div.star.star_hover {
 	overflow: hidden;
 	background: $homepage-footer-bg;
 	min-height: 344px;
+	height: 344px;
 	padding-right: 29px;
 	padding-left: 29px;
 	// max 991px
 	@media (max-width: $screen-sm-max) {
-		min-height: 348px;
+		min-height: 354px;
+		height: 354px;
 		padding-left: 13px;
 		padding-right: 13px;
 	}
