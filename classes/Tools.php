@@ -2042,7 +2042,7 @@ class ToolsCore
 		}
 
 		// Write .htaccess data
-		if (!$write_fd = fopen($path, 'w'))
+		if (!$write_fd = @fopen($path, 'w'))
 			return false;
 		if ($specific_before)
 			fwrite($write_fd, trim($specific_before)."\n\n");
