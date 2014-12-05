@@ -37,6 +37,8 @@ class ThemeCore extends ObjectModel
 
 	const CACHE_FILE_MUST_HAVE_THEMES_LIST = '/config/xml/must_have_themes_list.xml';
 
+	const UPLOADED_THEME_DIR_NAME = 'uploaded';
+
 	/** @var int access rights of created folders (octal) */
 	public static $access_rights = 0775;
 	/**
