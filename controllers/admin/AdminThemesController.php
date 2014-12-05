@@ -536,8 +536,9 @@ class AdminThemesControllerCore extends AdminController
 
 					file_put_contents($sandbox.(string)$addons_theme->name.'.zip', $zip_content);
 
-					if ($theme_directory = $this->extractTheme($sandbox.(string)$addons_theme->name.'.zip', $sandbox))
-						$ids_themes[$theme_directory] = (string)$addons_theme->id;
+					if ($this->extractTheme($sandbox.(string)$addons_theme->name.'.zip', $sandbox))
+						if ($theme_directory = $this->installTheme(Theme::UPLOADED_THEME_DIR_NAME, $sandbox, false))
+							$ids_themes[$theme_directory] = (string)$addons_theme->id;
 
 					Tools::deleteDirectory($sandbox);
 				}
@@ -1475,11 +1476,11 @@ class AdminThemesControllerCore extends AdminController
 				$uploader = new Uploader('themearchive');
 				$uploader->setAcceptTypes(array('zip'));
 				$uploader->setSavePath($sandbox);
-				$file = $uploader->process('uploaded.zip');
+				$file = $uploader->process(Theme::UPLOADED_THEME_DIR_NAME.'.zip');
 
 				if ($file[0]['error'] === 0)
 				{
-					if (Tools::ZipTest($sandbox.'uploaded.zip'))
+					if (Tools::ZipTest($sandbox.Theme::UPLOADED_THEME_DIR_NAME.'.zip'))
 						$archive_uploaded = true;
 					else
 						$this->errors[] = $this->l('Zip file seems to be broken');
@@ -1492,9 +1493,9 @@ class AdminThemesControllerCore extends AdminController
 			{
 				if (!Validate::isModuleUrl($url = Tools::getValue('themearchiveUrl'), $this->errors))
 					$this->errors[] = $this->l('Only zip files are allowed');
-				elseif (!move_uploaded_file($url, $sandbox.'uploaded.zip'))
+				elseif (!move_uploaded_file($url, $sandbox.Theme::UPLOADED_THEME_DIR_NAME.'.zip'))
 					$this->errors[] = $this->l('Error during the file download');
-				elseif (Tools::ZipTest($sandbox.'uploaded.zip'))
+				elseif (Tools::ZipTest($sandbox.Theme::UPLOADED_THEME_DIR_NAME.'.zip'))
 					$archive_uploaded = true;
 				else
 					$this->errors[] = $this->l('Zip file seems to be broken');
@@ -1504,9 +1505,9 @@ class AdminThemesControllerCore extends AdminController
 				$filename = _PS_ALL_THEMES_DIR_.Tools::getValue('theme_archive_server');
 				if (substr($filename, -4) != '.zip')
 					$this->errors[] = $this->l('Only zip files are allowed');
-				elseif (!copy($filename, $sandbox.'uploaded.zip'))
+				elseif (!copy($filename, $sandbox.Theme::UPLOADED_THEME_DIR_NAME.'.zip'))
 					$this->errors[] = $this->l('An error has occurred during the file copy.');
-				elseif (Tools::ZipTest($sandbox.'uploaded.zip'))
+				elseif (Tools::ZipTest($sandbox.Theme::UPLOADED_THEME_DIR_NAME.'.zip'))
 					$archive_uploaded = true;
 				else
 					$this->errors[] = $this->l('Zip file seems to be broken');
@@ -1515,7 +1516,8 @@ class AdminThemesControllerCore extends AdminController
 				$this->errors[] = $this->l('You must upload or enter a location of your zip');
 
 			if ($archive_uploaded)
-				$this->extractTheme($sandbox.'uploaded.zip', $sandbox);
+				if ($this->extractTheme($sandbox.Theme::UPLOADED_THEME_DIR_NAME.'.zip', $sandbox))
+					$this->installTheme(Theme::UPLOADED_THEME_DIR_NAME, $sandbox);
 
 			Tools::deleteDirectory($sandbox);
 
@@ -1528,17 +1530,14 @@ class AdminThemesControllerCore extends AdminController
 
 	protected function extractTheme($theme_zip_file, $sandbox)
 	{
-		if (!Tools::ZipExtract($theme_zip_file, $sandbox.'uploaded/'))
-			$this->errors[] = $this->l('Error during zip extraction');
-		else
-			$this->installTheme('uploaded', $sandbox);
+		if (Tools::ZipExtract($theme_zip_file, $sandbox.Theme::UPLOADED_THEME_DIR_NAME.'/'))
+			return true;
 
-		if (!count($this->errors))
-			return $theme->directory;
+		$this->errors[] = $this->l('Error during zip extraction');
 		return false;
 	}
 
-	protected function installTheme($theme_dir, $sandbox = false)
+	protected function installTheme($theme_dir, $sandbox = false, $redirect = true)
 	{
 		if (!$sandbox)
 		{
@@ -1584,8 +1583,14 @@ class AdminThemesControllerCore extends AdminController
 		Tools::deleteDirectory($sandbox);
 
 		if (!count($this->errors))
-			Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminThemes').'&conf=18');
-
+		{
+			if ($redirect)
+				Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminThemes').'&conf=18');
+			else
+				return true;
+		}
+		else
+			return false;
 	}
 
 	protected function isThemeInstalled($theme_name)
