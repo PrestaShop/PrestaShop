@@ -26,3 +26,5 @@ ALTER TABLE `PREFIX_order_state` ADD `pdf_invoice` TINYINT(1) UNSIGNED NOT NULL 
 ALTER TABLE `PREFIX_orders` CHANGE `shipping_number` `shipping_number` VARCHAR( 64 );
 
 /* PHP:ps16012_update_alias(); */;
+
+ALTER TABLE `PREFIX_store` CHANGE `hours` `hours` TEXT;
