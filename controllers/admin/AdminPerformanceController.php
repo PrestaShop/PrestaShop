@@ -747,6 +747,22 @@ class AdminPerformanceControllerCore extends AdminController
 				$theme_cache_directory = _PS_ALL_THEMES_DIR_.$this->context->shop->theme_directory.'/cache/';
 				if (((bool)Tools::getValue('PS_CSS_THEME_CACHE') || (bool)Tools::getValue('PS_JS_THEME_CACHE')) && !is_writable($theme_cache_directory))
 					$this->errors[] = Tools::displayError(sprintf($this->l('To use Smart Cache directory %s must be writable.'), realpath($theme_cache_directory)));
+
+				if($tmp = (int)Tools::getValue('PS_CSS_THEME_CACHE'))
+				{
+					$version = (int)Configuration::get('PS_CCCCSS_VERSION');
+					if (Configuration::get('PS_CSS_THEME_CACHE') != $tmp)
+						Configuration::updateValue('PS_CCCCSS_VERSION', ++$version);
+				}
+
+
+				if($tmp = (int)Tools::getValue('PS_JS_THEME_CACHE'))
+				{
+					$version = (int)Configuration::get('PS_CCCJS_VERSION');
+					if (Configuration::get('PS_JS_THEME_CACHE') != $tmp)
+						Configuration::updateValue('PS_CCCJS_VERSION', ++$version);
+				}
+
 				if (!Configuration::updateValue('PS_CSS_THEME_CACHE', (int)Tools::getValue('PS_CSS_THEME_CACHE')) ||
 					!Configuration::updateValue('PS_JS_THEME_CACHE', (int)Tools::getValue('PS_JS_THEME_CACHE')) ||
 					!Configuration::updateValue('PS_HTML_THEME_COMPRESSION', (int)Tools::getValue('PS_HTML_THEME_COMPRESSION')) ||
