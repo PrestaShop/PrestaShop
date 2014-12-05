@@ -1493,7 +1493,7 @@ class AdminThemesControllerCore extends AdminController
 			{
 				if (!Validate::isModuleUrl($url = Tools::getValue('themearchiveUrl'), $this->errors))
 					$this->errors[] = $this->l('Only zip files are allowed');
-				elseif (!move_uploaded_file($url, $sandbox.Theme::UPLOADED_THEME_DIR_NAME.'.zip'))
+				elseif (!Tools::copy($url, $sandbox.Theme::UPLOADED_THEME_DIR_NAME.'.zip'))
 					$this->errors[] = $this->l('Error during the file download');
 				elseif (Tools::ZipTest($sandbox.Theme::UPLOADED_THEME_DIR_NAME.'.zip'))
 					$archive_uploaded = true;
