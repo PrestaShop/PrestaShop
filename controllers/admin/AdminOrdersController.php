@@ -2589,6 +2589,9 @@ class AdminOrdersControllerCore extends AdminController
 					$quantity_to_reinject,
 					$order_detail->id_shop
 				);
+
+				if ($delete)
+					$order_detail->delete();
 			}
 			else
 				$this->errors[] = Tools::displayError('This product cannot be re-stocked.');
