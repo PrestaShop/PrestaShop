@@ -760,6 +760,8 @@ function init()
 			{
 				if (data.result)
 				{
+					if (data.refresh)
+						location.reload();
 					tr_product.fadeOut('slow', function() {
 						$(this).remove();
 					});
