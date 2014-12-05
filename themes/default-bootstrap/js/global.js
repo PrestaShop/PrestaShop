@@ -391,6 +391,8 @@ function accordion(status)
 			$(this).toggleClass('active').parent().find('.block_content').stop().slideToggle('medium');
 		});
 		$('#right_column, #left_column').addClass('accordion').find('.block .block_content').slideUp('fast');
+		if (typeof(ajaxCart) !== 'undefined')
+			ajaxCart.collapse();
 	}
 	else
 	{

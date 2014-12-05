@@ -526,7 +526,9 @@ class AdminModulesControllerCore extends AdminController
 			}
 			else
 				$this->errors[] = Tools::displayError('Cannot load the module\'s object.');
-			$this->errors = array_merge($this->errors, $module->getErrors());
+
+			if (($errors = $module->getErrors()) && is_array($errors))
+				$this->errors = array_merge($this->errors, $errors);
 		}
 		else
 			$this->errors[] = Tools::displayError('You do not have permission to add this.');
