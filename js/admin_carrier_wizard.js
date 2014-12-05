@@ -41,10 +41,10 @@ $(document).ready(function() {
 	});
 
 	$('#carrier_logo_input').change(function(e) {
+		var name  = '';
 		if ($(this)[0].files !== undefined)
 		{
 			var files = $(this)[0].files;
-			var name  = '';
 
 			$.each(files, function(index, value) {
 				name += value.name+', ';
@@ -54,13 +54,29 @@ $(document).ready(function() {
 		}
 		else // Internet Explorer 9 Compatibility
 		{
-			var name = $(this).val().split(/[\\/]/);
+			name = $(this).val().split(/[\\/]/);
 			$('#attachement_filename').val(name[name.length-1]);
 		}
 	});
 
 	$('#carrier_logo_remove').click(function(e) {
 		$('#attachement_filename').val('');
+	});
+
+	if ($('#is_free_on').prop('checked') === true)
+	{
+		$('#shipping_handling_off').prop('checked', true).prop('disabled', true);
+		$('#shipping_handling_on').prop('disabled', true).prop('checked', false);
+	}
+
+	$('#is_free_on').click(function(e) {
+		$('#shipping_handling_off').prop('checked', true).prop('disabled', true);
+		$('#shipping_handling_on').prop('disabled', true).prop('checked', false);
+	});
+
+	$('#is_free_off').click(function(e) {
+		$('#shipping_handling_off').prop('disabled', false);
+		$('#shipping_handling_on').prop('disabled', false);
 	});
 });
 
@@ -119,7 +135,7 @@ function onFinishCallback(obj, context)
 		data : $('#carrier_wizard .stepContainer .content form').serialize() + '&action=finish_step&ajax=1&step_number='+context.fromStep,
 		success : function(data) {
 			if (data.has_error)
-			{				
+			{
 				displayError(data.errors, context.fromStep);
 				resizeWizard();
 			}
@@ -137,7 +153,7 @@ function onLeaveStepCallback(obj, context)
 	if (context.toStep == nbr_steps)
 		displaySummary();
 
-	return validateSteps(context.fromStep, context.toStep); // return false to stay on step and true to continue navigation 
+	return validateSteps(context.fromStep, context.toStep); // return false to stay on step and true to continue navigation
 }
 
 function displaySummary()
@@ -147,7 +163,7 @@ function displaySummary()
 
 	// Carrier name
 	$('#summary_name').html($('#name').val());
-	
+
 	// Delay and pricing
 	tmp = summary_translation_meta_informations.replace('@s2', '<strong>' + $('#delay_1').val() + '</strong>');
 	if ($('#is_free_on').attr('checked'))
@@ -155,25 +171,25 @@ function displaySummary()
 	else
 		tmp = tmp.replace('@s1', summary_translation_paid);
 	$('#summary_meta_informations').html(tmp);
-	
+
 	// Tax and calculation mode for the shipping cost
-	tmp = summary_translation_shipping_cost.replace('@s2', '<strong>' + $('#id_tax_rules_group option:selected').text() + '</strong>');	
-	
+	tmp = summary_translation_shipping_cost.replace('@s2', '<strong>' + $('#id_tax_rules_group option:selected').text() + '</strong>');
+
 		if ($('#billing_price').attr('checked'))
 			tmp = tmp.replace('@s1', summary_translation_price);
 		else if ($('#billing_weight').attr('checked'))
 			tmp = tmp.replace('@s1', summary_translation_weight);
 		else
 			tmp = tmp.replace('@s1', '<strong>' + summary_translation_undefined + '</strong>');
-	
-	
-	
+
+
+
 	$('#summary_shipping_cost').html(tmp);
-	
+
 	// Weight or price ranges
 	$('#summary_range').html(summary_translation_range+' '+summary_translation_range_limit);
-	
-	
+
+
 	if ($('input[name="shipping_method"]:checked').val() == 1)
 		unit = PS_WEIGHT_UNIT;
 	else
@@ -181,7 +197,7 @@ function displaySummary()
 
 	var range_inf = summary_translation_undefined;
 	var range_sup = summary_translation_undefined;
-	
+
 	$('tr.range_inf td input').each(function()
 	{
 		if (!isNaN(parseFloat($(this).val())) && (range_inf == summary_translation_undefined || parseFloat(range_inf) > parseFloat($(this).val())))
@@ -193,7 +209,7 @@ function displaySummary()
 		if (!isNaN(parseFloat($(this).val())) && (range_sup == summary_translation_undefined || parseFloat(range_sup) < parseFloat($(this).val())))
 			range_sup = $(this).val();
 	});
-	
+
 	$('#summary_range').html(
 		$('#summary_range').html()
 		.replace('@s1', '<strong>' + range_inf +' '+ unit + '</strong>')
@@ -208,14 +224,14 @@ function displaySummary()
 		if ($(this).attr('checked'))
 			$('#summary_zones').html($('#summary_zones').html() + '<li><strong>' + $(this).closest('tr').find('label').text() + '</strong></li>');
 	});
-	
+
 	// Group restrictions
 	$('#summary_groups').html('');
 	$('input[name$="groupBox[]"]').each(function(){
 		if ($(this).attr('checked'))
 			$('#summary_groups').html($('#summary_groups').html() + '<li><strong>' + $(this).closest('tr').find('td:eq(2)').text() + '</strong></li>');
 	});
-	
+
 	// shop restrictions
 	$('#summary_shops').html('');
 	$('.input_shop').each(function(){
@@ -243,16 +259,16 @@ function validateSteps(fromStep, toStep)
 				return;
 			}
 		}
-		
+
 		if (toStep > fromStep && !$('#is_free_on').attr('checked') && !validateRange(2))
 			is_ok = false;
 	}
-	
+
 	$('.wizard_error').remove();
-	
+
 	if (is_ok && isOverlapping())
 		is_ok = false;
-	
+
 	if (is_ok)
 	{
 		form = $('#carrier_wizard #step-'+fromStep+' form');
@@ -283,7 +299,7 @@ function validateSteps(fromStep, toStep)
 }
 
 function displayError(errors, step_number)
-{	
+{
 	$('#carrier_wizard .actionBar a.btn').removeClass('disabled');
 	$('.wizard_error').remove();
 	str_error = '<div class="error wizard_error" style="display:none"><ul>';
@@ -310,7 +326,7 @@ function bind_inputs()
 		$('#carrier_wizard .actionBar a.btn').not('.buttonFinish').removeClass('disabled');
 		$('.wizard_error').fadeOut('fast', function () { $(this).remove()});
 	});
-	
+
 	$('tr.delete_range td button').off('click').on('click', function () {
 		if (confirm(delete_range_confirm))
 		{
@@ -323,8 +339,8 @@ function bind_inputs()
 		}
 		return false;
 	});
-	
-	$('tr.fees td input:checkbox').off('change').on('change', function () 
+
+	$('tr.fees td input:checkbox').off('change').on('change', function ()
 	{
 		if($(this).is(':checked'))
 		{
@@ -341,14 +357,14 @@ function bind_inputs()
 		}
 		else
 			$(this).closest('tr').find('td').find('div.input-group input:text').attr('disabled', 'disabled').val('');
-			
+
 		return false;
 	});
-	
+
 	$('tr.range_sup td input:text, tr.range_inf td input:text').focus(function () {
 		$(this).closest('div.input-group').removeClass('has-error');
 	});
-	
+
 	$('tr.range_sup td input:text, tr.range_inf td input:text').keypress(function (evn) {
 		index = $(this).closest('td').index();
 		if (evn.keyCode == 13)
@@ -360,18 +376,18 @@ function bind_inputs()
 			return false;
 		}
 	});
-	
+
 	$('tr.fees_all td input:text').keypress(function (evn) {
 		index = $(this).parent('td').index();
 		if (evn.keyCode == 13)
 			return false;
 	});
-	
+
 	$('tr.range_sup td input:text, tr.range_inf td input:text').typeWatch({
 		captureLength: 0,
 		highlight: false,
 		wait: 1000,
-		callback: function() { 
+		callback: function() {
 			index = $(this.el).closest('td').index();
 			range_sup = $('tr.range_sup td:eq('+index+')').find('div.input-group input:text').val().trim();
 			range_inf = $('tr.range_inf td:eq('+index+')').find('div.input-group input:text').val().trim();
@@ -384,7 +400,7 @@ function bind_inputs()
 			}
 		}
 	});
-	
+
 	$(document.body).off('change', 'tr.fees_all td input').on('change', 'tr.fees_all td input', function() {
 	   index = $(this).closest('td').index();
 		val = $(this).val();
@@ -392,14 +408,14 @@ function bind_inputs()
 		$('tr.fees').each(function () {
 			$(this).find('td:eq('+index+') input:text:enabled').val(val);
 		});
-		
+
 		return false;
 	});
-	
+
 	$('input[name="is_free"]').off('click').on('click', function() {
 		is_freeClick(this);
 	});
-		
+
 	$('input[name="shipping_method"]').off('click').on('click', function() {
 		$.ajax({
 			type:"POST",
@@ -417,10 +433,10 @@ function bind_inputs()
 			}
 		});
 	});
-	
+
 	$('#zones_table td input[type=text]').off('change').on('change', function () {
 		checkAllFieldIsNumeric();
-	});	
+	});
 }
 
 function is_freeClick(elt)
@@ -468,7 +484,7 @@ function validateRange(index)
 	//reset error css
 	$('tr.range_sup td input:text').closest('div.input-group').removeClass('has-error');
 	$('tr.range_inf td input:text').closest('div.input-group').removeClass('has-error');
-	
+
 	var is_valid = true;
 	range_sup = parseFloat($('tr.range_sup td:eq('+index+')').find('div.input-group input:text').val().trim());
 	range_inf = parseFloat($('tr.range_inf td:eq('+index+')').find('div.input-group input:text').val().trim());
@@ -493,30 +509,30 @@ function validateRange(index)
 		displayError([invalid_range], $("#carrier_wizard").smartWizard('currentStep'));
 	}
 	else if (is_valid && index > 2) //check range only if it's not the first range
-	{	
-		$('tr.range_sup td').not('.range_type, .range_sign, tr.range_sup td:last').each(function () 
+	{
+		$('tr.range_sup td').not('.range_type, .range_sign, tr.range_sup td:last').each(function ()
 		{
 			if ($('tr.fees_all td:eq('+index+')').hasClass('validated'))
 			{
 				is_valid = false;
 				curent_index = $(this).index();
-	
+
 				current_sup = $(this).find('div.input-group input').val();
 				current_inf = $('tr.range_inf td:eq('+curent_index+') input').val();
-				
+
 				if ($('tr.range_inf td:eq('+curent_index+1+') input').length)
 					next_inf = $('tr.range_inf td:eq('+curent_index+1+') input').val();
 				else
 					next_inf = false;
-				
+
 				//check if range already exist
 				//check if ranges is overlapping
 				if ((range_sup != current_sup && range_inf != current_inf) && ((range_sup > current_sup || range_sup <= current_inf) && (range_inf < current_inf || range_inf >= current_sup)))
 					is_valid = true;
 			}
-			
+
 		});
-		
+
 		if (!is_valid)
 		{
 			$('tr.range_sup td:eq('+index+')').find('div.input-group input:text').closest('div.input-group').addClass('has-error');
@@ -532,7 +548,7 @@ function validateRange(index)
 function enableZone(index)
 {
 	$('tr.fees').each(function () {
-		if ($(this).find('td:eq(1)').find('input[type=checkbox]:checked').length)	
+		if ($(this).find('td:eq(1)').find('input[type=checkbox]:checked').length)
 			$(this).find('td:eq('+index+')').find('div.input-group input').removeAttr('disabled');
 	});
 }
@@ -552,7 +568,7 @@ function enableRange(index)
 			enableZone(index);
 	});
 	$('tr.fees_all td:eq('+index+')').addClass('validated').removeClass('not_validated');
-	
+
 	//if ($('.zone input[type=checkbox]:checked').length)
 		enableGlobalFees(index);
 	bind_inputs();
@@ -562,14 +578,14 @@ function enableGlobalFees(index)
 {
 	$('span.fees_all').show();
 	$('tr.fees_all td:eq('+index+')').find('div.input-group input').show().removeAttr('disabled');
-	$('tr.fees_all td:eq('+index+')').find('div.input-group .currency_sign').show();	
+	$('tr.fees_all td:eq('+index+')').find('div.input-group .currency_sign').show();
 }
 
 function disabledGlobalFees(index)
 {
 	$('span.fees_all').hide();
 	$('tr.fees_all td:eq('+index+')').find('div.input-group input').hide().attr('disabled', 'disabled');
-	$('tr.fees_all td:eq('+index+')').find('div.input-group .currency_sign').hide();	
+	$('tr.fees_all td:eq('+index+')').find('div.input-group .currency_sign').hide();
 }
 
 
@@ -591,7 +607,7 @@ function add_new_range()
 		alert(need_to_validate);
 		return false;
 	}
-	
+
 	last_sup_val = $('tr.range_sup td:last input').val();
 	//add new rand sup input
 	$('tr.range_sup td:last').after('<td class="range_data"><div class="input-group fixed-width-md"><span class="input-group-addon weight_unit" style="display: none;">'+PS_WEIGHT_UNIT+'</span><span class="input-group-addon price_unit" style="display: none;">'+currency_sign+'</span><input class="form-control" name="range_sup[]" type="text" /></div></td>');
@@ -603,7 +619,7 @@ function add_new_range()
 		$(this).find('td:last').after('<td><div class="input-group fixed-width-md"><span class="input-group-addon currency_sign">'+currency_sign+'</span><input class="form-control" disabled="disabled" name="fees['+$(this).data('zoneid')+'][]" type="text" /></div></td>');
 	});
 	$('tr.delete_range td:last').after('<td><button class="btn btn-default">'+labelDelete+'</button</td>');
-	
+
 	bind_inputs();
 	rebuildTabindex();
 	displayRangeType();
@@ -629,10 +645,10 @@ function checkAllFieldIsNumeric()
 function rebuildTabindex()
 {
 	i = 1;
-	$('#zones_table tr').each(function () 
-	{	
+	$('#zones_table tr').each(function ()
+	{
 		j = i;
-		$(this).find('td').each(function () 
+		$(this).find('td').each(function ()
 		{
 			j = zones_nbr + j;
 			if ($(this).index() >= 2 && $(this).find('div.input-group input'))
@@ -657,7 +673,7 @@ function checkRangeContinuity(reordering)
 	reordering = typeof reordering !== 'undefined' ? reordering : false;
 	res = true;
 
-	$('tr.range_sup td').not('.range_type, .range_sign').each(function () 
+	$('tr.range_sup td').not('.range_type, .range_sign').each(function ()
 	{
 		index = $(this).index();
 		if (index > 2)
@@ -667,7 +683,7 @@ function checkRangeContinuity(reordering)
 			prev_index = index-1;
 			prev_range_sup = parseFloat($('tr.range_sup td:eq('+prev_index+')').find('div.input-group input:text').val().trim());
 			prev_range_inf = parseFloat($('tr.range_inf td:eq('+prev_index+')').find('div.input-group input:text').val().trim());
-			
+
 			if (range_inf < prev_range_inf || range_sup < prev_range_sup)
 			{
 				res = false;
@@ -677,7 +693,7 @@ function checkRangeContinuity(reordering)
 					if (new_position)
 						repositionRange(index, new_position);
 				}
-			}	
+			}
 		}
 	});
 	if (res)
@@ -690,7 +706,7 @@ function checkRangeContinuity(reordering)
 function getCorrectRangePosistion(current_inf, current_sup)
 {
 	new_position = false;
-	$('tr.range_sup td').not('.range_type, .range_sign').each(function () 
+	$('tr.range_sup td').not('.range_type, .range_sign').each(function ()
 	{
 		index = $(this).index();
 		range_sup = parseFloat($('tr.range_sup td:eq('+index+')').find('div.input-group input:text').val().trim());
@@ -716,7 +732,7 @@ function isOverlapping()
 		$('tr.range_sup td').not('.range_type, .range_sign').each( function ()
 		{
 			testing_index = $(this).index();
-			
+
 			if (testing_index != index) //do not test himself
 			{
 				testing_inf = parseFloat($('.range_inf td:eq('+testing_index+') input').val());
@@ -754,5 +770,5 @@ function checkAllZones(elt)
 		$('.input_zone').removeAttr('checked');
 		$('.fees div.input-group input:text, .fees_all div.input-group input:text').attr('disabled', 'disabled');
 	}
-	
+
 }
