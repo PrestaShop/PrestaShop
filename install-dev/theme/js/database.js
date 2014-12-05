@@ -65,11 +65,23 @@ $(document).ready(function()
 			},
             error: function(xhr)
             {
+            	var re = /<([a-z]+)(.*?>.*?<\/\1>|.*?\/>)/img;
+            	var str = xhr.responseText;
+            	var m;
+
+            	while ((m = re.exec(str)) != null) {
+				    if (m.index === re.lastIndex) {
+				        re.lastIndex++;
+				    }
+				    if (m)
+				    	var html = true;
+				}
+
                 $("#dbResultCheck")
                     .addClass('errorBlock')
 					.removeClass('waitBlock')
                     .removeClass('okBlock')
-                    .html('An error occurred:<br /><br />' + xhr.responseText)
+                    .html('An error occurred:<br /><br />' + (html ? 'Can you please reload the page' : xhr.responseText))
             }
 		});
 	});

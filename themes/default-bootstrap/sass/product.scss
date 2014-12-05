@@ -794,8 +794,6 @@ table.table-product-discounts{
 	line-height: 18px;
 	display: inline-block;
 	padding: 3px 8px 4px;
-	background: #55c65e;
-	border: 1px solid #36943e;
 	margin-left: 5px;
 }
 #last_quantities{
@@ -804,6 +802,7 @@ table.table-product-discounts{
 	padding: 4px 8px 3px;
 	position: relative;
 	top: 1px;
+	margin-left: 0px;
 }
 #availability_statut,
 #pQuantityAvailable {
@@ -812,12 +811,6 @@ table.table-product-discounts{
 #pQuantityAvailable span{
 	font-weight: 700;
 	color: $base-text-color;
-}
-#availability_statut #availability_value.warning_inline {
-	background-color: #fe9126;
-	border-color: #e4752b;
-	text-shadow: 1px 1px #e68322;
-	margin: 0;
 }
 
 /* box-security */

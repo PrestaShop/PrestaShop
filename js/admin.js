@@ -1296,7 +1296,7 @@ function ajaxStates(id_state_selected)
 	{
 		$.ajax({
 			type: "GET",
-			url: module_dir + "vatnumber/ajax.php?id_country=" + $('#id_country').val(),
+			url: window.location.origin + module_dir + "vatnumber/ajax.php?id_country=" + $('#id_country').val(),
 			success: function(isApplicable)
 			{
 				if(isApplicable == 1)
