@@ -329,6 +329,9 @@ class AdminTranslationsControllerCore extends AdminController
 			fwrite($fd, "\n?>");
 			fclose($fd);
 
+			Translate::clearL2Cache();
+			Translate::setL2CacheDoNotSaveFlag();
+
 			// Redirect
 			if ($save_and_stay)
 				$this->redirect(true);

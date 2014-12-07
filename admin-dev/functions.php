@@ -237,6 +237,8 @@ function translate($string)
 {
 	Tools::displayAsDeprecated();
 
+	
+	
 	global $_LANGADM;
 	if (!is_array($_LANGADM))
 		return str_replace('"', '&quot;', $string);
