@@ -541,7 +541,7 @@ class TranslateCore
 		if (!self::$l2_save_guard)
 			self::initL2Cache();
 
-		$l2_cache_key = md5(sprintf('%s|%s|%s|%d|%d', $string, $currentClass, $class, (int)$addslashes, (int)$htmlentities));
+		$l2_cache_key = md5(sprintf('%s|%s|%s|%d|%d', $string));
 		if (!isset(self::$l2_cache[$l2_cache_key]) && !isset(self::$l2_miss[$l2_cache_key]))
 		{
 			self::$l2_miss[$l2_cache_key] = true;
