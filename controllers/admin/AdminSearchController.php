@@ -217,6 +217,7 @@ class AdminSearchControllerCore extends AdminController
 		$this->_list['features'] = array();
 
 		global $_LANGADM;
+		Translate::loadInitTranslations();
 		if ($_LANGADM === null)
 			return;
 

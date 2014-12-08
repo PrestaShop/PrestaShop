@@ -809,20 +809,12 @@ class ToolsCore
 	*/
 	public static function displayError($string = 'Fatal error', $htmlentities = true, Context $context = null)
 	{
-		global $_ERRORS;
-
-		if (is_null($context))
-			$context = Context::getContext();
-
-		@include_once(_PS_TRANSLATIONS_DIR_.$context->language->iso_code.'/errors.php');
 
 		if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_ && $string == 'Fatal error')
 			return ('<pre>'.print_r(debug_backtrace(), true).'</pre>');
-		if (!is_array($_ERRORS))
-			return $htmlentities ? Tools::htmlentitiesUTF8($string) : $string;
-		$key = md5(str_replace('\'', '\\\'', $string));
-		$str = (isset($_ERRORS) && is_array($_ERRORS) && array_key_exists($key, $_ERRORS)) ? $_ERRORS[$key] : $string;
-		return $htmlentities ? Tools::htmlentitiesUTF8(stripslashes($str)) : $str;
+
+		return Translate::displayErrorTranslate($string, $htmlentities, $context);
+
 	}
 
 	/**
