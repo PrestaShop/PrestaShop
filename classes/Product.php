@@ -2722,7 +2722,11 @@ class ProductCore extends ObjectModel
 			'-'.$quantity.'-'.$id_product_attribute.'-'.($use_tax?'1':'0').'-'.$decimals.'-'.($only_reduc?'1':'0').
 			'-'.($use_reduc?'1':'0').'-'.$with_ecotax.'-'.$id_customer.'-'.(int)$use_group_reduction.'-'.(int)$id_cart.'-'.(int)$real_quantity;
 
-		// reference parameter is filled before any returns
+	
+		if (isset(self::$_prices[$cache_id]))
+			return self::$_prices[$cache_id];
+
+                // reference parameter is filled before any returns
 		$specific_price = SpecificPrice::getSpecificPrice(
 			(int)$id_product,
 			$id_shop,
@@ -2735,8 +2739,6 @@ class ProductCore extends ObjectModel
 			$id_cart,
 			$real_quantity
 		);
-		if (isset(self::$_prices[$cache_id]))
-			return self::$_prices[$cache_id];
 
 		// fetch price & attribute price
 		$cache_id_2 = $id_product.'-'.$id_shop;
