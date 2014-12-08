@@ -248,15 +248,11 @@ abstract class AdminTabCore
 			$string = str_replace('\'', '\\\'', $string);
 			return Translate::getModuleTranslation(Module::$classInModule[$currentClass], $string, $currentClass);
 		}
-		global $_LANGADM;
 
         if ($class == __CLASS__)
                 $class = 'AdminTab';
 
-		$key = md5(str_replace('\'', '\\\'', $string));
-		$str = (array_key_exists(get_class($this).$key, $_LANGADM)) ? $_LANGADM[get_class($this).$key] : ((array_key_exists($class.$key, $_LANGADM)) ? $_LANGADM[$class.$key] : $string);
-		$str = $htmlentities ? htmlentities($str, ENT_QUOTES, 'utf-8') : $str;
-		return str_replace('"', '&quot;', ($addslashes ? addslashes($str) : stripslashes($str)));
+        return Translate::getAdminTabTranslation($string, $currentClass, $class, $addslashes, $htmlentities);
 	}
 
 	/**

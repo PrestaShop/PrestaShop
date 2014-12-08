@@ -48,14 +48,6 @@ try
 		$currentIndex .= '&back='.urlencode($back);
 	AdminTab::$currentIndex = $currentIndex;
 
-	$iso = $context->language->iso_code;
-	if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/errors.php'))
-		include(_PS_TRANSLATIONS_DIR_.$iso.'/errors.php');
-	if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/fields.php'))
-		include(_PS_TRANSLATIONS_DIR_.$iso.'/fields.php');
-	if (file_exists(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php'))
-		include(_PS_TRANSLATIONS_DIR_.$iso.'/admin.php');
-
 	/* Server Params */
 	$protocol_link = (Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
 	$protocol_content = (isset($useSSL) AND $useSSL AND Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
@@ -67,7 +59,7 @@ try
 		define('_PS_BASE_URL_SSL_', Tools::getShopDomainSsl(true));
 
 	$path = dirname(__FILE__).'/themes/';
-	// if the current employee theme is not valid (check layout.tpl presence), 
+	// if the current employee theme is not valid (check layout.tpl presence),
 	// reset to default theme
 	if (empty($context->employee->bo_theme) ||
 		!file_exists($path.$context->employee->bo_theme.'/template/layout.tpl'))
