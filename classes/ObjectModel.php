@@ -522,6 +522,18 @@ abstract class ObjectModelCore
 							$result &= ObjectModel::$db->insert($this->def['table'].'_lang', $field);
 						}
 					}
+					// If this table is linked to multishop system,insert for all shops from context
+					elseif ($this->isLangMultishop())
+					{
+						$id_shop_list = Shop::getContextListShopID();
+						if (count($this->id_shop_list) > 0)
+							$id_shop_list = $this->id_shop_list;
+						foreach ($id_shop_list as $id_shop)
+						{
+							$field['id_shop'] = (int)$id_shop;
+							$result &= ObjectModel::$db->insert($this->def['table'].'_lang', $field);
+						}
+					}
 					else
 						$result &= ObjectModel::$db->insert($this->def['table'].'_lang', $field);
 				}
