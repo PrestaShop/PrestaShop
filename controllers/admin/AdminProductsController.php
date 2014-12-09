@@ -4592,7 +4592,7 @@ class AdminProductsControllerCore extends AdminController
 			$id_product = (int)(Tools::getValue('id_product'));
 			$id_category = (int)(Tools::getValue('id_category'));
 			$positions = Tools::getValue('product');
-
+			$offset = (int)Tools::getValue('offset',0);
 			if (is_array($positions))
 				foreach ($positions as $position => $value)
 				{
@@ -4601,12 +4601,12 @@ class AdminProductsControllerCore extends AdminController
 					if ((isset($pos[1]) && isset($pos[2])) && ($pos[1] == $id_category && (int)$pos[2] === $id_product))
 					{
 						if ($product = new Product((int)$pos[2]))
-							if (isset($position) && $product->updatePosition($way, $position))
+							if (isset($position) && $product->updatePosition($way, $offset+$position))
 							{
 								$category = new Category((int)$id_category);
 								if (Validate::isLoadedObject($category))
 									hook::Exec('categoryUpdate', array('category' => $category));
-								echo 'ok position '.(int)$position.' for product '.(int)$pos[2]."\r\n";							
+								echo 'ok position '.((int)$position+$offset).' for product '.(int)$pos[2]."\r\n";							
 							}
 							else
 								echo '{"hasError" : true, "errors" : "Can not update product '.(int)$id_product.' to position '.(int)$position.' "}';
