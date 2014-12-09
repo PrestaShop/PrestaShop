@@ -38,7 +38,7 @@ class ContactControllerCore extends FrontController
 		if (Tools::isSubmit('submitMessage'))
 		{
 			$extension = array('.txt', '.rtf', '.doc', '.docx', '.pdf', '.zip', '.png', '.jpeg', '.gif', '.jpg');
-			$fileAttachment = Tools::fileAttachment('fileUpload');
+			$file_attachment = Tools::fileAttachment('fileUpload');
 			$message = Tools::getValue('message'); // Html entities is not usefull, iscleanHtml check there is no bad html tags.
 			if (!($from = trim(Tools::getValue('from'))) || !Validate::isEmail($from))
 				$this->errors[] = Tools::displayError('Invalid email address.');
@@ -48,17 +48,15 @@ class ContactControllerCore extends FrontController
 				$this->errors[] = Tools::displayError('Invalid message');
 			elseif (!($id_contact = (int)Tools::getValue('id_contact')) || !(Validate::isLoadedObject($contact = new Contact($id_contact, $this->context->language->id))))
 				$this->errors[] = Tools::displayError('Please select a subject from the list provided. ');
-			elseif (!empty($fileAttachment['name']) && $fileAttachment['error'] != 0)
+			elseif (!empty($file_attachment['name']) && $file_attachment['error'] != 0)
 				$this->errors[] = Tools::displayError('An error occurred during the file-upload process.');
-			elseif (!empty($fileAttachment['name']) && !in_array(Tools::strtolower(substr($fileAttachment['name'], -4)), $extension) && !in_array(Tools::strtolower(substr($fileAttachment['name'], -5)), $extension))
+			elseif (!empty($file_attachment['name']) && !in_array(Tools::strtolower(substr($file_attachment['name'], -4)), $extension) && !in_array(Tools::strtolower(substr($file_attachment['name'], -5)), $extension))
 				$this->errors[] = Tools::displayError('Bad file extension');
 			else
 			{
 				$customer = $this->context->customer;
 				if (!$customer->id)
 					$customer->getByEmail($from);
-
-				$contact = new Contact($id_contact, $this->context->language->id);
 
 				$id_order = (int)$this->getOrder();
 
@@ -145,10 +143,10 @@ class ContactControllerCore extends FrontController
 						$cm = new CustomerMessage();
 						$cm->id_customer_thread = $ct->id;
 						$cm->message = $message;
-						if (isset($fileAttachment['rename']) && !empty($fileAttachment['rename']) && rename($fileAttachment['tmp_name'], _PS_UPLOAD_DIR_.basename($fileAttachment['rename'])))
+						if (isset($file_attachment['rename']) && !empty($file_attachment['rename']) && rename($file_attachment['tmp_name'], _PS_UPLOAD_DIR_.basename($file_attachment['rename'])))
 						{
-							$cm->file_name = $fileAttachment['rename'];
-							@chmod(_PS_UPLOAD_DIR_.basename($fileAttachment['rename']), 0664);
+							$cm->file_name = $file_attachment['rename'];
+							@chmod(_PS_UPLOAD_DIR_.basename($file_attachment['rename']), 0664);
 						}
 						$cm->ip_address = (int)ip2long(Tools::getRemoteAddr());
 						$cm->user_agent = $_SERVER['HTTP_USER_AGENT'];
@@ -162,15 +160,15 @@ class ContactControllerCore extends FrontController
 				if (!count($this->errors))
 				{
 					$var_list = array(
-									'{order_name}' => '-',
-									'{attached_file}' => '-',
-									'{message}' => Tools::nl2br(stripslashes($message)),
-									'{email}' =>  $from,
-									'{product_name}' => '',
-								);
+						'{order_name}' => '-',
+						'{attached_file}' => '-',
+						'{message}' => Tools::nl2br(stripslashes($message)),
+						'{email}' =>  $from,
+						'{product_name}' => '',
+					);
 
-					if (isset($fileAttachment['name']))
-						$var_list['{attached_file}'] = $fileAttachment['name'];
+					if (isset($file_attachment['name']))
+						$var_list['{attached_file}'] = $file_attachment['name'];
 
 					$id_product = (int)Tools::getValue('id_product');
 
@@ -188,16 +186,49 @@ class ContactControllerCore extends FrontController
 							$var_list['{product_name}'] = $product->name[Context::getContext()->language->id];
 					}
 
-					if (empty($contact->email))
-						Mail::Send($this->context->language->id, 'contact_form', ((isset($ct) && Validate::isLoadedObject($ct)) ? sprintf(Mail::l('Your message has been correctly sent #ct%1$s #tc%2$s'), $ct->id, $ct->token) : Mail::l('Your message has been correctly sent')), $var_list, $from, null, null, null, $fileAttachment);
-					else
+					// if we need send the email message to the employee
+					if (!empty($contact->email))
 					{
-						if (!Mail::Send($this->context->language->id, 'contact', Mail::l('Message from contact form').' [no_sync]',
-							$var_list, $contact->email, $contact->name, $from, ($customer->id ? $customer->firstname.' '.$customer->lastname : ''),
-									$fileAttachment) ||
-								!Mail::Send($this->context->language->id, 'contact_form', ((isset($ct) && Validate::isLoadedObject($ct)) ? sprintf(Mail::l('Your message has been correctly sent #ct%1$s #tc%2$s'), $ct->id, $ct->token) : Mail::l('Your message has been correctly sent')), $var_list, $from, null, $contact->email, $contact->name, $fileAttachment))
-									$this->errors[] = Tools::displayError('An error occurred while sending the message.');
+						$sent_to_shop = Mail::Send(
+							$this->context->language->id,
+							'contact',
+							Mail::l('Message from contact form').' [no_sync]',
+							$var_list,
+							$contact->email,	// employee email
+							$contact->name,
+							null,				// from email: null because of sending a message from the shop
+							null,
+							$file_attachment
+						);
+
+						// we should not display the error message to the customer when the email message is not sent to the employee
+						// but only when 'customer service' is enable for the employee
+						if (!$sent_to_shop && $contact->customer_service && Validate::isLoadedObject($ct))
+							PrestaShopLogger::addLog(Tools::displayError('An e-mail message is not sent from contact form to the employee.'), 3);
+						elseif (!$sent_to_shop && !$contact->customer_service)
+							$this->errors[] = Tools::displayError('An error occurred while sending the message.');
 					}
+
+					$sent_to_customer = Mail::Send(
+						$this->context->language->id,
+						'contact_form',
+						(isset($ct) && Validate::isLoadedObject($ct)
+							? sprintf(Mail::l('Your message has been correctly sent #ct%1$s #tc%2$s'), $ct->id, $ct->token)
+							: Mail::l('Your message has been correctly sent')
+						),
+						$var_list,
+						$from,				// customer email
+						null,
+						null,				// from email: null because of sending a message from the shop and it is not doing an employee
+						null,
+						$file_attachment
+					);
+
+					// as well as for previous email message sending (to the employee)
+					if (!$sent_to_customer && $contact->customer_service && Validate::isLoadedObject($ct))
+						PrestaShopLogger::addLog(Tools::displayError('An e-mail message is not sent from contact form to the customer.'), 3);
+					elseif (!$sent_to_customer && !$contact->customer_service)
+						$this->errors[] = Tools::displayError('An error occurred while sending the message.');
 				}
 
 				if (count($this->errors) > 1)
@@ -234,10 +265,9 @@ class ContactControllerCore extends FrontController
 			'fileupload' => Configuration::get('PS_CUSTOMER_SERVICE_FILE_UPLOAD')
 		));
 
-
 		if (($id_customer_thread = (int)Tools::getValue('id_customer_thread')) && $token = Tools::getValue('token'))
 		{
-			$customerThread = Db::getInstance()->getRow('
+			$customer_thread = Db::getInstance()->getRow('
 				SELECT cm.*
 				FROM '._DB_PREFIX_.'customer_thread cm
 				WHERE cm.id_customer_thread = '.(int)$id_customer_thread.'
@@ -245,10 +275,10 @@ class ContactControllerCore extends FrontController
 				AND token = \''.pSQL($token).'\'
 			');
 
-			$order = new Order((int)$customerThread['id_order']);
+			$order = new Order((int)$customer_thread['id_order']);
 			if (Validate::isLoadedObject($order))
-				$customerThread['reference']= $order->getUniqReference();
-			$this->context->smarty->assign('customerThread', $customerThread);
+				$customer_thread['reference'] = $order->getUniqReference();
+			$this->context->smarty->assign('customerThread', $customer_thread);
 		}
 
 		$this->context->smarty->assign(array(
