@@ -156,7 +156,7 @@ function initTableDnD(table)
 							var up_reg  = new RegExp('position=[-]?[0-9]+&');
 							nodrag_lines.each(function(i) {
 								$(this).attr('id', $(this).attr('id').replace(reg, '_' + i));
-								$(this).find('.positions').text(i);
+								$(this).find('.positions').text(offset+i);
 							});
 						}
 
