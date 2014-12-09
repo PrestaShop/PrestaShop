@@ -112,6 +112,7 @@ function initTableDnD(table)
 						action: 'updatePositions',
 						id_category: ids[1],
 						id_product: ids[2],
+						offset : offset,
 						way: way
 					};
 				}
