@@ -23,7 +23,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<section id="social_block">
+<section id="social_block" class="pull-right">
 	<ul>
 		{if isset($facebook_url) && $facebook_url != ''}
 			<li class="facebook">
