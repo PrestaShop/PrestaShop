@@ -1172,13 +1172,13 @@
 						<p class="radio">
 							<label id="lab_refund_1" for="refund_1">
 								<input type="radio" value="0" name="refund_voucher_off" id="refund_1" checked="checked" />
-								{l s='Include amount of initial voucher: '}
+								{l s='Product(s) price: '}
 							</label>
 						</p>
 						<p class="radio">
 							<label id="lab_refund_2" for="refund_2">
 								<input type="radio" value="1" name="refund_voucher_off" id="refund_2"/>
-								{l s='Exclude amount of initial voucher: '}
+								{l s='Product(s) price, excluding amount of initial voucher: '}
 							</label>
 						</p>
 						<div class="nowrap radio-inline">
