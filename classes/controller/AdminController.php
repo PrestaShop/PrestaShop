@@ -2626,7 +2626,7 @@ class AdminControllerCore extends Controller
 			$this->_list_error = Db::getInstance()->getMsgError();
 		else
 			$this->_listTotal = Db::getInstance()->getValue('SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`', false);
-
+		$this->tpl_list_vars['start'] = ($use_limit === true?(int)$start:0);
 		Hook::exec('action'.$this->controller_name.'ListingResultsModifier', array(
 			'list' => &$this->_list,
 			'list_total' => &$this->_listTotal,
