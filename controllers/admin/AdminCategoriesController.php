@@ -170,8 +170,9 @@ class AdminCategoriesControllerCore extends AdminController
 					'desc' => $this->l('Add new root category', null, null, false)
 				);
 
+			$id_category = (Tools::isSubmit('id_category')) ? '&id_parent='.(int)Tools::getValue('id_category') : '';
 			$this->page_header_toolbar_btn['new_category'] = array(
-				'href' => self::$currentIndex.'&addcategory&token='.$this->token.'&id_parent='.(int)Tools::getValue('id_category'),
+				'href' => self::$currentIndex.'&addcategory&token='.$this->token.$id_category,
 				'desc' => $this->l('Add new category', null, null, false),
 				'icon' => 'process-icon-new'
 			);
@@ -208,15 +209,8 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->addRowAction('delete');
 
 
-		if (!Shop::isFeatureActive() && count(Category::getCategoriesWithoutParent()) > 1 && !Tools::isSubmit('id_category'))
-			$categories_tree = array(get_object_vars($this->_category->getTopCategory()));
-		else
-		{
-			$categories_tree = $this->_category->getParentsCategories();
-			$end = end($categories_tree);
-			if (isset($categories_tree) && !Shop::isFeatureActive() && $end['id_parent'] != 0)
-				$categories_tree = array_merge($categories_tree, array(get_object_vars($this->_category->getTopCategory())));
-		}
+		$count_categories_without_parent = count(Category::getCategoriesWithoutParent());	
+		$categories_tree = $this->_category->getParentsCategories();
 
 		if (empty($categories_tree)
 			&& ($this->_category->id != (int)Configuration::get('PS_ROOT_CATEGORY') || Tools::isSubmit('id_category'))
