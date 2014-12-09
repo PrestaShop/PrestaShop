@@ -41,7 +41,7 @@
 			</div>
 
 			{if $show_quantities == true}
-				<div class="form-group" {if $product->is_virtual || $product->cache_is_pack}style="display:none;"{/if} class="row stockForVirtualProduct">
+				<div class="form-group" {if $product->is_virtual}style="display:none;"{/if} class="row stockForVirtualProduct">
 					<div class="col-lg-9 col-lg-offset-3">
 						<p class="checkbox">
 							<label for="advanced_stock_management">
@@ -51,7 +51,7 @@
 									{else}
 										value="0"
 									{/if}
-									{if $stock_management_active == 0 || $product->cache_is_pack}
+									{if $stock_management_active == 0}
 										disabled="disabled"
 									{/if}
 								/>
@@ -61,12 +61,12 @@
 							{if $stock_management_active == 0 && !$product->cache_is_pack}
 								<p class="help-block"><i class="icon-warning-sign"></i>&nbsp;{l s='This requires you to enable advanced stock management.'}</p>
 							{else if $product->cache_is_pack}
-								<p class="help-block">{l s='This parameter depends on the product(s) in the pack.'}</p>
+								<p class="help-block">{l s='This parameter depends on the product(s) in the pack if you use an option that decrement product in pack.'}</p>
 							{/if}
 					</div>
 				</div>
 
-				<div {if $product->is_virtual || $product->cache_is_pack}style="display:none;"{/if} class="form-group stockForVirtualProduct">
+				<div {if $product->is_virtual}style="display:none;"{/if} class="form-group stockForVirtualProduct">
 					<label class="control-label col-lg-3" for="depends_on_stock_1">{l s='Available quantities'}</label>
 					<div class="col-lg-9">
 						<p class="radio">
@@ -75,16 +75,22 @@
 									{if $product->depends_on_stock == 1 && $stock_management_active == 1}
 										checked="checked"
 									{/if}
-									{if $stock_management_active == 0 || $product->advanced_stock_management == 0 || $product->cache_is_pack}
+									{if $stock_management_active == 0 || $product->advanced_stock_management == 0}
 										disabled="disabled"
 									{/if}
 								/>
 								{l s='The available quantities for the current product and its combinations are based on the stock in your warehouse (using the advanced stock management system). '}
 								{if ($stock_management_active == 0 || $product->advanced_stock_management == 0) && !$product->cache_is_pack} &nbsp;-&nbsp;{l s='This requires you to enable advanced stock management globally or for this product.'}
-								{else if $product->cache_is_pack} &nbsp;-&nbsp;{l s='This parameter depends on the product(s) in the pack.'}
 								{/if}
 							</label>
 						</p>
+						{if $product->cache_is_pack}
+							<p class="help-block">
+								{l s='You cannot use advanced stock management for this pack if'}</br>
+								{l s='- advanced stock management is not enabled for these products'}</br>
+								{l s='- you have chosen to decrement products quantities.'}
+							</p>
+						{/if}
 						<p class="radio">
 							<label for="depends_on_stock_0" for="depends_on_stock_0">
 								<input type="radio"  id="depends_on_stock_0" name="depends_on_stock" class="depends_on_stock" value="0"

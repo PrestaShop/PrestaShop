@@ -329,5 +329,27 @@ class PackCore extends Product
 		// not used
 		return false;
 	}
+
+	/**
+	 * For a given pack, tells if all products using the advanced stock management
+	 *
+	 * @param int $id_product id_pack
+	 * @return bool
+	 */
+	public static function allUsesAdvancedStockManagement($id_product)
+	{
+		if (!Pack::isPack($id_product))
+			return false;
+
+		$products = Pack::getItems($id_product, Configuration::get('PS_LANG_DEFAULT'));
+		foreach ($products as $product)
+		{
+			// if one product uses the advanced stock management
+			if ($product->advanced_stock_management == 0)
+				return false;
+		}
+		// not used
+		return true;
+	}
 }
 
