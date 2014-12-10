@@ -8,7 +8,7 @@ table#product_comparison tbody tr td.product-block {
 table#product_comparison tbody tr td.td_empty,
 table#product_comparison tbody tr td.feature-name, table#product_comparison tbody tr.comparison_header {
   background: #fbfbfb;
-  color: #333333; }
+  color: #333; }
 table#product_comparison tbody tr td.comparison_infos {
   text-align: center; }
   table#product_comparison tbody tr td.comparison_infos div.center {
@@ -51,7 +51,7 @@ table#product_comparison .comparison_availability_statut {
 table#product_comparison .product_discount {
   padding-top: 5px; }
   table#product_comparison .product_discount .reduced-price {
-    color: red;
+    color: #f00;
     font-weight: 700; }
 table#product_comparison .product_desc {
   padding: 0 0 12px 0; }
@@ -60,7 +60,7 @@ table#product_comparison .button-container a, table#product_comparison .button-c
 table#product_comparison .comparison_unit_price {
   font-size: 17px;
   font-family: "Open Sans", sans-serif;
-  color: #333333;
+  color: #333;
   font-style: italic; }
 table#product_comparison .product-rating {
   width: 80px;
@@ -168,3 +168,5 @@ table#product_comparison .comparison_feature .product_name {
     width: 50%;
     float: left;
     display: block; } }
+
+/*# sourceMappingURL=comparator.css.map */

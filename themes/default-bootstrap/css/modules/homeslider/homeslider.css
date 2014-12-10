@@ -86,7 +86,7 @@
   width: 100%; }
 #homepage-slider .bx-wrapper .bx-loading {
   min-height: 50px;
-  background: url(images/bx_loader.gif) center center no-repeat white;
+  background: url(images/bx_loader.gif) center center no-repeat #fff;
   height: 100%;
   width: 100%;
   position: absolute;
@@ -135,12 +135,12 @@
   height: 52px;
   text-indent: -9999px;
   z-index: 9999;
-  border: 2px solid white; }
+  border: 2px solid #fff; }
   #homepage-slider .bx-wrapper .bx-controls-direction a:before {
     height: 48px;
     width: 48px;
     display: block;
-    background: white;
+    background: #fff;
     content: ".";
     opacity: 0.14;
     text-indent: -9999px;
@@ -152,7 +152,7 @@
     display: block;
     width: 48px;
     height: 48px;
-    color: white;
+    color: #fff;
     text-indent: 0;
     text-align: center;
     font-size: 21px;
@@ -163,7 +163,7 @@
     z-index: 2;
     padding: 16px 0 0 0; }
   #homepage-slider .bx-wrapper .bx-controls-direction a:hover:before {
-    background: #333333;
+    background: #333;
     opacity: 0.83; }
 #homepage-slider .bx-wrapper .bx-controls-direction a.disabled {
   display: none; }
@@ -201,15 +201,17 @@
   position: absolute;
   bottom: 0;
   left: 0;
-  background: #666666 \9;
+  background: #666 \9;
   background: rgba(80, 80, 80, 0.75);
   width: 100%; }
 #homepage-slider .bx-wrapper .bx-caption span {
-  color: white;
+  color: #fff;
   font-family: Arial, Helvetica, sans-serif;
   display: block;
   font-size: .85em;
   padding: 10px; }
 
 .ie8 #homepage-slider .bx-wrapper .bx-controls-direction a:before {
-  background: #333333; }
+  background: #333; }
+
+/*# sourceMappingURL=homeslider.css.map */

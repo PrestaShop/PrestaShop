@@ -209,7 +209,7 @@ div.radio {
     div.radio.active span.checked {
       background-position: -13px -243px; }
   div.radio.hover span, div.radio.focus span {
-    background-position: -13px -36px -243px; }
+    background-position: -49px -243px; }
     div.radio.hover span.checked, div.radio.focus span.checked {
       background-position: -13px -243px; }
   div.radio.hover.active span, div.radio.focus.active span {
@@ -406,3 +406,5 @@ div.uploader.disabled span.filename, div.uploader.disabled.active span.filename 
 
 input.uniform-input, input.uniform-input:focus {
   background-color: #fff; }
+
+/*# sourceMappingURL=uniform.default.css.map */

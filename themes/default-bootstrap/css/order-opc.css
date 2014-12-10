@@ -16,7 +16,7 @@
       font-size: 42px;
       line-height: 51px;
       font-style: italic;
-      color: #333333;
+      color: #333;
       position: absolute;
       left: 10px;
       top: -14px; }
@@ -32,7 +32,7 @@
       text-decoration: none; }
   #order-opc .title_block {
     font-weight: bold;
-    color: #333333;
+    color: #333;
     padding: 3px 0 6px; }
   #order-opc .opc-button {
     padding: 11px 0 0 0; }
@@ -63,3 +63,5 @@
 #new_account_form .dni,
 #new_account_form .postcode {
   display: none; }
+
+/*# sourceMappingURL=order-opc.css.map */
