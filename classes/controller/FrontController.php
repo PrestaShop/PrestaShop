@@ -734,9 +734,6 @@ class FrontControllerCore extends Controller
 						'geolocation_country' => 'Undefined'
 					));
 			}
-			/* If not exists we disabled the geolocation feature */
-			else
-				Configuration::updateValue('PS_GEOLOCATION_ENABLED', 0);
 		}
 		return false;
 	}
