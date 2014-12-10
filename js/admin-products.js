@@ -1516,6 +1516,12 @@ product_tabs['Quantities'] = new function(){
 		if (display_multishop_checkboxes)
 			ProductMultishop.checkAllQuantities();
 
+		$('.pack_stock_type').click(function(e)
+		{
+			self.refreshQtyAvailabilityForm();
+			self.ajaxCall({actionQty: 'pack_stock_type', value: $(this).val()});
+		});
+
 		self.refreshQtyAvailabilityForm();
 	};
 }

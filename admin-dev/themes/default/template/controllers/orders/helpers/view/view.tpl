@@ -1133,12 +1133,12 @@
 									{l s='Exclude amount of initial voucher: '}
 								</label>
 							</p>
-							<div class="radio-inline row">
-								<label id="lab_refund_total_3" class="col-lg-3" for="refund_total_3">
+							<div class="nowrap radio-inline">
+								<label id="lab_refund_total_3" class="pull-left" for="refund_total_3">
 									{l s='Amount of your choice: '}
 									<input type="radio" value="2" name="refund_total_voucher_off" id="refund_total_3"/>
 								</label>
-								<div class="input-group col-lg-9">
+								<div class="input-group col-lg-1 pull-left">
 									<div class="input-group-addon">
 										{$currency->prefix}
 										{$currency->suffix}
@@ -1173,28 +1173,28 @@
 						<p class="radio">
 							<label id="lab_refund_1" for="refund_1">
 								<input type="radio" value="0" name="refund_voucher_off" id="refund_1" checked="checked" />
-								{l s='Include amount of initial voucher: '}
+								{l s='Product(s) price: '}
 							</label>
 						</p>
 						<p class="radio">
 							<label id="lab_refund_2" for="refund_2">
 								<input type="radio" value="1" name="refund_voucher_off" id="refund_2"/>
-								{l s='Exclude amount of initial voucher: '}
+								{l s='Product(s) price, excluding amount of initial voucher: '}
 							</label>
 						</p>
-						<div class="radio-inline row">
-							<label id="lab_refund_3" class="col-lg-3" for="refund_3">
-								{l s='Amount of your choice: '}
-								<input type="radio" value="2" name="refund_voucher_off" id="refund_3"/>
-							</label>
-							<div class="input-group col-lg-9">
-								<div class="input-group-addon">
-									{$currency->prefix}
-									{$currency->suffix}
+						<div class="nowrap radio-inline">
+								<label id="lab_refund_3" class="pull-left" for="refund_3">
+									{l s='Amount of your choice: '}
+									<input type="radio" value="2" name="refund_voucher_off" id="refund_3"/>
+								</label>
+								<div class="input-group col-lg-1 pull-left">
+									<div class="input-group-addon">
+										{$currency->prefix}
+										{$currency->suffix}
+									</div>
+									<input type="text" class="input fixed-width-md" name="refund_voucher_choose" value="0"/>
 								</div>
-								<input type="text" class="input fixed-width-md" name="refund_voucher_choose" value="0"/>
 							</div>
-						</div>
 						{/if}
 						<br/>
 						<button type="submit" name="partialRefund" class="btn btn-default">

@@ -204,7 +204,7 @@ class OrderHistoryCore extends ObjectModel
 						Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') &&
 						Warehouse::exists($product['id_warehouse']) &&
 						$manager != null &&
-						((int)$product['advanced_stock_management'] == 1 || Pack::usesAdvancedStockManagement($product['product_id'])))
+						(int)$product['advanced_stock_management'] == 1)
 					{
 						// gets the warehouse
 						$warehouse = new Warehouse($product['id_warehouse']);
@@ -227,7 +227,7 @@ class OrderHistoryCore extends ObjectModel
 							 Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') &&
 							 Warehouse::exists($product['id_warehouse']) &&
 							 $manager != null &&
-							 ((int)$product['advanced_stock_management'] == 1 || Pack::usesAdvancedStockManagement($product['product_id'])))
+							 (int)$product['advanced_stock_management'] == 1)
 					{
 						// if the product is a pack, we restock every products in the pack using the last negative stock mvts
 						if (Pack::isPack($product['product_id']))

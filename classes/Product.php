@@ -5689,4 +5689,10 @@ class ProductCore extends ObjectModel
 	{
 		return 'productlist_colors|'.(int)$id_product.'|'.(int)Context::getContext()->shop->id.'|'.(int)Context::getContext()->cookie->id_lang;
 	}
+
+	public static function setPackStockType($id_product, $pack_stock_type)
+	{
+		return Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'product p
+		'.Shop::addSqlAssociation('product', 'p').' SET product_shop.pack_stock_type = '.(int)$pack_stock_type.' WHERE p.`id_product` = '.(int)$id_product);
+	}
 }

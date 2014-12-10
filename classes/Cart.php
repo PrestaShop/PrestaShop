@@ -1651,7 +1651,7 @@ class CartCore extends ObjectModel
 			$product['warehouse_list'] = array();
 
 			if ($stock_management_active &&
-				((int)$product['advanced_stock_management'] == 1 || Pack::usesAdvancedStockManagement((int)$product['id_product'])))
+				(int)$product['advanced_stock_management'] == 1)
 			{
 				$warehouse_list = Warehouse::getProductWarehouseList($product['id_product'], $product['id_product_attribute'], $this->id_shop);
 				if (count($warehouse_list) == 0)

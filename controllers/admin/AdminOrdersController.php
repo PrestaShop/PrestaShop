@@ -2375,43 +2375,6 @@ class AdminOrdersControllerCore extends AdminController
 
 		$res &= $order->update();
 
-		$refresh = false;
-		$cart_rules = $order->getCartRules();
-		if ($cart_rules)
-		{
-			$cart  = new Cart(Context::getContext()->cart->id);
-			$cart = $cart->duplicate();
-			$cart = $cart['cart'];
-			$cart->deleteProduct($order_detail->product_id, $order_detail->product_attribute_id);
-
-			Context::getContext()->cart = $cart;
-			CartRule::autoAddToCart();
-
-			foreach ($cart_rules as $cart_rule)
-			{
-				$order_cart_rule = new CartRule($cart_rule['id_cart_rule']);
-				if ($order_cart_rule->gift_product)
-					foreach (Context::getContext()->cart->getProducts() as $value)
-						if ($value['id_product'] == $order_cart_rule->gift_product && $value['id_product_attribute'] == $order_cart_rule->gift_product_attribute)
-						{
-							Context::getContext()->cart->updateQty(-2, $value['id_product'], $value['id_product_attribute']);
-							break;
-						}
-
-				if ($order_cart_rule->checkValidity(Context::getContext(), true))
-				{
-					if ($order_cart_rule->gift_product)
-					{
-						$refresh = true;
-						$this->removeCartRule($cart_rule['id_order_cart_rule'], $order, $order_cart_rule->gift_product, $order_cart_rule->gift_product_attribute);
-					}
-					else
-						$this->removeCartRule($cart_rule['id_order_cart_rule'], $order);
-				}
-			}
-			$cart->delete();
-		}
-
 		// Reinject quantity in stock
 		$this->reinjectQuantity($order_detail, $order_detail->product_quantity, true);
 
@@ -2456,7 +2419,6 @@ class AdminOrdersControllerCore extends AdminController
 		die(Tools::jsonEncode(array(
 			'result' => $res,
 			'order' => $order,
-			'refresh' => $refresh,
 			'invoices' => $invoice_array,
 			'documents_html' => $this->createTemplate('_documents.tpl')->fetch(),
 			'shipping_html' => $this->createTemplate('_shipping.tpl')->fetch()
@@ -2672,61 +2634,5 @@ class AdminOrdersControllerCore extends AdminController
 			'result' => true,
 			'view' => $this->createTemplate('_select_payment.tpl')->fetch(),
 		)));
-	}
-
-	public function removeCartRule($id_order_cart_rule, $order, $id_product = 0, $id_product_attribute = 0)
-	{
-		$order_cart_rule = new OrderCartRule($id_order_cart_rule);
-
-		if (Validate::isLoadedObject($order) && Validate::isLoadedObject($order_cart_rule)
-			&& $order_cart_rule->id_order == $order->id)
-		{
-			$res = true;
-
-			if ($order_cart_rule->id_order_invoice)
-			{
-				$order_invoice = new OrderInvoice($order_cart_rule->id_order_invoice);
-				if (!Validate::isLoadedObject($order_invoice))
-					throw new PrestaShopException('Can\'t load Order Invoice object');
-
-				// Update amounts of Order Invoice
-				$order_invoice->total_discount_tax_excl -= $order_cart_rule->value_tax_excl;
-				$order_invoice->total_discount_tax_incl -= $order_cart_rule->value;
-
-				$order_invoice->total_paid_tax_excl += $order_cart_rule->value_tax_excl;
-				$order_invoice->total_paid_tax_incl += $order_cart_rule->value;
-
-				// Update Order Invoice
-				$res &= $order_invoice->update();
-			}
-
-			// Update amounts of order
-			$order->total_discounts -= $order_cart_rule->value;
-			$order->total_discounts_tax_incl -= $order_cart_rule->value;
-			$order->total_discounts_tax_excl -= $order_cart_rule->value_tax_excl;
-
-			$order->total_paid += $order_cart_rule->value;
-			$order->total_paid_tax_incl += $order_cart_rule->value;
-			$order->total_paid_tax_excl += $order_cart_rule->value_tax_excl;
-
-			if ((int)$id_product)
-			{
-				$order_list = $order->getOrderDetailList();
-				foreach ($order_list as $orders)
-					if ($orders['product_id'] == $id_product && $orders['product_attribute_id'] == $id_product_attribute)
-					{
-						$order_detail = new OrderDetail($orders['id_order_detail']);
-						$this->reinjectQuantity($order_detail, 1, true);
-					}
-			}
-
-			// Delete Order Cart Rule and update Order
-			$res &= $order_cart_rule->delete();
-			$res &= $order->update();
-
-			return $res;
-		}
-
-		return false;
 	}
 }
