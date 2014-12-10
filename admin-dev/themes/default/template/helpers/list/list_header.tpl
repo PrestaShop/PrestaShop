@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <script type="text/javascript">
-  var offset = {$start};
+  var offset = {if $start}{$start}{else}0{/if};
 </script>
 {if $ajax}
 <script type="text/javascript">
