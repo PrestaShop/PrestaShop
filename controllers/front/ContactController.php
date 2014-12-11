@@ -231,9 +231,9 @@ class ContactControllerCore extends FrontController
 		$this->context->smarty->assign(array(
 			'errors' => $this->errors,
 			'email' => $email,
-			'fileupload' => Configuration::get('PS_CUSTOMER_SERVICE_FILE_UPLOAD')
+			'fileupload' => Configuration::get('PS_CUSTOMER_SERVICE_FILE_UPLOAD'),
+			'max_upload_size' => (int)Tools::getMaxUploadSize()
 		));
-
 
 		if (($id_customer_thread = (int)Tools::getValue('id_customer_thread')) && $token = Tools::getValue('token'))
 		{
