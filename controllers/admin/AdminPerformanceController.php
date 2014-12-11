@@ -947,7 +947,11 @@ class AdminPerformanceControllerCore extends AdminController
 						copy(_PS_ROOT_DIR_.'/config/settings.inc.php', _PS_ROOT_DIR_.'/config/settings.old.php')
 						&& (bool)file_put_contents(_PS_ROOT_DIR_.'/config/settings.inc.php', $new_settings)
 					))
+					{
+						if (function_exists('opcache_invalidate'))
+							opcache_invalidate(_PS_ROOT_DIR_.'/config/settings.inc.php');
 						$redirectAdmin = true;
+					}
 					else
 						$this->errors[] = Tools::displayError('The settings file cannot be overwritten.');
 				}
