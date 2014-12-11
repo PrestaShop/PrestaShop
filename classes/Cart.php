@@ -2005,6 +2005,10 @@ class CartCore extends ObjectModel
 				$best_price_carrier[$id_carrier]['package_list'][] = $id_package;
 				$best_price_carrier[$id_carrier]['product_list'] = array_merge($best_price_carrier[$id_carrier]['product_list'], $packages[$id_package]['product_list']);
 				$best_price_carrier[$id_carrier]['instance'] = $carriers_instance[$id_carrier];
+				$real_best_price = !isset($real_best_price) || $real_best_price > $carriers_price[$id_address][$id_package][$id_carrier]['with_tax'] ?
+					$carriers_price[$id_address][$id_package][$id_carrier]['with_tax'] : $real_best_price;
+				$real_best_price_wt = !isset($real_best_price_wt) || $real_best_price_wt > $carriers_price[$id_address][$id_package][$id_carrier]['without_tax'] ?
+					$carriers_price[$id_address][$id_package][$id_carrier]['without_tax'] : $real_best_price_wt;
 			}
 
 			// Add the delivery option with best price as best price
@@ -2086,10 +2090,16 @@ class CartCore extends ObjectModel
 
 		$cart_rules = CartRule::getCustomerCartRules(Context::getContext()->cookie->id_lang, Context::getContext()->cookie->id_customer, true, true, false, $this);
 
+		$total_products_wt = $this->getOrderTotal(true, Cart::ONLY_PRODUCTS);
+		$total_products = $this->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+
 		$free_carriers_rules = array();
 		foreach ($cart_rules as $cart_rule)
 		{
-			if ($cart_rule['free_shipping'] && $cart_rule['carrier_restriction'])
+			$total_price = $cart_rule['minimum_amount_tax'] ? $total_products_wt : $total_products;
+			$total_price += $cart_rule['minimum_amount_tax'] && $cart_rule['minimum_amount_shipping'] ? $real_best_price : 0;
+			$total_price += !$cart_rule['minimum_amount_tax'] && $cart_rule['minimum_amount_shipping'] ? $real_best_price_wt : 0;
+			if ($cart_rule['free_shipping'] && $cart_rule['carrier_restriction'] && $cart_rule['minimum_amount'] <= $total_price)
 			{
 				$cr = new CartRule((int)$cart_rule['id_cart_rule']);
 				if (Validate::isLoadedObject($cr))
@@ -2889,7 +2899,7 @@ class CartCore extends ObjectModel
 		$gift_products = array();
 		$cart_rules = $this->getCartRules();
 		$total_shipping = $this->getTotalShippingCost();
-		$total_shipping_tax_exc = $this->getTotalShippingCost(null, false);
+ 		$total_shipping_tax_exc = $this->getTotalShippingCost(null, false);
 		$total_products_wt = $this->getOrderTotal(true, Cart::ONLY_PRODUCTS);
 		$total_products = $this->getOrderTotal(false, Cart::ONLY_PRODUCTS);
 		$total_discounts = $this->getOrderTotal(true, Cart::ONLY_DISCOUNTS);
