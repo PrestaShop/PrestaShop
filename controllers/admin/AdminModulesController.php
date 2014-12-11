@@ -941,7 +941,7 @@ class AdminModulesControllerCore extends AdminController
 									if (isset($module->addons_buy_url))
 										$module->addons_buy_url = str_replace('utm_source=v1trunk_api', 'utm_source=back-office', $module->addons_buy_url)
 											.'&utm_medium=related-modules&utm_campaign=back-office-'.strtoupper($this->context->language->iso_code)
-											.'&utm_content='.(defined('_PS_HOST_MODE_') ? 'ondemand' : 'download');
+											.'&utm_content='.(defined('_PS_HOST_MODE_') ? 'cloud' : 'download');
 									if (isset($module->description_full) && trim($module->description_full) != '')
 										$module->show_quick_view = true;
 								}
