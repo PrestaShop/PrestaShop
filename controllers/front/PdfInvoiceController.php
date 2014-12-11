@@ -30,7 +30,7 @@ class PdfInvoiceControllerCore extends FrontController
 	protected $display_header = false;
 	protected $display_footer = false;
 
-    public $content_only = true;
+	public $content_only = true;
 
 	protected $template;
 	public $filename;

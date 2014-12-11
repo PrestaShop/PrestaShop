@@ -1595,9 +1595,6 @@ class AdminControllerCore extends Controller
 			}
 		}
 
-		//$link = preg_replace('/&token=[a-z0-9]{32}/', '', basename($_SERVER['REQUEST_URI']));
-		//$currentPage = 'index.php?controller='.$this->context->controller->controller_name."&".$this->display.$this->table;
-
 		// Tab list
 		$tabs = Tab::getTabs($this->context->language->id, 0);
 		$current_id = Tab::getCurrentParentId();
@@ -3589,8 +3586,9 @@ class AdminControllerCore extends Controller
 
 	public function isFresh($file, $timeout = 604800)
 	{
-		if (file_exists(_PS_ROOT_DIR_.$file) && filesize(_PS_ROOT_DIR_.$file) > 0)
-			return ((time() - filemtime(_PS_ROOT_DIR_.$file)) < $timeout);
+		if (($time = @filemtime(_PS_ROOT_DIR_.$file)) && filesize(_PS_ROOT_DIR_.$file) > 0)
+			return ((time() - $time) < $timeout);
+
 		return false;
 	}
 
