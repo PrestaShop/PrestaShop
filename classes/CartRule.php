@@ -455,7 +455,7 @@ class CartRuleCore extends ObjectModel
 	 * @param bool $display_error Display error
 	 * @return bool|mixed|string
 	 */
-	public function checkValidity(Context $context, $alreadyInCart = false, $display_error = true)
+	public function checkValidity(Context $context, $alreadyInCart = false, $display_error = true, $check_carrier = true)
 	{
 		if (!CartRule::isFeatureActive())
 			return false;
@@ -510,7 +510,7 @@ class CartRuleCore extends ObjectModel
 		}
 
 		// Check if the carrier chosen by the customer is usable with the cart rule
-		if ($this->carrier_restriction)
+		if ($this->carrier_restriction && $check_carrier)
 		{
 			if (!$context->cart->id_carrier)
 				return (!$display_error) ? false : Tools::displayError('You must choose a carrier before applying this voucher to your order');
@@ -554,7 +554,7 @@ class CartRuleCore extends ObjectModel
 			return (!$display_error) ? false : Tools::displayError('You cannot use this voucher');
 		}
 
-		if ($this->minimum_amount)
+		if ($this->minimum_amount && $check_carrier)
 		{
 			// Minimum amount is converted to the contextual currency
 			$minimum_amount = $this->minimum_amount;
@@ -584,7 +584,9 @@ class CartRuleCore extends ObjectModel
 			Important note: this MUST be the last check, because if the tested cart rule has priority over a non combinable one in the cart, we will switch them
 		*/
 		$nb_products = Cart::getNbProducts($context->cart->id);
-		$otherCartRules = $context->cart->getCartRules();
+		$otherCartRules = array();
+		if ($check_carrier)
+			$otherCartRules = $context->cart->getCartRules();
 		if (count($otherCartRules))
 			foreach ($otherCartRules as $otherCartRule)
 			{
