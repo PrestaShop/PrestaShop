@@ -1989,9 +1989,9 @@ class AdminControllerCore extends Controller
 				.'&lastname='.urlencode($this->context->employee->lastname)
 				.'&website='.urlencode($this->context->shop->getBaseURL())
 				.'&utm_source=back-office&utm_medium=connect-to-addons'
-				.'&utm_campaign=back-office-'.Tools::strtoupper($language->iso_code)
-				.'&utm_content='.(defined('_PS_HOST_MODE_') ? 'ondemand' : 'download').'#createnow',
-			'addons_forgot_password_link' => "//addons.prestashop.com/".$language->iso_code."/forgot-your-password"
+				.'&utm_campaign=back-office-'.Tools::strtoupper($this->context->language->iso_code)
+				.'&utm_content='.(defined('_PS_HOST_MODE_') ? 'cloud' : 'download').'#createnow',
+			'addons_forgot_password_link' => '//addons.prestashop.com/'.$this->context->language->iso_code.'/forgot-your-password'
 		));
 
 		$this->modals[] = array(
@@ -1999,8 +1999,8 @@ class AdminControllerCore extends Controller
 			'modal_class' => "modal-md",
 			'modal_title' => '<i class="icon-puzzle-piece"></i> <a target="_blank" href="http://addons.prestashop.com/'
 			.'?utm_source=back-office&utm_medium=modules'
-			.'&utm_campaign=back-office-'.Tools::strtoupper($language->iso_code)
-			.'&utm_content='.(defined('_PS_HOST_MODE_') ? 'ondemand' : 'download').'>PrestaShop Addons</a>',
+			.'&utm_campaign=back-office-'.Tools::strtoupper($this->context->language->iso_code)
+			.'&utm_content='.(defined('_PS_HOST_MODE_') ? 'cloud' : 'download').'>PrestaShop Addons</a>',
 			'modal_content' => $this->context->smarty->fetch('controllers/modules/login_addons.tpl'),
 		);
 	}
