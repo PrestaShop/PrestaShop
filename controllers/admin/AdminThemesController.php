@@ -212,7 +212,7 @@ class AdminThemesControllerCore extends AdminController
 						'href' => 'http://addons.prestashop.com/en/3-templates-prestashop'
 						.'?utm_source=back-office&utm_medium=theme-button'
 						.'&utm_campaign=back-office-'.$iso_lang_uc
-						.'&utm_content='.(defined('_PS_HOST_MODE_') ? 'ondemand' : 'download'),
+						.'&utm_content='.(defined('_PS_HOST_MODE_') ? 'cloud' : 'download'),
 						'js' => 'return !window.open(this.href)'
 					)
 				)
