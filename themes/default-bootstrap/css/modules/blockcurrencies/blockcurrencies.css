@@ -10,7 +10,7 @@
   #currencies-block-top div.current {
     font-weight: bold;
     padding: 8px 10px 10px 10px;
-    color: white;
+    color: #fff;
     text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
     cursor: pointer;
     line-height: 18px; }
@@ -46,16 +46,18 @@
     top: 37px;
     left: 0;
     width: 157px;
-    background: #333333;
+    background: #333;
     z-index: 2; }
     #currencies-block-top ul li {
-      color: white;
+      color: #fff;
       line-height: 35px;
       font-size: 13px; }
       #currencies-block-top ul li a,
       #currencies-block-top ul li > span {
         padding: 0 10px 0 12px;
         display: block;
-        color: white; }
+        color: #fff; }
       #currencies-block-top ul li.selected, #currencies-block-top ul li:hover a {
         background: #484848; }
+
+/*# sourceMappingURL=blockcurrencies.css.map */
