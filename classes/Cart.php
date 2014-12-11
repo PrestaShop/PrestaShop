@@ -2109,10 +2109,12 @@ class CartCore extends ObjectModel
 
 		$cart_rules = CartRule::getCustomerCartRules(Context::getContext()->cookie->id_lang, Context::getContext()->cookie->id_customer, true, true, false, $this);
 		$result = Db::getInstance('SELECT * FROM '._DB_PREFIX_.'cart_cart_rule WHERE id_cart='.$this->id);
-        $cart_rules_in_cart = array();
-        foreach($result as $row)
+		$cart_rules_in_cart = array();
+
+		foreach ($result as $row)
 			$cart_rules_in_cart[] = $row['id_cart_rules'];
 		$free_carriers_rules = array();
+
 		foreach ($cart_rules as $cart_rule)
 		{
 			if ($cart_rule['free_shipping'] && $cart_rule['carrier_restriction'])
@@ -2123,7 +2125,7 @@ class CartCore extends ObjectModel
 				{
 					$carriers = $cr->getAssociatedRestrictions('carrier', true, false);
 					if (is_array($carriers) && count($carriers) && isset($carriers['selected']))
-						foreach($carriers['selected'] as $carrier)
+						foreach ($carriers['selected'] as $carrier)
 							if (isset($carrier['id_carrier']) && $carrier['id_carrier'])
 								$free_carriers_rules[] = (int)$carrier['id_carrier'];
 				}
