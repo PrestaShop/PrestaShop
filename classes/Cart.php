@@ -2089,11 +2089,17 @@ class CartCore extends ObjectModel
 		}
 
 		$cart_rules = CartRule::getCustomerCartRules(Context::getContext()->cookie->id_lang, Context::getContext()->cookie->id_customer, true, true, false, $this);
+		$result = Db::getInstance('SELECT * FROM '._DB_PREFIX_.'cart_cart_rule WHERE id_cart='.$this->id);
+		$cart_rules_in_cart = array();
+
+		foreach ($result as $row)
+			$cart_rules_in_cart[] = $row['id_cart_rules'];
 
 		$total_products_wt = $this->getOrderTotal(true, Cart::ONLY_PRODUCTS);
 		$total_products = $this->getOrderTotal(false, Cart::ONLY_PRODUCTS);
 
 		$free_carriers_rules = array();
+
 		foreach ($cart_rules as $cart_rule)
 		{
 			$total_price = $cart_rule['minimum_amount_tax'] ? $total_products_wt : $total_products;
@@ -2102,7 +2108,8 @@ class CartCore extends ObjectModel
 			if ($cart_rule['free_shipping'] && $cart_rule['carrier_restriction'] && $cart_rule['minimum_amount'] <= $total_price)
 			{
 				$cr = new CartRule((int)$cart_rule['id_cart_rule']);
-				if (Validate::isLoadedObject($cr))
+				if (Validate::isLoadedObject($cr) &&
+					$cr->checkValidity(Context::getContext(), in_array((int)$cart_rule['id_cart_rule'], $cart_rules_in_cart), false, false))
 				{
 					$carriers = $cr->getAssociatedRestrictions('carrier', true, false);
 					if (is_array($carriers) && count($carriers) && isset($carriers['selected']))
