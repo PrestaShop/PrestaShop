@@ -135,6 +135,22 @@
 						{/foreach}
 					{/foreach}
 				{/foreach}
+				{assign var=total_cart_rule value=0}
+				{foreach $cart_rules as $cart_rule}
+					{cycle values='#FFF,#DDD' assign=bgcolor}
+					<tr style="line-height:6px;background-color:{$bgcolor};text-align:left;">
+						<td style="line-height:3px;text-align:left;width:60%;vertical-align:top" colspan="{if !$tax_excluded_display}5{else}4{/if}">{$cart_rule.name}</td>
+						<td>
+							{if $tax_excluded_display}
+								{$total_cart_rule = $total_cart_rule + $cart_rule.value_tax_excl}
+								+ {$cart_rule.value_tax_excl}
+							{else}
+								{$total_cart_rule = $total_cart_rule + $cart_rule.value}
+								+ {$cart_rule.value}
+							{/if}
+						</td>
+					</tr>
+				{/foreach}
 			</table>
 
 			<table style="width: 100%">
@@ -171,7 +187,13 @@
 
 				<tr style="line-height:5px;">
 					<td style="text-align: right; font-weight: bold">{l s='Total ' pdf='true'}</td>
-					<td style="width: 15%; text-align: right;">- {displayPrice currency=$order->id_currency price=$order->total_paid_tax_incl}</td>
+					{if $total_cart_rule}
+						{assign var=total_paid value=0}
+						{$total_paid = $order->total_paid_tax_incl - $total_cart_rule}
+						<td style="width: 15%; text-align: right;">- {displayPrice currency=$order->id_currency price=$total_paid}</td>
+					{else}
+						<td style="width: 15%; text-align: right;">- {displayPrice currency=$order->id_currency price=$order->total_paid_tax_incl}</td>
+					{/if}
 				</tr>
 			</table>
 
