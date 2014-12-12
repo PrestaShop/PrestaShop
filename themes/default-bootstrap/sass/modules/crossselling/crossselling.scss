@@ -15,6 +15,17 @@
 			}
 		}
 
+		.exclusive span{
+			font-size: 13px;
+			line-height: 18px;
+			padding: 2px 8px 3px;
+			text-decoration: none;
+			&:focus,
+			&:active{
+				text-decoration: none;
+			}
+		}
+
 		/** RESET AND LAYOUT
 		===================================*/
 
