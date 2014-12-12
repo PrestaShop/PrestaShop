@@ -297,7 +297,6 @@ class OrderSlipCore extends ObjectModel
 			$id_tax_rules_group = Product::getIdTaxRulesGroupByIdProduct((int)$order_detail->product_id);
 			$tax_calculator = TaxManagerFactory::getManager($address, $id_tax_rules_group)->getTaxCalculator();
 
-
 			$order_slip->total_products_tax_excl += $price * $quantity;
 
 			if (in_array(Configuration::get('PS_ROUND_TYPE'), array(Order::ROUND_ITEM, Order::ROUND_LINE)))
@@ -377,7 +376,6 @@ class OrderSlipCore extends ObjectModel
 			'amount_tax_incl' => $product['total_price_tax_incl']
 		));
 	}
-
 
 	public static function createPartialOrderSlip($order, $amount, $shipping_cost_amount, $order_detail_list)
 	{
