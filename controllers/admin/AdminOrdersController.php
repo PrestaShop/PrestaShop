@@ -651,11 +651,13 @@ class AdminOrdersControllerCore extends AdminController
 						{
 							$order_detail_list[$id_order_detail]['unit_price'] = $order_detail->unit_price_tax_excl;
 							$order_detail_list[$id_order_detail]['amount'] = $order_detail->unit_price_tax_incl * $order_detail_list[$id_order_detail]['quantity'];
+							$order_detail_list[$id_order_detail]['total_price_tax_incl'] = $order_detail->unit_price_tax_incl * $order_detail_list[$id_order_detail]['quantity'];
 						}
 						else
 						{
 							$order_detail_list[$id_order_detail]['unit_price'] = (float)str_replace(',', '.', $amount_detail / $order_detail_list[$id_order_detail]['quantity']);
 							$order_detail_list[$id_order_detail]['amount'] = (float)str_replace(',', '.', $amount_detail);
+							$order_detail_list[$id_order_detail]['total_price_tax_incl'] = (float)str_replace(',', '.', $amount_detail);
 						}
 						$amount += $order_detail_list[$id_order_detail]['amount'];
 						if (!$order->hasBeenDelivered() || ($order->hasBeenDelivered() && Tools::isSubmit('reinjectQuantities')) && $order_detail_list[$id_order_detail]['quantity'] > 0)
@@ -663,13 +665,9 @@ class AdminOrdersControllerCore extends AdminController
 					}
 
 					if ((int)Tools::getValue('refund_voucher_off') == 1)
-						$amount -= (float)Tools::getValue('order_discount_price');
+						$amount -= $voucher = (float)Tools::getValue('order_discount_price');
 					elseif ((int)Tools::getValue('refund_voucher_off') == 2)
-						$amount = (float)Tools::getValue('refund_voucher_choose');
-
-					$shipping_cost_amount = (float)str_replace(',', '.', Tools::getValue('partialRefundShippingCost'));
-					if ($shipping_cost_amount > 0)
-						$amount += $shipping_cost_amount;
+						$amount = $voucher = (float)Tools::getValue('refund_voucher_choose');
 
 					$order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
 					if (Validate::isLoadedObject($order_carrier))
@@ -681,7 +679,9 @@ class AdminOrdersControllerCore extends AdminController
 
 					if ($amount > 0)
 					{
-						if (!OrderSlip::create($order, $order_detail_list, $shipping_cost_amount))
+						$shipping = Tools::isSubmit('shippingBack2') ? null : false;
+
+						if (!OrderSlip::create($order, $order_detail_list, $shipping, $voucher))
 							$this->errors[] = Tools::displayError('You cannot generate a partial credit slip.');
 
 						// Generate voucher
@@ -881,9 +881,9 @@ class AdminOrdersControllerCore extends AdminController
 							$amount = $order_detail->unit_price_tax_incl * $full_quantity_list[$id_order_detail];
 
 							if ((int)Tools::getValue('refund_total_voucher_off') == 1)
-								$amount -= (float)Tools::getValue('order_discount_price');
+								$amount -= $voucher = (float)Tools::getValue('order_discount_price');
 							elseif ((int)Tools::getValue('refund_total_voucher_off') == 2)
-								$amount = (float)Tools::getValue('refund_voucher_choose');
+								$amount = $voucher = (float)Tools::getValue('refund_voucher_choose');
 
 							foreach ($full_product_list as $id_order_detail)
 							{
@@ -898,7 +898,7 @@ class AdminOrdersControllerCore extends AdminController
 
 							$shipping = Tools::isSubmit('shippingBack') ? null : false;
 
-							if (!OrderSlip::create($order, $product_list, $shipping))
+							if (!OrderSlip::create($order, $product_list, $shipping, $voucher))
 								$this->errors[] = Tools::displayError('A credit slip cannot be generated. ');
 							else
 							{

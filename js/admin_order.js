@@ -912,6 +912,7 @@ function actualizeRefundVoucher()
 	});
 	$('#total_refund_1').remove();
 	$('#lab_refund_1').append('<span id="total_refund_1">' + formatCurrency(total, currency_format, currency_sign, currency_blank) + '</span>');
+	$('#lab_refund_1').append('<input type="hidden" name="order_discount_price" value=' + order_discount_price + '/>');
 	$('#total_refund_2').remove();
 	if (parseFloat(total - order_discount_price) > 0.0) {
 		document.getElementById('refund_2').disabled = false;
@@ -935,6 +936,7 @@ function actualizeTotalRefundVoucher()
 	});
 	$('#total_refund_1').remove();
 	$('#lab_refund_total_1').append('<span id="total_refund_1">' + formatCurrency(total, currency_format, currency_sign, currency_blank) + '</span>');
+	$('#lab_refund_total_1').append('<input type="hidden" name="order_discount_price" value=' + order_discount_price + '/>');
 	$('#total_refund_2').remove();
 	if (parseFloat(total - order_discount_price) > 0.0) {
 		document.getElementById('refund_total_2').disabled = false;
