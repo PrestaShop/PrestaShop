@@ -38,16 +38,27 @@
                         <a class="lnk_img product-image" href="{$orderProduct.link|escape:'html':'UTF-8'}" title="{$orderProduct.name|htmlspecialchars}" >
                             <img itemprop="image" src="{$orderProduct.image}" alt="{$orderProduct.name|htmlspecialchars}" />
                         </a>
-                        <p itemprop="name" class="product_name">
-                            <a itemprop="url" href="{$orderProduct.link|escape:'html':'UTF-8'}" title="{$orderProduct.name|htmlspecialchars}">
-                                {$orderProduct.name|truncate:15:'...'|escape:'html':'UTF-8'}
-                            </a>
-                        </p>
+                        <div class="s_title_block">
+                            <h5 itemprop="name" class="product-name">
+                                <a itemprop="url" href="{$orderProduct.link|escape:'html':'UTF-8'}" title="{$orderProduct.name|htmlspecialchars}">
+                                    {$orderProduct.name|truncate:15:'...'|escape:'html':'UTF-8'}
+                                </a>
+                            </h5>
+                        </div>
                         {if $crossDisplayPrice AND $orderProduct.show_price == 1 AND !isset($restricted_country_mode) AND !$PS_CATALOG_MODE}
                             <p class="price_display">
                                 <span class="price">{convertPrice price=$orderProduct.displayed_price}</span>
                             </p>
                         {/if}
+                        <div class="clearfix" style="margin-top:5px">
+                            {if !$PS_CATALOG_MODE && ($orderProduct.allow_oosp || $orderProduct.quantity > 0)}
+                                <div class="no-print">
+                                    <a class="exclusive button ajax_add_to_cart_button" href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$orderProduct.id_product|intval}&amp;token={$static_token}&amp;add")|escape:'html':'UTF-8'}" data-id-product="{$orderProduct.id_product|intval}" title="{l s='Add to cart' mod='crossselling'}">
+                                        <span>{l s='Add to cart'}</span>
+                                    </a>
+                                </div>
+                            {/if}
+                        </div>
                     </li>
                 {/foreach}
             </ul>

@@ -23,7 +23,7 @@
 .sf-menu ul {
   position: absolute;
   top: -999em;
-  background: white; }
+  background: #fff; }
   @media (max-width: 767px) {
     .sf-menu ul {
       position: relative; } }
@@ -66,9 +66,9 @@
     border-bottom: 3px solid #e9e9e9; }
   .sf-menu > li.sfHover > a,
   .sf-menu > li > a:hover, .sf-menu > li.sfHoverForce > a {
-    background: #333333;
+    background: #333;
     border-bottom-color: #666666;
-    color: white; }
+    color: #fff; }
 
 .sf-menu li li li a {
   display: inline-block;
@@ -84,7 +84,7 @@
     font-family: "FontAwesome";
     padding-right: 10px; }
   .sf-menu li li li a:hover {
-    color: #333333; }
+    color: #333; }
 
 .sf-menu li ul {
   display: none;
@@ -93,8 +93,8 @@
   /* match top ul list item height */
   z-index: 99;
   padding: 12px 0px 18px 0px;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 13px;
   -moz-box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 13px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 13px;
   box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 13px; }
   @media (max-width: 767px) {
     .sf-menu li ul {
@@ -105,9 +105,9 @@
   display: block !important;
   opacity: 1 !important;
   background: none;
-  -webkit-box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px;
-  -moz-box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px;
-  box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px; }
+  -moz-box-shadow: transparent 0px 0px 0px;
+  -webkit-box-shadow: transparent 0px 0px 0px;
+  box-shadow: transparent 0px 0px 0px; }
 
 .sf-menu li li li ul {
   padding: 0 0 0 20px; }
@@ -141,7 +141,7 @@ ul.sf-menu li li li.sfHover ul {
   .sf-menu > li > ul > li > a {
     text-transform: uppercase;
     font: 600 16px/20px "Open Sans", sans-serif;
-    color: #333333; }
+    color: #333; }
     .sf-menu > li > ul > li > a:hover {
       color: #515151; }
 
@@ -199,9 +199,9 @@ ul.sf-menu li li li.sfHover ul {
       background: #f6f6f6;
       position: relative; }
       .cat-title:hover {
-        background: #333333;
+        background: #333;
         border-bottom-color: #666666;
-        color: white; }
+        color: #fff; }
       .cat-title:after {
         display: block;
         font-family: "FontAwesome";
@@ -220,7 +220,7 @@ ul.sf-menu li li li.sfHover ul {
     padding: 0 13px;
     height: 30px;
     line-height: 30px;
-    background: white;
+    background: #fff;
     margin: 13px 10px 0 0;
     font-size: 13px;
     color: #9c9b9b;
@@ -237,3 +237,5 @@ ul.sf-menu li li li.sfHover ul {
       max-width: 100%; }
 #block_top_menu li.category-thumbnail {
   padding-right: 0; }
+
+/*# sourceMappingURL=superfish-modified.css.map */

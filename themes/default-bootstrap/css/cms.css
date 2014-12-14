@@ -34,7 +34,7 @@
   margin: 4px 0 13px 0;
   position: relative; }
   #cms #center_column .testimonials .inner {
-    border: 1px solid white;
+    border: 1px solid #fff;
     padding: 19px 18px 11px 18px;
     background: #fbfbfb;
     background: -moz-linear-gradient(top, #fbfbfb 0%, #fefefe 100%);
@@ -80,7 +80,7 @@
       padding-bottom: 10px;
       font-size: 14px;
       font-weight: bold;
-      color: #333333; }
+      color: #333; }
     #cms #center_column #admin-action-cms p .button {
       font: 700 17px/21px Arial, Helvetica, sans-serif;
       padding: 0;
@@ -88,7 +88,7 @@
       padding: 10px 14px;
       display: inline-block; }
       #cms #center_column #admin-action-cms p .button.publish_button {
-        color: white;
+        color: #fff;
         text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
         border-color: #0079b6 #006fa8 #012740 #006fa8;
         background: #009ad0;
@@ -98,13 +98,13 @@
         background: -o-linear-gradient(top, #009ad0 0%, #007ab7 100%);
         background: -ms-linear-gradient(top, #009ad0 0%, #007ab7 100%);
         background: linear-gradient(to bottom, #009ad0 0%, #007ab7 100%);
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#009ad0', endColorstr='#007ab7',GradientType=0); }
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#009ad0', endColorstr='#007ab7',GradientType=0); }
         #cms #center_column #admin-action-cms p .button.publish_button:hover {
           border-color: #01314e #004b74 #0079b6 #004b74;
           filter: none;
           background: #0084bf; }
       #cms #center_column #admin-action-cms p .button.lnk_view {
-        color: #333333;
+        color: #333;
         text-shadow: 1px 1px white;
         border-color: #cacaca #b7b7b7 #9a9a9a #b7b7b7;
         background: #f7f7f7;
@@ -114,8 +114,10 @@
         background: -o-linear-gradient(top, #f7f7f7 0%, #ededed 100%);
         background: -ms-linear-gradient(top, #f7f7f7 0%, #ededed 100%);
         background: linear-gradient(to bottom, #f7f7f7 0%, #ededed 100%);
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f7f7f7', endColorstr='#ededed',GradientType=0); }
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f7f7f7', endColorstr='#ededed',GradientType=0); }
         #cms #center_column #admin-action-cms p .button.lnk_view:hover {
           border-color: #9e9e9e #9e9e9e #c8c8c8 #9e9e9e;
           filter: none;
           background: #e7e7e7; }
+
+/*# sourceMappingURL=cms.css.map */
