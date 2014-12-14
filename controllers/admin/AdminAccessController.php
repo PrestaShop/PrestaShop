@@ -118,6 +118,7 @@ class AdminAccessControllerCore extends AdminController
 	 */
 	public function initContent()
 	{
+		$this->initTabModuleList();
 		$this->display = 'edit';
 		$this->initTabModuleList();
 		if (!$this->loadObject(true))
