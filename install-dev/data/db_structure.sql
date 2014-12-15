@@ -1309,6 +1309,7 @@ CREATE TABLE `PREFIX_order_slip` (
   `amount` DECIMAL(10,2) NOT NULL,
   `shipping_cost_amount` DECIMAL(10,2) NOT NULL,
   `partial` TINYINT(1) NOT NULL,
+  `order_slip_type` TINYINT(1) unsigned NOT NULL DEFAULT '0',
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
   PRIMARY KEY (`id_order_slip`),

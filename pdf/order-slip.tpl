@@ -136,21 +136,23 @@
 					{/foreach}
 				{/foreach}
 				{assign var=total_cart_rule value=0}
-				{foreach $cart_rules as $cart_rule}
-					{cycle values='#FFF,#DDD' assign=bgcolor}
-					<tr style="line-height:6px;background-color:{$bgcolor};text-align:left;">
-						<td style="line-height:3px;text-align:left;width:60%;vertical-align:top" colspan="{if !$tax_excluded_display}5{else}4{/if}">{$cart_rule.name}</td>
-						<td>
-							{if $tax_excluded_display}
-								{$total_cart_rule = $total_cart_rule + $cart_rule.value_tax_excl}
-								+ {$cart_rule.value_tax_excl}
-							{else}
-								{$total_cart_rule = $total_cart_rule + $cart_rule.value}
-								+ {$cart_rule.value}
-							{/if}
-						</td>
-					</tr>
-				{/foreach}
+				{if is_array($cart_rules) && count($cart_rules)}
+					{foreach $cart_rules as $cart_rule}
+						{cycle values='#FFF,#DDD' assign=bgcolor}
+						<tr style="line-height:6px;background-color:{$bgcolor};text-align:left;">
+							<td style="line-height:3px;text-align:left;width:85%;vertical-align:top" colspan="{if !$tax_excluded_display}5{else}4{/if}">{$cart_rule.name}</td>
+							<td style="text-align: right; width: 15%">
+								{if $tax_excluded_display}
+									{$total_cart_rule = $total_cart_rule + $cart_rule.value_tax_excl}
+									+ {$cart_rule.value_tax_excl}
+								{else}
+									{$total_cart_rule = $total_cart_rule + $cart_rule.value}
+									+ {$cart_rule.value}
+								{/if}
+							</td>
+						</tr>
+					{/foreach}
+				{/if}
 			</table>
 
 			<table style="width: 100%">
@@ -191,6 +193,8 @@
 						{assign var=total_paid value=0}
 						{$total_paid = $order->total_paid_tax_incl - $total_cart_rule}
 						<td style="width: 15%; text-align: right;">- {displayPrice currency=$order->id_currency price=$total_paid}</td>
+					{elseif $amount_choosen}
+						<td style="width: 15%; text-align: right;">- {displayPrice currency=$order->id_currency price=$order_slip->amount}</td>
 					{else}
 						<td style="width: 15%; text-align: right;">- {displayPrice currency=$order->id_currency price=$order->total_paid_tax_incl}</td>
 					{/if}
