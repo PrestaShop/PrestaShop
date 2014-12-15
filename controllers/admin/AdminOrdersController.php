@@ -1840,6 +1840,8 @@ class AdminOrdersControllerCore extends AdminController
 				'error' => Tools::displayError('The order object cannot be loaded.')
 			)));
 
+		$old_cart_rules = Context::getContext()->cart->getCartRules();
+
 		if ($order->hasBeenShipped())
 			die(Tools::jsonEncode(array(
 				'result' => false,
@@ -2107,6 +2109,7 @@ class AdminOrdersControllerCore extends AdminController
 		));
 
 		$this->sendChangedNotification($order);
+		$new_cart_rules = Context::getContext()->cart->getCartRules();
 
 		die(Tools::jsonEncode(array(
 			'result' => true,
@@ -2116,7 +2119,8 @@ class AdminOrdersControllerCore extends AdminController
 			'invoices' => $invoice_array,
 			'documents_html' => $this->createTemplate('_documents.tpl')->fetch(),
 			'shipping_html' => $this->createTemplate('_shipping.tpl')->fetch(),
-			'discount_form_html' => $this->createTemplate('_discount_form.tpl')->fetch()
+			'discount_form_html' => $this->createTemplate('_discount_form.tpl')->fetch(),
+			'refresh' => $old_cart_rules != $new_cart_rules ? true : false
 		)));
 	}
 
