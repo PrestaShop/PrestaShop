@@ -737,7 +737,9 @@ table.table-product-discounts {
     top: 40%;
     margin-top: -10px;
     font-size: 0;
-    overflow: hidden; }
+    overflow: hidden;
+    outline: none;
+    text-decoration: none; }
     .accessories-block .bx-wrapper .bx-controls-direction a:before {
       padding-left: 2px;
       color: #c0c0c0;

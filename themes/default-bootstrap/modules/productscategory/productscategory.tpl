@@ -51,6 +51,15 @@
 				{else}
 				<br />
 				{/if}
+				<div class="clearfix" style="margin-top:5px">
+					{if !$PS_CATALOG_MODE && ($categoryProduct.allow_oosp || $categoryProduct.quantity > 0)}
+						<div class="no-print">
+							<a class="exclusive button ajax_add_to_cart_button" href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$categoryProduct.id_product|intval}&amp;token={$static_token}&amp;add")|escape:'html':'UTF-8'}" data-id-product="{$categoryProduct.id_product|intval}" title="{l s='Add to cart' mod='productscategory'}">
+								<span>{l s='Add to cart'}</span>
+							</a>
+						</div>
+					{/if}
+				</div>
 			</li>
 		{/foreach}
 		</ul>
