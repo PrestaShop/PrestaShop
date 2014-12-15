@@ -666,10 +666,14 @@ class AdminOrdersControllerCore extends AdminController
 							$this->reinjectQuantity($order_detail, $order_detail_list[$id_order_detail]['quantity']);
 					}
 
+					$choosen = false;
 					if ((int)Tools::getValue('refund_voucher_off') == 1)
 						$amount -= $voucher = (float)Tools::getValue('order_discount_price');
 					elseif ((int)Tools::getValue('refund_voucher_off') == 2)
+					{
+						$choosen = true;
 						$amount = $voucher = (float)Tools::getValue('refund_voucher_choose');
+					}
 
 					$order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
 					if (Validate::isLoadedObject($order_carrier))
@@ -683,7 +687,7 @@ class AdminOrdersControllerCore extends AdminController
 					{
 						$shipping = Tools::isSubmit('shippingBack2') ? null : false;
 
-						if (!OrderSlip::create($order, $order_detail_list, $shipping, $voucher))
+						if (!OrderSlip::create($order, $order_detail_list, $shipping, $voucher, $choosen))
 							$this->errors[] = Tools::displayError('You cannot generate a partial credit slip.');
 
 						// Generate voucher
@@ -882,10 +886,14 @@ class AdminOrdersControllerCore extends AdminController
 							$product_list = array();
 							$amount = $order_detail->unit_price_tax_incl * $full_quantity_list[$id_order_detail];
 
-							if ((int)Tools::getValue('refund_total_voucher_off') == 1)
+							$choosen = false;
+							if ((int)Tools::getValue('refund_voucher_off') == 1)
 								$amount -= $voucher = (float)Tools::getValue('order_discount_price');
-							elseif ((int)Tools::getValue('refund_total_voucher_off') == 2)
+							elseif ((int)Tools::getValue('refund_voucher_off') == 2)
+							{
+								$choosen = true;
 								$amount = $voucher = (float)Tools::getValue('refund_voucher_choose');
+							}
 
 							foreach ($full_product_list as $id_order_detail)
 							{
@@ -900,7 +908,7 @@ class AdminOrdersControllerCore extends AdminController
 
 							$shipping = Tools::isSubmit('shippingBack') ? null : false;
 
-							if (!OrderSlip::create($order, $product_list, $shipping, $voucher))
+							if (!OrderSlip::create($order, $product_list, $shipping, $voucher, $choosen))
 								$this->errors[] = Tools::displayError('A credit slip cannot be generated. ');
 							else
 							{

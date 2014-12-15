@@ -56,6 +56,9 @@ class OrderSlipCore extends ObjectModel
 	/** @var string Object last modification date */
 	public $date_upd;
 
+	/** @var integer */
+	public $order_slip_type = 0;
+
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -76,6 +79,7 @@ class OrderSlipCore extends ObjectModel
 			'partial' =>				array('type' => self::TYPE_INT),
 			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'date_upd' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'order_slip_type' =>		array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 		),
 	);
 
@@ -244,7 +248,7 @@ class OrderSlipCore extends ObjectModel
 		return OrderSlip::create($order, $product_list, $shipping);
 	}
 
-	public static function create(Order $order, $product_list, $shipping_cost = false, $amount = 0)
+	public static function create(Order $order, $product_list, $shipping_cost = false, $amount = 0, $amount_choosen = false)
 	{
 		$currency = new Currency((int)$order->id_currency);
 		$order_slip = new OrderSlip();
@@ -347,8 +351,13 @@ class OrderSlipCore extends ObjectModel
 				$order_slip->total_products_tax_incl += $price;
 		}
 
-		$order_slip->total_products_tax_incl -= (float)$amount ? (float)$amount : 0;
-		$order_slip->amount = $order_slip->total_products_tax_incl;
+		if ((float)$amount && !$amount_choosen)
+			$order_slip->order_slip_type = 1;
+		if ((float)$amount && $amount_choosen)
+			$order_slip->order_slip_type = 2;
+
+		$order_slip->total_products_tax_incl -= (float)$amount && !$amount_choosen ? (float)$amount : 0;
+		$order_slip->amount = $amount_choosen ? (float)$amount : $order_slip->total_products_tax_incl;
 		$order_slip->shipping_cost_amount = $order_slip->total_shipping_tax_incl;
 
 		if (!$order_slip->add())
