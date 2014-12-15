@@ -15,6 +15,17 @@
 			}
 		}
 
+		.exclusive span{
+			font-size: 13px;
+			line-height: 18px;
+			padding: 2px 8px 3px;
+			text-decoration: none;
+			&:focus,
+			&:active{
+				text-decoration: none;
+			}
+		}
+
 		/** RESET AND LAYOUT
 		===================================*/
 
@@ -100,6 +111,8 @@
 			margin-top:-10px;
 			font-size:0;
 			overflow:hidden;
+			outline: none;
+			text-decoration: none;
 			&:before{
 				padding-left:2px;
 				color:#c0c0c0;
@@ -107,10 +120,8 @@
 				font-size:20px;
 				line-height:22px;
 			}
-
 			&:hover:before{color:$base-text-color}
 		}
-
 
 		.bx-next{
 			right: 10px;

@@ -17,6 +17,13 @@
       color: #3a3939; }
       #productscategory_list .product-name a:hover {
         color: #515151; }
+  #productscategory_list .exclusive span {
+    font-size: 13px;
+    line-height: 18px;
+    padding: 2px 8px 3px;
+    text-decoration: none; }
+    #productscategory_list .exclusive span:focus, #productscategory_list .exclusive span:active {
+      text-decoration: none; }
   #productscategory_list .bx-wrapper {
     position: relative;
     padding: 0;
@@ -75,7 +82,9 @@
     top: 40%;
     margin-top: -10px;
     font-size: 0;
-    overflow: hidden; }
+    overflow: hidden;
+    outline: none;
+    text-decoration: none; }
     #productscategory_list .bx-wrapper .bx-controls-direction a:before {
       padding-left: 2px;
       color: #c0c0c0;

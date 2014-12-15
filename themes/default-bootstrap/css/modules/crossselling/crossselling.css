@@ -82,7 +82,9 @@
     top: 40%;
     margin-top: -10px;
     font-size: 0;
-    overflow: hidden; }
+    overflow: hidden;
+    outline: none;
+    text-decoration: none; }
     #crossselling_list .bx-wrapper .bx-controls-direction a:before {
       padding-left: 2px;
       color: #c0c0c0;
