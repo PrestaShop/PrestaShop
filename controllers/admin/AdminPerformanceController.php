@@ -748,7 +748,7 @@ class AdminPerformanceControllerCore extends AdminController
 				if (((bool)Tools::getValue('PS_CSS_THEME_CACHE') || (bool)Tools::getValue('PS_JS_THEME_CACHE')) && !is_writable($theme_cache_directory))
 					$this->errors[] = Tools::displayError(sprintf($this->l('To use Smart Cache directory %s must be writable.'), realpath($theme_cache_directory)));
 
-				if($tmp = (int)Tools::getValue('PS_CSS_THEME_CACHE'))
+				if ($tmp = (int)Tools::getValue('PS_CSS_THEME_CACHE'))
 				{
 					$version = (int)Configuration::get('PS_CCCCSS_VERSION');
 					if (Configuration::get('PS_CSS_THEME_CACHE') != $tmp)
@@ -756,7 +756,7 @@ class AdminPerformanceControllerCore extends AdminController
 				}
 
 
-				if($tmp = (int)Tools::getValue('PS_JS_THEME_CACHE'))
+				if ($tmp = (int)Tools::getValue('PS_JS_THEME_CACHE'))
 				{
 					$version = (int)Configuration::get('PS_CCCJS_VERSION');
 					if (Configuration::get('PS_JS_THEME_CACHE') != $tmp)
@@ -918,7 +918,7 @@ class AdminPerformanceControllerCore extends AdminController
 					elseif ($caching_system == 'CacheFs')
 						if (!is_dir(_PS_CACHEFS_DIRECTORY_))
 							@mkdir(_PS_CACHEFS_DIRECTORY_, 0777, true);
-						elseif  (!is_writable(_PS_CACHEFS_DIRECTORY_))
+						elseif (!is_writable(_PS_CACHEFS_DIRECTORY_))
 							$this->errors[] = sprintf(
 								Tools::displayError('To use CacheFS, the directory %s must be writable.'),
 								realpath(_PS_CACHEFS_DIRECTORY_)
@@ -947,7 +947,11 @@ class AdminPerformanceControllerCore extends AdminController
 						copy(_PS_ROOT_DIR_.'/config/settings.inc.php', _PS_ROOT_DIR_.'/config/settings.old.php')
 						&& (bool)file_put_contents(_PS_ROOT_DIR_.'/config/settings.inc.php', $new_settings)
 					))
+					{
+						if (function_exists('opcache_invalidate'))
+							opcache_invalidate(_PS_ROOT_DIR_.'/config/settings.inc.php');
 						$redirectAdmin = true;
+					}
 					else
 						$this->errors[] = Tools::displayError('The settings file cannot be overwritten.');
 				}
@@ -1005,5 +1009,5 @@ class AdminPerformanceControllerCore extends AdminController
 			}
 		}
 		die;
-    }
+	}
 }

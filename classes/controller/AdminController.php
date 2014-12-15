@@ -1595,9 +1595,6 @@ class AdminControllerCore extends Controller
 			}
 		}
 
-		//$link = preg_replace('/&token=[a-z0-9]{32}/', '', basename($_SERVER['REQUEST_URI']));
-		//$currentPage = 'index.php?controller='.$this->context->controller->controller_name."&".$this->display.$this->table;
-
 		// Tab list
 		$tabs = Tab::getTabs($this->context->language->id, 0);
 		$current_id = Tab::getCurrentParentId();
@@ -1987,7 +1984,7 @@ class AdminControllerCore extends Controller
 				.'&website='.urlencode($this->context->shop->getBaseURL())
 				.'&utm_source=back-office&utm_medium=connect-to-addons'
 				.'&utm_campaign=back-office-'.Tools::strtoupper($this->context->language->iso_code)
-				.'&utm_content='.(defined('_PS_HOST_MODE_') ? 'ondemand' : 'download').'#createnow',
+				.'&utm_content='.(defined('_PS_HOST_MODE_') ? 'cloud' : 'download').'#createnow',
 			'addons_forgot_password_link' => '//addons.prestashop.com/'.$this->context->language->iso_code.'/forgot-your-password'
 		));
 
@@ -1997,7 +1994,7 @@ class AdminControllerCore extends Controller
 			'modal_title' => '<i class="icon-puzzle-piece"></i> <a target="_blank" href="http://addons.prestashop.com/'
 			.'?utm_source=back-office&utm_medium=modules'
 			.'&utm_campaign=back-office-'.Tools::strtoupper($this->context->language->iso_code)
-			.'&utm_content='.(defined('_PS_HOST_MODE_') ? 'ondemand' : 'download').'>PrestaShop Addons</a>',
+			.'&utm_content='.(defined('_PS_HOST_MODE_') ? 'cloud' : 'download').'>PrestaShop Addons</a>',
 			'modal_content' => $this->context->smarty->fetch('controllers/modules/login_addons.tpl'),
 		);
 	}
@@ -3589,8 +3586,9 @@ class AdminControllerCore extends Controller
 
 	public function isFresh($file, $timeout = 604800)
 	{
-		if (file_exists(_PS_ROOT_DIR_.$file) && filesize(_PS_ROOT_DIR_.$file) > 0)
-			return ((time() - filemtime(_PS_ROOT_DIR_.$file)) < $timeout);
+		if (($time = @filemtime(_PS_ROOT_DIR_.$file)) && filesize(_PS_ROOT_DIR_.$file) > 0)
+			return ((time() - $time) < $timeout);
+
 		return false;
 	}
 

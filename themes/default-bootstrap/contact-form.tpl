@@ -127,7 +127,7 @@
 					{if $fileupload == 1}
 						<p class="form-group">
 							<label for="fileUpload">{l s='Attach File'}</label>
-							<input type="hidden" name="MAX_FILE_SIZE" value="2000000" />
+							<input type="hidden" name="MAX_FILE_SIZE" value="{if isset($max_upload_size) && $max_upload_size}{$max_upload_size|intval}{else}2000000{/if}" />
 							<input type="file" name="fileUpload" id="fileUpload" class="form-control" />
 						</p>
 					{/if}

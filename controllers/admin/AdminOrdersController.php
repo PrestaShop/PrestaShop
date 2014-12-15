@@ -666,12 +666,18 @@ class AdminOrdersControllerCore extends AdminController
 							$this->reinjectQuantity($order_detail, $order_detail_list[$id_order_detail]['quantity']);
 					}
 
-					if ((int)Tools::getValue('refund_voucher_off') == 1)
-						$amount -= (float)Tools::getValue('order_discount_price');
-					elseif ((int)Tools::getValue('refund_voucher_off') == 2)
-						$amount = (float)Tools::getValue('refund_voucher_choose');
+					$choosen = false;
+					$voucher = 0;
 
-					$shipping_cost_amount = (float)str_replace(',', '.', Tools::getValue('partialRefundShippingCost'));
+					if ((int)Tools::getValue('refund_voucher_off') == 1)
+						$amount -= $voucher = (float)Tools::getValue('order_discount_price');
+					elseif ((int)Tools::getValue('refund_voucher_off') == 2)
+					{
+						$choosen = true;
+						$amount = $voucher = (float)Tools::getValue('refund_voucher_choose');
+					}
+
+					$shipping_cost_amount = (float)str_replace(',', '.', Tools::getValue('partialRefundShippingCost')) ? (float)str_replace(',', '.', Tools::getValue('partialRefundShippingCost')) : false;
 					if ($shipping_cost_amount > 0)
 						$amount += $shipping_cost_amount;
 
@@ -685,7 +691,7 @@ class AdminOrdersControllerCore extends AdminController
 
 					if ($amount >= 0)
 					{
-						if (!OrderSlip::create($order, $order_detail_list, $shipping_cost_amount))
+						if (!OrderSlip::create($order, $order_detail_list, $shipping_cost_amount, $voucher, $choosen))
 							$this->errors[] = Tools::displayError('You cannot generate a partial credit slip.');
 
 						// Generate voucher
@@ -884,10 +890,14 @@ class AdminOrdersControllerCore extends AdminController
 							$product_list = array();
 							$amount = $order_detail->unit_price_tax_incl * $full_quantity_list[$id_order_detail];
 
-							if ((int)Tools::getValue('refund_total_voucher_off') == 1)
-								$amount -= (float)Tools::getValue('order_discount_price');
-							elseif ((int)Tools::getValue('refund_total_voucher_off') == 2)
-								$amount = (float)Tools::getValue('refund_voucher_choose');
+							$choosen = false;
+							if ((int)Tools::getValue('refund_voucher_off') == 1)
+								$amount -= $voucher = (float)Tools::getValue('order_discount_price');
+							elseif ((int)Tools::getValue('refund_voucher_off') == 2)
+							{
+								$choosen = true;
+								$amount = $voucher = (float)Tools::getValue('refund_voucher_choose');
+							}
 
 							foreach ($full_product_list as $id_order_detail)
 							{
@@ -902,7 +912,7 @@ class AdminOrdersControllerCore extends AdminController
 
 							$shipping = Tools::isSubmit('shippingBack') ? null : false;
 
-							if (!OrderSlip::create($order, $product_list, $shipping))
+							if (!OrderSlip::create($order, $product_list, $shipping, $voucher, $choosen))
 								$this->errors[] = Tools::displayError('A credit slip cannot be generated. ');
 							else
 							{
@@ -1625,7 +1635,7 @@ class AdminOrdersControllerCore extends AdminController
 			$product['current_stock'] = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], $product['id_shop']);
 			$resume = OrderSlip::getProductSlipResume($product['id_order_detail']);
 			$product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
-			$product['amount_refundable'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
+			$product['amount_refundable'] = $product['total_price_tax_excl'] - $resume['amount_tax_excl'];
 			$product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl'], $currency);
 			$product['refund_history'] = OrderSlip::getProductSlipDetail($product['id_order_detail']);
 			$product['return_history'] = OrderReturn::getProductReturnDetail($product['id_order_detail']);
@@ -2061,7 +2071,7 @@ class AdminOrdersControllerCore extends AdminController
 		$product = end($products);
 		$resume = OrderSlip::getProductSlipResume((int)$product['id_order_detail']);
 		$product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
-		$product['amount_refundable'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
+		$product['amount_refundable'] = $product['total_price_tax_excl'] - $resume['amount_tax_excl'];
 		$product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl']);
 		$product['return_history'] = OrderReturn::getProductReturnDetail((int)$product['id_order_detail']);
 		$product['refund_history'] = OrderSlip::getProductSlipDetail((int)$product['id_order_detail']);
@@ -2285,7 +2295,7 @@ class AdminOrdersControllerCore extends AdminController
 		$product = $products[$order_detail->id];
 		$resume = OrderSlip::getProductSlipResume($order_detail->id);
 		$product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
-		$product['amount_refundable'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
+		$product['amount_refundable'] = $product['total_price_tax_excl'] - $resume['amount_tax_excl'];
 		$product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl']);
 		$product['refund_history'] = OrderSlip::getProductSlipDetail($order_detail->id);
 		if ($product['id_warehouse'] != 0)

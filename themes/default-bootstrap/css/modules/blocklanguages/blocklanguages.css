@@ -11,7 +11,7 @@
     font-weight: bold;
     padding: 8px 10px 10px 10px;
     line-height: 18px;
-    color: white;
+    color: #fff;
     text-shadow: 1px 1px rgba(0, 0, 0, 0.2);
     cursor: pointer; }
     @media (max-width: 479px) {
@@ -44,16 +44,18 @@
     top: 37px;
     left: 0;
     width: 157px;
-    background: #333333;
+    background: #333;
     z-index: 2; }
     #languages-block-top ul li {
-      color: white;
+      color: #fff;
       line-height: 35px;
       font-size: 13px; }
       #languages-block-top ul li a,
       #languages-block-top ul li > span {
         padding: 0 10px 0 12px;
         display: block;
-        color: white; }
+        color: #fff; }
       #languages-block-top ul li.selected, #languages-block-top ul li:hover a {
         background: #484848; }
+
+/*# sourceMappingURL=blocklanguages.css.map */

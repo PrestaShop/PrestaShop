@@ -1,6 +1,30 @@
 @import "compass";
 @import "theme_variables";
-#crossselling_list, .accessories-block .block_content, #productscategory_list {
+
+#productscategory_list {
+
+		.product-name{
+			margin-bottom: 5px;
+			a{
+				font-size: 15px;
+				line-height: 18px;
+				color: $product-name-color;
+				&:hover{
+					color: $product-name-hover-color;
+				}
+			}
+		}
+
+		.exclusive span{
+			font-size: 13px;
+			line-height: 18px;
+			padding: 2px 8px 3px;
+			text-decoration: none;
+			&:focus,
+			&:active{
+				text-decoration: none;
+			}
+		}
 
 		/** RESET AND LAYOUT
 		===================================*/
@@ -19,8 +43,6 @@
 
 		/** THEME
 		===================================*/
-
-
 
 		.bx-wrapper .bx-pager,
 		.bx-wrapper .bx-controls-auto {
@@ -79,9 +101,6 @@
 
 		/* DIRECTION CONTROLS (NEXT / PREV) */
 
-
-
-
 		.bx-wrapper .bx-controls-direction a{
 			margin-top:38px;
 			height:20px;
@@ -92,6 +111,8 @@
 			margin-top:-10px;
 			font-size:0;
 			overflow:hidden;
+			outline: none;
+			text-decoration: none;
 			&:before{
 				padding-left:2px;
 				color:#c0c0c0;
@@ -99,10 +120,8 @@
 				font-size:20px;
 				line-height:22px;
 			}
-
 			&:hover:before{color:$base-text-color}
 		}
-
 
 		.bx-next{
 			right: 10px;
@@ -118,8 +137,6 @@
 
 			}
 		}
-
-
 
 		.bx-wrapper .bx-controls-direction a.disabled {
 			display: none;
@@ -172,7 +189,6 @@
 			right: 0;
 			width: 35px;
 		}
-
 
 		/* IMAGE CAPTIONS */
 
