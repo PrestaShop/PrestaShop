@@ -2719,7 +2719,7 @@ class AdminControllerCore extends Controller
 			'select' => &$this->_select,
 			'join' => &$this->_join,
 			'where' => &$this->_where,
-			'group_by' => &$this->_groupBy,
+			'group_by' => &$this->_group,
 			'order_by' => &$this->_orderBy,
 			'order_way' => &$this->_orderWay,
 			'fields' => &$this->fields_list,
