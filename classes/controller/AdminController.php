@@ -391,6 +391,20 @@ class AdminControllerCore extends Controller
 		// Check if logged on Addons
 		if (isset($this->context->cookie->username_addons) && isset($this->context->cookie->password_addons) && !empty($this->context->cookie->username_addons) && !empty($this->context->cookie->password_addons))
 			$this->logged_on_addons = true;
+
+		// Set context mode
+		if (defined(_PS_HOST_MODE_) && _PS_HOST_MODE_)
+		{
+			if (isset($this->context->cookie->is_contributor) && (int)$this->context->cookie->is_contributor === 1)
+				$this->context->mode = self::MODE_CONTRIB_HOST;
+			else
+				$this->context->mode = self::MODE_HOST;
+		}
+		elseif (isset($this->context->cookie->is_contributor) && (int)$this->context->cookie->is_contributor === 1)
+			$this->context->mode = self::MODE_CONTRIB;
+		else
+			$this->context->mode = self::MODE_STD;
+
 	}
 
 	/**
