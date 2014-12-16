@@ -2555,10 +2555,9 @@ class AdminProductsControllerCore extends AdminController
 				if ($this->tabAccess['add'])
 					$this->page_header_toolbar_btn['duplicate'] = array(
 						'short' => $this->l('Duplicate', null, null, false),
-						'href' => $this->context->link->getAdminLink('AdminProducts', true).'&id_product='.(int)$product->id.'&duplicateproduct',
 						'desc' => $this->l('Duplicate', null, null, false),
 						'confirm' => 1,
-						'js' => 'if (confirm(\''.$this->l('Also copy images', null, true, false).' ?\')){document.location.href = \''.Tools::safeOutput($this->context->link->getAdminLink('AdminProducts', true).'&id_product='.(int)$product->id.'&duplicateproduct').'\'; return false;} else{document.location.href = \''.Tools::safeOutput($this->context->link->getAdminLink('AdminProducts', true).'&id_product='.(int)$product->id.'&duplicateproduct&noimage=1').'\'; return false;}'
+						'js' => 'confirm_link(\'\', \''.$this->l('This will copy the images too. If you wish to proceed, click "Yes". If not, click "No".', null, true, false).'\', \''.$this->l('Yes', null, true, false).'\', \''.$this->l('No', null, true, false).'\', \''.$this->context->link->getAdminLink('AdminProducts', true).'&id_product='.(int)$product->id.'&duplicateproduct'.'\', \''.$this->context->link->getAdminLink('AdminProducts', true).'&id_product='.(int)$product->id.'&duplicateproduct&noimage=1'.'\')'
 					);
 
 				// adding button for preview this product statistics
