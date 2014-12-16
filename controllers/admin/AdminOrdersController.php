@@ -667,6 +667,8 @@ class AdminOrdersControllerCore extends AdminController
 					}
 
 					$choosen = false;
+					$voucher = 0;
+
 					if ((int)Tools::getValue('refund_voucher_off') == 1)
 						$amount -= $voucher = (float)Tools::getValue('order_discount_price');
 					elseif ((int)Tools::getValue('refund_voucher_off') == 2)
@@ -674,6 +676,10 @@ class AdminOrdersControllerCore extends AdminController
 						$choosen = true;
 						$amount = $voucher = (float)Tools::getValue('refund_voucher_choose');
 					}
+
+					$shipping_cost_amount = (float)str_replace(',', '.', Tools::getValue('partialRefundShippingCost')) ? (float)str_replace(',', '.', Tools::getValue('partialRefundShippingCost')) : false;
+					if ($shipping_cost_amount > 0)
+						$amount += $shipping_cost_amount;
 
 					$order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
 					if (Validate::isLoadedObject($order_carrier))
@@ -685,9 +691,7 @@ class AdminOrdersControllerCore extends AdminController
 
 					if ($amount >= 0)
 					{
-						$shipping = Tools::isSubmit('shippingBack2') ? null : false;
-
-						if (!OrderSlip::create($order, $order_detail_list, $shipping, $voucher, $choosen))
+						if (!OrderSlip::create($order, $order_detail_list, $shipping_cost_amount, $voucher, $choosen))
 							$this->errors[] = Tools::displayError('You cannot generate a partial credit slip.');
 
 						// Generate voucher
@@ -1631,7 +1635,7 @@ class AdminOrdersControllerCore extends AdminController
 			$product['current_stock'] = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], $product['id_shop']);
 			$resume = OrderSlip::getProductSlipResume($product['id_order_detail']);
 			$product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
-			$product['amount_refundable'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
+			$product['amount_refundable'] = $product['total_price_tax_excl'] - $resume['amount_tax_excl'];
 			$product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl'], $currency);
 			$product['refund_history'] = OrderSlip::getProductSlipDetail($product['id_order_detail']);
 			$product['return_history'] = OrderReturn::getProductReturnDetail($product['id_order_detail']);
@@ -1835,6 +1839,8 @@ class AdminOrdersControllerCore extends AdminController
 				'result' => false,
 				'error' => Tools::displayError('The order object cannot be loaded.')
 			)));
+
+		$old_cart_rules = Context::getContext()->cart->getCartRules();
 
 		if ($order->hasBeenShipped())
 			die(Tools::jsonEncode(array(
@@ -2067,7 +2073,7 @@ class AdminOrdersControllerCore extends AdminController
 		$product = end($products);
 		$resume = OrderSlip::getProductSlipResume((int)$product['id_order_detail']);
 		$product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
-		$product['amount_refundable'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
+		$product['amount_refundable'] = $product['total_price_tax_excl'] - $resume['amount_tax_excl'];
 		$product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl']);
 		$product['return_history'] = OrderReturn::getProductReturnDetail((int)$product['id_order_detail']);
 		$product['refund_history'] = OrderSlip::getProductSlipDetail((int)$product['id_order_detail']);
@@ -2103,6 +2109,41 @@ class AdminOrdersControllerCore extends AdminController
 		));
 
 		$this->sendChangedNotification($order);
+		$new_cart_rules = Context::getContext()->cart->getCartRules();
+		sort($old_cart_rules);
+		sort($new_cart_rules);
+		$result = array_diff($new_cart_rules, $old_cart_rules);
+		$refresh = false;
+
+		foreach ($result as $cart_rule)
+		{
+			$refresh = true;
+			// Create OrderCartRule
+			$rule = new CartRule($cart_rule['id_cart_rule']);
+			$values = array(
+					'tax_incl' => $rule->getContextualValue(true),
+					'tax_excl' => $rule->getContextualValue(false)
+					);
+			$order_cart_rule = new OrderCartRule();
+			$order_cart_rule->id_order = $order->id;
+			$order_cart_rule->id_cart_rule = $cart_rule['id_cart_rule'];
+			$order_cart_rule->id_order_invoice = $order_invoice->id;
+			$order_cart_rule->name = $cart_rule['name'];
+			$order_cart_rule->value = $values['tax_incl'];
+			$order_cart_rule->value_tax_excl = $values['tax_excl'];
+			$res &= $order_cart_rule->add();
+
+			$order->total_discounts += $order_cart_rule->value;
+			$order->total_discounts_tax_incl += $order_cart_rule->value;
+			$order->total_discounts_tax_excl += $order_cart_rule->value_tax_excl;
+			$order->total_paid -= $order_cart_rule->value;
+			$order->total_paid_tax_incl -= $order_cart_rule->value;
+			$order->total_paid_tax_excl -= $order_cart_rule->value_tax_excl;
+		}
+
+		// Update Order
+		$res &= $order->update();
+
 
 		die(Tools::jsonEncode(array(
 			'result' => true,
@@ -2112,7 +2153,8 @@ class AdminOrdersControllerCore extends AdminController
 			'invoices' => $invoice_array,
 			'documents_html' => $this->createTemplate('_documents.tpl')->fetch(),
 			'shipping_html' => $this->createTemplate('_shipping.tpl')->fetch(),
-			'discount_form_html' => $this->createTemplate('_discount_form.tpl')->fetch()
+			'discount_form_html' => $this->createTemplate('_discount_form.tpl')->fetch(),
+			'refresh' => $refresh
 		)));
 	}
 
@@ -2291,7 +2333,7 @@ class AdminOrdersControllerCore extends AdminController
 		$product = $products[$order_detail->id];
 		$resume = OrderSlip::getProductSlipResume($order_detail->id);
 		$product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
-		$product['amount_refundable'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
+		$product['amount_refundable'] = $product['total_price_tax_excl'] - $resume['amount_tax_excl'];
 		$product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl']);
 		$product['refund_history'] = OrderSlip::getProductSlipDetail($order_detail->id);
 		if ($product['id_warehouse'] != 0)

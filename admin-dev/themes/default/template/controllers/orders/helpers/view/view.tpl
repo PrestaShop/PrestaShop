@@ -1060,6 +1060,15 @@
 											<td class="amount text-right" >
 												{displayPrice price=$order_shipping_price currency=$currency->id}
 											</td>
+											<td class="partial_refund_fields current-edit" style="display:none;">
+												<div class="input-group">
+													<div class="input-group-addon">
+														{$currency->prefix}
+														{$currency->suffix}
+													</div>
+													<input type="text" name="partialRefundShippingCost" value="0" />
+												</div>
+											</td>
 										</tr>
 										{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
 			 							<tr id="total_taxes">
@@ -1157,12 +1166,6 @@
 							<label for="generateDiscountRefund">
 								<input type="checkbox" id="generateDiscountRefund" name="generateDiscountRefund" onclick="toggleShippingCost()" />
 								{l s='Generate a voucher'}
-							</label>
-						</p>
-						<p class="checkbox" id="spanShippingBack2">
-							<label for="shippingBack2">
-								<input type="checkbox" id="shippingBack2" name="shippingBack2" />
-								{l s='Repay shipping costs'}
 							</label>
 						</p>
 						{if $order->total_discounts_tax_excl > 0 || $order->total_discounts_tax_incl > 0}

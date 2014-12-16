@@ -103,8 +103,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 		$tax_calculator = new TaxCalculator(array($tax));
 		$this->order->total_shipping_tax_excl = Tools::ps_round($tax_calculator->removeTaxes($this->order_slip->shipping_cost_amount), 2);
 
-		$this->order->total_paid_tax_incl += $this->order->total_shipping_tax_incl;
-		$this->order->total_paid_tax_excl += $this->order->total_shipping_tax_excl;
+		$this->order->total_paid_tax_incl += $this->order_slip->shipping_cost_amount;
 
 		$this->smarty->assign(array(
 			'order' => $this->order,

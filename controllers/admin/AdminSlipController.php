@@ -34,7 +34,7 @@ class AdminSlipControllerCore extends AdminController
 
 		$this->_select = ' o.`id_shop`';
 		$this->_join .= ' LEFT JOIN '._DB_PREFIX_.'orders o ON (o.`id_order` = a.`id_order`)';
-		$this->_group = ' GROUP BY o.`id_order`';
+		$this->_group = ' GROUP BY a.`id_order_slip`';
 
 		$this->fields_list = array(
 			'id_order_slip' => array(
