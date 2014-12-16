@@ -248,7 +248,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 			if ($id_warehouse != -1)
 				$this->_where .= ' AND a.id_warehouse = '.(int)$id_warehouse;
 
-			$this->_groupBy = 'GROUP BY a.price_te';
+			$this->_group = 'GROUP BY a.price_te';
 
 			self::$currentIndex = self::$currentIndex.'&id_stock='.Tools::getValue('id_stock').'&detailsstock';
 			return parent::renderList();

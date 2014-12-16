@@ -396,14 +396,14 @@ class AdminControllerCore extends Controller
 		if (defined(_PS_HOST_MODE_) && _PS_HOST_MODE_)
 		{
 			if (isset($this->context->cookie->is_contributor) && (int)$this->context->cookie->is_contributor === 1)
-				$this->context->mode = self::MODE_CONTRIB_HOST;
+				$this->context->mode = Context::MODE_CONTRIB_HOST;
 			else
-				$this->context->mode = self::MODE_HOST;
+				$this->context->mode = Context::MODE_HOST;
 		}
 		elseif (isset($this->context->cookie->is_contributor) && (int)$this->context->cookie->is_contributor === 1)
-			$this->context->mode = self::MODE_CONTRIB;
+			$this->context->mode = Context::MODE_CONTRIB;
 		else
-			$this->context->mode = self::MODE_STD;
+			$this->context->mode = Context::MODE_STD;
 
 	}
 
@@ -2733,7 +2733,7 @@ class AdminControllerCore extends Controller
 			'select' => &$this->_select,
 			'join' => &$this->_join,
 			'where' => &$this->_where,
-			'group_by' => &$this->_groupBy,
+			'group_by' => &$this->_group,
 			'order_by' => &$this->_orderBy,
 			'order_way' => &$this->_orderWay,
 			'fields' => &$this->fields_list,
