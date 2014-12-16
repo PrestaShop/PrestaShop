@@ -349,7 +349,7 @@ abstract class ControllerCore
 				if ($check_path)
 					$js_path = Media::getJSPath($js_file);
 				if ($js_path && in_array($js_path, $this->js_files))
-					unset($this->js_files[array_search($js_path,$this->js_files)]);
+					unset($this->js_files[array_search($js_path, $this->js_files)]);
 			}
 		else
 		{
@@ -358,7 +358,7 @@ abstract class ControllerCore
 				$js_path = Media::getJSPath($js_uri);
 
 			if ($js_path)
-				unset($this->js_files[array_search($js_path,$this->js_files)]);
+				unset($this->js_files[array_search($js_path, $this->js_files)]);
 		}
 	}
 
@@ -448,10 +448,10 @@ abstract class ControllerCore
 			if (!$this->useMobileTheme() && $this->checkLiveEditAccess())
 				$live_edit_content = $this->getLiveEditFooter();
 
- 			$dom_available = extension_loaded('dom') ? true : false;
+			$dom_available = extension_loaded('dom') ? true : false;
 			$defer = (bool)Configuration::get('PS_JS_DEFER');
 
- 			if ($defer && $dom_available)
+			if ($defer && $dom_available)
 				$html = Media::deferInlineScripts($html);
 			$html = trim(str_replace(array('</body>', '</html>'), '', $html))."\n";
 
@@ -507,7 +507,7 @@ abstract class ControllerCore
 			'errstr' => $errstr
 		);
 		Context::getContext()->smarty->assign('php_errors', Controller::$php_errors);
-	    return true;
+		return true;
 	}
 
 	protected function ajaxDie($value = null, $controller = null, $method = null)
