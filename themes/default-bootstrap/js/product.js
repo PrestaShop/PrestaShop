@@ -179,7 +179,7 @@ $(document).ready(function()
 	else if (typeof ajax_allowed != 'undefined' && !ajax_allowed)
 		$('#buy_block').attr('target', '_top');
 
-	if ($('#bxslider li').lentgh && !!$.prototype.bxSlider)
+	if ($('#bxslider li').length && !!$.prototype.bxSlider)
 		$('#bxslider').bxSlider({
 			minSlides: 1,
 			maxSlides: 6,
@@ -193,7 +193,7 @@ $(document).ready(function()
 			hideControlOnEnd: true
 		});
 
-	if (!$('#bxslider li').lentgh)
+	if (!$('#bxslider li').length)
 		$('.accessories-block').parent().remove();
 
 	if (typeof product_fileDefaultHtml !== 'undefined')
