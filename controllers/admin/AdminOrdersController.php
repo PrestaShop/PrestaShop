@@ -2110,6 +2110,40 @@ class AdminOrdersControllerCore extends AdminController
 
 		$this->sendChangedNotification($order);
 		$new_cart_rules = Context::getContext()->cart->getCartRules();
+		sort($old_cart_rules);
+		sort($new_cart_rules);
+		$result = array_diff($new_cart_rules, $old_cart_rules);
+		$refresh = false;
+
+		foreach ($result as $cart_rule)
+		{
+			$refresh = true;
+			// Create OrderCartRule
+			$rule = new CartRule($cart_rule['id_cart_rule']);
+			$values = array(
+					'tax_incl' => $rule->getContextualValue(true),
+					'tax_excl' => $rule->getContextualValue(false)
+					);
+			$order_cart_rule = new OrderCartRule();
+			$order_cart_rule->id_order = $order->id;
+			$order_cart_rule->id_cart_rule = $cart_rule['id_cart_rule'];
+			$order_cart_rule->id_order_invoice = $order_invoice->id;
+			$order_cart_rule->name = $cart_rule['name'];
+			$order_cart_rule->value = $values['tax_incl'];
+			$order_cart_rule->value_tax_excl = $values['tax_excl'];
+			$res &= $order_cart_rule->add();
+
+			$order->total_discounts += $order_cart_rule->value;
+			$order->total_discounts_tax_incl += $order_cart_rule->value;
+			$order->total_discounts_tax_excl += $order_cart_rule->value_tax_excl;
+			$order->total_paid -= $order_cart_rule->value;
+			$order->total_paid_tax_incl -= $order_cart_rule->value;
+			$order->total_paid_tax_excl -= $order_cart_rule->value_tax_excl;
+		}
+
+		// Update Order
+		$res &= $order->update();
+
 
 		die(Tools::jsonEncode(array(
 			'result' => true,
@@ -2120,7 +2154,7 @@ class AdminOrdersControllerCore extends AdminController
 			'documents_html' => $this->createTemplate('_documents.tpl')->fetch(),
 			'shipping_html' => $this->createTemplate('_shipping.tpl')->fetch(),
 			'discount_form_html' => $this->createTemplate('_discount_form.tpl')->fetch(),
-			'refresh' => $old_cart_rules != $new_cart_rules ? true : false
+			'refresh' => $refresh
 		)));
 	}
 
