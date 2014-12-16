@@ -109,6 +109,8 @@ class ContextCore
 	 */
 	public $mobile_detect;
 
+	public $mode;
+
 	/**
 	 * @var boolean|string mobile device of the customer
 	 */
@@ -123,6 +125,14 @@ class ContextCore
 	const DEVICE_TABLET = 2;
 
 	const DEVICE_MOBILE = 4;
+
+	const MODE_STD = 1;
+
+	const MODE_STD_CONTRIB = 2;
+
+	const MODE_HOST_CONTRIB = 4;
+
+	const MODE_HOST = 8;
 
 	public function getMobileDetect()
 	{
