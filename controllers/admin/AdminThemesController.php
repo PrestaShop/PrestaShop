@@ -258,7 +258,8 @@ class AdminThemesControllerCore extends AdminController
 					FROM '._DB_PREFIX_.'theme_meta as tm
 					LEFT JOIN '._DB_PREFIX_.'meta m ON (m.`id_meta` = tm.`id_meta`)
 					LEFT JOIN '._DB_PREFIX_.'meta_lang ml ON(ml.id_meta = m.id_meta AND ml.id_lang = '.(int)$this->context->language->id.')
-					WHERE tm.`id_theme` = '.(int)$this->object->id);
+					WHERE tm.`id_theme` = '.(int)$this->object->id.
+					((int)Context::getContext()->shop->id ? ' AND id_shop = '.(int)Context::getContext()->shop->id : ''));
 
 				// if no theme_meta are found, we must create them
 				if (empty($theme_metas))

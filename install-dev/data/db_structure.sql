@@ -375,12 +375,13 @@ CREATE TABLE `PREFIX_cms` (
 CREATE TABLE `PREFIX_cms_lang` (
   `id_cms` int(10) unsigned NOT NULL,
   `id_lang` int(10) unsigned NOT NULL,
+  `id_shop` int(10) unsigned NOT NULL DEFAULT '1',
   `meta_title` varchar(128) NOT NULL,
   `meta_description` varchar(255) DEFAULT NULL,
   `meta_keywords` varchar(255) DEFAULT NULL,
   `content` longtext,
   `link_rewrite` varchar(128) NOT NULL,
-  PRIMARY KEY (`id_cms`,`id_lang`)
+  PRIMARY KEY (`id_cms`, `id_shop`, `id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_cms_category` (
@@ -398,15 +399,23 @@ CREATE TABLE `PREFIX_cms_category` (
 CREATE TABLE `PREFIX_cms_category_lang` (
   `id_cms_category` int(10) unsigned NOT NULL,
   `id_lang` int(10) unsigned NOT NULL,
+  `id_shop` int(10) unsigned NOT NULL DEFAULT '1',
   `name` varchar(128) NOT NULL,
   `description` text,
   `link_rewrite` varchar(128) NOT NULL,
   `meta_title` varchar(128) DEFAULT NULL,
   `meta_keywords` varchar(255) DEFAULT NULL,
   `meta_description` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id_cms_category`,`id_lang`),
+  PRIMARY KEY (`id_cms_category`, `id_shop`, `id_lang`),
   KEY `category_name` (`name`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
+
+CREATE TABLE `PREFIX_cms_category_shop` (
+  `id_cms_category` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id_shop` INT(11) UNSIGNED NOT NULL ,
+  PRIMARY KEY (`id_cms_category`, `id_shop`),
+  KEY `id_shop` (`id_shop`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_compare` (
   `id_compare` int(10) unsigned NOT NULL auto_increment,
