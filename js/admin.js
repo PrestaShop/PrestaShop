@@ -1223,7 +1223,7 @@ function bindAddonsButtons()
 					{
 						$('#addons_loading').html('');
 						$('#addons_login_div').fadeOut();
-						window.location.href = admin_modules_link + '&conf=32';
+						window.location.href = currentIndex + '&token=' + token + '&conf=32';
 					}
 					else
 						$('#addons_loading').html('<br><div class="alert alert-danger">'+errorLogin+'</div>');
