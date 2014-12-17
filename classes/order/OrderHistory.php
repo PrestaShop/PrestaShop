@@ -306,7 +306,7 @@ class OrderHistoryCore extends ObjectModel
 				if ($rest_paid > 0)
 				{
 					$payment = new OrderPayment();
-					$payment->order_reference = $order->reference;
+					$payment->order_reference = Tools::substr($order->reference, 0, 9);
 					$payment->id_currency = $order->id_currency;
 					$payment->amount = $rest_paid;
 

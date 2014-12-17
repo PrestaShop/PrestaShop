@@ -732,7 +732,7 @@ class FrontControllerCore extends Controller
 				elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_ && !FrontController::isInWhitelistForGeolocation())
 					$this->context->smarty->assign(array(
 						'restricted_country_mode' => true,
-						'geolocation_country' => 'Undefined'
+						'geolocation_country' => isset($record->country_name) && $record->country_name ? $record->country_name : 'Undefined'
 					));
 			}
 		}
