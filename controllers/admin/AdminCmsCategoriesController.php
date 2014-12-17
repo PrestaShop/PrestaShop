@@ -81,7 +81,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 		$this->initToolbar();
 		$this->_group = 'GROUP BY a.`id_cms_category`';
 		if (isset($this->toolbar_btn['new']))
-        	$this->toolbar_btn['new']['href'] .= '&id_parent='.(int)Tools::getValue('id_cms_category');
+			$this->toolbar_btn['new']['href'] .= '&id_parent='.(int)Tools::getValue('id_cms_category');
 		return parent::renderList();
 	}
 

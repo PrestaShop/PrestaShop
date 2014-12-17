@@ -39,14 +39,14 @@ function cms_multishop()
 	{
 		$data = array();
 		$cms = array(
-					'id_cms' => $value['id_cms'],
-					'id_lang' => $value['id_lang'],
-					'content' => $value['content'],
-					'link_rewrite' => $value['link_rewrite'],
-					'meta_title' => $value['meta_title'],
-					'meta_keywords' => $value['meta_keywords'],
-					'meta_description' => $value['meta_description']
-				);
+			'id_cms' => $value['id_cms'],
+			'id_lang' => $value['id_lang'],
+			'content' => $value['content'],
+			'link_rewrite' => $value['link_rewrite'],
+			'meta_title' => $value['meta_title'],
+			'meta_keywords' => $value['meta_keywords'],
+			'meta_description' => $value['meta_description']
+			);
 		foreach ($shops as $shop)
 		{
 			if ($shop['id_shop'] != 1)
@@ -68,18 +68,18 @@ function cms_multishop()
 		$data_bis = array();
 
 		$cms_category_shop = array(
-					'id_cms_category' => $value['id_cms_category'],
-				);
+			'id_cms_category' => $value['id_cms_category'],
+			);
 		$cms_category = array(
-					'id_cms_category' => $value['id_cms_category'],
-					'id_lang' => $value['id_lang'],
-					'name' => $value['name'],
-					'description' => $value['description'],
-					'link_rewrite' => $value['link_rewrite'],
-					'meta_title' => $value['meta_title'],
-					'meta_keywords' => $value['meta_keywords'],
-					'meta_description' => $value['meta_description']
-				);
+			'id_cms_category' => $value['id_cms_category'],
+			'id_lang' => $value['id_lang'],
+			'name' => $value['name'],
+			'description' => $value['description'],
+			'link_rewrite' => $value['link_rewrite'],
+			'meta_title' => $value['meta_title'],
+			'meta_keywords' => $value['meta_keywords'],
+			'meta_description' => $value['meta_description']
+			);
 		foreach ($shops as $shop)
 		{
 			if ($shop['id_shop'] != 1)
