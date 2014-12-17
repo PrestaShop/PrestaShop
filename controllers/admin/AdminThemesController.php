@@ -220,8 +220,7 @@ class AdminThemesControllerCore extends AdminController
 		);
 
 		$installed_theme = Theme::getAllThemes(array($this->context->shop->id_theme));
-		$non_installed_theme = (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_
-			&& (int)$this->context->cookie->is_contributor === 0) ? array() : Theme::getNonInstalledTheme();
+		$non_installed_theme = ($this->context->mode == Context::MODE_HOST) ? array() : Theme::getNonInstalledTheme();
 		if (count($installed_theme) || !empty($non_installed_theme))
 		{
 			$this->fields_options['theme'] = array(
@@ -259,7 +258,8 @@ class AdminThemesControllerCore extends AdminController
 					FROM '._DB_PREFIX_.'theme_meta as tm
 					LEFT JOIN '._DB_PREFIX_.'meta m ON (m.`id_meta` = tm.`id_meta`)
 					LEFT JOIN '._DB_PREFIX_.'meta_lang ml ON(ml.id_meta = m.id_meta AND ml.id_lang = '.(int)$this->context->language->id.')
-					WHERE tm.`id_theme` = '.(int)$this->object->id);
+					WHERE tm.`id_theme` = '.(int)$this->object->id.
+					((int)Context::getContext()->shop->id ? ' AND id_shop = '.(int)Context::getContext()->shop->id : ''));
 
 				// if no theme_meta are found, we must create them
 				if (empty($theme_metas))
@@ -706,20 +706,13 @@ class AdminThemesControllerCore extends AdminController
 
 		if (empty($this->display))
 		{
-			$this->page_header_toolbar_btn['create_theme'] = array(
-				'href' => self::$currentIndex.'&addtheme&token='.$this->token,
-				'desc' => $this->l('Create theme', null, null, false),
+			$this->page_header_toolbar_btn['import_theme'] = array(
+				'href' => self::$currentIndex.'&action=importtheme&token='.$this->token,
+				'desc' => $this->l('Add new theme', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 
-			if (!defined('_PS_HOST_MODE_') || (int)$this->context->cookie->is_contributor === 1)
-				$this->page_header_toolbar_btn['import_theme'] = array(
-					'href' => self::$currentIndex.'&action=importtheme&token='.$this->token,
-					'desc' => $this->l('Add new theme', null, null, false),
-					'icon' => 'process-icon-new'
-				);
-
-			if (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_ && (int)$this->context->cookie->is_contributor === 0)
+			if ($this->context->mode)
 				unset($this->toolbar_btn['new']);
 
 			$this->page_header_toolbar_btn['export_theme'] = array(
@@ -1684,97 +1677,105 @@ class AdminThemesControllerCore extends AdminController
 
 	public function renderImportTheme()
 	{
+		$fields_form = array();
+
 		$toolbar_btn['save'] = array(
 			'href' => '#',
 			'desc' => $this->l('Save')
 		);
 
-		$fields_form[0] = array(
-			'form' => array(
-				'tinymce' => false,
-				'legend' => array(
-					'title' => $this->l('Import from your computer'),
-					'icon' => 'icon-picture'
-				),
-				'input' => array(
-					array(
-						'type' => 'file',
-						'label' => $this->l('Zip file'),
-						'desc' => $this->l('Browse your computer files and select the Zip file for your new theme.'),
-						'name' => 'themearchive'
-					),
-				),
-				'submit' => array(
-					'id' => 'zip',
-					'title' => $this->l('Save'),
-				)
-			),
-		);
-
-		$fields_form[1] = array(
-			'form' => array(
-				'tinymce' => false,
-				'legend' => array(
-					'title' => $this->l('Import from the web'),
-					'icon' => 'icon-picture'
-				),
-				'input' => array(
-					array(
-						'type' => 'text',
-						'label' => $this->l('Archive URL'),
-						'desc' => $this->l('Indicate the complete URL to an online Zip file that contains your new theme. For instance, "http://example.com/files/theme.zip".'),
-						'name' => 'themearchiveUrl'
-					),
-				),
-				'submit' => array(
-					'title' => $this->l('Save'),
-				)
-			),
-		);
-
-		$theme_archive_server = array();
-		$files = scandir(_PS_ALL_THEMES_DIR_);
-		$theme_archive_server[] = '-';
-
-		foreach ($files as $file)
+		if ($this->context->mode != Context::MODE_HOST)
 		{
-			if (is_file(_PS_ALL_THEMES_DIR_.$file) && substr(_PS_ALL_THEMES_DIR_.$file, -4) == '.zip')
-			{
-				$theme_archive_server[] = array(
-					'id' => basename(_PS_ALL_THEMES_DIR_.$file),
-					'name' => basename(_PS_ALL_THEMES_DIR_.$file)
-				);
-			}
-		}
-
-		$fields_form[2] = array(
-			'form' => array(
-				'tinymce' => false,
-				'legend' => array(
-					'title' => $this->l('Import from FTP'),
-					'icon' => 'icon-picture'
-				),
-				'input' => array(
-					array(
-						'type' => 'select',
-						'label' => $this->l('Select the archive'),
-						'name' => 'theme_archive_server',
-						'desc' => $this->l('This selector lists the Zip files that you uploaded in the \'/themes\' folder.'),
-						'options' => array(
-							'id' => 'id',
-							'name' => 'name',
-							'query' => $theme_archive_server,
-						)
+			$fields_form[0] = array(
+				'form' => array(
+					'tinymce' => false,
+					'legend' => array(
+						'title' => $this->l('Import from your computer'),
+						'icon' => 'icon-picture'
 					),
+					'input' => array(
+						array(
+							'type' => 'file',
+							'label' => $this->l('Zip file'),
+							'desc' => $this->l('Browse your computer files and select the Zip file for your new theme.'),
+							'name' => 'themearchive'
+						),
+					),
+					'submit' => array(
+						'id' => 'zip',
+						'title' => $this->l('Save'),
+					)
 				),
-				'submit' => array(
-					'title' => $this->l('Save'),
-				)
-			),
-		);
+			);
+
+			$fields_form[1] = array(
+				'form' => array(
+					'tinymce' => false,
+					'legend' => array(
+						'title' => $this->l('Import from the web'),
+						'icon' => 'icon-picture'
+					),
+					'input' => array(
+						array(
+							'type' => 'text',
+							'label' => $this->l('Archive URL'),
+							'desc' => $this->l('Indicate the complete URL to an online Zip file that contains your new theme. For instance, "http://example.com/files/theme.zip".'),
+							'name' => 'themearchiveUrl'
+						),
+					),
+					'submit' => array(
+						'title' => $this->l('Save'),
+					)
+				),
+			);
+
+			$theme_archive_server = array();
+			$files = scandir(_PS_ALL_THEMES_DIR_);
+			$theme_archive_server[] = '-';
+
+			foreach ($files as $file)
+			{
+				if (is_file(_PS_ALL_THEMES_DIR_.$file) && substr(_PS_ALL_THEMES_DIR_.$file, -4) == '.zip')
+				{
+					$theme_archive_server[] = array(
+						'id' => basename(_PS_ALL_THEMES_DIR_.$file),
+						'name' => basename(_PS_ALL_THEMES_DIR_.$file)
+					);
+				}
+			}
+
+			$fields_form[2] = array(
+				'form' => array(
+					'tinymce' => false,
+					'legend' => array(
+						'title' => $this->l('Import from FTP'),
+						'icon' => 'icon-picture'
+					),
+					'input' => array(
+						array(
+							'type' => 'select',
+							'label' => $this->l('Select the archive'),
+							'name' => 'theme_archive_server',
+							'desc' => $this->l('This selector lists the Zip files that you uploaded in the \'/themes\' folder.'),
+							'options' => array(
+								'id' => 'id',
+								'name' => 'name',
+								'query' => $theme_archive_server,
+							)
+						),
+					),
+					'submit' => array(
+						'title' => $this->l('Save'),
+					)
+				),
+			);
+		}
 
 		$this->context->smarty->assign(
 			array(
+				'context_mode' => $this->context->mode,
+				'logged_on_addons' => $this->logged_on_addons,
+				'iso_code' => $this->context->language->iso_code,
 				'add_new_theme_href' => self::$currentIndex.'&addtheme&token='.$this->token,
 				'add_new_theme_label' => $this->l('Create new theme')
 			)
@@ -2960,5 +2961,8 @@ class AdminThemesControllerCore extends AdminController
 	{
 		parent::setMedia();
 		$this->addJS(_PS_JS_DIR_.'admin_themes.js');
+
+		if ($this->context->mode == Context::MODE_HOST && Tools::getValue('action') == 'importtheme')
+			$this->addJS(_PS_JS_DIR_.'admin-addons.js');
 	}
 }

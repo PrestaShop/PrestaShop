@@ -28,3 +28,18 @@ ALTER TABLE `PREFIX_orders` CHANGE `shipping_number` `shipping_number` VARCHAR( 
 /* PHP:ps16012_update_alias(); */;
 
 ALTER TABLE `PREFIX_store` CHANGE `hours` `hours` TEXT;
+
+ALTER TABLE `PREFIX_cms_lang` ADD `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_lang`;
+ALTER TABLE `PREFIX_cms_lang` DROP PRIMARY KEY, ADD PRIMARY KEY (`id_cms`, `id_shop`, `id_lang`);
+
+ALTER TABLE `PREFIX_cms_category_lang` ADD `id_shop` INT(11) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_lang`;
+ALTER TABLE `PREFIX_cms_category_lang` DROP PRIMARY KEY, ADD PRIMARY KEY (`id_cms_category`, `id_shop`, `id_lang`);
+
+CREATE TABLE `PREFIX_cms_category_shop` (
+	`id_cms_category` int(10) unsigned NOT NULL AUTO_INCREMENT,
+	`id_shop` INT(11) UNSIGNED NOT NULL ,
+	PRIMARY KEY (`id_cms_category`, `id_shop`),
+	KEY `id_shop` (`id_shop`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
+
+/* PHP:cms_multishop(); */;
