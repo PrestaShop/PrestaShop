@@ -166,8 +166,11 @@ class LocalizationPackCore
 			foreach ($xml->taxes->tax as $taxData)
 			{
 				$attributes = $taxData->attributes();
-				if (Tax::getTaxIdByName($attributes['name']))
+				if (($id_tax = Tax::getTaxIdByName($attributes['name'])))
+				{
+					$assoc_taxes[(int)$attributes['id']] = $id_tax;
 					continue;
+				}
 				$tax = new Tax();
 				$tax->name[(int)Configuration::get('PS_LANG_DEFAULT')] = (string)$attributes['name'];
 				$tax->rate = (float)$attributes['rate'];
