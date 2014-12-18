@@ -241,7 +241,7 @@ class MailCore extends ObjectModel
 			$override_mail = false;
 
 			// get templatePath
-			if (preg_match('#'.Context::getContext()->shop->getBaseURI().'modules/#', str_replace(DIRECTORY_SEPARATOR, '/', $template_path)) && preg_match('#modules/([a-z0-9_-]+)/#ui', str_replace(DIRECTORY_SEPARATOR, '/',$template_path), $res))
+			if (preg_match('#'.Context::getContext()->shop->physical_uri.'modules/#', str_replace(DIRECTORY_SEPARATOR, '/', $template_path)) && preg_match('#modules/([a-z0-9_-]+)/#ui', str_replace(DIRECTORY_SEPARATOR, '/',$template_path), $res))
 				$module_name = $res[1];
 
 			if ($module_name !== false && (file_exists($theme_path.'modules/'.$module_name.'/mails/'.$iso_template.'.txt') ||
