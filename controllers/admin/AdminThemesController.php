@@ -2960,9 +2960,9 @@ class AdminThemesControllerCore extends AdminController
 	public function setMedia()
 	{
 		parent::setMedia();
-		$this->addJS(_PS_JS_DIR_.'admin_themes.js');
+		$this->addJS(_PS_JS_DIR_.'admin/themes.js');
 
 		if ($this->context->mode == Context::MODE_HOST && Tools::getValue('action') == 'importtheme')
-			$this->addJS(_PS_JS_DIR_.'admin-addons.js');
+			$this->addJS(_PS_JS_DIR_.'admin/addons.js');
 	}
 }
