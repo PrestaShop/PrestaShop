@@ -370,10 +370,15 @@ class HelperListCore extends Helper
 
 		$duplicate = $this->currentIndex.'&'.$this->identifier.'='.$id.'&duplicate'.$this->table;
 
+		$confirm = self::$cache_lang['Copy images too?'];
+
+		if (($this->table == 'product') && !(bool)Image::getImages($this->context->language->id, (int)$id))
+			$confirm = '';
+
 		$tpl->assign(array(
 			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&view'.$this->table.'&token='.($token != null ? $token : $this->token),
 			'action' => self::$cache_lang['Duplicate'],
-			'confirm' => self::$cache_lang['Copy images too?'],
+			'confirm' => $confirm,
 			'location_ok' => $duplicate.'&token='.($token != null ? $token : $this->token),
 			'location_ko' => $duplicate.'&noimage=1&token='.($token ? $token : $this->token),
 		));
