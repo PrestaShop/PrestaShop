@@ -77,6 +77,14 @@ class AdminAttachmentsControllerCore extends AdminController
 		parent::__construct();
 	}
 
+	public function setMedia()
+	{
+		parent::setMedia();
+
+		$this->addJs(_PS_JS_DIR_.'/admin/attachments.js');
+		Media::addJsDefL('confirm_text', $this->l('This attachment is associated with the following products, do you really want to  delete it ?'));
+	}
+
 	public static function displayHumanReadableSize($size)
 	{
 		return Tools::formatBytes($size);
@@ -164,11 +172,15 @@ class AdminAttachmentsControllerCore extends AdminController
 			foreach ($this->_list as $list)
 			{
 				$product_list = '';
+
 				if (isset($this->product_attachements[$list['id_attachment']]))
 				{
 					foreach ($this->product_attachements[$list['id_attachment']] as $product)
 						$product_list .= $product.', ';
+
+					$product_list = rtrim($product_list, ', ');
 				}
+
 				$list_product_list[$list['id_attachment']] = $product_list;
 			}
 
