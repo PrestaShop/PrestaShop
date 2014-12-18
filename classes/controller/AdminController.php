@@ -405,6 +405,10 @@ class AdminControllerCore extends Controller
 		else
 			$this->context->mode = Context::MODE_STD;
 
+		$this->context->smarty->assign(array(
+			'context_mode' => $this->context->mode,
+		));
+
 	}
 
 	/**
