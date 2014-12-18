@@ -393,17 +393,17 @@ class AdminControllerCore extends Controller
 			$this->logged_on_addons = true;
 
 		// Set context mode
-		if (defined(_PS_HOST_MODE_) && _PS_HOST_MODE_)
+		if (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)
 		{
 			if (isset($this->context->cookie->is_contributor) && (int)$this->context->cookie->is_contributor === 1)
-				$this->context->mode = self::MODE_CONTRIB_HOST;
+				$this->context->mode = Context::MODE_CONTRIB_HOST;
 			else
-				$this->context->mode = self::MODE_HOST;
+				$this->context->mode = Context::MODE_HOST;
 		}
 		elseif (isset($this->context->cookie->is_contributor) && (int)$this->context->cookie->is_contributor === 1)
-			$this->context->mode = self::MODE_CONTRIB;
+			$this->context->mode = Context::MODE_CONTRIB;
 		else
-			$this->context->mode = self::MODE_STD;
+			$this->context->mode = Context::MODE_STD;
 
 	}
 
