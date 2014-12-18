@@ -2542,7 +2542,7 @@ class AdminTranslationsControllerCore extends AdminController
 				var ad = \''.$ad.'\' ;
 			</script>
 			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tiny_mce/tiny_mce.js"></script>
-			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/tinymce.inc.js"></script>';
+			<script type="text/javascript" src="'.__PS_BASE_URI__.'js/admin/tinymce.inc.js"></script>';
 	}
 
 	/**

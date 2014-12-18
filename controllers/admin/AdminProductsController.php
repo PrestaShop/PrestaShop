@@ -1390,7 +1390,7 @@ class AdminProductsControllerCore extends AdminController
 				_PS_JS_DIR_.'admin/attributes.js',
 				_PS_JS_DIR_.'admin/price.js',
 				_PS_JS_DIR_.'tiny_mce/tiny_mce.js',
-				_PS_JS_DIR_.'tinymce.inc.js',
+				_PS_JS_DIR_.'admin/tinymce.inc.js',
 				_PS_JS_DIR_.'admin/dnd.js',
 				_PS_JS_DIR_.'jquery/ui/jquery.ui.progressbar.min.js',
 				_PS_JS_DIR_.'vendor/spin.js',

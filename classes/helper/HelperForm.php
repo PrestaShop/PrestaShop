@@ -191,7 +191,7 @@ class HelperFormCore extends Helper
 								$this->tpl_vars['tinymce'] = true;
 
 								$this->context->controller->addJS(_PS_JS_DIR_.'tiny_mce/tiny_mce.js');
-								$this->context->controller->addJS(_PS_JS_DIR_.'tinymce.inc.js');
+								$this->context->controller->addJS(_PS_JS_DIR_.'admin/tinymce.inc.js');
 								$tinymce = false;
 							}
 

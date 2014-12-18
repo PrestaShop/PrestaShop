@@ -87,6 +87,8 @@ $plugins = array(
 					array('new_file' => 'admin/notifications.js', 'name' => 'login'),
 				'price.js'
 					array('new_file' => 'admin/price.js', 'name' => 'login'),
+				'tinymce.inc.js'
+					array('new_file' => 'admin/tinymce.inc.js', 'name' => 'tinymce'),
 );
 
 
