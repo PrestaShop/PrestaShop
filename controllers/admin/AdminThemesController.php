@@ -1460,7 +1460,7 @@ class AdminThemesControllerCore extends AdminController
 	{
 		$this->display = 'importtheme';
 
-		if (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_ && (int)$this->context->cookie->is_contributor === 0)
+		if ($this->context->mode == Context::MODE_HOST)
 			return true;
 
 		if (isset($_FILES['themearchive']) && isset($_POST['filename']) && Tools::isSubmit('theme_archive_server'))
@@ -1808,6 +1808,7 @@ class AdminThemesControllerCore extends AdminController
 
 		$this->context->smarty->assign(
 			array(
+				'import_theme' => true,
 				'logged_on_addons' => $this->logged_on_addons,
 				'iso_code' => $this->context->language->iso_code,
 				'add_new_theme_href' => self::$currentIndex.'&addtheme&token='.$this->token,
@@ -2601,12 +2602,10 @@ class AdminThemesControllerCore extends AdminController
 	 */
 	public function postProcess()
 	{
-		$host_mode = (bool)(defined('_PS_HOST_MODE_') && _PS_HOST_MODE_);
-
 		if (Tools::isSubmit('submitOptionstheme') && Tools::isSubmit('id_theme') && !Tools::isSubmit('deletetheme')
 			&& Tools::getValue('action') != 'ThemeInstall' && $this->context->shop->id_theme != Tools::getValue('id_theme'))
 			$this->display = 'ChooseThemeModule';
-		elseif (Tools::isSubmit('installThemeFromFolder') && (!$host_mode || (int)$this->context->cookie->is_contributor === 1))
+		elseif (Tools::isSubmit('installThemeFromFolder') && ($this->context->mode != Context::MODE_HOST)
 		{
 			$theme_dir = Tools::getValue('theme_dir');
 			$this->installTheme($theme_dir);

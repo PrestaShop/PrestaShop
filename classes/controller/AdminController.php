@@ -389,6 +389,7 @@ class AdminControllerCore extends Controller
 		$this->admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $this->admin_webpath);
 
 		// Check if logged on Addons
+		$this->logged_on_addons = false;
 		if (isset($this->context->cookie->username_addons) && isset($this->context->cookie->password_addons) && !empty($this->context->cookie->username_addons) && !empty($this->context->cookie->password_addons))
 			$this->logged_on_addons = true;
 
@@ -407,6 +408,7 @@ class AdminControllerCore extends Controller
 
 		$this->context->smarty->assign(array(
 			'context_mode' => $this->context->mode,
+			'logged_on_addons' => $this->logged_on_addons,
 		));
 
 	}
