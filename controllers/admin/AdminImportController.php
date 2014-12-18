@@ -666,7 +666,7 @@ class AdminImportControllerCore extends AdminController
 
 	public function renderView()
 	{
-		$this->addJS(_PS_JS_DIR_.'adminImport.js');
+		$this->addJS(_PS_JS_DIR_.'admin/import.js');
 
 		$handle = $this->openCsvFile();
 		$nb_column = $this->getNbrColumn($handle, $this->separator);

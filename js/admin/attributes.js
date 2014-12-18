@@ -181,7 +181,7 @@ function add_attr()
 	var attr_name = $('#attribute option:selected');
 	if (attr_name.val() == 0)
 		return jAlert(msg_combination_2);
-	
+
 	if (attr_group.val() in storeUsedGroups)
 		return jAlert(msg_combination_3);
 

@@ -58,7 +58,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 		parent::setMedia();
 		$this->addJqueryPlugin('smartWizard');
 		$this->addJqueryPlugin('typewatch');
-		$this->addJs(_PS_JS_DIR_.'admin_carrier_wizard.js');
+		$this->addJs(_PS_JS_DIR_.'admin/carrier_wizard.js');
 	}
 
 	public function initWizard()

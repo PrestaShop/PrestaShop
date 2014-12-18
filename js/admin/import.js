@@ -25,8 +25,8 @@
 
 $(document).ready(function(){
 
-	$('#saveImportMatchs').unbind('click').click(function(){ 
-	
+	$('#saveImportMatchs').unbind('click').click(function(){
+
 	var newImportMatchs = $('#newImportMatchs').attr('value');
 	if (newImportMatchs == '')
 		jAlert(errorEmpty);
@@ -48,7 +48,7 @@ $(document).ready(function(){
 				$('#valueImportMatchs').append('<option id="'+jsonData.id+'" value="'+matchFields+'" selected="selected">'+newImportMatchs+'</option>');
 				$('#selectDivImportMatchs').fadeIn('slow');
 	       },
-	      error: function(XMLHttpRequest, textStatus, errorThrown) 
+	      error: function(XMLHttpRequest, textStatus, errorThrown)
 	       {
 	       		jAlert('TECHNICAL ERROR Details: ' + html_escape(XMLHttpRequest.responseText));
 	       }
@@ -56,9 +56,9 @@ $(document).ready(function(){
 
 	}
 	});
-	
-	$('#loadImportMatchs').unbind('click').click(function(){ 
-	
+
+	$('#loadImportMatchs').unbind('click').click(function(){
+
 		var idToLoad = $('select#valueImportMatchs option:selected').attr('id');
 		$.ajax({
 		       type: 'POST',
@@ -74,16 +74,16 @@ $(document).ready(function(){
 					for (i=0;i<matchs.length;i++)
 						$('#type_value\\['+i+'\\]').val(matchs[i]).attr('selected',true);
 		       },
-		      error: function(XMLHttpRequest, textStatus, errorThrown) 
+		      error: function(XMLHttpRequest, textStatus, errorThrown)
 		       {
 		       		jAlert('TECHNICAL ERROR Details: ' + html_escape(XMLHttpRequest.responseText));
-		       		
+
 		       }
 		   });
 	});
-	
-	$('#deleteImportMatchs').unbind('click').click(function(){ 
-	
+
+	$('#deleteImportMatchs').unbind('click').click(function(){
+
 		var idToDelete = $('select#valueImportMatchs option:selected').attr('id');
 		$.ajax({
 		       type: 'POST',

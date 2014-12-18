@@ -69,6 +69,18 @@ $plugins = array(
 					array('new_file' => 'admin/dashboard.js', 'name' => 'dashboard'),
 				'admin-products.js'
 					array('new_file' => 'admin/products.js', 'name' => 'products'),
+				'adminImport.js'
+					array('new_file' => 'admin/import.js', 'name' => 'import'),
+				'admin_carrier_wizard.js'
+					array('new_file' => 'admin/carrier_wizard.js', 'name' => 'carrier_wizard'),
+				'admin_order.js'
+					array('new_file' => 'admin/orders.js', 'name' => 'orders'),
+				'attributesBack.js'
+					array('new_file' => 'admin/attributes.js', 'name' => 'attributes'),
+				'admin-scene-cropping.js'
+					array('new_file' => 'admin/scenes.js', 'name' => 'scenes'),
+				'admin-dnd.js'
+					array('new_file' => 'admin/dnd.js', 'name' => 'dnd'),
 );
 
 

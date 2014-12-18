@@ -322,7 +322,7 @@ class AdminOrdersControllerCore extends AdminController
 
 		if ($this->tabAccess['edit'] == 1 && $this->display == 'view')
 		{
-			$this->addJS(_PS_JS_DIR_.'admin_order.js');
+			$this->addJS(_PS_JS_DIR_.'admin/orders.js');
 			$this->addJS(_PS_JS_DIR_.'tools.js');
 			$this->addJqueryPlugin('autocomplete');
 		}

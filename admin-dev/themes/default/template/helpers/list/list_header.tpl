@@ -58,7 +58,7 @@
 		var come_from = '{$list_id|addslashes}';
 		var alternate = {if $order_way == 'DESC'}'1'{else}'0'{/if};
 	</script>
-	<script type="text/javascript" src="../js/admin-dnd.js"></script>
+	<script type="text/javascript" src="../js/admin/dnd.js"></script>
 {/if}
 {if !$simple_header}
 	<script type="text/javascript">
