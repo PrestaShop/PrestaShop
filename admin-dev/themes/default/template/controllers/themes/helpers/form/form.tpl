@@ -25,7 +25,7 @@
 {extends file="helpers/form/form.tpl"}
 
 {block name="defaultForm"}
-	{if $context_mode == Context::MODE_HOST}
+	{if $context_mode == Context::MODE_HOST && isset($import_theme) && $import_theme}
 
 	<div class="defaultForm form-horizontal">
 		{if $logged_on_addons}
