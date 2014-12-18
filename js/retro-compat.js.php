@@ -63,8 +63,12 @@ $plugins = array(
 					array('new_file' => $plugins_folder.'treeview-categories/jquery.treeview-categories.sortable.js', 'name' => 'treeview-categories.sortable'),
 				'tabpane.js' =>
 					array('new_file' => $plugins_folder.'tabpane/jquery.tabpane.js', 'name' => 'tabpane'),
-				'admin-themes' =>
+				'admin-themes.js' =>
 					array('new_file' => 'admin/themes.js', 'name' => 'themes'),
+				'admin-dashboard.js' =>
+					array('new_file' => 'admin/dashboard.js', 'name' => 'dashboard'),
+				'admin-products.js'
+					array('new_file' => 'admin/products.js', 'name' => 'products'),
 );
 
 
