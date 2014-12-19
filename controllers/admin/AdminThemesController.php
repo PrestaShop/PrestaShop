@@ -1777,7 +1777,7 @@ class AdminThemesControllerCore extends AdminController
 				'logged_on_addons' => $this->logged_on_addons,
 				'iso_code' => $this->context->language->iso_code,
 				'add_new_theme_href' => self::$currentIndex.'&addtheme&token='.$this->token,
-				'add_new_theme_label' => $this->l('Create new theme')
+				'add_new_theme_label' => $this->l('Create a new theme'),
 			)
 		);
 
