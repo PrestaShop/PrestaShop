@@ -66,8 +66,8 @@
 				</div><!-- /.form-wrapper -->
 
 				<div class="panel-footer">
-					<a href="http://addons.prestashop.com/en/3-templates-prestashop?utm_source=back-office&amp;utm_medium=theme-button&amp;utm_campaign=back-office-EN&amp;utm_content=cloud" class="btn btn-default" onclick="return !window.open(this.href)">
-						<i class="process-icon-themes"></i> {l s='Visit the theme catalog'}
+					<a href="{$link->getAdminLink('AdminThemes', true)|escape:'html':'UTF-8'}" class="btn btn-default">
+						<i class="process-icon-cancel"></i> {l s='Cancel'}
 					</a>
 					<a href="#" data-toggle="modal" data-target="#modal_addons_connect" class="btn btn-default pull-right">
 						<i class="process-icon-next"></i> {l s='Next'}
