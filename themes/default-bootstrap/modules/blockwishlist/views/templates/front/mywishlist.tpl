@@ -64,15 +64,15 @@
 		</form>
 		{if $wishlists}
 			<div id="block-history" class="block-center">
-				<table class="table table-bordered">
+				<table class="table table-bordered footab">
 					<thead>
 						<tr>
 							<th class="first_item">{l s='Name' mod='blockwishlist'}</th>
-							<th class="item mywishlist_first">{l s='Qty' mod='blockwishlist'}</th>
-							<th class="item mywishlist_first">{l s='Viewed' mod='blockwishlist'}</th>
-							<th class="item mywishlist_second">{l s='Created' mod='blockwishlist'}</th>
-							<th class="item mywishlist_second">{l s='Direct Link' mod='blockwishlist'}</th>
-							<th class="last_item mywishlist_first">{l s='Delete' mod='blockwishlist'}</th>
+							<th class="item mywishlist_first" data-hide="phone">{l s='Qty' mod='blockwishlist'}</th>
+							<th class="item mywishlist_first" data-sort-ignore="true" data-hide="phone">{l s='Viewed' mod='blockwishlist'}</th>
+							<th class="item mywishlist_second" data-sort-ignore="true" data-hide="phone">{l s='Created' mod='blockwishlist'}</th>
+							<th class="item mywishlist_second" data-sort-ignore="true">{l s='Direct Link' mod='blockwishlist'}</th>
+							<th class="last_item mywishlist_first" data-sort-ignore="true" data-hide="phone">{l s='Delete' mod='blockwishlist'}</th>
 						</tr>
 					</thead>
 					<tbody>
