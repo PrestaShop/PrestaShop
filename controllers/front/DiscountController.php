@@ -30,6 +30,13 @@ class DiscountControllerCore extends FrontController
 	public $php_self = 'discount';
 	public $authRedirection = 'discount';
 	public $ssl = true;
+	
+	public function setMedia()
+	{
+		parent::setMedia();
+		$this->addJqueryPlugin('footable');
+		$this->addJqueryPlugin('footable-sort');
+	}
 
 	/**
 	 * Assign template vars related to page content
