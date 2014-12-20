@@ -146,4 +146,12 @@ class SupplierControllerCore extends FrontController
 		else
 			Tools::redirect('index.php?controller=404');
 	}
+	
+	/**
+	* Get instance of current supplier
+	*/
+	public function getSupplier()
+	{
+		return $this->supplier;
+	}
 }
