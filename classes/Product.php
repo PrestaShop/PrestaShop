@@ -2959,9 +2959,9 @@ class ProductCore extends ObjectModel
 		return (isset($row['id_product_attribute']) && $row['id_product_attribute']) ? (int)$row['id_product_attribute'] : 0;
 	}
 
-	public function getPriceWithoutReduct($notax = false, $id_product_attribute = false)
+	public function getPriceWithoutReduct($notax = false, $id_product_attribute = false, $decimals = 6)
 	{
-		return Product::getPriceStatic((int)$this->id, !$notax, $id_product_attribute, 6, null, false, false);
+		return Product::getPriceStatic((int)$this->id, !$notax, $id_product_attribute, $decimals, null, false, false);
 	}
 
 	/**
