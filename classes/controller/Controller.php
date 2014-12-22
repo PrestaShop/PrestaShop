@@ -527,4 +527,3 @@ abstract class ControllerCore
 		die($value);
 	}
 }
-?>
