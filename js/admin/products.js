@@ -1757,33 +1757,27 @@ var ProductMultishop = new function()
 						tinyMCE.get(id).show();
 				}
 				break;
-
 			case 'radio' :
 				$('input[name=\''+id+'\']').attr('disabled', checked);
 				break;
-
 			case 'show_price' :
 				if ($('input[name=\'available_for_order\']').prop('checked'))
 					checked = true;
 				$('input[name=\''+id+'\']').attr('disabled', checked);
 				break;
-
 			case 'price' :
 				$('#priceTE').attr('disabled', checked);
 				$('#priceTI').attr('disabled', checked);
 				break;
-
 			case 'unit_price' :
 				$('#unit_price').attr('disabled', checked);
 				$('#unity').attr('disabled', checked);
 				break;
-
 			case 'attribute_price_impact' :
 				$('#attribute_price_impact').attr('disabled', checked);
 				$('#attribute_price').attr('disabled', checked);
 				$('#attribute_priceTI').attr('disabled', checked);
 				break;
-
 			case 'category_box' :
 				$('#'+id+' input[type=checkbox]').attr('disabled', checked);
 				if (!checked) {
@@ -1794,21 +1788,26 @@ var ProductMultishop = new function()
 					$('#uncheck-all-'+id).attr('disabled', 'disabled');
 				}
 				break;
-
 			case 'attribute_weight_impact' :
 				$('#attribute_weight_impact').attr('disabled', checked);
 				$('#attribute_weight').attr('disabled', checked);
 				break;
-
 			case 'attribute_unit_impact' :
 				$('#attribute_unit_impact').attr('disabled', checked);
 				$('#attribute_unity').attr('disabled', checked);
 				break;
-
 			case 'seo_friendly_url':
 				$('#'+id).attr('disabled', checked);
 				$('#generate-friendly-url').attr('disabled', checked);
-
+				break;
+			case 'uploadable_files':
+				$('input[name^=label_0_').attr('disabled', checked);
+				$('#'+id).attr('disabled', checked);
+				break;
+			case 'text_fields':
+				$('input[name^=label_1_').attr('disabled', checked);
+				$('#'+id).attr('disabled', checked);
+				break;
 			default :
 				$('#'+id).attr('disabled', checked);
 				break;
@@ -1871,8 +1870,8 @@ var ProductMultishop = new function()
 
 	this.checkAllCustomization = function()
 	{
-		ProductMultishop.checkField($('input[name=\'multishop_check[uploadable_files]\']').prop('checked'), 'uploadable_files');
-		ProductMultishop.checkField($('input[name=\'multishop_check[text_fields]\']').prop('checked'), 'text_fields');
+		ProductMultishop.checkField($('input[name=\'multishop_check[uploadable_files]\']').prop('checked'), 'uploadable_files', 'uploadable_files');
+		ProductMultishop.checkField($('input[name=\'multishop_check[text_fields]\']').prop('checked'), 'text_fields', 'text_fields');
 	};
 
 	this.checkAllCombinations = function()

@@ -33,7 +33,7 @@
 	{/if}
 
 	<div class="form-group">
-		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="uploadable_files" type="default"}</span></div>
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="uploadable_files" type="uploadable_files"}</span></div>
 		<label class="control-label col-lg-3" for="uploadable_files">
 			{$bullet_common_field}
 			<span class="label-tooltip" data-toggle="tooltip"
@@ -46,7 +46,7 @@
 		</div>
 	</div>
 	<div class="form-group">
-		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="text_fields" type="default"}</span></div>
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="text_fields" type="text_fields"}</span></div>
 		<label class="control-label col-lg-3" for="text_fields">
 			{$bullet_common_field}
 			<span class="label-tooltip" data-toggle="tooltip"
