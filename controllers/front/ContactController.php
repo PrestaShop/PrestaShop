@@ -296,6 +296,7 @@ class ContactControllerCore extends FrontController
 		$id_order = false;
 		if (!is_numeric($reference = Tools::getValue('id_order')))
 		{
+			$reference = ltrim($reference, '#');
 			$orders = Order::getByReference($reference);
 			if ($orders)
 				foreach ($orders as $order)
