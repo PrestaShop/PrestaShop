@@ -887,14 +887,13 @@ class AdminOrdersControllerCore extends AdminController
 							$amount = $order_detail->unit_price_tax_incl * $full_quantity_list[$id_order_detail];
 
 							$choosen = false;
-							if ((int)Tools::getValue('refund_voucher_off') == 1)
+							if ((int)Tools::getValue('refund_total_voucher_off') == 1)
 								$amount -= $voucher = (float)Tools::getValue('order_discount_price');
-							elseif ((int)Tools::getValue('refund_voucher_off') == 2)
+							elseif ((int)Tools::getValue('refund_total_voucher_off') == 2)
 							{
 								$choosen = true;
-								$amount = $voucher = (float)Tools::getValue('refund_voucher_choose');
+								$amount = $voucher = (float)Tools::getValue('refund_total_voucher_choose');
 							}
-
 							foreach ($full_product_list as $id_order_detail)
 							{
 								$order_detail = new OrderDetail((int)$id_order_detail);
