@@ -61,7 +61,8 @@
 
 				<div class="form-wrapper">
 					<div class="form-group">
-						<p>{l s='To add a new theme, simply connect to your PrestaShop Addons account and all your purchaseswill be automatically imported.'}</p>
+						<p>{l s='To add a new theme, simply connect to your PrestaShop Addons account: your new theme will be automatically imported to your shop.'}</p>
+						<p>{l s='You can choose among 1,500+ professional templates!'}</p>
 					</div>
 				</div><!-- /.form-wrapper -->
 
@@ -80,6 +81,7 @@
 			<div class="alert alert-info">
 				<h4>{l s='Can I add my own theme?'}</h4>
 				<p>{l s='Please note that for security reasons, you can only add themes that are being distributed on PrestaShop Addons, the official marketplace.'}</p>
+				<p>{l s='You can also create a new theme below.'}</p>
 			</div>
 
 	</div>
