@@ -63,7 +63,7 @@
 							<span>{l s='Quick view'}</span>
 						</a>
 						{/if}
-						{if (!$PS_CATALOG_MODE && $PS_STOCK_MANAGEMENT && ((isset($product.show_price) && $product.show_price) || (isset($product.available_for_order) && $product.available_for_order)))}
+						{if (!$PS_CATALOG_MODE && ((isset($product.show_price) && $product.show_price) || (isset($product.available_for_order) && $product.available_for_order)))}
 							<div class="content_price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
 								{if isset($product.show_price) && $product.show_price && !isset($restricted_country_mode)}
 									<span itemprop="price" class="price product-price">
