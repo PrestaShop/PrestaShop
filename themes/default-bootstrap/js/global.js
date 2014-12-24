@@ -96,7 +96,8 @@ $(document).ready(function(){
 
 	// Close Alert messages
 	$(".alert.alert-danger").on('click', this, function(e){
-		$(this).fadeOut();
+		if (e.offsetX >= 16 && e.offsetX <= 39 && e.offsetY >= 16 && e.offsetY <= 34)
+			$(this).fadeOut();
 	});
 });
 
