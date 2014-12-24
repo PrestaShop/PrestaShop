@@ -2565,6 +2565,11 @@ class CartCore extends ObjectModel
 		if (!$default_country)
 			$default_country = Context::getContext()->country;
 
+		if (!is_null($product_list))
+			foreach ($product_list as $key => $value)
+				if ($value['is_virtual'] == 1)
+					unset($product_list[$key]);
+
 		$complete_product_list = $this->getProducts();
 		if (is_null($product_list))
 			$products = $complete_product_list;
@@ -2785,19 +2790,15 @@ class CartCore extends ObjectModel
 				$shipping_cost += $carrier->getDeliveryPriceByPrice($order_total, $id_zone, (int)$this->id_currency);
 
 		}
-		$only_virtual = true;
+		// Adding handling charges
+		if (isset($configuration['PS_SHIPPING_HANDLING']) && $carrier->shipping_handling)
+			$shipping_cost += (float)$configuration['PS_SHIPPING_HANDLING'];
+
 		// Additional Shipping Cost per product
 		foreach ($products as $product)
 			if (!$product['is_virtual'])
-			{
-				$only_virtual = false;
 				$shipping_cost += $product['additional_shipping_cost'] * $product['cart_quantity'];
-			}
 
-
-		// Adding handling charges
-		if (isset($configuration['PS_SHIPPING_HANDLING']) && $carrier->shipping_handling && !$only_virtual)
-			$shipping_cost += (float)$configuration['PS_SHIPPING_HANDLING'];
 		$shipping_cost = Tools::convertPrice($shipping_cost, Currency::getCurrencyInstance((int)$this->id_currency));
 
 		//get external shipping cost from module

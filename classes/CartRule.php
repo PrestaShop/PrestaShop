@@ -613,6 +613,11 @@ class CartRuleCore extends ObjectModel
 							$context->cart->removeCartRule($cart_rule->id);
 					}
 				}
+				if ($otherCartRule['free_shipping'] && $this->free_shipping)
+				{
+					$cart_rule = new CartRule((int)$otherCartRule['id_cart_rule'], $context->cart->id_lang);
+					return (!$display_error) ? false : Tools::displayError('You already have a free shipping voucher in your cart:').' '.$cart_rule->name;
+				}
 			}
 
 		if (!$nb_products)

@@ -35,7 +35,6 @@ class GuestTrackingControllerCore extends FrontController
 	 */
 	public function init()
 	{
-		$this->display_column_left = false;
 		parent::init();
 		if ($this->context->customer->isLogged())
 			Tools::redirect('history.php');
