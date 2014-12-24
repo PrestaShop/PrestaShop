@@ -2565,6 +2565,11 @@ class CartCore extends ObjectModel
 		if (!$default_country)
 			$default_country = Context::getContext()->country;
 
+		if (!is_null($product_list))
+			foreach ($product_list as $key => $value)
+				if ($value['is_virtual'] == 1)
+					unset($product_list[$key]);
+
 		$complete_product_list = $this->getProducts();
 		if (is_null($product_list))
 			$products = $complete_product_list;
