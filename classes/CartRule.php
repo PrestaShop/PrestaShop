@@ -257,7 +257,7 @@ class CartRuleCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'cart_rule` cr
 		LEFT JOIN `'._DB_PREFIX_.'cart_rule_lang` crl ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = '.(int)$id_lang.')
 		WHERE (
-			cr.`id_customer` = '.(int)$id_customer.' OR cr.group_restriction = 1
+			cr.`id_customer` = '.(int)$id_customer.' OR (cr.group_restriction = 1 AND cr.highlight = 1)
 			'.($includeGeneric ? 'OR cr.`id_customer` = 0' : '').'
 		)
 		AND cr.date_from < "'.date('Y-m-d H:i:s').'"
