@@ -2069,7 +2069,7 @@ abstract class ModuleCore
 			return Tools::displayError('No template found for module').' '.basename($file, '.php');
 		else
 		{
-			if (Tools::getIsset('live_edit'))
+			if (Tools::getIsset('live_edit') || Tools::getIsset('live_configurator_token'))
 				$cacheId = null;
 
 			$this->smarty->assign(array(
@@ -2143,7 +2143,7 @@ abstract class ModuleCore
 
 	public function isCached($template, $cacheId = null, $compileId = null)
 	{
-		if (Tools::getIsset('live_edit'))
+		if (Tools::getIsset('live_edit') || Tools::getIsset('live_configurator_token'))
 			return false;
 		Tools::enableCache();
 		$new_tpl = $this->getTemplatePath($template);
