@@ -43,3 +43,8 @@ CREATE TABLE `PREFIX_cms_category_shop` (
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8;
 
 /* PHP:cms_multishop(); */;
+
+ALTER TABLE `PREFIX_customization_field_lang` ADD `id_shop` INT(10) UNSIGNED NOT NULL DEFAULT '1' AFTER `id_lang`;
+ALTER TABLE `PREFIX_customization_field_lang` DROP PRIMARY KEY, ADD PRIMARY KEY (`id_customization_field`, `id_shop`, `id_lang`);
+
+/* PHP:customization_field_multishop_lang(); */;

@@ -3780,10 +3780,13 @@ class ProductCore extends ObjectModel
 		return $return;
 	}
 
-	protected static function _getCustomizationFieldsNLabels($product_id)
+	protected static function _getCustomizationFieldsNLabels($product_id, $id_shop = null)
 	{
 		if (!Customization::isFeatureActive())
 			return false;
+
+		if (Shop::isFeatureActive() && !$id_shop)
+			$id_shop = (int)Context::getContext()->shop->id;
 
 		$customizations = array();
 		if (($customizations['fields'] = Db::getInstance()->executeS('
@@ -3803,7 +3806,7 @@ class ProductCore extends ObjectModel
 		if (($customization_labels = Db::getInstance()->executeS('
 			SELECT `id_customization_field`, `id_lang`, `name`
 			FROM `'._DB_PREFIX_.'customization_field_lang`
-			WHERE `id_customization_field` IN ('.implode(', ', $customization_field_ids).')
+			WHERE `id_customization_field` IN ('.implode(', ', $customization_field_ids).')'.($id_shop ? ' AND cfl.`id_shop` = '.$id_shop : '').'
 			ORDER BY `id_customization_field`')) === false)
 			return false;
 
@@ -4122,7 +4125,7 @@ class ProductCore extends ObjectModel
 	** Customization management
 	*/
 
-	public static function getAllCustomizedDatas($id_cart, $id_lang = null, $only_in_cart = true)
+	public static function getAllCustomizedDatas($id_cart, $id_lang = null, $only_in_cart = true, $id_shop = null)
 	{
 		if (!Customization::isFeatureActive())
 			return false;
@@ -4132,13 +4135,17 @@ class ProductCore extends ObjectModel
 			return false;
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
+		if (Shop::isFeatureActive() && !$id_shop)
+			$id_shop = (int)Context::getContext()->shop->id;
+
 
 		if (!$result = Db::getInstance()->executeS('
 			SELECT cd.`id_customization`, c.`id_address_delivery`, c.`id_product`, cfl.`id_customization_field`, c.`id_product_attribute`,
 				cd.`type`, cd.`index`, cd.`value`, cfl.`name`
 			FROM `'._DB_PREFIX_.'customized_data` cd
 			NATURAL JOIN `'._DB_PREFIX_.'customization` c
-			LEFT JOIN `'._DB_PREFIX_.'customization_field_lang` cfl ON (cfl.id_customization_field = cd.`index` AND id_lang = '.(int)$id_lang.')
+			LEFT JOIN `'._DB_PREFIX_.'customization_field_lang` cfl ON (cfl.id_customization_field = cd.`index` AND id_lang = '.(int)$id_lang.
+				($id_shop ? ' AND cfl.`id_shop` = '.$id_shop : '').')
 			WHERE c.`id_cart` = '.(int)$id_cart.
 			($only_in_cart ? ' AND c.`in_cart` = 1' : '').'
 			ORDER BY `id_product`, `id_product_attribute`, `type`, `index`'))
@@ -4319,12 +4326,14 @@ class ProductCore extends ObjectModel
 
 		// Multilingual label name creation
 		$values = '';
+
 		foreach ($languages as $language)
-			$values .= '('.(int)$id_customization_field.', '.(int)$language['id_lang'].', \'\'), ';
+			foreach (Shop::getContextListShopID() as $id_shop)
+				$values .= '('.(int)$id_customization_field.', '.(int)$language['id_lang'].', '.$id_shop .',\'\'), ';
 
 		$values = rtrim($values, ', ');
 		if (!Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'customization_field_lang` (`id_customization_field`, `id_lang`, `name`)
+			INSERT INTO `'._DB_PREFIX_.'customization_field_lang` (`id_customization_field`, `id_lang`, `id_shop`, `name`)
 			VALUES '.$values))
 			return false;
 
@@ -4360,11 +4369,20 @@ class ProductCore extends ObjectModel
 				if (!$tmp = $this->_checkLabelField($field, $value))
 					return false;
 				/* Multilingual label name update */
-				if (!Db::getInstance()->execute('
+				if (Shop::isFeatureActive())
+				{
+					foreach (Shop::getContextListShopID() as $id_shop)
+						if (!Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customization_field_lang`
+						(`id_customization_field`, `id_lang`, `id_shop`, `name`) VALUES ('.(int)$tmp[2].', '.(int)$tmp[3].', '.$id_shop.', \''.pSQL($value).'\')
+						ON DUPLICATE KEY UPDATE `name` = \''.pSQL($value).'\''))
+							return false;
+				}
+				elseif(!Db::getInstance()->execute('
 					INSERT INTO `'._DB_PREFIX_.'customization_field_lang`
 					(`id_customization_field`, `id_lang`, `name`) VALUES ('.(int)$tmp[2].', '.(int)$tmp[3].', \''.pSQL($value).'\')
 					ON DUPLICATE KEY UPDATE `name` = \''.pSQL($value).'\''))
 					return false;
+
 				$is_required = isset($_POST['require_'.(int)$tmp[1].'_'.(int)$tmp[2]]) ? 1 : 0;
 				$has_required_fields |= $is_required;
 				/* Require option update */
@@ -4384,16 +4402,20 @@ class ProductCore extends ObjectModel
 		return true;
 	}
 
-	public function getCustomizationFields($id_lang = false)
+	public function getCustomizationFields($id_lang = false, $id_shop = null)
 	{
 		if (!Customization::isFeatureActive())
 			return false;
+
+		if (Shop::isFeatureActive() && !$id_shop)
+			$id_shop = (int)Context::getContext()->shop->id;
 
 		if (!$result = Db::getInstance()->executeS('
 			SELECT cf.`id_customization_field`, cf.`type`, cf.`required`, cfl.`name`, cfl.`id_lang`
 			FROM `'._DB_PREFIX_.'customization_field` cf
 			NATURAL JOIN `'._DB_PREFIX_.'customization_field_lang` cfl
-			WHERE cf.`id_product` = '.(int)$this->id.($id_lang ? ' AND cfl.`id_lang` = '.(int)$id_lang : '').'
+			WHERE cf.`id_product` = '.(int)$this->id.($id_lang ? ' AND cfl.`id_lang` = '.(int)$id_lang : '').
+				($id_shop ? ' AND cfl.`id_shop` = '.$id_shop : '').'
 			ORDER BY cf.`id_customization_field`'))
 			return false;
 

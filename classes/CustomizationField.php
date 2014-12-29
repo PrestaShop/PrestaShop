@@ -42,12 +42,13 @@ class CustomizationFieldCore extends ObjectModel
 		'table' => 'customization_field',
 		'primary' => 'id_customization_field',
 		'multilang' => true,
+		'multilang_shop' => true,
 		'fields' => array(
 			/* Classic fields */
 			'id_product' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'type' => 				array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'required' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
-			
+
 			/* Lang fields */
 			'name' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'required' => true, 'size' => 255),
 		),
