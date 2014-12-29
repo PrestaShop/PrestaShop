@@ -55,9 +55,6 @@ if (!file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php'))
 require_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
 require_once(_PS_CONFIG_DIR_.'autoload.php');
 
-if (Tools::convertBytes(ini_get('upload_max_filesize')) < Tools::convertBytes('100M'))
-	ini_set('upload_max_filesize', '100M');
-
 if (_PS_DEBUG_PROFILING_)
 {
 	include_once(_PS_TOOL_DIR_.'profiling/Controller.php');
@@ -66,6 +63,9 @@ if (_PS_DEBUG_PROFILING_)
 	include_once(_PS_TOOL_DIR_.'profiling/Db.php');
 	include_once(_PS_TOOL_DIR_.'profiling/Tools.php');
 }
+
+if (Tools::convertBytes(ini_get('upload_max_filesize')) < Tools::convertBytes('100M'))
+	ini_set('upload_max_filesize', '100M');
 
 if (Tools::isPHPCLI() && isset($argc) && isset($argv))
 	Tools::argvToGET($argc, $argv);
