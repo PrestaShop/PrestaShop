@@ -266,6 +266,8 @@ class ContactControllerCore extends FrontController
 	{
 		if ($this->context->customer->isLogged())
 		{
+			$this->context->smarty->assign('isLogged', 1);
+
 			$products = array();
 			$result = Db::getInstance()->executeS('
 			SELECT id_order
