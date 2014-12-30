@@ -476,6 +476,12 @@
 			</section>
 			<!--end  More info -->
 		{/if}
+		{if isset($packItems) && $packItems|@count > 0}
+		<section id="blockpack">
+			<h3 class="page-product-heading">{l s='Pack content'}</h3>
+			{include file="$tpl_dir./product-list.tpl" products=$packItems}
+		</section>
+		{/if}
 		<!--HOOK_PRODUCT_TAB -->
 		<section class="page-product-box">
 			{$HOOK_PRODUCT_TAB}
@@ -646,12 +652,6 @@
 			</section>
 			<!--end Customization -->
 			{/if}
-		{/if}
-		{if isset($packItems) && $packItems|@count > 0}
-		<section id="blockpack">
-			<h3 class="page-product-heading">{l s='Pack content'}</h3>
-			{include file="$tpl_dir./product-list.tpl" products=$packItems}
-		</section>
 		{/if}
 	{/if}
 </div> <!-- itemscope product wrapper -->
