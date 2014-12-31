@@ -565,7 +565,7 @@ class LinkCore
 		}
 
 		$vars = array();
-		$vars_nb = array('n', 'search_query');
+		$vars_nb = array('n');
 		$vars_sort = array('orderby', 'orderway');
 		$vars_pagination = array('p');
 
