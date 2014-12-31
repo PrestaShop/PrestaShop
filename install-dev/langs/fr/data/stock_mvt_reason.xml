@@ -10,18 +10,18 @@
     <name>Commande client</name>
   </stock_mvt_reason>
   <stock_mvt_reason id='Regulation_following_an_inventory_of_stock'>
-    <name>Régulation suite à inventaire</name>
+    <name>Régularisation suite à inventaire</name>
   </stock_mvt_reason>
   <stock_mvt_reason id='Regulation_following_an_inventory_of_stock_1'>
-    <name>Régulation suite à inventaire</name>
+    <name>Régularisation suite à inventaire</name>
   </stock_mvt_reason>
   <stock_mvt_reason id='Transfer_to_another_warehouse'>
-    <name>Transfert à un autre entrepôt</name>
+    <name>Transfert vers un autre entrepôt</name>
   </stock_mvt_reason>
   <stock_mvt_reason id='Transfer_from_another_warehouse'>
-    <name>Transfert à partir d&apos;un autre entrepôt</name>
+    <name>Transfert depuis un autre entrepôt</name>
   </stock_mvt_reason>
   <stock_mvt_reason id='Supply_Order'>
-    <name>Commande</name>
+    <name>Commande fournisseur</name>
   </stock_mvt_reason>
 </entity_stock_mvt_reason>
