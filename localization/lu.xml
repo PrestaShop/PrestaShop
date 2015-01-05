@@ -8,10 +8,9 @@
     <language iso_code="fr"/>
   </languages>
   <taxes>
-    <tax id="1" name="TVA LU 15%" rate="15" eu-tax-group="virtual"/>
-    <tax id="2" name="TVA LU 12%" rate="12"/>
-    <tax id="3" name="TVA LU 9%" rate="9"/>
-    <tax id="4" name="TVA LU 6%" rate="6"/>
+    <tax id="1" name="TVA LU 17%" rate="17" eu-tax-group="virtual"/>
+    <tax id="2" name="TVA LU 14%" rate="14"/>
+    <tax id="4" name="TVA LU 8%" rate="8"/>
     <tax id="5" name="TVA LU 3%" rate="3"/>
     <tax id="6" name="USt. AT 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="7" name="TVA BE 21%" rate="21" auto-generated="1" from-eu-tax-group="virtual"/>
@@ -40,7 +39,7 @@
     <tax id="30" name="Moms SE 25%" rate="25" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="31" name="DDV SI 22%" rate="22" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="32" name="DPH SK 20%" rate="20" auto-generated="1" from-eu-tax-group="virtual"/>
-    <taxRulesGroup name="LU Standard Rate (15%)">
+    <taxRulesGroup name="LU Standard Rate (17%)">
       <taxRule iso_code_country="be" id_tax="1"/>
       <taxRule iso_code_country="bg" id_tax="1"/>
       <taxRule iso_code_country="cz" id_tax="1"/>
@@ -69,7 +68,7 @@
       <taxRule iso_code_country="se" id_tax="1"/>
       <taxRule iso_code_country="uk" id_tax="1"/>
     </taxRulesGroup>
-    <taxRulesGroup name="LU Reduced Rate (12%)">
+    <taxRulesGroup name="LU Reduced Rate (14%)">
       <taxRule iso_code_country="be" id_tax="2"/>
       <taxRule iso_code_country="bg" id_tax="2"/>
       <taxRule iso_code_country="cz" id_tax="2"/>
@@ -98,7 +97,7 @@
       <taxRule iso_code_country="se" id_tax="2"/>
       <taxRule iso_code_country="uk" id_tax="2"/>
     </taxRulesGroup>
-    <taxRulesGroup name="LU Reduced Rate (6%)">
+    <taxRulesGroup name="LU Reduced Rate (8%)">
       <taxRule iso_code_country="be" id_tax="4"/>
       <taxRule iso_code_country="bg" id_tax="4"/>
       <taxRule iso_code_country="cz" id_tax="4"/>
