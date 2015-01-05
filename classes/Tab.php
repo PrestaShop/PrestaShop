@@ -540,12 +540,6 @@ class TabCore extends ObjectModel
 	{
 		$modules_list = array('default_list' => array(), 'slider_list' => array());
 		$xml_tab_modules_list = false;
-		$db_tab_module_list = Db::getInstance()->executeS('
-			SELECT module
-			FROM '._DB_PREFIX_.'tab_module_preference
-			WHERE `id_tab` = '.(int)$id_tab.'
-			AND `id_employee` = '.(int)Context::getContext()->employee->id
-			);
 
 		if (file_exists(_PS_ROOT_DIR_.Module::CACHE_FILE_TAB_MODULES_LIST))
 			$xml_tab_modules_list = @simplexml_load_file(_PS_ROOT_DIR_.Module::CACHE_FILE_TAB_MODULES_LIST);
@@ -570,12 +564,6 @@ class TabCore extends ObjectModel
 					ksort($modules_list[$display_type]);
 				}
 			}
-
-		//merge tab modules preferences from db with xml
-		if (is_array($db_tab_module_list))
-			foreach ($db_tab_module_list as $m)
-				if (!in_array($m, $modules_list))
-					$modules_list['slider_list'][] = $m['module'];
 
 		return $modules_list;
 	}
