@@ -27,7 +27,7 @@
     <tax id="18" name="VAT IE 23%" rate="23" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="19" name="IVA IT 22%" rate="22" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="20" name="PVM LT 21%" rate="21" auto-generated="1" from-eu-tax-group="virtual"/>
-    <tax id="21" name="TVA LU 15%" rate="15" auto-generated="1" from-eu-tax-group="virtual"/>
+    <tax id="21" name="TVA LU 17%" rate="17" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="22" name="PVN LV 21%" rate="21" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="23" name="VAT MT 18%" rate="18" auto-generated="1" from-eu-tax-group="virtual"/>
     <tax id="24" name="PTU PL 23%" rate="23" auto-generated="1" from-eu-tax-group="virtual"/>
