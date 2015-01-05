@@ -30,7 +30,7 @@
 		<table class="table">
 			<tr>
 				<td width="10">&nbsp;</td>
-				<td align="right" style=" white-space: nowrap">
+				<td align="right">
 					<font size="2" face="Open-sans, sans-serif" color="#555454">
 						{$product['unit_price']}
 					</font>
@@ -56,7 +56,7 @@
 		<table class="table">
 			<tr>
 				<td width="10">&nbsp;</td>
-				<td align="right" style=" white-space: nowrap">
+				<td align="right">
 					<font size="2" face="Open-sans, sans-serif" color="#555454">
 						{$product['price']}
 					</font>
