@@ -149,6 +149,9 @@ class AdminModulesControllerCore extends AdminController
 	{
 		parent::setMedia();
 		$this->addJqueryPlugin(array('autocomplete', 'fancybox', 'tablefilter'));
+
+		if ($this->context->mode == Context::MODE_HOST && Tools::isSubmit('addnewmodule'))
+			$this->addJS(_PS_JS_DIR_.'admin/addons.js');
 	}
 
 	public function ajaxProcessRefreshModuleList($force_reload_cache = false)
@@ -1345,6 +1348,13 @@ class AdminModulesControllerCore extends AdminController
 
 	public function initContent()
 	{
+		if (Tools::isSubmit('addnewmodule') && $this->context->mode == Context::MODE_HOST)
+		{
+			$this->display = 'add';
+			$this->context->smarty->assign(array('iso_code' => $this->context->language->iso_code));
+			return parent::initContent();
+		}
+
 		$this->meta_title = 'Modules';
 
 		// If we are on a module configuration, no need to load all modules
