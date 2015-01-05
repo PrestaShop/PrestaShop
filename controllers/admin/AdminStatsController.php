@@ -360,7 +360,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
 	public static function getPendingMessages()
 	{
-		return CustomerThread::getTotalCustomerThreads('status LIKE "%pending%" OR status = "open"');
+		return CustomerThread::getTotalCustomerThreads('status LIKE "%pending%" OR status = "open"'.Shop::addSqlRestriction());
 	}
 
 	public static function getAverageMessageResponseTime($date_from, $date_to)
