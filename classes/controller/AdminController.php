@@ -397,7 +397,7 @@ class AdminControllerCore extends Controller
 		if (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)
 		{
 			if (isset($this->context->cookie->is_contributor) && (int)$this->context->cookie->is_contributor === 1)
-				$this->context->mode = Context::MODE_CONTRIB_HOST;
+				$this->context->mode = Context::MODE_HOST_CONTRIB;
 			else
 				$this->context->mode = Context::MODE_HOST;
 		}
