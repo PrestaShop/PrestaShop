@@ -540,7 +540,7 @@ class AdminModulesControllerCore extends AdminController
 	public function postProcessDownload()
 	{
 	 	// PrestaShop demo mode
-		if (_PS_MODE_DEMO_ || (defined('_PS_HOST_MODE_') && (int)$this->context->cookie->is_contributor === 0))
+		if (_PS_MODE_DEMO_ || ($this->context->mode == Context::MODE_HOST))
 		{
 			$this->errors[] = Tools::displayError('This functionality has been disabled.');
 			return;
@@ -806,11 +806,11 @@ class AdminModulesControllerCore extends AdminController
 					// Check potential error
 					if (!($module = Module::getInstanceByName(urldecode($name))))
 						$this->errors[] = $this->l('Module not found');
-					elseif (defined('_PS_HOST_MODE_') && in_array($module->name, Module::$hosted_modules_blacklist))
+					elseif (($this->context->mode >= Context::MODE_HOST_CONTRIB) && in_array($module->name, Module::$hosted_modules_blacklist))
 						$this->errors[] = Tools::displayError('You do not have permission to access this module.');
 					elseif ($key == 'install' && $this->tabAccess['add'] !== '1')
 						$this->errors[] = Tools::displayError('You do not have permission to install this module.');
-					elseif ($key == 'install' && defined('_PS_HOST_MODE_') && _PS_HOST_MODE_ && (int)$this->context->cookie->is_contributor === 0 && !Module::isModuleTrusted($module->name))
+					elseif ($key == 'install' && ($this->context->mode == Context::MODE_HOST) && !Module::isModuleTrusted($module->name))
 						$this->errors[] = Tools::displayError('You do not have permission to install this module.');
 					elseif ($key == 'delete' && ($this->tabAccess['delete'] !== '1' || !$module->getPermission('configure')))
 						$this->errors[] = Tools::displayError('You do not have permission to delete this module.');
@@ -944,7 +944,7 @@ class AdminModulesControllerCore extends AdminController
 									if (isset($module->addons_buy_url))
 										$module->addons_buy_url = str_replace('utm_source=v1trunk_api', 'utm_source=back-office', $module->addons_buy_url)
 											.'&utm_medium=related-modules&utm_campaign=back-office-'.strtoupper($this->context->language->iso_code)
-											.'&utm_content='.(defined('_PS_HOST_MODE_') ? 'cloud' : 'download');
+											.'&utm_content='.(($this->context->mode >= Context::MODE_HOST_CONTRIB) ? 'cloud' : 'download');
 									if (isset($module->description_full) && trim($module->description_full) != '')
 										$module->show_quick_view = true;
 								}
@@ -1329,11 +1329,11 @@ class AdminModulesControllerCore extends AdminController
 			'modal_content' => $modal_content
 		);
 
-		$modal_content = $this->context->smarty->fetch('controllers/modules/'.((defined('_PS_HOST_MODE_') && _PS_HOST_MODE_ && (int)$this->context->cookie->is_contributor === 0) ? 'modal_not_trusted_blocked.tpl' : 'modal_not_trusted.tpl'));
+		$modal_content = $this->context->smarty->fetch('controllers/modules/'.(($this->context->mode == Context::MODE_HOST) ? 'modal_not_trusted_blocked.tpl' : 'modal_not_trusted.tpl'));
 		$this->modals[] = array(
 			'modal_id' => "moduleNotTrusted",
 			'modal_class' => "modal-lg",
-			'modal_title' => (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_ && (int)$this->context->cookie->is_contributor === 0) ? $this->l('This module cannot be installed') : $this->l('Important Notice'),
+			'modal_title' => ($this->context->mode == Context::MODE_HOST) ? $this->l('This module cannot be installed') : $this->l('Important Notice'),
 			'modal_content' => $modal_content
 		);
 
