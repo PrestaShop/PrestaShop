@@ -196,7 +196,7 @@
 		</tr>
 		{foreach from=$discounts item='discount'}
 			<tr>
-				<td><a href="{$link->getAdminLink('AdminDiscounts')|escape:'html':'UTF-8'}&amp;id_discount={$discount.id_discount}&amp;updatediscount">{$discount.name}</a></td>
+				<td><a href="{$link->getAdminLink('AdminCartRules')|escape:'html':'UTF-8'}&amp;id_cart_rule={$discount.id_discount}&amp;updatecart_rule">{$discount.name}</a></td>
 				<td class="text-center">- {displayWtPriceWithCurrency price=$discount.value_real currency=$currency}</td>
 			</tr>
 		{/foreach}
