@@ -176,7 +176,7 @@ class AdminThemesControllerCore extends AdminController
 						'type' => 'file',
 						'name' => 'PS_FAVICON',
 						'tab' => 'icons',
-						'thumb' => _PS_IMG_.Configuration::get('PS_FAVICON')
+						'thumb' => _PS_IMG_.Configuration::get('PS_FAVICON').(Tools::getValue('conf') ? sprintf('?%04d', rand(0, 9999)) : '')
 					),
 					'PS_STORES_ICON' => array(
 						'title' => $this->l('Store icon'),
