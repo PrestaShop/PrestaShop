@@ -3,8 +3,8 @@
 
 Hi {firstname} {lastname}, 
 
-Your guest account for {shop_name} has been transformed into a
-customer account. 
+Your guest account for {shop_name} was converted to a customer
+account. 
 
 E-MAIL ADDRESS: {email}
 

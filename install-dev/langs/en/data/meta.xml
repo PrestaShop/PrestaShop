@@ -115,10 +115,10 @@
     <url_rewrite>order-follow</url_rewrite>
   </meta>
   <meta id="order-slip" id_shop="1">
-    <title>Order slip</title>
+    <title>Credit slip</title>
     <description/>
     <keywords/>
-    <url_rewrite>order-slip</url_rewrite>
+    <url_rewrite>credit-slip</url_rewrite>
   </meta>
   <meta id="order" id_shop="1">
     <title>Order</title>

@@ -296,9 +296,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT SUM(IF(g.id_gender IS NOT NULL, 1, 0)) as total, SUM(IF(type = 0, 1, 0)) as male, SUM(IF(type = 1, 1, 0)) as female, SUM(IF(type = 2, 1, 0)) as neutral
 		FROM `'._DB_PREFIX_.'customer` c
-		'.Shop::addSqlAssociation('customer', 'c').'
 		LEFT JOIN `'._DB_PREFIX_.'gender` g ON c.id_gender = g.id_gender
-		WHERE c.active = 1');
+		WHERE c.active = 1 '.Shop::addSqlRestriction());
 
 		if (!$row['total'])
 			return false;
@@ -354,15 +353,14 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		$value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT AVG(DATEDIFF(NOW(), birthday))
 		FROM `'._DB_PREFIX_.'customer` c
-		'.Shop::addSqlAssociation('customer', 'c').'
 		WHERE active = 1
-		AND birthday IS NOT NULL AND birthday != "0000-00-00"');
+		AND birthday IS NOT NULL AND birthday != "0000-00-00" '.Shop::addSqlRestriction());
 		return round($value / 365);
 	}
 
 	public static function getPendingMessages()
 	{
-		return CustomerThread::getTotalCustomerThreads('status LIKE "%pending%" OR status = "open"');
+		return CustomerThread::getTotalCustomerThreads('status LIKE "%pending%" OR status = "open"'.Shop::addSqlRestriction());
 	}
 
 	public static function getAverageMessageResponseTime($date_from, $date_to)
@@ -696,14 +694,14 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				$value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT COUNT(*)
 				FROM `'._DB_PREFIX_.'customer` c
-				WHERE active = 1
+				WHERE c.active = 1
 				'.Shop::addSqlRestriction());
 				if ($value)
 				{
 					$orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 					SELECT COUNT(*)
 					FROM `'._DB_PREFIX_.'orders` o
-					WHERE valid = 1
+					WHERE o.valid = 1
 					'.Shop::addSqlRestriction());
 					$value = round($orders / $value, 2);
 				}

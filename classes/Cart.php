@@ -367,7 +367,6 @@ class CartCore extends ObjectModel
 			$row['obj'] = new CartRule($row['id_cart_rule'], (int)$this->id_lang);
 			$row['value_real'] = $row['obj']->getContextualValue(true, $virtual_context, $filter);
 			$row['value_tax_exc'] = $row['obj']->getContextualValue(false, $virtual_context, $filter);
-
 			// Retro compatibility < 1.5.0.2
 			$row['id_discount'] = $row['id_cart_rule'];
 			$row['description'] = $row['name'];
@@ -1516,11 +1515,15 @@ class CartCore extends ObjectModel
 			$package = array('id_carrier' => $id_carrier, 'id_address' => $id_address_delivery, 'products' => $products);
 
 			// Then, calculate the contextual value for each one
+			$flag = false;
 			foreach ($cart_rules as $cart_rule)
 			{
 				// If the cart rule offers free shipping, add the shipping cost
-				if (($with_shipping || $type == Cart::ONLY_DISCOUNTS) && $cart_rule['obj']->free_shipping)
+				if (($with_shipping || $type == Cart::ONLY_DISCOUNTS) && $cart_rule['obj']->free_shipping && !$flag)
+				{
 					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_SHIPPING, ($param_product ? $package : null), $use_cache), _PS_PRICE_COMPUTE_PRECISION_);
+					$flag = true;
+				}
 
 				// If the cart rule is a free gift, then add the free gift value only if the gift is in this package
 				if ((int)$cart_rule['obj']->gift_product)

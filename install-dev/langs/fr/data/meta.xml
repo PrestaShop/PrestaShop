@@ -20,7 +20,7 @@
   </meta>
   <meta id='index' id_shop='1'>
     <title/>
-    <description>Boutique conçue avec PrestaShop</description>
+    <description>Boutique propulsée par PrestaShop</description>
     <keywords/>
     <url_rewrite/>
   </meta>
@@ -43,10 +43,10 @@
     <url_rewrite>recuperation-mot-de-passe</url_rewrite>
   </meta>
   <meta id='prices-drop' id_shop='1'>
-    <title>Baisse de prix</title>
+    <title>Promotions</title>
     <description>Nos promotions</description>
     <keywords/>
-    <url_rewrite>baisse-de-prix</url_rewrite>
+    <url_rewrite>promotions</url_rewrite>
   </meta>
   <meta id='sitemap' id_shop='1'>
     <title>Plan du site</title>
@@ -115,10 +115,10 @@
     <url_rewrite>suivi-commande</url_rewrite>
   </meta>
   <meta id='order-slip' id_shop='1'>
-    <title>Bordereau de commande</title>
+    <title>Avoirs</title>
     <description/>
     <keywords/>
-    <url_rewrite>bordereau-commande</url_rewrite>
+    <url_rewrite>avoirs</url_rewrite>
   </meta>
   <meta id='order' id_shop='1'>
     <title>Commande</title>
@@ -145,10 +145,10 @@
     <url_rewrite>commande-rapide</url_rewrite>
   </meta>
   <meta id='guest-tracking' id_shop='1'>
-    <title>Suivi invité</title>
+    <title>Suivi de commande invité</title>
     <description/>
     <keywords/>
-    <url_rewrite>suivi-invite</url_rewrite>
+    <url_rewrite>suivi-commande-invite</url_rewrite>
   </meta>
   <meta id='order-confirmation' id_shop='1'>
     <title>Confirmation de commande</title>

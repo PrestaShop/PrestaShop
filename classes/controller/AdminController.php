@@ -397,7 +397,7 @@ class AdminControllerCore extends Controller
 		if (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)
 		{
 			if (isset($this->context->cookie->is_contributor) && (int)$this->context->cookie->is_contributor === 1)
-				$this->context->mode = Context::MODE_CONTRIB_HOST;
+				$this->context->mode = Context::MODE_HOST_CONTRIB;
 			else
 				$this->context->mode = Context::MODE_HOST;
 		}
@@ -1587,30 +1587,33 @@ class AdminControllerCore extends Controller
 		$is_multishop = Shop::isFeatureActive();
 
 		// Quick access
-		$quick_access = QuickAccess::getQuickAccesses($this->context->language->id);
-		foreach ($quick_access as $index => $quick)
+		if ((int)$this->context->employee->id)
 		{
-			if ($quick['link'] == '../' && Shop::getContext() == Shop::CONTEXT_SHOP)
+			$quick_access = QuickAccess::getQuickAccesses($this->context->language->id);
+			foreach ($quick_access as $index => $quick)
 			{
-				$url = $this->context->shop->getBaseURL();
-				if (!$url)
+				if ($quick['link'] == '../' && Shop::getContext() == Shop::CONTEXT_SHOP)
 				{
-					unset($quick_access[$index]);
-					continue;
+					$url = $this->context->shop->getBaseURL();
+					if (!$url)
+					{
+						unset($quick_access[$index]);
+						continue;
+					}
+					$quick_access[$index]['link'] = $url;
 				}
-				$quick_access[$index]['link'] = $url;
-			}
-			else
-			{
-				preg_match('/controller=(.+)(&.+)?$/', $quick['link'], $admin_tab);
-				if (isset($admin_tab[1]))
+				else
 				{
-					if (strpos($admin_tab[1], '&'))
-						$admin_tab[1] = substr($admin_tab[1], 0, strpos($admin_tab[1], '&'));
+					preg_match('/controller=(.+)(&.+)?$/', $quick['link'], $admin_tab);
+					if (isset($admin_tab[1]))
+					{
+						if (strpos($admin_tab[1], '&'))
+							$admin_tab[1] = substr($admin_tab[1], 0, strpos($admin_tab[1], '&'));
 
-					$token = Tools::getAdminToken($admin_tab[1].(int)Tab::getIdFromClassName($admin_tab[1]).(int)$this->context->employee->id);
-					$quick_access[$index]['target'] = $admin_tab[1];
-					$quick_access[$index]['link'] .= '&token='.$token;
+						$token = Tools::getAdminToken($admin_tab[1].(int)Tab::getIdFromClassName($admin_tab[1]).(int)$this->context->employee->id);
+						$quick_access[$index]['target'] = $admin_tab[1];
+						$quick_access[$index]['link'] .= '&token='.$token;
+					}
 				}
 			}
 		}
