@@ -411,7 +411,6 @@ class OrderHistoryCore extends ObjectModel
 				$data = array_merge($data, $template_vars);
 
 			$data['{total_paid}'] = Tools::displayPrice((float)$order->total_paid, new Currency((int)$order->id_currency), false);
-			$data['{order_name}'] = $order->getUniqReference();
 
 			if (Validate::isLoadedObject($order))
 			{
