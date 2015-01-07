@@ -901,7 +901,6 @@ function updateCartSummary(json)
 	}
 	else
 	{
-		console.log(json);
 		if (parseFloat(json.total_shipping) > 0)
 			$('.ajax_cart_shipping_cost').text(jsonData.shippingCost);
 		else if (json.carrier.id == null && typeof(toBeDetermined) !== 'undefined')
