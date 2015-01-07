@@ -1,5 +1,5 @@
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -81,14 +81,14 @@ function mobileInit()
 	categoryMenu.superfish('destroy');
 	$('.sf-menu').removeAttr('style');
 
-	mCategoryGrover.on('click touchstart', function(e){
+	mCategoryGrover.on('click', function(e){
 		$(this).toggleClass('active').parent().find('ul.menu-content').stop().slideToggle('medium');
 		return false;
 	});
 
 	$('.sf-menu > li > ul').addClass('menu-mobile clearfix').parent().prepend('<span class="menu-mobile-grover"></span>');
 
-	$(".sf-menu .menu-mobile-grover").on('click touchstart', function(e){
+	$(".sf-menu .menu-mobile-grover").on('click', function(e){
 		var catSubUl = $(this).next().next('.menu-mobile');
 		if (catSubUl.is(':hidden'))
 		{
@@ -104,7 +104,7 @@ function mobileInit()
 	});
 
 
-	$('#block_top_menu > ul:first > li > a').on('click touchstart', function(e){
+	$('#block_top_menu > ul:first > li > a').on('click', function(e){
 		var parentOffset = $(this).prev().offset();
 	   	var relX = parentOffset.left - e.pageX;
 		if ($(this).parent('li').find('ul').length && relX >= 0 && relX <= 20)

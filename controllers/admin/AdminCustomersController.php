@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -196,7 +196,7 @@ class AdminCustomersControllerCore extends AdminController
 		parent::initToolbar();
 		if (!$this->can_add_customer)
 			unset($this->toolbar_btn['new']);
-		else if (!$this->display) //display import button only on listing
+		elseif (!$this->display) //display import button only on listing
 		{
 			$this->toolbar_btn['import'] = array(
 				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=customers',
@@ -602,8 +602,8 @@ class AdminCustomersControllerCore extends AdminController
 		$helper->subtitle = $this->l('All Time', null, null, false);
 		if (ConfigurationKPI::get('CUSTOMER_MAIN_GENDER', $this->context->language->id) !== false)
 			$helper->value = ConfigurationKPI::get('CUSTOMER_MAIN_GENDER', $this->context->language->id);
-		if (ConfigurationKPI::get('CUSTOMER_MAIN_GENDER_EXPIRE', $this->context->language->id) < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=customer_main_gender';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=customer_main_gender';
+		$helper->refresh = (bool)(ConfigurationKPI::get('CUSTOMER_MAIN_GENDER_EXPIRE', $this->context->language->id) < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -614,8 +614,8 @@ class AdminCustomersControllerCore extends AdminController
 		$helper->subtitle = $this->l('All Time', null, null, false);
 		if (ConfigurationKPI::get('AVG_CUSTOMER_AGE', $this->context->language->id) !== false)
 			$helper->value = ConfigurationKPI::get('AVG_CUSTOMER_AGE', $this->context->language->id);
-		if (ConfigurationKPI::get('AVG_CUSTOMER_AGE_EXPIRE', $this->context->language->id) < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=avg_customer_age';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=avg_customer_age';
+		$helper->refresh = (bool)(ConfigurationKPI::get('AVG_CUSTOMER_AGE_EXPIRE', $this->context->language->id) < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -626,8 +626,8 @@ class AdminCustomersControllerCore extends AdminController
 		$helper->subtitle = $this->l('All Time', null, null, false);
 		if (ConfigurationKPI::get('ORDERS_PER_CUSTOMER') !== false)
 			$helper->value = ConfigurationKPI::get('ORDERS_PER_CUSTOMER');
-		if (ConfigurationKPI::get('ORDERS_PER_CUSTOMER_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=orders_per_customer';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=orders_per_customer';
+		$helper->refresh = (bool)(ConfigurationKPI::get('ORDERS_PER_CUSTOMER_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -638,8 +638,8 @@ class AdminCustomersControllerCore extends AdminController
 		$helper->subtitle = $this->l('All Time', null, null, false);
 		if (ConfigurationKPI::get('NEWSLETTER_REGISTRATIONS') !== false)
 			$helper->value = ConfigurationKPI::get('NEWSLETTER_REGISTRATIONS');
-		if (ConfigurationKPI::get('NEWSLETTER_REGISTRATIONS_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=newsletter_registrations';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=newsletter_registrations';
+		$helper->refresh = (bool)(ConfigurationKPI::get('NEWSLETTER_REGISTRATIONS_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpiRow();
@@ -934,7 +934,7 @@ class AdminCustomersControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('This customer does not exist.');
 		if (Customer::customerExists($customer->email))
 			$this->errors[] = Tools::displayError('This customer already exists as a non-guest.');
-		else if ($customer->transformToCustomer(Tools::getValue('id_lang', $this->context->language->id)))
+		elseif ($customer->transformToCustomer(Tools::getValue('id_lang', $this->context->language->id)))
 			Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$customer->id.'&conf=3&token='.$this->token);
 		else
 			$this->errors[] = Tools::displayError('An error occurred while updating customer information.');

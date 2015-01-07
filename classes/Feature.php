@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -244,7 +244,7 @@ class FeatureCore extends ObjectModel
 			return false;
 
 		return Db::getInstance()->executeS('
-			SELECT * , COUNT(*) as nb
+			SELECT f.*, fl.*
 			FROM `'._DB_PREFIX_.'feature` f
 			LEFT JOIN `'._DB_PREFIX_.'feature_product` fp
 				ON f.`id_feature` = fp.`id_feature`
@@ -253,7 +253,7 @@ class FeatureCore extends ObjectModel
 			WHERE fp.`id_product` IN ('.$ids.')
 			AND `id_lang` = '.(int)$id_lang.'
 			GROUP BY f.`id_feature`
-			ORDER BY nb DESC, position ASC
+			ORDER BY f.`position` ASC
 		');
 	}
 

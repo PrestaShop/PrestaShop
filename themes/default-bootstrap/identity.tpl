@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -188,14 +188,14 @@
 					<input type="text" class="form-control" id="website" name="website" value="{if isset($smarty.post.website)}{$smarty.post.website}{/if}" />
 				</div>
 			{/if}
+
+                {$HOOK_CUSTOMER_IDENTITY_FORM}
+
                 <div class="form-group">
                     <button type="submit" name="submitIdentity" class="btn btn-default button button-medium">
                         <span>{l s='Save'}<i class="icon-chevron-right right"></i></span>
                     </button>
                 </div>
-                <p id="security_informations" class="text-right">
-                    <i>{l s='[Insert customer data privacy clause here, if applicable]'}</i>
-                </p>
             </fieldset>
         </form> <!-- .std -->
     {/if}

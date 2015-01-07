@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -89,7 +89,7 @@
 			{if (!$too_early AND ($is_logged OR $allow_guests))}
 			<p class="align_center">
 				<a id="new_comment_tab_btn" class="btn btn-default button button-small open-comment-form" href="#new_comment_form">
-					<span>{l s='Write your review' mod='productcomments'} !</span>
+					<span>{l s='Write your review!' mod='productcomments'}</span>
 				</a>
 			</p>
 			{/if}
@@ -97,11 +97,11 @@
 			{if (!$too_early AND ($is_logged OR $allow_guests))}
 			<p class="align_center">
 				<a id="new_comment_tab_btn" class="btn btn-default button button-small open-comment-form" href="#new_comment_form">
-					<span>{l s='Be the first to write your review' mod='productcomments'} !</span>
+					<span>{l s='Be the first to write your review!' mod='productcomments'}</span>
 				</a>
 			</p>
 			{else}
-			<p class="align_center">{l s='No customer comments for the moment.' mod='productcomments'}</p>
+			<p class="align_center">{l s='No customer reviews for the moment.' mod='productcomments'}</p>
 			{/if}
 		{/if}
 	</div> <!-- #product_comments_block_tab -->
@@ -127,7 +127,6 @@
 					</div>
 				{/if}
 				<div class="new_comment_form_content col-xs-12 col-sm-6">
-					<h2>{l s='Write a review' mod='productcomments'}</h2>
 					<div id="new_comment_form_error" class="error" style="display: none; padding: 15px 25px">
 						<ul></ul>
 					</div>
@@ -149,16 +148,16 @@
 						</ul>
 					{/if}
 					<label for="comment_title">
-						{l s='Title' mod='productcomments'}: <sup class="required">*</sup>
+						{l s='Title:' mod='productcomments'} <sup class="required">*</sup>
 					</label>
 					<input id="comment_title" name="title" type="text" value=""/>
 					<label for="content">
-						{l s='Comment' mod='productcomments'}: <sup class="required">*</sup>
+						{l s='Comment:' mod='productcomments'} <sup class="required">*</sup>
 					</label>
 					<textarea id="content" name="content"></textarea>
 					{if $allow_guests == true && !$is_logged}
 						<label>
-							{l s='Your name' mod='productcomments'}: <sup class="required">*</sup>
+							{l s='Your name:' mod='productcomments'} <sup class="required">*</sup>
 						</label>
 						<input id="commentCustomerName" name="customer_name" type="text" value=""/>
 					{/if}
@@ -167,7 +166,7 @@
 						<p class="fl required"><sup>*</sup> {l s='Required fields' mod='productcomments'}</p>
 						<p class="fr">
 							<button id="submitNewMessage" name="submitMessage" type="submit" class="btn button button-small">
-								<span>{l s='Send' mod='productcomments'}</span>
+								<span>{l s='Submit' mod='productcomments'}</span>
 							</button>&nbsp;
 							{l s='or' mod='productcomments'}&nbsp;
 							<a class="closefb" href="#">
@@ -190,7 +189,7 @@
 
 {addJsDefL name=confirm_report_message}{l s='Are you sure that you want to report this comment?' mod='productcomments' js=1}{/addJsDefL}
 {addJsDefL name=productcomment_added}{l s='Your comment has been added!' mod='productcomments' js=1}{/addJsDefL}
-{addJsDefL name=productcomment_added_moderation}{l s='Your comment has been added and will be available once approved by a moderator' mod='productcomments' js=1}{/addJsDefL}
+{addJsDefL name=productcomment_added_moderation}{l s='Your comment has been added and will be available once approved by a moderator.' mod='productcomments' js=1}{/addJsDefL}
 {addJsDefL name=productcomment_title}{l s='New comment' mod='productcomments' js=1}{/addJsDefL}
 {addJsDefL name=productcomment_ok}{l s='OK' mod='productcomments' js=1}{/addJsDefL}
 {/strip}

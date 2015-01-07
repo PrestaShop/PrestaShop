@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -29,7 +29,7 @@ class OrderInvoiceCore extends ObjectModel
 	const TAX_EXCL = 0;
 	const TAX_INCL = 1;
 	const DETAIL = 2;
-	
+
 	/** @var integer */
 	public $id_order;
 
@@ -120,7 +120,7 @@ class OrderInvoiceCore extends ObjectModel
 		ON p.id_product = od.product_id
 		LEFT JOIN `'._DB_PREFIX_.'product_shop` ps ON (ps.id_product = p.id_product AND ps.id_shop = od.id_shop)
 		WHERE od.`id_order` = '.(int)$this->id_order.'
-		AND od.`id_order_invoice` ='.($this->id && $this->number ? (int)$this->id : '0'));
+		'.($this->id && $this->number ? ' AND od.`id_order_invoice` = '.(int)$this->id : ''));
 	}
 
 	public static function getInvoiceByNumber($id_invoice)
@@ -135,7 +135,7 @@ class OrderInvoiceCore extends ObjectModel
 		}
 		if (!$id_invoice)
 			return false;
-		
+
 		$id_order_invoice = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `id_order_invoice`
 			FROM `'._DB_PREFIX_.'order_invoice`
@@ -183,9 +183,9 @@ class OrderInvoiceCore extends ObjectModel
 				// Get the display filename
 				$row['display_filename'] = ProductDownload::getFilenameFromFilename($row['filename']);
 			}
-			
+
 			$row['id_address_delivery'] = $order->id_address_delivery;
-			
+
 			/* Stock product */
 			$resultArray[(int)$row['id_order_detail']] = $row;
 		}
@@ -274,8 +274,9 @@ class OrderInvoiceCore extends ObjectModel
 	 * @since 1.5
 	 * @return array
 	 */
-	public function getProductTaxesBreakdown()
+	public function getProductTaxesBreakdown($order = null)
 	{
+		Tools::$round_mode = $order->round_mode;
 		$tmp_tax_infos = array();
 		if ($this->useOneAfterAnotherTaxComputationMethod())
 		{
@@ -312,6 +313,14 @@ class OrderInvoiceCore extends ObjectModel
 
 			// sum by taxes
 			$tmp_tax_infos = array();
+			$shipping_tax_amount = 0;
+			foreach ($order->getCartRules() as $cart_rule)
+				if ($cart_rule['free_shipping'])
+				{
+					$shipping_tax_amount = $this->total_shipping_tax_excl;
+					break;
+				}
+
 			foreach ($taxes_infos as $tax_infos)
 			{
 				if (!isset($tmp_tax_infos[$tax_infos['rate']]))
@@ -320,18 +329,19 @@ class OrderInvoiceCore extends ObjectModel
 						'name' => 0,
 						'total_price_tax_excl' => 0
 					);
-
 				$ratio = $tax_infos['total_price_tax_excl'] / $this->total_products;
-				$order_reduction_amount = $this->total_discount_tax_excl * $ratio;
-				$tmp_tax_infos[$tax_infos['rate']]['total_amount'] += ($tax_infos['total_amount'] - Tools::ps_round($tax_infos['ecotax'] * $tax_infos['product_quantity'] * $tax_infos['ecotax_tax_rate'] / 100, _PS_PRICE_DISPLAY_PRECISION_));
-
+				$order_reduction_amount = ($this->total_discount_tax_excl - $shipping_tax_amount) * $ratio;
+				$tmp_tax_infos[$tax_infos['rate']]['total_amount'] += ($tax_infos['total_amount'] - Tools::ps_round($tax_infos['ecotax'] * $tax_infos['product_quantity'] * $tax_infos['ecotax_tax_rate'] / 100, _PS_PRICE_COMPUTE_PRECISION_));
 				$tmp_tax_infos[$tax_infos['rate']]['name'] = $tax_infos['name'];
-				$tmp_tax_infos[$tax_infos['rate']]['total_price_tax_excl'] += $tax_infos['total_price_tax_excl'] - $order_reduction_amount - Tools::ps_round($tax_infos['ecotax'] * $tax_infos['product_quantity'], _PS_PRICE_DISPLAY_PRECISION_);
+				$tmp_tax_infos[$tax_infos['rate']]['total_price_tax_excl'] += $tax_infos['total_price_tax_excl'] - $order_reduction_amount - Tools::ps_round($tax_infos['ecotax'] * $tax_infos['product_quantity'], _PS_PRICE_COMPUTE_PRECISION_);
 			}
 		}
 
 		foreach ($tmp_tax_infos as &$tax)
+		{
 			$tax['total_amount'] = Tools::ps_round($tax['total_amount'], _PS_PRICE_DISPLAY_PRECISION_);
+			$tax['total_price_tax_excl'] = Tools::ps_round($tax['total_price_tax_excl'], _PS_PRICE_DISPLAY_PRECISION_);
+		}
 
 		return $tmp_tax_infos;
 	}
@@ -365,8 +375,8 @@ class OrderInvoiceCore extends ObjectModel
 
 	/**
 	 * Returns the wrapping taxes breakdown
+	 *
 	 * @todo
-
 	 * @since 1.5
 	 * @return array
 	 */
@@ -395,8 +405,8 @@ class OrderInvoiceCore extends ObjectModel
 		foreach ($result as $row)
 			if ($row['ecotax_tax_excl'] > 0)
 			{
-				$row['ecotax_tax_incl'] = Tools::ps_round($row['ecotax_tax_excl'] + ($row['ecotax_tax_excl'] * $row['rate'] / 100), 2);
-				$row['ecotax_tax_excl'] = Tools::ps_round($row['ecotax_tax_excl'], 2);
+				$row['ecotax_tax_incl'] = Tools::ps_round($row['ecotax_tax_excl'] + ($row['ecotax_tax_excl'] * $row['rate'] / 100), _PS_PRICE_DISPLAY_PRECISION_);
+				$row['ecotax_tax_excl'] = Tools::ps_round($row['ecotax_tax_excl'], _PS_PRICE_DISPLAY_PRECISION_);
 				$taxes[] = $row;
 			}
 		return $taxes;
@@ -439,8 +449,8 @@ class OrderInvoiceCore extends ObjectModel
 			SELECT oi.*
 			FROM `'._DB_PREFIX_.'order_invoice` oi
 			LEFT JOIN `'._DB_PREFIX_.'orders` o ON (o.`id_order` = oi.`id_order`)
-			WHERE '.(int)$id_order_state.' = o.current_state 
-			'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').' 
+			WHERE '.(int)$id_order_state.' = o.current_state
+			'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
 			AND oi.number > 0
 			ORDER BY oi.`date_add` ASC
 		');
@@ -539,11 +549,11 @@ class OrderInvoiceCore extends ObjectModel
 	{
 		return round($this->total_paid_tax_incl + $this->getSiblingTotal() - $this->getTotalPaid(), 2);
 	}
-	
+
 
 	/**
 	 * Return collection of order invoice object linked to the payments of the current order invoice object
-	 * 
+	 *
 	 * @since 1.5.0.14
      * @return PrestaShopCollection|array Collection of OrderInvoice or empty array
 	 */
@@ -555,27 +565,27 @@ class OrderInvoiceCore extends ObjectModel
 		$query->innerJoin('order_invoice_payment', 'oip2',
 			'oip2.id_order_payment = oip1.id_order_payment AND oip2.id_order_invoice <> oip1.id_order_invoice');
 		$query->where('oip1.id_order_invoice = '.$this->id);
-		
+
 		$invoices = Db::getInstance()->executeS($query);
 		if (!$invoices)
 			return array();
-		
+
 		$invoice_list = array();
 		foreach ($invoices as $invoice)
 			$invoice_list[] = $invoice['id_order_invoice'];
-		
+
 		$payments = new PrestaShopCollection('OrderInvoice');
 		$payments->where('id_order_invoice', 'IN', $invoice_list);
-		
+
 		return $payments;
 	}
-	
+
 
 	/**
 	 * Return total to paid of sibling invoices
-	 * 
+	 *
 	 * @param int $mod TAX_EXCL, TAX_INCL, DETAIL
-	 * 
+	 *
 	 * @since 1.5.0.14
 	 */
 	public function getSiblingTotal($mod = OrderInvoice::TAX_INCL)
@@ -588,9 +598,9 @@ class OrderInvoiceCore extends ObjectModel
 		$query->leftJoin('order_invoice', 'oi',
 			'oi.id_order_invoice = oip2.id_order_invoice');
 		$query->where('oip1.id_order_invoice = '.$this->id);
-		
+
 		$row = Db::getInstance()->getRow($query);
-		
+
 		switch ($mod)
 		{
 			case OrderInvoice::TAX_EXCL:
@@ -611,7 +621,7 @@ class OrderInvoiceCore extends ObjectModel
 	public function getGlobalRestPaid()
 	{
 		static $cache;
-		
+
 		if (!isset($cache[$this->id]))
 		{
 			$res = Db::getInstance()->getRow('
@@ -631,7 +641,7 @@ class OrderInvoiceCore extends ObjectModel
 			) sub');
 			$cache[$this->id] = round($res['to_paid'] - $res['paid'], 2);
 		}
-		
+
 		return $cache[$this->id];
 	}
 

@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 **
 * NOTICE OF LICENSE
 **
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 **
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -36,13 +36,13 @@
 				<i class="icon-upload"></i>
 				{l s='Import'}
 			</h3>
-			<div class="alert alert-info">		
+			<div class="alert alert-info">
 				<ul class="list-unstyled">
 					<li>{l s='You can read information on CSV import at:'}
-						<a href="http://doc.prestashop.com/display/PS16/CSV+Import+Parameters" target="_blank">http://doc.prestashop.com/display/PS16/CSV+Import+Parameters</a>
+						<a href="http://doc.prestashop.com/display/PS16/CSV+Import+Parameters" class="_blank">http://doc.prestashop.com/display/PS16/CSV+Import+Parameters</a>
 					</li>
 					<li>{l s='Read more about the CSV format at:'}
-						<a href="http://en.wikipedia.org/wiki/Comma-separated_values" target="_blank">http://en.wikipedia.org/wiki/Comma-separated_values</a>
+						<a href="http://en.wikipedia.org/wiki/Comma-separated_values" class="_blank">http://en.wikipedia.org/wiki/Comma-separated_values</a>
 					</li>
 				</ul>
 			</div>
@@ -113,7 +113,7 @@
 										</button>
 										<ul class="dropdown-menu" role="menu">
 											<li>
-												<a class="csv-download-link" href="#" target="_blank">
+												<a class="csv-download-link _blank" href="#">
 													<i class="icon-download"></i>
 													{l s='Download'}
 												</a>
@@ -145,7 +145,7 @@
 										</button>
 										<ul class="dropdown-menu" role="menu">
 											<li>
-												<a href="{$current|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;csvfilename={$filename|@urlencode}" target="_blank">
+												<a href="{$current|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;csvfilename={$filename|@urlencode}" class="_blank">
 													<i class="icon-download"></i>
 													{l s='Download'}
 												</a>
@@ -195,7 +195,7 @@
 							{/foreach}
 						</select>
 					</div>
-				</div>			
+				</div>
 				<div class="form-group">
 					<label for="convert" class="control-label col-lg-4">{l s='ISO 8859-1 encoded file?'}</label>
 					<div class="col-lg-8">
@@ -255,7 +255,7 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="regenerate" class="control-label col-lg-4">{l s='Do not regenerate thumbnails'}</label>
+					<label for="regenerate" class="control-label col-lg-4">{l s='Skip thumbnails regeneration'}</label>
 					<div class="col-lg-8">
 						<label class="switch-light prestashop-switch fixed-width-lg">
 							<input id="regenerate" name="regenerate" type="checkbox" />
@@ -270,7 +270,7 @@
 				<div class="form-group">
 					<label for="forceIDs" class="control-label col-lg-4">
 						<span data-toggle="tooltip" class="label-tooltip" data-original-title="{l s='If you enable this option, your imported items\' ID number will be used as-is. If you do not enable this option, the imported ID number will be ignored, and PrestaShop will instead create auto-incremented ID numbers for all the imported items.'}">
-							{l s='Force all ID numbers'} 
+							{l s='Force all ID numbers'}
 						</span>
 					</label>
 					<div class="col-lg-8">
@@ -284,11 +284,11 @@
 						</label>
 					</div>
 				</div>
-<!-- 
+<!--
 				{*if empty($files_to_import)*}
 				<div class="alert alert-info">{l s='You must upload a file in order to proceed to the next step'}</div>
 				{*if !count($files_to_import)*}
-				<p>{l s='There is no CSV file available. Please upload one using the \'Upload\' button above.'}</p> 
+				<p>{l s='There is no CSV file available. Please upload one using the \'Upload\' button above.'}</p>
 -->
 				<div class="panel-footer">
 					<button type="submit" name="submitImportFile" id="submitImportFile" class="btn btn-default pull-right" >
@@ -315,37 +315,37 @@
 				<i class="icon-download"></i>
 				{l s='Download sample csv files'}
 			</div>
-			
+
 			<div class="list-group">
-				<a class="list-group-item" href="../docs/csv_import/categories_import.csv" target="_blank">
+				<a class="list-group-item _blank" href="../docs/csv_import/categories_import.csv">
 					{l s='Sample Categories file'}
 				</a>
-				<a class="list-group-item" href="../docs/csv_import/products_import.csv" target="_blank">
+				<a class="list-group-item _blank" href="../docs/csv_import/products_import.csv">
 					{l s='Sample Products file'}
 				</a>
-				<a class="list-group-item" href="../docs/csv_import/combinations_import.csv" target="_blank">
+				<a class="list-group-item _blank" href="../docs/csv_import/combinations_import.csv">
 					{l s='Sample Combinations file'}
 				</a>
-				<a class="list-group-item" href="../docs/csv_import/customers_import.csv" target="_blank">
+				<a class="list-group-item _blank" href="../docs/csv_import/customers_import.csv">
 					{l s='Sample Customers file'}
 				</a>
-				<a class="list-group-item" href="../docs/csv_import/addresses_import.csv" target="_blank">
+				<a class="list-group-item _blank" href="../docs/csv_import/addresses_import.csv">
 					{l s='Sample Addresses file'}
 				</a>
-				<a class="list-group-item" href="../docs/csv_import/manufacturers_import.csv" target="_blank">
+				<a class="list-group-item _blank" href="../docs/csv_import/manufacturers_import.csv">
 					{l s='Sample Manufacturers file'}
 				</a>
-				<a class="list-group-item" href="../docs/csv_import/suppliers_import.csv" target="_blank">
+				<a class="list-group-item _blank" href="../docs/csv_import/suppliers_import.csv">
 					{l s='Sample Suppliers file'}
 				</a>
-				<a class="list-group-item" href="../docs/csv_import/alias_import.csv" target="_blank">
+				<a class="list-group-item _blank" href="../docs/csv_import/alias_import.csv">
 					{l s='Sample Aliases file'}
 				</a>
 				{if $PS_ADVANCED_STOCK_MANAGEMENT}
-				<a class="list-group-item" href="../docs/csv_import/supply_orders_import.csv" target="_blank">
+				<a class="list-group-item _blank" href="../docs/csv_import/supply_orders_import.csv">
 					{l s='Sample Supply Orders file'}
 				</a>
-				<a class="list-group-item" href="../docs/csv_import/supply_orders_details_import.csv" target="_blank">
+				<a class="list-group-item _blank" href="../docs/csv_import/supply_orders_details_import.csv">
 					{l s='Sample Supply Order Details file'}
 				</a>
 				{/if}
@@ -392,7 +392,7 @@
 
 		var file_add_button = Ladda.create(document.querySelector('#file-add-button'));
 		var file_total_files = 0;
-		
+
 		$('#file').fileupload({
 			dataType: 'json',
 			autoUpload: true,
@@ -434,7 +434,7 @@
 			file_add_button.stop();
 		}).on('fileuploadprocessalways', function (e, data) {
 			var index = data.index,	file = data.files[index];
-			
+
 			if (file.error) {
 				$('#file-errors').append('<strong>'+file.name+'</strong> ('+humanizeSize(file.size)+') : '+file.error).show();
 				$(data.context).find('button').trigger('click');
@@ -472,7 +472,7 @@
 		var truncateAuthorized = {$truncateAuthorized|intval};
 
 		enableHistory();
-		
+
 		$('#preview_import').submit(function(e) {
 			if ($('#truncate').get(0).checked) {
 				if (truncateAuthorized) {
@@ -500,7 +500,7 @@
 				$(".import_supply_orders_details").hide();
 				$('input[name=multiple_value_separator]').val('{if isset($multiple_value_separator_selected)}{$multiple_value_separator_selected}{else},{/if}');
 			}
-			if ($("#entity > option:selected").val() == 1) {
+			if ($("#entity > option:selected").val() == 1 || $("#entity > option:selected").val() == 2) {
 				$("#match_ref").closest('.form-group').show();
 			}
 			else {
@@ -540,18 +540,18 @@
 				success: function(j){
 					var fields = "";
 					$("#availableFields").empty();
-					
+
 					for (var i = 0; i < j.length; i++)
 						fields += j[i].field;
-	
+
 					$("#availableFields").html(fields);
 					$('.help-tooltip').tooltip();
 				},
-				error: function(j){}			
+				error: function(j){}
 			});
 		});
 
-		$("select#entity").trigger('change');	
+		$("select#entity").trigger('change');
 
 		$('#file-selectbutton').click(function(e){
 			$('#file').trigger('click');

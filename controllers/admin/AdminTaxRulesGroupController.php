@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -382,14 +382,14 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 		}
-		else if (Tools::isSubmit('submitBulkdeletetax_rule'))
+		elseif (Tools::isSubmit('submitBulkdeletetax_rule'))
 		{
 			if ($this->tabAccess['delete'] === '1')
 				$this->action = 'bulk_delete_tax_rules';
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 		}
-		else if (Tools::getValue('action') == 'create_rule')
+		elseif (Tools::getValue('action') == 'create_rule')
 		{
 			if ($this->tabAccess['add'] === '1')
 				$this->action = 'create_rule';

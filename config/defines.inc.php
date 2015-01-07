@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -63,13 +63,9 @@ if (!defined('_PS_ROOT_DIR_') && (getenv('_PS_ROOT_DIR_') || getenv('REDIRECT__P
 
 /* Directories */
 if (!defined('_PS_ROOT_DIR_'))
-{
 	define('_PS_ROOT_DIR_', realpath($currentDir.'/..'));
 
-	if (!defined('_PS_CORE_DIR_'))
-		define('_PS_CORE_DIR_', _PS_ROOT_DIR_);
-}
-elseif (!defined('_PS_CORE_DIR_'))
+if (!defined('_PS_CORE_DIR_'))
 	define('_PS_CORE_DIR_', realpath($currentDir.'/..'));
 
 define('_PS_ALL_THEMES_DIR_',        _PS_ROOT_DIR_.'/themes/');
@@ -138,7 +134,6 @@ define('PS_PRODUCT_TAX', 0);
 define('PS_STATE_TAX', 1);
 define('PS_BOTH_TAX', 2);
 
-define('_PS_PRICE_DISPLAY_PRECISION_', 2);
 define('PS_TAX_EXC', 1);
 define('PS_TAX_INC', 0);
 

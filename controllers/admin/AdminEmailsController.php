@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -102,12 +102,7 @@ class AdminEmailsControllerCore extends AdminController
 						'choices' => array(
 							3 => $this->l('Never send emails (may be useful for testing purposes)'),
 							2 => $this->l('Set my own SMTP parameters (for advanced users ONLY)')
-						),
-						'js' => array(
-							1 => 'onclick="$(\'#configuration_fieldset_smtp\').slideUp();"', 
-							2 => 'onclick="$(\'#configuration_fieldset_smtp\').slideDown();"',
-							3 => 'onclick="$(\'#configuration_fieldset_smtp\').slideUp();"'
-						),
+						)
 					),
 					'PS_MAIL_TYPE' => array(
 						'title' => '',
@@ -221,6 +216,20 @@ class AdminEmailsControllerCore extends AdminController
 				$this->l('Use PHP\'s mail() function (recommended; works in most cases)');
 
 		ksort($this->fields_options['email']['fields']['PS_MAIL_METHOD']['choices']);
+	}
+
+	public function setMedia()
+	{
+		parent::setMedia();
+
+		$this->addJs(_PS_JS_DIR_.'/admin/email.js');
+
+		Media::addJsDefL('textMsg', $this->l('This is a test message. Your server is now configured to send email.'));
+		Media::addJsDefL('textSubject', $this->l('Test message -- Prestashop'));
+		Media::addJsDefL('textSendOk', $this->l('A test email has been sent to the email address you provided.'));
+		Media::addJsDefL('textSendError', $this->l('Error: Please check your configuration'));
+		Media::addJsDefL('token_mail', $this->token);
+		Media::addJsDefL('errorMail', $this->l('This email address is not valid'));
 	}
 	
 	public function processDelete()

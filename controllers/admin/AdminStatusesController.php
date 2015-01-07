@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -365,9 +365,10 @@ class AdminStatusesControllerCore extends AdminController
 					'name' => 'template',
 					'lang' => true,
 					'options' => array(
-						'query' => $this->getTemplates($this->context->language->iso_code),
+						'query' => $this->getTemplates(),
 						'id' => 'id',
-						'name' => 'name'
+						'name' => 'name',
+						'folder' => 'folder'
 					),
 					'hint' => array(
 						$this->l('Only letters, numbers and underscores ("_") are allowed.'),
@@ -382,7 +383,7 @@ class AdminStatusesControllerCore extends AdminController
 
 		if (Tools::isSubmit('updateorder_state') || Tools::isSubmit('addorder_state'))
 			return $this->renderOrderStatusForm();
-		else if (Tools::isSubmit('updateorder_return_state') || Tools::isSubmit('addorder_return_state'))
+		elseif (Tools::isSubmit('updateorder_return_state') || Tools::isSubmit('addorder_return_state'))
 			return $this->renderOrderReturnsForm();
 		else
 			return parent::renderForm();
@@ -456,18 +457,36 @@ class AdminStatusesControllerCore extends AdminController
 		return $helper->generateForm($this->fields_form);
 	}
 
-	protected function getTemplates($iso_code)
+	protected function getTemplates()
 	{
+		$theme = new Theme($this->context->shop->id_theme);
+		$default_path = '../mails/';
+		$theme_path = '../themes/'.$theme->directory.'/mails/'; // Mail templates can also be found in the theme folder
+
 		$array = array();
-		if (!file_exists(_PS_ADMIN_DIR_.'/../mails/'.$iso_code))
-			return false;
-		$templates = scandir(_PS_ADMIN_DIR_.'/../mails/'.$iso_code);
-		foreach ($templates as $key => $template)
-			if (!strncmp(strrev($template), 'lmth.', 5))
-				$array[] = array(
-							'id' => substr($template, 0, -5),
-							'name' => substr($template, 0, -5)
-				);
+		foreach(Language::getLanguages(true) as $language)
+		{
+			$iso_code = $language['iso_code'];
+
+			// If there is no folder for the given iso_code in /mails or in /themes/[theme_name]/mails, we bypass this language
+			if (!@filemtime(_PS_ADMIN_DIR_.'/'.$default_path.$iso_code) && !@filemtime(_PS_ADMIN_DIR_.'/'.$theme_path.$iso_code))
+				continue;
+			
+			$theme_templates_dir = _PS_ADMIN_DIR_.'/'.$theme_path.$iso_code;
+			$theme_templates = is_dir($theme_templates_dir) ? scandir($theme_templates_dir) : array();
+			// We merge all available emails in one array 
+			$templates = array_unique(array_merge(scandir(_PS_ADMIN_DIR_.'/'.$default_path.$iso_code), $theme_templates));
+			foreach ($templates as $key => $template)
+				if (!strncmp(strrev($template), 'lmth.', 5))
+				{
+					$search_result = array_search($template, $theme_templates);
+					$array[$iso_code][] = array(
+								'id' => substr($template, 0, -5),
+								'name' => substr($template, 0, -5),
+								'folder' => ((!empty($search_result)?$theme_path:$default_path))
+					);
+				}
+		}
 
 		return $array;
 	}
@@ -537,7 +556,7 @@ class AdminStatusesControllerCore extends AdminController
 
 			return parent::postProcess();
 		}
-		else if (Tools::isSubmit('delete'.$this->table))
+		elseif (Tools::isSubmit('delete'.$this->table))
 		{
 			$order_state = new OrderState(Tools::getValue('id_order_state'), $this->context->language->id);
 			if (!$order_state->isRemovable())
@@ -545,7 +564,7 @@ class AdminStatusesControllerCore extends AdminController
 			else
 				return parent::postProcess();
 		}
-		else if (Tools::isSubmit('submitBulkdelete'.$this->table))
+		elseif (Tools::isSubmit('submitBulkdelete'.$this->table))
 		{
 			foreach (Tools::getValue($this->table.'Box') as $selection)
 			{

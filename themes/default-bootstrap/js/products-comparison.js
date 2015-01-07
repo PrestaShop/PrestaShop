@@ -1,5 +1,5 @@
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -38,13 +38,13 @@ function addToCompare(productId)
 {
 	var totalValueNow = parseInt($('.bt_compare').next('.compare_product_count').val());
 	var action, totalVal;
-	if($.inArray(parseInt(productId),comparedProductsIds) === -1)
+	if ($.inArray(parseInt(productId),comparedProductsIds) === -1)
 		action = 'add';
 	else
 		action = 'remove';
 
 	$.ajax({
-		url: 'index.php?controller=products-comparison&ajax=1&action='+action+'&id_product=' + productId,
+		url: baseUri + 'index.php?controller=products-comparison&ajax=1&action=' + action + '&id_product=' + productId,
 		async: true,
 		cache: false,
 		success: function(data) {
@@ -64,19 +64,17 @@ function addToCompare(productId)
 			}
 			else
 			{
-	            if (!!$.prototype.fancybox)
-	                $.fancybox.open([
-	                    {
-	                        type: 'inline',
-	                        autoScale: true,
-	                        minHeight: 30,
-	                        content: '<p class="fancybox-error">' + max_item + '</p>'
-	                    }
-	                ], {
-	                    padding: 0
-	                });
-	            else
-	                alert(max_item);
+				if (!!$.prototype.fancybox)
+					$.fancybox.open([{
+						type: 'inline',
+						autoScale: true,
+						minHeight: 30,
+						content: '<p class="fancybox-error">' + max_item + '</p>'
+					}], {
+						padding: 0
+					});
+				else
+					alert(max_item);
 			}
 			totalCompareButtons();
 		},
@@ -90,7 +88,7 @@ function reloadProductComparison()
 		e.preventDefault();
 		var idProduct = parseInt($(this).data('id-product'));
 		$.ajax({
-			url: 'index.php?controller=products-comparison&ajax=1&action=remove&id_product=' + idProduct,
+			url: baseUri + 'index.php?controller=products-comparison&ajax=1&action=remove&id_product=' + idProduct,
 			async: false,
 			cache: false
 		});

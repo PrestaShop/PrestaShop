@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -128,7 +128,7 @@
 				<span class="panel-heading-action">
 				{foreach from=$toolbar_btn item=btn key=k}
 					{if $k != 'modules-list' && $k != 'back'}
-						<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="list-toolbar-btn"{if isset($btn.href)} href="{$btn.href|escape:'html':'UTF-8'}"{/if}{if isset($btn.target) && $btn.target} target="_blank"{/if}{if isset($btn.js) && $btn.js} onclick="{$btn.js}"{/if}>
+						<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="list-toolbar-btn{if isset($btn.target) && $btn.target} _blank{/if}"{if isset($btn.href)} href="{$btn.href|escape:'html':'UTF-8'}"{/if}{if isset($btn.js) && $btn.js} onclick="{$btn.js}"{/if}>
 							<span title="" data-toggle="tooltip" class="label-tooltip" data-original-title="{l s=$btn.desc}" data-html="true" data-placement="left">
 								<i class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}{if isset($btn.class)} {$btn.class}{/if}"></i>
 							</span>
@@ -143,13 +143,13 @@
 				{if isset($sql) && $sql}
 					{if $smarty.const._PS_MODE_DEV_}
 						<a class="list-toolbar-btn" href="javascript:void(0);" onclick="$('.leadin').first().append('<div class=\'alert alert-info\'>' + $('#sql_query').val() + '</div>'); $(this).attr('onclick', '');">
-							<span class="label-tooltip" data-toggle="tooltip" data-original-title="{l s='Show SQL Request'}" data-html="true" data-placement="left" >
+							<span class="label-tooltip" data-toggle="tooltip" data-original-title="{l s='Show SQL query'}" data-html="true" data-placement="left" >
 								<i class="process-icon-terminal"></i>
 							</span>
 						</a>
 					{/if}
 					<a class="list-toolbar-btn" href="javascript:void(0);" onclick="$('#sql_name').val(createSqlQueryName()); $('#sql_query').val($('#sql_query').val().replace(/\s+limit\s+[0-9,\s]+$/ig, '').trim()); $('#sql_form').submit();">
-						<span class="label-tooltip" data-toggle="tooltip" data-original-title="{l s='Go to SQL Manager'}" data-html="true" data-placement="left" >
+						<span class="label-tooltip" data-toggle="tooltip" data-original-title="{l s='Export to SQL Manager'}" data-html="true" data-placement="left" >
 							<i class="process-icon-database"></i>
 						</span>
 					</a>

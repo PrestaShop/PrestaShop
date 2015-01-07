@@ -17,7 +17,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -235,12 +235,6 @@ function loadPack() {
 // The ProductTabsManager instance will make sure the onReady() methods of each tabs are executed once the tab has loaded
 var product_tabs = [];
 
-product_tabs['Customization'] = new function(){
-	this.onReady = function(){
-		if (display_multishop_checkboxes)
-		ProductMultishop.checkAllCustomization();
-	}
-}
 product_tabs['Combinations'] = new function(){
 	var self = this;
 	this.bindEdit = function(){
@@ -376,6 +370,16 @@ product_tabs['Combinations'] = new function(){
 				{
 					showSuccessMessage(data.message);
 					parent.remove();
+					if (data.id_product_attribute)
+						if (data.attribute)
+						{
+							var td = $('#qty_' + data.id_product_attribute);
+							td.attr('id', 'qty_0');
+							td.children('input').val('0').attr('name', 'qty_0');
+							td.next('td').text(data.attribute[0].name);
+						}
+						else
+							$('#qty_' + data.id_product_attribute).parent().hide();
 				}
 				else
 					showErrorMessage(data.message);
@@ -391,7 +395,7 @@ product_tabs['Combinations'] = new function(){
 	};
 
 	this.removeButtonCombination = function(item)
-	{		
+	{
 		$('#add_new_combination').show();
 		$('#desc-product-newCombination').children('i').first().removeClass('process-icon-new');
 		$('#desc-product-newCombination').children('i').first().addClass('process-icon-minus');
@@ -793,7 +797,7 @@ product_tabs['Associations'] = new function(){
 				autoFill: true,
 				max:20,
 				matchContains: true,
-				mustMatch:true,
+				mustMatch:false,
 				scroll:false,
 				cacheLength:0,
 				formatItem: function(item) {
@@ -811,8 +815,8 @@ product_tabs['Associations'] = new function(){
 	this.getAccessoriesIds = function()
 	{
 		if ($('#inputAccessories').val() === undefined)
-			return '';
-		return $('#inputAccessories').val().replace(/\-/g,',');
+			return id_product;
+		return id_product + ',' + $('#inputAccessories').val().replace(/\-/g,',');
 	}
 
 	this.addAccessory = function(event, data, formatted)
@@ -967,7 +971,7 @@ product_tabs['Shipping'] = new function(){
 				$(this).remove();
 			});
 			$('#selectedCarriers option').prop('selected', true);
-		   
+
 			if ($('#selectedCarriers').find("option").length == 0)
 				$('#no-selected-carries-alert').show();
 			else
@@ -1008,7 +1012,7 @@ product_tabs['Informations'] = new function(){
 				$('#show_price').attr('disabled', false);
 			}
 		});
-				
+
 		if ($('#active_on').prop('checked'))
 		{
 			showRedirectProductOptions(false);
@@ -1016,24 +1020,24 @@ product_tabs['Informations'] = new function(){
 		}
 		else
 			showRedirectProductOptions(true);
-			
+
 		$('#redirect_type').change(function () {
 			redirectSelectChange();
 		});
-		
+
 		$('#related_product_autocomplete_input')
 			.autocomplete('ajax_products_list.php?excludeIds='+id_product, {
 				minChars: 1,
 				autoFill: true,
 				max:20,
 				matchContains: true,
-				mustMatch:true,
+				mustMatch:false,
 				scroll:false,
 				cacheLength:0,
 				formatItem: function(item) {
 					return item[0]+' - '+item[1];
 				}
-			}).result(function(e, i){  
+			}).result(function(e, i){
 				if(i != undefined)
 					addRelatedProduct(i[1], i[0]);
 				$(this).val('');
@@ -1090,7 +1094,7 @@ product_tabs['Informations'] = new function(){
 		{
 			// Reset settings
 			$('a[id*="VirtualProduct"]').hide();
-			
+
 			$('#product-pack-container').hide();
 
 			$('div.is_virtual_good').hide();
@@ -1421,7 +1425,7 @@ product_tabs['Quantities'] = new function(){
 			error: function(jqXHR, textStatus, errorThrown)
   			{
 				if (textStatus != 'error' || errorThrown != '')
-					showErrorMessage(textStatus + ': ' + errorThrown);				
+					showErrorMessage(textStatus + ': ' + errorThrown);
   			}
 		});
 	};
@@ -1820,7 +1824,7 @@ var ProductMultishop = new function()
 			ProductMultishop.checkField($('input[name=\'multishop_check[link_rewrite]['+v.id_lang+']\']').prop('checked'), 'link_rewrite_'+v.id_lang, 'seo_friendly_url');
 		});
 	};
-	
+
 	this.checkAllQuantities = function()
 	{
 		$.each(languages, function(k, v)
@@ -1836,12 +1840,6 @@ var ProductMultishop = new function()
 	{
 		ProductMultishop.checkField($('input[name=\'multishop_check[id_category_default]\']').prop('checked'), 'id_category_default');
 		ProductMultishop.checkField($('input[name=\'multishop_check[id_category_default]\']').prop('checked'), 'associated-categories-tree', 'category_box');
-	};
-
-	this.checkAllCustomization = function()
-	{
-		ProductMultishop.checkField($('input[name=\'multishop_check[uploadable_files]\']').prop('checked'), 'uploadable_files');
-		ProductMultishop.checkField($('input[name=\'multishop_check[text_fields]\']').prop('checked'), 'text_fields');
 	};
 
 	this.checkAllCombinations = function()

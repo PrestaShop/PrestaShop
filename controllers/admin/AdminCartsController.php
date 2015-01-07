@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -136,8 +136,8 @@ class AdminCartsControllerCore extends AdminController
 			$helper->value = ConfigurationKPI::get('CONVERSION_RATE');
 		if (ConfigurationKPI::get('CONVERSION_RATE_CHART') !== false)
 			$helper->data = ConfigurationKPI::get('CONVERSION_RATE_CHART');
-		if (ConfigurationKPI::get('CONVERSION_RATE_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=conversion_rate';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=conversion_rate';
+		$helper->refresh = (bool)(ConfigurationKPI::get('CONVERSION_RATE_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -151,8 +151,8 @@ class AdminCartsControllerCore extends AdminController
 		$helper->href = $this->context->link->getAdminLink('AdminCarts').'&action=filterOnlyAbandonedCarts';
 		if (ConfigurationKPI::get('ABANDONED_CARTS') !== false)
 			$helper->value = ConfigurationKPI::get('ABANDONED_CARTS');
-		if (ConfigurationKPI::get('ABANDONED_CARTS_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=abandoned_cart';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=abandoned_cart';
+		$helper->refresh = (bool)(ConfigurationKPI::get('ABANDONED_CARTS_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -175,8 +175,8 @@ class AdminCartsControllerCore extends AdminController
 		$helper->subtitle = $this->l('30 days', null, null, false);
 		if (ConfigurationKPI::get('NETPROFIT_VISITOR') !== false)
 			$helper->value = ConfigurationKPI::get('NETPROFIT_VISITOR');
-		if (ConfigurationKPI::get('NETPROFIT_VISITOR_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=netprofit_visitor';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=netprofit_visitor';
+		$helper->refresh = (bool)(ConfigurationKPI::get('NETPROFIT_VISITOR_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpiRow();
@@ -548,7 +548,7 @@ class AdminCartsControllerCore extends AdminController
 			$new_cart = $cart->duplicate();
 			if (!$new_cart || !Validate::isLoadedObject($new_cart['cart']))
 				$errors[] = Tools::displayError('The order cannot be renewed.');
-			else if (!$new_cart['success'])
+			elseif (!$new_cart['success'])
 				$errors[] = Tools::displayError('The order cannot be renewed.');
 			else
 			{
@@ -571,7 +571,7 @@ class AdminCartsControllerCore extends AdminController
 	{
 		if ($this->tabAccess['edit'] === '1')
 		{
-			if (!$id_cart_rule = CartRule::getIdByCode('BO_ORDER_'.(int)$this->context->cart->id))
+			if (!$id_cart_rule = CartRule::getIdByCode(CartRule::BO_ORDER_CODE_PREFIX.(int)$this->context->cart->id))
 			{
 				$cart_rule = new CartRule();
 				$cart_rule->code = CartRule::BO_ORDER_CODE_PREFIX.(int)$this->context->cart->id;
@@ -753,7 +753,7 @@ class AdminCartsControllerCore extends AdminController
 		$free_shipping = false;
 		if (count($cart_rules))
 			foreach ($cart_rules as $cart_rule)
-				if ($cart_rule['id_cart_rule'] == CartRule::getIdByCode('BO_ORDER_'.(int)$this->context->cart->id))
+				if ($cart_rule['id_cart_rule'] == CartRule::getIdByCode(CartRule::BO_ORDER_CODE_PREFIX.(int)$this->context->cart->id))
 				{
 					$free_shipping = true;
 					break;

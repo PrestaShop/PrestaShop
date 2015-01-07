@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -42,10 +42,10 @@ class TabCore extends ObjectModel
 
 	/** @var boolean active */
 	public $active = true;
-	
+
 	/** @var integer hide_host_mode */
 	public $hide_host_mode = false;
-	
+
 	const TAB_MODULE_LIST_URL = 'api.prestashop.com/xml/tab_modules_list.xml';
 
 	/**
@@ -67,7 +67,7 @@ class TabCore extends ObjectModel
 			'name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'required' => true, 'validate' => 'isTabName', 'size' => 64),
 		),
 	);
-	
+
 	protected static $_getIdFromClassName = null;
 
 	/**
@@ -101,7 +101,7 @@ class TabCore extends ObjectModel
 
 		// Add tab
 		if (parent::add($autodate, $null_values))
-		{	
+		{
             //forces cache to be reloaded
             self::$_getIdFromClassName = null;
 			return Tab::initAccess($this->id);
@@ -166,7 +166,7 @@ class TabCore extends ObjectModel
 	public static function getCurrentTabId()
 	{
 		$id_tab = Tab::getIdFromClassName(Tools::getValue('controller'));
-		// retro-compatibility 1.4/1.5 
+		// retro-compatibility 1.4/1.5
 		if (empty ($id_tab))
 			$id_tab = Tab::getIdFromClassName(Tools::getValue('tab'));
 		return $id_tab;
@@ -268,7 +268,7 @@ class TabCore extends ObjectModel
 				$array_all = array_merge($array_all, $array_parent);
 			return $array_all;
 		}
-			
+
 		return (isset(self::$_cache_tabs[$id_lang][$id_parent]) ? self::$_cache_tabs[$id_lang][$id_parent] : array());
 	}
 
@@ -534,21 +534,15 @@ class TabCore extends ObjectModel
 	{
 		return Db::getInstance()->getValue('SELECT class_name FROM '._DB_PREFIX_.'tab WHERE id_tab = '.(int)$id_tab);
 	}
-	
+
 	public static function getTabModulesList($id_tab)
 	{
 		$modules_list = array('default_list' => array(), 'slider_list' => array());
 		$xml_tab_modules_list = false;
-		$db_tab_module_list = Db::getInstance()->executeS('
-			SELECT module
-			FROM '._DB_PREFIX_.'tab_module_preference
-			WHERE `id_tab` = '.(int)$id_tab.'
-			AND `id_employee` = '.(int)Context::getContext()->employee->id
-			);
 
 		if (file_exists(_PS_ROOT_DIR_.Module::CACHE_FILE_TAB_MODULES_LIST))
 			$xml_tab_modules_list = @simplexml_load_file(_PS_ROOT_DIR_.Module::CACHE_FILE_TAB_MODULES_LIST);
-		
+
 		$class_name = null;
 		$display_type = 'default_list';
 		if ($xml_tab_modules_list)
@@ -569,13 +563,7 @@ class TabCore extends ObjectModel
 					ksort($modules_list[$display_type]);
 				}
 			}
-		
-		//merge tab modules preferences from db with xml
-		if (is_array($db_tab_module_list))		
-			foreach($db_tab_module_list as $m)
-				if (!in_array($m, $modules_list))
-					$modules_list['slider_list'][] = $m['module'];
 
-		return $modules_list;	
+		return $modules_list;
 	}
 }

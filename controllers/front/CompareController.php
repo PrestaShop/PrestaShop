@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -50,7 +50,7 @@ class CompareControllerCore extends FrontController
 				else
 					die('0');
 			}
-			else if (Tools::getValue('action') == 'remove')
+			elseif (Tools::getValue('action') == 'remove')
 			{
 				if (isset($this->context->cookie->id_compare))
 					CompareProduct::removeCompareProduct((int)$this->context->cookie->id_compare, (int)Tools::getValue('id_product'));
@@ -151,5 +151,5 @@ class CompareControllerCore extends FrontController
 
 		$this->setTemplate(_PS_THEME_DIR_.'products-comparison.tpl');
 	}
-	
+
 }

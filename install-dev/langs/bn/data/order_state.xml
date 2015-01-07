@@ -32,7 +32,11 @@
     <name>পরিশোধ ত্রুটি </name>
     <template>payment_error</template>
   </order_state>
-  <order_state id='On_backorder'>
+  <order_state id='On_backorder_paid'>
+    <name>অন ব্যাক অর্ডার  </name>
+    <template>outofstock</template>
+  </order_state>
+  <order_state id='On_backorder_unpaid'>
     <name>অন ব্যাক অর্ডার  </name>
     <template>outofstock</template>
   </order_state>

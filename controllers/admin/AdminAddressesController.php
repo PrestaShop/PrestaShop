@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -132,22 +132,6 @@ class AdminAddressesControllerCore extends AdminController
 					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
 				),
 				array(
-					'type' => 'text',
-					'label' => $this->l('Home phone'),
-					'name' => 'phone',
-					'required' => false,
-					'col' => '4',
-					'hint' => Configuration::get('PS_ONE_PHONE_AT_LEAST') ? sprintf($this->l('You must register at least one phone number.')) : ''
-				),
-				array(
-					'type' => 'text',
-					'label' => $this->l('Mobile phone'),
-					'name' => 'phone_mobile',
-					'required' => false,
-					'col' => '4',
-					'hint' => Configuration::get('PS_ONE_PHONE_AT_LEAST') ? sprintf($this->l('You must register at least one phone number.')) : ''
-				),
-				array(
 					'type' => 'textarea',
 					'label' => $this->l('Other'),
 					'name' => 'other',
@@ -208,7 +192,7 @@ class AdminAddressesControllerCore extends AdminController
 					'required' => in_array('vat_number', $required_fields)
 				);
 			}
-			else if ($addr_field_item == 'lastname')
+			elseif ($addr_field_item == 'lastname')
 			{
 				if (isset($customer) &&
 					!Tools::isSubmit('submit'.strtoupper($this->table)) &&
@@ -228,7 +212,7 @@ class AdminAddressesControllerCore extends AdminController
 					'default_value' => $default_value,
 				);
 			}
-			else if ($addr_field_item == 'firstname')
+			elseif ($addr_field_item == 'firstname')
 			{
 				if (isset($customer) &&
 					!Tools::isSubmit('submit'.strtoupper($this->table)) &&
@@ -248,7 +232,7 @@ class AdminAddressesControllerCore extends AdminController
 					'default_value' => $default_value,
 				);
 			}
-			else if ($addr_field_item == 'address1')
+			elseif ($addr_field_item == 'address1')
 			{
 				$temp_fields[] = array(
 					'type' => 'text',
@@ -258,7 +242,7 @@ class AdminAddressesControllerCore extends AdminController
 					'required' => true,
 				);
 			}
-			else if ($addr_field_item == 'address2')
+			elseif ($addr_field_item == 'address2')
 			{
 				$temp_fields[] = array(
 					'type' => 'text',
@@ -278,7 +262,7 @@ class AdminAddressesControllerCore extends AdminController
 					'required' => true,
 				);
 			}
-			else if ($addr_field_item == 'city')
+			elseif ($addr_field_item == 'city')
 			{
 				$temp_fields[] = array(
 					'type' => 'text',
@@ -288,7 +272,7 @@ class AdminAddressesControllerCore extends AdminController
 					'required' => true,
 				);
 			}
-			else if ($addr_field_item == 'country' || $addr_field_item == 'Country:name')
+			elseif ($addr_field_item == 'country' || $addr_field_item == 'Country:name')
 			{
 				$temp_fields[] = array(
 					'type' => 'select',
@@ -316,6 +300,28 @@ class AdminAddressesControllerCore extends AdminController
 					)
 				);
 			}
+			elseif ($addr_field_item == 'phone')
+			{
+				$temp_fields[] = array(
+					'type' => 'text',
+					'label' => $this->l('Home phone'),
+					'name' => 'phone',
+					'required' => in_array('phone', $required_fields) || Configuration::get('PS_ONE_PHONE_AT_LEAST'),
+					'col' => '4',
+					'hint' => Configuration::get('PS_ONE_PHONE_AT_LEAST') ? sprintf($this->l('You must register at least one phone number.')) : ''
+				);
+			}
+			elseif ($addr_field_item == 'phone_mobile')
+			{
+				$temp_fields[] = array(
+					'type' => 'text',
+					'label' => $this->l('Mobile phone'),
+					'name' => 'phone_mobile',
+					'required' =>  in_array('phone_mobile', $required_fields) || Configuration::get('PS_ONE_PHONE_AT_LEAST'),
+					'col' => '4',
+					'hint' => Configuration::get('PS_ONE_PHONE_AT_LEAST') ? sprintf($this->l('You must register at least one phone number.')) : ''
+				);
+			}
 		}
 
 		// merge address format with the rest of the form
@@ -339,7 +345,7 @@ class AdminAddressesControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('This email address is not registered.');
 		}
-		else if ($id_customer = Tools::getValue('id_customer'))
+		elseif ($id_customer = Tools::getValue('id_customer'))
 		{
 			$customer = new Customer((int)$id_customer);
 			if (Validate::isLoadedObject($customer))

@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -81,7 +81,7 @@
 				{if $p != 1}
 					{assign var='p_previous' value=$p-1}
 					<li id="pagination_previous{if isset($paginationId)}_{$paginationId}{/if}" class="pagination_previous">
-						<a {$no_follow_text} href="{$link->goPage($requestPage, $p_previous)}">
+						<a {$no_follow_text} href="{$link->goPage($requestPage, $p_previous)}" rel="prev">
 							<i class="icon-chevron-left"></i> <b>{l s='Previous'}</b>
 						</a>
 					</li>
@@ -172,7 +172,7 @@
 				{if $pages_nb > 1 AND $p != $pages_nb}
 					{assign var='p_next' value=$p+1}
 					<li id="pagination_next{if isset($paginationId)}_{$paginationId}{/if}" class="pagination_next">
-						<a {$no_follow_text} href="{$link->goPage($requestPage, $p_next)}">
+						<a {$no_follow_text} href="{$link->goPage($requestPage, $p_next)}" rel="next">
 							<b>{l s='Next'}</b> <i class="icon-chevron-right"></i>
 						</a>
 					</li>

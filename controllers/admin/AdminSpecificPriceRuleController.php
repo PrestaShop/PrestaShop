@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -37,7 +37,10 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 
 		/* if $_GET['id_shop'] is transmitted, virtual url can be loaded in config.php, so we wether transmit shop_id in herfs */
 		if ($this->id_shop = (int)Tools::getValue('shop_id'))
+		{
 			$_GET['id_shop'] = $this->id_shop;
+			$_POST['id_shop'] = $this->id_shop;
+		}
 
 	 	$this->list_reduction_type = array(
 			'percentage' => $this->l('Percentage'),
@@ -145,7 +148,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 		foreach ($this->_list as $k => $list)
 			if ($list['reduction_type'] == 'amount')
 				$this->_list[$k]['reduction_type'] = $this->list_reduction_type['amount'];
-			else if ($list['reduction_type'] == 'percentage')
+			elseif ($list['reduction_type'] == 'percentage')
 				$this->_list[$k]['reduction_type'] = $this->list_reduction_type['percentage'];
 	}
 
@@ -267,6 +270,20 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 					),
 				),
 				array(
+					'type' => 'select',
+					'label' => $this->l('Reduction with or without taxes'),
+					'name' => 'reduction_tax',
+					'align' => 'center',
+					'options' => array(
+						'query' => array(
+										array('lab' => $this->l('Tax included'), 'val' => 1),
+										array('lab' => $this->l('Tax excluded'), 'val' => 0),
+									),
+						'id' => 'val',
+						'name' => 'lab',
+					)
+				),
+				array(
 					'type' => 'text',
 					'label' => $this->l('Reduction'),
 					'name' => 'reduction',
@@ -277,7 +294,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 				'title' => $this->l('Save')
 			),
 		);
-		if (($value = $this->getFieldValue($this->object, 'price')) != -1)	
+		if (($value = $this->getFieldValue($this->object, 'price')) != -1)
 			$price = number_format($value, 6);
 		else
 			$price = '';

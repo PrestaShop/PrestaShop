@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -114,7 +114,7 @@
 					<a href="{$link->getModuleLink('referralprogram', 'rules', ['height' => '500', 'width' => '400'], true)|escape:'html':'UTF-8'}" class="thickbox" title="{l s='Conditions of the referral program' mod='referralprogram'}" rel="nofollow">{l s='Read conditions.' mod='referralprogram'}</a>
 				</p>
 				<p class="see_email">
-					{l s='Preview' mod='referralprogram'} 
+					{l s='Preview' mod='referralprogram'}
 					{assign var="file" value="{$lang_iso}/referralprogram-invitation.html"}
 					<a href="{$link->getModuleLink('referralprogram', 'email', ['height' => '500', 'width' => '600', 'mail' => {$file}], true)|escape:'html':'UTF-8'}" class="thickbox" title="{l s='Invitation e-mail' mod='referralprogram'}" rel="nofollow">{l s='the default e-mail' mod='referralprogram'}</a> {l s='that will be sent to your friend(s).' mod='referralprogram'}
 				</p>
@@ -166,7 +166,13 @@
 			</p>
 		</form>
 		{else}
-			<p class="alert alert-warning">{l s='You have not sponsored any friends.' mod='referralprogram'}</p>
+			<p class="alert alert-warning">
+				{if $subscribeFriends AND $subscribeFriends|@count > 0}
+					{l s='You have no pending invitations.' mod='referralprogram'}
+				{else}
+					{l s='You have not sponsored any friends yet.' mod='referralprogram'}
+				{/if}
+			</p>
 		{/if}
 	</div>
 

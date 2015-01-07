@@ -225,3 +225,15 @@ ul.sf-menu li li li.sfHover ul {
     font-size: 13px;
     color: #9c9b9b;
     border: 1px solid #d6d4d4; }
+
+#block_top_menu .category-thumbnail {
+  clear: both;
+  width: 100%;
+  float: none; }
+  #block_top_menu .category-thumbnail div {
+    float: left;
+    width: 33.33333%; }
+    #block_top_menu .category-thumbnail div img {
+      max-width: 100%; }
+#block_top_menu li.category-thumbnail {
+  padding-right: 0; }

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -45,13 +45,13 @@ class CookieCore
 	protected $_cipherTool;
 
 	protected $_modified = false;
-	
+
 	protected $_allow_writing;
-	
+
 	protected $_salt;
-	
+
 	protected $_standalone;
-	
+
 	protected $_secure = false;
 
 	/**
@@ -65,23 +65,23 @@ class CookieCore
 		$this->_content = array();
 		$this->_standalone = $standalone;
 		$this->_expire = is_null($expire) ? time() + 1728000 : (int)$expire;
-		$this->_name = 'PrestaShop-'.md5(($this->_standalone ? '' : _PS_VERSION_).$name);
 		$this->_path = trim(($this->_standalone ? '' : Context::getContext()->shop->physical_uri).$path, '/\\').'/';
 		if ($this->_path{0} != '/') $this->_path = '/'.$this->_path;
 		$this->_path = rawurlencode($this->_path);
 		$this->_path = str_replace('%2F', '/', $this->_path);
 		$this->_path = str_replace('%7E', '~', $this->_path);
 		$this->_domain = $this->getDomain($shared_urls);
+		$this->_name = 'PrestaShop-'.md5(($this->_standalone ? '' : _PS_VERSION_).$name.$this->_domain);
 		$this->_allow_writing = true;
 		$this->_salt = $this->_standalone ? str_pad('', 8, md5('ps'.__FILE__)) : _COOKIE_IV_;
 		if ($this->_standalone)
 			$this->_cipherTool = new Blowfish(str_pad('', 56, md5('ps'.__FILE__)), str_pad('', 56, md5('iv'.__FILE__)));
-		elseif (!Configuration::get('PS_CIPHER_ALGORITHM'))
+		elseif (!Configuration::get('PS_CIPHER_ALGORITHM') || !defined('_RIJNDAEL_KEY_'))
 			$this->_cipherTool = new Blowfish(_COOKIE_KEY_, _COOKIE_IV_);
 		else
 			$this->_cipherTool = new Rijndael(_RIJNDAEL_KEY_, _RIJNDAEL_IV_);
 		$this->_secure = (bool)$secure;
-		
+
 		$this->update();
 	}
 
@@ -272,14 +272,14 @@ class CookieCore
 			/* Decrypt cookie content */
 			$content = $this->_cipherTool->decrypt($_COOKIE[$this->_name]);
 			//printf("\$content = %s<br />", $content);
-			
+
 			/* Get cookie checksum */
 			$tmpTab = explode('¤', $content);
 			array_pop($tmpTab);
 			$content_for_checksum = implode('¤', $tmpTab).'¤';
 			$checksum = crc32($this->_salt.$content_for_checksum);
 			//printf("\$checksum = %s<br />", $checksum);
-			
+
 			/* Unserialize cookie content */
 			$tmpTab = explode('¤', $content);
 			foreach ($tmpTab as $keyAndValue)

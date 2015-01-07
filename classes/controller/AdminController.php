@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -389,8 +389,28 @@ class AdminControllerCore extends Controller
 		$this->admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $this->admin_webpath);
 
 		// Check if logged on Addons
+		$this->logged_on_addons = false;
 		if (isset($this->context->cookie->username_addons) && isset($this->context->cookie->password_addons) && !empty($this->context->cookie->username_addons) && !empty($this->context->cookie->password_addons))
 			$this->logged_on_addons = true;
+
+		// Set context mode
+		if (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)
+		{
+			if (isset($this->context->cookie->is_contributor) && (int)$this->context->cookie->is_contributor === 1)
+				$this->context->mode = Context::MODE_CONTRIB_HOST;
+			else
+				$this->context->mode = Context::MODE_HOST;
+		}
+		elseif (isset($this->context->cookie->is_contributor) && (int)$this->context->cookie->is_contributor === 1)
+			$this->context->mode = Context::MODE_CONTRIB;
+		else
+			$this->context->mode = Context::MODE_STD;
+
+		$this->context->smarty->assign(array(
+			'context_mode' => $this->context->mode,
+			'logged_on_addons' => $this->logged_on_addons,
+		));
+
 	}
 
 	/**
@@ -603,6 +623,11 @@ class AdminControllerCore extends Controller
 			}
 
 			foreach ($_GET as $key => $value)
+			{
+				if (stripos($key, $this->list_id.'Filter_') === 0)
+					$this->context->cookie->{$prefix.$key} = !is_array($value) ? $value : serialize($value);
+				elseif (stripos($key, 'submitFilter') === 0)
+					$this->context->cookie->$key = !is_array($value) ? $value : serialize($value);
 				if (stripos($key, $this->list_id.'Orderby') === 0 && Validate::isOrderBy($value))
 				{
 					if ($value === '' || $value == $this->_defaultOrderBy)
@@ -617,6 +642,7 @@ class AdminControllerCore extends Controller
 					else
 						$this->context->cookie->{$prefix.$key} = $value;
 				}
+			}
 		}
 
 		$filters = $this->context->cookie->getFamily($prefix.$this->list_id.'Filter_');
@@ -781,8 +807,13 @@ class AdminControllerCore extends Controller
 		header('Content-disposition: attachment; filename="'.$this->table.'_'.date('Y-m-d_His').'.csv"');
 
 		$headers = array();
-		foreach ($this->fields_list as $datas)
-			$headers[] = Tools::htmlentitiesDecodeUTF8($datas['title']);
+		foreach ($this->fields_list as $key => $datas)
+		{
+			if ($datas['title'] == 'PDF')
+				unset($this->fields_list[$key]);
+			else
+				$headers[] = Tools::htmlentitiesDecodeUTF8($datas['title']);
+		}
 		$content = array();
 		foreach ($this->_list as $i => $row)
 		{
@@ -802,10 +833,11 @@ class AdminControllerCore extends Controller
 						$field_value = $path_to_image;
 				}
 				if (isset($params['callback']))
-                                {
-                                	$callback_obj = (isset($params['callback_object'])) ? $params['callback_object'] : $this->context->controller;
-                                	$field_value = call_user_func_array(array($callback_obj, $params['callback']), array($field_value, $row));
-                                }
+				{
+					$callback_obj = (isset($params['callback_object'])) ? $params['callback_object'] : $this->context->controller;
+					if (!preg_match('/<([a-z]+)([^<]+)*(?:>(.*)<\/\1>|\s+\/>)/ism', call_user_func_array(array($callback_obj, $params['callback']), array($field_value, $row))))
+						$field_value = call_user_func_array(array($callback_obj, $params['callback']), array($field_value, $row));
+				}
 				$content[$i][] = $field_value;
 			}
 		}
@@ -1198,7 +1230,7 @@ class AdminControllerCore extends Controller
 			{
 				foreach ($fields as $key => $options)
 				{
-					if (!$hide_multishop_checkbox && Shop::isFeatureActive() && isset($options['visibility']) && $options['visibility'] > Shop::getContext())
+					if (Shop::isFeatureActive() && isset($options['visibility']) && $options['visibility'] > Shop::getContext())
 						continue;
 
 					if (!$hide_multishop_checkbox && Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && empty($options['no_multishop_checkbox']) && empty($_POST['multishopOverrideOption'][$key]))
@@ -1460,6 +1492,7 @@ class AdminControllerCore extends Controller
 		$this->context->smarty->assign(array(
 			'display_header' => $this->display_header,
 			'display_footer' => $this->display_footer,
+			'js_def' => Media::getJsDef(),
 		));
 
 		// Use page title from meta_title if it has been set else from the breadcrumbs array
@@ -1549,6 +1582,8 @@ class AdminControllerCore extends Controller
 	 */
 	public function initHeader()
 	{
+		header('Cache-Control: no-store, no-cache');
+
 		// Multishop
 		$is_multishop = Shop::isFeatureActive();
 
@@ -1697,6 +1732,9 @@ class AdminControllerCore extends Controller
 		else
 			$this->context->smarty->assign('default_tab_link', $this->context->link->getAdminLink('AdminDashboard'));
 
+		// Shop::initialize() in config.php may empty $this->context->shop->virtual_uri so using a new shop instance for getBaseUrl()
+		$this->context->shop = new Shop((int)$this->context->shop->id);
+
 		$this->context->smarty->assign(array(
 			'img_dir' => _PS_IMG_,
 			'iso' => $this->context->language->iso_code,
@@ -1717,13 +1755,15 @@ class AdminControllerCore extends Controller
 			'controller_name' => htmlentities(Tools::getValue('controller')),
 			'currentIndex' => self::$currentIndex,
 			'bootstrap' => $this->bootstrap,
-			'default_language' => (int)Configuration::get('PS_LANG_DEFAULT')
+			'default_language' => (int)Configuration::get('PS_LANG_DEFAULT'),
+			'display_addons_connection' => Tab::checkTabRights(Tab::getIdFromClassName('AdminModulesController'))
 		));
 
 		$module = Module::getInstanceByName('themeconfigurator');
 		$lang = '';
 		if (Configuration::get('PS_REWRITING_SETTINGS') && count(Language::getLanguages(true)) > 1)
 			$lang = Language::getIsoById($this->context->employee->id_lang).'/';
+
 		if (is_object($module) && $module->active && (int)Configuration::get('PS_TC_ACTIVE') == 1 && $this->context->shop->getBaseURL())
 			$this->context->smarty->assign('base_url_tc', $this->context->shop->getBaseUrl()
 				.(Configuration::get('PS_REWRITING_SETTINGS') ? '' : 'index.php')
@@ -1868,6 +1908,11 @@ class AdminControllerCore extends Controller
 
 	protected function filterTabModuleList()
 	{
+		static $list_is_filtered = null;
+
+		if ($list_is_filtered !== null)
+			return;
+
 		if (!$this->isFresh(Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, 86400))
 			file_put_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST, Tools::addonsRequest('native'));
 
@@ -1900,6 +1945,8 @@ class AdminControllerCore extends Controller
 		}
 
 		$this->tab_modules_list['slider_list'] = array_intersect($this->tab_modules_list['slider_list'], $all_module_list);
+
+		$list_is_filtered = true;
 	}
 
 	/**
@@ -1956,14 +2003,24 @@ class AdminControllerCore extends Controller
 			'check_url_fopen' => (ini_get('allow_url_fopen') ? 'ok' : 'ko'),
 			'check_openssl' => (extension_loaded('openssl') ? 'ok' : 'ko'),
 			'add_permission' => 1,
-			'addons_register_link' => "//addons.prestashop.com/".$language->iso_code."/login?email=".urlencode($this->context->employee->email)."&firstname=".urlencode($this->context->employee->firstname)."&lastname=".urlencode($this->context->employee->lastname)."&website=".urlencode($this->context->shop->getBaseURL())."&utm_source=back-office&utm_medium=connect-to-addons&utm_campaign=back-office-".$iso_code_caps."#createnow",
-			'addons_forgot_password_link' => "//addons.prestashop.com/".$language->iso_code."/forgot-your-password"
+			'addons_register_link' => '//addons.prestashop.com/'.$language->iso_code.'/login?'
+				.'email='.urlencode($this->context->employee->email)
+				.'&firstname='.urlencode($this->context->employee->firstname)
+				.'&lastname='.urlencode($this->context->employee->lastname)
+				.'&website='.urlencode($this->context->shop->getBaseURL())
+				.'&utm_source=back-office&utm_medium=connect-to-addons'
+				.'&utm_campaign=back-office-'.Tools::strtoupper($this->context->language->iso_code)
+				.'&utm_content='.(defined('_PS_HOST_MODE_') ? 'cloud' : 'download').'#createnow',
+			'addons_forgot_password_link' => '//addons.prestashop.com/'.$this->context->language->iso_code.'/forgot-your-password'
 		));
 
 		$this->modals[] = array(
 			'modal_id' => "modal_addons_connect",
 			'modal_class' => "modal-md",
-			'modal_title' => '<i class="icon-puzzle-piece"></i> <a target="_blank" href="http://addons.prestashop.com/?utm_source=backoffice_modules">PrestaShop Addons</a>',
+			'modal_title' => '<i class="icon-puzzle-piece"></i> <a target="_blank" href="http://addons.prestashop.com/'
+			.'?utm_source=back-office&utm_medium=modules'
+			.'&utm_campaign=back-office-'.Tools::strtoupper($this->context->language->iso_code)
+			.'&utm_content='.(defined('_PS_HOST_MODE_') ? 'cloud' : 'download').'>PrestaShop Addons</a>',
 			'modal_content' => $this->context->smarty->fetch('controllers/modules/login_addons.tpl'),
 		);
 	}
@@ -2054,7 +2111,9 @@ class AdminControllerCore extends Controller
 		}
 
 		$this->setHelperDisplay($helper);
-		$helper->tpl_vars = $this->tpl_list_vars;
+		$helper->_default_pagination = $this->_default_pagination;
+		$helper->_pagination = $this->_pagination;
+		$helper->tpl_vars = $this->getTemplateListVars();
 		$helper->tpl_delete_link_vars = $this->tpl_delete_link_vars;
 
 		// For compatibility reasons, we have to check standard actions in class attributes
@@ -2069,6 +2128,11 @@ class AdminControllerCore extends Controller
 		return $list;
 	}
 
+	public function getTemplateListVars()
+	{
+		return $this->tpl_list_vars;
+	}
+
 	/**
 	 * Override to render the view page
 	 */
@@ -2076,12 +2140,17 @@ class AdminControllerCore extends Controller
 	{
 		$helper = new HelperView($this);
 		$this->setHelperDisplay($helper);
-		$helper->tpl_vars = $this->tpl_view_vars;
+		$helper->tpl_vars = $this->getTemplateViewVars();
 		if (!is_null($this->base_tpl_view))
 			$helper->base_tpl = $this->base_tpl_view;
 		$view = $helper->generateView();
 
 		return $view;
+	}
+
+	public function getTemplateViewVars()
+	{
+		return $this->tpl_view_vars;
 	}
 
 	/**
@@ -2124,7 +2193,7 @@ class AdminControllerCore extends Controller
 			$this->setHelperDisplay($helper);
 			$helper->fields_value = $fields_value;
 			$helper->submit_action = $this->submit_action;
-			$helper->tpl_vars = $this->tpl_form_vars;
+			$helper->tpl_vars = $this->getTemplateFormVars();
 			$helper->show_cancel_button = (isset($this->show_form_cancel_button)) ? $this->show_form_cancel_button : ($this->display == 'add' || $this->display == 'edit');
 
 			$back = Tools::safeOutput(Tools::getValue('back', ''));
@@ -2146,6 +2215,11 @@ class AdminControllerCore extends Controller
 
 			return $form;
 		}
+	}
+
+	public function getTemplateFormVars()
+	{
+		return $this->tpl_form_vars;
 	}
 
 	public function renderKpis()
@@ -2392,7 +2466,7 @@ class AdminControllerCore extends Controller
 		}
 		elseif (!Shop::isFeatureActive())
 			$this->context->cookie->shopContext = 's-'.Configuration::get('PS_SHOP_DEFAULT');
-		else if (Shop::getTotalShops(false, null) < 2)
+		elseif (Shop::getTotalShops(false, null) < 2)
 			$this->context->cookie->shopContext = 's-'.$this->context->employee->getDefaultShopID();
 
 		$shop_id = '';
@@ -2412,7 +2486,7 @@ class AdminControllerCore extends Controller
 						Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
 					}
 				}
-				else if (Shop::getShop($split[1]) && $this->context->employee->hasAuthOnShop($split[1]))
+				elseif (Shop::getShop($split[1]) && $this->context->employee->hasAuthOnShop($split[1]))
 				{
 					$shop_id = $split[1];
 					Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
@@ -2439,6 +2513,9 @@ class AdminControllerCore extends Controller
 			$this->context->shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
 		elseif ($this->context->shop->id != $shop_id)
 			$this->context->shop = new Shop($shop_id);
+
+		if ($this->context->shop->id_theme != $this->context->theme->id)
+			$this->context->theme = new Theme($this->context->shop->id_theme);
 
 		// Replace current default country
 		$this->context->country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
@@ -2606,6 +2683,8 @@ class AdminControllerCore extends Controller
 						{
 							$this->action = 'bulk'.$bulk_action;
 							$this->boxes = Tools::getValue($this->table.'Box');
+							if (empty($this->boxes) && $this->table == 'attribute')
+								$this->boxes = Tools::getValue($this->table.'_valuesBox');
 						}
 						else
 							$this->errors[] = Tools::displayError('You do not have permission to delete this.');
@@ -3191,7 +3270,7 @@ class AdminControllerCore extends Controller
 		if (Tools::isSubmit('checkBoxShopAsso_'.$table))
 			foreach (Tools::getValue('checkBoxShopAsso_'.$table) as $id_shop => $value)
 				$assos[] = (int)$id_shop;
-		else if (Shop::getTotalShops(false) == 1)// if we do not have the checkBox multishop, we can have an admin with only one shop and being in multishop
+		elseif (Shop::getTotalShops(false) == 1)// if we do not have the checkBox multishop, we can have an admin with only one shop and being in multishop
 			$assos[] = (int)Shop::getContextShopID();
 		return $assos;
 	}
@@ -3209,14 +3288,14 @@ class AdminControllerCore extends Controller
 		if (!Shop::isTableAssociated($this->table))
 			return;
 
-		$assos_data = $this->getSelectedAssoShop($this->table, $id_object);
+		$assos_data = $this->getSelectedAssoShop($this->table);
 
 		// Get list of shop id we want to exclude from asso deletion
 		$exclude_ids = $assos_data;
 		foreach (Db::getInstance()->executeS('SELECT id_shop FROM '._DB_PREFIX_.'shop') as $row)
 			if (!$this->context->employee->hasAuthOnShop($row['id_shop']))
 				$exclude_ids[] = $row['id_shop'];
-		Db::getInstance()->delete($this->table.'_shop', '`'.$this->identifier.'` = '.(int)$id_object.($exclude_ids ? ' AND id_shop NOT IN ('.implode(', ', $exclude_ids).')' : ''));
+		Db::getInstance()->delete($this->table.'_shop', '`'.bqSQL($this->identifier).'` = '.(int)$id_object.($exclude_ids ? ' AND id_shop NOT IN ('.implode(', ', array_map('intval', $exclude_ids)).')' : ''));
 
 		$insert = array();
 		foreach ($assos_data as $id_shop)
@@ -3782,7 +3861,7 @@ class AdminControllerCore extends Controller
 			else
 				$modules_options[] = $uninstall;
 		}
-		else if ($output_type == 'array')
+		elseif ($output_type == 'array')
 			if ($module->id)
 				$modules_options[] = $uninstall;
 

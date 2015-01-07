@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -339,31 +339,14 @@ class AttributeCore extends ObjectModel
 	 */
 	public function cleanPositions($id_attribute_group, $use_last_attribute = true)
 	{
-		$return = true;
+		$sql = 'SET @i = 0; UPDATE `'._DB_PREFIX_.'attribute` SET `position` = @i:=@i+1 WHERE';
 
-		$sql = '
-			SELECT `id_attribute`
-			FROM `'._DB_PREFIX_.'attribute`
-			WHERE `id_attribute_group` = '.(int)$id_attribute_group;
-
-		// when delete, you must use $use_last_attribute
 		if ($use_last_attribute)
-			$sql .= ' AND `id_attribute` != '.(int)$this->id;
+			$sql .= ' `id_attribute` != '.(int)$this->id.' AND';
 
-		$sql .= ' ORDER BY `position`';
+		$sql .= ' `id_attribute_group` = '.(int)$id_attribute_group.' ORDER BY `position` ASC';
 
-		$result = Db::getInstance()->executeS($sql);
-
-		$i = 0;
-		foreach ($result as $value)
-			$return = Db::getInstance()->execute('
-				UPDATE `'._DB_PREFIX_.'attribute`
-				SET `position` = '.(int)$i++.'
-				WHERE `id_attribute_group` = '.(int)$id_attribute_group.'
-				AND `id_attribute` = '.(int)$value['id_attribute']
-			);
-
-		return $return;
+		$return = Db::getInstance()->execute($sql);
 	}
 
 	/**

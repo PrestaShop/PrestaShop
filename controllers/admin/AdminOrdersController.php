@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -330,14 +330,20 @@ class AdminOrdersControllerCore extends AdminController
 
 	public function printPDFIcons($id_order, $tr)
 	{
+		static $valid_order_state = array();
+
 		$order = new Order($id_order);
-		$order_state = $order->getCurrentOrderState();
-		if (!Validate::isLoadedObject($order_state) || !Validate::isLoadedObject($order))
+		if (!Validate::isLoadedObject($order))
+			return '';
+
+		if (!isset($valid_order_state[$order->current_state]))
+			$valid_order_state[$order->current_state] = Validate::isLoadedObject($order->getCurrentOrderState());
+
+		if (!$valid_order_state[$order->current_state])
 			return '';
 
 		$this->context->smarty->assign(array(
 			'order' => $order,
-			'order_state' => $order_state,
 			'tr' => $tr
 		));
 
@@ -373,7 +379,7 @@ class AdminOrdersControllerCore extends AdminController
 						{
 							$current_order_state = $order->getCurrentOrderState();
 							if ($current_order_state->id == $order_state->id)
-								$this->errors[] = sprintf(Tools::displayError('Order #%d has already been assigned this status.'), $id_order);
+								$this->errors[] = $this->displayWarning(sprintf('Order #%d has already been assigned this status.', $id_order));
 							else
 							{
 								$history = new OrderHistory();
@@ -656,7 +662,18 @@ class AdminOrdersControllerCore extends AdminController
 							$this->reinjectQuantity($order_detail, $order_detail_list[$id_order_detail]['quantity']);
 					}
 
-					$shipping_cost_amount = (float)str_replace(',', '.', Tools::getValue('partialRefundShippingCost'));
+					$choosen = false;
+					$voucher = 0;
+
+					if ((int)Tools::getValue('refund_voucher_off') == 1)
+						$amount -= $voucher = (float)Tools::getValue('order_discount_price');
+					elseif ((int)Tools::getValue('refund_voucher_off') == 2)
+					{
+						$choosen = true;
+						$amount = $voucher = (float)Tools::getValue('refund_voucher_choose');
+					}
+
+					$shipping_cost_amount = (float)str_replace(',', '.', Tools::getValue('partialRefundShippingCost')) ? (float)str_replace(',', '.', Tools::getValue('partialRefundShippingCost')) : false;
 					if ($shipping_cost_amount > 0)
 						$amount += $shipping_cost_amount;
 
@@ -670,7 +687,7 @@ class AdminOrdersControllerCore extends AdminController
 
 					if ($amount > 0)
 					{
-						if (!OrderSlip::create($order, $order_detail_list, $shipping_cost_amount))
+						if (!OrderSlip::create($order, $order_detail_list, $shipping_cost_amount, $voucher, $choosen))
 							$this->errors[] = Tools::displayError('You cannot generate a partial credit slip.');
 
 						// Generate voucher
@@ -867,6 +884,16 @@ class AdminOrdersControllerCore extends AdminController
 						if (Tools::isSubmit('generateCreditSlip') && !count($this->errors))
 						{
 							$product_list = array();
+							$amount = $order_detail->unit_price_tax_incl * $full_quantity_list[$id_order_detail];
+
+							$choosen = false;
+							if ((int)Tools::getValue('refund_total_voucher_off') == 1)
+								$amount -= $voucher = (float)Tools::getValue('order_discount_price');
+							elseif ((int)Tools::getValue('refund_total_voucher_off') == 2)
+							{
+								$choosen = true;
+								$amount = $voucher = (float)Tools::getValue('refund_total_voucher_choose');
+							}
 							foreach ($full_product_list as $id_order_detail)
 							{
 								$order_detail = new OrderDetail((int)$id_order_detail);
@@ -874,13 +901,13 @@ class AdminOrdersControllerCore extends AdminController
 									'id_order_detail' => $id_order_detail,
 									'quantity' => $full_quantity_list[$id_order_detail],
 									'unit_price' => $order_detail->unit_price_tax_excl,
-									'amount' => $order_detail->unit_price_tax_incl * $full_quantity_list[$id_order_detail],
+									'amount' => isset($amount) ? $amount : $order_detail->unit_price_tax_incl * $full_quantity_list[$id_order_detail],
 								);
 							}
 
 							$shipping = Tools::isSubmit('shippingBack') ? null : false;
 
-							if (!OrderSlip::create($order, $product_list, $shipping))
+							if (!OrderSlip::create($order, $product_list, $shipping, $voucher, $choosen))
 								$this->errors[] = Tools::displayError('A credit slip cannot be generated. ');
 							else
 							{
@@ -934,6 +961,11 @@ class AdminOrdersControllerCore extends AdminController
 
 							if (Tools::isSubmit('shippingBack'))
 								$total += $order->total_shipping;
+
+							if ((int)Tools::getValue('refund_total_voucher_off') == 1)
+								$total -= (float)Tools::getValue('order_discount_price');
+							elseif ((int)Tools::getValue('refund_total_voucher_off') == 2)
+								$total = (float)Tools::getValue('refund_total_voucher_choose');
 
 							$cartrule->reduction_amount = $total;
 							$cartrule->reduction_tax = true;
@@ -1046,14 +1078,27 @@ class AdminOrdersControllerCore extends AdminController
 				$cart = new Cart((int)$id_cart);
 				Context::getContext()->currency = new Currency((int)$cart->id_currency);
 				Context::getContext()->customer = new Customer((int)$cart->id_customer);
-				$employee = new Employee((int)Context::getContext()->cookie->id_employee);
-				$payment_module->validateOrder(
-					(int)$cart->id, (int)$id_order_state,
-					$cart->getOrderTotal(true, Cart::BOTH), $payment_module->displayName, $this->l('Manual order -- Employee:').' '.
-					substr($employee->firstname, 0, 1).'. '.$employee->lastname, array(), null, false, $cart->secure_key
-				);
-				if ($payment_module->currentOrder)
-					Tools::redirectAdmin(self::$currentIndex.'&id_order='.$payment_module->currentOrder.'&vieworder'.'&token='.$this->token);
+
+				$bad_delivery = false;
+				if (($bad_delivery = (bool)!Address::isCountryActiveById((int)$cart->id_address_delivery))
+					|| !Address::isCountryActiveById((int)$cart->id_address_invoice))
+				{
+					if ($bad_delivery)
+						$this->errors[] = Tools::displayError('This delivery address country is not active.');
+					else
+						$this->errors[] = Tools::displayError('This invoice address country is not active.');
+				}
+				else
+				{
+					$employee = new Employee((int)Context::getContext()->cookie->id_employee);
+					$payment_module->validateOrder(
+						(int)$cart->id, (int)$id_order_state,
+						$cart->getOrderTotal(true, Cart::BOTH), $payment_module->displayName, $this->l('Manual order -- Employee:').' '.
+						substr($employee->firstname, 0, 1).'. '.$employee->lastname, array(), null, false, $cart->secure_key
+					);
+					if ($payment_module->currentOrder)
+						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$payment_module->currentOrder.'&vieworder'.'&token='.$this->token);
+				}
 			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to add this.');
@@ -1446,8 +1491,8 @@ class AdminOrdersControllerCore extends AdminController
 			$helper->value = ConfigurationKPI::get('CONVERSION_RATE');
 		if (ConfigurationKPI::get('CONVERSION_RATE_CHART') !== false)
 			$helper->data = ConfigurationKPI::get('CONVERSION_RATE_CHART');
-		if (ConfigurationKPI::get('CONVERSION_RATE_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=conversion_rate';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=conversion_rate';
+		$helper->refresh = (bool)(ConfigurationKPI::get('CONVERSION_RATE_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -1459,8 +1504,8 @@ class AdminOrdersControllerCore extends AdminController
 		$helper->href = $this->context->link->getAdminLink('AdminCarts').'&action=filterOnlyAbandonedCarts';
 		if (ConfigurationKPI::get('ABANDONED_CARTS') !== false)
 			$helper->value = ConfigurationKPI::get('ABANDONED_CARTS');
-		if (ConfigurationKPI::get('ABANDONED_CARTS_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=abandoned_cart';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=abandoned_cart';
+		$helper->refresh = (bool)(ConfigurationKPI::get('ABANDONED_CARTS_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -1471,8 +1516,8 @@ class AdminOrdersControllerCore extends AdminController
 		$helper->subtitle = $this->l('30 days', null, null, false);
 		if (ConfigurationKPI::get('AVG_ORDER_VALUE') !== false)
 			$helper->value = ConfigurationKPI::get('AVG_ORDER_VALUE');
-		if (ConfigurationKPI::get('AVG_ORDER_VALUE_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=average_order_value';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=average_order_value';
+		$helper->refresh = (bool)(ConfigurationKPI::get('AVG_ORDER_VALUE_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -1483,8 +1528,8 @@ class AdminOrdersControllerCore extends AdminController
 		$helper->subtitle = $this->l('30 days', null, null, false);
 		if (ConfigurationKPI::get('NETPROFIT_VISIT') !== false)
 			$helper->value = ConfigurationKPI::get('NETPROFIT_VISIT');
-		if (ConfigurationKPI::get('NETPROFIT_VISIT_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=netprofit_visit';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=netprofit_visit';
+		$helper->refresh = (bool)(ConfigurationKPI::get('NETPROFIT_VISIT_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpiRow();
@@ -1573,11 +1618,19 @@ class AdminOrdersControllerCore extends AdminController
 		// products current stock (from stock_available)
 		foreach ($products as &$product)
 		{
-			$product['current_stock'] = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], $product['id_shop']);
+			// Get total customized quantity for current product
+			$customized_product_quantity = 0;
 
+			if (is_array($product['customizedDatas']))
+				foreach ($product['customizedDatas'] as $customizationPerAddress)
+					foreach ($customizationPerAddress as $customizationId => $customization)
+						$customized_product_quantity += (int)$customization['quantity'];
+
+			$product['customized_product_quantity'] = $customized_product_quantity;
+			$product['current_stock'] = StockAvailable::getQuantityAvailableByProduct($product['product_id'], $product['product_attribute_id'], $product['id_shop']);
 			$resume = OrderSlip::getProductSlipResume($product['id_order_detail']);
 			$product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
-			$product['amount_refundable'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
+			$product['amount_refundable'] = $product['total_price_tax_excl'] - $resume['amount_tax_excl'];
 			$product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl'], $currency);
 			$product['refund_history'] = OrderSlip::getProductSlipDetail($product['id_order_detail']);
 			$product['return_history'] = OrderReturn::getProductReturnDetail($product['id_order_detail']);
@@ -1857,6 +1910,7 @@ class AdminOrdersControllerCore extends AdminController
 			$specific_price->from_quantity = 1;
 			$specific_price->reduction = 0;
 			$specific_price->reduction_type = 'amount';
+			$specific_price->reduction_tax = 0;
 			$specific_price->from = '0000-00-00 00:00:00';
 			$specific_price->to = '0000-00-00 00:00:00';
 			$specific_price->add();
@@ -2012,7 +2066,7 @@ class AdminOrdersControllerCore extends AdminController
 		$product = end($products);
 		$resume = OrderSlip::getProductSlipResume((int)$product['id_order_detail']);
 		$product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
-		$product['amount_refundable'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
+		$product['amount_refundable'] = $product['total_price_tax_excl'] - $resume['amount_tax_excl'];
 		$product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl']);
 		$product['return_history'] = OrderReturn::getProductReturnDetail((int)$product['id_order_detail']);
 		$product['refund_history'] = OrderSlip::getProductSlipDetail((int)$product['id_order_detail']);
@@ -2236,7 +2290,7 @@ class AdminOrdersControllerCore extends AdminController
 		$product = $products[$order_detail->id];
 		$resume = OrderSlip::getProductSlipResume($order_detail->id);
 		$product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
-		$product['amount_refundable'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
+		$product['amount_refundable'] = $product['total_price_tax_excl'] - $resume['amount_tax_excl'];
 		$product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl']);
 		$product['refund_history'] = OrderSlip::getProductSlipDetail($order_detail->id);
 		if ($product['id_warehouse'] != 0)

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -39,6 +39,12 @@ class Datas
 			'validate' => 'isLanguageIsoCode',
 			'alias' => 'l',
 			'help' => 'language iso code',
+		),
+		'all_languages' => array(
+			'default' => '0',
+			'validate' => 'isInt',
+			'alias' => 'l',
+			'help' => 'install all available languages',
 		),
 		'timezone' => array(
 			'default' => 'Europe/Paris',
@@ -81,13 +87,13 @@ class Datas
 			'name' => 'db_clear',
 			'default' => '1',
 			'validate' => 'isInt',
-			'help' => 'Drop existing tables' 
+			'help' => 'Drop existing tables'
 		),
 		'database_create' => array(
 			'name' => 'db_create',
 			'default' => '0',
 			'validate' => 'isInt',
-			'help' => 'Create the database if not exist' 
+			'help' => 'Create the database if not exist'
 		),
 		'database_prefix' => array(
 			'name' => 'prefix',
@@ -164,7 +170,7 @@ class Datas
 
 	public function __set($key, $value)
 	{
-		$this->datas[$key] = $value;		
+		$this->datas[$key] = $value;
 	}
 
 	public static function getInstance()
@@ -187,7 +193,7 @@ class Datas
 		$args_ok = array();
 		foreach ($argv as $arg)
 		{
-			if (!preg_match('/^--([^=\'"><|`]+)(?:=([^=\'"><|`]+)|(?!license))/i', trim($arg), $res))
+			if (!preg_match('/^--([^=\'"><|`]+)(?:=([^=><|`]+)|(?!license))/i', trim($arg), $res))
 				continue;
 
 			if ($res[1] == 'license' && !isset($res[2]))

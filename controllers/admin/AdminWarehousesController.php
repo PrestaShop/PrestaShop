@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -90,7 +90,7 @@ class AdminWarehousesControllerCore extends AdminController
 				'desc' => $this->l('Add new warehouse', null, null, false),
 				'icon' => 'process-icon-new'
 			);
-		
+
 		parent::initPageHeaderToolbar();
 	}
 
@@ -273,9 +273,9 @@ class AdminWarehousesControllerCore extends AdminController
 					),
 				),
 				array(
-					'type' => 'select',
+					'type' => 'swap',
 					'label' => $this->l('Carriers'),
-					'name' => 'ids_carriers[]',
+					'name' => 'ids_carriers',
 					'required' => false,
 					'multiple' => true,
 					'options' => array(
@@ -334,7 +334,7 @@ class AdminWarehousesControllerCore extends AdminController
 					'name' => 'name'
 				),
 			);
-			
+
 			// adds input valuation currency
 			$this->fields_form['input'][] = array(
 				'type' => 'select',
@@ -400,7 +400,7 @@ class AdminWarehousesControllerCore extends AdminController
 
 		// loads shops and carriers
 		$this->fields_value['ids_shops[]'] = $ids_shop;
-		$this->fields_value['ids_carriers[]'] = $carriers;
+		$this->fields_value['ids_carriers'] = $carriers;
 
 		if (!Validate::isLoadedObject($obj))
 			$this->fields_value['id_currency'] = (int)Configuration::get('PS_CURRENCY_DEFAULT');
@@ -461,8 +461,8 @@ class AdminWarehousesControllerCore extends AdminController
 		}
 
 		// handles carriers associations
-		if (Tools::isSubmit('ids_carriers'))
-			$object->setCarriers(Tools::getValue('ids_carriers'));
+		if (Tools::isSubmit('ids_carriers_selected'))
+			$object->setCarriers(Tools::getValue('ids_carriers_selected'));
 
 		return true;
 	}
@@ -497,7 +497,7 @@ class AdminWarehousesControllerCore extends AdminController
 			}
 		}
 	}
-	
+
 	public function initContent()
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
@@ -507,7 +507,7 @@ class AdminWarehousesControllerCore extends AdminController
 		}
 		parent::initContent();
 	}
-	
+
 	public function initProcess()
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
@@ -515,7 +515,7 @@ class AdminWarehousesControllerCore extends AdminController
 			$this->warnings[md5('PS_ADVANCED_STOCK_MANAGEMENT')] = $this->l('You need to activate advanced stock management before using this feature.');
 			return false;
 		}
-		parent::initProcess();	
+		parent::initProcess();
 	}
 
 	/**
@@ -529,14 +529,14 @@ class AdminWarehousesControllerCore extends AdminController
 					return;
 
 			$this->updateAddress();
-			
+
 			// hack for enable the possibility to update a warehouse without recreate new id
 			$this->deleted = false;
 
 			return parent::processAdd();
 		}
 	}
-	
+
 	protected function updateAddress()
 	{
 		// updates/creates address if it does not exist
@@ -595,9 +595,9 @@ class AdminWarehousesControllerCore extends AdminController
 			// check if the warehouse exists and can be deleted
 			if (!($obj = $this->loadObject(true)))
 				return;
-			else if ($obj->getQuantitiesOfProducts() > 0) // not possible : products
+			elseif ($obj->getQuantitiesOfProducts() > 0) // not possible : products
 				$this->errors[] = $this->l('It is not possible to delete a warehouse when there are products in it.');
-			else if (SupplyOrder::warehouseHasPendingOrders($obj->id)) // not possible : supply orders
+			elseif (SupplyOrder::warehouseHasPendingOrders($obj->id)) // not possible : supply orders
 				$this->errors[] = $this->l('It is not possible to delete a Warehouse if it has pending supply orders.');
 			else // else, it can be deleted
 			{
@@ -625,7 +625,7 @@ class AdminWarehousesControllerCore extends AdminController
 			return;
 		$this->updateAddress();
 		// handles carriers associations
-		$obj->setCarriers(Tools::getValue('ids_carriers'), array());
+		$obj->setCarriers(Tools::getValue('ids_carriers_selected'), array());
 
 		return parent::processUpdate();
 	}

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -307,8 +307,8 @@ abstract class ModuleCore
 
 		// Permissions management
 		Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_module`, `view`, `configure`) (
-				SELECT id_profile, '.(int)$this->id.', 1, 1
+			INSERT INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_module`, `view`, `configure`, `uninstall`) (
+				SELECT id_profile, '.(int)$this->id.', 1, 1, 1
 				FROM '._DB_PREFIX_.'access a
 				WHERE id_tab = (
 					SELECT `id_tab` FROM '._DB_PREFIX_.'tab
@@ -316,8 +316,8 @@ abstract class ModuleCore
 				AND a.`view` = 1)');
 
 		Db::getInstance()->execute('
-			INSERT INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_module`, `view`, `configure`) (
-				SELECT id_profile, '.(int)$this->id.', 1, 0
+			INSERT INTO `'._DB_PREFIX_.'module_access` (`id_profile`, `id_module`, `view`, `configure`, `uninstall`) (
+				SELECT id_profile, '.(int)$this->id.', 1, 0, 0
 				FROM '._DB_PREFIX_.'access a
 				WHERE id_tab = (
 					SELECT `id_tab` FROM '._DB_PREFIX_.'tab
@@ -365,7 +365,7 @@ abstract class ModuleCore
 			if ($upgrade_detail['success'])
 			{
 				$this->_confirmations[] = sprintf(Tools::displayError('Current version: %s'), $this->version);
-				$this->_confirmations[] = sprintf(Tools::displayError('%i file upgrade applied'), $upgrade_detail['number_upgraded']);
+				$this->_confirmations[] = sprintf(Tools::displayError('%d file upgrade applied'), $upgrade_detail['number_upgraded']);
 			}
 			else
 			{
@@ -374,7 +374,7 @@ abstract class ModuleCore
 				else
 				{
 					$this->_errors[] = sprintf(Tools::displayError('Upgraded from: %s to %s'), $upgrade_detail['upgraded_from'], $upgrade_detail['upgraded_to']);
-					$this->_errors[] = sprintf(Tools::displayError('%i upgrade left'), $upgrade_detail['number_upgrade_left']);
+					$this->_errors[] = sprintf(Tools::displayError('%d upgrade left'), $upgrade_detail['number_upgrade_left']);
 				}
 
 				if (isset($upgrade_detail['duplicate']) && $upgrade_detail['duplicate'])
@@ -479,9 +479,9 @@ abstract class ModuleCore
 	public static function upgradeModuleVersion($name, $version)
 	{
 		return Db::getInstance()->execute('
-		UPDATE `'._DB_PREFIX_.'module` m
-		SET m.version = \''.bqSQL($version).'\'
-		WHERE m.name = \''.bqSQL($name).'\'');
+			UPDATE `'._DB_PREFIX_.'module` m
+			SET m.version = \''.pSQL($version).'\'
+			WHERE m.name = \''.pSQL($name).'\'');
 	}
 
 	/**
@@ -1030,6 +1030,15 @@ abstract class ModuleCore
 			if (Tools::file_exists_no_cache(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php'))
 			{
 				include_once(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php');
+
+				if (Tools::file_exists_no_cache(_PS_OVERRIDE_DIR_.'modules/'.$module_name.'/'.$module_name.'.php'))
+				{
+					include_once(_PS_OVERRIDE_DIR_.'modules/'.$module_name.'/'.$module_name.'.php');
+					$override = $module_name.'Override';
+
+					if (class_exists($override, false))
+						return self::$_INSTANCE[$module_name] = new $override;
+				}
 
 				if (class_exists($module_name, false))
 					return self::$_INSTANCE[$module_name] = new $module_name;
@@ -1906,10 +1915,11 @@ abstract class ModuleCore
 	/*
 	 * Return exceptions for module in hook
 	 *
+	 * @param int $id_module Module ID
 	 * @param int $id_hook Hook ID
 	 * @return array Exceptions
 	 */
-	public function getExceptions($id_hook, $dispatch = false)
+	public static function getExceptionsStatic($id_module, $id_hook, $dispatch = false)
 	{
 		$cache_id = 'exceptionsCache';
 		if (!Cache::isStored($cache_id))
@@ -1935,7 +1945,7 @@ abstract class ModuleCore
 		else
 			$exceptionsCache = Cache::retrieve($cache_id);
 
-		$key = $id_hook.'-'.$this->id;
+		$key = $id_hook.'-'.$id_module;
 		$array_return = array();
 		if ($dispatch)
 		{
@@ -1952,6 +1962,16 @@ abstract class ModuleCore
 							$array_return[] = $file;
 		}
 		return $array_return;
+	}
+	/*
+	 * Return exceptions for module in hook
+	 *
+	 * @param int $id_hook Hook ID
+	 * @return array Exceptions
+	 */
+	public function getExceptions($id_hook, $dispatch = false)
+	{
+		return Module::getExceptionsStatic($this->id, $id_hook, $dispatch);
 	}
 
 	public static function isInstalled($module_name)
@@ -2049,7 +2069,7 @@ abstract class ModuleCore
 			return Tools::displayError('No template found for module').' '.basename($file, '.php');
 		else
 		{
-			if (Tools::getIsset('live_edit'))
+			if (Tools::getIsset('live_edit') || Tools::getIsset('live_configurator_token'))
 				$cacheId = null;
 
 			$this->smarty->assign(array(
@@ -2123,7 +2143,7 @@ abstract class ModuleCore
 
 	public function isCached($template, $cacheId = null, $compileId = null)
 	{
-		if (Tools::getIsset('live_edit'))
+		if (Tools::getIsset('live_edit') || Tools::getIsset('live_configurator_token'))
 			return false;
 		Tools::enableCache();
 		$new_tpl = $this->getTemplatePath($template);
@@ -2219,7 +2239,7 @@ abstract class ModuleCore
 	 */
 	public static function getPermissionStatic($id_module, $variable, $employee = null)
 	{
-		if (!in_array($variable, array('view', 'configure')))
+		if (!in_array($variable, array('view', 'configure', 'uninstall')))
 			return false;
 
 		if (!$employee)
@@ -2231,11 +2251,12 @@ abstract class ModuleCore
 		if (!isset(self::$cache_permissions[$employee->id_profile]))
 		{
 			self::$cache_permissions[$employee->id_profile] = array();
-			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `id_module`, `view`, `configure` FROM `'._DB_PREFIX_.'module_access` WHERE `id_profile` = '.(int)$employee->id_profile);
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `id_module`, `view`, `configure`, `uninstall` FROM `'._DB_PREFIX_.'module_access` WHERE `id_profile` = '.(int)$employee->id_profile);
 			foreach ($result as $row)
 			{
 				self::$cache_permissions[$employee->id_profile][$row['id_module']]['view'] = $row['view'];
 				self::$cache_permissions[$employee->id_profile][$row['id_module']]['configure'] = $row['configure'];
+				self::$cache_permissions[$employee->id_profile][$row['id_module']]['uninstall'] = $row['uninstall'];
 			}
 		}
 
@@ -2482,13 +2503,26 @@ abstract class ModuleCore
 
 			// Check if none of the methods already exists in the override class
 			foreach ($module_class->getMethods() as $method)
+			{
 				if ($override_class->hasMethod($method->getName()))
+				{
+					$method_override = $override_class->getMethod($method->getName());
+					if (preg_match('/module: (.*)/ism', $override_file[$method_override->getStartLine() - 5], $name) && preg_match('/date: (.*)/ism', $override_file[$method_override->getStartLine() - 4], $date) && preg_match('/version: ([0-9.]+)/ism', $override_file[$method_override->getStartLine() - 3], $version))
+						throw new Exception(sprintf(Tools::displayError('The method %1$s in the class %2$s is already overridden by the module %3$s version %4$s at %5$s.'), $method->getName(), $classname, $name[1], $version[1], $date[1]));
 					throw new Exception(sprintf(Tools::displayError('The method %1$s in the class %2$s is already overridden.'), $method->getName(), $classname));
+				}
+				else
+					$module_file = preg_replace('/(^.*?function\s+'.$method->getName().')/ism', "\n\t/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n$1", $module_file);
+			}
 
 			// Check if none of the properties already exists in the override class
 			foreach ($module_class->getProperties() as $property)
+			{
 				if ($override_class->hasProperty($property->getName()))
 					throw new Exception(sprintf(Tools::displayError('The property %1$s in the class %2$s is already defined.'), $property->getName(), $classname));
+				else
+					$module_file = preg_replace('/(public|private|protected|const)\s+(static\s+)?(\$?'.$property->getName().')/ism', "\n\t/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n$1 $2 $3" , $module_file);
+			}
 
 			// Insert the methods from module override in override
 			$copy_from = array_slice($module_file, $module_class->getStartLine() + 1, $module_class->getEndLine() - $module_class->getStartLine() - 2);
@@ -2502,7 +2536,22 @@ abstract class ModuleCore
 			$override_dest = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'override'.DIRECTORY_SEPARATOR.$path;
 			if (!is_writable(dirname($override_dest)))
 				throw new Exception(sprintf(Tools::displayError('directory (%s) not writable'), dirname($override_dest)));
-			copy($override_src, $override_dest);
+			$module_file = file($override_src);
+			do $uniq = uniqid();
+			while (class_exists($classname.'OverrideOriginal_remove', false));
+
+			eval(preg_replace(array('#^\s*<\?(?:php)?#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array(' ', 'class '.$classname.'Override'.$uniq), implode('', $module_file)));
+			$module_class = new ReflectionClass($classname.'Override'.$uniq);
+
+			// Add foreach function a comment with the module name and the module version like it permit us to know wich module do the override and permit an update
+			foreach ($module_class->getMethods() as $method)
+				$module_file = preg_replace('/(^.*?function\s+'.$method->getName().')/ism', "\n\t/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n$1", $module_file);
+
+			// same as precedent but for variable
+			foreach ($module_class->getProperties() as $property)
+				$module_file = preg_replace('/(public|private|protected|const)\s+(static\s+)?(\$?'.$property->getName().')/ism', "\n\t/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n$1 $2 $3" , $module_file);
+
+			file_put_contents($override_dest, $module_file);
 			// Re-generate the class index
 			Tools::generateIndex();
 		}
@@ -2558,10 +2607,16 @@ abstract class ModuleCore
 			$orig_content = preg_replace("/\s/", '', implode('', array_splice($override_file, $method->getStartLine() - 1, $length, array_pad(array(), $length, '#--remove--#'))));
 			$module_content = preg_replace("/\s/", '', implode('', array_splice($module_file, $module_method->getStartLine() - 1, $length, array_pad(array(), $length, '#--remove--#'))));
 
-			if (md5($module_content) != md5($orig_content))
+			$replace = true;
+			if (preg_match('/\* module: ('.$this->name.')/ism', $override_file[$method->getStartLine() - 5]))
+			{
+				$override_file[$method->getStartLine() - 7] = $override_file[$method->getStartLine() - 6] = $override_file[$method->getStartLine() - 5] = $override_file[$method->getStartLine() - 4] = $override_file[$method->getStartLine() - 3] =  $override_file[$method->getStartLine() - 2] = '#--remove--#';
+				$replace = false;
+			}
+
+			if (md5($module_content) != md5($orig_content) && $replace)
 				$override_file = $override_file_orig;
 		}
-
 		// Remove properties from override file
 		foreach ($module_class->getProperties() as $property)
 		{
@@ -2572,11 +2627,12 @@ abstract class ModuleCore
 			foreach ($override_file as $line_number => &$line_content)
 				if (preg_match('/(public|private|protected|const)\s+(static\s+)?(\$)?'.$property->getName().'/i', $line_content))
 				{
+					if (preg_match('/\* module: ('.$this->name.')/ism', $override_file[$line_number - 5]))
+						$override_file[$line_number - 7] = $override_file[$line_number - 6] = $override_file[$line_number - 5] = $override_file[$line_number - 4] = $override_file[$line_number - 3] =  $override_file[$line_number - 2] = '#--remove--#';
 					$line_content = '#--remove--#';
 					break;
 				}
 		}
-
 		// Rewrite nice code
 		$code = '';
 		foreach ($override_file as $line)
@@ -2586,7 +2642,13 @@ abstract class ModuleCore
 
 			$code .= $line;
 		}
-		file_put_contents($override_path, $code);
+
+		$to_delete = preg_match('/<\?(?:php)?\s+class\s+'.$classname.'\s+extends\s+'.$classname.'Core\s*?[{]\s*?[}]/ism', $code);
+
+		if ($to_delete)
+			unlink($override_path);
+		else
+			file_put_contents($override_path, $code);
 
 		// Re-generate the class index
 		Tools::generateIndex();

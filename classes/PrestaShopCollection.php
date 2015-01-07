@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -105,7 +105,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 		$this->definition = ObjectModel::getDefinition($this->classname);
 		if (!isset($this->definition['table']))
 			throw new PrestaShopException('Miss table in definition for class '.$this->classname);
-		else if (!isset($this->definition['primary']))
+		elseif (!isset($this->definition['primary']))
 			throw new PrestaShopException('Miss primary in definition for class '.$this->classname);
 
 		$this->query = new DbQuery();
@@ -659,7 +659,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 				// Test field validity for language fields
 				if (empty($definition['is_lang']) && !empty($definition['fields'][$fieldname]['lang']))
 					throw new PrestaShopException('Field '.$fieldname.' is declared as lang field but is used in non multilang context');
-				else if (!empty($definition['is_lang']) && empty($definition['fields'][$fieldname]['lang']))
+				elseif (!empty($definition['is_lang']) && empty($definition['fields'][$fieldname]['lang']))
 					throw new PrestaShopException('Field '.$fieldname.' is not declared as lang field but is used in multilang context');
 
 				$type = $definition['fields'][$fieldname]['type'];

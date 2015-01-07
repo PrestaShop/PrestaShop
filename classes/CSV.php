@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -32,15 +32,15 @@
 class CSVCore
 {
 	public $filename;
-    public $collection;
-    public $delimiter;
+	public $collection;
+	public $delimiter;
 
-    /**
-     * Loads objects, filename and optionnaly a delimiter.
-     * @param Collection $collection collection of objects / array (of non-objects)
-     * @param string $filename : used later to save the file
-     * @param string $delimiter Optional : delimiter used
-     */
+	/**
+	* Loads objects, filename and optionnaly a delimiter.
+	* @param Collection $collection collection of objects / array (of non-objects)
+	* @param string $filename : used later to save the file
+	* @param string $delimiter Optional : delimiter used
+	*/
 	public function __construct($collection, $filename, $delimiter = ';')
 	{
 		$this->filename = $filename;
@@ -89,21 +89,21 @@ class CSVCore
 	 * @param string $data
 	 * @return string $data
 	 */
-    public static function wrap($data)
-    {
-    	$data = Tools::safeOutput($data, '";');
-        return sprintf('"%s"', $data);
-    }
+	public static function wrap($data)
+	{
+		$data = Tools::safeOutput($data, '";');
+		return sprintf('"%s"', $data);
+	}
 
-    /**
-     * Adds headers
-     */
-    public function headers()
-    {
-        header('Content-type: text/csv');
-        header('Content-Type: application/force-download; charset=UTF-8');
+	/**
+	* Adds headers
+	*/
+	public function headers()
+	{
+		header('Content-type: text/csv');
+		header('Content-Type: application/force-download; charset=UTF-8');
 		header('Cache-Control: no-store, no-cache');
-        header('Content-disposition: attachment; filename="'.$this->filename.'.csv"');
-    }
+		header('Content-disposition: attachment; filename="'.$this->filename.'.csv"');
+	}
 }
 

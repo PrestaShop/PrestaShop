@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -190,9 +190,12 @@ class CategoryCore extends ObjectModel
 
 		// Update group selection
 		$this->updateGroup($this->groupBox);
+
 		$this->level_depth = $this->calcLevelDepth();
+
 		// If the parent category was changed, we don't want to have 2 categories with the same position
-		if ($this->getDuplicatePosition())
+		$changed = $this->getDuplicatePosition();
+		if ($changed)
 		{
 			if (Tools::isSubmit('checkBoxShopAsso_category'))
 				foreach (Tools::getValue('checkBoxShopAsso_category') as $id_asso_object => $row)
@@ -202,10 +205,11 @@ class CategoryCore extends ObjectModel
 				foreach (Shop::getShops(true) as $shop)
 					$this->addPosition(max(1, Category::getLastPosition((int)$this->id_parent, $shop['id_shop'])), $shop['id_shop']);
 		}
-		$this->cleanPositions((int)$this->id_parent);
+
 		$ret = parent::update($null_values);
-		if (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree)
+		if ($changed && (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree))
 		{
+			$this->cleanPositions((int)$this->id_parent);
 			Category::regenerateEntireNtree();
 			$this->recalculateLevelDepth($this->id);
 		}
@@ -244,7 +248,7 @@ class CategoryCore extends ObjectModel
 			{
 				if (!$subcat['id_category'])
 					break;
-				else if (!is_array($excluded_ids_array) || !in_array($subcat['id_category'], $excluded_ids_array))
+				elseif (!is_array($excluded_ids_array) || !in_array($subcat['id_category'], $excluded_ids_array))
 				{
 					$categ = new Category($subcat['id_category'], $id_lang);
 					$children[] = $categ->recurseLiteCategTree($max_depth, $current_depth + 1, $id_lang, $excluded_ids_array);
@@ -660,7 +664,7 @@ class CategoryCore extends ObjectModel
 			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 		}
 
-		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, MAX(product_attribute_shop.id_product_attribute) id_product_attribute, product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity, pl.`description`, pl.`description_short`, pl.`available_now`,
+		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity'.(Combination::isFeatureActive() ? ', MAX(product_attribute_shop.id_product_attribute) id_product_attribute, MAX(product_attribute_shop.minimal_quantity) AS product_attribute_minimal_quantity' : '').', pl.`description`, pl.`description_short`, pl.`available_now`,
 					pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, MAX(image_shop.`id_image`) id_image,
 					MAX(il.`legend`) as legend, m.`name` AS manufacturer_name, cl.`name` AS category_default,
 					DATEDIFF(product_shop.`date_add`, DATE_SUB(NOW(),
@@ -669,11 +673,11 @@ class CategoryCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'category_product` cp
 				LEFT JOIN `'._DB_PREFIX_.'product` p
 					ON p.`id_product` = cp.`id_product`
-				'.Shop::addSqlAssociation('product', 'p').'
-				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa
+				'.Shop::addSqlAssociation('product', 'p').
+				(Combination::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa
 				ON (p.`id_product` = pa.`id_product`)
 				'.Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.`default_on` = 1').'
-				'.Product::sqlStock('p', 'product_attribute_shop', false, $context->shop).'
+				'.Product::sqlStock('p', 'product_attribute_shop', false, $context->shop) :  Product::sqlStock('p', 'product', false, Context::getContext()->shop)).'
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
 					ON (product_shop.`id_category_default` = cl.`id_category`
 					AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').')
@@ -789,6 +793,23 @@ class CategoryCore extends ObjectModel
 		$categories = new PrestaShopCollection('Category', $id_lang);
 		$categories->where('nleft', '>', $this->nleft);
 		$categories->where('nright', '<', $this->nright);
+		return $categories;
+	}
+
+	/**
+	 * Return an array of all parents of the current category
+	 *
+	 * @param int $id_lang
+	 * @return PrestaShopCollection Collection of Category
+	 */
+	public function getAllParents($id_lang = null)
+	{
+		if (is_null($id_lang))
+			$id_lang = Context::getContext()->language->id;
+
+		$categories = new PrestaShopCollection('Category', $id_lang);
+		$categories->where('nleft', '<', $this->nleft);
+		$categories->where('nright', '>', $this->nright);
 		return $categories;
 	}
 
@@ -1085,7 +1106,8 @@ class CategoryCore extends ObjectModel
 	public function addGroups($groups)
 	{
 		foreach ($groups as $group)
-			Db::getInstance()->insert('category_group', array('id_category' => (int)$this->id, 'id_group' => (int)$group));
+			if ($group !== false)
+				Db::getInstance()->insert('category_group', array('id_category' => (int)$this->id, 'id_group' => (int)$group));
 	}
 
 	public function getGroups()

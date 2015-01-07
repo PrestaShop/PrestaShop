@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -42,7 +42,8 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 		$this->date = Tools::displayDate($order_invoice->date_add);
 
 		$id_lang = Context::getContext()->language->id;
-		$this->title = HTMLTemplateInvoice::l('Invoice ').' #'.Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, (int)$this->order->id_shop).sprintf('%06d', $order_invoice->number);
+		$prefix = Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, (int)$this->order->id_shop);
+		$this->title = sprintf(HTMLTemplateInvoice::l('Invoice #%1$s%2$06d'), $prefix, $order_invoice->number);
 		// footer informations
 		$this->shop = new Shop((int)$this->order->id_shop);
 	}
@@ -53,8 +54,9 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 	 */
 	public function getContent()
 	{
-		$country = new Country((int)$this->order->id_address_invoice);
 		$invoice_address = new Address((int)$this->order->id_address_invoice);
+		$country = new Country((int)$invoice_address->id_country);
+
 		$formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
 		$formatted_delivery_address = '';
 
@@ -97,11 +99,11 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 							&& !empty($address->vat_number)
 							&& $address->id_country != Configuration::get('VATNUMBER_COUNTRY');
 		$carrier = new Carrier($this->order->id_carrier);
-			
+
 		$data = array(
 			'tax_exempt' => $tax_exempt,
 			'use_one_after_another_method' => $this->order_invoice->useOneAfterAnotherTaxComputationMethod(),
-			'product_tax_breakdown' => $this->order_invoice->getProductTaxesBreakdown(),
+			'product_tax_breakdown' => $this->order_invoice->getProductTaxesBreakdown($this->order),
 			'shipping_tax_breakdown' => $this->order_invoice->getShippingTaxesBreakdown($this->order),
 			'ecotax_tax_breakdown' => $this->order_invoice->getEcoTaxTaxesBreakdown(),
 			'wrapping_tax_breakdown' => $this->order_invoice->getWrappingTaxesBreakdown(),

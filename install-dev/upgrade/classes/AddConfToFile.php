@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -30,7 +30,7 @@ class	AddConfToFile
 	public $file;
 	public $mode;
 	public $error = false;
-	
+
 	public function __construct($file, $mode = 'r+')
 	{
 		$this->file = $file;
@@ -40,13 +40,13 @@ class	AddConfToFile
 			if (!$res = @fwrite($this->fd, '<?php'."\n"))
 				$this->error = 6;
 	}
-	
+
 	public function __destruct()
 	{
 		if (!$this->error)
 			@fclose($this->fd);
 	}
-	
+
 	private function checkFile($file)
 	{
 		if (!$fd = @fopen($this->file, $this->mode))
@@ -55,7 +55,7 @@ class	AddConfToFile
 			$this->error = 6;
 		$this->fd = $fd;
 	}
-	
+
 	public function writeInFile($name, $data)
 	{
 		if ($name == '_PS_VERSION_' && strpos($this->file, 'settings.inc') !== false)
@@ -70,7 +70,7 @@ class	AddConfToFile
 		}
 		return true;
 	}
-	
+
 	public function writeEndTagPhp()
 	{
 		if (!$res = @fwrite($this->fd, '?>'."\n")) {
@@ -79,7 +79,7 @@ class	AddConfToFile
 		}
 		return true;
 	}
-	
+
 	public function checkString($string)
 	{
 		if (get_magic_quotes_gpc())
@@ -87,7 +87,7 @@ class	AddConfToFile
 		if (!is_numeric($string))
 		{
 			$string = addslashes($string);
-			$string = strip_tags(nl2br($string));
+			$string = str_replace(array("\n", "\r"), '', $string);
 		}
 		return $string;
 	}

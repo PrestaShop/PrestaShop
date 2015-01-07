@@ -32,8 +32,12 @@
     <name>Errore di pagamento</name>
     <template>payment_error</template>
   </order_state>
-  <order_state id='On_backorder'>
-    <name>Ordine inevaso</name>
+  <order_state id="On_backorder_paid">
+    <name>In attesa di rifornimento</name>
+    <template>outofstock</template>
+  </order_state>
+  <order_state id="On_backorder_unpaid">
+    <name>In attesa di rifornimento</name>
     <template>outofstock</template>
   </order_state>
   <order_state id='Awaiting_bank_wire_payment'>

@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -86,14 +86,14 @@
 					<th class="cart_description item">{l s='Description'}</th>
 					{if $PS_STOCK_MANAGEMENT}
 						{assign var='col_span_subtotal' value='3'}
-						<th class="cart_avail item">{l s='Avail.'}</th>
+						<th class="cart_avail item text-center">{l s='Availability'}</th>
 					{else}
 						{assign var='col_span_subtotal' value='2'}
 					{/if}
-					<th class="cart_unit item">{l s='Unit price'}</th>
+					<th class="cart_unit item text-right">{l s='Unit price'}</th>
 					<th class="cart_quantity item text-center">{l s='Qty'}</th>
 					<th class="cart_delete last_item">&nbsp;</th>
-					<th class="cart_total item text-right">{l s='Total'}</th>					
+					<th class="cart_total item text-right">{l s='Total'}</th>
 				</tr>
 			</thead>
 			<tfoot>
@@ -225,9 +225,9 @@
 				<tr{if $total_wrapping == 0} style="display: none;"{/if}>
 					<td colspan="3" class="text-right">
 						{if $use_taxes}
-							{if $display_tax_label}{l s='Total gift wrapping (tax incl.):'}{else}{l s='Total gift-wrapping cost:'}{/if}
+							{if $display_tax_label}{l s='Total gift wrapping (tax incl.)'}{else}{l s='Total gift-wrapping cost'}{/if}
 						{else}
-							{l s='Total gift-wrapping cost:'}
+							{l s='Total gift-wrapping cost'}
 						{/if}
 					</td>
 					<td colspan="2" class="price-discount price" id="total_wrapping">
@@ -271,7 +271,7 @@
 					<td colspan="{$col_span_subtotal}" class="text-right">
 						{if $display_tax_label}
 							{if $use_taxes && $priceDisplay == 0}
-								{l s='Total vouchers (tax incl.):'}
+								{l s='Total vouchers (tax incl.)'}
 							{else}
 								{l s='Total vouchers (tax excl.)'}
 							{/if}
@@ -558,17 +558,11 @@
 	<div id="HOOK_SHOPPING_CART">{$HOOK_SHOPPING_CART}</div>
 	<p class="cart_navigation clearfix">
 		{if !$opc}
-			<a
-				href="{if $back}{$link->getPageLink('order', true, NULL, 'step=1&amp;back={$back}')|escape:'html':'UTF-8'}{else}{$link->getPageLink('order', true, NULL, 'step=1')|escape:'html':'UTF-8'}{/if}"
-				class="button btn btn-default standard-checkout button-medium"
-				title="{l s='Proceed to checkout'}">
+			<a  href="{if $back}{$link->getPageLink('order', true, NULL, 'step=1&amp;back={$back}')|escape:'html':'UTF-8'}{else}{$link->getPageLink('order', true, NULL, 'step=1')|escape:'html':'UTF-8'}{/if}" class="button btn btn-default standard-checkout button-medium" title="{l s='Proceed to checkout'}">
 				<span>{l s='Proceed to checkout'}<i class="icon-chevron-right right"></i></span>
 			</a>
 		{/if}
-		<a
-			href="{if (isset($smarty.server.HTTP_REFERER) && strstr($smarty.server.HTTP_REFERER, 'order.php')) || isset($smarty.server.HTTP_REFERER) && strstr($smarty.server.HTTP_REFERER, 'order-opc') || !isset($smarty.server.HTTP_REFERER)}{$link->getPageLink('index')}{else}{$smarty.server.HTTP_REFERER|escape:'html':'UTF-8'|secureReferrer}{/if}"
-			class="button-exclusive btn btn-default"
-			title="{l s='Continue shopping'}">
+		<a href="{if (isset($smarty.server.HTTP_REFERER) && ($smarty.server.HTTP_REFERER == $link->getPageLink('order', true) || $smarty.server.HTTP_REFERER == $link->getPageLink('order-opc', true) || strstr($smarty.server.HTTP_REFERER, 'step='))) || !isset($smarty.server.HTTP_REFERER)}{$link->getPageLink('index')}{else}{$smarty.server.HTTP_REFERER|escape:'html':'UTF-8'|secureReferrer}{/if}" class="button-exclusive btn btn-default" title="{l s='Continue shopping'}">
 			<i class="icon-chevron-left"></i>{l s='Continue shopping'}
 		</a>
 	</p>

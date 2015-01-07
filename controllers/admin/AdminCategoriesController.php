@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -170,8 +170,9 @@ class AdminCategoriesControllerCore extends AdminController
 					'desc' => $this->l('Add new root category', null, null, false)
 				);
 
+			$id_category = (Tools::isSubmit('id_category')) ? '&id_parent='.(int)Tools::getValue('id_category') : '';
 			$this->page_header_toolbar_btn['new_category'] = array(
-				'href' => self::$currentIndex.'&addcategory&token='.$this->token.'&id_parent='.(int)Tools::getValue('id_category'),
+				'href' => self::$currentIndex.'&addcategory&token='.$this->token.$id_category,
 				'desc' => $this->l('Add new category', null, null, false),
 				'icon' => 'process-icon-new'
 			);
@@ -208,15 +209,8 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->addRowAction('delete');
 
 
-		if (!Shop::isFeatureActive() && count(Category::getCategoriesWithoutParent()) > 1 && !Tools::isSubmit('id_category'))
-			$categories_tree = array(get_object_vars($this->_category->getTopCategory()));
-		else
-		{
-			$categories_tree = $this->_category->getParentsCategories();
-			$end = end($categories_tree);
-			if (isset($categories_tree) && !Shop::isFeatureActive() && $end['id_parent'] != 0)
-				$categories_tree = array_merge($categories_tree, array(get_object_vars($this->_category->getTopCategory())));
-		}
+		$count_categories_without_parent = count(Category::getCategoriesWithoutParent());	
+		$categories_tree = $this->_category->getParentsCategories();
 
 		if (empty($categories_tree)
 			&& ($this->_category->id != (int)Configuration::get('PS_ROOT_CATEGORY') || Tools::isSubmit('id_category'))
@@ -365,8 +359,8 @@ class AdminCategoriesControllerCore extends AdminController
 		$helper->title = $this->l('Disabled Categories', null, null, false);
 		if (ConfigurationKPI::get('DISABLED_CATEGORIES') !== false)
 			$helper->value = ConfigurationKPI::get('DISABLED_CATEGORIES');
-		if (ConfigurationKPI::get('DISABLED_CATEGORIES_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=disabled_categories';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=disabled_categories';
+		$helper->refresh = (bool)(ConfigurationKPI::get('DISABLED_CATEGORIES_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -377,8 +371,8 @@ class AdminCategoriesControllerCore extends AdminController
 		$helper->title = $this->l('Empty Categories', null, null, false);
 		if (ConfigurationKPI::get('EMPTY_CATEGORIES') !== false)
 			$helper->value = ConfigurationKPI::get('EMPTY_CATEGORIES');
-		if (ConfigurationKPI::get('EMPTY_CATEGORIES_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=empty_categories';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=empty_categories';
+		$helper->refresh = (bool)(ConfigurationKPI::get('EMPTY_CATEGORIES_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -389,8 +383,8 @@ class AdminCategoriesControllerCore extends AdminController
 		$helper->subtitle = $this->l('30 days', null, null, false);
 		if (ConfigurationKPI::get('TOP_CATEGORY', $this->context->employee->id_lang) !== false)
 			$helper->value = ConfigurationKPI::get('TOP_CATEGORY', $this->context->employee->id_lang);
-		if (ConfigurationKPI::get('TOP_CATEGORY_EXPIRE', $this->context->employee->id_lang) < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=top_category';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=top_category';
+		$helper->refresh = (bool)(ConfigurationKPI::get('TOP_CATEGORY_EXPIRE', $this->context->employee->id_lang) < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -400,8 +394,8 @@ class AdminCategoriesControllerCore extends AdminController
 		$helper->title = $this->l('Average number of products per category', null, null, false);
 		if (ConfigurationKPI::get('PRODUCTS_PER_CATEGORY') !== false)
 			$helper->value = ConfigurationKPI::get('PRODUCTS_PER_CATEGORY');
-		if (ConfigurationKPI::get('PRODUCTS_PER_CATEGORY_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=products_per_category';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=products_per_category';
+		$helper->refresh = (bool)(ConfigurationKPI::get('PRODUCTS_PER_CATEGORY_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpiRow();
@@ -751,7 +745,7 @@ class AdminCategoriesControllerCore extends AdminController
 	{
 		if ($this->tabAccess['edit'] !== '1')
 			$this->errors[] = Tools::displayError('You do not have permission to edit this.');
-		else if (!Validate::isLoadedObject($object = new Category((int)Tools::getValue($this->identifier, Tools::getValue('id_category_to_move', 1)))))
+		elseif (!Validate::isLoadedObject($object = new Category((int)Tools::getValue($this->identifier, Tools::getValue('id_category_to_move', 1)))))
 			$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.
 				$this->table.'</b> '.Tools::displayError('(cannot load object)');
 		if (!$object->updatePosition((int)Tools::getValue('way'), (int)Tools::getValue('position')))

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -58,7 +58,7 @@ class CategoryControllerCore extends FrontController
 	public function canonicalRedirection($canonicalURL = '')
 	{
 		if (Tools::getValue('live_edit'))
-			return ;
+			return;
 		if (!Validate::isLoadedObject($this->category) || !$this->category->inShop() || !$this->category->isAssociatedToShop() || in_array($this->category->id, array(Configuration::get('PS_HOME_CATEGORY'), Configuration::get('PS_ROOT_CATEGORY'))))
 		{
 			$this->redirect_after = '404';
@@ -98,13 +98,13 @@ class CategoryControllerCore extends FrontController
 			$this->customer_access = false;
 		}
 	}
-	
+
 	public function initContent()
 	{
 		parent::initContent();
-		
+
 		$this->setTemplate(_PS_THEME_DIR_.'category.tpl');
-		
+
 		if (!$this->customer_access)
 			return;
 
@@ -112,7 +112,7 @@ class CategoryControllerCore extends FrontController
 			$this->context->smarty->assign('compareProducts', CompareProduct::getCompareProducts((int)$this->context->cookie->id_compare));
 
 		$this->productSort(); // Product sort must be called before assignProductList()
-		
+
 		$this->assignScenes();
 		$this->assignSubcategories();
 		$this->assignProductList();
@@ -217,7 +217,7 @@ class CategoryControllerCore extends FrontController
 
 		$this->context->smarty->assign('nb_products', $this->nbProducts);
 	}
-	
+
 	/**
 	 * Get instance of current category
 	 */

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -483,11 +483,11 @@ class AdminSuppliersControllerCore extends AdminController
 			}
 			return parent::postProcess();
 		}
-		else if (Tools::isSubmit('delete'.$this->table))
+		elseif (Tools::isSubmit('delete'.$this->table))
 		{
 			if (!($obj = $this->loadObject(true)))
 				return;
-			else if (SupplyOrder::supplierHasPendingOrders($obj->id))
+			elseif (SupplyOrder::supplierHasPendingOrders($obj->id))
 				$this->errors[] = $this->l('It is not possible to delete a supplier if there are pending supplier orders.');
 			else
 			{

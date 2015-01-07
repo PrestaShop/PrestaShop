@@ -1,5 +1,5 @@
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -122,7 +122,7 @@ $(document).ready(function()
 		else
 			refreshProductImages(0);
 	}
-	
+
 	initLocationChange();
 	serialScrollSetNbImages();
 
@@ -149,6 +149,14 @@ $(document).ready(function()
 
 	//set jqZoom parameters if needed
 	if (typeof(jqZoomEnabled) != 'undefined' && jqZoomEnabled)
+	{
+		if ($('#thumbs_list .shown img').length)
+		{
+			var new_src = $('#thumbs_list .shown img').attr('src').replace('cart_', 'large_');
+			if ($('.jqzoom img').attr('src')!= new_src)
+				$('.jqzoom img').attr('src', new_src).parent().attr('href', new_src);
+		}
+
 		$('.jqzoom').jqzoom({
 			zoomType: 'innerzoom', //innerzoom/standard/reverse/drag
 			zoomWidth: 458, //zooming div default width(default width value is 200)
@@ -158,6 +166,7 @@ $(document).ready(function()
 			title: false
 		});
 
+	}
 	if (typeof(contentOnly) != 'undefined' && !contentOnly)
 	{
 		if (!!$.prototype.fancybox)
@@ -188,9 +197,16 @@ $(document).ready(function()
 		$.uniform.defaults.fileDefaultHtml = product_fileDefaultHtml;
 	if (typeof product_fileButtonHtml !== 'undefined')
 		$.uniform.defaults.fileButtonHtml = product_fileButtonHtml;
+
+	if ($('#customizationForm').length)
+	{
+		var url = window.location + '';
+		if (url.indexOf('#') != -1)
+			getProductAttribute();
+	}
 });
 
-$(window).resize(function(){	
+$(window).resize(function(){
 	serialScrollSetNbImages();
 	$('#thumbs_list').trigger('goto', 0);
 	serialScrollFixLock('', '', '', '', 0);
@@ -264,7 +280,11 @@ if (typeof(contentOnly) != 'undefined' && contentOnly)
 	$(document).on('click', '#image-block', function(e){
 		e.preventDefault();
 		var productUrl = window.document.location.href + '';
-		var data = productUrl.replace('content_only=1', '');
+		var data = productUrl.replace(/[\?|&]content_only=1/, '');
+
+		if (window.parent.page_name == 'search')
+			data += ((data.indexOf('?') < 0) ? '?' : '&') + 'HTTP_REFERER=' + encodeURIComponent(window.parent.document.location.href);
+
 		window.parent.document.location.href = data;
 		return;
 	});
@@ -463,7 +483,10 @@ function updateDisplay()
 
 		//availability value management
 		if (stock_management && availableNowValue != '')
+		{
 			$('#availability_value').removeClass('warning_inline').text(availableNowValue).show();
+			$('#availability_statut:hidden').show()
+		}
 		else
 			$('#availability_statut:visible').hide();
 
@@ -589,8 +612,8 @@ function updateDisplay()
 function updatePrice()
 {
 	// Get combination prices
-	combID = $('#idCombination').val();
-	combination = combinationsFromController[combID];
+	var combID = $('#idCombination').val();
+	var combination = combinationsFromController[combID];
 	if (typeof combination == 'undefined')
 		return;
 
@@ -600,15 +623,39 @@ function updatePrice()
 
 	// Apply combination price impact
 	// 0 by default, +x if price is inscreased, -x if price is decreased
-	basePriceWithoutTax = basePriceWithoutTax + parseFloat(combination.price);
+	basePriceWithoutTax = basePriceWithoutTax + +combination.price;
 
 	// If a specific price redefine the combination base price
 	if (combination.specific_price && combination.specific_price.price > 0)
-		basePriceWithoutTax = parseFloat(combination.specific_price.price);
+	{
+		if (combination.specific_price.id_product_attribute === 0)
+			basePriceWithoutTax = +combination.specific_price.price;
+		else
+			basePriceWithoutTax = +combination.specific_price.price + +combination.price;
+	}
 
 	// Apply group reduction
 	priceWithGroupReductionWithoutTax = basePriceWithoutTax * (1 - group_reduction);
 	var priceWithDiscountsWithoutTax = priceWithGroupReductionWithoutTax;
+
+	// Apply specific price (discount)
+	// We only apply percentage discount and discount amount given before tax
+	// Specific price give after tax will be handled after taxes are added
+	if (combination.specific_price && combination.specific_price.reduction > 0)
+	{
+		if (combination.specific_price.reduction_type == 'amount')
+		{
+			if (typeof combination.specific_price.reduction_tax !== 'undefined' && combination.specific_price.reduction_tax === "0")
+			{
+				var reduction = +combination.specific_price.reduction / currencyRate;
+				priceWithDiscountsWithoutTax -= reduction;
+			}
+		}
+		else if (combination.specific_price.reduction_type == 'percentage')
+		{
+			priceWithDiscountsWithoutTax = priceWithDiscountsWithoutTax * (1 - +combination.specific_price.reduction);
+		}
+	}
 
 	// Apply Tax if necessary
 	if (noTaxForThisProduct || customerGroupWithoutTax)
@@ -630,22 +677,21 @@ function updatePrice()
 		priceWithDiscountsDisplay = priceWithDiscountsDisplay + default_eco_tax * (1 + ecotaxTax_rate / 100);
 	}
 
-	// Apply specific price (discount)
-	// Note: Reduction amounts are given after tax
+	// If the specific price was given after tax, we apply it now
 	if (combination.specific_price && combination.specific_price.reduction > 0)
+	{
 		if (combination.specific_price.reduction_type == 'amount')
 		{
-			var reduction = parseFloat(combination.specific_price.reduction) / currencyRate;
-			priceWithDiscountsDisplay = priceWithDiscountsDisplay - reduction;
-			// We recalculate the price without tax in order to keep the data consistency
-			priceWithDiscountsWithoutTax = priceWithDiscountsDisplay * ( 1/(1+taxRate) / 100 );
+			if (typeof combination.specific_price.reduction_tax === 'undefined'
+				|| (typeof combination.specific_price.reduction_tax !== 'undefined' && combination.specific_price.reduction_tax === '1'))
+			{
+				var reduction = +combination.specific_price.reduction / currencyRate;
+				priceWithDiscountsDisplay -= reduction;
+				// We recalculate the price without tax in order to keep the data consistency
+				priceWithDiscountsWithoutTax = priceWithDiscountsDisplay - reduction * ( 1/(1+taxRate/100) );
+			}
 		}
-		else if (combination.specific_price.reduction_type == 'percentage')
-		{
-			priceWithDiscountsDisplay = priceWithDiscountsDisplay * (1 - parseFloat(combination.specific_price.reduction));
-			// We recalculate the price without tax in order to keep the data consistency
-			priceWithDiscountsWithoutTax = priceWithDiscountsDisplay * ( 1/(1+taxRate) / 100 );
-		}
+	}
 
 	// Compute discount value and percentage
 	// Done just before display update so we have final prices
@@ -655,7 +701,7 @@ function updatePrice()
 		var discountPercentage = (1-(priceWithDiscountsDisplay/basePriceDisplay))*100;
 	}
 
-	var unit_impact = parseFloat(combination.unit_impact);
+	var unit_impact = +combination.unit_impact;
 	if (productUnitPriceRatio > 0 || unit_impact)
 	{
 		if (unit_impact)
@@ -679,8 +725,7 @@ function updatePrice()
 	$('.price-ecotax').hide();
 	$('.unit-price').hide();
 
-
-	$('#our_price_display').text(formatCurrency(priceWithDiscountsDisplay * currencyRate, currencyFormat, currencySign, currencyBlank));
+	$('#our_price_display').text(formatCurrency(priceWithDiscountsDisplay * currencyRate, currencyFormat, currencySign, currencyBlank)).trigger('change');
 
 	// If the calculated price (after all discounts) is different than the base price
 	// we show the old price striked through
@@ -694,7 +739,7 @@ function updatePrice()
 		{
 			if (combination.specific_price.reduction_type == 'amount')
 			{
-				$('#reduction_amount_display').html('-' + formatCurrency(parseFloat(discountValue) * currencyRate, currencyFormat, currencySign, currencyBlank));
+				$('#reduction_amount_display').html('-' + formatCurrency(+discountValue * currencyRate, currencyFormat, currencySign, currencyBlank));
 				$('#reduction_amount').show();
 			}
 			else
@@ -713,7 +758,7 @@ function updatePrice()
 
 		// If the default product ecotax is overridden by the combination
 		if (combination.ecotax)
-			ecotax = parseFloat(combination.ecotax);
+			ecotax = +combination.ecotax;
 
 		if (!noTaxForThisProduct)
 			ecotax = ecotax * (1 + ecotaxTax_rate/100)
@@ -740,12 +785,12 @@ function displayImage(domAAroundImgThumb, no_animation)
 {
 	if (typeof(no_animation) == 'undefined')
 		no_animation = false;
-	if (domAAroundImgThumb.prop('href'))
+	if (domAAroundImgThumb.attr('href'))
 	{
 		var new_src = domAAroundImgThumb.attr('href').replace('thickbox', 'large');
 		var new_title = domAAroundImgThumb.attr('title');
 		var new_href = domAAroundImgThumb.attr('href');
-		if ($('#bigpic').prop('src') != new_src)
+		if ($('#bigpic').attr('src') != new_src)
 		{
 			$('#bigpic').attr({
 				'src' : new_src,
@@ -804,8 +849,8 @@ function updateDiscountTable(newPrice)
 		}
 
 		if (displayDiscountPrice != 0)
-			$(this).children('td').eq(1).text( formatCurrency(discountedPrice, currencyFormat, currencySign, currencyBlank) );
-		$(this).children('td').eq(2).text(upToTxt + ' ' + formatCurrency(discountUpTo, currencyFormat, currencySign, currencyBlank));
+			$(this).children('td').eq(1).text( formatCurrency(discountedPrice * currencyRate, currencyFormat, currencySign, currencyBlank) );
+		$(this).children('td').eq(2).text(upToTxt + ' ' + formatCurrency(discountUpTo * currencyRate, currencyFormat, currencySign, currencyBlank));
 	});
 }
 
@@ -832,7 +877,7 @@ function serialScrollSetNbImages()
 
 // Change the current product images regarding the combination selected
 function refreshProductImages(id_product_attribute)
-{	
+{
 	id_product_attribute = parseInt(id_product_attribute);
 
 	if (id_product_attribute > 0 && typeof(combinationImages) != 'undefined' && typeof(combinationImages[id_product_attribute]) != 'undefined')
@@ -938,7 +983,7 @@ function getProductAttribute()
 			if (attributesCombinations[i]['id_attribute'] === tab_attributes[a])
 				request += '/'+attributesCombinations[i]['group'] + attribute_anchor_separator + attributesCombinations[i]['attribute'];
 	request = request.replace(request.substring(0, 1), '#/');
-	url = window.location + '';
+	var url = window.location + '';
 
 	// redirection
 	if (url.indexOf('#') != -1)
@@ -967,7 +1012,7 @@ function checkUrl()
 	if (original_url != window.location || first_url_check)
 	{
 		first_url_check = false;
-		url = window.location + '';
+		var url = window.location + '';
 		// if we need to load a specific combination
 		if (url.indexOf('#/') != -1)
 		{

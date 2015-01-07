@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -114,7 +114,7 @@ class ConnectionCore extends ObjectModel
 		{
 			// This is a bot and we have to retrieve its connection ID
 			$sql = 'SELECT `id_connections` FROM `'._DB_PREFIX_.'connections`
-					WHERE ip_address = '.ip2long(Tools::getRemoteAddr()).'
+					WHERE ip_address = '.(int)ip2long(Tools::getRemoteAddr()).'
 						AND `date_add` > \''.pSQL(date('Y-m-d H:i:00', time() - 1800)).'\'
 						'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
 					ORDER BY `date_add` DESC';
@@ -145,7 +145,7 @@ class ConnectionCore extends ObjectModel
 			$connection = new Connection();
 			$connection->id_guest = (int)$cookie->id_guest;
 			$connection->id_page = Page::getCurrentId();
-			$connection->ip_address = Tools::getRemoteAddr() ? ip2long(Tools::getRemoteAddr()) : '';
+			$connection->ip_address = Tools::getRemoteAddr() ? (int)ip2long(Tools::getRemoteAddr()) : '';
 			$connection->id_shop = Context::getContext()->shop->id;
 			$connection->id_shop_group = Context::getContext()->shop->id_shop_group;
 			$connection->date_add = $cookie->date_add;
@@ -181,9 +181,9 @@ class ConnectionCore extends ObjectModel
 
 		if ($period === 'week')
 			$interval = '1 WEEK';
-		else if ($period === 'month')
+		elseif ($period === 'month')
 			$interval = '1 MONTH';
-		else if ($period === 'year')
+		elseif ($period === 'year')
 			$interval = '1 YEAR';
 		else
 			return;

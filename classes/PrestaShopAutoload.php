@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -106,7 +106,7 @@ class PrestaShopAutoload
 			// If requested class does not exist, load associated core class
 			if (isset($this->index[$classname]) && !$this->index[$classname]['path'])
 			{
-				require($class_dir.$this->index[$classname.'Core']['path']);
+				require_once($class_dir.$this->index[$classname.'Core']['path']);
 
 				if ($this->index[$classname.'Core']['type'] != 'interface')
 					eval($this->index[$classname.'Core']['type'].' '.$classname.' extends '.$classname.'Core {}');
@@ -123,7 +123,7 @@ class PrestaShopAutoload
 		}
 		// Call directly ProductCore, ShopCore class
 		elseif (isset($this->index[$classname]['path']) && $this->index[$classname]['path'])
-			require($this->root_dir.$this->index[$classname]['path']);
+			require_once($this->root_dir.$this->index[$classname]['path']);
 	}
 
 	/**
@@ -179,7 +179,7 @@ class PrestaShopAutoload
 			{
 				if (is_dir($root_dir.$path.$file))
 					$classes = array_merge($classes, $this->getClassesFromDir($path.$file.'/', $host_mode));
-				else if (substr($file, -4) == '.php')
+				elseif (substr($file, -4) == '.php')
 				{
 					$content = file_get_contents($root_dir.$path.$file);
 			 		$pattern = '#\W((abstract\s+)?class|interface)\s+(?P<classname>'.basename($file, '.php').'(?:Core)?)'
@@ -213,15 +213,6 @@ class PrestaShopAutoload
 
 	private function normalizeDirectory($directory)
 	{
-		$last = $directory[strlen($directory) - 1];
-
-		if (in_array($last, array('/', '\\')))
-		{
-			$directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
-			return $directory;
-		}
-
-		$directory .= DIRECTORY_SEPARATOR;
-		return $directory;
+		return rtrim($directory, '/\\') .  DIRECTORY_SEPARATOR;
 	}
 }

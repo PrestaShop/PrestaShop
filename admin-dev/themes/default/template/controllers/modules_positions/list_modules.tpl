@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -159,7 +159,7 @@
 				<p>{l s='You have to select a shop to use Live Edit'}</p>
 			{else}
 				<p>{l s='Click here to be redirected to the front-office of your shop where you can move and delete modules directly.'}</p>
-					<a class="btn btn-default" href="{$url_live_edit|escape:'html':'UTF-8'}" target="_blank">
+					<a class="btn btn-default _blank" href="{$url_live_edit|escape:'html':'UTF-8'}">
 						<i class="icon-edit"></i>
 						{l s='Run Live Edit'}
 					</a>

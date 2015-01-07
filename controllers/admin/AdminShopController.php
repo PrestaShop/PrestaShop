@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -178,7 +178,7 @@ class AdminShopControllerCore extends AdminController
 
 		if ($this->display == 'edit')
 			$this->toolbar_title[] = $this->object->name;
-		else if (!$this->display && $this->id_shop_group)
+		elseif (!$this->display && $this->id_shop_group)
 		{
 			$group = new ShopGroup($this->id_shop_group);
 			$this->toolbar_title[] = $group->name;
@@ -241,7 +241,7 @@ class AdminShopControllerCore extends AdminController
 		{
 			if (Tools::getValue('id_shop') == Configuration::get('PS_SHOP_DEFAULT'))
 				$this->errors[] = Tools::displayError('You cannot disable the default shop.');
-			else if (Shop::getTotalShops() == 1)
+			elseif (Shop::getTotalShops() == 1)
 				$this->errors[] = Tools::displayError('You cannot disable the last shop.');
 		}*/
 		
@@ -270,7 +270,7 @@ class AdminShopControllerCore extends AdminController
 	{
 		if (!Validate::isLoadedObject($object = $this->loadObject()))
 			$this->errors[] = Tools::displayError('Unable to load this shop.');
-		else if (!Shop::hasDependency($object->id))
+		elseif (!Shop::hasDependency($object->id))
 		{
 			$result = Category::deleteCategoriesFromShop($object->id) && parent::processDelete();
 			Tools::generateHtaccess();
@@ -639,7 +639,7 @@ class AdminShopControllerCore extends AdminController
 					' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
 			}
 			/* voluntary do affectation here */
-			else if (($_POST[$this->identifier] = $object->id) && $this->postImage($object->id) && !count($this->errors) && $this->_redirect)
+			elseif (($_POST[$this->identifier] = $object->id) && $this->postImage($object->id) && !count($this->errors) && $this->_redirect)
 			{
 				$parent_id = (int)Tools::getValue('id_parent', 1);
 				$this->afterAdd($object);

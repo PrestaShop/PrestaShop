@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -314,7 +314,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				$cm = new CustomerMessage();
 				$cm->id_employee = (int)$this->context->employee->id;
 				$cm->id_customer_thread = (int)Tools::getValue('id_customer_thread');
-				$cm->ip_address = ip2long(Tools::getRemoteAddr());
+				$cm->ip_address = (int)ip2long(Tools::getRemoteAddr());
 				$current_employee = $this->context->employee;
 				$id_employee = (int)Tools::getValue('id_employee_forward');
 				$employee = new Employee($id_employee);
@@ -380,7 +380,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				$cm = new CustomerMessage();
 				$cm->id_employee = (int)$this->context->employee->id;
 				$cm->id_customer_thread = $ct->id;
-				$cm->ip_address = ip2long(Tools::getRemoteAddr());
+				$cm->ip_address = (int)ip2long(Tools::getRemoteAddr());
 				$cm->message = Tools::getValue('reply_message');
 				if (($error = $cm->validateField('message', $cm->message, null, array(), true)) !== true)
 					$this->errors[] = $error;
@@ -500,8 +500,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$helper->title = $this->l('Pending Discussion Threads', null, null, false);
 		if (ConfigurationKPI::get('PENDING_MESSAGES') !== false)
 			$helper->value = ConfigurationKPI::get('PENDING_MESSAGES');
-		if (ConfigurationKPI::get('PENDING_MESSAGES_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=pending_messages';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=pending_messages';
+		$helper->refresh = (bool)(ConfigurationKPI::get('PENDING_MESSAGES_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -512,8 +512,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$helper->subtitle = $this->l('30 days', null, null, false);
 		if (ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME') !== false)
 			$helper->value = ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME');
-		if (ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=avg_msg_response_time';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=avg_msg_response_time';
+		$helper->refresh = (bool)(ConfigurationKPI::get('AVG_MSG_RESPONSE_TIME_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpi();
@@ -524,8 +524,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$helper->subtitle = $this->l('30 day', null, null, false);
 		if (ConfigurationKPI::get('MESSAGES_PER_THREAD') !== false)
 			$helper->value = ConfigurationKPI::get('MESSAGES_PER_THREAD');
-		if (ConfigurationKPI::get('MESSAGES_PER_THREAD_EXPIRE') < $time)
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=messages_per_thread';
+		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=messages_per_thread';
+		$helper->refresh = (bool)(ConfigurationKPI::get('MESSAGES_PER_THREAD_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
 		$helper = new HelperKpiRow();
@@ -880,19 +880,23 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			$mbox = @imap_open('{'.$url.':'.$port.$conf_str.'}', $user, $password);
 
 			//checks if there is no error when connecting imap server
-			$errors = imap_errors();
+			$errors = array_unique(imap_errors());
 			$str_errors = '';
 			$str_error_delete = '';
+
 			if (sizeof($errors) && is_array($errors))
 			{
 				$str_errors = '';
 				foreach($errors as $error)
-					$str_errors .= '"'.$error.'",';
-				$str_errors = rtrim($str_errors, ',').'';
+					$str_errors .= $error.', ';
+				$str_errors = rtrim(trim($str_errors), ',');
 			}
 			//checks if imap connexion is active
 			if (!$mbox)
-				die('{"hasError" : true, "errors" : ["Cannot connect to the mailbox:.<br />'.addslashes($str_errors).'"]}');
+			{
+				$array = array('hasError' => true, 'errors' => array('Cannot connect to the mailbox :<br />'.($str_errors)));
+				die(Tools::jsonEncode($array));
+			}
 
 			//Returns information about the current mailbox. Returns FALSE on failure.
 			$check = imap_check($mbox);
@@ -920,7 +924,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				 {
 					if (Configuration::get('PS_SAV_IMAP_DELETE_MSG'))
 						if (!imap_delete($mbox, $overview->msgno))
-							$str_error_delete = ', "Fail to delete message"';
+							$str_error_delete = ', Fail to delete message';
 				 }
 				 else
 				 {
@@ -989,7 +993,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			}
 			imap_expunge($mbox);
 			imap_close($mbox);
-			die('{"hasError" : false, "errors" : ["'.$str_errors.$str_error_delete.'"]}');
+			$array = array('hasError' => false, 'errors' => array($str_errors.$str_error_delete));
+			die(Tools::jsonEncode($array));
 		}
 	}
 }

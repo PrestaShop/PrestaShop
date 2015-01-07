@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -69,12 +69,12 @@
 						<td>
 							{if get_class($document) eq 'OrderInvoice'}
 								{if isset($document->is_delivery)}
-									<a target="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateDeliverySlipPDF&amp;id_order_invoice={$document->id}">
+									<a class="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateDeliverySlipPDF&amp;id_order_invoice={$document->id}">
 								{else}
-									<a target="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateInvoicePDF&amp;id_order_invoice={$document->id}">
+									<a class="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateInvoicePDF&amp;id_order_invoice={$document->id}">
 							   {/if}
 							{elseif get_class($document) eq 'OrderSlip'}
-								<a target="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateOrderSlipPDF&amp;id_order_slip={$document->id}">
+								<a class="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateOrderSlipPDF&amp;id_order_slip={$document->id}">
 							{/if}
 							{if get_class($document) eq 'OrderInvoice'}
 								{if isset($document->is_delivery)}
@@ -104,7 +104,7 @@
 								{/if}
 							{/if}
 						{elseif get_class($document) eq 'OrderSlip'}
-							{displayPrice price=$document->amount currency=$currency->id}
+							{displayPrice price=$document->amount+$document->shipping_cost_amount currency=$currency->id}
 						{/if}
 						</td>
 						<td class="text-right document_action">
@@ -143,7 +143,7 @@
 									<textarea name="note" id="editNote{$document->id}" class="edit-note textarea-autosize">{$document->note|escape:'html':'UTF-8'}</textarea>
 								</p>
 								<p>
-									<button type="submit" name="submitEditNote" class="btn btn-default"> 
+									<button type="submit" name="submitEditNote" class="btn btn-default">
 										<i class="icon-save"></i>
 										{l s='Save'}
 									</button>

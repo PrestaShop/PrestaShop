@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,16 +18,16 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div class="row">
-	<div class="col-xs-12 col-md-6">
+	<div class="col-xs-12">
         <p class="payment_module">
             <a class="cash" href="{$link->getModuleLink('cashondelivery', 'validation', [], true)|escape:'html'}" title="{l s='Pay with cash on delivery (COD)' mod='cashondelivery'}" rel="nofollow">
-            	{l s='Pay with cash on delivery (COD)' mod='cashondelivery'}<br />
-            	{l s='You pay for the merchandise upon delivery' mod='cashondelivery'}
+            	{l s='Pay with cash on delivery (COD)' mod='cashondelivery'}
+            	<span>({l s='You pay for the merchandise upon delivery' mod='cashondelivery'})</span>
             </a>
         </p>
     </div>

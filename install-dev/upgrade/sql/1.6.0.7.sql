@@ -11,8 +11,6 @@ UPDATE `PREFIX_hook` SET  live_edit = '1' WHERE `name` IN('displayTop','displayA
 'displayOrderDetail','displayPaymentReturn','displayPaymentTop','displayProductButtons','displayProductComparison','displayProductListFunctionalButtons',
 'displayProductTab','displayProductTabContent','displayRightColumnProduct','displayShoppingCart','displayShoppingCartFooter');
 
-ALTER TABLE `PREFIX_order_detail_tax` DROP PRIMARY KEY;
-
 ALTER TABLE `PREFIX_order_detail_tax` ADD INDEX id_order_detail (`id_order_detail`);
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES('PS_DISPLAY_BEST_SELLERS', '1', NOW(), NOW());
@@ -23,4 +21,4 @@ INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VAL
 
 /* PHP:ps1607_language_code_update(); */;
 /* PHP:drop_module_non_unique_index(); */;
-
+/* PHP:p1607_drop_primary_key_if_exists(); */;

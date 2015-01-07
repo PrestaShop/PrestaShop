@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -154,16 +154,16 @@
 			</a>
 		</p>
 		<p class="text-center">
-			<a class="link-social link-twitter" href="https://twitter.com/PrestaShop" target="_blank" title="Twitter">
+			<a class="link-social link-twitter _blank" href="https://twitter.com/PrestaShop" title="Twitter">
 				<i class="icon-twitter"></i>
 			</a>
-			<a class="link-social link-facebook" href="https://www.facebook.com/prestashop" target="_blank" title="Facebook">
+			<a class="link-social link-facebook _blank" href="https://www.facebook.com/prestashop" title="Facebook">
 				<i class="icon-facebook"></i>
 			</a>
-			<a class="link-social link-github" href="https://www.prestashop.com/github" target="_blank" title="Github">
+			<a class="link-social link-github _blank" href="https://www.prestashop.com/github" title="Github">
 				<i class="icon-github"></i>
 			</a>
-			<a class="link-social link-google" href="https://plus.google.com/+prestashop/" target="_blank" title="Google">
+			<a class="link-social link-google _blank" href="https://plus.google.com/+prestashop/" title="Google">
 				<i class="icon-google-plus"></i>
 			</a>
 		</p>

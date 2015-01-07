@@ -17,7 +17,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -135,14 +135,14 @@ function copy2friendlyURL()
 {
 	if (typeof(id_product) == 'undefined')
 		id_product = false;
-	
+
 	if (ps_force_friendly_product || !$('#link_rewrite_' + id_language).val().length || !id_product)//check if user didn't type anything in rewrite field, to prevent overwriting
 	{
 		$('#link_rewrite_' + id_language).val(str2url($('#name_' + id_language).val().replace(/^[0-9]+\./, ''), 'UTF-8').replace('%', ''));
 		if ($('#friendly-url'))
 			$('#friendly-url').html($('#link_rewrite_' + id_language).val());
 		// trigger onchange event to use anything binded there
-		$('#link_rewrite_' + id_language).change(); 
+		$('#link_rewrite_' + id_language).change();
 	}
 	return;
 }
@@ -210,7 +210,7 @@ function changeFormLanguage(id_language_new, iso_code, employee_cookie)
 		$(this).find('.lang_' + id_language_new)
 			.show()
 			.siblings('div:not(.displayed_flag):not(.clear)').hide();
-		$('.language_current').attr('src', '../img/l/' + id_language_new + '.jpg');
+		$(this).find('.language_current').attr('src', '../img/l/' + id_language_new + '.jpg');
 	});
 
 	// For multishop checkboxes
@@ -358,14 +358,15 @@ function gencode(size)
 }
 
 var tpl_viewing_window = null;
-function viewTemplates(id_select, prefix, ext)
+function viewTemplates(id_select, lang, ext)
 {
 	var loc = $(id_select).val();
 	if (loc != 0)
 	{
 		if (tpl_viewing_window != null && !tpl_viewing_window.closed)
 			tpl_viewing_window.close();
-		tpl_viewing_window = window.open(prefix + loc + ext, 'tpl_viewing', 'toolbar=0,location=0,directories=0,statfr=no,menubar=0,scrollbars=yes,resizable=yes,width=520,height=400,top=50,left=300');
+		var url_preview = $("option[value="+loc+"]", id_select).data('preview');
+		tpl_viewing_window = window.open(url_preview + lang + loc + ext, 'tpl_viewing', 'toolbar=0,location=0,directories=0,statfr=no,menubar=0,scrollbars=yes,resizable=yes,width=520,height=400,top=50,left=300');
 		tpl_viewing_window.focus();
 	}
 }
@@ -540,7 +541,7 @@ function showRedirectProductOptions(show)
 		$('.redirect_product_options').fadeIn();
 	else
 		$('.redirect_product_options').fadeOut();
-	
+
 	redirectSelectChange();
 }
 
@@ -579,7 +580,7 @@ function showRedirectProductSelectOptions(show)
 		$('.redirect_product_options_product_choise').hide();
 		removeRelatedProduct();
 	}
-		
+
 }
 
 function showOptions(show)
@@ -780,11 +781,11 @@ $(document).ready(function()
 		setTimeout(function(){element.hide()}, 1000);
 		clearTimeout(ajax_running_timeout);
 	});
-	
+
 	bindTabModuleListAction();
-	
+
 	bindAddonsButtons();
-	
+
 	//Check filters value on submit filter
 	$("[name='submitFilter']").click(function(event) {
 		var list_id = $(this).data('list-id');
@@ -835,7 +836,7 @@ $(document).ready(function()
 				{
 					$(this).css('width', $(this).width());
 					// fixing parent height will prevent that annoying "pagequake" thing
-					// the order is important : this has to be set before adding class fix-toolbar 
+					// the order is important : this has to be set before adding class fix-toolbar
 					$(this).parent().css('height', $(this).parent().height());
 					$(this).addClass("fix-toolbar");
 				}
@@ -915,6 +916,31 @@ $(document).ready(function()
 		});
 		return false;
 	});
+
+	// js for the buttons of swap helper
+	$("#addSwap").on('click', function(e) {
+		e.preventDefault();
+		$('#availableSwap option:selected').each( function() {
+			$('#selectedSwap').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
+			$(this).remove();
+		});
+		$('#selectedSwap option').prop('selected', true);
+	});
+
+	$("#removeSwap").on('click', function(e) {
+		e.preventDefault();
+		$('#selectedSwap option:selected').each( function() {
+			$('#availableSwap').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
+			$(this).remove();
+		});
+		$('#selectedSwap option').prop('selected', true);
+	});
+
+	if ($('#selectedSwap').length != 0) {
+		$('button:submit').click(function() {
+			$('#selectedSwap option').attr('selected', 'selected');
+		});
+	}
 });
 
 
@@ -925,7 +951,7 @@ function bindTabModuleListAction()
 			option = $('#'+$(this).data('option')+' :selected');
 			if ($(option).data('onclick') != '')
 			{
-				
+
 				var f = eval("(function(){ "+$(option).data('onclick')+"})");
 				if (f.call())
 					window.location.href = $(option).data('href');
@@ -933,7 +959,7 @@ function bindTabModuleListAction()
 			else
 				window.location.href = $(option).data('href');
 			return false;
-		});			
+		});
 	});
 }
 
@@ -1060,7 +1086,7 @@ function display_action_details(row_id, controller, token, action, params)
 				}
 				current_element.data('dataMaped', true);
 				current_element.data('opened', false);
-				
+
 				if (typeof(initTableDnD) != 'undefined')
 					initTableDnD('.details_'+id+' table.tableDnD');
 			}
@@ -1096,7 +1122,7 @@ function changeEmployeeLanguage()
 {
 	if (typeof allowEmployeeFormLang !== 'undefined' && allowEmployeeFormLang)
 		$.post("index.php", {
-			action: 'formLanguage', 
+			action: 'formLanguage',
 			tab: 'AdminEmployees',
 			ajax: 1,
 			token: employee_token,
@@ -1137,7 +1163,7 @@ function sendBulkAction(form, action)
 	$(form).submit();
 }
 
-function openModulesList() 
+function openModulesList()
 {
 	if (!modules_list_loaded)
 	{
@@ -1197,17 +1223,17 @@ function bindAddonsButtons()
 					{
 						$('#addons_loading').html('');
 						$('#addons_login_div').fadeOut();
-						window.location.href = admin_modules_link + '&conf=32';
+						window.location.href = currentIndex + '&token=' + token + '&conf=32';
 					}
 					else
-						$('#addons_loading').html(errorLogin);
+						$('#addons_loading').html('<br><div class="alert alert-danger">'+errorLogin+'</div>');
 				}
 			});
 		}
 		catch(e){}
 		return false;
 	});
-	
+
 	// Method to log out PrestaShop Addons WebServices
 	$('#addons_logout_button').click(function()
 	{
@@ -1286,7 +1312,7 @@ function check_for_all_accesses(tabsize, tabnumber)
 	var i = 0;
 	var res = 0;
 	var right = 0;
-	var rights = new Array('view', 'add', 'edit', 'delete', 'all'); 
+	var rights = new Array('view', 'add', 'edit', 'delete', 'all');
 
 	while (i != parseInt(tabsize) + 1)
 	{
@@ -1339,7 +1365,7 @@ function verifyMail(testMsg, testSubject)
 	$("#mailResultCheck").slideDown("slow");
 
 	//local verifications
-	if ($("#testEmail[value=]").length > 0)
+	if (!($("#testEmail").val().length > 0))
 	{
 		$("#mailResultCheck").addClass("alert-danger").removeClass("alert-success").removeClass('userInfos').html(errorMail);
 		return false;
@@ -1402,7 +1428,7 @@ function checkLangPack(token){
 				action:'checkLangPack',
 				token:token,
 				ajax:1,
-				iso_lang:($('#iso_code').val()).toLowerCase(), 
+				iso_lang:($('#iso_code').val()).toLowerCase(),
 				ps_version:$('#ps_version').val()
 			},
 			function(ret)
@@ -1455,7 +1481,7 @@ function isCleanHtml(content)
 	events += '|ondragleave|ondragover|ondragstart|ondrop|onerrorupdate|onfilterchange|onfinish|onfocusin|onfocusout|onhashchange|onhelp|oninput|onlosecapture|onmessage|onmouseup|onmovestart';
 	events += '|onoffline|ononline|onpaste|onpropertychange|onreadystatechange|onresizeend|onresizestart|onrowenter|onrowexit|onrowsdelete|onrowsinserted|onscroll|onsearch|onselectionchange';
 	events += '|onselectstart|onstart|onstop';
-	
+
 	var script1 = /<[\s]*script/im;
 	var script2 = new RegExp('('+events+')[\s]*=', 'im');
 	var script3 = /.*script\:/im;
@@ -1471,6 +1497,13 @@ function parseDate(date){
 	return $.datepicker.parseDate("yy-mm-dd", date);
 }
 
+function refresh_kpis()
+{
+	$('.box-stats').each(function(){
+		window['refresh_' + $(this).attr('id').replace(/-/g, '_')]();
+	});
+}
+
 function createSqlQueryName()
 {
 	var container = false;
@@ -1482,7 +1515,7 @@ function createSqlQueryName()
 	var title = false;
 	if ($('.page-title'))
 		title = $('.page-title').first().text().replace(/\s+/g, ' ').trim();
-	
+
 	var name = false;
 	if (container && current && container != current)
 		name = container + ' > ' + current;
@@ -1490,7 +1523,7 @@ function createSqlQueryName()
 		name = container;
 	else if (current)
 		name = current;
-	
+
 	if (title && title != current && title != container)
 	{
 		if (name)
@@ -1501,4 +1534,3 @@ function createSqlQueryName()
 
 	return name.trim();
 }
-

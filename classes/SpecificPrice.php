@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -39,6 +39,7 @@ class SpecificPriceCore extends ObjectModel
 	public	$price;
 	public	$from_quantity;
 	public	$reduction;
+	public	$reduction_tax = 1;
 	public	$reduction_type;
 	public	$from;
 	public	$to;
@@ -63,6 +64,7 @@ class SpecificPriceCore extends ObjectModel
 			'price' => 					array('type' => self::TYPE_FLOAT, 'validate' => 'isNegativePrice', 'required' => true),
 			'from_quantity' => 			array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
 			'reduction' => 				array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice', 'required' => true),
+			'reduction_tax' => 			array('type' => self::TYPE_INT, 'validate' => 'isBool', 'required' => true),
 			'reduction_type' => 		array('type' => self::TYPE_STRING, 'validate' => 'isReductionType', 'required' => true),
 			'from' => 					array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat', 'required' => true),
 			'to' => 					array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat', 'required' => true),
@@ -228,14 +230,14 @@ class SpecificPriceCore extends ObjectModel
 					AND
 					(`to` = \'0000-00-00 00:00:00\' OR \''.$now.'\' <= `to`)
 				)
-				AND id_cart IN (0, '.(int)$id_cart.') 
+				AND id_cart IN (0, '.(int)$id_cart.')
 				AND IF(`from_quantity` > 1, `from_quantity`, 0) <= ';
 
-			$query .= (Configuration::get('PS_QTY_DISCOUNT_ON_COMBINATION') || !$id_cart || !$real_quantity) ? (int)$quantity : max(1, (int)$real_quantity);			
+			$query .= (Configuration::get('PS_QTY_DISCOUNT_ON_COMBINATION') || !$id_cart || !$real_quantity) ? (int)$quantity : max(1, (int)$real_quantity);
 			$query .= ' ORDER BY `id_product_attribute` DESC, `from_quantity` DESC, `id_specific_price_rule` ASC, `score` DESC';
-			
+
 			SpecificPrice::$_specificPriceCache[$key] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
-				
+
 		}
 		return SpecificPrice::$_specificPriceCache[$key];
 	}
@@ -296,7 +298,7 @@ class SpecificPriceCore extends ObjectModel
 						AND
 						(`to` = \'0000-00-00 00:00:00\' OR \''.$now.'\' <= `to`)
 					)
-					ORDER BY `id_product_attribute` DESC, `from_quantity` DESC, `id_specific_price_rule` ASC, `score` DESC
+					ORDER BY `from_quantity` ASC, `id_specific_price_rule` ASC, `score` DESC
 		');
 
 		$targeted_prices = array();
@@ -406,7 +408,7 @@ class SpecificPriceCore extends ObjectModel
 			$feature_active = Configuration::get('PS_SPECIFIC_PRICE_FEATURE_ACTIVE');
 		return $feature_active;
 	}
-	
+
 	public static function exists($id_product, $id_product_attribute, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to, $rule = false)
 	{
 		$rule = ' AND `id_specific_price_rule`'.(!$rule ? '=0' : '!=0');

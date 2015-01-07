@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -108,7 +108,6 @@ class UploaderCore
 
 	public function getPostMaxSizeBytes()
 	{
-
 		$post_max_size = ini_get('post_max_size');
 		$bytes         = trim($post_max_size);
 		$last          = strtolower($post_max_size[strlen($post_max_size) - 1]);
@@ -150,7 +149,6 @@ class UploaderCore
 		if ($upload && is_array($upload['tmp_name']))
 		{
 			$tmp = array();
-
 			foreach ($upload['tmp_name'] as $index => $value)
 			{	$tmp[$index] = array(
 					'tmp_name' => $upload['tmp_name'][$index],
@@ -165,7 +163,6 @@ class UploaderCore
 		}
 		elseif ($upload)
 		{
-
 			$this->files[] = $this->upload($upload, $dest);
 		}
 
@@ -186,7 +183,7 @@ class UploaderCore
 			else
 				// Non-multipart uploads (PUT method support)
 				file_put_contents($file_path, fopen('php://input', 'r'));
-			
+
 			$file_size = $this->_getFileSize($file_path, true);
 
 			if ($file_size === $file['size'])
@@ -210,10 +207,10 @@ class UploaderCore
 		switch ($error_code)
 		{
 			case 1:
-				$error = Tools::displayError(sprintf('The uploaded file exceeds %s', ini_get('post_max_size')));
+				$error = Tools::displayError(sprintf('The uploaded file exceeds %s', ini_get('upload_max_filesize')));
 				break;
 			case 2:
-				$error = Tools::displayError(sprintf('The uploaded file exceeds %s', Tools::formatBytes((int)$_POST['MAX_FILE_SIZE'])));
+				$error = Tools::displayError(sprintf('The uploaded file exceeds %s', ini_get('post_max_size')));
 				break;
 			case 3:
 				$error = Tools::displayError('The uploaded file was only partially uploaded');
@@ -287,12 +284,12 @@ class UploaderCore
 	protected function _normalizeDirectory($directory)
 	{
 		$last = $directory[strlen($directory) - 1];
-		
+
 		if (in_array($last, array('/', '\\'))) {
 			$directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
 			return $directory;
 		}
-		
+
 		$directory .= DIRECTORY_SEPARATOR;
 		return $directory;
 	}

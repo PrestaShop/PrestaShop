@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -221,7 +221,7 @@ class AuthControllerCore extends FrontController
 
 		foreach (array('inv', 'dlv') as $addressType)
 			$this->context->smarty->assign(array(
-				$addressType.'_adr_fields' => $addressFormat, 
+				$addressType.'_adr_fields' => $addressFormat,
 				$addressType.'_all_fields' => $addressItems,
 				'required_fields' => $requireFormFieldsList
 			));
@@ -248,7 +248,6 @@ class AuthControllerCore extends FrontController
 	 */
 	protected function processSubmitLogin()
 	{
-
 		Hook::exec('actionBeforeAuthentication');
 		$passwd = trim(Tools::getValue('passwd'));
 		$email = trim(Tools::getValue('email'));
@@ -266,7 +265,7 @@ class AuthControllerCore extends FrontController
 			$authentication = $customer->getByEmail(trim($email), trim($passwd));
 			if (isset($authentication->active) && !$authentication->active)
 				$this->errors[] = Tools::displayError('Your account isn\'t available at this time, please contact us');
-			else if (!$authentication || !$customer->id)
+			elseif (!$authentication || !$customer->id)
 				$this->errors[] = Tools::displayError('Authentication failed.');
 			else
 			{
@@ -368,7 +367,7 @@ class AuthControllerCore extends FrontController
 			$this->context->smarty->assign('email_create', 1);
 		// New Guest customer
 		if (!Tools::getValue('is_new_customer', 1) && !Configuration::get('PS_GUEST_CHECKOUT_ENABLED'))
-			$this->errors[] = Tools::displayError('You cannot create a guest account..');
+			$this->errors[] = Tools::displayError('You cannot create a guest account.');
 		if (!Tools::getValue('is_new_customer', 1))
 			$_POST['passwd'] = md5(time()._COOKIE_KEY_);
 		if ($guest_email = Tools::getValue('guest_email'))
@@ -459,7 +458,7 @@ class AuthControllerCore extends FrontController
 							Tools::redirect(html_entity_decode($back));
 						// redirection: if cart is not empty : redirection to the cart
 						if (count($this->context->cart->getProducts(true)) > 0)
-							Tools::redirect('index.php?controller=order&multi-shipping='.(int)Tools::getValue('multi-shipping'));
+							Tools::redirect('index.php?controller=order'.($multi = (int)Tools::getValue('multi-shipping') ? '&multi-shipping='.$multi : ''));
 						// else : redirection to the account
 						else
 							Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? urlencode($this->authRedirection) : 'my-account'));
@@ -476,13 +475,13 @@ class AuthControllerCore extends FrontController
 			$_POST['firstname'] = $firstnameAddress;
 			$post_back = $_POST;
 			// Preparing addresses
-			foreach($addresses_types as $addresses_type)
+			foreach ($addresses_types as $addresses_type)
 			{
 				$$addresses_type = new Address();
 				$$addresses_type->id_customer = 1;
 
 				if ($addresses_type == 'address_invoice')
-					foreach($_POST as $key => &$post)
+					foreach ($_POST as $key => &$post)
 						if ($tmp = Tools::getValue($key.'_invoice'))
 							$post = $tmp;
 
@@ -496,11 +495,11 @@ class AuthControllerCore extends FrontController
 				if (!$country->active)
 					$this->errors[] = Tools::displayError('This country is not active.');
 
-				$postcode = Tools::getValue('postcode');
+				$postcode = $$addresses_type->postcode;
 				/* Check zip code format */
 				if ($country->zip_code_format && !$country->checkZipCode($postcode))
 					$this->errors[] = sprintf(Tools::displayError('The Zip/Postal code you\'ve entered is invalid. It must follow this format: %s'), str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format))));
-				elseif(empty($postcode) && $country->need_zip_code)
+				elseif (empty($postcode) && $country->need_zip_code)
 					$this->errors[] = Tools::displayError('A Zip / Postal code is required.');
 				elseif ($postcode && !Validate::isPostCode($postcode))
 					$this->errors[] = Tools::displayError('The Zip / Postal code is invalid.');
@@ -515,7 +514,7 @@ class AuthControllerCore extends FrontController
 						$this->errors[] = Tools::displayError('Country is invalid');
 				$contains_state = isset($country) && is_object($country) ? (int)$country->contains_states: 0;
 				$id_state = isset($$addresses_type) && is_object($$addresses_type) ? (int)$$addresses_type->id_state: 0;
-				if ((Tools::isSubmit('submitAccount')|| Tools::isSubmit('submitGuestAccount')) && $contains_state && !$id_state)
+				if ((Tools::isSubmit('submitAccount') || Tools::isSubmit('submitGuestAccount')) && $contains_state && !$id_state)
 					$this->errors[] = Tools::displayError('This country requires you to choose a State.');
 			}
 		}
@@ -546,11 +545,11 @@ class AuthControllerCore extends FrontController
 					$this->errors[] = Tools::displayError('An error occurred while creating your account.');
 				else
 				{
-					foreach($addresses_types as $addresses_type)
+					foreach ($addresses_types as $addresses_type)
 					{
 						$$addresses_type->id_customer = (int)$customer->id;
 						if ($addresses_type == 'address_invoice')
-							foreach($_POST as $key => &$post)
+							foreach ($_POST as $key => &$post)
 								if ($tmp = Tools::getValue($key.'_invoice'))
 									$post = $tmp;
 
@@ -621,7 +620,7 @@ class AuthControllerCore extends FrontController
 
 						// redirection: if cart is not empty : redirection to the cart
 						if (count($this->context->cart->getProducts(true)) > 0)
-							Tools::redirect('index.php?controller=order&multi-shipping='.(int)Tools::getValue('multi-shipping'));
+							Tools::redirect('index.php?controller=order'.($multi = (int)Tools::getValue('multi-shipping') ? '&multi-shipping='.$multi : ''));
 						// else : redirection to the account
 						else
 							Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? urlencode($this->authRedirection) : 'my-account'));

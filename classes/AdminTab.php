@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -1001,7 +1001,7 @@ abstract class AdminTabCore
 						$method_name = 'updateOption'.Tools::toCamelCase($key, true);
 						if (method_exists($this, $method_name))
 							$this->$method_name(Tools::getValue($key));
-						else if (isset($options['type']) && in_array($options['type'], array('textLang', 'textareaLang')))
+						elseif (isset($options['type']) && in_array($options['type'], array('textLang', 'textareaLang')))
 						{
 							$list = array();
 							foreach ($languages as $language)
@@ -1314,7 +1314,7 @@ abstract class AdminTabCore
 		{
 			if (!$this->_group)
 				$this->_group = 'GROUP BY a.'.pSQL($this->identifier);
-			else if (!preg_match('#(\s|,)\s*a\.`?'.pSQL($this->identifier).'`?(\s|,|$)#', $this->_group))
+			elseif (!preg_match('#(\s|,)\s*a\.`?'.pSQL($this->identifier).'`?(\s|,|$)#', $this->_group))
 				$this->_group .= ', a.'.pSQL($this->identifier);
 
 			if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && !preg_match('#`?'.preg_quote(_DB_PREFIX_.$this->table.'_'.$filterKey).'`? *sa#', $this->_join))
@@ -1683,7 +1683,7 @@ abstract class AdminTabCore
 					{
 						if ($key == 'price')
 							$echo = round($tr[$key], 2);
-						else if (isset($params['maxlength']) && Tools::strlen($tr[$key]) > $params['maxlength'])
+						elseif (isset($params['maxlength']) && Tools::strlen($tr[$key]) > $params['maxlength'])
 							$echo = '<span title="'.$tr[$key].'">'.Tools::substr($tr[$key], 0, $params['maxlength']).'...</span>';
 						else
 							$echo = $tr[$key];
@@ -1858,7 +1858,7 @@ abstract class AdminTabCore
 						$isDisabled = true;
 						$isInvisible = true;
 					}
-					else if (Shop::getContext() != Shop::CONTEXT_ALL && !Configuration::isOverridenByCurrentContext($key))
+					elseif (Shop::getContext() != Shop::CONTEXT_ALL && !Configuration::isOverridenByCurrentContext($key))
 						$isDisabled = true;
 				}
 

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop 
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -174,8 +174,8 @@ class MediaCore
 		{
 			$limit  = Media::getBackTrackLimit();
 			$css_content = preg_replace('#/\*.*?\*/#s', '', $css_content, $limit);
-			$css_content = preg_replace_callback('#(url\((?![\\\'"]?data:)(?!http://)(?!https://)(?:\'|")?)([^\)\'"]*(?:\'|")?\))#s', array('Tools', 'replaceByAbsoluteURL'), $css_content, $limit); 
-			$css_content = preg_replace('#\s+#', ' ', $css_content, $limit);		
+			$css_content = preg_replace_callback('#(url\((?![\\\'"]?data:)(?!http://)(?!https://)(?:\'|")?)([^\)\'"]*(?:\'|")?\))#s', array('Tools', 'replaceByAbsoluteURL'), $css_content, $limit);
+			$css_content = preg_replace('#\s+#', ' ', $css_content, $limit);
 			$css_content = str_replace(array("\t", "\n", "\r"), '', $css_content);
 			$css_content = str_replace(array('; ', ': '), array(';', ':'), $css_content);
 			$css_content = str_replace(array(' {', '{ '), '{', $css_content);
@@ -184,7 +184,7 @@ class MediaCore
 			$css_content = str_replace(array(':0px', ':0em', ':0pt', ':0%'), ':0', $css_content);
 			$css_content = str_replace(array(' 0px', ' 0em', ' 0pt', ' 0%'), ' 0', $css_content);
 			$css_content = str_replace('\'images_ie/', '\'images/', $css_content);
-			$css_content = preg_replace_callback('#(AlphaImageLoader\(src=\')([^\']*\',)#s', array('Tools', 'replaceByAbsoluteURL'), $css_content);	
+			$css_content = preg_replace_callback('#(AlphaImageLoader\(src=\')([^\']*\',)#s', array('Tools', 'replaceByAbsoluteURL'), $css_content);
 			// Store all import url
 			preg_match_all('#@(import|charset) .*?;#i', $css_content, $m);
 			for ($i = 0, $total = count($m[0]); $i < $total; $i++)
@@ -246,7 +246,7 @@ class MediaCore
 		{
 			$media_uri_host_mode = '/'.ltrim(str_replace(str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, _PS_CORE_DIR_), __PS_BASE_URI__, $media_uri), '/\\');
 			$media_uri = '/'.ltrim(str_replace(str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, _PS_ROOT_DIR_), __PS_BASE_URI__, $media_uri), '/\\');
-			$url_data['path'] = $media_uri;			
+			$url_data['path'] = $media_uri;
 			// remove PS_BASE_URI on _PS_ROOT_DIR_ for the following
 			$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
 			$file_uri_host_mode = _PS_CORE_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, Tools::str_replace_once(_PS_CORE_DIR_, '', $url_data['path']));
@@ -254,7 +254,7 @@ class MediaCore
 
 		// check if css files exists
 		if (!array_key_exists('host', $url_data))
-		{			
+		{
 			if (!@filemtime($file_uri) || @filesize($file_uri) === 0)
 			{
 				if (!defined('_PS_HOST_MODE_'))
@@ -265,13 +265,13 @@ class MediaCore
 				{
 					$media_uri = $media_uri_host_mode;
 					$file_uri = $file_uri_host_mode;
-				}				
+				}
 			}
 		}
 
 		if (!array_key_exists('host', $url_data))
 			$media_uri = str_replace('//', '/', $media_uri);
-		
+
 		if ($css_media_type)
 			return array($media_uri => $css_media_type);
 
@@ -289,7 +289,7 @@ class MediaCore
 		$add_no_conflict = false;
 		if ($version === null)
 			$version = _PS_JQUERY_VERSION_; //set default version
-		else if (preg_match('/^([0-9\.]+)$/Ui', $version))
+		elseif (preg_match('/^([0-9\.]+)$/Ui', $version))
 			$add_no_conflict = true;
 		else
 			return false;
@@ -403,7 +403,7 @@ class MediaCore
 		$url_data = parse_url($folder);
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
 		$file_uri_host_mode = _PS_CORE_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
-		
+
 		if (@file_exists($file_uri.$file) || (defined('_PS_HOST_MODE_') && @file_exists($file_uri_host_mode.$file)))
 			$plugin_path['js'] = Media::getJSPath($folder.$file);
 		elseif (@file_exists($file_uri.$name.'/'.$file) || (defined('_PS_HOST_MODE_') && @file_exists($file_uri_host_mode.$name.'/'.$file)))
@@ -429,7 +429,7 @@ class MediaCore
 		$url_data = parse_url($folder);
 		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
 		$file_uri_host_mode = _PS_CORE_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
-		
+
 		if (@file_exists($file_uri.$file) || (defined('_PS_HOST_MODE_') && @file_exists($file_uri_host_mode.$file)))
 			return Media::getCSSPath($folder.$file);
 		elseif (@file_exists($file_uri.$name.'/'.$file) || (defined('_PS_HOST_MODE_') && @file_exists($file_uri_host_mode.$name.'/'.$file)))
@@ -448,7 +448,7 @@ class MediaCore
 	{
 		//inits
 		$css_files_by_media = array();
-		$external_css_files = array(); 
+		$external_css_files = array();
 		$compressed_css_files = array();
 		$compressed_css_files_not_found = array();
 		$compressed_css_files_infos = array();
@@ -552,7 +552,7 @@ class MediaCore
 			$url = str_replace(_PS_THEME_DIR_, _THEMES_DIR_._THEME_NAME_.'/', $filename);
 			$css_files[$protocol_link.Tools::getMediaServer($url).$url] = $media;
 		}
-		return array_merge($external_css_files, $css_files); 
+		return array_merge($external_css_files, $css_files);
 	}
 
 	public static function getBackTrackLimit()
@@ -656,7 +656,7 @@ class MediaCore
 
 		return array_merge(array($protocol_link.Tools::getMediaServer($url).$url), $js_external_files);
 	}
-	
+
 	public static function clearCache()
 	{
 		foreach (array(_PS_THEME_DIR_.'cache') as $dir)
@@ -703,13 +703,18 @@ class MediaCore
 	 * @param mixed $js_def
 	 * @return void
 	 */
-	public static function addJsDefL($params, $content, $smarty, &$repeat)
+	public static function addJsDefL($params, $content, $smarty = null, &$repeat = false)
 	{
-		if (!$repeat && isset($params) && is_array($params) && Tools::strlen($content))
+		if (!$repeat && isset($params) && Tools::strlen($content))
+		{
+			if (!is_array($params))
+				$params = (array)$params;
+
 			foreach($params as $param)
 				Media::$js_def[$param] = $content;
+		}
 	}
-	
+
 	public static function deferInlineScripts($output)
 	{
 		/* Try to enqueue in js_files inline scripts with src but without conditionnal comments */
@@ -758,7 +763,7 @@ class MediaCore
 		$output = preg_replace_callback('/<script[^>]*>(.*)<\s*\/script\s*[^>]*>/Uims', array('Media', 'deferScript'), $output);
 		return $output;
 	}
-	
+
 	public static function deferScript($matches)
 	{
 		if (!is_array($matches))

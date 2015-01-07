@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -545,8 +545,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 			foreach ($languages as $language)
 				foreach (Image::getImages($language['id_lang'], $object_id) as $image)
 					$available_image_ids[] = $image['id_image'];
-
-
+			$available_image_ids = array_unique($available_image_ids, SORT_NUMERIC);
+			
 			// If an image id is specified
 			if ($this->wsObject->urlSegment[3] != '')
 			{
@@ -578,7 +578,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 				}
 			}
 			// display the list of declinated images
-			else if ($this->wsObject->method == 'GET' || $this->wsObject->method == 'HEAD')
+			elseif ($this->wsObject->method == 'GET' || $this->wsObject->method == 'HEAD')
 			{
 				if ($available_image_ids)
 				{
@@ -1154,7 +1154,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 						@unlink(_PS_TMP_IMG_DIR_.$tmpName);
 						$this->imgToDisplay = $receptionPath;
 					}
-					else if ($this->imageType == 'customizations')
+					elseif ($this->imageType == 'customizations')
 					{
 						$filename = md5(uniqid(rand(), true));
 						$this->imgToDisplay = _PS_UPLOAD_DIR_.$filename;

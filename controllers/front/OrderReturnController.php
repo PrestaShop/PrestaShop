@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -46,21 +46,21 @@ class OrderReturnControllerCore extends FrontController
 			$this->errors[] = Tools::displayError('Order ID required');
 		else
 		{
-			$orderRet = new OrderReturn((int)($_GET['id_order_return']));
+			$orderRet = new OrderReturn((int)$_GET['id_order_return']);
 			if (Validate::isLoadedObject($orderRet) && $orderRet->id_customer == $this->context->cookie->id_customer)
 			{
 				$order = new Order((int)($orderRet->id_order));
 				if (Validate::isLoadedObject($order))
 				{
-					$state = new OrderReturnState((int)($orderRet->state));
+					$state = new OrderReturnState((int)$orderRet->state);
 					$this->context->smarty->assign(array(
 						'orderRet' => $orderRet,
 						'order' => $order,
 						'state_name' => $state->name[(int)$this->context->language->id],
 						'return_allowed' => false,
-						'products' => OrderReturn::getOrdersReturnProducts((int)($orderRet->id), $order),
-						'returnedCustomizations' => OrderReturn::getReturnedCustomizedProducts((int)($orderRet->id_order)),
-						'customizedDatas' => Product::getAllCustomizedDatas((int)($order->id_cart))
+						'products' => OrderReturn::getOrdersReturnProducts((int)$orderRet->id, $order),
+						'returnedCustomizations' => OrderReturn::getReturnedCustomizedProducts((int)$orderRet->id_order),
+						'customizedDatas' => Product::getAllCustomizedDatas((int)$order->id_cart)
 					));
 				}
 				else
@@ -81,7 +81,7 @@ class OrderReturnControllerCore extends FrontController
 
 		$this->context->smarty->assign(array(
 			'errors' => $this->errors,
-			'nbdaysreturn' => (int)(Configuration::get('PS_ORDER_RETURN_NB_DAYS'))
+			'nbdaysreturn' => (int)Configuration::get('PS_ORDER_RETURN_NB_DAYS')
 		));
 		$this->setTemplate(_PS_THEME_DIR_.'order-return.tpl');
 	}

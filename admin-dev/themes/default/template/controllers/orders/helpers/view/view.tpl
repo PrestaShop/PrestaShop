@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -53,6 +53,13 @@
 			statesShipped.push({$state['id_order_state']});
 		{/if}
 	{/foreach}
+	var order_discount_price = {if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
+									{$order->total_discounts_tax_excl}
+								{else}
+									{$order->total_discounts_tax_incl}
+								{/if};
+
+	var errorRefund = "{l s='Error. You cannot refund a negative amount.'}";
 	</script>
 
 	{assign var="hook_invoice" value={hook h="displayInvoice" id_order=$order->id}}
@@ -121,8 +128,8 @@
 						{l s='Print order'}
 					</a>
 					&nbsp;
-					{if Configuration::get('PS_INVOICE') && count($invoices_collection) && ((isset($currentState) && $currentState->invoice && $order->invoice_number) || $order->invoice_number)}
-						<a data-selenium-id="view_invoice" class="btn btn-default" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateInvoicePDF&amp;id_order={$order->id|intval}" target="_blank">
+					{if Configuration::get('PS_INVOICE') && count($invoices_collection) && $order->invoice_number}
+						<a data-selenium-id="view_invoice" class="btn btn-default _blank" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateInvoicePDF&amp;id_order={$order->id|intval}">
 							<i class="icon-file"></i>
 							{l s='View invoice'}
 						</a>
@@ -133,8 +140,8 @@
 						</span>
 					{/if}
 					&nbsp;
-					{if ((isset($currentState) && $currentState->delivery && $order->delivery_number) || $order->delivery_number)}
-						<a class="btn btn-default"  href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateDeliverySlipPDF&amp;id_order={$order->id|intval}" target="_blank">
+					{if $order->delivery_number}
+						<a class="btn btn-default _blank"  href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateDeliverySlipPDF&amp;id_order={$order->id|intval}">
 							<i class="icon-truck"></i>
 							{l s='View delivery slip'}
 						</a>
@@ -319,7 +326,7 @@
 											<td>{$line.type}</td>
 											<td>{$line.state_name}</td>
 											<td class="actions">
-												<span id="shipping_number_show">{if isset($line.url) && isset($line.tracking_number)}<a href="{$line.url|replace:'@':$line.tracking_number|escape:'html':'UTF-8'}">{$line.tracking_number}</a>{elseif isset($line.tracking_number)}{$line.tracking_number}{/if}</span>
+												<span class="shipping_number_show">{if isset($line.url) && isset($line.tracking_number)}<a href="{$line.url|replace:'@':$line.tracking_number|escape:'html':'UTF-8'}">{$line.tracking_number}</a>{elseif isset($line.tracking_number)}{$line.tracking_number}{/if}</span>
 												{if $line.can_edit}
 												<form method="post" action="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;vieworder&amp;id_order={$order->id|intval}&amp;id_order_invoice={if $line.id_order_invoice}{$line.id_order_invoice|intval}{else}0{/if}&amp;id_carrier={if $line.id_carrier}{$line.id_carrier|escape:'html':'UTF-8'}{else}0{/if}">
 													<span class="shipping_number_edit" style="display:none;">
@@ -767,9 +774,9 @@
 									</div>
 								</div>
 								<div class="message-body">
-									
+
 									<span class="message-date">&nbsp;<i class="icon-calendar"></i>
-										{dateFormat date=$message['date_add']} - 
+										{dateFormat date=$message['date_add']} -
 									</span>
 									<h4 class="message-item-heading">
 										{if ($message['elastname']|escape:'html':'UTF-8')}{$message['efirstname']|escape:'html':'UTF-8'}
@@ -821,7 +828,7 @@
 										<label for="visibility_on">
 											{l s='Yes'}
 										</label>
-										<input type="radio" name="visibility" id="visibility_off" value="1" checked="checked" /> 
+										<input type="radio" name="visibility" id="visibility_off" value="1" checked="checked" />
 										<label for="visibility_off">
 											{l s='No'}
 										</label>
@@ -1060,6 +1067,7 @@
 													</div>
 													<input type="text" name="partialRefundShippingCost" value="0" />
 												</div>
+												<p class="help-block"><i class="icon-warning-sign"></i>{l s='(excl tax)'}</p>
 											</td>
 										</tr>
 										{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
@@ -1096,7 +1104,7 @@
 							<p class="checkbox">
 								<label for="generateCreditSlip">
 									<input type="checkbox" id="generateCreditSlip" name="generateCreditSlip" onclick="toggleShippingCost()" />
-									{l s='Generate a credit card slip'}
+									{l s='Generate a credit slip'}
 								</label>
 							</p>
 							<p class="checkbox">
@@ -1111,7 +1119,35 @@
 									{l s='Repay shipping costs'}
 								</label>
 							</p>
+							{if $order->total_discounts_tax_excl > 0 || $order->total_discounts_tax_incl > 0}
+							<br/><p>{l s='This order has been partially paid by voucher. Choose the amount you want to refund:'}</p>
+							<p class="radio">
+								<label id="lab_refund_total_1" for="refund_total_1">
+									<input type="radio" value="0" name="refund_total_voucher_off" id="refund_total_1" checked="checked" />
+									{l s='Include amount of initial voucher: '}
+								</label>
+							</p>
+							<p class="radio">
+								<label id="lab_refund_total_2" for="refund_total_2">
+									<input type="radio" value="1" name="refund_total_voucher_off" id="refund_total_2"/>
+									{l s='Exclude amount of initial voucher: '}
+								</label>
+							</p>
+							<div class="nowrap radio-inline">
+								<label id="lab_refund_total_3" class="pull-left" for="refund_total_3">
+									{l s='Amount of your choice: '}
+									<input type="radio" value="2" name="refund_total_voucher_off" id="refund_total_3"/>
+								</label>
+								<div class="input-group col-lg-1 pull-left">
+									<div class="input-group-addon">
+										{$currency->prefix}
+										{$currency->suffix}
+									</div>
+									<input type="text" class="input fixed-width-md" name="refund_total_voucher_choose" value="0"/>
+								</div>
+							</div>
 							{/if}
+						{/if}
 						</div>
 						{if (!$order->hasBeenDelivered() || ($order->hasBeenDelivered() && Configuration::get('PS_ORDER_RETURN')))}
 						<div class="row">
@@ -1132,6 +1168,35 @@
 								{l s='Generate a voucher'}
 							</label>
 						</p>
+						{if $order->total_discounts_tax_excl > 0 || $order->total_discounts_tax_incl > 0}
+						<p>{l s='This order has been partially paid by voucher. Choose the amount you want to refund:'}</p>
+						<p class="radio">
+							<label id="lab_refund_1" for="refund_1">
+								<input type="radio" value="0" name="refund_voucher_off" id="refund_1" checked="checked" />
+								{l s='Product(s) price: '}
+							</label>
+						</p>
+						<p class="radio">
+							<label id="lab_refund_2" for="refund_2">
+								<input type="radio" value="1" name="refund_voucher_off" id="refund_2"/>
+								{l s='Product(s) price, excluding amount of initial voucher: '}
+							</label>
+						</p>
+						<div class="nowrap radio-inline">
+								<label id="lab_refund_3" class="pull-left" for="refund_3">
+									{l s='Amount of your choice: '}
+									<input type="radio" value="2" name="refund_voucher_off" id="refund_3"/>
+								</label>
+								<div class="input-group col-lg-1 pull-left">
+									<div class="input-group-addon">
+										{$currency->prefix}
+										{$currency->suffix}
+									</div>
+									<input type="text" class="input fixed-width-md" name="refund_voucher_choose" value="0"/>
+								</div>
+							</div>
+						{/if}
+						<br/>
 						<button type="submit" name="partialRefund" class="btn btn-default">
 							<i class="icon-check"></i> {l s='Partial refund'}
 						</button>
@@ -1263,7 +1328,7 @@
 					});
 				}
 			});
-			
+
 			var date = new Date();
 			var hours = date.getHours();
 			if (hours < 10)

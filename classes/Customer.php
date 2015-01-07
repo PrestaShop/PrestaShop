@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -526,7 +526,7 @@ class CustomerCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'customer` c
 		LEFT JOIN `'._DB_PREFIX_.'guest` g ON g.id_customer = c.id_customer
 		LEFT JOIN `'._DB_PREFIX_.'connections` co ON g.id_guest = co.id_guest
-		WHERE co.`ip_address` = \''.ip2long(trim($ip)).'\'');
+		WHERE co.`ip_address` = \''.(int)ip2long(trim($ip)).'\'');
 	}
 
 	/**

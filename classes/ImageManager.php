@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -134,11 +134,55 @@ class ImageManagerCore
 			clearstatcache();
 		else
 			clearstatcache(true, $src_file);
-		
+
 		if (!file_exists($src_file) || !filesize($src_file))
 			return !($error = self::ERROR_FILE_NOT_EXIST);
 
-		list($src_width, $src_height, $type) = getimagesize($src_file);
+		list($tmp_width, $tmp_height, $type) = getimagesize($src_file);
+		$src_image = ImageManager::create($type, $src_file);
+
+		if (function_exists('exif_read_data') && function_exists('mb_strtolower'))
+		{
+			$exif = @exif_read_data($src_file);
+
+			if ($exif && isset($exif['Orientation']))
+			{
+				switch ($exif['Orientation'])
+				{
+					case 3:
+						$src_width = $tmp_width;
+						$src_height = $tmp_height;
+						$src_image = imagerotate($src_image, 180, 0);
+						break;
+
+					case 6:
+						$src_width = $tmp_height;
+						$src_height = $tmp_width;
+						$src_image = imagerotate($src_image, -90, 0);
+						break;
+
+					case 8:
+						$src_width = $tmp_height;
+						$src_height = $tmp_width;
+						$src_image = imagerotate($src_image, 90, 0);
+						break;
+
+					default:
+						$src_width = $tmp_width;
+						$src_height = $tmp_height;
+				}
+			}
+			else
+			{
+				$src_width = $tmp_width;
+				$src_height = $tmp_height;
+			}
+		}
+		else
+		{
+			$src_width = $tmp_width;
+			$src_height = $tmp_height;
+		}
 
 		// If PS_IMAGE_QUALITY is activated, the generated image will be a PNG with .jpg as a file extension.
 		// This allow for higher quality and for transparency. JPG source files will also benefit from a higher quality
@@ -153,8 +197,6 @@ class ImageManagerCore
 			$dst_width = $src_width;
 		if (!$dst_height)
 			$dst_height = $src_height;
-
-		$src_image = ImageManager::create($type, $src_file);
 
 		$width_diff = $dst_width / $src_width;
 		$height_diff = $dst_height / $src_height;
@@ -182,7 +224,7 @@ class ImageManagerCore
 
 		if (!ImageManager::checkImageMemoryLimit($src_file))
 			return !($error = self::ERROR_MEMORY_LIMIT);
-		
+
 		$dest_image = imagecreatetruecolor($dst_width, $dst_height);
 
 		// If image is a PNG and the output is PNG, fill with transparency. Else fill with white background.
@@ -228,7 +270,7 @@ class ImageManagerCore
 			else
 				$file_mime_type = false;
 		}
-		else if (function_exists('finfo_open'))
+		elseif (function_exists('finfo_open'))
 		{
 			$const = defined('FILEINFO_MIME_TYPE') ? FILEINFO_MIME_TYPE : FILEINFO_MIME;
 			$finfo = finfo_open($const);
@@ -429,7 +471,7 @@ class ImageManagerCore
 			case 'jpeg':
 			default:
 				$quality = (Configuration::get('PS_JPEG_QUALITY') === false ? 90 : Configuration::get('PS_JPEG_QUALITY'));
-				imageinterlace($resource,1); /// make it PROGRESSIVE
+				imageinterlace($resource, 1); /// make it PROGRESSIVE
 				$success = imagejpeg($resource, $filename, (int)$quality);
 			break;
 		}
@@ -450,7 +492,7 @@ class ImageManagerCore
 						'image/gif' => array('gif'),
 						'image/jpeg' => array('jpg', 'jpeg'),
 						'image/png' => array('png')
-					);	
+					);
 		$extension = substr($file_name, strrpos($file_name, '.') + 1);
 
 		$mime_type = null;

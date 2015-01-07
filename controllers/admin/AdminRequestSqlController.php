@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -278,16 +278,16 @@ class AdminRequestSqlControllerCore extends AdminController
 
 			$this->content .= $this->renderForm();
 		}
-		else if ($this->display == 'view')
+		elseif ($this->display == 'view')
 		{
 			// Some controllers use the view action without an object
 			if ($this->className)
 				$this->loadObject(true);
 			$this->content .= $this->renderView();
 		}
-		else if ($this->display == 'export')
+		elseif ($this->display == 'export')
 			$this->generateExport();
-		else if (!$this->ajax)
+		elseif (!$this->ajax)
 		{
 			$this->content .= $this->renderList();
 			$this->content .= $this->renderOptions();

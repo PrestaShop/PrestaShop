@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -174,7 +174,7 @@ class AddressCore extends ObjectModel
 			Customer::resetAddressCache($this->id_customer);
 		return true;
 	}
-	
+
 	public function update($null_values = false)
 	{
 		// Empty related caches
@@ -359,13 +359,14 @@ class AddressCore extends ObjectModel
 			$address = new Address((int)$id_address);
 
 			if (!Validate::isLoadedObject($address))
-				throw new PrestaShopException('Invalid address');
+				throw new PrestaShopException('Invalid address #'.(int)$id_address);
 		}
 		elseif ($with_geoloc && isset($context->customer->geoloc_id_country))
 		{
-			$id_country = (int)$context->customer->geoloc_id_country;
-			$id_state = (int)$context->customer->id_state;
-			$zipcode = $context->customer->postcode;
+			$address = new Address();
+			$address->id_country = (int)$context->customer->geoloc_id_country;
+			$address->id_state = (int)$context->customer->id_state;
+			$address->zipcode = $context->customer->postcode;
 		}
 		else
 		{
@@ -397,7 +398,7 @@ class AddressCore extends ObjectModel
 		$query->where('id_warehouse = 0');
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 	}
-	
+
 	public static function aliasExist($alias, $id_address, $id_customer)
 	{
 		$query = new DbQuery();

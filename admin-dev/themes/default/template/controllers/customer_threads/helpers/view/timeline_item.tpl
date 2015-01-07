@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -32,7 +32,7 @@
 			{if isset($timeline_item.id_order)}<a class="badge" href="#">{l s="Order #"}{$timeline_item.id_order|intval}</a><br/>{/if}
 			<span>{$timeline_item.content|truncate:220}</span>
 			{if isset($timeline_item.see_more_link)}
-				<br/><br/><a href="{$timeline_item.see_more_link|escape:'html':'UTF-8'}" target="_blank" class="btn btn-default">{l s="See more"}</a>
+				<br/><br/><a href="{$timeline_item.see_more_link|escape:'html':'UTF-8'}" class="btn btn-default _blank">{l s="See more"}</a>
 			{/if}
 		</div>
 	</div>

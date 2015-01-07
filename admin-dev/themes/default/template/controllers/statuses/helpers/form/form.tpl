@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -44,7 +44,7 @@
 							{if isset($input.multiple)}multiple="multiple" {/if}
 							{if isset($input.size)}size="{$input.size}"{/if}
 							{if isset($input.onchange)}onchange="{$input.onchange}"{/if}>
-						{foreach $input.options.query AS $option}
+						{foreach $input.options.query[$language.iso_code] AS $option}
 							<option value="{$option[$input.options.id]}"
 								{if isset($input.multiple)}
 									{foreach $fields_value[$input.name] as $field_value}
@@ -53,6 +53,7 @@
 								{else}
 									{if isset($fields_value[$input.name][$language.id_lang]) && ($fields_value[$input.name][$language.id_lang] == $option[$input.options.id])}selected="selected"{/if}
 								{/if}
+								data-preview="{$option[$input.options.folder]}"
 							>{$option[$input.options.name]|escape:'html':'UTF-8'}</option>
 						{/foreach}
 					</select>					
@@ -69,7 +70,7 @@
 						</li>
 						{/foreach}
 					</ul>
-					<button type="button" class="btn btn-default" onclick="viewTemplates('#template_select_{$language.id_lang}', '../mails/{$language.iso_code}/', '.html');">
+					<button type="button" class="btn btn-default" onclick="viewTemplates('#template_select_{$language.id_lang}', '{$language.iso_code}/', '.html');">
 						<i class="icon-eye-open"></i>
 						{l s='Preview'}
 					</button>

@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -93,7 +93,7 @@
 						<input type="hidden" name="{$key}" value="{$field['value']}" />
 					{else}
 						<div class="form-group{if isset($field.form_group_class)} {$field.form_group_class}{/if}"{if isset($tabs) && isset($field.tab)} data-tab-id="{$field.tab}"{/if}>
-							<div id="conf_id_{$key}"{if $field['is_invisible']} class="isInvisible"{/if}>								
+							<div id="conf_id_{$key}"{if $field['is_invisible']} class="isInvisible"{/if}>
 								{block name="label"}
 									{if isset($field['title']) && isset($field['hint'])}
 										<label class="control-label col-lg-3{if isset($field['required']) && $field['required'] && $field['type'] != 'radio'} required{/if}">
@@ -144,11 +144,11 @@
 										<div class="col-lg-9">
 											<span class="switch prestashop-switch fixed-width-lg">
 												{strip}
-												<input type="radio" name="{$key}" id="{$key}_on" value="1" {if $field['value']} checked="checked"{/if}{if isset($field['js']['on'])} {$field['js']['on']}{/if}/>
+												<input type="radio" name="{$key}" id="{$key}_on" value="1" {if $field['value']} checked="checked"{/if}{if isset($field['js']['on'])} {$field['js']['on']}{/if}{if isset($field['disabled']) && (bool)$field['disabled']} disabled="disabled"{/if}/>
 												<label for="{$key}_on" class="radioCheck">
 													{l s='Yes'}
 												</label>
-												<input type="radio" name="{$key}" id="{$key}_off" value="0" {if !$field['value']} checked="checked"{/if}{if isset($field['js']['off'])} {$field['js']['off']}{/if}/>
+												<input type="radio" name="{$key}" id="{$key}_off" value="0" {if !$field['value']} checked="checked"{/if}{if isset($field['js']['off'])} {$field['js']['off']}{/if}{if isset($field['disabled']) && (bool)$field['disabled']} disabled="disabled"{/if}/>
 												<label for="{$key}_off" class="radioCheck">
 													{l s='No'}
 												</label>
@@ -183,7 +183,7 @@
 											{/foreach}
 										</div>
 									{elseif $field['type'] == 'text'}
-										<div class="col-lg-9">{if isset($field['suffix'])}<div class="input-group">{/if}
+										<div class="col-lg-9">{if isset($field['suffix'])}<div class="input-group{if isset($field.class)} {$field.class}{/if}">{/if}
 											<input class="form-control {if isset($field['class'])}{$field['class']}{/if}" type="{$field['type']}"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value="{$field['value']|escape:'html':'UTF-8'}" {if isset($field['autocomplete']) && !$field['autocomplete']}autocomplete="off"{/if}/>
 											{if isset($field['suffix'])}
 											<span class="input-group-addon">
@@ -193,7 +193,7 @@
 											{if isset($field['suffix'])}</div>{/if}
 										</div>
 									{elseif $field['type'] == 'password'}
-										<div class="col-lg-9">{if isset($field['suffix'])}<div class="input-group">{/if}
+										<div class="col-lg-9">{if isset($field['suffix'])}<div class="input-group{if isset($field.class)} {$field.class}{/if}">{/if}
 											<input type="{$field['type']}"{if isset($field['id'])} id="{$field['id']}"{/if} size="{if isset($field['size'])}{$field['size']|intval}{else}5{/if}" name="{$key}" value=""{if isset($field['autocomplete']) && !$field['autocomplete']} autocomplete="off"{/if} />
 											{if isset($field['suffix'])}
 											<span class="input-group-addon">

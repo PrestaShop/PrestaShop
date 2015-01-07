@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -31,6 +31,8 @@ class ToolsCore
 	protected static $_caching;
 	protected static $_user_plateform;
 	protected static $_user_browser;
+
+	public static $round_mode = null;
 
 	/**
 	* Random password generator
@@ -320,11 +322,13 @@ class ToolsCore
 	{
 		if (!isset($key) || empty($key) || !is_string($key))
 			return false;
+
 		$ret = (isset($_POST[$key]) ? $_POST[$key] : (isset($_GET[$key]) ? $_GET[$key] : $default_value));
 
-		if (is_string($ret) === true)
-			$ret = urldecode(preg_replace('/((\%5C0+)|(\%00+))/i', '', urlencode($ret)));
-		return !is_string($ret)? $ret : stripslashes($ret);
+		if (is_string($ret))
+			return stripslashes(urldecode(preg_replace('/((\%5C0+)|(\%00+))/i', '', urlencode($ret))));
+
+		return $ret;
 	}
 
 	public static function getIsset($key)
@@ -638,13 +642,13 @@ class ToolsCore
 			$amount *= $currency_to->conversion_rate;
 		else
 		{
-            $conversion_rate = ($currency_from->conversion_rate == 0 ? 1 : $currency_from->conversion_rate);
+			$conversion_rate = ($currency_from->conversion_rate == 0 ? 1 : $currency_from->conversion_rate);
 			// Convert amount to default currency (using the old currency rate)
 			$amount = $amount / $conversion_rate;
 			// Convert to new currency
 			$amount *= $currency_to->conversion_rate;
 		}
-		return Tools::ps_round($amount, _PS_PRICE_DISPLAY_PRECISION_);
+		return Tools::ps_round($amount, _PS_PRICE_COMPUTE_PRECISION_);
 	}
 
 	/**
@@ -1079,7 +1083,7 @@ class ToolsCore
 				foreach ($categories as $category)
 				{
 					$full_path .=
-					(($n < $n_categories || $link_on_the_item) ? '<a href="'.Tools::safeOutput($context->link->getCategoryLink((int)$category['id_category'], $category['link_rewrite'])).'" title="'.htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').'">' : '').
+					(($n < $n_categories || $link_on_the_item) ? '<a href="'.Tools::safeOutput($context->link->getCategoryLink((int)$category['id_category'], $category['link_rewrite'])).'" title="'.htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').'" data-gg="">' : '').
 					htmlentities($category['name'], ENT_NOQUOTES, 'UTF-8').
 					(($n < $n_categories || $link_on_the_item) ? '</a>' : '').
 					(($n++ != $n_categories || !empty($path)) ? '<span class="navigation-pipe">'.$pipe.'</span>' : '');
@@ -1088,7 +1092,7 @@ class ToolsCore
 				return $full_path.$path;
 			}
 		}
-		else if ($category_type === 'CMS')
+		elseif ($category_type === 'CMS')
 		{
 			$category = new CMSCategory($id_category, $context->language->id);
 			if (!Validate::isLoadedObject($category))
@@ -1096,9 +1100,9 @@ class ToolsCore
 			$category_link = $context->link->getCMSCategoryLink($category);
 
 			if ($path != $category->name)
-				$full_path .= '<a href="'.Tools::safeOutput($category_link).'">'.htmlentities($category->name, ENT_NOQUOTES, 'UTF-8').'</a><span class="navigation-pipe">'.$pipe.'</span>'.$path;
+				$full_path .= '<a href="'.Tools::safeOutput($category_link).'" data-gg="">'.htmlentities($category->name, ENT_NOQUOTES, 'UTF-8').'</a><span class="navigation-pipe">'.$pipe.'</span>'.$path;
 			else
-				$full_path = ($link_on_the_item ? '<a href="'.Tools::safeOutput($category_link).'">' : '').htmlentities($path, ENT_NOQUOTES, 'UTF-8').($link_on_the_item ? '</a>' : '');
+				$full_path = ($link_on_the_item ? '<a href="'.Tools::safeOutput($category_link).'" data-gg="">' : '').htmlentities($path, ENT_NOQUOTES, 'UTF-8').($link_on_the_item ? '</a>' : '');
 
 			return Tools::getPath($category->id_parent, $full_path, $link_on_the_item, $category_type);
 		}
@@ -1121,7 +1125,7 @@ class ToolsCore
 			$default_category = $context->shop->getCategory();
 			$category = new Category($id_category, $context->language->id);
 		}
-		else if ($type_cat === 'CMS')
+		elseif ($type_cat === 'CMS')
 		    $category = new CMSCategory($id_category, $context->language->id);
 
 		if (!Validate::isLoadedObject($category))
@@ -1203,30 +1207,30 @@ class ToolsCore
 		$patterns = array(
 
 			/* Lowercase */
-			/* a  */ '/[\x{00E0}\x{00E1}\x{00E2}\x{00E3}\x{00E4}\x{00E5}\x{0101}\x{0103}\x{0105}\x{0430}]/u',
+			/* a  */ '/[\x{00E0}\x{00E1}\x{00E2}\x{00E3}\x{00E4}\x{00E5}\x{0101}\x{0103}\x{0105}\x{0430}\x{00C0}-\x{00C3}\x{1EA0}-\x{1EB7}]/u',
 			/* b  */ '/[\x{0431}]/u',
 			/* c  */ '/[\x{00E7}\x{0107}\x{0109}\x{010D}\x{0446}]/u',
-			/* d  */ '/[\x{010F}\x{0111}\x{0434}]/u',
-			/* e  */ '/[\x{00E8}\x{00E9}\x{00EA}\x{00EB}\x{0113}\x{0115}\x{0117}\x{0119}\x{011B}\x{0435}\x{044D}]/u',
+			/* d  */ '/[\x{010F}\x{0111}\x{0434}\x{0110}]/u',
+			/* e  */ '/[\x{00E8}\x{00E9}\x{00EA}\x{00EB}\x{0113}\x{0115}\x{0117}\x{0119}\x{011B}\x{0435}\x{044D}\x{00C8}-\x{00CA}\x{1EB8}-\x{1EC7}]/u',
 			/* f  */ '/[\x{0444}]/u',
 			/* g  */ '/[\x{011F}\x{0121}\x{0123}\x{0433}\x{0491}]/u',
 			/* h  */ '/[\x{0125}\x{0127}]/u',
-			/* i  */ '/[\x{00EC}\x{00ED}\x{00EE}\x{00EF}\x{0129}\x{012B}\x{012D}\x{012F}\x{0131}\x{0438}\x{0456}]/u',
+			/* i  */ '/[\x{00EC}\x{00ED}\x{00EE}\x{00EF}\x{0129}\x{012B}\x{012D}\x{012F}\x{0131}\x{0438}\x{0456}\x{00CC}\x{00CD}\x{1EC8}-\x{1ECB}\x{0128}]/u',
 			/* j  */ '/[\x{0135}\x{0439}]/u',
 			/* k  */ '/[\x{0137}\x{0138}\x{043A}]/u',
 			/* l  */ '/[\x{013A}\x{013C}\x{013E}\x{0140}\x{0142}\x{043B}]/u',
 			/* m  */ '/[\x{043C}]/u',
 			/* n  */ '/[\x{00F1}\x{0144}\x{0146}\x{0148}\x{0149}\x{014B}\x{043D}]/u',
-			/* o  */ '/[\x{00F2}\x{00F3}\x{00F4}\x{00F5}\x{00F6}\x{00F8}\x{014D}\x{014F}\x{0151}\x{043E}]/u',
+			/* o  */ '/[\x{00F2}\x{00F3}\x{00F4}\x{00F5}\x{00F6}\x{00F8}\x{014D}\x{014F}\x{0151}\x{043E}\x{00D2}-\x{00D5}\x{01A0}\x{01A1}\x{1ECC}-\x{1EE3}]/u',
 			/* p  */ '/[\x{043F}]/u',
 			/* r  */ '/[\x{0155}\x{0157}\x{0159}\x{0440}]/u',
 			/* s  */ '/[\x{015B}\x{015D}\x{015F}\x{0161}\x{0441}]/u',
 			/* ss */ '/[\x{00DF}]/u',
 			/* t  */ '/[\x{0163}\x{0165}\x{0167}\x{0442}]/u',
-			/* u  */ '/[\x{00F9}\x{00FA}\x{00FB}\x{00FC}\x{0169}\x{016B}\x{016D}\x{016F}\x{0171}\x{0173}\x{0443}]/u',
+			/* u  */ '/[\x{00F9}\x{00FA}\x{00FB}\x{00FC}\x{0169}\x{016B}\x{016D}\x{016F}\x{0171}\x{0173}\x{0443}\x{00D9}-\x{00DA}\x{0168}\x{01AF}\x{01B0}\x{1EE4}-\x{1EF1}]/u',
 			/* v  */ '/[\x{0432}]/u',
 			/* w  */ '/[\x{0175}]/u',
-			/* y  */ '/[\x{00FF}\x{0177}\x{00FD}\x{044B}]/u',
+			/* y  */ '/[\x{00FF}\x{0177}\x{00FD}\x{044B}\x{1EF2}-\x{1EF9}\x{00DD}]/u',
 			/* z  */ '/[\x{017A}\x{017C}\x{017E}\x{0437}]/u',
 			/* ae */ '/[\x{00E6}]/u',
 			/* ch */ '/[\x{0447}]/u',
@@ -1608,12 +1612,10 @@ class ToolsCore
 	 */
 	public static function ps_round($value, $precision = 0)
 	{
-		static $method = null;
+		if (Tools::$round_mode == null)
+			Tools::$round_mode = (int)Configuration::get('PS_PRICE_ROUND_MODE');
 
-		if ($method == null)
-			$method = (int)Configuration::get('PS_PRICE_ROUND_MODE');
-
-		switch ($method)
+		switch (Tools::$round_mode)
 		{
 			case PS_ROUND_UP:
 				return Tools::ceilf($value, $precision);
@@ -1622,7 +1624,7 @@ class ToolsCore
 			case PS_ROUND_HALF_DOWN:
 			case PS_ROUND_HALF_EVEN:
 			case PS_ROUND_HALF_ODD:
-				return Tools::math_round($value, $precision, $method);
+				return Tools::math_round($value, $precision, Tools::$round_mode);
 			case PS_ROUND_HALF_UP:
 			default:
 				return Tools::math_round($value, $precision, PS_ROUND_HALF_UP);
@@ -2239,7 +2241,10 @@ class ToolsCore
 	ExpiresByType application/x-font-otf \"access plus 1 year\"
 </IfModule>
 
-FileETag INode MTime Size
+<IfModule mod_headers.c>
+	Header unset Etag
+</IfModule>
+FileETag none
 <IfModule mod_deflate.c>
 	<IfModule mod_filter.c>
 		AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/x-javascript
@@ -2964,7 +2969,7 @@ exit;
 			$len = $len1 - $len2;
 			$str = &$v2;
 		}
-		else if ($len2 > $len1)
+		elseif ($len2 > $len1)
 		{
 			$len = $len2 - $len1;
 			$str = &$v1;
@@ -3073,11 +3078,10 @@ exit;
 					$protocols[] = 'http';
 				break;
 			case 'hosted_module':
-				$end_point .= '/'._PS_VERSION_.'/module/'.urlencode($params['id_module'])
-					.'/'.urlencode($params['hosted_email'])
-					.'/'.urlencode($params['password_addons'])
-					.'/'.(isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain())
-					.'/'.(isset($params['email']) ? $params['email'] : Configuration::get('PS_SHOP_EMAIL'));
+				$post_data .= '&method=module&id_module='.urlencode((int)$params['id_module']).'&username='.urlencode($params['hosted_email'])
+					.'&password='.urlencode($params['password_addons'])
+					.'&shop_url='.urlencode(isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain())
+					.'&mail='.urlencode(isset($params['email']) ? $params['email'] : Configuration::get('PS_SHOP_EMAIL'));
 				$protocols[] = 'https';
 				break;
 			case 'install-modules':

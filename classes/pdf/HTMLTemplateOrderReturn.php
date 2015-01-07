@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -40,7 +40,7 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
 
 		// header informations
 		$this->date = Tools::displayDate($this->order->invoice_date);
-		$this->title = sprintf(HTMLTemplateOrderReturn::l('Order Return %s'), sprintf('%06d', $this->order_return->id));
+		$this->title = sprintf(HTMLTemplateOrderReturn::l('Order Return #%06d'), $this->order_return->id);
 
 		// footer informations
 		$this->shop = new Shop((int)$this->order->id_shop);

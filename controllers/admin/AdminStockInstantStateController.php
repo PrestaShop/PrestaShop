@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -122,14 +122,14 @@ class AdminStockInstantStateControllerCore extends AdminController
 				'short' => $this->l('Export this list as CSV', null, null, false),
 				'href' => $this->context->link->getAdminLink('AdminStockInstantState').'&csv_quantities&id_warehouse='.(int)$this->getCurrentCoverageWarehouse(),
 				'desc' => $this->l('Export Quantities (CSV)', null, null, false),
-				'imgclass' => 'export'
+				'class' => 'process-icon-export'
 			);
 
 			$this->page_header_toolbar_btn['export-stock-state-prices-csv'] = array(
 				'short' => $this->l('Export this list as CSV', null, null, false),
 				'href' => $this->context->link->getAdminLink('AdminStockInstantState').'&csv_prices&id_warehouse='.(int)$this->getCurrentCoverageWarehouse(),
 				'desc' => $this->l('Export Prices (CSV)', null, null, false),
-				'imgclass' => 'export'
+				'class' => 'process-icon-export'
 			);
 		}
 
@@ -293,7 +293,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 				unset($this->context->cookie->{$this->table.'Orderby'});
 				$order_by_valuation = true;
 			}
-			else if ($this->context->cookie->{$this->table.'Orderby'} == 'real_quantity')
+			elseif ($this->context->cookie->{$this->table.'Orderby'} == 'real_quantity')
 			{
 				unset($this->context->cookie->{$this->table.'Orderby'});
 				$order_by_real_quantity = true;
@@ -344,7 +344,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 
 			if ($this->getCurrentCoverageWarehouse() != -1 && $order_by_valuation)
 				usort($this->_list, array($this, 'valuationCmp'));
-			else if ($order_by_real_quantity)
+			elseif ($order_by_real_quantity)
 				usort($this->_list, array($this, 'realQuantityCmp'));
 		}
 	}
@@ -404,16 +404,16 @@ class AdminStockInstantStateControllerCore extends AdminController
 		{
 			$this->toolbar_btn['export-stock-state-quantities-csv'] = array(
 				'short' => 'Export this list as CSV',
-				'href' => $this->context->link->getAdminLink('AdminStockInstantState').'&amp;csv_quantities&amp;id_warehouse='.(int)$this->getCurrentCoverageWarehouse(),
+				'href' => $this->context->link->getAdminLink('AdminStockInstantState').'&csv_quantities&id_warehouse='.(int)$this->getCurrentCoverageWarehouse(),
 				'desc' => $this->l('Export Quantities (CSV)'),
-				'imgclass' => 'export'
+				'class' => 'process-icon-export'
 			);
 
 			$this->toolbar_btn['export-stock-state-prices-csv'] = array(
 				'short' => 'Export this list as CSV',
-				'href' => $this->context->link->getAdminLink('AdminStockInstantState').'&amp;csv_prices&amp;id_warehouse='.(int)$this->getCurrentCoverageWarehouse(),
+				'href' => $this->context->link->getAdminLink('AdminStockInstantState').'&csv_prices&id_warehouse='.(int)$this->getCurrentCoverageWarehouse(),
 				'desc' => $this->l('Export Prices (CSV)'),
-				'imgclass' => 'export'
+				'class' => 'process-icon-export'
 			);
 		}
 		parent::initToolbar();
@@ -440,7 +440,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 
 			// header
 			header('Content-type: text/csv');
-			header('Cache-Control: no-store, no-cache');
+			header('Cache-Control: no-store, no-cache must-revalidate');
 			header('Content-disposition: attachment; filename="'.$filename);
 
 			// puts keys
@@ -460,14 +460,14 @@ class AdminStockInstantStateControllerCore extends AdminController
 			}
 		}
 		// if prices requested
-		else if (Tools::isSubmit('csv_prices'))
+		elseif (Tools::isSubmit('csv_prices'))
 		{
 			// sets filename
 			$filename = $this->l('stock_instant_state_prices').'_'.$warehouse_name.'.csv';
 
 			// header
 			header('Content-type: text/csv');
-			header('Cache-Control: no-store, no-cache');
+			header('Cache-Control: no-store, no-cache must-revalidate');
 			header('Content-disposition: attachment; filename="'.$filename);
 
 			// puts keys
@@ -502,7 +502,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 			}
 		}
 	}
-	
+
 	public function initContent()
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
@@ -512,7 +512,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 		}
 		parent::initContent();
 	}
-	
+
 	public function initProcess()
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
@@ -526,7 +526,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 		else
 			$this->list_id = 'stock';
 
-		parent::initProcess();	
+		parent::initProcess();
 	}
 
 }

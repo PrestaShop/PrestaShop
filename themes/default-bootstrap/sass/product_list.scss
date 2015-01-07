@@ -281,9 +281,6 @@ ul.product_list.grid {
 			}
 			.button-container {
 				margin-bottom: 14px;
-				@media (min-width: $screen-lg) { // min 1200px
-					display: none;
-				}
 				.ajax_add_to_cart_button, 
 				span.button,
 				.lnk_view { 

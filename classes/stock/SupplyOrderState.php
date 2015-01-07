@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -132,10 +132,10 @@ class SupplyOrderStateCore extends ObjectModel
 			if ($is_editable)
 				$query->where('s.editable = 1 OR s.delivery_note = 1 OR s.enclosed = 1');
 			//check if the delivery note is available or if the state correspond to a pending receipt state
-			else if ($is_delivery_note || $is_pending_receipt)
+			elseif ($is_delivery_note || $is_pending_receipt)
 				$query->where('(s.delivery_note = 0 AND s.editable = 0) OR s.enclosed = 1');
 			//check if the state correspond to a receipt state
-			else if ($is_receipt_state)
+			elseif ($is_receipt_state)
 				$query->where('s.receipt_state = 1 OR s.enclosed = 1');
 		}
 

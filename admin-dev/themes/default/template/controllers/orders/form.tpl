@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -229,6 +229,17 @@
 
 		$('#submitAddProduct').on('click',function(){
 			addProduct();
+		});
+
+		$('#product').bind('keypress', function(e) {
+			var code = (e.keyCode ? e.keyCode : e.which);
+			if(code == 13)
+			{
+				e.stopPropagation();
+				e.preventDefault();
+				if ($('#submitAddProduct').length)
+					addProduct();
+			}
 		});
 
 		$('#send_email_to_customer').on('click',function(){
@@ -1496,7 +1507,7 @@
 							<i class="icon-credit-card"></i>
 							{l s='Send an email to the customer with the link to process the payment.'}
 						</a>
-						<a target="_blank" id="go_order_process" href="" class="btn btn-link">
+						<a id="go_order_process" href="" class="btn btn-link _blank">
 							{l s='Go on payment page to process the payment.'}
 							<i class="icon-external-link"></i>
 						</a>

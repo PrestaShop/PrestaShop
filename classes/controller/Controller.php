@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -77,9 +77,9 @@ abstract class ControllerCore
 	protected $status = '';
 
 	protected $redirect_after = null;
-	
+
 	public $controller_type;
-	public $php_self;	
+	public $php_self;
 	/**
 	 * check that the controller is available for the current user/visitor
 	 */
@@ -189,7 +189,7 @@ abstract class ControllerCore
 			if ($this->ajax)
 			{
 				$action = Tools::toCamelCase(Tools::getValue('action'), true);
-				if (!empty($action) && method_exists($this, 'displayAjax'.$action)) 
+				if (!empty($action) && method_exists($this, 'displayAjax'.$action))
 					$this->{'displayAjax'.$action}();
 				elseif (method_exists($this, 'displayAjax'))
 					$this->displayAjax();
@@ -244,20 +244,32 @@ abstract class ControllerCore
 	 *
 	 * @param mixed $css_uri Path to css file, or list of css files like this : array(array(uri => media_type), ...)
 	 * @param string $css_media_type
+	 * @param integer $offset
+	 * @param bool $check_path
 	 * @return true
 	 */
-	public function addCSS($css_uri, $css_media_type = 'all', $offset = null)
+	public function addCSS($css_uri, $css_media_type = 'all', $offset = null, $check_path = true)
 	{
 		if (!is_array($css_uri))
 			$css_uri = array($css_uri);
 
 		foreach ($css_uri as $css_file => $media)
 		{
-			if (is_string($css_file) && strlen($css_file) > 1)
-				$css_path = Media::getCSSPath($css_file, $media);
-			else
-				$css_path = Media::getCSSPath($media, $css_media_type);
-			
+				if (is_string($css_file) && strlen($css_file) > 1)
+				{
+					if ($check_path)
+						$css_path = Media::getCSSPath($css_file, $media);
+					else
+						$css_path = array($css_file => $media);
+				}
+				else
+				{
+					if ($check_path)
+						$css_path = Media::getCSSPath($media, $css_media_type);
+					else
+						$css_path = array($media => $css_media_type);
+				}
+
 			$key = is_array($css_path) ? key($css_path) : $css_path;
 			if ($css_path && (!isset($this->css_files[$key]) || ($this->css_files[$key] != reset($css_path))))
 			{
@@ -270,17 +282,28 @@ abstract class ControllerCore
 		}
 	}
 
-	public function removeCSS($css_uri, $css_media_type = 'all')
+	public function removeCSS($css_uri, $css_media_type = 'all', $check_path = true)
 	{
 		if (!is_array($css_uri))
 			$css_uri = array($css_uri);
 
 		foreach ($css_uri as $css_file => $media)
 		{
-			if (is_string($css_file) && strlen($css_file) > 1)
-				$css_path = Media::getCSSPath($css_file, $media);
-			else
-				$css_path = Media::getCSSPath($media, $css_media_type);
+				if (is_string($css_file) && strlen($css_file) > 1)
+				{
+					if ($check_path)
+						$css_path = Media::getCSSPath($css_file, $media);
+					else
+						$css_path = array($css_file => $media);
+				}
+				else
+				{
+					if ($check_path)
+						$css_path = Media::getCSSPath($media, $css_media_type);
+					else
+						$css_path = array($media => $css_media_type);
+				}
+
 			if ($css_path && isset($this->css_files[key($css_path)]) && ($this->css_files[key($css_path)] == reset($css_path)))
 				unset($this->css_files[key($css_path)]);
 		}
@@ -290,21 +313,29 @@ abstract class ControllerCore
 	 * Add a new javascript file in page header.
 	 *
 	 * @param mixed $js_uri
+	 * @param bool $check_path
 	 * @return void
 	 */
-	public function addJS($js_uri)
+	public function addJS($js_uri, $check_path = true)
 	{
+
 		if (is_array($js_uri))
 			foreach ($js_uri as $js_file)
 			{
-				$js_path = Media::getJSPath($js_file);
+				$js_path = $js_file;
+				if ($check_path)
+					$js_path = Media::getJSPath($js_file);
+
 				$key = is_array($js_path) ? key($js_path) : $js_path;
 				if ($js_path && !in_array($js_path, $this->js_files))
 					$this->js_files[] = $js_path;
 			}
 		else
 		{
-			$js_path = Media::getJSPath($js_uri);
+			$js_path = $js_uri;
+			if ($check_path)
+				$js_path = Media::getJSPath($js_uri);
+
 			if ($js_path && !in_array($js_path, $this->js_files))
 				$this->js_files[] = $js_path;
 		}
@@ -315,13 +346,18 @@ abstract class ControllerCore
 		if (is_array($js_uri))
 			foreach ($js_uri as $js_file)
 			{
-				$js_path = Media::getJSPath($js_file);
+				$js_path = $js_file;
+				if ($check_path)
+					$js_path = Media::getJSPath($js_file);
 				if ($js_path && in_array($js_path, $this->js_files))
 					unset($this->js_files[array_search($js_path,$this->js_files)]);
 			}
 		else
 		{
-			$js_path = Media::getJSPath($js_uri);
+			$js_path = $js_uri;
+			if ($check_path)
+				$js_path = Media::getJSPath($js_uri);
+
 			if ($js_path)
 				unset($this->js_files[array_search($js_path,$this->js_files)]);
 		}
@@ -335,7 +371,7 @@ abstract class ControllerCore
 	 */
 	public function addJquery($version = null, $folder = null, $minifier = true)
 	{
-		$this->addJS(Media::getJqueryPath($version, $folder, $minifier));
+		$this->addJS(Media::getJqueryPath($version, $folder, $minifier), false);
 	}
 
 	/**
@@ -353,8 +389,8 @@ abstract class ControllerCore
 		foreach ($component as $ui)
 		{
 			$ui_path = Media::getJqueryUIPath($ui, $theme, $check_dependencies);
-			$this->addCSS($ui_path['css']);
-			$this->addJS($ui_path['js']);
+			$this->addCSS($ui_path['css'], null, false);
+			$this->addJS($ui_path['js'], false);
 		}
 	}
 
@@ -376,9 +412,9 @@ abstract class ControllerCore
 				$plugin_path = Media::getJqueryPluginPath($plugin, $folder);
 
 				if (!empty($plugin_path['js']))
-					$this->addJS($plugin_path['js']);
+					$this->addJS($plugin_path['js'], false);
 				if ($css && !empty($plugin_path['css']))
-					$this->addCSS(key($plugin_path['css']), 'all');
+					$this->addCSS(key($plugin_path['css']), 'all', null, false);
 			}
 		}
 	}
@@ -391,7 +427,7 @@ abstract class ControllerCore
 	{
 		return (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest');
 	}
-	
+
 	protected function smartyOutputContent($content)
 	{
 		$this->context->cookie->write();
@@ -432,7 +468,7 @@ abstract class ControllerCore
 		else
 			echo $html;
 	}
-	
+
 	protected function isCached($template, $cacheId = null, $compileId = null)
 	{
 		Tools::enableCache();

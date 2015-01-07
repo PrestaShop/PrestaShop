@@ -32,8 +32,12 @@
     <name>Erro no pagamento</name>
     <template>payment_error</template>
   </order_state>
-  <order_state id='On_backorder'>
-    <name>Pedido em atraso</name>
+  <order_state id="On_backorder_paid">
+    <name>On backorder (paid)</name>
+    <template>outofstock</template>
+  </order_state>
+  <order_state id="On_backorder_unpaid">
+    <name>On backorder (not paid)</name>
     <template>outofstock</template>
   </order_state>
   <order_state id='Awaiting_bank_wire_payment'>

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -38,15 +38,17 @@ class OrderControllerCore extends ParentOrderController
 
 		parent::init();
 
-		$this->step = (int)(Tools::getValue('step'));
+		$this->step = (int)Tools::getValue('step');
 		if (!$this->nbProducts)
 			$this->step = -1;
 
+		$product = $this->context->cart->checkQuantities(true);
+
 		// If some products have disappear
-		if (!$this->context->cart->checkQuantities())
+		if (is_array($product))
 		{
 			$this->step = 0;
-			$this->errors[] = Tools::displayError('An item in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.');
+			$this->errors[] = sprintf(Tools::displayError('An item (%1s) in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.'), $product['name']);
 		}
 
 		// Check minimal amount
@@ -64,8 +66,19 @@ class OrderControllerCore extends ParentOrderController
 		}
 		if (!$this->context->customer->isLogged(true) && in_array($this->step, array(1, 2, 3)))
 		{
-			$back_url = $this->context->link->getPageLink('order', true, (int)$this->context->language->id, array('step' => $this->step, 'multi-shipping' => (int)Tools::getValue('multi-shipping')));
-			$params = array('multi-shipping' => (int)Tools::getValue('multi-shipping'), 'display_guest_checkout' => (int)Configuration::get('PS_GUEST_CHECKOUT_ENABLED'), 'back' => $back_url);
+
+			$params = array();
+			if ($this->step)
+				$params['step'] = (int)$this->step;
+			if ($multi = (int)Tools::getValue('multi-shipping'))
+				$params['multi-shipping'] = $multi;
+			$back_url = $this->context->link->getPageLink('order', true, (int)$this->context->language->id, $params);
+
+			$params = array('back' => $back_url);
+			if ($multi)
+				$params['multi-shipping'] = $multi;
+			if ($guest = (int)Configuration::get('PS_GUEST_CHECKOUT_ENABLED'))
+				$params['display_guest_checkout'] = $guest;
 			Tools::redirect($this->context->link->getPageLink('authentication', true, (int)$this->context->language->id, $params));
 		}
 
@@ -199,13 +212,6 @@ class OrderControllerCore extends ParentOrderController
 				$this->setTemplate(_PS_THEME_DIR_.'shopping-cart.tpl');
 			break;
 		}
-
-		$this->context->smarty->assign(array(
-			'currencySign' => $this->context->currency->sign,
-			'currencyRate' => $this->context->currency->conversion_rate,
-			'currencyFormat' => $this->context->currency->format,
-			'currencyBlank' => $this->context->currency->blank,
-		));
 	}
 
 	protected function processAddressFormat()
@@ -280,7 +286,7 @@ class OrderControllerCore extends ParentOrderController
 	public function processAddress()
 	{
 		$same = Tools::isSubmit('same');
-		if(!Tools::getValue('id_address_invoice', false) && !$same)
+		if (!Tools::getValue('id_address_invoice', false) && !$same)
 			$same = true;
 
 		if (!Customer::customerHasAddress($this->context->customer->id, (int)Tools::getValue('id_address_delivery'))
@@ -391,8 +397,8 @@ class OrderControllerCore extends ParentOrderController
 		/* We may need to display an order summary */
 		$this->context->smarty->assign($this->context->cart->getSummaryDetails());
 		$this->context->smarty->assign(array(
-			'total_price' => (float)($orderTotal),
-			'taxes_enabled' => (int)(Configuration::get('PS_TAX'))
+			'total_price' => (float)$orderTotal,
+			'taxes_enabled' => (int)Configuration::get('PS_TAX')
 		));
 		$this->context->cart->checkedTOS = '1';
 

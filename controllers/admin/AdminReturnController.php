@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -33,15 +33,16 @@ class AdminReturnControllerCore extends AdminController
 	 	$this->table = 'order_return';
 	 	$this->className = 'OrderReturn';
 		$this->colorOnBackground = true;
-		$this->_select = 'orsl.`name`, o.`id_shop`';
-		$this->_join = 'LEFT JOIN '._DB_PREFIX_.'order_return_state_lang orsl ON (orsl.`id_order_return_state` = a.`state` AND orsl.`id_lang` = '.(int)$this->context->language->id.')';
+		$this->_select = 'ors.color, orsl.`name`, o.`id_shop`';
+		$this->_join = 'LEFT JOIN '._DB_PREFIX_.'order_return_state ors ON (ors.`id_order_return_state` = a.`state`)';
+		$this->_join .= 'LEFT JOIN '._DB_PREFIX_.'order_return_state_lang orsl ON (orsl.`id_order_return_state` = a.`state` AND orsl.`id_lang` = '.(int)$this->context->language->id.')';
 		$this->_join .= ' LEFT JOIN '._DB_PREFIX_.'orders o ON (o.`id_order` = a.`id_order`)';
 
- 		$this->fields_list = array(
+        	$this->fields_list = array(
 			'id_order_return' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-			'a!id_order' => array('title' => $this->l('Order ID'), 'width' => 100, 'align' => 'center'),
-			'name' => array('title' => $this->l('Status'), 'width' => 'auto', 'align' => 'left'),
-			'a!date_add' => array('title' => $this->l('Date issued'), 'width' => 150, 'type' => 'date', 'align' => 'right'),
+			'id_order' => array('title' => $this->l('Order ID'), 'width' => 100, 'align' => 'center', 'filter_key'=>'a!id_order'),
+			'name' => array('title' => $this->l('Status'),'color' => 'color', 'width' => 'auto', 'align' => 'left'),
+			'date_add' => array('title' => $this->l('Date issued'), 'width' => 150, 'type' => 'date', 'align' => 'right', 'filter_key'=>'a!date_add'),
  		);
 
 		$this->fields_options = array(
@@ -166,7 +167,7 @@ class AdminReturnControllerCore extends AdminController
 		// If display list, we don't want the "add" button
 		if (!$this->display || $this->display == 'list')
 			return;
-		else if ($this->display != 'options')
+		elseif ($this->display != 'options')
 			$this->toolbar_btn['save-and-stay'] = array(
 				'short' => 'SaveAndStay',
 				'href' => '#',

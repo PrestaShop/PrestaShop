@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -149,7 +149,7 @@ class AddressControllerCore extends FrontController
 			/* Check zip code format */
 			if ($country->zip_code_format && !$country->checkZipCode($postcode))
 				$this->errors[] = sprintf(Tools::displayError('The Zip/Postal code you\'ve entered is invalid. It must follow this format: %s'), str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format))));
-			elseif(empty($postcode) && $country->need_zip_code)
+			elseif (empty($postcode) && $country->need_zip_code)
 				$this->errors[] = Tools::displayError('A Zip/Postal code is required.');
 			elseif ($postcode && !Validate::isPostCode($postcode))
 				$this->errors[] = Tools::displayError('The Zip/Postal code is invalid.');
@@ -164,7 +164,7 @@ class AddressControllerCore extends FrontController
 		if (!$this->context->customer->is_guest && !empty($_POST['alias']) && (int)$this->context->customer->id > 0)
 		{
 			$id_address = Tools::getValue('id_address');
-			if(Configuration::get('PS_ORDER_PROCESS_TYPE') && (int)Tools::getValue('opc_id_address_'.Tools::getValue('type')) > 0)
+			if (Configuration::get('PS_ORDER_PROCESS_TYPE') && (int)Tools::getValue('opc_id_address_'.Tools::getValue('type')) > 0)
 				$id_address = Tools::getValue('opc_id_address_'.Tools::getValue('type'));
 
 			if (Address::aliasExist(Tools::getValue('alias'), (int)$id_address, (int)$this->context->customer->id))
@@ -190,7 +190,7 @@ class AddressControllerCore extends FrontController
 					$address_old->delete();
 				else
 				{
-					$address->id = (int)($address_old->id);
+					$address->id = (int)$address_old->id;
 					$address->date_add = $address_old->date_add;
 				}
 			}
@@ -218,7 +218,7 @@ class AddressControllerCore extends FrontController
 			else // Update cart address
 				$this->context->cart->autosetProductAddress();
 
-			if ((bool)(Tools::getValue('select_address', false)) == true OR (Tools::getValue('type') == 'invoice' && Configuration::get('PS_ORDER_PROCESS_TYPE')))
+			if ((bool)Tools::getValue('select_address', false) == true || (Tools::getValue('type') == 'invoice' && Configuration::get('PS_ORDER_PROCESS_TYPE')))
 				$this->context->cart->id_address_invoice = (int)$address->id;
 			elseif (Configuration::get('PS_ORDER_PROCESS_TYPE'))
 				$this->context->cart->id_address_invoice = (int)$this->context->cart->id_address_delivery;

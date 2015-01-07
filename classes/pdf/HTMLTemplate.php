@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -75,6 +75,7 @@ abstract class HTMLTemplateCore
 			'shop_address' => $shop_address,
 			'shop_fax' => Configuration::get('PS_SHOP_FAX', null, null, (int)$this->order->id_shop),
 			'shop_phone' => Configuration::get('PS_SHOP_PHONE', null, null, (int)$this->order->id_shop),
+			'shop_email' => Configuration::get('PS_SHOP_EMAIL', null, null, (int)$this->order->id_shop),
 			'shop_details' => Configuration::get('PS_SHOP_DETAILS', null, null, (int)$this->order->id_shop),
 			'free_text' => Configuration::get('PS_INVOICE_FREE_TEXT', (int)Context::getContext()->language->id, null, (int)$this->order->id_shop)
 		));
@@ -89,8 +90,10 @@ abstract class HTMLTemplateCore
 	protected function getShopAddress()
 	{
 		$shop_address = '';
+
 		if (Validate::isLoadedObject($this->shop))
 		{
+			Shop::setContext(Shop::CONTEXT_SHOP, $this->shop->id);
 			$shop_address_obj = $this->shop->getAddress();
 			if (isset($shop_address_obj) && $shop_address_obj instanceof Address)
 				$shop_address = AddressFormat::generateAddress($shop_address_obj, array(), ' - ', ' ');
@@ -106,8 +109,6 @@ abstract class HTMLTemplateCore
 	protected function getLogo()
 	{
 		$logo = '';
-
-		$physical_uri = Context::getContext()->shop->physical_uri.'img/';
 
 		if (Configuration::get('PS_LOGO_INVOICE', null, null, (int)$this->order->id_shop) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, (int)$this->order->id_shop)))
 			$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, (int)$this->order->id_shop);
@@ -165,7 +166,7 @@ abstract class HTMLTemplateCore
 
 		if (file_exists($overriden_template))
 			$template = $overriden_template;
-		else if (file_exists($default_template))
+		elseif (file_exists($default_template))
 			$template = $default_template;
 
 		return $template;

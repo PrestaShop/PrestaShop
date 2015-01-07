@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -145,7 +145,7 @@ class ConfigurationCore extends ObjectModel
 
 			if ($row['id_shop'])
 				self::$_cache[self::$definition['table']][$lang]['shop'][$row['id_shop']][$row['name']] = $row['value'];
-			else if ($row['id_shop_group'])
+			elseif ($row['id_shop_group'])
 				self::$_cache[self::$definition['table']][$lang]['group'][$row['id_shop_group']][$row['name']] = $row['value'];
 			else
 				self::$_cache[self::$definition['table']][$lang]['global'][$row['name']] = $row['value'];
@@ -296,7 +296,7 @@ class ConfigurationCore extends ObjectModel
 		{
 			if ($id_shop)
 				self::$_cache[self::$definition['table']][$lang]['shop'][$id_shop][$key] = $value;
-			else if ($id_shop_group)
+			elseif ($id_shop_group)
 				self::$_cache[self::$definition['table']][$lang]['group'][$id_shop_group][$key] = $value;
 			else
 				self::$_cache[self::$definition['table']][$lang]['global'][$key] = $value;
@@ -338,6 +338,9 @@ class ConfigurationCore extends ObjectModel
 
 		if (!is_array($values))
 			$values = array($values);
+
+		if ($html)
+			$html = Tools::purifyHTML($html);
 
 		$result = true;
 		foreach ($values as $lang => $value)
@@ -395,7 +398,7 @@ class ConfigurationCore extends ObjectModel
 				{
 					$result &= Db::getInstance()->insert(self::$definition['table'].'_lang', array(
 						self::$definition['primary'] => $configID,
-						'id_lang' => $lang,
+						'id_lang' => (int)$lang,
 						'value' => pSQL($value, $html),
 						'date_upd' => date('Y-m-d H:i:s'),
 					));

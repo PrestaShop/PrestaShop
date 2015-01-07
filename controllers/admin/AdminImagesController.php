@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -57,9 +57,12 @@ class AdminImagesControllerCore extends AdminController
 			'categories' => array('title' => $this->l('Categories'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
 			'manufacturers' => array('title' => $this->l('Manufacturers'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
 			'suppliers' => array('title' => $this->l('Suppliers'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
-			'scenes' => array('title' => $this->l('Scenes'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false),
 			'stores' => array('title' => $this->l('Stores'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false)
 		);
+
+		// Scenes tab has been removed by default from the installation, but may still exists in updates
+		if (Tab::getIdFromClassName('AdminScenes'))
+			$this->fields_list['scenes'] = array('title' => $this->l('Scenes'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false);
 		
 		// No need to display the old image system migration tool except if product images are in _PS_PROD_IMG_DIR_
 		$this->display_move = false;
@@ -669,7 +672,7 @@ class AdminImagesControllerCore extends AdminController
 			$result = Image::moveToNewFileSystem($this->max_execution_time);
 			if ($result === 'timeout')
 				$this->errors[] = Tools::displayError('Not all images have been moved. The server timed out before finishing. Click on "Move images" again to resume the moving process.');
-			else if ($result === false)
+			elseif ($result === false)
 				$this->errors[] = Tools::displayError('Error: Some -- or all -- images cannot be moved.');
 		}
 		return (count($this->errors) > 0 ? false : true);

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -41,7 +41,6 @@ class AdminMetaControllerCore extends AdminController
 		$this->identifier_name = 'page';
 		$this->ht_file = _PS_ROOT_DIR_.'/.htaccess';
 		$this->rb_file = _PS_ROOT_DIR_.'/robots.txt';
-		$this->sm_file = _PS_ROOT_DIR_.'/sitemap.xml';
 		$this->rb_data = $this->getRobotsContent();
 
 		$this->explicitSelect = true;
@@ -66,6 +65,7 @@ class AdminMetaControllerCore extends AdminController
 
 		parent::__construct();
 
+		$this->sm_file = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$this->context->shop->id.'_index_sitemap.xml';
 		// Options to generate friendly urls
 		$mod_rewrite = Tools::modRewriteActive();
 		$general_fields = array(
@@ -205,11 +205,11 @@ class AdminMetaControllerCore extends AdminController
 		else
 			$this->fields_options['manage_domain_name'] = array(
 				'title' => $this->l('Manage domain name'),
-				'description' => $this->l('You can search for a new domain name or add a domain name that you already own. You will be redirected to your PrestaShop account.'),
+				'description' => $this->l('You can search for a new domain name or add a domain name that you already own. You will be redirected to your PrestaShop.com account.'),
 				'buttons' => array(
 					array(
 						'title' => $this->l('Add a domain name'),
-						'href' => 'https://www.prestashop.com/ondemand/',
+						'href' => 'https://www.prestashop.com/cloud/',
 						'class' => 'pull-right', 'icon' => 'process-icon-new',
 						'js' => 'return !window.open(this.href);'
 					)
@@ -514,7 +514,8 @@ class AdminMetaControllerCore extends AdminController
 			if (file_exists($this->sm_file) && filesize($this->sm_file))
 			{
 				fwrite($write_fd, "# Sitemap\n");
-				fwrite($write_fd, 'Sitemap: '.(Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://').$_SERVER['SERVER_NAME'].__PS_BASE_URI__.'sitemap.xml'."\n");
+				$sitemap_filename = basename($this->sm_file);
+				fwrite($write_fd, 'Sitemap: '.(Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://').$_SERVER['SERVER_NAME'].__PS_BASE_URI__.$sitemap_filename."\n");
 			}
 
 			fclose($write_fd);
@@ -717,7 +718,7 @@ class AdminMetaControllerCore extends AdminController
 	{
 		$this->addFieldRoute('product_rule', $this->l('Route to products'));
 		$this->addFieldRoute('category_rule', $this->l('Route to category'));
-		$this->addFieldRoute('layered_rule', $this->l('Route to category with attribute selected_filter for the module block layered'));
+		$this->addFieldRoute('layered_rule', $this->l('Route to category which has the "selected_filter" attribute for the "Layered Navigation" (blocklayered) module'));
 		$this->addFieldRoute('supplier_rule', $this->l('Route to supplier'));
 		$this->addFieldRoute('manufacturer_rule', $this->l('Route to manufacturer'));
 		$this->addFieldRoute('cms_rule', $this->l('Route to CMS page'));
@@ -768,7 +769,8 @@ class AdminMetaControllerCore extends AdminController
 		}
 
 		$tab['GB'] = array(
-			'orderby=','orderway=','tag=','id_currency=','search_query=','back=','n='
+			'?orderby=','?orderway=','?tag=','?id_currency=','?search_query=','?back=','?n=',
+			'&orderby=','&orderway=','&tag=','&id_currency=','&search_query=','&back=','&n='
 		);
 
 		foreach ($disallow_controllers as $controller)

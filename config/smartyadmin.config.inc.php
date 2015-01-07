@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -38,7 +38,7 @@ function smartyTranslate($params, &$smarty)
 	$htmlentities = !isset($params['js']);
 	$pdf = isset($params['pdf']);
 	$addslashes = (isset($params['slashes']) || isset($params['js']));
-	$sprintf = isset($params['sprintf']) ? $params['sprintf'] : false;
+	$sprintf = isset($params['sprintf']) ? $params['sprintf'] : null;
 
 	if ($pdf)
 		return Translate::smartyPostProcessTranslation(Translate::getPdfTranslation($params['s']), $params);
@@ -52,8 +52,9 @@ function smartyTranslate($params, &$smarty)
 	// If the tpl is at the root of the template folder
 	if (dirname($filename) == '.')
 		$class = 'index';
+	
 	// If the tpl is used by a Helper
-	elseif (strpos($filename, 'helpers') === 0)
+	if (strpos($filename, 'helpers') === 0)
 		$class = 'Helper';
 	// If the tpl is used by a Controller
 	else
@@ -67,7 +68,7 @@ function smartyTranslate($params, &$smarty)
 		}
 		else
 		{
-	// Split by \ and / to get the folder tree for the file
+		// Split by \ and / to get the folder tree for the file
 		$folder_tree = preg_split('#[/\\\]#', $filename);
 		$key = array_search('controllers', $folder_tree);
 
@@ -77,8 +78,6 @@ function smartyTranslate($params, &$smarty)
 			$class = 'Admin'.Tools::toCamelCase($folder_tree[$key + 1], true);
 		elseif (isset($folder_tree[0]))
 			$class = 'Admin'.Tools::toCamelCase($folder_tree[0], true);
-		else
-			$class = null;
 		}
 	}
 

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -170,6 +170,11 @@ class AdminDashboardControllerCore extends AdminController
 			'suffix' => $currency->iso_code
 		);
 
+		Media::addJsDef(array(
+				'dashboard_ajax_url' => $this->context->link->getAdminLink('AdminDashboard'),
+				'read_more' => '',
+			));
+
 		return $forms;
 	}
 
@@ -248,24 +253,36 @@ class AdminDashboardControllerCore extends AdminController
 
 		if (Tools::isSubmit('submitDateRange'))
 		{
-			$this->context->employee->stats_date_from = Tools::getValue('date_from');
-			$this->context->employee->stats_date_to = Tools::getValue('date_to');
-			$this->context->employee->preselect_date_range = Tools::getValue('preselectDateRange');
+			if (!Validate::isDate(Tools::getValue('date_from'))
+				|| !Validate::isDate(Tools::getValue('date_to')))
+				$this->errors[] = Tools::displayError('The selected date range is not valid.');
 
 			if (Tools::getValue('datepicker_compare'))
-			{
-				$this->context->employee->stats_compare_from = Tools::getValue('compare_date_from');
-				$this->context->employee->stats_compare_to = Tools::getValue('compare_date_to');
-				$this->context->employee->stats_compare_option = Tools::getValue('compare_date_option');
-			}
-			else
-			{
-				$this->context->employee->stats_compare_from = null;
-				$this->context->employee->stats_compare_to = null;
-				$this->context->employee->stats_compare_option = HelperCalendar::DEFAULT_COMPARE_OPTION;
-			}
+				if (!Validate::isDate(Tools::getValue('compare_date_from'))
+					|| !Validate::isDate(Tools::getValue('compare_date_to')))
+					$this->errors[] = Tools::displayError('The selected date range is not valid.');
 
-			$this->context->employee->update();
+			if (!count($this->errors))
+			{
+				$this->context->employee->stats_date_from = Tools::getValue('date_from');
+				$this->context->employee->stats_date_to = Tools::getValue('date_to');
+				$this->context->employee->preselect_date_range = Tools::getValue('preselectDateRange');
+
+				if (Tools::getValue('datepicker_compare'))
+				{
+					$this->context->employee->stats_compare_from = Tools::getValue('compare_date_from');
+					$this->context->employee->stats_compare_to = Tools::getValue('compare_date_to');
+					$this->context->employee->stats_compare_option = Tools::getValue('compare_date_option');
+				}
+				else
+				{
+					$this->context->employee->stats_compare_from = null;
+					$this->context->employee->stats_compare_to = null;
+					$this->context->employee->stats_compare_option = HelperCalendar::DEFAULT_COMPARE_OPTION;
+				}
+
+				$this->context->employee->update();
+			}
 		}
 
 		parent::postProcess();
@@ -367,7 +384,7 @@ class AdminDashboardControllerCore extends AdminController
 			{
 				if (Validate::isLoadedObject($module_obj) && method_exists($module_obj, 'saveDashConfig'))
 					$return['has_errors'] = $module_obj->saveDashConfig($configs);
-				else if (is_array($configs) && count($configs))
+				elseif (is_array($configs) && count($configs))
 					foreach ($configs as $name => $value)
 						if (Validate::isConfigName($name))
 							Configuration::updateValue($name, $value);

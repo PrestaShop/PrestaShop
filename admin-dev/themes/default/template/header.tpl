@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -78,7 +78,7 @@
 		var admin_modules_link = '{$link->getAdminLink("AdminModules")|addslashes}';
 		var tab_modules_list = '{if isset($tab_modules_list) && $tab_modules_list}{$tab_modules_list|addslashes}{/if}';
 		var update_success_msg = '{l s='Update successful' js=1}';
-		var errorLogin = '{l s='PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.'}';
+		var errorLogin = '{l s='PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.' js=1}';
 		var search_product_msg = '{l s='Search for a product' js=1}';
 	</script>
 {/if}
@@ -87,11 +87,9 @@
 	<link href="{$css_uri|escape:'html':'UTF-8'}" rel="stylesheet" type="text/css"/>
 {/foreach}
 {/if}
-{if isset($js_files)}
-{foreach from=$js_files item=js_uri}
-	<script type="text/javascript" src="{$js_uri|escape:'html':'UTF-8'}"></script>
-{/foreach}
-{/if}
+	{if (isset($js_def) && count($js_def) || isset($js_files) && count($js_files))}
+		{include file=$smarty.const._PS_ALL_THEMES_DIR_|cat:"javascript.tpl"}
+	{/if}
 
 	{if isset($displayBackOfficeHeader)}
 		{$displayBackOfficeHeader}
@@ -205,7 +203,7 @@
 						<ul class="dropdown-menu">
 							{foreach $quick_access as $quick}
 								<li {if $link->matchQuickLink({$quick.link})}{assign "matchQuickLink" $quick.id_quick_access}class="active"{/if}>
-									<a href="{$quick.link|escape:'html':'UTF-8'}" {if $quick.new_window} target="_blank"{/if}>
+									<a href="{$quick.link|escape:'html':'UTF-8'}"{if $quick.new_window} class="_blank"{/if}>
 										{if isset($quick.icon)}
 											<i class="icon-{$quick.icon} icon-fw"></i>
 										{else}
@@ -262,18 +260,18 @@
 				</script>
 {/if}
 				<ul id="header_employee_box">
-					{if !isset($logged_on_addons) || !$logged_on_addons}
+					{if (!isset($logged_on_addons) || !$logged_on_addons) && (isset($display_addons_connection) && $display_addons_connection)}
 						<li>
-							<a href="#" class="addons_connect toolbar_btn" data-toggle="modal" data-target="#modal_addons_connect" title="{l s='Addons'}">
+							<a href="#" class="addons_connect toolbar_btn" data-toggle="modal" data-target="#modal_addons_connect" title="{l s='Connect to Prestashop Marketplace account'}">
 								<i class="icon-chain-broken"></i>
-								<span class="string-long">{l s='Not connected to PrestaShop Addons'}</span>
-								<span class="string-short">{l s='Addons'}</span>
+								<span class="string-long">{l s='Connect to Prestashop Marketplace account'}</span>
+								<span class="string-short">{l s='Prestashop Marketplace'}</span>
 							</a>
 						</li>
 					{/if}
 {if {$base_url}}
 					<li>
-						<a href="{if isset($base_url_tc)}{$base_url_tc|escape:'html':'UTF-8'}{else}{$base_url|escape:'html':'UTF-8'}{/if}" id="header_foaccess" target="_blank" title="{l s='View my shop'}">
+						<a href="{if isset($base_url_tc)}{$base_url_tc|escape:'html':'UTF-8'}{else}{$base_url|escape:'html':'UTF-8'}{/if}" id="header_foaccess" class="_blank" title="{l s='View my shop'}">
 							<i class="icon-star"></i>
 							<span class="string-long">{l s='My shop'}</span>
 							<span class="string-short">{l s='Shop'}</span>
@@ -301,7 +299,7 @@
 							<li class="divider"></li>
 							<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences'}</a></li>
 							{if $host_mode}
-							<li><a href="https://www.prestashop.com/ondemand/" class="_blank"><i class="icon-wrench"></i> {l s='My PrestaShop account'}</a></li>
+							<li><a href="https://www.prestashop.com/cloud/" class="_blank"><i class="icon-wrench"></i> {l s='My PrestaShop account'}</a></li>
 							{/if}
 							<li class="divider"></li>
 							<li><a id="header_logout" href="{$default_tab_link|escape:'html':'UTF-8'}&amp;logout"><i class="icon-signout"></i> {l s='Sign out'}</a></li>

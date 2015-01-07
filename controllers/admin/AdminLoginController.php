@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -84,7 +84,7 @@ class AdminLoginControllerCore extends AdminController
 		
 		if (basename(_PS_ADMIN_DIR_) == 'admin' && file_exists(_PS_ADMIN_DIR_.'/../admin/'))
 		{	
-			$rand = 'admin'.sprintf('%04d', rand(0, 9999)).'/';
+			$rand = 'admin'.sprintf('%03d', rand(0, 999)).Tools::strtolower(Tools::passwdGen(6)).'/';
 			if (@rename(_PS_ADMIN_DIR_.'/../admin/', _PS_ADMIN_DIR_.'/../'.$rand))
 				Tools::redirectAdmin('../'.$rand);
 			else
@@ -184,7 +184,9 @@ class AdminLoginControllerCore extends AdminController
 			}
 			else
 			{
-				$this->context->employee->remote_addr = ip2long(Tools::getRemoteAddr());
+				PrestaShopLogger::addLog(sprintf($this->l('BackOffice connection from %s', 'AdminTab', false, false), Tools::getRemoteAddr()), 1, null, '', 0, true, (int)$this->context->employee->id);
+
+				$this->context->employee->remote_addr = (int)ip2long(Tools::getRemoteAddr());
 				// Update cookie
 				$cookie = Context::getContext()->cookie;
 				$cookie->id_employee = $this->context->employee->id;
@@ -250,7 +252,7 @@ class AdminLoginControllerCore extends AdminController
 				'{passwd}' => $pwd
 			);
 						
-			if (Mail::Send($employee->id_lang, 'password', Mail::l('Your new password', $employee->id_lang), $params, $employee->email, $employee->firstname.' '.$employee->lastname))
+			if (Mail::Send($employee->id_lang, 'employee_password', Mail::l('Your new password', $employee->id_lang), $params, $employee->email, $employee->firstname.' '.$employee->lastname))
 			{
 				// Update employee only if the mail can be sent
 				Shop::setContext(Shop::CONTEXT_SHOP, (int)min($employee->getAssociatedShops()));
@@ -271,7 +273,7 @@ class AdminLoginControllerCore extends AdminController
 				)));
 		
 		}
-		else if (Tools::isSubmit('ajax'))
+		elseif (Tools::isSubmit('ajax'))
 			die(Tools::jsonEncode(array('hasErrors' => true, 'errors' => $this->errors)));
 	}
 }

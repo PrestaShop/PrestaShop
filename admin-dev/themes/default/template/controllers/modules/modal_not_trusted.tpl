@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -70,14 +70,13 @@
 <div class="untrusted-content-more-info" style="display:none;">
 
 	<div class="modal-body">
-		<h4>{l s='Am I at Risk ?'}</h4>
+		<h4>{l s='Am I at Risk?'}</h4>
 
-		<p>{l s="A module that hasn't been verified may be dangerous and could add hidden functionalities like backdoors, ads, hidden links, spam, etc.
-Don’t worry, this alert is simply a warning."}</p>
+		<p>{l s="A module that hasn't been verified may be dangerous and could add hidden functionalities like backdoors, ads, hidden links, spam, etc. Don’t worry, this alert is simply a warning."}</p>
 
 		<p>{l s="PrestaShop, being an open-source software, has an awesome community with a long history of developing and sharing high quality modules. Before installing this module, making sure the author of this module is a known community member is always a good idea (by checking [1]our forum[/1] for instance)." tags=['<a href="http://forum.prestashop.com">']}</p>
 
-		<h4>{l s='What Should I Do ?'}</h4>
+		<h4>{l s='What Should I Do?'}</h4>
 		
 		<p>{l s="If you trust or find the author of this module to be an active community member, you can proceed with the installation."}
 

@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -37,11 +37,11 @@
 				<a class="btn btn-default pull-right" href="mailto:{$customer->email}"><i class="icon-envelope"></i> {$customer->email}</a>
 				<h2>
 					{if $customer->id_gender == 1}
-					<i class="icon-male"></i> 
+					<i class="icon-male"></i>
 					{elseif $customer->id_gender == 2}
-					<i class="icon-female"></i> 
+					<i class="icon-female"></i>
 					{else}
-					<i class="icon-question"></i> 
+					<i class="icon-question"></i>
 					{/if}
 					<a href="{$link->getAdminLink('AdminCustomers')|escape:'html':'UTF-8'}&amp;id_customer={$customer->id|intval}&amp;viewcustomer">{$customer->firstname} {$customer->lastname}</a></h2>
 				<div class="form-horizontal">
@@ -115,7 +115,7 @@
 								<ul style="margin: 0; padding: 0; list-style-type: none;">
 								{foreach from=$datas key='index' item='data'}
 										<li style="display: inline; margin: 2px;">
-											<a href="displayImage.php?img={$data.value}&name={$order->id|intval}-file{$index}" target="_blank">
+											<a href="displayImage.php?img={$data.value}&name={$order->id|intval}-file{$index}" class="_blank">
 											<img src="{$pic_dir}{$data.value}_small" alt="" /></a>
 										</li>
 								{/foreach}
@@ -141,7 +141,7 @@
 					</tr>
 					{/foreach}
 				{/if}
-				
+
 				{if $product.cart_quantity > $product.customization_quantity}
 					<tr>
 						<td>{$product.image}</td>
@@ -162,7 +162,7 @@
 			<tr>
 				<td colspan="5">{l s='Total cost of products:'}</td>
 				<td class="text-right">{displayWtPriceWithCurrency price=$total_products currency=$currency}</td>
-			</tr>		
+			</tr>
 			{if $total_discounts != 0}
 			<tr>
 				<td colspan="5">{l s='Total value of vouchers:'}</td>
@@ -187,7 +187,7 @@
 			</tr>
 		</tbody>
 	</table>
-	
+
 	{if $discounts}
 	<table class="table">
 		<tr>
@@ -204,7 +204,7 @@
 	{/if}
 	<div class="alert alert-warning">
 		{l s='For this particular customer group, prices are displayed as:'} <b>{if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC}{l s='Tax excluded'}{else}{l s='Tax included'}{/if}</b>
-	</div>	
+	</div>
 	<div class="clear" style="height:20px;">&nbsp;</div>
 {/block}
 </div>

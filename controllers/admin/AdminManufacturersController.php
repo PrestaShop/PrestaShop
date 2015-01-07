@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -744,20 +744,20 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->initPageHeaderToolbar();
 		if ($this->display == 'editaddresses' || $this->display == 'addaddress')
 			$this->content .= $this->renderFormAddress();
-		else if ($this->display == 'edit' || $this->display == 'add')
+		elseif ($this->display == 'edit' || $this->display == 'add')
 		{
 			if (!$this->loadObject(true))
 				return;
 			$this->content .= $this->renderForm();
 		}
-		else if ($this->display == 'view')
+		elseif ($this->display == 'view')
 		{
 			// Some controllers use the view action without an object
 			if ($this->className)
 				$this->loadObject(true);
 			$this->content .= $this->renderView();
 		}
-		else if (!$this->ajax)
+		elseif (!$this->ajax)
 		{
 			$this->content .= $this->renderList();
 			$this->content .= $this->renderOptions();
@@ -782,13 +782,13 @@ class AdminManufacturersControllerCore extends AdminController
 
 		if (Tools::isSubmit('editaddresses'))
 			$this->display = 'editaddresses';
-		else if (Tools::isSubmit('updateaddress'))
+		elseif (Tools::isSubmit('updateaddress'))
 			$this->display = 'editaddresses';
-		else if (Tools::isSubmit('addaddress'))
+		elseif (Tools::isSubmit('addaddress'))
 			$this->display = 'addaddress';
-		else if (Tools::isSubmit('submitAddaddress'))
+		elseif (Tools::isSubmit('submitAddaddress'))
 			$this->action = 'save';
-		else if (Tools::isSubmit('deleteaddress'))
+		elseif (Tools::isSubmit('deleteaddress'))
 			$this->action = 'delete';
 	}
 

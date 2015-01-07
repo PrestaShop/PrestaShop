@@ -1,5 +1,5 @@
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registred Trademark & Property of PrestaShop SA
 */
@@ -320,12 +320,21 @@ function paginationButton(nbProductsIn, nbProductOut)
 			//insert values into a .product-count
 			productCountRow = $.trim(productCountRow);
 			productCountRow = productCountRow.split(' ');
-			productCountRow[1] = productShowingStart;
-			productCountRow[3] = (nbProductOut != 'undefined') && (nbProductOut > productShowing) ? nbProductOut : productShowing;
-			productCountRow[5] = nb_products;
 
-			if (productCountRow[3] > productCountRow[5])
-				productCountRow[3] = productCountRow[5];
+			var backStart = new Array;
+			for (row in productCountRow)
+				if (parseInt(productCountRow[row]) + 0 == parseInt(productCountRow[row]))
+					backStart.push(row);
+
+			if (typeof backStart[0] !== 'undefined')
+				productCountRow[backStart[0]] = productShowingStart;
+			if (typeof backStart[1] !== 'undefined')
+				productCountRow[backStart[1]] = (nbProductOut != 'undefined') && (nbProductOut > productShowing) ? nbProductOut : productShowing;
+			if (typeof backStart[2] !== 'undefined')
+				productCountRow[backStart[2]] = nb_products;
+
+			if (typeof backStart[1] !== 'undefined' && typeof backStart[2] !== 'undefined' && productCountRow[backStart[1]] > productCountRow[backStart[2]])
+				productCountRow[backStart[1]] = productCountRow[backStart[2]];
 
 			productCountRow = productCountRow.join(' ');
 			$('.product-count').html(productCountRow);
@@ -454,7 +463,7 @@ function reloadContent(params_plus)
 	}
 
 	var slideUp = true;
-	if (params_plus == undefined)
+	if (params_plus == undefined || !(typeof params_plus == 'string'))
 	{
 		params_plus = '';
 		slideUp = false;

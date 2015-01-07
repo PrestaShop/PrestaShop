@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -35,8 +35,8 @@ if (!$query OR $query == '' OR strlen($query) < 1)
 
 /*
  * In the SQL request the "q" param is used entirely to match result in database.
- * In this way if string:"(ref : #ref_pattern#)" is displayed on the return list, 
- * they are no return values just because string:"(ref : #ref_pattern#)" 
+ * In this way if string:"(ref : #ref_pattern#)" is displayed on the return list,
+ * they are no return values just because string:"(ref : #ref_pattern#)"
  * is not write in the name field of the product.
  * So the ref pattern will be cut for the search request.
  */
@@ -67,9 +67,7 @@ $sql = 'SELECT p.`id_product`, pl.`link_rewrite`, p.`reference`, pl.`name`, MAX(
 
 $items = Db::getInstance()->executeS($sql);
 
-$acc = (bool)Tools::isSubmit('excludeIds');
-
-if ($items && $acc)
+if ($items && ($excludeIds || strpos($_SERVER['HTTP_REFERER'], 'AdminScenes') !== false))
 	foreach ($items AS $item)
 		echo trim($item['name']).(!empty($item['reference']) ? ' (ref: '.$item['reference'].')' : '').'|'.(int)($item['id_product'])."\n";
 elseif ($items)
@@ -89,4 +87,4 @@ elseif ($items)
 	echo Tools::jsonEncode($results);
 }
 else
-	json_encode(new stdClass);
+	Tools::jsonEncode(new stdClass);

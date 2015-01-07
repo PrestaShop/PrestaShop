@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -33,17 +33,19 @@ class AdminCountriesControllerCore extends AdminController
 		$this->className = 'Country';
 	 	$this->lang = true;
 		$this->deleted = false;
+		$this->_defaultOrderBy = 'name';
+		$this->_defaultOrderWay = 'ASC';
 
 		$this->explicitSelect = true;
 		$this->addRowAction('edit');
 
 		$this->context = Context::getContext();
-		
+
 		$this->bulk_actions = array(
 			'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
 			'affectzone' => array('text' => $this->l('Assign to a new zone'))
 		);
-		
+
 		$this->fieldImageSettings = array(
 			'name' => 'logo',
 			'dir' => 'st'
@@ -63,7 +65,7 @@ class AdminCountriesControllerCore extends AdminController
 				'submit' => array('title' => $this->l('Save'))
 			)
 		);
-		
+
 		$zones_array = array();
 		$this->zones = Zone::getZones();
 		foreach ($this->zones as $zone)
@@ -181,7 +183,7 @@ class AdminCountriesControllerCore extends AdminController
 					'name' => 'name',
 					'lang' => true,
 					'required' => true,
-					'hint' => $this->l('Country name').' - '.$this->l('Invalid characters:'). ' &lt;&gt;;=#{} '
+					'hint' => $this->l('Country name').' - '.$this->l('Invalid characters:').' &lt;&gt;;=#{} '
 				),
 				array(
 					'type' => 'text',
@@ -285,7 +287,7 @@ class AdminCountriesControllerCore extends AdminController
 						)
 					),
 					'hint' => $this->l('Display this country to your customers (the selected country will always be displayed in the Back Office).')
-				),			
+				),
 				array(
 					'type' => 'switch',
 					'label' => $this->l('Contains states'),
@@ -341,7 +343,7 @@ class AdminCountriesControllerCore extends AdminController
 					)
 				)
 			)
-			
+
 		);
 
 		if (Shop::isFeatureActive())
@@ -356,10 +358,10 @@ class AdminCountriesControllerCore extends AdminController
 		$this->fields_form['submit'] = array(
 			'title' => $this->l('Save')
 		);
-		
+
 		return parent::renderForm();
 	}
-	
+
 	public function processUpdate()
 	{
 		$country = $this->loadObject();
@@ -373,11 +375,11 @@ class AdminCountriesControllerCore extends AdminController
 				$ids = array();
 				foreach ($results as $res)
 					$ids[] = (int)$res['id_state'];
-				
+
 				if (count($ids))
 					$res = Db::getInstance()->execute(
-							'UPDATE `'._DB_PREFIX_.'state` 
-							SET `id_zone` = '.(int)Tools::getValue('id_zone').' 
+							'UPDATE `'._DB_PREFIX_.'state`
+							SET `id_zone` = '.(int)Tools::getValue('id_zone').'
 							WHERE `id_state` IN ('.implode(',', $ids).')');
 			}
 		}
@@ -391,7 +393,7 @@ class AdminCountriesControllerCore extends AdminController
 			if (Validate::isLanguageIsoCode(Tools::getValue('iso_code')) && Country::getByIso(Tools::getValue('iso_code')))
 				$this->errors[] = Tools::displayError('This ISO code already exists.You cannot create two countries with the same ISO code.');
 		}
-		else if (Validate::isLanguageIsoCode(Tools::getValue('iso_code')))
+		elseif (Validate::isLanguageIsoCode(Tools::getValue('iso_code')))
 		{
 			$id_country = Country::getByIso(Tools::getValue('iso_code'));
 			if (!is_null($id_country) && $id_country != Tools::getValue('id_'.$this->table))
@@ -400,17 +402,13 @@ class AdminCountriesControllerCore extends AdminController
 
 		return parent::postProcess();
 	}
-	
+
 	public function processSave()
 	{
 		if (!$this->id_object)
-		{
 			$tmp_addr_format = new AddressFormat();
-		}
 		else
-		{
 			$tmp_addr_format = new AddressFormat($this->id_object);
-		}
 
 		$tmp_addr_format->format = Tools::getValue('address_layout');
 
@@ -421,9 +419,9 @@ class AdminCountriesControllerCore extends AdminController
 				$this->errors[] = $error;
 		}
 		if (strlen($tmp_addr_format->format) <= 0)
-				$this->errors[] = $this->l("Address format invalid");
+			$this->errors[] = $this->l('Address format invalid');
 
-		$country =  parent::processSave();
+		$country = parent::processSave();
 
 		if (!count($this->errors))
 		{
@@ -436,15 +434,15 @@ class AdminCountriesControllerCore extends AdminController
 
 		return $country;
 	}
-	
+
 	public function processStatus()
 	{
 		parent::processStatus();
-		if (Validate::isLoadedObject($object = $this->loadObject()) &&  $object->active == 1)
-			return Country::addModuleRestrictions(array(), array(array('id_country' => $object->id)), array());				
+		if (Validate::isLoadedObject($object = $this->loadObject()) && $object->active == 1)
+			return Country::addModuleRestrictions(array(), array(array('id_country' => $object->id)), array());
 		return false;
 	}
-	
+
 	public function processBulkStatusSelection($way)
 	{
 		if (is_array($this->boxes) && !empty($this->boxes))
@@ -470,7 +468,6 @@ class AdminCountriesControllerCore extends AdminController
 		$this->l('Address');
 		*/
 
-
 		$html_tabnav = '<ul class="nav nav-tabs" id="custom-address-fields">';
 		$html_tabcontent = '<div class="tab-content" >';
 
@@ -482,11 +479,12 @@ class AdminCountriesControllerCore extends AdminController
 		$class_tab_active = 'active';
 		foreach ($object_list as $class_name => &$object)
 		{
-			if ($i != 0){ $class_tab_active = ''; }
+			if ($i != 0)
+				$class_tab_active = '';
 			$fields = array();
 			$html_tabnav .= '<li'.($class_tab_active ? ' class="'.$class_tab_active.'"' : '').'>
 				<a href="#availableListFieldsFor_'.$class_name.'"><i class="icon-caret-down"></i>&nbsp;'.Translate::getAdminTranslation($class_name, 'AdminCountries').'</a></li>';
-			
+
 			foreach (AddressFormat::getValidateFields($class_name) as $name)
 				$fields[] = '<a href="javascript:void(0);" class="addPattern btn btn-default btn-xs" id="'.($class_name == 'Address' ? $name : $class_name.':'.$name).'">
 					<i class="icon-plus-sign"></i>&nbsp;'.ObjectModel::displayFieldName($name, $class_name).'</a>';

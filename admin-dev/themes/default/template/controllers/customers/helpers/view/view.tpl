@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -200,7 +200,7 @@
 							</div>
 						</div>
 					</div>
-					
+
 					{if $count_ok}
 						<table class="table">
 							<thead>
@@ -258,7 +258,7 @@
 								</tr>
 								{/foreach}
 							</tbody>
-						</table>	
+						</table>
 					{/if}
 				{else}
 				<p class="text-muted text-center">
@@ -276,7 +276,7 @@
 						<thead>
 							<tr>
 								<th><span class="title_box ">{l s='ID'}</span></th>
-								<th><span class="title_box ">{l s='Date'}</a></span></th>
+								<th><span class="title_box ">{l s='Date'}</span></th>
 								<th><span class="title_box ">{l s='Carrier'}</span></th>
 								<th><span class="title_box ">{l s='Total'}</span></th>
 							</tr>
@@ -347,7 +347,7 @@
 					{foreach $interested as $key => $p}
 						<tr onclick="document.location = '{$p['url']|escape:'html':'UTF-8'}'">
 							<td>{$p['id']}</td>
-							<td><a href="{$p['url']}">{$p['name']}</a></td>
+							<td><a href="{$p['url']|escape:'html':'UTF-8'}">{$p['name']}</a></td>
 						</tr>
 					{/foreach}
 					</tbody>
@@ -365,7 +365,7 @@
 				<form id="customer_note" class="form-horizontal" action="ajax.php" method="post" onsubmit="saveCustomerNote({$customer->id|intval});return false;" >
 					<div class="form-group">
 						<div class="col-lg-12">
-							<textarea name="note" id="noteContent" onkeyup="$(this).val().length > 0 ? $('#submitCustomerNote').removeAttr('disabled') : $('#submitCustomerNote').attr('disabled', 'disabled')">{$customer_note}</textarea>
+							<textarea name="note" id="noteContent" onkeyup="$('#submitCustomerNote').removeAttr('disabled');">{$customer_note}</textarea>
 						</div>
 					</div>
 					<div class="row">
@@ -549,7 +549,7 @@
 
 	<div class="row">
 		<div class="col-lg-6">
-			
+
 		</div>
 		<div class="col-lg-6">
 			{if count($referrers)}

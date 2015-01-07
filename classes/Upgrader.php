@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -221,7 +221,7 @@ class UpgraderCore
 
 		if (strpos($path, 'mails/') !== false)
 			$this->changed_files['mail'][] = $path;
-		else if (
+		elseif (
 			strpos($path, '/en.php') !== false
 			|| strpos($path, '/fr.php') !== false
 			|| strpos($path, '/es.php') !== false
@@ -252,7 +252,7 @@ class UpgraderCore
 				$current_path[$level] = (string)$child['name'];
 				$this->browseXmlAndCompare($child, $current_path, $level + 1);
 			}
-			else if (is_object($child) && $child->getName() == 'md5file')
+			elseif (is_object($child) && $child->getName() == 'md5file')
 			{
 				// We will store only relative path.
 				// absolute path is only used for file_exists and compare
@@ -268,7 +268,7 @@ class UpgraderCore
 				$fullpath = str_replace(_PS_ROOT_DIR_.'/admin', _PS_ADMIN_DIR_, $fullpath);
 				if (!file_exists($fullpath))
 					$this->addMissingFile($relative_path);
-				else if (!$this->compareChecksum($fullpath, (string)$child))
+				elseif (!$this->compareChecksum($fullpath, (string)$child))
 					$this->addChangedFile($relative_path);
 					// else, file is original (and ok)
 			}

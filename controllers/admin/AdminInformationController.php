@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -124,7 +124,8 @@ class AdminInformationControllerCore extends AdminController
 			'virtual_products_dir' => $this->l('Set write permissions for the "download" folder and subfolders.'),
 			'fopen' => $this->l('Allow the PHP fopen() function on your server.'),
 			'register_globals' => $this->l('Set PHP "register_globals" option to "Off".'),
-			'gz' => $this->l('Enable GZIP compression on your server.')
+			'gz' => $this->l('Enable GZIP compression on your server.'),
+			'files' => $this->l('All files from PrestaShop are not present on your server.')
 		);
 
 		// Functions list to test with 'test_system'
@@ -134,8 +135,17 @@ class AdminInformationControllerCore extends AdminController
 		if (!defined('_PS_HOST_MODE_'))
 			$params_optional_results = ConfigurationTest::check(ConfigurationTest::getDefaultTestsOp());
 
+		$failRequired = in_array('fail', $params_required_results);
+		
+		if ($failRequired && $params_required_results['files'] != 'ok')
+		{
+			$tmp = 	ConfigurationTest::test_files(true);
+			if (is_array($tmp) && count($tmp))
+				$tests_errors['files'] = $tests_errors['files'].'<br/>('.implode(', ', $tmp).')';
+ 		}
+
 		$results = array(
-			'failRequired' => in_array('fail', $params_required_results),
+			'failRequired' => $failRequired,
 			'testsErrors' => $tests_errors,
 			'testsRequired' => $params_required_results,
 		);
@@ -185,4 +195,3 @@ class AdminInformationControllerCore extends AdminController
 			$this->getListOfUpdatedFiles($subdir, $path.$subdir['name'].'/');
 	}
 }
-

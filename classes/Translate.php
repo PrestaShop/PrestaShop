@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -64,7 +64,7 @@ class TranslateCore
 			if (class_exists($class_name_controller) && Module::getModuleNameFromClass($class_name_controller))
 			{
 				$string = str_replace('\'', '\\\'', $string);
-				return Translate::getModuleTranslation(Module::$classInModule[$class_name_controller], $string, $class_name_controller);
+				return Translate::getModuleTranslation(Module::$classInModule[$class_name_controller], $string, $class_name_controller, $sprintf, $addslashes);
 			}
 		}
 
@@ -100,9 +100,9 @@ class TranslateCore
 
 		if (isset($lang_array['AdminController'.$key]))
 			$str = $lang_array['AdminController'.$key];
-		else if (isset($lang_array['Helper'.$key]))
+		elseif (isset($lang_array['Helper'.$key]))
 			$str = $lang_array['Helper'.$key];
-		else if (isset($lang_array['AdminTab'.$key]))
+		elseif (isset($lang_array['AdminTab'.$key]))
 			$str = $lang_array['AdminTab'.$key];
 		else
 			// note in 1.5, some translations has moved from AdminXX to helper/*.tpl
@@ -129,19 +129,21 @@ class TranslateCore
 		static $translations_merged = array();
 
 		$name = $module instanceof Module ? $module->name : $module;
+		$language = Context::getContext()->language;
+
 		if (!isset($translations_merged[$name]) && isset(Context::getContext()->language))
 		{
 			$filesByPriority = array(
 				// Translations in theme
-				_PS_THEME_DIR_.'modules/'.$name.'/translations/'.Context::getContext()->language->iso_code.'.php', 
-				_PS_THEME_DIR_.'modules/'.$name.'/'.Context::getContext()->language->iso_code.'.php', 
+				_PS_THEME_DIR_.'modules/'.$name.'/translations/'.$language->iso_code.'.php',
+				_PS_THEME_DIR_.'modules/'.$name.'/'.$language->iso_code.'.php',
 				// PrestaShop 1.5 translations
-				_PS_MODULE_DIR_.$name.'/translations/'.Context::getContext()->language->iso_code.'.php',
+				_PS_MODULE_DIR_.$name.'/translations/'.$language->iso_code.'.php',
 				// PrestaShop 1.4 translations
-				_PS_MODULE_DIR_.$name.'/'.Context::getContext()->language->iso_code.'.php'
+				_PS_MODULE_DIR_.$name.'/'.$language->iso_code.'.php'
 			);
 			foreach ($filesByPriority as $file)
-				if (Tools::file_exists_cache($file))
+				if (file_exists($file))
 				{
 					include_once($file);
 					$_MODULES = !empty($_MODULES) ? $_MODULES + $_MODULE : $_MODULE; //we use "+" instead of array_merge() because array merge erase existing values.
@@ -289,4 +291,3 @@ class TranslateCore
 		return Translate::postProcessTranslation($string, array('tags' => $tags));
 	}
 }
-

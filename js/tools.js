@@ -1,5 +1,5 @@
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -106,7 +106,7 @@ function ps_log10(value)
 }
 
 function ps_round_half_up(value, precision)
-{		
+{
 	var mul = Math.pow(10, precision);
 	var val = value * mul;
 
@@ -123,9 +123,9 @@ function ps_round(value, places)
 {
 	if (typeof(roundMode) === 'undefined')
 		roundMode = 2;
-	if (typeof(precision) === 'undefined')
-		precision = 2;
-	
+	if (typeof(places) === 'undefined')
+		places = 2;
+
 	var method = roundMode;
 
 	if (method === 0)
@@ -319,7 +319,7 @@ function checkCustomizations()
 
 	if (typeof customizationFields != 'undefined')
 		for (var i = 0; i < customizationFields.length; i++)
-		{								
+		{
 			/* If the field is required and empty then we abort */
 			if (parseInt(customizationFields[i][1]) == 1 && ($('#' + customizationFields[i][0]).html() == '' ||  $('#' + customizationFields[i][0]).text() != $('#' + customizationFields[i][0]).val()) && !pattern.test($('#' + customizationFields[i][0]).attr('class')))
 				return false;
@@ -516,45 +516,50 @@ function dbg(value)
 
 /**
 * Function : print_r()
-* Arguments: The data  - array,hash(associative array),object
-*            The level - OPTIONAL
+* Arguments: The element  - array,hash(associative array),object
+*            The limit - OPTIONAL LIMIT
+*            The depth - OPTIONAL
 * Returns  : The textual representation of the array.
 * This function was inspired by the print_r function of PHP.
 * This will accept some data as the argument and return a
 * text that will be a more readable version of the
 * array/hash/object that is given.
 */
-function print_r(arr, level)
+function print_r(element, limit, depth)
 {
-	var dumped_text = "";
-	if (!level)
-		level = 0;
+	depth =	depth?depth:0;
+	limit = limit?limit:1;
 
-	//The padding given at the beginning of the line.
-	var level_padding = "";
-	for (var j = 0 ; j < level + 1; j++)
-		level_padding += "    ";
+	returnString = '<ol>';
 
-	if (typeof(arr) === 'object')
-	{ //Array/Hashes/Objects 
-		for (var item in arr)
+	for(property in element)
+	{
+		//Property domConfig isn't accessable
+		if (property != 'domConfig')
 		{
-			var value = arr[item];
-			if (typeof(value) === 'object') { //If it is an array,
-				dumped_text += level_padding + "'" + item + "' ...\n";
-				dumped_text += dump(value,level+1);
-			}
-			else
-			{
-				dumped_text += level_padding + "'" + item + "' => \"" + value + "\"\n";
-			}
+			returnString += '<li><strong>'+ property + '</strong> <small>(' + (typeof element[property]) +')</small>';
+
+			if (typeof element[property] == 'number' || typeof element[property] == 'boolean')
+				returnString += ' : <em>' + element[property] + '</em>';
+			if (typeof element[property] == 'string' && element[property])
+				returnString += ': <div style="background:#C9C9C9;border:1px solid black; overflow:auto;"><code>' +
+									element[property].replace(/</g, '&amp;lt;').replace(/>/g, '&amp;gt;') + '</code></div>';
+
+			if ((typeof element[property] == 'object') && (depth < limit))
+				returnString += print_r(element[property], limit, (depth + 1));
+
+			returnString += '</li>';
 		}
 	}
-	else
-	{ //Stings/Chars/Numbers etc.
-		dumped_text = "===>" + arr + "<===("+typeof(arr)+")";
+	returnString += '</ol>';
+
+	if(depth == 0)
+	{
+		winpop = window.open("", "","width=800,height=600,scrollbars,resizable");
+		winpop.document.write('<pre>'+returnString+ '</pre>');
+		winpop.document.close();
 	}
-	return dumped_text;
+	return returnString;
 }
 
 //verify if value is in the array
@@ -575,7 +580,7 @@ function isCleanHtml(content)
 	events += '|ondragleave|ondragover|ondragstart|ondrop|onerrorupdate|onfilterchange|onfinish|onfocusin|onfocusout|onhashchange|onhelp|oninput|onlosecapture|onmessage|onmouseup|onmovestart';
 	events += '|onoffline|ononline|onpaste|onpropertychange|onreadystatechange|onresizeend|onresizestart|onrowenter|onrowexit|onrowsdelete|onrowsinserted|onscroll|onsearch|onselectionchange';
 	events += '|onselectstart|onstart|onstop';
-	
+
 	var script1 = /<[\s]*script/im;
 	var script2 = new RegExp('('+events+')[\s]*=', 'im');
 	var script3 = /.*script\:/im;
@@ -609,7 +614,7 @@ $(document).ready(function()
 			fnChecked.call(this);
 		else if(fnUnchecked)
 			fnUnchecked.call(this);
-		
+
 		if (!$(this).attr('eventCheckboxChange'))
 		{
 			$(this).on('change', function() { $(this).checkboxChange(fnChecked, fnUnchecked); });
@@ -619,4 +624,5 @@ $(document).ready(function()
 
 	// attribute target="_blank" is not W3C compliant
 	$('a._blank, a.js-new-window').attr('target', '_blank');
+
 });

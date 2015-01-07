@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -116,6 +116,9 @@ class HelperFormCore extends Helper
 								if (isset($params['tree']['use_checkbox']))
 									$tree->setUseCheckBox($params['tree']['use_checkbox']);
 
+								if (isset($params['tree']['set_data']))
+									$tree->setData($params['tree']['set_data']);
+
 								$this->context->smarty->assign('categories_tree', $tree->render());
 								$categories = false;
 							}
@@ -132,7 +135,7 @@ class HelperFormCore extends Helper
 
 							if (isset($params['files']) && $params['files'])
 								$uploader->setFiles($params['files']);
-							elseif (isset($params['image']) && $params['image']) // Use for retrocompatibility							
+							elseif (isset($params['image']) && $params['image']) // Use for retrocompatibility
 								$uploader->setFiles(array(
 									0 => array(
 									'type'       => HelperUploader::TYPE_IMAGE,
@@ -141,7 +144,7 @@ class HelperFormCore extends Helper
 									'delete_url' => isset($params['delete_url'])?$params['delete_url']:null
 								)));
 
-							if (isset($params['file']) && $params['file']) // Use for retrocompatibility							
+							if (isset($params['file']) && $params['file']) // Use for retrocompatibility
 								$uploader->setFiles(array(
 									0 => array(
 									'type'       => HelperUploader::TYPE_FILE,
@@ -150,7 +153,7 @@ class HelperFormCore extends Helper
 									'download_url' => isset($params['file'])?$params['file']:null
 								)));
 
-							if (isset($params['thumb']) && $params['thumb']) // Use for retrocompatibility							
+							if (isset($params['thumb']) && $params['thumb']) // Use for retrocompatibility
 								$uploader->setFiles(array(
 									0 => array(
 									'type'       => HelperUploader::TYPE_IMAGE,
@@ -203,7 +206,8 @@ class HelperFormCore extends Helper
 							$disable_shops = isset($params['disable_shared']) ? $params['disable_shared'] : false;
 							$params['html'] = $this->renderAssoShop($disable_shops);
 							if (Shop::getTotalShops(false) == 1)
-								unset($this->fields_form[$fieldset_key]['form']['input'][$key]);
+								if ((isset($this->fields_form[$fieldset_key]['form']['force']) && !$this->fields_form[$fieldset_key]['form']['force']) || !isset($this->fields_form[$fieldset_key]['form']['force']))
+									unset($this->fields_form[$fieldset_key]['form']['input'][$key]);
 						break;
 					}
 				}
@@ -230,13 +234,14 @@ class HelperFormCore extends Helper
 			'fields' => $this->fields_form,
 			'fields_value' => $this->fields_value,
 			'required_fields' => $this->getFieldsRequired(),
-			'vat_number' => file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php'),
+			'vat_number' => Module::isInstalled('vatnumber') && file_exists(_PS_MODULE_DIR_.'vatnumber/ajax.php'),
 			'module_dir' => _MODULE_DIR_,
 			'base_url' => $this->context->shop->getBaseURL(),
 			'contains_states' => (isset($this->fields_value['id_country']) && isset($this->fields_value['id_state'])) ? Country::containsStates($this->fields_value['id_country']) : null,
 			'show_cancel_button' => $this->show_cancel_button,
 			'back_url' => $this->back_url
 		));
+
 		return parent::generate();
 	}
 
@@ -248,9 +253,8 @@ class HelperFormCore extends Helper
 		foreach ($this->fields_form as $fieldset)
 			if (isset($fieldset['form']['input']))
 				foreach ($fieldset['form']['input'] as $input)
-					if (is_array($input) && array_key_exists('required', $input) && $input['required'] && $input['type'] != 'radio')
+					if (!empty($input['required']) && $input['type'] != 'radio')
 						return true;
-
 		return false;
 	}
 

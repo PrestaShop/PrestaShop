@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -35,7 +35,7 @@ class ProductControllerCore extends FrontController
 	{
 		parent::setMedia();
 		if (count($this->errors))
-			return ;
+			return;
 
 		if (!$this->useMobileTheme())
 		{
@@ -64,7 +64,7 @@ class ProductControllerCore extends FrontController
 	public function canonicalRedirection($canonical_url = '')
 	{
 		if (Tools::getValue('live_edit'))
-			return ;
+			return;
 		if (Validate::isLoadedObject($this->product))
 			parent::canonicalRedirection($this->context->link->getProductLink($this->product));
 	}
@@ -97,7 +97,6 @@ class ProductControllerCore extends FrontController
 			 */
 			if (!$this->product->isAssociatedToShop() || !$this->product->active)
 			{
-
 				if (Tools::getValue('adtoken') == Tools::getAdminToken('AdminProducts'.(int)Tab::getIdFromClassName('AdminProducts').(int)Tools::getValue('id_employee')) && $this->product->isAssociatedToShop())
 				{
 					// If the product is not active, it's the admin preview mode
@@ -106,19 +105,21 @@ class ProductControllerCore extends FrontController
 				else
 				{
 					$this->context->smarty->assign('adminActionDisplay', false);
-					if ($this->product->id_product_redirected == $this->product->id)
+					if (!$this->product->id_product_redirected || $this->product->id_product_redirected == $this->product->id)
 						$this->product->redirect_type = '404';
-					
+
 					switch ($this->product->redirect_type)
 					{
 						case '301':
 							header('HTTP/1.1 301 Moved Permanently');
 							header('Location: '.$this->context->link->getProductLink($this->product->id_product_redirected));
+							exit;
 						break;
 						case '302':
 							header('HTTP/1.1 302 Moved Temporarily');
 							header('Cache-Control: no-cache');
 							header('Location: '.$this->context->link->getProductLink($this->product->id_product_redirected));
+							exit;
 						break;
 						case '404':
 						default:
@@ -151,7 +152,7 @@ class ProductControllerCore extends FrontController
 					if ($id_object)
 					{
 						$referers = array($_SERVER['HTTP_REFERER'],urldecode($_SERVER['HTTP_REFERER']));
-						if (in_array($this->context->link->getCategoryLink($id_object), $referers))	
+						if (in_array($this->context->link->getCategoryLink($id_object), $referers))
 							$id_category = (int)$id_object;
 						elseif (isset($this->context->cookie->last_visited_category) && (int)$this->context->cookie->last_visited_category && in_array($this->context->link->getProductLink($id_object), $referers))
 							$id_category = (int)$this->context->cookie->last_visited_category;
@@ -200,10 +201,9 @@ class ProductControllerCore extends FrontController
 				$this->textRecord();
 				$this->formTargetFormat();
 			}
-			else if (Tools::getIsset('deletePicture') && !$this->context->cart->deleteCustomizationToProduct($this->product->id, Tools::getValue('deletePicture')))
+			elseif (Tools::getIsset('deletePicture') && !$this->context->cart->deleteCustomizationToProduct($this->product->id, Tools::getValue('deletePicture')))
 				$this->errors[] = Tools::displayError('An error occurred while deleting the selected picture.');
 
-			
 			$pictures = array();
 			$text_fields = array();
 			if ($this->product->customizable)
@@ -223,10 +223,10 @@ class ProductControllerCore extends FrontController
 				'textFields' => $text_fields));
 
 			$this->product->customization_required = false;
-			$customizationFields = $this->product->customizable ? $this->product->getCustomizationFields($this->context->language->id) : false;
-			if (is_array($customizationFields))
-				foreach($customizationFields as $customizationField)
-					if ($this->product->customization_required = $customizationField['required'])
+			$customization_fields = $this->product->customizable ? $this->product->getCustomizationFields($this->context->language->id) : false;
+			if (is_array($customization_fields))
+				foreach ($customization_fields as $customization_field)
+					if ($this->product->customization_required = $customization_field['required'])
 						break;
 
 			// Assign template vars related to the category + execute hooks related to the category
@@ -254,7 +254,7 @@ class ProductControllerCore extends FrontController
 
 			$this->context->smarty->assign(array(
 				'stock_management' => Configuration::get('PS_STOCK_MANAGEMENT'),
-				'customizationFields' => $customizationFields,
+				'customizationFields' => $customization_fields,
 				'accessories' => $this->product->getAccessories($this->context->language->id),
 				'return_link' => $return_link,
 				'product' => $this->product,
@@ -273,16 +273,12 @@ class ProductControllerCore extends FrontController
 				'HOOK_PRODUCT_CONTENT' =>  Hook::exec('displayProductContent', array('product' => $this->product)),
 				'display_qties' => (int)Configuration::get('PS_DISPLAY_QTIES'),
 				'display_ht' => !Tax::excludeTaxeOption(),
-				'currencySign' => $this->context->currency->sign,
-				'currencyRate' => $this->context->currency->conversion_rate,
-				'currencyFormat' => $this->context->currency->format,
-				'currencyBlank' => $this->context->currency->blank,
 				'jqZoomEnabled' => Configuration::get('PS_DISPLAY_JQZOOM'),
 				'ENT_NOQUOTES' => ENT_NOQUOTES,
 				'outOfStockAllowed' => (int)Configuration::get('PS_ORDER_OUT_OF_STOCK'),
 				'errors' => $this->errors,
 				'body_classes' => array(
-					$this->php_self.'-'.$this->product->id, 
+					$this->php_self.'-'.$this->product->id,
 					$this->php_self.'-'.$this->product->link_rewrite,
 					'category-'.(isset($this->category) ? $this->category->id : ''),
 					'category-'.(isset($this->category) ? $this->category->getFieldByLang('link_rewrite') : '')
@@ -363,7 +359,7 @@ class ProductControllerCore extends FrontController
 		$images = $this->product->getImages((int)$this->context->cookie->id_lang);
 		$product_images = array();
 
-		if(isset($images[0]))
+		if (isset($images[0]))
 			$this->context->smarty->assign('mainImage', $images[0]);
 		foreach ($images as $k => $image)
 		{
@@ -379,7 +375,7 @@ class ProductControllerCore extends FrontController
 
 		if (!isset($cover))
 		{
-			if(isset($images[0]))
+			if (isset($images[0]))
 			{
 				$cover = $images[0];
 				$cover['id_image'] = (Configuration::get('PS_LEGACY_IMAGES') ? ($this->product->id.'-'.$images[0]['id_image']) : $images[0]['id_image']);
@@ -446,7 +442,6 @@ class ProductControllerCore extends FrontController
 					$groups[$row['id_attribute_group']]['attributes_quantity'][$row['id_attribute']] = 0;
 				$groups[$row['id_attribute_group']]['attributes_quantity'][$row['id_attribute']] += (int)$row['quantity'];
 
-
 				$combinations[$row['id_product_attribute']]['attributes_values'][$row['id_attribute_group']] = $row['attribute_name'];
 				$combinations[$row['id_product_attribute']]['attributes'][] = (int)$row['id_attribute'];
 				$combinations[$row['id_product_attribute']]['price'] = (float)$row['price'];
@@ -484,7 +479,7 @@ class ProductControllerCore extends FrontController
 
 						if (is_array($combination_images[$row['id_product_attribute']]))
 						{
-							foreach ($combination_images[$row['id_product_attribute']] as $tmp) 
+							foreach ($combination_images[$row['id_product_attribute']] as $tmp)
 								if ($tmp['id_image'] == $current_cover['id_image'])
 								{
 									$combinations[$row['id_product_attribute']]['id_image'] = $id_image = (int)$tmp['id_image'];
@@ -579,22 +574,22 @@ class ProductControllerCore extends FrontController
 		elseif (Category::inShopStatic($this->product->id_category_default, $this->context->shop))
 		{
 			$this->category = new Category((int)$this->product->id_category_default, (int)$this->context->language->id);
-			if (Validate::isLoadedObject( $this->category) &&  $this->category->active &&  $this->category->isAssociatedToShop())
+			if (Validate::isLoadedObject( $this->category) && $this->category->active && $this->category->isAssociatedToShop())
 				$path = Tools::getPath((int)$this->product->id_category_default, $this->product->name);
 		}
 		if (!isset($path) || !$path)
 			$path = Tools::getPath((int)$this->context->shop->id_category, $this->product->name);
 
-		$subCategories = array();
+		$sub_categories = array();
 		if (Validate::isLoadedObject($this->category))
 		{
-			$subCategories = $this->category->getSubCategories($this->context->language->id, true);
+			$sub_categories = $this->category->getSubCategories($this->context->language->id, true);
 
 			// various assignements before Hook::exec
 			$this->context->smarty->assign(array(
 				'path' => $path,
 				'category' => $this->category,
-				'subCategories' => $subCategories,
+				'subCategories' => $sub_categories,
 				'id_category_current' => (int)$this->category->id,
 				'id_category_parent' => (int)$this->category->id_parent,
 				'return_category_name' => Tools::safeOutput($this->category->getFieldByLang('name')),
@@ -657,12 +652,12 @@ class ProductControllerCore extends FrontController
 	{
 		if (!$field_ids = $this->product->getCustomizationFieldIds())
 			return false;
-			
+
 		$authorized_text_fields = array();
 		foreach ($field_ids as $field_id)
 			if ($field_id['type'] == Product::CUSTOMIZE_TEXTFIELD)
 				$authorized_text_fields[(int)$field_id['id_customization_field']] = 'textField'.(int)$field_id['id_customization_field'];
-				
+
 		$indexes = array_flip($authorized_text_fields);
 		foreach ($_POST as $field_name => $value)
 			if (in_array($field_name, $authorized_text_fields) && $value != '')
@@ -672,7 +667,7 @@ class ProductControllerCore extends FrontController
 				else
 					$this->context->cart->addTextFieldToProduct($this->product->id, $indexes[$field_name], Product::CUSTOMIZE_TEXTFIELD, $value);
 			}
-			else if (in_array($field_name, $authorized_text_fields) && $value == '')
+			elseif (in_array($field_name, $authorized_text_fields) && $value == '')
 				$this->context->cart->deleteCustomizationToProduct((int)$this->product->id, $indexes[$field_name]);
 	}
 
@@ -708,16 +703,16 @@ class ProductControllerCore extends FrontController
 				else
 					$row['real_value'] = $row['reduction'] * 100;
 			}
-			$row['nextQuantity'] = (isset($specific_prices[$key + 1]) ? (int)$specific_prices[$key + 1]['from_quantity'] : -1);
+			$row['nextQuantity'] = (isset($specific_prices[$key + 1]) ? (int)$specific_prices[$key + 1]['from_quantity'] : - 1);
 		}
 		return $specific_prices;
 	}
-	
+
 	public function getProduct()
 	{
 	    return $this->product;
 	}
-	
+
 	public function getCategory()
 	{
 	    return $this->category;

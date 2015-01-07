@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,13 +19,38 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class ConfigurationTestCore
 {
+
+	public static $test_files = array(
+		'/cache/smarty/compile/index.php',
+		'/classes/log/index.php',
+		'/classes/cache/index.php',
+		'/config/index.php',
+		'/tools/tar/Archive_Tar.php',
+		'/tools/pear/PEAR.php',
+		'/controllers/admin/AdminLoginController.php',
+		'/css/index.php',
+		'/download/index.php',
+		'/img/404.gif',
+		'/js/tools.js',
+		'/js/jquery/plugins/fancybox/jquery.fancybox.js',
+		'/localization/fr.xml',
+		'/mails/index.php',
+		'/modules/index.php',
+		'/override/controllers/front/index.php',
+		'/pdf/order-return.tpl',
+		'/themes/default-bootstrap/css/global.css',
+		'/translations/export/index.php',
+		'/webservice/dispatcher.php',
+		'/upload/index.php',
+		'/index.php'
+	);
 
 	/**
 	 * getDefaultTests return an array of tests to executes.
@@ -325,35 +350,20 @@ class ConfigurationTestCore
 		return extension_loaded('Dom');
 	}
 	
-	public static function test_files()
+	public static function test_files($full = false)
 	{
-		$files = array(
-			'/cache/smarty/compile/index.php',
-			'/classes/log/index.php',
-			'/classes/cache/index.php',
-			'/config/index.php',
-			'/tools/tar/Archive_Tar.php',
-			'/tools/pear/PEAR.php',
-			'/controllers/admin/AdminLoginController.php',
-			'/css/index.php',
-			'/download/index.php',
-			'/img/404.gif',
-			'/js/tools.js',
-			'/js/jquery/plugins/fancybox/jquery.fancybox.js',
-			'/localization/fr.xml',
-			'/mails/index.php',
-			'/modules/index.php',
-			'/override/controllers/front/index.php',
-			'/pdf/order-return.tpl',
-			'/themes/default-bootstrap/css/global.css',
-			'/translations/export/index.php',
-			'/webservice/dispatcher.php',
-			'/upload/index.php',
-			'/index.php'
-		);
-		foreach ($files as $file)
+		$return = array();
+		foreach (ConfigurationTest::$test_files as $file)
 			if (!file_exists(rtrim(_PS_ROOT_DIR_, DIRECTORY_SEPARATOR).str_replace('/', DIRECTORY_SEPARATOR, $file)))
-				return false;
-		return true;		
+			{
+				if ($full)
+					array_push($return, $file);
+				else
+					return false;
+			}
+
+		if ($full)
+			return $return;
+		return true;
 	}
 }

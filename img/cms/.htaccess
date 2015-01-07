@@ -2,7 +2,7 @@
 	php_flag engine off
 </IfModule>
 deny from all
-<Files ~ "(?i)^.*\.(jpg|jpeg|gif|png)$">
+<Files ~ "(?i)^.*\.(jpg|jpeg|gif|png|bmp|tiff|svg|pdf)$">
 	order deny,allow
 	allow from all
 </Files>

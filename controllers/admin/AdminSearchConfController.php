@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -127,6 +127,18 @@ class AdminSearchConfControllerCore extends AdminController
 							$this->l('With instant search, the results will appear immediately as the user writes a query.')
 						)
 					),
+					'PS_SEARCH_START' => array(
+						'title' => $this->l('Search within word'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool',
+						'desc' => $this->l('By default, to search for “blouse”, you have to enter “blous”, “blo”, etc (beginning of the word) – but not “lous” (within the word).').'<br/>'.
+	    						  $this->l('With this function enabled, it also gives the good result if you search for “lous”, “ouse”, or anything contained in the word.'),
+						'hint' => array(
+							$this->l('Enable search within a whole word, rather than from its beginning only.'),
+							$this->l('It checks if the searched term is contained in the indexed word. This may be resource-consuming.')
+						)
+					),
 					'PS_SEARCH_MINWORDLEN' => array(
 						'title' => $this->l('Minimum word length (in characters)'),
 						'hint' => $this->l('Only words this size or larger will be indexed.'),
@@ -138,7 +150,7 @@ class AdminSearchConfControllerCore extends AdminController
 						'title' => $this->l('Blacklisted words'),
 						'validation' => 'isGenericName',
 						'hint' => $this->l('Please enter the index words separated by a "|".'),
-						'type' => 'textLang'
+						'type' => 'textareaLang'
 					)
 				),
 				'submit' => array('title' => $this->l('Save'))

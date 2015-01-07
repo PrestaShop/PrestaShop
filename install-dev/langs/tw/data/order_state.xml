@@ -32,7 +32,11 @@
     <name>付款錯誤</name>
     <template>payment_error</template>
   </order_state>
-  <order_state id="On_backorder">
+  <order_state id="On_backorder_paid">
+    <name>預約訂購</name>
+    <template>outofstock</template>
+  </order_state>
+  <order_state id="On_backorder_unpaid">
     <name>預約訂購</name>
     <template>outofstock</template>
   </order_state>

@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -37,7 +37,7 @@
 			<!--start addons login-->
 			<form id="addons_login_form" method="post" >
 				<div>
-					<img class="img-responsive center-block" src="themes/default/img/prestashop-addons-logo.png" alt="Logo PrestaShop Addons"/>
+					<a href="{$addons_register_link|escape:'html':'UTF-8'}"><img class="img-responsive center-block" src="themes/default/img/prestashop-addons-logo.png" alt="Logo PrestaShop Addons"/></a>
 					<h3 class="text-center">{l s="Connect your shop with PrestaShop's marketplace in order to automatically import all your Addons purchases."}</h3>
 					<hr />
 				</div>
@@ -55,7 +55,7 @@
 								<span class="input-group-addon"><i class="icon-key"></i></span>
 								<input id="password_addons" name="password_addons" type="password" value="" autocomplete="off" class="form-control ac_input">
 							</div>
-							<a class="btn btn-link pull-right" href="{$addons_forgot_password_link}" target="_blank" >{l s='I forgot my password'}</a>
+							<a class="btn btn-link pull-right _blank" href="{$addons_forgot_password_link}">{l s='I forgot my password'}</a>
 							<br>
 						</div>
 						<div class="form-group">
@@ -67,7 +67,7 @@
 					<div class="col-md-5 col-md-pull-6">
 						<h4>{l s="Don't have an account?"}</h4>
 						<p class='text-justify'>{l s="Discover the Power of PrestaShop Addons! Explore the PrestaShop Official Marketplace and find over 3 500 innovative modules and themes that optimize conversion rates, increase traffic, build customer loyalty and maximize your productivity"}</p>
-						<a class="btn btn-default btn-block" target="_blank" href="{$addons_register_link|escape:'html':'UTF-8'}">
+						<a class="btn btn-default btn-block _blank" href="{$addons_register_link|escape:'html':'UTF-8'}">
 							{l s="Create an Account"}
 							<i class="icon-external-link"></i>
 						</a>

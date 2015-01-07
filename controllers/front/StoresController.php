@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -133,7 +133,15 @@ class StoresControllerCore extends FrontController
 		$days[7] = 'Sunday';
 		
 		$days_datas = array();
-		$hours = array_filter(unserialize($store['hours']));
+		$hours = array();
+		
+		if ($store['hours'])
+		{
+			$hours = Tools::unSerialize($store['hours']);
+			if (is_array($hours))
+				$hours = array_filter($hours);
+		}
+		
 		if (!empty($hours))
 		{
 			for ($i = 1; $i < 8; $i++)

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -502,7 +502,7 @@ class RequestSqlCore extends ObjectModel
 					}
 				}
 			}
-			else if ($attribut['expr_type'] == 'operator')
+			elseif ($attribut['expr_type'] == 'operator')
 			{
 				if (!in_array(strtoupper($attribut['base_expr']), $this->tested['operator']))
 				{
@@ -510,7 +510,7 @@ class RequestSqlCore extends ObjectModel
 					return false;
 				}
 			}
-			else if ($attribut['expr_type'] == 'subquery')
+			elseif ($attribut['expr_type'] == 'subquery')
 			{
 				$tab = $attribut['sub_tree'];
 				return $this->validateParser($tab, true, $sql);

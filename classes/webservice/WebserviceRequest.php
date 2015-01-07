@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -229,11 +229,11 @@ class WebserviceRequestCore
 		$headers = self::getallheaders();
 		if (isset($headers['Io-Format']))
 		   $type = $headers['Io-Format'];
-		else if (isset($headers['Output-Format']))
+		elseif (isset($headers['Output-Format']))
 		     $type = $headers['Output-Format'];
-		else if (isset($_GET['output_format']))
+		elseif (isset($_GET['output_format']))
 		     $type = $_GET['output_format'];
-		else if (isset($_GET['io_format']))
+		elseif (isset($_GET['io_format']))
 		   $type = $_GET['io_format'];
 		$this->outputFormat = $type;
 		switch ($type)
@@ -814,7 +814,7 @@ class WebserviceRequestCore
 				self::$shopIDs[] = (int)$params['id_shop'];
 				return true;
 			}
-			else if ($params['id_shop'] == 'all')
+			elseif ($params['id_shop'] == 'all')
 			{
 				Shop::setContext(Shop::CONTEXT_ALL);
 				self::$shopIDs = Shop::getShops(true, null, true);
@@ -1703,7 +1703,7 @@ class WebserviceRequestCore
 						$arr_languages[] = $i;
 				}
 			}
-			else if (preg_match('#\[(\d)+\]#Ui', $this->urlFragments['language'], $match_lang))
+			elseif (preg_match('#\[(\d)+\]#Ui', $this->urlFragments['language'], $match_lang))
 			{
 				$arr_languages[] = $match_lang[1];
 			}

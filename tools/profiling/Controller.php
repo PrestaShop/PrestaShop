@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,62 +19,10 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-
-function developpementErrorHandler($errno, $errstr, $errfile, $errline)
-{
-	if (!(error_reporting() & $errno))
-		return;
-	switch($errno)
-	{
-		case E_ERROR:
-			echo '[PHP Error #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_WARNING:
-			echo '[PHP Warning #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_PARSE:
-			echo '[PHP Parse #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_NOTICE:
-			echo '[PHP Notice #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_CORE_ERROR:
-			echo '[PHP Core #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_CORE_WARNING:
-			echo '[PHP Core warning #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_COMPILE_ERROR:
-			echo '[PHP Compile #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_COMPILE_WARNING:
-			echo '[PHP Compile warning #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_USER_ERROR:
-			echo '[PHP Error #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_USER_WARNING:
-			echo '[PHP User warning #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_USER_NOTICE:
-			echo '[PHP User notice #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_STRICT:
-			echo '[PHP Strict #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		case E_RECOVERABLE_ERROR:
-			echo '[PHP Recoverable error #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-			break;
-		default:
-			echo '[PHP Unknown error #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')';
-	}
-	die;
-	return true;
-}
 
 abstract class Controller extends ControllerCore
 {
@@ -92,9 +40,11 @@ abstract class Controller extends ControllerCore
 		$n /= 1048576;
 		if ($n > 3)
 			return '<span style="color:red">'.sprintf('%0.2f', $n).'</span>';
-		if ($n > 1)
+		elseif ($n > 1)
 			return '<span style="color:orange">'.sprintf('%0.2f', $n).'</span>';
-		return '<span style="color:green">'.sprintf('%0.2f', $n).'</span>';
+		elseif (round($n, 2) > 0)
+			return '<span style="color:green">'.sprintf('%0.2f', $n).'</span>';
+		return '<span style="color:green">-</span>';
 	}
 
 	private function displayPeakMemoryColor($n)
@@ -129,9 +79,11 @@ abstract class Controller extends ControllerCore
 	{
 		if ($n > 1)
 			return '<span style="color:red">'.round($n * 1000).'</span>'.($kikoo ? ' ms<br />You\'d better run your shop on a toaster' : '');
-		if ($n > 0.5)
+		elseif ($n > 0.5)
 			return '<span style="color:orange">'.round($n * 1000).'</span>'.($kikoo ? ' ms<br />I hope it is a shared hosting' : '');
-		return '<span style="color:green">'.round($n * 1000).'</span>'.($kikoo ? ' ms<br />Good boy! That\'s what I call a webserver!' : '');
+		elseif ($n > 0)
+			return '<span style="color:green">'.round($n * 1000).'</span>'.($kikoo ? ' ms<br />Good boy! That\'s what I call a webserver!' : '');
+		return '<span style="color:green">-</span>'.($kikoo ? ' ms<br />Faster than light' : '');
 	}
 
 	private function getTimeColor($n)
@@ -172,11 +124,6 @@ abstract class Controller extends ControllerCore
 
 	public function __construct()
 	{
-		//set_error_handler('developpementErrorHandler');
-		ini_set('html_errors', 'on');
-		ini_set('display_errors', 'on');
-		error_reporting(E_ALL | E_STRICT);
-
 		if (!self::$_footer)
 			return;
 
@@ -215,9 +162,6 @@ abstract class Controller extends ControllerCore
 			$this->_mempeak['postProcess'] = memory_get_peak_usage();
 			$this->_time['postProcess'] = microtime(true);
 
-			if (!empty($this->redirect_after))
-				$this->redirect();
-
 			if (!$this->content_only && ($this->display_header || (isset($this->className) && $this->className)))
 				$this->initHeader();
 			$this->_memory['initHeader'] = memory_get_usage();
@@ -255,24 +199,6 @@ abstract class Controller extends ControllerCore
 		}
 	}
 
-	function ini_get_display_errors()
-	{
-		$a = 'display_errors';
-		$b = ini_get($a);
-		switch (strtolower($b))
-		{
-			case 'on':
-			case 'yes':
-			case 'true':
-				return 'assert.active' !== $a;
-			case 'stdout':
-			case 'stderr':
-				return 'display_errors' === $a;
-			default:
-				return (bool)(int)$b;
-		}
-	}
-	
 	private function sizeofvar($var)
 	{
 		$start_memory = memory_get_usage();
@@ -300,9 +226,6 @@ abstract class Controller extends ControllerCore
 		$this->_memory['display'] = memory_get_usage();
 		$this->_mempeak['display'] = memory_get_peak_usage();
 		$this->_time['display'] = microtime(true);
-
-		if (!$this->ini_get_display_errors())
-			return;
 
 		$memory_peak_usage = memory_get_peak_usage();
 			
@@ -336,7 +259,7 @@ abstract class Controller extends ControllerCore
 			{
 				$totalGlobalSize += ($size = $this->sizeofvar($value));
 				if ($size > 1024)
-					$globalSize[$key] = round($size / 1024, 1);
+					$globalSize[$key] = round($size / 1024);
 			}
 		arsort($globalSize);
 
@@ -382,8 +305,7 @@ abstract class Controller extends ControllerCore
 			}
 			#ps_profiling td pre{
 				padding: 6px;
-				max-width: 600px;
-				max-height: 140px;
+				margin-right: 10px;
 				border-radius: 5px;
 				overflow: auto;
 				display: block;
@@ -394,6 +316,11 @@ abstract class Controller extends ControllerCore
 				word-wrap: break-word;
 				background-color: whitesmoke;
 				border: 1px solid #cccccc;
+				max-width: 960px;
+			}
+			#ps_profiling td .qbt{
+				max-height: 140px;
+				overflow: auto;
 			}
 			#ps_profiling table{
 				width: 100%;
@@ -411,6 +338,9 @@ abstract class Controller extends ControllerCore
 				padding: 6px;
 			}
 
+			.sortable thead th{
+				cursor:pointer;
+			}
 			#ps_profiling table .text-right{
 				text-align: right
 			}
@@ -454,8 +384,11 @@ abstract class Controller extends ControllerCore
 			}
 		</style>';
 
+		echo '<div id="ps_profiling">';
+		if (!empty($this->redirect_after))
+			echo '<div class="ps_profiling_row"><div class="ps_profiling_col12"><h2>Caught redirection to <a href="'.htmlspecialchars($this->redirect_after).'">'.htmlspecialchars($this->redirect_after).'</a></h2></div></div>';
+		
 		echo '
-		<div id="ps_profiling">
 		<div class="ps_profiling_row">
 		<div class="ps_profiling_col4">
 			<div class="ps_profiling_infobox"><b>Load time</b>: '.$this->displayLoadTimeColor($this->_time['display'] - $start_time, true).'</div>';
@@ -499,19 +432,25 @@ abstract class Controller extends ControllerCore
 		echo '
  	 	</div>';
 
+		$compile = array(
+			0 => 'green">never recompile',
+			1 => 'orange">auto',
+			2 => 'red">force compile'
+		);
+		
 		echo '
 		<div class="ps_profiling_col4">
-			<div class="ps_profiling_infobox"><b>Total cache size (in Cache class)</b>: '.$this->displayMemoryColor($totalCacheSize).' Mb</div>
-			<div class="ps_profiling_infobox"><b>DB type</b>: '.get_class(Db::getInstance()).'</div>
-			<div class="ps_profiling_infobox"><b>SQL Queries</b>: '.$this->displaySQLQueries(count(Db::getInstance()->queries)).'</div>
-			<div class="ps_profiling_infobox"><b>Time spent querying</b>: '.$this->displayLoadTimeColor($totalQueryTime).' ms</div>
-			<div class="ps_profiling_infobox"><b>Included files</b>: '.sizeof(get_included_files()).'</div>
-			<div class="ps_profiling_infobox"><b>Size of included files</b>: '.$this->displayMemoryColor($totalSize).' Mb</div>
-			<div class="ps_profiling_infobox"><b>Globals</b> (&gt; 1 Ko only): '.round($totalGlobalSize / 1024).' Ko
-			<ul>';
+			<div class="ps_profiling_infobox"><b>Total cache size in Cache class</b>: '.$this->displayMemoryColor($totalCacheSize).' Mb</div>
+			<div class="ps_profiling_infobox"><b>Smarty cache</b>: <span style="color:'.(Configuration::get('PS_SMARTY_CACHE') ? 'green">enabled' : 'red">disabled').'</span></div>
+			<div class="ps_profiling_infobox"><b>Smarty compilation</b>: <span style="color:'.$compile[Configuration::get('PS_SMARTY_FORCE_COMPILE')].'</span></div>
+			<div class="ps_profiling_infobox"><b>SQL Queries</b>: '.$this->displaySQLQueries(count(Db::getInstance()->queries)).' in '.$this->displayLoadTimeColor($totalQueryTime).' ms</div>
+			<div class="ps_profiling_infobox"><b>Included files</b>: '.sizeof(get_included_files()).' ('.$this->displayMemoryColor($totalSize).' Mb)</div>
+			<div class="ps_profiling_infobox"><b>Global vars</b> : '.$this->displayMemoryColor($totalGlobalSize).' Mb
+				<ul>';
 			foreach ($globalSize as $global => $size)
-				echo '<li>'.$global.' &asymp; '.$size.' Ko</li>';
-			echo '</ul></div>
+				echo '<li>$'.$global.' &asymp; '.$size.'k</li>';
+			echo '</ul>
+			</div>
 		</div>';
 
 		$array_queries = array();
@@ -555,31 +494,35 @@ abstract class Controller extends ControllerCore
 		<div class="ps_profiling_row">
 		<span class="ps_profiling_title"><a name="stopwatch">Stopwatch (with SQL_NO_CACHE) (total = '.count(Db::getInstance()->queries).')</a></span>';
 		$i = 1;
-		echo '<table><thead>
+		echo '
+		<script type="text/javascript" src="https://raw.githubusercontent.com/drvic10k/bootstrap-sortable/master/Scripts/bootstrap-sortable.js"></script>
+		<table class="table table-striped table-condensed sortable">
+			<thead>
 				<tr>
-				<th class="text-left">Query</th>
-				<th class="text-left" width="80px">Time (ms)</th>
-				<th class="text-left" width="40px">Rows</th>
-				<th class="text-left" width="70px">Filesort</th>
-				<th class="text-left" width="70px">Group By</th>
-				<th class="text-left" width="300px">Location</th>
+					<th class="text-left col-lg-6">Query</th>
+					<th class="text-left col-lg-1">Time (ms)</th>
+					<th class="text-left col-lg-1">Rows</th>
+					<th class="text-left col-lg-1">Filesort</th>
+					<th class="text-left col-lg-1">Group By</th>
+					<th class="text-left col-lg-2">Location</th>
 				</tr>
-				<thead><tbody>';
+			<thead>
+			<tbody>';
 		foreach ($array_queries as $data)
 		{
 			$echo_stack = '';
 			array_shift($data['stack']);
 			foreach ($data['stack'] as $call)
 				$echo_stack .= 'from '.str_replace('\\', '/', substr($call['file'], strlen(_PS_ROOT_DIR_))).':'.$call['line'].'<br />';
-
-			echo '<tr>';
-			echo '<td><pre>'.preg_replace("/(^[\s]*)/m", "", htmlspecialchars($data['query'], ENT_NOQUOTES, 'utf-8', false)).'</pre></td>';
-			echo '<td><span '.$this->getTimeColor($data['time'] * 1000).'>'.round($data['time'] * 1000, 3).'</span></td>';
-			echo '<td>'.$data['rows'].'</td>';
-			echo '<td>'.($data['filesort'] ? '<span style="color:green">Yes</span>' : '').'</td>';
-			echo '<td>'.($data['group_by'] ? '<span style="color:red">Yes</span>' : '').'</td>';
-			echo '<td>in '.$data['location'].'<br><br><div id="qbt'.($i++).'">'.$echo_stack.'</div></td>';
-			echo '</tr>';
+			echo '
+			<tr>
+				<td><pre>'.preg_replace("/(^[\s]*)/m", "", htmlspecialchars($data['query'], ENT_NOQUOTES, 'utf-8', false)).'</pre></td>
+				<td><span '.$this->getTimeColor($data['time'] * 1000).'>'.(round($data['time'] * 1000, 1) < 0.1 ? '< 1' : round($data['time'] * 1000, 1)).'</span></td>
+				<td>'.$data['rows'].'</td>
+				<td>'.($data['filesort'] ? '<span style="color:red">Yes</span>' : '').'</td>
+				<td>'.($data['group_by'] ? '<span style="color:red">Yes</span>' : '').'</td>
+				<td>in '.$data['location'].'<br /><div class="qbt" id="qbt'.($i++).'">'.$echo_stack.'</div></td>
+			</tr>';
 		}
 		echo '</table>';
 		$queries = Db::getInstance()->uniqQueries;

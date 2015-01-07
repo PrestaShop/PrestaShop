@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -78,9 +78,9 @@ class MySQLCore extends Db
 	public function nextRow($result = false)
 	{
 		$return = false;
-		if(is_resource($result) && $result)
+		if (is_resource($result) && $result)
 			$return = mysql_fetch_assoc($result);
-		elseif(is_resource($this->_result) && $this->_result)
+		elseif (is_resource($this->_result) && $this->_result)
 			$return = mysql_fetch_assoc($this->_result);
 		return $return;	
 	}
@@ -147,6 +147,21 @@ class MySQLCore extends Db
 	public function set_db($db_name)
 	{
 		return mysql_select_db($db_name, $this->link);
+	}
+	
+	/**
+	 * @see DbCore::getAll()
+	*/
+	protected function getAll($result = false)
+	{
+		if (!$result)
+			$result = $this->result;
+
+		$data = array();
+		while ($row = $this->nextRow($result))
+			$data[] = $row;
+
+		return $data;
 	}
 
 	/**

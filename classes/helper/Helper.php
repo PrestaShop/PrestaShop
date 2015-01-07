@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -83,18 +83,18 @@ class HelperCore
 		{
 			if ($this->context->controller instanceof ModuleAdminController)
 				$override_tpl_path = $this->context->controller->getTemplatePath().$this->override_folder.$this->base_folder.$tpl_name;
-			else if ($this->module)
+			elseif ($this->module)
 				$override_tpl_path = _PS_MODULE_DIR_.$this->module->name.'/views/templates/admin/_configure/'.$this->override_folder.$this->base_folder.$tpl_name;
 			else
 			{
 				if (file_exists($this->context->smarty->getTemplateDir(1).$this->override_folder.$this->base_folder.$tpl_name))
 					$override_tpl_path = $this->context->smarty->getTemplateDir(1).$this->override_folder.$this->base_folder.$tpl_name;
-				else if (file_exists($this->context->smarty->getTemplateDir(0).'controllers'.DIRECTORY_SEPARATOR.$this->override_folder.$this->base_folder.$tpl_name))
+				elseif (file_exists($this->context->smarty->getTemplateDir(0).'controllers'.DIRECTORY_SEPARATOR.$this->override_folder.$this->base_folder.$tpl_name))
 					$override_tpl_path = $this->context->smarty->getTemplateDir(0).'controllers'.DIRECTORY_SEPARATOR.$this->override_folder.$this->base_folder.$tpl_name;
 
 			}
 		}
-		else if ($this->module)
+		elseif ($this->module)
 			$override_tpl_path = _PS_MODULE_DIR_.$this->module->name.'/views/templates/admin/_configure/'.$this->base_folder.$tpl_name;
 
 		if (isset($override_tpl_path) && file_exists($override_tpl_path))
@@ -130,7 +130,7 @@ class HelperCore
 		$helper = new Helper();
 		if (isset($translations['Root']))
 			$root = $translations['Root'];
-		else if (isset($translations['Home']))
+		elseif (isset($translations['Home']))
 			$root = array('name' => $translations['Home'], 'id_category' => 1);
 		else
 			throw new PrestaShopException('Missing root category parameter.');
@@ -239,25 +239,26 @@ class HelperCore
 		.'</div>';
 
 		$home_is_selected = false;
-		foreach ($selected_cat as $cat)
-		{
-			if (is_array($cat))
+		if (is_array($selected_cat))
+			foreach ($selected_cat as $cat)
 			{
-				$disabled = in_array($cat['id_category'], $disabled_categories);
-				if ($cat['id_category'] != $root['id_category'])
-					$html .= '<input '.($disabled?'disabled="disabled"':'').' type="hidden" name="'.$input_name.'" value="'.$cat['id_category'].'" >';
+				if (is_array($cat))
+				{
+					$disabled = in_array($cat['id_category'], $disabled_categories);
+					if ($cat['id_category'] != $root['id_category'])
+						$html .= '<input '.($disabled?'disabled="disabled"':'').' type="hidden" name="'.$input_name.'" value="'.$cat['id_category'].'" >';
+					else
+						$home_is_selected = true;
+				}
 				else
-					$home_is_selected = true;
+				{
+					$disabled = in_array($cat, $disabled_categories);
+					if ($cat != $root['id_category'])
+						$html .= '<input '.($disabled?'disabled="disabled"':'').' type="hidden" name="'.$input_name.'" value="'.$cat.'" >';
+					else
+						$home_is_selected = true;
+				}
 			}
-			else
-			{
-				$disabled = in_array($cat, $disabled_categories);
-				if ($cat != $root['id_category'])
-					$html .= '<input '.($disabled?'disabled="disabled"':'').' type="hidden" name="'.$input_name.'" value="'.$cat.'" >';
-				else
-					$home_is_selected = true;
-			}
-		}
 
 		$root_input = '';
 		if ($root['id_category'] != (int)Configuration::get('PS_ROOT_CATEGORY') || (Tools::isSubmit('ajax') && Tools::getValue('action') == 'getCategoriesFromRootCategory'))
@@ -342,7 +343,7 @@ class HelperCore
 
 		return $tpl->fetch();
 	}
-	
+
 	public function renderModulesList($modules_list)
 	{
 		$this->tpl_vars = array(
@@ -372,7 +373,7 @@ class HelperCore
 		$shop_context = Shop::getContext();
 		if ($shop_context == Shop::CONTEXT_ALL || ($context->controller->multishop_context_group == false && $shop_context == Shop::CONTEXT_GROUP))
 			$value = '';
-		else if ($shop_context == Shop::CONTEXT_GROUP)
+		elseif ($shop_context == Shop::CONTEXT_GROUP)
 			$value = 'g-'.Shop::getContextShopGroupID();
 		else
 			$value = 's-'.Shop::getContextShopID();

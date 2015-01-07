@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -60,7 +60,7 @@
 										<th class="cart_product first_item">{l s='Product'}</th>
 										<th class="cart_description item">{l s='Description'}</th>
 										{if $PS_STOCK_MANAGEMENT}
-											<th class="cart_availability item">{l s='Avail.'}</th>
+											<th class="cart_availability item text-center">{l s='Availability'}</th>
 										{/if}
 										<th class="cart_unit item text-right">{l s='Unit price'}</th>
 										<th class="cart_quantity item text-center">{l s='Qty'}</th>
@@ -292,7 +292,7 @@
 								{if count($discounts)}
 									<tbody>
 										{foreach from=$discounts item=discount name=discountLoop}
-											<tr class="cart_discount {if $smarty.foreach.discountLoop.last}last_item{elseif $smarty.foreach.discountLoop.first}first_item{else}item{/if}" id="cart_discount_{$discount.id_discount}">											
+											<tr class="cart_discount {if $smarty.foreach.discountLoop.last}last_item{elseif $smarty.foreach.discountLoop.first}first_item{else}item{/if}" id="cart_discount_{$discount.id_discount}">
 												<td class="cart_discount_name" colspan="{if $PS_STOCK_MANAGEMENT}3{else}2{/if}">{$discount.name}</td>
 												<td class="cart_discount_price">
 													<span class="price-discount">

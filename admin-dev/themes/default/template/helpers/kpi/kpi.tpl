@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,11 +18,12 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<{if isset($href) && $href}a style="display:block" href="{$href|escape:'html':'UTF-8'}"{else}div{/if} id="{$id|escape:'html':'UTF-8'}" class="box-stats {$color|escape}" >
+
+<{if isset($href) && $href}a style="display:block" href="{$href|escape:'html':'UTF-8'}"{else}div{/if} id="{$id|escape:'html':'UTF-8'}" data-toggle="tooltip" class="box-stats label-tooltip {$color|escape}" data-original-title="{$tooltip|escape}">
 	<div class="kpi-content">
 	{if isset($icon) && $icon}
 		<i class="{$icon|escape}"></i>
@@ -33,7 +34,6 @@
 			</div>
 		</div>
 	{/if}
-	
 		<span class="title">{$title|escape}</span>
 		<span cLass="subtitle">{$subtitle|escape}</span>
 		<span class="value">{$value|escape|replace:'&amp;':'&'}</span>
@@ -43,25 +43,31 @@
 
 {if isset($source) && $source != ''}
 <script>
-	$.ajax({
-		url: '{$source|addslashes}' + '&rand=' + new Date().getTime(),
-		dataType: 'json',
-		type: 'GET',
-		cache: false,
-		headers: { 'cache-control': 'no-cache' },
-		success: function(jsonData){
-			if (!jsonData.has_errors)
-			{
-				if (jsonData.value != undefined)
-					$('#{$id|addslashes} .value').html(jsonData.value);
-				if (jsonData.data != undefined)
+	function refresh_{$id|replace:'-':'_'|addslashes}()
+	{
+		$.ajax({
+			url: '{$source|addslashes}' + '&rand=' + new Date().getTime(),
+			dataType: 'json',
+			type: 'GET',
+			cache: false,
+			headers: { 'cache-control': 'no-cache' },
+			success: function(jsonData){
+				if (!jsonData.has_errors)
 				{
-					$("#{$id|addslashes} .boxchart svg").remove();
-					set_d3_{$id|str_replace:'-':'_'|addslashes}(jsonData.data);
+					if (jsonData.value != undefined)
+						$('#{$id|addslashes} .value').html(jsonData.value);
+					if (jsonData.data != undefined)
+					{
+						$("#{$id|addslashes} .boxchart svg").remove();
+						set_d3_{$id|replace:'-':'_'|addslashes}(jsonData.data);
+					}
 				}
 			}
-		}
-	});
+		});
+	}
+	{if isset($refresh) && $refresh != ''}
+		refresh_{$id|replace:'-':'_'|addslashes}();
+	{/if}
 </script>
 {/if}
 
@@ -94,7 +100,7 @@
 	}
 	
 	{if $data}
-		set_d3_{$id|str_replace:'-':'_'|addslashes}($.parseJSON("{$data|addslashes}"));
+		set_d3_{$id|replace:'-':'_'|addslashes}($.parseJSON("{$data|addslashes}"));
 	{/if}
 </script>
 {/if}

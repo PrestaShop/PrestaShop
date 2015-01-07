@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,12 +18,12 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{if $tax_exempt || ((isset($product_tax_breakdown) && $product_tax_breakdown|@count > 0) || (isset($ecotax_tax_breakdown) && $ecotax_tax_breakdown|@count > 0))}
+{if $tax_exempt || ((isset($product_tax_breakdown) && $product_tax_breakdown|@count > 0) || (isset($ecotax_tax_breakdown) && $ecotax_tax_breakdown|@count > 0) || (isset($shipping_tax_breakdown) && $shipping_tax_breakdown|@count > 0))}
 <!--  TAX DETAILS -->
 <table style="width: 100%">
 	<tr>
@@ -60,9 +60,9 @@
 					 <td style="width: 20%; text-align: right;">{if isset($is_order_slip) && $is_order_slip}- {/if}{displayPrice currency=$order->id_currency price=$product_tax_infos.total_amount}</td>
 					</tr>
 					{/foreach}
-					{/if}
+				{/if}
 
-					{if isset($shipping_tax_breakdown)}
+				{if isset($shipping_tax_breakdown)}
 					{foreach $shipping_tax_breakdown as $shipping_tax_infos}
 					<tr style="line-height:6px;background-color:{cycle values='#FFF,#DDD'};">
 					 <td style="width: 30%">

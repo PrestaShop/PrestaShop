@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -74,7 +74,7 @@ define('_THEME_NAME_', 'default');
 
 require_once(dirname(__FILE__).'/../init.php');
 
-// set logger 
+// set logger
 require_once(_PS_INSTALL_PATH_.'upgrade/classes/AbstractLogger.php');
 eval('abstract class AbstractLogger extends AbstractLoggerCore{}');
 require_once(_PS_INSTALL_PATH_.'upgrade/classes/FileLogger.php');
@@ -157,7 +157,7 @@ if ($resultDB !== true)
 }
 */
 
-// 
+//
 //custom sql file creation
 $upgradeFiles = array();
 if (empty ($fail_result))
@@ -215,7 +215,7 @@ if (defined('_PS_CACHING_SYSTEM_') AND _PS_CACHING_SYSTEM_ == 'CacheFS')
 elseif (defined('_PS_CACHING_SYSTEM_') AND _PS_CACHING_SYSTEM_ != 'CacheMemcache')
 	$cache_engine = _PS_CACHING_SYSTEM_;
 else
-	$cache_engine = 'CacheMemcache';	
+	$cache_engine = 'CacheMemcache';
 $datas = array(
 	array('_DB_SERVER_', _DB_SERVER_),
 	array('_DB_NAME_', _DB_NAME_),
@@ -225,9 +225,6 @@ $datas = array(
 	array('_MYSQL_ENGINE_', $mysqlEngine),
 	array('_PS_CACHING_SYSTEM_', $cache_engine),
 	array('_PS_CACHE_ENABLED_', defined('_PS_CACHE_ENABLED_') ? _PS_CACHE_ENABLED_ : '0'),
-	array('_MEDIA_SERVER_1_', defined('_MEDIA_SERVER_1_') ? _MEDIA_SERVER_1_ : ''),
-	array('_MEDIA_SERVER_2_', defined('_MEDIA_SERVER_2_') ? _MEDIA_SERVER_2_ : ''),
-	array('_MEDIA_SERVER_3_', defined('_MEDIA_SERVER_3_') ? _MEDIA_SERVER_3_ : ''),
 	// 1.4 only
 	// array('__PS_BASE_URI__', __PS_BASE_URI__),
 	// 1.4 only
@@ -238,6 +235,14 @@ $datas = array(
 	array('_PS_CREATION_DATE_', defined("_PS_CREATION_DATE_") ? _PS_CREATION_DATE_ : date('Y-m-d')),
 	array('_PS_VERSION_', _PS_INSTALL_VERSION_)
 );
+
+if (version_compare(_PS_INSTALL_VERSION_, '1.6.0.11', '<'))
+{
+	$datas[] = array('_MEDIA_SERVER_1_', defined('_MEDIA_SERVER_1_') ? _MEDIA_SERVER_1_ : '');
+	$datas[] = array('_MEDIA_SERVER_2_', defined('_MEDIA_SERVER_2_') ? _MEDIA_SERVER_2_ : '');
+	$datas[] = array('_MEDIA_SERVER_3_', defined('_MEDIA_SERVER_3_') ? _MEDIA_SERVER_3_ : '');
+}
+
 if (defined('_RIJNDAEL_KEY_'))
 	$datas[] = array('_RIJNDAEL_KEY_', _RIJNDAEL_KEY_);
 if (defined('_RIJNDAEL_IV_'))
@@ -246,7 +251,7 @@ if(!defined('_PS_CACHE_ENABLED_'))
 	define('_PS_CACHE_ENABLED_', '0');
 if(!defined('_MYSQL_ENGINE_'))
 	define('_MYSQL_ENGINE_', 'MyISAM');
-	
+
 global $smarty;
 // Clean all cache values
 Cache::clean('*');
@@ -267,7 +272,7 @@ if (!defined('_PS_SMARTY_FAST_LOAD_'))
 	define('_PS_SMARTY_FAST_LOAD_', true);
 require_once _PS_ROOT_DIR_.'/config/smarty.config.inc.php';
 
-Context::getContext()->smarty = $smarty;	
+Context::getContext()->smarty = $smarty;
 
 if(isset($_GET['customModule']) AND $_GET['customModule'] == 'desactivate')
 {
@@ -433,10 +438,10 @@ else
 if (!isset($return_type))
 	$return_type = 'xml';
 
-// format available 
+// format available
 // 1) output on screen
 // - xml (default)
-// - json 
+// - json
 // 2) return value in php
 // - include : variable $result available after inclusion
 // 3) file_get_contents()

@@ -9,7 +9,9 @@
     content: "\f0fe";
     font-family: "FontAwesome";
     display: block;
-    vertical-align: 5px; }
+    vertical-align: 5px;
+    color: grey;
+}
 
 .thumbs_banner {
   margin: 10px auto;

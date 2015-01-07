@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -32,7 +32,7 @@
 			{if count($modules_list)}
 				<table class="table">
 					{counter start=1  assign="count"}
-						{foreach from=$modules_list item=module}	
+						{foreach from=$modules_list item=module}
 							{include file='controllers/modules/tab_module_line.tpl' class_row={cycle values=",row alt"}}
 						{counter}
 					{/foreach}
@@ -54,7 +54,7 @@
 							<div class="alert alert-warning">
 							{if $controller_name == 'AdminPayment'}
 							{l s='It seems there are no recommended payment solutions for your country.'}<br />
-							<a target="_blank" href="http://www.prestashop.com/en/contribute-prestashop-localization">{l s='Do you think there should be one? Let us know!'}</a>
+							<a class="_blank" href="http://www.prestashop.com/en/contribute-prestashop-localization">{l s='Do you think there should be one? Let us know!'}</a>
 							{else}{l s='No modules available in this section.'}{/if}</div>
 						</td>
 					</tr>

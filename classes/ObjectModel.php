@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -125,6 +125,8 @@ abstract class ObjectModelCore
 	 */
 	public static $definition = array();
 
+	protected static $loaded_classes = array();
+
 	/**
 	 * @var array Contain current object definition
 	 */
@@ -176,8 +178,19 @@ abstract class ObjectModelCore
 		if (!ObjectModel::$db)
 			ObjectModel::$db = Db::getInstance();
 
-		$this->def = ObjectModel::getDefinition($this);
-		$this->setDefinitionRetrocompatibility();
+		$class_name = get_class($this);
+		if (!isset(ObjectModel::$loaded_classes[$class_name]))
+		{
+			$this->def = ObjectModel::getDefinition($class_name);
+			$this->setDefinitionRetrocompatibility();
+		 	if (!Validate::isTableOrIdentifier($this->def['primary']) || !Validate::isTableOrIdentifier($this->def['table']))
+					throw new PrestaShopException('Identifier or table format not valid for class '.$class_name);
+
+			ObjectModel::$loaded_classes[$class_name] = get_object_vars($this);
+		}
+		else
+			foreach (ObjectModel::$loaded_classes[$class_name] as $key => $value)
+				$this->{$key} = $value;
 
 		if ($id_lang !== null)
 			$this->id_lang = (Language::getLanguage($id_lang) !== false) ? $id_lang : Configuration::get('PS_LANG_DEFAULT');
@@ -190,9 +203,6 @@ abstract class ObjectModelCore
 
 		if ($this->isMultishop() && !$this->id_shop)
 			$this->id_shop = Context::getContext()->shop->id;
-
-	 	if (!Validate::isTableOrIdentifier($this->def['primary']) || !Validate::isTableOrIdentifier($this->def['table']))
-			throw new PrestaShopException('Identifier or table format not valid for class '.get_class($this));
 
 		if ($id)
 		{
@@ -226,10 +236,11 @@ abstract class ObjectModelCore
 							foreach ($object_datas_lang as $row)
 								foreach ($row as $key => $value)
 								{
-									if (array_key_exists($key, $this) && $key != $this->def['primary'])
+									if ($key != $this->def['primary'] && array_key_exists($key, $this))
 									{
 										if (!isset($object_datas[$key]) || !is_array($object_datas[$key]))
 											$object_datas[$key] = array();
+
 										$object_datas[$key][$row['id_lang']] = $value;
 									}
 								}
@@ -355,7 +366,7 @@ abstract class ObjectModelCore
 			{
 				if (!empty($value[$id_lang]))
 					$value = $value[$id_lang];
-				else if (!empty($data['required']))
+				elseif (!empty($data['required']))
 					$value = $value[Configuration::get('PS_LANG_DEFAULT')];
 				else
 					$value = '';
@@ -727,14 +738,14 @@ abstract class ObjectModelCore
 		// Database deletion
 		$has_multishop_entries = $this->hasMultishopEntries();
 		if ($result && !$has_multishop_entries)
-			$result &= ObjectModel::$db->delete($this->def['table'], '`'.pSQL($this->def['primary']).'` = '.(int)$this->id);
+			$result &= ObjectModel::$db->delete($this->def['table'], '`'.bqSQL($this->def['primary']).'` = '.(int)$this->id);
 
 		if (!$result)
 			return false;
 
 		// Database deletion for multilingual fields related to the object
 		if (!empty($this->def['multilang']) && !$has_multishop_entries)
-			$result &= ObjectModel::$db->delete($this->def['table'].'_lang', '`'.pSQL($this->def['primary']).'` = '.(int)$this->id);
+			$result &= ObjectModel::$db->delete($this->def['table'].'_lang', '`'.bqSQL($this->def['primary']).'` = '.(int)$this->id);
 
 		// @hook actionObject*DeleteAfter
 		Hook::exec('actionObjectDeleteAfter', array('object' => $this));
@@ -824,7 +835,7 @@ abstract class ObjectModelCore
 			if ((!$this->id_lang && isset($this->{$field_name}[$id_language]) && !empty($this->{$field_name}[$id_language]))
 			|| ($this->id_lang && isset($this->$field_name) && !empty($this->$field_name)))
 				$fields[$id_language][$field_name] = $this->id_lang ? pSQL($this->$field_name, $html) : pSQL($this->{$field_name}[$id_language], $html);
-			else if (in_array($field_name, $this->fieldsRequiredLang))
+			elseif (in_array($field_name, $this->fieldsRequiredLang))
 				$fields[$id_language][$field_name] = pSQL($this->id_lang ? $this->$field_name : $this->{$field_name}[Configuration::get('PS_LANG_DEFAULT')], $html);
 			else
 				$fields[$id_language][$field_name] = '';
