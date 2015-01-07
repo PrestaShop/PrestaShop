@@ -1,7 +1,7 @@
 <?php
 
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -20,7 +20,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -2643,8 +2643,8 @@ class AdminThemesControllerCore extends AdminController
 				$this->errors[] = $error;
 				return false;
 			}
-
 			$tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
+
 			if (!$tmp_name || !move_uploaded_file($_FILES[$field_name]['tmp_name'], $tmp_name))
 				return false;
 

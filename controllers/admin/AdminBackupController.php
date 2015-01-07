@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014  
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -220,7 +220,7 @@ class AdminBackupControllerCore extends AdminController
 				$order_way = 'desc';
 		}
 		if (empty($limit))
-			$limit = ((!isset($this->context->cookie->{$this->table.'_pagination'})) ? $this->_pagination[0] : $limit = 
+			$limit = ((!isset($this->context->cookie->{$this->table.'_pagination'})) ? $this->_pagination[0] : $limit =
 				$this->context->cookie->{$this->table.'_pagination'});
 		$limit = (int)Tools::getValue('pagination', $limit);
 		$this->context->cookie->{$this->table.'_pagination'} = $limit;
@@ -253,7 +253,7 @@ class AdminBackupControllerCore extends AdminController
 			elseif ($age < 86400)
 			{
 				$age = floor($age / 3600);
-				$age = $age.' '.(($age == 1) ? $this->l('Hour', 'AdminTab', false, false) : 
+				$age = $age.' '.(($age == 1) ? $this->l('Hour', 'AdminTab', false, false) :
 					$this->l('Hours', 'AdminTab', false, false));
 			}
 			else
