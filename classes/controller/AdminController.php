@@ -1496,7 +1496,7 @@ class AdminControllerCore extends Controller
 
 		// Use page title from meta_title if it has been set else from the breadcrumbs array
 		if (!$this->meta_title)
-			$this->meta_title = strip_tags(is_array($this->toolbar_title) ? implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $this->toolbar_title) : $this->toolbar_title);
+			$this->meta_title = $this->page_header_toolbar_title;
 		$this->context->smarty->assign('meta_title', $this->meta_title);
 
 		$template_dirs = $this->context->smarty->getTemplateDir();
