@@ -705,7 +705,7 @@ class CategoryCore extends ObjectModel
 			$sql .= ' ORDER BY '.(!empty($order_by_prefix) ? $order_by_prefix.'.' : '').'`'.bqSQL($order_by).'` '.pSQL($order_way).'
 			LIMIT '.(((int)$p - 1) * (int)$n).','.(int)$n;
 
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
 		if ($order_by == 'orderprice')
 			Tools::orderbyPrice($result, $order_way);
 
