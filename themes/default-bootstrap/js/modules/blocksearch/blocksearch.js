@@ -57,10 +57,10 @@ $(document).ready(function()
 				}
 			}
 		)
-			.result(function(event, data, formatted) {
-				$input.val(data.pname);
-				document.location.href = data.product_link;
-			});
+		.result(function(event, data, formatted) {
+			$input.val(data.pname);
+			document.location.href = data.product_link;
+		});
 	}
 
 	if (typeof instantsearch != 'undefined' && instantsearch) {
