@@ -402,7 +402,7 @@ class AdminControllerCore extends Controller
 				$this->context->mode = Context::MODE_HOST;
 		}
 		elseif (isset($this->context->cookie->is_contributor) && (int)$this->context->cookie->is_contributor === 1)
-			$this->context->mode = Context::MODE_CONTRIB;
+			$this->context->mode = Context::MODE_STD_CONTRIB;
 		else
 			$this->context->mode = Context::MODE_STD;
 
