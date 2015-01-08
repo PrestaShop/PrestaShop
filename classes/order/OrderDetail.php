@@ -718,7 +718,7 @@ class OrderDetailCore extends ObjectModel
 					.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
 				ORDER BY RAND()
 				LIMIT '.(int)$limit.'
-			');
+			', true, false);
 
 			$tax_calc = Product::getTaxCalculationMethod();
 			if (is_array($order_products))
