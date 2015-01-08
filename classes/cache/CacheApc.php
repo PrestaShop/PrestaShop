@@ -33,13 +33,17 @@ class CacheApcCore extends Cache
 {
 	public function __construct()
 	{
-		$this->keys = array();
-		$cache_info = apc_cache_info((extension_loaded('apcu') === true )? '' : 'user' );
-		foreach ($cache_info['cache_list'] as $entry)
-			if (extension_loaded('apcu') === true)
-				$this->keys[$entry['key']] = $entry['ttl'];
-			else
-				$this->keys[$entry['info']] = $entry['ttl'];
+		if (!function_exists('apc_exists')) {
+			$this->keys = array();
+			$cache_info = apc_cache_info((extension_loaded('apcu') === true) ? '' : 'user');
+			foreach ($cache_info['cache_list'] as $entry) {
+				if (extension_loaded('apcu') === true) {
+					$this->keys[$entry['key']] = $entry['ttl'];
+				} else {
+					$this->keys[$entry['info']] = $entry['ttl'];
+				}
+			}
+		}
 	}
 
 	/**
@@ -104,7 +108,11 @@ class CacheApcCore extends Cache
 	 */
 	protected function _exists($key)
 	{
-		return isset($this->keys[$key]);
+		if (!function_exists('apc_exists')) {
+			return isset($this->keys[$key]);
+		} else {
+			return apc_exists($key);
+		}
 	}
 
 	/**
