@@ -502,17 +502,15 @@ class CustomerCore extends ObjectModel
 	 */
 	public static function searchByName($query)
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT *
-		FROM `'._DB_PREFIX_.'customer`
-		WHERE (
-			`email` LIKE \'%'.pSQL($query).'%\'
-			OR `id_customer` = '.(int)$query.'
-			OR `lastname` LIKE \'%'.pSQL($query).'%\'
-			OR `firstname` LIKE \'%'.pSQL($query).'%\'
-		)
-		'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER));
+		$sql_base = 'SELECT *
+				FROM `'._DB_PREFIX_.'customer`';
+		$sql = '('.$sql_base.' WHERE `email` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
+		$sql .= ' UNION ('.$sql_base.' WHERE `id_customer` = '.(int)$query.' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
+		$sql .= ' UNION ('.$sql_base.' WHERE `lastname` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
+		$sql .= ' UNION ('.$sql_base.' WHERE `firstname` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
+
 
 	/**
 	 * Search for customers by ip address

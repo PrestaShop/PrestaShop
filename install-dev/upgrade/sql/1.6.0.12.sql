@@ -57,3 +57,12 @@ ALTER TABLE `PREFIX_product_attribute_shop` CHANGE `available_date` `available_d
 ALTER TABLE `PREFIX_module_access` CHANGE `view` `view` TINYINT( 1 ) NOT NULL DEFAULT '0',
 CHANGE `configure` `configure` TINYINT( 1 ) NOT NULL DEFAULT '0',
 CHANGE `uninstall` `uninstall` TINYINT( 1 ) NOT NULL DEFAULT '0';
+
+ALTER TABLE `PREFIX_shop_group` ADD KEY `deleted` (`deleted`, `name`);
+ALTER TABLE `PREFIX_shop` DROP KEY `id_shop_group`;
+ALTER TABLE `PREFIX_shop` DROP KEY `id_group_shop`;
+ALTER TABLE `PREFIX_shop` ADD KEY `id_shop_group` (`id_shop_group`, `deleted`);
+ALTER TABLE `PREFIX_shop_url` DROP KEY `id_shop`;
+ALTER TABLE `PREFIX_shop_url` ADD KEY `id_shop` (`id_shop`, `main`);
+ALTER TABLE `PREFIX_customization` ADD KEY `id_cart` (`id_cart`);
+ALTER TABLE `PREFIX_product_sale` ADD KEY `quantity` (`quantity`);

@@ -263,7 +263,7 @@ class CartRuleCore extends ObjectModel
 		AND cr.date_from < "'.date('Y-m-d H:i:s').'"
 		AND cr.date_to > "'.date('Y-m-d H:i:s').'"
 		'.($active ? 'AND cr.`active` = 1' : '').'
-		'.($inStock ? 'AND cr.`quantity` > 0' : ''));
+		'.($inStock ? 'AND cr.`quantity` > 0' : ''), true, false);
 
 		// Remove cart rule that does not match the customer groups
 		$customerGroups = Customer::getGroupsStatic($id_customer);
@@ -1226,7 +1226,7 @@ class CartRuleCore extends ObjectModel
 		)
 		AND cr.id_cart_rule NOT IN (SELECT id_cart_rule FROM '._DB_PREFIX_.'cart_cart_rule WHERE id_cart = '.(int)$context->cart->id.')
 		ORDER BY priority';
-		$result = Db::getInstance()->executeS($sql);
+		$result = Db::getInstance()->executeS($sql, true, false);
 		if ($result)
 		{
 			$cart_rules = ObjectModel::hydrateCollection('CartRule', $result);
@@ -1295,12 +1295,14 @@ class CartRuleCore extends ObjectModel
 	 */
 	public static function getCartsRuleByCode($name, $id_lang, $extended = false)
 	{
-		return Db::getInstance()->executeS('
-			SELECT cr.*, crl.*
-			FROM '._DB_PREFIX_.'cart_rule cr
-			LEFT JOIN '._DB_PREFIX_.'cart_rule_lang crl ON (cr.id_cart_rule = crl.id_cart_rule AND crl.id_lang = '.(int)$id_lang.')
-			WHERE code LIKE \'%'.pSQL($name).'%\''
-			.($extended ? ' OR name LIKE \'%'.pSQL($name).'%\'' : ''));
+		$sql_base = 'SELECT cr.*, crl.*
+						FROM '._DB_PREFIX_.'cart_rule cr
+						LEFT JOIN '._DB_PREFIX_.'cart_rule_lang crl ON (cr.id_cart_rule = crl.id_cart_rule AND crl.id_lang = '.(int)$id_lang.')';
+		if ($extended) {
+			return Db::getInstance()->executeS('('.$sql_base.' WHERE code LIKE \'%'.pSQL($name).'%\') UNION ('.$sql_base.' WHERE name LIKE \'%'.pSQL($name).'%\')');
+		} else {
+			return Db::getInstance()->executeS($sql_base.' WHERE code LIKE \'%'.pSQL($name).'%\'');
+		}
 	}
 }
 
