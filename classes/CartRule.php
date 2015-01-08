@@ -252,18 +252,22 @@ class CartRuleCore extends ObjectModel
 		if (!CartRule::isFeatureActive())
 			return array();
 
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT *
-		FROM `'._DB_PREFIX_.'cart_rule` cr
-		LEFT JOIN `'._DB_PREFIX_.'cart_rule_lang` crl ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = '.(int)$id_lang.')
-		WHERE (
-			cr.`id_customer` = '.(int)$id_customer.' OR cr.group_restriction = 1
-			'.($includeGeneric ? 'OR cr.`id_customer` = 0' : '').'
-		)
-		AND cr.date_from < "'.date('Y-m-d H:i:s').'"
-		AND cr.date_to > "'.date('Y-m-d H:i:s').'"
-		'.($active ? 'AND cr.`active` = 1' : '').'
-		'.($inStock ? 'AND cr.`quantity` > 0' : ''));
+		$sql_part1 = 'SELECT *
+				FROM `'._DB_PREFIX_.'cart_rule` cr
+				LEFT JOIN `'._DB_PREFIX_.'cart_rule_lang` crl ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = '.(int)$id_lang.')';
+
+		$sql_part2 = ' AND cr.date_from < "'.date('Y-m-d H:i:s').'"
+				AND cr.date_to > "'.date('Y-m-d H:i:s').'"
+				'.($active ? 'AND cr.`active` = 1' : '').'
+				'.($inStock ? 'AND cr.`quantity` > 0' : '');
+
+		$sql = '('.$sql_part1.' WHERE cr.`id_customer` = '.(int)$id_customer.' '.$sql_part2.')';
+		$sql .= ' UNION ('.$sql_part1.' WHERE cr.`group_restriction` = 1 '.$sql_part2.')';
+		if ($includeGeneric && (int)$id_customer != 0) {
+			$sql .= ' UNION ('.$sql_part1.' WHERE cr.`id_customer` = 0 '.$sql_part2.')';
+		}
+
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
 
 		// Remove cart rule that does not match the customer groups
 		$customerGroups = Customer::getGroupsStatic($id_customer);
