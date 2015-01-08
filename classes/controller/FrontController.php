@@ -1111,7 +1111,7 @@ class FrontControllerCore extends Controller
 
 	public function removeJS($js_uri, $check_path = true)
 	{
-		return Frontcontroller::removeMedia($js_uri, $check_path);
+		return Frontcontroller::removeMedia($js_uri, null, $check_path);
 	}
 
 	protected function recoverCart()
