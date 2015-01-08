@@ -134,6 +134,7 @@ class HelperUploaderCore extends Uploader
 	public function setPostMaxSize($value)
 	{
 		$this->_post_max_size = $value;
+		$this->setMaxSize($value);
 		return $this;
 	}
 
