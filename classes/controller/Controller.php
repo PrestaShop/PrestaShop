@@ -388,7 +388,7 @@ abstract class ControllerCore
 		foreach ($component as $ui)
 		{
 			$ui_path = Media::getJqueryUIPath($ui, $theme, $check_dependencies);
-			$this->addCSS($ui_path['css'], null, false);
+			$this->addCSS($ui_path['css'], 'all', false);
 			$this->addJS($ui_path['js'], false);
 		}
 	}
