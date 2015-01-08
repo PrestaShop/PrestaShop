@@ -673,7 +673,8 @@ CREATE TABLE `PREFIX_customization` (
   `quantity_returned` INT NOT NULL DEFAULT '0',
   `in_cart` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_customization`,`id_cart`,`id_product`, `id_address_delivery`),
-  KEY `id_product_attribute` (`id_product_attribute`)
+  KEY `id_product_attribute` (`id_product_attribute`),
+  KEY `id_cart` (`id_cart`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_customization_field` (
@@ -1600,7 +1601,8 @@ CREATE TABLE `PREFIX_product_sale` (
   `quantity` int(10) unsigned NOT NULL DEFAULT '0',
   `sale_nbr` int(10) unsigned NOT NULL DEFAULT '0',
   `date_upd` date NOT NULL,
-  PRIMARY KEY (`id_product`)
+  PRIMARY KEY (`id_product`),
+  KEY `quantity` (`quantity`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_product_tag` (
@@ -2011,7 +2013,8 @@ CREATE TABLE IF NOT EXISTS `PREFIX_shop_group` (
   `share_stock` TINYINT(1) NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT '1',
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id_shop_group`)
+  PRIMARY KEY (`id_shop_group`),
+  KEY `deleted` (`deleted`, `name`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE IF NOT EXISTS `PREFIX_shop` (
@@ -2023,7 +2026,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_shop` (
   `active` tinyint(1) NOT NULL DEFAULT '1',
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_shop`),
-  KEY `id_shop_group` (`id_shop_group`),
+  KEY `id_shop_group` (`id_shop_group`, `deleted`),
   KEY `id_category` (`id_category`),
   KEY `id_theme` (`id_theme`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
@@ -2038,7 +2041,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_shop_url` (
   `main` TINYINT(1) NOT NULL,
   `active` TINYINT(1) NOT NULL,
   PRIMARY KEY (`id_shop_url`),
-  KEY `id_shop` (`id_shop`),
+  KEY `id_shop` (`id_shop`, `main`),
   UNIQUE KEY `full_shop_url` (`domain`, `physical_uri`, `virtual_uri`),
   UNIQUE KEY `full_shop_url_ssl` (`domain_ssl`, `physical_uri`, `virtual_uri`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
