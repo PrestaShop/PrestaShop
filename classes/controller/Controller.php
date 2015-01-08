@@ -340,7 +340,7 @@ abstract class ControllerCore
 		}
 	}
 
-	public function removeJS($js_uri)
+	public function removeJS($js_uri, $check_path = true)
 	{
 		if (is_array($js_uri))
 			foreach ($js_uri as $js_file)
