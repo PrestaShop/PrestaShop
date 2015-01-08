@@ -2118,8 +2118,9 @@ class CartCore extends ObjectModel
 		$result = Db::getInstance('SELECT * FROM '._DB_PREFIX_.'cart_cart_rule WHERE id_cart='.$this->id);
 		$cart_rules_in_cart = array();
 
-		foreach ($result as $row)
-			$cart_rules_in_cart[] = $row['id_cart_rules'];
+		if (is_array($result) && count($result))
+			foreach ($result as $row)
+				$cart_rules_in_cart[] = $row['id_cart_rule'];
 
 		$total_products_wt = $this->getOrderTotal(true, Cart::ONLY_PRODUCTS);
 		$total_products = $this->getOrderTotal(false, Cart::ONLY_PRODUCTS);
