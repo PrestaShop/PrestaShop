@@ -48,3 +48,12 @@ ALTER TABLE `PREFIX_customization_field_lang` ADD `id_shop` INT(10) UNSIGNED NOT
 ALTER TABLE `PREFIX_customization_field_lang` DROP PRIMARY KEY, ADD PRIMARY KEY (`id_customization_field`, `id_shop`, `id_lang`);
 
 /* PHP:customization_field_multishop_lang(); */;
+
+ALTER TABLE `PREFIX_shop_group` ADD KEY `deleted` (`deleted`, `name`);
+ALTER TABLE `PREFIX_shop` DROP KEY `id_shop_group`;
+ALTER TABLE `PREFIX_shop` DROP KEY `id_group_shop`;
+ALTER TABLE `PREFIX_shop` ADD KEY `id_shop_group` (`id_shop_group`, `deleted`);
+ALTER TABLE `PREFIX_shop_url` DROP KEY `id_shop`;
+ALTER TABLE `PREFIX_shop_url` ADD KEY `id_shop` (`id_shop`, `main`);
+ALTER TABLE `PREFIX_customization` ADD KEY `id_cart` (`id_cart`);
+ALTER TABLE `PREFIX_product_sale` ADD KEY `quantity` (`quantity`);
