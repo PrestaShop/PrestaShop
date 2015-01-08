@@ -57,3 +57,5 @@ ALTER TABLE `PREFIX_shop_url` DROP KEY `id_shop`;
 ALTER TABLE `PREFIX_shop_url` ADD KEY `id_shop` (`id_shop`, `main`);
 ALTER TABLE `PREFIX_customization` ADD KEY `id_cart` (`id_cart`);
 ALTER TABLE `PREFIX_product_sale` ADD KEY `quantity` (`quantity`);
+ALTER TABLE `PREFIX_cart_rule` ADD KEY `id_customer` (`id_customer`, `active`, `date_to`);
+ALTER TABLE `PREFIX_cart_rule` ADD KEY `group_restriction` (`group_restriction`, `active`, `date_to`);
