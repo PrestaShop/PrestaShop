@@ -67,9 +67,15 @@ class ProductSaleCore
 		if ($nb_products < 1) $nb_products = 10;
 		$final_order_by = $order_by;
 		$order_table = '';
-		if (is_null($order_by) || $order_by == 'position' || $order_by == 'price') $order_by = 'sales';
-		if ($order_by == 'date_add' || $order_by == 'date_upd')
+		if (is_null($order_by) || $order_by == 'position' || $order_by == 'price') {
+			$order_by = 'quantity';
+			$order_table = 'ps';
+			$group_table = 'ps';
+		}
+		if ($order_by == 'date_add' || $order_by == 'date_upd') {
 			$order_table = 'product_shop';
+			$group_table = 'product_shop';
+		}
 		if (is_null($order_way) || $order_by == 'sales') $order_way = 'DESC';
 
 		$interval = Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
@@ -113,7 +119,7 @@ class ProductSaleCore
 			$sql .= '
 				WHERE product_shop.`active` = 1
 					AND p.`visibility` != \'none\'
-				GROUP BY product_shop.id_product
+				GROUP BY '.$group_table.'.id_product
 				ORDER BY '.(!empty($order_table) ? '`'.pSQL($order_table).'`.' : '').'`'.pSQL($order_by).'` '.pSQL($order_way).'
 				LIMIT '.(int)($page_number * $nb_products).', '.(int)$nb_products;
 
@@ -177,8 +183,8 @@ class ProductSaleCore
 		$sql.= '
 		WHERE product_shop.`active` = 1
 		AND p.`visibility` != \'none\'
-		GROUP BY product_shop.id_product
-		ORDER BY sales DESC
+		GROUP BY ps.id_product
+		ORDER BY ps.quantity DESC
 		LIMIT '.(int)($page_number * $nb_products).', '.(int)$nb_products;
 
 		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))

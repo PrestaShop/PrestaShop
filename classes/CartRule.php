@@ -1295,12 +1295,13 @@ class CartRuleCore extends ObjectModel
 	 */
 	public static function getCartsRuleByCode($name, $id_lang, $extended = false)
 	{
-		return Db::getInstance()->executeS('
-			SELECT cr.*, crl.*
-			FROM '._DB_PREFIX_.'cart_rule cr
-			LEFT JOIN '._DB_PREFIX_.'cart_rule_lang crl ON (cr.id_cart_rule = crl.id_cart_rule AND crl.id_lang = '.(int)$id_lang.')
-			WHERE code LIKE \'%'.pSQL($name).'%\''
-			.($extended ? ' OR name LIKE \'%'.pSQL($name).'%\'' : ''));
+		$sql_base = 'SELECT cr.*, crl.*
+						FROM '._DB_PREFIX_.'cart_rule cr
+						LEFT JOIN '._DB_PREFIX_.'cart_rule_lang crl ON (cr.id_cart_rule = crl.id_cart_rule AND crl.id_lang = '.(int)$id_lang.')';
+		if ($extended)
+			return Db::getInstance()->executeS('('.$sql_base.' WHERE code LIKE \'%'.pSQL($name).'%\') UNION ('.$sql_base.' WHERE name LIKE \'%'.pSQL($name).'%\')');
+		else
+			return Db::getInstance()->executeS($sql_base.' WHERE code LIKE \'%'.pSQL($name).'%\'');
 	}
 }
 
