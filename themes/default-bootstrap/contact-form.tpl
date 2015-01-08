@@ -73,9 +73,9 @@
 							{/foreach}
 						</select>
 					</div>
-						<p id="desc_contact0" class="desc_contact">&nbsp;</p>
+						<p id="desc_contact0" class="desc_contact" {if isset($smarty.request.id_contact)}style="display:none;"{/if}>&nbsp;</p>
 						{foreach from=$contacts item=contact}
-							<p id="desc_contact{$contact.id_contact|intval}" class="desc_contact contact-title" style="display:none;">
+							<p id="desc_contact{$contact.id_contact|intval}" class="desc_contact contact-title" {if !isset($smarty.request.id_contact) || $smarty.request.id_contact != $contact.id_contact}style="display:none;"{/if}>
 								<i class="icon-comment-alt"></i>{$contact.description|escape:'html':'UTF-8'}
 							</p>
 						{/foreach}
