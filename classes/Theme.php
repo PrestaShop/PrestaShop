@@ -220,7 +220,8 @@ class ThemeCore extends ObjectModel
 					foreach ($xml_theme->attributes() as $key => $value)
 						$theme[$key] = (string)$value;
 
-					$not_installed_theme[] = $theme;
+					if (!empty($theme))
+						$not_installed_theme[] = $theme;
 				}
 			}
 		}
