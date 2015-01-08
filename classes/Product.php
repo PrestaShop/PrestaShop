@@ -3047,8 +3047,8 @@ class ProductCore extends ObjectModel
 	public static function sqlStock($product_alias, $product_attribute = null, $inner_join = false, Shop $shop = null)
 	{
 		$id_shop = ($shop !== null ? (int)$shop->id : null);
-		$sql = (($inner_join) ? ' INNER ' : ' LEFT ').'
-			JOIN '._DB_PREFIX_.'stock_available stock
+		$sql = (($inner_join) ? ' INNER ' : ' LEFT ')
+			.'JOIN '._DB_PREFIX_.'stock_available stock
 			ON (stock.id_product = '.pSQL($product_alias).'.id_product';
 
 		if (!is_null($product_attribute))

@@ -70,11 +70,9 @@ class ProductSaleCore
 		if (is_null($order_by) || $order_by == 'position' || $order_by == 'price') {
 			$order_by = 'quantity';
 			$order_table = 'ps';
-			$group_table = 'ps';
 		}
 		if ($order_by == 'date_add' || $order_by == 'date_upd') {
 			$order_table = 'product_shop';
-			$group_table = 'product_shop';
 		}
 		if (is_null($order_way) || $order_by == 'sales') $order_way = 'DESC';
 
@@ -84,46 +82,61 @@ class ProductSaleCore
 					pl.`description`, pl.`description_short`, pl.`link_rewrite`, pl.`meta_description`,
 					pl.`meta_keywords`, pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`,
 					m.`name` AS manufacturer_name, p.`id_manufacturer` as id_manufacturer,
-					MAX(image_shop.`id_image`) id_image, il.`legend`,
 					ps.`quantity` AS sales, t.`rate`, pl.`meta_keywords`, pl.`meta_title`, pl.`meta_description`,
 					DATEDIFF(p.`date_add`, DATE_SUB(NOW(),
-					INTERVAL '.(int)$interval.' DAY)) > 0 AS new'.(Combination::isFeatureActive() ? ', MAX(product_attribute_shop.minimal_quantity) AS product_attribute_minimal_quantity' : '')
+					INTERVAL '.(int)$interval.' DAY)) > 0 AS new'
 				.' FROM `'._DB_PREFIX_.'product_sale` ps
 				LEFT JOIN `'._DB_PREFIX_.'product` p ON ps.`id_product` = p.`id_product`
 				'.Shop::addSqlAssociation('product', 'p', false).'
-				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa
-				ON (p.`id_product` = pa.`id_product`)
-				'.(Combination::isFeatureActive() ?
-				Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.`default_on` = 1').'
-				'.Product::sqlStock('p', 'product_attribute_shop', false, Context::getContext()->shop) : Product::sqlStock('p', 'product', false, Context::getContext()->shop)).'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 					ON p.`id_product` = pl.`id_product`
 					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
-				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)'.
-				Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
-				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
 				LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (product_shop.`id_tax_rules_group` = tr.`id_tax_rules_group`)
 					AND tr.`id_country` = '.(int)Context::getContext()->country->id.'
 					AND tr.`id_state` = 0
-				LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)';
+				LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
+				'.Product::sqlStock('p', 0);
+
+			$sql .= '
+				WHERE product_shop.`active` = 1
+					AND p.`visibility` != \'none\'';
 
 			if (Group::isFeatureActive())
 			{
 				$groups = FrontController::getCurrentCustomerGroups();
-				$sql .= '
-					JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)
-					JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.id_category = cg.id_category AND cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1').')';
+				$sql .= ' AND EXISTS(SELECT 1 FROM `'._DB_PREFIX_.'category_product` cp
+					JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.id_category = cg.id_category AND cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1').')
+					WHERE cp.`id_product` = p.`id_product`)';
 			}
 
+
 			$sql .= '
-				WHERE product_shop.`active` = 1
-					AND p.`visibility` != \'none\'
-				GROUP BY '.$group_table.'.id_product
 				ORDER BY '.(!empty($order_table) ? '`'.pSQL($order_table).'`.' : '').'`'.pSQL($order_by).'` '.pSQL($order_way).'
 				LIMIT '.(int)($page_number * $nb_products).', '.(int)$nb_products;
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+
+
+		foreach($result as $key => $product_result) {
+			$sql = 'SELECT MAX(image_shop.`id_image`) id_image, il.`legend`
+							FROM `'._DB_PREFIX_.'image` i
+					'.Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
+							LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
+					WHERE i.`id_product`='.(int)$product_result['id_product'];
+			$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
+
+			if (Combination::isFeatureActive()) {
+				$sql = 'SELECT MAX(product_attribute_shop.minimal_quantity) AS product_attribute_minimal_quantity
+								FROM `'._DB_PREFIX_.'product_attribute` pa
+						'.Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.`default_on` = 1').'
+						WHERE pa.`id_product`='.(int)$product_result['id_product'];
+				$row1 = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
+				$result[$key] = array_merge($product_result, $row, $row1);
+			} else {
+				$result[$key] = array_merge($product_result, $row);
+			}
+		}
 
 		if ($final_order_by == 'price')
 			Tools::orderbyPrice($result, $order_way);
@@ -151,7 +164,7 @@ class ProductSaleCore
 		SELECT
 			p.id_product,  pl.`link_rewrite`, pl.`name`, pl.`description_short`, product_shop.`id_category_default`,
 			ps.`quantity` AS sales, p.`ean13`, p.`upc`, cl.`link_rewrite` AS category, p.show_price, p.available_for_order, p.customizable,
-			p.minimal_quantity as minimal_quantity,
+			p.minimal_quantity as minimal_quantity, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity,
 			product_shop.`date_add` > "'.date('Y-m-d', strtotime('-'.(Configuration::get('PS_NB_DAYS_NEW_PRODUCT') ? (int)Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY')).'" as new,
 			product_shop.`on_sale`
 		FROM `'._DB_PREFIX_.'product_sale` ps
@@ -162,7 +175,7 @@ class ProductSaleCore
 			AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
 			ON cl.`id_category` = product_shop.`id_category_default`
-			AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl');
+			AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').Product::sqlStock('p', 0);
 
 		$sql.= '
 		WHERE product_shop.`active` = 1
@@ -185,12 +198,11 @@ class ProductSaleCore
 			return false;
 
 		foreach($result as $key => $product_result) {
-			$sql = 'SELECT MAX(product_attribute_shop.id_product_attribute) id_product_attribute, stock.out_of_stock,
-							IFNULL(stock.quantity, 0) as quantity, IFNULL(pa.minimal_quantity, "'.$product_result['minimal_quantity'].'") as minimal_quantity,
+			$sql = 'SELECT MAX(product_attribute_shop.id_product_attribute) id_product_attribute,
+							IFNULL(pa.minimal_quantity, "'.$product_result['minimal_quantity'].'") as minimal_quantity,
 							MAX(product_attribute_shop.minimal_quantity) AS product_attribute_minimal_quantity
 							FROM `'._DB_PREFIX_.'product_attribute` pa
 					'.Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.`default_on` = 1').'
-					'.Product::sqlStock('pa', 'product_attribute_shop', false, $context->shop).'
 					WHERE pa.`id_product`='.(int)$product_result['id_product'];
 			$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 
