@@ -58,7 +58,7 @@ $(document).ready(function()
 			}
 		)
 			.result(function(event, data, formatted) {
-				$('#search_query_' + blocksearch_type).val(data.pname);
+				$input.val(data.pname);
 				document.location.href = data.product_link;
 			});
 	}
