@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -57,8 +57,6 @@ class ContactControllerCore extends FrontController
 				$customer = $this->context->customer;
 				if (!$customer->id)
 					$customer->getByEmail($from);
-
-				$contact = new Contact($id_contact, $this->context->language->id);
 
 				$id_order = (int)$this->getOrder();
 
@@ -202,7 +200,7 @@ class ContactControllerCore extends FrontController
 
 				if (count($this->errors) > 1)
 					array_unique($this->errors);
-				else
+				elseif (!count($this->errors))
 					$this->context->smarty->assign('confirmation', 1);
 			}
 		}
