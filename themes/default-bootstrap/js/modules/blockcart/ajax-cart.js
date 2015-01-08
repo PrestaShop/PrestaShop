@@ -785,7 +785,7 @@ var ajaxCart = {
 		if (parseFloat(jsonData.shippingCostFloat) > 0)
 			$('.ajax_cart_shipping_cost').text(jsonData.shippingCost);
 		else if (hasDeliveryAddress && typeof(freeShippingTranslation) != 'undefined')
-				$('.ajax_cart_shipping_cost').html(freeShippingTranslation);
+			$('.ajax_cart_shipping_cost').html(freeShippingTranslation);
 		else if (!hasDeliveryAddress)
 			$('.ajax_cart_shipping_cost').html(toBeDetermined);
 

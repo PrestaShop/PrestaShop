@@ -883,7 +883,9 @@ function updateCartSummary(json)
 	}
 
 	// Block cart
-	$('.ajax_cart_shipping_cost').parent().find('.unvisible').show();
+	if (typeof(orderProcess) !== 'undefined' && orderProcess == 'order-opc')
+		$('.ajax_cart_shipping_cost').parent().find('.unvisible').show();
+
 	if (json.total_shipping > 0)
 	{
 		if (priceDisplayMethod !== 0)
@@ -934,7 +936,7 @@ function updateCartSummary(json)
 	{
 		if (json.carrier.id != null)
 			$('#total_shipping').html(freeShippingTranslation);
-		else
+		else if (!hasDeliveryAddress)
 			$('.cart_total_delivery').hide();
 	}
 
