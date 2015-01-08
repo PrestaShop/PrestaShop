@@ -165,7 +165,7 @@ class AdminPaymentControllerCore extends AdminController
 	{
 		$this->toolbar_title = $this->l('Payment');
 		unset($this->toolbar_btn['back']);
-		
+
 		$shop_context = (!Shop::isFeatureActive() || Shop::getContext() == Shop::CONTEXT_SHOP);
 		if (!$shop_context)
 		{
@@ -215,6 +215,12 @@ class AdminPaymentControllerCore extends AdminController
 			foreach ($list['items'] as $key_item => $item)
 			{
 				$name_id = $list['name_id'];
+
+				if ($name_id === 'currency'
+					&& Tools::strpos($list['items'][$key_item]['name'], '('.$list['items'][$key_item]['iso_code'].')') === false)
+					$list['items'][$key_item]['name'] = sprintf($this->l('%1$s (%2$s)'), $list['items'][$key_item]['name'],
+						$list['items'][$key_item]['iso_code']);
+
 				foreach ($this->payment_modules as $key_module => $module)
 				{
 					if (isset($module->$name_id) && in_array($item['id_'.$name_id], $module->$name_id))
@@ -266,11 +272,11 @@ class AdminPaymentControllerCore extends AdminController
 					$this->modules_list[$key]->type = 'addonsPartner';
 				if (isset($module->description_full) && trim($module->description_full) != '')
 					$module->show_quick_view = true;
-				
+
 				if ($module->active)
-					$active_list[] = $module; 
+					$active_list[] = $module;
 				else
-					$unactive_list[] = $module; 
+					$unactive_list[] = $module;
 			}
 
 			$helper = new Helper();
