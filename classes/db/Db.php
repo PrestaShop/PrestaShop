@@ -524,15 +524,8 @@ abstract class DbCore
 				$use_cache = false;
 				$result = $this->result;
 			}
-			elseif (version_compare(PHP_VERSION, '5.3.0') >= 0)
-				$result = $this->getAll($this->result);
 			else
-			{
-				$result = array();
-
-				while ($row = $this->nextRow($this->result))
-					$result[] = $row;
-			}
+				$result = $this->getAll($this->result);
 		}
 
 		$this->last_cached = false;
