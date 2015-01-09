@@ -300,7 +300,8 @@ class AdminFeaturesControllerCore extends AdminController
 				else
 					$bread_extended[] = $this->l('Add New Value');
 
-				$this->addMetaTitle($bread_extended[count($bread_extended) - 1]);
+				if (count($bread_extended) > 0)
+					$this->addMetaTitle($bread_extended[count($bread_extended) - 1]);
 				break;
 		}
 
