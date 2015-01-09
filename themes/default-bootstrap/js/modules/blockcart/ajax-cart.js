@@ -1,5 +1,5 @@
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -34,13 +34,10 @@ $(document).ready(function(){
 		ajaxCart.expand();
 	});
 
-	var cart_qty = 0;
 	var current_timestamp = parseInt(new Date().getTime() / 1000);
 
 	if (typeof $('.ajax_cart_quantity').html() == 'undefined' || (typeof generated_date != 'undefined' && generated_date != null && (parseInt(generated_date) + 30) < current_timestamp))
 		ajaxCart.refresh();
-	else
-		cart_qty = parseInt($('.ajax_cart_quantity').html());
 
 	/* roll over cart */
 	var cart_block = new HoverWatcher('#header .cart_block');
@@ -59,7 +56,7 @@ $(document).ready(function(){
 		{
 			if ($(this).next('.cart_block:visible').length && !cart_block.isHoveringOver())
 				$("#header .cart_block").stop(true, true).slideUp(450);
-			else if (ajaxCart.nb_total_products > 0 || cart_qty > 0)
+			else if (ajaxCart.nb_total_products > 0 || parseInt($('.ajax_cart_quantity').html()) > 0)
 				$("#header .cart_block").stop(true, true).slideDown(450);
 			return;
 		}
@@ -69,7 +66,7 @@ $(document).ready(function(){
 
 	$("#header .shopping_cart a:first").hover(
 		function(){
-			if (ajaxCart.nb_total_products > 0 || cart_qty > 0)
+			if (ajaxCart.nb_total_products > 0 || parseInt($('.ajax_cart_quantity').html()) > 0)
 				$("#header .cart_block").stop(true, true).slideDown(450);
 		},
 		function(){
@@ -478,6 +475,7 @@ var ajaxCart = {
 								// If the cart is now empty, show the 'no product in the cart' message and close detail
 								if($('.cart_block:first dl.products dt').length == 0)
 								{
+									$('.ajax_cart_quantity').html('0');
 									$("#header .cart_block").stop(true, true).slideUp(200);
 									$('.cart_block_no_products:hidden').slideDown(450);
 									$('.cart_block dl.products').remove();
@@ -786,8 +784,13 @@ var ajaxCart = {
 
 		if (parseFloat(jsonData.shippingCostFloat) > 0)
 			$('.ajax_cart_shipping_cost').text(jsonData.shippingCost);
-		else if (typeof(freeShippingTranslation) != 'undefined')
-				$('.ajax_cart_shipping_cost').html(freeShippingTranslation);
+		else if ((hasDeliveryAddress || typeof(orderProcess) !== 'undefined' && orderProcess == 'order-opc') && typeof(freeShippingTranslation) != 'undefined')
+			$('.ajax_cart_shipping_cost').html(freeShippingTranslation);
+		else if (!hasDeliveryAddress)
+			$('.ajax_cart_shipping_cost').html(toBeDetermined);
+
+		if (hasDeliveryAddress)
+			$('.ajax_cart_shipping_cost').parent().find('.unvisible').show();
 
 		$('.ajax_cart_tax_cost').text(jsonData.taxCost);
 		$('.cart_block_wrapping_cost').text(jsonData.wrappingCost);

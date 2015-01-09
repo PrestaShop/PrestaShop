@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -340,7 +340,7 @@ abstract class ControllerCore
 		}
 	}
 
-	public function removeJS($js_uri)
+	public function removeJS($js_uri, $check_path = true)
 	{
 		if (is_array($js_uri))
 			foreach ($js_uri as $js_file)
@@ -388,7 +388,7 @@ abstract class ControllerCore
 		foreach ($component as $ui)
 		{
 			$ui_path = Media::getJqueryUIPath($ui, $theme, $check_dependencies);
-			$this->addCSS($ui_path['css'], null, false);
+			$this->addCSS($ui_path['css'], 'all', false);
 			$this->addJS($ui_path['js'], false);
 		}
 	}
