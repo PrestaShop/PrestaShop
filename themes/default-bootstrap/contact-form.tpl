@@ -57,7 +57,7 @@
 				<div class="col-xs-12 col-md-3">
 					<div class="form-group selector1">
 						<label for="id_contact">{l s='Subject Heading'}</label>
-					{if isset($customerThread.id_contact)}
+					{if isset($customerThread.id_contact) && $customerThread.id_contact}
 							{foreach from=$contacts item=contact}
 								{if $contact.id_contact == $customerThread.id_contact}
 									<input type="text" class="form-control" id="contact_name" name="contact_name" value="{$contact.name|escape:'html':'UTF-8'}" readonly="readonly" />
