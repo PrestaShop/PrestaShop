@@ -3987,8 +3987,6 @@ class AdminControllerCore extends Controller
 	{
 		// Only add entry if the meta title was not forced.
 		if (is_array($this->meta_title))
-		{
 			$this->meta_title[] = $entry;
-		}
 	}
 }

@@ -242,7 +242,8 @@ class AdminCustomersControllerCore extends AdminController
 		}
 
 		array_pop($this->meta_title);
-		$this->addMetaTitle($this->toolbar_title[count($this->toolbar_title) - 1]);
+		if (count($this->toolbar_title) > 0)
+			$this->addMetaTitle($this->toolbar_title[count($this->toolbar_title) - 1]);
 	}
 
 	public function initPageHeaderToolbar()
