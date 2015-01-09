@@ -56,6 +56,9 @@ class AdminDashboardControllerCore extends AdminController
 
 		$this->page_header_toolbar_title = $this->l('Dashboard');
 		$this->page_header_toolbar_btn = array();
+
+		// Remove the last element on this controller to match the title with the rule of the others
+		array_pop($this->meta_title);
 	}
 
 	protected function getOptionFields()
