@@ -259,7 +259,7 @@
 									{if $priceDisplay >= 0 && $priceDisplay <= 2}
 										<span id="our_price_display" class="price" itemprop="price">{convertPrice price=$productPrice}</span>
 										{if $tax_enabled  && ((isset($display_tax_label) && $display_tax_label == 1) || !isset($display_tax_label))}
-											&nbsp;{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}
+											{if $priceDisplay == 1} {l s='tax excl.'}{else} {l s='tax incl.'}{/if}
 										{/if}
 										<meta itemprop="priceCurrency" content="{$currency->iso_code}" />
 										{hook h="displayProductPriceBlock" product=$product type="price"}
@@ -280,13 +280,13 @@
 								<p id="old_price"{if (!$product->specificPrice || !$product->specificPrice.reduction) && $group_reduction == 0} class="hidden"{/if}>{strip}
 									{if $priceDisplay >= 0 && $priceDisplay <= 2}
 										{hook h="displayProductPriceBlock" product=$product type="old_price"}
-										<span id="old_price_display">{if $productPriceWithoutReduction > $productPrice}<span class="price">{convertPrice price=$productPriceWithoutReduction}</span>{if $tax_enabled && $display_tax_label == 1}&nbsp;{if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}{/if}{/if}</span>
+										<span id="old_price_display">{if $productPriceWithoutReduction > $productPrice}<span class="price">{convertPrice price=$productPriceWithoutReduction}</span>{if $tax_enabled && $display_tax_label == 1} {if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}{/if}{/if}</span>
 									{/if}
 								{/strip}</p>
 								{if $priceDisplay == 2}
 									<br />
 									<span id="pretaxe_price">{strip}
-										<span id="pretaxe_price_display">{convertPrice price=$product->getPrice(false, $smarty.const.NULL)}</span>&nbsp;{l s='tax excl.'}
+										<span id="pretaxe_price_display">{convertPrice price=$product->getPrice(false, $smarty.const.NULL)}</span> {l s='tax excl.'}
 									{/strip}</span>
 								{/if}
 							</div> <!-- end prices -->
