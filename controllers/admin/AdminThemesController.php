@@ -1536,7 +1536,7 @@ class AdminThemesControllerCore extends AdminController
 		return false;
 	}
 
-	protected function installTheme($theme_dir, $sandbox = false, $redirect = true)
+	protected function installTheme($theme_dir, $sandbox = false)
 	{
 		if (!$sandbox)
 		{
@@ -1550,16 +1550,6 @@ class AdminThemesControllerCore extends AdminController
 		if (!$this->checkXmlFields($xml_file))
 			$this->errors[] = $this->l('Bad configuration file');
 		else
-			$this->installTheme('uploaded', $sandbox);
-
-		if (!count($this->errors))
-			return $theme->directory;
-		return false;
-	}
-
-	protected function installTheme($theme_dir, $sandbox = false)
-	{
-		if (!$sandbox)
 		{
 			$imported_theme = $this->importThemeXmlConfig(simplexml_load_file($xml_file));
 			foreach ($imported_theme as $theme)
