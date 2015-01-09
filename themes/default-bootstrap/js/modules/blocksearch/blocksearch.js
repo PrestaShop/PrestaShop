@@ -28,8 +28,43 @@ $(document).ready(function()
 {
 	if (typeof blocksearch_type == 'undefined')
 		return;
-	if (typeof instantsearch != 'undefined' && instantsearch)		
-		$("#search_query_" + blocksearch_type).keyup(function(){
+
+	var $input = $("#search_query_" + blocksearch_type);
+
+	var width_ac_results = 	$input.parent('form').width();
+	if (typeof ajaxsearch != 'undefined' && ajaxsearch) {
+		$input.autocomplete(
+			search_url,
+			{
+				minChars: 3,
+				max: 10,
+				width: (width_ac_results > 0 ? width_ac_results : 500),
+				selectFirst: false,
+				scroll: false,
+				dataType: "json",
+				formatItem: function(data, i, max, value, term) {
+					return value;
+				},
+				parse: function(data) {
+					var mytab = [];
+					for (var i = 0; i < data.length; i++)
+						mytab[mytab.length] = { data: data[i], value: data[i].cname + ' > ' + data[i].pname };
+					return mytab;
+				},
+				extraParams: {
+					ajaxSearch: 1,
+					id_lang: id_lang
+				}
+			}
+		)
+		.result(function(event, data, formatted) {
+			$input.val(data.pname);
+			document.location.href = data.product_link;
+		});
+	}
+
+	if (typeof instantsearch != 'undefined' && instantsearch) {
+		$input.on('keyup', function(){
 			if($(this).val().length > 4)
 			{
 				stopInstantSearchQueries();
@@ -46,16 +81,14 @@ $(document).ready(function()
 					async: true,
 					cache: false,
 					success: function(data){
-						if($("#search_query_" + blocksearch_type).val().length > 0)
-						{
+						if ($input.val().length > 0) {
 							tryToCloseInstantSearch();
 							$('#center_column').attr('id', 'old_center_column');
-							$('#old_center_column').after('<div id="center_column" class="' + $('#old_center_column').attr('class') + '">'+data+'</div>');
-							$('#old_center_column').hide();
+							$('#old_center_column').after('<div id="center_column" class="' + $('#old_center_column').attr('class') + '">' + data + '</div>').hide();
 							// Button override
 							ajaxCart.overrideButtonsInThePage();
-							$("#instant_search_results a.close").click(function() {
-								$("#search_query_" + blocksearch_type).val('');
+							$("#instant_search_results a.close").on('click', function() {
+								$input.val('');
 								return tryToCloseInstantSearch();
 							});
 							return false;
@@ -69,54 +102,23 @@ $(document).ready(function()
 			else
 				tryToCloseInstantSearch();
 		});
-
-	/* TODO Ids aa blocksearch_type need to be removed*/
-	var width_ac_results = 	$("#search_query_" + blocksearch_type).parent('form').width();
-	if (typeof ajaxsearch != 'undefined' && ajaxsearch)
-		$("#search_query_" + blocksearch_type).autocomplete(
-			search_url,
-			{
-				minChars: 3,
-				max: 10,
-				width: (width_ac_results > 0 ? width_ac_results : 500),
-				selectFirst: false,
-				scroll: false,
-				dataType: "json",
-				formatItem: function(data, i, max, value, term) {
-					return value;
-				},
-				parse: function(data) {
-					var mytab = new Array();
-					for (var i = 0; i < data.length; i++)
-						mytab[mytab.length] = { data: data[i], value: data[i].cname + ' > ' + data[i].pname };
-					return mytab;
-				},
-				extraParams: {
-					ajaxSearch: 1,
-					id_lang: id_lang
-				}
-			}
-		)
-		.result(function(event, data, formatted) {
-			$('#search_query_' + blocksearch_type).val(data.pname);
-			document.location.href = data.product_link;
-		});
+	}
 });
 
 function tryToCloseInstantSearch()
 {
-	if ($('#old_center_column').length > 0)
+	var $oldCenterColumn = $('#old_center_column');
+	if ($oldCenterColumn.length > 0)
 	{
 		$('#center_column').remove();
-		$('#old_center_column').attr('id', 'center_column');
-		$('#center_column').show();
+		$oldCenterColumn.attr('id', 'center_column').show();
 		return false;
 	}
 }
 
 function stopInstantSearchQueries()
 {
-	for(i=0;i<instantSearchQueries.length;i++)
+	for(var i=0; i<instantSearchQueries.length; i++)
 		instantSearchQueries[i].abort();
-	instantSearchQueries = new Array();
+	instantSearchQueries = [];
 }
