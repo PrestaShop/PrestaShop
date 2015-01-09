@@ -33,7 +33,8 @@ if (typeof $.uniform.defaults !== 'undefined')
 
 $(document).ready(function(){
 	$(document).on('change', 'select[name=id_contact]', function(){
-		showElemFromSelect('id_contact', 'desc_contact')
+		$('.desc_contact').hide();
+		$('#desc_contact' + parseInt($(this).val())).show();
 	});
 
 	$(document).on('change', 'select[name=id_order]', function (){
