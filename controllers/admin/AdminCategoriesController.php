@@ -757,7 +757,8 @@ class AdminCategoriesControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('Failed to update the position.');
 		else
 		{
-			$object->regenerateEntireNtree();
+			// The regeneration of the nTree is done within the Category's processPosition
+			//$object->regenerateEntireNtree();
 			Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.(($id_category = (int)Tools::getValue($this->identifier, Tools::getValue('id_category_parent', 1))) ? ('&'.$this->identifier.'='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminCategories'));
 		}
 	}
