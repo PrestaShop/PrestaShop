@@ -846,6 +846,16 @@ table.table-product-discounts{
 		font-size: 26px;
 		line-height: 28px;
 	}
+	.price {
+		font-weight: 600;
+		font-size: 29px;
+		line-height: 32px;
+		color: $product-price-color;
+		@media (max-width: $screen-sm-max) { //max 991px
+			font-size: 26px;
+			line-height: 28px;
+		}
+	}
 }
 #old_price {
 	padding-bottom: 15px;
