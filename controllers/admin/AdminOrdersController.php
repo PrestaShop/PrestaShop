@@ -274,6 +274,7 @@ class AdminOrdersControllerCore extends AdminController
 				Tools::redirectAdmin($this->context->link->getAdminLink('AdminOrders'));
 
 			$this->toolbar_title[] = sprintf($this->l('Order %1$s from %2$s %3$s'), $order->reference, $customer->firstname, $customer->lastname);
+			$this->addMetaTitle($this->toolbar_title[count($this->toolbar_title) - 1]);
 
 			if ($order->hasBeenShipped())
 				$type = $this->l('Return products');
