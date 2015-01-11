@@ -111,7 +111,7 @@ class ConfigurationCore extends ObjectModel
 		if ($loaded !== null)
 			return $loaded;
 
-		if (isset(self::$_cache) && isset(self::$_cache['configuration']) && count(self::$_cache['configuration']))
+		if (isset(self::$_cache) && isset(self::$_cache[self::$definition['table']]) && count(self::$_cache[self::$definition['table']]))
 		{
 			$loaded = true;
 			return $loaded;
