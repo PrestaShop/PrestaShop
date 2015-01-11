@@ -310,8 +310,9 @@ CREATE TABLE `PREFIX_cart_product` (
   `id_product_attribute` int(10) unsigned DEFAULT NULL,
   `quantity` int(10) unsigned NOT NULL DEFAULT '0',
   `date_add` datetime NOT NULL,
-  KEY `cart_product_index` (`id_cart`,`id_product`),
-  KEY `id_product_attribute` (`id_product_attribute`)
+  PRIMARY KEY (`id_cart`,`id_product`,`id_product_attribute`,`id_address_delivery`),
+  KEY `id_product_attribute` (`id_product_attribute`),
+  KEY `id_cart_order` (`id_cart`, `date_add`, `id_product`, `id_product_attribute`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_category` (
@@ -676,7 +677,7 @@ CREATE TABLE `PREFIX_customization` (
   `in_cart` TINYINT(1) UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_customization`,`id_cart`,`id_product`, `id_address_delivery`),
   KEY `id_product_attribute` (`id_product_attribute`),
-  KEY `id_cart` (`id_cart`)
+  UNIQUE `id_cart_product` (`id_cart`, `id_product`, `id_product_attribute`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_customization_field` (
