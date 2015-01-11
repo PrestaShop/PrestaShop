@@ -772,7 +772,7 @@ class SearchCore
 
 		$sql .= ' ORDER BY position DESC'.($orderBy ? ', '.$orderBy : '').($orderWay ? ' '.$orderWay : '').'
 				LIMIT '.(int)(($pageNumber - 1) * $pageSize).','.(int)$pageSize;
-		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false))
+		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
 			return false;
 
 		foreach($result as $key => $product_result) {
