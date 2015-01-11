@@ -478,7 +478,7 @@ class CartCore extends ObjectModel
 						stock.`quantity` AS quantity_available, p.`width`, p.`height`, p.`depth`, stock.`out_of_stock`, p.`weight`,
 						p.`date_add`, p.`date_upd`, IFNULL(stock.quantity, 0) as quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
 						CONCAT(LPAD(cp.`id_product`, 10, 0), LPAD(IFNULL(cp.`id_product_attribute`, 0), 10, 0), IFNULL(cp.`id_address_delivery`, 0)) AS unique_id, cp.id_address_delivery,
-						product_shop.advanced_stock_management, ps.product_supplier_reference supplier_reference, IFNULL(sp.`reduction_type`, 0) AS reduction_type');
+						product_shop.advanced_stock_management, ps.product_supplier_reference supplier_reference');
 
 		// Build FROM
 		$sql->from('cart_product', 'cp');
@@ -498,8 +498,6 @@ class CartCore extends ObjectModel
 
 		$sql->leftJoin('product_supplier', 'ps', 'ps.`id_product` = cp.`id_product` AND ps.`id_product_attribute` = cp.`id_product_attribute` AND ps.`id_supplier` = p.`id_supplier`');
 
-		$sql->leftJoin('specific_price', 'sp', 'sp.`id_product` = cp.`id_product`'); // AND 'sp.`id_shop` = cp.`id_shop`
-
 		// @todo test if everything is ok, then refactorise call of this method
 		$sql->join(Product::sqlStock('cp', 'cp'));
 
@@ -509,11 +507,8 @@ class CartCore extends ObjectModel
 			$sql->where('cp.`id_product` = '.(int)$id_product);
 		$sql->where('p.`id_product` IS NOT NULL');
 
-		// Build GROUP BY
-		$sql->groupBy('unique_id');
-
 		// Build ORDER BY
-		$sql->orderBy('cp.`date_add`, p.`id_product`, cp.`id_product_attribute` ASC');
+		$sql->orderBy('cp.`date_add`, cp.`id_product`, cp.`id_product_attribute` ASC');
 
 		if (Customization::isFeatureActive())
 		{
@@ -532,15 +527,12 @@ class CartCore extends ObjectModel
 				(p.`weight`+ pa.`weight`) weight_attribute,
 				IF (IFNULL(pa.`ean13`, \'\') = \'\', p.`ean13`, pa.`ean13`) AS ean13,
 				IF (IFNULL(pa.`upc`, \'\') = \'\', p.`upc`, pa.`upc`) AS upc,
-				pai.`id_image` as pai_id_image, il.`legend` as pai_legend,
 				IFNULL(product_attribute_shop.`minimal_quantity`, product_shop.`minimal_quantity`) as minimal_quantity,
 				IF(product_attribute_shop.wholesale_price > 0,  product_attribute_shop.wholesale_price, product_shop.`wholesale_price`) wholesale_price
 			');
 
 			$sql->leftJoin('product_attribute', 'pa', 'pa.`id_product_attribute` = cp.`id_product_attribute`');
 			$sql->leftJoin('product_attribute_shop', 'product_attribute_shop', '(product_attribute_shop.`id_shop` = cp.`id_shop` AND product_attribute_shop.`id_product_attribute` = pa.`id_product_attribute`)');
-			$sql->leftJoin('product_attribute_image', 'pai', 'pai.`id_product_attribute` = pa.`id_product_attribute`');
-			$sql->leftJoin('image_lang', 'il', 'il.`id_image` = pai.`id_image` AND il.`id_lang` = '.(int)$this->id_lang);
 		}
 		else
 			$sql->select(
@@ -553,10 +545,27 @@ class CartCore extends ObjectModel
 		$products_ids = array();
 		$pa_ids = array();
 		if ($result)
-			foreach ($result as $row)
+			foreach ($result as $key => $row)
 			{
 				$products_ids[] = $row['id_product'];
 				$pa_ids[] = $row['id_product_attribute'];
+				$specific_price = SpecificPrice::getSpecificPrice($id_product, $this->id_shop, $this->id_currency, $id_country, $this->id_shop_group, $row['cart_quantity'], $row['id_product_attribute'], $this->id_customer, $this->id);
+				if ($specific_price) {
+					$reduction_type_row = array('reduction_type' => $specific_price['reduction_type']);
+				} else {
+					$reduction_type_row = array('reduction_type' => 0);
+				}
+
+				if (Combination::isFeatureActive() && $row['id_product_attribute']) {
+					$sql          = 'SELECT MAX(pai.`id_image`) as pai_id_image, il.`legend` as pai_legend
+									FROM `'._DB_PREFIX_.'product_attribute_image` pai
+									LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (pai.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$this->id_lang.')
+									WHERE pai.`id_product_attribute`='.(int)$row['id_product_attribute'];
+					$image_row    = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
+				} else {
+					$image_row 	  = array('pai_id_image' => NULL, 'pai_legend' => NULL);
+				}
+				$result[$key] = array_merge($row, $image_row, $reduction_type_row);
 			}
 		// Thus you can avoid one query per product, because there will be only one query for all the products of the cart
 		Product::cacheProductsFeatures($products_ids);

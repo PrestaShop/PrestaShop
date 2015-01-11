@@ -2547,6 +2547,30 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
+	* Get product cover image & legend
+	*
+	* @return array Product cover image & legend
+	*/
+	public static function getCoverLegend($id_product, $id_lang, Context $context = null)
+	{
+		if (!$context)
+			$context = Context::getContext();
+		$cache_id = 'Product::getCoverLegend_'.(int)$id_product.'-'.(int)$context->shop->id;
+		if (!Cache::isStored($cache_id))
+		{
+			$sql = 'SELECT image_shop.`id_image`, il.`legend`
+					FROM `'._DB_PREFIX_.'image` i
+					'.Shop::addSqlAssociation('image', 'i').'
+					LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
+					WHERE i.`id_product` = '.(int)$id_product.'
+					AND image_shop.`cover` = 1';
+			$result = Db::getInstance()->getRow($sql);
+			Cache::store($cache_id, $result);
+		}
+		return Cache::retrieve($cache_id);
+	}
+
+	/**
 	* Get product price
 	*
 	* @param integer $id_product Product id
