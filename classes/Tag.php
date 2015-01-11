@@ -136,7 +136,7 @@ class TagCore extends ObjectModel
 			$groups = FrontController::getCurrentCustomerGroups();
 			$sql_groups = '
 			AND p.`id_product` IN (
-				SELECT cp.`id_product`
+				SELECT DISTINCT cp.`id_product`
 				FROM `'._DB_PREFIX_.'category_product` cp
 				LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.`id_category` = cg.`id_category`)
 				WHERE cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1').'
