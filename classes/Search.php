@@ -721,14 +721,14 @@ class SearchCore
 						AND t.`name` LIKE \'%'.pSQL($tag).'%\'';
 			if (Group::isFeatureActive())
 			{
-				$sql .= ' AND EXISTS(SELECT 1 FROM `'._DB_PREFIX_.'category_product` cp
+				$sql .= ' AND p.id_product IN (SELECT DISTINCT cp.`id_product` FROM `'._DB_PREFIX_.'category_product` cp
 					LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.id_category = cg.id_category)
 					LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cp.`id_category` = cs.`id_category`)
-					WHERE cp.`id_product` = p.`id_product` AND cs.`id_shop` = '.(int)$id_shop.' '.$sql_groups.')';
+					WHERE cs.`id_shop` = '.(int)$id_shop.' '.$sql_groups.')';
 			} else {
-				$sql .= ' AND EXISTS(SELECT 1 FROM `'._DB_PREFIX_.'category_product` cp
+				$sql .= ' AND p.id_product IN (SELECT DISTINCT cp.`id_product` FROM `'._DB_PREFIX_.'category_product` cp
 					LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cp.`id_category` = cs.`id_category`)
-					WHERE cp.`id_product` = p.`id_product` AND cs.`id_shop` = '.(int)$id_shop.')';
+					WHERE cs.`id_shop` = '.(int)$id_shop.')';
 			}
 
 			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
