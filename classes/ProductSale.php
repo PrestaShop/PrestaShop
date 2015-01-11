@@ -119,12 +119,7 @@ class ProductSaleCore
 
 
 		foreach($result as $key => $product_result) {
-			$sql = 'SELECT MAX(image_shop.`id_image`) id_image, il.`legend`
-							FROM `'._DB_PREFIX_.'image` i
-					'.Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
-							LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
-					WHERE i.`id_product`='.(int)$product_result['id_product'];
-			$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
+			$row = Product::getCoverLegend($product_result['id_product'], $id_lang);
 
 			if (Combination::isFeatureActive()) {
 				$sql = 'SELECT MAX(product_attribute_shop.minimal_quantity) AS product_attribute_minimal_quantity
@@ -206,13 +201,7 @@ class ProductSaleCore
 					WHERE pa.`id_product`='.(int)$product_result['id_product'];
 			$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 
-			$sql = 'SELECT MAX(image_shop.`id_image`) id_image, il.`legend`
-							FROM `'._DB_PREFIX_.'image` i
-					'.Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
-							LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
-					WHERE i.`id_product`='.(int)$product_result['id_product'];
-			$row1 = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
-
+			$row1 = Product::getCoverLegend($product_result['id_product'], $id_lang);
 
 			$result[$key] = array_merge($product_result, $row, $row1);
 		}
