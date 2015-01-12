@@ -529,7 +529,7 @@ abstract class DbCore
 		}
 
 		$this->last_cached = false;
-		if ($use_cache && $this->is_cache_enabled)
+		if ($use_cache && $this->is_cache_enabled && $array)
 			Cache::getInstance()->setQuery($sql, $result);
 		return $result;
 	}
