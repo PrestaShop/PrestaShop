@@ -2134,17 +2134,25 @@ class OrderCore extends ObjectModel
 		// compute products discount
 		$order_discount_tax_excl = $this->total_discounts_tax_excl;
 
+		$free_shipping_tax = 0;
 		foreach ($this->getCartRules() as $cart_rule)
 		{
 			if ($cart_rule['free_shipping'])
 			{
+				// ddd("order_discount_tax_excl: $order_discount_tax_excl   total_shipping_tax_excl: {$this->total_shipping_tax_excl}");
+				$free_shipping_tax = $this->total_shipping_tax_incl - $this->total_shipping_tax_excl;
 				$order_discount_tax_excl -= $this->total_shipping_tax_excl;
 				break;
 			}
 		}
 
 
-		$expected_total_tax = ($this->total_products_wt - $this->total_products) - ($this->total_discounts_tax_incl - $this->total_discounts_tax_excl);
+		$products_tax 	= $this->total_products_wt - $this->total_products;
+		$discounts_tax 	= $this->total_discounts_tax_incl - $this->total_discounts_tax_excl;
+
+		// We add $free_shipping_tax because when there is free shipping, the tax that would
+		// be paid if there wasn't is included in $discounts_tax.  
+		$expected_total_tax = $products_tax - $discounts_tax + $free_shipping_tax;
 		$actual_total_tax = 0;
 
 		$order_detail_tax_rows_to_insert = array();
