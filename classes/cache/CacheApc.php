@@ -43,6 +43,37 @@ class CacheApcCore extends Cache
 	}
 
 	/**
+	 * Delete one or several data from cache (* joker can be used, but avoid it !)
+	 * 	E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
+	 *
+	 * @param string $key
+	 * @return bool
+	 */
+	public function delete($key)
+	{
+		if ($key == '*') {
+			$this->flush();
+		} elseif (strpos($key, '*') === false) {
+			$this->_delete($key);
+		} else {
+			$pattern = str_replace('\\*', '.*', preg_quote($key));
+
+			$cache_info = apc_cache_info((extension_loaded('apcu') === true) ? '' : 'user');
+			foreach ($cache_info['cache_list'] as $entry) {
+				if (extension_loaded('apcu') === true) {
+					$key = $entry['key'];
+				} else {
+					$key = $entry['info'];
+				}
+				if (preg_match('#^'.$pattern.'$#', $key)) {
+					$this->_delete($key);
+				}
+			}
+		}
+		return true;
+	}
+
+	/**
 	 * @see Cache::_set()
 	 */
 	protected function _set($key, $value, $ttl = 0)
