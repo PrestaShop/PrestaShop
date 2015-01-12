@@ -329,11 +329,11 @@ CREATE TABLE `PREFIX_category` (
   `is_root_category` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_category`),
   KEY `category_parent` (`id_parent`),
-  KEY `nleftright` (`nleft`, `nright`),
   KEY `nleftrightactive` (`nleft`, `nright`, `active`),
   KEY `level_depth` (`level_depth`),
   KEY `nright` (`nright`),
-  KEY `nleft` (`nleft`)
+  KEY `activenleft` (`active`,`nleft`),
+  KEY `activenright` (`active`,`nright`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_category_group` (
