@@ -42,7 +42,7 @@ function addToCompare(productId)
 		action = 'add';
 	else
 		action = 'remove';
-console.log(baseUri + '?controller=products-comparison&ajax=1&action=' + action + '&id_product=' + productId);
+
 	$.ajax({
 		url: baseUri + '?controller=products-comparison&ajax=1&action=' + action + '&id_product=' + productId,
 		async: true,
