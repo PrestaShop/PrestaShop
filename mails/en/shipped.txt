@@ -3,12 +3,11 @@
 
 Hi {firstname} {lastname},
 
-Thank you for shopping with {shop_name}! 
+Your order has been shipped 
 
 Your order with the reference {order_name} has been shipped.
 
-You will soon receive a link to track the delivery progress of your
-package. 		 
+Thank you for shopping with {shop_name}! 		 
 
 You can review your order and download your invoice from the
 "Order history" [{history_url}] section of your

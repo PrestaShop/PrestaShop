@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -133,10 +133,22 @@ class AdminSearchConfControllerCore extends AdminController
 						'cast' => 'intval',
 						'type' => 'bool',
 						'desc' => $this->l('By default, to search for “blouse”, you have to enter “blous”, “blo”, etc (beginning of the word) – but not “lous” (within the word).').'<br/>'.
-	    						  $this->l('With this function enabled, it also gives the good result if you search for “lous”, “ouse”, or anything contained in the word.'),
+								  $this->l('With this option enabled, it also gives the good result if you search for “lous”, “ouse”, or anything contained in the word.'),
 						'hint' => array(
 							$this->l('Enable search within a whole word, rather than from its beginning only.'),
 							$this->l('It checks if the searched term is contained in the indexed word. This may be resource-consuming.')
+						)
+					),
+					'PS_SEARCH_END' => array(
+						'title' => $this->l('Search exact end match'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool',
+						'desc' => $this->l('By default, if you search "book", you will have "book", "bookcase" and "bookend".').'<br/>'.
+								  $this->l('With this option enabled, it only gives one result “book”, as exact end of the indexed word is matching.'),
+						'hint' => array(
+							$this->l('Enable more precise search with the end of the word.'),
+							$this->l('It checks if the searched term is the exact end of the indexed word.')
 						)
 					),
 					'PS_SEARCH_MINWORDLEN' => array(

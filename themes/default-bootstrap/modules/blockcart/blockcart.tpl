@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -116,7 +116,7 @@
 							{l s='No products' mod='blockcart'}
 						</p>
 						{if $discounts|@count > 0}
-							<table class="vouchers"{if $discounts|@count == 0} style="display:none;"{/if}>
+							<table class="vouchers{if $discounts|@count == 0} unvisible{/if}">
 								{foreach from=$discounts item=discount}
 									{if $discount.value_real > 0}
 										<tr class="bloc_cart_voucher" data-id="bloc_cart_voucher_{$discount.id_discount}">
@@ -141,14 +141,14 @@
 						{/if}
 						<div class="cart-prices">
 							<div class="cart-prices-line first-line">
-								<span class="price cart_block_shipping_cost ajax_cart_shipping_cost">
+								<span class="price cart_block_shipping_cost ajax_cart_shipping_cost{if !($page_name == 'order-opc') && $shipping_cost_float == 0 && (!isset($cart->id_address_delivery) || !$cart->id_address_delivery)} unvisible{/if}">
 									{if $shipping_cost_float == 0}
-										{l s='Free shipping!' mod='blockcart'}
+										 {if !($page_name == 'order-opc') && (!isset($cart->id_address_delivery) || !$cart->id_address_delivery)}{l s='To be determined' mod='blockcart'}{else}{l s='Free shipping!' mod='blockcart'}{/if}
 									{else}
 										{$shipping_cost}
 									{/if}
 								</span>
-								<span>
+								<span{if !($page_name == 'order-opc') && $shipping_cost_float == 0 && (!isset($cart->id_address_delivery) || !$cart->id_address_delivery)} class="unvisible"{/if}>
 									{l s='Shipping' mod='blockcart'}
 								</span>
 							</div>
@@ -235,7 +235,7 @@
 						{l s='There is 1 item in your cart.' mod='blockcart'}
 					</span>
 				</h2>
-	
+
 				<div class="layer_cart_row">
 					<strong class="dark">
 						{l s='Total products' mod='blockcart'}
@@ -253,7 +253,7 @@
 						{/if}
 					</span>
 				</div>
-	
+
 				{if $show_wrapping}
 					<div class="layer_cart_row">
 						<strong class="dark">
@@ -276,12 +276,12 @@
 					</div>
 				{/if}
 				<div class="layer_cart_row">
-					<strong class="dark">
+					<strong class="dark{if $shipping_cost_float == 0 && (!isset($cart->id_address_delivery) || !$cart->id_address_delivery)} unvisible{/if}">
 						{l s='Total shipping' mod='blockcart'}&nbsp;{if $display_tax_label}{if $priceDisplay == 1}{l s='(tax excl.)' mod='blockcart'}{else}{l s='(tax incl.)' mod='blockcart'}{/if}{/if}
 					</strong>
-					<span class="ajax_cart_shipping_cost">
+					<span class="ajax_cart_shipping_cost{if $shipping_cost_float == 0 && (!isset($cart->id_address_delivery) || !$cart->id_address_delivery)} unvisible{/if}">
 						{if $shipping_cost_float == 0}
-							{l s='Free shipping!' mod='blockcart'}
+							 {if (!isset($cart->id_address_delivery) || !$cart->id_address_delivery)}{l s='To be determined' mod='blockcart'}{else}{l s='Free shipping!' mod='blockcart'}{/if}
 						{else}
 							{$shipping_cost}
 						{/if}
@@ -293,7 +293,7 @@
 						<span class="price cart_block_tax_cost ajax_cart_tax_cost">{$tax_cost}</span>
 					</div>
 				{/if}
-				<div class="layer_cart_row">	
+				<div class="layer_cart_row">
 					<strong class="dark">
 						{l s='Total' mod='blockcart'}
 						{if $display_tax_label}
@@ -314,7 +314,7 @@
 						{/if}
 					</span>
 				</div>
-				<div class="button-container">	
+				<div class="button-container">
 					<span class="continue btn btn-default button exclusive-medium" title="{l s='Continue shopping' mod='blockcart'}">
 						<span>
 							<i class="icon-chevron-left left"></i>{l s='Continue shopping' mod='blockcart'}
@@ -324,7 +324,7 @@
 						<span>
 							{l s='Proceed to checkout' mod='blockcart'}<i class="icon-chevron-right right"></i>
 						</span>
-					</a>	
+					</a>
 				</div>
 			</div>
 		</div>
@@ -337,11 +337,13 @@
 {addJsDef img_dir=$img_dir|escape:'quotes':'UTF-8'}
 {addJsDef generated_date=$smarty.now|intval}
 {addJsDef ajax_allowed=$ajax_allowed|boolval}
+{addJsDef hasDeliveryAddress=(isset($cart->id_address_delivery) && $cart->id_address_delivery)}
 
 {addJsDefL name=customizationIdMessage}{l s='Customization #' mod='blockcart' js=1}{/addJsDefL}
 {addJsDefL name=removingLinkText}{l s='remove this product from my cart' mod='blockcart' js=1}{/addJsDefL}
 {addJsDefL name=freeShippingTranslation}{l s='Free shipping!' mod='blockcart' js=1}{/addJsDefL}
 {addJsDefL name=freeProductTranslation}{l s='Free!' mod='blockcart' js=1}{/addJsDefL}
 {addJsDefL name=delete_txt}{l s='Delete' mod='blockcart' js=1}{/addJsDefL}
+{addJsDefL name=toBeDetermined}{l s='To be determined' mod='blockcart' js=1}{/addJsDefL}
 {/strip}
 <!-- /MODULE Block cart -->

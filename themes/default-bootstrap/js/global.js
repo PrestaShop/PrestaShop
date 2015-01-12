@@ -1,5 +1,5 @@
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -55,7 +55,7 @@ $(document).ready(function(){
 			$(this.form).submit();
 		});
 
-		$(document).on('change', 'select[name="currency_payement"]', function(){
+		$(document).on('change', 'select[name="currency_payment"]', function(){
 			setCurrency($(this).val());
 		});
 	}
@@ -170,10 +170,11 @@ function blockHover(status)
 {
 	var screenLg = $('body').find('.container').width() == 1170;
 
-	if (screenLg)
-		$('.product_list .button-container').hide();
-	else
-		$('.product_list .button-container').show();
+	if ($('.product_list').is('.grid'))
+		if (screenLg)
+			$('.product_list .button-container').hide();
+		else
+			$('.product_list .button-container').show();
 
 	$(document).off('mouseenter').on('mouseenter', '.product_list.grid li.ajax_block_product .product-container', function(e){
 		if (screenLg)

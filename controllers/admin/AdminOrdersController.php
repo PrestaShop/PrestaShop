@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -274,6 +274,7 @@ class AdminOrdersControllerCore extends AdminController
 				Tools::redirectAdmin($this->context->link->getAdminLink('AdminOrders'));
 
 			$this->toolbar_title[] = sprintf($this->l('Order %1$s from %2$s %3$s'), $order->reference, $customer->firstname, $customer->lastname);
+			$this->addMetaTitle($this->toolbar_title[count($this->toolbar_title) - 1]);
 
 			if ($order->hasBeenShipped())
 				$type = $this->l('Return products');

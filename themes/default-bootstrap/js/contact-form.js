@@ -1,5 +1,5 @@
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -33,7 +33,8 @@ if (typeof $.uniform.defaults !== 'undefined')
 
 $(document).ready(function(){
 	$(document).on('change', 'select[name=id_contact]', function(){
-		showElemFromSelect('id_contact', 'desc_contact')
+		$('.desc_contact').hide();
+		$('#desc_contact' + parseInt($(this).val())).show();
 	});
 
 	$(document).on('change', 'select[name=id_order]', function (){

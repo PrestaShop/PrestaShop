@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -270,14 +270,17 @@ class AdminFeaturesControllerCore extends AdminController
 		{
 			case 'edit':
 				$bread_extended[] = $this->l('Edit New Feature');
+				$this->addMetaTitle($bread_extended[count($bread_extended) - 1]);
 				break;
 
 			case 'add':
 				$bread_extended[] = $this->l('Add New Feature');
+				$this->addMetaTitle($bread_extended[count($bread_extended) - 1]);
 				break;
 
 			case 'view':
 				$bread_extended[] = $this->feature_name[$this->context->employee->id_lang];
+				$this->addMetaTitle($bread_extended[count($bread_extended) - 1]);
 				break;
 
 			case 'editFeatureValue':
@@ -296,6 +299,9 @@ class AdminFeaturesControllerCore extends AdminController
 				}
 				else
 					$bread_extended[] = $this->l('Add New Value');
+
+				if (count($bread_extended) > 0)
+					$this->addMetaTitle($bread_extended[count($bread_extended) - 1]);
 				break;
 		}
 

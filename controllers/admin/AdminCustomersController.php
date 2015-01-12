@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -223,20 +223,27 @@ class AdminCustomersControllerCore extends AdminController
 		{
 			case '':
 			case 'list':
+				array_pop($this->toolbar_title);
 				$this->toolbar_title[] = $this->l('Manage your Customers');
 				break;
 			case 'view':
 				if (($customer = $this->loadObject(true)) && Validate::isLoadedObject($customer))
+					array_pop($this->toolbar_title);
 					$this->toolbar_title[] = sprintf('Information about Customer: %s', Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname);
 				break;
 			case 'add':
 			case 'edit':
+				array_pop($this->toolbar_title);
 				if (($customer = $this->loadObject(true)) && Validate::isLoadedObject($customer))
 					$this->toolbar_title[] = sprintf($this->l('Editing Customer: %s'), Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname);
 				else
 					$this->toolbar_title[] = $this->l('Creating a new Customer');
 				break;
 		}
+
+		array_pop($this->meta_title);
+		if (count($this->toolbar_title) > 0)
+			$this->addMetaTitle($this->toolbar_title[count($this->toolbar_title) - 1]);
 	}
 
 	public function initPageHeaderToolbar()

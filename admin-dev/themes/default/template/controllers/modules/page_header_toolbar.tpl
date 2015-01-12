@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -56,9 +56,16 @@
 				</a>
 			</li>
 			{/if}
-			{if $add_permission eq '1' && (!$host_mode || $is_contributor)}
+			{if $add_permission eq '1' && ($context_mode != Context::MODE_HOST)}
 			<li>
-				<a id="desc-module-new" class="toolbar_btn anchor" href="#module_install" onclick="$('#module_install').slideToggle();" title="{l s='Add a new module'}">
+				<a id="desc-module-new" class="toolbar_btn anchor" href="#" onclick="$('#module_install').slideToggle();" title="{l s='Add a new module'}">
+					<i class="process-icon-new"></i>
+					<div>{l s='Add a new module'}</div>
+				</a>
+			</li>
+			{else}
+			<li>
+				<a id="desc-module-new" class="toolbar_btn" href="{$link->getAdminLink('AdminModules')}&addnewmodule" title="{l s='Add a new module'}">
 					<i class="process-icon-new"></i>
 					<div>{l s='Add a new module'}</div>
 				</a>

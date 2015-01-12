@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -54,8 +54,9 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 	 */
 	public function getContent()
 	{
-		$country = new Country((int)$this->order->id_address_invoice);
 		$invoice_address = new Address((int)$this->order->id_address_invoice);
+		$country = new Country((int)$invoice_address->id_country);
+
 		$formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
 		$formatted_delivery_address = '';
 

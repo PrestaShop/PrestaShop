@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -57,7 +57,7 @@
 				<div class="col-xs-12 col-md-3">
 					<div class="form-group selector1">
 						<label for="id_contact">{l s='Subject Heading'}</label>
-					{if isset($customerThread.id_contact)}
+					{if isset($customerThread.id_contact) && $customerThread.id_contact}
 							{foreach from=$contacts item=contact}
 								{if $contact.id_contact == $customerThread.id_contact}
 									<input type="text" class="form-control" id="contact_name" name="contact_name" value="{$contact.name|escape:'html':'UTF-8'}" readonly="readonly" />
@@ -69,13 +69,13 @@
 						<select id="id_contact" class="form-control" name="id_contact">
 							<option value="0">{l s='-- Choose --'}</option>
 							{foreach from=$contacts item=contact}
-								<option value="{$contact.id_contact|intval}" {if isset($smarty.request.id_contact) && $smarty.request.id_contact == $contact.id_contact}selected="selected"{/if}>{$contact.name|escape:'html':'UTF-8'}</option>
+								<option value="{$contact.id_contact|intval}"{if isset($smarty.request.id_contact) && $smarty.request.id_contact == $contact.id_contact} selected="selected"{/if}>{$contact.name|escape:'html':'UTF-8'}</option>
 							{/foreach}
 						</select>
 					</div>
-						<p id="desc_contact0" class="desc_contact">&nbsp;</p>
+						<p id="desc_contact0" class="desc_contact{if isset($smarty.request.id_contact)} unvisible{/if}">&nbsp;</p>
 						{foreach from=$contacts item=contact}
-							<p id="desc_contact{$contact.id_contact|intval}" class="desc_contact contact-title" style="display:none;">
+							<p id="desc_contact{$contact.id_contact|intval}" class="desc_contact contact-title{if !isset($smarty.request.id_contact) || $smarty.request.id_contact|intval != $contact.id_contact|intval} unvisible{/if}">
 								<i class="icon-comment-alt"></i>{$contact.description|escape:'html':'UTF-8'}
 							</p>
 						{/foreach}

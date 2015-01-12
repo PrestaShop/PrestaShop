@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -41,7 +41,7 @@ class AdminControllerCore extends Controller
 	public $layout = 'layout.tpl';
 	public $bootstrap = false;
 
-	protected $meta_title;
+	protected $meta_title = array();
 
 	public $template = 'content.tpl';
 
@@ -397,12 +397,12 @@ class AdminControllerCore extends Controller
 		if (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)
 		{
 			if (isset($this->context->cookie->is_contributor) && (int)$this->context->cookie->is_contributor === 1)
-				$this->context->mode = Context::MODE_CONTRIB_HOST;
+				$this->context->mode = Context::MODE_HOST_CONTRIB;
 			else
 				$this->context->mode = Context::MODE_HOST;
 		}
 		elseif (isset($this->context->cookie->is_contributor) && (int)$this->context->cookie->is_contributor === 1)
-			$this->context->mode = Context::MODE_CONTRIB;
+			$this->context->mode = Context::MODE_STD_CONTRIB;
 		else
 			$this->context->mode = Context::MODE_STD;
 
@@ -434,6 +434,7 @@ class AdminControllerCore extends Controller
 		);
 		if (isset($tabs[0]))
 		{
+			$this->addMetaTitle($tabs[0]['name']);
 			$breadcrumbs2['tab']['name'] = $tabs[0]['name'];
 			$breadcrumbs2['tab']['href'] = __PS_BASE_URI__.basename(_PS_ADMIN_DIR_ ).'/'.$this->context->link->getAdminLink($tabs[0]['class_name']);
 			if (!isset($tabs[1]))
@@ -502,15 +503,18 @@ class AdminControllerCore extends Controller
 		switch ($this->display)
 		{
 			case 'edit':
-				$this->toolbar_title[] = $this->l('Edit', null, null, false);
+				$this->toolbar_title[] = $this->l('Edit', null, null,  false);
+				$this->addMetaTitle($this->l('Edit', null, null, false));
 				break;
 
 			case 'add':
 				$this->toolbar_title[] = $this->l('Add new', null, null, false);
+				$this->addMetaTitle($this->l('Add new', null, null, false));
 				break;
 
 			case 'view':
 				$this->toolbar_title[] = $this->l('View', null, null, false);
+				$this->addMetaTitle($this->l('View', null, null, false));
 				break;
 		}
 
@@ -1305,7 +1309,9 @@ class AdminControllerCore extends Controller
 				if (Validate::isLoadedObject($obj) && isset($obj->{$this->identifier_name}) && !empty($obj->{$this->identifier_name}))
 				{
 					array_pop($this->toolbar_title);
+					array_pop($this->meta_title);
 					$this->toolbar_title[] = is_array($obj->{$this->identifier_name}) ? $obj->{$this->identifier_name}[$this->context->employee->id_lang] : $obj->{$this->identifier_name};
+					$this->addMetaTitle($this->toolbar_title[count($this->toolbar_title) - 1]);
 				}
 				break;
 			case 'edit':
@@ -1313,8 +1319,10 @@ class AdminControllerCore extends Controller
 				if (Validate::isLoadedObject($obj) && isset($obj->{$this->identifier_name}) && !empty($obj->{$this->identifier_name}))
 				{
 					array_pop($this->toolbar_title);
+					array_pop($this->meta_title);
 					$this->toolbar_title[] = sprintf($this->l('Edit: %s'),
 						is_array($obj->{$this->identifier_name}) ? $obj->{$this->identifier_name}[$this->context->employee->id_lang] : $obj->{$this->identifier_name});
+					$this->addMetaTitle($this->toolbar_title[count($this->toolbar_title) - 1]);
 				}
 				break;
 		}
@@ -1325,10 +1333,11 @@ class AdminControllerCore extends Controller
 			$this->show_page_header_toolbar = true;
 
 		if (empty($this->page_header_toolbar_title))
-			$this->page_header_toolbar_title = array_pop($this->toolbar_title);
+			$this->page_header_toolbar_title = $this->toolbar_title[count($this->toolbar_title) - 1];
 		$this->addPageHeaderToolBarModulesListButton();
 
-		$this->context->smarty->assign('help_link', 'http://help.prestashop.com/'.$this->context->language->iso_code.'/doc/'.Tools::getValue('controller').'?version='._PS_VERSION_.'&country='.$this->context->country->iso_code);
+		$this->context->smarty->assign('help_link', 'http://help.prestashop.com/'.Language::getIsoById($this->context->employee->id_lang).'/doc/'
+			.Tools::getValue('controller').'?version='._PS_VERSION_.'&country='.Language::getIsoById($this->context->employee->id_lang));
 	}
 
 	/**
@@ -1496,7 +1505,9 @@ class AdminControllerCore extends Controller
 
 		// Use page title from meta_title if it has been set else from the breadcrumbs array
 		if (!$this->meta_title)
-			$this->meta_title = strip_tags(is_array($this->toolbar_title) ? implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $this->toolbar_title) : $this->toolbar_title);
+			$this->meta_title = $this->toolbar_title;
+		if (is_array($this->meta_title))
+			$this->meta_title = strip_tags(implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ', $this->meta_title));
 		$this->context->smarty->assign('meta_title', $this->meta_title);
 
 		$template_dirs = $this->context->smarty->getTemplateDir();
@@ -3967,5 +3978,16 @@ class AdminControllerCore extends Controller
 		Context::getContext()->override_controller_name_for_translations = 'AdminModules';
 		$this->smartyOutputContent('controllers/modules/quickview.tpl');
 		die(1);
+	}
+
+	/**
+	 * Add an entry to the meta title.
+	 * @param string $entry New entry.
+	 */
+	public function addMetaTitle($entry)
+	{
+		// Only add entry if the meta title was not forced.
+		if (is_array($this->meta_title))
+			$this->meta_title[] = $entry;
 	}
 }

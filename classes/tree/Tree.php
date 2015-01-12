@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -220,17 +220,21 @@ class TreeCore
 	public function getTemplateFile($template)
 	{
 		if (preg_match_all('/((?:^|[A-Z])[a-z]+)/', get_class($this->getContext()->controller), $matches) !== FALSE)
-			$controllerName = strtolower($matches[0][1]);
-
-		if ($this->getContext()->controller instanceof ModuleAdminController && file_exists($this->_normalizeDirectory(
+			$controller_name = strtolower($matches[0][1]);
+		
+		if ($this->getContext()->controller instanceof ModuleAdminController && isset($controller_name) && file_exists($this->_normalizeDirectory(
+				$this->getContext()->controller->getTemplatePath()).$controller_name.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template))
+			return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath()).
+				$controller_name.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template;
+		elseif ($this->getContext()->controller instanceof ModuleAdminController && file_exists($this->_normalizeDirectory(
 				$this->getContext()->controller->getTemplatePath()).$this->getTemplateDirectory().$template))
 			return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath())
 				.$this->getTemplateDirectory().$template;
-		elseif ($this->getContext()->controller instanceof AdminController && isset($controllerName)
+		elseif ($this->getContext()->controller instanceof AdminController && isset($controller_name)
 			&& file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)).'controllers'
-				.DIRECTORY_SEPARATOR.$controllerName.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template))
+				.DIRECTORY_SEPARATOR.$controller_name.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template))
 			return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)).'controllers'
-				.DIRECTORY_SEPARATOR.$controllerName.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template;
+				.DIRECTORY_SEPARATOR.$controller_name.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template;
 		elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
 				.$this->getTemplateDirectory().$template))
 			return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
