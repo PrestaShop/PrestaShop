@@ -257,9 +257,9 @@ class AdminThemesControllerCore extends AdminController
 				$theme_metas = Db::getInstance()->executeS('SELECT ml.`title`, m.`page`, tm.`left_column` as `left`, tm.`right_column` as `right`, m.`id_meta`, tm.`id_theme_meta`
 					FROM '._DB_PREFIX_.'theme_meta as tm
 					LEFT JOIN '._DB_PREFIX_.'meta m ON (m.`id_meta` = tm.`id_meta`)
-					LEFT JOIN '._DB_PREFIX_.'meta_lang ml ON(ml.id_meta = m.id_meta AND ml.id_lang = '.(int)$this->context->language->id.')
-					WHERE tm.`id_theme` = '.(int)$this->object->id.
-					((int)Context::getContext()->shop->id ? ' AND id_shop = '.(int)Context::getContext()->shop->id : ''));
+					LEFT JOIN '._DB_PREFIX_.'meta_lang ml ON(ml.id_meta = m.id_meta AND ml.id_lang = '.(int)$this->context->language->id.
+					((int)Context::getContext()->shop->id ? ' AND id_shop = '.(int)Context::getContext()->shop->id : '').')
+					WHERE tm.`id_theme` = '.(int)$this->object->id);
 
 				// if no theme_meta are found, we must create them
 				if (empty($theme_metas))
@@ -280,6 +280,7 @@ class AdminThemesControllerCore extends AdminController
 						LEFT JOIN '._DB_PREFIX_.'meta_lang ml ON(ml.id_meta = m.id_meta AND ml.id_lang = '.(int)$this->context->language->id.')
 						WHERE tm.`id_theme` = '.(int)$this->object->id);
 				}
+
 				$image_url = '<img alt="preview" src="'.__PS_BASE_URI__.'themes/'.$theme->directory.'/preview.jpg">';
 
 					foreach ($theme_metas as $key => &$meta)
