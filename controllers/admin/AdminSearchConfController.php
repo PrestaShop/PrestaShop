@@ -144,8 +144,8 @@ class AdminSearchConfControllerCore extends AdminController
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool',
-						'desc' => $this->l('By default, if you search "tee", you will have "tee" and "teeshirt"').'<br/>'.
-								  $this->l('With this option enabled, it only gives one result “tee”, as exact end of the indexed word is matching'),
+						'desc' => $this->l('By default, if you search "book", you will have "book", "bookcase" and "bookend".').'<br/>'.
+								  $this->l('With this option enabled, it only gives one result “book”, as exact end of the indexed word is matching.'),
 						'hint' => array(
 							$this->l('Enable more precise search with the end of the word.'),
 							$this->l('It checks if the searched term is the exact end of the indexed word.')
