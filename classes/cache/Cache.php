@@ -239,10 +239,10 @@ abstract class CacheCore
 				$this->sql_tables_cached = array();
 		}
 
-		// Store query results in cache if this query is not already cached
+		// Store query results in cache
 		$key = Tools::encryptIV($query);
-		if ($this->exists($key))
-			return true;
+		// no need to check the key existence before the set : if the query is already
+		// in the cache, setQuery is not invoked
 		$this->set($key, $result);
 
 		// Get all table from the query and save them in cache
