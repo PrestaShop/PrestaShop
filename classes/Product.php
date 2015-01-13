@@ -3186,7 +3186,7 @@ class ProductCore extends ObjectModel
 			JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
 			JOIN `'._DB_PREFIX_.'attribute_group` ag ON (a.id_attribute_group = ag.`id_attribute_group`)
 			WHERE pa.`id_product` IN ('.implode(array_map('intval', $products), ',').') AND ag.`is_color_group` = 1
-			GROUP BY pa.`id_product`, `a.id_attribute`, `group_by`
+			GROUP BY pa.`id_product`, a.`id_attribute`, `group_by`
 			'.($check_stock ? 'HAVING qty > 0' : '').'
 			ORDER BY a.`position` ASC;'
 			)
