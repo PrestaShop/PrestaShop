@@ -101,6 +101,7 @@
 			z-index: 9999;
 			border: 2px solid $light-border-color;
 			line-height: 18px;
+			position: absolute;
 			&:before {
 				height: 48px;
 				width: 48px;
@@ -138,12 +139,12 @@
 		}
 		.bx-prev {
 			right: 60px;
-			left: auto;
 			&:after {
 				content: "\f053";
 			}
 		}
 		.bx-next {
+			right: 10px;
 			&:after {
 				content: "\f054";
 			}
