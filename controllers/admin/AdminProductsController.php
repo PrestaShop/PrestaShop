@@ -3205,11 +3205,11 @@ class AdminProductsControllerCore extends AdminController
 		$data = $this->createTemplate($this->tpl_form);
 
 		$context = Context::getContext();
-		$rewrited_links = array();
+		$rewritten_links = array();
 		foreach ($this->_languages as $language)
 		{
 			$category = Category::getLinkRewrite((int)$product->id_category_default, (int)$language['id_lang']);
-			$rewrited_links[(int)$language['id_lang']] = explode(
+			$rewritten_links[(int)$language['id_lang']] = explode(
 				'[REWRITE]',
 				$context->link->getProductLink($product, '[REWRITE]', $category, null, (int)$language['id_lang'])
 			);
@@ -3222,7 +3222,7 @@ class AdminProductsControllerCore extends AdminController
 			'ps_ssl_enabled' => Configuration::get('PS_SSL_ENABLED'),
 			'curent_shop_url' => $this->context->shop->getBaseURL(),
 			'default_form_language' => $this->default_form_language,
-			'rewrited_links' => $rewrited_links
+			'rewritten_links' => $rewritten_links
 		));
 
 		$this->tpl_form_vars['custom_form'] = $data->fetch();
