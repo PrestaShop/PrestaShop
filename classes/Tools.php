@@ -1927,12 +1927,14 @@ class ToolsCore
 	{
 		global $current_css_file;
 		$protocol_link = Tools::getCurrentUrlProtocolPrefix();
+
 		if (array_key_exists(1, $matches) && array_key_exists(2, $matches))
 		{
 			if (!preg_match('/^(?:https?:)?\/\//iUs', $matches[2]))
 			{
 				$tmp = dirname($current_css_file).'/'.$matches[2];
-				return $matches[1].$protocol_link.Tools::getMediaServer($tmp).$tmp;
+				$server = Tools::getMediaServer($tmp);
+				return $matches[1].$protocol_link.$server.$tmp;
 			}
 			else
 				return $matches[0];
@@ -1999,7 +2001,7 @@ class ToolsCore
 				self::$_cache_nb_media_servers = 3;
 		}
 
-		if (self::$_cache_nb_media_servers && ($id_media_server = (abs(crc32($filename)) % self::$_cache_nb_media_servers + 1)))
+		if ($filename && self::$_cache_nb_media_servers && ($id_media_server = (abs(crc32($filename)) % self::$_cache_nb_media_servers + 1)))
 			return constant('_MEDIA_SERVER_'.$id_media_server.'_');
 
 		return Tools::usingSecureMode() ? Tools::getShopDomainSSL() : Tools::getShopDomain();
@@ -2216,7 +2218,12 @@ class ToolsCore
 		fwrite($write_fd, "AddType application/vnd.ms-fontobject .eot\n");
 		fwrite($write_fd, "AddType font/ttf .ttf\n");
 		fwrite($write_fd, "AddType font/otf .otf\n");
-		fwrite($write_fd, "AddType application/x-font-woff .woff\n\n");
+		fwrite($write_fd, "AddType application/x-font-woff .woff\n");
+		fwrite($write_fd, "<IfModule mod_headers.c>
+	<FilesMatch \"\.(ttf|ttc|otf|eot|woff|svg)$\">
+		Header add Access-Control-Allow-Origin \"*\"
+	</FilesMatch>
+</IfModule>\n\n");
 
 		// Cache control
 		if ($cache_control)

@@ -1260,6 +1260,7 @@ class ProductCore extends ObjectModel
 
 			$obj->default_on = $default_on;
 			$default_on = 0;
+			$this->setAvailableDate();
 
 			$obj->save();
 
@@ -1557,8 +1558,13 @@ class ProductCore extends ObjectModel
 			Db::getInstance()->update('stock_available', array('quantity' => 0), '`id_product` = '.$this->id);
 
 		$id_default_attribute = Product::updateDefaultAttribute($this->id);
+
 		if ($id_default_attribute)
+		{
 			$this->cache_default_attribute = $id_default_attribute;
+			if (!$combination->available_date)
+				$this->setAvailableDate();
+		}
 
 		if (!empty($id_images))
 			$combination->setImages($id_images);
@@ -3180,7 +3186,7 @@ class ProductCore extends ObjectModel
 			JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
 			JOIN `'._DB_PREFIX_.'attribute_group` ag ON (a.id_attribute_group = ag.`id_attribute_group`)
 			WHERE pa.`id_product` IN ('.implode(array_map('intval', $products), ',').') AND ag.`is_color_group` = 1
-			GROUP BY pa.`id_product`, `group_by`
+			GROUP BY pa.`id_product`, a.`id_attribute`, `group_by`
 			'.($check_stock ? 'HAVING qty > 0' : '').'
 			ORDER BY a.`position` ASC;'
 			)
