@@ -2135,15 +2135,28 @@ class OrderCore extends ObjectModel
 		$order_discount_tax_excl = $this->total_discounts_tax_excl;
 
 		$free_shipping_tax = 0;
-		foreach ($this->getCartRules() as $cart_rule)
+		$product_specific_discounts = array();
+
+		foreach ($this->getCartRules() as $order_cart_rule)
 		{
-			if ($cart_rule['free_shipping'])
+			if ($order_cart_rule['free_shipping'] && $free_shipping_tax === 0)
 			{
-				// ddd("order_discount_tax_excl: $order_discount_tax_excl   total_shipping_tax_excl: {$this->total_shipping_tax_excl}");
 				$free_shipping_tax = $this->total_shipping_tax_incl - $this->total_shipping_tax_excl;
 				$order_discount_tax_excl -= $this->total_shipping_tax_excl;
-				break;
 			}
+
+			$cart_rule = new CartRule($order_cart_rule['id_cart_rule']);
+			if ($cart_rule->reduction_product)
+			{
+				if (empty($product_specific_discounts[$cart_rule->reduction_product]))
+				{
+					$product_specific_discounts[$cart_rule->reduction_product] = 0;
+				}
+
+				$product_specific_discounts[$cart_rule->reduction_product] += $order_cart_rule['value_tax_excl'];
+				$order_discount_tax_excl -= $order_cart_rule['value_tax_excl'];
+			}
+
 		}
 
 
@@ -2151,7 +2164,7 @@ class OrderCore extends ObjectModel
 		$discounts_tax 	= $this->total_discounts_tax_incl - $this->total_discounts_tax_excl;
 
 		// We add $free_shipping_tax because when there is free shipping, the tax that would
-		// be paid if there wasn't is included in $discounts_tax.  
+		// be paid if there wasn't is included in $discounts_tax.
 		$expected_total_tax = $products_tax - $discounts_tax + $free_shipping_tax;
 		$actual_total_tax = 0;
 
@@ -2166,7 +2179,15 @@ class OrderCore extends ObjectModel
 
 			$discount_ratio = $order_detail['unit_price_tax_excl'] / $this->total_products;
 
+			// share of global discount
 			$discounted_price_tax_excl =  $order_detail['unit_price_tax_excl'] - $discount_ratio * $order_discount_tax_excl;
+			// specific discount
+			if (!empty($product_specific_discounts[$order_detail['product_id']]))
+			{
+				$discounted_price_tax_excl -= $product_specific_discounts[$order_detail['product_id']];
+			}
+
+
 			$quantity = $order_detail['product_quantity'];
 
 			foreach ($tax_calculator->getTaxesAmount($discounted_price_tax_excl) as $id_tax => $unit_amount)
