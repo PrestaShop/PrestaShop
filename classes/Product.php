@@ -1260,6 +1260,7 @@ class ProductCore extends ObjectModel
 
 			$obj->default_on = $default_on;
 			$default_on = 0;
+			$this->setAvailableDate();
 
 			$obj->save();
 
@@ -1557,8 +1558,13 @@ class ProductCore extends ObjectModel
 			Db::getInstance()->update('stock_available', array('quantity' => 0), '`id_product` = '.$this->id);
 
 		$id_default_attribute = Product::updateDefaultAttribute($this->id);
+
 		if ($id_default_attribute)
+		{
 			$this->cache_default_attribute = $id_default_attribute;
+			if (!$combination->available_date)
+				$this->setAvailableDate();
+		}
 
 		if (!empty($id_images))
 			$combination->setImages($id_images);

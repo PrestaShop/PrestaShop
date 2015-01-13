@@ -946,8 +946,11 @@ class AdminProductsControllerCore extends AdminController
 						Product::updateDefaultAttribute((int)$product->id);
 						if(isset($id_product_attribute))
 							$product->cache_default_attribute = (int)$id_product_attribute;
+
 						if ($available_date = Tools::getValue('available_date_attribute'))
 							$product->setAvailableDate($available_date);
+						else
+							$product->setAvailableDate();
 					}
 				}
 			}
