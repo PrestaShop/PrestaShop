@@ -119,4 +119,39 @@ class CacheApcCore extends Cache
 	{
 		return apc_clear_cache();
 	}
+
+	/**
+	 * Store a data in cache
+	 *
+	 * @param string $key
+	 * @param mixed $value
+	 * @param int $ttl
+	 * @return bool
+	 */
+	public function set($key, $value, $ttl = 0)
+	{
+		return $this->_set($key, $value, $ttl);
+	}
+
+	/**
+	 * Retrieve a data from cache
+	 *
+	 * @param string $key
+	 * @return mixed
+	 */
+	public function get($key)
+	{
+		return $this->_get($key);
+	}
+
+	/**
+	 * Check if a data is cached
+	 *
+	 * @param string $key
+	 * @return bool
+	 */
+	public function exists($key)
+	{
+		return $this->_exists($key);
+	}
 }
