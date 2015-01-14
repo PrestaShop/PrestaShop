@@ -2551,11 +2551,9 @@ class ProductCore extends ObjectModel
 	*
 	* @return array Product cover image & legend
 	*/
-	public static function getCoverLegend($id_product, $id_lang, Context $context = null)
+	public static function getCoverLegend($id_product, $id_lang)
 	{
-		if (!$context)
-			$context = Context::getContext();
-		$cache_id = 'Product::getCoverLegend_'.(int)$id_product.'-'.(int)$context->shop->id;
+		$cache_id = 'Product::getCoverLegend_'.(int)$id_product.'-'.(int)$id_lang;
 		if (!Cache::isStored($cache_id))
 		{
 			$sql = 'SELECT image_shop.`id_image`, il.`legend`
