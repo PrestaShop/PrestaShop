@@ -89,6 +89,14 @@ abstract class DbCore
 	protected $last_query;
 
 	/**
+	 * Store hash of the last executed query
+	 *
+	 * @var string
+	 */
+	protected $last_query_hash;
+
+
+	/**
 	 * Last cached query
 	 *
 	 * @var string
@@ -496,21 +504,23 @@ abstract class DbCore
 		if ($sql instanceof DbQuery)
 			$sql = $sql->build();
 
+		$this->result = false;
+		$this->last_query = $sql;
+
+		if ($use_cache && $this->is_cache_enabled && $array) {
+			$this->last_query_hash = Tools::encryptIV($sql);
+			if (($result = Cache::getInstance()->get($this->last_query_hash)) !== false) {
+				$this->last_cached = true;
+				return $result;
+			}
+		}
+
 		// This method must be used only with queries which display results
 		if (!preg_match('#^\s*\(?\s*(select|show|explain|describe|desc)\s#i', $sql))
 		{
 			if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_)
 				throw new PrestaShopDatabaseException('Db->executeS() must be used only with select, show, explain or describe queries');
 			return $this->execute($sql, $use_cache);
-		}
-
-		$this->result = false;
-		$this->last_query = $sql;
-
-		if ($use_cache && $this->is_cache_enabled && $array && ($result = Cache::getInstance()->get(Tools::encryptIV($sql))) !== false)
-		{
-			$this->last_cached = true;
-			return $result;
 		}
 
 		$this->result = $this->query($sql);
@@ -550,11 +560,15 @@ abstract class DbCore
 		$sql = rtrim($sql, " \t\n\r\0\x0B;").' LIMIT 1';
 		$this->result = false;
 		$this->last_query = $sql;
-		if ($use_cache && $this->is_cache_enabled && ($result = Cache::getInstance()->get(Tools::encryptIV($sql))) !== false)
-		{
-			$this->last_cached = true;
-			return $result;
+
+		if ($use_cache && $this->is_cache_enabled) {
+			$this->last_query_hash = Tools::encryptIV($sql);
+			if (($result = Cache::getInstance()->get($this->last_query_hash)) !== false) {
+				$this->last_cached = true;
+				return $result;
+			}
 		}
+
 		$this->result = $this->query($sql);
 		if (!$this->result)
 			$result = false;
@@ -596,11 +610,11 @@ abstract class DbCore
 		{
 			$nrows = $this->_numRows($this->result);
 			if ($this->is_cache_enabled)
-				Cache::getInstance()->set(Tools::encryptIV($this->last_query).'_nrows', $nrows);
+				Cache::getInstance()->set($this->last_query_hash.'_nrows', $nrows);
 			return $nrows;
 		}
 		elseif ($this->is_cache_enabled && $this->last_cached)
-			return Cache::getInstance()->get(Tools::encryptIV($this->last_query).'_nrows');
+			return Cache::getInstance()->get($this->last_query_hash.'_nrows');
 	}
 
 	/**
