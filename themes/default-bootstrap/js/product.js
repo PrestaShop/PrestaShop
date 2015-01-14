@@ -984,7 +984,7 @@ function getProductAttribute()
 	for (var i in attributesCombinations)
 		for (var a in tab_attributes)
 			if (attributesCombinations[i]['id_attribute'] === tab_attributes[a])
-				request += '/'+attributesCombinations[i]['group'] + attribute_anchor_separator + attributesCombinations[i]['attribute'];
+				request += '/' + attributesCombinations[i]['id_attribute'] + '-' + attributesCombinations[i]['group'] + attribute_anchor_separator + attributesCombinations[i]['attribute'];
 	request = request.replace(request.substring(0, 1), '#/');
 	var url = window.location + '';
 
@@ -1033,8 +1033,8 @@ function checkUrl()
 			count = 0;
 			for (var z in tabValues)
 				for (var a in attributesCombinations)
-					if (attributesCombinations[a]['group'] === decodeURIComponent(tabValues[z][0])
-						&& attributesCombinations[a]['attribute'] === decodeURIComponent(tabValues[z][1]))
+					if (attributesCombinations[a]['group'] === decodeURIComponent(tabValues[z][1])
+						&& attributesCombinations[a]['id_attribute'] === decodeURIComponent(tabValues[z][0]))
 					{
 						count++;
 
