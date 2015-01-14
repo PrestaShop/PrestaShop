@@ -1059,6 +1059,7 @@ class AdminProductsControllerCore extends AdminController
 		$reduction = (float)(Tools::getValue('sp_reduction'));
 		$reduction_tax = Tools::getValue('sp_reduction_tax');
 		$reduction_type = !$reduction ? 'amount' : Tools::getValue('sp_reduction_type');
+		$reduction_type = $reduction_type == '-' ? 'amount' : $reduction_type;
 		$from = Tools::getValue('sp_from');
 		if (!$from)
 			$from = '0000-00-00 00:00:00';
@@ -1066,7 +1067,11 @@ class AdminProductsControllerCore extends AdminController
 		if (!$to)
 			$to = '0000-00-00 00:00:00';
 
-		if ($reduction_type == 'percentage' && ((float)$reduction <= 0 || (float)$reduction > 100))
+		if (($price == '-1') && ((float)$reduction == '0'))
+			$this->errors[] = Tools::displayError('No submitted reduction value');
+		elseif (strtotime($to) < strtotime($from))
+			$this->errors[] = Tools::displayError('Invalid date range');
+		elseif ($reduction_type == 'percentage' && ((float)$reduction <= 0 || (float)$reduction > 100))
 			$this->errors[] = Tools::displayError('Submitted reduction value (0-100) is out-of-range');
 		elseif ($this->_validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_product_attribute))
 		{

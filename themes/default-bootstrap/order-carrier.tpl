@@ -212,7 +212,7 @@
 														{if isset($carrier.instance->delay[$cookie->id_lang])}
 															<i class="icon-info-sign"></i>
 															{strip}
-																{$first.instance->delay[$cookie->id_lang]|escape:'htmlall':'UTF-8'}
+																{$carrier.instance->delay[$cookie->id_lang]|escape:'htmlall':'UTF-8'}
 																&nbsp;
 																{if count($first.product_list) <= 1}
 																	({l s='For this product:'}

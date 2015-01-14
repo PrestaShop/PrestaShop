@@ -446,8 +446,6 @@ function wishlistProductChange(id_product, id_product_attribute, id_old_wishlist
 		},
 		success: function (data)
 		{
-			console.log(data);
-			console.log(data.msg);
 			if (data.success == true) {
 				$('#wlp_' + id_product + '_' + id_product_attribute).fadeOut('slow');
 				$('#wishlist_' + id_old_wishlist + ' td:nth-child(2)').text($('#wishlist_' + id_old_wishlist + ' td:nth-child(2)').text() - quantity);
