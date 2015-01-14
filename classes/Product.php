@@ -2764,19 +2764,21 @@ class ProductCore extends ObjectModel
 
 			$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
-			foreach ($res as $row)
-			{
-				$array_tmp = array(
-					'price' => $row['price'],
-					'ecotax' => $row['ecotax'],
-					'attribute_price' => (isset($row['attribute_price']) ? $row['attribute_price'] : null)
-				);
-				self::$_pricesLevel2[$cache_id_2][(int)$row['id_product_attribute']] = $array_tmp;
+			if (is_array($res) && count($res))
+				foreach ($res as $row)
+				{
+					$array_tmp = array(
+						'price' => $row['price'],
+						'ecotax' => $row['ecotax'],
+						'attribute_price' => (isset($row['attribute_price']) ? $row['attribute_price'] : null)
+					);
+					self::$_pricesLevel2[$cache_id_2][(int)$row['id_product_attribute']] = $array_tmp;
 
-				if (isset($row['default_on']) && $row['default_on'] == 1)
-					self::$_pricesLevel2[$cache_id_2][0] = $array_tmp;
-			}
+					if (isset($row['default_on']) && $row['default_on'] == 1)
+						self::$_pricesLevel2[$cache_id_2][0] = $array_tmp;
+				}
 		}
+
 		if (!isset(self::$_pricesLevel2[$cache_id_2][(int)$id_product_attribute]))
 			return;
 
