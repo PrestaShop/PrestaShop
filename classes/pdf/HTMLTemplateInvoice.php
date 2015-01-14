@@ -82,15 +82,42 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 				}
 			}
 
+		$product_taxes = 0;
+		foreach ($this->order_invoice->getProductTaxesBreakdown($this->order) as $details)
+		{
+			$product_taxes += $details['total_amount'];
+		}
+
+		$cart_rules = $this->order->getCartRules($this->order_invoice->id);
+
+		$free_shipping = false;
+		foreach ($cart_rules as $cart_rule)
+		{
+			if ($cart_rule['free_shipping'])
+			{
+				$free_shipping = true;
+				break;
+			}
+		}
+
+		$product_discounts = $this->order_invoice->total_discount_tax_excl;
+		if ($free_shipping)
+		{
+			$product_discounts -= $this->order_invoice->total_shipping_tax_excl;
+		}
+
 		$data = array(
 			'order' => $this->order,
 			'order_details' => $order_details,
-			'cart_rules' => $this->order->getCartRules($this->order_invoice->id),
+			'cart_rules' => $cart_rules,
 			'delivery_address' => $formatted_delivery_address,
 			'invoice_address' => $formatted_invoice_address,
 			'tax_excluded_display' => Group::getPriceDisplayMethod($customer->id_default_group),
 			'tax_tab' => $this->getTaxTabContent(),
-			'customer' => $customer
+			'customer' => $customer,
+			'product_taxes' => $product_taxes,
+			'free_shipping' => $free_shipping,
+			'product_discounts' => $product_discounts
 		);
 
 		if (Tools::getValue('debug'))
@@ -170,4 +197,3 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 		return Configuration::get('PS_INVOICE_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order_invoice->number).'.pdf';
 	}
 }
-

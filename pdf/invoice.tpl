@@ -233,18 +233,18 @@
 					<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->total_products}</td>
 				</tr>
 
-				{if $order_invoice->total_discount_tax_excl > 0}
+				{if $product_discounts > 0}
 					<tr style="line-height:5px;">
 						<td style="text-align: right; font-weight: bold">{l s='Total Discounts (Tax Excl.)' pdf='true'}</td>
-						<td style="width: 17%; text-align: right;">-{displayPrice currency=$order->id_currency price=($order_invoice->total_discount_tax_excl)}</td>
+						<td style="width: 17%; text-align: right;">-{displayPrice currency=$order->id_currency price=$product_discounts}</td>
 					</tr>
 					<tr style="line-height:5px; font-style: italic;">
 						<td style="text-align: right; font-weight: bold">{l s='Product Total After Discounts (Tax Excl.)' pdf='true'}</td>
-						<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=($order_invoice->total_products - $order_invoice->total_discount_tax_excl)}</td>
+						<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=($order_invoice->total_products - $product_discounts)}</td>
 					</tr>
 				{/if}
 
-				{if $order_invoice->total_shipping_tax_excl > 0}
+				{if !$free_shipping and ($order_invoice->total_shipping_tax_excl > 0)}
 					<tr style="line-height:5px;">
 						<td style="text-align: right; font-weight: bold">{l s='Shipping Cost (Tax Excl.)' pdf='true'}</td>
 						<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->total_shipping_tax_excl}</td>
@@ -265,7 +265,7 @@
 					</tr>
 				{/if}
 
-				{if $order_invoice->total_shipping_tax_incl - $order_invoice->total_shipping_tax_excl > 0}
+				{if !$free_shipping and ($order_invoice->total_shipping_tax_incl - $order_invoice->total_shipping_tax_excl > 0)}
 					<tr style="line-height:5px;">
 						<td style="text-align: right; font-weight: bold">{l s='Shipping Taxes' pdf='true'}</td>
 						<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->total_shipping_tax_incl - $order_invoice->total_shipping_tax_excl}</td>
