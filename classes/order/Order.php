@@ -2170,6 +2170,8 @@ class OrderCore extends ObjectModel
 
 		$order_detail_tax_rows_to_insert = array();
 
+		$breakdown = array();
+
 		// Get order_details
 		$order_details = $this->getOrderDetailList();
 		foreach ($order_details as $order_detail)
@@ -2195,15 +2197,22 @@ class OrderCore extends ObjectModel
 				switch (Configuration::get('PS_ROUND_TYPE'))
 				{
 					case Order::ROUND_ITEM:
-					$total_amount = $quantity * Tools::ps_round($unit_amount, _PS_PRICE_COMPUTE_PRECISION_);
+						$total_amount = $quantity * Tools::ps_round($unit_amount, _PS_PRICE_COMPUTE_PRECISION_);
 					break;
 					case Order::ROUND_LINE:
+						$total_amount = Tools::ps_round($quantity * $unit_amount, _PS_PRICE_COMPUTE_PRECISION_);
+					break;
 					case Order::ROUND_TOTAL:
-					$total_amount = Tools::ps_round($quantity * $unit_amount, _PS_PRICE_COMPUTE_PRECISION_);
+						$total_amount = $quantity * $unit_amount;
 					break;
 				}
 
-				$actual_total_tax += $total_amount;
+				if (!isset($breakdown[$id_tax]))
+				{
+					$breakdown[$id_tax] = 0;
+				}
+
+				$breakdown[$id_tax] += $total_amount;
 
 				$order_detail_tax_rows_to_insert[] = array(
 					'id_order_detail' => $id_order_detail,
@@ -2212,6 +2221,11 @@ class OrderCore extends ObjectModel
 					'total_amount' => $total_amount
 				);
 			}
+		}
+
+		foreach ($breakdown as $total_amount)
+		{
+			$actual_total_tax += Tools::ps_round($total_amount, _PS_PRICE_COMPUTE_PRECISION_);
 		}
 
 		$rounding_error = $expected_total_tax - $actual_total_tax;
