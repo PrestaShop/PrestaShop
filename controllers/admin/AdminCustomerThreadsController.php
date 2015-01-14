@@ -214,6 +214,9 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
 	public function renderList()
 	{
+		// Check the new IMAP messages before rendering the list
+		$this->renderProcessSyncImap();
+
 	 	$this->addRowAction('view');
 	 	$this->addRowAction('delete');
 
@@ -841,160 +844,194 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		if (count($messages))
 			Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customer_message` set `read` = 1 WHERE `id_employee` = '.(int)$this->context->employee->id.' AND `id_customer_thread` = '.(int)$id_thread);
 	}
-	
+
+	/**
+	 * Call the IMAP synchronization during an AJAX process.
+	 *
+	 * @throws PrestaShopException
+	 */
 	public function ajaxProcessSyncImap()
 	{
 		if ($this->tabAccess['edit'] != '1')
 			throw new PrestaShopException(Tools::displayError('You do not have permission to edit this.'));
 
 		if (Tools::isSubmit('syncImapMail'))
-		{
-			if (!($url = Configuration::get('PS_SAV_IMAP_URL'))
+			die(Tools::jsonEncode($this->syncImap()));
+	}
+
+	/**
+	 * Call the IMAP synchronization during the render process.
+	 */
+	public function renderProcessSyncImap()
+	{
+		// To avoid an error if the IMAP isn't configured, we check the configuration here, like during
+		// the synchronization. All parameters will exists.
+		if (!(Configuration::get('PS_SAV_IMAP_URL')
+			|| Configuration::get('PS_SAV_IMAP_PORT')
+			|| Configuration::get('PS_SAV_IMAP_USER')
+			|| Configuration::get('PS_SAV_IMAP_PWD')))
+			return;
+
+		// Executes the IMAP synchronization.
+		$syncErrors = $this->syncImap();
+
+		// Show the errors.
+		if (isset($syncErrors['hasError']) && $syncErrors['hasError'])
+			if (isset($syncErrors['errors']))
+				foreach ($syncErrors['errors'] as &$error)
+					$this->displayWarning($error);
+	}
+
+	/**
+	 * Imap synchronization method.
+	 *
+	 * @return array Errors list.
+	 */
+	public function syncImap()
+	{
+		if (!($url = Configuration::get('PS_SAV_IMAP_URL'))
 			|| !($port = Configuration::get('PS_SAV_IMAP_PORT'))
 			|| !($user = Configuration::get('PS_SAV_IMAP_USER'))
 			|| !($password = Configuration::get('PS_SAV_IMAP_PWD')))
-			die('{"hasError" : true, "errors" : ["Configuration is not correct"]}');
+			return array('hasError' => true, 'errors' => array('IMAP configuration is not correct'));
 
-			$conf = Configuration::getMultiple(array(
-				'PS_SAV_IMAP_OPT_NORSH', 'PS_SAV_IMAP_OPT_SSL',
-				'PS_SAV_IMAP_OPT_VALIDATE-CERT', 'PS_SAV_IMAP_OPT_NOVALIDATE-CERT',
-				'PS_SAV_IMAP_OPT_TLS', 'PS_SAV_IMAP_OPT_NOTLS'));
-	
-			$conf_str = '';
-			if ($conf['PS_SAV_IMAP_OPT_NORSH'])
-				$conf_str .= '/norsh';
-			if ($conf['PS_SAV_IMAP_OPT_SSL'])
-				$conf_str .= '/ssl';
-			if ($conf['PS_SAV_IMAP_OPT_VALIDATE-CERT'])
-				$conf_str .= '/validate-cert';
-			if ($conf['PS_SAV_IMAP_OPT_NOVALIDATE-CERT'])
-				$conf_str .= '/novalidate-cert';
-			if ($conf['PS_SAV_IMAP_OPT_TLS'])
-				$conf_str .= '/tls';
-			if ($conf['PS_SAV_IMAP_OPT_NOTLS'])
-				$conf_str .= '/notls';
+		$conf = Configuration::getMultiple(array(
+			'PS_SAV_IMAP_OPT_NORSH', 'PS_SAV_IMAP_OPT_SSL',
+			'PS_SAV_IMAP_OPT_VALIDATE-CERT', 'PS_SAV_IMAP_OPT_NOVALIDATE-CERT',
+			'PS_SAV_IMAP_OPT_TLS', 'PS_SAV_IMAP_OPT_NOTLS'));
 
-			if (!function_exists('imap_open'))
-				die('{"hasError" : true, "errors" : ["imap is not installed on this server"]}');
+		$conf_str = '';
+		if ($conf['PS_SAV_IMAP_OPT_NORSH'])
+			$conf_str .= '/norsh';
+		if ($conf['PS_SAV_IMAP_OPT_SSL'])
+			$conf_str .= '/ssl';
+		if ($conf['PS_SAV_IMAP_OPT_VALIDATE-CERT'])
+			$conf_str .= '/validate-cert';
+		if ($conf['PS_SAV_IMAP_OPT_NOVALIDATE-CERT'])
+			$conf_str .= '/novalidate-cert';
+		if ($conf['PS_SAV_IMAP_OPT_TLS'])
+			$conf_str .= '/tls';
+		if ($conf['PS_SAV_IMAP_OPT_NOTLS'])
+			$conf_str .= '/notls';
 
-			$mbox = @imap_open('{'.$url.':'.$port.$conf_str.'}', $user, $password);
+		if (!function_exists('imap_open'))
+			return array('hasError' => true, 'errors' => array('imap is not installed on this server'));
 
-			//checks if there is no error when connecting imap server
-			$errors = array_unique(imap_errors());
+		$mbox = @imap_open('{'.$url.':'.$port.$conf_str.'}', $user, $password);
+
+		//checks if there is no error when connecting imap server
+		$errors = imap_errors();
+		if (is_array($errors))
+			$errors = array_unique($errors);
+		$str_errors = '';
+		$str_error_delete = '';
+
+		if (sizeof($errors) && is_array($errors))
+		{
 			$str_errors = '';
-			$str_error_delete = '';
+			foreach($errors as $error)
+				$str_errors .= $error.', ';
+			$str_errors = rtrim(trim($str_errors), ',');
+		}
+		//checks if imap connexion is active
+		if (!$mbox)
+			return array('hasError' => true, 'errors' => array('Cannot connect to the mailbox :<br />'.($str_errors)));
 
-			if (sizeof($errors) && is_array($errors))
-			{
-				$str_errors = '';
-				foreach($errors as $error)
-					$str_errors .= $error.', ';
-				$str_errors = rtrim(trim($str_errors), ',');
-			}
-			//checks if imap connexion is active
-			if (!$mbox)
-			{
-				$array = array('hasError' => true, 'errors' => array('Cannot connect to the mailbox :<br />'.($str_errors)));
-				die(Tools::jsonEncode($array));
-			}
+		//Returns information about the current mailbox. Returns FALSE on failure.
+		$check = imap_check($mbox);
+		if (!$check)
+			return array('hasError' => true, 'errors' => array('Fail to get information about the current mailbox'));
 
-			//Returns information about the current mailbox. Returns FALSE on failure.
-			$check = imap_check($mbox);
-			if (!$check)
-				die('{"hasError" : true, "errors" : ["Fail to get information about the current mailbox"]}');
+		if ($check->Nmsgs == 0)
+			return array('hasError' => true, 'errors' => array('NO message to sync'));
 
-			if ($check->Nmsgs == 0)
-				die('{"hasError" : true, "errors" : ["NO message to sync"]}');
-
-			$result = imap_fetch_overview($mbox,"1:{$check->Nmsgs}",0);
-			foreach ($result as $overview)
-			{
-				 //check if message exist in database
-				 if (isset($overview->subject))
-						$subject = $overview->subject;
-					else
-						$subject = '';
-				//Creating an md5 to check if message has been allready processed
-				 $md5 = md5($overview->date.$overview->from.$subject.$overview->msgno);
-				 $exist = Db::getInstance()->getValue(
-						 'SELECT `md5_header`
+		$result = imap_fetch_overview($mbox,"1:{$check->Nmsgs}",0);
+		foreach ($result as $overview)
+		{
+			//check if message exist in database
+			if (isset($overview->subject))
+				$subject = $overview->subject;
+			else
+				$subject = '';
+			//Creating an md5 to check if message has been allready processed
+			$md5 = md5($overview->date.$overview->from.$subject.$overview->msgno);
+			$exist = Db::getInstance()->getValue(
+				'SELECT `md5_header`
 						 FROM `'._DB_PREFIX_.'customer_message_sync_imap`
 						 WHERE `md5_header` = \''.pSQL($md5).'\'');
-				 if ($exist)
-				 {
-					if (Configuration::get('PS_SAV_IMAP_DELETE_MSG'))
-						if (!imap_delete($mbox, $overview->msgno))
-							$str_error_delete = ', Fail to delete message';
-				 }
-				 else
-				 {
-				 	//check if subject has id_order
-				 	preg_match('/\#ct([0-9]*)/', $subject, $matches1);
-				 	preg_match('/\#tc([0-9-a-z-A-Z]*)/', $subject, $matches2);
-					$matchFound = false;
-					if (isset($matches1[1]) && isset($matches2[1]))
-						$matchFound = true;
-					
-					$new_ct = ( Configuration::get('PS_SAV_IMAP_CREATE_THREADS') && !$matchFound && (strpos($subject, '[no_sync]') == false));				
-					
-					if ( $matchFound || $new_ct)
-					{
-						if ($new_ct)
-						{
-							if (!preg_match('/<('.Tools::cleanNonUnicodeSupport('[a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z0-9]+').')>/', $overview->from, $result)
-								|| !Validate::isEmail($from = $result[1]))
-									continue;
-							
-							// we want to assign unrecognized mails to the right contact category
-							$contacts = Contact::getContacts($this->context->language->id);
-							if (!$contacts)
-								continue;
-								
-							foreach ($contacts as $contact) {
-								if (strpos($overview->to , $contact['email']) !== false)
-									$id_contact = $contact['id_contact'];
-							}
-							
-							if (!isset($id_contact)) // if not use the default contact category				
-								$id_contact = $contacts[0]['id_contact'];
-								
-							$customer = new Customer;
-							$client = $customer->getByEmail($from); //check if we already have a customer with this email
-							
-							$ct = new CustomerThread();
-							if (isset($client->id)) //if mail is owned by a customer assign to him
-								$ct->id_customer = $client->id;
-							$ct->email = $from;
-							$ct->id_contact = $id_contact;
-							$ct->id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
-							$ct->id_shop = $this->context->shop->id; //new customer threads for unrecognized mails are not shown without shop id
-							$ct->status = 'open';
-							$ct->token = Tools::passwdGen(12);
-							$ct->add();	
-						}
-						else
-							$ct = new CustomerThread((int)$matches1[1]); //check if order exist in database
-
-						if (Validate::isLoadedObject($ct) && ((isset($matches2[1]) && $ct->token == $matches2[1]) || $new_ct))
-						{
-							$message = imap_fetchbody($mbox, $overview->msgno, 1);
-							$message = quoted_printable_decode($message);
-							$message = utf8_encode($message);
-							$message = quoted_printable_decode($message);
-							$message = nl2br($message);
-							$cm = new CustomerMessage();
-							$cm->id_customer_thread = $ct->id;
-							$cm->message = $message;
-							$cm->add();
-						}
-					}
-					Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customer_message_sync_imap` (`md5_header`) VALUES (\''.pSQL($md5).'\')');
-				}
+			if ($exist)
+			{
+				if (Configuration::get('PS_SAV_IMAP_DELETE_MSG'))
+					if (!imap_delete($mbox, $overview->msgno))
+						$str_error_delete = ', Fail to delete message';
 			}
-			imap_expunge($mbox);
-			imap_close($mbox);
-			$array = array('hasError' => false, 'errors' => array($str_errors.$str_error_delete));
-			die(Tools::jsonEncode($array));
+			else
+			{
+				//check if subject has id_order
+				preg_match('/\#ct([0-9]*)/', $subject, $matches1);
+				preg_match('/\#tc([0-9-a-z-A-Z]*)/', $subject, $matches2);
+				$matchFound = false;
+				if (isset($matches1[1]) && isset($matches2[1]))
+					$matchFound = true;
+
+				$new_ct = ( Configuration::get('PS_SAV_IMAP_CREATE_THREADS') && !$matchFound && (strpos($subject, '[no_sync]') == false));
+
+				if ( $matchFound || $new_ct)
+				{
+					if ($new_ct)
+					{
+						if (!preg_match('/<('.Tools::cleanNonUnicodeSupport('[a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z0-9]+').')>/', $overview->from, $result)
+							|| !Validate::isEmail($from = $result[1]))
+							continue;
+
+						// we want to assign unrecognized mails to the right contact category
+						$contacts = Contact::getContacts($this->context->language->id);
+						if (!$contacts)
+							continue;
+
+						foreach ($contacts as $contact) {
+							if (strpos($overview->to , $contact['email']) !== false)
+								$id_contact = $contact['id_contact'];
+						}
+
+						if (!isset($id_contact)) // if not use the default contact category
+							$id_contact = $contacts[0]['id_contact'];
+
+						$customer = new Customer;
+						$client = $customer->getByEmail($from); //check if we already have a customer with this email
+
+						$ct = new CustomerThread();
+						if (isset($client->id)) //if mail is owned by a customer assign to him
+							$ct->id_customer = $client->id;
+						$ct->email = $from;
+						$ct->id_contact = $id_contact;
+						$ct->id_lang = (int)Configuration::get('PS_LANG_DEFAULT');
+						$ct->id_shop = $this->context->shop->id; //new customer threads for unrecognized mails are not shown without shop id
+						$ct->status = 'open';
+						$ct->token = Tools::passwdGen(12);
+						$ct->add();
+					}
+					else
+						$ct = new CustomerThread((int)$matches1[1]); //check if order exist in database
+
+					if (Validate::isLoadedObject($ct) && ((isset($matches2[1]) && $ct->token == $matches2[1]) || $new_ct))
+					{
+						$message = imap_fetchbody($mbox, $overview->msgno, 1);
+						$message = quoted_printable_decode($message);
+						$message = utf8_encode($message);
+						$message = quoted_printable_decode($message);
+						$message = nl2br($message);
+						$cm = new CustomerMessage();
+						$cm->id_customer_thread = $ct->id;
+						$cm->message = $message;
+						$cm->add();
+					}
+				}
+				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'customer_message_sync_imap` (`md5_header`) VALUES (\''.pSQL($md5).'\')');
+			}
 		}
+		imap_expunge($mbox);
+		imap_close($mbox);
+		return array('hasError' => false, 'errors' => array($str_errors.$str_error_delete));
 	}
 }
