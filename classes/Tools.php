@@ -1161,6 +1161,11 @@ class ToolsCore
 	{
 		static $array_str = array();
 		static $allow_accented_chars = null;
+		static $has_mb_strtolower = null;
+
+		if ($has_mb_strtolower === null) {
+			$has_mb_strtolower = function_exists('mb_strtolower');
+		}
 
 		if (isset($array_str[$str])) {
 			return $array_str[$str];
@@ -1178,14 +1183,14 @@ class ToolsCore
 
 		$return_str = trim($str);
 
-		if (function_exists('mb_strtolower'))
+		if ($has_mb_strtolower)
 			$return_str = mb_strtolower($return_str, 'utf-8');
 		if (!$allow_accented_chars)
 			$return_str = Tools::replaceAccentedChars($return_str);
 
 		// Remove all non-whitelist chars.
 		if ($allow_accented_chars)
-			$return_str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]\-\pL]/u', '', $return_str);
+			$return_str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]\-\p{L}]/u', '', $return_str);
 		else
 			$return_str = preg_replace('/[^a-zA-Z0-9\s\'\:\/\[\]\-]/','', $return_str);
 
@@ -1194,7 +1199,7 @@ class ToolsCore
 
 		// If it was not possible to lowercase the string with mb_strtolower, we do it after the transformations.
 		// This way we lose fewer special chars.
-		if (!function_exists('mb_strtolower'))
+		if (!$has_mb_strtolower)
 			$return_str = Tools::strtolower($return_str);
 
 		$array_str[$str] = $return_str;
