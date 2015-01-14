@@ -2133,7 +2133,7 @@ CREATE TABLE `PREFIX_image_shop` (
 	`id_image` INT( 11 ) UNSIGNED NOT NULL,
 	`id_shop` INT( 11 ) UNSIGNED NOT NULL,
 	`cover` tinyint(1) NOT NULL DEFAULT '0',
-	KEY (`id_image`, `id_shop`, `cover`),
+	PRIMARY KEY (`id_image`, `id_shop`, `cover`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 

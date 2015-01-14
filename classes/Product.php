@@ -83,6 +83,8 @@ class ProductCore extends ObjectModel
 	/** @var float Price in euros */
 	public $price = 0;
 
+	public $specificPrice = 0;
+
 	/** @var float Additional shipping cost */
 	public $additional_shipping_cost = 0;
 
@@ -467,11 +469,11 @@ class ProductCore extends ObjectModel
 	public function __construct($id_product = null, $full = false, $id_lang = null, $id_shop = null, Context $context = null)
 	{
 		parent::__construct($id_product, $id_lang, $id_shop);
-		if (!$context)
-			$context = Context::getContext();
-
 		if ($full && $this->id)
 		{
+			if (!$context)
+				$context = Context::getContext();
+
 			$this->isFullyLoaded = $full;
 			$this->tax_name = 'deprecated'; // The applicable tax may be BOTH the product one AND the state one (moreover this variable is some deadcode)
 			$this->manufacturer_name = Manufacturer::getNameById((int)$this->id_manufacturer);
@@ -2262,7 +2264,7 @@ class ProductCore extends ObjectModel
 
 			$sql = 'SELECT p.*, product_shop.*, stock.`out_of_stock` out_of_stock, pl.`description`, pl.`description_short`,
 						pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`,
-						p.`ean13`, p.`upc`, MAX(image_shop.`id_image`) id_image, il.`legend`,
+						p.`ean13`, p.`upc`,
 						DATEDIFF(product_shop.`date_add`, DATE_SUB(NOW(),
 						INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).'
 							DAY)) > 0 AS new
@@ -2272,16 +2274,16 @@ class ProductCore extends ObjectModel
 						AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
 					)
 					'.Shop::addSqlAssociation('product', 'p').'
-					LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)'.
-					Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
-					LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 					'.Product::sqlStock('p', 0).'
-					WHERE p.id_product = '.(int)$id_product.'
-					GROUP BY product_shop.id_product';
+					WHERE p.id_product = '.(int)$id_product;
 
 			$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 			if (!$row)
 				return false;
+
+			$row2 = Product::getCoverLegend($id_product, $id_lang);
+
+			$row = array_merge($row, $row2);
 
 			if ($result['id_product_attribute'])
 				$row['id_product_attribute'] = $result['id_product_attribute'];
