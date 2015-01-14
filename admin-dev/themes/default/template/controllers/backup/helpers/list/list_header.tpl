@@ -35,7 +35,7 @@
 		</h3>
 		<p>
 			<a class="btn btn-default" href="{$backup_url}">
-				<i class="icon-download"></i> 
+				<i class="icon-download"></i>
 				{l s='Download the backup file (%s MB)' sprintf=$backup_weight}
 			</a>
 		</p>
@@ -59,12 +59,23 @@
 			</ol>
 			<form action="{$currentIndex|escape:'html':'UTF-8'}&amp;add{$table}&amp;token={$token|escape:'html':'UTF-8'}" method="post" class="form-horizontal">
 				<button type="submit" class="btn btn-default">
-					<i class="icon-save"></i> 
+					<i class="icon-save"></i>
 					{l s='I have read the disclaimer. Please create a new backup.'}
 				</button>
 			</form>
 		</div>
 
+		{if $host_mode}
+		<div class="alert alert-info">
+			<h4>{l s='How to restore a database backup'}</h4>
+			<ol>
+				<li>{l s='If you wish to restore a database backup, we invite you to open a support ticket on your [1]PrestaShop.com account[/1].' tags=['<a href="https://www.prestashop.com/cloud/support?init=ask">']}</li>
+				<li>{l s='Our team will take care of restoring your database safely.'}</li>
+				<li>{l s='Why can\'t I restore it by myself?'}</li>
+				<li>{l s='Your shop is hosted by PrestaShop. Although you can create backup files here below, there are core settings you cannot access for security reasons, like the database management. Thus, only our team can proceed to a restoration.'}</li>
+			</ol>
+		</div>
+		{else}
 		<div class="alert alert-info">
 			<h4>{l s='How to restore a database backup in 10 easy steps'}</h4>
 			<ol>
@@ -80,5 +91,6 @@
 				<li>{l s='Click on the "Go" button and please wait patiently for the import process to conclude. This may take several minutes.'}</li>
 			</ol>
 		</div>
+		{/if}
 
 {/block}
