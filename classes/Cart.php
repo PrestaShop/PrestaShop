@@ -2935,6 +2935,26 @@ class CartCore extends ObjectModel
 		$currency = new Currency($this->id_currency);
 
 		$products = $this->getProducts($refresh);
+
+		foreach ($products as $key => &$product)
+		{
+			$product['price_without_quantity_discount'] = Product::getPriceStatic(
+				$product['id_product'],
+				!Product::getTaxCalculationMethod(),
+				$product['id_product_attribute'],
+				6,
+				null,
+				false,
+				false
+			);
+
+			if ($product['reduction_type'] == 'amount')
+			{
+				$reduction = (float)$product['price_wt'] - (float)$product['price_without_quantity_discount'];
+				$product['reduction_formatted'] = Tools::displayPrice($reduction);
+			}
+		}
+
 		$gift_products = array();
 		$cart_rules = $this->getCartRules();
 		$total_shipping = $this->getTotalShippingCost();
@@ -2947,7 +2967,6 @@ class CartCore extends ObjectModel
 		// The cart content is altered for display
 		foreach ($cart_rules as &$cart_rule)
 		{
-
 			// If the cart rule is automatic (wihtout any code) and include free shipping, it should not be displayed as a cart rule but only set the shipping cost to 0
 			if ($cart_rule['free_shipping'] && (empty($cart_rule['code']) || preg_match('/^'.CartRule::BO_ORDER_CODE_PREFIX.'[0-9]+/', $cart_rule['code'])))
 			{

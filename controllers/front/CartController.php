@@ -368,21 +368,6 @@ class CartControllerCore extends FrontController
 						foreach ($addresses as $customization)
 							$product['quantity_without_customization'] -= (int)$customization['quantity'];
 				}
-				$product['price_without_quantity_discount'] = Product::getPriceStatic(
-					$product['id_product'],
-					!Product::getTaxCalculationMethod(),
-					$product['id_product_attribute'],
-					6,
-					null,
-					false,
-					false
-				);
-
-				if ($product['reduction_type'] == 'amount')
-				{
-					$reduction = (float)$product['price_wt'] - (float)$product['price_without_quantity_discount'];
-					$product['reduction_formatted'] = Tools::displayPrice($reduction);
-				}
 			}
 			if ($result['customizedDatas'])
 				Product::addCustomizationPrice($result['summary']['products'], $result['customizedDatas']);
