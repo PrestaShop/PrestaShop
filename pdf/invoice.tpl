@@ -265,6 +265,12 @@
 					</tr>
 				{/if}
 
+				<tr style="line-height:5px; font-style: italic">
+					<td style="text-align: right; font-weight: bold">{l s='Total Taxes' pdf='true'}</td>
+					<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->total_paid_tax_incl - $order_invoice->total_paid_tax_excl}</td>
+				</tr>
+
+
 				{if !$free_shipping and ($order_invoice->total_shipping_tax_incl - $order_invoice->total_shipping_tax_excl > 0)}
 					<tr style="line-height:5px;">
 						<td style="text-align: right; font-weight: bold">{l s='Shipping Taxes' pdf='true'}</td>

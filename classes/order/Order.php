@@ -2231,38 +2231,7 @@ class OrderCore extends ObjectModel
 		$rounding_error = $expected_total_tax - $actual_total_tax;
 
 		if ($rounding_error !== 0) {
-
-			// Sort the rows by decreasing $total_amount
-			// the idea is to adjust the lines with highest amount first
-			// to minimize the error on each line.
-			usort(
-				$order_detail_tax_rows_to_insert,
-				create_function('$a, $b', 'return $b["total_amount"] - $a["total_amount"];')
-			);
-
-			$unit = pow(10, _PS_PRICE_COMPUTE_PRECISION_);
-
-			$sign = $rounding_error >= 0 ? 1 : -1;
-
-			$err = round(abs($rounding_error * $unit));
-
-			$remaining_amount = ($err % count($order_detail_tax_rows_to_insert));
-			$amount_to_spread = ($err - $remaining_amount) / count($order_detail_tax_rows_to_insert);
-
-			$amount_to_spread = $sign * round($amount_to_spread / (float)$unit, _PS_PRICE_COMPUTE_PRECISION_);
-
-			foreach ($order_detail_tax_rows_to_insert as $r => $row)
-			{
-				$delta = $amount_to_spread;
-				if ($r < $remaining_amount)
-				{
-					// If there was a remaining amount, it is necessarily less than the
-					// number of lines, so we spread it evenly on the top $remaining_amount
-					// lines.
-					$delta += $sign * round(1.0 / $unit, _PS_PRICE_COMPUTE_PRECISION_);
-				}
-				$order_detail_tax_rows_to_insert[$r]['total_amount'] += $delta;
-			}
+			Tools::spreadAmount($rounding_error, _PS_PRICE_COMPUTE_PRECISION_, $order_detail_tax_rows_to_insert, 'total_amount');
 		}
 
 		$old_id_order_details = array();

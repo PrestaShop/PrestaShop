@@ -3326,6 +3326,51 @@ exit;
 		if (!defined($constant))
 			define($constant, $value);
 	}
+
+	/**
+	 * Spread an amount on lines, adjusting the $column field,
+	 * with the biggest adjustments going to the rows having the
+	 * highest $sort_column.
+	 *
+	 * E.g.:
+	 * $rows = [['a' => 5.1], ['a' => 8.2]];
+	 * spreadAmount(0.3, 1, $rows, 'a');
+	 * // $rows is [['b' => 8.4], ['a' => 5.2]]
+	 */
+	public static function spreadAmount($amount, $precision, &$rows, $column, $sort_column = null)
+	{
+		if (!$sort_column)
+		{
+			$sort_column = $column;
+		}
+
+		$sort_function = create_function('$a, $b', "return \$a['$sort_column'] - \$b['$sort_column'];");
+
+		uasort($rows, $sort_function);
+
+		$sign = $amount >= 0 ? 1.0 : -1.0;
+		$unit = pow(10, $precision);
+
+		$int_amount = round($unit * abs($amount));
+
+		$remainder = $int_amount % count($rows);
+		$amount_to_spread = $sign * (($int_amount - $remainder) / count($rows) / $unit);
+
+		$position = 0;
+		foreach ($rows as $key => $row)
+		{
+			$adjustment_factor = $amount_to_spread;
+
+			if ($position < $remainder)
+			{
+				$adjustment_factor += $sign / $unit;
+			}
+
+			$rows[$key][$column] = $row[$column] + $adjustment_factor;
+
+			++$position;
+		}
+	}
 }
 
 /**
