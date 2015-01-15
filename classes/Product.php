@@ -2822,7 +2822,7 @@ class ProductCore extends ObjectModel
 				$reduction_amount = $specific_price['reduction'];
 
 				if (!$specific_price['id_currency'])
-					$reduction_amount = Tools::convertPrice($reduction_amount, $id_currency);
+					$reduction_amount = Tools::convertPrice($reduction_amount, (int)Configuration::get('PS_CURRENCY_DEFAULT'));
 
 				if (!isset($specific_price['reduction_tax']) || (isset($specific_price['reduction_tax']) && $specific_price['reduction_tax']))
 					$specific_price_reduction = !$use_tax ? $product_tax_calculator->removeTaxes($reduction_amount) : $reduction_amount;
