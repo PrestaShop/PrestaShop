@@ -167,8 +167,12 @@ class CategoryCore extends ObjectModel
 					$position = 1;
 				$this->addPosition($position, $shop['id_shop']);
 			}
-		if (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree)
-			Category::regenerateEntireNtree();
+
+		// Insert the new category into the tree WITHOUT recomputing it all
+		if (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree) {
+			$this->nTreeAdd();
+		}
+
 		$this->updateGroup($this->groupBox);
 		Hook::exec('actionCategoryAdd', array('category' => $this));
 		return $ret;
@@ -210,7 +214,11 @@ class CategoryCore extends ObjectModel
 		if ($changed && (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree))
 		{
 			$this->cleanPositions((int)$this->id_parent);
-			Category::regenerateEntireNtree();
+
+			// Do not regenerate the whole tree
+			$this->nTreeDelete();
+			$this->nTreeAdd();
+
 			$this->recalculateLevelDepth($this->id);
 		}
 		Hook::exec('actionCategoryUpdate', array('category' => $this));
@@ -338,8 +346,10 @@ class CategoryCore extends ObjectModel
 		}
 
 		/* Rebuild the nested tree */
-		if (!$this->hasMultishopEntries() && (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree))
-			Category::regenerateEntireNtree();
+		// Delete the category (and every possible subcategory) of the tree WITHOUT recomputing it all
+		if (!$this->hasMultishopEntries() && (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree)) {
+			$this->nTreeDelete();
+		}
 
 		Hook::exec('actionCategoryDelete', array('category' => $this));
 
@@ -416,6 +426,65 @@ class CategoryCore extends ObjectModel
 		UPDATE '._DB_PREFIX_.'category
 		SET nleft = '.(int)$left.', nright = '.(int)$right.'
 		WHERE id_category = '.(int)$id_category.' LIMIT 1');
+	}
+
+	/**
+	 * Add a node in the tree without recomputing the whole thing.
+	 * Require to have the level_depth, the id_parent and the id all set.
+	 *
+	 * - Either take the last sibling or the parent (if no siblings available)
+	 * - Use it's nleft/nright to compute the current nleft/nright
+	 * - Update all following nleft/nright (create a hole)
+	 * - Update current object with new computed nleft/nright (fill the hole)
+	 */
+	private function nTreeAdd() {
+		// Compute the number of child (case of an update)
+		$span = 1;
+		if (isset($this->nleft) && isset($this->nright)) {
+			$span = $this->nright - $this->nleft;
+		}
+
+		$db = Db::getInstance(_PS_USE_SQL_SLAVE_);
+
+		$id_shop = Context::getContext()->shop->id;
+		$id_shop = $id_shop ? $id_shop : Configuration::get('PS_SHOP_DEFAULT');
+
+		$sibling = $db->getRow("SELECT `nleft`, `nright`
+			FROM `"._DB_PREFIX_."category`
+			WHERE `id_parent` = ". $this->id_parent ." AND `level_depth` = ". $this->level_depth ." AND `id_category` != ". $this->id ."
+			ORDER `id_category` DESC"); //  LIMIT 1
+
+		if ($db->numRows() == 0) {
+			// No sibling, use parent instead
+			$parent = $db->getRow("SELECT `nleft`, `nright` FROM `"._DB_PREFIX_."category` WHERE `id_category` = ".$this->id_parent);
+
+			$this->nleft  = $parent['nright'];
+			$this->nright = $parent['nright'] + 1;
+		} else {
+			// Sibling found add after
+			$this->nleft  = $sibling['nright'] + 1;
+			$this->nright = $sibling['nright'] + 2;
+		}
+
+		// Create the hole
+		$db->execute("UPDATE `"._DB_PREFIX_."category` SET `nleft`  = nleft + ". ($span+1) ."  WHERE `nleft`  >= ".$this->nleft);
+		$db->execute("UPDATE `"._DB_PREFIX_."category` SET `nright` = nright + ". ($span+1) ." WHERE `nright` >= ".$this->nleft); // yes, nright >= $this->nleft
+
+		// Fill the hole
+		$db->execute("UPDATE `"._DB_PREFIX_."category` SET `nright` = ". $this->nright .", `nleft` = ". $this->nleft ." WHERE `id_category` = ". $this->id);
+	}
+
+	/**
+	 * Delete a node in the tree without recomputing the whole thing.
+	 * Require to have the nleft and nright set.
+	 */
+	private function nTreeDelete() {
+		$db = Db::getInstance(_PS_USE_SQL_SLAVE_);
+
+		$span = $this->nright - $this->nleft;
+
+		$db->execute("UPDATE `"._DB_PREFIX_."category` SET `nleft`  = `nleft`  - ".($span + 1)." WHERE `nleft`  > ".$this->nright); // yes, nleft > this->nright
+		$db->execute("UPDATE `"._DB_PREFIX_."category` SET `nright` = `nright` - ".($span + 1)." WHERE `nright` > ".$this->nright);
 	}
 
 	/**

@@ -118,6 +118,22 @@ class AdminCategoriesControllerCore extends AdminController
 				$this->_category = new Category(Configuration::get('PS_HOME_CATEGORY'));
 		}
 
+		// Handle the regenerate tree button
+		if (Tools::isSubmit('regeneratetree')) {
+			// Regenerate the whole tree
+			Category::regenerateEntireNtree();
+
+			// Redirect
+			$id_category = Tools::getValue('id_category');
+			if ($id_category) {
+				$this->redirect_after = self::$currentIndex.'&id_category='.(int)$id_category.'&token='.$this->token;
+			} else {
+				$this->redirect_after = self::$currentIndex.'&token='.$this->token;
+			}
+			$this->redirect_after .= '&'.$this->display.$this->table;
+			$this->redirect();
+		}
+
 		$count_categories_without_parent = count(Category::getCategoriesWithoutParent());
 
 		if (Tools::isSubmit('id_category'))
@@ -210,7 +226,7 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->addRowAction('delete');
 
 
-		$count_categories_without_parent = count(Category::getCategoriesWithoutParent());	
+		$count_categories_without_parent = count(Category::getCategoriesWithoutParent());
 		$categories_tree = $this->_category->getParentsCategories();
 
 		if (empty($categories_tree)
@@ -271,6 +287,11 @@ class AdminCategoriesControllerCore extends AdminController
 			$this->toolbar_btn['import'] = array(
 				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=categories',
 				'desc' => $this->l('Import')
+			);
+			// Add a button to recompute the whole nTree.
+			$this->toolbar_btn['regeneratetree'] = array(
+				'href' => self::$currentIndex.'&regeneratetree&token='.$this->token,
+				'desc' => $this->l('Regenerate nTree')
 			);
 		}
 		// be able to edit the Home category
@@ -757,7 +778,8 @@ class AdminCategoriesControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('Failed to update the position.');
 		else
 		{
-			$object->regenerateEntireNtree();
+			// The regeneration of the nTree is done within the Category's processPosition
+			//$object->regenerateEntireNtree();
 			Tools::redirectAdmin(self::$currentIndex.'&'.$this->table.'Orderby=position&'.$this->table.'Orderway=asc&conf=5'.(($id_category = (int)Tools::getValue($this->identifier, Tools::getValue('id_category_parent', 1))) ? ('&'.$this->identifier.'='.$id_category) : '').'&token='.Tools::getAdminTokenLite('AdminCategories'));
 		}
 	}
