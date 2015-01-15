@@ -314,7 +314,9 @@ class AdminControllerCore extends Controller
 			$this->multishop_context = Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP;
 
         // Fix #PSCSX-4339 - "default" theme name should be customizable
-        $default_theme_name = (defined('__PS_DEFAULT_THEME__') && !empty(__PS_DEFAULT_THEME__)) ? __PS_DEFAULT_THEME__ : 'default';
+        $default_theme_name = 'default';
+        if ( defined('_PS_BO_DEFAULT_THEME_') && _PS_BO_DEFAULT_THEME_ && file_exists(_PS_BO_ALL_THEMES_DIR_._PS_BO_DEFAULT_THEME_.DIRECTORY_SEPARATOR.'template'))
+            $default_theme_name = _PS_BO_DEFAULT_THEME_; 
 
 		$this->bo_theme = ((Validate::isLoadedObject($this->context->employee) && $this->context->employee->bo_theme) ? $this->context->employee->bo_theme : $default_theme_name);
 		if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$this->bo_theme.DIRECTORY_SEPARATOR.'template'))
