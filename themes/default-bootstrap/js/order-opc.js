@@ -384,44 +384,45 @@ function updateAddressSelection()
 				if (jsonData.refresh)
 					location.reload();
 				// Update all product keys with the new address id
-				$('#cart_summary .address_'+deliveryAddress).each(function() {
+				$('#cart_summary .address_' + deliveryAddress).each(function() {
 					$(this)
-						.removeClass('address_'+deliveryAddress)
-						.addClass('address_'+idAddress_delivery);
-					$(this).attr('id', $(this).attr('id').replace(/_\d+$/, '_'+idAddress_delivery));
-					if ($(this).find('.cart_unit span').length > 0 && $(this).find('.cart_unit span').attr('id').length > 0)
-						$(this).find('.cart_unit span').attr('id', $(this).find('.cart_unit span').attr('id').replace(/_\d+$/, '_'+idAddress_delivery));
+						.removeClass('address_' + deliveryAddress)
+						.addClass('address_' + idAddress_delivery);
+					$(this).attr('id', $(this).attr('id').replace(/_\d+$/, '_' + idAddress_delivery));
+					if ($(this).find('.cart_unit ul').length > 0 && $(this).find('.cart_unit ul').attr('id').length > 0)
+						$(this).find('.cart_unit ul').attr('id', $(this).find('.cart_unit ul').attr('id').replace(/_\d+$/, '_' + idAddress_delivery));
 
 					if ($(this).find('.cart_total span').length > 0 && $(this).find('.cart_total span').attr('id').length > 0)
-						$(this).find('.cart_total span').attr('id', $(this).find('.cart_total span').attr('id').replace(/_\d+$/, '_'+idAddress_delivery));
+						$(this).find('.cart_total span').attr('id', $(this).find('.cart_total span').attr('id').replace(/_\d+$/, '_' + idAddress_delivery));
 
 					if ($(this).find('.cart_quantity_input').length > 0 && $(this).find('.cart_quantity_input').attr('name').length > 0)
 					{
 						var name = $(this).find('.cart_quantity_input').attr('name')+'_hidden';
-						$(this).find('.cart_quantity_input').attr('name', $(this).find('.cart_quantity_input').attr('name').replace(/_\d+$/, '_'+idAddress_delivery));
+
+						$(this).find('.cart_quantity_input').attr('name', $(this).find('.cart_quantity_input').attr('name').replace(/_\d+$/, '_' + idAddress_delivery));
 						if ($(this).find('[name="' + name + '"]').length > 0)
-							$(this).find('[name="' + name +' "]').attr('name', name.replace(/_\d+_hidden$/, '_'+idAddress_delivery+'_hidden'));
+							$(this).find('[name="' + name + '"]').attr('name', name.replace(/_\d+_hidden$/, '_' + idAddress_delivery + '_hidden'));
 					}
 
 					if ($(this).find('.cart_quantity_delete').length > 0 && $(this).find('.cart_quantity_delete').attr('id').length > 0)
 					{
 						$(this).find('.cart_quantity_delete')
-							.attr('id', $(this).find('.cart_quantity_delete').attr('id').replace(/_\d+$/, '_'+idAddress_delivery))
-							.attr('href', $(this).find('.cart_quantity_delete').attr('href').replace(/id_address_delivery=\d+&/, 'id_address_delivery='+idAddress_delivery+'&'));
+							.attr('id', $(this).find('.cart_quantity_delete').attr('id').replace(/_\d+$/, '_' + idAddress_delivery))
+							.attr('href', $(this).find('.cart_quantity_delete').attr('href').replace(/id_address_delivery=\d+&/, 'id_address_delivery=' + idAddress_delivery+'&'));
 					}
 
 					if ($(this).find('.cart_quantity_down').length > 0 && $(this).find('.cart_quantity_down').attr('id').length > 0)
 					{
 						$(this).find('.cart_quantity_down')
-							.attr('id', $(this).find('.cart_quantity_down').attr('id').replace(/_\d+$/, '_'+idAddress_delivery))
-							.attr('href', $(this).find('.cart_quantity_down').attr('href').replace(/id_address_delivery=\d+&/, 'id_address_delivery='+idAddress_delivery+'&'));
+							.attr('id', $(this).find('.cart_quantity_down').attr('id').replace(/_\d+$/, '_' + idAddress_delivery))
+							.attr('href', $(this).find('.cart_quantity_down').attr('href').replace(/id_address_delivery=\d+&/, 'id_address_delivery=' + idAddress_delivery+'&'));
 					}
 
 					if ($(this).find('.cart_quantity_up').length > 0 && $(this).find('.cart_quantity_up').attr('id').length > 0)
 					{
 						$(this).find('.cart_quantity_up')
-							.attr('id', $(this).find('.cart_quantity_up').attr('id').replace(/_\d+$/, '_'+idAddress_delivery))
-							.attr('href', $(this).find('.cart_quantity_up').attr('href').replace(/id_address_delivery=\d+&/, 'id_address_delivery='+idAddress_delivery+'&'));
+							.attr('id', $(this).find('.cart_quantity_up').attr('id').replace(/_\d+$/, '_' + idAddress_delivery))
+							.attr('href', $(this).find('.cart_quantity_up').attr('href').replace(/id_address_delivery=\d+&/, 'id_address_delivery=' + idAddress_delivery+'&'));
 					}
 				});
 

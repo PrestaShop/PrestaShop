@@ -30,9 +30,9 @@ class AdminCustomerThreadsControllerCore extends AdminController
 	{
 		$this->bootstrap = true;
 		$this->context = Context::getContext();
-	 	$this->table = 'customer_thread';
+		$this->table = 'customer_thread';
 		$this->className = 'CustomerThread';
-	 	$this->lang = false;
+		$this->lang = false;
 
 		$contact_array = array();
 		$contacts = Contact::getContacts($this->context->language->id);
@@ -112,13 +112,13 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			),
 		);
 
-	 	$this->bulk_actions = array(
-	 		'delete' => array(
-	 			'text' => $this->l('Delete selected'),
-	 			'confirm' => $this->l('Delete selected items?'),
-	 			'icon' => 'icon-trash'
-	 		),
-	 	);
+		$this->bulk_actions = array(
+			'delete' => array(
+				'text' => $this->l('Delete selected'),
+				'confirm' => $this->l('Delete selected items?'),
+				'icon' => 'icon-trash'
+			),
+		);
 
 		$this->shopLinkType = 'shop';
 
@@ -217,12 +217,12 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		// Check the new IMAP messages before rendering the list
 		$this->renderProcessSyncImap();
 
-	 	$this->addRowAction('view');
-	 	$this->addRowAction('delete');
+		$this->addRowAction('view');
+		$this->addRowAction('delete');
 
- 		$this->_select = '
- 			CONCAT(c.`firstname`," ",c.`lastname`) as customer, cl.`name` as contact, l.`name` as language, group_concat(message) as messages,
- 			(
+		$this->_select = '
+			CONCAT(c.`firstname`," ",c.`lastname`) as customer, cl.`name` as contact, l.`name` as language, group_concat(message) as messages,
+			(
 				SELECT IFNULL(CONCAT(LEFT(e.`firstname`, 1),". ",e.`lastname`), "--")
 				FROM `'._DB_PREFIX_.'customer_message` cm2
 				INNER JOIN '._DB_PREFIX_.'employee e
@@ -443,7 +443,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
 		return parent::postProcess();
 	}
-		
+
 	public function initContent()
 	{
 		if (isset($_GET['filename']) && file_exists(_PS_UPLOAD_DIR_.$_GET['filename']) && Validate::isFileName($_GET['filename']))
@@ -549,9 +549,9 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$employees = Employee::getEmployees();
 
 		$messages = CustomerThread::getMessageCustomerThreads($id_customer_thread);
-		
+
 		foreach ($messages as $key => $mess)
-		{	
+		{
 			if ($mess['id_employee'])
 			{
 				$employee = new Employee($mess['id_employee']);
@@ -572,7 +572,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				}
 			}
 		}
-		
+
 		$next_thread = CustomerThread::getNextThread((int)$thread->id);
 
 		$contacts = Contact::getContacts($this->context->language->id);
@@ -629,7 +629,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				'name' => 'setstatus',
 				'value' => 1
 			);
-		
+
 		if ($thread->id_customer)
 		{
 			$customer = new Customer($thread->id_customer);
@@ -688,10 +688,10 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
 		if ($next_thread)
 			$this->tpl_view_vars['next_thread'] = $next_thread;
-		
+
 		return parent::renderView();
 	}
-	
+
 	public function getTimeline($messages, $id_order)
 	{
 		$timeline = array();
@@ -699,13 +699,12 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		{
 			$product = new Product((int)$message['id_product'], false, $this->context->language->id);
 			$link_product = $this->context->link->getAdminLink('AdminOrders').'&vieworder&id_order='.(int)$product->id;
-			
-			
+
 			$content = $this->l('Message to: ').' <span class="badge">'.(!$message['id_employee'] ? $message['subject'] : $message['customer_name']).'</span><br/>';
 			if (Validate::isLoadedObject($product))
 				$content .= '<br/>'.$this->l('Product: ').'<span class="label label-info">'.$product->name.'</span><br/><br/>';
 			$content .= Tools::safeOutput($message['message']);
-			
+
 			$timeline[$message['date_add']][] = array(
 				'arrow' => 'left',
 				'background_color' => '',
@@ -714,7 +713,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				'date' => $message['date_add'],
 			);
 		}
-		
+
 		$order = new Order((int)$id_order);
 		if (Validate::isLoadedObject($order))
 		{
@@ -722,9 +721,9 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			foreach ($order_history as $history)
 			{
 				$link_order = $this->context->link->getAdminLink('AdminOrders').'&vieworder&id_order='.(int)$order->id;
-				
+
 				$content = '<a class="badge" target="_blank" href="'.Tools::safeOutput($link_order).'">'.$this->l('Order').' #'.(int)$order->id.'</a><br/><br/>';
-				
+
 				$content .= '<span>'.$this->l('Status:').' '.$history['ostate_name'].'</span>';
 
 				$timeline[$history['date_add']][] = array(
@@ -741,7 +740,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		krsort($timeline);
 		return $timeline;
 	}
-	
+
 	protected function displayMessage($message, $email = false, $id_employee = null)
 	{
 		$tpl = $this->createTemplate('message.tpl');
@@ -750,7 +749,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		foreach ($contacts as $contact)
 			$contact_array[$contact['id_contact']] = array('id_contact' => $contact['id_contact'], 'name' => $contact['name']);
 		$contacts = $contact_array;
-		
+
 		if (!$email)
 		{
 			if (!empty($message['id_product']) && empty($message['employee_name']))
@@ -833,14 +832,14 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		if (!$this->errors && $value)
 			Configuration::updateValue('PS_SAV_IMAP_OPT', implode('', $value));
 	}
-	
+
 	public function ajaxProcessMarkAsRead()
 	{
 		if ($this->tabAccess['edit'] != '1')
 			throw new PrestaShopException(Tools::displayError('You do not have permission to edit this.'));
 
 		$id_thread = Tools::getValue('id_thread');
-		$messages = CustomerThread::getMessageCustomerThreads($id_thread);		
+		$messages = CustomerThread::getMessageCustomerThreads($id_thread);
 		if (count($messages))
 			Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'customer_message` set `read` = 1 WHERE `id_employee` = '.(int)$this->context->employee->id.' AND `id_customer_thread` = '.(int)$id_thread);
 	}
@@ -873,12 +872,12 @@ class AdminCustomerThreadsControllerCore extends AdminController
 			return;
 
 		// Executes the IMAP synchronization.
-		$syncErrors = $this->syncImap();
+		$sync_errors = $this->syncImap();
 
 		// Show the errors.
-		if (isset($syncErrors['hasError']) && $syncErrors['hasError'])
-			if (isset($syncErrors['errors']))
-				foreach ($syncErrors['errors'] as &$error)
+		if (isset($sync_errors['hasError']) && $sync_errors['hasError'])
+			if (isset($sync_errors['errors']))
+				foreach ($sync_errors['errors'] as &$error)
 					$this->displayWarning($error);
 	}
 
@@ -926,10 +925,10 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		$str_errors = '';
 		$str_error_delete = '';
 
-		if (sizeof($errors) && is_array($errors))
+		if (count($errors) && is_array($errors))
 		{
 			$str_errors = '';
-			foreach($errors as $error)
+			foreach ($errors as $error)
 				$str_errors .= $error.', ';
 			$str_errors = rtrim(trim($str_errors), ',');
 		}
@@ -970,13 +969,13 @@ class AdminCustomerThreadsControllerCore extends AdminController
 				//check if subject has id_order
 				preg_match('/\#ct([0-9]*)/', $subject, $matches1);
 				preg_match('/\#tc([0-9-a-z-A-Z]*)/', $subject, $matches2);
-				$matchFound = false;
+				$match_found = false;
 				if (isset($matches1[1]) && isset($matches2[1]))
-					$matchFound = true;
+					$match_found = true;
 
-				$new_ct = ( Configuration::get('PS_SAV_IMAP_CREATE_THREADS') && !$matchFound && (strpos($subject, '[no_sync]') == false));
+				$new_ct = ( Configuration::get('PS_SAV_IMAP_CREATE_THREADS') && !$match_found && (strpos($subject, '[no_sync]') == false));
 
-				if ( $matchFound || $new_ct)
+				if ($match_found || $new_ct)
 				{
 					if ($new_ct)
 					{
@@ -989,10 +988,9 @@ class AdminCustomerThreadsControllerCore extends AdminController
 						if (!$contacts)
 							continue;
 
-						foreach ($contacts as $contact) {
-							if (strpos($overview->to , $contact['email']) !== false)
+						foreach ($contacts as $contact)
+							if (strpos($overview->to, $contact['email']) !== false)
 								$id_contact = $contact['id_contact'];
-						}
 
 						if (!isset($id_contact)) // if not use the default contact category
 							$id_contact = $contacts[0]['id_contact'];
