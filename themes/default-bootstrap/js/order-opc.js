@@ -400,7 +400,7 @@ function updateAddressSelection()
 						var name = $(this).find('.cart_quantity_input').attr('name')+'_hidden';
 						$(this).find('.cart_quantity_input').attr('name', $(this).find('.cart_quantity_input').attr('name').replace(/_\d+$/, '_'+idAddress_delivery));
 						if ($(this).find('[name="' + name + '"]').length > 0)
-							$(this).find('[name="' + name +' "]').attr('name', name.replace(/_\d+_hidden$/, '_'+idAddress_delivery+'_hidden'));
+							$(this).find('[name="' + name +'"]').attr('name', name.replace(/_\d+_hidden$/, '_'+idAddress_delivery+'_hidden'));
 					}
 
 					if ($(this).find('.cart_quantity_delete').length > 0 && $(this).find('.cart_quantity_delete').attr('id').length > 0)
