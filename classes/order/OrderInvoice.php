@@ -300,50 +300,85 @@ class OrderInvoiceCore extends ObjectModel
 		}
 		else
 		{
-			// sum by order details in order to retrieve real taxes rate
-			$taxes_infos = Db::getInstance()->executeS('
-			SELECT t.`rate` AS `name`, od.`total_price_tax_excl` AS total_price_tax_excl, SUM(t.`rate`) AS rate, SUM(`total_amount`) AS `total_amount`, od.`ecotax`, od.`ecotax_tax_rate`, od.`product_quantity`
-			FROM `'._DB_PREFIX_.'order_detail_tax` odt
-			LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = odt.`id_tax`)
-			LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
-			WHERE od.`id_order` = '.(int)$this->id_order.'
-			AND od.`id_order_invoice` = '.(int)$this->id.'
-			GROUP BY odt.`id_order_detail`
+			/**
+			 * Keys of the $breakdown array below are tax rates.
+			 * Values are arrays that should contain at least the columns:
+			 * - total_amount
+			 * - name
+			 * - total_price_tax_excl
+			 */
+			$breakdown = array();
+
+			$product_details = Db::getInstance()->executeS('
+				SELECT t.`rate`, od.`total_price_tax_excl` AS total_price_tax_excl, od.product_id as id_product, `total_amount`, od.`ecotax`, od.`ecotax_tax_rate`, od.`product_quantity`
+				FROM `'._DB_PREFIX_.'order_detail_tax` odt
+				LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = odt.`id_tax`)
+				LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
+				WHERE od.`id_order` = '.(int)$this->id_order.'
+				AND od.`id_order_invoice` = '.(int)$this->id.'
+				GROUP BY odt.`id_order_detail`
 			');
 
-			// sum by taxes
-			$tmp_tax_infos = array();
-			$shipping_tax_amount = 0;
-			foreach ($order->getCartRules() as $cart_rule)
-				if ($cart_rule['free_shipping'])
+			$order_discount_tax_excl = $this->total_discount_tax_excl;
+
+			$order = new Order($this->id_order);
+			$shipping_tax_excl = 0;
+
+			$product_specific_discounts = array();
+
+			foreach ($order->getCartRules() as $order_cart_rule)
+			{
+				if ($order_cart_rule['free_shipping'])
 				{
-					$shipping_tax_amount = $this->total_shipping_tax_excl;
-					break;
+					$shipping_tax_excl = $this->total_shipping_tax_excl;
 				}
 
-			foreach ($taxes_infos as $tax_infos)
+				$cart_rule = new CartRule($order_cart_rule['id_cart_rule']);
+				if ($cart_rule->reduction_product)
+				{
+
+					if (empty($product_specific_discounts[$cart_rule->reduction_product]))
+					{
+						$product_specific_discounts[$cart_rule->reduction_product] = 0;
+					}
+				}
+
+				$product_specific_discounts[$cart_rule->reduction_product] += $order_cart_rule['value_tax_excl'];
+				$order_discount_tax_excl -= $order_cart_rule['value_tax_excl'];
+			}
+
+			$order_discount_tax_excl -= $shipping_tax_excl;
+
+			foreach ($product_details as $details)
 			{
-				if (!isset($tmp_tax_infos[$tax_infos['rate']]))
-					$tmp_tax_infos[$tax_infos['rate']] = array(
+				if (!isset($breakdown[$details['rate']]))
+				{
+					$breakdown[$details['rate']] = array(
+						'name' => $details['rate'],
 						'total_amount' => 0,
-						'name' => 0,
 						'total_price_tax_excl' => 0
 					);
-				$ratio = $tax_infos['total_price_tax_excl'] / $this->total_products;
-				$order_reduction_amount = ($this->total_discount_tax_excl - $shipping_tax_amount) * $ratio;
-				$tmp_tax_infos[$tax_infos['rate']]['total_amount'] += ($tax_infos['total_amount'] - Tools::ps_round($tax_infos['ecotax'] * $tax_infos['product_quantity'] * $tax_infos['ecotax_tax_rate'] / 100, _PS_PRICE_COMPUTE_PRECISION_));
-				$tmp_tax_infos[$tax_infos['rate']]['name'] = $tax_infos['name'];
-				$tmp_tax_infos[$tax_infos['rate']]['total_price_tax_excl'] += $tax_infos['total_price_tax_excl'] - $order_reduction_amount - Tools::ps_round($tax_infos['ecotax'] * $tax_infos['product_quantity'], _PS_PRICE_COMPUTE_PRECISION_);
+				}
+
+				$discount_ratio = $details['total_price_tax_excl'] / $this->total_products;
+
+				$breakdown[$details['rate']]['total_amount'] += $details['total_amount'];
+				$share_of_order_discount = $discount_ratio * $order_discount_tax_excl;
+				$breakdown[$details['rate']]['total_price_tax_excl'] += $details['total_price_tax_excl'] - $share_of_order_discount;
+				if (!empty($product_specific_discounts[$details['id_product']]))
+				{
+					$breakdown[$details['rate']]['total_price_tax_excl'] -= $product_specific_discounts[$details['id_product']];
+				}
 			}
-		}
 
-		foreach ($tmp_tax_infos as &$tax)
-		{
-			$tax['total_amount'] = Tools::ps_round($tax['total_amount'], _PS_PRICE_DISPLAY_PRECISION_);
-			$tax['total_price_tax_excl'] = Tools::ps_round($tax['total_price_tax_excl'], _PS_PRICE_DISPLAY_PRECISION_);
-		}
+			foreach ($breakdown as $rate => $details)
+			{
+				$details[$rate]['total_amount'] = Tools::ps_round($details[$rate]['total_amount'], _PS_PRICE_COMPUTE_PRECISION_);
+				$details[$rate]['total_price_tax_excl'] = Tools::ps_round($details[$rate]['total_price_tax_excl'], _PS_PRICE_COMPUTE_PRECISION_);
+			}
 
-		return $tmp_tax_infos;
+			return $breakdown;
+		}
 	}
 
 	/**
