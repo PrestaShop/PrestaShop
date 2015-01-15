@@ -2356,8 +2356,8 @@ class AdminControllerCore extends Controller
 		// Execute Hook AdminController SetMedia
 		Hook::exec('actionAdminControllerSetMedia');
 
-        // Specific Admin Theme
-        $this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/overrides.css', 'all', PHP_INT_MAX);
+		// Specific Admin Theme
+		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/overrides.css', 'all', PHP_INT_MAX);
 	}
 
 	/**
