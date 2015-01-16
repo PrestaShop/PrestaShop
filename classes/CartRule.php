@@ -904,7 +904,8 @@ class CartRuleCore extends ObjectModel
 						if (in_array($product['id_product'].'-'.$product['id_product_attribute'], $selected_products)
 							|| in_array($product['id_product'].'-0', $selected_products))
 						{
-							$price = ($use_tax ? $product['price_wt'] : $product['price']);
+							// TODO: functional test
+							$price = ($use_tax ? $product['price'] * (1 + $context->cart->getAverageProductsTaxRate()) : $product['price']);
 							$selected_products_reduction += $price * $product['cart_quantity'];
 						}
 				$reduction_value += $selected_products_reduction * $this->reduction_percent / 100;
