@@ -1169,7 +1169,7 @@ class ProductCore extends ObjectModel
 					INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY
 				)
 			) > 0
-		', true, false);
+		');
 		return count($result) > 0;
 	}
 
