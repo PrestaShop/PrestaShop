@@ -2936,6 +2936,9 @@ class CartCore extends ObjectModel
 
 		$products = $this->getProducts($refresh);
 
+		$ecotax_rate = (float)Tax::getProductEcotaxRate($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+		$apply_eco_tax = Product::$_taxCalculationMethod == PS_TAX_INC && (int)Configuration::get('PS_TAX');
+
 		foreach ($products as $key => &$product)
 		{
 			$product['price_without_quantity_discount'] = Product::getPriceStatic(
@@ -2953,6 +2956,12 @@ class CartCore extends ObjectModel
 				$reduction = (float)$product['price_wt'] - (float)$product['price_without_quantity_discount'];
 				$product['reduction_formatted'] = Tools::displayPrice($reduction);
 			}
+
+			$ecotax_tax_amount = Tools::ps_round($product['ecotax'], 2);
+			if ($apply_eco_tax)
+				$ecotax_tax_amount = Tools::ps_round($ecotax_tax_amount * (1 + $ecotax_rate / 100), 2);
+			$product['price'] += $ecotax_tax_amount;
+			$product['price_wt'] += $ecotax_tax_amount;
 		}
 
 		$gift_products = array();
