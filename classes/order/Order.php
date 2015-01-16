@@ -1096,7 +1096,7 @@ class OrderCore extends ObjectModel
 		if (!$nbReturnDays)
 			return true;
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT TO_DAYS(NOW()) - TO_DAYS(`delivery_date`)  AS days FROM `'._DB_PREFIX_.'orders`
+		SELECT TO_DAYS("'.date('Y-m-d').' 00:00:00") - TO_DAYS(`delivery_date`)  AS days FROM `'._DB_PREFIX_.'orders`
 		WHERE `id_order` = '.(int)($this->id));
 		if ($result['days'] <= $nbReturnDays)
 			return true;
