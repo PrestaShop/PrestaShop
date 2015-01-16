@@ -332,7 +332,7 @@ class ManufacturerCore extends ObjectModel
 				DATEDIFF(
 					product_shop.`date_add`,
 					DATE_SUB(
-						NOW(),
+						"'.date('Y-m-d').' 00:00:00",
 						INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY
 					)
 				) > 0 AS new'.(Combination::isFeatureActive() ? ',MAX(product_attribute_shop.minimal_quantity) AS product_attribute_minimal_quantity' : '')
