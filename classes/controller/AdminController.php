@@ -313,9 +313,14 @@ class AdminControllerCore extends Controller
 		if ($this->multishop_context == -1)
 			$this->multishop_context = Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP;
 
-		$this->bo_theme = ((Validate::isLoadedObject($this->context->employee) && $this->context->employee->bo_theme) ? $this->context->employee->bo_theme : 'default');
+        // Fix #PSCSX-4339 - "default" theme name should be customizable
+        $default_theme_name = 'default';
+        if ( defined('_PS_BO_DEFAULT_THEME_') && _PS_BO_DEFAULT_THEME_ && file_exists(_PS_BO_ALL_THEMES_DIR_._PS_BO_DEFAULT_THEME_.DIRECTORY_SEPARATOR.'template'))
+            $default_theme_name = _PS_BO_DEFAULT_THEME_; 
+
+		$this->bo_theme = ((Validate::isLoadedObject($this->context->employee) && $this->context->employee->bo_theme) ? $this->context->employee->bo_theme : $default_theme_name);
 		if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$this->bo_theme.DIRECTORY_SEPARATOR.'template'))
-			$this->bo_theme = 'default';
+			$this->bo_theme = $default_theme_name;
 		$this->bo_css = ((Validate::isLoadedObject($this->context->employee) && $this->context->employee->bo_css) ? $this->context->employee->bo_css : 'admin-theme.css');
 		if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$this->bo_theme.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.$this->bo_css))
 			$this->bo_css = 'admin-theme.css';
