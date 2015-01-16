@@ -339,13 +339,12 @@ class OrderInvoiceCore extends ObjectModel
 			$order_discount_tax_excl -= $free_shipping_tax_excl;
 
 			$product_details = Db::getInstance()->executeS('
-			SELECT t.`rate`, od.`total_price_tax_excl` AS total_price_tax_excl, od.product_id as id_product, `total_amount`, od.`ecotax`, od.`ecotax_tax_rate`, od.`product_quantity`
-			FROM `'._DB_PREFIX_.'order_detail_tax` odt
-			LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = odt.`id_tax`)
-			LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
-			WHERE od.`id_order` = '.(int)$this->id_order.'
-			AND od.`id_order_invoice` = '.(int)$this->id.'
-			GROUP BY odt.`id_order_detail`
+				SELECT t.`rate`, od.`total_price_tax_excl` AS total_price_tax_excl, od.product_id as id_product, `total_amount`, od.`ecotax`, od.`ecotax_tax_rate`, od.`product_quantity`
+				FROM `'._DB_PREFIX_.'order_detail_tax` odt
+				LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = odt.`id_tax`)
+				LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
+				WHERE od.`id_order` = '.(int)$this->id_order.'
+				AND od.`id_order_invoice` = '.(int)$this->id.'
 			');
 
 			foreach ($product_details as $details)
