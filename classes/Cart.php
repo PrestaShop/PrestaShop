@@ -534,7 +534,10 @@ class CartCore extends ObjectModel
 		if (empty($result))
 			return array();
 
+		$ecotax_rate = (float)Tax::getProductEcotaxRate($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
+		$apply_eco_tax = Product::$_taxCalculationMethod == PS_TAX_INC && (int)Configuration::get('PS_TAX');
 		$cart_shop_context = Context::getContext()->cloneContext();
+
 		foreach ($result as &$row)
 		{
 			if (isset($row['ecotax_attr']) && $row['ecotax_attr'] > 0)
@@ -595,6 +598,14 @@ class CartCore extends ObjectModel
 					break;
 			}
 			$row['price_wt'] = $tax_calculator->addTaxes($row['price']);
+
+			$ecotax_tax_amount = Tools::ps_round($row['ecotax'], 2);
+			if ($apply_eco_tax)
+				$ecotax_tax_amount = Tools::ps_round($ecotax_tax_amount * (1 + $ecotax_rate / 100), 2);
+			$row['price'] += $ecotax_tax_amount;
+			$row['price_wt'] += $ecotax_tax_amount;
+			$row['total'] += $ecotax_tax_amount * $row['cart_quantity'];
+			$row['total_wt'] += $ecotax_tax_amount * $row['cart_quantity'];
 			$row['description_short'] = Tools::nl2br($row['description_short']);
 
 			if (!isset($row['pai_id_image']) || $row['pai_id_image'] == 0)
@@ -2936,9 +2947,6 @@ class CartCore extends ObjectModel
 
 		$products = $this->getProducts($refresh);
 
-		$ecotax_rate = (float)Tax::getProductEcotaxRate($this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
-		$apply_eco_tax = Product::$_taxCalculationMethod == PS_TAX_INC && (int)Configuration::get('PS_TAX');
-
 		foreach ($products as $key => &$product)
 		{
 			$product['price_without_quantity_discount'] = Product::getPriceStatic(
@@ -2956,14 +2964,6 @@ class CartCore extends ObjectModel
 				$reduction = (float)$product['price_wt'] - (float)$product['price_without_quantity_discount'];
 				$product['reduction_formatted'] = Tools::displayPrice($reduction);
 			}
-
-			$ecotax_tax_amount = Tools::ps_round($product['ecotax'], 2);
-			if ($apply_eco_tax)
-				$ecotax_tax_amount = Tools::ps_round($ecotax_tax_amount * (1 + $ecotax_rate / 100), 2);
-			$product['price'] += $ecotax_tax_amount;
-			$product['price_wt'] += $ecotax_tax_amount;
-			$product['total'] += $ecotax_tax_amount * $product['cart_quantity'];
-			$product['total_wt'] += $ecotax_tax_amount * $product['cart_quantity'];
 		}
 
 		$gift_products = array();
