@@ -875,9 +875,14 @@ class CartRuleCore extends ObjectModel
 				$cheapest_product = null;
 				foreach ($all_products as $product)
 				{
-					// since later on we won't be able to know the product the cart rule was applied to,
-					// use average cart VAT for price_wt
-					$price = ($use_tax ? $product['price'] * (1 + $context->cart->getAverageProductsTaxRate()) : $product['price']);
+					$price = $product['price'];
+					if ($use_tax)
+					{
+						// since later on we won't be able to know the product the cart rule was applied to,
+						// use average cart VAT for price_wt
+						$price *= (1 + $context->cart->getAverageProductsTaxRate());
+					}
+
 					if ($price > 0 && ($minPrice === false || $minPrice > $price))
 					{
 						$minPrice = $price;
@@ -904,8 +909,12 @@ class CartRuleCore extends ObjectModel
 						if (in_array($product['id_product'].'-'.$product['id_product_attribute'], $selected_products)
 							|| in_array($product['id_product'].'-0', $selected_products))
 						{
-							// TODO: functional test
-							$price = ($use_tax ? $product['price'] * (1 + $context->cart->getAverageProductsTaxRate()) : $product['price']);
+							$price = $product['price'];
+							if ($use_tax)
+							{
+								$price *= (1 + $context->cart->getAverageProductsTaxRate());
+							}
+
 							$selected_products_reduction += $price * $product['cart_quantity'];
 						}
 				$reduction_value += $selected_products_reduction * $this->reduction_percent / 100;
