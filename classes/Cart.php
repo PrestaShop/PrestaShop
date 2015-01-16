@@ -2962,6 +2962,8 @@ class CartCore extends ObjectModel
 				$ecotax_tax_amount = Tools::ps_round($ecotax_tax_amount * (1 + $ecotax_rate / 100), 2);
 			$product['price'] += $ecotax_tax_amount;
 			$product['price_wt'] += $ecotax_tax_amount;
+			$product['total'] += $ecotax_tax_amount * $product['cart_quantity'];
+			$product['total_wt'] += $ecotax_tax_amount * $product['cart_quantity'];
 		}
 
 		$gift_products = array();
