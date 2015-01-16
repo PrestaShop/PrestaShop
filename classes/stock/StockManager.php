@@ -651,7 +651,7 @@ class StockManagerCore implements StockManagerInterface
 				'.Shop::addSqlAssociation('product_attribute', 'pa', false).'
 				WHERE sm.`sign` = -1
 				AND sm.`id_stock_mvt_reason` != '.Configuration::get('PS_STOCK_MVT_TRANSFER_FROM').'
-				AND TO_DAYS(NOW()) - TO_DAYS(sm.`date_add`) <= '.(int)$coverage.'
+				AND TO_DAYS("'.date('Y-m-d').' 00:00:00") - TO_DAYS(sm.`date_add`) <= '.(int)$coverage.'
 				AND s.`id_product` = '.(int)$id_product.'
 				AND s.`id_product_attribute` = '.(int)$id_product_attribute.
 				($id_warehouse ? ' AND s.`id_warehouse` = '.(int)$id_warehouse : '').'

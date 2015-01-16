@@ -1162,11 +1162,11 @@ class ProductCore extends ObjectModel
 			AND DATEDIFF(
 				product_shop.`date_add`,
 				DATE_SUB(
-					NOW(),
+					"'.date('Y-m-d').' 00:00:00",
 					INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY
 				)
 			) > 0
-		', true, false);
+		');
 		return count($result) > 0;
 	}
 
@@ -2262,7 +2262,7 @@ class ProductCore extends ObjectModel
 			$sql = 'SELECT p.*, product_shop.*, stock.`out_of_stock` out_of_stock, pl.`description`, pl.`description_short`,
 						pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, pl.`available_now`, pl.`available_later`,
 						p.`ean13`, p.`upc`,
-						DATEDIFF(product_shop.`date_add`, DATE_SUB(NOW(),
+						DATEDIFF(product_shop.`date_add`, DATE_SUB("'.date('Y-m-d').' 00:00:00",
 						INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).'
 							DAY)) > 0 AS new
 					FROM `'._DB_PREFIX_.'product` p
@@ -2370,7 +2370,7 @@ class ProductCore extends ObjectModel
 			DATEDIFF(
 				p.`date_add`,
 				DATE_SUB(
-					NOW(),
+					"'.date('Y-m-d').' 00:00:00",
 					INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY
 				)
 			) > 0 AS new
@@ -3319,7 +3319,7 @@ class ProductCore extends ObjectModel
 					DATEDIFF(
 						p.`date_add`,
 						DATE_SUB(
-							NOW(),
+							"'.date('Y-m-d').' 00:00:00",
 							INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY
 						)
 					) > 0 AS new

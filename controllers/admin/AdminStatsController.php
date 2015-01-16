@@ -364,7 +364,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 	public static function getAverageCustomerAge()
 	{
 		$value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT AVG(DATEDIFF(NOW(), birthday))
+		SELECT AVG(DATEDIFF("'.date('Y-m-d').' 00:00:00", birthday))
 		FROM `'._DB_PREFIX_.'customer` c
 		WHERE active = 1
 		AND birthday IS NOT NULL AND birthday != "0000-00-00" '.Shop::addSqlRestriction());

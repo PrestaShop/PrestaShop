@@ -267,7 +267,7 @@ class SupplierCore extends ObjectModel
 					MAX(image_shop.`id_image`) id_image,
 					il.`legend`,
 					s.`name` AS supplier_name,
-					DATEDIFF(p.`date_add`, DATE_SUB(NOW(), INTERVAL '.($nb_days_new_product).' DAY)) > 0 AS new,
+					DATEDIFF(p.`date_add`, DATE_SUB("'.date('Y-m-d').' 00:00:00", INTERVAL '.($nb_days_new_product).' DAY)) > 0 AS new,
 					m.`name` AS manufacturer_name'.(Combination::isFeatureActive() ? ', MAX(product_attribute_shop.minimal_quantity) AS product_attribute_minimal_quantity' : '').'
 				 FROM `'._DB_PREFIX_.'product` p
 				'.Shop::addSqlAssociation('product', 'p').'
