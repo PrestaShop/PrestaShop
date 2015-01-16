@@ -311,7 +311,7 @@ class SearchCore
 				DATEDIFF(
 					p.`date_add`,
 					DATE_SUB(
-						NOW(),
+						"'.date('Y-m-d').' 00:00:00",
 						INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY
 					)
 				) > 0 new'.(Combination::isFeatureActive() ? ', MAX(product_attribute_shop.minimal_quantity) AS product_attribute_minimal_quantity' : '').'
@@ -722,14 +722,14 @@ class SearchCore
 						AND t.`name` LIKE \'%'.pSQL($tag).'%\'';
 			if (Group::isFeatureActive())
 			{
-				$sql .= ' AND EXISTS(SELECT 1 FROM `'._DB_PREFIX_.'category_product` cp
+				$sql .= ' AND p.id_product IN (SELECT DISTINCT cp.`id_product` FROM `'._DB_PREFIX_.'category_product` cp
 					LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.id_category = cg.id_category)
 					LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cp.`id_category` = cs.`id_category`)
-					WHERE cp.`id_product` = p.`id_product` AND cs.`id_shop` = '.(int)$id_shop.' '.$sql_groups.')';
+					WHERE cs.`id_shop` = '.(int)$id_shop.' '.$sql_groups.')';
 			} else {
-				$sql .= ' AND EXISTS(SELECT 1 FROM `'._DB_PREFIX_.'category_product` cp
+				$sql .= ' AND p.id_product IN (SELECT DISTINCT cp.`id_product` FROM `'._DB_PREFIX_.'category_product` cp
 					LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cp.`id_category` = cs.`id_category`)
-					WHERE cp.`id_product` = p.`id_product` AND cs.`id_shop` = '.(int)$id_shop.')';
+					WHERE cs.`id_shop` = '.(int)$id_shop.')';
 			}
 
 			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
@@ -740,7 +740,7 @@ class SearchCore
 					DATEDIFF(
 						p.`date_add`,
 						DATE_SUB(
-							NOW(),
+							"'.date('Y-m-d').' 00:00:00",
 							INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY
 						)
 					) > 0 new
