@@ -221,16 +221,17 @@ class TabCore extends ObjectModel
 	 * Return the list of tab used by a module
 	 *
 	 * @static
+	 * @param $module string Name of module
 	 * @return array
 	 */
-	public static function getModuleTabList()
+	public static function getModuleTabList($module)
 	{
 		$list = array();
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT t.`class_name`, t.`module`
+			SELECT t.`id_tab`, t.`id_parent`, t.`class_name`
 			FROM `'._DB_PREFIX_.'tab` t
-			WHERE t.`module` IS NOT NULL AND t.`module` != ""');
+			WHERE t.`module` = \''.$module.'\'');
 
 		foreach ($result as $detail)
 			$list[strtolower($detail['class_name'])] = $detail;
