@@ -332,7 +332,7 @@ class SearchCore
 				GROUP BY product_shop.id_product
 				'.($order_by ? 'ORDER BY  '.$alias.$order_by : '').($order_way ? ' '.$order_way : '').'
 				LIMIT '.(int)(($page_number - 1) * $page_size).','.(int)$page_size;
-		$result = $db->executeS($sql, true, false);
+		$result = $db->executeS($sql);
 
 		$sql = 'SELECT COUNT(*)
 				FROM '._DB_PREFIX_.'product p
