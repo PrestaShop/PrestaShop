@@ -269,6 +269,10 @@ class CartRuleCore extends ObjectModel
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
 
+		if (empty($result)) {
+			return array();
+		}
+
 		// Remove cart rule that does not match the customer groups
 		$customerGroups = Customer::getGroupsStatic($id_customer);
 
