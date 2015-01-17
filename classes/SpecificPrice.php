@@ -379,7 +379,7 @@ class SpecificPriceCore extends ObjectModel
 					`id_customer` IN(0, '.(int)$id_customer.') AND
 					`from_quantity` = 1 AND
 					`reduction` > 0
-		', false);
+		');
 		$ids_product = array();
 		while ($row = Db::getInstance()->nextRow($result)) {
 			$from = (int)$row['u_from'];
