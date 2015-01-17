@@ -269,6 +269,10 @@ class CartRuleCore extends ObjectModel
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
 
+		if (empty($result)) {
+			return array();
+		}
+
 		// Remove cart rule that does not match the customer groups
 		$customerGroups = Customer::getGroupsStatic($id_customer);
 
@@ -811,7 +815,7 @@ class CartRuleCore extends ObjectModel
 			$filter = CartRule::FILTER_ACTION_ALL;
 
 		$all_products = $context->cart->getProducts();
-		$package_products = (is_null($package) ? $all_products : $package['products']);
+		$package_products = (($package === null) ? $all_products : $package['products']);
 
 		$reduction_value = 0;
 
@@ -826,7 +830,7 @@ class CartRuleCore extends ObjectModel
 		if ($this->free_shipping && in_array($filter, array(CartRule::FILTER_ACTION_ALL, CartRule::FILTER_ACTION_ALL_NOCAP, CartRule::FILTER_ACTION_SHIPPING)))
 		{
 			if (!$this->carrier_restriction)
-				$reduction_value += $context->cart->getOrderTotal($use_tax, Cart::ONLY_SHIPPING, is_null($package) ? null : $package['products'], is_null($package) ? null : $package['id_carrier']);
+				$reduction_value += $context->cart->getOrderTotal($use_tax, Cart::ONLY_SHIPPING, ($package === null) ? null : $package['products'], ($package === null) ? null : $package['id_carrier']);
 			else
 			{
 				$data = Db::getInstance()->executeS('
@@ -907,7 +911,7 @@ class CartRuleCore extends ObjectModel
 			if ($this->reduction_amount)
 			{
 				$prorata = 1;
-				if (!is_null($package) && count($all_products))
+				if ($package !== null && count($all_products))
 				{
 					$total_products = $context->cart->getOrderTotal($use_tax, Cart::ONLY_PRODUCTS);
 					if ($total_products)
@@ -999,7 +1003,7 @@ class CartRuleCore extends ObjectModel
 		// Free gift
 		if ((int)$this->gift_product && in_array($filter, array(CartRule::FILTER_ACTION_ALL, CartRule::FILTER_ACTION_ALL_NOCAP, CartRule::FILTER_ACTION_GIFT)))
 		{
-			$id_address = (is_null($package) ? 0 : $package['id_address']);
+			$id_address = (($package === null) ? 0 : $package['id_address']);
 			foreach ($package_products as $product)
 				if ($product['id_product'] == $this->gift_product && ($product['id_product_attribute'] == $this->gift_product_attribute || !(int)$this->gift_product_attribute))
 				{
