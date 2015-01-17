@@ -253,8 +253,7 @@ class CartRuleCore extends ObjectModel
 		if (!CartRule::isFeatureActive())
 			return array();
 
-		$sql_part1 = 'SELECT SQL_NO_CACHE *
-				FROM `'._DB_PREFIX_.'cart_rule` cr
+		$sql_part1 = '* FROM `'._DB_PREFIX_.'cart_rule` cr
 				LEFT JOIN `'._DB_PREFIX_.'cart_rule_lang` crl ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = '.(int)$id_lang.')';
 
 		$sql_part2 = ' AND cr.date_from < NOW()
@@ -266,8 +265,8 @@ class CartRuleCore extends ObjectModel
 			$sql_part2 .= ' AND free_shipping = 1 AND carrier_restriction = 1';
 		}
 
-		$sql = '('.$sql_part1.' WHERE cr.`id_customer` = '.(int)$id_customer.' '.$sql_part2.')';
-		$sql .= ' UNION ('.$sql_part1.' WHERE cr.`group_restriction` = 1 '.$sql_part2.')';
+		$sql = '(SELECT SQL_NO_CACHE '.$sql_part1.' WHERE cr.`id_customer` = '.(int)$id_customer.' '.$sql_part2.')';
+		$sql .= ' UNION (SELECT '.$sql_part1.' WHERE cr.`group_restriction` = 1 '.$sql_part2.')';
 		if ($includeGeneric && (int)$id_customer != 0) {
 			$sql .= ' UNION ('.$sql_part1.' WHERE cr.`id_customer` = 0 '.$sql_part2.')';
 		}
