@@ -94,7 +94,7 @@ class TranslateCore
 	public static function getGenericAdminTranslation($string, $key = null, &$lang_array)
 	{
 		$string = preg_replace("/\\\*'/", "\'", $string);
-		if (is_null($key))
+		if (($key === null))
 			$key = md5($string);
 
 		if (isset($lang_array['AdminController'.$key]))
@@ -247,7 +247,7 @@ class TranslateCore
 	 */
 	public static function checkAndReplaceArgs($string, $args)
 	{
-		if (preg_match_all('#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#', $string, $matches) && !is_null($args))
+		if (preg_match_all('#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#', $string, $matches) && ($args !== null))
 		{
 			if (!is_array($args))
 				$args = array($args);

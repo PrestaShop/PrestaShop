@@ -828,7 +828,7 @@ abstract class ModuleCore
 			}
 
 			// If shop lists is null, we fill it with all shops
-			if (is_null($shop_list))
+			if (($shop_list === null))
 				$shop_list = Shop::getShops(true, null, true);
 
 			foreach ($shop_list as $shop_id)
@@ -925,7 +925,7 @@ abstract class ModuleCore
 	public function registerExceptions($id_hook, $excepts, $shop_list = null)
 	{
 		// If shop lists is null, we fill it with all shops
-		if (is_null($shop_list))
+		if (($shop_list === null))
 			$shop_list = Shop::getContextListShopID();
 
 		// Save modules exception for each shop
@@ -1058,7 +1058,7 @@ abstract class ModuleCore
 	{
 		static $id2name = null;
 
-		if (is_null($id2name))
+		if (($id2name === null))
 		{
 			$id2name = array();
 			$sql = 'SELECT `id_module`, `name` FROM `'._DB_PREFIX_.'module`';
@@ -1866,7 +1866,7 @@ abstract class ModuleCore
 		$sql = 'SELECT `id_module`, `id_shop`
 			FROM `'._DB_PREFIX_.'hook_module`
 			WHERE `id_hook` = '.(int)$id_hook.'
-			'.((!is_null($shop_list) && $shop_list) ? ' AND `id_shop` IN('.implode(', ', array_map('intval', $shop_list)).')' : '').'
+			'.((($shop_list !== null) && $shop_list) ? ' AND `id_shop` IN('.implode(', ', array_map('intval', $shop_list)).')' : '').'
 			ORDER BY `position`';
 		$results = Db::getInstance()->executeS($sql);
 		$position = array();

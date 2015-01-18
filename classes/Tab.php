@@ -302,7 +302,7 @@ class TabCore extends ObjectModel
 	 */
 	public static function getCollectionFromModule($module, $id_lang = null)
 	{
-		if (is_null($id_lang))
+		if (($id_lang === null))
 			$id_lang = Context::getContext()->language->id;
 
 		if (!Validate::isModuleName($module))
@@ -373,7 +373,7 @@ class TabCore extends ObjectModel
 		return (int)Db::getInstance()->getValue('
 			SELECT COUNT(*)
 			FROM `'._DB_PREFIX_.'tab` t
-			'.(!is_null($id_parent) ? 'WHERE t.`id_parent` = '.(int)$id_parent : '')
+			'.(($id_parent !== null) ? 'WHERE t.`id_parent` = '.(int)$id_parent : '')
 		);
 	}
 

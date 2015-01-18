@@ -432,7 +432,7 @@ class AdminControllerCore extends Controller
 		if (is_array($tabs) || count($tabs))
 			$tabs = array();
 
-		if (is_null($tab_id))
+		if (($tab_id === null))
 			$tab_id = $this->id;
 
 		$tabs = Tab::recursiveTab($tab_id, $tabs);
@@ -2165,7 +2165,7 @@ class AdminControllerCore extends Controller
 		$helper = new HelperView($this);
 		$this->setHelperDisplay($helper);
 		$helper->tpl_vars = $this->getTemplateViewVars();
-		if (!is_null($this->base_tpl_view))
+		if (($this->base_tpl_view !== null))
 			$helper->base_tpl = $this->base_tpl_view;
 		$view = $helper->generateView();
 
@@ -2227,7 +2227,7 @@ class AdminControllerCore extends Controller
 				die(Tools::displayError());
 
 			$helper->back_url = $back;
-			!is_null($this->base_tpl_form) ? $helper->base_tpl = $this->base_tpl_form : '';
+			($this->base_tpl_form !== null) ? $helper->base_tpl = $this->base_tpl_form : '';
 			if ($this->tabAccess['view'])
 			{
 				if (Tools::getValue('back'))
@@ -2988,7 +2988,7 @@ class AdminControllerCore extends Controller
 
 	public function getModulesList($filter_modules_list)
 	{
-		if (!is_array($filter_modules_list) && !is_null($filter_modules_list))
+		if (!is_array($filter_modules_list) && ($filter_modules_list !== null))
 			$filter_modules_list = array($filter_modules_list);
 
 		if (!count($filter_modules_list))
@@ -3804,7 +3804,7 @@ class AdminControllerCore extends Controller
 		);
 
 		$install = array(
-			'href' => $link_admin_modules.'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : ''),
+			'href' => $link_admin_modules.'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).(($back !== null) ? '&back='.urlencode($back) : ''),
 			'onclick' => '',
 			'title' => $this->translationsTab['Install'],
 			'text' => $this->translationsTab['Install'],
@@ -3813,7 +3813,7 @@ class AdminControllerCore extends Controller
 		);
 
 		$uninstall = array(
-			'href' => $link_admin_modules.'&uninstall='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).(!is_null($back) ? '&back='.urlencode($back) : ''),
+			'href' => $link_admin_modules.'&uninstall='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).(($back !== null) ? '&back='.urlencode($back) : ''),
 			'onclick' => (isset($module->onclick_option_content['uninstall']) ? $module->onclick_option_content['uninstall'] : 'return confirm(\''.$this->translationsTab['confirm_uninstall_popup'].'\');'),
 			'title' => $this->translationsTab['Uninstall'],
 			'text' => $this->translationsTab['Uninstall'],
@@ -3924,7 +3924,7 @@ class AdminControllerCore extends Controller
 				if ($output_type == 'link')
 				{
 					$return .= '<li><a class="'.$option_name.' action_module';
-					$return .= '" href="'.$option['href'].(!is_null($back) ? '&back='.urlencode($back) : '').'"';
+					$return .= '" href="'.$option['href'].(($back !== null) ? '&back='.urlencode($back) : '').'"';
 					$return .= ' onclick="'.$option['onclick'].'"  title="'.$option['title'].'"><i class="icon-'.(isset($option['icon']) && $option['icon'] ? $option['icon']:'cog' ).'"></i>&nbsp;'.$option['text'].'</a></li>';
 				}
 				elseif ($output_type == 'array')
@@ -3954,11 +3954,11 @@ class AdminControllerCore extends Controller
 					if (isset($option['style']))
 						$html .= ' style="'.$option['style'].'"';
 
-					$html .= ' href="'.htmlentities($option['href']).(!is_null($back) ? '&back='.urlencode($back) : '').'" onclick="'.$option['onclick'].'"  title="'.$option['title'].'"><i class="icon-'.(isset($option['icon']) && $option['icon'] ? $option['icon']:'cog' ).'"></i> '.$option['text'].'</a>';
+					$html .= ' href="'.htmlentities($option['href']).(($back !== null) ? '&back='.urlencode($back) : '').'" onclick="'.$option['onclick'].'"  title="'.$option['title'].'"><i class="icon-'.(isset($option['icon']) && $option['icon'] ? $option['icon']:'cog' ).'"></i> '.$option['text'].'</a>';
 					$return[] = $html;
 				}
 				elseif ($output_type == 'select')
-					$return .= '<option id="'.$option_name.'" data-href="'.htmlentities($option['href']).(!is_null($back) ? '&back='.urlencode($back) : '').'" data-onclick="'.$option['onclick'].'">'.$option['text'].'</option>';
+					$return .= '<option id="'.$option_name.'" data-href="'.htmlentities($option['href']).(($back !== null) ? '&back='.urlencode($back) : '').'" data-onclick="'.$option['onclick'].'">'.$option['text'].'</option>';
 			}
 		}
 

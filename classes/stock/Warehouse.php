@@ -340,7 +340,7 @@ class WarehouseCore extends ObjectModel
 	public static function getWarehouses($ignore_shop = false, $id_shop = null)
 	{
 		if (!$ignore_shop)
-			if (is_null($id_shop))
+			if (($id_shop === null))
 				$id_shop = Context::getContext()->shop->id;
 
 		$query = new DbQuery();
@@ -493,7 +493,7 @@ class WarehouseCore extends ObjectModel
 		if (!Pack::isPack($id_product))
 			return false;
 
-		if (is_null($id_shop))
+		if (($id_shop === null))
 			$id_shop = Context::getContext()->shop->id;
 
 		// warehouses of the pack

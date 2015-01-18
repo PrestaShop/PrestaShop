@@ -57,7 +57,7 @@ class GenderCore extends ObjectModel
 
 	public static function getGenders($id_lang = null)
 	{
-		if (is_null($id_lang))
+		if (($id_lang === null))
 			$id_lang = Context::getContext()->language->id;
 
 		$genders = new PrestaShopCollection('Gender', $id_lang);

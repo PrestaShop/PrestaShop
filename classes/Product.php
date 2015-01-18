@@ -508,7 +508,7 @@ class ProductCore extends ObjectModel
 	public function getFieldsShop()
 	{
 		$fields = parent::getFieldsShop();
-		if (is_null($this->update_fields) || (!empty($this->update_fields['price']) && !empty($this->update_fields['unit_price'])))
+		if (($this->update_fields === null) || (!empty($this->update_fields['price']) && !empty($this->update_fields['unit_price'])))
 		$fields['unit_price_ratio'] = (float)$this->unit_price > 0 ? $this->price / $this->unit_price : 0;
 		$fields['unity'] = pSQL($this->unity);
 
@@ -1431,8 +1431,8 @@ class ProductCore extends ObjectModel
 			}
 
 			$product_supplier->product_supplier_reference = pSQL($supplier_reference);
-			$product_supplier->product_supplier_price_te = !is_null($price) ? (float)$price : (float)$product_supplier->product_supplier_price_te;
-			$product_supplier->id_currency = !is_null($id_currency) ? (int)$id_currency : (int)$product_supplier->id_currency;
+			$product_supplier->product_supplier_price_te = ($price !== null) ? (float)$price : (float)$product_supplier->product_supplier_price_te;
+			$product_supplier->id_currency = ($id_currency !== null) ? (int)$id_currency : (int)$product_supplier->id_currency;
 			$product_supplier->save();
 		}
 	}
@@ -1461,14 +1461,14 @@ class ProductCore extends ObjectModel
 
 		if (!$update_all_fields)
 			$combination->setFieldsToUpdate(array(
-				'price' => !is_null($price),
-				'wholesale_price' => !is_null($wholesale_price),
-				'ecotax' => !is_null($ecotax),
-				'weight' => !is_null($weight),
-				'unit_price_impact' => !is_null($unit),
-				'default_on' => !is_null($default),
-				'minimal_quantity' => !is_null($minimal_quantity),
-				'available_date' => !is_null($available_date),
+				'price' => ($price !== null),
+				'wholesale_price' => ($wholesale_price !== null),
+				'ecotax' => ($ecotax !== null),
+				'weight' => ($weight !== null),
+				'unit_price_impact' => ($unit !== null),
+				'default_on' => ($default !== null),
+				'minimal_quantity' => ($minimal_quantity !== null),
+				'available_date' => ($available_date !== null),
 			));
 
 		$price = str_replace(',', '.', $price);
@@ -2682,7 +2682,7 @@ class ProductCore extends ObjectModel
 			&& Configuration::get('VATNUMBER_MANAGEMENT'))
 			$usetax = false;
 
-		if (is_null($id_customer) && Validate::isLoadedObject($context->customer))
+		if (($id_customer === null) && Validate::isLoadedObject($context->customer))
 			$id_customer = $context->customer->id;
 
 		return Product::priceCalculation(
@@ -3075,7 +3075,7 @@ class ProductCore extends ObjectModel
 			.'JOIN '._DB_PREFIX_.'stock_available stock
 			ON (stock.id_product = '.pSQL($product_alias).'.id_product';
 
-		if (!is_null($product_attribute))
+		if (($product_attribute !== null))
 		{
 			if (!Combination::isFeatureActive())
 				$sql .= ' AND stock.id_product_attribute = 0';
@@ -3913,7 +3913,7 @@ class ProductCore extends ObjectModel
 
 	public function getTags($id_lang)
 	{
-		if (!$this->isFullyLoaded && is_null($this->tags))
+		if (!$this->isFullyLoaded && ($this->tags === null))
 			$this->tags = Tag::getProductTags($this->id);
 
 		if (!($this->tags && array_key_exists($id_lang, $this->tags)))
@@ -5427,7 +5427,7 @@ class ProductCore extends ObjectModel
 	{
 		static $manager = null;
 
-		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && is_null($manager))
+		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && ($manager === null))
 			$manager = StockManagerFactory::getManager();
 
 		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && Product::usesAdvancedStockManagement($id_product) &&

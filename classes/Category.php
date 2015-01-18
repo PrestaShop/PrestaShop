@@ -239,7 +239,7 @@ class CategoryCore extends ObjectModel
 	 */
 	public function recurseLiteCategTree($max_depth = 3, $current_depth = 0, $id_lang = null, $excluded_ids_array = null)
 	{
-		$id_lang = is_null($id_lang) ? Context::getContext()->language->id : (int)$id_lang;
+		$id_lang = ($id_lang === null) ? Context::getContext()->language->id : (int)$id_lang;
 
 		$children = array();
 		$subcats = $this->getSubCategories($id_lang, true);
@@ -731,7 +731,7 @@ class CategoryCore extends ObjectModel
 	public static function getRootCategory($id_lang = null, Shop $shop = null)
 	{
 		$context = Context::getContext();
-		if (is_null($id_lang))
+		if (($id_lang === null))
 			$id_lang = $context->language->id;
 		if (!$shop)
 			if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP)
@@ -787,7 +787,7 @@ class CategoryCore extends ObjectModel
 	 */
 	public function getAllChildren($id_lang = null)
 	{
-		if (is_null($id_lang))
+		if (($id_lang === null))
 			$id_lang = Context::getContext()->language->id;
 
 		$categories = new PrestaShopCollection('Category', $id_lang);
@@ -804,7 +804,7 @@ class CategoryCore extends ObjectModel
 	 */
 	public function getAllParents($id_lang = null)
 	{
-		if (is_null($id_lang))
+		if (($id_lang === null))
 			$id_lang = Context::getContext()->language->id;
 
 		$categories = new PrestaShopCollection('Category', $id_lang);
@@ -1038,7 +1038,7 @@ class CategoryCore extends ObjectModel
 		$context = Context::getContext()->cloneContext();
 		$context->shop = clone($context->shop);
 
-		if (is_null($id_lang))
+		if (($id_lang === null))
 			$id_lang = $context->language->id;
 
 		$categories = null;
@@ -1502,7 +1502,7 @@ class CategoryCore extends ObjectModel
 	 */
 	public static function getTopCategory($id_lang = null)
 	{
-		if (is_null($id_lang))
+		if (($id_lang === null))
 			$id_lang = (int)Context::getContext()->language->id;
 		$cache_id = 'Category::getTopCategory_'.(int)$id_lang;
 		if (!Cache::isStored($cache_id))
@@ -1519,7 +1519,7 @@ class CategoryCore extends ObjectModel
 	public function addPosition($position, $id_shop = null)
 	{
 		$return = true;
-		if (is_null($id_shop))
+		if (($id_shop === null))
 		{
 			if (Shop::getContext() != Shop::CONTEXT_SHOP)
 				foreach (Shop::getContextListShopID() as $id_shop)

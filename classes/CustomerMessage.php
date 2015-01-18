@@ -94,7 +94,7 @@ class CustomerMessageCore extends ObjectModel
 
 	public static function getTotalCustomerMessages($where = null)
 	{
-		if (is_null($where))
+		if (($where === null))
 			return (int)Db::getInstance()->getValue('
 				SELECT COUNT(*)
 				FROM '._DB_PREFIX_.'customer_message

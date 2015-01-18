@@ -143,7 +143,7 @@ class EmployeeCore extends ObjectModel
 	{
 		parent::__construct($id, null, $id_shop);
 
-		if (!is_null($id_lang))
+		if (($id_lang !== null))
 			$this->id_lang = (int)(Language::getLanguage($id_lang) !== false) ? $id_lang : Configuration::get('PS_LANG_DEFAULT');
 
 		if ($this->id)

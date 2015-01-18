@@ -171,7 +171,7 @@ class CustomerThreadCore extends ObjectModel
 
 	public static function getTotalCustomerThreads($where = null)
 	{
-		if (is_null($where))
+		if (($where === null))
 			return (int)Db::getInstance()->getValue('
 				SELECT COUNT(*)
 				FROM '._DB_PREFIX_.'customer_thread

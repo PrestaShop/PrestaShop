@@ -493,7 +493,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 			throw new PrestaShopException('You cannot add an element which is not an instance of '.$this->classname);
 
 		$this->getAll();
-		if (is_null($offset))
+		if (($offset === null))
 			$this->results[] = $value;
 		else
 			$this->results[$offset] = $value;

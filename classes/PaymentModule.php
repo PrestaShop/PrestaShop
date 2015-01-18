@@ -313,7 +313,7 @@ abstract class PaymentModuleCore extends Module
 					$order->total_shipping_tax_incl = (float)$this->context->cart->getPackageShippingCost((int)$id_carrier, true, null, $order->product_list);
 					$order->total_shipping = $order->total_shipping_tax_incl;
 
-					if (!is_null($carrier) && Validate::isLoadedObject($carrier))
+					if (($carrier !== null) && Validate::isLoadedObject($carrier))
 						$order->carrier_tax_rate = $carrier->getTaxesRate(new Address($this->context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
 
 					$order->total_wrapping_tax_excl = (float)abs($this->context->cart->getOrderTotal(false, Cart::ONLY_WRAPPING, $order->product_list, $id_carrier));
@@ -361,7 +361,7 @@ abstract class PaymentModuleCore extends Module
 						PrestaShopLogger::addLog('PaymentModule::validateOrder - OrderCarrier is about to be added', 1, null, 'Cart', (int)$id_cart, true);
 
 					// Adding an entry in order_carrier table
-					if (!is_null($carrier))
+					if (($carrier !== null))
 					{
 						$order_carrier = new OrderCarrier();
 						$order_carrier->id_order = (int)$order->id;

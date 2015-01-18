@@ -396,7 +396,7 @@ class AdminCountriesControllerCore extends AdminController
 		elseif (Validate::isLanguageIsoCode(Tools::getValue('iso_code')))
 		{
 			$id_country = Country::getByIso(Tools::getValue('iso_code'));
-			if (!is_null($id_country) && $id_country != Tools::getValue('id_'.$this->table))
+			if (($id_country !== null) && $id_country != Tools::getValue('id_'.$this->table))
 				$this->errors[] = Tools::displayError('This ISO code already exists.You cannot create two countries with the same ISO code.');
 		}
 
@@ -425,7 +425,7 @@ class AdminCountriesControllerCore extends AdminController
 
 		if (!count($this->errors))
 		{
-			if (is_null($tmp_addr_format->id_country))
+			if (($tmp_addr_format->id_country === null))
 				$tmp_addr_format->id_country = $country->id;
 
 			if (!$tmp_addr_format->save())

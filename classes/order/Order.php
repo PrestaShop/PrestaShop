@@ -1010,7 +1010,7 @@ class OrderCore extends ObjectModel
 	 */
 	public function getCustomer()
 	{
-		if (is_null($this->cacheCustomer))
+		if (($this->cacheCustomer === null))
 			$this->cacheCustomer = new Customer((int)$this->id_customer);
 
 		return $this->cacheCustomer;
@@ -1607,12 +1607,12 @@ class OrderCore extends ObjectModel
 			$this->total_paid_real += Tools::ps_round(Tools::convertPrice($order_payment->amount, $order_payment->id_currency, false), 2);
 
 		// We put autodate parameter of add method to true if date_add field is null
-		$res = $order_payment->add(is_null($order_payment->date_add)) && $this->update();
+		$res = $order_payment->add(($order_payment->date_add === null)) && $this->update();
 
 		if (!$res)
 			return false;
 
-		if (!is_null($order_invoice))
+		if (($order_invoice !== null))
 		{
 			$res = Db::getInstance()->execute('
 			INSERT INTO `'._DB_PREFIX_.'order_invoice_payment` (`id_order_invoice`, `id_order_payment`, `id_order`)

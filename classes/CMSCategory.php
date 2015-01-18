@@ -131,7 +131,7 @@ class CMSCategoryCore extends ObjectModel
 		if (!$link)
 			$link = Context::getContext()->link;
 
-		if (is_null($id_lang))
+		if (($id_lang === null))
 			$id_lang = Context::getContext()->language->id;
 
 		// recursivity for subcategories
@@ -163,7 +163,7 @@ class CMSCategoryCore extends ObjectModel
 	{
 		if (!$link)
 			$link = Context::getContext()->link;
-		if (is_null($id_lang))
+		if (($id_lang === null))
 			$id_lang = Context::getContext()->language->id;
 
 		$sql = 'SELECT c.`id_cms_category`, c.`id_parent`, c.`level_depth`, cl.`name`, cl.`link_rewrite`
@@ -531,7 +531,7 @@ class CMSCategoryCore extends ObjectModel
 	  */
 	public function getParentsCategories($id_lang = null)
 	{
-		if (is_null($id_lang))
+		if (($id_lang === null))
 			$id_lang = Context::getContext()->language->id;
 
 		$categories = null;

@@ -53,13 +53,13 @@
 										{l s='Compare to'}
 									</label>
 								</span>
-								<select id="compare-options" class="form-control fixed-width-lg pull-right" name="compare_date_option"{if is_null($compare_date_from) || is_null($compare_date_to)} disabled="disabled"{/if}>
+								<select id="compare-options" class="form-control fixed-width-lg pull-right" name="compare_date_option"{if ($compare_date_from === null) || ($compare_date_to === null)} disabled="disabled"{/if}>
 									<option value="1" {if $compare_option == 1}selected="selected"{/if} label="{l s='Previous period'}">{l s='Previous period'}</option>
 									<option value="2" {if $compare_option == 2}selected="selected"{/if} label="{l s='Previous Year'}">{l s='Previous year'}</option>
 									<option value="3" {if $compare_option == 3}selected="selected"{/if} label="{l s='Custom'}">{l s='Custom'}</option>
 								</select>
 							</div>
-							<div class="form-date-body" id="form-date-body-compare"{if is_null($compare_date_from) || is_null($compare_date_to)} style="display: none;"{/if}>
+							<div class="form-date-body" id="form-date-body-compare"{if ($compare_date_from === null) || ($compare_date_to === null)} style="display: none;"{/if}>
 								<label>{l s='From'}</label>
 								<input id="date-start-compare" class="date-input form-control" type="text" placeholder="Start" name="compare_date_from" value="{$compare_date_from}" data-date-format="{$date_format}" tabindex="4" />
 								<label>{l s='to'}</label>

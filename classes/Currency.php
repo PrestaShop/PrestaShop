@@ -239,7 +239,7 @@ class CurrencyCore extends ObjectModel
 
 	public static function getPaymentCurrenciesSpecial($id_module, $id_shop = null)
 	{
-		if (is_null($id_shop))
+		if (($id_shop === null))
 			$id_shop = Context::getContext()->shop->id;
 
 		$sql = 'SELECT *
@@ -251,7 +251,7 @@ class CurrencyCore extends ObjectModel
 
 	public static function getPaymentCurrencies($id_module, $id_shop = null)
 	{
-		if (is_null($id_shop))
+		if (($id_shop === null))
 			$id_shop = Context::getContext()->shop->id;
 
 		$sql = 'SELECT c.*
@@ -270,7 +270,7 @@ class CurrencyCore extends ObjectModel
 		if (empty($id_module))
 			return false;
 
-		if (is_null($id_shop))
+		if (($id_shop === null))
 			$id_shop = Context::getContext()->shop->id;
 
 		$sql = 'SELECT *
