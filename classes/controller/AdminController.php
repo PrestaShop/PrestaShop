@@ -313,11 +313,22 @@ class AdminControllerCore extends Controller
 		if ($this->multishop_context == -1)
 			$this->multishop_context = Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP;
 
-		$this->bo_theme = ((Validate::isLoadedObject($this->context->employee) && $this->context->employee->bo_theme) ? $this->context->employee->bo_theme : 'default');
-		if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$this->bo_theme.DIRECTORY_SEPARATOR.'template'))
-			$this->bo_theme = 'default';
-		$this->bo_css = ((Validate::isLoadedObject($this->context->employee) && $this->context->employee->bo_css) ? $this->context->employee->bo_css : 'admin-theme.css');
-		if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$this->bo_theme.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.$this->bo_css))
+		$default_theme_name = 'default';
+
+		if (defined('_PS_BO_DEFAULT_THEME_') && _PS_BO_DEFAULT_THEME_
+			&& @filemtime(_PS_BO_ALL_THEMES_DIR_._PS_BO_DEFAULT_THEME_.DIRECTORY_SEPARATOR.'template'))
+			$default_theme_name = _PS_BO_DEFAULT_THEME_;
+
+		$this->bo_theme = ((Validate::isLoadedObject($this->context->employee)
+			&& $this->context->employee->bo_theme) ? $this->context->employee->bo_theme : $default_theme_name);
+
+		if (!@filemtime(_PS_BO_ALL_THEMES_DIR_.$this->bo_theme.DIRECTORY_SEPARATOR.'template'))
+			$this->bo_theme = $default_theme_name;
+
+		$this->bo_css = ((Validate::isLoadedObject($this->context->employee)
+			&& $this->context->employee->bo_css) ? $this->context->employee->bo_css : 'admin-theme.css');
+
+		if (!@filemtime(_PS_BO_ALL_THEMES_DIR_.$this->bo_theme.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.$this->bo_css))
 			$this->bo_css = 'admin-theme.css';
 
 		$this->context->smarty->setTemplateDir(array(
@@ -1723,6 +1734,7 @@ class AdminControllerCore extends Controller
 				'show_new_customers' => Configuration::get('PS_SHOW_NEW_CUSTOMERS') && isset($accesses['AdminCustomers']) && $accesses['AdminCustomers']['view'],
 				'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES') && isset($accesses['AdminCustomerThreads']) && $accesses['AdminCustomerThreads']['view'],
 				'employee' => $this->context->employee,
+				'current_version' => (string)Configuration::get('PS_INSTALL_VERSION'),
 				'search_type' => Tools::getValue('bo_search_type'),
 				'bo_query' => Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query'))),
 				'quick_access' => $quick_access,
@@ -2327,9 +2339,8 @@ class AdminControllerCore extends Controller
 
 	public function setMedia()
 	{
-		//Bootstrap + Specific Admin Theme
+		//Bootstrap
 		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/'.$this->bo_css, 'all', 0);
-		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/overrides.css', 'all', 99);
 
 		$this->addJquery();
 		$this->addjQueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox' ));
@@ -2356,6 +2367,9 @@ class AdminControllerCore extends Controller
 
 		// Execute Hook AdminController SetMedia
 		Hook::exec('actionAdminControllerSetMedia');
+
+		// Specific Admin Theme
+		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/overrides.css', 'all', PHP_INT_MAX);
 	}
 
 	/**

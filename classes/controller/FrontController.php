@@ -1,5 +1,5 @@
 <?php
-/*
+/**
 * 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
@@ -687,13 +687,13 @@ class FrontControllerCore extends Controller
 		if (!in_array($_SERVER['SERVER_NAME'], array('localhost', '127.0.0.1')))
 		{
 			/* Check if Maxmind Database exists */
-			if (file_exists(_PS_GEOIP_DIR_.'GeoLiteCity.dat'))
+			if (@filemtime(_PS_GEOIP_DIR_._PS_GEOIP_CITY_FILE_))
 			{
 				if (!isset($this->context->cookie->iso_code_country) || (isset($this->context->cookie->iso_code_country) && !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES')))))
 				{
 					include_once(_PS_GEOIP_DIR_.'geoipcity.inc');
 
-					$gi = geoip_open(realpath(_PS_GEOIP_DIR_.'GeoLiteCity.dat'), GEOIP_STANDARD);
+					$gi = geoip_open(realpath(_PS_GEOIP_DIR_._PS_GEOIP_CITY_FILE_), GEOIP_STANDARD);
 					$record = geoip_record_by_addr($gi, Tools::getRemoteAddr());
 
 					if (is_object($record))

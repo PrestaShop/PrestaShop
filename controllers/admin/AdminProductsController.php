@@ -946,8 +946,11 @@ class AdminProductsControllerCore extends AdminController
 						Product::updateDefaultAttribute((int)$product->id);
 						if(isset($id_product_attribute))
 							$product->cache_default_attribute = (int)$id_product_attribute;
+
 						if ($available_date = Tools::getValue('available_date_attribute'))
 							$product->setAvailableDate($available_date);
+						else
+							$product->setAvailableDate();
 					}
 				}
 			}
@@ -1056,6 +1059,7 @@ class AdminProductsControllerCore extends AdminController
 		$reduction = (float)(Tools::getValue('sp_reduction'));
 		$reduction_tax = Tools::getValue('sp_reduction_tax');
 		$reduction_type = !$reduction ? 'amount' : Tools::getValue('sp_reduction_type');
+		$reduction_type = $reduction_type == '-' ? 'amount' : $reduction_type;
 		$from = Tools::getValue('sp_from');
 		if (!$from)
 			$from = '0000-00-00 00:00:00';
@@ -1063,7 +1067,11 @@ class AdminProductsControllerCore extends AdminController
 		if (!$to)
 			$to = '0000-00-00 00:00:00';
 
-		if ($reduction_type == 'percentage' && ((float)$reduction <= 0 || (float)$reduction > 100))
+		if (($price == '-1') && ((float)$reduction == '0'))
+			$this->errors[] = Tools::displayError('No submitted reduction value');
+		elseif (strtotime($to) < strtotime($from))
+			$this->errors[] = Tools::displayError('Invalid date range');
+		elseif ($reduction_type == 'percentage' && ((float)$reduction <= 0 || (float)$reduction > 100))
 			$this->errors[] = Tools::displayError('Submitted reduction value (0-100) is out-of-range');
 		elseif ($this->_validateSpecificPrice($id_shop, $id_currency, $id_country, $id_group, $id_customer, $price, $from_quantity, $reduction, $reduction_type, $from, $to, $id_product_attribute))
 		{
@@ -2396,11 +2404,11 @@ class AdminProductsControllerCore extends AdminController
 			$helper->icon = 'icon-archive';
 			$helper->color = 'color1';
 			$helper->title = $this->l('Out of stock items', null, null, false);
-			if (ConfigurationKPI::get('PERCENT_PRODUCT_STOCK') !== false)
-				$helper->value = ConfigurationKPI::get('PERCENT_PRODUCT_STOCK');
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=percent_product_stock';
+			if (ConfigurationKPI::get('PERCENT_PRODUCT_OUT_OF_STOCK') !== false)
+				$helper->value = ConfigurationKPI::get('PERCENT_PRODUCT_OUT_OF_STOCK');
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=percent_product_out_of_stock';
 			$helper->tooltip = $this->l('X% of your products for sale are out of stock.', null, null, false);
-			$helper->refresh = (bool)(ConfigurationKPI::get('PERCENT_PRODUCT_STOCK_EXPIRE') < $time);
+			$helper->refresh = (bool)(ConfigurationKPI::get('PERCENT_PRODUCT_OUT_OF_STOCK_EXPIRE') < $time);
 			$helper->href = Context::getContext()->link->getAdminLink('AdminProducts').'&productFilter_sav!quantity=0&productFilter_active=1&submitFilterproduct=1';
 			$kpis[] = $helper->generate();
 		}
@@ -3201,13 +3209,25 @@ class AdminProductsControllerCore extends AdminController
 
 		$data = $this->createTemplate($this->tpl_form);
 
+		$context = Context::getContext();
+		$rewritten_links = array();
+		foreach ($this->_languages as $language)
+		{
+			$category = Category::getLinkRewrite((int)$product->id_category_default, (int)$language['id_lang']);
+			$rewritten_links[(int)$language['id_lang']] = explode(
+				'[REWRITE]',
+				$context->link->getProductLink($product, '[REWRITE]', $category, null, (int)$language['id_lang'])
+			);
+		}
+
 		$data->assign(array(
 			'product' => $product,
 			'languages' => $this->_languages,
 			'id_lang' => $this->context->language->id,
 			'ps_ssl_enabled' => Configuration::get('PS_SSL_ENABLED'),
 			'curent_shop_url' => $this->context->shop->getBaseURL(),
-			'default_form_language' => $this->default_form_language
+			'default_form_language' => $this->default_form_language,
+			'rewritten_links' => $rewritten_links
 		));
 
 		$this->tpl_form_vars['custom_form'] = $data->fetch();

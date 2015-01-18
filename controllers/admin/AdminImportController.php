@@ -291,7 +291,7 @@ class AdminImportControllerCore extends AdminController
 
 				self::$default_values = array(
 					'id_category' => array((int)Configuration::get('PS_HOME_CATEGORY')),
-					'id_category_default' => (int)Configuration::get('PS_HOME_CATEGORY'),
+					'id_category_default' => null,
 					'active' => '1',
 					'width' => 0.000000,
 					'height' => 0.000000,

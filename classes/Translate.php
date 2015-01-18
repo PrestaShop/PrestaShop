@@ -65,7 +65,7 @@ class TranslateCore
 				return Translate::getModuleTranslation(Module::$classInModule[$class_name_controller], $string, $class_name_controller, $sprintf, $addslashes);
 		}
 
-		$string = preg_replace("/\\*'/", "\'", $string);
+		$string = preg_replace("/\\\*'/", "\'", $string);
 		$key = md5($string);
 		if (isset($_LANGADM[$class.$key]))
 			$str = $_LANGADM[$class.$key];
@@ -93,7 +93,7 @@ class TranslateCore
 	 */
 	public static function getGenericAdminTranslation($string, $key = null, &$lang_array)
 	{
-		$string = preg_replace("/\\*'/", "\'", $string);
+		$string = preg_replace("/\\\*'/", "\'", $string);
 		if (is_null($key))
 			$key = md5($string);
 
@@ -149,7 +149,7 @@ class TranslateCore
 					$translations_merged[$name] = true;
 				}
 		}
-		$string = preg_replace("/\\*'/", "\'", $string);
+		$string = preg_replace("/\\\*'/", "\'", $string);
 		$key = md5($string);
 
 		$cache_key = $name.'|'.$string.'|'.$source.'|'.(int)$js;
@@ -172,13 +172,13 @@ class TranslateCore
 				$default_key_file = strtolower('<{'.$name.'}prestashop>'.$file).'_'.$key;
 			}
 
-			if (isset($current_key_file) && isset($_MODULES[$current_key_file]))
+			if (isset($current_key_file) && !empty($_MODULES[$current_key_file]))
 				$ret = stripslashes($_MODULES[$current_key_file]);
-			elseif (isset($default_key_file) && isset($_MODULES[$default_key_file]))
+			elseif (isset($default_key_file) && !empty($_MODULES[$default_key_file]))
 				$ret = stripslashes($_MODULES[$default_key_file]);
-			elseif (isset($_MODULES[$current_key]))
+			elseif (!empty($_MODULES[$current_key]))
 				$ret = stripslashes($_MODULES[$current_key]);
-			elseif (isset($_MODULES[$default_key]))
+			elseif (!empty($_MODULES[$default_key]))
 				$ret = stripslashes($_MODULES[$default_key]);
 			// if translation was not found in module, look for it in AdminController or Helpers
 			elseif (!empty($_LANGADM))
@@ -229,7 +229,7 @@ class TranslateCore
 		if (!isset($_LANGPDF) || !is_array($_LANGPDF))
 			return str_replace('"', '&quot;', $string);
 
-		$string = preg_replace("/\\*'/", "\'", $string);
+		$string = preg_replace("/\\\*'/", "\'", $string);
 		$key = md5($string);
 
 		$str = (array_key_exists('PDF'.$key, $_LANGPDF) ? $_LANGPDF['PDF'.$key] : $string);

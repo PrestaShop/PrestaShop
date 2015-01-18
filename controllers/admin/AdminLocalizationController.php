@@ -165,6 +165,9 @@ class AdminLocalizationControllerCore extends AdminController
 				return;
 		}
 
+		if (!extension_loaded('openssl'))
+			$this->displayWarning($this->l('Importing a new language may fail without the OpenSSL module. Please enable "openssl.so" on your server configuration.'));
+
 		if (Tools::isSubmit('submitLocalizationPack'))
 		{
 			$version = str_replace('.', '', _PS_VERSION_);

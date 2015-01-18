@@ -55,6 +55,18 @@ abstract class HTMLTemplateCore
 		if (!empty($path_logo))
 			list($width, $height) = getimagesize($path_logo);
 
+		// Limit the height of the logo for the PDF render
+		if (Context::getContext()->controller->controller_name == 'AdminPdf')
+		{
+			$maximum_height = 100;
+			if ($height > $maximum_height)
+			{
+				$ratio = $maximum_height / $height;
+				$height *= $ratio;
+				$width *= $ratio;
+			}
+		}
+
 		$this->smarty->assign(array(
 			'logo_path' => $path_logo,
 			'img_ps_dir' => 'http://'.Tools::getMediaServer(_PS_IMG_)._PS_IMG_,
