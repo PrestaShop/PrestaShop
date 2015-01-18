@@ -496,7 +496,7 @@ class CarrierCore extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'zone` zz ON cz.id_zone = zz.id_zone) ON zz.`id_zone` = c.`id_zone`
 			WHERE 1
 			'.($active_countries ? 'AND c.active = 1' : '').'
-			'.(!is_null($contain_states) ? 'AND c.`contains_states` = '.(int)$contain_states : '').'
+			'.(($contain_states !== null) ? 'AND c.`contains_states` = '.(int)$contain_states : '').'
 			ORDER BY cl.name ASC');
 
 		$countries = array();
@@ -543,7 +543,7 @@ class CarrierCore extends ObjectModel
 	{
 		$context = Context::getContext();
 		$id_lang = $context->language->id;
-		if (is_null($cart))
+		if (($cart === null))
 			$cart = $context->cart;
 		if (isset($context->currency))
 			$id_currency = $context->currency->id;
@@ -773,8 +773,8 @@ class CarrierCore extends ObjectModel
 			if ($delete)
 				Db::getInstance()->execute('
 					DELETE FROM `'._DB_PREFIX_.'delivery`
-					WHERE '.(is_null($values['id_shop']) ? 'ISNULL(`id_shop`) ' : 'id_shop = '.(int)$values['id_shop']).'
-					AND '.(is_null($values['id_shop_group']) ? 'ISNULL(`id_shop`) ' : 'id_shop_group='.(int)$values['id_shop_group']).'
+					WHERE '.(($values['id_shop'] === null) ? 'ISNULL(`id_shop`) ' : 'id_shop = '.(int)$values['id_shop']).'
+					AND '.(($values['id_shop_group'] === null) ? 'ISNULL(`id_shop`) ' : 'id_shop_group='.(int)$values['id_shop_group']).'
 					AND id_carrier='.(int)$values['id_carrier'].
 					($values['id_range_price'] !== null ? ' AND id_range_price='.(int)$values['id_range_price'] : ' AND (ISNULL(`id_range_price`) OR `id_range_price` = 0)').
 					($values['id_range_weight'] !== null ? ' AND id_range_weight='.(int)$values['id_range_weight'] : ' AND (ISNULL(`id_range_weight`) OR `id_range_weight` = 0)').'
@@ -784,7 +784,7 @@ class CarrierCore extends ObjectModel
 			$sql .= '(';
 			foreach ($values as $v)
 			{
-				if (is_null($v))
+				if (($v === null))
 					$sql .= 'NULL';
 				elseif (is_int($v) || is_float($v))
 					$sql .= $v;
@@ -1168,12 +1168,12 @@ class CarrierCore extends ObjectModel
 	 */
 	public static function getAvailableCarrierList(Product $product, $id_warehouse, $id_address_delivery = null, $id_shop = null, $cart = null)
 	{
-		if (is_null($id_shop))
+		if (($id_shop === null))
 			$id_shop = Context::getContext()->shop->id;
-		if (is_null($cart))
+		if (($cart === null))
 			$cart = Context::getContext()->cart;
 
-		$id_address = (int)((!is_null($id_address_delivery) && $id_address_delivery != 0) ? $id_address_delivery :  $cart->id_address_delivery);
+		$id_address = (int)((($id_address_delivery !== null) && $id_address_delivery != 0) ? $id_address_delivery :  $cart->id_address_delivery);
 		if ($id_address)
 		{
 			$address = new Address($id_address);

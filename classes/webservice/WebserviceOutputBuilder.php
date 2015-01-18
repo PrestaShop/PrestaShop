@@ -157,7 +157,7 @@ class WebserviceOutputBuilderCore
 	{
 		$return = '';
 
-		if (!is_null($key))
+		if (($key !== null))
 		{
 			if (!Validate::isCleanHtml($key))
 				throw new WebserviceException('the key you write is a corrupted text.', array(95, 500));
@@ -282,7 +282,7 @@ class WebserviceOutputBuilderCore
 	 */
 	public function getResourcesList($key_permissions)
 	{
-		if (is_null($this->wsResource))
+		if (($this->wsResource === null))
 			throw new WebserviceException ('You must set web service resource for get the resources list.', array(82, 500));
 		$output = '';
 		$more_attr = array('shopName' => htmlspecialchars(Configuration::get('PS_SHOP_NAME')));
@@ -376,7 +376,7 @@ class WebserviceOutputBuilderCore
 		if ($type_of_view === self::VIEW_LIST)
 			$output .= $this->setIndent($depth).$this->objectRender->renderNodeHeader($ws_params['objectsNodeName'], $ws_params);
 
-		if (is_null($this->schemaToDisplay))
+		if (($this->schemaToDisplay === null))
 		{
 			foreach ($objects as $key => $object)
 			{
@@ -553,7 +553,7 @@ class WebserviceOutputBuilderCore
 			if ($field['value'] === null)
 				$field['value'] = '';
 			// delete the xlink except for schemas
-			if (isset($field['xlink_resource']) && is_null($this->schemaToDisplay))
+			if (isset($field['xlink_resource']) && ($this->schemaToDisplay === null))
 				 unset($field['xlink_resource']);
 		}
 		// set "id" for each node name which display the id of the entity
@@ -605,7 +605,7 @@ class WebserviceOutputBuilderCore
 				}
 				else
 				{
-					if (method_exists($object, $getter) && is_null($this->schemaToDisplay))
+					if (method_exists($object, $getter) && ($this->schemaToDisplay === null))
 					{
 						$association_resources = $object->$getter();
 						if (is_array($association_resources) && !empty($association_resources))
@@ -663,7 +663,7 @@ class WebserviceOutputBuilderCore
 	{
 		$output = '';
 		$more_attr = array();
-		if (isset($this->wsResource[$assoc_name]) && is_null($this->schemaToDisplay))
+		if (isset($this->wsResource[$assoc_name]) && ($this->schemaToDisplay === null))
 		{
 			if ($assoc_name == 'images')
 			{
@@ -698,7 +698,7 @@ class WebserviceOutputBuilderCore
 				$field['entities_name'] = $assoc_name;
 				$field['entity_name'] = $resource_name;
 
-				if (!is_null($this->schemaToDisplay))
+				if (($this->schemaToDisplay !== null))
 					$field['synopsis_details'] = $this->getSynopsisDetails($field);
 				$field['is_association'] = true;
 				$output .= $this->setIndent($depth-1).$this->objectRender->renderField($field);

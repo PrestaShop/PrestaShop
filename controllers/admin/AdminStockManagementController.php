@@ -596,7 +596,7 @@ class AdminStockManagementControllerCore extends AdminController
 
 			// get usable flag
 			$usable = Tools::getValue('usable', null);
-			if (is_null($usable))
+			if (($usable === null))
 				$this->errors[] = Tools::displayError('You have to specify whether the product quantity is usable for sale on shops or not.');
 			$usable = (bool)$usable;
 		}
@@ -706,13 +706,13 @@ class AdminStockManagementControllerCore extends AdminController
 
 			// get usable flag for source warehouse
 			$usable_from = Tools::getValue('usable_from', null);
-			if (is_null($usable_from))
+			if (($usable_from === null))
 				$this->errors[] = Tools::displayError('You have to specify whether the product quantity in your source warehouse(s) is ready for sale or not.');
 			$usable_from = (bool)$usable_from;
 
 			// get usable flag for destination warehouse
 			$usable_to = Tools::getValue('usable_to', null);
-			if (is_null($usable_to))
+			if (($usable_to === null))
 				$this->errors[] = Tools::displayError('You have to specify whether the product quantity in your destination warehouse(s) is ready for sale or not.');
 			$usable_to = (bool)$usable_to;
 

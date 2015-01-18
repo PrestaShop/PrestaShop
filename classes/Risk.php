@@ -67,7 +67,7 @@ class RiskCore extends ObjectModel
 
 	public static function getRisks($id_lang = null)
 	{
-		if (is_null($id_lang))
+		if (($id_lang === null))
 			$id_lang = Context::getContext()->language->id;
 
 		$risks = new PrestaShopCollection('Risk', $id_lang);

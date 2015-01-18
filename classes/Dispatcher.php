@@ -813,7 +813,7 @@ class DispatcherCore
 	public static function getModuleControllers($type = 'all', $module = null)
 	{
 		$modules_controllers = array();
-		if (is_null($module))
+		if (($module === null))
 			$modules = Module::getModulesOnDisk(true);
 		elseif (!is_array($module))
 			$modules = array(Module::getInstanceByName($module));

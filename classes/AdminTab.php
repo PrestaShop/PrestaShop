@@ -1771,7 +1771,7 @@ abstract class AdminTabCore
 
 		echo '
 			<a href="'.self::$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token!=NULL ? $token : $this->token).'" onclick="return confirm(\''.$_cacheLang['DeleteItem'].$id.' ?'.
-    				(!is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : '').'\');">
+    				(($this->specificConfirmDelete !== null) ? '\r'.$this->specificConfirmDelete : '').'\');">
 			<img src="../img/admin/delete.gif" alt="'.$_cacheLang['Delete'].'" title="'.$_cacheLang['Delete'].'" /></a>';
 	}
 

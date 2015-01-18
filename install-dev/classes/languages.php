@@ -128,10 +128,10 @@ class InstallLanguages
 	{
 		$args = func_get_args();
 		$translation = $this->getLanguage()->getTranslation($args[0]);
-		if (is_null($translation))
+		if (($translation === null))
 		{
 			$translation = $this->getLanguage(self::DEFAULT_ISO)->getTranslation($args[0]);
-			if (is_null($translation))
+			if (($translation === null))
 				$translation = $args[0];
 		}
 
@@ -150,7 +150,7 @@ class InstallLanguages
 	public function getInformation($key, $with_default = true)
 	{
 		$information = $this->getLanguage()->getTranslation($key, 'informations');
-		if (is_null($information) && $with_default)
+		if (($information === null) && $with_default)
 			return $this->getLanguage(self::DEFAULT_ISO)->getTranslation($key, 'informations');
 		return $information;
 	}
@@ -164,7 +164,7 @@ class InstallLanguages
 	{
 		static $countries = null;
 
-		if (is_null($countries))
+		if (($countries === null))
 		{
 			$countries = array();
 			$countries_lang = $this->getLanguage()->getCountries();

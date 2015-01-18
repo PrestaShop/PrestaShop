@@ -46,7 +46,7 @@ class InstallSqlLoader
 	 */
 	public function __construct(Db $db = null)
 	{
-		if (is_null($db))
+		if (($db === null))
 			$db = Db::getInstance();
 		$this->db = $db;
 	}

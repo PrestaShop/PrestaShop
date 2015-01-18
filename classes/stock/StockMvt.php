@@ -199,7 +199,7 @@ class StockMvtCore extends ObjectModel
 		$query->where('s.id_product = '.(int)$id_product.' AND s.id_product_attribute = '.(int)$id_product_attribute);
 
 		// if filer by warehouse
-		if (!is_null($id_warehouse))
+		if (($id_warehouse !== null))
 			$query->where('s.id_warehouse = '.(int)$id_warehouse);
 
 		// orders the movements by date

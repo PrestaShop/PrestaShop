@@ -113,6 +113,6 @@ class RangePriceCore extends ObjectModel
 			    OR ('.(float)$delimiter1.' > `delimiter1` AND '.(float)$delimiter1.' < `delimiter2`)
 			    OR ('.(float)$delimiter2.' < `delimiter1` AND '.(float)$delimiter2.' > `delimiter2`)
 			    )
-			'.(!is_null($id_rang) ? ' AND `id_range_price` != '.(int)$id_rang : ''));
+			'.(($id_rang !== null) ? ' AND `id_range_price` != '.(int)$id_rang : ''));
 	}
 }

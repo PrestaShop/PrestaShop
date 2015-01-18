@@ -702,7 +702,7 @@ class InstallXmlLoader
 	{
 		static $tables = null;
 
-		if (is_null($tables))
+		if (($tables === null))
 		{
 			$tables = array();
 			foreach (Db::getInstance()->executeS('SHOW TABLES') as $row)
@@ -750,11 +750,11 @@ class InstallXmlLoader
 	{
 		static $cache = null;
 
-		if (!is_null($cache))
+		if (($cache !== null))
 			return $cache;
 
 		$dir = $path;
-		if (is_null($dir))
+		if (($dir === null))
 			$dir = _PS_CLASS_DIR_;
 
 		$classes = array();
@@ -768,7 +768,7 @@ class InstallXmlLoader
 			}
 
 		sort($classes);
-		if (is_null($path))
+		if (($path === null))
 			$cache = $classes;
 		return $classes;
 	}

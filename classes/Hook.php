@@ -672,7 +672,7 @@ class HookCore extends ObjectModel
 	{
 		Tools::displayAsDeprecated();
 
-		if (!is_null(self::$_hook_modules_cache))
+		if ((self::$_hook_modules_cache !== null))
 			return false;
 
 		self::$_hook_modules_cache = Hook::getHookModuleList();

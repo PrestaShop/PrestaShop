@@ -67,14 +67,14 @@ class ProductSaleCore
 		if ($nb_products < 1) $nb_products = 10;
 		$final_order_by = $order_by;
 		$order_table = '';
-		if (is_null($order_by) || $order_by == 'position' || $order_by == 'price') {
+		if (($order_by === null) || $order_by == 'position' || $order_by == 'price') {
 			$order_by = 'quantity';
 			$order_table = 'ps';
 		}
 		if ($order_by == 'date_add' || $order_by == 'date_upd') {
 			$order_table = 'product_shop';
 		}
-		if (is_null($order_way) || $order_by == 'sales') $order_way = 'DESC';
+		if (($order_way === null) || $order_by == 'sales') $order_way = 'DESC';
 
 		$interval = Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20;
 

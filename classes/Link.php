@@ -125,7 +125,7 @@ class LinkCore
 			$params['tags'] = Tools::str2url($product->getTags($id_lang));
 
 		if ($dispatcher->hasKeyword('product_rule', $id_lang, 'category', $id_shop))
-			$params['category'] = (!is_null($product->category) && !empty($product->category)) ? Tools::str2url($product->category) : Tools::str2url($category);
+			$params['category'] = (($product->category !== null) && !empty($product->category)) ? Tools::str2url($product->category) : Tools::str2url($category);
 
 		if ($dispatcher->hasKeyword('product_rule', $id_lang, 'reference', $id_shop))
 			$params['reference'] = Tools::str2url($product->reference);
@@ -171,7 +171,7 @@ class LinkCore
 		$params['meta_title'] = Tools::str2url($category->getFieldByLang('meta_title'));
 
 		// Selected filters is used by the module blocklayered
-		$selected_filters = is_null($selected_filters) ? '' : $selected_filters;
+		$selected_filters = ($selected_filters === null) ? '' : $selected_filters;
 
 		if (empty($selected_filters))
 			$rule = 'category_rule';
