@@ -480,7 +480,7 @@ class HelperListCore extends Helper
 		if (!array_key_exists('Name', self::$cache_lang))
 			self::$cache_lang['Name'] = $this->l('Name:', 'Helper', true, false);
 
-		if (!is_null($name))
+		if (($name !== null))
 			$name = addcslashes('\n\n'.self::$cache_lang['Name'].' '.$name, '\'');
 
 		$data = array(
@@ -490,7 +490,7 @@ class HelperListCore extends Helper
 		);
 
 		if ($this->specificConfirmDelete !== false)
-			$data['confirm'] = !is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : Tools::safeOutput(self::$cache_lang['DeleteItem'].$name);
+			$data['confirm'] = ($this->specificConfirmDelete !== null) ? '\r'.$this->specificConfirmDelete : Tools::safeOutput(self::$cache_lang['DeleteItem'].$name);
 
 		$tpl->assign(array_merge($this->tpl_delete_link_vars, $data));
 

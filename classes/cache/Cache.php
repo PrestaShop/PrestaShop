@@ -236,7 +236,7 @@ abstract class CacheCore
 			$result = array();
 		}
 
-		if (is_null($this->sql_tables_cached))
+		if (($this->sql_tables_cached === null))
 		{
 			$this->sql_tables_cached = $this->get(Tools::encryptIV(self::SQL_TABLES_NAME));
 			if (!is_array($this->sql_tables_cached))
@@ -277,7 +277,7 @@ abstract class CacheCore
 	 */
 	public function deleteQuery($query)
 	{
-		if (is_null($this->sql_tables_cached))
+		if (($this->sql_tables_cached === null))
 		{
 			$this->sql_tables_cached = $this->get(Tools::encryptIV(self::SQL_TABLES_NAME));
 			if (!is_array($this->sql_tables_cached))

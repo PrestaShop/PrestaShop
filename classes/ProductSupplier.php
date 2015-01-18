@@ -213,7 +213,7 @@ class ProductSupplierCore extends ObjectModel
 	 */
 	public static function getProductPrice($id_supplier, $id_product, $id_product_attribute = 0, $converted_price = false)
 	{
-		if (is_null($id_supplier) || is_null($id_product))
+		if (($id_supplier === null) || ($id_product === null))
 			return;
 
 		$query = new DbQuery();

@@ -698,7 +698,7 @@ class AdminShopControllerCore extends AdminController
 
 	public function initCategoriesAssociation($id_root = null)
 	{
-		if (is_null($id_root))
+		if (($id_root === null))
 			$id_root = Configuration::get('PS_ROOT_CATEGORY');
 		$id_shop = (int)Tools::getValue('id_shop');
 		$shop = new Shop($id_shop);

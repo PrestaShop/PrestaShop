@@ -610,7 +610,7 @@ class ShopCore extends ObjectModel
 	 */
 	public static function cacheShops($refresh = false)
 	{
-		if (!is_null(self::$shops) && !$refresh)
+		if ((self::$shops !== null) && !$refresh)
 			return;
 
 		self::$shops = array();
@@ -984,7 +984,7 @@ class ShopCore extends ObjectModel
 	 */
 	public static function addSqlRestrictionOnLang($alias = null, $id_shop = null)
 	{
-		if (isset(Context::getContext()->shop) && is_null($id_shop))
+		if (isset(Context::getContext()->shop) && ($id_shop === null))
 			$id_shop = (int)Context::getContext()->shop->id;
 		if (!$id_shop)
 			$id_shop = (int)Configuration::get('PS_SHOP_DEFAULT');

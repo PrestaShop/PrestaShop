@@ -403,7 +403,7 @@ abstract class DbCore
 				if ($value['type'] == 'sql')
 					$values[] = $value['value'];
 				else
-					$values[] = $null_values && ($value['value'] === '' || is_null($value['value'])) ? 'NULL' : "'{$value['value']}'";
+					$values[] = $null_values && ($value['value'] === '' || ($value['value'] === null)) ? 'NULL' : "'{$value['value']}'";
 			}
 			$keys_stringified = implode(', ', $keys);
 			$values_stringified[] = '('.implode(', ', $values).')';
@@ -439,7 +439,7 @@ abstract class DbCore
 			if ($value['type'] == 'sql')
 				$sql .= '`'.bqSQL($key)."` = {$value['value']},";
 			else
-				$sql .= ($null_values && ($value['value'] === '' || is_null($value['value']))) ? '`'.bqSQL($key).'` = NULL,' : '`'.bqSQL($key)."` = '{$value['value']}',";
+				$sql .= ($null_values && ($value['value'] === '' || ($value['value'] === null))) ? '`'.bqSQL($key).'` = NULL,' : '`'.bqSQL($key)."` = '{$value['value']}',";
 		}
 
 		$sql = rtrim($sql, ',');
@@ -575,7 +575,7 @@ abstract class DbCore
 		else
 			$result = $this->nextRow($this->result);
 		$this->last_cached = false;
-		if (is_null($result))
+		if (($result === null))
 			$result = false;
 		if ($use_cache && $this->is_cache_enabled)
 			Cache::getInstance()->setQuery($sql, $result);

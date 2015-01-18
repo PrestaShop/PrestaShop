@@ -131,7 +131,7 @@ class FeatureValueCore extends ObjectModel
 	public static function addFeatureValueImport($id_feature, $value, $id_product = null, $id_lang = null, $custom = false)
 	{
 		$id_feature_value = false;
-		if (!is_null($id_product) && $id_product)
+		if (($id_product !== null) && $id_product)
 		{
 			$id_feature_value = Db::getInstance()->getValue('
 				SELECT fp.`id_feature_value`
@@ -141,7 +141,7 @@ class FeatureValueCore extends ObjectModel
 				AND fv.`custom` = '.(int)$custom.'
 				AND fp.`id_product` = '.(int)$id_product);
 
-			if ($custom && $id_feature_value && !is_null($id_lang) && $id_lang)
+			if ($custom && $id_feature_value && ($id_lang !== null) && $id_lang)
 				Db::getInstance()->execute('
 				UPDATE '._DB_PREFIX_.'feature_value_lang 
 				SET `value` = \''.pSQL($value).'\' 

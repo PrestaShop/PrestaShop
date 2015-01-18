@@ -155,7 +155,7 @@ class CartCore extends ObjectModel
 	{
 		parent::__construct($id);
 
-		if (!is_null($id_lang))
+		if (($id_lang !== null))
 			$this->id_lang = (int)(Language::getLanguage($id_lang) !== false) ? $id_lang : Configuration::get('PS_LANG_DEFAULT');
 
 		if ($this->id_customer)
@@ -1198,7 +1198,7 @@ class CartCore extends ObjectModel
 		$result = Db::getInstance()->execute('
 		DELETE FROM `'._DB_PREFIX_.'cart_product`
 		WHERE `id_product` = '.(int)$id_product.'
-		'.(!is_null($id_product_attribute) ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '').'
+		'.(($id_product_attribute !== null) ? ' AND `id_product_attribute` = '.(int)$id_product_attribute : '').'
 		AND `id_cart` = '.(int)$this->id.'
 		'.((int)$id_address_delivery ? 'AND `id_address_delivery` = '.(int)$id_address_delivery : ''));
 
@@ -1361,7 +1361,7 @@ class CartCore extends ObjectModel
 
 		if ($with_shipping || $type == Cart::ONLY_DISCOUNTS)
 		{
-			if (is_null($products) && is_null($id_carrier))
+			if (($products === null) && ($id_carrier === null))
 				$shipping_fees = $this->getTotalShippingCost(null, (boolean)$with_taxes);
 			else
 				$shipping_fees = $this->getPackageShippingCost($id_carrier, (bool)$with_taxes, null, $products);
@@ -1376,7 +1376,7 @@ class CartCore extends ObjectModel
 			$type = Cart::ONLY_PRODUCTS;
 
 		$param_product = true;
-		if (is_null($products))
+		if (($products === null))
 		{
 			$param_product = false;
 			$products = $this->getProducts();
@@ -1549,7 +1549,7 @@ class CartCore extends ObjectModel
 
 			$id_address_delivery = 0;
 			if (isset($products[0]))
-				$id_address_delivery = (is_null($products) ? $this->id_address_delivery : $products[0]['id_address_delivery']);
+				$id_address_delivery = (($products === null) ? $this->id_address_delivery : $products[0]['id_address_delivery']);
 			$package = array('id_carrier' => $id_carrier, 'id_address' => $id_address_delivery, 'products' => $products);
 
 			// Then, calculate the contextual value for each one
@@ -1567,7 +1567,7 @@ class CartCore extends ObjectModel
 				if ((int)$cart_rule['obj']->gift_product)
 				{
 					$in_order = false;
-					if (is_null($products))
+					if (($products === null))
 						$in_order = true;
 					else
 						foreach ($products as $product)
@@ -2010,7 +2010,7 @@ class CartCore extends ObjectModel
 				$carriers_price[$id_address][$id_package] = array();
 
 				// Get all common carriers for each packages to the same address
-				if (is_null($common_carriers))
+				if (($common_carriers === null))
 					$common_carriers = $package['carrier_list'];
 				else
 					$common_carriers = array_intersect($common_carriers, $package['carrier_list']);
@@ -2028,7 +2028,7 @@ class CartCore extends ObjectModel
 
 					$price_with_tax = $this->getPackageShippingCost($id_carrier, true, $country, $package['product_list']);
 					$price_without_tax = $this->getPackageShippingCost($id_carrier, false, $country, $package['product_list']);
-					if (is_null($best_price) || $price_with_tax < $best_price)
+					if (($best_price === null) || $price_with_tax < $best_price)
 					{
 						$best_price = $price_with_tax;
 						$best_price_carrier = $id_carrier;
@@ -2038,7 +2038,7 @@ class CartCore extends ObjectModel
 						'with_tax' => $price_with_tax);
 
 					$grade = $carriers_instance[$id_carrier]->grade;
-					if (is_null($best_grade) || $grade > $best_grade)
+					if (($best_grade === null) || $grade > $best_grade)
 					{
 						$best_grade = $grade;
 						$best_grade_carrier = $id_carrier;
@@ -2237,9 +2237,9 @@ class CartCore extends ObjectModel
 	{
 		static $order_by_price = null;
 		static $order_way = null;
-		if (is_null($order_by_price))
+		if (($order_by_price === null))
 			$order_by_price = !Configuration::get('PS_CARRIER_DEFAULT_SORT');
-		if (is_null($order_way))
+		if (($order_way === null))
 			$order_way = Configuration::get('PS_CARRIER_DEFAULT_ORDER');
 
 		if ($order_by_price)
@@ -2527,7 +2527,7 @@ class CartCore extends ObjectModel
 	{
 		if(isset(Context::getContext()->cookie->id_country))
 			$default_country = new Country(Context::getContext()->cookie->id_country);
-		if (is_null($delivery_option))
+		if (($delivery_option === null))
 			$delivery_option = $this->getDeliveryOption($default_country, false, false);
 
 		$total_shipping = 0;
@@ -2555,7 +2555,7 @@ class CartCore extends ObjectModel
 	*/
 	public function getCarrierCost($id_carrier, $useTax = true, Country $default_country = null, $delivery_option = null)
 	{
-		if (is_null($delivery_option))
+		if (($delivery_option === null))
 			$delivery_option = $this->getDeliveryOption($default_country);
 
 		$total_shipping = 0;
@@ -2607,12 +2607,12 @@ class CartCore extends ObjectModel
 		if (!$default_country)
 			$default_country = Context::getContext()->country;
 
-		if (!is_null($product_list))
+		if (($product_list !== null))
 			foreach ($product_list as $key => $value)
 				if ($value['is_virtual'] == 1)
 					unset($product_list[$key]);
 
-		if (is_null($product_list)) {
+		if (($product_list === null)) {
 			$products = $this->getProducts();
 		} else {
 			$products = $product_list;
@@ -2893,12 +2893,12 @@ class CartCore extends ObjectModel
 	*/
 	public function getTotalWeight($products = null)
 	{
-		if (!is_null($products))
+		if (($products !== null))
 		{
 			$total_weight = 0;
 			foreach ($products as $product)
 			{
-				if (!isset($product['weight_attribute']) || is_null($product['weight_attribute']))
+				if (!isset($product['weight_attribute']) || ($product['weight_attribute'] === null))
 					$total_weight += $product['weight'] * $product['cart_quantity'];
 				else
 					$total_weight += $product['weight_attribute'] * $product['cart_quantity'];

@@ -229,7 +229,7 @@ abstract class InstallControllerHttp
 	{
 		static $flip = null;
 
-		if (is_null($flip))
+		if (($flip === null))
 			$flip = array_flip(self::$steps);
 		return $flip[$step];
 	}

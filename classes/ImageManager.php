@@ -394,8 +394,8 @@ class ImageManagerCore
 		$dest = array();
 		$dest['x'] = $dst_x;
 		$dest['y'] = $dst_y;
-		$dest['width'] = !is_null($dst_width) ? $dst_width : $src['width'];
-		$dest['height'] = !is_null($dst_height) ? $dst_height : $src['height'];
+		$dest['width'] = ($dst_width !== null) ? $dst_width : $src['width'];
+		$dest['height'] = ($dst_height !== null) ? $dst_height : $src['height'];
 		$dest['ressource'] = ImageManager::createWhiteImage($dest['width'], $dest['height']);
 
 		$white = imagecolorallocate($dest['ressource'], 255, 255, 255);

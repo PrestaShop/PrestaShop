@@ -2164,13 +2164,13 @@ class AdminProductsControllerCore extends AdminController
 	{
 		// Cache this condition to improve performances
 		static $is_activated = null;
-		if (is_null($is_activated))
+		if (($is_activated === null))
 			$is_activated = Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP && $this->id_object;
 
 		if (!$is_activated)
 			return true;
 
-		if (is_null($id_lang))
+		if (($id_lang === null))
 			return !empty($_POST['multishop_check'][$field]);
 		else
 			return !empty($_POST['multishop_check'][$field][$id_lang]);

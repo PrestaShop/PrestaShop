@@ -47,7 +47,7 @@
 		</div>
 	</div>
 </div>
-{if is_null($modules_list)}
+{if ($modules_list === null)}
 <div class="panel">
 	<h3>{l s="Use one of our recommended carrier modules"}</h3>
 	<p>{l s="It seems there are no recommended carriers for your country."}</p>

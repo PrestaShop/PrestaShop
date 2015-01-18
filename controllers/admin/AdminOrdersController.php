@@ -2160,7 +2160,7 @@ class AdminOrdersControllerCore extends AdminController
 
 	public function sendChangedNotification(Order $order = null)
 	{
-		if (is_null($order))
+		if (($order === null))
 			$order = new Order(Tools::getValue('id_order'));
 
 		$data = array(

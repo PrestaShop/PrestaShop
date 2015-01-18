@@ -166,7 +166,7 @@ class ToolsCore
 	 */
 	public static function getProtocol($use_ssl = null)
 	{
-		return (!is_null($use_ssl) && $use_ssl ? 'https://' : 'http://');
+		return (($use_ssl !== null) && $use_ssl ? 'https://' : 'http://');
 	}
 
 	/**
@@ -811,7 +811,7 @@ class ToolsCore
 	{
 		global $_ERRORS;
 
-		if (is_null($context))
+		if (($context === null))
 			$context = Context::getContext();
 
 		@include_once(_PS_TRANSLATIONS_DIR_.$context->language->iso_code.'/errors.php');
@@ -1833,7 +1833,7 @@ class ToolsCore
 
 	public static function copy($source, $destination, $stream_context = null)
 	{
-		if (is_null($stream_context) && !preg_match('/^https?:\/\//', $source))
+		if (($stream_context === null) && !preg_match('/^https?:\/\//', $source))
 			return @copy($source, $destination);
 		return @file_put_contents($destination, Tools::file_get_contents($source, false, $stream_context));
 	}
@@ -2028,11 +2028,11 @@ class ToolsCore
 			return true;
 
 		// Default values for parameters
-		if (is_null($path))
+		if (($path === null))
 			$path = _PS_ROOT_DIR_.'/.htaccess';
-		if (is_null($cache_control))
+		if (($cache_control === null))
 			$cache_control = (int)Configuration::get('PS_HTACCESS_CACHE_CONTROL');
-		if (is_null($disable_multiviews))
+		if (($disable_multiviews === null))
 			$disable_multiviews = (int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS');
 
 		if ($disable_modsec === null)
@@ -2616,7 +2616,7 @@ exit;
 		{
 			case 'by' :
 				$list = array(0 => 'name', 1 => 'price', 2 => 'date_add', 3 => 'date_upd', 4 => 'position', 5 => 'manufacturer_name', 6 => 'quantity', 7 => 'reference');
-				$value = (is_null($value) || $value === false || $value === '') ? (int)Configuration::get('PS_PRODUCTS_ORDER_BY') : $value;
+				$value = (($value === null) || $value === false || $value === '') ? (int)Configuration::get('PS_PRODUCTS_ORDER_BY') : $value;
 				$value = (isset($list[$value])) ? $list[$value] : ((in_array($value, $list)) ? $value : 'position');
 				$order_by_prefix = '';
 				if ($prefix)
@@ -2638,7 +2638,7 @@ exit;
 			break;
 
 			case 'way' :
-				$value = (is_null($value) || $value === false || $value === '') ? (int)Configuration::get('PS_PRODUCTS_ORDER_WAY') : $value;
+				$value = (($value === null) || $value === false || $value === '') ? (int)Configuration::get('PS_PRODUCTS_ORDER_WAY') : $value;
 				$list = array(0 => 'asc', 1 => 'desc');
 				return ((isset($list[$value])) ? $list[$value] : ((in_array($value, $list)) ? $value : 'asc'));
 			break;

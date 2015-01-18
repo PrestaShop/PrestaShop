@@ -189,7 +189,7 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 	 */
 	public function getTimezones()
 	{
-		if (!is_null($this->cache_timezones))
+		if (($this->cache_timezones !== null))
 			return;
 
 		if (!file_exists(_PS_INSTALL_DATA_PATH_.'xml/timezone.xml'))

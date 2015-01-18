@@ -36,7 +36,7 @@ var {$k} = {$def|floatval|replace:',':'.'};
 var {$k} = '{$def|strval}';
 {elseif is_array($def) || is_object($def)}
 var {$k} = {$def|json_encode};
-{elseif is_null($def)}
+{elseif ($def === null)}
 var {$k} = null;
 {else}
 var {$k} = '{$def|@addcslashes:'\''}';

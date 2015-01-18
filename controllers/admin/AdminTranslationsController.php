@@ -95,7 +95,7 @@ class AdminTranslationsControllerCore extends AdminController
 		$this->initTabModuleList();
 		$this->initPageHeaderToolbar();
 
-		if (!is_null($this->type_selected))
+		if (($this->type_selected !== null))
 		{
 			$method_name = 'initForm'.$this->type_selected;
 			if (method_exists($this, $method_name))

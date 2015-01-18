@@ -203,7 +203,7 @@ class SceneCore extends ObjectModel
 		{
 			if (!$context)
 				$context = Context::getContext();
-			$id_lang = is_null($id_lang) ? $context->language->id : $id_lang;
+			$id_lang = ($id_lang === null) ? $context->language->id : $id_lang;
 	
 			$sql = 'SELECT s.*
 					FROM `'._DB_PREFIX_.'scene_category` sc
@@ -237,7 +237,7 @@ class SceneCore extends ObjectModel
 
 		if (!$context)
 			$context = Context::getContext();
-		$id_lang = is_null($id_lang) ? $context->language->id : $id_lang;
+		$id_lang = ($id_lang === null) ? $context->language->id : $id_lang;
 
 		$products = Db::getInstance()->executeS('
 		SELECT s.*
