@@ -179,7 +179,6 @@ ul.product_list.grid > li {
       position: relative; }
       @media (max-width: 767px) {
         ul.product_list.grid > li .product-container .product-image-container {
-          max-width: 290px;
           margin-left: auto;
           margin-right: auto; } }
       ul.product_list.grid > li .product-container .product-image-container .content_price {
