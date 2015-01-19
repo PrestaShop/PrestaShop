@@ -3333,7 +3333,7 @@ exit;
 	 * highest $sort_column.
 	 *
 	 * E.g.:
-	 * $rows = [['a' => 5.1], ['a' => 8.2]];
+	 * $rows = [['a' => 5.1], ['b' => 8.2]];
 	 * spreadAmount(0.3, 1, $rows, 'a');
 	 * // $rows is [['b' => 8.4], ['a' => 5.2]]
 	 */
