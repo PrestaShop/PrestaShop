@@ -128,6 +128,7 @@ class TranslateCore
 		static $translations_merged = array();
 
 		$name = $module instanceof Module ? $module->name : $module;
+
 		$language = Context::getContext()->language;
 
 		if (!isset($translations_merged[$name]) && isset(Context::getContext()->language))
@@ -182,7 +183,7 @@ class TranslateCore
 				$ret = stripslashes($_MODULES[$default_key]);
 			// if translation was not found in module, look for it in AdminController or Helpers
 			elseif (!empty($_LANGADM))
-				$ret = Translate::getGenericAdminTranslation($string, $key, $_LANGADM);
+				$ret = stripslashes(Translate::getGenericAdminTranslation($string, $key, $_LANGADM));
 			else
 				$ret = stripslashes($string);
 
