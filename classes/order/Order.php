@@ -1912,8 +1912,8 @@ class OrderCore extends ObjectModel
 		if ($res = (int)Db::getInstance()->getvalue('
 				SELECT `id_order_invoice`
 				FROM `'._DB_PREFIX_.'order_invoice`
-				WHERE `id_order` =  '.(int)$this->id.'
-				AND `number` > 0'));
+				WHERE `id_order` =  '.(int)$this->id.
+				(Configuration::get('PS_INVOICE') ? ' AND `number` > 0' : '')))
 			return $res;
 		return false;
 	}
