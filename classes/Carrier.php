@@ -234,7 +234,8 @@ class CarrierCore extends ObjectModel
 	 */
 	public function getDeliveryPriceByWeight($total_weight, $id_zone)
 	{
-		$cache_key = $this->id.'_'.$total_weight.'_'.$id_zone;
+		$id_carrier = (int)$this->id;
+		$cache_key = $id_carrier.'_'.$total_weight.'_'.$id_zone;
 		if (!isset(self::$price_by_weight[$cache_key]))
 		{
 			$sql = 'SELECT d.`price`
@@ -243,7 +244,7 @@ class CarrierCore extends ObjectModel
 					WHERE d.`id_zone` = '.(int)$id_zone.'
 						AND '.(float)$total_weight.' >= w.`delimiter1`
 						AND '.(float)$total_weight.' < w.`delimiter2`
-						AND d.`id_carrier` = '.(int)$this->id.'
+						AND d.`id_carrier` = '.$id_carrier.'
 						'.Carrier::sqlDeliveryRangeShop('range_weight').'
 					ORDER BY w.`delimiter1` ASC';
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
@@ -252,11 +253,17 @@ class CarrierCore extends ObjectModel
 			else
 				self::$price_by_weight[$cache_key] = $result['price'];
 		}
+
+		$price_by_weight = Hook::exec('actionDeliveryPriceByWeight', array('id_carrier' => $id_carrier, 'total_weight' => $total_weight, 'id_zone' => $id_zone));
+		if (is_numeric($price_by_weight))
+			self::$price_by_weight[$cache_key] = $price_by_weight;
+
 		return self::$price_by_weight[$cache_key];
 	}
 
 	public static function checkDeliveryPriceByWeight($id_carrier, $total_weight, $id_zone)
 	{
+		$id_carrier = (int)$id_carrier;
 		$cache_key = $id_carrier.'_'.$total_weight.'_'.$id_zone;
 		if (!isset(self::$price_by_weight2[$cache_key]))
 		{
@@ -266,12 +273,17 @@ class CarrierCore extends ObjectModel
 					WHERE d.`id_zone` = '.(int)$id_zone.'
 						AND '.(float)$total_weight.' >= w.`delimiter1`
 						AND '.(float)$total_weight.' < w.`delimiter2`
-						AND d.`id_carrier` = '.(int)$id_carrier.'
+						AND d.`id_carrier` = '.$id_carrier.'
 						'.Carrier::sqlDeliveryRangeShop('range_weight').'
 					ORDER BY w.`delimiter1` ASC';
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 			self::$price_by_weight2[$cache_key] = (isset($result['price']));
 		}
+
+		$price_by_weight = Hook::exec('actionDeliveryPriceByWeight', array('id_carrier' => $id_carrier, 'total_weight' => $total_weight, 'id_zone' => $id_zone));
+		if (is_numeric($price_by_weight))
+			self::$price_by_weight2[$cache_key] = $price_by_weight;
+
 		return self::$price_by_weight2[$cache_key];
 	}
 
@@ -302,6 +314,7 @@ class CarrierCore extends ObjectModel
 	 */
 	public function getDeliveryPriceByPrice($order_total, $id_zone, $id_currency = null)
 	{
+		$id_carrier = (int)$this->id;
 		$cache_key = $this->id.'_'.$order_total.'_'.$id_zone.'_'.$id_currency;
 		if (!isset(self::$price_by_price[$cache_key]))
 		{
@@ -314,7 +327,7 @@ class CarrierCore extends ObjectModel
 					WHERE d.`id_zone` = '.(int)$id_zone.'
 						AND '.(float)$order_total.' >= r.`delimiter1`
 						AND '.(float)$order_total.' < r.`delimiter2`
-						AND d.`id_carrier` = '.(int)$this->id.'
+						AND d.`id_carrier` = '.$id_carrier.'
 						'.Carrier::sqlDeliveryRangeShop('range_price').'
 					ORDER BY r.`delimiter1` ASC';
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
@@ -323,6 +336,11 @@ class CarrierCore extends ObjectModel
 			else
 				self::$price_by_price[$cache_key] = $result['price'];
 		}
+
+		$price_by_price = Hook::exec('actionDeliveryPriceByPrice', array('id_carrier' => $id_carrier, 'order_total' => $order_total, 'id_zone' => $id_zone));
+		if (is_numeric($price_by_price))
+			self::$price_by_price[$cache_key] = $price_by_price;
+
 		return self::$price_by_price[$cache_key];
 	}
 
@@ -337,6 +355,7 @@ class CarrierCore extends ObjectModel
 	 */
 	public static function checkDeliveryPriceByPrice($id_carrier, $order_total, $id_zone, $id_currency = null)
 	{
+		$id_carrier = (int)$id_carrier;
 		$cache_key = $id_carrier.'_'.$order_total.'_'.$id_zone.'_'.$id_currency;
 		if (!isset(self::$price_by_price2[$cache_key]))
 		{
@@ -349,12 +368,17 @@ class CarrierCore extends ObjectModel
 					WHERE d.`id_zone` = '.(int)$id_zone.'
 						AND '.(float)$order_total.' >= r.`delimiter1`
 						AND '.(float)$order_total.' < r.`delimiter2`
-						AND d.`id_carrier` = '.(int)$id_carrier.'
+						AND d.`id_carrier` = '.$id_carrier.'
 						'.Carrier::sqlDeliveryRangeShop('range_price').'
 					ORDER BY r.`delimiter1` ASC';
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql);
 			self::$price_by_price2[$cache_key] = (isset($result['price']));
 		}
+
+		$price_by_price = Hook::exec('actionDeliveryPriceByPrice', array('id_carrier' => $id_carrier, 'order_total' => $order_total, 'id_zone' => $id_zone));
+		if (is_numeric($price_by_price))
+			self::$price_by_price2[$cache_key] = $price_by_price;
+
 		return self::$price_by_price2[$cache_key];
 	}
 
