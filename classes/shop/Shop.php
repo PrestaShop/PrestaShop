@@ -418,10 +418,16 @@ class ShopCore extends ObjectModel
 					if (count($params))
 						$url .= '?'.http_build_query($params);
 				}
-				$redirect_type = Configuration::get('PS_CANONICAL_REDIRECT') == 2 ? '301' : '302';
-				header('HTTP/1.0 '.$redirect_type.' Moved');
-				header('location: http://'.$url);
-				exit;
+				
+				$redirect_type = Configuration::get('PS_CANONICAL_REDIRECT');
+				if ($redirect_type != 0) {
+					$redirect_code = ($redirect_type == 1 ? '302' : '301');
+					header('HTTP/1.0 '.$redirect_code.' Moved');
+					header('location: http://'.$url);
+					exit;
+				} else {
+					$shop = $default_shop;
+				}
 			}
 			elseif (defined('_PS_ADMIN_DIR_') && empty($shop->physical_uri))
 			{
