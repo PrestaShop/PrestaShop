@@ -3038,7 +3038,7 @@ class CartCore extends ObjectModel
 			if ($cart_rule['value_real'] == 0)
 				unset($cart_rules[$key]);
 
-		return array(
+		$summary = array(
 			'delivery' => $delivery,
 			'delivery_state' => State::getNameById($delivery->id_state),
 			'invoice' => $invoice,
@@ -3063,6 +3063,12 @@ class CartCore extends ObjectModel
 			'free_ship' => $total_shipping ? 0 : 1,
 			'carrier' => new Carrier($this->id_carrier, $id_lang),
 		);
+
+		$hook = Hook::exec('actionCartSummary', $summary, null, true);
+		if (is_array($hook))
+			$summary = array_merge($summary, array_shift($hook));
+
+		return $summary;
 	}
 
 	public function checkQuantities($return_product = false)
