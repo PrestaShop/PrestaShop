@@ -227,69 +227,110 @@
 				<!-- END CART RULES -->
 			</table>
 
-			<table style="width: 100%">
-				<tr style="line-height:5px;">
-					<td style="width: 83%; text-align: right; font-weight: bold">{l s='Product Total (Tax Excl.)' pdf='true'}</td>
-					<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->total_products}</td>
-				</tr>
+			{if $tax_excluded_display}
+				<table style="width: 100%">
 
-				{if $product_discounts > 0}
 					<tr style="line-height:5px;">
-						<td style="text-align: right; font-weight: bold">{l s='Total Discounts (Tax Excl.)' pdf='true'}</td>
-						<td style="width: 17%; text-align: right;">-{displayPrice currency=$order->id_currency price=$product_discounts}</td>
+						<td style="width: 83%; text-align: right; font-weight: bold">{l s='Product Total (Tax Excl.)' pdf='true'}</td>
+						<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$footer.products_before_discounts_tax_excl}</td>
 					</tr>
-					<tr style="line-height:5px; font-style: italic;">
-						<td style="text-align: right; font-weight: bold">{l s='Product Total After Discounts (Tax Excl.)' pdf='true'}</td>
-						<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=($order_invoice->total_products - $product_discounts)}</td>
-					</tr>
-				{/if}
 
-				{if !$free_shipping and ($order_invoice->total_shipping_tax_excl > 0)}
+					{if $footer.product_discounts_tax_excl > 0}
+						<tr style="line-height:5px;">
+							<td style="text-align: right; font-weight: bold">{l s='Total Discounts (Tax Excl.)' pdf='true'}</td>
+							<td style="width: 17%; text-align: right;">-{displayPrice currency=$order->id_currency price=$footer.product_discounts_tax_excl}</td>
+						</tr>
+						<tr style="line-height:5px; font-style: italic;">
+							<td style="text-align: right; font-weight: bold">{l s='Product Total After Discounts (Tax Excl.)' pdf='true'}</td>
+							<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$footer.products_after_discounts_tax_excl}</td>
+						</tr>
+					{/if}
+
+					{if $footer.shipping_tax_excl > 0}
+						<tr style="line-height:5px;">
+							<td style="text-align: right; font-weight: bold">{l s='Shipping Cost (Tax Excl.)' pdf='true'}</td>
+							<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$footer.shipping_tax_excl}</td>
+						</tr>
+					{/if}
+
+					{if $footer.wrapping_tax_excl > 0}
+						<tr style="line-height:5px;">
+							<td style="text-align: right; font-weight: bold">{l s='Wrapping Cost (Tax Excl.)' pdf='true'}</td>
+							<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$footer.wrapping_tax_excl}</td>
+						</tr>
+					{/if}
+
+					{if $footer.product_taxes > 0}
+						<tr style="line-height:5px;">
+							<td style="text-align: right; font-weight: bold">{l s='Product Taxes' pdf='true'}</td>
+							<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$footer.product_taxes}</td>
+						</tr>
+					{/if}
+
+					{if $footer.ecotax_taxes > 0}
+						<tr style="line-height:5px;">
+							<td style="text-align: right; font-weight: bold">{l s='Ecotax Tax' pdf='true'}</td>
+							<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$footer.ecotax_taxes}</td>
+						</tr>
+					{/if}
+
+					{if $footer.total_taxes > 0}
+						<tr style="line-height:5px; font-style: italic">
+							<td style="text-align: right; font-weight: bold">{l s='Total Taxes' pdf='true'}</td>
+							<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$footer.total_taxes}</td>
+						</tr>
+					{/if}
+
+
+					{if $footer.shipping_taxes > 0}
+						<tr style="line-height:5px;">
+							<td style="text-align: right; font-weight: bold">{l s='Shipping Taxes' pdf='true'}</td>
+							<td style="width: 17%; text-align: right;">{displayPrice currency=$footer.shipping_taxes}</td>
+						</tr>
+					{/if}
+
+					{if $footer.wrapping_taxes > 0}
+						<tr style="line-height:5px;">
+							<td style="text-align: right; font-weight: bold">{l s='Wrapping Taxes' pdf='true'}</td>
+							<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$footer.wrapping_taxes}</td>
+						</tr>
+					{/if}
+
 					<tr style="line-height:5px;">
-						<td style="text-align: right; font-weight: bold">{l s='Shipping Cost (Tax Excl.)' pdf='true'}</td>
-						<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->total_shipping_tax_excl}</td>
+						<td style="text-align: right; font-weight: bold">{l s='Total' pdf='true'}</td>
+						<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$footer.total_paid_tax_incl}</td>
 					</tr>
-				{/if}
 
-				{if $order_invoice->total_wrapping_tax_excl > 0}
-				<tr style="line-height:5px;">
-					<td style="text-align: right; font-weight: bold">{l s='Wrapping Cost (Tax Excl.)' pdf='true'}</td>
-					<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->total_wrapping_tax_excl}</td>
-				</tr>
-				{/if}
+				</table>
+			{else}
+				<table style="width: 100%">
 
-				{if $product_taxes > 0}
 					<tr style="line-height:5px;">
-						<td style="text-align: right; font-weight: bold">{l s='Product Taxes' pdf='true'}</td>
-						<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$product_taxes}</td>
+						<td style="width: 83%; text-align: right; font-weight: bold">{l s='Product Total (Tax Incl.)' pdf='true'}</td>
+						<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$footer.products_before_discounts_tax_incl}</td>
 					</tr>
-				{/if}
 
-				<tr style="line-height:5px; font-style: italic">
-					<td style="text-align: right; font-weight: bold">{l s='Total Taxes' pdf='true'}</td>
-					<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->total_paid_tax_incl - $order_invoice->total_paid_tax_excl}</td>
-				</tr>
+					{if $footer.product_discounts_tax_incl > 0}
+						<tr style="line-height:5px;">
+							<td style="text-align: right; font-weight: bold">{l s='Total Discounts (Tax Incl.)' pdf='true'}</td>
+							<td style="width: 17%; text-align: right;">-{displayPrice currency=$order->id_currency price=$footer.product_discounts_tax_incl}</td>
+						</tr>
+					{/if}
 
+					{if $footer.shipping_tax_incl > 0}
+						<tr style="line-height:5px;">
+							<td style="text-align: right; font-weight: bold">{l s='Shipping Cost (Tax Incl.)' pdf='true'}</td>
+							<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$footer.shipping_tax_incl}</td>
+						</tr>
+					{/if}
 
-				{if !$free_shipping and ($order_invoice->total_shipping_tax_incl - $order_invoice->total_shipping_tax_excl > 0)}
 					<tr style="line-height:5px;">
-						<td style="text-align: right; font-weight: bold">{l s='Shipping Taxes' pdf='true'}</td>
-						<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->total_shipping_tax_incl - $order_invoice->total_shipping_tax_excl}</td>
+						<td style="text-align: right; font-weight: bold">{l s='Total' pdf='true'}</td>
+						<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$footer.total_paid_tax_incl}</td>
 					</tr>
-				{/if}
 
-				{if $order_invoice->total_wrapping_tax_incl - $order_invoice->total_wrapping_tax_excl > 0}
-					<tr style="line-height:5px;">
-						<td style="text-align: right; font-weight: bold">{l s='Wrapping Taxes' pdf='true'}</td>
-						<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->total_wrapping_tax_incl - $order_invoice->total_wrapping_tax_excl}</td>
-					</tr>
-				{/if}
-
-				<tr style="line-height:5px;">
-					<td style="text-align: right; font-weight: bold">{l s='Total' pdf='true'}</td>
-					<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$order_invoice->total_paid_tax_incl}</td>
-				</tr>
-			</table>
+				</table>
+			{/if}
 
 		</td>
 	</tr>

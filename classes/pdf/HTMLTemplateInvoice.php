@@ -82,12 +82,6 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 				}
 			}
 
-		$product_taxes = 0;
-		foreach ($this->order_invoice->getProductTaxesBreakdown($this->order) as $details)
-		{
-			$product_taxes += $details['total_amount'];
-		}
-
 		$cart_rules = $this->order->getCartRules($this->order_invoice->id);
 
 		$free_shipping = false;
@@ -100,11 +94,30 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			}
 		}
 
-		$product_discounts = $this->order_invoice->total_discount_tax_excl;
+		$product_taxes = 0;
+		foreach ($this->order_invoice->getProductTaxesBreakdown($this->order) as $details)
+		{
+			$product_taxes += $details['total_amount'];
+		}
+
+		$product_discounts_tax_excl = $this->order_invoice->total_discount_tax_excl;
+		$product_discounts_tax_incl = $this->order_invoice->total_discount_tax_incl;
 		if ($free_shipping)
 		{
-			$product_discounts -= $this->order_invoice->total_shipping_tax_excl;
+			$product_discounts_tax_excl -= $this->order_invoice->total_shipping_tax_excl;
+			$product_discounts_tax_incl -= $this->order_invoice->total_shipping_tax_incl;
 		}
+
+		$products_after_discounts_tax_excl = $this->order_invoice->total_products - $product_discounts_tax_excl;
+		$products_after_discounts_tax_incl = $this->order_invoice->total_products_wt - $product_discounts_tax_incl;
+
+		$shipping_tax_excl = $free_shipping ? 0 : $this->order_invoice->total_shipping_tax_excl;
+		$shipping_tax_incl = $free_shipping ? 0 : $this->order_invoice->total_shipping_tax_incl;
+		$shipping_taxes = $shipping_tax_incl - $shipping_tax_excl;
+
+		$wrapping_taxes = $this->order_invoice->total_wrapping_tax_incl - $this->order_invoice->total_wrapping_tax_excl;
+
+		$total_taxes = $this->order_invoice->total_paid_tax_incl - $this->order_invoice->total_paid_tax_excl;
 
 		$data = array(
 			'order' => $this->order,
@@ -115,9 +128,25 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			'tax_excluded_display' => Group::getPriceDisplayMethod($customer->id_default_group),
 			'tax_tab' => $this->getTaxTabContent(),
 			'customer' => $customer,
-			'product_taxes' => $product_taxes,
-			'free_shipping' => $free_shipping,
-			'product_discounts' => $product_discounts
+			'footer' => array(
+				'products_before_discounts_tax_excl' => $this->order_invoice->total_products,
+				'product_discounts_tax_excl' => $product_discounts_tax_excl,
+				'products_after_discounts_tax_excl' => $products_after_discounts_tax_excl,
+				'products_before_discounts_tax_incl' => $this->order_invoice->total_products_wt,
+				'product_discounts_tax_incl' => $product_discounts_tax_incl,
+				'products_after_discounts_tax_incl' => $products_after_discounts_tax_incl,
+				'product_taxes' => $product_taxes,
+				'shipping_tax_excl' => $shipping_tax_excl,
+				'shipping_taxes' => $shipping_taxes,
+				'shipping_tax_incl' => $shipping_tax_incl,
+				'wrapping_tax_excl' => $this->order_invoice->total_wrapping_tax_excl,
+				'wrapping_taxes' => $wrapping_taxes,
+				'wrapping_tax_incl' => $this->order_invoice->total_wrapping_tax_incl,
+				'ecotax_taxes' => $total_taxes - $product_taxes - $wrapping_taxes - $shipping_taxes,
+				'total_taxes' => $total_taxes,
+				'total_paid_tax_excl' => $this->order_invoice->total_paid_tax_excl,
+				'total_paid_tax_incl' => $this->order_invoice->total_paid_tax_incl
+			)
 		);
 
 		if (Tools::getValue('debug'))
