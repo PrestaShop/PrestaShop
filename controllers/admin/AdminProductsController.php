@@ -4888,7 +4888,7 @@ class AdminProductsControllerCore extends AdminController
 
 	public function processImageLegends()
 	{
-		if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
+		if (Tools::getValue('key_tab') == 'Images' && Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
 		{
 			$languages = Language::getLanguages(false);
 			foreach ($_POST as $key => $val)
