@@ -734,7 +734,7 @@ class StockManagerCore implements StockManagerInterface
 					$stock_quantity += Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT SUM(s.`usable_quantity`) as quantity
 						FROM '._DB_PREFIX_.'stock s
 						LEFT JOIN '._DB_PREFIX_.'warehouse_carrier wc ON wc.`id_warehouse` = s.`id_warehouse`
-						LEFT JOIN ps_carrier c ON wc.`id_carrier` = c.`id_reference`
+						LEFT JOIN '._DB_PREFIX_.'carrier c ON wc.`id_carrier` = c.`id_reference`
 						WHERE s.`id_product` = '.(int)$id_product.' AND s.`id_product_attribute` = '.(int)$id_product_attribute.' AND s.`id_warehouse` = '.$result['id_warehouse'].' AND c.`id_carrier` IN ('.rtrim($delivery_option[(int)Context::getContext()->cart->id_address_delivery], ',').') GROUP BY s.`id_product`');
 				else
 					$stock_quantity += Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT SUM(s.`usable_quantity`) as quantity
