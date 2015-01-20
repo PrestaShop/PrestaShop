@@ -274,18 +274,10 @@
 						</tr>
 					{/if}
 
-					{if $footer.total_taxes > 0}
-						<tr style="line-height:5px; font-style: italic">
-							<td style="text-align: right; font-weight: bold">{l s='Total Taxes' pdf='true'}</td>
-							<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$footer.total_taxes}</td>
-						</tr>
-					{/if}
-
-
 					{if $footer.shipping_taxes > 0}
 						<tr style="line-height:5px;">
 							<td style="text-align: right; font-weight: bold">{l s='Shipping Taxes' pdf='true'}</td>
-							<td style="width: 17%; text-align: right;">{displayPrice currency=$footer.shipping_taxes}</td>
+							<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$footer.shipping_taxes}</td>
 						</tr>
 					{/if}
 
@@ -293,6 +285,13 @@
 						<tr style="line-height:5px;">
 							<td style="text-align: right; font-weight: bold">{l s='Wrapping Taxes' pdf='true'}</td>
 							<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$footer.wrapping_taxes}</td>
+						</tr>
+					{/if}
+
+					{if $footer.total_taxes > 0}
+						<tr style="line-height:5px; font-style: italic">
+							<td style="text-align: right; font-weight: bold">{l s='Total Taxes' pdf='true'}</td>
+							<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$footer.total_taxes}</td>
 						</tr>
 					{/if}
 
@@ -321,6 +320,13 @@
 						<tr style="line-height:5px;">
 							<td style="text-align: right; font-weight: bold">{l s='Shipping Cost (Tax Incl.)' pdf='true'}</td>
 							<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$footer.shipping_tax_incl}</td>
+						</tr>
+					{/if}
+
+					{if $footer.wrapping_tax_incl > 0}
+						<tr style="line-height:5px;">
+							<td style="text-align: right; font-weight: bold">{l s='Wrapping Cost (Tax Incl.)' pdf='true'}</td>
+							<td style="width: 17%; text-align: right;">{displayPrice currency=$order->id_currency price=$footer.wrapping_tax_incl}</td>
 						</tr>
 					{/if}
 
