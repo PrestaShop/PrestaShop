@@ -1263,6 +1263,9 @@ class AdminImportControllerCore extends AdminController
 
 	public function productImport()
 	{
+		if (!defined('PS_MASS_PRODUCT_CREATION'))
+			define('PS_MASS_PRODUCT_CREATION', true);
+
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
 		$default_language_id = (int)Configuration::get('PS_LANG_DEFAULT');

@@ -81,6 +81,9 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 
 	public function initProcess()
 	{
+		if (!defined('PS_MASS_PRODUCT_CREATION'))
+			define('PS_MASS_PRODUCT_CREATION', true);
+
 		if (Tools::isSubmit('generate'))
 		{
 			if ($this->tabAccess['edit'] === '1')
