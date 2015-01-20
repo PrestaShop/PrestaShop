@@ -2174,6 +2174,13 @@ class OrderCore extends ObjectModel
 
 		// Get order_details
 		$order_details = $this->getOrderDetailList();
+
+		$order_ecotax = 0;
+		foreach ($order_details as $order_detail)
+		{
+			$order_ecotax += $order_detail['ecotax'];
+		}
+
 		foreach ($order_details as $order_detail)
 		{
 			$id_order_detail = $order_detail['id_order_detail'];
@@ -2182,7 +2189,7 @@ class OrderCore extends ObjectModel
 			$discount_ratio = $order_detail['unit_price_tax_excl'] / $this->total_products;
 
 			// share of global discount
-			$discounted_price_tax_excl =  $order_detail['unit_price_tax_excl'] - $discount_ratio * $order_discount_tax_excl;
+			$discounted_price_tax_excl =  $order_detail['unit_price_tax_excl'] - $discount_ratio * ($order_discount_tax_excl + $order_ecotax);
 			// specific discount
 			if (!empty($product_specific_discounts[$order_detail['product_id']]))
 			{

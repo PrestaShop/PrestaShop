@@ -326,6 +326,12 @@ class OrderInvoiceCore extends ObjectModel
 			AND od.`id_order_invoice` = '.(int)$this->id.'
 		');
 
+		$order_ecotax = 0;
+		foreach ($product_details as $details)
+		{
+			$order_ecotax += $details['ecotax'];
+		}
+
 		foreach ($product_details as $details)
 		{
 			if (!array_key_exists($details['rate'], $breakdown))
@@ -338,7 +344,7 @@ class OrderInvoiceCore extends ObjectModel
 			}
 			$discount_ratio = $details['total_price_tax_excl'] / $this->total_products;
 			$breakdown[$details['rate']]['total_amount'] += $details['total_amount'];
-			$share_of_order_discount = $discount_ratio * $order_discount_tax_excl;
+			$share_of_order_discount = $discount_ratio * ($order_discount_tax_excl - $order_ecotax);
 			$breakdown[$details['rate']]['total_price_tax_excl'] += $details['total_price_tax_excl'] - $share_of_order_discount;
 			if (!empty($product_specific_discounts[$details['id_product']]))
 			{
