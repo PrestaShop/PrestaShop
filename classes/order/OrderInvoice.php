@@ -327,9 +327,10 @@ class OrderInvoiceCore extends ObjectModel
 		');
 
 		$order_ecotax = 0;
+
 		foreach ($product_details as $details)
 		{
-			$order_ecotax += $details['ecotax'];
+			$order_ecotax += $details['ecotax'] * $details['product_quantity'];
 		}
 
 		foreach ($product_details as $details)
@@ -339,12 +340,16 @@ class OrderInvoiceCore extends ObjectModel
 				$breakdown[$details['rate']] = array(
 					'name' => $details['rate'],
 					'total_amount' => 0,
-					'total_price_tax_excl' => 0
+					'total_price_tax_excl' => 0,
+					'ecotax_price_tax_excl' => 0,
+					'discount_ratio' => 0
 				);
 			}
-			$discount_ratio = $details['total_price_tax_excl'] / $this->total_products;
+			$breakdown[$details['rate']]['ecotax_price_tax_excl'] += $details['ecotax'] * $details['product_quantity'];
+			$discount_ratio = ($details['total_price_tax_excl'] + $details['ecotax']) / $this->total_products;
+			$breakdown[$details['rate']]['discount_ratio'] += $discount_ratio;
 			$breakdown[$details['rate']]['total_amount'] += $details['total_amount'];
-			$share_of_order_discount = $discount_ratio * ($order_discount_tax_excl - $order_ecotax);
+			$share_of_order_discount = $discount_ratio * ($order_discount_tax_excl);
 			$breakdown[$details['rate']]['total_price_tax_excl'] += $details['total_price_tax_excl'] - $share_of_order_discount;
 			if (!empty($product_specific_discounts[$details['id_product']]))
 			{
@@ -362,14 +367,15 @@ class OrderInvoiceCore extends ObjectModel
 			$breakdown[$rate]['total_amount'] = Tools::ps_round($breakdown[$rate]['total_amount'], _PS_PRICE_COMPUTE_PRECISION_);
 			$breakdown[$rate]['total_price_tax_excl'] = $total_price_tax_excl;
 		}
-		$delta = $total_products_after_discounts - $breakdown_total_products_after_discounts;
+
+		$delta = $total_products_after_discounts - $breakdown_total_products_after_discounts - $order_ecotax;
 		if ($delta !== 0)
 		{
 			Tools::spreadAmount($delta, _PS_PRICE_COMPUTE_PRECISION_, $breakdown, 'total_price_tax_excl');
 		}
 
 		Tools::$round_mode = $previous_round_mode;
-
+		
 		return $breakdown;
 	}
 

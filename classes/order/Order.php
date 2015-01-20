@@ -2175,21 +2175,23 @@ class OrderCore extends ObjectModel
 		// Get order_details
 		$order_details = $this->getOrderDetailList();
 
-		$order_ecotax = 0;
-		foreach ($order_details as $order_detail)
-		{
-			$order_ecotax += $order_detail['ecotax'];
-		}
+		$order_ecotax_tax = 0;
 
 		foreach ($order_details as $order_detail)
 		{
 			$id_order_detail = $order_detail['id_order_detail'];
 			$tax_calculator = OrderDetail::getTaxCalculatorStatic($id_order_detail);
 
-			$discount_ratio = $order_detail['unit_price_tax_excl'] / $this->total_products;
+			// TODO: probably need to make an ecotax tax breakdown here instead,
+			// but it seems unlikely there will be different tax rates applied to the
+			// ecotax in the same order in the real world
+			$unit_ecotax_tax = $order_detail['ecotax'] * $order_detail['ecotax_tax_rate'] / 100.0;
+			$order_ecotax_tax += $order_detail['product_quantity'] * $unit_ecotax_tax;
+
+			$discount_ratio = ($order_detail['unit_price_tax_excl'] + $order_detail['ecotax']) / $this->total_products;
 
 			// share of global discount
-			$discounted_price_tax_excl =  $order_detail['unit_price_tax_excl'] - $discount_ratio * ($order_discount_tax_excl + $order_ecotax);
+			$discounted_price_tax_excl =  $order_detail['unit_price_tax_excl'] - $discount_ratio * $order_discount_tax_excl;
 			// specific discount
 			if (!empty($product_specific_discounts[$order_detail['product_id']]))
 			{
@@ -2235,7 +2237,9 @@ class OrderCore extends ObjectModel
 			$actual_total_tax += Tools::ps_round($total_amount, _PS_PRICE_COMPUTE_PRECISION_);
 		}
 
-		$rounding_error = $expected_total_tax - $actual_total_tax;
+		$order_ecotax_tax = Tools::ps_round($order_ecotax_tax, _PS_PRICE_COMPUTE_PRECISION_);
+
+		$rounding_error = $expected_total_tax - $actual_total_tax - $order_ecotax_tax;
 
 		if ($rounding_error !== 0) {
 			Tools::spreadAmount($rounding_error, _PS_PRICE_COMPUTE_PRECISION_, $order_detail_tax_rows_to_insert, 'total_amount');
