@@ -163,7 +163,7 @@ class DbQueryCore
 	}
 
 	/**
-	 * Add an ORDER B restriction
+	 * Add an ORDER BY restriction
 	 *
 	 * @param string $fields List of fields to sort. E.g. $this->order('myField, b.mySecondField DESC')
 	 * @return DbQuery
@@ -179,7 +179,7 @@ class DbQueryCore
 	/**
 	 * Add a GROUP BY restriction
 	 *
-	 * @param string $fields List of fields to sort. E.g. $this->group('myField, b.mySecondField DESC')
+	 * @param string $fields List of fields to group. E.g. $this->group('myField1, myField2')
 	 * @return DbQuery
 	 */
 	public function groupBy($fields)
@@ -193,7 +193,7 @@ class DbQueryCore
 	/**
 	 * Limit results in query
 	 *
-	 * @param string $fields List of fields to sort. E.g. $this->order('myField, b.mySecondField DESC')
+	 * @param string $fields Couple of values to set limit and offset. E.g. $this->limit(1, 10)
 	 * @return DbQuery
 	 */
 	public function limit($limit, $offset = 0)
@@ -210,7 +210,7 @@ class DbQueryCore
 	}
 
 	/**
-	 * Generate and get the query
+	 * Generate and get the query as a string
 	 *
 	 * @return string
 	 */
