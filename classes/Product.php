@@ -3667,7 +3667,7 @@ class ProductCore extends ObjectModel
 
 	public static function duplicateTags($id_product_old, $id_product_new)
 	{
-		$tags = Db::getInstance()->executeS('SELECT `id_tag` FROM `'._DB_PREFIX_.'product_tag` WHERE `id_product` = '.(int)$id_product_old);
+		$tags = Db::getInstance()->executeS('SELECT `id_tag`, `id_lang` FROM `'._DB_PREFIX_.'product_tag` WHERE `id_product` = '.(int)$id_product_old);
 		if (!Db::getInstance()->NumRows())
 			return true;
 
@@ -3676,6 +3676,7 @@ class ProductCore extends ObjectModel
 			$data[] = array(
 				'id_product' => (int)$id_product_new,
 				'id_tag' => (int)$tag['id_tag'],
+				'id_lang' => (int)$tag['id_lang'],
 			);
 
 		return Db::getInstance()->insert('product_tag', $data);
@@ -5029,10 +5030,12 @@ class ProductCore extends ObjectModel
 			{
 				$sql_values = '';
 				$ids = array_map('intval', $ids);
-				foreach ($ids as $position => $id)
-					$sql_values[] = '('.(int)$this->id.', '.(int)$id.')';
+				foreach ($ids as $position => $id) {
+					$id_lang = Db::getInstance()->getValue('SELECT `id_lang` FROM `'._DB_PREFIX_.'tag` WHERE `id_tag`='.(int)$id);
+					$sql_values[] = '('.(int)$this->id.', '.(int)$id.', '.(int)$id_lang.')';
+				}
 				$result = Db::getInstance()->execute('
-					INSERT INTO `'._DB_PREFIX_.'product_tag` (`id_product`, `id_tag`)
+					INSERT INTO `'._DB_PREFIX_.'product_tag` (`id_product`, `id_tag`, `id_lang`)
 					VALUES '.implode(',', $sql_values)
 				);
 				return $result;

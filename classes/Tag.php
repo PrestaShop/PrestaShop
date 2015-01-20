@@ -120,11 +120,11 @@ class TagCore extends ObjectModel
 			}
 		$data = '';
 		foreach ($list as $tag)
-			$data .= '('.(int)$tag.','.(int)$id_product.'),';
+			$data .= '('.(int)$tag.','.(int)$id_product.','.(int)$id_lang.'),';
 		$data = rtrim($data, ',');
 
 		return Db::getInstance()->execute('
-		INSERT INTO `'._DB_PREFIX_.'product_tag` (`id_tag`, `id_product`)
+		INSERT INTO `'._DB_PREFIX_.'product_tag` (`id_tag`, `id_product`, `id_lang`)
 		VALUES '.$data);
 	}
 
@@ -146,9 +146,9 @@ class TagCore extends ObjectModel
 		LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = pt.id_product)
 		'.Shop::addSqlAssociation('product', 'p').'
 		'.$sql_groups.'
-		WHERE t.`id_lang` = '.(int)$id_lang.'
+		WHERE pt.`id_lang` = '.(int)$id_lang.'
 		AND product_shop.`active` = 1
-		GROUP BY t.id_tag
+		GROUP BY pt.id_tag
 		ORDER BY times DESC
 		LIMIT '.(int)$nb);
 	}
@@ -196,12 +196,13 @@ class TagCore extends ObjectModel
 			$array = array_map('intval', $array);
 			$result &= ObjectModel::updateMultishopTable('Product', array('indexed' => 0), 'a.id_product IN ('.implode(',', $array).')');
 			$ids = array();
-			foreach ($array as $id_product)
-				$ids[] = '('.(int)$id_product.','.(int)$this->id.')';
+			foreach ($array as $id_product) {
+				$ids[] = '('.(int)$id_product.','.(int)$this->id.','.(int)$this->id_lang.')';
+			}
 
 			if ($result)
 			{
-				$result &= Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'product_tag (id_product, id_tag) VALUES '.implode(',', $ids));
+				$result &= Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'product_tag (id_product, id_tag, id_lang) VALUES '.implode(',', $ids));
 				if (Configuration::get('PS_SEARCH_INDEXATION'))
 					$result &= Search::indexation(false);
 			}
