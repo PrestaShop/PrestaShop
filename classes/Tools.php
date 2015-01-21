@@ -1616,8 +1616,10 @@ class ToolsCore
 		{
 			if (Tools::$round_mode == null)
 			{
-				$round_mode = Tools::$round_mode = (int)Configuration::get('PS_PRICE_ROUND_MODE');
+				Tools::$round_mode = (int)Configuration::get('PS_PRICE_ROUND_MODE');
 			}
+
+			$round_mode = Tools::$round_mode;
 		}
 
 		switch ($round_mode)
