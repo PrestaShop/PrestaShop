@@ -1471,7 +1471,7 @@ CREATE TABLE `PREFIX_product` (
   `pack_stock_type` int(11) unsigned DEFAULT '3' NOT NULL,
   PRIMARY KEY (`id_product`),
   KEY `product_supplier` (`id_supplier`),
-  KEY `product_manufacturer` (`id_manufacturer`),
+  KEY `product_manufacturer` (`id_manufacturer`, `id_product`),
   KEY `id_category_default` (`id_category_default`),
   KEY `indexed` (`indexed`),
   KEY `date_add` (`date_add`)
@@ -2447,7 +2447,8 @@ CREATE TABLE `PREFIX_product_supplier` (
   `product_supplier_price_te` decimal(20,6) NOT NULL DEFAULT '0.000000',
   `id_currency` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id_product_supplier`),
-  UNIQUE KEY `id_product` (`id_product`,`id_product_attribute`,`id_supplier`)
+  UNIQUE KEY `id_product` (`id_product`,`id_product_attribute`,`id_supplier`),
+  KEY `id_supplier` (`id_supplier`,`id_product`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_order_carrier` (

@@ -134,7 +134,7 @@ class SupplierCore extends ObjectModel
 			}
 
 			$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-					SELECT  p.`id_supplier`, COUNT(DISTINCT p.`id_product`) as nb_products
+					SELECT  ps.`id_supplier`, COUNT(DISTINCT ps.`id_product`) as nb_products
 					FROM `'._DB_PREFIX_.'product_supplier` ps
 					JOIN `'._DB_PREFIX_.'product` p ON (ps.`id_product`= p.`id_product`)
 					'.Shop::addSqlAssociation('product', 'p').'
@@ -149,7 +149,7 @@ class SupplierCore extends ObjectModel
 						LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
 						WHERE cg.`id_group` '.$sql_groups.'
 					)
-					GROUP BY p.`id_supplier`'
+					GROUP BY ps.`id_supplier`'
 				));
 
 			$counts = array();
