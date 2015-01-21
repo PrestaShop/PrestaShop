@@ -123,3 +123,5 @@ SELECT 0, t.id_tag, t.id_lang, ps.id_shop, COUNT(pt.id_tag) AS times
 	WHERE pt.`id_lang` = 1 AND product_shop.`active` = 1
 	AND product_shop.id_shop = ps.id_shop
 	GROUP BY pt.id_tag;
+	ALTER TABLE `PREFIX_product_supplier` ADD KEY `id_supplier` (`id_supplier`,`id_product`);
+	ALTER TABLE `PREFIX_product` DROP KEY `product_manufacturer`, ADD KEY `product_manufacturer` (`id_manufacturer`, `id_product`);

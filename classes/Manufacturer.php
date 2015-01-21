@@ -190,7 +190,7 @@ class ManufacturerCore extends ObjectModel
 
 			$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 					SELECT  p.`id_manufacturer`, COUNT(DISTINCT p.`id_product`) as nb_products
-					FROM `'._DB_PREFIX_.'product` p
+					FROM `'._DB_PREFIX_.'product` p USE INDEX (product_manufacturer)
 					'.Shop::addSqlAssociation('product', 'p').'
 					LEFT JOIN `'._DB_PREFIX_.'manufacturer` as m ON (m.`id_manufacturer`= p.`id_manufacturer`)
 					WHERE product_shop.`visibility` NOT IN ("none")
