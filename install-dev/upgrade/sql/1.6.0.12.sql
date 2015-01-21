@@ -79,3 +79,38 @@ UPDATE PREFIX_image_shop, PREFIX_image
 	SET PREFIX_image_shop.id_product=PREFIX_image.id_product
 	WHERE PREFIX_image_shop.id_image=PREFIX_image.id_image;
 ALTER IGNORE TABLE `PREFIX_image_shop` DROP PRIMARY KEY, ADD PRIMARY KEY (`id_image`, `id_shop`);
+CREATE TABLE `PREFIX_tag_count` (
+  `id_group` int(10) unsigned NOT NULL DEFAULT 0,
+  `id_tag` int(10) unsigned NOT NULL DEFAULT 0,
+  `id_lang` int(10) unsigned NOT NULL DEFAULT 0,
+  `id_shop` int(11) unsigned NOT NULL DEFAULT 0,
+  `counter` int(10) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id_group`, `id_tag`),
+  KEY (`id_group`, `id_lang`, `id_shop`, `counter`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+REPLACE INTO `PREFIX_tag_count` (id_group, id_tag, id_lang, id_shop, counter)
+SELECT cg.id_group, t.id_tag, t.id_lang, ps.id_shop, COUNT(pt.id_tag) AS times
+	FROM `PREFIX_product_tag` pt
+	LEFT JOIN `PREFIX_tag` t ON (t.id_tag = pt.id_tag)
+	LEFT JOIN `PREFIX_product` p ON (p.id_product = pt.id_product)
+	INNER JOIN `PREFIX_product_shop` product_shop
+		ON (product_shop.id_product = p.id_product)
+	JOIN (SELECT DISTINCT id_group FROM `PREFIX_category_group`) cg
+	JOIN (SELECT DISTINCT id_shop FROM `PREFIX_shop`) ps
+	WHERE pt.`id_lang` = 1 AND product_shop.`active` = 1
+	AND p.`id_product` IN (SELECT DISTINCT cp.`id_product` FROM `PREFIX_category_product` cp
+													LEFT JOIN `PREFIX_category_group` cgo ON (cp.`id_category` = cgo.`id_category`)
+													WHERE cgo.`id_group` = cg.id_group)
+	AND product_shop.id_shop = ps.id_shop
+	GROUP BY pt.id_tag, cg.id_group;
+REPLACE INTO `PREFIX_tag_count` (id_group, id_tag, id_lang, id_shop, counter)
+SELECT 0, t.id_tag, t.id_lang, ps.id_shop, COUNT(pt.id_tag) AS times
+	FROM `PREFIX_product_tag` pt
+	LEFT JOIN `PREFIX_tag` t ON (t.id_tag = pt.id_tag)
+	LEFT JOIN `PREFIX_product` p ON (p.id_product = pt.id_product)
+	INNER JOIN `PREFIX_product_shop` product_shop
+		ON (product_shop.id_product = p.id_product)
+	JOIN (SELECT DISTINCT id_shop FROM `PREFIX_shop`) ps
+	WHERE pt.`id_lang` = 1 AND product_shop.`active` = 1
+	AND product_shop.id_shop = ps.id_shop
+	GROUP BY pt.id_tag;
