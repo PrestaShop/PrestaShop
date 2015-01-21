@@ -1610,12 +1610,17 @@ class ToolsCore
 	 * @param int $precision
 	 * @return float
 	 */
-	public static function ps_round($value, $precision = 0)
+	public static function ps_round($value, $precision = 0, $round_mode = null)
 	{
-		if (Tools::$round_mode == null)
-			Tools::$round_mode = (int)Configuration::get('PS_PRICE_ROUND_MODE');
+		if ($round_mode === null)
+		{
+			if (Tools::$round_mode == null)
+			{
+				$round_mode = Tools::$round_mode = (int)Configuration::get('PS_PRICE_ROUND_MODE');
+			}
+		}
 
-		switch (Tools::$round_mode)
+		switch ($round_mode)
 		{
 			case PS_ROUND_UP:
 				return Tools::ceilf($value, $precision);
@@ -1624,7 +1629,7 @@ class ToolsCore
 			case PS_ROUND_HALF_DOWN:
 			case PS_ROUND_HALF_EVEN:
 			case PS_ROUND_HALF_ODD:
-				return Tools::math_round($value, $precision, Tools::$round_mode);
+				return Tools::math_round($value, $precision, $round_mode);
 			case PS_ROUND_HALF_UP:
 			default:
 				return Tools::math_round($value, $precision, PS_ROUND_HALF_UP);
