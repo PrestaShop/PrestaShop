@@ -1843,6 +1843,15 @@ CREATE TABLE `PREFIX_tag` (
   KEY `id_lang` (`id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
+CREATE TABLE `PREFIX_tag_count` (
+  `id_group` int(10) unsigned NOT NULL DEFAULT 0,
+  `id_tag` int(10) unsigned NOT NULL DEFAULT 0,
+  `id_lang` int(10) unsigned NOT NULL DEFAULT 0,
+  `counter` int(10) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id_group`, `id_tag`),
+  KEY (`id_group`, `id_lang`, `id_shop`, `counter`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
+
 CREATE TABLE `PREFIX_tax` (
   `id_tax` int(10) unsigned NOT NULL auto_increment,
   `rate` DECIMAL(10, 3) NOT NULL,
