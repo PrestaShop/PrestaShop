@@ -1539,6 +1539,7 @@ CREATE TABLE `PREFIX_product_attribute` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_product_attribute_shop` (
+  `id_product` int(10) unsigned NOT NULL,
   `id_product_attribute` int(10) unsigned NOT NULL,
   `id_shop` int(10) unsigned NOT NULL,
   `wholesale_price` decimal(20,6) NOT NULL DEFAULT '0.000000',
@@ -1549,7 +1550,8 @@ CREATE TABLE `PREFIX_product_attribute_shop` (
   `default_on` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `minimal_quantity` int(10) unsigned NOT NULL DEFAULT '1',
   `available_date` date NOT NULL DEFAULT '0000-00-00',
-  PRIMARY KEY (`id_product_attribute`, `id_shop`)
+  PRIMARY KEY (`id_product_attribute`, `id_shop`),
+  KEY `id_product` (`id_product`, `id_shop`, `default_on`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_product_attribute_combination` (
@@ -2130,10 +2132,12 @@ CREATE TABLE `PREFIX_contact_shop` (
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_image_shop` (
+  `id_product` int(10) unsigned NOT NULL,
 	`id_image` INT( 11 ) UNSIGNED NOT NULL,
 	`id_shop` INT( 11 ) UNSIGNED NOT NULL,
 	`cover` tinyint(1) NOT NULL DEFAULT '0',
-	PRIMARY KEY (`id_image`, `id_shop`, `cover`),
+	PRIMARY KEY (`id_image`, `id_shop`),
+	KEY `id_product` (`id_product`, `id_shop`, `cover`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
