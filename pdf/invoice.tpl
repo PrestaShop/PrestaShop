@@ -222,8 +222,9 @@
 				{foreach from=$cart_rules item=cart_rule name="cart_rules_loop"}
 					{cycle values='#FFF,#DDD' assign=bgcolor}
 					{if $smarty.foreach.cart_rules_loop.first}
-						<tr style="margin-top:5px">
+						<tr>
 							<td style="text-align:left" colspan="{if $tax_excluded_display}5{else}6{/if}">
+								<br><br>
 								<span style="font-style: italic">{l s='Discounts' pdf='true'}</span>
 							</td>
 						</tr>
