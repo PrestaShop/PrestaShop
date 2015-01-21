@@ -1859,6 +1859,9 @@ class ToolsCore
 
 	public static function getBrightness($hex)
 	{
+		if (Tools::strtolower($hex) == 'transparent')
+			return '129';
+
 		$hex = str_replace('#', '', $hex);
 		$r = hexdec(substr($hex, 0, 2));
 		$g = hexdec(substr($hex, 2, 2));
