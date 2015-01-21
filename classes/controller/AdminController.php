@@ -620,6 +620,10 @@ class AdminControllerCore extends Controller
 	 */
 	public function processFilter()
 	{
+		Hook::exec('action'.$this->controller_name.'ListingFieldsModifier', array(
+			'fields' => &$this->fields_list,
+		));
+
 		if (!isset($this->list_id))
 			$this->list_id = $this->table;
 
