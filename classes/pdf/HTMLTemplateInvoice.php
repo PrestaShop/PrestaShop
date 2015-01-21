@@ -69,6 +69,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
 		$order_details = $this->order_invoice->getProducts();
 		if (Configuration::get('PS_PDF_IMG_INVOICE'))
+		{
 			foreach ($order_details as &$order_detail)
 			{
 				if ($order_detail['image'] != null)
@@ -81,6 +82,8 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 						$order_detail['image_size'] = false;
 				}
 			}
+			unset($order_detail); // don't overwrite the last order_detail later
+		}
 
 		$cart_rules = $this->order->getCartRules($this->order_invoice->id);
 
