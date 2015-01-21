@@ -366,7 +366,7 @@ class AddressCore extends ObjectModel
 			$address = new Address();
 			$address->id_country = (int)$context->customer->geoloc_id_country;
 			$address->id_state = (int)$context->customer->id_state;
-			$address->zipcode = $context->customer->postcode;
+			$address->postcode = $context->customer->postcode;
 		}
 		else
 		{
