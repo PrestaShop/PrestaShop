@@ -145,14 +145,26 @@
 					<!-- unit price tax excluded is mandatory -->
 					{if !$tax_excluded_display}
 						<td style="text-align: right; width: 20%; white-space: nowrap;">
-						{displayPrice currency=$order->id_currency price=$order_detail.unit_price_tax_excl}
+							{displayPrice currency=$order->id_currency price=$order_detail.unit_price_tax_excl_including_ecotax}
+							{if $order_detail.ecotax_tax_excl > 0}
+								<br>
+								<small>{{displayPrice currency=$order->id_currency price=$order_detail.ecotax_tax_excl}|string_format:{l s='ecotax: %s' pdf='true'}}</small>
+							{/if}
 						</td>
 					{/if}
 					<td style="text-align: right; width: 10%; white-space: nowrap;">
 					{if $tax_excluded_display}
-						{displayPrice currency=$order->id_currency price=$order_detail.unit_price_tax_excl}
+						{displayPrice currency=$order->id_currency price=$order_detail.unit_price_tax_excl_including_ecotax}
+						{if $order_detail.ecotax_tax_excl > 0}
+							<br>
+							<small>{{displayPrice currency=$order->id_currency price=$order_detail.ecotax_tax_excl}|string_format:{l s='ecotax: %s' pdf='true'}}</small>
+						{/if}
 					{else}
-						{displayPrice currency=$order->id_currency price=$order_detail.unit_price_tax_incl}
+						{displayPrice currency=$order->id_currency price=$order_detail.unit_price_tax_incl_including_ecotax}
+						{if $order_detail.ecotax_tax_incl > 0}
+							<br>
+							<small>{{displayPrice currency=$order->id_currency price=$order_detail.ecotax_tax_incl}|string_format:{l s='ecotax: %s' pdf='true'}}</small>
+						{/if}
 					{/if}
 					</td>
 					<td style="text-align: right; width: 10%">
@@ -167,9 +179,9 @@
 					<td style="text-align: center; width: 10%">{$order_detail.product_quantity}</td>
 					<td style="text-align: right;  width: {if !$tax_excluded_display}15%{else}25%{/if}; white-space: nowrap;">
 					{if $tax_excluded_display}
-						{displayPrice currency=$order->id_currency price=$order_detail.total_price_tax_excl}
+						{displayPrice currency=$order->id_currency price=$order_detail.total_price_tax_excl_including_ecotax}
 					{else}
-						{displayPrice currency=$order->id_currency price=$order_detail.total_price_tax_incl}
+						{displayPrice currency=$order->id_currency price=$order_detail.total_price_tax_incl_including_ecotax}
 					{/if}
 					</td>
 				</tr>
