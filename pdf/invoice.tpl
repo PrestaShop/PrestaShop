@@ -219,15 +219,20 @@
 
 				<!-- CART RULES -->
 				{assign var="shipping_discount_tax_incl" value="0"}
-				{foreach $cart_rules as $cart_rule}
+				{foreach from=$cart_rules item=cart_rule name="cart_rules_loop"}
 					{cycle values='#FFF,#DDD' assign=bgcolor}
+					{if $smarty.foreach.cart_rules_loop.first}
+						<tr style="margin-top:5px">
+							<td style="text-align:left" colspan="{if $tax_excluded_display}5{else}6{/if}">
+								<span style="font-style: italic">{l s='Discounts' pdf='true'}</span>
+							</td>
+						</tr>
+					{/if}
 					<tr style="line-height:6px;background-color:{$bgcolor};text-align:left;">
-						{$cart_rule_colspan = 2}
-						{if Configuration::get('PS_PDF_IMG_INVOICE')}
-							{$cart_rule_colspan = $cart_rule_colspan + 1}
-						{/if}
-						<td colspan="{$cart_rule_colspan}">{$cart_rule.name}</td>
-						<td style="text-align: right">
+						<td style="text-align:left;width:60%;vertical-align:top" colspan="{if $tax_excluded_display}4{else}5{/if}">
+							{$cart_rule.name}
+						</td>
+						<td style="text-align:right;width:40%;vertical-align:top">
 							{if $tax_excluded_display}
 								- {displayPrice currency=$order->id_currency price=$cart_rule.value_tax_excl}
 							{else}
@@ -238,6 +243,8 @@
 				{/foreach}
 				<!-- END CART RULES -->
 			</table>
+
+			<br>
 
 			{if $tax_excluded_display}
 				<table style="width: 100%">
