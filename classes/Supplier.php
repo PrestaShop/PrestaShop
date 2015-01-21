@@ -264,24 +264,22 @@ class SupplierCore extends ObjectModel
 					pl.`meta_keywords`,
 					pl.`meta_title`,
 					pl.`name`,
-					MAX(image_shop.`id_image`) id_image,
+					image_shop.`id_image` id_image,
 					il.`legend`,
 					s.`name` AS supplier_name,
 					DATEDIFF(p.`date_add`, DATE_SUB("'.date('Y-m-d').' 00:00:00", INTERVAL '.($nb_days_new_product).' DAY)) > 0 AS new,
-					m.`name` AS manufacturer_name'.(Combination::isFeatureActive() ? ', MAX(product_attribute_shop.minimal_quantity) AS product_attribute_minimal_quantity' : '').'
+					m.`name` AS manufacturer_name'.(Combination::isFeatureActive() ? ', product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity' : '').'
 				 FROM `'._DB_PREFIX_.'product` p
 				'.Shop::addSqlAssociation('product', 'p').'
 				JOIN `'._DB_PREFIX_.'product_supplier` ps ON (ps.id_product = p.id_product
-					AND ps.id_product_attribute = 0)
-				LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa
-					ON (p.`id_product` = pa.`id_product`)
-				'.(Combination::isFeatureActive() ?
-				Shop::addSqlAssociation('product_attribute', 'pa', false, 'product_attribute_shop.`default_on` = 1') : '').'
+					AND ps.id_product_attribute = 0) '.
+				(Combination::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'product_attribute_shop` product_attribute_shop
+				ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop='.(int)$context->shop->id.')':'').'
 				LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (p.`id_product` = pl.`id_product`
 					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').')
-				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)'.
-				Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
-				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image`
+				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop
+					ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop='.(int)$context->shop->id.')
+				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (image_shop.`id_image` = il.`id_image`
 					AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'supplier` s ON s.`id_supplier` = p.`id_supplier`
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
@@ -300,7 +298,7 @@ class SupplierCore extends ObjectModel
 				WHERE ps.`id_supplier` = '.(int)$id_supplier.'
 					'.($active ? ' AND product_shop.`active` = 1' : '').'
 					'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
-				GROUP BY product_shop.id_product
+				GROUP BY ps.id_product
 				ORDER BY '.$alias.pSQL($order_by).' '.pSQL($order_way).'
 				LIMIT '.(((int)$p - 1) * (int)$n).','.(int)$n;
 
