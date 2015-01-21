@@ -381,7 +381,7 @@ class SpecificPriceCore extends ObjectModel
 					`reduction` > 0
 		');
 		$ids_product = array();
-		while ($row = Db::getInstance()->nextRow($result)) {
+		foreach($result as $row) {
 			$from = (int)$row['u_from'];
 			$to = (int)$row['u_to'];
 			if (($from == 0 || $beginning_timestamp >= $from)
