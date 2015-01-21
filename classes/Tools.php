@@ -3346,6 +3346,11 @@ exit;
 	 */
 	public static function spreadAmount($amount, $precision, &$rows, $column, $sort_column = null)
 	{
+		if (empty($rows))
+		{
+			return;
+		}
+
 		if (!$sort_column)
 		{
 			$sort_column = $column;

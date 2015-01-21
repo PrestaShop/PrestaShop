@@ -2232,6 +2232,12 @@ class OrderCore extends ObjectModel
 			}
 		}
 
+		// Sometimes, our work is already done
+		if (empty($order_detail_tax_rows_to_insert))
+		{
+			return;
+		}
+
 		foreach ($breakdown as $total_amount)
 		{
 			$actual_total_tax += Tools::ps_round($total_amount, _PS_PRICE_COMPUTE_PRECISION_);
