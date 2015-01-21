@@ -2577,3 +2577,19 @@ CREATE TABLE IF NOT EXISTS `PREFIX_mail` (
   PRIMARY KEY (`id_mail`),
   KEY `recipient` (`recipient`(10))
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
+
+CREATE TABLE IF NOT EXISTS `PREFIX_postcode` (
+	`id` INT(10) NOT NULL AUTO_INCREMENT,
+	`id_country` INT(10) NULL DEFAULT NULL,
+	`id_zone` INT(10) NULL DEFAULT NULL,
+	`min` INT(10) NULL DEFAULT NULL,
+	`max` INT(10) NULL DEFAULT NULL,
+	PRIMARY KEY (`id`),
+	INDEX `ZCZCountryIndex` (`id_country`),
+	INDEX `ZCZZoneIndex` (`id_zone`)
+)
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=148
+;
+
