@@ -245,6 +245,12 @@ class AddressCore extends ObjectModel
 		if (isset(self::$_idZones[$id_address]))
 			return self::$_idZones[$id_address];
 
+		$id_zone = Hook::exec('actionGetZoneById', array('id_address' => $id_address));
+		if (is_numeric($id_zone)) {
+			self::$_idZones[$id_address] = (int)$id_zone;
+			return self::$_idZones[$id_address]
+		}
+
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT s.`id_zone` AS id_zone_state, c.`id_zone`
 		FROM `'._DB_PREFIX_.'address` a
