@@ -246,13 +246,20 @@ class AddressCore extends ObjectModel
 			return self::$_idZones[$id_address];
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT s.`id_zone` AS id_zone_state, c.`id_zone`
+		SELECT z.`id_zone` AS id_zone_zip, s.`id_zone` AS id_zone_state, c.`id_zone`
 		FROM `'._DB_PREFIX_.'address` a
 		LEFT JOIN `'._DB_PREFIX_.'country` c ON c.`id_country` = a.`id_country`
 		LEFT JOIN `'._DB_PREFIX_.'state` s ON s.`id_state` = a.`id_state`
+		LEFT JOIN `'._DB_PREFIX_.'zip_zone` z ON a.postcode BETWEEN z.`min` AND z.`max`
 		WHERE a.`id_address` = '.(int)$id_address);
 
-		self::$_idZones[$id_address] = (int)((int)$result['id_zone_state'] ? $result['id_zone_state'] : $result['id_zone']);
+		if ((int)$result['id_zone_zip'])
+			self::$_idZones[$id_address] = (int)$result['id_zone_zip'];
+		elseif ((int)$result['id_zone_state'])
+			self::$_idZones[$id_address] = (int)$result['id_zone_state'];
+		else
+			self::$_idZones[$id_address] = $result['id_zone'];
+
 		return self::$_idZones[$id_address];
 	}
 
