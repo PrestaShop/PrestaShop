@@ -1274,9 +1274,16 @@ class CarrierCore extends ObjectModel
 			foreach ($carrier_list as $key => $id_carrier)
 			{
 				$carrier = new Carrier($id_carrier);
-				if (($carrier->max_width > 0 && $carrier->max_width < $product->width)
-					|| ($carrier->max_height > 0 && $carrier->max_height < $product->height)
-					|| ($carrier->max_depth > 0 && $carrier->max_depth < $product->depth)
+
+				// Get the sizes of the carrier and the product and sort them to check if the carrier can take the product.
+				$carrier_sizes = array((int)$carrier->max_width, (int)$carrier->max_height, (int)$carrier->max_depth);
+				$product_sizes = array((int)$product->width, (int)$product->height, (int)$product->depth);
+				rsort($carrier_sizes, SORT_NUMERIC);
+				rsort($product_sizes, SORT_NUMERIC);
+
+				if (($carrier_sizes[0] > 0 && $carrier_sizes[0] < $product_sizes[0])
+					|| ($carrier_sizes[1] > 0 && $carrier_sizes[1] < $product_sizes[1])
+					|| ($carrier_sizes[2] > 0 && $carrier_sizes[2] < $product_sizes[2])
 					|| ($carrier->max_weight > 0 && $carrier->max_weight < $product->weight * $cart_quantity))
 					unset($carrier_list[$key]);
 			}
