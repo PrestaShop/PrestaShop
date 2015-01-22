@@ -252,10 +252,14 @@ class ProductControllerCore extends FrontController
 			else
 				$return_link = 'javascript: history.back();';
 
+			$accessories = $this->product->getAccessories($this->context->language->id);
+			if ($this->product->cache_is_pack || count($accessories))
+					$this->context->controller->addCSS(_THEME_CSS_DIR_.'product_list.css');
+
 			$this->context->smarty->assign(array(
 				'stock_management' => Configuration::get('PS_STOCK_MANAGEMENT'),
 				'customizationFields' => $customization_fields,
-				'accessories' => $this->product->getAccessories($this->context->language->id),
+				'accessories' => $accessories,
 				'return_link' => $return_link,
 				'product' => $this->product,
 				'product_manufacturer' => new Manufacturer((int)$this->product->id_manufacturer, $this->context->language->id),
