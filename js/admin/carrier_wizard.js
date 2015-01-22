@@ -356,7 +356,7 @@ function bind_inputs()
 			});
 		}
 		else
-			$(this).closest('tr').find('td').find('div.input-group input:text').attr('disabled', 'disabled').val('');
+			$(this).closest('tr').find('td').find('div.input-group input:text').attr('disabled', 'disabled');
 
 		return false;
 	});
