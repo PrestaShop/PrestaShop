@@ -360,7 +360,6 @@ class OrderInvoiceCore extends ObjectModel
 		$sum_composite_taxes = !$this->useOneAfterAnotherTaxComputationMethod();
 
 		$order_detail_taxes = $this->getOrder()->getOrderDetailTaxes();
-
 		$breakdown = array();
 
 		$group_by = $sum_composite_taxes ? 'id_tax_rules_group' : 'id_tax';
@@ -384,7 +383,10 @@ class OrderInvoiceCore extends ObjectModel
 		}
 
 		$total_price_tax_excl = 0;
-		$new_keys = array();
+
+		// We need to reindex the array by tax rate because that's the way invoice.tax-tab.tpl likes it
+		$reindexed_breakdown = array();
+
 		foreach ($breakdown as $key => $details)
 		{
 			$tp = Tools::ps_round(
@@ -402,8 +404,10 @@ class OrderInvoiceCore extends ObjectModel
 			);
 
 			$rate = 0;
-			// If there are multiple $sub_rate's, it's because we're
+			// If there are multiple $sub_rate's it's because we're
 			// in a composite tax and we wanted to aggregate them.
+			// If the tax is not composite OR we don't want to sum its components
+			// there will be only one $sub_rate.
 			foreach ($breakdown[$key]['rates'] as $sub_rate)
 			{
 				$rate += $sub_rate;
@@ -415,22 +419,21 @@ class OrderInvoiceCore extends ObjectModel
 			// if 2 taxes have the same name (it can happen for instance
 			// with local + federal tax)
 			// should it be improved by using the real tax names as names instead of the tax rates?
-			while (isset($new_keys[$name]))
+			while (isset($reindexed_breakdown[$name]))
 			{
 				$name = ' ' . $name; // since the templates align rates to the right, spaces to the left won't hurt
 			}
 
-			$new_keys[$name] = $name;
+			$reindexed_breakdown[$name] = $breakdown[$key];
 		}
+
+		$breakdown = $reindexed_breakdown;
 
 		$delta = $this->getProductsAfterDiscountsTaxExclExcludingEcotax() - $total_price_tax_excl;
 		if ($delta !== 0)
 		{
 			Tools::spreadAmount($delta, _PS_PRICE_COMPUTE_PRECISION_, $breakdown, 'total_price_tax_excl');
 		}
-
-		// Re-index the array by the names of the taxes, because invoice templates expect this.
-		$breakdown = array_combine($new_keys, $breakdown);
 
 		return $breakdown;
 	}
