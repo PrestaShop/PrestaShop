@@ -336,7 +336,7 @@ class ReferrerCore extends ObjectModel
 
 		$json_array = array(
 			'id_product' => (int)$product->id,
-			'product_name' => addslashes($product->name),
+			'product_name' => htmlspecialchars($product->name),
 			'uniqs' => (int)$stats_visits['uniqs'],
 			'visitors' => (int)$stats_visits['visitors'],
 			'visits' => (int)$stats_visits['visits'],
