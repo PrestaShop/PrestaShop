@@ -2579,17 +2579,14 @@ CREATE TABLE IF NOT EXISTS `PREFIX_mail` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE IF NOT EXISTS `PREFIX_postcode` (
-	`id` INT(10) NOT NULL AUTO_INCREMENT,
+	`id_postcode` INT(10) NOT NULL AUTO_INCREMENT,
 	`id_country` INT(10) NULL DEFAULT NULL,
 	`id_zone` INT(10) NULL DEFAULT NULL,
-	`min` INT(10) NULL DEFAULT NULL,
-	`max` INT(10) NULL DEFAULT NULL,
-	PRIMARY KEY (`id`),
-	INDEX `ZCZCountryIndex` (`id_country`),
-	INDEX `ZCZZoneIndex` (`id_zone`)
-)
-COLLATE='utf8_general_ci'
-ENGINE=InnoDB
-AUTO_INCREMENT=148
-;
-
+	`postcode` VARCHAR(32) NOT NULL,
+	`active` tinyint(1) NOT NULL DEFAULT '0',
+	PRIMARY KEY (`id_postcode`),
+	KEY `id_country` (`id_country`),
+	KEY `id_zone` (`id_zone`),
+	KEY `active` (`active`),
+	UNIQUE KEY `postcode` (`postcode`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
