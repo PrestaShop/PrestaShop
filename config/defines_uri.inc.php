@@ -81,3 +81,14 @@ define('_PS_CSS_DIR_',                   __PS_BASE_URI__.'css/');
 define('_THEME_PROD_PIC_DIR_', 	         __PS_BASE_URI__.'upload/');
 define('_MAIL_DIR_',        	         __PS_BASE_URI__.'mails/');
 define('_MODULE_DIR_',                   __PS_BASE_URI__.'modules/');
+
+/* Define API URLs if not defined by customer */
+Tools::safeDefine('_PS_API_DOMAIN_', 		'api.prestashop.com');
+Tools::safeDefine('_PS_API_URL_', 			'http://'._PS_API_DOMAIN_);
+Tools::safeDefine('_PS_API_SSL_URL_', 		'https://'._PS_API_DOMAIN_);
+
+Tools::safeDefine('_PS_TAB_MODULE_LIST_URL_', 	'http://'._PS_API_DOMAIN_.'/xml/tab_modules_list.xml');
+Tools::safeDefine('_PS_API_MODULES_LIST_16_',	_PS_API_DOMAIN_.'/xml/modules_list_16.xml');
+
+// Different name for currency url. customers could customize just this without affecting all other apis
+Tools::safeDefine('_PS_CURRENCY_FEED_URL_', 'http://'._PS_API_DOMAIN_.'/xml/currencies.xml');
