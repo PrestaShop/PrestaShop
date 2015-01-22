@@ -423,7 +423,7 @@ class AdminReferrersControllerCore extends AdminController
 				'statsdata_name' => $statsdata_name,
 				'current' => self::$currentIndex,
 				'token' => $this->token,
-				'tracking_dt' => (int)Tools::getValue('tracking_dt', Configuration::get('TRACKING_DIRECT_TRAFFIC'))
+				'tracking_dt' => (int)Tools::getValue('tracking_dt', Configuration::get('TRACKING_DIRECT_TRAFFIC')),
 				'exclude_tx' => (int)Tools::getValue('exclude_tx', Configuration::get('REFERER_TAX')),
 				'exclude_ship' => (int)Tools::getValue('exclude_ship', Configuration::get('REFERER_SHIPPING'))
 			));
