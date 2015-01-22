@@ -2053,7 +2053,10 @@ abstract class ModuleCore
 		if (Shop::isFeatureActive())
 			$cache_array[] = (int)$this->context->shop->id;
 		if (Group::isFeatureActive())
+		{
 			$cache_array[] = (int)Group::getCurrent()->id;
+			$cache_array[] = implode('_', Customer::getGroupsStatic($this->context->customer->id));
+		}
 		if (Language::isMultiLanguageActivated())
 			$cache_array[] = (int)$this->context->language->id;
 		if (Currency::isMultiCurrencyActivated())
