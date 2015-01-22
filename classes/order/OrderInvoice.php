@@ -397,6 +397,12 @@ class OrderInvoiceCore extends ObjectModel
 			$total_price_tax_excl += $tp;
 			$breakdown[$key]['total_price_tax_excl'] = $tp;
 
+			$breakdown[$key]['total_amount'] = Tools::ps_round(
+				$breakdown[$key]['total_amount'],
+				_PS_PRICE_COMPUTE_PRECISION_,
+				$order->round_mode
+			);
+
 			$name = sprintf('%.3f', $breakdown[$key]['rate']);
 
 			// hacky way to avoid overwriting a row of the array
