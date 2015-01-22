@@ -84,6 +84,9 @@ class OrderInvoiceCore extends ObjectModel
 	/** @var array Total paid cache */
 	protected static $_total_paid_cache = array();
 
+	/** @var Order **/
+	private $order;
+
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -302,6 +305,38 @@ class OrderInvoiceCore extends ObjectModel
 		) || Configuration::get('PS_INVOICE_TAXES_BREAKDOWN');
 	}
 
+	public function getOrder()
+	{
+		if (!$this->order) {
+			$this->order = new Order($this->id_order);
+		}
+
+		return $this->order;
+	}
+
+	public function getProductsAfterDiscountsTaxExclExcludingEcotax()
+	{
+		$total_products = $this->total_products;
+		$order_discount_tax_excl = $this->total_discount_tax_excl;
+
+		foreach ($this->getOrder()->getCartRules() as $order_cart_rule)
+		{
+			if ($order_cart_rule['free_shipping'])
+			{
+				$order_discount_tax_excl -= $this->total_shipping_tax_excl;
+				break;
+			}
+
+		}
+
+		foreach ($this->getProductsDetail() as $details)
+		{
+			$total_products -= $details['ecotax'] * $details['product_quantity'];
+		}
+
+		return $total_products - $order_discount_tax_excl;
+	}
+
 	/**
 	 * Returns the correct product taxes breakdown.
 	 *
@@ -310,105 +345,80 @@ class OrderInvoiceCore extends ObjectModel
 	 */
 	public function getProductTaxesBreakdown($order = null)
 	{
-		$previous_round_mode = Tools::$round_mode;
-		Tools::$round_mode = $order->round_mode;
-
 		/**
-		 * Keys of the $breakdown array below are tax rates.
-		 * Values are arrays that should contain at least the columns:
-		 * - total_amount
-		 * - name
-		 * - total_price_tax_excl
+		 * The logic here is to start from the tax amounts, which are correct
+		 * and already take into account complicated things such as discounts
+		 * spread across lines.
+		 *
+		 * From the tax amounts and rates, we work out the actual tax bases.
+		 *
+		 * Then, if there is a difference (due to rounding) between the sum
+		 * of tax bases and the product total before tax, we adjust the tax bases by
+		 * spreading the difference across the lines of the breakdown.
 		 */
+
+		$sum_composite_taxes = !$this->useOneAfterAnotherTaxComputationMethod();
+
+		$order_detail_taxes = $this->getOrder()->getOrderDetailTaxes();
+
 		$breakdown = array();
 
-		$order_discount_tax_excl = $this->total_discount_tax_excl;
+		$group_by = $sum_composite_taxes ? 'id_order_detail' : 'id_tax';
 
-		$order = new Order($this->id_order);
-		$free_shipping_tax_excl = 0;
-
-		$product_specific_discounts = array();
-
-		foreach ($order->getCartRules() as $order_cart_rule)
+		foreach ($order_detail_taxes as $details)
 		{
-			if ($order_cart_rule['free_shipping'])
+			$group_column = $details[$group_by];
+
+			if (!isset($breakdown[$group_column]))
 			{
-				$free_shipping_tax_excl = $this->total_shipping_tax_excl;
-			}
-
-			$cart_rule = new CartRule($order_cart_rule['id_cart_rule']);
-			if ($cart_rule->reduction_product > 0)
-			{
-				if (empty($product_specific_discounts[$cart_rule->reduction_product]))
-				{
-					$product_specific_discounts[$cart_rule->reduction_product] = 0;
-				}
-
-				$product_specific_discounts[$cart_rule->reduction_product] += $order_cart_rule['value_tax_excl'];
-				$order_discount_tax_excl -= $order_cart_rule['value_tax_excl'];
-			}
-		}
-
-		$order_discount_tax_excl -= $free_shipping_tax_excl;
-
-		$product_details = Db::getInstance()->executeS('
-			SELECT t.`rate`, t.`id_tax`, od.`total_price_tax_excl` AS total_price_tax_excl, od.product_id as id_product, `total_amount`, od.`ecotax`, od.`ecotax_tax_rate`, od.`product_quantity`
-			FROM `'._DB_PREFIX_.'order_detail_tax` odt
-			LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = odt.`id_tax`)
-			LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
-			WHERE od.`id_order` = '.(int)$this->id_order.'
-			AND od.`id_order_invoice` = '.(int)$this->id.'
-		');
-
-		$order_ecotax = 0;
-
-		foreach ($product_details as $details)
-		{
-			$order_ecotax += $details['ecotax'] * $details['product_quantity'];
-		}
-
-		foreach ($product_details as $details)
-		{
-			if (!array_key_exists($details['rate'], $breakdown))
-			{
-				$breakdown[$details['rate']] = array(
-					'name' => $details['rate'],
+				$breakdown[$group_column] = array(
 					'total_amount' => 0,
 					'total_price_tax_excl' => 0,
-					'ecotax_price_tax_excl' => 0,
-					'discount_ratio' => 0
+					'rates' => array(),
+					'rate' => 0
 				);
 			}
-			$breakdown[$details['rate']]['ecotax_price_tax_excl'] += $details['ecotax'] * $details['product_quantity'];
-			$discount_ratio = ($details['total_price_tax_excl'] + $details['ecotax']) / $this->total_products;
-			$breakdown[$details['rate']]['discount_ratio'] += $discount_ratio;
-			$breakdown[$details['rate']]['total_amount'] += $details['total_amount'];
-			$share_of_order_discount = $discount_ratio * ($order_discount_tax_excl);
-			$breakdown[$details['rate']]['total_price_tax_excl'] += $details['total_price_tax_excl'] - $share_of_order_discount;
-			if (!empty($product_specific_discounts[$details['id_product']]))
-			{
-				$breakdown[$details['rate']]['total_price_tax_excl'] -= $product_specific_discounts[$details['id_product']];
-			}
+
+			$breakdown[$group_column]['total_amount'] += $details['total_amount'];
+			$breakdown[$group_column]['total_price_tax_excl'] += ($details['unit_amount'] * $details['product_quantity']) / ($details['rate'] / 100);
+			$breakdown[$group_column]['rates'][] = $details['rate'];
+			$breakdown[$group_column]['rate'] += $details['rate'];
 		}
 
-		$product_discounts = $this->total_discount_tax_excl - $free_shipping_tax_excl;
-		$total_products_after_discounts = $this->total_products - $product_discounts;
-		$breakdown_total_products_after_discounts = 0;
-		foreach ($breakdown as $rate => $details)
+		$total_price_tax_excl = 0;
+		$new_keys = array();
+		foreach ($breakdown as $key => $details)
 		{
-			$total_price_tax_excl = Tools::ps_round($breakdown[$rate]['total_price_tax_excl'], _PS_PRICE_COMPUTE_PRECISION_);
-			$breakdown_total_products_after_discounts += $total_price_tax_excl;
-			$breakdown[$rate]['total_amount'] = Tools::ps_round($breakdown[$rate]['total_amount'], _PS_PRICE_COMPUTE_PRECISION_);
-			$breakdown[$rate]['total_price_tax_excl'] = $total_price_tax_excl;
+			$tp = Tools::ps_round(
+				$breakdown[$key]['total_price_tax_excl'] / count($breakdown[$key]['rates']),
+				_PS_PRICE_COMPUTE_PRECISION_,
+				$order->round_mode
+			);
+			$total_price_tax_excl += $tp;
+			$breakdown[$key]['total_price_tax_excl'] = $tp;
+
+			$name = sprintf('%.3f', $breakdown[$key]['rate']);
+
+			// hacky way to avoid overwriting a row of the array
+			// if 2 taxes have the same name (it can happen for instance
+			// with local + federal tax)
+			// should it be improved by using the real tax names as names instead of the tax rates?
+			while (isset($new_keys[$name]))
+			{
+				$name = ' ' . $name; // since the templates align rates to the right, spaces to the left won't hurt
+			}
+
+			$new_keys[$name] = $name;
 		}
 
-		$delta = $total_products_after_discounts - $breakdown_total_products_after_discounts - $order_ecotax;
+		$delta = $this->getProductsAfterDiscountsTaxExclExcludingEcotax() - $total_price_tax_excl;
 		if ($delta !== 0)
 		{
 			Tools::spreadAmount($delta, _PS_PRICE_COMPUTE_PRECISION_, $breakdown, 'total_price_tax_excl');
 		}
 
-		Tools::$round_mode = $previous_round_mode;
+		// Re-index the array by the names of the taxes, because invoice templates expect this.
+		$breakdown = array_combine($new_keys, $breakdown);
 
 		return $breakdown;
 	}
