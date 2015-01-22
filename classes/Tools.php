@@ -3316,17 +3316,6 @@ exit;
 
 		return $html;
 	}
-
-	/**
-	  * Check if a constant was already defined, if not, set a new constant with a value
-	  *
-	  * @param string $constant Constant name
-	  * @param mixed $value Default value to set if not defined
-	  */
-	public static function safeDefine($constant, $value) {
-		if ( !defined($constant) )
-			define($constant, $value);
-	}
 }
 
 /**
