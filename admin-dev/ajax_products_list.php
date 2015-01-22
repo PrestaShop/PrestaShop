@@ -50,8 +50,8 @@ else
 	$excludeIds = '';
 
 // Excluding downloadable products from packs because download from pack is not supported
-$excludeVirtuals = (bool)Tools::getValue('excludeVirtuals', false);
-$exclude_packs = (bool)Tools::getValue('exclude_packs', false);
+$excludeVirtuals = (bool)Tools::getValue('excludeVirtuals', true);
+$exclude_packs = (bool)Tools::getValue('exclude_packs', true);
 
 $sql = 'SELECT p.`id_product`, pl.`link_rewrite`, p.`reference`, pl.`name`, MAX(image_shop.`id_image`) id_image, il.`legend`, p.`cache_default_attribute`
 		FROM `'._DB_PREFIX_.'product` p
