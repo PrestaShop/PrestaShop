@@ -1280,6 +1280,9 @@ class AdminThemesControllerCore extends AdminController
 
 		if (count($to_install) > 0)
 		{
+			foreach ($to_install as $module)
+				$fields_value['modulesToExport_module'.$module] = true;
+				
 			$fields_form['form']['input'][] = array(
 				'type' => 'checkbox',
 				'label' => $this->l('Select the theme\'s modules that you wish to export'),
