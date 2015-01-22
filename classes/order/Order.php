@@ -2089,7 +2089,7 @@ class OrderCore extends ObjectModel
 		return true;
 	}
 
-	public function getWsCurrentState($state)
+	public function getWsCurrentState()
 	{
 		return $this->getCurrentState();
 	}
