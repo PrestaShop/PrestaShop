@@ -48,3 +48,8 @@ ALTER TABLE `PREFIX_customization_field_lang` ADD `id_shop` INT(10) UNSIGNED NOT
 ALTER TABLE `PREFIX_customization_field_lang` DROP PRIMARY KEY, ADD PRIMARY KEY (`id_customization_field`, `id_shop`, `id_lang`);
 
 /* PHP:customization_field_multishop_lang(); */;
+
+ALTER TABLE `PREFIX_product` CHANGE `available_date` `available_date` DATE NOT NULL DEFAULT '0000-00-00';
+ALTER TABLE `PREFIX_product_shop` CHANGE `available_date` `available_date` DATE NOT NULL DEFAULT '0000-00-00';
+ALTER TABLE `PREFIX_product_attribute` CHANGE `available_date` `available_date` DATE NOT NULL DEFAULT '0000-00-00';
+ALTER TABLE `PREFIX_product_attribute_shop` CHANGE `available_date` `available_date` DATE NOT NULL DEFAULT '0000-00-00';
