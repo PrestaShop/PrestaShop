@@ -122,6 +122,30 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
 		$total_taxes = $this->order_invoice->total_paid_tax_incl - $this->order_invoice->total_paid_tax_excl;
 
+		$footer = array(
+			'products_before_discounts_tax_excl' => $this->order_invoice->total_products,
+			'product_discounts_tax_excl' => $product_discounts_tax_excl,
+			'products_after_discounts_tax_excl' => $products_after_discounts_tax_excl,
+			'products_before_discounts_tax_incl' => $this->order_invoice->total_products_wt,
+			'product_discounts_tax_incl' => $product_discounts_tax_incl,
+			'products_after_discounts_tax_incl' => $products_after_discounts_tax_incl,
+			'product_taxes' => $product_taxes,
+			'shipping_tax_excl' => $shipping_tax_excl,
+			'shipping_taxes' => $shipping_taxes,
+			'shipping_tax_incl' => $shipping_tax_incl,
+			'wrapping_tax_excl' => $this->order_invoice->total_wrapping_tax_excl,
+			'wrapping_taxes' => $wrapping_taxes,
+			'wrapping_tax_incl' => $this->order_invoice->total_wrapping_tax_incl,
+			'ecotax_taxes' => $total_taxes - $product_taxes - $wrapping_taxes - $shipping_taxes,
+			'total_taxes' => $total_taxes,
+			'total_paid_tax_excl' => $this->order_invoice->total_paid_tax_excl,
+			'total_paid_tax_incl' => $this->order_invoice->total_paid_tax_incl
+		);
+
+		foreach ($footer as $key => $value) {
+			$footer[$key] = Tools::ps_round($value, _PS_PRICE_COMPUTE_PRECISION_, $this->order->round_mode);
+		}
+
 		$data = array(
 			'order' => $this->order,
 			'order_details' => $order_details,
@@ -131,25 +155,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			'tax_excluded_display' => Group::getPriceDisplayMethod($customer->id_default_group),
 			'tax_tab' => $this->getTaxTabContent(),
 			'customer' => $customer,
-			'footer' => array(
-				'products_before_discounts_tax_excl' => $this->order_invoice->total_products,
-				'product_discounts_tax_excl' => $product_discounts_tax_excl,
-				'products_after_discounts_tax_excl' => $products_after_discounts_tax_excl,
-				'products_before_discounts_tax_incl' => $this->order_invoice->total_products_wt,
-				'product_discounts_tax_incl' => $product_discounts_tax_incl,
-				'products_after_discounts_tax_incl' => $products_after_discounts_tax_incl,
-				'product_taxes' => $product_taxes,
-				'shipping_tax_excl' => $shipping_tax_excl,
-				'shipping_taxes' => $shipping_taxes,
-				'shipping_tax_incl' => $shipping_tax_incl,
-				'wrapping_tax_excl' => $this->order_invoice->total_wrapping_tax_excl,
-				'wrapping_taxes' => $wrapping_taxes,
-				'wrapping_tax_incl' => $this->order_invoice->total_wrapping_tax_incl,
-				'ecotax_taxes' => $total_taxes - $product_taxes - $wrapping_taxes - $shipping_taxes,
-				'total_taxes' => $total_taxes,
-				'total_paid_tax_excl' => $this->order_invoice->total_paid_tax_excl,
-				'total_paid_tax_incl' => $this->order_invoice->total_paid_tax_incl
-			)
+			'footer' => $footer
 		);
 
 		if (Tools::getValue('debug'))
