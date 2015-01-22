@@ -105,7 +105,7 @@ class StateCore extends ObjectModel
 	{
 		if (empty($state))
 			return false;
-		$cache_id = 'State::getNameById_'.pSQL($state);
+		$cache_id = 'State::getIdByName_'.pSQL($state);
 		if (!Cache::isStored($cache_id))
 		{
 			$result = (int)Db::getInstance()->getValue('
