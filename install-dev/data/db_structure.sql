@@ -1452,7 +1452,7 @@ CREATE TABLE `PREFIX_product` (
   `redirect_type` ENUM('', '404', '301', '302') NOT NULL DEFAULT '',
   `id_product_redirected` int(10) unsigned NOT NULL DEFAULT '0',
   `available_for_order` tinyint(1) NOT NULL DEFAULT '1',
-  `available_date` date NOT NULL,
+  `available_date` date NOT NULL DEFAULT '0000-00-00',
   `condition` ENUM('new', 'used', 'refurbished') NOT NULL DEFAULT 'new',
   `show_price` tinyint(1) NOT NULL DEFAULT '1',
   `indexed` tinyint(1) NOT NULL DEFAULT '0',
@@ -1494,7 +1494,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   `redirect_type` ENUM('', '404', '301', '302') NOT NULL DEFAULT '',
   `id_product_redirected` int(10) unsigned NOT NULL DEFAULT '0',
   `available_for_order` tinyint(1) NOT NULL DEFAULT '1',
-  `available_date` date NOT NULL,
+  `available_date` date NOT NULL DEFAULT '0000-00-00',
   `condition` enum('new','used','refurbished') NOT NULL DEFAULT 'new',
   `show_price` tinyint(1) NOT NULL DEFAULT '1',
   `indexed` tinyint(1) NOT NULL DEFAULT '0',
@@ -1525,7 +1525,7 @@ CREATE TABLE `PREFIX_product_attribute` (
   `unit_price_impact` DECIMAL(20,6) NOT NULL DEFAULT '0.00',
   `default_on` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `minimal_quantity` int(10) unsigned NOT NULL DEFAULT '1',
-  `available_date` date NOT NULL,
+  `available_date` date NOT NULL DEFAULT '0000-00-00',
   PRIMARY KEY (`id_product_attribute`),
   KEY `product_attribute_product` (`id_product`),
   KEY `reference` (`reference`),
@@ -1544,7 +1544,7 @@ CREATE TABLE `PREFIX_product_attribute_shop` (
   `unit_price_impact` DECIMAL(20,6) NOT NULL DEFAULT '0.00',
   `default_on` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `minimal_quantity` int(10) unsigned NOT NULL DEFAULT '1',
-  `available_date` date NOT NULL,
+  `available_date` date NOT NULL DEFAULT '0000-00-00',
   PRIMARY KEY (`id_product_attribute`, `id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
