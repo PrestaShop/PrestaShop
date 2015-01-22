@@ -68,12 +68,14 @@
 		{if $host_mode}
 		<div class="alert alert-info">
 			<h4>{l s='How to restore a database backup'}</h4>
-			<ol>
-				<li>{l s='If you wish to restore a database backup, we invite you to open a support ticket on your [1]PrestaShop.com account[/1].' tags=['<a href="https://www.prestashop.com/cloud/support?init=ask">']}</li>
-				<li>{l s='Our team will take care of restoring your database safely.'}</li>
-				<li>{l s='Why can\'t I restore it by myself?'}</li>
-				<li>{l s='Your shop is hosted by PrestaShop. Although you can create backup files here below, there are core settings you cannot access for security reasons, like the database management. Thus, only our team can proceed to a restoration.'}</li>
-			</ol>
+			{l s='If you need to restore a database backup, we invite you to subscribe to a [1][2]technical support plan[/2][/1].' tags=['<strong>', '<a href="http://addons.prestashop.com/support/16298-support-essentiel-plan.html">']}
+			<br />
+			{l s='Our team will take care of restoring your database safely.'}
+			<br />
+			<br />
+			{l s='Why can\'t I restore it by myself?'}
+			<br />
+			{l s='Your shop is hosted by PrestaShop. Although you can create backup files here below, there are core settings you cannot access for security reasons, like the database management. Thus, only our team can proceed to a restoration.'}
 		</div>
 		{else}
 		<div class="alert alert-info">
