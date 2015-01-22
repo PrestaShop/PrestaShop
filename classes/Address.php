@@ -250,7 +250,7 @@ class AddressCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'address` a
 		LEFT JOIN `'._DB_PREFIX_.'country` c ON c.`id_country` = a.`id_country`
 		LEFT JOIN `'._DB_PREFIX_.'state` s ON s.`id_state` = a.`id_state`
-		LEFT JOIN `'._DB_PREFIX_.'postcode` p ON a.postcode BETWEEN p.`min` AND p.`max`
+		LEFT JOIN `'._DB_PREFIX_.'postcode` p ON a.postcode = p.`postcode`
 		WHERE a.`id_address` = '.(int)$id_address);
 
 		if ((int)$result['id_zone_postcode'])
