@@ -210,11 +210,11 @@ class SpecificPriceCore extends ObjectModel
 		$key = ((int)$id_product.'-'.(int)$id_shop.'-'.(int)$id_currency.'-'.(int)$id_country.'-'.(int)$id_group.'-'.(int)$quantity.'-'.(int)$id_product_attribute.'-'.(int)$id_cart.'-'.(int)$id_customer.'-'.(int)$real_quantity);
 		if (!array_key_exists($key, SpecificPrice::$_specificPriceCache))
 		{
-			$now = time();
+			$now = date('Y-m-d H:i:0');
 			$query = '
 			SELECT *, '.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).',
-			    UNIX_TIMESTAMP(`from`) u_from, UNIX_TIMESTAMP(`to`) u_to
-				FROM `'._DB_PREFIX_.'specific_price`
+				UNIX_TIMESTAMP(`from`) u_from, UNIX_TIMESTAMP(`to`) u_to
+				FROM `'._DB_PREFIX_.'specific_price` USE INDEX (id_product_2)
 				WHERE `id_product` IN (0, '.(int)$id_product.')
 				AND `id_product_attribute` IN (0, '.(int)$id_product_attribute.')
 				AND `id_shop` IN (0, '.(int)$id_shop.')
@@ -222,23 +222,20 @@ class SpecificPriceCore extends ObjectModel
 				AND `id_country` IN (0, '.(int)$id_country.')
 				AND `id_group` IN (0, '.(int)$id_group.')
 				AND `id_customer` IN (0, '.(int)$id_customer.')
+				AND
+				(
+					(`from` = \'0000-00-00 00:00:00\' OR \''.$now.'\' >= `from`)
+					AND
+					(`to` = \'0000-00-00 00:00:00\' OR \''.$now.'\' <= `to`)
+				)
 				AND id_cart IN (0, '.(int)$id_cart.')
 				AND IF(`from_quantity` > 1, `from_quantity`, 0) <= ';
 
 			$query .= (Configuration::get('PS_QTY_DISCOUNT_ON_COMBINATION') || !$id_cart || !$real_quantity) ? (int)$quantity : max(1, (int)$real_quantity);
 			$query .= ' ORDER BY `id_product_attribute` DESC, `from_quantity` DESC, `id_specific_price_rule` ASC, `score` DESC, `to` DESC, `from` DESC';
 
-			$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
-			SpecificPrice::$_specificPriceCache[$key] = array();
-			foreach($results as $value) {
-				$from = (int)$value['u_from'];
-				$to = (int)$value['u_to'];
-				if (($from == 0 || $now >= $from)
-					&& ($to == 0 || $now <= $to)) {
-					SpecificPrice::$_specificPriceCache[$key] = $value;
-					break;
-				}
-			}
+			SpecificPrice::$_specificPriceCache[$key] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query, false);
+
 		}
 		return SpecificPrice::$_specificPriceCache[$key];
 	}
