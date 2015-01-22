@@ -363,7 +363,7 @@ class OrderInvoiceCore extends ObjectModel
 
 		$breakdown = array();
 
-		$group_by = $sum_composite_taxes ? 'id_order_detail' : 'id_tax';
+		$group_by = $sum_composite_taxes ? 'id_tax_rules_group' : 'id_tax';
 
 		foreach ($order_detail_taxes as $details)
 		{
@@ -374,15 +374,13 @@ class OrderInvoiceCore extends ObjectModel
 				$breakdown[$group_column] = array(
 					'total_amount' => 0,
 					'total_price_tax_excl' => 0,
-					'rates' => array(),
-					'rate' => 0
+					'rates' => array()
 				);
 			}
 
 			$breakdown[$group_column]['total_amount'] += $details['total_amount'];
 			$breakdown[$group_column]['total_price_tax_excl'] += ($details['unit_amount'] * $details['product_quantity']) / ($details['rate'] / 100);
-			$breakdown[$group_column]['rates'][] = $details['rate'];
-			$breakdown[$group_column]['rate'] += $details['rate'];
+			$breakdown[$group_column]['rates'][$details['id_tax']] = $details['rate'];
 		}
 
 		$total_price_tax_excl = 0;
@@ -403,7 +401,15 @@ class OrderInvoiceCore extends ObjectModel
 				$order->round_mode
 			);
 
-			$name = sprintf('%.3f', $breakdown[$key]['rate']);
+			$rate = 0;
+			// If there are multiple $sub_rate's, it's because we're
+			// in a composite tax and we wanted to aggregate them.
+			foreach ($breakdown[$key]['rates'] as $sub_rate)
+			{
+				$rate += $sub_rate;
+			}
+
+			$name = sprintf('%.3f', $rate);
 
 			// hacky way to avoid overwriting a row of the array
 			// if 2 taxes have the same name (it can happen for instance

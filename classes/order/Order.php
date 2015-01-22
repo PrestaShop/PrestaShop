@@ -2273,7 +2273,7 @@ class OrderCore extends ObjectModel
 	public function getOrderDetailTaxes()
 	{
 		return Db::getInstance()->executeS(
-			'SELECT od.product_quantity, odt.*, t.* FROM '._DB_PREFIX_.'orders o '.
+			'SELECT od.id_tax_rules_group, od.product_quantity, odt.*, t.* FROM '._DB_PREFIX_.'orders o '.
 			'INNER JOIN '._DB_PREFIX_.'order_detail od ON od.id_order = o.id_order '.
 			'INNER JOIN '._DB_PREFIX_.'order_detail_tax odt ON odt.id_order_detail = od.id_order_detail '.
 			'INNER JOIN '._DB_PREFIX_.'tax t ON t.id_tax = odt.id_tax '.
