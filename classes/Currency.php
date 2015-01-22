@@ -402,7 +402,7 @@ class CurrencyCore extends ObjectModel
 	public static function refreshCurrencies()
 	{
 		// Parse
-		if (!$feed = Tools::simplexml_load_file('http://api.prestashop.com/xml/currencies.xml'))
+		if (!$feed = Tools::simplexml_load_file(_PS_CURRENCY_FEED_URL_))
 			return Tools::displayError('Cannot parse feed.');
 
 		// Default feed currency (EUR)

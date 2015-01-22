@@ -1982,7 +1982,7 @@ class AdminThemesControllerCore extends AdminController
 	 */
 	private function getNativeModule($type = 0)
 	{
-		$xml = simplexml_load_string(Tools::file_get_contents('http://api.prestashop.com/xml/modules_list_16.xml'));
+		$xml = simplexml_load_string(Tools::file_get_contents(_PS_API_URL_.'/xml/modules_list_16.xml'));
 
 		if ($xml)
 		{

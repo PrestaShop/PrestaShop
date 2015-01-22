@@ -27,8 +27,8 @@
 class UpgraderCore
 {
 	const DEFAULT_CHECK_VERSION_DELAY_HOURS = 24;
-	public $rss_version_link = 'http://api.prestashop.com/xml/upgrader.xml';
-	public $rss_md5file_link_dir = 'http://api.prestashop.com/xml/md5/';
+	public $rss_version_link;
+	public $rss_md5file_link_dir;
 	/**
 	 * @var boolean contains true if last version is not installed
 	 */
@@ -52,6 +52,9 @@ class UpgraderCore
 
 	public function __construct($autoload = false)
 	{
+		$this->rss_version_link = _PS_API_URL_.'/xml/upgrader.xml';
+		$this->rss_md5file_link_dir = _PS_API_URL_.'/xml/md5/';
+
 		if ($autoload)
 		{
 			$this->loadFromConfig();
