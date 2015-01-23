@@ -46,6 +46,8 @@ class TabCore extends ObjectModel
 	/** @var integer hide_host_mode */
 	public $hide_host_mode = false;
 
+	const TAB_MODULE_LIST_URL = _PS_TAB_MODULE_LIST_URL_;
+
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -164,6 +166,7 @@ class TabCore extends ObjectModel
 	 */
 	public static function getCurrentTabId()
 	{
+
 		$id_tab = Tab::getIdFromClassName(Tools::getValue('controller'));
 		// retro-compatibility 1.4/1.5
 		if (empty ($id_tab))
