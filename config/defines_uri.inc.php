@@ -55,7 +55,7 @@ define('_THEME_MOBILE_JS_DIR_',			_THEME_MOBILE_DIR_.'js/');
 define('_PS_THEME_TOUCHPAD_DIR_',		_PS_THEME_DIR_.'touchpad/');
 define('_THEME_TOUCHPAD_DIR_',			_THEMES_DIR_._THEME_NAME_.'/touchpad/');
 define('_THEME_TOUCHPAD_CSS_DIR_',		_THEME_TOUCHPAD_DIR_.'css/');
-define('_THEME_TOUCHPAD_JS_DIR_',		 _THEME_TOUCHPAD_DIR_.'js/');
+define('_THEME_TOUCHPAD_JS_DIR_',		_THEME_TOUCHPAD_DIR_.'js/');
 
 /* Image URLs */
 define('_PS_IMG_',						__PS_BASE_URI__.'img/');
@@ -82,12 +82,9 @@ define('_THEME_PROD_PIC_DIR_',			__PS_BASE_URI__.'upload/');
 define('_MAIL_DIR_',					__PS_BASE_URI__.'mails/');
 define('_MODULE_DIR_',					__PS_BASE_URI__.'modules/');
 
-/* Define API URLs if not defined by customer */
-define('_PS_API_DOMAIN_',				'api.prestashop.com');
-define('_PS_API_URL_',					'http://'._PS_API_DOMAIN_);
-define('_PS_API_SSL_URL_',				'https://'._PS_API_DOMAIN_);
-define('_PS_TAB_MODULE_LIST_URL_',		'http://'._PS_API_DOMAIN_.'/xml/tab_modules_list.xml');
-define('_PS_API_MODULES_LIST_16_',		_PS_API_DOMAIN_.'/xml/modules_list_16.xml');
-
-// Different name for currency url. customers could customize just this without affecting all other apis
-define('_PS_CURRENCY_FEED_URL_', 'http://'._PS_API_DOMAIN_.'/xml/currencies.xml');
+/* Define API URLs if not defined before */
+Tools::safeDefine('_PS_API_DOMAIN_',				'api.prestashop.com');
+Tools::safeDefine('_PS_API_URL_',					'http://'._PS_API_DOMAIN_);
+Tools::safeDefine('_PS_TAB_MODULE_LIST_URL_',		_PS_API_URL_.'/xml/tab_modules_list.xml');
+Tools::safeDefine('_PS_API_MODULES_LIST_16_',		_PS_API_DOMAIN_.'/xml/modules_list_16.xml');
+Tools::safeDefine('_PS_CURRENCY_FEED_URL_',			_PS_API_URL_.'/xml/currencies.xml');

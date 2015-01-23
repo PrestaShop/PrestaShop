@@ -3243,10 +3243,9 @@ exit;
 	}
 
 	/**
-	  * Allows to display the category description without HTML tags and slashes
-	  *
-	  * @return string
-	  */
+	 * Allows to display the category description without HTML tags and slashes
+	 * @return string
+	*/
 	public static function getDescriptionClean($description)
 	{
 		return strip_tags(stripslashes($description));
@@ -3288,7 +3287,7 @@ exit;
 				// http://developers.whatwg.org/the-video-element.html#the-video-element
 				if ($def = $config->maybeGetRawHTMLDefinition())
 				{
-				    $def->addElement('video', 'Block', 'Optional: (source, Flow) | (Flow, source) | Flow', 'Common', array(
+					$def->addElement('video', 'Block', 'Optional: (source, Flow) | (Flow, source) | Flow', 'Common', array(
 						'src' => 'URI',
 						'type' => 'Text',
 						'width' => 'Length',
@@ -3297,7 +3296,7 @@ exit;
 						'preload' => 'Enum#auto,metadata,none',
 						'controls' => 'Bool',
 					));
-				    $def->addElement('source', 'Block', 'Flow', 'Common', array(
+					$def->addElement('source', 'Block', 'Flow', 'Common', array(
 						'src' => 'URI',
 						'type' => 'Text',
 					));
@@ -3315,6 +3314,17 @@ exit;
 		}
 
 		return $html;
+	}
+
+	/**
+	 * Check if a constant was already defined
+	 * @param string $constant Constant name
+	 * @param mixed $value Default value to set if not defined
+	*/
+	public static function safeDefine($constant, $value)
+	{
+		if (!defined($constant))
+			define($constant, $value);
 	}
 }
 
