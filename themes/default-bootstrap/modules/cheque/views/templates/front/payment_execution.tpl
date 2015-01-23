@@ -56,7 +56,7 @@
 					<br />
 					<div class="form-group">
 						<label>{l s='Choose one of the following:' mod='cheque'}</label>
-						<selectid="currency_payment" class="form-control" name="currency_payment">
+						<select id="currency_payment" class="form-control" name="currency_payment">
 						{foreach from=$currencies item=currency}
 							<option value="{$currency.id_currency}"{if isset($currencies) && $currency.id_currency == $cust_currency} selected="selected"{/if}>{$currency.name}</option>
 						{/foreach}
