@@ -2146,7 +2146,7 @@ class OrderCore extends ObjectModel
 			}
 
 			$cart_rule = new CartRule($order_cart_rule['id_cart_rule']);
-			if ($cart_rule->reduction_product)
+			if ($cart_rule->reduction_product > 0)
 			{
 				if (empty($product_specific_discounts[$cart_rule->reduction_product]))
 				{
