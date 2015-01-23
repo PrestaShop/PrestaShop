@@ -1435,6 +1435,7 @@ class AdminProductsControllerCore extends AdminController
 				{
 					$product->deleteAttributeCombination((int)$id_product_attribute);
 					$product->checkDefaultAttributes();
+					Tools::clearColorListCache((int)$product->id);
 					if (!$product->hasAttributes())
 					{
 						$product->cache_default_attribute = 0;
