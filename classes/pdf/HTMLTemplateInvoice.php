@@ -155,7 +155,8 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			'tax_excluded_display' => Group::getPriceDisplayMethod($customer->id_default_group),
 			'tax_tab' => $this->getTaxTabContent(),
 			'customer' => $customer,
-			'footer' => $footer
+			'footer' => $footer,
+			'ps_price_compute_precision' => _PS_PRICE_COMPUTE_PRECISION_
 		);
 
 		if (Tools::getValue('debug'))
