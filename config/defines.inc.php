@@ -1,5 +1,5 @@
 <?php
-/*
+/**
 * 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
@@ -91,6 +91,7 @@ define('_PS_FRONT_CONTROLLER_DIR_',  _PS_CORE_DIR_.'/controllers/front/');
 
 define('_PS_TOOL_DIR_',              _PS_CORE_DIR_.'/tools/');
 define('_PS_GEOIP_DIR_',             _PS_TOOL_DIR_.'geoip/');
+define('_PS_GEOIP_CITY_FILE_',       'GeoLiteCity.dat');
 define('_PS_PEAR_XML_PARSER_PATH_',  _PS_TOOL_DIR_.'pear_xml_parser/');
 define('_PS_SWIFT_DIR_',             _PS_TOOL_DIR_.'swift/');
 define('_PS_TAASC_PATH_',            _PS_TOOL_DIR_.'taasc/');
@@ -195,4 +196,3 @@ define('_PS_SMARTY_CONSOLE_OPEN_BY_URL_', 1);
 define('_PS_SMARTY_CONSOLE_OPEN_', 2);
 
 define('_PS_JQUERY_VERSION_', '1.11.0');
-

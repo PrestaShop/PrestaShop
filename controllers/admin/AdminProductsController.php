@@ -2404,11 +2404,11 @@ class AdminProductsControllerCore extends AdminController
 			$helper->icon = 'icon-archive';
 			$helper->color = 'color1';
 			$helper->title = $this->l('Out of stock items', null, null, false);
-			if (ConfigurationKPI::get('PERCENT_PRODUCT_STOCK') !== false)
-				$helper->value = ConfigurationKPI::get('PERCENT_PRODUCT_STOCK');
-			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=percent_product_stock';
+			if (ConfigurationKPI::get('PERCENT_PRODUCT_OUT_OF_STOCK') !== false)
+				$helper->value = ConfigurationKPI::get('PERCENT_PRODUCT_OUT_OF_STOCK');
+			$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=percent_product_out_of_stock';
 			$helper->tooltip = $this->l('X% of your products for sale are out of stock.', null, null, false);
-			$helper->refresh = (bool)(ConfigurationKPI::get('PERCENT_PRODUCT_STOCK_EXPIRE') < $time);
+			$helper->refresh = (bool)(ConfigurationKPI::get('PERCENT_PRODUCT_OUT_OF_STOCK_EXPIRE') < $time);
 			$helper->href = Context::getContext()->link->getAdminLink('AdminProducts').'&productFilter_sav!quantity=0&productFilter_active=1&submitFilterproduct=1';
 			$kpis[] = $helper->generate();
 		}
@@ -4888,7 +4888,7 @@ class AdminProductsControllerCore extends AdminController
 
 	public function processImageLegends()
 	{
-		if (Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
+		if (Tools::getValue('key_tab') == 'Images' && Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
 		{
 			$languages = Language::getLanguages(false);
 			foreach ($_POST as $key => $val)

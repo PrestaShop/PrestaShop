@@ -2327,9 +2327,8 @@ class AdminControllerCore extends Controller
 
 	public function setMedia()
 	{
-		//Bootstrap + Specific Admin Theme
+		//Bootstrap
 		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/'.$this->bo_css, 'all', 0);
-		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/overrides.css', 'all', 99);
 
 		$this->addJquery();
 		$this->addjQueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox' ));
@@ -2356,6 +2355,9 @@ class AdminControllerCore extends Controller
 
 		// Execute Hook AdminController SetMedia
 		Hook::exec('actionAdminControllerSetMedia');
+
+		// Specific Admin Theme
+		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/overrides.css', 'all', PHP_INT_MAX);
 	}
 
 	/**

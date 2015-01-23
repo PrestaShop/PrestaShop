@@ -134,6 +134,19 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		return round($row['products'] ? 100 * $row['with_stock'] / $row['products'] : 0, 2).'%';
 	}
 
+	public static function getPercentProductOutOfStock()
+	{
+		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+		SELECT SUM(IF(IFNULL(stock.quantity, 0) = 0, 1, 0)) as without_stock, COUNT(*) as products
+		FROM `'._DB_PREFIX_.'product` p
+		'.Shop::addSqlAssociation('product', 'p').'
+		LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON p.id_product = pa.id_product
+		'.Product::sqlStock('p', 'pa').'
+		WHERE product_shop.active = 1');
+		return round($row['products'] ? 100 * $row['without_stock'] / $row['products'] : 0, 2).'%';
+	}
+
+
 	public static function getProductAverageGrossMargin()
 	{
 		$sql = 'SELECT AVG(1 - (IF(IFNULL(product_attribute_shop.wholesale_price, 0) = 0, product_shop.wholesale_price,product_attribute_shop.wholesale_price) / (IFNULL(product_attribute_shop.price, 0) + product_shop.price)))
@@ -560,6 +573,12 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				$value = AdminStatsController::getPercentProductStock();
 				ConfigurationKPI::updateValue('PERCENT_PRODUCT_STOCK', $value);
 				ConfigurationKPI::updateValue('PERCENT_PRODUCT_STOCK_EXPIRE', strtotime('+4 hour'));
+				break;
+
+			case 'percent_product_out_of_stock':
+				$value = AdminStatsController::getPercentProductOutOfStock();
+				ConfigurationKPI::updateValue('PERCENT_PRODUCT_OUT_OF_STOCK', $value);
+				ConfigurationKPI::updateValue('PERCENT_PRODUCT_OUT_OF_STOCK_EXPIRE', strtotime('+4 hour'));
 				break;
 
 			case 'product_avg_gross_margin':
