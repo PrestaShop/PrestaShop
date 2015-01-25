@@ -212,7 +212,7 @@ class SpecificPriceCore extends ObjectModel
 		{
 			$now = date('Y-m-d H:i:0');
 			$query = '
-			SELECT *, '.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).',
+			SELECT SQL_NO_CACHE *, '.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).',
 				UNIX_TIMESTAMP(`from`) u_from, UNIX_TIMESTAMP(`to`) u_to
 				FROM `'._DB_PREFIX_.'specific_price` USE INDEX (id_product_2)
 				WHERE `id_product` IN (0, '.(int)$id_product.')
