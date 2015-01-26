@@ -547,7 +547,7 @@ abstract class DbCore
 		if ($sql instanceof DbQuery)
 			$sql = $sql->build();
 
-		$sql .= ' LIMIT 1';
+		$sql = rtrim($sql, ';').' LIMIT 1';
 		$this->result = false;
 		$this->last_query = $sql;
 		if ($use_cache && $this->is_cache_enabled && ($result = Cache::getInstance()->get(Tools::encryptIV($sql))) !== false)
