@@ -84,8 +84,8 @@ class ProfileCore extends ObjectModel
 			$result = Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'access (SELECT '.(int)$this->id.', id_tab, 0, 0, 0, 0 FROM '._DB_PREFIX_.'tab)');
 			$result &= Db::getInstance()->execute('
 				INSERT INTO '._DB_PREFIX_.'module_access
-				(`id_profile`, `id_module`, `configure`, `view`)
-				(SELECT '.(int)$this->id.', id_module, 0, 1 FROM '._DB_PREFIX_.'module)
+				(`id_profile`, `id_module`, `configure`, `view`, `uninstall`)
+				(SELECT '.(int)$this->id.', id_module, 0, 1, 0 FROM '._DB_PREFIX_.'module)
 			');
 			return $result;
 		}
@@ -116,7 +116,7 @@ class ProfileCore extends ObjectModel
 
 		if (!isset(self::$_cache_accesses[$id_profile]))
 			self::$_cache_accesses[$id_profile] = array();
-			
+
 		if (!isset(self::$_cache_accesses[$id_profile][$type]))
 		{
 			self::$_cache_accesses[$id_profile][$type] = array();

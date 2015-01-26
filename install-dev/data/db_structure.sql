@@ -1043,9 +1043,9 @@ CREATE TABLE `PREFIX_module` (
 CREATE TABLE `PREFIX_module_access` (
   `id_profile` int(10) unsigned NOT NULL,
   `id_module` int(10) unsigned NOT NULL,
-  `view` tinyint(1) NOT NULL,
-  `configure` tinyint(1) NOT NULL,
-  `uninstall` tinyint(1) NOT NULL,
+  `view` tinyint(1) NOT NULL DEFAULT '0',
+  `configure` tinyint(1) NOT NULL DEFAULT '0',
+  `uninstall` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_profile`,`id_module`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 

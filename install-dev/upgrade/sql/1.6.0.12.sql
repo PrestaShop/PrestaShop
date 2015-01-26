@@ -53,3 +53,7 @@ ALTER TABLE `PREFIX_product` CHANGE `available_date` `available_date` DATE NOT N
 ALTER TABLE `PREFIX_product_shop` CHANGE `available_date` `available_date` DATE NOT NULL DEFAULT '0000-00-00';
 ALTER TABLE `PREFIX_product_attribute` CHANGE `available_date` `available_date` DATE NOT NULL DEFAULT '0000-00-00';
 ALTER TABLE `PREFIX_product_attribute_shop` CHANGE `available_date` `available_date` DATE NOT NULL DEFAULT '0000-00-00';
+
+ALTER TABLE `PREFIX_module_access` CHANGE `view` `view` TINYINT( 1 ) NOT NULL DEFAULT '0',
+CHANGE `configure` `configure` TINYINT( 1 ) NOT NULL DEFAULT '0',
+CHANGE `uninstall` `uninstall` TINYINT( 1 ) NOT NULL DEFAULT '0';
