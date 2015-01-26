@@ -369,7 +369,7 @@ class ShopCore extends ObjectModel
 
 		if ((!$id_shop && defined('_PS_ADMIN_DIR_')) || Tools::isPHPCLI() || in_array($http_host, $all_media))
 		{
-			// If in admin, we can access to the shop without right URL
+		// If in admin, we can access to the shop without right URL
 			if ((!$id_shop && Tools::isPHPCLI()) || defined('_PS_ADMIN_DIR_'))
 				$id_shop = (int)Configuration::get('PS_SHOP_DEFAULT');
 
@@ -420,15 +420,11 @@ class ShopCore extends ObjectModel
 				}
 
 				$redirect_type = Configuration::get('PS_CANONICAL_REDIRECT');
-				if ($redirect_type != 0)
-				{
-					$redirect_code = ($redirect_type == 1 ? '302' : '301');
-					header('HTTP/1.0 '.$redirect_code.' Moved');
-					header('location: http://'.$url);
-					exit;
-				}
-				else
-					$shop = $default_shop;
+				$redirect_code = ($redirect_type == 1 ? '302' : '301');
+				header('HTTP/1.0 '.$redirect_code.' Moved');
+				header('location: http://'.$url);
+				exit;
+
 			}
 			elseif (defined('_PS_ADMIN_DIR_') && empty($shop->physical_uri))
 			{
