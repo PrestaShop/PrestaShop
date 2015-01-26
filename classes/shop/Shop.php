@@ -322,7 +322,7 @@ class ShopCore extends ObjectModel
 			$sql = 'SELECT s.id_shop, CONCAT(su.physical_uri, su.virtual_uri) AS uri, su.domain, su.main
 					FROM '._DB_PREFIX_.'shop_url su
 					LEFT JOIN '._DB_PREFIX_.'shop s ON (s.id_shop = su.id_shop)
-					WHERE (su.domain = \''. pSQL($host).'\' OR su.domain_ssl = \''. pSQL($host).'\')
+					WHERE (su.domain = \''.pSQL($host).'\' OR su.domain_ssl = \''.pSQL($host).'\')
 						AND s.active = 1
 						AND s.deleted = 0
 					ORDER BY LENGTH(CONCAT(su.physical_uri, su.virtual_uri)) DESC';
@@ -331,7 +331,6 @@ class ShopCore extends ObjectModel
 
 			$through = false;
 			foreach ($result as $row)
-			{
 				// An URL matching current shop was found
 				if (preg_match('#^'.preg_quote($row['uri'], '#').'#i', $request_uri))
 				{
@@ -342,26 +341,22 @@ class ShopCore extends ObjectModel
 						$is_main_uri = true;
 					break;
 				}
-			}
 
 			// If an URL was found but is not the main URL, redirect to main URL
 			if ($through && $id_shop && !$is_main_uri)
-			{
-
 				foreach ($result as $row)
-				{
 					if ($row['id_shop'] == $id_shop && $row['main'])
 					{
 						$request_uri = substr($request_uri, strlen($found_uri));
 						$url = str_replace('//', '/', $row['domain'].$row['uri'].$request_uri);
-						$redirect_type = Configuration::get('PS_CANONICAL_REDIRECT') == 2 ? '301' : '302';
-						header('HTTP/1.0 '.$redirect_type.' Moved');
+						$redirect_type = Configuration::get('PS_CANONICAL_REDIRECT');
+						$redirect_code = ($redirect_type == 1 ? '302' : '301');
+						$redirect_header = ($redirect_type == 1 ? 'Found' : 'Moved Permanently');
+						header('HTTP/1.0 '.$redirect_code.' '.$redirect_header);
 						header('Cache-Control: no-cache');
-						header('location: http://'.$url);
+						header('Location: http://'.$url);
 						exit;
 					}
-				}
-			}
 		}
 
 		$http_host = Tools::getHttpHost();
@@ -421,8 +416,9 @@ class ShopCore extends ObjectModel
 
 				$redirect_type = Configuration::get('PS_CANONICAL_REDIRECT');
 				$redirect_code = ($redirect_type == 1 ? '302' : '301');
-				header('HTTP/1.0 '.$redirect_code.' Moved');
-				header('location: http://'.$url);
+				$redirect_header = ($redirect_type == 1 ? 'Found' : 'Moved Permanently');
+				header('HTTP/1.0 '.$redirect_code.' '.$redirect_header);
+				header('Location: http://'.$url);
 				exit;
 
 			}
@@ -475,7 +471,7 @@ class ShopCore extends ObjectModel
 
 	/**
 	 * Get shop URI
- 	 *
+	 *
 	 * @return string
 	 */
 	public function getBaseURI()
