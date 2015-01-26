@@ -31,7 +31,7 @@
 		</div>
 	</div>
 {/if}
-{if count($errors) && !empty(array_shift($errors)) && (!isset($disableDefaultErrorOutPut) || $disableDefaultErrorOutPut == false)}
+{if count($errors) && array_shift($errors) != '' && (!isset($disableDefaultErrorOutPut) || $disableDefaultErrorOutPut == false)}
 	<div class="bootstrap">
 		<div class="alert alert-danger">
 			<button type="button" class="close" data-dismiss="alert">&times;</button>
