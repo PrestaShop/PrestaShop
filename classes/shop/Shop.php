@@ -419,10 +419,11 @@ class ShopCore extends ObjectModel
 						$url .= '?'.http_build_query($params);
 				}
 
-				$redirect_type = Configuration::get('PS_CANONICAL_REDIRECT');
-				$redirect_code = ($redirect_type == 1 ? '302' : '301');
-				header('HTTP/1.0 '.$redirect_code.' Moved');
-				header('location: http://'.$url);
+				$redirect_type   = Configuration::get('PS_CANONICAL_REDIRECT');
+				$redirect_code   = ($redirect_type == 1 ? '302' : '301');
+				$redirect_header = ($redirect_type == 1 ? 'Found' : 'Moved Permanently');
+				header('HTTP/1.0 '.$redirect_code.' '.$redirect_header);
+				header('Location: http://'.$url);
 				exit;
 
 			}
