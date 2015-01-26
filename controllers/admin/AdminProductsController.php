@@ -2422,7 +2422,7 @@ class AdminProductsControllerCore extends AdminController
 		if (ConfigurationKPI::get('PRODUCT_AVG_GROSS_MARGIN') !== false)
 			$helper->value = ConfigurationKPI::get('PRODUCT_AVG_GROSS_MARGIN');
 		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=product_avg_gross_margin';
-		$helper->tooltip = $this->l('The gross margin is the margin made on the sold of a product regarding its purchase price, on all your products for sale.', null, null, false);
+		$helper->tooltip = $this->l('The gross margin is the difference between the retail price and the wholesale price, on all your products for sale.', null, null, false);
 		$helper->refresh = (bool)(ConfigurationKPI::get('PRODUCT_AVG_GROSS_MARGIN_EXPIRE') < $time);
 		$kpis[] = $helper->generate();
 
