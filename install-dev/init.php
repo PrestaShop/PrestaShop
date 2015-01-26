@@ -41,7 +41,9 @@ if (!defined('_PS_CORE_DIR_'))
 if (!defined('_THEME_NAME_'))
         define('_THEME_NAME_', 'default-bootstrap');
 
+
 require_once(_PS_CORE_DIR_.'/config/defines.inc.php');
+require_once(_PS_CORE_DIR_.'/config/autoload.php');
 require_once(_PS_CORE_DIR_.'/config/defines_uri.inc.php');
 
 // Generate common constants
@@ -57,7 +59,7 @@ require_once(_PS_INSTALL_PATH_.'install_version.php');
 
 // PrestaShop autoload is used to load some helpfull classes like Tools.
 // Add classes used by installer bellow.
-require_once(_PS_CORE_DIR_.'/config/autoload.php');
+
 require_once(_PS_CORE_DIR_.'/config/alias.php');
 require_once(_PS_INSTALL_PATH_.'classes/exception.php');
 require_once(_PS_INSTALL_PATH_.'classes/languages.php');
@@ -96,15 +98,15 @@ function psinstall_get_octets($option)
 function psinstall_get_memory_limit()
 {
 	$memory_limit = @ini_get('memory_limit');
-	
+
 	if (preg_match('/[0-9]+k/i', $memory_limit))
 		return 1024 * (int)$memory_limit;
-	
+
 	if (preg_match('/[0-9]+m/i', $memory_limit))
 		return 1024 * 1024 * (int)$memory_limit;
-	
+
 	if (preg_match('/[0-9]+g/i', $memory_limit))
 		return 1024 * 1024 * 1024 * (int)$memory_limit;
-	
+
 	return $memory_limit;
 }
