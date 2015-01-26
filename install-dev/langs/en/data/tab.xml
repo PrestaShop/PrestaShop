@@ -100,4 +100,5 @@
   <tab id="Supply_orders" name="Supply orders"/>
   <tab id="Configuration" name="Configuration"/>
   <tab id="CarrierWizard" name="Carrier"/>
+  <tab id="Postcodes" name="Postcodes"/>
 </entity_tab>
