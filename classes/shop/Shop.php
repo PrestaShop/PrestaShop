@@ -359,7 +359,7 @@ class ShopCore extends ObjectModel
 						$redirect_header = ($redirect_type == 1 ? 'Found' : 'Moved Permanently');
 						$protocol_link   = (Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';						
 						header('Cache-Control: no-cache');
-						header('Location: '.$protocol_link.$url);
+						header('Location: '.$protocol_link.'://'.$url);
 						exit;
 					}
 				}
@@ -427,7 +427,7 @@ class ShopCore extends ObjectModel
 				header('HTTP/1.0 '.$redirect_code.' '.$redirect_header);
 				$protocol_link   = (Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';						
 				header('Cache-Control: no-cache');
-				header('Location: '.$protocol_link.$url);
+				header('Location: '.$protocol_link.'://'.$url);
 				exit;
 
 			}
