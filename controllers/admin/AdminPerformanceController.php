@@ -817,11 +817,23 @@ class AdminPerformanceControllerCore extends AdminController
 					Configuration::updateValue('PS_MEDIA_SERVER_3', Tools::getValue('_MEDIA_SERVER_3_'));
 					Tools::clearSmartyCache();
 					Media::clearCache();
-					Tools::generateHtaccess(null, null, null, '', null, array($base_urls['_MEDIA_SERVER_1_'], $base_urls['_MEDIA_SERVER_2_'], $base_urls['_MEDIA_SERVER_3_']));
+
+					if (is_writable(_PS_ROOT_DIR_.'/.htaccess'))
+					{
+						Tools::generateHtaccess(null, null, null, '', null, array($base_urls['_MEDIA_SERVER_1_'], $base_urls['_MEDIA_SERVER_2_'], $base_urls['_MEDIA_SERVER_3_']));
+						$redirectAdmin = true;
+					}
+					else
+					{
+						$message = $this->l('Before being able to use this tool, you need to:');
+						$message .= '<br />- '.$this->l('Create a blank .htaccess in your root directory.');
+						$message .= '<br />- '.$this->l('Give it write permissions (CHMOD 666 on Unix system).');
+						$this->errors[] = Tools::displayError($message, false);
+						Configuration::updateValue('PS_HTACCESS_CACHE_CONTROL', false);
+					}
 					unset($this->_fieldsGeneral['_MEDIA_SERVER_1_']);
 					unset($this->_fieldsGeneral['_MEDIA_SERVER_2_']);
 					unset($this->_fieldsGeneral['_MEDIA_SERVER_3_']);
-					$redirectAdmin = true;
 				}
 			}
 			else
