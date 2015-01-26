@@ -183,6 +183,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 		$data = array(
 			'tax_exempt' => $tax_exempt,
 			'use_one_after_another_method' => $this->order_invoice->useOneAfterAnotherTaxComputationMethod(),
+			'display_tax_bases_in_breakdowns' => $this->order_invoice->displayTaxBasesInProductTaxesBreakdown(),
 			'product_tax_breakdown' => $this->order_invoice->getProductTaxesBreakdown($this->order),
 			'shipping_tax_breakdown' => $this->order_invoice->getShippingTaxesBreakdown($this->order),
 			'ecotax_tax_breakdown' => $this->order_invoice->getEcoTaxTaxesBreakdown(),

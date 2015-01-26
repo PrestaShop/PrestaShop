@@ -305,6 +305,11 @@ class OrderInvoiceCore extends ObjectModel
 		) || Configuration::get('PS_INVOICE_TAXES_BREAKDOWN');
 	}
 
+	public function displayTaxBasesInProductTaxesBreakdown()
+	{
+		return $this->getOrder()->round_mode === Order::ROUND_TOTAL && !$this->useOneAfterAnotherTaxComputationMethod();
+	}
+
 	public function getOrder()
 	{
 		if (!$this->order) {
@@ -429,10 +434,21 @@ class OrderInvoiceCore extends ObjectModel
 
 		$breakdown = $reindexed_breakdown;
 
-		$delta = $this->getProductsAfterDiscountsTaxExclExcludingEcotax() - $total_price_tax_excl;
-		if ($delta !== 0)
+		/**
+		 * If the tax bases are to be displayed, then adjust them in case there is
+		 * a (slight) discrepancy due to rounding.
+		 *
+		 * OrderInvoice::displayTaxBasesInProductTaxesBreakdown should return true only in the cases where
+		 * we can reasonably produce tax bases that are coherent with the rest of the invoice.
+		 */
+		if ($this->displayTaxBasesInProductTaxesBreakdown())
 		{
-			Tools::spreadAmount($delta, _PS_PRICE_COMPUTE_PRECISION_, $breakdown, 'total_price_tax_excl');
+			$delta = $this->getProductsAfterDiscountsTaxExclExcludingEcotax() - $total_price_tax_excl;
+			if ($delta !== 0)
+			{
+				Tools::spreadAmount($delta, _PS_PRICE_COMPUTE_PRECISION_, $breakdown, 'total_price_tax_excl');
+			}
+
 		}
 
 		return $breakdown;
