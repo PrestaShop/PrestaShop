@@ -1405,7 +1405,7 @@ abstract class ModuleCore
 			}
 
 		foreach ($module_list as $key => &$module)
-			if ((defined('_PS_HOST_MODE_') && in_array($module->name, self::$hosted_modules_blacklist)) || (defined('_PS_MODULES_BLACKLIST_') && _PS_MODULES_BLACKLIST_ && in_array($module->name, explode(',', _PS_MODULES_BLACKLIST_))))
+			if ((defined('_PS_HOST_MODE_') && in_array($module->name, self::$hosted_modules_blacklist)) || (_PS_MODULES_BLACKLIST_ && in_array($module->name, explode(',', _PS_MODULES_BLACKLIST_))))
 				unset($module_list[$key]);
 			elseif (isset($modules_installed[$module->name]))
 			{

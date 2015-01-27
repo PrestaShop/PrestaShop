@@ -245,6 +245,9 @@ if (!defined('_MEDIA_SERVER_2_'))
 if (!defined('_MEDIA_SERVER_3_'))
 	define('_MEDIA_SERVER_3_', Configuration::get('PS_MEDIA_SERVER_3'));
 
+/* _PS_MODULES_BLACKLIST_ must be defined (empty or not) to avoid modules blacklisting other modules */
+Tools::safeDefine('_PS_MODULES_BLACKLIST_', '');
+
 /* Get smarty */
 require_once(dirname(__FILE__).'/smarty.config.inc.php');
 $context->smarty = $smarty;
