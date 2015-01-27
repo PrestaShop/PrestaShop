@@ -55,6 +55,9 @@ if (!file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php'))
 require_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
 require_once(_PS_CONFIG_DIR_.'autoload.php');
 
+/* Custom config made by users */
+@include_once(_PS_CONFIG_DIR_.'config_custom.inc.php');
+
 if (_PS_DEBUG_PROFILING_)
 {
 	include_once(_PS_TOOL_DIR_.'profiling/Controller.php');
@@ -244,9 +247,6 @@ if (!defined('_MEDIA_SERVER_2_'))
 	define('_MEDIA_SERVER_2_', Configuration::get('PS_MEDIA_SERVER_2'));
 if (!defined('_MEDIA_SERVER_3_'))
 	define('_MEDIA_SERVER_3_', Configuration::get('PS_MEDIA_SERVER_3'));
-
-/* Custom config made by users */
-@include_once(_PS_CONFIG_DIR_.'config_custom.inc.php');
 
 /* Get smarty */
 require_once(dirname(__FILE__).'/smarty.config.inc.php');
