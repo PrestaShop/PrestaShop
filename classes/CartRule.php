@@ -809,6 +809,11 @@ class CartRuleCore extends ObjectModel
 		$all_products = $context->cart->getProducts();
 		$package_products = (is_null($package) ? $all_products : $package['products']);
 
+		$all_cart_rules_ids = $context->cart->getOrderedCartRulesIds();
+
+		$cart_amount_ti = $context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
+		$cart_amount_te = $context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+
 		$reduction_value = 0;
 
 		$cache_id = 'getContextualValue_'.(int)$this->id.'_'.(int)$use_tax.'_'.(int)$context->cart->id.'_'.(int)$filter;
@@ -963,19 +968,11 @@ class CartRuleCore extends ObjectModel
 					// Discount (¤) on the whole order
 					elseif ($this->reduction_product == 0)
 					{
-						$cart_amount_ti = $context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
-						$cart_amount_te = $context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
-
 						// The reduction cannot exceed the products total, except when we do not want it to be limited (for the partial use calculation)
 						if ($filter != CartRule::FILTER_ACTION_ALL_NOCAP)
 							$reduction_amount = min($reduction_amount, $this->reduction_tax ? $cart_amount_ti : $cart_amount_te);
 
-						$cart_vat_amount = $cart_amount_ti - $cart_amount_te;
-
-						if ($cart_vat_amount == 0 || $cart_amount_te == 0)
-							$cart_average_vat_rate = 0;
-						else
-							$cart_average_vat_rate = Tools::ps_round($cart_vat_amount / $cart_amount_te, 3);
+						$cart_average_vat_rate = $this->getCartAverageVatRate();
 
 						if ($this->reduction_tax && !$use_tax)
 							$reduction_value += $prorata * $reduction_amount / (1 + $cart_average_vat_rate);
@@ -989,6 +986,28 @@ class CartRuleCore extends ObjectModel
 					 * elseif ($this->reduction_product == -2)
 					*/
 				}
+
+				// Cart values
+				$cart_average_vat_rate = $this->getCartAverageVatRate();
+				$current_cart_amount = $use_tax ? $cart_amount_ti : $cart_amount_te;
+
+				foreach ($all_cart_rules_ids as $current_cart_rule_id)
+				{
+					if ((int)$current_cart_rule_id['id_cart_rule'] == (int)$this->id)
+						break;
+
+					$previous_cart_rule = new CartRule((int)$current_cart_rule_id['id_cart_rule']);
+					$previous_reduction_amount = $previous_cart_rule->reduction_amount;
+
+					if ($previous_cart_rule->reduction_tax && !$use_tax)
+						$previous_reduction_amount = $prorata * $previous_reduction_amount / (1 + $cart_average_vat_rate);
+					elseif (!$previous_cart_rule->reduction_tax && $use_tax)
+						$previous_reduction_amount = $prorata * $previous_reduction_amount * (1 + $cart_average_vat_rate);
+
+					$current_cart_amount = max($current_cart_amount - (float)$previous_reduction_amount, 0);
+				}
+
+				$reduction_value = min($reduction_value, $current_cart_amount);
 			}
 		}
 
@@ -1016,6 +1035,26 @@ class CartRuleCore extends ObjectModel
 
 		Cache::store($cache_id, $reduction_value);
 		return $reduction_value;
+	}
+
+	/**
+	 * Return the estimated cart VAT from the difference between the total amount taxes included and taxes excluded.
+	 * @return float Estimated VAT rate.
+	 */
+	public function getCartAverageVatRate()
+	{
+		$context = Context::getContext();
+		$cart_amount_ti = $context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
+		$cart_amount_te = $context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+
+		$cart_vat_amount = $cart_amount_ti - $cart_amount_te;
+
+		if ($cart_vat_amount == 0 || $cart_amount_te == 0)
+			$cart_average_vat_rate = 0;
+		else
+			$cart_average_vat_rate = Tools::ps_round($cart_vat_amount / $cart_amount_te, 3);
+
+		return (float)$cart_average_vat_rate;
 	}
 
 	/**
