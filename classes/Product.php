@@ -659,12 +659,15 @@ class ProductCore extends ObjectModel
 	*
 	* @return int Attributes list
 	*/
-	public static function getDefaultAttribute($id_product, $minimum_quantity = 0)
+	public static function getDefaultAttribute($id_product, $minimum_quantity = 0, $reset = false)
 	{
 		static $combinations = array();
 
 		if (!Combination::isFeatureActive())
 			return 0;
+
+		if ($reset && isset($combinations[$id_product]))
+			unset($combinations[$id_product]);
 
 		if (!isset($combinations[$id_product]))
 			$combinations[$id_product] = array();

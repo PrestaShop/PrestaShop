@@ -127,6 +127,10 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 				$this->product->deleteProductAttributes();
 				$this->product->generateMultipleCombinations($values, $this->combinations);
 
+				// Reset cached default attribute for the product and get a new one
+				Product::getDefaultAttribute($this->product->id, 0, true);
+				Product::updateDefaultAttribute($this->product->id);
+
 				// @since 1.5.0
 				if ($this->product->depends_on_stock == 0)
 				{
