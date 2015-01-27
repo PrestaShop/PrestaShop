@@ -43,7 +43,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
 		$id_lang = Context::getContext()->language->id;
 		$prefix = Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, (int)$this->order->id_shop);
-		$this->title = sprintf(HTMLTemplateInvoice::l('Invoice #%1$s%2$06d'), $prefix, $order_invoice->number);
+		$this->title = sprintf(HTMLTemplateInvoice::l('Invoice %1$s%2$06d'), $prefix, $order_invoice->number);
 		// footer informations
 		$this->shop = new Shop((int)$this->order->id_shop);
 	}

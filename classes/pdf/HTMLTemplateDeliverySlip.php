@@ -40,7 +40,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 		// header informations
 		$this->date = Tools::displayDate($this->order->invoice_date);
 		$prefix = Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id);
-		$this->title = sprintf(HTMLTemplateDeliverySlip::l('Delivery #%1$s%2$06d'), $prefix, $this->order_invoice->delivery_number);
+		$this->title = sprintf(HTMLTemplateDeliverySlip::l('Delivery %1$s%2$06d'), $prefix, $this->order_invoice->delivery_number);
 
 		// footer informations
 		$this->shop = new Shop((int)$this->order->id_shop);
@@ -61,7 +61,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 			$invoice_address = new Address((int)$this->order->id_address_invoice);
 			$formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
 		}
-		
+
 		$carrier = new Carrier($this->order->id_carrier);
 		$carrier->name = ($carrier->name == '0' ? Configuration::get('PS_SHOP_NAME') : $carrier->name);
 

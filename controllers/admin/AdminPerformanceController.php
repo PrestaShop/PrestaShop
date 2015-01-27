@@ -821,6 +821,9 @@ class AdminPerformanceControllerCore extends AdminController
 					if (is_writable(_PS_ROOT_DIR_.'/.htaccess'))
 					{
 						Tools::generateHtaccess(null, null, null, '', null, array($base_urls['_MEDIA_SERVER_1_'], $base_urls['_MEDIA_SERVER_2_'], $base_urls['_MEDIA_SERVER_3_']));
+						unset($this->_fieldsGeneral['_MEDIA_SERVER_1_']);
+						unset($this->_fieldsGeneral['_MEDIA_SERVER_2_']);
+						unset($this->_fieldsGeneral['_MEDIA_SERVER_3_']);
 						$redirectAdmin = true;
 					}
 					else
@@ -831,9 +834,6 @@ class AdminPerformanceControllerCore extends AdminController
 						$this->errors[] = Tools::displayError($message, false);
 						Configuration::updateValue('PS_HTACCESS_CACHE_CONTROL', false);
 					}
-					unset($this->_fieldsGeneral['_MEDIA_SERVER_1_']);
-					unset($this->_fieldsGeneral['_MEDIA_SERVER_2_']);
-					unset($this->_fieldsGeneral['_MEDIA_SERVER_3_']);
 				}
 			}
 			else

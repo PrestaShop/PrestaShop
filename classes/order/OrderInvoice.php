@@ -671,7 +671,7 @@ class OrderInvoiceCore extends ObjectModel
 	 */
 	public function getInvoiceNumberFormatted($id_lang, $id_shop = null)
 	{
-		return '#'.Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, $id_shop).sprintf('%06d', $this->number);
+		return sprintf('%1$s%2$06d', Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, $id_shop), $this->number);
 	}
 
 	public function saveCarrierTaxCalculator(array $taxes_amount)
