@@ -1248,8 +1248,22 @@ class OrderCore extends ObjectModel
 
 			// Keep it for backward compatibility, to remove on 1.6 version
 			$this->invoice_date = $order_invoice->date_add;
+
 			if (Configuration::get('PS_INVOICE'))
+			{
 				$this->invoice_number = $this->getInvoiceNumber($order_invoice->id);
+				$invoice_number = Hook::exec('actionSetInvoice',array(
+					get_class($this) => $this,
+					get_class($order_invoice) => $order_invoice,
+					'use_existing_payment' => (bool)$use_existing_payment
+				));
+
+				if (is_numeric($invoice_number))
+					$this->invoice_number = (int)$invoice_number;
+				else
+					$this->invoice_number = $this->getInvoiceNumber($order_invoice->id);
+			}
+
 			$this->update();
 		}
 	}
