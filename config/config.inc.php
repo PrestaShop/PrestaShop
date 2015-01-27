@@ -245,6 +245,9 @@ if (!defined('_MEDIA_SERVER_2_'))
 if (!defined('_MEDIA_SERVER_3_'))
 	define('_MEDIA_SERVER_3_', Configuration::get('PS_MEDIA_SERVER_3'));
 
+/* Custom config made by users */
+@include_once(_PS_CONFIG_DIR_.'config_custom.inc.php');
+
 /* Get smarty */
 require_once(dirname(__FILE__).'/smarty.config.inc.php');
 $context->smarty = $smarty;
