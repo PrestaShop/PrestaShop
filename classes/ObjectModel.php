@@ -488,7 +488,10 @@ abstract class ObjectModelCore
 
 		// Get object id in database
 		$this->id = ObjectModel::$db->Insert_ID();
-
+		//set key vs id
+		$id_name = self::definition['primary']; 
+		$this->$$id_name = $this->id;
+		
 		// Database insertion for multishop fields related to the object
 		if (Shop::isTableAssociated($this->def['table']))
 		{
