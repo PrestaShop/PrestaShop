@@ -56,7 +56,7 @@ require_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
 require_once(_PS_CONFIG_DIR_.'autoload.php');
 
 /* Custom config made by users */
-@include_once(_PS_CONFIG_DIR_.'config_custom.inc.php');
+@include_once(_PS_CONFIG_DIR_.'settings_custom.inc.php');
 
 if (_PS_DEBUG_PROFILING_)
 {
