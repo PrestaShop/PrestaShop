@@ -40,11 +40,11 @@ if (!headers_sent())
 	header('Content-Type: text/html; charset=utf-8');
 
 /* No settings file? goto installer... */
-if (!file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php'))
+if (!@filemtime(_PS_ROOT_DIR_.'/config/settings.inc.php'))
 {
-	if (file_exists(dirname(__FILE__).'/../install'))
+	if (@filemtime(dirname(__FILE__).'/../install'))
 		header('Location: install/');
-	elseif (file_exists(dirname(__FILE__).'/../install-dev'))
+	elseif (@filemtime(dirname(__FILE__).'/../install-dev'))
 		header('Location: install-dev/');
 	else
 		die('Error: "install" directory is missing');
