@@ -148,6 +148,11 @@ abstract class ObjectModelCore
 	public $force_id = false;
 
 	/**
+	 * @var boolean cache the objects in memory
+	 */
+	protected static $cache_objects = true;
+
+	/**
 	 * Returns object validation rules (fields validity)
 	 *
 	 * @param string $class Child class name for static use (optional)
@@ -208,7 +213,7 @@ abstract class ObjectModelCore
 		{
 			// Load object from database if object id is present
 			$cache_id = 'objectmodel_'.$this->def['classname'].'_'.(int)$id.'_'.(int)$this->id_shop.'_'.(int)$id_lang;
-			if (!Cache::isStored($cache_id))
+			if (!ObjectModel::$cache_objects || !Cache::isStored($cache_id))
 			{
 				$sql = new DbQuery();
 				$sql->from($this->def['table'], 'a');
@@ -245,7 +250,8 @@ abstract class ObjectModelCore
 									}
 								}
 					}
-					Cache::store($cache_id, $object_datas);
+					if (ObjectModel::$cache_objects)
+						Cache::store($cache_id, $object_datas);
 				}
 			}
 			else
@@ -1270,13 +1276,19 @@ abstract class ObjectModelCore
 			$id_shop = Context::getContext()->shop->id;
 
 		$cache_id = 'objectmodel_shop_'.$this->def['classname'].'_'.(int)$this->id.'-'.(int)$id_shop;
-		if (!Cache::isStored($cache_id))
+		if (!ObjectModel::$cache_objects || !Cache::isStored($cache_id))
 		{
-			$sql = 'SELECT id_shop
-					FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_shop`
-					WHERE `'.$this->def['primary'].'` = '.(int)$this->id.'
-						AND id_shop = '.(int)$id_shop;
-			Cache::store($cache_id, (bool)Db::getInstance()->getValue($sql));
+			$associated = (bool)Db::getInstance()->getValue('
+				SELECT id_shop
+				FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_shop`
+				WHERE `'.$this->def['primary'].'` = '.(int)$this->id.'
+				AND id_shop = '.(int)$id_shop
+			);
+
+			if (!ObjectModel::$cache_objects)
+				return $associated;
+
+			Cache::store($cache_id, $associated);
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -1697,5 +1709,15 @@ abstract class ObjectModelCore
 	public function setFieldsToUpdate(array $fields)
 	{
 		$this->update_fields = $fields;
+	}
+
+	public static function enableCache()
+	{
+		ObjectModel::$cache_objects = true;
+	}
+
+	public static function disableCache()
+	{
+		ObjectModel::$cache_objects = false;
 	}
 }
