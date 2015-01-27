@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <entity_configuration>
   <configuration id="PS_INVOICE_PREFIX">
-    <value>FA</value>
+    <value>#FA</value>
   </configuration>
   <configuration id="PS_DELIVERY_PREFIX">
-    <value>TA</value>
+    <value>#TA</value>
   </configuration>
   <configuration id="PS_SEARCH_BLACKLIST">
     <value>و|یا|با|در|یک|روی|به|برای|تا|که</value>

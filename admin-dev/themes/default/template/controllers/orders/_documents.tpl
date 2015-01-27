@@ -78,12 +78,12 @@
 							{/if}
 							{if get_class($document) eq 'OrderInvoice'}
 								{if isset($document->is_delivery)}
-									#{Configuration::get('PS_DELIVERY_PREFIX', $current_id_lang, null, $order->id_shop)}{'%06d'|sprintf:$document->delivery_number}
+									{Configuration::get('PS_DELIVERY_PREFIX', $current_id_lang, null, $order->id_shop)}{'%06d'|sprintf:$document->delivery_number}
 								{else}
 									{$document->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}
 								{/if}
 							{elseif get_class($document) eq 'OrderSlip'}
-								#{Configuration::get('PS_CREDIT_SLIP_PREFIX', $current_id_lang)}{'%06d'|sprintf:$document->id}
+								{Configuration::get('PS_CREDIT_SLIP_PREFIX', $current_id_lang)}{'%06d'|sprintf:$document->id}
 							{/if}
 							</a>
 						</td>
