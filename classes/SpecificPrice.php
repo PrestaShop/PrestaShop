@@ -212,8 +212,7 @@ class SpecificPriceCore extends ObjectModel
 		{
 			$now = date('Y-m-d H:i:0');
 			$query = '
-			SELECT SQL_NO_CACHE *, '.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).',
-				UNIX_TIMESTAMP(`from`) u_from, UNIX_TIMESTAMP(`to`) u_to
+			SELECT SQL_NO_CACHE *, '.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
 				FROM `'._DB_PREFIX_.'specific_price` USE INDEX (id_product_2)
 				WHERE `id_product` IN (0, '.(int)$id_product.')
 				AND `id_product_attribute` IN (0, '.(int)$id_product_attribute.')
@@ -277,13 +276,12 @@ class SpecificPriceCore extends ObjectModel
 		if (!SpecificPrice::isFeatureActive())
 			return array();
 
-		$now = time();
+		$now = date('Y-m-d H:i:0');
 		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT *,
-					'.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).',
-					UNIX_TIMESTAMP(`from`) u_from, UNIX_TIMESTAMP(`to`) u_to
-			FROM `'._DB_PREFIX_.'specific_price`
-			WHERE
+			SELECT SQL_NO_CACHE *,
+					'.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
+				FROM `'._DB_PREFIX_.'specific_price` USE INDEX (id_product_2)
+				WHERE
 					`id_product` IN(0, '.(int)$id_product.') AND
 					'.(!$all_combinations ? '`id_product_attribute` IN(0, '.(int)$id_product_attribute.') AND ' : '').'
 					`id_shop` IN(0, '.(int)$id_shop.') AND
@@ -291,20 +289,20 @@ class SpecificPriceCore extends ObjectModel
 					`id_country` IN(0, '.(int)$id_country.') AND
 					`id_group` IN(0, '.(int)$id_group.') AND
 					`id_customer` IN(0, '.(int)$id_customer.')
+					AND
+					(
+						(`from` = \'0000-00-00 00:00:00\' OR \''.$now.'\' >= `from`)
+						AND
+						(`to` = \'0000-00-00 00:00:00\' OR \''.$now.'\' <= `to`)
+					)
 					ORDER BY `from_quantity` ASC, `id_specific_price_rule` ASC, `score` DESC, `to` DESC, `from` DESC
-		');
+		', true, false);
 
 		$targeted_prices = array();
 		$last_quantity = array();
 
 		foreach ($res as $specific_price)
 		{
-			$from = (int)$specific_price['u_from'];
-			$to = (int)$specific_price['u_to'];
-			if (!(($from == 0 || $now >= $from)
-				&& ($to == 0 || $now <= $to))) {
-				continue;
-			}
 			if (!isset($last_quantity[(int)$specific_price['id_product_attribute']]))
 				 $last_quantity[(int)$specific_price['id_product_attribute']] = $specific_price['from_quantity'];
 			elseif ($last_quantity[(int)$specific_price['id_product_attribute']] == $specific_price['from_quantity'])
@@ -323,11 +321,10 @@ class SpecificPriceCore extends ObjectModel
 		if (!SpecificPrice::isFeatureActive())
 			return array();
 
-		$now = time();
-		$query = '
-			SELECT *,
-					'.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).',
-					UNIX_TIMESTAMP(`from`) u_from, UNIX_TIMESTAMP(`to`) u_to
+		$now = date('Y-m-d H:i:0');
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+			SELECT SQL_NO_CACHE *,
+					'.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
 			FROM `'._DB_PREFIX_.'specific_price`
 			WHERE
 					`id_product` IN(0, '.(int)$id_product.') AND
@@ -338,18 +335,14 @@ class SpecificPriceCore extends ObjectModel
 					`id_group` IN(0, '.(int)$id_group.') AND
 					`id_customer` IN(0, '.(int)$id_customer.') AND
 					`from_quantity` >= '.(int)$quantity.'
+					AND
+					(
+						(`from` = \'0000-00-00 00:00:00\' OR \''.$now.'\' >= `from`)
+						AND
+						(`to` = \'0000-00-00 00:00:00\' OR \''.$now.'\' <= `to`)
+					)
 					ORDER BY `from_quantity` DESC, `score` DESC, `to` DESC, `from` DESC
-		';
-		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
-		foreach($results as $value) {
-			$from = (int)$value['u_from'];
-			$to = (int)$value['u_to'];
-			if (($from == 0 || $now >= $from)
-				&& ($to == 0 || $now <= $to)) {
-				return $value;
-			}
-		}
-		return null;
+		', false);
 	}
 
 	public static function getProductIdByDate($id_shop, $id_currency, $id_country, $id_group, $beginning, $ending, $id_customer = 0, $with_combination_id = false)
