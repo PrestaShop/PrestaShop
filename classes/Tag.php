@@ -63,7 +63,7 @@ class TagCore extends ObjectModel
 			$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT *
 			FROM `'._DB_PREFIX_.'tag` t
-			WHERE `name` LIKE \''.pSQL($name).'\' AND `id_lang` = '.(int)$id_lang);
+			WHERE `name` = \''.pSQL($name).'\' AND `id_lang` = '.(int)$id_lang);
 
 			if ($row)
 			{

@@ -962,7 +962,7 @@ class CategoryCore extends ObjectModel
 			SELECT c.*, cl.*
 			FROM `'._DB_PREFIX_.'category` c
 			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` '.Shop::addSqlRestrictionOnLang('cl').')
-			WHERE `name` LIKE \''.pSQL($query).'\'');
+			WHERE `name` = \''.pSQL($query).'\'');
 		else
 			return Db::getInstance()->executeS('
 			SELECT c.*, cl.*
@@ -988,7 +988,7 @@ class CategoryCore extends ObjectModel
 		LEFT JOIN `'._DB_PREFIX_.'category_lang` cl
 			ON (c.`id_category` = cl.`id_category`
 			AND `id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').')
-		WHERE `name`  LIKE \''.pSQL($category_name).'\'
+		WHERE `name` = \''.pSQL($category_name).'\'
 			AND c.`id_category` != '.(int)Configuration::get('PS_HOME_CATEGORY').'
 			AND c.`id_parent` = '.(int)$id_parent_category);
 	}
