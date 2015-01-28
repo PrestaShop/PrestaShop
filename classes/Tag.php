@@ -164,7 +164,8 @@ class TagCore extends ObjectModel
 	public static function getMainTags($id_lang, $nb = 10)
 	{
 		$context = Context::getContext();
-		if (Group::isFeatureActive()) {
+		if (Group::isFeatureActive())
+		{
 			$groups = FrontController::getCurrentCustomerGroups();
 			return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT t.name, counter AS times
@@ -174,7 +175,9 @@ class TagCore extends ObjectModel
 			AND pt.`id_lang` = '.(int)$id_lang.' AND pt.`id_shop` = '.(int)$context->shop->id.'
 			ORDER BY times DESC
 			LIMIT '.(int)$nb);
-		} else {
+		}
+		else
+		{
 			return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT t.name, counter AS times
 			FROM `'._DB_PREFIX_.'tag_count` pt
@@ -228,9 +231,8 @@ class TagCore extends ObjectModel
 			$array = array_map('intval', $array);
 			$result &= ObjectModel::updateMultishopTable('Product', array('indexed' => 0), 'a.id_product IN ('.implode(',', $array).')');
 			$ids = array();
-			foreach ($array as $id_product) {
+			foreach ($array as $id_product)
 				$ids[] = '('.(int)$id_product.','.(int)$this->id.','.(int)$this->id_lang.')';
-			}
 
 			if ($result)
 			{

@@ -5030,7 +5030,8 @@ class ProductCore extends ObjectModel
 			{
 				$sql_values = '';
 				$ids = array_map('intval', $ids);
-				foreach ($ids as $position => $id) {
+				foreach ($ids as $position => $id)
+				{
 					$id_lang = Db::getInstance()->getValue('SELECT `id_lang` FROM `'._DB_PREFIX_.'tag` WHERE `id_tag`='.(int)$id);
 					$sql_values[] = '('.(int)$this->id.', '.(int)$id.', '.(int)$id_lang.')';
 				}
