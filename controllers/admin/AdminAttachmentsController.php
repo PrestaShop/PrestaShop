@@ -60,7 +60,7 @@ class AdminAttachmentsControllerCore extends AdminController
 				'callback' => 'displayHumanReadableSize'
 			),
 			'products' => array(
-				'title' => $this->l('Associated to'),
+				'title' => $this->l('Associated with'),
 				'suffix' => $this->l('product(s)'),
 				'filter_key' => 'virtual!products',
 			),
@@ -82,7 +82,7 @@ class AdminAttachmentsControllerCore extends AdminController
 		parent::setMedia();
 
 		$this->addJs(_PS_JS_DIR_.'/admin/attachments.js');
-		Media::addJsDefL('confirm_text', $this->l('This attachment is associated with the following products, do you really want to  delete it ?'));
+		Media::addJsDefL('confirm_text', $this->l('This attachment is associated with the following products, do you really want to  delete it?'));
 	}
 
 	public static function displayHumanReadableSize($size)
