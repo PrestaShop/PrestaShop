@@ -232,9 +232,8 @@ abstract class CacheCore
 		if ($this->isBlacklist($query))
 			return true;
 
-		if (empty($result)) {
+		if (empty($result))
 			$result = array();
-		}
 
 		if (is_null($this->sql_tables_cached))
 		{

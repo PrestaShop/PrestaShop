@@ -51,21 +51,31 @@ class CacheApcCore extends Cache
 	 */
 	public function delete($key)
 	{
-		if ($key == '*') {
+		if ($key == '*')
+		{
 			$this->flush();
-		} elseif (strpos($key, '*') === false) {
+		}
+		elseif (strpos($key, '*') === false)
+		{
 			$this->_delete($key);
-		} else {
+		}
+		else
+		{
 			$pattern = str_replace('\\*', '.*', preg_quote($key));
 
 			$cache_info = apc_cache_info((extension_loaded('apcu') === true) ? '' : 'user');
-			foreach ($cache_info['cache_list'] as $entry) {
-				if (extension_loaded('apcu') === true) {
+			foreach ($cache_info['cache_list'] as $entry)
+			{
+				if (extension_loaded('apcu') === true)
+				{
 					$key = $entry['key'];
-				} else {
+				}
+				else
+				{
 					$key = $entry['info'];
 				}
-				if (preg_match('#^'.$pattern.'$#', $key)) {
+				if (preg_match('#^'.$pattern.'$#', $key))
+				{
 					$this->_delete($key);
 				}
 			}
