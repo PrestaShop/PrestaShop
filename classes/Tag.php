@@ -143,9 +143,9 @@ class TagCore extends ObjectModel
 			JOIN (SELECT DISTINCT id_group FROM `'._DB_PREFIX_.'category_group`) cg
 			JOIN (SELECT DISTINCT id_shop FROM `'._DB_PREFIX_.'shop`) ps
 			WHERE pt.`id_lang` = 1 AND product_shop.`active` = 1
-			AND p.`id_product` IN (SELECT DISTINCT cp.`id_product` FROM `'._DB_PREFIX_.'category_product` cp
-															LEFT JOIN `'._DB_PREFIX_.'category_group` cgo ON (cp.`id_category` = cgo.`id_category`)
-															WHERE cgo.`id_group` = cg.id_group)
+			AND EXISTS(SELECT 1 FROM `'._DB_PREFIX_.'category_product` cp
+							LEFT JOIN `'._DB_PREFIX_.'category_group` cgo ON (cp.`id_category` = cgo.`id_category`)
+							WHERE cgo.`id_group` = cg.id_group AND p.`id_product` = cp.`id_product`)
 			AND product_shop.id_shop = ps.id_shop
 			GROUP BY pt.id_tag, cg.id_group');
 		Db::getInstance()->execute('REPLACE INTO `'._DB_PREFIX_.'tag_count` (id_group, id_tag, id_lang, id_shop, counter)
