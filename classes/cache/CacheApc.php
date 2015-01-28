@@ -33,15 +33,16 @@ class CacheApcCore extends Cache
 {
 	public function __construct()
 	{
-		if (!function_exists('apc_exists')) {
+		if (!function_exists('apc_exists'))
+		{
 			$this->keys = array();
 			$cache_info = apc_cache_info((extension_loaded('apcu') === true) ? '' : 'user');
-			foreach ($cache_info['cache_list'] as $entry) {
-				if (extension_loaded('apcu') === true) {
+			foreach ($cache_info['cache_list'] as $entry)
+			{
+				if (extension_loaded('apcu') === true)
 					$this->keys[$entry['key']] = $entry['ttl'];
-				} else {
+				else
 					$this->keys[$entry['info']] = $entry['ttl'];
-				}
 			}
 		}
 	}
@@ -56,13 +57,9 @@ class CacheApcCore extends Cache
 	public function delete($key)
 	{
 		if ($key == '*')
-		{
 			$this->flush();
-		}
 		elseif (strpos($key, '*') === false)
-		{
 			$this->_delete($key);
-		}
 		else
 		{
 			$pattern = str_replace('\\*', '.*', preg_quote($key));
@@ -71,17 +68,11 @@ class CacheApcCore extends Cache
 			foreach ($cache_info['cache_list'] as $entry)
 			{
 				if (extension_loaded('apcu') === true)
-				{
 					$key = $entry['key'];
-				}
 				else
-				{
 					$key = $entry['info'];
-				}
 				if (preg_match('#^'.$pattern.'$#', $key))
-				{
 					$this->_delete($key);
-				}
 			}
 		}
 		return true;
@@ -108,11 +99,10 @@ class CacheApcCore extends Cache
 	 */
 	protected function _exists($key)
 	{
-		if (!function_exists('apc_exists')) {
+		if (!function_exists('apc_exists'))
 			return isset($this->keys[$key]);
-		} else {
+		else
 			return apc_exists($key);
-		}
 	}
 
 	/**
