@@ -2282,10 +2282,6 @@ class ProductCore extends ObjectModel
 			if (!$row)
 				return false;
 
-			$row2 = Product::getCoverLegend($id_product, $id_lang);
-
-			$row = array_merge($row, $row2);
-
 			$row['id_product_attribute'] = (int)$result['id_product_attribute'];
 			return Product::getProductProperties($id_lang, $row);
 		}
