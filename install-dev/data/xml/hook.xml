@@ -310,5 +310,8 @@
     <hook id="displayOverrideTemplate" live_edit="0">
       <name>displayOverrideTemplate</name><title>Change the default template of current controller</title><description></description>
     </hook>
+    <hook id="displayAfterThemeInstallation" live_edit="0">
+      <name>displayAfterThemeInstallation</name><title>Place where you can display additional information after theme installation</title><description>This hook displays additional information after theme installation'</description>
+    </hook>
   </entities>
 </entity_hook>
