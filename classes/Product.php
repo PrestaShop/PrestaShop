@@ -2107,12 +2107,9 @@ class ProductCore extends ObjectModel
 		if (Group::isFeatureActive())
 		{
 			$groups = FrontController::getCurrentCustomerGroups();
-			$sql_groups = 'AND p.`id_product` IN (
-				SELECT cp.`id_product`
-				FROM `'._DB_PREFIX_.'category_group` cg
-				LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
-				WHERE cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1').'
-			)';
+			$sql_groups = ' AND EXISTS(SELECT 1 FROM `'._DB_PREFIX_.'category_product` cp
+				JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.id_category = cg.id_category AND cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1').')
+				WHERE cp.`id_product` = p.`id_product`)';
 		}
 
 		if (strpos($order_by, '.') > 0)
@@ -2235,7 +2232,9 @@ class ProductCore extends ObjectModel
 			$ids_product = rtrim($ids_product, 'OR').')';
 
 			$groups = FrontController::getCurrentCustomerGroups();
-			$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
+			$sql_groups = ' AND EXISTS(SELECT 1 FROM `'._DB_PREFIX_.'category_product` cp
+				JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.id_category = cg.id_category AND cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1').')
+				WHERE cp.`id_product` = p.`id_product`)';
 
 			// Please keep 2 distinct queries because RAND() is an awful way to achieve this result
 			$sql = 'SELECT product_shop.id_product, IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute
@@ -2244,13 +2243,7 @@ class ProductCore extends ObjectModel
 					LEFT JOIN `'._DB_PREFIX_.'product_attribute_shop` product_attribute_shop
 				   		ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop='.(int)$context->shop->id.')
 					WHERE product_shop.`active` = 1
-						'.(($ids_product) ? $ids_product : '').'
-						AND p.`id_product` IN (
-							SELECT DISTINCT cp.`id_product`
-							FROM `'._DB_PREFIX_.'category_group` cg
-							LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
-							WHERE cg.`id_group` '.$sql_groups.'
-						)
+						'.(($ids_product) ? $ids_product : '').' '.$sql_groups.'
 					'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
 					ORDER BY RAND()';
 
@@ -2333,12 +2326,9 @@ class ProductCore extends ObjectModel
 		if (Group::isFeatureActive())
 		{
 			$groups = FrontController::getCurrentCustomerGroups();
-			$sql_groups = 'AND p.`id_product` IN (
-				SELECT cp.`id_product`
-				FROM `'._DB_PREFIX_.'category_group` cg
-				LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
-				WHERE cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1').'
-			)';
+			$sql_groups = ' AND EXISTS(SELECT 1 FROM `'._DB_PREFIX_.'category_product` cp
+				JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.id_category = cg.id_category AND cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1').')
+				WHERE cp.`id_product` = p.`id_product`)';
 		}
 
 		if ($count)
