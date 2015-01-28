@@ -131,6 +131,7 @@ class AdminStatusesControllerCore extends AdminController
 	protected function initOrdersReturnsList()
 	{
 		$this->table = 'order_return_state';
+		$this->className = 'OrderState';
 		$this->_defaultOrderBy = $this->identifier = 'id_order_return_state';
 		$this->list_id = 'order_return_state';
 		$this->deleted = false;
