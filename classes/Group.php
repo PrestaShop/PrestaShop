@@ -304,13 +304,11 @@ class GroupCore extends ObjectModel
 		static $ps_unidentified_group = null;
 		static $ps_customer_group = null;
 
-		if ($ps_unidentified_group === null) {
+		if ($ps_unidentified_group === null)
 			$ps_unidentified_group = Configuration::get('PS_UNIDENTIFIED_GROUP');
-		}
 
-		if ($ps_customer_group === null) {
+		if ($ps_customer_group === null)
 			$ps_customer_group = Configuration::get('PS_CUSTOMER_GROUP');
-		}
 
 		$customer = Context::getContext()->customer;
 		if (Validate::isLoadedObject($customer))
