@@ -905,7 +905,7 @@ class CartRuleCore extends ObjectModel
 			}
 
 			// Discount (¤)
-			if ($this->reduction_amount)
+			if ((float)$this->reduction_amount > 0)
 			{
 				$prorata = 1;
 				if (!is_null($package) && count($all_products))
