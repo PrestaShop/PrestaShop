@@ -712,32 +712,24 @@ class SearchCore
 
 		if ($count)
 		{
-			$sql = 'SELECT COUNT(*) nb
-						FROM `'._DB_PREFIX_.'product` p
-						'.Shop::addSqlAssociation('product', 'p').'
-						LEFT JOIN `'._DB_PREFIX_.'product_tag` pt ON (p.`id_product` = pt.`id_product`)
-						LEFT JOIN `'._DB_PREFIX_.'tag` t ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = '.(int)$id_lang.')
-						WHERE product_shop.`active` = 1
-						AND p.visibility IN (\'both\', \'search\')
-						AND t.`name` LIKE \'%'.pSQL($tag).'%\'';
-			if (Group::isFeatureActive())
-			{
-				$sql .= ' AND p.id_product IN (SELECT DISTINCT cp.`id_product` FROM `'._DB_PREFIX_.'category_product` cp
-					LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.id_category = cg.id_category)
-					LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cp.`id_category` = cs.`id_category`)
-					WHERE cs.`id_shop` = '.(int)$id_shop.' '.$sql_groups.')';
-			} else {
-				$sql .= ' AND p.id_product IN (SELECT DISTINCT cp.`id_product` FROM `'._DB_PREFIX_.'category_product` cp
-					LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cp.`id_category` = cs.`id_category`)
-					WHERE cs.`id_shop` = '.(int)$id_shop.')';
-			}
-
-			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
+			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+			'SELECT COUNT(DISTINCT pt.`id_product`) nb
+			FROM `'._DB_PREFIX_.'product` p
+			'.Shop::addSqlAssociation('product', 'p').'
+			LEFT JOIN `'._DB_PREFIX_.'product_tag` pt ON (p.`id_product` = pt.`id_product`)
+			LEFT JOIN `'._DB_PREFIX_.'tag` t ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = '.(int)$id_lang.')
+			LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)
+			LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cp.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
+			'.(Group::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)' : '').'
+			WHERE product_shop.`active` = 1
+			AND p.visibility IN (\'both\', \'search\')
+			AND cs.`id_shop` = '.(int)Context::getContext()->shop->id.'
+			'.$sql_groups.'
+			AND t.`name` LIKE \'%'.pSQL($tag).'%\'');
 		}
 
-		// no group by needed : there's only one attribute with cover=1 for a given id_product + shop
-		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description_short`, pl.`link_rewrite`, pl.`name`,
-					image_shop.`id_image` id_image, il.`legend`, m.`name` manufacturer_name, 1 position, IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute,
+		$sql = 'SELECT DISTINCT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity, pl.`description_short`, pl.`link_rewrite`, pl.`name`,
+					MAX(image_shop.`id_image`) id_image, il.`legend`, m.`name` manufacturer_name, 1 position,
 					DATEDIFF(
 						p.`date_add`,
 						DATE_SUB(
@@ -759,24 +751,16 @@ class SearchCore
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
 				LEFT JOIN `'._DB_PREFIX_.'product_tag` pt ON (p.`id_product` = pt.`id_product`)
 				LEFT JOIN `'._DB_PREFIX_.'tag` t ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = '.(int)$id_lang.')
+				LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)
+				'.(Group::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)' : '').'
+				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cp.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
 				'.Product::sqlStock('p', 0).'
 				WHERE product_shop.`active` = 1
-				AND p.visibility IN (\'both\', \'search\')
-				AND t.`name` LIKE \'%'.pSQL($tag).'%\'';
-
-		if (Group::isFeatureActive())
-		{
-			$sql .= ' AND EXISTS(SELECT 1 FROM `'._DB_PREFIX_.'category_product` cp
-				LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.id_category = cg.id_category)
-				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cp.`id_category` = cs.`id_category`)
-				WHERE cp.`id_product` = p.`id_product` AND cs.`id_shop` = '.(int)$id_shop.' '.$sql_groups.')';
-		} else {
-			$sql .= ' AND EXISTS(SELECT 1 FROM `'._DB_PREFIX_.'category_product` cp
-				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cp.`id_category` = cs.`id_category`)
-				WHERE cp.`id_product` = p.`id_product` AND cs.`id_shop` = '.(int)$id_shop.')';
-		}
-
-		$sql .= ' ORDER BY position DESC'.($orderBy ? ', '.$orderBy : '').($orderWay ? ' '.$orderWay : '').'
+					AND cs.`id_shop` = '.(int)Context::getContext()->shop->id.'
+					'.$sql_groups.'
+					AND t.`name` LIKE \'%'.pSQL($tag).'%\'
+					GROUP BY product_shop.id_product
+				ORDER BY position DESC'.($orderBy ? ', '.$orderBy : '').($orderWay ? ' '.$orderWay : '').'
 				LIMIT '.(int)(($pageNumber - 1) * $pageSize).','.(int)$pageSize;
 		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
 			return false;
