@@ -261,21 +261,18 @@ class CartRuleCore extends ObjectModel
 				'.($active ? 'AND cr.`active` = 1' : '').'
 				'.($inStock ? 'AND cr.`quantity` > 0' : '');
 
-		if ($free_shipping_only) {
+		if ($free_shipping_only)
 			$sql_part2 .= ' AND free_shipping = 1 AND carrier_restriction = 1';
-		}
 
 		$sql = '(SELECT SQL_NO_CACHE '.$sql_part1.' WHERE cr.`id_customer` = '.(int)$id_customer.' '.$sql_part2.')';
 		$sql .= ' UNION (SELECT '.$sql_part1.' WHERE cr.`group_restriction` = 1 '.$sql_part2.')';
-		if ($includeGeneric && (int)$id_customer != 0) {
+		if ($includeGeneric && (int)$id_customer != 0)
 			$sql .= ' UNION ('.$sql_part1.' WHERE cr.`id_customer` = 0 '.$sql_part2.')';
-		}
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
 
-		if (empty($result)) {
+		if (empty($result))
 			return array();
-		}
 
 		// Remove cart rule that does not match the customer groups
 		$customerGroups = Customer::getGroupsStatic($id_customer);
