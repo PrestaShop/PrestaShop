@@ -210,7 +210,7 @@ class SpecificPriceCore extends ObjectModel
 		$key = ((int)$id_product.'-'.(int)$id_shop.'-'.(int)$id_currency.'-'.(int)$id_country.'-'.(int)$id_group.'-'.(int)$quantity.'-'.(int)$id_product_attribute.'-'.(int)$id_cart.'-'.(int)$id_customer.'-'.(int)$real_quantity);
 		if (!array_key_exists($key, SpecificPrice::$_specificPriceCache))
 		{
-			$now = date('Y-m-d H:i:0');
+			$now = date('Y-m-d H:i:00');
 			$query = '
 			SELECT SQL_NO_CACHE *, '.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
 				FROM `'._DB_PREFIX_.'specific_price` USE INDEX (id_product_2)
@@ -276,8 +276,8 @@ class SpecificPriceCore extends ObjectModel
 		if (!SpecificPrice::isFeatureActive())
 			return array();
 
-		$now = date('Y-m-d H:i:0');
-		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		$now = date('Y-m-d H:i:00');
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT SQL_NO_CACHE *,
 					'.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
 				FROM `'._DB_PREFIX_.'specific_price` USE INDEX (id_product_2)
@@ -296,12 +296,12 @@ class SpecificPriceCore extends ObjectModel
 						(`to` = \'0000-00-00 00:00:00\' OR \''.$now.'\' <= `to`)
 					)
 					ORDER BY `from_quantity` ASC, `id_specific_price_rule` ASC, `score` DESC, `to` DESC, `from` DESC
-		', true, false);
+		', false, false);
 
 		$targeted_prices = array();
 		$last_quantity = array();
 
-		foreach ($res as $specific_price)
+		while ($specific_price = Db::getInstance()->nextRow($result))
 		{
 			if (!isset($last_quantity[(int)$specific_price['id_product_attribute']]))
 				 $last_quantity[(int)$specific_price['id_product_attribute']] = $specific_price['from_quantity'];
@@ -321,11 +321,11 @@ class SpecificPriceCore extends ObjectModel
 		if (!SpecificPrice::isFeatureActive())
 			return array();
 
-		$now = date('Y-m-d H:i:0');
+		$now = date('Y-m-d H:i:00');
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT SQL_NO_CACHE *,
 					'.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
-			FROM `'._DB_PREFIX_.'specific_price`
+			FROM `'._DB_PREFIX_.'specific_price` USE INDEX (id_product_2)
 			WHERE
 					`id_product` IN(0, '.(int)$id_product.') AND
 					`id_product_attribute` IN(0, '.(int)$id_product_attribute.') AND
@@ -350,17 +350,8 @@ class SpecificPriceCore extends ObjectModel
 		if (!SpecificPrice::isFeatureActive())
 			return array();
 
-		list($beginning_days, $beginning_hours) = explode(' ', $beginning);
-		list($beginning_year, $beginning_month, $beginning_day) = explode('-', $beginning_days);
-		list($beginning_hour, $beginning_minute, $beginning_second) = explode(':', $beginning_hours);
-		$beginning_timestamp = mktime($beginning_hour, $beginning_minute, $beginning_second, $beginning_month, $beginning_day, $beginning_year);
-
-		list($ending_days, $ending_hours) = explode(' ', $ending);
-		list($ending_year, $ending_month, $ending_day) = explode('-', $ending_days);
-		list($ending_hour, $ending_minute, $ending_second) = explode(':', $ending_hours);
-		$ending_timestamp = mktime($ending_hour, $ending_minute, $ending_second, $ending_month, $ending_day, $ending_year);
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT `id_product`, `id_product_attribute`, UNIX_TIMESTAMP(`from`) u_from, UNIX_TIMESTAMP(`to`) u_to
+			SELECT SQL_NO_CACHE `id_product`, `id_product_attribute`
 			FROM `'._DB_PREFIX_.'specific_price`
 			WHERE	`id_shop` IN(0, '.(int)$id_shop.') AND
 					`id_currency` IN(0, '.(int)$id_currency.') AND
@@ -368,18 +359,18 @@ class SpecificPriceCore extends ObjectModel
 					`id_group` IN(0, '.(int)$id_group.') AND
 					`id_customer` IN(0, '.(int)$id_customer.') AND
 					`from_quantity` = 1 AND
+					(
+						(`from` = \'0000-00-00 00:00:00\' OR \''.pSQL($beginning).'\' >= `from`)
+						AND
+						(`to` = \'0000-00-00 00:00:00\' OR \''.pSQL($ending).'\' <= `to`)
+					)
+					AND
 					`reduction` > 0
-		');
+		', false, false);
 		$ids_product = array();
-		foreach($result as $row) {
-			$from = (int)$row['u_from'];
-			$to = (int)$row['u_to'];
-			if (($from == 0 || $beginning_timestamp >= $from)
-				&& ($to == 0 || $ending_timestamp <= $to)) {
-				$ids_product[] = $with_combination_id ? array('id_product' => (int)$row['id_product'], 'id_product_attribute' => (int)$row['id_product_attribute']) : (int)$row['id_product'];
-			}
+		while ($row = Db::getInstance()->nextRow($result))
+			$ids_product[] = $with_combination_id ? array('id_product' => (int)$row['id_product'], 'id_product_attribute' => (int)$row['id_product_attribute']) : (int)$row['id_product'];
 
-		}
 		return $ids_product;
 	}
 
