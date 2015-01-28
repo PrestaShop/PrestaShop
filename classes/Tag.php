@@ -141,7 +141,7 @@ class TagCore extends ObjectModel
 			INNER JOIN `'._DB_PREFIX_.'product_shop` product_shop
 				ON (product_shop.id_product = p.id_product)
 			JOIN (SELECT DISTINCT id_group FROM `'._DB_PREFIX_.'category_group`) cg
-			JOIN (SELECT DISTINCT id_shop FROM `'._DB_PREFIX_.'_shop`) ps
+			JOIN (SELECT DISTINCT id_shop FROM `'._DB_PREFIX_.'shop`) ps
 			WHERE pt.`id_lang` = 1 AND product_shop.`active` = 1
 			AND p.`id_product` IN (SELECT DISTINCT cp.`id_product` FROM `'._DB_PREFIX_.'category_product` cp
 															LEFT JOIN `'._DB_PREFIX_.'category_group` cgo ON (cp.`id_category` = cgo.`id_category`)
@@ -155,7 +155,7 @@ class TagCore extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = pt.id_product)
 			INNER JOIN `'._DB_PREFIX_.'product_shop` product_shop
 				ON (product_shop.id_product = p.id_product)
-			JOIN (SELECT DISTINCT id_shop FROM `'._DB_PREFIX_.'_shop`) ps
+			JOIN (SELECT DISTINCT id_shop FROM `'._DB_PREFIX_.'shop`) ps
 			WHERE pt.`id_lang` = 1 AND product_shop.`active` = 1
 			AND product_shop.id_shop = ps.id_shop
 			GROUP BY pt.id_tag');
