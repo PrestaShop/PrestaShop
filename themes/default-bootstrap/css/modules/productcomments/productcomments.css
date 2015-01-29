@@ -182,9 +182,10 @@
       border: none; }
     #product_comments_block_tab div.comment .comment_author {
       padding: 0 20px;
-      line-height: 18px span;
-        line-height-font-weight: bold;
-        line-height-float: left; }
+      line-height: 18px; }
+      #product_comments_block_tab div.comment .comment_author span {
+        font-weight: bold;
+        float: left; }
       #product_comments_block_tab div.comment .comment_author .star_content {
         display: inline-block;
         vertical-align: middle;
