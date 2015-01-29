@@ -166,9 +166,6 @@ class SpecificPriceCore extends ObjectModel
 	{
 	    $select = '(';
 
-       $now = date('Y-m-d H:i:s');
-       $select .= ' IF (\''.$now.'\' >= `from` AND \''.$now.'\' <= `to`, '.pow(2, 0).', 0) + ';
-
 	    $priority = SpecificPrice::getPriority($id_product);
 	    foreach (array_reverse($priority) as $k => $field)
 			if (!empty($field))
@@ -213,10 +210,10 @@ class SpecificPriceCore extends ObjectModel
 		$key = ((int)$id_product.'-'.(int)$id_shop.'-'.(int)$id_currency.'-'.(int)$id_country.'-'.(int)$id_group.'-'.(int)$quantity.'-'.(int)$id_product_attribute.'-'.(int)$id_cart.'-'.(int)$id_customer.'-'.(int)$real_quantity);
 		if (!array_key_exists($key, SpecificPrice::$_specificPriceCache))
 		{
-			$now = date('Y-m-d H:i:s');
+			$now = date('Y-m-d H:i:00');
 			$query = '
-			SELECT *, '.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
-				FROM `'._DB_PREFIX_.'specific_price`
+			SELECT SQL_NO_CACHE *, '.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
+				FROM `'._DB_PREFIX_.'specific_price` USE INDEX (id_product_2)
 				WHERE `id_product` IN (0, '.(int)$id_product.')
 				AND `id_product_attribute` IN (0, '.(int)$id_product_attribute.')
 				AND `id_shop` IN (0, '.(int)$id_shop.')
@@ -234,9 +231,9 @@ class SpecificPriceCore extends ObjectModel
 				AND IF(`from_quantity` > 1, `from_quantity`, 0) <= ';
 
 			$query .= (Configuration::get('PS_QTY_DISCOUNT_ON_COMBINATION') || !$id_cart || !$real_quantity) ? (int)$quantity : max(1, (int)$real_quantity);
-			$query .= ' ORDER BY `id_product_attribute` DESC, `from_quantity` DESC, `id_specific_price_rule` ASC, `score` DESC';
+			$query .= ' ORDER BY `id_product_attribute` DESC, `from_quantity` DESC, `id_specific_price_rule` ASC, `score` DESC, `to` DESC, `from` DESC';
 
-			SpecificPrice::$_specificPriceCache[$key] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
+			SpecificPrice::$_specificPriceCache[$key] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query, false);
 
 		}
 		return SpecificPrice::$_specificPriceCache[$key];
@@ -279,12 +276,12 @@ class SpecificPriceCore extends ObjectModel
 		if (!SpecificPrice::isFeatureActive())
 			return array();
 
-		$now = date('Y-m-d H:i:s');
-		$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT *,
+		$now = date('Y-m-d H:i:00');
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+			SELECT SQL_NO_CACHE *,
 					'.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
-			FROM `'._DB_PREFIX_.'specific_price`
-			WHERE
+				FROM `'._DB_PREFIX_.'specific_price` USE INDEX (id_product_2)
+				WHERE
 					`id_product` IN(0, '.(int)$id_product.') AND
 					'.(!$all_combinations ? '`id_product_attribute` IN(0, '.(int)$id_product_attribute.') AND ' : '').'
 					`id_shop` IN(0, '.(int)$id_shop.') AND
@@ -298,13 +295,13 @@ class SpecificPriceCore extends ObjectModel
 						AND
 						(`to` = \'0000-00-00 00:00:00\' OR \''.$now.'\' <= `to`)
 					)
-					ORDER BY `from_quantity` ASC, `id_specific_price_rule` ASC, `score` DESC
-		');
+					ORDER BY `from_quantity` ASC, `id_specific_price_rule` ASC, `score` DESC, `to` DESC, `from` DESC
+		', false, false);
 
 		$targeted_prices = array();
 		$last_quantity = array();
 
-		foreach ($res as $specific_price)
+		while ($specific_price = Db::getInstance()->nextRow($result))
 		{
 			if (!isset($last_quantity[(int)$specific_price['id_product_attribute']]))
 				 $last_quantity[(int)$specific_price['id_product_attribute']] = $specific_price['from_quantity'];
@@ -324,11 +321,11 @@ class SpecificPriceCore extends ObjectModel
 		if (!SpecificPrice::isFeatureActive())
 			return array();
 
-		$now = date('Y-m-d H:i:s');
+		$now = date('Y-m-d H:i:00');
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-			SELECT *,
+			SELECT SQL_NO_CACHE *,
 					'.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
-			FROM `'._DB_PREFIX_.'specific_price`
+			FROM `'._DB_PREFIX_.'specific_price` USE INDEX (id_product_2)
 			WHERE
 					`id_product` IN(0, '.(int)$id_product.') AND
 					`id_product_attribute` IN(0, '.(int)$id_product_attribute.') AND
@@ -344,8 +341,8 @@ class SpecificPriceCore extends ObjectModel
 						AND
 						(`to` = \'0000-00-00 00:00:00\' OR \''.$now.'\' <= `to`)
 					)
-					ORDER BY `from_quantity` DESC, `score` DESC
-		');
+					ORDER BY `from_quantity` DESC, `score` DESC, `to` DESC, `from` DESC
+		', false);
 	}
 
 	public static function getProductIdByDate($id_shop, $id_currency, $id_country, $id_group, $beginning, $ending, $id_customer = 0, $with_combination_id = false)
@@ -354,7 +351,7 @@ class SpecificPriceCore extends ObjectModel
 			return array();
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT `id_product`, `id_product_attribute`
+			SELECT SQL_NO_CACHE `id_product`, `id_product_attribute`
 			FROM `'._DB_PREFIX_.'specific_price`
 			WHERE	`id_shop` IN(0, '.(int)$id_shop.') AND
 					`id_currency` IN(0, '.(int)$id_currency.') AND
@@ -369,10 +366,11 @@ class SpecificPriceCore extends ObjectModel
 					)
 					AND
 					`reduction` > 0
-		', false);
+		', false, false);
 		$ids_product = array();
 		while ($row = Db::getInstance()->nextRow($result))
 			$ids_product[] = $with_combination_id ? array('id_product' => (int)$row['id_product'], 'id_product_attribute' => (int)$row['id_product_attribute']) : (int)$row['id_product'];
+
 		return $ids_product;
 	}
 

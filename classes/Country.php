@@ -240,7 +240,7 @@ class CountryCore extends ObjectModel
 		$sql = '
 		SELECT `id_country`
 		FROM `'._DB_PREFIX_.'country_lang`
-		WHERE `name` LIKE \''.pSQL($country).'\'';
+		WHERE `name` = \''.pSQL($country).'\'';
 		if ($id_lang)
 			$sql .= ' AND `id_lang` = '.(int)$id_lang;
 

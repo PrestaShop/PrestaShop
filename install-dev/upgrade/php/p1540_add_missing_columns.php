@@ -27,7 +27,7 @@
 function p1540_add_missing_columns()
 {
 	$errors = array();
-	$id_module = Db::getInstance()->getValue('SELECT id_module FROM `'._DB_PREFIX_.'module` WHERE name LIKE "loyalty"');
+	$id_module = Db::getInstance()->getValue('SELECT id_module FROM `'._DB_PREFIX_.'module` WHERE name = "loyalty"');
 	if ($id_module)
 	{
 		$list_fields = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'loyalty`');
@@ -39,7 +39,7 @@ function p1540_add_missing_columns()
 				$errors[] = Db::getInstance()->getMsgError();				
 	}
 	
-	$id_module = Db::getInstance()->getValue('SELECT id_module FROM `'._DB_PREFIX_.'module` WHERE name LIKE "blocklayered"');
+	$id_module = Db::getInstance()->getValue('SELECT id_module FROM `'._DB_PREFIX_.'module` WHERE name = "blocklayered"');
 	if ($id_module)
 	{
 		$list_fields = Db::getInstance()->executeS('SHOW FIELDS FROM `'._DB_PREFIX_.'layered_product_attribute`');
