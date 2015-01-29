@@ -223,6 +223,7 @@ class AdminStatusesControllerCore extends AdminController
 		$lists = parent::renderList();
 
 		//init and render the second list
+		$this->list_skip_actions = array();
 		$this->_filter = false;
 		$this->initOrdersReturnsList();
 
