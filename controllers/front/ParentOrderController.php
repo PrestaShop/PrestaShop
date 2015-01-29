@@ -321,7 +321,7 @@ class ParentOrderControllerCore extends FrontController
 				null,
 				false,
 				false,
-				1,
+				6,
 				false,
 				null,
 				null,
