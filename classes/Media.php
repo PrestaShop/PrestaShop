@@ -259,7 +259,7 @@ class MediaCore
 			{
 				if (!defined('_PS_HOST_MODE_'))
 					return false;
-				elseif((int)@filesize($file_uri_host_mode))
+				elseif((int)@filesize($file_uri_host_mode) == 0)
 					return false;
 				else
 				{
