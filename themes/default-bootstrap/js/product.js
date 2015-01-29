@@ -747,7 +747,10 @@ function updatePrice()
 			}
 			else
 			{
-				$('#reduction_percent_display').html('-' + parseFloat(discountPercentage).toFixed(0) + '%');
+				var toFix = 2;
+				if ((parseFloat(discountPercentage).toFixed(2) - parseFloat(discountPercentage).toFixed(0)) == 0)
+					toFix = 0;
+				$('#reduction_percent_display').html('-' + parseFloat(discountPercentage).toFixed(toFix) + '%');
 				$('#reduction_percent').show();
 			}
 		}
