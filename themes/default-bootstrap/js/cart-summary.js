@@ -773,7 +773,7 @@ function updateCartSummary(json)
 		var reduction_type = product_list[i].reduction_type;
 		var reduction_symbol = '';
 		var initial_price_text = '';
-		initial_price = '';
+		var initial_price = '';
 
 		if (typeof(product_list[i].price_without_quantity_discount) !== 'undefined')
 			initial_price = formatCurrency(product_list[i].price_without_quantity_discount, currencyFormat, currencySign, currencyBlank);
