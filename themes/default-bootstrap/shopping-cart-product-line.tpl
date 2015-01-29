@@ -41,36 +41,36 @@
 			{if !empty($product.gift)}
 				<li class="gift-icon">{l s='Gift!'}</li>
 			{else}
-            	{if !$priceDisplay}
+				{if !$priceDisplay}
 					<li class="price{if isset($product.is_discounted) && $product.is_discounted && isset($product.reduction_applies) && $product.reduction_applies} special-price{/if}">{convertPrice price=$product.price_wt}</li>
 				{else}
-               	 	<li class="price{if isset($product.is_discounted) && $product.is_discounted && isset($product.reduction_applies) && $product.reduction_applies} special-price{/if}">{convertPrice price=$product.price}</li>
+					<li class="price{if isset($product.is_discounted) && $product.is_discounted && isset($product.reduction_applies) && $product.reduction_applies} special-price{/if}">{convertPrice price=$product.price}</li>
 				{/if}
 				{if isset($product.is_discounted) && $product.is_discounted && isset($product.reduction_applies) && $product.reduction_applies}
-                	<li class="price-percent-reduction small">
-            			{if !$priceDisplay}
-            				{if isset($product.reduction_type) && $product.reduction_type == 'amount'}
-                    			{assign var='priceReduction' value=($product.price_wt - $product.price_without_specific_price)}
-                    			{assign var='symbol' value=$currency->sign}
-                    		{else}
-                    			{assign var='priceReduction' value=(($product.price_without_specific_price - $product.price_wt)/$product.price_without_specific_price) * 100 * -1}
-                    			{assign var='symbol' value='%'}
-                    		{/if}
+					<li class="price-percent-reduction small">
+						{if !$priceDisplay}
+							{if isset($product.reduction_type) && $product.reduction_type == 'amount'}
+								{assign var='priceReduction' value=($product.price_wt - $product.price_without_specific_price)}
+								{assign var='symbol' value=$currency->sign}
+							{else}
+								{assign var='priceReduction' value=(($product.price_without_specific_price - $product.price_wt)/$product.price_without_specific_price) * -100}
+								{assign var='symbol' value='%'}
+							{/if}
 						{else}
 							{if isset($product.reduction_type) && $product.reduction_type == 'amount'}
 								{assign var='priceReduction' value=($product.price - $product.price_without_specific_price)}
 								{assign var='symbol' value=$currency->sign}
-                    		{else}
-                    			{assign var='priceReduction' value=(($product.price_without_specific_price - $product.price)/$product.price_without_specific_price) * 100 * -1}
-                    			{assign var='symbol' value='%'}
-                    		{/if}
+							{else}
+								{assign var='priceReduction' value=(($product.price_without_specific_price - $product.price)/$product.price_without_specific_price) * -100}
+								{assign var='symbol' value='%'}
+							{/if}
 						{/if}
 						{if $symbol == '%'}
-							&nbsp;{$priceReduction|round:2|string_format:"%.2f"|regex_replace:"/[^\d]0+$/":""}{$symbol}&nbsp;
+							&nbsp;{$priceReduction|string_format:"%.2f"|regex_replace:"/[^\d]0+$/":""}{$symbol}&nbsp;
 						{else}
 							&nbsp;{convertPrice price=$priceReduction}&nbsp;
 						{/if}
-                    </li>
+					</li>
 					<li class="old-price">{convertPrice price=$product.price_without_specific_price}</li>
 				{/if}
 			{/if}
@@ -104,7 +104,7 @@
 					<span><i class="icon-minus"></i></span>
 				</a>
 				{/if}
-                	<a rel="nofollow" class="cart_quantity_up btn btn-default button-plus" id="cart_quantity_up_{$product.id_product}_{$product.id_product_attribute}_{if $quantityDisplayed > 0}nocustom{else}0{/if}_{$product.id_address_delivery|intval}" href="{$link->getPageLink('cart', true, NULL, "add=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_address_delivery={$product.id_address_delivery|intval}&amp;token={$token_cart}")|escape:'html':'UTF-8'}" title="{l s='Add'}"><span><i class="icon-plus"></i></span></a>
+					<a rel="nofollow" class="cart_quantity_up btn btn-default button-plus" id="cart_quantity_up_{$product.id_product}_{$product.id_product_attribute}_{if $quantityDisplayed > 0}nocustom{else}0{/if}_{$product.id_address_delivery|intval}" href="{$link->getPageLink('cart', true, NULL, "add=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_address_delivery={$product.id_address_delivery|intval}&amp;token={$token_cart}")|escape:'html':'UTF-8'}" title="{l s='Add'}"><span><i class="icon-plus"></i></span></a>
 				</div>
 			{/if}
 		{/if}
