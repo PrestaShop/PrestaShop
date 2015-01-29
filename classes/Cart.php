@@ -640,31 +640,32 @@ class CartCore extends ObjectModel
 			$row['total_wt'] += $ecotax_tax_amount * $row['cart_quantity'];
 			$row['description_short'] = Tools::nl2br($row['description_short']);
 
-			if (!isset($row['pai_id_image']) || $row['pai_id_image'] == 0)
+			$cache_id = 'Cart::getProducts_'.'-pai_id_image-'.(int)$row['id_product'].'-'.(int)$row['id_product_attribute'].'-'.(int)$this->id_lang.'-'.(int)$row['id_shop'];
+			if (!Cache::isStored($cache_id))
 			{
-				$cache_id = 'Cart::getProducts_'.'-pai_id_image-'.(int)$row['id_product'].'-'.(int)$this->id_lang.'-'.(int)$row['id_shop'];
-				if (!Cache::isStored($cache_id))
-				{
-					$row2 = Db::getInstance()->getRow('
-						SELECT image_shop.`id_image` id_image, il.`legend`
-						FROM `'._DB_PREFIX_.'image` i
-						JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (i.id_image = image_shop.id_image AND image_shop.cover=1 AND image_shop.id_shop='.(int)$row['id_shop'].')
-						LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$this->id_lang.')
-						WHERE i.`id_product` = '.(int)$row['id_product'].' AND image_shop.`cover` = 1'
-					);
-					Cache::store($cache_id, $row2);
-				}
-				$row2 = Cache::retrieve($cache_id);
-				if (!$row2)
-					$row2 = array('id_image' => false, 'legend' => false);
-				else
-					$row = array_merge($row, $row2);
+				$flag = (int)$row['id_product_attribute'] && (int)$row['pai_id_image'];
+				$row2 = Db::getInstance()->getRow('
+					SELECT image_shop.`id_image` id_image, il.`legend`
+					FROM `'._DB_PREFIX_.'image` i
+					INNER JOIN `'._DB_PREFIX_.'image_shop` image_shop
+						ON (i.id_image = image_shop.id_image'.(!$flag ? ' AND image_shop.cover = 1' : '').' AND image_shop.id_shop = '.(int)$row['id_shop'].')'
+					.($flag ? '
+					INNER JOIN `'._DB_PREFIX_.'product_attribute_image` pai
+						ON (pai.`id_image` = i.`id_image` AND pai.`id_product_attribute` = '.(int)$row['id_product_attribute'].')' : '')
+					.'
+					LEFT JOIN `'._DB_PREFIX_.'image_lang` il
+						ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$this->id_lang.')
+					WHERE i.`id_product` = '.(int)$row['id_product']
+					.($flag ? '
+					ORDER BY i.`position` ASC' : '')
+				);
+				Cache::store($cache_id, $row2);
 			}
-			else
-			{
-				$row['id_image'] = $row['pai_id_image'];
-				$row['legend'] = $row['pai_legend'];
-			}
+			$row2 = Cache::retrieve($cache_id);
+
+			if (!$row2)
+				$row2 = array('id_image' => false, 'legend' => false);
+			$row = array_merge($row, $row2);
 
 			$row['reduction_applies'] = ($specific_price_output && (float)$specific_price_output['reduction']);
 			$row['quantity_discount_applies'] = ($specific_price_output && $row['cart_quantity'] >= (int)$specific_price_output['from_quantity']);
