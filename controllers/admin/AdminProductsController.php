@@ -4186,7 +4186,7 @@ class AdminProductsControllerCore extends AdminController
 
 		$this->fields_list = array(
 			'attributes' => array('title' => $this->l('Attribute - value pair'), 'align' => 'left'),
-			'unit_impact' => array('title' => $this->l('Impact on price'), 'type' => 'price', 'align' => 'left'),
+			'price' => array('title' => $this->l('Impact on price'), 'type' => 'price', 'align' => 'left'),
 			'weight' => array('title' => $this->l('Impact on weight'), 'align' => 'left'),
 			'reference' => array('title' => $this->l('Reference'), 'align' => 'left'),
 			'ean13' => array('title' => $this->l('EAN-13'), 'align' => 'left'),
