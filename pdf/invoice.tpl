@@ -178,8 +178,8 @@
 							<tr>
 								<td style="line-height: 1px;" colspan="{6 - $tax_excluded_display + Configuration::get('PS_PDF_IMG_INVOICE')}"></td>
 							</tr>
-							<tr>
-								<td style="border: 1px solid #eee;" colspan="{3 - $tax_excluded_display + Configuration::get('PS_PDF_IMG_INVOICE')}">
+							<tr style="font-size: 0.9em">
+								<td style="border: 1px solid #eee;" colspan="{4 - $tax_excluded_display + Configuration::get('PS_PDF_IMG_INVOICE')}">
 									{if isset($customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_]) && count($customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_]) > 0}
 										<table style="width: 100%;">
 											{foreach $customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_] as $customization_infos}
@@ -187,7 +187,7 @@
 													<td style="font-style: italic; text-align: right;">
 														{$customization_infos.name|string_format:{l s='%s:' pdf='true'}}
 													</td>
-													<td>{$customization_infos.value}</td>
+													<td style="text-align: justify;">{$customization_infos.value}</td>
 												</tr>
 											{/foreach}
 										</table>
@@ -202,7 +202,6 @@
 										</table>
 									{/if}
 								</td>
-								<td></td><!-- discount -->
 								<td style="text-align: center;">({$customization.quantity})</td><!-- quantity -->
 								<td></td><!-- total    -->
 							</tr>
