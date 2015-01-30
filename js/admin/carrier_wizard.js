@@ -75,8 +75,8 @@ $(document).ready(function() {
 	});
 
 	$('#is_free_off').click(function(e) {
-		$('#shipping_handling_off').prop('disabled', false);
-		$('#shipping_handling_on').prop('disabled', false);
+		$('#shipping_handling_off').prop('disabled', false).prop('checked', false);
+		$('#shipping_handling_on').prop('disabled', false).prop('checked', true);
 	});
 });
 
