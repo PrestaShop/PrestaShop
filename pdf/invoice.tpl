@@ -126,84 +126,90 @@
 				</tr>
 				<!-- PRODUCTS -->
 				{foreach $order_details as $order_detail}
-				{cycle values='#FFF,#DDD' assign=bgcolor}
-				<tr style="line-height:6px;background-color:{$bgcolor};">
-					{if Configuration::get('PS_PDF_IMG_INVOICE')}
-						<td style="text-align: left;">{if isset($order_detail.image) && $order_detail.image->id}{$order_detail.image_tag}{/if}</td>
-					{/if}
-					<td style="text-align: left; width: {$product_reference_width}%">{$order_detail.product_name}{if isset($order_detail.product_reference) && !empty($order_detail.product_reference)} ({l s='Reference:' pdf='true'} {$order_detail.product_reference}){/if}</td>
-					<!-- unit price tax excluded is mandatory -->
-					{if !$tax_excluded_display}
-						<td style="text-align: right; width: 20%; white-space: nowrap;">
+					{cycle values='#FFF,#DDD' assign=bgcolor}
+					<tr style="line-height:6px;background-color:{$bgcolor};">
+						{if Configuration::get('PS_PDF_IMG_INVOICE')}
+							<td style="text-align: center;">
+								{if isset($order_detail.image) && $order_detail.image->id}
+									<br><br>
+									{$order_detail.image_tag}
+								{/if}
+							</td>
+						{/if}
+						<td style="text-align: left;">{$order_detail.product_name}{if isset($order_detail.product_reference) && !empty($order_detail.product_reference)} ({l s='Reference:' pdf='true'} {$order_detail.product_reference}){/if}</td>
+						<!-- unit price tax excluded is mandatory -->
+						<td style="text-align: right; white-space: nowrap;">
 							{displayPrice currency=$order->id_currency price=$order_detail.unit_price_tax_excl_including_ecotax}
 							{if $order_detail.ecotax_tax_excl > 0}
 								<br>
 								<small>{{displayPrice currency=$order->id_currency price=$order_detail.ecotax_tax_excl}|string_format:{l s='ecotax: %s' pdf='true'}}</small>
-						</td>
-					{/if}
-					<td style="text-align: left;">{$order_detail.product_name}{if isset($order_detail.product_reference) && !empty($order_detail.product_reference)} ({l s='Reference:' pdf='true'} {$order_detail.product_reference}){/if}</td>
-					<!-- unit price tax excluded is mandatory -->
-					<td style="text-align: right; white-space: nowrap;">
-						{displayPrice currency=$order->id_currency price=$order_detail.unit_price_tax_excl_including_ecotax}
-						{if $order_detail.ecotax_tax_excl > 0}
-							<br>
-							<small>{{displayPrice currency=$order->id_currency price=$order_detail.ecotax_tax_excl}|string_format:{l s='ecotax: %s' pdf='true'}}</small>
-						{/if}
-					</td>
-					{if !$tax_excluded_display}
-						<td style="text-align: right;">
-							{displayPrice currency=$order->id_currency price=$order_detail.unit_price_tax_incl_including_ecotax}
-							{if $order_detail.ecotax_tax_incl > 0}
-							<br>
-							<small>{{displayPrice currency=$order->id_currency price=$order_detail.ecotax_tax_incl}|string_format:{l s='ecotax: %s' pdf='true'}}</small>
 							{/if}
 						</td>
-					{/if}
-					<td style="text-align: center;">
-						{if (isset($order_detail.reduction_amount) && $order_detail.reduction_amount > 0)}
-							-{displayPrice currency=$order->id_currency price=$order_detail.reduction_amount}
-						{elseif (isset($order_detail.reduction_percent) && $order_detail.reduction_percent > 0)}
-							-{$order_detail.reduction_percent}%
-						{else}
-						--
+						{if !$tax_excluded_display}
+							<td style="text-align: right;">
+								{displayPrice currency=$order->id_currency price=$order_detail.unit_price_tax_incl_including_ecotax}
+								{if $order_detail.ecotax_tax_incl > 0}
+								<br>
+								<small>{{displayPrice currency=$order->id_currency price=$order_detail.ecotax_tax_incl}|string_format:{l s='ecotax: %s' pdf='true'}}</small>
+								{/if}
+							</td>
 						{/if}
-					</td>
-					<td style="text-align: center;">{$order_detail.product_quantity}</td>
-					<td style="text-align: right; white-space: nowrap;">
-						{if $tax_excluded_display}
-							{displayPrice currency=$order->id_currency price=$order_detail.total_price_tax_excl_including_ecotax}
-						{else}
-							{displayPrice currency=$order->id_currency price=$order_detail.total_price_tax_incl_including_ecotax}
-						{/if}
-					</td>
-				</tr>
+						<td style="text-align: center;">
+							{if (isset($order_detail.reduction_amount) && $order_detail.reduction_amount > 0)}
+								-{displayPrice currency=$order->id_currency price=$order_detail.reduction_amount}
+							{elseif (isset($order_detail.reduction_percent) && $order_detail.reduction_percent > 0)}
+								-{$order_detail.reduction_percent}%
+							{else}
+							--
+							{/if}
+						</td>
+						<td style="text-align: center;">{$order_detail.product_quantity}</td>
+						<td style="text-align: right; white-space: nowrap;">
+							{if $tax_excluded_display}
+								{displayPrice currency=$order->id_currency price=$order_detail.total_price_tax_excl_including_ecotax}
+							{else}
+								{displayPrice currency=$order->id_currency price=$order_detail.total_price_tax_incl_including_ecotax}
+							{/if}
+						</td>
+					</tr>
+
 					{foreach $order_detail.customizedDatas as $customizationPerAddress}
 						{foreach $customizationPerAddress as $customizationId => $customization}
-							<tr style="line-height:6px;background-color:{$bgcolor};">
-								<td style="line-height:3px; text-align: left; vertical-align: top">
-										<blockquote>
-											{if isset($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) && count($customization.datas[Product::CUSTOMIZE_FILE]) > 0}
-												{foreach $customization.datas[Product::CUSTOMIZE_TEXTFIELD] as $customization_infos}
-													{$customization_infos.name}: {$customization_infos.value}
-													{if !$smarty.foreach.custo_foreach.last}<br />
-													{else}
-													<div style="line-height:0.4pt">&nbsp;</div>
-													{/if}
-												{/foreach}
-											{/if}
-
-											{if isset($customization.datas[Product::CUSTOMIZE_FILE]) && count($customization.datas[Product::CUSTOMIZE_FILE]) > 0}
-												{count($customization.datas[Product::CUSTOMIZE_FILE])} {l s='image(s)' pdf='true'}
-											{/if}
-										</blockquote>
-								</td>
-								{if !$tax_excluded_display}
-									<td style="text-align: left;"></td>
-								{/if}
-								<td></td>
-								<td style="text-align: center; vertical-align: top">({$customization.quantity})</td>
-								<td style=" text-align: left;"></td>
+							<tr>
+								<td style="line-height: 1px;" colspan="{6 - $tax_excluded_display + Configuration::get('PS_PDF_IMG_INVOICE')}"></td>
 							</tr>
+							<tr>
+								<td style="border: 1px solid #eee;" colspan="{3 - $tax_excluded_display + Configuration::get('PS_PDF_IMG_INVOICE')}">
+									{if isset($customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_]) && count($customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_]) > 0}
+										<table style="width: 100%;">
+											{foreach $customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_] as $customization_infos}
+												<tr>
+													<td style="font-style: italic; text-align: right;">
+														{$customization_infos.name|string_format:{l s='%s:' pdf='true'}}
+													</td>
+													<td>{$customization_infos.value}</td>
+												</tr>
+											{/foreach}
+										</table>
+									{/if}
+
+									{if isset($customization.datas[$smarty.const._CUSTOMIZE_FILE_]) && count($customization.datas[$smarty.const._CUSTOMIZE_FILE_]) > 0}
+										<table style="width: 100%;">
+											<tr>
+												<td style="font-style: italic; text-align: right;">{l s='image(s):' pdf='true'}</td>
+												<td>{count($customization.datas[$smarty.const._CUSTOMIZE_FILE_])}</td>
+											</tr>
+										</table>
+									{/if}
+								</td>
+								<td></td><!-- discount -->
+								<td style="text-align: center;">({$customization.quantity})</td><!-- quantity -->
+								<td></td><!-- total    -->
+							</tr>
+							<tr>
+								<td style="line-height: 1px;" colspan="{6 - $tax_excluded_display + Configuration::get('PS_PDF_IMG_INVOICE')}"></td>
+							</tr>
+							<!--if !$smarty.foreach.custo_foreach.last-->
 						{/foreach}
 					{/foreach}
 				{/foreach}
@@ -234,6 +240,9 @@
 						</td>
 					</tr>
 				{/foreach}
+				<tr>
+					<td style="line-height: 2px;" colspan="{6 - $tax_excluded_display + Configuration::get('PS_PDF_IMG_INVOICE')}"></td>
+				</tr>
 				<!-- END CART RULES -->
 			</table>
 
