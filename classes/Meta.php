@@ -372,10 +372,16 @@ class MetaCore extends ObjectModel
 	{
 		$sql = 'SELECT `meta_title`, `meta_description`, `meta_keywords`
 				FROM `'._DB_PREFIX_.'cms_lang`
-				WHERE id_lang = '.(int)$id_lang.'
+				WHERE 
+					id_lang = '.(int)$id_lang.'
 					AND id_cms = '.(int)$id_cms.
-					(int)Context::getContext()->shop->id ? '
-					AND id_shop = '.(int)Context::getContext()->shop->id : '';
+					(
+						(int)Context::getContext()->shop->id
+						
+							? ' AND id_shop = '.(int)Context::getContext()->shop->id 
+							: ''
+					);
+					
 		if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql))
 		{
 			$row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');
