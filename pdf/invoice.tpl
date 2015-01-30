@@ -202,7 +202,7 @@
 										</table>
 									{/if}
 								</td>
-								<td style="text-align: center;">({$customization.quantity})</td><!-- quantity -->
+								<td style="text-align: center;">({if $customization.quantity == 0}1{else}{$customization.quantity}{/if})</td><!-- quantity -->
 								<td></td><!-- total    -->
 							</tr>
 							<tr>
