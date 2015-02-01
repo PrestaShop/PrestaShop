@@ -25,9 +25,9 @@ SELECT cg.id_group, t.id_tag, t.id_lang, ps.id_shop, COUNT(pt.id_tag) AS times
 	JOIN (SELECT DISTINCT id_group FROM `PREFIX_category_group`) cg
 	JOIN (SELECT DISTINCT id_shop FROM `PREFIX_shop`) ps
 	WHERE pt.`id_lang` = 1 AND product_shop.`active` = 1
-	AND p.`id_product` IN (SELECT DISTINCT cp.`id_product` FROM `PREFIX_category_product` cp
-													LEFT JOIN `PREFIX_category_group` cgo ON (cp.`id_category` = cgo.`id_category`)
-													WHERE cgo.`id_group` = cg.id_group)
+	AND EXISTS(SELECT 1 FROM `PREFIX_category_product` cp
+						LEFT JOIN `PREFIX_category_group` cgo ON (cp.`id_category` = cgo.`id_category`)
+						WHERE cgo.`id_group` = cg.id_group AND p.`id_product` = cp.`id_product`)
 	AND product_shop.id_shop = ps.id_shop
 	GROUP BY pt.id_tag, cg.id_group;
 REPLACE INTO `PREFIX_tag_count` (id_group, id_tag, id_lang, id_shop, counter)
