@@ -74,6 +74,7 @@ abstract class HTMLTemplateCore
 			'title' => $this->title,
 			'date' => $this->date,
 			'shop_name' => $shop_name,
+			'shop_details' => Configuration::get('PS_SHOP_DETAILS', null, null, (int)$id_shop),
 			'width_logo' => $width,
 			'height_logo' => $height
 		));
@@ -100,7 +101,6 @@ abstract class HTMLTemplateCore
 			'shop_fax' => Configuration::get('PS_SHOP_FAX', null, null, (int)$id_shop),
 			'shop_phone' => Configuration::get('PS_SHOP_PHONE', null, null, (int)$id_shop),
 			'shop_email' => Configuration::get('PS_SHOP_EMAIL', null, null, (int)$id_shop),
-			'shop_details' => Configuration::get('PS_SHOP_DETAILS', null, null, (int)$id_shop),
 			'free_text' => Configuration::get('PS_INVOICE_FREE_TEXT', (int)Context::getContext()->language->id, null, (int)$id_shop)
 		));
 

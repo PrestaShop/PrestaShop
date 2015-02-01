@@ -267,10 +267,15 @@ class PackCore extends Product
 	*/
 	public static function addItem($id_product, $id_item, $qty, $id_attribute_item = 0)
 	{
-		$id_product_attribute = (int)$id_product_attribute ? (int)$id_product_attribute : Product::getDefaultAttribute((int)$id_item);
+		$id_attribute_item = (int)$id_attribute_item ? (int)$id_attribute_item : Product::getDefaultAttribute((int)$id_item);
 		return Db::getInstance()->update('product', array('cache_is_pack' => 1), 'id_product = '.(int)$id_product) &&
-			Db::getInstance()->insert('pack', array('id_product_pack' => (int)$id_product, 'id_product_item' => (int)$id_item, 'id_product_attribute_item' => (int)$id_attribute_item,'quantity' => (int)$qty)) &&
-			Configuration::updateGlobalValue('PS_PACK_FEATURE_ACTIVE', '1');
+			Db::getInstance()->insert('pack', array(
+				'id_product_pack' => (int)$id_product,
+				'id_product_item' => (int)$id_item,
+				'id_product_attribute_item' => (int)$id_attribute_item,
+				'quantity' => (int)$qty
+				))
+			&& Configuration::updateGlobalValue('PS_PACK_FEATURE_ACTIVE', '1');
 	}
 
 	public static function duplicate($id_product_old, $id_product_new)

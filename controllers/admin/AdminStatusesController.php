@@ -63,7 +63,6 @@ class AdminStatusesControllerCore extends AdminController
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 		$this->addRowActionSkipList('delete', range(1, 14));
-
 		$this->bulk_actions = array(
 			'delete' => array(
 				'text' => $this->l('Delete selected'),
