@@ -35,10 +35,10 @@ abstract class ModuleAdminControllerCore extends AdminController
 	public $module;
 	
 	public function __construct()
-	{
-		$this->controller_type = 'moduleadmin';
-		
+	{		
 		parent::__construct();
+
+		$this->controller_type = 'moduleadmin';
 
 		$tab = new Tab($this->id);
 		if (!$tab->module)

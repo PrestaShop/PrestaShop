@@ -36,14 +36,15 @@ class ModuleFrontControllerCore extends FrontController
 
 	public function __construct()
 	{
-		$this->controller_type = 'modulefront';
-
 		$this->module = Module::getInstanceByName(Tools::getValue('module'));
 		if (!$this->module->active)
 			Tools::redirect('index');
+
 		$this->page_name = 'module-'.$this->module->name.'-'.Dispatcher::getInstance()->getController();
 
 		parent::__construct();
+
+		$this->controller_type = 'modulefront';
 
 		$in_base = isset($this->page_name) && is_object(Context::getContext()->theme) && Context::getContext()->theme->hasColumnsSettings($this->page_name);
 
