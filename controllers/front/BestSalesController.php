@@ -38,6 +38,9 @@ class BestSalesControllerCore extends FrontController
 			$nb_products = (int)ProductSale::getNbSales();
 			$this->pagination($nb_products);
 
+			if (!Tools::getValue('orderby'))
+				$this->orderBy = 'sales';
+
 			$products = ProductSale::getBestSales($this->context->language->id, $this->p - 1, $this->n, $this->orderBy, $this->orderWay);
 			$this->addColorsToProductList($products);
 
