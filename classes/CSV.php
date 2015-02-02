@@ -80,8 +80,8 @@ class CSVCore
 	 */
 	public function output($data)
 	{
-    	$wraped_data = array_map(array('CSVCore', 'wrap'), $data);
-        echo sprintf("%s\n", implode($this->delimiter, $wraped_data));
+		$wraped_data = array_map(array('CSVCore', 'wrap'), $data);
+		echo sprintf("%s\n", implode($this->delimiter, $wraped_data));
 	}
 
 	/**
@@ -91,7 +91,7 @@ class CSVCore
 	 */
 	public static function wrap($data)
 	{
-		$data = Tools::safeOutput($data, '";');
+		$data = Tools::safeOutput($data, true);
 		return sprintf('"%s"', $data);
 	}
 
