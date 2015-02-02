@@ -892,8 +892,10 @@ function checkPartialRefundProductQuantity(it)
 
 function checkPartialRefundProductAmount(it)
 {
-	if (parseInt($(it).val()) > parseInt($(it).closest('td').find('.partialRefundProductAmount').val()))
-		$(it).val($(it).closest('td').find('.partialRefundProductAmount').val());
+	var old_price = $(it).closest('td').find('.partialRefundProductAmount').val();
+	if (typeof $(it).val() !== undefined && typeof new_price !== undefined &&
+		parseFloat($(it).val()) > parseFloat(old_price))
+		$(it).val(old_price);
 	if (order_discount_price)
 		actualizeRefundVoucher();
 }
