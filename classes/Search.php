@@ -456,7 +456,7 @@ class SearchCore
 				ON pa.id_product = p.id_product
 			LEFT JOIN '._DB_PREFIX_.'product_lang pl
 				ON p.id_product = pl.id_product
-			'.Shop::addSqlAssociation('product', 'p').'
+			'.Shop::addSqlAssociation('product', 'p', true, null, true).'
 			LEFT JOIN '._DB_PREFIX_.'category_lang cl
 				ON (cl.id_category = product_shop.id_category_default AND pl.id_lang = cl.id_lang AND cl.id_shop = product_shop.id_shop)
 			LEFT JOIN '._DB_PREFIX_.'manufacturer m
