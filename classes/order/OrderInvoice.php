@@ -319,134 +319,60 @@ class OrderInvoiceCore extends ObjectModel
 		return $this->order;
 	}
 
-	public function getProductsAfterDiscountsTaxExclExcludingEcotax()
-	{
-		$total_products = $this->total_products;
-		$order_discount_tax_excl = $this->total_discount_tax_excl;
-
-		foreach ($this->getOrder()->getCartRules() as $order_cart_rule)
-		{
-			if ($order_cart_rule['free_shipping'])
-			{
-				$order_discount_tax_excl -= $this->total_shipping_tax_excl;
-				break;
-			}
-
-		}
-
-		foreach ($this->getProductsDetail() as $details)
-		{
-			$total_products -= $details['ecotax'] * $details['product_quantity'];
-		}
-
-		return $total_products - $order_discount_tax_excl;
-	}
-
-	/**
-	 * Returns the correct product taxes breakdown.
-	 *
-	 * @since 1.5
-	 * @return array
-	 */
 	public function getProductTaxesBreakdown($order = null)
 	{
-		/**
-		 * The logic here is to start from the tax amounts, which are correct
-		 * and already take into account complicated things such as discounts
-		 * spread across lines.
-		 *
-		 * From the tax amounts and rates, we work out the actual tax bases.
-		 *
-		 * Then, if there is a difference (due to rounding) between the sum
-		 * of tax bases and the product total before tax, we adjust the tax bases by
-		 * spreading the difference across the lines of the breakdown.
-		 */
+		if (!$order)
+		{
+			$order = $this->getOrder();
+		}
 
 		$sum_composite_taxes = !$this->useOneAfterAnotherTaxComputationMethod();
 
-		$order_detail_taxes = $this->getOrder()->getOrderDetailTaxes();
+		// $breakdown will be an array with tax rates as keys and at least the columns:
+		// 	- 'total_price_tax_excl'
+		// 	- 'total_amount'
 		$breakdown = array();
 
-		$group_by = $sum_composite_taxes ? 'id_tax_rules_group' : 'id_tax';
+		$details = $order->getProductTaxesDetails();
 
-		foreach ($order_detail_taxes as $details)
+		if ($sum_composite_taxes)
 		{
-			$group_column = $details[$group_by];
-
-			if (!isset($breakdown[$group_column]))
+			$grouped_details = array();
+			foreach ($details as $row)
 			{
-				$breakdown[$group_column] = array(
-					'total_amount' => 0,
+				if (!isset($grouped_details[$row['id_order_detail']]))
+				{
+					$grouped_details[$row['id_order_detail']] = array(
+						'tax_rate' => 0,
+						'total_tax_base' => 0,
+						'total_amount' => 0
+					);
+				}
+
+				$grouped_details[$row['id_order_detail']]['tax_rate'] += $row['tax_rate'];
+				$grouped_details[$row['id_order_detail']]['total_tax_base'] += $row['total_tax_base'];
+				$grouped_details[$row['id_order_detail']]['total_amount'] += $row['total_amount'];
+			}
+
+			$details = $grouped_details;
+		}
+
+		foreach ($details as $row)
+		{
+			$rate = sprintf('%.3f', $row['tax_rate']);
+			if (!isset($breakdown[$row['tax_rate']]))
+			{
+				$breakdown[$rate] = array(
 					'total_price_tax_excl' => 0,
-					'rates' => array()
+					'total_amount' => 0
 				);
 			}
 
-			$breakdown[$group_column]['total_amount'] += $details['total_amount'];
-			$breakdown[$group_column]['total_price_tax_excl'] += ($details['unit_amount'] * $details['product_quantity']) / ($details['rate'] / 100);
-			$breakdown[$group_column]['rates'][$details['id_tax']] = $details['rate'];
+			$breakdown[$rate]['total_price_tax_excl'] += $row['total_tax_base'];
+			$breakdown[$rate]['total_amount'] += $row['total_amount'];
 		}
 
-		$total_price_tax_excl = 0;
-
-		// We need to reindex the array by tax rate because that's the way invoice.tax-tab.tpl likes it
-		$reindexed_breakdown = array();
-
-		foreach ($breakdown as $key => $details)
-		{
-			$tp = Tools::ps_round(
-				$breakdown[$key]['total_price_tax_excl'] / count($breakdown[$key]['rates']),
-				_PS_PRICE_COMPUTE_PRECISION_,
-				$order->round_mode
-			);
-			$total_price_tax_excl += $tp;
-			$breakdown[$key]['total_price_tax_excl'] = $tp;
-
-			$breakdown[$key]['total_amount'] = Tools::ps_round(
-				$breakdown[$key]['total_amount'],
-				_PS_PRICE_COMPUTE_PRECISION_,
-				$order->round_mode
-			);
-
-			$rate = 0;
-			// If there are multiple $sub_rate's it's because we're
-			// in a composite tax and we wanted to aggregate them.
-			// If the tax is not composite OR we don't want to sum its components
-			// there will be only one $sub_rate.
-			foreach ($breakdown[$key]['rates'] as $sub_rate)
-			{
-				$rate += $sub_rate;
-			}
-
-			$name = sprintf('%.3f', $rate);
-
-			// hacky way to avoid overwriting a row of the array
-			// if 2 taxes have the same name (it can happen for instance
-			// with local + federal tax)
-			// should it be improved by using the real tax names as names instead of the tax rates?
-			while (isset($reindexed_breakdown[$name]))
-			{
-				$name = ' ' . $name; // since the templates align rates to the right, spaces to the left won't hurt
-			}
-
-			$reindexed_breakdown[$name] = $breakdown[$key];
-		}
-
-		$breakdown = $reindexed_breakdown;
-
-		/**
-		 * If the tax bases are to be displayed, then adjust them in case there is
-		 * a (slight) discrepancy due to rounding.
-		 */
-		if ($this->displayTaxBasesInProductTaxesBreakdown())
-		{
-			$delta = $this->getProductsAfterDiscountsTaxExclExcludingEcotax() - $total_price_tax_excl;
-			if ($delta !== 0)
-			{
-				Tools::spreadAmount($delta, _PS_PRICE_COMPUTE_PRECISION_, $breakdown, 'total_price_tax_excl');
-			}
-
-		}
+		ksort($breakdown);
 
 		return $breakdown;
 	}
