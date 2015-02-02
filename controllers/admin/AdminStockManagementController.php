@@ -1070,7 +1070,7 @@ class AdminStockManagementControllerCore extends AdminController
 						'check' => md5(_COOKIE_KEY_.$id_product.$id_product_attribute),
 						'quantity' => Tools::getValue('quantity', ''),
 						'id_warehouse' => Tools::getValue('id_warehouse', ''),
-						'usable' => ($this->fields_value['usable'] ? $this->fields_value['usable'] : Tools::getValue('usable', '')),
+						'usable' => $this->fields_value['usable'] ? $this->fields_value['usable'] : Tools::getValue('usable', 1),
 						'price' => Tools::getValue('price', (float)Tools::convertPrice($default_wholesale_price, null)),
 						'id_currency' => Tools::getValue('id_currency', ''),
 						'id_stock_mvt_reason' => Tools::getValue('id_stock_mvt_reason', ''),
