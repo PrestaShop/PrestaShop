@@ -61,7 +61,7 @@ class AdminSearchConfControllerCore extends AdminController
 		// Search options
 		$current_file_name = array_reverse(explode('/', $_SERVER['SCRIPT_NAME']));
 		$cron_url = Tools::getHttpHost(true, true).__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).
-			'/searchcron.php?full=1&token='.substr(_COOKIE_KEY_, 34, 8);
+			'/searchcron.php?full=1&token='.substr(_COOKIE_KEY_, 34, 8).(Shop::getContext() == Shop::CONTEXT_SHOP ? '&id_shop='.(int)Context::getContext()->shop->id : '');
 
 		list($total, $indexed) = Db::getInstance()->getRow('SELECT COUNT(*) as "0", SUM(product_shop.indexed) as "1" FROM '._DB_PREFIX_.'product p '.Shop::addSqlAssociation('product', 'p').' WHERE product_shop.`visibility` IN ("both", "search") AND product_shop.`active` = 1');
 
@@ -77,11 +77,11 @@ class AdminSearchConfControllerCore extends AdminController
 						'.$this->l('Building the product index may take a few minutes.').'
 						'.$this->l('If your server stops before the process ends, you can resume the indexing by clicking "Add missing products to the index".').'
 					</p>
-					<a href="searchcron.php?token='.substr(_COOKIE_KEY_, 34, 8).'&amp;redirect=1" class="btn-link">
+					<a href="searchcron.php?token='.substr(_COOKIE_KEY_, 34, 8).'&amp;redirect=1'.(Shop::getContext() == Shop::CONTEXT_SHOP ? '&id_shop='.(int)Context::getContext()->shop->id : '').'" class="btn-link">
 						<i class="icon-external-link-sign"></i>
 						'.$this->l('Add missing products to the index').'
 					</a><br />
-					<a href="searchcron.php?full=1&amp;token='.substr(_COOKIE_KEY_, 34, 8).'&amp;redirect=1" class="btn-link">
+					<a href="searchcron.php?full=1&amp;token='.substr(_COOKIE_KEY_, 34, 8).'&amp;redirect=1'.(Shop::getContext() == Shop::CONTEXT_SHOP ? '&id_shop='.(int)Context::getContext()->shop->id : '').'" class="btn-link">
 						<i class="icon-external-link-sign"></i>
 						'.$this->l('Re-build the entire index').'
 					</a><br /><br />

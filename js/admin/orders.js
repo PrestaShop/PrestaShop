@@ -892,8 +892,10 @@ function checkPartialRefundProductQuantity(it)
 
 function checkPartialRefundProductAmount(it)
 {
-	if (parseInt($(it).val()) > parseInt($(it).closest('td').find('.partialRefundProductAmount').val()))
-		$(it).val($(it).closest('td').find('.partialRefundProductAmount').val());
+	var old_price = $(it).closest('td').find('.partialRefundProductAmount').val();
+	if (typeof $(it).val() !== undefined && typeof new_price !== undefined &&
+		parseFloat($(it).val()) > parseFloat(old_price))
+		$(it).val(old_price);
 	if (order_discount_price)
 		actualizeRefundVoucher();
 }
@@ -946,7 +948,7 @@ function actualizeTotalRefundVoucher()
 	else {
 		if (document.getElementById('refund_total_2').checked === true)
 			document.getElementById('refund_total_1').checked = true;
-		document.getElementById('refund_2').disabled = true;
+		document.getElementById('refund_total_2').disabled = true;
 		$('#lab_refund_total_2').append('<span id="total_refund_2">' + errorRefund + '</span>');
 	}
 }

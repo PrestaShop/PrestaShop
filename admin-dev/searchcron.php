@@ -27,7 +27,9 @@
 if (!defined('_PS_ADMIN_DIR_'))
 	define('_PS_ADMIN_DIR_', getcwd());
 include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
-Context::getContext()->shop->setContext(Shop::CONTEXT_ALL);
+
+if (!Tools::getValue('id_shop'))
+	Context::getContext()->shop->setContext(Shop::CONTEXT_ALL);
 
 if (substr(_COOKIE_KEY_, 34, 8) != Tools::getValue('token'))
 	die;
