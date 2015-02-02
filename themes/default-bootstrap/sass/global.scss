@@ -466,7 +466,6 @@ span.exclusive {
 		text-align: center;
 		vertical-align: middle;
 		padding: 4px 0 0 0;
-		background: rgb(30, 87, 153);
 		background: rgb(255, 255, 255);
 		background: -moz-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(251, 251, 251, 1) 100%);
 		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(255, 255, 255, 1)), color-stop(100%, rgba(251, 251, 251, 1)));
@@ -2450,6 +2449,7 @@ a.price_discount_delete {
 table#cart_summary .gift-icon {
 	color: white;
 	background: #0088cc;
+	display: inline;
 	line-height: 20px;
 	padding: 2px 5px;
 	border-radius: 5px;

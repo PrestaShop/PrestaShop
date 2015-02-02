@@ -78,7 +78,7 @@
 			autoUpload: false,
 			singleFileUploads: true,
 			maxFileSize: {$post_max_size},
-			start: function (e) {				
+			start: function (e) {
 				{$id|escape:'html':'UTF-8'}_upload_button.start();
 				$('#{$id|escape:'html':'UTF-8'}-upload-button').unbind('click'); //Important as we bind it for every elements in add function
 			},
@@ -94,7 +94,7 @@
 								$('#{$id|escape:'html':'UTF-8'}-errors').html('<strong>'+data.result.{$name|escape:'html':'UTF-8'}[i].name+'</strong> : '+data.result.{$name|escape:'html':'UTF-8'}[i].error).parent().show();
 								$('#{$id|escape:'html':'UTF-8'}-files-list').html('').parent().hide();
 							}
-							else 
+							else
 							{
 								$(data.context).appendTo($('#{$id|escape:'html':'UTF-8'}-success'));
 								$('#{$id|escape:'html':'UTF-8'}-success').parent().show();
@@ -115,9 +115,10 @@
 									$("#countImage").html(parseInt($("#countImage").html()) + 1);
 									$("#img" + id).remove();
 									$("#imageTable").tableDnDUpdate();
+									$('#legend_1').val('');
 								}
 							}
-							
+
 						}
 					}
 
@@ -148,7 +149,7 @@
 			var button = $('<button/>').addClass('btn btn-default pull-right').prop('type', 'button').html('<i class="icon-trash"></i> {l s='Remove file'}').appendTo(data.context).on('click', function() {
 				{$id|escape:'html':'UTF-8'}_total_files--;
 				data.files = null;
-				
+
 				var total_elements = $(this).parent().siblings('div.form-group').length;
 				$(this).parent().remove();
 
@@ -160,13 +161,13 @@
 			$('#{$id|escape:'html':'UTF-8'}-files-list').parent().show();
 			$('#{$id|escape:'html':'UTF-8'}-upload-button').show().bind('click', function () {
 				if (data.files != null)
-					data.submit();						
+					data.submit();
 			});
 
 			{$id|escape:'html':'UTF-8'}_total_files++;
 		}).on('fileuploadprocessalways', function (e, data) {
 			var index = data.index,	file = data.files[index];
-			
+
 			if (file.error) {
 				$('#{$id|escape:'html':'UTF-8'}-errors').append('<div class="form-group"><i class="icon-picture-o"></i> <strong>'+file.name+'</strong> ('+humanizeSize(file.size)+') : '+file.error+'</div>').parent().show();
 				$('#{$id|escape:'html':'UTF-8'}-files-list').html('').parent().hide();
@@ -181,7 +182,7 @@
 				params[id] = $(this).val();
 			});
 
-			data.formData = params;			
+			data.formData = params;
 		});
 
 		$('#{$id|escape:'html':'UTF-8'}-add-button').on('click', function() {
