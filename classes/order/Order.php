@@ -2142,7 +2142,7 @@ class OrderCore extends ObjectModel
 		$free_shipping_tax = 0;
 		$product_specific_discounts = array();
 
-		$expected_total_base = $this->total_products;
+		$expected_total_base = $this->total_products - $this->total_discounts_tax_excl;
 
 		foreach ($this->getCartRules() as $order_cart_rule)
 		{
@@ -2150,11 +2150,7 @@ class OrderCore extends ObjectModel
 			{
 				$free_shipping_tax = $this->total_shipping_tax_incl - $this->total_shipping_tax_excl;
 				$order_discount_tax_excl -= $this->total_shipping_tax_excl;
-			}
-
-			if (!$order_cart_rule['free_shipping'])
-			{
-				$expected_total_base -= $order_cart_rule['value_tax_excl'];
+				$expected_total_base += $this->total_shipping_tax_excl;
 			}
 
 			$cart_rule = new CartRule($order_cart_rule['id_cart_rule']);
@@ -2281,9 +2277,7 @@ class OrderCore extends ObjectModel
 			}
 		}
 
-		p("Round type: $round_type, Round mode: {$this->round_mode}");
-
-		return ddd($order_detail_tax_rows);
+		return $order_detail_tax_rows;
 	}
 
 	/**

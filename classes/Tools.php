@@ -3344,7 +3344,7 @@ exit;
 	 * spreadAmount(0.3, 1, $rows, 'a');
 	 * // $rows is [['b' => 8.4], ['a' => 5.2]]
 	 */
-	public static function spreadAmount($amount, $precision, &$rows, $column, $sort_column = null)
+	public static function spreadAmount($amount, $precision, &$rows, $column, $sort_column = null, $max_adjustment = null)
 	{
 		if (empty($rows))
 		{
@@ -3367,7 +3367,6 @@ exit;
 
 		$remainder = $int_amount % count($rows);
 		$amount_to_spread = $sign * (($int_amount - $remainder) / count($rows) / $unit);
-
 		$position = 0;
 		foreach ($rows as $key => $row)
 		{
@@ -3378,7 +3377,10 @@ exit;
 				$adjustment_factor += $sign / $unit;
 			}
 
-			$rows[$key][$column] = $row[$column] + $adjustment_factor;
+			if (!$max_adjustment || abs($unit*$adjustment_factor) <= $max_adjustment)
+			{
+				$rows[$key][$column] = $row[$column] + $adjustment_factor;
+			}
 
 			++$position;
 		}
