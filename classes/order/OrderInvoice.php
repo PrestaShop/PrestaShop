@@ -360,7 +360,7 @@ class OrderInvoiceCore extends ObjectModel
 		foreach ($details as $row)
 		{
 			$rate = sprintf('%.3f', $row['tax_rate']);
-			if (!isset($breakdown[$row['tax_rate']]))
+			if (!isset($breakdown[$rate]))
 			{
 				$breakdown[$rate] = array(
 					'total_price_tax_excl' => 0,
@@ -370,6 +370,12 @@ class OrderInvoiceCore extends ObjectModel
 
 			$breakdown[$rate]['total_price_tax_excl'] += $row['total_tax_base'];
 			$breakdown[$rate]['total_amount'] += $row['total_amount'];
+		}
+
+		foreach ($breakdown as $rate => $data)
+		{
+			$breakdown[$rate]['total_price_tax_excl'] = Tools::ps_round($data['total_price_tax_excl'], _PS_PRICE_COMPUTE_PRECISION_, $order->round_mode);
+			$breakdown[$rate]['total_amount'] = Tools::ps_round($data['total_amount'], _PS_PRICE_COMPUTE_PRECISION_, $order->round_mode);
 		}
 
 		ksort($breakdown);
