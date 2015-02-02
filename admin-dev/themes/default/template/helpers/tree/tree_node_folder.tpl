@@ -25,9 +25,9 @@
 <li class="tree-folder">
 	<span class="tree-folder-name">
 		<i class="icon-folder-close"></i>
-		<label class="tree-toggler">{$node['name']}</label>
+		<label class="tree-toggler">{$node['name']|escape:'html':'UTF-8'}</label>
 	</span>
 	<ul class="tree">
-		{$children}
+		{$children|escape:'UTF-8'}
 	</ul>
 </li>
