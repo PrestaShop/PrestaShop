@@ -307,7 +307,7 @@ class OrderInvoiceCore extends ObjectModel
 
 	public function displayTaxBasesInProductTaxesBreakdown()
 	{
-		return $this->getOrder()->round_mode === Order::ROUND_TOTAL && !$this->useOneAfterAnotherTaxComputationMethod();
+		return !$this->useOneAfterAnotherTaxComputationMethod();
 	}
 
 	public function getOrder()
@@ -437,9 +437,6 @@ class OrderInvoiceCore extends ObjectModel
 		/**
 		 * If the tax bases are to be displayed, then adjust them in case there is
 		 * a (slight) discrepancy due to rounding.
-		 *
-		 * OrderInvoice::displayTaxBasesInProductTaxesBreakdown should return true only in the cases where
-		 * we can reasonably produce tax bases that are coherent with the rest of the invoice.
 		 */
 		if ($this->displayTaxBasesInProductTaxesBreakdown())
 		{

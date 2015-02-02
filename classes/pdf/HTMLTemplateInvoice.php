@@ -146,6 +146,23 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			$footer[$key] = Tools::ps_round($value, _PS_PRICE_COMPUTE_PRECISION_, $this->order->round_mode);
 		}
 
+		/**
+		 * Need the $round_mode for the tests.
+		 */
+		$round_mode = null;
+		switch ($this->order->round_mode)
+		{
+			case Order::ROUND_TOTAL:
+				$round_mode = 'total';
+				break;
+			case Order::ROUND_LINE;
+				$round_mode = 'line';
+				break;
+			case Order::ROUND_ITEM:
+				$round_mode = 'item';
+				break;
+		}
+
 		$data = array(
 			'order' => $this->order,
 			'order_details' => $order_details,
@@ -156,7 +173,8 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			'tax_tab' => $this->getTaxTabContent(),
 			'customer' => $customer,
 			'footer' => $footer,
-			'ps_price_compute_precision' => _PS_PRICE_COMPUTE_PRECISION_
+			'ps_price_compute_precision' => _PS_PRICE_COMPUTE_PRECISION_,
+			'round_mode' => $round_mode
 		);
 
 		if (Tools::getValue('debug'))
