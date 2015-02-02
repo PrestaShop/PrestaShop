@@ -374,8 +374,9 @@ class MetaCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'cms_lang`
 				WHERE id_lang = '.(int)$id_lang.'
 					AND id_cms = '.(int)$id_cms.
-					(int)Context::getContext()->shop->id ? '
-					AND id_shop = '.(int)Context::getContext()->shop->id : '';
+					((int)Context::getContext()->shop->id ?
+						' AND id_shop = '.(int)Context::getContext()->shop->id : '' );
+
 		if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql))
 		{
 			$row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');
@@ -400,8 +401,8 @@ class MetaCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'cms_category_lang`
 				WHERE id_lang = '.(int)$id_lang.'
 					AND id_cms_category = '.(int)$id_cms_category.
-					(int)Context::getContext()->shop->id ? '
-					AND id_shop = '.(int)Context::getContext()->shop->id : '';
+					((int)Context::getContext()->shop->id ?
+						' AND id_shop = '.(int)Context::getContext()->shop->id : '');
 		if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql))
 		{
 			$row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');
