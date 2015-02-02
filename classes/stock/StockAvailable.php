@@ -131,6 +131,22 @@ class StockAvailableCore extends ObjectModel
 		if (!Validate::isUnsignedId($id_product))
 			return false;
 
+		//if product is pack sync recursivly product in pack
+		if (Pack::isPack($id_product))
+		{
+			if (Validate::isLoadedObject($product = new Product((int)$id_product)))
+			{
+				if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && Configuration::get('PS_STOCK_TYPE') > 0))
+				{
+					$products_pack = Pack::getItems($id_product, (int)Configuration::get('PS_LANG_DEFAULT'));
+					foreach ($products_pack as $product_pack)
+						StockAvailable::synchronize($product_pack->id, $order_id_shop);
+				}
+			}
+			else
+				return false;
+		}
+
 		// gets warehouse ids grouped by shops
 		$ids_warehouse = Warehouse::getWarehousesGroupedByShops();
 		if ($order_id_shop !== null)
