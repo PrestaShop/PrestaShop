@@ -436,7 +436,7 @@ abstract class ControllerCore
 
 		if (is_array($content))
 			foreach ($content as $tpl)
-				$html = $this->context->smarty->fetch($tpl);
+				$html .= $this->context->smarty->fetch($tpl);
 		else
 			$html = $this->context->smarty->fetch($content);
 
