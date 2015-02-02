@@ -47,8 +47,18 @@ $(document).ready(function(){
 			if (typeof request != 'undefined' && request)
 				var requestSortProducts = request;
  			var splitData = $(this).val().split(':');
+ 			var url = '';
 			if (typeof requestSortProducts != 'undefined' && requestSortProducts)
-				document.location.href = requestSortProducts + ((requestSortProducts.indexOf('?') < 0) ? '?' : '&') + 'orderby=' + splitData[0] + '&orderway=' + splitData[1];
+			{
+				url += requestSortProducts ;
+				if (typeof splitData[0] !== 'undefined' && splitData[0])
+				{
+					url += ( requestSortProducts.indexOf('?') < 0 ? '?' : '&') + 'orderby=' + splitData[0] + (splitData[1] ? '&orderway=' + splitData[1] : '');
+					if (typeof splitData[1] !== 'undefined' && splitData[1])
+						url += '&orderway=' + splitData[1];
+				}
+				document.location.href = url;
+			}
     	});
 
 		$(document).on('change', 'select[name="n"]', function(){
