@@ -167,6 +167,11 @@ class OrderCore extends ObjectModel
 	public $round_mode;
 
 	/**
+	* @var int Round type method used for this order
+	*/
+	public $round_type;
+
+	/**
 	 * @see ObjectModel::$definition
 	 */
 	public static $definition = array(
@@ -207,6 +212,7 @@ class OrderCore extends ObjectModel
 			'total_wrapping_tax_incl' =>	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 			'total_wrapping_tax_excl' =>	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 			'round_mode' =>					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'round_type' =>					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'shipping_number' => 			array('type' => self::TYPE_STRING, 'validate' => 'isTrackingNumber'),
 			'conversion_rate' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
 			'invoice_number' => 			array('type' => self::TYPE_INT),
@@ -2121,6 +2127,15 @@ class OrderCore extends ObjectModel
 
 	public function getProductTaxesDetails()
 	{
+		$round_type = $this->round_type;
+		if ($round_type == 0)
+		{
+			// if this is 0, it means the field did not exist
+			// at the time the order was made.
+			// Set it to old type, which was closest to line.
+			$round_type = Order::ROUND_LINE;
+		}
+
 		// compute products discount
 		$order_discount_tax_excl = $this->total_discounts_tax_excl;
 
@@ -2209,15 +2224,15 @@ class OrderCore extends ObjectModel
 			foreach ($tax_calculator->getTaxesAmount($discounted_price_tax_excl) as $id_tax => $unit_amount)
 			{
 				$total_tax_base = 0;
-				switch ($this->round_mode)
+				switch ($round_type)
 				{
 					case Order::ROUND_ITEM:
-						$total_tax_base = $quantity * Tools::ps_round($discounted_price_tax_excl, _PS_PRICE_COMPUTE_PRECISION_);
+						$total_tax_base = $quantity * Tools::ps_round($discounted_price_tax_excl, _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
 						$total_amount = $quantity * Tools::ps_round($unit_amount, _PS_PRICE_COMPUTE_PRECISION_);
 						break;
 					case Order::ROUND_LINE:
-						$total_tax_base = Tools::ps_round($quantity * $discounted_price_tax_excl, _PS_PRICE_COMPUTE_PRECISION_);
-						$total_amount = Tools::ps_round($quantity * $unit_amount, _PS_PRICE_COMPUTE_PRECISION_);
+						$total_tax_base = Tools::ps_round($quantity * $discounted_price_tax_excl, _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
+						$total_amount = Tools::ps_round($quantity * $unit_amount, _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
 						break;
 					case Order::ROUND_TOTAL:
 						$total_tax_base = $quantity * $discounted_price_tax_excl;
@@ -2249,11 +2264,11 @@ class OrderCore extends ObjectModel
 		{
 			foreach ($breakdown as $data)
 			{
-				$actual_total_tax += Tools::ps_round($data['tax_amount'], _PS_PRICE_COMPUTE_PRECISION_);
-				$actual_total_base += Tools::ps_round($data['tax_base'], _PS_PRICE_COMPUTE_PRECISION_);
+				$actual_total_tax += Tools::ps_round($data['tax_amount'], _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
+				$actual_total_base += Tools::ps_round($data['tax_base'], _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
 			}
 
-			$order_ecotax_tax = Tools::ps_round($order_ecotax_tax, _PS_PRICE_COMPUTE_PRECISION_);
+			$order_ecotax_tax = Tools::ps_round($order_ecotax_tax, _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
 
 			$tax_rounding_error = $expected_total_tax - $actual_total_tax - $order_ecotax_tax;
 			if ($tax_rounding_error !== 0) {

@@ -58,6 +58,8 @@ ALTER TABLE `PREFIX_module_access` CHANGE `view` `view` TINYINT( 1 ) NOT NULL DE
 CHANGE `configure` `configure` TINYINT( 1 ) NOT NULL DEFAULT '0',
 CHANGE `uninstall` `uninstall` TINYINT( 1 ) NOT NULL DEFAULT '0';
 
+/* taxes-patch */
+
 ALTER TABLE `PREFIX_order_invoice`
 CHANGE COLUMN `total_discount_tax_excl` `total_discount_tax_excl` DECIMAL(20,6) NOT NULL DEFAULT '0.00' ,
 CHANGE COLUMN `total_discount_tax_incl` `total_discount_tax_incl` DECIMAL(20,6) NOT NULL DEFAULT '0.00' ,
@@ -69,3 +71,5 @@ CHANGE COLUMN `total_shipping_tax_excl` `total_shipping_tax_excl` DECIMAL(20,6) 
 CHANGE COLUMN `total_shipping_tax_incl` `total_shipping_tax_incl` DECIMAL(20,6) NOT NULL DEFAULT '0.00' ,
 CHANGE COLUMN `total_wrapping_tax_excl` `total_wrapping_tax_excl` DECIMAL(20,6) NOT NULL DEFAULT '0.00' ,
 CHANGE COLUMN `total_wrapping_tax_incl` `total_wrapping_tax_incl` DECIMAL(20,6) NOT NULL DEFAULT '0.00' ;
+
+ALTER TABLE `PREFIX_orders` ADD `round_type` TINYINT(1) NOT NULL DEFAULT '1' AFTER `round_mode`;
