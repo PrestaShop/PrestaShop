@@ -73,7 +73,7 @@ class CmsControllerCore extends FrontController
 			else
 				$this->assignCase = 1;
 		}
-		elseif (Validate::isLoadedObject($this->cms_category))
+		elseif (Validate::isLoadedObject($this->cms_category) && $this->cms_category->active)
 			$this->assignCase = 2;
 		else
 		{
