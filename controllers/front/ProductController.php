@@ -243,7 +243,7 @@ class ProductControllerCore extends FrontController
 			$this->assignAttributesCombinations();
 
 			// Pack management
-			$pack_items = $this->product->cache_is_pack ? Pack::getItemTable($this->product->id, $this->context->language->id, true) : array();
+			$pack_items = Pack::isPack($this->product->id) ? Pack::getItemTable($this->product->id, $this->context->language->id, true) : array();
 			$this->context->smarty->assign('packItems', $pack_items);
 			$this->context->smarty->assign('packs', Pack::getPacksTable($this->product->id, $this->context->language->id, true, 1));
 
