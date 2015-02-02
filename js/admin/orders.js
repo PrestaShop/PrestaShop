@@ -948,7 +948,7 @@ function actualizeTotalRefundVoucher()
 	else {
 		if (document.getElementById('refund_total_2').checked === true)
 			document.getElementById('refund_total_1').checked = true;
-		document.getElementById('refund_total_2').disabled = true;
+		document.getElementById('refund_2').disabled = true;
 		$('#lab_refund_total_2').append('<span id="total_refund_2">' + errorRefund + '</span>');
 	}
 }
