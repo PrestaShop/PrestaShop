@@ -2209,7 +2209,7 @@ class OrderCore extends ObjectModel
 			foreach ($tax_calculator->getTaxesAmount($discounted_price_tax_excl) as $id_tax => $unit_amount)
 			{
 				$total_tax_base = 0;
-				switch (Configuration::get('PS_ROUND_TYPE'))
+				switch ($this->round_mode)
 				{
 					case Order::ROUND_ITEM:
 						$total_tax_base = $quantity * Tools::ps_round($discounted_price_tax_excl, _PS_PRICE_COMPUTE_PRECISION_);
