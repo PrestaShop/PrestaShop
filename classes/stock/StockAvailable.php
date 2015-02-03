@@ -136,7 +136,7 @@ class StockAvailableCore extends ObjectModel
 		{
 			if (Validate::isLoadedObject($product = new Product((int)$id_product)))
 			{
-				if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && Configuration::get('PS_STOCK_TYPE') > 0))
+				if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && Configuration::get('PS_PACK_STOCK_TYPE') > 0))
 				{
 					$products_pack = Pack::getItems($id_product, (int)Configuration::get('PS_LANG_DEFAULT'));
 					foreach ($products_pack as $product_pack)
@@ -469,7 +469,7 @@ class StockAvailableCore extends ObjectModel
 		{
 			if (Validate::isLoadedObject($product = new Product((int)$id_product)))
 			{
-				if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && Configuration::get('PS_STOCK_TYPE') > 0))
+				if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && Configuration::get('PS_PACK_STOCK_TYPE') > 0))
 				{
 					$products_pack = Pack::getItems($id_product, (int)Configuration::get('PS_LANG_DEFAULT'));
 					foreach ($products_pack as $product_pack)
@@ -481,7 +481,7 @@ class StockAvailableCore extends ObjectModel
 				$stock_available->quantity = $stock_available->quantity + $delta_quantity;
 
 				if ($product->pack_stock_type == 0 || $product->pack_stock_type == 2 ||
-					($product->pack_stock_type == 3 && (Configuration::get('PS_STOCK_TYPE') == 0 || Configuration::get('PS_STOCK_TYPE') == 2)))
+					($product->pack_stock_type == 3 && (Configuration::get('PS_PACK_STOCK_TYPE') == 0 || Configuration::get('PS_PACK_STOCK_TYPE') == 2)))
 					$stock_available->update();
 			}
 			else
