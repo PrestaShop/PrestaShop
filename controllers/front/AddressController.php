@@ -196,7 +196,7 @@ class AddressControllerCore extends FrontController
 			}
 		}
 
-		if ($this->ajax && Tools::getValue('type') == 'invoice' && Configuration::get('PS_ORDER_PROCESS_TYPE'))
+		if ($this->ajax && Configuration::get('PS_ORDER_PROCESS_TYPE'))
 		{
 			$this->errors = array_unique(array_merge($this->errors, $address->validateController()));
 			if (count($this->errors))
