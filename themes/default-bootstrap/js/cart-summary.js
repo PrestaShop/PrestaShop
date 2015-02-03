@@ -934,7 +934,7 @@ function updateCartSummary(json)
 	}
 	else
 	{
-		if (json.carrier.id != null)
+		if (json.carrier.id != null || json.free_ship == 1)
 			$('#total_shipping').html(freeShippingTranslation);
 		else if (!hasDeliveryAddress)
 			$('.cart_total_delivery').hide();
