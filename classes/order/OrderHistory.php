@@ -214,7 +214,7 @@ class OrderHistoryCore extends ObjectModel
 							$product['product_id'],
 							$product['product_attribute_id'],
 							$warehouse,
-							$product['product_quantity'],
+							($product['product_quantity'] - $product['product_quantity_refunded']),
 							Configuration::get('PS_STOCK_CUSTOMER_ORDER_REASON'),
 							true,
 							(int)$order->id,
@@ -259,7 +259,9 @@ class OrderHistoryCore extends ObjectModel
 						// else, it's not a pack, re-stock using the last negative stock mvts
 						else
 						{
-							$mvts = StockMvt::getNegativeStockMvts($order->id, $product['product_id'], $product['product_attribute_id'], $product['product_quantity']);
+							$mvts = StockMvt::getNegativeStockMvts($order->id, $product['product_id'],
+								$product['product_attribute_id'], ($product['product_quantity'] - $product['product_quantity_refunded']));
+
 							foreach ($mvts as $mvt)
 							{
 								$manager->addProduct(
