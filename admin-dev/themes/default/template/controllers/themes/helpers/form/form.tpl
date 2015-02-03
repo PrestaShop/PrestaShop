@@ -37,9 +37,9 @@
 					</div>
 					<div class="col-lg-4 col-lg-offset-1 col-md-4 col-sm-7 col-xs-12 addons-style-search-bar">
 						<form id="addons-search-form" method="get" action="http://addons.prestashop.com/{$iso_code}/search" class="float">
-						<label>{l s='Search on Prestashop Addons:'}</label>
+						<label>{l s='Search on Prestashop Marketplace:'}</label>
 						<div class="input-group">
-							<input id="addons-search-box" class="form-control" type="text" autocomplete="off" name="query" value="" placeholder="Search on Prestashop Addons">
+							<input id="addons-search-box" class="form-control" type="text" autocomplete="off" name="query" value="" placeholder="Search on Prestashop Marketplace">
 							<div id="addons-search-btn" class="btn btn-primary input-group-addon">
 								<i class="icon-search"></i>
 							</div>
