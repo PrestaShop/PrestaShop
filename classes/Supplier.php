@@ -156,9 +156,10 @@ class SupplierCore extends ObjectModel
 			foreach ($results as $result)
 				$counts[(int)$result['id_supplier']] = (int)$result['nb_products'];
 
-			if (count($counts))
+			if (count($counts) && is_array($suppliers))
 				foreach ($suppliers as $key => $supplier)
-					$suppliers[$key]['nb_products'] = $counts[(int)$supplier['id_supplier']];
+					if (isset($counts[(int)$supplier['id_supplier']]))
+						$suppliers[$key]['nb_products'] = $counts[(int)$supplier['id_supplier']];
 		}
 
 		$nb_suppliers = count($suppliers);
