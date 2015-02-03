@@ -484,8 +484,8 @@ class ProductCore extends ObjectModel
 
 			$this->new = $this->isNew();
 
-			// keep base price
-			$this->base_price = $this->price;
+			// keep base price (= base price - group reduction)
+			$this->base_price = Product::getPriceStatic((int)$this->id, false, null, 6, null, false, false, 1, false, null, null, null, $this->specificPrice);
 
 			$this->price = Product::getPriceStatic((int)$this->id, false, null, 6, null, false, true, 1, false, null, null, null, $this->specificPrice);
 			$this->unit_price = ($this->unit_price_ratio != 0  ? $this->price / $this->unit_price_ratio : 0);
@@ -2852,10 +2852,9 @@ class ProductCore extends ObjectModel
 			$group_reduction = 0;
 
 		if ($only_reduc)
-			return Tools::ps_round($group_reduction + $specific_price_reduction, $decimals);
+			return Tools::ps_round($specific_price_reduction, $decimals);
 
-		if ($use_reduc)
-			$price -= $group_reduction;
+		$price -= $group_reduction;
 
 		// Eco Tax
 		if (($result['ecotax'] || isset($result['attribute_ecotax'])) && $with_ecotax)

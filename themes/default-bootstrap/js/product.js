@@ -637,9 +637,7 @@ function updatePrice()
 			basePriceWithoutTax = +combination.specific_price.price + +combination.price;
 	}
 
-	// Apply group reduction
-	priceWithGroupReductionWithoutTax = basePriceWithoutTax * (1 - group_reduction);
-	var priceWithDiscountsWithoutTax = priceWithGroupReductionWithoutTax;
+	var priceWithDiscountsWithoutTax = basePriceWithoutTax;
 
 	// Apply specific price (discount)
 	// We only apply percentage discount and discount amount given before tax
