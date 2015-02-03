@@ -218,11 +218,11 @@ class StockManagerCore implements StockManagerInterface
 					// Foreach item
 					foreach ($products_pack as $product_pack)
 						if ($product_pack->advanced_stock_management == 1)
-							$this->removeProduct($product_pack->id, $product_pack->id_pack_product_attribute, $warehouse, $product_pack->pack_quantity * $quantity, $id_stock_mvt_reason, $is_usable, $id_order);
+							$return[] = $this->removeProduct($product_pack->id, $product_pack->id_pack_product_attribute, $warehouse, $product_pack->pack_quantity * $quantity, $id_stock_mvt_reason, $is_usable, $id_order);
 				}
 				if ($product->pack_stock_type == 0 || $product->pack_stock_type == 2 ||
 					($product->pack_stock_type == 3 && (Configuration::get('PS_PACK_STOCK_TYPE') == 0 || Configuration::get('PS_PACK_STOCK_TYPE') == 2)))
-					$this->removeProduct($id_product, $id_product_attribute, $warehouse, $quantity, $id_stock_mvt_reason, $is_usable, $id_order, 1);
+					$return[] = $this->removeProduct($id_product, $id_product_attribute, $warehouse, $quantity, $id_stock_mvt_reason, $is_usable, $id_order, 1);
 			}
 			else
 				return false;
@@ -420,7 +420,7 @@ class StockManagerCore implements StockManagerInterface
 		if ($is_usable)
 			Hook::exec('actionProductCoverage',
 					   	array(
-		   					'id_product' => $id_product,
+					   		'id_product' => $id_product,
 		   					'id_product_attribute' => $id_product_attribute,
 		   					'warehouse' => $warehouse
 					   	)
