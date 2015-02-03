@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{assign var=module_name value='<strong><span class="module-name-placeholder"></span></strong>'}
+{assign var=module_name value='<strong><span class="module-display-name-placeholder"></span></strong>'}
 
 <div class="modal-body">
 	<div class="alert alert-warning">
@@ -45,6 +45,10 @@
 </div>
 
 <div class="modal-footer">
-	<button type="button" class="btn btn-default" data-dismiss="modal">{l s='Back to modules list'}</button>
-	<a id="proceed-install-anyway" href="#" class="btn btn-warning">{l s='Proceed with the installation'}</a>
+	<div class="row">
+		<div class="col-sm-12 text-center">
+			<a id="proceed-install-anyway" href="#" class="btn btn-warning">{l s='Proceed with the installation'}</a>
+			<button type="button" class="btn btn-default" data-dismiss="modal">{l s='Back to modules list'}</button>
+		</div>
+	</div>
 </div>
