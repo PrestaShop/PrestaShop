@@ -212,7 +212,7 @@ class StockManagerCore implements StockManagerInterface
 			if (Validate::isLoadedObject($product = new Product((int)$id_product)))
 			{
 				// Gets items
-				if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && Configuration::get('PS_STOCK_TYPE') > 0))
+				if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && Configuration::get('PS_PACK_STOCK_TYPE') > 0))
 				{
 					$products_pack = Pack::getItems((int)$id_product, (int)Configuration::get('PS_LANG_DEFAULT'));
 					// Foreach item
@@ -221,7 +221,7 @@ class StockManagerCore implements StockManagerInterface
 							$this->removeProduct($product_pack->id, $product_pack->id_pack_product_attribute, $warehouse, $product_pack->pack_quantity * $quantity, $id_stock_mvt_reason, $is_usable, $id_order);
 				}
 				if ($product->pack_stock_type == 0 || $product->pack_stock_type == 2 ||
-					($product->pack_stock_type == 3 && (Configuration::get('PS_STOCK_TYPE') == 0 || Configuration::get('PS_STOCK_TYPE') == 2)))
+					($product->pack_stock_type == 3 && (Configuration::get('PS_PACK_STOCK_TYPE') == 0 || Configuration::get('PS_PACK_STOCK_TYPE') == 2)))
 					$this->removeProduct($id_product, $id_product_attribute, $warehouse, $quantity, $id_stock_mvt_reason, $is_usable, $id_order, 1);
 			}
 			else
@@ -487,7 +487,7 @@ class StockManagerCore implements StockManagerInterface
 			foreach ($in_pack as $value)
 			{
 				if (Validate::isLoadedObject($product = new Product((int)$value['id_product_pack'])) &&
-					($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && Configuration::get('PS_STOCK_TYPE') > 0)))
+					($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && Configuration::get('PS_PACK_STOCK_TYPE') > 0)))
 				{
 					$query = new DbQuery();
 					$query->select('od.product_quantity, od.product_quantity_refunded');
@@ -514,7 +514,7 @@ class StockManagerCore implements StockManagerInterface
 		// skip if product is a pack without
 		if (!Pack::isPack($id_product) || (Pack::isPack($id_product) && Validate::isLoadedObject($product = new Product((int)$id_product))
 			&& $product->pack_stock_type == 0 || $product->pack_stock_type == 2 ||
-					($product->pack_stock_type == 3 && (Configuration::get('PS_STOCK_TYPE') == 0 || Configuration::get('PS_STOCK_TYPE') == 2))))
+					($product->pack_stock_type == 3 && (Configuration::get('PS_PACK_STOCK_TYPE') == 0 || Configuration::get('PS_PACK_STOCK_TYPE') == 2))))
 		{
 			// Gets client_orders_qty
 			$query = new DbQuery();
