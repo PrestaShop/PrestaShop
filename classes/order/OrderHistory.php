@@ -214,7 +214,7 @@ class OrderHistoryCore extends ObjectModel
 							$product['product_id'],
 							$product['product_attribute_id'],
 							$warehouse,
-							($product['product_quantity'] - $product['product_quantity_refunded']),
+							($product['product_quantity'] - $product['product_quantity_refunded'] - $product['product_quantity_return']),
 							Configuration::get('PS_STOCK_CUSTOMER_ORDER_REASON'),
 							true,
 							(int)$order->id,
@@ -260,7 +260,8 @@ class OrderHistoryCore extends ObjectModel
 						else
 						{
 							$mvts = StockMvt::getNegativeStockMvts($order->id, $product['product_id'],
-								$product['product_attribute_id'], ($product['product_quantity'] - $product['product_quantity_refunded']));
+								$product['product_attribute_id'],
+								($product['product_quantity'] - $product['product_quantity_refunded'] - $product['product_quantity_return']));
 
 							foreach ($mvts as $mvt)
 							{
