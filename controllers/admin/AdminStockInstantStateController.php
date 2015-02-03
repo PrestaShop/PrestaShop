@@ -226,8 +226,8 @@ class AdminStockInstantStateControllerCore extends AdminController
 			$id_product_attribute = $ids[1];
 			$id_warehouse = Tools::getValue('id_warehouse', -1);
 			$this->_select = 'IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(DISTINCT agl.`name`, \' - \', al.name SEPARATOR \', \')),pl.name) as name,
-				w.id_currency, a.price_te, SUM(a.physical_quantity) as physical_quantity, SUM(a.usable_quantity) as usable_quantity,
-				(a.price_te * SUM(a.physical_quantity)) as valuation';
+				w.id_currency, a.price_te, (SELECT SUM(aa.physical_quantity) FROM ps_stock aa WHERE aa.id_product = '.(int)$id_product.' AND aa.id_product_attribute = '.(int)$id_product_attribute.') as physical_quantity, (SELECT SUM(aa.usable_quantity) FROM ps_stock aa WHERE aa.id_product = '.(int)$id_product.' AND aa.id_product_attribute = '.(int)$id_product_attribute.') as usable_quantity,
+				(a.price_te * (SELECT SUM(aa.physical_quantity) FROM ps_stock aa WHERE aa.id_product = '.(int)$id_product.' AND aa.id_product_attribute = '.(int)$id_product_attribute.')) as valuation';
 			$this->_join = ' LEFT JOIN `'._DB_PREFIX_.'warehouse` AS w ON w.id_warehouse = a.id_warehouse';
 			$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
 				a.id_product = pl.id_product
