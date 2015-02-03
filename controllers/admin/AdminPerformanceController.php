@@ -452,9 +452,9 @@ class AdminPerformanceControllerCore extends AdminController
 			)
 		);
 
-		$this->fields_value['_MEDIA_SERVER_1_'] = Configuration::get('PS_MEDIA_SERVER_1');
-		$this->fields_value['_MEDIA_SERVER_2_'] = Configuration::get('PS_MEDIA_SERVER_2');
-		$this->fields_value['_MEDIA_SERVER_3_'] = Configuration::get('PS_MEDIA_SERVER_3');
+		$this->fields_value['_MEDIA_SERVER_1_'] = (defined('_MEDIA_SERVER_1_') ? _MEDIA_SERVER_1_ : Configuration::get('PS_MEDIA_SERVER_1'));
+		$this->fields_value['_MEDIA_SERVER_2_'] = (defined('_MEDIA_SERVER_2_') ? _MEDIA_SERVER_2_ : Configuration::get('PS_MEDIA_SERVER_2'));
+		$this->fields_value['_MEDIA_SERVER_3_'] = (defined('_MEDIA_SERVER_3_') ? _MEDIA_SERVER_3_ : Configuration::get('PS_MEDIA_SERVER_3'));
 	}
 
 	public function initFieldsetCiphering()
@@ -812,6 +812,7 @@ class AdminPerformanceControllerCore extends AdminController
 						Configuration::updateValue('PS_MEDIA_SERVERS', 1);
 					else
 						Configuration::updateValue('PS_MEDIA_SERVERS', 0);
+					rewriteSettingsFile($base_urls, null, null);
 					Configuration::updateValue('PS_MEDIA_SERVER_1', Tools::getValue('_MEDIA_SERVER_1_'));
 					Configuration::updateValue('PS_MEDIA_SERVER_2', Tools::getValue('_MEDIA_SERVER_2_'));
 					Configuration::updateValue('PS_MEDIA_SERVER_3', Tools::getValue('_MEDIA_SERVER_3_'));
