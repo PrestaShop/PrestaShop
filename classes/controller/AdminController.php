@@ -2028,7 +2028,7 @@ class AdminControllerCore extends Controller
 			'modal_title' => '<i class="icon-puzzle-piece"></i> <a target="_blank" href="http://addons.prestashop.com/'
 			.'?utm_source=back-office&utm_medium=modules'
 			.'&utm_campaign=back-office-'.Tools::strtoupper($this->context->language->iso_code)
-			.'&utm_content='.(defined('_PS_HOST_MODE_') ? 'cloud' : 'download').'>PrestaShop Addons</a>',
+			.'&utm_content='.(defined('_PS_HOST_MODE_') ? 'cloud' : 'download').'">PrestaShop Addons</a>',
 			'modal_content' => $this->context->smarty->fetch('controllers/modules/login_addons.tpl'),
 		);
 	}
