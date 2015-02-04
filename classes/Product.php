@@ -197,7 +197,10 @@ class ProductCore extends ObjectModel
 	/*** @var array Tags */
 	public $tags;
 
-	/** @var float Base price of the product */
+	/**
+	 * @var float Base price of the product
+	 * @deprecated 1.6.13
+	 */
 	public $base_price;
 
 	public $id_tax_rules_group = 1;
