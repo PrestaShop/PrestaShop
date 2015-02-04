@@ -277,7 +277,7 @@
 									{/if}
 									</span>
 								{/strip}</p>
-								<p id="old_price"{if (!$product->specificPrice || !$product->specificPrice.reduction) && $group_reduction == 0} class="hidden"{/if}>{strip}
+								<p id="old_price"{if (!$product->specificPrice || !$product->specificPrice.reduction)} class="hidden"{/if}>{strip}
 									{if $priceDisplay >= 0 && $priceDisplay <= 2}
 										{hook h="displayProductPriceBlock" product=$product type="old_price"}
 										<span id="old_price_display">{if $productPriceWithoutReduction > $productPrice}<span class="price">{convertPrice price=$productPriceWithoutReduction}</span>{if $tax_enabled && $display_tax_label == 1} {if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}{/if}{/if}</span>
@@ -683,7 +683,6 @@
 {addJsDef default_eco_tax=$product->ecotax|floatval}
 {addJsDef displayPrice=$priceDisplay|intval}
 {addJsDef ecotaxTax_rate=$ecotaxTax_rate|floatval}
-{addJsDef group_reduction=$group_reduction}
 {if isset($cover.id_image_only)}
 	{addJsDef idDefaultImage=$cover.id_image_only|intval}
 {else}
@@ -700,8 +699,8 @@
 {addJsDef oosHookJsCodeFunctions=Array()}
 {addJsDef productHasAttributes=isset($groups)|boolval}
 {addJsDef productPriceTaxExcluded=($product->getPriceWithoutReduct(true)|default:'null' - $product->ecotax)|floatval}
-{addJsDef productBasePriceTaxExcluded=($product->base_price - $product->ecotax)|floatval}
-{addJsDef productBasePriceTaxExcl=($product->base_price|floatval)}
+{addJsDef productBasePriceTaxExcluded=($product->base_user_group_price - $product->ecotax)|floatval}
+{addJsDef productBasePriceTaxExcl=($product->base_user_group_price|floatval)}
 {addJsDef productReference=$product->reference|escape:'html':'UTF-8'}
 {addJsDef productAvailableForOrder=$product->available_for_order|boolval}
 {addJsDef productPriceWithoutReduction=$productPriceWithoutReduction|floatval}

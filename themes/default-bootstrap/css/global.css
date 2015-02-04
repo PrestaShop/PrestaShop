@@ -5846,7 +5846,6 @@ span.exclusive {
     text-align: center;
     vertical-align: middle;
     padding: 4px 0 0 0;
-    background: #1e5799;
     background: white;
     background: -moz-linear-gradient(top, white 0%, #fbfbfb 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, white), color-stop(100%, #fbfbfb));
@@ -6883,6 +6882,8 @@ div.star a:hover {
 
 #page .rte {
   background: transparent none repeat scroll 0 0; }
+  #page .rte em {
+    font-style: italic !important; }
 
 .listcomment {
   list-style-type: none;
@@ -7436,6 +7437,7 @@ a.price_discount_delete {
 table#cart_summary .gift-icon {
   color: white;
   background: #0088cc;
+  display: inline;
   line-height: 20px;
   padding: 2px 5px;
   border-radius: 5px; }
