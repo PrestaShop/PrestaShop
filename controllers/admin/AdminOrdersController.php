@@ -695,6 +695,13 @@ class AdminOrdersControllerCore extends AdminController
 						if (!OrderSlip::create($order, $order_detail_list, $shipping_cost_amount, $voucher, $choosen, false))
 							$this->errors[] = Tools::displayError('You cannot generate a partial credit slip.');
 
+						foreach ($order_detail_list as &$product)
+						{
+							$order_detail = new OrderDetail((int)$product['id_order_detail']);
+							if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+								StockAvailable::synchronize($order_detail->product_id);
+						}
+
 						// Generate voucher
 						if (Tools::isSubmit('generateDiscountRefund') && !count($this->errors) && $amount > 0)
 						{
@@ -2613,16 +2620,51 @@ class AdminOrdersControllerCore extends AdminController
 						$quantity_to_reinject = $movement['physical_quantity'];
 
 					$left_to_reinject -= $quantity_to_reinject;
-
-					$manager->addProduct(
-						$order_detail->product_id,
-						$order_detail->product_attribute_id,
-						new Warehouse($movement['id_warehouse']),
-						$quantity_to_reinject,
-						null,
-						$movement['price_te'],
-						true
-					);
+					if (Pack::isPack((int)$product->id))
+					{
+						// Gets items
+						if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && Configuration::get('PS_PACK_STOCK_TYPE') > 0))
+						{
+							$products_pack = Pack::getItems((int)$product->id, (int)Configuration::get('PS_LANG_DEFAULT'));
+							// Foreach item
+							foreach ($products_pack as $product_pack)
+								if ($product_pack->advanced_stock_management == 1)
+								{
+									 $manager->addProduct(
+										$product_pack->id,
+										$product_pack->id_pack_product_attribute,
+										new Warehouse($movement['id_warehouse']),
+										$product_pack->pack_quantity * $quantity_to_reinject,
+										null,
+										$movement['price_te'],
+										true
+									);
+								}
+						}
+						if ($product->pack_stock_type == 0 || $product->pack_stock_type == 2 ||
+							($product->pack_stock_type == 3 && (Configuration::get('PS_PACK_STOCK_TYPE') == 0 || Configuration::get('PS_PACK_STOCK_TYPE') == 2)))
+							$manager->addProduct(
+								$order_detail->product_id,
+								$order_detail->product_attribute_id,
+								new Warehouse($movement['id_warehouse']),
+								$quantity_to_reinject,
+								null,
+								$movement['price_te'],
+								true
+							);
+					}
+					else
+					{
+						$manager->addProduct(
+							$order_detail->product_id,
+							$order_detail->product_attribute_id,
+							new Warehouse($movement['id_warehouse']),
+							$quantity_to_reinject,
+							null,
+							$movement['price_te'],
+							true
+						);
+					}
 				}
 
 				$id_product = $order_detail->product_id;
