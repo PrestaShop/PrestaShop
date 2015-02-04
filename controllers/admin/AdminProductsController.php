@@ -1821,6 +1821,9 @@ class AdminProductsControllerCore extends AdminController
 					$warehouse_location_entity->save();
 				}
 
+				// Apply groups reductions
+				$this->object->setGroupReduction();
+
 				// Save and preview
 				if (Tools::isSubmit('submitAddProductAndPreview'))
 					$this->redirect_after = $this->getPreviewUrl($this->object);

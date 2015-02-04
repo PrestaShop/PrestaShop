@@ -192,17 +192,24 @@ class GroupReductionCore extends ObjectModel
 		, false);
 	}
 
-	public static function setProductReduction($id_product, $id_group = null, $id_category, $reduction = null)
+	public static function setProductReduction($id_product, $id_group = null, $id_category = null, $reduction = null)
 	{
 		$res = true;
 		GroupReduction::deleteProductReduction((int)$id_product);
-		$reductions = GroupReduction::getGroupsByCategoryId((int)$id_category);
-		if ($reductions)
-		{
-			foreach ($reductions as $reduction)
-				$res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'product_group_reduction_cache` (`id_product`, `id_group`, `reduction`)
-								VALUES ('.(int)$id_product.', '.(int)$reduction['id_group'].', '.(float)$reduction['reduction'].')');
-		}
+
+		$categories = Product::getProductCategories((int)$id_product);
+
+		if ($categories)
+			foreach ($categories as $category)
+			{
+				$reductions = GroupReduction::getGroupsByCategoryId((int)$category);
+				if ($reductions)
+					foreach ($reductions as $reduction)
+					{
+						$current_group_reduction = new GroupReduction((int)$reduction['id_group_reduction']);
+						$res &= $current_group_reduction->_setCache();
+					}
+			}
 
 		return $res;
 	}
