@@ -248,15 +248,29 @@ class OrderSlipCore extends ObjectModel
 		return OrderSlip::create($order, $product_list, $shipping);
 	}
 
-	public static function create(Order $order, $product_list, $shipping_cost = false, $amount = 0, $amount_choosen = false)
+	public static function create(Order $order, $product_list, $shipping_cost = false, $amount = 0, $amount_choosen = false, $add_tax = true)
 	{
 		$currency = new Currency((int)$order->id_currency);
 		$order_slip = new OrderSlip();
 		$order_slip->id_customer = (int)$order->id_customer;
 		$order_slip->id_order = (int)$order->id;
 		$order_slip->conversion_rate = $currency->conversion_rate;
-		$order_slip->total_shipping_tax_excl = 0;
-		$order_slip->total_shipping_tax_incl = 0;
+
+		if ($add_tax)
+		{
+			$add_or_remove = 'add';
+			$inc_or_ex_1 = 'excl';
+			$inc_or_ex_2 = 'incl';
+		}
+		else
+		{
+			$add_or_remove = 'remove';
+			$inc_or_ex_1 = 'incl';
+			$inc_or_ex_2 = 'excl';
+		}
+
+		$order_slip->{'total_shipping_tax_'.$inc_or_ex_1} = 0;
+		$order_slip->{'total_shipping_tax_'.$inc_or_ex_2} = 0;
 		$order_slip->partial = 0;
 
 		if ($shipping_cost !== false)
@@ -267,18 +281,18 @@ class OrderSlipCore extends ObjectModel
 
 			$tax_calculator = $carrier->getTaxCalculator($address);
 
-			$order_slip->total_shipping_tax_excl = ($shipping_cost === null ? $order->total_shipping_tax_excl : (float)$shipping_cost);
+			$order_slip->{'total_shipping_tax_'.$inc_or_ex_1} = ($shipping_cost === null ? $order->total_shipping_tax_excl : (float)$shipping_cost);
 			if ($tax_calculator instanceof TaxCalculator)
-				$order_slip->total_shipping_tax_incl = Tools::ps_round($tax_calculator->addTaxes($order_slip->total_shipping_tax_excl), _PS_PRICE_COMPUTE_PRECISION_);
+				$order_slip->{'total_shipping_tax_'.$inc_or_ex_2} = Tools::ps_round($tax_calculator->{$add_or_remove.'Taxes'}($order_slip->{'total_shipping_tax_'.$inc_or_ex_1}), _PS_PRICE_COMPUTE_PRECISION_);
 			else
-				$order_slip->total_shipping_tax_incl = $order_slip->total_shipping_tax_excl;
+				$order_slip->{'total_shipping_tax_'.$inc_or_ex_2} = $order_slip->{'total_shipping_tax_'.$inc_or_ex_1};
 		}
 		else
 			$order_slip->shipping_cost = false;
 
 		$order_slip->amount = 0;
-		$order_slip->total_products_tax_excl = 0;
-		$order_slip->total_products_tax_incl = 0;
+		$order_slip->{'total_products_tax_'.$inc_or_ex_1} = 0;
+		$order_slip->{'total_products_tax_'.$inc_or_ex_2} = 0;
 
 		foreach ($product_list as &$product)
 		{
@@ -301,7 +315,7 @@ class OrderSlipCore extends ObjectModel
 			$id_tax_rules_group = Product::getIdTaxRulesGroupByIdProduct((int)$order_detail->product_id);
 			$tax_calculator = TaxManagerFactory::getManager($address, $id_tax_rules_group)->getTaxCalculator();
 
-			$order_slip->total_products_tax_excl += $price * $quantity;
+			$order_slip->{'total_products_tax_'.$inc_or_ex_1} += $price * $quantity;
 
 			if (in_array(Configuration::get('PS_ROUND_TYPE'), array(Order::ROUND_ITEM, Order::ROUND_LINE)))
 				if (!isset($total_products[$id_tax_rules_group]))
@@ -310,11 +324,11 @@ class OrderSlipCore extends ObjectModel
 				if (!isset($total_products[$id_tax_rules_group.'_'.$id_address]))
 					$total_products[$id_tax_rules_group.'_'.$id_address] = 0;
 
-			$product_tax_incl_line = Tools::ps_round($tax_calculator->addTaxes($price) * $quantity, _PS_PRICE_COMPUTE_PRECISION_);
+			$product_tax_incl_line = Tools::ps_round($tax_calculator->{$add_or_remove.'Taxes'}($price) * $quantity, _PS_PRICE_COMPUTE_PRECISION_);
 			switch (Configuration::get('PS_ROUND_TYPE'))
 			{
 				case Order::ROUND_ITEM:
-					$product_tax_incl = Tools::ps_round($tax_calculator->addTaxes($price), _PS_PRICE_COMPUTE_PRECISION_) * $quantity;
+					$product_tax_incl = Tools::ps_round($tax_calculator->{$add_or_remove.'Taxes'}($price), _PS_PRICE_COMPUTE_PRECISION_) * $quantity;
 					$total_products[$id_tax_rules_group] += $product_tax_incl;
 					break;
 				case Order::ROUND_LINE:
@@ -327,11 +341,11 @@ class OrderSlipCore extends ObjectModel
 					break;
 			}
 
-			$product['unit_price_tax_excl'] = $price;
-			$product['unit_price_tax_incl'] = Tools::ps_round($tax_calculator->addTaxes($price), _PS_PRICE_COMPUTE_PRECISION_);
+			$product['unit_price_tax_'.$inc_or_ex_1] = $price;
+			$product['unit_price_tax_'.$inc_or_ex_2] = Tools::ps_round($tax_calculator->{$add_or_remove.'Taxes'}($price), _PS_PRICE_COMPUTE_PRECISION_);
 
-			$product['total_price_tax_excl'] = Tools::ps_round($price * $quantity, _PS_PRICE_COMPUTE_PRECISION_);
-			$product['total_price_tax_incl'] = Tools::ps_round($product_tax_incl, _PS_PRICE_COMPUTE_PRECISION_);
+			$product['total_price_tax_'.$inc_or_ex_1] = Tools::ps_round($price * $quantity, _PS_PRICE_COMPUTE_PRECISION_);
+			$product['total_price_tax_'.$inc_or_ex_2] = Tools::ps_round($product_tax_incl, _PS_PRICE_COMPUTE_PRECISION_);
 
 		}
 		unset($product);
@@ -343,10 +357,10 @@ class OrderSlipCore extends ObjectModel
 				$tmp = explode('_', $key);
 				$address = Address::initialize((int)$tmp[1], true);
 				$tax_calculator = TaxManagerFactory::getManager($address, $tmp[0])->getTaxCalculator();
-				$order_slip->total_products_tax_incl += Tools::ps_round($tax_calculator->addTaxes($price), _PS_PRICE_COMPUTE_PRECISION_);
+				$order_slip->{'total_products_tax_'.$inc_or_ex_2} += Tools::ps_round($tax_calculator->{$add_or_remove.'Taxes'}($price), _PS_PRICE_COMPUTE_PRECISION_);
 			}
 			else
-				$order_slip->total_products_tax_incl += $price;
+				$order_slip->{'total_products_tax_'.$inc_or_ex_2} += $price;
 		}
 
 		if ((float)$amount && !$amount_choosen)
@@ -354,9 +368,9 @@ class OrderSlipCore extends ObjectModel
 		if ((float)$amount && $amount_choosen)
 			$order_slip->order_slip_type = 2;
 
-		$order_slip->total_products_tax_incl -= (float)$amount && !$amount_choosen ? (float)$amount : 0;
-		$order_slip->amount = $amount_choosen ? (float)$amount : $order_slip->total_products_tax_incl;
-		$order_slip->shipping_cost_amount = $order_slip->total_shipping_tax_incl;
+		$order_slip->{'total_products_tax_'.$inc_or_ex_2} -= (float)$amount && !$amount_choosen ? (float)$amount : 0;
+		$order_slip->amount = $amount_choosen ? (float)$amount : $order_slip->{'total_products_tax_'.$inc_or_ex_2};
+		$order_slip->shipping_cost_amount = $order_slip->{'total_shipping_tax_'.$inc_or_ex_2};
 
 		if (!$order_slip->add())
 			return false;

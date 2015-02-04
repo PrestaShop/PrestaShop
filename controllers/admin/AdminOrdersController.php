@@ -692,7 +692,7 @@ class AdminOrdersControllerCore extends AdminController
 
 					if ($amount >= 0)
 					{
-						if (!OrderSlip::create($order, $order_detail_list, $shipping_cost_amount, $voucher, $choosen))
+						if (!OrderSlip::create($order, $order_detail_list, $shipping_cost_amount, $voucher, $choosen, false))
 							$this->errors[] = Tools::displayError('You cannot generate a partial credit slip.');
 
 						// Generate voucher
