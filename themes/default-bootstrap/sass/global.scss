@@ -1657,6 +1657,10 @@ div.star a:hover {
 
 #page .rte {
 	background: transparent none repeat scroll 0 0;
+
+	em {
+		font-style: italic !important;
+	}
 }
 
 .listcomment {
