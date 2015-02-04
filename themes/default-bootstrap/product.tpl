@@ -699,8 +699,8 @@
 {addJsDef oosHookJsCodeFunctions=Array()}
 {addJsDef productHasAttributes=isset($groups)|boolval}
 {addJsDef productPriceTaxExcluded=($product->getPriceWithoutReduct(true)|default:'null' - $product->ecotax)|floatval}
-{addJsDef productBasePriceTaxExcluded=($product->base_price - $product->ecotax)|floatval}
-{addJsDef productBasePriceTaxExcl=($product->base_price|floatval)}
+{addJsDef productBasePriceTaxExcluded=($product->base_user_group_price - $product->ecotax)|floatval}
+{addJsDef productBasePriceTaxExcl=($product->base_user_group_price|floatval)}
 {addJsDef productReference=$product->reference|escape:'html':'UTF-8'}
 {addJsDef productAvailableForOrder=$product->available_for_order|boolval}
 {addJsDef productPriceWithoutReduction=$productPriceWithoutReduction|floatval}
