@@ -203,7 +203,7 @@
 								<input onchange="checkPartialRefundProductAmount(this)" type="text" name="partialRefundProduct[{$product['id_order_detail']|intval}]" />
 								{if !$currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax incl.'}</div>{/if}
 							</div>
-							<p class="help-block"><i class="icon-warning-sign"></i> {l s='(Max %s incl tax)' sprintf=$product['amount_refundable']}</p>
+							<p class="help-block"><i class="icon-warning-sign"></i> {l s='(Max %s incl tax)' sprintf=(Tools::ps_round($product_price, 2) * ($product['product_quantity'] - $product['customizationQuantityTotal']))}</p>
 						</div>
 					</div>
 
@@ -212,7 +212,7 @@
 							({l s='%s refund' sprintf=$product['amount_refund']})
 						{/if}
 						<input type="hidden" value="{$product['quantity_refundable']}" class="partialRefundProductQuantity" />
-						<input type="hidden" value="{$product['amount_refundable']}" class="partialRefundProductAmount" />
+						<input type="hidden" value="{(Tools::ps_round($product_price, 2) * ($product['product_quantity'] - $product['customizationQuantityTotal']))}" class="partialRefundProductAmount" />
 					</div>
 				</td>
 				{if ($can_edit && !$order->hasBeenDelivered())}
