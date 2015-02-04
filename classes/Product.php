@@ -200,9 +200,6 @@ class ProductCore extends ObjectModel
 	/** @var float Base price of the product */
 	public $base_price;
 
-	/** @var float Base price for the current user group */
-	public $base_user_group_price;
-
 	public $id_tax_rules_group = 1;
 
 	/**
@@ -492,9 +489,6 @@ class ProductCore extends ObjectModel
 
 			// Keep base price
 			$this->base_price = $this->price;
-
-			// Keep user group price (= base price - group reduction)
-			$this->base_user_group_price = Product::getPriceStatic((int)$this->id, false, null, 6, null, false, false, 1, false, null, null, null, $this->specificPrice);
 
 			$this->price = Product::getPriceStatic((int)$this->id, false, null, 6, null, false, true, 1, false, null, null, null, $this->specificPrice);
 			$this->unit_price = ($this->unit_price_ratio != 0  ? $this->price / $this->unit_price_ratio : 0);
