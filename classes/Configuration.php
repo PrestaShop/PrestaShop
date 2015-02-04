@@ -342,7 +342,8 @@ class ConfigurationCore extends ObjectModel
 			$values = array($values);
 
 		if ($html)
-			$html = Tools::purifyHTML($html);
+			foreach ($values as &$value)
+				$value = Tools::purifyHTML($value);
 
 		$result = true;
 		foreach ($values as $lang => $value)
