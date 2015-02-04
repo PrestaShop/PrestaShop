@@ -5075,7 +5075,7 @@ class ProductCore extends ObjectModel
 	 */
 	public function setGroupReduction()
 	{
-		return GroupReduction::setProductReduction($this->id, null, $this->id_category_default);
+		return GroupReduction::setProductReduction($this->id);
 	}
 
 	/**
