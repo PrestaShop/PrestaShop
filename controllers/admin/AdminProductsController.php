@@ -1068,7 +1068,7 @@ class AdminProductsControllerCore extends AdminController
 			$to = '0000-00-00 00:00:00';
 
 		if (($price == '-1') && ((float)$reduction == '0'))
-			$this->errors[] = Tools::displayError('No submitted reduction value');
+			$this->errors[] = Tools::displayError('No reduction value has been submitted');
 		elseif (strtotime($to) < strtotime($from))
 			$this->errors[] = Tools::displayError('Invalid date range');
 		elseif ($reduction_type == 'percentage' && ((float)$reduction <= 0 || (float)$reduction > 100))
