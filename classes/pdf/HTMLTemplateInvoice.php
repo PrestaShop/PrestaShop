@@ -47,6 +47,62 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 		$this->shop = new Shop((int)$this->order->id_shop);
 	}
 
+	private function computeLayout($tax_excluded_display, $display_product_images)
+	{
+		$layout = array(
+			'reference' => array(
+				'width' => 40
+			),
+			'unit_price_tax_excl' => array(
+				'width' => 0
+			),
+			'discount' => array(
+				'width' => 0
+			),
+			'quantity' => array(
+				'width' => 0
+			),
+			'total' => array(
+				'width' => 0
+			)
+		);
+
+		if (!$tax_excluded_display)
+		{
+			$layout['unit_price_tax_incl'] = array('width' => 0);
+		}
+
+		if ($display_product_images)
+		{
+			$layout['image'] = array('width' => 0);
+		}
+
+		$total_width = 0;
+		$free_columns_count = 0;
+		foreach ($layout as $data)
+		{
+			if ($data['width'] === 0)
+			{
+				++$free_columns_count;
+			}
+			$total_width += $data['width'];
+		}
+
+		$delta = 100 - $total_width;
+
+		foreach ($layout as $row => $data)
+		{
+			if ($data['width'] === 0)
+			{
+				$layout[$row]['width'] = $delta / $free_columns_count;
+			}
+		}
+
+		$layout['_colCount'] = count($layout);
+
+		return $layout;
+	}
+
 	/**
 	 * Returns the template's HTML content
 	 * @return string HTML content
@@ -166,13 +222,18 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 				break;
 		}
 
+		$display_product_images = Configuration::get('PS_PDF_IMG_INVOICE');
+		$tax_excluded_display = Group::getPriceDisplayMethod($customer->id_default_group);
+
 		$data = array(
 			'order' => $this->order,
 			'order_details' => $order_details,
 			'cart_rules' => $cart_rules,
 			'delivery_address' => $formatted_delivery_address,
 			'invoice_address' => $formatted_invoice_address,
-			'tax_excluded_display' => Group::getPriceDisplayMethod($customer->id_default_group),
+			'tax_excluded_display' => $tax_excluded_display,
+			'display_product_images' => $display_product_images,
+			'layout' => $this->computeLayout($tax_excluded_display, $display_product_images),
 			'tax_tab' => $this->getTaxTabContent(),
 			'customer' => $customer,
 			'footer' => $footer,
