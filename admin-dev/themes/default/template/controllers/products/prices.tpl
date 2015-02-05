@@ -387,9 +387,11 @@ $(document).ready(function () {
 			</div>
 			<div class="form-group">
 				<label class="control-label col-lg-2" for="sp_from_quantity">{l s='Starting at'}</label>
-				<div class="input-group col-lg-4">
-					<span class="input-group-addon">{l s='unit'}</span>
-					<input type="text" name="sp_from_quantity" id="sp_from_quantity" value="1" />
+				<div class="col-lg-4">
+					<div class="input-group">
+						<span class="input-group-addon">{l s='unit'}</span>
+						<input type="text" name="sp_from_quantity" id="sp_from_quantity" value="1" />
+					</div>
 				</div>
 			</div>
 			<div class="form-group">
@@ -400,11 +402,11 @@ $(document).ready(function () {
 				</label>
 				<div class="col-lg-9">
 					<div class="row">
-						<div class="input-group col-lg-4">
-							<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
-							<input type="text" disabled="disabled" name="sp_price" id="sp_price" value="{$product->price|string_format:$priceDisplayPrecisionFormat}" />
-						</div>
-						<div class="col-lg-8">
+						<div class="col-lg-4">
+							<div class="input-group">
+								<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
+								<input type="text" disabled="disabled" name="sp_price" id="sp_price" value="{$product->price|string_format:$priceDisplayPrecisionFormat}" />
+							</div>
 							<p class="checkbox">
 								<label for="leave_bprice">{l s='Leave base price:'}</label>
 								<input type="checkbox" id="leave_bprice" name="leave_bprice"  value="1" checked="checked"  />
