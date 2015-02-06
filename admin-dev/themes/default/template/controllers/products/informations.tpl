@@ -428,7 +428,7 @@
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="tags_{$id_lang}">
 			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='Appear on the shop in the "Tags" block, when enabled. Tags help customers easily find your products.'}">
+				title="{l s='Will be displayed in the tags block when enabled. Tags help customers easily find your products.'}">
 				{l s='Tags:'}
 			</span>
 		</label>
