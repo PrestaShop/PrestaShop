@@ -265,12 +265,21 @@ class ConfigurationCore extends ObjectModel
 	{
 		if (!is_int($key) && !is_string($key))
 			return false;
+
 		$id_lang = (int)$id_lang;
+
 		if ($id_shop)
-			return isset(self::$_cache[self::$definition['table']][$id_lang]['shop'][$id_shop][$key]) || array_key_exists($key, self::$_cache[self::$definition['table']][$id_lang]['shop'][$id_shop]);
+			return isset(self::$_cache[self::$definition['table']][$id_lang]['shop'][$id_shop])
+				&& (isset(self::$_cache[self::$definition['table']][$id_lang]['shop'][$id_shop][$key])
+					|| array_key_exists($key, self::$_cache[self::$definition['table']][$id_lang]['shop'][$id_shop]));
 		elseif ($id_shop_group)
-			return isset(self::$_cache[self::$definition['table']][$id_lang]['group'][$id_shop_group][$key]) || array_key_exists($key, self::$_cache[self::$definition['table']][$id_lang]['group'][$id_shop_group]);
-		return isset(self::$_cache[self::$definition['table']][$id_lang]['global'][$key]) || array_key_exists($key, self::$_cache[self::$definition['table']][$id_lang]['global']);
+			return isset(self::$_cache[self::$definition['table']][$id_lang]['group'][$id_shop_group])
+				&& (isset(self::$_cache[self::$definition['table']][$id_lang]['group'][$id_shop_group][$key])
+					|| array_key_exists($key, self::$_cache[self::$definition['table']][$id_lang]['group'][$id_shop_group]));
+
+		return isset(self::$_cache[self::$definition['table']][$id_lang]['global'])
+			&& (isset(self::$_cache[self::$definition['table']][$id_lang]['global'][$key])
+				||  array_key_exists($key, self::$_cache[self::$definition['table']][$id_lang]['global']));
 	}
 
 	/**
