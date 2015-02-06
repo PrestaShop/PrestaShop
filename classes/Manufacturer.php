@@ -210,10 +210,7 @@ class ManufacturerCore extends ObjectModel
 
 			if (count($counts))
 				foreach ($manufacturers as $key => $manufacturer)
-					if (isset($counts[(int)$manufacturer['id_manufacturer']]))
-						$manufacturers[$key]['nb_products'] = $counts[(int)$manufacturer['id_manufacturer']];
-					else
-						$manufacturers[$key]['nb_products'] = 0;
+					$manufacturers[$key]['nb_products'] = $counts[(int)$manufacturer['id_manufacturer']];
 		}
 
 		$total_manufacturers = count($manufacturers);
