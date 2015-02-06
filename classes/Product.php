@@ -1904,15 +1904,18 @@ class ProductCore extends ObjectModel
 		//Get quantity of each variations
 		foreach ($combinations as $key => $row)
 		{
-			$cache_key = $row['id_product'].'_'.$row['id_product_attribute'].'_quantity';
+            if ((int)Configuration::get('PS_STOCK_MANAGEMENT')) {
+                $cache_key = $row['id_product'].'_'.$row['id_product_attribute'].'_quantity';
 
-			if (!Cache::isStored($cache_key))
-				Cache::store(
-					$cache_key,
-					StockAvailable::getQuantityAvailableByProduct($row['id_product'], $row['id_product_attribute'])
-				);
+                if (!Cache::isStored($cache_key))
+                    Cache::store(
+                        $cache_key,
+                        StockAvailable::getQuantityAvailableByProduct($row['id_product'], $row['id_product_attribute'])
+                    );
 
-			$combinations[$key]['quantity'] = Cache::retrieve($cache_key);
+                $combinations[$key]['quantity'] = Cache::retrieve($cache_key);
+            } else
+                $combinations[$key]['quantity'] = 0;
 		}
 
 		return $combinations;
@@ -1947,16 +1950,20 @@ class ProductCore extends ObjectModel
 		//Get quantity of each variations
 		foreach ($res as $key => $row)
 		{
-			$cache_key = $row['id_product'].'_'.$row['id_product_attribute'].'_quantity';
+            if ((int)Configuration::get('PS_STOCK_MANAGEMENT'))
+            {
+                $cache_key = $row['id_product'].'_'.$row['id_product_attribute'].'_quantity';
 
-			if (!Cache::isStored($cache_key))
-				Cache::store(
-					$cache_key,
-					StockAvailable::getQuantityAvailableByProduct($row['id_product'], $row['id_product_attribute'])
-				);
+                if (!Cache::isStored($cache_key))
+                    Cache::store(
+                        $cache_key,
+                        StockAvailable::getQuantityAvailableByProduct($row['id_product'], $row['id_product_attribute'])
+                    );
 
-			$res[$key]['quantity'] = Cache::retrieve($cache_key);
-		}
+                $res[$key]['quantity'] = Cache::retrieve($cache_key);
+            } else
+                $res[$key]['quantity'] = 0;
+        }
 
 		return $res;
 	}
@@ -1991,16 +1998,20 @@ class ProductCore extends ObjectModel
 		//Get quantity of each variations
 		foreach ($res as $key => $row)
 		{
-			$cache_key = $row['id_product'].'_'.$row['id_product_attribute'].'_quantity';
+            if ((int)Configuration::get('PS_STOCK_MANAGEMENT'))
+            {
+                $cache_key = $row['id_product'].'_'.$row['id_product_attribute'].'_quantity';
 
-			if (!Cache::isStored($cache_key))
-				Cache::store(
-					$cache_key,
-					StockAvailable::getQuantityAvailableByProduct($row['id_product'], $row['id_product_attribute'])
-				);
+                if (!Cache::isStored($cache_key))
+                    Cache::store(
+                        $cache_key,
+                        StockAvailable::getQuantityAvailableByProduct($row['id_product'], $row['id_product_attribute'])
+                    );
 
-			$res[$key]['quantity'] = Cache::retrieve($cache_key);
-		}
+                $res[$key]['quantity'] = Cache::retrieve($cache_key);
+            } else
+                $res[$key]['quantity'] = 0;
+        }
 
 		return $res;
 	}

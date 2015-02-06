@@ -420,6 +420,24 @@ class ProductControllerCore extends FrontController
 		{
 			$combination_images = $this->product->getCombinationImages($this->context->language->id);
 			$combination_prices_set = array();
+
+            //check specific prices for product
+            $product_id = (int)$this->product->id;
+            $query = 'SELECT * FROM `'._DB_PREFIX_.'specific_price` WHERE `id_product` = ' . $product_id;
+            $specific_prices = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+
+            //get specific price for product default attribute (when id_product_attribute field = 0 in ps_specific_price
+            //or when product not in the list)
+            $calculated_combination_specific_price = 0; //update by reference
+            Product::getPriceStatic($product_id, false, null, 6, null, false, true, 1, false, null, null, null, $calculated_combination_specific_price);
+
+            $calc_combination_specific_price = array();
+            //collect existing id_product_attributes for product in ps_specific_price
+            if ($specific_prices)
+                foreach($specific_prices as $specific_price)
+                    if ($specific_price['id_product_attribute'])
+                        $calc_combination_specific_price[] = $specific_price['id_product_attribute'];
+
 			foreach ($attributes_groups as $k => $row)
 			{
 				// Color management
@@ -453,7 +471,12 @@ class ProductControllerCore extends FrontController
 				// Call getPriceStatic in order to set $combination_specific_price
 				if (!isset($combination_prices_set[(int)$row['id_product_attribute']]))
 				{
-					Product::getPriceStatic((int)$this->product->id, false, $row['id_product_attribute'], 6, null, false, true, 1, false, null, null, null, $combination_specific_price);
+                    //set $combination_specific_price to calculated value;
+                    $combination_specific_price = $calculated_combination_specific_price;
+                    //calculate $combination_specific_price for attribute
+                    if (in_array($row['id_product_attribute'], $calc_combination_specific_price))
+                        Product::getPriceStatic((int)$this->product->id, false, $row['id_product_attribute'], 6, null, false, true, 1, false, null, null, null, $combination_specific_price);
+
 					$combination_prices_set[(int)$row['id_product_attribute']] = true;
 					$combinations[$row['id_product_attribute']]['specific_price'] = $combination_specific_price;
 				}

@@ -3108,6 +3108,24 @@ class AdminProductsControllerCore extends AdminController
 			$currencies = Currency::getCurrencies();
 			$attributes = $obj->getAttributesGroups((int)$this->context->language->id);
 			$combinations = array();
+
+            //check specific prices for product
+            $product_id = (int)$obj->id;
+            $query = 'SELECT * FROM `'._DB_PREFIX_.'specific_price` WHERE `id_product` = ' . $product_id;
+            $specific_prices = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+
+            //get specific price for product default attribute (when id_product_attribute field = 0 in ps_specific_price
+            //or when product not in the list)
+            $calculated_combination_specific_price = 0; //update by reference
+            Product::getPriceStatic($product_id, false, null, 6, null, false, true, 1, false, null, null, null, $calculated_combination_specific_price);
+
+            $calc_combination_specific_price = array();
+            //collect existing id_product_attributes for product in ps_specific_price
+            if ($specific_prices)
+                foreach($specific_prices as $specific_price)
+                    if ($specific_price['id_product_attribute'])
+                        $calc_combination_specific_price[] = $specific_price['id_product_attribute'];
+
 			foreach ($attributes as $attribute)
 			{
 				$combinations[$attribute['id_product_attribute']]['id_product_attribute'] = $attribute['id_product_attribute'];
@@ -3115,12 +3133,26 @@ class AdminProductsControllerCore extends AdminController
 					$combinations[$attribute['id_product_attribute']]['attributes'] = '';
 				$combinations[$attribute['id_product_attribute']]['attributes'] .= $attribute['attribute_name'].' - ';
 
-				$combinations[$attribute['id_product_attribute']]['price'] = Tools::displayPrice(
-					Tools::convertPrice(
-						Product::getPriceStatic((int)$obj->id, false, $attribute['id_product_attribute']),
-						$this->context->currency
-					), $this->context->currency
-				);
+                //calculate $combination_specific_price for attribute
+                if (in_array($attribute['id_product_attribute'], $calc_combination_specific_price))
+                {
+                    $combinations[$attribute['id_product_attribute']]['price'] = Tools::displayPrice(
+                        Tools::convertPrice(
+                            $calculated_combination_specific_price,
+                            $this->context->currency
+                        ), $this->context->currency
+                    );
+                }
+                else
+                {
+                    $combinations[$attribute['id_product_attribute']]['price'] = Tools::displayPrice(
+                        Tools::convertPrice(
+                            Product::getPriceStatic((int)$obj->id, false, $attribute['id_product_attribute']),
+                            $this->context->currency
+                        ), $this->context->currency
+                    );
+                }
+
 			}
 			foreach ($combinations as &$combination)
 				$combination['attributes'] = rtrim($combination['attributes'], ' - ');
