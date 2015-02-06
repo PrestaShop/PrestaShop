@@ -1784,7 +1784,8 @@ CREATE TABLE `PREFIX_specific_price` (
 	KEY (`id_product`, `id_shop`, `id_currency`, `id_country`, `id_group`, `id_customer`, `from_quantity`, `from`, `to`),
 	KEY `from_quantity` (`from_quantity`),
 	KEY (`id_specific_price_rule`),
-	KEY (`id_cart`)
+	KEY (`id_cart`),
+  UNIQUE KEY `id_product_2` (`id_product`,`id_shop`,`id_shop_group`,`id_currency`,`id_country`,`id_group`,`id_customer`,`id_product_attribute`,`from_quantity`,`from`,`to`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_state` (
