@@ -478,7 +478,7 @@ class CartCore extends ObjectModel
 						stock.`quantity` AS quantity_available, p.`width`, p.`height`, p.`depth`, stock.`out_of_stock`, p.`weight`,
 						p.`date_add`, p.`date_upd`, IFNULL(stock.quantity, 0) as quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
 						CONCAT(LPAD(cp.`id_product`, 10, 0), LPAD(IFNULL(cp.`id_product_attribute`, 0), 10, 0), IFNULL(cp.`id_address_delivery`, 0)) AS unique_id, cp.id_address_delivery,
-						product_shop.advanced_stock_management, ps.product_supplier_reference supplier_reference, IFNULL(sp.`reduction_type`, 0) AS reduction_type');
+						product_shop.advanced_stock_management, ps.product_supplier_reference supplier_reference');
 
 		// Build FROM
 		$sql->from('cart_product', 'cp');
@@ -498,8 +498,6 @@ class CartCore extends ObjectModel
 
 		$sql->leftJoin('product_supplier', 'ps', 'ps.`id_product` = cp.`id_product` AND ps.`id_product_attribute` = cp.`id_product_attribute` AND ps.`id_supplier` = p.`id_supplier`');
 
-		$sql->leftJoin('specific_price', 'sp', 'sp.`id_product` = cp.`id_product`'); // AND 'sp.`id_shop` = cp.`id_shop`
-
 		// @todo test if everything is ok, then refactorise call of this method
 		$sql->join(Product::sqlStock('cp', 'cp'));
 
@@ -509,11 +507,8 @@ class CartCore extends ObjectModel
 			$sql->where('cp.`id_product` = '.(int)$id_product);
 		$sql->where('p.`id_product` IS NOT NULL');
 
-		// Build GROUP BY
-		$sql->groupBy('unique_id');
-
 		// Build ORDER BY
-		$sql->orderBy('cp.`date_add`, p.`id_product`, cp.`id_product_attribute` ASC');
+		$sql->orderBy('cp.`date_add`, cp.`id_product`, cp.`id_product_attribute` ASC');
 
 		if (Customization::isFeatureActive())
 		{
@@ -553,10 +548,17 @@ class CartCore extends ObjectModel
 		$products_ids = array();
 		$pa_ids = array();
 		if ($result)
-			foreach ($result as $row)
+			foreach ($result as $key => $row)
 			{
 				$products_ids[] = $row['id_product'];
 				$pa_ids[] = $row['id_product_attribute'];
+				$specific_price = SpecificPrice::getSpecificPrice($row['id_product'], $this->id_shop, $this->id_currency, $id_country, $this->id_shop_group, $row['cart_quantity'], $row['id_product_attribute'], $this->id_customer, $this->id);
+				if ($specific_price) {
+					$reduction_type_row = array('reduction_type' => $specific_price['reduction_type']);
+				} else {
+					$reduction_type_row = array('reduction_type' => 0);
+				}
+				$result[$key] = array_merge($row, $reduction_type_row);
 			}
 		// Thus you can avoid one query per product, because there will be only one query for all the products of the cart
 		Product::cacheProductsFeatures($products_ids);
@@ -640,31 +642,24 @@ class CartCore extends ObjectModel
 			$row['total_wt'] += $ecotax_tax_amount * $row['cart_quantity'];
 			$row['description_short'] = Tools::nl2br($row['description_short']);
 
-			$cache_id = 'Cart::getProducts_'.'-pai_id_image-'.(int)$row['id_product'].'-'.(int)$row['id_product_attribute'].'-'.(int)$this->id_lang.'-'.(int)$row['id_shop'];
+			$cache_id = 'Cart::getProducts_'.'-pai_id_image-'.(int)$row['id_product'].'-'.(int)$this->id_lang.'-'.(int)$row['id_shop'];
+
 			if (!Cache::isStored($cache_id))
 			{
-				$flag = (int)$row['id_product_attribute'] && (int)$row['pai_id_image'];
 				$row2 = Db::getInstance()->getRow('
 					SELECT image_shop.`id_image` id_image, il.`legend`
-					FROM `'._DB_PREFIX_.'image` i
-					INNER JOIN `'._DB_PREFIX_.'image_shop` image_shop
-						ON (i.id_image = image_shop.id_image'.(!$flag ? ' AND image_shop.cover = 1' : '').' AND image_shop.id_shop = '.(int)$row['id_shop'].')'
-					.($flag ? '
-					INNER JOIN `'._DB_PREFIX_.'product_attribute_image` pai
-						ON (pai.`id_image` = i.`id_image` AND pai.`id_product_attribute` = '.(int)$row['id_product_attribute'].')' : '')
-					.'
-					LEFT JOIN `'._DB_PREFIX_.'image_lang` il
-						ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$this->id_lang.')
-					WHERE i.`id_product` = '.(int)$row['id_product']
-					.($flag ? '
-					ORDER BY i.`position` ASC' : '')
+					FROM `'._DB_PREFIX_.'image_shop` image_shop
+					LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$this->id_lang.')
+					WHERE image_shop.`id_product` = '.(int)$row['id_product'].' AND image_shop.`cover` = 1 AND image_shop.id_shop='.(int)$row['id_shop']
 				);
 				Cache::store($cache_id, $row2);
 			}
+
 			$row2 = Cache::retrieve($cache_id);
 
 			if (!$row2)
 				$row2 = array('id_image' => false, 'legend' => false);
+
 			$row = array_merge($row, $row2);
 
 			$row['reduction_applies'] = ($specific_price_output && (float)$specific_price_output['reduction']);
@@ -2175,7 +2170,7 @@ class CartCore extends ObjectModel
 			}
 		}
 
-		$cart_rules = CartRule::getCustomerCartRules(Context::getContext()->cookie->id_lang, Context::getContext()->cookie->id_customer, true, true, false, $this);
+		$cart_rules = CartRule::getCustomerCartRules(Context::getContext()->cookie->id_lang, Context::getContext()->cookie->id_customer, true, true, false, $this, true);
 		$result = Db::getInstance('SELECT * FROM '._DB_PREFIX_.'cart_cart_rule WHERE id_cart='.$this->id);
 		$cart_rules_in_cart = array();
 
@@ -2635,11 +2630,11 @@ class CartCore extends ObjectModel
 				if ($value['is_virtual'] == 1)
 					unset($product_list[$key]);
 
-		$complete_product_list = $this->getProducts();
-		if (is_null($product_list))
-			$products = $complete_product_list;
-		else
+		if (is_null($product_list)) {
+			$products = $this->getProducts();
+		} else {
 			$products = $product_list;
+		}
 
 		if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_invoice')
 			$address_id = (int)$this->id_address_invoice;
@@ -2719,9 +2714,10 @@ class CartCore extends ObjectModel
 
 				$carrier = self::$_carriers[$row['id_carrier']];
 
+				$shipping_method = $carrier->getShippingMethod();
 				// Get only carriers that are compliant with shipping method
-				if (($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_WEIGHT && $carrier->getMaxDeliveryPriceByWeight((int)$id_zone) === false)
-				|| ($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_PRICE && $carrier->getMaxDeliveryPriceByPrice((int)$id_zone) === false))
+				if (($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && $carrier->getMaxDeliveryPriceByWeight((int)$id_zone) === false)
+				|| ($shipping_method == Carrier::SHIPPING_METHOD_PRICE && $carrier->getMaxDeliveryPriceByPrice((int)$id_zone) === false))
 				{
 					unset($result[$k]);
 					continue;
@@ -2736,15 +2732,15 @@ class CartCore extends ObjectModel
 					$check_delivery_price_by_price = Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $total_order, (int)$id_zone, (int)$this->id_currency);
 
 					// Get only carriers that have a range compatible with cart
-					if (($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_WEIGHT && !$check_delivery_price_by_weight)
-					|| ($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_PRICE && !$check_delivery_price_by_price))
+					if (($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && !$check_delivery_price_by_weight)
+					|| ($shipping_method == Carrier::SHIPPING_METHOD_PRICE && !$check_delivery_price_by_price))
 					{
 						unset($result[$k]);
 						continue;
 					}
 				}
 
-				if ($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_WEIGHT)
+				if ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT)
 					$shipping = $carrier->getDeliveryPriceByWeight($this->getTotalWeight($product_list), (int)$id_zone);
 				else
 					$shipping = $carrier->getDeliveryPriceByPrice($order_total, (int)$id_zone, (int)$this->id_currency);
@@ -2774,6 +2770,7 @@ class CartCore extends ObjectModel
 			Cache::store($cache_id, 0);
 			return 0;
 		}
+		$shipping_method = $carrier->getShippingMethod();
 
 		if (!$carrier->active)
 		{
@@ -2835,13 +2832,13 @@ class CartCore extends ObjectModel
 					$id_zone = (int)$default_country->id_zone;
 			}
 
-			if (($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_WEIGHT && !Carrier::checkDeliveryPriceByWeight($carrier->id, $this->getTotalWeight(), (int)$id_zone))
-			|| ($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_PRICE && !Carrier::checkDeliveryPriceByPrice($carrier->id, $total_package_without_shipping_tax_inc, $id_zone, (int)$this->id_currency)
+			if (($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && !Carrier::checkDeliveryPriceByWeight($carrier->id, $this->getTotalWeight(), (int)$id_zone))
+			|| ($shipping_method == Carrier::SHIPPING_METHOD_PRICE && !Carrier::checkDeliveryPriceByPrice($carrier->id, $total_package_without_shipping_tax_inc, $id_zone, (int)$this->id_currency)
 			))
 				$shipping_cost += 0;
 			else
 			{
-				if ($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_WEIGHT)
+				if ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT)
 					$shipping_cost += $carrier->getDeliveryPriceByWeight($this->getTotalWeight($product_list), $id_zone);
 				else // by price
 					$shipping_cost += $carrier->getDeliveryPriceByPrice($order_total, $id_zone, (int)$this->id_currency);
@@ -2849,7 +2846,7 @@ class CartCore extends ObjectModel
 		}
 		else
 		{
-			if ($carrier->getShippingMethod() == Carrier::SHIPPING_METHOD_WEIGHT)
+			if ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT)
 				$shipping_cost += $carrier->getDeliveryPriceByWeight($this->getTotalWeight($product_list), $id_zone);
 			else
 				$shipping_cost += $carrier->getDeliveryPriceByPrice($order_total, $id_zone, (int)$this->id_currency);

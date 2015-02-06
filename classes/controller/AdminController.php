@@ -2763,7 +2763,10 @@ class AdminControllerCore extends Controller
 	 * @param string $order_by ORDER BY clause
 	 * @param string $_orderWay Order way (ASC, DESC)
 	 * @param integer $start Offset in LIMIT clause
-	 * @param integer $limit Row count in LIMIT clause
+	 * @param integer $limit     Row count in LIMIT clause
+	 * @param integer $id_lang_shop
+	 * @throws PrestaShopDatabaseException
+	 * @throws PrestaShopException
 	 */
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{

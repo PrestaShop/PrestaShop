@@ -65,7 +65,7 @@ function add_order_state($conf_name, $name, $invoice, $send_email, $color, $unre
 		');
 	}
 	
-	$exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` LIKE \''.pSQL($conf_name).'\'');
+	$exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = \''.pSQL($conf_name).'\'');
 	if ($exist)
 		$res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "'.(int)$id_order_state.'" WHERE `name` LIKE \''.pSQL($conf_name).'\'');
 	else

@@ -111,7 +111,7 @@ class StateCore extends ObjectModel
 			$result = (int)Db::getInstance()->getValue('
 				SELECT `id_state`
 				FROM `'._DB_PREFIX_.'state`
-				WHERE `name` LIKE \''.pSQL($state).'\'
+				WHERE `name` = \''.pSQL($state).'\'
 			');
 			Cache::store($cache_id, $result);
 		}

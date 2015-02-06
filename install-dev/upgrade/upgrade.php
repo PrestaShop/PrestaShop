@@ -490,7 +490,7 @@ function getConfValue($name)
 	$sql = 'SELECT IF(cl.`id_lang` IS NULL, c.`value`, cl.`value`) AS value
 			FROM `'._DB_PREFIX_.'configuration` c
 			LEFT JOIN `'._DB_PREFIX_.'configuration_lang` cl ON (c.`id_configuration` = cl.`id_configuration`)
-			WHERE c.`name` LIKE \''.pSQL($name).'\'';
+			WHERE c.`name`=\''.pSQL($name).'\'';
 
 	if ($full)
 	{

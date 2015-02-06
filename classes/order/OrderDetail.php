@@ -702,10 +702,12 @@ class OrderDetailCore extends ObjectModel
 
 			$order_products = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 				SELECT DISTINCT od.product_id, p.id_product, pl.name, pl.link_rewrite, p.reference, i.id_image, product_shop.show_price,
-				cl.link_rewrite category, p.ean13, p.out_of_stock, p.id_category_default
+				cl.link_rewrite category, p.ean13, p.out_of_stock, p.id_category_default '.(Combination::isFeatureActive() ? ', IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute' : '').'
 				FROM '._DB_PREFIX_.'order_detail od
 				LEFT JOIN '._DB_PREFIX_.'product p ON (p.id_product = od.product_id)
-				'.Shop::addSqlAssociation('product', 'p').'
+				'.Shop::addSqlAssociation('product', 'p').
+				(Combination::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'product_attribute_shop` product_attribute_shop
+				ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop='.(int)Context::getContext()->shop->id.')':'').'
 				LEFT JOIN '._DB_PREFIX_.'product_lang pl ON (pl.id_product = od.product_id'.Shop::addSqlRestrictionOnLang('pl').')
 				LEFT JOIN '._DB_PREFIX_.'category_lang cl ON (cl.id_category = product_shop.id_category_default'.Shop::addSqlRestrictionOnLang('cl').')
 				LEFT JOIN '._DB_PREFIX_.'image i ON (i.id_product = od.product_id)
