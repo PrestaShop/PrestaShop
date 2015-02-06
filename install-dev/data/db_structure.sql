@@ -1606,8 +1606,10 @@ CREATE TABLE `PREFIX_product_sale` (
 CREATE TABLE `PREFIX_product_tag` (
   `id_product` int(10) unsigned NOT NULL,
   `id_tag` int(10) unsigned NOT NULL,
+  `id_lang` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id_product`,`id_tag`),
-  KEY `id_tag` (`id_tag`)
+  KEY `id_tag` (`id_tag`),
+  KEY `id_lang` (`id_lang`,`id_tag`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_profile` (
@@ -1839,6 +1841,15 @@ CREATE TABLE `PREFIX_tag` (
   PRIMARY KEY (`id_tag`),
   KEY `tag_name` (`name`),
   KEY `id_lang` (`id_lang`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
+
+CREATE TABLE `PREFIX_tag_count` (
+  `id_group` int(10) unsigned NOT NULL DEFAULT 0,
+  `id_tag` int(10) unsigned NOT NULL DEFAULT 0,
+  `id_lang` int(10) unsigned NOT NULL DEFAULT 0,
+  `counter` int(10) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id_group`, `id_tag`),
+  KEY (`id_group`, `id_lang`, `id_shop`, `counter`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_tax` (
