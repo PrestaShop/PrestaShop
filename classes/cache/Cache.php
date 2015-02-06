@@ -232,9 +232,6 @@ abstract class CacheCore
 		if ($this->isBlacklist($query))
 			return true;
 
-		if (empty($result))
-			$result = array();
-
 		if (is_null($this->sql_tables_cached))
 		{
 			$this->sql_tables_cached = $this->get(Tools::encryptIV(self::SQL_TABLES_NAME));
@@ -242,10 +239,10 @@ abstract class CacheCore
 				$this->sql_tables_cached = array();
 		}
 
-		// Store query results in cache
+		// Store query results in cache if this query is not already cached
 		$key = Tools::encryptIV($query);
-		// no need to check the key existence before the set : if the query is already
-		// in the cache, setQuery is not invoked
+		if ($this->exists($key))
+			return true;
 		$this->set($key, $result);
 
 		// Get all table from the query and save them in cache
