@@ -797,6 +797,27 @@ abstract class ObjectModelCore
 		// Change status to active/inactive
 		return $this->update(false);
 	}
+	
+	/**
+	 * Toggle object's visibility status in database
+	 *
+	 * @return boolean Update result
+	 */
+	public function toggleHidden()
+	{
+	 	// Object must have a variable called 'active'
+	 	if (!array_key_exists('hidden', $this))
+			throw new PrestaShopException('property "hidden" is missing in object '.get_class($this));
+
+		// Update only active field
+		$this->setFieldsToUpdate(array('hidden' => true));
+
+	 	// Update active status on object
+	 	$this->hidden = !(int)$this->hidden;
+
+		// Change status to active/inactive
+		return $this->update(false);
+	}
 
 	/**
 	 * @deprecated 1.5.0 (use getFieldsLang())

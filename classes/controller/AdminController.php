@@ -373,7 +373,8 @@ class AdminControllerCore extends Controller
 			29 => $this->l('Successful upgrade'),
 			30 => $this->l('A partial refund was successfully created.'),
 			31 => $this->l('The discount was successfully generated.'),
-			32 => $this->l('Successfully signed in to PrestaShop Addons')
+			32 => $this->l('Successfully signed in to PrestaShop Addons'),
+			33 => $this->l('The visibility has been successfully updated.')
 		);
 
 		if (!$this->identifier) $this->identifier = 'id_'.$this->table;
@@ -1117,6 +1118,36 @@ class AdminControllerCore extends Controller
 		}
 		else
 			$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').
+				' <b>'.$this->table.'</b> '.
+				Tools::displayError('(cannot load object)');
+
+		return $object;
+	}
+	
+	/**
+	* Change object visibility (visible, hidden)
+	*/
+	public function processHidden()
+	{
+		if (Validate::isLoadedObject($object = $this->loadObject()))
+		{
+			if ($object->toggleHidden())
+			{
+				$matches = array();
+				if (preg_match('/[\?|&]controller=([^&]*)/', (string)$_SERVER['HTTP_REFERER'], $matches) !== FALSE
+					&& strtolower($matches[1]) != strtolower(preg_replace('/controller/i', '', get_class($this))))
+						$this->redirect_after = preg_replace('/[\?|&]conf=([^&]*)/i', '', (string)$_SERVER['HTTP_REFERER']);
+				else
+					$this->redirect_after = self::$currentIndex.'&token='.$this->token;
+
+				$id_category = (($id_category = (int)Tools::getValue('id_category')) && Tools::getValue('id_product')) ? '&id_category='.$id_category : '';
+				$this->redirect_after .= '&conf=33'.$id_category;
+			}
+			else
+				$this->errors[] = Tools::displayError('An error occurred while updating the the "hidden" value for this object.');
+		}
+		else
+			$this->errors[] = Tools::displayError('An error occurred while updating the "hidden" value for an object.').
 				' <b>'.$this->table.'</b> '.
 				Tools::displayError('(cannot load object)');
 
@@ -2583,11 +2614,19 @@ class AdminControllerCore extends Controller
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 		}
-		/* Change object statuts (active, inactive) */
+		/* Change object status (active, inactive) */
 		elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools::getValue($this->identifier))
 		{
 			if ($this->tabAccess['edit'] === '1')
 				$this->action = 'status';
+			else
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
+		}
+		/* Change object's hidden value (hidden, visible) */
+		elseif ((isset($_GET['hidden'.$this->table]) || isset($_GET['hidden'])) && Tools::getValue($this->identifier))
+		{
+			if ($this->tabAccess['edit'] === '1')
+				$this->action = 'hidden';
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}

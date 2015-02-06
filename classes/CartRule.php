@@ -69,6 +69,7 @@ class CartRuleCore extends ObjectModel
 	public $gift_product_attribute;
 	public $highlight;
 	public $active = 1;
+	public $hidden = 0;
 	public $date_add;
 	public $date_upd;
 
@@ -109,6 +110,7 @@ class CartRuleCore extends ObjectModel
 			'gift_product_attribute' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'highlight' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'active' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'hidden' => 					array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'date_upd' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 
@@ -245,9 +247,10 @@ class CartRuleCore extends ObjectModel
 	 * @param bool $includeGeneric
 	 * @param bool $inStock
 	 * @param Cart|null $cart
+	 * @param bool $hidden
 	 * @return array
 	 */
-	public static function getCustomerCartRules($id_lang, $id_customer, $active = false, $includeGeneric = true, $inStock = false, Cart $cart = null)
+	public static function getCustomerCartRules($id_lang, $id_customer, $active = false, $includeGeneric = true, $inStock = false, Cart $cart = null, $hidden = false)
 	{
 		if (!CartRule::isFeatureActive())
 			return array();
@@ -262,6 +265,7 @@ class CartRuleCore extends ObjectModel
 		)
 		AND cr.date_from < "'.date('Y-m-d H:i:s').'"
 		AND cr.date_to > "'.date('Y-m-d H:i:s').'"
+		'.($hidden ? '' : 'AND cr. `hidden` = 0').'
 		'.($active ? 'AND cr.`active` = 1' : '').'
 		'.($inStock ? 'AND cr.`quantity` > 0' : ''));
 

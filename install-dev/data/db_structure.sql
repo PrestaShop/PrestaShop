@@ -229,6 +229,7 @@ CREATE TABLE `PREFIX_cart_rule` (
 	`gift_product_attribute` int(10) unsigned NOT NULL DEFAULT '0',
 	`highlight` tinyint(1) unsigned NOT NULL DEFAULT '0',
 	`active` tinyint(1) unsigned NOT NULL DEFAULT '0',
+	`hidden` tinyint(1) unsigned NOT NULL DEFAULT '0',
 	`date_add` datetime NOT NULL,
 	`date_upd` datetime NOT NULL,
 	PRIMARY KEY (`id_cart_rule`)
