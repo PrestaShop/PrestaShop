@@ -118,7 +118,7 @@ class ConnectionCore extends ObjectModel
 						AND `date_add` > \''.pSQL(date('Y-m-d H:i:00', time() - 1800)).'\'
 						'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
 					ORDER BY `date_add` DESC';
-			if ($id_connections = Db::getInstance()->getValue($sql))
+			if ($id_connections = Db::getInstance()->getValue($sql, false))
 			{
 				$cookie->id_connections = (int)$id_connections;
 				return Page::getCurrentId();
@@ -132,7 +132,7 @@ class ConnectionCore extends ObjectModel
 					AND `date_add` > \''.pSQL(date('Y-m-d H:i:00', time() - 1800)).'\'
 					'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
 				ORDER BY `date_add` DESC';
-		$result = Db::getInstance()->getRow($sql);
+		$result = Db::getInstance()->getRow($sql, false);
 		if (!$result['id_guest'] && (int)$cookie->id_guest)
 		{
 			// The old connections details are removed from the database in order to spare some memory

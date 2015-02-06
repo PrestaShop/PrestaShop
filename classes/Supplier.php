@@ -307,7 +307,7 @@ class SupplierCore extends ObjectModel
 				ORDER BY '.$alias.pSQL($order_by).' '.pSQL($order_way).'
 				LIMIT '.(((int)$p - 1) * (int)$n).','.(int)$n;
 
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
 
 		if (!$result)
 			return false;
