@@ -375,6 +375,37 @@ class CartCore extends ObjectModel
 		return $result;
 	}
 
+	/**
+	 * Return the cart rules Ids on the cart.
+	 * @param $filter
+	 * @return array
+	 * @throws PrestaShopDatabaseException
+	 */
+	public function getOrderedCartRulesIds($filter = CartRule::FILTER_ACTION_ALL)
+	{
+		$cache_key = 'Cart::getCartRules_' . $this->id . '-' . $filter . '-ids';
+		if (!Cache::isStored($cache_key)) {
+			$result = Db::getInstance()->executeS('
+				SELECT cr.`id_cart_rule`
+				FROM `' . _DB_PREFIX_ . 'cart_cart_rule` cd
+				LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule` cr ON cd.`id_cart_rule` = cr.`id_cart_rule`
+				LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl ON (
+					cd.`id_cart_rule` = crl.`id_cart_rule`
+					AND crl.id_lang = ' . (int)$this->id_lang . '
+				)
+				WHERE `id_cart` = ' . (int)$this->id . '
+				' . ($filter == CartRule::FILTER_ACTION_SHIPPING ? 'AND free_shipping = 1' : '') . '
+				' . ($filter == CartRule::FILTER_ACTION_GIFT ? 'AND gift_product != 0' : '') . '
+				' . ($filter == CartRule::FILTER_ACTION_REDUCTION ? 'AND (reduction_percent != 0 OR reduction_amount != 0)' : '')
+				. ' ORDER BY cr.priority ASC'
+			);
+			Cache::store($cache_key, $result);
+		}
+		$result = Cache::retrieve($cache_key);
+
+		return $result;
+	}
+
 	public function getDiscountsCustomer($id_cart_rule)
 	{
 		if (!CartRule::isFeatureActive())
@@ -1489,6 +1520,7 @@ class CartCore extends ObjectModel
 			return $wrapping_fees;
 
 		$order_total_discount = 0;
+		$order_shipping_discount = 0;
 		if (!in_array($type, array(Cart::ONLY_SHIPPING, Cart::ONLY_PRODUCTS)) && CartRule::isFeatureActive())
 		{
 			// First, retrieve the cart rules associated to this "getOrderTotal"
@@ -1521,7 +1553,7 @@ class CartCore extends ObjectModel
 				// If the cart rule offers free shipping, add the shipping cost
 				if (($with_shipping || $type == Cart::ONLY_DISCOUNTS) && $cart_rule['obj']->free_shipping && !$flag)
 				{
-					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_SHIPPING, ($param_product ? $package : null), $use_cache), _PS_PRICE_COMPUTE_PRECISION_);
+					$order_shipping_discount = (float)Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_SHIPPING, ($param_product ? $package : null), $use_cache), _PS_PRICE_COMPUTE_PRECISION_);
 					$flag = true;
 				}
 
@@ -1544,7 +1576,7 @@ class CartCore extends ObjectModel
 				if ($cart_rule['obj']->reduction_percent > 0 || $cart_rule['obj']->reduction_amount > 0)
 					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_REDUCTION, $package, $use_cache), _PS_PRICE_COMPUTE_PRECISION_);
 			}
-			$order_total_discount = min(Tools::ps_round($order_total_discount, 2), $wrapping_fees + $order_total_products + $shipping_fees);
+			$order_total_discount = min(Tools::ps_round($order_total_discount, 2), (float)$order_total_products) + (float)$order_shipping_discount;
 			$order_total -= $order_total_discount;
 		}
 
