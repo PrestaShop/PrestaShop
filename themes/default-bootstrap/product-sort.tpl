@@ -42,16 +42,11 @@
 	{/if}
 {/if}
 {if $page_name == 'best-sales' && (!isset($smarty.get.orderby) || empty($smarty.get.orderby))}{$orderby = ''}{$orderbydefault = ''}{/if}
-{assign 'sortOptionsArray' ['price', 'name', 'quantity', 'reference']}
 <form id="productsSortForm{if isset($paginationId)}_{$paginationId}{/if}" action="{$request|escape:'html':'UTF-8'}" class="productsSortForm">
 	<div class="select selector1">
 		<label for="selectProductSort{if isset($paginationId)}_{$paginationId}{/if}">{l s='Sort by'}</label>
 		<select id="selectProductSort{if isset($paginationId)}_{$paginationId}{/if}" class="selectProductSort form-control">
-			{if $orderbydefault|in_array:$sortOptionsArray}
-			<option disabled>{l s='Filter'}</option>
-			{else}
-			<option{if $page_name != 'best-sales'} value="{$orderbydefault|escape:'html':'UTF-8'}:{$orderwaydefault|escape:'html':'UTF-8'}"{/if}{if $orderby eq $orderbydefault} selected="selected"{/if}>{l s='--'}</option>
-			{/if}
+			<option value="{if $page_name != 'best-sales'}{$orderbydefault|escape:'html':'UTF-8'}:{$orderwaydefault|escape:'html':'UTF-8'}{/if}"{if $orderby eq $orderbydefault} selected="selected"{/if}>--</option>
 			{if !$PS_CATALOG_MODE}
 				<option value="price:asc"{if $orderby eq 'price' AND $orderway eq 'asc'} selected="selected"{/if}>{l s='Price: Lowest first'}</option>
 				<option value="price:desc"{if $orderby eq 'price' AND $orderway eq 'desc'} selected="selected"{/if}>{l s='Price: Highest first'}</option>
