@@ -3138,7 +3138,7 @@ class AdminProductsControllerCore extends AdminController
                 {
                     $combinations[$attribute['id_product_attribute']]['price'] = Tools::displayPrice(
                         Tools::convertPrice(
-                            $calculated_combination_specific_price,
+                            Product::getPriceStatic((int)$obj->id, false, $attribute['id_product_attribute']),
                             $this->context->currency
                         ), $this->context->currency
                     );
@@ -3147,7 +3147,7 @@ class AdminProductsControllerCore extends AdminController
                 {
                     $combinations[$attribute['id_product_attribute']]['price'] = Tools::displayPrice(
                         Tools::convertPrice(
-                            Product::getPriceStatic((int)$obj->id, false, $attribute['id_product_attribute']),
+                            $calculated_combination_specific_price,
                             $this->context->currency
                         ), $this->context->currency
                     );
