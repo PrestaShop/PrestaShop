@@ -527,15 +527,16 @@ class CartCore extends ObjectModel
 				(p.`weight`+ pa.`weight`) weight_attribute,
 				IF (IFNULL(pa.`ean13`, \'\') = \'\', p.`ean13`, pa.`ean13`) AS ean13,
 				IF (IFNULL(pa.`upc`, \'\') = \'\', p.`upc`, pa.`upc`) AS upc,
-				pai.`id_image` as pai_id_image, il.`legend` as pai_legend,
+				image_shop.`id_image` id_image, il.`legend`,
 				IFNULL(product_attribute_shop.`minimal_quantity`, product_shop.`minimal_quantity`) as minimal_quantity,
 				IF(product_attribute_shop.wholesale_price > 0,  product_attribute_shop.wholesale_price, product_shop.`wholesale_price`) wholesale_price
 			');
 
 			$sql->leftJoin('product_attribute', 'pa', 'pa.`id_product_attribute` = cp.`id_product_attribute`');
 			$sql->leftJoin('product_attribute_shop', 'product_attribute_shop', '(product_attribute_shop.`id_shop` = cp.`id_shop` AND product_attribute_shop.`id_product_attribute` = pa.`id_product_attribute`)');
-			$sql->leftJoin('product_attribute_image', 'pai', 'pai.`id_product_attribute` = pa.`id_product_attribute`');
-			$sql->leftJoin('image_lang', 'il', 'il.`id_image` = pai.`id_image` AND il.`id_lang` = '.(int)$this->id_lang);
+
+			$sql->leftJoin('image_shop', 'image_shop', 'image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop='.(int)$this->id_shop);
+			$sql->leftJoin('image_lang', 'il', 'il.`id_image` = image_shop.`id_image` AND il.`id_lang` = '.(int)$this->id_lang);
 		}
 		else
 			$sql->select(
@@ -558,6 +559,7 @@ class CartCore extends ObjectModel
 				} else {
 					$reduction_type_row = array('reduction_type' => 0);
 				}
+
 				$result[$key] = array_merge($row, $reduction_type_row);
 			}
 		// Thus you can avoid one query per product, because there will be only one query for all the products of the cart
@@ -642,25 +644,13 @@ class CartCore extends ObjectModel
 			$row['total_wt'] += $ecotax_tax_amount * $row['cart_quantity'];
 			$row['description_short'] = Tools::nl2br($row['description_short']);
 
-			$cache_id = 'Cart::getProducts_'.'-pai_id_image-'.(int)$row['id_product'].'-'.(int)$this->id_lang.'-'.(int)$row['id_shop'];
-
-			if (!Cache::isStored($cache_id))
+			// check if a image associated with the attribute exists
+			if ($row['id_product_attribute'])
 			{
-				$row2 = Db::getInstance()->getRow('
-					SELECT image_shop.`id_image` id_image, il.`legend`
-					FROM `'._DB_PREFIX_.'image_shop` image_shop
-					LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$this->id_lang.')
-					WHERE image_shop.`id_product` = '.(int)$row['id_product'].' AND image_shop.`cover` = 1 AND image_shop.id_shop='.(int)$row['id_shop']
-				);
-				Cache::store($cache_id, $row2);
+				$row2 = Image::getBestImageAttribute($row['id_shop'], $this->id_lang, $row['id_product'], $row['id_product_attribute']);
+				if ($row2)
+					$row = array_merge($row, $row2);
 			}
-
-			$row2 = Cache::retrieve($cache_id);
-
-			if (!$row2)
-				$row2 = array('id_image' => false, 'legend' => false);
-
-			$row = array_merge($row, $row2);
 
 			$row['reduction_applies'] = ($specific_price_output && (float)$specific_price_output['reduction']);
 			$row['quantity_discount_applies'] = ($specific_price_output && $row['cart_quantity'] >= (int)$specific_price_output['from_quantity']);
