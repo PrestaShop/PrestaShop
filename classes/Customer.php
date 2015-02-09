@@ -194,13 +194,13 @@ class CustomerCore extends ObjectModel
 	protected static $_defaultGroupId = array();
 	protected static $_customerHasAddress = array();
 	protected static $_customer_groups = array();
-	
+
 	public function __construct($id = null)
 	{
 		$this->id_default_group = (int)Configuration::get('PS_CUSTOMER_GROUP');
 		parent::__construct($id);
 	}
-	
+
 	public function add($autodate = true, $null_values = true)
 	{
 		$this->id_shop = ($this->id_shop) ? $this->id_shop : Context::getContext()->shop->id;
@@ -209,10 +209,10 @@ class CustomerCore extends ObjectModel
 		$this->birthday = (empty($this->years) ? $this->birthday : (int)$this->years.'-'.(int)$this->months.'-'.(int)$this->days);
 		$this->secure_key = md5(uniqid(rand(), true));
 		$this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-'.Configuration::get('PS_PASSWD_TIME_FRONT').'minutes'));
-		
+
 		if ($this->newsletter && !Validate::isDate($this->newsletter_date_add))
 			$this->newsletter_date_add = date('Y-m-d H:i:s');
-			
+
 		if ($this->id_default_group == Configuration::get('PS_CUSTOMER_GROUP'))
 			if ($this->is_guest)
 				$this->id_default_group = (int)Configuration::get('PS_GUEST_GROUP');
@@ -235,7 +235,7 @@ class CustomerCore extends ObjectModel
 			$this->newsletter_date_add = date('Y-m-d H:i:s');
 		if (isset(Context::getContext()->controller) && Context::getContext()->controller->controller_type == 'admin')
 			$this->updateGroup($this->groupBox);
-			
+
 		if ($this->deleted)
 		{
 			$addresses = $this->getAddresses((int)Configuration::get('PS_LANG_DEFAULT'));
@@ -262,10 +262,10 @@ class CustomerCore extends ObjectModel
 		}
 		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'customer_group` WHERE `id_customer` = '.(int)$this->id);
 		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'message WHERE id_customer='.(int)$this->id);
-		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'specific_price WHERE id_customer='.(int)$this->id);		
+		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'specific_price WHERE id_customer='.(int)$this->id);
 		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'compare WHERE id_customer='.(int)$this->id);
-				
-		$carts = Db::getInstance()->executes('SELECT id_cart 
+
+		$carts = Db::getInstance()->executes('SELECT id_cart
 															FROM '._DB_PREFIX_.'cart
 															WHERE id_customer='.(int)$this->id);
 		if ($carts)
@@ -274,8 +274,8 @@ class CustomerCore extends ObjectModel
 				Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'cart WHERE id_cart='.(int)$cart['id_cart']);
 				Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'cart_product WHERE id_cart='.(int)$cart['id_cart']);
 			}
-		
-		$cts = Db::getInstance()->executes('SELECT id_customer_thread 
+
+		$cts = Db::getInstance()->executes('SELECT id_customer_thread
 															FROM '._DB_PREFIX_.'customer_thread
 															WHERE id_customer='.(int)$this->id);
 		if ($cts)
@@ -423,10 +423,11 @@ class CustomerCore extends ObjectModel
 		return self::$_customerHasAddress[$key];
 	}
 
-	public static function resetAddressCache($id_customer)
+	public static function resetAddressCache($id_customer, $id_address)
 	{
-		if (array_key_exists($id_customer, self::$_customerHasAddress))
-			unset(self::$_customerHasAddress[$id_customer]);
+		$key = (int)$id_customer.'-'.(int)$id_address;
+		if (array_key_exists($key, self::$_customerHasAddress))
+			unset(self::$_customerHasAddress[$key]);
 	}
 
 	/**
@@ -440,13 +441,13 @@ class CustomerCore extends ObjectModel
 		$share_order = (bool)Context::getContext()->shop->getGroup()->share_order;
 		$cache_id = 'Customer::getAddresses'.(int)$this->id.'-'.(int)$id_lang.'-'.$share_order;
 		if (!Cache::isStored($cache_id))
-		{ 
+		{
 			$sql = 'SELECT DISTINCT a.*, cl.`name` AS country, s.name AS state, s.iso_code AS state_iso
 					FROM `'._DB_PREFIX_.'address` a
 					LEFT JOIN `'._DB_PREFIX_.'country` c ON (a.`id_country` = c.`id_country`)
 					LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country`)
 					LEFT JOIN `'._DB_PREFIX_.'state` s ON (s.`id_state` = a.`id_state`)
-					'.($share_order ? '' : Shop::addSqlAssociation('country', 'c')).' 
+					'.($share_order ? '' : Shop::addSqlAssociation('country', 'c')).'
 					WHERE `id_lang` = '.(int)$id_lang.' AND `id_customer` = '.(int)$this->id.' AND a.`deleted` = 0';
 
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
