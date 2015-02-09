@@ -896,6 +896,7 @@ function checkPartialRefundProductAmount(it)
 	if (typeof $(it).val() !== undefined && typeof new_price !== undefined &&
 		parseFloat($(it).val()) > parseFloat(old_price))
 		$(it).val(old_price);
+
 	if (order_discount_price)
 		actualizeRefundVoucher();
 }

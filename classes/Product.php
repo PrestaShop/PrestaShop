@@ -199,7 +199,7 @@ class ProductCore extends ObjectModel
 
 	/**
 	 * @var float Base price of the product
-	 * @deprecated 1.6.13
+	 * @deprecated 1.6.0.13
 	 */
 	public $base_price;
 

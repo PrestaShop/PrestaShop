@@ -991,27 +991,30 @@ class CartRuleCore extends ObjectModel
 					*/
 				}
 
-				// Cart values
-				$cart_average_vat_rate = $this->getCartAverageVatRate();
-				$current_cart_amount = $use_tax ? $cart_amount_ti : $cart_amount_te;
-
-				foreach ($all_cart_rules_ids as $current_cart_rule_id)
+				// Take care of the other cart rules values if the filter allow it
+				if ($filter != CartRule::FILTER_ACTION_ALL_NOCAP)
 				{
-					if ((int)$current_cart_rule_id['id_cart_rule'] == (int)$this->id)
-						break;
+					// Cart values
+					$cart_average_vat_rate = $this->getCartAverageVatRate();
+					$current_cart_amount = $use_tax ? $cart_amount_ti : $cart_amount_te;
 
-					$previous_cart_rule = new CartRule((int)$current_cart_rule_id['id_cart_rule']);
-					$previous_reduction_amount = $previous_cart_rule->reduction_amount;
+					foreach ($all_cart_rules_ids as $current_cart_rule_id) {
+						if ((int)$current_cart_rule_id['id_cart_rule'] == (int)$this->id)
+							break;
 
-					if ($previous_cart_rule->reduction_tax && !$use_tax)
-						$previous_reduction_amount = $prorata * $previous_reduction_amount / (1 + $cart_average_vat_rate);
-					elseif (!$previous_cart_rule->reduction_tax && $use_tax)
-						$previous_reduction_amount = $prorata * $previous_reduction_amount * (1 + $cart_average_vat_rate);
+						$previous_cart_rule = new CartRule((int)$current_cart_rule_id['id_cart_rule']);
+						$previous_reduction_amount = $previous_cart_rule->reduction_amount;
 
-					$current_cart_amount = max($current_cart_amount - (float)$previous_reduction_amount, 0);
+						if ($previous_cart_rule->reduction_tax && !$use_tax)
+							$previous_reduction_amount = $prorata * $previous_reduction_amount / (1 + $cart_average_vat_rate);
+						elseif (!$previous_cart_rule->reduction_tax && $use_tax)
+							$previous_reduction_amount = $prorata * $previous_reduction_amount * (1 + $cart_average_vat_rate);
+
+						$current_cart_amount = max($current_cart_amount - (float)$previous_reduction_amount, 0);
+					}
+
+					$reduction_value = min($reduction_value, $current_cart_amount);
 				}
-
-				$reduction_value = min($reduction_value, $current_cart_amount);
 			}
 		}
 
