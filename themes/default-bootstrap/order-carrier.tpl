@@ -195,62 +195,62 @@
 														</div>
 													</td>
 												</tr>
-												<tr>
-													<td class="delivery_option_logo{if $carrier.product_list[0].carrier_list[0] eq 0} hide{/if}">
-														{foreach $option.carrier_list as $carrier}
-															{if $carrier@iteration != 1}
-																{if $carrier.logo}
-																	<img src="{$carrier.logo|escape:'htmlall':'UTF-8'}" alt="{$carrier.instance->name|escape:'htmlall':'UTF-8'}"/>
-																{else if !$option.unique_carrier}
-																	{$carrier.instance->name|escape:'htmlall':'UTF-8'}
-																{/if}
+												{foreach $option.carrier_list as $carrier}
+													{if $carrier@iteration != 1}
+													<tr>
+														<td class="delivery_option_logo{if $carrier.product_list[0].carrier_list[0] eq 0} hide{/if}">
+															{if $carrier.logo}
+																<img src="{$carrier.logo|escape:'htmlall':'UTF-8'}" alt="{$carrier.instance->name|escape:'htmlall':'UTF-8'}"/>
+															{else if !$option.unique_carrier}
+																{$carrier.instance->name|escape:'htmlall':'UTF-8'}
 															{/if}
-														{/foreach}
-													</td>
-													<td class="{if $option.unique_carrier} first_item{/if}{if $carrier.product_list[0].carrier_list[0] eq 0} hide{/if}">
-														<input type="hidden" value="{$first.instance->id|intval}" name="id_carrier" />
-														{if isset($carrier.instance->delay[$cookie->id_lang])}
-															<i class="icon-info-sign"></i>
-															{strip}
-																{$carrier.instance->delay[$cookie->id_lang]|escape:'htmlall':'UTF-8'}
-																&nbsp;
-																{if count($first.product_list) <= 1}
-																	({l s='For this product:'}
-																{else}
-																	({l s='For these products:'}
-																{/if}
-															{/strip}
-															{foreach $carrier.product_list as $product}
-																{if $product@index == 4}
-																	<acronym title="
-																{/if}
+														</td>
+														<td class="{if $option.unique_carrier} first_item{/if}{if $carrier.product_list[0].carrier_list[0] eq 0} hide{/if}">
+															<input type="hidden" value="{$first.instance->id|intval}" name="id_carrier" />
+															{if isset($carrier.instance->delay[$cookie->id_lang])}
+																<i class="icon-info-sign"></i>
 																{strip}
-																	{if $product@index >= 4}
-																		{$product.name|escape:'htmlall':'UTF-8'}
-																		{if isset($product.attributes) && $product.attributes}
-																			{$product.attributes|escape:'htmlall':'UTF-8'}
-																		{/if}
-																		{if !$product@last}
-																			,&nbsp;
-																		{else}
-																			">&hellip;</acronym>)
-																		{/if}
+																	{$carrier.instance->delay[$cookie->id_lang]|escape:'htmlall':'UTF-8'}
+																	&nbsp;
+																	{if count($first.product_list) <= 1}
+																		({l s='For this product:'}
 																	{else}
-																		{$product.name|escape:'htmlall':'UTF-8'}
-																		{if isset($product.attributes) && $product.attributes}
-																			{$product.attributes|escape:'htmlall':'UTF-8'}
-																		{/if}
-																		{if !$product@last}
-																			,&nbsp;
-																		{else}
-																			)
-																		{/if}
+																		({l s='For these products:'}
 																	{/if}
-																{strip}
-															{/foreach}
-														{/if}
-													</td>
-												</tr>
+																{/strip}
+																{foreach $carrier.product_list as $product}
+																	{if $product@index == 4}
+																		<acronym title="
+																	{/if}
+																	{strip}
+																		{if $product@index >= 4}
+																			{$product.name|escape:'htmlall':'UTF-8'}
+																			{if isset($product.attributes) && $product.attributes}
+																				{$product.attributes|escape:'htmlall':'UTF-8'}
+																			{/if}
+																			{if !$product@last}
+																				,&nbsp;
+																			{else}
+																				">&hellip;</acronym>)
+																			{/if}
+																		{else}
+																			{$product.name|escape:'htmlall':'UTF-8'}
+																			{if isset($product.attributes) && $product.attributes}
+																				{$product.attributes|escape:'htmlall':'UTF-8'}
+																			{/if}
+																			{if !$product@last}
+																				,&nbsp;
+																			{else}
+																				)
+																			{/if}
+																		{/if}
+																	{strip}
+																{/foreach}
+															{/if}
+														</td>
+													</tr>
+													{/if}
+												{/foreach}
 											</table>
 										{/if}
 									</div>
