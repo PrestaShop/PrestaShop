@@ -29,6 +29,7 @@
 	{assign var='no_follow_text' value=''}
 {/if}
 
+<div id="pagination{if isset($paginationId)}_{$paginationId}{/if}_holder">
 {if isset($p) AND $p}
 	{if isset($smarty.get.id_category) && $smarty.get.id_category && isset($category)}
 		{if !isset($current_url)}
@@ -205,3 +206,4 @@
     </div>
 	<!-- /Pagination -->
 {/if}
+</div>
