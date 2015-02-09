@@ -1379,11 +1379,11 @@ abstract class ModuleCore
 							$item->url = isset($modaddons->url) ? $modaddons->url : null;
 							if (isset($modaddons->img))
 							{
-								if (!file_exists(_PS_TMP_IMG_DIR_.md5($modaddons->name).'.jpg'))
-									if (!file_put_contents(_PS_TMP_IMG_DIR_.md5($modaddons->name).'.jpg', Tools::file_get_contents($modaddons->img)))
-										copy(_PS_IMG_DIR_.'404.gif', _PS_TMP_IMG_DIR_.md5($modaddons->name).'.jpg');
-								if (file_exists(_PS_TMP_IMG_DIR_.md5($modaddons->name).'.jpg'))
-									$item->image = '../img/tmp/'.md5($modaddons->name).'.jpg';
+								if (!file_exists(_PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg'))
+									if (!file_put_contents(_PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg', Tools::file_get_contents($modaddons->img)))
+										copy(_PS_IMG_DIR_.'404.gif', _PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg');
+								if (file_exists(_PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg'))
+									$item->image = '../img/tmp/'.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg';
 							}
 							if ($item->type == 'addonsMustHave')
 							{
