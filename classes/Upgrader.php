@@ -287,7 +287,6 @@ class UpgraderCore
 
 	public function isAuthenticPrestashopVersion()
 	{
-
 		$this->getChangedFilesList();
 		return !$this->version_is_modified;
 	}

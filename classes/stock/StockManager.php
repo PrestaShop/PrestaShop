@@ -51,7 +51,8 @@ class StockManagerCore implements StockManagerInterface
 							   $price_te,
 							   $is_usable = true,
 							   $id_supply_order = null,
-							   $id_employee = null)
+							   $employee = null
+							  )
 	{
 		if (!Validate::isLoadedObject($warehouse) || !$price_te || !$quantity || !$id_product)
 			return false;
@@ -71,9 +72,9 @@ class StockManagerCore implements StockManagerInterface
 			'price_te' => $price_te,
 			'last_wa' => null,
 			'current_wa' => null,
-			'id_employee' => (int)$context->employee->id ? (int)$context->employee->id : $id_employee,
-			'employee_firstname' => $context->employee->firstname,
-			'employee_lastname' => $context->employee->lastname,
+			'id_employee' => (int)$context->employee->id ? (int)$context->employee->id : $employee->id,
+			'employee_firstname' => $context->employee->firstname ? $context->employee->firstname : $employee->firstname,
+			'employee_lastname' => $context->employee->lastname ? $context->employee->lastname : $employee->lastname,
 			'sign' => 1
 		);
 
@@ -194,7 +195,7 @@ class StockManagerCore implements StockManagerInterface
 								  $is_usable = true,
 								  $id_order = null,
 								  $ignore_pack = 0,
-								  $id_employee = null)
+								  $employee = null)
 	{
 		$return = array();
 
@@ -285,9 +286,9 @@ class StockManagerCore implements StockManagerInterface
 						'price_te' => $stock->price_te,
 						'last_wa' => $stock->price_te,
 						'current_wa' => $stock->price_te,
-						'id_employee' => (int)$context->employee->id ? (int)$context->employee->id : (int)$id_employee,
-						'employee_firstname' => $context->employee->firstname,
-						'employee_lastname' => $context->employee->lastname,
+						'id_employee' => (int)$context->employee->id ? (int)$context->employee->id : $employee->id,
+						'employee_firstname' => $context->employee->firstname ? $context->employee->firstname : $employee->firstname,
+						'employee_lastname' => $context->employee->lastname ? $context->employee->lastname : $employee->lastname,
 						'sign' => -1
 					);
 					$stock_params = array(
@@ -401,7 +402,7 @@ class StockManagerCore implements StockManagerInterface
 									'price_te' => $stock->price_te,
 									'sign' => -1,
 									'referer' => $id_mvt_referrer,
-									'id_employee' => $context->employee->id
+									'id_employee' => (int)$context->employee->id ? (int)$context->employee->id : $employee->id,
 								);
 
 								// saves stock mvt

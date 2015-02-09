@@ -328,7 +328,7 @@ class CustomerCore extends ObjectModel
 			return false;
 		$this->id = $result['id_customer'];
 		foreach ($result as $key => $value)
-			if (property_exists($this, $key))
+			if (Tools::property_exists($this, $key))
 				$this->{$key} = $value;
 		return $this;
 	}

@@ -107,7 +107,7 @@ class TagCore extends ObjectModel
 		 	 		return false;
 				$tag = trim(Tools::substr($tag, 0, self::$definition['fields']['name']['size']));
 				$tag_obj = new Tag(null, $tag, (int)$id_lang);
-	
+
 				/* Tag does not exist in database */
 				if (!Validate::isLoadedObject($tag_obj))
 				{
@@ -126,12 +126,12 @@ class TagCore extends ObjectModel
 		$result = Db::getInstance()->execute('
 		INSERT INTO `'._DB_PREFIX_.'product_tag` (`id_tag`, `id_product`, `id_lang`)
 		VALUES '.$data);
-		
+
 		self::updateTagCount();
-		
+
 		return $result;
 	}
-	
+
 	public static function updateTagCount() {
 		Db::getInstance()->execute('REPLACE INTO `'._DB_PREFIX_.'tag_count` (id_group, id_tag, id_lang, id_shop, counter)
 		SELECT cg.id_group, t.id_tag, t.id_lang, ps.id_shop, COUNT(pt.id_tag) AS times
@@ -225,7 +225,7 @@ class TagCore extends ObjectModel
 
 	public function setProducts($array)
 	{
-		$result = Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'product_tag WHERE id_tag = '.(int)$this->id);
+		$result = Db::getInstance()->delete('product_tag', 'id_tag = '.(int)$this->id);
 		if (is_array($array))
 		{
 			$array = array_map('intval', $array);
@@ -247,10 +247,8 @@ class TagCore extends ObjectModel
 
 	public static function deleteTagsForProduct($id_product)
 	{
-		$result = Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_tag` WHERE `id_product` = '.(int)$id_product);
+		$result = Db::getInstance()->delete('product_tag', 'id_product = '.(int)$id_product);
 		self::updateTagCount();
 		return $result;
 	}
 }
-
-
