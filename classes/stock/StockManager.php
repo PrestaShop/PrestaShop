@@ -218,7 +218,20 @@ class StockManagerCore implements StockManagerInterface
 					// Foreach item
 					foreach ($products_pack as $product_pack)
 						if ($product_pack->advanced_stock_management == 1)
-							$return[] = $this->removeProduct($product_pack->id, $product_pack->id_pack_product_attribute, $warehouse, $product_pack->pack_quantity * $quantity, $id_stock_mvt_reason, $is_usable, $id_order);
+						{
+							$product_warehouses = Warehouse::getProductWarehouseList($product_pack->id);
+							$warehouse_stock_found = false;
+							foreach ($product_warehouses as $product_warehouse)
+								if (!$warehouse_stock_found)
+									if (Warehouse::exists($product_warehouse['id_warehouse']))
+									{
+										$current_warehouse = new Warehouse($product_warehouse['id_warehouse']);
+										$return[] = $this->removeProduct($product_pack->id, $product_pack->id_pack_product_attribute, $current_warehouse, $product_pack->pack_quantity * $quantity, $id_stock_mvt_reason, $is_usable, $id_order);
+
+										// The product was found on this warehouse. Stop the stock searching.
+										$warehouse_stock_found = !empty($return[count($return) - 1]);
+									}
+						}
 				}
 				if ($product->pack_stock_type == 0 || $product->pack_stock_type == 2 ||
 					($product->pack_stock_type == 3 && (Configuration::get('PS_PACK_STOCK_TYPE') == 0 || Configuration::get('PS_PACK_STOCK_TYPE') == 2)))
