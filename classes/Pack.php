@@ -258,13 +258,15 @@ class PackCore extends Product
 	}
 
 	/**
-	* Add an item to the pack
-	*
-	* @param integer $id_product
-	* @param integer $id_item
-	* @param integer $qty
-	* @return boolean true if everything was fine
-	*/
+	 * Add an item to the pack
+	 *
+	 * @param integer $id_product
+	 * @param integer $id_item
+	 * @param integer $qty
+	 * @param int     $id_attribute_item
+	 * @return bool true if everything was fine
+	 * @throws PrestaShopDatabaseException
+	 */
 	public static function addItem($id_product, $id_item, $qty, $id_attribute_item = 0)
 	{
 		$id_attribute_item = (int)$id_attribute_item ? (int)$id_attribute_item : Product::getDefaultAttribute((int)$id_item);

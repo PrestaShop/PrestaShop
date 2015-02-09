@@ -664,7 +664,7 @@ class ValidateCore
 	 */
 	public static function isUnsignedInt($value)
 	{
-		return (preg_match('#^[0-9]+$#', (string)$value) && $value < 4294967296 && $value >= 0);
+		return ((string)(int)$value === (string)$value && $value < 4294967296 && $value >= 0);
 	}
 
 	/**
