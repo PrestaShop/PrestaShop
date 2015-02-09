@@ -425,8 +425,12 @@ class CustomerCore extends ObjectModel
 
 	public static function resetAddressCache($id_customer)
 	{
-		if (array_key_exists($id_customer, self::$_customerHasAddress))
-			unset(self::$_customerHasAddress[$id_customer]);
+		foreach (self::$_customerHasAddress as $key => $value)
+		{
+			list($firstPart) = explode('-', $key);
+			if ((int)$firstPart == $id_customer)
+				unset(self::$_customerHasAddress[$key]);
+		}
 	}
 
 	/**
