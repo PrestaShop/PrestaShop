@@ -330,7 +330,6 @@ class CustomerCore extends ObjectModel
 		foreach ($result as $key => $value)
 			if (property_exists($this, $key))
 				$this->{$key} = $value;
-		}
 		return $this;
 	}
 
