@@ -68,7 +68,7 @@ class ThemeCore extends ObjectModel
 	{
 		$themes = new PrestaShopCollection('Theme');
 
-		if(is_array($excluded_ids) && !empty($excluded_ids))
+		if (is_array($excluded_ids) && !empty($excluded_ids))
 			$themes->where('id_theme', 'notin', $excluded_ids);
 
 		$themes->orderBy('name');
@@ -150,7 +150,7 @@ class ThemeCore extends ObjectModel
 			if (!$res)
 				return false;
 
-			return new Theme($res['id_theme']);
+			return new Theme((int)$res['id_theme']);
 		}
 	}
 
@@ -166,7 +166,7 @@ class ThemeCore extends ObjectModel
 
 	public static function getThemeInfo($id_theme)
 	{
-		$theme = new Theme($id_theme);
+		$theme = new Theme((int)$id_theme);
 		$theme_arr = array();
 
 		if (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml'))
@@ -178,7 +178,7 @@ class ThemeCore extends ObjectModel
 
 		if ($config_file)
 		{
-			$theme_arr['theme_id'] = $theme->id;
+			$theme_arr['theme_id'] = (int)$theme->id;
 			$xml_theme = @simplexml_load_file($config_file);
 
 			if ($xml_theme !== false)
@@ -196,7 +196,7 @@ class ThemeCore extends ObjectModel
 		else
 		{
 			// If no xml we use data from database
-			$theme_arr['theme_id'] = $theme->id;
+			$theme_arr['theme_id'] = (int)$theme->id;
 			$theme_arr['theme_name'] = $theme->name;
 			$theme_arr['theme_directory'] = $theme->directory;
 		}
@@ -238,7 +238,7 @@ class ThemeCore extends ObjectModel
 	public function updateMetas($metas, $full_update = false)
 	{
 		if ($full_update)
-			Db::getInstance()->delete(_DB_PREFIX_ . 'theme_meta', 'id_theme='.(int)$this->id);
+			Db::getInstance()->delete(_DB_PREFIX_ . 'theme_meta', 'id_theme = '.(int)$this->id);
 
 		$values = array();
 		if ($this->id > 0)
@@ -246,7 +246,7 @@ class ThemeCore extends ObjectModel
 			foreach ($metas as $meta)
 			{
 				if (!$full_update)
-					Db::getInstance()->delete(_DB_PREFIX_ . 'theme_meta', 'id_theme='.(int)$this->id.' AND id_meta='.(int)$meta['id_meta']);
+					Db::getInstance()->delete(_DB_PREFIX_ . 'theme_meta', 'id_theme = '.(int)$this->id.' AND id_meta='.(int)$meta['id_meta']);
 
 				$values[] = array(
 					'id_theme'     => (int)$this->id,
