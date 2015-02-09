@@ -110,7 +110,7 @@
 				</div>
 				{* if customer hasn't update his layout address, country has to be verified but it's deprecated *}
 			{/if}
-			{if $field_name eq 'Country:name' || $field_name eq 'country'}
+			{if $field_name eq 'Country:name' || $field_name eq 'country' || $field_name eq 'Country:iso_code'}
 				<div class="required form-group">
 					<label for="id_country">{l s='Country'} <sup>*</sup></label>
 					<select id="id_country" class="form-control" name="id_country">{$countries_list}</select>
