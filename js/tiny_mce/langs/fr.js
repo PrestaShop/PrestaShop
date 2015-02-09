@@ -173,5 +173,7 @@ tinymce.addI18n('fr_FR',{
 "Tools": "Outils",
 "View": "Voir",
 "Table": "Tableau",
-"Format": "Format"
+"Format": "Format",
+"File manager": "Gestionnaire de fichier",
+"Color Picker": "Pipette de couleur"
 });

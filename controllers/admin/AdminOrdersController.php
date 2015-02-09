@@ -692,7 +692,8 @@ class AdminOrdersControllerCore extends AdminController
 
 					if ($amount >= 0)
 					{
-						if (!OrderSlip::create($order, $order_detail_list, $shipping_cost_amount, $voucher, $choosen, false))
+						if (!OrderSlip::create($order, $order_detail_list, $shipping_cost_amount, $voucher, $choosen,
+							(Tools::getValue('TaxMethod') ? false : true)))
 							$this->errors[] = Tools::displayError('You cannot generate a partial credit slip.');
 
 						foreach ($order_detail_list as &$product)
@@ -872,6 +873,9 @@ class AdminOrdersControllerCore extends AdminController
 									if ($order_carrier->update())
 										$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);
 								}
+
+								if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && StockAvailable::dependsOnStock($order_detail->product_id))
+									StockAvailable::synchronize($order_detail->product_id);
 								Hook::exec('actionProductCancel', array('order' => $order, 'id_order_detail' => (int)$id_order_detail), null, false, true, false, $order->id_shop);
 							}
 						if (!count($this->errors) && $customizationList)
