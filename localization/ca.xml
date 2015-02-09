@@ -4,8 +4,8 @@
 		<currency name="Dollar (CAD)" iso_code="CAD" iso_code_num="124" sign="CAD$" blank="0" conversion_rate="1.40054" format="1" decimals="1" />
 	</currencies>
 	<languages>
-		<language iso_code="fr" />
 		<language iso_code="en" />
+		<language iso_code="qc" />
 	</languages>
 	<states>
 		<state name="Alberta" iso_code="AB" country="CA" zone="North America" />
@@ -59,4 +59,3 @@
 	</configurations>
 	<group_default price_display_method="1" />
 </localizationPack>
-
