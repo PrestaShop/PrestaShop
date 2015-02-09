@@ -692,7 +692,8 @@ class AdminOrdersControllerCore extends AdminController
 
 					if ($amount >= 0)
 					{
-						if (!OrderSlip::create($order, $order_detail_list, $shipping_cost_amount, $voucher, $choosen, false))
+						if (!OrderSlip::create($order, $order_detail_list, $shipping_cost_amount, $voucher, $choosen,
+							(Tools::getValue('TaxMethod') ? false : true)))
 							$this->errors[] = Tools::displayError('You cannot generate a partial credit slip.');
 
 						foreach ($order_detail_list as &$product)

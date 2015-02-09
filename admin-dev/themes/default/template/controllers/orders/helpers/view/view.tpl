@@ -890,6 +890,11 @@
 							{l s='tax included.'}
 						{/if}
 					{/capture}
+					{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
+						<input type="hidden" name="TaxMethod" value="0">
+					{else}
+						<input type="hidden" name="TaxMethod" value="1">
+					{/if}
 					<div class="table-responsive">
 						<table class="table" id="orderProducts">
 							<thead>
