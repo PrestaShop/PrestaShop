@@ -2623,12 +2623,14 @@ class AdminProductsControllerCore extends AdminController
 				'class' => 'toolbar-new'
 			);
 		}
-		else
-			$this->toolbar_btn['import'] = array(
-				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=products',
-				'desc' => $this->l('Import')
-			);
-
+		else {
+			$importAccess = Profile::getProfileAccess($this->context->employee->id_profile, Tab::getIdFromClassName('AdminImport'));
+			if ( is_array($importAccess) && isset($importAccess['view']) && $importAccess['view'] == 1 ) 
+				$this->toolbar_btn['import'] = array(
+					'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=products',
+					'desc' => $this->l('Import')
+				);
+		}
 		$this->context->smarty->assign('toolbar_scroll', 1);
 		$this->context->smarty->assign('show_toolbar', 1);
 		$this->context->smarty->assign('toolbar_btn', $this->toolbar_btn);

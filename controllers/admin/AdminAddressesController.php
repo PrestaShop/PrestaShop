@@ -82,11 +82,14 @@ class AdminAddressesControllerCore extends AdminController
 	public function initToolbar()
 	{
 		parent::initToolbar();
-		if (!$this->display)
-			$this->toolbar_btn['import'] = array(
-				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=addresses',
-				'desc' => $this->l('Import')
-			);
+		if (!$this->display) {
+			$importAccess = Profile::getProfileAccess($this->context->employee->id_profile, Tab::getIdFromClassName('AdminImport'));
+			if ( is_array($importAccess) && isset($importAccess['view']) && $importAccess['view'] == 1 ) 
+				$this->toolbar_btn['import'] = array(
+					'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=addresses',
+					'desc' => $this->l('Import')
+				);
+		}
 	}
 
 	public function initPageHeaderToolbar()

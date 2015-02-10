@@ -570,10 +570,13 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					'desc' => $this->l('Add New Attributes', null, null, false)
 				);
 		}
-			$this->toolbar_btn['import'] = array(
-					'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=combinations',
-					'desc' => $this->l('Import', null, null, false)
-				);
+
+			$importAccess = Profile::getProfileAccess($this->context->employee->id_profile, Tab::getIdFromClassName('AdminImport'));
+			if ( is_array($importAccess) && isset($importAccess['view']) && $importAccess['view'] == 1 ) 
+				$this->toolbar_btn['import'] = array(
+						'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=combinations',
+						'desc' => $this->l('Import', null, null, false)
+					);
 	}
 
 	public function initToolbarTitle()

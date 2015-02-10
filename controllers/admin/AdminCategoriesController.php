@@ -268,10 +268,12 @@ class AdminCategoriesControllerCore extends AdminController
 				'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
 				'desc' => $this->l('Add New')
 			);
-			$this->toolbar_btn['import'] = array(
-				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=categories',
-				'desc' => $this->l('Import')
-			);
+			$importAccess = Profile::getProfileAccess($this->context->employee->id_profile, Tab::getIdFromClassName('AdminImport'));
+			if ( is_array($importAccess) && isset($importAccess['view']) && $importAccess['view'] == 1 ) 
+				$this->toolbar_btn['import'] = array(
+					'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=categories',
+					'desc' => $this->l('Import')
+				);
 		}
 		// be able to edit the Home category
 		if (count(Category::getCategoriesWithoutParent()) == 1 && !Tools::isSubmit('id_category')
