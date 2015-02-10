@@ -480,7 +480,7 @@ class MediaCore
 			if (!array_key_exists('date', $css_files_by_media[$media]))
 				$css_files_by_media[$media]['date'] = 0;
 			$css_files_by_media[$media]['date'] = max(
-				file_exists($infos['path']) ? @filemtime($infos['path']) : 0,
+				(int)@filemtime($infos['path']),
 				$css_files_by_media[$media]['date']
 			);
 
@@ -498,7 +498,7 @@ class MediaCore
 
 			$info = array(
 				'key' => $key,
-				'date' => file_exists($filename) ? @filemtime($filename) : 0
+				'date' => (int)@filemtime($filename)
 			);
 		}
 
@@ -603,7 +603,7 @@ class MediaCore
 				$js_files_infos[] = $infos;
 
 				$js_files_date = max(
-					file_exists($infos['path']) ? @filemtime($infos['path']) : 0,
+					(int)@filemtime($infos['path']),
 					$js_files_date
 				);
 				$compressed_js_filename .= $filename;
@@ -614,7 +614,7 @@ class MediaCore
 		$compressed_js_filename = md5($compressed_js_filename);
 		$version = (int)Configuration::get('PS_CCCJS_VERSION');
 		$compressed_js_path = $cache_path.'v_'.$version.'_'.$compressed_js_filename.'.js';
-		$compressed_js_file_date = file_exists($compressed_js_path) ? @filemtime($compressed_js_path) : 0;
+		$compressed_js_file_date = (int)@filemtime($compressed_js_path);
 
 		// aggregate and compress js files content, write new caches files
 		if ($js_files_date > $compressed_js_file_date)

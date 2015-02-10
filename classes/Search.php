@@ -332,7 +332,7 @@ class SearchCore
 				GROUP BY product_shop.id_product
 				'.($order_by ? 'ORDER BY  '.$alias.$order_by : '').($order_way ? ' '.$order_way : '').'
 				LIMIT '.(int)(($page_number - 1) * $page_size).','.(int)$page_size;
-		$result = $db->executeS($sql);
+		$result = $db->executeS($sql, true, false);
 
 		$sql = 'SELECT COUNT(*)
 				FROM '._DB_PREFIX_.'product p
@@ -760,7 +760,7 @@ class SearchCore
 					GROUP BY product_shop.id_product
 				ORDER BY position DESC'.($orderBy ? ', '.$orderBy : '').($orderWay ? ' '.$orderWay : '').'
 				LIMIT '.(int)(($pageNumber - 1) * $pageSize).','.(int)$pageSize;
-		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql))
+		if (!$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false))
 			return false;
 
 		return Product::getProductsProperties((int)$id_lang, $result);
