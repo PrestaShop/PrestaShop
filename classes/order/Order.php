@@ -1600,6 +1600,10 @@ class OrderCore extends ObjectModel
 		$order_payment->amount = $amount_paid;
 		$order_payment->date_add = ($date ? $date : null);
 
+		// Add time to the date if needed
+		if ($order_payment->date_add != null && preg_match("/^[0-9]+-[0-9]+-[0-9]+$/", $order_payment->date_add))
+			$order_payment->date_add .= ' '.date('H:i:s');
+
 		// Update total_paid_real value for backward compatibility reasons
 		if ($order_payment->id_currency == $this->id_currency)
 			$this->total_paid_real += $order_payment->amount;
