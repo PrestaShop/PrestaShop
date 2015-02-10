@@ -190,7 +190,7 @@ class TagCore extends ObjectModel
 
 	public function setProducts($array)
 	{
-		$result = Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'product_tag WHERE id_tag = '.(int)$this->id);
+		$result = Db::getInstance()->delete('product_tag', 'id_tag = '.(int)$this->id);
 		if (is_array($array))
 		{
 			$array = array_map('intval', $array);
@@ -211,7 +211,7 @@ class TagCore extends ObjectModel
 
 	public static function deleteTagsForProduct($id_product)
 	{
-		return Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_tag` WHERE `id_product` = '.(int)$id_product);
+		return Db::getInstance()->delete('product_tag', 'id_product = '.(int)$id_product);
 	}
 }
 
