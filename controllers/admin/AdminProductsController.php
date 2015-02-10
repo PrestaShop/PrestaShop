@@ -2624,8 +2624,7 @@ class AdminProductsControllerCore extends AdminController
 			);
 		}
 		else {
-			$importAccess = Profile::getProfileAccess($this->context->employee->id_profile, Tab::getIdFromClassName('AdminImport'));
-			if ( is_array($importAccess) && isset($importAccess['view']) && $importAccess['view'] == 1 ) 
+			if ( $this->canImport )
 				$this->toolbar_btn['import'] = array(
 					'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=products',
 					'desc' => $this->l('Import')

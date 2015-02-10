@@ -268,8 +268,7 @@ class AdminCategoriesControllerCore extends AdminController
 				'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
 				'desc' => $this->l('Add New')
 			);
-			$importAccess = Profile::getProfileAccess($this->context->employee->id_profile, Tab::getIdFromClassName('AdminImport'));
-			if ( is_array($importAccess) && isset($importAccess['view']) && $importAccess['view'] == 1 ) 
+			if ( $this->canImport )
 				$this->toolbar_btn['import'] = array(
 					'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=categories',
 					'desc' => $this->l('Import')

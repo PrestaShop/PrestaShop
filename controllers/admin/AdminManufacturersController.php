@@ -669,8 +669,7 @@ class AdminManufacturersControllerCore extends AdminController
 			default:
 				parent::initToolbar();
 
-				$importAccess = Profile::getProfileAccess($this->context->employee->id_profile, Tab::getIdFromClassName('AdminImport'));
-				if ( is_array($importAccess) && isset($importAccess['view']) && $importAccess['view'] == 1 ) 
+				if ( $this->canImport ) 
 					$this->toolbar_btn['import'] = array(
 						'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=manufacturers',
 						'desc' => $this->l('Import')

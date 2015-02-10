@@ -297,6 +297,9 @@ class AdminControllerCore extends Controller
 
 	protected $logged_on_addons = false;
 
+	/** @var bool if logged employee has access to AdminImport */
+	protected $canImport = false;
+
 	public function __construct()
 	{
 		global $timer_start;
@@ -417,9 +420,15 @@ class AdminControllerCore extends Controller
 		else
 			$this->context->mode = Context::MODE_STD;
 
+		//* Check if logged employee has access to AdminImport controller */
+		$importAccess = Profile::getProfileAccess($this->context->employee->id_profile, Tab::getIdFromClassName('AdminImport'));
+		if ( is_array($importAccess) && isset($importAccess['view']) && $importAccess['view'] == 1 )
+			$this->canImport = true;
+
 		$this->context->smarty->assign(array(
 			'context_mode' => $this->context->mode,
 			'logged_on_addons' => $this->logged_on_addons,
+			'can_import' => $this->canImport,
 		));
 
 	}

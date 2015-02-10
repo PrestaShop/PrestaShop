@@ -246,8 +246,7 @@ class AdminSearchConfControllerCore extends AdminController
 			);
 		$this->identifier_name = 'alias';
 		parent::initPageHeaderToolbar();
-		$importAccess = Profile::getProfileAccess($this->context->employee->id_profile, Tab::getIdFromClassName('AdminImport'));
-		if ( is_array($importAccess) && isset($importAccess['view']) && $importAccess['view'] == 1 ) 
+		if ( $this->canImport ) 
 			$this->toolbar_btn['import'] = array(
 				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=alias',
 				'desc' => $this->l('Import', null, null, false)

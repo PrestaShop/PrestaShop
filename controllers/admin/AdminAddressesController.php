@@ -83,8 +83,7 @@ class AdminAddressesControllerCore extends AdminController
 	{
 		parent::initToolbar();
 		if (!$this->display) {
-			$importAccess = Profile::getProfileAccess($this->context->employee->id_profile, Tab::getIdFromClassName('AdminImport'));
-			if ( is_array($importAccess) && isset($importAccess['view']) && $importAccess['view'] == 1 ) 
+			if ( $this->canImport ) 
 				$this->toolbar_btn['import'] = array(
 					'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=addresses',
 					'desc' => $this->l('Import')
