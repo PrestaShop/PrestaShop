@@ -115,7 +115,6 @@
 				</button>
 
 				<a id="header_shopname" href="{$default_tab_link|escape:'html':'UTF-8'}">
-					<img src="{$img_dir}prestashop-avatar.png" alt="{$shop_name|escape:'html':'UTF-8'}" />
 					{$shop_name}
 				</a>
 
