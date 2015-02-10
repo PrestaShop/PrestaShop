@@ -53,6 +53,7 @@ class AdminLoginControllerCore extends AdminController
 		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/overrides.css', 'all', PHP_INT_MAX);
 		$this->addJS(_PS_JS_DIR_.'vendor/spin.js');
 		$this->addJS(_PS_JS_DIR_.'vendor/ladda.js');
+		$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/custom.js');
 	}
 	
 	public function initContent()
