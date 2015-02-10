@@ -538,6 +538,7 @@ abstract class PaymentModuleCore extends Module
 								// Add total shipping amout only if reduction amount > total shipping
 								if ($voucher->free_shipping == 1 && $voucher->reduction_amount >= $order->total_shipping_tax_incl)
 									$voucher->reduction_amount -= $order->total_shipping_tax_incl;
+								$voucher->reduction_amount -= Tools::convertPrice(Tools::ps_round($this->context->cart->getGiftWrappingPrice(true), _PS_PRICE_COMPUTE_PRECISION_), Currency::getCurrencyInstance((int)$this->id_currency));
 							}
 							else
 							{
