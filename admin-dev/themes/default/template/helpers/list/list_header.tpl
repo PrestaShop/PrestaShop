@@ -141,18 +141,22 @@
 						</span>
 					</a>
 				{if isset($sql) && $sql}
-					{if $smarty.const._PS_MODE_DEV_}
-						<a class="list-toolbar-btn" href="javascript:void(0);" onclick="$('.leadin').first().append('<div class=\'alert alert-info\'>' + $('#sql_query').val() + '</div>'); $(this).attr('onclick', '');">
-							<span class="label-tooltip" data-toggle="tooltip" data-original-title="{l s='Show SQL query'}" data-html="true" data-placement="top" >
-								<i class="process-icon-terminal"></i>
+					{assign var=sqlManager value=Profile::getProfileAccess(Context::getContext()->employee->id_profile, Tab::getIdFromClassName('AdminRequestSql'))}
+
+					{if $sqlManager.view == 1}
+						{if $smarty.const._PS_MODE_DEV_}
+							<a class="list-toolbar-btn" href="javascript:void(0);" onclick="$('.leadin').first().append('<div class=\'alert alert-info\'>' + $('#sql_query').val() + '</div>'); $(this).attr('onclick', '');">
+								<span class="label-tooltip" data-toggle="tooltip" data-original-title="{l s='Show SQL query'}" data-html="true" data-placement="top" >
+									<i class="process-icon-terminal"></i>
+								</span>
+							</a>
+						{/if}					
+						<a class="list-toolbar-btn" href="javascript:void(0);" onclick="$('#sql_name').val(createSqlQueryName()); $('#sql_query').val($('#sql_query').val().replace(/\s+limit\s+[0-9,\s]+$/ig, '').trim()); $('#sql_form').submit();">
+							<span class="label-tooltip" data-toggle="tooltip" data-original-title="{l s='Export to SQL Manager'}" data-html="true" data-placement="top" >
+								<i class="process-icon-database"></i>
 							</span>
 						</a>
 					{/if}
-					<a class="list-toolbar-btn" href="javascript:void(0);" onclick="$('#sql_name').val(createSqlQueryName()); $('#sql_query').val($('#sql_query').val().replace(/\s+limit\s+[0-9,\s]+$/ig, '').trim()); $('#sql_form').submit();">
-						<span class="label-tooltip" data-toggle="tooltip" data-original-title="{l s='Export to SQL Manager'}" data-html="true" data-placement="top" >
-							<i class="process-icon-database"></i>
-						</span>
-					</a>
 				{/if}
 				</span>
 			{/if}
