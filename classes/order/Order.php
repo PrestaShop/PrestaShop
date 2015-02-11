@@ -2118,4 +2118,126 @@ class OrderCore extends ObjectModel
 			$this->setCurrentState($state);
 		return true;
 	}
+
+	/**
+	 * The primary purpose of this method is to be
+	 * called at the end of the generation of each order
+	 * in PaymentModule::validateOrder, to fill in
+	 * the order_detail_tax table with taxes
+	 * that will add up in such a way that
+	 * the sum of the tax amounts in the product tax breakdown
+	 * is equal to the difference between products with tax and
+	 * products without tax.
+	 */
+	public function updateOrderDetailTax()
+	{
+		// compute products discount
+		$order_discount_tax_excl = $this->total_discounts_tax_excl;
+
+		foreach ($this->getCartRules() as $cart_rule)
+		{
+			if ($cart_rule['free_shipping'])
+			{
+				$order_discount_tax_excl -= $this->total_shipping_tax_excl;
+				break;
+			}
+		}
+
+
+		$expected_total_tax = ($this->total_products_wt - $this->total_products) - ($this->total_discounts_tax_incl - $this->total_discounts_tax_excl);
+		$actual_total_tax = 0;
+
+		$order_detail_tax_rows_to_insert = array();
+
+		// Get order_details
+		$order_details = $this->getOrderDetailList();
+		foreach ($order_details as $order_detail)
+		{
+			$id_order_detail = $order_detail['id_order_detail'];
+			$tax_calculator = OrderDetail::getTaxCalculatorStatic($id_order_detail);
+
+			$discount_ratio = $order_detail['unit_price_tax_excl'] / $this->total_products;
+
+			$discounted_price_tax_excl =  $order_detail['unit_price_tax_excl'] - $discount_ratio * $order_discount_tax_excl;
+			$quantity = $order_detail['product_quantity'];
+
+			foreach ($tax_calculator->getTaxesAmount($discounted_price_tax_excl) as $id_tax => $unit_amount)
+			{
+				switch (Configuration::get('PS_ROUND_TYPE'))
+				{
+					case Order::ROUND_ITEM:
+					$total_amount = $quantity * Tools::ps_round($unit_amount, _PS_PRICE_COMPUTE_PRECISION_);
+					break;
+					case Order::ROUND_LINE:
+					case Order::ROUND_TOTAL:
+					$total_amount = Tools::ps_round($quantity * $unit_amount, _PS_PRICE_COMPUTE_PRECISION_);
+					break;
+				}
+
+				$actual_total_tax += $total_amount;
+
+				$order_detail_tax_rows_to_insert[] = array(
+					'id_order_detail' => $id_order_detail,
+					'id_tax' => $id_tax,
+					'unit_amount' => $unit_amount,
+					'total_amount' => $total_amount
+				);
+			}
+		}
+
+		$rounding_error = $expected_total_tax - $actual_total_tax;
+
+		if ($rounding_error !== 0) {
+
+			// Sort the rows by decreasing $total_amount
+			// the idea is to adjust the lines with highest amount first
+			// to minimize the error on each line.
+			usort(
+				$order_detail_tax_rows_to_insert,
+				create_function('$a, $b', 'return $b["total_amount"] - $a["total_amount"];')
+			);
+
+			$unit = pow(10, _PS_PRICE_COMPUTE_PRECISION_);
+
+			$sign = $rounding_error >= 0 ? 1 : -1;
+
+			$err = round(abs($rounding_error * $unit));
+
+			$remaining_amount = ($err % count($order_detail_tax_rows_to_insert));
+			$amount_to_spread = ($err - $remaining_amount) / count($order_detail_tax_rows_to_insert);
+
+			$amount_to_spread = $sign * round($amount_to_spread / (float)$unit, _PS_PRICE_COMPUTE_PRECISION_);
+
+			foreach ($order_detail_tax_rows_to_insert as $r => $row)
+			{
+				$delta = $amount_to_spread;
+				if ($r < $remaining_amount)
+				{
+					// If there was a remaining amount, it is necessarily less than the
+					// number of lines, so we spread it evenly on the top $remaining_amount
+					// lines.
+					$delta += $sign * round(1.0 / $unit, _PS_PRICE_COMPUTE_PRECISION_);
+				}
+				$order_detail_tax_rows_to_insert[$r]['total_amount'] += $delta;
+			}
+		}
+
+		$old_id_order_details = array();
+		$values = array();
+		foreach ($order_detail_tax_rows_to_insert as $row)
+		{
+			$old_id_order_details[] = (int)$row['id_order_detail'];
+			$values[] = '('.(int)$row['id_order_detail'].', '.(int)$row['id_tax'].', '.(float)$row['unit_amount'].', '.(float)$row['total_amount'].')';
+		}
+
+		// Remove current order_detail_tax'es
+		Db::getInstance()->execute(
+			'DELETE FROM `'._DB_PREFIX_.'order_detail_tax` WHERE id_order_detail IN ('.implode(', ', $old_id_order_details).')'
+		);
+
+		// Insert the adjusted ones instead
+		Db::getInstance()->execute(
+			'INSERT INTO `'._DB_PREFIX_.'order_detail_tax` (id_order_detail, id_tax, unit_amount, total_amount) VALUES '.implode(', ', $values)
+		);
+	}
 }

@@ -789,6 +789,8 @@ abstract class PaymentModuleCore extends Module
 							}
 						}
 					}
+
+					$order->updateOrderDetailTax();
 				}
 				else
 				{
@@ -799,11 +801,13 @@ abstract class PaymentModuleCore extends Module
 			} // End foreach $order_detail_list
 
 			// Update Order Details Tax in case cart rules have free shipping
+
+			/*
 			foreach ($order->getOrderDetailList() as $detail)
 			{
 				$order_detail = new OrderDetail($detail['id_order_detail']);
-					$order_detail->updateTaxAmount($order);
-			}
+				$order_detail->updateTaxAmount($order);
+			}//*/
 
 			// Use the last order as currentOrder
 			if (isset($order) && $order->id)
