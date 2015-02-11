@@ -236,7 +236,7 @@ class StockManagerCore implements StockManagerInterface
 				}
 				if ($product->pack_stock_type == 0 || $product->pack_stock_type == 2 ||
 					($product->pack_stock_type == 3 && (Configuration::get('PS_PACK_STOCK_TYPE') == 0 || Configuration::get('PS_PACK_STOCK_TYPE') == 2)))
-					$return[] = $this->removeProduct($id_product, $id_product_attribute, $warehouse, $quantity, $id_stock_mvt_reason, $is_usable, $id_order, 1);
+					$return = array_merge($return, $this->removeProduct($id_product, $id_product_attribute, $warehouse, $quantity, $id_stock_mvt_reason, $is_usable, $id_order, 1));
 			}
 			else
 				return false;

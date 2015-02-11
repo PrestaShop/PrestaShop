@@ -4664,7 +4664,7 @@ class AdminProductsControllerCore extends AdminController
 					die (Tools::jsonEncode(array('error' =>  $this->l('Undefined id product attribute'))));
 
 				StockAvailable::setQuantity($product->id, (int)Tools::getValue('id_product_attribute'), (int)Tools::getValue('value'));
-				Hook::exec('actionProductUpdate', array('id_product' => (int)$this->object->id, 'product' => $this->object));
+				Hook::exec('actionProductUpdate', array('id_product' => (int)$product->id, 'product' => $product));
 
 				// Catch potential echo from modules
 				$error = ob_get_contents();

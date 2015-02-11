@@ -368,4 +368,3 @@ class PackCore extends Product
 		return true;
 	}
 }
-

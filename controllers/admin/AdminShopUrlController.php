@@ -113,7 +113,7 @@ class AdminShopUrlControllerCore extends AdminController
 		$this->multiple_fieldsets = true;
 		if (!$update_htaccess)
 			$desc_virtual_uri = array(
-				'<span class="warning_mod_rewrite">'.$this->l('If you want to add a virtual URL, you need to activate URL rewriting on your web server.').'</span>'
+				'<span class="warning_mod_rewrite">'.$this->l('If you want to add a virtual URL, you need to activate URL rewriting on your web server and enable Friendly URL option.').'</span>'
 			);
 		else
 			$desc_virtual_uri = array(
@@ -125,7 +125,7 @@ class AdminShopUrlControllerCore extends AdminController
 				'form' => array(
 					'legend' => array(
 						'title' => $this->l('URL options'),
-						'icon' => 'icon-cogs' 
+						'icon' => 'icon-cogs'
 					),
 					'input' => array(
 						array(
@@ -223,7 +223,7 @@ class AdminShopUrlControllerCore extends AdminController
 				),
 			),
 		);
-		
+
 		if (!defined('_PS_HOST_MODE_'))
 			$this->fields_form[1]['form']['input'] = array_merge($this->fields_form[1]['form']['input'],
 				array(
@@ -413,7 +413,7 @@ class AdminShopUrlControllerCore extends AdminController
 			if ($this->tabAccess['edit'] === '1')
 			{
 				if (Validate::isLoadedObject($object = $this->loadObject()))
-				{	
+				{
 					if (!$object->main)
 					{
 						$result = $object->setMain();
@@ -459,7 +459,7 @@ class AdminShopUrlControllerCore extends AdminController
 	public function processAdd()
 	{
 		$object = $this->loadObject(true);
-		
+
 		if ($object->canAddThisUrl(Tools::getValue('domain'), Tools::getValue('domain_ssl'), Tools::getValue('physical_uri'), Tools::getValue('virtual_uri')))
 			$this->errors[] = Tools::displayError('A shop URL that uses this domain already exists.');
 
@@ -495,7 +495,7 @@ class AdminShopUrlControllerCore extends AdminController
 		if ($this->redirect_shop_url)
 			$this->redirect_after = $object->getBaseURI().basename(_PS_ADMIN_DIR_).'/'.$this->context->link->getAdminLink('AdminShopUrl');
 	}
-	
+
 	/**
 	 * @param string $token
 	 * @param integer $id
@@ -523,10 +523,10 @@ class AdminShopUrlControllerCore extends AdminController
 			'href' => self::$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&shop_id='.(int)$this->id_shop.'&token='.($token != null ? $token : $this->token),
 			'action' => self::$cache_lang['Delete'],
 		);
-		
+
 		if ($this->specificConfirmDelete !== false)
 			$data['confirm'] = !is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : self::$cache_lang['DeleteItem'].$name;
-		
+
 		$tpl->assign(array_merge($this->tpl_delete_link_vars, $data));
 
 		return $tpl->fetch();
