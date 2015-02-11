@@ -1312,9 +1312,12 @@ abstract class ModuleCore
 			$results = Db::getInstance()->executeS($sql);
 			foreach ($results as $result)
 			{
-				$moduleCursor = $modulesNameToCursor[$result['name']];
-				$moduleCursor->id = $result['id_module'];
-				$moduleCursor->active = ($result['total'] == count($list)) ? 1 : 0;
+				if (isset($modulesNameToCursor[Tools::strtolower($result['name'])]))
+				{
+					$module_cursor = $modulesNameToCursor[Tools::strtolower($result['name'])];
+					$module_cursor->id = (int)$result['id_module'];
+					$module_cursor->active = ($result['total'] == count($list)) ? 1 : 0;
+				}
 			}
 		}
 
