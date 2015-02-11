@@ -1306,11 +1306,8 @@ class AdminImportControllerCore extends AdminController
 				$category_data = Product::getProductCategories((int)$product->id);
 
 				if (is_array($product->category))
-				{
 					foreach ($category_data as $tmp)
 						$product->category[] = $tmp;
-					$product->category = array_values(array_unique($product->category));
-				}
 			}
 
 			AdminImportController::setEntityDefaultValues($product);
@@ -1464,6 +1461,7 @@ class AdminImportControllerCore extends AdminController
 							$this->errors[] = sprintf(Tools::displayError('%1$s cannot be saved'), trim($value));
 					}
 				}
+				$product->id_category = array_values(array_unique($product->id_category));
 			}
 
 			if (!isset($product->id_category_default) || !$product->id_category_default)
