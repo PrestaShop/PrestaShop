@@ -153,7 +153,7 @@ class AdminPreferencesControllerCore extends AdminController
 				),
 				'PS_PRICE_ROUND_MODE' => array(
 					'title' => $this->l('Round mode'),
-					'desc' => $this->l('You can choose how to round prices: always round up, always round down or classic rounding (up if > .5, down if < .5).'),
+					'desc' => $this->l('You can choose among 6 different ways of rounding prices. "Round up away from zero ..." is the recommended behavior.'),
 					'validation' => 'isInt',
 					'cast' => 'intval',
 					'type' => 'select',
@@ -162,6 +162,7 @@ class AdminPreferencesControllerCore extends AdminController
 				),
 				'PS_ROUND_TYPE' => array(
 					'title' => $this->l('Round type'),
+					'desc' => $this->l('You can choose when to round prices: either on each item, each line or the total (of an invoice, for example).'),
 					'cast' => 'intval',
 					'type' => 'select',
 					'list' => array(
