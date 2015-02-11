@@ -197,7 +197,7 @@ abstract class ModuleCore
 			$this->smarty = $this->context->smarty->createData($this->context->smarty);
 
 		// If the module has no name we gave him its id as name
-		if (is_null($this->name))
+		if ($this->name === null)
 			$this->name = $this->id;
 
 		// If the module has the name we load the corresponding data from the cache
