@@ -44,7 +44,7 @@
 		</div>
 	</div>
 	<div class="form-group">
-		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="meta_description" type="default" multilang="true"}</span></div>		
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="meta_description" type="default" multilang="true"}</span></div>
 		<label class="control-label col-lg-2" for="meta_description_{$id_lang}">
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='This description will appear in search engines. You need a single sentence, shorter than 160 characters (including spaces).'}">
@@ -62,7 +62,7 @@
 	</div>
 	{* Removed for simplicity *}
 	<div class="form-group hide">
-		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="meta_keywords" type="default" multilang="true"}</span></div>	
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="meta_keywords" type="default" multilang="true"}</span></div>
 		<label class="control-label col-lg-2" for="meta_keywords_{$id_lang}">
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='Keywords for search engines, separated by commas.'}">
@@ -76,7 +76,7 @@
 		</div>
 	</div>
 	<div class="form-group">
-		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="link_rewrite" type="seo_friendly_url" multilang="true"}</span></div>	
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="link_rewrite" type="seo_friendly_url" multilang="true"}</span></div>
 		<label class="control-label col-lg-2" for="link_rewrite_{$id_lang}">
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='This is the human-readable URL, as generated from the product\'s name. You can change it if you want.'}">
@@ -111,5 +111,6 @@
 	</div>
 </div>
 <script type="text/javascript">
-	hideOtherLanguage({$default_form_language});
+	if (tabs_manager.allow_hide_other_languages)
+		hideOtherLanguage({$default_form_language});
 </script>
