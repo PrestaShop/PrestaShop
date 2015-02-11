@@ -783,7 +783,7 @@ var ajaxCart = {
 		$('.ajax_cart_total').text($.trim(jsonData.productTotal));
 
 		if (parseFloat(jsonData.shippingCostFloat) > 0)
-			$('.ajax_cart_shipping_cost').text(jsonData.shippingCost);
+			$('.ajax_cart_shipping_cost').text(jsonData.shippingCost).parent().find('.unvisible').show();
 		else if ((hasDeliveryAddress || typeof(orderProcess) !== 'undefined' && orderProcess == 'order-opc') && typeof(freeShippingTranslation) != 'undefined')
 			$('.ajax_cart_shipping_cost').html(freeShippingTranslation);
 		else if (!hasDeliveryAddress)
