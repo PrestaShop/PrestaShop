@@ -197,7 +197,7 @@ abstract class ModuleCore
 			$this->smarty = $this->context->smarty->createData($this->context->smarty);
 
 		// If the module has no name we gave him its id as name
-		if ($this->name == null)
+		if (is_null($this->name))
 			$this->name = $this->id;
 
 		// If the module has the name we load the corresponding data from the cache
@@ -262,7 +262,7 @@ abstract class ModuleCore
 		// Check module dependencies
 		if (count($this->dependencies) > 0)
 			foreach ($this->dependencies as $dependency)
-				if (!Db::getInstance()->getRow('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($dependency).'\''))
+				if (!Db::getInstance()->getRow('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL(Tools::strtolower($dependency)).'\''))
 				{
 					$error = Tools::displayError('Before installing this module, you have to install this/these module(s) first:').'<br />';
 					foreach ($this->dependencies as $d)
