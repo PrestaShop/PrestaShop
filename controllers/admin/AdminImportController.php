@@ -1306,8 +1306,11 @@ class AdminImportControllerCore extends AdminController
 				$category_data = Product::getProductCategories((int)$product->id);
 
 				if (is_array($product->category))
+				{
 					foreach ($category_data as $tmp)
 						$product->category[] = $tmp;
+					$product->category = array_values(array_unique($product->category));
+				}
 			}
 
 			AdminImportController::setEntityDefaultValues($product);
@@ -1430,13 +1433,6 @@ class AdminImportControllerCore extends AdminController
 							$product->id_category[] = (int)$value;
 						else
 						{
-							$this->errors[] = sprintf(
-								Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-								$category_to_create->name[$default_language_id],
-								(isset($category_to_create->id) && !empty($category_to_create->id))? $category_to_create->id : 'null'
-							);
-							$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
-								Db::getInstance()->getMsgError();
 							$category_to_create = new Category();
 							$category_to_create->id = (int)$value;
 							$category_to_create->name = AdminImportController::createMultiLangField($value);
@@ -1744,7 +1740,8 @@ class AdminImportControllerCore extends AdminController
 							$this->warnings[] = sprintf(Tools::displayError('Product #%1$d: the picture (%2$s) cannot be saved.'), $image->id_product, $url);
 					}
 				}
-				if (isset($product->id_category))
+
+				if (isset($product->id_category) && is_array($product->id_category))
 					$product->updateCategories(array_map('intval', $product->id_category));
 
 				$product->checkDefaultAttributes();
