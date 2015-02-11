@@ -88,7 +88,7 @@ function ps_round_helper(value, mode)
 			(mode == 5 && value == (0.5 + 2 * Math.floor(tmp_value / 2.0) - 1.0)))
 			tmp_value -= 1.0;
 	}
-	else 
+	else
 	{
 		tmp_value = Math.ceil(value - 0.5);
 		if ((mode == 3 && value == (0.5 + tmp_value)) ||
@@ -140,10 +140,10 @@ function ps_round(value, places)
 		var precision_places = 14 - Math.floor(ps_log10(Math.abs(value)));
 		var f1 = Math.pow(10, Math.abs(places));
 
-		if (precision_places > places && precision_places - places < 15) 
+		if (precision_places > places && precision_places - places < 15)
 		{
 			var f2 = Math.pow(10, Math.abs(precision_places));
-			if (precision_places >= 0) 
+			if (precision_places >= 0)
 				tmp_value = value * f2;
 			else
 				tmp_value = value / f2;
@@ -154,8 +154,8 @@ function ps_round(value, places)
 			f2 = Math.pow(10, Math.abs(places - precision_places));
 			/* because places < precision_places */
 			tmp_value /= f2;
-		} 
-		else 
+		}
+		else
 		{
 			/* adjust the value */
 			if (places >= 0)
@@ -168,7 +168,7 @@ function ps_round(value, places)
 		}
 
 		tmp_value = ps_round_helper(tmp_value, roundMode);
-		if (places > 0) 
+		if (places > 0)
 			tmp_value = tmp_value / f1;
 		else
 			tmp_value = tmp_value * f1;
@@ -592,11 +592,12 @@ function isCleanHtml(content)
 	return true;
 }
 
-function sleep(seconds) {
+function sleep(milliseconds)
+{
 	var start = new Date().getTime();
 
 	for (var i = 0; i < 1e7; i++) {
-		if ((new Date().getTime() - start) > seconds*1000){
+		if ((new Date().getTime() - start) > milliseconds) {
 			break;
 		}
 	}
@@ -624,5 +625,4 @@ $(document).ready(function()
 
 	// attribute target="_blank" is not W3C compliant
 	$('a._blank, a.js-new-window').attr('target', '_blank');
-
 });

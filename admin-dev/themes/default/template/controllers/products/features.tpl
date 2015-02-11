@@ -142,10 +142,9 @@
 		<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> {l s='Save and stay'}</button>
 	</div>
 </div>
-{/if}
-
 <script type="text/javascript">
-	hideOtherLanguage({$default_form_language});
+	if (tabs_manager.allow_hide_other_languages)
+		hideOtherLanguage({$default_form_language});
 {literal}
 	$(".textarea-autosize").autosize();
 
@@ -176,3 +175,5 @@
 	}
 </script>
 {/literal}
+
+{/if}

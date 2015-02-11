@@ -4556,6 +4556,7 @@ class AdminProductsControllerCore extends AdminController
 
 		$data = $this->createTemplate($this->tpl_form);
 		$data->assign('default_form_language', $this->default_form_language);
+		$data->assign('languages', $this->_languages);
 
 		if (!Feature::isFeatureActive())
 			$this->displayWarning($this->l('This feature has been disabled. ').' <a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.$this->l('Performances').'</a>');
@@ -4588,10 +4589,8 @@ class AdminProductsControllerCore extends AdminController
 					}
 
 					$data->assign('available_features', $features);
-
 					$data->assign('product', $obj);
 					$data->assign('link', $this->context->link);
-					$data->assign('languages', $this->_languages);
 					$data->assign('default_form_language', $this->default_form_language);
 				}
 				else

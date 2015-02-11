@@ -33,6 +33,11 @@ function ProductTabsManager(){
 	this.page_reloading = false;
 	this.has_error_loading_tabs = false;
 
+	/**
+	* Show / Hide languages semaphore
+	*/
+	this.allow_hide_other_languages = true;
+
 	this.setTabs = function(tabs){
 		this.product_tabs = tabs;
 	}
@@ -87,8 +92,9 @@ function ProductTabsManager(){
 	 */
 	this.display = function (tab_name, selected)
 	{
-		if (mod_evasive || mod_security)
-			sleep(1);
+		/*In order to prevent mod_evasive DOSPageInterval (Default 1s)*/
+		if (mod_evasive)
+			sleep(1000);
 
 		var tab_selector = $("#product-tab-content-" + tab_name);
 
@@ -119,6 +125,7 @@ function ProductTabsManager(){
 				type: send_type,
 				headers: { "cache-control": "no-cache" },
 				data: data,
+				timeout: 30000,
 				success : function(data)
 				{
 					tab_selector.html(data).find('.dropdown-toggle').dropdown();
@@ -164,6 +171,7 @@ function ProductTabsManager(){
 			$('[name="submitAddproduct"]').each(function() {
 				$(this).prop('disabled', false).find('i').removeClass('process-icon-loading').addClass('process-icon-save');
 			});
+			this.allow_hide_other_languages = true;
 
 			return false;
 		}
@@ -180,6 +188,7 @@ function ProductTabsManager(){
 					var current_tab = stack[0];
 					self.stack_error.push(stack.shift());
 					self.has_error_loading_tabs = true;
+
 					jConfirm('Tab : ' + current_tab + ' (' + request.status + ')\n' + reload_tab_description, reload_tab_title, function(confirm) {
 						if (confirm === true)
 						{
@@ -194,6 +203,8 @@ function ProductTabsManager(){
 							$('[name="submitAddproduct"]').each(function() {
 								$(this).prop('disabled', false).find('i').removeClass('process-icon-loading').addClass('process-icon-save');
 							});
+							self.allow_hide_other_languages = true;
+
 							return false;
 						}
 					});

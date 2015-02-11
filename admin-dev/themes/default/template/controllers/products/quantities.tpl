@@ -294,7 +294,8 @@
 			var quantities_ajax_waiting = '{l s='Saving data...' js=1}';
 		</script>
 	</div>
+	<script type="text/javascript">
+		if (tabs_manager.allow_hide_other_languages)
+			hideOtherLanguage({$default_form_language});
+	</script>
 {/if}
-<script type="text/javascript">
-	hideOtherLanguage({$default_form_language});
-</script>
