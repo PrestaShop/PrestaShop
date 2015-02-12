@@ -3043,8 +3043,10 @@ class CartCore extends ObjectModel
 		}
 
 		foreach ($cart_rules as $key => &$cart_rule)
-			if ($cart_rule['value_real'] == 0)
+		{
+			if ((float)$cart_rule['value_real'] == 0 && (int)$cart_rule['free_shipping'] == 0)
 				unset($cart_rules[$key]);
+		}
 
 		return array(
 			'delivery' => $delivery,
