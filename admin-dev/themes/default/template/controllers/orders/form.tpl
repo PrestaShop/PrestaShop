@@ -767,9 +767,14 @@
 	function updateCartVouchers(vouchers)
 	{
 		var vouchers_html = '';
-		if (typeof(vouchers) == 'object')
+		if (typeof(vouchers) == 'object')parseFloat
 			$.each(vouchers, function(){
-				vouchers_html += '<tr><td>'+this.name+'</td><td>'+this.description+'</td><td>'+this.value_real+'</td><td class="text-right"><a href="#" class="btn btn-default delete_discount" rel="'+this.id_discount+'"><i class="icon-remove text-danger"></i>&nbsp;{l s='Delete'}</a></td></tr>';
+				if (parseFloat(this.value_real) === 0 && parseInt(this.free_shipping) === 1)
+					var value = '{l s='Free shipping'}';
+				else
+					var value = this.value_real;
+
+				vouchers_html += '<tr><td>'+this.name+'</td><td>'+this.description+'</td><td>'+value+'</td><td class="text-right"><a href="#" class="btn btn-default delete_discount" rel="'+this.id_discount+'"><i class="icon-remove text-danger"></i>&nbsp;{l s='Delete'}</a></td></tr>';
 			});
 		$('#voucher_list tbody').html($.trim(vouchers_html));
 		if ($('#voucher_list tbody').html().length == 0)
