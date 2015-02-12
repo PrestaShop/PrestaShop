@@ -75,12 +75,12 @@ class FrontControllerCore extends Controller
 
 		if (isset($this->php_self)  && is_object(Context::getContext()->theme))
 		{
-			$colums = Context::getContext()->theme->hasColumns($this->php_self);
+			$columns = Context::getContext()->theme->hasColumns($this->php_self);
 			// don't use theme tables if not configurated in DB
-			if ($colums)
+			if ($columns)
 			{
-				$this->display_column_left = $colums['left_column'];
-				$this->display_column_right = $colums['right_column'];
+				$this->display_column_left = $columns['left_column'];
+				$this->display_column_right = $columns['right_column'];
 			}
 		}
 	}
