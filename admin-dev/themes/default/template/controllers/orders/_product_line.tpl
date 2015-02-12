@@ -149,7 +149,7 @@
 					{l s='Quantity:'}
 				</label>
 				<div class="input-group">
-					<input onchange="checkPartialRefundProductQuantity(this)" type="text" name="partialRefundProductQuantity[{{$product['id_order_detail']}}]" value="{if ($productQuantity-$product['product_quantity_refunded']) >0}1{else}0{/if}" />
+					<input onchange="checkPartialRefundProductQuantity(this)" type="text" name="partialRefundProductQuantity[{{$product['id_order_detail']}}]" value="0" />
 					<div class="input-group-addon">/ {$productQuantity-$product['product_quantity_refunded']}</div>
 				</div>
 			</div>
