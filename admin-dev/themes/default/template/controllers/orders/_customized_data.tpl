@@ -186,6 +186,7 @@
 				<td class="partial_refund_fields current-edit" style="display:none; width: 250px;">
 					<div class="form-group">
 						<div class="col-lg-4">
+							{if ($customization['quantity']-$customization['quantity_refunded']) > 0}
 							<label class="control-label">
 								{l s='Quantity:'}
 							</label>
@@ -193,8 +194,10 @@
 								<input onchange="checkPartialRefundProductQuantity(this)" type="text" name="partialRefundProductQuantity[{$product['id_order_detail']|intval}]" value="{if ($customization['quantity']-$customization['quantity_refunded']) >0}1{else}0{/if}" />
 								<div class="input-group-addon">/ {$customization['quantity']-$customization['quantity_refunded']}</div>
 							</div>
+							{/if}
 						</div>
 						<div class="col-lg-8">
+							{if ($customization['quantity']-$customization['quantity_refunded']) > 0}
 							<label class="control-label">
 								{l s='Amount:'}
 							</label>
@@ -204,6 +207,7 @@
 								{if !$currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax incl.'}</div>{/if}
 							</div>
 							<p class="help-block"><i class="icon-warning-sign"></i> {l s='(Max %s %s)' sprintf=[(Tools::ps_round($product_price, 2) * ($product['product_quantity'] - $product['customizationQuantityTotal'])), $smarty.capture.TaxMethod]}</p>
+							{/if}
 						</div>
 					</div>
 
