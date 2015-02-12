@@ -1041,28 +1041,28 @@
 										{/if}
 										<tr id="total_products">
 											<td class="text-right">{l s='Products:'}</td>
-											<td class="amount text-right">
+											<td class="amount text-right nowrap">
 												{displayPrice price=$order_product_price currency=$currency->id}
 											</td>
 											<td class="partial_refund_fields current-edit" style="display:none;"></td>
 										</tr>
 										<tr id="total_discounts" {if $order->total_discounts_tax_incl == 0}style="display: none;"{/if}>
 											<td class="text-right">{l s='Discounts'}</td>
-											<td class="amount text-right">
+											<td class="amount text-right nowrap">
 												-{displayPrice price=$order_discount_price currency=$currency->id}
 											</td>
 											<td class="partial_refund_fields current-edit" style="display:none;"></td>
 										</tr>
 										<tr id="total_wrapping" {if $order->total_wrapping_tax_incl == 0}style="display: none;"{/if}>
 											<td class="text-right">{l s='Wrapping'}</td>
-											<td class="amount text-right">
+											<td class="amount text-right nowrap">
 												{displayPrice price=$order_wrapping_price currency=$currency->id}
 											</td>
 											<td class="partial_refund_fields current-edit" style="display:none;"></td>
 										</tr>
 										<tr id="total_shipping">
 											<td class="text-right">{l s='Shipping'}</td>
-											<td class="amount text-right" >
+											<td class="amount text-right nowrap" >
 												{displayPrice price=$order_shipping_price currency=$currency->id}
 											</td>
 											<td class="partial_refund_fields current-edit" style="display:none;">
@@ -1079,14 +1079,14 @@
 										{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
 			 							<tr id="total_taxes">
 			 								<td class="text-right">{l s='Taxes'}</td>
-			 								<td class="amount text-right" >{displayPrice price=($order->total_paid_tax_incl-$order->total_paid_tax_excl) currency=$currency->id}</td>
+			 								<td class="amount text-right nowrap" >{displayPrice price=($order->total_paid_tax_incl-$order->total_paid_tax_excl) currency=$currency->id}</td>
 			 								<td class="partial_refund_fields current-edit" style="display:none;"></td>
 			 							</tr>
 			 							{/if}
 										{assign var=order_total_price value=$order->total_paid_tax_incl}
 										<tr id="total_order">
 											<td class="text-right"><strong>{l s='Total'}</strong></td>
-											<td class="amount text-right">
+											<td class="amount text-right nowrap">
 												<strong>{displayPrice price=$order_total_price currency=$currency->id}</strong>
 											</td>
 											<td class="partial_refund_fields current-edit" style="display:none;"></td>
