@@ -2483,6 +2483,7 @@ abstract class ModuleCore
 	 */
 	public function addOverride($classname)
 	{
+		@ini_set('auto_detect_line_endings', true);
 		$path = PrestaShopAutoload::getInstance()->getClassPath($classname.'Core');
 
 		// Check if there is already an override file, if not, we just need to copy the file
@@ -2571,6 +2572,7 @@ abstract class ModuleCore
 	 */
 	public function removeOverride($classname)
 	{
+		@ini_set('auto_detect_line_endings', true);
 		$path = PrestaShopAutoload::getInstance()->getClassPath($classname.'Core');
 
 		if (!PrestaShopAutoload::getInstance()->getClassPath($classname))
