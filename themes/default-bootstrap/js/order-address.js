@@ -214,7 +214,7 @@ function appendAddressList(dest_comp, values, fields_name)
 {
 	for (var item in fields_name)
 	{
-		var name = fields_name[item].replace(",", "");
+		var name = fields_name[item].replace(/,/g, "");
 		var value = getFieldValue(name, values);
 		if (value != "")
 		{
@@ -238,7 +238,7 @@ function getFieldValue(field_name, values)
 	var vals = new Array();
 	for (var field_item in items)
 	{
-		items[field_item] = items[field_item].replace(",", "");
+		items[field_item] = items[field_item].replace(/,/g, "");
 		vals.push(values[items[field_item]]);
 	}
 	return vals.join(" ");
