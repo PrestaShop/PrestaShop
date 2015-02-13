@@ -3363,7 +3363,7 @@ exit;
 		$sign = $amount >= 0 ? 1.0 : -1.0;
 		$unit = pow(10, $precision);
 
-		$int_amount = round($unit * abs($amount));
+		$int_amount = floor($unit * abs($amount));
 
 		$remainder = $int_amount % count($rows);
 		$amount_to_spread = $sign * (($int_amount - $remainder) / count($rows) / $unit);
