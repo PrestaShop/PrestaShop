@@ -47,6 +47,11 @@ class IdentityControllerCore extends FrontController
 
 		if (Tools::isSubmit('submitIdentity'))
 		{
+			Hook::exec('actionBeforeSubmitIdentity', array(
+				'post' => $_POST,
+				'controller' => $this,
+			));
+
 			$email = trim(Tools::getValue('email'));
 
 			if (Tools::getValue('months') != '' && Tools::getValue('days') != '' && Tools::getValue('years') != '')
@@ -109,6 +114,11 @@ class IdentityControllerCore extends FrontController
 		}
 		else
 			$_POST = array_map('stripslashes', $this->customer->getFields());
+
+		Hook::exec('actionAfterSubmitIdentity', array(
+			'post' => $_POST,
+			'controller' => $this,
+		));
 
 		return $this->customer;
 	}
