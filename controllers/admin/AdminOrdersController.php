@@ -222,6 +222,8 @@ class AdminOrdersControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('Can\'t load Carrier object');
 			return false;
 		}
+		if ($order->current_state==(int)Configuration::get('PS_OS_DELIVERED'))
+                        return false;
 		
 		$this->context->smarty->assign(array(
 			'shipping_number' => $sn,
