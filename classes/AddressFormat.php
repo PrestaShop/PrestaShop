@@ -261,7 +261,7 @@ class AddressFormatCore extends ObjectModel
 						$chars = $start = $end = str_replace($key, '', $replacedValue);
 						if (preg_match(self::_CLEANING_REGEX_, $chars))
 						{
-							if (substr($replacedValue, 0, Tools::strlen($chars)) == $chars)
+							if (Tools::substr($replacedValue, 0, Tools::strlen($chars)) == $chars)
 								$end = '';
 							else
 								$start = '';
