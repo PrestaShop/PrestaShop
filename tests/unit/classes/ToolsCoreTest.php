@@ -112,4 +112,80 @@ class ToolsCoreTest extends PHPUnit_Framework_TestCase
 		$this->setPostAndGet();
 		$this->assertEquals($cleanedString, Tools::getValue('NON EXISTING KEY', $rawString));
 	}
+
+
+	public function testSpreadAmountExamples()
+	{
+		return array(
+			array(
+				array(array('a' => 2), array('a' => 1)), // expected result
+				1, 0,									 // amount and precision
+				array(array('a' => 1), array('a' => 1)), // source rows
+				'a'									     // sort column
+			),
+			array(
+				array(array('a' => 1.5), array('a' => 1.5)),
+				1, 1,
+				array(array('a' => 1), array('a' => 1)),
+				'a'
+			),
+			array(
+				array(array('a' => 1.5), array('a' => 1.5)),
+				1, 2,
+				array(array('a' => 1), array('a' => 1)),
+				'a'
+			),
+			array(
+				array(array('a' => 3), array('a' => 1)),
+				1, 0,
+				array(array('a' => 1), array('a' => 2)),
+				'a'
+			),
+			array(
+				array(array('a' => 4), array('a' => 2)),
+				3, 0,
+				array(array('a' => 1), array('a' => 2)),
+				'a'
+			),
+			array(
+				array(array('a' => 2.01), array('a' => 1)),
+				0.01, 2,
+				array(array('a' => 1), array('a' => 2)),
+				'a'
+			),
+			array(
+				array(array('a' => 2.01), array('a' => 1.01)),
+				0.02, 2,
+				array(array('a' => 1), array('a' => 2)),
+				'a'
+			),
+			array(
+				array(array('a' => 2.02), array('a' => 1.01)),
+				0.03, 2,
+				array(array('a' => 1), array('a' => 2)),
+				'a'
+			),
+			array(
+				array(array('a' => 2.01), array('a' => 1.01)),
+				0.025, 2,
+				array(array('a' => 1), array('a' => 2)),
+				'a'
+			),
+			array(
+				array('z' => array('a' => 2.01), 'x' => array('a' => 1.01)),
+				0.025, 2,
+				array(array('a' => 1), array('a' => 2)),
+				'a'
+			)
+		);
+	}
+
+	/**
+	 * @dataProvider testSpreadAmountExamples
+	 */
+	public function testSpreadAmount($expectedRows, $amount, $precision, $rows, $column, $sort_column = null, $max_adjustment = null)
+	{
+		Tools::spreadAmount($amount, $precision, $rows, $column, $sort_column, $max_adjustment);
+		$this->assertEquals(array_values($expectedRows), array_values($rows));
+	}
 }
