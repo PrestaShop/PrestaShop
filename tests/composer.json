@@ -1,0 +1,14 @@
+{
+    "name": "prestashop/prestashop-unit-tests",
+    "description": "Unit tests for PrestaShop Download",
+    "license": "OSL",
+    "authors": [
+        {
+            "name": "fmdj",
+            "email": "fmdj@prestashop.com"
+        }
+    ],
+    "require": {
+        "phpunit/phpunit": "~4.5"
+    }
+}
