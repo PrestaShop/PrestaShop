@@ -166,13 +166,13 @@ class ToolsCoreTest extends PHPUnit_Framework_TestCase
 				'a'
 			),
 			array(
-				array(array('a' => 2.01), array('a' => 1.01)),
-				0.025, 2,
+				array('z' => array('a' => 2.01), 'x' => array('a' => 1.01)),
+				0.02, 2,
 				array(array('a' => 1), array('a' => 2)),
 				'a'
 			),
 			array(
-				array('z' => array('a' => 2.01), 'x' => array('a' => 1.01)),
+				array(array('a' => 2.02), array('a' => 1.01)),
 				0.025, 2,
 				array(array('a' => 1), array('a' => 2)),
 				'a'
