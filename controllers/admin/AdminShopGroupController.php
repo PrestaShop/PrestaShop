@@ -115,7 +115,7 @@ class AdminShopGroupControllerCore extends AdminController
 				}
 			}
 
-		$shops_tree = new HelperTreeShops('shops-tree', 'Multistore tree');
+		$shops_tree = new HelperTreeShops('shops-tree', $this->l('Multistore tree'));
 		$shops_tree->setNodeFolderTemplate('shop_tree_node_folder.tpl')->setNodeItemTemplate('shop_tree_node_item.tpl')
 			->setHeaderTemplate('shop_tree_header.tpl')->setActions(array(
 				new TreeToolbarLink(
