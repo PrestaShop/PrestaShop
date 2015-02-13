@@ -75,7 +75,7 @@ class ToolsCoreTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(false, Tools::getValue(null, true));
 	}
 
-	public function testGetValueStripsPercentSignsAndNullCharsFromReturnedStringsExamples()
+	public function testGetValueStripsNullCharsFromReturnedStringsExamples()
 	{
 		return array(
 			array("\0", ''),
@@ -85,7 +85,7 @@ class ToolsCoreTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @dataProvider testGetValueStripsPercentSignsAndNullCharsFromReturnedStringsExamples
+	 * @dataProvider testGetValueStripsNullCharsFromReturnedStringsExamples
 	 */
 	public function testGetValueStripsNullCharsFromReturnedStrings($rawString, $cleanedString)
 	{
