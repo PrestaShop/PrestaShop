@@ -2373,6 +2373,7 @@ class AdminControllerCore extends Controller
 		Hook::exec('actionAdminControllerSetMedia');
 
 		// Specific Admin Theme
+		$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/custom.js');
 		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/overrides.css', 'all', PHP_INT_MAX);
 	}
 
