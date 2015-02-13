@@ -253,12 +253,10 @@ function translate($string)
  */
 function checkingTab($tab)
 {
-	$tab = trim($tab);
-
-	$tab_lowercase = strtolower($tab);
+	$tab_lowercase = Tools::strtolower(trim($tab));
 	if (!Validate::isTabName($tab))
 		return false;
-	$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT id_tab, module, class_name FROM `'._DB_PREFIX_.'tab` WHERE class_name = \''.pSQL($tab).'\'');
+	$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT id_tab, module, class_name FROM `'._DB_PREFIX_.'tab` WHERE LOWER(class_name) = \''.pSQL($tab).'\'');
 	if (!$row['id_tab'])
 	{
 		if (isset(AdminTab::$tabParenting[$tab]))
