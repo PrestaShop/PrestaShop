@@ -3356,7 +3356,7 @@ exit;
 			$sort_column = $column;
 		}
 
-		$sort_function = create_function('$a, $b', "return \$a['$sort_column'] - \$b['$sort_column'];");
+		$sort_function = create_function('$a, $b', "return \$b['$sort_column'] > \$a['$sort_column'] ? 1 : -1;");
 
 		uasort($rows, $sort_function);
 
