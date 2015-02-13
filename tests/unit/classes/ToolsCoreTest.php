@@ -96,14 +96,14 @@ class ToolsCoreTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($cleanedString, Tools::getValue('rawString'));
 
 		/**
-		* Check it cleans values stored in GET
-		*/
+		 * Check it cleans values stored in GET
+		 */
 		$this->setPostAndGet(array(), array('rawString' => $rawString));
 		$this->assertEquals($cleanedString, Tools::getValue('rawString'));
 
 		/**
-		* Check it cleans default values too
-		*/
+		 * Check it cleans default values too
+		 */
 		$this->setPostAndGet();
 		$this->assertEquals($cleanedString, Tools::getValue('NON EXISTING KEY', $rawString));
 	}
