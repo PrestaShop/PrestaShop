@@ -499,3 +499,8 @@ $(document).ready(function () {
 						});
 				</script>
 			{/if}
+		</tbody>
+	</table>
+	</div>
+</div>
+{/if}
