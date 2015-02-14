@@ -498,4 +498,8 @@ $(document).ready(function () {
 						unitPriceWithTax('unit');
 						});
 				</script>
-			{/if}
+		</tbody>
+	</table>
+	</div>
+</div>
+{/if}
