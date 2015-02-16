@@ -2499,7 +2499,9 @@ abstract class ModuleCore
 			while (class_exists($classname.'OverrideOriginal_remove', false));
 
 			// Make a reflection of the override class and the module override class
-			$override_file = file($override_path);
+			$override_file = array();
+			if (is_file($override_path))
+				$override_file = file($override_path);
 			eval(preg_replace(array('#^\s*<\?(?:php)?#', '#class\s+'.$classname.'\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'), array(' ', 'class '.$classname.'OverrideOriginal'.$uniq), implode('', $override_file)));
 			$override_class = new ReflectionClass($classname.'OverrideOriginal'.$uniq);
 
