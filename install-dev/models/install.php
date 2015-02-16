@@ -193,11 +193,8 @@ class InstallModelInstall extends InstallAbstractModel
 					$localization_file_content = $this->getLocalizationPackContent($version, $iso_country);
 
 					if ($xml = @simplexml_load_string($localization_file_content))
-					{
-
 						foreach ($xml->languages->language as $language)
 							$iso_codes_to_install[] = (string)$language->attributes()->iso_code;
-					}
 				}
 			}
 			else
