@@ -10,5 +10,12 @@
     ],
     "require": {
         "phpunit/phpunit": "~4.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "PrestaShop\\PrestaShop\\Tests\\": "",
+            "PrestaShop\\PrestaShop\\Tests\\Unit\\": "unit",
+            "PrestaShop\\PrestaShop\\Tests\\Unit\\Classes\\": "unit/classes"
+        }
     }
 }

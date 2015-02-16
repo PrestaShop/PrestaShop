@@ -25,6 +25,12 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+namespace PrestaShop\PrestaShop\Tests\Unit\Classes;
+
+use PrestaShop\PrestaShop\Tests\TestCase\PrestaShopPHPUnit;
+
+use PrestaShopAutoload;
+
 class	PrestaShopAutoloadTest extends PrestaShopPHPUnit
 {
 	private $file_index_content = null;
@@ -42,7 +48,7 @@ class	PrestaShopAutoloadTest extends PrestaShopPHPUnit
 		$this->assertTrue(file_exists($this->file_index));
 		$this->assertEquals($this->file_index_content, md5(file_get_contents($this->file_index)));
 	}
-	
+
 	public function testLoad()
 	{
 		PrestaShopAutoload::getInstance()->load('RequestSql');
