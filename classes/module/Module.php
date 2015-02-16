@@ -2484,14 +2484,19 @@ abstract class ModuleCore
 	public function addOverride($classname)
 	{
 		$path = PrestaShopAutoload::getInstance()->getClassPath($classname.'Core');
+		$path_override = $this->getLocalPath().'override'.DIRECTORY_SEPARATOR.$path;
 
-		file_put_contents($this->getLocalPath().'override'.DIRECTORY_SEPARATOR.$path, preg_replace('#(\r|\r\n)#ism', "\n", file_get_contents($this->getLocalPath().'override'.DIRECTORY_SEPARATOR.$path)));
+		if (!is_file($path_override))
+			return false;
+
+		file_put_contents($path_override, preg_replace('#(\r|\r\n)#ism', "\n", file_get_contents($path_override)));
 
 		// Check if there is already an override file, if not, we just need to copy the file
 		if (PrestaShopAutoload::getInstance()->getClassPath($classname))
 		{
 			// Check if override file is writable
 			$override_path = _PS_ROOT_DIR_.'/'.PrestaShopAutoload::getInstance()->getClassPath($classname);
+
 			if ((!file_exists($override_path) && !is_writable(dirname($override_path))) || (file_exists($override_path) && !is_writable($override_path)))
 				throw new Exception(sprintf(Tools::displayError('file (%s) not writable'), $override_path));
 
@@ -2500,13 +2505,12 @@ abstract class ModuleCore
 			while (class_exists($classname.'OverrideOriginal_remove', false));
 
 			// Make a reflection of the override class and the module override class
-			$override_file = array();
-			if (is_file($override_path))
-				$override_file = file($override_path);
+			$override_file = file($override_path);
+
 			eval(preg_replace(array('#^\s*<\?(?:php)?#', '#class\s+'.$classname.'\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'), array(' ', 'class '.$classname.'OverrideOriginal'.$uniq), implode('', $override_file)));
 			$override_class = new ReflectionClass($classname.'OverrideOriginal'.$uniq);
 
-			$module_file = file($this->getLocalPath().'override'.DIRECTORY_SEPARATOR.$path);
+			$module_file = file($path_override);
 			eval(preg_replace(array('#^\s*<\?(?:php)?#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array(' ', 'class '.$classname.'Override'.$uniq), implode('', $module_file)));
 			$module_class = new ReflectionClass($classname.'Override'.$uniq);
 
@@ -2541,7 +2545,7 @@ abstract class ModuleCore
 		}
 		else
 		{
-			$override_src = $this->getLocalPath().'override'.DIRECTORY_SEPARATOR.$path;
+			$override_src = $path_override;
 			$override_dest = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'override'.DIRECTORY_SEPARATOR.$path;
 			if (!is_writable(dirname($override_dest)))
 				throw new Exception(sprintf(Tools::displayError('directory (%s) not writable'), dirname($override_dest)));
@@ -2582,7 +2586,8 @@ abstract class ModuleCore
 
 		// Check if override file is writable
 		$override_path = _PS_ROOT_DIR_.'/'.PrestaShopAutoload::getInstance()->getClassPath($classname);
-		if (!is_writable($override_path))
+
+		if (!is_file($override_path) || !is_writable($override_path))
 			return false;
 
 		file_put_contents($override_path, preg_replace('#(\r|\r\n)#ism', "\n", file_get_contents($override_path)));
@@ -2592,9 +2597,7 @@ abstract class ModuleCore
 		while (class_exists($classname.'OverrideOriginal_remove', false));
 
 		// Make a reflection of the override class and the module override class
-		$override_file = array();
-		if (is_file($override_path))
-			$override_file = file($override_path);
+		$override_file = file($override_path);
 
 		eval(preg_replace(array('#^\s*<\?(?:php)?#', '#class\s+'.$classname.'\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'), array(' ', 'class '.$classname.'OverrideOriginal_remove'.$uniq), implode('', $override_file)));
 		$override_class = new ReflectionClass($classname.'OverrideOriginal_remove'.$uniq);
@@ -2648,7 +2651,6 @@ abstract class ModuleCore
 					break;
 				}
 			}
-
 		}
 
 		$count = count($override_file);
