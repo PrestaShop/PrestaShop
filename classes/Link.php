@@ -596,7 +596,7 @@ class LinkCore
 
 		if (!$array)
 			if (count($vars))
-				return $url.(($this->allow == 1 || $url == $this->url) ? '?' : '&').http_build_query($vars, '', '&');
+				return $url.(!strstr($url, '?') && ($this->allow == 1 || $url == $this->url) ? '?' : '&').http_build_query($vars, '', '&');
 			else
 				return $url;
 
