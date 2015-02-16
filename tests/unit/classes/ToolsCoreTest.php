@@ -25,6 +25,11 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+namespace PrestaShop\PrestaShop\Tests\Unit\Classes;
+
+use PHPUnit_Framework_TestCase;
+use Tools;
+
 class ToolsCoreTest extends PHPUnit_Framework_TestCase
 {
 	private function setPostAndGet(array $post = array(), array $get = array())
