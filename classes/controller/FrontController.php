@@ -813,6 +813,7 @@ class FrontControllerCore extends Controller
 	{
 		// P3P Policies (http://www.w3.org/TR/2002/REC-P3P-20020416/#compact_policies)
 		header('P3P: CP="IDC DSP COR CURa ADMa OUR IND PHY ONL COM STA"');
+		header('Powered-By: PrestaShop');
 
 		/* Hooks are volontary out the initialize array (need those variables already assigned) */
 		$this->context->smarty->assign(array(
