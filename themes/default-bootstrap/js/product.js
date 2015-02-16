@@ -621,21 +621,16 @@ function updatePrice()
 		return;
 
 	// Set product (not the combination) base price
-	var basePriceWithoutTax = productBasePriceTaxExcl;
+	var basePriceWithoutTax = +productPriceTaxExcluded;
 	var priceWithGroupReductionWithoutTax = 0;
 
-	// Apply combination price impact
+	// Apply combination price impact (only if there is no specific price)
 	// 0 by default, +x if price is inscreased, -x if price is decreased
 	basePriceWithoutTax = basePriceWithoutTax + +combination.price;
 
 	// If a specific price redefine the combination base price
 	if (combination.specific_price && combination.specific_price.price > 0)
-	{
-		if (combination.specific_price.id_product_attribute === 0)
-			basePriceWithoutTax = +combination.specific_price.price;
-		else
-			basePriceWithoutTax = +combination.specific_price.price + +combination.price;
-	}
+		basePriceWithoutTax = +combination.specific_price.price;
 
 	var priceWithDiscountsWithoutTax = basePriceWithoutTax;
 
