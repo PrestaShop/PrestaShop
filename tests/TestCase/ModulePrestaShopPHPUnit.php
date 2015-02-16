@@ -25,7 +25,34 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class	BlockLanguagesTest extends ModulePrestaShopPHPUnit
-{
+namespace PrestaShop\PrestaShop\Tests\TestCase;
 
+use Module;
+use Context;
+
+class	ModulePrestaShopPHPUnit extends PrestaShopPHPUnit
+{
+	public function setUp()
+	{
+		Module::updateTranslationsAfterInstall(false);
+		Context::getContext()->employee = new Employee();
+		Context::getContext()->employee->id = 1;
+		Context::getContext()->employee->id_profile = _PS_ADMIN_PROFILE_;
+	}
+
+	public function testInstall()
+	{
+		$module = Module::getInstanceByName(Tools::strtolower($this->getClass()));
+		if ($module->id)
+			$module->uninstall();
+		$this->assertTrue($module->install());
+	}
+
+	public function testUninstall()
+	{
+		$module = Module::getInstanceByName(Tools::strtolower($this->getClass()));
+		if (!$module->id)
+			$module->install();
+		$this->assertTrue($module->uninstall());
+	}
 }

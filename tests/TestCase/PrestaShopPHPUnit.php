@@ -25,6 +25,11 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+namespace PrestaShop\PrestaShop\Tests\TestCase;
+
+use PHPUnit_Framework_TestCase;
+use ReflectionClass;
+
 class	PrestaShopPHPUnit extends PHPUnit_Framework_TestCase
 {
 	protected function invoke($object, $method)
@@ -37,7 +42,7 @@ class	PrestaShopPHPUnit extends PHPUnit_Framework_TestCase
 
 		return $reflexion_method->invokeArgs($object, $params);
 	}
-	
+
 	protected function getProperty($object, $property)
 	{
 		$reflexion = new ReflectionClass($this->getClass());
@@ -46,7 +51,7 @@ class	PrestaShopPHPUnit extends PHPUnit_Framework_TestCase
 
 		return $reflexion_property->getValue($object);
 	}
-	
+
 	protected function setProperty($object, $property, $value)
 	{
 		$reflexion = new ReflectionClass($this->getClass());
@@ -58,6 +63,7 @@ class	PrestaShopPHPUnit extends PHPUnit_Framework_TestCase
 
 	protected function getClass()
 	{
-		return preg_replace('/(.*)(?:Core)?Test$/', '$1', get_class($this));
+		$namespace = explode('\\', get_class($this));
+		return preg_replace('/(.*)(?:Core)?Test$/', '$1', end($namespace));
 	}
 }
