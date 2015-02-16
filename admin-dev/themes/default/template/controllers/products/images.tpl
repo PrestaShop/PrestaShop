@@ -327,8 +327,8 @@
 
 			$('.fancybox').fancybox();
 		});
-
-		hideOtherLanguage(default_language);
+		if (tabs_manager.allow_hide_other_languages)
+			hideOtherLanguage(default_language);
 		{/literal}
 	</script>
 </div>

@@ -121,10 +121,15 @@
 		<td style="width: 85%; text-align: right">
 			<table style="width: 100%; font-size: 8pt;">
 				<tr style="line-height:4px;">
+					{$product_reference_width = 45}
 					{if Configuration::get('PS_PDF_IMG_INVOICE')}
+						{$product_reference_width = $product_reference_width - 10}
 						<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: 10%">{l s='Image' pdf='true'}</td>
 					{/if}
-					<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: 45%">{l s='Product / Reference' pdf='true'}</td>
+					{if !$tax_excluded_display}
+						{$product_reference_width = $product_reference_width - 10}
+					{/if}
+					<td style="text-align: left; background-color: #4D4D4D; color: #FFF; padding-left: 10px; font-weight: bold; width: {$product_reference_width}%">{l s='Product / Reference' pdf='true'}</td>
                     <!-- unit price tax excluded is mandatory -->
 					{if !$tax_excluded_display}
 					    <td style="background-color: #4D4D4D; color: #FFF; text-align: right; font-weight: bold; width: 10%">{l s='Unit Price' pdf='true'} <br />{l s='(Tax Excl.)' pdf='true'}</td>
@@ -140,7 +145,7 @@
 					{if Configuration::get('PS_PDF_IMG_INVOICE')}
 						<td style="text-align: left;">{if isset($order_detail.image) && $order_detail.image->id}{$order_detail.image_tag}{/if}</td>
 					{/if}
-					<td style="text-align: left; width: 45%">{$order_detail.product_name}{if isset($order_detail.product_reference) && !empty($order_detail.product_reference)} ({l s='Reference:' pdf='true'} {$order_detail.product_reference}){/if}</td>
+					<td style="text-align: left; width: {$product_reference_width}%">{$order_detail.product_name}{if isset($order_detail.product_reference) && !empty($order_detail.product_reference)} ({l s='Reference:' pdf='true'} {$order_detail.product_reference}){/if}</td>
                     <!-- unit price tax excluded is mandatory -->
 					{if !$tax_excluded_display}
 					    <td style="text-align: right; width: 10%">

@@ -1312,9 +1312,12 @@ abstract class ModuleCore
 			$results = Db::getInstance()->executeS($sql);
 			foreach ($results as $result)
 			{
-				$moduleCursor = $modulesNameToCursor[$result['name']];
-				$moduleCursor->id = $result['id_module'];
-				$moduleCursor->active = ($result['total'] == count($list)) ? 1 : 0;
+				if (isset($modulesNameToCursor[Tools::strtolower($result['name'])]))
+				{
+					$module_cursor = $modulesNameToCursor[Tools::strtolower($result['name'])];
+					$module_cursor->id = (int)$result['id_module'];
+					$module_cursor->active = ($result['total'] == count($list)) ? 1 : 0;
+				}
 			}
 		}
 
@@ -2480,6 +2483,7 @@ abstract class ModuleCore
 	 */
 	public function addOverride($classname)
 	{
+		@ini_set('auto_detect_line_endings', true);
 		$path = PrestaShopAutoload::getInstance()->getClassPath($classname.'Core');
 
 		// Check if there is already an override file, if not, we just need to copy the file
@@ -2514,7 +2518,7 @@ abstract class ModuleCore
 					throw new Exception(sprintf(Tools::displayError('The method %1$s in the class %2$s is already overridden.'), $method->getName(), $classname));
 				}
 				else
-					$module_file = preg_replace('/(^.*?function\s+'.$method->getName().')/ism', "\n\t/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n$1", $module_file);
+					$module_file = preg_replace('/((:?public|private|protected)\s+(static\s+)?function\s+'.$method->getName().')/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1", $module_file);
 			}
 
 			// Check if none of the properties already exists in the override class
@@ -2523,7 +2527,7 @@ abstract class ModuleCore
 				if ($override_class->hasProperty($property->getName()))
 					throw new Exception(sprintf(Tools::displayError('The property %1$s in the class %2$s is already defined.'), $property->getName(), $classname));
 				else
-					$module_file = preg_replace('/(public|private|protected|const)\s+(static\s+)?(\$?'.$property->getName().')/ism', "\n\t/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n$1 $2 $3" , $module_file);
+					$module_file = preg_replace('/(:?public|private|protected|const)\s+(static\s+)?(\$?'.$property->getName().')/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1 $2$3" , $module_file);
 			}
 
 			// Insert the methods from module override in override
@@ -2545,13 +2549,13 @@ abstract class ModuleCore
 			eval(preg_replace(array('#^\s*<\?(?:php)?#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array(' ', 'class '.$classname.'Override'.$uniq), implode('', $module_file)));
 			$module_class = new ReflectionClass($classname.'Override'.$uniq);
 
-			// Add foreach function a comment with the module name and the module version like it permit us to know wich module do the override and permit an update
+			// Add foreach function a comment with the module name and the module version
 			foreach ($module_class->getMethods() as $method)
-				$module_file = preg_replace('/(^.*?function\s+'.$method->getName().')/ism', "\n\t/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n$1", $module_file);
+				$module_file = preg_replace('/((:?public|private|protected)\s+(static\s+)?function\s+'.$method->getName().')/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1", $module_file);
 
 			// same as precedent but for variable
 			foreach ($module_class->getProperties() as $property)
-				$module_file = preg_replace('/(public|private|protected|const)\s+(static\s+)?(\$?'.$property->getName().')/ism', "\n\t/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n$1 $2 $3" , $module_file);
+				$module_file = preg_replace('/(:?public|private|protected|const)\s+(static\s+)?(\$?'.$property->getName().')/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1 $2$3" , $module_file);
 
 			file_put_contents($override_dest, $module_file);
 			// Re-generate the class index
@@ -2568,6 +2572,7 @@ abstract class ModuleCore
 	 */
 	public function removeOverride($classname)
 	{
+		@ini_set('auto_detect_line_endings', true);
 		$path = PrestaShopAutoload::getInstance()->getClassPath($classname.'Core');
 
 		if (!PrestaShopAutoload::getInstance()->getClassPath($classname))
@@ -2584,6 +2589,7 @@ abstract class ModuleCore
 
 		// Make a reflection of the override class and the module override class
 		$override_file = file($override_path);
+
 		eval(preg_replace(array('#^\s*<\?(?:php)?#', '#class\s+'.$classname.'\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'), array(' ', 'class '.$classname.'OverrideOriginal_remove'.$uniq), implode('', $override_file)));
 		$override_class = new ReflectionClass($classname.'OverrideOriginal_remove'.$uniq);
 

@@ -22,17 +22,15 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{if $wishlists|count == 1}
 <p class="buttons_bottom_block no-print">
+{if $wishlists|count == 1}
 	<a id="wishlist_button_nopop" href="#" onclick="WishlistCart('wishlist_block_list', 'add', '{$id_product|intval}', $('#idCombination').val(), document.getElementById('quantity_wanted').value); return false;" rel="nofollow"  title="{l s='Add to my wishlist' mod='blockwishlist'}">
 		{l s='Add to wishlist' mod='blockwishlist'}
 	</a>
-</p>
 {else}
 	{foreach name=wl from=$wishlists item=wishlist}
 		{if $smarty.foreach.wl.first}
-		<p class="buttons_bottom_block">
-			<a class="btn btn-default" tabindex="0" data-toggle="popover" data-trigger="focus" title="Wishlist" data-placement="bottom" id="wishlist_button">{l s='Add to wishlist' mod='blockwishlist'}</a></p>
+			<a id="wishlist_button" tabindex="0" data-toggle="popover" data-trigger="focus" title="Wishlist" data-placement="bottom">{l s='Add to wishlist' mod='blockwishlist'}</a>
 				<div hidden id="popover-content">
 					<table class="table" border="1">
 						<tbody>
@@ -53,3 +51,4 @@
 		</a>
 	{/foreach}
 {/if}
+</p>

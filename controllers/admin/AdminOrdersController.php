@@ -667,7 +667,13 @@ class AdminOrdersControllerCore extends AdminController
 							$this->reinjectQuantity($order_detail, $order_detail_list[$id_order_detail]['quantity']);
 					}
 
-					$choosen = false;
+                    if ($amount == 0)
+                    {
+                        $this->errors[] = Tools::displayError('You have to enter an amount if you want to create a partial credit slip.');
+                        return false;
+                    }
+
+                    $choosen = false;
 					$voucher = 0;
 
 					if ((int)Tools::getValue('refund_voucher_off') == 1)

@@ -71,7 +71,7 @@ class AddressFormatCore extends ObjectModel
 		'active',
 		'is_guest',
 		'date_upd',
-		'country',		
+		'country',
 		'years',
 		'days',
 		'months',
@@ -257,7 +257,20 @@ class AddressFormatCore extends ObjectModel
 					{
 						// Check if we need to use an older modified pattern if a key has already be matched before
 						$replacedValue = empty($mainFormattedKey) ? $pattern : $formattedValueList[$mainFormattedKey];
-						if (($formattedValue = preg_replace('/^'.$key.'$/', $formattedValueList[$key], $replacedValue, -1, $count)))
+
+						$chars = $start = $end = str_replace($key, '', $replacedValue);
+						if (preg_match(self::_CLEANING_REGEX_, $chars))
+						{
+							if (Tools::substr($replacedValue, 0, Tools::strlen($chars)) == $chars)
+								$end = '';
+							else
+								$start = '';
+
+							if ($chars)
+								$replacedValue = str_replace($chars, '', $replacedValue);
+						}
+
+						if ($formattedValue = preg_replace('/^'.$key.'$/', $formattedValueList[$key], $replacedValue, -1, $count))
 							if ($count)
 							{
 								// Allow to check multiple key in the same pattern,
@@ -267,7 +280,7 @@ class AddressFormatCore extends ObjectModel
 								if ($mainFormattedKey != $key)
 									$formattedValueList[$key] = '';
 								// Store the new pattern value
-								$formattedValueList[$mainFormattedKey] = $formattedValue;
+								$formattedValueList[$mainFormattedKey] = $start.$formattedValue.$end;
 								unset($originalFormattedPatternList[$patternNum]);
 							}
 					}

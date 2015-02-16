@@ -622,6 +622,9 @@ class CartCore extends ObjectModel
 			switch (Configuration::get('PS_ROUND_TYPE'))
 			{
 				case Order::ROUND_TOTAL:
+					$row['total'] = $row['price'] * (int)$row['cart_quantity'];
+					$row['total_wt'] = $tax_calculator->addTaxes($row['price']) * (int)$row['cart_quantity'];
+					break;
 				case Order::ROUND_LINE:
 					$row['total'] = Tools::ps_round($row['price'] * (int)$row['cart_quantity'], _PS_PRICE_COMPUTE_PRECISION_);
 					$row['total_wt'] = Tools::ps_round($tax_calculator->addTaxes($row['price']) * (int)$row['cart_quantity'], _PS_PRICE_COMPUTE_PRECISION_);
@@ -633,6 +636,7 @@ class CartCore extends ObjectModel
 					$row['total_wt'] = Tools::ps_round($tax_calculator->addTaxes($row['price']), _PS_PRICE_COMPUTE_PRECISION_) * (int)$row['cart_quantity'];
 					break;
 			}
+
 			$row['price_wt'] = $tax_calculator->addTaxes($row['price']);
 
 			$ecotax_tax_amount = Tools::ps_round($row['ecotax'], 2);
@@ -1476,18 +1480,20 @@ class CartCore extends ObjectModel
 					break;
 				case Order::ROUND_LINE:
 					$product_price = $price * $product['cart_quantity'];
-					$products_total[$id_tax_rules_group] += Tools::ps_round($product_price, _PS_PRICE_COMPUTE_PRECISION_);
 
 					if ($with_taxes)
-						$products_total[$id_tax_rules_group] += Tools::ps_round($tax_calculator->getTaxesTotalAmount($product_price), _PS_PRICE_COMPUTE_PRECISION_);
+						$products_total[$id_tax_rules_group] += Tools::ps_round($product_price + $tax_calculator->getTaxesTotalAmount($product_price), _PS_PRICE_COMPUTE_PRECISION_);
+					else
+						$products_total[$id_tax_rules_group] += Tools::ps_round($product_price, _PS_PRICE_COMPUTE_PRECISION_);
 
 					if ($ecotax)
 					{
 						$ecotax_price = $ecotax * (int)$product['cart_quantity'];
-						$ecotax_total += Tools::ps_round($ecotax_price, _PS_PRICE_COMPUTE_PRECISION_);
 
 						if ($with_taxes)
-							$ecotax_total += Tools::ps_round($ecotax_tax_calculator->getTaxesTotalAmount($ecotax_price), _PS_PRICE_COMPUTE_PRECISION_);
+							$ecotax_total += Tools::ps_round($ecotax_price + $ecotax_tax_calculator->getTaxesTotalAmount($ecotax_price), _PS_PRICE_COMPUTE_PRECISION_);
+						else
+							$ecotax_total += Tools::ps_round($ecotax_price, _PS_PRICE_COMPUTE_PRECISION_);
 					}
 					break;
 				case Order::ROUND_ITEM:
@@ -1511,7 +1517,7 @@ class CartCore extends ObjectModel
 				$tmp = explode('_', $key);
 				$address = Address::initialize((int)$tmp[1], true);
 				$tax_calculator = TaxManagerFactory::getManager($address, $tmp[0])->getTaxCalculator();
-				$order_total += Tools::ps_round($price, _PS_PRICE_COMPUTE_PRECISION_) + Tools::ps_round($tax_calculator->getTaxesTotalAmount($price), _PS_PRICE_COMPUTE_PRECISION_);
+				$order_total += Tools::ps_round($price + $tax_calculator->getTaxesTotalAmount($price), _PS_PRICE_COMPUTE_PRECISION_);
 			}
 			else
 				$order_total += $price;
@@ -1534,7 +1540,6 @@ class CartCore extends ObjectModel
 			return $wrapping_fees;
 
 		$order_total_discount = 0;
-		$real_total_discount = 0;
 		$order_shipping_discount = 0;
 		if (!in_array($type, array(Cart::ONLY_SHIPPING, Cart::ONLY_PRODUCTS)) && CartRule::isFeatureActive())
 		{
@@ -1589,21 +1594,14 @@ class CartCore extends ObjectModel
 
 				// If the cart rule offers a reduction, the amount is prorated (with the products in the package)
 				if ($cart_rule['obj']->reduction_percent > 0 || $cart_rule['obj']->reduction_amount > 0)
-				{
 					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_REDUCTION, $package, $use_cache), _PS_PRICE_COMPUTE_PRECISION_);
-					$real_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_ALL_NOCAP, $package, $use_cache), _PS_PRICE_COMPUTE_PRECISION_);
-				}
 			}
 			$order_total_discount = min(Tools::ps_round($order_total_discount, 2), (float)$order_total_products) + (float)$order_shipping_discount;
 			$order_total -= $order_total_discount;
 		}
 
 		if ($type == Cart::BOTH)
-		{
-			$discount = $real_total_discount - $order_total_discount;
-			$wrapping_fees = $wrapping_fees - $discount > 0 ? $wrapping_fees - $discount : 0;
 			$order_total += $shipping_fees + $wrapping_fees;
-		}
 
 		if ($order_total < 0 && $type != Cart::ONLY_DISCOUNTS)
 			return 0;
@@ -3080,8 +3078,10 @@ class CartCore extends ObjectModel
 		}
 
 		foreach ($cart_rules as $key => &$cart_rule)
-			if ($cart_rule['value_real'] == 0)
+		{
+			if ((float)$cart_rule['value_real'] == 0 && (int)$cart_rule['free_shipping'] == 0)
 				unset($cart_rules[$key]);
+		}
 
 		$summary = array(
 			'delivery' => $delivery,

@@ -118,7 +118,9 @@
 		var iso = '{$iso_tiny_mce}';
 		var pathCSS = '{$smarty.const._THEME_CSS_DIR_}';
 		var ad = '{$ad}';
-		hideOtherLanguage({$default_form_language});
+
+		if (tabs_manager.allow_hide_other_languages)
+			hideOtherLanguage({$default_form_language});
 	</script>
 </div>
 {/if}

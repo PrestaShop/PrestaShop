@@ -145,15 +145,18 @@
 	<td class="partial_refund_fields current-edit" style="display:none; width: 250px;">
 		<div class="form-group">
 			<div class="col-lg-4">
+				{if ($productQuantity-$product['product_quantity_refunded']) > 0}
 				<label class="control-label">
 					{l s='Quantity:'}
 				</label>
 				<div class="input-group">
-					<input onchange="checkPartialRefundProductQuantity(this)" type="text" name="partialRefundProductQuantity[{{$product['id_order_detail']}}]" value="{if ($productQuantity-$product['product_quantity_refunded']) >0}1{else}0{/if}" />
+					<input onchange="checkPartialRefundProductQuantity(this)" type="text" name="partialRefundProductQuantity[{{$product['id_order_detail']}}]" value="0" />
 					<div class="input-group-addon">/ {$productQuantity-$product['product_quantity_refunded']}</div>
 				</div>
+				{/if}
 			</div>
 			<div class="col-lg-8">
+				{if ($productQuantity-$product['product_quantity_refunded']) > 0}
 				<label class="control-label">
 					{l s='Amount:'}
 				</label>
@@ -162,7 +165,8 @@
 					<input onchange="checkPartialRefundProductAmount(this)" type="text" name="partialRefundProduct[{$product['id_order_detail']}]" />
 					{if !$currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax incl.'}</div>{/if}
 				</div>
-				<p class="help-block"><i class="icon-warning-sign"></i> {l s='(Max %s %s)' sprintf=[(Tools::ps_round($product_price, 2) * ($product['product_quantity'] - $product['customizationQuantityTotal'])) , $smarty.capture.TaxMethod]}</p>
+				<p class="help-block"><i class="icon-warning-sign"></i> {l s='(Max %s %s)' sprintf=[Tools::displayPrice(Tools::ps_round($product_price, 2) * ($product['product_quantity'] - $product['customizationQuantityTotal']), $currency->id) , $smarty.capture.TaxMethod]}</p>
+				{/if}
 			</div>
 		</div>
 

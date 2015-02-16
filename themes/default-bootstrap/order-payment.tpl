@@ -292,6 +292,9 @@
 								{if count($discounts)}
 									<tbody>
 										{foreach from=$discounts item=discount name=discountLoop}
+										{if (float)$discount.value_real == 0}
+											{continue}
+										{/if}
 											<tr class="cart_discount {if $smarty.foreach.discountLoop.last}last_item{elseif $smarty.foreach.discountLoop.first}first_item{else}item{/if}" id="cart_discount_{$discount.id_discount}">
 												<td class="cart_discount_name" colspan="{if $PS_STOCK_MANAGEMENT}3{else}2{/if}">{$discount.name}</td>
 												<td class="cart_discount_price">

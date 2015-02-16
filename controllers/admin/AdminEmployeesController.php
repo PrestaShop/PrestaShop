@@ -26,7 +26,7 @@
 
 class AdminEmployeesControllerCore extends AdminController
 {
- 	/** @var array profiles list */
+	/** @var array profiles list */
 	protected $profiles_array = array();
 
 	/** @var array themes list*/
@@ -40,14 +40,14 @@ class AdminEmployeesControllerCore extends AdminController
 	public function __construct()
 	{
 		$this->bootstrap = true;
-	 	$this->table = 'employee';
+		$this->table = 'employee';
 		$this->className = 'Employee';
-	 	$this->lang = false;
+		$this->lang = false;
+		$this->context = Context::getContext();
 
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-
-		$this->context = Context::getContext();
+		$this->addRowActionSkipList('delete', array((int)$this->context->employee->id));
 
 		$this->bulk_actions = array(
 			'delete' => array(
@@ -125,7 +125,7 @@ class AdminEmployeesControllerCore extends AdminController
 					foreach (scandir($path.$theme.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR.'schemes'.$rtl) as $css)
 						if ($css[0] != '.' && preg_match('/\.css$/', $css))
 						{
-							$name = (strpos($css,'admin-theme-') !== false ? Tools::ucfirst(preg_replace('/^admin-theme-(.*)\.css$/', '$1', $css)) : $css);
+							$name = strpos($css, 'admin-theme-') !== false ? Tools::ucfirst(preg_replace('/^admin-theme-(.*)\.css$/', '$1', $css)) : $css;
 							$this->themes[] = array('id' => $theme.'|schemes'.$rtl.'/'.$css, 'name' => $name);
 						}
 			}
@@ -194,7 +194,7 @@ class AdminEmployeesControllerCore extends AdminController
 
 	public function renderList()
 	{
- 		$this->_select = 'pl.`name` AS profile';
+		$this->_select = 'pl.`name` AS profile';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'profile` p ON a.`id_profile` = p.`id_profile`
 		LEFT JOIN `'._DB_PREFIX_.'profile_lang` pl ON (pl.`id_profile` = p.`id_profile` AND pl.`id_lang` = '
 			.(int)$this->context->language->id.')';
@@ -261,7 +261,7 @@ class AdminEmployeesControllerCore extends AdminController
 				'name' => 'passwd'
 				);
 
-			if(Tab::checkTabRights(Tab::getIdFromClassName('AdminModulesController')))
+			if (Tab::checkTabRights(Tab::getIdFromClassName('AdminModulesController')))
 				$this->fields_form['input'][] = array(
 					'type' => 'prestashop_addons',
 					'label' => 'PrestaShop Addons',
@@ -373,8 +373,8 @@ class AdminEmployeesControllerCore extends AdminController
 
 			// if employee is not SuperAdmin (id_profile = 1), don't make it possible to select the admin profile
 			if ($this->context->employee->id_profile != _PS_ADMIN_PROFILE_)
-				 foreach ($available_profiles as $i => $profile)
-				 	if ($available_profiles[$i]['id_profile'] == _PS_ADMIN_PROFILE_)
+				foreach ($available_profiles as $i => $profile)
+					if ($available_profiles[$i]['id_profile'] == _PS_ADMIN_PROFILE_)
 					{
 						unset($available_profiles[$i]);
 						break;
@@ -450,6 +450,19 @@ class AdminEmployeesControllerCore extends AdminController
 		parent::processStatus();
 	}
 
+	protected function processBulkDelete()
+	{
+		if (is_array($this->boxes) && !empty($this->boxes))
+			foreach ($this->boxes as $id_employee)
+				if ((int)$this->context->employee->id == (int)$id_employee)
+				{
+					$this->restrict_edition = true;
+					return $this->canModifyEmployee();
+				}
+
+		return parent::processBulkDelete();
+	}
+
 	protected function canModifyEmployee()
 	{
 		if ($this->restrict_edition)
@@ -515,10 +528,10 @@ class AdminEmployeesControllerCore extends AdminController
 		}
 		else
 		{
-			$_POST['id_last_order'] = $employee->getLastElementsForNotify('order');;
- 			$_POST['id_last_customer_message'] = $employee->getLastElementsForNotify('customer_message');
- 			$_POST['id_last_customer'] = $employee->getLastElementsForNotify('customer');
- 		}
+			$_POST['id_last_order'] = $employee->getLastElementsForNotify('order');
+			$_POST['id_last_customer_message'] = $employee->getLastElementsForNotify('customer_message');
+			$_POST['id_last_customer'] = $employee->getLastElementsForNotify('customer');
+		}
 
 		//if profile is super admin, manually fill checkBoxShopAsso_employee because in the form they are disabled.
 		if ($_POST['id_profile'] == _PS_ADMIN_PROFILE_)
