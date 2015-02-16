@@ -50,7 +50,7 @@
 					<td class="logo">
 						{if $store.has_picture}
 							<div class="store-image">
-								<img src="{$img_store_dir}{$store.id_store}.jpg" alt="" />
+								<img src="{$img_store_dir}{$store.id_store}-medium_default.jpg" alt="" />
 							</div>
 						{/if}
 					</td>
