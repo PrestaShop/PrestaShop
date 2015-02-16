@@ -2491,6 +2491,7 @@ abstract class ModuleCore
 
 		file_put_contents($path_override, preg_replace('#(\r|\r\n)#ism', "\n", file_get_contents($path_override)));
 
+		$pattern_escape_com = '#(\/\/.*?\n|\/\*(?!\n\s+\* module:.*?\* date:.*?\* version:.*?\*\/).*?\*\/)#ism';
 		// Check if there is already an override file, if not, we just need to copy the file
 		if (PrestaShopAutoload::getInstance()->getClassPath($classname))
 		{
@@ -2541,7 +2542,8 @@ abstract class ModuleCore
 			$copy_from = array_slice($module_file, $module_class->getStartLine() + 1, $module_class->getEndLine() - $module_class->getStartLine() - 2);
 			array_splice($override_file, $override_class->getEndLine() - 1, 0, $copy_from);
 			$code = implode('', $override_file);
-			file_put_contents($override_path, $code);
+
+			file_put_contents($override_path, preg_replace($pattern_escape_com, '', $code));
 		}
 		else
 		{
@@ -2564,7 +2566,7 @@ abstract class ModuleCore
 			foreach ($module_class->getProperties() as $property)
 				$module_file = preg_replace('/(:?public|private|protected|const)\s+(static\s+)?(\$?\b'.$property->getName().'\b)/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1 $2$3", $module_file);
 
-			file_put_contents($override_dest, $module_file);
+			file_put_contents($override_dest, preg_replace($pattern_escape_com, '', $module_file));
 			// Re-generate the class index
 			Tools::generateIndex();
 		}
