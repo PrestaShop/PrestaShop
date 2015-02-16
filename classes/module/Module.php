@@ -2483,14 +2483,21 @@ abstract class ModuleCore
 	 */
 	public function addOverride($classname)
 	{
-		@ini_set('auto_detect_line_endings', true);
 		$path = PrestaShopAutoload::getInstance()->getClassPath($classname.'Core');
+		$path_override = $this->getLocalPath().'override'.DIRECTORY_SEPARATOR.$path;
 
+		if (!is_file($path_override))
+			return false;
+
+		file_put_contents($path_override, preg_replace('#(\r|\r\n)#ism', "\n", file_get_contents($path_override)));
+
+		$pattern_escape_com = '#(\/\/.*?\n|\/\*(?!\n\s+\* module:.*?\* date:.*?\* version:.*?\*\/).*?\*\/)#ism';
 		// Check if there is already an override file, if not, we just need to copy the file
 		if (PrestaShopAutoload::getInstance()->getClassPath($classname))
 		{
 			// Check if override file is writable
 			$override_path = _PS_ROOT_DIR_.'/'.PrestaShopAutoload::getInstance()->getClassPath($classname);
+
 			if ((!file_exists($override_path) && !is_writable(dirname($override_path))) || (file_exists($override_path) && !is_writable($override_path)))
 				throw new Exception(sprintf(Tools::displayError('file (%s) not writable'), $override_path));
 
@@ -2499,13 +2506,12 @@ abstract class ModuleCore
 			while (class_exists($classname.'OverrideOriginal_remove', false));
 
 			// Make a reflection of the override class and the module override class
-			$override_file = array();
-			if (is_file($override_path))
-				$override_file = file($override_path);
+			$override_file = file($override_path);
+
 			eval(preg_replace(array('#^\s*<\?(?:php)?#', '#class\s+'.$classname.'\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'), array(' ', 'class '.$classname.'OverrideOriginal'.$uniq), implode('', $override_file)));
 			$override_class = new ReflectionClass($classname.'OverrideOriginal'.$uniq);
 
-			$module_file = file($this->getLocalPath().'override'.DIRECTORY_SEPARATOR.$path);
+			$module_file = file($path_override);
 			eval(preg_replace(array('#^\s*<\?(?:php)?#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array(' ', 'class '.$classname.'Override'.$uniq), implode('', $module_file)));
 			$module_class = new ReflectionClass($classname.'Override'.$uniq);
 
@@ -2529,18 +2535,19 @@ abstract class ModuleCore
 				if ($override_class->hasProperty($property->getName()))
 					throw new Exception(sprintf(Tools::displayError('The property %1$s in the class %2$s is already defined.'), $property->getName(), $classname));
 				else
-					$module_file = preg_replace('/(:?public|private|protected|const)\s+(static\s+)?(\$?\b'.$property->getName().'\b)/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1 $2$3" , $module_file);
+					$module_file = preg_replace('/(:?public|private|protected|const)\s+(static\s+)?(\$?\b'.$property->getName().'\b)/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1 $2$3", $module_file);
 			}
 
 			// Insert the methods from module override in override
 			$copy_from = array_slice($module_file, $module_class->getStartLine() + 1, $module_class->getEndLine() - $module_class->getStartLine() - 2);
 			array_splice($override_file, $override_class->getEndLine() - 1, 0, $copy_from);
 			$code = implode('', $override_file);
-			file_put_contents($override_path, $code);
+
+			file_put_contents($override_path, preg_replace($pattern_escape_com, '', $code));
 		}
 		else
 		{
-			$override_src = $this->getLocalPath().'override'.DIRECTORY_SEPARATOR.$path;
+			$override_src = $path_override;
 			$override_dest = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'override'.DIRECTORY_SEPARATOR.$path;
 			if (!is_writable(dirname($override_dest)))
 				throw new Exception(sprintf(Tools::displayError('directory (%s) not writable'), dirname($override_dest)));
@@ -2557,9 +2564,9 @@ abstract class ModuleCore
 
 			// same as precedent but for variable
 			foreach ($module_class->getProperties() as $property)
-				$module_file = preg_replace('/(:?public|private|protected|const)\s+(static\s+)?(\$?\b'.$property->getName().'\b)/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1 $2$3" , $module_file);
+				$module_file = preg_replace('/(:?public|private|protected|const)\s+(static\s+)?(\$?\b'.$property->getName().'\b)/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1 $2$3", $module_file);
 
-			file_put_contents($override_dest, $module_file);
+			file_put_contents($override_dest, preg_replace($pattern_escape_com, '', $module_file));
 			// Re-generate the class index
 			Tools::generateIndex();
 		}
@@ -2574,7 +2581,6 @@ abstract class ModuleCore
 	 */
 	public function removeOverride($classname)
 	{
-		@ini_set('auto_detect_line_endings', true);
 		$path = PrestaShopAutoload::getInstance()->getClassPath($classname.'Core');
 
 		if (!PrestaShopAutoload::getInstance()->getClassPath($classname))
@@ -2582,8 +2588,11 @@ abstract class ModuleCore
 
 		// Check if override file is writable
 		$override_path = _PS_ROOT_DIR_.'/'.PrestaShopAutoload::getInstance()->getClassPath($classname);
-		if (!is_writable($override_path))
+
+		if (!is_file($override_path) || !is_writable($override_path))
 			return false;
+
+		file_put_contents($override_path, preg_replace('#(\r|\r\n)#ism', "\n", file_get_contents($override_path)));
 
 		// Get a uniq id for the class, because you can override a class (or remove the override) twice in the same session and we need to avoid redeclaration
 		do $uniq = uniqid();
@@ -2600,7 +2609,6 @@ abstract class ModuleCore
 		$module_class = new ReflectionClass($classname.'Override_remove'.$uniq);
 
 		// Remove methods from override file
-		$override_file = file($override_path);
 		foreach ($module_class->getMethods() as $method)
 		{
 			if (!$override_class->hasMethod($method->getName()))
@@ -2614,13 +2622,13 @@ abstract class ModuleCore
 
 			$override_file_orig = $override_file;
 
-			$orig_content = preg_replace("/\s/", '', implode('', array_splice($override_file, $method->getStartLine() - 1, $length, array_pad(array(), $length, '#--remove--#'))));
-			$module_content = preg_replace("/\s/", '', implode('', array_splice($module_file, $module_method->getStartLine() - 1, $length, array_pad(array(), $length, '#--remove--#'))));
+			$orig_content = preg_replace('/\s/', '', implode('', array_splice($override_file, $method->getStartLine() - 1, $length, array_pad(array(), $length, '#--remove--#'))));
+			$module_content = preg_replace('/\s/', '', implode('', array_splice($module_file, $module_method->getStartLine() - 1, $length, array_pad(array(), $length, '#--remove--#'))));
 
 			$replace = true;
 			if (preg_match('/\* module: ('.$this->name.')/ism', $override_file[$method->getStartLine() - 5]))
 			{
-				$override_file[$method->getStartLine() - 7] = $override_file[$method->getStartLine() - 6] = $override_file[$method->getStartLine() - 5] = $override_file[$method->getStartLine() - 4] = $override_file[$method->getStartLine() - 3] =  $override_file[$method->getStartLine() - 2] = '#--remove--#';
+				$override_file[$method->getStartLine() - 6] = $override_file[$method->getStartLine() - 5] = $override_file[$method->getStartLine() - 4] = $override_file[$method->getStartLine() - 3] = $override_file[$method->getStartLine() - 2] = '#--remove--#';
 				$replace = false;
 			}
 
@@ -2640,15 +2648,15 @@ abstract class ModuleCore
 				if (preg_match('/(public|private|protected|const)\s+(static\s+)?(\$)?'.$property->getName().'/i', $line_content))
 				{
 					if (preg_match('/\* module: ('.$this->name.')/ism', $override_file[$line_number - 4]))
-						$override_file[$line_number - 5] = $override_file[$line_number - 4] = $override_file[$line_number - 3] = $override_file[$line_number - 2] =  $override_file[$line_number - 1] = '#--remove--#';
+						$override_file[$line_number - 5] = $override_file[$line_number - 4] = $override_file[$line_number - 3] = $override_file[$line_number - 2] = $override_file[$line_number - 1] = '#--remove--#';
 					$line_content = '#--remove--#';
 					break;
 				}
 			}
-
 		}
 
-		for ($i = 0; $i < count($override_file); ++$i)
+		$count = count($override_file);
+		for ($i = 0; $i < $count; ++$i)
 		{
 			if (preg_match('/(\/\/.*)/i', $override_file[$i]))
 				$override_file[$i] = '#--remove--#';
