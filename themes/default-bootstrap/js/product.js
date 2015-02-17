@@ -805,27 +805,34 @@ function displayImage(domAAroundImgThumb, no_animation)
 	}
 }
 
-//update display of the discounts table
+/**
+ * Update display of the discounts table.
+ * @param combination Combination ID.
+ */
 function displayDiscounts(combination)
 {
-	$('#quantityDiscount tbody tr').each(function(){
-		if (($(this).attr('id') != 'quantityDiscount_0') &&
-			($(this).attr('id') != 'quantityDiscount_' + combination) &&
-			($(this).attr('id') != 'noQuantityDiscount'))
-			$(this).fadeOut('slow');
-	 });
+	// Tables & rows selection
+	var quantityDiscountTable = $('#quantityDiscount');
+	var combinationsSpecificQuantityDiscount = $('#quantityDiscount_'+combination, quantityDiscountTable);
+	var allQuantityDiscount = $('#quantityDiscount_0', quantityDiscountTable);
 
-	if ($('#quantityDiscount_' + combination+',.quantityDiscount_' + combination).length != 0
-		|| $('#quantityDiscount_0,.quantityDiscount_0').length != 0)
+	// If there is some combinations specific quantity discount, show them, else, if there are some
+	// products quantity discount: show them. In case of result, show the category.
+	if (combinationsSpecificQuantityDiscount.length != 0)
 	{
-		$('#quantityDiscount').parent().show();
-		$('#quantityDiscount_' + combination+',.quantityDiscount_' + combination).show();
-		$('#noQuantityDiscount').hide();
+		combinationsSpecificQuantityDiscount.show();
+		allQuantityDiscount.hide();
+		quantityDiscountTable.show();
+	}
+	else if(allQuantityDiscount.length != 0)
+	{
+		allQuantityDiscount.show();
+		$('tr', quantityDiscountTable).not('#quantityDiscount_0').hide();
+		quantityDiscountTable.show();
 	}
 	else
 	{
-		$('#quantityDiscount').parent().hide();
-		$('#noQuantityDiscount').show();
+		quantityDiscountTable.hide();
 	}
 }
 

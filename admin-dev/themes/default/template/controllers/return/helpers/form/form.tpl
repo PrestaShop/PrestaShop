@@ -87,8 +87,6 @@
 											</div>
 										{/foreach}
 									{elseif $type == Product::CUSTOMIZE_TEXTFIELD}
-
-
 											{foreach from=$datas item='data'}
 												<div class="form-group">
 													<span class="control-label col-lg-3"><strong>{if $data['name']}{$data['name']}{else}{l s='Text #%d' sprintf=$smarty.foreach.data.iteration}{/if}</strong></span>
