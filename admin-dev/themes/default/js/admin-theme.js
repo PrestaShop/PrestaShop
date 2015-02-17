@@ -445,7 +445,14 @@ $(document).ready(function() {
 		});
 		return false;
 	});
-
+	
+	//open fancybox iframe for tracking url
+        $('.fancybox_shipping_number').fancybox({
+                'type': 'iframe',
+                'width': '80%',
+                'height': '80%',
+        });
+        
 	//scroll_if_anchor(window.location.hash);
 	$("body").on("click", "a.anchor", scroll_if_anchor);
 }); //end dom ready
