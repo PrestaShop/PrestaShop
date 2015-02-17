@@ -191,9 +191,9 @@ class ContactControllerCore extends FrontController
 					else
 					{
 						if (!Mail::Send($this->context->language->id, 'contact', Mail::l('Message from contact form').' [no_sync]',
-							$var_list, $contact->email, $contact->name, null, null,
-									$file_attachment, null,	_PS_MAIL_DIR_, false, null, null, $from) ||
-								!Mail::Send($this->context->language->id, 'contact_form', ((isset($ct) && Validate::isLoadedObject($ct)) ? sprintf(Mail::l('Your message has been correctly sent #ct%1$s #tc%2$s'), $ct->id, $ct->token) : Mail::l('Your message has been correctly sent')), $var_list, $from, null, null, null, $file_attachment, null,	_PS_MAIL_DIR_, false, null, null, $contact->email))
+							$var_list, $contact->email, $contact->name, $from, ($customer->id ? $customer->firstname.' '.$customer->lastname : ''),
+									$file_attachment) ||
+								!Mail::Send($this->context->language->id, 'contact_form', ((isset($ct) && Validate::isLoadedObject($ct)) ? sprintf(Mail::l('Your message has been correctly sent #ct%1$s #tc%2$s'), $ct->id, $ct->token) : Mail::l('Your message has been correctly sent')), $var_list, $from, null, $contact->email, $contact->name, $file_attachment))
 									$this->errors[] = Tools::displayError('An error occurred while sending the message.');
 					}
 				}
