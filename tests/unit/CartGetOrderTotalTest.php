@@ -379,4 +379,36 @@ class CartGetOrderTotalTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(12, $cart->getOrderTotal(false, Cart::BOTH, null, $id_carrier));
         $this->assertEquals(13.2, $cart->getOrderTotal(true, Cart::BOTH, null, $id_carrier));
     }
+
+    public function testBasicRoundTypeLine()
+    {
+        self::setRoundingType('line');
+
+        $product_a = self::makeProduct('A Product', 1.236, self::getIdTaxRulesGroup(20));
+        $product_b = self::makeProduct('B Product', 2.345, self::getIdTaxRulesGroup(20));
+
+        $cart = self::makeCart();
+
+        $cart->updateQty(1, $product_a->id);
+        $cart->updateQty(1, $product_b->id);
+
+        $this->assertEquals(3.59, $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS));
+        $this->assertEquals(4.29, $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS));
+    }
+
+    public function testBasicRoundTypeTotal()
+    {
+        self::setRoundingType('total');
+
+        $product_a = self::makeProduct('A Product', 1.236, self::getIdTaxRulesGroup(20));
+        $product_b = self::makeProduct('B Product', 2.345, self::getIdTaxRulesGroup(20));
+
+        $cart = self::makeCart();
+
+        $cart->updateQty(1, $product_a->id);
+        $cart->updateQty(1, $product_b->id);
+
+        $this->assertEquals(3.58, $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS));
+        $this->assertEquals(4.30, $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS));
+    }
 }
