@@ -1,7 +1,9 @@
 <?php
 
+
 class AdminProductsController extends AdminProductsControllerCore
 {
+
 	/*
 	* module: pscsx3241
 	* date: 2015-02-17 18:32:41
