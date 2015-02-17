@@ -77,7 +77,7 @@
 						<tr>
 							<td colspan="4">
 								<div class="form-horizontal">
-									{if $type == $smarty.const._CUSTOMIZE_FILE_}
+									{if $type == Product::CUSTOMIZE_FILE}
 										{foreach from=$datas item='data'}
 											<div class="form-group">
 												<span class="col-lg-3 control-label"><strong>{l s='Attachment'}</strong></span>
@@ -86,7 +86,7 @@
 												</div>
 											</div>
 										{/foreach}
-									{elseif $type == $smarty.const._CUSTOMIZE_TEXTFIELD_}
+									{elseif $type == Product::CUSTOMIZE_TEXTFIELD}
 
 
 											{foreach from=$datas item='data'}

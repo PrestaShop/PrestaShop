@@ -654,7 +654,7 @@ class AdminOrdersControllerCore extends AdminController
 						$order_detail = new OrderDetail((int)$id_order_detail);
 						if (empty($amount_detail))
 						{
-							$order_detail_list[$id_order_detail]['unit_price'] = $order_detail->unit_price_tax_excl;
+							$order_detail_list[$id_order_detail]['unit_price'] = (!Tools::getValue('TaxMethod') ? $order_detail->unit_price_tax_excl : $order_detail->unit_price_tax_incl);
 							$order_detail_list[$id_order_detail]['amount'] = $order_detail->unit_price_tax_incl * $order_detail_list[$id_order_detail]['quantity'];
 						}
 						else
@@ -669,7 +669,10 @@ class AdminOrdersControllerCore extends AdminController
 
                     if ($amount == 0)
                     {
-                        $this->errors[] = Tools::displayError('You have to enter an amount if you want to create a partial credit slip.');
+                    	if (!empty($refunds))
+							$this->errors[] = Tools::displayError('You have to enter a quantity if you want to create a partial credit slip.');
+						else
+							$this->errors[] = Tools::displayError('You have to enter an amount if you want to create a partial credit slip.');
                         return false;
                     }
 
@@ -767,7 +770,12 @@ class AdminOrdersControllerCore extends AdminController
 						}
 					}
 					else
-						$this->errors[] = Tools::displayError('You have to enter an amount if you want to create a partial credit slip.');
+					{
+						if (!empty($refunds))
+							$this->errors[] = Tools::displayError('You have to enter a quantity if you want to create a partial credit slip.');
+						else
+							$this->errors[] = Tools::displayError('You have to enter an amount if you want to create a partial credit slip.');
+					}
 
 					// Redirect if no errors
 					if (!count($this->errors))

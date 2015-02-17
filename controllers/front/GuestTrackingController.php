@@ -175,8 +175,8 @@ class GuestTrackingControllerCore extends FrontController
 			'invoiceAllowed' => (int)Configuration::get('PS_INVOICE'),
 			'is_guest' => true,
 			'group_use_tax' => (Group::getPriceDisplayMethod($customer->id_default_group) == PS_TAX_INC),
-			'CUSTOMIZE_FILE' => _CUSTOMIZE_FILE_,
-			'CUSTOMIZE_TEXTFIELD' => _CUSTOMIZE_TEXTFIELD_,
+			'CUSTOMIZE_FILE' => Product::CUSTOMIZE_FILE,
+			'CUSTOMIZE_TEXTFIELD' => Product::CUSTOMIZE_TEXTFIELD,
 			'use_tax' => Configuration::get('PS_TAX'),
 			));
 	}

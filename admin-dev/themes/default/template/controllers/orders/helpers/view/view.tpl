@@ -1073,7 +1073,7 @@
 													</div>
 													<input type="text" name="partialRefundShippingCost" value="0" />
 												</div>
-												<p class="help-block"><i class="icon-warning-sign"></i>{l s='(excl tax)'}</p>
+												<p class="help-block"><i class="icon-warning-sign"></i>{l s='(%s)' sprintf=$smarty.capture.TaxMethod}</p>
 											</td>
 										</tr>
 										{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}

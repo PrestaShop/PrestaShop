@@ -97,7 +97,7 @@
 			<b>{l s='Carrier:' pdf='true'}</b><br />
 			{$carrier->name}<br />
 			<br />
-			{/if}			
+			{/if}
 			<!-- / CUSTOMER INFORMATIONS -->
 		</td>
 		<td style="width: 78%; text-align: right">
@@ -131,8 +131,8 @@
 							<tr style="line-height:6px;background-color:{$bgcolor};">
 								<td style="line-height:3px; text-align: left; width: 60%; vertical-align: top">
 										<blockquote>
-											{if isset($customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_]) && count($customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_]) > 0}
-												{foreach $customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_] as $customization_infos}
+											{if isset($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) && count($customization.datas[Product::CUSTOMIZE_TEXTFIELD_]) > 0}
+												{foreach $customization.datas[Product::CUSTOMIZE_TEXTFIELD] as $customization_infos}
 													{$customization_infos.name}: {$customization_infos.value}
 													{if !$smarty.foreach.custo_foreach.last}<br />
 													{else}
@@ -141,8 +141,8 @@
 												{/foreach}
 											{/if}
 
-											{if isset($customization.datas[$smarty.const._CUSTOMIZE_FILE_]) && count($customization.datas[$smarty.const._CUSTOMIZE_FILE_]) > 0}
-												{count($customization.datas[$smarty.const._CUSTOMIZE_FILE_])} {l s='image(s)' pdf='true'}
+											{if isset($customization.datas[Product::CUSTOMIZE_FILE]) && count($customization.datas[Product::CUSTOMIZE_FILE]) > 0}
+												{count($customization.datas[Product::CUSTOMIZE_FILE])} {l s='image(s)' pdf='true'}
 											{/if}
 										</blockquote>
 								</td>
