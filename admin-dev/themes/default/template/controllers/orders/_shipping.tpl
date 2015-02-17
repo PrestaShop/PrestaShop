@@ -62,7 +62,7 @@
 					{/if}
 				</td>
 				<td>
-					<span class="shipping_number_show">{if $line.url && $line.tracking_number}<a class="fancybox_shipping_number" class="_blank" href="{$line.url|replace:'@':$line.tracking_number}">{$line.tracking_number}</a>{else}{$line.tracking_number}{/if}</span>
+					<span class="shipping_number_show">{if $line.url && $line.tracking_number}<a class="fancybox_shipping_number _blank" href="{$line.url|replace:'@':$line.tracking_number}">{$line.tracking_number}</a>{else}{$line.tracking_number}{/if}</span>
 				</td>
 				<td>
 					{if $line.can_edit}
