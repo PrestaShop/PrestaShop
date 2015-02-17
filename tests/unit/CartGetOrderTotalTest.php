@@ -62,6 +62,9 @@ class CartGetOrderTotalTest extends PHPUnit_Framework_TestCase
         // We'll base all our computations on the invoice address
         Configuration::set('PS_TAX_ADDRESS_TYPE', 'id_address_invoice');
 
+        // We don't care about stock, abstract this away by allowing ordering out of stock products
+        Configuration::set('PS_ORDER_OUT_OF_STOCK', true);
+
         // Create the address only once
         self::$id_address = self::makeAddress()->id;
 
