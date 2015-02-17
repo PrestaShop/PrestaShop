@@ -23,6 +23,7 @@ class AdminProductsController extends AdminProductsControllerCore
 	* version: 1
 	*/
 	protected $_category;
+
 	/*
 	* module: pscsx3241
 	* date: 2015-02-17 18:32:41
