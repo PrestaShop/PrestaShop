@@ -32,6 +32,8 @@ use PHPUnit_Framework_Assert as Assert;
 
 use PrestaShop\PrestaShop\Tests\Helper\DatabaseDump;
 
+use Exception;
+
 use Address;
 use Carrier;
 use Cart;
@@ -39,6 +41,7 @@ use Configuration;
 use Context;
 use Currency;
 use Db;
+use Order;
 use Product;
 use Tools;
 use Tax;
@@ -108,6 +111,70 @@ class CartGetOrderTotalTest extends PHPUnit_Framework_TestCase
     private static function getCountryId()
     {
         return Configuration::get('PS_COUNTRY_DEFAULT');
+    }
+
+    private static function setRoundingMode($modeStr)
+    {
+        $mode = null;
+
+        switch ($modeStr)
+        {
+            case 'up':
+                $mode = PS_ROUND_UP;
+                break;
+            case 'down':
+                $mode = PS_ROUND_DOWN;
+                break;
+            case 'half_up':
+                $mode = PS_ROUND_HALF_UP;
+                break;
+            case 'half_down':
+                $mode = PS_ROUND_HALF_DOWN;
+                break;
+            case 'half_even':
+                $mode = PS_ROUND_HALF_DOWN;
+                break;
+            case 'hald_odd':
+                $mode = PS_ROUND_HALF_ODD;
+                break;
+            default:
+                throw new Exception(sprintf('Unknown rounding mode `%s`.', $modeStr));
+        }
+
+        Configuration::set('PS_PRICE_ROUND_MODE', $mode);
+
+        return $mode;
+    }
+
+    private static function setRoundingType($typeStr)
+    {
+        $type = null;
+
+        switch ($typeStr)
+        {
+            case 'item':
+                $type = Order::ROUND_ITEM;
+                break;
+            case 'line':
+                $type = Order::ROUND_LINE;
+                break;
+            case 'total':
+                $type = Order::ROUND_TOTAL;
+                break;
+            default:
+                throw new Exception(sprintf('Unknown rounding type `%s`.', $typeStr));
+        }
+
+        Configuration::set('PS_ROUND_TYPE', $type);
+
+        return $type;
+    }
+
+    private static function setRoundingDecimals($nInt)
+    {
+        Configuration::set('PS_PRICE_DISPLAY_PRECISION', $nInt);
+
+        return $nInt;
     }
 
     /**
@@ -268,6 +335,15 @@ class CartGetOrderTotalTest extends PHPUnit_Framework_TestCase
      * End of setup, real tests start here.
      */
 
+    /**
+     * Provide sensible defaults for tests that don't specify them.
+     */
+    public function setUp()
+    {
+        self::setRoundingType('line');
+        self::setRoundingMode('half_up');
+        self::setRoundingDecimals(2);
+    }
 
     public function testBasicOnlyProducts()
     {
