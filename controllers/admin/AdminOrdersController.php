@@ -131,6 +131,14 @@ class AdminOrdersControllerCore extends AdminController
 				'filter_type' => 'int',
 				'order_key' => 'osname'
 			),
+			'shipping_number' => array(
+				'title' => $this->l('Shipping Number'),
+				'align' => 'text-center',
+				'class' => 'fixed-width-xs',
+				'remove_onclick' => true,
+				'orderby' => false,
+				'callback' => 'printTrackingLink',
+			),
 			'date_add' => array(
 				'title' => $this->l('Date'),
 				'align' => 'text-right',
@@ -197,6 +205,33 @@ class AdminOrdersControllerCore extends AdminController
 	{
 		$order = new Order($tr['id_order']);
 		return Tools::displayPrice($echo, (int)$order->id_currency);
+	}
+
+	public function printTrackingLink($sn, $parm)
+	{
+		$order = new Order($parm['id_order']);
+		if (!Validate::isLoadedObject($order))
+		{
+			$this->errors[] = Tools::displayError('The order cannot be found');
+			return false;
+		}
+
+		$carrier = new Carrier((int)$order->id_carrier, $order->id_lang);
+		if (!Validate::isLoadedObject($carrier))
+		{
+			$this->errors[] = Tools::displayError('Can\'t load Carrier object');
+			return false;
+		}
+		if ($order->current_state==(int)Configuration::get('PS_OS_DELIVERED'))
+                        return false;
+		
+		$this->context->smarty->assign(array(
+			'shipping_number' => $sn,
+			'shipping_url' => str_replace('@', $sn, $carrier->url)
+		));
+		
+	
+		return $this->createTemplate('_print_shipping_link.tpl')->fetch();
 	}
 
 	public function initPageHeaderToolbar()
