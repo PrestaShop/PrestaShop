@@ -25,5 +25,8 @@
 
 {* Generate HTML code for printing Shipping Number with link *}
 {if ($shipping_number && $shipping_url)}
-<a class="" target="_blank" href="{$shipping_url|escape:'html':'UTF-8'}">{$shipping_number}</a>
+<a class="fancybox_shipping_number btn btn-default" href="{$shipping_url|escape:'html':'UTF-8'}">
+        {$shipping_number}
+        <i class="icon-link"></i>
+</a>
 {/if}
