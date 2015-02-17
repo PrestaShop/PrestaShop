@@ -79,6 +79,17 @@ class CartGetOrderTotalTest extends PHPUnit_Framework_TestCase
         self::$dump->restore();
     }
 
+    /**
+     * The private static methods below are used to setup the initial conditions
+     * for our tests.
+     * They should probably be refactored out of the test itself, but since they perform
+     * tasks specifically designed for this test (and maybe misleading if used out of context),
+     * I'm leaving them here for now.
+     *
+     * Methods starting with get should cache their result for performance,
+     * methods starting with make should create a new object each time.
+     */
+
     private static function deactivateCurrentCartRules()
     {
         Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'cart_rule SET active = 0');
@@ -98,17 +109,6 @@ class CartGetOrderTotalTest extends PHPUnit_Framework_TestCase
     {
         return Configuration::get('PS_COUNTRY_DEFAULT');
     }
-
-    /**
-     * The private static methods below are used to setup the initial conditions
-     * for our tests.
-     * They should probably be refactored out of the test itself, but since they perform
-     * tasks specifically designed for this test (and maybe misleading if used out of context),
-     * I'm leaving them here for now.
-     *
-     * Methods starting with get will should cache their result for performance,
-     * methods starting with make should create a new object each time.
-     */
 
     /**
      * $rate is e.g. 5.5, 20...
