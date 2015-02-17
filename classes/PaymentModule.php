@@ -549,7 +549,11 @@ abstract class PaymentModuleCore extends Module
 							if ($voucher->reduction_amount <= 0)
 								continue;
 
-							$voucher->id_customer = $order->id_customer;
+							if ($this->context->customer->isGuest())
+								$voucher->id_customer = 0;
+							else
+								$voucher->id_customer = $order->id_customer;
+
 							$voucher->quantity = 1;
 							$voucher->quantity_per_user = 1;
 							$voucher->free_shipping = 0;
