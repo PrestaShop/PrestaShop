@@ -566,7 +566,7 @@ class CartCore extends ObjectModel
 				(int)$row['id_product'],
 				false,
 				isset($row['id_product_attribute']) ? (int)$row['id_product_attribute'] : null,
-				6,
+				_PS_PRICE_COMPUTE_PRECISION_,
 				null,
 				false,
 				true,
@@ -595,7 +595,7 @@ class CartCore extends ObjectModel
 					$row['total_wt'] = Tools::ps_round($tax_calculator->addTaxes($row['price']), _PS_PRICE_COMPUTE_PRECISION_) * (int)$row['cart_quantity'];
 					break;
 			}
-			$row['price_wt'] = $tax_calculator->addTaxes($row['price']);
+			$row['price_wt'] = Tools::ps_round($tax_calculator->addTaxes($row['price']), _PS_PRICE_COMPUTE_PRECISION_);
 			$row['description_short'] = Tools::nl2br($row['description_short']);
 
 			if (!isset($row['pai_id_image']) || $row['pai_id_image'] == 0)
@@ -1376,7 +1376,7 @@ class CartCore extends ObjectModel
 				(int)$product['id_product'],
 				false,
 				(int)$product['id_product_attribute'],
-				6,
+				_PS_PRICE_COMPUTE_PRECISION_,
 				null,
 				false,
 				true,
@@ -1541,7 +1541,7 @@ class CartCore extends ObjectModel
 				if ($cart_rule['obj']->reduction_percent > 0 || $cart_rule['obj']->reduction_amount > 0)
 					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_REDUCTION, $package, $use_cache), _PS_PRICE_COMPUTE_PRECISION_);
 			}
-			$order_total_discount = min(Tools::ps_round($order_total_discount, 2), $wrapping_fees + $order_total_products + $shipping_fees);
+			$order_total_discount = min(Tools::ps_round($order_total_discount, _PS_PRICE_COMPUTE_PRECISION_), $wrapping_fees + $order_total_products + $shipping_fees);
 			$order_total -= $order_total_discount;
 		}
 
