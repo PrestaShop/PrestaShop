@@ -519,7 +519,7 @@ class StockManagerCore implements StockManagerInterface
         }
 
         $client_orders_qty = 0;
-		// initial variable
+
 		$products = '';
         // check if product is present in a pack
         if (!Pack::isPack($id_product) && $in_pack = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
@@ -568,13 +568,17 @@ class StockManagerCore implements StockManagerInterface
 		}
 		// Gets supply_orders_qty
 		$sql = 'SELECT SUM(sod.quantity_expected - COALESCE(sod.quantity_received, 0))'.
-			' FROM supply_order` so'.
-			' JOIN supply_order_detail` sod ON sod.id_supply_order = so.id_supply_order'.
-							' AND sod.id_product = '.(int)$id_product.' AND sod.id_product_attribute = '.(int)$id_product_attribute).
+			' FROM `'._DB_PREFIX_.'supply_order` so'.
+			' JOIN `'._DB_PREFIX_.'supply_order_detail` sod ON sod.id_supply_order = so.id_supply_order'.
+							' AND sod.id_product = '.(int)$id_product.
+							' AND sod.id_product_attribute = '.(int)$id_product_attribute.
 							' AND sod.quantity_expected > COALESCE(sod.quantity_received, 0)'.
-			' JOIN supply_order_state` sos ON sos.id_supply_order_state = so.id_supply_order_state'.
+			' JOIN `'._DB_PREFIX_.'supply_order_state` sos ON sos.id_supply_order_state = so.id_supply_order_state'.
 							' AND sos.pending_receipt = 1'.
-			((!is_null($ids_warehouse) && count($ids_warehouse)) ? ' WHERE so.id_warehouse IN ('.implode(', ', $ids_warehouse).')', '');
+		if (!is_null($ids_warehouse) && count($ids_warehouse))
+		{
+			$sql .= ' WHERE so.id_warehouse IN ('.implode(', ', $ids_warehouse).')';
+		}
 		$supply_orders_qty = Db::getInstance(_PS_USE_SQL_SLAVE_)->getvalue($sql);
 
         // Gets {physical OR usable}_qty
