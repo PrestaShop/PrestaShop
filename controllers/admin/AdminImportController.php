@@ -1307,7 +1307,8 @@ class AdminImportControllerCore extends AdminController
 
 				if (is_array($category_data))
 					foreach ($category_data as $tmp)
-						$product->category[] = $tmp;
+						if (!isset($product->category) || is_array($product->category))
+							$product->category[] = $tmp;
 			}
 
 			AdminImportController::setEntityDefaultValues($product);
