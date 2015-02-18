@@ -27,6 +27,6 @@
 {if ($shipping_number && $shipping_url)}
 <a class="fancybox_shipping_number btn btn-default" href="{$shipping_url|escape:'html':'UTF-8'}">
         {$shipping_number}
-        <i class="icon-link"></i>
+        <i class="icon-external-link"></i>
 </a>
 {/if}
