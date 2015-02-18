@@ -86,7 +86,7 @@ class MailCore extends ObjectModel
 	 */
 	public static function Send($id_lang, $template, $subject, $template_vars, $to,
 		$to_name = null, $from = null, $from_name = null, $file_attachment = null, $mode_smtp = null,
-		$template_path = _PS_MAIL_DIR_, $die = false, $id_shop = null, $bcc = null)
+		$template_path = _PS_MAIL_DIR_, $die = false, $id_shop = null, $bcc = null, $reply_to = null)
 	{
 		if (!$id_shop)
 			$id_shop = Context::getContext()->shop->id;
@@ -125,8 +125,10 @@ class MailCore extends ObjectModel
 			$configuration['PS_MAIL_SMTP_PORT'] = 'default';
 
 		// Sending an e-mail can be of vital importance for the merchant, when his password is lost for example, so we must not die but do our best to send the e-mail
+
 		if (!isset($from) || !Validate::isEmail($from))
 			$from = $configuration['PS_SHOP_EMAIL'];
+
 		if (!Validate::isEmail($from))
 			$from = null;
 
@@ -287,6 +289,12 @@ class MailCore extends ObjectModel
 			$message->setId(Mail::generateId());
 
 			$message->headers->setEncoding('Q');
+
+			if (!($reply_to && Validate::isEmail($reply_to)))
+				$reply_to = $from;
+
+			if (isset($reply_to) && $reply_to)
+				$message->setReplyTo($reply_to);
 
 			$template_vars = array_map(array('Tools', 'htmlentitiesDecodeUTF8'), $template_vars);
 			$template_vars = array_map(array('Tools', 'stripslashes'), $template_vars);

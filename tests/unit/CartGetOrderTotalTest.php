@@ -32,6 +32,8 @@ use PHPUnit_Framework_Assert as Assert;
 
 use PrestaShop\PrestaShop\Tests\Helper\DatabaseDump;
 
+use Exception;
+
 use Address;
 use Carrier;
 use Cart;
@@ -39,6 +41,7 @@ use Configuration;
 use Context;
 use Currency;
 use Db;
+use Order;
 use Product;
 use Tools;
 use Tax;
@@ -79,6 +82,17 @@ class CartGetOrderTotalTest extends PHPUnit_Framework_TestCase
         self::$dump->restore();
     }
 
+    /**
+     * The private static methods below are used to setup the initial conditions
+     * for our tests.
+     * They should probably be refactored out of the test itself, but since they perform
+     * tasks specifically designed for this test (and maybe misleading if used out of context),
+     * I'm leaving them here for now.
+     *
+     * Methods starting with get should cache their result for performance,
+     * methods starting with make should create a new object each time.
+     */
+
     private static function deactivateCurrentCartRules()
     {
         Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'cart_rule SET active = 0');
@@ -99,16 +113,69 @@ class CartGetOrderTotalTest extends PHPUnit_Framework_TestCase
         return Configuration::get('PS_COUNTRY_DEFAULT');
     }
 
-    /**
-     * The private static methods below are used to setup the initial conditions
-     * for our tests.
-     * They should probably be refactored out of the test itself, but since they perform
-     * tasks specifically designed for this test (and maybe misleading if used out of context),
-     * I'm leaving them here for now.
-     *
-     * Methods starting with get will should cache their result for performance,
-     * methods starting with make should create a new object each time.
-     */
+    private static function setRoundingMode($modeStr)
+    {
+        $mode = null;
+
+        switch ($modeStr)
+        {
+            case 'up':
+                $mode = PS_ROUND_UP;
+                break;
+            case 'down':
+                $mode = PS_ROUND_DOWN;
+                break;
+            case 'half_up':
+                $mode = PS_ROUND_HALF_UP;
+                break;
+            case 'half_down':
+                $mode = PS_ROUND_HALF_DOWN;
+                break;
+            case 'half_even':
+                $mode = PS_ROUND_HALF_DOWN;
+                break;
+            case 'hald_odd':
+                $mode = PS_ROUND_HALF_ODD;
+                break;
+            default:
+                throw new Exception(sprintf('Unknown rounding mode `%s`.', $modeStr));
+        }
+
+        Configuration::set('PS_PRICE_ROUND_MODE', $mode);
+
+        return $mode;
+    }
+
+    private static function setRoundingType($typeStr)
+    {
+        $type = null;
+
+        switch ($typeStr)
+        {
+            case 'item':
+                $type = Order::ROUND_ITEM;
+                break;
+            case 'line':
+                $type = Order::ROUND_LINE;
+                break;
+            case 'total':
+                $type = Order::ROUND_TOTAL;
+                break;
+            default:
+                throw new Exception(sprintf('Unknown rounding type `%s`.', $typeStr));
+        }
+
+        Configuration::set('PS_ROUND_TYPE', $type);
+
+        return $type;
+    }
+
+    private static function setRoundingDecimals($nInt)
+    {
+        Configuration::set('PS_PRICE_DISPLAY_PRECISION', $nInt);
+
+        return $nInt;
+    }
 
     /**
      * $rate is e.g. 5.5, 20...
@@ -268,6 +335,15 @@ class CartGetOrderTotalTest extends PHPUnit_Framework_TestCase
      * End of setup, real tests start here.
      */
 
+    /**
+     * Provide sensible defaults for tests that don't specify them.
+     */
+    public function setUp()
+    {
+        self::setRoundingType('line');
+        self::setRoundingMode('half_up');
+        self::setRoundingDecimals(2);
+    }
 
     public function testBasicOnlyProducts()
     {
@@ -302,5 +378,37 @@ class CartGetOrderTotalTest extends PHPUnit_Framework_TestCase
         $cart->updateQty(1, $product->id);
         $this->assertEquals(12, $cart->getOrderTotal(false, Cart::BOTH, null, $id_carrier));
         $this->assertEquals(13.2, $cart->getOrderTotal(true, Cart::BOTH, null, $id_carrier));
+    }
+
+    public function testBasicRoundTypeLine()
+    {
+        self::setRoundingType('line');
+
+        $product_a = self::makeProduct('A Product', 1.236, self::getIdTaxRulesGroup(20));
+        $product_b = self::makeProduct('B Product', 2.345, self::getIdTaxRulesGroup(20));
+
+        $cart = self::makeCart();
+
+        $cart->updateQty(1, $product_a->id);
+        $cart->updateQty(1, $product_b->id);
+
+        $this->assertEquals(3.59, $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS));
+        $this->assertEquals(4.29, $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS));
+    }
+
+    public function testBasicRoundTypeTotal()
+    {
+        self::setRoundingType('total');
+
+        $product_a = self::makeProduct('A Product', 1.236, self::getIdTaxRulesGroup(20));
+        $product_b = self::makeProduct('B Product', 2.345, self::getIdTaxRulesGroup(20));
+
+        $cart = self::makeCart();
+
+        $cart->updateQty(1, $product_a->id);
+        $cart->updateQty(1, $product_b->id);
+
+        $this->assertEquals(3.58, $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS));
+        $this->assertEquals(4.30, $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS));
     }
 }

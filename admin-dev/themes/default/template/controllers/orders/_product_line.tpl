@@ -73,7 +73,14 @@
 		</span>
 		{/if}
 	</td>
-	{if $display_warehouse}<td>{$product.warehouse_name|escape:'html':'UTF-8'}</td>{/if}
+	{if $display_warehouse}
+		<td>
+			{$product.warehouse_name|escape:'html':'UTF-8'}
+			{if $product.warehouse_location}
+				<br>{l s='Location'}: <strong>{$product.warehouse_location|escape:'html':'UTF-8'}</strong>
+			{/if}
+		</td>
+	{/if}
 	{if ($order->hasBeenPaid())}
 		<td class="productQuantity text-center">
 			{$product['product_quantity_refunded']}
