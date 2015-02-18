@@ -75,3 +75,12 @@ ALTER TABLE `PREFIX_product` DROP KEY `product_manufacturer`, ADD KEY `product_m
 ALTER IGNORE TABLE `PREFIX_specific_price` ADD UNIQUE KEY `id_product_2` (`id_product`,`id_shop`,`id_shop_group`,`id_currency`,`id_country`,`id_group`,`id_customer`,`id_product_attribute`,`from_quantity`,`from`,`to`);
 ALTER TABLE `PREFIX_orders` CHANGE `invoice_number` `invoice_number` INT( 11 ) UNSIGNED NOT NULL DEFAULT '0',
 CHANGE `delivery_number` `delivery_number` INT( 11 ) UNSIGNED NOT NULL DEFAULT '0';
+
+CREATE TABLE `PREFIX_smarty_lazy_cache` (
+  `template_hash` varchar(32) NOT NULL DEFAULT '',
+  `cache_id` varchar(32) NOT NULL DEFAULT '',
+  `compile_id` varchar(32) NOT NULL DEFAULT '',
+  `filepath` varchar(2048) NOT NULL DEFAULT '',
+  `last_update` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`template_hash`, `cache_id`, `compile_id`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;

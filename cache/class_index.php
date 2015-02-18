@@ -3377,6 +3377,18 @@
     'type' => 'class',
     'override' => false,
   ),
+  'SmartyCustom' => 
+  array (
+    'path' => '',
+    'type' => 'class',
+    'override' => false,
+  ),
+  'SmartyCustomCore' => 
+  array (
+    'path' => 'classes/SmartyCustom.php',
+    'type' => 'class',
+    'override' => false,
+  ),
   'SpecificPrice' => 
   array (
     'path' => '',

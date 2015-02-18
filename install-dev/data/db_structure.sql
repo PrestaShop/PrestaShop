@@ -2601,3 +2601,12 @@ CREATE TABLE IF NOT EXISTS `PREFIX_mail` (
   PRIMARY KEY (`id_mail`),
   KEY `recipient` (`recipient`(10))
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
+
+CREATE TABLE `PREFIX_smarty_lazy_cache` (
+  `template_hash` varchar(32) NOT NULL DEFAULT '',
+  `cache_id` varchar(32) NOT NULL DEFAULT '',
+  `compile_id` varchar(32) NOT NULL DEFAULT '',
+  `filepath` varchar(2048) NOT NULL DEFAULT '',
+  `last_update` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`template_hash`, `cache_id`, `compile_id`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
