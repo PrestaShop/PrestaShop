@@ -99,4 +99,3 @@ class TaxManagerFactoryCore
 				.$address->dni;
 	}
 }
-
