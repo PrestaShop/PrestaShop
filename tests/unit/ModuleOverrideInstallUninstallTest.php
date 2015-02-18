@@ -66,7 +66,7 @@ class ModulesOverrideInstallUninstallTest extends PHPUnit_Framework_TestCase
 
 	public function testDiffOverrideAndUninstall()
 	{
-		$ressource_path = realpath(dirname(__FILE__).'/../ressources/ModulesOverrideInstallUninstallTest/');
+		$ressource_path = realpath(dirname(__FILE__).'/../resources/ModulesOverrideInstallUninstallTest/');
 		$override_path_cart = _PS_ROOT_DIR_.'/'.PrestaShopAutoload::getInstance()->getClassPath('Cart');
 		$override_path_admin_product_controller = _PS_ROOT_DIR_.'/'.PrestaShopAutoload::getInstance()->getClassPath('AdminProductsController');
 

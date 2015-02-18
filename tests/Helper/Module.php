@@ -26,14 +26,14 @@
 
 namespace PrestaShop\PrestaShop\Tests\Helper;
 
-define('_RESSOURCE_MODULE_DIR_', realpath(dirname(__FILE__).'/../ressources/module/'));
+define('_RESSOURCE_MODULE_DIR_', realpath(dirname(__FILE__).'/../resources/module/'));
 
 class	Module
 {
 	/**
-	 * Copy the directory in ressources which get the name $module_dir_name in the module directory
+	 * Copy the directory in resources which get the name $module_dir_name in the module directory
 	 *
-	 * @var module_dir_name take the directory name of a module contain in /home/prestashop/tests/ressources/module
+	 * @var module_dir_name take the directory name of a module contain in /home/prestashop/tests/resources/module
 	 */
 	public static function addModule($module_dir_name)
 	{
