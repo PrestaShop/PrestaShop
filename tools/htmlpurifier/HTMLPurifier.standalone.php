@@ -8712,6 +8712,15 @@ class HTMLPurifier_URI
         $chars_gen_delims = ':/?#[]@';
         $chars_pchar = $chars_sub_delims . ':@';
 
+        /**
+         * Prestashop
+         */
+        if (isset($config->def->defaults['URI.unescape']))
+            $chars_sub_delims .= $config->def->defaults['URI.unescape'];
+        /**
+         * End Prestashop
+         */
+
         // validate host
         if (!is_null($this->host)) {
             $host_def = new HTMLPurifier_AttrDef_URI_Host();
