@@ -566,27 +566,16 @@ class StockManagerCore implements StockManagerInterface
 				 WHERE o.valid = 1 OR (os.id_order_state NOT IN (e.value, c.value))';
 			$client_orders_qty = Db::getInstance(_PS_USE_SQL_SLAVE_)->getvalue($sql);
 		}
-        // Gets supply_orders_qty
-        $query = new DbQuery();
-
-        $query->select('sod.quantity_expected, sod.quantity_received');
-        $query->from('supply_order', 'so');
-        $query->leftjoin('supply_order_detail', 'sod', 'sod.id_supply_order = so.id_supply_order');
-        $query->leftjoin('supply_order_state', 'sos', 'sos.id_supply_order_state = so.id_supply_order_state');
-        $query->where('sos.pending_receipt = 1');
-        $query->where('sod.id_product = '.(int)$id_product.' AND sod.id_product_attribute = '.(int)$id_product_attribute);
-        if (!is_null($ids_warehouse) && count($ids_warehouse)) {
-            $query->where('so.id_warehouse IN('.implode(', ', $ids_warehouse).')');
-        }
-
-        $supply_orders_qties = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
-
-        $supply_orders_qty = 0;
-        foreach ($supply_orders_qties as $qty) {
-            if ($qty['quantity_expected'] > $qty['quantity_received']) {
-                $supply_orders_qty += ($qty['quantity_expected'] - $qty['quantity_received']);
-            }
-        }
+		// Gets supply_orders_qty
+		$sql = 'SELECT SUM(sod.quantity_expected - COALESCE(sod.quantity_received, 0))'.
+			' FROM supply_order` so'.
+			' JOIN supply_order_detail` sod ON sod.id_supply_order = so.id_supply_order'.
+							' AND sod.id_product = '.(int)$id_product.' AND sod.id_product_attribute = '.(int)$id_product_attribute).
+							' AND sod.quantity_expected > COALESCE(sod.quantity_received, 0)'.
+			' JOIN supply_order_state` sos ON sos.id_supply_order_state = so.id_supply_order_state'.
+							' AND sos.pending_receipt = 1'.
+			((!is_null($ids_warehouse) && count($ids_warehouse)) ? ' WHERE so.id_warehouse IN ('.implode(', ', $ids_warehouse).')', '');
+		$supply_orders_qty = Db::getInstance(_PS_USE_SQL_SLAVE_)->getvalue($sql);
 
         // Gets {physical OR usable}_qty
         $qty = $this->getProductPhysicalQuantities($id_product, $id_product_attribute, $ids_warehouse, $usable);
