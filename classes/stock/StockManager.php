@@ -492,6 +492,7 @@ class StockManagerCore implements StockManagerInterface
 
 		$client_orders_qty = 0;
 
+		$products = '';
 		// check if product is present in a pack
 		if (!Pack::isPack($id_product) && $in_pack = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
 			'SELECT id_product_pack, quantity FROM '._DB_PREFIX_.'pack
@@ -503,63 +504,50 @@ class StockManagerCore implements StockManagerInterface
 				if (Validate::isLoadedObject($product = new Product((int)$value['id_product_pack'])) &&
 					($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && Configuration::get('PS_PACK_STOCK_TYPE') > 0)))
 				{
-					$query = new DbQuery();
-					$query->select('od.product_quantity, od.product_quantity_refunded');
-					$query->from('order_detail', 'od');
-					$query->leftjoin('orders', 'o', 'o.id_order = od.id_order');
-					$query->where('od.product_id = '.(int)$value['id_product_pack']);
-					$query->leftJoin('order_history', 'oh', 'oh.id_order = o.id_order AND oh.id_order_state = o.current_state');
-					$query->leftJoin('order_state', 'os', 'os.id_order_state = oh.id_order_state');
-					$query->where('os.shipped != 1');
-					$query->where('o.valid = 1 OR (os.id_order_state != '.(int)Configuration::get('PS_OS_ERROR').'
-								   AND os.id_order_state != '.(int)Configuration::get('PS_OS_CANCELED').')');
-					$query->groupBy('od.id_order_detail');
-					if (count($ids_warehouse))
-						$query->where('od.id_warehouse IN('.implode(', ', $ids_warehouse).')');
-					$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
-					if (count($res))
-						foreach ($res as $row)
-							$client_orders_qty += ($row['product_quantity'] - $row['product_quantity_refunded']);
+					$products .= ($products != '' ? ',' : '').(int)$value['id_product_pack'];
 				}
 			}
 		}
-
-
 		// skip if product is a pack without
 		if (!Pack::isPack($id_product) || (Pack::isPack($id_product) && Validate::isLoadedObject($product = new Product((int)$id_product))
 			&& $product->pack_stock_type == 0 || $product->pack_stock_type == 2 ||
 					($product->pack_stock_type == 3 && (Configuration::get('PS_PACK_STOCK_TYPE') == 0 || Configuration::get('PS_PACK_STOCK_TYPE') == 2))))
 		{
 			// Gets client_orders_qty
-			$query = new DbQuery();
-			$query->select('od.product_quantity, od.product_quantity_refunded');
-			$query->from('order_detail', 'od');
-			$query->leftjoin('orders', 'o', 'o.id_order = od.id_order');
-			$query->where('od.product_id = '.(int)$id_product);
-			if (0 != $id_product_attribute)
-				$query->where('od.product_attribute_id = '.(int)$id_product_attribute);
-			$query->leftJoin('order_history', 'oh', 'oh.id_order = o.id_order AND oh.id_order_state = o.current_state');
-			$query->leftJoin('order_state', 'os', 'os.id_order_state = oh.id_order_state');
-			$query->where('os.shipped != 1');
-			$query->where('o.valid = 1 OR (os.id_order_state != '.(int)Configuration::get('PS_OS_ERROR').'
-						   AND os.id_order_state != '.(int)Configuration::get('PS_OS_CANCELED').')');
-			$query->groupBy('od.id_order_detail');
+			$products .= ($products != '' ? ',' : '').(int)$id_product;
+		}
+		if ($products != '')
+		{
+			$sql = 'SELECT SUM(COALESCE(od.product_quantity, 0) - COALESCE(od.product_quantity_refunded, 0))'.
+				' FROM `'._DB_PREFIX_.'orders` o'.
+				' JOIN `'._DB_PREFIX_.'configuration` e ON e.name = "PS_OS_ERROR"'.
+				' JOIN `'._DB_PREFIX_.'configuration` c ON c.name = "PS_OS_CANCELED"'.
+				' JOIN `'._DB_PREFIX_.'order_detail` od ON od.id_order = o.id_order'.
+									' AND od.product_id IN ('.$products.')';
 			if (count($ids_warehouse))
-				$query->where('od.id_warehouse IN('.implode(', ', $ids_warehouse).')');
-			$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
-			if (count($res))
-				foreach ($res as $row)
-					$client_orders_qty += ($row['product_quantity'] - $row['product_quantity_refunded']);
+			{
+				$sql .= ' AND od.id_warehouse IN('.implode(', ', $ids_warehouse).')';
+			}
+			$sql .= ' JOIN `'._DB_PREFIX_.'order_history` oh ON oh.id_order = od.id_order'.
+									' AND oh.id_order_state = o.current_state'.
+				' JOIN `'._DB_PREFIX_.'order_state` os ON os.id_order_state = oh.id_order_state'.
+									' AND os.shipped != 1'.
+				' WHERE o.valid = 1 OR (os.id_order_state NOT IN (e.value, c.value))';
+			$client_orders_qty = Db::getInstance(_PS_USE_SQL_SLAVE_)->getvalue($sql);
 		}
 		// Gets supply_orders_qty
 		$sql = 'SELECT SUM(sod.quantity_expected - COALESCE(sod.quantity_received, 0))'.
-			' FROM supply_order` so'.
-			' JOIN supply_order_detail` sod ON sod.id_supply_order = so.id_supply_order'.
-							' AND sod.id_product = '.(int)$id_product.' AND sod.id_product_attribute = '.(int)$id_product_attribute).
+			' FROM `'._DB_PREFIX_.'supply_order` so'.
+			' JOIN `'._DB_PREFIX_.'supply_order_detail` sod ON sod.id_supply_order = so.id_supply_order'.
+							' AND sod.id_product = '.(int)$id_product.
+							' AND sod.id_product_attribute = '.(int)$id_product_attribute.
 							' AND sod.quantity_expected > COALESCE(sod.quantity_received, 0)'.
-			' JOIN supply_order_state` sos ON sos.id_supply_order_state = so.id_supply_order_state'.
+			' JOIN `'._DB_PREFIX_.'supply_order_state` sos ON sos.id_supply_order_state = so.id_supply_order_state'.
 							' AND sos.pending_receipt = 1'.
-			((!is_null($ids_warehouse) && count($ids_warehouse)) ? ' WHERE so.id_warehouse IN ('.implode(', ', $ids_warehouse).')', '');
+		if (!is_null($ids_warehouse) && count($ids_warehouse))
+		{
+			$sql .= ' WHERE so.id_warehouse IN ('.implode(', ', $ids_warehouse).')';
+		}
 		$supply_orders_qty = Db::getInstance(_PS_USE_SQL_SLAVE_)->getvalue($sql);				
 
 		// Gets {physical OR usable}_qty
