@@ -2114,9 +2114,17 @@ class AdminOrdersControllerCore extends AdminController
 		{
 			$warehouse = new Warehouse((int)$product['id_warehouse']);
 			$product['warehouse_name'] = $warehouse->name;
+			$warehouse_location = WarehouseProductLocation::getProductLocation($product['product_id'], $product['product_attribute_id'], $product['id_warehouse']);
+			if (!empty($warehouse_location))
+				$product['warehouse_location'] = $warehouse_location;
+			else
+				$product['warehouse_location'] = false;
 		}
 		else
+		{
 			$product['warehouse_name'] = '--';
+			$product['warehouse_location'] = false;
+		}
 
 		// Get invoices collection
 		$invoice_collection = $order->getInvoicesCollection();
@@ -2373,9 +2381,17 @@ class AdminOrdersControllerCore extends AdminController
 		{
 			$warehouse = new Warehouse((int)$product['id_warehouse']);
 			$product['warehouse_name'] = $warehouse->name;
+			$warehouse_location = WarehouseProductLocation::getProductLocation($product['product_id'], $product['product_attribute_id'], $product['id_warehouse']);
+			if (!empty($warehouse_location))
+				$product['warehouse_location'] = $warehouse_location;
+			else
+				$product['warehouse_location'] = false;
 		}
 		else
+		{
 			$product['warehouse_name'] = '--';
+			$product['warehouse_location'] = false;
+		}
 
 		// Get invoices collection
 		$invoice_collection = $order->getInvoicesCollection();
