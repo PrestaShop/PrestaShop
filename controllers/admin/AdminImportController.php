@@ -1307,7 +1307,7 @@ class AdminImportControllerCore extends AdminController
 
 				if (is_array($category_data))
 					foreach ($category_data as $tmp)
-						if (!isset($product->category) || is_array($product->category))
+						if (!isset($product->category) || !$product->category || is_array($product->category))
 							$product->category[] = $tmp;
 			}
 
