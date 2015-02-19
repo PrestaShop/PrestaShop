@@ -115,7 +115,7 @@ class TaxCalculatorCore
 
 		return (float)$taxes;
 	}
-	
+
 	public function getTaxesName()
 	{
 		$name = '';
@@ -168,4 +168,3 @@ class TaxCalculatorCore
 		return $amount;
 	}
 }
-

@@ -1396,7 +1396,7 @@
 			</div>
 			<div class="form-group">
 				<label class="control-label col-lg-3" for="shipping_price">
-					{l s='Shipping price'}
+					{l s='Shipping price (Tax incl.)'}
 				</label>
 				<div class="col-lg-9">
 					<p id="shipping_price" class="form-control-static" name="shipping_price"></p>
@@ -1468,13 +1468,13 @@
 				</div>
 				<div class="col-lg-2">
 					<div class="data-focus">
-						<span>{l s='Total vouchers'}</span><br/>
+						<span>{l s='Total vouchers (Tax excl.)'}</span><br/>
 						<span id="total_vouchers" class="size_l text-danger"></span>
 					</div>
 				</div>
 				<div class="col-lg-2">
 					<div class="data-focus">
-						<span>{l s='Total shipping'}</span><br/>
+						<span>{l s='Total shipping (Tax excl.)'}</span><br/>
 						<span id="total_shipping" class="size_l"></span>
 					</div>
 				</div>
@@ -1486,13 +1486,13 @@
 				</div>
 				<div class="col-lg-2">
 					<div class="data-focus">
-						<span>{l s='Total without taxes'}</span><br/>
+						<span>{l s='Total (Tax excl.)'}</span><br/>
 						<span id="total_without_taxes" class="size_l"></span>
 					</div>
 				</div>
 				<div class="col-lg-2">
 					<div class="data-focus data-focus-primary">
-						<span>{l s='Total with taxes'}</span><br/>
+						<span>{l s='Total (Tax incl.)'}</span><br/>
 						<span id="total_with_taxes" class="size_l"></span>
 					</div>
 				</div>

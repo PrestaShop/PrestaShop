@@ -73,7 +73,14 @@
 		</span>
 		{/if}
 	</td>
-	{if $display_warehouse}<td>{$product.warehouse_name|escape:'html':'UTF-8'}</td>{/if}
+	{if $display_warehouse}
+		<td>
+			{$product.warehouse_name|escape:'html':'UTF-8'}
+			{if $product.warehouse_location}
+				<br>{l s='Location'}: <strong>{$product.warehouse_location|escape:'html':'UTF-8'}</strong>
+			{/if}
+		</td>
+	{/if}
 	{if ($order->hasBeenPaid())}
 		<td class="productQuantity text-center">
 			{$product['product_quantity_refunded']}
@@ -143,33 +150,31 @@
 	{/if}
 	</td>
 	<td class="partial_refund_fields current-edit" style="display:none; width: 250px;">
+		{if $product['quantity_refundable'] > 0}
 		<div class="form-group">
-			<div class="col-lg-4">
-				{if ($productQuantity-$product['product_quantity_refunded']) > 0}
+			<div class="{if $product['amount_refundable'] > 0}col-lg-4{else}col-lg-12{/if}">
 				<label class="control-label">
 					{l s='Quantity:'}
 				</label>
 				<div class="input-group">
 					<input onchange="checkPartialRefundProductQuantity(this)" type="text" name="partialRefundProductQuantity[{{$product['id_order_detail']}}]" value="0" />
-					<div class="input-group-addon">/ {$productQuantity-$product['product_quantity_refunded']}</div>
+					<div class="input-group-addon">/ {$product['quantity_refundable']}</div>
 				</div>
-				{/if}
 			</div>
-			<div class="col-lg-8">
-				{if ($productQuantity-$product['product_quantity_refunded']) > 0}
+			<div class="{if $product['quantity_refundable'] > 0}col-lg-8{else}col-lg-12{/if}">
 				<label class="control-label">
-					{l s='Amount:'}
+					<span class="title_box ">{l s='Amount:'}</span>
+					<small class="text-muted">({$smarty.capture.TaxMethod})</small>
 				</label>
 				<div class="input-group">
-					{if $currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax incl.'}</div>{/if}
+					{if $currency->format % 2}<div class="input-group-addon">{$currency->sign}</div>{/if}
 					<input onchange="checkPartialRefundProductAmount(this)" type="text" name="partialRefundProduct[{$product['id_order_detail']}]" />
-					{if !$currency->format % 2}<div class="input-group-addon">{$currency->sign} {l s='tax incl.'}</div>{/if}
+					{if !$currency->format % 2}<div class="input-group-addon">{$currency->sign}</div>{/if}
 				</div>
-				<p class="help-block"><i class="icon-warning-sign"></i> {l s='(Max %s %s)' sprintf=[Tools::displayPrice(Tools::ps_round($product_price, 2) * ($product['product_quantity'] - $product['customizationQuantityTotal']), $currency->id) , $smarty.capture.TaxMethod]}</p>
-				{/if}
-			</div>
+				<p class="help-block"><i class="icon-warning-sign"></i> {l s='(Max %s %s)' sprintf=[Tools::displayPrice(Tools::ps_round($product['amount_refundable'], 2), $currency->id) , $smarty.capture.TaxMethod]}</p>
+			</div>			
 		</div>
-
+		{/if}
 		<div class="form-group">
 			{if !empty($product['amount_refund']) && $product['amount_refund'] > 0}
 				({l s='%s refund' sprintf=$product['amount_refund']})
