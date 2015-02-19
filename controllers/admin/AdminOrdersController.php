@@ -667,7 +667,9 @@ class AdminOrdersControllerCore extends AdminController
 							$this->reinjectQuantity($order_detail, $order_detail_list[$id_order_detail]['quantity']);
 					}
 
-                    if ($amount == 0)
+					$shipping_cost_amount = (float)str_replace(',', '.', Tools::getValue('partialRefundShippingCost')) ? (float)str_replace(',', '.', Tools::getValue('partialRefundShippingCost')) : false;
+
+                    if ($amount == 0 && $shipping_cost_amount == 0)
                     {
                         $this->errors[] = Tools::displayError('You have to enter an amount if you want to create a partial credit slip.');
                         return false;
@@ -684,7 +686,6 @@ class AdminOrdersControllerCore extends AdminController
 						$amount = $voucher = (float)Tools::getValue('refund_voucher_choose');
 					}
 
-					$shipping_cost_amount = (float)str_replace(',', '.', Tools::getValue('partialRefundShippingCost')) ? (float)str_replace(',', '.', Tools::getValue('partialRefundShippingCost')) : false;
 					if ($shipping_cost_amount > 0)
 						$amount += $shipping_cost_amount;
 

@@ -964,11 +964,11 @@
 						</button>
 					</div>
 					{/if}
+					<div class="clear">&nbsp;</div>
 					<div class="row">
 						<div class="col-xs-6">
 							<div class="alert alert-warning">
-								{l s='For this customer group, prices are displayed as:'}
-								<strong>{$smarty.capture.TaxMethod}</strong>
+								{l s='For this customer group, prices are displayed as: [1]%s[/1]' sprintf=[$smarty.capture.TaxMethod] tags=['<strong>']}
 								{if !Configuration::get('PS_ORDER_RETURN')}
 									<br/><strong>{l s='Merchandise returns are disabled'}</strong>
 								{/if}
@@ -1073,7 +1073,7 @@
 													</div>
 													<input type="text" name="partialRefundShippingCost" value="0" />
 												</div>
-												<p class="help-block"><i class="icon-warning-sign"></i>{l s='(excl tax)'}</p>
+												<p class="help-block"><i class="icon-warning-sign"></i> {l s='(%s)' sprintf=$smarty.capture.TaxMethod}</p>
 											</td>
 										</tr>
 										{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
