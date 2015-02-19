@@ -543,7 +543,7 @@ class StockManagerCore implements StockManagerInterface
 							' AND sod.id_product_attribute = '.(int)$id_product_attribute.
 							' AND sod.quantity_expected > COALESCE(sod.quantity_received, 0)'.
 			' JOIN `'._DB_PREFIX_.'supply_order_state` sos ON sos.id_supply_order_state = so.id_supply_order_state'.
-							' AND sos.pending_receipt = 1'.
+							' AND sos.pending_receipt = 1';
 		if (!is_null($ids_warehouse) && count($ids_warehouse))
 		{
 			$sql .= ' WHERE so.id_warehouse IN ('.implode(', ', $ids_warehouse).')';
