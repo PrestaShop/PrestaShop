@@ -33,6 +33,27 @@ class SmartyCustomCore extends Smarty {
 	}
 
 	/**
+	* Delete compiled template file (lazy delete if resource_name is not specified)
+	*
+	* @param  string  $resource_name template name
+	* @param  string  $compile_id    compile id
+	* @param  integer $exp_time      expiration time
+	*
+	* @return integer number of template files deleted
+	*/
+	public function clearCompiledTemplate($resource_name = null, $compile_id = null, $exp_time = null)
+	{
+		if ($resource_name == null)
+		{
+			Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'smarty_compile_last_flush`');
+			Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'smarty_compile_last_flush` (`last_flush`) VALUES (\''.date('Y-m-d H:i:s').'\')');
+			return 0;
+		}
+		else
+			return parent::clearCompiledTemplate($resource_name, $compile_id, $exp_time);
+	}
+
+	/**
 	* Mark all template files to be regenerated
 	*
 	* @param  integer $exp_time expiration time
@@ -62,19 +83,46 @@ class SmartyCustomCore extends Smarty {
 	}
 
 	/**
+	 * Check the compile cache needs to be invalidated (multi front + local cache compatible)
+	 */
+	public function check_compile_cache_invalidation()
+	{
+		if (!file_exists($this->getCompileDir().'last_flush'))
+			@touch($this->getCompileDir().'last_flush');
+		else
+		{
+			$sql = 'SELECT UNIX_TIMESTAMP(last_flush) as last_flush FROM `'._DB_PREFIX_.'smarty_compile_last_flush`';
+			$last_flush = Db::getInstance()->getRow($sql, false);
+			if ((int)$last_flush && @filemtime($this->getCompileDir().'last_flush') < $last_flush)
+			{
+				@touch($this->getCacheDir().'last_flush');
+				parent::clearCompiledTemplate();
+			}
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function fetch($template = null, $cache_id = null, $compile_id = null, $parent = null, $display = false, $merge_tpl_vars = true, $no_output_filter = false)
+	{
+		$this->check_compile_cache_invalidation();
+		return parent::fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public function createTemplate($template, $cache_id = null, $compile_id = null, $parent = null, $do_clone = true)
 	{
+		$this->check_compile_cache_invalidation();
 		if ($this->caching)
 		{
 			$this->check_template_invalidation($template, $cache_id, $compile_id);
 			return parent::createTemplate($template, $cache_id, $compile_id, $parent, $do_clone);
 		}
 		else
-		{
 			return parent::createTemplate($template, $cache_id, $compile_id, $parent, $do_clone);
-		}
 	}
 
 	/**

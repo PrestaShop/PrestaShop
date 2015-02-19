@@ -84,3 +84,7 @@ CREATE TABLE `PREFIX_smarty_lazy_cache` (
   `last_update` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`template_hash`, `cache_id`, `compile_id`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_smarty_compile_last_flush` (
+  `last_flush` datetime NOT NULL DEFAULT '0000-00-00 00:00:00'
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
