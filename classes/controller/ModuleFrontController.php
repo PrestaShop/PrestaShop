@@ -29,9 +29,7 @@
  */
 class ModuleFrontControllerCore extends FrontController
 {
-	/**
-	 * @var Module
-	 */
+	/** @var Module */
 	public $module;
 
 	public function __construct()
@@ -57,9 +55,10 @@ class ModuleFrontControllerCore extends FrontController
 	}
 
 	/**
-	 * Assign module template
+	 * Assigns module template for page content
 	 *
-	 * @param string $template
+	 * @param string $template Template filename
+	 * @throws PrestaShopException
 	 */
 	public function setTemplate($template)
 	{
@@ -70,9 +69,10 @@ class ModuleFrontControllerCore extends FrontController
 	}
 
 	/**
-	 * Get path to front office templates for the module
+	 * Finds and returns module front template that take the highest precedence
 	 *
-	 * @return string
+	 * @param $template Template filename
+	 * @return string|false
 	 */
 	public function getTemplatePath($template)
 	{
