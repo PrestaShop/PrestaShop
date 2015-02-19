@@ -67,8 +67,6 @@
 					{/foreach}
 				{/if}
 
-				
-
 				{if isset($ecotax_tax_breakdown)}
 					{foreach $ecotax_tax_breakdown as $ecotax_tax_infos}
 						{if $ecotax_tax_infos.ecotax_tax_excl > 0}

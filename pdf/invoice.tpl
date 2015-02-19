@@ -31,8 +31,8 @@
 <!-- ADDRESSES -->
 <table style="width: 100%">
 	<tr>
-		<td style="width: 17%"></td>
-		<td style="width: 83%">
+		<td style="width: 15%"></td>
+		<td style="width: 85%">
 			{if !empty($delivery_address)}
 				<table style="width: 100%">
 					<tr>
@@ -70,7 +70,7 @@
 <!-- PRODUCTS TAB -->
 <table style="width: 100%">
 	<tr>
-		<td style="width: 17%; padding-right: 7px; text-align: left; vertical-align: top; font-size: 7pt;">
+		<td style="width: 15%; padding-right: 7px; text-align: left; vertical-align: top; font-size: 7pt;">
 			<!-- CUSTOMER INFORMATION -->
 			<b>{l s='Order Number:' pdf='true'}</b><br />
 			{$order->getUniqReference()}<br />
@@ -101,7 +101,7 @@
 			{/if}
 			<!-- / CUSTOMER INFORMATION -->
 		</td>
-		<td style="width: 83%; text-align: left">
+		<td style="width: 85%; text-align: left">
 			<table style="width: 100%; font-size: 8pt;">
 				<tr style="line-height:5px;">
 					{if $display_product_images}
