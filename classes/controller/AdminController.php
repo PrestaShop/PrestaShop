@@ -68,37 +68,37 @@ class AdminControllerCore extends Controller
 	/** @var string */
 	public $template = 'content.tpl';
 
-	/** @var string - Associated table name */
+	/** @var string Associated table name */
 	public $table = 'configuration';
 
 	/** @var string */
 	public $list_id;
 
-	/** @var string|false - Object identifier inside the associated table */
+	/** @var string|false Object identifier inside the associated table */
 	protected $identifier = false;
 
 	/** @var string */
 	protected $identifier_name = 'name';
 
-	/** @var string - associated object class name */
+	/** @var string Associated object class name */
 	public $className;
 
-	/** @var array - tabAccess */
+	/** @var array */
 	public $tabAccess;
 
-	/** @var integer - Tab id */
+	/** @var integer Tab id */
 	public $id = -1;
 
 	/** @var bool */
 	public $required_database = false;
 
-	/** @var string - Security token */
+	/** @var string Security token */
 	public $token;
 
-	/** @var string - shop | group_shop */
+	/** @var string "shop" or "group_shop" */
 	public $shopLinkType;
 
-	/** @var string - Default ORDER BY clause when $_orderBy is not defined */
+	/** @var string Default ORDER BY clause when $_orderBy is not defined */
 	protected $_defaultOrderBy = false;
 
 	/** @var string */
@@ -128,120 +128,122 @@ class AdminControllerCore extends Controller
 	/** @var string|null */
 	public $base_tpl_form = null;
 
-	/** @var bool - if you want more fieldsets in the form */
+	/** @var bool If you want more fieldsets in the form */
 	public $multiple_fieldsets = false;
 
 	/** @var array|false */
 	public $fields_value = false;
 
-	/** @var array - Errors displayed after post processing */
+	/** @var array Errors displayed after post processing */
 	public $errors = array();
 
-	/** @var bool - define if the header of the list contains filter and sorting links or not */
+	/** @var bool Define if the header of the list contains filter and sorting links or not */
 	protected $list_simple_header;
 
-	/** @var array - list to be generated */
+	/** @var array List to be generated */
 	protected $fields_list;
 
-	/** @var array - modules list filters */
+	/** @var array Modules list filters */
 	protected $filter_modules_list = null;
 
-	/** @var array - modules list filters */
+	/** @var array Modules list filters */
 	protected $modules_list = array();
 
-	/** @var array - edit form to be generated */
+	/** @var array Edit form to be generated */
 	protected $fields_form;
 
-	/** @var array - override of $fields_form */
+	/** @var array Override of $fields_form */
 	protected $fields_form_override;
 
-	/** @var string - override form action */
+	/** @var string Override form action */
 	protected $submit_action;
 
-	/** @var array - list of option forms to be generated */
+	/** @var array List of option forms to be generated */
 	protected $fields_options = array();
 
 	/** @var string */
 	protected $shopLink;
 
-	/** @var string - SQL query */
+	/** @var string SQL query */
 	protected $_listsql = '';
 
-	/** @var array - Cache for query results */
+	/** @var array Cache for query results */
 	protected $_list = array();
 
-	/** @var string|array - Toolbar title */
+	/** @var string|array Toolbar title */
 	protected $toolbar_title;
 
-	/** @var array - list of toolbar buttons */
+	/** @var array List of toolbar buttons */
 	protected $toolbar_btn = null;
 
-	/** @var boolean - scrolling toolbar */
+	/** @var boolean Scrolling toolbar */
 	protected $toolbar_scroll = true;
 
-	/** @var boolean - set to false to hide toolbar and page title */
+	/** @var boolean Set to false to hide toolbar and page title */
 	protected $show_toolbar = true;
 
-	/** @var boolean - set to true to show toolbar and page title for options */
+	/** @var boolean Set to true to show toolbar and page title for options */
 	protected $show_toolbar_options = false;
 
-	/** @var integer - Number of results in list */
+	/** @var integer Number of results in list */
 	protected $_listTotal = 0;
 
-	/** @var boolean - Automatically join language table if true */
+	/** @var boolean Automatically join language table if true */
 	public $lang = false;
 
-	/** @var array - WHERE clause determined by filter fields */
+	/** @var array WHERE clause determined by filter fields */
 	protected $_filter;
 
 	/** @var string */
 	protected $_filterHaving;
 
-	/** @var array - Temporary SQL table WHERE clause determined by filter fields */
+	/** @var array Temporary SQL table WHERE clause determined by filter fields */
 	protected $_tmpTableFilter = '';
 
-	/** @var array - Number of results in list per page (used in select field) */
+	/** @var array Number of results in list per page (used in select field) */
 	protected $_pagination = array(20, 50, 100, 300, 1000);
 
-	/** @var integer - Default number of results in list per page */
+	/** @var integer Default number of results in list per page */
 	protected $_default_pagination = 50;
 
-	/** @var string - ORDER BY clause determined by field/arrows in list header */
+	/** @var string ORDER BY clause determined by field/arrows in list header */
 	protected $_orderBy;
 
-	/** @var string - Order way (ASC, DESC) determined by arrows in list header */
+	/** @var string Order way (ASC, DESC) determined by arrows in list header */
 	protected $_orderWay;
 
-	/** @var array - list of available actions for each list row - default actions are view, edit, delete, duplicate */
+	/** @var array List of available actions for each list row - default actions are view, edit, delete, duplicate */
 	protected $actions_available = array('view', 'edit', 'duplicate', 'delete');
 
-	/** @var array - list of required actions for each list row */
+	/** @var array List of required actions for each list row */
 	protected $actions = array();
 
-	/** @var array - list of row ids associated with a given action for witch this action have to not be available */
+	/** @var array List of row ids associated with a given action for witch this action have to not be available */
 	protected $list_skip_actions = array();
 
-	/* @var boolean - don't show header & footer */
+	/* @var boolean Don't show header & footer */
 	protected $lite_display = false;
 
-	/** @var bool - List content lines are clickable if true */
+	/** @var bool List content lines are clickable if true */
 	protected $list_no_link = false;
 
 	/** @var bool */
 	protected $allow_export = false;
 
-	/** @var array - cache for translations */
+	/** @var array Cache for translations */
 	public static $cache_lang = array();
 
-	/** @var array - required_fields to display in the Required Fields form */
+	/** @var array Required_fields to display in the Required Fields form */
 	public $required_fields = array();
 
 	/** @var Helper */
 	protected $helper;
 
 	/**
-	 * @var array - actions to execute on multiple selections
+	 * Actions to execute on multiple selections.
+	 *
 	 * Usage:
+	 *
 	 * array(
 	 * 		'actionName' => array(
 	 * 			'text' => $this->l('Message displayed on the submit button (mandatory)'),
@@ -250,43 +252,45 @@ class AdminControllerCore extends Controller
 	 * );
 	 *
 	 * If your action is named 'actionName', you need to have a method named bulkactionName() that will be executed when the button is clicked.
+	 *
+	 * @var array
 	 */
 	protected $bulk_actions;
 
-	/* @var array - ids of the rows selected */
+	/* @var array Ids of the rows selected */
 	protected $boxes;
 
-	/** @var string - Do not automatically select * anymore but select only what is necessary */
+	/** @var string Do not automatically select * anymore but select only what is necessary */
 	protected $explicitSelect = false;
 
-	/** @var string - Add fields into data query to display list */
+	/** @var string Add fields into data query to display list */
 	protected $_select;
 
-	/** @var string - Join tables into data query to display list */
+	/** @var string Join tables into data query to display list */
 	protected $_join;
 
-	/** @var string - Add conditions into data query to display list */
+	/** @var string Add conditions into data query to display list */
 	protected $_where;
 
-	/** @var string - Group rows into data query to display list */
+	/** @var string Group rows into data query to display list */
 	protected $_group;
 
-	/** @var string - Having rows into data query to display list */
+	/** @var string Having rows into data query to display list */
 	protected $_having;
 
 	/** @var bool */
 	protected $is_cms = false;
 
-	/** @var string	- identifier to use for changing positions in lists (can be omitted if positions cannot be changed) */
+	/** @var string Identifier to use for changing positions in lists (can be omitted if positions cannot be changed) */
 	protected $position_identifier;
 
 	/** @var string|int */
 	protected $position_group_identifier;
 
-	/** @var boolean - Table records are not deleted but marked as deleted if set to true */
+	/** @var boolean Table records are not deleted but marked as deleted if set to true */
 	protected $deleted = false;
 
-	/**  @var bool - is a list filter set */
+	/**  @var bool Is a list filter set */
 	protected $filter;
 
 	/** @var bool */
@@ -298,10 +302,10 @@ class AdminControllerCore extends Controller
 	/** @var bool */
 	protected $colorOnBackground;
 
-	/** @var bool - If true, activates color on hover */
+	/** @var bool If true, activates color on hover */
 	protected $row_hover = true;
 
-	/** @var string - Action to perform : 'edit', 'view', 'add', ... */
+	/** @var string Action to perform : 'edit', 'view', 'add', ... */
 	protected $action;
 
 	/** @var string */
@@ -319,22 +323,22 @@ class AdminControllerCore extends Controller
 	/** @var string */
 	protected $bo_theme;
 
-	/** @var bool - Redirect or not after a creation */
+	/** @var bool Redirect or not after a creation */
 	protected $_redirect = true;
 
-	/** @var array - Name and directory where class image are located */
+	/** @var array Name and directory where class image are located */
 	public $fieldImageSettings = array();
 
-	/** @var string - Image type */
+	/** @var string Image type */
 	public $imageType = 'jpg';
 
-	/** @var ObjectModel - instantiation of the class associated with the AdminController */
+	/** @var ObjectModel Instantiation of the class associated with the AdminController */
 	protected $object;
 
-	/** @var int - current object ID */
+	/** @var int Current object ID */
 	protected $id_object;
 
-	/** @var string - current controller name without suffix */
+	/** @var string Current controller name without suffix */
 	public $controller_name;
 
 	/** @var int */
@@ -343,19 +347,19 @@ class AdminControllerCore extends Controller
 	/** @var false */
 	public $multishop_context_group = true;
 
-	/** @var array - Current breadcrumb position as an array of tab names */
+	/** @var array Current breadcrumb position as an array of tab names */
 	protected $breadcrumbs;
 
-	/** @var bool - (Bootstrap variable) */
+	/** @var bool Bootstrap variable */
 	public $show_page_header_toolbar = false;
 
-	/** @var string - (Bootstrap variable) */
+	/** @var string Bootstrap variable */
 	public $page_header_toolbar_title;
 
-	/** @var array|Traversable - (Bootstrap variable) */
+	/** @var array|Traversable Bootstrap variable */
 	public $page_header_toolbar_btn = array();
 
-	/** @var bool - (Bootstrap variable) */
+	/** @var bool Bootstrap variable */
 	public $show_form_cancel_button;
 
 	/** @var string */
@@ -1532,7 +1536,7 @@ class AdminControllerCore extends Controller
 	 * Load class object using identifier in $_GET (if possible)
 	 * otherwise return an empty object, or die
 	 *
-	 * @param bool $opt - Return an empty object if load fail
+	 * @param bool $opt Return an empty object if load fail
 	 * @return ObjectModel|false
 	 */
 	protected function loadObject($opt = false)
@@ -2540,11 +2544,11 @@ class AdminControllerCore extends Controller
 	/**
 	 * Non-static method which uses AdminController::translate()
 	 *
-	 * @param string  $string - term or expression in english
-	 * @param string|null $class - name of the class
-	 * @param boolean $addslashes - if set to true, the return value will pass through addslashes(). Otherwise, stripslashes().
-	 * @param boolean $htmlentities - if set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
-	 * @return string - the translation if available, or the english default text.
+	 * @param string  $string Term or expression in english
+	 * @param string|null $class Name of the class
+	 * @param boolean $addslashes If set to true, the return value will pass through addslashes(). Otherwise, stripslashes().
+	 * @param boolean $htmlentities If set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
+	 * @return string The translation if available, or the english default text.
 	 */
 	protected function l($string, $class = null, $addslashes = false, $htmlentities = true)
 	{
@@ -2923,11 +2927,11 @@ class AdminControllerCore extends Controller
 	/**
 	 * Get the current objects' list form the database
 	 *
-	 * @param integer $id_lang - Language used for display
-	 * @param string|null $order_by - ORDER BY clause
-	 * @param string|null $order_way - Order way (ASC, DESC)
-	 * @param integer $start - Offset in LIMIT clause
-	 * @param integer|null $limit - Row count in LIMIT clause
+	 * @param integer $id_lang Language used for display
+	 * @param string|null $order_by ORDER BY clause
+	 * @param string|null $order_way Order way (ASC, DESC)
+	 * @param integer $start Offset in LIMIT clause
+	 * @param integer|null $limit Row count in LIMIT clause
 	 * @param int|bool $id_lang_shop
 	 * @throws PrestaShopDatabaseException
 	 * @throws PrestaShopException
@@ -3221,7 +3225,7 @@ class AdminControllerCore extends Controller
 	/**
 	 * Return the list of fields value
 	 *
-	 * @param ObjectModel $obj - Object
+	 * @param ObjectModel $obj Object
 	 * @return array
 	 */
 	public function getFieldsValue($obj)
@@ -3269,9 +3273,9 @@ class AdminControllerCore extends Controller
 	 * Case 1 : Return value if present in $_POST / $_GET
 	 * Case 2 : Return object value
 	 *
-	 * @param ObjectModel $obj - Object
-	 * @param string $key - Field name
-	 * @param integer|null $id_lang - Language id (optional)
+	 * @param ObjectModel $obj Object
+	 * @param string $key Field name
+	 * @param integer|null $id_lang Language id (optional)
 	 * @return string
 	 */
 	public function getFieldValue($obj, $key, $id_lang = null)
@@ -3287,7 +3291,7 @@ class AdminControllerCore extends Controller
 	/**
 	 * Manage page display (form, list...)
 	 *
-	 * @param string|bool $class_name - Allow to validate a different class than the current one
+	 * @param string|bool $class_name Allow to validate a different class than the current one
 	 * @throws PrestaShopException
 	 */
 	public function validateRules($class_name = false)
@@ -3377,7 +3381,7 @@ class AdminControllerCore extends Controller
 	/**
 	 * Called before deletion
 	 *
-	 * @param ObjectModel $object - Object
+	 * @param ObjectModel $object Object
 	 * @return boolean
 	 */
 	protected function beforeDelete($object)
@@ -3388,7 +3392,7 @@ class AdminControllerCore extends Controller
 	/**
 	 * Called before deletion
 	 *
-	 * @param ObjectModel $object - Object
+	 * @param ObjectModel $object Object
 	 * @param int $oldId
 	 * @return boolean
 	 */
@@ -3428,8 +3432,8 @@ class AdminControllerCore extends Controller
 	/**
 	 * Copy data values from $_POST to object
 	 *
-	 * @param ObjectModel &$object - Object
-	 * @param string $table - Object table
+	 * @param ObjectModel &$object Object
+	 * @param string $table Object table
 	 */
 	protected function copyFromPost(&$object, $table)
 	{
@@ -3550,7 +3554,7 @@ class AdminControllerCore extends Controller
 	/**
 	 * Overload this method for custom checking
 	 *
-	 * @param integer $id - Object id used for deleting images
+	 * @param integer $id Object id used for deleting images
 	 * @return boolean
 	 */
 	protected function postImage($id)
@@ -3618,7 +3622,7 @@ class AdminControllerCore extends Controller
 	/**
 	 * Delete multiple items
 	 *
-	 * @return boolean - true if success
+	 * @return boolean true if success
 	 */
 	protected function processBulkDelete()
 	{
@@ -3711,7 +3715,7 @@ class AdminControllerCore extends Controller
 	/**
 	 * Enable multiple items
 	 *
-	 * @return boolean - true if success
+	 * @return boolean true if success
 	 */
 	protected function processBulkEnableSelection()
 	{
@@ -3721,7 +3725,7 @@ class AdminControllerCore extends Controller
 	/**
 	 * Disable multiple items
 	 *
-	 * @return boolean - true if success
+	 * @return boolean true if success
 	 */
 	protected function processBulkDisableSelection()
 	{
@@ -3732,7 +3736,7 @@ class AdminControllerCore extends Controller
 	 * Toggle status of multiple items
 	 *
 	 * @param bool $status
-	 * @return boolean - true if success
+	 * @return boolean true if success
 	 * @throws PrestaShopException
 	 */
 	protected function processBulkStatusSelection($status)
@@ -3776,7 +3780,7 @@ class AdminControllerCore extends Controller
 	/**
 	 * Called before Add
 	 *
-	 * @param ObjectModel $object - Object
+	 * @param ObjectModel $object Object
 	 * @return boolean
 	 */
 	protected function beforeAdd($object)
@@ -3804,7 +3808,7 @@ class AdminControllerCore extends Controller
 	/**
 	 * Create a template from the override file, else from the base file.
 	 *
-	 * @param string $tpl_name - filename
+	 * @param string $tpl_name filename
 	 * @return Template|object
 	 */
 	public function createTemplate($tpl_name)
@@ -3825,7 +3829,7 @@ class AdminControllerCore extends Controller
 	/**
 	 * Shortcut to set up a json success payload
 	 *
-	 * @param string $message - success message
+	 * @param string $message Success message
 	 */
 	public function jsonConfirmation($message)
 	{
@@ -3838,7 +3842,7 @@ class AdminControllerCore extends Controller
 	/**
 	 * Shortcut to set up a json error payload
 	 *
-	 * @param string $message - error message
+	 * @param string $message Error message
 	 */
 	public function jsonError($message)
 	{
@@ -3924,7 +3928,7 @@ class AdminControllerCore extends Controller
 	 * Display modules list
 	 *
 	 * @param Module $module
-	 * @param string $output_type - (link or select)
+	 * @param string $output_type (link or select)
 	 * @param string|null $back
 	 * @return string|array
 	 */
@@ -4232,7 +4236,7 @@ class AdminControllerCore extends Controller
 	/**
 	 * Add an entry to the meta title.
 	 *
-	 * @param string $entry - New entry.
+	 * @param string $entry New entry.
 	 */
 	public function addMetaTitle($entry)
 	{
