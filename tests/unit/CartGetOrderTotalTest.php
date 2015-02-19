@@ -37,6 +37,7 @@ use Exception;
 use Address;
 use Carrier;
 use Cart;
+use CartRule;
 use Configuration;
 use Context;
 use Currency;
@@ -70,9 +71,6 @@ class CartGetOrderTotalTest extends PHPUnit_Framework_TestCase
 
         // Create the address only once
         self::$id_address = self::makeAddress()->id;
-
-        // Pre-existing cart rules might mess up our test
-        self::deactivateCurrentCartRules();
     }
 
     public static function tearDownAfterClass()
@@ -263,6 +261,7 @@ class CartGetOrderTotalTest extends PHPUnit_Framework_TestCase
         $cart->id_currency = self::getCurrencyId();
         $cart->id_address_invoice = self::$id_address;
         Assert::assertTrue($cart->save());
+        Context::getContext()->cart = $cart;
         return $cart;
     }
 
@@ -331,6 +330,50 @@ class CartGetOrderTotalTest extends PHPUnit_Framework_TestCase
         return $carriers[$name];
     }
 
+    private static function makeCartRule($amount, $type)
+    {
+        $cartRule = new CartRule(null, self::getLanguageId());
+
+        $cartRule->name = $amount.' '.$type.' Cart Rule';
+
+        $date_from = new \DateTime();
+        $date_to = $date_from->modify('+1 day');
+
+        $cartRule->date_from = $date_from->format('Y-m-d H:i:s');
+        $cartRule->date_to = $date_to->format('Y-m-d H:i:s');
+
+        $cartRule->quantity = 1;
+        $cartRule->quantity_per_user;
+
+        if ($type === 'before tax')
+        {
+            $cartRule->reduction_amount = $amount;
+            $cartRule->reduction_tax = false;
+        }
+        else if ($type === 'after tax')
+        {
+            $cartRule->reduction_amount = $amount;
+            $cartRule->reduction_tax = true;
+        }
+        else if ($type === '%')
+        {
+            $cartRule->reduction_percent = $amount;
+        }
+        else
+        {
+            throw new Exception(sprintf("Invalid CartRule type `%s`.", $type));
+        }
+
+        Assert::assertTrue($cartRule->save());
+
+        return $cartRule;
+    }
+
+    private function assertEqualsFloat($expected, $actual, $message = '')
+    {
+        return $this->assertEquals($expected, $actual, $message, _PS_PRICE_COMPUTE_PRECISION_);
+    }
+
     /**
      * End of setup, real tests start here.
      */
@@ -343,6 +386,8 @@ class CartGetOrderTotalTest extends PHPUnit_Framework_TestCase
         self::setRoundingType('line');
         self::setRoundingMode('half_up');
         self::setRoundingDecimals(2);
+        // Pre-existing cart rules might mess up our test
+        self::deactivateCurrentCartRules();
     }
 
     public function testBasicOnlyProducts()
@@ -410,5 +455,22 @@ class CartGetOrderTotalTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(3.58, $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS));
         $this->assertEquals(4.30, $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS));
+    }
+
+    public function testBasicCartRuleAmountBeforeTax()
+    {
+        $id_carrier = self::getIdCarrier('free');
+
+        $product = self::makeProduct('Yo Product', 10, self::getIdTaxRulesGroup(20));
+
+        $cart = self::makeCart();
+
+        $cart->updateQty(1, $product->id);
+
+        $cart->addCartRule(self::makeCartRule(5, 'before tax')->id);
+
+        $this->assertEqualsFloat(10, $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS));
+        $this->assertEqualsFloat(5, $cart->getOrderTotal(false, Cart::BOTH, null, $id_carrier));
+        $this->assertEqualsFloat(5.1, $cart->getOrderTotal(true, Cart::BOTH, null, $id_carrier));
     }
 }
