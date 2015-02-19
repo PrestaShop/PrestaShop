@@ -369,11 +369,6 @@ class CartGetOrderTotalTest extends PHPUnit_Framework_TestCase
         return $cartRule;
     }
 
-    private function assertEqualsFloat($expected, $actual, $message = '')
-    {
-        return $this->assertEquals($expected, $actual, $message, _PS_PRICE_COMPUTE_PRECISION_);
-    }
-
     /**
      * End of setup, real tests start here.
      */
@@ -469,8 +464,8 @@ class CartGetOrderTotalTest extends PHPUnit_Framework_TestCase
 
         $cart->addCartRule(self::makeCartRule(5, 'before tax')->id);
 
-        $this->assertEqualsFloat(10, $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS));
-        $this->assertEqualsFloat(5, $cart->getOrderTotal(false, Cart::BOTH, null, $id_carrier));
-        $this->assertEqualsFloat(5.1, $cart->getOrderTotal(true, Cart::BOTH, null, $id_carrier));
+        $this->assertEquals(10, $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS));
+        $this->assertEquals(5, $cart->getOrderTotal(false, Cart::BOTH, null, $id_carrier));
+        $this->assertEquals(6, $cart->getOrderTotal(true, Cart::BOTH, null, $id_carrier));
     }
 }
