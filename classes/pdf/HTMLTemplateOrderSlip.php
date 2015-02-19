@@ -104,13 +104,18 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 		if ($this->order_slip->shipping_cost == 0)
 			$this->order->total_shipping_tax_incl = $this->order->total_shipping_tax_excl = 0;
 
-		if (/*$this->order_slip->partial == 1 && */$this->order_slip->shipping_cost_amount > 0)
-			$this->order->total_shipping_tax_incl = $this->order_slip->shipping_cost_amount;
-
 		$tax = new Tax();
 		$tax->rate = $this->order->carrier_tax_rate;
 		$tax_calculator = new TaxCalculator(array($tax));
 		$tax_excluded_display = Group::getPriceDisplayMethod((int)$customer->id_default_group);
+
+		if (/*$this->order_slip->partial == 1 && */$this->order_slip->shipping_cost_amount > 0)
+		{
+			if ($tax_excluded_display)
+				$this->order->total_shipping_tax_incl = Tools::ps_round($tax_calculator->addTaxes($this->order_slip->shipping_cost_amount), 2);
+			else
+				$this->order->total_shipping_tax_incl = $this->order_slip->shipping_cost_amount;
+		}
 
 		if ($tax_excluded_display)
 			$this->order->total_shipping_tax_excl = $this->order_slip->shipping_cost_amount;

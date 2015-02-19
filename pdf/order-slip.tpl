@@ -222,11 +222,7 @@
 						{/if}
 						<td style="width: 15%; text-align: right;">- {displayPrice currency=$order->id_currency price=$total_paid}</td>
 					{elseif $amount_choosen}
-						{if $order_slip->amount == 0 && $order_slip->shipping_cost_amount > 0}
-							<td style="width: 15%; text-align: right;">- {displayPrice currency=$order->id_currency price=$order_slip->shipping_cost_amount}</td>
-						{else}
-							<td style="width: 15%; text-align: right;">- {displayPrice currency=$order->id_currency price=$order_slip->amount}</td>
-						{/if}
+						<td style="width: 15%; text-align: right;">- {displayPrice currency=$order->id_currency price=($order_slip->amount+$order_slip->shipping_cost_amount)}</td>
 					{else}
 						{if $tax_excluded_display}
 							<td style="width: 15%; text-align: right;">- {displayPrice currency=$order->id_currency price=$order->total_paid_tax_excl}</td>
