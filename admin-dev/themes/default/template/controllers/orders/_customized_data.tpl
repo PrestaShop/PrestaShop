@@ -191,7 +191,7 @@
 					<input type="text" id="cancelQuantity_{$customizationId|intval}" name="cancelCustomizationQuantity[{$customizationId|intval}]" size="2" onclick="selectCheckbox(this);" value="" />0/{$customization['quantity']-$customization['quantity_refunded']}
 				{/if}
 				</td>
-				<td class="partial_refund_fields current-edit" style="display:none; width: 250px;">
+				<td class="partial_refund_fields current-edit" colspan="2" style="display:none; width: 250px;">
 					{if $product['quantity_refundable'] > 0}
 					{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
 						{assign var='amount_refundable' value=$product['amount_refundable']}
