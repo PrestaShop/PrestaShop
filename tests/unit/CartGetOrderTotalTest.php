@@ -64,10 +64,10 @@ class CartGetOrderTotalTest extends PHPUnit_Framework_TestCase
         Context::getContext()->currency = new Currency(self::getCurrencyId());
 
         // We'll base all our computations on the invoice address
-        Configuration::set('PS_TAX_ADDRESS_TYPE', 'id_address_invoice');
+        Configuration::updateValue('PS_TAX_ADDRESS_TYPE', 'id_address_invoice');
 
         // We don't care about stock, abstract this away by allowing ordering out of stock products
-        Configuration::set('PS_ORDER_OUT_OF_STOCK', true);
+        Configuration::updateValue('PS_ORDER_OUT_OF_STOCK', true);
 
         // Create the address only once
         self::$id_address = self::makeAddress()->id;
@@ -337,7 +337,10 @@ class CartGetOrderTotalTest extends PHPUnit_Framework_TestCase
         $cartRule->name = $amount.' '.$type.' Cart Rule';
 
         $date_from = new \DateTime();
-        $date_to = $date_from->modify('+1 day');
+        $date_to = new \DateTime();
+
+        $date_from->modify('-2 days');
+        $date_to->modify('+2 days');
 
         $cartRule->date_from = $date_from->format('Y-m-d H:i:s');
         $cartRule->date_to = $date_to->format('Y-m-d H:i:s');
@@ -383,6 +386,8 @@ class CartGetOrderTotalTest extends PHPUnit_Framework_TestCase
         self::setRoundingDecimals(2);
         // Pre-existing cart rules might mess up our test
         self::deactivateCurrentCartRules();
+        // Something might have disabled CartRules :)
+        Configuration::set('PS_CART_RULE_FEATURE_ACTIVE', true);
     }
 
     public function testBasicOnlyProducts()
@@ -452,19 +457,22 @@ class CartGetOrderTotalTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(4.30, $cart->getOrderTotal(true, Cart::ONLY_PRODUCTS));
     }
 
-    public function DISABLEDtestBasicCartRuleAmountBeforeTax()
+    public function testBasicCartRuleAmountBeforeTax()
     {
         $id_carrier = self::getIdCarrier('free');
 
         $product = self::makeProduct('Yo Product', 10, self::getIdTaxRulesGroup(20));
 
+
+        self::makeCartRule(5, 'before tax')->id;
         $cart = self::makeCart();
 
         $cart->updateQty(1, $product->id);
 
-        $this->assertTrue($cart->addCartRule(self::makeCartRule(5, 'before tax')->id));
-
+        // Control the result without the CartRule
         $this->assertEquals(10, $cart->getOrderTotal(false, Cart::ONLY_PRODUCTS));
+
+        // Check that the CartRule is applied
         $this->assertEquals(5, $cart->getOrderTotal(false, Cart::BOTH, null, $id_carrier));
         $this->assertEquals(6, $cart->getOrderTotal(true, Cart::BOTH, null, $id_carrier));
     }
