@@ -672,9 +672,9 @@ class AdminOrdersControllerCore extends AdminController
                     if ($amount == 0 && $shipping_cost_amount == 0)
                     {
                     	if (!empty($refunds))
-							$this->errors[] = Tools::displayError('You have to enter a quantity if you want to create a partial credit slip.');
+							$this->errors[] = Tools::displayError('Please enter a quantity to proceed with your refund.');
 						else
-							$this->errors[] = Tools::displayError('You have to enter an amount if you want to create a partial credit slip.');
+							$this->errors[] = Tools::displayError('Please enter an amount to proceed with your refund.');
                         return false;
                     }
 
