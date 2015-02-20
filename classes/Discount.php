@@ -161,9 +161,9 @@ class DiscountCore extends CartRule
 	/**
 	  * @deprecated 1.5.0.1
 	  */
-	public static function getCustomerDiscounts($id_lang, $id_customer, $active = false, $includeGenericOnes = true, $hasStock = false, Cart $cart = null)
+	public static function getCustomerDiscounts($id_lang, $id_customer, $active = false, $includeGenericOnes = true, $hasStock = false, Cart $cart = null, $hidden = false)
 	{
-		return parent::getCustomerCartRules($id_lang, $id_customer, $active, $includeGenericOnes, $hasStock, $cart);
+		return parent::getCustomerCartRules($id_lang, $id_customer, $active, $includeGenericOnes, $hasStock, $cart, $hidden);
 	}
 	
 	/**
@@ -234,6 +234,7 @@ class DiscountCore extends CartRule
 		$voucher->cumulable_reduction = 1;
 		$voucher->minimal = (float)($voucher->value);
 		$voucher->active = 1;
+		$voucher->hidden = 0;
 		$voucher->cart_display = 1;
 
 		$now = time();

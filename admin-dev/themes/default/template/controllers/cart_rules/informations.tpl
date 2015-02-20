@@ -124,6 +124,19 @@
 		</span>
 	</div>
 </div>
+
+<div class="form-group">
+	<label class="control-label col-lg-3">{l s='Hidden'}</label>
+	<div class="col-lg-9">
+		<span class="switch prestashop-switch fixed-width-lg">
+			<input type="radio" name="hidden" id="hidden_on" value="1" {if $currentTab->getFieldValue($currentObject, 'hidden')|intval}checked="checked"{/if} />
+			<label class="t" for="hidden_on">{l s='Yes'}</label>
+			<input type="radio" name="hidden" id="hidden_off" value="0"  {if !$currentTab->getFieldValue($currentObject, 'hidden')|intval}checked="checked"{/if} />
+			<label class="t" for="hidden_off">{l s='No'}</label>
+			<a class="slide-button btn"></a>
+		</span>
+	</div>
+</div>
 <script type="text/javascript">
 	$(".textarea-autosize").autosize();
 </script>

@@ -46,6 +46,7 @@ class AdminCartRulesControllerCore extends AdminController
 			'quantity' => array('title' => $this->l('Quantity'), 'align' => 'center', 'class' => 'fixed-width-xs'),
 			'date_to' => array('title' => $this->l('Expiration date'), 'type' => 'datetime'),
 			'active' => array('title' => $this->l('Status'), 'active' => 'status', 'type' => 'bool', 'orderby' => false),
+			'hidden' => array('title' => $this->l('Hidden'), 'active' => 'hidden', 'type' => 'bool', 'orderby' => false),
 		);
 
 		parent::__construct();
