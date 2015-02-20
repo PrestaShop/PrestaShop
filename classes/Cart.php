@@ -323,6 +323,26 @@ class CartCore extends ObjectModel
 	}
 
 	/**
+	 * The arguments are optional and only serve as return values in case caller needs the details.
+	 */
+	public function getAverageProductsTaxRate(&$cart_amount_te = null, &$cart_amount_ti = null)
+	{
+		$cart_amount_ti = $this->getOrderTotal(true, Cart::ONLY_PRODUCTS);
+		$cart_amount_te = $this->getOrderTotal(false, Cart::ONLY_PRODUCTS);
+
+		$cart_vat_amount = $cart_amount_ti - $cart_amount_te;
+
+		if ($cart_vat_amount == 0 || $cart_amount_te == 0)
+		{
+			return 0;
+		}
+		else
+		{
+			return Tools::ps_round($cart_vat_amount / $cart_amount_te, 3);
+		}
+	}
+
+	/**
 	 * @deprecated 1.5.0, use Cart->getCartRules()
 	 */
 	public function getDiscounts($lite = false, $refresh = false)

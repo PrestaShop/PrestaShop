@@ -875,7 +875,14 @@ class CartRuleCore extends ObjectModel
 				$cheapest_product = null;
 				foreach ($all_products as $product)
 				{
-					$price = ($use_tax ? $product['price_wt'] : $product['price']);
+					$price = $product['price'];
+					if ($use_tax)
+					{
+						// since later on we won't be able to know the product the cart rule was applied to,
+						// use average cart VAT for price_wt
+						$price *= (1 + $context->cart->getAverageProductsTaxRate());
+					}
+
 					if ($price > 0 && ($minPrice === false || $minPrice > $price))
 					{
 						$minPrice = $price;
@@ -902,7 +909,12 @@ class CartRuleCore extends ObjectModel
 						if (in_array($product['id_product'].'-'.$product['id_product_attribute'], $selected_products)
 							|| in_array($product['id_product'].'-0', $selected_products))
 						{
-							$price = ($use_tax ? $product['price_wt'] : $product['price']);
+							$price = $product['price'];
+							if ($use_tax)
+							{
+								$price *= (1 + $context->cart->getAverageProductsTaxRate());
+							}
+
 							$selected_products_reduction += $price * $product['cart_quantity'];
 						}
 				$reduction_value += $selected_products_reduction * $this->reduction_percent / 100;
@@ -972,11 +984,13 @@ class CartRuleCore extends ObjectModel
 					// Discount (¤) on the whole order
 					elseif ($this->reduction_product == 0)
 					{
+						$cart_amount_te = null;
+						$cart_amount_ti = null;
+						$cart_average_vat_rate = $context->cart->getAverageProductsTaxRate($cart_amount_te, $cart_amount_ti);
+
 						// The reduction cannot exceed the products total, except when we do not want it to be limited (for the partial use calculation)
 						if ($filter != CartRule::FILTER_ACTION_ALL_NOCAP)
 							$reduction_amount = min($reduction_amount, $this->reduction_tax ? $cart_amount_ti : $cart_amount_te);
-
-						$cart_average_vat_rate = $this->getCartAverageVatRate();
 
 						if ($this->reduction_tax && !$use_tax)
 							$reduction_value += $prorata * $reduction_amount / (1 + $cart_average_vat_rate);
@@ -1310,4 +1324,3 @@ class CartRuleCore extends ObjectModel
 			.($extended ? ' OR name LIKE \'%'.pSQL($name).'%\'' : ''));
 	}
 }
-

@@ -112,4 +112,90 @@ class ToolsCoreTest extends PHPUnit_Framework_TestCase
 		$this->setPostAndGet();
 		$this->assertEquals($cleanedString, Tools::getValue('NON EXISTING KEY', $rawString));
 	}
+
+
+	public function testSpreadAmountExamples()
+	{
+		return array(
+			array(
+				// base case
+				array(array('a' => 2), array('a' => 1)), // expected result
+				1, 0,									 // amount and precision
+				array(array('a' => 1), array('a' => 1)), // source rows
+				'a'									     // sort column
+			),
+			array(
+				// check with 1 decimal
+				array(array('a' => 1.5), array('a' => 1.5)),
+				1, 1,
+				array(array('a' => 1), array('a' => 1)),
+				'a'
+			),
+			array(
+				// 2 decimals, but only one really needed
+				array(array('a' => 1.5), array('a' => 1.5)),
+				1, 2,
+				array(array('a' => 1), array('a' => 1)),
+				'a'
+			),
+			array(
+				// check that the biggest "a" gets the adjustment
+				array(array('a' => 3), array('a' => 1)),
+				1, 0,
+				array(array('a' => 1), array('a' => 2)),
+				'a'
+			),
+			array(
+				// check it works with amount > count($rows)
+				array(array('a' => 4), array('a' => 2)),
+				3, 0,
+				array(array('a' => 1), array('a' => 2)),
+				'a'
+			),
+			array(
+				// 2 decimals
+				array(array('a' => 2.01), array('a' => 1)),
+				0.01, 2,
+				array(array('a' => 1), array('a' => 2)),
+				'a'
+			),
+			array(
+				// 2 decimals, equal level of adjustment
+				array(array('a' => 2.01), array('a' => 1.01)),
+				0.02, 2,
+				array(array('a' => 1), array('a' => 2)),
+				'a'
+			),
+			array(
+				// 2 decimals, different levels of adjustmnt
+				array(array('a' => 2.02), array('a' => 1.01)),
+				0.03, 2,
+				array(array('a' => 1), array('a' => 2)),
+				'a'
+			),
+			array(
+				// check associative arrays are OK too
+				array(array('a' => 2.01), array('a' => 1.01)),
+				0.02, 2,
+				array('z' => array('a' => 1), 'x' => array('a' => 2)),
+				'a'
+			),
+			array(
+				// check amount is rounded if it needs more precision than asked for
+				array(array('a' => 2.02), array('a' => 1.01)),
+				0.025, 2,
+				array(array('a' => 1), array('a' => 2)),
+				'a'
+			)
+		);
+	}
+
+	/**
+	 * @dataProvider testSpreadAmountExamples
+	 */
+	public function testSpreadAmount($expectedRows, $amount, $precision, $rows, $column, $sort_column = null, $max_adjustment = null)
+	{
+		Tools::spreadAmount($amount, $precision, $rows, $column, $sort_column, $max_adjustment);
+		$this->assertEquals(array_values($expectedRows), array_values($rows));
+	}
 }

@@ -167,6 +167,11 @@ class OrderCore extends ObjectModel
 	public $round_mode;
 
 	/**
+	* @var int Round type method used for this order
+	*/
+	public $round_type;
+
+	/**
 	 * @see ObjectModel::$definition
 	 */
 	public static $definition = array(
@@ -207,6 +212,7 @@ class OrderCore extends ObjectModel
 			'total_wrapping_tax_incl' =>	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 			'total_wrapping_tax_excl' =>	array('type' => self::TYPE_FLOAT, 'validate' => 'isPrice'),
 			'round_mode' =>					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+			'round_type' =>					array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
 			'shipping_number' => 			array('type' => self::TYPE_STRING, 'validate' => 'isTrackingNumber'),
 			'conversion_rate' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
 			'invoice_number' => 			array('type' => self::TYPE_INT),
@@ -2117,5 +2123,209 @@ class OrderCore extends ObjectModel
 		if ($this->id)
 			$this->setCurrentState($state);
 		return true;
+	}
+
+	public function getProductTaxesDetails()
+	{
+		$round_type = $this->round_type;
+		if ($round_type == 0)
+		{
+			// if this is 0, it means the field did not exist
+			// at the time the order was made.
+			// Set it to old type, which was closest to line.
+			$round_type = Order::ROUND_LINE;
+		}
+
+		// compute products discount
+		$order_discount_tax_excl = $this->total_discounts_tax_excl;
+
+		$free_shipping_tax = 0;
+		$product_specific_discounts = array();
+
+		$expected_total_base = $this->total_products - $this->total_discounts_tax_excl;
+
+		foreach ($this->getCartRules() as $order_cart_rule)
+		{
+			if ($order_cart_rule['free_shipping'] && $free_shipping_tax === 0)
+			{
+				$free_shipping_tax = $this->total_shipping_tax_incl - $this->total_shipping_tax_excl;
+				$order_discount_tax_excl -= $this->total_shipping_tax_excl;
+				$expected_total_base += $this->total_shipping_tax_excl;
+			}
+
+			$cart_rule = new CartRule($order_cart_rule['id_cart_rule']);
+			if ($cart_rule->reduction_product > 0)
+			{
+				if (empty($product_specific_discounts[$cart_rule->reduction_product]))
+				{
+					$product_specific_discounts[$cart_rule->reduction_product] = 0;
+				}
+
+				$product_specific_discounts[$cart_rule->reduction_product] += $order_cart_rule['value_tax_excl'];
+				$order_discount_tax_excl -= $order_cart_rule['value_tax_excl'];
+			}
+
+		}
+
+
+		$products_tax 	= $this->total_products_wt - $this->total_products;
+		$discounts_tax 	= $this->total_discounts_tax_incl - $this->total_discounts_tax_excl;
+
+		// We add $free_shipping_tax because when there is free shipping, the tax that would
+		// be paid if there wasn't is included in $discounts_tax.
+		$expected_total_tax = $products_tax - $discounts_tax + $free_shipping_tax;
+		$actual_total_tax = 0;
+		$actual_total_base = 0;
+
+		$order_detail_tax_rows = array();
+
+		$breakdown = array();
+
+		// Get order_details
+		$order_details = $this->getOrderDetailList();
+
+		$order_ecotax_tax = 0;
+
+		$tax_rates = array();
+
+		foreach ($order_details as $order_detail)
+		{
+			$id_order_detail = $order_detail['id_order_detail'];
+			$tax_calculator = OrderDetail::getTaxCalculatorStatic($id_order_detail);
+
+			// TODO: probably need to make an ecotax tax breakdown here instead,
+			// but it seems unlikely there will be different tax rates applied to the
+			// ecotax in the same order in the real world
+			$unit_ecotax_tax = $order_detail['ecotax'] * $order_detail['ecotax_tax_rate'] / 100.0;
+			$order_ecotax_tax += $order_detail['product_quantity'] * $unit_ecotax_tax;
+
+			$discount_ratio = ($order_detail['unit_price_tax_excl'] + $order_detail['ecotax']) / $this->total_products;
+
+			// share of global discount
+			$discounted_price_tax_excl =  $order_detail['unit_price_tax_excl'] - $discount_ratio * $order_discount_tax_excl;
+			// specific discount
+			if (!empty($product_specific_discounts[$order_detail['product_id']]))
+			{
+				$discounted_price_tax_excl -= $product_specific_discounts[$order_detail['product_id']];
+			}
+
+
+			$quantity = $order_detail['product_quantity'];
+
+			foreach ($tax_calculator->taxes as $tax)
+			{
+				$tax_rates[$tax->id] = $tax->rate;
+			}
+
+			foreach ($tax_calculator->getTaxesAmount($discounted_price_tax_excl) as $id_tax => $unit_amount)
+			{
+				$total_tax_base = 0;
+				switch ($round_type)
+				{
+					case Order::ROUND_ITEM:
+						$total_tax_base = $quantity * Tools::ps_round($discounted_price_tax_excl, _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
+						$total_amount = $quantity * Tools::ps_round($unit_amount, _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
+						break;
+					case Order::ROUND_LINE:
+						$total_tax_base = Tools::ps_round($quantity * $discounted_price_tax_excl, _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
+						$total_amount = Tools::ps_round($quantity * $unit_amount, _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
+						break;
+					case Order::ROUND_TOTAL:
+						$total_tax_base = $quantity * $discounted_price_tax_excl;
+						$total_amount = $quantity * $unit_amount;
+						break;
+				}
+
+				if (!isset($breakdown[$id_tax]))
+				{
+					$breakdown[$id_tax] = array('tax_base' => 0, 'tax_amount' => 0);
+				}
+
+				$breakdown[$id_tax]['tax_base'] += $total_tax_base;
+				$breakdown[$id_tax]['tax_amount'] += $total_amount;
+
+				$order_detail_tax_rows[] = array(
+					'id_order_detail' => $id_order_detail,
+					'id_tax' => $id_tax,
+					'tax_rate' => $tax_rates[$id_tax],
+					'unit_tax_base' => $discounted_price_tax_excl,
+					'total_tax_base' => $total_tax_base,
+					'unit_amount' => $unit_amount,
+					'total_amount' => $total_amount
+				);
+			}
+		}
+
+		if (!empty($order_detail_tax_rows))
+		{
+			foreach ($breakdown as $data)
+			{
+				$actual_total_tax += Tools::ps_round($data['tax_amount'], _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
+				$actual_total_base += Tools::ps_round($data['tax_base'], _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
+			}
+
+			$order_ecotax_tax = Tools::ps_round($order_ecotax_tax, _PS_PRICE_COMPUTE_PRECISION_, $this->round_mode);
+
+			$tax_rounding_error = $expected_total_tax - $actual_total_tax - $order_ecotax_tax;
+			if ($tax_rounding_error !== 0) {
+				Tools::spreadAmount($tax_rounding_error, _PS_PRICE_COMPUTE_PRECISION_, $order_detail_tax_rows, 'total_amount');
+			}
+
+			$base_rounding_error = $expected_total_base - $actual_total_base;
+			if ($base_rounding_error !== 0) {
+				Tools::spreadAmount($base_rounding_error, _PS_PRICE_COMPUTE_PRECISION_, $order_detail_tax_rows, 'total_tax_base');
+			}
+		}
+
+		return $order_detail_tax_rows;
+	}
+
+	/**
+	 * The primary purpose of this method is to be
+	 * called at the end of the generation of each order
+	 * in PaymentModule::validateOrder, to fill in
+	 * the order_detail_tax table with taxes
+	 * that will add up in such a way that
+	 * the sum of the tax amounts in the product tax breakdown
+	 * is equal to the difference between products with tax and
+	 * products without tax.
+	 */
+	public function updateOrderDetailTax()
+	{
+		$order_detail_tax_rows_to_insert = $this->getProductTaxesDetails();
+
+		if (empty($order_detail_tax_rows_to_insert))
+		{
+			return;
+		}
+
+		$old_id_order_details = array();
+		$values = array();
+		foreach ($order_detail_tax_rows_to_insert as $row)
+		{
+			$old_id_order_details[] = (int)$row['id_order_detail'];
+			$values[] = '('.(int)$row['id_order_detail'].', '.(int)$row['id_tax'].', '.(float)$row['unit_amount'].', '.(float)$row['total_amount'].')';
+		}
+
+		// Remove current order_detail_tax'es
+		Db::getInstance()->execute(
+			'DELETE FROM `'._DB_PREFIX_.'order_detail_tax` WHERE id_order_detail IN ('.implode(', ', $old_id_order_details).')'
+		);
+
+		// Insert the adjusted ones instead
+		Db::getInstance()->execute(
+			'INSERT INTO `'._DB_PREFIX_.'order_detail_tax` (id_order_detail, id_tax, unit_amount, total_amount) VALUES '.implode(', ', $values)
+		);
+	}
+
+	public function getOrderDetailTaxes()
+	{
+		return Db::getInstance()->executeS(
+			'SELECT od.id_tax_rules_group, od.product_quantity, odt.*, t.* FROM '._DB_PREFIX_.'orders o '.
+			'INNER JOIN '._DB_PREFIX_.'order_detail od ON od.id_order = o.id_order '.
+			'INNER JOIN '._DB_PREFIX_.'order_detail_tax odt ON odt.id_order_detail = od.id_order_detail '.
+			'INNER JOIN '._DB_PREFIX_.'tax t ON t.id_tax = odt.id_tax '.
+			'WHERE o.id_order = '.(int)$this->id
+		);
 	}
 }

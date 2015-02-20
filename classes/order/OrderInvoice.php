@@ -84,6 +84,9 @@ class OrderInvoiceCore extends ObjectModel
 	/** @var array Total paid cache */
 	protected static $_total_paid_cache = array();
 
+	/** @var Order **/
+	private $order;
+
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -186,6 +189,40 @@ class OrderInvoiceCore extends ObjectModel
 
 			$row['id_address_delivery'] = $order->id_address_delivery;
 
+			/* Ecotax */
+			$round_mode = $order->round_mode;
+
+			$row['ecotax_tax_excl'] = $row['ecotax']; // alias for coherence
+			$row['ecotax_tax_incl'] = $row['ecotax'] * (100 + $row['ecotax_tax_rate']) /100;
+			$row['ecotax_tax'] = $row['ecotax_tax_incl'] - $row['ecotax_tax_excl'];
+
+			if ($round_mode == Order::ROUND_ITEM)
+			{
+				$row['ecotax_tax_incl'] = Tools::ps_round($row['ecotax_tax_incl'], _PS_PRICE_COMPUTE_PRECISION_, $round_mode);
+			}
+
+			$row['total_ecotax_tax_excl'] = $row['ecotax_tax_excl'] * $row['product_quantity'];
+			$row['total_ecotax_tax_incl'] = $row['ecotax_tax_incl'] * $row['product_quantity'];
+
+			$row['total_ecotax_tax'] = $row['total_ecotax_tax_incl'] - $row['total_ecotax_tax_excl'];
+
+			foreach (array(
+				'ecotax_tax_excl',
+				'ecotax_tax_incl',
+				'ecotax_tax',
+				'total_ecotax_tax_excl',
+				'total_ecotax_tax_incl',
+				'total_ecotax_tax'
+			) as $ecotax_field)
+			{
+				$row[$ecotax_field] = Tools::ps_round($row[$ecotax_field], _PS_PRICE_COMPUTE_PRECISION_, $round_mode);
+			}
+
+			$row['unit_price_tax_excl_including_ecotax'] = $row['unit_price_tax_excl'] + $row['ecotax_tax_excl'];
+			$row['unit_price_tax_incl_including_ecotax'] = $row['unit_price_tax_incl'] + $row['ecotax_tax_incl'];
+			$row['total_price_tax_excl_including_ecotax'] = $row['total_price_tax_excl'] + $row['total_ecotax_tax_excl'];
+			$row['total_price_tax_incl_including_ecotax'] = $row['total_price_tax_incl'] + $row['total_ecotax_tax_incl'];
+
 			/* Stock product */
 			$resultArray[(int)$row['id_order_detail']] = $row;
 		}
@@ -268,82 +305,82 @@ class OrderInvoiceCore extends ObjectModel
 		) || Configuration::get('PS_INVOICE_TAXES_BREAKDOWN');
 	}
 
-	/**
-	 * Returns the correct product taxes breakdown.
-	 *
-	 * @since 1.5
-	 * @return array
-	 */
+	public function displayTaxBasesInProductTaxesBreakdown()
+	{
+		return !$this->useOneAfterAnotherTaxComputationMethod();
+	}
+
+	public function getOrder()
+	{
+		if (!$this->order) {
+			$this->order = new Order($this->id_order);
+		}
+
+		return $this->order;
+	}
+
 	public function getProductTaxesBreakdown($order = null)
 	{
-		Tools::$round_mode = $order->round_mode;
-		$tmp_tax_infos = array();
-		if ($this->useOneAfterAnotherTaxComputationMethod())
+		if (!$order)
 		{
-			// sum by taxes
-			$taxes_infos = Db::getInstance()->executeS('
-			SELECT t.`rate` AS `name`, t.`rate`, SUM(`total_amount`) AS `total_amount`
-			FROM `'._DB_PREFIX_.'order_detail_tax` odt
-			LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = odt.`id_tax`)
-			LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
-			WHERE od.`id_order` = '.(int)$this->id_order.'
-			AND od.`id_order_invoice` = '.(int)$this->id.'
-			GROUP BY odt.`id_tax`
-			');
-
-			// format response
-			foreach ($taxes_infos as $tax_infos)
-			{
-				$tmp_tax_infos[$tax_infos['rate']]['total_amount'] = $tax_infos['total_amount'];
-				$tmp_tax_infos[$tax_infos['rate']]['name'] = $tax_infos['name'];
-			}
+			$order = $this->getOrder();
 		}
-		else
-		{
-			// sum by order details in order to retrieve real taxes rate
-			$taxes_infos = Db::getInstance()->executeS('
-			SELECT t.`rate` AS `name`, od.`total_price_tax_excl` AS total_price_tax_excl, SUM(t.`rate`) AS rate, SUM(`total_amount`) AS `total_amount`, od.`ecotax`, od.`ecotax_tax_rate`, od.`product_quantity`
-			FROM `'._DB_PREFIX_.'order_detail_tax` odt
-			LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = odt.`id_tax`)
-			LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
-			WHERE od.`id_order` = '.(int)$this->id_order.'
-			AND od.`id_order_invoice` = '.(int)$this->id.'
-			GROUP BY odt.`id_order_detail`
-			');
 
-			// sum by taxes
-			$tmp_tax_infos = array();
-			$shipping_tax_amount = 0;
-			foreach ($order->getCartRules() as $cart_rule)
-				if ($cart_rule['free_shipping'])
+		$sum_composite_taxes = !$this->useOneAfterAnotherTaxComputationMethod();
+
+		// $breakdown will be an array with tax rates as keys and at least the columns:
+		// 	- 'total_price_tax_excl'
+		// 	- 'total_amount'
+		$breakdown = array();
+
+		$details = $order->getProductTaxesDetails();
+
+		if ($sum_composite_taxes)
+		{
+			$grouped_details = array();
+			foreach ($details as $row)
+			{
+				if (!isset($grouped_details[$row['id_order_detail']]))
 				{
-					$shipping_tax_amount = $this->total_shipping_tax_excl;
-					break;
+					$grouped_details[$row['id_order_detail']] = array(
+						'tax_rate' => 0,
+						'total_tax_base' => 0,
+						'total_amount' => 0
+					);
 				}
 
-			foreach ($taxes_infos as $tax_infos)
-			{
-				if (!isset($tmp_tax_infos[$tax_infos['rate']]))
-					$tmp_tax_infos[$tax_infos['rate']] = array(
-						'total_amount' => 0,
-						'name' => 0,
-						'total_price_tax_excl' => 0
-					);
-				$ratio = $tax_infos['total_price_tax_excl'] / $this->total_products;
-				$order_reduction_amount = ($this->total_discount_tax_excl - $shipping_tax_amount) * $ratio;
-				$tmp_tax_infos[$tax_infos['rate']]['total_amount'] += ($tax_infos['total_amount'] - Tools::ps_round($tax_infos['ecotax'] * $tax_infos['product_quantity'] * $tax_infos['ecotax_tax_rate'] / 100, _PS_PRICE_COMPUTE_PRECISION_));
-				$tmp_tax_infos[$tax_infos['rate']]['name'] = $tax_infos['name'];
-				$tmp_tax_infos[$tax_infos['rate']]['total_price_tax_excl'] += $tax_infos['total_price_tax_excl'] - $order_reduction_amount - Tools::ps_round($tax_infos['ecotax'] * $tax_infos['product_quantity'], _PS_PRICE_COMPUTE_PRECISION_);
+				$grouped_details[$row['id_order_detail']]['tax_rate'] += $row['tax_rate'];
+				$grouped_details[$row['id_order_detail']]['total_tax_base'] += $row['total_tax_base'];
+				$grouped_details[$row['id_order_detail']]['total_amount'] += $row['total_amount'];
 			}
+
+			$details = $grouped_details;
 		}
 
-		foreach ($tmp_tax_infos as &$tax)
+		foreach ($details as $row)
 		{
-			$tax['total_amount'] = Tools::ps_round($tax['total_amount'], _PS_PRICE_DISPLAY_PRECISION_);
-			$tax['total_price_tax_excl'] = Tools::ps_round($tax['total_price_tax_excl'], _PS_PRICE_DISPLAY_PRECISION_);
+			$rate = sprintf('%.3f', $row['tax_rate']);
+			if (!isset($breakdown[$rate]))
+			{
+				$breakdown[$rate] = array(
+					'total_price_tax_excl' => 0,
+					'total_amount' => 0
+				);
+			}
+
+			$breakdown[$rate]['total_price_tax_excl'] += $row['total_tax_base'];
+			$breakdown[$rate]['total_amount'] += $row['total_amount'];
 		}
 
-		return $tmp_tax_infos;
+		foreach ($breakdown as $rate => $data)
+		{
+			$breakdown[$rate]['total_price_tax_excl'] = Tools::ps_round($data['total_price_tax_excl'], _PS_PRICE_COMPUTE_PRECISION_, $order->round_mode);
+			$breakdown[$rate]['total_amount'] = Tools::ps_round($data['total_amount'], _PS_PRICE_COMPUTE_PRECISION_, $order->round_mode);
+		}
+
+		ksort($breakdown);
+
+		return $breakdown;
 	}
 
 	/**

@@ -324,6 +324,7 @@ abstract class PaymentModuleCore extends Module
 					$order->total_paid_tax_incl = (float)Tools::ps_round((float)$this->context->cart->getOrderTotal(true, Cart::BOTH, $order->product_list, $id_carrier), _PS_PRICE_COMPUTE_PRECISION_);
 					$order->total_paid = $order->total_paid_tax_incl;
 					$order->round_mode = Configuration::get('PS_PRICE_ROUND_MODE');
+					$order->round_type = Configuration::get('PS_ROUND_TYPE');
 
 					$order->invoice_date = '0000-00-00 00:00:00';
 					$order->delivery_date = '0000-00-00 00:00:00';
@@ -789,6 +790,8 @@ abstract class PaymentModuleCore extends Module
 							}
 						}
 					}
+
+					$order->updateOrderDetailTax();
 				}
 				else
 				{
@@ -797,13 +800,6 @@ abstract class PaymentModuleCore extends Module
 					die($error);
 				}
 			} // End foreach $order_detail_list
-
-			// Update Order Details Tax in case cart rules have free shipping
-			foreach ($order->getOrderDetailList() as $detail)
-			{
-				$order_detail = new OrderDetail($detail['id_order_detail']);
-					$order_detail->updateTaxAmount($order);
-			}
 
 			// Use the last order as currentOrder
 			if (isset($order) && $order->id)
