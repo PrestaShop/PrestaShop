@@ -1316,23 +1316,10 @@ class CartCore extends ObjectModel
 	*/
 	public function getOrderTotal($with_taxes = true, $type = Cart::BOTH, $products = null, $id_carrier = null, $use_cache = true)
 	{
-		static $address = null;
-		static $ps_tax_address_type = null;
-		static $ps_use_ecotax = null;
-		static $ps_round_type = null;
-		static $ps_ecotax_tax_rules_group_id = null;
-
-		if ($ps_tax_address_type === null)
-			$ps_tax_address_type = Configuration::get('PS_TAX_ADDRESS_TYPE');
-
-		if ($ps_use_ecotax === null)
-			$ps_use_ecotax = Configuration::get('PS_USE_ECOTAX');
-
-		if ($ps_round_type === null)
-			$ps_round_type = Configuration::get('PS_ROUND_TYPE');
-
-		if ($ps_ecotax_tax_rules_group_id === null)
-			$ps_ecotax_tax_rules_group_id = Configuration::get('PS_ECOTAX_TAX_RULES_GROUP_ID');
+		$ps_tax_address_type = Configuration::get('PS_TAX_ADDRESS_TYPE');
+		$ps_use_ecotax = Configuration::get('PS_USE_ECOTAX');
+		$ps_round_type = Configuration::get('PS_ROUND_TYPE');
+		$ps_ecotax_tax_rules_group_id = Configuration::get('PS_ECOTAX_TAX_RULES_GROUP_ID');
 
 		if (!$this->id)
 			return 0;

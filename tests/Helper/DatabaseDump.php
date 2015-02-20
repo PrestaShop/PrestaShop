@@ -87,8 +87,7 @@ class DatabaseDump
 
         if ($this->password)
         {
-            $parts[] = '-p';
-            $parts[] = escapeshellarg($this->password);
+            $parts[] = '-p'.escapeshellarg($this->password);
         }
 
         $parts = array_merge($parts, array_map('escapeshellarg', $arguments));
