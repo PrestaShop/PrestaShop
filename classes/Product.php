@@ -4945,9 +4945,12 @@ class ProductCore extends ObjectModel
 			$value = $value['id_product'];
 		$current_position = $this->getWsPositionInCategory();
 
-		$save = $result[$current_position];
-		unset($result[$current_position]);
-		array_splice($result, (int)$position, 0, $save);
+		if ($current_position && isset($result[$current_position]))
+		{
+			$save = $result[$current_position];
+			unset($result[$current_position]);
+			array_splice($result, (int)$position, 0, $save);
+		}
 
 		foreach ($result as $position => $id_product)
 		{

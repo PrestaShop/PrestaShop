@@ -403,22 +403,21 @@ class CartCore extends ObjectModel
 	 */
 	public function getOrderedCartRulesIds($filter = CartRule::FILTER_ACTION_ALL)
 	{
-		$cache_key = 'Cart::getCartRules_'.$this->id.'-'.$filter.'-ids';
-		if (!Cache::isStored($cache_key))
-		{
+		$cache_key = 'Cart::getCartRules_' . $this->id . '-' . $filter . '-ids';
+		if (!Cache::isStored($cache_key)) {
 			$result = Db::getInstance()->executeS('
 				SELECT cr.`id_cart_rule`
-				FROM `'._DB_PREFIX_.'cart_cart_rule` cd
-				LEFT JOIN `'._DB_PREFIX_.'cart_rule` cr ON cd.`id_cart_rule` = cr.`id_cart_rule`
-				LEFT JOIN `'._DB_PREFIX_.'cart_rule_lang` crl ON (
+				FROM `' . _DB_PREFIX_ . 'cart_cart_rule` cd
+				LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule` cr ON cd.`id_cart_rule` = cr.`id_cart_rule`
+				LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl ON (
 					cd.`id_cart_rule` = crl.`id_cart_rule`
-					AND crl.id_lang = '.(int)$this->id_lang.'
+					AND crl.id_lang = ' . (int)$this->id_lang . '
 				)
-				WHERE `id_cart` = '.(int)$this->id.'
-				'.($filter == CartRule::FILTER_ACTION_SHIPPING ? 'AND free_shipping = 1' : '').'
-				'.($filter == CartRule::FILTER_ACTION_GIFT ? 'AND gift_product != 0' : '').'
-				'.($filter == CartRule::FILTER_ACTION_REDUCTION ? 'AND (reduction_percent != 0 OR reduction_amount != 0)' : '')
-				.' ORDER by cr.priority ASC'
+				WHERE `id_cart` = ' . (int)$this->id . '
+				' . ($filter == CartRule::FILTER_ACTION_SHIPPING ? 'AND free_shipping = 1' : '') . '
+				' . ($filter == CartRule::FILTER_ACTION_GIFT ? 'AND gift_product != 0' : '') . '
+				' . ($filter == CartRule::FILTER_ACTION_REDUCTION ? 'AND (reduction_percent != 0 OR reduction_amount != 0)' : '')
+				. ' ORDER BY cr.priority ASC'
 			);
 			Cache::store($cache_key, $result);
 		}
