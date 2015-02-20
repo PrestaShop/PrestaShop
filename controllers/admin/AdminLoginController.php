@@ -186,7 +186,7 @@ class AdminLoginControllerCore extends AdminController
 			}
 			else
 			{
-				PrestaShopLogger::addLog(sprintf($this->l('BackOffice connection from %s', 'AdminTab', false, false), Tools::getRemoteAddr()), 1, null, '', 0, true, (int)$this->context->employee->id);
+				PrestaShopLogger::addLog(sprintf($this->l('Back Office connection from %s', 'AdminTab', false, false), Tools::getRemoteAddr()), 1, null, '', 0, true, (int)$this->context->employee->id);
 
 				$this->context->employee->remote_addr = (int)ip2long(Tools::getRemoteAddr());
 				// Update cookie

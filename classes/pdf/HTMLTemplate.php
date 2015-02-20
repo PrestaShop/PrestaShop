@@ -41,12 +41,9 @@ abstract class HTMLTemplateCore
 	 */
 	public function getHeader()
 	{
-		if (isset($this->order) && Validate::isLoadedObject($this->order))
-			$id_shop = $this->order->id_shop;
-		else
-			$id_shop = Context::getContext()->shop->id;
-
-		$shop_name = Configuration::get('PS_SHOP_NAME', null, null, (int)$id_shop);
+		$this->setShopId();
+		$id_shop = (int)$this->shop->id;
+		$shop_name = Configuration::get('PS_SHOP_NAME', null, null, $id_shop);
 
 		$path_logo = $this->getLogo();
 
@@ -90,18 +87,15 @@ abstract class HTMLTemplateCore
 	{
 		$shop_address = $this->getShopAddress();
 
-		if (isset($this->order) && Validate::isLoadedObject($this->order))
-			$id_shop = $this->order->id_shop;
-		else
-			$id_shop = Context::getContext()->shop->id;
+		$id_shop = (int)$this->shop->id;
 
 		$this->smarty->assign(array(
 			'available_in_your_account' => $this->available_in_your_account,
 			'shop_address' => $shop_address,
-			'shop_fax' => Configuration::get('PS_SHOP_FAX', null, null, (int)$id_shop),
-			'shop_phone' => Configuration::get('PS_SHOP_PHONE', null, null, (int)$id_shop),
-			'shop_email' => Configuration::get('PS_SHOP_EMAIL', null, null, (int)$id_shop),
-			'free_text' => Configuration::get('PS_INVOICE_FREE_TEXT', (int)Context::getContext()->language->id, null, (int)$id_shop)
+			'shop_fax' => Configuration::get('PS_SHOP_FAX', null, null, $id_shop),
+			'shop_phone' => Configuration::get('PS_SHOP_PHONE', null, null, $id_shop),
+			'shop_email' => Configuration::get('PS_SHOP_EMAIL', null, null, $id_shop),
+			'free_text' => Configuration::get('PS_INVOICE_FREE_TEXT', (int)Context::getContext()->language->id, null, $id_shop)
 		));
 
 		return $this->smarty->fetch($this->getTemplate('footer'));
@@ -115,14 +109,10 @@ abstract class HTMLTemplateCore
 	{
 		$shop_address = '';
 
-		if (Validate::isLoadedObject($this->shop))
-		{
-			Shop::setContext(Shop::CONTEXT_SHOP, $this->shop->id);
-			$shop_address_obj = $this->shop->getAddress();
-			if (isset($shop_address_obj) && $shop_address_obj instanceof Address)
-				$shop_address = AddressFormat::generateAddress($shop_address_obj, array(), ' - ', ' ');
-			return $shop_address;
-		}
+		$shop_address_obj = $this->shop->getAddress();
+		if (isset($shop_address_obj) && $shop_address_obj instanceof Address)
+			$shop_address = AddressFormat::generateAddress($shop_address_obj, array(), ' - ', ' ');
+		return $shop_address;
 
 		return $shop_address;
 	}
@@ -134,15 +124,12 @@ abstract class HTMLTemplateCore
 	{
 		$logo = '';
 
-		if (isset($this->order) && Validate::isLoadedObject($this->order))
-			$id_shop = $this->order->id_shop;
-		else
-			$id_shop = Context::getContext()->shop->id;
+		$id_shop = (int)$this->shop->id;
 
-		if (Configuration::get('PS_LOGO_INVOICE', null, null, (int)$id_shop) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, (int)$id_shop)))
-			$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, (int)$id_shop);
-		elseif (Configuration::get('PS_LOGO', null, null, (int)$id_shop) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, (int)$id_shop)))
-			$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, (int)$id_shop);
+		if (Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop)))
+			$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop);
+		elseif (Configuration::get('PS_LOGO', null, null, $id_shop) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, $id_shop)))
+			$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, $id_shop);
 		return $logo;
 	}
 
@@ -191,8 +178,7 @@ abstract class HTMLTemplateCore
 	{
 		$template = false;
 		$default_template = _PS_PDF_DIR_.'/'.$template_name.'.tpl';
-		$overriden_template = _PS_THEME_DIR_.'pdf/'.$template_name.'.tpl';
-
+		$overriden_template = $this->shop->getTheme().'/pdf/'.$template_name.'.tpl';
 		if (file_exists($overriden_template))
 			$template = $overriden_template;
 		elseif (file_exists($default_template))
@@ -210,6 +196,18 @@ abstract class HTMLTemplateCore
 	protected static function l($string)
 	{
 		return Translate::getPdfTranslation($string);
+	}
+
+	protected function setShopId()
+	{
+		if (isset($this->order) && Validate::isLoadedObject($this->order))
+			$id_shop = (int)$this->order->id_shop;
+		else
+			$id_shop = (int)Context::getContext()->shop->id;
+
+		$this->shop = new Shop($id_shop);
+		if (Validate::isLoadedObject($this->shop))
+			Shop::setContext(Shop::CONTEXT_SHOP, (int)$this->shop->id);
 	}
 }
 

@@ -690,7 +690,17 @@ class AdminOrdersControllerCore extends AdminController
 					}
 
 					if ($shipping_cost_amount > 0)
-						$amount += $shipping_cost_amount;
+					{
+						if (!Tools::getValue('TaxMethod'))
+						{
+							$tax = new Tax();
+							$tax->rate = $order->carrier_tax_rate;
+							$tax_calculator = new TaxCalculator(array($tax));
+							$amount += $tax_calculator->addTaxes($shipping_cost_amount);
+						}
+						else
+							$amount += $shipping_cost_amount;
+					}
 
 					$order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
 					if (Validate::isLoadedObject($order_carrier))
@@ -732,7 +742,7 @@ class AdminOrdersControllerCore extends AdminController
 							$cart_rule->id_customer = $order->id_customer;
 							$now = time();
 							$cart_rule->date_from = date('Y-m-d H:i:s', $now);
-							$cart_rule->date_to = date('Y-m-d H:i:s', $now + (3600 * 24 * 365.25)); /* 1 year */
+							$cart_rule->date_to = date('Y-m-d H:i:s', strtotime('+1 year'));
 							$cart_rule->partial_use = 1;
 							$cart_rule->active = 1;
 
@@ -1662,6 +1672,7 @@ class AdminOrdersControllerCore extends AdminController
 			$resume = OrderSlip::getProductSlipResume($product['id_order_detail']);
 			$product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
 			$product['amount_refundable'] = $product['total_price_tax_excl'] - $resume['amount_tax_excl'];
+			$product['amount_refundable_tax_incl'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
 			$product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl'], $currency);
 			$product['refund_history'] = OrderSlip::getProductSlipDetail($product['id_order_detail']);
 			$product['return_history'] = OrderReturn::getProductReturnDetail($product['id_order_detail']);

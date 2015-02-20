@@ -156,7 +156,15 @@
 					{/if}
 				</td>
 				{if $display_warehouse}<td>&nbsp;</td>{/if}
-				{if ($order->hasBeenPaid())}<td class="text-center">{$customization['quantity_refunded']}</td>{/if}
+				{if ($order->hasBeenPaid())}
+				<td class="text-center">
+					{if !empty($product['amount_refund'])}
+					{l s='%s (%s refund)' sprintf=[$customization['quantity_refunded'], $product['amount_refund']]}
+					{/if}
+					<input type="hidden" value="{$product['quantity_refundable']}" class="partialRefundProductQuantity" />
+					<input type="hidden" value="{(Tools::ps_round($product_price, 2) * ($product['product_quantity'] - $product['customizationQuantityTotal']))}" class="partialRefundProductAmount" />
+				</td>
+				{/if}
 				{if ($order->hasBeenDelivered())}<td class="text-center">{$customization['quantity_returned']}</td>{/if}
 				<td class="text-center">-</td>
 				<td class="total_product">
@@ -183,8 +191,13 @@
 					<input type="text" id="cancelQuantity_{$customizationId|intval}" name="cancelCustomizationQuantity[{$customizationId|intval}]" size="2" onclick="selectCheckbox(this);" value="" />0/{$customization['quantity']-$customization['quantity_refunded']}
 				{/if}
 				</td>
-				<td class="partial_refund_fields current-edit" style="display:none; width: 250px;">
+				<td class="partial_refund_fields current-edit" colspan="2" style="display:none; width: 250px;">
 					{if $product['quantity_refundable'] > 0}
+					{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
+						{assign var='amount_refundable' value=$product['amount_refundable']}
+					{else}
+						{assign var='amount_refundable' value=$product['amount_refundable_tax_incl']}
+					{/if}
 					<div class="form-group">
 						<div class="{if $product['amount_refundable'] > 0}col-lg-4{else}col-lg-12{/if}">
 							<label class="control-label">
@@ -205,17 +218,10 @@
 								<input onchange="checkPartialRefundProductAmount(this)" type="text" name="partialRefundProduct[{$product['id_order_detail']|intval}]" />
 								{if !$currency->format % 2}<div class="input-group-addon">{$currency->sign}</div>{/if}
 							</div>
-							<p class="help-block"><i class="icon-warning-sign"></i> {l s='(Max %s %s)' sprintf=[Tools::displayPrice(Tools::ps_round($product['amount_refundable'], 2), $currency->id), $smarty.capture.TaxMethod]}</p>
+							<p class="help-block"><i class="icon-warning-sign"></i> {l s='(Max %s %s)' sprintf=[Tools::displayPrice(Tools::ps_round($amount_refundable, 2), $currency->id), $smarty.capture.TaxMethod]}</p>
 						</div>
 					</div>
 					{/if}
-					<div class="form-group">
-						{if !empty($product['amount_refund']) && $product['amount_refund'] > 0}
-							({l s='%s refund' sprintf=$product['amount_refund']})
-						{/if}
-						<input type="hidden" value="{$product['quantity_refundable']}" class="partialRefundProductQuantity" />
-						<input type="hidden" value="{(Tools::ps_round($product_price, 2) * ($product['product_quantity'] - $product['customizationQuantityTotal']))}" class="partialRefundProductAmount" />
-					</div>
 				</td>
 				{if ($can_edit && !$order->hasBeenDelivered())}
 					<td class="edit_product_fields" colspan="2" style="display:none"></td>
