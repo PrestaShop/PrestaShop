@@ -429,6 +429,7 @@ abstract class PaymentModuleCore extends Module
 							if (self::DEBUG_MODE)
 								PrestaShopLogger::addLog('PaymentModule::validateOrder - Message is about to be added', 1, null, 'Cart', (int)$id_cart, true);
 							$msg->message = $message;
+							$msg->id_cart = int($id_cart);
 							$msg->id_order = intval($order->id);
 							$msg->private = 1;
 							$msg->add();
