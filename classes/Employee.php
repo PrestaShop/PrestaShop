@@ -231,12 +231,12 @@ class EmployeeCore extends ObjectModel
 	/**
 	 * Return list of employees
 	 */
-	public static function getEmployees()
+	public static function getEmployees($active_only = true)
 	{
 		return Db::getInstance()->executeS('
 			SELECT `id_employee`, `firstname`, `lastname`
 			FROM `'._DB_PREFIX_.'employee`
-			WHERE `active` = 1
+			'.($active_only ? 'WHERE `active` = 1' : '').'
 			ORDER BY `lastname` ASC
 		');
 	}
@@ -248,7 +248,7 @@ class EmployeeCore extends ObjectModel
 	  * @param string $passwd Password is also checked if specified
 	  * @return Employee instance
 	  */
-	public function getByEmail($email, $passwd = null)
+	public function getByEmail($email, $passwd = null, $active_only = true)
 	{
 	 	if (!Validate::isEmail($email) || ($passwd != null && !Validate::isPasswd($passwd)))
 	 		die(Tools::displayError());
@@ -256,9 +256,9 @@ class EmployeeCore extends ObjectModel
 		$result = Db::getInstance()->getRow('
 		SELECT *
 		FROM `'._DB_PREFIX_.'employee`
-		WHERE `active` = 1
-		AND `email` = \''.pSQL($email).'\'
-		'.($passwd !== null ? 'AND `passwd` = \''.Tools::encrypt($passwd).'\'' : ''));
+		WHERE `email` = \''.pSQL($email).'\'
+		'.($active_only ? 'AND active = 1' : '')
+		.($passwd !== null ? 'AND `passwd` = \''.Tools::encrypt($passwd).'\'' : ''));
 		if (!$result)
 			return false;
 		$this->id = $result['id_employee'];
