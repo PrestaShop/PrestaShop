@@ -66,7 +66,7 @@ class ImageCore extends ObjectModel
 		'primary' => 'id_image',
 		'multilang' => true,
 		'fields' => array(
-			'id_product' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_product' => array('type' => self::TYPE_INT, 'shop' => 'both', 'validate' => 'isUnsignedId', 'required' => true),
 			'position' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'cover' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'shop' => true),
 			'legend' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
@@ -117,6 +117,39 @@ class ImageCore extends ObjectModel
 			}
 
 		return true;
+	}
+
+	/**
+	 * Return first image (by position) associated with a product attribute
+	 *
+	 * @param integer $id_shop Shop ID
+	 * @param integer $id_lang Language ID
+	 * @param integer $id_product Product ID
+	 * @param integer $id_product_attribute Product Attribute ID
+	 * @return array
+	 */
+	public static function getBestImageAttribute($id_shop, $id_lang, $id_product, $id_product_attribute)
+	{
+		$cache_id = 'Image::getBestImageAttribute'.'-'.(int)$id_product.'-'.(int)$id_product_attribute.'-'.(int)$id_lang.'-'.(int)$id_shop;
+
+		if (!Cache::isStored($cache_id))
+		{
+			$row = Db::getInstance()->getRow('
+					SELECT image_shop.`id_image` id_image, il.`legend`
+					FROM `'._DB_PREFIX_.'image` i
+					INNER JOIN `'._DB_PREFIX_.'image_shop` image_shop
+						ON (i.id_image = image_shop.id_image AND image_shop.id_shop = '.(int)$id_shop.')
+						INNER JOIN `'._DB_PREFIX_.'product_attribute_image` pai
+						ON (pai.`id_image` = i.`id_image` AND pai.`id_product_attribute` = '.(int)$id_product_attribute.')
+					LEFT JOIN `'._DB_PREFIX_.'image_lang` il
+						ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
+					WHERE i.`id_product` = '.(int)$id_product.' ORDER BY i.`position` ASC');
+
+			Cache::store($cache_id, $row);
+		}
+
+		$row = Cache::retrieve($cache_id);
+		return $row;
 	}
 
 	/**

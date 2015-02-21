@@ -222,9 +222,9 @@ class HookCore extends ObjectModel
 		{
 			$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT h.id_hook, h.name as h_name, title, description, h.position, live_edit, hm.position as hm_position, m.id_module, m.name, active
-			FROM `'._DB_PREFIX_.'hook` h
-			INNER JOIN `'._DB_PREFIX_.'hook_module` hm ON (h.id_hook = hm.id_hook AND hm.id_shop = '.(int)Context::getContext()->shop->id.')
-			INNER JOIN `'._DB_PREFIX_.'module` as m ON (m.id_module = hm.id_module)
+			FROM `'._DB_PREFIX_.'hook_module` hm
+			STRAIGHT_JOIN `'._DB_PREFIX_.'hook` h ON (h.id_hook = hm.id_hook AND hm.id_shop = '.(int)Context::getContext()->shop->id.')
+			STRAIGHT_JOIN `'._DB_PREFIX_.'module` as m ON (m.id_module = hm.id_module)
 			ORDER BY hm.position');
 			$list = array();
 			foreach ($results as $result)

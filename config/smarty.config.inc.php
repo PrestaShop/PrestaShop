@@ -29,7 +29,7 @@ define('_PS_SMARTY_DIR_', _PS_TOOL_DIR_.'smarty/');
 require_once(_PS_SMARTY_DIR_.'Smarty.class.php');
 
 global $smarty;
-$smarty = new Smarty();
+$smarty = new SmartyCustom();
 $smarty->setCompileDir(_PS_CACHE_DIR_.'smarty/compile');
 $smarty->setCacheDir(_PS_CACHE_DIR_.'smarty/cache');
 if (!Tools::getSafeModeStatus())

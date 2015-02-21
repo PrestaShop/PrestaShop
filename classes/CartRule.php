@@ -239,31 +239,40 @@ class CartRuleCore extends ObjectModel
 
 	/**
 	 * @static
-	 * @param $id_lang
-	 * @param $id_customer
-	 * @param bool $active
-	 * @param bool $includeGeneric
-	 * @param bool $inStock
+	 * @param           $id_lang
+	 * @param           $id_customer
+	 * @param bool      $active
+	 * @param bool      $includeGeneric
+	 * @param bool      $inStock
 	 * @param Cart|null $cart
+	 * @param bool      $free_shipping_only
 	 * @return array
 	 */
-	public static function getCustomerCartRules($id_lang, $id_customer, $active = false, $includeGeneric = true, $inStock = false, Cart $cart = null)
+	public static function getCustomerCartRules($id_lang, $id_customer, $active = false, $includeGeneric = true, $inStock = false, Cart $cart = null, $free_shipping_only = false)
 	{
 		if (!CartRule::isFeatureActive())
 			return array();
 
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT *
-		FROM `'._DB_PREFIX_.'cart_rule` cr
-		LEFT JOIN `'._DB_PREFIX_.'cart_rule_lang` crl ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = '.(int)$id_lang.')
-		WHERE (
-			cr.`id_customer` = '.(int)$id_customer.' OR cr.group_restriction = 1
-			'.($includeGeneric ? 'OR cr.`id_customer` = 0' : '').'
-		)
-		AND cr.date_from < "'.date('Y-m-d H:i:s').'"
-		AND cr.date_to > "'.date('Y-m-d H:i:s').'"
-		'.($active ? 'AND cr.`active` = 1' : '').'
-		'.($inStock ? 'AND cr.`quantity` > 0' : ''));
+		$sql_part1 = '* FROM `'._DB_PREFIX_.'cart_rule` cr
+				LEFT JOIN `'._DB_PREFIX_.'cart_rule_lang` crl ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = '.(int)$id_lang.')';
+
+		$sql_part2 = ' AND cr.date_from < "'.date('Y-m-d H:i:s').'"
+				AND cr.date_to > "'.date('Y-m-d H:i:s').'"
+				'.($active ? 'AND cr.`active` = 1' : '').'
+				'.($inStock ? 'AND cr.`quantity` > 0' : '');
+
+		if ($free_shipping_only)
+			$sql_part2 .= ' AND free_shipping = 1 AND carrier_restriction = 1';
+
+		$sql = '(SELECT SQL_NO_CACHE '.$sql_part1.' WHERE cr.`id_customer` = '.(int)$id_customer.' '.$sql_part2.')';
+		$sql .= ' UNION (SELECT '.$sql_part1.' WHERE cr.`group_restriction` = 1 '.$sql_part2.')';
+		if ($includeGeneric && (int)$id_customer != 0)
+			$sql .= ' UNION ('.$sql_part1.' WHERE cr.`id_customer` = 0 '.$sql_part2.')';
+
+		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
+
+		if (empty($result))
+			return array();
 
 		// Remove cart rule that does not match the customer groups
 		$customerGroups = Customer::getGroupsStatic($id_customer);
@@ -1202,7 +1211,7 @@ class CartRuleCore extends ObjectModel
 			return;
 
 		$sql = '
-		SELECT cr.*
+		SELECT SQL_NO_CACHE cr.*
 		FROM '._DB_PREFIX_.'cart_rule cr
 		LEFT JOIN '._DB_PREFIX_.'cart_rule_shop crs ON cr.id_cart_rule = crs.id_cart_rule
 		'.(!$context->customer->id && Group::isFeatureActive() ? ' LEFT JOIN '._DB_PREFIX_.'cart_rule_group crg ON cr.id_cart_rule = crg.id_cart_rule' : '').'
@@ -1247,7 +1256,7 @@ class CartRuleCore extends ObjectModel
 		)
 		AND cr.id_cart_rule NOT IN (SELECT id_cart_rule FROM '._DB_PREFIX_.'cart_cart_rule WHERE id_cart = '.(int)$context->cart->id.')
 		ORDER BY priority';
-		$result = Db::getInstance()->executeS($sql);
+		$result = Db::getInstance()->executeS($sql, true, false);
 		if ($result)
 		{
 			$cart_rules = ObjectModel::hydrateCollection('CartRule', $result);
@@ -1316,11 +1325,12 @@ class CartRuleCore extends ObjectModel
 	 */
 	public static function getCartsRuleByCode($name, $id_lang, $extended = false)
 	{
-		return Db::getInstance()->executeS('
-			SELECT cr.*, crl.*
-			FROM '._DB_PREFIX_.'cart_rule cr
-			LEFT JOIN '._DB_PREFIX_.'cart_rule_lang crl ON (cr.id_cart_rule = crl.id_cart_rule AND crl.id_lang = '.(int)$id_lang.')
-			WHERE code LIKE \'%'.pSQL($name).'%\''
-			.($extended ? ' OR name LIKE \'%'.pSQL($name).'%\'' : ''));
+		$sql_base = 'SELECT cr.*, crl.*
+						FROM '._DB_PREFIX_.'cart_rule cr
+						LEFT JOIN '._DB_PREFIX_.'cart_rule_lang crl ON (cr.id_cart_rule = crl.id_cart_rule AND crl.id_lang = '.(int)$id_lang.')';
+		if ($extended)
+			return Db::getInstance()->executeS('('.$sql_base.' WHERE code LIKE \'%'.pSQL($name).'%\') UNION ('.$sql_base.' WHERE name LIKE \'%'.pSQL($name).'%\')');
+		else
+			return Db::getInstance()->executeS($sql_base.' WHERE code LIKE \'%'.pSQL($name).'%\'');
 	}
 }

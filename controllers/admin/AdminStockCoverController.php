@@ -362,7 +362,7 @@ class AdminStockCoverControllerCore extends AdminController
 		$query->leftJoin('order_state', 'os', 'os.id_order_state = oh.id_order_state');
 		$query->where('od.product_id = '.(int)$id_product);
 		$query->where('od.product_attribute_id = '.(int)$id_product_attribute);
-		$query->where('TO_DAYS(NOW()) - TO_DAYS(oh.date_add) <= '.(int)$coverage);
+		$query->where('TO_DAYS("'.date('Y-m-d').' 00:00:00") - TO_DAYS(oh.date_add) <= '.(int)$coverage);
 		$query->where('o.valid = 1');
 		$query->where('os.logable = 1 AND os.delivery = 1 AND os.shipped = 1');
 

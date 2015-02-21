@@ -359,11 +359,11 @@ abstract class ObjectModelCore
 			// E.g. if only lang fields are filtered, ignore fields without lang => true
 			if (($type == self::FORMAT_LANG && empty($data['lang']))
 				|| ($type == self::FORMAT_SHOP && empty($data['shop']))
-				|| ($type == self::FORMAT_COMMON && (!empty($data['shop']) || !empty($data['lang']))))
+				|| ($type == self::FORMAT_COMMON && ((!empty($data['shop']) && $data['shop'] != 'both') || !empty($data['lang']))))
 				continue;
 
 			if (is_array($this->update_fields))
-				if ((!empty($data['lang']) || !empty($data['shop'])) && (empty($this->update_fields[$field]) || ($type == self::FORMAT_LANG && empty($this->update_fields[$field][$id_lang]))))
+				if ((!empty($data['lang']) || (!empty($data['shop']) && $data['shop'] != 'both')) && (empty($this->update_fields[$field]) || ($type == self::FORMAT_LANG && empty($this->update_fields[$field][$id_lang]))))
 					continue;
 
 			// Get field value, if value is multilang and field is empty, use value from default lang

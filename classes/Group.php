@@ -301,19 +301,27 @@ class GroupCore extends ObjectModel
 	public static function getCurrent()
 	{
 		static $groups = array();
+		static $ps_unidentified_group = null;
+		static $ps_customer_group = null;
+
+		if ($ps_unidentified_group === null)
+			$ps_unidentified_group = Configuration::get('PS_UNIDENTIFIED_GROUP');
+
+		if ($ps_customer_group === null)
+			$ps_customer_group = Configuration::get('PS_CUSTOMER_GROUP');
 
 		$customer = Context::getContext()->customer;
 		if (Validate::isLoadedObject($customer))
 			$id_group = (int)$customer->id_default_group;
 		else
-			$id_group = (int)Configuration::get('PS_UNIDENTIFIED_GROUP');
+			$id_group = (int)$ps_unidentified_group;
 
 		if (!isset($groups[$id_group]))
 			$groups[$id_group] = new Group($id_group);
 			
 		if (!$groups[$id_group]->isAssociatedToShop(Context::getContext()->shop->id))
 		{
-			$id_group = (int)Configuration::get('PS_CUSTOMER_GROUP');
+			$id_group = (int)$ps_customer_group;
 			if (!isset($groups[$id_group]))
 				$groups[$id_group] = new Group($id_group);
 		}
@@ -324,10 +332,8 @@ class GroupCore extends ObjectModel
 	/**
 	  * Light back office search for Group
 	  *
-	  * @param integer $id_lang Language ID
 	  * @param string $query Searched string
-	  * @param boolean $unrestricted allows search without lang and includes first group and exact match
-	  * @return array Corresponding groupes
+	  * @return array Corresponding groups
 	  */
 	public static function searchByName($query)
 	{
@@ -336,7 +342,7 @@ class GroupCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'group` g
 			LEFT JOIN `'._DB_PREFIX_.'group_lang` gl
 				ON (g.`id_group` = gl.`id_group`)
-			WHERE `name` LIKE \''.pSQL($query).'\'
+			WHERE `name` = \''.pSQL($query).'\'
 		');
 	}
 }

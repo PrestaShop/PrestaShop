@@ -43,9 +43,9 @@ function update_module_loyalty()
 		{
 			$category_list = rtrim($category_list, ',');
 
-			$exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` LIKE \'PS_LOYALTY_VOUCHER_CATEGORY\'');
+			$exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = \'PS_LOYALTY_VOUCHER_CATEGORY\'');
 			if ($exist)
-				$res = Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "'.pSQL($category_list).'" WHERE `name` LIKE \'PS_LOYALTY_VOUCHER_CATEGORY\'');
+				$res = Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "'.pSQL($category_list).'" WHERE `name` = \'PS_LOYALTY_VOUCHER_CATEGORY\'');
 			else
 				$res = Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (name, value) VALUES ("PS_LOYALTY_VOUCHER_CATEGORY", "'.pSQL($category_list).'"');
 		}

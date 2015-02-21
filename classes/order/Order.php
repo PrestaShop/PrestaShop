@@ -669,17 +669,17 @@ class OrderCore extends ObjectModel
 	{
 		if (isset($product['product_attribute_id']) && $product['product_attribute_id'])
 			$id_image = Db::getInstance()->getValue('
-				SELECT image_shop.id_image
-				FROM '._DB_PREFIX_.'product_attribute_image pai'.
+				SELECT `image_shop`.id_image
+				FROM `'._DB_PREFIX_.'product_attribute_image` pai'.
 				Shop::addSqlAssociation('image', 'pai', true).'
 				WHERE id_product_attribute = '.(int)$product['product_attribute_id']);
 
 		if (!isset($id_image) || !$id_image)
 			$id_image = Db::getInstance()->getValue('
-				SELECT image_shop.id_image
-				FROM '._DB_PREFIX_.'image i'.
+				SELECT `image_shop`.id_image
+				FROM `'._DB_PREFIX_.'image` i'.
 				Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1').'
-				WHERE id_product = '.(int)($product['product_id'])
+				WHERE i.id_product = '.(int)($product['product_id'])
 			);
 
 		$product['image'] = null;
@@ -1102,7 +1102,7 @@ class OrderCore extends ObjectModel
 		if (!$nbReturnDays)
 			return true;
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT TO_DAYS(NOW()) - TO_DAYS(`delivery_date`)  AS days FROM `'._DB_PREFIX_.'orders`
+		SELECT TO_DAYS("'.date('Y-m-d').' 00:00:00") - TO_DAYS(`delivery_date`)  AS days FROM `'._DB_PREFIX_.'orders`
 		WHERE `id_order` = '.(int)($this->id));
 		if ($result['days'] <= $nbReturnDays)
 			return true;

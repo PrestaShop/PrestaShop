@@ -93,21 +93,21 @@ function migrate_block_info_to_cms_block()
 		PRIMARY KEY (`id_cms_block_page`)
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8');
 
-		$exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` LIKE \'FOOTER_CMS\'');
+		$exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = \'FOOTER_CMS\'');
 		if ($exist)
-			$res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "" WHERE `name` LIKE \'FOOTER_CMS\'');
+			$res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "" WHERE `name` = \'FOOTER_CMS\'');
 		else
 			$res &= Db::getInstance()->getValue('INSERT INTO `'._DB_PREFIX_.'configuration` (name, value) VALUES ("FOOTER_CMS", "")');
 
-		$exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` LIKE \'FOOTER_BLOCK_ACTIVATION\'');
+		$exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = \'FOOTER_BLOCK_ACTIVATION\'');
 		if ($exist)
-			$res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "1" WHERE `name` LIKE \'FOOTER_BLOCK_ACTIVATION\'');
+			$res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "1" WHERE `name` = \'FOOTER_BLOCK_ACTIVATION\'');
 		else
 			$res &= Db::getInstance()->getValue('INSERT INTO `'._DB_PREFIX_.'configuration` (name, value) VALUES ("FOOTER_BLOCK_ACTIVATION", "1")');
 
-		$exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` LIKE \'FOOTER_POWEREDBY\'');
+		$exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = \'FOOTER_POWEREDBY\'');
 		if ($exist)
-			$res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "1" WHERE `name` LIKE \'FOOTER_POWEREDBY\'');
+			$res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "1" WHERE `name` = \'FOOTER_POWEREDBY\'');
 		else
 			$res &= Db::getInstance()->getValue('INSERT INTO `'._DB_PREFIX_.'configuration` (name, value) VALUES ("FOOTER_POWEREDBY", "1")');
 		

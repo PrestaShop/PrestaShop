@@ -63,7 +63,7 @@ class TagCore extends ObjectModel
 			$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT *
 			FROM `'._DB_PREFIX_.'tag` t
-			WHERE `name` LIKE \''.pSQL($name).'\' AND `id_lang` = '.(int)$id_lang);
+			WHERE `name` = \''.pSQL($name).'\' AND `id_lang` = '.(int)$id_lang);
 
 			if ($row)
 			{
@@ -107,7 +107,7 @@ class TagCore extends ObjectModel
 		 	 		return false;
 				$tag = trim(Tools::substr($tag, 0, self::$definition['fields']['name']['size']));
 				$tag_obj = new Tag(null, $tag, (int)$id_lang);
-	
+
 				/* Tag does not exist in database */
 				if (!Validate::isLoadedObject($tag_obj))
 				{
@@ -120,37 +120,72 @@ class TagCore extends ObjectModel
 			}
 		$data = '';
 		foreach ($list as $tag)
-			$data .= '('.(int)$tag.','.(int)$id_product.'),';
+			$data .= '('.(int)$tag.','.(int)$id_product.','.(int)$id_lang.'),';
 		$data = rtrim($data, ',');
 
-		return Db::getInstance()->execute('
-		INSERT INTO `'._DB_PREFIX_.'product_tag` (`id_tag`, `id_product`)
+		$result = Db::getInstance()->execute('
+		INSERT INTO `'._DB_PREFIX_.'product_tag` (`id_tag`, `id_product`, `id_lang`)
 		VALUES '.$data);
+
+		self::updateTagCount();
+
+		return $result;
+	}
+
+	public static function updateTagCount() {
+		Db::getInstance()->execute('REPLACE INTO `'._DB_PREFIX_.'tag_count` (id_group, id_tag, id_lang, id_shop, counter)
+		SELECT cg.id_group, t.id_tag, t.id_lang, ps.id_shop, COUNT(pt.id_tag) AS times
+			FROM `'._DB_PREFIX_.'product_tag` pt
+			LEFT JOIN `'._DB_PREFIX_.'tag` t ON (t.id_tag = pt.id_tag)
+			LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = pt.id_product)
+			INNER JOIN `'._DB_PREFIX_.'product_shop` product_shop
+				ON (product_shop.id_product = p.id_product)
+			JOIN (SELECT DISTINCT id_group FROM `'._DB_PREFIX_.'category_group`) cg
+			JOIN (SELECT DISTINCT id_shop FROM `'._DB_PREFIX_.'shop`) ps
+			WHERE pt.`id_lang` = 1 AND product_shop.`active` = 1
+			AND EXISTS(SELECT 1 FROM `'._DB_PREFIX_.'category_product` cp
+							LEFT JOIN `'._DB_PREFIX_.'category_group` cgo ON (cp.`id_category` = cgo.`id_category`)
+							WHERE cgo.`id_group` = cg.id_group AND p.`id_product` = cp.`id_product`)
+			AND product_shop.id_shop = ps.id_shop
+			GROUP BY pt.id_tag, cg.id_group');
+		Db::getInstance()->execute('REPLACE INTO `'._DB_PREFIX_.'tag_count` (id_group, id_tag, id_lang, id_shop, counter)
+		SELECT 0, t.id_tag, t.id_lang, ps.id_shop, COUNT(pt.id_tag) AS times
+			FROM `'._DB_PREFIX_.'product_tag` pt
+			LEFT JOIN `'._DB_PREFIX_.'tag` t ON (t.id_tag = pt.id_tag)
+			LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = pt.id_product)
+			INNER JOIN `'._DB_PREFIX_.'product_shop` product_shop
+				ON (product_shop.id_product = p.id_product)
+			JOIN (SELECT DISTINCT id_shop FROM `'._DB_PREFIX_.'shop`) ps
+			WHERE pt.`id_lang` = 1 AND product_shop.`active` = 1
+			AND product_shop.id_shop = ps.id_shop
+			GROUP BY pt.id_tag');
 	}
 
 	public static function getMainTags($id_lang, $nb = 10)
 	{
-		$sql_groups = '';
+		$context = Context::getContext();
 		if (Group::isFeatureActive())
 		{
 			$groups = FrontController::getCurrentCustomerGroups();
-			$sql_groups .= '
-			JOIN `'._DB_PREFIX_.'category_product` cp ON (pt.id_product = cp.id_product)
-			JOIN `'._DB_PREFIX_.'category_group` cg ON (cp.`id_category` = cg.`id_category` AND cg.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1').')';
+			return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+			SELECT t.name, counter AS times
+			FROM `'._DB_PREFIX_.'tag_count` pt
+			LEFT JOIN `'._DB_PREFIX_.'tag` t ON (t.id_tag = pt.id_tag)
+			WHERE pt.`id_group` '.(count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1').'
+			AND pt.`id_lang` = '.(int)$id_lang.' AND pt.`id_shop` = '.(int)$context->shop->id.'
+			ORDER BY times DESC
+			LIMIT '.(int)$nb);
 		}
-
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT t.name, COUNT(pt.id_tag) AS times
-		FROM `'._DB_PREFIX_.'product_tag` pt
-		LEFT JOIN `'._DB_PREFIX_.'tag` t ON (t.id_tag = pt.id_tag)
-		LEFT JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = pt.id_product)
-		'.Shop::addSqlAssociation('product', 'p').'
-		'.$sql_groups.'
-		WHERE t.`id_lang` = '.(int)$id_lang.'
-		AND product_shop.`active` = 1
-		GROUP BY t.id_tag
-		ORDER BY times DESC
-		LIMIT '.(int)$nb);
+		else
+		{
+			return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+			SELECT t.name, counter AS times
+			FROM `'._DB_PREFIX_.'tag_count` pt
+			LEFT JOIN `'._DB_PREFIX_.'tag` t ON (t.id_tag = pt.id_tag)
+			WHERE pt.id_group = 0 AND pt.`id_lang` = '.(int)$id_lang.' AND pt.`id_shop` = '.(int)$context->shop->id.'
+			ORDER BY times DESC
+			LIMIT '.(int)$nb);
+		}
 	}
 
 	public static function getProductTags($id_product)
@@ -197,22 +232,23 @@ class TagCore extends ObjectModel
 			$result &= ObjectModel::updateMultishopTable('Product', array('indexed' => 0), 'a.id_product IN ('.implode(',', $array).')');
 			$ids = array();
 			foreach ($array as $id_product)
-				$ids[] = '('.(int)$id_product.','.(int)$this->id.')';
+				$ids[] = '('.(int)$id_product.','.(int)$this->id.','.(int)$this->id_lang.')';
 
 			if ($result)
 			{
-				$result &= Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'product_tag (id_product, id_tag) VALUES '.implode(',', $ids));
+				$result &= Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'product_tag (id_product, id_tag, id_lang) VALUES '.implode(',', $ids));
 				if (Configuration::get('PS_SEARCH_INDEXATION'))
 					$result &= Search::indexation(false);
 			}
 		}
+		self::updateTagCount();
 		return $result;
 	}
 
 	public static function deleteTagsForProduct($id_product)
 	{
-		return Db::getInstance()->delete('product_tag', 'id_product = '.(int)$id_product);
+		$result = Db::getInstance()->delete('product_tag', 'id_product = '.(int)$id_product);
+		self::updateTagCount();
+		return $result;
 	}
 }
-
-
