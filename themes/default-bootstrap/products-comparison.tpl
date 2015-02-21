@@ -131,7 +131,7 @@
 									</span>
 								{/if}
 							</p>
-							{hook h="displayProductDeliveryTime" product=$product}
+							{if !$product->is_virtual}{hook h="displayProductDeliveryTime" product=$product}{/if}
 							{hook h="displayProductPriceBlock" product=$product type="weight"}
 							<div class="clearfix">
 								<div class="button-container">
