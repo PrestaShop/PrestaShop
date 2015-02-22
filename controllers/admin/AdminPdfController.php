@@ -190,6 +190,14 @@ class AdminPdfControllerCore extends AdminController
 
 	public function generatePDF($object, $template)
 	{
+		if (!($object instanceof Iterator) && !is_array($object))
+		$object = array($object);
+			
+		if (count($object) == 1 && isset($object[0]->id_order))
+		{
+			$tmporder = new Order($object[0]->id_order);
+			$this->context->language = new Language($tmporder->id_lang);
+		}	
 		$pdf = new PDF($object, $template, Context::getContext()->smarty);
 		$pdf->render();
 	}
