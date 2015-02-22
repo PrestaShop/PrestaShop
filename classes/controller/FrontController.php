@@ -27,25 +27,25 @@
 class FrontControllerCore extends Controller
 {
 	/**
-	 * @deprecated Deprecated shortcuts as of 1.5 - Use $context->smarty instead
+	 * @deprecated Deprecated shortcuts as of 1.5.0.1 - Use $context->smarty instead
 	 * @var $smarty Smarty
 	 */
 	protected static $smarty;
 
 	/**
-	 * @deprecated Deprecated shortcuts as of 1.5 - Use $context->cookie instead
+	 * @deprecated Deprecated shortcuts as of 1.5.0.1 - Use $context->cookie instead
 	 * @var $cookie Cookie
 	 */
 	protected static $cookie;
 
 	/**
-	 * @deprecated Deprecated shortcuts as of 1.5 - Use $context->link instead
+	 * @deprecated Deprecated shortcuts as of 1.5.0.1 - Use $context->link instead
 	 * @var $link Link
 	 */
 	protected static $link;
 
 	/**
-	 * @deprecated Deprecated shortcuts as of 1.5 - Use $context->cart instead
+	 * @deprecated Deprecated shortcuts as of 1.5.0.1 - Use $context->cart instead
 	 * @var $cart Cart
 	 */
 	protected static $cart;
@@ -198,7 +198,7 @@ class FrontControllerCore extends Controller
 	public function init()
 	{
 		/**
-		 * Globals are DEPRECATED as of version 1.5.
+		 * Globals are DEPRECATED as of version 1.5.0.1
 		 * Use the Context object to access objects instead.
 		 * Example: $this->context->cart
 		 */
@@ -215,7 +215,7 @@ class FrontControllerCore extends Controller
 		if (Tools::usingSecureMode())
 			$useSSL = true;
 
-		// For compatibility with globals, DEPRECATED as of version 1.5
+		// For compatibility with globals, DEPRECATED as of version 1.5.0.1
 		$css_files = $this->css_files;
 		$js_files = $this->js_files;
 
@@ -507,7 +507,7 @@ class FrontControllerCore extends Controller
 				$this->context->smarty->assign($assign_key, $assign_value);
 
 		/**
-		 * These shortcuts are DEPRECATED as of version 1.5.
+		 * These shortcuts are DEPRECATED as of version 1.5.0.1
 		 * Use the Context to access objects instead.
 		 * Example: $this->context->cart
 		 */
@@ -930,7 +930,7 @@ class FrontControllerCore extends Controller
 			return true;
 		}
 
-		$this->addCSS(_THEME_CSS_DIR_.'grid_prestashop.css', 'all');  // retro compat themes 1.5
+		$this->addCSS(_THEME_CSS_DIR_.'grid_prestashop.css', 'all');  // retro compat themes 1.5.0.1
 		$this->addCSS(_THEME_CSS_DIR_.'global.css', 'all');
 		$this->addJquery();
 		$this->addJqueryPlugin('easing');
@@ -1118,7 +1118,7 @@ class FrontControllerCore extends Controller
 		$this->p = (int)Tools::getValue('p', 1);
 		// If the parameter is not correct then redirect (do not merge with the previous line, the redirect is required in order to avoid duplicate content)
 		if (!is_numeric($this->p) || $this->p < 1)
-			Tools::redirect(self::$link->getPaginationLink(false, false, $this->n, false, 1, false));
+			Tools::redirect($this->context->link->getPaginationLink(false, false, $this->n, false, 1, false));
 
 		// Remove the page parameter in order to get a clean URL for the pagination template
 		$current_url = preg_replace('/(\?)?(&amp;)?p=\d+/', '$1', Tools::htmlentitiesUTF8($_SERVER['REQUEST_URI']));
@@ -1128,7 +1128,7 @@ class FrontControllerCore extends Controller
 
 		$pages_nb = ceil($total_products / (int)$this->n);
 		if ($this->p > $pages_nb && $total_products != 0)
-			Tools::redirect(self::$link->getPaginationLink(false, false, $this->n, false, $pages_nb, false));
+			Tools::redirect($this->context->link->getPaginationLink(false, false, $this->n, false, $pages_nb, false));
 
 		$range = 2; /* how many pages around page selected */
 		$start = (int)($this->p - $range);
@@ -1571,9 +1571,9 @@ class FrontControllerCore extends Controller
 		$mobile_device = $this->context->getMobileDevice();
 
 		if ($mobile_device && Configuration::get('PS_LOGO_MOBILE'))
-			$logo = self::$link->getMediaLink(_PS_IMG_.Configuration::get('PS_LOGO_MOBILE').'?'.Configuration::get('PS_IMG_UPDATE_TIME'));
+			$logo = $this->context->link->getMediaLink(_PS_IMG_.Configuration::get('PS_LOGO_MOBILE').'?'.Configuration::get('PS_IMG_UPDATE_TIME'));
 		else
-			$logo = self::$link->getMediaLink(_PS_IMG_.Configuration::get('PS_LOGO'));
+			$logo = $this->context->link->getMediaLink(_PS_IMG_.Configuration::get('PS_LOGO'));
 
 		return array(
 			'favicon_url'       => _PS_IMG_.Configuration::get('PS_FAVICON'),
