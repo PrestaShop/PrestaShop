@@ -1018,7 +1018,7 @@ class CartRuleCore extends ObjectModel
 				if ($filter != CartRule::FILTER_ACTION_ALL_NOCAP)
 				{
 					// Cart values
-					$cart_average_vat_rate = $this->getCartAverageVatRate();
+					$cart_average_vat_rate = Context::getContext()->cart->getAverageProductsTaxRate();
 					$current_cart_amount = $use_tax ? $cart_amount_ti : $cart_amount_te;
 
 					foreach ($all_cart_rules_ids as $current_cart_rule_id) {
@@ -1065,26 +1065,6 @@ class CartRuleCore extends ObjectModel
 
 		Cache::store($cache_id, $reduction_value);
 		return $reduction_value;
-	}
-
-	/**
-	 * Return the estimated cart VAT from the difference between the total amount taxes included and taxes excluded.
-	 * @return float Estimated VAT rate.
-	 */
-	public function getCartAverageVatRate()
-	{
-		$context = Context::getContext();
-		$cart_amount_ti = $context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS);
-		$cart_amount_te = $context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
-
-		$cart_vat_amount = $cart_amount_ti - $cart_amount_te;
-
-		if ($cart_vat_amount == 0 || $cart_amount_te == 0)
-			$cart_average_vat_rate = 0;
-		else
-			$cart_average_vat_rate = Tools::ps_round($cart_vat_amount / $cart_amount_te, 3);
-
-		return (float)$cart_average_vat_rate;
 	}
 
 	/**
