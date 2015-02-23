@@ -1812,11 +1812,11 @@ var ProductMultishop = new function()
 				$('#generate-friendly-url').attr('disabled', checked);
 				break;
 			case 'uploadable_files':
-				$('input[name^=label_0_').attr('disabled', checked);
+				$('input[name^=label_0_]').attr('disabled', checked);
 				$('#'+id).attr('disabled', checked);
 				break;
 			case 'text_fields':
-				$('input[name^=label_1_').attr('disabled', checked);
+				$('input[name^=label_1_]').attr('disabled', checked);
 				$('#'+id).attr('disabled', checked);
 				break;
 			default :
