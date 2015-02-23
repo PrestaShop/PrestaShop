@@ -166,7 +166,8 @@ class PackCore extends Product
 					ON product_shop.`id_category_default` = cl.`id_category`
 					AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').'
 				WHERE product_shop.`id_shop` = '.(int)Context::getContext()->shop->id.'
-				AND a.`id_product_pack` = '.(int)$id_product;
+				AND a.`id_product_pack` = '.(int)$id_product.'
+				GROUP BY a.id_product_attribute_item';
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
@@ -356,4 +357,3 @@ class PackCore extends Product
 		return true;
 	}
 }
-
