@@ -2,10 +2,12 @@ GitHub contributors:
 --------------------------------
 (d)oekia
 123monsite-regis
+1RV34
 Adonis Karavokyros
 Adrien
 Agence CINS
 Aleksander Palyan
+Alessandro Corbelli
 Alex Even
 Alexander Grosul
 Alexander Otchenashev
@@ -15,6 +17,8 @@ Alexey Svistunov
 alexey-svistunov
 Alfakom-MK
 Alfonso Jimenez
+Alphacom IT Solutions - Macedonia
+amatosg
 anat
 Anatole
 Andrew
@@ -51,6 +55,7 @@ Comkwatt
 Corentin Delcourt
 Cosmin Hutanu
 Cedric Mouleyre
+damien
 Damien Metzger
 DamienMetzger
 Damon Skelhorn
@@ -60,6 +65,7 @@ Daniele Giachino
 danoosh
 Danoosh Mir
 David Gasperoni
+David Sivocha
 David-Julian BUCH
 Davy Rolink
 DevNet
@@ -93,6 +99,7 @@ Fabio Chelly
 fchellypresta
 Felipe Uribe
 fetis
+flashmaestro
 Florian Kwakkenbos
 fram
 Francois Gaillard
@@ -110,9 +117,12 @@ gRoussac
 Gregoire Belorgey
 Guillaume DELOINCE
 Guillaume Lafarge
+Gytis
+Gytis Skėma
 Ha!*!*y
 ha99y
 hiousi
+htrex
 indesign47
 iNem0o
 ironwo0d
@@ -128,6 +138,7 @@ jeckyl
 Jerome Nadaud
 jeromenadaud
 jessylenne
+Joan
 Joan Juvanteny
 joemartin247
 Joep Hendrix
@@ -136,11 +147,13 @@ Jonathan Danse
 Jonathan SAHM
 Jorge Vargas
 joseantgv
+jtogrul
 Julien
 Julien Bouchez
 Julien Bourdeau
 julienbourdeau
 Jachym Tousek
+kermes
 Kevin Granger
 kiropowered
 kpodemski
@@ -162,8 +175,10 @@ Mainmich
 makk1ntosh
 marcinsz101
 Marco Cervellin
+Marcos
 matiasiglesias
 Mats Rynge
+Matteo
 MatthieuB
 Maxence
 Maxime
@@ -178,6 +193,7 @@ Mingsong Hu
 minic studio
 misthero
 montes
+mplh
 MustangZhong
 natrim
 neemzy
@@ -192,12 +208,14 @@ nturato
 oleacorner
 Otto Nascarella
 Panagiotis Tigas
+panesarsandeep
 Patanock
 Patrick Mettraux
 Pavel Novitsky
 Per Lejontand
 Peter Schaeffer
 peterept
+Petyuska
 PhpMadman
 Pierre
 Piotr Kaczor
@@ -210,6 +228,7 @@ prestarocket
 Prestaspirit
 Priyank Bolia
 Pronux
+proydsl
 pxls
 quadrateam
 Quentin Leonetti
@@ -231,6 +250,7 @@ Sacha
 Sacha Froment
 sadlyblue
 sagaradonis
+Sam Sanchez
 Samir Shah
 Samy Rabih
 Sarah Lorenzini
@@ -240,10 +260,11 @@ sfroment42
 shaffe-fr
 Shagshag
 Shipow
-shudrum
+Shudrum
 sjousse
 sLorenzini
 smartdatasoft
+snamor
 soufyan
 soware
 Staging
@@ -264,6 +285,7 @@ Thomas
 Thomas Blanc
 Thomas N
 Thomas Nabord
+thomas-aw
 Threef
 timsit
 tmackay
@@ -278,6 +300,7 @@ Vincent Schoener
 Vincent Terenti
 vinvin27
 vinzter
+Wayann
 web-plus
 Xavier
 Xavier Borderie
