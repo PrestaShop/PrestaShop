@@ -53,8 +53,9 @@ else
 $excludeVirtuals = (bool)Tools::getValue('excludeVirtuals', false);
 $exclude_packs = (bool)Tools::getValue('exclude_packs', false);
 
-$sql = 'SELECT p.`id_product`, pl.`link_rewrite`, p.`reference`, pl.`name`, MAX(image_shop.`id_image`) id_image, il.`legend`
+$sql = 'SELECT p.`id_product`, pl.`link_rewrite`, p.`reference`, pl.`name`, MAX(image_shop.`id_image`) id_image, il.`legend`, p.`cache_default_attribute`
 		FROM `'._DB_PREFIX_.'product` p
+		'.Shop::addSqlAssociation('product', 'p').'
 		LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (pl.id_product = p.id_product AND pl.id_lang = '.(int)Context::getContext()->language->id.Shop::addSqlRestrictionOnLang('pl').')
 		LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = p.`id_product`)'.
 		Shop::addSqlAssociation('image', 'i', false, 'image_shop.cover=1').'
@@ -76,14 +77,63 @@ elseif ($items)
 	$results = array();
 	foreach ($items AS $item)
 	{
-		$product = array(
-			'id' => (int)($item['id_product']),
-			'name' => $item['name'],
-			'ref' => (!empty($item['reference']) ? $item['reference'] : ''),
-			'image' => str_replace('http://', Tools::getShopProtocol(), Context::getContext()->link->getImageLink($item['link_rewrite'], $item['id_image'], 'home_default')),
-		);
-		array_push($results, $product);
+		// check if product have combination
+		if (Combination::isFeatureActive() && $item['cache_default_attribute'])
+		{
+			$sql = 'SELECT pa.`id_product_attribute`, pa.`reference`, ag.`id_attribute_group`, pai.`id_image`, agl.`name` AS group_name, al.`name` AS attribute_name,
+						a.`id_attribute`
+					FROM `'._DB_PREFIX_.'product_attribute` pa
+					'.Shop::addSqlAssociation('product_attribute', 'pa').'
+					LEFT JOIN `'._DB_PREFIX_.'product_attribute_combination` pac ON pac.`id_product_attribute` = pa.`id_product_attribute`
+					LEFT JOIN `'._DB_PREFIX_.'attribute` a ON a.`id_attribute` = pac.`id_attribute`
+					LEFT JOIN `'._DB_PREFIX_.'attribute_group` ag ON ag.`id_attribute_group` = a.`id_attribute_group`
+					LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)Context::getContext()->language->id.')
+					LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (ag.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = '.(int)Context::getContext()->language->id.')
+					LEFT JOIN `'._DB_PREFIX_.'product_attribute_image` pai ON pai.`id_product_attribute` = pa.`id_product_attribute`
+					WHERE pa.`id_product` = '.(int)$item['id_product'].'
+					GROUP BY pa.`id_product_attribute`, ag.`id_attribute_group`
+					ORDER BY pa.`id_product_attribute`';
+
+			$combinations = Db::getInstance()->executeS($sql);
+			if (!empty($combinations))
+			{
+				foreach ($combinations as $k => $combination)
+				{
+					$results[$combination['id_product_attribute']]['id'] = $item['id_product'];
+					$results[$combination['id_product_attribute']]['id_product_attribute'] = $combination['id_product_attribute'];
+					!empty($results[$combination['id_product_attribute']]['name']) ? $results[$combination['id_product_attribute']]['name'] .= ' '.$combination['group_name'].'-'.$combination['attribute_name']
+					: $results[$combination['id_product_attribute']]['name'] = $item['name'].' '.$combination['group_name'].'-'.$combination['attribute_name'];
+					if (!empty($combination['reference']))
+						$results[$combination['id_product_attribute']]['ref'] = $combination['reference'];
+					else
+						$results[$combination['id_product_attribute']]['ref'] = !empty($item['reference']) ? $item['reference'] : '';
+					if (empty($results[$combination['id_product_attribute']]['image']))
+						$results[$combination['id_product_attribute']]['image'] = str_replace('http://', Tools::getShopProtocol(), Context::getContext()->link->getImageLink($item['link_rewrite'], $combination['id_image'], 'home_default'));
+				}
+			}
+			else
+			{
+				$product = array(
+					'id' => (int)($item['id_product']),
+					'name' => $item['name'],
+					'ref' => (!empty($item['reference']) ? $item['reference'] : ''),
+					'image' => str_replace('http://', Tools::getShopProtocol(), Context::getContext()->link->getImageLink($item['link_rewrite'], $item['id_image'], 'home_default')),
+				);
+				array_push($results, $product);
+			}
+		}
+		else
+		{
+			$product = array(
+				'id' => (int)($item['id_product']),
+				'name' => $item['name'],
+				'ref' => (!empty($item['reference']) ? $item['reference'] : ''),
+				'image' => str_replace('http://', Tools::getShopProtocol(), Context::getContext()->link->getImageLink($item['link_rewrite'], $item['id_image'], 'home_default')),
+			);
+			array_push($results, $product);
+		}
 	}
+	$results = array_values($results);
 	echo Tools::jsonEncode($results);
 }
 else

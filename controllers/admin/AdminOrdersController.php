@@ -238,7 +238,7 @@ class AdminOrdersControllerCore extends AdminController
 
 		$defaults_order_state = array('cheque' => (int)Configuration::get('PS_OS_CHEQUE'),
 												'bankwire' => (int)Configuration::get('PS_OS_BANKWIRE'),
-												'cashondelivery' => (int)Configuration::get('PS_OS_PREPARATION'),
+												'cashondelivery' => Configuration::get('PS_OS_COD_VALIDATION') ? (int)Configuration::get('PS_OS_COD_VALIDATION') : (int)Configuration::get('PS_OS_PREPARATION'),
 												'other' => (int)Configuration::get('PS_OS_PAYMENT'));
 		$payment_modules = array();
 		foreach (PaymentModule::getInstalledPaymentModules() as $p_module)
@@ -274,6 +274,7 @@ class AdminOrdersControllerCore extends AdminController
 				Tools::redirectAdmin($this->context->link->getAdminLink('AdminOrders'));
 
 			$this->toolbar_title[] = sprintf($this->l('Order %1$s from %2$s %3$s'), $order->reference, $customer->firstname, $customer->lastname);
+			$this->addMetaTitle($this->toolbar_title[count($this->toolbar_title) - 1]);
 
 			if ($order->hasBeenShipped())
 				$type = $this->l('Return products');
@@ -322,7 +323,7 @@ class AdminOrdersControllerCore extends AdminController
 
 		if ($this->tabAccess['edit'] == 1 && $this->display == 'view')
 		{
-			$this->addJS(_PS_JS_DIR_.'admin_order.js');
+			$this->addJS(_PS_JS_DIR_.'admin/orders.js');
 			$this->addJS(_PS_JS_DIR_.'tools.js');
 			$this->addJqueryPlugin('autocomplete');
 		}
@@ -635,21 +636,25 @@ class AdminOrdersControllerCore extends AdminController
 		{
 			if ($this->tabAccess['edit'] == '1')
 			{
-				if (is_array($_POST['partialRefundProduct']))
+				if (Tools::isSubmit('partialRefundProduct') && ($refunds = Tools::getValue('partialRefundProduct')) && is_array($refunds))
 				{
 					$amount = 0;
 					$order_detail_list = array();
-					foreach ($_POST['partialRefundProduct'] as $id_order_detail => $amount_detail)
+					foreach ($refunds as $id_order_detail => $amount_detail)
 					{
+						$quantity = Tools::getValue('partialRefundProductQuantity');
+						if (!$quantity[$id_order_detail])
+							continue;
+
 						$order_detail_list[$id_order_detail] = array(
-							'quantity' => (int)$_POST['partialRefundProductQuantity'][$id_order_detail],
+							'quantity' => (int)$quantity[$id_order_detail],
 							'id_order_detail' => (int)$id_order_detail
 						);
 
 						$order_detail = new OrderDetail((int)$id_order_detail);
 						if (empty($amount_detail))
 						{
-							$order_detail_list[$id_order_detail]['unit_price'] = $order_detail->unit_price_tax_excl;
+							$order_detail_list[$id_order_detail]['unit_price'] = (!Tools::getValue('TaxMethod') ? $order_detail->unit_price_tax_excl : $order_detail->unit_price_tax_incl);
 							$order_detail_list[$id_order_detail]['amount'] = $order_detail->unit_price_tax_incl * $order_detail_list[$id_order_detail]['quantity'];
 						}
 						else
@@ -662,7 +667,18 @@ class AdminOrdersControllerCore extends AdminController
 							$this->reinjectQuantity($order_detail, $order_detail_list[$id_order_detail]['quantity']);
 					}
 
-					$choosen = false;
+					$shipping_cost_amount = (float)str_replace(',', '.', Tools::getValue('partialRefundShippingCost')) ? (float)str_replace(',', '.', Tools::getValue('partialRefundShippingCost')) : false;
+
+                    if ($amount == 0 && $shipping_cost_amount == 0)
+                    {
+                    	if (!empty($refunds))
+							$this->errors[] = Tools::displayError('Please enter a quantity to proceed with your refund.');
+						else
+							$this->errors[] = Tools::displayError('Please enter an amount to proceed with your refund.');
+                        return false;
+                    }
+
+                    $choosen = false;
 					$voucher = 0;
 
 					if ((int)Tools::getValue('refund_voucher_off') == 1)
@@ -673,9 +689,18 @@ class AdminOrdersControllerCore extends AdminController
 						$amount = $voucher = (float)Tools::getValue('refund_voucher_choose');
 					}
 
-					$shipping_cost_amount = (float)str_replace(',', '.', Tools::getValue('partialRefundShippingCost')) ? (float)str_replace(',', '.', Tools::getValue('partialRefundShippingCost')) : false;
 					if ($shipping_cost_amount > 0)
-						$amount += $shipping_cost_amount;
+					{
+						if (!Tools::getValue('TaxMethod'))
+						{
+							$tax = new Tax();
+							$tax->rate = $order->carrier_tax_rate;
+							$tax_calculator = new TaxCalculator(array($tax));
+							$amount += $tax_calculator->addTaxes($shipping_cost_amount);
+						}
+						else
+							$amount += $shipping_cost_amount;
+					}
 
 					$order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
 					if (Validate::isLoadedObject($order_carrier))
@@ -685,13 +710,21 @@ class AdminOrdersControllerCore extends AdminController
 							$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);
 					}
 
-					if ($amount > 0)
+					if ($amount >= 0)
 					{
-						if (!OrderSlip::create($order, $order_detail_list, $shipping_cost_amount, $voucher, $choosen))
+						if (!OrderSlip::create($order, $order_detail_list, $shipping_cost_amount, $voucher, $choosen,
+							(Tools::getValue('TaxMethod') ? false : true)))
 							$this->errors[] = Tools::displayError('You cannot generate a partial credit slip.');
 
+						foreach ($order_detail_list as &$product)
+						{
+							$order_detail = new OrderDetail((int)$product['id_order_detail']);
+							if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+								StockAvailable::synchronize($order_detail->product_id);
+						}
+
 						// Generate voucher
-						if (Tools::isSubmit('generateDiscountRefund') && !count($this->errors))
+						if (Tools::isSubmit('generateDiscountRefund') && !count($this->errors) && $amount > 0)
 						{
 							$cart_rule = new CartRule();
 							$cart_rule->description = sprintf($this->l('Credit slip for order #%d'), $order->id);
@@ -709,7 +742,7 @@ class AdminOrdersControllerCore extends AdminController
 							$cart_rule->id_customer = $order->id_customer;
 							$now = time();
 							$cart_rule->date_from = date('Y-m-d H:i:s', $now);
-							$cart_rule->date_to = date('Y-m-d H:i:s', $now + (3600 * 24 * 365.25)); /* 1 year */
+							$cart_rule->date_to = date('Y-m-d H:i:s', strtotime('+1 year'));
 							$cart_rule->partial_use = 1;
 							$cart_rule->active = 1;
 
@@ -748,7 +781,12 @@ class AdminOrdersControllerCore extends AdminController
 						}
 					}
 					else
-						$this->errors[] = Tools::displayError('You have to enter an amount if you want to create a partial credit slip.');
+					{
+						if (!empty($refunds))
+							$this->errors[] = Tools::displayError('You have to enter a quantity if you want to create a partial credit slip.');
+						else
+							$this->errors[] = Tools::displayError('You have to enter an amount if you want to create a partial credit slip.');
+					}
 
 					// Redirect if no errors
 					if (!count($this->errors))
@@ -860,6 +898,9 @@ class AdminOrdersControllerCore extends AdminController
 									if ($order_carrier->update())
 										$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);
 								}
+
+								if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && StockAvailable::dependsOnStock($order_detail->product_id))
+									StockAvailable::synchronize($order_detail->product_id);
 								Hook::exec('actionProductCancel', array('order' => $order, 'id_order_detail' => (int)$id_order_detail), null, false, true, false, $order->id_shop);
 							}
 						if (!count($this->errors) && $customizationList)
@@ -1631,6 +1672,7 @@ class AdminOrdersControllerCore extends AdminController
 			$resume = OrderSlip::getProductSlipResume($product['id_order_detail']);
 			$product['quantity_refundable'] = $product['product_quantity'] - $resume['product_quantity'];
 			$product['amount_refundable'] = $product['total_price_tax_excl'] - $resume['amount_tax_excl'];
+			$product['amount_refundable_tax_incl'] = $product['total_price_tax_incl'] - $resume['amount_tax_incl'];
 			$product['amount_refund'] = Tools::displayPrice($resume['amount_tax_incl'], $currency);
 			$product['refund_history'] = OrderSlip::getProductSlipDetail($product['id_order_detail']);
 			$product['return_history'] = OrderReturn::getProductReturnDetail($product['id_order_detail']);
@@ -1834,6 +1876,8 @@ class AdminOrdersControllerCore extends AdminController
 				'result' => false,
 				'error' => Tools::displayError('The order object cannot be loaded.')
 			)));
+
+		$old_cart_rules = Context::getContext()->cart->getCartRules();
 
 		if ($order->hasBeenShipped())
 			die(Tools::jsonEncode(array(
@@ -2102,6 +2146,41 @@ class AdminOrdersControllerCore extends AdminController
 		));
 
 		$this->sendChangedNotification($order);
+		$new_cart_rules = Context::getContext()->cart->getCartRules();
+		sort($old_cart_rules);
+		sort($new_cart_rules);
+		$result = array_diff($new_cart_rules, $old_cart_rules);
+		$refresh = false;
+
+		foreach ($result as $cart_rule)
+		{
+			$refresh = true;
+			// Create OrderCartRule
+			$rule = new CartRule($cart_rule['id_cart_rule']);
+			$values = array(
+					'tax_incl' => $rule->getContextualValue(true),
+					'tax_excl' => $rule->getContextualValue(false)
+					);
+			$order_cart_rule = new OrderCartRule();
+			$order_cart_rule->id_order = $order->id;
+			$order_cart_rule->id_cart_rule = $cart_rule['id_cart_rule'];
+			$order_cart_rule->id_order_invoice = $order_invoice->id;
+			$order_cart_rule->name = $cart_rule['name'];
+			$order_cart_rule->value = $values['tax_incl'];
+			$order_cart_rule->value_tax_excl = $values['tax_excl'];
+			$res &= $order_cart_rule->add();
+
+			$order->total_discounts += $order_cart_rule->value;
+			$order->total_discounts_tax_incl += $order_cart_rule->value;
+			$order->total_discounts_tax_excl += $order_cart_rule->value_tax_excl;
+			$order->total_paid -= $order_cart_rule->value;
+			$order->total_paid_tax_incl -= $order_cart_rule->value;
+			$order->total_paid_tax_excl -= $order_cart_rule->value_tax_excl;
+		}
+
+		// Update Order
+		$res &= $order->update();
+
 
 		die(Tools::jsonEncode(array(
 			'result' => true,
@@ -2111,7 +2190,8 @@ class AdminOrdersControllerCore extends AdminController
 			'invoices' => $invoice_array,
 			'documents_html' => $this->createTemplate('_documents.tpl')->fetch(),
 			'shipping_html' => $this->createTemplate('_shipping.tpl')->fetch(),
-			'discount_form_html' => $this->createTemplate('_discount_form.tpl')->fetch()
+			'discount_form_html' => $this->createTemplate('_discount_form.tpl')->fetch(),
+			'refresh' => $refresh
 		)));
 	}
 
@@ -2381,10 +2461,7 @@ class AdminOrdersControllerCore extends AdminController
 		$res &= $order->update();
 
 		// Reinject quantity in stock
-		$this->reinjectQuantity($order_detail, $order_detail->product_quantity);
-
-		// Delete OrderDetail
-		$res &= $order_detail->delete();
+		$this->reinjectQuantity($order_detail, $order_detail->product_quantity, true);
 
 		// Update weight SUM
 		$order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
@@ -2542,10 +2619,12 @@ class AdminOrdersControllerCore extends AdminController
 			}
 		}
 
+		ksort($products);
+
 		return $products;
 	}
 
-	protected function reinjectQuantity($order_detail, $qty_cancel_product)
+	protected function reinjectQuantity($order_detail, $qty_cancel_product, $delete = false)
 	{
 		// Reinject product
 		$reinjectable_quantity = (int)$order_detail->product_quantity - (int)$order_detail->product_quantity_reinjected;
@@ -2571,18 +2650,57 @@ class AdminOrdersControllerCore extends AdminController
 						$quantity_to_reinject = $movement['physical_quantity'];
 
 					$left_to_reinject -= $quantity_to_reinject;
-
-					$manager->addProduct(
-						$order_detail->product_id,
-						$order_detail->product_attribute_id,
-						new Warehouse($movement['id_warehouse']),
-						$quantity_to_reinject,
-						null,
-						$movement['price_te'],
-						true
-					);
+					if (Pack::isPack((int)$product->id))
+					{
+						// Gets items
+						if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && Configuration::get('PS_PACK_STOCK_TYPE') > 0))
+						{
+							$products_pack = Pack::getItems((int)$product->id, (int)Configuration::get('PS_LANG_DEFAULT'));
+							// Foreach item
+							foreach ($products_pack as $product_pack)
+								if ($product_pack->advanced_stock_management == 1)
+								{
+									 $manager->addProduct(
+										$product_pack->id,
+										$product_pack->id_pack_product_attribute,
+										new Warehouse($movement['id_warehouse']),
+										$product_pack->pack_quantity * $quantity_to_reinject,
+										null,
+										$movement['price_te'],
+										true
+									);
+								}
+						}
+						if ($product->pack_stock_type == 0 || $product->pack_stock_type == 2 ||
+							($product->pack_stock_type == 3 && (Configuration::get('PS_PACK_STOCK_TYPE') == 0 || Configuration::get('PS_PACK_STOCK_TYPE') == 2)))
+							$manager->addProduct(
+								$order_detail->product_id,
+								$order_detail->product_attribute_id,
+								new Warehouse($movement['id_warehouse']),
+								$quantity_to_reinject,
+								null,
+								$movement['price_te'],
+								true
+							);
+					}
+					else
+					{
+						$manager->addProduct(
+							$order_detail->product_id,
+							$order_detail->product_attribute_id,
+							new Warehouse($movement['id_warehouse']),
+							$quantity_to_reinject,
+							null,
+							$movement['price_te'],
+							true
+						);
+					}
 				}
-					StockAvailable::synchronize($order_detail->product_id);
+
+				$id_product = $order_detail->product_id;
+				if ($delete)
+					$order_detail->delete();
+				StockAvailable::synchronize($id_product);
 			}
 			elseif ($order_detail->id_warehouse == 0)
 			{
@@ -2592,6 +2710,9 @@ class AdminOrdersControllerCore extends AdminController
 					$quantity_to_reinject,
 					$order_detail->id_shop
 				);
+
+				if ($delete)
+					$order_detail->delete();
 			}
 			else
 				$this->errors[] = Tools::displayError('This product cannot be re-stocked.');

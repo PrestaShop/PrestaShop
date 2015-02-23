@@ -111,7 +111,7 @@ class AdminStockManagementControllerCore extends AdminController
 		// overrides query
 		$this->_select = 'a.id_product as id, COUNT(pa.id_product_attribute) as variations';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON (pa.id_product = a.id_product)'.Shop::addSqlAssociation('product_attribute', 'pa', false);
-		$this->_where = 'AND a.cache_is_pack = 0 AND a.is_virtual = 0';
+		$this->_where = 'AND a.is_virtual = 0';
 		$this->_group = 'GROUP BY a.id_product';
 
 		// displays informations
@@ -1036,7 +1036,7 @@ class AdminStockManagementControllerCore extends AdminController
 					}
 				}
 
-				if ($product_is_valid === true && $is_pack == false && $is_virtual == false)
+				if ($product_is_valid === true && $is_virtual == false)
 				{
 					// init form
 					$this->renderForm();
@@ -1070,7 +1070,7 @@ class AdminStockManagementControllerCore extends AdminController
 						'check' => md5(_COOKIE_KEY_.$id_product.$id_product_attribute),
 						'quantity' => Tools::getValue('quantity', ''),
 						'id_warehouse' => Tools::getValue('id_warehouse', ''),
-						'usable' => ($this->fields_value['usable'] ? $this->fields_value['usable'] : Tools::getValue('usable', '')),
+						'usable' => $this->fields_value['usable'] ? $this->fields_value['usable'] : Tools::getValue('usable', 1),
 						'price' => Tools::getValue('price', (float)Tools::convertPrice($default_wholesale_price, null)),
 						'id_currency' => Tools::getValue('id_currency', ''),
 						'id_stock_mvt_reason' => Tools::getValue('id_stock_mvt_reason', ''),

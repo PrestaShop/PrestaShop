@@ -92,11 +92,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 				'fields' => array(
 					'PS_ATTACHMENT_MAXIMUM_SIZE' => array(
 						'title' => $this->l('Maximum size for attachment'),
-						'hint' => $this->l('Set the maximum size allowed for attachment files (in megabytes).'),
-						/***** TO DO - ajouter cette ligne dans le hint ? 
-						.' '.$this->l('Maximum:').' '.
-							((int)str_replace('M', '', ini_get('post_max_size')) > (int)str_replace('M', '', ini_get('upload_max_filesize')) ? ini_get('upload_max_filesize') : ini_get('post_max_size')),
-							*****/
+						'hint' =>  sprintf($this->l('Set the maximum size allowed for attachment files (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %s MB).'), $upload_mb),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'text',

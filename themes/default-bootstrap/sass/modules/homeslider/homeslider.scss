@@ -22,7 +22,18 @@
 		margin: 0 auto;
 		padding: 0;
 	}
+	.homeslider-container {
+		position: relative;
+	}
+	.homeslider-image {
+		position: absolute;
+		left: 0;
+		top: 0;
+	}
 	.homeslider-description {
+		position: absolute;
+		left: 0;
+		top: 0;
 		padding: 50px 50px;
 		cursor: pointer;
 		h2 {
@@ -61,208 +72,82 @@
 			}
 		}
 	}
-
-}
 /*****************************************************************************
 						BXSlider Styles
 ********************************************************************************/
-//RESET AND LAYOUT
-#homepage-slider {
-	.homeslider-container {
-		position: relative;
-	}
-	.homeslider-image {
-		position: absolute;
-		left: 0;
-		top: 0;
-	}
-	.homeslider-description {
-		position: absolute;
-		left: 0;
-  		top: 0;
-	}
 	.bx-wrapper {
-		position: relative;
-		padding: 0;
-		*zoom: 1;
 		a {
 			display: block;
 		}
 		img {
-			display: block;	
-			max-width: 100%;
 			height: auto;
 		}
-	}
-	// THEME
-	.bx-wrapper {
 		.bx-viewport {
 			width: 100%;
 			direction: ltr!important;
 		}
-	}
-	.bx-wrapper .bx-pager,
-	.bx-wrapper .bx-controls-auto {
-		position: absolute;
-		bottom: -30px;
-		width: 100%;
-	}
-	//LOADER
-	.bx-wrapper .bx-loading {
-		min-height: 50px;
-		background: url(images/bx_loader.gif) center center no-repeat $light-background;
-		height: 100%;
-		width: 100%;
-		position: absolute;
-		top: 0;
-		left: 0;
-		z-index: 2000;
-	}
-	//PAGER
-	.bx-wrapper .bx-pager {
-		text-align: center;
-		font-size: .85em;
-		font-family: $font-family;
-		font-weight: bold;
-		color: #666;
-		padding-top: 20px;
-	}
-	.bx-wrapper .bx-pager .bx-pager-item,
-	.bx-wrapper .bx-controls-auto .bx-controls-auto-item {
-		display: inline-block;
-		*zoom: 1;
-		*display: inline;
-	}
-	.bx-wrapper .bx-pager.bx-default-pager a {
-		background: #666;
-		text-indent: -9999px;
-		display: block;
-		width: 10px;
-		height: 10px;
-		margin: 0 5px;
-		outline: 0;
-		-moz-border-radius: 5px;
-		-webkit-border-radius: 5px;
-		border-radius: 5px;
-	}
-	.bx-wrapper .bx-pager.bx-default-pager a:hover,
-	.bx-wrapper .bx-pager.bx-default-pager a.active {
-		background: #000;
-	}
-	//DIRECTION CONTROLS (NEXT / PREV)
-	.bx-wrapper .bx-prev {
-		right: 60px;
-		&:after {
-			content: "\f053";	
+		.bx-pager.bx-default-pager a {
+			background: #666;
 		}
-	}
-	.bx-wrapper .bx-next {
-		right: 10px;
-		&:after {
-			content: "\f054";	
-		}
-	}
-	.bx-wrapper .bx-controls-direction a {
-		position: absolute;
-		bottom: 10px;
-		outline: 0;
-		width: 52px;
-		height: 52px;
-		text-indent: -9999px;
-		z-index: 9999;
-		border: 2px solid $light-border-color;
-		&:before {
-			height: 48px;
-			width: 48px;
-			display: block;
-			background: $light-background;
-			content: ".";
-			opacity: 0.14;
+		.bx-controls-direction a {
+			top: auto;
+			margin-top: 0px;
+			font-size: 1em;
+			bottom: 10px;
+			outline: 0;
+			width: 52px;
+			height: 52px;
 			text-indent: -9999px;
-			position: absolute;
-			left: 0;
-			top: 0;
-			z-index: 1;
-		}
-		&:after { 
-			display: block;
-			width: 48px;
-			height: 48px;
-			color: $light-text-color;
-			text-indent: 0;
-			text-align: center;
-			font-size: 21px;
-			font-family: $font-icon;
-			position: absolute;
-			top: 0;
-			left: 0;
-			z-index: 2;
-			padding: 16px 0 0 0;
-		}
-		&:hover {
+			z-index: 9999;
+			border: 2px solid $light-border-color;
+			line-height: 18px;
 			&:before {
-				background: $dark-background;
-				opacity: 0.83;	
+				height: 48px;
+				width: 48px;
+				display: block;
+				background: $light-background;
+				content: ".";
+				opacity: 0.14;
+				text-indent: -9999px;
+				position: absolute;
+				left: 0;
+				top: 0;
+				z-index: 1;
+			}
+			&:after {
+				display: block;
+				width: 48px;
+				height: 48px;
+				color: $light-text-color;
+				text-indent: 0;
+				text-align: center;
+				font-size: 21px;
+				font-family: $font-icon;
+				position: absolute;
+				top: 0;
+				left: 0;
+				z-index: 2;
+				padding: 16px 0 0 0;
+			}
+			&:hover {
+				&:before {
+					background: $dark-background;
+					opacity: 0.83;
+				}
 			}
 		}
-	}
-	.bx-wrapper .bx-controls-direction a.disabled {
-		display: none;
-	}
-	//AUTO CONTROLS (START / STOP)
-	.bx-wrapper .bx-controls-auto {
-		text-align: center;
-	}
-	.bx-wrapper .bx-controls-auto .bx-start {
-		display: block;
-		text-indent: -9999px;
-		width: 10px;
-		height: 11px;
-		outline: 0;
-		background: url(images/controls.png) -86px -11px no-repeat;
-		margin: 0 3px;
-	}
-	.bx-wrapper .bx-controls-auto .bx-start:hover,
-	.bx-wrapper .bx-controls-auto .bx-start.active {
-		background-position: -86px 0;
-	}
-	.bx-wrapper .bx-controls-auto .bx-stop {
-		display: block;
-		text-indent: -9999px;
-		width: 9px;
-		height: 11px;
-		outline: 0;
-		background: url(images/controls.png) -86px -44px no-repeat;
-		margin: 0 3px;
-	}
-	.bx-wrapper .bx-controls-auto .bx-stop:hover,
-	.bx-wrapper .bx-controls-auto .bx-stop.active {
-		background-position: -86px -33px;
-	}
-	//PAGER WITH AUTO-CONTROLS HYBRID LAYOUT
-	.bx-wrapper .bx-controls.bx-has-controls-auto.bx-has-pager .bx-pager {
-		text-align: left;
-		width: 80%;
-	}
-	.bx-wrapper .bx-controls.bx-has-controls-auto.bx-has-pager .bx-controls-auto {
-		right: 0;
-		width: 35px;
-	}
-	//IMAGE CAPTIONS
-	.bx-wrapper .bx-caption {
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		background: #666\9;
-		background: rgba(80, 80, 80, 0.75);
-		width: 100%;
-	}
-	.bx-wrapper .bx-caption span {
-		color: $light-text-color;
-		font-family: $font-family;
-		display: block;
-		font-size: .85em;
-		padding: 10px;
+		.bx-prev {
+			right: 60px;
+			left: auto;
+			&:after {
+				content: "\f053";
+			}
+		}
+		.bx-next {
+			&:after {
+				content: "\f054";
+			}
+		}
 	}
 }
 .ie8 {
@@ -274,4 +159,3 @@
 		}
 	}
 }
-

@@ -118,7 +118,7 @@ class CartControllerCore extends FrontController
 				$total_quantity += $custom['quantity'];
 
 			if ($total_quantity < $product->minimal_quantity)
-				die(Tools::jsonEncode(array(
+				$this->ajaxDie(Tools::jsonEncode(array(
 						'hasError' => true,
 						'errors' => array(sprintf(Tools::displayError('You must add %d minimum quantity', !Tools::getValue('ajax')), $product->minimal_quantity)),
 				)));
@@ -149,7 +149,7 @@ class CartControllerCore extends FrontController
 		$new_id_address_delivery = (int)Tools::getValue('new_id_address_delivery');
 
 		if (!count(Carrier::getAvailableCarrierList(new Product($this->id_product), null, $new_id_address_delivery)))
-			die(Tools::jsonEncode(array(
+			$this->ajaxDie(Tools::jsonEncode(array(
 				'hasErrors' => true,
 				'error' => Tools::displayError('It is not possible to deliver this product to the selected address.', false),
 			)));
@@ -167,11 +167,11 @@ class CartControllerCore extends FrontController
 			return;
 
 		if (Tools::getValue('value') === false)
-			die('{"error":true, "error_message": "No value setted"}');
+			$this->ajaxDie('{"error":true, "error_message": "No value setted"}');
 
 		$this->context->cart->allow_seperated_package = (boolean)Tools::getValue('value');
 		$this->context->cart->update();
-		die('{"error":false}');
+		$this->ajaxDie('{"error":false}');
 	}
 
 	protected function processDuplicateProduct()
@@ -205,7 +205,7 @@ class CartControllerCore extends FrontController
 			$this->errors[] = Tools::displayError('Product not found', !Tools::getValue('ajax'));
 
 		$product = new Product($this->id_product, true, $this->context->language->id);
-		if (!$product->id || !$product->active)
+		if (!$product->id || !$product->active || !$product->checkAccess($this->context->cart->id_customer))
 		{
 			$this->errors[] = Tools::displayError('This product is no longer available.', !Tools::getValue('ajax'));
 			return;
@@ -335,9 +335,9 @@ class CartControllerCore extends FrontController
 	public function displayAjax()
 	{
 		if ($this->errors)
-			die(Tools::jsonEncode(array('hasError' => true, 'errors' => $this->errors)));
+			$this->ajaxDie(Tools::jsonEncode(array('hasError' => true, 'errors' => $this->errors)));
 		if ($this->ajax_refresh)
-			die(Tools::jsonEncode(array('refresh' => true)));
+			$this->ajaxDie(Tools::jsonEncode(array('refresh' => true)));
 
 		// write cookie if can't on destruct
 		$this->context->cookie->write();
@@ -388,7 +388,7 @@ class CartControllerCore extends FrontController
 				Product::addCustomizationPrice($result['summary']['products'], $result['customizedDatas']);
 
 			Hook::exec('actionCartListOverride', array('summary' => $result, 'json' => &$json));
-			die(Tools::jsonEncode(array_merge($result, (array)Tools::jsonDecode($json, true))));
+			$this->ajaxDie(Tools::jsonEncode(array_merge($result, (array)Tools::jsonDecode($json, true))));
 
 		}
 		// @todo create a hook

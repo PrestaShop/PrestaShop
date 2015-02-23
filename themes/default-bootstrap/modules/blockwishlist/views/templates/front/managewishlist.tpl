@@ -41,10 +41,10 @@
             {if count($productsBoughts)}
                 <li>
                     <a id="hideBoughtProductsInfos" class="button_account" href="#" onclick="WishlistVisibility('wlp_bought_infos', 'BoughtProductsInfos'); return false;" title="{l s='Hide products' mod='blockwishlist'}">
-                        {l s="Hide bought product's info" mod='blockwishlist'}
+                        {l s="Hide bought products' info" mod='blockwishlist'}
                     </a>
                     <a id="showBoughtProductsInfos" class="button_account" href="#" onclick="WishlistVisibility('wlp_bought_infos', 'BoughtProductsInfos'); return false;" title="{l s='Show products' mod='blockwishlist'}">
-                        {l s="Show bought product's info" mod='blockwishlist'}
+                        {l s="Show bought products' info" mod='blockwishlist'}
                     </a>
                 </li>
             {/if}
@@ -128,6 +128,30 @@
                                     <a class="btn btn-default button button-small"  href="javascript:;" onclick="WishlistProductManage('wlp_bought_{$product.id_product_attribute}', 'update', '{$id_wishlist}', '{$product.id_product}', '{$product.id_product_attribute}', $('#quantity_{$product.id_product}_{$product.id_product_attribute}').val(), $('#priority_{$product.id_product}_{$product.id_product_attribute}').val());" title="{l s='Save' mod='blockwishlist'}">
                                         <span>{l s='Save' mod='blockwishlist'}</span>
                                     </a>
+                                    {if $wishlists|count > 1}
+                                        {foreach name=wl from=$wishlists item=wishlist}
+                                            {if $smarty.foreach.wl.first}
+                                                <a class="btn btn-default button button-small wishlist_change_button" tabindex="0" data-toggle="popover" data-trigger="focus" title="Move to a wishlist" data-placement="bottom">
+                                                    <span>{l s='Move' mod='blockwishlist'}</span>
+                                                    </a>
+                                                    <div hidden class="popover-content">
+                                                        <table class="table" border="1">
+                                                            <tbody>
+                                            {/if}
+                                            {if $id_wishlist != {$wishlist.id_wishlist}}
+                                                                <tr title="{$wishlist.name}" value="{$wishlist.id_wishlist}" onclick="wishlistProductChange({$product.id_product}, {$product.id_product_attribute}, '{$id_wishlist}', '{$wishlist.id_wishlist}');">
+                                                                    <td>
+                                                                        {l s='Move to %s'|sprintf:$wishlist.name mod='blockwishlist'}
+                                                                    </td>
+                                                                </tr>
+                                            {/if}
+                                            {if $smarty.foreach.wl.last}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            {/if}
+                                        {/foreach}
+                                    {/if}
                                 </div>
                             </div>
                         </div>
@@ -184,7 +208,7 @@
 										<img
                                                 src="{$link->getImageLink($product.link_rewrite, $product.cover, 'small')|escape:'html':'UTF-8'}"
                                                 alt="{$product.name|escape:'html':'UTF-8'}"/>
-									</span>			
+									</span>
 									<span style="float:left;">
 										{$product.name|truncate:40:'...'|escape:'html':'UTF-8'}
                                         {if isset($product.attributes_small)}

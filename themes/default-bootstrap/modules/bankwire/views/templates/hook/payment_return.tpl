@@ -24,10 +24,8 @@
 *}
 
 {if $status == 'ok'}
+	<p class="alert alert-success">{l s='Your order on %s is complete.' sprintf=$shop_name mod='cheque'}</p>
 	<div class="box">
-		<p class="cheque-indent">
-			<strong class="dark">{l s='Your order on %s is complete.' sprintf=$shop_name mod='bankwire'}</strong>
-		</p>
 		{l s='Please send us a bank wire with' mod='bankwire'}
 		<br />- {l s='Amount' mod='bankwire'} <span class="price"><strong>{$total_to_pay}</strong></span>
 		<br />- {l s='Name of account owner' mod='bankwire'}  <strong>{if $bankwireOwner}{$bankwireOwner}{else}___________{/if}</strong>
@@ -43,7 +41,7 @@
 	</div>
 {else}
 	<p class="alert alert-warning">
-		{l s='We noticed a problem with your order. If you think this is an error, feel free to contact our' mod='bankwire'} 
-		<a href="{$link->getPageLink('contact', true)|escape:'html':'UTF-8'}">{l s='expert customer support team' mod='bankwire'}</a>.
+		{l s='We noticed a problem with your order. If you think this is an error, feel free to contact our' mod='bankwire'}
+		<a href="{$link->getPageLink('contact', true)|escape:'html':'UTF-8'}">{l s='customer service department.' mod='bankwire'}</a>.
 	</p>
 {/if}

@@ -24,19 +24,20 @@
 *}
 {if $wishlists|count == 1}
 <p class="buttons_bottom_block no-print">
-	<a id="wishlist_button" href="#" onclick="WishlistCart('wishlist_block_list', 'add', '{$id_product|intval}', $('#idCombination').val(), document.getElementById('quantity_wanted').value); return false;" rel="nofollow"  title="{l s='Add to my wishlist' mod='blockwishlist'}">
+	<a id="wishlist_button_nopop" href="#" onclick="WishlistCart('wishlist_block_list', 'add', '{$id_product|intval}', $('#idCombination').val(), document.getElementById('quantity_wanted').value); return false;" rel="nofollow"  title="{l s='Add to my wishlist' mod='blockwishlist'}">
 		{l s='Add to wishlist' mod='blockwishlist'}
 	</a>
 </p>
 {else}
 	{foreach name=wl from=$wishlists item=wishlist}
 		{if $smarty.foreach.wl.first}
-			<a class="btn btn-default" tabindex="0" data-toggle="popover" data-trigger="focus" title="Wishlist" data-placement="bottom" id="wishlist_button">{l s='Add to wishlist' mod='blockwishlist'}</a>
+		<p class="buttons_bottom_block">
+			<a class="btn btn-default" tabindex="0" data-toggle="popover" data-trigger="focus" title="Wishlist" data-placement="bottom" id="wishlist_button">{l s='Add to wishlist' mod='blockwishlist'}</a></p>
 				<div hidden id="popover-content">
 					<table class="table" border="1">
 						<tbody>
 		{/if}
-							<tr title="{$wishlist.name}" value="{$wishlist.id_wishlist}" onclick="WishlistCart('wishlist_block_list', 'add', '{$id_product|intval}', $('idCombination').val(), document.getElementById('quantity_wanted').value, 'wishlist_' + this.value);">
+							<tr title="{$wishlist.name}" value="{$wishlist.id_wishlist}" onclick="WishlistCart('wishlist_block_list', 'add', '{$id_product|intval}', $('idCombination').val(), document.getElementById('quantity_wanted').value, '{$wishlist.id_wishlist}');">
 								<td>
 									{l s='Add to %s'|sprintf:$wishlist.name mod='blockwishlist'}
 								</td>
@@ -47,7 +48,7 @@
 			</div>
 		{/if}
 	{foreachelse}
-		<a href="#" id="wishlist_button" onclick="WishlistCart('wishlist_block_list', 'add', '{$id_product|intval}', $('#idCombination').val(), document.getElementById('quantity_wanted').value); return false;" rel="nofollow"  title="{l s='Add to my wishlist' mod='blockwishlist'}">
+		<a href="#" id="wishlist_button_nopop" onclick="WishlistCart('wishlist_block_list', 'add', '{$id_product|intval}', $('#idCombination').val(), document.getElementById('quantity_wanted').value); return false;" rel="nofollow"  title="{l s='Add to my wishlist' mod='blockwishlist'}">
 			{l s='Add to wishlist' mod='blockwishlist'}
 		</a>
 	{/foreach}

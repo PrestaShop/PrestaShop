@@ -91,8 +91,6 @@
 							{else}
 								<img src="../img/admin/{$tr[$key]['src']}" alt="{$tr[$key]['alt']}" title="{$tr[$key]['alt']}" />
 							{/if}
-                        {else}
-                            <i class="{$tr[$key]}"></i>
 						{/if}
 					{elseif isset($params.type) && $params.type == 'price'}
 						{displayPrice price=$tr.$key}
@@ -192,7 +190,7 @@
 {/foreach}
 {else}
 	<tr>
-		<td class="list-empty" colspan="{count($fields_display)}">
+		<td class="list-empty" colspan="{count($fields_display)+1}">
 			<div class="list-empty-msg">
 				<i class="icon-warning-sign list-empty-icon"></i>
 				{l s='No records found'}

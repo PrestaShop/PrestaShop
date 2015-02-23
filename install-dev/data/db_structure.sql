@@ -375,12 +375,13 @@ CREATE TABLE `PREFIX_cms` (
 CREATE TABLE `PREFIX_cms_lang` (
   `id_cms` int(10) unsigned NOT NULL,
   `id_lang` int(10) unsigned NOT NULL,
+  `id_shop` int(10) unsigned NOT NULL DEFAULT '1',
   `meta_title` varchar(128) NOT NULL,
   `meta_description` varchar(255) DEFAULT NULL,
   `meta_keywords` varchar(255) DEFAULT NULL,
   `content` longtext,
   `link_rewrite` varchar(128) NOT NULL,
-  PRIMARY KEY (`id_cms`,`id_lang`)
+  PRIMARY KEY (`id_cms`, `id_shop`, `id_lang`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_cms_category` (
@@ -398,15 +399,23 @@ CREATE TABLE `PREFIX_cms_category` (
 CREATE TABLE `PREFIX_cms_category_lang` (
   `id_cms_category` int(10) unsigned NOT NULL,
   `id_lang` int(10) unsigned NOT NULL,
+  `id_shop` int(10) unsigned NOT NULL DEFAULT '1',
   `name` varchar(128) NOT NULL,
   `description` text,
   `link_rewrite` varchar(128) NOT NULL,
   `meta_title` varchar(128) DEFAULT NULL,
   `meta_keywords` varchar(255) DEFAULT NULL,
   `meta_description` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id_cms_category`,`id_lang`),
+  PRIMARY KEY (`id_cms_category`, `id_shop`, `id_lang`),
   KEY `category_name` (`name`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
+
+CREATE TABLE `PREFIX_cms_category_shop` (
+  `id_cms_category` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id_shop` INT(11) UNSIGNED NOT NULL ,
+  PRIMARY KEY (`id_cms_category`, `id_shop`),
+  KEY `id_shop` (`id_shop`)
+) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_compare` (
   `id_compare` int(10) unsigned NOT NULL auto_increment,
@@ -679,8 +688,9 @@ CREATE TABLE `PREFIX_customization_field` (
 CREATE TABLE `PREFIX_customization_field_lang` (
   `id_customization_field` int(10) unsigned NOT NULL,
   `id_lang` int(10) unsigned NOT NULL,
+  `id_shop` int(10) UNSIGNED NOT NULL DEFAULT '1',
   `name` varchar(255) NOT NULL,
-  PRIMARY KEY (`id_customization_field`,`id_lang`)
+  PRIMARY KEY (`id_customization_field`,`id_lang`, `id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_customized_data` (
@@ -1033,9 +1043,9 @@ CREATE TABLE `PREFIX_module` (
 CREATE TABLE `PREFIX_module_access` (
   `id_profile` int(10) unsigned NOT NULL,
   `id_module` int(10) unsigned NOT NULL,
-  `view` tinyint(1) NOT NULL,
-  `configure` tinyint(1) NOT NULL,
-  `uninstall` tinyint(1) NOT NULL,
+  `view` tinyint(1) NOT NULL DEFAULT '0',
+  `configure` tinyint(1) NOT NULL DEFAULT '0',
+  `uninstall` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_profile`,`id_module`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
@@ -1088,7 +1098,7 @@ CREATE TABLE `PREFIX_orders` (
   `gift` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `gift_message` text,
   `mobile_theme` tinyint(1) NOT NULL DEFAULT '0',
-  `shipping_number` varchar(32) DEFAULT NULL,
+  `shipping_number` varchar(64) DEFAULT NULL,
   `total_discounts` decimal(20,6) NOT NULL DEFAULT '0.00',
   `total_discounts_tax_incl` decimal(20,6) NOT NULL DEFAULT '0.00',
   `total_discounts_tax_excl` decimal(20,6) NOT NULL DEFAULT '0.00',
@@ -1342,6 +1352,8 @@ CREATE TABLE `PREFIX_order_state` (
   `delivery` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
   `shipped` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
   `paid` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
+  `pdf_invoice` tinyint(1) UNSIGNED NOT NULL default '0',
+  `pdf_delivery` tinyint(1) UNSIGNED NOT NULL default '0',
   `deleted` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_order_state`),
   KEY `module_name` (`module_name`)
@@ -1358,8 +1370,9 @@ CREATE TABLE `PREFIX_order_state_lang` (
 CREATE TABLE `PREFIX_pack` (
   `id_product_pack` int(10) unsigned NOT NULL,
   `id_product_item` int(10) unsigned NOT NULL,
+  `id_product_attribute_item` int(10) unsigned NOT NULL,
   `quantity` int(10) unsigned NOT NULL DEFAULT 1,
-  PRIMARY KEY (`id_product_pack`,`id_product_item`)
+  PRIMARY KEY (`id_product_pack`, `id_product_item`, `id_product_attribute_item`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_page` (
@@ -1439,7 +1452,7 @@ CREATE TABLE `PREFIX_product` (
   `redirect_type` ENUM('', '404', '301', '302') NOT NULL DEFAULT '',
   `id_product_redirected` int(10) unsigned NOT NULL DEFAULT '0',
   `available_for_order` tinyint(1) NOT NULL DEFAULT '1',
-  `available_date` date NOT NULL,
+  `available_date` date NOT NULL DEFAULT '0000-00-00',
   `condition` ENUM('new', 'used', 'refurbished') NOT NULL DEFAULT 'new',
   `show_price` tinyint(1) NOT NULL DEFAULT '1',
   `indexed` tinyint(1) NOT NULL DEFAULT '0',
@@ -1451,6 +1464,7 @@ CREATE TABLE `PREFIX_product` (
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
   `advanced_stock_management` tinyint(1) DEFAULT '0' NOT NULL,
+  `pack_stock_type` int(11) unsigned DEFAULT '3' NOT NULL,
   PRIMARY KEY (`id_product`),
   KEY `product_supplier` (`id_supplier`),
   KEY `product_manufacturer` (`id_manufacturer`),
@@ -1480,7 +1494,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   `redirect_type` ENUM('', '404', '301', '302') NOT NULL DEFAULT '',
   `id_product_redirected` int(10) unsigned NOT NULL DEFAULT '0',
   `available_for_order` tinyint(1) NOT NULL DEFAULT '1',
-  `available_date` date NOT NULL,
+  `available_date` date NOT NULL DEFAULT '0000-00-00',
   `condition` enum('new','used','refurbished') NOT NULL DEFAULT 'new',
   `show_price` tinyint(1) NOT NULL DEFAULT '1',
   `indexed` tinyint(1) NOT NULL DEFAULT '0',
@@ -1489,6 +1503,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   `advanced_stock_management` tinyint(1) DEFAULT '0' NOT NULL,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
+  `pack_stock_type` int(11) unsigned DEFAULT '3' NOT NULL,
   PRIMARY KEY (`id_product`, `id_shop`),
   KEY `id_category_default` (`id_category_default`),
   KEY `date_add` (`date_add` , `active` , `visibility`)
@@ -1510,7 +1525,7 @@ CREATE TABLE `PREFIX_product_attribute` (
   `unit_price_impact` DECIMAL(20,6) NOT NULL DEFAULT '0.00',
   `default_on` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `minimal_quantity` int(10) unsigned NOT NULL DEFAULT '1',
-  `available_date` date NOT NULL,
+  `available_date` date NOT NULL DEFAULT '0000-00-00',
   PRIMARY KEY (`id_product_attribute`),
   KEY `product_attribute_product` (`id_product`),
   KEY `reference` (`reference`),
@@ -1529,7 +1544,7 @@ CREATE TABLE `PREFIX_product_attribute_shop` (
   `unit_price_impact` DECIMAL(20,6) NOT NULL DEFAULT '0.00',
   `default_on` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `minimal_quantity` int(10) unsigned NOT NULL DEFAULT '1',
-  `available_date` date NOT NULL,
+  `available_date` date NOT NULL DEFAULT '0000-00-00',
   PRIMARY KEY (`id_product_attribute`, `id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 

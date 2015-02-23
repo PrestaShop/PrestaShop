@@ -125,7 +125,7 @@ class AdminInformationControllerCore extends AdminController
 			'fopen' => $this->l('Allow the PHP fopen() function on your server.'),
 			'register_globals' => $this->l('Set PHP "register_globals" option to "Off".'),
 			'gz' => $this->l('Enable GZIP compression on your server.'),
-			'files' => $this->l('All files from PrestaShop are not present on your server.')
+			'files' => $this->l('Some PrestaShop files are missing from your server.')
 		);
 
 		// Functions list to test with 'test_system'

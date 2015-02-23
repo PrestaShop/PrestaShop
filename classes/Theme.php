@@ -220,7 +220,8 @@ class ThemeCore extends ObjectModel
 					foreach ($xml_theme->attributes() as $key => $value)
 						$theme[$key] = (string)$value;
 
-					$not_installed_theme[] = $theme;
+					if (!empty($theme))
+						$not_installed_theme[] = $theme;
 				}
 			}
 		}
@@ -237,7 +238,7 @@ class ThemeCore extends ObjectModel
 	public function updateMetas($metas, $full_update = false)
 	{
 		if ($full_update)
-			Db::getInstance()->delete(_DB_PREFIX_ . 'theme_meta', 'id_theme='.(int)$this->id);
+			Db::getInstance()->delete('theme_meta', 'id_theme='.(int)$this->id);
 
 		$values = array();
 		if ($this->id > 0)
@@ -245,7 +246,7 @@ class ThemeCore extends ObjectModel
 			foreach ($metas as $meta)
 			{
 				if (!$full_update)
-					Db::getInstance()->delete(_DB_PREFIX_ . 'theme_meta', 'id_theme='.(int)$this->id.' AND id_meta='.(int)$meta['id_meta']);
+					Db::getInstance()->delete('theme_meta', 'id_theme='.(int)$this->id.' AND id_meta='.(int)$meta['id_meta']);
 
 				$values[] = array(
 					'id_theme'     => (int)$this->id,
@@ -330,7 +331,7 @@ class ThemeCore extends ObjectModel
 		if (!Validate::isUnsignedId($this->id) || $this->id == 0)
 			return false;
 
-		return Db::getInstance()->delete(_DB_PREFIX_ . 'theme_meta', 'id_theme = '.(int)$this->id);
+		return Db::getInstance()->delete('theme_meta', 'id_theme = '.(int)$this->id);
 	}
 
 	public function toggleResponsive()

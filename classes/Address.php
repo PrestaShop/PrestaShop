@@ -171,7 +171,7 @@ class AddressCore extends ObjectModel
 			return false;
 
 		if (Validate::isUnsignedId($this->id_customer))
-			Customer::resetAddressCache($this->id_customer);
+			Customer::resetAddressCache($this->id_customer, $this->id);
 		return true;
 	}
 
@@ -184,7 +184,7 @@ class AddressCore extends ObjectModel
 			unset(self::$_idZones[$this->id]);
 
 		if (Validate::isUnsignedId($this->id_customer))
-			Customer::resetAddressCache($this->id_customer);
+			Customer::resetAddressCache($this->id_customer, $this->id);
 
 		return parent::update($null_values);
 	}
@@ -195,7 +195,7 @@ class AddressCore extends ObjectModel
 	public function delete()
 	{
 		if (Validate::isUnsignedId($this->id_customer))
-			Customer::resetAddressCache($this->id_customer);
+			Customer::resetAddressCache($this->id_customer, $this->id);
 
 		if (!$this->isUsed())
 			return parent::delete();
@@ -366,7 +366,7 @@ class AddressCore extends ObjectModel
 			$address = new Address();
 			$address->id_country = (int)$context->customer->geoloc_id_country;
 			$address->id_state = (int)$context->customer->id_state;
-			$address->zipcode = $context->customer->postcode;
+			$address->postcode = $context->customer->postcode;
 		}
 		else
 		{

@@ -591,11 +591,13 @@
 			$('#carrier_form').show();
 			$('#delivery_option').html(html);
 			$('#carriers_err').hide();
+			$("button[name=\"submitAddOrder\"]").removeAttr("disabled");
 		}
 		else
 		{
 			$('#carrier_form').hide();
 			$('#carriers_err').show().html('{l s='No carrier can be applied to this order'}');
+			$("button[name=\"submitAddOrder\"]").attr("disabled", "disabled");
 		}
 	}
 
@@ -765,9 +767,14 @@
 	function updateCartVouchers(vouchers)
 	{
 		var vouchers_html = '';
-		if (typeof(vouchers) == 'object')
+		if (typeof(vouchers) == 'object')parseFloat
 			$.each(vouchers, function(){
-				vouchers_html += '<tr><td>'+this.name+'</td><td>'+this.description+'</td><td>'+this.value_real+'</td><td class="text-right"><a href="#" class="btn btn-default delete_discount" rel="'+this.id_discount+'"><i class="icon-remove text-danger"></i>&nbsp;{l s='Delete'}</a></td></tr>';
+				if (parseFloat(this.value_real) === 0 && parseInt(this.free_shipping) === 1)
+					var value = '{l s='Free shipping'}';
+				else
+					var value = this.value_real;
+
+				vouchers_html += '<tr><td>'+this.name+'</td><td>'+this.description+'</td><td>'+value+'</td><td class="text-right"><a href="#" class="btn btn-default delete_discount" rel="'+this.id_discount+'"><i class="icon-remove text-danger"></i>&nbsp;{l s='Delete'}</a></td></tr>';
 			});
 		$('#voucher_list tbody').html($.trim(vouchers_html));
 		if ($('#voucher_list tbody').html().length == 0)
@@ -1389,7 +1396,7 @@
 			</div>
 			<div class="form-group">
 				<label class="control-label col-lg-3" for="shipping_price">
-					{l s='Shipping price'}
+					{l s='Shipping price (Tax incl.)'}
 				</label>
 				<div class="col-lg-9">
 					<p id="shipping_price" class="form-control-static" name="shipping_price"></p>
@@ -1461,13 +1468,13 @@
 				</div>
 				<div class="col-lg-2">
 					<div class="data-focus">
-						<span>{l s='Total vouchers'}</span><br/>
+						<span>{l s='Total vouchers (Tax excl.)'}</span><br/>
 						<span id="total_vouchers" class="size_l text-danger"></span>
 					</div>
 				</div>
 				<div class="col-lg-2">
 					<div class="data-focus">
-						<span>{l s='Total shipping'}</span><br/>
+						<span>{l s='Total shipping (Tax excl.)'}</span><br/>
 						<span id="total_shipping" class="size_l"></span>
 					</div>
 				</div>
@@ -1479,13 +1486,13 @@
 				</div>
 				<div class="col-lg-2">
 					<div class="data-focus">
-						<span>{l s='Total without taxes'}</span><br/>
+						<span>{l s='Total (Tax excl.)'}</span><br/>
 						<span id="total_without_taxes" class="size_l"></span>
 					</div>
 				</div>
 				<div class="col-lg-2">
 					<div class="data-focus data-focus-primary">
-						<span>{l s='Total with taxes'}</span><br/>
+						<span>{l s='Total (Tax incl.)'}</span><br/>
 						<span id="total_with_taxes" class="size_l"></span>
 					</div>
 				</div>

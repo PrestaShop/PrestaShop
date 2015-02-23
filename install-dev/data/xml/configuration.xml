@@ -392,6 +392,9 @@
 	<configuration id="PS_OS_OUTOFSTOCK_UNPAID" name="PS_OS_OUTOFSTOCK_UNPAID">
 		<value>13</value>
 	</configuration>
+	<configuration id="PS_OS_COD_VALIDATION" name="PS_OS_COD_VALIDATION">
+		<value>14</value>
+	</configuration>
 	<configuration id="PS_LEGACY_IMAGES" name="PS_LEGACY_IMAGES">
 		<value>0</value>
 	</configuration>
@@ -768,7 +771,7 @@ Country</value>
 	</configuration>
 	<configuration id="PS_CUSTOMER_CREATION_EMAIL" name="PS_CUSTOMER_CREATION_EMAIL">
 		<value>1</value>
-	</configuration>	  
+	</configuration>
 	<configuration id="PS_SMARTY_CONSOLE_KEY" name="PS_SMARTY_CONSOLE_KEY">
 		<value>SMARTY_DEBUG</value>
 	</configuration>
@@ -803,13 +806,22 @@ Country</value>
 		<value>1</value>
 	</configuration>
 	<configuration id="PS_ROUND_TYPE" name="PS_ROUND_TYPE">
-		<value>3</value>
+		<value>2</value>
 	</configuration>
 	<configuration id="PS_PRICE_DISPLAY_PRECISION" name="PS_PRICE_DISPLAY_PRECISION">
 		<value>2</value>
 	</configuration>
 	<configuration id="PS_LOG_EMAILS" name="PS_LOG_EMAILS">
 		<value>1</value>
+	</configuration>
+	<configuration id="PS_CUSTOMER_NWSL" name="PS_CUSTOMER_NWSL">
+		<value>1</value>
+	</configuration>
+	<configuration id="PS_CUSTOMER_OPTIN" name="PS_CUSTOMER_OPTIN">
+		<value>1</value>
+	</configuration>
+	<configuration id="PS_PACK_STOCK_TYPE" name="PS_PACK_STOCK_TYPE">
+		<value>0</value>
 	</configuration>
   </entities>
 </entity_configuration>

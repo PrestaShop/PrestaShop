@@ -44,7 +44,7 @@
 
 		<tbody>
 		{foreach from=$available_features item=available_feature}
-		
+
 			<tr>
 				<td>{$available_feature.name}</td>
 				<td>
@@ -60,19 +60,19 @@
 					</select>
 				{else}
 					<input type="hidden" name="feature_{$available_feature.id_feature}_value" value="0" />
-					<span>{l s='N/A'} - 
+					<span>{l s='N/A'} -
 						<a href="{$link->getAdminLink('AdminFeatures')|escape:'html':'UTF-8'}&amp;addfeature_value&amp;id_feature={$available_feature.id_feature}"
 					 	class="confirm_leave btn btn-link"><i class="icon-plus-sign"></i> {l s='Add pre-defined values first'} <i class="icon-external-link-sign"></i></a>
 					</span>
 				{/if}
 				</td>
 				<td>
-				
+
 				<div class="row lang-0" style='display: none;'>
 					<div class="col-lg-9">
 						<textarea class="custom_{$available_feature.id_feature}_ALL textarea-autosize"	name="custom_{$available_feature.id_feature}_ALL"
 								cols="40" style='background-color:#CCF'	rows="1" onkeyup="{foreach from=$languages key=k item=language}$('.custom_{$available_feature.id_feature}_{$language.id_lang}').val($(this).val());{/foreach}" >{$available_feature.val[1].value|escape:'html':'UTF-8'|default:""}</textarea>
-								
+
 					</div>
 					{if $languages|count > 1}
 						<div class="col-lg-3">
@@ -90,7 +90,7 @@
 						</div>
 					{/if}
 				</div>
-			
+
 				{foreach from=$languages key=k item=language}
 					{if $languages|count > 1}
 					<div class="row translatable-field lang-{$language.id_lang}">
@@ -102,7 +102,7 @@
 								cols="40"
 								rows="1"
 								onkeyup="if (isArrowKey(event)) return ;$('#feature_{$available_feature.id_feature}_value').val(0);" >{$available_feature.val[$k].value|escape:'html':'UTF-8'|default:""}</textarea>
-								
+
 					{if $languages|count > 1}
 						</div>
 						<div class="col-lg-3">
@@ -111,7 +111,7 @@
 								<span class="caret"></span>
 							</button>
 							<ul class="dropdown-menu">
-								<li><a href="javascript:void(0);" onclick="all_languages($(this));">{l s='ALL'}</a></li>								
+								<li><a href="javascript:void(0);" onclick="all_languages($(this));">{l s='ALL'}</a></li>
 								{foreach from=$languages item=language}
 								<li>
 									<a href="javascript:hideOtherLanguage({$language.id_lang});">{$language.iso_code}</a>
@@ -142,19 +142,20 @@
 		<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> {l s='Save and stay'}</button>
 	</div>
 </div>
-{/if}
-
 <script type="text/javascript">
-	hideOtherLanguage({$default_form_language});
+	if (tabs_manager.allow_hide_other_languages)
+		hideOtherLanguage({$default_form_language});
 {literal}
 	$(".textarea-autosize").autosize();
 
 	function all_languages(pos)
 	{
 {/literal}
-{foreach from=$languages key=k item=language}
-		pos.parents('td').find('.lang-{$language.id_lang}').addClass('nolang-{$language.id_lang}').removeClass('lang-{$language.id_lang}');
-{/foreach}
+{if isset($languages) && is_array($languages)}
+	{foreach from=$languages key=k item=language}
+			pos.parents('td').find('.lang-{$language.id_lang}').addClass('nolang-{$language.id_lang}').removeClass('lang-{$language.id_lang}');
+	{/foreach}
+{/if}
 		pos.parents('td').find('.translatable-field').hide();
 		pos.parents('td').find('.lang-0').show();
 {literal}
@@ -163,12 +164,16 @@
 	function restore_lng(pos,i)
 	{
 {/literal}
-{foreach from=$languages key=k item=language}
-		pos.parents('td').find('.nolang-{$language.id_lang}').addClass('lang-{$language.id_lang}').removeClass('nolang-{$language.id_lang}');
-{/foreach}
+{if isset($languages) && is_array($languages)}
+	{foreach from=$languages key=k item=language}
+			pos.parents('td').find('.nolang-{$language.id_lang}').addClass('lang-{$language.id_lang}').removeClass('nolang-{$language.id_lang}');
+	{/foreach}
+{/if}
 {literal}
 		pos.parents('td').find('.lang-0').hide();
 		hideOtherLanguage(i);
 	}
 </script>
 {/literal}
+
+{/if}

@@ -1,5 +1,5 @@
 <?php
-/*
+/**
 * 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
@@ -340,6 +340,7 @@ class FrontControllerCore extends Controller
 			'modules_dir' => _MODULE_DIR_,
 			'mail_dir' => _MAIL_DIR_,
 			'lang_iso' => $this->context->language->iso_code,
+			'lang_id' => (int)$this->context->language->id,
 			'language_code' => $this->context->language->language_code ? $this->context->language->language_code : $this->context->language->iso_code,
 			'come_from' => Tools::getHttpHost(true, true).Tools::htmlentitiesUTF8(str_replace(array('\'', '\\'), '', urldecode($_SERVER['REQUEST_URI']))),
 			'cart_qties' => (int)$cart->nbProducts(),
@@ -357,7 +358,7 @@ class FrontControllerCore extends Controller
 			'display_tax_label' => (bool)$display_tax_label,
 			'vat_management' => (int)Configuration::get('VATNUMBER_MANAGEMENT'),
 			'opc' => (bool)Configuration::get('PS_ORDER_PROCESS_TYPE'),
-			'PS_CATALOG_MODE' => (bool)Configuration::get('PS_CATALOG_MODE') || !(bool)Group::getCurrent()->show_prices,
+			'PS_CATALOG_MODE' => (bool)Configuration::get('PS_CATALOG_MODE') || (Group::isFeatureActive() && !(bool)Group::getCurrent()->show_prices),
 			'b2b_enable' => (bool)Configuration::get('PS_B2B_ENABLE'),
 			'request' => $link->getPaginationLink(false, false, false, true),
 			'PS_STOCK_MANAGEMENT' => Configuration::get('PS_STOCK_MANAGEMENT'),
@@ -475,7 +476,7 @@ class FrontControllerCore extends Controller
 		{
 			// CSS compressor management
 			if (Configuration::get('PS_CSS_THEME_CACHE'))
-				$this->css_files = Media::cccCSS($this->css_files);
+				$this->css_files = Media::cccCss($this->css_files);
 			//JS compressor management
 			if (Configuration::get('PS_JS_THEME_CACHE'))
 				$this->js_files = Media::cccJs($this->js_files);
@@ -539,7 +540,7 @@ class FrontControllerCore extends Controller
 		{
 			// CSS compressor management
 			if (Configuration::get('PS_CSS_THEME_CACHE'))
-				$this->css_files = Media::cccCSS($this->css_files);
+				$this->css_files = Media::cccCss($this->css_files);
 			//JS compressor management
 			if (Configuration::get('PS_JS_THEME_CACHE') && !$this->useMobileTheme())
 				$this->js_files = Media::cccJs($this->js_files);
@@ -686,13 +687,13 @@ class FrontControllerCore extends Controller
 		if (!in_array($_SERVER['SERVER_NAME'], array('localhost', '127.0.0.1')))
 		{
 			/* Check if Maxmind Database exists */
-			if (file_exists(_PS_GEOIP_DIR_.'GeoLiteCity.dat'))
+			if (@filemtime(_PS_GEOIP_DIR_._PS_GEOIP_CITY_FILE_))
 			{
 				if (!isset($this->context->cookie->iso_code_country) || (isset($this->context->cookie->iso_code_country) && !in_array(strtoupper($this->context->cookie->iso_code_country), explode(';', Configuration::get('PS_ALLOWED_COUNTRIES')))))
 				{
 					include_once(_PS_GEOIP_DIR_.'geoipcity.inc');
 
-					$gi = geoip_open(realpath(_PS_GEOIP_DIR_.'GeoLiteCity.dat'), GEOIP_STANDARD);
+					$gi = geoip_open(realpath(_PS_GEOIP_DIR_._PS_GEOIP_CITY_FILE_), GEOIP_STANDARD);
 					$record = geoip_record_by_addr($gi, Tools::getRemoteAddr());
 
 					if (is_object($record))
@@ -731,7 +732,7 @@ class FrontControllerCore extends Controller
 				elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_ORDER_ && !FrontController::isInWhitelistForGeolocation())
 					$this->context->smarty->assign(array(
 						'restricted_country_mode' => true,
-						'geolocation_country' => 'Undefined'
+						'geolocation_country' => isset($record->country_name) && $record->country_name ? $record->country_name : 'Undefined'
 					));
 			}
 		}
@@ -812,6 +813,7 @@ class FrontControllerCore extends Controller
 	{
 		// P3P Policies (http://www.w3.org/TR/2002/REC-P3P-20020416/#compact_policies)
 		header('P3P: CP="IDC DSP COR CURa ADMa OUR IND PHY ONL COM STA"');
+		header('Powered-By: PrestaShop');
 
 		/* Hooks are volontary out the initialize array (need those variables already assigned) */
 		$this->context->smarty->assign(array(
@@ -1033,7 +1035,7 @@ class FrontControllerCore extends Controller
 			if (!Validate::isAbsoluteUrl($media))
 			{
 				$different = 0;
-                $different_css = 0;
+				$different_css = 0;
 				$type = 'css';
 				if (!$css_media_type)
 				{
@@ -1058,6 +1060,8 @@ class FrontControllerCore extends Controller
 				else
 					$list_uri[$file] = $media;
 			}
+			else
+				$list_uri[$file] = $media;
 		}
 
 		if ($remove)
@@ -1108,7 +1112,7 @@ class FrontControllerCore extends Controller
 
 	public function removeJS($js_uri, $check_path = true)
 	{
-		return Frontcontroller::removeMedia($js_uri, $check_path);
+		return Frontcontroller::removeMedia($js_uri, null, $check_path);
 	}
 
 	protected function recoverCart()

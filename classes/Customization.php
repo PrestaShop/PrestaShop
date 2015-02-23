@@ -125,15 +125,17 @@ class CustomizationCore extends ObjectModel
 		return $total;
 	}
 
-	public static function getLabel($id_customization, $id_lang)
+	public static function getLabel($id_customization, $id_lang, $id_shop = null)
 	{
 		if (!$id_customization || !$id_lang)
 			return false;
+		if (Shop::isFeatureActive() && !$id_shop)
+			$id_shop = (int)Context::getContext()->shop->id;
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT `name`
 		FROM `'._DB_PREFIX_.'customization_field_lang`
-		WHERE `id_customization_field` = '.(int)($id_customization).'
+		WHERE `id_customization_field` = '.(int)($id_customization).($id_shop ? ' AND cfl.`id_shop` = '.$id_shop : '').'
 		AND `id_lang` = '.(int)($id_lang)
 		);
 
@@ -210,9 +212,9 @@ class CustomizationCore extends ObjectModel
 	public function getWsCustomizedDataTextFields()
 	{
 		if (!$results = Db::getInstance()->executeS('
-			SELECT id_customization_field, value 
-			FROM `'._DB_PREFIX_.'customization_field` cf 
-			LEFT JOIN `'._DB_PREFIX_.'customized_data` cd ON (cf.id_customization_field = cd.index) 
+			SELECT id_customization_field, value
+			FROM `'._DB_PREFIX_.'customization_field` cf
+			LEFT JOIN `'._DB_PREFIX_.'customized_data` cd ON (cf.id_customization_field = cd.index)
 			WHERE `id_product` = '.(int)$this->id_product.'
 			AND cf.type = 1'))
 			return array();
@@ -222,9 +224,9 @@ class CustomizationCore extends ObjectModel
 	public function getWsCustomizedDataImages()
 	{
 		if (!$results = Db::getInstance()->executeS('
-			SELECT id_customization_field, value 
-			FROM `'._DB_PREFIX_.'customization_field` cf 
-			LEFT JOIN `'._DB_PREFIX_.'customized_data` cd ON (cf.id_customization_field = cd.index) 
+			SELECT id_customization_field, value
+			FROM `'._DB_PREFIX_.'customization_field` cf
+			LEFT JOIN `'._DB_PREFIX_.'customized_data` cd ON (cf.id_customization_field = cd.index)
 			WHERE `id_product` = '.(int)$this->id_product.'
 			AND cf.type = 0'))
 			return array();

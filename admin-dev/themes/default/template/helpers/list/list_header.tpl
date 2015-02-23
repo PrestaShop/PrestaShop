@@ -51,16 +51,16 @@
 		});
 	</script>
 {/if}
+{* Display column names and arrows for ordering (ASC, DESC) *}
+{if $is_order_position}
+	<script type="text/javascript" src="../js/jquery/plugins/jquery.tablednd.js"></script>
+	<script type="text/javascript">
+		var come_from = '{$list_id|addslashes}';
+		var alternate = {if $order_way == 'DESC'}'1'{else}'0'{/if};
+	</script>
+	<script type="text/javascript" src="../js/admin/dnd.js"></script>
+{/if}
 {if !$simple_header}
-	{* Display column names and arrows for ordering (ASC, DESC) *}
-	{if $is_order_position}
-		<script type="text/javascript" src="../js/jquery/plugins/jquery.tablednd.js"></script>
-		<script type="text/javascript">
-			var come_from = '{$list_id|addslashes}';
-			var alternate = {if $order_way == 'DESC'}'1'{else}'0'{/if};
-		</script>
-		<script type="text/javascript" src="../js/admin-dnd.js"></script>
-	{/if}
 	<script type="text/javascript">
 		$(function() {
 			$('table.{$list_id} .filter').keypress(function(e){

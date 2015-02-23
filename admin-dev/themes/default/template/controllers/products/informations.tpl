@@ -32,7 +32,7 @@
 	<input type="hidden" name="submitted_tabs[]" value="Informations" />
 	<h3 class="tab"> <i class="icon-info"></i> {l s='Information'}</h3>
 	<script type="text/javascript">
-		
+
 		var msg_select_one = "{l s='Please select at least one product.' js=1}";
 		var msg_set_quantity = "{l s='Please set a quantity to add a product.' js=1}";
 
@@ -228,12 +228,12 @@
 				{l s='404 Not Found = Do not redirect and display a 404 page.'}<br/>
 				{l s='301 Moved Permanently = Permanently display another product instead.'}<br/>
 				{l s='302 Moved Temporarily = Temporarily display another product instead.'}
-			</div>	
+			</div>
 		</div>
 	</div>
 
-	<div class="form-group redirect_product_options redirect_product_options_product_choise" style="display:none">	
-		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="id_product_redirected" type="radio" onclick=""}</span></div>	
+	<div class="form-group redirect_product_options redirect_product_options_product_choise" style="display:none">
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="id_product_redirected" type="radio" onclick=""}</span></div>
 		<label class="control-label col-lg-2" for="related_product_autocomplete_input">
 			{l s='Related product:'}
 		</label>
@@ -253,7 +253,7 @@
 					</a>
 				</span>
 			</div>
-			
+
 		</div>
 		<script>
 			var no_related_product = '{l s='No related product'}';
@@ -263,7 +263,7 @@
 	</div>
 
 	<div class="form-group">
-		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="visibility" type="default"}</span></div>		
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="visibility" type="default"}</span></div>
 		<label class="control-label col-lg-2" for="visibility">
 			{l s='Visibility'}
 		</label>
@@ -288,7 +288,7 @@
 							{include file="controllers/products/multishop/checkbox.tpl" only_checkbox="true" field="online_only" type="default"}
 						{/if}
 					</span>
-				</div>	
+				</div>
 				<label class="control-label col-lg-2" for="available_for_order">
 					{l s='Options'}
 				</label>
@@ -311,7 +311,7 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="condition" type="default"}</span></div>				
+				<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="condition" type="default"}</span></div>
 				<label class="control-label col-lg-2" for="condition">
 					{l s='Condition'}
 				</label>
@@ -321,7 +321,7 @@
 						<option value="used" {if $product->condition == 'used'}selected="selected"{/if} >{l s='Used'}</option>
 						<option value="refurbished" {if $product->condition == 'refurbished'}selected="selected"{/if}>{l s='Refurbished'}</option>
 					</select>
-				</div>	
+				</div>
 			</div>
 		</div>
 	</div>
@@ -388,7 +388,7 @@
 			<label class="control-label col-lg-3" for="leftRight_1">{l s='Position'}</label>
 			<div class="col-lg-5">
 				<p class="checkbox">
-					<input type="radio" name="leftRight" id="leftRight_1" value="left" checked>							
+					<input type="radio" name="leftRight" id="leftRight_1" value="left" checked>
 					<label for="leftRight_1" >{l s='left'}</label>
 				</p>
 				<p class="checkbox">
@@ -428,7 +428,7 @@
 	<div class="form-group">
 		<label class="control-label col-lg-3" for="tags_{$id_lang}">
 			<span class="label-tooltip" data-toggle="tooltip"
-				title="{l s='Appear on the shop in the "Tags" block, when enabled. Tags help customers easily find your products.'}">
+				title="{l s='Will be displayed in the tags block when enabled. Tags help customers easily find your products.'}">
 				{l s='Tags:'}
 			</span>
 		</label>
@@ -463,7 +463,7 @@
 						<ul class="dropdown-menu">
 							{foreach from=$languages item=language}
 							<li>
-								<a href="javascript:hideOtherLanguage({$language.id_lang});">{$language.name}</a>
+								<a href="javascript:tabs_manager.allow_hide_other_languages = false;hideOtherLanguage({$language.id_lang});">{$language.name}</a>
 							</li>
 							{/foreach}
 						</ul>

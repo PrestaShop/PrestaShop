@@ -1145,8 +1145,8 @@ abstract class AdminTabCore
 			$languages = Language::getLanguages(false);
 			foreach ($languages as $language)
 				foreach (array_keys($rules['validateLang']) as $field)
-					if (isset($_POST[$field.'_'.(int)($language['id_lang'])]))
-						$object->{$field}[(int)($language['id_lang'])] = $_POST[$field.'_'.(int)($language['id_lang'])];
+					if (Tools::isSubmit($field.'_'.(int)$language['id_lang']))
+						$object->{$field}[(int)$language['id_lang']] = Tools::getValue($field.'_'.(int)$language['id_lang']);
 		}
 	}
 
@@ -1438,7 +1438,7 @@ abstract class AdminTabCore
 				var come_from = \''.$this->table.'\';
 				var alternate = \''.($this->_orderWay == 'DESC' ? '1' : '0' ).'\';
 			</script>
-			<script type="text/javascript" src="../js/admin-dnd.js"></script>
+			<script type="text/javascript" src="../js/admin/dnd.js"></script>
 			';
 		}
 		echo '<table'.(array_key_exists($this->identifier,$this->identifiersDnd) ? ' id="'.(((int)(Tools::getValue($this->identifiersDnd[$this->identifier], 1))) ? substr($this->identifier,3,strlen($this->identifier)) : '').'"' : '' ).' class="table'.((array_key_exists($this->identifier,$this->identifiersDnd) && ($this->_orderBy != 'position 'AND $this->_orderWay != 'DESC')) ? ' tableDnD'  : '' ).'" cellpadding="0" cellspacing="0">

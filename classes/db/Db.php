@@ -136,13 +136,13 @@ abstract class DbCore
 	 * @param mixed $result
 	 */
 	abstract public function nextRow($result = false);
-	
+
 	/**
 	 * Get all rows for a query which return an array
 	 *
 	 * @param mixed $result
 	 */
-	
+
 	abstract protected function getAll($result = false);
 
 	/**
@@ -329,6 +329,13 @@ abstract class DbCore
 			$sql = $sql->build();
 
 		$this->result = $this->_query($sql);
+
+		if (!$this->result && $this->getNumberError() == 2006)
+		{
+			if ($this->connect())
+				$this->result = $this->_query($sql);
+		}
+
 		if (_PS_DEBUG_SQL_)
 			$this->displayError($sql);
 		return $this->result;
@@ -424,7 +431,7 @@ abstract class DbCore
 			if ($value['type'] == 'sql')
 				$sql .= '`'.bqSQL($key)."` = {$value['value']},";
 			else
-				$sql .= ($null_values && ($value['value'] === '' || is_null($value['value']))) ? '`'.bqSQL($key)."` = NULL," : '`'.bqSQL($key)."` = '{$value['value']}',";
+				$sql .= ($null_values && ($value['value'] === '' || is_null($value['value']))) ? '`'.bqSQL($key).'` = NULL,' : '`'.bqSQL($key)."` = '{$value['value']}',";
 		}
 
 		$sql = rtrim($sql, ',');
@@ -540,7 +547,7 @@ abstract class DbCore
 		if ($sql instanceof DbQuery)
 			$sql = $sql->build();
 
-		$sql .= ' LIMIT 1';
+		$sql = rtrim($sql, " \t\n\r\0\x0B;").' LIMIT 1';
 		$this->result = false;
 		$this->last_query = $sql;
 		if ($use_cache && $this->is_cache_enabled && ($result = Cache::getInstance()->get(Tools::encryptIV($sql))) !== false)

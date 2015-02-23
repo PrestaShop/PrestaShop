@@ -5,12 +5,13 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
 		<title>Message from {shop_name}</title>
 		
-
+		
 		<style>	@media only screen and (max-width: 300px){ 
 				body {
 					width:218px !important;
 					margin:auto !important;
 				}
+				thead, tbody{width: 100%}
 				.table {width:195px !important;margin:auto !important;}
 				.logo, .titleblock, .linkbelow, .box, .footer, .space_footer{width:auto !important;display: block !important;}		
 				span.title{font-size:20px !important;line-height: 23px !important}
@@ -25,27 +26,28 @@
 				.space_address{display: none !important;}	
 			}
 	@media only screen and (min-width: 301px) and (max-width: 500px) { 
-				body {width:308px!important;margin:auto!important;}
-				.table {width:285px!important;margin:auto!important;}	
+				body {width:425px!important;margin:auto!important;}
+				thead, tbody{width: 100%}
+				.table {margin:auto!important;}	
 				.logo, .titleblock, .linkbelow, .box, .footer, .space_footer{width:auto!important;display: block!important;}	
-				.table-recap table, .table-recap thead, .table-recap tbody, .table-recap th, .table-recap td, .table-recap tr { 
-					display: block !important; 
-				}
-				.table-recap{width: 293px !important;}
+				.table-recap{width: 295px !important;}
 				.table-recap tr td, .conf_body td{text-align:center !important;}
+				.table-recap tr th{font-size: 10px !important}
 				
 			}
 	@media only screen and (min-width: 501px) and (max-width: 768px) {
 				body {width:478px!important;margin:auto!important;}
-				.table {width:450px!important;margin:auto!important;}	
+				thead, tbody{width: 100%}
+				.table {margin:auto!important;}	
 				.logo, .titleblock, .linkbelow, .box, .footer, .space_footer{width:auto!important;display: block!important;}			
 			}
 	@media only screen and (max-device-width: 480px) { 
-				body {width:308px!important;margin:auto!important;}
-				.table {width:285px;margin:auto!important;}	
+				body {width:340px!important;margin:auto!important;}
+				thead, tbody{width: 100%}
+				.table {margin:auto!important;}	
 				.logo, .titleblock, .linkbelow, .box, .footer, .space_footer{width:auto!important;display: block!important;}
 				
-				.table-recap{width: 285px!important;}
+				.table-recap{width: 295px!important;}
 				.table-recap tr td, .conf_body td{text-align:center!important;}	
 				.address{display: block !important;margin-bottom: 10px !important;}
 				.space_address{display: none !important;}	
@@ -102,194 +104,191 @@
 	<td style="padding:7px 0">
 		<font size="2" face="Open-sans, sans-serif" color="#555454">
 			<table class="table table-recap" bgcolor="#ffffff" style="width:100%;border-collapse:collapse"><!-- Title -->
-				<thead>
-					<tr>
-						<th style="border:1px solid #D6D4D4;background-color:#fbfbfb;font-family:Arial;color:#333;font-size:13px;padding:10px">Reference</th>
-						<th style="border:1px solid #D6D4D4;background-color:#fbfbfb;font-family:Arial;color:#333;font-size:13px;padding:10px">Product</th>
-						<th style="border:1px solid #D6D4D4;background-color:#fbfbfb;font-family:Arial;color:#333;font-size:13px;padding:10px">Unit price</th>
-						<th style="border:1px solid #D6D4D4;background-color:#fbfbfb;font-family:Arial;color:#333;font-size:13px;padding:10px">Quantity</th>
-						<th style="border:1px solid #D6D4D4;background-color:#fbfbfb;font-family:Arial;color:#333;font-size:13px;padding:10px">Total price</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td colspan="5" style="border:1px solid #D6D4D4;color:#777;padding:7px 0">
-							&nbsp;&nbsp;{products}
-						</td>
-					</tr>
-					<tr>
-						<td colspan="5" style="border:1px solid #D6D4D4;color:#777;padding:7px 0">
-							&nbsp;&nbsp;{discounts}
-						</td>
-					</tr>
-					<tr class="conf_body">
-						<td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
-							<table class="table" style="width:100%;border-collapse:collapse">
-								<tr>
-									<td width="10" style="color:#333;padding:0">&nbsp;</td>
-									<td align="right" style="color:#333;padding:0">
-										<font size="2" face="Open-sans, sans-serif" color="#555454">
-											<strong>Products</strong>
-										</font>
-									</td>
-									<td width="10" style="color:#333;padding:0">&nbsp;</td>
-								</tr>
-							</table>
-						</td>
-						<td bgcolor="#f8f8f8" align="right" colspan="4" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
-							<table class="table" style="width:100%;border-collapse:collapse">
-								<tr>
-									<td width="10" style="color:#333;padding:0">&nbsp;</td>
-									<td align="right" style="color:#333;padding:0">
-										<font size="2" face="Open-sans, sans-serif" color="#555454">
-											{total_products}
-										</font>
-									</td>
-									<td width="10" style="color:#333;padding:0">&nbsp;</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-					<tr class="conf_body">
-						<td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
-							<table class="table" style="width:100%;border-collapse:collapse">
-								<tr>
-									<td width="10" style="color:#333;padding:0">&nbsp;</td>
-									<td align="right" style="color:#333;padding:0">
-										<font size="2" face="Open-sans, sans-serif" color="#555454">
-											<strong>Discounts</strong>
-										</font>
-									</td>
-									<td width="10" style="color:#333;padding:0">&nbsp;</td>
-								</tr>
-							</table>
-						</td>
-						<td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
-							<table class="table" style="width:100%;border-collapse:collapse">
-								<tr>
-									<td width="10" style="color:#333;padding:0">&nbsp;</td>
-									<td align="right" style="color:#333;padding:0">
-										<font size="2" face="Open-sans, sans-serif" color="#555454">
-											{total_discounts}
-										</font>
-									</td>
-									<td width="10" style="color:#333;padding:0">&nbsp;</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-					<tr class="conf_body">
-						<td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
-							<table class="table" style="width:100%;border-collapse:collapse">
-								<tr>
-									<td width="10" style="color:#333;padding:0">&nbsp;</td>
-									<td align="right" style="color:#333;padding:0">
-										<font size="2" face="Open-sans, sans-serif" color="#555454">
-											<strong>Gift-wrapping</strong>
-										</font>
-									</td>
-									<td width="10" style="color:#333;padding:0">&nbsp;</td>
-								</tr>
-							</table>
-						</td>
-						<td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
-							<table class="table" style="width:100%;border-collapse:collapse">
-								<tr>
-									<td width="10" style="color:#333;padding:0">&nbsp;</td>
-									<td align="right" style="color:#333;padding:0">
-										<font size="2" face="Open-sans, sans-serif" color="#555454">
-											{total_wrapping}
-										</font>
-									</td>
-									<td width="10" style="color:#333;padding:0">&nbsp;</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-					<tr class="conf_body">
-						<td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
-							<table class="table" style="width:100%;border-collapse:collapse">
-								<tr>
-									<td width="10" style="color:#333;padding:0">&nbsp;</td>
-									<td align="right" style="color:#333;padding:0">
-										<font size="2" face="Open-sans, sans-serif" color="#555454">
-											<strong>Shipping</strong>
-										</font>
-									</td>
-									<td width="10" style="color:#333;padding:0">&nbsp;</td>
-								</tr>
-							</table>
-						</td>
-						<td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
-							<table class="table" style="width:100%;border-collapse:collapse">
-								<tr>
-									<td width="10" style="color:#333;padding:0">&nbsp;</td>
-									<td align="right" style="color:#333;padding:0">
-										<font size="2" face="Open-sans, sans-serif" color="#555454">
-											{total_shipping}
-										</font>
-									</td>
-									<td width="10" style="color:#333;padding:0">&nbsp;</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-					<tr class="conf_body">
-						<td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
-							<table class="table" style="width:100%;border-collapse:collapse">
-								<tr>
-									<td width="10" style="color:#333;padding:0">&nbsp;</td>
-									<td align="right" style="color:#333;padding:0">
-										<font size="2" face="Open-sans, sans-serif" color="#555454">
-											<strong>Total Tax paid</strong>
-										</font>
-									</td>
-									<td width="10" style="color:#333;padding:0">&nbsp;</td>
-								</tr>
-							</table>
-						</td>
-						<td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
-							<table class="table" style="width:100%;border-collapse:collapse">
-								<tr>
-									<td width="10" style="color:#333;padding:0">&nbsp;</td>
-									<td align="right" style="color:#333;padding:0">
-										<font size="2" face="Open-sans, sans-serif" color="#555454">
-											{total_tax_paid}
-										</font>
-									</td>
-									<td width="10" style="color:#333;padding:0">&nbsp;</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-					<tr class="conf_body">
-						<td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
-							<table class="table" style="width:100%;border-collapse:collapse">
-								<tr>
-									<td width="10" style="color:#333;padding:0">&nbsp;</td>
-									<td align="right" style="color:#333;padding:0">
-										<font size="2" face="Open-sans, sans-serif" color="#555454">
-											<strong>Total paid</strong>
-										</font>
-									</td>
-									<td width="10" style="color:#333;padding:0">&nbsp;</td>
-								</tr>
-							</table>
-						</td>
-						<td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
-							<table class="table" style="width:100%;border-collapse:collapse">
-								<tr>
-									<td width="10" style="color:#333;padding:0">&nbsp;</td>
-									<td align="right" style="color:#333;padding:0">
-										<font size="4" face="Open-sans, sans-serif" color="#555454">
-											{total_paid}
-										</font>
-									</td>
-									<td width="10" style="color:#333;padding:0">&nbsp;</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
+				<tr>
+					<th bgcolor="#f8f8f8" style="border:1px solid #D6D4D4;background-color: #fbfbfb;color: #333;font-family: Arial;font-size: 13px;padding: 10px;">Reference</th>
+					<th bgcolor="#f8f8f8" style="border:1px solid #D6D4D4;background-color: #fbfbfb;color: #333;font-family: Arial;font-size: 13px;padding: 10px;">Product</th>
+					<th bgcolor="#f8f8f8" style="border:1px solid #D6D4D4;background-color: #fbfbfb;color: #333;font-family: Arial;font-size: 13px;padding: 10px;" width="17%">Unit price</th>
+					<th bgcolor="#f8f8f8" style="border:1px solid #D6D4D4;background-color: #fbfbfb;color: #333;font-family: Arial;font-size: 13px;padding: 10px;">Quantity</th>
+					<th bgcolor="#f8f8f8" style="border:1px solid #D6D4D4;background-color: #fbfbfb;color: #333;font-family: Arial;font-size: 13px;padding: 10px;" width="17%">Total price</th>
+				</tr>
+				<tr>
+					<td colspan="5" style="border:1px solid #D6D4D4;text-align:center;color:#777;padding:7px 0">
+						&nbsp;&nbsp;{products} 
+					</td>
+				</tr>
+				<tr>
+					<td colspan="5" style="border:1px solid #D6D4D4;text-align:center;color:#777;padding:7px 0">
+						&nbsp;&nbsp;{discounts}
+					</td>
+				</tr>
+				<tr class="conf_body">
+					<td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
+						<table class="table" style="width:100%;border-collapse:collapse">
+							<tr>
+								<td width="10" style="color:#333;padding:0">&nbsp;</td>
+								<td align="right" style="color:#333;padding:0">
+									<font size="2" face="Open-sans, sans-serif" color="#555454">
+										<strong>Products</strong>
+									</font>
+								</td>
+								<td width="10" style="color:#333;padding:0">&nbsp;</td>
+							</tr>
+						</table>
+					</td>
+					<td bgcolor="#f8f8f8" align="right" colspan="4" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
+						<table class="table" style="width:100%;border-collapse:collapse">
+							<tr>
+								<td width="10" style="color:#333;padding:0">&nbsp;</td>
+								<td align="right" style="color:#333;padding:0">
+									<font size="2" face="Open-sans, sans-serif" color="#555454">
+										{total_products}
+									</font>
+								</td>
+								<td width="10" style="color:#333;padding:0">&nbsp;</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr class="conf_body">
+					<td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
+						<table class="table" style="width:100%;border-collapse:collapse">
+							<tr>
+								<td width="10" style="color:#333;padding:0">&nbsp;</td>
+								<td align="right" style="color:#333;padding:0">
+									<font size="2" face="Open-sans, sans-serif" color="#555454">
+										<strong>Discounts</strong>
+									</font>
+								</td>
+								<td width="10" style="color:#333;padding:0">&nbsp;</td>
+							</tr>
+						</table>
+					</td>
+					<td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
+						<table class="table" style="width:100%;border-collapse:collapse">
+							<tr>
+								<td width="10" style="color:#333;padding:0">&nbsp;</td>
+								<td align="right" style="color:#333;padding:0">
+									<font size="2" face="Open-sans, sans-serif" color="#555454">
+										{total_discounts}
+									</font>
+								</td>
+								<td width="10" style="color:#333;padding:0">&nbsp;</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr class="conf_body">
+					<td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
+						<table class="table" style="width:100%;border-collapse:collapse">
+							<tr>
+								<td width="10" style="color:#333;padding:0">&nbsp;</td>
+								<td align="right" style="color:#333;padding:0">
+									<font size="2" face="Open-sans, sans-serif" color="#555454">
+										<strong>Gift-wrapping</strong>
+									</font>
+								</td>
+								<td width="10" style="color:#333;padding:0">&nbsp;</td>
+							</tr>
+						</table>
+					</td>
+					<td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
+						<table class="table" style="width:100%;border-collapse:collapse">
+							<tr>
+								<td width="10" style="color:#333;padding:0">&nbsp;</td>
+								<td align="right" style="color:#333;padding:0">
+									<font size="2" face="Open-sans, sans-serif" color="#555454">
+										{total_wrapping}
+									</font>
+								</td>
+								<td width="10" style="color:#333;padding:0">&nbsp;</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr class="conf_body">
+					<td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
+						<table class="table" style="width:100%;border-collapse:collapse">
+							<tr>
+								<td width="10" style="color:#333;padding:0">&nbsp;</td>
+								<td align="right" style="color:#333;padding:0">
+									<font size="2" face="Open-sans, sans-serif" color="#555454">
+										<strong>Shipping</strong>
+									</font>
+								</td>
+								<td width="10" style="color:#333;padding:0">&nbsp;</td>
+							</tr>
+						</table>
+					</td>
+					<td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
+						<table class="table" style="width:100%;border-collapse:collapse">
+							<tr>
+								<td width="10" style="color:#333;padding:0">&nbsp;</td>
+								<td align="right" style="color:#333;padding:0">
+									<font size="2" face="Open-sans, sans-serif" color="#555454">
+										{total_shipping}
+									</font>
+								</td>
+								<td width="10" style="color:#333;padding:0">&nbsp;</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr class="conf_body">
+					<td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
+						<table class="table" style="width:100%;border-collapse:collapse">
+							<tr>
+								<td width="10" style="color:#333;padding:0">&nbsp;</td>
+								<td align="right" style="color:#333;padding:0">
+									<font size="2" face="Open-sans, sans-serif" color="#555454">
+										<strong>Total Tax paid</strong>
+									</font>
+								</td>
+								<td width="10" style="color:#333;padding:0">&nbsp;</td>
+							</tr>
+						</table>
+					</td>
+					<td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
+						<table class="table" style="width:100%;border-collapse:collapse">
+							<tr>
+								<td width="10" style="color:#333;padding:0">&nbsp;</td>
+								<td align="right" style="color:#333;padding:0">
+									<font size="2" face="Open-sans, sans-serif" color="#555454">
+										{total_tax_paid}
+									</font>
+								</td>
+								<td width="10" style="color:#333;padding:0">&nbsp;</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr class="conf_body">
+					<td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
+						<table class="table" style="width:100%;border-collapse:collapse">
+							<tr>
+								<td width="10" style="color:#333;padding:0">&nbsp;</td>
+								<td align="right" style="color:#333;padding:0">
+									<font size="2" face="Open-sans, sans-serif" color="#555454">
+										<strong>Total paid</strong>
+									</font>
+								</td>
+								<td width="10" style="color:#333;padding:0">&nbsp;</td>
+							</tr>
+						</table>
+					</td>
+					<td bgcolor="#f8f8f8" colspan="4" style="border:1px solid #D6D4D4;color:#333;padding:7px 0">
+						<table class="table" style="width:100%;border-collapse:collapse">
+							<tr>
+								<td width="10" style="color:#333;padding:0">&nbsp;</td>
+								<td align="right" style="color:#333;padding:0">
+									<font size="4" face="Open-sans, sans-serif" color="#555454">
+										{total_paid}
+									</font>
+								</td>
+								<td width="10" style="color:#333;padding:0">&nbsp;</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
 				</tbody>
 			</table>
 		</font>
@@ -330,9 +329,10 @@
 								<font size="2" face="Open-sans, sans-serif" color="#555454">
 									<p data-html-only="1" style="border-bottom:1px solid #D6D4D4;margin:3px 0 7px;text-transform:uppercase;font-weight:500;font-size:18px;padding-bottom:10px">
 										Delivery address									</p>
-									<span style="color:#777">
+									<span data-html-only="1" style="color:#777">
 										{delivery_block_html}
 									</span>
+									
 								</font>
 							</td>
 							<td width="10" style="padding:7px 0">&nbsp;</td>
@@ -348,9 +348,10 @@
 								<font size="2" face="Open-sans, sans-serif" color="#555454">
 									<p data-html-only="1" style="border-bottom:1px solid #D6D4D4;margin:3px 0 7px;text-transform:uppercase;font-weight:500;font-size:18px;padding-bottom:10px">
 										Billing address									</p>
-									<span style="color:#777">
+									<span data-html-only="1" style="color:#777">
 										{invoice_block_html}
 									</span>
+									
 								</font>
 							</td>
 							<td width="10" style="padding:7px 0">&nbsp;</td>

@@ -84,7 +84,7 @@
             </a>
 		</div>
     {else}
-		<div>{l s='No specials at this time.' mod='blockspecials'}</div>
+		<div>{l s='No special products at this time.' mod='blockspecials'}</div>
     {/if}
 	</div>
 </div>

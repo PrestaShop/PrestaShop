@@ -62,7 +62,7 @@ class AdminStatusesControllerCore extends AdminController
 	{
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-		$this->addRowActionSkipList('delete', range(1, 12));
+		$this->addRowActionSkipList('delete', range(1, 13));
 
 		$this->bulk_actions = array(
 			'delete' => array(
@@ -131,6 +131,7 @@ class AdminStatusesControllerCore extends AdminController
 	protected function initOrdersReturnsList()
 	{
 		$this->table = 'order_return_state';
+		$this->className = 'OrderState';
 		$this->_defaultOrderBy = $this->identifier = 'id_order_return_state';
 		$this->list_id = 'order_return_state';
 		$this->deleted = false;
@@ -222,6 +223,7 @@ class AdminStatusesControllerCore extends AdminController
 		$lists = parent::renderList();
 
 		//init and render the second list
+		$this->list_skip_actions = array();
 		$this->_filter = false;
 		$this->initOrdersReturnsList();
 
@@ -328,6 +330,28 @@ class AdminStatusesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'checkbox',
+					'name' => 'pdf_invoice',
+					'values' => array(
+						'query' => array(
+							array('id' => 'on',  'name' => $this->l('Attach invoice PDF to email'), 'val' => '1'),
+							),
+						'id' => 'id',
+						'name' => 'name'
+					),
+				),
+				array(
+					'type' => 'checkbox',
+					'name' => 'pdf_delivery',
+					'values' => array(
+						'query' => array(
+							array('id' => 'on',  'name' => $this->l('Attach delivery slip PDF to email'), 'val' => '1'),
+							),
+						'id' => 'id',
+						'name' => 'name'
+					),
+				),
+				array(
+					'type' => 'checkbox',
 					'name' => 'shipped',
 					'values' => array(
 						'query' => array(
@@ -402,6 +426,8 @@ class AdminStatusesControllerCore extends AdminController
 			'shipped_on' => $this->getFieldValue($obj, 'shipped'),
 			'paid_on' => $this->getFieldValue($obj, 'paid'),
 			'delivery_on' => $this->getFieldValue($obj, 'delivery'),
+			'pdf_delivery_on' => $this->getFieldValue($obj, 'pdf_delivery'),
+			'pdf_invoice_on' => $this->getFieldValue($obj, 'pdf_invoice'),
 		);
 
 		if ($this->getFieldValue($obj, 'color') !== false)
@@ -547,6 +573,8 @@ class AdminStatusesControllerCore extends AdminController
 			$_POST['shipped'] = (int)Tools::getValue('shipped_on');
 			$_POST['paid'] = (int)Tools::getValue('paid_on');
 			$_POST['delivery'] = (int)Tools::getValue('delivery_on');
+			$_POST['pdf_delivery'] = (int)Tools::getValue('pdf_delivery_on');
+			$_POST['pdf_invoice'] = (int)Tools::getValue('pdf_invoice_on');
 			if (!$_POST['send_email'])
 			{
 				$languages = Language::getLanguages(false);

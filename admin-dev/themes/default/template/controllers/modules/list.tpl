@@ -52,7 +52,7 @@
 							<div class="module_name">
 								<span style="display:none">{$module->name|escape:'html':'UTF-8'}</span>
 								{$module->displayName|escape:'html':'UTF-8'}
-								<small class="text-muted">v{$module->version} - by {$module->author}</small>
+								<small class="text-muted">v{$module->version} - {l s='by'} {$module->author}</small>
 								{if isset($module->type) && $module->type == 'addonsBought'}
 								- <span class="module-badge-bought help-tooltip text-warning" data-title="{l s="You bought this module on PrestaShop Addons. Thank You."}"><i class="icon-pushpin"></i> <small>{l s="Bought"}</small></span>
 								{elseif isset($module->type) && $module->type == 'addonsMustHave'}

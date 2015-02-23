@@ -51,7 +51,7 @@ class SpecificPriceRuleCore extends ObjectModel
 			'name' => 			array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true),
 			'id_shop' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_country' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-			'id_currency' => 	array('type' => self::TYPE_INT, 'required' => true),
+			'id_currency' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'id_group' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'from_quantity' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true),
 			'price' => 		array('type' => self::TYPE_FLOAT, 'validate' => 'isNegativePrice', 'required' => true),

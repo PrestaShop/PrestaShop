@@ -130,7 +130,7 @@ class ProductControllerCore extends FrontController
 					}
 				}
 			}
-			elseif (!$this->product->checkAccess(isset($this->context->customer) ? $this->context->customer->id : 0))
+			elseif (!$this->product->checkAccess(isset($this->context->customer->id) && $this->context->customer->id ? (int)$this->context->customer->id : 0))
 			{
 				header('HTTP/1.1 403 Forbidden');
 				header('Status: 403 Forbidden');
@@ -243,7 +243,7 @@ class ProductControllerCore extends FrontController
 			$this->assignAttributesCombinations();
 
 			// Pack management
-			$pack_items = $this->product->cache_is_pack ? Pack::getItemTable($this->product->id, $this->context->language->id, true) : array();
+			$pack_items = Pack::isPack($this->product->id) ? Pack::getItemTable($this->product->id, $this->context->language->id, true) : array();
 			$this->context->smarty->assign('packItems', $pack_items);
 			$this->context->smarty->assign('packs', Pack::getPacksTable($this->product->id, $this->context->language->id, true, 1));
 
@@ -252,10 +252,14 @@ class ProductControllerCore extends FrontController
 			else
 				$return_link = 'javascript: history.back();';
 
+			$accessories = $this->product->getAccessories($this->context->language->id);
+			if ($this->product->cache_is_pack || count($accessories))
+					$this->context->controller->addCSS(_THEME_CSS_DIR_.'product_list.css');
+
 			$this->context->smarty->assign(array(
 				'stock_management' => Configuration::get('PS_STOCK_MANAGEMENT'),
 				'customizationFields' => $customization_fields,
-				'accessories' => $this->product->getAccessories($this->context->language->id),
+				'accessories' => $accessories,
 				'return_link' => $return_link,
 				'product' => $this->product,
 				'product_manufacturer' => new Manufacturer((int)$this->product->id_manufacturer, $this->context->language->id),

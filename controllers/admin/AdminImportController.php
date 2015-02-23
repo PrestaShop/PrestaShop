@@ -291,7 +291,7 @@ class AdminImportControllerCore extends AdminController
 
 				self::$default_values = array(
 					'id_category' => array((int)Configuration::get('PS_HOME_CATEGORY')),
-					'id_category_default' => (int)Configuration::get('PS_HOME_CATEGORY'),
+					'id_category_default' => null,
 					'active' => '1',
 					'width' => 0.000000,
 					'height' => 0.000000,
@@ -666,7 +666,7 @@ class AdminImportControllerCore extends AdminController
 
 	public function renderView()
 	{
-		$this->addJS(_PS_JS_DIR_.'adminImport.js');
+		$this->addJS(_PS_JS_DIR_.'admin/import.js');
 
 		$handle = $this->openCsvFile();
 		$nb_column = $this->getNbrColumn($handle, $this->separator);
@@ -1302,9 +1302,10 @@ class AdminImportControllerCore extends AdminController
 				$product->loadStockData();
 				$category_data = Product::getProductCategories((int)$product->id);
 
-				if (is_array($product->category))
+				if (is_array($category_data))
 					foreach ($category_data as $tmp)
-						$product->category[] = $tmp;
+						if (!isset($product->category) || !$product->category || is_array($product->category))
+							$product->category[] = $tmp;
 			}
 
 			AdminImportController::setEntityDefaultValues($product);
@@ -1427,13 +1428,6 @@ class AdminImportControllerCore extends AdminController
 							$product->id_category[] = (int)$value;
 						else
 						{
-							$this->errors[] = sprintf(
-								Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-								$category_to_create->name[$default_language_id],
-								(isset($category_to_create->id) && !empty($category_to_create->id))? $category_to_create->id : 'null'
-							);
-							$this->errors[] = ($field_error !== true ? $field_error : '').(isset($lang_field_error) && $lang_field_error !== true ? $lang_field_error : '').
-								Db::getInstance()->getMsgError();
 							$category_to_create = new Category();
 							$category_to_create->id = (int)$value;
 							$category_to_create->name = AdminImportController::createMultiLangField($value);
@@ -1465,6 +1459,7 @@ class AdminImportControllerCore extends AdminController
 							$this->errors[] = sprintf(Tools::displayError('%1$s cannot be saved'), trim($value));
 					}
 				}
+				$product->id_category = array_values(array_unique($product->id_category));
 			}
 
 			if (!isset($product->id_category_default) || !$product->id_category_default)
@@ -1741,7 +1736,8 @@ class AdminImportControllerCore extends AdminController
 							$this->warnings[] = sprintf(Tools::displayError('Product #%1$d: the picture (%2$s) cannot be saved.'), $image->id_product, $url);
 					}
 				}
-				if (isset($product->id_category))
+
+				if (isset($product->id_category) && is_array($product->id_category))
 					$product->updateCategories(array_map('intval', $product->id_category));
 
 				$product->checkDefaultAttributes();
@@ -2447,10 +2443,11 @@ class AdminImportControllerCore extends AdminController
 				$customer->id_default_group = (int)Configuration::get('PS_CUSTOMER_GROUP');
 			$customer_groups[] = (int)$customer->id_default_group;
 			$customer_groups = array_flip(array_flip($customer_groups));
-			$res = true;
+			$res = false;
 			if (($field_error = $customer->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 				($lang_field_error = $customer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
 			{
+				$res = true;
 				foreach ($customers_shop as $id_shop => $id_group)
 				{
 					$customer->force_id = (bool)Tools::getValue('forceIDs');
@@ -3025,14 +3022,14 @@ class AdminImportControllerCore extends AdminController
 
 				// updatesd($supply_order);
 
-				$res = true;
+				$res = false;
 
 				if ((int)$supply_order->id && ($supply_order->exists((int)$supply_order->id) || $supply_order->exists($supply_order->reference)))
-					$res &= $supply_order->update();
+					$res = $supply_order->update();
 				else
 				{
 					$supply_order->force_id = (bool)Tools::getValue('forceIDs');
-					$res &= $supply_order->add();
+					$res = $supply_order->add();
 				}
 
 				// errors

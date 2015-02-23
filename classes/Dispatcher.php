@@ -49,8 +49,8 @@ class DispatcherCore
 			'controller' =>	'category',
 			'rule' =>		'{id}-{rewrite}',
 			'keywords' => array(
-				'id' =>				array('regexp' => '[0-9]+', 'param' => 'id_category'),
-				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+				'id' =>			array('regexp' => '[0-9]+', 'param' => 'id_category'),
+				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
 				'meta_keywords' =>	array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 				'meta_title' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 			),
@@ -59,8 +59,8 @@ class DispatcherCore
 			'controller' =>	'supplier',
 			'rule' =>		'{id}__{rewrite}',
 			'keywords' => array(
-				'id' =>				array('regexp' => '[0-9]+', 'param' => 'id_supplier'),
-				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+				'id' =>			array('regexp' => '[0-9]+', 'param' => 'id_supplier'),
+				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
 				'meta_keywords' =>	array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 				'meta_title' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 			),
@@ -69,8 +69,8 @@ class DispatcherCore
 			'controller' =>	'manufacturer',
 			'rule' =>		'{id}_{rewrite}',
 			'keywords' => array(
-				'id' =>				array('regexp' => '[0-9]+', 'param' => 'id_manufacturer'),
-				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+				'id' =>			array('regexp' => '[0-9]+', 'param' => 'id_manufacturer'),
+				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
 				'meta_keywords' =>	array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 				'meta_title' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 			),
@@ -79,8 +79,8 @@ class DispatcherCore
 			'controller' =>	'cms',
 			'rule' =>		'content/{id}-{rewrite}',
 			'keywords' => array(
-				'id' =>				array('regexp' => '[0-9]+', 'param' => 'id_cms'),
-				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+				'id' =>			array('regexp' => '[0-9]+', 'param' => 'id_cms'),
+				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
 				'meta_keywords' =>	array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 				'meta_title' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 			),
@@ -89,8 +89,8 @@ class DispatcherCore
 			'controller' =>	'cms',
 			'rule' =>		'content/category/{id}-{rewrite}',
 			'keywords' => array(
-				'id' =>				array('regexp' => '[0-9]+', 'param' => 'id_cms_category'),
-				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+				'id' =>			array('regexp' => '[0-9]+', 'param' => 'id_cms_category'),
+				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
 				'meta_keywords' =>	array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 				'meta_title' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 			),
@@ -99,7 +99,7 @@ class DispatcherCore
 			'controller' =>	null,
 			'rule' =>		'module/{module}{/:controller}',
 			'keywords' => array(
-				'module' =>			array('regexp' => '[_a-zA-Z0-9_-]+', 'param' => 'module'),
+				'module' =>		array('regexp' => '[_a-zA-Z0-9_-]+', 'param' => 'module'),
 				'controller' =>		array('regexp' => '[_a-zA-Z0-9_-]+', 'param' => 'controller'),
 			),
 			'params' => array(
@@ -110,9 +110,9 @@ class DispatcherCore
 			'controller' =>	'product',
 			'rule' =>		'{category:/}{id}-{rewrite}{-:ean13}.html',
 			'keywords' => array(
-				'id' =>				array('regexp' => '[0-9]+', 'param' => 'id_product'),
-				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
-				'ean13' =>			array('regexp' => '[0-9\pL]*'),
+				'id' =>			array('regexp' => '[0-9]+', 'param' => 'id_product'),
+				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
+				'ean13' =>		array('regexp' => '[0-9\pL]*'),
 				'category' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 				'categories' =>		array('regexp' => '[/_a-zA-Z0-9-\pL]*'),
 				'reference' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
@@ -129,10 +129,10 @@ class DispatcherCore
 			'controller' =>	'category',
 			'rule' =>		'{id}-{rewrite}{/:selected_filters}',
 			'keywords' => array(
-				'id' =>				array('regexp' => '[0-9]+', 'param' => 'id_category'),
+				'id' =>			array('regexp' => '[0-9]+', 'param' => 'id_category'),
 				/* Selected filters is used by the module blocklayered */
-				'selected_filters' =>		array('regexp' => '.*', 'param' => 'selected_filters'),
-				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
+				'selected_filters' =>	array('regexp' => '.*', 'param' => 'selected_filters'),
+				'rewrite' =>		array('regexp' => '[_a-zA-Z0-9\pL\pS-]*'),
 				'meta_keywords' =>	array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 				'meta_title' =>		array('regexp' => '[_a-zA-Z0-9-\pL]*'),
 			),
@@ -267,7 +267,6 @@ class DispatcherCore
 			// Dispatch front office controller
 			case self::FC_FRONT :
 				$controllers = Dispatcher::getControllers(array(_PS_FRONT_CONTROLLER_DIR_, _PS_OVERRIDE_DIR_.'controllers/front/'));
-
 				$controllers['index'] = 'IndexController';
 				if (isset($controllers['auth']))
 					$controllers['authentication'] = $controllers['auth'];

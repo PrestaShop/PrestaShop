@@ -67,7 +67,7 @@ class OrderDetailControllerCore extends FrontController
 				{
 					//check if a thread already exist
 					$id_customer_thread = CustomerThread::getIdCustomerThreadByEmailAndIdOrder($this->context->customer->email, $order->id);
-
+					$id_product = (int)Tools::getValue('id_product');
 					$cm = new CustomerMessage();
 					if (!$id_customer_thread)
 					{
@@ -75,7 +75,7 @@ class OrderDetailControllerCore extends FrontController
 						$ct->id_contact = 0;
 						$ct->id_customer = (int)$order->id_customer;
 						$ct->id_shop = (int)$this->context->shop->id;
-						if (($id_product = (int)Tools::getValue('id_product')) && $order->orderContainProduct((int)$id_product))
+						if ($id_product && $order->orderContainProduct($id_product))
 							$ct->id_product = $id_product;
 						$ct->id_order = (int)$order->id;
 						$ct->id_lang = (int)$this->context->language->id;
@@ -101,6 +101,11 @@ class OrderDetailControllerCore extends FrontController
 					$toName = strval(Configuration::get('PS_SHOP_NAME'));
 					$customer = $this->context->customer;
 
+					$product = new Product($id_product);
+					$product_name = '';
+					if (Validate::isLoadedObject($product) && isset($product->name[(int)$this->context->language->id]))
+						$product_name = $product->name[(int)$this->context->language->id];
+
 					if (Validate::isLoadedObject($customer))
 						Mail::Send($this->context->language->id, 'order_customer_comment', Mail::l('Message from a customer'),
 						array(
@@ -109,7 +114,8 @@ class OrderDetailControllerCore extends FrontController
 							'{email}' => $customer->email,
 							'{id_order}' => (int)$order->id,
 							'{order_name}' => $order->getUniqReference(),
-							'{message}' => Tools::nl2br($msgText)
+							'{message}' => Tools::nl2br($msgText),
+							'{product_name}' => $product_name
 						),
 						$to, $toName, $customer->email, $customer->firstname.' '.$customer->lastname);
 
@@ -164,9 +170,9 @@ class OrderDetailControllerCore extends FrontController
 				Product::addCustomizationPrice($products, $customizedDatas);
 
 				OrderReturn::addReturnedQuantity($products, $order->id);
+				$order_status = new OrderState((int)$id_order_state, (int)$order->id_lang);
 
 				$customer = new Customer($order->id_customer);
-
 				$this->context->smarty->assign(array(
 					'shop_name' => strval(Configuration::get('PS_SHOP_NAME')),
 					'order' => $order,
@@ -175,6 +181,7 @@ class OrderDetailControllerCore extends FrontController
 					'order_state' => (int)$id_order_state,
 					'invoiceAllowed' => (int)Configuration::get('PS_INVOICE'),
 					'invoice' => (OrderState::invoiceAvailable($id_order_state) && count($order->getInvoicesCollection())),
+					'logable' => (bool)$order_status->logable,
 					'order_history' => $order->getHistory($this->context->language->id, false, true),
 					'products' => $products,
 					'discounts' => $order->getCartRules(),

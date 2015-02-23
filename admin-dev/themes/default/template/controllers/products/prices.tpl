@@ -109,7 +109,7 @@ $(document).ready(function () {
 <div id="product-prices" class="panel product-tab">
 	<input type="hidden" name="submitted_tabs[]" value="Prices" />
 	<h3>{l s='Product price'}</h3>
-	<div class="alert alert-info">
+	<div class="alert alert-info" {if !$country_display_tax_label || $tax_exclude_taxe_option}style="display:none;"{/if}>
 		{l s='You must enter either the pre-tax retail price, or the retail price with tax. The input field will be automatically calculated.'}
 	</div>
 	{include file="controllers/products/multishop/check_fields.tpl" product_tab="Prices"}
@@ -206,7 +206,7 @@ $(document).ready(function () {
 	<div class="form-group">
 		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="unit_price" type="unit_price"}</span></div>
 		<label class="control-label col-lg-2" for="unit_price">
-			<span class="label-tooltip" data-toggle="tooltip" title="{l s='When selling a pack of items, you can indicate the unit price for each item of the pack. For instance, "per bottle" or "per pound".'}">{l s='Unit price'}</span>
+			<span class="label-tooltip" data-toggle="tooltip" title="{l s='When selling a pack of items, you can indicate the unit price for each item of the pack. For instance, "per bottle" or "per pound".'}">{l s='Unit price (tax excl.)'}</span>
 		</label>
 		<div class="col-lg-4">
 			<div class="input-group">
@@ -223,7 +223,7 @@ $(document).ready(function () {
 			<div class="alert alert-warning">
 				<span>{l s='or'}
 					{$currency->prefix}<span id="unit_price_with_tax">0.00</span>{$currency->suffix}
-					{l s='per'} <span id="unity_second">{$product->unity}</span>{if $ps_tax && $country_display_tax_label} {l s='with tax.'}{/if}
+					{l s='per'} <span id="unity_second">{$product->unity}</span>{if $ps_tax && $country_display_tax_label} {l s='(tax incl.)'}{/if}
 				</span>
 			</div>
 		</div>
@@ -387,9 +387,11 @@ $(document).ready(function () {
 			</div>
 			<div class="form-group">
 				<label class="control-label col-lg-2" for="sp_from_quantity">{l s='Starting at'}</label>
-				<div class="input-group col-lg-4">
-					<span class="input-group-addon">{l s='unit'}</span>
-					<input type="text" name="sp_from_quantity" id="sp_from_quantity" value="1" />
+				<div class="col-lg-4">
+					<div class="input-group">
+						<span class="input-group-addon">{l s='unit'}</span>
+						<input type="text" name="sp_from_quantity" id="sp_from_quantity" value="1" />
+					</div>
 				</div>
 			</div>
 			<div class="form-group">
@@ -400,11 +402,11 @@ $(document).ready(function () {
 				</label>
 				<div class="col-lg-9">
 					<div class="row">
-						<div class="input-group col-lg-4">
-							<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
-							<input type="text" disabled="disabled" name="sp_price" id="sp_price" value="{$product->price|string_format:$priceDisplayPrecisionFormat}" />
-						</div>
-						<div class="col-lg-8">
+						<div class="col-lg-4">
+							<div class="input-group">
+								<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
+								<input type="text" disabled="disabled" name="sp_price" id="sp_price" value="{$product->price|string_format:$priceDisplayPrecisionFormat}" />
+							</div>
 							<p class="checkbox">
 								<label for="leave_bprice">{l s='Leave base price:'}</label>
 								<input type="checkbox" id="leave_bprice" name="leave_bprice"  value="1" checked="checked"  />

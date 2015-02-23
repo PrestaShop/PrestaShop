@@ -94,9 +94,9 @@ class StoresControllerCore extends FrontController
 		LEFT JOIN '._DB_PREFIX_.'country_lang cl ON (cl.id_country = s.id_country)
 		LEFT JOIN '._DB_PREFIX_.'state st ON (st.id_state = s.id_state)
 		WHERE s.active = 1 AND cl.id_lang = '.(int)$this->context->language->id);
-		
+
 		$addresses_formated = array();
-		
+
 		foreach ($stores as &$store)
 		{
 			$address = new Address();
@@ -105,10 +105,10 @@ class StoresControllerCore extends FrontController
 			$address->address2 = $store['address2'];
 			$address->postcode = $store['postcode'];
 			$address->city = $store['city'];
-			
-			$addresses_formated[$store['id_store']] = AddressFormat::getFormattedLayoutData($address); 
-			
-			$store['has_picture'] = file_exists(_PS_STORE_IMG_DIR_.(int)($store['id_store']).'.jpg');
+
+			$addresses_formated[$store['id_store']] = AddressFormat::getFormattedLayoutData($address);
+
+			$store['has_picture'] = file_exists(_PS_STORE_IMG_DIR_.(int)$store['id_store'].'.jpg');
 			if ($working_hours = $this->renderStoreWorkingHours($store))
 				$store['working_hours'] = $working_hours;
 		}
@@ -119,11 +119,11 @@ class StoresControllerCore extends FrontController
 			'addresses_formated' => $addresses_formated,
 		));
 	}
-	
+
 	public function renderStoreWorkingHours($store)
 	{
 		global $smarty;
-		
+
 		$days[1] = 'Monday';
 		$days[2] = 'Tuesday';
 		$days[3] = 'Wednesday';
@@ -131,25 +131,25 @@ class StoresControllerCore extends FrontController
 		$days[5] = 'Friday';
 		$days[6] = 'Saturday';
 		$days[7] = 'Sunday';
-		
+
 		$days_datas = array();
 		$hours = array();
-		
+
 		if ($store['hours'])
 		{
 			$hours = Tools::unSerialize($store['hours']);
 			if (is_array($hours))
 				$hours = array_filter($hours);
 		}
-		
+
 		if (!empty($hours))
 		{
 			for ($i = 1; $i < 8; $i++)
 			{
-				if (isset($hours[(int)($i) - 1]))
+				if (isset($hours[(int)$i - 1]))
 				{
 					$hours_datas = array();
-					$hours_datas['hours'] = $hours[(int)($i) - 1];
+					$hours_datas['hours'] = $hours[(int)$i - 1];
 					$hours_datas['day'] = $days[$i];
 					$days_datas[] = $hours_datas;
 				}
@@ -160,12 +160,12 @@ class StoresControllerCore extends FrontController
 		}
 		return false;
 	}
-	
+
 	public function getStores()
 	{
-		$distanceUnit = Configuration::get('PS_DISTANCE_UNIT');
-		if (!in_array($distanceUnit, array('km', 'mi')))
-			$distanceUnit = 'km';
+		$distance_unit = Configuration::get('PS_DISTANCE_UNIT');
+		if (!in_array($distance_unit, array('km', 'mi')))
+			$distance_unit = 'km';
 
 		if (Tools::getValue('all') == 1)
 		{
@@ -179,17 +179,17 @@ class StoresControllerCore extends FrontController
 		}
 		else
 		{
-			$distance = (int)(Tools::getValue('radius', 100));
-			$multiplicator = ($distanceUnit == 'km' ? 6371 : 3959);
+			$distance = (int)Tools::getValue('radius', 100);
+			$multiplicator = ($distance_unit == 'km' ? 6371 : 3959);
 
 			$stores = Db::getInstance()->executeS('
 			SELECT s.*, cl.name country, st.iso_code state,
-			('.(int)($multiplicator).'
+			('.(int)$multiplicator.'
 				* acos(
-					cos(radians('.(float)(Tools::getValue('latitude')).'))
+					cos(radians('.(float)Tools::getValue('latitude').'))
 					* cos(radians(latitude))
-					* cos(radians(longitude) - radians('.(float)(Tools::getValue('longitude')).'))
-					+ sin(radians('.(float)(Tools::getValue('latitude')).'))
+					* cos(radians(longitude) - radians('.(float)Tools::getValue('longitude').'))
+					+ sin(radians('.(float)Tools::getValue('latitude').'))
 					* sin(radians(latitude))
 				)
 			) distance,
@@ -199,7 +199,7 @@ class StoresControllerCore extends FrontController
 			LEFT JOIN '._DB_PREFIX_.'country_lang cl ON (cl.id_country = s.id_country)
 			LEFT JOIN '._DB_PREFIX_.'state st ON (st.id_state = s.id_state)
 			WHERE s.active = 1 AND cl.id_lang = '.(int)$this->context->language->id.'
-			HAVING distance < '.(int)($distance).'
+			HAVING distance < '.(int)$distance.'
 			ORDER BY distance ASC
 			LIMIT 0,20');
 		}
@@ -214,12 +214,12 @@ class StoresControllerCore extends FrontController
 	{
 		$this->context->smarty->assign('hasStoreIcon', file_exists(_PS_IMG_DIR_.Configuration::get('PS_STORES_ICON')));
 
-		$distanceUnit = Configuration::get('PS_DISTANCE_UNIT');
-		if (!in_array($distanceUnit, array('km', 'mi')))
-			$distanceUnit = 'km';
+		$distance_unit = Configuration::get('PS_DISTANCE_UNIT');
+		if (!in_array($distance_unit, array('km', 'mi')))
+			$distance_unit = 'km';
 
 		$this->context->smarty->assign(array(
-			'distance_unit' => $distanceUnit,
+			'distance_unit' => $distance_unit,
 			'simplifiedStoresDiplay' => false,
 			'stores' => $this->getStores(),
 		));
@@ -233,14 +233,6 @@ class StoresControllerCore extends FrontController
 		$stores = $this->getStores();
 		$parnode = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><markers></markers>');
 
-		$days[1] = 'Monday';
-		$days[2] = 'Tuesday';
-		$days[3] = 'Wednesday';
-		$days[4] = 'Thursday';
-		$days[5] = 'Friday';
-		$days[6] = 'Saturday';
-		$days[7] = 'Sunday';
-
 		foreach ($stores as $store)
 		{
 			$other = '';
@@ -253,12 +245,12 @@ class StoresControllerCore extends FrontController
 			$newnode->addAttribute('address', $address);
 			$newnode->addAttribute('other', $other);
 			$newnode->addAttribute('phone', $store['phone']);
-			$newnode->addAttribute('id_store', (int)($store['id_store']));
-			$newnode->addAttribute('has_store_picture', file_exists(_PS_STORE_IMG_DIR_.(int)($store['id_store']).'.jpg'));
-			$newnode->addAttribute('lat', (float)($store['latitude']));
-			$newnode->addAttribute('lng', (float)($store['longitude']));
+			$newnode->addAttribute('id_store', (int)$store['id_store']);
+			$newnode->addAttribute('has_store_picture', file_exists(_PS_STORE_IMG_DIR_.(int)$store['id_store'].'.jpg'));
+			$newnode->addAttribute('lat', (float)$store['latitude']);
+			$newnode->addAttribute('lng', (float)$store['longitude']);
 			if (isset($store['distance']))
-				$newnode->addAttribute('distance', (int)($store['distance']));
+				$newnode->addAttribute('distance', (int)$store['distance']);
 		}
 
 		header('Content-type: text/xml');
@@ -297,7 +289,7 @@ class StoresControllerCore extends FrontController
 		if (!Configuration::get('PS_STORES_SIMPLIFIED'))
 		{
 			$default_country = new Country((int)Tools::getCountry());
-			$this->addJS('http'.((Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE')) ? 's' : '').'://maps.google.com/maps/api/js?sensor=true&amp;region='.substr($default_country->iso_code, 0, 2));
+			$this->addJS('http'.((Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE')) ? 's' : '').'://maps.google.com/maps/api/js?sensor=true&region='.substr($default_country->iso_code, 0, 2));
 			$this->addJS(_THEME_JS_DIR_.'stores.js');
 		}
 	}

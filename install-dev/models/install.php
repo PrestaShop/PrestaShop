@@ -122,7 +122,7 @@ class InstallModelInstall extends InstallAbstractModel
 		if ($clear_database)
 			$this->clearDatabase();
 
-		$allowed_collation = array('utf8_general_ci', 'utf8_unicode_ci', 'utf8_bin');
+		$allowed_collation = array('utf8_general_ci', 'utf8_unicode_ci');
 		$collation_database = Db::getInstance()->getValue('SELECT @@collation_database');
 		// Install database structure
 		$sql_loader = new InstallSqlLoader();
@@ -193,11 +193,8 @@ class InstallModelInstall extends InstallAbstractModel
 					$localization_file_content = $this->getLocalizationPackContent($version, $iso_country);
 
 					if ($xml = @simplexml_load_string($localization_file_content))
-					{
-						
 						foreach ($xml->languages->language as $language)
 							$iso_codes_to_install[] = (string)$language->attributes()->iso_code;
-					}
 				}
 			}
 			else
@@ -458,15 +455,15 @@ class InstallModelInstall extends InstallAbstractModel
 		Configuration::updateGlobalValue('PS_INSTALL_VERSION', 			_PS_INSTALL_VERSION_);
 		Configuration::updateGlobalValue('PS_LOCALE_LANGUAGE', 			$this->language->getLanguageIso());
 		Configuration::updateGlobalValue('PS_SHOP_NAME', 				$data['shop_name']);
-		Configuration::updateGlobalValue('PS_SHOP_ACTIVITY', 			$data['shop_activity']);
+		Configuration::updateGlobalValue('PS_SHOP_ACTIVITY', 				$data['shop_activity']);
 		Configuration::updateGlobalValue('PS_COUNTRY_DEFAULT',			$id_country);
 		Configuration::updateGlobalValue('PS_LOCALE_COUNTRY', 			$data['shop_country']);
 		Configuration::updateGlobalValue('PS_TIMEZONE', 				$data['shop_timezone']);
-		Configuration::updateGlobalValue('PS_CONFIGURATION_AGREMENT',	(int)$data['configuration_agrement']);
+		Configuration::updateGlobalValue('PS_CONFIGURATION_AGREMENT',		(int)$data['configuration_agrement']);
 
 		// Set mails configuration
 		Configuration::updateGlobalValue('PS_MAIL_METHOD', 			($data['use_smtp']) ? 2 : 1);
-		Configuration::updateGlobalValue('PS_MAIL_SMTP_ENCRYPTION', $data['smtp_encryption']);
+		Configuration::updateGlobalValue('PS_MAIL_SMTP_ENCRYPTION', 	$data['smtp_encryption']);
 		Configuration::updateGlobalValue('PS_MAIL_SMTP_PORT', 		$data['smtp_port']);
 
 		// Set default rewriting settings
@@ -474,6 +471,33 @@ class InstallModelInstall extends InstallAbstractModel
 
 		// Activate rijndael 128 encrypt algorihtm if mcrypt is activated
 		Configuration::updateGlobalValue('PS_CIPHER_ALGORITHM', function_exists('mcrypt_encrypt') ? 1 : 0);
+
+		$groups = Group::getGroups((int)Configuration::get('PS_LANG_DEFAULT'));
+		$groups_default = Db::getInstance()->executeS('SELECT `name` FROM '._DB_PREFIX_.'configuration WHERE `name` LIKE "PS_%_GROUP" ORDER BY `id_configuration`');
+		foreach ($groups_default as &$group_default)
+			if (is_array($group_default) && isset($group_default['name']))
+				$group_default = $group_default['name'];
+
+		if (is_array($groups) && count($groups))
+			foreach ($groups as $key => $group)
+				if (Configuration::get($groups_default[$key]) != $groups[$key]['id_group'])
+					Configuration::updateGlobalValue($groups_default[$key], (int)$groups[$key]['id_group']);
+
+		$states = Db::getInstance()->executeS('SELECT `id_order_state` FROM '._DB_PREFIX_.'order_state ORDER by `id_order_state`');
+		$states_default = Db::getInstance()->executeS('SELECT MIN(`id_configuration`), `name` FROM '._DB_PREFIX_.'configuration WHERE `name` LIKE "PS_OS_%" GROUP BY `value` ORDER BY`id_configuration`');
+
+		foreach ($states_default as &$state_default)
+			if (is_array($state_default) && isset($state_default['name']))
+				$state_default = $state_default['name'];
+
+		if (is_array($states) && count($states))
+		{
+			foreach ($states as $key => $state)
+				if (Configuration::get($states_default[$key]) != $states[$key]['id_order_state'])
+					Configuration::updateGlobalValue($states_default[$key], (int)$states[$key]['id_order_state']);
+			/* deprecated order state */
+			Configuration::updateGlobalValue('PS_OS_OUTOFSTOCK_PAID', (int)Configuration::get('PS_OS_OUTOFSTOCK'));
+		}
 
 		// Set logo configuration
 		if (file_exists(_PS_IMG_DIR_.'logo.jpg'))

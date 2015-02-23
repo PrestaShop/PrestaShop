@@ -62,8 +62,7 @@ class TabCore extends ObjectModel
 			'class_name' => array('type' => self::TYPE_STRING, 'required' => true, 'size' => 64),
 			'active' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'hide_host_mode' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-
-			// Lang fields
+			/* Lang fields */
 			'name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'required' => true, 'validate' => 'isTabName', 'size' => 64),
 		),
 	);
@@ -91,6 +90,7 @@ class TabCore extends ObjectModel
 			'AdminStats' => 'AdminParentStats',
 			'AdminEmployees' => 'AdminAdmin',
 		);
+
 		$class_name = Tab::getClassNameById($this->id_parent);
 		if (isset($retro[$class_name]))
 			$this->id_parent = Tab::getIdFromClassName($retro[$class_name]);
@@ -98,12 +98,13 @@ class TabCore extends ObjectModel
 
 		// Set good position for new tab
 		$this->position = Tab::getNewLastPosition($this->id_parent);
+		$this->module = Tools::strtolower($this->module);
 
 		// Add tab
 		if (parent::add($autodate, $null_values))
 		{
-            //forces cache to be reloaded
-            self::$_getIdFromClassName = null;
+			//forces cache to be reloaded
+			self::$_getIdFromClassName = null;
 			return Tab::initAccess($this->id);
 		}
 		return false;
@@ -126,33 +127,33 @@ class TabCore extends ObjectModel
 	{
 		if (!$context)
 			$context = Context::getContext();
-	 	if (!$context->employee || !$context->employee->id_profile)
-	 		return false;
+		if (!$context->employee || !$context->employee->id_profile)
+			return false;
 
-	 	/* Profile selection */
-	 	$profiles = Db::getInstance()->executeS('SELECT `id_profile` FROM '._DB_PREFIX_.'profile WHERE `id_profile` != 1');
-	 	if (!$profiles || empty($profiles))
-	 		return true;
+		/* Profile selection */
+		$profiles = Db::getInstance()->executeS('SELECT `id_profile` FROM '._DB_PREFIX_.'profile WHERE `id_profile` != 1');
+		if (!$profiles || empty($profiles))
+			return true;
 
-	 	/* Query definition */
-	 	$query = 'REPLACE INTO `'._DB_PREFIX_.'access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ';
+		/* Query definition */
+		$query = 'REPLACE INTO `'._DB_PREFIX_.'access` (`id_profile`, `id_tab`, `view`, `add`, `edit`, `delete`) VALUES ';
 		$query .= '(1, '.(int)$id_tab.', 1, 1, 1, 1),';
 
-	 	foreach ($profiles as $profile)
-	 	{
-	 	 	$rights = $profile['id_profile'] == $context->employee->id_profile ? 1 : 0;
+		foreach ($profiles as $profile)
+		{
+			$rights = $profile['id_profile'] == $context->employee->id_profile ? 1 : 0;
 			$query .= '('.(int)$profile['id_profile'].', '.(int)$id_tab.', '.(int)$rights.', '.(int)$rights.', '.(int)$rights.', '.(int)$rights.'),';
-	 	}
+		}
 		$query = trim($query, ', ');
-	 	return Db::getInstance()->execute($query);
+		return Db::getInstance()->execute($query);
 	}
 
 	public function delete()
 	{
-	 	if (Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'access WHERE `id_tab` = '.(int)$this->id) && parent::delete())
+		if (Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'access WHERE `id_tab` = '.(int)$this->id) && parent::delete())
 		{
 			if (is_array(self::$_getIdFromClassName) && isset(self::$_getIdFromClassName[strtolower($this->class_name)]))
-				self::$_getIdFromClassName=null;
+				self::$_getIdFromClassName = null;
 			return $this->cleanPositions($this->id_parent);
 		}
 		return false;
@@ -546,15 +547,15 @@ class TabCore extends ObjectModel
 		$class_name = null;
 		$display_type = 'default_list';
 		if ($xml_tab_modules_list)
-			foreach($xml_tab_modules_list->tab as $tab)
+			foreach ($xml_tab_modules_list->tab as $tab)
 			{
-				foreach($tab->attributes() as $key => $value)
+				foreach ($tab->attributes() as $key => $value)
 					if ($key == 'class_name')
 						$class_name = (string)$value;
 
 				if (Tab::getIdFromClassName((string)$class_name) == $id_tab)
 				{
-					foreach($tab->attributes() as $key => $value)
+					foreach ($tab->attributes() as $key => $value)
 						if ($key == 'display_type')
 							$display_type = (string)$value;
 

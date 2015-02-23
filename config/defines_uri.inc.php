@@ -54,8 +54,8 @@ define('_THEME_MOBILE_JS_DIR_',          _THEME_MOBILE_DIR_.'js/');
 /* For touch pad devices */
 define('_PS_THEME_TOUCHPAD_DIR_',        _PS_THEME_DIR_.'touchpad/');
 define('_THEME_TOUCHPAD_DIR_',           _THEMES_DIR_._THEME_NAME_.'/touchpad/');
-define('_THEME_TOUCHPAD_CSS_DIR_',       _THEME_MOBILE_DIR_.'css/');
-define('_THEME_TOUCHPAD_JS_DIR_',        _THEME_MOBILE_DIR_.'js/');
+define('_THEME_TOUCHPAD_CSS_DIR_',       _THEME_TOUCHPAD_DIR_.'css/');
+define('_THEME_TOUCHPAD_JS_DIR_',        _THEME_TOUCHPAD_DIR_.'js/');
 
 /* Image URLs */
 define('_PS_IMG_',                       __PS_BASE_URI__.'img/');

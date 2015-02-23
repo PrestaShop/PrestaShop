@@ -270,14 +270,17 @@ class AdminFeaturesControllerCore extends AdminController
 		{
 			case 'edit':
 				$bread_extended[] = $this->l('Edit New Feature');
+				$this->addMetaTitle($bread_extended[count($bread_extended) - 1]);
 				break;
 
 			case 'add':
 				$bread_extended[] = $this->l('Add New Feature');
+				$this->addMetaTitle($bread_extended[count($bread_extended) - 1]);
 				break;
 
 			case 'view':
 				$bread_extended[] = $this->feature_name[$this->context->employee->id_lang];
+				$this->addMetaTitle($bread_extended[count($bread_extended) - 1]);
 				break;
 
 			case 'editFeatureValue':
@@ -296,6 +299,9 @@ class AdminFeaturesControllerCore extends AdminController
 				}
 				else
 					$bread_extended[] = $this->l('Add New Value');
+
+				if (count($bread_extended) > 0)
+					$this->addMetaTitle($bread_extended[count($bread_extended) - 1]);
 				break;
 		}
 

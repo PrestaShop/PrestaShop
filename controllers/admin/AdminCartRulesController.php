@@ -307,7 +307,7 @@ class AdminCartRulesControllerCore extends AdminController
 		Context::getContext()->smarty->assign('product_rule_group_id', $product_rule_group_id);
 		Context::getContext()->smarty->assign('product_rule_group_quantity', $product_rule_group_quantity);
 		Context::getContext()->smarty->assign('product_rules', $product_rules);
-		return Context::getContext()->smarty->fetch('controllers/cart_rules/product_rule_group.tpl');
+		return $this->createTemplate('product_rule_group.tpl')->fetch();
 	}
 
 	public function getProductRuleDisplay($product_rule_group_id, $product_rule_id, $product_rule_type, $selected = array())

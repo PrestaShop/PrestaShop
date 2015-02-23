@@ -176,7 +176,7 @@ class AdminThemesControllerCore extends AdminController
 						'type' => 'file',
 						'name' => 'PS_FAVICON',
 						'tab' => 'icons',
-						'thumb' => _PS_IMG_.Configuration::get('PS_FAVICON')
+						'thumb' => _PS_IMG_.Configuration::get('PS_FAVICON').(Tools::getValue('conf') ? sprintf('?%04d', rand(0, 9999)) : '')
 					),
 					'PS_STORES_ICON' => array(
 						'title' => $this->l('Store icon'),
@@ -257,9 +257,9 @@ class AdminThemesControllerCore extends AdminController
 				$theme_metas = Db::getInstance()->executeS('SELECT ml.`title`, m.`page`, tm.`left_column` as `left`, tm.`right_column` as `right`, m.`id_meta`, tm.`id_theme_meta`
 					FROM '._DB_PREFIX_.'theme_meta as tm
 					LEFT JOIN '._DB_PREFIX_.'meta m ON (m.`id_meta` = tm.`id_meta`)
-					LEFT JOIN '._DB_PREFIX_.'meta_lang ml ON(ml.id_meta = m.id_meta AND ml.id_lang = '.(int)$this->context->language->id.')
-					WHERE tm.`id_theme` = '.(int)$this->object->id.
-					((int)Context::getContext()->shop->id ? ' AND id_shop = '.(int)Context::getContext()->shop->id : ''));
+					LEFT JOIN '._DB_PREFIX_.'meta_lang ml ON(ml.id_meta = m.id_meta AND ml.id_lang = '.(int)$this->context->language->id.
+					((int)Context::getContext()->shop->id ? ' AND id_shop = '.(int)Context::getContext()->shop->id : '').')
+					WHERE tm.`id_theme` = '.(int)$this->object->id);
 
 				// if no theme_meta are found, we must create them
 				if (empty($theme_metas))
@@ -280,6 +280,7 @@ class AdminThemesControllerCore extends AdminController
 						LEFT JOIN '._DB_PREFIX_.'meta_lang ml ON(ml.id_meta = m.id_meta AND ml.id_lang = '.(int)$this->context->language->id.')
 						WHERE tm.`id_theme` = '.(int)$this->object->id);
 				}
+
 				$image_url = '<img alt="preview" src="'.__PS_BASE_URI__.'themes/'.$theme->directory.'/preview.jpg">';
 
 					foreach ($theme_metas as $key => &$meta)
@@ -466,7 +467,6 @@ class AdminThemesControllerCore extends AdminController
 
 	public function renderList()
 	{
-
 		return parent::renderList();
 	}
 
@@ -583,9 +583,7 @@ class AdminThemesControllerCore extends AdminController
 			if (isset($_FILES['image_preview']) && $_FILES['image_preview']['error'] == 0)
 			{
 				if (@getimagesize($_FILES['image_preview']['tmp_name']) && !ImageManager::validateUpload($_FILES['image_preview'], Tools::getMaxUploadSize()))
-				{
 					move_uploaded_file($_FILES['image_preview']['tmp_name'], _PS_ALL_THEMES_DIR_.$new_dir.'/preview.jpg');
-				}
 				else
 				{
 					$this->errors[] = $this->l('Image is not valid.');
@@ -641,9 +639,7 @@ class AdminThemesControllerCore extends AdminController
 			if (isset($_FILES['image_preview']) && $_FILES['image_preview']['error'] == 0)
 			{
 				if (@getimagesize($_FILES['image_preview']['tmp_name']) && !ImageManager::validateUpload($_FILES['image_preview'], 300000))
-				{
 					move_uploaded_file($_FILES['image_preview']['tmp_name'], _PS_ALL_THEMES_DIR_.$theme->directory.'/preview.jpg');
-				}
 				else
 				{
 					$this->errors[] = $this->l('Image is not valid.');
@@ -742,35 +738,15 @@ class AdminThemesControllerCore extends AdminController
 	{
 		if (!$obj = Module::getInstanceByName($name))
 			return false;
-		if (is_callable(array(
-			$obj,
-			'validateOrder'
-		))
-		)
+		if (is_callable(array($obj,	 'validateOrder')))
 			return false;
-		if (is_callable(array(
-			$obj,
-			'getDateBetween'
-		))
-		)
+		if (is_callable(array($obj, 'getDateBetween')))
 			return false;
-		if (is_callable(array(
-			$obj,
-			'getGridEngines'
-		))
-		)
+		if (is_callable(array($obj, 'getGridEngines')))
 			return false;
-		if (is_callable(array(
-			$obj,
-			'getGraphEngines'
-		))
-		)
+		if (is_callable(array($obj, 'getGraphEngines')))
 			return false;
-		if (is_callable(array(
-			$obj,
-			'hookAdminStatsModules'
-		))
-		)
+		if (is_callable(array($obj, 'hookAdminStatsModules')))
 			return false;
 		else
 			return true;
@@ -1086,9 +1062,7 @@ class AdminThemesControllerCore extends AdminController
 				$this->native_modules = $this->getNativeModule();
 
 				foreach ($this->hook_list as &$row)
-				{
 					$row['exceptions'] = trim(preg_replace('/(,,+)/', ',', $row['exceptions']), ',');
-				}
 
 				$this->to_install = array();
 				$this->to_enable = array();
@@ -1126,12 +1100,8 @@ class AdminThemesControllerCore extends AdminController
 				}
 
 				foreach ($_POST as $key => $value)
-				{
 					if (strncmp($key, 'modulesToExport_module', strlen('modulesToExport_module')) == 0)
-					{
 						$this->to_export[] = $value;
-					}
-				}
 
 				if ($this->to_install)
 					foreach ($this->to_install as $string)
@@ -1189,9 +1159,7 @@ class AdminThemesControllerCore extends AdminController
 		');
 
 		foreach ($hook_list as &$row)
-		{
 			$row['exceptions'] = trim(preg_replace('/(,,+)/', ',', $row['exceptions']), ',');
-		}
 
 		$native_modules = $this->getNativeModule();
 
@@ -1328,9 +1296,7 @@ class AdminThemesControllerCore extends AdminController
 		$languages = $this->getLanguages();
 
 		foreach ($languages as $language)
-		{
 			$fields_value['body_title'][$language['id_lang']] = '';
-		}
 
 		$helper = new HelperForm();
 		$helper->languages = $languages;
@@ -1536,7 +1502,7 @@ class AdminThemesControllerCore extends AdminController
 		return false;
 	}
 
-	protected function installTheme($theme_dir, $sandbox = false)
+	protected function installTheme($theme_dir, $sandbox = false, $redirect = true)
 	{
 		if (!$sandbox)
 		{
@@ -2249,7 +2215,6 @@ class AdminThemesControllerCore extends AdminController
 				)
 			);
 
-
 			if (count($to_install) > 0)
 				$fields_form['form']['input'][] = array(
 					'type' => 'checkbox',
@@ -2417,7 +2382,6 @@ class AdminThemesControllerCore extends AdminController
 
 	private function hookModule($id_module, $module_hooks, $shop)
 	{
-
 		Db::getInstance()->execute('INSERT IGNORE INTO '._DB_PREFIX_.'module_shop (id_module, id_shop) VALUES('.(int)$id_module.', '.(int)$shop.')');
 
 		Db::getInstance()->execute($sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module` WHERE `id_module` = '.(int)$id_module.' AND id_shop = '.(int)$shop);
@@ -2434,7 +2398,6 @@ class AdminThemesControllerCore extends AdminController
 					foreach ($hook['exceptions'] as $exception)
 					{
 						$sql_hook_module_except = 'INSERT INTO `'._DB_PREFIX_.'hook_module_exceptions` (`id_module`, `id_hook`, `file_name`) VALUES ('.(int)$id_module.', '.(int)Hook::getIdByName($hook['hook']).', "'.pSQL($exception).'")';
-
 						Db::getInstance()->execute($sql_hook_module_except);
 					}
 				}
@@ -2709,7 +2672,7 @@ class AdminThemesControllerCore extends AdminController
 			$id_shop_group = null;
 			if (!count($this->errors) && @filemtime(_PS_IMG_DIR_.Configuration::get($field_name)))
 			{
-				if(Shop::isFeatureActive())
+				if (Shop::isFeatureActive())
 				{
 					if (Shop::getContext() == Shop::CONTEXT_SHOP)
 					{

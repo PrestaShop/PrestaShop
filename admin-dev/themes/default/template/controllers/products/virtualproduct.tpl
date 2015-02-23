@@ -79,9 +79,15 @@
 					<input type="hidden" id="virtual_product_id" name="virtual_product_id" value="{$product->productDownload->id}" />
 				{/if}
 				<div class="form-group"{if $is_file} style="display:none"{/if}>
-					<label id="virtual_product_file_label" for="virtual_product_file" class="control-label col-lg-3">{l s='File'}</label>
+					<label id="virtual_product_file_label" for="virtual_product_file" class="control-label col-lg-3">
+						<span class="label-tooltip" data-toggle="tooltip"
+							title="{l s='Upload a file from your computer'} ({Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE')|string_format:'%.2f'} {l s='MB max.'})">
+							{l s='File'}
+						</span>
+					</label>
 					<div class="col-lg-5">
 					{$virtual_product_file_uploader}
+					<p class="help-block">{l s='Upload a file from your computer'} ({Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE')|string_format:'%.2f'} {l s='MB max.'})</p>
 					</div>
 				</div>
 				<div class="form-group">
@@ -99,7 +105,7 @@
 						<a href="{$currentIndex|escape:'html':'UTF-8'}&amp;deleteVirtualProduct=true&amp;updateproduct&amp;token={$token|escape:'html':'UTF-8'}&amp;id_product={$product->id}" class="btn btn-default" onclick="return confirm('{l s='Do you really want to delete this file?' js=1}');"><i class="icon-trash"></i> {l s='Delete this file'}</a>
 					</div>
 				</div>
-				{/if}				
+				{/if}
 				<div class="form-group">
 					<label class="control-label col-lg-3">{l s='Number of allowed downloads'}</label>
 					<div class="col-lg-3">

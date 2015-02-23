@@ -216,7 +216,7 @@ class AdminScenesControllerCore extends AdminController
 		{
 			$this->addJqueryPlugin('autocomplete');
 			$this->addJqueryPlugin('imgareaselect');
-			$this->addJs(_PS_JS_DIR_.'admin-scene-cropping.js' );
+			$this->addJs(_PS_JS_DIR_.'admin/scenes.js' );
 			$image_to_map_desc .= '<div class="panel panel-default"><span class="thumbnail row-margin-bottom"><img id="large_scene_image" alt="" src="'.
 				_THEME_SCENE_DIR_.$obj->id.'-scene_default.jpg?rand='.(int)rand().'" /></span>';
 
@@ -310,7 +310,7 @@ class AdminScenesControllerCore extends AdminController
 			if (!Tools::isSubmit('zones') || !count(Tools::getValue('zones')))
 				$this->errors[] = Tools::displayError('You should create at least one zone.');
 		}
-		
+
 		if (Tools::isSubmit('delete'.$this->table))
 		{
 			if (Validate::isLoadedObject($object = $this->loadObject()))

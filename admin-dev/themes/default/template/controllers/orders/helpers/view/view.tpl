@@ -101,7 +101,6 @@
 			</div>
 		</div>
 	</div>
-	{hook h="displayAdminOrder" id_order=$order->id}
 	<div class="row">
 		<div class="col-lg-7">
 			<div class="panel">
@@ -547,6 +546,7 @@
 					</form>
 				{/if}
 			</div>
+			{hook h="displayAdminOrderLeft" id_order=$order->id}
 		</div>
 		<div class="col-lg-5">
 			<!-- Customer informations -->
@@ -686,7 +686,7 @@
 								<div class="well">
 									<div class="row">
 										<div class="col-sm-6">
-											<a class="btn btn-default pull-right" href="?tab=AdminAddresses&amp;id_address={$addresses.delivery->id}&amp;addaddress&amp;realedit=1&amp;id_order={$order->id}{if ($addresses.delivery->id == $addresses.invoice->id)}&amp;address_type=1{/if}&amp;token={getAdminToken tab='AdminAddresses'}&amp;back={$smarty.server.REQUEST_URI|urlencode}">
+											<a class="btn btn-default pull-right" href="?tab=AdminAddresses&amp;id_address={$addresses.delivery->id}&amp;addaddress&amp;realedit=1&amp;id_order={$order->id}&amp;address_type=1&amp;token={getAdminToken tab='AdminAddresses'}&amp;back={$smarty.server.REQUEST_URI|urlencode}">
 												<i class="icon-pencil"></i>
 												{l s='Edit'}
 											</a>
@@ -736,7 +736,7 @@
 							<div class="well">
 								<div class="row">
 									<div class="col-sm-6">
-										<a class="btn btn-default pull-right" href="?tab=AdminAddresses&amp;id_address={$addresses.invoice->id}&amp;addaddress&amp;realedit=1&amp;id_order={$order->id}{if ($addresses.delivery->id == $addresses.invoice->id)}&amp;address_type=2{/if}&amp;back={$smarty.server.REQUEST_URI|urlencode}&amp;token={getAdminToken tab='AdminAddresses'}">
+										<a class="btn btn-default pull-right" href="?tab=AdminAddresses&amp;id_address={$addresses.invoice->id}&amp;addaddress&amp;realedit=1&amp;id_order={$order->id}&amp;address_type=2&amp;back={$smarty.server.REQUEST_URI|urlencode}&amp;token={getAdminToken tab='AdminAddresses'}">
 											<i class="icon-pencil"></i>
 											{l s='Edit'}
 										</a>
@@ -859,9 +859,10 @@
 					</form>
 				</div>
 			</div>
+			{hook h="displayAdminOrderRight" id_order=$order->id}
 		</div>
 	</div>
-
+	{hook h="displayAdminOrder" id_order=$order->id}
 	<div class="row" id="start_products">
 		<div class="col-lg-12">
 			<form class="container-command-top-spacing" action="{$current_index}&amp;vieworder&amp;token={$smarty.get.token|escape:'html':'UTF-8'}&amp;id_order={$order->id|intval}" method="post" onsubmit="return orderDeleteProduct('{l s='This product cannot be returned.'}', '{l s='Quantity to cancel is greater than quantity available.'}');">
@@ -889,6 +890,11 @@
 							{l s='tax included.'}
 						{/if}
 					{/capture}
+					{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
+						<input type="hidden" name="TaxMethod" value="0">
+					{else}
+						<input type="hidden" name="TaxMethod" value="1">
+					{/if}
 					<div class="table-responsive">
 						<table class="table" id="orderProducts">
 							<thead>
@@ -958,11 +964,11 @@
 						</button>
 					</div>
 					{/if}
+					<div class="clear">&nbsp;</div>
 					<div class="row">
 						<div class="col-xs-6">
 							<div class="alert alert-warning">
-								{l s='For this customer group, prices are displayed as:'}
-								<strong>{$smarty.capture.TaxMethod}</strong>
+								{l s='For this customer group, prices are displayed as: [1]%s[/1]' sprintf=[$smarty.capture.TaxMethod] tags=['<strong>']}
 								{if !Configuration::get('PS_ORDER_RETURN')}
 									<br/><strong>{l s='Merchandise returns are disabled'}</strong>
 								{/if}
@@ -1035,28 +1041,28 @@
 										{/if}
 										<tr id="total_products">
 											<td class="text-right">{l s='Products:'}</td>
-											<td class="amount text-right">
+											<td class="amount text-right nowrap">
 												{displayPrice price=$order_product_price currency=$currency->id}
 											</td>
 											<td class="partial_refund_fields current-edit" style="display:none;"></td>
 										</tr>
 										<tr id="total_discounts" {if $order->total_discounts_tax_incl == 0}style="display: none;"{/if}>
 											<td class="text-right">{l s='Discounts'}</td>
-											<td class="amount text-right">
+											<td class="amount text-right nowrap">
 												-{displayPrice price=$order_discount_price currency=$currency->id}
 											</td>
 											<td class="partial_refund_fields current-edit" style="display:none;"></td>
 										</tr>
 										<tr id="total_wrapping" {if $order->total_wrapping_tax_incl == 0}style="display: none;"{/if}>
 											<td class="text-right">{l s='Wrapping'}</td>
-											<td class="amount text-right">
+											<td class="amount text-right nowrap">
 												{displayPrice price=$order_wrapping_price currency=$currency->id}
 											</td>
 											<td class="partial_refund_fields current-edit" style="display:none;"></td>
 										</tr>
 										<tr id="total_shipping">
 											<td class="text-right">{l s='Shipping'}</td>
-											<td class="amount text-right" >
+											<td class="amount text-right nowrap" >
 												{displayPrice price=$order_shipping_price currency=$currency->id}
 											</td>
 											<td class="partial_refund_fields current-edit" style="display:none;">
@@ -1067,20 +1073,20 @@
 													</div>
 													<input type="text" name="partialRefundShippingCost" value="0" />
 												</div>
-												<p class="help-block"><i class="icon-warning-sign"></i>{l s='(excl tax)'}</p>
+												<p class="help-block"><i class="icon-warning-sign"></i> {l s='(%s)' sprintf=$smarty.capture.TaxMethod}</p>
 											</td>
 										</tr>
 										{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
 			 							<tr id="total_taxes">
 			 								<td class="text-right">{l s='Taxes'}</td>
-			 								<td class="amount text-right" >{displayPrice price=($order->total_paid_tax_incl-$order->total_paid_tax_excl) currency=$currency->id}</td>
+			 								<td class="amount text-right nowrap" >{displayPrice price=($order->total_paid_tax_incl-$order->total_paid_tax_excl) currency=$currency->id}</td>
 			 								<td class="partial_refund_fields current-edit" style="display:none;"></td>
 			 							</tr>
 			 							{/if}
 										{assign var=order_total_price value=$order->total_paid_tax_incl}
 										<tr id="total_order">
 											<td class="text-right"><strong>{l s='Total'}</strong></td>
-											<td class="amount text-right">
+											<td class="amount text-right nowrap">
 												<strong>{displayPrice price=$order_total_price currency=$currency->id}</strong>
 											</td>
 											<td class="partial_refund_fields current-edit" style="display:none;"></td>

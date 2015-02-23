@@ -44,6 +44,12 @@ class OrderControllerCore extends ParentOrderController
 
 		$product = $this->context->cart->checkQuantities(true);
 
+		if ((int)$id_product = $this->context->cart->checkProductsAccess())
+		{
+			$this->step = 0;
+			$this->errors[] = sprintf(Tools::displayError('An item in your cart is no longer available (%1s). You cannot proceed with your order.'), Product::getProductName((int)$id_product));
+		}
+
 		// If some products have disappear
 		if (is_array($product))
 		{
@@ -60,7 +66,7 @@ class OrderControllerCore extends ParentOrderController
 		{
 			$this->step = 0;
 			$this->errors[] = sprintf(
-				Tools::displayError('A minimum purchase total of %1s (tax excl.) is required in order to validate your order, current purchase total is %2s (tax excl.).'),
+				Tools::displayError('A minimum purchase total of %1s (tax excl.) is required to validate your order, current purchase total is %2s (tax excl.).'),
 				Tools::displayPrice($minimal_purchase, $currency), Tools::displayPrice($this->context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS), $currency)
 			);
 		}
@@ -124,7 +130,7 @@ class OrderControllerCore extends ParentOrderController
 					)
 				)
 			);
-			die(Tools::jsonEncode($return));
+			$this->ajaxDie(Tools::jsonEncode($return));
 		}
 
 		if ($this->nbProducts)
@@ -326,12 +332,12 @@ class OrderControllerCore extends ParentOrderController
 		if ($this->errors)
 		{
 			if (Tools::getValue('ajax'))
-				die('{"hasError" : true, "errors" : ["'.implode('\',\'', $this->errors).'"]}');
+				$this->ajaxDie('{"hasError" : true, "errors" : ["'.implode('\',\'', $this->errors).'"]}');
 			$this->step = 1;
 		}
 
 		if ($this->ajax)
-			die(true);
+			$this->ajaxDie(true);
 	}
 
 	/**

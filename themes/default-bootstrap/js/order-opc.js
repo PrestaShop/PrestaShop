@@ -30,7 +30,7 @@ $(document).ready(function(){
 		{
 			$('#opc_account_choice').show();
 			$('#opc_account_form, #opc_invoice_address').hide();
-			
+
 			$(document).on('click', '#opc_createAccount',function(e){
 				e.preventDefault();
 				$('.is_customer_param').show();
@@ -67,7 +67,7 @@ $(document).ready(function(){
 			$('.is_customer_param, #opc_account_form').show();
 			$('#opc_invoice_address').hide();
 		}
-		
+
 		// LOGIN FORM
 		$(document).on('click', '#openLoginFormBlock', function(e){
 			e.preventDefault();
@@ -127,12 +127,12 @@ $(document).ready(function(){
 				}
 			});
 		});
-		
+
 		// VALIDATION / CREATION AJAX
 		$(document).on('click', '#submitAccount, #submitGuestAccount', function(e){
 			e.preventDefault();
 			$('#opc_new_account-overlay, #opc_delivery_methods-overlay, #opc_payment_methods-overlay').fadeIn('slow')
-						
+
 			var callingFile = '';
 			var params = '';
 
@@ -172,7 +172,7 @@ $(document).ready(function(){
 			params += 'is_new_customer='+encodeURIComponent($('#is_new_customer').val())+'&';
 			// Clean the last &
 			params = params.substr(0, params.length-1);
-			
+
 			$.ajax({
 				type: 'POST',
 				headers: { "cache-control": "no-cache" },
@@ -199,8 +199,8 @@ $(document).ready(function(){
 						$('#opc_account_errors').slideUp('fast', function(){
 							$(this).html(errors).slideDown('slow', function(){
 								$.scrollTo('#opc_account_errors', 800);
-							});							
-						});	
+							});
+						});
 					}
 					else
 					{
@@ -214,30 +214,30 @@ $(document).ready(function(){
 					if(jsonData.id_address_delivery !== undefined && jsonData.id_address_delivery > 0)
 						$('#opc_id_address_delivery').val(jsonData.id_address_delivery);
 					if(jsonData.id_address_invoice !== undefined && jsonData.id_address_invoice > 0)
-						$('#opc_id_address_invoice').val(jsonData.id_address_invoice);					
-					
+						$('#opc_id_address_invoice').val(jsonData.id_address_invoice);
+
 					if (jsonData.id_customer !== undefined && jsonData.id_customer !== 0 && jsonData.isSaved)
 					{
 						// update token
 						static_token = jsonData.token;
-						
+
 						// It's not a new customer
 						if ($('#opc_id_customer').val() !== '0')
 							if (!saveAddress('delivery'))
 								return false;
-						
+
 						// update id_customer
 						$('#opc_id_customer').val(jsonData.id_customer);
-						
+
 						if ($('#invoice_address:checked').length !== 0)
 						{
 							if (!saveAddress('invoice'))
 								return false;
 						}
-						
+
 						// update id_customer
 						$('#opc_id_customer').val(jsonData.id_customer);
-						
+
 						// force to refresh carrier list
 						if (isGuest)
 						{
@@ -274,9 +274,9 @@ $(document).ready(function(){
 			});
 		});
 	}
-	
+
 	bindInputs();
-	
+
 	$('#opc_account_form input,select,textarea').change(function() {
 		if ($(this).is(':visible'))
 		{
@@ -335,7 +335,7 @@ function updatePaymentMethodsDisplay()
 					bindUniform();
 			}
 		});
-		$(this).fadeOut('slow');		
+		$(this).fadeOut('slow');
 	});
 }
 
@@ -347,7 +347,7 @@ function updateAddressSelection()
 	$('#opc_account-overlay').fadeIn('slow');
 	$('#opc_delivery_methods-overlay').fadeIn('slow');
 	$('#opc_payment_methods-overlay').fadeIn('slow');
-	
+
 	$.ajax({
 		type: 'POST',
 		headers: { "cache-control": "no-cache" },
@@ -400,7 +400,7 @@ function updateAddressSelection()
 						var name = $(this).find('.cart_quantity_input').attr('name')+'_hidden';
 						$(this).find('.cart_quantity_input').attr('name', $(this).find('.cart_quantity_input').attr('name').replace(/_\d+$/, '_'+idAddress_delivery));
 						if ($(this).find('[name="' + name + '"]').length > 0)
-							$(this).find('[name="' + name +' "]').attr('name', name.replace(/_\d+_hidden$/, '_'+idAddress_delivery+'_hidden'));
+							$(this).find('[name="' + name +'"]').attr('name', name.replace(/_\d+_hidden$/, '_'+idAddress_delivery+'_hidden'));
 					}
 
 					if ($(this).find('.cart_quantity_delete').length > 0 && $(this).find('.cart_quantity_delete').attr('id').length > 0)
@@ -409,7 +409,7 @@ function updateAddressSelection()
 							.attr('id', $(this).find('.cart_quantity_delete').attr('id').replace(/_\d+$/, '_'+idAddress_delivery))
 							.attr('href', $(this).find('.cart_quantity_delete').attr('href').replace(/id_address_delivery=\d+&/, 'id_address_delivery='+idAddress_delivery+'&'));
 					}
-					
+
 					if ($(this).find('.cart_quantity_down').length > 0 && $(this).find('.cart_quantity_down').attr('id').length > 0)
 					{
 						$(this).find('.cart_quantity_down')
@@ -422,7 +422,7 @@ function updateAddressSelection()
 						$(this).find('.cart_quantity_up')
 							.attr('id', $(this).find('.cart_quantity_up').attr('id').replace(/_\d+$/, '_'+idAddress_delivery))
 							.attr('href', $(this).find('.cart_quantity_up').attr('href').replace(/id_address_delivery=\d+&/, 'id_address_delivery='+idAddress_delivery+'&'));
-					}	
+					}
 				});
 
 				// Update global var deliveryAddress
@@ -529,7 +529,7 @@ function updateCarrierSelectionAndGift()
 	var recyclablePackage = 0;
 	var gift = 0;
 	var giftMessage = '';
-	
+
 	var delivery_option_radio = $('.delivery_option_radio');
 	var delivery_option_params = '&';
 	$.each(delivery_option_radio, function(i) {
@@ -546,7 +546,7 @@ function updateCarrierSelectionAndGift()
 		gift = 1;
 		giftMessage = encodeURIComponent($('#gift_message').val());
 	}
-	
+
 	$('#opc_delivery_methods-overlay, #opc_payment_methods-overlay').fadeOut('slow');
 	$.ajax({
 		type: 'POST',
@@ -654,9 +654,9 @@ function saveAddress(type)
 {
 	if (type !== 'delivery' && type !== 'invoice')
 		return false;
-	
+
 	var params = 'firstname=' + encodeURIComponent($('#firstname' + (type == 'invoice' ? '_invoice' : '')).val()) + '&lastname=' + encodeURIComponent($('#lastname'+(type == 'invoice' ? '_invoice' : '')).val()) + '&';
-	if ($('#company' + (type == 'invoice' ? '_invoice' : '')).length)	
+	if ($('#company' + (type == 'invoice' ? '_invoice' : '')).length)
 		params += 'company=' + encodeURIComponent($('#company' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
 	if ($('#vat_number' + (type == 'invoice' ? '_invoice' : '')).length)
 		params += 'vat_number='+encodeURIComponent($('#vat_number' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
@@ -675,13 +675,13 @@ function saveAddress(type)
 	params += 'alias=' + encodeURIComponent($('#alias' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
 	if (type == 'delivery' && $('#opc_id_address_delivery').val() != undefined && parseInt($('#opc_id_address_delivery').val()) > 0)
 		params += 'opc_id_address_delivery=' + parseInt($('#opc_id_address_delivery').val()) + '&';
-	if (type == 'invoice' && $('#opc_id_address_invoice').val() != undefined && parseInt($('#opc_id_address_invoice').val()) > 0)			
-		params += 'opc_id_address_invoice=' + parseInt($('#opc_id_address_invoice').val()) + '&';		
+	if (type == 'invoice' && $('#opc_id_address_invoice').val() != undefined && parseInt($('#opc_id_address_invoice').val()) > 0)
+		params += 'opc_id_address_invoice=' + parseInt($('#opc_id_address_invoice').val()) + '&';
 	// Clean the last &
 	params = params.substr(0, params.length-1);
 
 	var result = false;
-	
+
 	$.ajax({
 		type: 'POST',
 		headers: { "cache-control": "no-cache" },
@@ -773,7 +773,7 @@ function updateNewAccountToAddressBlock()
 				isLogged = 1;
 				if (json.no_address == 1)
 					document.location.href = addressUrl;
-				
+
 				$('#opc_new_account').fadeOut('fast', function() {
 					if (typeof json.formatedAddressFieldsValuesList !== 'undefined' && json.formatedAddressFieldsValuesList )
 						formatedAddressFieldsValuesList = json.formatedAddressFieldsValuesList;
@@ -782,7 +782,7 @@ function updateNewAccountToAddressBlock()
 					// update block user info
 					if (json.block_user_info !== '' && $('#header_user').length == 1)
 					{
-						var elt = $(json.block_user_info).find('#header_user_info').html();					
+						var elt = $(json.block_user_info).find('#header_user_info').html();
 						$('#header_user_info').fadeOut('nortmal', function() {
 							$(this).html(elt).fadeIn();
 						});
@@ -847,12 +847,12 @@ function bindInputs()
 		if (typeof bindUniform !=='undefined')
 			bindUniform();
 	});
-	
+
 	// Recyclable checkbox
 	$('#recyclable').on('click', function(e){
 		updateCarrierSelectionAndGift();
 	});
-	
+
 	// Gift checkbox update
 	$('#gift').off('click').on('click', function(e){
 		if ($('#gift').is(':checked'))
@@ -861,7 +861,7 @@ function bindInputs()
 			$('#gift_div').hide();
 		updateCarrierSelectionAndGift();
 	});
-	
+
 	if ($('#gift').is(':checked'))
 		$('#gift_div').show();
 	else
@@ -871,7 +871,7 @@ function bindInputs()
 	$('#gift_message').on('change', function() {
 		updateCarrierSelectionAndGift();
 	});
-	
+
 	// Term Of Service (TOS)
 	$('#cgv').on('click', function(e){
 		updatePaymentMethodsDisplay();
@@ -888,10 +888,10 @@ function multishippingMode(it)
 		$('#multishipping_mode_box').addClass('on');
 		$('.addressesAreEquals').hide();
 		$('#address_invoice_form').show();
-		
+
 		$(document).on('click', '#link_multishipping_form', function(e){e.preventDefault();});
 		$('.address_add a').attr('href', addressMultishippingUrl);
-		
+
 		$(document).on('click', '#link_multishipping_form', function(e){
 			if(!!$.prototype.fancybox)
 				$.fancybox({
@@ -958,21 +958,21 @@ function multishippingMode(it)
 		else
 			$('#address_invoice_form').show();
 		$('.address_add a').attr('href', addressUrl);
-		
+
 		// Disable multi address shipping
 		$.ajax({
 			type: 'POST',
-			headers: { "cache-control": "no-cache" },			
+			headers: { "cache-control": "no-cache" },
 			url: orderOpcUrl + '?rand=' + new Date().getTime(),
 			async: true,
 			cache: false,
 			data: 'ajax=true&method=noMultiAddressDelivery'
 		});
-		
+
 		// Reload the cart
 		$.ajax({
 			type: 'POST',
-			headers: { "cache-control": "no-cache" },			
+			headers: { "cache-control": "no-cache" },
 			url: orderOpcUrl + '?rand=' + new Date().getTime(),
 			async: true,
 			cache: false,
@@ -984,5 +984,5 @@ function multishippingMode(it)
 		});
 	}
 	if (typeof bindUniform !=='undefined')
-		bindUniform(); 
+		bindUniform();
 }

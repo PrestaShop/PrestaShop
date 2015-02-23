@@ -94,11 +94,11 @@ class AdminCustomersControllerCore extends AdminController
 				'filter_type' => 'int',
 				'order_key' => 'gl!name'
 			),
-			'lastname' => array(
-				'title' => $this->l('Last name')
-			),
 			'firstname' => array(
 				'title' => $this->l('First name')
+			),
+			'lastname' => array(
+				'title' => $this->l('Last name')
 			),
 			'email' => array(
 				'title' => $this->l('Email address')
@@ -223,20 +223,27 @@ class AdminCustomersControllerCore extends AdminController
 		{
 			case '':
 			case 'list':
+				array_pop($this->toolbar_title);
 				$this->toolbar_title[] = $this->l('Manage your Customers');
 				break;
 			case 'view':
 				if (($customer = $this->loadObject(true)) && Validate::isLoadedObject($customer))
+					array_pop($this->toolbar_title);
 					$this->toolbar_title[] = sprintf('Information about Customer: %s', Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname);
 				break;
 			case 'add':
 			case 'edit':
+				array_pop($this->toolbar_title);
 				if (($customer = $this->loadObject(true)) && Validate::isLoadedObject($customer))
 					$this->toolbar_title[] = sprintf($this->l('Editing Customer: %s'), Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname);
 				else
 					$this->toolbar_title[] = $this->l('Creating a new Customer');
 				break;
 		}
+
+		array_pop($this->meta_title);
+		if (count($this->toolbar_title) > 0)
+			$this->addMetaTitle($this->toolbar_title[count($this->toolbar_title) - 1]);
 	}
 
 	public function initPageHeaderToolbar()
@@ -414,6 +421,7 @@ class AdminCustomersControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
+					'disabled' =>  (bool)!Configuration::get('PS_CUSTOMER_NWSL'),
 					'hint' => $this->l('This customer will receive your newsletter via email.')
 				),
 				array(
@@ -435,6 +443,7 @@ class AdminCustomersControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
+					'disabled' =>  (bool)!Configuration::get('PS_CUSTOMER_OPTIN'),
 					'hint' => $this->l('This customer will receive your ads via email.')
 				),
 			)

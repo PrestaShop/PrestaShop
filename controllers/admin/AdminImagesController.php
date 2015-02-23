@@ -63,7 +63,7 @@ class AdminImagesControllerCore extends AdminController
 		// Scenes tab has been removed by default from the installation, but may still exists in updates
 		if (Tab::getIdFromClassName('AdminScenes'))
 			$this->fields_list['scenes'] = array('title' => $this->l('Scenes'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false);
-		
+
 		// No need to display the old image system migration tool except if product images are in _PS_PROD_IMG_DIR_
 		$this->display_move = false;
 		$dir = _PS_PROD_IMG_DIR_;
@@ -132,8 +132,8 @@ class AdminImagesControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_PRODUCT_PICTURE_MAX_SIZE' => array(
-						'title' => $this->l('Maximum file size of customization pictures'),
-						'hint' => $this->l('The maximum file size of product customization pictures that customers can upload (in bytes).'),
+						'title' => $this->l('Maximum file size of product customization pictures'),
+						'hint' => $this->l('The maximum file size of pictures that customers can upload to customize a product (in bytes).'),
 						'validation' => 'isUnsignedInt',
 						'required' => true,
 						'cast' => 'intval',
@@ -167,7 +167,7 @@ class AdminImagesControllerCore extends AdminController
 				'submit' => array('title' => $this->l('Save')),
 			),
 		);
-		
+
 		if ($this->display_move)
 			$this->fields_options['product_images']['fields']['PS_LEGACY_IMAGES'] = array(
 				'title' => $this->l('Use the legacy image filesystem'),
@@ -438,10 +438,10 @@ class AdminImagesControllerCore extends AdminController
 
 		foreach ($toDel as $d)
 			foreach ($type as $imageType)
-				if (preg_match('/^[0-9]+\-'.($product ? '[0-9]+\-' : '').$imageType['name'].'\.jpg$/', $d) 
-					|| (count($type) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.jpg$/', $d))					
+				if (preg_match('/^[0-9]+\-'.($product ? '[0-9]+\-' : '').$imageType['name'].'\.jpg$/', $d)
+					|| (count($type) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.jpg$/', $d))
 					|| preg_match('/^([[:lower:]]{2})\-default\-'.$imageType['name'].'\.jpg$/', $d))
-					if (file_exists($dir.$d))		
+					if (file_exists($dir.$d))
 						unlink($dir.$d);
 
 		// delete product images using new filesystem.
@@ -509,7 +509,7 @@ class AdminImagesControllerCore extends AdminController
 				$existing_img = $dir.$imageObj->getExistingImgPath().'.jpg';
 				if (file_exists($existing_img) && filesize($existing_img))
 				{
-					foreach ($type as $imageType)				
+					foreach ($type as $imageType)
 						if (!file_exists($dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg'))
 							if (!ImageManager::resize($existing_img, $dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg', (int)($imageType['width']), (int)($imageType['height'])))
 								$this->errors[] = Tools::displayError(sprintf('Original image is corrupt (%s) for product ID %2$d or bad permission on folder', $existing_img, (int)$imageObj->id_product));
@@ -549,7 +549,7 @@ class AdminImagesControllerCore extends AdminController
 	}
 
 	/* Hook watermark optimization */
-	protected function _regenerateWatermark($dir)
+	protected function _regenerateWatermark($dir, $type = null)
 	{
 		$result = Db::getInstance()->executeS('
 		SELECT m.`name` FROM `'._DB_PREFIX_.'module` m
@@ -568,7 +568,7 @@ class AdminImagesControllerCore extends AdminController
 					{
 						$moduleInstance = Module::getInstanceByName($module['name']);
 						if ($moduleInstance && is_callable(array($moduleInstance, 'hookActionWatermark')))
-							call_user_func(array($moduleInstance, 'hookActionWatermark'), array('id_image' => $imageObj->id, 'id_product' => $imageObj->id_product));
+							call_user_func(array($moduleInstance, 'hookActionWatermark'), array('id_image' => $imageObj->id, 'id_product' => $imageObj->id_product, 'image_type' => $type));
 
 						if (time() - $this->start_time > $this->max_execution_time - 4) // stop 4 seconds before the tiemout, just enough time to process the end of the page on a slow server
 							return 'timeout';
@@ -622,7 +622,7 @@ class AdminImagesControllerCore extends AdminController
 			else
 			{
 				if ($proc['type'] == 'products')
-					if ($this->_regenerateWatermark($proc['dir']) == 'timeout')
+					if ($this->_regenerateWatermark($proc['dir'], $formats) == 'timeout')
 						$this->errors[] = Tools::displayError('Server timed out. The watermark may not have been applied to all images.');
 				if (!count($this->errors))
 					if ($this->_regenerateNoPictureImages($proc['dir'], $formats, $languages))
@@ -654,7 +654,7 @@ class AdminImagesControllerCore extends AdminController
 				'desc' => $this->l('Add new image type', null, null, false),
 				'icon' => 'process-icon-new'
 			);
-		
+
 		parent::initPageHeaderToolbar();
 	}
 

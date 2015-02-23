@@ -293,14 +293,6 @@ class WarehouseCore extends ObjectModel
 	{
 
 		// if it's a pack, returns warehouses if and only if some products use the advanced stock management
-		if (Pack::isPack($id_product))
-		{
-			$warehouses = Warehouse::getPackWarehouses($id_product);
-			$res = array();
-			foreach ($warehouses as $warehouse)
-				$res[]['id_warehouse'] = $warehouse;
-			return $res;
-		}
 		$share_stock = false;
 		if ($id_shop === null)
 		{
@@ -310,7 +302,7 @@ class WarehouseCore extends ObjectModel
 			{
 				$shop_group = Context::getContext()->shop->getGroup();
 				$id_shop = (int)Context::getContext()->shop->id;
-			}	
+			}
 			$share_stock = $shop_group->share_stock;
 		}
 		else
@@ -536,7 +528,7 @@ class WarehouseCore extends ObjectModel
 			$res = call_user_func_array('array_intersect', $list);
 		return $res;
 	}
-	
+
 	public function resetStockAvailable()
 	{
 		$products = WarehouseProductLocation::getProducts((int)$this->id);

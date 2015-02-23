@@ -243,8 +243,10 @@ class AdminCmsControllerCore extends AdminController
 
 	public function renderList()
 	{
+		$this->_group = 'GROUP BY a.`id_cms`';
 		//self::$currentIndex = self::$currentIndex.'&cms';
 		$this->position_group_identifier = (int)$this->id_cms_category;
+
 		$this->toolbar_title = $this->l('Pages in this category');
 		$this->toolbar_btn['new'] = array(
 			'href' => self::$currentIndex.'&add'.$this->table.'&id_cms_category='.(int)$this->id_cms_category.'&token='.$this->token,

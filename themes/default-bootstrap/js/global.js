@@ -47,15 +47,25 @@ $(document).ready(function(){
 			if (typeof request != 'undefined' && request)
 				var requestSortProducts = request;
  			var splitData = $(this).val().split(':');
+ 			var url = '';
 			if (typeof requestSortProducts != 'undefined' && requestSortProducts)
-				document.location.href = requestSortProducts + ((requestSortProducts.indexOf('?') < 0) ? '?' : '&') + 'orderby=' + splitData[0] + '&orderway=' + splitData[1];
+			{
+				url += requestSortProducts ;
+				if (typeof splitData[0] !== 'undefined' && splitData[0])
+				{
+					url += ( requestSortProducts.indexOf('?') < 0 ? '?' : '&') + 'orderby=' + splitData[0] + (splitData[1] ? '&orderway=' + splitData[1] : '');
+					if (typeof splitData[1] !== 'undefined' && splitData[1])
+						url += '&orderway=' + splitData[1];
+				}
+				document.location.href = url;
+			}
     	});
 
 		$(document).on('change', 'select[name="n"]', function(){
 			$(this.form).submit();
 		});
 
-		$(document).on('change', 'select[name="currency_payement"]', function(){
+		$(document).on('change', 'select[name="currency_payment"]', function(){
 			setCurrency($(this).val());
 		});
 	}
@@ -96,7 +106,8 @@ $(document).ready(function(){
 
 	// Close Alert messages
 	$(".alert.alert-danger").on('click', this, function(e){
-		$(this).fadeOut();
+		if (e.offsetX >= 16 && e.offsetX <= 39 && e.offsetY >= 16 && e.offsetY <= 34)
+			$(this).fadeOut();
 	});
 });
 
@@ -169,10 +180,11 @@ function blockHover(status)
 {
 	var screenLg = $('body').find('.container').width() == 1170;
 
-	if (screenLg)
-		$('.product_list .button-container').hide();
-	else
-		$('.product_list .button-container').show();
+	if ($('.product_list').is('.grid'))
+		if (screenLg)
+			$('.product_list .button-container').hide();
+		else
+			$('.product_list .button-container').show();
 
 	$(document).off('mouseenter').on('mouseenter', '.product_list.grid li.ajax_block_product .product-container', function(e){
 		if (screenLg)
@@ -198,6 +210,14 @@ function quick_view()
 	$(document).on('click', '.quick-view:visible, .quick-view-mobile:visible', function(e){
 		e.preventDefault();
 		var url = this.rel;
+		var anchor = '';
+
+		if (url.indexOf('#') != -1)
+		{
+			anchor = url.substring(url.indexOf('#'), url.length);
+			url = url.substring(0, url.indexOf('#'));
+		}
+
 		if (url.indexOf('?') != -1)
 			url += '&';
 		else
@@ -209,7 +229,7 @@ function quick_view()
 				'width':    1087,
 				'height':   610,
 				'type':     'iframe',
-				'href':     url + 'content_only=1'
+				'href':     url + 'content_only=1' + anchor
 			});
 	});
 }
@@ -383,6 +403,8 @@ function accordion(status)
 			$(this).toggleClass('active').parent().find('.block_content').stop().slideToggle('medium');
 		});
 		$('#right_column, #left_column').addClass('accordion').find('.block .block_content').slideUp('fast');
+		if (typeof(ajaxCart) !== 'undefined')
+			ajaxCart.collapse();
 	}
 	else
 	{

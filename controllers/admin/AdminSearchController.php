@@ -140,7 +140,7 @@ class AdminSearchControllerCore extends AdminController
 				/* Handle module name */
 				if ($searchType == 7 && Validate::isModuleName($this->query) AND ($module = Module::getInstanceByName($this->query)) && Validate::isLoadedObject($module))
 					Tools::redirectAdmin('index.php?tab=AdminModules&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).'&token='.Tools::getAdminTokenLite('AdminModules'));
-				
+
 				/* Normal catalog search */
 				$this->searchModule();
 			}
@@ -180,7 +180,7 @@ class AdminSearchControllerCore extends AdminController
 	{
 		$this->_list['customers'] = Customer::searchByName($this->query);
 	}
-	
+
 	public function searchModule()
 	{
 		$this->_list['modules'] = array();
@@ -196,8 +196,14 @@ class AdminSearchControllerCore extends AdminController
 		{
 			$iso_lang = Tools::strtolower(Context::getContext()->language->iso_code);
 			$iso_country = Tools::strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
-			if (($json_content = Tools::file_get_contents('https://api.addons.prestashop.com/'._PS_VERSION_.'/search/'.urlencode($this->query).'/'.$iso_country.'/'.$iso_lang.'/')) != false)
-				$this->_list['addons'] = Tools::jsonDecode($json_content, true);
+			if (($json_content = Tools::file_get_contents('https://api-addons.prestashop.com/'._PS_VERSION_.'/search/'.urlencode($this->query).'/'.$iso_country.'/'.$iso_lang.'/')) != false)
+			{
+				$results = Tools::jsonDecode($json_content, true);
+				if (isset($results['id']))
+					$this->_list['addons']  = array($results);
+				else
+					$this->_list['addons']  =  $results;
+			}
 		}
 	}
 
@@ -213,7 +219,7 @@ class AdminSearchControllerCore extends AdminController
 		global $_LANGADM;
 		if ($_LANGADM === null)
 			return;
-		
+
 		$tabs = array();
 		$key_match = array();
 		$result = Db::getInstance()->executeS('

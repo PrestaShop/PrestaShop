@@ -78,40 +78,40 @@ abstract class ObjectModelCore
 	/**
 	 * @deprecated 1.5.0 This property shouldn't be overloaded anymore in class, use static $definition['fields'] property instead
 	 */
- 	protected $fieldsRequired = array();
+	protected $fieldsRequired = array();
 
 	/**
 	 * @deprecated 1.5.0 This property shouldn't be overloaded anymore in class, use static $definition['fields'] property instead
 	 */
- 	protected $fieldsSize = array();
+	protected $fieldsSize = array();
 
 	/**
 	 * @deprecated 1.5.0 This property shouldn't be overloaded anymore in class, use static $definition['fields'] property instead
 	 */
- 	protected $fieldsValidate = array();
+	protected $fieldsValidate = array();
 
 	/**
 	 * @deprecated 1.5.0 This property shouldn't be overloaded anymore in class, use static $definition['fields'] property instead
 	 */
- 	protected $fieldsRequiredLang = array();
+	protected $fieldsRequiredLang = array();
 
 	/**
 	 * @deprecated 1.5.0 This property shouldn't be overloaded anymore in class, use static $definition['fields'] property instead
 	 */
- 	protected $fieldsSizeLang = array();
+	protected $fieldsSizeLang = array();
 
 	/**
 	 * @deprecated 1.5.0 This property shouldn't be overloaded anymore in class, use static $definition['fields'] property instead
 	 */
- 	protected $fieldsValidateLang = array();
+	protected $fieldsValidateLang = array();
 
 	/**
 	 * @deprecated 1.5.0
 	 */
- 	protected $tables = array();
+	protected $tables = array();
 
- 	/** @var array tables */
- 	protected $webserviceParameters = array();
+	/** @var array tables */
+	protected $webserviceParameters = array();
 
 	/** @var  string path to image directory. Used for image deletion. */
 	protected $image_dir = null;
@@ -146,6 +146,11 @@ abstract class ObjectModelCore
 	 * @var boolean, enable possibility to define an id before adding object
 	 */
 	public $force_id = false;
+
+	/**
+	 * @var boolean cache the objects in memory
+	 */
+	protected static $cache_objects = true;
 
 	/**
 	 * Returns object validation rules (fields validity)
@@ -183,7 +188,7 @@ abstract class ObjectModelCore
 		{
 			$this->def = ObjectModel::getDefinition($class_name);
 			$this->setDefinitionRetrocompatibility();
-		 	if (!Validate::isTableOrIdentifier($this->def['primary']) || !Validate::isTableOrIdentifier($this->def['table']))
+			if (!Validate::isTableOrIdentifier($this->def['primary']) || !Validate::isTableOrIdentifier($this->def['table']))
 					throw new PrestaShopException('Identifier or table format not valid for class '.$class_name);
 
 			ObjectModel::$loaded_classes[$class_name] = get_object_vars($this);
@@ -208,14 +213,14 @@ abstract class ObjectModelCore
 		{
 			// Load object from database if object id is present
 			$cache_id = 'objectmodel_'.$this->def['classname'].'_'.(int)$id.'_'.(int)$this->id_shop.'_'.(int)$id_lang;
-			if (!Cache::isStored($cache_id))
+			if (!ObjectModel::$cache_objects || !Cache::isStored($cache_id))
 			{
 				$sql = new DbQuery();
 				$sql->from($this->def['table'], 'a');
 				$sql->where('a.'.$this->def['primary'].' = '.(int)$id);
 
 				// Get lang informations
-				if ($id_lang)
+				if ($id_lang && isset($this->def['multilang']) && $this->def['multilang'])
 				{
 					$sql->leftJoin($this->def['table'].'_lang', 'b', 'a.'.$this->def['primary'].' = b.'.$this->def['primary'].' AND b.id_lang = '.(int)$id_lang);
 					if ($this->id_shop && !empty($this->def['multilang_shop']))
@@ -245,7 +250,8 @@ abstract class ObjectModelCore
 									}
 								}
 					}
-					Cache::store($cache_id, $object_datas);
+					if (ObjectModel::$cache_objects)
+						Cache::store($cache_id, $object_datas);
 				}
 			}
 			else
@@ -778,15 +784,15 @@ abstract class ObjectModelCore
 	 */
 	public function toggleStatus()
 	{
-	 	// Object must have a variable called 'active'
-	 	if (!array_key_exists('active', $this))
+		// Object must have a variable called 'active'
+		if (!array_key_exists('active', $this))
 			throw new PrestaShopException('property "active" is missing in object '.get_class($this));
 
 		// Update only active field
 		$this->setFieldsToUpdate(array('active' => true));
 
-	 	// Update active status on object
-	 	$this->active = !(int)$this->active;
+		// Update active status on object
+		$this->active = !(int)$this->active;
 
 		// Change status to active/inactive
 		return $this->update(false);
@@ -966,7 +972,7 @@ abstract class ObjectModelCore
 						return sprintf(Tools::displayError('The field %1$s (%2$s) is too long (%3$d chars max, html chars including).'), $this->displayFieldName($field, get_class($this)), $language->name, $size['max']);
 					}
 					else
-					 	return sprintf(Tools::displayError('The %1$s field is too long (%2$d chars max).'), $this->displayFieldName($field, get_class($this)), $size['max']);
+						return sprintf(Tools::displayError('The %1$s field is too long (%2$d chars max).'), $this->displayFieldName($field, get_class($this)), $size['max']);
 				}
 				else
 					return 'Property '.get_class($this).'->'.$field.' length ('.$length.') must be between '.$size['min'].' and '.$size['max'];
@@ -1009,7 +1015,7 @@ abstract class ObjectModelCore
 	{
 		global $_FIELDS;
 
-		if(!isset($context))
+		if (!isset($context))
 			$context = Context::getContext();
 
 		if ($_FIELDS === null && file_exists(_PS_TRANSLATIONS_DIR_.$context->language->iso_code.'/fields.php'))
@@ -1135,10 +1141,10 @@ abstract class ObjectModelCore
 			if (isset($details['validate']))
 			{
 				$current_field['validateMethod'] = (
- 								array_key_exists('validateMethod', $resource_parameters['fields'][$field_name]) ?
- 								array_merge($resource_parameters['fields'][$field_name]['validateMethod'], array($details['validate'])) :
- 								array($details['validate'])
- 							);
+								array_key_exists('validateMethod', $resource_parameters['fields'][$field_name]) ?
+								array_merge($resource_parameters['fields'][$field_name]['validateMethod'], array($details['validate'])) :
+								array($details['validate'])
+							);
 			}
 			$resource_parameters['fields'][$field_name] = array_merge($resource_parameters['fields'][$field_name], $current_field);
 
@@ -1270,13 +1276,19 @@ abstract class ObjectModelCore
 			$id_shop = Context::getContext()->shop->id;
 
 		$cache_id = 'objectmodel_shop_'.$this->def['classname'].'_'.(int)$this->id.'-'.(int)$id_shop;
-		if (!Cache::isStored($cache_id))
+		if (!ObjectModel::$cache_objects || !Cache::isStored($cache_id))
 		{
-			$sql = 'SELECT id_shop
-					FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_shop`
-					WHERE `'.$this->def['primary'].'` = '.(int)$this->id.'
-						AND id_shop = '.(int)$id_shop;
-			Cache::store($cache_id, (bool)Db::getInstance()->getValue($sql));
+			$associated = (bool)Db::getInstance()->getValue('
+				SELECT id_shop
+				FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_shop`
+				WHERE `'.$this->def['primary'].'` = '.(int)$this->id.'
+				AND id_shop = '.(int)$id_shop
+			);
+
+			if (!ObjectModel::$cache_objects)
+				return $associated;
+
+			Cache::store($cache_id, $associated);
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -1635,7 +1647,7 @@ abstract class ObjectModelCore
 		{
 			$this->def['fields'] = array();
 			$suffixs = array('', 'Lang');
-			foreach($suffixs as $suffix)
+			foreach ($suffixs as $suffix)
 			{
 				foreach ($this->{'fieldsValidate'.$suffix} as $field => $validate)
 				{
@@ -1697,5 +1709,15 @@ abstract class ObjectModelCore
 	public function setFieldsToUpdate(array $fields)
 	{
 		$this->update_fields = $fields;
+	}
+
+	public static function enableCache()
+	{
+		ObjectModel::$cache_objects = true;
+	}
+
+	public static function disableCache()
+	{
+		ObjectModel::$cache_objects = false;
 	}
 }

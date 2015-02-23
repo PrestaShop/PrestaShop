@@ -1236,20 +1236,24 @@ class CarrierCore extends ObjectModel
 		else
 			$carrier_list = $available_carrier_list;
 
-		if (isset($warehouse_carrier_list) && count($warehouse_carrier_list))
+		if (isset($warehouse_carrier_list))
 			$carrier_list = array_intersect($carrier_list, $warehouse_carrier_list);
+
+		$cart_quantity = 0;
+
+		foreach ($cart->getProducts(false, $product->id) as $cart_product)
+			if ($cart_product['id_product'] == $product->id)
+				$cart_quantity += $cart_product['cart_quantity'];
 
 		if ($product->width > 0 || $product->height > 0 || $product->depth > 0 || $product->weight > 0)
 		{
-			$total_weight = $cart->getTotalWeight();
-
 			foreach ($carrier_list as $key => $id_carrier)
 			{
 				$carrier = new Carrier($id_carrier);
 				if (($carrier->max_width > 0 && $carrier->max_width < $product->width)
 					|| ($carrier->max_height > 0 && $carrier->max_height < $product->height)
 					|| ($carrier->max_depth > 0 && $carrier->max_depth < $product->depth)
-					|| ($carrier->max_weight > 0 && $carrier->max_weight < $total_weight))
+					|| ($carrier->max_weight > 0 && $carrier->max_weight < $product->weight * $cart_quantity))
 					unset($carrier_list[$key]);
 			}
 		}

@@ -50,7 +50,7 @@ class PrestaShopAutoload
 	public $index = array();
 
 	public $_include_override_path = true;
-	
+
 	protected static $class_aliases = array(
 		'Collection' => 'PrestaShopCollection',
 		'Autoload' => 'PrestaShopAutoload',
@@ -88,7 +88,7 @@ class PrestaShopAutoload
 	 */
 	public function load($classname)
 	{
-		// Retrocompatibility 
+		// Retrocompatibility
 		if (isset(PrestaShopAutoload::$class_aliases[$classname]) && !interface_exists($classname, false) && !class_exists($classname, false))
 			return eval('class '.$classname.' extends '.PrestaShopAutoload::$class_aliases[$classname].' {}');
 
@@ -102,7 +102,7 @@ class PrestaShopAutoload
 		{
 			$class_dir = (isset($this->index[$classname]['override'])
 				&& $this->index[$classname]['override'] === true) ? $this->normalizeDirectory(_PS_ROOT_DIR_) : $this->root_dir;
-	
+
 			// If requested class does not exist, load associated core class
 			if (isset($this->index[$classname]) && !$this->index[$classname]['path'])
 			{
@@ -182,15 +182,15 @@ class PrestaShopAutoload
 				elseif (substr($file, -4) == '.php')
 				{
 					$content = file_get_contents($root_dir.$path.$file);
-			 		$pattern = '#\W((abstract\s+)?class|interface)\s+(?P<classname>'.basename($file, '.php').'(?:Core)?)'
-			 					.'(?:\s+extends\s+[a-z][a-z0-9_]*)?(?:\s+implements\s+[a-z][a-z0-9_]*(?:\s*,\s*[a-z][a-z0-9_]*)*)?\s*\{#i';
-			 		if (preg_match($pattern, $content, $m))
-			 		{
-			 			$classes[$m['classname']] = array(
-			 				'path' => $path.$file,
-			 				'type' => trim($m[1]),
-			 				'override' => $host_mode
-			 			);
+					$pattern = '#\W((abstract\s+)?class|interface)\s+(?P<classname>'.basename($file, '.php').'(?:Core)?)'
+								.'(?:\s+extends\s+[a-z][a-z0-9_]*)?(?:\s+implements\s+[a-z][\\a-z0-9_]*(?:\s*,\s*[a-z][\\a-z0-9_]*)*)?\s*\{#i';
+					if (preg_match($pattern, $content, $m))
+					{
+						$classes[$m['classname']] = array(
+							'path' => $path.$file,
+							'type' => trim($m[1]),
+							'override' => $host_mode
+						);
 
 						if (substr($m['classname'], -4) == 'Core')
 							$classes[substr($m['classname'], 0, -4)] = array(
@@ -198,7 +198,7 @@ class PrestaShopAutoload
 								'type' => $classes[$m['classname']]['type'],
 								'override' => $host_mode
 							);
-			 		}
+					}
 				}
 			}
 		}
@@ -213,6 +213,6 @@ class PrestaShopAutoload
 
 	private function normalizeDirectory($directory)
 	{
-		return rtrim($directory, '/\\') .  DIRECTORY_SEPARATOR;
+		return rtrim($directory, '/\\').DIRECTORY_SEPARATOR;
 	}
 }

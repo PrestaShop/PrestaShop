@@ -57,7 +57,7 @@
 				{l s='Contact'}
 			</a>
 			/&nbsp;
-			<a href="http://forge.prestashop.com/?utm_source=back-office&amp;utm_medium=footer&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}"class="footer_link _blank">
+			<a href="http://forge.prestashop.com/?utm_source=back-office&amp;utm_medium=footer&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="footer_link _blank">
 				<i class="icon-bug"></i>
 				{l s='Bug Tracker'}
 			</a>
@@ -76,7 +76,7 @@
 				<i class="icon-book"></i>
 				{l s='Training'}
 			</a>
-			{if $iso_is_fr && host_mode == 0}
+			{if $iso_is_fr && !host_mode}
 			<p>Questions • Renseignements • Formations :
 				<strong>+33 (0)1.40.18.30.04</strong>
 			</p>

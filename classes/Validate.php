@@ -199,7 +199,7 @@ class ValidateCore
 	 */
 	public static function isModuleName($module_name)
 	{
-		return (is_string($module_name) && preg_match('/^[a-zA-Z0-9_-]+$/', $module_name));
+		return (is_string($module_name) && preg_match('/^[a-z0-9_]+$/', $module_name));
 	}
 
 	/**
@@ -280,7 +280,7 @@ class ValidateCore
 	 */
 	public static function isDiscountName($voucher)
 	{
-		return preg_match('/^[^!<>,;?=+()@"°{}_$%:]{3,32}$/u', $voucher);
+		return preg_match(Tools::cleanNonUnicodeSupport('/^[^!<>,;?=+()@"°{}_$%:]{3,32}$/u'), $voucher);
 	}
 
 	/**
@@ -291,7 +291,7 @@ class ValidateCore
 	 */
 	public static function isCatalogName($name)
 	{
-		return preg_match('/^[^<>;=#{}]*$/u', $name);
+		return preg_match(Tools::cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u'), $name);
 	}
 
 	/**
@@ -325,10 +325,10 @@ class ValidateCore
 	public static function isLinkRewrite($link)
 	{
 		if (Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL'))
-			return preg_match('/^[_a-zA-Z0-9\-\pL]+$/u', $link);
+			return preg_match(Tools::cleanNonUnicodeSupport('/^[_a-zA-Z0-9\pL\pS-]+$/u'), $link);
 		return preg_match('/^[_a-zA-Z0-9\-]+$/', $link);
 	}
-	
+
 	/**
 	 * Check for a route pattern validity
 	 *
@@ -338,10 +338,10 @@ class ValidateCore
 	public static function isRoutePattern($pattern)
 	{
 		if (Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL'))
-			return preg_match('/^[_a-zA-Z0-9\(\)\.{}:\/\-\pL]+$/u', $pattern);
+			return preg_match(Tools::cleanNonUnicodeSupport('/^[_a-zA-Z0-9\(\)\.{}:\/\pL\pS-]+$/u'), $pattern);
 		return preg_match('/^[_a-zA-Z0-9\(\)\.{}:\/\-]+$/', $pattern);
 	}
-	
+
 	/**
 	 * Check for a postal address validity
 	 *
@@ -350,7 +350,7 @@ class ValidateCore
 	 */
 	public static function isAddress($address)
 	{
-		return empty($address) || preg_match('/^[^!<>?=+@{}_$%]*$/u', $address);
+		return empty($address) || preg_match(Tools::cleanNonUnicodeSupport('/^[^!<>?=+@{}_$%]*$/u'), $address);
 	}
 
 	/**
@@ -361,7 +361,7 @@ class ValidateCore
 	 */
 	public static function isCityName($city)
 	{
-		return preg_match('/^[^!<>;?=+@#"°{}_$%]*$/u', $city);
+		return preg_match(Tools::cleanNonUnicodeSupport('/^[^!<>;?=+@#"°{}_$%]*$/u'), $city);
 	}
 
 	/**
@@ -372,7 +372,7 @@ class ValidateCore
 	 */
 	public static function isValidSearch($search)
 	{
-		return preg_match('/^[^<>;=#{}]{0,64}$/u', $search);
+		return preg_match(Tools::cleanNonUnicodeSupport('/^[^<>;=#{}]{0,64}$/u'), $search);
 	}
 
 	/**
@@ -383,7 +383,7 @@ class ValidateCore
 	 */
 	public static function isGenericName($name)
 	{
-		return empty($name) || preg_match('/^[^<>={}]*$/u', $name);
+		return empty($name) || preg_match(Tools::cleanNonUnicodeSupport('/^[^<>={}]*$/u'), $name);
 	}
 
 	/**
@@ -419,7 +419,7 @@ class ValidateCore
 	 */
 	public static function isReference($reference)
 	{
-		return preg_match('/^[^<>;={}]*$/u', $reference);
+		return preg_match(Tools::cleanNonUnicodeSupport('/^[^<>;={}]*$/u'), $reference);
 	}
 
 	/**
@@ -631,7 +631,7 @@ class ValidateCore
 	 */
 	public static function isTagsList($list)
 	{
-		return preg_match('/^[^!<>;?=+#"°{}_$%]*$/u', $list);
+		return preg_match(Tools::cleanNonUnicodeSupport('/^[^!<>;?=+#"°{}_$%]*$/u'), $list);
 	}
 
 	/**
@@ -666,7 +666,7 @@ class ValidateCore
 	{
 		return (preg_match('#^[0-9]+$#', (string)$value) && $value < 4294967296 && $value >= 0);
 	}
-	
+
 	/**
 	 * Check for an percentage validity (between 0 and 100)
 	 *
@@ -725,7 +725,7 @@ class ValidateCore
 	 */
 	public static function isUrl($url)
 	{
-		return preg_match('/^[~:#,$%&_=\(\)\.\? \+\-@\/a-zA-Z0-9]+$/', $url);
+		return preg_match(Tools::cleanNonUnicodeSupport('/^[~:#,$%&_=\(\)\.\? \+\-@\/a-zA-Z0-9\pL\pS-]+$/u'), $url);
 	}
 
 	/**
@@ -770,13 +770,13 @@ class ValidateCore
 
 	public static function isUnixName($data)
 	{
-		return preg_match('/^[a-z0-9\._-]+$/ui', $data);
+		return preg_match(Tools::cleanNonUnicodeSupport('/^[a-z0-9\._-]+$/ui'), $data);
 	}
 
 	public static function isTablePrefix($data)
 	{
 		// Even if "-" is theorically allowed, it will be considered a syntax error if you do not add backquotes (`) around the table name
-		return preg_match('/^[a-z0-9_]+$/ui', $data);
+		return preg_match(Tools::cleanNonUnicodeSupport('/^[a-z0-9_]+$/ui'), $data);
 	}
 
 	/**
@@ -791,8 +791,8 @@ class ValidateCore
 	}
 
 	/**
-	 * Check for standard name directory validity 
-	 * 
+	 * Check for standard name directory validity
+	 *
 	 * @param string $dir Directory to validate
 	 * @return boolean Validity is ok or not
 	 */
@@ -809,7 +809,7 @@ class ValidateCore
 	 */
 	public static function isTabName($name)
 	{
-		return preg_match('/^[^<>]+$/u', $name);
+		return preg_match(Tools::cleanNonUnicodeSupport('/^[^<>]+$/u'), $name);
 	}
 
 	public static function isWeightUnit($unit)
@@ -851,7 +851,7 @@ class ValidateCore
 	 */
 	public static function isLabel($label)
 	{
-		return (preg_match('/^[^{}<>]*$/u', $label));
+		return (preg_match(Tools::cleanNonUnicodeSupport('/^[^{}<>]*$/u'), $label));
 	}
 
 	/**
@@ -1062,12 +1062,12 @@ class ValidateCore
 	{
 		return (bool)preg_match('/^[0-9]{3,4}[a-zA-Z]{1}$/s', $ape);
 	}
-	
+
 	public static function isControllerName($name)
 	{
-		return (bool)(is_string($name) && preg_match('/^[0-9a-zA-Z-_]*$/u', $name));
+		return (bool)(is_string($name) && preg_match(Tools::cleanNonUnicodeSupport('/^[0-9a-zA-Z-_]*$/u'), $name));
 	}
-	
+
 	public static function isPrestaShopVersion($version)
 	{
 		return (preg_match('/^[0-1]\.[0-9]{1,2}(\.[0-9]{1,2}){0,2}$/', $version) && ip2long($version));

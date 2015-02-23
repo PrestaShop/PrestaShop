@@ -48,20 +48,20 @@ class CompareControllerCore extends FrontController
 				if (CompareProduct::getNumberProducts($id_compare) < Configuration::get('PS_COMPARATOR_MAX_ITEM'))
 					CompareProduct::addCompareProduct($id_compare, (int)Tools::getValue('id_product'));
 				else
-					die('0');
+					$this->ajaxDie('0');
 			}
 			elseif (Tools::getValue('action') == 'remove')
 			{
 				if (isset($this->context->cookie->id_compare))
 					CompareProduct::removeCompareProduct((int)$this->context->cookie->id_compare, (int)Tools::getValue('id_product'));
 				else
-					die('0');
+					$this->ajaxDie('0');
 			}
 			else
-				die('0');
-			die('1');
+				$this->ajaxDie('0');
+			$this->ajaxDie('1');
 		}
-		die('0');
+		$this->ajaxDie('0');
 	}
 
 	/**

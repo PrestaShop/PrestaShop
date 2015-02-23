@@ -179,7 +179,7 @@ $(document).ready(function()
 	else if (typeof ajax_allowed != 'undefined' && !ajax_allowed)
 		$('#buy_block').attr('target', '_top');
 
-	if (!!$.prototype.bxSlider)
+	if ($('#bxslider li').length && !!$.prototype.bxSlider)
 		$('#bxslider').bxSlider({
 			minSlides: 1,
 			maxSlides: 6,
@@ -192,6 +192,9 @@ $(document).ready(function()
 			infiniteLoop:false,
 			hideControlOnEnd: true
 		});
+
+	if (!$('#bxslider li').length)
+		$('.accessories-block').parent().remove();
 
 	if (typeof product_fileDefaultHtml !== 'undefined')
 		$.uniform.defaults.fileDefaultHtml = product_fileDefaultHtml;
@@ -232,7 +235,7 @@ $(document).on('click', '#customizedDatas input', function(e){
 	$('#customizedDatas').append(uploading_in_progress);
 });
 
-$(document).on('click', 'a[name=resetImages]', function(e){
+$(document).on('click', 'a[data-id=resetImages]', function(e){
 	e.preventDefault();
 	refreshProductImages(0);
 });
@@ -335,9 +338,9 @@ function arrayUnique(a)
 //check if a function exists
 function function_exists(function_name)
 {
-	if (typeof function_name == 'string')
-		return (typeof window[function_name] == 'function');
-	return (function_name instanceof Function);
+	if (typeof function_name === 'string')
+		function_name = this.window[function_name];
+	return typeof function_name === 'function';
 }
 
 //execute oosHook js code
@@ -484,7 +487,7 @@ function updateDisplay()
 		//availability value management
 		if (stock_management && availableNowValue != '')
 		{
-			$('#availability_value').removeClass('warning_inline').text(availableNowValue).show();
+			$('#availability_value').removeClass('label-warning').addClass('label-success').text(availableNowValue).show();
 			$('#availability_statut:hidden').show()
 		}
 		else
@@ -541,11 +544,11 @@ function updateDisplay()
 		{
 			$('#availability_value').text(doesntExistNoMore + (globalQuantity > 0 ? ' ' + doesntExistNoMoreBut : ''));
 			if (!allowBuyWhenOutOfStock)
-				$('#availability_value').addClass('warning_inline');
+				$('#availability_value').removeClass('label-success').addClass('label-warning');
 		}
 		else
 		{
-			$('#availability_value').text(doesntExist).addClass('warning_inline');
+			$('#availability_value').text(doesntExist).removeClass('label-success').addClass('label-warning');
 			$('#oosHook').hide();
 		}
 
@@ -578,7 +581,7 @@ function updateDisplay()
 			$('#add_to_cart:hidden').fadeIn(600);
 
 			if (stock_management && availableLaterValue != '')
-				$('#availability_value').removeClass('warning_inline').text(availableLaterValue).show('slow');
+				$('#availability_value').addClass('label-warning').text(availableLaterValue).show('slow');
 			else
 				$('#availability_statut:visible').hide('slow');
 		}
@@ -744,7 +747,10 @@ function updatePrice()
 			}
 			else
 			{
-				$('#reduction_percent_display').html('-' + parseFloat(discountPercentage).toFixed(0) + '%');
+				var toFix = 2;
+				if ((parseFloat(discountPercentage).toFixed(2) - parseFloat(discountPercentage).toFixed(0)) == 0)
+					toFix = 0;
+				$('#reduction_percent_display').html('-' + parseFloat(discountPercentage).toFixed(toFix) + '%');
 				$('#reduction_percent').show();
 			}
 		}
@@ -981,7 +987,7 @@ function getProductAttribute()
 	for (var i in attributesCombinations)
 		for (var a in tab_attributes)
 			if (attributesCombinations[i]['id_attribute'] === tab_attributes[a])
-				request += '/'+attributesCombinations[i]['group'] + attribute_anchor_separator + attributesCombinations[i]['attribute'];
+				request += '/' + attributesCombinations[i]['id_attribute'] + '-' + attributesCombinations[i]['group'] + attribute_anchor_separator + attributesCombinations[i]['attribute'];
 	request = request.replace(request.substring(0, 1), '#/');
 	var url = window.location + '';
 
@@ -1030,8 +1036,8 @@ function checkUrl()
 			count = 0;
 			for (var z in tabValues)
 				for (var a in attributesCombinations)
-					if (attributesCombinations[a]['group'] === decodeURIComponent(tabValues[z][0])
-						&& attributesCombinations[a]['attribute'] === decodeURIComponent(tabValues[z][1]))
+					if (attributesCombinations[a]['group'] === decodeURIComponent(tabValues[z][1])
+						&& attributesCombinations[a]['id_attribute'] === decodeURIComponent(tabValues[z][0]))
 					{
 						count++;
 

@@ -198,6 +198,7 @@ class SearchCore
 				$word = str_replace('%', '\\%', $word);
 				$word = str_replace('_', '\\_', $word);
 				$start_search = Configuration::get('PS_SEARCH_START') ? '%': '';
+				$end_search = Configuration::get('PS_SEARCH_END') ? '': '%';
 
 				$intersect_array[] = 'SELECT si.id_product
 					FROM '._DB_PREFIX_.'search_word sw
@@ -206,12 +207,12 @@ class SearchCore
 						AND sw.id_shop = '.$context->shop->id.'
 						AND sw.word LIKE
 					'.($word[0] == '-'
-						? ' \''.$start_search.pSQL(Tools::substr($word, 1, PS_SEARCH_MAX_WORD_LENGTH)).'%\''
-						: ' \''.$start_search.pSQL(Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH)).'%\''
+						? ' \''.$start_search.pSQL(Tools::substr($word, 1, PS_SEARCH_MAX_WORD_LENGTH)).$end_search.'\''
+						: ' \''.$start_search.pSQL(Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH)).$end_search.'\''
 					);
 
 				if ($word[0] != '-')
-					$score_array[] = 'sw.word LIKE \''.$start_search.pSQL(Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH)).'%\'';
+					$score_array[] = 'sw.word LIKE \''.$start_search.pSQL(Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH)).$end_search.'\'';
 			}
 			else
 				unset($words[$key]);
@@ -455,7 +456,7 @@ class SearchCore
 				ON pa.id_product = p.id_product
 			LEFT JOIN '._DB_PREFIX_.'product_lang pl
 				ON p.id_product = pl.id_product
-			'.Shop::addSqlAssociation('product', 'p').'
+			'.Shop::addSqlAssociation('product', 'p', true, null, true).'
 			LEFT JOIN '._DB_PREFIX_.'category_lang cl
 				ON (cl.id_category = product_shop.id_category_default AND pl.id_lang = cl.id_lang AND cl.id_shop = product_shop.id_shop)
 			LEFT JOIN '._DB_PREFIX_.'manufacturer m

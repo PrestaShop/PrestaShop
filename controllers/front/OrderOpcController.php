@@ -51,17 +51,16 @@ class OrderOpcControllerCore extends ParentOrderController
 			{
 				if (Tools::isSubmit('method'))
 				{
-
 					switch (Tools::getValue('method'))
 					{
 						case 'updateMessage':
 							if (Tools::isSubmit('message'))
 							{
-								$txtMessage = urldecode(Tools::getValue('message'));
-								$this->_updateMessage($txtMessage);
+								$txt_message = urldecode(Tools::getValue('message'));
+								$this->_updateMessage($txt_message);
 								if (count($this->errors))
-									die('{"hasError" : true, "errors" : ["'.implode('\',\'', $this->errors).'"]}');
-								die(true);
+									$this->ajaxDie('{"hasError" : true, "errors" : ["'.implode('\',\'', $this->errors).'"]}');
+								$this->ajaxDie(true);
 							}
 							break;
 
@@ -81,12 +80,12 @@ class OrderOpcControllerCore extends ParentOrderController
 										$this->getFormatedSummaryDetail()
 									);
 									Cart::addExtraCarriers($return);
-									die(Tools::jsonEncode($return));
+									$this->ajaxDie(Tools::jsonEncode($return));
 								}
 								else
 									$this->errors[] = Tools::displayError('An error occurred while updating the cart.');
 								if (count($this->errors))
-									die('{"hasError" : true, "errors" : ["'.implode('\',\'', $this->errors).'"]}');
+									$this->ajaxDie('{"hasError" : true, "errors" : ["'.implode('\',\'', $this->errors).'"]}');
 								exit;
 							}
 							break;
@@ -95,7 +94,7 @@ class OrderOpcControllerCore extends ParentOrderController
 							if (Tools::isSubmit('checked'))
 							{
 								$this->context->cookie->checkedTOS = (int)Tools::getValue('checked');
-								die(Tools::jsonEncode(array(
+								$this->ajaxDie(Tools::jsonEncode(array(
 									'HOOK_TOP_PAYMENT' => Hook::exec('displayPaymentTop'),
 									'HOOK_PAYMENT' => $this->_getPaymentMethods()
 								)));
@@ -103,7 +102,7 @@ class OrderOpcControllerCore extends ParentOrderController
 							break;
 
 						case 'getCarrierList':
-							die(Tools::jsonEncode($this->_getCarrierList()));
+							$this->ajaxDie(Tools::jsonEncode($this->_getCarrierList()));
 							break;
 
 						case 'editCustomer':
@@ -132,7 +131,7 @@ class OrderOpcControllerCore extends ParentOrderController
 								$return['isSaved'] = (bool)$this->context->customer->update();
 							else
 								$return['isSaved'] = false;
-							die(Tools::jsonEncode($return));
+							$this->ajaxDie(Tools::jsonEncode($return));
 							break;
 
 						case 'getAddressBlockAndCarriersAndPayments':
@@ -140,26 +139,26 @@ class OrderOpcControllerCore extends ParentOrderController
 							{
 								// check if customer have addresses
 								if (!Customer::getAddressesTotalById($this->context->customer->id))
-									die(Tools::jsonEncode(array('no_address' => 1)));
+									$this->ajaxDie(Tools::jsonEncode(array('no_address' => 1)));
 								if (file_exists(_PS_MODULE_DIR_.'blockuserinfo/blockuserinfo.php'))
 								{
 									include_once(_PS_MODULE_DIR_.'blockuserinfo/blockuserinfo.php');
-									$blockUserInfo = new BlockUserInfo();
+									$block_user_info = new BlockUserInfo();
 								}
 								$this->context->smarty->assign('isVirtualCart', $this->context->cart->isVirtualCart());
 								$this->_processAddressFormat();
 								$this->_assignAddress();
 
-								if (!($formatedAddressFieldsValuesList = $this->context->smarty->getTemplateVars('formatedAddressFieldsValuesList')))
-									$formatedAddressFieldsValuesList = array();
+								if (!($formated_address_fields_values_list = $this->context->smarty->getTemplateVars('formatedAddressFieldsValuesList')))
+									$formated_address_fields_values_list = array();
 
 								// Wrapping fees
 								$wrapping_fees = $this->context->cart->getGiftWrappingPrice(false);
 								$wrapping_fees_tax_inc = $this->context->cart->getGiftWrappingPrice();
 								$return = array_merge(array(
 									'order_opc_adress' => $this->context->smarty->fetch(_PS_THEME_DIR_.'order-address.tpl'),
-									'block_user_info' => (isset($blockUserInfo) ? $blockUserInfo->hookDisplayTop(array()) : ''),
-									'formatedAddressFieldsValuesList' => $formatedAddressFieldsValuesList,
+									'block_user_info' => (isset($block_user_info) ? $block_user_info->hookDisplayTop(array()) : ''),
+									'formatedAddressFieldsValuesList' => $formated_address_fields_values_list,
 									'carrier_data' => $this->_getCarrierList(),
 									'HOOK_TOP_PAYMENT' => Hook::exec('displayPaymentTop'),
 									'HOOK_PAYMENT' => $this->_getPaymentMethods(),
@@ -168,7 +167,7 @@ class OrderOpcControllerCore extends ParentOrderController
 									),
 									$this->getFormatedSummaryDetail()
 								);
-								die(Tools::jsonEncode($return));
+								$this->ajaxDie(Tools::jsonEncode($return));
 							}
 							die(Tools::displayError());
 							break;
@@ -181,7 +180,7 @@ class OrderOpcControllerCore extends ParentOrderController
 								$email = $this->context->customer->email;
 								if ($this->context->customer->is_guest)
 									$this->context->customer->logout(); // If guest we clear the cookie for security reason
-								die('freeorder:'.$order->reference.':'.$email);
+								$this->ajaxDie('freeorder:'.$order->reference.':'.$email);
 							}
 							exit;
 							break;
@@ -248,16 +247,16 @@ class OrderOpcControllerCore extends ParentOrderController
 										$result = array_merge($result, array(
 											'HOOK_TOP_PAYMENT' => Hook::exec('displayPaymentTop'),
 											'HOOK_PAYMENT' => $this->_getPaymentMethods(),
-											'gift_price' => Tools::displayPrice(Tools::convertPrice(Product::getTaxCalculationMethod() == 1 ? $wrapping_fees : $wrapping_fees_tax_inc, new Currency((int)($this->context->cookie->id_currency)))),
+											'gift_price' => Tools::displayPrice(Tools::convertPrice(Product::getTaxCalculationMethod() == 1 ? $wrapping_fees : $wrapping_fees_tax_inc, new Currency((int)$this->context->cookie->id_currency))),
 											'carrier_data' => $this->_getCarrierList(),
 											'refresh' => (bool)$this->ajax_refresh),
 											$this->getFormatedSummaryDetail()
 										);
-										die(Tools::jsonEncode($result));
+										$this->ajaxDie(Tools::jsonEncode($result));
 									}
 								}
 								if (count($this->errors))
-									die(Tools::jsonEncode(array(
+									$this->ajaxDie(Tools::jsonEncode(array(
 										'hasError' => true,
 										'errors' => $this->errors
 									)));
@@ -275,7 +274,7 @@ class OrderOpcControllerCore extends ParentOrderController
 								$this->context->smarty->assign('address_list', array());
 							$this->setTemplate(_PS_THEME_DIR_.'order-address-multishipping-products.tpl');
 							$this->display();
-							die();
+							$this->ajaxDie();
 							break;
 
 						case 'cartReload':
@@ -287,12 +286,12 @@ class OrderOpcControllerCore extends ParentOrderController
 							$this->context->smarty->assign('opc', true);
 							$this->setTemplate(_PS_THEME_DIR_.'shopping-cart.tpl');
 							$this->display();
-							die();
+							$this->ajaxDie();
 							break;
 
 						case 'noMultiAddressDelivery':
 							$this->context->cart->setNoMultishipping();
-							die();
+							$this->ajaxDie();
 							break;
 
 						default:
@@ -305,8 +304,8 @@ class OrderOpcControllerCore extends ParentOrderController
 		}
 		elseif (Tools::isSubmit('ajax'))
 		{
-			$this->errors[] = Tools::displayError('No product in your cart.');
-			die('{"hasError" : true, "errors" : ["'.implode('\',\'', $this->errors).'"]}');
+			$this->errors[] = Tools::displayError('There is no product in your cart.');
+			$this->ajaxDie('{"hasError" : true, "errors" : ["'.implode('\',\'', $this->errors).'"]}');
 		}
 	}
 
@@ -379,7 +378,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			'PS_GUEST_CHECKOUT_ENABLED' => Configuration::get('PS_GUEST_CHECKOUT_ENABLED'),
 			'errorCarrier' => Tools::displayError('You must choose a carrier.', false),
 			'errorTOS' => Tools::displayError('You must accept the Terms of Service.', false),
-			'isPaymentStep' => (bool)(isset($_GET['isPaymentStep']) && $_GET['isPaymentStep']),
+			'isPaymentStep' => isset($_GET['isPaymentStep']) && $_GET['isPaymentStep'],
 			'genders' => Gender::getGenders(),
 			'one_phone_at_least' => (int)Configuration::get('PS_ONE_PHONE_AT_LEAST'),
 			'HOOK_CREATE_ACCOUNT_FORM' => Hook::exec('displayCustomerAccountForm'),
@@ -406,8 +405,9 @@ class OrderOpcControllerCore extends ParentOrderController
 		$this->_assignPayment();
 		Tools::safePostVars();
 
-		$blocknewsletter = Module::getInstanceByName('blocknewsletter');
-		$this->context->smarty->assign('newsletter', (bool)$blocknewsletter && $blocknewsletter->active);
+		$newsletter = Configuration::get('PS_CUSTOMER_NWSL') || (Module::isInstalled('blocknewsletter') && Module::getInstanceByName('blocknewsletter')->active);
+		$this->context->smarty->assign('newsletter', $newsletter);
+		$this->context->smarty->assign('optin', (bool)Configuration::get('PS_CUSTOMER_OPTIN'));
 		$this->context->smarty->assign('field_required', $this->context->customer->validateFieldsRequiredDatabase());
 
 		$this->_processAddressFormat();
@@ -488,11 +488,11 @@ class OrderOpcControllerCore extends ParentOrderController
 		if (!$this->isLogged)
 		{
 			$carriers = $this->context->cart->simulateCarriersOutput();
-			$oldMessage = Message::getMessageByCartId((int)$this->context->cart->id);
+			$old_message = Message::getMessageByCartId((int)$this->context->cart->id);
 			$this->context->smarty->assign(array(
 				'HOOK_EXTRACARRIER' => null,
 				'HOOK_EXTRACARRIER_ADDR' => null,
-				'oldMessage' => isset($oldMessage['message'])? $oldMessage['message'] : '',
+				'oldMessage' => isset($old_message['message'])? $old_message['message'] : '',
 				'HOOK_BEFORECARRIER' => Hook::exec('displayBeforeCarrier', array(
 					'carriers' => $carriers,
 					'checked' => $this->context->cart->simulateCarrierSelectedOutput(),
@@ -528,9 +528,9 @@ class OrderOpcControllerCore extends ParentOrderController
 		if (count($this->context->cart->getDeliveryOptionList()) == 0 && !$this->context->cart->isVirtualCart())
 		{
 			if ($this->context->cart->isMultiAddressDelivery())
-				return '<p class="warning">'.Tools::displayError('Error: None of your chosen carriers deliver to some of  the addresses you\'ve selected.').'</p>';
+				return '<p class="warning">'.Tools::displayError('Error: None of your chosen carriers deliver to some of the addresses you have selected.').'</p>';
 			else
-				return '<p class="warning">'.Tools::displayError('Error: None of your chosen carriers deliver to the address you\'ve selected.').'</p>';
+				return '<p class="warning">'.Tools::displayError('Error: None of your chosen carriers deliver to the address you have selected.').'</p>';
 		}
 		if (!$this->context->cart->getDeliveryOption(null, false) && !$this->context->cart->isVirtualCart())
 			return '<p class="warning">'.Tools::displayError('Error: Please choose a carrier.').'</p>';
@@ -540,8 +540,11 @@ class OrderOpcControllerCore extends ParentOrderController
 			return '<p class="warning">'.Tools::displayError('Please accept the Terms of Service.').'</p>';
 
 		/* If some products have disappear */
-		if (!$this->context->cart->checkQuantities())
-			return '<p class="warning">'.Tools::displayError('An item in your cart is no longer available. You cannot proceed with your order.').'</p>';
+		if (is_array($product = $this->context->cart->checkQuantities(true)))
+			return '<p class="warning">'.sprintf(Tools::displayError('An item (%s) in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.'), $product['name']).'</p>';
+
+		if ((int)$id_product = $this->context->cart->checkProductsAccess())
+			return '<p class="warning">'.sprintf(Tools::displayError('An item in your cart is no longer available (%s). You cannot proceed with your order.'), Product::getProductName((int)$id_product)).'</p>';
 
 		/* Check minimal amount */
 		$currency = Currency::getCurrency((int)$this->context->cart->id_currency);
@@ -549,7 +552,7 @@ class OrderOpcControllerCore extends ParentOrderController
 		$minimal_purchase = Tools::convertPrice((float)Configuration::get('PS_PURCHASE_MINIMUM'), $currency);
 		if ($this->context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS) < $minimal_purchase)
 			return '<p class="warning">'.sprintf(
-				Tools::displayError('A minimum purchase total of %1s (tax excl.) is required in order to validate your order, current purchase total is %2s (tax excl.).'),
+				Tools::displayError('A minimum purchase total of %1s (tax excl.) is required to validate your order, current purchase total is %2s (tax excl.).'),
 				Tools::displayPrice($minimal_purchase, $currency), Tools::displayPrice($this->context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS), $currency)
 			).'</p>';
 
@@ -579,7 +582,7 @@ class OrderOpcControllerCore extends ParentOrderController
 
 		$wrapping_fees = $this->context->cart->getGiftWrappingPrice(false);
 		$wrapping_fees_tax_inc = $this->context->cart->getGiftWrappingPrice();
-		$oldMessage = Message::getMessageByCartId((int)$this->context->cart->id);
+		$old_message = Message::getMessageByCartId((int)$this->context->cart->id);
 
 		$free_shipping = false;
 		foreach ($this->context->cart->getCartRules() as $rule)
@@ -611,7 +614,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			'delivery_option' => $delivery_option,
 			'address_collection' => $this->context->cart->getAddressCollection(),
 			'opc' => true,
-			'oldMessage' => isset($oldMessage['message'])? $oldMessage['message'] : '',
+			'oldMessage' => isset($old_message['message'])? $old_message['message'] : '',
 			'HOOK_BEFORECARRIER' => Hook::exec('displayBeforeCarrier', array(
 				'carriers' => $carriers,
 				'delivery_option_list' => $this->context->cart->getDeliveryOptionList(),
@@ -623,7 +626,7 @@ class OrderOpcControllerCore extends ParentOrderController
 
 		$this->context->smarty->assign($vars);
 
-		if (!Address::isCountryActiveById((int)($this->context->cart->id_address_delivery)) && $this->context->cart->id_address_delivery != 0)
+		if (!Address::isCountryActiveById((int)$this->context->cart->id_address_delivery) && $this->context->cart->id_address_delivery != 0)
 			$this->errors[] = Tools::displayError('This address is not in a valid area.');
 		elseif ((!Validate::isLoadedObject($address_delivery) || $address_delivery->deleted) && $this->context->cart->id_address_delivery != 0)
 			$this->errors[] = Tools::displayError('This address is invalid.');
@@ -656,16 +659,16 @@ class OrderOpcControllerCore extends ParentOrderController
 
 		$inv_adr_fields = AddressFormat::getOrderedAddressFields((int)$address_delivery->id_country, false, true);
 		$dlv_adr_fields = AddressFormat::getOrderedAddressFields((int)$address_invoice->id_country, false, true);
-		$requireFormFieldsList = AddressFormat::getFieldsRequired();
+		$require_form_fields_list = AddressFormat::getFieldsRequired();
 
 		// Add missing require fields for a new user susbscription form
-		foreach ($requireFormFieldsList as $fieldName)
-			if (!in_array($fieldName, $dlv_adr_fields))
-				$dlv_adr_fields[] = trim($fieldName);
+		foreach ($require_form_fields_list as $field_name)
+			if (!in_array($field_name, $dlv_adr_fields))
+				$dlv_adr_fields[] = trim($field_name);
 
-		foreach ($requireFormFieldsList as $fieldName)
-			if (!in_array($fieldName, $inv_adr_fields))
-				$inv_adr_fields[] = trim($fieldName);
+		foreach ($require_form_fields_list as $field_name)
+			if (!in_array($field_name, $inv_adr_fields))
+				$inv_adr_fields[] = trim($field_name);
 
 		$inv_all_fields = array();
 		$dlv_all_fields = array();
@@ -682,7 +685,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			$this->context->smarty->assign(array(
 				$adr_type.'_adr_fields' => ${$adr_type.'_adr_fields'},
 				$adr_type.'_all_fields' => ${$adr_type.'_all_fields'},
-				'required_fields' => $requireFormFieldsList
+				'required_fields' => $require_form_fields_list
 			));
 		}
 	}

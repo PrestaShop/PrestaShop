@@ -60,9 +60,11 @@ class SearchControllerCore extends FrontController
 		if ($this->ajax_search)
 		{
 			$searchResults = Search::find((int)(Tools::getValue('id_lang')), $query, 1, 10, 'position', 'desc', true);
-			foreach ($searchResults as &$product)
-				$product['product_link'] = $this->context->link->getProductLink($product['id_product'], $product['prewrite'], $product['crewrite']);
-			die(Tools::jsonEncode($searchResults));
+			if (is_array($searchResults))
+				foreach ($searchResults as &$product)
+					$product['product_link'] = $this->context->link->getProductLink($product['id_product'], $product['prewrite'], $product['crewrite']);
+
+			$this->ajaxDie(Tools::jsonEncode($searchResults));
 		}
 
 		//Only controller content initialization when the user use the normal search
@@ -96,8 +98,10 @@ class SearchControllerCore extends FrontController
 			$original_query = $query;
 			$query = Tools::replaceAccentedChars(urldecode($query));
 			$search = Search::find($this->context->language->id, $query, $this->p, $this->n, $this->orderBy, $this->orderWay);
-			foreach ($search['result'] as &$product)
-				$product['link'] .= (strpos($product['link'], '?') === false ? '?' : '&').'search_query='.urlencode($query).'&results='.(int)$search['total'];
+			if (is_array($search['result']))
+				foreach ($search['result'] as &$product)
+					$product['link'] .= (strpos($product['link'], '?') === false ? '?' : '&').'search_query='.urlencode($query).'&results='.(int)$search['total'];
+
 			Hook::exec('actionSearch', array('expr' => $query, 'total' => $search['total']));
 			$nbProducts = $search['total'];
 			$this->pagination($nbProducts);

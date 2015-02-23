@@ -1228,11 +1228,39 @@ class AdminSupplyOrdersControllerCore extends AdminController
 								$supply_order->id_supply_order_state = $state['id_supply_order_state'];
 								if ($supply_order->save())
 								{
+									if ($new_state->pending_receipt)
+									{
+										$supply_order_details = $supply_order->getEntries();
+										foreach ($supply_order_details as $supply_order_detail)
+										{
+											$is_present = Stock::productIsPresentInStock($supply_order_detail['id_product'], $supply_order_detail['id_product_attribute'], $supply_order->id_warehouse);
+											if (!$is_present)
+											{
+												$stock = new Stock();
+
+												$stock_params = array(
+													'id_product_attribute' => $supply_order_detail['id_product_attribute'],
+													'id_product' => $supply_order_detail['id_product'],
+													'physical_quantity' => 0,
+													'price_te' => $supply_order_detail['price_te'],
+													'usable_quantity' => 0,
+													'id_warehouse' => $supply_order->id_warehouse
+												);
+
+												// saves stock in warehouse
+												$stock->hydrate($stock_params);
+												$stock->add();
+											}
+										}
+									}
+
 									// if pending_receipt,
 									// or if the order is being canceled,
+									// or if the order is received completely
 									// synchronizes StockAvailable
 									if (($new_state->pending_receipt && !$new_state->receipt_state) ||
-										($old_state->receipt_state && $new_state->enclosed && !$new_state->receipt_state))
+										(($old_state->receipt_state || $old_state->pending_receipt) && $new_state->enclosed && !$new_state->receipt_state) ||
+										($new_state->receipt_state && $new_state->enclosed))
 									{
 										$supply_order_details = $supply_order->getEntries();
 										$products_done = array();

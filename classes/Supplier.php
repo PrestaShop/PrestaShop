@@ -133,15 +133,13 @@ class SupplierCore extends ObjectModel
 				$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
 			}
 
-			foreach ($suppliers as $key => $supplier)
-			{
-				$sql = '
-					SELECT DISTINCT(ps.`id_product`)
+			$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+					SELECT  p.`id_supplier`, COUNT(DISTINCT p.`id_product`) as nb_products
 					FROM `'._DB_PREFIX_.'product_supplier` ps
 					JOIN `'._DB_PREFIX_.'product` p ON (ps.`id_product`= p.`id_product`)
 					'.Shop::addSqlAssociation('product', 'p').'
-					WHERE ps.`id_supplier` = '.(int)$supplier['id_supplier'].'
-					AND ps.id_product_attribute = 0'.
+					LEFT JOIN `'._DB_PREFIX_.'supplier` as m ON (m.`id_supplier`= p.`id_supplier`)
+					WHERE ps.id_product_attribute = 0'.
 					($active ? ' AND product_shop.`active` = 1' : '').
 					' AND product_shop.`visibility` NOT IN ("none")'.
 					($all_groups ? '' :'
@@ -150,10 +148,20 @@ class SupplierCore extends ObjectModel
 						FROM `'._DB_PREFIX_.'category_group` cg
 						LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
 						WHERE cg.`id_group` '.$sql_groups.'
-					)');
-				$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-				$suppliers[$key]['nb_products'] = count($result);
-			}
+					)
+					GROUP BY p.`id_supplier`'
+				));
+
+			$counts = array();
+			foreach ($results as $result)
+				$counts[(int)$result['id_supplier']] = (int)$result['nb_products'];
+
+			if (count($counts) && is_array($suppliers))
+				foreach ($suppliers as $key => $supplier)
+					if (isset($counts[(int)$supplier['id_supplier']]))
+						$suppliers[$key]['nb_products'] = $counts[(int)$supplier['id_supplier']];
+					else
+						$suppliers[$key]['nb_products'] = 0;
 		}
 
 		$nb_suppliers = count($suppliers);

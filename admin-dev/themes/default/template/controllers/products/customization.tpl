@@ -32,9 +32,10 @@
 		<div class="alert alert-info">{l s='Warning, if you change the value of fields with an orange bullet %s, the value will be changed for all other shops for this product' sprintf=$bullet_common_field}</div>
 	{/if}
 
-	<div class="form-group">		
+	<div class="form-group">
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="uploadable_files" type="uploadable_files"}</span></div>
 		<label class="control-label col-lg-3" for="uploadable_files">
-			{$bullet_common_field} 
+			{$bullet_common_field}
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='Number of upload file fields to be displayed to the user.'}">
 				{l s='File fields'}
@@ -45,8 +46,9 @@
 		</div>
 	</div>
 	<div class="form-group">
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="text_fields" type="text_fields"}</span></div>
 		<label class="control-label col-lg-3" for="text_fields">
-			{$bullet_common_field} 
+			{$bullet_common_field}
 			<span class="label-tooltip" data-toggle="tooltip"
 				title="{l s='Number of text fields to be displayed to the user.'}">
 				{l s='Text fields'}

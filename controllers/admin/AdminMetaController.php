@@ -34,8 +34,8 @@ class AdminMetaControllerCore extends AdminController
 
 	public function __construct()
 	{
-	 	$this->table = 'meta';
-	 	$this->className = 'Meta';
+		$this->table = 'meta';
+		$this->className = 'Meta';
 
 		$this->bootstrap = true;
 		$this->identifier_name = 'page';
@@ -205,7 +205,7 @@ class AdminMetaControllerCore extends AdminController
 		else
 			$this->fields_options['manage_domain_name'] = array(
 				'title' => $this->l('Manage domain name'),
-				'description' => $this->l('You can search for a new domain name or add a domain name that you already own. You will be redirected to your PrestaShop.com account.'),
+				'description' => $this->l('You can search for a new domain name or add a domain name that you already own. You will be redirected to your PrestaShop account.'),
 				'buttons' => array(
 					array(
 						'title' => $this->l('Add a domain name'),
@@ -217,15 +217,12 @@ class AdminMetaControllerCore extends AdminController
 			);
 
 		// Add display route options to options form
-		if (Configuration::get('PS_REWRITING_SETTINGS'))
+		if (Configuration::get('PS_REWRITING_SETTINGS') || Tools::getValue('PS_REWRITING_SETTINGS'))
 		{
-			$this->fields_options['routes'] = array(
-				'title' =>	$this->l('Schema of URLs'),
-				'description' => $this->l('This section enables you to change the default pattern of your links. In order to use this functionality, PrestaShop\'s "Friendly URL" option must be enabled, and Apache\'s URL rewriting module (mod_rewrite) must be activated on your web server.').'<br />'.$this->l('There are several available keywords for each route listed below; note that keywords with * are required!').'<br />'.$this->l('To add a keyword in your URL, use the {keyword} syntax. If the keyword is not empty, you can add text before or after the keyword with syntax {prepend:keyword:append}. For example {-hey-:meta_title} will add "-hey-my-title" in the URL if the meta title is set.'),
-				'fields' => array(),
-				'submit' => array('title' => $this->l('Save'))
-			);
 			$this->addAllRouteFields();
+			$this->fields_options['routes']['title'] = $this->l('Schema of URLs');
+			$this->fields_options['routes']['description'] = $this->l('This section enables you to change the default pattern of your links. In order to use this functionality, PrestaShop\'s "Friendly URL" option must be enabled, and Apache\'s URL rewriting module (mod_rewrite) must be activated on your web server.').'<br />'.$this->l('There are several available keywords for each route listed below; note that keywords with * are required!').'<br />'.$this->l('To add a keyword in your URL, use the {keyword} syntax. If the keyword is not empty, you can add text before or after the keyword with syntax {prepend:keyword:append}. For example {-hey-:meta_title} will add "-hey-my-title" in the URL if the meta title is set.');
+			$this->fields_options['routes']['submit'] = array('title' => $this->l('Save'));
 		}
 
 		$this->fields_options['robots'] = $robots_options;
@@ -279,9 +276,9 @@ class AdminMetaControllerCore extends AdminController
 		$files = Meta::getPages(true, ($this->object->page ? $this->object->page : false));
 
 		$is_index = false;
-		if (is_object($this->object) && is_array($this->object->url_rewrite) &&  count($this->object->url_rewrite))
+		if (is_object($this->object) && is_array($this->object->url_rewrite) && count($this->object->url_rewrite))
 			foreach ($this->object->url_rewrite as $rewrite)
-				if($is_index != true)
+				if ($is_index != true)
 					$is_index = ($this->object->page == 'index' && empty($rewrite)) ? true : false;
 
 		$pages = array(
@@ -304,7 +301,7 @@ class AdminMetaControllerCore extends AdminController
 			);
 		}
 
- 		$this->fields_form = array(
+		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Meta tags'),
 				'icon' => 'icon-tags'

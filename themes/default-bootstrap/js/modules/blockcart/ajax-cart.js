@@ -34,13 +34,10 @@ $(document).ready(function(){
 		ajaxCart.expand();
 	});
 
-	var cart_qty = 0;
 	var current_timestamp = parseInt(new Date().getTime() / 1000);
 
 	if (typeof $('.ajax_cart_quantity').html() == 'undefined' || (typeof generated_date != 'undefined' && generated_date != null && (parseInt(generated_date) + 30) < current_timestamp))
 		ajaxCart.refresh();
-	else
-		cart_qty = parseInt($('.ajax_cart_quantity').html());
 
 	/* roll over cart */
 	var cart_block = new HoverWatcher('#header .cart_block');
@@ -59,9 +56,8 @@ $(document).ready(function(){
 		{
 			if ($(this).next('.cart_block:visible').length && !cart_block.isHoveringOver())
 				$("#header .cart_block").stop(true, true).slideUp(450);
-			else if (ajaxCart.nb_total_products > 0 || cart_qty > 0)
+			else if (ajaxCart.nb_total_products > 0 || parseInt($('.ajax_cart_quantity').html()) > 0)
 				$("#header .cart_block").stop(true, true).slideDown(450);
-
 			return;
 		}
 		else
@@ -70,13 +66,13 @@ $(document).ready(function(){
 
 	$("#header .shopping_cart a:first").hover(
 		function(){
-			if (ajaxCart.nb_total_products > 0 || cart_qty > 0)
+			if (ajaxCart.nb_total_products > 0 || parseInt($('.ajax_cart_quantity').html()) > 0)
 				$("#header .cart_block").stop(true, true).slideDown(450);
 		},
 		function(){
 			setTimeout(function(){
 				if (!shopping_cart.isHoveringOver() && !cart_block.isHoveringOver())
-					$("#header .cart_block").stop(true, true).slideUp(450);				
+					$("#header .cart_block").stop(true, true).slideUp(450);
 			}, 200);
 		}
 	);
@@ -121,7 +117,7 @@ $(document).ready(function(){
 		$('.layer_cart_overlay').hide();
 		$('#layer_cart').fadeOut('fast');
 	});
-	
+
 	$('#columns #layer_cart, #columns .layer_cart_overlay').detach().prependTo('#columns');
 });
 
@@ -131,7 +127,7 @@ var ajaxCart = {
 	//override every button in the page in relation to the cart
 	overrideButtonsInThePage : function(){
 		//for every 'add' buttons...
-		$(document).on('click', '.ajax_add_to_cart_button', function(e){
+		$(document).off('click', '.ajax_add_to_cart_button').on('click', '.ajax_add_to_cart_button', function(e){
 			e.preventDefault();
 			var idProduct =  parseInt($(this).data('id-product'));
 			var minimalQuantity =  parseInt($(this).data('minimal_quantity'));
@@ -141,13 +137,13 @@ var ajaxCart = {
 				ajaxCart.add(idProduct, null, false, this, minimalQuantity);
 		});
 		//for product page 'add' button...
-		$(document).on('click', '#add_to_cart button', function(e){
+		$(document).off('click', '#add_to_cart button').on('click', '#add_to_cart button', function(e){
 			e.preventDefault();
 			ajaxCart.add($('#product_page_product_id').val(), $('#idCombination').val(), true, null, $('#quantity_wanted').val(), null);
 		});
 
 		//for 'delete' buttons in the cart block...
-		$(document).on('click', '.cart_block_list .ajax_cart_block_remove_link', function(e){
+		$(document).off('click', '.cart_block_list .ajax_cart_block_remove_link').on('click', '.cart_block_list .ajax_cart_block_remove_link', function(e){
 			e.preventDefault();
 			// Customized product management
 			var customizationId = 0;
@@ -214,7 +210,7 @@ var ajaxCart = {
 					$('.block_cart_expand').fadeOut('fast', function(){
 						$('.block_cart_collapse').fadeIn('fast');
 					});
-				}			
+				}
 			});
 		}
 	},
@@ -264,7 +260,7 @@ var ajaxCart = {
 	updateCartInformation : function (jsonData, addedFromProductPage){
 		ajaxCart.updateCart(jsonData);
 		//reactive the button when adding has finished
-		if (addedFromProductPage) 
+		if (addedFromProductPage)
 		{
 			$('#add_to_cart button').removeProp('disabled').removeClass('disabled');
 			if (!jsonData.hasError || jsonData.hasError == false)
@@ -281,7 +277,7 @@ var ajaxCart = {
 	add : function(idProduct, idCombination, addedFromProductPage, callerElement, quantity, whishlist){
 		if (addedFromProductPage && !checkCustomizations())
 		{
-			if (contentOnly) 
+			if (contentOnly)
 			{
 				var productUrl = window.document.location.href + '';
 				var data = productUrl.replace('content_only=1', '');
@@ -330,7 +326,7 @@ var ajaxCart = {
 				// add appliance to whishlist module
 				if (whishlist && !jsonData.errors)
 					WishlistAddProductCart(whishlist[0], idProduct, idCombination, whishlist[1]);
-				
+
 				if (!jsonData.hasError)
 				{
 					if (contentOnly)
@@ -345,7 +341,7 @@ var ajaxCart = {
 						$(jsonData.products).each(function(){
 							if (this.id != undefined && this.id == parseInt(idProduct) && this.idCombination == parseInt(idCombination))
 								if (contentOnly)
-									window.parent.ajaxCart.updateLayer(this);	
+									window.parent.ajaxCart.updateLayer(this);
 								else
 									ajaxCart.updateLayer(this);
 						});
@@ -355,17 +351,17 @@ var ajaxCart = {
 								if (contentOnly)
 									window.parent.ajaxCart.updateLayer(this);
 								else
-									ajaxCart.updateLayer(this);					
+									ajaxCart.updateLayer(this);
 						});
 					if (contentOnly)
 						parent.$.fancybox.close();
 				}
-				else 
+				else
 				{
 					if (contentOnly)
 						window.parent.ajaxCart.updateCart(jsonData);
 					else
-						ajaxCart.updateCart(jsonData);	
+						ajaxCart.updateCart(jsonData);
 					if (addedFromProductPage)
 						$('#add_to_cart button').removeProp('disabled').removeClass('disabled');
 					else
@@ -479,6 +475,7 @@ var ajaxCart = {
 								// If the cart is now empty, show the 'no product in the cart' message and close detail
 								if($('.cart_block:first dl.products dt').length == 0)
 								{
+									$('.ajax_cart_quantity').html('0');
 									$("#header .cart_block").stop(true, true).slideUp(200);
 									$('.cart_block_no_products:hidden').slideDown(450);
 									$('.cart_block dl.products').remove();
@@ -786,9 +783,14 @@ var ajaxCart = {
 		$('.ajax_cart_total').text($.trim(jsonData.productTotal));
 
 		if (parseFloat(jsonData.shippingCostFloat) > 0)
-			$('.ajax_cart_shipping_cost').text(jsonData.shippingCost);
-		else if (typeof(freeShippingTranslation) != 'undefined')
-				$('.ajax_cart_shipping_cost').html(freeShippingTranslation);
+			$('.ajax_cart_shipping_cost').text(jsonData.shippingCost).parent().find('.unvisible').show();
+		else if ((hasDeliveryAddress || typeof(orderProcess) !== 'undefined' && orderProcess == 'order-opc') && typeof(freeShippingTranslation) != 'undefined')
+			$('.ajax_cart_shipping_cost').html(freeShippingTranslation);
+		else if (!hasDeliveryAddress)
+			$('.ajax_cart_shipping_cost').html(toBeDetermined);
+
+		if (hasDeliveryAddress)
+			$('.ajax_cart_shipping_cost').parent().find('.unvisible').show();
 
 		$('.ajax_cart_tax_cost').text(jsonData.taxCost);
 		$('.cart_block_wrapping_cost').text(jsonData.wrappingCost);

@@ -79,8 +79,12 @@ class AliasCore extends ObjectModel
 		}
 	}
 
+
 	public function add($autodate = true, $nullValues = false)
 	{
+		$this->alias = Tools::replaceAccentedChars($this->alias);
+		$this->search = Tools::replaceAccentedChars($this->search);
+
 		if (parent::add($autodate, $nullValues))
 		{
 			// Set cache of feature detachable to true

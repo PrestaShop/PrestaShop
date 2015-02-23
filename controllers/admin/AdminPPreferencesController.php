@@ -131,7 +131,7 @@ class AdminPPreferencesControllerCore extends AdminController
 							array('id' => '4', 'name' => $this->l('Position inside category')),
 							array('id' => '5', 'name' => $this->l('Manufacturer')),
 							array('id' => '6', 'name' => $this->l('Product quantity')),
-							array('id' => '7', 'name' => $this->l('Product reference')) 
+							array('id' => '7', 'name' => $this->l('Product reference'))
 						),
 						'identifier' => 'id'
 					),
@@ -173,7 +173,7 @@ class AdminPPreferencesControllerCore extends AdminController
 						'type' => 'text'
 					),
 					'PS_DISPLAY_JQZOOM' => array(
-						'title' => $this->l('Enable JqZoom instead of Thickbox on the product page'),
+						'title' => $this->l('Enable JqZoom instead of Fancybox on the product page'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'required' => false,
@@ -263,6 +263,25 @@ class AdminPPreferencesControllerCore extends AdminController
 						'type' => 'select',
 						'list' => $warehouse_list,
 						'identifier' => 'id_warehouse'
+					),
+					'PS_PACK_STOCK_TYPE' => array(
+						'title' =>  $this->l('Default pack stock management'),
+						'type' => 'select',
+						'list' =>array(
+							array(
+								'pack_stock' => 0,
+								'name' => $this->l('Decrement pack only.')
+							),
+							array(
+								'pack_stock' => 1,
+								'name' => $this->l('Decrement products in pack only.')
+							),
+							array(
+								'pack_stock' => 2,
+								'name' => $this->l('Decrement both.')
+							),
+						),
+						'identifier' => 'pack_stock',
 					),
 				),
 				'bottom' => '<script type="text/javascript">stockManagementActivationAuthorization();advancedStockManagementActivationAuthorization();</script>',

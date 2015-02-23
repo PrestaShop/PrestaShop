@@ -104,7 +104,7 @@
 				<iframe style="overflow:hidden;border:none" src="{$new_version_url|escape:'html':'UTF-8'}" ></iframe>
 			</section>
 			<section class="dash_links panel">
-				<h3><i class="icon-link"></i> {l s="Useful Links"}</h3>
+				<h3><i class="icon-link"></i> {l s="Useful links"}</h3>
 					<dl>
 						<dt><a href="http://doc.prestashop.com/display/PS16?utm_source=back-office&amp;utm_medium=dashboard&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content={if $host_mode}cloud{else}download{/if}" class="_blank">{l s="Official Documentation"}</a></dt>
 						<dd>{l s="User, Developer and Designer Guides"}</dd>
@@ -139,7 +139,7 @@
 					</label>
 					<a class="slide-button btn"></a>
 				</span>
-				{l s='This mode displays sample data so you can try your Dashboard without real numbers.'}
+				{l s='This mode displays sample data so you can try your dashboard without real numbers.'}
 			</section>
 
 		</div>

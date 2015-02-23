@@ -131,6 +131,22 @@ class StockAvailableCore extends ObjectModel
 		if (!Validate::isUnsignedId($id_product))
 			return false;
 
+		//if product is pack sync recursivly product in pack
+		if (Pack::isPack($id_product))
+		{
+			if (Validate::isLoadedObject($product = new Product((int)$id_product)))
+			{
+				if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && Configuration::get('PS_PACK_STOCK_TYPE') > 0))
+				{
+					$products_pack = Pack::getItems($id_product, (int)Configuration::get('PS_LANG_DEFAULT'));
+					foreach ($products_pack as $product_pack)
+						StockAvailable::synchronize($product_pack->id, $order_id_shop);
+				}
+			}
+			else
+				return false;
+		}
+
 		// gets warehouse ids grouped by shops
 		$ids_warehouse = Warehouse::getWarehousesGroupedByShops();
 		if ($order_id_shop !== null)
@@ -451,17 +467,34 @@ class StockAvailableCore extends ObjectModel
 		// Update quantity of the pack products
 		if (Pack::isPack($id_product))
 		{
-			$products_pack = Pack::getItems($id_product, (int)Configuration::get('PS_LANG_DEFAULT'));
-			foreach ($products_pack as $product_pack)
+			if (Validate::isLoadedObject($product = new Product((int)$id_product)))
 			{
-				$pack_id_product_attribute = Product::getDefaultAttribute($product_pack->id, 1);
-				StockAvailable::updateQuantity($product_pack->id, $pack_id_product_attribute, $product_pack->pack_quantity * $delta_quantity, $id_shop);
+				if ($product->pack_stock_type == 1 || $product->pack_stock_type == 2 || ($product->pack_stock_type == 3 && Configuration::get('PS_PACK_STOCK_TYPE') > 0))
+				{
+					$products_pack = Pack::getItems($id_product, (int)Configuration::get('PS_LANG_DEFAULT'));
+					foreach ($products_pack as $product_pack)
+						StockAvailable::updateQuantity($product_pack->id, $product_pack->id_pack_product_attribute, $product_pack->pack_quantity * $delta_quantity, $id_shop);
+				}
+
+
+				$stock_available = new StockAvailable($id_stock_available);
+				$stock_available->quantity = $stock_available->quantity + $delta_quantity;
+
+				if ($product->pack_stock_type == 0 || $product->pack_stock_type == 2 ||
+					($product->pack_stock_type == 3 && (Configuration::get('PS_PACK_STOCK_TYPE') == 0 || Configuration::get('PS_PACK_STOCK_TYPE') == 2)))
+					$stock_available->update();
 			}
+			else
+				return false;
+		}
+		else
+		{
+			$stock_available = new StockAvailable($id_stock_available);
+			$stock_available->quantity = $stock_available->quantity + $delta_quantity;
+			$stock_available->update();
 		}
 
-		$stock_available = new StockAvailable($id_stock_available);
-		$stock_available->quantity = $stock_available->quantity + $delta_quantity;
-		$stock_available->update();
+		Cache::clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$id_product.'*');
 
 		Hook::exec('actionUpdateQuantity',
 				   array(
@@ -470,8 +503,6 @@ class StockAvailableCore extends ObjectModel
 				   	'quantity' => $stock_available->quantity
 				   )
 				  );
-
-		Cache::clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$id_product.'*');
 
 		return true;
 	}

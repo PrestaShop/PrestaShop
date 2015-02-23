@@ -8139,12 +8139,14 @@ div.star.star_hover:after {
   overflow: hidden;
   background: #f2f2f2;
   min-height: 344px;
+  height: 344px;
   padding-right: 29px;
   padding-left: 29px; }
   @media (max-width: 991px) {
     #facebook_block,
     #cmsinfo_block {
-      min-height: 348px;
+      min-height: 354px;
+      height: 354px;
       padding-left: 13px;
       padding-right: 13px; } }
   @media (max-width: 767px) {
@@ -8299,3 +8301,5 @@ div.star.star_hover:after {
   background-color: #ce1f21; }
   .btn-pinterest:hover i {
     color: white; }
+
+/*# sourceMappingURL=global.css.map */

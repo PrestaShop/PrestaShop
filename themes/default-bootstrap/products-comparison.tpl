@@ -79,7 +79,7 @@
 								{if isset($product->specificPrice) && $product->specificPrice}
 									{if {$product->specificPrice.reduction_type == 'percentage'}}
 										<span class="old-price product-price">
-											{displayWtPrice p=$product->getPrice($taxes_behavior)+($product->getPrice($taxes_behavior)* $product->specificPrice.reduction)}
+											{displayWtPrice p=$product->getPrice($taxes_behavior) + ($product->base_price * $product->specificPrice.reduction)}
 										</span>
 										<span class="price-percent-reduction">
 											-{$product->specificPrice.reduction*100|floatval}%

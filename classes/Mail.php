@@ -143,6 +143,13 @@ class MailCore extends ObjectModel
 			return false;
 		}
 
+		// if bcc is not null, make sure it's a vaild e-mail
+		if (!is_null($bcc) && !is_array($bcc) && !Validate::isEmail($bcc))
+		{
+			Tools::dieOrLog(Tools::displayError('Error: parameter "bcc" is corrupted'), $die);
+			$bcc = null;
+		}
+
 		if (!is_array($template_vars))
 			$template_vars = array();
 
@@ -234,7 +241,7 @@ class MailCore extends ObjectModel
 			$override_mail = false;
 
 			// get templatePath
-			if (preg_match('#'.__PS_BASE_URI__.'modules/#', str_replace(DIRECTORY_SEPARATOR, '/', $template_path)) && preg_match('#modules/([a-z0-9_-]+)/#ui', str_replace(DIRECTORY_SEPARATOR, '/',$template_path), $res))
+			if (preg_match('#'.$shop->physical_uri.'modules/#', str_replace(DIRECTORY_SEPARATOR, '/', $template_path)) && preg_match('#modules/([a-z0-9_-]+)/#ui', str_replace(DIRECTORY_SEPARATOR, '/',$template_path), $res))
 				$module_name = $res[1];
 
 			if ($module_name !== false && (file_exists($theme_path.'modules/'.$module_name.'/mails/'.$iso_template.'.txt') ||

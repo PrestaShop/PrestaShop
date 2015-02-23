@@ -52,18 +52,25 @@ class DbMySQLiCore extends Db
 
 		return $this->link;
 	}
-	
-	public static function createDatabase($host, $user, $password, $dbname, $dropit = false)
+
+	public static function createDatabase($host, $user = null, $password = null, $database = null, $dropit = false)
 	{
+		if (is_null($user))
+			$user = $this->user;
+		if (is_null($password))
+			$password = $this->password;
+		if (is_null($database))
+			$database = $this->database;
+
 		if (strpos($host, ':') !== false)
 		{
 			list($host, $port) = explode(':', $host);
-			$link = @new mysqli($host, $this->user, $this->password, null, $port);
+			$link = @new mysqli($host, $user, $password, null, $port);
 		}
 		else
 			$link = @new mysqli($host, $user, $password);
-		$success = $link->query('CREATE DATABASE `'.str_replace('`', '\\`', $dbname).'`');
-		if ($dropit && ($link->query('DROP DATABASE `'.str_replace('`', '\\`', $dbname).'`') !== false))
+		$success = $link->query('CREATE DATABASE `'.str_replace('`', '\\`', $database).'`');
+		if ($dropit && ($link->query('DROP DATABASE `'.str_replace('`', '\\`', $database).'`') !== false))
 			return true;
 		return $success;
 	}
@@ -109,7 +116,17 @@ class DbMySQLiCore extends Db
 		if (!is_object($result))
 			return false;
 
-		return $result->fetch_all(MYSQLI_ASSOC);
+		if (method_exists($result, 'fetch_all'))
+			return $result->fetch_all(MYSQLI_ASSOC);
+		else
+		{
+			$ret = array();
+
+			while ($row = $this->nextRow($result))
+				$ret[] = $row;
+
+			return $ret;
+		}
 	}
 
 	/**
@@ -209,11 +226,11 @@ class DbMySQLiCore extends Db
 		$link->close();
 		return 0;
 	}
-	
+
 	public function getBestEngine()
 	{
 		$value = 'InnoDB';
-		
+
 		$sql = 'SHOW VARIABLES WHERE Variable_name = \'have_innodb\'';
 		$result = $this->link->query($sql);
 		if (!$result)
@@ -221,7 +238,7 @@ class DbMySQLiCore extends Db
 		$row = $result->fetch_assoc();
 		if (!$row || strtolower($row['Value']) != 'yes')
 			$value = 'MyISAM';
-			
+
 		/* MySQL >= 5.6 */
 		$sql = 'SHOW ENGINES';
 		$result = $this->link->query($sql);
@@ -234,7 +251,7 @@ class DbMySQLiCore extends Db
 			}
 		return $value;
 	}
-	
+
 	public static function checkCreatePrivilege($server, $user, $pwd, $db, $prefix, $engine = null)
 	{
 		$link = @new mysqli($server, $user, $pwd, $db);
@@ -261,7 +278,7 @@ class DbMySQLiCore extends Db
 	 */
 	static public function tryUTF8($server, $user, $pwd)
 	{
-		$link = @new mysqli($server, $user, $pwd, $db);
+		$link = @new mysqli($server, $user, $pwd);
 		$ret = $link->query("SET NAMES 'UTF8'");
 		$link->close();
 		return $ret;

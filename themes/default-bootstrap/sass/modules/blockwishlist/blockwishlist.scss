@@ -2,11 +2,13 @@
 @import "theme_variables";
 
 /* lnk on detail product page */
-#wishlist_button {
+#wishlist_button, #wishlist_button_nopop {
 	font-weight: 700;
 	@include border-radius(5px);
-	margin-left: 55px;
-	margin-bottom: 5px;
+	background-color: transparent;
+	border-color: transparent;
+	margin: auto;
+	outline: 0;
 	&:before{
 		content: "\f08a";
 		font: 400 15px/31px $font-icon;
@@ -195,7 +197,8 @@ ul.wlp_bought_list li .lnkdel {
 #wishlist_button > .btn-group {
 	width: 80%;
 }
-[id=wishlist_button] + .popover {
+[id=wishlist_button] + .popover,
+.wishlist_change_button + .popover {
 	padding: 0;
 	min-width: 150px;
 	 .popover-content {

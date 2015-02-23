@@ -140,11 +140,26 @@ class AdminAddressesControllerCore extends AdminController
 					'rows' => 3,
 					'hint' => $this->l('Forbidden characters:').' &lt;&gt;;=#{}'
 				),
+				array(
+					'type' => 'hidden',
+					'name' => 'id_order'
+				),
+				array(
+					'type' => 'hidden',
+					'name' => 'address_type',
+				),
+				array(
+					'type' => 'hidden',
+					'name' => 'back'
+				)
 			),
 			'submit' => array(
 				'title' => $this->l('Save'),
 			)
 		);
+
+		$this->fields_value['address_type'] = (int)Tools::getValue('address_type', 1);
+
 		$id_customer = (int)Tools::getValue('id_customer');
 		if (!$id_customer && Validate::isLoadedObject($this->object))
 			$id_customer = $this->object->id_customer;
@@ -156,7 +171,8 @@ class AdminAddressesControllerCore extends AdminController
 
 		$this->tpl_form_vars = array(
 			'customer' => isset($customer) ? $customer : null,
-			'tokenCustomer' => isset ($token_customer) ? $token_customer : null
+			'tokenCustomer' => isset ($token_customer) ? $token_customer : null,
+			'back_url' => urldecode(Tools::getValue('back'))
 		);
 
 		// Order address fields depending on country format
@@ -373,7 +389,7 @@ class AdminAddressesControllerCore extends AdminController
 		/* Check zip code format */
 		if ($country->zip_code_format && !$country->checkZipCode($postcode))
 			$this->errors[] = Tools::displayError('Your Zip/postal code is incorrect.').'<br />'.Tools::displayError('It must be entered as follows:').' '.str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)));
-		elseif(empty($postcode) && $country->need_zip_code)
+		elseif (empty($postcode) && $country->need_zip_code)
 			$this->errors[] = Tools::displayError('A Zip/postal code is required.');
 		elseif ($postcode && !Validate::isPostCode($postcode))
 			$this->errors[] = Tools::displayError('The Zip/postal code is invalid.');
@@ -387,7 +403,10 @@ class AdminAddressesControllerCore extends AdminController
 		{
 			$this->_redirect = false;
 			if (isset($_POST['address_type']))
+			{
 				$_POST['id_address'] = '';
+				$this->id_object = null;
+			}
 		}
 
 		// Check the requires fields which are settings in the BO
@@ -395,20 +414,22 @@ class AdminAddressesControllerCore extends AdminController
 		$this->errors = array_merge($this->errors, $address->validateFieldsRequiredDatabase());
 
 		if (empty($this->errors))
-			return parent::processSave();
+			$return = parent::processSave();
 		else
 			// if we have errors, we stay on the form instead of going back to the list
 			$this->display = 'edit';
 
 		/* Reassignation of the order's new (invoice or delivery) address */
-		$address_type = ((int)Tools::getValue('address_type') == 2 ? 'invoice' : ((int)Tools::getValue('address_type') == 1 ? 'delivery' : ''));
+		$address_type = (int)Tools::getValue('address_type') == 2 ? 'invoice' : 'delivery';
+
 		if ($this->action == 'save' && ($id_order = (int)Tools::getValue('id_order')) && !count($this->errors) && !empty($address_type))
 		{
-			if (!Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'orders SET `id_address_'.$address_type.'` = '.Db::getInstance()->Insert_ID().' WHERE `id_order` = '.$id_order))
+			if (!Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'orders SET `id_address_'.bqSQL($address_type).'` = '.(int)$this->object->id.' WHERE `id_order` = '.(int)$id_order))
 				$this->errors[] = Tools::displayError('An error occurred while linking this address to its order.');
 			else
-				Tools::redirectAdmin(Tools::getValue('back').'&conf=4');
+				Tools::redirectAdmin(urldecode(Tools::getValue('back')).'&conf=4');
 		}
+		return $return;
 	}
 
 	public function processAdd()

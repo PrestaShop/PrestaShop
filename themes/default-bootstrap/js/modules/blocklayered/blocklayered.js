@@ -89,7 +89,7 @@ $(document).ready(function()
 	});
 
 	// Click on label
-	$('#layered_block_left label a').on({
+	$('#layered_block_left label:not(.layered_color) a').on({
 		click: function(e) {
 			e.preventDefault();
 			var disable = $(this).parent().parent().find('input').attr('disabled');
@@ -122,7 +122,7 @@ $(document).ready(function()
 			reloadContent(true);
 	});
 
-	$(document).off('change').on('change', 'select[name=n]', function(e) 
+	$(document).off('change', '#layered_form select[name=n]').on('change', '#layered_form select[name=n]', function(e)
 	{
 		$('select[name=n]').val($(this).val());
 		reloadContent(true);
@@ -184,7 +184,7 @@ function initFilters()
 				$('#layered_' + filter.type + '_range_min').attr('limitValue', filter.min);
 				$('#layered_' + filter.type + '_range_max').attr('limitValue', filter.max);
 			}
-			
+
 			$('.layered_' + filter.type).show();
 		}
 		initUniform();
@@ -272,7 +272,7 @@ function paginationButton(nbProductsIn, nbProductOut)
 			var page = 1;
 		else
 			var page = parseInt($(this).attr('href').replace(/^.*(\?|&)p=(\d+).*$/, '$2'));
-		
+
 		var location = window.location.href.replace(/#.*$/, '');
 		$(this).attr('href', location + current_friendly_url.replace(/\/page-(\d+)/, '') + '/page-' + page);
 	});
@@ -549,7 +549,7 @@ function reloadContent(params_plus)
 			{
 				e.preventDefault();
 				val = $('div.pagination select[name=n]').val();
-			
+
 				$('div.pagination select[name=n]').children().each(function(it, option) {
 					if (option.value == val)
 						$(option).attr('selected', true);
@@ -597,7 +597,7 @@ function reloadContent(params_plus)
 
 			if (current_friendly_url != '#/show-all')
 				$('div.clearfix.selector1').show();
-			
+
 			lockLocationChecking = true;
 
 			if (slideUp)

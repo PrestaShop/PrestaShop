@@ -146,6 +146,7 @@ class ShopCore extends ObjectModel
 			'category' => array('type' => 'shop'),
 			'category_lang' => array('type' => 'fk_shop'),
 			'cms' => array('type' => 'shop'),
+			'cms_category' => array('type' => 'shop'),
 			'contact' => array('type' => 'shop'),
 			'country' => array('type' => 'shop'),
 			'currency' => array('type' => 'shop'),

@@ -136,7 +136,7 @@ class SupplyOrderStateCore extends ObjectModel
 				$query->where('(s.delivery_note = 0 AND s.editable = 0) OR s.enclosed = 1');
 			//check if the state correspond to a receipt state
 			elseif ($is_receipt_state)
-				$query->where('s.receipt_state = 1 OR s.enclosed = 1');
+				$query->where('s.receipt_state = 1');
 		}
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);

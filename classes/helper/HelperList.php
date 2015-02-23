@@ -40,7 +40,7 @@ class HelperListCore extends Helper
 
 	/** @var array Number of results in list per page (used in select field) */
 	public $_pagination = array(20, 50, 100, 300, 1000);
-	
+
 	/** @var integer Default number of results in list per page */
 	public $_default_pagination = 50;
 
@@ -366,14 +366,19 @@ class HelperListCore extends Helper
 			self::$cache_lang['Duplicate'] = $this->l('Duplicate', 'Helper');
 
 		if (!array_key_exists('Copy images too?', self::$cache_lang))
-			self::$cache_lang['Copy images too?'] = $this->l('This will copy the images too. If you wish to proceed, click "OK". If not, click "Cancel".', 'Helper');
+			self::$cache_lang['Copy images too?'] = $this->l('This will copy the images too. If you wish to proceed, click "Yes". If not, click "No".', 'Helper');
 
 		$duplicate = $this->currentIndex.'&'.$this->identifier.'='.$id.'&duplicate'.$this->table;
+
+		$confirm = self::$cache_lang['Copy images too?'];
+
+		if (($this->table == 'product') && !(bool)Image::getImages($this->context->language->id, (int)$id))
+			$confirm = '';
 
 		$tpl->assign(array(
 			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&view'.$this->table.'&token='.($token != null ? $token : $this->token),
 			'action' => self::$cache_lang['Duplicate'],
-			'confirm' => self::$cache_lang['Copy images too?'],
+			'confirm' => $confirm,
 			'location_ok' => $duplicate.'&token='.($token != null ? $token : $this->token),
 			'location_ko' => $duplicate.'&noimage=1&token='.($token ? $token : $this->token),
 		));
@@ -486,7 +491,7 @@ class HelperListCore extends Helper
 
 		if ($this->specificConfirmDelete !== false)
 			$data['confirm'] = !is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : Tools::safeOutput(self::$cache_lang['DeleteItem'].$name);
-		
+
 		$tpl->assign(array_merge($this->tpl_delete_link_vars, $data));
 
 		return $tpl->fetch();
@@ -565,7 +570,12 @@ class HelperListCore extends Helper
 		{
 			if (!isset($params['type']))
 				$params['type'] = 'text';
-			$value = Context::getContext()->cookie->{$prefix.$this->list_id.'Filter_'.(array_key_exists('filter_key', $params) && $key != 'active' ? $params['filter_key'] : $key)};
+
+			$value_key = $prefix.$this->list_id.'Filter_'.(array_key_exists('filter_key', $params) && $key != 'active' ? $params['filter_key'] : $key);
+			$value = Context::getContext()->cookie->{$value_key};
+			if (!$value && Tools::getIsset($value_key))
+				$value = Tools::getValue($value_key);
+
 			switch ($params['type'])
 			{
 				case 'bool':

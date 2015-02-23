@@ -334,7 +334,7 @@ class OrderCore extends ObjectModel
 
 	/**
 	 * This function return products of the orders
-	 * It's similar to Order::getProducts but witrh similar outputs of Cart::getProducts
+	 * It's similar to Order::getProducts but with similar outputs of Cart::getProducts
 	 *
 	 * @return array
 	 */
@@ -1586,6 +1586,10 @@ class OrderCore extends ObjectModel
 		$order_payment->amount = $amount_paid;
 		$order_payment->date_add = ($date ? $date : null);
 
+		// Add time to the date if needed
+		if ($order_payment->date_add != null && preg_match("/^[0-9]+-[0-9]+-[0-9]+$/", $order_payment->date_add))
+			$order_payment->date_add .= ' '.date('H:i:s');
+
 		// Update total_paid_real value for backward compatibility reasons
 		if ($order_payment->id_currency == $this->id_currency)
 			$this->total_paid_real += $order_payment->amount;
@@ -1912,8 +1916,8 @@ class OrderCore extends ObjectModel
 		if ($res = (int)Db::getInstance()->getvalue('
 				SELECT `id_order_invoice`
 				FROM `'._DB_PREFIX_.'order_invoice`
-				WHERE `id_order` =  '.(int)$this->id.'
-				AND `number` > 0'));
+				WHERE `id_order` =  '.(int)$this->id.
+				(Configuration::get('PS_INVOICE') ? ' AND `number` > 0' : '')))
 			return $res;
 		return false;
 	}
@@ -2096,7 +2100,8 @@ class OrderCore extends ObjectModel
 
 	public function setWsCurrentState($state)
 	{
-		$this->setCurrentState($state);
+		if ($this->id)
+			$this->setCurrentState($state);
 		return true;
 	}
 }

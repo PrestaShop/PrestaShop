@@ -45,7 +45,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 	{
 		foreach ($attributes as $attribute)
 		{
-			$price += (float)preg_replace('/[^0-9.]/', '', str_replace(',', '.', Tools::getValue('price_impact_'.(int)$attribute)));
+			$price += (float)preg_replace('/[^0-9.-]/', '', str_replace(',', '.', Tools::getValue('price_impact_'.(int)$attribute)));
 			$weight += (float)preg_replace('/[^0-9.]/', '', str_replace(',', '.', Tools::getValue('weight_impact_'.(int)$attribute)));
 		}
 		if ($this->product->id)
@@ -138,7 +138,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 				SpecificPriceRule::enableAnyApplication();
 				SpecificPriceRule::applyAllRules(array((int)$this->product->id));
 
-				Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&addproduct&key_tab=Combinations&conf=4');
+				Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&updateproduct&key_tab=Combinations&conf=4');
 			}
 			else
 				$this->errors[] = Tools::displayError('Unable to initialize these parameters. A combination is missing or an object cannot be loaded.');
@@ -220,7 +220,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 
 		foreach ($attributes as $k => $attribute)
 			$attribute_js[$attribute['id_attribute_group']][$attribute['id_attribute']] = $attribute['name'];
-		
+
 		$attribute_groups = AttributeGroup::getAttributesGroups($this->context->language->id);
 		$this->product = new Product((int)Tools::getValue('id_product'));
 

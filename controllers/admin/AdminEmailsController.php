@@ -141,7 +141,7 @@ class AdminEmailsControllerCore extends AdminController
 						'type' => 'text',
 					),
 					'PS_MAIL_USER' => array(
-						'title' => $this->l('SMTP user'),
+						'title' => $this->l('SMTP username'),
 						'hint' => $this->l('Leave blank if not applicable.'),
 						'validation' => 'isGenericName',
 						'type' => 'text',

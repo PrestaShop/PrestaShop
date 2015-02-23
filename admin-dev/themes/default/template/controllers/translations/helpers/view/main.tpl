@@ -67,7 +67,7 @@
 
 				if (lang == null)
 					return !alert('{l s='Please select your language!'}');
-				
+
 				chooseTypeTranslation($('#translations-languages li.active').data('type'));
 			});
 		});
@@ -109,7 +109,7 @@
 			</div>
 			<div class="form-group">
 				<label class="control-label col-lg-3" for="language-button">{l s='Select your language'}</label>
-				<div class="input-group col-lg-4">
+				<div class="col-lg-4">
 					<button type="button" id="language-button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 						{l s='Language'} <span class="caret"></span>
 					</button>
@@ -150,19 +150,19 @@
 										<option value="{$lang_pack['iso_code']}|{$lang_pack['version']}">{$lang_pack['name']}</option>
 									{/foreach}
 								</optgroup>
-								<optgroup label="{l s='Add a language'}">		
+								<optgroup label="{l s='Add a language'}">
 									{foreach $packs_to_install as $lang_pack}
 										<option value="{$lang_pack['iso_code']}|{$lang_pack['version']}">{$lang_pack['name']}</option>
 									{/foreach}
 								</optgroup>
-							</select> 
+							</select>
 							</div>
 						</div>
 					</div>
-					
+
 				{else}
 					<p class="text-danger">{l s='Cannot connect to the PrestaShop website to get the language list.'}</p>
-				{/if}				
+				{/if}
 			</div>
 			<div class="panel-footer">
 				<button type="submit" name="submitAddLanguage" class="btn btn-default pull-right">
@@ -293,7 +293,7 @@
 							<option value="{$theme->directory}" {if $id_theme_current == $theme->id}selected=selected{/if}>{$theme->name}</option>
 						{/foreach}
 					</select>
-				</div>			
+				</div>
 			</div>
 			<div class="form-group">
 				<p class="col-lg-12 text-muted required">

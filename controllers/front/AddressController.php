@@ -196,7 +196,7 @@ class AddressControllerCore extends FrontController
 			}
 		}
 
-		if ($this->ajax && Tools::getValue('type') == 'invoice' && Configuration::get('PS_ORDER_PROCESS_TYPE'))
+		if ($this->ajax && Configuration::get('PS_ORDER_PROCESS_TYPE'))
 		{
 			$this->errors = array_unique(array_merge($this->errors, $address->validateController()));
 			if (count($this->errors))
@@ -205,7 +205,7 @@ class AddressControllerCore extends FrontController
 					'hasError' => (bool)$this->errors,
 					'errors' => $this->errors
 				);
-				die(Tools::jsonEncode($return));
+				$this->ajaxDie(Tools::jsonEncode($return));
 			}
 		}
 
@@ -232,7 +232,7 @@ class AddressControllerCore extends FrontController
 					'id_address_delivery' => (int)$this->context->cart->id_address_delivery,
 					'id_address_invoice' => (int)$this->context->cart->id_address_invoice
 				);
-				die(Tools::jsonEncode($return));
+				$this->ajaxDie(Tools::jsonEncode($return));
 			}
 
 			// Redirect to old page or current page
@@ -311,6 +311,7 @@ class AddressControllerCore extends FrontController
 		$this->context->smarty->assign(array(
 			'countries_list' => $list,
 			'countries' => $countries,
+			'sl_country' => (int)$this->id_country,
 		));
 	}
 
@@ -362,7 +363,7 @@ class AddressControllerCore extends FrontController
 				'hasError' => !empty($this->errors),
 				'errors' => $this->errors
 			);
-			die(Tools::jsonEncode($return));
+			$this->ajaxDie(Tools::jsonEncode($return));
 		}
 	}
 }
