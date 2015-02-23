@@ -81,7 +81,7 @@ class	PrestaShopLoggerCore extends ObjectModel
 	 */
 	public static function sendByMail($log)
 	{
-		if (intval(Configuration::get('PS_LOGS_BY_EMAIL')) <= intval($log->severity))
+		if ((int)Configuration::get('PS_LOGS_BY_EMAIL') <= (int)$log->severity)
 			Mail::Send(
 				(int)Configuration::get('PS_LANG_DEFAULT'),
 				'log_alert',
@@ -105,8 +105,8 @@ class	PrestaShopLoggerCore extends ObjectModel
 	public static function addLog($message, $severity = 1, $error_code = null, $object_type = null, $object_id = null, $allow_duplicate = false, $id_employee = null)
 	{
 		$log = new PrestaShopLogger();
-		$log->severity = intval($severity);
-		$log->error_code = intval($error_code);
+		$log->severity = (int)$severity;
+		$log->error_code = (int)$error_code;
 		$log->message = pSQL($message);
 		$log->date_add = date('Y-m-d H:i:s');
 		$log->date_upd = date('Y-m-d H:i:s');
@@ -120,7 +120,7 @@ class	PrestaShopLoggerCore extends ObjectModel
 		if (!empty($object_type) && !empty($object_id))
 		{
 			$log->object_type = pSQL($object_type);
-			$log->object_id = intval($object_id);
+			$log->object_id = (int)$object_id;
 		}
 
 		PrestaShopLogger::sendByMail($log);
