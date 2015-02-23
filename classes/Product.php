@@ -1358,7 +1358,7 @@ class ProductCore extends ObjectModel
 	{
 		$result = ObjectModel::updateMultishopTable('Combination', array(
 			'default_on' => 1
-		), '`id_product` = '.(int)$this->id.' AND a.`id_product_attribute` = '.(int)$id_product_attribute);
+		), 'a.`id_product` = '.(int)$this->id.' AND a.`id_product_attribute` = '.(int)$id_product_attribute);
 
 		$result &= ObjectModel::updateMultishopTable('product', array(
 			'cache_default_attribute' => (int)$id_product_attribute,
