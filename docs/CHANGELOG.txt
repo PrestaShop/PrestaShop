@@ -24,6 +24,16 @@ International Registred Trademark & Property of PrestaShop SA
 Release Notes for PrestaShop 1.6
 --------------------------------
 ####################################
+#   v1.6.0.13 - (2015-02-24)
+####################################
+
+	Fixed bugs:
+
+	[-] BO : Fix bug #PSCFV-12280, save product list, last part
+	[-] BO : Fix bug #PSCFV-12280, save product list, first part
+
+
+####################################
 #   v1.6.0.12 - (2015-02-23)
 ####################################
 
