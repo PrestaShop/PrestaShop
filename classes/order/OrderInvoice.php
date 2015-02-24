@@ -276,7 +276,7 @@ class OrderInvoiceCore extends ObjectModel
 				SELECT image_shop.id_image
 				FROM '._DB_PREFIX_.'image i'.
 				Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1').'
-				WHERE id_product = '.(int)($product['product_id']));
+				WHERE i.id_product = '.(int)($product['product_id']));
 
 		$product['image'] = null;
 		$product['image_size'] = null;

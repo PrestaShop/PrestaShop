@@ -5,7 +5,7 @@
 			{l s='Name'}
 		</span>
 	</label>
-	<div class="col-lg-8">	
+	<div class="col-lg-8">
 		{foreach from=$languages item=language}
 		{if $languages|count > 1}
 		<div class="row">
@@ -17,7 +17,7 @@
 				</div>
 				<div class="col-lg-2">
 					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-						{$language.iso_code} 
+						{$language.iso_code}
 						<span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu">
@@ -25,7 +25,7 @@
 						<li><a href="javascript:hideOtherLanguage({$language.id_lang});" tabindex="-1">{$language.name}</a></li>
 						{/foreach}
 					</ul>
-				</div>		
+				</div>
 			</div>
 		</div>
 		{/if}

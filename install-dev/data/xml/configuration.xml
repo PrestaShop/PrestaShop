@@ -823,5 +823,8 @@ Country</value>
 	<configuration id="PS_PACK_STOCK_TYPE" name="PS_PACK_STOCK_TYPE">
 		<value>0</value>
 	</configuration>
+	<configuration id="PS_LOG_MODULE_PERFS_MODULO" name="PS_LOG_MODULE_PERFS_MODULO">
+		<value>0</value>
+	</configuration>
   </entities>
 </entity_configuration>

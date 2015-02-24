@@ -20,7 +20,6 @@
 *
 *  @author PrestaShop SA <contact@prestashop.com>
 *  @copyright  2007-2015 PrestaShop SA
-*  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -186,6 +185,12 @@ class ToolsCoreTest extends PHPUnit_Framework_TestCase
 				0.025, 2,
 				array(array('a' => 1), array('a' => 2)),
 				'a'
+			),
+			array(
+				array(array('a' => 7.69), array('a' => 4.09), array('a' => 1.8)),
+				-0.32, 2,
+				array(array('a' => 7.8), array('a' => 4.2), array('a' => 1.9)),
+				'a'
 			)
 		);
 	}
@@ -193,9 +198,9 @@ class ToolsCoreTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @dataProvider testSpreadAmountExamples
 	 */
-	public function testSpreadAmount($expectedRows, $amount, $precision, $rows, $column, $sort_column = null, $max_adjustment = null)
+	public function testSpreadAmount($expectedRows, $amount, $precision, $rows, $column)
 	{
-		Tools::spreadAmount($amount, $precision, $rows, $column, $sort_column, $max_adjustment);
+		Tools::spreadAmount($amount, $precision, $rows, $column);
 		$this->assertEquals(array_values($expectedRows), array_values($rows));
 	}
 }

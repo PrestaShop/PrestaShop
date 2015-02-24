@@ -142,15 +142,25 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 		}
 
 		$cart_rules = $this->order->getCartRules($this->order_invoice->id);
-
 		$free_shipping = false;
 		foreach ($cart_rules as $key => $cart_rule)
 		{
 			if ($cart_rule['free_shipping'])
 			{
-				unset($cart_rules[$key]);
 				$free_shipping = true;
-				break;
+				/**
+				 * Adjust cart rule value to remove the amount of the shipping.
+				 * We're not interested in displaying the shipping discount as it is already shown as "Free Shipping".
+				 */
+				$cart_rules[$key]['value_tax_excl'] -= $this->order_invoice->total_shipping_tax_excl;
+				$cart_rules[$key]['value'] -= $this->order_invoice->total_shipping_tax_incl;
+
+				/**
+				 * Don't display cart rules that are only about free shipping and don't create
+				 * a discount on products.
+				 */
+				if ($cart_rules[$key]['value'] == 0)
+					unset($cart_rules[$key]);
 			}
 		}
 

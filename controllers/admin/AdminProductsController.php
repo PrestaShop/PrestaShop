@@ -1781,7 +1781,6 @@ class AdminProductsControllerCore extends AdminController
 		$this->object = new $this->className();
 		$this->_removeTaxFromEcotax();
 		$this->copyFromPost($this->object, $this->table);
-
 		if ($this->object->add())
 		{
 			PrestaShopLogger::addLog(sprintf($this->l('%s addition', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
@@ -1790,7 +1789,7 @@ class AdminProductsControllerCore extends AdminController
 			$this->updatePackItems($this->object);
 			$this->updateDownloadProduct($this->object);
 
-			if (Configuration::get('PS_FORCE_ASM_NEW_PRODUCT') && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+			if (Configuration::get('PS_FORCE_ASM_NEW_PRODUCT') && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $this->object->getType() != Product::PTYPE_VIRTUAL)
 			{
 				$this->object->advanced_stock_management = 1;
 				StockAvailable::setProductDependsOnStock($this->object->id, true, (int)$this->context->shop->id, 0);
@@ -1992,17 +1991,18 @@ class AdminProductsControllerCore extends AdminController
 							$this->redirect_after = $this->getPreviewUrl($object);
 						else
 						{
+							$page = (int)Tools::getValue('page');
 							// Save and stay on same form
 							if ($this->display == 'edit')
 							{
 								$this->confirmations[] = $this->l('Update successful');
 								$this->redirect_after = self::$currentIndex.'&id_product='.(int)$this->object->id
 									.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '')
-									.'&updateproduct&conf=4&key_tab='.Tools::safeOutput(Tools::getValue('key_tab')).'&token='.$this->token;
+									.'&updateproduct&conf=4&key_tab='.Tools::safeOutput(Tools::getValue('key_tab')).($page > 1 ? '&page='.(int)$page : '').'&token='.$this->token;
 							}
 							else
 								// Default behavior (save and back)
-								$this->redirect_after = self::$currentIndex.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&conf=4&token='.$this->token;
+								$this->redirect_after = self::$currentIndex.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&conf=4'.($page > 1 ? '&submitFilterproduct='.(int)$page : '').'&token='.$this->token;
 						}
 					}
 					// if errors : stay on edit page
@@ -2701,7 +2701,9 @@ class AdminProductsControllerCore extends AdminController
 		else
 			$id_product = (int)Tools::getvalue('id_product');
 
-		$this->tpl_form_vars['form_action'] = $this->context->link->getAdminLink('AdminProducts').'&'.($id_product ? 'id_product='.(int)$id_product : 'addproduct');
+		$page = (int)Tools::getValue('page');
+
+		$this->tpl_form_vars['form_action'] = $this->context->link->getAdminLink('AdminProducts').'&'.($id_product ? 'id_product='.(int)$id_product : 'addproduct').($page > 1 ? '&page='.(int)$page : '');
 		$this->tpl_form_vars['id_product'] = $id_product;
 
 		// Transform configuration option 'upload_max_filesize' in octets
@@ -3403,6 +3405,7 @@ class AdminProductsControllerCore extends AdminController
 		if (!($obj = $this->loadObject()))
 			return;
 
+		$page = (int)Tools::getValue('page');
 		$content = '';
 		$specific_prices = SpecificPrice::getByProductId((int)$obj->id);
 		$specific_price_priorities = SpecificPrice::getPriority((int)$obj->id);
@@ -3511,7 +3514,7 @@ class AdminProductsControllerCore extends AdminController
 			}
 		}
 
-		if($length_before === strlen($content))
+		if ($length_before === strlen($content))
 			$content .= '
 				<tr>
 					<td class="text-center" colspan="13"><i class="icon-warning-sign"></i>&nbsp;'.$this->l('No specific prices.').'</td>
@@ -3522,7 +3525,7 @@ class AdminProductsControllerCore extends AdminController
 			</table>
 			</div>
 			<div class="panel-footer">
-				<a href="'.$this->context->link->getAdminLink('AdminProducts').'" class="btn btn-default"><i class="process-icon-cancel"></i> '.$this->l('Cancel').'</a>
+				<a href="'.$this->context->link->getAdminLink('AdminProducts').($page > 1 ? '&submitFilter'.$this->table.'='.(int)$page : '').'" class="btn btn-default"><i class="process-icon-cancel"></i> '.$this->l('Cancel').'</a>
 				<button id="product_form_submit_btn"  type="submit" name="submitAddproduct" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> '.$this->l('Save') .'</button>
 				<button id="product_form_submit_btn"  type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> '.$this->l('Save and stay') .'</button>
 			</div>
@@ -3600,7 +3603,7 @@ class AdminProductsControllerCore extends AdminController
 			</div>
 		</div>
 		<div class="panel-footer">
-				<a href="'.$this->context->link->getAdminLink('AdminProducts').'" class="btn btn-default"><i class="process-icon-cancel"></i> '.$this->l('Cancel').'</a>
+				<a href="'.$this->context->link->getAdminLink('AdminProducts').($page > 1 ? '&submitFilter'.$this->table.'='.(int)$page : '').'" class="btn btn-default"><i class="process-icon-cancel"></i> '.$this->l('Cancel').'</a>
 				<button id="product_form_submit_btn"  type="submit" name="submitAddproduct" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> '.$this->l('Save') .'</button>
 				<button id="product_form_submit_btn"  type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> '.$this->l('Save and stay') .'</button>
 			</div>
@@ -3763,9 +3766,12 @@ class AdminProductsControllerCore extends AdminController
 		$data = $this->createTemplate($this->tpl_form);
 
 		$currency = $this->context->currency;
-		$data->assign('languages', $this->_languages);
-		$data->assign('default_form_language', $this->default_form_language);
-		$data->assign('currency', $currency);
+
+		$data->assign(array(
+			'languages' => $this->_languages,
+			'default_form_language' => $this->default_form_language,
+			'currency' => $currency
+		));
 		$this->object = $product;
 		//$this->display = 'edit';
 		$data->assign('product_name_redirected', Product::getProductName((int)$product->id_product_redirected, null, (int)$this->context->language->id));
@@ -3833,16 +3839,19 @@ class AdminProductsControllerCore extends AdminController
 		// TinyMCE
 		$iso_tiny_mce = $this->context->language->iso_code;
 		$iso_tiny_mce = (file_exists(_PS_ROOT_DIR_.'/js/tiny_mce/langs/'.$iso_tiny_mce.'.js') ? $iso_tiny_mce : 'en');
-		$data->assign('ad', dirname($_SERVER['PHP_SELF']));
-		$data->assign('iso_tiny_mce', $iso_tiny_mce);
-		$data->assign('check_product_association_ajax', $check_product_association_ajax);
-		$data->assign('id_lang', $this->context->language->id);
-		$data->assign('product', $product);
-		$data->assign('token', $this->token);
-		$data->assign('currency', $currency);
+		$data->assign(array(
+			'ad' => dirname($_SERVER['PHP_SELF']),
+			'iso_tiny_mce' => $iso_tiny_mce,
+			'check_product_association_ajax' => $check_product_association_ajax,
+			'id_lang' => $this->context->language->id,
+			'product' => $product,
+			'token' => $this->token,
+			'currency' => $currency,
+			'link' => $this->context->link,
+			'PS_PRODUCT_SHORT_DESC_LIMIT' => Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT') ? Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT') : 400
+		));
 		$data->assign($this->tpl_form_vars);
-		$data->assign('link', $this->context->link);
-		$data->assign('PS_PRODUCT_SHORT_DESC_LIMIT', Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT') ? Configuration::get('PS_PRODUCT_SHORT_DESC_LIMIT') : 400);
+
 		$this->tpl_form_vars['product'] = $product;
 		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}

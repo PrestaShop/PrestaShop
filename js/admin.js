@@ -920,32 +920,36 @@ $(document).ready(function()
 		return false;
 	});
 
-	// js for the buttons of swap helper
-	$("#addSwap").on('click', function(e) {
-		e.preventDefault();
-		$('#availableSwap option:selected').each( function() {
-			$('#selectedSwap').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
-			$(this).remove();
-		});
-		$('#selectedSwap option').prop('selected', true);
-	});
+	/** make sure that all the swap id is present in the dom to prevent mistake **/
+	if (typeof $('#addSwap') !== undefined && typeof $("#removeSwap") !== undefined &&
+		typeof $('#selectedSwap') !== undefined && typeof $('#availableSwap') !== undefined)
+	{
+		bindSwapButton('add', 'available', 'selected');
+		bindSwapButton('remove', 'selected', 'available');
 
-	$("#removeSwap").on('click', function(e) {
-		e.preventDefault();
-		$('#selectedSwap option:selected').each( function() {
-			$('#availableSwap').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
-			$(this).remove();
-		});
-		$('#selectedSwap option').prop('selected', true);
-	});
-
-	if ($('#selectedSwap').length != 0) {
-		$('button:submit').click(function() {
-			$('#selectedSwap option').attr('selected', 'selected');
-		});
+		$('button:submit').click(bindSwapSave);
 	}
 });
 
+function bindSwapSave()
+{
+	if ($('#selectedSwap option').length !== 0)
+		$('#selectedSwap option').attr('selected', 'selected');
+	else
+		$('#availableSwap option').attr('selected', 'selected');
+}
+
+function bindSwapButton(prefix_button, prefix_select_remove, prefix_select_add)
+{
+	$('#'+prefix_button+'Swap').on('click', function(e) {
+		e.preventDefault();
+		$('#' + prefix_select_remove + 'Swap option:selected').each(function() {
+			$('#' + prefix_select_add + 'Swap').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
+			$(this).remove();
+		});
+		$('#selectedSwap option').prop('selected', true);
+	});
+}
 
 function bindTabModuleListAction()
 {
@@ -954,7 +958,6 @@ function bindTabModuleListAction()
 			option = $('#'+$(this).data('option')+' :selected');
 			if ($(option).data('onclick') != '')
 			{
-
 				var f = eval("(function(){ "+$(option).data('onclick')+"})");
 				if (f.call())
 					window.location.href = $(option).data('href');

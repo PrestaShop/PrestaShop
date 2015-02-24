@@ -285,10 +285,10 @@ class AdminWarehousesControllerCore extends AdminController
 					),
 					'hint' => array(
 						$this->l('Associated carriers.'),
-						$this->l('If you do not select any carrier, none will be able to ship from this warehouse.'),
-						$this->l('You can specify the number of carriers available to ship orders from particular warehouses.'),
+						$this->l('You can choose which carriers can ship orders from particular warehouses.'),
+						$this->l('If you do not select any carrier, all the carriers will be able to ship from this warehouse.'),
 					),
-					'desc' => $this->l('You must select at least one carrier to enable shipping from this warehouse. Use CTRL+Click to select more than one carrier.'),
+					'desc' => $this->l('If no carrier is selected, all the carriers will be allowed to ship from this warehouse. Use CTRL+Click to select more than one carrier.'),
 				),
 			),
 
@@ -461,8 +461,10 @@ class AdminWarehousesControllerCore extends AdminController
 		}
 
 		// handles carriers associations
-		if (Tools::isSubmit('ids_carriers_selected'))
+		if (!empty(Tools::isSubmit('ids_carriers_selected')))
 			$object->setCarriers(Tools::getValue('ids_carriers_selected'));
+		else
+			$object->setCarriers(Tools::getValue('ids_carriers_available'));
 
 		return true;
 	}

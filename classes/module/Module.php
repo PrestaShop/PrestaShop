@@ -154,6 +154,11 @@ abstract class ModuleCore
 	public $allow_push;
 
 	public $push_time_limit = 180;
+	
+	/** @var bool Define if we will log modules performances for this session */
+	public static $_log_module_perfs = null;
+	/** @var bool Random session for modules perfs logs*/
+	public static $_log_module_perfs_session = null;
 
 	const CACHE_FILE_MODULES_LIST = '/config/xml/modules_list.xml';
 
@@ -829,7 +834,9 @@ abstract class ModuleCore
 
 			// If shop lists is null, we fill it with all shops
 			if (is_null($shop_list))
-				$shop_list = Shop::getShops(true, null, true);
+				$shop_list = Shop::getCompleteListOfShopsID();
+
+			$shop_list_employee = Shop::getShops(true, null, true);
 
 			foreach ($shop_list as $shop_id)
 			{
@@ -855,6 +862,12 @@ abstract class ModuleCore
 					'id_shop' => (int)$shop_id,
 					'position' => (int)($position + 1),
 				));
+
+				if (!in_array($shop_id, $shop_list_employee))
+				{
+					$where = '`id_module` = '.(int)$this->id.' AND `id_shop` = '.(int)$shop_id;
+					$return &= Db::getInstance()->delete('module_shop', $where);
+				}
 			}
 
 			Hook::exec('actionModuleRegisterHookAfter', array('object' => $this, 'hook_name' => $hook_name));
@@ -1027,25 +1040,47 @@ abstract class ModuleCore
 
 		if (!isset(self::$_INSTANCE[$module_name]))
 		{
-			if (Tools::file_exists_no_cache(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php'))
-			{
-				include_once(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php');
-
-				if (Tools::file_exists_no_cache(_PS_OVERRIDE_DIR_.'modules/'.$module_name.'/'.$module_name.'.php'))
-				{
-					include_once(_PS_OVERRIDE_DIR_.'modules/'.$module_name.'/'.$module_name.'.php');
-					$override = $module_name.'Override';
-
-					if (class_exists($override, false))
-						return self::$_INSTANCE[$module_name] = new $override;
-				}
-
-				if (class_exists($module_name, false))
-					return self::$_INSTANCE[$module_name] = new $module_name;
-			}
-			return false;
+			if (!Tools::file_exists_no_cache(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php'))
+				return false;
+			return Module::coreLoadModule($module_name);
 		}
 		return self::$_INSTANCE[$module_name];
+	}
+
+	protected static function coreLoadModule($module_name)
+	{
+		// Define if we will log modules performances for this session
+		if (Module::$_log_module_perfs === null)
+		{
+			$modulo = _PS_DEBUG_PROFILING_ ? 1 : Configuration::get('PS_LOG_MODULE_PERFS_MODULO');
+			Module::$_log_module_perfs = ($modulo && mt_rand(0, $modulo - 1) == 0);
+			if (Module::$_log_module_perfs)
+				Module::$_log_module_perfs_session = mt_rand();
+		}
+
+		// Store time before and after hook call and save the result in the database
+		$ts_start = microtime(true);
+		
+		include_once(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php');
+
+		$r = false;
+		if (Tools::file_exists_no_cache(_PS_OVERRIDE_DIR_.'modules/'.$module_name.'/'.$module_name.'.php'))
+		{
+			include_once(_PS_OVERRIDE_DIR_.'modules/'.$module_name.'/'.$module_name.'.php');
+			$override = $module_name.'Override';
+
+			if (class_exists($override, false))
+				$r = self::$_INSTANCE[$module_name] = new $override;
+		}
+
+		if (!$r && class_exists($module_name, false))
+			$r = self::$_INSTANCE[$module_name] = new $module_name;
+
+		$ts_end = microtime(true);
+		if (Module::$_log_module_perfs)
+			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'module_perfs (session, module, method, ts_start, ts_end) VALUES ('.(int)Module::$_log_module_perfs_session.', "'.pSQL($module_name).'", "__construct", "'.pSQL($ts_start).'", "'.pSQL($ts_end).'")');
+
+		return $r;
 	}
 
 	/**

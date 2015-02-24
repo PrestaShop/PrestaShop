@@ -3352,50 +3352,55 @@ exit;
 	 * highest $sort_column.
 	 *
 	 * E.g.:
-	 * $rows = [['a' => 5.1], ['b' => 8.2]];
+	 *
+	 * $rows = [['a' => 5.1], ['a' => 8.2]];
+	 *
 	 * spreadAmount(0.3, 1, $rows, 'a');
-	 * // $rows is [['b' => 8.4], ['a' => 5.2]]
+	 *
+	 * => $rows is [['a' => 8.4], ['a' => 5.2]]
+	 *
+	 * @param $amount float  The amount to spread across the rows
+	 * @param $precision int Rounding precision
+	 *                       e.g. if $amount is 1, $precision is 0 and $rows = [['a' => 2], ['a' => 1]]
+	 *                       then the resulting $rows will be [['a' => 3], ['a' => 1]]
+	 *                       But if $precision were 1, then the resulting $rows would be [['a' => 2.5], ['a' => 1.5]]
+	 * @param &$rows array 	 An array, associative or not, containing arrays that have at least $column and $sort_column fields
+	 * @param $column string The column on which to perform adjustments
 	 */
-	public static function spreadAmount($amount, $precision, &$rows, $column, $sort_column = null, $max_adjustment = null)
+	public static function spreadAmount($amount, $precision, &$rows, $column)
 	{
-		if (empty($rows))
+		if (!is_array($rows) || empty($rows))
 		{
 			return;
 		}
 
-		if (!$sort_column)
-		{
-			$sort_column = $column;
-		}
-
-		$sort_function = create_function('$a, $b', "return \$b['$sort_column'] > \$a['$sort_column'] ? 1 : -1;");
+		$sort_function = create_function('$a, $b', "return \$b['$column'] > \$a['$column'] ? 1 : -1;");
 
 		uasort($rows, $sort_function);
 
-		$sign = $amount >= 0 ? 1.0 : -1.0;
 		$unit = pow(10, $precision);
 
-		$int_amount = round($unit * abs($amount));
+		$int_amount = (int)round($unit * $amount);
 
 		$remainder = $int_amount % count($rows);
-		$amount_to_spread = $sign * (($int_amount - $remainder) / count($rows) / $unit);
+		$amount_to_spread = ($int_amount - $remainder) / count($rows) / $unit;
+
+		$sign = ($amount >= 0 ? 1 : -1);
 		$position = 0;
-		foreach ($rows as $key => $row)
+		foreach ($rows as &$row)
 		{
 			$adjustment_factor = $amount_to_spread;
 
-			if ($position < $remainder)
+			if ($position < abs($remainder))
 			{
-				$adjustment_factor += $sign / $unit;
+				$adjustment_factor += $sign * 1 / $unit;
 			}
 
-			if (!$max_adjustment || abs($unit*$adjustment_factor) <= $max_adjustment)
-			{
-				$rows[$key][$column] = $row[$column] + $adjustment_factor;
-			}
+			$row[$column] += $adjustment_factor;
 
 			++$position;
 		}
+		unset($row);
 	}
 }
 

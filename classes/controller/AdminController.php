@@ -1223,7 +1223,10 @@ class AdminControllerCore extends Controller
 					$this->redirect_after = self::$currentIndex.'&token='.$this->token;
 
 				$id_category = (($id_category = (int)Tools::getValue('id_category')) && Tools::getValue('id_product')) ? '&id_category='.$id_category : '';
-				$this->redirect_after .= '&conf=5'.$id_category;
+
+				$page = (int)Tools::getValue('page');
+				$page = $page > 1 ? '&submitFilter'.$this->table.'='.(int)$page : '';
+				$this->redirect_after .= '&conf=5'.$id_category.$page;
 			}
 			else
 				$this->errors[] = Tools::displayError('An error occurred while updating the status.');

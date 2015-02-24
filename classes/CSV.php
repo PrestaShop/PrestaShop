@@ -91,7 +91,7 @@ class CSVCore
 	 */
 	public static function wrap($data)
 	{
-		$data = Tools::safeOutput($data, true);
+		$data = Tools::str_replace(array('"', ';'), '', $data);
 		return sprintf('"%s"', $data);
 	}
 
