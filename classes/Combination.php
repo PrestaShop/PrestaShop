@@ -78,7 +78,7 @@ class CombinationCore extends ObjectModel
 			'weight' => 			array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isFloat'),
 			'unit_price_impact' => 	array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isNegativePrice', 'size' => 20),
 			'minimal_quantity' => 	array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId', 'required' => true),
-			'default_on' => 		array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isBool'),
+			'default_on' => 		array('type' => self::TYPE_NOTHING, 'shop' => true, 'validate' => 'isBool'),
 			'available_date' => 	array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDateFormat'),
 		),
 	);
@@ -127,6 +127,14 @@ class CombinationCore extends ObjectModel
 
 	public function add($autodate = true, $null_values = false)
 	{
+		if ($this->default_on)
+			$this->default_on = 1;
+		else
+		{
+			$this->default_on = null;
+			$null_values = true;
+		}
+
 		if (!parent::add($autodate, $null_values))
 			return false;
 
@@ -145,6 +153,13 @@ class CombinationCore extends ObjectModel
 
 	public function update($null_values = false)
 	{
+		if ($this->default_on)
+			$this->default_on = 1;
+		else
+		{
+			$this->default_on = null;
+			$null_values = true;
+		}
 		$return = parent::update($null_values);
 		Product::updateDefaultAttribute($this->id_product);
 

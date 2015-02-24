@@ -1528,14 +1528,14 @@ CREATE TABLE `PREFIX_product_attribute` (
   `quantity` int(10) NOT NULL DEFAULT '0',
   `weight` DECIMAL(20,6) NOT NULL DEFAULT '0',
   `unit_price_impact` DECIMAL(20,6) NOT NULL DEFAULT '0.00',
-  `default_on` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `default_on` tinyint(1) unsigned NULL DEFAULT NULL,
   `minimal_quantity` int(10) unsigned NOT NULL DEFAULT '1',
   `available_date` date NOT NULL DEFAULT '0000-00-00',
   PRIMARY KEY (`id_product_attribute`),
   KEY `product_attribute_product` (`id_product`),
   KEY `reference` (`reference`),
   KEY `supplier_reference` (`supplier_reference`),
-  KEY `product_default` (`id_product`,`default_on`),
+  UNIQUE KEY `product_default` (`id_product`,`default_on`),
   KEY `id_product_id_product_attribute` (`id_product_attribute` , `id_product`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
@@ -1548,11 +1548,11 @@ CREATE TABLE `PREFIX_product_attribute_shop` (
   `ecotax` decimal(17,6) NOT NULL DEFAULT '0.00',
   `weight` DECIMAL(20,6) NOT NULL DEFAULT '0',
   `unit_price_impact` DECIMAL(20,6) NOT NULL DEFAULT '0.00',
-  `default_on` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `default_on` tinyint(1) unsigned NULL DEFAULT NULL,
   `minimal_quantity` int(10) unsigned NOT NULL DEFAULT '1',
   `available_date` date NOT NULL DEFAULT '0000-00-00',
   PRIMARY KEY (`id_product_attribute`, `id_shop`),
-  KEY `id_product` (`id_product`, `id_shop`, `default_on`)
+  UNIQUE KEY `id_product` (`id_product`, `id_shop`, `default_on`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_product_attribute_combination` (

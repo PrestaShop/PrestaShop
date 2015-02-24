@@ -82,14 +82,15 @@ class ImageCore extends ObjectModel
 		$this->source_index = _PS_PROD_IMG_DIR_.'index.php';
 	}
 
-	public function add($autodate = true, $null_values = true)
+	public function add($autodate = true, $null_values = false)
 	{
 		if ($this->position <= 0)
 			$this->position = Image::getHighestPosition($this->id_product) + 1;
 
-		if ($this->cover) {
+		if ($this->cover)
 			$this->cover = 1;
-		} else {
+		else
+		{
 			$this->cover = null;
 			$null_values = true;
 		}
@@ -97,11 +98,12 @@ class ImageCore extends ObjectModel
 		return parent::add($autodate, $null_values);
 	}
 
-	public function update($null_values = true)
+	public function update($null_values = false)
 	{
-		if ($this->cover) {
+		if ($this->cover)
 			$this->cover = 1;
-		} else {
+		else
+		{
 			$this->cover = null;
 			$null_values = true;
 		}
