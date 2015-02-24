@@ -268,12 +268,16 @@
 						</tr>
 					{/if}
 
-					{if $footer.shipping_tax_excl > 0}
-						<tr style="line-height:5px;">
-							<td style="text-align: right; font-weight: bold">{l s='Shipping Cost (Tax Excl.)' pdf='true'}</td>
-							<td style="width: 17%;">{displayPrice currency=$order->id_currency price=$footer.shipping_tax_excl}</td>
-						</tr>
-					{/if}
+					<tr style="line-height:5px;">
+						<td style="text-align: right; font-weight: bold">{l s='Shipping Cost (Tax Excl.)' pdf='true'}</td>
+						<td style="width: 17%;">
+							{if $footer.shipping_tax_excl > 0}
+								{displayPrice currency=$order->id_currency price=$footer.shipping_tax_excl}
+							{else}
+								{l s='Free Shipping' pdf=true}
+							{/if}
+						</td>
+					</tr>
 
 					{if $footer.wrapping_tax_excl > 0}
 						<tr style="line-height:5px;">
@@ -314,12 +318,17 @@
 						</tr>
 					{/if}
 
-					{if $footer.shipping_tax_incl > 0}
-						<tr style="line-height:5px;">
-							<td style="text-align: right; font-weight: bold">{l s='Shipping Cost (Tax Incl.)' pdf='true'}</td>
-							<td style="width: 17%;">{displayPrice currency=$order->id_currency price=$footer.shipping_tax_incl}</td>
-						</tr>
-					{/if}
+					<tr style="line-height:5px;">
+						<td style="text-align: right; font-weight: bold">{l s='Shipping Cost (Tax Incl.)' pdf='true'}</td>
+						<td style="width: 17%;">
+							{if $footer.shipping_tax_excl > 0}
+								{displayPrice currency=$order->id_currency price=$footer.shipping_tax_incl}
+							{else}
+								{l s='Free Shipping' pdf=true}
+							{/if}
+						</td>
+					</tr>
+
 
 					{if $footer.wrapping_tax_incl > 0}
 						<tr style="line-height:5px;">
