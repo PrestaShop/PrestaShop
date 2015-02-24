@@ -834,7 +834,9 @@ abstract class ModuleCore
 
 			// If shop lists is null, we fill it with all shops
 			if (is_null($shop_list))
-				$shop_list = Shop::getShops(true, null, true);
+				$shop_list = Shop::getCompleteListOfShopsID();
+
+			$shop_list_employee = Shop::getShops(true, null, true);
 
 			foreach ($shop_list as $shop_id)
 			{
@@ -860,6 +862,12 @@ abstract class ModuleCore
 					'id_shop' => (int)$shop_id,
 					'position' => (int)($position + 1),
 				));
+
+				if (!in_array($shop_id, $shop_list_employee))
+				{
+					$where = '`id_module` = '.(int)$this->id.' AND `id_shop` = '.(int)$shop_id;
+					$return &= Db::getInstance()->delete('module_shop', $where);
+				}
 			}
 
 			Hook::exec('actionModuleRegisterHookAfter', array('object' => $this, 'hook_name' => $hook_name));
