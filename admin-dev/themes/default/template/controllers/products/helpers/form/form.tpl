@@ -294,7 +294,9 @@
 		<form id="product_form" class="form-horizontal col-lg-10 col-md-9" action="{$form_action|escape:'html':'UTF-8'}" method="post" enctype="multipart/form-data" name="product" novalidate>
 			<input type="hidden" name="id_product" value="{$id_product}" />
 			<input type="hidden" id="is_virtual" name="is_virtual" value="{$product->is_virtual|escape:'html':'UTF-8'}" />
-
+			{if isset($smarty.request.page) && $smarty.request.page > 1}
+				<input type="hidden" id="page" name="page" value="{$smarty.request.page|intval}" />
+			{/if}
 			{if !$product->active && $product->isAssociatedToShop()}
 			<div class="alert alert-info draft" >
 				{l s='Your product will be saved as a draft.'}
