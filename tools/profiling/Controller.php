@@ -228,8 +228,19 @@ abstract class Controller extends ControllerCore
 		$this->_time['display'] = microtime(true);
 
 		$memory_peak_usage = memory_get_peak_usage();
-			
-		$hr = '<hr>';
+
+		// Retrieve module perfs
+		$modules_perfs = array();
+		$result = Db::getInstance()->ExecuteS('SELECT * FROM '._DB_PREFIX_.'module_perfs WHERE session = '.(int)Module::$_log_module_perfs_session.' AND ts_start >= '.(float)$start_time.' AND ts_end <= '.(float)$this->_time['display']);
+		foreach ($result as $row)
+		{
+			if (!isset($modules_perfs[$row['module']]))
+				$modules_perfs[$row['module']] = array('time' => 0, 'methods' => array());
+			$tmp_time = $row['ts_end'] - $row['ts_start'];
+			$modules_perfs[$row['module']]['time'] += $tmp_time;
+			$modules_perfs[$row['module']]['methods'][$row['method']] = $tmp_time;
+		}
+		uasort($modules_perfs, 'prestashop_querytime_sort');
 
 		$totalSize = 0;
 		foreach (get_included_files() as $file)
@@ -354,23 +365,23 @@ abstract class Controller extends ControllerCore
 				clear: both;
 				margin-bottom: 60px;
 			}
-			#ps_profiling .ps_profiling_col4{
+			#ps_profiling .ps_profiling_col3{
 				float: left;
 				padding: 0 10px;
 				border-right: 1px solid #ccc;
-				width: 25%;
+				width: 33%;
 			}
 			@media (max-width: 1200px) {
-				#ps_profiling .ps_profiling_col4 {
+				#ps_profiling .ps_profiling_col3 {
 					width: 50%;
 				}
 			}
 			@media (max-width: 600px) {
-				#ps_profiling .ps_profiling_col4 {
+				#ps_profiling .ps_profiling_col3 {
 					width: 100%;
 				}
 			}
-			#ps_profiling .ps_profiling_col4:last-child{
+			#ps_profiling .ps_profiling_col3:last-child{
 				border-right: none;
 			}
 			#ps_profiling .ps_profiling_infobox{
@@ -390,32 +401,23 @@ abstract class Controller extends ControllerCore
 		
 		echo '
 		<div class="ps_profiling_row">
-		<div class="ps_profiling_col4">
+		<div class="ps_profiling_col3">
 			<div class="ps_profiling_infobox"><b>Load time</b>: '.$this->displayLoadTimeColor($this->_time['display'] - $start_time, true).'</div>';
 
-		if (self::$_footer){
-				echo '<table>';
-				echo '<thead><tr><th class="text-left">Execution</th><th class="text-right">Load time (ms)</th></tr><thead><tbody>';
-				$last_time = $start_time;
-				foreach ($this->_time as $k => $time)
-				{
-					echo '<tr><td>'.$k.'</td><td class="text-right">'.$this->displayLoadTimeColor($time - $last_time).'</td></tr>';
-					$last_time = $time;
-				}
-				echo '</tbody></table>';
-			}
-		echo '</div>
-		<div class="ps_profiling_col4">
-			<div class="ps_profiling_infobox"><b>Hook processing</b>: '.$this->displayLoadTimeColor($totalHookTime).' ms / '.$this->displayMemoryColor($totalHookMemoryUsage).' Mb<br>
-			'.(int)count($executedModules).' methods called in '.(int)count(array_unique($executedModules)).' modules</div>';
+		if (self::$_footer)
+		{
 			echo '<table>';
-			echo '<thead><tr><th class="text-left">Hook</th><th class="text-right">Processing</th></tr><thead><tbody>';
-		foreach ($hooktime as $hook => $time)
-			echo '<tr><td>'.$hook.'</td><td class="text-right">'.$this->displayMemoryColor($hookMemoryUsage[$hook]).' Mb in '.$this->displayLoadTimeColor($time).' ms</td></tr>';
-		echo '</table>
-		</div>
-
-		<div class="ps_profiling_col4">
+			echo '<thead><tr><th class="text-left">Execution</th><th class="text-right">Load time (ms)</th></tr><thead><tbody>';
+			$last_time = $start_time;
+			foreach ($this->_time as $k => $time)
+			{
+				echo '<tr><td>'.$k.'</td><td class="text-right">'.$this->displayLoadTimeColor($time - $last_time).'</td></tr>';
+				$last_time = $time;
+			}
+			echo '</tbody></table>';
+		}
+		echo '</div>
+		<div class="ps_profiling_col3">
 			<div class="ps_profiling_infobox"><b>Memory peak usage</b>: '.$this->displayPeakMemoryColor($memory_peak_usage).' Mb</div>';
 		if (self::$_footer)
 		{
@@ -439,7 +441,7 @@ abstract class Controller extends ControllerCore
 		);
 		
 		echo '
-		<div class="ps_profiling_col4">
+		<div class="ps_profiling_col3">
 			<div class="ps_profiling_infobox"><b>Total cache size in Cache class</b>: '.$this->displayMemoryColor($totalCacheSize).' Mb</div>
 			<div class="ps_profiling_infobox"><b>Smarty cache</b>: <span style="color:'.(Configuration::get('PS_SMARTY_CACHE') ? 'green">enabled' : 'red">disabled').'</span></div>
 			<div class="ps_profiling_infobox"><b>Smarty compilation</b>: <span style="color:'.$compile[Configuration::get('PS_SMARTY_FORCE_COMPILE')].'</span></div>
@@ -481,6 +483,43 @@ abstract class Controller extends ControllerCore
 		}
 		echo '</div>';
 		echo '
+		
+		<div class="ps_profiling_row">
+			<div class="ps_profiling_col3">
+				<div class="ps_profiling_infobox">
+					<b>Hook processing</b>: '.$this->displayLoadTimeColor($totalHookTime).' ms / '.$this->displayMemoryColor($totalHookMemoryUsage).' Mb<br>
+					'.(int)count($executedModules).' methods called in '.(int)count(array_unique($executedModules)).' modules
+				</div>
+				<table>
+					<thead><tr><th class="text-left">Hook</th><th class="text-right">Processing</th></tr><thead><tbody>';
+		foreach ($hooktime as $hook => $time)
+			echo '	<tr><td>'.$hook.'</td><td class="text-right">'.$this->displayMemoryColor($hookMemoryUsage[$hook]).' Mb in '.$this->displayLoadTimeColor($time).' ms</td></tr>';
+		echo '	</table>
+			</div>
+			<div class="ps_profiling_col3">
+				<div class="ps_profiling_infobox">
+					<b>Modules</b>
+				</div>
+				<table>
+					<thead><tr><th class="text-left">Module</th><th class="text-right">Processing</th></tr><thead><tbody>';
+		foreach ($modules_perfs as $module => $module_perfs)
+		{
+			echo '	<tr>
+						<td>
+							<a href="javascript:void(0);" onclick="$(\'.toggle_'.$module.'\').toggle();">
+								'.$module.'
+							</a>
+							<div class="ps_profiling_infobox toggle_'.$module.'" style="display:none">'.implode('<br>', array_keys($module_perfs['methods'])).'</div>
+						</td>
+						<td class="text-right">
+							'.$this->displayLoadTimeColor($module_perfs['time']).' ms
+							<div class="ps_profiling_infobox toggle_'.$module.'" style="display:none">'.implode(' ms<br>', array_map(array($this, 'displayLoadTimeColor'), $module_perfs['methods'])).' ms</div>
+						</td>
+					</tr>';
+		}
+		echo '	</table>
+			</div>
+		</div>
 		<div class="ps_profiling_row">
 			<ul>
 				<li><a href="#stopwatch">Stopwatch</a></li>

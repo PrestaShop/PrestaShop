@@ -507,9 +507,10 @@ class HookCore extends ObjectModel
 
 				// Call hook method
 				if ($hook_callable)
-					$display = $moduleInstance->{'hook'.$hook_name}($hook_args);
+					$display = Hook::coreCallHook($moduleInstance, 'hook'.$hook_name, $hook_args);
 				elseif ($hook_retro_callable)
-					$display = $moduleInstance->{'hook'.$retro_hook_name}($hook_args);
+					$display = Hook::coreCallHook($moduleInstance, 'hook'.$retro_hook_name, $hook_args);
+
 				// Live edit
 				if (!$array_return && $array['live_edit'] && Tools::isSubmit('live_edit') && Tools::getValue('ad') && Tools::getValue('liveToken') == Tools::getAdminToken('AdminModulesPositions'.(int)Tab::getIdFromClassName('AdminModulesPositions').(int)Tools::getValue('id_employee')))
 				{
@@ -534,6 +535,29 @@ class HookCore extends ObjectModel
 		else
 			return ($live_edit ? '<script type="text/javascript">hooks_list.push(\''.$hook_name.'\');</script>
 				<div id="'.$hook_name.'" class="dndHook" style="min-height:50px">' : '').$output.($live_edit ? '</div>' : '');// Return html string
+	}
+	
+	public static function coreCallHook($module, $method, $params)
+	{
+		// Define if we will log modules performances for this session
+		if (Module::$_log_module_perfs === null)
+		{
+			$modulo = _PS_DEBUG_PROFILING_ ? 1 : Configuration::get('PS_LOG_MODULE_PERFS_MODULO');
+			Module::$_log_module_perfs = ($modulo && mt_rand(0, $modulo - 1) == 0);
+			if (Module::$_log_module_perfs)
+				Module::$_log_module_perfs_session = mt_rand();
+		}
+		
+		// Immediately return the result if we do not log performances
+		if (!Module::$_log_module_perfs)
+			return $module->{$method}($params);
+		
+		// Store time before and after hook call and save the result in the database
+		$ts_start = microtime(true);
+		$r = $module->{$method}($params);
+		$ts_end = microtime(true);
+		Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'module_perfs (session, module, method, ts_start, ts_end) VALUES ('.(int)Module::$_log_module_perfs_session.', "'.pSQL($module->name).'", "'.pSQL($method).'", "'.pSQL($ts_start).'", "'.pSQL($ts_end).'")');
+		return $r;
 	}
 
 	public static function wrapLiveEdit($display, $moduleInstance, $id_hook)

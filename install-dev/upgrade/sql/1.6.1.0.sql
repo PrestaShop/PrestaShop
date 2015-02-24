@@ -107,3 +107,13 @@ CREATE TABLE `PREFIX_smarty_lazy_cache` (
 CREATE TABLE `PREFIX_smarty_compile_last_flush` (
   `last_flush` datetime NOT NULL DEFAULT '0000-00-00 00:00:00'
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_module_perfs` (
+  `id_module_perfs` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `session` int(11) unsigned NOT NULL,
+  `module` varchar(62) NOT NULL,
+  `method` varchar(126) NOT NULL,
+  `ts_start` double unsigned NOT NULL,
+  `ts_end` double unsigned NOT NULL,
+  PRIMARY KEY (`id_module_perfs`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
