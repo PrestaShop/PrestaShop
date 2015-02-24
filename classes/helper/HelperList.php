@@ -173,7 +173,7 @@ class HelperListCore extends Helper
 			'ajax' => $ajax,
 			'enabled' => (bool)$value,
 			'url_enable' => $this->currentIndex.'&'.$this->identifier.'='.(int)$id.'&'.$active.$this->table.($ajax ? '&action='.$active.$this->table.'&ajax='.(int)$ajax : '').
-				((int)$id_category && (int)$id_product ? '&id_category='.(int)$id_category : '').'&token='.($token != null ? $token : $this->token)
+				((int)$id_category && (int)$id_product ? '&id_category='.(int)$id_category : '').($this->page && $this->page > 1 ? '&page='.(int)$this->page : '').'&token='.($token != null ? $token : $this->token)
 		));
 		return $tpl_enable->fetch();
 	}
