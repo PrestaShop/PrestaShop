@@ -1781,7 +1781,6 @@ class AdminProductsControllerCore extends AdminController
 		$this->object = new $this->className();
 		$this->_removeTaxFromEcotax();
 		$this->copyFromPost($this->object, $this->table);
-
 		if ($this->object->add())
 		{
 			PrestaShopLogger::addLog(sprintf($this->l('%s addition', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
@@ -1790,7 +1789,7 @@ class AdminProductsControllerCore extends AdminController
 			$this->updatePackItems($this->object);
 			$this->updateDownloadProduct($this->object);
 
-			if (Configuration::get('PS_FORCE_ASM_NEW_PRODUCT') && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
+			if (Configuration::get('PS_FORCE_ASM_NEW_PRODUCT') && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $this->object->getType() != Product::PTYPE_VIRTUAL)
 			{
 				$this->object->advanced_stock_management = 1;
 				StockAvailable::setProductDependsOnStock($this->object->id, true, (int)$this->context->shop->id, 0);
