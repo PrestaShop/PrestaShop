@@ -928,10 +928,10 @@ CREATE TABLE `PREFIX_image` (
   `id_image` int(10) unsigned NOT NULL auto_increment,
   `id_product` int(10) unsigned NOT NULL,
   `position` smallint(2) unsigned NOT NULL DEFAULT '0',
-  `cover` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `cover` tinyint(1) unsigned NULL DEFAULT NULL,
   PRIMARY KEY (`id_image`),
   KEY `image_product` (`id_product`),
-  KEY `id_product_cover` (`id_product`,`cover`),
+  UNIQUE KEY `id_product_cover` (`id_product`,`cover`),
   UNIQUE KEY `idx_product_image` (`id_image`, `id_product`, `cover`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
@@ -2149,9 +2149,9 @@ CREATE TABLE `PREFIX_image_shop` (
   `id_product` int(10) unsigned NOT NULL,
 	`id_image` INT( 11 ) UNSIGNED NOT NULL,
 	`id_shop` INT( 11 ) UNSIGNED NOT NULL,
-	`cover` tinyint(1) NOT NULL DEFAULT '0',
+	`cover` tinyint(1) UNSIGNED NULL DEFAULT NULL,
 	PRIMARY KEY (`id_image`, `id_shop`),
-	KEY `id_product` (`id_product`, `id_shop`, `cover`),
+	UNIQUE KEY `id_product` (`id_product`, `id_shop`, `cover`),
 	KEY `id_shop` (`id_shop`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 

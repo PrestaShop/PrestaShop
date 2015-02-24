@@ -117,3 +117,17 @@ CREATE TABLE `PREFIX_module_perfs` (
   `ts_end` double unsigned NOT NULL,
   PRIMARY KEY (`id_module_perfs`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+ALTER TABLE `PREFIX_image` CHANGE `cover` `cover` tinyint(1) unsigned NULL DEFAULT NULL;
+UPDATE `PREFIX_image` SET cover=NULL WHERE cover=0;
+CREATE TEMPORARY TABLE `image_transform` SELECT `id_product`, COUNT(*) c  FROM `PREFIX_image` WHERE `cover`=1 GROUP BY `id_product` HAVING c>1;
+UPDATE `image_transform` JOIN `PREFIX_image` USING (`id_product`) SET `PREFIX_image`.cover=NULL;
+ALTER TABLE `PREFIX_image` DROP KEY `id_product_cover`;
+ALTER IGNORE TABLE `PREFIX_image` ADD UNIQUE KEY `id_product_cover` (`id_product`,`cover`);
+
+ALTER TABLE `PREFIX_image_shop` CHANGE `cover` `cover` tinyint(1) unsigned NULL DEFAULT NULL;
+UPDATE `PREFIX_image_shop` SET cover=NULL WHERE cover=0;
+CREATE TEMPORARY TABLE `image_shop_transform` SELECT `id_product`, `id_shop`, COUNT(*) c  FROM `PREFIX_image_shop` WHERE `cover`=1 GROUP BY `id_product`, `id_shop` HAVING c>1;
+UPDATE `image_shop_transform` JOIN `PREFIX_image_shop` USING (`id_product`, `id_shop`) SET `PREFIX_image_shop`.cover=NULL;
+ALTER TABLE `PREFIX_image_shop` DROP KEY `id_product`;
+ALTER IGNORE TABLE `PREFIX_image_shop` ADD UNIQUE KEY `id_product` (`id_product`, `id_shop`, `cover`);
