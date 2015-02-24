@@ -1988,18 +1988,17 @@ class AdminProductsControllerCore extends AdminController
 							$this->redirect_after = $this->getPreviewUrl($object);
 						else
 						{
-							$page = (int)Tools::getValue('page', 'submitFilterproduct', Tools::getValue('submitFilterproduct'));
 							// Save and stay on same form
 							if ($this->display == 'edit')
 							{
 								$this->confirmations[] = $this->l('Update successful');
 								$this->redirect_after = self::$currentIndex.'&id_product='.(int)$this->object->id
 									.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '')
-									.'&updateproduct&conf=4&key_tab='.Tools::safeOutput(Tools::getValue('key_tab')).($page > 1 ? '&submitFilterproduct='.(int)$page : '').'&token='.$this->token;
+									.'&updateproduct&conf=4&key_tab='.Tools::safeOutput(Tools::getValue('key_tab')).'&token='.$this->token;
 							}
 							else
 								// Default behavior (save and back)
-								$this->redirect_after = self::$currentIndex.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&conf=4'.($page > 1 ? '&submitFilterproduct='.(int)$page : '').'&token='.$this->token;
+								$this->redirect_after = self::$currentIndex.(Tools::getIsset('id_category') ? '&id_category='.(int)Tools::getValue('id_category') : '').'&conf=4&token='.$this->token;
 						}
 					}
 					// if errors : stay on edit page
@@ -2697,9 +2696,8 @@ class AdminProductsControllerCore extends AdminController
 			$id_product = (int)$this->object->id;
 		else
 			$id_product = (int)Tools::getvalue('id_product');
-		$page = (int)Tools::getValue('page', Tools::getValue('submitFilterproduct'));
 
-		$this->tpl_form_vars['form_action'] = $this->context->link->getAdminLink('AdminProducts').'&'.($id_product ? 'id_product='.(int)$id_product : 'addproduct').($page > 1 ? '&page='.(int)$page : '');
+		$this->tpl_form_vars['form_action'] = $this->context->link->getAdminLink('AdminProducts').'&'.($id_product ? 'id_product='.(int)$id_product : 'addproduct');
 		$this->tpl_form_vars['id_product'] = $id_product;
 
 		// Transform configuration option 'upload_max_filesize' in octets
@@ -3598,7 +3596,7 @@ class AdminProductsControllerCore extends AdminController
 			</div>
 		</div>
 		<div class="panel-footer">
-				<a href="'.$this->context->link->getAdminLink('AdminProducts').'" class="btn btn-default"><i class="process-icon-cancel"></i> '.$this->l('Cancelooo').'</a>
+				<a href="'.$this->context->link->getAdminLink('AdminProducts').'" class="btn btn-default"><i class="process-icon-cancel"></i> '.$this->l('Cancel').'</a>
 				<button id="product_form_submit_btn"  type="submit" name="submitAddproduct" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> '.$this->l('Save') .'</button>
 				<button id="product_form_submit_btn"  type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> '.$this->l('Save and stay') .'</button>
 			</div>

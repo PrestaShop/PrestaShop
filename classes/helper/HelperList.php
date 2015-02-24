@@ -110,8 +110,6 @@ class HelperListCore extends Helper
 
 	public $ajax_params = array();
 
-	public $page;
-
 	public function __construct()
 	{
 		$this->base_folder = 'helpers/list/';
@@ -458,7 +456,7 @@ class HelperListCore extends Helper
 			self::$cache_lang['Edit'] = $this->l('Edit', 'Helper');
 
 		$tpl->assign(array(
-			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&update'.$this->table.($this->page && $this->page > 1 ? '&page='.(int)$this->page : '').'&token='.($token != null ? $token : $this->token),
+			'href' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&update'.$this->table.'&token='.($token != null ? $token : $this->token),
 			'action' => self::$cache_lang['Edit'],
 			'id' => $id
 		));
@@ -554,8 +552,6 @@ class HelperListCore extends Helper
 
 		if ($page > $total_pages)
 			$page = $total_pages;
-
-		$this->page = (int)$page;
 
 		/* Choose number of results per page */
 		$selected_pagination = Tools::getValue($this->list_id.'_pagination',
