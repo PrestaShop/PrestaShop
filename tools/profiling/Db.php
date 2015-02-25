@@ -80,10 +80,10 @@ abstract class Db extends DbCore
 			$this->uniqQueries[$uniqSql]++;
 
 			// No cache for query
-			if ($this->disableCache)
+			if ($this->disableCache && !stripos($sql, 'SQL_NO_CACHE'))
 				$sql = preg_replace('/^\s*select\s+/i', 'SELECT SQL_NO_CACHE ', trim($sql));
 
-			// Get tables in quer
+			// Get tables in query
 			preg_match_all('/(from|join)\s+`?'._DB_PREFIX_.'([a-z0-9_-]+)/ui', $sql, $matches);
 			foreach ($matches[2] as $table)
 			{
@@ -92,10 +92,10 @@ abstract class Db extends DbCore
 				$this->tables[$table]++;
 			}
 
-			// Execute query
 			$start = microtime(true);
 		}
 
+		// Execute query
 		$result = parent::query($sql);
 
 		if (!$explain)

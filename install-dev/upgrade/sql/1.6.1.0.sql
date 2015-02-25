@@ -107,3 +107,41 @@ CREATE TABLE `PREFIX_smarty_lazy_cache` (
 CREATE TABLE `PREFIX_smarty_compile_last_flush` (
   `last_flush` datetime NOT NULL DEFAULT '0000-00-00 00:00:00'
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE `PREFIX_module_perfs` (
+  `id_module_perfs` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `session` int(11) unsigned NOT NULL,
+  `module` varchar(62) NOT NULL,
+  `method` varchar(126) NOT NULL,
+  `ts_start` double unsigned NOT NULL,
+  `ts_end` double unsigned NOT NULL,
+  PRIMARY KEY (`id_module_perfs`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+ALTER TABLE `PREFIX_image` CHANGE `cover` `cover` tinyint(1) unsigned NULL DEFAULT NULL;
+UPDATE `PREFIX_image` SET `cover`=NULL WHERE `cover`=0;
+CREATE TEMPORARY TABLE `image_transform` SELECT `id_product`, COUNT(*) c  FROM `PREFIX_image` WHERE `cover`=1 GROUP BY `id_product` HAVING c>1;
+UPDATE `image_transform` JOIN `PREFIX_image` USING (`id_product`) SET `PREFIX_image`.`cover`=NULL;
+ALTER TABLE `PREFIX_image` DROP KEY `id_product_cover`;
+ALTER IGNORE TABLE `PREFIX_image` ADD UNIQUE KEY `id_product_cover` (`id_product`,`cover`);
+
+ALTER TABLE `PREFIX_image_shop` CHANGE `cover` `cover` tinyint(1) unsigned NULL DEFAULT NULL;
+UPDATE `PREFIX_image_shop` SET `cover`=NULL WHERE `cover`=0;
+CREATE TEMPORARY TABLE `image_shop_transform` SELECT `id_product`, `id_shop`, COUNT(*) c  FROM `PREFIX_image_shop` WHERE `cover`=1 GROUP BY `id_product`, `id_shop` HAVING c>1;
+UPDATE `image_shop_transform` JOIN `PREFIX_image_shop` USING (`id_product`, `id_shop`) SET `PREFIX_image_shop`.`cover`=NULL;
+ALTER TABLE `PREFIX_image_shop` DROP KEY `id_product`;
+ALTER IGNORE TABLE `PREFIX_image_shop` ADD UNIQUE KEY `id_product` (`id_product`, `id_shop`, `cover`);
+
+ALTER TABLE `PREFIX_product_attribute` CHANGE `default_on` `default_on` tinyint(1) unsigned NULL DEFAULT NULL;
+UPDATE `PREFIX_product_attribute` SET `default_on`=NULL WHERE `default_on`=0;
+CREATE TEMPORARY TABLE `attribute_transform` SELECT `id_product`, COUNT(*) c  FROM `PREFIX_product_attribute` WHERE `default_on`=1 GROUP BY `id_product` HAVING c>1;
+UPDATE `attribute_transform` JOIN `PREFIX_product_attribute` USING (`id_product`) SET `PREFIX_product_attribute`.`default_on`=NULL;
+ALTER TABLE `PREFIX_product_attribute` DROP KEY `product_default`;
+ALTER IGNORE TABLE `PREFIX_product_attribute` ADD UNIQUE KEY `product_default` (`id_product`,`default_on`);
+
+ALTER TABLE `PREFIX_product_attribute_shop` CHANGE `default_on` `default_on` tinyint(1) unsigned NULL DEFAULT NULL;
+UPDATE `PREFIX_product_attribute_shop` SET `default_on`=NULL WHERE `default_on`=0;
+CREATE TEMPORARY TABLE `attribute_shop_transform` SELECT `id_product`, `id_shop`, COUNT(*) c  FROM `PREFIX_product_attribute_shop` WHERE `default_on`=1 GROUP BY `id_product`, `id_shop` HAVING c>1;
+UPDATE `attribute_shop_transform` JOIN `PREFIX_product_attribute_shop` USING (`id_product`, `id_shop`) SET `PREFIX_product_attribute_shop`.`default_on`=NULL;
+ALTER TABLE `PREFIX_product_attribute_shop` DROP KEY `id_product`;
+ALTER IGNORE TABLE `PREFIX_product_attribute_shop` ADD UNIQUE KEY `id_product` (`id_product`, `id_shop`, `default_on`);
