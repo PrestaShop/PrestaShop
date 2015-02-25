@@ -127,10 +127,10 @@ class ImageTypeCore extends ObjectModel
 	 * @param string $name
 	 * @param string $type
 	 */
-	public static function getByNameNType($name, $type = null, $order = null)
+	public static function getByNameNType($name, $type = null, $order = 0)
 	{
 		static $is_passed = false;
-
+		
 		if (!isset(self::$images_types_name_cache[$name.'_'.$type.'_'.$order]) && !$is_passed)
 		{
 			$results = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'image_type`');
