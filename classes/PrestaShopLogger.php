@@ -123,7 +123,8 @@ class	PrestaShopLoggerCore extends ObjectModel
 			$log->object_id = (int)$object_id;
 		}
 
-		PrestaShopLogger::sendByMail($log);
+		if ($object_type != 'Swift_Message')
+			PrestaShopLogger::sendByMail($log);
 
 		if ($allow_duplicate || !$log->_isPresent())
 		{
