@@ -154,7 +154,7 @@ abstract class ModuleCore
 	public $allow_push;
 
 	public $push_time_limit = 180;
-	
+
 	/** @var bool Define if we will log modules performances for this session */
 	public static $_log_module_perfs = null;
 	/** @var bool Random session for modules perfs logs*/
@@ -1060,7 +1060,7 @@ abstract class ModuleCore
 
 		// Store time before and after hook call and save the result in the database
 		$ts_start = microtime(true);
-		
+
 		include_once(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php');
 
 		$r = false;
@@ -2528,7 +2528,7 @@ abstract class ModuleCore
 		else
 			file_put_contents($path_override, preg_replace('#(\r|\r\n)#ism', "\n", file_get_contents($path_override)));
 
-		$pattern_escape_com = '#(\/\/.*?\n|\/\*(?!\n\s+\* module:.*?\* date:.*?\* version:.*?\*\/).*?\*\/)#ism';
+		$pattern_escape_com = '#(^\s*?\/\/.*?\n|\/\*(?!\n\s+\* module:.*?\* date:.*?\* version:.*?\*\/).*?\*\/)#ism';
 		// Check if there is already an override file, if not, we just need to copy the file
 		if ($file = PrestaShopAutoload::getInstance()->getClassPath($classname))
 		{
