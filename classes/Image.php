@@ -68,7 +68,7 @@ class ImageCore extends ObjectModel
 		'fields' => array(
 			'id_product' => array('type' => self::TYPE_INT, 'shop' => 'both', 'validate' => 'isUnsignedId', 'required' => true),
 			'position' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-			'cover' => 		array('type' => self::TYPE_NOTHING, 'validate' => 'isBool', 'shop' => true),
+			'cover' => 		array('type' => self::TYPE_BOOL, 'allow_null' => true, 'validate' => 'isBool', 'shop' => true),
 			'legend' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
 		),
 	);
@@ -90,10 +90,7 @@ class ImageCore extends ObjectModel
 		if ($this->cover)
 			$this->cover = 1;
 		else
-		{
 			$this->cover = null;
-			$null_values = true;
-		}
 
 		return parent::add($autodate, $null_values);
 	}
@@ -103,10 +100,7 @@ class ImageCore extends ObjectModel
 		if ($this->cover)
 			$this->cover = 1;
 		else
-		{
 			$this->cover = null;
-			$null_values = true;
-		}
 
 
 		return parent::update($null_values);
