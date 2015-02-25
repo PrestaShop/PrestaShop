@@ -133,7 +133,7 @@ abstract class HTMLTemplateCore
 	/**
 	* Assign hook data
 	*
-	* @param $object generally the object used in the constructor
+	* @param ObjectModel $object generally the object used in the constructor
 	*/
 	public function assignHookData($object)
 	{

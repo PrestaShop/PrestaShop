@@ -1917,10 +1917,10 @@ class AdminThemesControllerCore extends AdminController
 	/**
 	 * _checkConfigForFeatures
 	 *
-	 * @param array $arrFeature array of feature code to check
+	 * @param array $arrFeatures array of feature code to check
 	 * @param mixed $configItem will precise the attribute which not matches. If empty, will check every attributes
 	 *
-	 * @return error message, or null if disabled
+	 * @return bool Error message, or null if disabled
 	 */
 	protected function _checkConfigForFeatures($arrFeatures, $configItem = array())
 	{

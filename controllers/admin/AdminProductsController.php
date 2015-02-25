@@ -2321,7 +2321,7 @@ class AdminProductsControllerCore extends AdminController
 	/**
 	 * Update product tags
 	 *
-	 * @param array Languages
+	 * @param array $languages Array languages
 	 * @param object $product Product
 	 * @return boolean Update result
 	 */

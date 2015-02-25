@@ -78,7 +78,7 @@ class OrderInvoiceCore extends ObjectModel
 	/** @var string note */
 	public $note;
 
-	/** @var intger */
+	/** @var int */
 	public $date_add;
 
 	/** @var array Total paid cache */

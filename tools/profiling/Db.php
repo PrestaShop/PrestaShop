@@ -29,7 +29,7 @@ abstract class Db extends DbCore
 	/**
 	 * Add SQL_NO_CACHE in SELECT queries
 	 * 
-	 * @var unknown_type
+	 * @var bool
 	 */
 	public $disableCache = true;
 
