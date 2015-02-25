@@ -2528,7 +2528,7 @@ abstract class ModuleCore
 		else
 			file_put_contents($path_override, preg_replace('#(\r|\r\n)#ism', "\n", file_get_contents($path_override)));
 
-		$pattern_escape_com = '#(^\s?\/\/.*?\n|\/\*(?!\n\s+\* module:.*?\* date:.*?\* version:.*?\*\/).*?\*\/)#ism';
+		$pattern_escape_com = '#(^\s*?\/\/.*?\n|\/\*(?!\n\s+\* module:.*?\* date:.*?\* version:.*?\*\/).*?\*\/)#ism';
 		// Check if there is already an override file, if not, we just need to copy the file
 		if ($file = PrestaShopAutoload::getInstance()->getClassPath($classname))
 		{
