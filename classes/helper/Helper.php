@@ -50,7 +50,7 @@ class HelperCore
 	public $override_folder;
 
 	/**
-	 * @var smartyTemplate base template object
+	 * @var Smarty_Internal_Template base template object
 	 */
 	protected $tpl;
 
@@ -75,7 +75,7 @@ class HelperCore
 	 * Create a template from the override file, else from the base file.
 	 *
 	 * @param string $tpl_name filename
-	 * @return Template
+	 * @return Smarty_Internal_Template
 	 */
 	public function createTemplate($tpl_name)
 	{
@@ -141,7 +141,7 @@ class HelperCore
 	/**
 	 *
 	 * @param array $root array with the name and ID of the tree root category, if null the Shop's root category will be used
-	 * @param type $selected_cat array of selected categories
+	 * @param array $selected_cat array of selected categories
 	 *					Format
 	 *						Array
 	 * 					(
@@ -293,8 +293,8 @@ class HelperCore
 	 *
 	 * @param mixed $string term or expression in english
 	 * @param string $class
-	 * @param boolan $addslashes if set to true, the return value will pass through addslashes(). Otherwise, stripslashes().
-	 * @param boolean $htmlentities if set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
+	 * @param bool $addslashes if set to true, the return value will pass through addslashes(). Otherwise, stripslashes().
+	 * @param bool $htmlentities if set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
 	 * @return string the translation if available, or the english default text.
 	 */
 	protected function l($string, $class = 'AdminTab', $addslashes = false, $htmlentities = true)

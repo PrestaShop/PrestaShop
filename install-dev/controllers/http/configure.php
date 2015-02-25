@@ -291,7 +291,8 @@ class InstallControllerHttpConfigure extends InstallControllerHttp
 	/**
 	 * Helper to display error for a field
 	 *
-	 * @param unknown_type $field
+	 * @param string $field
+	 * @return string|void
 	 */
 	public function displayError($field)
 	{

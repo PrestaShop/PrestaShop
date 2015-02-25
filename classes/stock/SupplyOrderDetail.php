@@ -240,7 +240,7 @@ class SupplyOrderDetailCore extends ObjectModel
 	 * Applies a global order discount rate, for the current product (i.e detail)
 	 * Calls ObjectModel::update()
 	 *
-	 * @param $discount_rate The discount rate in percent (Ex. 5 for 5 percents)
+	 * @param float|int $discount_rate The discount rate in percent (Ex. 5 for 5 percents)
 	 */
 	public function applyGlobalDiscount($discount_rate)
 	{
@@ -261,8 +261,8 @@ class SupplyOrderDetailCore extends ObjectModel
 	/**
 	 * @see ObjectModel::validateController()
 	 *
-	 * @param $htmlentities Optional
-	 * @return $errors If any..
+	 * @param bool $htmlentities Optional
+	 * @return array Errors, if any..
 	 */
 	public function validateController($htmlentities = true)
 	{

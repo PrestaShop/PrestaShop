@@ -241,7 +241,7 @@ class AdminAccessControllerCore extends AdminController
 	/**
 	* Get the current profile id
 	*
-	* @return the $_GET['profile'] if valid, else 1 (the first profile id)
+	* @return int the $_GET['profile'] if valid, else 1 (the first profile id)
 	*/
 	public function getCurrentProfileId()
 	{
