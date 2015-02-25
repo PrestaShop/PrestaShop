@@ -361,7 +361,10 @@ class MailCore extends ObjectModel
 		}
 		catch (Swift_Exception $e)
 		{
-			throw new PrestaShopException('Swift error: ' . $e->getMessage());
+			if (_PS_MODE_DEV_)
+				throw new PrestaShopException('Swift error: ' . $e->getMessage());
+
+			return false;
 		}
 	}
 
