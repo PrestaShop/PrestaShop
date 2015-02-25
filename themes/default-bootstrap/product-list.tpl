@@ -105,7 +105,7 @@
 							</a>
 						{/if}
 					</div>
-					{if !$product.is_virtual}{hook h="displayProductDeliveryTime" product=$product}{/if}
+					{if isset($product.is_virtual) && !$product.is_virtual}{hook h="displayProductDeliveryTime" product=$product}{/if}
 					{hook h="displayProductPriceBlock" product=$product type="weight"}
 				</div>
 				<div class="right-block">
