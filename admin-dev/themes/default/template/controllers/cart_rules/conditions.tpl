@@ -228,8 +228,16 @@
 				</label>
 			</p>
 			<div id="cart_rule_restriction_div">
+				<div class="choice">
+					<input type="radio" name="cartRulesSelection" value="select" {if $cart_rules.unselected|@count == 0}checked="checked"{/if}/>
+					<strong>{l s='Combinable all cart rules'}</strong><br />
+					<input type="radio" name="cartRulesSelection" value="unselect" {if $cart_rules.selected|@count == 0}checked="checked"{/if}/>
+					<strong>{l s='Uncombinable all cart rules'}</strong><br />
+					<input type="radio" name="cartRulesSelection" value="personnalize" {if $cart_rules.selected|@count > 0 && $cart_rules.unselected|@count > 0}checked="checked"{/if} />
+					<strong>{l s='Personnalize'}</strong>
+				</div>
 				<br />
-				<table  class="table">
+				<table id="cartRulesSelection" class="table" {if $cart_rules.selected|@count == 0 || $cart_rules.unselected|@count == 0}style="display:none;"{/if}>
 					<tr>
 						<td>
 							<p>{l s='Uncombinable cart rules'}</p>
@@ -307,3 +315,15 @@
 		{/if}
 	</div>
 </div>
+<script type="text/javascript">
+$(function() {
+	$('input[name=cartRulesSelection]').change(function(){
+		if($('input[name=cartRulesSelection]:checked').val() == 'personnalize') {
+			$("#cartRulesSelection").slideDown();
+		}
+		else{
+			$("#cartRulesSelection").slideUp();
+		}
+	});
+});
+</script>
