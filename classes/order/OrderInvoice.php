@@ -391,23 +391,51 @@ class OrderInvoiceCore extends ObjectModel
 	 */
 	public function getShippingTaxesBreakdown($order)
 	{
-		$taxes_breakdown = array();
+		// No shipping breakdown if no shipping!
+		if ($this->total_shipping_tax_excl == 0)
+			return array();
 
 		// No shipping breakdown if it's free!
 		foreach ($order->getCartRules() as $cart_rule)
 			if ($cart_rule['free_shipping'])
-				return $taxes_breakdown;
+				return array();
 
 		$shipping_tax_amount = $this->total_shipping_tax_incl - $this->total_shipping_tax_excl;
 
-		if ($shipping_tax_amount > 0)
-			$taxes_breakdown[] = array(
-				'rate' => $order->carrier_tax_rate,
-				'total_amount' => $shipping_tax_amount,
-				'total_tax_excl' => $this->total_shipping_tax_excl
+		if (Configuration::get('PS_INVOICE_TAXES_BREAKDOWN'))
+		{
+			$shipping_breakdown = Db::getInstance()->executeS(
+				'SELECT '.(float)$this->total_shipping_tax_excl.' as total_tax_excl, t.rate, oit.amount as total_amount
+				 FROM `'._DB_PREFIX_.'tax` t
+				 INNER JOIN `'._DB_PREFIX_.'order_invoice_tax` oit ON oit.id_tax = t.id_tax
+				 WHERE oit.type = "shipping" AND oit.id_order_invoice = '.(int)$this->id
 			);
 
-		return $taxes_breakdown;
+			$sum_of_split_taxes = 0;
+			foreach ($shipping_breakdown as &$row)
+			{
+				$row['total_amount'] = Tools::ps_round($row['total_amount'], _PS_PRICE_COMPUTE_PRECISION_, $this->getOrder()->round_mode);
+				$sum_of_split_taxes += $row['total_amount'];
+			}
+			unset($row);
+
+			$delta = $shipping_tax_amount - $sum_of_split_taxes;
+
+			if ($delta != 0)
+				Tools::spreadAmount($delta, _PS_PRICE_COMPUTE_PRECISION_, $shipping_breakdown, 'total_amount');
+		}
+		else
+		{
+			$shipping_breakdown = array(
+				array(
+					'total_tax_excl' => $this->total_shipping_tax_excl,
+					'rate' => $order->carrier_tax_rate,
+					'total_amount' => $shipping_tax_amount
+				)
+			);
+		}
+
+		return $shipping_breakdown;
 	}
 
 	/**
@@ -419,8 +447,45 @@ class OrderInvoiceCore extends ObjectModel
 	 */
 	public function getWrappingTaxesBreakdown()
 	{
-		$taxes_breakdown = array();
-		return $taxes_breakdown;
+		if ($this->total_wrapping_tax_excl == 0)
+			return array();
+
+		$wrapping_tax_amount = $this->total_wrapping_tax_incl - $this->total_wrapping_tax_excl;
+
+		$wrapping_breakdown = Db::getInstance()->executeS(
+			'SELECT '.(float)$this->total_wrapping_tax_incl.' as total_tax_excl, t.rate, oit.amount as total_amount
+			FROM `'._DB_PREFIX_.'tax` t
+			INNER JOIN `'._DB_PREFIX_.'order_invoice_tax` oit ON oit.id_tax = t.id_tax
+			WHERE oit.type = "wrapping" AND oit.id_order_invoice = '.(int)$this->id
+		);
+
+		$sum_of_split_taxes = 0;
+		$total_tax_rate = 0;
+		foreach ($wrapping_breakdown as &$row)
+		{
+			$row['total_amount'] = Tools::ps_round($row['total_amount'], _PS_PRICE_COMPUTE_PRECISION_, $this->getOrder()->round_mode);
+			$sum_of_split_taxes += $row['total_amount'];
+			$total_tax_rate += (float)$row['rate'];
+		}
+		unset($row);
+
+		$delta = $wrapping_tax_amount - $sum_of_split_taxes;
+
+		if ($delta != 0)
+			Tools::spreadAmount($delta, _PS_PRICE_COMPUTE_PRECISION_, $wrapping_breakdown, 'total_amount');
+
+		if (!Configuration::get('PS_INVOICE_TAXES_BREAKDOWN'))
+		{
+			$wrapping_breakdown = array(
+				array(
+					'total_tax_excl' => $this->total_wrapping_tax_excl,
+					'rate' => $total_tax_rate,
+					'total_amount' => $wrapping_tax_amount
+				)
+			);
+		}
+
+		return $wrapping_breakdown;
 	}
 
 	/**
@@ -728,6 +793,20 @@ class OrderInvoiceCore extends ObjectModel
 		{
 			$sql = 'INSERT INTO `'._DB_PREFIX_.'order_invoice_tax` (`id_order_invoice`, `type`, `id_tax`, `amount`)
 					VALUES ('.(int)$this->id.', \'shipping\', '.(int)$id_tax.', '.(float)$amount.')';
+
+			$is_correct &= Db::getInstance()->execute($sql);
+		}
+
+		return $is_correct;
+	}
+
+	public function saveWrappingTaxCalculator(array $taxes_amount)
+	{
+		$is_correct = true;
+		foreach ($taxes_amount as $id_tax => $amount)
+		{
+			$sql = 'INSERT INTO `'._DB_PREFIX_.'order_invoice_tax` (`id_order_invoice`, `type`, `id_tax`, `amount`)
+					VALUES ('.(int)$this->id.', \'wrapping\', '.(int)$id_tax.', '.(float)$amount.')';
 
 			$is_correct &= Db::getInstance()->execute($sql);
 		}

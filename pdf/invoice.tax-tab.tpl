@@ -102,6 +102,25 @@
 					{/foreach}
 				{/if}
 
+				{if isset($wrapping_tax_breakdown)}
+					{$smarty.capture.separator_row}
+					{foreach $wrapping_tax_breakdown as $wrapping_tax_infos}
+						<tr style="line-height:6px;background-color:{cycle values='#FFF,#DDD'};">
+							<td style="width: {if !$use_one_after_another_method}30%{else}60%{/if}">
+								{if !isset($pdf_wrapping_tax_written)}
+									{l s='Wrapping' pdf='true'}
+									{assign var=pdf_wrapping_tax_written value=1}
+								{/if}
+							</td>
+							<td style="width: 20%; text-align: right;">{$wrapping_tax_infos.rate} %</td>
+							{if !$use_one_after_another_method}
+								<td style="width: 30%; text-align: right;">{if isset($is_order_slip) && $is_order_slip}- {/if}{displayPrice currency=$order->id_currency price=$wrapping_tax_infos.total_tax_excl}</td>
+							{/if}
+							<td style="width: 20%; text-align: right;">{if isset($is_order_slip) && $is_order_slip}- {/if}{displayPrice currency=$order->id_currency price=$wrapping_tax_infos.total_amount}</td>
+						</tr>
+					{/foreach}
+				{/if}
+
 			</table>
 			{/if}
 		</td>
