@@ -141,7 +141,7 @@ class SmartyCustomCore extends Smarty {
 		if ($cache_id !== null && (is_object($cache_id) || is_array($cache_id)))
 			$cache_id = null;
 
-		if (!$this->is_in_lazy_cache($template, $cache_id, $compile_id))
+		if ($this->is_in_lazy_cache($template, $cache_id, $compile_id) === false)
 		{
 			// insert in cache before the effective cache creation to avoid nasty race condition
 			$this->insert_in_lazy_cache($template, $cache_id, $compile_id);
@@ -223,7 +223,7 @@ class SmartyCustomCore extends Smarty {
 					|| @filemtime($this->getCacheDir().$result['filepath']) < $result['last_update'])
 					$return = false;
 				else
-					$return = true;
+					$return = $result['filepath'];
 			}
 			$is_in_lazy_cache[$key] = $return;
 		}
@@ -303,7 +303,8 @@ class Smarty_Custom_Template extends Smarty_Internal_Template {
 			if (property_exists($this, 'cached'))
 			{
 				$filepath = str_replace($this->smarty->getCacheDir(), '', $this->cached->filepath);
-				$this->smarty->update_filepath($filepath, $this->template_resource, $this->cache_id, $this->compile_id);
+				if ($this->smarty->is_in_lazy_cache($this->template_resource, $this->cache_id, $this->compile_id) != $filepath)
+					$this->smarty->update_filepath($filepath, $this->template_resource, $this->cache_id, $this->compile_id);
 			}
 			return $tpl;
 		}
