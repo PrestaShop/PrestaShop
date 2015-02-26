@@ -540,23 +540,32 @@ class HookCore extends ObjectModel
 	public static function coreCallHook($module, $method, $params)
 	{
 		// Define if we will log modules performances for this session
-		if (Module::$_log_module_perfs === null)
+		if (Module::$_log_modules_perfs === null)
 		{
-			$modulo = _PS_DEBUG_PROFILING_ ? 1 : Configuration::get('PS_LOG_MODULE_PERFS_MODULO');
-			Module::$_log_module_perfs = ($modulo && mt_rand(0, $modulo - 1) == 0);
-			if (Module::$_log_module_perfs)
-				Module::$_log_module_perfs_session = mt_rand();
+			$modulo = _PS_DEBUG_PROFILING_ ? 1 : Configuration::get('PS_log_modules_perfs_MODULO');
+			Module::$_log_modules_perfs = ($modulo && mt_rand(0, $modulo - 1) == 0);
+			if (Module::$_log_modules_perfs)
+				Module::$_log_modules_perfs_session = mt_rand();
 		}
 		
 		// Immediately return the result if we do not log performances
-		if (!Module::$_log_module_perfs)
+		if (!Module::$_log_modules_perfs)
 			return $module->{$method}($params);
 		
-		// Store time before and after hook call and save the result in the database
-		$ts_start = microtime(true);
+		// Store time and memory before and after hook call and save the result in the database
+		$time_start = microtime(true);
+		$memory_start = memory_get_usage(true);
+		
+		// Call hook
 		$r = $module->{$method}($params);
-		$ts_end = microtime(true);
-		Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'module_perfs (session, module, method, ts_start, ts_end) VALUES ('.(int)Module::$_log_module_perfs_session.', "'.pSQL($module->name).'", "'.pSQL($method).'", "'.pSQL($ts_start).'", "'.pSQL($ts_end).'")');
+		
+		$time_end = microtime(true);
+		$memory_end = memory_get_usage(true);
+
+		Db::getInstance()->execute('
+		INSERT INTO '._DB_PREFIX_.'modules_perfs (session, module, method, time_start, time_end, memory_start, memory_end)
+		VALUES ('.(int)Module::$_log_modules_perfs_session.', "'.pSQL($module->name).'", "'.pSQL($method).'", "'.pSQL($time_start).'", "'.pSQL($time_end).'", '.(int)$memory_start.', '.(int)$memory_end.')');
+
 		return $r;
 	}
 

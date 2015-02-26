@@ -69,12 +69,13 @@ abstract class Db extends DbCore
 	public function query($sql)
 	{
 		$explain = false;
-		if (preg_match('/^\s*explain\s+/i', $sql))
+		if (preg_match('/^\s*explain\s+/i', $sql) || strpos($sql, _DB_PREFIX_.'modules_perfs'))
 			$explain = true;
 			
 		if (!$explain)
 		{
-			$uniqSql = preg_replace('/[0-9]+/', '<span style="color:blue">XX</span>', $sql);
+			$uniqSql = preg_replace('/[\'"][a-f0-9]{32}[\'"]/', '<span style="color:blue">XX</span>', $sql);
+			$uniqSql = preg_replace('/[0-9]+/', '<span style="color:blue">XX</span>', $uniqSql);
 			if (!isset($this->uniqQueries[$uniqSql]))
 				$this->uniqQueries[$uniqSql] = 0;
 			$this->uniqQueries[$uniqSql]++;

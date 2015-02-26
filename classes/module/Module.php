@@ -156,9 +156,9 @@ abstract class ModuleCore
 	public $push_time_limit = 180;
 	
 	/** @var bool Define if we will log modules performances for this session */
-	public static $_log_module_perfs = null;
+	public static $_log_modules_perfs = null;
 	/** @var bool Random session for modules perfs logs*/
-	public static $_log_module_perfs_session = null;
+	public static $_log_modules_perfs_session = null;
 
 	const CACHE_FILE_MODULES_LIST = '/config/xml/modules_list.xml';
 
@@ -1042,16 +1042,20 @@ abstract class ModuleCore
 	protected static function coreLoadModule($module_name)
 	{
 		// Define if we will log modules performances for this session
-		if (Module::$_log_module_perfs === null)
+		if (Module::$_log_modules_perfs === null)
 		{
-			$modulo = _PS_DEBUG_PROFILING_ ? 1 : Configuration::get('PS_LOG_MODULE_PERFS_MODULO');
-			Module::$_log_module_perfs = ($modulo && mt_rand(0, $modulo - 1) == 0);
-			if (Module::$_log_module_perfs)
-				Module::$_log_module_perfs_session = mt_rand();
+			$modulo = _PS_DEBUG_PROFILING_ ? 1 : Configuration::get('PS_log_modules_perfs_MODULO');
+			Module::$_log_modules_perfs = ($modulo && mt_rand(0, $modulo - 1) == 0);
+			if (Module::$_log_modules_perfs)
+				Module::$_log_modules_perfs_session = mt_rand();
 		}
 
-		// Store time before and after hook call and save the result in the database
-		$ts_start = microtime(true);
+		// Store time and memory before and after hook call and save the result in the database
+		if (Module::$_log_modules_perfs)
+		{
+			$time_start = microtime(true);
+			$memory_start = memory_get_usage(true);
+		}
 		
 		include_once(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php');
 
@@ -1068,9 +1072,15 @@ abstract class ModuleCore
 		if (!$r && class_exists($module_name, false))
 			$r = self::$_INSTANCE[$module_name] = new $module_name;
 
-		$ts_end = microtime(true);
-		if (Module::$_log_module_perfs)
-			Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'module_perfs (session, module, method, ts_start, ts_end) VALUES ('.(int)Module::$_log_module_perfs_session.', "'.pSQL($module_name).'", "__construct", "'.pSQL($ts_start).'", "'.pSQL($ts_end).'")');
+		if (Module::$_log_modules_perfs)
+		{
+			$time_end = microtime(true);
+			$memory_end = memory_get_usage(true);
+
+			Db::getInstance()->execute('
+			INSERT INTO '._DB_PREFIX_.'modules_perfs (session, module, method, time_start, time_end, memory_start, memory_end)
+			VALUES ('.(int)Module::$_log_modules_perfs_session.', "'.pSQL($module_name).'", "__construct", "'.pSQL($time_start).'", "'.pSQL($time_end).'", '.(int)$memory_start.', '.(int)$memory_end.')');
+		}
 
 		return $r;
 	}

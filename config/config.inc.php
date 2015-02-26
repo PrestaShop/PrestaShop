@@ -63,7 +63,6 @@ if (_PS_DEBUG_PROFILING_)
 {
 	include_once(_PS_TOOL_DIR_.'profiling/Controller.php');
 	include_once(_PS_TOOL_DIR_.'profiling/ObjectModel.php');
-	include_once(_PS_TOOL_DIR_.'profiling/Hook.php');
 	include_once(_PS_TOOL_DIR_.'profiling/Db.php');
 	include_once(_PS_TOOL_DIR_.'profiling/Tools.php');
 }

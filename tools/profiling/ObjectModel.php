@@ -24,10 +24,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-//
-// IMPORTANT : don't forget to delete the underscore _ in the file name if you want to use it !
-//
-
 abstract class ObjectModel extends ObjectModelCore
 {
 	public static $debug_list = array();
@@ -48,9 +44,8 @@ abstract class ObjectModel extends ObjectModelCore
 		$trace_id--;
 
 		self::$debug_list[$classname][] = array(
-			'file' =>		@$backtrace[$trace_id]['file'],
-			'line' =>		@$backtrace[$trace_id]['line'],
+			'file' => @$backtrace[$trace_id]['file'],
+			'line' => @$backtrace[$trace_id]['line'],
 		);
 	}
 }
-
