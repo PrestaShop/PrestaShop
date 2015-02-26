@@ -3165,7 +3165,7 @@ class ProductCore extends ObjectModel
 		SELECT MIN(pa.id_product_attribute) as `id_attr`
 		FROM `'._DB_PREFIX_.'product_attribute` pa
 			'.Shop::addSqlAssociation('product_attribute', 'pa').'
-			WHERE `id_product` = '.(int)$this->id
+			WHERE pa.`id_product` = '.(int)$this->id
 		);
 		if (!$mini)
 			return false;
