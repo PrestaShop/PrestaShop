@@ -54,7 +54,8 @@ class WarehouseCore extends ObjectModel
 
 	/**
 	 * Describes the way a Warehouse is managed
-	 * @var enum WA|LIFO|FIFO
+	 *
+	 * @var string enum WA|LIFO|FIFO
 	 */
 	public $management_type;
 

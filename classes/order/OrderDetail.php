@@ -128,7 +128,7 @@ class OrderDetailCore extends ObjectModel
 	/** @var integer */
 	public $download_nb;
 
-	/** @var date */
+	/** @var datetime */
 	public $download_deadline;
 
 	/** @var string $tax_name **/

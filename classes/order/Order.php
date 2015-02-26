@@ -1200,7 +1200,11 @@ class OrderCore extends ObjectModel
 			if (Configuration::get('PS_INVOICE'))
 				$this->setLastInvoiceNumber($order_invoice->id, $this->id_shop);
 
+			$wrapping_tax_manager = TaxManagerFactory::getManager($address, (int)Configuration::get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'));
+			$wrapping_tax_calculator = $wrapping_tax_manager->getTaxCalculator();
+
 			$order_invoice->saveCarrierTaxCalculator($tax_calculator->getTaxesAmount($order_invoice->total_shipping_tax_excl));
+			$order_invoice->saveWrappingTaxCalculator($wrapping_tax_calculator->getTaxesAmount($order_invoice->total_wrapping_tax_excl));
 
 			// Update order_carrier
 			$id_order_carrier = Db::getInstance()->getValue('

@@ -184,7 +184,7 @@ class TaxRulesGroupCore extends ObjectModel
 	/**
 	* Returns the tax rules group id corresponding to the name
 	*
-	* @param string name
+	* @param string $name
 	* @return int id of the tax rules
 	*/
 	public static function getIdByName($name)

@@ -117,12 +117,12 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 			'from' => array(
 				'title' => $this->l('Beginning'),
 				'align' => 'right',
-				'type' => 'date',
+				'type' => 'datetime',
 			),
 			'to' => array(
 				'title' => $this->l('End'),
 				'align' => 'right',
-				'type' => 'date'
+				'type' => 'datetime'
 			),
 		);
 

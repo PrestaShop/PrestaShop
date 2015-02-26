@@ -36,7 +36,7 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 	/**
 	 *
 	 * @param Address $address
-	 * @param mixed An additional parameter for the tax manager (ex: tax rules id for TaxRuleTaxManager)
+	 * @param mixed $type An additional parameter for the tax manager (ex: tax rules id for TaxRuleTaxManager)
 	 */
 	public function __construct(Address $address, $type)
 	{

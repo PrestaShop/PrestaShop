@@ -1351,7 +1351,7 @@ class ProductCore extends ObjectModel
 	{
 		return ObjectModel::updateMultishopTable('Combination', array(
 			'default_on' => 0,
-		), 'id_product = '.(int)$this->id);
+		), 'a.`id_product` = '.(int)$this->id);
 	}
 
 	public function setDefaultAttribute($id_product_attribute)
@@ -3165,7 +3165,7 @@ class ProductCore extends ObjectModel
 		SELECT MIN(pa.id_product_attribute) as `id_attr`
 		FROM `'._DB_PREFIX_.'product_attribute` pa
 			'.Shop::addSqlAssociation('product_attribute', 'pa').'
-			WHERE `id_product` = '.(int)$this->id
+			WHERE pa.`id_product` = '.(int)$this->id
 		);
 		if (!$mini)
 			return false;
@@ -3496,7 +3496,7 @@ class ProductCore extends ObjectModel
 		OR p.`supplier_reference` LIKE \'%'.pSQL($query).'%\'
 		OR `product_supplier_reference` LIKE \'%'.pSQL($query).'%\'';
 
-		$sql->groupBy('`id_product`');
+		$sql->groupBy('p.`id_product`');
 		$sql->orderBy('pl.`name` ASC');
 
 		if (Combination::isFeatureActive())
@@ -4831,7 +4831,7 @@ class ProductCore extends ObjectModel
 			'SELECT pa.`id_product_attribute` as id
 			FROM `'._DB_PREFIX_.'product_attribute` pa
 			'.Shop::addSqlAssociation('product_attribute', 'pa').'
-			WHERE `id_product` = '.(int)$this->id
+			WHERE pa.`id_product` = '.(int)$this->id
 		);
 
 		return $result;
@@ -4854,7 +4854,7 @@ class ProductCore extends ObjectModel
 			'SELECT pa.`id_product_attribute` as id
 			FROM `'._DB_PREFIX_.'product_attribute` pa
 			'.Shop::addSqlAssociation('product_attribute', 'pa').'
-			WHERE `id_product` = '.(int)$this->id
+			WHERE pa.`id_product` = '.(int)$this->id
 		);
 
 		if (is_array($original))

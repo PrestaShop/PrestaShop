@@ -89,7 +89,7 @@ class SmartyCustomCore extends Smarty {
 	{
 		if (!file_exists($this->getCompileDir().'last_flush'))
 			@touch($this->getCompileDir().'last_flush');
-		else
+		elseif (defined('_DB_PREFIX_'))
 		{
 			$sql = 'SELECT UNIX_TIMESTAMP(last_flush) as last_flush FROM `'._DB_PREFIX_.'smarty_compile_last_flush`';
 			$last_flush = Db::getInstance()->getRow($sql, false);
@@ -293,8 +293,6 @@ class Smarty_Custom_Template extends Smarty_Internal_Template {
 			return $tpl;
 		}
 		else
-		{
 			return parent::fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
-		}
 	}
 }

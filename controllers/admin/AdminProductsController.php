@@ -343,12 +343,38 @@ class AdminProductsControllerCore extends AdminController
 
 		if ($this->isTabSubmitted('Informations'))
 		{
-			$object->available_for_order = (int)Tools::getValue('available_for_order');
-			$object->show_price = $object->available_for_order ? 1 : (int)Tools::getValue('show_price');
-			$object->online_only = (int)Tools::getValue('online_only');
+			if ($this->checkMultishopBox('available_for_order', $this->context))
+				$object->available_for_order = (int)Tools::getValue('available_for_order');
+			if ($this->checkMultishopBox('show_price', $this->context))
+				$object->show_price = (int)Tools::getValue('show_price');
+			if ($this->checkMultishopBox('online_only', $this->context))
+				$object->online_only = (int)Tools::getValue('online_only');
 		}
 		if ($this->isTabSubmitted('Prices'))
 			$object->on_sale = (int)Tools::getValue('on_sale');
+	}
+
+	public function checkMultishopBox($field, $context = null)
+	{
+		static $checkbox = null;
+		static $shop_context = null;
+
+		if ($context == null && $shop_context == null)
+			$context = Context::getContext();
+
+		if ($shop_context == null)
+			$shop_context = $context->shop->getContext();
+
+		if ($checkbox == null)
+			$checkbox = Tools::getValue('multishop_check', array());
+
+		if ($shop_context == Shop::CONTEXT_SHOP)
+			return true;
+
+		if (isset($checkbox[$field]) && $checkbox[$field] == 1)
+			return true;
+
+		return false;
 	}
 
 	public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0, $limit = null, $id_lang_shop = null)
@@ -2295,7 +2321,7 @@ class AdminProductsControllerCore extends AdminController
 	/**
 	 * Update product tags
 	 *
-	 * @param array Languages
+	 * @param array $languages Array languages
 	 * @param object $product Product
 	 * @return boolean Update result
 	 */

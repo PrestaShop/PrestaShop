@@ -120,7 +120,7 @@ class AdminTranslationsControllerCore extends AdminController
 	 * This function create vars by default and call the good method for generate form
 	 *
 	 * @param $method_name
-	 * @return call the method $this->method_name()
+	 * @return mixed Call the method $this->method_name()
 	 */
 	public function initForm($method_name)
 	{
@@ -1179,7 +1179,7 @@ class AdminTranslationsControllerCore extends AdminController
 	 * @param $type_translation : front, back, errors, modules...
 	 * @param string|bool $type_file : (tpl|php)
 	 * @param string $module_name : name of the module
-	 * @return return $matches
+	 * @return array
 	 */
 	protected function userParseFile($content, $type_translation, $type_file = false, $module_name = '')
 	{

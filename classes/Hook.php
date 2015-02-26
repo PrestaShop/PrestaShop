@@ -153,7 +153,7 @@ class HookCore extends ObjectModel
 			);
 		return Cache::retrieve($cache_id);
 	}
-	
+
 	/**
 	 * Return hook live edit bool from ID
 	 */
@@ -167,7 +167,7 @@ class HookCore extends ObjectModel
 				WHERE `id_hook` = '.(int)$hook_id)
 			);
 		return Cache::retrieve($cache_id);
-	}	
+	}
 
 	/**
 	 * Get list of hook alias
@@ -302,7 +302,7 @@ class HookCore extends ObjectModel
 						$groups = array((int)Configuration::get('PS_UNIDENTIFIED_GROUP'));
 				}
 			}
-			
+
 			// SQL Request
 			$sql = new DbQuery();
 			$sql->select('h.`name` as hook, m.`id_module`, h.`id_hook`, m.`name` as module, h.`live_edit`');
@@ -402,7 +402,7 @@ class HookCore extends ObjectModel
 	{
 		if (defined('PS_INSTALLATION_IN_PROGRESS'))
 			return;
-		
+
 		static $disable_non_native_modules = null;
 		if ($disable_non_native_modules === null)
 			$disable_non_native_modules = (bool)Configuration::get('PS_DISABLE_NON_NATIVE_MODULE');
@@ -412,7 +412,7 @@ class HookCore extends ObjectModel
 			throw new PrestaShopException('Invalid id_module or hook_name');
 
 		// If no modules associated to hook_name or recompatible hook name, we stop the function
-		
+
 		if (!$module_list = Hook::getHookModuleExecList($hook_name))
 			return '';
 
@@ -470,14 +470,14 @@ class HookCore extends ObjectModel
 
 				$controller = Dispatcher::getInstance()->getController();
 				$controller_obj = Context::getContext()->controller;
-				
+
 				//check if current controller is a module controller
 				if (isset($controller_obj->module) && Validate::isLoadedObject($controller_obj->module))
 					$controller = 'module-'.$controller_obj->module->name.'-'.$controller;
-				
+
 				if (in_array($controller, $exceptions))
 					continue;
-				
+
 				//retro compat of controller names
 				$matching_name = array(
 					'authentication' => 'auth',
@@ -488,7 +488,7 @@ class HookCore extends ObjectModel
 				if (Validate::isLoadedObject($context->employee) && !Module::getPermissionStatic($array['id_module'], 'view', $context->employee))
 					continue;
 			}
-			
+
 			if (!($moduleInstance = Module::getInstanceByName($array['module'])))
 				continue;
 

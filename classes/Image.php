@@ -68,7 +68,7 @@ class ImageCore extends ObjectModel
 		'fields' => array(
 			'id_product' => array('type' => self::TYPE_INT, 'shop' => 'both', 'validate' => 'isUnsignedId', 'required' => true),
 			'position' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-			'cover' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'shop' => true),
+			'cover' => 		array('type' => self::TYPE_BOOL, 'allow_null' => true, 'validate' => 'isBool', 'shop' => true),
 			'legend' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
 		),
 	);
@@ -87,7 +87,23 @@ class ImageCore extends ObjectModel
 		if ($this->position <= 0)
 			$this->position = Image::getHighestPosition($this->id_product) + 1;
 
+		if ($this->cover)
+			$this->cover = 1;
+		else
+			$this->cover = null;
+
 		return parent::add($autodate, $null_values);
+	}
+
+	public function update($null_values = false)
+	{
+		if ($this->cover)
+			$this->cover = 1;
+		else
+			$this->cover = null;
+
+
+		return parent::update($null_values);
 	}
 
 	public function delete()
@@ -234,12 +250,12 @@ class ImageCore extends ObjectModel
 		
 		return (Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'image`
-			SET `cover` = 0
+			SET `cover` = NULL
 			WHERE `id_product` = '.(int)$id_product
 		) &&
 		Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'image` i, `'._DB_PREFIX_.'image_shop` image_shop
-			SET image_shop.`cover` = 0
+			SET image_shop.`cover` = NULL
 			WHERE image_shop.id_shop IN ('.implode(',', array_map('intval', Shop::getContextListShopID())).') AND image_shop.id_image = i.id_image AND i.`id_product` = '.(int)$id_product
 		));
 	}
@@ -255,7 +271,7 @@ class ImageCore extends ObjectModel
 		return Db::getInstance()->getRow('
 			SELECT * FROM `'._DB_PREFIX_.'image` i'.
 			Shop::addSqlAssociation('image', 'i').'
-			WHERE `id_product` = '.(int)$id_product.'
+			WHERE i.`id_product` = '.(int)$id_product.'
 			AND image_shop.`cover`= 1');
 	}
 
