@@ -461,8 +461,9 @@ class AdminWarehousesControllerCore extends AdminController
 		}
 
 		// handles carriers associations
-		if (!empty(Tools::isSubmit('ids_carriers_selected')))
-			$object->setCarriers(Tools::getValue('ids_carriers_selected'));
+		$ids_carriers_selected = Tools::getValue('ids_carriers_selected');
+		if (Tools::isSubmit('ids_carriers_selected') && !empty($ids_carriers_selected))
+			$object->setCarriers($ids_carriers_selected);
 		else
 			$object->setCarriers(Tools::getValue('ids_carriers_available'));
 
