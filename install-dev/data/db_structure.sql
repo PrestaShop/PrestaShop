@@ -195,7 +195,8 @@ CREATE TABLE `PREFIX_cart` (
   KEY `id_currency` (`id_currency`),
   KEY `id_guest` (`id_guest`),
   KEY `id_shop_group` (`id_shop_group`),
-  KEY `id_shop` (`id_shop`)
+  KEY `id_shop_2` (`id_shop`,`date_upd`),
+  KEY `id_shop` (`id_shop`,`date_add`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_cart_rule` (
@@ -608,7 +609,7 @@ CREATE TABLE `PREFIX_customer` (
   KEY `id_customer_passwd` (`id_customer`,`passwd`),
   KEY `id_gender` (`id_gender`),
   KEY `id_shop_group` (`id_shop_group`),
-  KEY `id_shop` (`id_shop`)
+  KEY `id_shop` (`id_shop`, `date_add`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_customer_group` (
@@ -1581,7 +1582,8 @@ CREATE TABLE `PREFIX_product_download` (
   `active` tinyint(1) unsigned NOT NULL DEFAULT '1',
   `is_shareable` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_product_download`),
-  KEY `product_active` (`id_product`,`active`)
+  KEY `product_active` (`id_product`,`active`),
+  UNIQUE KEY `id_product` (`id_product`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_product_lang` (

@@ -95,7 +95,7 @@ class SmartyCustomCore extends Smarty {
 			if ($last_flush === null)
 			{
 				$sql        = 'SELECT UNIX_TIMESTAMP(last_flush) as last_flush FROM `'._DB_PREFIX_.'smarty_compile_last_flush`';
-				$last_flush = Db::getInstance()->getRow($sql, false);
+				$last_flush = Db::getInstance()->getValue($sql, false);
 			}
 			if ((int)$last_flush && @filemtime($this->getCompileDir().'last_flush') < $last_flush)
 			{

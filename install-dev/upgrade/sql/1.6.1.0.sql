@@ -154,3 +154,9 @@ ALTER TABLE `PREFIX_product_attribute_shop` DROP KEY `id_product`;
 ALTER IGNORE TABLE `PREFIX_product_attribute_shop` ADD UNIQUE KEY `id_product` (`id_product`, `id_shop`, `default_on`);
 
 ALTER IGNORE TABLE `PREFIX_product_download` ADD UNIQUE KEY `id_product` (`id_product`);
+
+ALTER TABLE `PREFIX_customer` DROP KEY `id_shop`;
+ALTER TABLE `PREFIX_customer` ADD KEY `id_shop` (`id_shop`, `date_add`);
+
+ALTER TABLE `PREFIX_cart` DROP KEY `id_shop`;
+ALTER TABLE `PREFIX_cart` ADD KEY `id_shop_2` (`id_shop`,`date_upd`), ADD KEY `id_shop` (`id_shop`,`date_add`);
