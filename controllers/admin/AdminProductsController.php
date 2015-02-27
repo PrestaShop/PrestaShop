@@ -345,8 +345,10 @@ class AdminProductsControllerCore extends AdminController
 		{
 			if ($this->checkMultishopBox('available_for_order', $this->context))
 				$object->available_for_order = (int)Tools::getValue('available_for_order');
+
 			if ($this->checkMultishopBox('show_price', $this->context))
-				$object->show_price = (int)Tools::getValue('show_price');
+				$object->show_price = $object->available_for_order ? 1 : (int)Tools::getValue('show_price');
+
 			if ($this->checkMultishopBox('online_only', $this->context))
 				$object->online_only = (int)Tools::getValue('online_only');
 		}

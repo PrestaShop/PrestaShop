@@ -245,8 +245,14 @@ class ToolsCore
 	*/
 	public static function getRemoteAddr()
 	{
-		// This condition is necessary when using CDN, don't remove it.
-		if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] && (!isset($_SERVER['REMOTE_ADDR'])
+		if (function_exists('apache_request_headers'))
+			$headers = apache_request_headers();
+		else
+			$headers = $_SERVER;
+
+		if (array_key_exists('X-Forwarded-For', $headers))
+			return $headers['X-Forwarded-For'];
+		elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] && (!isset($_SERVER['REMOTE_ADDR'])
 			|| preg_match('/^127\..*/i', trim($_SERVER['REMOTE_ADDR'])) || preg_match('/^172\.16.*/i', trim($_SERVER['REMOTE_ADDR']))
 			|| preg_match('/^192\.168\.*/i', trim($_SERVER['REMOTE_ADDR'])) || preg_match('/^10\..*/i', trim($_SERVER['REMOTE_ADDR']))))
 		{
@@ -258,7 +264,8 @@ class ToolsCore
 			else
 				return $_SERVER['HTTP_X_FORWARDED_FOR'];
 		}
-		return $_SERVER['REMOTE_ADDR'];
+		else
+			return $_SERVER['REMOTE_ADDR'];
 	}
 
 	/**

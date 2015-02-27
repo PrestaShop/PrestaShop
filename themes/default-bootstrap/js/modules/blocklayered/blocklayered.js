@@ -193,7 +193,8 @@ function initFilters()
 
 function initUniform()
 {
-	$("#layered_form input[type='checkbox'], #layered_form input[type='radio'], select.form-control").uniform();
+	if (!!$.prototype.uniform)
+		$("#layered_form input[type='checkbox'], #layered_form input[type='radio'], select.form-control").uniform();
 }
 
 function hideFilterValueAction(it)
