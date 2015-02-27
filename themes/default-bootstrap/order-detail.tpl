@@ -366,7 +366,7 @@
 		</p>
 	</div>
 {/if}
-</form>
+{if !$is_guest}</form>{/if}
 {assign var='carriers' value=$order->getShipping()}
 {if $carriers|count > 0 && isset($carriers.0.carrier_name) && $carriers.0.carrier_name}
 	<table class="table table-bordered footab">
