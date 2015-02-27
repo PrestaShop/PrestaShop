@@ -374,7 +374,7 @@ class HelperListCore extends Helper
 
 		$confirm = self::$cache_lang['Copy images too?'];
 
-		if (($this->table == 'product') && !(bool)Image::getImages($this->context->language->id, (int)$id))
+		if (($this->table == 'product') && !Image::hasImages($this->context->language->id, (int)$id))
 			$confirm = '';
 
 		$tpl->assign(array(

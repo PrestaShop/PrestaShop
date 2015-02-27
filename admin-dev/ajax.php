@@ -59,7 +59,7 @@ if (Tools::isSubmit('ajaxProductPackItems'))
 	NATURAL LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 	WHERE pl.`id_lang` = '.(int)(Tools::getValue('id_lang')).'
 	'.Shop::addSqlRestrictionOnLang('pl').'
-	AND p.`id_product` NOT IN (SELECT DISTINCT id_product_pack FROM `'._DB_PREFIX_.'pack`)
+	AND NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'pack` WHERE `id_product_pack` = p.`id_product`)
 	AND p.`id_product` != '.(int)(Tools::getValue('id_product')));
 
 	foreach ($products AS $packItem)

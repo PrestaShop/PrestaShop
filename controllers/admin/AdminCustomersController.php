@@ -741,11 +741,11 @@ class AdminCustomersControllerCore extends AdminController
 				JOIN '._DB_PREFIX_.'cart c ON (c.id_cart = cp.id_cart)
 				JOIN '._DB_PREFIX_.'product p ON (cp.id_product = p.id_product)
 				WHERE c.id_customer = '.(int)$customer->id.'
-					AND cp.id_product NOT IN (
-							SELECT product_id
+					AND NOT EXISTS (
+							SELECT 1
 							FROM '._DB_PREFIX_.'orders o
 							JOIN '._DB_PREFIX_.'order_detail od ON (o.id_order = od.id_order)
-							WHERE o.valid = 1 AND o.id_customer = '.(int)$customer->id.'
+							WHERE product_id = cp.id_product AND o.valid = 1 AND o.id_customer = '.(int)$customer->id.'
 						)';
 		$interested = Db::getInstance()->executeS($sql);
 		$total_interested = count($interested);

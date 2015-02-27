@@ -3157,7 +3157,8 @@ class CartCore extends ObjectModel
 	{
 		$sql = 'SELECT c.`id_cart`
 				FROM '._DB_PREFIX_.'cart c
-				WHERE c.`id_cart` NOT IN (SELECT o.`id_cart` FROM '._DB_PREFIX_.'orders o WHERE o.`id_customer` = '.(int)$id_customer.')
+				WHERE NOT EXISTS (SELECT 1 FROM '._DB_PREFIX_.'orders o WHERE o.`id_cart` = c.`id_cart`
+									AND o.`id_customer` = '.(int)$id_customer.')
 				AND c.`id_customer` = '.(int)$id_customer.'
 					'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'c').'
 				ORDER BY c.`date_upd` DESC';
@@ -3314,7 +3315,7 @@ class CartCore extends ObjectModel
 		SELECT *
 		FROM '._DB_PREFIX_.'cart c
 		WHERE c.`id_customer` = '.(int)$id_customer.'
-		'.(!$with_order ? 'AND id_cart NOT IN (SELECT id_cart FROM '._DB_PREFIX_.'orders o)' : '').'
+		'.(!$with_order ? 'AND NOT EXISTS (SELECT 1 FROM '._DB_PREFIX_.'orders o WHERE o.`id_cart` = c.`id_cart`)' : '').'
 		ORDER BY c.`date_add` DESC');
 	}
 
