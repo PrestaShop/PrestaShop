@@ -1373,11 +1373,11 @@ class ProductCore extends ObjectModel
 
 		$result = Db::getInstance()->update('product_shop', array(
 			'cache_default_attribute' => $id_default_attribute,
-		), 'id_product = '.(int)$id_product.Shop::addSqlRestriction());
+		), 'a.`id_product` = '.(int)$id_product.Shop::addSqlRestriction());
 
 		$result &= Db::getInstance()->update('product', array(
 			'cache_default_attribute' => $id_default_attribute,
-		), 'id_product = '.(int)$id_product);
+		), 'a.`id_product` = '.(int)$id_product);
 
 		if ($result && $id_default_attribute)
 			return $id_default_attribute;
