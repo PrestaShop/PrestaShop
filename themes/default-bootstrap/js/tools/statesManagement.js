@@ -75,7 +75,8 @@ function bindCheckbox()
 
 function bindUniform()
 {
-	$("select.form-control,input[type='radio'],input[type='checkbox']").uniform(); 
+	if (!!$.prototype.uniform)
+		$("select.form-control,input[type='radio'],input[type='checkbox']").uniform();
 }
 
 function bindPostcode()
