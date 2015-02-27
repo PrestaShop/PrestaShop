@@ -3092,9 +3092,7 @@ class AdminControllerCore extends Controller
 
 		do
 		{
-			$this->_listsql = '
-			SELECT SQL_CALC_FOUND_ROWS
-			'.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '');
+			$this->_listsql = '';
 
 			if ($this->explicitSelect)
 			{
@@ -3117,18 +3115,27 @@ class AdminControllerCore extends Controller
 				$this->_listsql .= ($this->lang ? 'b.*,' : '').' a.*';
 
 			$this->_listsql .= '
-			'.(isset($this->_select) ? ', '.rtrim($this->_select, ', ') : '').$select_shop.'
-			FROM `'._DB_PREFIX_.$sql_table.'` a
+			'.(isset($this->_select) ? ', '.rtrim($this->_select, ', ') : '').$select_shop;
+
+			$sql_from = '
+			FROM `'._DB_PREFIX_.$sql_table.'` a ';
+			$sql_join = '
 			'.$lang_join.'
 			'.(isset($this->_join) ? $this->_join.' ' : '').'
-			'.$join_shop.'
-			WHERE 1 '.(isset($this->_where) ? $this->_where.' ' : '').($this->deleted ? 'AND a.`deleted` = 0 ' : '').
+			'.$join_shop;
+			$sql_where = ' '.(isset($this->_where) ? $this->_where.' ' : '').($this->deleted ? 'AND a.`deleted` = 0 ' : '').
 			(isset($this->_filter) ? $this->_filter : '').$where_shop.'
 			'.(isset($this->_group) ? $this->_group.' ' : '').'
-			'.$having_clause.'
-			ORDER BY '.((str_replace('`', '', $order_by) == $this->identifier) ? 'a.' : '').$order_by.' '.pSQL($order_way).
-			($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '').
-			(($use_limit === true) ? ' LIMIT '.(int)$start.','.(int)$limit : '');
+			'.$having_clause;
+			$sql_order_by = ' ORDER BY '.((str_replace('`', '', $order_by) == $this->identifier) ? 'a.' : '').$order_by.' '.pSQL($order_way).
+			($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '');
+			$sql_limit = ' '.(($use_limit === true) ? ' LIMIT '.(int)$start.','.(int)$limit : '');
+
+			$list_count = 'SELECT COUNT(*) AS `'._DB_PREFIX_.$this->table.'` '.$sql_from.$sql_join.' WHERE 1 '.$sql_where;
+
+			$this->_listsql = 'SELECT
+			'.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '').$this->_listsql.$sql_from.$sql_join.' WHERE 1 '.$sql_where.
+							  $sql_order_by.$sql_limit;
 
 			$this->_list = Db::getInstance()->executeS($this->_listsql, true, false);
 
@@ -3138,7 +3145,7 @@ class AdminControllerCore extends Controller
 				break;
 			}
 
-			$this->_listTotal = Db::getInstance()->getValue('SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`', false);
+			$this->_listTotal = Db::getInstance()->getValue($list_count, false);
 
 			if ($use_limit === true)
 			{

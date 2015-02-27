@@ -167,7 +167,6 @@ class AdminProductsControllerCore extends AdminController
 			$join_category = true;
 
 		$this->_join .= '
-		LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_product` = a.`id_product`)
 		LEFT JOIN `'._DB_PREFIX_.'stock_available` sav ON (sav.`id_product` = a.`id_product` AND sav.`id_product_attribute` = 0
 		'.StockAvailable::addSqlShopRestriction(null, null, 'sav').') ';
 
@@ -178,11 +177,12 @@ class AdminProductsControllerCore extends AdminController
 		$this->_join .= ' JOIN `'._DB_PREFIX_.'product_shop` sa ON (a.`id_product` = sa.`id_product` AND sa.id_shop = '.$id_shop.')
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON ('.$alias.'.`id_category_default` = cl.`id_category` AND b.`id_lang` = cl.`id_lang` AND cl.id_shop = '.$id_shop.')
 				LEFT JOIN `'._DB_PREFIX_.'shop` shop ON (shop.id_shop = '.$id_shop.')
-				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (image_shop.`id_image` = i.`id_image` AND image_shop.`cover` = 1 AND image_shop.id_shop = '.$id_shop.')
+				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop ON (image_shop.`id_product` = a.`id_product` AND image_shop.`cover` = 1 AND image_shop.id_shop = '.$id_shop.')
+				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_image` = image_shop.`id_image`)
 				LEFT JOIN `'._DB_PREFIX_.'product_download` pd ON (pd.`id_product` = a.`id_product`)';
 
 		$this->_select .= 'shop.name as shopname, a.id_shop_default, ';
-		$this->_select .= 'MAX('.$alias_image.'.id_image) id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, a.`is_virtual`, pd.`nb_downloadable`, sav.`quantity` as sav_quantity, '.$alias.'.`active`, IF(sav.`quantity`<=0, 1, 0) badge_danger';
+		$this->_select .= $alias_image.'.id_image id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, a.`is_virtual`, pd.`nb_downloadable`, sav.`quantity` as sav_quantity, '.$alias.'.`active`, IF(sav.`quantity`<=0, 1, 0) badge_danger';
 
 		if ($join_category)
 		{
@@ -190,7 +190,7 @@ class AdminProductsControllerCore extends AdminController
 			$this->_select .= ' , cp.`position`, ';
 		}
 
-		$this->_group = 'GROUP BY '.$alias.'.id_product';
+		$this->_group = '';
 
 		$this->fields_list = array();
 		$this->fields_list['id_product'] = array(
@@ -345,8 +345,10 @@ class AdminProductsControllerCore extends AdminController
 		{
 			if ($this->checkMultishopBox('available_for_order', $this->context))
 				$object->available_for_order = (int)Tools::getValue('available_for_order');
+
 			if ($this->checkMultishopBox('show_price', $this->context))
-				$object->show_price = (int)Tools::getValue('show_price');
+				$object->show_price = $object->available_for_order ? 1 : (int)Tools::getValue('show_price');
+
 			if ($this->checkMultishopBox('online_only', $this->context))
 				$object->online_only = (int)Tools::getValue('online_only');
 		}
@@ -4933,7 +4935,7 @@ class AdminProductsControllerCore extends AdminController
 				if (preg_match('/^legend_([0-9]+)/i', $key, $match))
 					foreach ($languages as $language)
 						if ($val && $language['id_lang'] == $match[1])
-							Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_lang SET legend = "'.pSQL($val).'" WHERE id_image IN (SELECT id_image FROM '._DB_PREFIX_.'image WHERE id_product = '.(int)$product->id.') AND id_lang = '.(int)$language['id_lang']);
+							Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_lang SET legend = "'.pSQL($val).'" WHERE EXISTS (SELECT 1 FROM '._DB_PREFIX_.'image WHERE '._DB_PREFIX_.'image.id_image = '._DB_PREFIX_.'image_lang.id_image AND id_product = '.(int)$product->id.') AND id_lang = '.(int)$language['id_lang']);
 		}
 	}
 }

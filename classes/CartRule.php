@@ -152,8 +152,10 @@ class CartRuleCore extends ObjectModel
 		$r &= Db::getInstance()->delete('cart_rule_country', '`id_cart_rule` = '.(int)$this->id);
 		$r &= Db::getInstance()->delete('cart_rule_combination', '`id_cart_rule_1` = '.(int)$this->id.' OR `id_cart_rule_2` = '.(int)$this->id);
 		$r &= Db::getInstance()->delete('cart_rule_product_rule_group', '`id_cart_rule` = '.(int)$this->id);
-		$r &= Db::getInstance()->delete('cart_rule_product_rule', '`id_product_rule_group` NOT IN (SELECT `id_product_rule_group` FROM `'._DB_PREFIX_.'cart_rule_product_rule_group`)');
-		$r &= Db::getInstance()->delete('cart_rule_product_rule_value', '`id_product_rule` NOT IN (SELECT `id_product_rule` FROM `'._DB_PREFIX_.'cart_rule_product_rule`)');
+		$r &= Db::getInstance()->delete('cart_rule_product_rule', 'NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'cart_rule_product_rule_group`
+																				WHERE `'._DB_PREFIX_.'cart_rule_product_rule`.`id_product_rule_group` = `'._DB_PREFIX_.'cart_rule_product_rule_group`.`id_product_rule_group`)');
+		$r &= Db::getInstance()->delete('cart_rule_product_rule_value', 'NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'cart_rule_product_rule`
+																				WHERE `'._DB_PREFIX_.'cart_rule_product_rule_value`.`id_product_rule` = `'._DB_PREFIX_.'cart_rule_product_rule`.`id_product_rule`))');
 
 		return $r;
 	}
@@ -1234,7 +1236,8 @@ class CartRuleCore extends ObjectModel
 				WHERE `id_cart` = '.(int)$context->cart->id.'
 			)
 		)
-		AND cr.id_cart_rule NOT IN (SELECT id_cart_rule FROM '._DB_PREFIX_.'cart_cart_rule WHERE id_cart = '.(int)$context->cart->id.')
+		AND NOT EXISTS (SELECT 1 FROM '._DB_PREFIX_.'cart_cart_rule WHERE cr.id_cart_rule = '._DB_PREFIX_.'cart_cart_rule.id_cart_rule
+																			AND id_cart = '.(int)$context->cart->id.')
 		ORDER BY priority';
 		$result = Db::getInstance()->executeS($sql, true, false);
 		if ($result)
@@ -1281,11 +1284,12 @@ class CartRuleCore extends ObjectModel
 
 		// Delete the product rules that does not have any values
 		if (Db::getInstance()->Affected_Rows() > 0)
-				Db::getInstance()->delete('cart_rule_product_rule', '`id_product_rule` NOT IN (SELECT id_product_rule FROM `'._DB_PREFIX_.'cart_rule_product_rule_value`)');
-
+				Db::getInstance()->delete('cart_rule_product_rule', 'NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'cart_rule_product_rule_value`
+																							WHERE `cart_rule_product_rule`.`id_product_rule` = `cart_rule_product_rule_value`.`id_product_rule`)');
 		// If the product rules were the only conditions of a product rule group, delete the product rule group
 		if (Db::getInstance()->Affected_Rows() > 0)
-				Db::getInstance()->delete('cart_rule_product_rule_group', '`id_product_rule_group` NOT IN (SELECT id_product_rule_group FROM `'._DB_PREFIX_.'cart_rule_product_rule`)');
+				Db::getInstance()->delete('cart_rule_product_rule_group', 'NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'cart_rule_product_rule`
+																						WHERE `cart_rule_product_rule`.`id_product_rule_group` = `cart_rule_product_rule_group`.`id_product_rule_group`)');
 
 		// If the product rule group were the only restrictions of a cart rule, update de cart rule restriction cache
 		if (Db::getInstance()->Affected_Rows() > 0)

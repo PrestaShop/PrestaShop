@@ -2625,6 +2625,6 @@ CREATE TABLE `PREFIX_modules_perfs` (
   `time_end` double unsigned NOT NULL,
   `memory_start` int unsigned NOT NULL,
   `memory_end` int unsigned NOT NULL,
-  PRIMARY KEY (`id_module_perfs`),
+  PRIMARY KEY (`id_modules_perfs`),
   KEY (`session`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;

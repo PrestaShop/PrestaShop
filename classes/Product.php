@@ -682,6 +682,19 @@ class ProductCore extends ObjectModel
 		if (isset($combinations[$id_product][$minimum_quantity]))
 			return $combinations[$id_product][$minimum_quantity];
 
+
+		$sql = 'SELECT product_attribute_shop.id_product_attribute
+				FROM '._DB_PREFIX_.'product_attribute pa
+				'.Shop::addSqlAssociation('product_attribute', 'pa').'
+				WHERE pa.id_product = '.(int)$id_product;
+
+		$result_no_filter = Db::getInstance()->getValue($sql);
+		if (!$result_no_filter)
+		{
+			$combinations[$id_product][$minimum_quantity] = 0;
+			return 0;
+		}
+
 		$sql = 'SELECT product_attribute_shop.id_product_attribute
 				FROM '._DB_PREFIX_.'product_attribute pa
 				'.Shop::addSqlAssociation('product_attribute', 'pa').'
@@ -716,12 +729,7 @@ class ProductCore extends ObjectModel
 
 		if (!$result)
 		{
-			$sql = 'SELECT product_attribute_shop.id_product_attribute
-					FROM '._DB_PREFIX_.'product_attribute pa
-					'.Shop::addSqlAssociation('product_attribute', 'pa').'
-					WHERE pa.id_product = '.(int)$id_product;
-
-			$result = Db::getInstance()->getValue($sql);
+			$result = $result_no_filter;
 		}
 
 		$combinations[$id_product][$minimum_quantity] = $result;
@@ -1040,7 +1048,8 @@ class ProductCore extends ObjectModel
 	public function deleteTags()
 	{
 		return Db::getInstance()->delete('product_tag', 'id_product = '.(int)$this->id)
-			&& Db::getInstance()->delete('tag', 'id_tag NOT IN (SELECT id_tag FROM '._DB_PREFIX_.'product_tag)');
+			&& Db::getInstance()->delete('tag', 'NOT EXISTS (SELECT 1 FROM '._DB_PREFIX_.'product_tag
+												WHERE '._DB_PREFIX_.'product_tag.id_tag = '._DB_PREFIX_.'tag.id_tag)');
 	}
 
 	/**
@@ -1703,9 +1712,9 @@ class ProductCore extends ObjectModel
 			)
 			&&
 			Db::getInstance()->execute(
-				'DELETE FROM `'._DB_PREFIX_.'customization_field_lang`
-				WHERE `id_customization_field` NOT IN (SELECT id_customization_field
-				FROM `'._DB_PREFIX_.'customization_field`)'
+				'DELETE `'._DB_PREFIX_.'customization_field_lang` FROM `'._DB_PREFIX_.'customization_field_lang` LEFT JOIN `'._DB_PREFIX_.'customization_field`
+				ON (customization_field.id_customization_field = customization_field_lang.id_customization_field)
+				WHERE customization_field.id_customization_field IS NULL'
 			)
 		);
 	}

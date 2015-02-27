@@ -451,7 +451,9 @@ class CarrierCore extends ObjectModel
 		if ($id_zone)
 			$sql .= ' AND cz.`id_zone` = '.(int)$id_zone.' AND z.`active` = 1 ';
 		if ($ids_group)
-			$sql .= ' AND c.id_carrier IN (SELECT id_carrier FROM '._DB_PREFIX_.'carrier_group WHERE id_group IN ('.implode(',', array_map('intval', $ids_group)).')) ';
+			$sql .= ' AND EXISTS (SELECT 1 FROM '._DB_PREFIX_.'carrier_group
+									WHERE '._DB_PREFIX_.'carrier_group.id_carrier = c.id_carrier
+									AND id_group IN ('.implode(',', array_map('intval', $ids_group)).')) ';
 
 		switch ($modules_filters)
 		{

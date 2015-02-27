@@ -86,7 +86,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		SELECT COUNT(DISTINCT id_guest)
 		FROM `'._DB_PREFIX_.'cart`
 		WHERE `date_add` BETWEEN "'.pSQL($date_from).'" AND "'.pSQL($date_to).'"
-		AND id_cart NOT IN (SELECT id_cart FROM `'._DB_PREFIX_.'orders`)
+		AND NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'orders` WHERE `'._DB_PREFIX_.'orders`.id_cart = `'._DB_PREFIX_.'cart`.id_cart)
 		'.Shop::addSqlRestriction());
 	}
 

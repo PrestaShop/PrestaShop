@@ -725,7 +725,7 @@ class AdminCategoriesControllerCore extends AdminController
 		$fatherless_products = Db::getInstance()->executeS('
 			SELECT p.`id_product` FROM `'._DB_PREFIX_.'product` p
 			'.Shop::addSqlAssociation('product', 'p').'
-			WHERE p.`id_product` NOT IN (SELECT DISTINCT(cp.`id_product`) FROM `'._DB_PREFIX_.'category_product` cp)');
+			WHERE NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'category_product` cp WHERE cp.`id_product` = p.`id_product`)');
 
 		foreach ($fatherless_products as $id_poor_product)
 		{
