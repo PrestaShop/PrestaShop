@@ -734,14 +734,14 @@
 			{
 				$.each(this.customized_datas[this.id_product][this.id_product_attribute][id_address_delivery], function() {
 					var customized_desc = '';
-					if (this.datas[1].length)
+					if (typeof this.datas[1] !== 'undefined' && this.datas[1].length)
 					{
 						$.each(this.datas[1],function() {
 							customized_desc += this.name + ': ' + this.value + '<br />';
 							id_customization = this.id_customization;
 						});
 					}
-					if (this.datas[0] && this.datas[0].length)
+					if (typeof this.datas[0] !== 'undefined' && this.datas[0].length)
 					{
 						$.each(this.datas[0],function() {
 							customized_desc += this.name + ': <img src="' + pic_dir + this.value + '_small" /><br />';
