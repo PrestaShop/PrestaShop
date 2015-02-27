@@ -245,17 +245,13 @@ class ToolsCore
 	*/
 	public static function getRemoteAddr()
 	{
- 		if ( function_exists( 'apache_request_headers' ) )
-		{
+		if (function_exists('apache_request_headers'))
 			$headers = apache_request_headers();
-		}
-		else 
+		else
 			$headers = $_SERVER;
-		
-		if ( array_key_exists( 'X-Forwarded-For', $headers ) ) 
-		{
+
+		if (array_key_exists('X-Forwarded-For', $headers))
 			return $headers['X-Forwarded-For'];
-		} 
 		elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] && (!isset($_SERVER['REMOTE_ADDR'])
 			|| preg_match('/^127\..*/i', trim($_SERVER['REMOTE_ADDR'])) || preg_match('/^172\.16.*/i', trim($_SERVER['REMOTE_ADDR']))
 			|| preg_match('/^192\.168\.*/i', trim($_SERVER['REMOTE_ADDR'])) || preg_match('/^10\..*/i', trim($_SERVER['REMOTE_ADDR']))))
@@ -267,8 +263,8 @@ class ToolsCore
 			}
 			else
 				return $_SERVER['HTTP_X_FORWARDED_FOR'];
-		} 
-		else 
+		}
+		else
 			return $_SERVER['REMOTE_ADDR'];
 	}
 
