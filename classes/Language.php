@@ -179,7 +179,7 @@ class LanguageCore extends ObjectModel
 	  * Return an array of theme 
 	  *
 	  * @return array([theme dir] => array('name' => [theme name]))
-	  * @deprecated
+	  * @deprecated 1.5.5.0
 	  */
 	protected function _getThemesList()
 	{

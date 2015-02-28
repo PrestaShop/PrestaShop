@@ -1750,6 +1750,7 @@ abstract class ModuleCore
 	/**
 	 * Execute modules for specified hook
 	 *
+	 * @deprecated 1.5.3.0
 	 * @param string $hook_name Hook Name
 	 * @param array $hookArgs Parameters for the functions
 	 * @return string modules output
@@ -1760,6 +1761,11 @@ abstract class ModuleCore
 		return Hook::exec($hook_name, $hookArgs, $id_module);
 	}
 
+	/**
+	 * @deprecated 1.5.3.0
+	 * @return string
+	 * @throws PrestaShopException
+	 */
 	public static function hookExecPayment()
 	{
 		Tools::displayAsDeprecated();
@@ -1771,9 +1777,9 @@ abstract class ModuleCore
 		return true;
 	}
 
-	/*
-		@deprecated since 1.6.0.2
-	*/
+	/**
+	 * @deprecated since 1.6.0.2
+	 */
 	public static function getPaypalIgnore()
 	{
 		Tools::displayAsDeprecated();

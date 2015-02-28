@@ -163,6 +163,11 @@ class GroupReductionCore extends ObjectModel
 		);
 	}
 
+	/**
+	 * @deprecated 1.5.3.0
+	 * @param int $id_category
+	 * @return array|null
+	 */
 	public static function getGroupByCategoryId($id_category)
 	{
 		Tools::displayAsDeprecated('Use GroupReduction::getGroupsByCategoryId($id_category)');
@@ -182,6 +187,11 @@ class GroupReductionCore extends ObjectModel
 		);
 	}
 
+	/**
+	 * @deprecated 1.5.3.0
+	 * @param int $id_category
+	 * @return array|null
+	 */
 	public static function getGroupReductionByCategoryId($id_category)
 	{
 		Tools::displayAsDeprecated('Use GroupReduction::getGroupsByCategoryId($id_category)');

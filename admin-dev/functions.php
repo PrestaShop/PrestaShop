@@ -49,11 +49,9 @@ function bindDatepicker($id, $time)
 }
 
 /**
- * Deprecated since 1.5
- * Use Controller::addJqueryUi('ui.datepicker') instead
- *
- * @param int|array $id id can be a identifier or an array of identifiers
- * @param unknown_type $time
+ * @deprecated 1.5.3.0 Use Controller::addJqueryUi('ui.datepicker') instead
+ * @param int|array $id ID can be a identifier or an array of identifiers
+ * @param bool $time
  */
 function includeDatepicker($id, $time = false)
 {
@@ -228,10 +226,9 @@ function checkPSVersion()
 }
 
 /**
- * Deprecated since > 1.5.4.1
- * Use Translate::getAdminTranslation($string) instead
- *
+ * @deprecated 1.5.4.1 Use Translate::getAdminTranslation($string) instead
  * @param string $string
+ * @return string
  */
 function translate($string)
 {
