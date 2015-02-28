@@ -317,11 +317,15 @@ class OrderSlipCore extends ObjectModel
 			$order_slip->{'total_products_tax_'.$inc_or_ex_1} += $price * $quantity;
 
 			if (in_array(Configuration::get('PS_ROUND_TYPE'), array(Order::ROUND_ITEM, Order::ROUND_LINE)))
+			{
 				if (!isset($total_products[$id_tax_rules_group]))
 					$total_products[$id_tax_rules_group] = 0;
+			}
 			else
+			{
 				if (!isset($total_products[$id_tax_rules_group.'_'.$id_address]))
 					$total_products[$id_tax_rules_group.'_'.$id_address] = 0;
+			}
 
 			$product_tax_incl_line = Tools::ps_round($tax_calculator->{$add_or_remove.'Taxes'}($price) * $quantity, _PS_PRICE_COMPUTE_PRECISION_);
 
