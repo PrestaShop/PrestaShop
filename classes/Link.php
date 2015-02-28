@@ -197,7 +197,7 @@ class LinkCore
 		if (!$id_lang)
 			$id_lang = Context::getContext()->language->id;
 
-		$url = $this->getBaseLink($id_shop, null, $relative_protocol = false).$this->getLangLink($id_lang, null, $id_shop);
+		$url = $this->getBaseLink($id_shop, null, $relative_protocol).$this->getLangLink($id_lang, null, $id_shop);
 
 		$dispatcher = Dispatcher::getInstance();
 		if (!is_object($cms_category))
