@@ -495,10 +495,10 @@ function updateDisplay()
 		if (stock_management && availableNowValue != '')
 		{
 			$('#availability_value').removeClass('label-warning').addClass('label-success').text(availableNowValue).show();
-			$('#availability_statut:hidden').show();
+			$('#availability_statut:hidden').show('slow');
 		}
 		else
-			$('#availability_statut:visible').hide();
+			$('#availability_statut:visible').hide('slow');
 
 		//'last quantities' message management
 		if (!allowBuyWhenOutOfStock)
@@ -590,7 +590,7 @@ function updateDisplay()
 			if (stock_management && availableLaterValue != '')
 			{
 				$('#availability_value').addClass('label-warning').text(availableLaterValue).show('slow');
-				$('#availability_statut:hidden').show();
+				$('#availability_statut:hidden').show('slow');
 			}
 			else
 				$('#availability_statut:visible').hide('slow');
