@@ -488,7 +488,7 @@ function updateDisplay()
 		if (stock_management && availableNowValue != '')
 		{
 			$('#availability_value').removeClass('label-warning').addClass('label-success').text(availableNowValue).show();
-			$('#availability_statut:hidden').show()
+			$('#availability_statut:hidden').show();
 		}
 		else
 			$('#availability_statut:visible').hide();
@@ -521,6 +521,7 @@ function updateDisplay()
 	}
 	else
 	{
+
 		//show the hook out of stock
 		if (productAvailableForOrder == 1)
 		{
@@ -581,7 +582,10 @@ function updateDisplay()
 			$('#add_to_cart:hidden').fadeIn(600);
 
 			if (stock_management && availableLaterValue != '')
+			{
 				$('#availability_value').addClass('label-warning').text(availableLaterValue).show('slow');
+				$('#availability_statut:hidden').show();
+			}
 			else
 				$('#availability_statut:visible').hide('slow');
 		}
