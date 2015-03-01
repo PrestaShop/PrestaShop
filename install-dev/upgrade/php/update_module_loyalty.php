@@ -35,7 +35,7 @@ function update_module_loyalty()
 	if ($ps_loyalty_point_value !== false)
 	{
 		$category_list = '';
-		$categories = Db::getInstance('SELECT id_category FROM `'._DB_PREFIX_.'category`');
+		$categories = Db::getInstance()->executeS('SELECT id_category FROM `'._DB_PREFIX_.'category`');
 		foreach($categories as $category)
 			$category_list .= $category['id_category'].',';
 
