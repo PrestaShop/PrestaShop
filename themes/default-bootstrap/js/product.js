@@ -123,7 +123,6 @@ $(document).ready(function()
 			refreshProductImages(0);
 	}
 
-	initLocationChange();
 	serialScrollSetNbImages();
 
 	//init the serialScroll for thumbs
@@ -196,10 +195,13 @@ $(document).ready(function()
 	if (!$('#bxslider li').length)
 		$('.accessories-block').parent().remove();
 
-	if (typeof product_fileDefaultHtml !== 'undefined')
-		$.uniform.defaults.fileDefaultHtml = product_fileDefaultHtml;
-	if (typeof product_fileButtonHtml !== 'undefined')
-		$.uniform.defaults.fileButtonHtml = product_fileButtonHtml;
+	if (!!$.prototype.uniform)
+	{
+		if (typeof product_fileDefaultHtml !== 'undefined')
+			$.uniform.defaults.fileDefaultHtml = product_fileDefaultHtml;
+		if (typeof product_fileButtonHtml !== 'undefined')
+			$.uniform.defaults.fileButtonHtml = product_fileButtonHtml;
+	}
 
 	if ($('#customizationForm').length)
 	{
@@ -213,6 +215,11 @@ $(window).resize(function(){
 	serialScrollSetNbImages();
 	$('#thumbs_list').trigger('goto', 0);
 	serialScrollFixLock('', '', '', '', 0);
+});
+
+$(window).bind('hashchange', function(){
+	checkUrl();
+	findCombination();
 });
 
 //hover 'other views' images management
@@ -521,7 +528,6 @@ function updateDisplay()
 	}
 	else
 	{
-
 		//show the hook out of stock
 		if (productAvailableForOrder == 1)
 		{
@@ -960,14 +966,13 @@ function colorPickerClick(elt)
 	id_attribute = $(elt).attr('id').replace('color_', '');
 	$(elt).parent().parent().children().removeClass('selected');
 	$(elt).fadeTo('fast', 1, function(){
-								$(this).fadeTo('fast', 0, function(){
-									$(this).fadeTo('fast', 1, function(){
-										$(this).parent().addClass('selected');
-										});
-									});
-								});
+	$(this).fadeTo('fast', 0, function(){
+		$(this).fadeTo('fast', 1, function(){
+			$(this).parent().addClass('selected');
+			});
+		});
+	});
 	$(elt).parent().parent().parent().children('.color_pick_hidden').val(id_attribute);
-	findCombination();
 }
 
 
@@ -1011,12 +1016,6 @@ function getProductAttribute()
 	window.location = url + request;
 }
 
-function initLocationChange(time)
-{
-	if (!time) time = 500;
-		setInterval(checkUrl, time);
-}
-
 function checkUrl()
 {
 	if (original_url != window.location || first_url_check)
@@ -1047,15 +1046,21 @@ function checkUrl()
 
 						// add class 'selected' to the selected color
 						$('#color_' + attributesCombinations[a]['id_attribute']).addClass('selected').parent().addClass('selected');
-						$('input:radio[value=' + attributesCombinations[a]['id_attribute'] + ']').attr('checked', true);
+						$('input:radio[value=' + attributesCombinations[a]['id_attribute'] + ']').prop('checked', true);
 						$('input[type=hidden][name=group_' + attributesCombinations[a]['id_attribute_group'] + ']').val(attributesCombinations[a]['id_attribute']);
 						$('select[name=group_' + attributesCombinations[a]['id_attribute_group'] + ']').val(attributesCombinations[a]['id_attribute']);
+						if (!!$.prototype.uniform)
+							$.uniform.update('input[name=group_' + attributesCombinations[a]['id_attribute_group'] + '], select[name=group_' + attributesCombinations[a]['id_attribute_group'] + ']');
+
 					}
 			// find combination and select corresponding thumbs
-			if (count >= 0)
+			if (count)
 			{
-				firstTime = false;
-				findCombination();
+				if (firstTime)
+				{
+					firstTime = false;
+					findCombination();
+				}
 				original_url = url;
 				return true;
 			}
