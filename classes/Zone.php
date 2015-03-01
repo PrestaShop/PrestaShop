@@ -97,8 +97,8 @@ class ZoneCore extends ObjectModel
 			$result &= Db::getInstance()->delete('delivery', 'id_zone = '.(int)$this->id);
 
 			// Update Country & state zone with 0
-			$result &= Db::getInstance()->update('country', array('id_zone' => (int)$this->id));
-			$result &= Db::getInstance()->update('state', array('id_zone' => (int)$this->id));
+			$result &= Db::getInstance()->update('country', array('id_zone' => 0), 'id_zone = '.(int)$this->id);
+			$result &= Db::getInstance()->update('state', array('id_zone' => 0), 'id_zone = '.(int)$this->id);
 
 			return $result;
 		}
