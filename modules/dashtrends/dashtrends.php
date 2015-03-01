@@ -38,7 +38,7 @@ class Dashtrends extends DashboardModule
 	{
 		$this->name = 'dashtrends';
 		$this->displayName = 'Dashboard Trends';
-		$this->tab = 'dashboard';
+		$this->tab = '';
 		$this->version = '0.1';
 		$this->author = 'PrestaShop';
 
