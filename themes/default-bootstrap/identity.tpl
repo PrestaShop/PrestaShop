@@ -152,7 +152,7 @@
                         <label for="newsletter">
                             <input type="checkbox" id="newsletter" name="newsletter" value="1" {if isset($smarty.post.newsletter) && $smarty.post.newsletter == 1} checked="checked"{/if}/>
                             {l s='Sign up for our newsletter!'}
-                            {if array_key_exists('newsletter', $field_required)}
+                            {if isset($required_fields) && array_key_exists('newsletter', $field_required)}
                               <sup> *</sup>
                             {/if}
                         </label>
@@ -163,7 +163,7 @@
                         <label for="optin">
                             <input type="checkbox" name="optin" id="optin" value="1" {if isset($smarty.post.optin) && $smarty.post.optin == 1} checked="checked"{/if}/>
                             {l s='Receive special offers from our partners!'}
-                            {if array_key_exists('optin', $field_required)}
+                            {if isset($required_fields) && array_key_exists('optin', $field_required)}
                               <sup> *</sup>
                             {/if}
                         </label>
@@ -190,9 +190,9 @@
 					<input type="text" class="form-control" id="website" name="website" value="{if isset($smarty.post.website)}{$smarty.post.website}{/if}" />
 				</div>
 			{/if}
-
-                {$HOOK_CUSTOMER_IDENTITY_FORM}
-
+                {if isset($HOOK_CUSTOMER_IDENTITY_FORM)}
+			{$HOOK_CUSTOMER_IDENTITY_FORM}
+		{/if}
                 <div class="form-group">
                     <button type="submit" name="submitIdentity" class="btn btn-default button button-medium">
                         <span>{l s='Save'}<i class="icon-chevron-right right"></i></span>
