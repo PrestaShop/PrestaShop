@@ -1359,9 +1359,14 @@ class AdminImportControllerCore extends AdminController
 				{
 					$manufacturer = new Manufacturer();
 					$manufacturer->name = $product->manufacturer;
+					$manufacturer->active = true;
+
 					if (($field_error = $manufacturer->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 						($lang_field_error = $manufacturer->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $manufacturer->add())
+					{
 						$product->id_manufacturer = (int)$manufacturer->id;
+						$manufacturer->associateTo($product->id_shop_list);
+					}
 					else
 					{
 						$this->errors[] = sprintf(
