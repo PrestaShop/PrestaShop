@@ -3165,7 +3165,7 @@ exit;
 
 	public static function changeFileMTime($file_name)
 	{
-		touch($file_name);
+		@touch($file_name);
 	}
 
 	public static function waitUntilFileIsModified($file_name, $timeout = 180)
