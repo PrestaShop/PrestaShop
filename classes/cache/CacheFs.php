@@ -43,7 +43,7 @@ class CacheFsCore extends Cache
 	/**
 	 * @see Cache::_set()
 	 */
-	protected function _set($key, $value, $ttl = 0)
+	protected function _set($key, $value)
 	{
 		return (@file_put_contents($this->getFilename($key), serialize($value)));
 	}
