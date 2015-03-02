@@ -32,13 +32,13 @@ class AdminShippingControllerCore extends AdminController
 	{
 		$this->bootstrap = true;
 		parent::__construct();
-	 	$this->table = 'delivery';
+		$this->table = 'delivery';
 
 		$carriers = Carrier::getCarriers($this->context->language->id, true, false, false, null, Carrier::PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE);
 		foreach ($carriers as $key => $carrier)
 			if ($carrier['is_free'])
 				unset($carriers[$key]);
-		
+
 		$carrier_default_sort = array(
 			array('value' => Carrier::SORT_BY_PRICE, 'name' => $this->l('Price')),
 			array('value' => Carrier::SORT_BY_POSITION, 'name' => $this->l('Position'))
@@ -48,7 +48,7 @@ class AdminShippingControllerCore extends AdminController
 			array('value' => Carrier::SORT_BY_ASC, 'name' => $this->l('Ascending')),
 			array('value' => Carrier::SORT_BY_DESC, 'name' => $this->l('Descending'))
 		);
-		
+
 		$this->fields_options = array(
 			'handling' => array(
 				'title' =>	$this->l('Handling'),
@@ -115,7 +115,7 @@ class AdminShippingControllerCore extends AdminController
 				),
 				'submit' => array('title' => $this->l('Save'))
 			)
-		);		
+		);
 	}
 
 	public function postProcess()
@@ -123,7 +123,7 @@ class AdminShippingControllerCore extends AdminController
 		/* Shipping fees */
 		if (Tools::isSubmit('submitFees'.$this->table))
 		{
-		 	if ($this->tabAccess['edit'] === '1')
+			if ($this->tabAccess['edit'] === '1')
 			{
 				if (($id_carrier = (int)(Tools::getValue('id_carrier'))) && $id_carrier == ($id_carrier2 = (int)(Tools::getValue('id_carrier2'))))
 				{
@@ -179,5 +179,3 @@ class AdminShippingControllerCore extends AdminController
 			return parent::postProcess();
 	}
 }
-
-

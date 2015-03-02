@@ -74,12 +74,12 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
-        if (empty($this->display))
-		$this->page_header_toolbar_btn['new_tax_rules_group'] = array(
-			'href' => self::$currentIndex.'&addtax_rules_group&token='.$this->token,
-			'desc' => $this->l('Add new tax rules group', null, null, false),
-			'icon' => 'process-icon-new'
-		);
+		if (empty($this->display))
+			$this->page_header_toolbar_btn['new_tax_rules_group'] = array(
+				'href' => self::$currentIndex.'&addtax_rules_group&token='.$this->token,
+				'desc' => $this->l('Add new tax rules group', null, null, false),
+				'icon' => 'process-icon-new'
+			);
 
 		parent::initPageHeaderToolbar();
 	}
@@ -196,7 +196,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				'stay' => true
 			)
 		);
-		
+
 		if (Shop::isFeatureActive())
 		{
 			$this->fields_form['input'][] = array(
@@ -535,10 +535,10 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 	*/
 	protected function validateTaxRule(TaxRule $tr)
 	{
-		// TODO: check if the rule already exists
+		// @TODO: check if the rule already exists
 		return $tr->validateController();
 	}
-	
+
 	protected function displayAjaxUpdateTaxRule()
 	{
 		if ($this->tabAccess['view'] === '1')

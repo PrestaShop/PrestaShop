@@ -36,7 +36,7 @@ class AdminPPreferencesControllerCore extends AdminController
 
 		$warehouse_list = Warehouse::getWarehouses();
 		$warehouse_no = array(array('id_warehouse' => 0,'name' => $this->l('No default warehouse (default setting)')));
-		$warehouse_list = array_merge($warehouse_no,$warehouse_list);
+		$warehouse_list = array_merge($warehouse_no, $warehouse_list);
 
 		$this->fields_options = array(
 			'products' => array(
@@ -217,12 +217,12 @@ class AdminPPreferencesControllerCore extends AdminController
 				'title' =>	$this->l('Products stock'),
 				'fields' =>	array(
 					'PS_ORDER_OUT_OF_STOCK' => array(
-		 				'title' => $this->l('Allow ordering of out-of-stock products'),
-		 				'hint' => $this->l('By default, the Add to Cart button is hidden when a product is unavailable. You can choose to have it displayed in all cases.'),
-		 				'validation' => 'isBool',
-		 				'cast' => 'intval',
-		 				'required' => false,
-		 				'type' => 'bool'
+						'title' => $this->l('Allow ordering of out-of-stock products'),
+						'hint' => $this->l('By default, the Add to Cart button is hidden when a product is unavailable. You can choose to have it displayed in all cases.'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'required' => false,
+						'type' => 'bool'
 					),
 					'PS_STOCK_MANAGEMENT' => array(
 						'title' => $this->l('Enable stock management'),
