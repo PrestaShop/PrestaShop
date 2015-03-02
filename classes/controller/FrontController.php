@@ -258,8 +258,8 @@ class FrontControllerCore extends Controller
 
 		if (Configuration::get('PS_GEOLOCATION_ENABLED'))
 		{
-			if (($newDefault = $this->geolocationManagement($this->context->country)) && Validate::isLoadedObject($newDefault))
-				$this->context->country = $newDefault;
+			if (($new_default = $this->geolocationManagement($this->context->country)) && Validate::isLoadedObject($new_default))
+				$this->context->country = $new_default;
 		}
 		elseif (!isset($this->context->cookie->id_currency) && Configuration::get('PS_DETECT_COUNTRY'))
 		{
@@ -383,8 +383,8 @@ class FrontControllerCore extends Controller
 		$this->context->smarty->assign('request_uri', Tools::safeOutput(urldecode($_SERVER['REQUEST_URI'])));
 
 		/* Breadcrumb */
-		$navigationPipe = (Configuration::get('PS_NAVIGATION_PIPE') ? Configuration::get('PS_NAVIGATION_PIPE') : '>');
-		$this->context->smarty->assign('navigationPipe', $navigationPipe);
+		$navigation_pipe = (Configuration::get('PS_NAVIGATION_PIPE') ? Configuration::get('PS_NAVIGATION_PIPE') : '>');
+		$this->context->smarty->assign('navigationPipe', $navigation_pipe);
 
 		// Automatically redirect to the canonical URL if needed
 		if (!empty($this->php_self) && !Tools::getValue('ajax'))
@@ -1101,16 +1101,16 @@ class FrontControllerCore extends Controller
 
 		// Retrieve the default number of products per page and the other available selections
 		$default_products_per_page = max(1, (int)Configuration::get('PS_PRODUCTS_PER_PAGE'));
-		$nArray = array($default_products_per_page, $default_products_per_page * 2, $default_products_per_page * 5);
+		$n_array = array($default_products_per_page, $default_products_per_page * 2, $default_products_per_page * 5);
 
 		if ((int)Tools::getValue('n') && (int)$total_products > 0)
-			$nArray[] = $total_products;
+			$n_array[] = $total_products;
 		// Retrieve the current number of products per page (either the default, the GET parameter or the one in the cookie)
 		$this->n = $default_products_per_page;
-		if (isset($this->context->cookie->nb_item_per_page) && in_array($this->context->cookie->nb_item_per_page, $nArray))
+		if (isset($this->context->cookie->nb_item_per_page) && in_array($this->context->cookie->nb_item_per_page, $n_array))
 				$this->n = (int)$this->context->cookie->nb_item_per_page;
 
-		if ((int)Tools::getValue('n') && in_array((int)Tools::getValue('n'), $nArray))
+		if ((int)Tools::getValue('n') && in_array((int)Tools::getValue('n'), $n_array))
 			$this->n = (int)Tools::getValue('n');
 
 		// Retrieve the page number (either the GET parameter or the first page)
@@ -1144,7 +1144,7 @@ class FrontControllerCore extends Controller
 			'pages_nb'          => $pages_nb,
 			'p'                 => $this->p,
 			'n'                 => $this->n,
-			'nArray'            => $nArray,
+			'nArray'            => $n_array,
 			'range'             => $range,
 			'start'             => $start,
 			'stop'              => $stop,
