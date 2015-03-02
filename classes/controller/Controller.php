@@ -502,7 +502,11 @@ abstract class ControllerCore
 			));
 
 			$javascript = $this->context->smarty->fetch(_PS_ALL_THEMES_DIR_.'javascript.tpl');
-			echo ($defer ? $html.$javascript : preg_replace('/(?<!\$)'.$js_tag.'/', $javascript, $html)).$live_edit_content.((!isset($this->ajax) || ! $this->ajax) ? '</body></html>' : '');
+
+			if ($defer)
+				echo $html.$javascript
+			else
+				echo preg_replace('/(?<!\$)'.$js_tag.'/', $javascript, $html)).$live_edit_content.((!isset($this->ajax) || ! $this->ajax) ? '</body></html>' : '');
 		}
 		else
 			echo $html;
