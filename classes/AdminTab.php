@@ -1248,7 +1248,7 @@ abstract class AdminTabCore
 	 *
 	 * @param integer $id_lang Language used for display
 	 * @param string $orderBy ORDER BY clause
-	 * @param string $_orderWay Order way (asC, DESC)
+	 * @param string $_orderWay Order way (ASC, DESC)
 	 * @param integer $start Offset in LIMIT clause
 	 * @param integer $limit Row count in LIMIT clause
 	 */
@@ -1264,7 +1264,7 @@ abstract class AdminTabCore
 		if (empty($orderBy))
 			$orderBy = $this->context->cookie->__get($this->table.'Orderby') ? $this->context->cookie->__get($this->table.'Orderby') : $this->_defaultOrderBy;
 		if (empty($orderWay))
-			$orderWay = $this->context->cookie->__get($this->table.'Orderway') ? $this->context->cookie->__get($this->table.'Orderway') : 'asC';
+			$orderWay = $this->context->cookie->__get($this->table.'Orderway') ? $this->context->cookie->__get($this->table.'Orderway') : 'ASC';
 
 		$limit = (int)(Tools::getValue('pagination', $limit));
 		$this->context->cookie->{$this->table.'_pagination'} = $limit;
@@ -1427,7 +1427,7 @@ abstract class AdminTabCore
 			<tr>
 				<td>';
 
-		/* Display column names and arrows for ordering (asC, DESC) */
+		/* Display column names and arrows for ordering (ASC, DESC) */
 		if (array_key_exists($this->identifier, $this->identifiersDnd) && $this->_orderBy == 'position')
 		{
 			echo '
@@ -1457,7 +1457,7 @@ abstract class AdminTabCore
 					self::$currentIndex = preg_replace('/&'.$this->table.'Orderby=([a-z _]*)&'.$this->table.'Orderway=([a-z]*)/i', '', self::$currentIndex);
 				echo '	<br />
 						<a href="'.self::$currentIndex.'&'.$this->identifier.'='.$id_cat.'&'.$this->table.'Orderby='.urlencode($key).'&'.$this->table.'Orderway=desc&token='.$token.'"><img border="0" src="../img/admin/down'.((isset($this->_orderBy) && ($key == $this->_orderBy) && ($this->_orderWay == 'DESC')) ? '_d' : '').'.gif" /></a>
-						<a href="'.self::$currentIndex.'&'.$this->identifier.'='.$id_cat.'&'.$this->table.'Orderby='.urlencode($key).'&'.$this->table.'Orderway=asc&token='.$token.'"><img border="0" src="../img/admin/up'.((isset($this->_orderBy) && ($key == $this->_orderBy) && ($this->_orderWay == 'asC')) ? '_d' : '').'.gif" /></a>';
+						<a href="'.self::$currentIndex.'&'.$this->identifier.'='.$id_cat.'&'.$this->table.'Orderby='.urlencode($key).'&'.$this->table.'Orderway=asc&token='.$token.'"><img border="0" src="../img/admin/up'.((isset($this->_orderBy) && ($key == $this->_orderBy) && ($this->_orderWay == 'ASC')) ? '_d' : '').'.gif" /></a>';
 			}
 			echo '	</th>';
 		}
@@ -1636,13 +1636,13 @@ abstract class AdminTabCore
 							echo '<a'.(!($tr[$key] != $positions[count($positions) - 1]) ? ' style="display: none;"' : '').' href="'.self::$currentIndex.
 									'&'.$keyToGet.'='.(int)($id_category).'&'.$this->identifiersDnd[$this->identifier].'='.$id.'
 									&way=1&position='.(int)($tr['position'] + 1).'&token='.($token != null ? $token : $this->token).'">
-									<img src="../img/admin/'.($this->_orderWay == 'asC' ? 'down' : 'up').'.gif"
+									<img src="../img/admin/'.($this->_orderWay == 'ASC' ? 'down' : 'up').'.gif"
 									alt="'.$this->l('Down').'" title="'.$this->l('Down').'" /></a>';
 
 							echo '<a'.(!($tr[$key] != $positions[0]) ? ' style="display: none;"' : '').' href="'.self::$currentIndex.
 									'&'.$keyToGet.'='.(int)($id_category).'&'.$this->identifiersDnd[$this->identifier].'='.$id.'
 									&way=0&position='.(int)($tr['position'] - 1).'&token='.($token != null ? $token : $this->token).'">
-									<img src="../img/admin/'.($this->_orderWay == 'asC' ? 'up' : 'down').'.gif"
+									<img src="../img/admin/'.($this->_orderWay == 'ASC' ? 'up' : 'down').'.gif"
 									alt="'.$this->l('Up').'" title="'.$this->l('Up').'" /></a>';
 						}
 						else
