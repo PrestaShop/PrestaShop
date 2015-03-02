@@ -580,8 +580,8 @@ class AdminControllerCore extends Controller
 
 		/* BEGIN - Backward compatibility < 1.6.0.3 */
 		$this->breadcrumbs[] = $tabs[0]['name'];
-		$navigationPipe = (Configuration::get('PS_NAVIGATION_PIPE') ? Configuration::get('PS_NAVIGATION_PIPE') : '>');
-		$this->context->smarty->assign('navigationPipe', $navigationPipe);
+		$navigation_pipe = (Configuration::get('PS_NAVIGATION_PIPE') ? Configuration::get('PS_NAVIGATION_PIPE') : '>');
+		$this->context->smarty->assign('navigationPipe', $navigation_pipe);
 		/* END - Backward compatibility < 1.6.0.3 */
 	}
 
@@ -597,7 +597,7 @@ class AdminControllerCore extends Controller
 		switch ($this->display)
 		{
 			case 'edit':
-				$this->toolbar_title[] = $this->l('Edit', null, null,  false);
+				$this->toolbar_title[] = $this->l('Edit', null, null, false);
 				$this->addMetaTitle($this->l('Edit', null, null, false));
 				break;
 
@@ -2219,17 +2219,17 @@ class AdminControllerCore extends Controller
 	public function renderModulesList()
 	{
 		// Load cache file modules list (natives and partners modules)
-		$xmlModules = false;
+		$xml_modules = false;
 		if (file_exists(_PS_ROOT_DIR_.Module::CACHE_FILE_MODULES_LIST))
-			$xmlModules = @simplexml_load_file(_PS_ROOT_DIR_.Module::CACHE_FILE_MODULES_LIST);
-		if ($xmlModules)
-			foreach ($xmlModules->children() as $xmlModule)
-				foreach ($xmlModule->children() as $module)
+			$xml_modules = @simplexml_load_file(_PS_ROOT_DIR_.Module::CACHE_FILE_MODULES_LIST);
+		if ($xml_modules)
+			foreach ($xml_modules->children() as $xml_module)
+				foreach ($xml_module->children() as $module)
 					foreach ($module->attributes() as $key => $value)
 					{
-						if ($xmlModule->attributes() == 'native' && $key == 'name')
+						if ($xml_module->attributes() == 'native' && $key == 'name')
 							$this->list_natives_modules[] = (string)$value;
-						if ($xmlModule->attributes() == 'partner' && $key == 'name')
+						if ($xml_module->attributes() == 'partner' && $key == 'name')
 							$this->list_partners_modules[] = (string)$value;
 					}
 
@@ -3226,7 +3226,7 @@ class AdminControllerCore extends Controller
 		$this->default_form_language = $lang_exists ? (int)$cookie->employee_form_lang : (int)Configuration::get('PS_LANG_DEFAULT');
 
 		foreach ($this->_languages as $k => $language)
-			$this->_languages[$k]['is_default'] = ((int)($language['id_lang'] == $this->default_form_language));
+			$this->_languages[$k]['is_default'] = (int)($language['id_lang'] == $this->default_form_language);
 
 		return $this->_languages;
 	}
@@ -3256,22 +3256,22 @@ class AdminControllerCore extends Controller
 						elseif (isset($input['lang']) && $input['lang'])
 							foreach ($this->_languages as $language)
 							{
-								$fieldValue = $this->getFieldValue($obj, $input['name'], $language['id_lang']);
-								if (empty($fieldValue))
+								$field_value = $this->getFieldValue($obj, $input['name'], $language['id_lang']);
+								if (empty($field_value))
 								{
 									if (isset($input['default_value']) && is_array($input['default_value']) && isset($input['default_value'][$language['id_lang']]))
-										$fieldValue = $input['default_value'][$language['id_lang']];
+										$field_value = $input['default_value'][$language['id_lang']];
 									elseif (isset($input['default_value']))
-										$fieldValue = $input['default_value'];
+										$field_value = $input['default_value'];
 								}
-								$this->fields_value[$input['name']][$language['id_lang']] = $fieldValue;
+								$this->fields_value[$input['name']][$language['id_lang']] = $field_value;
 							}
 						else
 						{
-							$fieldValue = $this->getFieldValue($obj, $input['name']);
-							if ($fieldValue === false && isset($input['default_value']))
-								$fieldValue = $input['default_value'];
-							$this->fields_value[$input['name']] = $fieldValue;
+							$field_value = $this->getFieldValue($obj, $input['name']);
+							if ($field_value === false && isset($input['default_value']))
+								$field_value = $input['default_value'];
+							$this->fields_value[$input['name']] = $field_value;
 						}
 
 		return $this->fields_value;
@@ -3406,7 +3406,7 @@ class AdminControllerCore extends Controller
 	 * @param int $oldId
 	 * @return boolean
 	 */
-	protected function afterDelete($object, $oldId)
+	protected function afterDelete($object, $old_id)
 	{
 		return true;
 	}
