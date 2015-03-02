@@ -489,7 +489,7 @@ abstract class ObjectModelCore
 
 		// Database insertion
 		if (Shop::checkIdShopDefault($this->def['table']))
-			$this->id_shop_default = in_array(Configuration::get('PS_SHOP_DEFAULT'), $id_shop_list) == true ? Configuration::get('PS_SHOP_DEFAULT') : min($id_shop_list);
+			$this->id_shop_default = (in_array(Configuration::get('PS_SHOP_DEFAULT'), $id_shop_list) == true) ? Configuration::get('PS_SHOP_DEFAULT') : min($id_shop_list);
 		if (!$result = ObjectModel::$db->insert($this->def['table'], $this->getFields(), $null_values))
 			return false;
 
@@ -636,7 +636,7 @@ abstract class ObjectModelCore
 			$id_shop_list = $this->id_shop_list;
 
 		if (Shop::checkIdShopDefault($this->def['table']) && !$this->id_shop_default)
-			$this->id_shop_default = in_array(Configuration::get('PS_SHOP_DEFAULT'), $id_shop_list) == true ? Configuration::get('PS_SHOP_DEFAULT') : min($id_shop_list);
+			$this->id_shop_default = (in_array(Configuration::get('PS_SHOP_DEFAULT'), $id_shop_list) == true) ? Configuration::get('PS_SHOP_DEFAULT') : min($id_shop_list);
 		// Database update
 		if (!$result = ObjectModel::$db->update($this->def['table'], $this->getFields(), '`'.pSQL($this->def['primary']).'` = '.(int)$this->id, 0, $null_values))
 			return false;
