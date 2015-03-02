@@ -251,4 +251,3 @@ class DbQueryCore
 		return $this->build();
 	}
 }
-

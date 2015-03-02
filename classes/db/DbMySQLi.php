@@ -210,7 +210,7 @@ class DbMySQLiCore extends Db
 	/**
 	 * @see Db::checkConnection()
 	 */
-	public static function tryToConnect($server, $user, $pwd, $db, $newDbLink = true, $engine = null, $timeout = 5)
+	public static function tryToConnect($server, $user, $pwd, $db, $new_db_link = true, $engine = null, $timeout = 5)
 	{
 		$link = mysqli_init();
 		if (!$link)
@@ -276,7 +276,7 @@ class DbMySQLiCore extends Db
 	/**
 	 * @see Db::checkEncoding()
 	 */
-	static public function tryUTF8($server, $user, $pwd)
+	public static function tryUTF8($server, $user, $pwd)
 	{
 		$link = @new mysqli($server, $user, $pwd);
 		$ret = $link->query("SET NAMES 'UTF8'");

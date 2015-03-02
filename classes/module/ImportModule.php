@@ -25,34 +25,34 @@
 */
 
 /**
-  * ImportModule class, ImportModule.php
-  * Import module management
-  * @category classes
-  *
-  */
+ * ImportModule class, ImportModule.php
+ * Import module management
+ * @category classes
+ *
+ */
 
 abstract class ImportModuleCore extends Module
 {
 	protected $_link = null;
-	
+
 	public $server;
-	
+
 	public $user;
-	
+
 	public $passwd;
-	
+
 	public $database;
-	
+
 	/** @var string Prefix database */
 	public $prefix;
-	
-	
+
+
 	public function __destruct()
 	{
 		if ($this->_link)
 			@mysql_close($this->_link);
 	}
-	
+
 	protected function initDatabaseConnection()
 	{
 		if ($this->_link != null)
@@ -68,24 +68,24 @@ abstract class ImportModuleCore extends Module
 			die(Tools::displayError('Link to database cannot be established.'));
 		return $this->_link;
 	}
-	
+
 	public function ExecuteS($query)
 	{
 		$this->initDatabaseConnection();
 		$result = mysql_query($query, $this->_link);
-		$resultArray = array();
+		$result_array = array();
 		if ($result !== true)
 			while ($row = mysql_fetch_assoc($result))
-				$resultArray[] = $row;
-		return $resultArray;
+				$result_array[] = $row;
+		return $result_array;
 	}
-	
+
 	public function Execute($query)
 	{
 		$this->initDatabaseConnection();
 		return mysql_query($query, $this->_link);
 	}
-	
+
 	public function getValue($query)
 	{
 		$this->initDatabaseConnection();
@@ -95,7 +95,7 @@ abstract class ImportModuleCore extends Module
 		else
 			return array_shift($result[0]);
 	}
-	
+
 	public static function getImportModulesOnDisk()
 	{
 		$modules = Module::getModulesOnDisk(true);
@@ -104,8 +104,6 @@ abstract class ImportModuleCore extends Module
 				unset($modules[$key]);
 		return $modules;
 	}
-	
+
 	abstract public function getDefaultIdLang();
-
 }
-
