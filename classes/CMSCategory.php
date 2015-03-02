@@ -509,7 +509,7 @@ class CMSCategoryCore extends ObjectModel
 	  * @param string  $CMSCategory_name Searched CMSCategory name
 	  * @param integer $id_parent_CMSCategory parent CMSCategory ID
 	  * @return array Corresponding CMSCategory
-	  *	@deprecated
+	  *	@deprecated 1.5.3.0
 	  */
 	public static function searchByNameAndParentCMSCategoryId($id_lang, $CMSCategory_name, $id_parent_CMSCategory)
 	{

@@ -1320,6 +1320,12 @@ class ProductCore extends ObjectModel
 		return $id_product_attribute;
 	}
 
+	/**
+	 * @deprecated 1.5.5.0
+	 * @param $attributes
+	 * @param bool $set_default
+	 * @return array
+	 */
 	public function addProductAttributeMultiple($attributes, $set_default = true)
 	{
 		Tools::displayAsDeprecated();
@@ -1802,6 +1808,13 @@ class ProductCore extends ObjectModel
 		return $combination->setAttributes($attributes);
 	}
 
+	/**
+	 * @deprecated 1.5.5.0
+	 * @param $id_attributes
+	 * @param $combinations
+	 * @return bool
+	 * @throws PrestaShopDatabaseException
+	 */
 	public function addAttributeCombinationMultiple($id_attributes, $combinations)
 	{
 		Tools::displayAsDeprecated();
@@ -3074,8 +3087,8 @@ class ProductCore extends ObjectModel
 	 * @see StockManager if you want to manage real stock
 	 * @see StockAvailable if you want to manage available quantities for sale on your shop(s)
 	 *
-	 * @param array $product Array with ordered product (quantity, id_product_attribute if applicable)
-	 * @return mixed Query result
+	 * @deprecated 1.5.3.0
+	 * @return false
 	 */
 	public static function updateQuantity()
 	{
@@ -3090,9 +3103,10 @@ class ProductCore extends ObjectModel
 	 * It's not possible to use this method with new stockManager and stockAvailable features
 	 * Now this method do nothing
 	 *
+	 * @deprecated 1.5.3.0
 	 * @see StockManager if you want to manage real stock
 	 * @see StockAvailable if you want to manage available quantities for sale on your shop(s)
-	 *
+	 * @return false
 	 */
 	public static function reinjectQuantities()
 	{

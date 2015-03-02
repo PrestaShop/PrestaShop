@@ -312,6 +312,8 @@ class CartControllerCore extends FrontController
 
 	/**
 	 * Remove discounts on cart
+	 *
+	 * @deprecated 1.5.3.0
 	 */
 	protected function processRemoveDiscounts()
 	{

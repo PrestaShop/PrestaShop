@@ -71,6 +71,8 @@ class OrderPaymentCore extends ObjectModel
 
 	/**
 	* Get the detailed payment of an order
+	*
+	* @deprecated 1.5.3.0
 	* @param int $id_order
 	* @return array
 	*/

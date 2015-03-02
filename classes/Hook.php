@@ -737,8 +737,14 @@ class HookCore extends ObjectModel
 	/**
 	 * Called when quantity of a product is updated.
 	 *
-	 * @param Product
-	 * @param Order
+	 * @deprecated 1.5.3.0
+	 * @param Cart $cart
+	 * @param Order $order
+	 * @param Customer $customer
+	 * @param Currency $currency
+	 * @param $orderStatus
+	 * @return string
+	 * @throws PrestaShopException
 	 */
 	public static function newOrder($cart, $order, $customer, $currency, $orderStatus)
 	{

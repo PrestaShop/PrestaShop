@@ -822,6 +822,11 @@ abstract class PaymentModuleCore extends Module
 		}
 	}
 
+	/**
+	 * @deprecated 1.6.0.7
+	 * @param mixed $content
+	 * @return mixed
+	 */
 	public function formatProductAndVoucherForEmail($content)
 	{
 		Tools::displayAsDeprecated();

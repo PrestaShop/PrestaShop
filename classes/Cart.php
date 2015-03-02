@@ -3244,6 +3244,12 @@ class CartCore extends ObjectModel
 		return $this->_addCustomization($id_product, 0, $index, $type, $file, 0);
 	}
 
+	/**
+	 * @deprecated 1.5.5.0
+	 * @param int $id_product
+	 * @param $index
+	 * @return bool
+	 */
 	public function deletePictureToProduct($id_product, $index)
 	{
 		Tools::displayAsDeprecated();
