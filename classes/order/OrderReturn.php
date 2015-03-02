@@ -164,7 +164,7 @@ class OrderReturnCore extends ObjectModel
 		$tmp = array();
 		foreach ($products_ret as $return_detail)
 		{
-			$tmp[$return_detail['id_order_detail']]['quantity'] = isset($tmp[$return_detail['id_order_detail']]['quantity']) ? $tmp[$return_detail['id_order_detail']]['quantity'] + (int($return_detail['product_quantity'] : (int)$return_detail['product_quantity'];
+			$tmp[$return_detail['id_order_detail']]['quantity'] = isset($tmp[$return_detail['id_order_detail']]['quantity']) ? $tmp[$return_detail['id_order_detail']]['quantity'] + (int)$return_detail['product_quantity'] : (int)$return_detail['product_quantity'];
 			$tmp[$return_detail['id_order_detail']]['customizations'] = (int)$return_detail['id_customization'];
 		}
 		$res_tab = array();
