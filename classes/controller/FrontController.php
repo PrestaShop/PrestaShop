@@ -141,7 +141,7 @@ class FrontControllerCore extends Controller
 		else
 			$useSSL = $this->ssl;
 
-		if (isset($this->php_self)  && is_object(Context::getContext()->theme))
+		if (isset($this->php_self) && is_object(Context::getContext()->theme))
 		{
 			$columns = Context::getContext()->theme->hasColumns($this->php_self);
 
@@ -305,8 +305,8 @@ class FrontControllerCore extends Controller
 			elseif ($this->context->cookie->id_customer != $cart->id_customer || $this->context->cookie->id_lang != $cart->id_lang || $currency->id != $cart->id_currency)
 			{
 				if ($this->context->cookie->id_customer)
-					$cart->id_customer = (int)($this->context->cookie->id_customer);
-				$cart->id_lang = (int)($this->context->cookie->id_lang);
+					$cart->id_customer = (int)$this->context->cookie->id_customer;
+				$cart->id_lang = (int)$this->context->cookie->id_lang;
 				$cart->id_currency = (int)$currency->id;
 				$cart->update();
 			}
@@ -333,15 +333,15 @@ class FrontControllerCore extends Controller
 		if (!isset($cart) || !$cart->id)
 		{
 			$cart = new Cart();
-			$cart->id_lang = (int)($this->context->cookie->id_lang);
-			$cart->id_currency = (int)($this->context->cookie->id_currency);
-			$cart->id_guest = (int)($this->context->cookie->id_guest);
+			$cart->id_lang = (int)$this->context->cookie->id_lang;
+			$cart->id_currency = (int)$this->context->cookie->id_currency;
+			$cart->id_guest = (int)$this->context->cookie->id_guest;
 			$cart->id_shop_group = (int)$this->context->shop->id_shop_group;
 			$cart->id_shop = $this->context->shop->id;
 			if ($this->context->cookie->id_customer)
 			{
-				$cart->id_customer = (int)($this->context->cookie->id_customer);
-				$cart->id_address_delivery = (int)(Address::getFirstCustomerAddressId($cart->id_customer));
+				$cart->id_customer = (int)$this->context->cookie->id_customer);
+				$cart->id_address_delivery = (int)Address::getFirstCustomerAddressId($cart->id_customer);
 				$cart->id_address_invoice = $cart->id_address_delivery;
 			}
 			else
@@ -395,7 +395,7 @@ class FrontControllerCore extends Controller
 		$display_tax_label = $this->context->country->display_tax_label;
 		if (isset($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) && $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')})
 		{
-			$infos = Address::getCountryAndState((int)($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}));
+			$infos = Address::getCountryAndState((int)$cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 			$country = new Country((int)$infos['id_country']);
 			$this->context->country = $country;
 			if (Validate::isLoadedObject($country))
@@ -872,7 +872,7 @@ class FrontControllerCore extends Controller
 					if ($default_country->iso_code != $this->context->cookie->iso_code_country)
 						$default_country = new Country($id_country);
 					if (isset($has_been_set) && $has_been_set)
-						$this->context->cookie->id_currency = (int)(Currency::getCurrencyInstance($default_country->id_currency ? (int)$default_country->id_currency : Configuration::get('PS_CURRENCY_DEFAULT'))->id);
+						$this->context->cookie->id_currency = Currency::getCurrencyInstance($default_country->id_currency ? (int)$default_country->id_currency : (int)Configuration::get('PS_CURRENCY_DEFAULT'))->id);
 					return $default_country;
 				}
 				elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_ && !FrontController::isInWhitelistForGeolocation())
@@ -1067,7 +1067,7 @@ class FrontControllerCore extends Controller
 		$order_by_values  = array(0 => 'name', 1 => 'price', 2 => 'date_add', 3 => 'date_upd', 4 => 'position', 5 => 'manufacturer_name', 6 => 'quantity', 7 => 'reference');
 		$order_way_values = array(0 => 'asc', 1 => 'desc');
 
-		$this->orderBy  = Tools::strtolower(Tools::getValue('orderby',  $order_by_values[(int)Configuration::get('PS_PRODUCTS_ORDER_BY')]));
+		$this->orderBy  = Tools::strtolower(Tools::getValue('orderby', $order_by_values[(int)Configuration::get('PS_PRODUCTS_ORDER_BY')]));
 		$this->orderWay = Tools::strtolower(Tools::getValue('orderway', $order_way_values[(int)Configuration::get('PS_PRODUCTS_ORDER_WAY')]));
 
 		if (!in_array($this->orderBy, $order_by_values))
@@ -1261,7 +1261,7 @@ class FrontControllerCore extends Controller
 				{
 					$override_path = str_replace(__PS_BASE_URI__.'modules/', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/'.$type.'/modules/', $file, $different);
 					if (strrpos($override_path, $type.'/'.basename($file)) !== false)
-						$override_path_css = str_replace($type.'/'.basename($file) , basename($file), $override_path, $different_css);
+						$override_path_css = str_replace($type.'/'.basename($file), basename($file), $override_path, $different_css);
 
 					if ($different && @filemtime($override_path))
 						$file = str_replace(__PS_BASE_URI__.'modules/', __PS_BASE_URI__.'themes/'._THEME_NAME_.'/'.$type.'/modules/', $file, $different);
