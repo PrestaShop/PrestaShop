@@ -752,16 +752,16 @@ class ToolsCore
 			if ($files = scandir($dirname))
 			{
 				foreach ($files as $file)
-				if ($file != '.' && $file != '..' && $file != '.svn')
-				{
-					if (is_dir($dirname.$file))
-						Tools::deleteDirectory($dirname.$file, true);
-					elseif (file_exists($dirname.$file))
-						{
-							@chmod($dirname.$file, 0777); // NT ?
-							unlink($dirname.$file);
-						}
-				}
+					if ($file != '.' && $file != '..' && $file != '.svn')
+					{
+						if (is_dir($dirname.$file))
+							Tools::deleteDirectory($dirname.$file, true);
+						elseif (file_exists($dirname.$file))
+							{
+								@chmod($dirname.$file, 0777); // NT ?
+								unlink($dirname.$file);
+							}
+					}
 				if ($delete_self && file_exists($dirname))
 					if (!rmdir($dirname))
 					{
@@ -1347,8 +1347,8 @@ class ToolsCore
 			if (Tools::strlen(preg_replace('/<.*?>/', '', $text)) <= $length)
 				return $text;
 
-			$totalLength = Tools::strlen(strip_tags($ellipsis));
-			$openTags = array();
+			$total_length = Tools::strlen(strip_tags($ellipsis));
+			$open_tags = array();
 			$truncate = '';
 			preg_match_all('/(<\/?([\w+]+)[^>]*>)?([^<>]*)/', $text, $tags, PREG_SET_ORDER);
 
@@ -1357,46 +1357,46 @@ class ToolsCore
 				if (!preg_match('/img|br|input|hr|area|base|basefont|col|frame|isindex|link|meta|param/s', $tag[2]))
 				{
 					if (preg_match('/<[\w]+[^>]*>/s', $tag[0]))
-						array_unshift($openTags, $tag[2]);
-					elseif (preg_match('/<\/([\w]+)[^>]*>/s', $tag[0], $closeTag))
+						array_unshift($open_tags, $tag[2]);
+					elseif (preg_match('/<\/([\w]+)[^>]*>/s', $tag[0], $close_tag))
 					{
-						$pos = array_search($closeTag[1], $openTags);
+						$pos = array_search($close_tag[1], $open_tags);
 						if ($pos !== false)
-							array_splice($openTags, $pos, 1);
+							array_splice($open_tags, $pos, 1);
 					}
 				}
 				$truncate .= $tag[1];
-				$contentLength = Tools::strlen(preg_replace('/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i', ' ', $tag[3]));
+				$content_length = Tools::strlen(preg_replace('/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i', ' ', $tag[3]));
 
-				if ($contentLength + $totalLength > $length)
+				if ($content_length + $total_length > $length)
 				{
-					$left = $length - $totalLength;
-					$entitiesLength = 0;
+					$left = $length - $total_length;
+					$entities_length = 0;
 
 					if (preg_match_all('/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i', $tag[3], $entities, PREG_OFFSET_CAPTURE))
 					{
 						foreach ($entities[0] as $entity)
 						{
-							if ($entity[1] + 1 - $entitiesLength <= $left)
+							if ($entity[1] + 1 - $entities_length <= $left)
 							{
 								$left--;
-								$entitiesLength += Tools::strlen($entity[0]);
+								$entities_length += Tools::strlen($entity[0]);
 							}
 							else
 								break;
 						}
 					}
 
-					$truncate .= Tools::substr($tag[3], 0, $left + $entitiesLength);
+					$truncate .= Tools::substr($tag[3], 0, $left + $entities_length);
 					break;
 				}
 				else
 				{
 					$truncate .= $tag[3];
-					$totalLength += $contentLength;
+					$total_length += $content_length;
 				}
 
-				if ($totalLength >= $length)
+				if ($total_length >= $length)
 					break;
 			}
 		}
@@ -1413,32 +1413,32 @@ class ToolsCore
 			$spacepos = Tools::strrpos($truncate, ' ');
 			if ($html)
 			{
-				$truncateCheck = Tools::substr($truncate, 0, $spacepos);
-				$lastOpenTag = Tools::strrpos($truncateCheck, '<');
-				$lastCloseTag = Tools::strrpos($truncateCheck, '>');
+				$truncate_check = Tools::substr($truncate, 0, $spacepos);
+				$last_open_tag = Tools::strrpos($truncate_check, '<');
+				$last_close_tag = Tools::strrpos($truncate_check, '>');
 
-				if ($lastOpenTag > $lastCloseTag)
+				if ($last_open_tag > $last_close_tag)
 				{
-					preg_match_all('/<[\w]+[^>]*>/s', $truncate, $lastTagMatches);
-					$lastTag = array_pop($lastTagMatches[0]);
-					$spacepos = Tools::strrpos($truncate, $lastTag) + Tools::strlen($lastTag);
+					preg_match_all('/<[\w]+[^>]*>/s', $truncate, $last_tag_matches);
+					$last_tag = array_pop($last_tag_matches[0]);
+					$spacepos = Tools::strrpos($truncate, $last_tag) + Tools::strlen($last_tag);
 				}
 
 				$bits = Tools::substr($truncate, $spacepos);
-				preg_match_all('/<\/([a-z]+)>/', $bits, $droppedTags, PREG_SET_ORDER);
+				preg_match_all('/<\/([a-z]+)>/', $bits, $dropped_tags, PREG_SET_ORDER);
 
-				if (!empty($droppedTags))
+				if (!empty($dropped_tags))
 				{
-					if (!empty($openTags))
+					if (!empty($open_tags))
 					{
-						foreach ($droppedTags as $closingTag)
-							if (!in_array($closingTag[1], $openTags))
-								array_unshift($openTags, $closingTag[1]);
+						foreach ($dropped_tags as $closing_tag)
+							if (!in_array($closing_tag[1], $open_tags))
+								array_unshift($open_tags, $closing_tag[1]);
 					}
 					else
 					{
-						foreach ($droppedTags as $closingTag)
-							$openTags[] = $closingTag[1];
+						foreach ($dropped_tags as $closing_tag)
+							$open_tags[] = $closing_tag[1];
 					}
 				}
 			}
@@ -1449,7 +1449,7 @@ class ToolsCore
 		$truncate .= $ellipsis;
 
 		if ($html)
-			foreach ($openTags as $tag)
+			foreach ($open_tags as $tag)
 				$truncate .= '</'.$tag.'>';
 
 		return $truncate;
@@ -2591,27 +2591,27 @@ exit;
 
 	public static function chmodr($path, $filemode)
 	{
-	    if (!is_dir($path))
-	        return @chmod($path, $filemode);
-	    $dh = opendir($path);
-	    while (($file = readdir($dh)) !== false)
+		if (!is_dir($path))
+			return @chmod($path, $filemode);
+		$dh = opendir($path);
+		while (($file = readdir($dh)) !== false)
 		{
-	        if ($file != '.' && $file != '..')
+			if ($file != '.' && $file != '..')
 			{
-	            $fullpath = $path.'/'.$file;
-	            if (is_link($fullpath))
-	                return false;
-	            elseif (!is_dir($fullpath) && !@chmod($fullpath, $filemode))
-	                    return false;
-	            elseif (!Tools::chmodr($fullpath, $filemode))
-	                return false;
-	        }
-	    }
-	    closedir($dh);
-	    if (@chmod($path, $filemode))
-	        return true;
-	    else
-	        return false;
+				$fullpath = $path.'/'.$file;
+				if (is_link($fullpath))
+					return false;
+				elseif (!is_dir($fullpath) && !@chmod($fullpath, $filemode))
+					return false;
+				elseif (!Tools::chmodr($fullpath, $filemode))
+					return false;
+			}
+		}
+		closedir($dh);
+		if (@chmod($path, $filemode))
+			return true;
+		else
+			return false;
 	}
 
 	/**

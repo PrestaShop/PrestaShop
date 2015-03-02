@@ -592,7 +592,7 @@ abstract class AdminTabCore
 						{
 							$object->deleteImage();
 							$object->deleted = 1;
-							if(method_exists($object, 'cleanPositions'))
+							if (method_exists($object, 'cleanPositions'))
 								$object->cleanPositions();
 							if ($object->update())
 								Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.$token);
@@ -1723,7 +1723,7 @@ abstract class AdminTabCore
 	protected function _displayEnableLink($token, $id, $value, $active,  $id_category = null, $id_product = null)
 	{
 		echo '<a href="'.self::$currentIndex.'&'.$this->identifier.'='.$id.'&'.$active.$this->table.
-			((int)$id_category && (int)$id_product ? '&id_category='.$id_category : '').'&token='.($token != ull ? $token : $this->token).'">
+			((int)$id_category && (int)$id_product ? '&id_category='.$id_category : '').'&token='.($token != null ? $token : $this->token).'">
 			<img src="../img/admin/'.($value ? 'enabled.gif' : 'disabled.gif').'"
 			alt="'.($value ? $this->l('Enabled') : $this->l('Disabled')).'" title="'.($value ? $this->l('Enabled') : $this->l('Disabled')).'" /></a>';
 	}

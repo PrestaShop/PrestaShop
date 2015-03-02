@@ -51,7 +51,7 @@ class SceneCore extends ObjectModel
 		'fields' => array(
 			'active' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
 
-			// Lang fields
+			/* Lang fields */
 			'name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 100),
 		),
 	);
@@ -193,7 +193,8 @@ class SceneCore extends ObjectModel
 	 *
 	 * @return array Products
 	 */
-	public static function getScenes($id_category, $id_lang = null, $only_active = true, $lite_result = true, $hide_scene_position = true, Context $context = null)
+	public static function getScenes($id_category, $id_lang = null, $only_active = true, $lite_result = true, $hide_scene_position = true,
+		Context $context = null)
 	{
 		if (!Scene::isFeatureActive())
 			return array();
