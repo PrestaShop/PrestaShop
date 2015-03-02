@@ -153,7 +153,7 @@ class FeatureCore extends ObjectModel
 		foreach ($fields as $field)
 		{
 			foreach (array_keys($field) as $key)
-			 	if (!Validate::isTableOrIdentifier($key))
+				if (!Validate::isTableOrIdentifier($key))
 					die(Tools::displayError());
 
 			$sql = 'SELECT `id_lang` FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_lang`
