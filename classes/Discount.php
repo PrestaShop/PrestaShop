@@ -25,8 +25,8 @@
 */
 
 /**
-  * @deprecated 1.5.0.1
-  */
+ * @deprecated 1.5.0.1
+ */
 class DiscountCore extends CartRule
 {
 	const PERCENT = 1;
@@ -155,7 +155,7 @@ class DiscountCore extends CartRule
 	 */
 	public static function getIdByName($code)
 	{
-	 	return parent::getIdByCode($code);
+		return parent::getIdByCode($code);
 	}
 
 	/**
@@ -186,8 +186,8 @@ class DiscountCore extends CartRule
 			$context->currency = $currency;
 		if (Validate::isLoadedObject($shop))
 			$context->shop = $shop;
-	 	return parent::getContextualValue($useTax, $context);
-    }
+		return parent::getContextualValue($useTax, $context);
+	}
 
 	/**
 	 * @deprecated 1.5.0.1

@@ -386,7 +386,7 @@ class WebserviceRequestCore
 		}
 		return $arr_return;
 	}
-	// @todo : set this method out
+	/* @todo : set this method out */
 	/**
 	 * This method is used for calculate the price for products on a virtual fields
 	 *
@@ -899,9 +899,7 @@ class WebserviceRequestCore
 				$ids = explode(',', $matches[1]);
 		}
 		else
-		{
 			$ids[] = (int)$this->urlSegment[1];
-		}
 		if (!empty($ids))
 		{
 			foreach ($ids as $id)
@@ -918,10 +916,6 @@ class WebserviceRequestCore
 		{
 			$this->setError(404, 'Id(s) not exists: '.implode(', ', $arr_avoid_id), 87);
 			$this->_outputEnabled = true;
-		}
-		else
-		{
-
 		}
 	}
 
@@ -951,7 +945,8 @@ class WebserviceRequestCore
 		foreach ($part as $str)
 		{
 			$field_name = trim(substr($str, 0, (strpos($str, '[') === false ? strlen($str) : strpos($str, '['))));
-			if (!isset($fields[$field_name])) $fields[$field_name] = null;
+			if (!isset($fields[$field_name]))
+				$fields[$field_name] = null;
 			if (strpos($str, '[') !== false)
 			{
 				$sub_fields = substr($str, strpos($str, '[') + 1, strlen($str) - strpos($str, '[') - 2);
@@ -1375,9 +1370,7 @@ class WebserviceRequestCore
 				$ids = explode(',', $matches[1]);
 		}
 		else
-		{
 			$ids[] = (int)$this->urlSegment[1];
-		}
 		if (!empty($ids))
 		{
 			foreach ($ids as $id)
@@ -1413,9 +1406,7 @@ class WebserviceRequestCore
 				$this->_outputEnabled = true;
 			}
 			else
-			{
 				$this->_outputEnabled = false;
-			}
 		}
 	}
 
@@ -1698,9 +1689,7 @@ class WebserviceRequestCore
 				}
 			}
 			elseif (preg_match('#\[(\d)+\]#Ui', $this->urlFragments['language'], $match_lang))
-			{
 				$arr_languages[] = $match_lang[1];
-			}
 		}
 		else
 		{
@@ -1831,9 +1820,8 @@ class WebserviceRequestCore
 		}
 
 		if (!isset($return['content']) || strlen($return['content']) <= 0)
-		{
 			$this->objOutput->setHeaderParams('Content-Type', '');
-		}
+
 		$return['headers'] = $this->objOutput->buildHeader();
 		restore_error_handler();
 		return $return;
@@ -1845,9 +1833,7 @@ class WebserviceRequestCore
 		$headers = array();
 
 		if (function_exists('apache_request_headers'))
-		{
 			$headers = apache_request_headers();
-		}
 		else
 		{
 			$headers = array_merge($_ENV, $_SERVER);

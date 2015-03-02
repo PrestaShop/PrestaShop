@@ -73,9 +73,9 @@ class ConfigurationCore extends ObjectModel
 	);
 
 	/**
-	  * @see ObjectModel::getFieldsLang()
-	  * @return array Multilingual fields
-	  */
+	 * @see ObjectModel::getFieldsLang()
+	 * @return array Multilingual fields
+	 */
 	public function getFieldsLang()
 	{
 		if (!is_array($this->value))
@@ -153,12 +153,12 @@ class ConfigurationCore extends ObjectModel
 	}
 
 	/**
-	  * Get a single configuration value (in one language only)
-	  *
-	  * @param string $key Key wanted
-	  * @param integer $id_lang Language ID
-	  * @return string Value
-	  */
+	 * Get a single configuration value (in one language only)
+	 *
+	 * @param string $key Key wanted
+	 * @param integer $id_lang Language ID
+	 * @return string Value
+	 */
 	public static function get($key, $id_lang = null, $id_shop_group = null, $id_shop = null)
 	{
 		if (defined('_PS_DO_NOT_LOAD_CONFIGURATION_') && _PS_DO_NOT_LOAD_CONFIGURATION_)
@@ -195,13 +195,13 @@ class ConfigurationCore extends ObjectModel
 	}
 
 	/**
-	  * Get a single configuration value (in multiple languages)
-	  *
-	  * @param string $key Key wanted
-	  * @param int $id_shop_group
-	  * @param int $id_shop
-	  * @return array Values in multiple languages
-	  */
+	 * Get a single configuration value (in multiple languages)
+	 *
+	 * @param string $key Key wanted
+	 * @param int $id_shop_group
+	 * @param int $id_shop
+	 * @return array Values in multiple languages
+	 */
 	public static function getInt($key, $id_shop_group = null, $id_shop = null)
 	{
 		$languages = Language::getLanguages();
@@ -212,12 +212,12 @@ class ConfigurationCore extends ObjectModel
 	}
 
 	/**
-	  * Get a single configuration value for all shops
-	  *
-	  * @param string $key Key wanted
-	  * @param int $id_lang
-	  * @return array Values for all shops
-	  */
+	 * Get a single configuration value for all shops
+	 *
+	 * @param string $key Key wanted
+	 * @param int $id_lang
+	 * @return array Values for all shops
+	 */
 	public static function getMultiShopValues($key, $id_lang = null)
 	{
 		$shops = Shop::getShops(false, null, true);
@@ -229,12 +229,12 @@ class ConfigurationCore extends ObjectModel
 
 
 	/**
-	  * Get several configuration values (in one language only)
-	  *
-	  * @param array $keys Keys wanted
-	  * @param integer $id_lang Language ID
-	  * @return array Values
-	  */
+	 * Get several configuration values (in one language only)
+	 *
+	 * @param array $keys Keys wanted
+	 * @param integer $id_lang Language ID
+	 * @return array Values
+	 */
 	public static function getMultiple($keys, $id_lang = null, $id_shop_group = null, $id_shop = null)
 	{
 	 	if (!is_array($keys))
@@ -246,9 +246,9 @@ class ConfigurationCore extends ObjectModel
 		if ($id_shop_group === null)
 			$id_shop_group = Shop::getContextShopGroupID(true);
 
-	 	$results = array();
-	 	foreach ($keys as $key)
-	 		$results[$key] = Configuration::get($key, $id_lang, $id_shop_group, $id_shop);
+		$results = array();
+		foreach ($keys as $key)
+			$results[$key] = Configuration::get($key, $id_lang, $id_shop_group, $id_shop);
 		return $results;
 	}
 
@@ -283,13 +283,13 @@ class ConfigurationCore extends ObjectModel
 	}
 
 	/**
-	  * Set TEMPORARY a single configuration value (in one language only)
-	  *
-	  * @param string $key Key wanted
-	  * @param mixed $values $values is an array if the configuration is multilingual, a single string else.
-	  * @param int $id_shop_group
-	  * @param int $id_shop
-	  */
+	 * Set TEMPORARY a single configuration value (in one language only)
+	 *
+	 * @param string $key Key wanted
+	 * @param mixed $values $values is an array if the configuration is multilingual, a single string else.
+	 * @param int $id_shop_group
+	 * @param int $id_shop
+	 */
 	public static function set($key, $values, $id_shop_group = null, $id_shop = null)
 	{
 		if (!Validate::isConfigName($key))
@@ -328,15 +328,15 @@ class ConfigurationCore extends ObjectModel
 	}
 
 	/**
-	  * Update configuration key and value into database (automatically insert if key does not exist)
-	  *
-	  * @param string $key Key
-	  * @param mixed $values $values is an array if the configuration is multilingual, a single string else.
-	  * @param boolean $html Specify if html is authorized in value
-	  * @param int $id_shop_group
-	  * @param int $id_shop
-	  * @return boolean Update result
-	  */
+	 * Update configuration key and value into database (automatically insert if key does not exist)
+	 *
+	 * @param string $key Key
+	 * @param mixed $values $values is an array if the configuration is multilingual, a single string else.
+	 * @param boolean $html Specify if html is authorized in value
+	 * @param int $id_shop_group
+	 * @param int $id_shop
+	 * @return boolean Update result
+	 */
 	public static function updateValue($key, $values, $html = false, $id_shop_group = null, $id_shop = null)
 	{
 		if (!Validate::isConfigName($key))
@@ -431,7 +431,7 @@ class ConfigurationCore extends ObjectModel
 	 */
 	public static function deleteByName($key)
 	{
-	 	if (!Validate::isConfigName($key))
+		if (!Validate::isConfigName($key))
 			return false;
 
 		$result = Db::getInstance()->execute('

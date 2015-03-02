@@ -242,11 +242,11 @@ abstract class AdminTabCore
 	protected function l($string, $class = 'AdminTab', $addslashes = false, $htmlentities = true)
 	{
 		// if the class is extended by a module, use modules/[module_name]/xx.php lang file
-		$currentClass = get_class($this);
-		if (Module::getModuleNameFromClass($currentClass))
+		$current_class = get_class($this);
+		if (Module::getModuleNameFromClass($current_class))
 		{
 			$string = str_replace('\'', '\\\'', $string);
-			return Translate::getModuleTranslation(Module::$classInModule[$currentClass], $string, $currentClass);
+			return Translate::getModuleTranslation(Module::$classInModule[$current_class], $string, $current_class);
 		}
 		global $_LANGADM;
 
@@ -481,7 +481,7 @@ abstract class AdminTabCore
 
 		/* Checking for fields validity */
 		foreach ($rules['validate'] as $field => $function)
-			if (($value = Tools::getValue($field)) !== false AND !empty($value) AND ($field != 'passwd'))
+			if (($value = Tools::getValue($field)) !== false && !empty($value) && ($field != 'passwd'))
 				if (!Validate::$function($value))
 					$this->_errors[] = sprintf(Tools::displayError('The field %1$s (%2$s) is invalid.'), call_user_func(array($className, 'displayFieldName'), $field, $className));
 
@@ -1720,7 +1720,7 @@ abstract class AdminTabCore
 		echo '<br /><a href="'.self::$currentIndex.'&add'.$this->table.'&token='.$this->token.'"><img src="../img/admin/add.gif" border="0" /> '.$this->l('Add new').'</a><br /><br />';
 	}
 
-	protected function _displayEnableLink($token, $id, $value, $active,  $id_category = null, $id_product = null)
+	protected function _displayEnableLink($token, $id, $value, $active, $id_category = null, $id_product = null)
 	{
 		echo '<a href="'.self::$currentIndex.'&'.$this->identifier.'='.$id.'&'.$active.$this->table.
 			((int)$id_category && (int)$id_product ? '&id_category='.$id_category : '').'&token='.($token != null ? $token : $this->token).'">
@@ -1736,7 +1736,7 @@ abstract class AdminTabCore
 		$duplicate = self::$currentIndex.'&'.$this->identifier.'='.$id.'&duplicate'.$this->table;
 
 		echo '
-			<a class="pointer" onclick="if (confirm(\''.$_cacheLang['Copy images too?'].'\')) document.location = \''.$duplicate.'&token='.($token != ull ? $token : $this->token).'\'; else document.location = \''.$duplicate.'&noimage=1&token='.($token ? $token : $this->token).'\';">
+			<a class="pointer" onclick="if (confirm(\''.$_cacheLang['Copy images too?'].'\')) document.location = \''.$duplicate.'&token='.($token != null ? $token : $this->token).'\'; else document.location = \''.$duplicate.'&noimage=1&token='.($token ? $token : $this->token).'\';">
 			<img src="../img/admin/duplicate.png" alt="'.$_cacheLang['Duplicate'].'" title="'.$_cacheLang['Duplicate'].'" /></a>';
 	}
 
@@ -1931,7 +1931,7 @@ abstract class AdminTabCore
 	{
 		echo '<select name="'.$key.'"'.(isset($field['js']) === true ? ' onchange="'.$field['js'].'"' : '').' id="'.$key.'">';
 		foreach ($field['list'] as $k => $option)
-			echo  '<option value="'.(isset($option['cast']) ? $option['cast']($option[$field['identifier']]) : $option[$field['identifier']]).'"'.(($value == $option[$field['identifier']]) ? ' selected="selected"' : '').'>'.$option['name'].'</option>';
+			echo '<option value="'.(isset($option['cast']) ? $option['cast']($option[$field['identifier']]) : $option[$field['identifier']]).'"'.(($value == $option[$field['identifier']]) ? ' selected="selected"' : '').'>'.$option['name'].'</option>';
 		echo '</select>';
 	}
 
@@ -2075,11 +2075,11 @@ abstract class AdminTabCore
 		foreach ($languages as $language)
 		{
 			echo '<div id="'.$key.'_'.$language['id_lang'].'" style="margin-bottom:8px; display: '.($language['id_lang'] == $this->context->language->id ? 'block' : 'none').'; float: left; vertical-align: top;">';
-			echo  '<select name="'.$key.'_'.strtoupper($language['iso_code']).'">';
+			echo '<select name="'.$key.'_'.strtoupper($language['iso_code']).'">';
 			foreach ($field['list'] as $k => $v)
-				echo  '<option value="'.(isset($v['cast']) ? $v['cast']($v[$field['identifier']]) : $v[$field['identifier']]).'"'.((htmlentities(Tools::getValue($key.'_'.strtoupper($language['iso_code']), (Configuration::get($key.'_'.strtoupper($language['iso_code'])) ? Configuration::get($key.'_'.strtoupper($language['iso_code'])) : '')), ENT_COMPAT, 'UTF-8') == $v[$field['identifier']]) ? ' selected="selected"' : '').'>'.$v['name'].'</option>';
-			echo  '</select>';
-			echo  '</div>';
+				echo '<option value="'.(isset($v['cast']) ? $v['cast']($v[$field['identifier']]) : $v[$field['identifier']]).'"'.((htmlentities(Tools::getValue($key.'_'.strtoupper($language['iso_code']), (Configuration::get($key.'_'.strtoupper($language['iso_code'])) ? Configuration::get($key.'_'.strtoupper($language['iso_code'])) : '')), ENT_COMPAT, 'UTF-8') == $v[$field['identifier']]) ? ' selected="selected"' : '').'>'.$v['name'].'</option>';
+			echo '</select>';
+			echo '</div>';
 		}
 		$this->displayFlags($languages, $this->context->language->id, $key, $key);
 	}
