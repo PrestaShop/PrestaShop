@@ -323,14 +323,12 @@ class DbMySQLiCore extends Db
 		$sql = 'SHOW ENGINES';
 		$result = $this->link->query($sql);
 		while ($row = $result->fetch_assoc())
-		{
 			if ($row['Engine'] == 'InnoDB')
 			{
 				if (in_array($row['Support'], array('DEFAULT', 'YES')))
 					$value = 'InnoDB';
 				break;
 			}
-		}
 
 		return $value;
 	}

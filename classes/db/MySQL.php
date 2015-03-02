@@ -300,14 +300,12 @@ class MySQLCore extends Db
 		$sql = 'SHOW ENGINES';
 		$result = mysql_query($sql);
 		while ($row = mysql_fetch_assoc($result))
-		{
 			if ($row['Engine'] == 'InnoDB')
 			{
 				if (in_array($row['Support'], array('DEFAULT', 'YES')))
 					$value = 'InnoDB';
 				break;
 			}
-		}
 
 		return $value;
 	}
