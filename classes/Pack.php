@@ -169,7 +169,7 @@ class PackCore extends Product
 					AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').'
 				WHERE product_shop.`id_shop` = '.(int)$context->shop->id.'
 				AND a.`id_product_pack` = '.(int)$id_product.'
-				GROUP BY a.id_product_attribute_item';
+				GROUP BY a.`id_product_item`, a.`id_product_attribute_item`';
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
