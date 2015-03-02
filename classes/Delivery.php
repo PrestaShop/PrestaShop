@@ -95,4 +95,3 @@ class DeliveryCore extends ObjectModel
 		return $fields;
 	}
 }
-
