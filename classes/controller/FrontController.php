@@ -610,9 +610,8 @@ class FrontControllerCore extends Controller
 	 * Compiles and outputs page footer section
 	 *
 	 * @deprecated 1.5.0.1
-	 * @param bool $display If true, renders visual page footer section
 	 */
-	public function displayFooter($display = true)
+	public function displayFooter()
 	{
 		Tools::displayAsDeprecated();
 		$this->smartyOutputContent(_PS_THEME_DIR_.'footer.tpl');
