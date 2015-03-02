@@ -256,4 +256,3 @@ class CustomizationCore extends ObjectModel
 		return true;
 	}
 }
-

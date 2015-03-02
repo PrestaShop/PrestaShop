@@ -197,9 +197,8 @@ class PackCore extends Product
 				if (isset($attr_name[0]['id_product_attribute_image']) && $attr_name[0]['id_product_attribute_image'])
 					$line['id_image'] = $attr_name[0]['id_product_attribute_image'];
 				$line['name'] .= "\n";
-				foreach ($attr_name as $value) {
+				foreach ($attr_name as $value)
 					$line['name'] .= ' '.$value['group_name'].'-'.$value['attribute_name'];
-				}
 			}
 			$line = Product::getTaxesInformations($line);
 		}

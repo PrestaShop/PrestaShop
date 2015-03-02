@@ -140,10 +140,10 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 		$shop_name = Configuration::get('PS_SHOP_NAME');
 		$path_logo = $this->getLogo();
 		$width = $height = 0;
-		
+
 		if (!empty($path_logo))
 			list($width, $height) = getimagesize($path_logo);
-		
+
 		$this->smarty->assign(array(
 			'logo_path' => $path_logo,
 			'img_ps_dir' => 'http://'.Tools::getMediaServer(_PS_IMG_)._PS_IMG_,
@@ -209,4 +209,3 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 		$supply_order->total_ti = Tools::ps_round($supply_order->total_ti, 2);
 	}
 }
-

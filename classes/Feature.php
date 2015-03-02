@@ -26,7 +26,7 @@
 
 class FeatureCore extends ObjectModel
 {
- 	/** @var string Name */
+	/** @var string Name */
 	public $name;
 	public $position;
 
@@ -40,7 +40,7 @@ class FeatureCore extends ObjectModel
 		'fields' => array(
 			'position' => 	array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 
-			// Lang fields
+			/* Lang fields */
 			'name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
 		),
 	);
@@ -118,7 +118,7 @@ class FeatureCore extends ObjectModel
 
 	public function delete()
 	{
-	 	/* Also delete related attributes */
+		/* Also delete related attributes */
 		Db::getInstance()->execute('
 			DELETE `'._DB_PREFIX_.'feature_value_lang` FROM `'._DB_PREFIX_.'feature_value_lang` JOIN `'._DB_PREFIX_.'feature_value`
 			ON (`'._DB_PREFIX_.'feature_value_lang`.id_feature_value = `'._DB_PREFIX_.'feature_value`.id_feature_value)
@@ -146,19 +146,19 @@ class FeatureCore extends ObjectModel
 
 	public function update($nullValues = false)
 	{
-	 	$this->clearCache();
+		$this->clearCache();
 
-	 	$result = 1;
-	 	$fields = $this->getFieldsLang();
+		$result = 1;
+		$fields = $this->getFieldsLang();
 		foreach ($fields as $field)
 		{
 			foreach (array_keys($field) as $key)
 			 	if (!Validate::isTableOrIdentifier($key))
-	 				die(Tools::displayError());
+					die(Tools::displayError());
 
-	 		$sql = 'SELECT `id_lang` FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_lang`
-	 				WHERE `'.$this->def['primary'].'` = '.(int)$this->id.'
-	 					AND `id_lang` = '.(int)$field['id_lang'];
+			$sql = 'SELECT `id_lang` FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_lang`
+					WHERE `'.$this->def['primary'].'` = '.(int)$this->id.'
+						AND `id_lang` = '.(int)$field['id_lang'];
 			$mode = Db::getInstance()->getRow($sql);
 			$result &= (!$mode) ? Db::getInstance()->insert($this->def['table'].'_lang', $field) :
 			Db::getInstance()->update(
@@ -183,7 +183,7 @@ class FeatureCore extends ObjectModel
 		return Db::getInstance()->getValue('
 		SELECT COUNT(*) as nb
 		FROM `'._DB_PREFIX_.'feature` ag
-		LEFT JOIN `'._DB_PREFIX_.'feature_lang` agl 
+		LEFT JOIN `'._DB_PREFIX_.'feature_lang` agl
 		ON (ag.`id_feature` = agl.`id_feature` AND `id_lang` = '.(int)$id_lang.')
 		');
 	}
@@ -217,7 +217,7 @@ class FeatureCore extends ObjectModel
 			$feature->add();
 			return $feature->id;
 		}
-		elseif(isset($rq['id_feature']) && $rq['id_feature'])
+		elseif (isset($rq['id_feature']) && $rq['id_feature'])
 		{
 			if (is_numeric($position) && $feature = new Feature((int)$rq['id_feature']))
 			{
@@ -315,7 +315,7 @@ class FeatureCore extends ObjectModel
 	public static function cleanPositions()
 	{
 		//Reordering positions to remove "holes" in them (after delete for instance)
-		$sql = "SELECT id_feature, position FROM "._DB_PREFIX_."feature ORDER BY position";
+		$sql = 'SELECT id_feature, position FROM '._DB_PREFIX_.'feature ORDER BY position';
 		$db = Db::getInstance();
 		$r = $db->executeS($sql, false);
 		$shiftTable = array(); //List of update queries (one query is necessary for each "hole" in the table)
@@ -336,7 +336,7 @@ class FeatureCore extends ObjectModel
 		}
 
 		$shiftTable[] = array('minId' => $minId, 'delta' => $currentDelta);
-		
+
 		//Executing generated queries
 		foreach ($shiftTable as $line)
 		{
@@ -365,4 +365,3 @@ class FeatureCore extends ObjectModel
 		return (is_numeric($position)) ? $position : -1;
 	}
 }
-

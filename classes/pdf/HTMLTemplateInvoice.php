@@ -68,35 +68,26 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 		);
 
 		if (!$tax_excluded_display)
-		{
 			$layout['unit_price_tax_incl'] = array('width' => 0);
-		}
 
 		if ($display_product_images)
-		{
 			$layout['image'] = array('width' => 0);
-		}
 
 		$total_width = 0;
 		$free_columns_count = 0;
 		foreach ($layout as $data)
 		{
 			if ($data['width'] === 0)
-			{
 				++$free_columns_count;
-			}
+
 			$total_width += $data['width'];
 		}
 
 		$delta = 100 - $total_width;
 
 		foreach ($layout as $row => $data)
-		{
 			if ($data['width'] === 0)
-			{
 				$layout[$row]['width'] = $delta / $free_columns_count;
-			}
-		}
 
 		$layout['_colCount'] = count($layout);
 
@@ -166,9 +157,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
 		$product_taxes = 0;
 		foreach ($this->order_invoice->getProductTaxesBreakdown($this->order) as $details)
-		{
 			$product_taxes += $details['total_amount'];
-		}
 
 		$product_discounts_tax_excl = $this->order_invoice->total_discount_tax_excl;
 		$product_discounts_tax_incl = $this->order_invoice->total_discount_tax_incl;
@@ -209,9 +198,8 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			'total_paid_tax_incl' => $this->order_invoice->total_paid_tax_incl
 		);
 
-		foreach ($footer as $key => $value) {
+		foreach ($footer as $key => $value)
 			$footer[$key] = Tools::ps_round($value, _PS_PRICE_COMPUTE_PRECISION_, $this->order->round_mode);
-		}
 
 		/**
 		 * Need the $round_mode for the tests.

@@ -26,7 +26,7 @@
 
 class ProfileCore extends ObjectModel
 {
- 	/** @var string Name */
+	/** @var string Name */
 	public $name;
 
 	/**
@@ -37,7 +37,7 @@ class ProfileCore extends ObjectModel
 		'primary' => 'id_profile',
 		'multilang' => true,
 		'fields' => array(
-			// Lang fields
+			/* Lang fields */
 			'name' => array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
 		),
 	);
@@ -94,8 +94,8 @@ class ProfileCore extends ObjectModel
 
 	public function delete()
 	{
-	 	if (parent::delete())
-	 	 	return (
+		if (parent::delete())
+			return (
 				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'access` WHERE `id_profile` = '.(int)$this->id)
 				&& Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'module_access` WHERE `id_profile` = '.(int)$this->id)
 			);
@@ -150,5 +150,3 @@ class ProfileCore extends ObjectModel
 		return self::$_cache_accesses[$id_profile][$type];
 	}
 }
-
-

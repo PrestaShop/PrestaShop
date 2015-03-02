@@ -176,7 +176,7 @@ class ImageCore extends ObjectModel
 	 * @param integer $id_product_attribute Product Attribute ID
 	 * @return array Images
 	 */
-	public static function getImages($id_lang, $id_product, $id_product_attribute = NULL)
+	public static function getImages($id_lang, $id_product, $id_product_attribute = null)
 	{
 		$attribute_filter = ($id_product_attribute ? ' AND ai.`id_product_attribute` = '.(int)$id_product_attribute : '');
 		$sql = 'SELECT *
@@ -199,7 +199,7 @@ class ImageCore extends ObjectModel
 	 * @param integer $id_product_attribute Product Attribute ID
 	 * @return bool
 	 */
-	public static function hasImages($id_lang, $id_product, $id_product_attribute = NULL)
+	public static function hasImages($id_lang, $id_product, $id_product_attribute = null)
 	{
 		$attribute_filter = ($id_product_attribute ? ' AND ai.`id_product_attribute` = '.(int)$id_product_attribute : '');
 		$sql = 'SELECT 1
@@ -269,7 +269,7 @@ class ImageCore extends ObjectModel
 
 		if (file_exists(_PS_TMP_IMG_DIR_.'product_'.$id_product.'.jpg'))
 			unlink(_PS_TMP_IMG_DIR_.'product_'.$id_product.'.jpg');
-		
+
 		return (Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'image`
 			SET `cover` = NULL
@@ -449,15 +449,15 @@ class ImageCore extends ObjectModel
 				FROM '._DB_PREFIX_.'image_type
 				WHERE `name` = \''.pSQL($type).'\'
 			');
-	 	return self::$_cacheGetSize[$type];
+		return self::$_cacheGetSize[$type];
 	}
-	
+
 	public static function getWidth($params, &$smarty)
 	{
 		$result = self::getSize($params['type']);
 		return $result['width'];
 	}
-	
+
 	public static function getHeight($params, &$smarty)
 	{
 		$result = self::getSize($params['type']);

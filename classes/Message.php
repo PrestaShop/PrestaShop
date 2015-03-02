@@ -67,11 +67,11 @@ class MessageCore extends ObjectModel
 	);
 
 	/**
-	  * Return the last message from cart
-	  *
-	  * @param integer $id_cart Cart ID
-	  * @return array Message
-	  */
+	 * Return the last message from cart
+	 *
+	 * @param integer $id_cart Cart ID
+	 * @return array Message
+	 */
 	public static function getMessageByCartId($id_cart)
 	{
 		return Db::getInstance()->getRow('
@@ -82,16 +82,16 @@ class MessageCore extends ObjectModel
 	}
 
 	/**
-	  * Return messages from Order ID
-	  *
-	  * @param integer $id_order Order ID
-	  * @param boolean $private return WITH private messages
-	  * @return array Messages
-	  */
+	 * Return messages from Order ID
+	 *
+	 * @param integer $id_order Order ID
+	 * @param boolean $private return WITH private messages
+	 * @return array Messages
+	 */
 	public static function getMessagesByOrderId($id_order, $private = false, Context $context = null)
 	{
-	 	if (!Validate::isBool($private))
-	 		die(Tools::displayError());
+		if (!Validate::isBool($private))
+			die(Tools::displayError());
 
 		if (!$context)
 			$context = Context::getContext();
@@ -113,16 +113,16 @@ class MessageCore extends ObjectModel
 	}
 
 	/**
-	  * Return messages from Cart ID
-	  *
-	  * @param integer $id_order Order ID
-	  * @param boolean $private return WITH private messages
-	  * @return array Messages
-	  */
+	 * Return messages from Cart ID
+	 *
+	 * @param integer $id_order Order ID
+	 * @param boolean $private return WITH private messages
+	 * @return array Messages
+	 */
 	public static function getMessagesByCartId($id_cart, $private = false, Context $context = null)
 	{
-	 	if (!Validate::isBool($private))
-	 		die(Tools::displayError());
+		if (!Validate::isBool($private))
+			die(Tools::displayError());
 
 		if (!$context)
 			$context = Context::getContext();
@@ -142,15 +142,15 @@ class MessageCore extends ObjectModel
 	}
 
 	/**
-	  * Registered a message 'readed'
-	  *
-	  * @param integer $id_message Message ID
-	  * @param integer $id_emplyee Employee ID
-	  */
+	 * Registered a message 'readed'
+	 *
+	 * @param integer $id_message Message ID
+	 * @param integer $id_emplyee Employee ID
+	 */
 	public static function markAsReaded($id_message, $id_employee)
 	{
-	 	if (!Validate::isUnsignedId($id_message) || !Validate::isUnsignedId($id_employee))
-	 		die(Tools::displayError());
+		if (!Validate::isUnsignedId($id_message) || !Validate::isUnsignedId($id_employee))
+			die(Tools::displayError());
 
 		$result = Db::getInstance()->execute('
 			INSERT INTO '._DB_PREFIX_.'message_readed (id_message , id_employee , date_add) VALUES
@@ -159,5 +159,3 @@ class MessageCore extends ObjectModel
 		return $result;
 	}
 }
-
-

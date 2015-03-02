@@ -27,8 +27,7 @@
 
 class TaxCore extends ObjectModel
 {
-
- 	/** @var string Name */
+	/** @var string Name */
 	public $name;
 
 	/** @var float Rate (%) */
@@ -51,8 +50,7 @@ class TaxCore extends ObjectModel
 			'rate' => 			array('type' => self::TYPE_FLOAT, 'validate' => 'isFloat', 'required' => true),
 			'active' => 		array('type' => self::TYPE_BOOL),
 			'deleted' => 		array('type' => self::TYPE_BOOL),
-
-			// Lang fields
+			/* Lang fields */
 			'name' => 			array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
 		),
 	);
@@ -89,10 +87,10 @@ class TaxCore extends ObjectModel
 
 	public function toggleStatus()
 	{
-	    if (parent::toggleStatus())
-            return $this->_onStatusChange();
+		if (parent::toggleStatus())
+			return $this->_onStatusChange();
 
-        return false;
+		return false;
 	}
 
 	public function update($nullValues = false)
@@ -109,7 +107,7 @@ class TaxCore extends ObjectModel
 			// change tax id in the tax rule table
 			$res &= TaxRule::swapTaxId($historized_tax->id, $this->id);
 			return $res;
-		} 
+		}
 		elseif (parent::update($nullValues))
 			return $this->_onStatusChange();
 
@@ -118,10 +116,10 @@ class TaxCore extends ObjectModel
 
 	protected function _onStatusChange()
 	{
-        if (!$this->active)
-            return TaxRule::deleteTaxRuleByIdTax($this->id);
+		if (!$this->active)
+			return TaxRule::deleteTaxRuleByIdTax($this->id);
 
-        return true;
+		return true;
 	}
 
 	/**
@@ -238,8 +236,8 @@ class TaxCore extends ObjectModel
 
 		if (!isset(self::$_product_tax_via_rules[$id_product.'-'.$id_country.'-'.$id_state.'-'.$zipcode]))
 		{
-		    $tax_rate = TaxRulesGroup::getTaxesRate((int)Product::getIdTaxRulesGroupByIdProduct((int)$id_product), (int)$id_country, (int)$id_state, $zipcode);
-		    self::$_product_tax_via_rules[$id_product.'-'.$id_country.'-'.$zipcode] = $tax_rate;
+			$tax_rate = TaxRulesGroup::getTaxesRate((int)Product::getIdTaxRulesGroupByIdProduct((int)$id_product), (int)$id_country, (int)$id_state, $zipcode);
+			self::$_product_tax_via_rules[$id_product.'-'.$id_country.'-'.$zipcode] = $tax_rate;
 		}
 
 		return self::$_product_tax_via_rules[$id_product.'-'.$id_country.'-'.$zipcode];
@@ -266,4 +264,3 @@ class TaxCore extends ObjectModel
 		return $tax_calculator->getTotalRate();
 	}
 }
-

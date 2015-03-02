@@ -728,9 +728,7 @@ class ProductCore extends ObjectModel
 		}
 
 		if (!$result)
-		{
 			$result = $result_no_filter;
-		}
 
 		$combinations[$id_product][$minimum_quantity] = $result;
 		return $result;
@@ -1304,7 +1302,7 @@ class ProductCore extends ObjectModel
 	* @param string $supplier_reference DEPRECATED
 	*/
 	public function addCombinationEntity($wholesale_price, $price, $weight, $unit_impact, $ecotax, $quantity,
-		$id_images, $reference, $id_supplier, $ean13, $default, $location = null, $upc = null, $minimal_quantity = 1,  array $id_shop_list = array(), $available_date = null)
+		$id_images, $reference, $id_supplier, $ean13, $default, $location = null, $upc = null, $minimal_quantity = 1, array $id_shop_list = array(), $available_date = null)
 	{
 		$id_product_attribute = $this->addAttribute(
 			$price, $weight, $unit_impact, $ecotax, $id_images,
@@ -4404,7 +4402,7 @@ class ProductCore extends ObjectModel
 						ON DUPLICATE KEY UPDATE `name` = \''.pSQL($value).'\''))
 							return false;
 				}
-				elseif(!Db::getInstance()->execute('
+				elseif (!Db::getInstance()->execute('
 					INSERT INTO `'._DB_PREFIX_.'customization_field_lang`
 					(`id_customization_field`, `id_lang`, `name`) VALUES ('.(int)$tmp[2].', '.(int)$tmp[3].', \''.pSQL($value).'\')
 					ON DUPLICATE KEY UPDATE `name` = \''.pSQL($value).'\''))

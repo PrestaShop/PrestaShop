@@ -161,7 +161,7 @@ class OrderHistoryCore extends ObjectModel
 			if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
 				$manager = StockManagerFactory::getManager();
 
-			$errorOrCanceledStatuses = array(Configuration::get('PS_OS_ERROR'), Configuration::get('PS_OS_CANCELED'));
+			$error_or_canceled_statuses = array(Configuration::get('PS_OS_ERROR'), Configuration::get('PS_OS_CANCELED'));
 
 			// foreach products of the order
 			if (Validate::isLoadedObject($old_os))
@@ -173,7 +173,7 @@ class OrderHistoryCore extends ObjectModel
 						ProductSale::addProductSale($product['product_id'], $product['product_quantity']);
 						// @since 1.5.0 - Stock Management
 						if (!Pack::isPack($product['product_id']) &&
-							in_array($old_os->id, $errorOrCanceledStatuses) &&
+							in_array($old_os->id, $error_or_canceled_statuses) &&
 							!StockAvailable::dependsOnStock($product['id_product'], (int)$order->id_shop))
 							StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], -(int)$product['product_quantity'], $order->id_shop);
 					}
@@ -184,16 +184,16 @@ class OrderHistoryCore extends ObjectModel
 
 						// @since 1.5.0 - Stock Management
 						if (!Pack::isPack($product['product_id']) &&
-							in_array($new_os->id, $errorOrCanceledStatuses) &&
+							in_array($new_os->id, $error_or_canceled_statuses) &&
 							!StockAvailable::dependsOnStock($product['id_product']))
 							StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $order->id_shop);
 					}
 					// if waiting for payment => payment error/canceled
 					elseif (!$new_os->logable && !$old_os->logable &&
-							 in_array($new_os->id, $errorOrCanceledStatuses) &&
-							 !in_array($old_os->id, $errorOrCanceledStatuses) &&
-							 !StockAvailable::dependsOnStock($product['id_product']))
-							 StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $order->id_shop);
+							in_array($new_os->id, $error_or_canceled_statuses) &&
+							!in_array($old_os->id, $error_or_canceled_statuses) &&
+							!StockAvailable::dependsOnStock($product['id_product']))
+							StockAvailable::updateQuantity($product['product_id'], $product['product_attribute_id'], (int)$product['product_quantity'], $order->id_shop);
 
 					if ((int)$this->id_employee && !Validate::isLoadedObject(($employee = new Employee((int)$this->id_employee))))
 						$employee = null;
@@ -224,10 +224,10 @@ class OrderHistoryCore extends ObjectModel
 					}
 					// @since.1.5.0 : if the order was shipped, and is not anymore, we need to restock products
 					elseif ($new_os->shipped == 0 && $old_os->shipped == 1 &&
-							 Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') &&
-							 Warehouse::exists($product['id_warehouse']) &&
-							 $manager != null &&
-							 (int)$product['advanced_stock_management'] == 1)
+							Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') &&
+							Warehouse::exists($product['id_warehouse']) &&
+							$manager != null &&
+							(int)$product['advanced_stock_management'] == 1)
 					{
 						// if the product is a pack, we restock every products in the pack using the last negative stock mvts
 						if (Pack::isPack($product['product_id']))
@@ -480,29 +480,29 @@ class OrderHistoryCore extends ObjectModel
 		AND os.`logable` = 1');
 	}
 
-    /**
-     * Add method for webservice create resource Order History
-     * If sendemail=1 GET parameter is present sends email to customer otherwise does not
-     * @return bool
-     */
+	/**
+	 * Add method for webservice create resource Order History
+	 * If sendemail=1 GET parameter is present sends email to customer otherwise does not
+	 * @return bool
+	 */
 	public function addWs()
 	{
-	    $sendemail = (bool)Tools::getValue('sendemail', false);
-	    $this->changeIdOrderState($this->id_order_state, $this->id_order);
+		$sendemail = (bool)Tools::getValue('sendemail', false);
+		$this->changeIdOrderState($this->id_order_state, $this->id_order);
 
-	    if ($sendemail)
-	    {
-	        //Mail::Send requires link object on context and is not set when getting here
-	        $context = Context::getContext();
-	        if ($context->link == null)
-	        {
-	            $protocol_link = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
-	            $protocol_content = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
-	            $context->link = new Link($protocol_link, $protocol_content);
-	        }
-	        return $this->addWithemail();
-	    }
+		if ($sendemail)
+		{
+			//Mail::Send requires link object on context and is not set when getting here
+			$context = Context::getContext();
+			if ($context->link == null)
+			{
+				$protocol_link = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
+				$protocol_content = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED')) ? 'https://' : 'http://';
+				$context->link = new Link($protocol_link, $protocol_content);
+			}
+			return $this->addWithemail();
+		}
 		else
-	        return $this->add();
+			return $this->add();
 	}
 }

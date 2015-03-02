@@ -51,7 +51,7 @@ class CMSCore extends ObjectModel
 			'indexation' =>     	array('type' => self::TYPE_BOOL),
 			'active' => 			array('type' => self::TYPE_BOOL),
 
-			// Lang fields
+			/* Lang fields */
 			'meta_description' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
 			'meta_keywords' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
 			'meta_title' =>			array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
@@ -80,7 +80,7 @@ class CMSCore extends ObjectModel
 
 	public function delete()
 	{
-	 	if (parent::delete())
+		if (parent::delete())
 			return $this->cleanPositions($this->id_cms_category);
 		return false;
 	}
@@ -221,7 +221,7 @@ class CMSCore extends ObjectModel
 
 	public static function getUrlRewriteInformations($id_cms)
 	{
-	    $sql = 'SELECT l.`id_lang`, c.`link_rewrite`
+		$sql = 'SELECT l.`id_lang`, c.`link_rewrite`
 				FROM `'._DB_PREFIX_.'cms_lang` AS c
 				LEFT JOIN  `'._DB_PREFIX_.'lang` AS l ON c.`id_lang` = l.`id_lang`
 				WHERE c.`id_cms` = '.(int)$id_cms.'

@@ -82,7 +82,7 @@ class MailCore extends ObjectModel
 	 * @param bool $modeSMTP
 	 * @param string $template_path
 	 * @param bool $die
-     * @param string $bcc Bcc recipient
+	 * @param string $bcc Bcc recipient
 	 */
 	public static function Send($id_lang, $template, $subject, $template_vars, $to,
 		$to_name = null, $from = null, $from_name = null, $file_attachment = null, $mode_smtp = null,
@@ -443,11 +443,11 @@ class MailCore extends ObjectModel
 	/* Rewrite of Swift_Message::generateId() without getmypid() */
 	protected static function generateId($idstring = null)
 	{
-		$midparams =  array(
-			"utctime" => gmstrftime("%Y%m%d%H%M%S"),
-			"randint" => mt_rand(),
-			"customstr" => (preg_match("/^(?<!\\.)[a-z0-9\\.]+(?!\\.)\$/iD", $idstring) ? $idstring : "swift") ,
-			"hostname" => (isset($_SERVER["SERVER_NAME"]) ? $_SERVER["SERVER_NAME"] : php_uname("n")),
+		$midparams = array(
+			'utctime' => gmstrftime('%Y%m%d%H%M%S'),
+			'randint' => mt_rand(),
+			'customstr' => (preg_match("/^(?<!\\.)[a-z0-9\\.]+(?!\\.)\$/iD", $idstring) ? $idstring : "swift") ,
+			'hostname' => (isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : php_uname('n')),
 		);
 		return vsprintf("<%s.%d.%s@%s>", $midparams);
 	}
@@ -498,7 +498,7 @@ class MailCore extends ObjectModel
 		else
 		{
 			$string = chunk_split(base64_encode($string), $length, $sep);
-			$string = preg_replace('/' . preg_quote($sep) . '$/', '', $string);
+			$string = preg_replace('/'.preg_quote($sep).'$/', '', $string);
 		}
 
 		return $start.$string.$end;

@@ -129,7 +129,7 @@ class OrderInvoiceCore extends ObjectModel
 	public static function getInvoiceByNumber($id_invoice)
 	{
 		if (is_numeric($id_invoice))
-			$id_invoice = (int)($id_invoice);
+			$id_invoice = (int)$id_invoice;
 		elseif (is_string($id_invoice))
 		{
 			$matches = array();
@@ -153,7 +153,7 @@ class OrderInvoiceCore extends ObjectModel
 	 *
 	 * @return array Products with price, quantity (with taxe and without)
 	 */
-	public function getProducts($products = false, $selectedProducts = false, $selectedQty = false)
+	public function getProducts($products = false, $selected_products = false, $selected_qty = false)
 	{
 		if (!$products)
 			$products = $this->getProductsDetail();
@@ -161,16 +161,16 @@ class OrderInvoiceCore extends ObjectModel
 		$order = new Order($this->id_order);
 		$customized_datas = Product::getAllCustomizedDatas($order->id_cart);
 
-		$resultArray = array();
+		$result_array = array();
 		foreach ($products as $row)
 		{
 			// Change qty if selected
-			if ($selectedQty)
+			if ($selected_qty)
 			{
 				$row['product_quantity'] = 0;
-				foreach ($selectedProducts as $key => $id_product)
+				foreach ($selected_products as $key => $id_product)
 					if ($row['id_order_detail'] == $id_product)
-						$row['product_quantity'] = (int)($selectedQty[$key]);
+						$row['product_quantity'] = (int)$selected_qty[$key];
 				if (!$row['product_quantity'])
 					continue;
 			}
@@ -193,13 +193,11 @@ class OrderInvoiceCore extends ObjectModel
 			$round_mode = $order->round_mode;
 
 			$row['ecotax_tax_excl'] = $row['ecotax']; // alias for coherence
-			$row['ecotax_tax_incl'] = $row['ecotax'] * (100 + $row['ecotax_tax_rate']) /100;
+			$row['ecotax_tax_incl'] = $row['ecotax'] * (100 + $row['ecotax_tax_rate']) / 100;
 			$row['ecotax_tax'] = $row['ecotax_tax_incl'] - $row['ecotax_tax_excl'];
 
 			if ($round_mode == Order::ROUND_ITEM)
-			{
 				$row['ecotax_tax_incl'] = Tools::ps_round($row['ecotax_tax_incl'], _PS_PRICE_COMPUTE_PRECISION_, $round_mode);
-			}
 
 			$row['total_ecotax_tax_excl'] = $row['ecotax_tax_excl'] * $row['product_quantity'];
 			$row['total_ecotax_tax_incl'] = $row['ecotax_tax_incl'] * $row['product_quantity'];
@@ -214,9 +212,7 @@ class OrderInvoiceCore extends ObjectModel
 				'total_ecotax_tax_incl',
 				'total_ecotax_tax'
 			) as $ecotax_field)
-			{
 				$row[$ecotax_field] = Tools::ps_round($row[$ecotax_field], _PS_PRICE_COMPUTE_PRECISION_, $round_mode);
-			}
 
 			$row['unit_price_tax_excl_including_ecotax'] = $row['unit_price_tax_excl'] + $row['ecotax_tax_excl'];
 			$row['unit_price_tax_incl_including_ecotax'] = $row['unit_price_tax_incl'] + $row['ecotax_tax_incl'];
@@ -224,13 +220,13 @@ class OrderInvoiceCore extends ObjectModel
 			$row['total_price_tax_incl_including_ecotax'] = $row['total_price_tax_incl'] + $row['total_ecotax_tax_incl'];
 
 			/* Stock product */
-			$resultArray[(int)$row['id_order_detail']] = $row;
+			$result_array[(int)$row['id_order_detail']] = $row;
 		}
 
 		if ($customized_datas)
-			Product::addCustomizationPrice($resultArray, $customized_datas);
+			Product::addCustomizationPrice($result_array, $customized_datas);
 
-		return $resultArray;
+		return $result_array;
 	}
 
 	protected function setProductCustomizedDatas(&$product, $customized_datas)
@@ -276,7 +272,7 @@ class OrderInvoiceCore extends ObjectModel
 				SELECT image_shop.id_image
 				FROM '._DB_PREFIX_.'image i'.
 				Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1').'
-				WHERE i.id_product = '.(int)($product['product_id']));
+				WHERE i.id_product = '.(int)$product['product_id']);
 
 		$product['image'] = null;
 		$product['image_size'] = null;
@@ -312,9 +308,8 @@ class OrderInvoiceCore extends ObjectModel
 
 	public function getOrder()
 	{
-		if (!$this->order) {
+		if (!$this->order)
 			$this->order = new Order($this->id_order);
-		}
 
 		return $this->order;
 	}
@@ -322,9 +317,7 @@ class OrderInvoiceCore extends ObjectModel
 	public function getProductTaxesBreakdown($order = null)
 	{
 		if (!$order)
-		{
 			$order = $this->getOrder();
-		}
 
 		$sum_composite_taxes = !$this->useOneAfterAnotherTaxComputationMethod();
 
@@ -650,12 +643,11 @@ class OrderInvoiceCore extends ObjectModel
 		return round($this->total_paid_tax_incl + $this->getSiblingTotal() - $this->getTotalPaid(), 2);
 	}
 
-
 	/**
 	 * Return collection of order invoice object linked to the payments of the current order invoice object
 	 *
 	 * @since 1.5.0.14
-     * @return PrestaShopCollection|array Collection of OrderInvoice or empty array
+	 * @return PrestaShopCollection|array Collection of OrderInvoice or empty array
 	 */
 	public function getSibling()
 	{

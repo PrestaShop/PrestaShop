@@ -179,7 +179,7 @@ class ProductSaleCore
 			ON cl.`id_category` = product_shop.`id_category_default`
 			AND cl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('cl').Product::sqlStock('p', 0);
 
-		$sql.= '
+		$sql .= '
 		WHERE product_shop.`active` = 1
 		AND p.`visibility` != \'none\'';
 
@@ -191,7 +191,7 @@ class ProductSaleCore
 				WHERE cp.`id_product` = p.`id_product`)';
 		}
 
-		$sql.= '
+		$sql .= '
 		ORDER BY ps.quantity DESC
 		LIMIT '.(int)($page_number * $nb_products).', '.(int)$nb_products;
 

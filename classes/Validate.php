@@ -39,7 +39,7 @@ class ValidateCore
 		return true;
 	}
 
- 	/**
+	/**
 	 * Check for e-mail validity
 	 *
 	 * @param string $email e-mail address to validate

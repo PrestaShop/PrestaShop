@@ -545,7 +545,7 @@ abstract class PaymentModuleCore extends Module
 							}
 							else
 							{
-								$voucher->reduction_amount =  ($total_reduction_value_tex + $values['tax_excl']) - $order->total_products;
+								$voucher->reduction_amount = ($total_reduction_value_tex + $values['tax_excl']) - $order->total_products;
 
 								// Add total shipping amout only if reduction amount > total shipping
 								if ($voucher->free_shipping == 1 && $voucher->reduction_amount >= $order->total_shipping_tax_excl)
@@ -943,7 +943,7 @@ abstract class PaymentModuleCore extends Module
 		SELECT DISTINCT m.`id_module`, h.`id_hook`, m.`name`, hm.`position`
 		FROM `'._DB_PREFIX_.'module` m
 		LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`'
-		. Shop::addSqlRestriction(false, 'hm').'
+		.Shop::addSqlRestriction(false, 'hm').'
 		LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
 		INNER JOIN `'._DB_PREFIX_.'module_shop` ms ON (m.`id_module` = ms.`id_module` AND ms.id_shop='.(int)Context::getContext()->shop->id.')
 		WHERE h.`name` = \''.pSQL($hook_payment).'\'');

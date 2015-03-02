@@ -222,10 +222,10 @@ class TranslateCore
 		$override_i18n_file = _PS_THEME_DIR_.'pdf/lang/'.$iso.'.php';
 		$i18n_file = _PS_TRANSLATIONS_DIR_.$iso.'/pdf.php';
 		if (file_exists($override_i18n_file))
-            $i18n_file = $override_i18n_file;
+			$i18n_file = $override_i18n_file;
 
-      if (!include($i18n_file))
-            Tools::displayError(sprintf('Cannot include PDF translation language file : %s', $i18n_file));
+		if (!include($i18n_file))
+			Tools::displayError(sprintf('Cannot include PDF translation language file : %s', $i18n_file));
 
 		if (!isset($_LANGPDF) || !is_array($_LANGPDF))
 			return str_replace('"', '&quot;', $string);

@@ -26,7 +26,7 @@
 
 class ZoneCore extends ObjectModel
 {
- 	/** @var string Name */
+	/** @var string Name */
 	public $name;
 
 	/** @var boolean Zone status */

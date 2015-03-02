@@ -27,12 +27,12 @@
 
 class TaxRulesGroupCore extends ObjectModel
 {
-    public $name;
+	public $name;
 
-    /** @var bool active state */
-    public $active;
+	/** @var bool active state */
+	public $active;
 
-    public $deleted = 0;
+	public $deleted = 0;
 
 	/** @var string Object creation date */
 	public $date_add;
@@ -88,19 +88,19 @@ class TaxRulesGroupCore extends ObjectModel
 	{
 		$this->deleted = true;
 
-		return parent::update() && 
+		return parent::update() &&
 		Db::getInstance()->execute('
-		INSERT INTO '._DB_PREFIX_.'tax_rule 
+		INSERT INTO '._DB_PREFIX_.'tax_rule
 		(id_tax_rules_group, id_country, id_state, zipcode_from, zipcode_to, id_tax, behavior, description)
 		(
 			SELECT '.(int)$tax_rules_group->id.', id_country, id_state, zipcode_from, zipcode_to, id_tax, behavior, description
-			FROM '._DB_PREFIX_.'tax_rule 
+			FROM '._DB_PREFIX_.'tax_rule
 			WHERE id_tax_rules_group='.(int)$this->id.'
-		)') && 
+		)') &&
 		Db::getInstance()->execute('
 		UPDATE '._DB_PREFIX_.'product
 		SET id_tax_rules_group='.(int)$tax_rules_group->id.'
-		WHERE id_tax_rules_group='.(int)$this->id) && 
+		WHERE id_tax_rules_group='.(int)$this->id) &&
 		Db::getInstance()->execute('
 		UPDATE '._DB_PREFIX_.'product_shop
 		SET id_tax_rules_group='.(int)$tax_rules_group->id.'
@@ -113,9 +113,9 @@ class TaxRulesGroupCore extends ObjectModel
 		UPDATE '._DB_PREFIX_.'carrier_tax_rules_group_shop
 		SET id_tax_rules_group='.(int)$tax_rules_group->id.'
 		WHERE id_tax_rules_group='.(int)$this->id);
-		
+
 	}
-	
+
 	public function getIdTaxRuleGroupFromHistorizedId($id_tax_rule)
 	{
 		$params = Db::getInstance()->getRow('
@@ -127,7 +127,7 @@ class TaxRulesGroupCore extends ObjectModel
 		return Db::getInstance()->getValue('
 		SELECT id_tax_rule
 		FROM '._DB_PREFIX_.'tax_rule
-		WHERE 
+		WHERE
 			id_tax_rules_group = '.(int)$this->id.' AND
 			id_country='.(int)$params['id_country'].' AND id_state='.(int)$params['id_state'].' AND id_tax='.(int)$params['id_tax'].' AND
 			zipcode_from=\''.pSQL($params['zipcode_from']).'\' AND zipcode_to=\''.pSQL($params['zipcode_to']).'\' AND behavior='.(int)$params['behavior']
@@ -164,21 +164,21 @@ class TaxRulesGroupCore extends ObjectModel
 	*/
 	public static function getAssociatedTaxRatesByIdCountry($id_country)
 	{
-	    $rows = Db::getInstance()->executeS('
-	    SELECT rg.`id_tax_rules_group`, t.`rate`
-	    FROM `'._DB_PREFIX_.'tax_rules_group` rg
-   	    LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (tr.`id_tax_rules_group` = rg.`id_tax_rules_group`)
-	    LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
-	    WHERE tr.`id_country` = '.(int)$id_country.'
-	    AND tr.`id_state` = 0
-	    AND 0 between `zipcode_from` AND `zipcode_to`'
-	    );
+		$rows = Db::getInstance()->executeS('
+			SELECT rg.`id_tax_rules_group`, t.`rate`
+			FROM `'._DB_PREFIX_.'tax_rules_group` rg
+			LEFT JOIN `'._DB_PREFIX_.'tax_rule` tr ON (tr.`id_tax_rules_group` = rg.`id_tax_rules_group`)
+			LEFT JOIN `'._DB_PREFIX_.'tax` t ON (t.`id_tax` = tr.`id_tax`)
+			WHERE tr.`id_country` = '.(int)$id_country.'
+			AND tr.`id_state` = 0
+			AND 0 between `zipcode_from` AND `zipcode_to`'
+		);
 
-	    $res = array();
-	    foreach ($rows as $row)
-	        $res[$row['id_tax_rules_group']] = $row['rate'];
+		$res = array();
+		foreach ($rows as $row)
+			$res[$row['id_tax_rules_group']] = $row['rate'];
 
-	    return $res;
+		return $res;
 	}
 
 	/**
@@ -189,13 +189,13 @@ class TaxRulesGroupCore extends ObjectModel
 	*/
 	public static function getIdByName($name)
 	{
-	    return Db::getInstance()->getValue(
-	    'SELECT `id_tax_rules_group`
-	    FROM `'._DB_PREFIX_.'tax_rules_group` rg
-	    WHERE `name` = \''.pSQL($name).'\''
-	    );
+		return Db::getInstance()->getValue(
+			'SELECT `id_tax_rules_group`
+			FROM `'._DB_PREFIX_.'tax_rules_group` rg
+			WHERE `name` = \''.pSQL($name).'\''
+		);
 	}
-	
+
 	public function hasUniqueTaxRuleForCountry($id_country, $id_state, $id_tax_rule = false)
 	{
 		$rules = TaxRule::getTaxRulesByGroupId((int)Context::getContext()->language->id, (int)$this->id);
@@ -221,11 +221,11 @@ class TaxRulesGroupCore extends ObjectModel
 	public static function getTaxesRate($id_tax_rules_group, $id_country, $id_state, $zipcode)
 	{
 		Tools::displayAsDeprecated();
-	    $rate = 0;
-	    foreach (TaxRulesGroup::getTaxes($id_tax_rules_group, $id_country, $id_state, $zipcode) as $tax)
-	        $rate += (float)$tax->rate;
+		$rate = 0;
+		foreach (TaxRulesGroup::getTaxes($id_tax_rules_group, $id_country, $id_state, $zipcode) as $tax)
+			$rate += (float)$tax->rate;
 
-	    return $rate;
+		return $rate;
 	}
 
 	/**

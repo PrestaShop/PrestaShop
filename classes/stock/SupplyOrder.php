@@ -150,30 +150,30 @@ class SupplyOrderCore extends ObjectModel
 	/**
 	 * @see ObjectModel::$webserviceParameters
 	 */
- 	protected $webserviceParameters = array(
- 		'fields' => array(
- 			'id_supplier' => array('xlink_resource' => 'suppliers'),
- 			'id_lang' => array('xlink_resource' => 'languages'),
- 			'id_warehouse' => array('xlink_resource' => 'warehouses'),
- 			'id_supply_order_state' => array('xlink_resource' => 'supply_order_states'),
- 			'id_currency' => array('xlink_resource' => 'currencies'),
- 		),
- 		'hidden_fields' => array(
- 			'id_ref_currency',
- 		),
- 		'associations' => array(
+	protected $webserviceParameters = array(
+		'fields' => array(
+			'id_supplier' => array('xlink_resource' => 'suppliers'),
+			'id_lang' => array('xlink_resource' => 'languages'),
+			'id_warehouse' => array('xlink_resource' => 'warehouses'),
+			'id_supply_order_state' => array('xlink_resource' => 'supply_order_states'),
+			'id_currency' => array('xlink_resource' => 'currencies'),
+		),
+		'hidden_fields' => array(
+			'id_ref_currency',
+		),
+		'associations' => array(
 			'supply_order_details' => array(
 				'resource' => 'supply_order_detail',
 				'fields' => array(
 					'id' => array(),
- 					'id_product' => array(),
- 					'id_product_attribute' => array(),
- 					'supplier_reference' => array(),
- 					'product_name' => array(),
+					'id_product' => array(),
+					'id_product_attribute' => array(),
+					'supplier_reference' => array(),
+					'product_name' => array(),
 				),
 			),
 		),
- 	);
+	);
 
 	/**
 	 * @see ObjectModel::update()
