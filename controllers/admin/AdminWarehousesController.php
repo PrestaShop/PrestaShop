@@ -628,7 +628,11 @@ class AdminWarehousesControllerCore extends AdminController
 			return;
 		$this->updateAddress();
 		// handles carriers associations
-		$obj->setCarriers(Tools::getValue('ids_carriers_selected'), array());
+		$ids_carriers_selected = Tools::getValue('ids_carriers_selected');
+		if (Tools::isSubmit('ids_carriers_selected') && !empty($ids_carriers_selected))
+			$object->setCarriers($ids_carriers_selected);
+		else
+			$object->setCarriers(Tools::getValue('ids_carriers_available'));
 
 		return parent::processUpdate();
 	}
