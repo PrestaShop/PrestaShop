@@ -1731,7 +1731,7 @@ abstract class AdminTabCore
 	protected function _displayDuplicate($token = null, $id)
 	{
 		$_cacheLang['Duplicate'] = $this->l('Duplicate');
-		$_cacheLang['Copy images too?'] = $this->l('This will copy the images too. If you wish to proceed, click "OK". If not, click "Cancel".', __CLasS__, true, false);
+		$_cacheLang['Copy images too?'] = $this->l('This will copy the images too. If you wish to proceed, click "OK". If not, click "Cancel".', __CLASS__, true, false);
 
 		$duplicate = self::$currentIndex.'&'.$this->identifier.'='.$id.'&duplicate'.$this->table;
 
@@ -1761,7 +1761,7 @@ abstract class AdminTabCore
 	protected function _displayDeleteLink($token = null, $id)
 	{
 		$_cacheLang['Delete'] = $this->l('Delete');
-		$_cacheLang['DeleteItem'] = $this->l('Delete item #', __CLasS__, true, false);
+		$_cacheLang['DeleteItem'] = $this->l('Delete item #', __CLASS__, true, false);
 
 		echo '
 			<a href="'.self::$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token).'" onclick="return confirm(\''.$_cacheLang['DeleteItem'].$id.' ?'.
@@ -1776,7 +1776,7 @@ abstract class AdminTabCore
 	{
 		echo '</table>';
 		if ($this->delete)
-			echo '<p><input type="submit" class="button" name="submitDel'.$this->table.'" value="'.$this->l('Delete selection').'" onclick="return confirm(\''.$this->l('Delete selected items?', __CLasS__, true, false).'\');" /></p>';
+			echo '<p><input type="submit" class="button" name="submitDel'.$this->table.'" value="'.$this->l('Delete selection').'" onclick="return confirm(\''.$this->l('Delete selected items?', __CLASS__, true, false).'\');" /></p>';
 		echo '
 				</td>
 			</tr>
