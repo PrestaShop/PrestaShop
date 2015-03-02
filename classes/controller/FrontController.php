@@ -611,7 +611,7 @@ class FrontControllerCore extends Controller
 	 *
 	 * @deprecated 1.5.0.1
 	 */
-	public function displayFooter()
+	public function displayFooter($display = true)
 	{
 		Tools::displayAsDeprecated();
 		$this->smartyOutputContent(_PS_THEME_DIR_.'footer.tpl');
