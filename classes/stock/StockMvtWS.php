@@ -188,7 +188,7 @@ class StockMvtWSCore extends ObjectModelCore
 			'id_supply_order' => array('xlink_resource' => 'supply_orders'),
 			'product_name' => array('getter' => 'getWSProductName', 'i18n' => true),
 			'ean13' => array(),
- 			'upc' => array(),
+			'upc' => array(),
 			'reference' => array(),
 		),
 		'hidden_fields' => array(
@@ -203,7 +203,7 @@ class StockMvtWSCore extends ObjectModelCore
 	 * @var Array
 	 */
 	protected $tables_assoc = array(
- 		'id_product' => array('table' => 's'),
+		'id_product' => array('table' => 's'),
 		'id_product_attribute' => array('table' => 's'),
 		'id_warehouse' => array('table' => 's'),
 		'id_currency' => array('table' => 's'),

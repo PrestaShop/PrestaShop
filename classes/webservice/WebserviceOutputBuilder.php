@@ -549,7 +549,6 @@ class WebserviceOutputBuilderCore
 		if ($field_name === 'id')
 			$field['sqlId'] = 'id';
 
-
 		// don't display the node id for a synopsis schema
 		if ($show_field)
 			$output .= $this->setIndent($depth - 1).$this->objectRender->renderField($field);

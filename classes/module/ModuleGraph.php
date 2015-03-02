@@ -332,5 +332,3 @@ abstract class ModuleGraphCore extends Module
 		return $this->_id_lang;
 	}
 }
-
-

@@ -222,7 +222,7 @@ class CountryCore extends ObjectModel
 			Country::$cache_iso_by_id[$id_country] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `iso_code`
 			FROM `'._DB_PREFIX_.'country`
-			WHERE `id_country` = '.(int)($id_country));
+			WHERE `id_country` = '.(int)$id_country);
 		}
 
 		return Country::$cache_iso_by_id[$id_country];

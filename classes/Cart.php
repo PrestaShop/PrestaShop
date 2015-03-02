@@ -2560,6 +2560,7 @@ class CartCore extends ObjectModel
 
 		return $total_shipping;
 	}
+
 	/**
 	* Return shipping total of a specific carriers for the cart
 	*
@@ -2593,7 +2594,6 @@ class CartCore extends ObjectModel
 
 		return $total_shipping;
 	}
-
 
 	/**
 	 * @deprecated 1.5.0, use Cart->getPackageShippingCost()

@@ -570,7 +570,6 @@ abstract class ObjectModelCore
 				$value = ObjectModel::formatValue($value, $definition['fields'][$field]['type'], false, true,
 												  !empty($definition['fields'][$field]['allow_null']));
 
-
 		if (!Db::getInstance()->insert($definition['table'], $res))
 			return false;
 

@@ -524,7 +524,6 @@ class StockManagerCore implements StockManagerInterface
 			}
 		}
 
-
 		// skip if product is a pack without
 		if (!Pack::isPack($id_product) || (Pack::isPack($id_product) && Validate::isLoadedObject($product = new Product((int)$id_product))
 			&& $product->pack_stock_type == 0 || $product->pack_stock_type == 2 ||

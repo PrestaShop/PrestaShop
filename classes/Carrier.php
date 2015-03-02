@@ -472,7 +472,6 @@ class CarrierCore extends ObjectModel
 		}
 		$sql .= ' GROUP BY c.`id_carrier` ORDER BY c.`position` ASC';
 
-
 		$cache_id = 'Carrier::getCarriers_'.md5($sql);
 		if (!Cache::isStored($cache_id))
 		{

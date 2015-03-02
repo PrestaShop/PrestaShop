@@ -1739,7 +1739,6 @@ class WebserviceRequestCore
 						->setHeaderParams('PSWS-Version', _PS_VERSION_)
 						->setHeaderParams('Execution-Time', round(microtime(true) - $this->_startTime, 3));
 
-
 		$return['type'] = strtolower($this->outputFormat);
 
 		// write this header only now (avoid hackers happiness...)
