@@ -69,7 +69,7 @@ class ProductSaleCore
 		$final_order_by = $order_by;
 		$order_table = '';
 
-		if (is_null($order_by) || $order_by == 'position' || $order_by == 'price')
+		if (is_null($order_by))
 		{
 			$order_by = 'quantity';
 			$order_table = 'ps';
@@ -125,9 +125,10 @@ class ProductSaleCore
 					WHERE cp.`id_product` = p.`id_product`)';
 			}
 
-			$sql .= '
-				ORDER BY '.(!empty($order_table) ? '`'.pSQL($order_table).'`.' : '').'`'.pSQL($order_by).'` '.pSQL($order_way).'
-				LIMIT '.(int)($page_number * $nb_products).', '.(int)$nb_products;
+			if ($final_order_by != 'price')
+				$sql .= '
+					ORDER BY '.(!empty($order_table) ? '`'.pSQL($order_table).'`.' : '').'`'.pSQL($order_by).'` '.pSQL($order_way).'
+					LIMIT '.(int)($page_number * $nb_products).', '.(int)$nb_products;
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
