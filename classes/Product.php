@@ -1719,8 +1719,8 @@ class ProductCore extends ObjectModel
 			&&
 			Db::getInstance()->execute(
 				'DELETE `'._DB_PREFIX_.'customization_field_lang` FROM `'._DB_PREFIX_.'customization_field_lang` LEFT JOIN `'._DB_PREFIX_.'customization_field`
-				ON (customization_field.id_customization_field = customization_field_lang.id_customization_field)
-				WHERE customization_field.id_customization_field IS NULL'
+				ON ('._DB_PREFIX_.'customization_field.id_customization_field = '._DB_PREFIX_.'customization_field_lang.id_customization_field)
+				WHERE '._DB_PREFIX_.'customization_field.id_customization_field IS NULL'
 			)
 		);
 	}
