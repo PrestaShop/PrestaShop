@@ -55,13 +55,6 @@ class DbMySQLiCore extends Db
 
 	public static function createDatabase($host, $user = null, $password = null, $database = null, $dropit = false)
 	{
-		if (is_null($user))
-			$user = $this->user;
-		if (is_null($password))
-			$password = $this->password;
-		if (is_null($database))
-			$database = $this->database;
-
 		if (strpos($host, ':') !== false)
 		{
 			list($host, $port) = explode(':', $host);
