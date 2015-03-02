@@ -124,7 +124,7 @@ abstract class AdminTabCore
 	/** @var string Default ORDER BY clause when $_orderBy is not defined */
 	protected $_defaultOrderBy = false;
 
-	/** @var string Order way (asC, DESC) determined by arrows in list header */
+	/** @var string Order way (ASC, DESC) determined by arrows in list header */
 	protected $_orderWay;
 
 	/** @var integer Max image size for upload
@@ -250,7 +250,7 @@ abstract class AdminTabCore
 		}
 		global $_LANGADM;
 
-		if ($class == __CLasS__)
+		if ($class == __CLASS__)
 			$class = 'AdminTab';
 
 		$key = md5(str_replace('\'', '\\\'', $string));
