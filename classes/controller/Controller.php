@@ -516,14 +516,14 @@ abstract class ControllerCore
 	 * Checks if a template is cached
 	 *
 	 * @param string $template
-	 * @param string|null $cacheId Cache item ID
-	 * @param string|null $compileId
+	 * @param string|null $cache_id Cache item ID
+	 * @param string|null $compile_id
 	 * @return bool
 	 */
-	protected function isCached($template, $cacheId = null, $compileId = null)
+	protected function isCached($template, $cache_id = null, $compile_id = null)
 	{
 		Tools::enableCache();
-		$res = $this->context->smarty->isCached($template, $cacheId, $compileId);
+		$res = $this->context->smarty->isCached($template, $cache_id, $compile_id);
 		Tools::restoreCacheSettings();
 
 		return $res;
