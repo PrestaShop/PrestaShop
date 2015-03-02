@@ -1064,7 +1064,7 @@ abstract class ModuleCore
 			$time_start = microtime(true);
 			$memory_start = memory_get_usage(true);
 		}
-		
+
 		include_once(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php');
 
 		$r = false;
@@ -2750,7 +2750,7 @@ abstract class ModuleCore
 				$code .= $line;
 			}
 
-			$to_delete = preg_match('/<\?(?:php)?\s+class\s+'.$classname.'\s+extends\s+'.$classname.'Core\s*?[{]\s*?[}]/ism', $code);
+			$to_delete = preg_match('/<\?(?:php)?\s+(?:abstract|interface)?\s*?class\s+'.$classname.'\s+extends\s+'.$classname.'Core\s*?[{]\s*?[}]/ism', $code);
 		}
 
 		if (!isset($to_delete) || $to_delete)
