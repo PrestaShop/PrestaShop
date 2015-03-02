@@ -638,7 +638,7 @@ elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools
 
 		foreach ($this->_list as $key => $list)
 			if ($list['name'] == '0')
-				$this->_list[$key]['name'] = Configuration::get('PS_SHOP_NAME');
+				$this->_list[$key]['name'] = Carrier::getCarrierNameFromShopName();
 	}
 
 	public function ajaxProcessUpdatePositions()

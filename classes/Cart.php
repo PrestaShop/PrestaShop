@@ -3321,7 +3321,7 @@ class CartCore extends ObjectModel
 
 	public static function replaceZeroByShopName($echo, $tr)
 	{
-		return ($echo == '0' ? Configuration::get('PS_SHOP_NAME') : $echo);
+		return ($echo == '0' ? Carrier::getCarrierNameFromShopName() : $echo);
 	}
 
 	public function duplicate()

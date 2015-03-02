@@ -832,7 +832,7 @@ class AdminCartsControllerCore extends AdminController
 
 	public static function replaceZeroByShopName($echo, $tr)
 	{
-		return ($echo == '0' ? Configuration::get('PS_SHOP_NAME') : $echo);
+		return ($echo == '0' ? Carrier::getCarrierNameFromShopName() : $echo);
 	}
 	
 	public function displayDeleteLink($token = null, $id, $name = null)

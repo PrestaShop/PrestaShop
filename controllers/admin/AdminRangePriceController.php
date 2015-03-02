@@ -124,7 +124,7 @@ class AdminRangePriceControllerCore extends AdminController
 		if ($this->_list && is_array($this->_list))
 			foreach ($this->_list as $key => $list)
 				if ($list['carrier_name'] == '0')
-					$this->_list[$key]['carrier_name'] = Configuration::get('PS_SHOP_NAME');
+					$this->_list[$key]['carrier_name'] = Carrier::getCarrierNameFromShopName();
 	}
 
 	public function postProcess()
