@@ -304,7 +304,7 @@ class SpecificPriceCore extends ObjectModel
 		while ($specific_price = Db::getInstance()->nextRow($result))
 		{
 			if (!isset($last_quantity[(int)$specific_price['id_product_attribute']]))
-				 $last_quantity[(int)$specific_price['id_product_attribute']] = $specific_price['from_quantity'];
+				$last_quantity[(int)$specific_price['id_product_attribute']] = $specific_price['from_quantity'];
 			elseif ($last_quantity[(int)$specific_price['id_product_attribute']] == $specific_price['from_quantity'])
 				continue;
 

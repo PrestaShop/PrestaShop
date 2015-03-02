@@ -186,7 +186,7 @@ class ImageCore extends ObjectModel
 		if ($id_product_attribute)
 			$sql .= ' LEFT JOIN `'._DB_PREFIX_.'product_attribute_image` ai ON (i.`id_image` = ai.`id_image`)';
 
-		$sql .= ' WHERE i.`id_product` = '.(int)$id_product.' AND il.`id_lang` = '.(int)$id_lang . $attribute_filter.'
+		$sql .= ' WHERE i.`id_product` = '.(int)$id_product.' AND il.`id_lang` = '.(int)$id_lang.$attribute_filter.'
 			ORDER BY i.`position` ASC';
 		return Db::getInstance()->executeS($sql);
 	}
@@ -209,8 +209,8 @@ class ImageCore extends ObjectModel
 		if ($id_product_attribute)
 			$sql .= ' LEFT JOIN `'._DB_PREFIX_.'product_attribute_image` ai ON (i.`id_image` = ai.`id_image`)';
 
-		$sql .= ' WHERE i.`id_product` = '.(int)$id_product.' AND il.`id_lang` = '.(int)$id_lang . $attribute_filter;
-		return (bool) Db::getInstance()->getValue($sql);
+		$sql .= ' WHERE i.`id_product` = '.(int)$id_product.' AND il.`id_lang` = '.(int)$id_lang.$attribute_filter;
+		return (bool)Db::getInstance()->getValue($sql);
 	}
 
 	/**

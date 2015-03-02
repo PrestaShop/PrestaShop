@@ -752,44 +752,44 @@ class ToolsCore
 			if ($files = scandir($dirname))
 			{
 				foreach ($files as $file)
-    				if ($file != '.' && $file != '..' && $file != '.svn')
-    				{
-    					if (is_dir($dirname.$file))
-    						Tools::deleteDirectory($dirname.$file, true);
-    					elseif (file_exists($dirname.$file))
+				if ($file != '.' && $file != '..' && $file != '.svn')
+				{
+					if (is_dir($dirname.$file))
+						Tools::deleteDirectory($dirname.$file, true);
+					elseif (file_exists($dirname.$file))
 						{
 							@chmod($dirname.$file, 0777); // NT ?
 							unlink($dirname.$file);
 						}
-    				}
+				}
 				if ($delete_self && file_exists($dirname))
 					if (!rmdir($dirname))
 					{
 						@chmod($dirname, 0777); // NT ?
-                        return false;
+						return false;
 					}
-                return true;
+				return true;
 			}
-        return false;
-    }
+		return false;
+	}
 
-    /**
+	/**
 	* Delete file
 	*
 	* @param string File path
 	* @param array  Excluded files
 	*/
-    public static function deleteFile($file, $exclude_files = array())
-    {
+	public static function deleteFile($file, $exclude_files = array())
+	{
 		if (isset($exclude_files) && !is_array($exclude_files))
 			$exclude_files = array($exclude_files);
 
-		if (file_exists($file) && is_file($file) && array_search(basename($file), $exclude_files) === FALSE)
+		if (file_exists($file) && is_file($file) && array_search(basename($file), $exclude_files) === false)
 		{
 			@chmod($dirname.$file, 0777); // NT ?
 			unlink($file);
 		}
-    }
+	}
 
 	/**
 	* Clear XML cache folder
@@ -1133,7 +1133,7 @@ class ToolsCore
 			$category = new Category($id_category, $context->language->id);
 		}
 		elseif ($type_cat === 'CMS')
-		    $category = new CMSCategory($id_category, $context->language->id);
+			$category = new CMSCategory($id_category, $context->language->id);
 
 		if (!Validate::isLoadedObject($category))
 			$id_category = $default_category;
@@ -1326,10 +1326,10 @@ class ToolsCore
 	** For other purposes use the smarty function instead */
 	public static function truncate($str, $max_length, $suffix = '...')
 	{
-	 	if (Tools::strlen($str) <= $max_length)
-	 		return $str;
-	 	$str = utf8_decode($str);
-	 	return (utf8_encode(substr($str, 0, $max_length - Tools::strlen($suffix)).$suffix));
+		if (Tools::strlen($str) <= $max_length)
+			return $str;
+		$str = utf8_decode($str);
+		return (utf8_encode(substr($str, 0, $max_length - Tools::strlen($suffix)).$suffix));
 	}
 
 	/*Copied from CakePHP String utility file*/
@@ -1415,13 +1415,13 @@ class ToolsCore
 			{
 				$truncateCheck = Tools::substr($truncate, 0, $spacepos);
 				$lastOpenTag = Tools::strrpos($truncateCheck, '<');
-				$lastCloseTag =  Tools::strrpos($truncateCheck, '>');
+				$lastCloseTag = Tools::strrpos($truncateCheck, '>');
 
 				if ($lastOpenTag > $lastCloseTag)
 				{
 					preg_match_all('/<[\w]+[^>]*>/s', $truncate, $lastTagMatches);
 					$lastTag = array_pop($lastTagMatches[0]);
-					$spacepos =  Tools::strrpos($truncate, $lastTag) + Tools::strlen($lastTag);
+					$spacepos = Tools::strrpos($truncate, $lastTag) + Tools::strlen($lastTag);
 				}
 
 				$bits = Tools::substr($truncate, $spacepos);
@@ -1450,7 +1450,7 @@ class ToolsCore
 
 		if ($html)
 			foreach ($openTags as $tag)
-				$truncate .= '</' . $tag . '>';
+				$truncate .= '</'.$tag.'>';
 
 		return $truncate;
 	}
@@ -1504,14 +1504,14 @@ class ToolsCore
 
 	public static function hourGenerate($hours, $minutes, $seconds)
 	{
-	    return implode(':', array($hours, $minutes, $seconds));
+		return implode(':', array($hours, $minutes, $seconds));
 	}
 
 	public static function dateFrom($date)
 	{
 		$tab = explode(' ', $date);
 		if (!isset($tab[1]))
-		    $date .= ' '.Tools::hourGenerate(0, 0, 0);
+			$date .= ' '.Tools::hourGenerate(0, 0, 0);
 		return $date;
 	}
 
@@ -1519,7 +1519,7 @@ class ToolsCore
 	{
 		$tab = explode(' ', $date);
 		if (!isset($tab[1]))
-		    $date .= ' '.Tools::hourGenerate(23, 59, 59);
+			$date .= ' '.Tools::hourGenerate(23, 59, 59);
 		return $date;
 	}
 
@@ -1634,9 +1634,7 @@ class ToolsCore
 		if ($round_mode === null)
 		{
 			if (Tools::$round_mode == null)
-			{
 				Tools::$round_mode = (int)Configuration::get('PS_PRICE_ROUND_MODE');
-			}
 
 			$round_mode = Tools::$round_mode;
 		}
@@ -1661,7 +1659,7 @@ class ToolsCore
 	{
 		//If PHP_ROUND_HALF_UP exist (PHP 5.3) use it and pass correct mode value (PrestaShop define - 1)
 		if (defined('PHP_ROUND_HALF_UP'))
-			return round($value, $places, $mode-1);
+			return round($value, $places, $mode - 1);
 
 		$precision_places = 14 - floor(log10(abs($value)));
 		$f1 = pow(10.0, (double)abs($places));
@@ -1721,18 +1719,18 @@ class ToolsCore
 			$tmp_value = floor($value + 0.5);
 
 			if (($mode == PS_ROUND_HALF_DOWN && $value == (-0.5 + $tmp_value )) ||
-				($mode == PS_ROUND_HALF_EVEN && $value == (0.5 + 2 * floor($tmp_value /2.0))) ||
-				($mode == PS_ROUND_HALF_ODD  && $value == (0.5 + 2 * floor($tmp_value /2.0) - 1.0)))
-				$tmp_value  = $tmp_value  - 1.0;
+				($mode == PS_ROUND_HALF_EVEN && $value == (0.5 + 2 * floor($tmp_value / 2.0))) ||
+				($mode == PS_ROUND_HALF_ODD  && $value == (0.5 + 2 * floor($tmp_value / 2.0) - 1.0)))
+				$tmp_value  = $tmp_value - 1.0;
 		}
 		else
 		{
 			$tmp_value  = ceil($value - 0.5);
 
 			if (($mode == PS_ROUND_HALF_DOWN && $value == (0.5 + $tmp_value )) ||
-				($mode == PS_ROUND_HALF_EVEN && $value == (-0.5 + 2 * ceil($tmp_value /2.0))) ||
-				($mode == PS_ROUND_HALF_ODD  && $value == (-0.5 + 2 * ceil($tmp_value /2.0) + 1.0)))
-				$tmp_value  = $tmp_value  + 1.0;
+				($mode == PS_ROUND_HALF_EVEN && $value == (-0.5 + 2 * ceil($tmp_value / 2.0))) ||
+				($mode == PS_ROUND_HALF_ODD  && $value == (-0.5 + 2 * ceil($tmp_value / 2.0) + 1.0)))
+				$tmp_value  = $tmp_value + 1.0;
 		}
 
 		return $tmp_value;
@@ -1817,7 +1815,8 @@ class ToolsCore
 			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
 			curl_setopt($curl, CURLOPT_TIMEOUT, $curl_timeout);
 			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-			if ($stream_context != null) {
+			if ($stream_context != null)
+			{
 				$opts = stream_context_get_options($stream_context);
 				if (isset($opts['http']['method']) && Tools::strtolower($opts['http']['method']) == 'post')
 				{
@@ -2050,7 +2049,7 @@ class ToolsCore
 			$disable_multiviews = (int)Configuration::get('PS_HTACCESS_DISABLE_MULTIVIEWS');
 
 		if ($disable_modsec === null)
-			$disable_modsec =  (int)Configuration::get('PS_HTACCESS_DISABLE_MODSEC');
+			$disable_modsec = (int)Configuration::get('PS_HTACCESS_DISABLE_MODSEC');
 
 		// Check current content of .htaccess and save all code outside of prestashop comments
 		$specific_before = $specific_after = '';
@@ -3056,7 +3055,7 @@ exit;
 	{
 		if (!defined('PREG_BAD_UTF8_OFFSET'))
 			return $pattern;
-		return preg_replace('/\\\[px]\{[a-z]{1,2}\}|(\/[a-z]*)u([a-z]*)$/i', "$1$2", $pattern);
+		return preg_replace('/\\\[px]\{[a-z]{1,2}\}|(\/[a-z]*)u([a-z]*)$/i', '$1$2', $pattern);
 	}
 
 	protected static $is_addons_up = true;
@@ -3252,17 +3251,17 @@ exit;
 		$user_agent = $_SERVER['HTTP_USER_AGENT'];
 		self::$_user_browser = 'unknown';
 
-		if (preg_match('/MSIE/i',$user_agent) && !preg_match('/Opera/i',$user_agent))
+		if (preg_match('/MSIE/i', $user_agent) && !preg_match('/Opera/i', $user_agent))
 			self::$_user_browser = 'Internet Explorer';
-		elseif (preg_match('/Firefox/i',$user_agent))
+		elseif (preg_match('/Firefox/i', $user_agent))
 			self::$_user_browser = 'Mozilla Firefox';
-		elseif (preg_match('/Chrome/i',$user_agent))
+		elseif (preg_match('/Chrome/i', $user_agent))
 			self::$_user_browser = 'Google Chrome';
-		elseif (preg_match('/Safari/i',$user_agent))
+		elseif (preg_match('/Safari/i', $user_agent))
 			self::$_user_browser = 'Apple Safari';
-		elseif (preg_match('/Opera/i',$user_agent))
+		elseif (preg_match('/Opera/i', $user_agent))
 			self::$_user_browser = 'Opera';
-		elseif (preg_match('/Netscape/i',$user_agent))
+		elseif (preg_match('/Netscape/i', $user_agent))
 			self::$_user_browser = 'Netscape';
 
 		return self::$_user_browser;
@@ -3377,9 +3376,7 @@ exit;
 	public static function spreadAmount($amount, $precision, &$rows, $column)
 	{
 		if (!is_array($rows) || empty($rows))
-		{
 			return;
-		}
 
 		$sort_function = create_function('$a, $b', "return \$b['$column'] > \$a['$column'] ? 1 : -1;");
 
@@ -3399,9 +3396,7 @@ exit;
 			$adjustment_factor = $amount_to_spread;
 
 			if ($position < abs($remainder))
-			{
 				$adjustment_factor += $sign * 1 / $unit;
-			}
 
 			$row[$column] += $adjustment_factor;
 
