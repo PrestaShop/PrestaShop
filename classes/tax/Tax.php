@@ -93,7 +93,7 @@ class TaxCore extends ObjectModel
 		return false;
 	}
 
-	public function update($nullValues = false)
+	public function update($null_values = false)
 	{
 		if (!$this->deleted && $this->isUsed())
 		{
@@ -108,7 +108,7 @@ class TaxCore extends ObjectModel
 			$res &= TaxRule::swapTaxId($historized_tax->id, $this->id);
 			return $res;
 		}
-		elseif (parent::update($nullValues))
+		elseif (parent::update($null_values))
 			return $this->_onStatusChange();
 
 		return false;
@@ -185,7 +185,7 @@ class TaxCore extends ObjectModel
 			WHERE tl.`name` = \''.pSQL($tax_name).'\' '.
 			($active == 1 ? ' AND t.`active` = 1' : ''));
 
-		return $tax ? (int)($tax['id_tax']) : false;
+		return $tax ? (int)$tax['id_tax'] : false;
 	}
 
 	/**

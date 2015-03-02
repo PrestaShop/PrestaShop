@@ -536,7 +536,7 @@ class HookCore extends ObjectModel
 			return ($live_edit ? '<script type="text/javascript">hooks_list.push(\''.$hook_name.'\');</script>
 				<div id="'.$hook_name.'" class="dndHook" style="min-height:50px">' : '').$output.($live_edit ? '</div>' : '');// Return html string
 	}
-	
+
 	public static function coreCallHook($module, $method, $params)
 	{
 		// Define if we will log modules performances for this session
@@ -547,18 +547,18 @@ class HookCore extends ObjectModel
 			if (Module::$_log_modules_perfs)
 				Module::$_log_modules_perfs_session = mt_rand();
 		}
-		
+
 		// Immediately return the result if we do not log performances
 		if (!Module::$_log_modules_perfs)
 			return $module->{$method}($params);
-		
+
 		// Store time and memory before and after hook call and save the result in the database
 		$time_start = microtime(true);
 		$memory_start = memory_get_usage(true);
-		
+
 		// Call hook
 		$r = $module->{$method}($params);
-		
+
 		$time_end = microtime(true);
 		$memory_end = memory_get_usage(true);
 
@@ -576,38 +576,37 @@ class HookCore extends ObjectModel
 				class="dndModule" style="border: 1px dotted red;'.(!strlen($display) ? 'height:50px;' : '').'">
 					<span style="font-family: Georgia;font-size:13px;font-style:italic;">
 						<img style="padding-right:5px;" src="'._MODULE_DIR_.Tools::safeOutput($moduleInstance->name).'/logo.gif">'
-			 	.Tools::safeOutput($moduleInstance->displayName).'<span style="float:right">
-			 	<a href="#" id="'.(int)$id_hook.'_'.(int)$moduleInstance->id.'" class="moveModule">
-			 		<img src="'._PS_ADMIN_IMG_.'arrow_out.png"></a>
-			 	<a href="#" id="'.(int)$id_hook.'_'.(int)$moduleInstance->id.'" class="unregisterHook">
-			 		<img src="'._PS_ADMIN_IMG_.'delete.gif"></a></span>
-			 	</span>'.$display.'</div>';
+				.Tools::safeOutput($moduleInstance->displayName).'<span style="float:right">
+				<a href="#" id="'.(int)$id_hook.'_'.(int)$moduleInstance->id.'" class="moveModule">
+					<img src="'._PS_ADMIN_IMG_.'arrow_out.png"></a>
+				<a href="#" id="'.(int)$id_hook.'_'.(int)$moduleInstance->id.'" class="unregisterHook">
+					<img src="'._PS_ADMIN_IMG_.'delete.gif"></a></span>
+				</span>'.$display.'</div>';
 	}
-
 
 	/**
 	 * @deprecated 1.5.0
 	 */
-	public static function updateOrderStatus($newOrderStatusId, $id_order)
+	public static function updateOrderStatus($new_order_status_id, $id_order)
 	{
 		Tools::displayAsDeprecated();
-		$order = new Order((int)($id_order));
-		$newOS = new OrderState((int)($newOrderStatusId), $order->id_lang);
+		$order = new Order((int)$id_order);
+		$new_os = new OrderState((int)$new_order_status_id, $order->id_lang);
 
-		$return = ((int)($newOS->id) == Configuration::get('PS_OS_PAYMENT')) ? Hook::exec('paymentConfirm', array('id_order' => (int)($order->id))) : true;
-		$return = Hook::exec('updateOrderStatus', array('newOrderStatus' => $newOS, 'id_order' => (int)($order->id))) && $return;
+		$return = ((int)$new_os->id == Configuration::get('PS_OS_PAYMENT')) ? Hook::exec('paymentConfirm', array('id_order' => (int)($order->id))) : true;
+		$return = Hook::exec('updateOrderStatus', array('newOrderStatus' => $new_os, 'id_order' => (int)($order->id))) && $return;
 		return $return;
 	}
 
 	/**
 	 * @deprecated 1.5.0
 	 */
-	public static function postUpdateOrderStatus($newOrderStatusId, $id_order)
+	public static function postUpdateOrderStatus($new_order_status_id, $id_order)
 	{
 		Tools::displayAsDeprecated();
-		$order = new Order((int)($id_order));
-		$newOS = new OrderState((int)($newOrderStatusId), $order->id_lang);
-		$return = Hook::exec('postUpdateOrderStatus', array('newOrderStatus' => $newOS, 'id_order' => (int)($order->id)));
+		$order = new Order((int)$id_order);
+		$new_os = new OrderState((int)$new_order_status_id, $order->id_lang);
+		$return = Hook::exec('postUpdateOrderStatus', array('newOrderStatus' => $new_os, 'id_order' => (int)($order->id)));
 		return $return;
 	}
 
@@ -715,21 +714,21 @@ class HookCore extends ObjectModel
 	/**
 	 * Return hook ID from name
 	 *
-	 * @param string $hookName Hook name
+	 * @param string $hook_name Hook name
 	 * @return integer Hook ID
 	 *
 	 * @deprecated since 1.5.0 use Hook::getIdByName() instead
 	 */
-	public static function get($hookName)
+	public static function get($hook_name)
 	{
 		Tools::displayAsDeprecated();
-		if (!Validate::isHookName($hookName))
+		if (!Validate::isHookName($hook_name))
 			die(Tools::displayError());
 
 		$result = Db::getInstance()->getRow('
 		SELECT `id_hook`, `name`
 		FROM `'._DB_PREFIX_.'hook`
-		WHERE `name` = \''.pSQL($hookName).'\'');
+		WHERE `name` = \''.pSQL($hook_name).'\'');
 
 		return ($result ? $result['id_hook'] : false);
 	}
@@ -740,7 +739,7 @@ class HookCore extends ObjectModel
 	 * @param Product
 	 * @param Order
 	 */
-	public static function newOrder($cart, $order, $customer, $currency, $orderStatus)
+	public static function newOrder($cart, $order, $customer, $currency, $order_status)
 	{
 		Tools::displayAsDeprecated();
 		return Hook::exec('newOrder', array(
@@ -748,7 +747,7 @@ class HookCore extends ObjectModel
 			'order' => $order,
 			'customer' => $customer,
 			'currency' => $currency,
-			'orderStatus' => $orderStatus));
+			'orderStatus' => $order_status));
 	}
 
 	/**
@@ -814,4 +813,3 @@ class HookCore extends ObjectModel
 		return Hook::exec('updateProductAttribute', array('id_product_attribute' => $id_product_attribute));
 	}
 }
-

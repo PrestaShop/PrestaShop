@@ -109,15 +109,15 @@ class ImageTypeCore extends ObjectModel
 	* @param string $typeName Name
 	* @return integer Number of results found
 	*/
-	public static function typeAlreadyExists($typeName)
+	public static function typeAlreadyExists($type_name)
 	{
-		if (!Validate::isImageTypeName($typeName))
+		if (!Validate::isImageTypeName($type_name))
 			die(Tools::displayError());
 
 		Db::getInstance()->executeS('
 			SELECT `id_image_type`
 			FROM `'._DB_PREFIX_.'image_type`
-			WHERE `name` = \''.pSQL($typeName).'\'');
+			WHERE `name` = \''.pSQL($type_name).'\'');
 
 		return Db::getInstance()->NumRows();
 	}
@@ -130,7 +130,7 @@ class ImageTypeCore extends ObjectModel
 	public static function getByNameNType($name, $type = null, $order = 0)
 	{
 		static $is_passed = false;
-		
+
 		if (!isset(self::$images_types_name_cache[$name.'_'.$type.'_'.$order]) && !$is_passed)
 		{
 			$results = Db::getInstance()->ExecuteS('SELECT * FROM `'._DB_PREFIX_.'image_type`');

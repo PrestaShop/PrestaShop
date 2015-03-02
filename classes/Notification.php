@@ -110,7 +110,7 @@ class NotificationCore
 				$customer_name = Tools::safeOutput($value['firstname'].' '.$value['lastname']);
 			elseif (isset($value['email']))
 				$customer_name = Tools::safeOutput($value['email']);
-			
+
 			$json['results'][] = array(
 				'id_order' => ((!empty($value['id_order'])) ? (int)$value['id_order'] : 0),
 				'id_customer' => ((!empty($value['id_customer'])) ? (int)$value['id_customer'] : 0),
@@ -118,7 +118,8 @@ class NotificationCore
 				'id_customer_thread' => ((!empty($value['id_customer_thread'])) ? (int)$value['id_customer_thread'] : 0),
 				'total_paid' => ((!empty($value['total_paid'])) ? Tools::displayPrice((float)$value['total_paid'], (int)$value['id_currency'], false) : 0),
 				'customer_name' => $customer_name,
-				'update_date' => isset($value['date_upd']) ? (int)strtotime($value['date_upd']) * 1000 : 0, // x1000 because of moment.js (see: http://momentjs.com/docs/#/parsing/unix-timestamp/)
+				// x1000 because of moment.js (see: http://momentjs.com/docs/#/parsing/unix-timestamp/)
+				'update_date' => isset($value['date_upd']) ? (int)strtotime($value['date_upd']) * 1000 : 0,
 			);
 		}
 
