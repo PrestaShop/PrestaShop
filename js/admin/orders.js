@@ -601,12 +601,12 @@ function init()
 				{
 					current_product = data;
 
-					var element_list = $('.customized-' + element.parent().parent().find('.edit_product_id_order_detail').val());
+					var element_list = $('.customized-' + element.parents('.product-line-row').find('.edit_product_id_order_detail').val());
 					if (!element_list.length)
 					{
-						element_list = element.parent().parent().parent();
-						element_list.parent().parent().find('td .product_quantity_show').hide();
-						element_list.parent().parent().find('td .product_quantity_edit').show();
+						element_list = element.parents('.product-line-row');
+						element_list.find('td .product_quantity_show').hide();
+						element_list.find('td .product_quantity_edit').show();
 					}
 					else
 					{
