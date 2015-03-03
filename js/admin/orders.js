@@ -578,6 +578,7 @@ function init()
 	$('.edit_product_change_link').unbind('click').click(function(e) {
 		$('.add_product_fields, .standard_refund_fields, .order_action').hide();
 		$('.edit_product_fields').show();
+		$('.row-editing-warning').hide();
 		$('.cancel_product_change_link:visible').trigger('click');
 		closeAddProduct();
 		var element = $(this);
@@ -624,6 +625,10 @@ function init()
 					element.parent().children('.edit_product_change_link').parent().hide();
 					element.parent().parent().find('button.submitProductChange').show();
 					element.parent().parent().find('.cancel_product_change_link').show();
+
+					if (+data.reduction_percent != +0)
+						element_list.find('.row-editing-warning').show();
+
 					$('.standard_refund_fields').hide();
 					$('.partial_refund_fields').hide();
 				}
@@ -638,6 +643,7 @@ function init()
 	{
 		current_product = null;
 		$('.edit_product_fields').hide();
+		$('.row-editing-warning').hide();
 		var element_list = $('.customized-' + $(this).parent().parent().find('.edit_product_id_order_detail').val());
 		if (!element_list.length)
 			element_list = $($(this).parent().parent());
@@ -701,7 +707,7 @@ function init()
 						$('.standard_refund_fields').hide();
 						$('.partial_refund_fields').hide();
 						$('.add_product_fields').hide();
-						$('.add_product_fields').hide();
+						$('.row-editing-warning').hide();
 						$('td.product_action').attr('colspan', 3);
 					}
 					else

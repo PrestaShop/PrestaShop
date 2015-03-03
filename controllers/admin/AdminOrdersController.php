@@ -2261,7 +2261,8 @@ class AdminOrdersControllerCore extends AdminController
 			'product' => $product,
 			'tax_rate' => $product->getTaxesRate($address),
 			'price_tax_incl' => Product::getPriceStatic($product->id, true, $order_detail->product_attribute_id, 2),
-			'price_tax_excl' => Product::getPriceStatic($product->id, false, $order_detail->product_attribute_id, 2)
+			'price_tax_excl' => Product::getPriceStatic($product->id, false, $order_detail->product_attribute_id, 2),
+			'reduction_percent' => $order_detail->reduction_percent
 		)));
 	}
 
@@ -2357,6 +2358,7 @@ class AdminOrdersControllerCore extends AdminController
 		$old_quantity = $order_detail->product_quantity;
 
 		$order_detail->product_quantity = $product_quantity;
+		$order_detail->reduction_percent = 0;
 
 		// update taxes
 		$res &= $order_detail->updateTaxAmount($order);

@@ -39,6 +39,11 @@
 			{if $product.product_reference}{l s='Reference number:'} {$product.product_reference}<br />{/if}
 			{if $product.product_supplier_reference}{l s='Supplier reference:'} {$product.product_supplier_reference}{/if}
 		</a>
+		<div class="row-editing-warning" style="display:none;">
+			<div class="alert alert-warning">
+				<strong>{l s='Editing this product line will remove the reduction and base price.'}</strong>
+			</div>
+		</div>
 	</td>
 	<td>
 		<span class="product_price_show">{displayPrice price=$product_price currency=$currency->id}</span>
