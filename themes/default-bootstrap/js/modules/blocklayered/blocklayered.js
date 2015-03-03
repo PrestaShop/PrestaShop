@@ -483,6 +483,8 @@ function reloadContent(params_plus)
 				n = '&n=' + option.value;
 		});
 	}
+	if (params_plus === true)
+		params_plus ='';
 	ajaxQuery = $.ajax(
 	{
 		type: 'GET',
