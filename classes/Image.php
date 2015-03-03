@@ -120,7 +120,7 @@ class ImageCore extends ObjectModel
 		// update positions
 		Db::getInstance()->execute('SET @position:=0', false);
 		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'image` SET position=(@position:=@position+1)
-									WHERE `id_product` = '.(int)$this->id_product.' ORDER BY position ASC', false);
+									WHERE `id_product` = '.(int)$this->id_product.' ORDER BY position ASC');
 
 		return true;
 	}
