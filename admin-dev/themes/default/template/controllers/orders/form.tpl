@@ -767,7 +767,7 @@
 	function updateCartVouchers(vouchers)
 	{
 		var vouchers_html = '';
-		if (typeof(vouchers) == 'object')parseFloat
+		if (typeof(vouchers) == 'object')
 			$.each(vouchers, function(){
 				if (parseFloat(this.value_real) === 0 && parseInt(this.free_shipping) === 1)
 					var value = '{l s='Free shipping'}';
