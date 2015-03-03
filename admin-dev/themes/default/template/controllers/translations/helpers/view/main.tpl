@@ -223,7 +223,7 @@
 			</h3>
 			<p class="alert alert-info">
 				{l s='Export data from one language to a file (language pack).'}<br />
-				{l s='Select which theme you would like to export your translations to. '}
+				{l s='Select which theme you would like to export your translations to.'}
 			</p>
 			<div class="form-group">
 				<label class="control-label col-lg-3" for="iso_code">{l s='Language'}</label>
