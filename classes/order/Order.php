@@ -814,7 +814,7 @@ class OrderCore extends ObjectModel
 
 	public function hasBeenPaid()
 	{
-		return count($this->getHistory((int)$this->id_lan), false, false, OrderState::FLAG_PAID));
+		return count($this->getHistory((int)$this->id_lang), false, false, OrderState::FLAG_PAID));
 	}
 
 	public function hasBeenShipped()
