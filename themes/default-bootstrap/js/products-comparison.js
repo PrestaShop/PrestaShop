@@ -44,7 +44,7 @@ function addToCompare(productId)
 		action = 'remove';
 
 	$.ajax({
-		url: baseUri + '?controller=products-comparison&ajax=1&action=' + action + '&id_product=' + productId,
+		url: 'index.php?controller=products-comparison&ajax=1&action=' + action + '&id_product=' + productId,
 		async: true,
 		cache: false,
 		success: function(data) {
@@ -88,7 +88,7 @@ function reloadProductComparison()
 		e.preventDefault();
 		var idProduct = parseInt($(this).data('id-product'));
 		$.ajax({
-			url: baseUri + '?controller=products-comparison&ajax=1&action=remove&id_product=' + idProduct,
+			url: 'index.php??controller=products-comparison&ajax=1&action=remove&id_product=' + idProduct,
 			async: false,
 			cache: false
 		});
