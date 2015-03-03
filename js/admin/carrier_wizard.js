@@ -161,14 +161,31 @@ function onLeaveStepCallback(obj, context)
 
 function displaySummary()
 {
-	// used as buffer - you must not replace directly in the translation vars
-	var tmp;
+    var id_default_lang = typeof default_language !== 'undefined' ? default_language : 1,
+        id_lang = id_default_lang;
+
+    // Try to find current employee language
+    if (typeof languages !== 'undefined' && typeof iso_user !== 'undefined')
+        for (var i=0; i<languages.length; i++)
+            if (languages[i]['iso_code'] == iso_user)
+            {
+                id_lang = languages[i]['id_lang'];
+                break;
+            }
+
+    // used as buffer - you must not replace directly in the translation vars
+    var tmp,
+        delay_text = $('#delay_' + id_lang).val();
+
+    // Assign text in default language if empty
+    if (!delay_text)
+        delay_text = $('#delay_' + id_default_lang).val();
 
 	// Carrier name
 	$('#summary_name').html($('#name').val());
 
 	// Delay and pricing
-	tmp = summary_translation_meta_informations.replace('@s2', '<strong>' + $('#delay_1').val() + '</strong>');
+	tmp = summary_translation_meta_informations.replace('@s2', '<strong>' + delay_text + '</strong>');
 	if ($('#is_free_on').attr('checked'))
 		tmp = tmp.replace('@s1', summary_translation_free);
 	else
