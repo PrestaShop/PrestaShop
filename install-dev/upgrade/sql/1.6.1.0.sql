@@ -27,7 +27,7 @@ ALTER TABLE `PREFIX_orders` ADD `round_type` TINYINT(1) NOT NULL DEFAULT '1' AFT
 ALTER TABLE PREFIX_product_tag ADD `id_lang` int(10) unsigned NOT NULL, ADD KEY (id_lang, id_tag);
 UPDATE PREFIX_product_tag, PREFIX_tag SET PREFIX_product_tag.id_lang=PREFIX_tag.id_lang WHERE PREFIX_tag.id_tag=PREFIX_product_tag.id_tag;
 
-DROP TABLE IF EXISTS `PREFIX_tag_count`
+DROP TABLE IF EXISTS `PREFIX_tag_count`;
 CREATE TABLE `PREFIX_tag_count` (
   `id_group` int(10) unsigned NOT NULL DEFAULT 0,
   `id_tag` int(10) unsigned NOT NULL DEFAULT 0,
@@ -97,7 +97,7 @@ ALTER TABLE `PREFIX_product` DROP KEY `product_manufacturer`;
 ALTER TABLE `PREFIX_product` ADD KEY `product_manufacturer` (`id_manufacturer`, `id_product`);
 ALTER IGNORE TABLE `PREFIX_specific_price` ADD UNIQUE KEY `id_product_2` (`id_product`,`id_shop`,`id_shop_group`,`id_currency`,`id_country`,`id_group`,`id_customer`,`id_product_attribute`,`from_quantity`,`from`,`to`);
 
-DROP TABLE IF EXISTS `PREFIX_smarty_lazy_cache`
+DROP TABLE IF EXISTS `PREFIX_smarty_lazy_cache`;
 CREATE TABLE `PREFIX_smarty_lazy_cache` (
   `template_hash` varchar(32) NOT NULL DEFAULT '',
   `cache_id` varchar(32) NOT NULL DEFAULT '',
@@ -107,12 +107,12 @@ CREATE TABLE `PREFIX_smarty_lazy_cache` (
   PRIMARY KEY (`template_hash`, `cache_id`, `compile_id`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `PREFIX_smarty_compile_last_flush`
+DROP TABLE IF EXISTS `PREFIX_smarty_compile_last_flush`;
 CREATE TABLE `PREFIX_smarty_compile_last_flush` (
   `last_flush` datetime NOT NULL DEFAULT '0000-00-00 00:00:00'
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `PREFIX_modules_perfs`
+DROP TABLE IF EXISTS `PREFIX_modules_perfs`;
 CREATE TABLE `PREFIX_modules_perfs` (
   `id_modules_perfs` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `session` int(11) unsigned NOT NULL,
