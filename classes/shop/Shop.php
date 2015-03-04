@@ -146,7 +146,9 @@ class ShopCore extends ObjectModel
 			'category' => array('type' => 'shop'),
 			'category_lang' => array('type' => 'fk_shop'),
 			'cms' => array('type' => 'shop'),
+			'cms_lang' => array('type' => 'fk_shop'),
 			'cms_category' => array('type' => 'shop'),
+			'cms_category_lang' => array('type' => 'fk_shop'),
 			'contact' => array('type' => 'shop'),
 			'country' => array('type' => 'shop'),
 			'currency' => array('type' => 'shop'),
@@ -1028,6 +1030,13 @@ class ShopCore extends ObjectModel
 		{
 			$tables_import['carrier_tax_rules_group_shop'] = true;
 			$tables_import['carrier_lang'] = true;
+		}
+
+		if (isset($tables_import['cms']))
+		{
+			$tables_import['cms_lang'] = true;
+			$tables_import['cms_category'] = true;
+			$tables_import['cms_category_lang'] = true;
 		}
 
 		$tables_import['category_lang'] = true;

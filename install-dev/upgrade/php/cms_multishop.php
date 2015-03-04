@@ -41,11 +41,11 @@ function cms_multishop()
 		$cms = array(
 			'id_cms' => $value['id_cms'],
 			'id_lang' => $value['id_lang'],
-			'content' => $value['content'],
-			'link_rewrite' => $value['link_rewrite'],
-			'meta_title' => $value['meta_title'],
-			'meta_keywords' => $value['meta_keywords'],
-			'meta_description' => $value['meta_description']
+			'content' => pSQL($value['content']),
+			'link_rewrite' => pSQL($value['link_rewrite']),
+			'meta_title' => pSQL($value['meta_title']),
+			'meta_keywords' => pSQL($value['meta_keywords']),
+			'meta_description' => pSQL($value['meta_description'])
 			);
 		foreach ($shops as $shop)
 		{
@@ -73,12 +73,12 @@ function cms_multishop()
 		$cms_category = array(
 			'id_cms_category' => $value['id_cms_category'],
 			'id_lang' => $value['id_lang'],
-			'name' => $value['name'],
-			'description' => $value['description'],
-			'link_rewrite' => $value['link_rewrite'],
-			'meta_title' => $value['meta_title'],
-			'meta_keywords' => $value['meta_keywords'],
-			'meta_description' => $value['meta_description']
+			'name' => pSQL($value['name']),
+			'description' => pSQL($value['description']),
+			'link_rewrite' => pSQL($value['link_rewrite']),
+			'meta_title' => pSQL($value['meta_title']),
+			'meta_keywords' => pSQL($value['meta_keywords']),
+			'meta_description' => pSQL($value['meta_description'])
 			);
 		foreach ($shops as $shop)
 		{

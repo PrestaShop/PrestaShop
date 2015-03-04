@@ -176,7 +176,7 @@ class LanguageCore extends ObjectModel
 	}
 
 	/**
-	  * Return an array of theme 
+	  * Return an array of theme
 	  *
 	  * @return array([theme dir] => array('name' => [theme name]))
 	  * @deprecated 1.5.5.0
@@ -430,7 +430,7 @@ class LanguageCore extends ObjectModel
 						$primary_key_exists = true;
 				}
 				$fields = rtrim($fields, ', ');
-				
+
 				if (!$primary_key_exists)
 					continue;
 
@@ -487,21 +487,21 @@ class LanguageCore extends ObjectModel
 		{
 			if (empty($this->iso_code))
 				$this->iso_code = Language::getIsoById($this->id);
-	
+
 			// Database translations deletion
 			$result = Db::getInstance()->executeS('SHOW TABLES FROM `'._DB_NAME_.'`');
 			foreach ($result as $row)
 				if (isset($row['Tables_in_'._DB_NAME_]) && !empty($row['Tables_in_'._DB_NAME_]) && preg_match('/'.preg_quote(_DB_PREFIX_).'_lang/', $row['Tables_in_'._DB_NAME_]))
 					if (!Db::getInstance()->execute('DELETE FROM `'.$row['Tables_in_'._DB_NAME_].'` WHERE `id_lang` = '.(int)$this->id))
 						return false;
-	
-	
+
+
 			// Delete tags
 			Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'tag WHERE id_lang = '.(int)$this->id);
-	
+
 			// Delete search words
 			Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'search_word WHERE id_lang = '.(int)$this->id);
-	
+
 			// Files deletion
 			foreach (Language::getFilesList($this->iso_code, _THEME_NAME_, false, false, false, true, true) as $key => $file)
 				if (file_exists($key))
@@ -514,7 +514,7 @@ class LanguageCore extends ObjectModel
 				$files = @scandir(_PS_MODULE_DIR_.$mod.'/mails/');
 				if (count($files) <= 2)
 					Language::recurseDeleteDir(_PS_MODULE_DIR_.$mod.'/mails/');
-	
+
 				if (file_exists(_PS_MODULE_DIR_.$mod.'/'.$this->iso_code.'.php'))
 				{
 					unlink(_PS_MODULE_DIR_.$mod.'/'.$this->iso_code.'.php');
@@ -523,7 +523,7 @@ class LanguageCore extends ObjectModel
 						Language::recurseDeleteDir(_PS_MODULE_DIR_.$mod);
 				}
 			}
-	
+
 			if (file_exists(_PS_MAIL_DIR_.$this->iso_code))
 				Language::recurseDeleteDir(_PS_MAIL_DIR_.$this->iso_code);
 			if (file_exists(_PS_TRANSLATIONS_DIR_.$this->iso_code))
@@ -650,7 +650,7 @@ class LanguageCore extends ObjectModel
 		// or a close match.
 		$id_lang = Db::getInstance()->getValue(
 			'SELECT `id_lang`, IF(language_code = \''.pSQL($code).'\', 0, LENGTH(language_code)) as found
-			FROM `'._DB_PREFIX_.'lang` 
+			FROM `'._DB_PREFIX_.'lang`
 			WHERE LEFT(`language_code`,2) = \''.pSQL($lang).'\'
 			ORDER BY found ASC'
 		);
@@ -854,7 +854,7 @@ class LanguageCore extends ObjectModel
 				elseif (!is_writable($file))
 					$errors[] = Tools::displayError('Server does not have permissions for writing.').' ('.$file.')';
 			}
-		
+
 		if (!file_exists($file))
 			$errors[] = Tools::displayError('No language pack is available for your version.');
 		elseif ($install)
@@ -875,7 +875,6 @@ class LanguageCore extends ObjectModel
 					$errors[] = (!$i++? Tools::displayError('The archive cannot be extracted.').' ' : '').Tools::displayError('The server does not have permissions for writing.').' '.sprintf(Tools::displayError('Please check rights for %s'), $path);
 					$tmp_array[] = $path;
 				}
-
 			}
 
 			if (defined('_PS_HOST_MODE_'))
@@ -890,20 +889,18 @@ class LanguageCore extends ObjectModel
 						$other_files[] = $data;
 
 				$files_list = $other_files;
-
-				if (!$gz->extractList(AdminTranslationsController::filesListToPaths($mails_files), _PS_CORE_DIR_))
-					$errors[] = Tools::displayError('Cannot decompress the translation mail file for the following language:').' '.(string)$iso;
 			}
 
 			if (!$gz->extractList(AdminTranslationsController::filesListToPaths($files_list), _PS_TRANSLATIONS_DIR_.'../'))
 				$errors[] = Tools::displayError('Cannot decompress the translation file for the following language:').' '.(string)$iso;
 			// Clear smarty modules cache
 			Tools::clearCache();
+
 			if (!Language::checkAndAddLanguage((string)$iso, $lang_pack, false, $params))
 				$errors[] = Tools::displayError('An error occurred while creating the language: ').(string)$iso;
 			else
 			{
-				// Reset cache 
+				// Reset cache
 				Language::loadLanguages();
 
 				AdminTranslationsController::checkAndAddMailsFiles($iso, $files_list);
