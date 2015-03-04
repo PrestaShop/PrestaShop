@@ -4351,22 +4351,25 @@ class AdminProductsControllerCore extends AdminController
 				$shop_context = Shop::getContext();
 				$shop_group = new ShopGroup((int)Shop::getContextShopGroupID());
 
-				// if we are in all shops context, it's not possible to manage quantities at this level
-				if (Shop::isFeatureActive() && $shop_context == Shop::CONTEXT_ALL)
-					$show_quantities = false;
-				// if we are in group shop context
-				elseif (Shop::isFeatureActive() && $shop_context == Shop::CONTEXT_GROUP)
+				if (Shop::isFeatureActive())
 				{
-					// if quantities are not shared between shops of the group, it's not possible to manage them at group level
-					if (!$shop_group->share_stock)
+					// if we are in all shops context, it's not possible to manage quantities at this level
+					if ($shop_context == Shop::CONTEXT_ALL)
 						$show_quantities = false;
-				}
-				// if we are in shop context
-				else
-				{
-					// if quantities are shared between shops of the group, it's not possible to manage them for a given shop
-					if ($shop_group->share_stock)
-						$show_quantities = false;
+					// if we are in group shop context
+					elseif ($shop_context == Shop::CONTEXT_GROUP)
+					{
+						// if quantities are not shared between shops of the group, it's not possible to manage them at group level
+						if (!$shop_group->share_stock)
+							$show_quantities = false;
+					}
+					// if we are in shop context
+					else
+					{
+						// if quantities are shared between shops of the group, it's not possible to manage them for a given shop
+						if ($shop_group->share_stock)
+							$show_quantities = false;
+					}
 				}
 
 				$data->assign('ps_stock_management', Configuration::get('PS_STOCK_MANAGEMENT'));
