@@ -1457,7 +1457,7 @@ class ToolsCore
 
 	public static function normalizeDirectory($directory)
 	{
-		$directory = $directory = rtrim($directory, '/\\').DIRECTORY_SEPARATOR;;
+		$directory = $directory = rtrim($directory, '/\\').DIRECTORY_SEPARATOR;
 		return $directory;
 	}
 
