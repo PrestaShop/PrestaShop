@@ -192,7 +192,7 @@ class ManufacturerCore extends ObjectModel
 					FROM `'._DB_PREFIX_.'product` p USE INDEX (product_manufacturer)
 					'.Shop::addSqlAssociation('product', 'p').'
 					LEFT JOIN `'._DB_PREFIX_.'manufacturer` as m ON (m.`id_manufacturer`= p.`id_manufacturer`)
-					WHERE product_shop.`visibility` NOT IN ("none")
+					WHERE p.`id_manufacturer` != 0 AND product_shop.`visibility` NOT IN ("none")
 					'.($active ? ' AND product_shop.`active` = 1 ' : '').'
 					'.($all_group ? '' : ' AND p.`id_product` IN (
 						SELECT cp.`id_product`
