@@ -1372,14 +1372,15 @@ class CategoryCore extends ObjectModel
 		$nb_product_recursive = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT COUNT(distinct(id_product))
 			FROM  `'._DB_PREFIX_.'category_product`
-			WHERE id_category IN (
-				SELECT c2.id_category
+			WHERE id_category = '.(int)$this->id.' OR
+			EXISTS (
+				SELECT 1
 				FROM `'._DB_PREFIX_.'category` c2
 				'.Shop::addSqlAssociation('category', 'c2').'
-				WHERE c2.nleft > '.(int)$this->nleft.'
+				WHERE `'._DB_PREFIX_.'category_product`.id_category = c2.id_category
+					AND c2.nleft > '.(int)$this->nleft.'
 					AND c2.nright < '.(int)$this->nright.'
 					AND c2.active = 1
-				UNION SELECT '.(int)$this->id.'
 			)
 		');
 		if (!$nb_product_recursive)

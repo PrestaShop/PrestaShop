@@ -3054,10 +3054,10 @@ class AdminControllerCore extends Controller
 				$test_join = !preg_match('#`?'.preg_quote(_DB_PREFIX_.$this->table.'_shop').'`? *sa#', $this->_join);
 				if (Shop::isFeatureActive() && $test_join && Shop::isTableAssociated($this->table))
 				{
-					$this->_where .= ' AND a.'.$this->identifier.' IN (
-						SELECT sa.'.$this->identifier.'
+					$this->_where .= ' AND EXISTS (
+						SELECT 1
 						FROM `'._DB_PREFIX_.$this->table.'_shop` sa
-						WHERE sa.id_shop IN ('.implode(', ', Shop::getContextListShopID()).')
+						WHERE a.'.$this->identifier.' = sa.'.$this->identifier.' AND sa.id_shop IN ('.implode(', ', Shop::getContextListShopID()).')
 					)';
 				}
 			}

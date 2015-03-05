@@ -194,11 +194,11 @@ class ManufacturerCore extends ObjectModel
 					LEFT JOIN `'._DB_PREFIX_.'manufacturer` as m ON (m.`id_manufacturer`= p.`id_manufacturer`)
 					WHERE p.`id_manufacturer` != 0 AND product_shop.`visibility` NOT IN ("none")
 					'.($active ? ' AND product_shop.`active` = 1 ' : '').'
-					'.($all_group ? '' : ' AND p.`id_product` IN (
-						SELECT cp.`id_product`
+					'.($all_group ? '' : ' AND EXISTS (
+						SELECT 1
 						FROM `'._DB_PREFIX_.'category_group` cg
 						LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
-						WHERE cg.`id_group` '.$sql_groups.'
+						WHERE p.`id_product` = cp.`id_product` AND cg.`id_group` '.$sql_groups.'
 					)
 					GROUP BY p.`id_manufacturer`'
 				));
@@ -295,12 +295,12 @@ class ManufacturerCore extends ObjectModel
 				WHERE p.id_manufacturer = '.(int)$id_manufacturer
 				.($active ? ' AND product_shop.`active` = 1' : '').'
 				'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
-				AND p.`id_product` IN (
-					SELECT cp.`id_product`
+				AND EXISTS (
+					SELECT 1
 					FROM `'._DB_PREFIX_.'category_group` cg
 					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)'.
 					($active_category ? ' INNER JOIN `'._DB_PREFIX_.'category` ca ON cp.`id_category` = ca.`id_category` AND ca.`active` = 1' : '').'
-					WHERE cg.`id_group` '.$sql_groups.'
+					WHERE p.`id_product` = cp.`id_product` AND cg.`id_group` '.$sql_groups.'
 				)';
 
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);

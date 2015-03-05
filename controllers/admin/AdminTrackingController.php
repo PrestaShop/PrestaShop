@@ -108,9 +108,10 @@ class AdminTrackingControllerCore extends AdminController
 		$this->clearFilters();
 
 		$this->_join = Shop::addSqlAssociation('category', 'a');
-		$this->_filter = ' AND a.`id_category` NOT IN (
-			SELECT DISTINCT(cp.id_category)
+		$this->_filter = ' AND NOT EXISTS (
+			SELECT 1
 			FROM `'._DB_PREFIX_.'category_product` cp
+			WHERE a.`id_category` = cp.id_category
 		)
 		AND a.`id_category` != '.(int)Configuration::get('PS_ROOT_CATEGORY');
 		$this->toolbar_title = $this->l('List of empty categories:');

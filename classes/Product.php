@@ -1774,16 +1774,10 @@ class ProductCore extends ObjectModel
 	{
 		return (
 			Db::getInstance()->execute(
-				'DELETE FROM `'._DB_PREFIX_.'search_index`
-				WHERE `id_product` = '.(int)$this->id
-			)
-			&&
-			Db::getInstance()->execute(
-				'DELETE FROM `'._DB_PREFIX_.'search_word`
-				WHERE `id_word` NOT IN (
-					SELECT id_word
-					FROM `'._DB_PREFIX_.'search_index`
-				)'
+				'DELETE `'._DB_PREFIX_.'search_index`, `'._DB_PREFIX_.'search_word`
+				FROM `'._DB_PREFIX_.'search_index` JOIN `'._DB_PREFIX_.'search_word`
+				WHERE `'._DB_PREFIX_.'search_index`.`id_product` = '.(int)$this->id.'
+						AND `'._DB_PREFIX_.'search_word`.`id_word` = `'._DB_PREFIX_.'search_index`.id_word'
 			)
 		);
 	}
@@ -4318,35 +4312,23 @@ class ProductCore extends ObjectModel
 		/* If too much inside the database, deletion */
 		if ($extra_file > 0 && count($customization_fields[Product::CUSTOMIZE_FILE]) - $extra_file >= 0 &&
 		(!Db::getInstance()->execute(
-			'DELETE FROM `'._DB_PREFIX_.'customization_field`
-			WHERE `id_product` = '.(int)$this->id.'
-			AND `type` = '.Product::CUSTOMIZE_FILE.'
-			AND `id_customization_field` >= '.(int)$customization_fields[Product::CUSTOMIZE_FILE][count($customization_fields[Product::CUSTOMIZE_FILE]) - $extra_file]
-		)
-		|| !Db::getInstance()->execute(
-			'DELETE FROM `'._DB_PREFIX_.'customization_field_lang`
-			WHERE `id_customization_field`
-			NOT IN (
-				SELECT `id_customization_field`
-				FROM `'._DB_PREFIX_.'customization_field`
-			)'
+			'DELETE `'._DB_PREFIX_.'customization_field`,`'._DB_PREFIX_.'customization_field_lang`
+			FROM `'._DB_PREFIX_.'customization_field` JOIN `'._DB_PREFIX_.'customization_field_lang`
+			WHERE `'._DB_PREFIX_.'customization_field`.`id_product` = '.(int)$this->id.'
+			AND `'._DB_PREFIX_.'customization_field`.`type` = '.Product::CUSTOMIZE_FILE.'
+			AND `'._DB_PREFIX_.'customization_field_lang`.`id_customization_field` = `'._DB_PREFIX_.'customization_field`.`id_customization_field`
+			AND `'._DB_PREFIX_.'customization_field`.`id_customization_field` >= '.(int)$customization_fields[Product::CUSTOMIZE_FILE][count($customization_fields[Product::CUSTOMIZE_FILE]) - $extra_file]
 		)))
 			return false;
 
 		if ($extra_text > 0 && count($customization_fields[Product::CUSTOMIZE_TEXTFIELD]) - $extra_text >= 0 &&
 		(!Db::getInstance()->execute(
-			'DELETE FROM `'._DB_PREFIX_.'customization_field`
-			WHERE `id_product` = '.(int)$this->id.'
-			AND `type` = '.Product::CUSTOMIZE_TEXTFIELD.'
-			AND `id_customization_field` >= '.(int)$customization_fields[Product::CUSTOMIZE_TEXTFIELD][count($customization_fields[Product::CUSTOMIZE_TEXTFIELD]) - $extra_text]
-		)
-		|| !Db::getInstance()->execute(
-			'DELETE FROM `'._DB_PREFIX_.'customization_field_lang`
-			WHERE `id_customization_field`
-			NOT IN (
-				SELECT `id_customization_field`
-				FROM `'._DB_PREFIX_.'customization_field`
-			)'
+			'DELETE `'._DB_PREFIX_.'customization_field`,`'._DB_PREFIX_.'customization_field_lang`
+			FROM `'._DB_PREFIX_.'customization_field` JOIN `'._DB_PREFIX_.'customization_field_lang`
+			WHERE `'._DB_PREFIX_.'customization_field`.`id_product` = '.(int)$this->id.'
+			AND `'._DB_PREFIX_.'customization_field`.`type` = '.Product::CUSTOMIZE_TEXTFIELD.'
+			AND `'._DB_PREFIX_.'customization_field_lang`.`id_customization_field` = `'._DB_PREFIX_.'customization_field`.`id_customization_field`
+			AND `'._DB_PREFIX_.'customization_field`.`id_customization_field` >= '.(int)$customization_fields[Product::CUSTOMIZE_TEXTFIELD][count($customization_fields[Product::CUSTOMIZE_TEXTFIELD]) - $extra_text]
 		)))
 			return false;
 
@@ -5744,12 +5726,14 @@ class ProductCore extends ObjectModel
 			FROM '._DB_PREFIX_.'stock_available sa
 			WHERE id_product='.(int)$this->id.' AND quantity <= 0
 			'.StockAvailable::addSqlShopRestriction(null, $id_shop, 'sa').'
-			AND id_product_attribute IN (
-				SELECT pa.id_product_attribute
+			AND EXISTS (
+				SELECT 1
 				FROM '._DB_PREFIX_.'product_attribute pa
-				JOIN '._DB_PREFIX_.'product_attribute_shop product_attribute_shop ON (product_attribute_shop.id_product_attribute = pa.id_product_attribute AND product_attribute_shop.id_shop='.(int)$id_shop.')
-				JOIN '._DB_PREFIX_.'product_attribute_combination pac ON (pac.id_product_attribute AND product_attribute_shop.id_product_attribute)
-				WHERE pa.id_product='.(int)$this->id.' AND pac.id_attribute='.(int)$id_attribute.'
+				JOIN '._DB_PREFIX_.'product_attribute_shop product_attribute_shop
+					ON (product_attribute_shop.id_product_attribute = pa.id_product_attribute AND product_attribute_shop.id_shop='.(int)$id_shop.')
+				JOIN '._DB_PREFIX_.'product_attribute_combination pac
+					ON (pac.id_product_attribute AND product_attribute_shop.id_product_attribute)
+				WHERE sa.id_product_attribute = pa.id_product_attribute AND pa.id_product='.(int)$this->id.' AND pac.id_attribute='.(int)$id_attribute.'
 			)'
 		);
 	}

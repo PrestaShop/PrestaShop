@@ -239,12 +239,17 @@ class AdminCartRulesControllerCore extends AdminController
 			FROM '._DB_PREFIX_.'cart_rule cr
 			WHERE cr.id_cart_rule != '.(int)$currentObject->id.'
 			AND cr.cart_rule_restriction = 0
-			AND cr.id_cart_rule NOT IN (
-				SELECT IF(id_cart_rule_1 = '.(int)$currentObject->id.', id_cart_rule_2, id_cart_rule_1)
+			AND NOT EXISTS (
+				SELECT 1
 				FROM '._DB_PREFIX_.'cart_rule_combination
-				WHERE '.(int)$currentObject->id.' = id_cart_rule_1
-				OR '.(int)$currentObject->id.' = id_cart_rule_2
-			)');
+				WHERE cr.id_cart_rule = '._DB_PREFIX_.'cart_rule_combination.id_cart_rule_2 AND '.(int)$currentObject->id.' = id_cart_rule_1
+			)
+			AND NOT EXISTS (
+				SELECT 1
+				FROM '._DB_PREFIX_.'cart_rule_combination
+				WHERE cr.id_cart_rule = '._DB_PREFIX_.'cart_rule_combination.id_cart_rule_1 AND '.(int)$currentObject->id.' = id_cart_rule_2
+			)
+			');
 			foreach ($ruleCombinations as $incompatibleRule)
 			{
 				Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'cart_rule` SET cart_rule_restriction = 1 WHERE id_cart_rule = '.(int)$incompatibleRule['id_cart_rule'].' LIMIT 1');

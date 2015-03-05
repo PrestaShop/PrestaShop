@@ -1088,11 +1088,15 @@ class CartRuleCore extends ObjectModel
 		WHERE cr.id_cart_rule != '.(int)$this->id.'
 		AND (
 			cr.cart_rule_restriction = 0
-			OR cr.id_cart_rule IN (
-				SELECT IF(id_cart_rule_1 = '.(int)$this->id.', id_cart_rule_2, id_cart_rule_1)
+			OR EXISTS (
+				SELECT 1
 				FROM '._DB_PREFIX_.'cart_rule_combination
-				WHERE '.(int)$this->id.' = id_cart_rule_1
-				OR '.(int)$this->id.' = id_cart_rule_2
+				WHERE cr.id_cart_rule = '._DB_PREFIX_.'cart_rule_combination.id_cart_rule_1 AND '.(int)$this->id.' = id_cart_rule_2
+			)
+			OR EXISTS (
+				SELECT 1
+				FROM '._DB_PREFIX_.'cart_rule_combination
+				WHERE cr.id_cart_rule = '._DB_PREFIX_.'cart_rule_combination.id_cart_rule_2 AND '.(int)$this->id.' = id_cart_rule_1
 			)
 		)');
 
@@ -1219,8 +1223,8 @@ class CartRuleCore extends ObjectModel
 		)
 		AND (
 			cr.`group_restriction` = 0
-			'.($context->customer->id ? 'OR 0 < (
-				SELECT cg.`id_group`
+			'.($context->customer->id ? 'OR EXISTS (
+				SELECT 1
 				FROM `'._DB_PREFIX_.'customer_group` cg
 				INNER JOIN `'._DB_PREFIX_.'cart_rule_group` crg ON cg.id_group = crg.id_group
 				WHERE cr.`id_cart_rule` = crg.`id_cart_rule`
@@ -1230,10 +1234,10 @@ class CartRuleCore extends ObjectModel
 		)
 		AND (
 			cr.`reduction_product` <= 0
-			OR cr.`reduction_product` IN (
-				SELECT `id_product`
+			OR EXISTS (
+				SELECT 1
 				FROM `'._DB_PREFIX_.'cart_product`
-				WHERE `id_cart` = '.(int)$context->cart->id.'
+				WHERE `'._DB_PREFIX_.'cart_product`.`id_product` = cr.`reduction_product` AND `id_cart` = '.(int)$context->cart->id.'
 			)
 		)
 		AND NOT EXISTS (SELECT 1 FROM '._DB_PREFIX_.'cart_cart_rule WHERE cr.id_cart_rule = '._DB_PREFIX_.'cart_cart_rule.id_cart_rule
