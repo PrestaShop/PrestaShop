@@ -383,6 +383,7 @@ class AdminImportControllerCore extends AdminController
 					'phone' => array('label' => $this->l('Phone')),
 					'phone_mobile' => array('label' => $this->l('Mobile Phone')),
 					'vat_number' => array('label' => $this->l('VAT number')),
+					'dni' => array('label' => $this->l('DNI/NIF/NIE')),
 				);
 
 				self::$default_values = array(
