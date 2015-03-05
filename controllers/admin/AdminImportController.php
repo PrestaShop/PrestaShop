@@ -336,6 +336,13 @@ class AdminImportControllerCore extends AdminController
 					'optin' => array('label' => $this->l('Opt-in (0/1)')),
 					'group' => array('label' => $this->l('Groups (x,y,z...)')),
 					'id_default_group' => array('label' => $this->l('Default group ID')),
+					'id_risk' => array('label' => $this->l('Risk rating')),
+					'company' => array('label' => $this->l('Company')),
+					'siret' => array('label' => $this->l('Siret')),
+					'ape' => array('label' => $this->l('Ape')),
+					'website' => array('label' => $this->l('Website')),
+					'outstanding_allow_amount' => array('label' => $this->l('Allowed outstanding amount')),
+					'max_payment_days' => array('label' => $this->l('Maximum number of payment days')),
 					'id_shop' => array(
 						'label' => $this->l('ID / Name of shop'),
 						'help' => $this->l('Ignore this field if you don\'t use the Multistore tool. If you leave this field empty, the default shop will be used.'),
