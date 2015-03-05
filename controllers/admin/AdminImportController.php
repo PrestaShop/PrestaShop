@@ -72,7 +72,7 @@ class AdminImportControllerCore extends AdminController
 		'available_now' => array('AdminImportController', 'createMultiLangField'),
 		'available_later' => array('AdminImportController', 'createMultiLangField'),
 		'category' => array('AdminImportController', 'split'),
-		'online_only' => array('AdminImportController', 'getBoolean')
+		'online_only' => array('AdminImportController', 'getBoolean'),
 	);
 
 	public $separator;
