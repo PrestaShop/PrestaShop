@@ -141,18 +141,20 @@ function smarty_modifier_htmlentitiesUTF8($string)
 }
 function smartyMinifyHTML($tpl_output, &$smarty)
 {
-	if (in_array(Context::getContext()->controller->php_self, array('pdf-invoice', 'pdf-order-return', 'pdf-order-slip')))
+	$context = Context::getContext();
+	if (isset($context->controller) && in_array($context->controller->php_self, array('pdf-invoice', 'pdf-order-return', 'pdf-order-slip')))
 		return $tpl_output;
-    $tpl_output = Media::minifyHTML($tpl_output);
-    return $tpl_output;
+	$tpl_output = Media::minifyHTML($tpl_output);
+	return $tpl_output;
 }
 
 function smartyPackJSinHTML($tpl_output, &$smarty)
 {
-	if (in_array(Context::getContext()->controller->php_self, array('pdf-invoice', 'pdf-order-return', 'pdf-order-slip')))
+	$context = Context::getContext();
+	if (isset($context->controller) && in_array($context->controller->php_self, array('pdf-invoice', 'pdf-order-return', 'pdf-order-slip')))
 		return $tpl_output;
-    $tpl_output = Media::packJSinHTML($tpl_output);
-    return $tpl_output;
+	$tpl_output = Media::packJSinHTML($tpl_output);
+	return $tpl_output;
 }
 
 function smartyRegisterFunction($smarty, $type, $function, $params, $lazy = true)
@@ -237,13 +239,13 @@ class SmartyLazyRegister
 		else
 		{
 			$args = array();
-			
+
 			foreach($arguments as $a => $argument)
 				if($a == 0)
-					$args[] = $arguments[0]; 
+					$args[] = $arguments[0];
 				else
-					$args[] = &$arguments[$a]; 
-			
+					$args[] = &$arguments[$a];
+
 			return call_user_func_array($item, $args);
 		}
 	}
