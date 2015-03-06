@@ -71,9 +71,9 @@ class CategoryControllerCore extends FrontController
 	/**
 	 * Redirects to canonical or "Not Found" URL
 	 *
-	 * @param string $canonicalURL
+	 * @param string $canonical_url
 	 */
-	public function canonicalRedirection($canonicalURL = '')
+	public function canonicalRedirection($canonical_url = '')
 	{
 		if (Tools::getValue('live_edit'))
 			return;
