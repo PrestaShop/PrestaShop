@@ -215,6 +215,7 @@ ul.product_list.grid > li {
     ul.product_list.grid > li .product-container .old-price {
       margin-right: 5px; }
     ul.product_list.grid > li .product-container .button-container {
+      display: none;
       margin-bottom: 14px; }
       ul.product_list.grid > li .product-container .button-container .ajax_add_to_cart_button,
       ul.product_list.grid > li .product-container .button-container span.button,
