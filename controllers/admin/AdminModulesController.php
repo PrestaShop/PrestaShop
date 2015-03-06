@@ -761,7 +761,7 @@ class AdminModulesControllerCore extends AdminController
 								$content = Tools::file_get_contents(_PS_ROOT_DIR_.$file);
 								if ($xml = @simplexml_load_string($content, null, LIBXML_NOCDATA))
 									foreach ($xml->module as $modaddons)
-										if ($name == $modaddons->name)
+										if (Tools::strtolower($name) == Tools::strtolower($modaddons->name))
 										{
 											$module_to_update[$name]['id'] = $modaddons->id;
 											$module_to_update[$name]['displayName'] = $modaddons->displayName;
