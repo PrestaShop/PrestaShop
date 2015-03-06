@@ -637,39 +637,56 @@ class CategoryCore extends ObjectModel
 	}
 
 	/**
-	 * Return current category products
+	 * Returns category products
 	 *
-	 * @param integer $id_lang Language ID
-	 * @param integer $p Page number
-	 * @param integer $n Number of products per page
-	 * @param boolean $get_total return the number of results instead of the results themself
-	 * @param boolean $active return only active products
-	 * @param boolean $random active a random filter for returned products
-	 * @param int $random_number_products number of products to return if random is activated
-	 * @param boolean $check_access set to false to return all products (even if customer hasn't access)
-	 * @return mixed Products or number of products
+	 * @param int         $id_lang                Language ID
+	 * @param int         $p                      Page number
+	 * @param int         $n                      Number of products per page
+	 * @param string|null $order_by               ORDER BY column
+	 * @param string|null $order_way              Order way
+	 * @param bool        $get_total              If set to true, returns the total number of results only
+	 * @param bool        $active                 If set to true, finds only active products
+	 * @param bool        $random                 If true, sets a random filter for returned products
+	 * @param int         $random_number_products Number of products to return if random is activated
+	 * @param bool        $check_access           If set tot rue, check if the current customer
+	 *                                            can see products from this category
+	 * @param Context|null $context
+	 *
+	 * @return array|int|false Products, number of products or false (no access)
+	 * @throws PrestaShopDatabaseException
 	 */
 	public function getProducts($id_lang, $p, $n, $order_by = null, $order_way = null, $get_total = false, $active = true, $random = false, $random_number_products = 1, $check_access = true, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
+
 		if ($check_access && !$this->checkAccess($context->customer->id))
 			return false;
 
-		$front = true;
-		if (!in_array($context->controller->controller_type, array('front', 'modulefront')))
-			$front = false;
+		$front = in_array($context->controller->controller_type, array('front', 'modulefront'));
+		$id_supplier = (int)Tools::getValue('id_supplier');
 
-		if ($p < 1) $p = 1;
+		/** Return only the number of products */
+		if ($get_total)
+		{
+			$sql = 'SELECT COUNT(cp.`id_product`) AS total
+					FROM `'._DB_PREFIX_.'product` p
+					'.Shop::addSqlAssociation('product', 'p').'
+					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON p.`id_product` = cp.`id_product`
+					WHERE cp.`id_category` = '.(int)$this->id.
+				($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').
+				($active ? ' AND product_shop.`active` = 1' : '').
+				($id_supplier ? 'AND p.id_supplier = '.(int)$id_supplier : '');
 
-		if (empty($order_by))
-			$order_by = 'position';
-		else
-			/* Fix for all modules which are now using lowercase values for 'orderBy' parameter */
-			$order_by = strtolower($order_by);
+			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
+		}
 
-		if (empty($order_way))
-			$order_way = 'ASC';
+		if ($p < 1)
+			$p = 1;
+
+		/** Tools::strtolower is a fix for all modules which are now using lowercase values for 'orderBy' parameter */
+		$order_by  = Validate::isOrderBy($order_by)   ? Tools::strtolower($order_by)  : 'position';
+		$order_way = Validate::isOrderWay($order_way) ? Tools::strtoupper($order_way) : 'ASC';
 
 		$order_by_prefix = false;
 		if ($order_by == 'id_product' || $order_by == 'date_add' || $order_by == 'date_upd')
@@ -687,32 +704,16 @@ class CategoryCore extends ObjectModel
 		if ($order_by == 'price')
 			$order_by = 'orderprice';
 
-		if (!Validate::isBool($active) || !Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way))
-			die (Tools::displayError());
+		$nb_days_new_product = Configuration::get('PS_NB_DAYS_NEW_PRODUCT');
+		if (!Validate::isUnsignedInt($nb_days_new_product))
+			$nb_days_new_product = 20;
 
-		$id_supplier = (int)Tools::getValue('id_supplier');
-
-		/* Return only the number of products */
-		if ($get_total)
-		{
-			$sql = 'SELECT COUNT(cp.`id_product`) AS total
-					FROM `'._DB_PREFIX_.'product` p
-					'.Shop::addSqlAssociation('product', 'p').'
-					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON p.`id_product` = cp.`id_product`
-					WHERE cp.`id_category` = '.(int)$this->id.
-					($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').
-					($active ? ' AND product_shop.`active` = 1' : '').
-					($id_supplier ? 'AND p.id_supplier = '.(int)$id_supplier : '');
-			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
-		}
-
-		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity'.(Combination::isFeatureActive() ? ', IFNULL(product_attribute_shop.id_product_attribute, 0) id_product_attribute,
+		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) AS quantity'.(Combination::isFeatureActive() ? ', IFNULL(product_attribute_shop.id_product_attribute, 0) AS id_product_attribute,
 					product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity' : '').', pl.`description`, pl.`description_short`, pl.`available_now`,
 					pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, image_shop.`id_image` id_image,
 					il.`legend` as legend, m.`name` AS manufacturer_name, cl.`name` AS category_default,
 					DATEDIFF(product_shop.`date_add`, DATE_SUB("'.date('Y-m-d').' 00:00:00",
-					INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).'
-						DAY)) > 0 AS new, product_shop.price AS orderprice
+					INTERVAL '.(int)$nb_days_new_product.' DAY)) > 0 AS new, product_shop.price AS orderprice
 				FROM `'._DB_PREFIX_.'category_product` cp
 				LEFT JOIN `'._DB_PREFIX_.'product` p
 					ON p.`id_product` = cp.`id_product`
@@ -747,13 +748,14 @@ class CategoryCore extends ObjectModel
 			LIMIT '.(((int)$p - 1) * (int)$n).','.(int)$n;
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
-		if ($order_by == 'orderprice')
-			Tools::orderbyPrice($result, $order_way);
 
 		if (!$result)
 			return array();
 
-		/* Modify SQL result */
+		if ($order_by == 'orderprice')
+			Tools::orderbyPrice($result, $order_way);
+
+		/** Modify SQL result */
 		return Product::getProductsProperties($id_lang, $result);
 	}
 
