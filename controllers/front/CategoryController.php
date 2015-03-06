@@ -26,8 +26,13 @@
 
 class CategoryControllerCore extends FrontController
 {
+	/** string Internal controller name */
 	public $php_self = 'category';
+
+	/** @var Category Current category object */
 	protected $category;
+
+	/** @var bool If set to false, customer cannot view the current category. */
 	public $customer_access = true;
 
 	/** @var int Number of products in the current page. */
@@ -37,7 +42,7 @@ class CategoryControllerCore extends FrontController
 	protected $cat_products;
 
 	/**
-	 * Set default medias for this controller
+	 * Sets default medias for this controller
 	 */
 	public function setMedia()
 	{
@@ -61,6 +66,11 @@ class CategoryControllerCore extends FrontController
 		$this->addJS(_THEME_JS_DIR_.'category.js');
 	}
 
+	/**
+	 * Redirects to canonical or "Not Found" URL
+	 *
+	 * @param string $canonicalURL
+	 */
 	public function canonicalRedirection($canonicalURL = '')
 	{
 		if (Tools::getValue('live_edit'))
@@ -75,8 +85,10 @@ class CategoryControllerCore extends FrontController
 	}
 
 	/**
-	 * Initialize category controller
+	 * Initializes controller
+	 *
 	 * @see FrontController::init()
+	 * @throws PrestaShopException
 	 */
 	public function init()
 	{
@@ -105,6 +117,9 @@ class CategoryControllerCore extends FrontController
 		}
 	}
 
+	/**
+	 * Initializes page content variables
+	 */
 	public function initContent()
 	{
 		parent::initContent();
@@ -144,7 +159,7 @@ class CategoryControllerCore extends FrontController
 	}
 
 	/**
-	 * Assign scenes template vars
+	 * Assigns scenes template variables
 	 */
 	protected function assignScenes()
 	{
@@ -171,7 +186,7 @@ class CategoryControllerCore extends FrontController
 	}
 
 	/**
-	 * Assign sub categories templates vars
+	 * Assigns subcategory templates variables
 	 */
 	protected function assignSubcategories()
 	{
@@ -186,7 +201,7 @@ class CategoryControllerCore extends FrontController
 	}
 
 	/**
-	 * Assign list of products template vars
+	 * Assigns product list template variables
 	 */
 	public function assignProductList()
 	{
@@ -225,7 +240,9 @@ class CategoryControllerCore extends FrontController
 	}
 
 	/**
-	 * Get instance of current category
+	 * Returns an instance of the current category
+	 *
+	 * @return Category
 	 */
 	public function getCategory()
 	{
