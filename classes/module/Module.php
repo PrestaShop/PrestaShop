@@ -262,7 +262,7 @@ abstract class ModuleCore
 		// Check module dependencies
 		if (count($this->dependencies) > 0)
 			foreach ($this->dependencies as $dependency)
-				if (!Db::getInstance()->getRow('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL(Tools::strtolower($dependency)).'\''))
+				if (!Db::getInstance()->getRow('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE LOWER(`name`) = \''.pSQL(Tools::strtolower($dependency)).'\''))
 				{
 					$error = Tools::displayError('Before installing this module, you have to install this/these module(s) first:').'<br />';
 					foreach ($this->dependencies as $d)
@@ -1198,8 +1198,10 @@ abstract class ModuleCore
 					$item = new stdClass();
 					$item->id = 0;
 					$item->warning = '';
+
 					foreach ($xml_module as $k => $v)
 						$item->$k = (string)$v;
+
 					$item->displayName = stripslashes(Translate::getModuleTranslation((string)$xml_module->name, Module::configXmlStringFormat($xml_module->displayName), (string)$xml_module->name));
 					$item->description = stripslashes(Translate::getModuleTranslation((string)$xml_module->name, Module::configXmlStringFormat($xml_module->description), (string)$xml_module->name));
 					$item->author = stripslashes(Translate::getModuleTranslation((string)$xml_module->name, Module::configXmlStringFormat($xml_module->author), (string)$xml_module->name));
@@ -1210,12 +1212,12 @@ abstract class ModuleCore
 
 					$item->active = 0;
 					$item->onclick_option = false;
-
 					$item->trusted = Module::isModuleTrusted($item->name);
 
 					$module_list[] = $item;
+
 					$module_name_list[] = '\''.pSQL($item->name).'\'';
-					$modulesNameToCursor[strval($item->name)] = $item;
+					$modulesNameToCursor[Tools::strtolower(strval($item->name))] = $item;
 				}
 			}
 
@@ -1228,8 +1230,10 @@ abstract class ModuleCore
 					// Get content from php file
 					$filepath = _PS_MODULE_DIR_.$module.'/'.$module.'.php';
 					$file = trim(file_get_contents(_PS_MODULE_DIR_.$module.'/'.$module.'.php'));
+
 					if (substr($file, 0, 5) == '<?php')
 						$file = substr($file, 5);
+
 					if (substr($file, -2) == '?>')
 						$file = substr($file, 0, -2);
 
@@ -1244,7 +1248,6 @@ abstract class ModuleCore
 				// If class exists, we just instanciate it
 				if (class_exists($module, false))
 				{
-
 					$tmp_module = new $module;
 
 					$item = new stdClass();
@@ -1273,25 +1276,27 @@ abstract class ModuleCore
 					$item->avg_rate = isset($tmp_module->avg_rate) ? (array)$tmp_module->avg_rate : null;
 					$item->badges = isset($tmp_module->badges) ? (array)$tmp_module->badges : null;
 					$item->url = isset($tmp_module->url) ? $tmp_module->url : null;
-
 					$item->onclick_option  = method_exists($module, 'onclickOption') ? true : false;
+
 					if ($item->onclick_option)
 					{
 						$href = Context::getContext()->link->getAdminLink('Module', true).'&module_name='.$tmp_module->name.'&tab_module='.$tmp_module->tab;
 						$item->onclick_option_content = array();
 						$option_tab = array('desactive', 'reset', 'configure', 'delete');
+
 						foreach ($option_tab as $opt)
 							$item->onclick_option_content[$opt] = $tmp_module->onclickOption($opt, $href);
 					}
 
-
 					$module_list[] = $item;
+
 					if (!$xml_exist || $needNewConfigFile)
 					{
 						self::$_generate_config_xml_mode = true;
 						$tmp_module->_generateConfigXml();
 						self::$_generate_config_xml_mode = false;
 					}
+
 					unset($tmp_module);
 				}
 				else
@@ -1303,13 +1308,13 @@ abstract class ModuleCore
 		if (!empty($module_name_list))
 		{
 			$list = Shop::getContextListShopID();
-
 			$sql = 'SELECT m.id_module, m.name, (
 						SELECT COUNT(*) FROM '._DB_PREFIX_.'module_shop ms WHERE m.id_module = ms.id_module AND ms.id_shop IN ('.implode(',', $list).')
 					) as total
 					FROM '._DB_PREFIX_.'module m
-					WHERE m.name IN ('.implode(',', $module_name_list).')';
+					WHERE LOWER(m.name) IN ('.Tools::strtolower(implode(',', $module_name_list)).')';
 			$results = Db::getInstance()->executeS($sql);
+
 			foreach ($results as $result)
 			{
 				if (isset($modulesNameToCursor[Tools::strtolower($result['name'])]))
@@ -1339,12 +1344,14 @@ abstract class ModuleCore
 				$file = $f['file'];
 				$content = Tools::file_get_contents($file);
 				$xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
+
 				if ($xml && isset($xml->module))
 					foreach ($xml->module as $modaddons)
 					{
 						$flag_found = 0;
+
 						foreach ($module_list as $k => &$m)
-							if ($m->name == $modaddons->name && !isset($m->available_on_addons))
+							if (Tools::strtolower($m->name) == Tools::strtolower($modaddons->name) && !isset($m->available_on_addons))
 							{
 								$flag_found = 1;
 								if ($m->version != $modaddons->version && version_compare($m->version, $modaddons->version) === -1)
@@ -1380,28 +1387,34 @@ abstract class ModuleCore
 							$item->avg_rate = isset($modaddons->avg_rate) ? (array)$modaddons->avg_rate : null;
 							$item->badges = isset($modaddons->badges) ? (array)$modaddons->badges : null;
 							$item->url = isset($modaddons->url) ? $modaddons->url : null;
+
 							if (isset($modaddons->img))
 							{
 								if (!file_exists(_PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg'))
 									if (!file_put_contents(_PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg', Tools::file_get_contents($modaddons->img)))
 										copy(_PS_IMG_DIR_.'404.gif', _PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg');
+
 								if (file_exists(_PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg'))
 									$item->image = '../img/tmp/'.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg';
 							}
+
 							if ($item->type == 'addonsMustHave')
 							{
 								$item->addons_buy_url = strip_tags((string)$modaddons->url);
 								$prices = (array)$modaddons->price;
 								$id_default_currency = Configuration::get('PS_CURRENCY_DEFAULT');
+
 								foreach ($prices as $currency => $price)
 									if ($id_currency = Currency::getIdByIsoCode($currency))
 									{
 										$item->price = (float)$price;
 										$item->id_currency = (int)$id_currency;
+
 										if ($id_default_currency == $id_currency)
 											break;
 									}
 							}
+
 							$module_list[] = $item;
 						}
 					}
@@ -1622,7 +1635,7 @@ abstract class ModuleCore
 
 			if ($xml && isset($xml->module))
 				foreach ($xml->module as $modaddons)
-					$trusted[] = (string)$modaddons->name;
+					$trusted[] = Tools::strtolower((string)$modaddons->name);
 		}
 
 		foreach (glob(_PS_ROOT_DIR_.'/config/xml/themes/*.xml') as $theme_xml)
@@ -1632,7 +1645,7 @@ abstract class ModuleCore
 				$xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
 				foreach ($xml->modules->module as $modaddons)
 					if((string)$modaddons['action'] == 'install')
-						$trusted[] = (string)$modaddons['name'];
+						$trusted[] = Tools::strtolower((string)$modaddons['name']);
 			}
 
 		foreach ($modules_on_disk as $name)
@@ -1640,9 +1653,9 @@ abstract class ModuleCore
 			if (!in_array($name, $trusted))
 			{
 				if (Module::checkModuleFromAddonsApi($name))
-					$trusted[] = $name;
+					$trusted[] = Tools::strtolower($name);
 				else
-					$untrusted[] = $name;
+					$untrusted[] = Tools::strtolower($name);
 			}
 		}
 
