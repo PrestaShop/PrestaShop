@@ -279,7 +279,9 @@ ul.product_list.grid {
 				margin-right: 5px;
 			}
 			.button-container {
-				display: none;
+				@media (min-width: $screen-lg) { // min 1200px
+					display: none;
+				}
 				margin-bottom: 14px;
 				.ajax_add_to_cart_button,
 				span.button,
