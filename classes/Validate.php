@@ -199,7 +199,7 @@ class ValidateCore
 	 */
 	public static function isModuleName($module_name)
 	{
-		return (is_string($module_name) && preg_match('/^[a-z0-9_]+$/', $module_name));
+		return (is_string($module_name) && preg_match('/^[a-zA-Z0-9_-]+$/', $module_name));
 	}
 
 	/**

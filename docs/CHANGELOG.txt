@@ -1,4 +1,4 @@
-2007-2015 PrestaShop 
+2007-2015 PrestaShop
 
 NOTICE OF LICENSE
 
@@ -29,8 +29,8 @@ Release Notes for PrestaShop 1.6
 
 	Fixed bugs:
 
-	[-] BO : Fix bug #PSCFV-12280, save product list, last part
-	[-] BO : Fix bug #PSCFV-12280, save product list, first part
+	[-] FO : Fix duplicate pack item
+	[-] BO : Fix unable to save in multishop on firefox
 
 
 ####################################
@@ -6911,6 +6911,6 @@ Release Notes for PrestaShop 1.6
 ####################################
 
 	Added Features:
-	
-	[+] Project : new feature, multi-shop	
+
+	[+] Project : new feature, multi-shop
 	[+] FO : add dispatcher
