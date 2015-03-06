@@ -30,6 +30,12 @@ class CategoryControllerCore extends FrontController
 	protected $category;
 	public $customer_access = true;
 
+	/** @var int Number of products in the current page. */
+	protected $nbProducts;
+
+	/** @var array Products to be displayed in the current page . */
+	protected $cat_products;
+
 	/**
 	 * Set default medias for this controller
 	 */
