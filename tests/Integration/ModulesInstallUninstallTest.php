@@ -1,6 +1,6 @@
 <?php
 
-namespace PrestaShop\PrestaShop\Tests\Unit;
+namespace PrestaShop\PrestaShop\Tests\Integration;
 
 use PHPUnit_Framework_TestCase;
 

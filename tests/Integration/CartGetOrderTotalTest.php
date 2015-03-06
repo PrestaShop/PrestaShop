@@ -25,7 +25,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-namespace PrestaShop\PrestaShop\Tests\Unit;
+namespace PrestaShop\PrestaShop\Tests\Integration;
 
 use PHPUnit_Framework_TestCase;
 use PHPUnit_Framework_Assert as Assert;
@@ -59,6 +59,9 @@ class CartGetOrderTotalTest extends PHPUnit_Framework_TestCase
         // Save the database to restore it later: we're not the only test running so let's leave things
         // the way we found them.
         self::$dump = DatabaseDump::create();
+
+        // Some tests might have cleared the configuration
+        Configuration::loadConfiguration();
 
         // Context needs a currency but doesn't set it by itself, use default one.
         Context::getContext()->currency = new Currency(self::getCurrencyId());
@@ -99,6 +102,11 @@ class CartGetOrderTotalTest extends PHPUnit_Framework_TestCase
     private static function getLanguageId()
     {
         return (int)Context::getContext()->language->id;
+    }
+
+    private static function getDefaultLanguageId()
+    {
+        return Configuration::get('PS_LANG_DEFAULT');
     }
 
     private static function getCurrencyId()
@@ -187,7 +195,7 @@ class CartGetOrderTotalTest extends PHPUnit_Framework_TestCase
 
         if (!array_key_exists($name, $taxes))
         {
-            $tax = new Tax(null, self::getLanguageId());
+            $tax = new Tax(null, self::getDefaultLanguageId());
             $tax->name = $name;
             $tax->rate = $rate;
             $tax->active = true;
@@ -209,12 +217,12 @@ class CartGetOrderTotalTest extends PHPUnit_Framework_TestCase
 
         if (!array_key_exists($name, $groups))
         {
-            $taxRulesGroup = new TaxRulesGroup(null, self::getLanguageId());
+            $taxRulesGroup = new TaxRulesGroup(null, self::getDefaultLanguageId());
             $taxRulesGroup->name = $name;
             $taxRulesGroup->active = true;
             Assert::assertTrue((bool)$taxRulesGroup->save());
 
-            $taxRule = new TaxRule(null, self::getLanguageId());
+            $taxRule = new TaxRule(null, self::getDefaultLanguageId());
             $taxRule->id_tax = self::getIdTax($rate);
             $taxRule->id_country = self::getCountryId();
             $taxRule->id_tax_rules_group = $taxRulesGroup->id;
@@ -233,7 +241,7 @@ class CartGetOrderTotalTest extends PHPUnit_Framework_TestCase
     private static function makeProduct($name, $price, $id_tax_rules_group)
     {
 
-        $product = new Product(null, false, self::getLanguageId());
+        $product = new Product(null, false, self::getDefaultLanguageId());
         $product->id_tax_rules_group = $id_tax_rules_group;
         $product->name = $name;
         $product->price = $price;
@@ -257,7 +265,7 @@ class CartGetOrderTotalTest extends PHPUnit_Framework_TestCase
 
     private static function makeCart()
     {
-        $cart = new Cart(null, self::getLanguageId());
+        $cart = new Cart(null, self::getDefaultLanguageId());
         $cart->id_currency = self::getCurrencyId();
         $cart->id_address_invoice = self::$id_address;
         Assert::assertTrue($cart->save());
@@ -275,7 +283,7 @@ class CartGetOrderTotalTest extends PHPUnit_Framework_TestCase
 
         if (!array_key_exists($name, $carriers))
         {
-            $carrier = new Carrier(null, self::getLanguageId());
+            $carrier = new Carrier(null, self::getDefaultLanguageId());
 
             $carrier->name = $name;
             $carrier->delay = '28 days later';
@@ -332,7 +340,7 @@ class CartGetOrderTotalTest extends PHPUnit_Framework_TestCase
 
     private static function makeCartRule($amount, $type)
     {
-        $cartRule = new CartRule(null, self::getLanguageId());
+        $cartRule = new CartRule(null, self::getDefaultLanguageId());
 
         $cartRule->name = $amount.' '.$type.' Cart Rule';
 
