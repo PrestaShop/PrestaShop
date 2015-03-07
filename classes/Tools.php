@@ -918,6 +918,21 @@ class ToolsCore
 	}
 
 	/**
+	 * Prints object information into error log
+	 *
+	 * @see error_log()
+	 * @param mixed $object
+	 * @param int|null    $message_type
+	 * @param string|null $destination
+	 * @param string|null $extra_headers
+	 * @return bool
+	 */
+	public static function epr($object, $message_type = null, $destination = null, $extra_headers = null)
+	{
+		return error_log(print_r($object, true), $message_type, $destination, $extra_headers);
+	}
+
+	/**
 	* Check if submit has been posted
 	*
 	* @param string $submit submit name
