@@ -3612,6 +3612,21 @@ class ProductCore extends ObjectModel
 			}
 			else
 				Shop::setContext($context_old, $context_shop_id_old);
+			
+			//Copy suppliers
+			$result3 = Db::getInstance()->executeS('
+			SELECT *
+			FROM `'._DB_PREFIX_.'product_supplier`
+			WHERE `id_product_attribute` = '.(int)$id_product_attribute_old.'
+			AND `id_product` = '.(int)$id_product_old);
+			
+			foreach ($result3 as $row3)
+			{
+				unset($row3['id_product_supplier']);
+				$row3['id_product'] = $id_product_new;
+				$row3['id_product_attribute'] = $id_product_attribute_new;
+				$return &= Db::getInstance()->insert('product_supplier', $row3);
+			}
 		}
 
 		$impacts = self::getAttributesImpacts($id_product_old);
@@ -3899,6 +3914,30 @@ class ProductCore extends ObjectModel
 		return true;
 	}
 
+	/**
+	 * Adds suppliers from old product onto a newly duplicated product
+	 *
+	 * @param integer $id_product_old
+	 * @param integer $id_product_new
+	 */
+	public static function duplicateSuppliers($id_product_old, $id_product_new)
+	{
+		$result = Db::getInstance()->executeS('
+		SELECT *
+		FROM `'._DB_PREFIX_.'product_supplier`
+		WHERE `id_product` = '.(int)$id_product_old.' AND `id_product_attribute` = 0');
+		
+		foreach ($result as $row)
+		{
+			unset($row['id_product_supplier']);
+			$row['id_product'] = $id_product_new;
+			if (!Db::getInstance()->insert('product_supplier', $row))
+				return false;
+		}
+		
+		return true;
+	}
+	
 	/**
 	* Get the link of the product page of this product
 	*/
