@@ -121,11 +121,22 @@ class DbPDOCore extends Db
 	 *
 	 * @see DbCore::_query()
 	 * @param string $sql
+	 * @param boolean $use_query
 	 * @return PDOStatement
 	 */
-	protected function _query($sql)
+	protected function _query($sql, $use_query = true)
 	{
-		return $this->link->query($sql);
+		if ($use_query)
+			return $this->link->query($sql);
+		else
+		{
+			$stmt = $this->link->prepare($sql, array(
+				PDO::ATTR_EMULATE_PREPARES => false,
+				PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => false,
+				PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY,
+			));
+			return ($stmt->execute()?$stmt:false);
+		}
 	}
 
 	/**

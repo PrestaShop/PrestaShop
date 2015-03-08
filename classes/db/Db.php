@@ -354,20 +354,21 @@ abstract class DbCore
 	 * Execute a query and get result resource
 	 *
 	 * @param string|DbQuery $sql
+	 * @param boolean $use_query
 	 * @return bool|mysqli_result|PDOStatement|resource
 	 * @throws PrestaShopDatabaseException
 	 */
-	public function query($sql)
+	public function query($sql, $use_query = true)
 	{
 		if ($sql instanceof DbQuery)
 			$sql = $sql->build();
 
-		$this->result = $this->_query($sql);
+		$this->result = $this->_query($sql, $use_query);
 
 		if (!$this->result && $this->getNumberError() == 2006)
 		{
 			if ($this->connect())
-				$this->result = $this->_query($sql);
+				$this->result = $this->_query($sql, $use_query);
 		}
 
 		if (_PS_DEBUG_SQL_)
@@ -560,7 +561,7 @@ abstract class DbCore
 			return $this->execute($sql, $use_cache);
 		}
 
-		$this->result = $this->query($sql);
+		$this->result = $this->query($sql, $array);
 
 		if (!$this->result)
 			$result = false;
