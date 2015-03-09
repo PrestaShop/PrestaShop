@@ -1637,8 +1637,7 @@ class AdminControllerCore extends Controller
 
 	protected function redirect()
 	{
-		header('Location: '.$this->redirect_after);
-		exit;
+		Tools::redirectAdmin($this->redirect_after);
 	}
 
 	/**

@@ -61,7 +61,7 @@ class Tools extends ToolsCore
 				header($header);
 		}
 
-		Context::getContext()->controller->redirect_after = $url;
+		Context::getContext()->controller->setRedirectAfter($url);
 	}
 
 	public static function redirectLink($url)
@@ -76,13 +76,13 @@ class Tools extends ToolsCore
 				$url .= '?'.$explode[1];
 		}
 
-		Context::getContext()->controller->redirect_after = $url;
+		Context::getContext()->controller->setRedirectAfter($url);
 	}
 
 	public static function redirectAdmin($url)
 	{
 		if (!is_object(Context::getContext()->controller))
 			Context::getContext()->controller = new StdClass();
-		Context::getContext()->controller->redirect_after = $url;
+		Context::getContext()->controller->setRedirectAfter($url);
 	}
 }
