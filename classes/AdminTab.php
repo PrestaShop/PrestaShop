@@ -811,7 +811,7 @@ abstract class AdminTabCore
 			foreach ($filters as $cookieKey => $filter)
 				if (strncmp($cookieKey, $this->table.'Filter_', 7 + Tools::strlen($this->table)) == 0)
 					{
-						$key = substr($cookieKey, 7 + Tools::strlen($this->table));
+						$key = Tools::substr($cookieKey, 7 + Tools::strlen($this->table));
 						/* Table alias could be specified using a ! eg. alias!field */
 						$tmpTab = explode('!', $key);
 						$key = (count($tmpTab) > 1 ? $tmpTab[1] : $tmpTab[0]);
@@ -1440,7 +1440,7 @@ abstract class AdminTabCore
 			<script type="text/javascript" src="../js/admin/dnd.js"></script>
 			';
 		}
-		echo '<table'.(array_key_exists($this->identifier, $this->identifiersDnd) ? ' id="'.(((int)(Tools::getValue($this->identifiersDnd[$this->identifier], 1))) ? substr($this->identifier,3,strlen($this->identifier)) : '').'"' : '' ).' class="table'.((array_key_exists($this->identifier, $this->identifiersDnd) && ($this->_orderBy != 'position '&& $this->_orderWay != 'DESC')) ? ' tableDnD'  : '' ).'" cellpadding="0" cellspacing="0">
+		echo '<table'.(array_key_exists($this->identifier, $this->identifiersDnd) ? ' id="'.(((int)(Tools::getValue($this->identifiersDnd[$this->identifier], 1))) ? Tools::substr($this->identifier, 3, Tools::strlen($this->identifier)) : '').'"' : '' ).' class="table'.((array_key_exists($this->identifier, $this->identifiersDnd) && ($this->_orderBy != 'position' && $this->_orderWay != 'DESC')) ? ' tableDnD'  : '' ).'" cellpadding="0" cellspacing="0">
 			<thead>
 				<tr class="nodrag nodrop">
 					<th>';
@@ -2425,9 +2425,9 @@ EOF;
 			$remove = array($remove);
 
 		$url = preg_replace('#(?<=&|\?)('.implode('|', $remove).')=.*?(&|$)#i', '', $url);
-		$len = strlen($url);
+		$len = Tools::strlen($url);
 		if ($url[$len - 1] == '&')
-			$url = substr($url, 0, $len - 1);
+			$url = Tools::substr($url, 0, $len - 1);
 		return $url;
 	}
 }
