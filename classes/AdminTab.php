@@ -1728,39 +1728,39 @@ abstract class AdminTabCore
 
 	protected function _displayEnableLink($token, $id, $value, $active,  $id_category = NULL, $id_product = NULL)
 	{
-	    echo '<a href="'.self::$currentIndex.'&'.$this->identifier.'='.$id.'&'.$active.$this->table.
-	        ((int)$id_category && (int)$id_product ? '&id_category='.$id_category : '').'&token='.($token!=NULL ? $token : $this->token).'">
-	        <img src="../img/admin/'.($value ? 'enabled.gif' : 'disabled.gif').'"
-	        alt="'.($value ? $this->l('Enabled') : $this->l('Disabled')).'" title="'.($value ? $this->l('Enabled') : $this->l('Disabled')).'" /></a>';
+		$href = Tools::safeOutput(self::$currentIndex.'&'.$this->identifier.'='.(int)$id.'&'.$active.$this->table.
+	        ((int)$id_category && (int)$id_product ? '&id_category='.(int)$id_category : '').'&token='.($token!=NULL ? $token : $this->token));
+
+	    echo '<a href="'.$href.'">
+	        <img src="../img/admin/'.((bool)$value ? 'enabled.gif' : 'disabled.gif').'"
+	        alt="'.((bool)$value ? $this->l('Enabled') : $this->l('Disabled')).'" title="'.((bool)$value ? $this->l('Enabled') : $this->l('Disabled')).'" /></a>';
 	}
 
     protected function _displayDuplicate($token = NULL, $id)
     {
-        $_cacheLang['Duplicate'] = $this->l('Duplicate');
+		$_cacheLang['Duplicate'] = $this->l('Duplicate');
 		$_cacheLang['Copy images too?'] = $this->l('This will copy the images too. If you wish to proceed, click "OK". If not, click "Cancel".', __CLASS__, TRUE, FALSE);
+		$duplicate = Tools::safeOutput(self::$currentIndex.'&'.$this->identifier.'='.$id.'&duplicate'.$this->table.'&token='.($token!=NULL ? $token : $this->token));
 
-    	$duplicate = self::$currentIndex.'&'.$this->identifier.'='.$id.'&duplicate'.$this->table;
-
-		echo '
-			<a class="pointer" onclick="if (confirm(\''.$_cacheLang['Copy images too?'].'\')) document.location = \''.$duplicate.'&token='.($token!=NULL ? $token : $this->token).'\'; else document.location = \''.$duplicate.'&noimage=1&token='.($token ? $token : $this->token).'\';">
+		echo '<a class="pointer" onclick="if (confirm(\''.$_cacheLang['Copy images too?'].'\')) document.location = \''.$duplicate.'\'; else document.location = \''.$duplicate.'&noimage=1\';">
     		<img src="../img/admin/duplicate.png" alt="'.$_cacheLang['Duplicate'].'" title="'.$_cacheLang['Duplicate'].'" /></a>';
     }
 
 	protected function _displayViewLink($token = NULL, $id)
 	{
 		$_cacheLang['View'] = $this->l('View');
+		$href = Tools::safeOutput(self::$currentIndex.'&'.$this->identifier.'='.(int)$id.'&view'.$this->table.'&token='.($token!=NULL ? $token : $this->token));
 
-    	echo '
-			<a href="'.self::$currentIndex.'&'.$this->identifier.'='.$id.'&view'.$this->table.'&token='.($token!=NULL ? $token : $this->token).'">
+    	echo '<a href="'.$href'">
 			<img src="../img/admin/details.gif" alt="'.$_cacheLang['View'].'" title="'.$_cacheLang['View'].'" /></a>';
 	}
 
 	protected function _displayEditLink($token = NULL, $id)
 	{
 		$_cacheLang['Edit'] = $this->l('Edit');
+		$href = Tools::safeOutput(self::$currentIndex.'&'.$this->identifier.'='.(int)$id.'&update'.$this->table.'&token='.($token!=NULL ? $token : $this->token));
 
-		echo '
-    		<a href="'.self::$currentIndex.'&'.$this->identifier.'='.$id.'&update'.$this->table.'&token='.($token!=NULL ? $token : $this->token).'">
+		echo '<a href="'.$href.'">
     		<img src="../img/admin/edit.gif" alt="" title="'.$_cacheLang['Edit'].'" /></a>';
 	}
 
@@ -1768,9 +1768,9 @@ abstract class AdminTabCore
 	{
 		$_cacheLang['Delete'] = $this->l('Delete');
 		$_cacheLang['DeleteItem'] = $this->l('Delete item #', __CLASS__, TRUE, FALSE);
+		$href = Tools::safeOutput(self::$currentIndex.'&'.$this->identifier.'='.(int)$id.'&delete'.$this->table.'&token='.($token!=NULL ? $token : $this->token));
 
-		echo '
-			<a href="'.self::$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token!=NULL ? $token : $this->token).'" onclick="return confirm(\''.$_cacheLang['DeleteItem'].$id.' ?'.
+		echo '<a href="'.$href.'" onclick="return confirm(\''.$_cacheLang['DeleteItem'].(int)$id.' ?'.
     				(!is_null($this->specificConfirmDelete) ? '\r'.$this->specificConfirmDelete : '').'\');">
 			<img src="../img/admin/delete.gif" alt="'.$_cacheLang['Delete'].'" title="'.$_cacheLang['Delete'].'" /></a>';
 	}
@@ -1819,7 +1819,9 @@ abstract class AdminTabCore
 			id_language = Number('.$this->context->language->id.');
 		</script>';
 
-		echo '<form action="'.self::$currentIndex.'&submitOptions'.$this->table.'=1&token='.$this->token.'" method="post" enctype="multipart/form-data">';
+		$action = Tools::safeOutput(self::$currentIndex.'&submitOptions'.$this->table.'=1&token='.$this->token);
+
+		echo '<form action="'.$action.'" method="post" enctype="multipart/form-data">';
 		foreach ($this->optionsList as $category => $categoryData)
 		{
 			$required = false;
