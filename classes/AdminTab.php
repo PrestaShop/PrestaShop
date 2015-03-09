@@ -2075,9 +2075,9 @@ abstract class AdminTabCore
 		foreach ($languages as $language)
 		{
 			echo '<div id="'.$key.'_'.$language['id_lang'].'" style="margin-bottom:8px; display: '.($language['id_lang'] == $this->context->language->id ? 'block' : 'none').'; float: left; vertical-align: top;">';
-			echo '<select name="'.$key.'_'.strtoupper($language['iso_code']).'">';
+			echo '<select name="'.$key.'_'.Tools::strtoupper($language['iso_code']).'">';
 			foreach ($field['list'] as $k => $v)
-				echo '<option value="'.(isset($v['cast']) ? $v['cast']($v[$field['identifier']]) : $v[$field['identifier']]).'"'.((htmlentities(Tools::getValue($key.'_'.strtoupper($language['iso_code']), (Configuration::get($key.'_'.strtoupper($language['iso_code'])) ? Configuration::get($key.'_'.strtoupper($language['iso_code'])) : '')), ENT_COMPAT, 'UTF-8') == $v[$field['identifier']]) ? ' selected="selected"' : '').'>'.$v['name'].'</option>';
+				echo '<option value="'.(isset($v['cast']) ? $v['cast']($v[$field['identifier']]) : $v[$field['identifier']]).'"'.((htmlentities(Tools::getValue($key.'_'.Tools::strtoupper($language['iso_code']), (Configuration::get($key.'_'.Tools::strtoupper($language['iso_code'])) ? Configuration::get($key.'_'.Tools::strtoupper($language['iso_code'])) : '')), ENT_COMPAT, 'UTF-8') == $v[$field['identifier']]) ? ' selected="selected"' : '').'>'.$v['name'].'</option>';
 			echo '</select>';
 			echo '</div>';
 		}
