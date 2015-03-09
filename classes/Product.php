@@ -1520,7 +1520,7 @@ class ProductCore extends ObjectModel
 				'reference' => pSQL($reference),
 				'ean13'     => pSQL($ean13),
 				'upc'		=> pSQL($upc),
-			), 'id_product_attribute = '.(int)$id_product_attribute, 1);
+			), 'id_product = '.$this->id.' AND id_product_attribute = '.(int)$id_product_attribute);
 
 		Hook::exec('actionProductAttributeUpdate', array('id_product_attribute' => (int)$id_product_attribute));
 		Tools::clearColorListCache($this->id);
