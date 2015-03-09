@@ -624,7 +624,7 @@ class AdminWarehousesControllerCore extends AdminController
 	public function processUpdate()
 	{
 		// loads object
-		if (!($obj = $this->loadObject(true)))
+		if (!($object = $this->loadObject(true)))
 			return;
 		$this->updateAddress();
 		// handles carriers associations
