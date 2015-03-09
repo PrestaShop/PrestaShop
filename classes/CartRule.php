@@ -1078,9 +1078,20 @@ class CartRuleCore extends ObjectModel
 		self::$only_one_gift = array();
 	}
 
-	protected function getCartRuleCombinations()
+	/**
+	 * @param int $limit
+	 * @param int $offset
+	 * @return array
+	 * @throws PrestaShopDatabaseException
+	 */
+	protected function getCartRuleCombinations($offset = null, $limit = null)
 	{
 		$array = array();
+		if ($offset !== null && $limit !== null)
+			$sql_limit = ' LIMIT '.(int)$offset.', '.(int)($limit+1);
+		else
+			$sql_limit = '';
+
 		$array['selected'] = Db::getInstance()->executeS('
 		SELECT cr.*, crl.*, 1 as selected
 		FROM '._DB_PREFIX_.'cart_rule cr
@@ -1098,7 +1109,7 @@ class CartRuleCore extends ObjectModel
 				FROM '._DB_PREFIX_.'cart_rule_combination
 				WHERE cr.id_cart_rule = '._DB_PREFIX_.'cart_rule_combination.id_cart_rule_2 AND '.(int)$this->id.' = id_cart_rule_1
 			)
-		)');
+		) ORDER BY cr.id_cart_rule'.$sql_limit);
 
 		$array['unselected'] = Db::getInstance()->executeS('
 		SELECT cr.*, crl.*, 1 as selected
@@ -1109,11 +1120,20 @@ class CartRuleCore extends ObjectModel
 		WHERE cr.cart_rule_restriction = 1
 		AND cr.id_cart_rule != '.(int)$this->id.'
 		AND crc1.id_cart_rule_1 IS NULL
-		AND crc2.id_cart_rule_1 IS NULL');
+		AND crc2.id_cart_rule_1 IS NULL  ORDER BY cr.id_cart_rule'.$sql_limit);
 		return $array;
 	}
 
-	public function getAssociatedRestrictions($type, $active_only, $i18n)
+	/**
+	 * @param string $type
+	 * @param bool   $active_only
+	 * @param bool   $i18n
+	 * @param int    $offset
+	 * @param int    $limit
+	 * @return array|bool
+	 * @throws PrestaShopDatabaseException
+	 */
+	public function getAssociatedRestrictions($type, $active_only, $i18n, $offset = null, $limit = null)
 	{
 		$array = array('selected' => array(), 'unselected' => array());
 
@@ -1144,7 +1164,7 @@ class CartRuleCore extends ObjectModel
 		else
 		{
 			if ($type == 'cart_rule')
-				$array = $this->getCartRuleCombinations();
+				$array = $this->getCartRuleCombinations($offset, $limit);
 			else
 			{
 				$resource = Db::getInstance()->query('
