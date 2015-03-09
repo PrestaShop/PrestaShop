@@ -1817,15 +1817,16 @@ class ToolsCore
 			curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
 			curl_setopt($curl, CURLOPT_TIMEOUT, $curl_timeout);
 			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-			if ($stream_context != null) {
+			if ($stream_context != null)
+			{
 				$opts = stream_context_get_options($stream_context);
 				if (isset($opts['http']['method']) && Tools::strtolower($opts['http']['method']) == 'post')
 				{
 					curl_setopt($curl, CURLOPT_POST, true);
 					if (isset($opts['http']['content']))
 					{
-						parse_str($opts['http']['content'], $datas);
-						curl_setopt($curl, CURLOPT_POSTFIELDS, $datas);
+						parse_str($opts['http']['content'], $post_data);
+						curl_setopt($curl, CURLOPT_POSTFIELDS, $post_data);
 					}
 				}
 			}
