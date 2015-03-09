@@ -548,6 +548,15 @@ class ProductCore extends ObjectModel
 	{
 		$return = parent::update($null_values);
 		$this->setGroupReduction();
+
+		// Sync stock Reference, EAN13 and UPC
+		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && StockAvailable::dependsOnStock($this->id, Context::getContext()->shop->id))
+			Db::getInstance()->update('stock', array(
+				'reference' => pSQL($this->reference),
+				'ean13'     => pSQL($this->ean13),
+				'upc'		=> pSQL($this->upc),
+			), 'id_product = '.(int)$this->id.' AND id_product_attribute = 0');
+
 		Hook::exec('actionProductSave', array('id_product' => (int)$this->id, 'product' => $this));
 		Hook::exec('actionProductUpdate', array('id_product' => (int)$this->id, 'product' => $this));
 		if ($this->getType() == Product::PTYPE_VIRTUAL && $this->active && !Configuration::get('PS_VIRTUAL_PROD_FEATURE_ACTIVE'))
@@ -1519,6 +1528,14 @@ class ProductCore extends ObjectModel
 		$id_default_attribute = (int)Product::updateDefaultAttribute($this->id);
 		if ($id_default_attribute)
 			$this->cache_default_attribute = $id_default_attribute;
+
+		// Sync stock Reference, EAN13 and UPC for this attribute
+		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && StockAvailable::dependsOnStock($this->id, Context::getContext()->shop->id))
+			Db::getInstance()->update('stock', array(
+				'reference' => pSQL($reference),
+				'ean13'     => pSQL($ean13),
+				'upc'		=> pSQL($upc),
+			), 'id_product = '.$this->id.' AND id_product_attribute = '.(int)$id_product_attribute);
 
 		Hook::exec('actionProductAttributeUpdate', array('id_product_attribute' => (int)$id_product_attribute));
 		Tools::clearColorListCache($this->id);
