@@ -438,7 +438,7 @@ class AdminStoresControllerCore extends AdminController
 				'type' => 'text'
 			),
 			'PS_SHOP_DETAILS' => array(
-				'title' => $this->l('Registration'),
+				'title' => $this->l('Registration number'),
 				'hint' => $this->l('Shop registration information (e.g. SIRET or RCS).'),
 				'validation' => 'isGenericName',
 				'type' => 'textarea',
