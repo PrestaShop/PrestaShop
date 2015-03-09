@@ -408,13 +408,7 @@ span.exclusive {
 	}
 	&:hover {
 		background: rgb(58, 160, 76);
-		background: -moz-linear-gradient(top, rgba(58, 160, 76, 1) 0%, rgba(58, 160, 74, 1) 100%);
-		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(58, 160, 76, 1)), color-stop(100%, rgba(58, 160, 74, 1)));
-		background: -webkit-linear-gradient(top, rgba(58, 160, 76, 1) 0%, rgba(58, 160, 74, 1) 100%);
-		background: -o-linear-gradient(top, rgba(58, 160, 76, 1) 0%, rgba(58, 160, 74, 1) 100%);
-		background: -ms-linear-gradient(top, rgba(58, 160, 76, 1) 0%, rgba(58, 160, 74, 1) 100%);
-		background: linear-gradient(to bottom, rgba(58, 160, 76, 1) 0%, rgba(58, 160, 74, 1) 100%);
-		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3aa04c', endColorstr='#3aa04a',GradientType=0 );
+		@include gradient-vertical(rgba(58, 160, 76, 1), rgba(58, 160, 74, 1));
 		border-color: #196f28 #399a49 #399a49 #258033;
 	}
 }

@@ -5789,13 +5789,12 @@ span.exclusive {
           margin-left: 5px; } }
   .button.button-medium:hover {
     background: #3aa04c;
-    background: -moz-linear-gradient(top, #3aa04c 0%, #3aa04a 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #3aa04c), color-stop(100%, #3aa04a));
-    background: -webkit-linear-gradient(top, #3aa04c 0%, #3aa04a 100%);
-    background: -o-linear-gradient(top, #3aa04c 0%, #3aa04a 100%);
-    background: -ms-linear-gradient(top, #3aa04c 0%, #3aa04a 100%);
-    background: linear-gradient(to bottom, #3aa04c 0%, #3aa04a 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#3aa04c', endColorstr='#3aa04a',GradientType=0 );
+    background-image: -webkit-gradient(linear, left 0%, left 100%, from(#3aa04c), to(#3aa04a));
+    background-image: -webkit-linear-gradient(top, #3aa04c, 0%, #3aa04a, 100%);
+    background-image: -moz-linear-gradient(top, #3aa04c 0%, #3aa04a 100%);
+    background-image: linear-gradient(to bottom, #3aa04c 0%, #3aa04a 100%);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF3AA04C', endColorstr='#FF3AA04A', GradientType=0);
     border-color: #196f28 #399a49 #399a49 #258033; }
 
 .button.button-medium.exclusive {
