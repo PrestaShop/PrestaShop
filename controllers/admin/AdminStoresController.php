@@ -67,8 +67,8 @@ class AdminStoresControllerCore extends AdminController
 
 		$this->fields_options = array(
 			'general' => array(
-				'title' =>	$this->l('Parameters'),
-				'fields' =>	array(
+				'title' => $this->l('Parameters'),
+				'fields' => array(
 					'PS_STORES_DISPLAY_FOOTER' => array(
 						'title' => $this->l('Display in the footer'),
 						'hint' => $this->l('Display a link to the store locator in the footer.'),
@@ -429,7 +429,8 @@ class AdminStoresControllerCore extends AdminController
 				'hint' => $this->l('Displayed in emails and page titles.'),
 				'validation' => 'isGenericName',
 				'required' => true,
-				'type' => 'text'
+				'type' => 'text',
+				'no_escape' => true,
 			),
 			'PS_SHOP_EMAIL' => array('title' => $this->l('Shop email'),
 				'hint' => $this->l('Displayed in emails sent to customers.'),
