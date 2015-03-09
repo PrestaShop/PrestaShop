@@ -187,6 +187,7 @@ class ManufacturerCore extends ObjectModel
 				$groups = FrontController::getCurrentCustomerGroups();
 				$sql_groups = (count($groups) ? 'IN ('.implode(',', $groups).')' : '= 1');
 			}
+
 			$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 					SELECT  p.`id_manufacturer`, COUNT(DISTINCT p.`id_product`) as nb_products
 					FROM `'._DB_PREFIX_.'product` p USE INDEX (product_manufacturer)
@@ -199,9 +200,9 @@ class ManufacturerCore extends ObjectModel
 						FROM `'._DB_PREFIX_.'category_group` cg
 						LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
 						WHERE p.`id_product` = cp.`id_product` AND cg.`id_group` '.$sql_groups.'
-					)
+					)').'
 					GROUP BY p.`id_manufacturer`'
-				));
+				);
 
 			$counts = array();
 			foreach ($results as $result)
