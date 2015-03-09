@@ -111,11 +111,6 @@ abstract class ControllerCore
 	abstract public function display();
 
 	/**
-	 * Redirects after process if there is no error
-	 */
-	abstract protected function redirect();
-
-	/**
 	 * Sets default media list for this controller
 	 */
 	abstract public function setMedia();
@@ -253,6 +248,19 @@ abstract class ControllerCore
 	 * Assigns Smarty variables for the page footer
 	 */
 	abstract public function initFooter();
+	
+	/**
+	 * Redirects to $this->redirect_after after the process if there is no error
+	 */
+	abstract protected function redirect();
+	
+	/**
+	 * Set $this->redirect_after that will be used by redirect() after the process
+	 */
+	public function setRedirectAfter($url)
+	{
+		$this->redirect_after = $url;
+	}
 
 	/**
 	 * Adds a new stylesheet(s) to the page header.

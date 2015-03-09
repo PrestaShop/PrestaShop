@@ -641,7 +641,7 @@ class FrontControllerCore extends Controller
 	 *
 	 * @see $redirect_after
 	 */
-	public function redirect()
+	protected function redirect()
 	{
 		Tools::redirectLink($this->redirect_after);
 	}
