@@ -166,7 +166,6 @@ class TabCore extends ObjectModel
 	 */
 	public static function getCurrentTabId()
 	{
-
 		$id_tab = Tab::getIdFromClassName(Tools::getValue('controller'));
 		// retro-compatibility 1.4/1.5
 		if (empty ($id_tab))

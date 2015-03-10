@@ -197,7 +197,7 @@ class LocalizationPackCore
 				if (!Validate::isGenericName($group_attributes['name']))
 					continue;
 
-				 if (TaxRulesGroup::getIdByName($group['name']))
+				if (TaxRulesGroup::getIdByName($group['name']))
 					continue;
 
 				$trg = new TaxRulesGroup();
@@ -292,9 +292,9 @@ class LocalizationPackCore
 					PaymentModule::addCurrencyPermissions($currency->id);
 				}
 			}
-            
+
 			if (($error = Currency::refreshCurrencies()) !== null)
-                $this->_errors[] = $error;
+				$this->_errors[] = $error;
 
 			if (!count($this->_errors) && $install_mode && isset($attributes['iso_code']) && count($xml->currencies->currency) == 1)
 				$this->iso_currency = $attributes['iso_code'];
@@ -403,7 +403,7 @@ class LocalizationPackCore
 
 		return true;
 	}
-	
+
 	protected function _installGroups($xml)
 	{
 		return $this->updateDefaultGroupDisplayMethod($xml);
@@ -438,4 +438,3 @@ class LocalizationPackCore
 		return $this->_errors;
 	}
 }
-

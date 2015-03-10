@@ -124,7 +124,7 @@ class DispatcherCore
 				'tags' =>			array('regexp' => '[a-zA-Z0-9-\pL]*'),
 			),
 		),
-		// Must be after the product and category rules in order to avoid conflict
+		/* Must be after the product and category rules in order to avoid conflict */
 		'layered_rule' => array(
 			'controller' =>	'category',
 			'rule' =>		'{id}-{rewrite}{/:selected_filters}',
@@ -412,10 +412,10 @@ class DispatcherCore
 		// Load custom routes from modules
 		$modules_routes = Hook::exec('moduleRoutes', array('id_shop' => $id_shop), null, true, false);
 		if (is_array($modules_routes) && count($modules_routes))
-			foreach($modules_routes as $module_route)
+			foreach ($modules_routes as $module_route)
 			{
 				if (is_array($module_route) && count($module_route))
-					foreach($module_route as $route => $route_details)
+					foreach ($module_route as $route => $route_details)
 						if (array_key_exists('controller', $route_details) && array_key_exists('rule', $route_details)
 							&& array_key_exists('keywords', $route_details) && array_key_exists('params', $route_details))
 						{
@@ -499,7 +499,7 @@ class DispatcherCore
 	 * @param string $rule Url rule
 	 * @param string $controller Controller to call if request uri match the rule
 	 * @param int $id_lang
- 	 * @param int $id_shop
+	 * @param int $id_shop
 	 */
 	public function addRoute($route_id, $rule, $controller, $id_lang = null, array $keywords = array(), array $params = array(), $id_shop = null)
 	{
@@ -561,7 +561,7 @@ class DispatcherCore
 	 *
 	 * @param string $route_id
 	 * @param int $id_lang
- 	 * @param int $id_shop
+	 * @param int $id_shop
 	 * @return bool
 	 */
 	public function hasRoute($route_id, $id_lang = null, $id_shop = null)
@@ -580,7 +580,7 @@ class DispatcherCore
 	 * @param string $route_id
 	 * @param int $id_lang
 	 * @param string $keyword
- 	 * @param int $id_shop
+	 * @param int $id_shop
 	 * @return bool
 	 */
 	public function hasKeyword($route_id, $id_lang, $keyword, $id_shop = null)

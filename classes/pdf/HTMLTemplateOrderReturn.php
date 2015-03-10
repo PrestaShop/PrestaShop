@@ -91,4 +91,3 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
 		return 'invoices.pdf';
 	}
 }
-

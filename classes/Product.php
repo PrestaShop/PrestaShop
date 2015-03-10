@@ -737,9 +737,7 @@ class ProductCore extends ObjectModel
 		}
 
 		if (!$result)
-		{
 			$result = $result_no_filter;
-		}
 
 		$combinations[$id_product][$minimum_quantity] = $result;
 		return $result;
@@ -1313,7 +1311,7 @@ class ProductCore extends ObjectModel
 	* @param string $supplier_reference DEPRECATED
 	*/
 	public function addCombinationEntity($wholesale_price, $price, $weight, $unit_impact, $ecotax, $quantity,
-		$id_images, $reference, $id_supplier, $ean13, $default, $location = null, $upc = null, $minimal_quantity = 1,  array $id_shop_list = array(), $available_date = null)
+		$id_images, $reference, $id_supplier, $ean13, $default, $location = null, $upc = null, $minimal_quantity = 1, array $id_shop_list = array(), $available_date = null)
 	{
 		$id_product_attribute = $this->addAttribute(
 			$price, $weight, $unit_impact, $ecotax, $id_images,
@@ -1615,14 +1613,14 @@ class ProductCore extends ObjectModel
 		Tools::clearColorListCache($this->id);
 
 		if (Configuration::get('PS_DEFAULT_WAREHOUSE_NEW_PRODUCT') != 0 && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
-                {
-                        $warehouse_location_entity = new WarehouseProductLocation();
-                        $warehouse_location_entity->id_product = $this->id;
-                        $warehouse_location_entity->id_product_attribute = (int)$combination->id;
-                        $warehouse_location_entity->id_warehouse = Configuration::get('PS_DEFAULT_WAREHOUSE_NEW_PRODUCT');
-                        $warehouse_location_entity->location = pSQL('');
-                        $warehouse_location_entity->save();
-                }
+		{
+			$warehouse_location_entity = new WarehouseProductLocation();
+			$warehouse_location_entity->id_product = $this->id;
+			$warehouse_location_entity->id_product_attribute = (int)$combination->id;
+			$warehouse_location_entity->id_warehouse = Configuration::get('PS_DEFAULT_WAREHOUSE_NEW_PRODUCT');
+			$warehouse_location_entity->location = pSQL('');
+			$warehouse_location_entity->save();
+		}
 
 		return (int)$combination->id;
 	}
@@ -2526,7 +2524,7 @@ class ProductCore extends ObjectModel
 		$unique_array = array();
 		foreach ($data as $sub_array)
 			if (!in_array($sub_array, $unique_array))
-			  $unique_array[] = $sub_array;
+				$unique_array[] = $sub_array;
 
 		if (count($unique_array))
 			Db::getInstance()->insert('product_carrier', $unique_array, false, true, Db::INSERT_IGNORE);
@@ -4066,7 +4064,7 @@ class ProductCore extends ObjectModel
 			$row['quantity'] = Product::getQuantity(
 				(int)$row['id_product'],
 				$id_product_attribute,
-			   isset($row['cache_is_pack']) ? $row['cache_is_pack'] : null
+				isset($row['cache_is_pack']) ? $row['cache_is_pack'] : null
 			);
 
 		$row['id_image'] = Product::defineProductImage($row, $id_lang);
@@ -4256,7 +4254,7 @@ class ProductCore extends ObjectModel
 					$price_wt = $price * (1 + ((isset($product_update['tax_rate']) ? $product_update['tax_rate'] : $product_update['rate']) * 0.01));
 
 				if (!isset($customized_datas[$product_id][$product_attribute_id][$id_address_delivery]))
-                                        $id_address_delivery = 0;
+					$id_address_delivery = 0;
 				if (isset($customized_datas[$product_id][$product_attribute_id][$id_address_delivery]))
 				{
 					foreach ($customized_datas[$product_id][$product_attribute_id][$id_address_delivery] as $customization)
@@ -4417,7 +4415,7 @@ class ProductCore extends ObjectModel
 						ON DUPLICATE KEY UPDATE `name` = \''.pSQL($value).'\''))
 							return false;
 				}
-				elseif(!Db::getInstance()->execute('
+				elseif (!Db::getInstance()->execute('
 					INSERT INTO `'._DB_PREFIX_.'customization_field_lang`
 					(`id_customization_field`, `id_lang`, `name`) VALUES ('.(int)$tmp[2].', '.(int)$tmp[3].', \''.pSQL($value).'\')
 					ON DUPLICATE KEY UPDATE `name` = \''.pSQL($value).'\''))
@@ -4553,7 +4551,7 @@ class ProductCore extends ObjectModel
 	}
 
 	public function checkAccess($id_customer)
- 	{
+	{
 		return Product::checkAccessStatic((int)$this->id, (int)$id_customer);
 	}
 
@@ -4810,7 +4808,7 @@ class ProductCore extends ObjectModel
 		return true;
 	}
 
- 	/**
+	/**
 	* Webservice getter : get product accessories ids of current product for association
 	*
 	* @return array

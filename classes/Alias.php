@@ -66,8 +66,8 @@ class AliasCore extends ObjectModel
 
 				if ($row)
 				{
-				 	$this->id = (int)($row['id_alias']);
-				 	$this->search = $search ? trim($search) : $row['search'];
+					$this->id = (int)$row['id_alias'];
+					$this->search = $search ? trim($search) : $row['search'];
 					$this->alias = $row['alias'];
 				}
 				else
@@ -145,4 +145,3 @@ class AliasCore extends ObjectModel
 		return isset($row['id_alias']);
 	}
 }
-

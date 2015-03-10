@@ -177,18 +177,18 @@ class SupplyOrderDetailCore extends ObjectModel
 	/**
 	 * @see ObjectModel::$webserviceParameters
 	 */
- 	protected $webserviceParameters = array(
- 		'objectsNodeName' => 'supply_order_details',
+	protected $webserviceParameters = array(
+		'objectsNodeName' => 'supply_order_details',
 		'objectNodeName' => 'supply_order_detail',
- 		'fields' => array(
- 			'id_supply_order' => array('xlink_resource' => 'supply_orders'),
- 			'id_product' => array('xlink_resource' => 'products'),
- 			'id_product_attribute' => array('xlink_resource' => 'combinations'),
- 		),
- 		'hidden_fields' => array(
- 			'id_currency',
- 		),
- 	);
+		'fields' => array(
+			'id_supply_order' => array('xlink_resource' => 'supply_orders'),
+			'id_product' => array('xlink_resource' => 'products'),
+			'id_product_attribute' => array('xlink_resource' => 'combinations'),
+		),
+		'hidden_fields' => array(
+			'id_currency',
+		),
+	);
 
 	/**
 	 * @see ObjectModel::update()

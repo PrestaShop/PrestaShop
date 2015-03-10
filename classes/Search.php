@@ -406,9 +406,9 @@ class SearchCore
 		$sql = 'SELECT p.id_product, pl.id_lang, pl.id_shop, l.iso_code';
 
 		if (is_array($weight_array))
-			foreach($weight_array as $key => $weight)
+			foreach ($weight_array as $key => $weight)
 				if ((int)$weight)
-					switch($key)
+					switch ($key)
 					{
 						case 'pname':
 							$sql .= ', pl.name pname';
@@ -556,11 +556,11 @@ class SearchCore
 			// Now each non-indexed product is processed one by one, langage by langage
 			foreach ($products as $product)
 			{
- 				if ((int)$weight_array['tags'])
+				if ((int)$weight_array['tags'])
 					$product['tags'] = Search::getTags($db, (int)$product['id_product'], (int)$product['id_lang']);
- 				if ((int)$weight_array['attributes'])
+				if ((int)$weight_array['attributes'])
 					$product['attributes'] = Search::getAttributes($db, (int)$product['id_product'], (int)$product['id_lang']);
- 				if ((int)$weight_array['features'])
+				if ((int)$weight_array['features'])
 					$product['features'] = Search::getFeatures($db, (int)$product['id_product'], (int)$product['id_lang']);
 
 				// Data must be cleaned of html, bad characters, spaces and anything, then if the resulting words are long enough, they're added to the array
@@ -657,7 +657,8 @@ class SearchCore
 
 	public static function removeProductsSearchIndex($products)
 	{
-		if (count($products)) {
+		if (count($products))
+		{
 			Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'search_index WHERE id_product IN ('.implode(',', array_map('intval', $products)).')');
 			ObjectModel::updateMultishopTable('Product', array('indexed' => 0), 'a.id_product IN ('.implode(',', array_map('intval', $products)).')');
 		}

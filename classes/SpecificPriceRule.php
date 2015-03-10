@@ -66,12 +66,12 @@ class SpecificPriceRuleCore extends ObjectModel
 	protected $webserviceParameters = array(
 		'objectsNodeName' => 'specific_price_rules',
 		'objectNodeName' => 'specific_price_rule',
-	        'fields' => array(
+		'fields' => array(
 			'id_shop' => 				array('xlink_resource' => 'shops', 'required' => true),
 			'id_country' => 			array('xlink_resource' => 'countries', 'required' => true),
 			'id_currency' => 			array('xlink_resource' => 'currencies', 'required' => true),
 			'id_group' => 				array('xlink_resource' => 'groups', 'required' => true),
-	      	),
+		),
 	);
 
 	public function delete()
@@ -93,7 +93,7 @@ class SpecificPriceRuleCore extends ObjectModel
 				Db::getInstance()->delete('specific_price_rule_condition', 'id_specific_price_rule_condition_group='.(int)$row['id_specific_price_rule_condition_group']);
 			}
 	}
-	
+
 	public static function disableAnyApplication()
 	{
 		SpecificPriceRule::$rules_application_enable = false;
@@ -231,7 +231,7 @@ class SpecificPriceRuleCore extends ObjectModel
 						'values' => array()
 					)
 				);
-				
+
 				foreach ($condition_group as $condition)
 				{
 					if ($condition['type'] == 'category')
@@ -242,10 +242,10 @@ class SpecificPriceRuleCore extends ObjectModel
 						$attributes = true;
 					elseif ($condition['type'] == 'supplier')
 						$suppliers = true;
-						
+
 					$fields[$condition['type']]['values'][] = $condition['value'];
 				}
-				
+
 				foreach ($fields as $field)
 				{
 					if (!$n_conditions = count($field['values']))
@@ -255,7 +255,7 @@ class SpecificPriceRuleCore extends ObjectModel
 					if ($n_conditions > 1)
 						$query->having('COUNT('.bqSQL($field['name']).') >='.(int)$n_conditions);
 				}
-				
+
 				$where = rtrim($where, ' AND ').') OR (';
 			}
 			$where = rtrim($where, 'OR (').')';
@@ -274,7 +274,7 @@ class SpecificPriceRuleCore extends ObjectModel
 			$query->select('NULL as id_product_attribute');
 
 		if ($features)
-			$query->leftJoin('feature_product', 'fp', 'p.id_product = fp.id_product');			
+			$query->leftJoin('feature_product', 'fp', 'p.id_product = fp.id_product');
 		if ($categories)
 			$query->leftJoin('category_product', 'cp', 'p.id_product = cp.id_product');
 

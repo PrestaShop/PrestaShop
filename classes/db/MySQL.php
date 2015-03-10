@@ -117,7 +117,7 @@ class MySQLCore extends Db
 		elseif (is_resource($this->_result) && $this->_result)
 			$return = mysql_fetch_assoc($this->_result);
 
-		return $return;	
+		return $return;
 	}
 
 	/**
@@ -267,10 +267,10 @@ class MySQLCore extends Db
 	 * @param int $timeout
 	 * @return int Error code or 0 if connection was successful
 	 */
-	public static function tryToConnect($server, $user, $pwd, $db, $newDbLink = true, $engine = null, $timeout = 5)
+	public static function tryToConnect($server, $user, $pwd, $db, $new_db_link = true, $engine = null, $timeout = 5)
 	{
 		ini_set('mysql.connect_timeout', $timeout);
-		if (!$link = @mysql_connect($server, $user, $pwd, $newDbLink))
+		if (!$link = @mysql_connect($server, $user, $pwd, $new_db_link))
 			return 1;
 		if (!@mysql_select_db($db, $link))
 			return 2;
@@ -287,7 +287,7 @@ class MySQLCore extends Db
 	public function getBestEngine()
 	{
 		$value = 'InnoDB';
-		
+
 		$sql = 'SHOW VARIABLES WHERE Variable_name = \'have_innodb\'';
 		$result = mysql_query($sql);
 		if (!$result)
@@ -295,7 +295,7 @@ class MySQLCore extends Db
 		$row = mysql_fetch_assoc($result);
 		if (!$row || strtolower($row['Value']) != 'yes')
 			$value = 'MyISAM';
-		
+
 		/* MySQL >= 5.6 */
 		$sql = 'SHOW ENGINES';
 		$result = mysql_query($sql);
@@ -336,7 +336,7 @@ class MySQLCore extends Db
 		CREATE TABLE `'.$prefix.'test` (
 			`test` tinyint(1) unsigned NOT NULL
 		) ENGINE='.$engine, $link);
-		
+
 		if (!$result)
 			return mysql_error($link);
 

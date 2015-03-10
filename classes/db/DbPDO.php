@@ -332,7 +332,7 @@ class DbPDOCore extends Db
 	 * @param int $timeout
 	 * @return int Error code or 0 if connection was successful
 	 */
-	public static function tryToConnect($server, $user, $pwd, $db, $newDbLink = true, $engine = null, $timeout = 5)
+	public static function tryToConnect($server, $user, $pwd, $db, $new_db_link = true, $engine = null, $timeout = 5)
 	{
 		try {
 			$link = DbPDO::_getPDO($server, $user, $pwd, $db, $timeout);

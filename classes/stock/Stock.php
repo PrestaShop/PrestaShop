@@ -80,16 +80,16 @@ class StockCore extends ObjectModel
 	/**
 	 * @see ObjectModel::$webserviceParameters
 	 */
- 	protected $webserviceParameters = array(
- 		'fields' => array(
- 			'id_warehouse' => array('xlink_resource' => 'warehouses'),
- 			'id_product' => array('xlink_resource' => 'products'),
- 			'id_product_attribute' => array('xlink_resource' => 'combinations'),
- 			'real_quantity' => array('getter' => 'getWsRealQuantity', 'setter' => false),
- 		),
- 		'hidden_fields' => array(
- 		),
- 	);
+	protected $webserviceParameters = array(
+		'fields' => array(
+			'id_warehouse' => array('xlink_resource' => 'warehouses'),
+			'id_product' => array('xlink_resource' => 'products'),
+			'id_product_attribute' => array('xlink_resource' => 'combinations'),
+			'real_quantity' => array('getter' => 'getWsRealQuantity', 'setter' => false),
+		),
+		'hidden_fields' => array(
+		),
+	);
 
 	/**
 	 * @see ObjectModel::update()

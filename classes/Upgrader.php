@@ -82,7 +82,7 @@ class UpgraderCore
 		if (empty($this->link))
 			$this->checkPSVersion();
 
-		$destPath =  realpath($dest).DIRECTORY_SEPARATOR.$filename;
+		$destPath = realpath($dest).DIRECTORY_SEPARATOR.$filename;
 		if (@copy($this->link, $destPath))
 			return true;
 		else
@@ -104,7 +104,6 @@ class UpgraderCore
 	 */
 	public function checkPSVersion($force = false)
 	{
-
 		if (class_exists('Configuration'))
 			$last_check = Configuration::get('PS_LAST_VERSION_CHECK');
 		else
@@ -167,7 +166,7 @@ class UpgraderCore
 	public function loadFromConfig()
 	{
 		$last_version_check = Tools::unSerialize(Configuration::get('PS_LAST_VERSION'));
-		if($last_version_check)
+		if ($last_version_check)
 		{
 			if (isset($last_version_check['name']))
 				$this->version_name = $last_version_check['name'];
@@ -205,9 +204,7 @@ class UpgraderCore
 			libxml_set_streams_context(@stream_context_create(array('http' => array('timeout' => 3))));
 			$checksum = @simplexml_load_file($this->rss_md5file_link_dir._PS_VERSION_.'.xml');
 			if ($checksum == false)
-			{
 				$this->changed_files = false;
-			}
 			else
 				$this->browseXmlAndCompare($checksum->ps_root_dir[0]);
 		}
@@ -263,7 +260,7 @@ class UpgraderCore
 					for ($i = 1; $i < $level; $i++)
 					$relative_path .= $current_path[$i].'/';
 				$relative_path .= (string)$child['name'];
-				$fullpath = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR . $relative_path;
+				$fullpath = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$relative_path;
 
 				$fullpath = str_replace('ps_root_dir', _PS_ROOT_DIR_, $fullpath);
 

@@ -433,11 +433,11 @@ class StockManagerCore implements StockManagerInterface
 		// if we remove a usable quantity, exec hook
 		if ($is_usable)
 			Hook::exec('actionProductCoverage',
-					   	array(
-					   		'id_product' => $id_product,
-		   					'id_product_attribute' => $id_product_attribute,
-		   					'warehouse' => $warehouse
-					   	)
+					array(
+						'id_product' => $id_product,
+						'id_product_attribute' => $id_product_attribute,
+						'warehouse' => $warehouse
+					)
 			);
 
 		return $return;
@@ -523,7 +523,6 @@ class StockManagerCore implements StockManagerInterface
 				}
 			}
 		}
-
 
 		// skip if product is a pack without
 		if (!Pack::isPack($id_product) || (Pack::isPack($id_product) && Validate::isLoadedObject($product = new Product((int)$id_product))

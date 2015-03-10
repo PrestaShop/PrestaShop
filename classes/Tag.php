@@ -26,10 +26,10 @@
 
 class TagCore extends ObjectModel
 {
- 	/** @var integer Language id */
+	/** @var integer Language id */
 	public $id_lang;
 
- 	/** @var string Name */
+	/** @var string Name */
 	public $name;
 
 	/**
@@ -67,8 +67,8 @@ class TagCore extends ObjectModel
 
 			if ($row)
 			{
-			 	$this->id = (int)$row['id_tag'];
-			 	$this->id_lang = (int)$row['id_lang'];
+				$this->id = (int)$row['id_tag'];
+				$this->id_lang = (int)$row['id_lang'];
 				$this->name = $row['name'];
 			}
 		}
@@ -93,18 +93,18 @@ class TagCore extends ObjectModel
 	*/
 	public static function addTags($id_lang, $id_product, $tag_list, $separator = ',')
 	{
-	 	if (!Validate::isUnsignedId($id_lang))
+		if (!Validate::isUnsignedId($id_lang))
 			return false;
 
 		if (!is_array($tag_list))
-	 		$tag_list = array_filter(array_unique(array_map('trim', preg_split('#\\'.$separator.'#', $tag_list, null, PREG_SPLIT_NO_EMPTY))));
+			$tag_list = array_filter(array_unique(array_map('trim', preg_split('#\\'.$separator.'#', $tag_list, null, PREG_SPLIT_NO_EMPTY))));
 
-	 	$list = array();
+		$list = array();
 		if (is_array($tag_list))
 			foreach ($tag_list as $tag)
 			{
-		 	 	if (!Validate::isGenericName($tag))
-		 	 		return false;
+				if (!Validate::isGenericName($tag))
+					return false;
 				$tag = trim(Tools::substr($tag, 0, self::$definition['fields']['name']['size']));
 				$tag_obj = new Tag(null, $tag, (int)$id_lang);
 
@@ -132,7 +132,8 @@ class TagCore extends ObjectModel
 		return $result;
 	}
 
-	public static function updateTagCount() {
+	public static function updateTagCount()
+	{
 		Db::getInstance()->execute('REPLACE INTO `'._DB_PREFIX_.'tag_count` (id_group, id_tag, id_lang, id_shop, counter)
 		SELECT cg.id_group, t.id_tag, t.id_lang, ps.id_shop, COUNT(pt.id_tag) AS times
 			FROM `'._DB_PREFIX_.'product_tag` pt
@@ -190,16 +191,16 @@ class TagCore extends ObjectModel
 
 	public static function getProductTags($id_product)
 	{
-	 	if (!$tmp = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		if (!$tmp = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT t.`id_lang`, t.`name`
 		FROM '._DB_PREFIX_.'tag t
 		LEFT JOIN '._DB_PREFIX_.'product_tag pt ON (pt.id_tag = t.id_tag)
 		WHERE pt.`id_product`='.(int)$id_product))
-	 		return false;
-	 	$result = array();
-	 	foreach ($tmp as $tag)
-	 		$result[$tag['id_lang']][] = $tag['name'];
-	 	return $result;
+			return false;
+		$result = array();
+		foreach ($tmp as $tag)
+			$result[$tag['id_lang']][] = $tag['name'];
+		return $result;
 	}
 
 	public function getProducts($associated = true, Context $context = null)

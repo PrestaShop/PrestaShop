@@ -71,7 +71,7 @@ class SupplierCore extends ObjectModel
 			'date_add' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'date_upd' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 
-			// Lang fields
+			/* Lang fields */
 			'description' => 		array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
 			'meta_title' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
 			'meta_description' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
@@ -99,10 +99,10 @@ class SupplierCore extends ObjectModel
 	}
 
 	/**
-	  * Return suppliers
-	  *
-	  * @return array Suppliers
-	  */
+	 * Return suppliers
+	 *
+	 * @return array Suppliers
+	 */
 	public static function getSuppliers($get_nb_products = false, $id_lang = 0, $active = true, $p = false, $n = false, $all_groups = false)
 	{
 		if (!$id_lang)
@@ -172,11 +172,11 @@ class SupplierCore extends ObjectModel
 	}
 
 	/**
-	  * Return name from id
-	  *
-	  * @param integer $id_supplier Supplier ID
-	  * @return string name
-	  */
+	 * Return name from id
+	 *
+	 * @param integer $id_supplier Supplier ID
+	 * @return string name
+	 */
 	static protected $cache_name = array();
 	public static function getNameById($id_supplier)
 	{
@@ -208,8 +208,8 @@ class SupplierCore extends ObjectModel
 			$front = false;
 
 		if ($p < 1) $p = 1;
-	 	if (empty($order_by) || $order_by == 'position') $order_by = 'name';
-	 	if (empty($order_way)) $order_way = 'ASC';
+		if (empty($order_by) || $order_by == 'position') $order_by = 'name';
+		if (empty($order_way)) $order_way = 'ASC';
 
 		if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way))
 			die (Tools::displayError());

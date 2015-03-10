@@ -162,9 +162,7 @@ class UploaderCore
 			}
 		}
 		elseif ($upload)
-		{
 			$this->files[] = $this->upload($upload, $dest);
-		}
 
 		return $this->files;
 	}
@@ -179,7 +177,7 @@ class UploaderCore
 				$file_path = $this->getFilePath(isset($dest) ? $dest : $file['name']);
 
 			if ($file['tmp_name'] && is_uploaded_file($file['tmp_name'] ))
-					move_uploaded_file($file['tmp_name'] , $file_path);
+					move_uploaded_file($file['tmp_name'], $file_path);
 			else
 				// Non-multipart uploads (PUT method support)
 				file_put_contents($file_path, fopen('php://input', 'r'));
@@ -187,9 +185,7 @@ class UploaderCore
 			$file_size = $this->_getFileSize($file_path, true);
 
 			if ($file_size === $file['size'])
-			{
 				$file['save_path'] = $file_path;
-			}
 			else
 			{
 				$file['size'] = $file_size;
@@ -269,7 +265,8 @@ class UploaderCore
 		return true;
 	}
 
-	protected function _getFileSize($file_path, $clear_stat_cache = false) {
+	protected function _getFileSize($file_path, $clear_stat_cache = false)
+	{
 		if ($clear_stat_cache)
 			clearstatcache(true, $file_path);
 
@@ -285,7 +282,8 @@ class UploaderCore
 	{
 		$last = $directory[strlen($directory) - 1];
 
-		if (in_array($last, array('/', '\\'))) {
+		if (in_array($last, array('/', '\\')))
+		{
 			$directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
 			return $directory;
 		}

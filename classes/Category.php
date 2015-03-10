@@ -105,7 +105,7 @@ class CategoryCore extends ObjectModel
 			'position' => 			array('type' => self::TYPE_INT),
 			'date_add' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'date_upd' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-			// Lang fields
+			/* Lang fields */
 			'name' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => true, 'size' => 128),
 			'link_rewrite' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isLinkRewrite', 'required' => true, 'size' => 128),
 			'description' => 		array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
@@ -366,10 +366,10 @@ class CategoryCore extends ObjectModel
 	}
 
 	/**
-	  * Get the depth level for the category
-	  *
-	  * @return integer Depth level
-	  */
+	 * Get the depth level for the category
+	 *
+	 * @return integer Depth level
+	 */
 	public function calcLevelDepth()
 	{
 		/* Root category */
@@ -383,8 +383,8 @@ class CategoryCore extends ObjectModel
 	}
 
 	/**
-	  * Re-calculate the values of all branches of the nested tree
-	  */
+	 * Re-calculate the values of all branches of the nested tree
+	 */
 	public static function regenerateEntireNtree()
 	{
 		$id = Context::getContext()->shop->id;
@@ -419,10 +419,10 @@ class CategoryCore extends ObjectModel
 	}
 
 	/**
-	  * Updates level_depth for all children of the given id_category
-	  *
-	  * @param integer $id_category parent category
-	  */
+	 * Updates level_depth for all children of the given id_category
+	 *
+	 * @param integer $id_category parent category
+	 */
 	public function recalculateLevelDepth($id_category)
 	{
 		if (!is_numeric($id_category))
@@ -450,16 +450,16 @@ class CategoryCore extends ObjectModel
 	}
 
 	/**
-	  * Return available categories
-	  *
-	  * @param integer $id_lang Language ID
-	  * @param boolean $active return only active categories
-	  * @return array Categories
-	  */
+	 * Return available categories
+	 *
+	 * @param integer $id_lang Language ID
+	 * @param boolean $active return only active categories
+	 * @return array Categories
+	 */
 	public static function getCategories($id_lang = false, $active = true, $order = true, $sql_filter = '', $sql_sort = '', $sql_limit = '')
 	{
-	 	if (!Validate::isBool($active))
-	 		die(Tools::displayError());
+		if (!Validate::isBool($active))
+			die(Tools::displayError());
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 			SELECT *
 			FROM `'._DB_PREFIX_.'category` c
@@ -557,12 +557,12 @@ class CategoryCore extends ObjectModel
 	}
 
 	/**
-	  * Return current category childs
-	  *
-	  * @param integer $id_lang Language ID
-	  * @param boolean $active return only active categories
-	  * @return array Categories
-	  */
+	 * Return current category childs
+	 *
+	 * @param integer $id_lang Language ID
+	 * @param boolean $active return only active categories
+	 * @return array Categories
+	 */
 	public function getSubCategories($id_lang, $active = true)
 	{
 		$sql_groups_where = '';
@@ -595,18 +595,18 @@ class CategoryCore extends ObjectModel
 	}
 
 	/**
-	  * Return current category products
-	  *
-	  * @param integer $id_lang Language ID
-	  * @param integer $p Page number
-	  * @param integer $n Number of products per page
-	  * @param boolean $get_total return the number of results instead of the results themself
-	  * @param boolean $active return only active products
-	  * @param boolean $random active a random filter for returned products
-	  * @param int $random_number_products number of products to return if random is activated
-	  * @param boolean $check_access set to false to return all products (even if customer hasn't access)
-	  * @return mixed Products or number of products
-	  */
+	 * Return current category products
+	 *
+	 * @param integer $id_lang Language ID
+	 * @param integer $p Page number
+	 * @param integer $n Number of products per page
+	 * @param boolean $get_total return the number of results instead of the results themself
+	 * @param boolean $active return only active products
+	 * @param boolean $random active a random filter for returned products
+	 * @param int $random_number_products number of products to return if random is activated
+	 * @param boolean $check_access set to false to return all products (even if customer hasn't access)
+	 * @return mixed Products or number of products
+	 */
 	public function getProducts($id_lang, $p, $n, $order_by = null, $order_way = null, $get_total = false, $active = true, $random = false, $random_number_products = 1, $check_access = true, Context $context = null)
 	{
 		if (!$context)
@@ -716,12 +716,12 @@ class CategoryCore extends ObjectModel
 	}
 
 	/**
-	  * Return main categories
-	  *
-	  * @param integer $id_lang Language ID
-	  * @param boolean $active return only active categories
-	  * @return array categories
-	  */
+	 * Return main categories
+	 *
+	 * @param integer $id_lang Language ID
+	 * @param boolean $active return only active categories
+	 * @return array categories
+	 */
 	public static function getHomeCategories($id_lang, $active = true, $id_shop = false)
 	{
 		return self::getChildren(Configuration::get('PS_HOME_CATEGORY'), $id_lang, $active, $id_shop);
@@ -855,12 +855,12 @@ class CategoryCore extends ObjectModel
 	}
 
 	/**
-	  * Copy products from a category to another
-	  *
-	  * @param integer $id_old Source category ID
-	  * @param boolean $id_new Destination category ID
-	  * @return boolean Duplication result
-	  */
+	 * Copy products from a category to another
+	 *
+	 * @param integer $id_old Source category ID
+	 * @param boolean $id_new Destination category ID
+	 * @return boolean Duplication result
+	 */
 	public static function duplicateProductCategories($id_old, $id_new)
 	{
 		$sql = 'SELECT `id_category`
@@ -885,13 +885,13 @@ class CategoryCore extends ObjectModel
 	}
 
 	/**
-	  * Check if category can be moved in another one.
-		* The category cannot be moved in a child category.
-	  *
-		* @param integer $id_category current category
-	  * @param integer $id_parent Parent candidate
-	  * @return boolean Parent validity
-	  */
+	 * Check if category can be moved in another one.
+	 * The category cannot be moved in a child category.
+	 *
+	 * @param integer $id_category current category
+	 * @param integer $id_parent Parent candidate
+	 * @return boolean Parent validity
+	 */
 	public static function checkBeforeMove($id_category, $id_parent)
 	{
 		if ($id_category == $id_parent) return false;
@@ -948,13 +948,13 @@ class CategoryCore extends ObjectModel
 	}
 
 	/**
-	  * Light back office search for categories
-	  *
-	  * @param integer $id_lang Language ID
-	  * @param string $query Searched string
-	  * @param boolean $unrestricted allows search without lang and includes first category and exact match
-	  * @return array Corresponding categories
-	  */
+	 * Light back office search for categories
+	 *
+	 * @param integer $id_lang Language ID
+	 * @param string $query Searched string
+	 * @param boolean $unrestricted allows search without lang and includes first category and exact match
+	 * @return array Corresponding categories
+	 */
 	public static function searchByName($id_lang, $query, $unrestricted = false)
 	{
 		if ($unrestricted === true)
@@ -973,13 +973,13 @@ class CategoryCore extends ObjectModel
 	}
 
 	/**
-	  * Retrieve category by name and parent category id
-	  *
-	  * @param integer $id_lang Language ID
-	  * @param string  $category_name Searched category name
-	  * @param integer $id_parent_category parent category ID
-	  * @return array Corresponding category
-	  */
+	 * Retrieve category by name and parent category id
+	 *
+	 * @param integer $id_lang Language ID
+	 * @param string  $category_name Searched category name
+	 * @param integer $id_parent_category parent category ID
+	 * @return array Corresponding category
+	 */
 	public static function searchByNameAndParentCategoryId($id_lang, $category_name, $id_parent_category)
 	{
 		return Db::getInstance()->getRow('
@@ -994,21 +994,21 @@ class CategoryCore extends ObjectModel
 	}
 
 	/**
-	  * Search with Pathes for categories
-	  *
-	  * @param integer $id_lang Language ID
-	  * @param string $path of category
-	  * @param boolean $object_to_create a category
-* 	  * @param boolean $method_to_create a category
-	  * @return array Corresponding categories
-	  */
+	 * Search with Pathes for categories
+	 *
+	 * @param integer $id_lang Language ID
+	 * @param string $path of category
+	 * @param boolean $object_to_create a category
+* 	 * @param boolean $method_to_create a category
+	 * @return array Corresponding categories
+	 */
 	public static function searchByPath($id_lang, $path, $object_to_create = false, $method_to_create = false)
 	{
 		$categories = explode('/', trim($path));
 		$category = $id_parent_category = false;
 
 		if (is_array($categories) && count($categories))
-			foreach($categories as $category_name)
+			foreach ($categories as $category_name)
 			{
 				if ($id_parent_category)
 					$category = Category::searchByNameAndParentCategoryId($id_lang, $category_name, $id_parent_category);
@@ -1019,7 +1019,7 @@ class CategoryCore extends ObjectModel
 				{
 					call_user_func_array(array($object_to_create, $method_to_create), array($id_lang, $category_name , $id_parent_category));
 					$category = Category::searchByPath($id_lang, $category_name);
-		     	}
+				}
 				if (isset($category['id_category']) && $category['id_category'])
 					$id_parent_category = (int)$category['id_category'];
 			}

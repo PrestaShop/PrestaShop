@@ -222,7 +222,7 @@ class CustomerCore extends ObjectModel
 		/* Can't create a guest customer, if this feature is disabled */
 		if ($this->is_guest && !Configuration::get('PS_GUEST_CHECKOUT_ENABLED'))
 			return false;
-	 	$success = parent::add($autodate, $null_values);
+		$success = parent::add($autodate, $null_values);
 		$this->updateGroup($this->groupBox);
 		return $success;
 	}
@@ -246,7 +246,7 @@ class CustomerCore extends ObjectModel
 			}
 		}
 
-	 	return parent::update(true);
+		return parent::update(true);
 	}
 
 	public function delete()
@@ -590,7 +590,7 @@ class CustomerCore extends ObjectModel
 	* @param $id_customer Customer id
 	* @return boolean
 	*/
-	// DEPRECATED
+	/* DEPRECATED */
 	public function customerIdExists($id_customer)
 	{
 		return Customer::customerIdExistsStatic((int)$id_customer);

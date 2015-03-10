@@ -944,7 +944,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
 		if ($check->Nmsgs == 0)
 			return array('hasError' => true, 'errors' => array('NO message to sync'));
 
-		$result = imap_fetch_overview($mbox,"1:{$check->Nmsgs}",0);
+		$result = imap_fetch_overview($mbox, "1:{$check->Nmsgs}", 0);
 		foreach ($result as $overview)
 		{
 			//check if message exist in database

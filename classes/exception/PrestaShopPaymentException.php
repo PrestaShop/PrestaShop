@@ -31,4 +31,3 @@ class PrestaShopPaymentExceptionCore extends PrestaShopException
 {
 
 }
-

@@ -54,7 +54,7 @@ class AdminInformationControllerCore extends AdminController
 	public function renderView()
 	{
 		$this->initPageHeaderToolbar();
-		
+
 		$hosting_vars = array();
 		if (!defined('_PS_HOST_MODE_'))
 			$hosting_vars = array(
@@ -75,7 +75,7 @@ class AdminInformationControllerCore extends AdminController
 				'uname' => function_exists('php_uname') ? php_uname('s').' '.php_uname('v').' '.php_uname('m') : '',
 				'apache_instaweb' => Tools::apacheModExists('mod_instaweb')
 			);
-		
+
 		$shop_vars = array(
 			'shop' => array(
 				'ps' => _PS_VERSION_,
@@ -135,17 +135,17 @@ class AdminInformationControllerCore extends AdminController
 		if (!defined('_PS_HOST_MODE_'))
 			$params_optional_results = ConfigurationTest::check(ConfigurationTest::getDefaultTestsOp());
 
-		$failRequired = in_array('fail', $params_required_results);
-		
-		if ($failRequired && $params_required_results['files'] != 'ok')
+		$fail_required = in_array('fail', $params_required_results);
+
+		if ($fail_required && $params_required_results['files'] != 'ok')
 		{
-			$tmp = 	ConfigurationTest::test_files(true);
+			$tmp = ConfigurationTest::test_files(true);
 			if (is_array($tmp) && count($tmp))
 				$tests_errors['files'] = $tests_errors['files'].'<br/>('.implode(', ', $tmp).')';
- 		}
+		}
 
 		$results = array(
-			'failRequired' => $failRequired,
+			'failRequired' => $fail_required,
 			'testsErrors' => $tests_errors,
 			'testsRequired' => $params_required_results,
 		);
