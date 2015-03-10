@@ -51,6 +51,13 @@
 			};
 		{/foreach}
 		displayFlags(languages, {$id_lang_default});
+
+		function combinable_filter(id_rule, search, type)
+		{
+			var href = 'ajax-tab.php?tab=AdminCartRules&id_cart_rule={$id_cart_rule|@intval}&token={$currentToken|@addslashes}&action=loadCartRules&limit={$limit|@intval}&type='+encodeURIComponent(type)+'&count=0&search='+encodeURIComponent(search);
+			$(id_rule).jscroll().data('jscrollapi').load_scroll(href);
+		}
+
 	</script>
 	<script type="text/javascript" src="themes/default/template/controllers/cart_rules/form.js"></script>
 	{include file="footer_toolbar.tpl"}

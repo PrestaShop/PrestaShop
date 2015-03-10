@@ -233,6 +233,7 @@
 					<tr>
 						<td>
 							<p>{l s='Uncombinable cart rules'}</p>
+							<input id="cart_rule_select_1_filter" autocomplete="off" class="form-control uncombinable_search_filter" type="text" name="uncombinable_filter" placeholder="{l s='Search'}" value="">
 							<select id="cart_rule_select_1" class="jscroll" multiple="">
 								{foreach from=$cart_rules.unselected item='cart_rule' name='uncombinable_rules'}
 									<option value="{$cart_rule.id_cart_rule|intval}">&nbsp;{$cart_rule.name|escape}</option>
@@ -242,12 +243,13 @@
 								{/foreach}
 							</select>
 							{if $cart_rules.unselected|@count > $limit}
-								<a class="jscroll-next btn btn-default btn-block clearfix" href="ajax-tab.php?tab=AdminCartRules&amp;id_cart_rule={$id_cart_rule|intval}&amp;token={$currentToken|addslashes}&amp;action=loadCartRules&amp;limit={$limit}&amp;type=unselected&amp;count={$cart_rules.unselected|@count}">{l s='Next'}</a>
+								<a class="jscroll-next btn btn-default btn-block clearfix" href="ajax-tab.php?tab=AdminCartRules&amp;id_cart_rule={$id_cart_rule|@intval}&amp;token={$currentToken|@addslashes}&amp;action=loadCartRules&amp;limit={$limit|@intval}&amp;type=unselected&amp;count={$cart_rules.unselected|@count}&amp;search=">{l s='Next'}</a>
 							{/if}
 							<a id="cart_rule_select_add" class="btn btn-default btn-block clearfix">{l s='Add'} <i class="icon-arrow-right"></i></a>
 						</td>
 						<td>
 							<p>{l s='Combinable cart rules'}</p>
+							<input id="cart_rule_select_2_filter" autocomplete="off" class="form-control combinable_search_filter" type="text" name="combinable_filter" placeholder="{l s='Search'}" value="">
 							<select name="cart_rule_select[]" class="jscroll" id="cart_rule_select_2" multiple>
 								{foreach from=$cart_rules.selected item='cart_rule' name="combinable_rules"}
 									<option value="{$cart_rule.id_cart_rule|intval}">&nbsp;{$cart_rule.name|escape}</option>
@@ -257,7 +259,7 @@
 								{/foreach}
 							</select>
 							{if $cart_rules.selected|@count > $limit}
-								<a class="jscroll-next btn btn-default btn-block clearfix" href="ajax-tab.php?tab=AdminCartRules&amp;id_cart_rule={$id_cart_rule|intval}&amp;token={$currentToken|addslashes}&amp;action=loadCartRules&amp;limit={$limit}&amp;type=selected&amp;count={$cart_rules.selected|@count}">{l s='Next'}</a>
+								<a class="jscroll-next btn btn-default btn-block clearfix" href="ajax-tab.php?tab=AdminCartRules&amp;id_cart_rule={$id_cart_rule|@intval}&amp;token={$currentToken|@addslashes}&amp;action=loadCartRules&amp;limit={$limit|@intval}&amp;type=selected&amp;count={$cart_rules.selected|@count}&amp;search=">{l s='Next'}</a>
 							{/if}
 							<a id="cart_rule_select_remove" class="btn btn-default btn-block clearfix" ><i class="icon-arrow-left"></i> {l s='Remove'}</a>
 						</td>
@@ -319,11 +321,3 @@
 		{/if}
 	</div>
 </div>
-{literal}
-<script type="text/javascript">
-	$('.jscroll').jscroll({
-	    padding: 20,
-	    nextSelector: 'a.jscroll-next:last'
-	});
-</script>
-{/literal}
