@@ -126,6 +126,14 @@ class AdminImagesControllerCore extends AdminController
 							array(
 								'id' => '2',
 								'name' => $this->l('Height')
+							),
+							array(
+								'id' => '3',
+								'name' => $this->l('Crop')
+							),
+							array(
+								'id' => '4',
+								'name' => $this->l('Adjust (might produce stripes)')
 							)
 						),
 						'identifier' => 'id',
