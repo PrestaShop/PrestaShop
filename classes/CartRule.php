@@ -1078,12 +1078,12 @@ class CartRuleCore extends ObjectModel
 	}
 
 	/**
-	 * @param int $limit
-	 * @param int $offset
+	 * @param int    $offset
+	 * @param int    $limit
+	 * @param string $search
 	 * @return array
-	 * @throws PrestaShopDatabaseException
 	 */
-	protected function getCartRuleCombinations($offset = null, $limit = null)
+	protected function getCartRuleCombinations($offset = null, $limit = null, $search = '')
 	{
 		$array = array();
 		if ($offset !== null && $limit !== null)
@@ -1095,7 +1095,7 @@ class CartRuleCore extends ObjectModel
 		SELECT cr.*, crl.*, 1 as selected
 		FROM '._DB_PREFIX_.'cart_rule cr
 		LEFT JOIN '._DB_PREFIX_.'cart_rule_lang crl ON (cr.id_cart_rule = crl.id_cart_rule AND crl.id_lang = '.(int)Context::getContext()->language->id.')
-		WHERE cr.id_cart_rule != '.(int)$this->id.'
+		WHERE cr.id_cart_rule != '.(int)$this->id.($search ? ' AND crl.name LIKE "%'.pSQL($search).'%"' : '').'
 		AND (
 			cr.cart_rule_restriction = 0
 			OR EXISTS (
@@ -1117,7 +1117,7 @@ class CartRuleCore extends ObjectModel
 		LEFT JOIN '._DB_PREFIX_.'cart_rule_combination crc1 ON (cr.id_cart_rule = crc1.id_cart_rule_1 AND crc1.id_cart_rule_2 = '.(int)$this->id.')
 		LEFT JOIN '._DB_PREFIX_.'cart_rule_combination crc2 ON (cr.id_cart_rule = crc2.id_cart_rule_2 AND crc2.id_cart_rule_1 = '.(int)$this->id.')
 		WHERE cr.cart_rule_restriction = 1
-		AND cr.id_cart_rule != '.(int)$this->id.'
+		AND cr.id_cart_rule != '.(int)$this->id.($search ? ' AND crl.name LIKE "%'.pSQL($search).'%"' : '').'
 		AND crc1.id_cart_rule_1 IS NULL
 		AND crc2.id_cart_rule_1 IS NULL  ORDER BY cr.id_cart_rule'.$sql_limit);
 		return $array;
@@ -1129,10 +1129,11 @@ class CartRuleCore extends ObjectModel
 	 * @param bool   $i18n
 	 * @param int    $offset
 	 * @param int    $limit
+	 * @param string $search_cart_rule_name
 	 * @return array|bool
 	 * @throws PrestaShopDatabaseException
 	 */
-	public function getAssociatedRestrictions($type, $active_only, $i18n, $offset = null, $limit = null)
+	public function getAssociatedRestrictions($type, $active_only, $i18n, $offset = null, $limit = null, $search_cart_rule_name = '')
 	{
 		$array = array('selected' => array(), 'unselected' => array());
 
@@ -1147,6 +1148,11 @@ class CartRuleCore extends ObjectModel
 				$shop_list = ' AND t.id_shop IN ('.implode(array_map('intval', $shops), ',').') ';
 		}
 
+		if ($offset !== null && $limit !== null)
+			$sql_limit = ' LIMIT '.(int)$offset.', '.(int)($limit+1);
+		else
+			$sql_limit = '';
+		
 		if (!Validate::isLoadedObject($this) || $this->{$type.'_restriction'} == 0)
 		{
 			$array['selected'] = Db::getInstance()->executeS('
@@ -1158,12 +1164,12 @@ class CartRuleCore extends ObjectModel
 			'.(in_array($type, array('carrier', 'shop')) ? ' AND t.deleted = 0' : '').'
 			'.($type == 'cart_rule' ? 'AND t.id_cart_rule != '.(int)$this->id : '').
 			$shop_list.
-			' ORDER BY name ASC');
+			' ORDER BY name ASC '.$sql_limit);
 		}
 		else
 		{
 			if ($type == 'cart_rule')
-				$array = $this->getCartRuleCombinations($offset, $limit);
+				$array = $this->getCartRuleCombinations($offset, $limit, $search_cart_rule_name);
 			else
 			{
 				$resource = Db::getInstance()->query('
@@ -1174,7 +1180,7 @@ class CartRuleCore extends ObjectModel
 				WHERE 1 '.($active_only ? ' AND t.active = 1' : '').
 				$shop_list
 				.(in_array($type, array('carrier', 'shop')) ? ' AND t.deleted = 0' : '').
-				' ORDER BY name ASC',
+				' ORDER BY name ASC '.$sql_limit,
 				false);
 				while ($row = Db::getInstance()->nextRow($resource))
 					$array[($row['selected'] || $this->{$type.'_restriction'} == 0) ? 'selected' : 'unselected'][] = $row;

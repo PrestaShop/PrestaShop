@@ -53,7 +53,7 @@ class AdminCartRulesControllerCore extends AdminController
 
 	public function ajaxProcessLoadCartRules()
 	{
-		$type = $token = '';
+		$type = $token = $search = '';
 		$limit = $count = $id_cart_rule = 0;
 		if (isset($_GET['limit']))
 			$limit = $_GET['limit'];
@@ -70,15 +70,21 @@ class AdminCartRulesControllerCore extends AdminController
 		if (isset($_GET['token']))
 			$token = $_GET['token'];
 
+		if (isset($_GET['search']))
+			$search = $_GET['search'];
+
 
 		$page = floor($count / $limit);
 
 		$html = '';
+		$next_link = '';
 
-		if (($page * $limit) + 1 == $count)
+		if (($page * $limit) + 1 == $count || $count == 0)
 		{
+			if ($count == 0)
+				$count = 1;
 			$current_object = $this->loadObject(true);
-			$cart_rules     = $current_object->getAssociatedRestrictions('cart_rule', false, true, ($page)*$limit, $limit);
+			$cart_rules     = $current_object->getAssociatedRestrictions('cart_rule', false, true, ($page)*$limit, $limit, $search);
 			if ($type == 'selected')
 			{
 				$i = 1;
@@ -89,7 +95,8 @@ class AdminCartRulesControllerCore extends AdminController
 						break;
 					$i++;
 				}
-				$next_link = 'ajax-tab.php?tab=AdminCartRules&id_cart_rule='.(int)$id_cart_rule.'&token='.Tools::safeOutput($token).'&action=loadCartRules&limit='.(int)$limit.'&type=selected&count='.($count - 1 + count($cart_rules['selected']));
+				if ($i == $limit)
+					$next_link = 'ajax-tab.php?tab=AdminCartRules&id_cart_rule='.(int)$id_cart_rule.'&token='.Tools::safeOutput($token).'&action=loadCartRules&limit='.(int)$limit.'&type=selected&count='.($count - 1 + count($cart_rules['selected']).'&search='.urlencode($search));
 			}
 			else
 			{
@@ -101,7 +108,8 @@ class AdminCartRulesControllerCore extends AdminController
 						break;
 					$i++;
 				}
-				$next_link = 'ajax-tab.php?tab=AdminCartRules&id_cart_rule='.(int)$id_cart_rule.'&token='.Tools::safeOutput($token).'&action=loadCartRules&limit='.(int)$limit.'&type=unselected&count='.($count - 1 + count($cart_rules['unselected']));
+				if ($i == $limit)
+					$next_link = 'ajax-tab.php?tab=AdminCartRules&id_cart_rule='.(int)$id_cart_rule.'&token='.Tools::safeOutput($token).'&action=loadCartRules&limit='.(int)$limit.'&type=unselected&count='.($count - 1 + count($cart_rules['unselected']).'&search='.urlencode($search));
 			}
 		}
 		echo Tools::jsonEncode(array('html' => $html, 'next_link' => $next_link));
@@ -659,7 +667,7 @@ class AdminCartRulesControllerCore extends AdminController
 		$this->content .= $this->createTemplate('form.tpl')->fetch();
 
 		$this->addJqueryUI('ui.datepicker');
-		$this->addJqueryPlugin('jscroll');
+		$this->addJqueryPlugin(array('jscroll', 'typewatch'));
 		return parent::renderForm();
 	}
 
