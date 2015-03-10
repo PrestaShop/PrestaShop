@@ -30,14 +30,14 @@
 {else}
 	{foreach name=wl from=$wishlists item=wishlist}
 		{if $smarty.foreach.wl.first}
-			<a id="wishlist_button" tabindex="0" data-toggle="popover" data-trigger="focus" title="{l s='Wishlist' mod='blockwishlist'}" data-placement="bottom">{l s='Add to wishlist' mod='blockwishlist'}</a>
+			<a id="wishlist_button" tabindex="0" data-toggle="popover" data-trigger="focus" title="Wishlist" data-placement="bottom">{l s='Add to wishlist' mod='blockwishlist'}</a>
 				<div hidden id="popover-content">
 					<table class="table" border="1">
 						<tbody>
 		{/if}
 							<tr title="{$wishlist.name}" value="{$wishlist.id_wishlist}" onclick="WishlistCart('wishlist_block_list', 'add', '{$id_product|intval}', $('idCombination').val(), document.getElementById('quantity_wanted').value, '{$wishlist.id_wishlist}');">
 								<td>
-									{l s='Add to' mod='blockwishlist'} {$wishlist.name}
+									{l s='Add to %s'|sprintf:$wishlist.name mod='blockwishlist'}
 								</td>
 							</tr>
 		{if $smarty.foreach.wl.last}
