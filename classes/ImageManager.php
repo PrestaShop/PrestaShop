@@ -201,7 +201,22 @@ class ImageManagerCore
 		$width_diff = $dst_width / $src_width;
 		$height_diff = $dst_height / $src_height;
 
-		if ($width_diff > 1 && $height_diff > 1)
+		if ((int)Configuration::get('PS_IMAGE_GENERATION_METHOD') > 2)
+		{
+			// crop method (3) and adjust method (4)
+ 			$next_height = $dst_height;
+			$next_width = $dst_width;
+
+			if (((int)Configuration::get('PS_IMAGE_GENERATION_METHOD') == 3) == ($width_diff > $height_diff))
+			{
+				$next_height = round($src_height * $width_diff);
+			}
+			else
+			{
+				$next_width = round($src_width * $height_diff);
+			}
+		}
+		else if ($width_diff > 1 && $height_diff > 1)
 		{
 			$next_width = $src_width;
 			$next_height = $src_height;
