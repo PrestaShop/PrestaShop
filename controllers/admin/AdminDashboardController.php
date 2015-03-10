@@ -341,7 +341,12 @@ class AdminDashboardControllerCore extends AdminController
 
 	public function ajaxProcessGetBlogRss()
 	{
-		$return = array('has_errors' => false, 'rss' => array());
+		// Call hook actionGetBlogRss
+		$return = Hook::exec('actionGetBlogRss');
+		if ( $return && isset($return['rss']) && is_array($return['rss']) )
+			die(Tools::jsonEncode($return));
+
+		$return = array('has_errors' => false, 'rss' => array(), 'moreLink' => 'http://www.prestashop.com/blog/');
 		if (!$this->isFresh('/config/xml/blog-'.$this->context->language->iso_code.'.xml', 86400))
 			if (!$this->refresh('/config/xml/blog-'.$this->context->language->iso_code.'.xml', _PS_API_URL_.'/rss/blog/blog-'.$this->context->language->iso_code.'.xml'))
 				$return['has_errors'] = true;
