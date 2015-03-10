@@ -62,7 +62,9 @@
             if (_options.pagingSelector) {
                 var $parent = $next.closest(_options.pagingSelector).hide();
             } else {
-                $next.wrap('<div class="jscroll-next-parent" />').parent().hide();
+                if (!$next.parent().hasClass('jscroll-next-parent')) {
+                    $next.wrap('<div class="jscroll-next-parent" />').parent().hide();
+                }
             }
         }
 
@@ -126,21 +128,33 @@
         }
 
         // Load the next set of content, if available
-        function _load() {
+        function _load(href) {
             var $inner = $e,
-                data = $e.data('jscroll');
+                data = $e.data('jscroll'),
+                append = true;
 
             data.waiting = true;
 
-            return $.get(data.nextHref, function(r, status, xhr) {
+            if (typeof(href) == 'undefined') {
+                href = data.nextHref;
+            } else {
+                append = false;
+            }
+
+            return $.get(href, function(r, status, xhr) {
                     if (status === 'error') {
                         return _destroy();
                     }
                     $inner.fadeTo("fast", 0.5);
-                    $inner.append(r.html);
+                    if (append) {
+                        $inner.append(r.html);
+                    } else {
+                        $inner.html(r.html);
+                        $inner.scrollTop(0);
+                    }
                     data.waiting = false;
                     data.nextHref = r.next_link;
-                    $('.jscroll-next-parent', $e.parent()).remove(); // Remove the previous next link now that we have a new one
+                    $('.jscroll-next', $e.parent()).attr('href', r.next_link);
                     _checkNextHref();
                     if (_options.callback) {
                         _options.callback.call(this);
@@ -171,7 +185,8 @@
 
         // Expose API methods via the jQuery.jscroll namespace, e.g. $('sel').jscroll.method()
         $.extend($e.jscroll, {
-            destroy: _destroy
+            destroy: _destroy,
+            load_scroll: _load
         });
         return $e;
     };
