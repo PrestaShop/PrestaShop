@@ -270,7 +270,9 @@ class ContactControllerCore extends FrontController
 			$result = Db::getInstance()->executeS('
 			SELECT id_order
 			FROM '._DB_PREFIX_.'orders
-			WHERE id_customer = '.(int)$this->context->customer->id.' ORDER BY date_add');
+			WHERE id_customer = '.(int)$this->context->customer->id.' ORDER BY date_add'.
+			Shop::addSqlRestriction(Shop::SHARE_ORDER));
+
 			$orders = array();
 
 			foreach ($result as $row)
