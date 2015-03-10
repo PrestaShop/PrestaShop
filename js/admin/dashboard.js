@@ -200,6 +200,12 @@ function getBlogRss() {
 					var article_html = '<article><h4><a href="'+jsonData.rss[article].link+'" class="_blank" onclick="return !window.open(this.href);">'+jsonData.rss[article].title+'</a></h4><span class="dash-news-date text-muted">'+jsonData.rss[article].date+'</span><p>'+jsonData.rss[article].short_desc+' <a href="'+jsonData.rss[article].link+'">'+read_more+'</a><p></article><hr/>';
 					$('.dash_news .dash_news_content').append(article_html);
 				}
+
+				if (jsonData.moreLink !== undefined) {
+					$('.dash_news a.find_more_news').attr('href', jsonData.moreLink);
+				} else {
+					$('.dash_news a.find_more_news').hide();
+				}
 			}
 			else {
 				$('.dash_news').hide();
