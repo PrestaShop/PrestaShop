@@ -26,7 +26,7 @@
 
 class AdminTrackingControllerCore extends AdminController
 {
-	public $bootstrap = true ;
+	public $bootstrap = true;
 	protected $_helper_list;
 
 	public function postprocess()
@@ -335,4 +335,3 @@ class AdminTrackingControllerCore extends AdminController
 		return Tools::getDescriptionClean($description);
 	}
 }
-

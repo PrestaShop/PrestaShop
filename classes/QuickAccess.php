@@ -26,7 +26,7 @@
 
 class QuickAccessCore extends ObjectModel
 {
- 	/** @var string Name */
+	/** @var string Name */
 	public $name;
 
 	/** @var string Link */
@@ -46,7 +46,7 @@ class QuickAccessCore extends ObjectModel
 			'link' => 		array('type' => self::TYPE_STRING, 'validate' => 'isUrl', 'required' => true, 'size' => 255),
 			'new_window' => array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
 
-			// Lang fields
+			/* Lang fields */
 			'name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 32),
 		),
 	);
@@ -76,6 +76,4 @@ class QuickAccessCore extends ObjectModel
 
 		return $this->update(false);
 	}
-
 }
-

@@ -391,7 +391,7 @@ class AddressFormatCore extends ObjectModel
 					$addressText .= (!empty($tmpText)) ? $tmpText.$newLine: '';
 				}
 
-		$addressText = preg_replace('/'.preg_quote($newLine,'/').'$/i', '', $addressText);
+		$addressText = preg_replace('/'.preg_quote($newLine, '/').'$/i', '', $addressText);
 		$addressText = rtrim($addressText, $separator);
 
 		return $addressText;

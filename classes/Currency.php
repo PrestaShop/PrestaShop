@@ -302,19 +302,19 @@ class CurrencyCore extends ObjectModel
 		{
 			$query = Currency::getIdByQuery($id_shop);
 			$query->where('iso_code = \''.pSQL($iso_code).'\'');
-	
+
 			$result = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
 			Cache::store($cache_id, $result);
 		}
 		return Cache::retrieve($cache_id);
 	}
 
-    /**
-     * @static
-     * @param $iso_code
-     * @param int $id_shop
-     * @return int
-     */
+	/**
+	 * @static
+	 * @param $iso_code
+	 * @param int $id_shop
+	 * @return int
+	 */
 	public static function getIdByIsoCodeNum($iso_code_num, $id_shop = 0)
 	{
 		$query = Currency::getIdByQuery($id_shop);
@@ -435,7 +435,7 @@ class CurrencyCore extends ObjectModel
 			self::$currencies[(int)($id)] = new Currency($id);
 		return self::$currencies[(int)($id)];
 	}
-	
+
 	public function getConversationRate()
 	{
 		return $this->id != (int)Configuration::get('PS_CURRENCY_DEFAULT') ? $this->conversion_rate : 1;

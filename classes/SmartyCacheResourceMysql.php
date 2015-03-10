@@ -92,7 +92,7 @@ class Smarty_CacheResource_Mysql extends Smarty_CacheResource_Custom
 			"'.pSQL($cache_id, true).'",
 			"'.pSQL($content, true).'"
 		)');
-	  
+
 		return (bool)Db::getInstance()->Affected_Rows();
 	}
 
@@ -108,7 +108,8 @@ class Smarty_CacheResource_Mysql extends Smarty_CacheResource_Custom
 	protected function delete($name, $cache_id, $compile_id, $exp_time)
 	{
 		// delete the whole cache
-		if ($name === null && $cache_id === null && $compile_id === null && $exp_time === null) {
+		if ($name === null && $cache_id === null && $compile_id === null && $exp_time === null)
+		{
 			// returning the number of deleted caches would require a second query to count them
 			Db::getInstance()->execute('TRUNCATE TABLE '._DB_PREFIX_.'smarty_cache');
 			return -1;
@@ -122,7 +123,7 @@ class Smarty_CacheResource_Mysql extends Smarty_CacheResource_Custom
 		if ($cache_id !== null)
 			$where[] = '(cache_id  = "'.pSQL($cache_id, true).'" OR cache_id LIKE "'.pSQL($cache_id .'|%', true).'")';
 
-		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'smarty_cache WHERE ' . implode(' AND ', $where));
+		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'smarty_cache WHERE '.implode(' AND ', $where));
 		return Db::getInstance()->Affected_Rows();
 	}
 }

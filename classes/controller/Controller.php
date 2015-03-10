@@ -510,7 +510,11 @@ abstract class ControllerCore
 			));
 
 			$javascript = $this->context->smarty->fetch(_PS_ALL_THEMES_DIR_.'javascript.tpl');
-			echo ($defer ? $html.$javascript : preg_replace('/(?<!\$)'.$js_tag.'/', $javascript, $html)).$live_edit_content.((!isset($this->ajax) || ! $this->ajax) ? '</body></html>' : '');
+
+			if ($defer)
+				echo $html.$javascript;
+			else
+				echo preg_replace('/(?<!\$)'.$js_tag.'/', $javascript, $html).$live_edit_content.((!isset($this->ajax) || ! $this->ajax) ? '</body></html>' : '');
 		}
 		else
 			echo $html;
@@ -520,14 +524,14 @@ abstract class ControllerCore
 	 * Checks if a template is cached
 	 *
 	 * @param string $template
-	 * @param string|null $cacheId Cache item ID
-	 * @param string|null $compileId
+	 * @param string|null $cache_id Cache item ID
+	 * @param string|null $compile_id
 	 * @return bool
 	 */
-	protected function isCached($template, $cacheId = null, $compileId = null)
+	protected function isCached($template, $cache_id = null, $compile_id = null)
 	{
 		Tools::enableCache();
-		$res = $this->context->smarty->isCached($template, $cacheId, $compileId);
+		$res = $this->context->smarty->isCached($template, $cache_id, $compile_id);
 		Tools::restoreCacheSettings();
 
 		return $res;

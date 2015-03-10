@@ -112,7 +112,7 @@ class CartRuleCore extends ObjectModel
 			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'date_upd' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 
-			// Lang fields
+			/* Lang fields */
 			'name' => 					array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 254),
 		),
 	);
@@ -333,7 +333,7 @@ class CartRuleCore extends ObjectModel
 				);
 
 				if (is_array($countries) && count($countries))
-					foreach($countries as $country)
+					foreach ($countries as $country)
 					{
 						$id_cart_rule = (bool)Db::getInstance()->getValue('
 							SELECT crc.id_cart_rule
@@ -922,9 +922,7 @@ class CartRuleCore extends ObjectModel
 						{
 							$price = $product['price'];
 							if ($use_tax)
-							{
 								$price *= (1 + $context->cart->getAverageProductsTaxRate());
-							}
 
 							$selected_products_reduction += $price * $product['cart_quantity'];
 						}
@@ -1023,7 +1021,8 @@ class CartRuleCore extends ObjectModel
 					$cart_average_vat_rate = Context::getContext()->cart->getAverageProductsTaxRate();
 					$current_cart_amount = $use_tax ? $cart_amount_ti : $cart_amount_te;
 
-					foreach ($all_cart_rules_ids as $current_cart_rule_id) {
+					foreach ($all_cart_rules_ids as $current_cart_rule_id)
+					{
 						if ((int)$current_cart_rule_id['id_cart_rule'] == (int)$this->id)
 							break;
 
@@ -1128,7 +1127,7 @@ class CartRuleCore extends ObjectModel
 				$shop_list = ' AND t.id_shop IN ('.implode(array_map('intval', $shops), ',').') ';
 		}
 
-		if (!Validate::isLoadedObject($this) OR $this->{$type.'_restriction'} == 0)
+		if (!Validate::isLoadedObject($this) || $this->{$type.'_restriction'} == 0)
 		{
 			$array['selected'] = Db::getInstance()->executeS('
 			SELECT t.*'.($i18n ? ', tl.*' : '').', 1 as selected

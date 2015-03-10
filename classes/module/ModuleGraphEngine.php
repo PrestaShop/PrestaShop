@@ -68,5 +68,3 @@ abstract class ModuleGraphEngineCore extends Module
 	abstract public function setTitles($titles);
 	abstract public function draw();
 }
-
-

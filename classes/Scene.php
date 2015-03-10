@@ -26,7 +26,7 @@
 
 class SceneCore extends ObjectModel
 {
- 	/** @var string Name */
+	/** @var string Name */
 	public $name;
 
 	/** @var boolean Active Scene */
@@ -51,12 +51,12 @@ class SceneCore extends ObjectModel
 		'fields' => array(
 			'active' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true),
 
-			// Lang fields
+			/* Lang fields */
 			'name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 100),
 		),
 	);
 
- 	protected static $feature_active = null;
+	protected static $feature_active = null;
 
 	public function __construct($id = null, $id_lang = null, $lite_result = true, $hide_scene_position = false)
 	{
@@ -116,12 +116,12 @@ class SceneCore extends ObjectModel
 	}
 
 	public function deleteImage($force_delete = false)
-	{	
-		if (file_exists($this->image_dir.'thumbs/'.$this->id.'-m_scene_default.'.$this->image_format) 
+	{
+		if (file_exists($this->image_dir.'thumbs/'.$this->id.'-m_scene_default.'.$this->image_format)
 			&& !unlink($this->image_dir.'thumbs/'.$this->id.'-m_scene_default.'.$this->image_format))
 			return false;
 		if (!(isset($_FILES) && count($_FILES)))
-			return parent::deleteImage();		
+			return parent::deleteImage();
 		return true;
 	}
 
@@ -193,7 +193,8 @@ class SceneCore extends ObjectModel
 	 *
 	 * @return array Products
 	 */
-	public static function getScenes($id_category, $id_lang = null, $only_active = true, $lite_result = true, $hide_scene_position = true, Context $context = null)
+	public static function getScenes($id_category, $id_lang = null, $only_active = true, $lite_result = true, $hide_scene_position = true,
+		Context $context = null)
 	{
 		if (!Scene::isFeatureActive())
 			return array();
@@ -204,7 +205,7 @@ class SceneCore extends ObjectModel
 			if (!$context)
 				$context = Context::getContext();
 			$id_lang = is_null($id_lang) ? $context->language->id : $id_lang;
-	
+
 			$sql = 'SELECT s.*
 					FROM `'._DB_PREFIX_.'scene_category` sc
 					LEFT JOIN `'._DB_PREFIX_.'scene` s ON (sc.id_scene = s.id_scene)
@@ -215,7 +216,7 @@ class SceneCore extends ObjectModel
 						.($only_active ? ' AND s.active = 1' : '').'
 					ORDER BY sl.name ASC';
 			$scenes = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
-	
+
 			if (!$lite_result && $scenes)
 				foreach ($scenes as &$scene)
 					$scene = new Scene($scene['id_scene'], $id_lang, false, $hide_scene_position);
@@ -281,11 +282,11 @@ class SceneCore extends ObjectModel
 	}
 
 	/**
-	  * Hide scene prefix used for position
-	  *
-	  * @param string $name Scene name
-	  * @return string Name without position
-	  */
+	 * Hide scene prefix used for position
+	 *
+	 * @param string $name Scene name
+	 * @return string Name without position
+	 */
 	public static function hideScenePosition($name)
 	{
 		return preg_replace('/^[0-9]+\./', '', $name);

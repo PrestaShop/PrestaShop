@@ -77,7 +77,7 @@ class ManufacturerCore extends ObjectModel
 			'date_add' => 			array('type' => self::TYPE_DATE),
 			'date_upd' => 			array('type' => self::TYPE_DATE),
 
-			// Lang fields
+			/* Lang fields */
 			'description' => 		array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
 			'short_description' => 	array('type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'),
 			'meta_title' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
@@ -110,7 +110,7 @@ class ManufacturerCore extends ObjectModel
 	{
 		$address = new Address($this->id_address);
 
-		if (Validate::isLoadedObject($address) AND !$address->delete())
+		if (Validate::isLoadedObject($address) && !$address->delete())
 			return false;
 
 		if (parent::delete())
@@ -150,16 +150,16 @@ class ManufacturerCore extends ObjectModel
 	}
 
 	/**
-	  * Return manufacturers
-	  *
-	  * @param boolean $get_nb_products [optional] return products numbers for each
-	  * @param int $id_lang
-	  * @param bool $active
-	  * @param int $p
-	  * @param int $n
-	  * @param bool $all_group
-	  * @return array Manufacturers
-	  */
+	 * Return manufacturers
+	 *
+	 * @param boolean $get_nb_products [optional] return products numbers for each
+	 * @param int $id_lang
+	 * @param bool $active
+	 * @param int $p
+	 * @param int $n
+	 * @param bool $all_group
+	 * @return array Manufacturers
+	 */
 	public static function getManufacturers($get_nb_products = false, $id_lang = 0, $active = true, $p = false, $n = false, $all_group = false, $group_by = false)
 	{
 		if (!$id_lang)
@@ -224,11 +224,11 @@ class ManufacturerCore extends ObjectModel
 	}
 
 	/**
-	  * Return name from id
-	  *
-	  * @param integer $id_manufacturer Manufacturer ID
-	  * @return string name
-	  */
+	 * Return name from id
+	 *
+	 * @param integer $id_manufacturer Manufacturer ID
+	 * @return string name
+	 */
 	static protected $cacheName = array();
 	public static function getNameById($id_manufacturer)
 	{
@@ -275,10 +275,10 @@ class ManufacturerCore extends ObjectModel
 		if ($p < 1)
 			$p = 1;
 
-	 	if (empty($order_by) || $order_by == 'position')
-	 		$order_by = 'name';
+		if (empty($order_by) || $order_by == 'position')
+			$order_by = 'name';
 
-	 	if (empty($order_way)) $order_way = 'ASC';
+		if (empty($order_way)) $order_way = 'ASC';
 
 		if (!Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way))
 			die (Tools::displayError());
@@ -340,7 +340,7 @@ class ManufacturerCore extends ObjectModel
 				) > 0 AS new'
 			.' FROM `'._DB_PREFIX_.'product` p
 			'.Shop::addSqlAssociation('product', 'p').
-			   (Combination::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'product_attribute_shop` product_attribute_shop
+			(Combination::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'product_attribute_shop` product_attribute_shop
 						ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop='.(int)$context->shop->id.')':'').'
 			LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 				ON (p.`id_product` = pl.`id_product` AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').')

@@ -448,7 +448,7 @@ class AdminProductsControllerCore extends AdminController
 	public function ajaxProcessGetCountriesOptions()
 	{
 		if (!$res = Country::getCountriesByIdShop((int)Tools::getValue('id_shop'), (int)$this->context->language->id))
-			return ;
+			return;
 
 		$tpl = $this->createTemplate('specific_prices_shop_update.tpl');
 		$tpl->assign(array(
@@ -464,7 +464,7 @@ class AdminProductsControllerCore extends AdminController
 	public function ajaxProcessGetCurrenciesOptions()
 	{
 		if (!$res = Currency::getCurrenciesByIdShop((int)Tools::getValue('id_shop')))
-			return ;
+			return;
 
 		$tpl = $this->createTemplate('specific_prices_shop_update.tpl');
 		$tpl->assign(array(
@@ -480,7 +480,7 @@ class AdminProductsControllerCore extends AdminController
 	public function ajaxProcessGetGroupsOptions()
 	{
 		if (!$res = Group::getGroups((int)$this->context->language->id, (int)Tools::getValue('id_shop')))
-			return ;
+			return;
 
 		$tpl = $this->createTemplate('specific_prices_shop_update.tpl');
 		$tpl->assign(array(
@@ -972,7 +972,7 @@ class AdminProductsControllerCore extends AdminController
 					if (Tools::getValue('attribute_default'))
 					{
 						Product::updateDefaultAttribute((int)$product->id);
-						if(isset($id_product_attribute))
+						if (isset($id_product_attribute))
 							$product->cache_default_attribute = (int)$id_product_attribute;
 
 						if ($available_date = Tools::getValue('available_date_attribute'))
@@ -2123,7 +2123,7 @@ class AdminProductsControllerCore extends AdminController
 		// Check multilingual fields sizes
 		foreach ($rules['sizeLang'] as $fieldLang => $maxLength)
 			foreach ($languages as $language)
-		  {
+			{
 				$value = Tools::getValue($fieldLang.'_'.$language['id_lang']);
 				if ($value && Tools::strlen($value) > $maxLength)
 					$this->errors[] = sprintf(
@@ -3888,13 +3888,13 @@ class AdminProductsControllerCore extends AdminController
 	{
 		$data = $this->createTemplate($this->tpl_form);
 		$data->assign(array(
-						  'product' => $obj,
-						  'ps_dimension_unit' => Configuration::get('PS_DIMENSION_UNIT'),
-						  'ps_weight_unit' => Configuration::get('PS_WEIGHT_UNIT'),
-						  'carrier_list' => $this->getCarrierList(),
-						  'currency' => $this->context->currency,
-						  'country_display_tax_label' =>  $this->context->country->display_tax_label
-					  ));
+						'product' => $obj,
+						'ps_dimension_unit' => Configuration::get('PS_DIMENSION_UNIT'),
+						'ps_weight_unit' => Configuration::get('PS_WEIGHT_UNIT'),
+						'carrier_list' => $this->getCarrierList(),
+						'currency' => $this->context->currency,
+						'country_display_tax_label' =>  $this->context->country->display_tax_label
+					));
 		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
@@ -4781,7 +4781,7 @@ class AdminProductsControllerCore extends AdminController
 	 */
 	public function initFormModules($obj)
 	{
- 		$id_module = Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($this->tab_display_module).'\'');
+		$id_module = Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = \''.pSQL($this->tab_display_module).'\'');
 		$this->tpl_form_vars['custom_form'] = Hook::exec('displayAdminProductsExtra', array(), (int)$id_module);
 	}
 

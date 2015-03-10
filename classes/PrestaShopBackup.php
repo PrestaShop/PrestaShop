@@ -56,17 +56,17 @@ class PrestaShopBackupCore
 
 	/**
 	 * you can set a different path with that function
-	 * 
+	 *
 	 * @TODO include the prefix name
-	 * @param string $dir 
+	 * @param string $dir
 	 * @return boolean bo
 	 */
 	public function setCustomBackupPath($dir)
 	{
-		$customDir = DIRECTORY_SEPARATOR.trim($dir, '/').DIRECTORY_SEPARATOR;
+		$custom_dir = DIRECTORY_SEPARATOR.trim($dir, '/').DIRECTORY_SEPARATOR;
 		if (is_dir((defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_).DIRECTORY_SEPARATOR.$customDir
 			.DIRECTORY_SEPARATOR))
-			$this->customBackupDir = $customDir;
+			$this->customBackupDir = $custom_dir;
 		else
 			return false;
 
@@ -76,7 +76,7 @@ class PrestaShopBackupCore
 
 	/**
 	 * get the path to use for backup (customBackupDir if specified, or default)
-	 * 
+	 *
 	 * @param string $filename filename to use
 	 * @return string full path
 	 */
@@ -191,7 +191,7 @@ class PrestaShopBackupCore
 				.'connections_source', _DB_PREFIX_.'guest', _DB_PREFIX_.'statssearch');
 		else
 			$ignore_insert_table = array();
-		
+
 		// Generate some random number, to make it extra hard to guess backup file names
 		$rand = dechex ( mt_rand(0, min(0xffffffff, mt_getrandmax() ) ) );
 		$date = time();
@@ -245,10 +245,10 @@ class PrestaShopBackupCore
 			}
 
 			fwrite($fp, '/* Scheme for table '.$schema[0]['Table']." */\n");
-			
+
 			if ($this->psBackupDropTable)
 				fwrite($fp, 'DROP TABLE IF EXISTS `'.$schema[0]['Table'].'`;'."\n");
-			
+
 			fwrite($fp, $schema[0]['Create Table'].";\n\n");
 
 			if (!in_array($schema[0]['Table'], $ignore_insert_table))
@@ -265,7 +265,7 @@ class PrestaShopBackupCore
 					while ($row = DB::getInstance()->nextRow($data))
 					{
 						$s = '(';
-						
+
 						foreach ($row as $field => $value)
 						{
 							$tmp = "'".pSQL($value, true)."',";
@@ -275,7 +275,7 @@ class PrestaShopBackupCore
 							{
 								foreach ($lines as $line)
 									if (strpos($line, '`'.$field.'`') !== false)
-									{	
+									{
 										if (preg_match('/(.*NOT NULL.*)/Ui', $line))
 											$s .= "'',";
 										else
@@ -311,5 +311,4 @@ class PrestaShopBackupCore
 
 		return true;
 	}
-
 }

@@ -94,7 +94,7 @@ class AdminShopGroupControllerCore extends AdminController
 	public function initContent()
 	{
 		parent::initContent();
-		
+
 		$this->addJqueryPlugin('cooki-plugin');
 		$data = Shop::getTree();
 
@@ -164,11 +164,11 @@ class AdminShopGroupControllerCore extends AdminController
 			);
 		}
 	}
-	
+
 	public function initToolbar()
 	{
 		parent::initToolbar();
-		
+
 		if ($this->display != 'add' && $this->display != 'edit')
 			$this->toolbar_btn['new'] = array(
 				'desc' => $this->l('Add a new shop group'),
@@ -360,5 +360,3 @@ class AdminShopGroupControllerCore extends AdminController
 		}
 	}
 }
-
-

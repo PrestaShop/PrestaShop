@@ -73,20 +73,20 @@ class StockAvailableCore extends ObjectModel
 	/**
 	 * @see ObjectModel::$webserviceParameters
 	 */
- 	protected $webserviceParameters = array(
- 		'fields' => array(
- 			'id_product' => array('xlink_resource' => 'products'),
- 			'id_product_attribute' => array('xlink_resource' => 'combinations'),
- 			'id_shop' => array('xlink_resource' => 'shops'),
- 			'id_shop_group' => array('xlink_resource' => 'shop_groups'),
- 		),
- 		'hidden_fields' => array(
- 		),
+	protected $webserviceParameters = array(
+		'fields' => array(
+			'id_product' => array('xlink_resource' => 'products'),
+			'id_product_attribute' => array('xlink_resource' => 'combinations'),
+			'id_shop' => array('xlink_resource' => 'shops'),
+			'id_shop_group' => array('xlink_resource' => 'shop_groups'),
+		),
+		'hidden_fields' => array(
+		),
 		'objectMethods' => array(
 			'add' => 'addWs',
 			'update' => 'updateWs',
 		),
- 	);
+	);
 
 	/**
 	 * For a given {id_product, id_product_attribute and id_shop}, gets the stock available id associated
@@ -497,16 +497,15 @@ class StockAvailableCore extends ObjectModel
 		Cache::clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$id_product.'*');
 
 		Hook::exec('actionUpdateQuantity',
-				   array(
-				   	'id_product' => $id_product,
-				   	'id_product_attribute' => $id_product_attribute,
-				   	'quantity' => $stock_available->quantity
-				   )
-				  );
+				array(
+					'id_product' => $id_product,
+					'id_product_attribute' => $id_product_attribute,
+					'quantity' => $stock_available->quantity
+				)
+		);
 
 		return true;
 	}
-
 
 	/**
 	 * For a given id_product and id_product_attribute sets the quantity available
@@ -568,12 +567,12 @@ class StockAvailableCore extends ObjectModel
 			}
 
 			Hook::exec('actionUpdateQuantity',
-				   array(
-				   	'id_product' => $id_product,
-				   	'id_product_attribute' => $id_product_attribute,
-				   	'quantity' => $stock_available->quantity
-				   )
-				  );
+				array(
+					'id_product' => $id_product,
+					'id_product_attribute' => $id_product_attribute,
+					'quantity' => $stock_available->quantity
+				)
+			);
 		}
 
 		Cache::clean('StockAvailable::getQuantityAvailableByProduct_'.(int)$id_product.'*');
@@ -611,7 +610,7 @@ class StockAvailableCore extends ObjectModel
 						return true;
 			}
 
-		$res =  Db::getInstance()->execute('
+		$res = Db::getInstance()->execute('
 		DELETE FROM '._DB_PREFIX_.'stock_available
 		WHERE id_product = '.(int)$id_product.
 		($id_product_attribute ? ' AND id_product_attribute = '.(int)$id_product_attribute : '').

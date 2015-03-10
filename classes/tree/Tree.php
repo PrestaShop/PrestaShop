@@ -219,9 +219,9 @@ class TreeCore
 
 	public function getTemplateFile($template)
 	{
-		if (preg_match_all('/((?:^|[A-Z])[a-z]+)/', get_class($this->getContext()->controller), $matches) !== FALSE)
+		if (preg_match_all('/((?:^|[A-Z])[a-z]+)/', get_class($this->getContext()->controller), $matches) !== false)
 			$controller_name = strtolower($matches[0][1]);
-		
+
 		if ($this->getContext()->controller instanceof ModuleAdminController && isset($controller_name) && file_exists($this->_normalizeDirectory(
 				$this->getContext()->controller->getTemplatePath()).$controller_name.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template))
 			return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath()).
@@ -335,7 +335,7 @@ class TreeCore
 			));
 			$template->assign('header', $headerTemplate->fetch());
 		}
-		
+
 		//Assign Tree nodes
 		$template->assign($this->getAttributes())->assign(array(
 			'id'    => $this->getId(),
@@ -396,13 +396,14 @@ class TreeCore
 	private function _normalizeDirectory($directory)
 	{
 		$last = $directory[strlen($directory) - 1];
-        
-        if (in_array($last, array('/', '\\'))) {
-            $directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
-            return $directory;
-        }
-        
-        $directory .= DIRECTORY_SEPARATOR;
-        return $directory;
+
+		if (in_array($last, array('/', '\\')))
+		{
+			$directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
+			return $directory;
+		}
+
+		$directory .= DIRECTORY_SEPARATOR;
+		return $directory;
 	}
 }

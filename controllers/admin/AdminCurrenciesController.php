@@ -274,7 +274,7 @@ class AdminCurrenciesControllerCore extends AdminController
 			return false;
 		return parent::processDelete();
 	}
-	
+
 	protected function processBulkDelete()
 	{
 		if (is_array($this->boxes) && !empty($this->boxes))
@@ -298,10 +298,10 @@ class AdminCurrenciesControllerCore extends AdminController
 		$object = $this->loadObject();
 		if (!$this->checkDisableStatus($object))
 			return false;
-		
+
 		return parent::processStatus();
 	}
-	
+
 	protected function processBulkDisableSelection()
 	{
 		if (is_array($this->boxes) && !empty($this->boxes))
@@ -356,4 +356,3 @@ class AdminCurrenciesControllerCore extends AdminController
 		parent::initPageHeaderToolbar();
 	}
 }
-

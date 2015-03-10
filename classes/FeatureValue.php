@@ -46,7 +46,7 @@ class FeatureValueCore extends ObjectModel
 			'id_feature' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
 			'custom' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
-			// Lang fields
+			/* Lang fields */
 			'value' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 255),
 		),
 	);
@@ -143,14 +143,14 @@ class FeatureValueCore extends ObjectModel
 
 			if ($custom && $id_feature_value && !is_null($id_lang) && $id_lang)
 				Db::getInstance()->execute('
-				UPDATE '._DB_PREFIX_.'feature_value_lang 
-				SET `value` = \''.pSQL($value).'\' 
-				WHERE `id_feature_value` = '.(int)$id_feature_value.' 
-				AND `value` != \''.pSQL($value).'\' 
+				UPDATE '._DB_PREFIX_.'feature_value_lang
+				SET `value` = \''.pSQL($value).'\'
+				WHERE `id_feature_value` = '.(int)$id_feature_value.'
+				AND `value` != \''.pSQL($value).'\'
 				AND `id_lang` = '.(int)$id_lang);
 		}
-		
-		if (!$custom)		
+
+		if (!$custom)
 			$id_feature_value = Db::getInstance()->getValue('
 				SELECT fv.`id_feature_value`
 				FROM '._DB_PREFIX_.'feature_value fv

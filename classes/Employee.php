@@ -159,7 +159,7 @@ class EmployeeCore extends ObjectModel
 	public function getFields()
 	{
 		if (empty($this->stats_date_from) || $this->stats_date_from == '0000-00-00')
-			$this->stats_date_from = date('Y-m-d', strtotime("-1 month"));
+			$this->stats_date_from = date('Y-m-d', strtotime('-1 month'));
 
 		if (empty($this->stats_compare_from) || $this->stats_compare_from == '0000-00-00')
 			$this->stats_compare_from = null;
@@ -178,7 +178,7 @@ class EmployeeCore extends ObjectModel
 		$this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-'.Configuration::get('PS_PASSWD_TIME_BACK').'minutes'));
 		$this->saveOptin();
 		$this->updateTextDirection();
-	 	return parent::add($autodate, $null_values);
+		return parent::add($autodate, $null_values);
 	}
 
 	public function update($null_values = false)
@@ -189,7 +189,7 @@ class EmployeeCore extends ObjectModel
 			$this->stats_date_to = date('Y-m-d');
 		$this->saveOptin();
 		$this->updateTextDirection();
-	 	return parent::update($null_values);
+		return parent::update($null_values);
 	}
 
 	protected function updateTextDirection()
@@ -244,17 +244,17 @@ class EmployeeCore extends ObjectModel
 	}
 
 	/**
-	  * Return employee instance from its e-mail (optionnaly check password)
-	  *
-	  * @param string $email e-mail
-	  * @param string $passwd Password is also checked if specified
-	  * @param boolean $active_only Filter employee by active status
-	  * @return Employee instance
-	  */
+	 * Return employee instance from its e-mail (optionnaly check password)
+	 *
+	 * @param string $email e-mail
+	 * @param string $passwd Password is also checked if specified
+	 * @param boolean $active_only Filter employee by active status
+	 * @return Employee instance
+	 */
 	public function getByEmail($email, $passwd = null, $active_only = true)
 	{
-	 	if (!Validate::isEmail($email) || ($passwd != null && !Validate::isPasswd($passwd)))
-	 		die(Tools::displayError());
+		if (!Validate::isEmail($email) || ($passwd != null && !Validate::isPasswd($passwd)))
+			die(Tools::displayError());
 
 		$result = Db::getInstance()->getRow('
 		SELECT *
@@ -274,8 +274,8 @@ class EmployeeCore extends ObjectModel
 
 	public static function employeeExists($email)
 	{
-	 	if (!Validate::isEmail($email))
-	 		die (Tools::displayError());
+		if (!Validate::isEmail($email))
+			die (Tools::displayError());
 
 		return (bool)Db::getInstance()->getValue('
 		SELECT `id_employee`
@@ -284,15 +284,15 @@ class EmployeeCore extends ObjectModel
 	}
 
 	/**
-	  * Check if employee password is the right one
-	  *
-	  * @param string $passwd Password
-	  * @return boolean result
-	  */
+	 * Check if employee password is the right one
+	 *
+	 * @param string $passwd Password
+	 * @return boolean result
+	 */
 	public static function checkPassword($id_employee, $passwd)
 	{
-	 	if (!Validate::isUnsignedId($id_employee) || !Validate::isPasswd($passwd, 8))
-	 		die (Tools::displayError());
+		if (!Validate::isUnsignedId($id_employee) || !Validate::isPasswd($passwd, 8))
+			die (Tools::displayError());
 
 		return Db::getInstance()->getValue('
 		SELECT `id_employee`
@@ -332,10 +332,10 @@ class EmployeeCore extends ObjectModel
 	}
 
 	/**
-	  * Check employee informations saved into cookie and return employee validity
-	  *
-	  * @return boolean employee validity
-	  */
+	 * Check employee informations saved into cookie and return employee validity
+	 *
+	 * @return boolean employee validity
+	 */
 	public function isLoggedBack()
 	{
 		if (!Cache::isStored('isLoggedBack'.$this->id))
@@ -350,8 +350,8 @@ class EmployeeCore extends ObjectModel
 	}
 
 	/**
-	  * Logout
-	  */
+	 * Logout
+	 */
 	public function logout()
 	{
 		if (isset(Context::getContext()->cookie))
@@ -456,7 +456,7 @@ class EmployeeCore extends ObjectModel
 
 	public static function setLastConnectionDate($id_employee)
 	{
-		return  Db::getInstance()->execute('
+		return Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'employee`
 			SET `last_connection_date` = CURRENT_DATE()
 			WHERE `id_employee` = '.(int)$id_employee.' AND `last_connection_date`< CURRENT_DATE()

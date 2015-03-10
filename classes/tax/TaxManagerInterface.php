@@ -46,4 +46,3 @@ interface TaxManagerInterface
 	*/
 	public function getTaxCalculator();
 }
-

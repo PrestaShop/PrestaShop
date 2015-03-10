@@ -106,4 +106,3 @@ class CSVCore
 		header('Content-disposition: attachment; filename="'.$this->filename.'.csv"');
 	}
 }
-

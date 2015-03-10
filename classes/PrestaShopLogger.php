@@ -43,7 +43,7 @@ class	PrestaShopLoggerCore extends ObjectModel
 
 	/** @var integer Object ID */
 	public $object_id;
-	
+
 	/** @var integer Object ID */
 	public $id_employee;
 
@@ -113,7 +113,7 @@ class	PrestaShopLoggerCore extends ObjectModel
 
 		if ($id_employee === null && isset(Context::getContext()->employee) && Validate::isLoadedObject(Context::getContext()->employee))
 			$id_employee = Context::getContext()->employee->id;
-		
+
 		if ($id_employee !== null)
 			$log->id_employee = (int)$id_employee;
 
@@ -150,7 +150,7 @@ class	PrestaShopLoggerCore extends ObjectModel
 
 		return $this->hash;
 	}
-	
+
 	public static function eraseAllLogs()
 	{
 		return Db::getInstance()->execute('TRUNCATE TABLE '._DB_PREFIX_.'log');
@@ -177,4 +177,3 @@ class	PrestaShopLoggerCore extends ObjectModel
 		return self::$is_present[$this->getHash()];
 	}
 }
-

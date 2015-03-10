@@ -285,7 +285,7 @@ class DbMySQLiCore extends Db
 	 * @param int $timeout
 	 * @return int Error code or 0 if connection was successful
 	 */
-	public static function tryToConnect($server, $user, $pwd, $db, $newDbLink = true, $engine = null, $timeout = 5)
+	public static function tryToConnect($server, $user, $pwd, $db, $new_db_link = true, $engine = null, $timeout = 5)
 	{
 		$link = mysqli_init();
 		if (!$link)
@@ -374,7 +374,7 @@ class DbMySQLiCore extends Db
 	 * @param string $pwd Password for database connection
 	 * @return bool
 	 */
-	static public function tryUTF8($server, $user, $pwd)
+	public static function tryUTF8($server, $user, $pwd)
 	{
 		$link = @new mysqli($server, $user, $pwd);
 		$ret = $link->query("SET NAMES 'UTF8'");

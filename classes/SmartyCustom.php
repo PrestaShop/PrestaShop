@@ -24,9 +24,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class SmartyCustomCore extends Smarty {
+class SmartyCustomCore extends Smarty
+{
 
-	function __construct()
+	public function __construct()
 	{
 		parent::__construct();
 		$this->template_class = 'Smarty_Custom_Template';

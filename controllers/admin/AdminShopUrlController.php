@@ -29,9 +29,9 @@ class AdminShopUrlControllerCore extends AdminController
 	public function __construct()
 	{
 		$this->bootstrap = true;
-	 	$this->table = 'shop_url';
+		$this->table = 'shop_url';
 		$this->className = 'ShopUrl';
-	 	$this->lang = false;
+		$this->lang = false;
 		$this->requiredDatabase = true;
 		$this->multishop_context = Shop::CONTEXT_ALL;
 
@@ -97,13 +97,13 @@ class AdminShopUrlControllerCore extends AdminController
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 
-	 	$this->_select = 's.name AS shop_name, CONCAT(\'http://\', a.domain, a.physical_uri, a.virtual_uri) AS url';
-	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'shop` s ON (s.id_shop = a.id_shop)';
+		$this->_select = 's.name AS shop_name, CONCAT(\'http://\', a.domain, a.physical_uri, a.virtual_uri) AS url';
+		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'shop` s ON (s.id_shop = a.id_shop)';
 
 		if ($id_shop = (int)Tools::getValue('id_shop'))
 			$this->_where = 'AND a.id_shop = '.$id_shop;
 
-	 	return parent::renderList();
+		return parent::renderList();
 	}
 
 	public function renderForm()

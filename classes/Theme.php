@@ -212,7 +212,7 @@ class ThemeCore extends ObjectModel
 		{
 			$dir = basename($theme_dir);
 			$config_file = _PS_ALL_THEMES_DIR_.$dir.'/config.xml';
-			if(!in_array($dir, $installed_theme_directories) && @filemtime($config_file))
+			if (!in_array($dir, $installed_theme_directories) && @filemtime($config_file))
 			{
 				if ($xml_theme = @simplexml_load_file($config_file))
 				{

@@ -59,12 +59,12 @@ class CacheMemcacheCore extends Cache
 			$this->memcache = new Memcache();
 		else
 			return;
-		
+
 		$servers = self::getMemcachedServers();
 		if (!$servers)
 			return;
 		foreach ($servers as $server)
-			$this->memcache->addServer($server['ip'], $server['port'], true, (int) $server['weight']);
+			$this->memcache->addServer($server['ip'], $server['port'], true, (int)$server['weight']);
 
 		$this->is_connected = true;
 	}
@@ -174,22 +174,16 @@ class CacheMemcacheCore extends Cache
 	public function delete($key)
 	{
 		if ($key == '*')
-		{
 			$this->flush();
-		}
 		elseif (strpos($key, '*') === false)
-		{
 			$this->_delete($key);
-		}
 		else
 		{
 			// Get keys (this code comes from Doctrine 2 project)
 			$pattern = str_replace('\\*', '.*', preg_quote($key));
 			$servers = $this->getMemcachedServers();
 			if (is_array($servers) && count($servers) > 0 && method_exists('Memcache', 'getStats'))
-			{
 				$all_slabs = $this->memcache->getStats('slabs');
-			}
 
 			if (isset($all_slabs) && is_array($all_slabs))
 			{
@@ -211,9 +205,7 @@ class CacheMemcacheCore extends Cache
 											foreach ($entries as $key => $data)
 											{
 												if (preg_match('#^'.$pattern.'$#', $key))
-												{
 													$this->_delete($key);
-												}
 											}
 										}
 									}

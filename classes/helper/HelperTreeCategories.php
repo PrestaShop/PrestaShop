@@ -216,7 +216,7 @@ class HelperTreeCategoriesCore extends TreeCore
 		return (isset($this->_use_shop_restriction) && $this->_use_shop_restriction);
 	}
 
-	public function render($data = NULL)
+	public function render($data = null)
 	{
 		if (!isset($data))
 			$data = $this->getData();
@@ -280,7 +280,7 @@ class HelperTreeCategoriesCore extends TreeCore
 		return parent::render($data);
 	}
 
-	//Override
+	/* Override */
 	public function renderNodes($data = null)
 	{
 		if (!isset($data))

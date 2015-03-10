@@ -173,7 +173,7 @@ class ProductDownloadCore extends ObjectModel
 		self::$_productIds[$id_product] = (int)Db::getInstance()->getValue('
 		SELECT `id_product_download`
 		FROM `'._DB_PREFIX_.'product_download`
-		WHERE `id_product` = '.(int)$id_product.' 
+		WHERE `id_product` = '.(int)$id_product.'
 		AND `active` = 1
 		ORDER BY `id_product_download` DESC');
 
@@ -292,9 +292,9 @@ class ProductDownloadCore extends ObjectModel
 	 */
 	public static function getNewFilename()
 	{
-		do {
+		do
 			$filename = sha1(microtime());
-		} while (file_exists(_PS_DOWNLOAD_DIR_.$filename));
+		while (file_exists(_PS_DOWNLOAD_DIR_.$filename));
 		return $filename;
 	}
 
