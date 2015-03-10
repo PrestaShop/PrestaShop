@@ -133,6 +133,8 @@
                 data = $e.data('jscroll'),
                 append = true;
 
+            console.log($e);
+
             data.waiting = true;
 
             if (typeof(href) == 'undefined') {
