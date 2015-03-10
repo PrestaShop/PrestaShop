@@ -36,6 +36,7 @@ config/xml/*
 
 # Themes, modules and overrides
 
+admin-dev/themes/default/css/overrides.css
 modules/*
 override/*
 
