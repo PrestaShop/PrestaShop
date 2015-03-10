@@ -847,11 +847,11 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	 * 	Delete the image on disk
 	 *
 	 * @param string $file_path the image file path
-	 * @param array $imageTypes The differents sizes
+	 * @param array $image_types The differents sizes
 	 * @param string $parent_path The parent path
 	 * @return boolean
 	 */
-	protected function deleteImageOnDisk($file_path, $imageTypes = null, $parent_path = null)
+	protected function deleteImageOnDisk($file_path, $image_types = null, $parent_path = null)
 	{
 		$this->wsObject->setOutputEnabled(false);
 		if (file_exists($file_path))
@@ -859,14 +859,14 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 			// delete image on disk
 			@unlink($file_path);
 			// Delete declinated image if needed
-			if ($imageTypes)
+			if ($image_types)
 			{
-				foreach ($imageTypes as $imageType)
+				foreach ($image_types as $image_type)
 				{
 					if ($this->defaultImage) // @todo products images too !!
-						$declination_path = $parent_path.$this->wsObject->urlSegment[3].'-default-'.$imageType['name'].'.jpg';
+						$declination_path = $parent_path.$this->wsObject->urlSegment[3].'-default-'.$image_type['name'].'.jpg';
 					else
-						$declination_path = $parent_path.$this->wsObject->urlSegment[2].'-'.$imageType['name'].'.jpg';
+						$declination_path = $parent_path.$this->wsObject->urlSegment[2].'-'.$image_type['name'].'.jpg';
 					if (!@unlink($declination_path))
 					{
 						$this->objOutput->setStatus(204);
@@ -890,11 +890,11 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	 * @param string $new_path
 	 * @param int $dest_width
 	 * @param int $dest_height
-	 * @param array $imageTypes
+	 * @param array $image_types
 	 * @param string $parent_path
 	 * @return string
 	 */
-	protected function writeImageOnDisk($base_path, $new_path, $dest_width = null, $dest_height = null, $imageTypes = null, $parent_path = null)
+	protected function writeImageOnDisk($base_path, $new_path, $dest_width = null, $dest_height = null, $image_types = null, $parent_path = null)
 	{
 		list($source_width, $source_height, $type, $attr) = getimagesize($base_path);
 		if (!$source_width)
@@ -982,22 +982,22 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 			throw new WebserviceException(sprintf('Unable to write the image "%s".', str_replace(_PS_ROOT_DIR_, '[SHOP_ROOT_DIR]', $new_path)), array(70, 500));
 
 		// Write image declinations if present
-		if ($imageTypes)
+		if ($image_types)
 		{
-			foreach ($imageTypes as $imageType)
+			foreach ($image_types as $image_type)
 			{
 				if ($this->defaultImage)
-					$declination_path = $parent_path.$this->wsObject->urlSegment[3].'-default-'.$imageType['name'].'.jpg';
+					$declination_path = $parent_path.$this->wsObject->urlSegment[3].'-default-'.$image_type['name'].'.jpg';
 				else
 				{
 
-					if ($this->imageType == 'products')
-						$declination_path = $parent_path.chunk_split($this->wsObject->urlSegment[3], 1, '/').$this->wsObject->urlSegment[3].'-'.$imageType['name'].'.jpg';
+					if ($this->image_type == 'products')
+						$declination_path = $parent_path.chunk_split($this->wsObject->urlSegment[3], 1, '/').$this->wsObject->urlSegment[3].'-'.$image_type['name'].'.jpg';
 					else
-						$declination_path = $parent_path.$this->wsObject->urlSegment[2].'-'.$imageType['name'].'.jpg';
+						$declination_path = $parent_path.$this->wsObject->urlSegment[2].'-'.$image_type['name'].'.jpg';
 				}
-				if (!$this->writeImageOnDisk($base_path, $declination_path, $imageType['width'], $imageType['height']))
-					throw new WebserviceException(sprintf('Unable to save the declination "%s" of this image.', $imageType['name']), array(71, 500));
+				if (!$this->writeImageOnDisk($base_path, $declination_path, $image_type['width'], $image_type['height']))
+					throw new WebserviceException(sprintf('Unable to save the declination "%s" of this image.', $image_type['name']), array(71, 500));
 			}
 		}
 
@@ -1011,11 +1011,11 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	 * @param string $reception_path
 	 * @param int $dest_width
 	 * @param int $dest_height
-	 * @param array $imageTypes
+	 * @param array $image_types
 	 * @param string $parent_path
 	 * @return boolean
 	 */
-	protected function writePostedImageOnDisk($reception_path, $dest_width = null, $dest_height = null, $imageTypes = null, $parent_path = null)
+	protected function writePostedImageOnDisk($reception_path, $dest_width = null, $dest_height = null, $image_types = null, $parent_path = null)
 	{
 		if ($this->wsObject->method == 'PUT')
 		{
@@ -1054,7 +1054,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 					throw new WebserviceException('Error while copying image to the temporary directory', array(75, 400));
 				// Try to copy image file to the image directory
 				else
-					$result = $this->writeImageOnDisk($tmp_name, $reception_path, $dest_width, $dest_height, $imageTypes, $parent_path);
+					$result = $this->writeImageOnDisk($tmp_name, $reception_path, $dest_width, $dest_height, $image_types, $parent_path);
 
 				@unlink($tmp_name);
 				return $result;
