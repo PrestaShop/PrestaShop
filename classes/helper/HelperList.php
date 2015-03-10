@@ -226,7 +226,8 @@ class HelperListCore extends Helper
 						$this->_list[$index][$action] = $this->$method_name($this->token, $id, $name);
 				}
 
-				if ($is_first && isset($this->_list[$index][$action])) {
+				if ($is_first && isset($this->_list[$index][$action]))
+				{
 					$is_first = false;
 
 					if (!preg_match('/a\s*.*class/', $this->_list[$index][$action]))
@@ -645,7 +646,7 @@ class HelperListCore extends Helper
 			'selected_pagination' => $selected_pagination,
 			'pagination' => $this->_pagination,
 			'list_total' => $this->listTotal,
-			'sql' => isset($this->sql) && $this->sql ? str_replace("\n", " ", str_replace("\r", "", $this->sql)) : false,
+			'sql' => isset($this->sql) && $this->sql ? str_replace('\n', ' ', str_replace('\r', '', $this->sql)) : false,
 			'token' => $this->token,
 			'table' => $this->table,
 			'bulk_actions' => $this->bulk_actions,

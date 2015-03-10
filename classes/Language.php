@@ -570,11 +570,11 @@ class LanguageCore extends ObjectModel
 	}
 
 	/**
-	  * Return available languages
-	  *
-	  * @param boolean $active Select only active languages
-	  * @return array Languages
-	  */
+	 * Return available languages
+	 *
+	 * @param boolean $active Select only active languages
+	 * @return array Languages
+	 */
 	public static function getLanguages($active = true, $id_shop = false)
 	{
 		if (!self::$_LANGUAGES)
@@ -598,11 +598,11 @@ class LanguageCore extends ObjectModel
 	}
 
 	/**
-	  * Return iso code from id
-	  *
-	  * @param integer $id_lang Language ID
-	  * @return string Iso code
-	  */
+	 * Return iso code from id
+	 *
+	 * @param integer $id_lang Language ID
+	 * @return string Iso code
+	 */
 	public static function getIsoById($id_lang)
 	{
 		if (isset(self::$_LANGUAGES[(int)$id_lang]['iso_code']))
@@ -611,22 +611,22 @@ class LanguageCore extends ObjectModel
 	}
 
 	/**
-	  * Return id from iso code
-	  *
-	  * @param string $iso_code Iso code
-	  * @return integer Language ID
-	  */
+	 * Return id from iso code
+	 *
+	 * @param string $iso_code Iso code
+	 * @return integer Language ID
+	 */
 	public static function getIdByIso($iso_code)
 	{
-	 	if (!Validate::isLanguageIsoCode($iso_code))
-	 		die(Tools::displayError('Fatal error: ISO code is not correct').' '.Tools::safeOutput($iso_code));
+		if (!Validate::isLanguageIsoCode($iso_code))
+			die(Tools::displayError('Fatal error: ISO code is not correct').' '.Tools::safeOutput($iso_code));
 
 		return Db::getInstance()->getValue('SELECT `id_lang` FROM `'._DB_PREFIX_.'lang` WHERE `iso_code` = \''.pSQL(strtolower($iso_code)).'\'');
 	}
 
 	public static function getLanguageCodeByIso($iso_code)
 	{
-	 	if (!Validate::isLanguageIsoCode($iso_code))
+		if (!Validate::isLanguageIsoCode($iso_code))
 			die(Tools::displayError('Fatal error: ISO code is not correct').' '.Tools::safeOutput($iso_code));
 
 		return Db::getInstance()->getValue('SELECT `language_code` FROM `'._DB_PREFIX_.'lang` WHERE `iso_code` = \''.pSQL(strtolower($iso_code)).'\'');
@@ -663,11 +663,11 @@ class LanguageCore extends ObjectModel
 	}
 
 	/**
-	  * Return array (id_lang, iso_code)
-	  *
-	  * @param string $iso_code Iso code
-	  * @return array  Language (id_lang, iso_code)
-	  */
+	 * Return array (id_lang, iso_code)
+	 *
+	 * @param string $iso_code Iso code
+	 * @return array  Language (id_lang, iso_code)
+	 */
 	public static function getIsoIds($active = true)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `id_lang`, `iso_code` FROM `'._DB_PREFIX_.'lang` '.($active ? 'WHERE active = 1' : ''));
@@ -689,7 +689,7 @@ class LanguageCore extends ObjectModel
 					$query .= '(';
 					$row2['id_lang'] = $to;
 					foreach ($row2 as $field)
-						$query .= (!is_string($field) && $field == NULL) ? 'NULL,' : '\''.pSQL($field, true).'\',';
+						$query .= (!is_string($field) && $field == null) ? 'NULL,' : '\''.pSQL($field, true).'\',';
 					$query = rtrim($query, ',').'),';
 				}
 				$query = rtrim($query, ',');
@@ -699,8 +699,8 @@ class LanguageCore extends ObjectModel
 	}
 
 	/**
-	  * Load all languages in memory for caching
-	  */
+	 * Load all languages in memory for caching
+	 */
 	public static function loadLanguages()
 	{
 		self::$_LANGUAGES = array();
@@ -867,7 +867,7 @@ class LanguageCore extends ObjectModel
 			$i = 0;
 			$tmp_array = array();
 
-			foreach($files_paths as $files_path)
+			foreach ($files_paths as $files_path)
 			{
 				$path = dirname($files_path);
 				if (is_dir(_PS_TRANSLATIONS_DIR_.'../'.$path) && !is_writable(_PS_TRANSLATIONS_DIR_.'../'.$path) && !in_array($path, $tmp_array))

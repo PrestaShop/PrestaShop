@@ -86,11 +86,11 @@ class OrderDetailCore extends ObjectModel
 	/** @var float */
 	public $reduction_amount;
 
-    /** @var float */
-    public $reduction_amount_tax_excl;
+	/** @var float */
+	public $reduction_amount_tax_excl;
 
-    /** @var float */
-    public $reduction_amount_tax_incl;
+	/** @var float */
+	public $reduction_amount_tax_incl;
 
 	/** @var float */
 	public $group_reduction;
@@ -146,11 +146,11 @@ class OrderDetailCore extends ObjectModel
 	/** @var int Id warehouse */
 	public $id_warehouse;
 
-    /** @var float additional shipping price tax excl */
-    public $total_shipping_price_tax_excl;
+	/** @var float additional shipping price tax excl */
+	public $total_shipping_price_tax_excl;
 
-    /** @var float additional shipping price tax incl */
-    public $total_shipping_price_tax_incl;
+	/** @var float additional shipping price tax incl */
+	public $total_shipping_price_tax_incl;
 
 	/** @var float */
 	public $purchase_supplier_price;

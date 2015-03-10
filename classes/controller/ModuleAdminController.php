@@ -36,7 +36,7 @@ abstract class ModuleAdminControllerCore extends AdminController
 	 * @throws PrestaShopException
 	 */
 	public function __construct()
-	{		
+	{
 		parent::__construct();
 
 		$this->controller_type = 'moduleadmin';

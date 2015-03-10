@@ -91,7 +91,7 @@ class MediaCore
 
 			require_once(_PS_TOOL_DIR_.'minify_html/minify_html.class.php');
 			$html_content = str_replace(chr(194).chr(160), '&nbsp;', $html_content);
-			if (trim($minified_content = Minify_HTML::minify($html_content, array('cssMinifier', 'jsMinifier'))) !=  '')
+			if (trim($minified_content = Minify_HTML::minify($html_content, array('cssMinifier', 'jsMinifier'))) != '')
 				$html_content = $minified_content;
 
 			return $html_content;
@@ -154,9 +154,12 @@ class MediaCore
 		if (!empty($js_content))
 		{
 			require_once(_PS_TOOL_DIR_.'js_minify/jsmin.php');
-			try {
+			try
+			{
 				$js_content = JSMin::minify($js_content);
-			} catch (Exception $e) {
+			}
+			catch (Exception $e)
+			{
 				if (_PS_MODE_DEV_)
 					echo $e->getMessage();
 				return ';'.trim($js_content, ';').';';
@@ -221,11 +224,11 @@ class MediaCore
 	public static function getCSSPath($css_uri, $css_media_type = 'all', $need_rtl = true)
 	{
 		// RTL Ready: search and load rtl css file if it's not originally rtl
-		if($need_rtl && Context::getContext()->language->is_rtl)
+		if ($need_rtl && Context::getContext()->language->is_rtl)
 		{
 			$css_uri_rtl = preg_replace('/(^[^.].*)(\.css)$/', '$1_rtl.css', $css_uri);
 			$rtl_media = Media::getMediaPath($css_uri_rtl, $css_media_type);
-			if($rtl_media != false)
+			if ($rtl_media != false)
 				return $rtl_media;
 		}
 		// End RTL
@@ -259,7 +262,7 @@ class MediaCore
 			{
 				if (!defined('_PS_HOST_MODE_'))
 					return false;
-				elseif(!@filemtime($file_uri_host_mode) || @filesize($file_uri_host_mode) === 0)
+				elseif (!@filemtime($file_uri_host_mode) || @filesize($file_uri_host_mode) === 0)
 					return false;
 				else
 				{
@@ -465,7 +468,7 @@ class MediaCore
 			$infos['uri'] = $filename;
 			$url_data = parse_url($filename);
 
-			if(array_key_exists('host', $url_data))
+			if (array_key_exists('host', $url_data))
 			{
 				$external_css_files[$filename] = $media;
 				continue;
@@ -710,7 +713,7 @@ class MediaCore
 			if (!is_array($params))
 				$params = (array)$params;
 
-			foreach($params as $param)
+			foreach ($params as $param)
 				Media::$js_def[$param] = $content;
 		}
 	}
@@ -727,7 +730,7 @@ class MediaCore
 			foreach ($scripts as $script)
 				if ($src = $script->getAttribute('src'))
 				{
-			  		if (substr($src, 0, 2) == '//')
+					if (substr($src, 0, 2) == '//')
 						$src = Tools::getCurrentUrlProtocolPrefix().substr($src, 2);
 
 					$patterns = array(
@@ -738,7 +741,7 @@ class MediaCore
 						'#/jquery-([0-9\.]+)(\.min)*\.js$#Ui'
 					);
 
-					foreach($patterns as $pattern)
+					foreach ($patterns as $pattern)
 					{
 						$matches = array();
 						if (preg_match($pattern, $src, $matches))

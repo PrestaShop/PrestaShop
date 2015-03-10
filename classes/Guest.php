@@ -82,7 +82,7 @@ class GuestCore extends ObjectModel
 		$this->id_web_browser = $this->getBrowser($userAgent);
 		$this->mobile_theme = Context::getContext()->getMobileDevice();
 	}
-	
+
 	protected function getLanguage($acceptLanguage)
 	{
 		// $langsArray is filled with all the languages accepted, ordered by priority
@@ -96,7 +96,7 @@ class GuestCore extends ObjectModel
 					$langsArray[$lang] = 1;
 			arsort($langsArray, SORT_NUMERIC);
 		}
-		
+
 		// Only the first language is returned
 		return (count($langsArray) ? key($langsArray) : '');
 	}
@@ -123,12 +123,12 @@ class GuestCore extends ObjectModel
 				SELECT `id_web_browser`
 				FROM `'._DB_PREFIX_.'web_browser` wb
 				WHERE wb.`name` = \''.pSQL($k).'\'');
-				
+
 				return $result['id_web_browser'];
 			}
 		return null;
 	}
-	
+
 	protected function getOs($userAgent)
 	{
 		$osArray = array(
@@ -140,6 +140,7 @@ class GuestCore extends ObjectModel
 			'Android' => 'Android',
 			'Linux' => 'X11'
 		);
+
 		foreach ($osArray as $k => $value)
 			if (strstr($userAgent, $value))
 			{
@@ -147,12 +148,12 @@ class GuestCore extends ObjectModel
 				SELECT `id_operating_system`
 				FROM `'._DB_PREFIX_.'operating_system` os
 				WHERE os.`name` = \''.pSQL($k).'\'');
-				
+
 				return $result['id_operating_system'];
 			}
 		return null;
 	}
-	
+
 	public static function getFromCustomer($id_customer)
 	{
 		if (!Validate::isUnsignedId($id_customer))
@@ -163,7 +164,7 @@ class GuestCore extends ObjectModel
 		WHERE `id_customer` = '.(int)($id_customer));
 		return $result['id_guest'];
 	}
-	
+
 	public function mergeWithCustomer($id_guest, $id_customer)
 	{
 		// Since the guests are merged, the guest id in the connections table must be changed too
@@ -171,18 +172,18 @@ class GuestCore extends ObjectModel
 		UPDATE `'._DB_PREFIX_.'connections` c
 		SET c.`id_guest` = '.(int)($id_guest).'
 		WHERE c.`id_guest` = '.(int)($this->id));
-		
+
 		// The current guest is removed from the database
 		$this->delete();
-		
+
 		// $this is still filled with values, so it's id is changed for the old guest
 		$this->id = (int)($id_guest);
 		$this->id_customer = (int)($id_customer);
-		
+
 		// $this is now the old guest but filled with the most up to date values
 		$this->update();
 	}
-	
+
 	public static function setNewGuest($cookie)
 	{
 		$guest = new Guest(isset($cookie->id_customer) ? Guest::getFromCustomer((int)($cookie->id_customer)) : null);

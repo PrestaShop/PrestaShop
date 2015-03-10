@@ -46,7 +46,7 @@ class OrderCartRuleCore extends ObjectModel
 
 	/** @var float value (tax excl.) of voucher */
 	public $value_tax_excl;
-	
+
 	/** @var boolean value : voucher gives free shipping or not */
 	public $free_shipping;
 
@@ -73,4 +73,3 @@ class OrderCartRuleCore extends ObjectModel
 		),
 	);
 }
-

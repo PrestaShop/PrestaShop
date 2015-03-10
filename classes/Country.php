@@ -155,7 +155,7 @@ class CountryCore extends ObjectModel
 	 * Get a country ID with its iso code
 	 *
 	 * @param string $iso_code Country iso code
- 	 * @param bool $active return only active coutries
+	 * @param bool $active return only active coutries
 	 * @return integer Country ID
 	 */
 	public static function getByIso($iso_code, $active = false)
@@ -222,7 +222,7 @@ class CountryCore extends ObjectModel
 			Country::$cache_iso_by_id[$id_country] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `iso_code`
 			FROM `'._DB_PREFIX_.'country`
-			WHERE `id_country` = '.(int)($id_country));
+			WHERE `id_country` = '.(int)$id_country);
 		}
 
 		return Country::$cache_iso_by_id[$id_country];
@@ -349,36 +349,36 @@ class CountryCore extends ObjectModel
 
 		return (bool)preg_match($zip_regexp, $zip_code);
 	}
-	
+
 	public static function addModuleRestrictions(array $shops = array(), array $countries = array(), array $modules = array())
 	{
 		if (!count($shops))
 			$shops = Shop::getShops(true, null, true);
-		
+
 		if (!count($countries))
 			$countries = Country::getCountries((int)Context::getContext()->cookie->id_lang);
-		
+
 		if (!count($modules))
 			$modules = Module::getPaymentModules();
-			
+
 		$sql = false;
 		foreach ($shops as $id_shop)
 			foreach ($countries as $country)
 				foreach ($modules as $module)
 					$sql .= '('.(int)$module['id_module'].', '.(int)$id_shop.', '.(int)$country['id_country'].'),';
-		
+
 		if ($sql)
 		{
 			$sql = 'INSERT IGNORE INTO `'._DB_PREFIX_.'module_country` (`id_module`, `id_shop`, `id_country`) VALUES '.rtrim($sql, ',');
 			return Db::getInstance()->execute($sql);
 		}
 		else
-			return true; 
+			return true;
 	}
-	
+
 	public function add($autodate = true, $null_values = false)
 	{
 		$return = parent::add($autodate, $null_values) && self::addModuleRestrictions(array(), array(array('id_country' => $this->id)), array());
-		return $return;	
+		return $return;
 	}
 }

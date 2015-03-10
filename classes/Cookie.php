@@ -185,11 +185,11 @@ class CookieCore
 	}
 
 	/**
-	  * Check customer informations saved into cookie and return customer validity
-	  *
-	  * @deprecated as of version 1.5 use Customer::isLogged() instead
-	  * @return boolean customer validity
-	  */
+	 * Check customer informations saved into cookie and return customer validity
+	 *
+	 * @deprecated as of version 1.5 use Customer::isLogged() instead
+	 * @return boolean customer validity
+	 */
 	public function isLogged($withGuest = false)
 	{
 		Tools::displayAsDeprecated();

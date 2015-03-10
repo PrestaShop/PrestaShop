@@ -227,7 +227,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 		}
 
 		// Delete ecotax from the total
-		$ecotax =  $this->order_slip->getEcoTaxTaxesBreakdown();
+		$ecotax = $this->order_slip->getEcoTaxTaxesBreakdown();
 		if ($this->order_slip->order_slip_type == 1)
 			foreach ($tmp_tax_infos as $rate => &$row)
 			{

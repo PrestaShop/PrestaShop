@@ -29,9 +29,9 @@ class AdminCountriesControllerCore extends AdminController
 	public function __construct()
 	{
 		$this->bootstrap = true;
-	 	$this->table = 'country';
+		$this->table = 'country';
 		$this->className = 'Country';
-	 	$this->lang = true;
+		$this->lang = true;
 		$this->deleted = false;
 		$this->_defaultOrderBy = 'name';
 		$this->_defaultOrderWay = 'ASC';
@@ -139,11 +139,11 @@ class AdminCountriesControllerCore extends AdminController
 
 	public function renderList()
 	{
-	 	$this->_select = 'z.`name` AS zone';
-	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = a.`id_zone`)';
+		$this->_select = 'z.`name` AS zone';
+		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = a.`id_zone`)';
 
 		$this->tpl_list_vars['zones'] = Zone::getZones();
-	 	return parent::renderList();
+		return parent::renderList();
 	}
 
 	public function renderForm()
@@ -193,7 +193,7 @@ class AdminCountriesControllerCore extends AdminController
 					'class' => 'uppercase',
 					'required' => true,
 					'hint' => $this->l('Two -- or three -- letter ISO code (e.g. "us for United States).')
-					 /* TO DO - ajouter les liens dans le hint ? */
+					/* @TODO - ajouter les liens dans le hint ? */
 					/*'desc' => $this->l('Two -- or three -- letter ISO code (e.g. U.S. for United States)').'.
 							<a href="http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm" target="_blank">'.
 								$this->l('Official list here').'

@@ -47,7 +47,7 @@ class AttributeCore extends ObjectModel
 			'color' => 				array('type' => self::TYPE_STRING, 'validate' => 'isColor'),
 			'position' => 			array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 
-			// Lang fields
+			/* Lang fields */
 			'name' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
 		)
 	);

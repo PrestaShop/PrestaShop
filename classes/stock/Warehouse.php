@@ -79,15 +79,15 @@ class WarehouseCore extends ObjectModel
 	/**
 	 * @see ObjectModel::$webserviceParameters
 	 */
- 	protected $webserviceParameters = array(
- 		'fields' => array(
- 			'id_address' => array('xlink_resource' => 'addresses'),
- 			'id_employee' => array('xlink_resource' => 'employees'),
- 			'id_currency' => array('xlink_resource' => 'currencies'),
- 			'valuation' => array('getter' => 'getWsStockValue', 'setter' => false),
- 			'deleted' => array(),
- 		),
- 		'associations' => array(
+	protected $webserviceParameters = array(
+		'fields' => array(
+			'id_address' => array('xlink_resource' => 'addresses'),
+			'id_employee' => array('xlink_resource' => 'employees'),
+			'id_currency' => array('xlink_resource' => 'currencies'),
+			'valuation' => array('getter' => 'getWsStockValue', 'setter' => false),
+			'deleted' => array(),
+		),
+		'associations' => array(
 			'stocks' => array(
 				'resource' => 'stock',
 				'fields' => array(
@@ -108,7 +108,7 @@ class WarehouseCore extends ObjectModel
 				),
 			),
 		),
- 	);
+	);
 
 	/**
 	 * Gets the shops associated to the current warehouse
@@ -292,7 +292,6 @@ class WarehouseCore extends ObjectModel
 	 */
 	public static function getProductWarehouseList($id_product, $id_product_attribute = 0, $id_shop = null)
 	{
-
 		// if it's a pack, returns warehouses if and only if some products use the advanced stock management
 		$share_stock = false;
 		if ($id_shop === null)

@@ -240,7 +240,7 @@ class AddressCore extends ObjectModel
 	 */
 	public static function getZoneById($id_address)
 	{
-		if(!isset($id_address) || empty($id_address))
+		if (!isset($id_address) || empty($id_address))
 			return false;
 
 		if (isset(self::$_idZones[$id_address]))
@@ -273,7 +273,7 @@ class AddressCore extends ObjectModel
 	 */
 	public static function isCountryActiveById($id_address)
 	{
-		if(!isset($id_address) || empty($id_address))
+		if (!isset($id_address) || empty($id_address))
 			return false;
 
 		$cache_id = 'Address::isCountryActiveById_'.(int)$id_address;

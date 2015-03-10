@@ -31,7 +31,7 @@ class ChartCore
 	protected $width = 600;
 	protected $height = 300;
 
-	// Time mode
+	/* Time mode */
 	protected $timeMode = false;
 	protected $from;
 	protected $to;

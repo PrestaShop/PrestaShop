@@ -49,10 +49,10 @@ class CarrierCore extends ObjectModel
 	/** @var int common id for carrier historization */
 	public $id_reference;
 
- 	/** @var string Name */
+	/** @var string Name */
 	public $name;
 
- 	/** @var string URL with a '@' for */
+	/** @var string URL with a '@' for */
 	public $url;
 
 	/** @var string Delay needed to deliver customer */
@@ -473,7 +473,6 @@ class CarrierCore extends ObjectModel
 				break;
 		}
 		$sql .= ' GROUP BY c.`id_carrier` ORDER BY c.`position` ASC';
-
 
 		$cache_id = 'Carrier::getCarriers_'.md5($sql);
 		if (!Cache::isStored($cache_id))

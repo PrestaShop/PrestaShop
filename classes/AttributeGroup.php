@@ -26,7 +26,7 @@
 
 class AttributeGroupCore extends ObjectModel
 {
- 	/** @var string Name */
+	/** @var string Name */
 	public $name;
 	public $is_color_group;
 	public $position;
@@ -47,7 +47,7 @@ class AttributeGroupCore extends ObjectModel
 			'group_type' => 	array('type' => self::TYPE_STRING, 'required' => true),
 			'position' => 		array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 
-			// Lang fields
+			/* Lang fields */
 			'name' => 			array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
 			'public_name' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
 		),
@@ -74,7 +74,7 @@ class AttributeGroupCore extends ObjectModel
 			$this->is_color_group = 1;
 		else
 			$this->is_color_group = 0;
-		
+
 		if ($this->position <= 0)
 			$this->position = AttributeGroup::getHigherPosition() + 1;
 
@@ -89,12 +89,12 @@ class AttributeGroupCore extends ObjectModel
 			$this->is_color_group = 1;
 		else
 			$this->is_color_group = 0;
-		
+
 		$return = parent::update($nullValues);
 		Hook::exec('actionAttributeGroupSave', array('id_attribute_group' => $this->id));
 		return $return;
 	}
-	
+
 	public static function cleanDeadCombinations()
 	{
 		$attribute_combinations = Db::getInstance()->executeS('
@@ -141,7 +141,7 @@ class AttributeGroupCore extends ObjectModel
 			/* Remove combinations if they do not possess attributes anymore */
 			if (!AttributeGroup::cleanDeadCombinations())
 				return false;
-		 	/* Also delete related attributes */
+			/* Also delete related attributes */
 			if (count($to_remove))
 				if (!Db::getInstance()->execute('
 				DELETE FROM `'._DB_PREFIX_.'attribute_lang`
@@ -334,4 +334,3 @@ class AttributeGroupCore extends ObjectModel
 		return (is_numeric($position)) ? $position : -1;
 	}
 }
-

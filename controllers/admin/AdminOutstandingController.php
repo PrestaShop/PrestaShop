@@ -29,7 +29,7 @@ class AdminOutstandingControllerCore  extends AdminController
 	public function __construct()
 	{
 		$this->bootstrap = true;
-	 	$this->table = 'order_invoice';
+		$this->table = 'order_invoice';
 		$this->className = 'OrderInvoice';
 		$this->addRowAction('view');
 
@@ -54,22 +54,22 @@ class AdminOutstandingControllerCore  extends AdminController
 		$this->fields_list = array(
 			'number' => array(
 				'title' => $this->l('Invoice')
- 			),
+			),
 			'date_add' => array(
 				'title' => $this->l('Date'),
 				'type' => 'date',
 				'align' => 'right',
 				'filter_key' => 'a!date_add'
- 			),
+			),
 			'customer' => array(
 				'title' => $this->l('Customer'),
 				'filter_key' => 'customer',
 				'tmpTableFilter' => true
- 			),
+			),
 			'company' => array(
 				'title' => $this->l('Company'),
 				'align' => 'center'
- 			),
+			),
 			'risk' => array(
 				'title' => $this->l('Risk'),
 				'align' => 'center',
@@ -79,21 +79,21 @@ class AdminOutstandingControllerCore  extends AdminController
 				'list' => $risks,
 				'filter_key' => 'r!id_risk',
 				'filter_type' => 'int'
- 			),
+			),
 			'outstanding_allow_amount' => array(
 				'title' => $this->l('Outstanding Allow'),
 				'align' => 'center',
 				'prefix' => '<b>',
 				'suffix' => '</b>',
 				'type' => 'price'
- 			),
+			),
 			'outstanding' => array(
 				'title' => $this->l('Current Outstanding'),
 				'align' => 'center',
 				'callback' => 'printOutstandingCalculation',
 				'orderby' => false,
 				'search' => false
- 			),
+			),
 			'id_invoice' => array(
 				'title' => $this->l('Invoice'),
 				'align' => 'center',
@@ -164,4 +164,3 @@ class AdminOutstandingControllerCore  extends AdminController
 		$this->redirect();
 	}
 }
-

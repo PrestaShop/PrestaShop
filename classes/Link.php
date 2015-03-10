@@ -39,8 +39,8 @@ class LinkCore
 	protected static $category_disable_rewrite = null;
 
 	/**
-	  * Constructor (initialization only)
-	  */
+	 * Constructor (initialization only)
+	 */
 	public function __construct($protocol_link = null, $protocol_content = null)
 	{
 		$this->allow = (int)Configuration::get('PS_REWRITING_SETTINGS');

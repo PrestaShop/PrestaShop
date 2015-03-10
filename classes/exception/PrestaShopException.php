@@ -109,7 +109,7 @@ class PrestaShopExceptionCore extends Exception
 		}
 		$lines = array_slice($lines, $offset, $total);
 		++$offset;
-		
+
 		echo '<div class="psTrace" id="psTrace_'.$id.'" '.((is_null($id) ? 'style="display: block"' : '')).'><pre>';
 		foreach ($lines as $k => $l)
 		{
@@ -139,7 +139,7 @@ class PrestaShopExceptionCore extends Exception
 		}
 		echo '</pre>';
 	}
-	
+
 	/**
 	 * Log the error on the disk
 	 */
@@ -149,7 +149,7 @@ class PrestaShopExceptionCore extends Exception
 		$logger->setFilename(_PS_ROOT_DIR_.'/log/'.date('Ymd').'_exception.log');
 		$logger->logError($this->getExtendedMessage(false));
 	}
-	
+
 	/**
 	 * @deprecated 1.5.5
 	 */
@@ -158,7 +158,7 @@ class PrestaShopExceptionCore extends Exception
 		Tools::displayAsDeprecated();
 		return $this->getExtendedMessage($html);
 	}
-	
+
 	/**
 	 * Return the content of the Exception
 	 * @return string content of the exception
@@ -176,5 +176,4 @@ class PrestaShopExceptionCore extends Exception
 					ltrim(str_replace(array(_PS_ROOT_DIR_, '\\'), array('', '/'), $this->getFile()), '/')
 				);
 	}
-	
 }

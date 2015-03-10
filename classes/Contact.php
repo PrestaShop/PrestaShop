@@ -50,19 +50,19 @@ class ContactCore extends ObjectModel
 			'email' => 				array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'size' => 128),
 			'customer_service' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
-			// Lang fields
+			/* Lang fields */
 			'name' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
 			'description' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml'),
 		),
 	);
 
 	/**
-	  * Return available contacts
-	  *
-	  * @param integer $id_lang Language ID
-	  * @param Context
-	  * @return array Contacts
-	  */
+	 * Return available contacts
+	 *
+	 * @param integer $id_lang Language ID
+	 * @param Context
+	 * @return array Contacts
+	 */
 	public static function getContacts($id_lang)
 	{
 		$shop_ids = Shop::getContextListShopID();
@@ -92,4 +92,3 @@ class ContactCore extends ObjectModel
 		');
 	}
 }
-
