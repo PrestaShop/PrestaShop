@@ -120,9 +120,14 @@ class FeatureCore extends ObjectModel
 	{
 	 	/* Also delete related attributes */
 		Db::getInstance()->execute('
-			DELETE `'._DB_PREFIX_.'feature_value_lang` FROM `'._DB_PREFIX_.'feature_value_lang` JOIN `'._DB_PREFIX_.'feature_value`
-			ON (`'._DB_PREFIX_.'feature_value_lang`.id_feature_value = `'._DB_PREFIX_.'feature_value`.id_feature_value)
-			WHERE `'._DB_PREFIX_.'feature_value_lang`.`id_feature` = '.(int)$this->id.')
+			DELETE
+				`'._DB_PREFIX_.'feature_value_lang`
+			FROM
+				`'._DB_PREFIX_.'feature_value_lang`
+				JOIN `'._DB_PREFIX_.'feature_value`
+					ON (`'._DB_PREFIX_.'feature_value_lang`.id_feature_value = `'._DB_PREFIX_.'feature_value`.id_feature_value)
+			WHERE
+				`'._DB_PREFIX_.'feature_value`.`id_feature` = '.(int)$this->id.'
 		');
 		Db::getInstance()->execute('
 			DELETE FROM `'._DB_PREFIX_.'feature_value`
