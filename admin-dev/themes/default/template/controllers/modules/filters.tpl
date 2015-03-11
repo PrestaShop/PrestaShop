@@ -53,7 +53,7 @@
 				<option value="partnerModules" {if $showTypeModules eq 'partnerModules'}selected="selected"{/if}>{l s='Partner Modules (Free)'}</option>
 				<option value="mustHaveModules" {if $showTypeModules eq 'mustHaveModules'}selected="selected"{/if}>{l s='Must Have'}</option>
 				{if isset($logged_on_addons)}<option value="addonsModules" {if $showTypeModules eq 'addonsModules'}selected="selected"{/if}>{l s='Modules purchased on Addons'}</option>{/if} -->
-				<option value="allModules" {if $showTypeModules eq 'allModules'}selected="selected"{/if}>{l s='All'}</option>
+				<option value="allModules" {if $showTypeModules eq 'allModules'}selected="selected"{/if}>{l s='All authors'}</option>
 				{foreach from=$list_modules_authors key=module_author item=status}
 					<option value="authorModules[{$module_author}]" {if $status eq "selected"}selected{/if}>{$module_author|truncate:20:'...'}</option>
 				{/foreach}
