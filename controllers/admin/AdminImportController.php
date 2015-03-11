@@ -1316,12 +1316,12 @@ class AdminImportControllerCore extends AdminController
 			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $product);
 
 			if (!Shop::isFeatureActive())
-				$product->shop = 1;
+				$product->shop = (int)Configuration::get('PS_SHOP_DEFAULT');;
 			elseif (!isset($product->shop) || empty($product->shop))
 				$product->shop = implode($this->multiple_value_separator, Shop::getContextListShopID());
 
 			if (!Shop::isFeatureActive())
-				$product->id_shop_default = 1;
+				$product->id_shop_default = (int)Configuration::get('PS_SHOP_DEFAULT');;
 			else
 				$product->id_shop_default = (int)Context::getContext()->shop->id;
 
