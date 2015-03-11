@@ -211,8 +211,7 @@ class SpecificPriceRuleCore extends ObjectModel
 				$query->select('p.`id_product`')
 					->from('product', 'p')
 					->leftJoin('product_shop', 'ps', 'p.`id_product` = ps.`id_product`')
-					->where('ps.id_shop = '.(int)$current_shop_id)
-					->groupBy('`id_product_attribute`');
+					->where('ps.id_shop = '.(int)$current_shop_id);
 
 				$attributes_join_added = false;
 
@@ -244,9 +243,15 @@ class SpecificPriceRuleCore extends ObjectModel
 					}
 					else if ($condition['type'] == 'supplier')
 					{
-						$query->leftJoin('product_supplier', 'ps'.(int)$id_condition, 'p.`id_product` = ps'.(int)$id_condition.'.`id_product`')
-							->where('ps'.(int)$id_condition.'.`id_supplier` = '.(int)$condition['value'])
-							->groupBy('ps'.(int)$id_condition.'.`id_supplier`');
+						$query->where('EXISTS(
+							SELECT
+								`ps'.(int)$id_condition.'`.`id_product`
+							FROM
+								`'._DB_PREFIX_.'product_supplier` `ps'.(int)$id_condition.'`
+							WHERE
+								`p`.`id_product` = `ps'.(int)$id_condition.'`.`id_product`
+								AND `ps'.(int)$id_condition.'`.`id_supplier` = '.(int)$condition['value'].'
+						)');
 					}
 					else if ($condition['type'] == 'feature')
 					{
