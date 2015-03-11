@@ -1316,14 +1316,11 @@ class AdminImportControllerCore extends AdminController
 			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $product);
 
 			if (!Shop::isFeatureActive())
-				$product->shop = 1;
+				$product->shop = (int)Context::getContext()->shop->id;
 			elseif (!isset($product->shop) || empty($product->shop))
 				$product->shop = implode($this->multiple_value_separator, Shop::getContextListShopID());
 
-			if (!Shop::isFeatureActive())
-				$product->id_shop_default = 1;
-			else
-				$product->id_shop_default = (int)Context::getContext()->shop->id;
+			$product->id_shop_default = (int)Context::getContext()->shop->id;
 
 			// link product to shops
 			$product->id_shop_list = array();
