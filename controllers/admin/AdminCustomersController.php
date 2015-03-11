@@ -31,6 +31,7 @@ class AdminCustomersControllerCore extends AdminController
 	protected $_defaultOrderBy = 'date_add';
 	protected $_defaultOrderWay = 'DESC';
 	protected $can_add_customer = true;
+	protected static $meaning_status = array();
 
 	public function __construct()
 	{
@@ -166,6 +167,16 @@ class AdminCustomersControllerCore extends AdminController
 		// Check if we can add a customer
 		if (Shop::isFeatureActive() && (Shop::getContext() == Shop::CONTEXT_ALL || Shop::getContext() == Shop::CONTEXT_GROUP))
 			$this->can_add_customer = false;
+
+		$meaning_statuses = array(
+			'Open' => $this->l('Open'),
+			'Closed' => $this->l('Closed'),
+			'Pending 1' => $this->l('Pending 1'),
+			'Pending 2' => $this->l('Pending 2')
+		);
+
+		foreach ($meaning_statuses as $key => $meaning_status)
+			self::$meaning_status[Tools::strtolower($key)] = $meaning_status;
 	}
 
 	public function postProcess()
@@ -685,11 +696,14 @@ class AdminCustomersControllerCore extends AdminController
 		}
 
 		$messages = CustomerThread::getCustomerMessages((int)$customer->id);
+
 		$total_messages = count($messages);
 		for ($i = 0; $i < $total_messages; $i++)
 		{
 			$messages[$i]['message'] = substr(strip_tags(html_entity_decode($messages[$i]['message'], ENT_NOQUOTES, 'UTF-8')), 0, 75);
 			$messages[$i]['date_add'] = Tools::displayDate($messages[$i]['date_add'], null, true);
+			if (isset(self::$meaning_status[$messages[$i]['status']]))
+				$messages[$i]['status'] = self::$meaning_status[$messages[$i]['status']];
 		}
 
 		$groups = $customer->getGroups();

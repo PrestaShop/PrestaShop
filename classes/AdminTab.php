@@ -1745,7 +1745,7 @@ abstract class AdminTabCore
 		$_cacheLang['View'] = $this->l('View');
 		$href = Tools::safeOutput(self::$currentIndex.'&'.$this->identifier.'='.(int)$id.'&view'.$this->table.'&token='.($token != null ? $token : $this->token));
 
-    	echo '<a href="'.$href'">
+		echo '<a href="'.$href.'">
 			<img src="../img/admin/details.gif" alt="'.$_cacheLang['View'].'" title="'.$_cacheLang['View'].'" /></a>';
 	}
 

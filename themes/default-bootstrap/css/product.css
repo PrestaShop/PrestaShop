@@ -87,7 +87,7 @@ a.fancybox-nav {
   @media (max-width: 767px) {
     .pb-left-column #views_block {
       width: 280px;
-      margin-left: 10px auto 0px auto; } }
+      margin: 10px auto 0px auto; } }
 
 #thumbs_list {
   overflow: hidden;

@@ -939,7 +939,7 @@ class ShopCore extends ObjectModel
 
 		$group = Shop::getGroupFromShop(Shop::getContextShopID(), false);
 		if ($share == Shop::SHARE_CUSTOMER && Shop::getContext() == Shop::CONTEXT_SHOP && $group['share_customer'])
-			$restriction = ' AND '.$alias.'id_shop_group = '.(int)Shop::getContextShopGroupID();
+			$restriction = ' AND '.$alias.'id_shop_group = '.(int)Shop::getContextShopGroupID().' ';
 		else
 			$restriction = ' AND '.$alias.'id_shop IN ('.implode(', ', Shop::getContextListShopID($share)).') ';
 
