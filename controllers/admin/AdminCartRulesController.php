@@ -55,23 +55,20 @@ class AdminCartRulesControllerCore extends AdminController
 	{
 		$type = $token = $search = '';
 		$limit = $count = $id_cart_rule = 0;
-		if (isset($_GET['limit']))
-			$limit = $_GET['limit'];
+		if (Tools::getIsset('limit'))
+			$limit = Tools::getValue('limit');
 
-		if (isset($_GET['type']))
-			$type = $_GET['type'];
+		if (Tools::getIsset('type'))
+			$type = Tools::getValue('type');
 
-		if (isset($_GET['count']))
-			$count = $_GET['count'];
+		if (Tools::getIsset('count'))
+			$count = Tools::getValue('count');
 
-		if (isset($_GET['id_cart_rule']))
-			$id_cart_rule = $_GET['id_cart_rule'];
+		if (Tools::getIsset('id_cart_rule'))
+			$id_cart_rule = Tools::getValue('id_cart_rule');
 
-		if (isset($_GET['token']))
-			$token = $_GET['token'];
-
-		if (isset($_GET['search']))
-			$search = $_GET['search'];
+		if (Tools::getIsset('search'))
+			$search = Tools::getValue('search');
 
 
 		$page = floor($count / $limit);
@@ -96,7 +93,7 @@ class AdminCartRulesControllerCore extends AdminController
 					$i++;
 				}
 				if ($i == $limit)
-					$next_link = 'ajax-tab.php?tab=AdminCartRules&id_cart_rule='.(int)$id_cart_rule.'&token='.Tools::safeOutput($token).'&action=loadCartRules&limit='.(int)$limit.'&type=selected&count='.($count - 1 + count($cart_rules['selected']).'&search='.urlencode($search));
+					$next_link = Context::getContext()->link->getAdminLink('AdminCartRules').'&ajaxMode=1&ajax=1&id_cart_rule='.(int)$id_cart_rule.'&action=loadCartRules&limit='.(int)$limit.'&type=selected&count='.($count - 1 + count($cart_rules['selected']).'&search='.urlencode($search));
 			}
 			else
 			{
@@ -109,7 +106,7 @@ class AdminCartRulesControllerCore extends AdminController
 					$i++;
 				}
 				if ($i == $limit)
-					$next_link = 'ajax-tab.php?tab=AdminCartRules&id_cart_rule='.(int)$id_cart_rule.'&token='.Tools::safeOutput($token).'&action=loadCartRules&limit='.(int)$limit.'&type=unselected&count='.($count - 1 + count($cart_rules['unselected']).'&search='.urlencode($search));
+					$next_link = Context::getContext()->link->getAdminLink('AdminCartRules').'&ajaxMode=1&ajax=1&id_cart_rule='.(int)$id_cart_rule.'&action=loadCartRules&limit='.(int)$limit.'&type=unselected&count='.($count - 1 + count($cart_rules['unselected']).'&search='.urlencode($search));
 			}
 		}
 		echo Tools::jsonEncode(array('html' => $html, 'next_link' => $next_link));
@@ -663,7 +660,7 @@ class AdminCartRulesControllerCore extends AdminController
 				'hasAttribute' => $product->hasAttributes(),
 			)
 		);
-
+		Media::addJsDefL('baseHref', $this->context->link->getAdminLink('AdminCartRules').'&ajaxMode=1&ajax=1&id_cart_rule='.(int)Tools::getValue('id_cart_rule').'&action=loadCartRules&limit='.(int)$limit.'&count=0');
 		$this->content .= $this->createTemplate('form.tpl')->fetch();
 
 		$this->addJqueryUI('ui.datepicker');

@@ -486,3 +486,10 @@ $('.combinable_search_filter').typeWatch({
 	wait: 500,
 	callback: function(text) { combinable_filter('#cart_rule_select_2', text, 'selected'); }
 });
+
+
+function combinable_filter(id_rule, search, type)
+{
+	var href = baseHref+'&type='+encodeURIComponent(type)+'&search='+encodeURIComponent(search);
+	$(id_rule).jscroll().data('jscrollapi').load_scroll(href);
+}

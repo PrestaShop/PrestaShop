@@ -243,7 +243,7 @@
 								{/foreach}
 							</select>
 							{if $cart_rules.unselected|@count > $limit}
-								<a class="jscroll-next btn btn-default btn-block clearfix" href="ajax-tab.php?tab=AdminCartRules&amp;id_cart_rule={$id_cart_rule|@intval}&amp;token={$currentToken|@addslashes}&amp;action=loadCartRules&amp;limit={$limit|@intval}&amp;type=unselected&amp;count={$cart_rules.unselected|@count}&amp;search=">{l s='Next'}</a>
+								<a class="jscroll-next btn btn-default btn-block clearfix" href="{$link->getAdminLink('AdminCartRules')}&amp;ajaxMode=1&amp;ajax=1&amp;id_cart_rule={$id_cart_rule|@intval}&amp;action=loadCartRules&amp;limit={$limit|@intval}&amp;type=unselected&amp;count={$cart_rules.unselected|@count}&amp;search=">{l s='Next'}</a>
 							{/if}
 							<a id="cart_rule_select_add" class="btn btn-default btn-block clearfix">{l s='Add'} <i class="icon-arrow-right"></i></a>
 						</td>
@@ -259,7 +259,7 @@
 								{/foreach}
 							</select>
 							{if $cart_rules.selected|@count > $limit}
-								<a class="jscroll-next btn btn-default btn-block clearfix" href="ajax-tab.php?tab=AdminCartRules&amp;id_cart_rule={$id_cart_rule|@intval}&amp;token={$currentToken|@addslashes}&amp;action=loadCartRules&amp;limit={$limit|@intval}&amp;type=selected&amp;count={$cart_rules.selected|@count}&amp;search=">{l s='Next'}</a>
+								<a class="jscroll-next btn btn-default btn-block clearfix" href="{$link->getAdminLink('AdminCartRules')}&amp;ajaxMode=1&amp;ajax=1&amp;id_cart_rule={$id_cart_rule|@intval}&amp;action=loadCartRules&amp;limit={$limit|@intval}&amp;type=selected&amp;count={$cart_rules.selected|@count}&amp;search=">{l s='Next'}</a>
 							{/if}
 							<a id="cart_rule_select_remove" class="btn btn-default btn-block clearfix" ><i class="icon-arrow-left"></i> {l s='Remove'}</a>
 						</td>
