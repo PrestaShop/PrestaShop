@@ -235,32 +235,16 @@
 							<p>{l s='Uncombinable cart rules'}</p>
 							<input id="cart_rule_select_1_filter" autocomplete="off" class="form-control uncombinable_search_filter" type="text" name="uncombinable_filter" placeholder="{l s='Search'}" value="">
 							<select id="cart_rule_select_1" class="jscroll" multiple="">
-								{foreach from=$cart_rules.unselected item='cart_rule' name='uncombinable_rules'}
-									<option value="{$cart_rule.id_cart_rule|intval}">&nbsp;{$cart_rule.name|escape}</option>
-									{if $smarty.foreach.uncombinable_rules.iteration == $limit}
-										{break}
-									{/if}
-								{/foreach}
 							</select>
-							{if $cart_rules.unselected|@count > $limit}
-								<a class="jscroll-next btn btn-default btn-block clearfix" href="{$link->getAdminLink('AdminCartRules')}&amp;ajaxMode=1&amp;ajax=1&amp;id_cart_rule={$id_cart_rule|@intval}&amp;action=loadCartRules&amp;limit={$limit|@intval}&amp;type=unselected&amp;count={$cart_rules.unselected|@count}&amp;search=">{l s='Next'}</a>
-							{/if}
+							<a class="jscroll-next btn btn-default btn-block clearfix" href="">{l s='Next'}</a>
 							<a id="cart_rule_select_add" class="btn btn-default btn-block clearfix">{l s='Add'} <i class="icon-arrow-right"></i></a>
 						</td>
 						<td>
 							<p>{l s='Combinable cart rules'}</p>
 							<input id="cart_rule_select_2_filter" autocomplete="off" class="form-control combinable_search_filter" type="text" name="combinable_filter" placeholder="{l s='Search'}" value="">
 							<select name="cart_rule_select[]" class="jscroll" id="cart_rule_select_2" multiple>
-								{foreach from=$cart_rules.selected item='cart_rule' name="combinable_rules"}
-									<option value="{$cart_rule.id_cart_rule|intval}">&nbsp;{$cart_rule.name|escape}</option>
-									{if $smarty.foreach.combinable_rules.iteration == $limit}
-										{break}
-									{/if}
-								{/foreach}
 							</select>
-							{if $cart_rules.selected|@count > $limit}
-								<a class="jscroll-next btn btn-default btn-block clearfix" href="{$link->getAdminLink('AdminCartRules')}&amp;ajaxMode=1&amp;ajax=1&amp;id_cart_rule={$id_cart_rule|@intval}&amp;action=loadCartRules&amp;limit={$limit|@intval}&amp;type=selected&amp;count={$cart_rules.selected|@count}&amp;search=">{l s='Next'}</a>
-							{/if}
+							<a class="jscroll-next btn btn-default btn-block clearfix" href="">{l s='Next'}</a>
 							<a id="cart_rule_select_remove" class="btn btn-default btn-block clearfix" ><i class="icon-arrow-left"></i> {l s='Remove'}</a>
 						</td>
 					</tr>

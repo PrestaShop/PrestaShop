@@ -470,7 +470,8 @@ $(document).ready(function() {
   });
 });
 
-$('.jscroll').jscroll();
+$('#cart_rule_select_1').jscroll().data('jscrollapi').load_scroll(baseHref+'&type=unselected&search=');
+$('#cart_rule_select_2').jscroll().data('jscrollapi').load_scroll(baseHref+'&type=selected&search=');
 
 $('.uncombinable_search_filter').typeWatch({
 	captureLength: -1,

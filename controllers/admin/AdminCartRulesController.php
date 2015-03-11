@@ -648,7 +648,6 @@ class AdminCartRulesControllerCore extends AdminController
 				'groups' => $groups,
 				'shops' => $shops,
 				'cart_rules' => $cart_rules,
-				'limit' => $limit,
 				'product_rule_groups' => $product_rule_groups,
 				'product_rule_groups_counter' => count($product_rule_groups),
 				'attribute_groups' => $attribute_groups,
@@ -656,11 +655,11 @@ class AdminCartRulesControllerCore extends AdminController
 				'currentToken' => $this->token,
 				'currentObject' => $current_object,
 				'currentTab' => $this,
-				'id_cart_rule' => Tools::getValue('id_cart_rule'),
 				'hasAttribute' => $product->hasAttributes(),
 			)
 		);
-		Media::addJsDefL('baseHref', $this->context->link->getAdminLink('AdminCartRules').'&ajaxMode=1&ajax=1&id_cart_rule='.(int)Tools::getValue('id_cart_rule').'&action=loadCartRules&limit='.(int)$limit.'&count=0');
+		Media::addJsDefL('baseHref', $this->context->link->getAdminLink('AdminCartRules').'&ajaxMode=1&ajax=1&id_cart_rule='.
+									 (int)Tools::getValue('id_cart_rule').'&action=loadCartRules&limit='.(int)$limit.'&count=0');
 		$this->content .= $this->createTemplate('form.tpl')->fetch();
 
 		$this->addJqueryUI('ui.datepicker');
