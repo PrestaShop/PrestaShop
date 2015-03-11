@@ -57,6 +57,8 @@ class PrestaShopSecurityTest extends PHPUnit_Framework_TestCase
 		Assert::assertEquals('prestafraud', self::$prestafraud->name);
 		if (!Module::isInstalled('prestafraud'))
 			Assert::assertTrue((bool)self::$prestafraud->install());
+			
+		Assert::assertTrue((bool)self::$prestafraud->isRegisteredInHook('actionValidateOrder'), 'Fail Module::isRegisteredInHook(\'actionValidateOrder\')');
 		
 		$uniqid = uniqid().time();
 		$email = 'prestabot+'.$uniqid.'@gmail.com';
@@ -75,7 +77,7 @@ class PrestaShopSecurityTest extends PHPUnit_Framework_TestCase
 	{
 		$id_order = 1;
 		$order = new Order($id_order);
-		self::$prestafraud->hookNewOrder(array('order' => $order));
+		$this->assertTrue(self::$prestafraud->hookNewOrder(array('order' => $order)), 'Fail Prestafraud::hookNewOrder()');
 		$scoring = self::$prestafraud->_getScoring($id_order, Configuration::get('PS_LANG_DEFAULT'));
 		$this->assertGreaterThan(0, (int)$scoring['scoring']);
 	}
