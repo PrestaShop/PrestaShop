@@ -283,7 +283,7 @@ class RequestSqlCore extends ObjectModel
 		if ($alias)
 		{
 			foreach ($tables as $table)
-				if (isset($table['alias']) && $table['alias']['no_quotes'] == $alias)
+				if (isset($table['alias']) && isset($table['table']) && $table['alias']['no_quotes'] == $alias)
 					return array($table['table']);
 		}
 		elseif (count($tables) > 1)
@@ -376,7 +376,8 @@ class RequestSqlCore extends ObjectModel
 		for ($i = 0; $i < $nb; $i++)
 		{
 			$table = $from[$i];
-			if (!in_array(str_replace('`', '', $table['table']), $this->getTables()))
+
+			if (isset($table['table']) && !in_array(str_replace('`', '', $table['table']), $this->getTables()))
 			{
 				$this->error_sql['checkedFrom']['table'] = $table['table'];
 				return false;
