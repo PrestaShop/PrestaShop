@@ -179,8 +179,13 @@ class AdminTabsControllerCore extends AdminController
 			)
 		);
 
+		$module_controllers = array();
+		if(!empty($this->object->module))  {
+			$module_controllers = Dispatcher::getControllers(_PS_MODULE_DIR_.$this->object->module.'/controllers/admin/');
+		}
+		
 		$display_parent = true;
-		if (Validate::isLoadedObject($this->object) && !class_exists($this->object->class_name.'Controller'))
+		if (Validate::isLoadedObject($this->object) && !in_array($this->object->class_name,$module_controllers) && !class_exists($this->object->class_name.'Controller'))
 			$display_parent = false;
 
 		if ($display_parent)
