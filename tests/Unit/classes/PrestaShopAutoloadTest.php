@@ -26,10 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Tests\Unit\Classes;
 
-use PrestaShop\PrestaShop\Tests\TestCase\PrestaShopPHPUnit;
+use PHPUnit_Framework_TestCase;
 use PrestaShopAutoload;
 
-class PrestaShopAutoloadTest extends PrestaShopPHPUnit
+class	PrestaShopAutoloadTest extends PHPUnit_Framework_TestCase
+
 {
 	private $file_index_content = null;
 

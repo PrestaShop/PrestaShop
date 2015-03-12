@@ -24,12 +24,13 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-namespace PrestaShop\PrestaShop\Tests\Unit\Classes;
+namespace PrestaShop\PrestaShop\Tests\Integration\Classes;
 
-use PrestaShop\PrestaShop\Tests\TestCase\PrestaShopPHPUnit;
+use PrestaShop\PrestaShop\Tests\TestCase\ReflexionHelper;
+use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
 use Configuration;
 
-class ConfigurationCoreTest extends PrestaShopPHPUnit
+class ConfigurationCoreTest extends IntegrationTestCase
 {
 	protected function setUp()
 	{
@@ -68,7 +69,7 @@ class ConfigurationCoreTest extends PrestaShopPHPUnit
 		foreach ($id_shops as $id_shop)
 				$configuration['configuration'][0]['shop'][$id_shop]['PS_TEST_GROUP_SHOP_OVERRIDDEN'] = 'RESULT_GROUP_SHOP_OVERRIDDEN_SHOP_'.$id_shop;
 
-		$this->setProperty(null, '_cache', $configuration);
+        ReflexionHelper::setProperty(new Configuration(), '_cache', $configuration);
 	}
 
 	public function testGetGlobalValue()

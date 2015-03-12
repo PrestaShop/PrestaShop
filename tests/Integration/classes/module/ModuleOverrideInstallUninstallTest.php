@@ -24,14 +24,14 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-namespace PrestaShop\PrestaShop\Tests\Unit;
+namespace PrestaShop\PrestaShop\Tests\Integration;
 
-use PHPUnit_Framework_TestCase;
+use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
 
 use Module;
 use PrestaShopAutoload;
 
-class ModulesOverrideInstallUninstallTest extends PHPUnit_Framework_TestCase
+class ModulesOverrideInstallUninstallTest extends IntegrationTestCase
 {
 	public static function setUpBeforeClass()
 	{

@@ -2,13 +2,13 @@
 
 namespace PrestaShop\PrestaShop\Tests\Integration;
 
-use PHPUnit_Framework_TestCase;
+use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
 
 use Module;
 use Context;
 use Employee;
 
-class ModulesInstallUninstallTest extends PHPUnit_Framework_TestCase
+class ModulesInstallUninstallTest extends IntegrationTestCase
 {
     public static function setUpBeforeClass()
     {
