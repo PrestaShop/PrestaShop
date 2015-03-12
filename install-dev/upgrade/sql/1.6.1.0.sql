@@ -107,9 +107,11 @@ CREATE TABLE `PREFIX_smarty_lazy_cache` (
   PRIMARY KEY (`template_hash`, `cache_id`, `compile_id`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `PREFIX_smarty_compile_last_flush`;
-CREATE TABLE `PREFIX_smarty_compile_last_flush` (
-  `last_flush` datetime NOT NULL DEFAULT '0000-00-00 00:00:00'
+DROP TABLE IF EXISTS `PREFIX_smarty_last_flush`;
+CREATE TABLE `PREFIX_smarty_last_flush` (
+  `type` ENUM('compile', 'template'),
+  `last_flush` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`type`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `PREFIX_modules_perfs`;
