@@ -137,7 +137,8 @@ class SmartyCustomCore extends Smarty
 	 * @param  string  $cache_id      cache id
 	 * @param  string  $compile_id    compile id
 	 */
-	public function check_template_invalidation($template, $cache_id, $compile_id) {
+	public function check_template_invalidation($template, $cache_id, $compile_id)
+	{
 		static $last_flush = null;
 		if (!file_exists($this->getCacheDir().'last_template_flush'))
 			@touch($this->getCacheDir().'last_template_flush');
