@@ -233,16 +233,11 @@ class SpecificPriceRuleCore extends ObjectModel
 							->where('pac'.(int)$id_condition.'.`id_attribute` = '.(int)$condition['value']);
 					}
 					elseif ($condition['type'] == 'manufacturer')
-					{
 						$query->where('p.id_manufacturer = '.(int)$condition['value']);
-					}
 					elseif ($condition['type'] == 'category')
-					{
 						$query->leftJoin('category_product', 'cp'.(int)$id_condition, 'p.`id_product` = cp'.(int)$id_condition.'.`id_product`')
 							->where('cp'.(int)$id_condition.'.id_category = '.(int)$condition['value']);
-					}
 					elseif ($condition['type'] == 'supplier')
-					{
 						$query->where('EXISTS(
 							SELECT
 								`ps'.(int)$id_condition.'`.`id_product`
@@ -252,12 +247,9 @@ class SpecificPriceRuleCore extends ObjectModel
 								`p`.`id_product` = `ps'.(int)$id_condition.'`.`id_product`
 								AND `ps'.(int)$id_condition.'`.`id_supplier` = '.(int)$condition['value'].'
 						)');
-					}
 					elseif ($condition['type'] == 'feature')
-					{
 						$query->leftJoin('feature_product', 'fp'.(int)$id_condition, 'p.`id_product` = fp'.(int)$id_condition.'.`id_product`')
 							->where('fp'.(int)$id_condition.'.`id_feature_value` = '.(int)$condition['value']);
-					}
 				}
 
 				// Products limitation
