@@ -245,7 +245,8 @@ abstract class DbCore
     /**
      * Unit testing purpose only
      */
-    public static function deleteTestingInstance(){
+    public static function deleteTestingInstance()
+    {
         self::$instance = array();
     }
 

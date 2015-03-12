@@ -138,14 +138,16 @@ abstract class CacheCore
      * @param $testInstance Cache
      * Unit testing purpose only
      */
-    public static function setInstanceForTesting($testInstance){
+    public static function setInstanceForTesting($testInstance)
+    {
         self::$instance = $testInstance;
     }
 
     /**
      * Unit testing purpose only
      */
-    public static function deleteTestingInstance(){
+    public static function deleteTestingInstance()
+    {
         self::$instance = null;
     }
 
