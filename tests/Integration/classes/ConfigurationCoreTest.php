@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Tests\Integration\Classes;
 
-use PrestaShop\PrestaShop\Tests\TestCase\ReflexionHelper;
+use PrestaShop\PrestaShop\Tests\Helper\ReflexionHelper;
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
 use Configuration;
 
