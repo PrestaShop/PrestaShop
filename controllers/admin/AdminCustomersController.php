@@ -168,15 +168,12 @@ class AdminCustomersControllerCore extends AdminController
 		if (Shop::isFeatureActive() && (Shop::getContext() == Shop::CONTEXT_ALL || Shop::getContext() == Shop::CONTEXT_GROUP))
 			$this->can_add_customer = false;
 
-		$meaning_statuses = array(
-			'Open' => $this->l('Open'),
-			'Closed' => $this->l('Closed'),
-			'Pending 1' => $this->l('Pending 1'),
-			'Pending 2' => $this->l('Pending 2')
+		self::$meaning_status = array(
+			'open' => $this->l('Open'),
+			'closed' => $this->l('Closed'),
+			'pending1' => $this->l('Pending 1'),
+			'pending2' => $this->l('Pending 2')
 		);
-
-		foreach ($meaning_statuses as $key => $meaning_status)
-			self::$meaning_status[Tools::strtolower(str_replace(' ', '', $key))] = $meaning_status;
 	}
 
 	public function postProcess()
