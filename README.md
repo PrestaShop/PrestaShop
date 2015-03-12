@@ -15,7 +15,7 @@ About this repository
 
 This repository contains the source code for the latest version of PrestaShop 1.6.
 
-Clicking the "Download ZIP" button from the root of this repository will download the current state of PrestaShop 1.6 -- a branch that is in active development, and ready for production use. 
+Clicking the "Download ZIP" button from the root of this repository will download the current state of PrestaShop 1.6 -- which is in active development, and cannot be considered stable. If you want the latest stable version, go to [the download page][2].
 
 Note that the ZIP file does not contain the default modules: you need to make a recursive clone using your local Git client in order to download their files too. See [CONTRIBUTING.md][7] for more information about using Git and GitHub.
 
