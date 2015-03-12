@@ -4338,7 +4338,7 @@ class AdminProductsControllerCore extends AdminController
 				foreach ($attributes as $attribute)
 				{
 					// Get available quantity for the current product attribute in the current shop
-					$available_quantity[$attribute['id_product_attribute']] = (int)$attribute['quantity'];
+					$available_quantity[$attribute['id_product_attribute']] = isset($attribute['id_product_attribute']) && $attribute['id_product_attribute'] ? (int)$attribute['quantity'] : (int)$obj->quantity;
 					// Get all product designation
 					$product_designation[$attribute['id_product_attribute']] = rtrim(
 						$obj->name[$this->context->language->id].' - '.$attribute['attribute_designation'],
