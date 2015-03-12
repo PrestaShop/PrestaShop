@@ -2718,6 +2718,29 @@ class AdminControllerCore extends Controller
 
 		// Replace current default country
 		$this->context->country = new Country((int)Configuration::get('PS_COUNTRY_DEFAULT'));
+
+		if (isset($this->className) && isset($this->table) && ($id = Tools::getValue('id_'.$this->table)) > 0)
+		{
+			$res = false;
+			$class_test = new $this->className($id);
+			if ($class_test->isMultishop() || isset($class_test->id_shop))
+			{
+				$id_shop_list = $class_test->objectIsAssoWithIdShops();
+				if (is_array($id_shop_list))
+					foreach ($id_shop_list as $value)
+					{
+						if ($this->context->employee->hasAuthOnShop($value['id_shop']))
+						{
+							$res = true;
+							break;
+						}
+					}
+				else
+					$res = true;
+			}
+			if (!$res)
+				$this->tabAccess['view'] = 0;
+		}
 	}
 
 	/**
