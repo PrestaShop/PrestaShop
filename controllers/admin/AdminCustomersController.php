@@ -176,7 +176,7 @@ class AdminCustomersControllerCore extends AdminController
 		);
 
 		foreach ($meaning_statuses as $key => $meaning_status)
-			self::$meaning_status[Tools::strtolower($key)] = $meaning_status;
+			self::$meaning_status[Tools::strtolower(str_replace(' ', '', $key))] = $meaning_status;
 	}
 
 	public function postProcess()
