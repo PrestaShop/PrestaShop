@@ -270,6 +270,21 @@ class ContextCore
 		return self::$instance;
 	}
 
+    /**
+     * @param $testInstance Context
+     * Unit testing purpose only
+     */
+    public static function setInstanceForTesting($testInstance){
+        self::$instance = $testInstance;
+    }
+
+    /**
+     * Unit testing purpose only
+     */
+    public static function deleteTestingInstance(){
+        self::$instance = null;
+    }
+
 	/**
 	 * Clone current context object
 	 *

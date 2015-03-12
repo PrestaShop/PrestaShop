@@ -233,6 +233,22 @@ abstract class DbCore
 		return self::$instance[$id_server];
 	}
 
+    /**
+     * @param Db
+     * Unit testing purpose only
+     */
+    public static function setInstanceForTesting($testDatabaseManager)
+    {
+        self::$instance[0] = $testDatabaseManager;
+    }
+
+    /**
+     * Unit testing purpose only
+     */
+    public static function deleteTestingInstance(){
+        self::$instance = array();
+    }
+
 	/**
 	 * Loads configuration settings for slave servers
 	 */

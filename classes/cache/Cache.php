@@ -134,6 +134,21 @@ abstract class CacheCore
 		return self::$instance;
 	}
 
+    /**
+     * @param $testInstance Cache
+     * Unit testing purpose only
+     */
+    public static function setInstanceForTesting($testInstance){
+        self::$instance = $testInstance;
+    }
+
+    /**
+     * Unit testing purpose only
+     */
+    public static function deleteTestingInstance(){
+        self::$instance = null;
+    }
+
 	/**
 	 * Store a data in cache
 	 *
