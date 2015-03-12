@@ -2119,7 +2119,7 @@ abstract class ModuleCore
 			$cache_array[] = (int)Tools::usingSecureMode();
 		if (Shop::isFeatureActive())
 			$cache_array[] = (int)$this->context->shop->id;
-		if (Group::isFeatureActive())
+		if (Group::isFeatureActive() && isset($this->context->customer))
 		{
 			$cache_array[] = (int)Group::getCurrent()->id;
 			$cache_array[] = implode('_', Customer::getGroupsStatic($this->context->customer->id));
