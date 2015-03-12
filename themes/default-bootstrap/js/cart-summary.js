@@ -27,6 +27,7 @@ $(document).ready(function(){
 	$('.cart_quantity_up').off('click').on('click', function(e){
 		e.preventDefault();
 		upQuantity($(this).attr('id').replace('cart_quantity_up_', ''));
+		$('#' + $(this).attr('id').replace('_up_', '_down_')).removeClass('disabled');
 	});
 	$('.cart_quantity_down').off('click').on('click', function(e){
 		e.preventDefault();
