@@ -1967,7 +1967,7 @@ class AdminImportControllerCore extends AdminController
 
 			if (isset($info['image_url']) && $info['image_url'])
 			{
-				$info['image_url'] = explode(',', $info['image_url']);
+				$info['image_url'] = explode($this->multiple_value_separator, $info['image_url']);
 
 				if (is_array($info['image_url'] ) && count($info['image_url'] ))
 					foreach ($info['image_url'] as $url)
@@ -2006,9 +2006,9 @@ class AdminImportControllerCore extends AdminController
 			}
 			elseif (isset($info['image_position']) && $info['image_position'])
 			{
-				$info['image_position'] = explode(',', $info['image_position']);
+				$info['image_position'] = explode($this->multiple_value_separator, $info['image_position']);
 
-				if (is_array($info['image_position'] ) && count($info['image_position'] ))
+				if (is_array($info['image_position']) && count($info['image_position']))
 					foreach ($info['image_position'] as $position)
 					{
 						// choose images from product by position
