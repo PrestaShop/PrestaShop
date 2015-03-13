@@ -2328,7 +2328,7 @@ class AdminTranslationsControllerCore extends AdminController
 								$str_return .= '<input class="form-control" type="text" name="subject['.Tools::htmlentitiesUTF8($group_name).']['.Tools::htmlentitiesUTF8($subject_mail).']" value="'.$value_subject_mail['trad'].'" />';
 							else
 								$str_return .= '<input class="form-control" type="text" name="subject['.Tools::htmlentitiesUTF8($group_name).']['.Tools::htmlentitiesUTF8($subject_mail).']" value="" />';
-							$str_return .= '<p class="help-block">'.$subject_mail.'</p>';
+							$str_return .= '<p class="help-block">'.stripcslashes($subject_mail).'</p>';
 							$str_return .= '</div></div>';
 						}
 					}
