@@ -57,13 +57,19 @@
 				<div class="col-xs-12 col-md-3">
 					<div class="form-group selector1">
 						<label for="id_contact">{l s='Subject Heading'}</label>
-					{if isset($customerThread.id_contact) && $customerThread.id_contact}
+					{if isset($customerThread.id_contact) && $customerThread.id_contact && $contacts|count}
+							{assign var=flag value=true}
 							{foreach from=$contacts item=contact}
 								{if $contact.id_contact == $customerThread.id_contact}
 									<input type="text" class="form-control" id="contact_name" name="contact_name" value="{$contact.name|escape:'html':'UTF-8'}" readonly="readonly" />
-									<input type="hidden" name="id_contact" value="{$contact.id_contact}" />
+									<input type="hidden" name="id_contact" value="{$contact.id_contact|intval}" />
+									{$flag=false}
 								{/if}
 							{/foreach}
+							{if $flag && isset($contacts.0.id_contact)}
+									<input type="text" class="form-control" id="contact_name" name="contact_name" value="{$contacts.0.name|escape:'html':'UTF-8'}" readonly="readonly" />
+									<input type="hidden" name="id_contact" value="{$contacts.0.id_contact|intval}" />
+							{/if}
 					</div>
 					{else}
 						<select id="id_contact" class="form-control" name="id_contact">
