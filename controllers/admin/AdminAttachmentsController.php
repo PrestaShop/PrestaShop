@@ -42,6 +42,7 @@ class AdminAttachmentsControllerCore extends AdminController
 
 		$this->_select = 'IFNULL(virtual.products, 0) as products';
 		$this->_join = 'LEFT JOIN (SELECT id_attachment, COUNT(*) as products FROM '._DB_PREFIX_.'product_attachment GROUP BY id_attachment) virtual ON a.id_attachment = virtual.id_attachment';
+		$this->_use_found_rows = false;
 
 		$this->fields_list = array(
 			'id_attachment' => array(

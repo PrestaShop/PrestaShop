@@ -386,6 +386,7 @@ class AdminStockConfigurationControllerCore extends AdminController
 		$this->addRowAction('delete');
 		$this->addRowActionSkipList('delete', array(1, 2, 3, 4, 5, 6, 7, 8));
 		$this->_where = ' AND a.deleted = 0';
+		$this->_use_found_rows = false;
 
 		$this->toolbar_title = $this->l('Stock: Stock movement labels');
 		$first_list = parent::renderList();

@@ -49,6 +49,8 @@ class AdminCartsControllerCore extends AdminController
 
 		if (Tools::getValue('action') && Tools::getValue('action') == 'filterOnlyAbandonedCarts')
 			$this->_having = 'id_order = \''.$this->l('Abandoned cart').'\'';
+		else
+			$this->_use_found_rows = false;
 
 
 		$this->fields_list = array(

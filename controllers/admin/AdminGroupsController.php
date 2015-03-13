@@ -94,6 +94,7 @@ class AdminGroupsControllerCore extends AdminController
 		WHERE jc.`deleted` != 1
 		'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
 		AND jcg.`id_group` = a.`id_group`) AS nb';
+		$this->_use_found_rows = false;
 
 		$groups = Group::getGroups(Context::getContext()->language->id, true);
 		if (Shop::isFeatureActive())

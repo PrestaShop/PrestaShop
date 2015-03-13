@@ -46,6 +46,7 @@ class AdminRangePriceControllerCore extends AdminController
 		$this->_join = 'LEFT JOIN '._DB_PREFIX_.'carrier ca ON (ca.`id_carrier` = a.`id_carrier`)';
 		$this->_select = 'ca.`name` AS carrier_name';
 		$this->_where = 'AND ca.`deleted` = 0';
+		$this->_use_found_rows = false;
 
 		parent::__construct();
 	}

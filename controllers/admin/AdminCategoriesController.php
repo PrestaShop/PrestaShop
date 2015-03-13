@@ -137,6 +137,7 @@ class AdminCategoriesControllerCore extends AdminController
 			$id_parent = $this->context->shop->id_category;
 		$this->_select = 'sa.position position';
 		$this->original_filter = $this->_filter .= ' AND `id_parent` = '.(int)$id_parent.' ';
+		$this->_use_found_rows = false;
 
 		if (Shop::getContext() == Shop::CONTEXT_SHOP)
 			$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'category_shop` sa ON (a.`id_category` = sa.`id_category` AND sa.id_shop = '.(int)$this->context->shop->id.') ';

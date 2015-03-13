@@ -59,6 +59,7 @@ class AdminReturnControllerCore extends AdminController
 		parent::__construct();
 
 		$this->_where = Shop::addSqlRestriction(false, 'o');
+		$this->_use_found_rows = false;
 	}
 
 	public function renderForm()

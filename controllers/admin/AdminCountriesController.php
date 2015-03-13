@@ -141,6 +141,7 @@ class AdminCountriesControllerCore extends AdminController
 	{
 		$this->_select = 'z.`name` AS zone';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = a.`id_zone`)';
+		$this->_use_found_rows = false;
 
 		$this->tpl_list_vars['zones'] = Zone::getZones();
 		return parent::renderList();

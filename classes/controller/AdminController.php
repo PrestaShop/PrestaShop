@@ -278,6 +278,9 @@ class AdminControllerCore extends Controller
 	/** @var string Having rows into data query to display list */
 	protected $_having;
 
+	/** @var string Use SQL_CALC_FOUND_ROWS / FOUND_ROWS to count the number of records */
+	protected $_use_found_rows = true;
+
 	/** @var bool */
 	protected $is_cms = false;
 
@@ -3130,11 +3133,20 @@ class AdminControllerCore extends Controller
 			($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '');
 			$sql_limit = ' '.(($use_limit === true) ? ' LIMIT '.(int)$start.','.(int)$limit : '');
 
-			$list_count = 'SELECT COUNT(*) AS `'._DB_PREFIX_.$this->table.'` '.$sql_from.$sql_join.' WHERE 1 '.$sql_where;
-
-			$this->_listsql = 'SELECT
-			'.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '').$this->_listsql.$sql_from.$sql_join.' WHERE 1 '.$sql_where.
-							  $sql_order_by.$sql_limit;
+			if ($this->_use_found_rows)
+			{
+				$this->_listsql = 'SELECT SQL_CALC_FOUND_ROWS
+								'.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '').$this->_listsql.$sql_from.$sql_join.' WHERE 1 '.$sql_where.
+								  $sql_order_by.$sql_limit;
+				$list_count = 'SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`';
+			}
+			else
+			{
+				$this->_listsql = 'SELECT
+								'.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '').$this->_listsql.$sql_from.$sql_join.' WHERE 1 '.$sql_where.
+								  $sql_order_by.$sql_limit;
+				$list_count = 'SELECT COUNT(*) AS `'._DB_PREFIX_.$this->table.'` '.$sql_from.$sql_join.' WHERE 1 '.$sql_where;
+			}
 
 			$this->_list = Db::getInstance()->executeS($this->_listsql, true, false);
 
