@@ -2680,22 +2680,22 @@ class AdminControllerCore extends Controller
 			{
 				if ($split[0] == 'g')
 				{
-					if ($this->context->employee->hasAuthOnShopGroup($split[1]))
-						Shop::setContext(Shop::CONTEXT_GROUP, $split[1]);
+					if ($this->context->employee->hasAuthOnShopGroup((int)$split[1]))
+						Shop::setContext(Shop::CONTEXT_GROUP, (int)$split[1]);
 					else
 					{
-						$shop_id = $this->context->employee->getDefaultShopID();
+						$shop_id = (int)$this->context->employee->getDefaultShopID();
 						Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
 					}
 				}
 				elseif (Shop::getShop($split[1]) && $this->context->employee->hasAuthOnShop($split[1]))
 				{
-					$shop_id = $split[1];
+					$shop_id = (int)$split[1];
 					Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
 				}
 				else
 				{
-					$shop_id = $this->context->employee->getDefaultShopID();
+					$shop_id = (int)$this->context->employee->getDefaultShopID();
 					Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
 				}
 			}
