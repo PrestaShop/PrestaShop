@@ -459,3 +459,38 @@ function displayProductAttributes()
 		$('#ipa_' + $('#gift_product option:selected').val()).show();
 	}
 }
+
+
+$(document).ready(function() {
+  $(window).keydown(function(event){
+	if(event.keyCode == 13) {
+	  event.preventDefault();
+	  return false;
+	}
+  });
+});
+
+$('#cart_rule_select_1').jscroll().data('jscrollapi').load_scroll(baseHref+'&type=unselected&search=');
+$('#cart_rule_select_2').jscroll().data('jscrollapi').load_scroll(baseHref+'&type=selected&search=');
+
+$('.uncombinable_search_filter').typeWatch({
+	captureLength: -1,
+	highlight: true,
+	wait: 500,
+	callback: function(text) { combinable_filter('#cart_rule_select_1', text, 'unselected'); }
+});
+
+
+$('.combinable_search_filter').typeWatch({
+	captureLength: -1,
+	highlight: true,
+	wait: 500,
+	callback: function(text) { combinable_filter('#cart_rule_select_2', text, 'selected'); }
+});
+
+
+function combinable_filter(id_rule, search, type)
+{
+	var href = baseHref+'&type='+encodeURIComponent(type)+'&search='+encodeURIComponent(search);
+	$(id_rule).jscroll().data('jscrollapi').load_scroll(href);
+}

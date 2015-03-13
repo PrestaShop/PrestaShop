@@ -51,6 +51,67 @@ class AdminCartRulesControllerCore extends AdminController
 		parent::__construct();
 	}
 
+	public function ajaxProcessLoadCartRules()
+	{
+		$type = $token = $search = '';
+		$limit = $count = $id_cart_rule = 0;
+		if (Tools::getIsset('limit'))
+			$limit = Tools::getValue('limit');
+
+		if (Tools::getIsset('type'))
+			$type = Tools::getValue('type');
+
+		if (Tools::getIsset('count'))
+			$count = Tools::getValue('count');
+
+		if (Tools::getIsset('id_cart_rule'))
+			$id_cart_rule = Tools::getValue('id_cart_rule');
+
+		if (Tools::getIsset('search'))
+			$search = Tools::getValue('search');
+
+
+		$page = floor($count / $limit);
+
+		$html = '';
+		$next_link = '';
+
+		if (($page * $limit) + 1 == $count || $count == 0)
+		{
+			if ($count == 0)
+				$count = 1;
+			$current_object = $this->loadObject(true);
+			$cart_rules     = $current_object->getAssociatedRestrictions('cart_rule', false, true, ($page)*$limit, $limit, $search);
+			if ($type == 'selected')
+			{
+				$i = 1;
+				foreach ($cart_rules['selected'] as $cart_rule)
+				{
+					$html .= '<option value="'.(int)$cart_rule['id_cart_rule'].'">&nbsp;'.Tools::safeOutput($cart_rule['name']).'</option>';
+					if ($i == $limit)
+						break;
+					$i++;
+				}
+				if ($i == $limit)
+					$next_link = Context::getContext()->link->getAdminLink('AdminCartRules').'&ajaxMode=1&ajax=1&id_cart_rule='.(int)$id_cart_rule.'&action=loadCartRules&limit='.(int)$limit.'&type=selected&count='.($count - 1 + count($cart_rules['selected']).'&search='.urlencode($search));
+			}
+			else
+			{
+				$i = 1;
+				foreach ($cart_rules['unselected'] as $cart_rule)
+				{
+					$html .= '<option value="'.(int)$cart_rule['id_cart_rule'].'">&nbsp;'.Tools::safeOutput($cart_rule['name']).'</option>';
+					if ($i == $limit)
+						break;
+					$i++;
+				}
+				if ($i == $limit)
+					$next_link = Context::getContext()->link->getAdminLink('AdminCartRules').'&ajaxMode=1&ajax=1&id_cart_rule='.(int)$id_cart_rule.'&action=loadCartRules&limit='.(int)$limit.'&type=unselected&count='.($count - 1 + count($cart_rules['unselected']).'&search='.urlencode($search));
+			}
+		}
+		echo Tools::jsonEncode(array('html' => $html, 'next_link' => $next_link));
+	}
+
 	public function setMedia()
 	{
 		parent::setMedia();
@@ -489,6 +550,7 @@ class AdminCartRulesControllerCore extends AdminController
 
 	public function renderForm()
 	{
+		$limit = 40;
 		$back = Tools::safeOutput(Tools::getValue('back', ''));
 		if (empty($back))
 			$back = self::$currentIndex.'&token='.$this->token;
@@ -527,7 +589,7 @@ class AdminCartRulesControllerCore extends AdminController
 		$countries = $current_object->getAssociatedRestrictions('country', true, true);
 		$groups = $current_object->getAssociatedRestrictions('group', false, true);
 		$shops = $current_object->getAssociatedRestrictions('shop', false, false);
-		$cart_rules = $current_object->getAssociatedRestrictions('cart_rule', false, true);
+		$cart_rules = $current_object->getAssociatedRestrictions('cart_rule', false, true, 0, $limit);
 		$carriers = $current_object->getAssociatedRestrictions('carrier', true, false);
 		foreach ($carriers as &$carriers2)
 			foreach ($carriers2 as &$carrier)
@@ -596,10 +658,12 @@ class AdminCartRulesControllerCore extends AdminController
 				'hasAttribute' => $product->hasAttributes(),
 			)
 		);
-
+		Media::addJsDef(array('baseHref' => $this->context->link->getAdminLink('AdminCartRules').'&ajaxMode=1&ajax=1&id_cart_rule='.
+									 (int)Tools::getValue('id_cart_rule').'&action=loadCartRules&limit='.(int)$limit.'&count=0'));
 		$this->content .= $this->createTemplate('form.tpl')->fetch();
 
 		$this->addJqueryUI('ui.datepicker');
+		$this->addJqueryPlugin(array('jscroll', 'typewatch'));
 		return parent::renderForm();
 	}
 
