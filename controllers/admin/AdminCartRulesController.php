@@ -658,8 +658,8 @@ class AdminCartRulesControllerCore extends AdminController
 				'hasAttribute' => $product->hasAttributes(),
 			)
 		);
-		Media::addJsDefL('baseHref', $this->context->link->getAdminLink('AdminCartRules').'&ajaxMode=1&ajax=1&id_cart_rule='.
-									 (int)Tools::getValue('id_cart_rule').'&action=loadCartRules&limit='.(int)$limit.'&count=0');
+		Media::addJsDef(array('baseHref' => $this->context->link->getAdminLink('AdminCartRules').'&ajaxMode=1&ajax=1&id_cart_rule='.
+									 (int)Tools::getValue('id_cart_rule').'&action=loadCartRules&limit='.(int)$limit.'&count=0'));
 		$this->content .= $this->createTemplate('form.tpl')->fetch();
 
 		$this->addJqueryUI('ui.datepicker');
