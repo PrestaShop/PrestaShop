@@ -46,8 +46,7 @@ class SmartyCustomCore extends Smarty
 	{
 		if ($resource_name == null)
 		{
-			Db::getInstance()->execute('TRUNCATE TABLE `'._DB_PREFIX_.'smarty_compile_last_flush`');
-			Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'smarty_compile_last_flush` (`last_flush`) VALUES (\''.date('Y-m-d H:i:s').'\')');
+			Db::getInstance()->execute('REPLACE INTO `'._DB_PREFIX_.'smarty_last_flush` (`type`, `last_flush`) VALUES (\'compile\', \''.date('Y-m-d H:i:s').'\')');
 			return 0;
 		}
 		else
@@ -64,6 +63,7 @@ class SmartyCustomCore extends Smarty
 	*/
 	public function clearAllCache($exp_time = null, $type = null)
 	{
+		Db::getInstance()->execute('REPLACE INTO `'._DB_PREFIX_.'smarty_last_flush` (`type`, `last_flush`) VALUES (\'template\', \''.date('Y-m-d H:i:s').'\')');
 		return $this->delete_from_lazy_cache(null, null, null);
 	}
 
@@ -95,12 +95,12 @@ class SmartyCustomCore extends Smarty
 		{
 			if ($last_flush === null)
 			{
-				$sql        = 'SELECT UNIX_TIMESTAMP(last_flush) as last_flush FROM `'._DB_PREFIX_.'smarty_compile_last_flush`';
+				$sql = 'SELECT UNIX_TIMESTAMP(last_flush) as last_flush FROM `'._DB_PREFIX_.'smarty_last_flush` WHERE type=\'compile\'';
 				$last_flush = Db::getInstance()->getValue($sql, false);
 			}
 			if ((int)$last_flush && @filemtime($this->getCompileDir().'last_flush') < $last_flush)
 			{
-				@touch($this->getCacheDir().'last_flush');
+				@touch($this->getCompileDir().'last_flush');
 				parent::clearCompiledTemplate();
 			}
 		}
@@ -139,14 +139,34 @@ class SmartyCustomCore extends Smarty
 	 */
 	public function check_template_invalidation($template, $cache_id, $compile_id)
 	{
-		if ($cache_id !== null && (is_object($cache_id) || is_array($cache_id)))
-			$cache_id = null;
-
-		if ($this->is_in_lazy_cache($template, $cache_id, $compile_id) === false)
+		static $last_flush = null;
+		if (!file_exists($this->getCacheDir().'last_template_flush'))
+			@touch($this->getCacheDir().'last_template_flush');
+		elseif (defined('_DB_PREFIX_'))
 		{
-			// insert in cache before the effective cache creation to avoid nasty race condition
-			$this->insert_in_lazy_cache($template, $cache_id, $compile_id);
-			parent::clearCache($template, $cache_id, $compile_id);
+			if ($last_flush === null)
+			{
+				$sql = 'SELECT UNIX_TIMESTAMP(last_flush) as last_flush FROM `'._DB_PREFIX_.'smarty_last_flush` WHERE type=\'template\'';
+				$last_flush = Db::getInstance()->getValue($sql, false);
+			}
+
+			if ((int)$last_flush && @filemtime($this->getCacheDir().'last_template_flush') < $last_flush)
+			{
+				@touch($this->getCacheDir().'last_template_flush');
+				parent::clearAllCache();
+			}
+			else
+			{
+				if ($cache_id !== null && (is_object($cache_id) || is_array($cache_id)))
+					$cache_id = null;
+
+				if ($this->is_in_lazy_cache($template, $cache_id, $compile_id) === false)
+				{
+					// insert in cache before the effective cache creation to avoid nasty race condition
+					$this->insert_in_lazy_cache($template, $cache_id, $compile_id);
+					parent::clearCache($template, $cache_id, $compile_id);
+				}
+			}
 		}
 	}
 
