@@ -159,7 +159,7 @@ class HelperListCore extends Helper
 	 * Fetch the template for action enable
 	 *
 	 * @param string $token
-	 * @param int $id
+	 * @param string $id
 	 * @param int $value state enabled or not
 	 * @param string $active status
 	 * @param int $id_category
@@ -172,7 +172,7 @@ class HelperListCore extends Helper
 		$tpl_enable->assign(array(
 			'ajax' => $ajax,
 			'enabled' => (bool)$value,
-			'url_enable' => $this->currentIndex.'&'.$this->identifier.'='.(int)$id.'&'.$active.$this->table.($ajax ? '&action='.$active.$this->table.'&ajax='.(int)$ajax : '').
+			'url_enable' => $this->currentIndex.'&'.$this->identifier.'='.$id.'&'.$active.$this->table.($ajax ? '&action='.$active.$this->table.'&ajax='.(int)$ajax : '').
 				((int)$id_category && (int)$id_product ? '&id_category='.(int)$id_category : '').($this->page && $this->page > 1 ? '&page='.(int)$this->page : '').'&token='.($token != null ? $token : $this->token)
 		));
 		return $tpl_enable->fetch();
