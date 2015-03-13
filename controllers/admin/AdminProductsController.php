@@ -189,7 +189,7 @@ class AdminProductsControllerCore extends AdminController
 			$this->_join .= ' INNER JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = a.`id_product` AND cp.`id_category` = '.(int)$this->_category->id.') ';
 			$this->_select .= ' , cp.`position`, ';
 		}
-
+		$this->_use_found_rows = false;
 		$this->_group = '';
 
 		$this->fields_list = array();

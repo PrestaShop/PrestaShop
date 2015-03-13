@@ -51,7 +51,8 @@ class AdminStatesControllerCore extends AdminController
 		$this->_join = '
 		LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = a.`id_zone`)
 		LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (cl.`id_country` = a.`id_country` AND cl.id_lang = '.(int)$this->context->language->id.')';
-		
+		$this->_use_found_rows = false;
+
 		$countries_array = $zones_array = array();
 		$this->zones = Zone::getZones();
 		$this->countries = Country::getCountries($this->context->language->id, false, true, false);

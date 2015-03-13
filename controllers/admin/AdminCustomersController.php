@@ -81,6 +81,7 @@ class AdminCustomersControllerCore extends AdminController
 			LIMIT 1
 		) as connect';
 		$this->_join = 'LEFT JOIN '._DB_PREFIX_.'gender_lang gl ON (a.id_gender = gl.id_gender AND gl.id_lang = '.(int)$this->context->language->id.')';
+		$this->_use_found_rows = false;
 		$this->fields_list = array(
 			'id_customer' => array(
 				'title' => $this->l('ID'),

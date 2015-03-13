@@ -102,6 +102,7 @@ class AdminShopUrlControllerCore extends AdminController
 
 		if ($id_shop = (int)Tools::getValue('id_shop'))
 			$this->_where = 'AND a.id_shop = '.$id_shop;
+		$this->_use_found_rows = false;
 
 		return parent::renderList();
 	}

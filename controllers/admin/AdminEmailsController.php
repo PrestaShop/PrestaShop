@@ -73,6 +73,7 @@ class AdminEmailsControllerCore extends AdminController
 			);
 			$this->_select .= 'l.name as language';
 			$this->_join .= ' LEFT JOIN '._DB_PREFIX_.'lang l ON (a.id_lang = l.id_lang)';
+			$this->_use_found_rows = false;
 		}
 
 		parent::__construct();

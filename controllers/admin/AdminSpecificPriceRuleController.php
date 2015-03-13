@@ -57,6 +57,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 		LEFT JOIN '._DB_PREFIX_.'currency cu ON (cu.id_currency = a.id_currency)
 		LEFT JOIN '._DB_PREFIX_.'country_lang cl ON (cl.id_country = a.id_country AND cl.id_lang='.(int)$this->context->language->id.')
 		LEFT JOIN '._DB_PREFIX_.'group_lang gl ON (gl.id_group = a.id_group AND gl.id_lang='.(int)$this->context->language->id.')';
+		$this->_use_found_rows = false;
 
 		$this->bulk_actions = array(
 			'delete' => array(

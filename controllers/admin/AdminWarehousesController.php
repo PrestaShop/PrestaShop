@@ -122,7 +122,7 @@ class AdminWarehousesControllerCore extends AdminController
 			LEFT JOIN `'._DB_PREFIX_.'employee` e ON (e.id_employee = a.id_employee)
 			LEFT JOIN `'._DB_PREFIX_.'address` ad ON (ad.id_address = a.id_address)
 			LEFT JOIN `'._DB_PREFIX_.'country` c ON (c.id_country = ad.id_country)';
-
+		$this->_use_found_rows = false;
 		// display help informations
 		$this->displayInformation($this->l('This interface allows you to manage your warehouses.').'<br />');
 		$this->displayInformation($this->l('Before adding stock in your warehouses, you should check the default currency used.').'<br />');
