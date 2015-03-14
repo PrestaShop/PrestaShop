@@ -493,7 +493,6 @@ class SearchCore
 				SELECT p.id_product
 				FROM '._DB_PREFIX_.'product p
 				'.Shop::addSqlAssociation('product', 'p').'
-				INNER JOIN '._DB_PREFIX_.'product_lang pl ON pl.`id_shop` = product_shop.`id_shop`
 				WHERE product_shop.visibility IN ("both", "search")
 				AND product_shop.`active` = 1
 				AND '.($id_product ? 'p.id_product = '.(int)$id_product : 'product_shop.indexed = 0')
