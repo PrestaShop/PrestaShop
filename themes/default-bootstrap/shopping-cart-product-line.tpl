@@ -77,7 +77,7 @@
 		</ul>
 	</td>
 
-	<td class="cart_quantity text-center">
+	<td class="cart_quantity text-center" data-title="{l s='Quantity'}">
 		{if isset($cannotModify) AND $cannotModify == 1}
 			<span>
 				{if $quantityDisplayed == 0 AND isset($customizedDatas.$productId.$productAttributeId)}
@@ -110,7 +110,7 @@
 		{/if}
 	</td>
 	{if !isset($noDeleteButton) || !$noDeleteButton}
-		<td class="cart_delete text-center" data-title="Delete">
+		<td class="cart_delete text-center" data-title="{l s='Delete'}">
 		{if (!isset($customizedDatas.$productId.$productAttributeId) OR $quantityDisplayed > 0) && empty($product.gift)}
 			<div>
 				<a rel="nofollow" title="{l s='Delete'}" class="cart_quantity_delete" id="{$product.id_product}_{$product.id_product_attribute}_{if $quantityDisplayed > 0}nocustom{else}0{/if}_{$product.id_address_delivery|intval}" href="{$link->getPageLink('cart', true, NULL, "delete=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_address_delivery={$product.id_address_delivery|intval}&amp;token={$token_cart}")|escape:'html':'UTF-8'}"><i class="icon-trash"></i></a>
