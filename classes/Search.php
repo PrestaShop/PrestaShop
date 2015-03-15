@@ -590,7 +590,7 @@ class SearchCore
 						FROM '._DB_PREFIX_.'search_word sw
 						WHERE sw.word IN ('.implode(',', $query_array2).')
 						AND sw.id_lang = '.(int)$product['id_lang'].'
-						AND sw.id_shop = '.(int)$product['id_shop']);
+						AND sw.id_shop = '.(int)$product['id_shop'], true, false);
 						foreach ($added_words as $word_id)
 							$word_ids_by_word['_'.$word_id['word']] = (int)$word_id['id_word'];
 					}
