@@ -397,12 +397,58 @@ class SearchCore
 		return $features;
 	}
 
+	/**
+	 * @param $weight_array
+	 * @return string
+	 */
+	protected static function getSQLProductAttributeFields(&$weight_array)
+	{
+		$sql = '';
+		if (is_array($weight_array))
+			foreach ($weight_array as $key => $weight)
+				if ((int)$weight)
+					switch ($key)
+					{
+						case 'pa_reference':
+							$sql .= ', pa.reference AS pa_reference';
+						break;
+						case 'pa_supplier_reference':
+							$sql .= ', pa.supplier_reference AS pa_supplier_reference';
+						break;
+						case 'pa_ean13':
+							$sql .= ', pa.ean13 AS pa_ean13';
+						break;
+						case 'pa_upc':
+							$sql .= ', pa.upc AS pa_upc';
+						break;
+					}
+		return $sql;
+	}
+
 	protected static function getProductsToIndex($total_languages, $id_product = false, $limit = 50, $weight_array = array())
 	{
-		// Adjust the limit to get only "whole" products, in every languages (and at least one)
-		$max_possibilities = $total_languages * count(Shop::getShops(true));
-		$limit = max($max_possibilities, floor($limit / $max_possibilities) * $max_possibilities);
+		$ids = null;
+		if (!$id_product)
+		{
+			// Limit products for each step but be sure that each attribute is taken into account
+			$sql = 'SELECT p.id_product FROM '._DB_PREFIX_.'product p
+				'.Shop::addSqlAssociation('product', 'p', true, null, true).'
+				WHERE product_shop.`indexed` = 0
+				AND product_shop.`visibility` IN ("both", "search")
+				AND product_shop.`active` = 1
+				ORDER BY product_shop.`id_product` ASC
+				LIMIT '.(int)$limit;
 
+
+			$res = Db::getInstance()->executeS($sql, false);
+			while($row = Db::getInstance()->nextRow($res))
+			{
+				$ids[] = $row['id_product'];
+			}
+
+		}
+
+		// Now get every attribute in every language
 		$sql = 'SELECT p.id_product, pl.id_lang, pl.id_shop, l.iso_code';
 
 		if (is_array($weight_array))
@@ -416,26 +462,14 @@ class SearchCore
 						case 'reference':
 							$sql .= ', p.reference';
 						break;
-						case 'pa_reference':
-							$sql .= ', pa.reference AS pa_reference';
-						break;
 						case 'supplier_reference':
 							$sql .= ', p.supplier_reference';
-						break;
-						case 'pa_supplier_reference':
-							$sql .= ', pa.supplier_reference AS pa_supplier_reference';
 						break;
 						case 'ean13':
 							$sql .= ', p.ean13';
 						break;
-						case 'pa_ean13':
-							$sql .= ', pa.ean13 AS pa_ean13';
-						break;
 						case 'upc':
 							$sql .= ', p.upc';
-						break;
-						case 'pa_upc':
-							$sql .= ', pa.upc AS pa_upc';
 						break;
 						case 'description_short':
 							$sql .= ', pl.description_short';
@@ -452,8 +486,6 @@ class SearchCore
 					}
 
 		$sql .= ' FROM '._DB_PREFIX_.'product p
-			LEFT JOIN '._DB_PREFIX_.'product_attribute pa
-				ON pa.id_product = p.id_product
 			LEFT JOIN '._DB_PREFIX_.'product_lang pl
 				ON p.id_product = pl.id_product
 			'.Shop::addSqlAssociation('product', 'p', true, null, true).'
@@ -466,11 +498,50 @@ class SearchCore
 			WHERE product_shop.indexed = 0
 			AND product_shop.visibility IN ("both", "search")
 			'.($id_product ? 'AND p.id_product = '.(int)$id_product : '').'
+			'.($ids ? 'AND p.id_product IN ('.implode(',', array_map('intval', $ids)).')' : '').'
 			AND product_shop.`active` = 1
-			AND pl.`id_shop` = product_shop.`id_shop`
-			LIMIT '.(int)$limit;
+			AND pl.`id_shop` = product_shop.`id_shop`';
 
 		return Db::getInstance()->executeS($sql);
+	}
+
+	/**
+	 * @param $db
+	 * @param $id_product
+	 * @param $sql_attribute
+	 * @return mixed
+	 */
+	protected static function getAttributesFields($db, $id_product, $sql_attribute)
+	{
+		return $db->executeS('SELECT id_product '.$sql_attribute.' FROM '.
+										   _DB_PREFIX_.'product_attribute pa WHERE pa.id_product = '.(int)$id_product);
+	}
+
+	/**
+	 * @param $product_array
+	 * @param $weight_array
+	 * @param $key
+	 * @param $value
+	 * @param $id_lang
+	 * @param $iso_code
+	 */
+	protected static function fillProductArray(&$product_array, $weight_array, $key, $value, $id_lang, $iso_code)
+	{
+		if (strncmp($key, 'id_', 3) && isset($weight_array[$key]))
+		{
+			$words = explode(' ', Search::sanitize($value, (int)$id_lang, true, $iso_code));
+			foreach ($words as $word)
+				if (!empty($word))
+				{
+					$word = Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH);
+					// Remove accents
+					$word = Tools::replaceAccentedChars($word);
+
+					if (!isset($product_array[$word]))
+						$product_array[$word] = 0;
+					$product_array[$word] += $weight_array[$key];
+				}
+		}
 	}
 
 	public static function indexation($full = false, $id_product = false)
@@ -530,6 +601,7 @@ class SearchCore
 		// Retrieve the number of languages
 		$total_languages = count(Language::getLanguages(false));
 
+		$sql_attribute = Search::getSQLProductAttributeFields($weight_array);
 		// Products are processed 50 by 50 in order to avoid overloading MySQL
 		while (($products = Search::getProductsToIndex($total_languages, $id_product, 50, $weight_array)) && (count($products) > 0))
 		{
@@ -543,25 +615,26 @@ class SearchCore
 					$product['attributes'] = Search::getAttributes($db, (int)$product['id_product'], (int)$product['id_lang']);
 				if ((int)$weight_array['features'])
 					$product['features'] = Search::getFeatures($db, (int)$product['id_product'], (int)$product['id_lang']);
+				if ($sql_attribute)
+				{
+					$attribute_fields = Search::getAttributesFields($db, (int)$product['id_product'], $sql_attribute);
+					if ($attribute_fields)
+						$product['attributes_fields'] = $attribute_fields;
+				}
 
 				// Data must be cleaned of html, bad characters, spaces and anything, then if the resulting words are long enough, they're added to the array
 				$product_array = array();
 				foreach ($product as $key => $value)
-					if (strncmp($key, 'id_', 3) && isset($weight_array[$key]))
+				{
+					if ($key == 'attributes_fields')
 					{
-						$words = explode(' ', Search::sanitize($value, (int)$product['id_lang'], true, $product['iso_code']));
-						foreach ($words as $word)
-							if (!empty($word))
-							{
-								$word = Tools::substr($word, 0, PS_SEARCH_MAX_WORD_LENGTH);
-								// Remove accents
-								$word = Tools::replaceAccentedChars($word);
-
-								if (!isset($product_array[$word]))
-									$product_array[$word] = 0;
-								$product_array[$word] += $weight_array[$key];
-							}
+						foreach($value as $pa_array)
+							foreach($pa_array as $pa_key => $pa_value)
+								Search::fillProductArray($product_array, $weight_array, $pa_key, $pa_value, $product['id_lang'], $product['iso_code']);
 					}
+					else
+						Search::fillProductArray($product_array, $weight_array, $key, $value, $product['id_lang'], $product['iso_code']);
+				}
 
 				// If we find words that need to be indexed, they're added to the word table in the database
 				if (is_array($product_array) && !empty($product_array))
@@ -612,9 +685,9 @@ class SearchCore
 						Search::saveIndex($query_array3);
 				}
 
-				if (!in_array($product['id_product'], $products_array))
-					$products_array[] = (int)$product['id_product'];
+				$products_array[] = (int)$product['id_product'];
 			}
+			$products_array = array_unique($products_array);
 			Search::setProductsAsIndexed($products_array);
 
 			// One last save is done at the end in order to save what's left
