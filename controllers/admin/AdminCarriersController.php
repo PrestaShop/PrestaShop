@@ -26,6 +26,9 @@
 
 class AdminCarriersControllerCore extends AdminController
 {
+	/** @var Carrier */
+	protected $object;
+
 	protected $position_identifier = 'id_carrier';
 
 	public function __construct()

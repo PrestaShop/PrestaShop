@@ -32,6 +32,11 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 	public $order;
 	public $available_in_your_account = false;
 
+	/**
+	 * @param OrderInvoice $order_invoice
+	 * @param Smarty $smarty
+	 * @throws PrestaShopException
+	 */
 	public function __construct(OrderInvoice $order_invoice, $smarty)
 	{
 		$this->order_invoice = $order_invoice;

@@ -71,7 +71,7 @@ class PrestaShopAutoload
 	/**
 	 * Get instance of autoload (singleton)
 	 *
-	 * @return Autoload
+	 * @return PrestaShopAutoload
 	 */
 	public static function getInstance()
 	{

@@ -26,6 +26,9 @@
 
 class AdminProductsControllerCore extends AdminController
 {
+	/** @var Product */
+	protected $object;
+
 	/** @var integer Max image size for upload
 	 * As of 1.5 it is recommended to not set a limit to max image size
 	 */

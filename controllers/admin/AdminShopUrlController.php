@@ -26,6 +26,9 @@
 
 class AdminShopUrlControllerCore extends AdminController
 {
+	/** @var ShopUrl */
+	protected $object;
+
 	public function __construct()
 	{
 		$this->bootstrap = true;

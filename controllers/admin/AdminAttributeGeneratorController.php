@@ -29,6 +29,8 @@
 class AdminAttributeGeneratorControllerCore extends AdminController
 {
 	protected $combinations = array();
+
+	/** @var Product */
 	protected $product;
 
 	public function __construct()

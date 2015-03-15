@@ -236,7 +236,7 @@ class AdminControllerCore extends Controller
 	/** @var array Required_fields to display in the Required Fields form */
 	public $required_fields = array();
 
-	/** @var Helper */
+	/** @var HelperList */
 	protected $helper;
 
 	/**

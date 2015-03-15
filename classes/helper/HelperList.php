@@ -84,8 +84,13 @@ class HelperListCore extends Helper
 	/** @var boolean Content line is clickable if true */
 	public $no_link = false;
 
+	/** @var Smarty_Internal_Template|string */
 	protected $header_tpl = 'list_header.tpl';
+
+	/** @var Smarty_Internal_Template|string */
 	protected $content_tpl = 'list_content.tpl';
+
+	/** @var Smarty_Internal_Template|string */
 	protected $footer_tpl = 'list_footer.tpl';
 
 	/** @var array list of required actions for each list row */

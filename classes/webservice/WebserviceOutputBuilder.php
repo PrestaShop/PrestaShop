@@ -37,6 +37,8 @@ class WebserviceOutputBuilderCore
 
 	protected $wsUrl;
 	protected $output;
+
+	/** @var WebserviceOutputInterface|WebserviceOutputXML|WebserviceOutputJSON */
 	public $objectRender;
 	protected $wsResource;
 	protected $depth = 0;

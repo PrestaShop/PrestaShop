@@ -35,6 +35,11 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 	public $address_supplier;
 	public $context;
 
+	/**
+	 * @param SupplyOrder $supply_order
+	 * @param Smarty $smarty
+	 * @throws PrestaShopException
+	 */
 	public function __construct(SupplyOrder $supply_order, $smarty)
 	{
 		$this->supply_order = $supply_order;
