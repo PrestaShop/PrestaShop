@@ -131,7 +131,7 @@
                                     {if $wishlists|count > 1}
                                         {foreach name=wl from=$wishlists item=wishlist}
                                             {if $smarty.foreach.wl.first}
-                                                <a class="btn btn-default button button-small wishlist_change_button" tabindex="0" data-toggle="popover" data-trigger="focus" title="{l s='Move to a wishlist'}" data-placement="bottom">
+                                                <a class="btn btn-default button button-small wishlist_change_button" tabindex="0" data-toggle="popover" data-trigger="focus" title="{l s='Move to a wishlist' mod='blockwishlist'}" data-placement="bottom">
                                                     <span>{l s='Move' mod='blockwishlist'}</span>
                                                     </a>
                                                     <div hidden class="popover-content">
