@@ -1267,13 +1267,13 @@ class AdminTranslationsControllerCore extends AdminController
 	{
 		$this->translations_informations = array(
 			'front' => array(
-				'name' => $this->l('Front-office translations'),
+				'name' => $this->l('Front office translations'),
 				'var' => '_LANG',
 				'dir' => defined('_PS_THEME_SELECTED_DIR_') ? _PS_THEME_SELECTED_DIR_.'lang/' : '',
 				'file' => $this->lang_selected->iso_code.'.php'
 			),
 			'back' => array(
-				'name' => $this->l('Back-office translations'),
+				'name' => $this->l('Back office translations'),
 				'var' => '_LANGADM',
 				'dir' => _PS_TRANSLATIONS_DIR_.$this->lang_selected->iso_code.'/',
 				'file' => 'admin.php'
