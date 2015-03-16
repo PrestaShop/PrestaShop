@@ -209,9 +209,7 @@ abstract class DbCore
 			);
 
 		if (!$master)
-		{
 			Db::loadSlaveServers();
-		}
 
 		$total_servers = count(self::$_servers);
 		if ($master || $total_servers == 1)
@@ -237,12 +235,12 @@ abstract class DbCore
 	}
 
     /**
-     * @param Db
+     * @param $test_db Db
      * Unit testing purpose only
      */
-    public static function setInstanceForTesting($testDatabaseManager)
+    public static function setInstanceForTesting($test_db)
     {
-        self::$instance[0] = $testDatabaseManager;
+        self::$instance[0] = $test_db;
     }
 
     /**
