@@ -22,6 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+{if isset($colors_list)}
 <ul class="color_to_pick_list clearfix">
 	{foreach from=$colors_list item='color'}
 		{if isset($col_img_dir)}
@@ -36,3 +37,4 @@
 		{/if}
 	{/foreach}
 </ul>
+{/if}
