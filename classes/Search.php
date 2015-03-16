@@ -321,12 +321,16 @@ class SearchCore
 					p.`id_product` = pl.`id_product`
 					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
 				)
-				'.(Combination::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'product_attribute_shop` product_attribute_shop
-				ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop='.(int)$context->shop->id.')':'').'
+				'.(Combination::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'product_attribute` product_attribute
+					ON product_attribute.`id_product` = p.`id_product`
+					LEFT JOIN `'._DB_PREFIX_.'product_attribute_shop` product_attribute_shop
+					ON (product_attribute_shop.`id_product_attribute` = product_attribute.`id_product_attribute` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop='.(int)$context->shop->id.')':'').'
 				'.Product::sqlStock('p', 0).'
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
+				LEFT JOIN `'._DB_PREFIX_.'image` image
+					ON image.`id_product` = p.`id_product`
 				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop
-					ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop='.(int)$context->shop->id.')
+					ON (image_shop.`id_image` = image.`id_image` AND image_shop.cover=1 AND image_shop.id_shop='.(int)$context->shop->id.')
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				WHERE p.`id_product` '.$product_pool.'
 				GROUP BY product_shop.id_product
@@ -399,10 +403,22 @@ class SearchCore
 
 	protected static function getProductsToIndex($total_languages, $id_product = false, $limit = 50, $weight_array = array())
 	{
-		// Adjust the limit to get only "whole" products, in every languages (and at least one)
-		$max_possibilities = $total_languages * count(Shop::getShops(true));
-		$limit = max($max_possibilities, floor($limit / $max_possibilities) * $max_possibilities);
+		$ids = false;
+		if (!$id_product)
+		{
+			// Limit products for each step but be sure that each attribute is taken into account
+			$sql = 'SELECT p.id_product FROM '._DB_PREFIX_.'product p
+				'.Shop::addSqlAssociation('product', 'p', true, null, true).'
+				WHERE product_shop.indexed = 0
+				AND product_shop.visibility IN ("both", "search")
+				AND product_shop.`active` = 1
+				LIMIT '.(int)$limit;
+			$res = Db::getInstance()->executeS($sql);
+			$ids = array();
+			foreach ($res as $row) $ids[] = $row['id_product'];
+		}
 
+		// Now get every attribute in every language
 		$sql = 'SELECT p.id_product, pl.id_lang, pl.id_shop, l.iso_code';
 
 		if (is_array($weight_array))
@@ -466,9 +482,9 @@ class SearchCore
 			WHERE product_shop.indexed = 0
 			AND product_shop.visibility IN ("both", "search")
 			'.($id_product ? 'AND p.id_product = '.(int)$id_product : '').'
+			'.($ids ? 'AND p.id_product IN ('.implode(',', array_map('intval', $ids)).')' : '').'
 			AND product_shop.`active` = 1
-			AND pl.`id_shop` = product_shop.`id_shop`
-			LIMIT '.(int)$limit;
+			AND pl.`id_shop` = product_shop.`id_shop`';
 
 		return Db::getInstance()->executeS($sql);
 	}
@@ -549,8 +565,8 @@ class SearchCore
 		// Retrieve the number of languages
 		$total_languages = count(Language::getLanguages(false));
 
-		// Products are processed 50 by 50 in order to avoid overloading MySQL
-		while (($products = Search::getProductsToIndex($total_languages, $id_product, 50, $weight_array)) && (count($products) > 0))
+		// Products are processed 5 by 5 in order to avoid overloading MySQL
+		while (($products = Search::getProductsToIndex($total_languages, $id_product, 5, $weight_array)) && (count($products) > 0))
 		{
 			$products_array = array();
 			// Now each non-indexed product is processed one by one, langage by langage
@@ -744,10 +760,14 @@ class SearchCore
 					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
 				)
 				'.Shop::addSqlAssociation('product', 'p', false).'
+				LEFT JOIN `'._DB_PREFIX_.'product_attribute` product_attribute
+					ON product_attribute.`id_product` = p.`id_product`
 				LEFT JOIN `'._DB_PREFIX_.'product_attribute_shop` product_attribute_shop
-				ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop='.(int)$context->shop->id.')
+					ON (product_attribute_shop.`id_product_attribute` = product_attribute.`id_product_attribute` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop='.(int)$context->shop->id.')
+				LEFT JOIN `'._DB_PREFIX_.'image` image
+					ON image.`id_product` = p.`id_product`
 				LEFT JOIN `'._DB_PREFIX_.'image_shop` image_shop
-					ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop='.(int)$context->shop->id.')
+					ON (image_shop.`id_image` = image.`id_image` AND image_shop.cover=1 AND image_shop.id_shop='.(int)$context->shop->id.')
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
 				LEFT JOIN `'._DB_PREFIX_.'product_tag` pt ON (p.`id_product` = pt.`id_product`)
