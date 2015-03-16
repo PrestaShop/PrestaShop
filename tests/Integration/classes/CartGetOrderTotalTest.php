@@ -56,6 +56,8 @@ class CartGetOrderTotalTest extends IntegrationTestCase
 
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
+
         // Save the database to restore it later: we're not the only test running so let's leave things
         // the way we found them.
         self::$dump = DatabaseDump::create();
