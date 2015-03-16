@@ -6,6 +6,7 @@ namespace PrestaShop\PrestaShop\Tests\TestCase;
 
 use Cache;
 use Context;
+use Configuration;
 use Db;
 use PHPUnit_Framework_TestCase;
 use PrestaShop\PrestaShop\Tests\Helper\Mocks\DbMock;
@@ -48,7 +49,12 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
         Cache::deleteTestingInstance();
         Db::deleteTestingInstance();
         Context::deleteTestingInstance();
-
+        /**
+         * @todo proxy static calls inside Configuration to a mockable instance
+         * so that Configuration can be (indirectly) mocked.
+         * This way we'll avoid doing obscure teardown stuff like below.
+         */
+        Configuration::clearConfigurationCacheForTesting();
     }
 
 }
