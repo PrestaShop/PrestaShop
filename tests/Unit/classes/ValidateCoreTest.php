@@ -31,13 +31,7 @@ use Validate;
 
 class ValidateCoreTest extends PHPUnit_Framework_TestCase {
 
-	public function isIp2LongDataProvider()
-	{
-		return array(
-			array(false, 'toto'),
-			array(true, '123')
-		);
-	}
+	use providers;
 
 	/**
 	 * @dataProvider isIp2LongExamples
@@ -50,6 +44,96 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase {
 	public function testIsAnything()
 	{
 		$this->assertTrue(Validate::isAnything());
+	}
+
+	// TODO: Write test for testIsModuleUrl()
+	public function testIsModuleUrl()
+	{
+		//$this->assertSame($expected, Validate::isEmail($input));
+	}
+
+	/**
+	 * @dataProvider isEmailExamples
+	 */
+	public function testIsEmail($expected, $input)
+	{
+		$this->assertSame($expected, Validate::isEmail($input));
+	}
+
+	/**
+	 * @dataProvider isMd5Examples
+	 */
+	public function testIsMd5($expected, $input)
+	{
+		$this->assertSame($expected, Validate::isMd5($input));
+	}
+
+	/**
+	 * @dataProvider isSha1Examples
+	 */
+	public function testIsSha1($expected, $input)
+	{
+		$this->assertSame($expected, Validate::isSha1($input));
+	}
+
+	/**
+	 * @dataProvider isFloatExamples
+	 */
+	public function testIsFloat($expected, $input)
+	{
+		$this->assertSame($expected, Validate::isFloat($input));
+	}
+
+	/**
+	 * @dataProvider isUnsignedFloatExamples
+	 */
+	public function testIsUnsignedFloat($expected, $input)
+	{
+		$this->assertSame($expected, Validate::isUnsignedFloat($input));
+	}
+
+	/**
+	 * @depends testIsFloat
+	 * @dataProvider isOptFloatExamples
+	 */
+	public function testIsOptFloat($expected, $input)
+	{
+		$this->assertSame($expected, Validate::isOptFloat($input));
+	}
+}
+
+trait providers {
+
+    	public function isIp2LongDataProvider()
+	{
+		return array(
+			array(false, 'toto'),
+			array(true, '123')
+		);
+	}
+
+	public function isMd5DataProvider()
+	{
+		return array(
+			array(1, md5('SomeRandomString')),
+			array(0, ''),
+			array(0, sha1('AnotherRandomString')),
+			array(0, substr(md5('AnotherRandomString'), 0, 31)),
+			array(0, 123),
+			array(0, false),
+		);
+	}
+
+        public function isSha1DataProvider()
+	{
+		return array(
+			array(1, sha1('SomeRandomString')),
+			array(0, ''),
+			array(0, md5('AnotherRandomString')),
+			array(0, substr(sha1('AnotherRandomString'), 0, 39)),
+			array(0, 123),
+			array(0, false),
+		);
 	}
 
 	public function isEmailDataProvider()
@@ -68,90 +152,16 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase {
 		);
 	}
 
-	// TODO: Write test for testIsModuleUrl()
-	public function testIsModuleUrl()
-	{
-		//$this->assertSame($expected, Validate::isEmail($input));
-	}
-
-	/**
-	 * @dataProvider isEmailExamples
-	 */
-	public function testIsEmail($expected, $input)
-	{
-		$this->assertSame($expected, Validate::isEmail($input));
-	}
-
-	public function isMd5DataProvider()
-	{
-		return array(
-			array(1, md5('SomeRandomString')),
-			array(0, ''),
-			array(0, sha1('AnotherRandomString')),
-			array(0, substr(md5('AnotherRandomString'), 0, 31)),
-			array(0, 123),
-			array(0, false),
-		);
-	}
-
-	/**
-	 * @dataProvider isMd5Examples
-	 */
-	public function testIsMd5($expected, $input)
-	{
-		$this->assertSame($expected, Validate::isMd5($input));
-	}
-
-	public function isSha1DataProvider()
-	{
-		return array(
-			array(1, sha1('SomeRandomString')),
-			array(0, ''),
-			array(0, md5('AnotherRandomString')),
-			array(0, substr(sha1('AnotherRandomString'), 0, 39)),
-			array(0, 123),
-			array(0, false),
-		);
-	}
-
-	/**
-	 * @dataProvider isSha1Examples
-	 */
-	public function testIsSha1($expected, $input)
-	{
-		$this->assertSame($expected, Validate::isSha1($input));
-	}
-
-	public function trueFloatDataProvider()
-	{
-		return array(
-			array(true, 12),
-			array(true, 12.2151),
-			array(true, 12,2151),
-			array(true, '12.2151'),
-		);
-	}
-	public function isFloatDataProvider()
+	public function isOptFloatDataProvider()
 	{
 		return array_merge(
 			$this->trueFloatDataProvider(),
 			array(
 				array(true, -12.2151),
-				array(true, -12,2151),
-				array(true, '-12.2151'),
-				array(false, ''),
-				array(false, 'A'),
-				array(false, null),
+				array(true, null),
+				array(true, ''),
 			)
 		);
-	}
-
-	/**
-	 * @dataProvider isFloatExamples
-	 */
-	public function testIsFloat($expected, $input)
-	{
-		$this->assertSame($expected, Validate::isFloat($input));
 	}
 
 	public function isUnsignedFloatDataProvider()
@@ -169,32 +179,28 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase {
 		);
 	}
 
-	/**
-	 * @dataProvider isUnsignedFloatExamples
-	 */
-	public function testIsUnsignedFloat($expected, $input)
+        public function trueFloatDataProvider()
 	{
-		$this->assertSame($expected, Validate::isUnsignedFloat($input));
+		return array(
+			array(true, 12),
+			array(true, 12.2151),
+			array(true, 12,2151),
+			array(true, '12.2151'),
+		);
 	}
 
-	public function isOptFloatDataProvider()
+	public function isFloatDataProvider()
 	{
 		return array_merge(
 			$this->trueFloatDataProvider(),
 			array(
 				array(true, -12.2151),
-				array(true, null),
-				array(true, ''),
+				array(true, -12,2151),
+				array(true, '-12.2151'),
+				array(false, ''),
+				array(false, 'A'),
+				array(false, null),
 			)
 		);
-	}
-
-	/**
-	 * @depends testIsFloat
-	 * @dataProvider isOptFloatExamples
-	 */
-	public function testIsOptFloat($expected, $input)
-	{
-		$this->assertSame($expected, Validate::isOptFloat($input));
 	}
 }
