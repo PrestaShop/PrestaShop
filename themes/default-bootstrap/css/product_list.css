@@ -325,11 +325,11 @@ ul.product_list.list > li .right-block .right-block-content .content_price {
     ul.product_list.list > li .right-block .right-block-content .content_price {
       padding-top: 0;
       width: 100%; } }
-  ul.product_list.list > li .right-block .right-block-content .content_price span {
+  ul.product_list.list > li .right-block .right-block-content .content_price .price {
     display: inline-block;
     margin-top: -4px;
     margin-bottom: 14px; }
-    ul.product_list.list > li .right-block .right-block-content .content_price span.old-price {
+    ul.product_list.list > li .right-block .right-block-content .content_price .price.old-price {
       margin-right: 8px; }
 ul.product_list.list > li .right-block .right-block-content .button-container {
   overflow: hidden;
