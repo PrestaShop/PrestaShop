@@ -18,18 +18,6 @@ ul.product_list {
 			font-weight: bold;
 			padding: 3px 8px 4px 8px;
 			margin-bottom: 20px;
-			&.available-now {
-				background: #55c65e;
-				border: 1px solid #36943e;
-			}
-			&.out-of-stock{
-				background: #fe9126;
-				border: 1px solid #e4752b;
-			}
-			&.available-dif{
-				background: #fe9126;
-				border: 1px solid #e4752b;
-			}
 		}
 	}
 	.color-list-container {
