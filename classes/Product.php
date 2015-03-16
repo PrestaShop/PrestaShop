@@ -5173,7 +5173,7 @@ class ProductCore extends ObjectModel
 					$tab_id_attribute[] = $attribute['id_attribute'];
 
 					$group = Db::getInstance()->executeS('
-					SELECT g.`id_attribute_group`, g.`url_name` as `group`
+					SELECT a.`id_attribute`, g.`id_attribute_group`, g.`url_name` as `group`
 					FROM `'._DB_PREFIX_.'layered_indexable_attribute_group_lang_value` g
 					LEFT JOIN `'._DB_PREFIX_.'attribute` a
 						ON (a.`id_attribute_group` = g.`id_attribute_group`)
@@ -5194,7 +5194,7 @@ class ProductCore extends ObjectModel
 					$result[] = array_merge($attribute, $group[0]);
 				}
 				$values_not_custom = Db::getInstance()->executeS('
-				SELECT DISTINCT a.`id_attribute_group`, al.`name`, agl.`name` as `group`
+				SELECT DISTINCT a.`id_attribute`, a.`id_attribute_group`, al.`name`, agl.`name` as `group`
 				FROM `'._DB_PREFIX_.'attribute` a
 				LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al
 					ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
@@ -5215,7 +5215,7 @@ class ProductCore extends ObjectModel
 		if (!Cache::isStored($cache_id))
 		{
 			$result = Db::getInstance()->executeS('
-			SELECT al.`name`, agl.`name` as `group`
+			SELECT a.`id_attribute`, a.`id_attribute_group`, al.`name`, agl.`name` as `group`
 			FROM `'._DB_PREFIX_.'attribute` a
 			LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al
 				ON (al.`id_attribute` = a.`id_attribute` AND al.`id_lang` = '.(int)$id_lang.')
@@ -5350,11 +5350,12 @@ class ProductCore extends ObjectModel
 	{
 		$attributes = Product::getAttributesParams($this->id, $id_product_attribute);
 		$anchor = '#';
+		$sep = Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR');
 		foreach ($attributes as &$a)
 		{
 			foreach ($a as &$b)
-				$b = str_replace(Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR'), '_', Tools::link_rewrite($b));
-			$anchor .= '/'.$a['group'].Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR').$a['name'];
+				$b = str_replace($sep, '_', Tools::link_rewrite($b));
+			$anchor .= '/'.(isset($a['id_attribute']) && $a['id_attribute']? (int)$a['id_attribute'].$sep : '').$a['group'].$sep.$a['name'];
 		}
 		return $anchor;
 	}
