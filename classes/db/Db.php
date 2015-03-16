@@ -208,7 +208,10 @@ abstract class DbCore
 				array('server' => _DB_SERVER_, 'user' => _DB_USER_, 'password' => _DB_PASSWD_, 'database' => _DB_NAME_), /* MySQL Master server */
 			);
 
-		Db::loadSlaveServers();
+		if (!$master)
+		{
+			Db::loadSlaveServers();
+		}
 
 		$total_servers = count(self::$_servers);
 		if ($master || $total_servers == 1)
