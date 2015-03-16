@@ -35,14 +35,20 @@ class ModulesOverrideInstallUninstallTest extends IntegrationTestCase
 {
 	public static function setUpBeforeClass()
 	{
+		parent::setUpBeforeClass();
+
 		\PrestaShop\PrestaShop\Tests\Helper\Module::addModule('pscsx3241');
 		\PrestaShop\PrestaShop\Tests\Helper\Module::addModule('pscsx32412');
 	}
 
 	public static function tearDownAfterClass()
 	{
+		Module::getInstanceByName('pscsx3241')->uninstall();
+		Module::getInstanceByName('pscsx32412')->uninstall();
+
 		\PrestaShop\PrestaShop\Tests\Helper\Module::removeModule('pscsx3241');
 		\PrestaShop\PrestaShop\Tests\Helper\Module::removeModule('pscsx32412');
+
 	}
 
 	public function testInstall()
@@ -66,7 +72,7 @@ class ModulesOverrideInstallUninstallTest extends IntegrationTestCase
 
 	public function testDiffOverrideAndUninstall()
 	{
-		$ressource_path = realpath(dirname(__FILE__).'/../resources/ModulesOverrideInstallUninstallTest/');
+		$ressource_path = realpath(dirname(__FILE__).'/../../../resources/ModulesOverrideInstallUninstallTest/');
 		$override_path_cart = _PS_ROOT_DIR_.'/'.PrestaShopAutoload::getInstance()->getClassPath('Cart');
 		$override_path_admin_product_controller = _PS_ROOT_DIR_.'/'.PrestaShopAutoload::getInstance()->getClassPath('AdminProductsController');
 
