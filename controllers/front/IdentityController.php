@@ -31,6 +31,9 @@ class IdentityControllerCore extends FrontController
 	public $authRedirection = 'identity';
 	public $ssl = true;
 
+	/** @var Customer */
+	protected $customer;
+
 	public function init()
 	{
 		parent::init();

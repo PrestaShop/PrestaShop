@@ -28,6 +28,7 @@ class SupplierControllerCore extends FrontController
 {
 	public $php_self = 'supplier';
 
+	/** @var Supplier */
 	protected $supplier;
 
 	public function setMedia()

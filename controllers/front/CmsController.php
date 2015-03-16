@@ -29,6 +29,8 @@ class CmsControllerCore extends FrontController
 	public $php_self = 'cms';
 	public $assignCase;
 	public $cms;
+
+	/** @var CMSCategory */
 	public $cms_category;
 	public $ssl = false;
 

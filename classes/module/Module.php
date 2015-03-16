@@ -2161,6 +2161,12 @@ abstract class ModuleCore
 		}
 	}
 
+	/**
+	 * @param string $template
+	 * @param string|null $cache_id
+	 * @param string|null $compile_id
+	 * @return Smarty_Internal_Template
+	 */
 	protected function getCurrentSubTemplate($template, $cache_id = null, $compile_id = null)
 	{
 		if (!isset($this->current_subtemplate[$template.'_'.$cache_id.'_'.$compile_id]))

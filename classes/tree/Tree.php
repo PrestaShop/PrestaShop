@@ -40,8 +40,13 @@ class TreeCore
 	protected $_node_folder_template;
 	protected $_node_item_template;
 	protected $_template;
+
+	/** @var string */
 	private   $_template_directory;
 	private   $_title;
+
+	/** @var TreeToolbar|ITreeToolbar */
+	private $_toolbar;
 
 	public function __construct($id, $data = null)
 	{
@@ -202,12 +207,19 @@ class TreeCore
 		return $this->_template;
 	}
 
+	/**
+	 * @param $value
+	 * @return $this
+	 */
 	public function setTemplateDirectory($value)
 	{
 		$this->_template_directory = $this->_normalizeDirectory($value);
 		return $this;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getTemplateDirectory()
 	{
 		if (!isset($this->_template_directory))

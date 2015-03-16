@@ -26,6 +26,9 @@
 
 class AdminSpecificPriceRuleControllerCore extends AdminController
 {
+	/** @var SpecificPriceRule */
+	protected $object;
+
 	public $list_reduction_type;
 
 	public function __construct()

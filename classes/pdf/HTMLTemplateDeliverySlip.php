@@ -31,6 +31,11 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 {
 	public $order;
 
+	/**
+	 * @param OrderInvoice $order_invoice
+	 * @param Smarty $smarty
+	 * @throws PrestaShopException
+	 */
 	public function __construct(OrderInvoice $order_invoice, $smarty)
 	{
 		$this->order_invoice = $order_invoice;

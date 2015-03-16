@@ -27,6 +27,8 @@
 class AdminTrackingControllerCore extends AdminController
 {
 	public $bootstrap = true;
+
+	/** @var HelperList */
 	protected $_helper_list;
 
 	public function postprocess()
