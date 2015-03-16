@@ -1031,8 +1031,11 @@ function checkUrl()
 			tabValues = [];
 			if (tabParams[0] == '')
 				tabParams.shift();
-			for (var i in tabParams)
+
+			var len = tabParams.length;
+			for (var i=0; i<len; i++)
 				tabValues.push(tabParams[i].split(attribute_anchor_separator));
+
 			// fill html with values
 			$('.color_pick').removeClass('selected').parent().parent().children().removeClass('selected');
 
