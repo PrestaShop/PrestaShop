@@ -203,10 +203,10 @@ class UploaderCore
 		switch ($error_code)
 		{
 			case 1:
-				$error = sprintf(Tools::displayError('The uploaded file exceeds %s', ini_get('upload_max_filesize')));
+				$error = sprintf(Tools::displayError('The uploaded file exceeds %s'), ini_get('upload_max_filesize'));
 				break;
 			case 2:
-				$error = sprintf(Tools::displayError('The uploaded file exceeds %s', ini_get('post_max_size')));
+				$error = sprintf(Tools::displayError('The uploaded file exceeds %s'), ini_get('post_max_size'));
 				break;
 			case 3:
 				$error = Tools::displayError('The uploaded file was only partially uploaded');
