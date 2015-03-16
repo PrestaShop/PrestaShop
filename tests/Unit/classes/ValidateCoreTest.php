@@ -31,7 +31,7 @@ use Validate;
 
 class ValidateCoreTest extends PHPUnit_Framework_TestCase {
 
-	public function isIp2LongExamples()
+	public function isIp2LongDataProvider()
 	{
 		return array(
 			array(false, 'toto'),
@@ -52,7 +52,7 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue(Validate::isAnything());
 	}
 
-	public function isEmailExamples()
+	public function isEmailDataProvider()
 	{
 		return array(
 			array(true, 'john.doe@prestashop.com'),
@@ -82,7 +82,7 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase {
 		$this->assertSame($expected, Validate::isEmail($input));
 	}
 
-	public function isMd5Examples()
+	public function isMd5DataProvider()
 	{
 		return array(
 			array(1, md5('SomeRandomString')),
@@ -102,7 +102,7 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase {
 		$this->assertSame($expected, Validate::isMd5($input));
 	}
 
-	public function isSha1Examples()
+	public function isSha1DataProvider()
 	{
 		return array(
 			array(1, sha1('SomeRandomString')),
@@ -122,7 +122,7 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase {
 		$this->assertSame($expected, Validate::isSha1($input));
 	}
 
-	public function trueFloatExamples()
+	public function trueFloatDataProvider()
 	{
 		return array(
 			array(true, 12),
@@ -131,10 +131,10 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase {
 			array(true, '12.2151'),
 		);
 	}
-	public function isFloatExamples()
+	public function isFloatDataProvider()
 	{
 		return array_merge(
-			$this->trueFloatExamples(),
+			$this->trueFloatDataProvider(),
 			array(
 				array(true, -12.2151),
 				array(true, -12,2151),
@@ -154,10 +154,10 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase {
 		$this->assertSame($expected, Validate::isFloat($input));
 	}
 
-	public function isUnsignedFloatExamples()
+	public function isUnsignedFloatDataProvider()
 	{
 		return array_merge(
-			$this->trueFloatExamples(),
+			$this->trueFloatDataProvider(),
 			array(
 				array(false, -12.2151),
 				array(false, -12,2151),
@@ -177,10 +177,10 @@ class ValidateCoreTest extends PHPUnit_Framework_TestCase {
 		$this->assertSame($expected, Validate::isUnsignedFloat($input));
 	}
 
-	public function isOptFloatExamples()
+	public function isOptFloatDataProvider()
 	{
 		return array_merge(
-			$this->trueFloatExamples(),
+			$this->trueFloatDataProvider(),
 			array(
 				array(true, -12.2151),
 				array(true, null),
