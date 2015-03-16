@@ -58,12 +58,7 @@ function ddd($var)
  */
 function pSQL($string, $htmlOK = false)
 {
-	// Avoid thousands of "Db::getInstance()"...
-	static $db = false;
-	if (!$db)
-		$db = Db::getInstance();
-
-	return $db->escape($string, $htmlOK);
+	return Db::getInstance()->escape($string, $htmlOK);
 }
 
 function bqSQL($string)
