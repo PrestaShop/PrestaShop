@@ -235,7 +235,12 @@ class AdminEmailsControllerCore extends AdminController
 	
 	public function processDelete()
 	{
-		return Mail::eraseAllLogs();
+		if ((int)$id_mail = Tools::getValue('id_mail', 0))
+			$return = Mail::eraseLog((int)$id_mail);
+		else
+			$return = Mail::eraseAllLogs();
+
+		return $return;
 	}
 
 	public function initToolbar()
