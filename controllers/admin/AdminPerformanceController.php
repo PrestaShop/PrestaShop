@@ -746,7 +746,7 @@ class AdminPerformanceControllerCore extends AdminController
 			{
 				$theme_cache_directory = _PS_ALL_THEMES_DIR_.$this->context->shop->theme_directory.'/cache/';
 				if (((bool)Tools::getValue('PS_CSS_THEME_CACHE') || (bool)Tools::getValue('PS_JS_THEME_CACHE')) && !is_writable($theme_cache_directory))
-					$this->errors[] = Tools::displayError(sprintf($this->l('To use Smart Cache directory %s must be writable.'), realpath($theme_cache_directory)));
+					$this->errors[] = sprintf(Tools::displayError('To use Smart Cache directory %s must be writable.'), realpath($theme_cache_directory));
 
 				if ($tmp = (int)Tools::getValue('PS_CSS_THEME_CACHE'))
 				{
@@ -932,10 +932,7 @@ class AdminPerformanceControllerCore extends AdminController
 						if (!is_dir(_PS_CACHEFS_DIRECTORY_))
 							@mkdir(_PS_CACHEFS_DIRECTORY_, 0777, true);
 						elseif (!is_writable(_PS_CACHEFS_DIRECTORY_))
-							$this->errors[] = sprintf(
-								Tools::displayError('To use CacheFS, the directory %s must be writable.'),
-								realpath(_PS_CACHEFS_DIRECTORY_)
-							);
+							$this->errors[] = sprintf(Tools::displayError('To use CacheFS, the directory %s must be writable.'), realpath(_PS_CACHEFS_DIRECTORY_));
 
 					if ($caching_system == 'CacheFs')
 					{
