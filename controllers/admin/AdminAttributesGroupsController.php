@@ -107,8 +107,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			$this->list_id    = 'attribute_values';
 			$this->lang       = true;
 
-
-
 			$this->context->smarty->assign(array(
 				'current' => self::$currentIndex.'&id_attribute_group='.(int)$id.'&viewattribute_group'
 			));
@@ -554,10 +552,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				break;
 			case 'view':
 				$this->toolbar_btn['newAttributes'] = array(
-						'href' => self::$currentIndex.'&updateattribute&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&token='.$this->token,
-						'desc' => $this->l('Add New Values', null, null, false),
-						'class' => 'toolbar-new'
-					);
+					'href' => self::$currentIndex.'&updateattribute&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&token='.$this->token,
+					'desc' => $this->l('Add New Values', null, null, false),
+					'class' => 'toolbar-new'
+				);
 
 				$this->toolbar_btn['back'] = array(
 					'href' => self::$currentIndex.'&token='.$this->token,
@@ -569,13 +567,12 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
 					'desc' => $this->l('Add New Attributes', null, null, false)
 				);
-		}
-
-			if ($this->can_import) 
-				$this->toolbar_btn['import'] = array(
+				if ($this->can_import)
+					$this->toolbar_btn['import'] = array(
 						'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=combinations',
 						'desc' => $this->l('Import', null, null, false)
 					);
+		}
 	}
 
 	public function initToolbarTitle()

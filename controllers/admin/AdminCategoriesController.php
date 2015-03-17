@@ -211,7 +211,7 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->addRowAction('delete');
 
 
-		$count_categories_without_parent = count(Category::getCategoriesWithoutParent());	
+		$count_categories_without_parent = count(Category::getCategoriesWithoutParent());
 		$categories_tree = $this->_category->getParentsCategories();
 
 		if (empty($categories_tree)
@@ -269,6 +269,7 @@ class AdminCategoriesControllerCore extends AdminController
 				'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
 				'desc' => $this->l('Add New')
 			);
+
 			if ($this->can_import)
 				$this->toolbar_btn['import'] = array(
 					'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=categories',

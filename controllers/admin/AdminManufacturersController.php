@@ -49,7 +49,7 @@ class AdminManufacturersControllerCore extends AdminController
 				'confirm' => $this->l('Delete selected items?')
 			)
 		);
-		
+
 		$this->context = Context::getContext();
 
 		$this->fieldImageSettings = array(
@@ -157,7 +157,7 @@ class AdminManufacturersControllerCore extends AdminController
 
 		$this->content .= parent::renderList();
 	}
-	
+
 	protected function getAddressFieldsList()
 	{
 		// Sub tab addresses
@@ -487,7 +487,7 @@ class AdminManufacturersControllerCore extends AdminController
 			'type' => 'hidden',
 			'name' => 'alias',
 		);
-		
+
 		$form['input'][] = array(
 			'type' => 'hidden',
 			'name' => 'id_address',
@@ -504,7 +504,7 @@ class AdminManufacturersControllerCore extends AdminController
 				'col' => 4,
 				'hint' => $this->l('Company name for this supplier')
 			);
-		
+
 		$form['input'][] = array(
 			'type' => 'text',
 			'label' => $this->l('Last name'),
@@ -669,7 +669,7 @@ class AdminManufacturersControllerCore extends AdminController
 			default:
 				parent::initToolbar();
 
-				if ($this->can_import) 
+				if ($this->can_import)
 					$this->toolbar_btn['import'] = array(
 						'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=manufacturers',
 						'desc' => $this->l('Import')
@@ -681,7 +681,7 @@ class AdminManufacturersControllerCore extends AdminController
 	{
 		if (!($manufacturer = $this->loadObject()))
 			return;
-		
+
 		$this->toolbar_btn['new'] = array(
 					'href' => $this->context->link->getAdminLink('AdminManufacturers').'&addaddress=1&id_manufacturer='.(int)$manufacturer->id,
 					'desc' => $this->l('Add address')
@@ -689,7 +689,7 @@ class AdminManufacturersControllerCore extends AdminController
 
 		$this->toolbar_title = is_array($this->breadcrumbs) ? array_unique($this->breadcrumbs) : array($this->breadcrumbs);
 		$this->toolbar_title[] = $manufacturer->name;
-		
+
 		$addresses = $manufacturer->getAddresses($this->context->language->id);
 
 		$products = $manufacturer->getProductsLite($this->context->language->id);
@@ -844,7 +844,7 @@ class AdminManufacturersControllerCore extends AdminController
 	{
 		return true;
 	}
-	
+
 	public function processSave()
 	{
 		parent::processSave();

@@ -505,7 +505,7 @@ class AdminControllerCore extends Controller
 
 		//* Check if logged employee has access to AdminImport controller */
 		$import_access = Profile::getProfileAccess($this->context->employee->id_profile, Tab::getIdFromClassName('AdminImport'));
-		if ( is_array($import_access) && isset($import_access['view']) && $import_access['view'] == 1 )
+		if (is_array($import_access) && isset($import_access['view']) && $import_access['view'] == 1)
 			$this->can_import = true;
 
 		$this->context->smarty->assign(array(
@@ -513,7 +513,6 @@ class AdminControllerCore extends Controller
 			'logged_on_addons' => $this->logged_on_addons,
 			'can_import' => $this->can_import,
 		));
-
 	}
 
 	/**
