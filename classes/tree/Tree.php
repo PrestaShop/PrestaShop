@@ -353,8 +353,10 @@ class TreeCore
 
 		$js_path = __PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/tree.js';
 		if ($this->getContext()->controller->ajax)
+		{
 			if (!$this->_no_js)
 				$html = '<script type="text/javascript" src="'.$js_path.'"></script>';
+		}
 		else
 			$this->getContext()->controller->addJs($js_path);
 
