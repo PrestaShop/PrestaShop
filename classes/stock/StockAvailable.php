@@ -744,7 +744,10 @@ class StockAvailableCore extends ObjectModel
 			$shop = $context->shop;
 		}
 		elseif (is_object($shop))
+		{
+			/** @var Shop $shop */
 			$shop_group = $shop->getGroup();
+		}
 		else
 		{
 			$shop = new Shop($shop);

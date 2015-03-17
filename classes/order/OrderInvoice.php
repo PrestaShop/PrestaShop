@@ -380,6 +380,7 @@ class OrderInvoiceCore extends ObjectModel
 	 * Returns the shipping taxes breakdown
 	 *
 	 * @since 1.5
+	 * @param Order $order
 	 * @return array
 	 */
 	public function getShippingTaxesBreakdown($order)

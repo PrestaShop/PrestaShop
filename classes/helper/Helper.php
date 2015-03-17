@@ -318,6 +318,7 @@ class HelperCore
 		foreach ($rules['required'] as $required)
 			$required_class_fields[] = $required;
 
+		/** @var ObjectModel $object */
 		$object = new $class_name();
 		$res = $object->getFieldsRequiredDatabase();
 

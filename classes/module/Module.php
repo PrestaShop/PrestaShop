@@ -1286,6 +1286,7 @@ abstract class ModuleCore
 				// If class exists, we just instanciate it
 				if (class_exists($module, false))
 				{
+					/** @var Module $tmp_module */
 					$tmp_module = new $module;
 
 					$item = new stdClass();

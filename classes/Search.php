@@ -353,6 +353,12 @@ class SearchCore
 		return array('total' => $total,'result' => $result_properties);
 	}
 
+	/**
+	 * @param Db $db
+	 * @param int $id_product
+	 * @param int $id_lang
+	 * @return string
+	 */
 	public static function getTags($db, $id_product, $id_lang)
 	{
 		$tags = '';
@@ -365,6 +371,12 @@ class SearchCore
 		return $tags;
 	}
 
+	/**
+	 * @param Db $db
+	 * @param int $id_product
+	 * @param int $id_lang
+	 * @return string
+	 */
 	public static function getAttributes($db, $id_product, $id_lang)
 	{
 		if (!Combination::isFeatureActive())
@@ -382,6 +394,12 @@ class SearchCore
 		return $attributes;
 	}
 
+	/**
+	 * @param Db $db
+	 * @param int $id_product
+	 * @param int $id_lang
+	 * @return string
+	 */
 	public static function getFeatures($db, $id_product, $id_lang)
 	{
 		if (!Feature::isFeatureActive())

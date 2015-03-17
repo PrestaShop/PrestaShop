@@ -247,6 +247,7 @@ class UpgraderCore
 	{
 		foreach ($node as $key => $child)
 		{
+			/** @var SimpleXMLElement $child */
 			if (is_object($child) && $child->getName() == 'dir')
 			{
 				$current_path[$level] = (string)$child['name'];

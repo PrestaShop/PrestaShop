@@ -731,6 +731,8 @@ class MediaCore
 		$scripts = $dom->getElementsByTagName('script');
 		if (is_object($scripts) && $scripts->length)
 			foreach ($scripts as $script)
+			{
+				/** @var DOMElement $script */
 				if ($src = $script->getAttribute('src'))
 				{
 					if (substr($src, 0, 2) == '//')
@@ -766,6 +768,7 @@ class MediaCore
 					if (!in_array($src, Media::$inline_script_src))
 						Context::getContext()->controller->addJS($src);
 				}
+			}
 		$output = preg_replace_callback('/<script[^>]*>(.*)<\s*\/script\s*[^>]*>/Uims', array('Media', 'deferScript'), $output);
 		return $output;
 	}

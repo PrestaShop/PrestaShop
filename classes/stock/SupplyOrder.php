@@ -225,6 +225,7 @@ class SupplyOrderCore extends ObjectModel
 
 		foreach ($entries as $entry)
 		{
+			/** @var SupplyOrderDetail $entry */
 			// applys global discount rate on each product if possible
 			if ($is_discount)
 				$entry->applyGlobalDiscount((float)$this->discount_rate);

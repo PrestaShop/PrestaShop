@@ -317,7 +317,15 @@ class OrderCore extends ObjectModel
 		return (int)$this->_taxCalculationMethod;
 	}
 
-	/* Does NOT delete a product but "cancel" it (which means return/refund/delete it depending of the case) */
+	/**
+	 * Does NOT delete a product but "cancel" it (which means return/refund/delete it depending of the case)
+	 *
+	 * @param $order
+	 * @param OrderDetail $order_detail
+	 * @param int $quantity
+	 * @return bool
+	 * @throws PrestaShopException
+	 */
 	public function deleteProduct($order, $order_detail, $quantity)
 	{
 		if (!(int)$this->getCurrentState() || !validate::isLoadedObject($order_detail))
@@ -373,7 +381,14 @@ class OrderCore extends ObjectModel
 		return $product_list;
 	}
 
-	/* DOES delete the product */
+	/**
+	 * DOES delete the product
+	 *
+	 * @param OrderDetail $order_detail
+	 * @param int $quantity
+	 * @return bool
+	 * @throws PrestaShopException
+	 */
 	protected function _deleteProduct($order_detail, $quantity)
 	{
 		$product_price_tax_excl = $order_detail->unit_price_tax_excl * $quantity;
@@ -1480,6 +1495,7 @@ class OrderCore extends ObjectModel
 
 	public function addWs($autodate = true, $null_values = false)
 	{
+		/** @var PaymentModule $payment_module */
 		$payment_module = Module::getInstanceByName($this->module);
 		$customer = new Customer($this->id_customer);
 		$payment_module->validateOrder($this->id_cart, Configuration::get('PS_OS_WS_PAYMENT'), $this->total_paid, $this->payment, null, array(), null, false, $customer->secure_key);
@@ -1744,8 +1760,12 @@ class OrderCore extends ObjectModel
 	{
 		$invoices = $this->getInvoicesCollection();
 		foreach ($invoices as $key => $invoice)
+		{
+			/** @var OrderInvoice $invoice */
 			if ($invoice->isPaid())
 				unset($invoices[$key]);
+		}
+
 		return $invoices;
 	}
 

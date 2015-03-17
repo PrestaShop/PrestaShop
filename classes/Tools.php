@@ -456,6 +456,7 @@ class ToolsCore
 	{
 		if (Tools::isSubmit('SubmitCurrency') && ($id_currency = Tools::getValue('id_currency')))
 		{
+			/** @var Currency $currency */
 			$currency = Currency::getCurrencyInstance((int)$id_currency);
 			if (is_object($currency) && $currency->id && !$currency->deleted && $currency->isAssociatedToShop())
 				$cookie->id_currency = (int)$currency->id;
@@ -3300,6 +3301,7 @@ exit;
 					$config->set('URI.SafeIframeRegexp','/.*/');
 				}
 
+				/** @var HTMLPurifier_HTMLDefinition|HTMLPurifier_HTMLModule $def */
 				// http://developers.whatwg.org/the-video-element.html#the-video-element
 				if ($def = $config->maybeGetRawHTMLDefinition())
 				{

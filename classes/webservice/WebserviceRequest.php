@@ -45,7 +45,7 @@ class WebserviceRequestCore
 
 	/**
 	 * Set if the management is specific or if it is classic (entity management)
-	 * @var WebserviceSpecificManagementInterface|false
+	 * @var WebserviceSpecificManagementImages|WebserviceSpecificManagementSearch|false
 	 */
 	protected $objectSpecificManagement = false;
 
@@ -502,6 +502,7 @@ class WebserviceRequestCore
 					// load resource configuration
 					if ($this->urlSegment[0] != '')
 					{
+						/** @var ObjectModel $object */
 						$object = new $this->resourceList[$this->urlSegment[0]]['class']();
 						if (isset($this->resourceList[$this->urlSegment[0]]['parameters_attribute']))
 							$this->resourceConfiguration = $object->getWebserviceParameters($this->resourceList[$this->urlSegment[0]]['parameters_attribute']);
@@ -1191,6 +1192,7 @@ class WebserviceRequestCore
 				}
 				else
 				{
+					/** @var ObjectModel $object */
 					$object = new $this->resourceConfiguration['retrieveData']['className']();
 					$assoc = Shop::getAssoTable($this->resourceConfiguration['retrieveData']['table']);
 					if ($assoc !== false && $assoc['type'] == 'shop' && ($object->isMultiShopField($this->resourceConfiguration['fields'][$fieldName]['sqlId']) || $fieldName == 'id'))
@@ -1392,6 +1394,7 @@ class WebserviceRequestCore
 		{
 			foreach ($objects as $object)
 			{
+				/** @var ObjectModel $object */
 				if (isset($this->resourceConfiguration['objectMethods']) && isset($this->resourceConfiguration['objectMethods']['delete']))
 					$result = $object->{$this->resourceConfiguration['objectMethods']['delete']}();
 				else
@@ -1427,6 +1430,8 @@ class WebserviceRequestCore
 			$this->setError(500, 'XML error : '.$error->getMessage()."\n".'XML length : '.strlen($this->_inputXml)."\n".'Original XML : '.$this->_inputXml, 127);
 			return;
 		}
+
+		/** @var SimpleXMLElement|Countable $xmlEntities */
 		$xmlEntities = $xml->children();
 		$object = null;
 
@@ -1460,8 +1465,10 @@ class WebserviceRequestCore
 
 		foreach ($xmlEntities as $xmlEntity)
 		{
+			/** @var SimpleXMLElement $xmlEntity */
 			$attributes = $xmlEntity->children();
 
+			/** @var ObjectModel $object */
 			if ($this->method == 'POST')
 				$object = new $this->resourceConfiguration['retrieveData']['className']();
 			elseif ($this->method == 'PUT')
@@ -1514,7 +1521,10 @@ class WebserviceRequestCore
 					$i18n = true;
 					if (isset($attributes->$fieldName, $attributes->$fieldName->language))
 						foreach ($attributes->$fieldName->language as $lang)
+						{
+							/** @var SimpleXMLElement $lang */
 							$object->{$fieldName}[(int)$lang->attributes()->id] = (string)$lang;
+						}
 					else
 						$object->{$fieldName} = (string)$attributes->$fieldName;
 				}
@@ -1551,6 +1561,7 @@ class WebserviceRequestCore
 						if (isset($attributes->associations))
 							foreach ($attributes->associations->children() as $association)
 							{
+								/** @var SimpleXMLElement $association */
 								// associations
 								if (isset($this->resourceConfiguration['associations'][$association->getName()]))
 								{
@@ -1558,6 +1569,7 @@ class WebserviceRequestCore
 									$values = array();
 									foreach ($assocItems as $assocItem)
 									{
+										/** @var SimpleXMLElement $assocItem */
 										$fields = $assocItem->children();
 										$entry = array();
 										foreach ($fields as $fieldName => $fieldValue)

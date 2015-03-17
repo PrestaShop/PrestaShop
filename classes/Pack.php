@@ -77,7 +77,11 @@ class PackCore extends Product
 		$price_display_method = !self::$_taxCalculationMethod;
 		$items = Pack::getItems($id_product, Configuration::get('PS_LANG_DEFAULT'));
 		foreach ($items as $item)
+		{
+			/** @var Product $item */
 			$sum += $item->getPrice($price_display_method) * $item->pack_quantity;
+		}
+
 		return $sum;
 	}
 
@@ -138,6 +142,7 @@ class PackCore extends Product
 
 		foreach ($items as $item)
 		{
+			/** @var Product $item */
 			// Updated for 1.5.0
 			if (Product::getQuantity($item->id) < $item->pack_quantity && !$item->isAvailableWhenOutOfStock((int)$item->out_of_stock))
 				return false;

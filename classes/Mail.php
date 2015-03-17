@@ -351,6 +351,7 @@ class MailCore extends ObjectModel
 				$mail->id_lang = (int)$id_lang;
 				foreach (array_merge($to_list->getTo(), $to_list->getCc(), $to_list->getBcc()) as $recipient)
 				{
+					/** @var Swift_Address $recipient */
 					$mail->id = null;
 					$mail->recipient = substr($recipient->getAddress(), 0, 126);
 					$mail->add();

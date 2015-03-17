@@ -1268,8 +1268,11 @@ class CartRuleCore extends ObjectModel
 			$cart_rules = ObjectModel::hydrateCollection('CartRule', $result);
 			if ($cart_rules)
 				foreach ($cart_rules as $cart_rule)
+				{
+					/** @var CartRule $cart_rule */
 					if ($cart_rule->checkValidity($context, false, false))
 						$context->cart->addCartRule($cart_rule->id);
+				}
 		}
 	}
 

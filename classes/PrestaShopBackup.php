@@ -135,9 +135,9 @@ class PrestaShopBackupCore
 		return @filemtime($backupdir.DIRECTORY_SEPARATOR.$filename);
 	}
 	/**
-	 * Get the URL used to retreive this backup file
+	 * Get the URL used to retrieve this backup file
 	 *
-	 * @return The url used to request the backup file
+	 * @return string The url used to request the backup file
 	 */
 	public function getBackupURL()
 	{

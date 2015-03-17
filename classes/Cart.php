@@ -2711,6 +2711,7 @@ class CartCore extends ObjectModel
 				if (!isset(self::$_carriers[$row['id_carrier']]))
 					self::$_carriers[$row['id_carrier']] = new Carrier((int)$row['id_carrier']);
 
+				/** @var Carrier $carrier */
 				$carrier = self::$_carriers[$row['id_carrier']];
 
 				$shipping_method = $carrier->getShippingMethod();
@@ -2866,6 +2867,8 @@ class CartCore extends ObjectModel
 		if ($carrier->shipping_external)
 		{
 			$module_name = $carrier->external_module_name;
+
+			/** @var CarrierModule $module */
 			$module = Module::getInstanceByName($module_name);
 
 			if (Validate::isLoadedObject($module))
@@ -2951,6 +2954,8 @@ class CartCore extends ObjectModel
 
 	/**
 	 * @deprecated 1.5.0
+	 * @param CartRule $obj
+	 * @return bool|string
 	 */
 	public function checkDiscountValidity($obj, $discounts, $order_total, $products, $check_cart_discount = false)
 	{

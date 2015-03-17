@@ -37,6 +37,10 @@ class WebserviceSpecificManagementSearchCore implements WebserviceSpecificManage
 	 * GETTERS & SETTERS
 	 * ------------------------------------------------ */
 
+	/**
+	 * @param WebserviceOutputBuilderCore $obj
+	 * @return WebserviceSpecificManagementInterface
+	 */
 	public function setObjectOutput(WebserviceOutputBuilderCore $obj)
 	{
 		$this->objOutput = $obj;

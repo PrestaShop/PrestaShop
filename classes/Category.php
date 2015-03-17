@@ -322,6 +322,7 @@ class CategoryCore extends ObjectModel
 		$all_cat[] = $this;
 		foreach ($all_cat as $cat)
 		{
+			/** @var Category $cat */
 			$cat->deleteLite();
 			if (!$this->hasMultishopEntries())
 			{
@@ -1691,7 +1692,10 @@ class CategoryCore extends ObjectModel
 		$return = Db::getInstance()->execute($sql);
 		// we have to update position for every new entries
 		foreach ($tab_categories as $category)
+		{
+			/** @var Category $category */
 			$category->addPosition(Category::getLastPosition($category->id_parent, $id_shop), $id_shop);
+		}
 
 		return $return;
 	}

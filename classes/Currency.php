@@ -410,8 +410,11 @@ class CurrencyCore extends ObjectModel
 
 		$currencies = Currency::getCurrencies(true, false, true);
 		foreach ($currencies as $currency)
+		{
+			/** @var Currency $currency */
 			if ($currency->id != $default_currency->id)
 				$currency->refreshCurrency($feed->list, $isoCodeSource, $default_currency);
+		}
 	}
 
 	/**
