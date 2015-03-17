@@ -141,9 +141,9 @@
 						</span>
 					</a>
 				{if isset($sql) && $sql}
-					{assign var=sqlManager value=Profile::getProfileAccess(Context::getContext()->employee->id_profile, Tab::getIdFromClassName('AdminRequestSql'))}
+					{assign var=sql_manager value=Profile::getProfileAccess(Context::getContext()->employee->id_profile, Tab::getIdFromClassName('AdminRequestSql'))}
 
-					{if $sqlManager.view == 1}
+					{if $sql_manager.view == 1}
 						<a class="list-toolbar-btn" href="javascript:void(0);" onclick="$('.leadin').first().append('<div class=\'alert alert-info\'>' + $('#sql_query').val() + '</div>'); $(this).attr('onclick', '');">
 							<span class="label-tooltip" data-toggle="tooltip" data-original-title="{l s='Show SQL query'}" data-html="true" data-placement="top" >
 								<i class="process-icon-terminal"></i>
