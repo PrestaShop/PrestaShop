@@ -482,6 +482,47 @@ class CategoryCore extends ObjectModel
 		return $categories;
 	}
 
+	public static function getAllCategoriesName($root_category = null, $id_lang = false, $active = true, $groups = null,
+												$use_shop_restriction = true, $sql_filter = '', $sql_sort = '', $sql_limit = '')
+	{
+		if (isset($root_category) && !Validate::isInt($root_category))
+			die(Tools::displayError());
+
+		if (!Validate::isBool($active))
+			die(Tools::displayError());
+
+		if (isset($groups) && Group::isFeatureActive() && !is_array($groups))
+			$groups = (array)$groups;
+
+		$cache_id = 'Category::getAllCategoriesName_'.md5((int)$root_category.(int)$id_lang.(int)$active.(int)$use_shop_restriction
+			.(isset($groups) && Group::isFeatureActive() ? implode('', $groups) : ''));
+
+		if (!Cache::isStored($cache_id))
+		{
+			$result = Db::getInstance()->executeS('
+				SELECT c.id_category, cl.name
+				FROM `'._DB_PREFIX_.'category` c
+				'.($use_shop_restriction ? Shop::addSqlAssociation('category', 'c') : '').'
+				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').'
+				'.(isset($groups) && Group::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON c.`id_category` = cg.`id_category`' : '').'
+				'.(isset($root_category) ? 'RIGHT JOIN `'._DB_PREFIX_.'category` c2 ON c2.`id_category` = '.(int)$root_category.' AND c.`nleft` >= c2.`nleft` AND c.`nright` <= c2.`nright`' : '').'
+				WHERE 1 '.$sql_filter.' '.($id_lang ? 'AND `id_lang` = '.(int)$id_lang : '').'
+				'.($active ? ' AND c.`active` = 1' : '').'
+				'.(isset($groups) && Group::isFeatureActive() ? ' AND cg.`id_group` IN ('.implode(',', $groups).')' : '').'
+				'.(!$id_lang || (isset($groups) && Group::isFeatureActive()) ? ' GROUP BY c.`id_category`' : '').'
+				'.($sql_sort != '' ? $sql_sort : ' ORDER BY c.`level_depth` ASC').'
+				'.($sql_sort == '' && $use_shop_restriction ? ', category_shop.`position` ASC' : '').'
+				'.($sql_limit != '' ? $sql_limit : '')
+			);
+
+			Cache::store($cache_id, $result);
+		}
+		else
+			$result = Cache::retrieve($cache_id);
+
+		return $result;
+	}
+
 	public static function getNestedCategories($root_category = null, $id_lang = false, $active = true, $groups = null,
 		$use_shop_restriction = true, $sql_filter = '', $sql_sort = '', $sql_limit = '')
 	{
@@ -534,8 +575,10 @@ class CategoryCore extends ObjectModel
 
 			Cache::store($cache_id, $categories);
 		}
+		else
+			$categories = Cache::retrieve($cache_id);
 
-		return Cache::retrieve($cache_id);
+		return $categories;
 	}
 
 	public static function getSimpleCategories($id_lang)
@@ -750,9 +793,10 @@ class CategoryCore extends ObjectModel
 
 	/**
 	 *
-	 * @param int $id_parent
-	 * @param int $id_lang
+	 * @param int  $id_parent
+	 * @param int  $id_lang
 	 * @param bool $active
+	 * @param bool $id_shop
 	 * @return array
 	 */
 	public static function getChildren($id_parent, $id_lang, $active = true, $id_shop = false)
@@ -772,6 +816,35 @@ class CategoryCore extends ObjectModel
 			'.($active ? 'AND `active` = 1' : '').'
 			GROUP BY c.`id_category`
 			ORDER BY category_shop.`position` ASC';
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+			Cache::store($cache_id, $result);
+		}
+		return Cache::retrieve($cache_id);
+	}
+
+	/**
+	 *
+	 * @param int  $id_parent
+	 * @param int  $id_lang
+	 * @param bool $active
+	 * @param bool $id_shop
+	 * @return array
+	 */
+	public static function hasChildren($id_parent, $id_lang, $active = true, $id_shop = false)
+	{
+		if (!Validate::isBool($active))
+			die(Tools::displayError());
+
+		$cache_id = 'Category::hasChildren_'.(int)$id_parent.'-'.(int)$id_lang.'-'.(bool)$active.'-'.(int)$id_shop;
+		if (!Cache::isStored($cache_id))
+		{
+			$query = 'SELECT c.id_category
+			FROM `'._DB_PREFIX_.'category` c
+			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').')
+			'.Shop::addSqlAssociation('category', 'c').'
+			WHERE `id_lang` = '.(int)$id_lang.'
+			AND c.`id_parent` = '.(int)$id_parent.'
+			'.($active ? 'AND `active` = 1' : '').' LIMIT 1';
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 			Cache::store($cache_id, $result);
 		}

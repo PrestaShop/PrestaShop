@@ -35,6 +35,7 @@ class TreeCore
 	protected $_attributes;
 	private   $_context;
 	protected $_data;
+	protected $_data_search;
 	protected $_headerTemplate;
 	private   $_id;
 	protected $_node_folder_template;
@@ -44,6 +45,7 @@ class TreeCore
 	/** @var string */
 	private   $_template_directory;
 	private   $_title;
+	private   $_no_js;
 
 	/** @var TreeToolbar|ITreeToolbar */
 	private $_toolbar;
@@ -121,6 +123,23 @@ class TreeCore
 			$this->_context = Context::getContext();
 
 		return $this->_context;
+	}
+
+	public function setDataSearch($value)
+	{
+		if (!is_array($value) && !$value instanceof Traversable)
+			throw new PrestaShopException('Data value must be an traversable array');
+
+		$this->_data_search = $value;
+		return $this;
+	}
+
+	public function getDataSearch()
+	{
+		if (!isset($this->_data_search))
+			$this->_data_search = array();
+
+		return $this->_data_search;
 	}
 
 	public function setData($value)
@@ -259,6 +278,12 @@ class TreeCore
 			return $this->getTemplateDirectory().$template;
 	}
 
+	public function setNoJS($value)
+	{
+		$this->_no_js = $value;
+		return $this;
+	}
+
 	public function setTitle($value)
 	{
 		$this->_title = $value;
@@ -287,7 +312,12 @@ class TreeCore
 	public function getToolbar()
 	{
 		if (isset($this->_toolbar))
-			$this->_toolbar->setData($this->getData());
+		{
+			if ($this->getDataSearch())
+				$this->_toolbar->setData($this->getDataSearch());
+			else
+				$this->_toolbar->setData($this->getData());
+		}
 
 		return $this->_toolbar;
 	}
@@ -323,7 +353,8 @@ class TreeCore
 
 		$js_path = __PS_BASE_URI__.$admin_webpath.'/themes/'.$bo_theme.'/js/tree.js';
 		if ($this->getContext()->controller->ajax)
-			$html = '<script type="text/javascript" src="'.$js_path.'"></script>';
+			if (!$this->_no_js)
+				$html = '<script type="text/javascript" src="'.$js_path.'"></script>';
 		else
 			$this->getContext()->controller->addJs($js_path);
 

@@ -448,6 +448,23 @@ class AdminProductsControllerCore extends AdminController
 		return $result;
 	}
 
+	public function ajaxProcessGetCategoryTree()
+	{
+		$category = Tools::getValue('category', Category::getRootCategory()->id);
+		$fullTree = Tools::getValue('fullTree', 0);
+		$selected = Tools::getValue('selected', array());
+		$tree = new HelperTreeCategories('subtree_associated_categories');
+		$tree->setTemplate('subtree_associated_categories.tpl')
+			->setUseCheckBox(true)
+			->setUseSearch(true)
+			->setSelectedCategories($selected)
+			->setFullTree($fullTree)
+			->setChildrenOnly(true)
+			->setNoJS(true)
+			->setRootCategory($category);
+		die($tree->render());
+	}
+
 	public function ajaxProcessGetCountriesOptions()
 	{
 		if (!$res = Country::getCountriesByIdShop((int)Tools::getValue('id_shop'), (int)$this->context->language->id))

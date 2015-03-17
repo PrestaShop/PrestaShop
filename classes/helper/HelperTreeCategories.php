@@ -35,10 +35,12 @@ class HelperTreeCategoriesCore extends TreeCore
 	private $_lang;
 	private $_root_category;
 	private $_selected_categories;
+	private $_full_tree = false;
 	private $_shop;
 	private $_use_checkbox;
 	private $_use_search;
 	private $_use_shop_restriction;
+	private $_children_only = false;
 
 	public function __construct($id, $title = null, $root_category = null,
 		$lang = null, $use_shop_restriction = true)
@@ -55,14 +57,79 @@ class HelperTreeCategoriesCore extends TreeCore
 		$this->setUseShopRestriction($use_shop_restriction);
 	}
 
+	private function fillTree(&$categories, $id_category)
+	{
+		$tree = array();
+		foreach($categories[$id_category] as $category)
+		{
+			$tree[$category['id_category']] = $category;
+			if (!empty($categories[$category['id_category']]))
+				$tree[$category['id_category']]['children'] = $this->fillTree($categories, $category['id_category']);
+			else if ($result = Category::hasChildren($category['id_category'], $this->getLang(), false, $this->getShop()->id))
+				$tree[$category['id_category']]['children'] = array($result[0]['id_category'] => $result[0]);
+		}
+		return $tree;
+	}
+
 	public function getData()
 	{
 		if (!isset($this->_data))
-			$this->setData(Category::getNestedCategories(
-				$this->getRootCategory(), $this->getLang(), false, null, $this->useShopRestriction()));
+		{
+			if ($this->_full_tree)
+			{
+				$this->setData(Category::getNestedCategories(
+					$this->getRootCategory(), $this->getLang(), false, null, $this->useShopRestriction()));
+				$this->setDataSearch(Category::getAllCategoriesName($this->getRootCategory(), $this->getLang(), false, null, $this->useShopRestriction()));
+			}
+			else if ($this->_children_only)
+			{
+				$categories[(int)$this->getRootCategory()] = Category::getChildren($this->getRootCategory(), $this->getLang(), false, $this->getShop()->id);
+				$children = $this->fillTree($categories, (int)$this->getRootCategory());
+				$this->setData($children);
+			}
+			else
+			{
+				$selected_categories = $this->getSelectedCategories();
+				$categories[(int)$this->getRootCategory()] = Category::getChildren($this->getRootCategory(), $this->getLang(), false, $this->getShop()->id);
+				foreach($selected_categories as $selected_category)
+				{
+					$current_category = Category::getChildren($selected_category, $this->getLang(), false, $this->getShop()->id);
+					if (!empty($current_category))
+						$categories[$selected_category] = $current_category;
+				}
+
+				$tree = Category::getCategoryInformations(array($this->getRootCategory()), $this->getLang());
+
+				$children = $this->fillTree($categories, (int)$this->getRootCategory());
+
+				if (!empty($children))
+					$tree[$this->getRootCategory()]['children'] = $children;
+
+				$this->setData($tree);
+				$this->setDataSearch(Category::getAllCategoriesName($this->getRootCategory(), $this->getLang(), false, null, $this->useShopRestriction()));
+			}
+		}
 
 		return $this->_data;
 	}
+
+	public function setChildrenOnly($value)
+	{
+		$this->_children_only = $value;
+		return $this;
+	}
+
+	public function setFullTree($value)
+	{
+		$this->_full_tree = $value;
+		return $this;
+	}
+
+	public function getFullTree()
+	{
+		return $this->_full_tree;
+	}
+
 
 	public function setDisabledCategories($value)
 	{
