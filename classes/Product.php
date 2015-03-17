@@ -5346,7 +5346,7 @@ class ProductCore extends ObjectModel
 	 * @param integer $id_product_attribute
 	 * @return string
 	 */
-	public function getAnchor($id_product_attribute)
+	public function getAnchor($id_product_attribute, $with_id = false)
 	{
 		$attributes = Product::getAttributesParams($this->id, $id_product_attribute);
 		$anchor = '#';
@@ -5355,7 +5355,7 @@ class ProductCore extends ObjectModel
 		{
 			foreach ($a as &$b)
 				$b = str_replace($sep, '_', Tools::link_rewrite($b));
-			$anchor .= '/'.(isset($a['id_attribute']) && $a['id_attribute']? (int)$a['id_attribute'].$sep : '').$a['group'].$sep.$a['name'];
+			$anchor .= '/'.($with_id && isset($a['id_attribute']) && $a['id_attribute']? (int)$a['id_attribute'].$sep : '').$a['group'].$sep.$a['name'];
 		}
 		return $anchor;
 	}
