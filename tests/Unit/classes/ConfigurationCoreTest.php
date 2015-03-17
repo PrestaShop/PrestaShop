@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Tests\Unit\Classes;
 use PrestaShop\PrestaShop\Tests\TestCase\PrestaShopPHPUnit;
 use Configuration;
 
-class	ConfigurationCoreTest extends PrestaShopPHPUnit
+class ConfigurationCoreTest extends PrestaShopPHPUnit
 {
 	protected function setUp()
 	{

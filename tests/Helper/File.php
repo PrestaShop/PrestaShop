@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Tests\Helper;
 
-class	File
+class File
 {
 
 	/**

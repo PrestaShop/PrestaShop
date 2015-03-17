@@ -309,13 +309,16 @@ class MediaCore
 		// check if js files exists, if not try to load query from ajax.googleapis.com
 
 		$return = array();
+
 		if (@filemtime($file_uri) || (defined('_PS_HOST_MODE_') && @filemtime($file_uri_host_mode)))
 			$return[] = Media::getJSPath($file);
 		else
-			$return[] = Media::getJSPath(Tools::getCurrentUrlProtocolPrefix().'ajax.googleapis.com/ajax/libs/jquery/'.$version.'/jquery'.($minifier ? '.min.js' : '.js'));
+			$return[] = Media::getJSPath(Tools::getCurrentUrlProtocolPrefix().'ajax.googleapis.com/ajax/libs/jquery/'
+				.$version.'/jquery'.($minifier ? '.min.js' : '.js'));
 
 		if ($add_no_conflict)
-			$return[] = Media::getJSPath(Context::getContext()->link->getMediaLink(_PS_JS_DIR_.'jquery/jquery.noConflict.php?version='.$version));
+			$return[] = Media::getJSPath(Context::getContext()->shop->getBaseURL(true, false)._PS_JS_DIR_
+				.'jquery/jquery.noConflict.php?version='.$version);
 
 		//added query migrate for compatibility with new version of jquery will be removed in ps 1.6
 		$return[] = Media::getJSPath(_PS_JS_DIR_.'jquery/jquery-migrate-1.2.1.min.js');
