@@ -39,7 +39,7 @@
 	{elseif $input.type == 'pdf_order_return'}
 		<p>
 			{if $state_order_return == 2}
-				<a class="btn" href="{$link->getPageLink('pdf-order-return', true, NULL, "id_order_return={$id_order_return|intval}")|escape:'html':'UTF-8'}">
+				<a class="btn" href="{$link->getPageLink('pdf-order-return', true, NULL, "id_order_return={$id_order_return|intval}&adtoken={Tools::getAdminTokenLite('AdminReturn')}&id_employee={$employee->id|intval}")|escape:'html':'UTF-8'}">
 					<i class="icon-file-text"></i> {l s='Print out'}
 				</a>
 			{else}
