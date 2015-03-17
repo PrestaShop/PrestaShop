@@ -484,13 +484,23 @@ class ShopCore extends ObjectModel
 	/**
 	 * Get shop URL
 	 *
-	 * @return string
+	 * @param string $auto_secure_mode if set to true, secure mode will be checked
+	 * @param string $add_base_uri if set to true, shop base uri will be added
+	 * @return string complete base url of current shop
 	 */
-	public function getBaseURL()
+	public function getBaseURL($auto_secure_mode = false, $add_base_uri = true)
 	{
-		if (!$this->domain)
+		if (($auto_secure_mode && Tools::usingSecureMode() && !$this->domain_ssl) || !$this->domain)
 			return false;
-		return 'http://'.$this->domain.$this->getBaseURI();
+
+		$url = array();
+		$url['protocol'] = $auto_secure_mode && Tools::usingSecureMode() ? 'https://' : 'http://';
+		$url['domain'] = $auto_secure_mode && Tools::usingSecureMode() ? $this->domain_ssl : $this->domain;
+
+		if ($add_base_uri)
+			$url['base_uri'] = $this->getBaseURI();
+
+		return implode('', $url);
 	}
 
 	/**
