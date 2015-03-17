@@ -125,7 +125,11 @@ class AdminModulesControllerCore extends AdminController
 			$xml_modules = @simplexml_load_file(_PS_ROOT_DIR_.Module::CACHE_FILE_MODULES_LIST);
 		if ($xml_modules)
 			foreach ($xml_modules->children() as $xml_module)
+			{
+				/** @var SimpleXMLElement $xml_module */
 				foreach ($xml_module->children() as $module)
+				{
+					/** @var SimpleXMLElement $module */
 					foreach ($module->attributes() as $key => $value)
 					{
 						if ($xml_module->attributes() == 'native' && $key == 'name')
@@ -133,7 +137,8 @@ class AdminModulesControllerCore extends AdminController
 						if ($xml_module->attributes() == 'partner' && $key == 'name')
 							$this->list_partners_modules[] = (string)$value;
 					}
-
+				}
+			}
 	}
 
 	public function checkCategoriesNames($a, $b)
@@ -1438,6 +1443,8 @@ class AdminModulesControllerCore extends AdminController
 						continue;
 					require_once(_PS_MODULE_DIR_.$module->name.'/'.$module->name.'.php');
 				}
+
+				/** @var Module $object */
 				if ($object = new $module->name())
 				{
 					$object->runUpgradeModule();

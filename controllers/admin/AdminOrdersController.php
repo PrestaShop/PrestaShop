@@ -268,6 +268,7 @@ class AdminOrdersControllerCore extends AdminController
 	{
 		if ($this->display == 'view')
 		{
+			/** @var Order $order */
 			$order = $this->loadObject();
 			$customer = $this->context->customer;
 
@@ -1394,6 +1395,7 @@ class AdminOrdersControllerCore extends AdminController
 								$order_invoices_collection = $order->getInvoicesCollection();
 								foreach ($order_invoices_collection as $order_invoice)
 								{
+									/** @var OrderInvoice $order_invoice */
 									if ($discount_value > $order_invoice->total_paid_tax_incl)
 										$this->errors[] = Tools::displayError('The discount value is greater than the order invoice total.').$order_invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, (int)$order->id_shop).')';
 									else
@@ -2145,6 +2147,7 @@ class AdminOrdersControllerCore extends AdminController
 		$invoice_array = array();
 		foreach ($invoice_collection as $invoice)
 		{
+			/** @var OrderInvoice $invoice */
 			$invoice->name = $invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, (int)$order->id_shop);
 			$invoice_array[] = $invoice;
 		}
@@ -2414,6 +2417,7 @@ class AdminOrdersControllerCore extends AdminController
 		$invoice_array = array();
 		foreach ($invoice_collection as $invoice)
 		{
+			/** @var OrderInvoice $invoice */
 			$invoice->name = $invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, (int)$order->id_shop);
 			$invoice_array[] = $invoice;
 		}
@@ -2512,6 +2516,7 @@ class AdminOrdersControllerCore extends AdminController
 		$invoice_array = array();
 		foreach ($invoice_collection as $invoice)
 		{
+			/** @var OrderInvoice $invoice */
 			$invoice->name = $invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, (int)$order->id_shop);
 			$invoice_array[] = $invoice;
 		}
@@ -2628,6 +2633,10 @@ class AdminOrdersControllerCore extends AdminController
 			)));
 	}
 
+	/**
+	 * @param Order $order
+	 * @return array
+	 */
 	protected function getProducts($order)
 	{
 		$products = $order->getProducts();
@@ -2651,6 +2660,11 @@ class AdminOrdersControllerCore extends AdminController
 		return $products;
 	}
 
+	/**
+	 * @param OrderDetail $order_detail
+	 * @param int $qty_cancel_product
+	 * @param bool $delete
+	 */
 	protected function reinjectQuantity($order_detail, $qty_cancel_product, $delete = false)
 	{
 		// Reinject product
@@ -2745,6 +2759,11 @@ class AdminOrdersControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('This product cannot be re-stocked.');
 	}
 
+	/**
+	 * @param OrderInvoice $order_invoice
+	 * @param float $value_tax_incl
+	 * @param float $value_tax_excl
+	 */
 	protected function applyDiscountOnInvoice($order_invoice, $value_tax_incl, $value_tax_excl)
 	{
 		// Update OrderInvoice

@@ -189,6 +189,7 @@ class AdminCartsControllerCore extends AdminController
 
 	public function renderView()
 	{
+		/** @var Cart $cart */
 		if (!($cart = $this->loadObject(true)))
 			return;
 		$customer = new Customer($cart->id_customer);

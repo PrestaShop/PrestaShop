@@ -428,7 +428,8 @@ class AdminCarriersControllerCore extends AdminController
 							$current_carrier = new Carrier($id);
 							if (!Validate::isLoadedObject($current_carrier))
 								throw new PrestaShopException('Cannot load Carrier object');
-							
+
+							/** @var Carrier $new_carrier */
 							// Duplicate current Carrier
 							$new_carrier = $current_carrier->duplicateObject();
 							if (Validate::isLoadedObject($new_carrier))
@@ -598,6 +599,10 @@ elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools
 		$this->fields_value['id_tax_rules_group'] = $this->object->getIdTaxRulesGroup($this->context);
 	}
 
+	/**
+	 * @param Carrier $object
+	 * @return int
+	 */
 	protected function beforeDelete($object)
 	{
 		return $object->isUsed();
@@ -618,6 +623,7 @@ elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools
 
 	public function changeZones($id)
 	{
+		/** @var Carrier $carrier */
 		$carrier = new $this->className($id);
 		if (!Validate::isLoadedObject($carrier))
 			die (Tools::displayError('The object cannot be loaded.'));

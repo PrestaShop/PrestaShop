@@ -102,6 +102,7 @@ class AdminSearchControllerCore extends AdminController
 						$this->_list['orders'] = array();
 						foreach ($orders as $order)
 						{
+							/** @var Order $order */
 							$row = get_object_vars($order);
 							$row['id_order'] = $row['id'];
 							$customer = $order->getCustomer();

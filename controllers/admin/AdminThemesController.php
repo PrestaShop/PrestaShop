@@ -598,6 +598,7 @@ class AdminThemesControllerCore extends AdminController
 			}
 		}
 
+		/** @var Theme $theme */
 		$theme = parent::processAdd();
 		if ((int)$theme->product_per_page == 0)
 		{
@@ -667,6 +668,7 @@ class AdminThemesControllerCore extends AdminController
 
 	public function processDelete()
 	{
+		/** @var Theme $obj */
 		$obj = $this->loadObject();
 		if ($obj)
 		{
@@ -831,6 +833,12 @@ class AdminThemesControllerCore extends AdminController
 		return false;
 	}
 
+	/**
+	 * @param ZipArchive $obj
+	 * @param string $file
+	 * @param string $server_path
+	 * @param string $archive_path
+	 */
 	private function archiveThisFile($obj, $file, $server_path, $archive_path)
 	{
 		if (is_dir($server_path.$file))
@@ -2811,6 +2819,7 @@ class AdminThemesControllerCore extends AdminController
 
 	public function processResponsive()
 	{
+		/** @var Theme $object */
 		if (Validate::isLoadedObject($object = $this->loadObject()))
 		{
 			if ($object->toggleResponsive())
@@ -2828,6 +2837,7 @@ class AdminThemesControllerCore extends AdminController
 
 	public function processDefaultLeftColumn()
 	{
+		/** @var Theme $object */
 		if (Validate::isLoadedObject($object = $this->loadObject()))
 		{
 			if ($object->toggleDefaultLeftColumn())
@@ -2845,6 +2855,7 @@ class AdminThemesControllerCore extends AdminController
 
 	public function processDefaultRightColumn()
 	{
+		/** @var Theme $object */
 		if (Validate::isLoadedObject($object = $this->loadObject()))
 		{
 			if ($object->toggleDefaultRightColumn())

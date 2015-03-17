@@ -221,6 +221,7 @@ class AdminStatesControllerCore extends AdminController
 		{
 			if ($this->tabAccess['delete'] === '1')
 			{
+				/** @var State $object */
 				if (Validate::isLoadedObject($object = $this->loadObject()))
 				{
 					if (!$object->isUsed())

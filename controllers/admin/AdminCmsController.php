@@ -351,6 +351,7 @@ class AdminCmsControllerCore extends AdminController
 		}
 		elseif (Tools::isSubmit('way') && Tools::isSubmit('id_cms') && (Tools::isSubmit('position')))
 		{
+			/** @var CMS $object */
 			if ($this->tabAccess['edit'] !== '1')
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 			elseif (!Validate::isLoadedObject($object = $this->loadObject()))

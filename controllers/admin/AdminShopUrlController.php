@@ -416,6 +416,7 @@ class AdminShopUrlControllerCore extends AdminController
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
+				/** @var ShopUrl $object */
 				if (Validate::isLoadedObject($object = $this->loadObject()))
 				{
 					if (!$object->main)
@@ -443,6 +444,7 @@ class AdminShopUrlControllerCore extends AdminController
 
 	public function processSave()
 	{
+		/** @var ShopUrl $object */
 		$object = $this->loadObject(true);
 		if ($object->canAddThisUrl(Tools::getValue('domain'), Tools::getValue('domain_ssl'), Tools::getValue('physical_uri'), Tools::getValue('virtual_uri')))
 			$this->errors[] = Tools::displayError('A shop URL that uses this domain already exists.');
@@ -463,6 +465,7 @@ class AdminShopUrlControllerCore extends AdminController
 
 	public function processAdd()
 	{
+		/** @var ShopUrl $object */
 		$object = $this->loadObject(true);
 
 		if ($object->canAddThisUrl(Tools::getValue('domain'), Tools::getValue('domain_ssl'), Tools::getValue('physical_uri'), Tools::getValue('virtual_uri')))
@@ -492,6 +495,10 @@ class AdminShopUrlControllerCore extends AdminController
 		return parent::processUpdate();
 	}
 
+	/**
+	 * @param ShopUrl $object
+	 * @return void
+	 */
 	protected function afterUpdate($object)
 	{
 		if ($object->id && Tools::getValue('main'))
