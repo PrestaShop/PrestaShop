@@ -337,11 +337,14 @@ class AdminSuppliersControllerCore extends AdminController
 	{
 		parent::initToolbar();
 		$this->addPageHeaderToolBarModulesListButton();
-		if (empty($this->display))
-			$this->toolbar_btn['import'] = array(
-				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=suppliers',
-				'desc' => $this->l('Import')
-			);
+		if (empty($this->display)) 
+		{
+			if ($this->can_import) 
+				$this->toolbar_btn['import'] = array(
+					'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=suppliers',
+					'desc' => $this->l('Import')
+				);
+		}
 	}
 
 	public function renderView()
