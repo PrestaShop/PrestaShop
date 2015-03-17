@@ -27,30 +27,13 @@
 namespace PrestaShop\PrestaShop\Tests\Unit\Classes;
 
 use PrestaShop\PrestaShop\Tests\TestCase\PrestaShopPHPUnit;
-use PrestaShopAutoload;
+use Media;
 
-class PrestaShopAutoloadTest extends PrestaShopPHPUnit
+class MediaCoreTest extends PrestaShopPHPUnit
 {
-	private $file_index_content = null;
-
-	protected function setUp()
-	{
-		$this->file_index = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.PrestaShopAutoload::INDEX_FILE;
-		$this->file_index_content = md5(file_get_contents($this->file_index));
-	}
-
-	public function testGenerateIndex()
-	{
-		unlink($this->file_index);
-		PrestaShopAutoload::getInstance()->generateIndex();
-		$this->assertTrue(file_exists($this->file_index));
-		$this->assertEquals($this->file_index_content, md5(file_get_contents($this->file_index)));
-	}
-
-	public function testLoad()
-	{
-		PrestaShopAutoload::getInstance()->load('RequestSql');
-		$this->assertTrue(class_exists('RequestSqlCore', false));
-		$this->assertTrue(class_exists('RequestSql', false));
-	}
+    public function testCorrectJQueryNoConflictURL()
+    {
+        $result = Media::getJqueryPath('1.11');
+        $this->assertEquals(true, in_array('http://localhost/prestashop.unit.test/js/jquery/jquery.noConflict.php?version=1.11', $result));
+    }
 }

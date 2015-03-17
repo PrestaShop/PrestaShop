@@ -194,7 +194,7 @@ class ToolsCore
 	 * getShopDomain returns domain name according to configuration and ignoring ssl
 	 *
 	 * @param boolean $http if true, return domain name with protocol
-	 * @param boolean $entities if true,
+	 * @param boolean $entities if true, convert special chars to HTML entities
 	 * @return string domain
 	 */
 	public static function getShopDomain($http = false, $entities = false)
@@ -212,7 +212,7 @@ class ToolsCore
 	 * getShopDomainSsl returns domain name according to configuration and depending on ssl activation
 	 *
 	 * @param boolean $http if true, return domain name with protocol
-	 * @param boolean $entities if true,
+	 * @param boolean $entities if true, convert special chars to HTML entities
 	 * @return string domain
 	 */
 	public static function getShopDomainSsl($http = false, $entities = false)

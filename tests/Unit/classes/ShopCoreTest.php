@@ -27,30 +27,20 @@
 namespace PrestaShop\PrestaShop\Tests\Unit\Classes;
 
 use PrestaShop\PrestaShop\Tests\TestCase\PrestaShopPHPUnit;
-use PrestaShopAutoload;
+use Shop;
+use Context;
 
-class PrestaShopAutoloadTest extends PrestaShopPHPUnit
+class ShopCoreTest extends PrestaShopPHPUnit
 {
-	private $file_index_content = null;
+    protected $context;
 
-	protected function setUp()
-	{
-		$this->file_index = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.PrestaShopAutoload::INDEX_FILE;
-		$this->file_index_content = md5(file_get_contents($this->file_index));
-	}
+    protected function setUp()
+    {
+        $this->context = Context::getContext();
+    }
 
-	public function testGenerateIndex()
-	{
-		unlink($this->file_index);
-		PrestaShopAutoload::getInstance()->generateIndex();
-		$this->assertTrue(file_exists($this->file_index));
-		$this->assertEquals($this->file_index_content, md5(file_get_contents($this->file_index)));
-	}
-
-	public function testLoad()
-	{
-		PrestaShopAutoload::getInstance()->load('RequestSql');
-		$this->assertTrue(class_exists('RequestSqlCore', false));
-		$this->assertTrue(class_exists('RequestSql', false));
-	}
+    public function testGetBaseURL()
+    {
+        $this->assertEquals('http://localhost/prestashop.unit.test/', $this->context->shop->getBaseURL(true));
+    }
 }

@@ -112,7 +112,6 @@ class ToolsCoreTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($cleanedString, Tools::getValue('NON EXISTING KEY', $rawString));
 	}
 
-
 	public function testSpreadAmountExamples()
 	{
 		return array(
