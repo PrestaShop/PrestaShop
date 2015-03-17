@@ -669,7 +669,7 @@ class AdminManufacturersControllerCore extends AdminController
 			default:
 				parent::initToolbar();
 
-				if ( $this->canImport ) 
+				if ($this->can_import) 
 					$this->toolbar_btn['import'] = array(
 						'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=manufacturers',
 						'desc' => $this->l('Import')

@@ -571,7 +571,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				);
 		}
 
-			if ( $this->canImport ) 
+			if ($this->can_import) 
 				$this->toolbar_btn['import'] = array(
 						'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=combinations',
 						'desc' => $this->l('Import', null, null, false)
