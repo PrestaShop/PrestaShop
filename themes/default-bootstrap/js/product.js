@@ -1013,7 +1013,7 @@ function getProductAttribute()
 		$('#customizationForm').attr('action', customAction + request);
 	}
 
-	window.location = url + request;
+	window.location.replace(url + request);
 }
 
 function checkUrl()
@@ -1069,7 +1069,7 @@ function checkUrl()
 			}
 			// no combination found = removing attributes from url
 			else
-				window.location = url.substring(0, url.indexOf('#'));
+				window.location.replace(url.substring(0, url.indexOf('#')));
 		}
 	}
 	return false;
