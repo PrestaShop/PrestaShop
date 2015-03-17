@@ -203,16 +203,14 @@ class AdminCustomersControllerCore extends AdminController
 	public function initToolbar()
 	{
 		parent::initToolbar();
+
 		if (!$this->can_add_customer)
 			unset($this->toolbar_btn['new']);
-		elseif (!$this->display) //display import button only on listing
-		{
-			if ($this->can_import) 
-				$this->toolbar_btn['import'] = array(
-					'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=customers',
-					'desc' => $this->l('Import')
-				);
-		}
+		elseif (!$this->display && $this->can_import)
+			$this->toolbar_btn['import'] = array(
+				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=customers',
+				'desc' => $this->l('Import')
+			);
 	}
 
 	public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0, $limit = null, $id_lang_shop = null)
