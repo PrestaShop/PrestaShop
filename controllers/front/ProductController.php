@@ -436,16 +436,16 @@ class ProductControllerCore extends FrontController
 				}
 				if (!isset($groups[$row['id_attribute_group']])) {
 					if (Module::isInstalled('blocklayered') && Module::isEnabled('blocklayered'))
-					$groups[$row['id_attribute_group']] = array(
-						'group_name' => $row['group_name'],
+						$groups[$row['id_attribute_group']] = array(
+							'group_name' => $row['group_name'],
 							'group_url_name' => $row['group_url_name'],
 							'group_meta_title' => $row['group_meta_title'],
-						'name' => $row['public_group_name'],
+							'name' => $row['public_group_name'],
 							'url_name' => $row['url_name'],
 							'meta_title' => $row['meta_title'],
-						'group_type' => $row['group_type'],
-						'default' => -1,
-					);
+							'group_type' => $row['group_type'],
+							'default' => -1,
+						);
 					else
 						$groups[$row['id_attribute_group']] = array(
 							'group_name' => $row['group_name'],
