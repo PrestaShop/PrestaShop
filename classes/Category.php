@@ -838,7 +838,7 @@ class CategoryCore extends ObjectModel
 		$cache_id = 'Category::hasChildren_'.(int)$id_parent.'-'.(int)$id_lang.'-'.(bool)$active.'-'.(int)$id_shop;
 		if (!Cache::isStored($cache_id))
 		{
-			$query = 'SELECT c.id_category
+			$query = 'SELECT c.id_category, "" as name
 			FROM `'._DB_PREFIX_.'category` c
 			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category`'.Shop::addSqlRestrictionOnLang('cl').')
 			'.Shop::addSqlAssociation('category', 'c').'
