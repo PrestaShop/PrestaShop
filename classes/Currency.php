@@ -347,9 +347,9 @@ class CurrencyCore extends ObjectModel
 	 * Refresh the currency exchange rate
 	 * The XML file define exchange rate for each from a default currency ($isoCodeSource).
 	 *
-	 * @param $data XML content which contains all the exchange rates
-	 * @param $isoCodeSource The default currency used in the XML file
-	 * @param $defaultCurrency The default currency object
+	 * @param SimpleXMLElement $data XML content which contains all the exchange rates
+	 * @param string $isoCodeSource The default currency used in the XML file
+	 * @param Currency $defaultCurrency The default currency object
 	 */
 	public function refreshCurrency($data, $isoCodeSource, $defaultCurrency)
 	{

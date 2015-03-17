@@ -35,7 +35,7 @@ class PrestaShopAutoload
 	const INDEX_FILE = 'cache/class_index.php';
 
 	/**
-	 * @var Autoload
+	 * @var PrestaShopAutoload
 	 */
 	protected static $instance;
 

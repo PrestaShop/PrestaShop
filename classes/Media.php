@@ -447,7 +447,7 @@ class MediaCore
 	/**
 	* Combine Compress and Cache CSS (ccc) calls
 	*
-	* @param array css_files
+	* @param array $css_files
 	* @return array processed css_files
 	*/
 	public static function cccCss($css_files)
@@ -577,7 +577,7 @@ class MediaCore
 	/**
 	* Combine Compress and Cache (ccc) JS calls
 	*
-	* @param array js_files
+	* @param array $js_files
 	* @return array processed js_files
 	*/
 	public static function cccJS($js_files)

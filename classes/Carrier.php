@@ -230,8 +230,8 @@ class CarrierCore extends ObjectModel
 	/**
 	 * Get delivery prices for a given order
 	 *
-	 * @param floatval $totalWeight Order total weight
-	 * @param integer $id_zone Zone id (for customer delivery address)
+	 * @param float $total_weight Total order weight
+	 * @param int $id_zone Zone ID (for customer delivery address)
 	 * @return float Delivery price
 	 */
 	public function getDeliveryPriceByWeight($total_weight, $id_zone)
@@ -310,8 +310,9 @@ class CarrierCore extends ObjectModel
 	/**
 	 * Get delivery prices for a given order
 	 *
-	 * @param floatval $orderTotal Order total to pay
-	 * @param integer $id_zone Zone id (for customer delivery address)
+	 * @param float $order_total Order total to pay
+	 * @param int $id_zone Zone id (for customer delivery address)
+	 * @param int|null $id_currency
 	 * @return float Delivery price
 	 */
 	public function getDeliveryPriceByPrice($order_total, $id_zone, $id_currency = null)
@@ -349,10 +350,10 @@ class CarrierCore extends ObjectModel
 	/**
 	 * Check delivery prices for a given order
 	 *
-	 * @param id_carrier
-	 * @param floatval $orderTotal Order total to pay
-	 * @param integer $id_zone Zone id (for customer delivery address)
-	 * @param integer $id_currency
+	 * @param int $id_carrier
+	 * @param float $order_total Order total to pay
+	 * @param int $id_zone Zone id (for customer delivery address)
+	 * @param int|null $id_currency
 	 * @return float Delivery price
 	 */
 	public static function checkDeliveryPriceByPrice($id_carrier, $order_total, $id_zone, $id_currency = null)

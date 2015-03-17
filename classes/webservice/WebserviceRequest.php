@@ -178,7 +178,7 @@ class WebserviceRequestCore
 
 	/**
 	 * Save the class name for override used in getInstance()
-	 * @var ws_current_classname
+	 * @var string
 	 */
 	public static $ws_current_classname;
 

@@ -112,31 +112,31 @@ abstract class ModuleCore
 	 */
 	protected $local_path = null;
 
-	/** @var protected array filled with module errors */
+	/** @var array Array filled with module errors */
 	protected $_errors = array();
 
-	/** @var protected array filled with module success */
+	/** @var array Array  array filled with module success */
 	protected $_confirmations = array();
 
-	/** @var protected string main table used for modules installed */
+	/** @var string Main table used for modules installed */
 	protected $table = 'module';
 
-	/** @var protected string identifier of the main table */
+	/** @var string Identifier of the main table */
 	protected $identifier = 'id_module';
 
-	/** @var protected array cache filled with modules informations */
+	/** @var array Array cache filled with modules informations */
 	protected static $modules_cache;
 
-	/** @var protected array cache filled with modules instances */
+	/** @var array Array cache filled with modules instances */
 	protected static $_INSTANCE = array();
 
-	/** @var protected boolean filled with config xml generation mode */
+	/** @var bool Config xml generation mode */
 	protected static $_generate_config_xml_mode = false;
 
-	/** @var protected array filled with cache translations */
+	/** @var array Array filled with cache translations */
 	protected static $l_cache = array();
 
-	/** @var protected array filled with cache permissions (modules / employee profiles) */
+	/** @var array Array filled with cache permissions (modules / employee profiles) */
 	protected static $cache_permissions = array();
 
 	/** @var Context */
@@ -145,12 +145,12 @@ abstract class ModuleCore
 	/** @var Smarty_Data */
 	protected $smarty;
 
-	/** @var currentSmartySubTemplate */
+	/** @var Smarty_Internal_Template|null */
 	protected $current_subtemplate = null;
 
 	protected static $update_translations_after_install = true;
 
-	/** @var allow push */
+	/** @var bool If true, allow push */
 	public $allow_push;
 
 	public $push_time_limit = 180;
@@ -2343,7 +2343,9 @@ abstract class ModuleCore
 
 	/**
 	 * Get Unauthorized modules for a client group
-	 * @param integer group_id
+	 *
+	 * @param int $group_id
+	 * @return array|null
 	 */
 	public static function getAuthorizedModules($group_id)
 	{
@@ -2354,9 +2356,10 @@ abstract class ModuleCore
 	}
 
 	/**
-	 * Get id module by name
-	 * @param string name
-	 * @return integer id
+	 * Get ID module by name
+	 *
+	 * @param string $name
+	 * @return int Module ID
 	 */
 	public static function getModuleIdByName($name)
 	{

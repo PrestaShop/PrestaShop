@@ -2534,9 +2534,9 @@ class CartCore extends ObjectModel
 	/**
 	* Return shipping total for the cart
 	*
-	* @param array $delivery_option Array of the delivery option for each address
-	* @param booleal $use_tax
-	* @param Country $default_country
+	* @param array|null $delivery_option Array of the delivery option for each address
+	* @param bool $use_tax
+	* @param Country|null $default_country
 	* @return float Shipping total
 	*/
 	public function getTotalShippingCost($delivery_option = null, $use_tax = true, Country $default_country = null)
@@ -2562,14 +2562,15 @@ class CartCore extends ObjectModel
 	}
 
 	/**
-	* Return shipping total of a specific carriers for the cart
-	*
-	* @param int $id_carrier
-	* @param array $delivery_option Array of the delivery option for each address
-	* @param booleal $useTax
-	* @param Country $default_country
-	* @return float Shipping total
-	*/
+	 * Return shipping total of a specific carriers for the cart
+	 *
+	 * @param int $id_carrier
+	 * @param array $delivery_option Array of the delivery option for each address
+	 * @param bool $useTax
+	 * @param Country|null $default_country
+	 * @param array|null $delivery_option
+	 * @return float Shipping total
+	 */
 	public function getCarrierCost($id_carrier, $useTax = true, Country $default_country = null, $delivery_option = null)
 	{
 		if (is_null($delivery_option))
@@ -2607,11 +2608,12 @@ class CartCore extends ObjectModel
 	/**
 	 * Return package shipping cost
 	 *
-	 * @param integer $id_carrier Carrier ID (default : current carrier)
-	 * @param booleal $use_tax
-	 * @param Country $default_country
-	 * @param Array $product_list
-	 * @param array $product_list List of product concerned by the shipping. If null, all the product of the cart are used to calculate the shipping cost
+	 * @param int          $id_carrier      Carrier ID (default : current carrier)
+	 * @param bool         $use_tax
+	 * @param Country|null $default_country
+	 * @param array|null   $product_list    List of product concerned by the shipping.
+	 *                                      If null, all the product of the cart are used to calculate the shipping cost
+	 * @param int|null $id_zone
 	 *
 	 * @return float Shipping total
 	 */

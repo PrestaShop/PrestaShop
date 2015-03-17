@@ -364,10 +364,12 @@ class AddressFormatCore extends ObjectModel
 
 	/**
 	 * Generates the full address text
-	 * @param address is an instanciate object of Address class
-	 * @param patternrules is a defined rules array to avoid some pattern
-	 * @param newLine is a string containing the newLine format
-	 * @param separator is a string containing the separator format
+	 *
+	 * @param Address $address
+	 * @param array $patternRules A defined rules array to avoid some pattern
+	 * @param string $newLine A string containing the newLine format
+	 * @param string $separator A string containing the separator format
+	 * @param array $style
 	 * @return string
 	 */
 	public static function generateAddress(Address $address, $patternRules = array(), $newLine = "\r\n", $separator = ' ', $style = array())
@@ -470,7 +472,9 @@ class AddressFormatCore extends ObjectModel
 	/**
 	 * Returns address format fields in array by country
 	 *
-	 * @param Integer PS_COUNTRY.id if null using default country
+	 * @param int $id_country If null using PS_COUNTRY_DEFAULT
+	 * @param bool $split_all
+	 * @param bool $cleaned
 	 * @return Array String field address format
 	 */
 	public static function getOrderedAddressFields($id_country = 0, $split_all = false, $cleaned = false)
@@ -517,7 +521,7 @@ class AddressFormatCore extends ObjectModel
 	/**
 	 * Returns address format by country if not defined using default country
 	 *
-	 * @param Integer PS_COUNTRY.id
+	 * @param int $id_country
 	 * @return String field address format
 	 */
 	public static function getAddressCountryFormat($id_country = 0)
@@ -534,7 +538,7 @@ class AddressFormatCore extends ObjectModel
 	/**
 	 * Returns address format by country
 	 *
-	 * @param Integer PS_COUNTRY.id
+	 * @param int $id_country
 	 * @return String field address format
 	 */
 	public function getFormat($id_country)

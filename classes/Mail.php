@@ -42,10 +42,10 @@ class MailCore extends ObjectModel
 	/** @var string Subject */
 	public $subject;
 
-	/** @var unsigned integer Language ID */
+	/** @var int Language ID */
 	public $id_lang;
 
-	/** @var timestamp Date */
+	/** @var int Timestamp */
 	public $date_add;
 
 	/**

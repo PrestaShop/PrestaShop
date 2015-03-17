@@ -71,7 +71,7 @@ class ModuleFrontControllerCore extends FrontController
 	/**
 	 * Finds and returns module front template that take the highest precedence
 	 *
-	 * @param $template Template filename
+	 * @param string $template Template filename
 	 * @return string|false
 	 */
 	public function getTemplatePath($template)

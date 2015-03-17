@@ -302,9 +302,9 @@ class ImageManagerCore
 	/**
 	 * Check if image file extension is correct
 	 *
-	 * @static
-	 * @param $filename real filename
-	 * @return bool true if it's correct
+	 * @param string $filename Real filename
+	 * @param array|null $authorized_extensions
+	 * @return bool True if it's correct
 	 */
 	public static function isCorrectImageFileExt($filename, $authorized_extensions = null)
 	{

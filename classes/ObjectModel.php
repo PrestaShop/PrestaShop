@@ -551,7 +551,7 @@ abstract class ObjectModelCore
 	/**
 	 * Duplicate current object to database
 	 *
-	 * @return new object
+	 * @return ObjectModel
 	 */
 	public function duplicateObject()
 	{

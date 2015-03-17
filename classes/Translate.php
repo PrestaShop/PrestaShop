@@ -88,7 +88,7 @@ class TranslateCore
 	 * @static
 	 * @param $string string to translate
 	 * @param null $key md5 key if already calculated (optional)
-	 * @param $lang_array global array of admin translations
+	 * @param array $lang_array Global array of admin translations
 	 * @return string translation
 	 */
 	public static function getGenericAdminTranslation($string, $key = null, &$lang_array)

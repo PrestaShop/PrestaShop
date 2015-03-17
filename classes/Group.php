@@ -227,8 +227,9 @@ class GroupCore extends ObjectModel
 
 	/**
 	 * Truncate all modules restrictions for the group
-	 * @param integer id_group
-	 * @return boolean result
+	 *
+	 * @param int $id_group
+	 * @return bool
 	 */
 	public static function truncateModulesRestrictions($id_group)
 	{
@@ -239,8 +240,9 @@ class GroupCore extends ObjectModel
 
 	/**
 	 * Truncate all restrictions by module
-	 * @param integer id_module
-	 * @return boolean result
+	 *
+	 * @param int $id_module
+	 * @return bool
 	 */
 	public static function truncateRestrictionsByModule($id_module)
 	{
@@ -274,10 +276,12 @@ class GroupCore extends ObjectModel
 	}
 
 	/**
-	 * Add restrictions for a new module
+	 * Add restrictions for a new module.
 	 * We authorize every groups to the new module
-	 * @param integer id_module
+	 *
+	 * @param int $id_module
 	 * @param array $shops
+	 * @return bool
 	 */
 	public static function addRestrictionsForModule($id_module, $shops = array(1))
 	{

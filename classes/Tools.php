@@ -777,8 +777,8 @@ class ToolsCore
 	/**
 	* Delete file
 	*
-	* @param string File path
-	* @param array  Excluded files
+	* @param string $file File path
+	* @param array $exclude_files Excluded files
 	*/
 	public static function deleteFile($file, $exclude_files = array())
 	{
@@ -2489,9 +2489,9 @@ exit;
 	 * Function property_exists does not exist in PHP < 5.1
 	 *
 	 * @deprecated since 1.5.0 (PHP 5.1 required, so property_exists() is now natively supported)
-	 * @param object or class $class
+	 * @param object $class
 	 * @param string $property
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function property_exists($class, $property)
 	{
@@ -3041,7 +3041,7 @@ exit;
 	/**
 	 * Delete unicode class from regular expression patterns
 	 * @param string $pattern
-	 * @return pattern
+	 * @return string pattern
 	 */
 	public static function cleanNonUnicodeSupport($pattern)
 	{
