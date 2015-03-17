@@ -393,9 +393,7 @@ abstract class ModuleCore
 	/**
 	 * Init the upgrade module
 	 *
-	 * @static
-	 * @param $module_name
-	 * @param $module_version
+	 * @param $module
 	 * @return bool
 	 */
 	public static function initUpgradeModule($module)
@@ -476,7 +474,6 @@ abstract class ModuleCore
 	/**
 	 * Upgrade the registered version to a new one
 	 *
-	 * @static
 	 * @param $name
 	 * @param $version
 	 * @return bool
@@ -493,9 +490,7 @@ abstract class ModuleCore
 	 * Check if a module need to be upgraded.
 	 * This method modify the module_cache adding an upgrade list file
 	 *
-	 * @static
-	 * @param $module_name
-	 * @param $module_version
+	 * @param $module
 	 * @return bool
 	 */
 	public static function needUpgrade($module)
@@ -516,7 +511,6 @@ abstract class ModuleCore
 	 * Load the available list of upgrade of a specified module
 	 * with an associated version
 	 *
-	 * @static
 	 * @param $module_name
 	 * @param $module_version
 	 * @param $registered_version
@@ -572,7 +566,6 @@ abstract class ModuleCore
 	/**
 	 * Return the status of the upgraded module
 	 *
-	 * @static
 	 * @param $module_name
 	 * @return bool
 	 */

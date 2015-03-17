@@ -1569,7 +1569,6 @@ class CategoryCore extends ObjectModel
 	}
 
 	/**
-	 * @static
 	 * @param null $id_lang
 	 * @return Category
 	 */

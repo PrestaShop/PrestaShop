@@ -85,7 +85,6 @@ class TranslateCore
 	/**
 	 * Return the translation for a string if it exists for the base AdminController or for helpers
 	 *
-	 * @static
 	 * @param $string string to translate
 	 * @param null $key md5 key if already calculated (optional)
 	 * @param array $lang_array Global array of admin translations

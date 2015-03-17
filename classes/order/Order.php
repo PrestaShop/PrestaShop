@@ -919,7 +919,6 @@ class OrderCore extends ObjectModel
 	/**
 	 * @deprecated since 1.5.0.2
 	 *
-	 * @static
 	 * @param $date_from
 	 * @param $date_to
 	 * @param $id_customer
@@ -948,7 +947,6 @@ class OrderCore extends ObjectModel
 	/**
 	 * @deprecated 1.5.0.3
 	 *
-	 * @static
 	 * @param $id_order_state
 	 * @return array
 	 */

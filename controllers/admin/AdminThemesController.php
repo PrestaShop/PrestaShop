@@ -35,16 +35,20 @@ class AdminThemesControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	/** This value is used in isThemeCompatible method. only version node with an
+	/**
+	 * This value is used in isThemeCompatible method. only version node with an
 	 * higher version number will be used in [theme]/config.xml
+	 *
 	 * @since 1.4.0.11, check theme compatibility 1.4
-	 * @static
+	 * @var string
 	 */
 	public static $check_features_version = '1.4';
 
-	/** $check_features is a multidimensional array used to check [theme]/config.xml values,
+	/**
+	 * Multidimensional array used to check [theme]/config.xml values,
 	 * and also checks prestashop current configuration if not match.
-	 * @static
+	 *
+	 * @var array
 	 */
 	public static $check_features = array(
 		'ccc' => array(

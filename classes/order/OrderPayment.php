@@ -101,7 +101,7 @@ class OrderPaymentCore extends ObjectModel
 
 	/**
 	 * Get Order Payments By Invoice ID
-	 * @static
+	 *
 	 * @param int $id_invoice Invoice ID
 	 * @return PrestaShopCollection Collection of OrderPayment
 	 */

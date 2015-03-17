@@ -290,7 +290,6 @@ class CurrencyCore extends ObjectModel
 	}
 
 	/**
-	 * @static
 	 * @param $iso_code
 	 * @param int $id_shop
 	 * @return int
@@ -310,8 +309,7 @@ class CurrencyCore extends ObjectModel
 	}
 
 	/**
-	 * @static
-	 * @param $iso_code
+	 * @param $iso_code_num
 	 * @param int $id_shop
 	 * @return int
 	 */
@@ -324,7 +322,6 @@ class CurrencyCore extends ObjectModel
 	}
 
 	/**
-	 * @static
 	 * @param int $id_shop
 	 * @return DbQuery
 	 */

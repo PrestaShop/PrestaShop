@@ -299,7 +299,7 @@ class GroupCore extends ObjectModel
 	/**
 	 * Return current group object
 	 * Use context
-	 * @static
+	 *
 	 * @return Group Group object
 	 */
 	public static function getCurrent()

@@ -92,7 +92,6 @@ class ImageManagerCore
 	/**
 	 * Check if memory limit is too long or not
 	 *
-	 * @static
 	 * @param $image
 	 * @return bool
 	 */

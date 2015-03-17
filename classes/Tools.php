@@ -149,7 +149,7 @@ class ToolsCore
 	/**
 	 * getShopProtocol return the available protocol for the current shop in use
 	 * SSL if Configuration is set on and available for the server
-	 * @static
+	 *
 	 * @return String
 	 */
 	public static function getShopProtocol()
@@ -2966,7 +2966,6 @@ exit;
 	/**
 	 * Align version sent and use internal function
 	 *
-	 * @static
 	 * @param $v1
 	 * @param $v2
 	 * @param string $operator
@@ -2982,7 +2981,7 @@ exit;
 	 * Align 2 version with the same number of sub version
 	 * version_compare will work better for its comparison :)
 	 * (Means: '1.8' to '1.9.3' will change '1.8' to '1.8.0')
-	 * @static
+	 *
 	 * @param $v1
 	 * @param $v2
 	 */

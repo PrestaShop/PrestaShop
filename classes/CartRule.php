@@ -163,7 +163,6 @@ class CartRuleCore extends ObjectModel
 	/**
 	 * Copy conditions from one cart rule to an other
 	 *
-	 * @static
 	 * @param int $id_cart_rule_source
 	 * @param int $id_cart_rule_destination
 	 */
@@ -228,7 +227,6 @@ class CartRuleCore extends ObjectModel
 	/**
 	 * Retrieves the id associated to the given code
 	 *
-	 * @static
 	 * @param string $code
 	 * @return int|bool
 	 */
@@ -240,7 +238,6 @@ class CartRuleCore extends ObjectModel
 	}
 
 	/**
-	 * @static
 	 * @param           $id_lang
 	 * @param           $id_customer
 	 * @param bool      $active
@@ -385,7 +382,6 @@ class CartRuleCore extends ObjectModel
 	}
 
 	/**
-	 * @static
 	 * @param $name
 	 * @return bool
 	 */
@@ -401,7 +397,6 @@ class CartRuleCore extends ObjectModel
 	}
 
 	/**
-	 * @static
 	 * @param $id_customer
 	 * @return bool
 	 */
@@ -1210,7 +1205,6 @@ class CartRuleCore extends ObjectModel
 	}
 
 	/**
-	 * @static
 	 * @param Context|null $context
 	 * @return mixed
 	 */
@@ -1280,7 +1274,6 @@ class CartRuleCore extends ObjectModel
 	}
 
 	/**
-	 * @static
 	 * @return bool
 	 */
 	public static function isFeatureActive()
@@ -1331,7 +1324,6 @@ class CartRuleCore extends ObjectModel
 	}
 
 	/**
-	 * @static
 	 * @param $name
 	 * @param $id_lang
 	 * @return array

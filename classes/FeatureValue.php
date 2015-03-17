@@ -64,7 +64,6 @@ class FeatureValueCore extends ObjectModel
 	 *
 	 * @param boolean $id_feature Feature id
 	 * @return array Array with feature's values
-	 * @static
 	 */
 	public static function getFeatureValues($id_feature)
 	{
@@ -81,7 +80,6 @@ class FeatureValueCore extends ObjectModel
 	 * @param integer $id_lang Language id
 	 * @param boolean $id_feature Feature id
 	 * @return array Array with feature's values
-	 * @static
 	 */
 	public static function getFeatureValuesWithLang($id_lang, $id_feature, $custom = false)
 	{
@@ -101,7 +99,6 @@ class FeatureValueCore extends ObjectModel
 	 *
 	 * @param boolean $id_feature_value Feature value id
 	 * @return array Array with value's languages
-	 * @static
 	 */
 	public static function getFeatureValueLang($id_feature_value)
 	{
@@ -119,7 +116,6 @@ class FeatureValueCore extends ObjectModel
 	 * @param array $lang Array with all language
 	 * @param integer $id_lang Language id
 	 * @return string String value name selected
-	 * @static
 	 */
 	public static function selectLang($lang, $id_lang)
 	{

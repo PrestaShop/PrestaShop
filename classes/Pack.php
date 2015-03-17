@@ -33,7 +33,6 @@ class PackCore extends Product
 	/**
 	 * Is product a pack?
 	 *
-	 * @static
 	 * @param $id_product
 	 * @return bool
 	 */
@@ -56,7 +55,6 @@ class PackCore extends Product
 	/**
 	 * Is product in a pack?
 	 *
-	 * @static
 	 * @param $id_product
 	 * @return bool
 	 */

@@ -1128,7 +1128,6 @@ class ShopCore extends ObjectModel
 	}
 
 	/**
-	 * @static
 	 * @param int $id
 	 * @return array
 	 */

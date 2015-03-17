@@ -5485,7 +5485,7 @@ class ProductCore extends ObjectModel
 
 	/**
 	 * This method allows to flush price cache
-	 * @static
+	 *
 	 * @since 1.5.0
 	 */
 	public static function flushPriceCache()
