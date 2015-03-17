@@ -45,7 +45,7 @@ class DbQueryCore
 		'order' => 	array(),
 		'limit' => 	array('offset' => 0, 'limit' => 0),
 	);
-	
+
 	/**
 	 * Set type of the query
 	 *
@@ -232,11 +232,11 @@ class DbQueryCore
 	 */
 	public function build()
 	{
-		if($this->query['type'] == 'SELECT')
+		if ($this->query['type'] == 'SELECT')
 			$sql = 'SELECT '.((($this->query['select'])) ? implode(",\n", $this->query['select']) : '*')."\n";
 		else
 			$sql = $this->query['type'].' ';
-		
+
 		if (!$this->query['from'])
 			die('DbQuery->build() missing from clause');
 		$sql .= 'FROM '.implode(', ', $this->query['from'])."\n";
