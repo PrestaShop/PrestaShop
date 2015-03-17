@@ -274,6 +274,8 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 							&& $address->id_country != Configuration::get('VATNUMBER_COUNTRY');
 		$carrier = new Carrier($this->order->id_carrier);
 
+		$tax_breakdowns = $this->getTaxBreakdown();
+
 		$data = array(
 			'tax_exempt' => $tax_exempt,
 			'use_one_after_another_method' => $this->order_invoice->useOneAfterAnotherTaxComputationMethod(),
@@ -282,6 +284,8 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			'shipping_tax_breakdown' => $this->order_invoice->getShippingTaxesBreakdown($this->order),
 			'ecotax_tax_breakdown' => $this->order_invoice->getEcoTaxTaxesBreakdown(),
 			'wrapping_tax_breakdown' => $this->order_invoice->getWrappingTaxesBreakdown(),
+			'tax_breakdowns' => $tax_breakdowns,
+			'tax_label' => $this->getTaxLabel($tax_breakdowns),
 			'order' => $debug ? null : $this->order,
 			'order_invoice' => $debug ? null : $this->order_invoice,
 			'carrier' => $debug ? null : $carrier
@@ -293,6 +297,59 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 		$this->smarty->assign($data);
 
 		return $this->smarty->fetch($this->getTemplate('invoice.tax-tab'));
+	}
+
+	protected function getTaxBreakdown()
+	{
+		$breakdowns = array(
+			'product_tax' => $this->order_invoice->getProductTaxesBreakdown($this->order),
+			'shipping_tax' => $this->order_invoice->getShippingTaxesBreakdown($this->order),
+			'ecotax_tax' => $this->order_invoice->getEcoTaxTaxesBreakdown(),
+			'wrapping_tax' => $this->order_invoice->getWrappingTaxesBreakdown(),
+		);
+
+		foreach ($breakdowns as $type => $bd) {
+			if (empty($bd))
+			unset($breakdowns[$type]);
+		}
+
+		if (empty($breakdowns))
+			$breakdowns = false;
+
+		if (isset($breakdowns['product_tax'])) {
+			foreach ($breakdowns['product_tax'] as &$bd) {
+				$bd['total_tax_excl'] = $bd['total_price_tax_excl'];
+			}
+		}
+
+		if (isset($breakdowns['ecotax_tax'])) {
+			foreach ($breakdowns['ecotax_tax'] as &$bd) {
+				$bd['total_tax_excl'] = $bd['ecotax_tax_excl'];
+				$bd['total_amount'] = $bd['ecotax_tax_incl'] - $bd['ecotax_tax_excl'];
+			}
+		}
+
+		return $breakdowns;
+	}
+
+	protected function getTaxLabel($tax_breakdowns)
+	{
+		$tax_label = '';
+		$all_taxes = array();
+
+		foreach ($tax_breakdowns as $type => $bd)
+			foreach ($bd as $line)
+				if(isset($line['id_tax']))
+					$all_taxes[] = $line['id_tax'];
+
+		$taxes = array_unique($all_taxes);
+
+		foreach ($taxes as $id_tax) {
+			$tax = new Tax($id_tax);
+			$tax_label .= $tax->id.': '.$tax->name[$this->order->id_lang].' ('.$tax->rate.'%) ';
+		}
+
+		return $tax_label;
 	}
 
 	/**
