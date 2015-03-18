@@ -129,12 +129,15 @@ function initTableDnD(table)
 
 				params['ajax'] = 1;
 
+				var data = $.tableDnD.serialize();
+				if ((table.id == 'category') && (data.indexOf('_0&') != -1))
+					data += '&found_first=1';
 				$.ajax({
 					type: 'POST',
 					headers: { "cache-control": "no-cache" },
 					async: false,
 					url: currentIndex + '&token=' + token + '&' + 'rand=' + new Date().getTime(),
-					data: $.tableDnD.serialize() + '&' + objToString(params) ,
+					data:  data + '&' + objToString(params) ,
 					success: function(data) {
 						var nodrag_lines = $(tableDrag).find('tr:not(".nodrag")');
 						if (come_from == 'AdminModulesPositions')
@@ -157,7 +160,7 @@ function initTableDnD(table)
 							var up_reg  = new RegExp('position=[-]?[0-9]+&');
 							nodrag_lines.each(function(i) {
 								$(this).attr('id', $(this).attr('id').replace(reg, '_' + i));
-								$(this).find('.positions').text(i);
+								$(this).find('.positions').text(i + 1);
 							});
 						}
 
