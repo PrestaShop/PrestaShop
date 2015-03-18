@@ -98,9 +98,9 @@ class AdminTagsControllerCore extends AdminController
 	{
 		if ($this->tabAccess['edit'] === '1' && Tools::getValue('submitAdd'.$this->table))
 		{
-			/** @var Tag $obj */
 			if (($id = (int)Tools::getValue($this->identifier)) && ($obj = new $this->className($id)) && Validate::isLoadedObject($obj))
 			{
+				/** @var Tag $obj */
 				$previous_products = $obj->getProducts();
 				$removed_products = array();
 

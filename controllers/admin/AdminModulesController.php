@@ -1444,9 +1444,9 @@ class AdminModulesControllerCore extends AdminController
 					require_once(_PS_MODULE_DIR_.$module->name.'/'.$module->name.'.php');
 				}
 
-				/** @var Module $object */
 				if ($object = new $module->name())
 				{
+					/** @var Module $object */
 					$object->runUpgradeModule();
 					if ((count($errors_module_list = $object->getErrors())))
 						$module_errors[] = array('name' => $module->displayName, 'message' => $errors_module_list);

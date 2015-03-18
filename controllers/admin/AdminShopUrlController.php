@@ -416,9 +416,9 @@ class AdminShopUrlControllerCore extends AdminController
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
-				/** @var ShopUrl $object */
 				if (Validate::isLoadedObject($object = $this->loadObject()))
 				{
+					/** @var ShopUrl $object */
 					if (!$object->main)
 					{
 						$result = $object->setMain();

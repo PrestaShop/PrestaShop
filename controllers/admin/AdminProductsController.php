@@ -3950,9 +3950,9 @@ class AdminProductsControllerCore extends AdminController
 	{
 		$carrier_list = Carrier::getCarriers($this->context->language->id, false, false, false, null, Carrier::ALL_CARRIERS);
 
-		/** @var Product $product */
 		if ($product = $this->loadObject(true))
 		{
+			/** @var Product $product */
 			$carrier_selected_list = $product->getCarriers();
 			foreach ($carrier_list as &$carrier)
 				foreach ($carrier_selected_list as $carrier_selected)

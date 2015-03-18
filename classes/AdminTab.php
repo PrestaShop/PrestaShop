@@ -573,10 +573,12 @@ abstract class AdminTabCore
 		/* Delete object image */
 		if (isset($_GET['deleteImage']))
 		{
-			/** @var ObjectModel $object */
 			if (Validate::isLoadedObject($object = $this->loadObject()))
+			{
+				/** @var ObjectModel $object */
 				if (($object->deleteImage()))
 					Tools::redirectAdmin(self::$currentIndex.'&add'.$this->table.'&'.$this->identifier.'='.Tools::getValue($this->identifier).'&conf=7&token='.$token);
+			}
 			$this->_errors[] = Tools::displayError('An error occurred during image deletion (cannot load object).');
 		}
 
@@ -585,9 +587,9 @@ abstract class AdminTabCore
 		{
 			if ($this->tabAccess['delete'] === '1')
 			{
-				/** @var ObjectModel $object */
 				if (Validate::isLoadedObject($object = $this->loadObject()) && isset($this->fieldImageSettings))
 				{
+					/** @var ObjectModel $object */
 					// check if request at least one object with noZeroObject
 					if (isset($object->noZeroObject) && count(call_user_func(array($this->className, $object->noZeroObject))) <= 1)
 						$this->_errors[] = Tools::displayError('You need at least one object.').' <b>'.$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
@@ -623,9 +625,9 @@ abstract class AdminTabCore
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
-				/** @var ObjectModel $object */
 				if (Validate::isLoadedObject($object = $this->loadObject()))
 				{
+					/** @var ObjectModel $object */
 					if ($object->toggleStatus())
 						Tools::redirectAdmin(self::$currentIndex.'&conf=5'.((($id_category = (int)(Tools::getValue('id_category'))) && Tools::getValue('id_product')) ? '&id_category='.$id_category : '').'&token='.$token);
 					else

@@ -2819,9 +2819,9 @@ class AdminThemesControllerCore extends AdminController
 
 	public function processResponsive()
 	{
-		/** @var Theme $object */
 		if (Validate::isLoadedObject($object = $this->loadObject()))
 		{
+			/** @var Theme $object */
 			if ($object->toggleResponsive())
 				$this->redirect_after = self::$currentIndex.'&conf=5&token='.$this->token;
 			else
@@ -2837,9 +2837,9 @@ class AdminThemesControllerCore extends AdminController
 
 	public function processDefaultLeftColumn()
 	{
-		/** @var Theme $object */
 		if (Validate::isLoadedObject($object = $this->loadObject()))
 		{
+			/** @var Theme $object */
 			if ($object->toggleDefaultLeftColumn())
 				$this->redirect_after = self::$currentIndex.'&conf=5&token='.$this->token;
 			else
@@ -2855,9 +2855,9 @@ class AdminThemesControllerCore extends AdminController
 
 	public function processDefaultRightColumn()
 	{
-		/** @var Theme $object */
 		if (Validate::isLoadedObject($object = $this->loadObject()))
 		{
+			/** @var Theme $object */
 			if ($object->toggleDefaultRightColumn())
 				$this->redirect_after = self::$currentIndex.'&conf=5&token='.$this->token;
 			else
