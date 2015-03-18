@@ -414,6 +414,17 @@ class OrderDetailCore extends ObjectModel
 		return Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'order_detail` WHERE `id_order` = '.(int)$id_order);
 	}
 
+	public function getTaxList()
+	{
+		return self::getTaxList($this->id);
+	}
+	public static function getTaxListStatic($id_order_detail)
+	{
+		$sql = 'SELECT * FROM `'._DB_PREFIX_.'order_detail_tax`
+					WHERE `id_order_detail` = '.(int)$id_order_detail;
+		return Db::getInstance()->executeS($sql);
+	}
+
 	/*
 	 * Set virtual product information
 	 * @param array $product

@@ -120,6 +120,19 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 		$customer = new Customer((int)$this->order->id_customer);
 
 		$order_details = $this->order_invoice->getProducts();
+		foreach ($order_details as $id => &$order_detail)
+		{
+			$taxes = OrderDetail::getTaxListStatic($id);
+			$tax_temp = array();
+			foreach ($taxes as $tax)
+				$tax_temp[] = $tax['id_tax'];
+
+			$order_detail['order_detail_tax'] = $taxes;
+			$order_detail['order_detail_tax_label'] = implode(', ', $tax_temp);
+		}
+		unset($tax_temp);
+		unset($order_detail);
+
 		if (Configuration::get('PS_PDF_IMG_INVOICE'))
 		{
 			foreach ($order_details as &$order_detail)
@@ -243,6 +256,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			'cart_rules' => $cart_rules,
 			'delivery_address' => $formatted_delivery_address,
 			'invoice_address' => $formatted_invoice_address,
+			'addresses' => array('invoice' => $invoice_address, 'delivery' =>$delivery_address),
 			'tax_excluded_display' => $tax_excluded_display,
 			'display_product_images' => $display_product_images,
 			'layout' => $this->computeLayout($tax_excluded_display, $display_product_images),
@@ -250,7 +264,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			'customer' => $customer,
 			'footer' => $footer,
 			'ps_price_compute_precision' => _PS_PRICE_COMPUTE_PRECISION_,
-			'round_type' => $round_type
+			'round_type' => $round_type,
 		);
 
 		if (Tools::getValue('debug'))
