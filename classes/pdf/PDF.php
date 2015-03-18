@@ -88,6 +88,11 @@ class PDFCore
 		}
 	}
 
+	/**
+	 * @param mixed $object
+	 * @return HTMLTemplate|false
+	 * @throws PrestaShopException
+	 */
 	public function getTemplateObject($object)
 	{
 		$class = false;

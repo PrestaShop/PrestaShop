@@ -37,7 +37,7 @@ class CSVCore
 
 	/**
 	* Loads objects, filename and optionnaly a delimiter.
-	* @param Collection $collection collection of objects / array (of non-objects)
+	* @param array|Iterator $collection Collection of objects / arrays (of non-objects)
 	* @param string $filename : used later to save the file
 	* @param string $delimiter Optional : delimiter used
 	*/

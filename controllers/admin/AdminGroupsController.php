@@ -536,7 +536,7 @@ class AdminGroupsControllerCore extends AdminController
 
 	/**
 	 * Print enable / disable icon for show prices option
-	 * @static
+	 *
 	 * @param $id_group integer Group ID
 	 * @param $tr array Row data
 	 * @return string HTML link and icon

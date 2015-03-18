@@ -149,7 +149,7 @@ class ToolsCore
 	/**
 	 * getShopProtocol return the available protocol for the current shop in use
 	 * SSL if Configuration is set on and available for the server
-	 * @static
+	 *
 	 * @return String
 	 */
 	public static function getShopProtocol()
@@ -456,6 +456,7 @@ class ToolsCore
 	{
 		if (Tools::isSubmit('SubmitCurrency') && ($id_currency = Tools::getValue('id_currency')))
 		{
+			/** @var Currency $currency */
 			$currency = Currency::getCurrencyInstance((int)$id_currency);
 			if (is_object($currency) && $currency->id && !$currency->deleted && $currency->isAssociatedToShop())
 				$cookie->id_currency = (int)$currency->id;
@@ -777,8 +778,8 @@ class ToolsCore
 	/**
 	* Delete file
 	*
-	* @param string File path
-	* @param array  Excluded files
+	* @param string $file File path
+	* @param array $exclude_files Excluded files
 	*/
 	public static function deleteFile($file, $exclude_files = array())
 	{
@@ -2489,9 +2490,9 @@ exit;
 	 * Function property_exists does not exist in PHP < 5.1
 	 *
 	 * @deprecated since 1.5.0 (PHP 5.1 required, so property_exists() is now natively supported)
-	 * @param object or class $class
+	 * @param object $class
 	 * @param string $property
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function property_exists($class, $property)
 	{
@@ -2966,7 +2967,6 @@ exit;
 	/**
 	 * Align version sent and use internal function
 	 *
-	 * @static
 	 * @param $v1
 	 * @param $v2
 	 * @param string $operator
@@ -2982,7 +2982,7 @@ exit;
 	 * Align 2 version with the same number of sub version
 	 * version_compare will work better for its comparison :)
 	 * (Means: '1.8' to '1.9.3' will change '1.8' to '1.8.0')
-	 * @static
+	 *
 	 * @param $v1
 	 * @param $v2
 	 */
@@ -3041,7 +3041,7 @@ exit;
 	/**
 	 * Delete unicode class from regular expression patterns
 	 * @param string $pattern
-	 * @return pattern
+	 * @return string pattern
 	 */
 	public static function cleanNonUnicodeSupport($pattern)
 	{
@@ -3301,6 +3301,7 @@ exit;
 					$config->set('URI.SafeIframeRegexp','/.*/');
 				}
 
+				/** @var HTMLPurifier_HTMLDefinition|HTMLPurifier_HTMLModule $def */
 				// http://developers.whatwg.org/the-video-element.html#the-video-element
 				if ($def = $config->maybeGetRawHTMLDefinition())
 				{

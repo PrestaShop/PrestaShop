@@ -40,7 +40,7 @@ class HelperOptionsCore extends Helper
 
 	/**
 	 * Generate a form for options
-	 * @param array options
+	 * @param array $option_list
 	 * @return string html
 	 */
 	public function generateOptions($option_list)

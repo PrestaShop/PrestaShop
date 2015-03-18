@@ -220,7 +220,6 @@ class TabCore extends ObjectModel
 	/**
 	 * Return the list of tab used by a module
 	 *
-	 * @static
 	 * @return array
 	 */
 	public static function getModuleTabList()
@@ -276,7 +275,7 @@ class TabCore extends ObjectModel
 	/**
 	 * Get tab id from name
 	 *
-	 * @param string class_name
+	 * @param string $class_name
 	 * @return int id_tab
 	 */
 	public static function getIdFromClassName($class_name)
@@ -294,7 +293,7 @@ class TabCore extends ObjectModel
 
 	/**
 	 * Get collection from module name
-	 * @static
+	 *
 	 * @param $module string Module name
 	 * @param null $id_lang integer Language ID
 	 * @return array|PrestaShopCollection Collection of tabs (or empty array)
@@ -314,7 +313,7 @@ class TabCore extends ObjectModel
 
 	/**
 	 * Enabling tabs for module
-	 * @static
+	 *
 	 * @param $module string Module Name
 	 * @return bool Status
 	 */
@@ -335,7 +334,7 @@ class TabCore extends ObjectModel
 
 	/**
 	 * Disabling tabs for module
-	 * @static
+	 *
 	 * @param $module string Module name
 	 * @return bool Status
 	 */

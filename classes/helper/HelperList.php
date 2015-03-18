@@ -107,7 +107,7 @@ class HelperListCore extends Helper
 	/** @var bool If true, activates color on hover */
 	public $row_hover = true;
 
-	/** @var if not null, a title will be added on that list */
+	/** @var string|null If not null, a title will be added on that list */
 	public $title = null;
 
 	/** @var boolean ask for simple header : no filters, no paginations and no sorting */

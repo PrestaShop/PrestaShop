@@ -53,8 +53,8 @@ abstract class ModuleAdminControllerCore extends AdminController
 	/**
 	 * Creates a template object
 	 *
-	 * @param string $tpl_name template filename
-	 * @return Template|object
+	 * @param string $tpl_name Template filename
+	 * @return Smarty_Internal_Template
 	 */
 	public function createTemplate($tpl_name)
 	{

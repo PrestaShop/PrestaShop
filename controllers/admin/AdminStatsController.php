@@ -29,6 +29,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 	public static function getVisits($unique = false, $date_from, $date_to, $granularity = false)
 	{
 		$visits = ($granularity == false) ? 0 : array();
+		/** @var Gapi $gapi */
 		$gapi = Module::isInstalled('gapi') ? Module::getInstanceByName('gapi') : false;
 		if (Validate::isLoadedObject($gapi) && $gapi->isConfigured())
 		{

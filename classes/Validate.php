@@ -1033,9 +1033,9 @@ class ValidateCore
 
 	/**
 	 * Validate SIRET Code
-	 * @static
-	 * @param $siret SIRET Code
-	 * @return boolean Return true if is valid
+	 *
+	 * @param string $siret SIRET Code
+	 * @return bool Return true if is valid
 	 */
 	public static function isSiret($siret)
 	{
@@ -1054,8 +1054,8 @@ class ValidateCore
 
 	/**
 	 * Validate APE Code
-	 * @static
-	 * @param $ape APE Code
+	 *
+	 * @param string $ape APE Code
 	 * @return boolean Return true if is valid
 	 */
 	public static function isApe($ape)

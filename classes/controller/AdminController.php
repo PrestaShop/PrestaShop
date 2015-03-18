@@ -2234,7 +2234,11 @@ class AdminControllerCore extends Controller
 			$xml_modules = @simplexml_load_file(_PS_ROOT_DIR_.Module::CACHE_FILE_MODULES_LIST);
 		if ($xml_modules)
 			foreach ($xml_modules->children() as $xml_module)
+			{
+				/** @var SimpleXMLElement $xml_module */
 				foreach ($xml_module->children() as $module)
+				{
+					/** @var SimpleXMLElement $module */
 					foreach ($module->attributes() as $key => $value)
 					{
 						if ($xml_module->attributes() == 'native' && $key == 'name')
@@ -2242,6 +2246,8 @@ class AdminControllerCore extends Controller
 						if ($xml_module->attributes() == 'partner' && $key == 'name')
 							$this->list_partners_modules[] = (string)$value;
 					}
+				}
+			}
 
 		if ($this->getModulesList($this->filter_modules_list))
 		{
@@ -3838,7 +3844,7 @@ class AdminControllerCore extends Controller
 	 * Create a template from the override file, else from the base file.
 	 *
 	 * @param string $tpl_name filename
-	 * @return Template|object
+	 * @return Smarty_Internal_Template
 	 */
 	public function createTemplate($tpl_name)
 	{

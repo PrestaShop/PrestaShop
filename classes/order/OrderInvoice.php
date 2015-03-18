@@ -380,6 +380,7 @@ class OrderInvoiceCore extends ObjectModel
 	 * Returns the shipping taxes breakdown
 	 *
 	 * @since 1.5
+	 * @param Order $order
 	 * @return array
 	 */
 	public function getShippingTaxesBreakdown($order)
@@ -509,7 +510,6 @@ class OrderInvoiceCore extends ObjectModel
 	 * Returns all the order invoice that match the date interval
 	 *
 	 * @since 1.5
-	 * @static
 	 * @param $date_from
 	 * @param $date_to
 	 * @return array collection of OrderInvoice
@@ -532,7 +532,6 @@ class OrderInvoiceCore extends ObjectModel
 
 	/**
 	 * @since 1.5.0.3
-	 * @static
 	 * @param $id_order_state
 	 * @return array collection of OrderInvoice
 	 */
@@ -553,7 +552,6 @@ class OrderInvoiceCore extends ObjectModel
 
 	/**
 	 * @since 1.5.0.3
-	 * @static
 	 * @param $date_from
 	 * @param $date_to
 	 * @return array collection of invoice
@@ -575,7 +573,6 @@ class OrderInvoiceCore extends ObjectModel
 
 	/**
 	 * @since 1.5
-	 * @static
 	 * @param $id_order_invoice
 	 */
 	public static function getCarrier($id_order_invoice)
@@ -589,7 +586,6 @@ class OrderInvoiceCore extends ObjectModel
 
 	/**
 	 * @since 1.5
-	 * @static
 	 * @param $id_order_invoice
 	 */
 	public static function getCarrierId($id_order_invoice)
@@ -602,9 +598,9 @@ class OrderInvoiceCore extends ObjectModel
 	}
 
 	/**
-	 * @static
-	 * @param $id
+	 * @param int $id
 	 * @return OrderInvoice
+	 * @throws PrestaShopException
 	 */
 	public static function retrieveOneById($id)
 	{

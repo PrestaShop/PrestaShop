@@ -100,6 +100,7 @@ class AdminTagsControllerCore extends AdminController
 		{
 			if (($id = (int)Tools::getValue($this->identifier)) && ($obj = new $this->className($id)) && Validate::isLoadedObject($obj))
 			{
+				/** @var Tag $obj */
 				$previous_products = $obj->getProducts();
 				$removed_products = array();
 
@@ -119,6 +120,7 @@ class AdminTagsControllerCore extends AdminController
 
 	public function renderForm()
 	{
+		/** @var Tag $obj */
 		if (!($obj = $this->loadObject(true)))
 			return;
 

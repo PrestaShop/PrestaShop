@@ -58,7 +58,6 @@ class FeatureCore extends ObjectModel
 	 * @param integer $id_lang Language id
 	 * @param integer $id_feature Feature id
 	 * @return array Array with feature's data
-	 * @static
 	 */
 	public static function getFeature($id_lang, $id_feature)
 	{
@@ -76,7 +75,6 @@ class FeatureCore extends ObjectModel
 	 *
 	 * @param integer $id_lang Language id
 	 * @return array Multiple arrays with feature's data
-	 * @static
 	 */
 	public static function getFeatures($id_lang, $with_shop = true)
 	{
@@ -181,7 +179,6 @@ class FeatureCore extends ObjectModel
 	*
 	* @param integer $id_lang Language id
 	* @return int Number of feature
-	* @static
 	*/
 	public static function nbFeatures($id_lang)
 	{

@@ -157,6 +157,11 @@ class OrderReturnCore extends ObjectModel
 		WHERE `id_order_return` = '.(int)$id_order_return);
 	}
 
+	/**
+	 * @param int $order_return_id
+	 * @param Order $order
+	 * @return array
+	 */
 	public static function getOrdersReturnProducts($order_return_id, $order)
 	{
 		$products_ret = OrderReturn::getOrdersReturnDetail($order_return_id);

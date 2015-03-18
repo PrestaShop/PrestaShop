@@ -551,7 +551,7 @@ abstract class ObjectModelCore
 	/**
 	 * Duplicate current object to database
 	 *
-	 * @return new object
+	 * @return ObjectModel
 	 */
 	public function duplicateObject()
 	{
@@ -599,6 +599,7 @@ abstract class ObjectModelCore
 			}
 		}
 
+		/** @var ObjectModel $object_duplicated */
 		$object_duplicated = new $definition['classname']((int)$object_id);
 		$object_duplicated->duplicateShops((int)$this->id);
 
@@ -1568,6 +1569,7 @@ abstract class ObjectModelCore
 		// Hydrate objects
 		foreach ($rows as $row)
 		{
+			/** @var ObjectModel $obj */
 			$obj = new $class;
 			$obj->hydrate($row, $id_lang);
 			$collection[] = $obj;

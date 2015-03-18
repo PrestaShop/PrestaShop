@@ -447,7 +447,7 @@ class MediaCore
 	/**
 	* Combine Compress and Cache CSS (ccc) calls
 	*
-	* @param array css_files
+	* @param array $css_files
 	* @return array processed css_files
 	*/
 	public static function cccCss($css_files)
@@ -577,7 +577,7 @@ class MediaCore
 	/**
 	* Combine Compress and Cache (ccc) JS calls
 	*
-	* @param array js_files
+	* @param array $js_files
 	* @return array processed js_files
 	*/
 	public static function cccJS($js_files)
@@ -731,6 +731,8 @@ class MediaCore
 		$scripts = $dom->getElementsByTagName('script');
 		if (is_object($scripts) && $scripts->length)
 			foreach ($scripts as $script)
+			{
+				/** @var DOMElement $script */
 				if ($src = $script->getAttribute('src'))
 				{
 					if (substr($src, 0, 2) == '//')
@@ -766,6 +768,7 @@ class MediaCore
 					if (!in_array($src, Media::$inline_script_src))
 						Context::getContext()->controller->addJS($src);
 				}
+			}
 		$output = preg_replace_callback('/<script[^>]*>(.*)<\s*\/script\s*[^>]*>/Uims', array('Media', 'deferScript'), $output);
 		return $output;
 	}

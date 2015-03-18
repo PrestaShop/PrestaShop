@@ -199,6 +199,8 @@ class DiscountCore extends CartRule
 
 	/**
 	 * @deprecated 1.5.0.1
+	 * @param Order $order
+	 * @return Discount
 	 */
 	public static function createOrderDiscount($order, $productList, $qtyList, $name, $shipping_cost = false, $id_category = 0, $subcategory = 0)
 	{

@@ -111,9 +111,8 @@ class AttachmentCore extends ObjectModel
 	}
 
 	/**
-	 * deassociate $id_product from the current object
+	 * Unassociate $id_product from the current object
 	 *
-	 * @static
 	 * @param $id_product int
 	 * @return bool
 	 */
@@ -147,10 +146,9 @@ class AttachmentCore extends ObjectModel
 	}
 
 	/**
-	 * associate an array of id_attachment $array to the product $id_product
+	 * Associate an array of id_attachment $array to the product $id_product
 	 * and remove eventual previous association
 	 *
-	 * @static
 	 * @param $id_product
 	 * @param $array
 	 * @return bool

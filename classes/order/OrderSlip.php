@@ -141,6 +141,11 @@ class OrderSlipCore extends ObjectModel
 		.($id_order_detail ? ' WHERE `id_order_detail` = '.(int)($id_order_detail) : ''));
 	}
 
+	/**
+	 * @param int $orderSlipId
+	 * @param Order $order
+	 * @return array
+	 */
 	public static function getOrdersSlipProducts($orderSlipId, $order)
 	{
 		$cart_rules = $order->getCartRules(true);

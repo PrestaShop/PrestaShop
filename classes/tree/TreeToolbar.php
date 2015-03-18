@@ -140,6 +140,11 @@ class TreeToolbarCore implements ITreeToolbarCore
 			return $this->getTemplateDirectory().$template;
 	}
 
+	/**
+	 * @param ITreeToolbarButton $action
+	 * @return $this
+	 * @throws PrestaShopException
+	 */
 	public function addAction($action)
 	{
 		if (!is_object($action))
@@ -169,7 +174,10 @@ class TreeToolbarCore implements ITreeToolbarCore
 	public function render()
 	{
 		foreach ($this->getActions() as $action)
+		{
+			/** @var ITreeToolbarButton $action */
 			$action->setAttribute('data', $this->getData());
+		}
 
 		return $this->getContext()->smarty->createTemplate(
 			$this->getTemplateFile($this->getTemplate()),

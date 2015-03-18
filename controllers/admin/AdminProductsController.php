@@ -1239,6 +1239,7 @@ class AdminProductsControllerCore extends AdminController
 	 */
 	public function processPosition()
 	{
+		/** @var Product $object */
 		if (!Validate::isLoadedObject($object = $this->loadObject()))
 		{
 			$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').
@@ -1944,6 +1945,7 @@ class AdminProductsControllerCore extends AdminController
 		/* Update an existing product */
 		if (isset($id) && !empty($id))
 		{
+			/** @var Product $object */
 			$object = new $this->className((int)$id);
 			$this->object = $object;
 
@@ -3080,6 +3082,12 @@ class AdminProductsControllerCore extends AdminController
 		}
 	}
 
+	/**
+	 * @param Product $obj
+	 * @throws Exception
+	 * @throws PrestaShopException
+	 * @throws SmartyException
+	 */
 	public function initFormAssociations($obj)
 	{
 		$product = $obj;
@@ -3146,6 +3154,11 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
+	/**
+	 * @param Product $obj
+	 * @throws Exception
+	 * @throws SmartyException
+	 */
 	public function initFormPrices($obj)
 	{
 		$data = $this->createTemplate($this->tpl_form);
@@ -3342,6 +3355,11 @@ class AdminProductsControllerCore extends AdminController
 		return $pack_items;
 	}
 
+	/**
+	 * @param Product $product
+	 * @throws Exception
+	 * @throws SmartyException
+	 */
 	public function initFormPack($product)
 	{
 		$data = $this->createTemplate($this->tpl_form);
@@ -3719,6 +3737,11 @@ class AdminProductsControllerCore extends AdminController
 		return $content;
 	}
 
+	/**
+	 * @param Product $obj
+	 * @throws Exception
+	 * @throws SmartyException
+	 */
 	public function initFormCustomization($obj)
 	{
 		$data = $this->createTemplate($this->tpl_form);
@@ -3806,6 +3829,11 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
+	/**
+	 * @param Product $product
+	 * @throws Exception
+	 * @throws SmartyException
+	 */
 	public function initFormInformations($product)
 	{
 		if (!$this->default_form_language)
@@ -3921,8 +3949,10 @@ class AdminProductsControllerCore extends AdminController
 	protected function getCarrierList()
 	{
 		$carrier_list = Carrier::getCarriers($this->context->language->id, false, false, false, null, Carrier::ALL_CARRIERS);
+
 		if ($product = $this->loadObject(true))
 		{
+			/** @var Product $product */
 			$carrier_selected_list = $product->getCarriers();
 			foreach ($carrier_list as &$carrier)
 				foreach ($carrier_selected_list as $carrier_selected)
@@ -4073,6 +4103,11 @@ class AdminProductsControllerCore extends AdminController
 		die(Tools::jsonEncode(array($image_uploader->getName() => $files)));
 	}
 
+	/**
+	 * @param Product $obj
+	 * @throws Exception
+	 * @throws SmartyException
+	 */
 	public function initFormImages($obj)
 	{
 		$data = $this->createTemplate($this->tpl_form);
@@ -4154,6 +4189,11 @@ class AdminProductsControllerCore extends AdminController
 		return $this->initFormAttributes($obj);
 	}
 
+	/**
+	 * @param Product $product
+	 * @throws Exception
+	 * @throws SmartyException
+	 */
 	public function initFormAttributes($product)
 	{
 		$data = $this->createTemplate($this->tpl_form);
@@ -4235,6 +4275,11 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
+	/**
+	 * @param Product $product
+	 * @param Currency|array|int $currency
+	 * @return string
+	 */
 	public function renderListAttributes($product, $currency)
 	{
 		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
@@ -4331,6 +4376,11 @@ class AdminProductsControllerCore extends AdminController
 		return $helper->generateList($comb_array, $this->fields_list);
 	}
 
+	/**
+	 * @param Product $obj
+	 * @throws Exception
+	 * @throws SmartyException
+	 */
 	public function initFormQuantities($obj)
 	{
 		if (!$this->default_form_language)
@@ -4434,6 +4484,7 @@ class AdminProductsControllerCore extends AdminController
 					$pack_quantities = array();
 					foreach ($items as $item)
 					{
+						/** @var Product $item */
 						if (!$item->isAvailableWhenOutOfStock((int)$item->out_of_stock))
 						{
 							$pack_id_product_attribute = Product::getDefaultAttribute($item->id, 1);
@@ -4481,6 +4532,11 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
+	/**
+	 * @param Product $obj
+	 * @throws Exception
+	 * @throws SmartyException
+	 */
 	public function initFormSuppliers($obj)
 	{
 		$data = $this->createTemplate($this->tpl_form);
@@ -4559,6 +4615,11 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
+	/**
+	 * @param Product $obj
+	 * @throws Exception
+	 * @throws SmartyException
+	 */
 	public function initFormWarehouses($obj)
 	{
 		$data = $this->createTemplate($this->tpl_form);
@@ -4609,6 +4670,11 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['custom_form'] = $data->fetch();
 	}
 
+	/**
+	 * @param Product $obj
+	 * @throws Exception
+	 * @throws SmartyException
+	 */
 	public function initFormFeatures($obj)
 	{
 		if (!$this->default_form_language)
@@ -4748,6 +4814,7 @@ class AdminProductsControllerCore extends AdminController
 
 	public function getCombinationImagesJS()
 	{
+		/** @var Product $obj */
 		if (!($obj = $this->loadObject(true)))
 			return;
 

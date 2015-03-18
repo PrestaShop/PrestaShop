@@ -336,7 +336,6 @@ class CustomerCore extends ObjectModel
 	/**
 	 * Retrieve customers by email address
 	 *
-	 * @static
 	 * @param $email
 	 * @return array
 	 */

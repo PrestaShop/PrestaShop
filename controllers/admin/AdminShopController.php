@@ -282,6 +282,10 @@ class AdminShopControllerCore extends AdminController
 		return false;
 	}
 
+	/**
+	 * @param Shop $new_shop
+	 * @return bool
+	 */
 	protected function afterAdd($new_shop)
 	{
 		$import_data = Tools::getValue('importData', array());
@@ -304,6 +308,10 @@ class AdminShopControllerCore extends AdminController
 		return parent::afterAdd($new_shop);
 	}
 
+	/**
+	 * @param Shop $new_shop
+	 * @return bool
+	 */
 	protected function afterUpdate($new_shop)
 	{
 		$categories = Tools::getValue('categoryBox');
@@ -630,6 +638,7 @@ class AdminShopControllerCore extends AdminController
 
 		if (!count($this->errors))
 		{
+			/** @var Shop $object */
 			$object = new $this->className();
 			$this->copyFromPost($object, $this->table);
 			$this->beforeAdd($object);

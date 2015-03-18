@@ -106,6 +106,7 @@ class AdminScenesControllerCore extends AdminController
 	{
 		$this->initFieldsForm();
 
+		/** @var Scene $obj */
 		if (!($obj = $this->loadObject(true)))
 			return;
 

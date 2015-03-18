@@ -667,7 +667,7 @@ class ImageCore extends ObjectModel
 	 * If max_execution_time is provided, stops before timeout and returns string "timeout".
 	 * If any image cannot be moved, stops and returns "false"
 	 *
-	 * @param int max_execution_time
+	 * @param int $max_execution_time
 	 * @return mixed success or timeout
 	 */
 	public static function moveToNewFileSystem($max_execution_time = 0)

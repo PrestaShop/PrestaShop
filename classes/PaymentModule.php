@@ -256,6 +256,7 @@ abstract class PaymentModuleCore extends Module
 			foreach ($package_list as $id_address => $packageByAddress)
 				foreach ($packageByAddress as $id_package => $package)
 				{
+					/** @var Order $order */
 					$order = new Order();
 					$order->product_list = $package['product_list'];
 
@@ -414,6 +415,8 @@ abstract class PaymentModuleCore extends Module
 			CartRule::cleanCache();
 			foreach ($order_detail_list as $key => $order_detail)
 			{
+				/** @var OrderDetail $order_detail */
+
 				$order = $order_list[$key];
 				if (!$order_creation_failed && isset($order->id))
 				{

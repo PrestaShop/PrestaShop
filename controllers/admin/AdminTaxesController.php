@@ -234,6 +234,7 @@ class AdminTaxesControllerCore extends AdminController
 				/* Object update */
 				if (isset($id) && !empty($id))
 				{
+					/** @var Tax $object */
 					$object = new $this->className($id);
 					if (Validate::isLoadedObject($object))
 					{
@@ -252,6 +253,7 @@ class AdminTaxesControllerCore extends AdminController
 				/* Object creation */
 				else
 				{
+					/** @var Tax $object */
 					$object = new $this->className();
 					$this->copyFromPost($object, $this->table);
 					if (!$object->add())

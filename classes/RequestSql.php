@@ -76,7 +76,6 @@ class RequestSqlCore extends ObjectModel
 	/**
 	 * Get list of request SQL
 	 *
-	 * @static
 	 * @return array|bool
 	 */
 	public static function getRequestSql()
@@ -94,7 +93,6 @@ class RequestSqlCore extends ObjectModel
 	/**
 	 * Get list of request SQL by id request
 	 *
-	 * @static
 	 * @param $id
 	 * @return array
 	 */

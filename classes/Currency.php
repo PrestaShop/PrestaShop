@@ -290,7 +290,6 @@ class CurrencyCore extends ObjectModel
 	}
 
 	/**
-	 * @static
 	 * @param $iso_code
 	 * @param int $id_shop
 	 * @return int
@@ -310,8 +309,7 @@ class CurrencyCore extends ObjectModel
 	}
 
 	/**
-	 * @static
-	 * @param $iso_code
+	 * @param $iso_code_num
 	 * @param int $id_shop
 	 * @return int
 	 */
@@ -324,7 +322,6 @@ class CurrencyCore extends ObjectModel
 	}
 
 	/**
-	 * @static
 	 * @param int $id_shop
 	 * @return DbQuery
 	 */
@@ -347,9 +344,9 @@ class CurrencyCore extends ObjectModel
 	 * Refresh the currency exchange rate
 	 * The XML file define exchange rate for each from a default currency ($isoCodeSource).
 	 *
-	 * @param $data XML content which contains all the exchange rates
-	 * @param $isoCodeSource The default currency used in the XML file
-	 * @param $defaultCurrency The default currency object
+	 * @param SimpleXMLElement $data XML content which contains all the exchange rates
+	 * @param string $isoCodeSource The default currency used in the XML file
+	 * @param Currency $defaultCurrency The default currency object
 	 */
 	public function refreshCurrency($data, $isoCodeSource, $defaultCurrency)
 	{
@@ -413,8 +410,11 @@ class CurrencyCore extends ObjectModel
 
 		$currencies = Currency::getCurrencies(true, false, true);
 		foreach ($currencies as $currency)
+		{
+			/** @var Currency $currency */
 			if ($currency->id != $default_currency->id)
 				$currency->refreshCurrency($feed->list, $isoCodeSource, $default_currency);
+		}
 	}
 
 	/**

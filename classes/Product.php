@@ -178,7 +178,7 @@ class ProductCore extends ObjectModel
 	/** @var string Object available order date */
 	public $available_date = '0000-00-00';
 
-	/** @var enum Product condition (new, used, refurbished) */
+	/** @var string Enumerated (enum) product condition (new, used, refurbished) */
 	public $condition;
 
 	/** @var boolean Show price of Product */
@@ -1663,10 +1663,10 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
-	* Delete product attributes impacts
-	*
-	* @return Deletion result
-	*/
+	 * Delete product attributes impacts
+	 *
+	 * @return bool
+	 */
 	public function deleteAttributesImpacts()
 	{
 		return Db::getInstance()->execute(
@@ -2572,26 +2572,33 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
-	* Get product price
-	*
-	* @param integer $id_product Product id
-	* @param boolean $usetax With taxes or not (optional)
-	* @param integer $id_product_attribute Product attribute id (optional).
-	* 	If set to false, do not apply the combination price impact. NULL does apply the default combination price impact.
-	* @param integer $decimals Number of decimals (optional)
-	* @param integer $divisor Useful when paying many time without fees (optional)
-	* @param boolean $only_reduc Returns only the reduction amount
-	* @param boolean $usereduc Set if the returned amount will include reduction
-	* @param integer $quantity Required for quantity discount application (default value: 1)
-	* @param boolean $forceAssociatedTax DEPRECATED - NOT USED Force to apply the associated tax. Only works when the parameter $usetax is true
-	* @param integer $id_customer Customer ID (for customer group reduction)
-	* @param integer $id_cart Cart ID. Required when the cookie is not accessible (e.g., inside a payment module, a cron task...)
-	* @param integer $id_address Customer address ID. Required for price (tax included) calculation regarding the guest localization
-	* @param variable_reference $specificPriceOutput.
-	* 	If a specific price applies regarding the previous parameters, this variable is filled with the corresponding SpecificPrice object
-	* @param boolean $with_ecotax insert ecotax in price output.
-	* @return float Product price
-	*/
+	 * Returns product price
+	 *
+	 * @param int      $id_product            Product id
+	 * @param bool     $usetax                With taxes or not (optional)
+	 * @param int|null $id_product_attribute  Product attribute id (optional).
+	 *                                        If set to false, do not apply the combination price impact.
+	 *                                        NULL does apply the default combination price impact.
+	 * @param int      $decimals              Number of decimals (optional)
+	 * @param int|null $divisor               Useful when paying many time without fees (optional)
+	 * @param bool     $only_reduc            Returns only the reduction amount
+	 * @param bool     $usereduc              Set if the returned amount will include reduction
+	 * @param int      $quantity              Required for quantity discount application (default value: 1)
+	 * @param bool     $force_associated_tax  DEPRECATED - NOT USED Force to apply the associated tax.
+	 *                                        Only works when the parameter $usetax is true
+	 * @param int|null $id_customer           Customer ID (for customer group reduction)
+	 * @param int|null $id_cart               Cart ID. Required when the cookie is not accessible
+	 *                                        (e.g., inside a payment module, a cron task...)
+	 * @param int|null $id_address            Customer address ID. Required for price (tax included)
+	 *                                        calculation regarding the guest localization
+	 * @param null     $specific_price_output If a specific price applies regarding the previous parameters,
+	 *                                        this variable is filled with the corresponding SpecificPrice object
+	 * @param bool     $with_ecotax           Insert ecotax in price output.
+	 * @param bool     $use_group_reduction
+	 * @param Context  $context
+	 * @param bool     $use_customer_price
+	 * @return float                          Product price
+	 */
 	public static function getPriceStatic($id_product, $usetax = true, $id_product_attribute = null, $decimals = 6, $divisor = null,
 		$only_reduc = false, $usereduc = true, $quantity = 1, $force_associated_tax = false, $id_customer = null, $id_cart = null,
 		$id_address = null, &$specific_price_output = null, $with_ecotax = true, $use_group_reduction = true, Context $context = null,
@@ -2711,25 +2718,31 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
-	* Price calculation / Get product price
-	*
-	* @param integer $id_shop Shop id
-	* @param integer $id_product Product id
-	* @param integer $id_product_attribute Product attribute id
-	* @param integer $id_country Country id
-	* @param integer $id_state State id
-	* @param integer $id_currency Currency id
-	* @param integer $id_group Group id
-	* @param integer $quantity Quantity Required for Specific prices : quantity discount application
-	* @param boolean $use_tax with (1) or without (0) tax
-	* @param integer $decimals Number of decimals returned
-	* @param boolean $only_reduc Returns only the reduction amount
-	* @param boolean $use_reduc Set if the returned amount will include reduction
-	* @param boolean $with_ecotax insert ecotax in price output.
-	* @param variable_reference $specific_price_output
-	* 	If a specific price applies regarding the previous parameters, this variable is filled with the corresponding SpecificPrice object
-	* @return float Product price
-	**/
+	 * Price calculation / Get product price
+	 *
+	 * @param int    $id_shop Shop id
+	 * @param int    $id_product Product id
+	 * @param int    $id_product_attribute Product attribute id
+	 * @param int    $id_country Country id
+	 * @param int    $id_state State id
+	 * @param string $zipcode
+	 * @param int    $id_currency Currency id
+	 * @param int    $id_group Group id
+	 * @param int    $quantity Quantity Required for Specific prices : quantity discount application
+	 * @param bool   $use_tax with (1) or without (0) tax
+	 * @param int    $decimals Number of decimals returned
+	 * @param bool   $only_reduc Returns only the reduction amount
+	 * @param bool   $use_reduc Set if the returned amount will include reduction
+	 * @param bool   $with_ecotax insert ecotax in price output.
+	 * @param null   $specific_price If a specific price applies regarding the previous parameters,
+	 *                               this variable is filled with the corresponding SpecificPrice object
+	 * @param bool   $use_group_reduction
+	 * @param int    $id_customer
+	 * @param bool   $use_customer_price
+	 * @param int    $id_cart
+	 * @param int    $real_quantity
+	 * @return float Product price
+	 **/
 	public static function priceCalculation($id_shop, $id_product, $id_product_attribute, $id_country, $id_state, $zipcode, $id_currency,
 		$id_group, $quantity, $use_tax, $decimals, $only_reduc, $use_reduc, $with_ecotax, &$specific_price, $use_group_reduction,
 		$id_customer = 0, $use_customer_price = true, $id_cart = 0, $real_quantity = 0)
@@ -3013,7 +3026,7 @@ class ProductCore extends ObjectModel
 	 *
 	 * @param array $params
 	 * @param object $smarty DEPRECATED
-	 * @return Ambigous <string, mixed, Ambigous <number, string>>
+	 * @return string Ambigous <string, mixed, Ambigous <number, string>>
 	 */
 	public static function convertPriceWithCurrency($params, &$smarty)
 	{
@@ -3029,8 +3042,8 @@ class ProductCore extends ObjectModel
 	 * Display WT price with currency
 	 *
 	 * @param array $params
-	 * @param object DEPRECATED $smarty
-	 * @return Ambigous <string, mixed, Ambigous <number, string>>
+	 * @param Smarty $smarty DEPRECATED
+	 * @return string Ambigous <string, mixed, Ambigous <number, string>>
 	 */
 	public static function displayWtPriceWithCurrency($params, &$smarty)
 	{
@@ -4685,8 +4698,11 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
-	* @return the total taxes rate applied to the product
-	*/
+	 * Returns tax rate.
+	 *
+	 * @param Address|null $address
+	 * @return float The total taxes rate applied to the product
+	 */
 	public function getTaxesRate(Address $address = null)
 	{
 		if (!$address || !$address->id_country)
@@ -4724,11 +4740,11 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
-	* Webservice setter : set product features association
-	*
-	* @param $productFeatures Product Feature ids
-	* @return boolean
-	*/
+	 * Webservice setter : set product features association
+	 *
+	 * @param $product_features Product Feature ids
+	 * @return bool
+	 */
 	public function setWsProductFeatures($product_features)
 	{
 		Db::getInstance()->execute('
@@ -4751,10 +4767,11 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
-	* Webservice setter : set virtual field default combination
-	*
-	* @param $id_combination id default combination
-	*/
+	 * Webservice setter : set virtual field default combination
+	 *
+	 * @param int $id_combination id default combination
+	 * @return bool
+	 */
 	public function setWsDefaultCombination($id_combination)
 	{
 		$this->deleteDefaultAttributes();
@@ -4779,10 +4796,11 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
-	* Webservice setter : set category ids of current product for association
-	*
-	* @param $category_ids category ids
-	*/
+	 * Webservice setter : set category ids of current product for association
+	 *
+	 * @param array $category_ids category ids
+	 * @return bool
+	 */
 	public function setWsCategories($category_ids)
 	{
 		$ids = array();
@@ -5467,7 +5485,7 @@ class ProductCore extends ObjectModel
 
 	/**
 	 * This method allows to flush price cache
-	 * @static
+	 *
 	 * @since 1.5.0
 	 */
 	public static function flushPriceCache()
@@ -5576,7 +5594,10 @@ class ProductCore extends ObjectModel
 		$collection_download = new PrestaShopCollection('ProductDownload');
 		$collection_download->where('id_product', '=', $this->id);
 		foreach ($collection_download as $product_download)
+		{
+			/** @var ProductDownload $product_download */
 			$result &= $product_download->delete($product_download->checkFile());
+		}
 		return $result;
 	}
 

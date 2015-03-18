@@ -91,6 +91,10 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	 * GETTERS & SETTERS
 	 * ------------------------------------------------ */
 
+	/**
+	 * @param WebserviceOutputBuilderCore $obj
+	 * @return WebserviceSpecificManagementInterface
+	 */
 	public function setObjectOutput(WebserviceOutputBuilderCore $obj)
 	{
 		$this->objOutput = $obj;
@@ -818,6 +822,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 				{
 					if (in_array($this->imageType, array('categories', 'manufacturers', 'suppliers', 'stores')))
 					{
+						/** @var ObjectModel $object */
 						$object = new $this->wsObject->resourceList[$this->imageType]['class']((int)$this->wsObject->urlSegment[2]);
 						return $object->deleteImage(true);
 					}

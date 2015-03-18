@@ -231,13 +231,13 @@ abstract class AdminTabCore
 
 
 	/**
-	 * use translations files to replace english expression.
+	 * Uses translations files to find a translation for a given string (string should be in english).
 	 *
-	 * @param mixed $string term or expression in english
+	 * @param string $string term or expression in english
 	 * @param string $class
-	 * @param boolan $addslashes if set to true, the return value will pass through addslashes(). Otherwise, stripslashes().
-	 * @param boolean $htmlentities if set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
-	 * @return string the translation if available, or the english default text.
+	 * @param bool $addslashes if set to true, the return value will pass through addslashes(). Otherwise, stripslashes().
+	 * @param bool $htmlentities if set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
+	 * @return string The translation if available, or the english default text.
 	 */
 	protected function l($string, $class = 'AdminTab', $addslashes = false, $htmlentities = true)
 	{
@@ -333,6 +333,7 @@ abstract class AdminTabCore
 			<th>'.$this->l('Field Name').'</th>
 		</tr>';
 
+		/** @var ObjectModel $object */
 		$object = new $this->className();
 		$res = $object->getFieldsRequiredDatabase();
 
@@ -373,6 +374,8 @@ abstract class AdminTabCore
 				include_once('tabs/'.$classname.'.php');
 			if (!isset($this->_includeObj[$key]))
 				$this->_includeObj[$key] = new $classname;
+
+			/** @var AdminTab $adminTab */
 			$adminTab = $this->_includeObj[$key];
 			$adminTab->token = $this->token;
 
@@ -571,8 +574,11 @@ abstract class AdminTabCore
 		if (isset($_GET['deleteImage']))
 		{
 			if (Validate::isLoadedObject($object = $this->loadObject()))
+			{
+				/** @var ObjectModel $object */
 				if (($object->deleteImage()))
 					Tools::redirectAdmin(self::$currentIndex.'&add'.$this->table.'&'.$this->identifier.'='.Tools::getValue($this->identifier).'&conf=7&token='.$token);
+			}
 			$this->_errors[] = Tools::displayError('An error occurred during image deletion (cannot load object).');
 		}
 
@@ -583,6 +589,7 @@ abstract class AdminTabCore
 			{
 				if (Validate::isLoadedObject($object = $this->loadObject()) && isset($this->fieldImageSettings))
 				{
+					/** @var ObjectModel $object */
 					// check if request at least one object with noZeroObject
 					if (isset($object->noZeroObject) && count(call_user_func(array($this->className, $object->noZeroObject))) <= 1)
 						$this->_errors[] = Tools::displayError('You need at least one object.').' <b>'.$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
@@ -620,6 +627,7 @@ abstract class AdminTabCore
 			{
 				if (Validate::isLoadedObject($object = $this->loadObject()))
 				{
+					/** @var ObjectModel $object */
 					if ($object->toggleStatus())
 						Tools::redirectAdmin(self::$currentIndex.'&conf=5'.((($id_category = (int)(Tools::getValue('id_category'))) && Tools::getValue('id_product')) ? '&id_category='.$id_category : '').'&token='.$token);
 					else
@@ -634,6 +642,7 @@ abstract class AdminTabCore
 		/* Move an object */
 		elseif (isset($_GET['position']))
 		{
+			/** @var ObjectModel $object */
 			if ($this->tabAccess['edit'] !== '1')
 				$this->_errors[] = Tools::displayError('You do not have permission to edit here.');
 			elseif (!Validate::isLoadedObject($object = $this->loadObject()))
@@ -650,6 +659,7 @@ abstract class AdminTabCore
 			{
 				if (isset($_POST[$this->table.'Box']))
 				{
+					/** @var ObjectModel $object */
 					$object = new $this->className();
 					if (isset($object->noZeroObject) &&
 						// Check if all object will be deleted
@@ -662,6 +672,7 @@ abstract class AdminTabCore
 						{
 							foreach (Tools::getValue($this->table.'Box') as $id)
 							{
+								/** @var ObjectModel $toDelete */
 								$toDelete = new $this->className($id);
 								$toDelete->deleted = 1;
 								$result = $result && $toDelete->update();
@@ -698,12 +709,14 @@ abstract class AdminTabCore
 				{
 					if ($this->tabAccess['edit'] === '1' || ($this->table == 'employee' && $this->context->employee->id == Tools::getValue('id_employee') && Tools::isSubmit('updateemployee')))
 					{
+						/** @var ObjectModel $object */
 						$object = new $this->className($id);
 						if (Validate::isLoadedObject($object))
 						{
 							/* Specific to objects which must not be deleted */
 							if ($this->deleted && $this->beforeDelete($object))
 							{
+								/** @var ObjectModel $objectNew */
 								// Create new one with old objet values
 								$objectNew = new $this->className($object->id);
 								$objectNew->id = null;
@@ -765,6 +778,7 @@ abstract class AdminTabCore
 				{
 					if ($this->tabAccess['add'] === '1')
 					{
+						/** @var ObjectModel $object */
 						$object = new $this->className();
 						$this->copyFromPost($object, $this->table);
 						if (!$object->add())
@@ -897,6 +911,7 @@ abstract class AdminTabCore
 			if (!is_array($fields = Tools::getValue('fieldsBox')))
 				$fields = array();
 
+			/** @var ObjectModel $object */
 			$object = new $this->className();
 			if (!$object->addFieldsRequiredDatabase($fields))
 				$this->_errors[] = Tools::displayError('Error in updating required fields');

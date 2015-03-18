@@ -35,16 +35,20 @@ class AdminThemesControllerCore extends AdminController
 		parent::__construct();
 	}
 
-	/** This value is used in isThemeCompatible method. only version node with an
+	/**
+	 * This value is used in isThemeCompatible method. only version node with an
 	 * higher version number will be used in [theme]/config.xml
+	 *
 	 * @since 1.4.0.11, check theme compatibility 1.4
-	 * @static
+	 * @var string
 	 */
 	public static $check_features_version = '1.4';
 
-	/** $check_features is a multidimensional array used to check [theme]/config.xml values,
+	/**
+	 * Multidimensional array used to check [theme]/config.xml values,
 	 * and also checks prestashop current configuration if not match.
-	 * @static
+	 *
+	 * @var array
 	 */
 	public static $check_features = array(
 		'ccc' => array(
@@ -594,6 +598,7 @@ class AdminThemesControllerCore extends AdminController
 			}
 		}
 
+		/** @var Theme $theme */
 		$theme = parent::processAdd();
 		if ((int)$theme->product_per_page == 0)
 		{
@@ -663,6 +668,7 @@ class AdminThemesControllerCore extends AdminController
 
 	public function processDelete()
 	{
+		/** @var Theme $obj */
 		$obj = $this->loadObject();
 		if ($obj)
 		{
@@ -827,6 +833,12 @@ class AdminThemesControllerCore extends AdminController
 		return false;
 	}
 
+	/**
+	 * @param ZipArchive $obj
+	 * @param string $file
+	 * @param string $server_path
+	 * @param string $archive_path
+	 */
 	private function archiveThisFile($obj, $file, $server_path, $archive_path)
 	{
 		if (is_dir($server_path.$file))
@@ -2809,6 +2821,7 @@ class AdminThemesControllerCore extends AdminController
 	{
 		if (Validate::isLoadedObject($object = $this->loadObject()))
 		{
+			/** @var Theme $object */
 			if ($object->toggleResponsive())
 				$this->redirect_after = self::$currentIndex.'&conf=5&token='.$this->token;
 			else
@@ -2826,6 +2839,7 @@ class AdminThemesControllerCore extends AdminController
 	{
 		if (Validate::isLoadedObject($object = $this->loadObject()))
 		{
+			/** @var Theme $object */
 			if ($object->toggleDefaultLeftColumn())
 				$this->redirect_after = self::$currentIndex.'&conf=5&token='.$this->token;
 			else
@@ -2843,6 +2857,7 @@ class AdminThemesControllerCore extends AdminController
 	{
 		if (Validate::isLoadedObject($object = $this->loadObject()))
 		{
+			/** @var Theme $object */
 			if ($object->toggleDefaultRightColumn())
 				$this->redirect_after = self::$currentIndex.'&conf=5&token='.$this->token;
 			else

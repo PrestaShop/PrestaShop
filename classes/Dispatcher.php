@@ -848,7 +848,7 @@ class DispatcherCore
 	/**
 	 * Get list of available controllers from the specified dir
 	 *
-	 * @param string dir directory to scan (recursively)
+	 * @param string $dir Directory to scan (recursively)
 	 * @return array
 	 */
 	public static function getControllersInDirectory($dir)
