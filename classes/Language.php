@@ -489,12 +489,22 @@ class LanguageCore extends ObjectModel
 				$this->iso_code = Language::getIsoById($this->id);
 
 			// Database translations deletion
+			$regexp = '/^'.preg_quote(_DB_PREFIX_).'.*_lang$/';
 			$result = Db::getInstance()->executeS('SHOW TABLES FROM `'._DB_NAME_.'`');
 			foreach ($result as $row)
-				if (isset($row['Tables_in_'._DB_NAME_]) && !empty($row['Tables_in_'._DB_NAME_]) && preg_match('/'.preg_quote(_DB_PREFIX_).'_lang/', $row['Tables_in_'._DB_NAME_]))
-					if (!Db::getInstance()->execute('DELETE FROM `'.$row['Tables_in_'._DB_NAME_].'` WHERE `id_lang` = '.(int)$this->id))
-						return false;
-
+				if (isset($row['Tables_in_'._DB_NAME_]) && !empty($row['Tables_in_'._DB_NAME_]) && preg_match($regexp, $row['Tables_in_'._DB_NAME_]))
+				{
+					// TO BE DISCUSSED:
+					// Ignore errors because of tables from additional modules that may not respect id_lang column convention
+					try
+					{
+						Db::getInstance()->execute('DELETE FROM `'.$row['Tables_in_'._DB_NAME_].'` WHERE `id_lang` = '.(int)$this->id);
+					}
+					catch (Exception $e)
+					{
+						echo 'ERROR with '.$row['Tables_in_'._DB_NAME_].'<br>';
+					}
+				}
 
 			// Delete tags
 			Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'tag WHERE id_lang = '.(int)$this->id);
