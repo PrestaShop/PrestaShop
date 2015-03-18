@@ -26,14 +26,14 @@
 
 namespace PrestaShop\PrestaShop\Tests\Unit\Classes;
 
-use PrestaShop\PrestaShop\Tests\TestCase\PrestaShopPHPUnit;
+use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
 use Media;
 
-class MediaCoreTest extends PrestaShopPHPUnit
+class MediaCoreTest extends IntegrationTestCase
 {
     public function testCorrectJQueryNoConflictURL()
     {
         $result = Media::getJqueryPath('1.11');
-        $this->assertEquals(true, in_array('http://localhost/prestashop.unit.test/js/jquery/jquery.noConflict.php?version=1.11', $result));
+        $this->assertEquals(true, in_array('http://localhost'.__PS_BASE_URI__.'js/jquery/jquery.noConflict.php?version=1.11', $result));
     }
 }
