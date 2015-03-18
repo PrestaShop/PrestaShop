@@ -453,9 +453,14 @@ class AdminProductsControllerCore extends AdminController
 		$category = Tools::getValue('category', Category::getRootCategory()->id);
 		$fullTree = Tools::getValue('fullTree', 0);
 		$selected = Tools::getValue('selected', array());
+		$type = Tools::getValue('type', '');
+		if ($type == 'categories-tree')
+			$use_check_box = false;
+		else
+			$use_check_box = true;
 		$tree = new HelperTreeCategories('subtree_associated_categories');
 		$tree->setTemplate('subtree_associated_categories.tpl')
-			->setUseCheckBox(true)
+			->setUseCheckBox($use_check_box)
 			->setUseSearch(true)
 			->setSelectedCategories($selected)
 			->setFullTree($fullTree)
@@ -2429,7 +2434,7 @@ class AdminProductsControllerCore extends AdminController
 			$tree = new HelperTreeCategories('categories-tree', $this->l('Filter by category'));
 			$tree->setAttribute('is_category_filter', (bool)$this->id_current_category)
 				->setAttribute('base_url', preg_replace('#&id_category=[0-9]*#', '', self::$currentIndex).'&token='.$this->token)
-				->setInputName('id-category')
+				->setRootCategory(Configuration::get('PS_ROOT_CATEGORY'))
 				->setSelectedCategories(array((int)$id_category));
 			$this->tpl_list_vars['category_tree'] = $tree->render();
 
