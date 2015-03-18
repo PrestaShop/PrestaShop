@@ -63,10 +63,12 @@ abstract class DbCore
 	protected $result;
 
 	/** @var array List of DB instances */
-	protected static $instance = array();
+	public static $instance = array();
 
 	/** @var array List of server settings */
-	protected static $_servers = array();
+	public static $_servers = array();
+
+    public static $_slave_servers_loaded = null;
 
 	/**
 	 * Store last executed query
@@ -256,15 +258,14 @@ abstract class DbCore
 	 */
 	protected static function loadSlaveServers()
 	{
-		static $is_loaded = null;
-		if ($is_loaded !== null)
+		if (self::$_slave_servers_loaded !== null)
 			return;
 
 		// Add here your slave(s) server(s) in this file
 		if (file_exists(_PS_ROOT_DIR_.'/config/db_slave_server.inc.php'))
 			self::$_servers = array_merge(self::$_servers, require(_PS_ROOT_DIR_.'/config/db_slave_server.inc.php'));
 
-		$is_loaded = true;
+		self::$_slave_servers_loaded = true;
 	}
 
 	/**
