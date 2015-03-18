@@ -97,9 +97,7 @@ class HelperTreeCategoriesCore extends TreeCore
 					$new_selected_categories[] = $selected_category;
 					$parents = $category->getParentsCategories($this->getLang());
 					foreach($parents as $value)
-					{
 						$new_selected_categories[] = $value['id_category'];
-					}
 				}
 				$new_selected_categories = array_unique($new_selected_categories);
 				foreach($new_selected_categories as $selected_category)
