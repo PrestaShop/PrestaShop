@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,17 +18,12 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @version  Release: $Revision$
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <p class="info-title">{l s='Choose the delivery addresses'}</p>
-<script type="text/javascript">
-	CloseTxt = '{l s='Submit' js=1}';
-	QtyChanged = '{l s='Some product quantities have changed. Please check them' js=1}';
-	ShipToAnOtherAddress = '{l s='Ship to multiple addresses' js=1}';
-</script>
 <div id="order-detail-content" class="table_block table-responsive">
 	<table id="cart_summary" class="table table-bordered multishipping-cart">
 		<thead>
@@ -53,3 +48,6 @@
 		</tbody>
 	</table>
 </div>
+{addJsDefL name=CloseTxt}{l s='Submit' js=1}{/addJsDefL}
+{addJsDefL name=QtyChanged}{l s='Some product quantities have changed. Please check them' js=1}{/addJsDefL}
+{addJsDefL name=ShipToAnOtherAddress}{l s='Ship to multiple addresses' js=1}{/addJsDefL}

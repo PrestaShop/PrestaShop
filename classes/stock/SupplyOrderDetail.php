@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -177,18 +177,18 @@ class SupplyOrderDetailCore extends ObjectModel
 	/**
 	 * @see ObjectModel::$webserviceParameters
 	 */
- 	protected $webserviceParameters = array(
- 		'objectsNodeName' => 'supply_order_details',
+	protected $webserviceParameters = array(
+		'objectsNodeName' => 'supply_order_details',
 		'objectNodeName' => 'supply_order_detail',
- 		'fields' => array(
- 			'id_supply_order' => array('xlink_resource' => 'supply_orders'),
- 			'id_product' => array('xlink_resource' => 'products'),
- 			'id_product_attribute' => array('xlink_resource' => 'combinations'),
- 		),
- 		'hidden_fields' => array(
- 			'id_currency',
- 		),
- 	);
+		'fields' => array(
+			'id_supply_order' => array('xlink_resource' => 'supply_orders'),
+			'id_product' => array('xlink_resource' => 'products'),
+			'id_product_attribute' => array('xlink_resource' => 'combinations'),
+		),
+		'hidden_fields' => array(
+			'id_currency',
+		),
+	);
 
 	/**
 	 * @see ObjectModel::update()
@@ -240,7 +240,7 @@ class SupplyOrderDetailCore extends ObjectModel
 	 * Applies a global order discount rate, for the current product (i.e detail)
 	 * Calls ObjectModel::update()
 	 *
-	 * @param $discount_rate The discount rate in percent (Ex. 5 for 5 percents)
+	 * @param float|int $discount_rate The discount rate in percent (Ex. 5 for 5 percents)
 	 */
 	public function applyGlobalDiscount($discount_rate)
 	{
@@ -261,8 +261,8 @@ class SupplyOrderDetailCore extends ObjectModel
 	/**
 	 * @see ObjectModel::validateController()
 	 *
-	 * @param $htmlentities Optional
-	 * @return $errors If any..
+	 * @param bool $htmlentities Optional
+	 * @return array Errors, if any..
 	 */
 	public function validateController($htmlentities = true)
 	{

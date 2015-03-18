@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -28,7 +28,7 @@ class HelperImageUploaderCore extends HelperUploader
 {
 	public function getMaxSize()
 	{
-		return (int)Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE');
+		return (int)Tools::getMaxUploadSize();
 	}
 
 	public function getSavePath()
@@ -44,11 +44,21 @@ class HelperImageUploaderCore extends HelperUploader
 
 	protected function validate(&$file)
 	{
-		$post_max_size = $this->getPostMaxSizeBytes();
+		$file['error'] = $this->checkUploadError($file['error']);
+
+		$post_max_size = Tools::convertBytes(ini_get('post_max_size'));
+
+		$upload_max_filesize = Tools::convertBytes(ini_get('upload_max_filesize'));
 
 		if ($post_max_size && ($this->_getServerVars('CONTENT_LENGTH') > $post_max_size))
 		{
 			$file['error'] = Tools::displayError('The uploaded file exceeds the post_max_size directive in php.ini');
+			return false;
+		}
+
+		if ($upload_max_filesize && ($this->_getServerVars('CONTENT_LENGTH') > $upload_max_filesize))
+		{
+			$file['error'] = Tools::displayError('The uploaded file exceeds the upload_max_filesize directive in php.ini');
 			return false;
 		}
 
@@ -60,7 +70,7 @@ class HelperImageUploaderCore extends HelperUploader
 
 		if ($file['size'] > $this->getMaxSize())
 		{
-			$file['error'] = Tools::displayError('File is too big');
+			$file['error'] = sprintf(Tools::displayError('File (size : %1s) is too big (max : %2s)'), $file['size'], $this->getMaxSize());
 			return false;
 		}
 

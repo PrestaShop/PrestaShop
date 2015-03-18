@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -59,7 +59,7 @@ if (Tools::isSubmit('ajaxProductPackItems'))
 	NATURAL LEFT JOIN `'._DB_PREFIX_.'product_lang` pl
 	WHERE pl.`id_lang` = '.(int)(Tools::getValue('id_lang')).'
 	'.Shop::addSqlRestrictionOnLang('pl').'
-	AND p.`id_product` NOT IN (SELECT DISTINCT id_product_pack FROM `'._DB_PREFIX_.'pack`)
+	AND NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'pack` WHERE `id_product_pack` = p.`id_product`)
 	AND p.`id_product` != '.(int)(Tools::getValue('id_product')));
 
 	foreach ($products AS $packItem)
@@ -116,13 +116,10 @@ if (Tools::isSubmit('getParentCategoriesId') && $id_category = Tools::getValue('
 
 if (Tools::isSubmit('getZones'))
 {
-	$zones = Zone::getZones();
 	$html = '<select id="zone_to_affect" name="zone_to_affect">';
-	foreach ($zones as $z)
-	{
+	foreach (Zone::getZones() as $z)
 		$html .= '<option value="'.$z['id_zone'].'">'.$z['name'].'</option>';
-	}
 	$html .= '</select>';
 	$array = array('hasError' => false, 'errors' => '', 'data' => $html);
-	die(Tools::jsonEncode($html));
+	die(Tools::jsonEncode($array));
 }

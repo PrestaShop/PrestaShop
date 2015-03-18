@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -34,10 +34,10 @@
 		<p>
 			<a class="btn btn-default" href="{$backup_url}">
 				<i class="icon-download"></i> 
-				{l s='Download the backup file'} ({$backup_weight}{l s='MB'})
+				{l s='Download the backup file (%s MB)' sprintf=$backup_weight}
 			</a>
 		</p>
-		<p>{l s='Tip: You can also download this file over to your FTP. Backup files are located in the "admin/backups" directory.'}</p>
+		<p>{l s='Tip: You can also download this file from your FTP server. Backup files are located in the "/adminXXXX/backups" directory.'}</p>
 	</div>
 
 	<div class="row">
@@ -47,7 +47,7 @@
 			<ol>
 				<li>{l s='PrestaShop is not responsible for your database, its backups and/or recovery.'}</li>
 				<li>{l s='PrestaShop is open-source software. You are using it at your own risk under the license agreement.'}</li>
-				<li>{l s='You should backup your data on a regular basis (both files and database).'}</li>
+				<li>{l s='You should back up your data on a regular basis (both files and database).'}</li>
 				<li>{l s='This function only backs up your database, not your files.'}</li>
 				<li>{l s='By default, your existing database tables will be dropped during the backup recovery (see "Backup options" below).'}</li>
 				<li>{l s='Always verify the quality and integrity of your backup files!'}</li>
@@ -55,7 +55,7 @@
 				<li>{l s='Always check your data.'}</li>
 				<li>{l s='Never restore a backup on a live site.'}</li>
 			</ol>
-			<form action="{$currentIndex}&add{$table}&token={$token}" method="post" class="form-horizontal">
+			<form action="{$currentIndex|escape:'html':'UTF-8'}&amp;add{$table}&amp;token={$token|escape:'html':'UTF-8'}" method="post" class="form-horizontal">
 				<button type="submit" class="btn btn-default">
 					<i class="icon-save"></i> 
 					{l s='I have read the disclaimer. Please create a new backup.'}
@@ -76,10 +76,9 @@
 				<li>{l s='Unless you enabled the "Drop existing tables" option, you must delete all tables from your current database.'}</li>
 				<li>{l s='At the top of the screen, please select the "Import" tab'}</li>
 				<li>{l s='Click on the "Browse" button and select the backup file from your hard drive.'}</li>
-				<li>{l s='Check the maximum filesize allowed (e.g. Max: 16MB)'}<br />{l s='If your backup file exceeds this limit, contact your hosting provider for assistence. '}</li>
-				<li>{l s='Click on the "Go" button and please wait patiently for the import  process to conclude. This may take several minutes.'}</li>
+				<li>{l s='Check the maximum filesize allowed (e.g. Max: 16MB)'}<br />{l s='If your backup file exceeds this limit, contact your hosting provider for assistance. '}</li>
+				<li>{l s='Click on the "Go" button and please wait patiently for the import process to conclude. This may take several minutes.'}</li>
 			</ol>
 		</div>
 	</div>
-
 {/block}

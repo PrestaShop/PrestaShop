@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -35,6 +35,7 @@ class CustomerMessageCore extends ObjectModel
 	public $user_agent;
 	public $private;
 	public $date_add;
+	public $date_upd;
 	public $read;
 
 	/**
@@ -52,10 +53,11 @@ class CustomerMessageCore extends ObjectModel
 			'user_agent' => 		array('type' => self::TYPE_STRING),
 			'private' => 			array('type' => self::TYPE_INT),
 			'date_add' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'date_upd' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 			'read' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool')
 		),
 	);
-	
+
 	protected $webserviceParameters = array(
 		'fields' => array(
 			'id_employee' => array(
@@ -104,11 +106,11 @@ class CustomerMessageCore extends ObjectModel
 				WHERE '.$where
 			);
 	}
-	
+
 	public function delete()
 	{
 		if (!empty($this->file_name))
 			@unlink(_PS_UPLOAD_DIR_.$this->file_name);
 		return parent::delete();
-	}  
+	}
 }

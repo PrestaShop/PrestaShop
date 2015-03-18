@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -28,12 +28,12 @@
 	{if $field['type'] == 'checkbox_table'}
 		{*TODO : overflow*}
 		<div class="well margin-form" style="height: 300px; overflow-y: auto;">
-			<table class="table" cellspacing="0">
+			<table class="table" style="border-spacing : 0; border-collapse : collapse;">
 				<thead>
 					<tr>
 						<th><input type="checkbox" name="checkAll" onclick="checkDelBoxes(this.form, 'countries[]', this.checked)" /></th>
 						<th>{l s='Name'}</th>
-					<tr>
+					</tr>
 				</thead>
 				<tbody>
 					{foreach $field['list'] as $country}

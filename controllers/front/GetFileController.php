@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -59,7 +59,7 @@ class GetFileControllerCore extends FrontController
 			Tools::setCookieLanguage();
 			if (!$this->context->customer->isLogged() && !Tools::getValue('secure_key') && !Tools::getValue('id_order'))
 				Tools::redirect('index.php?controller=authentication&back=get-file.php&key='.$key);
-			else if (!$this->context->customer->isLogged() && Tools::getValue('secure_key') && Tools::getValue('id_order'))
+			elseif (!$this->context->customer->isLogged() && Tools::getValue('secure_key') && Tools::getValue('id_order'))
 			{
 				$order = new Order((int)Tools::getValue('id_order'));
 				if (!Validate::isLoadedObject($order))
@@ -83,7 +83,7 @@ class GetFileControllerCore extends FrontController
 			if (!isset($info['id_product_download']) || empty($info['id_product_download']))
 				$this->displayCustomError('This product has been deleted.');
 
-			if (!file_exists(_PS_DOWNLOAD_DIR_.$filename))
+			if (!Validate::isFileName($info['filename']) || !file_exists(_PS_DOWNLOAD_DIR_.$info['filename']))
 				$this->displayCustomError('This file no longer exists.');
 
             if (isset($info['product_quantity_refunded']) && isset($info['product_quantity_return']) &&
@@ -118,9 +118,9 @@ class GetFileControllerCore extends FrontController
 			$mimeType = @finfo_file($finfo, $file);
 			@finfo_close($finfo);
 		}
-		else if (function_exists('mime_content_type'))
+		elseif (function_exists('mime_content_type'))
 			$mimeType = @mime_content_type($file);
-		else if (function_exists('exec'))
+		elseif (function_exists('exec'))
 		{
 			$mimeType = trim(@exec('file -b --mime-type '.escapeshellarg($file)));
 			if (!$mimeType)
@@ -281,8 +281,10 @@ class GetFileControllerCore extends FrontController
 		//prevents max execution timeout, when reading large files
 		@set_time_limit(0);
 		$fp = fopen($file, 'rb');
-		while (!feof($fp))
-			echo fgets($fp, 16384);
+
+		if ($fp && is_resource($fp))
+			while (!feof($fp))
+				echo fgets($fp, 16384);
 
 		exit;
 	}

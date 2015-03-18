@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -29,27 +29,36 @@
  */
 class ModuleFrontControllerCore extends FrontController
 {
-	/**
-	 * @var Module
-	 */
+	/** @var Module */
 	public $module;
 
 	public function __construct()
 	{
-		$this->controller_type = 'modulefront';
-		
 		$this->module = Module::getInstanceByName(Tools::getValue('module'));
 		if (!$this->module->active)
 			Tools::redirect('index');
+
 		$this->page_name = 'module-'.$this->module->name.'-'.Dispatcher::getInstance()->getController();
 
 		parent::__construct();
+
+		$this->controller_type = 'modulefront';
+
+		$in_base = isset($this->page_name) && is_object(Context::getContext()->theme) && Context::getContext()->theme->hasColumnsSettings($this->page_name);
+
+		$tmp = isset($this->display_column_left) ? (bool)$this->display_column_left : true;
+		$this->display_column_left = $in_base ? Context::getContext()->theme->hasLeftColumn($this->page_name) : $tmp;
+
+		$tmp = isset($this->display_column_right) ? (bool)$this->display_column_right : true;
+		$this->display_column_right = $in_base ? Context::getContext()->theme->hasRightColumn($this->page_name) : $tmp;
+
 	}
 
 	/**
-	 * Assign module template
+	 * Assigns module template for page content
 	 *
-	 * @param string $template
+	 * @param string $template Template filename
+	 * @throws PrestaShopException
 	 */
 	public function setTemplate($template)
 	{
@@ -60,9 +69,10 @@ class ModuleFrontControllerCore extends FrontController
 	}
 
 	/**
-	 * Get path to front office templates for the module
+	 * Finds and returns module front template that take the highest precedence
 	 *
-	 * @return string
+	 * @param $template Template filename
+	 * @return string|false
 	 */
 	public function getTemplatePath($template)
 	{

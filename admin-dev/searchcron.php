@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -27,7 +27,9 @@
 if (!defined('_PS_ADMIN_DIR_'))
 	define('_PS_ADMIN_DIR_', getcwd());
 include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
-Context::getContext()->shop->setContext(Shop::CONTEXT_ALL);
+
+if (!Tools::getValue('id_shop'))
+	Context::getContext()->shop->setContext(Shop::CONTEXT_ALL);
 
 if (substr(_COOKIE_KEY_, 34, 8) != Tools::getValue('token'))
 	die;
@@ -35,5 +37,4 @@ if (substr(_COOKIE_KEY_, 34, 8) != Tools::getValue('token'))
 ini_set('max_execution_time', 7200);
 Search::indexation(Tools::getValue('full'));
 if (Tools::getValue('redirect'))
-Tools::redirectAdmin($_SERVER['HTTP_REFERER'].'&conf=4');
-
+	Tools::redirectAdmin($_SERVER['HTTP_REFERER'].'&conf=4');

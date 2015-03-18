@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -31,24 +31,25 @@ include(_PS_ADMIN_DIR_.'/../config/config.inc.php');
 if (!Context::getContext()->employee->isLoggedBack())
 	Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminLogin'));
 
-$tabAccess = Profile::getProfileAccess(Context::getContext()->employee->id_profile, Tab::getIdFromClassName('AdminBackup'));
+$tabAccess = Profile::getProfileAccess(Context::getContext()->employee->id_profile,
+	Tab::getIdFromClassName('AdminBackup'));
 
 if ($tabAccess['view'] !== '1')
 	die (Tools::displayError('You do not have permission to view this.'));
 
-$backupdir = realpath(_PS_ADMIN_DIR_ . '/backups/');
+$backupdir = realpath(PrestaShopBackup::getBackupPath());
 
 if ($backupdir === false)
-	die (Tools::displayError('A "Backup" directory does not exist.'));
+	die (Tools::displayError('There is no "/backup" directory.'));
 
 if (!$backupfile = Tools::getValue('filename'))
 	die (Tools::displayError('No file has been specified.'));
 
 // Check the realpath so we can validate the backup file is under the backup directory
-$backupfile = realpath($backupdir.'/'.$backupfile);
+$backupfile = realpath($backupdir.DIRECTORY_SEPARATOR.$backupfile);
 
 if ($backupfile === false OR strncmp($backupdir, $backupfile, strlen($backupdir)) != 0 )
-	die (Tools::displayError());
+	die (Tools::dieOrLog('The backup file does not exist.'));
 
 if (substr($backupfile, -4) == '.bz2')
     $contentType = 'application/x-bzip2';

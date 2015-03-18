@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -29,7 +29,7 @@
 	{l s='Credit slips'}
 </h1>
 <p class="info-title">
-	{l s='Credit slips you have received after cancelled orders'}.
+	{l s='Credit slips you have received after canceled orders'}.
 </p>
 <div class="block-center" id="block-history">
 	{if $ordersSlip && count($ordersSlip)}

@@ -120,15 +120,21 @@ Date.prototype.format = function(format) {
 
 	for (var i=0; i<=formatParts.length; i++) {
 		switch(formatParts[i]) {
-			case 'dd':
 			case 'd':
 			case 'j':
 			result += this.getDate() + formatSeparator;
 			break;
 
-			case 'mm':
+			case 'dd':
+			result += (this.getDate() < 10 ? '0' : '')+this.getDate() + formatSeparator;
+			break;
+
 			case 'm':
 			result += (this.getMonth() + 1) + formatSeparator;
+			break;
+
+			case 'mm':
+			result += (this.getMonth() < 9 ? '0' : '')+(this.getMonth() + 1) + formatSeparator;
 			break;
 
 			case 'yy':
@@ -181,6 +187,7 @@ function setDayPeriod() {
 	updatePickerFromInput();
 	$('#datepicker-from-info').html($("#date-start").val());
 	$('#datepicker-to-info').html($("#date-end").val());
+	$('#preselectDateRange').val('day');
 	$('button[name="submitDateRange"]').click();
 }
 
@@ -194,6 +201,7 @@ function setPreviousDayPeriod() {
 	updatePickerFromInput();
 	$('#datepicker-from-info').html($("#date-start").val());
 	$('#datepicker-to-info').html($("#date-end").val());
+	$('#preselectDateRange').val('prev-day');
 	$('button[name="submitDateRange"]').click();
 }
 
@@ -207,6 +215,7 @@ function setMonthPeriod() {
 	updatePickerFromInput();
 	$('#datepicker-from-info').html($("#date-start").val());
 	$('#datepicker-to-info').html($("#date-end").val());
+	$('#preselectDateRange').val('month');
 	$('button[name="submitDateRange"]').click();
 }
 
@@ -221,6 +230,7 @@ function setPreviousMonthPeriod() {
 	updatePickerFromInput();
 	$('#datepicker-from-info').html($("#date-start").val());
 	$('#datepicker-to-info').html($("#date-end").val());
+	$('#preselectDateRange').val('prev-month');
 	$('button[name="submitDateRange"]').click();
 }
 
@@ -234,6 +244,7 @@ function setYearPeriod() {
 	updatePickerFromInput();
 	$('#datepicker-from-info').html($("#date-start").val());
 	$('#datepicker-to-info').html($("#date-end").val());
+	$('#preselectDateRange').val('year');
 	$('button[name="submitDateRange"]').click();
 }
 
@@ -249,6 +260,7 @@ function setPreviousYearPeriod() {
 	updatePickerFromInput();
 	$('#datepicker-from-info').html($("#date-start").val());
 	$('#datepicker-to-info').html($("#date-end").val());
+	$('#preselectDateRange').val('prev-year');
 	$('button[name="submitDateRange"]').click();
 }
 

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -74,12 +74,12 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 	 * @var int Total of elements for iteration
 	 */
 	protected $total;
-	
+
 	/**
 	 * @var int Page number
 	 */
 	protected $page_number = 0;
-	
+
 	/**
 	 * @var int Size of a page
 	 */
@@ -105,7 +105,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 		$this->definition = ObjectModel::getDefinition($this->classname);
 		if (!isset($this->definition['table']))
 			throw new PrestaShopException('Miss table in definition for class '.$this->classname);
-		else if (!isset($this->definition['primary']))
+		elseif (!isset($this->definition['primary']))
 			throw new PrestaShopException('Miss primary in definition for class '.$this->classname);
 
 		$this->query = new DbQuery();
@@ -114,10 +114,10 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 	/**
 	 * Join current entity to an associated entity
 	 *
-	 * @param $association Association name
+	 * @param string $association Association name
 	 * @param string $on
 	 * @param int $type
-	 * @return Collection
+	 * @return PrestaShopCollection
 	 */
 	public function join($association, $on = '', $type = null)
 	{
@@ -152,7 +152,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 	 * @param string $operator List of operators : =, !=, <>, <, <=, >, >=, like, notlike, regexp, notregexp
 	 * @param mixed $value
 	 * @param string $type where|having
-	 * @return Collection
+	 * @return PrestaShopCollection
 	 */
 	public function where($field, $operator, $value, $method = 'where')
 	{
@@ -216,7 +216,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 	 * Add WHERE restriction on query using real SQL syntax
 	 *
 	 * @param string $sql
-	 * @return Collection
+	 * @return PrestaShopCollection
 	 */
 	public function sqlWhere($sql)
 	{
@@ -230,7 +230,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 	 * @param string $field Field name
 	 * @param string $operator List of operators : =, !=, <>, <, <=, >, >=, like, notlike, regexp, notregexp
 	 * @param mixed $value
-	 * @return Collection
+	 * @return PrestaShopCollection
 	 */
 	public function having($field, $operator, $value)
 	{
@@ -241,7 +241,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 	 * Add HAVING restriction on query using real SQL syntax
 	 *
 	 * @param string $sql
-	 * @return Collection
+	 * @return PrestaShopCollection
 	 */
 	public function sqlHaving($sql)
 	{
@@ -254,7 +254,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 	 *
 	 * @param string $field Field name
 	 * @param string $order asc|desc
-	 * @return Collection
+	 * @return PrestaShopCollection
 	 */
 	public function orderBy($field, $order = 'asc')
 	{
@@ -269,7 +269,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 	 * Add ORDER BY restriction on query using real SQL syntax
 	 *
 	 * @param string $sql
-	 * @return Collection
+	 * @return PrestaShopCollection
 	 */
 	public function sqlOrderBy($sql)
 	{
@@ -281,7 +281,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 	 * Add GROUP BY restriction on query
 	 *
 	 * @param string $field Field name
-	 * @return Collection
+	 * @return PrestaShopCollection
 	 */
 	public function groupBy($field)
 	{
@@ -293,7 +293,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 	 * Add GROUP BY restriction on query using real SQL syntax
 	 *
 	 * @param string $sql
-	 * @return Collection
+	 * @return PrestaShopCollection
 	 */
 	public function sqlGroupBy($sql)
 	{
@@ -305,7 +305,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 	 * Launch sql query to create collection of objects
 	 *
 	 * @param bool $display_query If true, query will be displayed (for debug purpose)
-	 * @return Collection
+	 * @return PrestaShopCollection
 	 */
 	public function getAll($display_query = false)
 	{
@@ -344,11 +344,10 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 				break;
 			}
 		}
-		
+
 		// All limit clause
 		if ($this->page_size)
 			$this->query->limit($this->page_size, $this->page_number * $this->page_size);
-		
 
 		// Shall we display query for debug ?
 		if ($display_query)
@@ -659,7 +658,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 				// Test field validity for language fields
 				if (empty($definition['is_lang']) && !empty($definition['fields'][$fieldname]['lang']))
 					throw new PrestaShopException('Field '.$fieldname.' is declared as lang field but is used in non multilang context');
-				else if (!empty($definition['is_lang']) && empty($definition['fields'][$fieldname]['lang']))
+				elseif (!empty($definition['is_lang']) && empty($definition['fields'][$fieldname]['lang']))
 					throw new PrestaShopException('Field '.$fieldname.' is not declared as lang field but is used in multilang context');
 
 				$type = $definition['fields'][$fieldname]['type'];
@@ -674,28 +673,28 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 		}
 		return $this->fields[$field];
 	}
-	
+
 	/**
 	 * Set the page number
 	 *
 	 * @param int $page_number
-	 * @return Collection
+	 * @return PrestaShopCollection
 	 */
 	public function setPageNumber($page_number)
 	{
 		$page_number = (int)$page_number;
 		if ($page_number > 0)
 			$page_number--;
-		
+
 		$this->page_number = $page_number;
 		return $this;
 	}
-	
+
 	/**
 	 * Set the nuber of item per page
 	 *
 	 * @param int $page_size
-	 * @return Collection
+	 * @return PrestaShopCollection
 	 */
 	public function setPageSize($page_size)
 	{

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -40,9 +40,9 @@ class PDFCore
 	const TEMPLATE_DELIVERY_SLIP = 'DeliverySlip';
 	const TEMPLATE_SUPPLY_ORDER_FORM = 'SupplyOrderForm';
 
-	public function __construct($objects, $template, $smarty)
+	public function __construct($objects, $template, $smarty, $orientation = 'P')
 	{
-		$this->pdf_renderer = new PDFGenerator((bool)Configuration::get('PS_PDF_USE_CACHE'));
+		$this->pdf_renderer = new PDFGenerator((bool)Configuration::get('PS_PDF_USE_CACHE'), $orientation);
 		$this->template = $template;
 		$this->smarty = $smarty;
 

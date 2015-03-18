@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -46,8 +46,9 @@
 		{foreach $value as $val}
 			<input type="hidden" name="{$key|escape:'html':'UTF-8'}[]" value="{$val|escape:'html':'UTF-8'}" />
 		{/foreach}
-	{else}
+	{elseif strtolower($key) != 'id_order_state'}
 			<input type="hidden" name="{$key|escape:'html':'UTF-8'}" value="{$value|escape:'html':'UTF-8'}" />
+
 	{/if}
 {/foreach}
 			<div class="panel-footer">
@@ -55,8 +56,8 @@
 					<i class="icon-remove"></i>
 					{l s='Cancel'}
 				</button>
-				<button type="submit" class="btn btn-default">
-					<i class="icon-trash text-danger"></i>
+				<button type="submit" class="btn btn-default" name="submitUpdateOrderStatus">
+					<i class="icon-check"></i>
 					{l s='Update Order Status'}
 				</button>
 			</div>

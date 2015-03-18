@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -186,7 +186,7 @@ abstract class AdminStatsTabControllerCore extends AdminPreferencesControllerCor
 				FROM `'._DB_PREFIX_.'module` m
 				LEFT JOIN `'._DB_PREFIX_.'hook_module` hm ON hm.`id_module` = m.`id_module`
 				LEFT JOIN `'._DB_PREFIX_.'hook` h ON hm.`id_hook` = h.`id_hook`
-				WHERE h.`name` LIKE \'displayAdminStatsModules\'
+				WHERE h.`name` = \'displayAdminStatsModules\'
 					AND m.`active` = 1
 				GROUP BY hm.id_module
 				ORDER BY hm.`position`';

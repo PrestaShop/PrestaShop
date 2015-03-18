@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,20 +18,18 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <script type="text/javascript">
-	var there_are = '{l s='There are'}';
-	var there_is = '{l s='There is'}';
-	var label_errors = '{l s='errors'}';
-	var label_error = '{l s='error'}';
+	var one_error = '{l s='There is one error.'}';
+	var more_errors = '{l s='There are several errors.'}';
 </script>
 <div id="login-panel">
 	<div id="login-header">
 		<h1 class="text-center">
-			<img id="logo" width="40px" src="{$img_dir}/icon-prestashop.svg"/>
+			<img id="logo" width="40px" src="{$img_dir}icon-prestashop.svg"/>
 			PRESTASHOP
 		</h1>
 		<hr/>
@@ -40,9 +38,10 @@
 		<div id="error" class="hide alert alert-danger">
 		{if isset($errors)}
 			<h4>
-				{if $nbErrors > 1}
+				{if isset($nbErrors) && $nbErrors > 1}
 					{l s='There are %d errors.' sprintf=$nbErrors}
-				{else}{l s='There is %d error.' sprintf=$nbErrors}
+				{else}
+					{l s='There is %d error.' sprintf=$nbErrors}
 				{/if}
 			</h4>
 			<ol>
@@ -66,15 +65,7 @@
 						<label class="control-label" for="email">{l s='Email address'}</label>
 						<div class="input-group">
 							<span class="input-group-addon"><i class="icon-envelope"></i></span>
-							<input
-								name="email"
-								type="text"
-								id="email"
-								class="form-control"
-								value="{if isset($email)}{$email|escape:'html':'UTF-8'}{/if}"
-								autofocus="autofocus"
-								tabindex="1"
-								placeholder="test@example.com" />
+							<input name="email" type="text" id="email" class="form-control" value="{if isset($email)}{$email|escape:'html':'UTF-8'}{/if}" autofocus="autofocus" tabindex="1" placeholder="test@example.com" />
 						</div>
 					</div>
 					<div class="form-group">
@@ -83,14 +74,7 @@
 						</label>
 						<div class="input-group">
 							<span class="input-group-addon"><i class="icon-key"></i></span>
-							<input
-								name="passwd"
-								type="password"
-								id="passwd"
-								class="form-control"
-								value="{if isset($password)}{$password}{/if}"
-								tabindex="2"
-								placeholder="{l s='Password'}" />
+							<input name="passwd" type="password" id="passwd" class="form-control" value="{if isset($password)}{$password|escape:'html':'UTF-8'}{/if}" tabindex="2" placeholder="{l s='Password'}" />
 						</div>
 					</div>
 					<div class="form-group clearfix">
@@ -108,7 +92,7 @@
 						<button name="submitLogin" type="submit" tabindex="4" class="btn btn-default btn-lg btn-block ladda-button" data-style="slide-up" data-spinner-color="black" >
 							<span class="ladda-label">
 								<i class="icon-check text-success"></i>
-								{l s='Log in'}
+								{l s='Sign in'}
 							</span>
 						</button>
 					</div>
@@ -128,14 +112,7 @@
 						</label>
 						<div class="input-group">
 							<span class="input-group-addon"><i class="icon-envelope"></i></span>
-							<input
-								type="text"
-								name="email_forgot"
-								id="email_forgot"
-								class="form-control"
-								autofocus="autofocus"
-								tabindex="5"
-								placeholder="test@example.com" />
+							<input type="text" name="email_forgot" id="email_forgot" class="form-control" autofocus="autofocus" tabindex="5" placeholder="test@example.com" />
 						</div>
 					</div>
 					<div class="panel-footer">
@@ -153,7 +130,7 @@
 		</div>
 		{else}
 		<div class="alert alert-danger">
-			<p>{l s='For security reasons, you cannot connect to the Back Office until after you have:'}</p>
+			<p>{l s='For security reasons, you cannot connect to the back-office until you have:'}</p>
 			<ul>
 				{if isset($wrong_install_name) && $wrong_install_name == true}
 					<li>{l s='deleted the /install folder'}</li>
@@ -177,19 +154,18 @@
 			</a>
 		</p>
 		<p class="text-center">
-			<a class="link-social link-twitter" href="https://twitter.com/PrestaShop" target="_blank" title="Twitter">
+			<a class="link-social link-twitter _blank" href="https://twitter.com/PrestaShop" title="Twitter">
 				<i class="icon-twitter"></i>
 			</a>
-			<a class="link-social link-facebook" href="https://www.facebook.com/prestashop" target="_blank" title="Facebook">
+			<a class="link-social link-facebook _blank" href="https://www.facebook.com/prestashop" title="Facebook">
 				<i class="icon-facebook"></i>
 			</a>
-			<a class="link-social link-github" href="https://github.com/PrestaShop/PrestaShop/" target="_blank" title="Github">
+			<a class="link-social link-github _blank" href="https://www.prestashop.com/github" title="Github">
 				<i class="icon-github"></i>
 			</a>
-			<a class="link-social link-google" href="https://plus.google.com/+prestashop/" target="_blank" title="Google">
+			<a class="link-social link-google _blank" href="https://plus.google.com/+prestashop/" title="Google">
 				<i class="icon-google-plus"></i>
 			</a>
 		</p>
 	</div>
 </div>
-	

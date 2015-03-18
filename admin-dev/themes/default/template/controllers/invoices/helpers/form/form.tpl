@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -62,7 +62,6 @@
 				<label for="{$id_checkbox}" class="control-label">
 					<input type="checkbox" name="{$input.name}[]" id="{$id_checkbox}" value="{$value[$input.values.id]|intval}" {if isset($fields_value[$id_checkbox]) && $fields_value[$id_checkbox]}checked="checked"{/if} />
 					{if $value['invoice']}
-						{$value[$input.values.name]}
 						<span class="badge badge-success">
 						{if isset($statusStats[$value['id_order_state']]) && $statusStats[$value['id_order_state']]}
 							{$statusStats[$value['id_order_state']]}
@@ -70,15 +69,16 @@
 							0
 						{/if}
 						</span>
-					{else}
 						{$value[$input.values.name]}
-						<span class="badge badge-error">
+					{else}
+						<span class="badge badge-danger">
 						{if isset($statusStats[$value['id_order_state']]) && $statusStats[$value['id_order_state']]}
 							{$statusStats[$value['id_order_state']]}
 						{else}
 							0
 						{/if}
 						</span>
+						{$value[$input.values.name]}
 					{/if}
 				</label>
 			</p>

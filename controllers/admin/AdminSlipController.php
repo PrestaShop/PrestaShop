@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -31,6 +31,11 @@ class AdminSlipControllerCore extends AdminController
 		$this->bootstrap = true;
 	 	$this->table = 'order_slip';
 		$this->className = 'OrderSlip';
+
+		$this->_select = ' o.`id_shop`';
+		$this->_join .= ' LEFT JOIN '._DB_PREFIX_.'orders o ON (o.`id_order` = a.`id_order`)';
+		$this->_group = ' GROUP BY a.`id_order_slip`';
+
 		$this->fields_list = array(
 			'id_order_slip' => array(
 				'title' => $this->l('ID'),
@@ -38,7 +43,7 @@ class AdminSlipControllerCore extends AdminController
 				'class' => 'fixed-width-xs'
  			),
 			'id_order' => array(
-				'title' => $this->l('ID Order'),
+				'title' => $this->l('Order ID'),
 				'align' => 'left',
 				'class' => 'fixed-width-md'
  			),
@@ -75,6 +80,8 @@ class AdminSlipControllerCore extends AdminController
 		);
 
 		parent::__construct();
+
+		$this->_where = Shop::addSqlRestriction(false, 'o');
 	}
 
 	public function initPageHeaderToolbar()

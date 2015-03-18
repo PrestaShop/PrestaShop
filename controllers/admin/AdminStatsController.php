@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -79,25 +79,25 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		}
 		return $visits;
 	}
-	
+
 	public static function getAbandonedCarts($date_from, $date_to)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 		SELECT COUNT(DISTINCT id_guest)
 		FROM `'._DB_PREFIX_.'cart`
 		WHERE `date_add` BETWEEN "'.pSQL($date_from).'" AND "'.pSQL($date_to).'"
-		AND id_cart NOT IN (SELECT id_cart FROM `'._DB_PREFIX_.'orders`)
+		AND NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'orders` WHERE `'._DB_PREFIX_.'orders`.id_cart = `'._DB_PREFIX_.'cart`.id_cart)
 		'.Shop::addSqlRestriction());
 	}
-	
+
 	public static function getInstalledModules()
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT COUNT(*)
+		SELECT COUNT(DISTINCT m.`id_module`)
 		FROM `'._DB_PREFIX_.'module` m
 		'.Shop::addSqlAssociation('module', 'm'));
 	}
-	
+
 	public static function getDisabledModules()
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
@@ -106,7 +106,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		'.Shop::addSqlAssociation('module', 'm', false).'
 		WHERE module_shop.id_module IS NULL OR m.active = 0');
 	}
-	
+
 	public static function getModulesToUpdate()
 	{
 		$context = Context::getContext();
@@ -117,11 +117,11 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		$modules = Module::getModulesOnDisk(true, $logged_on_addons, $context->employee->id);
 		$upgrade_available = 0;
 		foreach ($modules as $km => $module)
-			if ($module->installed && isset($module->version_addons) && (int)(string)$module->version_addons) // SimpleXMLElement 
+			if ($module->installed && isset($module->version_addons) && $module->version_addons) // SimpleXMLElement
 				++$upgrade_available;
 		return $upgrade_available;
 	}
-	
+
 	public static function getPercentProductStock()
 	{
 		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
@@ -129,21 +129,36 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		FROM `'._DB_PREFIX_.'product` p
 		'.Shop::addSqlAssociation('product', 'p').'
 		LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON p.id_product = pa.id_product
-		'.Product::sqlStock('p', 'pa'));
+		'.Product::sqlStock('p', 'pa').'
+		WHERE product_shop.active = 1');
 		return round($row['products'] ? 100 * $row['with_stock'] / $row['products'] : 0, 2).'%';
 	}
-	
-	public static function getProductAverageGrossMargin()
+
+	public static function getPercentProductOutOfStock()
 	{
-		$value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT AVG((IFNULL(product_attribute_shop.price, product_shop.price) - IFNULL(product_attribute_shop.wholesale_price, product_shop.wholesale_price)) / IFNULL(product_attribute_shop.price, product_shop.price))
+		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+		SELECT SUM(IF(IFNULL(stock.quantity, 0) = 0, 1, 0)) as without_stock, COUNT(*) as products
 		FROM `'._DB_PREFIX_.'product` p
 		'.Shop::addSqlAssociation('product', 'p').'
 		LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON p.id_product = pa.id_product
-		'.Shop::addSqlAssociation('product_attribute', 'pa'));
+		'.Product::sqlStock('p', 'pa').'
+		WHERE product_shop.active = 1');
+		return round($row['products'] ? 100 * $row['without_stock'] / $row['products'] : 0, 2).'%';
+	}
+
+
+	public static function getProductAverageGrossMargin()
+	{
+		$sql = 'SELECT AVG(1 - (IF(IFNULL(product_attribute_shop.wholesale_price, 0) = 0, product_shop.wholesale_price,product_attribute_shop.wholesale_price) / (IFNULL(product_attribute_shop.price, 0) + product_shop.price)))
+		FROM `'._DB_PREFIX_.'product` p
+		'.Shop::addSqlAssociation('product', 'p').'
+		LEFT JOIN `'._DB_PREFIX_.'product_attribute` pa ON p.id_product = pa.id_product
+		'.Shop::addSqlAssociation('product_attribute', 'pa', false).'
+		WHERE product_shop.active = 1';
+		$value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 		return round(100 * $value, 2).'%';
 	}
-	
+
 	public static function getDisabledCategories()
 	{
 		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
@@ -152,7 +167,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		'.Shop::addSqlAssociation('category', 'c').'
 		WHERE c.active = 0');
 	}
-	
+
 	public static function getTotalCategories()
 	{
 		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
@@ -160,7 +175,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		FROM `'._DB_PREFIX_.'category` c
 		'.Shop::addSqlAssociation('category', 'c'));
 	}
-	
+
 	public static function getDisabledProducts()
 	{
 		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
@@ -169,7 +184,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		'.Shop::addSqlAssociation('product', 'p').'
 		WHERE product_shop.active = 0');
 	}
-	
+
 	public static function getTotalProducts()
 	{
 		return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
@@ -177,7 +192,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		FROM `'._DB_PREFIX_.'product` p
 		'.Shop::addSqlAssociation('product', 'p'));
 	}
-	
+
 	public static function getTotalSales($date_from, $date_to, $granularity = false)
 	{
 		if ($granularity == 'day')
@@ -186,7 +201,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 			SELECT LEFT(`invoice_date`, 10) as date, SUM(total_paid_tax_excl / o.conversion_rate) as sales
 			FROM `'._DB_PREFIX_.'orders` o
-			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
+			LEFT JOIN `'._DB_PREFIX_.'order_state` os ON o.current_state = os.id_order_state
+			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59" AND os.logable = 1
 			'.Shop::addSqlRestriction(false, 'o').'
 			GROUP BY LEFT(`invoice_date`, 10)');
 			foreach ($result as $row)
@@ -199,7 +215,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 			SELECT LEFT(`invoice_date`, 7) as date, SUM(total_paid_tax_excl / o.conversion_rate) as sales
 			FROM `'._DB_PREFIX_.'orders` o
-			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
+			LEFT JOIN `'._DB_PREFIX_.'order_state` os ON o.current_state = os.id_order_state
+			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59" AND os.logable = 1
 			'.Shop::addSqlRestriction(false, 'o').'
 			GROUP BY LEFT(`invoice_date`, 7)');
 			foreach ($result as $row)
@@ -210,46 +227,22 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT SUM(total_paid_tax_excl / o.conversion_rate)
 			FROM `'._DB_PREFIX_.'orders` o
-			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
+			LEFT JOIN `'._DB_PREFIX_.'order_state` os ON o.current_state = os.id_order_state
+			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59" AND os.logable = 1
 			'.Shop::addSqlRestriction(false, 'o'));
 	}
-	
+
 	public static function get8020SalesCatalog($date_from, $date_to)
 	{
-		$total_sales = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT SUM(total_price_tax_excl / o.conversion_rate) as product_sales
+		$distinct_products = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		SELECT COUNT(DISTINCT od.product_id)
 		FROM `'._DB_PREFIX_.'orders` o
 		LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
 		WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
 		'.Shop::addSqlRestriction(false, 'o'));
-		if (!$total_sales)
+		if (!$distinct_products)
 			return '0%';
-
-		$total_products = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT COUNT(*)
-		FROM `'._DB_PREFIX_.'product` p
-		'.Shop::addSqlAssociation('product', 'p'));
-
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT SUM(total_price_tax_excl / o.conversion_rate) as product_sales
-		FROM `'._DB_PREFIX_.'orders` o
-		LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
-		WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
-		'.Shop::addSqlRestriction(false, 'o').'
-		GROUP BY od.product_id, od.product_attribute_id
-		ORDER BY SUM(total_price_tax_excl) DESC');
-
-		$products = 0;
-		$products_sales = 0;
-		foreach ($result as $row)
-		{
-			++$products;
-			$products_sales += $row['product_sales'];
-			if ($products_sales > $total_sales)
-				break;
-		}
-
-		return round(100 * $products / $total_products).'%';
+		return round(100 * $distinct_products / AdminStatsController::getTotalProducts()).'%';
 	}
 
 	public static function getOrders($date_from, $date_to, $granularity = false)
@@ -259,9 +252,10 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			$orders = array();
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 			SELECT LEFT(`invoice_date`, 10) as date, COUNT(*) as orders
-			FROM `'._DB_PREFIX_.'orders`
-			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
-			'.Shop::addSqlRestriction(false).'
+			FROM `'._DB_PREFIX_.'orders` o
+			LEFT JOIN `'._DB_PREFIX_.'order_state` os ON o.current_state = os.id_order_state
+			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59" AND os.logable = 1
+			'.Shop::addSqlRestriction(false, 'o').'
 			GROUP BY LEFT(`invoice_date`, 10)');
 			foreach ($result as $row)
 				$orders[strtotime($row['date'])] = $row['orders'];
@@ -272,9 +266,10 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			$orders = array();
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->ExecuteS('
 			SELECT LEFT(`invoice_date`, 7) as date, COUNT(*) as orders
-			FROM `'._DB_PREFIX_.'orders`
-			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
-			'.Shop::addSqlRestriction(false).'
+			FROM `'._DB_PREFIX_.'orders` o
+			LEFT JOIN `'._DB_PREFIX_.'order_state` os ON o.current_state = os.id_order_state
+			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59" AND os.logable = 1
+			'.Shop::addSqlRestriction(false, 'o').'
 			GROUP BY LEFT(`invoice_date`, 7)');
 			foreach ($result as $row)
 				$orders[strtotime($row['date'].'-01')] = $row['orders'];
@@ -283,12 +278,14 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		else
 			$orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT COUNT(*) as orders
-			FROM `'._DB_PREFIX_.'orders`
-			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
-			'.Shop::addSqlRestriction(false));
+			FROM `'._DB_PREFIX_.'orders` o
+			LEFT JOIN `'._DB_PREFIX_.'order_state` os ON o.current_state = os.id_order_state
+			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59" AND os.logable = 1
+			'.Shop::addSqlRestriction(false, 'o'));
+
 		return $orders;
 	}
-	
+
 	public static function getEmptyCategories()
 	{
 		$total = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
@@ -306,24 +303,24 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		AND c.nright = c.nleft + 1');
 		return intval($total - $used);
 	}
-	
+
 	public static function getCustomerMainGender()
 	{
 		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 		SELECT SUM(IF(g.id_gender IS NOT NULL, 1, 0)) as total, SUM(IF(type = 0, 1, 0)) as male, SUM(IF(type = 1, 1, 0)) as female, SUM(IF(type = 2, 1, 0)) as neutral
 		FROM `'._DB_PREFIX_.'customer` c
-		'.Shop::addSqlAssociation('customer', 'c').'
 		LEFT JOIN `'._DB_PREFIX_.'gender` g ON c.id_gender = g.id_gender
-		WHERE c.active = 1');
+		WHERE c.active = 1 '.Shop::addSqlRestriction());
+
 		if (!$row['total'])
 			return false;
-		elseif ($row['male'] > $row['female'] && $row['male'] > $row['neutral'])
+		elseif ($row['male'] > $row['female'] && $row['male'] >= $row['neutral'])
 			return array('type' => 'male', 'value' => round(100 * $row['male'] / $row['total']));
-		elseif ($row['female'] > $row['male'] && $row['female'] > $row['neutral'])
+		elseif ($row['female'] >= $row['male'] && $row['female'] >= $row['neutral'])
 			return array('type' => 'female', 'value' => round(100 * $row['female'] / $row['total']));
 		return array('type' => 'neutral', 'value' => round(100 * $row['neutral'] / $row['total']));
 	}
-	
+
 	public static function getBestCategory($date_from, $date_to)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
@@ -348,7 +345,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		GROUP BY ca.`id_category`
 		ORDER BY SUM(t.`totalPriceSold`) DESC');
 	}
-	
+
 	public static function getMainCountry($date_from, $date_to)
 	{
 		$total_orders = AdminStatsController::getOrders($date_from, $date_to);
@@ -363,21 +360,20 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		$row['orders'] = round(100 * $row['orders'] / $total_orders, 1);
 		return $row;
 	}
-	
+
 	public static function getAverageCustomerAge()
 	{
 		$value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-		SELECT AVG(DATEDIFF(NOW(), birthday))
+		SELECT AVG(DATEDIFF("'.date('Y-m-d').' 00:00:00", birthday))
 		FROM `'._DB_PREFIX_.'customer` c
-		'.Shop::addSqlAssociation('customer', 'c').'
 		WHERE active = 1
-		AND birthday IS NOT NULL AND birthday != "0000-00-00"');
+		AND birthday IS NOT NULL AND birthday != "0000-00-00" '.Shop::addSqlRestriction());
 		return round($value / 365);
 	}
 
 	public static function getPendingMessages()
 	{
-		return CustomerThread::getTotalCustomerThreads('status LIKE "%pending%" OR status = "open"');
+		return CustomerThread::getTotalCustomerThreads('status LIKE "%pending%" OR status = "open"'.Shop::addSqlRestriction());
 	}
 
 	public static function getAverageMessageResponseTime($date_from, $date_to)
@@ -423,7 +419,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			return 0;
 		return round($messages / $threads, 1);
 	}
-	
+
 	public static function getPurchases($date_from, $date_to, $granularity = false)
 	{
 		if ($granularity == 'day')
@@ -439,7 +435,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				)) as total_purchase_price
 			FROM `'._DB_PREFIX_.'orders` o
 			LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
-			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
+			LEFT JOIN `'._DB_PREFIX_.'order_state` os ON o.current_state = os.id_order_state
+			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59" AND os.logable = 1
 			'.Shop::addSqlRestriction(false, 'o').'
 			GROUP BY LEFT(`invoice_date`, 10)');
 			foreach ($result as $row)
@@ -455,42 +452,14 @@ class AdminStatsControllerCore extends AdminStatsTabController
 			)) as total_purchase_price
 			FROM `'._DB_PREFIX_.'orders` o
 			LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON o.id_order = od.id_order
-			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
+			LEFT JOIN `'._DB_PREFIX_.'order_state` os ON o.current_state = os.id_order_state
+			WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59" AND os.logable = 1
 			'.Shop::addSqlRestriction(false, 'o'));
 	}
-	
+
 	public static function getExpenses($date_from, $date_to, $granularity = false)
 	{
-		if ($granularity == 'day')
-		{
-			$expenses = array();
-			$from = strtotime($date_from.' 00:00:00');
-			$to = strtotime($date_to.' 23:59:59');
-			for ($date = $from; $date <= $to; $date = strtotime('+1 day', $date))
-			{
-				$expenses[$date] =
-					Configuration::get('CONF_MONTHLY_ACOUNTING')
-					+ Configuration::get('CONF_MONTHLY_DEVELOPMENT')
-					+ Configuration::get('CONF_MONTHLY_HOSTING')
-					+ Configuration::get('CONF_MONTHLY_MARKETING')
-					+ Configuration::get('CONF_MONTHLY_OTHERS')
-					+ Configuration::get('CONF_MONTHLY_TOOLS');
-				$expenses[$date] /= date('t', $date);
-			}
-		}
-		else
-		{
-			$secs_per_month = 30.4375 * 86400;
-			$total_secs = (strtotime($date_to) - min(strtotime($date_from), time())) / 86400;
-			$expenses =
-				Configuration::get('CONF_MONTHLY_ACOUNTING')
-				+ Configuration::get('CONF_MONTHLY_DEVELOPMENT')
-				+ Configuration::get('CONF_MONTHLY_HOSTING')
-				+ Configuration::get('CONF_MONTHLY_MARKETING')
-				+ Configuration::get('CONF_MONTHLY_OTHERS')
-				+ Configuration::get('CONF_MONTHLY_TOOLS');
-			$expenses *= $total_secs / $secs_per_month;
-		}
+		$expenses = ($granularity == 'day' ? array() : 0);
 
 		$orders = Db::getInstance()->ExecuteS('
 		SELECT
@@ -504,7 +473,8 @@ class AdminStatsControllerCore extends AdminStatsTabController
 		FROM `'._DB_PREFIX_.'orders` o
 		LEFT JOIN `'._DB_PREFIX_.'address` a ON o.id_address_delivery = a.id_address
 		LEFT JOIN `'._DB_PREFIX_.'carrier` c ON o.id_carrier = c.id_carrier
-		WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59"
+		LEFT JOIN `'._DB_PREFIX_.'order_state` os ON o.current_state = os.id_order_state
+		WHERE `invoice_date` BETWEEN "'.pSQL($date_from).' 00:00:00" AND "'.pSQL($date_to).' 23:59:59" AND os.logable = 1
 		'.Shop::addSqlRestriction(false, 'o'));
 		foreach ($orders as $order)
 		{
@@ -528,7 +498,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 					? Configuration::get('CONF_'.strtoupper($order['carrier_reference']).'_SHIP')
 					: Configuration::get('CONF_'.strtoupper($order['carrier_reference']).'_SHIP_OVERSEAS')
 				) / 100;
-			
+
 			// Tally up these fees
 			if ($granularity == 'day')
 			{
@@ -605,6 +575,12 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				ConfigurationKPI::updateValue('PERCENT_PRODUCT_STOCK_EXPIRE', strtotime('+4 hour'));
 				break;
 
+			case 'percent_product_out_of_stock':
+				$value = AdminStatsController::getPercentProductOutOfStock();
+				ConfigurationKPI::updateValue('PERCENT_PRODUCT_OUT_OF_STOCK', $value);
+				ConfigurationKPI::updateValue('PERCENT_PRODUCT_OUT_OF_STOCK_EXPIRE', strtotime('+4 hour'));
+				break;
+
 			case 'product_avg_gross_margin':
 				$value = AdminStatsController::getProductAverageGrossMargin();
 				ConfigurationKPI::updateValue('PRODUCT_AVG_GROSS_MARGIN', $value);
@@ -618,13 +594,13 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				break;
 
 			case 'disabled_products':
-				$value = AdminStatsController::getDisabledProducts();
+				$value = round(100 * AdminStatsController::getDisabledProducts() / AdminStatsController::getTotalProducts(), 2).'%';
 				ConfigurationKPI::updateValue('DISABLED_PRODUCTS', $value);
 				ConfigurationKPI::updateValue('DISABLED_PRODUCTS_EXPIRE', strtotime('+2 hour'));
 				break;
 
 			case '8020_sales_catalog':
-				$value = AdminStatsController::get8020SalesCatalog(date('Y-m-d', strtotime('-1 month')), date('Y-m-d'));
+				$value = AdminStatsController::get8020SalesCatalog(date('Y-m-d', strtotime('-30 days')), date('Y-m-d'));
 				$value = sprintf($this->l('%d%% of your Catalog'), $value);
 				ConfigurationKPI::updateValue('8020_SALES_CATALOG', $value);
 				ConfigurationKPI::updateValue('8020_SALES_CATALOG_EXPIRE', strtotime('+12 hour'));
@@ -638,24 +614,24 @@ class AdminStatsControllerCore extends AdminStatsTabController
 
 			case 'customer_main_gender':
 				$value = AdminStatsController::getCustomerMainGender();
-				
+
 				if ($value === false)
 					$value = $this->l('No customers', null, null, false);
-				elseif ($value['type'] == 'male')
-					$value = sprintf($this->l('%d%% Men Customers', null, null, false), $value['value']);
 				elseif ($value['type'] == 'female')
-					$value = sprintf($this->l('%d%% Women Customers', null, null, false), $value['value']);
+					$value = sprintf($this->l('%d%% Female Customers', null, null, false), $value['value']);
+				elseif ($value['type'] == 'male')
+					$value = sprintf($this->l('%d%% Male Customers', null, null, false), $value['value']);
 				else
 					$value = sprintf($this->l('%d%% Neutral Customers', null, null, false), $value['value']);
-				
-				ConfigurationKPI::updateValue('CUSTOMER_MAIN_GENDER', $value);
-				ConfigurationKPI::updateValue('CUSTOMER_MAIN_GENDER_EXPIRE', strtotime('+1 day'));
+
+				ConfigurationKPI::updateValue('CUSTOMER_MAIN_GENDER', array($this->context->language->id => $value));
+				ConfigurationKPI::updateValue('CUSTOMER_MAIN_GENDER_EXPIRE', array($this->context->language->id => strtotime('+1 day')));
 				break;
 
 			case 'avg_customer_age':
 				$value = sprintf($this->l('%d years', null, null, false), AdminStatsController::getAverageCustomerAge(), 1);
-				ConfigurationKPI::updateValue('AVG_CUSTOMER_AGE', $value);
-				ConfigurationKPI::updateValue('AVG_CUSTOMER_AGE_EXPIRE', strtotime('+1 day'));
+				ConfigurationKPI::updateValue('AVG_CUSTOMER_AGE', array($this->context->language->id => $value));
+				ConfigurationKPI::updateValue('AVG_CUSTOMER_AGE_EXPIRE', array($this->context->language->id => strtotime('+1 day')));
 				break;
 
 			case 'pending_messages':
@@ -729,7 +705,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 					$value = sprintf($this->l('%d%% %s', null, null, false), $row['orders'], $country->name);
 				}
 
-				ConfigurationKPI::updateValue('MAIN_COUNTRY', array($this->context->language->id => $value));				
+				ConfigurationKPI::updateValue('MAIN_COUNTRY', array($this->context->language->id => $value));
 				ConfigurationKPI::updateValue('MAIN_COUNTRY_EXPIRE', array($this->context->language->id => strtotime('+1 day')));
 				break;
 
@@ -737,14 +713,14 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				$value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 				SELECT COUNT(*)
 				FROM `'._DB_PREFIX_.'customer` c
-				WHERE active = 1
+				WHERE c.active = 1
 				'.Shop::addSqlRestriction());
 				if ($value)
 				{
 					$orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 					SELECT COUNT(*)
 					FROM `'._DB_PREFIX_.'orders` o
-					WHERE valid = 1
+					WHERE o.valid = 1
 					'.Shop::addSqlRestriction());
 					$value = round($orders / $value, 2);
 				}
@@ -766,11 +742,11 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				ConfigurationKPI::updateValue('AVG_ORDER_VALUE_EXPIRE', strtotime(date('Y-m-d 00:00:00', strtotime('+1 day'))));
 				break;
 
-			case 'netprofit_visitor':
+			case 'netprofit_visit':
 				$date_from = date('Y-m-d', strtotime('-31 day'));
 				$date_to = date('Y-m-d', strtotime('-1 day'));
 
-				$total_visitors = AdminStatsController::getVisits(true, $date_from, $date_to);
+				$total_visitors = AdminStatsController::getVisits(false, $date_from, $date_to);
 				$net_profits = AdminStatsController::getTotalSales($date_from, $date_to);
 				$net_profits -= AdminStatsController::getExpenses($date_from, $date_to);
 				$net_profits -= AdminStatsController::getPurchases($date_from, $date_to);
@@ -781,11 +757,11 @@ class AdminStatsControllerCore extends AdminStatsTabController
 					$value = '&infin;';
 				else
 					$value = Tools::displayPrice(0, $currency);
-	
-				ConfigurationKPI::updateValue('NETPROFIT_VISITOR', $value);
-				ConfigurationKPI::updateValue('NETPROFIT_VISITOR_EXPIRE', strtotime(date('Y-m-d 00:00:00', strtotime('+1 day'))));
+
+				ConfigurationKPI::updateValue('NETPROFIT_VISIT', $value);
+				ConfigurationKPI::updateValue('NETPROFIT_VISIT_EXPIRE', strtotime(date('Y-m-d 00:00:00', strtotime('+1 day'))));
 				break;
-				
+
 				case 'products_per_category':
 					$products = AdminStatsController::getTotalProducts();
 					$categories = AdminStatsController::getTotalCategories();
@@ -793,7 +769,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 					ConfigurationKPI::updateValue('PRODUCTS_PER_CATEGORY', $value);
 					ConfigurationKPI::updateValue('PRODUCTS_PER_CATEGORY_EXPIRE', strtotime('+1 hour'));
 					break;
-					
+
 				case 'top_category':
 					if (!($id_category = AdminStatsController::getBestCategory(date('Y-m-d', strtotime('-1 month')), date('Y-m-d'))))
 						$value = $this->l('No category', null, null, false);
@@ -803,7 +779,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 						$value = $category->name;
 					}
 
-					ConfigurationKPI::updateValue('TOP_CATEGORY', array($this->context->language->id => $value));				
+					ConfigurationKPI::updateValue('TOP_CATEGORY', array($this->context->language->id => $value));
 					ConfigurationKPI::updateValue('TOP_CATEGORY_EXPIRE', array($this->context->language->id => strtotime('+1 day')));
 					break;
 

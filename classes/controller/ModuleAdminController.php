@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -29,16 +29,17 @@
  */
 abstract class ModuleAdminControllerCore extends AdminController
 {
-	/**
-	 * @var Module
-	 */
+	/** @var Module */
 	public $module;
-	
+
+	/**
+	 * @throws PrestaShopException
+	 */
 	public function __construct()
 	{
-		$this->controller_type = 'moduleadmin';
-		
 		parent::__construct();
+
+		$this->controller_type = 'moduleadmin';
 
 		$tab = new Tab($this->id);
 		if (!$tab->module)
@@ -49,12 +50,19 @@ abstract class ModuleAdminControllerCore extends AdminController
 			throw new PrestaShopException("Module {$tab->module} not found");
 	}
 
+	/**
+	 * Creates a template object
+	 *
+	 * @param string $tpl_name template filename
+	 * @return Template|object
+	 */
 	public function createTemplate($tpl_name)
 	{
 		if (file_exists(_PS_THEME_DIR_.'modules/'.$this->module->name.'/views/templates/admin/'.$tpl_name) && $this->viewAccess())
 			return $this->context->smarty->createTemplate(_PS_THEME_DIR_.'modules/'.$this->module->name.'/views/templates/admin/'.$tpl_name, $this->context->smarty);
 		elseif (file_exists($this->getTemplatePath().$this->override_folder.$tpl_name) && $this->viewAccess())
 			return $this->context->smarty->createTemplate($this->getTemplatePath().$this->override_folder.$tpl_name, $this->context->smarty);
+
 		return parent::createTemplate($tpl_name);
 	}
 

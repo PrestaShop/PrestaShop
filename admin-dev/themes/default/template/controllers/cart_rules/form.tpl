@@ -13,7 +13,7 @@
 			</li>
 		</ul>
 	</div>
-	<form action="{$currentIndex|escape}&token={$currentToken|escape}&addcart_rule" id="cart_rule_form" class="form-horizontal" method="post">
+	<form action="{$currentIndex|escape}&amp;token={$currentToken|escape}&amp;addcart_rule" id="cart_rule_form" class="form-horizontal" method="post">
 		{if $currentObject->id}<input type="hidden" name="id_cart_rule" value="{$currentObject->id|intval}" />{/if}
 		<input type="hidden" id="currentFormTab" name="currentFormTab" value="informations" />
 		<div id="cart_rule_informations" class="panel cart_rule_tab">
@@ -35,6 +35,12 @@
 		var product_rule_counters = new Array();
 		var currentToken = '{$currentToken|escape:'quotes'}';
 		var currentFormTab = '{if isset($smarty.post.currentFormTab)}{$smarty.post.currentFormTab|escape:'quotes'}{else}informations{/if}';
+		var currentText = '{l s='Now' js=1}';
+		var closeText = '{l s='Done' js=1}';
+		var timeOnlyTitle = '{l s='Choose Time' js=1}';
+		var timeText = '{l s='Time' js=1}';
+		var hourText = '{l s='Hour' js=1}';
+		var minuteText = '{l s='Minute' js=1}';
 		
 		var languages = new Array();
 		{foreach from=$languages item=language key=k}

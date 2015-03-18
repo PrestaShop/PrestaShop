@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -71,7 +71,7 @@ class AdminShopGroupControllerCore extends AdminController
 				'title' =>	$this->l('Multistore options'),
 				'fields' =>	array(
 					'PS_SHOP_DEFAULT' => array(
-						'title' => $this->l('Default shop:'),
+						'title' => $this->l('Default shop'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'identifier' => 'id_shop',
@@ -94,7 +94,7 @@ class AdminShopGroupControllerCore extends AdminController
 	public function initContent()
 	{
 		parent::initContent();
-		
+
 		$this->addJqueryPlugin('cooki-plugin');
 		$data = Shop::getTree();
 
@@ -115,7 +115,7 @@ class AdminShopGroupControllerCore extends AdminController
 				}
 			}
 
-		$shops_tree = new HelperTreeShops('shops-tree', 'Multistore tree');
+		$shops_tree = new HelperTreeShops('shops-tree', $this->l('Multistore tree'));
 		$shops_tree->setNodeFolderTemplate('shop_tree_node_folder.tpl')->setNodeItemTemplate('shop_tree_node_item.tpl')
 			->setHeaderTemplate('shop_tree_header.tpl')->setActions(array(
 				new TreeToolbarLink(
@@ -154,24 +154,25 @@ class AdminShopGroupControllerCore extends AdminController
 		{
 			$this->page_header_toolbar_btn['new'] = array(
 				'desc' => $this->l('Add a new shop group'),
-				'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
+				'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token
 			);
 			$this->page_header_toolbar_btn['new_2'] = array(
 				'desc' => $this->l('Add a new shop'),
 				'href' => $this->context->link->getAdminLink('AdminShop').'&addshop',
-				'imgclass' => 'new'
+				'imgclass' => 'new_2',
+				'icon' => 'process-icon-new'
 			);
 		}
 	}
-	
+
 	public function initToolbar()
 	{
 		parent::initToolbar();
-		
+
 		if ($this->display != 'add' && $this->display != 'edit')
 			$this->toolbar_btn['new'] = array(
 				'desc' => $this->l('Add a new shop group'),
-				'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;token='.$this->token,
+				'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
 			);
 	}
 
@@ -208,11 +209,11 @@ class AdminShopGroupControllerCore extends AdminController
 							'value' => 0
 						)
 					),
-					'desc' => $this->l('Once this option is enabled, the shops in this group will share customers. If a customer registers in any one of these shops, the account will automatically be available in the others shops of this goup. <br/><br/>Warning: you will not be able to disable this option once you have registered customers.'),
+					'desc' => $this->l('Once this option is enabled, the shops in this group will share customers. If a customer registers in any one of these shops, the account will automatically be available in the others shops of this group.').'<br/>'.$this->l('Warning: you will not be able to disable this option once you have registered customers.'),
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Share available quantities to sell:'),
+					'label' => $this->l('Share available quantities to sell'),
 					'name' => 'share_stock',
 					'required' => true,
 					'class' => 't',
@@ -231,7 +232,7 @@ class AdminShopGroupControllerCore extends AdminController
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Share orders:'),
+					'label' => $this->l('Share orders'),
 					'name' => 'share_order',
 					'required' => true,
 					'class' => 't',
@@ -247,11 +248,11 @@ class AdminShopGroupControllerCore extends AdminController
 							'value' => 0
 						)
 					),
-					'desc' => $this->l('Once this option is enabled (which is only possible if customers and available quantities are shared among shops), the customer\'s cart will be shared by all shops in this group. This way, any purchase started in one shop will be able to be completed in another shop from the same group. <br/><br/>Warning: You will not be able to disable this option once you\'ve started to accept orders.')
+					'desc' => $this->l('Once this option is enabled (which is only possible if customers and available quantities are shared among shops), the customer\'s cart will be shared by all shops in this group. This way, any purchase started in one shop will be able to be completed in another shop from the same group.').'<br/>'.$this->l('Warning: You will not be able to disable this option once you\'ve started to accept orders.')
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Status:'),
+					'label' => $this->l('Status'),
 					'name' => 'active',
 					'required' => true,
 					'class' => 't',
@@ -322,7 +323,7 @@ class AdminShopGroupControllerCore extends AdminController
 			$object = $this->loadObject();
 			if (ShopGroup::getTotalShopGroup() == 1)
 				$this->errors[] = Tools::displayError('You cannot delete or disable the last shop group.');
-			else if ($object->haveShops())
+			elseif ($object->haveShops())
 				$this->errors[] = Tools::displayError('You cannot delete or disable a shop group in use.');
 
 			if (count($this->errors))
@@ -359,5 +360,3 @@ class AdminShopGroupControllerCore extends AdminController
 		}
 	}
 }
-
-

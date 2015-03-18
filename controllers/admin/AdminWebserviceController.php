@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -39,13 +39,15 @@ class AdminWebserviceControllerCore extends AdminController
 	 	$this->edit = true;
 	 	$this->delete = true;
  		$this->id_lang_default = Configuration::get('PS_LANG_DEFAULT');
-		
+
 		$this->bulk_actions = array(
-			'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
-			'enableSelection' => array('text' => $this->l('Enable selection')),
-			'disableSelection' => array('text' => $this->l('Disable selection'))
-			);
-		
+			'delete' => array(
+				'text' => $this->l('Delete selected'),
+				'confirm' => $this->l('Delete selected items?'),
+				'icon' => 'icon-trash'
+			)
+		);
+
 		$this->fields_list = array(
 			'key' => array(
 				'title' => $this->l('Key'),
@@ -78,15 +80,17 @@ class AdminWebserviceControllerCore extends AdminController
 												</ol>',
 							'cast' => 'intval',
 							'type' => 'bool'),
-						'PS_WEBSERVICE_CGI_HOST' => array(
-							'title' => $this->l('Enable CGI mode for PHP'),
-							'desc' => $this->l('Before choosing "Yes", check that PHP is not configured as an Apache module on your server.'),
-							'cast' => 'intval',
-							'type' => 'bool'
-						),
 					),
 					'submit' => array('title' => $this->l('Save'))
 				),
+			);
+
+		if (!defined('_PS_HOST_MODE_'))
+			$this->fields_options['general']['fields']['PS_WEBSERVICE_CGI_HOST'] = array(
+				'title' => $this->l('Enable CGI mode for PHP'),
+				'desc' => $this->l('Before choosing "Yes", check that PHP is not configured as an Apache module on your server.'),
+				'cast' => 'intval',
+				'type' => 'bool'
 			);
 
 		parent::__construct();
@@ -236,9 +240,9 @@ class AdminWebserviceControllerCore extends AdminController
 	public function postProcess()
 	{
 		if (Tools::getValue('key') && strlen(Tools::getValue('key')) < 32)
-			$this->errors[] = Tools::displayError($this->l('Key length must be 32 character long.'));
+			$this->errors[] = Tools::displayError('Key length must be 32 character long.');
 		if (WebserviceKey::keyExists(Tools::getValue('key')) && !Tools::getValue('id_webservice_account'))
-			$this->errors[] = Tools::displayError($this->l('This key already exists.'));
+			$this->errors[] = Tools::displayError('This key already exists.');
 		return parent::postProcess();
 	}
 
@@ -283,5 +287,4 @@ class AdminWebserviceControllerCore extends AdminController
 
 		$this->renderList();
 	}
-
 }

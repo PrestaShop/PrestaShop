@@ -1,0 +1,82 @@
+.kpi-container
+	padding-bottom: 10px !important
+
+.box-stats
+	display: block
+	height: 64px
+	margin-bottom: 10px
+	.boxchart-overlay
+		@include padding(10px, 10px, 5px, 10px)
+		@include margin-right(10px)
+		@include float(left)
+		@include border-radius(3px)
+	.kpi-content
+		width: 100%
+		position: relative
+		@include padding-left(72px)
+		@include float(left)
+		i
+			position: absolute
+			top: 0
+			font-size: 56px
+			text-align: center
+			color: white
+			width: 66px
+			height: 66px
+			line-height: 66px
+			@include left(0)
+			@include border-radius(3px)
+
+		.title
+			display: block
+			color: #666
+		.subtitle
+			display: block
+			text-transform: uppercase
+			color: #aaa
+		.value
+			display: block
+			clear: both
+			font-size: 1.8em
+			white-space: nowrap
+			text-overflow: ellipsis
+			overflow: hidden
+	&:hover
+		text-decoration: none
+.color1
+	i, .boxchart-overlay
+		background-color: #2BA8E3
+		@include box-shadow(rgba(black,.2) 0 -3px 0 inset)
+	.value
+		color: #2BA8E3
+.color2
+	i, .boxchart-overlay
+		background-color: #FF5450
+		@include box-shadow(rgba(black,.2) 0 -3px 0 inset)
+	.value
+		color: #FF5450
+.color3
+	i, .boxchart-overlay
+		background-color: #9E5BA1
+		@include box-shadow(rgba(black,.2) 0 -3px 0 inset)
+	.value
+		color: #9E5BA1
+.color4
+	i, .boxchart-overlay
+		background-color: #95CC6B
+		@include box-shadow(rgba(black,.2) 0 -3px 0 inset)
+	.value
+		color: #95CC6B
+
+.data_chart
+	rect
+		fill: white
+	path
+		stroke: white
+		stroke-width: 2
+		fill: none
+	line
+		stroke: black
+	.area
+		fill: rgba(white,0.30)
+		stroke-width: 0

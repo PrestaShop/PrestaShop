@@ -10,11 +10,15 @@ CREATE TABLE `PREFIX_cart_rule_shop` (
 
 INSERT INTO `PREFIX_configuration`(`id_group_shop`, `id_shop`, `name`, `value`, `date_add`, `date_upd`)
 VALUES
-	(NULL, NULL, 'PS_LOGO', 'logo.jpg', NOw(), NOW()),
 	(NULL, NULL, 'PS_LOGO_MAIL', 'logo_mail.jpg', NOw(), NOW()),
 	(NULL, NULL, 'PS_LOGO_INVOICE', 'logo_invoice.jpg', NOW(), NOW()),
 	(NULL, NULL, 'PS_FAVICON', 'favicon.jpg', NOW(), NOW()),
 	(NULL, NULL, 'PS_STORES_ICON', 'logo_stores.gif', NOW(), NOW());
+
+SET @id_configuration = (SELECT id_configuration FROM `PREFIX_configuration` WHERE `name` LIKE 'PS_LOGO' LIMIT 1);
+
+REPLACE INTO `PREFIX_configuration`(`id_group_shop`, `id_shop`, `name`, `value`, `date_add`, `date_upd`)
+VALUES((SELECT IFNULL(@id_configuration, NULL)), NULL, 'PS_LOGO', 'logo.jpg', '0000-00-00 00:00:00', '0000-00-00 00:00:00');
 
 CREATE TABLE `PREFIX_module_preference` (
   `id_module_preference` int(11) NOT NULL auto_increment,

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,13 +19,16 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class AdminSuppliersControllerCore extends AdminController
 {
+	/** @var Supplier */
+	protected $object;
+
 	public $bootstrap = true ;
 
 	public function __construct()
@@ -37,6 +40,9 @@ class AdminSuppliersControllerCore extends AdminController
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
 		$this->allow_export = true;
+
+		$this->_defaultOrderBy = 'name';
+		$this->_defaultOrderWay = 'ASC';
 		
 		$this->bulk_actions = array(
 			'delete' => array(
@@ -61,6 +67,7 @@ class AdminSuppliersControllerCore extends AdminController
 		);
 
 		parent::__construct();
+
 	}
 
 	public function setMedia()
@@ -93,6 +100,12 @@ class AdminSuppliersControllerCore extends AdminController
 			$this->imageType, true, true);
 		$image_size = file_exists($image) ? filesize($image) / 1000 : false;
 
+		$tmp_addr = new Address();
+		$res = $tmp_addr->getFieldsRequiredDatabase();
+		$required_fields = array();
+		foreach ($res as $row)
+			$required_fields[(int)$row['id_required_field']] = $row['field_name'];
+
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Suppliers'),
@@ -111,28 +124,51 @@ class AdminSuppliersControllerCore extends AdminController
 					'col' => 4,
 					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}',
 				),
+				(in_array('company', $required_fields) ? 
+					array(
+						'type' => 'text',
+						'label' => $this->l('Company'),
+						'name' => 'company',
+						'display' => in_array('company', $required_fields),
+						'required' => in_array('company', $required_fields),
+						'maxlength' => 16,
+						'col' => 4,
+						'hint' => $this->l('Company name for this supplier')
+					) 
+					: null
+				),
 				array(
 					'type' => 'textarea',
-					'label' => $this->l('Description:'),
+					'label' => $this->l('Description'),
 					'name' => 'description',
 					'lang' => true,
 					'hint' => array(
 						$this->l('Invalid characters:').' &lt;&gt;;=#{}',
-						$this->l('Will appear in the supplier list')
+						$this->l('Will appear in the list of suppliers.')
 					),
 					'autoload_rte' => 'rte' //Enable TinyMCE editor for short description
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Phone:'),
+					'label' => $this->l('Phone'),
 					'name' => 'phone',
+					'required' => in_array('phone', $required_fields),
 					'maxlength' => 16,
 					'col' => 4,
 					'hint' => $this->l('Phone number for this supplier')
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Address:'),
+					'label' => $this->l('Mobile phone'),
+					'name' => 'phone_mobile',
+					'required' => in_array('phone_mobile', $required_fields),
+					'maxlength' => 16,
+					'col' => 4,
+					'hint' => $this->l('Mobile phone number for this supplier.')
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Address'),
 					'name' => 'address',
 					'maxlength' => 128,
 					'col' => 6,
@@ -140,22 +176,23 @@ class AdminSuppliersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Address:').' (2)',
+					'label' => $this->l('Address').' (2)',
 					'name' => 'address2',
+					'required' => in_array('address2', $required_fields),
 					'col' => 6,
 					'maxlength' => 128,
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Postal Code/Zip Code:'),
+					'label' => $this->l('Zip/postal code'),
 					'name' => 'postcode',
+					'required' => in_array('postcode', $required_fields),
 					'maxlength' => 12,
 					'col' => 2,
-					'required' => true,
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('City:'),
+					'label' => $this->l('City'),
 					'name' => 'city',
 					'maxlength' => 32,
 					'col' => 4,
@@ -163,7 +200,7 @@ class AdminSuppliersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Country:'),
+					'label' => $this->l('Country'),
 					'name' => 'id_country',
 					'required' => true,
 					'col' => 4,
@@ -187,16 +224,16 @@ class AdminSuppliersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'file',
-					'label' => $this->l('Logo:'),
+					'label' => $this->l('Logo'),
 					'name' => 'logo',
 					'display_image' => true,
 					'image' => $image_url ? $image_url : false,
 					'size' => $image_size,
-					'hint' => $this->l('Upload a supplier logo from your computer')
+					'hint' => $this->l('Upload a supplier logo from your computer.')
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Meta title:'),
+					'label' => $this->l('Meta title'),
 					'name' => 'meta_title',
 					'lang' => true,
 					'col' => 4,
@@ -204,7 +241,7 @@ class AdminSuppliersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Meta description:'),
+					'label' => $this->l('Meta description'),
 					'name' => 'meta_description',
 					'lang' => true,
 					'col' => 6,
@@ -212,18 +249,18 @@ class AdminSuppliersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'tags',
-					'label' => $this->l('Meta keywords:'),
+					'label' => $this->l('Meta keywords'),
 					'name' => 'meta_keywords',
 					'lang' => true,
 					'col' => 6,
 					'hint' => array(
-						$this->l('To add "tags" click in the field, write something and then press "Enter"'),
+						$this->l('To add "tags" click in the field, write something and then press "Enter".'),
 						$this->l('Forbidden characters:').' &lt;&gt;;=#{}'
 					)
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Enable:'),
+					'label' => $this->l('Enable'),
 					'name' => 'active',
 					'required' => false,
 					'class' => 't',
@@ -263,6 +300,7 @@ class AdminSuppliersControllerCore extends AdminController
 			$this->fields_value = array(
 				'id_address' => $address->id,
 				'phone' => $address->phone,
+				'phone_mobile' => $address->phone_mobile,
 				'address' => $address->address1,
 				'address2' => $address->address2,
 				'postcode' => $address->postcode,
@@ -282,7 +320,7 @@ class AdminSuppliersControllerCore extends AdminController
 		{
 			$this->fields_form['input'][] = array(
 				'type' => 'shop',
-				'label' => $this->l('Shop association:'),
+				'label' => $this->l('Shop association'),
 				'name' => 'checkBoxShopAsso',
 			);
 		}
@@ -422,6 +460,7 @@ class AdminSuppliersControllerCore extends AdminController
 			$address->address2 = Tools::getValue('address2', null);
 			$address->postcode = Tools::getValue('postcode', null);
 			$address->phone = Tools::getValue('phone', null);
+			$address->phone_mobile = Tools::getValue('phone_mobile', null);
 			$address->id_country = Tools::getValue('id_country', null);
 			$address->id_state = Tools::getValue('id_state', null);
 			$address->city = Tools::getValue('city', null);
@@ -447,11 +486,11 @@ class AdminSuppliersControllerCore extends AdminController
 			}
 			return parent::postProcess();
 		}
-		else if (Tools::isSubmit('delete'.$this->table))
+		elseif (Tools::isSubmit('delete'.$this->table))
 		{
 			if (!($obj = $this->loadObject(true)))
 				return;
-			else if (SupplyOrder::supplierHasPendingOrders($obj->id))
+			elseif (SupplyOrder::supplierHasPendingOrders($obj->id))
 				$this->errors[] = $this->l('It is not possible to delete a supplier if there are pending supplier orders.');
 			else
 			{

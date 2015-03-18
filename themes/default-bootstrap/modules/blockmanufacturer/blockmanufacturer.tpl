@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -53,7 +53,7 @@
 			{if $form_list}
 				<form action="{$smarty.server.SCRIPT_NAME|escape:'html':'UTF-8'}" method="get">
 					<div class="form-group selector1">
-						<select id="manufacturer_list" class="form-control" onchange="autoUrl('manufacturer_list', '');">
+						<select class="form-control" name="manufacturer_list">
 							<option value="0">{l s='All manufacturers' mod='blockmanufacturer'}</option>
 						{foreach from=$manufacturers item=manufacturer}
 							<option value="{$link->getmanufacturerLink($manufacturer.id_manufacturer, $manufacturer.link_rewrite)|escape:'html':'UTF-8'}">{$manufacturer.name|escape:'html':'UTF-8'}</option>

@@ -1,5 +1,5 @@
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,15 +18,16 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 $(document).ready(function(){
 
-	$('#send_friend_button').fancybox({
-		'hideOnContentClick': false
-	});
+	if (!!$.prototype.fancybox)
+		$('#send_friend_button').fancybox({
+			'hideOnContentClick': false
+		});
 
 	$('#send_friend_form_content .closefb').click(function(e) {
 		$.fancybox.close();
@@ -36,7 +37,6 @@ $(document).ready(function(){
 	$('#sendEmail').click(function(){
 		var name = $('#friend_name').val();
 		var email = $('#friend_email').val();
-		var id_product = $('#id_product_comment_send').val();
 		if (name && email && !isNaN(id_product))
 		{
 			$.ajax({

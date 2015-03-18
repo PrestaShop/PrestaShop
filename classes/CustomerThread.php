@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -59,7 +59,7 @@ class CustomerThreadCore extends ObjectModel
 			'date_upd' => 	array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
 	);
-	
+
 	protected $webserviceParameters = array(
 		'fields' => array(
 			'id_lang' => array(
@@ -84,7 +84,7 @@ class CustomerThreadCore extends ObjectModel
 				'id' => array('required' => true)),
 		)
 	);
-	
+
 	public function getWsCustomerMessages()
 	{
 		return Db::getInstance()->executeS('
@@ -97,38 +97,41 @@ class CustomerThreadCore extends ObjectModel
 	{
 		if (!Validate::isUnsignedId($this->id))
 			return false;
- 		
-		$return = true;			
+
+		$return = true;
 		$result = Db::getInstance()->executeS('
-			SELECT `id_customer_message` 
+			SELECT `id_customer_message`
 			FROM `'._DB_PREFIX_.'customer_message`
 			WHERE `id_customer_thread` = '.(int)$this->id
 		);
 
-		if( count($result))
+		if (count($result))
 		{
-			foreach ($result AS $res)
+			foreach ($result as $res)
 			{
-			    $message = new CustomerMessage((int)$res['id_customer_message']);
-			    if (!Validate::isLoadedObject($message))
+				$message = new CustomerMessage((int)$res['id_customer_message']);
+				if (!Validate::isLoadedObject($message))
 					$return = false;
-			    else
-			        $return &= $message->delete();
+				else
+					$return &= $message->delete();
 			}
 		}
 		$return &= parent::delete();
 		return $return;
 	}
 
-	public static function getCustomerMessages($id_customer, $read = null)
+	public static function getCustomerMessages($id_customer, $read = null, $id_order = null)
 	{
 		$sql = 'SELECT *
 			FROM '._DB_PREFIX_.'customer_thread ct
 			LEFT JOIN '._DB_PREFIX_.'customer_message cm
 				ON ct.id_customer_thread = cm.id_customer_thread
 			WHERE id_customer = '.(int)$id_customer;
-		if (!is_null($read))
+
+		if ($read !== null)
 			$sql .= ' AND cm.`read` = '.(int)$read;
+		if ($id_order !== null)
+			$sql .= ' AND ct.`id_order` = '.(int)$id_order;
 
 		return Db::getInstance()->executeS($sql);
 	}
@@ -172,7 +175,8 @@ class CustomerThreadCore extends ObjectModel
 			return (int)Db::getInstance()->getValue('
 				SELECT COUNT(*)
 				FROM '._DB_PREFIX_.'customer_thread
-			');
+				WHERE 1 '.Shop::addSqlRestriction()
+			);
 		else
 			return (int)Db::getInstance()->getValue('
 				SELECT COUNT(*)
@@ -196,7 +200,7 @@ class CustomerThreadCore extends ObjectModel
 			LEFT JOIN '._DB_PREFIX_.'customer c
 				ON (IFNULL(ct.id_customer, ct.email) = IFNULL(c.id_customer, c.email))
 			WHERE ct.id_customer_thread = '.(int)$id_customer_thread.'
-			ORDER BY cm.date_add DESC
+			ORDER BY cm.date_add ASC
 		');
 	}
 

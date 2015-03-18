@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -44,13 +44,14 @@ class CMSCore extends ObjectModel
 		'table' => 'cms',
 		'primary' => 'id_cms',
 		'multilang' => true,
+		'multilang_shop' => true,
 		'fields' => array(
 			'id_cms_category' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 			'position' => 			array('type' => self::TYPE_INT),
 			'indexation' =>     	array('type' => self::TYPE_BOOL),
 			'active' => 			array('type' => self::TYPE_BOOL),
 
-			// Lang fields
+			/* Lang fields */
 			'meta_description' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
 			'meta_keywords' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255),
 			'meta_title' =>			array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
@@ -79,7 +80,7 @@ class CMSCore extends ObjectModel
 
 	public function delete()
 	{
-	 	if (parent::delete())
+		if (parent::delete())
 			return $this->cleanPositions($this->id_cms_category);
 		return false;
 	}
@@ -195,11 +196,17 @@ class CMSCore extends ObjectModel
 		$sql = new DbQuery();
 		$sql->select('*');
 		$sql->from('cms', 'c');
+
 		if ($id_lang)
-			$sql->innerJoin('cms_lang', 'l', 'c.id_cms = l.id_cms AND l.id_lang = '.(int)$id_lang);
+		{
+			if ($id_shop)
+				$sql->innerJoin('cms_lang', 'l', 'c.id_cms = l.id_cms AND l.id_lang = '.(int)$id_lang.' AND l.id_shop = '.(int)$id_shop);
+			else
+				$sql->innerJoin('cms_lang', 'l', 'c.id_cms = l.id_cms AND l.id_lang = '.(int)$id_lang);
+		}
 
 		if ($id_shop)
-			$sql->innerJoin('cms_shop', 'cs', 'c.id_cms = cs.id_cms AND cs.id_shop = '.(int)$id_shop); 
+			$sql->innerJoin('cms_shop', 'cs', 'c.id_cms = cs.id_cms AND cs.id_shop = '.(int)$id_shop);
 
 		if ($active)
 			$sql->where('c.active = 1');
@@ -214,7 +221,7 @@ class CMSCore extends ObjectModel
 
 	public static function getUrlRewriteInformations($id_cms)
 	{
-	    $sql = 'SELECT l.`id_lang`, c.`link_rewrite`
+		$sql = 'SELECT l.`id_lang`, c.`link_rewrite`
 				FROM `'._DB_PREFIX_.'cms_lang` AS c
 				LEFT JOIN  `'._DB_PREFIX_.'lang` AS l ON c.`id_lang` = l.`id_lang`
 				WHERE c.`id_cms` = '.(int)$id_cms.'

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -36,7 +36,7 @@ class ImageManagerCore
 	const ERROR_MEMORY_LIMIT   = 3;
 
 	/**
-	 * Generate a cached thumbnail for object lists (eg. carrier, order states...etc)
+	 * Generate a cached thumbnail for object lists (eg. carrier, order statuses...etc)
 	 *
 	 * @param string $image Real image filename
 	 * @param string $cache_image Cached filename
@@ -84,9 +84,9 @@ class ImageManagerCore
 		}
 		// Relative link will always work, whatever the base uri set in the admin
 		if (Context::getContext()->controller->controller_type == 'admin')
-			return '<img src="../img/tmp/'.$cache_image.($disable_cache ? '?time='.time() : '').'" alt="" class="imgm" />';
+			return '<img src="../img/tmp/'.$cache_image.($disable_cache ? '?time='.time() : '').'" alt="" class="imgm img-thumbnail" />';
 		else
-			return '<img src="'._PS_TMP_IMG_.$cache_image.($disable_cache ? '?time='.time() : '').'" alt="" class="imgm" />';
+			return '<img src="'._PS_TMP_IMG_.$cache_image.($disable_cache ? '?time='.time() : '').'" alt="" class="imgm img-thumbnail" />';
 	}
 
 	/**
@@ -99,6 +99,9 @@ class ImageManagerCore
 	public static function checkImageMemoryLimit($image)
 	{
 		$infos = @getimagesize($image);
+
+		if (!is_array($infos) || !isset($infos['bits']))
+			return true;
 
 		$memory_limit = Tools::getMemoryLimit();
 		// memory_limit == -1 => unlimited memory
@@ -131,11 +134,55 @@ class ImageManagerCore
 			clearstatcache();
 		else
 			clearstatcache(true, $src_file);
-		
+
 		if (!file_exists($src_file) || !filesize($src_file))
 			return !($error = self::ERROR_FILE_NOT_EXIST);
 
-		list($src_width, $src_height, $type) = getimagesize($src_file);
+		list($tmp_width, $tmp_height, $type) = getimagesize($src_file);
+		$src_image = ImageManager::create($type, $src_file);
+
+		if (function_exists('exif_read_data') && function_exists('mb_strtolower'))
+		{
+			$exif = @exif_read_data($src_file);
+
+			if ($exif && isset($exif['Orientation']))
+			{
+				switch ($exif['Orientation'])
+				{
+					case 3:
+						$src_width = $tmp_width;
+						$src_height = $tmp_height;
+						$src_image = imagerotate($src_image, 180, 0);
+						break;
+
+					case 6:
+						$src_width = $tmp_height;
+						$src_height = $tmp_width;
+						$src_image = imagerotate($src_image, -90, 0);
+						break;
+
+					case 8:
+						$src_width = $tmp_height;
+						$src_height = $tmp_width;
+						$src_image = imagerotate($src_image, 90, 0);
+						break;
+
+					default:
+						$src_width = $tmp_width;
+						$src_height = $tmp_height;
+				}
+			}
+			else
+			{
+				$src_width = $tmp_width;
+				$src_height = $tmp_height;
+			}
+		}
+		else
+		{
+			$src_width = $tmp_width;
+			$src_height = $tmp_height;
+		}
 
 		// If PS_IMAGE_QUALITY is activated, the generated image will be a PNG with .jpg as a file extension.
 		// This allow for higher quality and for transparency. JPG source files will also benefit from a higher quality
@@ -150,8 +197,6 @@ class ImageManagerCore
 			$dst_width = $src_width;
 		if (!$dst_height)
 			$dst_height = $src_height;
-
-		$src_image = ImageManager::create($type, $src_file);
 
 		$width_diff = $dst_width / $src_width;
 		$height_diff = $dst_height / $src_height;
@@ -179,7 +224,7 @@ class ImageManagerCore
 
 		if (!ImageManager::checkImageMemoryLimit($src_file))
 			return !($error = self::ERROR_MEMORY_LIMIT);
-		
+
 		$dest_image = imagecreatetruecolor($dst_width, $dst_height);
 
 		// If image is a PNG and the output is PNG, fill with transparency. Else fill with white background.
@@ -216,7 +261,16 @@ class ImageManagerCore
 			$mime_type_list = array('image/gif', 'image/jpg', 'image/jpeg', 'image/pjpeg', 'image/png', 'image/x-png');
 
 		// Try 4 different methods to determine the mime type
-		if (function_exists('finfo_open'))
+		if (function_exists('getimagesize'))
+		{
+			$image_info = @getimagesize($filename);
+
+			if ($image_info)
+				$mime_type = $image_info['mime'];
+			else
+				$file_mime_type = false;
+		}
+		elseif (function_exists('finfo_open'))
 		{
 			$const = defined('FILEINFO_MIME_TYPE') ? FILEINFO_MIME_TYPE : FILEINFO_MIME;
 			$finfo = finfo_open($const);
@@ -281,7 +335,7 @@ class ImageManagerCore
 	{
 		if ((int)$max_file_size > 0 && $file['size'] > (int)$max_file_size)
 			return sprintf(Tools::displayError('Image is too large (%1$d kB). Maximum allowed: %2$d kB'), $file['size'] / 1024, $max_file_size / 1024);
-		if (!ImageManager::isRealImage($file['tmp_name'], $file['type']) || !ImageManager::isCorrectImageFileExt($file['name'], $types))
+		if (!ImageManager::isRealImage($file['tmp_name'], $file['type']) || !ImageManager::isCorrectImageFileExt($file['name'], $types) || preg_match('/\%00/', $file['name']))
 			return Tools::displayError('Image format not recognized, allowed formats are: .gif, .jpg, .png');
 		if ($file['error'])
 			return sprintf(Tools::displayError('Error while uploading image; please change your server\'s settings. (Error code: %s)'), $file['error']);
@@ -417,7 +471,7 @@ class ImageManagerCore
 			case 'jpeg':
 			default:
 				$quality = (Configuration::get('PS_JPEG_QUALITY') === false ? 90 : Configuration::get('PS_JPEG_QUALITY'));
-				imageinterlace($resource,1); /// make it PROGRESSIVE
+				imageinterlace($resource, 1); /// make it PROGRESSIVE
 				$success = imagejpeg($resource, $filename, (int)$quality);
 			break;
 		}
@@ -438,7 +492,7 @@ class ImageManagerCore
 						'image/gif' => array('gif'),
 						'image/jpeg' => array('jpg', 'jpeg'),
 						'image/png' => array('png')
-					);	
+					);
 		$extension = substr($file_name, strrpos($file_name, '.') + 1);
 
 		$mime_type = null;

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -100,14 +100,7 @@ class ProductDownloadCore extends ObjectModel
 
 	public function add($autodate = true, $null_values = false)
 	{
-		if (parent::add($autodate, $null_values))
-		{
-			// Set cache of feature detachable to true
-			if ($this->active)
-				Configuration::updateGlobalValue('PS_VIRTUAL_PROD_FEATURE_ACTIVE', '1');
-			return true;
-		}
-		return false;
+		return (bool)parent::add($autodate, $null_values);
 	}
 
 	public function update($null_values = false)
@@ -180,7 +173,7 @@ class ProductDownloadCore extends ObjectModel
 		self::$_productIds[$id_product] = (int)Db::getInstance()->getValue('
 		SELECT `id_product_download`
 		FROM `'._DB_PREFIX_.'product_download`
-		WHERE `id_product` = '.(int)$id_product.' 
+		WHERE `id_product` = '.(int)$id_product.'
 		AND `active` = 1
 		ORDER BY `id_product_download` DESC');
 
@@ -299,9 +292,9 @@ class ProductDownloadCore extends ObjectModel
 	 */
 	public static function getNewFilename()
 	{
-		do {
+		do
 			$filename = sha1(microtime());
-		} while (file_exists(_PS_DOWNLOAD_DIR_.$filename));
+		while (file_exists(_PS_DOWNLOAD_DIR_.$filename));
 		return $filename;
 	}
 

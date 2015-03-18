@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -38,7 +38,7 @@
 		<!-- Shopping Cart -->
 		{include file="$tpl_dir./shopping-cart.tpl"}
 		<!-- End Shopping Cart -->
-		{if $isLogged AND !$isGuest}
+		{if $is_logged AND !$is_guest}
 			{include file="$tpl_dir./order-address.tpl"}
 		{else}
 			<!-- Create account / Guest account / Login block -->
@@ -55,15 +55,16 @@
 	{else}
 		{capture name=path}{l s='Your shopping cart'}{/capture}
 		<h2 class="page-heading">{l s='Your shopping cart'}</h2>
+		{include file="$tpl_dir./errors.tpl"}
 		<p class="alert alert-warning">{l s='Your shopping cart is empty.'}</p>
 	{/if}
 {strip}
 {addJsDef imgDir=$img_dir}
-{addJsDef authenticationUrl=$link->getPageLink("authentication", true)|addslashes}
-{addJsDef orderOpcUrl=$link->getPageLink("order-opc", true)|addslashes}
-{addJsDef historyUrl=$link->getPageLink("history", true)|addslashes}
-{addJsDef guestTrackingUrl=$link->getPageLink("guest-tracking", true)|addslashes}
-{addJsDef addressUrl=$link->getPageLink("address", true, NULL, "back={$back_order_page}")|addslashes}
+{addJsDef authenticationUrl=$link->getPageLink("authentication", true)|escape:'quotes':'UTF-8'}
+{addJsDef orderOpcUrl=$link->getPageLink("order-opc", true)|escape:'quotes':'UTF-8'}
+{addJsDef historyUrl=$link->getPageLink("history", true)|escape:'quotes':'UTF-8'}
+{addJsDef guestTrackingUrl=$link->getPageLink("guest-tracking", true)|escape:'quotes':'UTF-8'}
+{addJsDef addressUrl=$link->getPageLink("address", true, NULL, "back={$back_order_page}")|escape:'quotes':'UTF-8'}
 {addJsDef orderProcess='order-opc'}
 {addJsDef guestCheckoutEnabled=$PS_GUEST_CHECKOUT_ENABLED|intval}
 {addJsDef currencySign=$currencySign|html_entity_decode:2:"UTF-8"}
@@ -73,16 +74,11 @@
 {addJsDef displayPrice=$priceDisplay}
 {addJsDef taxEnabled=$use_taxes}
 {addJsDef conditionEnabled=$conditions|intval}
-{addJsDef countries=array()}
-{addJsDef countriesNeedIDNumber=array()}
-{addJsDef countriesNeedZipCode=array()}
 {addJsDef vat_management=$vat_management|intval}
 {addJsDef errorCarrier=$errorCarrier|@addcslashes:'\''}
 {addJsDef errorTOS=$errorTOS|@addcslashes:'\''}
 {addJsDef checkedCarrier=$checked|intval}
 {addJsDef addresses=array()}
-{addJsDef isLogged=$isLogged|intval}
-{addJsDef isGuest=$isGuest|intval}
 {addJsDef isVirtualCart=$isVirtualCart|intval}
 {addJsDef isPaymentStep=$isPaymentStep|intval}
 {addJsDefL name=txtWithTax}{l s='(tax incl.)' js=1}{/addJsDefL}
@@ -101,5 +97,20 @@
 {addJsDefL name=txtInstantCheckout}{l s='Instant checkout' js=1}{/addJsDefL}
 {addJsDefL name=txtSelectAnAddressFirst}{l s='Please start by selecting an address.' js=1}{/addJsDefL}
 {addJsDefL name=txtFree}{l s='Free' js=1}{/addJsDefL}
+
+{capture}{if $back}&mod={$back|urlencode}{/if}{/capture}
+{capture name=addressUrl}{$link->getPageLink('address', true, NULL, 'back='|cat:$back_order_page|cat:'?step=1'|cat:$smarty.capture.default)|escape:'quotes':'UTF-8'}{/capture}
+{addJsDef addressUrl=$smarty.capture.addressUrl}
+{capture}{'&multi-shipping=1'|urlencode}{/capture}
+{addJsDef addressMultishippingUrl=$smarty.capture.addressUrl|cat:$smarty.capture.default}
+{capture name=addressUrlAdd}{$smarty.capture.addressUrl|cat:'&id_address='}{/capture}
+{addJsDef addressUrlAdd=$smarty.capture.addressUrlAdd}
+{addJsDef opc=$opc|boolval}
+{capture}<h3 class="page-subheading">{l s='Your billing address' js=1}</h3>{/capture}
+{addJsDefL name=titleInvoice}{$smarty.capture.default|@addcslashes:'\''}{/addJsDefL}
+{capture}<h3 class="page-subheading">{l s='Your delivery address' js=1}</h3>{/capture}
+{addJsDefL name=titleDelivery}{$smarty.capture.default|@addcslashes:'\''}{/addJsDefL}
+{capture}<a class="button button-small btn btn-default" href="{$smarty.capture.addressUrlAdd}" title="{l s='Update' js=1}"><span>{l s='Update' js=1}<i class="icon-chevron-right right"></i></span></a>{/capture}
+{addJsDefL name=liUpdate}{$smarty.capture.default|@addcslashes:'\''}{/addJsDefL}
 {/strip}
 {/if}

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -68,9 +68,11 @@ class InstallModelDatabase extends InstallAbstractModel
 					// Check if a table with same prefix already exists
 					if (!$clear && Db::hasTableWithSamePrefix($server, $login, $password, $database, $prefix))
 						$errors[] = $this->language->l('At least one table with same prefix was already found, please change your prefix or drop your database');
+					if (!Db::checkAutoIncrement($server, $login, $password))
+						$errors[] = $this->language->l('The values of auto_increment increment and offset must be set to 1');
 					if (($create_error = Db::checkCreatePrivilege($server, $login, $password, $database, $prefix)) !== true)
 					{
-						$errors[] = $this->language->l(sprintf('Your database login don\'t have the privileges to create table on the database "%s". Ask your hosting provider:', $database));
+						$errors[] = $this->language->l(sprintf('Your database login does not have the privileges to create table on the database "%s". Ask your hosting provider:', $database));
 						if ($create_error != false)
 							$errors[] = $create_error;
 					}
@@ -92,13 +94,13 @@ class InstallModelDatabase extends InstallAbstractModel
 
 		return $errors;
 	}
-	
+
 	public function createDatabase($server, $database, $login, $password, $dropit = false)
 	{
 		$class = Db::getClass();
 		return call_user_func(array($class, 'createDatabase'), $server, $login, $password, $database, $dropit);
 	}
-	
+
 	public function getBestEngine($server, $database, $login, $password)
 	{
 		$class = Db::getClass();

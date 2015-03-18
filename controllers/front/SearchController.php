@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -55,16 +55,20 @@ class SearchControllerCore extends FrontController
 	 */
 	public function initContent()
 	{
-		parent::initContent();
-
-		$query = Tools::replaceAccentedChars(urldecode(Tools::getValue('q')));
+		$original_query = Tools::getValue('q');
+		$query = Tools::replaceAccentedChars(urldecode($original_query));
 		if ($this->ajax_search)
 		{
 			$searchResults = Search::find((int)(Tools::getValue('id_lang')), $query, 1, 10, 'position', 'desc', true);
-			foreach ($searchResults as &$product)
-				$product['product_link'] = $this->context->link->getProductLink($product['id_product'], $product['prewrite'], $product['crewrite']);
-			die(Tools::jsonEncode($searchResults));
+			if (is_array($searchResults))
+				foreach ($searchResults as &$product)
+					$product['product_link'] = $this->context->link->getProductLink($product['id_product'], $product['prewrite'], $product['crewrite']);
+
+			$this->ajaxDie(Tools::jsonEncode($searchResults));
 		}
+
+		//Only controller content initialization when the user use the normal search
+		parent::initContent();
 
 		if ($this->instant_search && !is_array($query))
 		{
@@ -82,7 +86,7 @@ class SearchControllerCore extends FrontController
 				'products' => $search['result'], // DEPRECATED (since to 1.4), not use this: conflict with block_cart module
 				'search_products' => $search['result'],
 				'nbProducts' => $search['total'],
-				'search_query' => $query,
+				'search_query' => $original_query,
 				'instant_search' => $this->instant_search,
 				'homeSize' => Image::getSize(ImageType::getFormatedName('home'))));
 		}
@@ -91,11 +95,13 @@ class SearchControllerCore extends FrontController
 			$this->productSort();
 			$this->n = abs((int)(Tools::getValue('n', Configuration::get('PS_PRODUCTS_PER_PAGE'))));
 			$this->p = abs((int)(Tools::getValue('p', 1)));
-			$original_query = Tools::safeOutput($query);
-			$query = Tools::replaceAccentedChars(urldecode($query));			
+			$original_query = $query;
+			$query = Tools::replaceAccentedChars(urldecode($query));
 			$search = Search::find($this->context->language->id, $query, $this->p, $this->n, $this->orderBy, $this->orderWay);
-			foreach ($search['result'] as &$product)
-				$product['link'] .= (strpos($product['link'], '?') === false ? '?' : '&').'search_query='.urlencode($query).'&results='.(int)$search['total'];
+			if (is_array($search['result']))
+				foreach ($search['result'] as &$product)
+					$product['link'] .= (strpos($product['link'], '?') === false ? '?' : '&').'search_query='.urlencode($query).'&results='.(int)$search['total'];
+
 			Hook::exec('actionSearch', array('expr' => $query, 'total' => $search['total']));
 			$nbProducts = $search['total'];
 			$this->pagination($nbProducts);

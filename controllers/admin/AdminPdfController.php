@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -36,12 +36,19 @@ class AdminPdfControllerCore extends AdminController
 
 	public function initProcess()
 	{
-		parent::initProcess();	
+		parent::initProcess();
+		$this->checkCacheFolder();
 		$access = Profile::getProfileAccess($this->context->employee->id_profile, (int)Tab::getIdFromClassName('AdminOrders'));
 		if ($access['view'] === '1' && ($action = Tools::getValue('submitAction')))
 			$this->action = $action;
 		else
 			$this->errors[] = Tools::displayError('You do not have permission to view this.');
+	}
+
+	public function checkCacheFolder()
+	{
+		if (!is_dir(_PS_CACHE_DIR_.'tcpdf/'))
+			mkdir(_PS_CACHE_DIR_.'tcpdf/');
 	}
 
 	public function processGenerateInvoicePdf()
@@ -56,13 +63,14 @@ class AdminPdfControllerCore extends AdminController
 
 	public function processGenerateOrderSlipPDF()
 	{
-		$orderSlip = new OrderSlip((int)Tools::getValue('id_order_slip'));
-		$order = new Order((int)$orderSlip->id_order);
+		$order_slip = new OrderSlip((int)Tools::getValue('id_order_slip'));
+		$order = new Order((int)$order_slip->id_order);
+
 		if (!Validate::isLoadedObject($order))
 			die(Tools::displayError('The order cannot be found within your database.'));
-		$order->products = OrderSlip::getOrdersSlipProducts($orderSlip->id, $order);
 
-		$this->generatePDF($orderSlip, PDF::TEMPLATE_ORDER_SLIP);
+		$order->products = OrderSlip::getOrdersSlipProducts($order_slip->id, $order);
+		$this->generatePDF($order_slip, PDF::TEMPLATE_ORDER_SLIP);
 	}
 
 	public function processGenerateDeliverySlipPDF()

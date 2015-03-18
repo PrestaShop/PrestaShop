@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -33,25 +33,31 @@ class AdminLoginControllerCore extends AdminController
 	 	$this->context = Context::getContext();
 	 	$this->display_header = false;
 	 	$this->display_footer = false;
-
 		$this->meta_title = $this->l('Administration panel');
-
 		parent::__construct();
+		$this->layout = _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR.$this->bo_theme
+			.DIRECTORY_SEPARATOR.'template'.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.'login'
+			.DIRECTORY_SEPARATOR.'layout.tpl';
+
+		if (!headers_sent())
+			header('Login: true');
 	}
 
 	public function setMedia()
 	{
 		$this->addJquery();
 		$this->addjqueryPlugin('validate');
-		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/admin-theme.css');
+		$this->addJS(_PS_JS_DIR_.'jquery/plugins/validate/localization/messages_'.$this->context->language->iso_code.'.js');
+		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/admin-theme.css', 'all', 0);
+        // Specific Admin Theme
+		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/overrides.css', 'all', PHP_INT_MAX);
 		$this->addJS(_PS_JS_DIR_.'vendor/spin.js');
 		$this->addJS(_PS_JS_DIR_.'vendor/ladda.js');
-		$this->addJS(_PS_JS_DIR_.'login.js');
 	}
 	
 	public function initContent()
 	{
-		if ((empty($_SERVER['HTTPS']) || strtolower($_SERVER['HTTPS']) == 'off') && Configuration::get('PS_SSL_ENABLED'))
+		if (!Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED'))
 		{
 			// You can uncomment these lines if you want to force https even from localhost and automatically redirect
 			// header('HTTP/1.1 301 Moved Permanently');
@@ -60,13 +66,19 @@ class AdminLoginControllerCore extends AdminController
 			$clientIsMaintenanceOrLocal = in_array(Tools::getRemoteAddr(), array_merge(array('127.0.0.1'), explode(',', Configuration::get('PS_MAINTENANCE_IP'))));
 			// If ssl is enabled, https protocol is required. Exception for maintenance and local (127.0.0.1) IP
 			if ($clientIsMaintenanceOrLocal)
-				$this->errors[] = Tools::displayError('SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.');
+				$warningSslMessage = Tools::displayError('SSL is activated. However, your IP is allowed to enter unsecure mode for maintenance or local IP issues.');
 			else
 			{	
 				$url = 'https://'.Tools::safeOutput(Tools::getServerName()).Tools::safeOutput($_SERVER['REQUEST_URI']);
-				$warningSslMessage = sprintf(Tools::displayError('SSL is activated. Please connect using the following link to <a href="%s">log into secure mode (https://)</a>'), $url);
-				$this->context->smarty->assign(array('warningSslMessage' => $warningSslMessage));
+				$warningSslMessage = sprintf(
+					Translate::ppTags(
+						Tools::displayError('SSL is activated. Please connect using the following link to [1]log into secure mode (https://)[/1]', false),
+						array('<a href="%s">')
+					),
+					$url
+				);
 			}
+			$this->context->smarty->assign('warningSslMessage', $warningSslMessage);
 		}
 
 		if (file_exists(_PS_ADMIN_DIR_.'/../install'))
@@ -74,7 +86,7 @@ class AdminLoginControllerCore extends AdminController
 		
 		if (basename(_PS_ADMIN_DIR_) == 'admin' && file_exists(_PS_ADMIN_DIR_.'/../admin/'))
 		{	
-			$rand = 'admin'.sprintf('%04d', rand(0, 9999)).'/';
+			$rand = 'admin'.sprintf('%03d', rand(0, 999)).Tools::strtolower(Tools::passwdGen(6)).'/';
 			if (@rename(_PS_ADMIN_DIR_.'/../admin/', _PS_ADMIN_DIR_.'/../'.$rand))
 				Tools::redirectAdmin('../'.$rand);
 			else
@@ -106,6 +118,11 @@ class AdminLoginControllerCore extends AdminController
 				'shop_name' => Tools::safeOutput(Configuration::get('PS_SHOP_NAME')),
 				'disableDefaultErrorOutPut' => true,
 			));
+
+		if ($email = Tools::getValue('email'))
+			$this->context->smarty->assign('email', $email);
+		if ($password = Tools::getValue('password'))
+			$this->context->smarty->assign('password', $password);
 
 		$this->setMedia();
 		$this->initHeader();
@@ -169,7 +186,9 @@ class AdminLoginControllerCore extends AdminController
 			}
 			else
 			{
-				$this->context->employee->remote_addr = ip2long(Tools::getRemoteAddr());
+				PrestaShopLogger::addLog(sprintf($this->l('Back Office connection from %s', 'AdminTab', false, false), Tools::getRemoteAddr()), 1, null, '', 0, true, (int)$this->context->employee->id);
+
+				$this->context->employee->remote_addr = (int)ip2long(Tools::getRemoteAddr());
 				// Update cookie
 				$cookie = Context::getContext()->cookie;
 				$cookie->id_employee = $this->context->employee->id;
@@ -225,7 +244,7 @@ class AdminLoginControllerCore extends AdminController
 		if (!count($this->errors))
 		{	
 			$pwd = Tools::passwdGen();
-			$employee->passwd = md5(pSQL(_COOKIE_KEY_.$pwd));
+			$employee->passwd = Tools::encrypt($pwd);
 			$employee->last_passwd_gen = date('Y-m-d H:i:s', time());
 
 			$params = array(
@@ -235,9 +254,11 @@ class AdminLoginControllerCore extends AdminController
 				'{passwd}' => $pwd
 			);
 						
-			if (Mail::Send($employee->id_lang, 'password', Mail::l('Your new password', $employee->id_lang), $params, $employee->email, $employee->firstname.' '.$employee->lastname))
+			if (Mail::Send($employee->id_lang, 'employee_password', Mail::l('Your new password', $employee->id_lang), $params, $employee->email, $employee->firstname.' '.$employee->lastname))
 			{
 				// Update employee only if the mail can be sent
+				Shop::setContext(Shop::CONTEXT_SHOP, (int)min($employee->getAssociatedShops()));
+
 				$result = $employee->update();
 				if (!$result)
 					$this->errors[] = Tools::displayError('An error occurred while attempting to change your password.');
@@ -254,7 +275,7 @@ class AdminLoginControllerCore extends AdminController
 				)));
 		
 		}
-		else if (Tools::isSubmit('ajax'))
+		elseif (Tools::isSubmit('ajax'))
 			die(Tools::jsonEncode(array('hasErrors' => true, 'errors' => $this->errors)));
 	}
 }

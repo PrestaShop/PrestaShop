@@ -36,8 +36,9 @@ $(document).ready(function() {
 	getHookableList();
 	$('.unregisterHook').unbind('click').click(function()
 	{
-		id = $(this).attr('id');
+		ids = $(this).attr('id').split('_');
 		$(this).parent().parent().parent().fadeOut('slow', function() {
+			$(this).parent().data('id', + ids[0]);
 			$(this).remove();
 		});
 		return false;
@@ -208,18 +209,23 @@ function saveModulePosition()
     $("#fancy").attr('href', '#live_edit_feedback');
     $("#fancy").trigger("click");
     var str = '';
-    for (var i = 0; i < hooks_list.length; i++) {
+    for (var i = 0; i < hooks_list.length; i++)
+	{
         str += '&' + hooks_list[i] + '=';
-        $('#' + hooks_list[i] + ' > .dndModule').each(function() {
-            ids = $(this).attr('id').split('_');
-            $("#liveEdit-action-form")
-        .append('<input class="dynamic-input-save-position" type="hidden" name="hook['+ids[1]+'][]" value="'+ids[3]+'" />');
-        });
 
+		if ($('#' + hooks_list[i] + ' > .dndModule').length)
+		{
+			$('#' + hooks_list[i] + ' > .dndModule').each(function(){
+	
+	            ids = $(this).attr('id').split('_');
+	            $("#liveEdit-action-form").append('<input class="dynamic-input-save-position" type="hidden" name="hook[' + ids[1] + '][]" value="' + ids[3] + '" />');
+	        });
+		}
+		else if (typeof($('#' + hooks_list[i]).data('id')) !== 'undefined' && !$('input[name="hook[' + i + ']"]').length)
+	            	$("#liveEdit-action-form").append('<input class="dynamic-input-save-position" type="hidden" name="hook[' + parseInt($('#' + hooks_list[i]).data('id')) + '][0]" value="0" />');
     }
-	$("#liveEdit-action-form")
-			.append('<input class="dynamic-input-save-position" type="hidden" name="saveHook" value="1" />');
-		datas = $("#liveEdit-action-form").serializeArray();
+	$("#liveEdit-action-form").append('<input class="dynamic-input-save-position" type="hidden" name="saveHook" value="1" />');
+	datas = $("#liveEdit-action-form").serializeArray();
 
     $.ajax({
         type: 'POST',
@@ -227,7 +233,7 @@ function saveModulePosition()
         async: true,
         dataType: 'json',
         data: datas,
-        success: function(jsonData) {
+        success: function(jsonData){
         $('#live_edit_feedback_str').html('<div class="live_edit_feed_back_ok" style="text-align:center; padding-top: 33px;"><img src="' + baseDir + 'img/admin/ok2.png"><h3>' + saveOK + '</h3><a style="margin:auto" class="exclusive" href="#" onclick="closeFancybox();">' + close + '</a></div>');
             timer = setTimeout("hideFeedback()", 3000);
             has_been_moved = false;

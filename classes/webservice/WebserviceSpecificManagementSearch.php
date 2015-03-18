@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,20 +19,23 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class WebserviceSpecificManagementSearchCore implements WebserviceSpecificManagementInterface
 {
+	/** @var WebserviceOutputBuilder */
 	protected $objOutput;
 	protected $output;
+
+	/** @var WebserviceRequest */
 	protected $wsObject;
 
-	// ------------------------------------------------
-	// GETTERS & SETTERS
-	// ------------------------------------------------
+	/* ------------------------------------------------
+	 * GETTERS & SETTERS
+	 * ------------------------------------------------ */
 
 	public function setObjectOutput(WebserviceOutputBuilderCore $obj)
 	{
@@ -86,7 +89,7 @@ class WebserviceSpecificManagementSearchCore implements WebserviceSpecificManage
 
 		$results = Search::find($this->wsObject->urlFragments['language'], $this->wsObject->urlFragments['query'], 1, 1, 'position', 'desc', true, false);
 		$categories = array();
-		foreach ($results AS $result)
+		foreach ($results as $result)
 		{
 			$current = new Product($result['id_product']);
 			$objects_products[] = $current;

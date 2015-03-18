@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,14 +18,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div class="panel">
 	{if isset($header)}{$header}{/if}
 	{if isset($nodes)}
-	<ul id="{$id}" class="tree">
+	<ul id="{$id|escape:'html':'UTF-8'}" class="tree">
 		{$nodes}
 	</ul>
 	{/if}
@@ -55,8 +55,8 @@
 		}
 	{/if}
 	{if isset($use_search) && $use_search == true}
-		$("#{$id}-categories-search").bind("typeahead:selected", function(obj, datum) {
-		    $("#{$id}").find(":input").each(
+		$("#{$id|escape:'html':'UTF-8'}-categories-search").bind("typeahead:selected", function(obj, datum) {
+		    $("#{$id|escape:'html':'UTF-8'}").find(":input").each(
 				function()
 				{
 					if ($(this).val() == datum.id_category)
@@ -78,13 +78,13 @@
 		});
 	{/if}
 	$(document).ready(function () {
-		$("#{$id}").tree("collapseAll");
+		$("#{$id|escape:'html':'UTF-8'}").tree("collapseAll");
 
 		{if isset($selected_categories)}
 			{assign var=imploded_selected_categories value='","'|implode:$selected_categories}
 			var selected_categories = new Array("{$imploded_selected_categories}");
 
-			$("#{$id}").find(":input").each(
+			$("#{$id|escape:'html':'UTF-8'}").find(":input").each(
 				function()
 				{
 					if ($.inArray($(this).val(), selected_categories) != -1)

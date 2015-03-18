@@ -1,5 +1,5 @@
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,12 +18,11 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-$(document).ready(function () {
-
+$(document).ready(function(){
 	$('ul.tree.dhtml').hide();
 
 	//to do not execute this script as much as it's called...
@@ -58,7 +57,8 @@ $(document).ready(function () {
 });
 
 //animate the opening of the branch (span.grower jQueryElement)
-function openBranch(jQueryElement, noAnimation) {
+function openBranch(jQueryElement, noAnimation)
+{
 		jQueryElement.addClass('OPEN').removeClass('CLOSE');
 		if(noAnimation)
 			jQueryElement.parent().find('ul:first').show();
@@ -66,7 +66,8 @@ function openBranch(jQueryElement, noAnimation) {
 			jQueryElement.parent().find('ul:first').slideDown();
 }
 //animate the closing of the branch (span.grower jQueryElement)
-function closeBranch(jQueryElement, noAnimation) {
+function closeBranch(jQueryElement, noAnimation)
+{
 	jQueryElement.addClass('CLOSE').removeClass('OPEN');
 	if(noAnimation)
 		jQueryElement.parent().find('ul:first').hide();
@@ -75,7 +76,8 @@ function closeBranch(jQueryElement, noAnimation) {
 }
 
 //animate the closing or opening of the branch (ul jQueryElement)
-function toggleBranch(jQueryElement, noAnimation) {
+function toggleBranch(jQueryElement, noAnimation)
+{
 	if(jQueryElement.hasClass('OPEN'))
 		closeBranch(jQueryElement, noAnimation);
 	else

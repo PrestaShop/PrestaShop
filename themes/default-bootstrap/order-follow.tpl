@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -53,12 +53,12 @@
 			<textarea name="returnText" class="form-control"></textarea>
 		</p>
 		{foreach $ids_order_detail as $id_order_detail}
-			<input type="hidden" name="ids_order_detail[{$id_order_detail}]" value="{$id_order_detail}"/>
+			<input type="hidden" name="ids_order_detail[{$id_order_detail|intval}]" value="{$id_order_detail|intval}"/>
 		{/foreach}
 		{foreach $order_qte_input as $key => $value}
-			<input type="hidden" name="order_qte_input[{$key}]" value="{$value}"/>
+			<input type="hidden" name="order_qte_input[{$key|intval}]" value="{$value|intval}"/>
 		{/foreach}
-		<input type="hidden" name="id_order" value="{$id_order}"/>
+		<input type="hidden" name="id_order" value="{$id_order|intval}"/>
 		<input class="unvisible" type="submit" name="submitReturnMerchandise" value="{l s='Make an RMA slip'}"/>
 		<p>
 	        <button type="submit" name="submitReturnMerchandise" class="btn btn-default button button-small">
@@ -128,10 +128,7 @@
 					</td>
 					<td class="history_invoice">
 						{if $return.state == 2}
-							<a 
-								class="link-button" 
-								href="{$link->getPageLink('pdf-order-return', true, NULL, "id_order_return={$return.id_order_return|intval}")|escape:'html':'UTF-8'}" 
-								title="{l s='Order return'} {l s='#'}{$return.id_order_return|string_format:"%06d"}">
+							<a class="link-button" href="{$link->getPageLink('pdf-order-return', true, NULL, "id_order_return={$return.id_order_return|intval}")|escape:'html':'UTF-8'}" title="{l s='Order return'} {l s='#'}{$return.id_order_return|string_format:"%06d"}">
 								<i class="icon-file-text"></i> {l s='Print out'}
 							</a>
 						{else}

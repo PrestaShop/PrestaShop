@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -38,12 +38,7 @@ class AdminSearchControllerCore extends AdminController
 		$this->query = trim(Tools::getValue('bo_query'));
 		$searchType = (int)Tools::getValue('bo_search_type');
 		/* Handle empty search field */
-		if (empty($this->query))
-		{
-			$this->errors[] = Tools::displayError('Please complete the search form first.');
-			return;
-		}
-		else
+		if (!empty($this->query))
 		{
 			if (!$searchType && strlen($this->query) > 1)
 				$this->searchFeatures();
@@ -145,7 +140,7 @@ class AdminSearchControllerCore extends AdminController
 				/* Handle module name */
 				if ($searchType == 7 && Validate::isModuleName($this->query) AND ($module = Module::getInstanceByName($this->query)) && Validate::isLoadedObject($module))
 					Tools::redirectAdmin('index.php?tab=AdminModules&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name).'&token='.Tools::getAdminTokenLite('AdminModules'));
-				
+
 				/* Normal catalog search */
 				$this->searchModule();
 			}
@@ -185,7 +180,7 @@ class AdminSearchControllerCore extends AdminController
 	{
 		$this->_list['customers'] = Customer::searchByName($this->query);
 	}
-	
+
 	public function searchModule()
 	{
 		$this->_list['modules'] = array();
@@ -201,8 +196,14 @@ class AdminSearchControllerCore extends AdminController
 		{
 			$iso_lang = Tools::strtolower(Context::getContext()->language->iso_code);
 			$iso_country = Tools::strtolower(Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT')));
-			if (($json_content = Tools::file_get_contents('https://api.addons.prestashop.com/'._PS_VERSION_.'/search/'.urlencode($this->query).'/'.$iso_country.'/'.$iso_lang.'/')) != false)
-				$this->_list['addons'] = Tools::jsonDecode($json_content, true);
+			if (($json_content = Tools::file_get_contents('https://api-addons.prestashop.com/'._PS_VERSION_.'/search/'.urlencode($this->query).'/'.$iso_country.'/'.$iso_lang.'/')) != false)
+			{
+				$results = Tools::jsonDecode($json_content, true);
+				if (isset($results['id']))
+					$this->_list['addons']  = array($results);
+				else
+					$this->_list['addons']  =  $results;
+			}
 		}
 	}
 
@@ -218,7 +219,7 @@ class AdminSearchControllerCore extends AdminController
 		global $_LANGADM;
 		if ($_LANGADM === null)
 			return;
-		
+
 		$tabs = array();
 		$key_match = array();
 		$result = Db::getInstance()->executeS('
@@ -227,7 +228,9 @@ class AdminSearchControllerCore extends AdminController
 		INNER JOIN '._DB_PREFIX_.'tab_lang tl ON (t.id_tab = tl.id_tab AND tl.id_lang = '.(int)$this->context->employee->id_lang.')
 		LEFT JOIN '._DB_PREFIX_.'access a ON (a.id_tab = t.id_tab AND a.id_profile = '.(int)$this->context->employee->id_profile.')
 		WHERE active = 1
-		'.($this->context->employee->id_profile != 1 ? 'AND view = 1' : ''));
+		'.($this->context->employee->id_profile != 1 ? 'AND view = 1' : '').
+		(defined('_PS_HOST_MODE_') ? ' AND t.`hide_host_mode` = 0' : '')
+		);
 		foreach ($result as $row)
 		{
 			$tabs[strtolower($row['class_name'])] = $row['name'];
@@ -285,7 +288,7 @@ class AdminSearchControllerCore extends AdminController
 		}
 		$this->fields_list['customers'] = (array(
 			'id_customer' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
-			'id_gender' => array('title' => $this->l('Titles'), 'align' => 'center', 'icon' => $genders_icon, 'list' => $genders, 'width' => 25),
+			'id_gender' => array('title' => $this->l('Social title'), 'align' => 'center', 'icon' => $genders_icon, 'list' => $genders, 'width' => 25),
 			'firstname' => array('title' => $this->l('First Name'), 'align' => 'left', 'width' => 150),
 			'lastname' => array('title' => $this->l('Name'), 'align' => 'left', 'width' => 'auto'),
 			'email' => array('title' => $this->l('Email address'), 'align' => 'left', 'width' => 250),

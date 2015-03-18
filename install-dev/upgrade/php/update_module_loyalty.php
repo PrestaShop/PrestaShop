@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -35,15 +35,19 @@ function update_module_loyalty()
 	if ($ps_loyalty_point_value !== false)
 	{
 		$category_list = '';
-		$categories = Db::getInstance('SELECT id_category FROM `'._DB_PREFIX_.'category`');
+		$categories = Db::getInstance()->executeS('SELECT id_category FROM `'._DB_PREFIX_.'category`');
 		foreach($categories as $category)
 			$category_list .= $category['id_category'].',';
 
 		if (!empty($category_list))
 		{
 			$category_list = rtrim($category_list, ',');
-			$res &= Db::getInstance()->execute('REPLACE INTO `'._DB_PREFIX_.'configuration`
-			(name, value) VALUES ("PS_LOYALTY_VOUCHER_CATEGORY", "'.$category_list.'"');
+
+			$exist = Db::getInstance()->getValue('SELECT `id_configuration` FROM `'._DB_PREFIX_.'configuration` WHERE `name` = \'PS_LOYALTY_VOUCHER_CATEGORY\'');
+			if ($exist)
+				$res = Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "'.pSQL($category_list).'" WHERE `name` = \'PS_LOYALTY_VOUCHER_CATEGORY\'');
+			else
+				$res = Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'configuration` (name, value) VALUES ("PS_LOYALTY_VOUCHER_CATEGORY", "'.pSQL($category_list).'"');
 		}
 	}
 }

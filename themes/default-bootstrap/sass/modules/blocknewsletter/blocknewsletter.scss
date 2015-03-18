@@ -18,7 +18,7 @@
 	.success_inline, .warning_inline {
 		text-align: left;
 		padding: 1px 0 0 0;
-		margin-bottom: -19px;	
+		margin-bottom: -19px;
 	}
 	.success_inline	{
 		color: #418B19;
@@ -57,12 +57,11 @@
 			margin-bottom: 0;
 			.form-control {
 				height: 45px;
-				line-height: 30px;
 				max-width: 267px;
 				background: #3c3c3c;
 				border-color: #515151;
 				color: $light-text-color;
-				padding: 5px 43px 5px 12px;
+				padding: 10px 43px 10px 12px;
 				display: inline-block;
 				float: left;
 				&:focus {
@@ -87,7 +86,7 @@
 				}
 				span{
 					display: none;
-				}	
+				}
 			}
 		}
 		.warning_inline {

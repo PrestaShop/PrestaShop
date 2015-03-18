@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -105,6 +105,8 @@ class CurrencyCore extends ObjectModel
 		// price sign before or after the price number
 		$this->prefix =	$this->format % 2 != 0 ? $this->sign.' ' : '';
 		$this->suffix =	$this->format % 2 == 0 ? ' '.$this->sign : '';
+		if (!$this->conversion_rate)
+			$this->conversion_rate = 1;
 	}
 	/**
 	 * Overriding check if currency rate is not empty and if currency with the same iso code already exists.
@@ -148,11 +150,12 @@ class CurrencyCore extends ObjectModel
 	public function deleteSelection($selection)
 	{
 		if (!is_array($selection))
-			die(Tools::displayError());
+			return false;
 
+		$res = array();
 		foreach ($selection as $id)
 		{
-			$obj = new Currency((int)($id));
+			$obj = new Currency((int)$id);
 			$res[$id] = $obj->delete();
 		}
 
@@ -207,15 +210,16 @@ class CurrencyCore extends ObjectModel
 	 *
 	 * @return array Currencies
 	 */
-	public static function getCurrencies($object = false, $active = true)
+	public static function getCurrencies($object = false, $active = true, $group_by = false)
 	{
 		$tab = Db::getInstance()->executeS('
 		SELECT *
 		FROM `'._DB_PREFIX_.'currency` c
-		'.Shop::addSqlAssociation('currency', 'c').'
-		WHERE `deleted` = 0
-		'.($active ? ' AND c.`active` = 1' : '').'
-		ORDER BY `name` ASC');
+		'.Shop::addSqlAssociation('currency', 'c').
+		' WHERE `deleted` = 0'.
+		($active ? ' AND c.`active` = 1' : '').
+		($group_by ? ' GROUP BY c.`id_currency`' : '').
+		' ORDER BY `name` ASC');
 		if ($object)
 			foreach ($tab as $key => $currency)
 				$tab[$key] = Currency::getCurrencyInstance($currency['id_currency']);
@@ -298,19 +302,19 @@ class CurrencyCore extends ObjectModel
 		{
 			$query = Currency::getIdByQuery($id_shop);
 			$query->where('iso_code = \''.pSQL($iso_code).'\'');
-	
+
 			$result = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
 			Cache::store($cache_id, $result);
 		}
 		return Cache::retrieve($cache_id);
 	}
 
-    /**
-     * @static
-     * @param $iso_code
-     * @param int $id_shop
-     * @return int
-     */
+	/**
+	 * @static
+	 * @param $iso_code
+	 * @param int $id_shop
+	 * @return int
+	 */
 	public static function getIdByIsoCodeNum($iso_code_num, $id_shop = 0)
 	{
 		$query = Currency::getIdByQuery($id_shop);
@@ -351,6 +355,7 @@ class CurrencyCore extends ObjectModel
 	{
 		// fetch the exchange rate of the default currency
 		$exchange_rate = 1;
+		$tmp = $this->conversion_rate;
 		if ($defaultCurrency->iso_code != $isoCodeSource)
 		{
 			foreach ($data->currency as $currency)
@@ -380,7 +385,9 @@ class CurrencyCore extends ObjectModel
 			if (isset($rate))
 				$this->conversion_rate = round($rate / $exchange_rate, 6);
 		}
-		$this->update();
+
+		if ($tmp != $this->conversion_rate)
+			$this->update();
 	}
 
 	public static function getDefaultCurrency()
@@ -395,7 +402,7 @@ class CurrencyCore extends ObjectModel
 	public static function refreshCurrencies()
 	{
 		// Parse
-		if (!$feed = Tools::simplexml_load_file('http://api.prestashop.com/xml/currencies.xml'))
+		if (!$feed = Tools::simplexml_load_file(_PS_CURRENCY_FEED_URL_))
 			return Tools::displayError('Cannot parse feed.');
 
 		// Default feed currency (EUR)
@@ -404,7 +411,7 @@ class CurrencyCore extends ObjectModel
 		if (!$default_currency = Currency::getDefaultCurrency())
 			return Tools::displayError('No default currency');
 
-		$currencies = Currency::getCurrencies(true, false);
+		$currencies = Currency::getCurrencies(true, false, true);
 		foreach ($currencies as $currency)
 			if ($currency->id != $default_currency->id)
 				$currency->refreshCurrency($feed->list, $isoCodeSource, $default_currency);
@@ -428,7 +435,12 @@ class CurrencyCore extends ObjectModel
 			self::$currencies[(int)($id)] = new Currency($id);
 		return self::$currencies[(int)($id)];
 	}
-	
+
+	public function getConversationRate()
+	{
+		return $this->id != (int)Configuration::get('PS_CURRENCY_DEFAULT') ? $this->conversion_rate : 1;
+	}
+
 	public static function countActiveCurrencies($id_shop = null)
 	{
 		if ($id_shop === null)

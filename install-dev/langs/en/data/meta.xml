@@ -38,7 +38,7 @@
   </meta>
   <meta id="password" id_shop="1">
     <title>Forgot your password</title>
-    <description>Enter your e-mail address used to register in goal to get e-mail with your new password</description>
+    <description>Enter the e-mail address you use to sign in to receive an e-mail with a new password</description>
     <keywords/>
     <url_rewrite>password-recovery</url_rewrite>
   </meta>
@@ -115,10 +115,10 @@
     <url_rewrite>order-follow</url_rewrite>
   </meta>
   <meta id="order-slip" id_shop="1">
-    <title>Order slip</title>
+    <title>Credit slip</title>
     <description/>
     <keywords/>
-    <url_rewrite>order-slip</url_rewrite>
+    <url_rewrite>credit-slip</url_rewrite>
   </meta>
   <meta id="order" id_shop="1">
     <title>Order</title>
@@ -155,5 +155,11 @@
     <description/>
     <keywords/>
     <url_rewrite>order-confirmation</url_rewrite>
+  </meta>
+  <meta id="products-comparison" id_shop="1">
+    <title>Products Comparison</title>
+    <description/>
+    <keywords/>
+    <url_rewrite>products-comparison</url_rewrite>
   </meta>
 </entity_meta>

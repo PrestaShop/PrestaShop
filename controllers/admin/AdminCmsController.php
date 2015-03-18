@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -41,7 +41,15 @@ class AdminCmsControllerCore extends AdminController
 		$this->lang = true;
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?'), 'icon' => 'icon-trash'));
+		$this->_orderBy = 'position';
+
+		$this->bulk_actions = array(
+			'delete' => array(
+				'text' => $this->l('Delete selected'),
+				'confirm' => $this->l('Delete selected items?'),
+				'icon' => 'icon-trash'
+			)
+		);
 		$this->fields_list = array(
 			'id_cms' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
 			'link_rewrite' => array('title' => $this->l('URL')),
@@ -77,11 +85,11 @@ class AdminCmsControllerCore extends AdminController
 			'desc' => $this->l('Save and preview', null, null, false)
 		);
 		$this->page_header_toolbar_btn['save-and-stay'] = array(
-			'short' => $this->l('SaveAndStay', null, null, false),
+			'short' => $this->l('Save and stay', null, null, false),
 			'href' => '#',
 			'desc' => $this->l('Save and stay', null, null, false),
 		);
-		
+
 		return parent::initPageHeaderToolbar();
 	}
 
@@ -204,6 +212,15 @@ class AdminCmsControllerCore extends AdminController
 			),
 			'submit' => array(
 				'title' => $this->l('Save'),
+			),
+			'buttons' => array(
+				'save_and_preview' => array(
+					'name' => 'viewcms',
+					'type' => 'submit',
+					'title' => $this->l('Save and preview'),
+					'class' => 'btn btn-default pull-right',
+					'icon' => 'process-icon-preview'
+				)
 			)
 		);
 
@@ -216,6 +233,9 @@ class AdminCmsControllerCore extends AdminController
 			);
 		}
 
+		if (Validate::isLoadedObject($this->object))
+			$this->context->smarty->assign('url_prev', $this->getPreviewUrl($this->object));
+
 		$this->tpl_form_vars = array(
 			'active' => $this->object->active,
 			'PS_ALLOW_ACCENTED_CHARS_URL', (int)Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL')
@@ -225,10 +245,13 @@ class AdminCmsControllerCore extends AdminController
 
 	public function renderList()
 	{
+		$this->_group = 'GROUP BY a.`id_cms`';
 		//self::$currentIndex = self::$currentIndex.'&cms';
+		$this->position_group_identifier = (int)$this->id_cms_category;
+
 		$this->toolbar_title = $this->l('Pages in this category');
 		$this->toolbar_btn['new'] = array(
-			'href' => self::$currentIndex.'&amp;add'.$this->table.'&amp;id_cms_category='.(int)$this->id_cms_category.'&amp;token='.$this->token,
+			'href' => self::$currentIndex.'&add'.$this->table.'&id_cms_category='.(int)$this->id_cms_category.'&token='.$this->token,
 			'desc' => $this->l('Add new')
 		);
 
@@ -248,11 +271,15 @@ class AdminCmsControllerCore extends AdminController
 		/* Close list table and submit button */
 		$this->displayListFooter($token);
 	}
-	
+
 	public function postProcess()
-	{	
-		if (Tools::isSubmit('viewcms') && ($id_cms = (int)Tools::getValue('id_cms')) && ($cms = new CMS($id_cms, $this->context->language->id)) && Validate::isLoadedObject($cms))
-			$this->redirect_after = $this->getPreviewUrl($cms);
+	{
+		if (Tools::isSubmit('viewcms') && ($id_cms = (int)Tools::getValue('id_cms')))
+		{
+			parent::postProcess();
+			if (($cms = new CMS($id_cms, $this->context->language->id)) && Validate::isLoadedObject($cms))
+				Tools::redirectAdmin(self::$currentIndex.'&id_cms='.$id_cms.'&conf=4&updatecms&token='.Tools::getAdminTokenLite('AdminCmsContent').'&url_preview=1');
+		}
 		elseif (Tools::isSubmit('deletecms'))
 		{
 			if (Tools::getValue('id_cms') == Configuration::get('PS_CONDITIONS_CMS_ID'))
@@ -296,33 +323,31 @@ class AdminCmsControllerCore extends AdminController
 		{
 			parent::validateRules();
 			if (count($this->errors))
-                return false;
-            if (!$id_cms = (int)Tools::getValue('id_cms'))
-            {
-                $cms = new CMS();
-                $this->copyFromPost($cms, 'cms');
-                if (!$cms->add())
-                    $this->errors[] = Tools::displayError('An error occurred while creating an object.')
-                        .' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
-                else
-                    $this->updateAssoShop($cms->id);
-            }
-            else
-            {
-                $cms = new CMS($id_cms);
-                $this->copyFromPost($cms, 'cms');
-                if (!$cms->update())
-                    $this->errors[] = Tools::displayError('An error occurred while updating an object.')
-                        .' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
-                else
-                    $this->updateAssoShop($cms->id);
-            }
-            if (Tools::isSubmit('submitAddcmsAndPreview'))
-					$this->redirect_after = $this->previewUrl($cms);
-            elseif (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
-                Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$cms->id.'&conf=4&update'.$this->table.'&token='.Tools::getAdminTokenLite('AdminCmsContent'));
-            else
-                Tools::redirectAdmin(self::$currentIndex.'&id_cms_category='.$cms->id_cms_category.'&conf=4&token='.Tools::getAdminTokenLite('AdminCmsContent'));
+				return false;
+			if (!$id_cms = (int)Tools::getValue('id_cms'))
+			{
+				$cms = new CMS();
+				$this->copyFromPost($cms, 'cms');
+				if (!$cms->add())
+					$this->errors[] = Tools::displayError('An error occurred while creating an object.').' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
+				else
+					$this->updateAssoShop($cms->id);
+			}
+			else
+			{
+				$cms = new CMS($id_cms);
+				$this->copyFromPost($cms, 'cms');
+				if (!$cms->update())
+					$this->errors[] = Tools::displayError('An error occurred while updating an object.').' <b>'.$this->table.' ('.Db::getInstance()->getMsgError().')</b>';
+				else
+					$this->updateAssoShop($cms->id);
+			}
+			if (Tools::isSubmit('view'.$this->table))
+				Tools::redirectAdmin(self::$currentIndex.'&id_cms='.$cms->id.'&conf=4&updatecms&token='.Tools::getAdminTokenLite('AdminCmsContent').'&url_preview=1');
+			elseif (Tools::isSubmit('submitAdd'.$this->table.'AndStay'))
+				Tools::redirectAdmin(self::$currentIndex.'&'.$this->identifier.'='.$cms->id.'&conf=4&update'.$this->table.'&token='.Tools::getAdminTokenLite('AdminCmsContent'));
+			else
+				Tools::redirectAdmin(self::$currentIndex.'&id_cms_category='.$cms->id_cms_category.'&conf=4&token='.Tools::getAdminTokenLite('AdminCmsContent'));
 		}
 		elseif (Tools::isSubmit('way') && Tools::isSubmit('id_cms') && (Tools::isSubmit('position')))
 		{
@@ -355,21 +380,21 @@ class AdminCmsControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
-        /* Delete multiple CMS content */
+		/* Delete multiple CMS content */
 		elseif (Tools::isSubmit('submitBulkdeletecms'))
 		{
 			if ($this->tabAccess['delete'] === '1')
 			{
-                $this->action = 'bulkdelete';
-                $this->boxes = Tools::getValue($this->table.'Box');
-                if (is_array($this->boxes) && array_key_exists(0, $this->boxes))
-                {
-                    $firstCms = new CMS((int)$this->boxes[0]);
-                    $id_cms_category = (int)$firstCms->id_cms_category;
-                    if (!$res = parent::postProcess(true))
-                        return $res;
-                    Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.Tools::getAdminTokenLite('AdminCmsContent').'&id_cms_category='.$id_cms_category);
-                }
+				$this->action = 'bulkdelete';
+				$this->boxes = Tools::getValue($this->table.'Box');
+				if (is_array($this->boxes) && array_key_exists(0, $this->boxes))
+				{
+					$firstCms = new CMS((int)$this->boxes[0]);
+					$id_cms_category = (int)$firstCms->id_cms_category;
+					if (!$res = parent::postProcess(true))
+						return $res;
+					Tools::redirectAdmin(self::$currentIndex.'&conf=2&token='.Tools::getAdminTokenLite('AdminCmsContent').'&id_cms_category='.$id_cms_category);
+				}
 			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to delete this.');
@@ -379,13 +404,13 @@ class AdminCmsControllerCore extends AdminController
 	}
 
 	public function getPreviewUrl(CMS $cms)
-	{			
+	{
 		$preview_url = $this->context->link->getCMSLink($cms, null, null, $this->context->language->id);
 		if (!$cms->active)
 		{
 			$params = http_build_query(array(
 				'adtoken' => Tools::getAdminTokenLite('AdminCmsContent'),
-				'ad' => substr(dirname($_SERVER['PHP_SELF']), strrpos(dirname($_SERVER['PHP_SELF']), '/') + 1),
+				'ad' => basename(_PS_ADMIN_DIR_),
 				'id_employee' => (int)$this->context->employee->id
 				)
 			);
@@ -395,5 +420,3 @@ class AdminCmsControllerCore extends AdminController
 		return $preview_url;
 	}
 }
-
-

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -122,14 +122,14 @@ class AdminStockInstantStateControllerCore extends AdminController
 				'short' => $this->l('Export this list as CSV', null, null, false),
 				'href' => $this->context->link->getAdminLink('AdminStockInstantState').'&csv_quantities&id_warehouse='.(int)$this->getCurrentCoverageWarehouse(),
 				'desc' => $this->l('Export Quantities (CSV)', null, null, false),
-				'imgclass' => 'export'
+				'class' => 'process-icon-export'
 			);
 
 			$this->page_header_toolbar_btn['export-stock-state-prices-csv'] = array(
 				'short' => $this->l('Export this list as CSV', null, null, false),
 				'href' => $this->context->link->getAdminLink('AdminStockInstantState').'&csv_prices&id_warehouse='.(int)$this->getCurrentCoverageWarehouse(),
 				'desc' => $this->l('Export Prices (CSV)', null, null, false),
-				'imgclass' => 'export'
+				'class' => 'process-icon-export'
 			);
 		}
 
@@ -226,8 +226,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 			$id_product_attribute = $ids[1];
 			$id_warehouse = Tools::getValue('id_warehouse', -1);
 			$this->_select = 'IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(DISTINCT agl.`name`, \' - \', al.name SEPARATOR \', \')),pl.name) as name,
-				w.id_currency, a.price_te, SUM(a.physical_quantity) as physical_quantity, SUM(a.usable_quantity) as usable_quantity,
-				(a.price_te * SUM(a.physical_quantity)) as valuation';
+				w.id_currency, a.price_te';
 			$this->_join = ' LEFT JOIN `'._DB_PREFIX_.'warehouse` AS w ON w.id_warehouse = a.id_warehouse';
 			$this->_join .= ' LEFT JOIN `'._DB_PREFIX_.'product_lang` pl ON (
 				a.id_product = pl.id_product
@@ -248,7 +247,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 			if ($id_warehouse != -1)
 				$this->_where .= ' AND a.id_warehouse = '.(int)$id_warehouse;
 
-			$this->_groupBy = 'GROUP BY a.price_te';
+			$this->_group = 'GROUP BY a.price_te';
 
 			self::$currentIndex = self::$currentIndex.'&id_stock='.Tools::getValue('id_stock').'&detailsstock';
 			return parent::renderList();
@@ -271,6 +270,23 @@ class AdminStockInstantStateControllerCore extends AdminController
 			{
 				$item = &$this->_list[$i];
 				$manager = StockManagerFactory::getManager();
+
+				// gets quantities and valuation
+				$query = new DbQuery();
+				$query->select('SUM(physical_quantity) as physical_quantity');
+				$query->select('SUM(usable_quantity) as usable_quantity');
+				$query->select('SUM(price_te * physical_quantity) as valuation');
+				$query->from('stock');
+				$query->where('id_product = '.(int)$item['id_product'].' AND id_product_attribute = '.(int)$item['id_product_attribute']);
+
+				if ($this->getCurrentCoverageWarehouse() != -1)
+					$query->where('id_warehouse = '.(int)$this->getCurrentCoverageWarehouse());
+
+				$res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
+
+				$item['physical_quantity'] = $res['physical_quantity'];
+				$item['usable_quantity'] = $res['usable_quantity'];
+				$item['valuation'] = $res['valuation'];
 				$item['real_quantity'] = $manager->getProductRealQuantities(
 					$item['id_product'],
 					$item['id_product_attribute'],
@@ -293,7 +309,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 				unset($this->context->cookie->{$this->table.'Orderby'});
 				$order_by_valuation = true;
 			}
-			else if ($this->context->cookie->{$this->table.'Orderby'} == 'real_quantity')
+			elseif ($this->context->cookie->{$this->table.'Orderby'} == 'real_quantity')
 			{
 				unset($this->context->cookie->{$this->table.'Orderby'});
 				$order_by_real_quantity = true;
@@ -344,7 +360,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 
 			if ($this->getCurrentCoverageWarehouse() != -1 && $order_by_valuation)
 				usort($this->_list, array($this, 'valuationCmp'));
-			else if ($order_by_real_quantity)
+			elseif ($order_by_real_quantity)
 				usort($this->_list, array($this, 'realQuantityCmp'));
 		}
 	}
@@ -404,16 +420,16 @@ class AdminStockInstantStateControllerCore extends AdminController
 		{
 			$this->toolbar_btn['export-stock-state-quantities-csv'] = array(
 				'short' => 'Export this list as CSV',
-				'href' => $this->context->link->getAdminLink('AdminStockInstantState').'&amp;csv_quantities&amp;id_warehouse='.(int)$this->getCurrentCoverageWarehouse(),
+				'href' => $this->context->link->getAdminLink('AdminStockInstantState').'&csv_quantities&id_warehouse='.(int)$this->getCurrentCoverageWarehouse(),
 				'desc' => $this->l('Export Quantities (CSV)'),
-				'imgclass' => 'export'
+				'class' => 'process-icon-export'
 			);
 
 			$this->toolbar_btn['export-stock-state-prices-csv'] = array(
 				'short' => 'Export this list as CSV',
-				'href' => $this->context->link->getAdminLink('AdminStockInstantState').'&amp;csv_prices&amp;id_warehouse='.(int)$this->getCurrentCoverageWarehouse(),
+				'href' => $this->context->link->getAdminLink('AdminStockInstantState').'&csv_prices&id_warehouse='.(int)$this->getCurrentCoverageWarehouse(),
 				'desc' => $this->l('Export Prices (CSV)'),
-				'imgclass' => 'export'
+				'class' => 'process-icon-export'
 			);
 		}
 		parent::initToolbar();
@@ -440,7 +456,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 
 			// header
 			header('Content-type: text/csv');
-			header('Cache-Control: no-store, no-cache');
+			header('Cache-Control: no-store, no-cache must-revalidate');
 			header('Content-disposition: attachment; filename="'.$filename);
 
 			// puts keys
@@ -460,14 +476,14 @@ class AdminStockInstantStateControllerCore extends AdminController
 			}
 		}
 		// if prices requested
-		else if (Tools::isSubmit('csv_prices'))
+		elseif (Tools::isSubmit('csv_prices'))
 		{
 			// sets filename
 			$filename = $this->l('stock_instant_state_prices').'_'.$warehouse_name.'.csv';
 
 			// header
 			header('Content-type: text/csv');
-			header('Cache-Control: no-store, no-cache');
+			header('Cache-Control: no-store, no-cache must-revalidate');
 			header('Content-disposition: attachment; filename="'.$filename);
 
 			// puts keys
@@ -502,7 +518,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 			}
 		}
 	}
-	
+
 	public function initContent()
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
@@ -512,7 +528,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 		}
 		parent::initContent();
 	}
-	
+
 	public function initProcess()
 	{
 		if (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT'))
@@ -526,7 +542,7 @@ class AdminStockInstantStateControllerCore extends AdminController
 		else
 			$this->list_id = 'stock';
 
-		parent::initProcess();	
+		parent::initProcess();
 	}
 
 }

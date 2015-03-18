@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -65,15 +65,15 @@ class WarehouseProductLocationCore extends ObjectModel
 	/**
 	 * @see ObjectModel::$webserviceParameters
 	 */
- 	protected $webserviceParameters = array(
- 		'fields' => array(
- 			'id_product' => array('xlink_resource' => 'products'),
- 			'id_product_attribute' => array('xlink_resource' => 'combinations'),
- 			'id_warehouse' => array('xlink_resource' => 'warehouses'),
- 		),
- 		'hidden_fields' => array(
- 		),
- 	);
+	protected $webserviceParameters = array(
+		'fields' => array(
+			'id_product' => array('xlink_resource' => 'products'),
+			'id_product_attribute' => array('xlink_resource' => 'combinations'),
+			'id_warehouse' => array('xlink_resource' => 'warehouses'),
+		),
+		'hidden_fields' => array(
+		),
+	);
 
 	/**
 	 * For a given product and warehouse, gets the location
@@ -123,7 +123,7 @@ class WarehouseProductLocationCore extends ObjectModel
 	 * For a given product, gets its warehouses
 	 *
 	 * @param int $id_product
-	 * @return Collection The type of the collection is WarehouseProductLocation
+	 * @return PrestaShopCollection The type of the collection is WarehouseProductLocation
 	 */
 	public static function getCollection($id_product)
 	{
@@ -131,9 +131,9 @@ class WarehouseProductLocationCore extends ObjectModel
 		$collection->where('id_product', '=', (int)$id_product);
 		return $collection;
 	}
-	
+
 	public static function getProducts($id_warehouse)
 	{
-		return Db::getInstance()->executeS('SELECT DISTINCT id_product FROM '._DB_PREFIX_.'warehouse_product_location WHERE id_warehouse='.(int)$id_warehouse);		
+		return Db::getInstance()->executeS('SELECT DISTINCT id_product FROM '._DB_PREFIX_.'warehouse_product_location WHERE id_warehouse='.(int)$id_warehouse);
 	}
 }

@@ -1854,6 +1854,7 @@ class CartCore extends ObjectModel
 							$has_default_warehouse = true;
 					}
 		}
+
 		if (!$has_default_warehouse && Configuration::get('PS_WAREHOUSE_SINGLE_COST'))
 		{
 			foreach ($final_package_list as &$packages)

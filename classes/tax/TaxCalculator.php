@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -32,7 +32,7 @@
 class TaxCalculatorCore
 {
 	/**
-  	 * COMBINE_METHOD sum taxes
+	 * COMBINE_METHOD sum taxes
 	 * eg: 100€ * (10% + 15%)
 	 */
 	const COMBINE_METHOD = 1;
@@ -72,7 +72,7 @@ class TaxCalculatorCore
 	/**
 	 * Compute and add the taxes to the specified price
 	 *
-	 * @param price_te price tax excluded
+	 * @param float $price_te price tax excluded
 	 * @return float price with taxes
 	 */
 	public function addTaxes($price_te)
@@ -84,8 +84,8 @@ class TaxCalculatorCore
 	/**
 	 * Compute and remove the taxes to the specified price
 	 *
-	 * @param price_ti price tax inclusive
-	 * @return price without taxes
+	 * @param float $price_ti price tax inclusive
+	 * @return float price without taxes
 	 */
 	public function removeTaxes($price_ti)
 	{
@@ -115,7 +115,7 @@ class TaxCalculatorCore
 
 		return (float)$taxes;
 	}
-	
+
 	public function getTaxesName()
 	{
 		$name = '';
@@ -150,5 +150,21 @@ class TaxCalculatorCore
 
 		return $taxes_amounts;
 	}
-}
 
+	/**
+	 * Return the total taxes amount
+	 *
+	 * @param float $price_te
+	 * @return float $amount
+	 */
+	public function getTaxesTotalAmount($price_te)
+	{
+		$amount = 0;
+
+		$taxes = $this->getTaxesAmount($price_te);
+		foreach ($taxes as $tax)
+			$amount += $tax;
+
+		return $amount;
+	}
+}

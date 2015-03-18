@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -64,6 +64,13 @@ class HelperOptionsCore extends Helper
 				$category_data['fields'] = array();
 
 			$category_data['hide_multishop_checkbox'] = true;
+
+			if (isset($category_data['tabs']))
+			{
+				$tabs[$category] = $category_data['tabs'];
+				$tabs[$category]['misc'] = $this->l('Miscellaneous');
+			}
+
 			foreach ($category_data['fields'] as $key => $field)
 			{
 				if (empty($field['no_multishop_checkbox']) && !$hide_multishop_checkbox)
@@ -74,27 +81,27 @@ class HelperOptionsCore extends Helper
 					$field['value'] = $this->getOptionValue($key, $field);
 
 				// Check if var is invisible (can't edit it in current shop context), or disable (use default value for multishop)
-				$isDisabled = $isInvisible = false;
+				$is_disabled = $is_invisible = false;
 				if (Shop::isFeatureActive())
 				{
 					if (isset($field['visibility']) && $field['visibility'] > Shop::getContext())
 					{
-						$isDisabled = true;
-						$isInvisible = true;
+						$is_disabled = true;
+						$is_invisible = true;
 					}
-					else if (Shop::getContext() != Shop::CONTEXT_ALL && !Configuration::isOverridenByCurrentContext($key))
-						$isDisabled = true;
+					elseif (Shop::getContext() != Shop::CONTEXT_ALL && !Configuration::isOverridenByCurrentContext($key))
+						$is_disabled = true;
 				}
-				$field['is_disabled'] = $isDisabled;
-				$field['is_invisible'] = $isInvisible;
+				$field['is_disabled'] = $is_disabled;
+				$field['is_invisible'] = $is_invisible;
 
 				$field['required'] = isset($field['required']) ? $field['required'] : $this->required;
 
 				if ($field['type'] == 'color')
-					$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/jquery.colorpicker.js');
+					$this->context->controller->addJqueryPlugin('colorpicker');
 
 				if ($field['type'] == 'texarea' || $field['type'] == 'textareaLang')
-					$this->context->controller->addJS(_PS_JS_DIR_.'jquery/plugins/jquery.autosize.min.js');
+					$this->context->controller->addJqueryPlugin('autosize');
 
 				if ($field['type'] == 'file')
 				{
@@ -108,7 +115,7 @@ class HelperOptionsCore extends Helper
 
 					if (isset($field['files']) && $field['files'])
 						$uploader->setFiles($field['files']);
-					elseif (isset($field['image']) && $field['image']) // Use for retrocompatibility							
+					elseif (isset($field['image']) && $field['image']) // Use for retrocompatibility
 						$uploader->setFiles(array(
 							0 => array(
 							'type'       => HelperUploader::TYPE_IMAGE,
@@ -117,7 +124,7 @@ class HelperOptionsCore extends Helper
 							'delete_url' => isset($field['delete_url'])?$field['delete_url']:null
 						)));
 
-					if (isset($field['file']) && $field['file']) // Use for retrocompatibility							
+					if (isset($field['file']) && $field['file']) // Use for retrocompatibility
 						$uploader->setFiles(array(
 							0 => array(
 							'type'       => HelperUploader::TYPE_FILE,
@@ -126,7 +133,7 @@ class HelperOptionsCore extends Helper
 							'download_url' => isset($field['file'])?$field['file']:null
 						)));
 
-					if (isset($field['thumb']) && $field['thumb']) // Use for retrocompatibility							
+					if (isset($field['thumb']) && $field['thumb']) // Use for retrocompatibility
 						$uploader->setFiles(array(
 							0 => array(
 							'type'       => HelperUploader::TYPE_IMAGE,
@@ -178,7 +185,7 @@ class HelperOptionsCore extends Helper
 
 				// Multishop default value
 				$field['multishop_default'] = false;
-				if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && !$isInvisible)
+				if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && !$is_invisible)
 				{
 					$field['multishop_default'] = true;
 					$use_multishop = true;
@@ -203,6 +210,7 @@ class HelperOptionsCore extends Helper
 			'current' => $this->currentIndex,
 			'table' => $this->table,
 			'token' => $this->token,
+			'tabs' => (isset($tabs)) ? $tabs : null,
 			'option_list' => $option_list,
 			'current_id_lang' => $this->context->language->id,
 			'languages' => isset($languages) ? $languages : null,
@@ -267,6 +275,6 @@ class HelperOptionsCore extends Helper
 
 		if (isset($field['defaultValue']) && !$value)
 			$value = $field['defaultValue'];
-		return $value;
+		return Tools::purifyHTML($value);
 	}
 }

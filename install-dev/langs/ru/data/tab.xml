@@ -25,6 +25,8 @@
   <tab id="Customers" name="Клиенты"/>
   <tab id="Customers_2" name="Клиенты"/>
   <tab id="Customers_1" name="Клиенты"/>
+  <tab id="Dashboard" name="Dashboard"/>
+  <tab id="CarrierWizard" name="Carrier"/>
   <tab id="DB_Backup" name="DB Backup"/>
   <tab id="Delivery_Slips" name="Счета на доставку"/>
   <tab id="E-mail" name="E-mail"/>
@@ -34,7 +36,6 @@
   <tab id="Geolocation" name="Геолокация"/>
   <tab id="Groups" name="Группы"/>
   <tab id="Home" name="Домой"/>
-  <tab id="Image_Mapping" name="Карта картинок"/>
   <tab id="Images" name="изображения"/>
   <tab id="Instant_Stock_Status" name="Текущее состояние склада"/>
   <tab id="Invoices" name="Инвойсы"/>

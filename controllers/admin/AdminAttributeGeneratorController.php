@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -29,6 +29,8 @@
 class AdminAttributeGeneratorControllerCore extends AdminController
 {
 	protected $combinations = array();
+
+	/** @var Product */
 	protected $product;
 
 	public function __construct()
@@ -45,7 +47,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 	{
 		foreach ($attributes as $attribute)
 		{
-			$price += (float)preg_replace('/[^0-9.]/', '', str_replace(',', '.', Tools::getValue('price_impact_'.(int)$attribute)));
+			$price += (float)preg_replace('/[^0-9.-]/', '', str_replace(',', '.', Tools::getValue('price_impact_'.(int)$attribute)));
 			$weight += (float)preg_replace('/[^0-9.]/', '', str_replace(',', '.', Tools::getValue('weight_impact_'.(int)$attribute)));
 		}
 		if ($this->product->id)
@@ -81,6 +83,9 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 
 	public function initProcess()
 	{
+		if (!defined('PS_MASS_PRODUCT_CREATION'))
+			define('PS_MASS_PRODUCT_CREATION', true);
+
 		if (Tools::isSubmit('generate'))
 		{
 			if ($this->tabAccess['edit'] === '1')
@@ -119,8 +124,14 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 						StockAvailable::removeProductFromStockAvailable($this->product->id, $attribute['id_product_attribute'], Context::getContext()->shop);
 				}
 
+				SpecificPriceRule::disableAnyApplication();
+
 				$this->product->deleteProductAttributes();
 				$this->product->generateMultipleCombinations($values, $this->combinations);
+
+				// Reset cached default attribute for the product and get a new one
+				Product::getDefaultAttribute($this->product->id, 0, true);
+				Product::updateDefaultAttribute($this->product->id);
 
 				// @since 1.5.0
 				if ($this->product->depends_on_stock == 0)
@@ -128,11 +139,24 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 					$attributes = Product::getProductAttributesIds($this->product->id, true);
 					$quantity = (int)Tools::getValue('quantity');
 					foreach ($attributes as $attribute)
-						StockAvailable::setQuantity($this->product->id, $attribute['id_product_attribute'], $quantity);
+						if (Shop::getContext() == Shop::CONTEXT_ALL)
+						{
+							$shops_list = Shop::getShops();
+							if (is_array($shops_list))
+								foreach ($shops_list as $current_shop)
+									if (isset($current_shop['id_shop']) && (int)$current_shop['id_shop'] > 0)
+										StockAvailable::setQuantity($this->product->id, (int)$attribute['id_product_attribute'], $quantity, (int)$current_shop['id_shop']);
+						}
+						else
+							StockAvailable::setQuantity($this->product->id, (int)$attribute['id_product_attribute'], $quantity);
 				}
 				else
 					StockAvailable::synchronize($this->product->id);
-				Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&addproduct&key_tab=Combinations&conf=4');
+
+				SpecificPriceRule::enableAnyApplication();
+				SpecificPriceRule::applyAllRules(array((int)$this->product->id));
+
+				Tools::redirectAdmin($this->context->link->getAdminLink('AdminProducts').'&id_product='.(int)Tools::getValue('id_product').'&updateproduct&key_tab=Combinations&conf=4');
 			}
 			else
 				$this->errors[] = Tools::displayError('Unable to initialize these parameters. A combination is missing or an object cannot be loaded.');
@@ -156,29 +180,11 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 		ON DUPLICATE KEY UPDATE `price` = VALUES(price), `weight` = VALUES(weight)');
     }
 
-	protected static function getAttributesImpacts($id_product)
-	{
-		$tab = array();
-		$result = Db::getInstance()->executeS(
-			'SELECT ai.`id_attribute`, ai.`price`, ai.`weight`
-			FROM `'._DB_PREFIX_.'attribute_impact` ai
-			WHERE ai.`id_product` = '.(int)$id_product);
-
-		if (!$result)
-			return array();
-		foreach ($result as $impact)
-		{
-			$tab[$impact['id_attribute']]['price'] = (float)$impact['price'];
-			$tab[$impact['id_attribute']]['weight'] = (float)$impact['weight'];
-		}
-		return $tab;
-    }
-
 	public function initGroupTable()
 	{
 		$combinations_groups = $this->product->getAttributesGroups($this->context->language->id);
 		$attributes = array();
-		$impacts = AdminAttributeGeneratorController::getAttributesImpacts($this->product->id);
+		$impacts = Product::getAttributesImpacts($this->product->id);
 		foreach ($combinations_groups as &$combination)
 		{
 			$target = &$attributes[$combination['id_attribute_group']][$combination['id_attribute']];
@@ -207,7 +213,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 		);
 	}
 
-	public function initBreadcrumbs()
+	public function initBreadcrumbs($tab_id = null, $tabs = null)
 	{
 		$this->display = 'generator';
 		return parent::initBreadcrumbs();
@@ -217,9 +223,9 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 	{
 		if (!Combination::isFeatureActive())
 		{
-			$this->displayWarning($this->l('This feature has been disabled. You can activate it at:').'
-				<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.
-					$this->l('Performance').'</a>');
+			$url = '<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.
+					$this->l('Performance').'</a>';
+			$this->displayWarning(sprintf($this->l('This feature has been disabled. You can activate it here: %s.'), $url));
 			return;
 		}
 
@@ -232,7 +238,7 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 
 		foreach ($attributes as $k => $attribute)
 			$attribute_js[$attribute['id_attribute_group']][$attribute['id_attribute']] = $attribute['name'];
-		
+
 		$attribute_groups = AttributeGroup::getAttributesGroups($this->context->language->id);
 		$this->product = new Product((int)Tools::getValue('id_product'));
 

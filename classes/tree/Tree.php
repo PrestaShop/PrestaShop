@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -40,8 +40,13 @@ class TreeCore
 	protected $_node_folder_template;
 	protected $_node_item_template;
 	protected $_template;
+
+	/** @var string */
 	private   $_template_directory;
 	private   $_title;
+
+	/** @var TreeToolbar|ITreeToolbar */
+	private $_toolbar;
 
 	public function __construct($id, $data = null)
 	{
@@ -202,12 +207,19 @@ class TreeCore
 		return $this->_template;
 	}
 
+	/**
+	 * @param $value
+	 * @return $this
+	 */
 	public function setTemplateDirectory($value)
 	{
 		$this->_template_directory = $this->_normalizeDirectory($value);
 		return $this;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getTemplateDirectory()
 	{
 		if (!isset($this->_template_directory))
@@ -219,37 +231,29 @@ class TreeCore
 
 	public function getTemplateFile($template)
 	{
-		if (preg_match_all('/((?:^|[A-Z])[a-z]+)/', get_class($this->getContext()->controller), $matches) !== FALSE)
-			$controllerName = strtolower($matches[0][1]);
+		if (preg_match_all('/((?:^|[A-Z])[a-z]+)/', get_class($this->getContext()->controller), $matches) !== false)
+			$controller_name = strtolower($matches[0][1]);
 
-		if ($this->getContext()->controller instanceof ModuleAdminController)
-			return $this->_normalizeDirectory(
-				$this->getContext()->controller->getTemplatePath())
+		if ($this->getContext()->controller instanceof ModuleAdminController && isset($controller_name) && file_exists($this->_normalizeDirectory(
+				$this->getContext()->controller->getTemplatePath()).$controller_name.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template))
+			return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath()).
+				$controller_name.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template;
+		elseif ($this->getContext()->controller instanceof ModuleAdminController && file_exists($this->_normalizeDirectory(
+				$this->getContext()->controller->getTemplatePath()).$this->getTemplateDirectory().$template))
+			return $this->_normalizeDirectory($this->getContext()->controller->getTemplatePath())
 				.$this->getTemplateDirectory().$template;
-		else if ($this->getContext()->controller instanceof AdminController
-			&& isset($controllerName) && file_exists($this->_normalizeDirectory(
-				$this->getContext()->smarty->getTemplateDir(0)).'controllers'
-				.DIRECTORY_SEPARATOR
-				.$controllerName
-				.DIRECTORY_SEPARATOR
+		elseif ($this->getContext()->controller instanceof AdminController && isset($controller_name)
+			&& file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)).'controllers'
+				.DIRECTORY_SEPARATOR.$controller_name.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template))
+			return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0)).'controllers'
+				.DIRECTORY_SEPARATOR.$controller_name.DIRECTORY_SEPARATOR.$this->getTemplateDirectory().$template;
+		elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
 				.$this->getTemplateDirectory().$template))
-			return $this->_normalizeDirectory(
-				$this->getContext()->smarty->getTemplateDir(0)).'controllers'
-				.DIRECTORY_SEPARATOR
-				.$controllerName
-				.DIRECTORY_SEPARATOR
-				.$this->getTemplateDirectory().$template;
-		else if (file_exists($this->_normalizeDirectory(
-				$this->getContext()->smarty->getTemplateDir(1))
-				.$this->getTemplateDirectory().$template))
-				return $this->_normalizeDirectory(
-					$this->getContext()->smarty->getTemplateDir(1))
+			return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(1))
 					.$this->getTemplateDirectory().$template;
-		else if (file_exists($this->_normalizeDirectory(
-				$this->getContext()->smarty->getTemplateDir(0))
+		elseif (file_exists($this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
 				.$this->getTemplateDirectory().$template))
-				return $this->_normalizeDirectory(
-				$this->getContext()->smarty->getTemplateDir(0))
+			return $this->_normalizeDirectory($this->getContext()->smarty->getTemplateDir(0))
 				.$this->getTemplateDirectory().$template;
 		else
 			return $this->getTemplateDirectory().$template;
@@ -309,7 +313,7 @@ class TreeCore
 	public function render($data = null)
 	{
 		//Adding tree.js
-		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
+		$admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
 		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
 		$bo_theme = ((Validate::isLoadedObject($this->getContext()->employee)
 			&& $this->getContext()->employee->bo_theme) ? $this->getContext()->employee->bo_theme : 'default');
@@ -343,7 +347,7 @@ class TreeCore
 			));
 			$template->assign('header', $headerTemplate->fetch());
 		}
-		
+
 		//Assign Tree nodes
 		$template->assign($this->getAttributes())->assign(array(
 			'id'    => $this->getId(),
@@ -404,13 +408,14 @@ class TreeCore
 	private function _normalizeDirectory($directory)
 	{
 		$last = $directory[strlen($directory) - 1];
-        
-        if (in_array($last, array('/', '\\'))) {
-            $directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
-            return $directory;
-        }
-        
-        $directory .= DIRECTORY_SEPARATOR;
-        return $directory;
+
+		if (in_array($last, array('/', '\\')))
+		{
+			$directory[strlen($directory) - 1] = DIRECTORY_SEPARATOR;
+			return $directory;
+		}
+
+		$directory .= DIRECTORY_SEPARATOR;
+		return $directory;
 	}
 }

@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -33,7 +33,7 @@
 				<i class="icon-info"></i>
 				{if isset($is_template) && $is_template == 1} {l s='Template'} {/if}{l s='General information'}
 			</h3>
-			<table classe="table">
+			<table class="table">
 				<tr>
 					<td>{l s='Creation date:'}</td>
 					<td>{$supply_order_creation_date}</td>

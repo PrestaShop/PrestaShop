@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -90,15 +90,16 @@ class PageCore extends ObjectModel
 	 */
 	public static function getPageTypeByName($name)
 	{
-		$sql = 'SELECT id_page_type
+		if ($value = Db::getInstance()->getValue('
+				SELECT id_page_type
 				FROM '._DB_PREFIX_.'page_type
-				WHERE name = \''.pSQL($name).'\'';
-		if ($value = Db::getInstance()->getValue($sql))
+				WHERE name = \''.pSQL($name).'\''
+				)
+			)
 			return $value;
 
-		Db::getInstance()->insert('page_type', array(
-			'name' =>	$name,
-		));
+		Db::getInstance()->insert('page_type', array('name' => pSQL($name)));
+
 		return Db::getInstance()->Insert_ID();
 	}
 

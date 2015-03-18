@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,13 +19,16 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class AdminSearchConfControllerCore extends AdminController
 {
+	/** @var Alias */
+	protected $object;
+
 	protected $toolbar_scroll = false;
 
 	public function __construct()
@@ -44,7 +47,13 @@ class AdminSearchConfControllerCore extends AdminController
 		if (!Tools::getValue('realedit'))
 			$this->deleted = false;
 
-		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+		$this->bulk_actions = array(
+			'delete' => array(
+				'text' => $this->l('Delete selected'),
+				'confirm' => $this->l('Delete selected items?'),
+				'icon' => 'icon-trash'
+			)
+		);
 
 		$this->fields_list = array(
 			'alias' => array('title' => $this->l('Aliases')),
@@ -54,33 +63,45 @@ class AdminSearchConfControllerCore extends AdminController
 
 		// Search options
 		$current_file_name = array_reverse(explode('/', $_SERVER['SCRIPT_NAME']));
-		$cron_url = Tools::getHttpHost(true, true).__PS_BASE_URI__.
-			substr($_SERVER['SCRIPT_NAME'], strlen(__PS_BASE_URI__), -strlen($current_file_name['0'])).
-			'searchcron.php?full=1&token='.substr(_COOKIE_KEY_, 34, 8);
-		list($total, $indexed) = Db::getInstance()->getRow('SELECT COUNT(*) as "0", SUM(product_shop.indexed) as "1" FROM '._DB_PREFIX_.'product p '.Shop::addSqlAssociation('product', 'p'));
+		$cron_url = Tools::getHttpHost(true, true).__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).
+			'/searchcron.php?full=1&token='.substr(_COOKIE_KEY_, 34, 8).(Shop::getContext() == Shop::CONTEXT_SHOP ? '&id_shop='.(int)Context::getContext()->shop->id : '');
+
+		list($total, $indexed) = Db::getInstance()->getRow('SELECT COUNT(*) as "0", SUM(product_shop.indexed) as "1" FROM '._DB_PREFIX_.'product p '.Shop::addSqlAssociation('product', 'p').' WHERE product_shop.`visibility` IN ("both", "search") AND product_shop.`active` = 1');
 
 		$this->fields_options = array(
 			'indexation' => array(
-				'title' => $this->l('Indexation'),
+				'title' => $this->l('Indexing'),
 				'icon' => 'icon-cogs',
-				'info' =>
-						$this->l('The "indexed" products have been analyzed by PrestaShop and will appear in the results of a Front Office search.').'<br />
+				'info' => '<p>
+						'.$this->l('The "indexed" products have been analyzed by PrestaShop and will appear in the results of a Front Office search.').'<br />
 						'.$this->l('Indexed products').' <strong>'.(int)$indexed.' / '.(int)$total.'</strong>.
-						</p>
-						<p>'.$this->l('Building the product index may take a few minutes.')
-						.$this->l('If your server stops before the process ends, you can resume the indexation by clicking "Add missing products."').'</p>
-						<a href="searchcron.php?token='.substr(_COOKIE_KEY_, 34, 8).'&redirect=1" class="btn-link"><i class="icon-external-link-sign"></i> '.
-							$this->l('Add missing products to the index.').'</a><br />
-						<a href="searchcron.php?full=1&token='.substr(_COOKIE_KEY_, 34, 8).'&redirect=1" class="btn-link"><i class="icon-external-link-sign"></i> '.
-							$this->l('Re-build the entire index.').'</a><br /><br />
-						'.$this->l('You can set a cron job that will rebuild your index using the following URL:').' <a href="'.$cron_url.'"><i class="icon-external-link-sign"></i> '.$cron_url.'</a>',
+					</p>
+					<p>
+						'.$this->l('Building the product index may take a few minutes.').'
+						'.$this->l('If your server stops before the process ends, you can resume the indexing by clicking "Add missing products to the index".').'
+					</p>
+					<a href="searchcron.php?token='.substr(_COOKIE_KEY_, 34, 8).'&amp;redirect=1'.(Shop::getContext() == Shop::CONTEXT_SHOP ? '&id_shop='.(int)Context::getContext()->shop->id : '').'" class="btn-link">
+						<i class="icon-external-link-sign"></i>
+						'.$this->l('Add missing products to the index').'
+					</a><br />
+					<a href="searchcron.php?full=1&amp;token='.substr(_COOKIE_KEY_, 34, 8).'&amp;redirect=1'.(Shop::getContext() == Shop::CONTEXT_SHOP ? '&id_shop='.(int)Context::getContext()->shop->id : '').'" class="btn-link">
+						<i class="icon-external-link-sign"></i>
+						'.$this->l('Re-build the entire index').'
+					</a><br /><br />
+					<p>
+						'.$this->l('You can set a cron job that will rebuild your index using the following URL:').'<br />
+						<a href="'.Tools::safeOutput($cron_url).'">
+							<i class="icon-external-link-sign"></i>
+							'.Tools::safeOutput($cron_url).'
+						</a>
+					</p><br />',
 				'fields' =>	array(
 					'PS_SEARCH_INDEXATION' => array(
-						'title' => $this->l('Indexation'),
+						'title' => $this->l('Indexing'),
 						'validation' => 'isBool',
 						'type' => 'bool',
 						'cast' => 'intval',
-						'desc' => $this->l('Enable the automatic indexation of products. If you enable this feature, the products will be indexed in the search automatically when they are saved. If the feature is disabled, you will have to index products manually by using the links provided in the field set.')
+						'desc' => $this->l('Enable the automatic indexing of products. If you enable this feature, the products will be indexed in the search automatically when they are saved. If the feature is disabled, you will have to index products manually by using the links provided in the field set.')
 					)
 				),
 				'submit' => array('title' => $this->l('Save'))
@@ -109,6 +130,30 @@ class AdminSearchConfControllerCore extends AdminController
 							$this->l('With instant search, the results will appear immediately as the user writes a query.')
 						)
 					),
+					'PS_SEARCH_START' => array(
+						'title' => $this->l('Search within word'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool',
+						'desc' => $this->l('By default, to search for “blouse”, you have to enter “blous”, “blo”, etc (beginning of the word) – but not “lous” (within the word).').'<br/>'.
+								  $this->l('With this option enabled, it also gives the good result if you search for “lous”, “ouse”, or anything contained in the word.'),
+						'hint' => array(
+							$this->l('Enable search within a whole word, rather than from its beginning only.'),
+							$this->l('It checks if the searched term is contained in the indexed word. This may be resource-consuming.')
+						)
+					),
+					'PS_SEARCH_END' => array(
+						'title' => $this->l('Search exact end match'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool',
+						'desc' => $this->l('By default, if you search "book", you will have "book", "bookcase" and "bookend".').'<br/>'.
+								  $this->l('With this option enabled, it only gives one result “book”, as exact end of the indexed word is matching.'),
+						'hint' => array(
+							$this->l('Enable more precise search with the end of the word.'),
+							$this->l('It checks if the searched term is the exact end of the indexed word.')
+						)
+					),
 					'PS_SEARCH_MINWORDLEN' => array(
 						'title' => $this->l('Minimum word length (in characters)'),
 						'hint' => $this->l('Only words this size or larger will be indexed.'),
@@ -120,7 +165,7 @@ class AdminSearchConfControllerCore extends AdminController
 						'title' => $this->l('Blacklisted words'),
 						'validation' => 'isGenericName',
 						'hint' => $this->l('Please enter the index words separated by a "|".'),
-						'type' => 'textLang'
+						'type' => 'textareaLang'
 					)
 				),
 				'submit' => array('title' => $this->l('Save'))
@@ -250,7 +295,7 @@ class AdminSearchConfControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Alias:'),
+					'label' => $this->l('Alias'),
 					'name' => 'alias',
 					'required' => true,
 					'hint' => array(

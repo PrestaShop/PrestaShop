@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -44,7 +44,7 @@ class TreeToolbarSearchCategoriesCore extends TreeToolbarButtonCore implements
 			$this->setAttribute('typeahead_source',
 				$this->_renderData($this->getAttribute('data')));
 
-		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
+		$admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
 		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
 		$bo_theme = ((Validate::isLoadedObject($this->getContext()->employee)
 			&& $this->getContext()->employee->bo_theme) ? $this->getContext()->employee->bo_theme : 'default');
@@ -69,8 +69,7 @@ class TreeToolbarSearchCategoriesCore extends TreeToolbarButtonCore implements
 
 		foreach ($data as $item)
 		{
-			$html .= '{id_category : '.$item['id_category'].', name : "'.$item['name'].'"},';
-
+			$html .= Tools::jsonEncode($item).',';
 			if (array_key_exists('children', $item) && !empty($item['children']))
 				$html .= $this->_renderData($item['children']);
 		}

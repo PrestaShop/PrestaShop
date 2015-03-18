@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -40,7 +40,13 @@ class AdminGendersControllerCore extends AdminController
 		if (!Tools::getValue('realedit'))
 			$this->deleted = false;
 
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+		$this->bulk_actions = array(
+			'delete' => array(
+				'text' => $this->l('Delete selected'),
+				'confirm' => $this->l('Delete selected items?'),
+				'icon' => 'icon-trash'
+			)
+		);
 
 		$this->default_image_height = 16;
 		$this->default_image_width = 16;
@@ -57,11 +63,11 @@ class AdminGendersControllerCore extends AdminController
 				'class' => 'fixed-width-xs'
 			),
 			'name' => array(
-				'title' => $this->l('Name'),
+				'title' => $this->l('Social title'),
 				'filter_key' => 'b!name'
 			),
 			'type' => array(
-				'title' => $this->l('Type'),
+				'title' => $this->l('Gender'),
 				'orderby' => false,
 				'type' => 'select',
 				'list' => array(
@@ -101,13 +107,13 @@ class AdminGendersControllerCore extends AdminController
 	{
 		$this->fields_form = array(
 			'legend' => array(
-				'title' => $this->l('Titles'),
+				'title' => $this->l('Social titles'),
 				'icon' => 'icon-male'
 			),
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Name'),
+					'label' => $this->l('Social title'),
 					'name' => 'name',
 					'lang' => true,
 					'col' => 4,
@@ -116,7 +122,7 @@ class AdminGendersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Type'),
+					'label' => $this->l('Gender'),
 					'name' => 'type',
 					'required' => false,
 					'class' => 't',
@@ -147,14 +153,14 @@ class AdminGendersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Image Width'),
+					'label' => $this->l('Image width'),
 					'name' => 'img_width',
 					'col' => 2,
 					'hint' => $this->l('Image width in pixels. Enter "0" to use the original size.')
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Image Height'),
+					'label' => $this->l('Image height'),
 					'name' => 'img_height',
 					'col' => 2,
 					'hint' => $this->l('Image height in pixels. Enter "0" to use the original size.')

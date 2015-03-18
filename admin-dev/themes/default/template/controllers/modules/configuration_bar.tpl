@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,27 +18,18 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+
+{$module_name = $module_name|escape:'html':'UTF-8'}
+{capture}{'/&module_name='|cat:$module_name|cat:'/'}{/capture}
+{if isset($display_multishop_checkbox) && $display_multishop_checkbox}
 <div class="bootstrap panel">
 	<h3><i class="icon-cogs"></i> {l s='Configuration'}</h3>
-	<div class="input-group">
-		<button type="button" class="btn btn-default dropdown-toggle" tabindex="-1" data-toggle="dropdown">
-			<i class="icon-flag"></i>
-			{l s='Manage translations'}
-			<span class="caret"></span>
-		</button>
-		<ul class="dropdown-menu">
-			{foreach from=$module_languages item=language}
-			<li><a href="{$trad_link}{$language['iso_code']}#{$module_name}">{$language.name}</a></li>
-			{/foreach}
-		</ul>
-	</div>
-	{if isset($display_multishop_checkbox) && $display_multishop_checkbox}
-	<input type="checkbox" name="activateModule" value="1"{if $module->active} checked="checked"{/if} 
-		onclick="location.href = '{$current_url}&enable='+(($(this).attr('checked')) ? 1 : 0)" />
-	{l s='Activate module for'} {$shop_context}
-	{/if}
+	<input type="checkbox" name="activateModule" value="1"{if $module->isEnabledForShopContext()} checked="checked"{/if} 
+		onclick="location.href = '{$current_url|regex_replace:$smarty.capture.default:''}&amp;module_name={$module_name}&amp;enable=' + (($(this).attr('checked')) ? 1 : 0);" />
+	{l s='Activate module for this shop context: %s.' sprintf=$shop_context}
 </div>
+{/if}

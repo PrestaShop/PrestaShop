@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -27,7 +27,7 @@
 {block name='override_header'}
 {if $submit_form_ajax}
 	<script type="text/javascript">
-		$('#customer', window.parent.document).val('{$new_customer->email|escape:'html'}');
+		$('#customer', window.parent.document).val('{$new_customer->email|escape:'html':'UTF-8'}');
 		parent.setupCustomer({$new_customer->id|intval});
 		parent.$.fancybox.close();
 	</script>
@@ -37,17 +37,22 @@
 	{if isset($delete_customer) && $delete_customer}
 		<form action="{$REQUEST_URI|escape:'html':'UTF-8'}" method="post">
 			<div class="alert alert-warning">
-				<h2>{l s='How do you want to delete these customer(s)?'}</h2>
+				<h4>{l s='How do you want to delete the selected customers?'}</h4>
 				<p>{l s='There are two ways of deleting a customer. Please choose your preferred method.'}</p>
-				<ul class="listForm">
-				<li>
-					<input type="radio" name="deleteMode" value="real" id="deleteMode_real" />
-					<label for="deleteMode_real" style="float:none;">{l s='I want to delete my customer(s) (All data will be removed from the database, and customers with the same e-mail address will be able to re-register.'}</label>
-				</li>
-				<li>
-					<input type="radio" name="deleteMode" value="deleted" id="deleteMode_deleted" />
-					<label for="deleteMode_deleted" style="float:none">{l s='I don\'t want my customer(s) to register again. Therefore, each customer(s) will be removed from this list but all corresponding data will be kept in the database.'}</label>
-				</li>
+				<br>
+				<ul class="listForm list-unstyled">
+					<li>
+						<label for="deleteMode_real" class="control-label">
+							<input type="radio" name="deleteMode" value="real" id="deleteMode_real" />
+							{l s='I want my customers to be able to register again with the same email address. All data will be removed from the database.'}
+						</label>
+					</li>
+					<li>
+						<label for="deleteMode_deleted" class="control-label">
+							<input type="radio" name="deleteMode" value="deleted" id="deleteMode_deleted" />
+							{l s='I do not want my customer(s) to register again with the same email address. All selected customer(s) will be removed from this list but their corresponding data will be kept in the database.'}
+						</label>
+					</li>
 				</ul>
 				{foreach $POST as $key => $value}
 					{if is_array($value)}
@@ -58,10 +63,9 @@
 						<input type="hidden" name="{$key|escape:'html':'UTF-8'}" value="{$value|escape:'html':'UTF-8'}" />
 					{/if}
 				{/foreach}
-				<br /><input type="submit" class="button" value="{l s='Delete'}" />
+				<input type="submit" class="btn btn-default" value="{l s='Delete'}" />
 			</div>
 		</form>
-		<div class="clear">&nbsp;</div>
 		<script>
 			$(document).ready(function() {
 				$('table[name=\'list_table\']').hide();

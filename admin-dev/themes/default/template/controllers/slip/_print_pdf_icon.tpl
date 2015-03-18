@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,14 +18,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 {* Generate HTML code for printing OrderSlip Icon with link *}
 
-<a class="btn btn-default" target="_blank" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&submitAction=generateOrderSlipPDF&id_order_slip={$order_slip->id}">
+<a class="btn btn-default _blank" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateOrderSlipPDF&amp;id_order_slip={$order_slip->id|intval}">
 	<i class="icon-file-text"></i>
 	{l s='Download credit slip'}
 </a>

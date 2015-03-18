@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -98,7 +98,7 @@ class CustomerCore extends ObjectModel
 	/** @var integer Password */
 	public $passwd;
 
-	/** @var datetime Password */
+	/** @var string Datetime Password */
 	public $last_passwd_gen;
 
 	/** @var boolean Status */
@@ -194,13 +194,13 @@ class CustomerCore extends ObjectModel
 	protected static $_defaultGroupId = array();
 	protected static $_customerHasAddress = array();
 	protected static $_customer_groups = array();
-	
+
 	public function __construct($id = null)
 	{
 		$this->id_default_group = (int)Configuration::get('PS_CUSTOMER_GROUP');
 		parent::__construct($id);
 	}
-	
+
 	public function add($autodate = true, $null_values = true)
 	{
 		$this->id_shop = ($this->id_shop) ? $this->id_shop : Context::getContext()->shop->id;
@@ -209,10 +209,10 @@ class CustomerCore extends ObjectModel
 		$this->birthday = (empty($this->years) ? $this->birthday : (int)$this->years.'-'.(int)$this->months.'-'.(int)$this->days);
 		$this->secure_key = md5(uniqid(rand(), true));
 		$this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-'.Configuration::get('PS_PASSWD_TIME_FRONT').'minutes'));
-		
+
 		if ($this->newsletter && !Validate::isDate($this->newsletter_date_add))
 			$this->newsletter_date_add = date('Y-m-d H:i:s');
-			
+
 		if ($this->id_default_group == Configuration::get('PS_CUSTOMER_GROUP'))
 			if ($this->is_guest)
 				$this->id_default_group = (int)Configuration::get('PS_GUEST_GROUP');
@@ -222,7 +222,7 @@ class CustomerCore extends ObjectModel
 		/* Can't create a guest customer, if this feature is disabled */
 		if ($this->is_guest && !Configuration::get('PS_GUEST_CHECKOUT_ENABLED'))
 			return false;
-	 	$success = parent::add($autodate, $null_values);
+		$success = parent::add($autodate, $null_values);
 		$this->updateGroup($this->groupBox);
 		return $success;
 	}
@@ -235,7 +235,7 @@ class CustomerCore extends ObjectModel
 			$this->newsletter_date_add = date('Y-m-d H:i:s');
 		if (isset(Context::getContext()->controller) && Context::getContext()->controller->controller_type == 'admin')
 			$this->updateGroup($this->groupBox);
-			
+
 		if ($this->deleted)
 		{
 			$addresses = $this->getAddresses((int)Configuration::get('PS_LANG_DEFAULT'));
@@ -246,7 +246,7 @@ class CustomerCore extends ObjectModel
 			}
 		}
 
-	 	return parent::update(true);
+		return parent::update(true);
 	}
 
 	public function delete()
@@ -262,10 +262,10 @@ class CustomerCore extends ObjectModel
 		}
 		Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'customer_group` WHERE `id_customer` = '.(int)$this->id);
 		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'message WHERE id_customer='.(int)$this->id);
-		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'specific_price WHERE id_customer='.(int)$this->id);		
+		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'specific_price WHERE id_customer='.(int)$this->id);
 		Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'compare WHERE id_customer='.(int)$this->id);
-				
-		$carts = Db::getInstance()->executes('SELECT id_cart 
+
+		$carts = Db::getInstance()->executes('SELECT id_cart
 															FROM '._DB_PREFIX_.'cart
 															WHERE id_customer='.(int)$this->id);
 		if ($carts)
@@ -274,8 +274,8 @@ class CustomerCore extends ObjectModel
 				Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'cart WHERE id_cart='.(int)$cart['id_cart']);
 				Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'cart_product WHERE id_cart='.(int)$cart['id_cart']);
 			}
-		
-		$cts = Db::getInstance()->executes('SELECT id_customer_thread 
+
+		$cts = Db::getInstance()->executes('SELECT id_customer_thread
 															FROM '._DB_PREFIX_.'customer_thread
 															WHERE id_customer='.(int)$this->id);
 		if ($cts)
@@ -315,23 +315,21 @@ class CustomerCore extends ObjectModel
 		if (!Validate::isEmail($email) || ($passwd && !Validate::isPasswd($passwd)))
 			die (Tools::displayError());
 
-		$sql = 'SELECT *
-				FROM `'._DB_PREFIX_.'customer`
-				WHERE `email` = \''.pSQL($email).'\'
-					'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
-					'.(isset($passwd) ? 'AND `passwd` = \''.Tools::encrypt($passwd).'\'' : '').'
-					AND `deleted` = 0'.
-					($ignore_guest ? ' AND `is_guest` = 0' : '');
-
-		$result = Db::getInstance()->getRow($sql);
+		$result = Db::getInstance()->getRow('
+		SELECT *
+		FROM `'._DB_PREFIX_.'customer`
+		WHERE `email` = \''.pSQL($email).'\'
+		'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
+		'.(isset($passwd) ? 'AND `passwd` = \''.pSQL(Tools::encrypt($passwd)).'\'' : '').'
+		AND `deleted` = 0
+		'.($ignore_guest ? ' AND `is_guest` = 0' : ''));
 
 		if (!$result)
 			return false;
 		$this->id = $result['id_customer'];
 		foreach ($result as $key => $value)
-			if (key_exists($key, $this))
+			if (property_exists($this, $key))
 				$this->{$key} = $value;
-
 		return $this;
 	}
 
@@ -390,20 +388,16 @@ class CustomerCore extends ObjectModel
 		{
 			if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_)
 				die (Tools::displayError('Invalid email'));
-			else
-				return false;
+			return false;
 		}
-		
-		$sql = 'SELECT `id_customer`
-				FROM `'._DB_PREFIX_.'customer`
-				WHERE `email` = \''.pSQL($email).'\'
-					'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).
-					($ignore_guest ? ' AND `is_guest` = 0' : '');
-		$result = Db::getInstance()->getRow($sql);
 
-		if ($return_id)
-			return $result['id_customer'];
-		return isset($result['id_customer']);
+		$result = Db::getInstance()->getValue('
+		SELECT `id_customer`
+		FROM `'._DB_PREFIX_.'customer`
+		WHERE `email` = \''.pSQL($email).'\'
+		'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
+		'.($ignore_guest ? ' AND `is_guest` = 0' : ''));
+		return ($return_id ? (int)$result : (bool)$result);
 	}
 
 	/**
@@ -428,10 +422,11 @@ class CustomerCore extends ObjectModel
 		return self::$_customerHasAddress[$key];
 	}
 
-	public static function resetAddressCache($id_customer)
+	public static function resetAddressCache($id_customer, $id_address)
 	{
-		if (array_key_exists($id_customer, self::$_customerHasAddress))
-			unset(self::$_customerHasAddress[$id_customer]);
+		$key = (int)$id_customer.'-'.(int)$id_address;
+		if (array_key_exists($key, self::$_customerHasAddress))
+			unset(self::$_customerHasAddress[$key]);
 	}
 
 	/**
@@ -445,13 +440,13 @@ class CustomerCore extends ObjectModel
 		$share_order = (bool)Context::getContext()->shop->getGroup()->share_order;
 		$cache_id = 'Customer::getAddresses'.(int)$this->id.'-'.(int)$id_lang.'-'.$share_order;
 		if (!Cache::isStored($cache_id))
-		{ 
+		{
 			$sql = 'SELECT DISTINCT a.*, cl.`name` AS country, s.name AS state, s.iso_code AS state_iso
 					FROM `'._DB_PREFIX_.'address` a
 					LEFT JOIN `'._DB_PREFIX_.'country` c ON (a.`id_country` = c.`id_country`)
 					LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (c.`id_country` = cl.`id_country`)
 					LEFT JOIN `'._DB_PREFIX_.'state` s ON (s.`id_state` = a.`id_state`)
-					'.($share_order ? '' : Shop::addSqlAssociation('country', 'c')).' 
+					'.($share_order ? '' : Shop::addSqlAssociation('country', 'c')).'
 					WHERE `id_lang` = '.(int)$id_lang.' AND `id_customer` = '.(int)$this->id.' AND a.`deleted` = 0';
 
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
@@ -489,11 +484,11 @@ class CustomerCore extends ObjectModel
 		$cache_id = 'Customer::checkPassword'.(int)$id_customer.'-'.$passwd;
 		if (!Cache::isStored($cache_id))
 		{
-			$sql = 'SELECT `id_customer`
-					FROM `'._DB_PREFIX_.'customer`
-					WHERE `id_customer` = '.$id_customer.'
-					AND `passwd` = \''.$passwd.'\'';
-			$result = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
+			$result = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT `id_customer`
+			FROM `'._DB_PREFIX_.'customer`
+			WHERE `id_customer` = '.(int)$id_customer.'
+			AND `passwd` = \''.pSQL($passwd).'\'');
 			Cache::store($cache_id, $result);
 		}
 		return Cache::retrieve($cache_id);
@@ -507,16 +502,15 @@ class CustomerCore extends ObjectModel
 	 */
 	public static function searchByName($query)
 	{
-		$sql = 'SELECT *
-				FROM `'._DB_PREFIX_.'customer`
-				WHERE (
-						`email` LIKE \'%'.pSQL($query).'%\'
-						OR `id_customer` LIKE \'%'.pSQL($query).'%\'
-						OR `lastname` LIKE \'%'.pSQL($query).'%\'
-						OR `firstname` LIKE \'%'.pSQL($query).'%\'
-					)'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER);
+		$sql_base = 'SELECT *
+				FROM `'._DB_PREFIX_.'customer`';
+		$sql = '('.$sql_base.' WHERE `email` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
+		$sql .= ' UNION ('.$sql_base.' WHERE `id_customer` = '.(int)$query.' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
+		$sql .= ' UNION ('.$sql_base.' WHERE `lastname` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
+		$sql .= ' UNION ('.$sql_base.' WHERE `firstname` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
+
 
 	/**
 	 * Search for customers by ip address
@@ -530,7 +524,7 @@ class CustomerCore extends ObjectModel
 		FROM `'._DB_PREFIX_.'customer` c
 		LEFT JOIN `'._DB_PREFIX_.'guest` g ON g.id_customer = c.id_customer
 		LEFT JOIN `'._DB_PREFIX_.'connections` co ON g.id_guest = co.id_guest
-		WHERE co.`ip_address` = \''.ip2long(trim($ip)).'\'');
+		WHERE co.`ip_address` = \''.(int)ip2long(trim($ip)).'\'');
 	}
 
 	/**
@@ -562,8 +556,23 @@ class CustomerCore extends ObjectModel
 		return $result;
 	}
 
+	public function getLastEmails()
+	{
+		if (!$this->id)
+			return array();
+		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+		SELECT m.*, l.name as language
+		FROM `'._DB_PREFIX_.'mail` m
+		LEFT JOIN `'._DB_PREFIX_.'lang` l ON m.id_lang = l.id_lang
+		WHERE `recipient` = "'.pSQL($this->email).'"
+		ORDER BY m.date_add DESC
+		LIMIT 10');
+	}
+
 	public function getLastConnections()
 	{
+		if (!$this->id)
+			return array();
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT c.date_add, COUNT(cp.id_page) AS pages, TIMEDIFF(MAX(cp.time_end), c.date_add) as time, http_referer,INET_NTOA(ip_address) as ipaddress
 		FROM `'._DB_PREFIX_.'guest` g
@@ -581,7 +590,7 @@ class CustomerCore extends ObjectModel
 	* @param $id_customer Customer id
 	* @return boolean
 	*/
-	// DEPRECATED
+	/* DEPRECATED */
 	public function customerIdExists($id_customer)
 	{
 		return Customer::customerIdExistsStatic((int)$id_customer);
@@ -711,9 +720,9 @@ class CustomerCore extends ObjectModel
 
 		/* Change status to active/inactive */
 		return Db::getInstance()->execute('
-		UPDATE `'.pSQL(_DB_PREFIX_.$this->def['table']).'`
+		UPDATE `'._DB_PREFIX_.bqSQL($this->def['table']).'`
 		SET `date_upd` = NOW()
-		WHERE `'.$this->def['primary'].'` = '.(int)$this->id);
+		WHERE `'.bqSQL($this->def['primary']).'` = '.(int)$this->id);
 	}
 
 
@@ -747,7 +756,7 @@ class CustomerCore extends ObjectModel
 			Mail::Send(
 				(int)$id_lang,
 				'guest_to_customer',
-				Mail::l('Your guest account has been transformed to customer account', (int)$id_lang),
+				Mail::l('Your guest account has been transformed into a customer account', (int)$id_lang),
 				$vars,
 				$this->email,
 				$this->firstname.' '.$this->lastname,
@@ -766,12 +775,7 @@ class CustomerCore extends ObjectModel
 
 	public function setWsPasswd($passwd)
 	{
-		if ($this->id != 0)
-		{
-			if ($this->passwd != $passwd)
-				$this->passwd = Tools::encrypt($passwd);
-		}
-		else
+		if ($this->id == 0 || $this->passwd != $passwd)
 			$this->passwd = Tools::encrypt($passwd);
 		return true;
 	}
@@ -789,9 +793,7 @@ class CustomerCore extends ObjectModel
 			return false;
 
 		/* Customer is valid only if it can be load and if object password is the same as database one */
-		if ($this->logged == 1 && $this->id && Validate::isUnsignedId($this->id) && Customer::checkPassword($this->id, $this->passwd))
-			return true;
-		return false;
+		return ($this->logged == 1 && $this->id && Validate::isUnsignedId($this->id) && Customer::checkPassword($this->id, $this->passwd));
 	}
 
 	/**

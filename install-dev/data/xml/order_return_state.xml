@@ -4,10 +4,10 @@
     <field name="color"/>
   </fields>
   <entities>
-    <order_return_state id="Waiting_for_confirmation" color="RoyalBlue"/>
-    <order_return_state id="Waiting_for_package" color="BlueViolet"/>
-    <order_return_state id="Package_received" color="LimeGreen"/>
-    <order_return_state id="Return_denied" color="Crimson"/>
+    <order_return_state id="Waiting_for_confirmation" color="#4169E1"/>
+    <order_return_state id="Waiting_for_package" color="#8A2BE2"/>
+    <order_return_state id="Package_received" color="#32CD32"/>
+    <order_return_state id="Return_denied" color="#DC143C"/>
     <order_return_state id="Return_completed" color="#108510"/>
   </entities>
 </entity_order_return_state>

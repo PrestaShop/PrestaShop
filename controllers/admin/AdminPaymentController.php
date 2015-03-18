@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -97,6 +97,8 @@ class AdminPaymentControllerCore extends AdminController
 
 	public function postProcess()
 	{
+		if (Tools::getValue('action') == 'GetModuleQuickView' && Tools::getValue('ajax') == '1')
+			$this->ajaxProcessGetModuleQuickView();
 		if ($this->action)
 			$this->saveRestrictions($this->action);
 	}
@@ -107,9 +109,9 @@ class AdminPaymentControllerCore extends AdminController
 		{
 			if (Tools::isSubmit('submitModulecountry'))
 				$this->action = 'country';
-			else if (Tools::isSubmit('submitModulecurrency'))
+			elseif (Tools::isSubmit('submitModulecurrency'))
 				$this->action = 'currency';
-			else if (Tools::isSubmit('submitModulegroup'))
+			elseif (Tools::isSubmit('submitModulegroup'))
 				$this->action = 'group';
 		}
 		else
@@ -153,18 +155,24 @@ class AdminPaymentControllerCore extends AdminController
 		return parent::initContent();
 	}
 
+	public function setMedia()
+	{
+		parent::setMedia();
+		$this->addJqueryPlugin('fancybox');
+	}
+
 	public function renderView()
 	{
-		$this->toolbar_title = $this->l('Payment: ');
+		$this->toolbar_title = $this->l('Payment');
 		unset($this->toolbar_btn['back']);
-		
+
 		$shop_context = (!Shop::isFeatureActive() || Shop::getContext() == Shop::CONTEXT_SHOP);
 		if (!$shop_context)
 		{
 			$this->tpl_view_vars = array('shop_context' => $shop_context);
 			return parent::renderView();
 		}
-	
+
 		// link to modules page
 		if (isset($this->payment_modules[0]))
 			$token_modules = Tools::getAdminToken('AdminModules'.(int)Tab::getIdFromClassName('AdminModules').(int)$this->context->employee->id);
@@ -207,6 +215,12 @@ class AdminPaymentControllerCore extends AdminController
 			foreach ($list['items'] as $key_item => $item)
 			{
 				$name_id = $list['name_id'];
+
+				if ($name_id === 'currency'
+					&& Tools::strpos($list['items'][$key_item]['name'], '('.$list['items'][$key_item]['iso_code'].')') === false)
+					$list['items'][$key_item]['name'] = sprintf($this->l('%1$s (%2$s)'), $list['items'][$key_item]['name'],
+						$list['items'][$key_item]['iso_code']);
+
 				foreach ($this->payment_modules as $key_module => $module)
 				{
 					if (isset($module->$name_id) && in_array($item['id_'.$name_id], $module->$name_id))
@@ -245,6 +259,42 @@ class AdminPaymentControllerCore extends AdminController
 		);
 
 		return parent::renderView();
+	}
+
+	public function renderModulesList()
+	{
+		if ($this->getModulesList($this->filter_modules_list))
+		{
+			$active_list = array();
+			foreach ($this->modules_list as $key => $module)
+			{
+				if (in_array($module->name, $this->list_partners_modules))
+					$this->modules_list[$key]->type = 'addonsPartner';
+				if (isset($module->description_full) && trim($module->description_full) != '')
+					$module->show_quick_view = true;
+
+				if ($module->active)
+					$active_list[] = $module;
+				else
+					$unactive_list[] = $module;
+			}
+
+			$helper = new Helper();
+			$fetch = '';
+
+			if (isset($active_list))
+			{
+				$this->context->smarty->assign('panel_title', $this->l('Active payment'));
+				$fetch = $helper->renderModulesList($active_list);
+			}
+
+			$this->context->smarty->assign(array(
+				'panel_title' => $this->l('Recommended payment gateways'),
+				'view_all' => true
+			));
+			$fetch .= $helper->renderModulesList($unactive_list);
+			return $fetch;
+		}
 	}
 }
 

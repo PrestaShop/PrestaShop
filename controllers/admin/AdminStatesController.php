@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -44,8 +44,6 @@ class AdminStatesControllerCore extends AdminController
 		
 		$this->bulk_actions = array(
 			'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
-			'enableSelection' => array('text' => $this->l('Enable selection')),
-			'disableSelection' => array('text' => $this->l('Disable selection')),
 			'affectzone' => array('text' => $this->l('Affect a new zone'))
 		);
 
@@ -53,7 +51,8 @@ class AdminStatesControllerCore extends AdminController
 		$this->_join = '
 		LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = a.`id_zone`)
 		LEFT JOIN `'._DB_PREFIX_.'country_lang` cl ON (cl.`id_country` = a.`id_country` AND cl.id_lang = '.(int)$this->context->language->id.')';
-		
+		$this->_use_found_rows = false;
+
 		$countries_array = $zones_array = array();
 		$this->zones = Zone::getZones();
 		$this->countries = Country::getCountries($this->context->language->id, false, true, false);
@@ -129,7 +128,7 @@ class AdminStatesControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'text',
-					'label' => $this->l('Name:'),
+					'label' => $this->l('Name'),
 					'name' => 'name',
 					'maxlength' => 32,
 					'required' => true,
@@ -137,7 +136,7 @@ class AdminStatesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('ISO code:'),
+					'label' => $this->l('ISO code'),
 					'name' => 'iso_code',
 					'maxlength' => 7,
 					'required' => true,
@@ -146,7 +145,7 @@ class AdminStatesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Country:'),
+					'label' => $this->l('Country'),
 					'name' => 'id_country',
 					'required' => true,
 					'default_value' => (int)$this->context->country->id,
@@ -159,7 +158,7 @@ class AdminStatesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'select',
-					'label' => $this->l('Zone:'),
+					'label' => $this->l('Zone'),
 					'name' => 'id_zone',
 					'required' => true,
 					'options' => array(
@@ -174,7 +173,7 @@ class AdminStatesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Status:'),
+					'label' => $this->l('Status'),
 					'name' => 'active',
 					'required' => true,
 					'values' => array(
@@ -246,32 +245,29 @@ class AdminStatesControllerCore extends AdminController
 
 	protected function displayAjaxStates()
 	{
-		if ($this->tabAccess['view'] === '1')
+		$states = Db::getInstance()->executeS('
+		SELECT s.id_state, s.name
+		FROM '._DB_PREFIX_.'state s
+		LEFT JOIN '._DB_PREFIX_.'country c ON (s.`id_country` = c.`id_country`)
+		WHERE s.id_country = '.(int)(Tools::getValue('id_country')).' AND s.active = 1 AND c.`contains_states` = 1
+		ORDER BY s.`name` ASC');
+
+		if (is_array($states) AND !empty($states))
 		{
-			$states = Db::getInstance()->executeS('
-			SELECT s.id_state, s.name
-			FROM '._DB_PREFIX_.'state s
-			LEFT JOIN '._DB_PREFIX_.'country c ON (s.`id_country` = c.`id_country`)
-			WHERE s.id_country = '.(int)(Tools::getValue('id_country')).' AND s.active = 1 AND c.`contains_states` = 1
-			ORDER BY s.`name` ASC');
-
-			if (is_array($states) AND !empty($states))
+			$list = '';
+			if ((bool)Tools::getValue('no_empty') != true)
 			{
-				$list = '';
-				if (Tools::getValue('no_empty') != true)
-				{
-					$empty_value = (Tools::isSubmit('empty_value')) ? Tools::getValue('empty_value') : '----------';
-					$list = '<option value="0">'.Tools::htmlentitiesUTF8($empty_value).'</option>'."\n";
-				}
-
-				foreach ($states AS $state)
-					$list .= '<option value="'.(int)($state['id_state']).'"'.((isset($_GET['id_state']) AND $_GET['id_state'] == $state['id_state']) ? ' selected="selected"' : '').'>'.$state['name'].'</option>'."\n";
+				$empty_value = (Tools::isSubmit('empty_value')) ? Tools::getValue('empty_value') : '-';
+				$list = '<option value="0">'.Tools::htmlentitiesUTF8($empty_value).'</option>'."\n";
 			}
-			else
-				$list = 'false';
 
-			die($list);
+			foreach ($states AS $state)
+				$list .= '<option value="'.(int)($state['id_state']).'"'.((isset($_GET['id_state']) AND $_GET['id_state'] == $state['id_state']) ? ' selected="selected"' : '').'>'.$state['name'].'</option>'."\n";
 		}
+		else
+			$list = 'false';
+
+		die($list);
 	}
 
 }

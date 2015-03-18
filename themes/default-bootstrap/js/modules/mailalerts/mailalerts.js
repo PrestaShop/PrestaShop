@@ -1,5 +1,5 @@
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,29 +18,63 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 $(document).ready(function() {
 	oosHookJsCodeMailAlert();
-	$('#oos_customer_email').bind('keypress', function(e) {
+	$(document).on('keypress', '#oos_customer_email', function(e){
 		if(e.keyCode == 13)
 		{
+			e.preventDefault();
 			addNotification();
-			return false;
 		}
 	});
 
-	$('#oos_customer_email').click(function(e) {
+	$(document).on('click', '#oos_customer_email', function(e){
 		clearText();
 	});
 
-	$('#mailalert_link').click(function(e) {
+	$(document).on('click', '#mailalert_link', function(e){
 		e.preventDefault();
 		addNotification();
 	});
+
+	$(document).on('click', 'i[rel^=ajax_id_mailalert_]', function(e)
+	{
+		var ids =  $(this).attr('rel').replace('ajax_id_mailalert_', '');
+		ids = ids.split('_');
+		var id_product_mail_alert = parseInt(ids[0]);
+		var id_product_attribute_mail_alert = parseInt(ids[1]);
+		var parent = $(this).parents('li');
+
+		if (typeof mailalerts_url_remove == 'undefined')
+			return;
+
+		$.ajax({
+			url: mailalerts_url_remove,
+			type: "POST",
+			data: {
+				'id_product': id_product_mail_alert,
+				'id_product_attribute': id_product_attribute_mail_alert
+			},
+			success: function(result)
+			{
+				if (result == '0')
+				{
+					parent.fadeOut("normal", function()
+					{
+                        if (parent.siblings().length == 0)
+                            $("#mailalerts_block_account_warning").removeClass('hidden');
+                        parent.remove();
+					});
+				}
+ 		 	}
+		});
+	});
+
 });
 
 function clearText()
@@ -51,6 +85,9 @@ function clearText()
 
 function oosHookJsCodeMailAlert()
 {
+	if (typeof mailalerts_url_check == 'undefined')
+		return;
+
 	$.ajax({
 		type: 'POST',
 		url: mailalerts_url_check,
@@ -72,8 +109,9 @@ function oosHookJsCodeMailAlert()
 
 function  addNotification()
 {
-	if ($('#oos_customer_email').val() == mailalerts_placeholder)
+	if ($('#oos_customer_email').val() == mailalerts_placeholder || (typeof mailalerts_url_add == 'undefined'))
 		return;
+
 	$.ajax({
 		type: 'POST',
 		url: mailalerts_url_add,

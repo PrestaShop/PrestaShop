@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -35,7 +35,6 @@ class GuestTrackingControllerCore extends FrontController
 	 */
 	public function init()
 	{
-		$this->display_column_left = false;
 		parent::init();
 		if ($this->context->customer->isLogged())
 			Tools::redirect('history.php');
@@ -58,7 +57,7 @@ class GuestTrackingControllerCore extends FrontController
 				{
 					$order = new Order((int)$id_order);
 					if (Validate::isLoadedObject($order))
-						$order_collection[] = $order;
+						$order_collection = Order::getByReference($order->reference);
 				}
 				else
 					$order_collection = Order::getByReference($id_order);
@@ -74,21 +73,20 @@ class GuestTrackingControllerCore extends FrontController
 
 			if (empty($order_reference) && empty($id_order))
 				$this->errors[] = Tools::displayError('Please provide your order\'s reference number.');
-			else if (empty($email))
+			elseif (empty($email))
 				$this->errors[] = Tools::displayError('Please provide a valid email address.');
-			else if (!Validate::isEmail($email))
+			elseif (!Validate::isEmail($email))
 				$this->errors[] = Tools::displayError('Please provide a valid email address.');
-			else if (!Customer::customerExists($email, false, false))
+			elseif (!Customer::customerExists($email, false, false))
 				$this->errors[] = Tools::displayError('There is no account associated with this email address.');
-			else if (Customer::customerExists($email, false, true))
+			elseif (Customer::customerExists($email, false, true))
 			{
-				$this->errors[] = Tools::displayError('Your guest account has already been transformed into a customer account.').' '.
-					Tools::displayError('Please login to your customer account to view this order. This section is reserved for guest accounts.');
+				$this->errors[] = Tools::displayError('This page is for guest accounts only. Since your guest account has already been transformed into a customer account, you can no longer view your order here. Please log in to your customer account to view this order');
 				$this->context->smarty->assign('show_login_link', true);
 			}
-			else if (!count($order_collection))
+			elseif (!count($order_collection))
 				$this->errors[] = Tools::displayError('Invalid order reference');
-			else if (!$order_collection->getFirst()->isAssociatedAtGuest($email))
+			elseif (!$order_collection->getFirst()->isAssociatedAtGuest($email))
 				$this->errors[] = Tools::displayError('Invalid order reference');
 			else
 			{
@@ -98,9 +96,9 @@ class GuestTrackingControllerCore extends FrontController
 					$customer = new Customer((int)$order->id_customer);
 					if (!Validate::isLoadedObject($customer))
 						$this->errors[] = Tools::displayError('Invalid customer');
-					else if (!Tools::getValue('password'))
+					elseif (!Tools::getValue('password'))
 						$this->errors[] = Tools::displayError('Invalid password.');
-					else if (!$customer->transformToCustomer($this->context->language->id, Tools::getValue('password')))
+					elseif (!$customer->transformToCustomer($this->context->language->id, Tools::getValue('password')))
 						// @todo clarify error message
 						$this->errors[] = Tools::displayError('An error occurred while transforming a guest into a registered customer.');
 					else
@@ -161,7 +159,7 @@ class GuestTrackingControllerCore extends FrontController
 			$order->products = $order->getProducts();
 			$order->customizedDatas = Product::getAllCustomizedDatas((int)$order->id_cart);
 			Product::addCustomizationPrice($order->products, $order->customizedDatas);
-			$order->total_old = ($order->total_discounts > 0) ? (float)($order->total_paid - $order->total_discounts) : false;
+			$order->total_old = $order->total_discounts > 0 ? (float)$order->total_paid - (float)$order->total_discounts : false;
 
 			if ($order->carrier->url && $order->shipping_number)
 				$order->followup = str_replace('@', $order->shipping_number, $order->carrier->url);
@@ -177,8 +175,8 @@ class GuestTrackingControllerCore extends FrontController
 			'invoiceAllowed' => (int)Configuration::get('PS_INVOICE'),
 			'is_guest' => true,
 			'group_use_tax' => (Group::getPriceDisplayMethod($customer->id_default_group) == PS_TAX_INC),
-			'CUSTOMIZE_FILE' => _CUSTOMIZE_FILE_,
-			'CUSTOMIZE_TEXTFIELD' => _CUSTOMIZE_TEXTFIELD_,
+			'CUSTOMIZE_FILE' => Product::CUSTOMIZE_FILE,
+			'CUSTOMIZE_TEXTFIELD' => Product::CUSTOMIZE_TEXTFIELD,
 			'use_tax' => Configuration::get('PS_TAX'),
 			));
 	}

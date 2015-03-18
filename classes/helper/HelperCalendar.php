@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,14 +19,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class HelperCalendarCore extends Helper
 {
-	const DEFAULT_DATE_FORMAT    = 'Y-m-d';
+	const DEFAULT_DATE_FORMAT    = 'Y-mm-dd';
 	const DEFAULT_COMPARE_OPTION = 1;
 
 	private $_actions;
@@ -136,7 +136,7 @@ class HelperCalendarCore extends Helper
 	public function setDateFrom($value)
 	{
 		if (!isset($value) || $value == '')
-			$value = date('Y-m-d', strtotime("-31 days"));
+			$value = date('Y-m-d', strtotime('-31 days'));
 
 		if (!is_string($value))
 			throw new PrestaShopException('Date must be a string');
@@ -148,7 +148,7 @@ class HelperCalendarCore extends Helper
 	public function getDateFrom()
 	{
 		if (!isset($this->_date_from))
-			$this->_date_from = date('Y-m-d', strtotime("-31 days"));
+			$this->_date_from = date('Y-m-d', strtotime('-31 days'));
 
 		return $this->_date_from;
 	}
@@ -201,8 +201,8 @@ class HelperCalendarCore extends Helper
 
 	public function generate()
 	{
-		$context =  Context::getContext();
-		$admin_webpath = str_ireplace(_PS_ROOT_DIR_, '', _PS_ADMIN_DIR_);
+		$context = Context::getContext();
+		$admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
 		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
 		$bo_theme = ((Validate::isLoadedObject($context->employee)
 			&& $context->employee->bo_theme) ? $context->employee->bo_theme : 'default');

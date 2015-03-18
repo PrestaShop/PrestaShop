@@ -98,7 +98,7 @@ class Swift_File
   {
     if ($this->handle === null)
     {
-      if (!$this->handle = fopen($this->path, "rb"))
+      if (!$this->handle = @fopen($this->path, "rb"))
       {
         throw new Swift_FileException("Unable to open file '" . $this->path . " for reading.  Check the file permissions.");
       }
@@ -186,7 +186,7 @@ class Swift_File
   public function close()
   {
     $this->createHandle();
-    fclose($this->handle);
+    @fclose($this->handle);
     $this->handle = null;
   }
   /**

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,14 +19,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class ZoneCore extends ObjectModel
 {
- 	/** @var string Name */
+	/** @var string Name */
 	public $name;
 
 	/** @var boolean Zone status */
@@ -93,12 +93,12 @@ class ZoneCore extends ObjectModel
 		if (parent::delete())
 		{
 			// Delete regarding delivery preferences
-			$result = Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'carrier_zone WHERE id_zone = '.(int)$this->id);
-			$result &= Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'delivery WHERE id_zone = '.(int)$this->id);
+			$result = Db::getInstance()->delete('carrier_zone', 'id_zone = '.(int)$this->id);
+			$result &= Db::getInstance()->delete('delivery', 'id_zone = '.(int)$this->id);
 
 			// Update Country & state zone with 0
-			$result &= Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'country SET id_zone = 0 WHERE id_zone = '.(int)$this->id);
-			$result &= Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'state SET id_zone = 0 WHERE id_zone = '.(int)$this->id);
+			$result &= Db::getInstance()->update('country', array('id_zone' => 0), 'id_zone = '.(int)$this->id);
+			$result &= Db::getInstance()->update('state', array('id_zone' => 0), 'id_zone = '.(int)$this->id);
 
 			return $result;
 		}

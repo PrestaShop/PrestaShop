@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -26,6 +26,7 @@
 {extends file="helpers/view/view.tpl"}
 
 {block name="override_tpl"}
+	{if !$host_mode}
 	<script type="text/javascript">
 		$(document).ready(function()
 		{
@@ -47,7 +48,7 @@
 					if (json.missing.length || json.updated.length)
 						$('#changedFiles').html('<div class="alert alert-warning">{l s='Changed/missing files have been detected.'}</div>');
 					else
-						$('#changedFiles').html('<div class="alert alert-success">{l s='No change has been detected in your files'}</div>');
+						$('#changedFiles').html('<div class="alert alert-success">{l s='No change has been detected in your files.'}</div>');
 
 					$.each(tab, function(key, lang)
 					{
@@ -67,6 +68,7 @@
 			});
 		});
 	</script>
+	{/if}
 	<div class="row">
 		<div class="col-lg-6">
 			<div class="panel">
@@ -76,6 +78,7 @@
 				</h3>
 				<p>{l s='This information must be provided when you report an issue on our bug tracker or forum.'}</p>
 			</div>
+			{if !$host_mode}
 			<div class="panel">
 				<h3>
 					<i class="icon-info"></i>
@@ -83,20 +86,20 @@
 				</h3>	
 				{if count($uname)}
 				<p>
-					<strong>{l s='Server information'}:</strong> {$uname|escape:'html':'UTF-8'}
+					<strong>{l s='Server information:'}</strong> {$uname|escape:'html':'UTF-8'}
 				</p>
 				{/if}
 				<p>
-					<strong>{l s='Server software version'}:</strong> {$version.server|escape:'html':'UTF-8'}
+					<strong>{l s='Server software version:'}</strong> {$version.server|escape:'html':'UTF-8'}
 				</p>
 				<p>
-					<strong>{l s='PHP version'}:</strong> {$version.php|escape:'html':'UTF-8'}
+					<strong>{l s='PHP version:'}</strong> {$version.php|escape:'html':'UTF-8'}
 				</p>
 				<p>
-					<strong>{l s='Memory limit'}:</strong> {$version.memory_limit|escape:'html':'UTF-8'}
+					<strong>{l s='Memory limit:'}</strong> {$version.memory_limit|escape:'html':'UTF-8'}
 				</p>
 				<p>
-					<strong>{l s='Max execution time'}:</strong> {$version.max_execution_time|escape:'html':'UTF-8'}
+					<strong>{l s='Max execution time:'}</strong> {$version.max_execution_time|escape:'html':'UTF-8'}
 				</p>
 				{if $apache_instaweb}
 					<p>{l s='PageSpeed module for Apache installed (mod_instaweb)'}</p>
@@ -108,16 +111,26 @@
 					{l s='Database information'}
 				</h3>
 				<p>
-					<strong>{l s='MySQL version'}:</strong> {$database.version|escape:'html':'UTF-8'}
+					<strong>{l s='MySQL version:'}</strong> {$database.version|escape:'html':'UTF-8'}
 				</p>
 				<p>
-					<strong>{l s='MySQL engine'}:</strong> {$database.engine|escape:'html':'UTF-8'}
+					<strong>{l s='MySQL server:'}</strong> {$database.server|escape:'html':'UTF-8'}
 				</p>
 				<p>
-					<strong>{l s='Tables prefix'}:</strong> {$database.prefix|escape:'html':'UTF-8'}
+					<strong>{l s='MySQL name:'}</strong> {$database.name|escape:'html':'UTF-8'}
+				</p>
+				<p>
+					<strong>{l s='MySQL user:'}</strong> {$database.user|escape:'html':'UTF-8'}
+				</p>
+				<p>
+					<strong>{l s='Tables prefix:'}</strong> {$database.prefix|escape:'html':'UTF-8'}
+				</p>
+				<p>
+					<strong>{l s='MySQL engine:'}</strong> {$database.engine|escape:'html':'UTF-8'}
 				</p>
 			</div>
 		</div>
+		{/if}
 		<div class="col-lg-6">
 			<div class="panel">
 				<h3>
@@ -125,13 +138,13 @@
 					{l s='Store information'}
 				</h3>
 				<p>
-					<strong>{l s='PrestaShop version'}:</strong> {$shop.ps|escape:'html':'UTF-8'}
+					<strong>{l s='PrestaShop version:'}</strong> {$shop.ps|escape:'html':'UTF-8'}
 				</p>
 				<p>
-					<strong>{l s='Shop URL'}:</strong> {$shop.url|escape:'html':'UTF-8'}
+					<strong>{l s='Shop URL:'}</strong> {$shop.url|escape:'html':'UTF-8'}
 				</p>
 				<p>
-					<strong>{l s='Current theme in use'}:</strong> {$shop.theme|escape:'html':'UTF-8'}
+					<strong>{l s='Current theme in use:'}</strong> {$shop.theme|escape:'html':'UTF-8'}
 				</p>
 			</div>
 			<div class="panel">
@@ -140,17 +153,17 @@
 					{l s='Mail configuration'}
 				</h3>
 				<p>
-					<strong>{l s='Mail method'}:</strong>
+					<strong>{l s='Mail method:'}</strong>
 			
 			{if $mail}
-				{l s='You are using the PHP mail function.'}</p>
+				{l s='You are using the PHP mail() function.'}</p>
 			{else}
 				{l s='You are using your own SMTP parameters.'}</p>
 				<p>
 					<strong>{l s='SMTP server'}:</strong> {$smtp.server|escape:'html':'UTF-8'}
 				</p>
 				<p>
-					<strong>{l s='SMTP user'}:</strong>
+					<strong>{l s='SMTP username'}:</strong>
 					{if $smtp.user neq ''}
 						{l s='Defined'}
 					{else}
@@ -166,10 +179,10 @@
 					{/if}
 				</p>
 				<p>
-					<strong>{l s='Encryption'}:</strong> {$smtp.encryption|escape:'html':'UTF-8'}
+					<strong>{l s='Encryption:'}</strong> {$smtp.encryption|escape:'html':'UTF-8'}
 				</p>
 				<p>
-					<strong>{l s='Port'}:</strong> {$smtp.port|escape:'html':'UTF-8'}
+					<strong>{l s='SMTP port:'}</strong> {$smtp.port|escape:'html':'UTF-8'}
 				</p>
 			{/if}
 			</div>
@@ -179,7 +192,7 @@
 					{l s='Your information'}
 				</h3>
 				<p>
-					<strong>{l s='Your web browser'}:</strong> {$user_agent|escape:'html':'UTF-8'}
+					<strong>{l s='Your web browser:'}</strong> {$user_agent|escape:'html':'UTF-8'}
 				</p>
 			</div>
 
@@ -189,7 +202,7 @@
 					{l s='Check your configuration'}
 				</h3>
 				<p>
-					<strong>{l s='Required parameters'}:</strong>
+					<strong>{l s='Required parameters:'}</strong>
 				{if !$failRequired}
 					<span class="text-success">{l s='OK'}</span>
 				</p>
@@ -198,31 +211,34 @@
 				</p>
 				<ul>
 					{foreach from=$testsRequired item='value' key='key'}
-						{if $value eq 'fail'}
+						{if $value eq 'fail' && isset($testsErrors[$key])}
 							<li>{$testsErrors[$key]}</li>
 						{/if}
 					{/foreach}
 				</ul>
 				{/if}
-				<p>
-					<strong>{l s='Optional parameters'}:</strong>
-				{if !$failOptional}
-					<span class="text-success">{l s='OK'}</span>
-				</p>
-				{else}
-					<span class="text-success">{l s='Please fix the following error(s)'}</span>
-				</p>
-				<ul>
-					{foreach from=$testsOptional item='value' key='key'}
-						{if $value eq 'fail'}
-							<li>{$key}</li>
-						{/if}
-					{/foreach}
-				</ul>
+				{if isset($failOptional)}
+					<p>
+						<strong>{l s='Optional parameters:'}</strong>
+					{if !$failOptional}
+						<span class="text-success">{l s='OK'}</span>
+					</p>
+					{else}
+						<span class="text-success">{l s='Please fix the following error(s)'}</span>
+					</p>
+					<ul>
+						{foreach from=$testsOptional item='value' key='key'}
+							{if $value eq 'fail'}
+								<li>{$key}</li>
+							{/if}
+						{/foreach}
+					</ul>
+					{/if}
 				{/if}
 			</div>
 		</div>
 	</div>
+	{if !$host_mode}
 	<div class="panel">
 		<h3>
 			<i class="icon-info"></i> 
@@ -230,4 +246,5 @@
 		</h3>
 		<div id="changedFiles"><i class="icon-spin icon-refresh"></i> {l s='Checking files...'}</div>
 	</div>
+	{/if}
 {/block}

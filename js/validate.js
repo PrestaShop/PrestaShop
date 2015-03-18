@@ -1,5 +1,5 @@
 /* unicode_hack.js
-*    Copyright (C) 2010-2012  Marcelo Gibson de Castro Gonçalves. All rights reserved.
+*    Copyright (C) 2010-2012  Marcelo Gibson de Castro GonÃ§alves. All rights reserved.
 *
 *    Copying and distribution of this file, with or without modification,
 *    are permitted in any medium without royalty provided the copyright
@@ -76,7 +76,7 @@ var unicode_hack = (function() {
 
 })();
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -95,13 +95,13 @@ var unicode_hack = (function() {
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 function validate_isName(s)
 {
-	var reg = /^[^0-9!<>,;?=+()@#"�{}_$%:]+$/;
+	var reg = /^[^0-9!<>,;?=+()@#"°{}_$%:]+$/;
 	return reg.test(s);
 }
 
@@ -119,7 +119,7 @@ function validate_isAddress(s)
 
 function validate_isPostCode(s, pattern)
 {
-	if (typeof(pattern) == 'undefined')
+	if (typeof(pattern) == 'undefined' || pattern.length == 0)
 		pattern = '[a-z 0-9-]+';
 	else
 	{
@@ -140,7 +140,7 @@ function validate_isPostCode(s, pattern)
 
 function validate_isCityName(s)
 {
-	var reg = /^[^!<>;?=+@#"�{}_$%]+$/;
+	var reg = /^[^!<>;?=+@#"°{}_$%]+$/;
 	return reg.test(s);
 }
 
@@ -172,3 +172,18 @@ function validate_isPasswd(s)
 {
 	return (s.length >= 5 && s.length < 255);
 }
+
+$(document).on('focusout', 'input.validate, textarea.validate', function() {
+	if ($(this).hasClass('is_required') || $(this).val().length)
+	{
+		if ($(this).attr('name') == 'postcode' && typeof(countriesNeedZipCode[$('#id_country option:selected').val()]) != 'undefined')
+			var result = window['validate_'+$(this).attr('data-validate')]($(this).val(), countriesNeedZipCode[$('#id_country option:selected').val()]);
+		else
+			var result = window['validate_'+$(this).attr('data-validate')]($(this).val())
+
+		if (result)
+			$(this).parent().removeClass('form-error').addClass('form-ok');
+		else
+			$(this).parent().addClass('form-error').removeClass('form-ok');
+	}
+});

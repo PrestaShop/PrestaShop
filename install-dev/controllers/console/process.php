@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -71,6 +71,9 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 		if (!isset(Context::getContext()->country) || !Validate::isLoadedObject(Context::getContext()->country))
 			if ($id_country = (int)Configuration::get('PS_COUNTRY_DEFAULT'))
 				Context::getContext()->country = new Country((int)$id_country);
+		if (!isset(Context::getContext()->currency) || !Validate::isLoadedObject(Context::getContext()->currency))
+			if ($id_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT'))
+				Context::getContext()->currency = new Currency((int)$id_currency);
 
 		Context::getContext()->cart = new Cart();
 		Context::getContext()->employee = new Employee(1);
@@ -83,30 +86,45 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 
 	public function process()
 	{
-		if (!$this->processGenerateSettingsFile())
-			$this->printErrors();
+		$steps = explode(',', $this->datas->step);
+		if (in_array('all', $steps))
+			$steps = array('database','fixtures','theme','modules','addons_modules');
 
-		if ($this->datas->database_create)
-			$this->model_database->createDatabase($this->datas->database_server, $this->datas->database_name, $this->datas->database_login, $this->datas->database_password);
+		if (in_array('database', $steps))
+		{
+			if (!$this->processGenerateSettingsFile())
+				$this->printErrors();
+
+			if ($this->datas->database_create)
+				$this->model_database->createDatabase($this->datas->database_server, $this->datas->database_name, $this->datas->database_login, $this->datas->database_password);
 		
-		if (!$this->model_database->testDatabaseSettings($this->datas->database_server, $this->datas->database_name, $this->datas->database_login, $this->datas->database_password, $this->datas->database_prefix, $this->datas->database_engine, $this->datas->database_clear))
-			$this->printErrors();
-		if (!$this->processInstallDatabase())
-			$this->printErrors();
-		if (!$this->processInstallDefaultData())
-			$this->printErrors();
-		if (!$this->processPopulateDatabase())
-			$this->printErrors();
-		if (!$this->processConfigureShop())
-			$this->printErrors();
-		if (!$this->processInstallFixtures())
-			$this->printErrors();
-		if (!$this->processInstallModules())
-			$this->printErrors();
-		if (!$this->processInstallAddonsModules())
-			$this->printErrors();
-		if (!$this->processInstallTheme())
-			$this->printErrors();
+			if (!$this->model_database->testDatabaseSettings($this->datas->database_server, $this->datas->database_name, $this->datas->database_login, $this->datas->database_password, $this->datas->database_prefix, $this->datas->database_engine, $this->datas->database_clear))
+				$this->printErrors();
+			if (!$this->processInstallDatabase())
+				$this->printErrors();
+			if (!$this->processInstallDefaultData())
+				$this->printErrors();
+			if (!$this->processPopulateDatabase())
+				$this->printErrors();
+			if (!$this->processConfigureShop())
+				$this->printErrors();
+		}
+
+		if (in_array('fixtures', $steps))
+			if (!$this->processInstallFixtures())
+				$this->printErrors();
+
+		if (in_array('modules', $steps))
+			if (!$this->processInstallModules())
+				$this->printErrors();
+
+		if (in_array('addons_modules', $steps))
+			if (!$this->processInstallAddonsModules())
+				$this->printErrors();
+
+		if (in_array('theme', $steps))
+			if (!$this->processInstallTheme())
+				$this->printErrors();
 
 		if ($this->datas->newsletter)
 		{
@@ -157,7 +175,17 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 	public function processInstallDefaultData()
 	{
 		$this->initializeContext();
-		return $this->model_install->installDefaultData($this->datas->shop_name, true);
+		if (!$res = $this->model_install->installDefaultData($this->datas->shop_name, $this->datas->shop_country, (int)$this->datas->all_languages, true))
+			return false;
+
+		if ($this->datas->base_uri != '/')
+		{
+			$shop_url = new ShopUrl(1);
+			$shop_url->physical_uri = $this->datas->base_uri;
+			$shop_url->save();
+		}
+
+		return $res;
 	}
 
 	/**
@@ -171,6 +199,8 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 		$this->model_install->xml_loader_ids = $this->datas->xml_loader_ids;
 		$result = $this->model_install->populateDatabase();
 		$this->datas->xml_loader_ids = $this->model_install->xml_loader_ids;
+		Configuration::updateValue('PS_INSTALL_XML_LOADERS_ID', Tools::jsonEncode($this->datas->xml_loader_ids));
+
 		return $result;
 	}
 
@@ -193,6 +223,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 			'admin_password' =>			$this->datas->admin_password,
 			'admin_email' =>			$this->datas->admin_email,
 			'configuration_agrement' =>	true,
+			'send_informations' => true,
 		));
 		
 	}
@@ -215,6 +246,9 @@ class InstallControllerConsoleProcess extends InstallControllerConsole
 	public function processInstallFixtures()
 	{
 		$this->initializeContext();
+
+		if ((!$this->datas->xml_loader_ids || !is_array($this->datas->xml_loader_ids)) && ($xml_ids = Tools::jsonDecode(Configuration::get('PS_INSTALL_XML_LOADERS_ID'), true)))
+			$this->datas->xml_loader_ids = $xml_ids;
 
 		$this->model_install->xml_loader_ids = $this->datas->xml_loader_ids;
 		$result = $this->model_install->installFixtures(null, array('shop_activity' => $this->datas->shop_activity, 'shop_country' => $this->datas->shop_country));

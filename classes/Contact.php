@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -50,19 +50,19 @@ class ContactCore extends ObjectModel
 			'email' => 				array('type' => self::TYPE_STRING, 'validate' => 'isEmail', 'size' => 128),
 			'customer_service' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
-			// Lang fields
+			/* Lang fields */
 			'name' => 				array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
 			'description' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCleanHtml'),
 		),
 	);
 
 	/**
-	  * Return available contacts
-	  *
-	  * @param integer $id_lang Language ID
-	  * @param Context
-	  * @return array Contacts
-	  */
+	 * Return available contacts
+	 *
+	 * @param integer $id_lang Language ID
+	 * @param Context
+	 * @return array Contacts
+	 */
 	public static function getContacts($id_lang)
 	{
 		$shop_ids = Shop::getContextListShopID();
@@ -72,8 +72,8 @@ class ContactCore extends ObjectModel
 				LEFT JOIN `'._DB_PREFIX_.'contact_lang` cl ON (c.`id_contact` = cl.`id_contact`)
 				WHERE cl.`id_lang` = '.(int)$id_lang.'
 				AND contact_shop.`id_shop` IN ('.implode(', ', array_map('intval', $shop_ids)).')
+				GROUP BY c.`id_contact`
 				ORDER BY `name` ASC';
-
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
 
@@ -92,4 +92,3 @@ class ContactCore extends ObjectModel
 		');
 	}
 }
-

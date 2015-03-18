@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -38,9 +38,10 @@ class HelperTreeCategoriesCore extends TreeCore
 	private $_shop;
 	private $_use_checkbox;
 	private $_use_search;
+	private $_use_shop_restriction;
 
 	public function __construct($id, $title = null, $root_category = null,
-		$lang = null, $shop = null)
+		$lang = null, $use_shop_restriction = true)
 	{
 		parent::__construct($id);
 
@@ -51,14 +52,14 @@ class HelperTreeCategoriesCore extends TreeCore
 			$this->setRootCategory($root_category);
 
 		$this->setLang($lang);
-		$this->setShop($shop);
+		$this->setUseShopRestriction($use_shop_restriction);
 	}
 
 	public function getData()
 	{
 		if (!isset($this->_data))
 			$this->setData(Category::getNestedCategories(
-				$this->getRootCategory(), $this->getLang(), false));
+				$this->getRootCategory(), $this->getLang(), false, null, $this->useShopRestriction()));
 
 		return $this->_data;
 	}
@@ -77,12 +78,13 @@ class HelperTreeCategoriesCore extends TreeCore
 	public function setInputName($value)
 	{
 		$this->_input_name = $value;
+		return $this;
 	}
 
 	public function getInputName()
 	{
 		if (!isset($this->_input_name))
-			$this->_input_name = 'categoryBox';
+			$this->setInputName('categoryBox');
 
 		return $this->_input_name;
 	}
@@ -128,10 +130,6 @@ class HelperTreeCategoriesCore extends TreeCore
 
 	public function getRootCategory()
 	{
-		if (!isset($this->_root_category))
-			$this->setRootCategory(Category::getRootCategory($this->getLang())
-				->id);
-
 		return $this->_root_category;
 	}
 
@@ -144,7 +142,7 @@ class HelperTreeCategoriesCore extends TreeCore
 		return $this;
 	}
 
-	public function getSelectedCatgories()
+	public function getSelectedCategories()
 	{
 		if (!isset($this->_selected_categories))
 			$this->_selected_categories = array();
@@ -197,6 +195,12 @@ class HelperTreeCategoriesCore extends TreeCore
 		return $this;
 	}
 
+	public function setUseShopRestriction($value)
+	{
+		$this->_use_shop_restriction = (bool)$value;
+		return $this;
+	}
+
 	public function useCheckBox()
 	{
 		return (isset($this->_use_checkbox) && $this->_use_checkbox);
@@ -207,7 +211,12 @@ class HelperTreeCategoriesCore extends TreeCore
 		return (isset($this->_use_search) && $this->_use_search);
 	}
 
-	public function render($data = NULL)
+	public function useShopRestriction()
+	{
+		return (isset($this->_use_shop_restriction) && $this->_use_shop_restriction);
+	}
+
+	public function render($data = null)
 	{
 		if (!isset($data))
 			$data = $this->getData();
@@ -215,6 +224,10 @@ class HelperTreeCategoriesCore extends TreeCore
 		if (isset($this->_disabled_categories)
 			&& !empty($this->_disabled_categories))
 			$this->_disableCategories($data, $this->getDisabledCategories());
+
+		if (isset($this->_selected_categories)
+			&& !empty($this->_selected_categories))
+			$this->_getSelectedChildNumbers($data, $this->getSelectedCategories());
 
 		//Default bootstrap style of search is push-right, so we add this button first
 		if ($this->useSearch())
@@ -262,11 +275,12 @@ class HelperTreeCategoriesCore extends TreeCore
 			$this->setAttribute('use_checkbox', $this->useCheckBox());
 		}
 
-		$this->setAttribute('selected_categories', $this->getSelectedCatgories());		
+		$this->setAttribute('selected_categories', $this->getSelectedCategories());
+		$this->getContext()->smarty->assign('root_category', Configuration::get('PS_ROOT_CATEGORY'));
 		return parent::render($data);
 	}
 
-	//Override
+	/* Override */
 	public function renderNodes($data = null)
 	{
 		if (!isset($data))
@@ -276,7 +290,6 @@ class HelperTreeCategoriesCore extends TreeCore
 			throw new PrestaShopException('Data value must be an traversable array');
 
 		$html = '';
-
 		foreach ($data as $item)
 		{
 			if (array_key_exists('children', $item)
@@ -312,8 +325,28 @@ class HelperTreeCategoriesCore extends TreeCore
 				if (array_key_exists('children', $category) && is_array($category['children']))
 					self::_disableCategories($category['children']);
 			}
-			else if (array_key_exists('children', $category) && is_array($category['children']))
+			elseif (array_key_exists('children', $category) && is_array($category['children']))
 				self::_disableCategories($category['children'], $disabled_categories);
 		}
+	}
+
+	private function _getSelectedChildNumbers(&$categories, $selected, &$parent = null)
+	{
+		$selected_childs = 0;
+
+		foreach ($categories as $key => &$category)
+		{
+			if (isset($parent) && in_array($category['id_category'], $selected))
+				$selected_childs++;
+
+			if (isset($category['children']) && !empty($category['children']))
+				$selected_childs += $this->_getSelectedChildNumbers($category['children'], $selected, $category);
+		}
+
+		if (!isset($parent['selected_childs']))
+			$parent['selected_childs'] = 0;
+
+		$parent['selected_childs'] = $selected_childs;
+		return $selected_childs;
 	}
 }

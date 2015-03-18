@@ -1,6 +1,6 @@
 <?php
-/*
-* 2007-2014 PrestaShop
+/**
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -140,7 +140,7 @@ class AdminGeolocationControllerCore extends AdminController
 	{
 		$this->display = 'options';
 		if (!$this->isGeoLiteCityAvailable())
-			$this->displayWarning($this->l('In order to use Geolocation, please download').' 
+			$this->displayWarning($this->l('In order to use Geolocation, please download').'
 				<a href="http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz">'.$this->l('this file').'</a> '.
 				$this->l('and extract it (using Winrar or Gzip) into the /tools/geoip/ directory.'));
 
@@ -149,9 +149,9 @@ class AdminGeolocationControllerCore extends AdminController
 
 	protected function isGeoLiteCityAvailable()
 	{
-		if (file_exists(_PS_GEOIP_DIR_.'GeoLiteCity.dat'))
+		if (@filemtime(_PS_GEOIP_DIR_._PS_GEOIP_CITY_FILE_))
 			return true;
+
 		return false;
 	}
 }
-

@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -142,24 +142,23 @@
 				{/foreach}
 			</table>
 		</div>
-		<div style="display:none" id="group_discount_category_fancybox">
+		<div id="group_discount_category_fancybox" class="bootstrap" style="display:none" >
 			<div class="panel form-horizontal">
-				<div class="col-lg-12">
-					<h3><i class="icon-group"></i> {l s='New group category discount'}</h3>
-					<hr/>
-					<div class="alert alert-info">{l s='Caution: The discount applied to a category does not stack with the overall reduction but instead replaces it.'}</div>
-					{$categoryTreeView}
-					<div class="alert alert-warning">{l s='Only products that have this category as the default category will be affected.'}</div>
-					<div class="form-group">
-						<label class="control-label col-lg-3" for="category_reduction_fancybox">{l s='Discount (%):'}</label>
-						<div class="col-lg-9">
-							<input type="text" name="category_reduction_fancybox" id="category_reduction_fancybox" value="0.00" class="form-control" />
-						</div>
+				<div class="panel-heading">
+					<i class="icon-group"></i> {l s='New group category discount'}
+				</div>
+				{$categoryTreeView}
+				<div class="alert alert-info">{l s='Caution: The discount applied to a category does not stack with the overall reduction but instead replaces it.'}</div>
+				<div class="alert alert-warning">{l s='Only products that have this category as the default category will be affected.'}</div>
+				<div class="form-group">
+					<label class="control-label col-lg-3" for="category_reduction_fancybox">{l s='Discount (%):'}</label>
+					<div class="col-lg-9">
+						<input type="text" name="category_reduction_fancybox" id="category_reduction_fancybox" value="0.00" class="form-control" />
 					</div>
-					<div class="form-group">
-						<div class="col-lg-12">
-							<button type="button" onclick="addCategoryReduction();" class="btn btn-default pull-right">{l s='add'}</button>
-						</div>
+				</div>
+				<div class="form-group">
+					<div class="col-lg-12">
+						<button type="button" onclick="addCategoryReduction();" class="btn btn-default pull-right">{l s='add'}</button>
 					</div>
 				</div>
 			</div>
@@ -182,31 +181,31 @@
 		<div class="col-lg-9" id="authorized-modules">			
 			{foreach $input['values']['auth_modules'] key=key item=module }
 			<div class="form-group">
-				<label class="control-label col-lg-4"><img src="../modules/{$module->name}/logo.gif"> {$module->displayName}</label>
-				<div class="input-group col-lg-2">
-					<span class="switch prestashop-switch">
-						<input type="radio" name="{$module->name}" id="{$module->name}_on" value="1" checked="checked">
-						<label for="{$module->name}_on">{l s='Yes'}</label>
-						<input type="radio" name="{$module->name}" id="{$module->name}_off" value="0">
-						<label for="{$module->name}_off">{l s='No'}</label>
+				<label class="control-label col-lg-4"><img src="../modules/{$module->name|escape:'html':'UTF-8'}/logo.gif" height="16" width="16" alt="{$module->displayName|escape:'html':'UTF-8'}" /> {$module->displayName|escape:'html':'UTF-8'}</label>
+				<div class="input-group col-lg-8">
+					<span class="switch prestashop-switch fixed-width-lg">
+						<input type="radio" name="{$module->name|escape:'html':'UTF-8'}" id="{$module->name|escape:'html':'UTF-8'}_on" value="1" checked="checked"/>
+						<label for="{$module->name|escape:'html':'UTF-8'}_on">{l s='Yes'}</label>
+						<input type="radio" name="{$module->name|escape:'html':'UTF-8'}" id="{$module->name|escape:'html':'UTF-8'}_off" value="0"/>
+						<label for="{$module->name|escape:'html':'UTF-8'}_off">{l s='No'}</label>
 						<a class="slide-button btn"></a>
 					</span>
-					<input type="hidden" name="modulesBoxAuth[]" value="{$module->id}">
+					<input type="hidden" name="modulesBoxAuth[]" value="{$module->id|intval}"/>
 				</div>
 			</div>
 			{/foreach}
 			{foreach $input['values']['unauth_modules'] key=key item=module }
 			<div class="form-group">
-				<label class="control-label col-lg-4"><img src="../modules/{$module->name}/logo.gif"> {$module->displayName}</label>
-				<div class="input-group col-lg-2">
-					<span class="switch prestashop-switch">
-						<input type="radio" name="{$module->name}" id="{$module->name}_on" value="1">
-						<label for="{$module->name}_on">{l s='Yes'}</label>
-						<input type="radio" name="{$module->name}" id="{$module->name}_off" value="0" checked="checked">
-						<label for="{$module->name}_off">{l s='No'}</label>
+				<label class="control-label col-lg-4"><img src="../modules/{$module->name|escape:'html':'UTF-8'}/logo.gif" height="16" width="16" alt="{$module->displayName|escape:'html':'UTF-8'}"/> {$module->displayName|escape:'html':'UTF-8'}</label>
+				<div class="input-group col-lg-8">
+					<span class="switch prestashop-switch fixed-width-lg">
+						<input type="radio" name="{$module->name|escape:'html':'UTF-8'}" id="{$module->name|escape:'html':'UTF-8'}_on" value="1"/>
+						<label for="{$module->name|escape:'html':'UTF-8'}_on">{l s='Yes'}</label>
+						<input type="radio" name="{$module->name|escape:'html':'UTF-8'}" id="{$module->name|escape:'html':'UTF-8'}_off" value="0" checked="checked"/>
+						<label for="{$module->name|escape:'html':'UTF-8'}_off">{l s='No'}</label>
 						<a class="slide-button btn"></a>
 					</span>
-					<input type="hidden" name="modulesBoxUnauth[]" value="{$module->id}">
+					<input type="hidden" name="modulesBoxUnauth[]" value="{$module->id|intval}"/>
 				</div>
 			</div>
 			{/foreach}

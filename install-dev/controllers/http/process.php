@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -62,6 +62,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 		Configuration::loadConfiguration();
 		Context::getContext()->language = new Language(Configuration::get('PS_LANG_DEFAULT'));
 		Context::getContext()->country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'));
+		Context::getContext()->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
 		Context::getContext()->cart = new Cart();
 		Context::getContext()->employee = new Employee(1);
 		define('_PS_SMARTY_FAST_LOAD_', true);
@@ -90,7 +91,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 			$this->processConfigureShop();
 		elseif (Tools::getValue('installFixtures') && !empty($this->session->process_validated['configureShop']))
 			$this->processInstallFixtures();
-		elseif (Tools::getValue('installModules') && !empty($this->session->process_validated['installFixtures']))
+		elseif (Tools::getValue('installModules') && (!empty($this->session->process_validated['installFixtures']) || $this->session->install_type != 'full'))
 			$this->processInstallModules();
 		elseif (Tools::getValue('installModulesAddons') && !empty($this->session->process_validated['installModules']))
 			$this->processInstallAddonsModules();
@@ -157,7 +158,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 	public function processInstallDefaultData()
 	{
 		// @todo remove true in populateDatabase for 1.5.0 RC version
-		$result = $this->model_install->installDefaultData($this->session->shop_name, true);
+		$result = $this->model_install->installDefaultData($this->session->shop_name, $this->session->shop_country, false, true);
 
 		if (!$result || $this->model_install->getErrors())
 			$this->ajaxJsonAnswer(false, $this->model_install->getErrors());
@@ -198,6 +199,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp
 			'admin_lastname' =>			$this->session->admin_lastname,
 			'admin_password' =>			$this->session->admin_password,
 			'admin_email' =>			$this->session->admin_email,
+			'send_informations' =>		$this->session->send_informations,
 			'configuration_agrement' =>	$this->session->configuration_agrement,
 			'rewrite_engine' =>			$this->session->rewrite_engine,
 		));

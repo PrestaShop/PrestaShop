@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,18 +19,18 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 function block_category_1521()
 {
-	if (!Db::getInstance()->getValue('SELECT value FROM `'._DB_PREFIX_.'configuration` WHERE `name` LIKE \'BLOCK_CATEG_MAX_DEPTH\' '))
+	if (!Db::getInstance()->getValue('SELECT value FROM `'._DB_PREFIX_.'configuration` WHERE `name` = \'BLOCK_CATEG_MAX_DEPTH\' '))
 		Db::getInstance()->Execute('INSERT INTO `'._DB_PREFIX_.'configuration` 
 			(`id_configuration` ,`id_shop_group` ,`id_shop` ,`name` ,`value` ,`date_add` ,`date_upd`)
 			VALUES (NULL, NULL, NULL, \'BLOCK_CATEG_MAX_DEPTH\', 4, NOW(), NOW())');
-	else if ($maxdepth = (int)Db::getInstance()->getValue('SELECT value FROM `'._DB_PREFIX_.'configuration` WHERE `value` IS NOT NULL AND `value` <> 0 AND `name` LIKE \'BLOCK_CATEG_MAX_DEPTH\''))
-		Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'configuration` SET `value` = '.($maxdepth + 1).' WHERE `name` LIKE \'BLOCK_CATEG_MAX_DEPTH\'');
+	else if ($maxdepth = (int)Db::getInstance()->getValue('SELECT value FROM `'._DB_PREFIX_.'configuration` WHERE `value` IS NOT NULL AND `value` <> 0 AND `name` = \'BLOCK_CATEG_MAX_DEPTH\''))
+		Db::getInstance()->Execute('UPDATE `'._DB_PREFIX_.'configuration` SET `value` = '.($maxdepth + 1).' WHERE `name` = \'BLOCK_CATEG_MAX_DEPTH\'');
 
 }

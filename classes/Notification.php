@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -69,7 +69,7 @@ class NotificationCore
 		{
 			case 'order':
 				$sql = '
-					SELECT SQL_CALC_FOUND_ROWS o.`id_order`, o.`id_customer`, o.`total_paid`, o.`id_currency`, c.`firstname`, c.`lastname`
+					SELECT SQL_CALC_FOUND_ROWS o.`id_order`, o.`id_customer`, o.`total_paid`, o.`id_currency`, o.`date_upd`, c.`firstname`, c.`lastname`
 					FROM `'._DB_PREFIX_.'orders` as o
 					LEFT JOIN `'._DB_PREFIX_.'customer` as c ON (c.`id_customer` = o.`id_customer`)
 					WHERE `id_order` > '.(int)$id_last_element.
@@ -80,7 +80,7 @@ class NotificationCore
 
 			case 'customer_message':
 				$sql = '
-					SELECT SQL_CALC_FOUND_ROWS c.`id_customer_message`, ct.`id_customer`, ct.`id_customer_thread`, ct.`email`
+					SELECT SQL_CALC_FOUND_ROWS c.`id_customer_message`, ct.`id_customer`, ct.`id_customer_thread`, ct.`email`, c.`date_add` as date_upd
 					FROM `'._DB_PREFIX_.'customer_message` as c
 					LEFT JOIN `'._DB_PREFIX_.'customer_thread` as ct ON (c.`id_customer_thread` = ct.`id_customer_thread`)
 					WHERE c.`id_customer_message` > '.(int)$id_last_element.'
@@ -108,16 +108,18 @@ class NotificationCore
 			$customer_name = '';
 			if (isset($value['firstname']) && isset($value['lastname']))
 				$customer_name = Tools::safeOutput($value['firstname'].' '.$value['lastname']);
-			else if (isset($value['email']))
+			elseif (isset($value['email']))
 				$customer_name = Tools::safeOutput($value['email']);
-			
+
 			$json['results'][] = array(
 				'id_order' => ((!empty($value['id_order'])) ? (int)$value['id_order'] : 0),
 				'id_customer' => ((!empty($value['id_customer'])) ? (int)$value['id_customer'] : 0),
 				'id_customer_message' => ((!empty($value['id_customer_message'])) ? (int)$value['id_customer_message'] : 0),
 				'id_customer_thread' => ((!empty($value['id_customer_thread'])) ? (int)$value['id_customer_thread'] : 0),
 				'total_paid' => ((!empty($value['total_paid'])) ? Tools::displayPrice((float)$value['total_paid'], (int)$value['id_currency'], false) : 0),
-				'customer_name' => $customer_name
+				'customer_name' => $customer_name,
+				// x1000 because of moment.js (see: http://momentjs.com/docs/#/parsing/unix-timestamp/)
+				'update_date' => isset($value['date_upd']) ? (int)strtotime($value['date_upd']) * 1000 : 0,
 			);
 		}
 
