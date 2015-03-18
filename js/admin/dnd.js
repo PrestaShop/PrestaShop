@@ -118,7 +118,7 @@ function initTableDnD(table)
 					};
 				}
 				else if (table.id.indexOf('module-') != -1) {
-					module = table.id.replace('table-module-', '');
+					module = table.id.replace('module-', '');
 
 					params = {
 						updatePositions: true,
