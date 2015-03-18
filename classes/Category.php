@@ -156,15 +156,13 @@ class CategoryCore extends ObjectModel
 		if (Tools::isSubmit('checkBoxShopAsso_category'))
 			foreach (Tools::getValue('checkBoxShopAsso_category') as $id_shop => $value)
 			{
-				$position = Category::getLastPosition((int)$this->id_parent, $id_shop);
+				$position = (int)Category::getLastPosition((int)$this->id_parent, $id_shop);
 				$this->addPosition($position, $id_shop);
 			}
 		else
 			foreach (Shop::getShops(true) as $shop)
 			{
-				$position = Category::getLastPosition((int)$this->id_parent, $shop['id_shop']);
-				if (!$position)
-					$position = 1;
+				$position = (int)Category::getLastPosition((int)$this->id_parent, $shop['id_shop']);
 				$this->addPosition($position, $shop['id_shop']);
 			}
 		if (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree)
@@ -200,10 +198,10 @@ class CategoryCore extends ObjectModel
 			if (Tools::isSubmit('checkBoxShopAsso_category'))
 				foreach (Tools::getValue('checkBoxShopAsso_category') as $id_asso_object => $row)
 					foreach ($row as $id_shop => $value)
-						$this->addPosition(Category::getLastPosition((int)$this->id_parent, (int)$id_shop), (int)$id_shop);
+						$this->addPosition((int)Category::getLastPosition((int)$this->id_parent, (int)$id_shop), (int)$id_shop);
 			else
 				foreach (Shop::getShops(true) as $shop)
-					$this->addPosition(max(1, Category::getLastPosition((int)$this->id_parent, $shop['id_shop'])), $shop['id_shop']);
+					$this->addPosition((int)Category::getLastPosition((int)$this->id_parent, $shop['id_shop']), $shop['id_shop']);
 		}
 
 		$ret = parent::update($null_values);
@@ -1320,7 +1318,7 @@ class CategoryCore extends ObjectModel
 		{
 			$return &= Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'category` c '.Shop::addSqlAssociation('category', 'c').'
-			SET category_shop.`position` = '.(int)($i + 1).'
+			SET category_shop.`position` = '.(int)($i).'
 			WHERE c.`id_parent` = '.(int)$id_category_parent.' AND c.`id_category` = '.(int)$result[$i]['id_category']);
 		}
 		return $return;
@@ -1335,11 +1333,18 @@ class CategoryCore extends ObjectModel
 	 */
 	public static function getLastPosition($id_category_parent, $id_shop)
 	{
-		return (1 + (int)Db::getInstance()->getValue('
-		SELECT MAX(cs.`position`)
-		FROM `'._DB_PREFIX_.'category` c
-		LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
-		WHERE c.`id_parent` = '.(int)$id_category_parent));
+		if ((int)Db::getInstance()->getValue('
+				SELECT COUNT(c.`id_category`)
+				FROM `'._DB_PREFIX_.'category` c
+				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
+				WHERE c.`id_parent` = '.(int)$id_category_parent) === 1)
+			return 0;
+		else
+			return (1 + (int)Db::getInstance()->getValue('
+				SELECT MAX(cs.`position`)
+				FROM `'._DB_PREFIX_.'category` c
+				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (c.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
+				WHERE c.`id_parent` = '.(int)$id_category_parent));
 	}
 
 	public static function getUrlRewriteInformations($id_category)

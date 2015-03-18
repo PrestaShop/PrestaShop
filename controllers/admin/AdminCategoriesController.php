@@ -793,10 +793,11 @@ class AdminCategoriesControllerCore extends AdminController
 
 	public function ajaxProcessUpdatePositions()
 	{
-		$id_category_to_move = (int)(Tools::getValue('id_category_to_move'));
-		$id_category_parent = (int)(Tools::getValue('id_category_parent'));
-		$way = (int)(Tools::getValue('way'));
+		$id_category_to_move = (int)Tools::getValue('id_category_to_move');
+		$id_category_parent = (int)Tools::getValue('id_category_parent');
+		$way = (int)Tools::getValue('way');
 		$positions = Tools::getValue('category');
+		$found_first = (bool)Tools::getValue('found_first');
 		if (is_array($positions))
 			foreach ($positions as $key => $value)
 			{
@@ -814,6 +815,11 @@ class AdminCategoriesControllerCore extends AdminController
 			if (isset($position) && $category->updatePosition($way, $position))
 			{
 				Hook::exec('actionCategoryUpdate');
+
+				/* Position '0' was not found in given positions so try to reorder parent category*/
+				if (!$found_first)
+					$category->cleanPositions((int)$category->id_parent);
+
 				die(true);
 			}
 			else

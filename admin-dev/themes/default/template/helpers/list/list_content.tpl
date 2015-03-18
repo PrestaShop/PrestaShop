@@ -76,7 +76,7 @@
 						{if $order_by == 'position' && $order_way != 'DESC'}
 							<div class="dragGroup">
 								<div class="positions">
-									{$tr.$key.position}
+									{$tr.$key.position + 1}
 								</div>
 							</div>
 						{else}
