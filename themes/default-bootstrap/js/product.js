@@ -1013,7 +1013,7 @@ function getProductAttribute()
 		$('#customizationForm').attr('action', customAction + request);
 	}
 
-	window.location = url + request;
+	window.location.replace(url + request);
 }
 
 function checkUrl()
@@ -1031,8 +1031,11 @@ function checkUrl()
 			tabValues = [];
 			if (tabParams[0] == '')
 				tabParams.shift();
-			for (var i in tabParams)
+
+			var len = tabParams.length;
+			for (var i=0; i<len; i++)
 				tabValues.push(tabParams[i].split(attribute_anchor_separator));
+
 			// fill html with values
 			$('.color_pick').removeClass('selected').parent().parent().children().removeClass('selected');
 
@@ -1066,7 +1069,7 @@ function checkUrl()
 			}
 			// no combination found = removing attributes from url
 			else
-				window.location = url.substring(0, url.indexOf('#'));
+				window.location.replace(url.substring(0, url.indexOf('#')));
 		}
 	}
 	return false;

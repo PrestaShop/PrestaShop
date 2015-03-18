@@ -372,6 +372,11 @@ class MailCore extends ObjectModel
 		}
 	}
 
+	public static function eraseLog($id_mail)
+	{
+		return Db::getInstance()->delete('mail', 'id_mail = '.(int)$id_mail);
+	}
+
 	public static function eraseAllLogs()
 	{
 		return Db::getInstance()->execute('TRUNCATE TABLE '._DB_PREFIX_.'mail');

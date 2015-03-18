@@ -36,7 +36,7 @@
 	<h3>{l s='What Should I Do?'}</h3>
 	<p>
 		{l s='If you are unsure about this, you should contact the Customer Service of %s to ask them to make the module compatible with your country.' sprintf=$module_name}<br />
-		{l s='Moreover, we recommend that you use an equivalent module: compatible modules for your country are listed in the "Modules" tab of your Back-Office.'}
+		{l s='Moreover, we recommend that you use an equivalent module: compatible modules for your country are listed in the "Modules" tab of your back office.'}
 	</p>
 	<p>
 		{l s='If you are unsure about this module, you can look for similar modules on the official marketplace.'}

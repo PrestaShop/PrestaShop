@@ -246,7 +246,7 @@ abstract class PaymentModuleCore extends Module
 						else
 						{
 							$rule_name = isset($rule->name[(int)$this->context->cart->id_lang]) ? $rule->name[(int)$this->context->cart->id_lang] : $rule->code;
-							$error = Tools::displayError(sprintf('CartRule ID %1s (%2s) used in this cart is not valid and has been withdrawn from cart', (int)$rule->id, $rule_name));
+							$error = sprintf(Tools::displayError('CartRule ID %1s (%2s) used in this cart is not valid and has been withdrawn from cart'), (int)$rule->id, $rule_name);
 							PrestaShopLogger::addLog($error, 3, '0000002', 'Cart', (int)$this->context->cart->id);
 						}
 					}
@@ -392,7 +392,7 @@ abstract class PaymentModuleCore extends Module
 			{
 				// $order is the last order loop in the foreach
 				// The method addOrderPayment of the class Order make a create a paymentOrder
-				//     linked to the order reference and not to the order id
+				// linked to the order reference and not to the order id
 				if (isset($extra_vars['transaction_id']))
 					$transaction_id = $extra_vars['transaction_id'];
 				else
@@ -517,12 +517,12 @@ abstract class PaymentModuleCore extends Module
 							continue;
 
 						// IF
-						//     This is not multi-shipping
-						//     The value of the voucher is greater than the total of the order
-						//     Partial use is allowed
-						//     This is an "amount" reduction, not a reduction in % or a gift
+						//	This is not multi-shipping
+						//	The value of the voucher is greater than the total of the order
+						//	Partial use is allowed
+						//	This is an "amount" reduction, not a reduction in % or a gift
 						// THEN
-						//     The voucher is cloned with a new value corresponding to the remainder
+						//	The voucher is cloned with a new value corresponding to the remainder
 						if (count($order_list) == 1 && $values['tax_incl'] > ($order->total_products_wt - $total_reduction_value_ti) && $cart_rule['obj']->partial_use == 1 && $cart_rule['obj']->reduction_amount > 0)
 						{
 							// Create a new voucher from the original

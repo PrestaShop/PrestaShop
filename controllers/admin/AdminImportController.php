@@ -72,7 +72,7 @@ class AdminImportControllerCore extends AdminController
 		'available_now' => array('AdminImportController', 'createMultiLangField'),
 		'available_later' => array('AdminImportController', 'createMultiLangField'),
 		'category' => array('AdminImportController', 'split'),
-		'online_only' => array('AdminImportController', 'getBoolean')
+		'online_only' => array('AdminImportController', 'getBoolean'),
 	);
 
 	public $separator;
@@ -383,6 +383,7 @@ class AdminImportControllerCore extends AdminController
 					'phone' => array('label' => $this->l('Phone')),
 					'phone_mobile' => array('label' => $this->l('Mobile Phone')),
 					'vat_number' => array('label' => $this->l('VAT number')),
+					'dni' => array('label' => $this->l('DNI/NIF/NIE')),
 				);
 
 				self::$default_values = array(

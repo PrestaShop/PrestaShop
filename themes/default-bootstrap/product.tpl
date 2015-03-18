@@ -464,13 +464,12 @@
 			</section>
 			<!--end Data sheet -->
 		{/if}
-		{if $product->description}
+		{if isset($product) && $product->description}
 			<!-- More info -->
 			<section class="page-product-box">
-				<h3 class="page-product-heading">{l s='More info'}</h3>{/if}
-				{if isset($product) && $product->description}
-					<!-- full description -->
-					<div  class="rte">{$product->description}</div>
+				<h3 class="page-product-heading">{l s='More info'}</h3>
+				<!-- full description -->
+				<div  class="rte">{$product->description}</div>
 			</section>
 			<!--end  More info -->
 		{/if}

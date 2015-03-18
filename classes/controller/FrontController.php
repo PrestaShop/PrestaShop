@@ -261,13 +261,28 @@ class FrontControllerCore extends Controller
 			if (($new_default = $this->geolocationManagement($this->context->country)) && Validate::isLoadedObject($new_default))
 				$this->context->country = $new_default;
 		}
-		elseif (!isset($this->context->cookie->id_currency) && Configuration::get('PS_DETECT_COUNTRY'))
+		elseif (Configuration::get('PS_DETECT_COUNTRY'))
 		{
-			$country = new Country((int)Tools::getCountry());
-			if (validate::isLoadedObject($country))
+			$has_currency = isset($this->context->cookie->id_currency) && (int)$this->context->cookie->id_currency;
+			$has_country = isset($this->context->cookie->iso_code_country) && $this->context->cookie->iso_code_country;
+			$has_address_type = false;
+
+			if ((int)$this->context->cookie->id_cart && ($cart = new Cart($this->context->cookie->id_cart)) && Validate::isLoadedObject($cart))
+					$has_address_type = isset($cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')}) && $cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+
+			if ((!$has_currency || $has_country) && !$has_address_type)
 			{
-				$this->context->country = $country;
-				$this->context->cookie->id_currency = (int)$this->context->country->id_currency;
+				$id_country = $has_country && !Validate::isLanguageIsoCode($this->context->cookie->iso_code_country) ?
+					(int)Country::getByIso(strtoupper($this->context->cookie->iso_code_country)) : (int)Tools::getCountry();
+
+				$country = new Country($id_country, (int)$this->context->cookie->id_lang);
+
+				if (validate::isLoadedObject($country) && $this->context->country->id !== $country->id)
+				{
+					$this->context->country = $country;
+					$this->context->cookie->id_currency = (int)Currency::getCurrencyInstance($country->id_currency ? (int)$country->id_currency : (int)Configuration::get('PS_CURRENCY_DEFAULT'))->id;
+					$this->context->cookie->iso_code_country = strtoupper($country->iso_code);
+				}
 			}
 		}
 
@@ -288,8 +303,10 @@ class FrontControllerCore extends Controller
 		/* Cart already exists */
 		if ((int)$this->context->cookie->id_cart)
 		{
-			$cart = new Cart($this->context->cookie->id_cart);
-			if ($cart->OrderExists())
+			if (!isset($cart))
+				$cart = new Cart($this->context->cookie->id_cart);
+
+			if (Validate::isLoadedObject($cart) && $cart->OrderExists())
 			{
 				unset($this->context->cookie->id_cart, $cart, $this->context->cookie->checkedTOS);
 				$this->context->cookie->check_cgv = false;

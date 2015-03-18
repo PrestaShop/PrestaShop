@@ -211,7 +211,7 @@ class AdminCategoriesControllerCore extends AdminController
 		$this->addRowAction('delete');
 
 
-		$count_categories_without_parent = count(Category::getCategoriesWithoutParent());	
+		$count_categories_without_parent = count(Category::getCategoriesWithoutParent());
 		$categories_tree = $this->_category->getParentsCategories();
 
 		if (empty($categories_tree)
@@ -269,10 +269,12 @@ class AdminCategoriesControllerCore extends AdminController
 				'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
 				'desc' => $this->l('Add New')
 			);
-			$this->toolbar_btn['import'] = array(
-				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=categories',
-				'desc' => $this->l('Import')
-			);
+
+			if ($this->can_import)
+				$this->toolbar_btn['import'] = array(
+					'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=categories',
+					'desc' => $this->l('Import')
+				);
 		}
 		// be able to edit the Home category
 		if (count(Category::getCategoriesWithoutParent()) == 1 && !Tools::isSubmit('id_category')
@@ -791,10 +793,11 @@ class AdminCategoriesControllerCore extends AdminController
 
 	public function ajaxProcessUpdatePositions()
 	{
-		$id_category_to_move = (int)(Tools::getValue('id_category_to_move'));
-		$id_category_parent = (int)(Tools::getValue('id_category_parent'));
-		$way = (int)(Tools::getValue('way'));
+		$id_category_to_move = (int)Tools::getValue('id_category_to_move');
+		$id_category_parent = (int)Tools::getValue('id_category_parent');
+		$way = (int)Tools::getValue('way');
 		$positions = Tools::getValue('category');
+		$found_first = (bool)Tools::getValue('found_first');
 		if (is_array($positions))
 			foreach ($positions as $key => $value)
 			{
@@ -812,6 +815,11 @@ class AdminCategoriesControllerCore extends AdminController
 			if (isset($position) && $category->updatePosition($way, $position))
 			{
 				Hook::exec('actionCategoryUpdate');
+
+				/* Position '0' was not found in given positions so try to reorder parent category*/
+				if (!$found_first)
+					$category->cleanPositions((int)$category->id_parent);
+
 				die(true);
 			}
 			else

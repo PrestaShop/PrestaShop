@@ -83,7 +83,8 @@ class AdminAddressesControllerCore extends AdminController
 	public function initToolbar()
 	{
 		parent::initToolbar();
-		if (!$this->display)
+
+		if (!$this->display && $this->can_import)
 			$this->toolbar_btn['import'] = array(
 				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=addresses',
 				'desc' => $this->l('Import')

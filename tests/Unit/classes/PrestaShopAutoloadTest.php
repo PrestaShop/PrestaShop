@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Tests\Unit\Classes;
 use PrestaShop\PrestaShop\Tests\TestCase\PrestaShopPHPUnit;
 use PrestaShopAutoload;
 
-class	PrestaShopAutoloadTest extends PrestaShopPHPUnit
+class PrestaShopAutoloadTest extends PrestaShopPHPUnit
 {
 	private $file_index_content = null;
 

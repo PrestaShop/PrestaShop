@@ -1530,7 +1530,7 @@
 								<option value="{$module->name}" {if isset($smarty.post.payment_module_name) && $module->name == $smarty.post.payment_module_name}selected="selected"{/if}>{$module->displayName}</option>
 							{/foreach}
 							{else}
-								<option value="boorder">{l s='Back-office order'}</option>
+								<option value="boorder">{l s='Back office order'}</option>
 							{/if}
 						</select>
 					</div>
