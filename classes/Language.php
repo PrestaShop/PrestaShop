@@ -489,7 +489,7 @@ class LanguageCore extends ObjectModel
 				$this->iso_code = Language::getIsoById($this->id);
 
 			// Database translations deletion
-			$regexp = '/^'.preg_quote(_DB_PREFIX_).'.*_lang$/';
+			$regexp = '/^'.preg_quote(_DB_PREFIX_).'.+_lang$/';
 			$result = Db::getInstance()->executeS('SHOW TABLES FROM `'._DB_NAME_.'`');
 			foreach ($result as $row)
 				if (isset($row['Tables_in_'._DB_NAME_]) && !empty($row['Tables_in_'._DB_NAME_]) && preg_match($regexp, $row['Tables_in_'._DB_NAME_]))
@@ -502,7 +502,7 @@ class LanguageCore extends ObjectModel
 					}
 					catch (Exception $e)
 					{
-						echo 'ERROR with '.$row['Tables_in_'._DB_NAME_].'<br>';
+						// Ignore
 					}
 				}
 
