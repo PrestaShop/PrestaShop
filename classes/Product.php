@@ -2725,7 +2725,7 @@ class ProductCore extends ObjectModel
 	 * @param int    $id_product_attribute Product attribute id
 	 * @param int    $id_country Country id
 	 * @param int    $id_state State id
-	 * @paran string $zipcode
+	 * @param string $zipcode
 	 * @param int    $id_currency Currency id
 	 * @param int    $id_group Group id
 	 * @param int    $quantity Quantity Required for Specific prices : quantity discount application
