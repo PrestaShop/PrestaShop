@@ -84,6 +84,16 @@ Tree.prototype =
 					}
 				}
 			});
+
+			this.$element.find(":input[type=radio]").unbind('click');
+			this.$element.find(":input[type=radio]").click(
+				function()
+				{
+					location.href = location.href.replace(
+						/&id_category=[0-9]*/, "")+"&id_category="
+						+$(this).val();
+				}
+			);
 		}
 
 		return $(this);
