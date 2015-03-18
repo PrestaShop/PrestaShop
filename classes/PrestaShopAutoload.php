@@ -32,7 +32,7 @@ class PrestaShopAutoload
 	/**
 	 * File where classes index is stored
 	 */
-	const INDEX_FILE = 'cache/class_index.php';
+	const INDEX_FILE = 'class_index.php';
 
 	/**
 	 * @var Autoload
@@ -61,7 +61,7 @@ class PrestaShopAutoload
 	protected function __construct()
 	{
 		$this->root_dir = _PS_CORE_DIR_.'/';
-		$file = $this->normalizeDirectory(_PS_ROOT_DIR_).PrestaShopAutoload::INDEX_FILE;
+		$file = $this->normalizeDirectory(_PS_CACHE_DIR_).PrestaShopAutoload::INDEX_FILE;
 		if (@filemtime($file) && is_readable($file))
 			$this->index = include($file);
 		else
@@ -147,7 +147,7 @@ class PrestaShopAutoload
 		$content = '<?php return '.var_export($classes, true).'; ?>';
 
 		// Write classes index on disc to cache it
-		$filename = $this->normalizeDirectory(_PS_ROOT_DIR_).PrestaShopAutoload::INDEX_FILE;
+		$filename = $this->normalizeDirectory(_PS_CACHE_DIR_).PrestaShopAutoload::INDEX_FILE;
 		$filename_tmp = tempnam(dirname($filename), basename($filename.'.'));
 		if ($filename_tmp !== false && file_put_contents($filename_tmp, $content) !== false)
 		{
