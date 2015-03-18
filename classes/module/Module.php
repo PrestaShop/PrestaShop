@@ -2576,11 +2576,12 @@ abstract class ModuleCore
 
 			// Make a reflection of the override class and the module override class
 			$override_file = file($override_path);
-
+			$override_file = array_diff($override_file,  array("\n"));
 			eval(preg_replace(array('#^\s*<\?(?:php)?#', '#class\s+'.$classname.'\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?#i'), array(' ', 'class '.$classname.'OverrideOriginal'.$uniq), implode('', $override_file)));
 			$override_class = new ReflectionClass($classname.'OverrideOriginal'.$uniq);
 
 			$module_file = file($path_override);
+			$module_file = array_diff($module_file,  array("\n"));
 			eval(preg_replace(array('#^\s*<\?(?:php)?#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array(' ', 'class '.$classname.'Override'.$uniq), implode('', $module_file)));
 			$module_class = new ReflectionClass($classname.'Override'.$uniq);
 
@@ -2631,6 +2632,7 @@ abstract class ModuleCore
 			if (!is_writable($dir_name))
 				throw new Exception(sprintf(Tools::displayError('directory (%s) not writable'), $dir_name));
 			$module_file = file($override_src);
+			$module_file = array_diff($module_file,  array("\n"));
 
 			if ($orig_path)
 			{
