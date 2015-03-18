@@ -93,6 +93,15 @@ class HelperTreeCategoriesCore extends TreeCore
 				$categories[(int)$this->getRootCategory()] = Category::getChildren($this->getRootCategory(), $this->getLang(), false, $this->getShop()->id);
 				foreach($selected_categories as $selected_category)
 				{
+					$category = new Category($selected_category, $this->getLang(), $this->getShop()->id);
+					$new_selected_categories[] = $selected_category;
+					$parents = $category->getParentsCategories($this->getLang());
+					foreach($parents as $value)
+						$new_selected_categories[] = $value['id_category'];
+				}
+				$new_selected_categories = array_unique($new_selected_categories);
+				foreach($new_selected_categories as $selected_category)
+				{
 					$current_category = Category::getChildren($selected_category, $this->getLang(), false, $this->getShop()->id);
 					if (!empty($current_category))
 						$categories[$selected_category] = $current_category;

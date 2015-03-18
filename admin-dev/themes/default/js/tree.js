@@ -39,7 +39,7 @@ Tree.prototype =
 						var thatOne = $(this);
 						$.get(
 							'ajax-tab.php',
-							{controller:'AdminProducts',token:currentToken,action:'getCategoryTree',category:category},
+							{controller:'AdminProducts',token:currentToken,action:'getCategoryTree',type:idTree,category:category},
 							function(content)
 							{
 								thatOne.parent().closest('.tree-folder').find('ul.tree').html(content);
