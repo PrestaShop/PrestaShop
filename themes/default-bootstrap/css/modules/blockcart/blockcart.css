@@ -330,7 +330,9 @@
     @media (max-width: 991px) {
       #layer_cart .layer_cart_cart {
         border-left: none;
-        border-top: 1px solid #d6d4d4; } }
+        border-top: 1px solid #d6d4d4; 
+      	-moz-border-radius: 0px 0 4px 4px;
+    	border-radius: 0px 0 4px 4px; } }
     #layer_cart .layer_cart_cart h2 {
       font: 400 23px/29px Arial, Helvetica, sans-serif;
       color: #333;
