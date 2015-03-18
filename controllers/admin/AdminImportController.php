@@ -1087,6 +1087,7 @@ class AdminImportControllerCore extends AdminController
 		$convert = Tools::getValue('convert');
 		$force_ids = Tools::getValue('forceIDs');
 		$regenerate = Tools::getValue('regenerate');
+		$shop_is_feature_active = Shop::isFeatureActive();
 
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
@@ -1156,7 +1157,7 @@ class AdminImportControllerCore extends AdminController
 			else
 				$valid_link = false;
 
-			if (!Shop::isFeatureActive())
+			if (!$shop_is_feature_active)
 				$category->id_shop_default = 1;
 			else
 				$category->id_shop_default = (int)Context::getContext()->shop->id;
@@ -1238,14 +1239,14 @@ class AdminImportControllerCore extends AdminController
 			else
 			{
 				// Associate category to shop
-				if (Shop::isFeatureActive())
+				if ($shop_is_feature_active)
 				{
 					Db::getInstance()->execute('
 						DELETE FROM '._DB_PREFIX_.'category_shop
 						WHERE id_category = '.(int)$category->id
 					);
 
-					if (!Shop::isFeatureActive())
+					if (!$shop_is_feature_active)
 						$info['shop'] = 1;
 					elseif (!isset($info['shop']) || empty($info['shop']))
 						$info['shop'] = implode($this->multiple_value_separator, Shop::getContextListShopID());
@@ -1285,6 +1286,7 @@ class AdminImportControllerCore extends AdminController
 		$convert = Tools::getValue('convert');
 		$force_ids = Tools::getValue('forceIDs');
 		$match_ref = Tools::getValue('match_ref');
+		$shop_is_feature_active = Shop::isFeatureActive();
 
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
@@ -1326,12 +1328,12 @@ class AdminImportControllerCore extends AdminController
 			AdminImportController::setEntityDefaultValues($product);
 			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $product);
 
-			if (!Shop::isFeatureActive())
+			if (!$shop_is_feature_active)
 				$product->shop = (int)Configuration::get('PS_SHOP_DEFAULT');
 			elseif (!isset($product->shop) || empty($product->shop))
 				$product->shop = implode($this->multiple_value_separator, Shop::getContextListShopID());
 
-			if (!Shop::isFeatureActive())
+			if (!$shop_is_feature_active)
 				$product->id_shop_default = (int)Configuration::get('PS_SHOP_DEFAULT');
 			else
 				$product->id_shop_default = (int)Context::getContext()->shop->id;
@@ -1620,7 +1622,7 @@ class AdminImportControllerCore extends AdminController
 				}
 
 				// SpecificPrice (only the basic reduction feature is supported by the import)
-				if (!Shop::isFeatureActive())
+				if (!$shop_is_feature_active)
 					$info['shop'] = 1;
 				elseif (!isset($info['shop']) || empty($info['shop']))
 					$info['shop'] = implode($this->multiple_value_separator, Shop::getContextListShopID());
@@ -1860,7 +1862,7 @@ class AdminImportControllerCore extends AdminController
 						}
 						else
 						{
-							if (Shop::isFeatureActive())
+							if ($shop_is_feature_active)
 								foreach ($shops as $shop)
 									StockAvailable::setQuantity((int)$product->id, 0, (int)$product->quantity, (int)$shop);
 							else
@@ -1870,7 +1872,7 @@ class AdminImportControllerCore extends AdminController
 				}
 				else // if not depends_on_stock set, use normal qty
 				{
-					if (Shop::isFeatureActive())
+					if ($shop_is_feature_active)
 						foreach ($shops as $shop)
 							StockAvailable::setQuantity((int)$product->id, 0, (int)$product->quantity, (int)$shop);
 					else
@@ -1923,6 +1925,9 @@ class AdminImportControllerCore extends AdminController
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
 		AdminImportController::setLocale();
+
+		$shop_is_feature_active = Shop::isFeatureActive();
+
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
 			if (count($line) == 1 && empty($line[0]))
@@ -1935,7 +1940,7 @@ class AdminImportControllerCore extends AdminController
 
 			AdminImportController::setDefaultValues($info);
 
-			if (!Shop::isFeatureActive())
+			if (!$shop_is_feature_active)
 				$info['shop'] = 1;
 			elseif (!isset($info['shop']) || empty($info['shop']))
 				$info['shop'] = implode($this->multiple_value_separator, Shop::getContextListShopID());
@@ -2316,7 +2321,7 @@ class AdminImportControllerCore extends AdminController
 						}
 						else
 						{
-							if (Shop::isFeatureActive())
+							if ($shop_is_feature_active)
 								foreach ($id_shop_list as $shop)
 									StockAvailable::setQuantity((int)$product->id, $id_product_attribute, (int)$info['quantity'], (int)$shop);
 							else
@@ -2328,7 +2333,7 @@ class AdminImportControllerCore extends AdminController
 				// if not depends_on_stock set, use normal qty
 				else
 				{
-					if (Shop::isFeatureActive())
+					if ($shop_is_feature_active)
 						foreach ($id_shop_list as $shop)
 							StockAvailable::setQuantity((int)$product->id, $id_product_attribute, (int)$info['quantity'], (int)$shop);
 					else
@@ -2350,6 +2355,9 @@ class AdminImportControllerCore extends AdminController
 		if (!Validate::isUnsignedId($id_lang))
 			$id_lang = $default_language_id;
 		AdminImportController::setLocale();
+
+		$shop_is_feature_active = Shop::isFeatureActive();
+
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
 			if (Tools::getValue('convert'))
@@ -2424,7 +2432,7 @@ class AdminImportControllerCore extends AdminController
 			$customers_shop = array();
 			$customers_shop['shared'] = array();
 			$default_shop = new Shop((int)Configuration::get('PS_SHOP_DEFAULT'));
-			if (Shop::isFeatureActive() && $id_shop_list)
+			if ($shop_is_feature_active && $id_shop_list)
 			{
 				foreach ($id_shop_list as $id_shop)
 				{
@@ -2757,6 +2765,9 @@ class AdminImportControllerCore extends AdminController
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
 		AdminImportController::setLocale();
+
+		$shop_is_feature_active = Shop::isFeatureActive();
+
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
 			if (Tools::getValue('convert'))
@@ -2795,7 +2806,7 @@ class AdminImportControllerCore extends AdminController
 				if ($res)
 				{
 					// Associate supplier to group shop
-					if (Shop::isFeatureActive() && $manufacturer->shop)
+					if ($shop_is_feature_active && $manufacturer->shop)
 					{
 						Db::getInstance()->execute('
 							DELETE FROM '._DB_PREFIX_.'manufacturer_shop
@@ -2836,6 +2847,9 @@ class AdminImportControllerCore extends AdminController
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
 		AdminImportController::setLocale();
+
+		$shop_is_feature_active = Shop::isFeatureActive();
+
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
 			if (Tools::getValue('convert'))
@@ -2879,7 +2893,7 @@ class AdminImportControllerCore extends AdminController
 				else
 				{
 					// Associate supplier to group shop
-					if (Shop::isFeatureActive() && $supplier->shop)
+					if ($shop_is_feature_active && $supplier->shop)
 					{
 						Db::getInstance()->execute('
 							DELETE FROM '._DB_PREFIX_.'supplier_shop
