@@ -1372,7 +1372,7 @@ class ProductCore extends ObjectModel
 	public function deleteDefaultAttributes()
 	{
 		return ObjectModel::updateMultishopTable('Combination', array(
-			'default_on' => 0,
+			'default_on' => null,
 		), 'a.`id_product` = '.(int)$this->id);
 	}
 
@@ -3192,7 +3192,7 @@ class ProductCore extends ObjectModel
 				WHERE product_attribute_shop.`default_on` = 1
 				AND pa.`id_product` = '.(int)$this->id) > Shop::getTotalShops(true))
 				Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'product_attribute_shop product_attribute_shop, '._DB_PREFIX_.'product_attribute pa
-					SET product_attribute_shop.default_on=0, pa.default_on = 0
+					SET product_attribute_shop.default_on=NULL, pa.default_on = NULL
 					WHERE product_attribute_shop.id_product_attribute=pa.id_product_attribute AND pa.id_product='.(int)$this->id
 					.Shop::addSqlRestriction(false, 'product_attribute_shop'));
 
