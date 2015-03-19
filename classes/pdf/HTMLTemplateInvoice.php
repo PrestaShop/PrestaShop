@@ -256,7 +256,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			'cart_rules' => $cart_rules,
 			'delivery_address' => $formatted_delivery_address,
 			'invoice_address' => $formatted_invoice_address,
-			'addresses' => array('invoice' => $invoice_address, 'delivery' =>$delivery_address),
+			'addresses' => array('invoice' => $invoice_address, 'delivery' => $delivery_address),
 			'tax_excluded_display' => $tax_excluded_display,
 			'display_product_images' => $display_product_images,
 			'layout' => $this->computeLayout($tax_excluded_display, $display_product_images),
@@ -265,6 +265,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			'footer' => $footer,
 			'ps_price_compute_precision' => _PS_PRICE_COMPUTE_PRECISION_,
 			'round_type' => $round_type,
+			'legal_free_text' => Configuration::get('PS_INVOICE_LEGAL_FREE_TEXT', (int)$this->order->id_lang, null, (int)$this->order->id_shop),
 		);
 
 		if (Tools::getValue('debug'))

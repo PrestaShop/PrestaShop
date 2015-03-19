@@ -100,6 +100,12 @@
 
             {$tax_tab}
 
+            <br/>
+
+            <div id="legal_free_text" class="">
+                {$legal_free_text}
+            </div>
+
         </td>
         <td colspan="1">&nbsp;</td>
         <!-- Calcule TVA -->
