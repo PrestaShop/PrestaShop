@@ -31,8 +31,8 @@
 	{assign var=imploded_selected_categories value='","'|implode:$selected_categories}
 	var selected_categories = new Array("{$imploded_selected_categories}");
 
-	$('#associated-categories-tree').tree('collapseAll');
-	$("#associated-categories-tree").find(":input").each(
+	$('#'+idTree).tree('collapseAll');
+	$('#'+idTree).find(":input").each(
 		function()
 		{
 			if ($.inArray($(this).val(), selected_categories) != -1)

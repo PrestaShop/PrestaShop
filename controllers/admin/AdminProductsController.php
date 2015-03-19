@@ -455,9 +455,15 @@ class AdminProductsControllerCore extends AdminController
 		$selected = Tools::getValue('selected', array());
 		$type = Tools::getValue('type', '');
 		if ($type == 'categories-tree')
+		{
 			$use_check_box = false;
+			$input_name = 'id-category';
+		}
 		else
+		{
 			$use_check_box = true;
+			$input_name = null;
+		}
 		$tree = new HelperTreeCategories('subtree_associated_categories');
 		$tree->setTemplate('subtree_associated_categories.tpl')
 			->setUseCheckBox($use_check_box)
@@ -467,6 +473,10 @@ class AdminProductsControllerCore extends AdminController
 			->setChildrenOnly(true)
 			->setNoJS(true)
 			->setRootCategory($category);
+
+		if ($input_name)
+			$tree->setInputName($input_name);
+
 		die($tree->render());
 	}
 
