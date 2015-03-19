@@ -500,7 +500,7 @@ function validateRange(index)
 	}
 	else if (is_valid && (isNaN(range_inf) || range_inf.length === 0))
 	{
-		$('tr.range_inf td:eq('+index+')').closest('div.input-group input:text').closest('div.input-group').addClass('has-error');
+		$('tr.range_inf td:eq('+index+')').find('div.input-group input:text').closest('div.input-group').addClass('has-error');
 		is_valid = false;
 		displayError([invalid_range], $("#carrier_wizard").smartWizard('currentStep'));
 	}
