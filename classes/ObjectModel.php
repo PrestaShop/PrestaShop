@@ -1421,11 +1421,24 @@ abstract class ObjectModelCore
 
 			if (!empty($def['fields'][$field]['shop']))
 			{
-				$update_data[] = "a.$field = '$value'";
-				$update_data[] = "{$def['table']}_shop.$field = '$value'";
+				if ($value === null && !empty($def['fields'][$field]['allow_null']))
+				{
+					$update_data[] = "a.$field = NULL";
+					$update_data[] = "{$def['table']}_shop.$field = NULL";
+				}
+				else
+				{
+					$update_data[] = "a.$field = '$value'";
+					$update_data[] = "{$def['table']}_shop.$field = '$value'";
+				}
 			}
 			else
-				$update_data[] = "a.$field = '$value'";
+			{
+				if ($value === null && !empty($def['fields'][$field]['allow_null']))
+					$update_data[] = "a.$field = NULL";
+				else
+					$update_data[] = "a.$field = '$value'";
+			}
 		}
 
 		$sql = 'UPDATE '._DB_PREFIX_.$def['table'].' a
