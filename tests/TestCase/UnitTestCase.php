@@ -14,47 +14,47 @@ use PrestaShop\PrestaShop\Tests\Helper\Mocks\CacheMock;
 
 class UnitTestCase extends PHPUnit_Framework_TestCase
 {
-    /**
-     * @var Context
-     */
-    public $context;
+	/**
+	 * @var Context
+	 */
+	public $context;
 
-    /**
-     * @var Db
-     */
-    public $database;
+	/**
+	 * @var Db
+	 */
+	public $database;
 
-    /**
-     * @var Cache
-     */
-    public $cacheManager;
+	/**
+	 * @var Cache
+	 */
+	public $cache;
 
-    public function setUpCommonStaticMocks()
-    {
-        $dbMock = new DbMock();
-        $cacheMock = new CacheMock();
-        $this->database = $this->getMockBuilder('PrestaShop\PrestaShop\Tests\Helper\Mocks\DbMock')->getMock();
-        Db::setInstanceForTesting($this->database);
+	public function setUpCommonStaticMocks()
+	{
+		$db_mock = new DbMock();
+		$cache_mock = new CacheMock();
+		$this->database = $this->getMockBuilder('PrestaShop\PrestaShop\Tests\Helper\Mocks\DbMock')->getMock();
+		Db::setInstanceForTesting($this->database);
 
-        $this->context = $this->getMockBuilder('Context')->getMock();
-        $this->context->shop = $this->getMockBuilder('Shop')->getMock();
-        Context::setInstanceForTesting($this->context);
+		$this->context = $this->getMockBuilder('Context')->getMock();
+		$this->context->shop = $this->getMockBuilder('Shop')->getMock();
+		Context::setInstanceForTesting($this->context);
 
-        $this->cacheManager = $this->getMockBuilder('PrestaShop\PrestaShop\Tests\Helper\Mocks\CacheMock')->getMock();
-        Cache::setInstanceForTesting($this->cacheManager);
-    }
+		$this->cache = $this->getMockBuilder('PrestaShop\PrestaShop\Tests\Helper\Mocks\CacheMock')->getMock();
+		Cache::setInstanceForTesting($this->cache);
+	}
 
-    public function tearDownCommonStaticMocks()
-    {
-        Cache::deleteTestingInstance();
-        Db::deleteTestingInstance();
-        Context::deleteTestingInstance();
-        /**
-         * @todo proxy static calls inside Configuration to a mockable instance
-         * so that Configuration can be (indirectly) mocked.
-         * This way we'll avoid doing obscure teardown stuff like below.
-         */
-        Configuration::clearConfigurationCacheForTesting();
-    }
+	public function tearDownCommonStaticMocks()
+	{
+		Cache::deleteTestingInstance();
+		Db::deleteTestingInstance();
+		Context::deleteTestingInstance();
+		/**
+		 * @todo proxy static calls inside Configuration to a mockable instance
+		 * so that Configuration can be (indirectly) mocked.
+		 * This way we'll avoid doing obscure teardown stuff like below.
+		 */
+		Configuration::clearConfigurationCacheForTesting();
+	}
 
 }

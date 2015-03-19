@@ -120,7 +120,7 @@ abstract class CacheCore
 	 */
 	abstract public function flush();
 
-    /**
+	/**
 	 * @return Cache
 	 */
 	public static function getInstance()
@@ -134,22 +134,22 @@ abstract class CacheCore
 		return self::$instance;
 	}
 
-    /**
-     * Unit testing purpose only
-     * @param $test_instance Cache
-     */
-    public static function setInstanceForTesting($test_instance)
-    {
-        self::$instance = $test_instance;
-    }
+	/**
+	 * Unit testing purpose only
+	 * @param $test_instance Cache
+	 */
+	public static function setInstanceForTesting($test_instance)
+	{
+		self::$instance = $test_instance;
+	}
 
-    /**
-     * Unit testing purpose only
-     */
-    public static function deleteTestingInstance()
-    {
-        self::$instance = null;
-    }
+	/**
+	 * Unit testing purpose only
+	 */
+	public static function deleteTestingInstance()
+	{
+		self::$instance = null;
+	}
 
 	/**
 	 * Store a data in cache

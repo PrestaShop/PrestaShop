@@ -68,7 +68,7 @@ abstract class DbCore
 	/** @var array List of server settings */
 	public static $_servers = array();
 
-    public static $_slave_servers_loaded = null;
+	public static $_slave_servers_loaded = null;
 
 	/**
 	 * Store last executed query
@@ -236,22 +236,22 @@ abstract class DbCore
 		return self::$instance[$id_server];
 	}
 
-    /**
-     * @param $test_db Db
-     * Unit testing purpose only
-     */
-    public static function setInstanceForTesting($test_db)
-    {
-        self::$instance[0] = $test_db;
-    }
+	/**
+	 * @param $test_db Db
+	 * Unit testing purpose only
+	 */
+	public static function setInstanceForTesting($test_db)
+	{
+		self::$instance[0] = $test_db;
+	}
 
-    /**
-     * Unit testing purpose only
-     */
-    public static function deleteTestingInstance()
-    {
-        self::$instance = array();
-    }
+	/**
+	 * Unit testing purpose only
+	 */
+	public static function deleteTestingInstance()
+	{
+		self::$instance = array();
+	}
 
 	/**
 	 * Loads configuration settings for slave servers

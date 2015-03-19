@@ -74,7 +74,7 @@ class ReflexionHelper extends PHPUnit_Framework_TestCase
 		$reflexion_property->setValue($object, $value);
 	}
 
-    public static function getClass($object)
+	public static function getClass($object)
 	{
 		$namespace = explode('\\', get_class($object));
 		return preg_replace('/(.*)(?:Core)?Test$/', '$1', end($namespace));

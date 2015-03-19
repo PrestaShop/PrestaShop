@@ -11,28 +11,28 @@ use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
  */
 class ExampleTest extends UnitTestCase
 {
-    /**
-     * @var Cart
-     */
-    private $cart;
+	/**
+	 * @var Cart
+	 */
+	private $cart;
 
-    public function setUp()
-    {
-        $this->setUpCommonStaticMocks();
+	public function setUp()
+	{
+		$this->setUpCommonStaticMocks();
 
-        $this->cart = new Cart(null, null, $this->context);
-    }
+		$this->cart = new Cart(null, null, $this->context);
+	}
 
-    public function tearDown()
-    {
-        $this->tearDownCommonStaticMocks();
-    }
+	public function tearDown()
+	{
+		$this->tearDownCommonStaticMocks();
+	}
 
-    public function test_getOrderTotal_ShouldReturnZero_WhenIdIsNotDefined()
-    {
-        //When
-        $result = $this->cart->getOrderTotal();
-        //Then
-        $this->assertEquals(0, $result);
-    }
+	public function test_getOrderTotal_ShouldReturnZero_WhenIdIsNotDefined()
+	{
+		//When
+		$result = $this->cart->getOrderTotal();
+		//Then
+		$this->assertEquals(0, $result);
+	}
 }
