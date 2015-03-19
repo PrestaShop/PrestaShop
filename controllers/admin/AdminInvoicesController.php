@@ -62,6 +62,12 @@ class AdminInvoicesControllerCore extends AdminController
 						'type' => 'text',
 						'cast' => 'intval'
 					),
+					'PS_INVOICE_LEGAL_FREE_TEXT' => array(
+						'title' => $this->l('Free text'),
+						'desc' => $this->l('This text will appear underneath the tax summary table.'),
+						'size' => 50,
+						'type' => 'textareaLang',
+					),
 					'PS_INVOICE_FREE_TEXT' => array(
 						'title' => $this->l('Footer text'),
 						'desc' => $this->l('This text will appear at the bottom of the invoice.'),
