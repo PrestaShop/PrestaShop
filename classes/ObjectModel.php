@@ -631,6 +631,14 @@ abstract class ObjectModelCore
 				$this->update_fields['date_upd'] = true;
 		}
 
+		// Automatically fill dates
+		if (array_key_exists('date_add', $this) && $this->date_add == null)
+		{
+			$this->date_add = date('Y-m-d H:i:s');
+			if (isset($this->update_fields) && is_array($this->update_fields) && count($this->update_fields))
+				$this->update_fields['date_add'] = true;
+		}
+
 		$id_shop_list = Shop::getContextListShopID();
 		if (count($this->id_shop_list) > 0)
 			$id_shop_list = $this->id_shop_list;
