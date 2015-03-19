@@ -5751,13 +5751,12 @@ span.exclusive {
   padding: 0;
   font-weight: bold;
   background: #43b754;
-  background: -moz-linear-gradient(top, #43b754 0%, #41b757 2%, #41b854 4%, #43b756 6%, #41b354 38%, #44b355 40%, #45af55 66%, #41ae53 74%, #42ac52 91%, #41ae55 94%, #43ab54 96%, #42ac52 100%);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #43b754), color-stop(2%, #41b757), color-stop(4%, #41b854), color-stop(6%, #43b756), color-stop(38%, #41b354), color-stop(40%, #44b355), color-stop(66%, #45af55), color-stop(74%, #41ae53), color-stop(91%, #42ac52), color-stop(94%, #41ae55), color-stop(96%, #43ab54), color-stop(100%, #42ac52));
-  background: -webkit-linear-gradient(top, #43b754 0%, #41b757 2%, #41b854 4%, #43b756 6%, #41b354 38%, #44b355 40%, #45af55 66%, #41ae53 74%, #42ac52 91%, #41ae55 94%, #43ab54 96%, #42ac52 100%);
-  background: -o-linear-gradient(top, #43b754 0%, #41b757 2%, #41b854 4%, #43b756 6%, #41b354 38%, #44b355 40%, #45af55 66%, #41ae53 74%, #42ac52 91%, #41ae55 94%, #43ab54 96%, #42ac52 100%);
-  background: -ms-linear-gradient(top, #43b754 0%, #41b757 2%, #41b854 4%, #43b756 6%, #41b354 38%, #44b355 40%, #45af55 66%, #41ae53 74%, #42ac52 91%, #41ae55 94%, #43ab54 96%, #42ac52 100%);
-  background: linear-gradient(to bottom, #43b754 0%, #41b757 2%, #41b854 4%, #43b756 6%, #41b354 38%, #44b355 40%, #45af55 66%, #41ae53 74%, #42ac52 91%, #41ae55 94%, #43ab54 96%, #42ac52 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#43b754', endColorstr='#42ac52',GradientType=0 );
+  background-image: -webkit-gradient(linear, left 0%, left 100%, from(#43b754), to(#42ac52));
+  background-image: -webkit-linear-gradient(top, #43b754, 0%, #42ac52, 100%);
+  background-image: -moz-linear-gradient(top, #43b754 0%, #42ac52 100%);
+  background-image: linear-gradient(to bottom, #43b754 0%, #42ac52 100%);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF43B754', endColorstr='#FF42AC52', GradientType=0);
   border: 1px solid;
   border-color: #399a49 #247f32 #1a6d27 #399a49;
   -moz-border-radius: 0;
@@ -5846,13 +5845,12 @@ span.exclusive {
     vertical-align: middle;
     padding: 4px 0 0 0;
     background: white;
-    background: -moz-linear-gradient(top, white 0%, #fbfbfb 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, white), color-stop(100%, #fbfbfb));
-    background: -webkit-linear-gradient(top, white 0%, #fbfbfb 100%);
-    background: -o-linear-gradient(top, white 0%, #fbfbfb 100%);
-    background: -ms-linear-gradient(top, white 0%, #fbfbfb 100%);
-    background: linear-gradient(to bottom, #ffffff 0%, #fbfbfb 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#fbfbfb',GradientType=0); }
+    background-image: -webkit-gradient(linear, left 0%, left 100%, from(white), to(#fbfbfb));
+    background-image: -webkit-linear-gradient(top, white, 0%, #fbfbfb, 100%);
+    background-image: -moz-linear-gradient(top, white 0%, #fbfbfb 100%);
+    background-image: linear-gradient(to bottom, #ffffff 0%, #fbfbfb 100%);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFFFFFFF', endColorstr='#FFFBFBFB', GradientType=0); }
   .btn.button-plus:hover,
   .btn.button-minus:hover {
     color: #333; }
@@ -5876,13 +5874,12 @@ span.exclusive {
     display: block;
     padding: 9px 10px 11px 10px;
     background: #f7f7f7;
-    background: -moz-linear-gradient(top, #f7f7f7 0%, #ededed 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f7f7f7), color-stop(100%, #ededed));
-    background: -webkit-linear-gradient(top, #f7f7f7 0%, #ededed 100%);
-    background: -o-linear-gradient(top, #f7f7f7 0%, #ededed 100%);
-    background: -ms-linear-gradient(top, #f7f7f7 0%, #ededed 100%);
-    background: linear-gradient(to bottom, #f7f7f7 0%, #ededed 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f7f7f7', endColorstr='#ededed',GradientType=0); }
+    background-image: -webkit-gradient(linear, left 0%, left 100%, from(#f7f7f7), to(#ededed));
+    background-image: -webkit-linear-gradient(top, #f7f7f7, 0%, #ededed, 100%);
+    background-image: -moz-linear-gradient(top, #f7f7f7 0%, #ededed 100%);
+    background-image: linear-gradient(to bottom, #f7f7f7 0%, #ededed 100%);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFF7F7F7', endColorstr='#FFEDEDED', GradientType=0); }
     @media (max-width: 480px) {
       .button.exclusive-medium span {
         font-size: 15px;
@@ -5913,13 +5910,12 @@ span.exclusive {
     padding: 10px 14px;
     display: block;
     background: #009ad0;
-    background: -moz-linear-gradient(top, #009ad0 0%, #007ab7 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #009ad0), color-stop(100%, #007ab7));
-    background: -webkit-linear-gradient(top, #009ad0 0%, #007ab7 100%);
-    background: -o-linear-gradient(top, #009ad0 0%, #007ab7 100%);
-    background: -ms-linear-gradient(top, #009ad0 0%, #007ab7 100%);
-    background: linear-gradient(to bottom, #009ad0 0%, #007ab7 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#009ad0', endColorstr='#007ab7',GradientType=0); }
+    background-image: -webkit-gradient(linear, left 0%, left 100%, from(#009ad0), to(#007ab7));
+    background-image: -webkit-linear-gradient(top, #009ad0, 0%, #007ab7, 100%);
+    background-image: -moz-linear-gradient(top, #009ad0 0%, #007ab7 100%);
+    background-image: linear-gradient(to bottom, #009ad0 0%, #007ab7 100%);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF009AD0', endColorstr='#FF007AB7', GradientType=0); }
   .button.ajax_add_to_cart_button:hover {
     border-color: #01314e #004b74 #0079b6 #004b74; }
     .button.ajax_add_to_cart_button:hover span {
@@ -5939,13 +5935,12 @@ span.exclusive {
     padding: 10px 14px;
     display: block;
     background: #f7f7f7;
-    background: -moz-linear-gradient(top, #f7f7f7 0%, #ededed 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f7f7f7), color-stop(100%, #ededed));
-    background: -webkit-linear-gradient(top, #f7f7f7 0%, #ededed 100%);
-    background: -o-linear-gradient(top, #f7f7f7 0%, #ededed 100%);
-    background: -ms-linear-gradient(top, #f7f7f7 0%, #ededed 100%);
-    background: linear-gradient(to bottom, #f7f7f7 0%, #ededed 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f7f7f7', endColorstr='#ededed',GradientType=0); }
+    background-image: -webkit-gradient(linear, left 0%, left 100%, from(#f7f7f7), to(#ededed));
+    background-image: -webkit-linear-gradient(top, #f7f7f7, 0%, #ededed, 100%);
+    background-image: -moz-linear-gradient(top, #f7f7f7 0%, #ededed 100%);
+    background-image: linear-gradient(to bottom, #f7f7f7 0%, #ededed 100%);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFF7F7F7', endColorstr='#FFEDEDED', GradientType=0); }
   .button.lnk_view:hover {
     border-color: #9e9e9e #9e9e9e #c8c8c8 #9e9e9e; }
     .button.lnk_view:hover span {
