@@ -49,6 +49,11 @@ function ddd($var)
 	Tools::d($var);
 }
 
+function epr($var, $message_type = null, $destination = null, $extra_headers = null)
+{
+	return Tools::epr($var, $message_type, $destination, $extra_headers);
+}
+
 /**
  * Sanitize data which will be injected into SQL query
  *
