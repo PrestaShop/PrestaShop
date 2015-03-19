@@ -2849,8 +2849,8 @@ class ProductCore extends ObjectModel
 		$tax_manager = TaxManagerFactory::getManager($address, Product::getIdTaxRulesGroupByIdProduct((int)$id_product, $context));
 		$product_tax_calculator = $tax_manager->getTaxCalculator();
 
-		// Add Tax
-		if ($use_tax)
+		// Add Tax only if there is no reduction without taxes
+		if ($use_tax && isset($specific_price) && $specific_price['reduction_tax'] != 0)
 			$price = $product_tax_calculator->addTaxes($price);
 
 		// Reduction
@@ -2875,6 +2875,10 @@ class ProductCore extends ObjectModel
 
 		if ($use_reduc)
 			$price -= $specific_price_reduction;
+
+		// Add Tax there was a reduction without taxes
+		if ($use_tax && isset($specific_price) && $specific_price['reduction_tax'] == 0)
+			$price = $product_tax_calculator->addTaxes($price);
 
 		// Group reduction
 		if ($use_group_reduction)
