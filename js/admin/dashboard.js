@@ -41,7 +41,9 @@ function refreshDashboard(module_name, use_push, extra) {
 				dashboard_use_push: Number(use_push),
 				extra: extra
 			},
-			cache: false, // Ensure to get fresh data
+			// Ensure to get fresh data
+			headers: { "cache-control": "no-cache" },
+			cache: false,
 			global: false,
 			dataType: 'json',
 			success : function(widgets){
