@@ -169,6 +169,14 @@ class PrestaShopAutoload
 				unlink($filename_tmp);
 			else
 				@chmod($filename, 0666);
+			// Backwards compatibility
+			// TODO: remove when deprecated INDEX_FILE gets removed
+			$retro_tmp = tempnam(dirname(_PS_ROOT_DIR_.PrestaShopAutoload::INDEX_FILE), basename(_PS_ROOT_DIR_.PrestaShopAutoload::INDEX_FILE.'.'));
+			@file_put_contents($retro_tmp, $content);
+			if (!@rename($retro_tmp, _PS_ROOT_DIR_.PrestaShopAutoload::INDEX_FILE))
+				unlink($retro_tmp);
+			else
+				@chmod(_PS_ROOT_DIR_.PrestaShopAutoload::INDEX_FILE, 0666);
 		}
 		// $filename_tmp couldn't be written. $filename should be there anyway (even if outdated), no need to die.
 		else
