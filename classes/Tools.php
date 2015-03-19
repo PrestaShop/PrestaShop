@@ -929,7 +929,7 @@ class ToolsCore
 	 * @param string|null $extra_headers
 	 * @return bool
 	 */
-	public static function epr($object, $message_type = null, $destination = null, $extra_headers = null)
+	public static function error_log($object, $message_type = null, $destination = null, $extra_headers = null)
 	{
 		return error_log(print_r($object, true), $message_type, $destination, $extra_headers);
 	}
