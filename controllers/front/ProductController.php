@@ -466,13 +466,13 @@ class ProductControllerCore extends FrontController
 				$combinations[$row['id_product_attribute']]['reference'] = $row['reference'];
 				$combinations[$row['id_product_attribute']]['unit_impact'] = $row['unit_price_impact'];
 				$combinations[$row['id_product_attribute']]['minimal_quantity'] = $row['minimal_quantity'];
-				if ($row['available_date'] != '0000-00-00')
+				if ($row['available_date'] != '0000-00-00' && Validate::isDate($row['available_date']))
 				{
 					$combinations[$row['id_product_attribute']]['available_date'] = $row['available_date'];
 					$combinations[$row['id_product_attribute']]['date_formatted'] = Tools::displayDate($row['available_date']);
 				}
 				else
-					$combinations[$row['id_product_attribute']]['available_date'] = '';
+					$combinations[$row['id_product_attribute']]['available_date'] = $combinations[$row['id_product_attribute']]['date_formatted'] = '';
 
 				if (!isset($combination_images[$row['id_product_attribute']][0]['id_image']))
 					$combinations[$row['id_product_attribute']]['id_image'] = -1;

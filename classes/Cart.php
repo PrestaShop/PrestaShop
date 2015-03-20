@@ -117,8 +117,8 @@ class CartCore extends ObjectModel
 			'delivery_option' => 		array('type' => self::TYPE_STRING),
 			'secure_key' => 			array('type' => self::TYPE_STRING, 'size' => 32),
 			'allow_seperated_package' =>array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
-			'date_upd' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
+			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'date_upd' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
 	);
 
