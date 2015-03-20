@@ -316,40 +316,8 @@ class FeatureCore extends ObjectModel
 	 */
 	public static function cleanPositions()
 	{
-		//Reordering positions to remove "holes" in them (after delete for instance)
-		$sql = 'SELECT id_feature, position FROM '._DB_PREFIX_.'feature ORDER BY position';
-		$db = Db::getInstance();
-		$r = $db->executeS($sql, false);
-		$shiftTable = array(); //List of update queries (one query is necessary for each "hole" in the table)
-		$currentDelta = 0;
-		$minId = 0;
-		$maxId = 0;
-		$futurePosition = 0;
-		while ($line = $db->nextRow($r))
-		{
-			$delta = $futurePosition - $line['position']; //Difference between current position and future position
-			if ($delta != $currentDelta)
-			{
-				$shiftTable[] = array('minId' => $minId, 'maxId' => $maxId, 'delta' => $currentDelta);
-				$currentDelta = $delta;
-				$minId = $line['id_feature'];
-			}
-			$futurePosition++;
-		}
-
-		$shiftTable[] = array('minId' => $minId, 'delta' => $currentDelta);
-
-		//Executing generated queries
-		foreach ($shiftTable as $line)
-		{
-			$delta = $line['delta'];
-			if ($delta == 0)
-				continue;
-			$delta = $delta > 0 ? '+'.(int)$delta : (int)$delta;
-			$minId = $line['minId'];
-			$sql = 'UPDATE '._DB_PREFIX_.'feature SET position = '.(int)$delta.' WHERE id_feature = '.(int)$minId;
-			Db::getInstance()->execute($sql);
-		}
+		$sql = 'SET @i = -1; UPDATE `'._DB_PREFIX_.'feature` SET `position` = @i:=@i+1 ORDER BY `position` ASC';
+		return (bool)Db::getInstance()->execute($sql);
 	}
 
 	/**
@@ -364,6 +332,6 @@ class FeatureCore extends ObjectModel
 		$sql = 'SELECT MAX(`position`)
 				FROM `'._DB_PREFIX_.'feature`';
 		$position = DB::getInstance()->getValue($sql);
-		return (is_numeric($position)) ? $position : -1;
+		return (is_numeric($position)) ? $position : - 1;
 	}
 }
