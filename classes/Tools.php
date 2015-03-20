@@ -800,7 +800,10 @@ class ToolsCore
 	{
 		$themes = array();
 		foreach (Theme::getThemes() as $theme)
+		{
+			/** @var Theme $theme */
 			$themes[] = $theme->directory;
+		}
 
 		foreach (scandir(_PS_ROOT_DIR_.'/config/xml') as $file)
 		{
@@ -2088,6 +2091,7 @@ class ToolsCore
 		$domains = array();
 		foreach (ShopUrl::getShopUrls() as $shop_url)
 		{
+			/** @var ShopUrl $shop_url */
 			if (!isset($domains[$shop_url->domain]))
 				$domains[$shop_url->domain] = array();
 

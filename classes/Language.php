@@ -162,6 +162,7 @@ class LanguageCore extends ObjectModel
 
 		foreach (Theme::getThemes() as $theme)
 		{
+			/** @var Theme $theme */
 			$theme_dir = $theme->directory;
 			if (file_exists(_PS_ALL_THEMES_DIR_.$theme_dir.'/lang/'.$this->iso_code.'.php'))
 				rename(_PS_ALL_THEMES_DIR_.$theme_dir.'/lang/'.$this->iso_code.'.php', _PS_ALL_THEMES_DIR_.$theme_dir.'/lang/'.$newIso.'.php');
@@ -191,7 +192,10 @@ class LanguageCore extends ObjectModel
 		{
 			$installed_themes = Theme::getThemes();
 			foreach ($installed_themes as $theme)
+			{
+				/** @var Theme $theme */
 				$themes[$theme->directory] = array('name' => $theme->name);
+			}
 		}
 		return $themes;
 	}
@@ -409,6 +413,7 @@ class LanguageCore extends ObjectModel
 		$shops = Shop::getShopsCollection(false);
 		foreach ($shops as $shop)
 		{
+			/** @var Shop $shop */
 			$id_lang_default = Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
 
 			foreach ($langTables as $name)

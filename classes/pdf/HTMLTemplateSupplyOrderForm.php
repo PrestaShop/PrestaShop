@@ -192,6 +192,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 	{
 		foreach ($collection as $supply_order_detail)
 		{
+			/** @var SupplyOrderDetail $supply_order_detail */
 			$supply_order_detail->unit_price_te = Tools::ps_round($supply_order_detail->unit_price_te, 2);
 			$supply_order_detail->price_te = Tools::ps_round($supply_order_detail->price_te, 2);
 			$supply_order_detail->discount_rate = Tools::ps_round($supply_order_detail->discount_rate, 2);

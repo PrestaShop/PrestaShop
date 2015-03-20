@@ -98,7 +98,11 @@ class ThemeCore extends ObjectModel
 		{
 			$themes = Theme::getThemes();
 			foreach ($themes as $theme_obj)
+			{
+				/** @var Theme $theme_obj */
 				$themes_dir[] = $theme_obj->directory;
+			}
+
 			foreach ($dirlist as $theme)
 				if (false !== array_search($theme, $themes_dir))
 					$available_theme[] = $theme;

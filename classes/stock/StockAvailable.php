@@ -583,8 +583,10 @@ class StockAvailableCore extends ObjectModel
 	 * Removes a given product from the stock available
 	 *
 	 * @param int $id_product
-	 * @param int $id_product_attribute Optional
-	 * @param mixed $id_shop shop id or shop object Optional
+	 * @param int|null $id_product_attribute Optional
+	 * @param Shop|null $shop Shop id or shop object Optional
+	 *
+	 * @return bool
 	 */
 	public static function removeProductFromStockAvailable($id_product, $id_product_attribute = null, $shop = null)
 	{
