@@ -86,9 +86,9 @@
 							{l s='You MUST use this syntax in your translations. Here are several examples:'}
 						</p>
 						<ul>
-							<li>"There are <strong>%d</strong> products": {l s='"%s" will be replaced by a number.' sprintf='%d'}</li>
-							<li>"List of pages in <strong>%s</strong>": {l s='"%s" will be replaced by a string.' sprintf='%s'}</li>
-							<li>"Feature: <strong>%1$s</strong> (<strong>%2$d</strong> values)": {l s='The numbers enable you to reorder the variables when necessary.'}</li>
+							<li>"{l s='There are'} <strong>%d</strong> {l s='products'}": {l s='"%s" will be replaced by a number.' sprintf='%d'}</li>
+							<li>"{l s='List of pages in'} <strong>%s</strong>": {l s='"%s" will be replaced by a string.' sprintf='%s'}</li>
+							<li>"{l s='Feature:'} <strong>%1$s</strong> (<strong>%2$d</strong> {l s='values'})": {l s='The numbers enable you to reorder the variables when necessary.'}</li>
 						</ul>
 					</div>
 				</div>
