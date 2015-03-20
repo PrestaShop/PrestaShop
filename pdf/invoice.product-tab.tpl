@@ -25,32 +25,24 @@
 <table class="product" width="100%" cellpadding="4" cellspacing="0">
     <thead>
     <tr>
-        <th class="product header small" width="10%">{l s='Reference' pdf='true'}</th>
-        <th class="product header small" width="50%">{l s='Product' pdf='true'}</th>
-        <th class="product header small" width="5%">{l s='Qty' pdf='true'}</th>
+        <th class="product header small" width="15%">{l s='Reference' pdf='true'}</th>
+        <th class="product header small" width="47%">{l s='Product' pdf='true'}</th>
+        <th class="product header small" width="6%">{l s='Qty' pdf='true'}</th>
         <th class="product header small" width="5%">{l s='Tax' pdf='true'}</th>
-        <th class="product header small" width="15%">{l s='Unit Price' pdf='true'} <br /> {l s='(Tax Excl.)' pdf='true'}</th>
-        <th class="product header center small" width="15%">{l s='Total' pdf='true'} <br /> {l s='(Tax Excl.)' pdf='true'}</th>
+        <th class="product header small" width="14%">{l s='Unit Price' pdf='true'} <br /> {l s='(Tax Excl.)' pdf='true'}</th>
+        <th class="product header center small" width="14%">{l s='Total' pdf='true'} <br /> {l s='(Tax Excl.)' pdf='true'}</th>
     </tr>
     </thead>
     <tbody>
 
     {foreach $order_details as $order_detail}
         <tr>
-            <td class="product">
+            <td class="product center">
                 {$order_detail.reference}
             </td>
-            <td>
-                {$order_detail.product_name}<br/>
-                {foreach $order_detail.customizedDatas as $customizationPerAddress}
-                    {foreach $customizationPerAddress as $customizationId => $customization}
-                        {if isset($customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_]) && count($customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_]) > 0}
-                            {foreach $customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_] as $customization_infos}
-                                {l s='Domain name:'} {$customization_infos.value}
-                            {/foreach}
-                        {/if}
-                    {/foreach}
-                {/foreach}
+            <td class="product">
+                {$order_detail.product_name}
+                TODO: customization !
             </td>
             <td class="product center">
                 {$order_detail.product_quantity}

@@ -30,9 +30,9 @@
         <th class="header small" width="30%" valign="middle">{l s='VAT Number' pdf='true'}</th>
     </tr>
     <tr>
-        <td class="header small">{$title|escape:'html':'UTF-8'}</td>
-        <td class="header small">{dateFormat date=$order->date_add full=0}</td>
-        <td class="header small">{$order->getUniqReference()}</td>
-        <td class="header small">{$data.addresses.invoice->vat_number}</td>
+        <td class="min-height-md center small">{$title|escape:'html':'UTF-8'}</td>
+        <td class="min-height-md center small">{dateFormat date=$order->date_add full=0}</td>
+        <td class="min-height-md center small">{$order->getUniqReference()}</td>
+        <td class="min-height-md center small">{$data.addresses.invoice->vat_number}</td>
     </tr>
 </table>
