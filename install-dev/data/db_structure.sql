@@ -1512,7 +1512,8 @@ CREATE TABLE IF NOT EXISTS `PREFIX_product_shop` (
   `pack_stock_type` int(11) unsigned DEFAULT '3' NOT NULL,
   PRIMARY KEY (`id_product`, `id_shop`),
   KEY `id_category_default` (`id_category_default`),
-  KEY `date_add` (`date_add` , `active` , `visibility`)
+  KEY `date_add` (`date_add` , `active` , `visibility`),
+  KEY `indexed` (`indexed`, `active`, `id_product`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_product_attribute` (
