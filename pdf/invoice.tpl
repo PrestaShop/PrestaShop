@@ -102,9 +102,9 @@
 
             <br/>
 
-            <div id="legal_free_text" class="">
-                {$legal_free_text}
-            </div>
+            <p id="legal_free_text" class="small">
+                {$legal_free_text|escape:'html':'UTF-8'|nl2br}
+            </p>
 
         </td>
         <td colspan="1">&nbsp;</td>

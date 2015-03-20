@@ -23,28 +23,25 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <style>
-    table, th, td
-    {
+    table, th, td {
         margin: 0!important;
         padding: 0!important;
         /*border: 1px solid green;*/
         vertical-align: middle;
+        font-size: 11pt;
 
     }
 
-    table.product
-    {
+    table.product {
         border: 1px solid black;
         border-collapse: collapse;
     }
 
-    th.product
-    {
+    th.product {
         border: 1px solid black;
     }
 
-    th.header
-    {
+    th.header {
         height: 22px;
         background-color: #f0f0f0;
         vertical-align: middle;
@@ -53,107 +50,92 @@
         font-weight: bold;
     }
 
-    th.payment
-    {
-        height: 30px;
+    th.payment {
         background-color: #f0f0f0;
         vertical-align: middle;
         /*line-height:15px;*/
         font-weight: bold;
     }
 
-    th.tva
-    {
-        height: 35px;
+    th.tva {
         background-color: #f0f0f0;
         vertical-align: middle;
         /*line-height:25px;*/
         font-weight: bold;
     }
 
-    td.header
-    {
-        height: 25px;
-        /*line-height:25px;*/
+    td.header {
         vertical-align: middle;
         text-align: center;
     }
 
-    td.product
-    {
-        height: 10px;
-        /*line-height:10px;*/
-        vertical-align: middle;
+    td.product {
+        vertical-align: top;
+        font-size: 10pt;
         /*border-top:hidden;*/
         /*border-bottom:1px solid black;*/
         border-left:1px solid black;
         border-right:1px solid black;
     }
 
-    td.payment
-    {
-        height: 35px;
+    td.payment {
         vertical-align: middle;
-        /*line-height:15px;*/
     }
 
-    td.tva
-    {
-        height: 35px;
+    td.tva {
         vertical-align: middle;
-        /*line-height:25px;*/
     }
 
-    .fleft
-    {
+    .min-height-md {
+        height: 20px;
+        vertical-align: middle;
+    }
+
+    .min-height-lg {
+        height: 30px;
+        vertical-align: middle;
+    }
+
+    .fleft {
         float: left;
     }
 
-    .left
-    {
+    .left {
         text-align: left;
     }
 
-    .fright
-    {
+    .fright {
         float: right;
     }
 
-    .right
-    {
+    .right {
         text-align: right;
     }
 
-    .center
-    {
+    .center {
         text-align: center;
     }
 
-    .bold
-    {
+    .bold {
         font-weight: bold;
     }
 
-    .border
-    {
+    .border {
         border: 1px solid black;
     }
 
-    .no_top_border
-    {
+    .no_top_border {
         border-top:hidden;
         border-bottom:1px solid black;
         border-left:1px solid black;
         border-right:1px solid black;
     }
 
-    .grey
-    {
+    .grey {
         background-color: #f0f0f0;
     }
 
-    .small
-    {
+    .small {
         font-size:small;
     }
 </style>
