@@ -441,11 +441,8 @@ class SearchCore
 
 
 			$res = Db::getInstance()->executeS($sql, false);
-			while($row = Db::getInstance()->nextRow($res))
-			{
+			while ($row = Db::getInstance()->nextRow($res))
 				$ids[] = $row['id_product'];
-			}
-
 		}
 
 		// Now get every attribute in every language
