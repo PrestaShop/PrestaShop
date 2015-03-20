@@ -889,7 +889,7 @@ class FrontControllerCore extends Controller
 					if ($default_country->iso_code != $this->context->cookie->iso_code_country)
 						$default_country = new Country($id_country);
 					if (isset($has_been_set) && $has_been_set)
-						$this->context->cookie->id_currency = (int)Currency::getCurrencyInstance($default_country->id_currency ? (int)$default_country->id_currency : (int)Configuration::get('PS_CURRENCY_DEFAULT'))->id;
+						$this->context->cookie->id_currency = (int)($default_country->id_currency ? (int)$default_country->id_currency : (int)Configuration::get('PS_CURRENCY_DEFAULT'));
 					return $default_country;
 				}
 				elseif (Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR') == _PS_GEOLOCATION_NO_CATALOG_ && !FrontController::isInWhitelistForGeolocation())
