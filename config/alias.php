@@ -51,7 +51,7 @@ function ddd($var)
 
 function epr($var, $message_type = null, $destination = null, $extra_headers = null)
 {
-	return Tools::epr($var, $message_type, $destination, $extra_headers);
+	return Tools::error_log($var, $message_type, $destination, $extra_headers);
 }
 
 /**
