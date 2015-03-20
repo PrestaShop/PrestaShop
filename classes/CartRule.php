@@ -122,6 +122,8 @@ class CartRuleCore extends ObjectModel
 	 */
 	public function add($autodate = true, $null_values = false)
 	{
+		if (!$this->reduction_currency)
+			$this->reduction_currency = Configuration::get('PS_CURRENCY_DEFAULT');
 		if (!parent::add($autodate, $null_values))
 			return false;
 
@@ -132,6 +134,10 @@ class CartRuleCore extends ObjectModel
 	public function update($null_values = false)
 	{
 		Cache::clean('getContextualValue_'.$this->id.'_*');
+
+		if (!$this->reduction_currency)
+			$this->reduction_currency = Configuration::get('PS_CURRENCY_DEFAULT');
+
 		return parent::update($null_values);
 	}
 
