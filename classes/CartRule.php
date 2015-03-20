@@ -123,7 +123,8 @@ class CartRuleCore extends ObjectModel
 	public function add($autodate = true, $null_values = false)
 	{
 		if (!$this->reduction_currency)
-			$this->reduction_currency = Configuration::get('PS_CURRENCY_DEFAULT');
+			$this->reduction_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT');
+
 		if (!parent::add($autodate, $null_values))
 			return false;
 
@@ -136,7 +137,7 @@ class CartRuleCore extends ObjectModel
 		Cache::clean('getContextualValue_'.$this->id.'_*');
 
 		if (!$this->reduction_currency)
-			$this->reduction_currency = Configuration::get('PS_CURRENCY_DEFAULT');
+			$this->reduction_currency = (int)Configuration::get('PS_CURRENCY_DEFAULT');
 
 		return parent::update($null_values);
 	}
@@ -1153,7 +1154,7 @@ class CartRuleCore extends ObjectModel
 			$sql_limit = ' LIMIT '.(int)$offset.', '.(int)($limit+1);
 		else
 			$sql_limit = '';
-		
+
 		if (!Validate::isLoadedObject($this) || $this->{$type.'_restriction'} == 0)
 		{
 			$array['selected'] = Db::getInstance()->executeS('
