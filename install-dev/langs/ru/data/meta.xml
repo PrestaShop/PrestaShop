@@ -13,7 +13,7 @@
     <url_rewrite>best-sales</url_rewrite>
   </meta>
   <meta id="contact" id_shop="1">
-    <title>Cяжитесь с нами</title>
+    <title>Cвяжитесь с нами</title>
     <description>Используйте нашу контактнвю форму, чтобы связаться с нами</description>
     <keywords>контакты, связаться с нами, e-mail</keywords>
     <url_rewrite>contact-us</url_rewrite>
