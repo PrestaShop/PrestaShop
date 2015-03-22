@@ -69,7 +69,7 @@ class LinkCore
 	public function getProductDeletePictureLink($product, $id_picture)
 	{
 		$url = $this->getProductLink($product);
-		return $url.((strpos($url, '?')) ? '&' : '?').'&deletePicture='.$id_picture;
+		return $url.((strpos($url, '?')) ? '&' : '?').'deletePicture='.$id_picture;
 	}
 
 	/**
