@@ -82,11 +82,9 @@
 
         {/foreach}
 
-        <tr>
-            {$tax_label}
-        </tr>
-
     </table>
+
+    {$tax_label}
 
 {/if}
 <!--  / TAX DETAILS -->

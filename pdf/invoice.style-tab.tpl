@@ -29,7 +29,7 @@
         /*border: 1px solid green;*/
         vertical-align: middle;
         font-size: 11pt;
-
+        white-space: nowrap;
     }
 
     table.product {

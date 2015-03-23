@@ -74,21 +74,6 @@
         <td colspan="12" height="10">&nbsp;</td>
     </tr>
 
-    <!-- Payment method + Discount -->
-    <tr>
-        <td colspan="6">
-
-            {include file="./invoice.payment-tab.tpl"}
-
-        </td>
-        <td colspan="1">&nbsp;</td>
-        <td colspan="5">
-
-            {include file="./invoice.discount-tab.tpl"}
-
-        </td>
-    </tr>
-
     <tr>
         <td colspan="12" height="1">&nbsp;</td>
     </tr>
@@ -100,20 +85,36 @@
 
             {$tax_tab}
 
-            <br/>
-
-            <p id="legal_free_text" class="small">
-                {$legal_free_text|escape:'html':'UTF-8'|nl2br}
-            </p>
-
         </td>
         <td colspan="1">&nbsp;</td>
         <!-- Calcule TVA -->
-        <td colspan="5" class="right">
+        <td colspan="5" rowspan="4" class="right">
 
             {include file="./invoice.total-tab.tpl"}
 
         </td>
+    </tr>
+
+    <tr>
+        <td colspan="12" height="10">&nbsp;</td>
+    </tr>
+
+    <tr>
+        <td colspan="6" class="left">
+            {include file="./invoice.payment-tab.tpl"}
+        </td>
+        <td colspan="1">&nbsp;</td>
+    </tr>
+
+    <tr>
+        <td colspan="12" height="10">&nbsp;</td>
+    </tr>
+
+    <tr>
+        <td colspan="6" class="left small">
+            {$legal_free_text|escape:'html':'UTF-8'|nl2br}
+        </td>
+        <td colspan="1">&nbsp;</td>
     </tr>
 
 </table>
