@@ -121,6 +121,16 @@ class ConfigurationCore extends ObjectModel
 	}
 
 	/**
+	 * WARNING: For testing only. Do NOT rely on this method, it may be removed at any time.
+	 * @todo Delegate static calls from Configuration to an instance
+	 * of a class to be created.
+	 */
+	public static function clearConfigurationCacheForTesting()
+	{
+		self::$_cache = array();
+	}
+
+	/**
 	 * Load all configuration data
 	 */
 	public static function loadConfiguration()

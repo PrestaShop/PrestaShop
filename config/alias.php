@@ -63,12 +63,7 @@ function epr($var, $message_type = null, $destination = null, $extra_headers = n
  */
 function pSQL($string, $htmlOK = false)
 {
-	// Avoid thousands of "Db::getInstance()"...
-	static $db = false;
-	if (!$db)
-		$db = Db::getInstance();
-
-	return $db->escape($string, $htmlOK);
+	return Db::getInstance()->escape($string, $htmlOK);
 }
 
 function bqSQL($string)

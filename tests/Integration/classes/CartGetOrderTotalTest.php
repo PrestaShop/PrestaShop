@@ -25,9 +25,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-namespace PrestaShop\PrestaShop\Tests\Integration;
+namespace PrestaShop\PrestaShop\Tests\Integration\Classes;
 
-use PHPUnit_Framework_TestCase;
+use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
 use PHPUnit_Framework_Assert as Assert;
 
 use PrestaShop\PrestaShop\Tests\Helper\DatabaseDump;
@@ -49,13 +49,15 @@ use Tax;
 use TaxRulesGroup;
 use TaxRule;
 
-class CartGetOrderTotalTest extends PHPUnit_Framework_TestCase
+class CartGetOrderTotalTest extends IntegrationTestCase
 {
     private static $dump;
     private static $id_address;
 
     public static function setUpBeforeClass()
     {
+        parent::setUpBeforeClass();
+
         // Save the database to restore it later: we're not the only test running so let's leave things
         // the way we found them.
         self::$dump = DatabaseDump::create();

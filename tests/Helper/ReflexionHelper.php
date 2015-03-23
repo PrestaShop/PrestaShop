@@ -25,45 +25,58 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-namespace PrestaShop\PrestaShop\Tests\TestCase;
+namespace PrestaShop\PrestaShop\Tests\Helper;
 
-use PHPUnit_Framework_TestCase;
 use ReflectionClass;
+use PHPUnit_Framework_TestCase;
 
-class	PrestaShopPHPUnit extends PHPUnit_Framework_TestCase
+/**
+ * Class ReflexionHelper
+ * @package PrestaShop\PrestaShop\Tests\TestCase
+ *
+ * Provides utilities to access private or protected properties inside classes.
+ *
+ * Please be careful with these feature, testing private fields or methods is often a bad smell :
+ *      - you may be testing your implementation details rather than the behaviour of your code.
+ *      - if this is because the class under test is too long and complicated, you should defintely consider breaking this class into several smaller ones.
+ *
+ * In the end, this kind of features is here just for convenience to be able to test quickly dirty legacy code.
+ */
+class ReflexionHelper extends PHPUnit_Framework_TestCase
 {
-	protected function invoke($object, $method)
+
+	public static function invoke($object, $method)
 	{
 		$params = array_slice(func_get_args(), 2);
 
-		$reflexion = new ReflectionClass($this->getClass());
+		$reflexion = new ReflectionClass(self::getClass($object));
 		$reflexion_method = $reflexion->getMethod($method);
 		$reflexion_method->setAccessible(true);
 
 		return $reflexion_method->invokeArgs($object, $params);
 	}
 
-	protected function getProperty($object, $property)
+	public static function getProperty($object, $property)
 	{
-		$reflexion = new ReflectionClass($this->getClass());
+		$reflexion = new ReflectionClass(self::getClass($object));
 		$reflexion_property = $reflexion->getProperty($property);
 		$reflexion_property->setAccessible(true);
 
 		return $reflexion_property->getValue($object);
 	}
 
-	protected function setProperty($object, $property, $value)
+	public static function setProperty($object, $property, $value)
 	{
-		$reflexion = new ReflectionClass($this->getClass());
+		$reflexion = new ReflectionClass(self::getClass($object));
 		$reflexion_property = $reflexion->getProperty($property);
 		$reflexion_property->setAccessible(true);
 
 		$reflexion_property->setValue($object, $value);
 	}
 
-	protected function getClass()
+	public static function getClass($object)
 	{
-		$namespace = explode('\\', get_class($this));
+		$namespace = explode('\\', get_class($object));
 		return preg_replace('/(.*)(?:Core)?Test$/', '$1', end($namespace));
 	}
 }

@@ -63,10 +63,15 @@ abstract class DbCore
 	protected $result;
 
 	/** @var array List of DB instances */
-	protected static $instance = array();
+	public static $instance = array();
 
 	/** @var array List of server settings */
-	protected static $_servers = array();
+	public static $_servers = array();
+
+	/** @var null Flag used to load slave servers only once.
+	 * See loadSlaveServers() method.
+	 */
+	public static $_slave_servers_loaded = null;
 
 	/**
 	 * Store last executed query
@@ -208,7 +213,8 @@ abstract class DbCore
 				array('server' => _DB_SERVER_, 'user' => _DB_USER_, 'password' => _DB_PASSWD_, 'database' => _DB_NAME_), /* MySQL Master server */
 			);
 
-		Db::loadSlaveServers();
+		if (!$master)
+			Db::loadSlaveServers();
 
 		$total_servers = count(self::$_servers);
 		if ($master || $total_servers == 1)
@@ -234,19 +240,35 @@ abstract class DbCore
 	}
 
 	/**
-	 * Loads configuration settings for slave servers
+	 * @param $test_db Db
+	 * Unit testing purpose only
+	 */
+	public static function setInstanceForTesting($test_db)
+	{
+		self::$instance[0] = $test_db;
+	}
+
+	/**
+	 * Unit testing purpose only
+	 */
+	public static function deleteTestingInstance()
+	{
+		self::$instance = array();
+	}
+
+	/**
+	 * Loads configuration settings for slave servers if needed.
 	 */
 	protected static function loadSlaveServers()
 	{
-		static $is_loaded = null;
-		if ($is_loaded !== null)
+		if (self::$_slave_servers_loaded !== null)
 			return;
 
 		// Add here your slave(s) server(s) in this file
 		if (file_exists(_PS_ROOT_DIR_.'/config/db_slave_server.inc.php'))
 			self::$_servers = array_merge(self::$_servers, require(_PS_ROOT_DIR_.'/config/db_slave_server.inc.php'));
 
-		$is_loaded = true;
+		self::$_slave_servers_loaded = true;
 	}
 
 	/**
