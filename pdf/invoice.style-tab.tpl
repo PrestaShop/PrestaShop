@@ -26,19 +26,32 @@
     table, th, td {
         margin: 0!important;
         padding: 0!important;
-        /*border: 1px solid green;*/
         vertical-align: middle;
         font-size: 11pt;
         white-space: nowrap;
     }
 
     table.product {
-        border: 1px solid black;
+        border: 2px solid #000000;
         border-collapse: collapse;
     }
 
     th.product {
-        border: 1px solid black;
+        border: 1px solid #000000;
+        border-bottom: 2px solid #000000;
+    }
+
+    tr.product td {
+        border-top: 1px solid #000000;
+    }
+
+    tr.customization_data td {
+        border-top: 1px solid #cccccc;
+    }
+
+    td.product {
+        vertical-align: top;
+        font-size: 10pt;
     }
 
     th.header {
@@ -53,14 +66,12 @@
     th.payment {
         background-color: #f0f0f0;
         vertical-align: middle;
-        /*line-height:15px;*/
         font-weight: bold;
     }
 
     th.tva {
         background-color: #f0f0f0;
         vertical-align: middle;
-        /*line-height:25px;*/
         font-weight: bold;
     }
 
@@ -69,14 +80,7 @@
         text-align: center;
     }
 
-    td.product {
-        vertical-align: top;
-        font-size: 10pt;
-        /*border-top:hidden;*/
-        /*border-bottom:1px solid black;*/
-        border-left:1px solid black;
-        border-right:1px solid black;
-    }
+
 
     td.payment {
         vertical-align: middle;
