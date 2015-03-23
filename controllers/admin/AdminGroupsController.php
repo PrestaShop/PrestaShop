@@ -233,6 +233,7 @@ class AdminGroupsControllerCore extends AdminController
 		$this->_select = 'c.*, a.id_group';
 		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'customer` c ON (a.`id_customer` = c.`id_customer`)';
 		$this->_where = 'AND a.`id_group` = '.(int)$group->id.' AND c.`deleted` != 1';
+		$this->_where = Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'c');
 		self::$currentIndex = self::$currentIndex.'&id_group='.(int)$group->id.'&viewgroup';
 
 		$this->processFilter();
