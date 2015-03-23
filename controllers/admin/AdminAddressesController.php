@@ -415,6 +415,7 @@ class AdminAddressesControllerCore extends AdminController
 		$address = new Address();
 		$this->errors = array_merge($this->errors, $address->validateFieldsRequiredDatabase());
 
+		$return = false;
 		if (empty($this->errors))
 			$return = parent::processSave();
 		else

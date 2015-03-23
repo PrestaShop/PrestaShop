@@ -562,7 +562,7 @@ function updateDisplay()
 		if ((stock_management == 1 && !allowBuyWhenOutOfStock) || (!stock_management && selectedCombination['unavailable']))
 			$('#availability_statut:hidden').show();
 
-		if (typeof(selectedCombination['available_date']) != 'undefined' && selectedCombination['available_date']['date'].length != 0)
+		if (typeof(selectedCombination['available_date']) != 'undefined' && typeof(selectedCombination['available_date']['date_formatted']) != 'undefined' && selectedCombination['available_date']['date'].length != 0)
 		{
 			var available_date = selectedCombination['available_date']['date'];
 			var tab_date = available_date.split('-');

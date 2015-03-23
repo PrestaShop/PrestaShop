@@ -308,8 +308,8 @@ class ProductCore extends ObjectModel
 			'visibility' => 				array('type' => self::TYPE_STRING, 'shop' => true, 'validate' => 'isProductVisibility', 'values' => array('both', 'catalog', 'search', 'none'), 'default' => 'both'),
 			'cache_default_attribute' => 	array('type' => self::TYPE_INT, 'shop' => true),
 			'advanced_stock_management' => 	array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
-			'date_add' => 					array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDateFormat'),
-			'date_upd' => 					array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDateFormat'),
+			'date_add' => 					array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDate'),
+			'date_upd' => 					array('type' => self::TYPE_DATE, 'shop' => true, 'validate' => 'isDate'),
 			'pack_stock_type' =>			array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'),
 
 			/* Lang fields */

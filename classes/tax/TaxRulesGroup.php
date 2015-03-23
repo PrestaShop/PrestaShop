@@ -50,8 +50,8 @@ class TaxRulesGroupCore extends ObjectModel
 			'name' =>		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
 			'active' =>		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'deleted' =>	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-			'date_add' => 	array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
-			'date_upd' => 	array('type' => self::TYPE_DATE, 'validate' => 'isDateFormat'),
+			'date_add' => 	array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+			'date_upd' => 	array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
 	);
 
