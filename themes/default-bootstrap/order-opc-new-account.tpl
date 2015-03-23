@@ -195,7 +195,7 @@
 					{$postCodeExist = true}
 					<div class="required postcode text form-group">
 						<label for="postcode">{l s='Zip/Postal code'} <sup>*</sup></label>
-						<input type="text" class="text form-control validate" name="postcode" id="postcode" data-validate="isPostCode" value="{if isset($guestInformations) && isset($guestInformations.postcode) && $guestInformations.postcode}{$guestInformations.postcode}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
+						<input type="text" class="text form-control validate" name="postcode" id="postcode" data-validate="isPostCode" value="{if isset($guestInformations) && isset($guestInformations.postcode) && $guestInformations.postcode}{$guestInformations.postcode}{/if}"/>
 					</div>
 					{elseif $field_name eq "city"}
 					<div class="required text form-group">
@@ -224,7 +224,7 @@
 					{if !$postCodeExist}
 					<div class="required postcode form-group unvisible">
 						<label for="postcode">{l s='Zip/Postal code'} <sup>*</sup></label>
-						<input type="text" class="text form-control validate" name="postcode" id="postcode" data-validate="isPostCode" value="{if isset($guestInformations) && isset($guestInformations.postcode) && $guestInformations.postcode}{$guestInformations.postcode}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
+						<input type="text" class="text form-control validate" name="postcode" id="postcode" data-validate="isPostCode" value="{if isset($guestInformations) && isset($guestInformations.postcode) && $guestInformations.postcode}{$guestInformations.postcode}{/if}"/>
 					</div>
 					{/if}
 					{if !$stateExist}
@@ -314,7 +314,7 @@
 						{$postCodeExist = true}
 						<div class="required postcode_invoice form-group">
 							<label for="postcode_invoice">{l s='Zip/Postal Code'} <sup>*</sup></label>
-							<input type="text" class="form-control validate" name="postcode_invoice" id="postcode_invoice" data-validate="isPostCode" value="{if isset($guestInformations) && isset($guestInformations.postcode_invoice) && $guestInformations.postcode_invoice}{$guestInformations.postcode_invoice}{/if}" onkeyup="$('#postcode_invoice').val($('#postcode_invoice').val().toUpperCase());" />
+							<input type="text" class="form-control validate" name="postcode_invoice" id="postcode_invoice" data-validate="isPostCode" value="{if isset($guestInformations) && isset($guestInformations.postcode_invoice) && $guestInformations.postcode_invoice}{$guestInformations.postcode_invoice}{/if}"/>
 						</div>
 						{elseif $field_name eq "city"}
 						<div class="required form-group">
@@ -344,7 +344,7 @@
 						{if !$postCodeExist}
 						<div class="required postcode_invoice form-group unvisible">
 							<label for="postcode_invoice">{l s='Zip/Postal Code'} <sup>*</sup></label>
-							<input type="text" class="form-control validate" name="postcode_invoice" id="postcode_invoice" data-validate="isPostCode" value="{if isset($guestInformations) && isset($guestInformations.postcode_invoice) && $guestInformations.postcode_invoice}{$guestInformations.postcode_invoice}{/if}" onkeyup="$('#postcode').val($('#postcode').val().toUpperCase());" />
+							<input type="text" class="form-control validate" name="postcode_invoice" id="postcode_invoice" data-validate="isPostCode" value="{if isset($guestInformations) && isset($guestInformations.postcode_invoice) && $guestInformations.postcode_invoice}{$guestInformations.postcode_invoice}{/if}"/>
 						</div>
 						{/if}
 						{if !$stateExist}
