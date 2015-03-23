@@ -37,13 +37,13 @@ class	PrestaShopAutoloadTest extends PHPUnit_Framework_TestCase
 	protected function setUp()
 	{
 		$this->file_index = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.PrestaShopAutoload::INDEX_FILE;
+		unlink($this->file_index);
+		PrestaShopAutoload::getInstance()->generateIndex();
 		$this->file_index_content = md5(file_get_contents($this->file_index));
 	}
 
 	public function testGenerateIndex()
 	{
-		unlink($this->file_index);
-		PrestaShopAutoload::getInstance()->generateIndex();
 		$this->assertTrue(file_exists($this->file_index));
 		$this->assertEquals($this->file_index_content, md5(file_get_contents($this->file_index)));
 	}
@@ -53,5 +53,11 @@ class	PrestaShopAutoloadTest extends PHPUnit_Framework_TestCase
 		PrestaShopAutoload::getInstance()->load('RequestSql');
 		$this->assertTrue(class_exists('RequestSqlCore', false));
 		$this->assertTrue(class_exists('RequestSql', false));
+	}
+
+	public function testClassLoadedFromCoreDir()
+	{
+		PrestaShopAutoload::getInstance()->load('CMSRoleEntity');
+		$this->assertTrue(class_exists('CMSRoleEntity', false));
 	}
 }
