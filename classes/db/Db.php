@@ -68,6 +68,9 @@ abstract class DbCore
 	/** @var array List of server settings */
 	public static $_servers = array();
 
+	/** @var null Flag used to load slave servers only once.
+	 * See loadSlaveServers() method.
+	 */
 	public static $_slave_servers_loaded = null;
 
 	/**
@@ -254,7 +257,7 @@ abstract class DbCore
 	}
 
 	/**
-	 * Loads configuration settings for slave servers
+	 * Loads configuration settings for slave servers if needed.
 	 */
 	protected static function loadSlaveServers()
 	{
