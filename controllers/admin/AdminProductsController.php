@@ -704,6 +704,7 @@ class AdminProductsControllerCore extends AdminController
 			$product->active = 0;
 			if ($product->add()
 			&& Category::duplicateProductCategories($id_product_old, $product->id)
+			&& Product::duplicateSuppliers($id_product_old, $product->id)
 			&& ($combination_images = Product::duplicateAttributes($id_product_old, $product->id)) !== false
 			&& GroupReduction::duplicateReduction($id_product_old, $product->id)
 			&& Product::duplicateAccessories($id_product_old, $product->id)
