@@ -188,6 +188,7 @@ class PrestaShopAutoload
 					$namespacePattern = '[\\a-z0-9_]*[\\]';
 					$pattern = '#\W((abstract\s+)?class|interface)\s+(?P<classname>'.basename($file, '.php').'(?:Core)?)'
 								.'(?:\s+extends\s+'.$namespacePattern.'[a-z][a-z0-9_]*)?(?:\s+implements\s+'.$namespacePattern.'[a-z][\\a-z0-9_]*(?:\s*,\s*'.$namespacePattern.'[a-z][\\a-z0-9_]*)*)?\s*\{#i';
+
 					if (preg_match($pattern, $content, $m))
 					{
 						$classes[$m['classname']] = array(
