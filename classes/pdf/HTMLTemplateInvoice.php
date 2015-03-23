@@ -52,31 +52,35 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 		$this->shop = new Shop((int)$this->order->id_shop);
 	}
 
-	private function computeLayout($tax_excluded_display, $display_product_images)
+	private function computeLayout($params)
 	{
 		$layout = array(
 			'reference' => array(
-				'width' => 40
+				'width' => 15,
 			),
-			'unit_price_tax_excl' => array(
-				'width' => 0
-			),
-			'discount' => array(
-				'width' => 0
+			'product' => array(
+				'width' => 45,
 			),
 			'quantity' => array(
-				'width' => 0
+				'width' => 6,
 			),
-			'total' => array(
-				'width' => 0
+			'tax_code' => array(
+				'width' => 6,
+			),
+			'unit_price_tax_excl' => array(
+				'width' => 0,
+			),
+			'total_tax_excl' => array(
+				'width' => 0,
 			)
 		);
 
-		if (!$tax_excluded_display)
-			$layout['unit_price_tax_incl'] = array('width' => 0);
-
-		if ($display_product_images)
-			$layout['image'] = array('width' => 0);
+		if (isset($params['has_discount']) && $params['has_discount'])
+		{
+			$layout['before_discount'] = array('width' => 0);
+			$layout['product']['width'] -= 7;
+			$layout['reference']['width'] -= 3;
+		}
 
 		$total_width = 0;
 		$free_columns_count = 0;
@@ -120,8 +124,18 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 		$customer = new Customer((int)$this->order->id_customer);
 
 		$order_details = $this->order_invoice->getProducts();
+
+		$has_discount = false;
 		foreach ($order_details as $id => &$order_detail)
 		{
+			// Find out if column 'price before discount' is required
+			if ($order_detail['reduction_amount_tax_excl'] > 0)
+			{
+				$has_discount = true;
+				$order_detail['unit_price_tax_excl_before_specific_price'] = $order_detail['unit_price_tax_excl_including_ecotax'] + $order_detail['reduction_amount_tax_excl'];
+			}
+
+			// Set tax_code
 			$taxes = OrderDetail::getTaxListStatic($id);
 			$tax_temp = array();
 			foreach ($taxes as $tax)
@@ -250,6 +264,8 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 		$display_product_images = Configuration::get('PS_PDF_IMG_INVOICE');
 		$tax_excluded_display = Group::getPriceDisplayMethod($customer->id_default_group);
 
+		$layout = $this->computeLayout(array('has_discount' => $has_discount));
+
 		$data = array(
 			'order' => $this->order,
 			'order_details' => $order_details,
@@ -259,7 +275,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			'addresses' => array('invoice' => $invoice_address, 'delivery' => $delivery_address),
 			'tax_excluded_display' => $tax_excluded_display,
 			'display_product_images' => $display_product_images,
-			'layout' => $this->computeLayout($tax_excluded_display, $display_product_images),
+			'layout' => $layout,
 			'tax_tab' => $this->getTaxTabContent(),
 			'customer' => $customer,
 			'footer' => $footer,

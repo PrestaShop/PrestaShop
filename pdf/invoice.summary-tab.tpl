@@ -33,6 +33,12 @@
         <td class="min-height-md center small">{$title|escape:'html':'UTF-8'}</td>
         <td class="min-height-md center small">{dateFormat date=$order->date_add full=0}</td>
         <td class="min-height-md center small">{$order->getUniqReference()}</td>
-        <td class="min-height-md center small">{$data.addresses.invoice->vat_number}</td>
+        <td class="min-height-md center small">
+            {if $data.addresses.invoice->vat_number}
+                {$data.addresses.invoice->vat_number}
+            {else}
+                --
+            {/if}
+        </td>
     </tr>
 </table>
