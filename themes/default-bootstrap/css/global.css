@@ -5887,15 +5887,6 @@ span.exclusive {
         padding-left: 7px; } }
     .button.exclusive-medium span:hover {
       border-color: #9e9e9e #c2c2c2 #c8c8c8 #c2c2c2; }
-      .button.exclusive-medium span:hover span {
-        background: #e7e7e7;
-        background: -moz-linear-gradient(top, #e7e7e7 0%, #e7e7e7 0%);
-        background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #e7e7e7), color-stop(0%, #e7e7e7));
-        background: -webkit-linear-gradient(top, #e7e7e7 0%, #e7e7e7 0%);
-        background: -o-linear-gradient(top, #e7e7e7 0%, #e7e7e7 0%);
-        background: -ms-linear-gradient(top, #e7e7e7 0%, #e7e7e7 0%);
-        background: linear-gradient(to bottom, #e7e7e7 0%, #e7e7e7 0%);
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e7e7e7', endColorstr='#e7e7e7',GradientType=0); }
 
 .button.ajax_add_to_cart_button {
   font: 700 17px/21px Arial, Helvetica, sans-serif;
