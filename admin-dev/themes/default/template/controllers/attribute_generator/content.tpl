@@ -64,7 +64,6 @@
 <div class="leadin">{block name="leadin"}{/block}</div>
 
 {if $generate}<div class="alert alert-success clearfix">{l s='%d product(s) successfully created.' sprintf=$combinations_size}</div>{/if}
-<script type="text/javascript" src="../js/admin/attributes.js"></script>
 <form enctype="multipart/form-data" method="post" id="generator" action="{$url_generator}">
 	<div class="panel">
 		<h3>

@@ -43,6 +43,12 @@ class AdminAttributeGeneratorControllerCore extends AdminController
 		parent::__construct();
 	}
 
+	public function setMedia()
+	{
+		parent::setMedia();
+		$this->addJS(_PS_JS_DIR_.'admin/attributes.js');
+	}
+
 	protected function addAttribute($attributes, $price = 0, $weight = 0)
 	{
 		foreach ($attributes as $attribute)
