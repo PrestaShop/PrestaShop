@@ -490,16 +490,6 @@ span.exclusive {
 		}
 		&:hover {
 			border-color: #9e9e9e #c2c2c2 #c8c8c8 #c2c2c2;
-			span {
-				background: rgb(231, 231, 231);
-				background: -moz-linear-gradient(top, rgba(231, 231, 231, 1) 0%, rgba(231, 231, 231, 1) 0%);
-				background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(231, 231, 231, 1)), color-stop(0%, rgba(231, 231, 231, 1)));
-				background: -webkit-linear-gradient(top, rgba(231, 231, 231, 1) 0%, rgba(231, 231, 231, 1) 0%);
-				background: -o-linear-gradient(top, rgba(231, 231, 231, 1) 0%, rgba(231, 231, 231, 1) 0%);
-				background: -ms-linear-gradient(top, rgba(231, 231, 231, 1) 0%, rgba(231, 231, 231, 1) 0%);
-				background: linear-gradient(to bottom, rgba(231, 231, 231, 1) 0%, rgba(231, 231, 231, 1) 0%);
-				filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#e7e7e7', endColorstr='#e7e7e7',GradientType=0);
-			}
 		}
 	}
 }
