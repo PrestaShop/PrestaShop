@@ -26,6 +26,7 @@
 
 /**
  * @since 1.5.0
+ * @property Stock $object
  */
 class AdminStockInstantStateControllerCore extends AdminController
 {

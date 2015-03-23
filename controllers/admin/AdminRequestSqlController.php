@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property RequestSql $object
+ */
 class AdminRequestSqlControllerCore extends AdminController
 {
 	/**

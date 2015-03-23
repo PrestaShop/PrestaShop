@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Alias $object
+ */
 class AdminSearchConfControllerCore extends AdminController
 {
 	protected $toolbar_scroll = false;

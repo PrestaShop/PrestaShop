@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Tag $object
+ */
 class AdminTagsControllerCore extends AdminController
 {
 	public $bootstrap = true;

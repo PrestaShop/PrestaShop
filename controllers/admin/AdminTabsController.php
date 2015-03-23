@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Tab $object
+ */
 class AdminTabsControllerCore extends AdminController
 {
 	protected $position_identifier = 'id_tab';

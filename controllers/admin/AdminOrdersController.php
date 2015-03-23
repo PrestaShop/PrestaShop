@@ -35,6 +35,9 @@ class BoOrder extends PaymentModule
 	}
 }
 
+/**
+ * @property Order $object
+ */
 class AdminOrdersControllerCore extends AdminController
 {
 	public $toolbar_title;

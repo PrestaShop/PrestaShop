@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Attachment $object
+ */
 class AdminAttachmentsControllerCore extends AdminController
 {
 	public $bootstrap = true ;

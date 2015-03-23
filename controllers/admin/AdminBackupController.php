@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property PrestaShopBackup $object
+ */
 class AdminBackupControllerCore extends AdminController
 {
 	/** @var string The field we are sorting on */

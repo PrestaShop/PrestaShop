@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Language $object
+ */
 class AdminLanguagesControllerCore extends AdminController
 {
 	public function __construct()

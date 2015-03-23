@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property OrderState $object
+ */
 class AdminStatusesControllerCore extends AdminController
 {
 	public function __construct()

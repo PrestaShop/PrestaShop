@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Product $object
+ */
 class AdminProductsControllerCore extends AdminController
 {
 	/** @var integer Max image size for upload

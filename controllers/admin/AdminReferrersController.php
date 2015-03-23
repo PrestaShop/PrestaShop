@@ -52,6 +52,9 @@ if (Tools::getValue('token') == Tools::getAdminToken('AdminReferrers'.(int)Tab::
 	}
 }
 
+/**
+ * @property Referrer $object
+ */
 class AdminReferrersControllerCore extends AdminController
 {
 	public function __construct()

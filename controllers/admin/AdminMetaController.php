@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Meta $object
+ */
 class AdminMetaControllerCore extends AdminController
 {
 	public $table = 'meta';

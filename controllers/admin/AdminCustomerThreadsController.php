@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property CustomerThread $object
+ */
 class AdminCustomerThreadsControllerCore extends AdminController
 {
 	public function __construct()

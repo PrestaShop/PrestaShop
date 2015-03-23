@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Country $object
+ */
 class AdminCountriesControllerCore extends AdminController
 {
 	public function __construct()

@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Carrier $object
+ */
 class AdminCarriersControllerCore extends AdminController
 {
 	protected $position_identifier = 'id_carrier';

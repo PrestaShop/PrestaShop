@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property OrderInvoice $object
+ */
 class AdminOutstandingControllerCore  extends AdminController
 {
 	public function __construct()

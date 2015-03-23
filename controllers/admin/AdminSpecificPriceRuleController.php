@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property SpecificPriceRule $object
+ */
 class AdminSpecificPriceRuleControllerCore extends AdminController
 {
 	public $list_reduction_type;

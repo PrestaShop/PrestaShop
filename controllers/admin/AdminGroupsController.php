@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Group $object
+ */
 class AdminGroupsControllerCore extends AdminController
 {
 	public function __construct()

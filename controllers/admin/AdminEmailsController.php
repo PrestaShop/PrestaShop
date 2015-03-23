@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Mail $object
+ */
 class AdminEmailsControllerCore extends AdminController
 {
 	public function __construct()

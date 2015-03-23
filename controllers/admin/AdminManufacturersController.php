@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Manufacturer $object
+ */
 class AdminManufacturersControllerCore extends AdminController
 {
 	public $bootstrap = true ;

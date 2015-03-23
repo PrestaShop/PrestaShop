@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Employee $object
+ */
 class AdminEmployeesControllerCore extends AdminController
 {
 	/** @var array profiles list */

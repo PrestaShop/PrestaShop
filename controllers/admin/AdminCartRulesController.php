@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property CartRule $object
+ */
 class AdminCartRulesControllerCore extends AdminController
 {
 	public function __construct()

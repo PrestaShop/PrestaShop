@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Tax $object
+ */
 class AdminTaxesControllerCore extends AdminController
 {
 	public function __construct()

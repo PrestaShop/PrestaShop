@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Customer $object
+ */
 class AdminCustomersControllerCore extends AdminController
 {
 	protected $delete_mode;

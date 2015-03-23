@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Category $object
+ */
 class AdminCategoriesControllerCore extends AdminController
 {
 	/**

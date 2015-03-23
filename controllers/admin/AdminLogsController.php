@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property PrestaShopLogger $object
+ */
 class AdminLogsControllerCore extends AdminController
 {
 	public function __construct()
