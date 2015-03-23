@@ -26,9 +26,6 @@
 
 class AdminProductsControllerCore extends AdminController
 {
-	/** @var Product */
-	protected $object;
-
 	/** @var integer Max image size for upload
 	 * As of 1.5 it is recommended to not set a limit to max image size
 	 */
@@ -319,6 +316,10 @@ class AdminProductsControllerCore extends AdminController
 			return '';
 	}
 
+	/**
+	 * @param Product|ObjectModel $object
+	 * @param string              $table
+	 */
 	protected function copyFromPost(&$object, $table)
 	{
 		parent::copyFromPost($object, $table);
@@ -737,6 +738,7 @@ class AdminProductsControllerCore extends AdminController
 	{
 		if (Validate::isLoadedObject($object = $this->loadObject()) && isset($this->fieldImageSettings))
 		{
+			/** @var Product $object */
 			// check if request at least one object with noZeroObject
 			if (isset($object->noZeroObject) && count($taxes = call_user_func(array($this->className, $object->noZeroObject))) <= 1)
 				$this->errors[] = Tools::displayError('You need at least one object.').' <b>'.$this->table.'</b><br />'.Tools::displayError('You cannot delete all of the items.');
@@ -2888,19 +2890,25 @@ class AdminProductsControllerCore extends AdminController
 
 			// Delete already associated suppliers if needed
 			foreach ($associated_suppliers as $key => $associated_supplier)
+			{
+				/** @var ProductSupplier $associated_supplier */
 				if (!in_array($associated_supplier->id_supplier, $suppliers_to_associate))
 				{
 					$associated_supplier->delete();
 					unset($associated_suppliers[$key]);
 				}
+			}
 
 			// Associate suppliers
 			foreach ($suppliers_to_associate as $id)
 			{
 				$to_add = true;
 				foreach ($associated_suppliers as $as)
+				{
+					/** @var ProductSupplier $as */
 					if ($id == $as->id_supplier)
 						$to_add = false;
+				}
 
 				if ($to_add)
 				{
@@ -2931,6 +2939,7 @@ class AdminProductsControllerCore extends AdminController
 			foreach ($attributes as $attribute)
 				foreach ($associated_suppliers as $supplier)
 				{
+					/** @var ProductSupplier $supplier */
 					if (Tools::isSubmit('supplier_reference_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier) ||
 						(Tools::isSubmit('product_price_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier) &&
 						 Tools::isSubmit('product_price_currency_'.$product->id.'_'.$attribute['id_product_attribute'].'_'.$supplier->id_supplier)))
@@ -3062,6 +3071,7 @@ class AdminProductsControllerCore extends AdminController
 			// Delete entry if necessary
 			foreach ($associated_warehouses_collection as $awc)
 			{
+				/** @var WarehouseProductLocation $awc */
 				if (!array_key_exists($awc->id_warehouse.'_'.$awc->id_product.'_'.$awc->id_product_attribute, $elements_to_manage))
 					$awc->delete();
 			}
@@ -3486,6 +3496,7 @@ class AdminProductsControllerCore extends AdminController
 
 	protected function _displaySpecificPriceModificationForm($defaultCurrency, $shops, $currencies, $countries, $groups)
 	{
+		/** @var Product $obj */
 		if (!($obj = $this->loadObject()))
 			return;
 
@@ -4597,6 +4608,8 @@ class AdminProductsControllerCore extends AdminController
 					$supplier['is_default'] = false;
 
 					foreach ($associated_suppliers as $associated_supplier)
+					{
+						/** @var ProductSupplier $associated_supplier */
 						if ($associated_supplier->id_supplier == $supplier['id_supplier'])
 						{
 							$associated_supplier->name = $supplier['name'];
@@ -4608,6 +4621,7 @@ class AdminProductsControllerCore extends AdminController
 								$default_supplier = $supplier['id_supplier'];
 							}
 						}
+					}
 				}
 
 				$data->assign(array(

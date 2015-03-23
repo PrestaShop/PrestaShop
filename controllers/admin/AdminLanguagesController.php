@@ -258,6 +258,7 @@ class AdminLanguagesControllerCore extends AdminController
 			'title' => $this->l('Save'),
 		);
 
+		/** @var Language $obj */
 		if (!($obj = $this->loadObject(true)))
 			return;
 
@@ -427,6 +428,8 @@ class AdminLanguagesControllerCore extends AdminController
 						// class AdminTab deal with every $_FILES content, don't do that for no_picture
 					unset($_FILES['no_picture']);
 			}
+
+			/** @var Language $object */
 			$object = $this->loadObject();
 			if (Tools::getValue('active') != (int)$object->active)
 				if (!$this->checkDisableStatus($object))
@@ -499,6 +502,10 @@ class AdminLanguagesControllerCore extends AdminController
 		return !count($this->errors) ? true : false;
 	}
 
+	/**
+	 * @param Language $object
+	 * @param string   $table
+	 */
 	protected function copyFromPost(&$object, $table)
 	{
 		if ($object->id && ($object->iso_code != $_POST['iso_code']))

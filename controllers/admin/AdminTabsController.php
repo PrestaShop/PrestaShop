@@ -238,6 +238,8 @@ class AdminTabsControllerCore extends AdminController
 			$this->addRowAction('edit');
 			$this->addRowAction('delete');
 			$this->toolbar_btn = array();
+
+			/** @var Tab $tab */
 			$tab = $this->loadObject($id);
 			$this->toolbar_title = $tab->name[$this->context->employee->id_lang];
 
@@ -336,6 +338,7 @@ class AdminTabsControllerCore extends AdminController
 
 	protected function afterImageUpload()
 	{
+		/** @var Tab $obj */
 		if (!($obj = $this->loadObject(true)))
 			return;
 		@rename(_PS_IMG_DIR_.'t/'.$obj->id.'.gif', _PS_IMG_DIR_.'t/'.$obj->class_name.'.gif');

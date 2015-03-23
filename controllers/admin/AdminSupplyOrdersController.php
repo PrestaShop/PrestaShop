@@ -29,7 +29,7 @@
  */
 class AdminSupplyOrdersControllerCore extends AdminController
 {
-	/*
+	/**
 	 * @var array List of warehouses
 	 */
 	protected $warehouses;

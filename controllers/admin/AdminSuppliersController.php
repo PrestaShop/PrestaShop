@@ -26,9 +26,6 @@
 
 class AdminSuppliersControllerCore extends AdminController
 {
-	/** @var Supplier */
-	protected $object;
-
 	public $bootstrap = true ;
 
 	public function __construct()

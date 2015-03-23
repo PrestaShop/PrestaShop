@@ -139,6 +139,7 @@ class AdminWarehousesControllerCore extends AdminController
 	 */
 	public function renderForm()
 	{
+		/** @var Warehouse $obj */
 		// loads current warehouse
 		if (!($obj = $this->loadObject(true)))
 			return;
@@ -446,9 +447,13 @@ class AdminWarehousesControllerCore extends AdminController
 	}
 
 	/**
-	 * @see AdminController::afterAdd()
 	 * Called once $object is set.
 	 * Used to process the associations with address/shops/carriers
+	 * @see AdminController::afterAdd()
+	 *
+	 * @param Warehouse $object
+	 *
+	 * @return bool
 	 */
 	protected function afterAdd($object)
 	{
@@ -595,6 +600,7 @@ class AdminWarehousesControllerCore extends AdminController
 	{
 		if (Tools::isSubmit('delete'.$this->table))
 		{
+			/** @var Warehouse $obj */
 			// check if the warehouse exists and can be deleted
 			if (!($obj = $this->loadObject(true)))
 				return;

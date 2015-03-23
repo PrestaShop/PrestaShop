@@ -26,9 +26,6 @@
 
 class AdminShopUrlControllerCore extends AdminController
 {
-	/** @var ShopUrl */
-	protected $object;
-
 	public function __construct()
 	{
 		$this->bootstrap = true;
@@ -399,6 +396,7 @@ class AdminShopUrlControllerCore extends AdminController
 			{
 				if (Validate::isLoadedObject($object = $this->loadObject()))
 				{
+					/** @var ShopUrl $object */
 					if ($object->main)
 						$this->errors[] = Tools::displayError('You cannot disable the Main URL.');
 					elseif ($object->toggleStatus())
@@ -484,6 +482,7 @@ class AdminShopUrlControllerCore extends AdminController
 		if (trim(dirname(dirname($current_url['path'])), '/') == trim($this->object->getBaseURI(), '/'))
 			$this->redirect_shop_url = true;
 
+		/** @var ShopUrl $object */
 		$object = $this->loadObject(true);
 
 		if ($object->main && !Tools::getValue('main'))

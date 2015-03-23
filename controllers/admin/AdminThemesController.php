@@ -682,6 +682,7 @@ class AdminThemesControllerCore extends AdminController
 			$themes = array();
 			foreach (Theme::getThemes() as $theme)
 			{
+				/** @var Theme $theme */
 				if ($theme->id != $obj->id)
 					$themes[] = $theme->directory;
 			}
@@ -1579,6 +1580,7 @@ class AdminThemesControllerCore extends AdminController
 
 		foreach ($themes as $theme_object)
 		{
+			/** @var Theme $theme_object */
 			if ($theme_object->name == $theme_name)
 				return true;
 		}

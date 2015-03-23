@@ -707,6 +707,7 @@ class AdminCategoriesControllerCore extends AdminController
 	{
 		if ($this->tabAccess['delete'] === '1')
 		{
+			/** @var Category $category */
 			$category = $this->loadObject();
 			if ($category->isRootCategoryForAShop())
 				$this->errors[] = Tools::displayError('You cannot remove this category because one of your shops uses it as a root category.');

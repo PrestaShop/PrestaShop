@@ -184,6 +184,7 @@ class AdminEmployeesControllerCore extends AdminController
 			$obj = $this->loadObject(true);
 			if (Validate::isLoadedObject($obj))
 			{
+				/** @var Employee $obj */
 				array_pop($this->toolbar_title);
 				$this->toolbar_title[] = sprintf($this->l('Edit: %1$s %2$s'), $obj->lastname, $obj->firstname);
 				$this->page_header_toolbar_title = implode(' '.Configuration::get('PS_NAVIGATION_PIPE').' ',
@@ -205,6 +206,7 @@ class AdminEmployeesControllerCore extends AdminController
 
 	public function renderForm()
 	{
+		/** @var Employee $obj */
 		if (!($obj = $this->loadObject(true)))
 			return;
 
@@ -620,6 +622,11 @@ class AdminEmployeesControllerCore extends AdminController
 		return parent::initContent();
 	}
 
+	/**
+	 * @param Employee $object
+	 *
+	 * @return bool
+	 */
 	protected function afterUpdate($object)
 	{
 		$res = parent::afterUpdate($object);

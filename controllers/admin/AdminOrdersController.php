@@ -1359,6 +1359,7 @@ class AdminOrdersControllerCore extends AdminController
 									$order_invoices_collection = $order->getInvoicesCollection();
 									foreach ($order_invoices_collection as $order_invoice)
 									{
+										/** @var OrderInvoice $order_invoice */
 										$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($order_invoice->total_paid_tax_incl * $discount_value / 100, 2);
 										$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($order_invoice->total_paid_tax_excl * $discount_value / 100, 2);
 
@@ -1437,6 +1438,7 @@ class AdminOrdersControllerCore extends AdminController
 								$order_invoices_collection = $order->getInvoicesCollection();
 								foreach ($order_invoices_collection as $order_invoice)
 								{
+									/** @var OrderInvoice $order_invoice */
 									if ($order_invoice->total_shipping_tax_incl <= 0)
 										continue;
 									$cart_rules[$order_invoice->id]['value_tax_incl'] = $order_invoice->total_shipping_tax_incl;

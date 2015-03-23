@@ -561,6 +561,7 @@ class AdminCartRulesControllerCore extends AdminController
 			'desc' => $this->l('Save and Stay')
 		);
 
+		/** @var CartRule $current_object */
 		$current_object = $this->loadObject(true);
 
 		// All the filter are prefilled with the correct information

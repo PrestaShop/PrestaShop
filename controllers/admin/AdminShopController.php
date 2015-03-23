@@ -255,6 +255,7 @@ class AdminShopControllerCore extends AdminController
 		if (count($this->errors))
 			return false;
 
+		/** @var Shop|bool $result */
 		$result = parent::postProcess();
 
 		if ($result != false && (Tools::isSubmit('submitAddshopAndStay') || Tools::isSubmit('submitAddshop')) && (int)$result->id_category != (int)Configuration::get('PS_HOME_CATEGORY', null, null, (int)$result->id))
@@ -354,6 +355,7 @@ class AdminShopControllerCore extends AdminController
 
 	public function renderForm()
 	{
+		/** @var Shop $obj */
 		if (!($obj = $this->loadObject(true)))
 			return;
 
@@ -388,6 +390,7 @@ class AdminShopControllerCore extends AdminController
 			$options = array();
 			foreach (ShopGroup::getShopGroups() as $group)
 			{
+				/** @var ShopGroup $group */
 				if ($this->display == 'edit' && ($group->share_customer || $group->share_order || $group->share_stock) && ShopGroup::hasDependency($group->id))
 					continue;
 

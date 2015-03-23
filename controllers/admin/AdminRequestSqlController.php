@@ -200,6 +200,7 @@ class AdminRequestSqlControllerCore extends AdminController
 
 	public function renderView()
 	{
+		/** @var RequestSql $obj */
 		if (!($obj = $this->loadObject(true)))
 			return;
 

@@ -50,7 +50,10 @@ class AdminOutstandingControllerCore  extends AdminController
 
 		$risks = array();
 		foreach (Risk::getRisks() as $risk)
+		{
+			/** @var Risk $risk */
 			$risks[$risk->id] = $risk->name;
+		}
 
 		$this->fields_list = array(
 			'number' => array(

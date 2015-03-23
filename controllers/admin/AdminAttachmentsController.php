@@ -117,6 +117,7 @@ class AdminAttachmentsControllerCore extends AdminController
 	{
 		if (($obj = $this->loadObject(true)) && Validate::isLoadedObject($obj))
 		{
+			/** @var Attachment $obj */
 			$link = $this->context->link->getPageLink('attachment', true, NULL, 'id_attachment='.$obj->id);
 
 			if (file_exists(_PS_DOWNLOAD_DIR_.$obj->file))

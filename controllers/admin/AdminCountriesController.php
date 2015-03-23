@@ -365,6 +365,7 @@ class AdminCountriesControllerCore extends AdminController
 
 	public function processUpdate()
 	{
+		/** @var Country $country */
 		$country = $this->loadObject();
 		if (Validate::isLoadedObject($country) && Tools::getValue('id_zone'))
 		{
@@ -439,8 +440,11 @@ class AdminCountriesControllerCore extends AdminController
 	public function processStatus()
 	{
 		parent::processStatus();
+
+		/** @var Country $object */
 		if (Validate::isLoadedObject($object = $this->loadObject()) && $object->active == 1)
 			return Country::addModuleRestrictions(array(), array(array('id_country' => $object->id)), array());
+
 		return false;
 	}
 
