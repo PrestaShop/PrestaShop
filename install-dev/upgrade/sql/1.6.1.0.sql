@@ -163,5 +163,5 @@ ALTER TABLE `PREFIX_customer` ADD KEY `id_shop` (`id_shop`, `date_add`);
 
 ALTER TABLE `PREFIX_cart` DROP KEY `id_shop`;
 ALTER TABLE `PREFIX_cart` ADD KEY `id_shop_2` (`id_shop`,`date_upd`), ADD KEY `id_shop` (`id_shop`,`date_add`);
-
 ALTER TABLE `PREFIX_product_shop` ADD KEY `indexed` (`indexed`, `active`, `id_product`);
+UPDATE `PREFIX_product_shop` SET `date_add` = NOW() WHERE `date_add` = "0000-00-00 00:00:00";
