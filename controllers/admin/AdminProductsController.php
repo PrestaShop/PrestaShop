@@ -2532,6 +2532,7 @@ class AdminProductsControllerCore extends AdminController
 	public function renderList()
 	{
 		$this->addRowAction('edit');
+		$this->addRowAction('preview');
 		$this->addRowAction('duplicate');
 		$this->addRowAction('delete');
 		return parent::renderList();
@@ -5039,5 +5040,19 @@ class AdminProductsControllerCore extends AdminController
 						if ($val && $language['id_lang'] == $match[1])
 							Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_lang SET legend = "'.pSQL($val).'" WHERE EXISTS (SELECT 1 FROM '._DB_PREFIX_.'image WHERE '._DB_PREFIX_.'image.id_image = '._DB_PREFIX_.'image_lang.id_image AND id_product = '.(int)$product->id.') AND id_lang = '.(int)$language['id_lang']);
 		}
+	}
+
+	public function displayPreviewLink($token = null, $id, $name = null)
+	{
+		$tpl = $this->createTemplate('helpers/list/list_action_preview.tpl');
+		if (!array_key_exists('Bad SQL query', self::$cache_lang))
+			self::$cache_lang['Preview'] = $this->l('Preview', 'Helper');
+
+		$tpl->assign(array(
+			'href' => $this->getPreviewUrl(new Product((int)$id)),
+			'action' => self::$cache_lang['Preview'],
+		));
+
+		return $tpl->fetch();
 	}
 }
