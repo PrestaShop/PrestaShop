@@ -3283,7 +3283,7 @@ exit;
 		return strip_tags(stripslashes($description));
 	}
 
-	public static function purifyHTML($html)
+	public static function purifyHTML($html, $uri_unescape = null)
 	{
 		static $use_html_purifier = null;
 		static $purifier = null;
@@ -3336,6 +3336,12 @@ exit;
 				}
 
 				$purifier = new HTMLPurifier($config);
+
+				if (is_array($uri_unescape))
+				{
+					foreach ($uri_unescape as $char)
+						$purifier->config->def->defaults['URI.unescape'] .= $char;
+				}
 			}
 			if (_PS_MAGIC_QUOTES_GPC_)
 				$html = stripslashes($html);
