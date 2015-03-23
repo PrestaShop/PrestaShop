@@ -2635,3 +2635,19 @@ CREATE TABLE `PREFIX_modules_perfs` (
   PRIMARY KEY (`id_modules_perfs`),
   KEY (`session`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `PREFIX_cms_role` (
+  `id_cms_role` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `id_cms` int(11) unsigned NOT NULL,
+  PRIMARY KEY (`id_cms_role`, `id_cms`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `PREFIX_cms_role_lang` (
+  `id_cms_role` int(11) unsigned NOT NULL,
+  `id_lang` int(11) unsigned NOT NULL,
+  `id_shop` int(11) unsigned NOT NULL,
+  `name` varchar(128) DEFAULT NULL,
+  PRIMARY KEY (`id_cms_role`,`id_lang`, id_shop)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
