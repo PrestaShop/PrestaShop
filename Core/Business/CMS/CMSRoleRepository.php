@@ -24,4 +24,33 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class Entity extends ObjectModel {}
+class CMSRoleRepository extends RepositoryManager
+{
+	public $entity;
+
+	public function __construct()
+	{
+		$this->entity = 'CMSRoleEntity';
+	}
+
+	public function getRoleByName($name)
+	{
+		$sql = '
+		SELECT *
+		FROM `'._DB_PREFIX_.CMSRoleEntity::$definition['table'].'`
+		WHERE `name` = "'.pSQL($name).'"';
+
+		return Db::getInstance()->executeS($sql);
+	}
+
+	public function getRoleByIdCms($id_cms)
+	{
+		$sql = '
+		SELECT *
+		FROM `'._DB_PREFIX_.CMSRoleEntity::$definition['table'].'`
+		WHERE `id_cms` ='.(int)$id_cms;
+
+		return Db::getInstance()->executeS($sql);
+	}
+
+}

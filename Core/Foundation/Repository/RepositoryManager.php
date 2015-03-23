@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,18 +19,28 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
-*  @version  Release: $Revision$
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
-			    	
-header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
-	
-header("Cache-Control: no-store, no-cache, must-revalidate");
-header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache");
-	
-header("Location: ../");
-exit;
+
+class RepositoryManager
+{
+	private $component = null;
+
+	public function getRepository($name)
+	{
+		$this->component = $name;
+		$repository_name = $this->component.'Repository';
+		return new $repository_name;
+	}
+
+	public function createNewRecord()
+	{
+		if (is_null($this->component))
+			throw new PrestaShopExceptionCore('No repository currently in use! use getRepository() to load one !');
+
+		$entity_name = $this->component.'Entity';
+		return new $entity_name;
+	}
+}

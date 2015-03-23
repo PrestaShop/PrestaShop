@@ -24,4 +24,41 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class Entity extends ObjectModel {}
+class DependencyInjector
+{
+	const TYPE_MODULE = 'MODULE';
+	private $component_type;
+
+	public function __construct($component_type)
+	{
+		$this->component_type = $component_type;
+	}
+
+	public function getDependencies($component_name)
+	{
+		$dependencies_array = array();
+
+		/* Handle module main class DI */
+		if ($this->component_type == DependencyInjector::TYPE_MODULE)
+		{
+			if (!Tools::file_exists_no_cache(_PS_MODULE_DIR_ . $component_name . '/' . $component_name . '.php'))
+				return array();
+
+			$r = new ReflectionMethod($component_name, '__construct');
+			$params = $r->getParameters();
+			foreach ($params as $param)
+			{
+				if (is_null($param->getClass()))
+					return array();
+				else
+				{
+					$dependency = $param->getClass();
+					$dependencies_array[] = new $dependency->name;
+				}
+			}
+		}
+
+		return $dependencies_array;
+	}
+
+}
