@@ -28,6 +28,13 @@
     {l s='Exempt of VAT according section 259B of the General Tax Code.' pdf='true'}
 {elseif (isset($tax_breakdowns) && $tax_breakdowns)}
 
+    <table width="100%">
+        <tr>
+            <td>{$tax_label}</td>
+        </tr>
+    </table>
+
+
     <table width="100%" border="1" cellpadding="2">
         <tr>
             <th class="header small">{l s='Tax Detail' pdf='true'}</th>
@@ -83,8 +90,6 @@
         {/foreach}
 
     </table>
-
-    {$tax_label}
 
 {/if}
 <!--  / TAX DETAILS -->
