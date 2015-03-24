@@ -27,12 +27,7 @@
         <td width="33%">
             <p class="small">&nbsp;</p>
             <p class="small">
-                PrestaShop<br />
-                55 rue Raspail<br />
-                92300 Levallois-Perret<br />
-                +33 (0)1 40 18 30 04<br />
-                +33 (0)9 72 11 18 78<br />
-                www.prestashop.com
+                {$order_invoice->company_address}
             </p>
         </td>
         <td width="33%">
