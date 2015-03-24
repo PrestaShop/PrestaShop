@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2015 PrestaShop
+* 2007-2014 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
+*  @copyright  2007-2014 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -73,13 +73,6 @@ class AdminOrderPreferencesControllerCore extends AdminController
 					'PS_GUEST_CHECKOUT_ENABLED' => array(
 						'title' => $this->l('Enable guest checkout'),
 						'hint' => $this->l('Allow guest visitors to place an order without registering.'),
-						'validation' => 'isBool',
-						'cast' => 'intval',
-						'type' => 'bool'
-					),
-					'PS_DISALLOW_HISTORY_REORDERING' => array(
-						'title' => $this->l('Disable Reordering Option'),
-						'hint' => $this->l('Disable the option to allow customers to reorder in one click from the order history page (required in some European countries).'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
@@ -138,27 +131,6 @@ class AdminOrderPreferencesControllerCore extends AdminController
 						'type' => 'select',
 						'list' => $warehouse_list,
 						'identifier' => 'id_warehouse'
-					),
-				),
-				'submit' => array('title' => $this->l('Save'))
-			),
-			'pdf' => array(
-				'title' => $this->l('PDF Settings'),
-				'icon' => 'icon-file-text',
-				'fields' => array(
-					'PS_PDF_IMG_INVOICE' => array(
-						'title' => $this->l('Enable product image on Invoice'),
-						'hint' => $this->l('Adds an image before product name on Invoice'),
-						'validation' => 'isBool',
-						'cast' => 'intval',
-						'type' => 'bool'
-					),
-					'PS_PDF_IMG_DELIVERY' => array(
-						'title' => $this->l('Enable product image on Delivery-slip'),
-						'hint' => $this->l('Adds an image before product name on Delivery-slip'),
-						'validation' => 'isBool',
-						'cast' => 'intval',
-						'type' => 'bool'
 					),
 				),
 				'submit' => array('title' => $this->l('Save'))

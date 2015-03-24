@@ -1854,7 +1854,6 @@ class CartCore extends ObjectModel
 							$has_default_warehouse = true;
 					}
 		}
-
 		if (!$has_default_warehouse && Configuration::get('PS_WAREHOUSE_SINGLE_COST'))
 		{
 			foreach ($final_package_list as &$packages)
@@ -1866,7 +1865,7 @@ class CartCore extends ObjectModel
 					}
 		}
 
-		$cache[(int)$this->id.'_'.(int)$this->id_address_delivery] = $final_package_list;
+		$cache[(int)$this->id] = $final_package_list;
 		return $final_package_list;
 	}
 
