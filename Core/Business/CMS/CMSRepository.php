@@ -24,45 +24,23 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class RepositoryManager
+class CMSRepository extends RepositoryManager
 {
-	protected $component = null;
+	protected $entity = null;
 
-	/**
-	 * @param $name
-	 * @return mixed
-	 */
-	public function getRepository($name)
+	public function __construct($component_name)
 	{
-		$repository_name = $name.'Repository';
-		return new $repository_name($name);
+		$this->component = $component_name;
+		$this->entity = 'CMS';
 	}
 
 	/**
-	 * @return mixed
-	 * @throws PrestaShopExceptionCore
+	 * @return array|false
 	 */
-	public function createNewRecord()
+	public function getCMSPagesList()
 	{
-		if (is_null($this->component))
-			throw new PrestaShopExceptionCore('No repository currently in use! use getRepository() to load one !');
-
-		$entity_name = $this->component.'Entity';
-		return new $entity_name;
+		// @TODO: Works as a "proxy" ATM but should be integrated directly here in the future
+		return CMS::listCms();
 	}
 
-	/**
-	 * @TODO: Make it more generics to allow to get record by any column possible :)
-	 * @param $id
-	 * @return mixed
-	 * @throws PrestaShopExceptionCore
-	 */
-	public function getRecordByID($id, $legacy = false)
-	{
-		if (is_null($this->component))
-			throw new PrestaShopExceptionCore('No repository currently in use! use getRepository() to load one !');
-
-		$entity_name = $this->component.($legacy ? '' : 'Entity');
-		return new $entity_name($id);
-	}
 }

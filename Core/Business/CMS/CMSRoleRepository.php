@@ -26,11 +26,11 @@
 
 class CMSRoleRepository extends RepositoryManager
 {
-	public $entity;
+	protected $entity = null;
 
-
-	public function __construct()
+	public function __construct($component_name)
 	{
+		$this->component = $component_name;
 		$this->entity = 'CMSRoleEntity';
 	}
 
@@ -60,6 +60,27 @@ class CMSRoleRepository extends RepositoryManager
 		SELECT *
 		FROM `'._DB_PREFIX_.CMSRoleEntity::$definition['table'].'`
 		WHERE `id_cms` ='.(int)$id_cms;
+
+		return Db::getInstance()->executeS($sql);
+	}
+
+	/**
+	 * @param $names_array
+	 * @return array|false
+	 * @throws PrestaShopDatabaseException
+	 * @throws PrestaShopExceptionCore
+	 */
+	public function getCMSRolesWhereNamesIn($names_array)
+	{
+		if (!is_array($names_array))
+			throw new PrestaShopExceptionCore('Expected array given '.gettype($names_array));
+
+		$names_exploded = implode('","', $names_array);
+
+		$sql = '
+		SELECT *
+		FROM `'._DB_PREFIX_.CMSRoleEntity::$definition['table'].'`
+		WHERE `name` IN ("'.$names_exploded.'")';
 
 		return Db::getInstance()->executeS($sql);
 	}
