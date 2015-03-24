@@ -29,11 +29,18 @@ class DependencyInjector
 	const TYPE_MODULE = 'MODULE';
 	private $component_type;
 
+	/**
+	 * @param $component_type
+	 */
 	public function __construct($component_type)
 	{
 		$this->component_type = $component_type;
 	}
 
+	/**
+	 * @param $component_name
+	 * @return array
+	 */
 	public function getDependencies($component_name)
 	{
 		$dependencies_array = array();

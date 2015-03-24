@@ -28,6 +28,10 @@ class RepositoryManager
 {
 	private $component = null;
 
+	/**
+	 * @param $name
+	 * @return mixed
+	 */
 	public function getRepository($name)
 	{
 		$this->component = $name;
@@ -35,6 +39,10 @@ class RepositoryManager
 		return new $repository_name;
 	}
 
+	/**
+	 * @return mixed
+	 * @throws PrestaShopExceptionCore
+	 */
 	public function createNewRecord()
 	{
 		if (is_null($this->component))

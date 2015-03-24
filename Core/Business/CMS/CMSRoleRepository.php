@@ -28,11 +28,17 @@ class CMSRoleRepository extends RepositoryManager
 {
 	public $entity;
 
+
 	public function __construct()
 	{
 		$this->entity = 'CMSRoleEntity';
 	}
 
+	/**
+	 * @param $name
+	 * @return array|false
+	 * @throws PrestaShopDatabaseException
+	 */
 	public function getRoleByName($name)
 	{
 		$sql = '
@@ -43,6 +49,11 @@ class CMSRoleRepository extends RepositoryManager
 		return Db::getInstance()->executeS($sql);
 	}
 
+	/**
+	 * @param $id_cms
+	 * @return array|false
+	 * @throws PrestaShopDatabaseException
+	 */
 	public function getRoleByIdCms($id_cms)
 	{
 		$sql = '
