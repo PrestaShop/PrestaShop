@@ -43,28 +43,32 @@
 
     <!-- PRODUCTS -->
     {foreach $order_details as $order_detail}
-        {cycle values='#FFF,#DDD' assign=bgcolor}
+        {cycle values=[$color_line_even, $color_line_odd] assign=bgcolor}
         <tr class="product" style="background-color:{$bgcolor};">
 
             <td class="product center">
+                {$color_line_even}
                 {$order_detail.reference}
             </td>
             <td class="product left">
-                <table width="100%">
-                    <tr>
-                        <td width="15%">
-                            {if $display_product_images}
-                                {if isset($order_detail.image) && $order_detail.image->id}
-                                    {$order_detail.image_tag}
-                                {/if}
-                            {/if}
-                        </td>
-                        <td width="5%">&nbsp;</td>
-                        <td width="80%">
-                            {$order_detail.product_name}
-                        </td>
-                    </tr>
-                </table>
+                {if $display_product_images}
+                    <table width="100%">
+                        <tr>
+                            <td width="15%">
+                                    {if isset($order_detail.image) && $order_detail.image->id}
+                                        {$order_detail.image_tag}
+                                    {/if}
+                            </td>
+                            <td width="5%">&nbsp;</td>
+                            <td width="80%">
+                                {$order_detail.product_name}
+                            </td>
+                        </tr>
+                    </table>
+                {else}
+                    {$order_detail.product_name}
+                {/if}
+
             </td>
             <td class="product center">
                 {$order_detail.product_quantity}
