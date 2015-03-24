@@ -522,7 +522,7 @@ class ShopCore extends ObjectModel
 	 */
 	public function getCategory()
 	{
-		return ($this->id_category) ? $this->id_category : 1;
+		return (int)($this->id_category ? $this->id_category : Configuration::get('PS_ROOT_CATEGORY'));
 	}
 
 	/**
