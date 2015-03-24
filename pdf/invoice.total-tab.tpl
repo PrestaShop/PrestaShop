@@ -25,10 +25,63 @@
 <table width="100%" border="1" cellpadding="4">
     <tr>
         <td class="grey" width="60%">
+            {l s='Shipping Cost (Tax Excl.)' pdf='true'}
+        </td>
+        <td width="40%">
+            {if $footer.shipping_tax_excl > 0}
+                {displayPrice currency=$order->id_currency price=$footer.shipping_tax_excl}
+            {else}
+                {l s='Free Shipping' pdf=true}
+            {/if}
+        </td>
+    </tr>
+
+    {if $footer.wrapping_tax_excl > 0}
+        <tr>
+            <td class="grey">
+                {l s='Wrapping Cost (Tax Excl.)' pdf='true'}
+            </td>
+            <td>{displayPrice currency=$order->id_currency price=$footer.wrapping_tax_excl}</td>
+        </tr>
+    {/if}
+
+    {if $footer.product_discounts_tax_excl > 0}
+
+        <tr>
+            <td class="grey">
+                {l s='Total Products Before Discounts (Tax Excl.)' pdf='true'}
+            </td>
+            <td class="right">
+                {displayPrice currency=$order->id_currency price=$footer.products_before_discounts_tax_excl}
+            </td>
+        </tr>
+
+        <tr>
+            <td class="grey">
+                {l s='Total Discounts (Tax Excl.)' pdf='true'}
+            </td>
+            <td class="right">
+                {displayPrice currency=$order->id_currency price=$footer.product_discounts_tax_excl}
+            </td>
+        </tr>
+
+    {/if}
+
+    <tr>
+        <td class="grey">
+            {l s='Total Products (Tax Excl.)' pdf='true'}
+        </td>
+        <td class="right">
+            {displayPrice currency=$order->id_currency price=$footer.products_after_discounts_tax_excl}
+        </td>
+    </tr>
+
+    <tr>
+        <td class="grey separator">
             {l s='Total (Tax Excl.)' pdf='true'}
         </td>
-        <td class="right" width="40%">
-            {displayPrice currency=$order->id_currency price=$order_invoice->total_paid_tax_excl}
+        <td class="right separator">
+            {displayPrice currency=$order->id_currency price=$footer.total_paid_tax_excl}
         </td>
     </tr>
     <tr>
@@ -36,8 +89,7 @@
             {l s='Total Tax' pdf='true'}
         </td>
         <td class="right">
-            {assign var="total_tax" value=($order_invoice->total_paid_tax_incl - $order_invoice->total_paid_tax_excl)}
-            {displayPrice currency=$order->id_currency price=$total_tax}
+            {displayPrice currency=$order->id_currency price=$footer.total_taxes}
         </td>
     </tr>
     <tr>
@@ -45,7 +97,7 @@
             {l s='Total (Tax Incl.)' pdf='true'}
         </td>
         <td class="right">
-            {displayPrice currency=$order->id_currency price=$order_invoice->total_paid_tax_incl}
+            {displayPrice currency=$order->id_currency price=$footer.total_paid_tax_incl}
         </td>
     </tr>
 </table>
