@@ -50,13 +50,13 @@
 	$(document).ready(function() {
 
 		$('#customer').typeWatch({
-			captureLength: 1,
+			captureLength: 2,
 			highlight: true,
 			wait: 100,
 			callback: function(){ searchCustomers(); }
 			});
 		$('#product').typeWatch({
-			captureLength: 1,
+			captureLength: 2,
 			highlight: true,
 			wait: 750,
 			callback: function(){ searchProducts(); }

@@ -404,11 +404,11 @@ function bind_inputs()
 	});
 
 	$('tr.range_sup td input:text, tr.range_inf td input:text').typeWatch({
-		captureLength: 0,
+		captureLength: 1,
 		highlight: false,
 		wait: 1000,
 		callback: function() {
-			index = $(this.el).closest('td').index();
+			index = $(this).closest('td').index();
 			range_sup = $('tr.range_sup td:eq('+index+')').find('div.input-group input:text').val().trim();
 			range_inf = $('tr.range_inf td:eq('+index+')').find('div.input-group input:text').val().trim();
 			if (range_sup != '' && range_inf != '')
