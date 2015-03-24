@@ -20,7 +20,7 @@ $min-height: 850px
 			position: relative
 			background-color: darken($main-color,5%)
 			border-bottom: darken($main-color,10%) solid 1px
-			@include box-shadow(rgba(black,0.1s) 0 -3px 0 0 inset)
+			@include box-shadow(rgba(black,0.1) 0 -3px 0 0 inset)
 			#bo_query
 				color: $main-color
 				background-color: lighten($main-color,60%)
@@ -52,13 +52,13 @@ $min-height: 850px
 				li
 					list-style: none !important
 					a
-						color: mix($main-color, contrast-color($main-color, black, white, 50%), 30%)
+						color: mix($main-color, contrast-color($main-color, black, white), 30%)
 						display: block
 						padding: 3px 8px
 						background-color: $main-color
 						border-bottom: darken($main-color,10%) solid 1px
 						&:hover
-							color: contrast-color($main-color, black, white, 50%)
+							color: contrast-color($main-color, black, white)
 							text-decoration: none
 							background-color: darken($main-color,10%)
 							@include box-shadow($brand-primary -4px 0 0 0 inset)
@@ -73,7 +73,7 @@ $min-height: 850px
 				height: $menu-item-size
 				border-bottom: darken($main-color,10%) solid 1px
 				background-color: $main-color
-				color: mix($main-color, contrast-color($main-color, black, white, 50%), 30%)
+				color: mix($main-color, contrast-color($main-color, black, white), 30%)
 				line-height: $menu-item-size
 				text-transform: uppercase
 				text-decoration: none
@@ -84,14 +84,14 @@ $min-height: 850px
 					width: 42px
 					font-size: $icon-size-base*2
 					vertical-align: middle
-					color: mix($main-color, contrast-color($main-color, black, white, 50%), 60%)
+					color: mix($main-color, contrast-color($main-color, black, white), 60%)
 					@include transition-property(color)
 					@include transition-duration(0.4s)
 					@include transition-timing-function(ease-out)
 			&.hover, &:hover:not(.hover)
 				> a.title
 					background-color: darken($main-color,8%)
-					color: contrast-color($main-color, black, white, 50%)
+					color: contrast-color($main-color, black, white)
 					i
 						color: white
 			&.hover
@@ -107,7 +107,7 @@ $min-height: 850px
 			&.active
 				a, li.active a
 					background-color: lighten($main-color,10%)
-					color: contrast-color($main-color, black, white, 50%)
+					color: contrast-color($main-color, black, white)
 					i
 						color: white
 				@media (min-height: $min-height)
@@ -129,13 +129,13 @@ $min-height: 850px
 							li:last-child a
 								border-bottom: solid 1px white
 							li.active a
-								color: contrast-color($brand-primary, white, #333, 10%)
+								color: contrast-color($brand-primary, white, #333)
 								background-color: $brand-primary
 								position: relative
 								top: -1px
 								border-top: solid 1px white
 								border-bottom: solid 1px $brand-primary
-			
+
 	@media (max-width: $screen-phone)
 		display: none
 
@@ -273,7 +273,7 @@ $min-height: 850px
 				background-color: $brand-primary
 				> a
 					text-decoration: none
-					color: contrast-color($main-color, white, #333, 10%)
+					color: contrast-color($main-color, white, #333)
 					i
 						color: white
 
@@ -304,7 +304,7 @@ $min-height: 850px
 						background-color: $brand-primary
 						text-decoration: none
 				&.active a
-					color: contrast-color($brand-primary, white, #333, 10%)
+					color: contrast-color($brand-primary, white, #333)
 					background-color: $brand-primary
 					border-bottom: solid 1px darken($brand-primary,10%)
 	#ellipsistab
@@ -364,7 +364,7 @@ $min-height: 850px
 		> li.searchtab
 			padding: 15px
 			position: relative
-			@include box-shadow(rgba(black,0.1s) 0 -3px 0 0 inset)
+			@include box-shadow(rgba(black,0.1) 0 -3px 0 0 inset)
 			#bo_query
 				color: $main-color
 				background-color: lighten($main-color,60%)
@@ -384,7 +384,7 @@ $min-height: 850px
 				position: relative
 				border-bottom: 1px solid darken($main-color,10%)
 				font-size: 12px
-				color: mix($main-color, contrast-color($main-color, white, #333, 10%), 30%)
+				color: mix($main-color, contrast-color($main-color, white, #333), 30%)
 				background-color: $main-color
 				text-transform: uppercase
 				text-decoration: none
