@@ -80,8 +80,6 @@
         text-align: center;
     }
 
-
-
     td.payment {
         vertical-align: middle;
     }
