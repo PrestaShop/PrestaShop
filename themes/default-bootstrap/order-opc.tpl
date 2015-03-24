@@ -67,10 +67,6 @@
 {addJsDef addressUrl=$link->getPageLink("address", true, NULL, "back={$back_order_page}")|escape:'quotes':'UTF-8'}
 {addJsDef orderProcess='order-opc'}
 {addJsDef guestCheckoutEnabled=$PS_GUEST_CHECKOUT_ENABLED|intval}
-{addJsDef currencySign=$currencySign|html_entity_decode:2:"UTF-8"}
-{addJsDef currencyRate=$currencyRate|floatval}
-{addJsDef currencyFormat=$currencyFormat|intval}
-{addJsDef currencyBlank=$currencyBlank|intval}
 {addJsDef displayPrice=$priceDisplay}
 {addJsDef taxEnabled=$use_taxes}
 {addJsDef conditionEnabled=$conditions|intval}

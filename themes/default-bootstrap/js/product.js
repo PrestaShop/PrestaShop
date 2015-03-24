@@ -653,7 +653,9 @@ function updatePrice()
 		{
 			if (typeof combination.specific_price.reduction_tax !== 'undefined' && combination.specific_price.reduction_tax === "0")
 			{
-				var reduction = +combination.specific_price.reduction / currencyRate;
+				var reduction = combination.specific_price.reduction;
+				if (combination.specific_price.id_currency == 0)
+					reduction = reduction * currencyRate;
 				priceWithDiscountsWithoutTax -= reduction;
 			}
 		}
@@ -673,7 +675,6 @@ function updatePrice()
 	{
 		basePriceDisplay = basePriceWithoutTax * (taxRate/100 + 1);
 		priceWithDiscountsDisplay = priceWithDiscountsWithoutTax * (taxRate/100 + 1);
-
 	}
 
 	if (default_eco_tax)
@@ -691,7 +692,13 @@ function updatePrice()
 			if (typeof combination.specific_price.reduction_tax === 'undefined'
 				|| (typeof combination.specific_price.reduction_tax !== 'undefined' && combination.specific_price.reduction_tax === '1'))
 			{
-				var reduction = +combination.specific_price.reduction / currencyRate;
+				var reduction = combination.specific_price.reduction;
+
+				if (typeof specific_currency !== 'undefined' && specific_currency && parseInt(combination.specific_price.id_currency) && combination.specific_price.id_currency != currency.id)
+					reduction = reduction / currencyRate;
+				else if(!specific_currency)
+					reduction = reduction * currencyRate;
+
 				priceWithDiscountsDisplay -= reduction;
 				// We recalculate the price without tax in order to keep the data consistency
 				priceWithDiscountsWithoutTax = priceWithDiscountsDisplay - reduction * ( 1/(1+taxRate/100) );
@@ -731,13 +738,13 @@ function updatePrice()
 	$('.price-ecotax').hide();
 	$('.unit-price').hide();
 
-	$('#our_price_display').text(formatCurrency(priceWithDiscountsDisplay * currencyRate, currencyFormat, currencySign, currencyBlank)).trigger('change');
+	$('#our_price_display').text(formatCurrency(priceWithDiscountsDisplay, currencyFormat, currencySign, currencyBlank)).trigger('change');
 
 	// If the calculated price (after all discounts) is different than the base price
 	// we show the old price striked through
 	if (priceWithDiscountsDisplay.toFixed(2) != basePriceDisplay.toFixed(2))
 	{
-		$('#old_price_display').text(formatCurrency(basePriceDisplay * currencyRate, currencyFormat, currencySign, currencyBlank));
+		$('#old_price_display').text(formatCurrency(basePriceDisplay, currencyFormat, currencySign, currencyBlank));
 		$('#old_price,#old_price_display,#old_price_display_taxes').show();
 
 		// Then if it's not only a group reduction we display the discount in red box
@@ -745,7 +752,7 @@ function updatePrice()
 		{
 			if (combination.specific_price.reduction_type == 'amount')
 			{
-				$('#reduction_amount_display').html('-' + formatCurrency(+discountValue * currencyRate, currencyFormat, currencySign, currencyBlank));
+				$('#reduction_amount_display').html('-' + formatCurrency(discountValue, currencyFormat, currencySign, currencyBlank));
 				$('#reduction_amount').show();
 			}
 			else

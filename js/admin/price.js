@@ -288,6 +288,11 @@ function unitySecond()
 function changeCurrencySpecificPrice(index)
 {
 	var id_currency = $('#spm_currency_' + index).val();
+	if (id_currency > 0)
+		$('#sp_reduction_type option[value="amount"]').text($('#spm_currency_' + index + ' option[value= ' + id_currency + ']').text());
+	else if (typeof currencyName !== 'undefined')
+		$('#sp_reduction_type option[value="amount"]').text(currencyName);
+
 	if (currencies[id_currency]["format"] == 2 || currencies[id_currency]["format"] == 4)
 	{
 		$('#spm_currency_sign_pre_' + index).html('');

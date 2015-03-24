@@ -117,10 +117,6 @@
 {strip}
 {if !$opc}
 	{addJsDef orderProcess='order'}
-	{addJsDef currencySign=$currencySign|html_entity_decode:2:"UTF-8"}
-	{addJsDef currencyRate=$currencyRate|floatval}
-	{addJsDef currencyFormat=$currencyFormat|intval}
-	{addJsDef currencyBlank=$currencyBlank|intval}
 	{addJsDefL name=txtProduct}{l s='product' js=1}{/addJsDefL}
 	{addJsDefL name=txtProducts}{l s='products' js=1}{/addJsDefL}
 	{addJsDefL name=CloseTxt}{l s='Submit' js=1}{/addJsDefL}
