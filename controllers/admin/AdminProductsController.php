@@ -3209,7 +3209,7 @@ class AdminProductsControllerCore extends AdminController
 				$this->context->currency, $shops, $currencies, $countries, $groups)
 			);
 
-			$data->assign('ecotax_tax_excl', $obj->ecotax);
+			$data->assign('ecotax_tax_excl', (int)$obj->ecotax);
 			$this->_applyTaxToEcotax($obj);
 
 			$data->assign(array(
