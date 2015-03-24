@@ -22,6 +22,12 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+
+{assign var=color_header value="#F0F0F0"}
+{assign var=color_border value="#000000"}
+{assign var=color_line_even value="#FFFFFF"}
+{assign var=color_line_odd value="#CCC"}
+
 <style>
     table, th, td {
         margin: 0!important;
@@ -32,17 +38,17 @@
     }
 
     table.product {
-        border: 2px solid #000000;
+        border: 2px solid {$color_border};
         border-collapse: collapse;
     }
 
     th.product {
-        border: 1px solid #000000;
-        border-bottom: 2px solid #000000;
+        border: 1px solid {$color_border};
+        border-bottom: 2px solid {$color_border};
     }
 
     tr.product td {
-        border-top: 1px solid #000000;
+        border-top: 1px solid {$color_border};
     }
 
     tr.customization_data td {
@@ -56,7 +62,7 @@
 
     th.header {
         height: 22px;
-        background-color: #f0f0f0;
+        background-color: {$color_header};
         vertical-align: middle;
         text-align: center;
         /*line-height:22px;*/
@@ -64,13 +70,13 @@
     }
 
     th.payment {
-        background-color: #f0f0f0;
+        background-color: {$color_header};
         vertical-align: middle;
         font-weight: bold;
     }
 
     th.tva {
-        background-color: #f0f0f0;
+        background-color: {$color_header};
         vertical-align: middle;
         font-weight: bold;
     }
@@ -134,7 +140,7 @@
     }
 
     .grey {
-        background-color: #f0f0f0;
+        background-color: {$color_header};
     }
 
     .small {

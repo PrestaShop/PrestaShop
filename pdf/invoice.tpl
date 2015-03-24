@@ -88,7 +88,7 @@
         </td>
         <td colspan="1">&nbsp;</td>
         <!-- Calcule TVA -->
-        <td colspan="5" rowspan="4" class="right">
+        <td colspan="5" rowspan="5" class="right">
 
             {include file="./invoice.total-tab.tpl"}
 
