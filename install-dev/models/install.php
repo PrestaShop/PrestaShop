@@ -672,7 +672,7 @@ class InstallModelInstall extends InstallAbstractModel
 		$modules = array();
 		if (!InstallSession::getInstance()->safe_mode)
 		{
-			foreach($addons_modules as $addons_module)
+			foreach ($addons_modules as $addons_module)
 				if (file_put_contents(_PS_MODULE_DIR_.$addons_module['name'].'.zip', Tools::addonsRequest('module', array('id_module' => $addons_module['id_module']))))
 					if (Tools::ZipExtract(_PS_MODULE_DIR_.$addons_module['name'].'.zip', _PS_MODULE_DIR_))
 					{

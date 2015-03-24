@@ -1834,8 +1834,8 @@ class ToolsCore
 					curl_setopt($curl, CURLOPT_POST, true);
 					if (isset($opts['http']['content']))
 					{
-						parse_str($opts['http']['content'], $datas);
-						curl_setopt($curl, CURLOPT_POSTFIELDS, $datas);
+						parse_str($opts['http']['content'], $post_data);
+						curl_setopt($curl, CURLOPT_POSTFIELDS, $post_data);
 					}
 				}
 			}
