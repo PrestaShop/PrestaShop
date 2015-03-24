@@ -98,7 +98,7 @@
         {foreach $order_detail.customizedDatas as $customizationPerAddress}
             {foreach $customizationPerAddress as $customizationId => $customization}
                 <tr class="customization_data" style="background-color: {$bgcolor};">
-                    <td class=" center"> &nbsp;</td>
+                    <td class="center"> &nbsp;</td>
 
                     <td>
                         {if isset($customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_]) && count($customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_]) > 0}
@@ -124,18 +124,17 @@
                         {/if}
                     </td>
 
-                    <td class=" center">
+                    <td class="center">
                         ({if $customization.quantity == 0}1{else}{$customization.quantity}{/if})
                     </td>
-                    <td class="">
-                        --
-                    </td>
-                    <td class=" center">
-                        --
-                    </td>
-                    <td class=" center">
-                        --
-                    </td>
+
+                    {assign var=end value=($layout._colCount-3)}
+                    {for $var=0 to $end}
+                        <td class="center">
+                            --
+                        </td>
+                    {/for}
+
                 </tr>
                 <!--if !$smarty.foreach.custo_foreach.last-->
             {/foreach}
@@ -146,25 +145,19 @@
     <!-- CART RULES -->
     {assign var="shipping_discount_tax_incl" value="0"}
     {foreach from=$cart_rules item=cart_rule name="cart_rules_loop"}
-        {cycle values='#FFF,#DDD' assign=bgcolor}
         {if $smarty.foreach.cart_rules_loop.first}
-            <tr>
-                <td style="text-align:left; font-style: italic;" colspan="{$layout._colCount}">
-                    <br><br>
+            <tr class="product">
+                <td class="product" colspan="{$layout._colCount}">
                     {l s='Discounts' pdf='true'}
                 </td>
             </tr>
         {/if}
-        <tr style="line-height:6px;background-color:{$bgcolor};text-align:left;">
-            <td style="text-align:left;vertical-align:top" colspan="{$layout._colCount - 1}">
+        <tr class="product">
+            <td class="product" colspan="{$layout._colCount - 1}">
                 {$cart_rule.name}
             </td>
-            <td style="text-align:right;vertical-align:top">
-                {if $tax_excluded_display}
-                    - {displayPrice currency=$order->id_currency price=$cart_rule.value_tax_excl}
-                {else}
-                    - {displayPrice currency=$order->id_currency price=$cart_rule.value}
-                {/if}
+            <td class="product">
+                - {displayPrice currency=$order->id_currency price=$cart_rule.value_tax_excl}
             </td>
         </tr>
     {/foreach}

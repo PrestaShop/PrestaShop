@@ -61,7 +61,7 @@
                 {l s='Total Discounts (Tax Excl.)' pdf='true'}
             </td>
             <td class="right">
-                {displayPrice currency=$order->id_currency price=$footer.product_discounts_tax_excl}
+                - {displayPrice currency=$order->id_currency price=$footer.product_discounts_tax_excl}
             </td>
         </tr>
 
