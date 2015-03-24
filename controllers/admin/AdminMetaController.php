@@ -473,7 +473,7 @@ class AdminMetaControllerCore extends AdminController
 			$this->errors[] = sprintf(Tools::displayError('Cannot write into file: %s. Please check write permissions.'), $this->rb_file);
 		else
 		{
-			Hook::exec('actionAdminMetaBeforeGenerateRobotsFile', array(
+			Hook::exec('actionAdminMetaBeforeWriteRobotsFile', array(
 				'rb_data' => &$this->rb_data
 			));
 
@@ -524,10 +524,11 @@ class AdminMetaControllerCore extends AdminController
 			{
 				fwrite($write_fd, "# Sitemap\n");
 				$sitemap_filename = basename($this->sm_file);
-				fwrite($write_fd, 'Sitemap: '.(Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://').$_SERVER['SERVER_NAME'].__PS_BASE_URI__.$sitemap_filename."\n");
+				fwrite($write_fd, 'Sitemap: '.(Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://').$_SERVER['SERVER_NAME']
+					.__PS_BASE_URI__.$sitemap_filename."\n");
 			}
 
-			Hook::exec('actionAdminMetaBeforeWriteRobotsFile', array(
+			Hook::exec('actionAdminMetaAfterWriteRobotsFile', array(
 				'rb_data' => $this->rb_data,
 				'write_fd' => &$write_fd
 			));
