@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property AttributeGroup $object
+ */
 class AdminAttributesGroupsControllerCore extends AdminController
 {
 	public $bootstrap = true;

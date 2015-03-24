@@ -26,10 +26,11 @@
 
 /**
  * @since 1.5.0
+ * @property SupplyOrder $object
  */
 class AdminSupplyOrdersControllerCore extends AdminController
 {
-	/*
+	/**
 	 * @var array List of warehouses
 	 */
 	protected $warehouses;

@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property WebserviceKey $object
+ */
 class AdminWebserviceControllerCore extends AdminController
 {
 	/** this will be filled later */

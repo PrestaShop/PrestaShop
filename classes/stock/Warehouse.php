@@ -506,7 +506,10 @@ class WarehouseCore extends ObjectModel
 
 		// fills $list
 		foreach ($pack_warehouses as $pack_warehouse)
+		{
+			/** @var WarehouseProductLocation $pack_warehouse */
 			$list['pack_warehouses'][] = (int)$pack_warehouse->id_warehouse;
+		}
 
 		// for each products in the pack
 		foreach ($products as $product)

@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Profile $object
+ */
 class AdminProfilesControllerCore extends AdminController
 {
 	public function __construct()

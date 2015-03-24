@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property RangePrice $object
+ */
 class AdminRangePriceControllerCore extends AdminController
 {
 	public function __construct()

@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Scene $object
+ */
 class AdminScenesControllerCore extends AdminController
 {
 	public $bootstrap = true;

@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property TaxRulesGroup $object
+ */
 class AdminTaxRulesGroupControllerCore extends AdminController
 {
 	public $tax_rule;

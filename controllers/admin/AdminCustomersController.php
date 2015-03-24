@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Customer $object
+ */
 class AdminCustomersControllerCore extends AdminController
 {
 	protected $delete_mode;
@@ -64,7 +67,10 @@ class AdminCustomersControllerCore extends AdminController
 		$titles_array = array();
 		$genders = Gender::getGenders($this->context->language->id);
 		foreach ($genders as $gender)
+		{
+			/** @var Gender $gender */
 			$titles_array[$gender->id_gender] = $gender->name;
+		}
 
 		$this->_select = '
 		a.date_add, gl.name as title, (
@@ -235,6 +241,7 @@ class AdminCustomersControllerCore extends AdminController
 				$this->toolbar_title[] = $this->l('Manage your Customers');
 				break;
 			case 'view':
+				/** @var Customer $customer */
 				if (($customer = $this->loadObject(true)) && Validate::isLoadedObject($customer))
 					array_pop($this->toolbar_title);
 					$this->toolbar_title[] = sprintf('Information about Customer: %s', Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname);
@@ -242,6 +249,7 @@ class AdminCustomersControllerCore extends AdminController
 			case 'add':
 			case 'edit':
 				array_pop($this->toolbar_title);
+				/** @var Customer $customer */
 				if (($customer = $this->loadObject(true)) && Validate::isLoadedObject($customer))
 					$this->toolbar_title[] = sprintf($this->l('Editing Customer: %s'), Tools::substr($customer->firstname, 0, 1).'. '.$customer->lastname);
 				else
@@ -314,6 +322,7 @@ class AdminCustomersControllerCore extends AdminController
 
 	public function renderForm()
 	{
+		/** @var Customer $obj */
 		if (!($obj = $this->loadObject(true)))
 			return;
 
@@ -321,6 +330,7 @@ class AdminCustomersControllerCore extends AdminController
 		$list_genders = array();
 		foreach ($genders as $key => $gender)
 		{
+			/** @var Gender $gender */
 			$list_genders[$key]['id'] = 'gender_'.$gender->id;
 			$list_genders[$key]['value'] = $gender->id;
 			$list_genders[$key]['label'] = $gender->name;
@@ -512,6 +522,7 @@ class AdminCustomersControllerCore extends AdminController
 			$list_risks = array();
 			foreach ($risks as $key => $risk)
 			{
+				/** @var Risk $risk */
 				$list_risks[$key]['id_risk'] = (int)$risk->id;
 				$list_risks[$key]['name'] = $risk->name;
 			}
@@ -666,6 +677,7 @@ class AdminCustomersControllerCore extends AdminController
 
 	public function renderView()
 	{
+		/** @var Customer $customer */
 		if (!($customer = $this->loadObject()))
 			return;
 

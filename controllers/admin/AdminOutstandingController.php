@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property OrderInvoice $object
+ */
 class AdminOutstandingControllerCore  extends AdminController
 {
 	public function __construct()
@@ -50,7 +53,10 @@ class AdminOutstandingControllerCore  extends AdminController
 
 		$risks = array();
 		foreach (Risk::getRisks() as $risk)
+		{
+			/** @var Risk $risk */
 			$risks[$risk->id] = $risk->name;
+		}
 
 		$this->fields_list = array(
 			'number' => array(

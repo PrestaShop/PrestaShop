@@ -26,6 +26,7 @@
 
 /**
  * @since 1.5.0
+ * @property Product $object
  */
 class AdminStockCoverControllerCore extends AdminController
 {

@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Group $object
+ */
 class AdminGroupsControllerCore extends AdminController
 {
 	public function __construct()
@@ -207,6 +210,7 @@ class AdminGroupsControllerCore extends AdminController
 		$genders_icon = array('default' => 'unknown.gif');
 		foreach (Gender::getGenders() as $gender)
 		{
+			/** @var Gender $gender */
 			$genders_icon[$gender->id] = '../genders/'.(int)$gender->id.'.jpg';
 			$genders[$gender->id] = $gender->name;
 		}

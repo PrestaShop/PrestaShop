@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Zone $object
+ */
 class AdminZonesControllerCore extends AdminController
 {
 	public $asso_type = 'shop';

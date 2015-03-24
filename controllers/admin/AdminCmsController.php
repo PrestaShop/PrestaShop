@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property CMS $object
+ */
 class AdminCmsControllerCore extends AdminController
 {
 	protected $category;
@@ -369,6 +372,7 @@ class AdminCmsControllerCore extends AdminController
 			{
 				if (Validate::isLoadedObject($object = $this->loadObject()))
 				{
+					/** @var CMS $object */
 					if ($object->toggleStatus())
 						Tools::redirectAdmin(self::$currentIndex.'&conf=5&id_cms_category='.(int)$object->id_cms_category.'&token='.Tools::getValue('token'));
 					else

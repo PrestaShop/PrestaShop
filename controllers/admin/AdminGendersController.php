@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Gender $object
+ */
 class AdminGendersControllerCore extends AdminController
 {
 	public function __construct()

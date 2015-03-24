@@ -965,8 +965,11 @@ abstract class PaymentModuleCore extends Module
 			return false;
 
 		if (($module_instance = Module::getInstanceByName($module_name)))
+		{
+			/** @var PaymentModule $module_instance */
 			if (!$module_instance->currencies || ($module_instance->currencies && count(Currency::checkPaymentCurrencies($module_instance->id))))
 				return true;
+		}
 
 		return false;
 	}

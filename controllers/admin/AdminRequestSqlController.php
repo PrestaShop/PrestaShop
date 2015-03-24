@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property RequestSql $object
+ */
 class AdminRequestSqlControllerCore extends AdminController
 {
 	/**
@@ -200,6 +203,7 @@ class AdminRequestSqlControllerCore extends AdminController
 
 	public function renderView()
 	{
+		/** @var RequestSql $obj */
 		if (!($obj = $this->loadObject(true)))
 			return;
 

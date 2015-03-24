@@ -26,6 +26,9 @@
 
 @ini_set('max_execution_time', 3600);
 
+/**
+ * @property Product $object
+ */
 class AdminAttributeGeneratorControllerCore extends AdminController
 {
 	protected $combinations = array();

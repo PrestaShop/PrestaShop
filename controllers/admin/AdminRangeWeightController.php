@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property RangeWeight $object
+ */
 class AdminRangeWeightControllerCore extends AdminController
 {
 	public function __construct()

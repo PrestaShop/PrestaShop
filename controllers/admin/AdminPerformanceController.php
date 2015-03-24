@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Configuration $object
+ */
 class AdminPerformanceControllerCore extends AdminController
 {
 

@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property QuickAccess $object
+ */
 class AdminQuickAccessesControllerCore extends AdminController
 {
 	public function __construct()

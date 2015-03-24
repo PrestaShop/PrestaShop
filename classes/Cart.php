@@ -92,6 +92,8 @@ class CartCore extends ObjectModel
 	protected static $_carriers = null;
 	protected static $_taxes_rate = null;
 	protected static $_attributesLists = array();
+
+	/** @var Customer|null */
 	protected static $_customer = null;
 
 	/**
@@ -2466,9 +2468,15 @@ class CartCore extends ObjectModel
 	}
 
 	/**
-	* Get the delivery option seleted, or if no delivery option was selected, the cheapest option for each address
-	* @return array delivery option
-	*/
+	 * Get the delivery option selected, or if no delivery option was selected,
+	 * the cheapest option for each address
+	 *
+	 * @param Country|null $default_country
+	 * @param bool         $dontAutoSelectOptions
+	 * @param bool         $use_cache
+	 *
+	 * @return array|bool|mixed Delivery option
+	 */
 	public function getDeliveryOption($default_country = null, $dontAutoSelectOptions = false, $use_cache = true)
 	{
 		static $cache = array();

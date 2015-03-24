@@ -24,11 +24,11 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Carrier $object
+ */
 class AdminCarriersControllerCore extends AdminController
 {
-	/** @var Carrier */
-	protected $object;
-
 	protected $position_identifier = 'id_carrier';
 
 	public function __construct()

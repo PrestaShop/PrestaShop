@@ -24,11 +24,11 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Store $object
+ */
 class AdminSuppliersControllerCore extends AdminController
 {
-	/** @var Supplier */
-	protected $object;
-
 	public $bootstrap = true ;
 
 	public function __construct()

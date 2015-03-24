@@ -3044,8 +3044,12 @@ class AdminTranslationsControllerCore extends AdminController
 
 		$theme_exists = false;
 		foreach ($this->themes as $existing_theme)
+		{
+			/** @var Theme $existing_theme */
 			if ($existing_theme->directory == $theme)
 				return true;
+		}
+
 		return false;
 	}
 }

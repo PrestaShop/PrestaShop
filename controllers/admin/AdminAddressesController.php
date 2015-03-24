@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Address $object
+ */
 class AdminAddressesControllerCore extends AdminController
 {
 	/** @var array countries list */

@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Carrier $object
+ */
 class AdminCarrierWizardControllerCore extends AdminController
 {
 	protected $wizard_access;

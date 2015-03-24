@@ -101,6 +101,7 @@ class ProductSupplierCore extends ObjectModel
 			$items = ProductSupplier::getSupplierCollection($this->id_product, false);
 			foreach ($items as $item)
 			{
+				/** @var ProductSupplier $item */
 				if ($item->id_product_attribute > 0)
 					$item->delete();
 			}

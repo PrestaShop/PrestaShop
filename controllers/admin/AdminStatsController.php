@@ -683,12 +683,15 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				$languages = Language::getLanguages();
 				$total = $translated = 0;
 				foreach ($themes as $theme)
+				{
+					/** @var Theme $theme */
 					foreach ($languages as $language)
 					{
 						$kpi_key = substr(strtoupper($theme->name.'_'.$language['iso_code']), 0, 16);
 						$total += ConfigurationKPI::get('TRANSLATE_TOTAL_'.$kpi_key);
 						$translated += ConfigurationKPI::get('TRANSLATE_DONE_'.$kpi_key);
 					}
+				}
 				$value = 0;
 				if ($translated)
 					$value = round(100 * $translated / $total, 1);

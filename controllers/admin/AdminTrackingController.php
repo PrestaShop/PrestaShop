@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Product|Category $object
+ */
 class AdminTrackingControllerCore extends AdminController
 {
 	public $bootstrap = true;

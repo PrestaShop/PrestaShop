@@ -26,6 +26,7 @@
 
 /**
  * @since 1.5.0
+ * @property StockMvtReason $object
  */
 class AdminStockConfigurationControllerCore extends AdminController
 {

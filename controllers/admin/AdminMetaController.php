@@ -24,11 +24,16 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Meta $object
+ */
 class AdminMetaControllerCore extends AdminController
 {
 	public $table = 'meta';
 	public $className = 'Meta';
 	public $lang = true;
+
+	/** @var ShopUrl */
 	protected $url = false;
 	protected $toolbar_scroll = false;
 
@@ -441,10 +446,12 @@ class AdminMetaControllerCore extends AdminController
 
 		if (Tools::isSubmit('submitAddmeta') && Validate::isLoadedObject($ret))
 		{
+			/** @var Theme $ret */
 			$themes = Theme::getThemes();
 			$theme_meta_value = array();
 			foreach ($themes as $theme)
 			{
+				/** @var Theme $theme */
 				$theme_meta_value[] = array(
 					'id_theme' => (int)$theme->id,
 					'id_meta' => (int)$ret->id,

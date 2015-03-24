@@ -2481,6 +2481,7 @@ abstract class ModuleCore
 			{
 				foreach ($themes as $theme)
 				{
+					/** @var Theme $theme */
 					$theme_meta_value[] = array(
 						'id_theme' => $theme->id,
 						'id_meta' => $meta->id,

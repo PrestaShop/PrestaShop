@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Contact $object
+ */
 class AdminContactsControllerCore extends AdminController
 {
 	public function __construct()

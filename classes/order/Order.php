@@ -1351,6 +1351,7 @@ class OrderCore extends ObjectModel
 		$order_invoice_collection = $this->getInvoicesCollection();
 		foreach ($order_invoice_collection as $order_invoice)
 		{
+			/** @var OrderInvoice $order_invoice */
 			if ($order_invoice->delivery_number)
 				continue;
 
@@ -1786,6 +1787,7 @@ class OrderCore extends ObjectModel
 		$payments = $this->getOrderPaymentCollection();
 		foreach ($payments as $payment)
 		{
+			/** @var OrderPayment $payment */
 			if ($payment->id_currency == $currency->id)
 				$total += $payment->amount;
 			else

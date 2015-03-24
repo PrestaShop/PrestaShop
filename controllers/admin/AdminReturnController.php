@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property OrderReturn $object
+ */
 class AdminReturnControllerCore extends AdminController
 {
 	public function __construct()

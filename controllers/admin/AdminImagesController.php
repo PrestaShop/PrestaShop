@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property ImageType $object
+ */
 class AdminImagesControllerCore extends AdminController
 {
 	protected $start_time = 0;

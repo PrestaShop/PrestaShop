@@ -623,7 +623,10 @@ class OrderInvoiceCore extends ObjectModel
 			$amount = 0;
 			$payments = OrderPayment::getByInvoiceId($this->id);
 			foreach ($payments as $payment)
+			{
+				/** @var OrderPayment $payment */
 				$amount += $payment->amount;
+			}
 			Cache::store($cache_id, $amount);
 		}
 		return Cache::retrieve($cache_id);

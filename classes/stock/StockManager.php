@@ -42,6 +42,19 @@ class StockManagerCore implements StockManagerInterface
 
 	/**
 	 * @see StockManagerInterface::addProduct()
+	 *
+	 * @param int           $id_product
+	 * @param int           $id_product_attribute
+	 * @param Warehouse     $warehouse
+	 * @param int           $quantity
+	 * @param int           $id_stock_mvt_reason
+	 * @param float         $price_te
+	 * @param bool          $is_usable
+	 * @param int|null      $id_supply_order
+	 * @param Employee|null $employee
+	 *
+	 * @return bool
+	 * @throws PrestaShopException
 	 */
 	public function addProduct($id_product,
 							   $id_product_attribute = 0,
@@ -93,6 +106,7 @@ class StockManagerCore implements StockManagerInterface
 				{
 					$stock_exists = true;
 
+					/** @var Stock $stock */
 					// for a warehouse using WA, there is one and only one stock for a given product
 					$stock = $stock_collection->current();
 
@@ -133,6 +147,7 @@ class StockManagerCore implements StockManagerInterface
 				{
 					$stock_exists = true;
 
+					/** @var Stock $stock */
 					// there is one and only one stock for a given product in a warehouse and at the current unit price
 					$stock = $stock_collection->current();
 
@@ -186,6 +201,19 @@ class StockManagerCore implements StockManagerInterface
 
 	/**
 	 * @see StockManagerInterface::removeProduct()
+	 *
+	 * @param int           $id_product
+	 * @param int|null      $id_product_attribute
+	 * @param Warehouse     $warehouse
+	 * @param int           $quantity
+	 * @param int           $id_stock_mvt_reason
+	 * @param bool          $is_usable
+	 * @param int|null      $id_order
+	 * @param int           $ignore_pack
+	 * @param Employee|null $employee
+	 *
+	 * @return array
+	 * @throws PrestaShopException
 	 */
 	public function removeProduct($id_product,
 								  $id_product_attribute = null,
@@ -275,6 +303,7 @@ class StockManagerCore implements StockManagerInterface
 			{
 				// case CUMP mode
 				case 'WA':
+					/** @var Stock $stock */
 					// There is one and only one stock for a given product in a warehouse in this mode
 					$stock = $stock_collection->current();
 
@@ -317,6 +346,7 @@ class StockManagerCore implements StockManagerInterface
 					// according to the instant available quantities for this stock
 					foreach ($stock_collection as $stock)
 					{
+						/** @var Stock $stock */
 						$left_quantity_to_check = $stock->physical_quantity;
 						if ($left_quantity_to_check <= 0)
 							continue;

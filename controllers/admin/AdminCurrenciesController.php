@@ -24,6 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Currency $object
+ */
 class AdminCurrenciesControllerCore extends AdminController
 {
 	public function __construct()
