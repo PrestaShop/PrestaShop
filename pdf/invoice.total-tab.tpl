@@ -22,12 +22,12 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<table width="100%" border="1" cellpadding="4">
+<table id="total-tab" width="100%">
     <tr>
-        <td class="grey" width="60%">
+        <td class="grey" width="70%">
             {l s='Shipping Cost (Tax Excl.)' pdf='true'}
         </td>
-        <td width="40%">
+        <td class="white" width="30%">
             {if $footer.shipping_tax_excl > 0}
                 {displayPrice currency=$order->id_currency price=$footer.shipping_tax_excl}
             {else}
@@ -41,7 +41,7 @@
             <td class="grey">
                 {l s='Wrapping Cost (Tax Excl.)' pdf='true'}
             </td>
-            <td>{displayPrice currency=$order->id_currency price=$footer.wrapping_tax_excl}</td>
+            <td class="white">{displayPrice currency=$order->id_currency price=$footer.wrapping_tax_excl}</td>
         </tr>
     {/if}
 
@@ -51,7 +51,7 @@
             <td class="grey">
                 {l s='Total Products Before Discounts (Tax Excl.)' pdf='true'}
             </td>
-            <td class="right">
+            <td class="white">
                 {displayPrice currency=$order->id_currency price=$footer.products_before_discounts_tax_excl}
             </td>
         </tr>
@@ -60,7 +60,7 @@
             <td class="grey">
                 {l s='Total Discounts (Tax Excl.)' pdf='true'}
             </td>
-            <td class="right">
+            <td class="white">
                 - {displayPrice currency=$order->id_currency price=$footer.product_discounts_tax_excl}
             </td>
         </tr>
@@ -71,16 +71,16 @@
         <td class="grey">
             {l s='Total Products (Tax Excl.)' pdf='true'}
         </td>
-        <td class="right">
+        <td class="white">
             {displayPrice currency=$order->id_currency price=$footer.products_after_discounts_tax_excl}
         </td>
     </tr>
 
-    <tr>
-        <td class="grey separator">
+    <tr class="separator">
+        <td class="grey">
             {l s='Total (Tax Excl.)' pdf='true'}
         </td>
-        <td class="right separator">
+        <td class="white">
             {displayPrice currency=$order->id_currency price=$footer.total_paid_tax_excl}
         </td>
     </tr>
@@ -88,7 +88,7 @@
         <td class="grey">
             {l s='Total Tax' pdf='true'}
         </td>
-        <td class="right">
+        <td class="white">
             {displayPrice currency=$order->id_currency price=$footer.total_taxes}
         </td>
     </tr>
@@ -96,7 +96,7 @@
         <td class="grey">
             {l s='Total (Tax Incl.)' pdf='true'}
         </td>
-        <td class="right">
+        <td class="white">
             {displayPrice currency=$order->id_currency price=$footer.total_paid_tax_incl}
         </td>
     </tr>

@@ -25,47 +25,80 @@
 
 {assign var=color_header value="#F0F0F0"}
 {assign var=color_border value="#000000"}
+{assign var=color_border_lighter value="#CCCCCC"}
 {assign var=color_line_even value="#FFFFFF"}
-{assign var=color_line_odd value="#CCC"}
+{assign var=color_line_odd value="#F9F9F9"}
+{assign var=font_size_text value="9pt"}
+{assign var=font_size_header value="10pt"}
+{assign var=font_size_product value="9pt"}
+{assign var=height_header value="20px"}
+{assign var=table_padding value="4px"}
 
 <style>
     table, th, td {
         margin: 0!important;
         padding: 0!important;
         vertical-align: middle;
-        font-size: 11pt;
+        font-size: {$font_size_text};
         white-space: nowrap;
     }
 
     table.product {
-        border: 2px solid {$color_border};
+        border: 1px solid {$color_border};
         border-collapse: collapse;
     }
 
-    th.product {
+    table#summary-tab {
+        padding: {$table_padding};
+        border: 1pt solid {$color_border};
+    }
+    table#total-tab {
+        padding: {$table_padding};
+        border: 1pt solid {$color_border};
+    }
+    table#tax-tab {
+        padding: {$table_padding};
+        border: 1pt solid {$color_border};
+    }
+    table#payment-tab {
+        padding: {$table_padding};
         border: 1px solid {$color_border};
-        border-bottom: 2px solid {$color_border};
     }
 
-    tr.product td {
+    th.product {
+        border-bottom: 1px solid {$color_border};
+    }
+
+    tr.discount th.header {
         border-top: 1px solid {$color_border};
     }
 
+    tr.product td {
+        border-bottom: 1px solid {$color_border_lighter};
+    }
+
+    tr.color_line_even {
+        background-color: {$color_line_even};
+    }
+
+    tr.color_line_odd {
+        background-color: {$color_line_odd};
+    }
+
     tr.customization_data td {
-        border-top: 1px solid #cccccc;
     }
 
     td.product {
-        vertical-align: top;
-        font-size: 10pt;
+        vertical-align: middle;
+        font-size: {$font_size_product};
     }
 
     th.header {
-        height: 22px;
+        font-size: {$font_size_header};
+        height: {$height_header};
         background-color: {$color_header};
         vertical-align: middle;
         text-align: center;
-        /*line-height:22px;*/
         font-weight: bold;
     }
 
@@ -94,18 +127,8 @@
         vertical-align: middle;
     }
 
-    .min-height-md {
-        height: 20px;
-        vertical-align: middle;
-    }
-
-    .min-height-lg {
-        height: 30px;
-        vertical-align: middle;
-    }
-
-    .fleft {
-        float: left;
+    tr.separator td {
+        border-top: 1px solid #000000;
     }
 
     .left {
@@ -141,6 +164,12 @@
 
     .grey {
         background-color: {$color_header};
+
+    }
+
+    /* This is used for the border size */
+    .white {
+        background-color: #FFFFFF;
     }
 
     .small {

@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<table width="100%" border="1">
+<table id="summary-tab" width="100%">
     <tr>
         <th class="header small" width="25%" valign="middle">{l s='Invoice Number' pdf='true'}</th>
         <th class="header small" width="20%" valign="middle">{l s='Invoice Date' pdf='true'}</th>
@@ -30,10 +30,10 @@
         <th class="header small" width="30%" valign="middle">{l s='VAT Number' pdf='true'}</th>
     </tr>
     <tr>
-        <td class="min-height-md center small">{$title|escape:'html':'UTF-8'}</td>
-        <td class="min-height-md center small">{dateFormat date=$order->date_add full=0}</td>
-        <td class="min-height-md center small">{$order->getUniqReference()}</td>
-        <td class="min-height-md center small">
+        <td class="center small white">{$title|escape:'html':'UTF-8'}</td>
+        <td class="center small white">{dateFormat date=$order->date_add full=0}</td>
+        <td class="center small white">{$order->getUniqReference()}</td>
+        <td class="center small white">
             {if $data.addresses.invoice->vat_number}
                 {$data.addresses.invoice->vat_number}
             {else}

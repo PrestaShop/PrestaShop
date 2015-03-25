@@ -22,11 +22,11 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<table width="100%" border="1" cellpadding="2">
-    <tr class="">
-        <td class="payment center small grey bold min-height-md" width="44%">{l s='Payment Method' pdf='true'}</td>
-        <td class="payment left min-height-md" width="56%">
-            <table width="100%" border="0" cellpadding="2">
+<table id="payment-tab" width="100%">
+    <tr>
+        <td class="payment center small grey bold" width="44%">{l s='Payment Method' pdf='true'}</td>
+        <td class="payment left white" width="56%">
+            <table width="100%" border="0">
                 {foreach from=$order_invoice->getOrderPaymentCollection() item=payment}
                     <tr>
                         <td class="right small">{$payment->payment_method}</td>
