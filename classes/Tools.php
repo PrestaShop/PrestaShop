@@ -3312,7 +3312,8 @@ exit;
 				$config->set('HTML.Trusted', true);
 				$config->set('Cache.SerializerPath', _PS_CACHE_DIR_.'purifier');
 				$config->set('Attr.AllowedFrameTargets', array('_blank', '_self', '_parent', '_top'));
-				$config->set('URI.UnescapeCharacters', implode('', $uri_unescape));
+				if (is_array($uri_unescape))
+					$config->set('URI.UnescapeCharacters', implode('', $uri_unescape));
 
 				if (Configuration::get('PS_ALLOW_HTML_IFRAME'))
 				{
