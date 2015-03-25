@@ -108,19 +108,41 @@ a.fancybox-nav {
 		margin: 10px auto 0px auto;
 	}
 }
+
+.hide-right-column.hide-left-column
+{
+	#thumbs_list {
+		width: 392px;
+		@media (min-width: $screen-md) and (max-width: $screen-md-max) { //min 992px max 1199px
+			width: 194px;
+		}
+		@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { // min 768px max 991px
+			width: 64px;
+		}
+		@media (max-width: $screen-xs-max) { //max 767px
+			width: 96px;
+		}		
+	}
+}
+.show-right-column.hide-left-column, .hide-right-column.show-left-column
+{
+	#thumbs_list {
+		width: 292px;
+		@media (min-width: $screen-md) and (max-width: $screen-md-max) { //min 992px max 1199px
+			width: 294px;
+		}
+		@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { // min 768px max 991px
+			width: 164px;
+		}
+		@media (max-width: $screen-xs-max) { //max 767px
+			width: 196px;
+		}		
+	}
+}
+
 #thumbs_list {
 	overflow: hidden;
 	float: left;
-	width: 392px;
-	@media (min-width: $screen-md) and (max-width: $screen-md-max) { //min 992px max 1199px
-		width: 294px;
-	}
-	@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { // min 768px max 991px
-		width: 164px;
-	}
-	@media (max-width: $screen-xs-max) { //max 767px
-		width: 196px;
-	}
 	ul#thumbs_list_frame {
 		list-style-type: none;
 		padding-left: 0;
