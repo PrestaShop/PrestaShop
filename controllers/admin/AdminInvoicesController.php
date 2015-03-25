@@ -49,6 +49,13 @@ class AdminInvoicesControllerCore extends AdminController
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
+					'PS_PDF_IMG_INVOICE' => array(
+						'title' => $this->l('Enable product image on Invoice'),
+						'hint' => $this->l('Adds an image before product name on Invoice'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
 					'PS_INVOICE_PREFIX' => array(
 						'title' => $this->l('Invoice prefix'),
 						'desc' => $this->l('Prefix used for invoice name (e.g. IN00001).'),
