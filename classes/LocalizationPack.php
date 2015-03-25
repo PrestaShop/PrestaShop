@@ -59,19 +59,25 @@ class LocalizationPackCore
 		{
 			$res &= $this->_installStates($xml);
 			$res &= $this->_installTaxes($xml);
-			$res &= $this->_installCurrencies($xml, $install_mode);
-			$res &= $this->_installUnits($xml);
 			$res &= $this->installConfiguration($xml);
 			$res &= $this->installModules($xml);
-			$res &= $this->_installLanguages($xml, $install_mode);
 			$res &= $this->updateDefaultGroupDisplayMethod($xml);
 
-			if ($res && isset($this->iso_code_lang))
+			if (($res || $install_mode) && isset($this->iso_code_lang))
 			{
-				if (!$id_lang = (int)Language::getIdByIso($this->iso_code_lang))
+				if (!($id_lang = (int)Language::getIdByIso($this->iso_code_lang)))
 					$id_lang = 1;
 				if (!$install_mode)
 					Configuration::updateValue('PS_LANG_DEFAULT', $id_lang);
+			}
+			elseif (!isset($this->iso_code_lang) && $install_mode)
+				$id_lang = 1;
+
+			if (!Language::isInstalled(Language::getIsoById($id_lang)))
+			{
+				$res &= $this->_installCurrencies($xml, $install_mode);
+				$res &= $this->_installLanguages($xml, $install_mode);
+				$res &= $this->_installUnits($xml);
 			}
 
 			if ($install_mode && $res && isset($this->iso_currency))

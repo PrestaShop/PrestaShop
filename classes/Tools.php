@@ -1956,7 +1956,10 @@ class ToolsCore
 
 	public static function simplexml_load_file($url, $class_name = null)
 	{
-		return @simplexml_load_string(Tools::file_get_contents($url), $class_name);
+		$cache_id = 'Tools::simplexml_load_file'.$url;
+		if (!Cache::isStored($cache_id))
+			Cache::store($cache_id, @simplexml_load_string(Tools::file_get_contents($url), $class_name));
+		return Cache::retrieve($cache_id);
 	}
 
 	public static function copy($source, $destination, $stream_context = null)
