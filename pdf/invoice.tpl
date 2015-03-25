@@ -74,10 +74,6 @@
         <td colspan="12" height="10">&nbsp;</td>
     </tr>
 
-    <tr>
-        <td colspan="12" height="1">&nbsp;</td>
-    </tr>
-
     <!-- TVA -->
     <tr>
         <!-- Code TVA -->
@@ -111,10 +107,9 @@
     </tr>
 
     <tr>
-        <td colspan="6" class="left small">
+        <td colspan="7" class="left small">
             {$legal_free_text|escape:'html':'UTF-8'|nl2br}
         </td>
-        <td colspan="1">&nbsp;</td>
     </tr>
 
 </table>

@@ -23,6 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <table class="product" width="100%" cellpadding="4" cellspacing="0">
+
     <thead>
     <tr>
         <th class="product header small" width="{$layout.reference.width}%">{l s='Reference' pdf='true'}</th>
@@ -43,11 +44,10 @@
 
     <!-- PRODUCTS -->
     {foreach $order_details as $order_detail}
-        {cycle values=[$color_line_even, $color_line_odd] assign=bgcolor}
-        <tr class="product" style="background-color:{$bgcolor};">
+        {cycle values=["color_line_even", "color_line_odd"] assign=bgcolor_class}
+        <tr class="product {$bgcolor_class}">
 
             <td class="product center">
-                {$color_line_even}
                 {$order_detail.reference}
             </td>
             <td class="product left">
@@ -55,9 +55,9 @@
                     <table width="100%">
                         <tr>
                             <td width="15%">
-                                    {if isset($order_detail.image) && $order_detail.image->id}
-                                        {$order_detail.image_tag}
-                                    {/if}
+                                {if isset($order_detail.image) && $order_detail.image->id}
+                                    {$order_detail.image_tag}
+                                {/if}
                             </td>
                             <td width="5%">&nbsp;</td>
                             <td width="80%">
@@ -101,7 +101,7 @@
 
         {foreach $order_detail.customizedDatas as $customizationPerAddress}
             {foreach $customizationPerAddress as $customizationId => $customization}
-                <tr class="customization_data" style="background-color: {$bgcolor};">
+                <tr class="customization_data {$bgcolor_class}">
                     <td class="center"> &nbsp;</td>
 
                     <td>
@@ -109,7 +109,7 @@
                             <table style="width: 100%;">
                                 {foreach $customization.datas[$smarty.const._CUSTOMIZE_TEXTFIELD_] as $customization_infos}
                                     <tr>
-                                        <td>
+                                        <td style="width: 30%;">
                                             {$customization_infos.name|string_format:{l s='%s:' pdf='true'}}
                                         </td>
                                         <td>{$customization_infos.value}</td>
@@ -121,7 +121,7 @@
                         {if isset($customization.datas[$smarty.const._CUSTOMIZE_FILE_]) && count($customization.datas[$smarty.const._CUSTOMIZE_FILE_]) > 0}
                             <table style="width: 100%;">
                                 <tr>
-                                    <td>{l s='image(s):' pdf='true'}</td>
+                                    <td style="width: 70%;">{l s='image(s):' pdf='true'}</td>
                                     <td>{count($customization.datas[$smarty.const._CUSTOMIZE_FILE_])}</td>
                                 </tr>
                             </table>
@@ -147,24 +147,26 @@
     <!-- END PRODUCTS -->
 
     <!-- CART RULES -->
+
     {assign var="shipping_discount_tax_incl" value="0"}
     {foreach from=$cart_rules item=cart_rule name="cart_rules_loop"}
         {if $smarty.foreach.cart_rules_loop.first}
-            <tr class="product">
-                <td class="product" colspan="{$layout._colCount}">
-                    {l s='Discounts' pdf='true'}
-                </td>
-            </tr>
+        <tr class="discount">
+            <th class="header" colspan="{$layout._colCount}">
+                {l s='Discounts' pdf='true'}
+            </th>
+        </tr>
         {/if}
-        <tr class="product">
-            <td class="product" colspan="{$layout._colCount - 1}">
+        <tr class="discount">
+            <td class="white" colspan="{$layout._colCount - 1}">
                 {$cart_rule.name}
             </td>
-            <td class="product">
+            <td class="right white">
                 - {displayPrice currency=$order->id_currency price=$cart_rule.value_tax_excl}
             </td>
         </tr>
     {/foreach}
 
     </tbody>
+
 </table>

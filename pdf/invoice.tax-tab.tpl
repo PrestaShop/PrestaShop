@@ -35,7 +35,7 @@
     </table>
 
 
-    <table width="100%" border="1" cellpadding="2">
+    <table id="tax-tab" width="100%">
         <tr>
             <th class="header small">{l s='Tax Detail' pdf='true'}</th>
             <th class="header small">{l s='Tax Rate' pdf='true'}</th>
@@ -54,7 +54,7 @@
                     {continue}
                 {/if}
                 <tr>
-                    <td>
+                    <td class="white">
                         {if !$label_printed}
                             {if $label == 'product_tax'}
                                 {l s='Products' pdf='true'}
@@ -69,18 +69,18 @@
                         {/if}
                     </td>
 
-                    <td class="center">
+                    <td class="center white">
                         {$line.rate} %
                     </td>
 
                     {if $display_tax_bases_in_breakdowns}
-                        <td class="right">
+                        <td class="right white">
                             {if isset($is_order_slip) && $is_order_slip}- {/if}
                             {displayPrice currency=$order->id_currency price=$line.total_tax_excl}
                         </td>
                     {/if}
 
-                    <td class="right">
+                    <td class="right white">
                         {if isset($is_order_slip) && $is_order_slip}- {/if}
                         {displayPrice currency=$order->id_currency price=$line.total_amount}
                     </td>
