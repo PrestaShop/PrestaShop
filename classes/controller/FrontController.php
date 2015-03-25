@@ -434,6 +434,7 @@ class FrontControllerCore extends Controller
 			'link'                => $link,
 			'cart'                => $cart,
 			'currency'            => $currency,
+			'currencyRate'        => (float)$currency->getConversationRate(),
 			'cookie'              => $this->context->cookie,
 			'page_name'           => $page_name,
 			'hide_left_column'    => !$this->display_column_left,
@@ -474,10 +475,9 @@ class FrontControllerCore extends Controller
 			'shop_phone'          => Configuration::get('PS_SHOP_PHONE'),
 			'compared_products'   => is_array($compared_products) ? $compared_products : array(),
 			'comparator_max_item' => (int)Configuration::get('PS_COMPARATOR_MAX_ITEM'),
-			'currencyRate'        => (float)$currency->getConversationRate(),
-			'currencySign'        => $currency->sign,
-			'currencyFormat'      => $currency->format,
-			'currencyBlank'       => $currency->blank,
+			'currencySign'        => $currency->sign, // backward compat, see global.tpl
+			'currencyFormat'      => $currency->format, // backward compat
+			'currencyBlank'       => $currency->blank, // backward compat
 		));
 
 		// Add the tpl files directory for mobile

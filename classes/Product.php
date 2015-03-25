@@ -2654,7 +2654,7 @@ class ProductCore extends ObjectModel
 			$cart_quantity = Cache::retrieve($cache_id);
 		}
 
-		$id_currency = (int)Validate::isLoadedObject($context->currency) ? $context->currency->id : Configuration::get('PS_CURRENCY_DEFAULT');
+		$id_currency = Validate::isLoadedObject($context->currency) ? (int)$context->currency->id : (int)Configuration::get('PS_CURRENCY_DEFAULT');
 
 		// retrieve address informations
 		$id_country = (int)$context->country->id;
@@ -2693,7 +2693,7 @@ class ProductCore extends ObjectModel
 		if (is_null($id_customer) && Validate::isLoadedObject($context->customer))
 			$id_customer = $context->customer->id;
 
-		return Product::priceCalculation(
+		$return = Product::priceCalculation(
 			$context->shop->id,
 			$id_product,
 			$id_product_attribute,
@@ -2715,6 +2715,8 @@ class ProductCore extends ObjectModel
 			$id_cart,
 			$cart_quantity
 		);
+
+		return $return;
 	}
 
 	/**
@@ -2765,9 +2767,10 @@ class ProductCore extends ObjectModel
 		if ($id_product_attribute === null)
 			$id_product_attribute = Product::getDefaultAttribute($id_product);
 
-		$cache_id = $id_product.'-'.$id_shop.'-'.$id_currency.'-'.$id_country.'-'.$id_state.'-'.$zipcode.'-'.$id_group.
-			'-'.$quantity.'-'.$id_product_attribute.'-'.($use_tax?'1':'0').'-'.$decimals.'-'.($only_reduc?'1':'0').
-			'-'.($use_reduc?'1':'0').'-'.$with_ecotax.'-'.$id_customer.'-'.(int)$use_group_reduction.'-'.(int)$id_cart.'-'.(int)$real_quantity;
+		$cache_id = (int)$id_product.'-'.(int)$id_shop.'-'.(int)$id_currency.'-'.(int)$id_country.'-'.$id_state.'-'.$zipcode.'-'.(int)$id_group.
+			'-'.(int)$quantity.'-'.(int)$id_product_attribute.
+			'-'.(int)$with_ecotax.'-'.(int)$id_customer.'-'.(int)$use_group_reduction.'-'.(int)$id_cart.'-'.(int)$real_quantity.
+			'-'.($only_reduc?'1':'0').'-'.($use_reduc?'1':'0').'-'.($use_tax?'1':'0').'-'.(int)$decimals;
 
 		// reference parameter is filled before any returns
 		$specific_price = SpecificPrice::getSpecificPrice(
@@ -2782,6 +2785,7 @@ class ProductCore extends ObjectModel
 			$id_cart,
 			$real_quantity
 		);
+
 		if (isset(self::$_prices[$cache_id]))
 			return self::$_prices[$cache_id];
 
@@ -2850,6 +2854,7 @@ class ProductCore extends ObjectModel
 		$product_tax_calculator = $tax_manager->getTaxCalculator();
 
 		// Add Tax
+
 		if ($use_tax)
 			$price = $product_tax_calculator->addTaxes($price);
 
@@ -2867,7 +2872,15 @@ class ProductCore extends ObjectModel
 				if (!isset($specific_price['reduction_tax']) || (isset($specific_price['reduction_tax']) && $specific_price['reduction_tax']))
 					$specific_price_reduction = !$use_tax ? $product_tax_calculator->removeTaxes($reduction_amount) : $reduction_amount;
 				else
+				{
 					$specific_price_reduction = $reduction_amount;
+					if ($use_tax)
+					{
+						if (!$use_reduc)
+							$price = $product_tax_calculator->addTaxes($price);
+						$specific_price_reduction = $reduction_amount = $product_tax_calculator->addTaxes($reduction_amount);
+					}
+				}
 			}
 			else
 				$specific_price_reduction = $price * $specific_price['reduction'];
@@ -2913,6 +2926,7 @@ class ProductCore extends ObjectModel
 			else
 				$price += $ecotax;
 		}
+
 		$price = Tools::ps_round($price, $decimals);
 		if ($price < 0)
 			$price = 0;
@@ -4074,7 +4088,6 @@ class ProductCore extends ObjectModel
 				),
 				2
 			);
-
 			$row['price_without_reduction'] = Product::getPriceStatic(
 				(int)$row['id_product'],
 				true,

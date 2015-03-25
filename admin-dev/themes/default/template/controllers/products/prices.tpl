@@ -431,7 +431,7 @@ $(document).ready(function () {
 						<div class="col-lg-6">
 							<select name="sp_reduction_type" id="sp_reduction_type">
 								<option selected="selected">-</option>
-								<option value="amount">{l s='%s (%s)' sprintf=[$currency->name|escape:'html':'UTF-8', $currency->iso_code|escape:'html':'UTF-8']}</option>
+								<option value="amount">{$currency->name|escape:'html':'UTF-8'}</option>
 								<option value="percentage">{l s='Percent'}</option>
 							</select>
 						</div>
@@ -441,6 +441,7 @@ $(document).ready(function () {
 		</div>
 	</div>
 	<script type="text/javascript">
+		var currencyName = '{$currency->name|escape:'html':'UTF-8'|@addcslashes:'\''}';
 		$(document).ready(function(){
 			product_prices['0'] = $('#sp_current_ht_price').html();
 			$('#id_product_attribute').change(function() {

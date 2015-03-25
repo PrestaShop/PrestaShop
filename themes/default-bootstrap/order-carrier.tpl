@@ -383,10 +383,6 @@
 {strip}
 {if !$opc}
 	{addJsDef orderProcess='order'}
-	{addJsDef currencySign=$currencySign|html_entity_decode:2:"UTF-8"}
-	{addJsDef currencyRate=$currencyRate|floatval}
-	{addJsDef currencyFormat=$currencyFormat|intval}
-	{addJsDef currencyBlank=$currencyBlank|intval}
 	{if isset($virtual_cart) && !$virtual_cart && $giftAllowed && $cart->gift == 1}
 		{addJsDef cart_gift=true}
 	{else}
