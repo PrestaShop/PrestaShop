@@ -2869,18 +2869,14 @@ class ProductCore extends ObjectModel
 				if (!$specific_price['id_currency'])
 					$reduction_amount = Tools::convertPrice($reduction_amount, $id_currency);
 
-				if (!isset($specific_price['reduction_tax']) || (isset($specific_price['reduction_tax']) && $specific_price['reduction_tax']))
-					$specific_price_reduction = !$use_tax ? $product_tax_calculator->removeTaxes($reduction_amount) : $reduction_amount;
-				else
-				{
 					$specific_price_reduction = $reduction_amount;
-					if ($use_tax)
-					{
-						if (!$use_reduc)
-							$price = $product_tax_calculator->addTaxes($price);
-						$specific_price_reduction = $reduction_amount = $product_tax_calculator->addTaxes($reduction_amount);
-					}
-				}
+
+					// Adjust taxes if required
+
+					if (!$use_tax && $specific_price['reduction_tax'])
+						$specific_price_reduction = $product_tax_calculator->removeTaxes($specific_price_reduction);
+					if ($use_tax && !$specific_price['reduction_tax'])
+						$specific_price_reduction = $product_tax_calculator->addTaxes($specific_price_reduction);
 			}
 			else
 				$specific_price_reduction = $price * $specific_price['reduction'];
