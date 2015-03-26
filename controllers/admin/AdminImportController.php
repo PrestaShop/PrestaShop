@@ -1052,16 +1052,30 @@ class AdminImportControllerCore extends AdminController
 		// Just hide the warning, the processing will be the same.
 		if (Tools::copy($url, $tmpfile))
 		{
-			ImageManager::resize($tmpfile, $path.'.jpg');
-			$images_types = ImageType::getImagesTypes($entity);
+			$last_width = $last_height = 0;
+			$error = 0;
+			ImageManager::resize($tmpfile, $path.'.jpg', null, null, 'jpg', false, $error, $last_width, $last_height, 4);
+			$images_types = ImageType::getImagesTypes($entity, true);
 
 			if ($regenerate)
+			{
+				$previous_path = null;
 				foreach ($images_types as $image_type)
 				{
-					ImageManager::resize($tmpfile, $path.'-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height']);
+					if ($image_type['width'] >= $last_width && $image_type['height'] >= $last_height)
+						copy($tmpfile, $path.'-'.stripslashes($image_type['name']).'.jpg');
+					else
+					{
+						if ($previous_path && $image_type['width'] < $last_width && $image_type['height'] < $last_height)
+							$tmpfile = $previous_path;
+
+						ImageManager::resize($tmpfile, $path.'-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height'], 'jpg', false, $error, $last_width, $last_height, 3);
+					}
+					$previous_path = $path.'-'.stripslashes($image_type['name']).'.jpg';
 					if (in_array($image_type['id_image_type'], $watermark_types))
 						Hook::exec('actionWatermark', array('id_image' => $id_image, 'id_product' => $id_entity));
 				}
+			}
 		}
 		else
 		{
