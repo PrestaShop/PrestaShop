@@ -28,11 +28,11 @@
 		{assign var='priceDisplayPrecision' value=2}
 	{/if}
 	{if !$priceDisplay || $priceDisplay == 2}
-		{assign var='productPrice' value=$product->getPrice(true, $smarty.const.NULL, $priceDisplayPrecision)}
-		{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(false, $smarty.const.NULL, $priceDisplayPrecision)}
+		{assign var='productPrice' value=$product->getPrice(true, $smarty.const.NULL, 6)}
+		{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(false, $smarty.const.NULL)}
 	{elseif $priceDisplay == 1}
-		{assign var='productPrice' value=$product->getPrice(false, $smarty.const.NULL, $priceDisplayPrecision)}
-		{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL, $priceDisplayPrecision)}
+		{assign var='productPrice' value=$product->getPrice(false, $smarty.const.NULL, 6)}
+		{assign var='productPriceWithoutReduction' value=$product->getPriceWithoutReduct(true, $smarty.const.NULL)}
 	{/if}
 <div itemscope itemtype="http://schema.org/Product">
 	<div class="primary_block row">
@@ -257,7 +257,7 @@
 								<p class="our_price_display" itemprop="offers" itemscope itemtype="http://schema.org/Offer">{strip}
 									{if $product->quantity > 0}<link itemprop="availability" href="http://schema.org/InStock"/>{/if}
 									{if $priceDisplay >= 0 && $priceDisplay <= 2}
-										<span id="our_price_display" class="price" itemprop="price">{convertPrice price=$productPrice}</span>
+										<span id="our_price_display" class="price" itemprop="price">{convertPrice price=$productPrice|floatval}</span>
 										{if $tax_enabled  && ((isset($display_tax_label) && $display_tax_label == 1) || !isset($display_tax_label))}
 											{if $priceDisplay == 1} {l s='tax excl.'}{else} {l s='tax incl.'}{/if}
 										{/if}
@@ -273,14 +273,14 @@
 								<p id="reduction_amount" {if !$product->specificPrice || $product->specificPrice.reduction_type != 'amount' || $product->specificPrice.reduction|floatval ==0} style="display:none"{/if}>{strip}
 									<span id="reduction_amount_display">
 									{if $product->specificPrice && $product->specificPrice.reduction_type == 'amount' && $product->specificPrice.reduction|floatval !=0}
-										-{convertPrice price=$productPriceWithoutReduction-$productPrice|floatval}
+										-{convertPrice price=$productPriceWithoutReduction|floatval-$productPrice|floatval}
 									{/if}
 									</span>
 								{/strip}</p>
 								<p id="old_price"{if (!$product->specificPrice || !$product->specificPrice.reduction)} class="hidden"{/if}>{strip}
 									{if $priceDisplay >= 0 && $priceDisplay <= 2}
 										{hook h="displayProductPriceBlock" product=$product type="old_price"}
-										<span id="old_price_display">{if $productPriceWithoutReduction > $productPrice}<span class="price">{convertPrice price=$productPriceWithoutReduction}</span>{if $tax_enabled && $display_tax_label == 1} {if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}{/if}{/if}</span>
+										<span id="old_price_display">{if $productPriceWithoutReduction > $productPrice}<span class="price">{convertPrice price=$productPriceWithoutReduction|floatval}</span>{if $tax_enabled && $display_tax_label == 1} {if $priceDisplay == 1}{l s='tax excl.'}{else}{l s='tax incl.'}{/if}{/if}{/if}</span>
 									{/if}
 								{/strip}</p>
 								{if $priceDisplay == 2}
@@ -301,7 +301,7 @@
 								</p>
 							{/if}
 							{if !empty($product->unity) && $product->unit_price_ratio > 0.000000}
-								{math equation="pprice / punit_price"  pprice=$productPrice  punit_price=$product->unit_price_ratio assign=unit_price}
+								{math equation="pprice / punit_price" pprice=$productPrice  punit_price=$product->unit_price_ratio assign=unit_price}
 								<p class="unit-price"><span id="unit_price_display">{convertPrice price=$unit_price}</span> {l s='per'} {$product->unity|escape:'html':'UTF-8'}</p>
 								{hook h="displayProductPriceBlock" product=$product type="unit_price"}
 							{/if}
@@ -417,13 +417,13 @@
 								<td>
 									{if $quantity_discount.price >= 0 || $quantity_discount.reduction_type == 'amount'}
 										{if $display_discount_price}
-											{convertPrice price=$productPrice-$quantity_discount.real_value|floatval}
+											{convertPrice price=$productPrice|floatval-$quantity_discount.real_value|floatval}
 										{else}
 											{convertPrice price=$quantity_discount.real_value|floatval}
 										{/if}
 									{else}
 										{if $display_discount_price}
-											{convertPrice price = $productPrice-($productPrice*$quantity_discount.reduction)|floatval}
+											{convertPrice price = $productPrice|floatval-($productPrice*$quantity_discount.reduction)|floatval}
 										{else}
 											{$quantity_discount.real_value|floatval}%
 										{/if}
@@ -432,13 +432,13 @@
 								<td>
 									<span>{l s='Up to'}</span>
 									{if $quantity_discount.price >= 0 || $quantity_discount.reduction_type == 'amount'}
-										{$discountPrice=$productPrice-$quantity_discount.real_value|floatval}
+										{$discountPrice=$productPrice|floatval-$quantity_discount.real_value|floatval}
 									{else}
-										{$discountPrice=$productPrice-($productPrice*$quantity_discount.reduction)|floatval}
+										{$discountPrice=$productPrice|floatval-($productPrice*$quantity_discount.reduction)|floatval}
 									{/if}
-									{$discountPrice=$discountPrice*$quantity_discount.quantity}
-									{$qtyProductPrice = $productPrice*$quantity_discount.quantity}
-									{convertPrice price=$qtyProductPrice-$discountPrice}
+									{$discountPrice=$discountPrice * $quantity_discount.quantity}
+									{$qtyProductPrice=$productPrice|floatval * $quantity_discount.quantity}
+									{convertPrice price=$qtyProductPrice - $discountPrice}
 								</td>
 							</tr>
 							{/foreach}
