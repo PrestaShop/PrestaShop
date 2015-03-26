@@ -558,7 +558,7 @@ class ToolsCore
 				break;
 			/* X 0'000.00  Added for the switzerland currency */
 			case 5:
-				$ret = $c_char.$blank.number_format($price, $c_decimals, '.', "'");
+				$ret = number_format($price, $c_decimals, '.', "'").$blank.$c_char;
 				break;
 		}
 		if ($is_negative)
