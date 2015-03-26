@@ -730,7 +730,7 @@ class StockAvailableCore extends ObjectModel
 	 *
 	 * @return mixed the DbQuery object or the sql restriction string
 	 */
-	public static function addSqlShopRestriction(DbQuery $sql = null, $shop = null, $alias = null)
+	public static function addSqlShopRestriction($sql = null, $shop = null, $alias = null)
 	{
 		$context = Context::getContext();
 
