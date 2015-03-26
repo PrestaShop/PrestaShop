@@ -179,9 +179,9 @@ abstract class HTMLTemplateCore
 	{
 		$template = false;
 		$default_template = _PS_PDF_DIR_.'/'.$template_name.'.tpl';
-		$overriden_template = $this->shop->getTheme().'/pdf/'.$template_name.'.tpl';
-		if (file_exists($overriden_template))
-			$template = $overriden_template;
+		$overridden_template = _PS_ALL_THEMES_DIR_.$this->shop->getTheme().'/pdf/'.$template_name.'.tpl';
+		if (file_exists($overridden_template))
+			$template = $overridden_template;
 		elseif (file_exists($default_template))
 			$template = $default_template;
 
