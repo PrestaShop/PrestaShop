@@ -89,30 +89,6 @@ a.fancybox-nav {
       width: 280px;
       margin: 10px auto 0px auto; } }
 
-.hide-right-column.hide-left-column #thumbs_list {
-  width: 392px; }
-  @media (min-width: 992px) and (max-width: 1199px) {
-    .hide-right-column.hide-left-column #thumbs_list {
-      width: 194px; } }
-  @media (min-width: 768px) and (max-width: 991px) {
-    .hide-right-column.hide-left-column #thumbs_list {
-      width: 64px; } }
-  @media (max-width: 767px) {
-    .hide-right-column.hide-left-column #thumbs_list {
-      width: 96px; } }
-
-.show-right-column.hide-left-column #thumbs_list, .hide-right-column.show-left-column #thumbs_list {
-  width: 292px; }
-  @media (min-width: 992px) and (max-width: 1199px) {
-    .show-right-column.hide-left-column #thumbs_list, .hide-right-column.show-left-column #thumbs_list {
-      width: 294px; } }
-  @media (min-width: 768px) and (max-width: 991px) {
-    .show-right-column.hide-left-column #thumbs_list, .hide-right-column.show-left-column #thumbs_list {
-      width: 164px; } }
-  @media (max-width: 767px) {
-    .show-right-column.hide-left-column #thumbs_list, .hide-right-column.show-left-column #thumbs_list {
-      width: 196px; } }
-
 #thumbs_list {
   overflow: hidden;
   float: left; }
@@ -161,6 +137,30 @@ a.fancybox-nav {
         #thumbs_list li img {
           width: 68px;
           height: 68px; } }
+
+.hide-right-column.hide-left-column #thumbs_list {
+  width: 392px; }
+  @media (min-width: 992px) and (max-width: 1199px) {
+    .hide-right-column.hide-left-column #thumbs_list {
+      width: 294px; } }
+  @media (min-width: 768px) and (max-width: 991px) {
+    .hide-right-column.hide-left-column #thumbs_list {
+      width: 164px; } }
+  @media (max-width: 767px) {
+    .hide-right-column.hide-left-column #thumbs_list {
+      width: 196px; } }
+
+.show-right-column.hide-left-column #thumbs_list, .hide-right-column.show-left-column #thumbs_list {
+  width: 294px; }
+  @media (min-width: 992px) and (max-width: 1199px) {
+    .show-right-column.hide-left-column #thumbs_list, .hide-right-column.show-left-column #thumbs_list {
+      width: 194px; } }
+  @media (min-width: 768px) and (max-width: 991px) {
+    .show-right-column.hide-left-column #thumbs_list, .hide-right-column.show-left-column #thumbs_list {
+      width: 82px; } }
+  @media (max-width: 767px) {
+    .show-right-column.hide-left-column #thumbs_list, .hide-right-column.show-left-column #thumbs_list {
+      width: 196px; } }
 
 span.view_scroll_spacer {
   float: left;
