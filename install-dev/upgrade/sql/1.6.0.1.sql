@@ -97,3 +97,12 @@ INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VAL
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES('DASHPRODUCT_NBR_SHOW_BEST_SELLER', '10', NOW(), NOW());
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES('DASHPRODUCT_NBR_SHOW_MOST_VIEWED', '10', NOW(), NOW());
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES('DASHPRODUCT_NBR_SHOW_TOP_SEARCH', '10', NOW(), NOW());
+
+CREATE TABLE `PREFIX_category_thumb_link` (
+  `id_thumb_link` int(11) NOT NULL,
+  `name` VARCHAR(80) NOT NULL ,
+  `link` TEXT NOT NULL ,
+  `id_category` int(11) NOT NULL
+    PRIMARY KEY (`id_thumb_link`),
+  KEY (`name`, `id_category`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
