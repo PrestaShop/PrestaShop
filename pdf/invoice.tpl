@@ -25,13 +25,6 @@
 
 {$style_tab}
 
-<table width="100%" id="body" border="0" cellspacing="0">
-    <tr>
-        <td colspan="8">&nbsp;</td>
-        <td colspan="4" class="center bold"><h1>{l s='INVOICE' pdf='true'}</h1></td>
-    </tr>
-</table>
-
 
 <table width="100%" id="body" border="0" cellpadding="2">
     <!-- Invoicing -->

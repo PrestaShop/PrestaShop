@@ -32,7 +32,7 @@
 	<td style="width: 50%; text-align: right;">
 		<table style="width: 100%">
 			<tr>
-				<td style="font-weight: bold; font-size: 14pt; color: #444; width: 100%">{$shop_name|escape:'html':'UTF-8'}</td>
+				<td style="font-weight: bold; font-size: 14pt; color: #444; width: 100%">{l s='INVOICE' pdf='true'}</td>
 			</tr>
 			<tr>
 				<td style="font-size: 14pt; color: #9E9F9E">{$date|escape:'html':'UTF-8'}</td>

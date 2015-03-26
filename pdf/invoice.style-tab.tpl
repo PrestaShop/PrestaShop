@@ -48,6 +48,10 @@
         border-collapse: collapse;
     }
 
+    table#addresses-tab tr td {
+        font-size: large;
+    }
+
     table#summary-tab {
         padding: {$table_padding};
         border: 1pt solid {$color_border};
