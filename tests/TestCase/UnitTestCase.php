@@ -1,11 +1,9 @@
 <?php
 namespace PrestaShop\PrestaShop\Tests\TestCase;
 
-use Exception;
-
 use Cache;
-use Context;
 use Configuration;
+use Context;
 use Db;
 use PHPUnit_Framework_TestCase;
 
@@ -14,12 +12,21 @@ use Core_Foundation_IoC_Container;
 use Adapter_ServiceLocator;
 
 use PrestaShop\PrestaShop\Tests\Fake\FakeConfiguration;
+use PrestaShop\PrestaShop\Tests\Helper\Mocks\FakeEntityMapper;
 
 use Phake;
 
 class UnitTestCase extends PHPUnit_Framework_TestCase
 {
+	/**
+	 * @var Core_Foundation_IoC_Container
+	 */
 	protected $container;
+
+	/**
+	 * @var FakeEntityMapper
+	 */
+	public $entity_mapper;
 
 	/**
 	 * @var Context
@@ -49,6 +56,10 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
 
 		$this->setupDatabaseMock();
 
+		$this->entity_mapper = new FakeEntityMapper();
+
+		$this->container->bind('Adapter_EntityMapper', $this->entity_mapper);
+
 		$this->context = Phake::mock('Context');
 
 		Phake::when($this->context)->cloneContext()->thenReturn($this->context);
@@ -62,10 +73,12 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
 
 	public function setConfiguration(array $keys)
     {
-        $this->container->bind(
+		$fakeConfiguration = new FakeConfiguration($keys);
+		$this->container->bind(
             'Core_Business_Configuration',
-            new FakeConfiguration($keys)
+			$fakeConfiguration
         );
+		return $fakeConfiguration;
     }
 
 	public function teardown()

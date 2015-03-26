@@ -23,6 +23,12 @@
     'type' => 'class',
     'override' => false,
   ),
+  'Adapter_EntityMapper' =>
+  array (
+    'path' => 'Adapter/Adapter_EntityMapper.php',
+    'type' => 'class',
+    'override' => false,
+  ),
   'Adapter_ProductPriceCalculator' => 
   array (
     'path' => 'Adapter/Adapter_ProductPriceCalculator.php',

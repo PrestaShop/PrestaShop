@@ -158,7 +158,9 @@ abstract class ObjectModelCore
 	/** @var bool Enables to define an ID before adding object. */
 	public $force_id = false;
 
-	/**  @var bool If true, objects are cached in memory. */
+	/**
+	 * @var bool If true, objects are cached in memory.
+	 */
 	protected static $cache_objects = true;
 
 	/**
@@ -221,59 +223,8 @@ abstract class ObjectModelCore
 
 		if ($id)
 		{
-			// Load object from database if object id is present
-			$cache_id = 'objectmodel_'.$this->def['classname'].'_'.(int)$id.'_'.(int)$this->id_shop.'_'.(int)$id_lang;
-			if (!ObjectModel::$cache_objects || !Cache::isStored($cache_id))
-			{
-				$sql = new DbQuery();
-				$sql->from($this->def['table'], 'a');
-				$sql->where('a.'.$this->def['primary'].' = '.(int)$id);
-
-				// Get lang informations
-				if ($id_lang && isset($this->def['multilang']) && $this->def['multilang'])
-				{
-					$sql->leftJoin($this->def['table'].'_lang', 'b', 'a.'.$this->def['primary'].' = b.'.$this->def['primary'].' AND b.id_lang = '.(int)$id_lang);
-					if ($this->id_shop && !empty($this->def['multilang_shop']))
-						$sql->where('b.id_shop = '.$this->id_shop);
-				}
-
-				// Get shop informations
-				if (Shop::isTableAssociated($this->def['table']))
-					$sql->leftJoin($this->def['table'].'_shop', 'c', 'a.'.$this->def['primary'].' = c.'.$this->def['primary'].' AND c.id_shop = '.(int)$this->id_shop);
-				if ($object_datas = Db::getInstance()->getRow($sql))
-				{
-					if (!$id_lang && isset($this->def['multilang']) && $this->def['multilang'])
-					{
-						$sql = 'SELECT * FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_lang`
-								WHERE `'.bqSQL($this->def['primary']).'` = '.(int)$id
-								.(($this->id_shop && $this->isLangMultishop()) ? ' AND `id_shop` = '.$this->id_shop : '');
-						if ($object_datas_lang = Db::getInstance()->executeS($sql))
-							foreach ($object_datas_lang as $row)
-								foreach ($row as $key => $value)
-								{
-									if ($key != $this->def['primary'] && array_key_exists($key, $this))
-									{
-										if (!isset($object_datas[$key]) || !is_array($object_datas[$key]))
-											$object_datas[$key] = array();
-
-										$object_datas[$key][$row['id_lang']] = $value;
-									}
-								}
-					}
-					if (ObjectModel::$cache_objects)
-						Cache::store($cache_id, $object_datas);
-				}
-			}
-			else
-				$object_datas = Cache::retrieve($cache_id);
-
-			if ($object_datas)
-			{
-				$this->id = (int)$id;
-				foreach ($object_datas as $key => $value)
-					if (array_key_exists($key, $this))
-						$this->{$key} = $value;
-			}
+			$entity_mapper = Adapter_ServiceLocator::get("Adapter_EntityMapper");
+			$entity_mapper->load($id, $id_lang, $this, $this->def, $this->id_shop, self::$cache_objects);
 		}
 	}
 

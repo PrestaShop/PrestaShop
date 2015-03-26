@@ -32,6 +32,10 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 	public $address;
 	public $type;
 	public $tax_calculator;
+
+	/**
+	 * @var Core_Business_Configuration
+	 */
 	private $configurationManager;
 
 	/**
@@ -39,10 +43,10 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 	 * @param Address $address
 	 * @param mixed $type An additional parameter for the tax manager (ex: tax rules id for TaxRuleTaxManager)
 	 */
-	public function __construct(Address $address, $type, ConfigurationManager $configurationManager = null)
+	public function __construct(Address $address, $type, Core_Business_Configuration $configurationManager = null)
 	{
 		if ($configurationManager === null)
-			$this->configurationManager = new ConfigurationManager();
+			$this->configurationManager = Adapter_ServiceLocator::get('Core_Business_Configuration');
 		else
 			$this->configurationManager = $configurationManager;
 

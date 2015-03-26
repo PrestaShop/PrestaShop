@@ -2,6 +2,9 @@
 
 class Adapter_ServiceLocator
 {
+	/**
+	 * @var Core_Foundation_IoC_Container
+	 */
     private static $service_container;
 
     public static function setServiceContainerInstance(Core_Foundation_IoC_Container $container)
