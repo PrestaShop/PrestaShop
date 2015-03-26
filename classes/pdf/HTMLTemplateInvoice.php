@@ -115,6 +115,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 		$formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
 		$formatted_delivery_address = '';
 
+		$delivery_address = null;
 		if ($this->order->id_address_delivery != $this->order->id_address_invoice)
 		{
 			$delivery_address = new Address((int)$this->order->id_address_delivery);
@@ -288,6 +289,19 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			die(json_encode($data));
 
 		$this->smarty->assign($data);
+
+		$tpls = array(
+			'style_tab' => $this->smarty->fetch($this->getTemplate('invoice.style-tab')),
+			'addresses_tab' => $this->smarty->fetch($this->getTemplate('invoice.addresses-tab')),
+			'summary_tab' => $this->smarty->fetch($this->getTemplate('invoice.summary-tab')),
+			'product_tab' => $this->smarty->fetch($this->getTemplate('invoice.product-tab')),
+			'discount_tab' => $this->smarty->fetch($this->getTemplate('invoice.discount-tab')),
+			'tax_tab' => $this->getTaxTabContent(),
+			'payment_tab' => $this->smarty->fetch($this->getTemplate('invoice.payment-tab')),
+			'total_tab' => $this->smarty->fetch($this->getTemplate('invoice.total-tab')),
+		);
+		$this->smarty->assign($tpls);
+
 
 		return $this->smarty->fetch($this->getTemplateByCountry($country->iso_code));
 	}

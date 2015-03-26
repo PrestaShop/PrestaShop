@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{include file="./invoice.style-tab.tpl"}
+{$style_tab}
 
 <table width="100%" id="body" border="0" cellspacing="0">
     <tr>
@@ -38,7 +38,7 @@
     <tr>
         <td colspan="12">
 
-            {include file="./invoice.addresses-tab.tpl"}
+            {$addresses_tab}
 
         </td>
     </tr>
@@ -51,7 +51,7 @@
     <tr>
         <td colspan="10" >
 
-            {include file="./invoice.summary-tab.tpl"}
+            {$summary_tab}
 
         </td>
         <td colspan="2">&nbsp;</td>
@@ -65,7 +65,7 @@
     <tr>
         <td colspan="12">
 
-            {include file="./invoice.product-tab.tpl"}
+            {$product_tab}
 
         </td>
     </tr>
@@ -86,7 +86,7 @@
         <!-- Calcule TVA -->
         <td colspan="5" rowspan="5" class="right">
 
-            {include file="./invoice.total-tab.tpl"}
+            {$total_tab}
 
         </td>
     </tr>
@@ -97,7 +97,9 @@
 
     <tr>
         <td colspan="6" class="left">
-            {include file="./invoice.payment-tab.tpl"}
+
+            {$payment_tab}
+
         </td>
         <td colspan="1">&nbsp;</td>
     </tr>
@@ -108,7 +110,9 @@
 
     <tr>
         <td colspan="7" class="left small">
+
             {$legal_free_text|escape:'html':'UTF-8'|nl2br}
+
         </td>
     </tr>
 
