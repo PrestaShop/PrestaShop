@@ -32,14 +32,20 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 	public $address;
 	public $type;
 	public $tax_calculator;
+	private $configurationManager;
 
 	/**
 	 *
 	 * @param Address $address
 	 * @param mixed $type An additional parameter for the tax manager (ex: tax rules id for TaxRuleTaxManager)
 	 */
-	public function __construct(Address $address, $type)
+	public function __construct(Address $address, $type, ConfigurationManager $configurationManager = null)
 	{
+		if ($configurationManager === null)
+			$this->configurationManager = new ConfigurationManager();
+		else
+			$this->configurationManager = $configurationManager;
+
 		$this->address = $address;
 		$this->type = $type;
 	}
@@ -67,7 +73,7 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 			return $this->tax_calculator;
 
 		if ($tax_enabled === null)
-			$tax_enabled = Configuration::get('PS_TAX');
+			$tax_enabled = $this->configurationManager->get('PS_TAX');
 
 		if (!$tax_enabled)
 			return new TaxCalculator(array());
