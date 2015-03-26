@@ -295,7 +295,6 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			'addresses_tab' => $this->smarty->fetch($this->getTemplate('invoice.addresses-tab')),
 			'summary_tab' => $this->smarty->fetch($this->getTemplate('invoice.summary-tab')),
 			'product_tab' => $this->smarty->fetch($this->getTemplate('invoice.product-tab')),
-			'discount_tab' => $this->smarty->fetch($this->getTemplate('invoice.discount-tab')),
 			'tax_tab' => $this->getTaxTabContent(),
 			'payment_tab' => $this->smarty->fetch($this->getTemplate('invoice.payment-tab')),
 			'total_tab' => $this->smarty->fetch($this->getTemplate('invoice.total-tab')),
@@ -353,18 +352,19 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			'wrapping_tax' => $this->order_invoice->getWrappingTaxesBreakdown(),
 		);
 
-		foreach ($breakdowns as $type => $bd) {
+		foreach ($breakdowns as $type => $bd)
+		{
 			if (empty($bd))
-			unset($breakdowns[$type]);
+				unset($breakdowns[$type]);
 		}
 
 		if (empty($breakdowns))
 			$breakdowns = false;
 
-		if (isset($breakdowns['product_tax'])) {
-			foreach ($breakdowns['product_tax'] as &$bd) {
+		if (isset($breakdowns['product_tax']))
+		{
+			foreach ($breakdowns['product_tax'] as &$bd)
 				$bd['total_tax_excl'] = $bd['total_price_tax_excl'];
-			}
 		}
 
 		if (isset($breakdowns['ecotax_tax'])) {
