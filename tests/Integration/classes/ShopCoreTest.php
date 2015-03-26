@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Tests\Unit\Classes;
 
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
+use Configuration;
 use Context;
 
 class ShopCoreTest extends IntegrationTestCase
@@ -40,6 +41,7 @@ class ShopCoreTest extends IntegrationTestCase
 
     public function testGetBaseURL()
     {
-        $this->assertEquals('http://localhost'.__PS_BASE_URI__, $this->context->shop->getBaseURL(true));
+        $domain = Configuration::get('PS_SHOP_DOMAIN');
+        $this->assertEquals('http://'.$domain.__PS_BASE_URI__, $this->context->shop->getBaseURL(true));
     }
 }
