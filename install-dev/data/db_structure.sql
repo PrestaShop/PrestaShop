@@ -2633,3 +2633,12 @@ CREATE TABLE `PREFIX_modules_perfs` (
   PRIMARY KEY (`id_modules_perfs`),
   KEY (`session`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE PREFIX_category_thumb_link` (
+  `id_thumb_link` int(11) NOT NULL,
+  `name` VARCHAR(80) NOT NULL ,
+  `link` TEXT DEFAULT NULL ,
+  `id_category` int(11) NOT NULL,
+  PRIMARY KEY (`id_thumb_link`),
+  KEY (`name`, `id_category`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;

@@ -26,22 +26,40 @@
 
 class HelperImageUploaderCore extends HelperUploader
 {
+	/**
+	 * Get Max Upload Size
+	 * @return int
+	 */
 	public function getMaxSize()
 	{
 		return (int)Tools::getMaxUploadSize();
 	}
 
+	/**
+	 * Get path where Image will be saved
+	 * @return string
+	 */
 	public function getSavePath()
 	{
 		return $this->_normalizeDirectory(_PS_TMP_IMG_DIR_);
 	}
 
+	/**
+	 * Get Image location
+	 * @param null $file_name
+	 * @return string
+	 */
 	public function getFilePath($file_name = null)
 	{
 		//Force file path
 		return tempnam($this->getSavePath(), $this->getUniqueFileName());
 	}
 
+	/**
+	 * Validate Image Uploaded
+	 * @param $file
+	 * @return bool
+	 */
 	protected function validate(&$file)
 	{
 		$file['error'] = $this->checkUploadError($file['error']);
@@ -75,5 +93,77 @@ class HelperImageUploaderCore extends HelperUploader
 		}
 
 		return true;
+	}
+
+	/**
+	 * Get an array of files with their associated links (if any)
+	 * @return array
+	 */
+	public function getFilesLinks()
+	{
+		$files = $this->getFiles();
+		$files_links = array();
+
+		foreach ($files as $file)
+		{
+			if (isset($file['is_linkable']) && isset($file['assoc_table']))
+			{
+				$db_filename = Tools::str_replace_once('.', '_', (string)$file['filename']);
+				$file_link = CategoryThumbLink::getLinkFromFilename($db_filename);
+				if (!is_null($file_link))
+					$files_links[(string)$file['filename']] = (string)$file_link['link'];
+			}
+		}
+		return $files_links;
+	}
+
+
+	/**
+	 * Render ImageUploader form
+	 * @return Smarty Template
+	 */
+	public function render()
+	{
+		$admin_webpath = str_ireplace(_PS_CORE_DIR_, '', _PS_ADMIN_DIR_);
+		$admin_webpath = preg_replace('/^'.preg_quote(DIRECTORY_SEPARATOR, '/').'/', '', $admin_webpath);
+		$bo_theme = ((Validate::isLoadedObject($this->getContext()->employee)
+			&& $this->getContext()->employee->bo_theme) ? $this->getContext()->employee->bo_theme : 'default');
+
+		if (!file_exists(_PS_BO_ALL_THEMES_DIR_.$bo_theme.DIRECTORY_SEPARATOR
+			.'template'))
+			$bo_theme = 'default';
+
+		$this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
+			.'/themes/'.$bo_theme.'/js/jquery.iframe-transport.js');
+		$this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
+			.'/themes/'.$bo_theme.'/js/jquery.fileupload.js');
+		$this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
+			.'/themes/'.$bo_theme.'/js/jquery.fileupload-process.js');
+		$this->getContext()->controller->addJs(__PS_BASE_URI__.$admin_webpath
+			.'/themes/'.$bo_theme.'/js/jquery.fileupload-validate.js');
+		$this->getContext()->controller->addJs(__PS_BASE_URI__.'js/vendor/spin.js');
+		$this->getContext()->controller->addJs(__PS_BASE_URI__.'js/vendor/ladda.js');
+
+		if ($this->useAjax() && !isset($this->_template))
+			$this->setTemplate(self::DEFAULT_AJAX_TEMPLATE);
+
+		$template = $this->getContext()->smarty->createTemplate(
+			$this->getTemplateFile($this->getTemplate()), $this->getContext()->smarty
+		);
+
+		$template->assign(array(
+			'id'            => $this->getId(),
+			'name'          => $this->getName(),
+			'url'           => $this->getUrl(),
+			'multiple'      => $this->isMultiple(),
+			'files'         => $this->getFiles(),
+			'files_links'   => $this->getFilesLinks(),
+			'title'         => $this->getTitle(),
+			'max_files'     => $this->getMaxFiles(),
+			'post_max_size' => $this->getPostMaxSizeBytes(),
+			'drop_zone'     => $this->getDropZone()
+		));
+
+		return $template->fetch();
 	}
 }

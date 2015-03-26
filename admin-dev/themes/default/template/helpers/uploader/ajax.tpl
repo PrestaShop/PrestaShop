@@ -25,21 +25,38 @@
 <div class="form-group" style="display: none;">
 	<div class="col-lg-12" id="{$id|escape:'html':'UTF-8'}-images-thumbnails">
 		{if isset($files) && $files|count > 0}
-		{foreach $files as $file}
-		{if isset($file.image) && $file.type == 'image'}
-		<div>
-			{$file.image}
-			{if isset($file.size)}<p>{l s='File size'} {$file.size}kb</p>{/if}
-			{if isset($file.delete_url)}
-			<p>
-				<a class="btn btn-default" href="{$file.delete_url}">
-					<i class="icon-trash"></i> {l s='Delete'}
-				</a>
-			</p>
-			{/if}
-		</div>
-		{/if}
-		{/foreach}
+            {foreach $files as $file}
+                {if isset($file.image) && $file.type == 'image'}
+                <div>
+
+                    {$file.image}
+
+                    {if isset($file.delete_url)}
+                        <p>
+                            <a class="btn btn-default" href="{$file.delete_url}">
+                                <i class="icon-trash"></i> {l s='Delete'}
+                            </a>
+                        </p>
+                    {/if}
+
+                    {if isset($file.size)}<p>{l s='File size'} {$file.size}kb</p>{/if}
+
+                    <div class="col-lg-12">
+                        <p>
+                            <label class="control-label">
+                                <span class="label-tooltip" data-toggle="tooltip" data-html="true" title="" data-original-title="{l s='You can associate an url to make thumbnail clickable (absolute url only)'}">
+                                    {l s='Thumbnail\'s href'}
+                                </span>
+                            </label>
+                        </p>
+                        <p>
+                            <input placeholder="http://myshop.com/" type="text" id="{$file.filename}" name="{$file.filename}" value="{if isset($files_links[$file.filename])}{$files_links[$file.filename]}{/if}">
+                        </p>
+                    </div>
+
+                </div>
+                {/if}
+            {/foreach}
 		{/if}
 	</div>
 </div>
