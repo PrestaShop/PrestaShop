@@ -418,6 +418,7 @@ class OrderDetailCore extends ObjectModel
 	{
 		return self::getTaxList($this->id);
 	}
+
 	public static function getTaxListStatic($id_order_detail)
 	{
 		$sql = 'SELECT * FROM `'._DB_PREFIX_.'order_detail_tax`
