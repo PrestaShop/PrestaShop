@@ -192,7 +192,8 @@ class StockAvailableCore extends ObjectModel
 									array(
 										'id_product' => $id_product,
 										'id_product_attribute' => 0,
-										'quantity' => $product_quantity
+										'quantity' => $product_quantity,
+										'id_shop' => $id_shop
 										)
 					);
 				}
@@ -250,7 +251,8 @@ class StockAvailableCore extends ObjectModel
 									array(
 										'id_product' => $id_product,
 										'id_product_attribute' => $id_product_attribute,
-										'quantity' => $quantity
+										'quantity' => $quantity,
+										'id_shop' => $id_shop
 									)
 						);
 					}
