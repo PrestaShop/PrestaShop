@@ -6,7 +6,10 @@ Hi {firstname} {lastname},
 Your order with the reference {order_name} is currently in transit. 
 
 You can track your package using the following link: {followup}
-[{followup}] 		 
+[{followup}]
+
+You can follow up too with carrier name {carrier_name} and shipping 
+number {shipping_number}.
 
 You can review your order and download your invoice from the
 "Order history" [{history_url}] section of your
