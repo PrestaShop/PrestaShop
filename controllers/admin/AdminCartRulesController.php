@@ -83,8 +83,11 @@ class AdminCartRulesControllerCore extends AdminController
 		{
 			if ($count == 0)
 				$count = 1;
+
+			/** @var CartRule $current_object */
 			$current_object = $this->loadObject(true);
 			$cart_rules     = $current_object->getAssociatedRestrictions('cart_rule', false, true, ($page)*$limit, $limit, $search);
+
 			if ($type == 'selected')
 			{
 				$i = 1;
@@ -328,7 +331,14 @@ class AdminCartRulesControllerCore extends AdminController
 		}
 	}
 
-	/* Retrieve the cart rule product rule groups in the POST data if available, and in the database if there is none */
+	/**
+	 * Retrieve the cart rule product rule groups in the POST data
+	 * if available, and in the database if there is none
+	 *
+	 * @param CartRule $cart_rule
+	 *
+	 * @return array
+	 */
 	public function getProductRuleGroupsDisplay($cart_rule)
 	{
 		$productRuleGroupsArray = array();

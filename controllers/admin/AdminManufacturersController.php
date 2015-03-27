@@ -685,6 +685,8 @@ class AdminManufacturersControllerCore extends AdminController
 		if (!($manufacturer = $this->loadObject()))
 			return;
 
+		/** @var Manufacturer $manufacturer */
+
 		$this->toolbar_btn['new'] = array(
 					'href' => $this->context->link->getAdminLink('AdminManufacturers').'&addaddress=1&id_manufacturer='.(int)$manufacturer->id,
 					'desc' => $this->l('Add address')

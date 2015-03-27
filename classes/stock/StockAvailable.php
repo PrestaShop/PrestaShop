@@ -724,11 +724,11 @@ class StockAvailableCore extends ObjectModel
 	/**
 	 * Add an sql restriction for shops fields - specific to StockAvailable
 	 *
-	 * @param DbQuery $query Reference to the query object
-	 * @param int $id_shop Optional : The shop ID
-	 * @param string $alias Optional : The current table alias
+	 * @param DbQuery|string|null $sql   Reference to the query object
+	 * @param Shop|int|null       $shop  Optional : The shop ID
+	 * @param string|null         $alias Optional : The current table alias
 	 *
-	 * @return mixed the DbQuery object or the sql restriction string
+	 * @return string|DbQuery DbQuery object or the sql restriction string
 	 */
 	public static function addSqlShopRestriction($sql = null, $shop = null, $alias = null)
 	{

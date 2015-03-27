@@ -396,6 +396,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	{
 		if ($this->table == 'attribute')
 		{
+			/** @var AttributeGroup $object */
 			$object = new $this->className();
 			foreach (Language::getLanguages(false) as $language)
 				if ($object->isAttribute((int)Tools::getValue('id_attribute_group'),
@@ -772,6 +773,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				{
 					if (isset($_POST[$this->table.'Box']))
 					{
+						/** @var AttributeGroup $object */
 						$object = new $this->className();
 						if ($object->deleteSelection($_POST[$this->table.'Box']))
 							Tools::redirectAdmin(self::$currentIndex.'&conf=2'.'&token='.$this->token);
