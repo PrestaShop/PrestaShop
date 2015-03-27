@@ -451,7 +451,7 @@ class WebserviceRequestCore
 		if ($this->webserviceChecks())
 		{
 			if ($bad_class_name)
-				$this->setError(500, 'Class "'.html_special_chars($bad_class_name).'" not found. Please update the class_name field in the webservice_account table.', 126);
+				$this->setError(500, 'Class "'.htmlspecialchars($bad_class_name).'" not found. Please update the class_name field in the webservice_account table.', 126);
 			// parse request url
 			$this->method = $method;
 			$this->urlSegment = explode('/', $url);
