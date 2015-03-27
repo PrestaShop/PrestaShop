@@ -197,6 +197,8 @@ class FrontControllerCore extends Controller
 	 */
 	public function init()
 	{
+		
+		header('Cache-Control: no-store, no-cache');
 		/**
 		 * Globals are DEPRECATED as of version 1.5.0.1
 		 * Use the Context object to access objects instead.
