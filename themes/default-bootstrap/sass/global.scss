@@ -1451,13 +1451,7 @@ ul.step {
 		&.step_current {
 			font-weight: bold;
 			background: rgb(66, 184, 86);
-			background: -moz-linear-gradient(top, rgba(66, 184, 86, 1) 0%, rgba(67, 171, 84, 1) 100%);
-			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(66, 184, 86, 1)), color-stop(100%, rgba(67, 171, 84, 1)));
-			background: -webkit-linear-gradient(top, rgba(66, 184, 86, 1) 0%, rgba(67, 171, 84, 1) 100%);
-			background: -o-linear-gradient(top, rgba(66, 184, 86, 1) 0%, rgba(67, 171, 84, 1) 100%);
-			background: -ms-linear-gradient(top, rgba(66, 184, 86, 1) 0%, rgba(67, 171, 84, 1) 100%);
-			background: linear-gradient(to bottom, rgba(66, 184, 86, 1) 0%, rgba(67, 171, 84, 1) 100%);
-			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#42b856', endColorstr='#43ab54',GradientType=0);
+			@include gradient-vertical(rgba(66, 184, 86, 1), rgba(67, 171, 84, 1));
 			border-color: #399b49 #51ae5c #208931 #369946;
 			span {
 				color: $light-text-color;
@@ -1479,13 +1473,7 @@ ul.step {
 		}
 		&.step_todo {
 			background: rgb(247, 247, 247);
-			background: -moz-linear-gradient(top, rgba(247, 247, 247, 1) 0%, rgba(237, 237, 237, 1) 100%);
-			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(247, 247, 247, 1)), color-stop(100%, rgba(237, 237, 237, 1)));
-			background: -webkit-linear-gradient(top, rgba(247, 247, 247, 1) 0%, rgba(237, 237, 237, 1) 100%);
-			background: -o-linear-gradient(top, rgba(247, 247, 247, 1) 0%, rgba(237, 237, 237, 1) 100%);
-			background: -ms-linear-gradient(top, rgba(247, 247, 247, 1) 0%, rgba(237, 237, 237, 1) 100%);
-			background: linear-gradient(to bottom, rgba(247, 247, 247, 1) 0%, rgba(237, 237, 237, 1) 100%);
-			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f7f7f7', endColorstr='#ededed',GradientType=0);
+			@include gradient-vertical(rgba(247, 247, 247, 1), rgba(237, 237, 237, 1));
 			span {
 				display: block;
 				border: 1px solid;
@@ -1504,13 +1492,7 @@ ul.step {
 		&.step_done {
 			border-color: #666666 #5f5f5f #292929 #5f5f5f;
 			background: rgb(114, 113, 113);
-			background: -moz-linear-gradient(top, rgba(114, 113, 113, 1) 0%, rgba(102, 102, 102, 1) 100%);
-			background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(114, 113, 113, 1)), color-stop(100%, rgba(102, 102, 102, 1)));
-			background: -webkit-linear-gradient(top, rgba(114, 113, 113, 1) 0%, rgba(102, 102, 102, 1) 100%);
-			background: -o-linear-gradient(top, rgba(114, 113, 113, 1) 0%, rgba(102, 102, 102, 1) 100%);
-			background: -ms-linear-gradient(top, rgba(114, 113, 113, 1) 0%, rgba(102, 102, 102, 1) 100%);
-			background: linear-gradient(to bottom, rgba(114, 113, 113, 1) 0%, rgba(102, 102, 102, 1) 100%);
-			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#727171', endColorstr='#666666',GradientType=0);
+			@include gradient-vertical(rgba(114, 113, 113, 1), rgba(102, 102, 102, 1));
 			a {
 				color: $light-text-color;
 				text-shadow: 1px 1px rgba(0, 0, 0, 0.3);
