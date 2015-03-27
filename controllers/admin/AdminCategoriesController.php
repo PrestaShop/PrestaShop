@@ -413,6 +413,8 @@ class AdminCategoriesControllerCore extends AdminController
 	public function renderForm()
 	{
 		$this->initToolbar();
+
+		/** @var Category $obj */
 		$obj = $this->loadObject(true);
 		$id_shop = Context::getContext()->shop->id;
 		$selected_categories = array((isset($obj->id_parent) && $obj->isParentCategoryAvailable($id_shop))? (int)$obj->id_parent : (int)Tools::getValue('id_parent', Category::getRootCategory()->id));

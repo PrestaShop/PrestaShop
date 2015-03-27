@@ -25,7 +25,7 @@
 */
 
 /**
- * @property Store $object
+ * @property Supplier $object
  */
 class AdminSuppliersControllerCore extends AdminController
 {

@@ -551,6 +551,8 @@ class AdminModulesPositionsControllerCore extends AdminController
 				if (file_exists(_PS_MODULE_DIR_.$module['name'].'/'.$module['name'].'.php'))
 				{
 					include_once(_PS_MODULE_DIR_.$module['name'].'/'.$module['name'].'.php');
+
+					/** @var Module $mod */
 					$mod = new $module['name']();
 					if ($mod->isHookableOn($hook_name))
 						$hookableModulesList[] = array('id' => (int)$mod->id, 'name' => $mod->displayName, 'display' => Hook::exec($hook_name, array(), (int)$mod->id));

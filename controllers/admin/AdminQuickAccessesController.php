@@ -233,6 +233,7 @@ class AdminQuickAccessesControllerCore extends AdminController
 	{
 		if (Validate::isLoadedObject($object = $this->loadObject()))
 		{
+			/** @var QuickAccess $object */
 			if ($object->toggleNewWindow())
 				$this->redirect_after = self::$currentIndex.'&conf=5&token='.$this->token;
 			else

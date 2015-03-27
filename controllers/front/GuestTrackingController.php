@@ -128,7 +128,11 @@ class GuestTrackingControllerCore extends FrontController
 	}
 
 	/**
-	 * Assign template vars related to order tracking informations
+	 * Assigns template vars related to order tracking information
+	 *
+	 * @param PrestaShopCollection $order_collection
+	 *
+	 * @throws PrestaShopException
 	 */
 	protected function assignOrderTracking($order_collection)
 	{
@@ -142,6 +146,7 @@ class GuestTrackingControllerCore extends FrontController
 
 		foreach ($order_list as &$order)
 		{
+			/** @var Order $order */
 			$order->id_order_state = (int)$order->getCurrentState();
 			$order->invoice = (OrderState::invoiceAvailable((int)$order->id_order_state) && $order->invoice_number);
 			$order->order_history = $order->getHistory((int)$this->context->language->id, false, true);

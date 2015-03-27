@@ -353,8 +353,11 @@ class AuthControllerCore extends FrontController
 			$customer->newsletter_date_add = pSQL(date('Y-m-d H:i:s'));
 
 			if ($module_newsletter = Module::getInstanceByName('blocknewsletter'))
+			{
+				/** @var Blocknewsletter $module_newsletter */
 				if ($module_newsletter->active)
 					$module_newsletter->confirmSubscription(Tools::getValue('email'));
+			}
 		}
 	}
 

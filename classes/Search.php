@@ -521,10 +521,11 @@ class SearchCore
 	}
 
 	/**
-	 * @param $db
-	 * @param $id_product
-	 * @param $sql_attribute
-	 * @return mixed
+	 * @param Db     $db
+	 * @param int    $id_product
+	 * @param string $sql_attribute
+	 *
+	 * @return array|null
 	 */
 	protected static function getAttributesFields($db, $id_product, $sql_attribute)
 	{
