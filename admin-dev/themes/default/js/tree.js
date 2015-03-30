@@ -143,7 +143,7 @@ Tree.prototype =
 			);
 			$.get(
 				'ajax-tab.php',
-				{controller:'AdminProducts',token:currentToken,action:'getCategoryTree', fullTree:1, selected:selected},
+				{controller:'AdminProducts',token:currentToken,action:'getCategoryTree',type:idTree,fullTree:1,selected:selected},
 				function(content)
 				{
 					$('#'+idTree).html(content);

@@ -416,7 +416,8 @@ class AdminCategoriesControllerCore extends AdminController
 
 		/** @var Category $obj */
 		$obj = $this->loadObject(true);
-		$id_shop = Context::getContext()->shop->id;
+        $context = Context::getContext();
+		$id_shop = $context->shop->id;
 		$selected_categories = array((isset($obj->id_parent) && $obj->isParentCategoryAvailable($id_shop))? (int)$obj->id_parent : (int)Tools::getValue('id_parent', Category::getRootCategory()->id));
 		$unidentified = new Group(Configuration::get('PS_UNIDENTIFIED_GROUP'));
 		$guest = new Group(Configuration::get('PS_GUEST_GROUP'));
@@ -476,7 +477,8 @@ class AdminCategoriesControllerCore extends AdminController
 					'tree'  => array(
 						'id'                  => 'categories-tree',
 						'selected_categories' => $selected_categories,
-						'disabled_categories' => (!Tools::isSubmit('add'.$this->table) && !Tools::isSubmit('submitAdd'.$this->table)) ? array($this->_category->id) : null
+						'disabled_categories' => (!Tools::isSubmit('add'.$this->table) && !Tools::isSubmit('submitAdd'.$this->table)) ? array($this->_category->id) : null,
+                        'root_category'       => $context->shop->getCategory()
 					)
 				),
 				array(
