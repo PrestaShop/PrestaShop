@@ -34,12 +34,11 @@
 			{if !empty($shop_phone) OR !empty($shop_fax)}
 				{l s='For more assistance, contact Support:' pdf='true'}<br />
 				{if !empty($shop_phone)}
-					{l s='Tel:' pdf='true'} {$shop_phone|escape:'html':'UTF-8'}
+					{l s='Tel: %s' sprintf=[$shop_phone|escape:'html':'UTF-8'] pdf='true'}
 				{/if}
 
 				{if !empty($shop_fax)}
-					{l s='Fax:' pdf='true'} {$shop_fax|escape:'html':'UTF-8'}
-				{/if}
+					{l s='Fax: %s' sprintf=[$shop_fax|escape:'html':'UTF-8'] pdf='true'}
 				<br />
 			{/if}
             
