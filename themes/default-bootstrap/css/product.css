@@ -91,7 +91,17 @@ a.fancybox-nav {
 
 #thumbs_list {
   overflow: hidden;
-  float: left; }
+  float: left;
+  width: 392px; }
+  @media (min-width: 992px) and (max-width: 1199px) {
+    #thumbs_list {
+      width: 294px; } }
+  @media (min-width: 768px) and (max-width: 991px) {
+    #thumbs_list {
+      width: 164px; } }
+  @media (max-width: 767px) {
+    #thumbs_list {
+      width: 196px; } }
   #thumbs_list ul#thumbs_list_frame {
     list-style-type: none;
     padding-left: 0;
@@ -138,18 +148,6 @@ a.fancybox-nav {
           width: 68px;
           height: 68px; } }
 
-.hide-right-column.hide-left-column #thumbs_list {
-  width: 392px; }
-  @media (min-width: 992px) and (max-width: 1199px) {
-    .hide-right-column.hide-left-column #thumbs_list {
-      width: 294px; } }
-  @media (min-width: 768px) and (max-width: 991px) {
-    .hide-right-column.hide-left-column #thumbs_list {
-      width: 164px; } }
-  @media (max-width: 767px) {
-    .hide-right-column.hide-left-column #thumbs_list {
-      width: 196px; } }
-
 .show-right-column.hide-left-column #thumbs_list, .hide-right-column.show-left-column #thumbs_list {
   width: 294px; }
   @media (min-width: 992px) and (max-width: 1199px) {
@@ -166,10 +164,34 @@ span.view_scroll_spacer {
   float: left;
   width: 39px;
   padding-left: 12px; }
+  @media (min-width: 992px) and (max-width: 1199px) {
+    span.view_scroll_spacer {
+      width: 45px;
+      padding-left: 18px; } }
   @media (min-width: 768px) and (max-width: 991px) {
     span.view_scroll_spacer {
-      padding-left: 6px;
-      width: 28px; } }
+      width: 30px;
+      padding-left: 3px; } }
+  @media (max-width: 767px) {
+    span.view_scroll_spacer {
+      width: 45px;
+      padding-left: 18px; } }
+
+.show-right-column.hide-left-column span.view_scroll_spacer, .hide-right-column.show-left-column span.view_scroll_spacer {
+  width: 27px;
+  padding-left: 2px; }
+  @media (min-width: 992px) and (max-width: 1199px) {
+    .show-right-column.hide-left-column span.view_scroll_spacer, .hide-right-column.show-left-column span.view_scroll_spacer {
+      width: 44px;
+      padding-left: 16px; } }
+  @media (min-width: 768px) and (max-width: 991px) {
+    .show-right-column.hide-left-column span.view_scroll_spacer, .hide-right-column.show-left-column span.view_scroll_spacer {
+      width: 41px;
+      padding-left: 13px; } }
+  @media (max-width: 767px) {
+    .show-right-column.hide-left-column span.view_scroll_spacer, .hide-right-column.show-left-column span.view_scroll_spacer {
+      width: 45px;
+      padding-left: 14px; } }
 
 #view_scroll_left,
 #view_scroll_right {

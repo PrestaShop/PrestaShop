@@ -137,7 +137,6 @@ $(document).ready(function()
 			stop:true,
 			onBefore:serialScrollFixLock,
 			duration:700,
-			step: 2,
 			lazy: true,
 			lock: false,
 			force:false,
@@ -884,7 +883,9 @@ function serialScrollFixLock(event, targeted, scrolled, items, position)
 function serialScrollSetNbImages()
 {
 	serialScrollNbImagesDisplayed = 4;
-	if ($('#thumbs_list').outerWidth(true) < 294)
+	if ($('#thumbs_list').outerWidth(true) < 194)
+		serialScrollNbImagesDisplayed = 1;
+	else if ($('#thumbs_list').outerWidth(true) < 294)
 		serialScrollNbImagesDisplayed = 2;
 	else if ($('#thumbs_list').outerWidth(true) < 392)
 		serialScrollNbImagesDisplayed = 3;
