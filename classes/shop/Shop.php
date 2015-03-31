@@ -188,6 +188,11 @@ class ShopCore extends ObjectModel
 		Shop::$initialized = true;
 	}
 
+	protected static function getProto()
+	{
+		return (Configuration::get('PS_SSL_ENABLED') && Configuration::get('PS_SSL_ENABLED_EVERYWHERE')) ? 'https://' : 'http://';
+	}
+
 	public function setUrl()
 	{
 		$cache_id = 'Shop::setUrl_'.(int)$this->id;
@@ -356,7 +361,7 @@ class ShopCore extends ObjectModel
 						$redirect_header = ($redirect_type == 1 ? 'Found' : 'Moved Permanently');
 						header('HTTP/1.0 '.$redirect_code.' '.$redirect_header);
 						header('Cache-Control: no-cache');
-						header('Location: http://'.$url);
+						header('Location: '.self::getProto().$url);
 						exit;
 					}
 		}
@@ -420,7 +425,7 @@ class ShopCore extends ObjectModel
 				$redirect_code = ($redirect_type == 1 ? '302' : '301');
 				$redirect_header = ($redirect_type == 1 ? 'Found' : 'Moved Permanently');
 				header('HTTP/1.0 '.$redirect_code.' '.$redirect_header);
-				header('Location: http://'.$url);
+				header('Location: '.self::getProto().$url);
 				exit;
 
 			}
