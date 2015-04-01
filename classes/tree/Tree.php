@@ -228,7 +228,8 @@ class TreeCore
 
 	/**
 	 * @param $value
-	 * @return $this
+	 *
+	 * @return Tree
 	 */
 	public function setTemplateDirectory($value)
 	{
