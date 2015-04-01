@@ -178,10 +178,10 @@ abstract class HTMLTemplateCore
 	protected function getTemplate($template_name)
 	{
 		$template = false;
-		$default_template = _PS_PDF_DIR_.'/'.$template_name.'.tpl';
-		$overriden_template = $this->shop->getTheme().'/pdf/'.$template_name.'.tpl';
-		if (file_exists($overriden_template))
-			$template = $overriden_template;
+		$default_template = rtrim(_PS_PDF_DIR_, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$template_name.'.tpl';
+		$overridden_template = _PS_ALL_THEMES_DIR_.$this->shop->getTheme().DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.$template_name.'.tpl';
+		if (file_exists($overridden_template))
+			$template = $overridden_template;
 		elseif (file_exists($default_template))
 			$template = $default_template;
 
