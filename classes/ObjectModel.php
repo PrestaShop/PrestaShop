@@ -1388,6 +1388,24 @@ abstract class ObjectModelCore
 		return Shop::isTableAssociated($this->def['table']) || !empty($this->def['multilang_shop']);
 	}
 
+	public function objectIsAssoWithIdShops()
+	{
+		$result = false;
+		$asso = Shop::getAssoTable($this->def['table']);
+		if ($asso['type'] == 'shop')
+			$sql = 'SELECT `id_shop` FROM '._DB_PREFIX_.$this->def['table'].'_shop WHERE `'.$this->def['primary'].'` = '.$this->id;
+		elseif ($asso['type'] == 'fk_shop')
+			$sql = 'SELECT `id_shop` FROM '._DB_PREFIX_.$this->def['table'].' WHERE `'.$this->def['primary'].'` = '.$this->id;
+
+		if (isset($sql))
+			$result = Db::getInstance()->executeS($sql);
+
+		if (!$result)
+			$result = isset($this->id_shop) ? array(array('id_shop' => $this->id_shop)) : false;
+
+		return $result;
+	}
+
 	public function isMultiShopField($field)
 	{
 		return (isset($this->def['fields'][$field]) && isset($this->def['fields'][$field]['shop']) && $this->def['fields'][$field]['shop']);
