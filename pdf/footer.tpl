@@ -40,6 +40,7 @@
 				{if !empty($shop_fax)}
 					{l s='Fax: %s' sprintf=[$shop_fax|escape:'html':'UTF-8'] pdf='true'}
 				<br />
+				{/if}
 			{/if}
             
             {if isset($shop_details)}
