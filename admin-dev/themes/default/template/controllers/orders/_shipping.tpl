@@ -30,7 +30,7 @@
 					<span class="title_box ">{l s='Date'}</span>
 				</th>
 				<th>
-					<span class="title_box ">{l s='Type'}</span>
+					<span class="title_box ">&nbsp;</span>
 				</th>
 				<th>
 					<span class="title_box ">{l s='Carrier'}</span>
@@ -51,7 +51,7 @@
 			{foreach from=$order->getShipping() item=line}
 			<tr>
 				<td>{dateFormat date=$line.date_add full=true}</td>
-				<td>{$line.type}</td>
+				<td>&nbsp;</td>
 				<td>{$line.carrier_name}</td>
 				<td class="weight">{$line.weight|string_format:"%.3f"} {Configuration::get('PS_WEIGHT_UNIT')}</td>
 				<td class="center">
