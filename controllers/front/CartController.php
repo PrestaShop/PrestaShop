@@ -374,6 +374,7 @@ class CartControllerCore extends FrontController
 			if ($result['customizedDatas'])
 				Product::addCustomizationPrice($result['summary']['products'], $result['customizedDatas']);
 
+			$json = '';
 			Hook::exec('actionCartListOverride', array('summary' => $result, 'json' => &$json));
 			$this->ajaxDie(Tools::jsonEncode(array_merge($result, (array)Tools::jsonDecode($json, true))));
 

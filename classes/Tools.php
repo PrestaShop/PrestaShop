@@ -788,7 +788,7 @@ class ToolsCore
 
 		if (file_exists($file) && is_file($file) && array_search(basename($file), $exclude_files) === false)
 		{
-			@chmod($dirname.$file, 0777); // NT ?
+			@chmod($file, 0777); // NT ?
 			unlink($file);
 		}
 	}
@@ -1361,6 +1361,11 @@ class ToolsCore
 
 		$options = array_merge($default, $options);
 		extract($options);
+		/**
+		 * @var string $ellipsis
+		 * @var bool   $exact
+		 * @var bool   $html
+		 */
 
 		if ($html)
 		{

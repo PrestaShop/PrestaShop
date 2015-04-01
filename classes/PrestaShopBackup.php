@@ -64,14 +64,12 @@ class PrestaShopBackupCore
 	public function setCustomBackupPath($dir)
 	{
 		$custom_dir = DIRECTORY_SEPARATOR.trim($dir, '/').DIRECTORY_SEPARATOR;
-		if (is_dir((defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_).DIRECTORY_SEPARATOR.$customDir
-			.DIRECTORY_SEPARATOR))
+		if (is_dir((defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_).$custom_dir))
 			$this->customBackupDir = $custom_dir;
 		else
 			return false;
 
 		return true;
-
 	}
 
 	/**
