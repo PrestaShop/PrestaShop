@@ -1967,19 +1967,19 @@ class OrderCore extends ObjectModel
 	}
 
 	/**
-	 *
 	 * Has Delivery return true if this order has already a delivery slip
+	 *
 	 * @return bool
 	 */
 	public function hasDelivery()
 	{
-		if ($res = (int)Db::getInstance()->getValue('
+		$res = (int)Db::getInstance()->getValue('
 				SELECT `id_order_invoice`
 				FROM `'._DB_PREFIX_.'order_invoice`
 				WHERE `id_order` =  '.(int)$this->id.'
-				AND `delivery_number` > 0'));
-			return $res;
-		return false;
+				AND `delivery_number` > 0');
+
+		return $res ? $res : false;
 	}
 
 	/**
