@@ -88,7 +88,7 @@
 				</tr>
 			{foreachelse}
 				<tr>
-					<td>{l s='No payment'}</td>
+					<td>{l s='No payment' pdf='true'}</td>
 				</tr>
 			{/foreach}
 			</table>
