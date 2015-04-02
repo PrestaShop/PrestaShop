@@ -452,7 +452,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 								'value' => 0
 							)
 						),
-						'hint' => $this->l('Enable the carrier in the Front Office.')
+						'hint' => $this->l('Enable the carrier in the front office.')
 					)
 				)
 			));

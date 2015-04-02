@@ -98,7 +98,7 @@ class AdminShippingControllerCore extends AdminController
 					),
 					'PS_CARRIER_DEFAULT_SORT' => array(
 						'title' => $this->l('Sort by'),
-						'desc' => $this->l('This will only be visible in the Front Office.'),
+						'desc' => $this->l('This will only be visible in the front office.'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'identifier' => 'value',
@@ -106,7 +106,7 @@ class AdminShippingControllerCore extends AdminController
 					),
 					'PS_CARRIER_DEFAULT_ORDER' => array(
 						'title' => $this->l('Order by'),
-						'desc' => $this->l('This will only be visible in the Front Office.'),
+						'desc' => $this->l('This will only be visible in the front office.'),
 						'cast' => 'intval',
 						'type' => 'select',
 						'identifier' => 'value',

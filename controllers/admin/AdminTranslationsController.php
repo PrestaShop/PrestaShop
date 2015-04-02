@@ -1404,7 +1404,7 @@ class AdminTranslationsControllerCore extends AdminController
 		$helper->id = 'box-translations';
 		$helper->icon = 'icon-list';
 		$helper->color = 'color3';
-		$helper->title = $this->l('Front Office Translations', null, null, false);
+		$helper->title = $this->l('Front office Translations', null, null, false);
 		if (ConfigurationKPI::get('FRONTOFFICE_TRANSLATIONS') !== false)
 			$helper->value = ConfigurationKPI::get('FRONTOFFICE_TRANSLATIONS');
 		$helper->source = $this->context->link->getAdminLink('AdminStats').'&ajax=1&action=getKpi&kpi=frontoffice_translations';

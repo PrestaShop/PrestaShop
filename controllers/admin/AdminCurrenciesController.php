@@ -128,7 +128,7 @@ class AdminCurrenciesControllerCore extends AdminController
 					'name' => 'sign',
 					'maxlength' => 8,
 					'required' => true,
-					'hint' => $this->l('Will appear in Front Office (e.g. $, &euro;, etc.)')
+					'hint' => $this->l('Will appear in front office (e.g. $, &euro;, etc.)')
 				),
 				array(
 					'type' => 'text',
