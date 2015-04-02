@@ -35,6 +35,7 @@ class CMSRoleRepository extends RepositoryManager
 	}
 
 	/**
+	 * Get CMS Role by its given reference name
 	 * @param $name
 	 * @return array|false
 	 * @throws PrestaShopDatabaseException
@@ -50,6 +51,7 @@ class CMSRoleRepository extends RepositoryManager
 	}
 
 	/**
+	 * Get CMS Roles by their Associated id_cms
 	 * @param $id_cms
 	 * @return array|false
 	 * @throws PrestaShopDatabaseException
@@ -65,6 +67,7 @@ class CMSRoleRepository extends RepositoryManager
 	}
 
 	/**
+	 * Get CMS Roles by their reference names
 	 * @param $names_array
 	 * @return array|false
 	 * @throws PrestaShopDatabaseException
@@ -83,6 +86,28 @@ class CMSRoleRepository extends RepositoryManager
 		WHERE `name` IN ("'.$names_exploded.'")';
 
 		return Db::getInstance()->executeS($sql);
+	}
+
+
+	/**
+	 * Return all CMS roles already associated to a CMS Page
+	 * @return array|false
+	 * @throws PrestaShopDatabaseException
+	 */
+	public function getCMSRolesAssociated()
+	{
+		$sql = '
+			SELECT *
+			FROM `'._DB_PREFIX_.CMSRoleEntity::$definition['table'].'`
+			WHERE `id_cms` != 0
+		';
+
+		$result = Db::getInstance()->executeS($sql);
+
+		if ($result === false || $result === null)
+			$result = array();
+
+		return $result;
 	}
 
 }

@@ -24,23 +24,5 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class CMSRepository extends RepositoryManager
-{
-	protected $entity = null;
-
-	public function __construct($component_name)
-	{
-		$this->component = $component_name;
-		$this->entity = 'CMSEntity';
-	}
-
-	/**
-	 * @return array|false
-	 */
-	public function getCMSPagesList()
-	{
-		// @TODO: Works as a "proxy" ATM but should be integrated directly here in the future
-		return CMS::listCms();
-	}
-
-}
+// @TODO: Only a proxy ATM
+class CMSEntity extends Entity {}
