@@ -92,6 +92,7 @@ class HelperTreeCategoriesCore extends TreeCore
 			}
 			else
 			{
+				$new_selected_categories = array();
 				$selected_categories = $this->getSelectedCategories();
 				$categories[$root_category] = Category::getChildren($root_category, $lang, false, $shop->id);
 				foreach($selected_categories as $selected_category)
