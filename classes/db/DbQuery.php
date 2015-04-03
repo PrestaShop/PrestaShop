@@ -254,6 +254,7 @@ class DbQueryCore
 	 * Generates query and return SQL string
 	 *
 	 * @return string
+	 * @throws PrestaShopException
 	 */
 	public function build()
 	{
@@ -263,7 +264,7 @@ class DbQueryCore
 			$sql = $this->query['type'].' ';
 
 		if (!$this->query['from'])
-			die('DbQuery->build() missing from clause');
+			throw new PrestaShopException('Table name not set in DbQuery object. Cannot build a valid SQL query.');
 
 		$sql .= 'FROM '.implode(', ', $this->query['from'])."\n";
 
@@ -285,7 +286,7 @@ class DbQueryCore
 		if ($this->query['limit']['limit'])
 		{
 			$limit = $this->query['limit'];
-			$sql .= 'LIMIT '.(($limit['offset']) ? $limit['offset'].', '.$limit['limit'] : $limit['limit']);
+			$sql .= 'LIMIT '.($limit['offset'] ? $limit['offset'].', ' : '').$limit['limit'];
 		}
 
 		return $sql;
