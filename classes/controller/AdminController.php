@@ -1892,8 +1892,6 @@ class AdminControllerCore extends Controller
 				'shop_list' => Helper::renderShopList(),
 				'shop' => $this->context->shop,
 				'shop_group' => new ShopGroup((int)Shop::getContextShopGroupID()),
-				'current_parent_id' => (int)Tab::getCurrentParentId(),
-				'tabs' => $tabs,
 				'is_multishop' => $is_multishop,
 				'multishop_context' => $this->multishop_context,
 				'default_tab_link' => $this->context->link->getAdminLink(Tab::getClassNameById((int)Context::getContext()->employee->default_tab)),
