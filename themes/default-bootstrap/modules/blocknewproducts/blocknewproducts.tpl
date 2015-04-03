@@ -44,6 +44,7 @@
                                         <span class="price">
                                         	{if !$priceDisplay}{convertPrice price=$newproduct.price}{else}{convertPrice price=$newproduct.price_tax_exc}{/if}
                                         </span>
+                                        {hook h="displayProductPriceBlock" product=$special type="price"}
                                     </div>
                                 {/if}
                             {/if}
