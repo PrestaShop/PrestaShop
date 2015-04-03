@@ -234,7 +234,9 @@ CREATE TABLE `PREFIX_cart_rule` (
 	`date_upd` datetime NOT NULL,
 	PRIMARY KEY (`id_cart_rule`),
 	KEY `id_customer` (`id_customer`, `active`, `date_to`),
-	KEY `group_restriction` (`group_restriction`, `active`, `date_to`)
+	KEY `group_restriction` (`group_restriction`, `active`, `date_to`),
+	KEY `id_customer_2` (`id_customer`,`active`,`highlight`,`date_to`),
+  KEY `group_restriction_2` (`group_restriction`,`active`,`highlight`,`date_to`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_cart_rule_lang` (

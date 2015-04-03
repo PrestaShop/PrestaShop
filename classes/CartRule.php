@@ -252,9 +252,11 @@ class CartRuleCore extends ObjectModel
 	 * @param bool      $inStock
 	 * @param Cart|null $cart
 	 * @param bool      $free_shipping_only
+	 * @param bool      $highlight_only
 	 * @return array
+	 * @throws PrestaShopDatabaseException
 	 */
-	public static function getCustomerCartRules($id_lang, $id_customer, $active = false, $includeGeneric = true, $inStock = false, Cart $cart = null, $free_shipping_only = false)
+	public static function getCustomerCartRules($id_lang, $id_customer, $active = false, $includeGeneric = true, $inStock = false, Cart $cart = null, $free_shipping_only = false, $highlight_only = false)
 	{
 		if (!CartRule::isFeatureActive())
 			return array();
@@ -269,6 +271,9 @@ class CartRuleCore extends ObjectModel
 
 		if ($free_shipping_only)
 			$sql_part2 .= ' AND free_shipping = 1 AND carrier_restriction = 1';
+
+		if ($highlight_only)
+			$sql_part2 .= ' AND highlight = 1 AND code NOT LIKE "'.pSQL(CartRule::BO_ORDER_CODE_PREFIX).'%"';
 
 		$sql = '(SELECT SQL_NO_CACHE '.$sql_part1.' WHERE cr.`id_customer` = '.(int)$id_customer.' '.$sql_part2.')';
 		$sql .= ' UNION (SELECT '.$sql_part1.' WHERE cr.`group_restriction` = 1 '.$sql_part2.')';
