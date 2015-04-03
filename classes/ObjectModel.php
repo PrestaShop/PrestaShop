@@ -29,155 +29,167 @@ abstract class ObjectModelCore
 	/**
 	 * List of field types
 	 */
-	const TYPE_INT = 1;
-	const TYPE_BOOL = 2;
-	const TYPE_STRING = 3;
-	const TYPE_FLOAT = 4;
-	const TYPE_DATE = 5;
-	const TYPE_HTML = 6;
+	const TYPE_INT     = 1;
+	const TYPE_BOOL    = 2;
+	const TYPE_STRING  = 3;
+	const TYPE_FLOAT   = 4;
+	const TYPE_DATE    = 5;
+	const TYPE_HTML    = 6;
 	const TYPE_NOTHING = 7;
-	const TYPE_SQL = 8;
+	const TYPE_SQL     = 8;
 
 	/**
 	 * List of data to format
 	 */
 	const FORMAT_COMMON = 1;
-	const FORMAT_LANG = 2;
-	const FORMAT_SHOP = 3;
+	const FORMAT_LANG   = 2;
+	const FORMAT_SHOP   = 3;
 
 	/**
 	 * List of association types
 	 */
-	const HAS_ONE = 1;
+	const HAS_ONE  = 1;
 	const HAS_MANY = 2;
 
-	/** @var integer Object id */
+	/** @var int Object ID */
 	public $id;
 
-	/** @var integer lang id */
+	/** @var int Language ID */
 	protected $id_lang = null;
 
+	/** @var int Shop ID */
 	protected $id_shop = null;
 
+	/** @var array|null List of shop IDs */
 	public $id_shop_list = null;
 
+	/** @var bool */
 	protected $get_shop_from_context = true;
 
+	/** @var array|null Holds required fields for each ObjectModel class */
 	protected static $fieldsRequiredDatabase = null;
 
 	/**
-	 * @deprecated 1.5.0 This property shouldn't be overloaded anymore in class, use static $definition['table'] property instead
+	 * @deprecated 1.5.0.1 Define property using $definition['table'] property instead.
+	 * @var string
 	 */
 	protected $table;
 
 	/**
-	 * @deprecated 1.5.0 This property shouldn't be overloaded anymore in class, use static $definition['primary'] property instead
+	 * @deprecated 1.5.0.1 Define property using $definition['table'] property instead.
+	 * @var string
 	 */
 	protected $identifier;
 
 	/**
-	 * @deprecated 1.5.0 This property shouldn't be overloaded anymore in class, use static $definition['fields'] property instead
+	 * @deprecated 1.5.0.1 Define property using $definition['table'] property instead.
+	 * @var array
 	 */
 	protected $fieldsRequired = array();
 
 	/**
-	 * @deprecated 1.5.0 This property shouldn't be overloaded anymore in class, use static $definition['fields'] property instead
+	 * @deprecated 1.5.0.1 Define property using $definition['table'] property instead.
+	 * @var array
 	 */
 	protected $fieldsSize = array();
 
 	/**
-	 * @deprecated 1.5.0 This property shouldn't be overloaded anymore in class, use static $definition['fields'] property instead
+	 * @deprecated 1.5.0.1 Define property using $definition['table'] property instead.
+	 * @var array
 	 */
 	protected $fieldsValidate = array();
 
 	/**
-	 * @deprecated 1.5.0 This property shouldn't be overloaded anymore in class, use static $definition['fields'] property instead
+	 * @deprecated 1.5.0.1 Define property using $definition['table'] property instead.
+	 * @var array
 	 */
 	protected $fieldsRequiredLang = array();
 
 	/**
-	 * @deprecated 1.5.0 This property shouldn't be overloaded anymore in class, use static $definition['fields'] property instead
+	 * @deprecated 1.5.0.1 Define property using $definition['table'] property instead.
+	 * @var array
 	 */
 	protected $fieldsSizeLang = array();
 
 	/**
-	 * @deprecated 1.5.0 This property shouldn't be overloaded anymore in class, use static $definition['fields'] property instead
+	 * @deprecated 1.5.0.1 Define property using $definition['table'] property instead.
+	 * @var array
 	 */
 	protected $fieldsValidateLang = array();
 
 	/**
-	 * @deprecated 1.5.0
+	 * @deprecated 1.5.0.1
+	 * @var array
 	 */
 	protected $tables = array();
 
-	/** @var array tables */
+	/** @var array Tables */
 	protected $webserviceParameters = array();
 
-	/** @var  string path to image directory. Used for image deletion. */
+	/** @var string Path to image directory. Used for image deletion. */
 	protected $image_dir = null;
 
-	/** @var string file type of image files. Used for image deletion. */
+	/** @var String file type of image files. */
 	protected $image_format = 'jpg';
 
 	/**
-	 * @var array Contain object definition
-	 * @since 1.5.0
+	 * @var array Contains object definition
+	 * @since 1.5.0.1
 	 */
 	public static $definition = array();
 
+	/**
+	 * Holds compiled definitions of each ObjectModel class.
+	 * Values are assigned during object initialization.
+	 *
+	 * @var array
+	 */
 	protected static $loaded_classes = array();
 
-	/**
-	 * @var array Contain current object definition
-	 */
+	/** @var array Contains current object definition. */
 	protected $def;
 
-	/**
-	 * @var array List of specific fields to update (all fields if null)
-	 */
+	/** @var array|null List of specific fields to update (all fields if null). */
 	protected $update_fields = null;
 
-	/**
-	 * @var Db An instance of the db in order to avoid calling Db::getInstance() thousands of time
-	 */
+	/** @var Db An instance of the db in order to avoid calling Db::getInstance() thousands of times. */
 	protected static $db = false;
 
-	/**
-	 * @var boolean, enable possibility to define an id before adding object
-	 */
+	/** @var bool Enables to define an ID before adding object. */
 	public $force_id = false;
 
-	/**
-	 * @var boolean cache the objects in memory
-	 */
+	/**  @var bool If true, objects are cached in memory. */
 	protected static $cache_objects = true;
 
 	/**
 	 * Returns object validation rules (fields validity)
 	 *
-	 * @param string $class Child class name for static use (optional)
+	 * @param  string $class Child class name for static use (optional)
+	 *
 	 * @return array Validation rules (fields validity)
 	 */
 	public static function getValidationRules($class = __CLASS__)
 	{
 		$object = new $class();
 		return array(
-			'required' => $object->fieldsRequired,
-			'size' => $object->fieldsSize,
-			'validate' => $object->fieldsValidate,
+			'required'     => $object->fieldsRequired,
+			'size'         => $object->fieldsSize,
+			'validate'     => $object->fieldsValidate,
 			'requiredLang' => $object->fieldsRequiredLang,
-			'sizeLang' => $object->fieldsSizeLang,
+			'sizeLang'     => $object->fieldsSizeLang,
 			'validateLang' => $object->fieldsValidateLang,
 		);
 	}
 
 	/**
-	 * Build object
+	 * Builds the object
 	 *
+	 * @param int|null $id      If specified, loads and existing object from DB (optional).
+	 * @param int|null $id_lang Required if object is multilingual (optional).
+	 * @param int|null $id_shop ID shop for objects with multishop tables.
+	 *
+	 * @throws PrestaShopDatabaseException
 	 * @throws PrestaShopException
-	 * @param int $id Existing object id in order to load object (optional)
-	 * @param int $id_lang Required if object is multilingual (optional)
-	 * @param int $id_shop ID shop for objects with multishop on langs
 	 */
 	public function __construct($id = null, $id_lang = null, $id_shop = null)
 	{
@@ -267,9 +279,10 @@ abstract class ObjectModelCore
 
 	/**
 	 * Prepare fields for ObjectModel class (add, update)
-	 * All fields are verified (pSQL, intval...)
+	 * All fields are verified (pSQL, intval, ...)
 	 *
 	 * @return array All object fields
+	 * @throws PrestaShopException
 	 */
 	public function getFields()
 	{
@@ -283,15 +296,16 @@ abstract class ObjectModelCore
 		// Ensure that we get something to insert
 		if (!$fields && isset($this->id) && Validate::isUnsignedId($this->id))
 			$fields[$this->def['primary']] = $this->id;
+
 		return $fields;
 	}
 
 	/**
 	 * Prepare fields for multishop
-	 * Fields are not validated here, we consider they are already validated in getFields() method, this
-	 * not the best solution but this is the only one possible for retro compatibility.
+	 * Fields are not validated here, we consider they are already validated in getFields() method,
+	 * this is not the best solution but this is the only one possible for retro compatibility.
 	 *
-	 * @since 1.5.0
+	 * @since 1.5.0.1
 	 * @return array All object fields
 	 */
 	public function getFieldsShop()
@@ -299,14 +313,17 @@ abstract class ObjectModelCore
 		$fields = $this->formatFields(self::FORMAT_SHOP);
 		if (!$fields && isset($this->id) && Validate::isUnsignedId($this->id))
 			$fields[$this->def['primary']] = $this->id;
+
 		return $fields;
 	}
 
 	/**
 	 * Prepare multilang fields
 	 *
-	 * @since 1.5.0
+	 * @since 1.5.0.1
+	 *
 	 * @return array
+	 * @throws PrestaShopException
 	 */
 	public function getFieldsLang()
 	{
@@ -338,9 +355,12 @@ abstract class ObjectModelCore
 	}
 
 	/**
-	 * @since 1.5.0
-	 * @param int $type FORMAT_COMMON or FORMAT_LANG or FORMAT_SHOP
+	 * Formats values of each fields.
+	 *
+	 * @since 1.5.0.1
+	 * @param int $type    FORMAT_COMMON or FORMAT_LANG or FORMAT_SHOP
 	 * @param int $id_lang If this parameter is given, only take lang fields
+	 *
 	 * @return array
 	 */
 	protected function formatFields($type, $id_lang = null)
@@ -385,14 +405,14 @@ abstract class ObjectModelCore
 	}
 
 	/**
-	 * Format a data
+	 * Formats a value
 	 *
-	 * @param mixed	     $value
-	 * @param int	     $type
-	 * @param bool		 $with_quotes
-	 * @param bool		 $purify
-	 * @param bool		 $allow_null
-	 * @return float|int|string|null
+	 * @param mixed	$value
+	 * @param int	$type
+	 * @param bool	$with_quotes
+	 * @param bool	$purify
+	 * @param bool	$allow_null
+	 * @return mixed
 	 */
 	public static function formatValue($value, $type, $with_quotes = false, $purify = true, $allow_null = false)
 	{
@@ -442,26 +462,30 @@ abstract class ObjectModelCore
 	}
 
 	/**
-	 * Save current object to database (add or update)
+	 * Saves current object to database (add or update)
 	 *
 	 * @param bool $null_values
-	 * @param bool $autodate
-	 * @return boolean Insertion result
+	 * @param bool $auto_date
+	 *
+	 * @return bool Insertion result
+	 * @throws PrestaShopException
 	 */
-	public function save($null_values = false, $autodate = true)
+	public function save($null_values = false, $auto_date = true)
 	{
-		return (int)$this->id > 0 ? $this->update($null_values) : $this->add($autodate, $null_values);
+		return (int)$this->id > 0 ? $this->update($null_values) : $this->add($auto_date, $null_values);
 	}
 
 	/**
-	 * Add current object to database
+	 * Adds current object to the database
 	 *
-	 * @throws PrestaShopException
+	 * @param bool $auto_date
 	 * @param bool $null_values
-	 * @param bool $autodate
-	 * @return boolean Insertion result
+	 *
+	 * @return bool Insertion result
+	 * @throws PrestaShopDatabaseException
+	 * @throws PrestaShopException
 	 */
-	public function add($autodate = true, $null_values = false)
+	public function add($auto_date = true, $null_values = false)
 	{
 		if (isset($this->id) && !$this->force_id)
 			unset($this->id);
@@ -471,9 +495,9 @@ abstract class ObjectModelCore
 		Hook::exec('actionObject'.get_class($this).'AddBefore', array('object' => $this));
 
 		// Automatically fill dates
-		if ($autodate && property_exists($this, 'date_add'))
+		if ($auto_date && property_exists($this, 'date_add'))
 			$this->date_add = date('Y-m-d H:i:s');
-		if ($autodate && property_exists($this, 'date_upd'))
+		if ($auto_date && property_exists($this, 'date_upd'))
 			$this->date_upd = date('Y-m-d H:i:s');
 
 		if (Shop::isTableAssociated($this->def['table']))
@@ -545,9 +569,11 @@ abstract class ObjectModelCore
 	}
 
 	/**
-	 * Duplicate current object to database
+	 * Takes current object ID, gets its values from database,
+	 * saves them in a new row and loads newly saved values as a new object.
 	 *
-	 * @return ObjectModel
+	 * @return ObjectModel|false
+	 * @throws PrestaShopDatabaseException
 	 */
 	public function duplicateObject()
 	{
@@ -560,6 +586,7 @@ abstract class ObjectModelCore
 				);
 		if (!$res)
 			return false;
+
 		unset($res[$definition['primary']]);
 		foreach ($res as $field => &$value)
 			if (isset($definition['fields'][$field]))
@@ -603,10 +630,13 @@ abstract class ObjectModelCore
 	}
 
 	/**
-	 * Update current object to database
+	 * Updates the current object in the database
 	 *
 	 * @param bool $null_values
-	 * @return boolean Update result
+	 *
+	 * @return bool
+	 * @throws PrestaShopDatabaseException
+	 * @throws PrestaShopException
 	 */
 	public function update($null_values = false)
 	{
@@ -727,9 +757,10 @@ abstract class ObjectModelCore
 	}
 
 	/**
-	 * Delete current object from database
+	 * Deletes current object from database
 	 *
-	 * @return boolean Deletion result
+	 * @return bool True if delete was successful
+	 * @throws PrestaShopException
 	 */
 	public function delete()
 	{
@@ -769,26 +800,29 @@ abstract class ObjectModelCore
 	}
 
 	/**
-	 * Delete several objects from database
+	 * Deletes multiple objects from the database at once
 	 *
-	 * @param array $selection
-	 * @return bool Deletion result
+	 * @param array $ids Array of objects IDs.
+	 *
+	 * @return bool
 	 */
-	public function deleteSelection($selection)
+	public function deleteSelection($ids)
 	{
 		$result = true;
-		foreach ($selection as $id)
+		foreach ($ids as $id)
 		{
 			$this->id = (int)$id;
 			$result = $result && $this->delete();
 		}
+
 		return $result;
 	}
 
 	/**
-	 * Toggle object status in database
+	 * Toggles object status in database
 	 *
-	 * @return boolean Update result
+	 * @return bool Update result
+	 * @throws PrestaShopException
 	 */
 	public function toggleStatus()
 	{
@@ -807,7 +841,11 @@ abstract class ObjectModelCore
 	}
 
 	/**
-	 * @deprecated 1.5.0 (use getFieldsLang())
+	 * @deprecated 1.5.0.1 (use getFieldsLang())
+	 * @param array $fields_array
+	 *
+	 * @return array
+	 * @throws PrestaShopException
 	 */
 	protected function getTranslationsFields($fields_array)
 	{
@@ -823,7 +861,12 @@ abstract class ObjectModelCore
 	}
 
 	/**
-	 * @deprecated 1.5.0
+	 * @deprecated 1.5.0.1
+	 * @param array $fields
+	 * @param array $fields_array
+	 * @param int   $id_language
+	 *
+	 * @throws PrestaShopException
 	 */
 	protected function makeTranslationFields(&$fields, &$fields_array, $id_language)
 	{
@@ -857,11 +900,13 @@ abstract class ObjectModelCore
 	}
 
 	/**
-	 * Check for fields validity before database interaction
+	 * Checks if object field values are valid before database interaction
 	 *
 	 * @param bool $die
 	 * @param bool $error_return
-	 * @return bool|string
+	 *
+	 * @return bool|string True, false or error message.
+	 * @throws PrestaShopException
 	 */
 	public function validateFields($die = true, $error_return = false)
 	{
@@ -886,11 +931,13 @@ abstract class ObjectModelCore
 	}
 
 	/**
-	 * Check for multilingual fields validity before database interaction
+	 * Checks if multilingual object field values are valid before database interaction.
 	 *
 	 * @param bool $die
 	 * @param bool $error_return
-	 * @return bool|string
+	 *
+	 * @return bool|string True, false or error message.
+	 * @throws PrestaShopException
 	 */
 	public function validateFieldsLang($die = true, $error_return = false)
 	{
@@ -930,11 +977,15 @@ abstract class ObjectModelCore
 	/**
 	 * Validate a single field
 	 *
-	 * @since 1.5.0
-	 * @param string $field Field name
-	 * @param mixed $value Field value
-	 * @param int $id_lang
-	 * @return bool|string
+	 * @since 1.5.0.1
+	 * @param string   $field        Field name
+	 * @param mixed    $value        Field value
+	 * @param int|null $id_lang      Language ID
+	 * @param array    $skip         Array of fields to skip.
+	 * @param bool     $human_errors If true, uses more descriptive, translatable error strings.
+	 *
+	 * @return true|string True or error message string.
+	 * @throws PrestaShopException
 	 */
 	public function validateField($field, $value, $id_lang = null, $skip = array(), $human_errors = false)
 	{
@@ -1019,6 +1070,16 @@ abstract class ObjectModelCore
 		return true;
 	}
 
+	/**
+	 * Returns field name translation
+	 *
+	 * @param string       $field        Field name
+	 * @param string       $class        ObjectModel class name
+	 * @param bool         $htmlentities If true, applies htmlentities() to result string
+	 * @param Context|null $context      Context object
+	 *
+	 * @return string
+	 */
 	public static function displayFieldName($field, $class = __CLASS__, $htmlentities = true, Context $context = null)
 	{
 		global $_FIELDS;
@@ -1034,15 +1095,24 @@ abstract class ObjectModelCore
 	}
 
 	/**
-	* TODO: refactor rename all calls to this to validateController
-	* @deprecated since 1.5 use validateController instead
-	*/
+	 * @deprecated 1.5.0.1 Use validateController() instead
+	 * @param bool $htmlentities
+	 *
+	 * @return array
+	 */
 	public function validateControler($htmlentities = true)
 	{
 		Tools::displayAsDeprecated();
 		return $this->validateController($htmlentities);
 	}
 
+	/**
+	 * Validates submitted values and returns an array of errors, if any.
+	 *
+	 * @param bool $htmlentities If true, uses htmlentities() for field name translations in errors.
+	 *
+	 * @return array
+	 */
 	public function validateController($htmlentities = true)
 	{
 		$this->cacheFieldsRequiredDatabase();
@@ -1088,9 +1158,17 @@ abstract class ObjectModelCore
 				}
 			}
 		}
+
 		return $errors;
 	}
 
+	/**
+	 * Returns webservice parameters of this object.
+	 *
+	 * @param string|null $ws_params_attribute_name
+	 *
+	 * @return array
+	 */
 	public function getWebserviceParameters($ws_params_attribute_name = null)
 	{
 		$this->cacheFieldsRequiredDatabase();
@@ -1166,9 +1244,21 @@ abstract class ObjectModelCore
 		foreach ($resource_parameters['fields'] as $key => $resource_parameters_field)
 			if (!isset($resource_parameters_field['sqlId']))
 				$resource_parameters['fields'][$key]['sqlId'] = $key;
+
 		return $resource_parameters;
 	}
 
+	/**
+	 * Returns webservice object list.
+	 *
+	 * @param string $sql_join
+	 * @param string $sql_filter
+	 * @param string $sql_sort
+	 * @param string $sql_limit
+	 *
+	 * @return array|null
+	 * @throws PrestaShopDatabaseException
+	 */
 	public function getWebserviceObjectList($sql_join, $sql_filter, $sql_sort, $sql_limit)
 	{
 		$assoc = Shop::getAssoTable($this->def['table']);
@@ -1202,9 +1292,18 @@ abstract class ObjectModelCore
 		WHERE 1 '.$sql_filter.'
 		'.($sql_sort != '' ? $sql_sort : '').'
 		'.($sql_limit != '' ? $sql_limit : '');
+
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 	}
 
+	/**
+	 * Validate required fields.
+	 *
+	 * @param bool $htmlentities
+	 *
+	 * @return array
+	 * @throws PrestaShopException
+	 */
 	public function validateFieldsRequiredDatabase($htmlentities = true)
 	{
 		$this->cacheFieldsRequiredDatabase();
@@ -1228,6 +1327,14 @@ abstract class ObjectModelCore
 		return $errors;
 	}
 
+	/**
+	 * Returns an array of required fields
+	 *
+	 * @param bool $all If true, returns required fields of all object classes.
+	 *
+	 * @return array|null
+	 * @throws PrestaShopDatabaseException
+	 */
 	public function getFieldsRequiredDatabase($all = false)
 	{
 		return Db::getInstance()->executeS('
@@ -1236,6 +1343,11 @@ abstract class ObjectModelCore
 		'.(!$all ? 'WHERE object_name = \''.pSQL(get_class($this)).'\'' : ''));
 	}
 
+	/**
+	 * Caches data about required objects fields in memory
+	 *
+	 * @param bool $all If true, caches required fields of all object classes.
+	 */
 	public function cacheFieldsRequiredDatabase($all = true)
 	{
 		if (!is_array(self::$fieldsRequiredDatabase))
@@ -1249,6 +1361,14 @@ abstract class ObjectModelCore
 		}
 	}
 
+	/**
+	 * Sets required field for this class in the database.
+	 *
+	 * @param array $fields
+	 *
+	 * @return bool
+	 * @throws PrestaShopDatabaseException
+	 */
 	public function addFieldsRequiredDatabase($fields)
 	{
 		if (!is_array($fields))
@@ -1260,9 +1380,15 @@ abstract class ObjectModelCore
 		foreach ($fields as $field)
 			if (!Db::getInstance()->insert('required_field', array('object_name' => get_class($this), 'field_name' => pSQL($field))))
 				return false;
+
 		return true;
 	}
 
+	/**
+	 * Clears cache entries that have this object's ID.
+	 *
+	 * @param bool $all If true, clears cache for all objects
+	 */
 	public function clearCache($all = false)
 	{
 		if ($all)
@@ -1272,10 +1398,10 @@ abstract class ObjectModelCore
 	}
 
 	/**
-	 * Check if current object is associated to a shop
+	 * Checks if current object is associated to a shop.
 	 *
-	 * @since 1.5.0
-	 * @param int $id_shop
+	 * @since 1.5.0.1
+	 * @param int|null $id_shop
 	 * @return bool
 	 */
 	public function isAssociatedToShop($id_shop = null)
@@ -1298,6 +1424,7 @@ abstract class ObjectModelCore
 
 			Cache::store($cache_id, $associated);
 		}
+
 		return Cache::retrieve($cache_id);
 	}
 
@@ -1305,7 +1432,9 @@ abstract class ObjectModelCore
 	 * This function associate an item to its context
 	 *
 	 * @param int|array $id_shops
-	 * @return boolean
+	 *
+	 * @return bool|void
+	 * @throws PrestaShopDatabaseException
 	 */
 	public function associateTo($id_shops)
 	{
@@ -1327,14 +1456,17 @@ abstract class ObjectModelCore
 
 		if ($data)
 			return Db::getInstance()->insert($this->def['table'].'_shop', $data);
+
 		return true;
 	}
 
 	/**
-	 * Get the list of associated id_shop
+	 * Gets the list of associated shop IDs
 	 *
-	 * @since 1.5.0
+	 * @since 1.5.0.1
+	 *
 	 * @return array
+	 * @throws PrestaShopDatabaseException
 	 */
 	public function getAssociatedShops()
 	{
@@ -1345,11 +1477,18 @@ abstract class ObjectModelCore
 		$sql = 'SELECT id_shop FROM `'._DB_PREFIX_.$this->def['table'].'_shop` WHERE `'.$this->def['primary'].'` = '.(int)$this->id;
 		foreach (Db::getInstance()->executeS($sql) as $row)
 			$list[] = $row['id_shop'];
+
 		return $list;
 	}
 
 	/**
-	 * @since 1.5.0
+	 * Copies shop association data from object with specified ID.
+	 *
+	 * @since 1.5.0.1
+	 * @param $id
+	 *
+	 * @return bool|void
+	 * @throws PrestaShopDatabaseException
 	 */
 	public function duplicateShops($id)
 	{
@@ -1371,41 +1510,61 @@ abstract class ObjectModelCore
 	}
 
 	/**
-	 * Check if there is more than one entries in associated shop table for current entity
+	 * Checks if there is more than one entry in associated shop table for current object.
 	 *
-	 * @since 1.5.0
+	 * @since 1.5.0.1
+	 *
 	 * @return bool
 	 */
 	public function hasMultishopEntries()
 	{
 		if (!Shop::isTableAssociated($this->def['table']) || !Shop::isFeatureActive())
 			return false;
+
 		return (bool)Db::getInstance()->getValue('SELECT COUNT(*) FROM `'._DB_PREFIX_.$this->def['table'].'_shop` WHERE `'.$this->def['primary'].'` = '.(int)$this->id);
 	}
 
+	/**
+	 * Checks if object is multi-shop object.
+	 *
+	 * @return bool
+	 */
 	public function isMultishop()
 	{
 		return Shop::isTableAssociated($this->def['table']) || !empty($this->def['multilang_shop']);
 	}
 
+	/**
+	 * Checks if a field is a multi-shop field.
+	 *
+	 * @param string $field
+	 *
+	 * @return bool
+	 */
 	public function isMultiShopField($field)
 	{
 		return (isset($this->def['fields'][$field]) && isset($this->def['fields'][$field]['shop']) && $this->def['fields'][$field]['shop']);
 	}
 
+	/**
+	 * Checks if the object is both multi-language and multi-shop.
+	 *
+	 * @return bool
+	 */
 	public function isLangMultishop()
 	{
 		return !empty($this->def['multilang']) && !empty($this->def['multilang_shop']);
 	}
 
 	/**
-	 * Update a table and splits the common datas and the shop datas
+	 * Updates a table and splits the common datas and the shop datas.
 	 *
-	 * @since 1.5.0
+	 * @since 1.5.0.1
 	 * @param string $classname
-	 * @param array $data
+	 * @param array  $data
 	 * @param string $where
 	 * @param string $specific_where Only executed for common table
+	 *
 	 * @return bool
 	 */
 	public static function updateMultishopTable($classname, $data, $where = '', $specific_where = '')
@@ -1443,13 +1602,16 @@ abstract class ObjectModelCore
 				'.Shop::addSqlAssociation($def['table'], 'a', true, null, true).'
 				SET '.implode(', ', $update_data).
 				(!empty($where) ? ' WHERE '.$where : '');
+
 		return Db::getInstance()->execute($sql);
 	}
 
 	/**
 	 * Delete images associated with the object
 	 *
-	 * @return bool success
+	 * @param bool $force_delete
+	 *
+	 * @return bool
 	 */
 	public function deleteImage($force_delete = false)
 	{
@@ -1478,15 +1640,17 @@ abstract class ObjectModelCore
 				&& !unlink($this->image_dir.$this->id.'-'.stripslashes($image_type['name']).'.'.$this->image_format))
 					return false;
 		}
+
 		return true;
 	}
 
 	/**
-	 * Specify if an ObjectModel is already in database
+	 * Checks if an object exists in database.
 	 *
-	 * @param int $id_entity
+	 * @param int    $id_entity
 	 * @param string $table
-	 * @return boolean
+	 *
+	 * @return bool
 	 */
 	public static function existsInDatabase($id_entity, $table)
 	{
@@ -1500,10 +1664,12 @@ abstract class ObjectModelCore
 	}
 
 	/**
-	 * This method is allow to know if a entity is currently used
+	 * Checks if an object type exists in the database.
+	 *
 	 * @since 1.5.0.1
-	 * @param string $table name of table linked to entity
-	 * @param bool $has_active_column true if the table has an active column
+	 * @param string|null $table             Name of table linked to entity
+	 * @param bool        $has_active_column True if the table has an active column
+	 *
 	 * @return bool
 	 */
 	public static function isCurrentlyUsed($table = null, $has_active_column = false)
@@ -1516,21 +1682,24 @@ abstract class ObjectModelCore
 		$query->from($table);
 		if ($has_active_column)
 			$query->where('`active` = 1');
+
 		return (bool)Db::getInstance()->getValue($query);
 	}
 
 	/**
-	 * Fill an object with given data. Data must be an array with this syntax: array(objProperty => value, objProperty2 => value, etc.)
+	 * Fill an object with given data. Data must be an array with this syntax:
+	 * array(objProperty => value, objProperty2 => value, etc.)
 	 *
-	 * @since 1.5.0
-	 * @param array $data
-	 * @param int $id_lang
+	 * @since 1.5.0.1
+	 * @param array    $data
+	 * @param int|null $id_lang
 	 */
 	public function hydrate(array $data, $id_lang = null)
 	{
 		$this->id_lang = $id_lang;
 		if (isset($data[$this->def['primary']]))
 			$this->id = $data[$this->def['primary']];
+
 		foreach ($data as $key => $value)
 			if (array_key_exists($key, $this))
 				$this->$key = $value;
@@ -1539,11 +1708,13 @@ abstract class ObjectModelCore
 	/**
 	 * Fill (hydrate) a list of objects in order to get a collection of these objects
 	 *
-	 * @since 1.5.0
-	 * @param string $class Class of objects to hydrate
-	 * @param array $datas List of data (multi-dimensional array)
-	 * @param int $id_lang
+	 * @since 1.5.0.1
+	 * @param string    $class   Class of objects to hydrate
+	 * @param array     $datas   List of data (multi-dimensional array)
+	 * @param int|null  $id_lang
+	 *
 	 * @return array
+	 * @throws PrestaShopException
 	 */
 	public static function hydrateCollection($class, array $datas, $id_lang = null)
 	{
@@ -1585,14 +1756,16 @@ abstract class ObjectModelCore
 			$obj->hydrate($row, $id_lang);
 			$collection[] = $obj;
 		}
+
 		return $collection;
 	}
 
 	/**
-	 * Get object definition
+	 * Returns object definition
 	 *
-	 * @param string $class Name of object
-	 * @param string $field Name of field if we want the definition of one field only
+	 * @param string      $class Name of object
+	 * @param string|null $field Name of field if we want the definition of one field only
+	 *
 	 * @return array
 	 */
 	public static function getDefinition($class, $field = null)
@@ -1629,9 +1802,9 @@ abstract class ObjectModelCore
 
 	/**
 	 * Retrocompatibility for classes without $definition static
-	 * Remove this in 1.6 !
+	 * @TODO Remove this in 1.6 !
 	 *
-	 * @since 1.5.0
+	 * @since 1.5.0.1
 	 */
 	protected function setDefinitionRetrocompatibility()
 	{
@@ -1694,13 +1867,15 @@ abstract class ObjectModelCore
 	}
 
 	/**
-	 * Return the field value for the specified language if the field is multilang, else the field value.
+	 * Return the field value for the specified language if the field is multilang,
+	 * else the field value.
 	 *
-	 * @param $field_name
-	 * @param null $id_lang
+	 * @since 1.5.0.1
+	 * @param string   $field_name
+	 * @param int|null $id_lang
+	 *
 	 * @return mixed
 	 * @throws PrestaShopException
-	 * @since 1.5
 	 */
 	public function getFieldByLang($field_name, $id_lang = null)
 	{
@@ -1723,9 +1898,10 @@ abstract class ObjectModelCore
 
 	/**
 	 * Set a list of specific fields to update
-	 * array(field1 => true, field2 => false, langfield1 => array(1 => true, 2 => false))
+	 * array(field1 => true, field2 => false,
+	 * langfield1 => array(1 => true, 2 => false))
 	 *
-	 * @since 1.5.0
+	 * @since 1.5.0.1
 	 * @param array $fields
 	 */
 	public function setFieldsToUpdate(array $fields)
@@ -1733,11 +1909,17 @@ abstract class ObjectModelCore
 		$this->update_fields = $fields;
 	}
 
+	/**
+	 * Enables object caching
+	 */
 	public static function enableCache()
 	{
 		ObjectModel::$cache_objects = true;
 	}
 
+	/**
+	 * Disables object caching
+	 */
 	public static function disableCache()
 	{
 		ObjectModel::$cache_objects = false;
