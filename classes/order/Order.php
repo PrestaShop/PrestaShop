@@ -1951,19 +1951,18 @@ class OrderCore extends ObjectModel
 	}
 
 	/**
-	 *
 	 * Has invoice return true if this order has already an invoice
+	 *
 	 * @return bool
 	 */
 	public function hasInvoice()
 	{
-		if ($res = (int)Db::getInstance()->getvalue('
-				SELECT `id_order_invoice`
-				FROM `'._DB_PREFIX_.'order_invoice`
-				WHERE `id_order` =  '.(int)$this->id.
-				(Configuration::get('PS_INVOICE') ? ' AND `number` > 0' : '')))
-			return $res;
-		return false;
+		return (bool)Db::getInstance()->getValue('
+			SELECT `id_order_invoice`
+			FROM `'._DB_PREFIX_.'order_invoice`
+			WHERE `id_order` =  '.(int)$this->id.
+			(Configuration::get('PS_INVOICE') ? ' AND `number` > 0' : '')
+		);
 	}
 
 	/**
@@ -1973,13 +1972,12 @@ class OrderCore extends ObjectModel
 	 */
 	public function hasDelivery()
 	{
-		$res = (int)Db::getInstance()->getValue('
-				SELECT `id_order_invoice`
-				FROM `'._DB_PREFIX_.'order_invoice`
-				WHERE `id_order` =  '.(int)$this->id.'
-				AND `delivery_number` > 0');
-
-		return $res ? $res : false;
+		return (bool)Db::getInstance()->getValue('
+			SELECT `id_order_invoice`
+			FROM `'._DB_PREFIX_.'order_invoice`
+			WHERE `id_order` =  '.(int)$this->id.'
+			AND `delivery_number` > 0'
+		);
 	}
 
 	/**
