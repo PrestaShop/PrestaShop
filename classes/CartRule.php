@@ -269,8 +269,6 @@ class CartRuleCore extends ObjectModel
 				'.($active ? 'AND cr.`active` = 1' : '').'
 				'.($inStock ? 'AND cr.`quantity` > 0' : '');
 
-		$sql_part3 = '';
-
 		if ($free_shipping_only)
 			$sql_part2 .= ' AND free_shipping = 1 AND carrier_restriction = 1';
 
