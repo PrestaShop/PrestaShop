@@ -880,9 +880,9 @@ abstract class ModuleCore
 		// Get hook id if a name is given as argument
 		if (!is_numeric($hook_id))
 		{
-			$hook_name = (int)$hook_id;
+			$hook_name = (string)$hook_id;
 			// Retrocompatibility
-			$hook_id = Hook::getIdByName($hook_id);
+			$hook_id = Hook::getIdByName($hook_name);
 			if (!$hook_id)
 				return false;
 		}
