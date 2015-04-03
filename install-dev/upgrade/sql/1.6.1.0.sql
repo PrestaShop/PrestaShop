@@ -170,4 +170,3 @@ INSERT INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`
 
 ALTER TABLE `PREFIX_cart_rule` ADD KEY `id_customer_2` (`id_customer`,`active`,`highlight`,`date_to`);
 ALTER TABLE `PREFIX_cart_rule` ADD KEY `group_restriction_2` (`group_restriction`,`active`,`highlight`,`date_to`);
-ALTER TABLE `PREFIX_cart_rule` ADD KEY `active` (`active`,`code`);

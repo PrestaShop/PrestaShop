@@ -275,22 +275,12 @@ class CartRuleCore extends ObjectModel
 			$sql_part2 .= ' AND free_shipping = 1 AND carrier_restriction = 1';
 
 		if ($highlight_only)
-		{
-			$sql_part3 = $sql_part2.' AND code LIKE "'.pSQL(CartRule::BO_ORDER_CODE_PREFIX).'%"';
-			$sql_part2 .= ' AND highlight = 1';
-		}
+			$sql_part2 .= ' AND highlight = 1 AND code NOT LIKE "'.pSQL(CartRule::BO_ORDER_CODE_PREFIX).'%"';
 
 		$sql = '(SELECT SQL_NO_CACHE '.$sql_part1.' WHERE cr.`id_customer` = '.(int)$id_customer.' '.$sql_part2.')';
 		$sql .= ' UNION (SELECT '.$sql_part1.' WHERE cr.`group_restriction` = 1 '.$sql_part2.')';
 		if ($includeGeneric && (int)$id_customer != 0)
 			$sql .= ' UNION (SELECT '.$sql_part1.' WHERE cr.`id_customer` = 0 '.$sql_part2.')';
-		if ($sql_part3)
-		{
-			$sql .= ' UNION (SELECT '.$sql_part1.' WHERE cr.`id_customer` = '.(int)$id_customer.' '.$sql_part3.')';
-			$sql .= ' UNION (SELECT '.$sql_part1.' WHERE cr.`group_restriction` = 1 '.$sql_part3.')';
-			if ($includeGeneric && (int)$id_customer != 0)
-				$sql .= ' UNION (SELECT '.$sql_part1.' WHERE cr.`id_customer` = 0 '.$sql_part3.')';
-		}
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
 
