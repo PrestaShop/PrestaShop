@@ -371,8 +371,8 @@ class AdminShopControllerCore extends AdminController
 				array(
 					'type' => 'text',
 					'label' => $this->l('Shop name'),
-					'desc' => array($this->l('This field does not refer to the shop name visible in the Front Office.'),
-							sprintf($this->l('Follow %sthis link%s to edit the shop name used on the Front Office.'), '<a href="'.$this->context->link->getAdminLink('AdminStores').'#store_fieldset_general">', '</a>')),
+					'desc' => array($this->l('This field does not refer to the shop name visible in the front office.'),
+							sprintf($this->l('Follow %sthis link%s to edit the shop name used on the front office.'), '<a href="'.$this->context->link->getAdminLink('AdminStores').'#store_fieldset_general">', '</a>')),
 					'name' => 'name',
 					'required' => true,
 				)

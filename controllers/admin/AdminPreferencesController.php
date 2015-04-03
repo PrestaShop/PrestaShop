@@ -130,7 +130,7 @@ class AdminPreferencesControllerCore extends AdminController
 
 			$fields = array_merge($fields, array(
 				'PS_TOKEN_ENABLE' => array(
-					'title' => $this->l('Increase Front Office security'),
+					'title' => $this->l('Increase front office security'),
 					'desc' => $this->l('Enable or disable token in the Front Office to improve PrestaShop\'s security.'),
 					'validation' => 'isBool',
 					'cast' => 'intval',
@@ -194,14 +194,14 @@ class AdminPreferencesControllerCore extends AdminController
 				),
 				'PS_DISPLAY_SUPPLIERS' => array(
 					'title' => $this->l('Display suppliers and manufacturers'),
-					'desc' => $this->l('Enable suppliers and manufacturers pages on your Front Office even when their respective modules are disabled.'),
+					'desc' => $this->l('Enable suppliers and manufacturers pages on your front office even when their respective modules are disabled.'),
 					'validation' => 'isBool',
 					'cast' => 'intval',
 					'type' => 'bool'
 				),
 				'PS_DISPLAY_BEST_SELLERS' => array(
 					'title' => $this->l('Display best sellers'),
-					'desc' => $this->l('Enable best sellers page on your Front Office even when its respective module is disabled.'),
+					'desc' => $this->l('Enable best sellers page on your front office even when its respective module is disabled.'),
 					'validation' => 'isBool',
 					'cast' => 'intval',
 					'type' => 'bool'

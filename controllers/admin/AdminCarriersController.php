@@ -237,7 +237,7 @@ class AdminCarriersControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'hint' => $this->l('Enable the carrier in the Front Office.')
+					'hint' => $this->l('Enable the carrier in the front office.')
 				),
 				array(
 					'type' => 'switch',

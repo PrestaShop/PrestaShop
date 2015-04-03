@@ -59,7 +59,7 @@ class AdminCountriesControllerCore extends AdminController
 				'title' =>	$this->l('Country options'),
 				'fields' =>	array(
 					'PS_RESTRICT_DELIVERED_COUNTRIES' => array(
-						'title' => $this->l('Restrict country selections in Front Office to those covered by active carriers'),
+						'title' => $this->l('Restrict country selections in front office to those covered by active carriers'),
 						'cast' => 'intval',
 						'type' => 'bool',
 						'default' => '0'
