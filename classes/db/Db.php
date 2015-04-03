@@ -553,7 +553,8 @@ abstract class DbCore
 	 * @param string|DbQuery $sql Query to execute
 	 * @param bool $array Return an array instead of a result object (deprecated since 1.5.0.1, use query method instead)
 	 * @param bool $use_cache
-	 * @return array|false|null|mysqli_result|PDOStatement|resource
+	 *
+	 * @return array|false
 	 * @throws PrestaShopDatabaseException
 	 */
 	public function executeS($sql, $array = true, $use_cache = true)

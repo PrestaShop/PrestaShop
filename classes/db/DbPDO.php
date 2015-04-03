@@ -151,7 +151,8 @@ class DbPDOCore extends Db
 	 *
 	 * @see DbCore::getAll()
 	 * @param bool $result
-	 * @return array|false|null
+	 *
+	 * @return array|false
 	 */
 	protected function getAll($result = false)
 	{
