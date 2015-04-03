@@ -137,7 +137,7 @@ class AdminStockMvtControllerCore extends AdminController
 
 		// overrides select
 		$this->_select = '
-			CONCAT(pl.name, \' \', GROUP_CONCAT(IFNULL(al.name, \'\'), \'\')) product_name,
+			IFNULL(CONCAT(pl.name, \' : \', GROUP_CONCAT(DISTINCT agl.`name`, \' - \', al.name SEPARATOR \', \')),pl.name) as product_name,
 			CONCAT(a.employee_lastname, \' \', a.employee_firstname) as employee,
 			mrl.name as reason,
 			stock.reference as product_reference,
@@ -162,6 +162,11 @@ class AdminStockMvtControllerCore extends AdminController
 								al.id_attribute = pac.id_attribute
 								AND pac.id_product_attribute <> 0
 								AND al.id_lang = '.(int)$this->context->language->id.'
+							)
+							LEFT JOIN `'._DB_PREFIX_.'attribute` atr ON (atr.id_attribute = pac.id_attribute)
+							LEFT JOIN `'._DB_PREFIX_.'attribute_group_lang` agl ON (
+								agl.id_attribute_group = atr.id_attribute_group
+								AND agl.id_lang = '.(int)$this->context->language->id.'
 							)';
 		// overrides group
 		$this->_group = 'GROUP BY a.id_stock_mvt';
