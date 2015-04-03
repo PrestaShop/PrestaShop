@@ -1823,6 +1823,13 @@ class AdminControllerCore extends Controller
 				$path_img = _PS_MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.png';
 				// Relative link will always work, whatever the base uri set in the admin
 				$img = '../modules/'.$tab['module'].'/'.$tab['class_name'].'.png';
+
+				$module = Module::getInstanceByName($tab['module']);
+				if (is_object($module) && !$module->isEnabledForShopContext())
+				{
+					unset($tabs[$index]);
+					continue;
+				}
 			}
 
 			// retrocompatibility
