@@ -698,6 +698,9 @@ function updatePrice()
 				else if(!specific_currency)
 					reduction = reduction * currencyRate;
 
+				if (typeof groupReduction !== 'undefined' && groupReduction > 0)
+					reduction *= 1 - parseFloat(groupReduction);
+
 				priceWithDiscountsDisplay -= reduction;
 				// We recalculate the price without tax in order to keep the data consistency
 				priceWithDiscountsWithoutTax = priceWithDiscountsDisplay - reduction * ( 1/(1+taxRate/100) );

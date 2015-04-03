@@ -696,6 +696,11 @@
 {else}
 	{addJsDef customerGroupWithoutTax=false}
 {/if}
+{if isset($group_reduction)}
+	{addJsDef groupReduction=$group_reduction}
+{else}
+	{addJsDef groupReduction=false}
+{/if}
 {addJsDef oosHookJsCodeFunctions=Array()}
 {addJsDef productHasAttributes=isset($groups)|boolval}
 {addJsDef productPriceTaxExcluded=($product->getPriceWithoutReduct(true)|default:'null' - $product->ecotax)|floatval}
