@@ -2598,6 +2598,8 @@ abstract class ModuleCore
 				}
 
 				$module_file = preg_replace('/((:?public|private|protected)\s+(static\s+)?function\s+(?:\b'.$method->getName().'\b))/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1", $module_file);
+				if ($module_file === NULL)
+					throw new Exception(sprintf(Tools::displayError('Failed to override method %1$s in class %2$s.'), $method->getName(), $classname));
 			}
 
 			// Check if none of the properties already exists in the override class
@@ -2607,6 +2609,8 @@ abstract class ModuleCore
 					throw new Exception(sprintf(Tools::displayError('The property %1$s in the class %2$s is already defined.'), $property->getName(), $classname));
 
 				$module_file = preg_replace('/(:?public|private|protected|const)\s+(static\s+)?(\$?\b'.$property->getName().'\b)/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1 $2$3", $module_file);
+				if ($module_file === NULL)
+					throw new Exception(sprintf(Tools::displayError('Failed to override property %1$s in class %2$s.'), $property->getName(), $classname));
 			}
 
 			// Insert the methods from module override in override
@@ -2642,13 +2646,21 @@ abstract class ModuleCore
 				eval(preg_replace(array('#^\s*<\?(?:php)?#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array(' ', 'class '.$classname.'Override'.$uniq), implode('', $module_file)));
 				$module_class = new ReflectionClass($classname.'Override'.$uniq);
 
-				// Add foreach function a comment with the module name and the module version
+				// For each method found in the override, prepend a comment with the module name and version
 				foreach ($module_class->getMethods() as $method)
+				{
 					$module_file = preg_replace('/((:?public|private|protected)\s+(static\s+)?function\s+(?:\b'.$method->getName().'\b))/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1", $module_file);
+					if ($module_file === NULL)
+						throw new Exception(sprintf(Tools::displayError('Failed to override method %1$s in class %2$s.'), $method->getName(), $classname));
+				}
 
-				// same as precedent but for variable
+				// Same loop for properties
 				foreach ($module_class->getProperties() as $property)
+				{
 					$module_file = preg_replace('/(:?public|private|protected|const)\s+(static\s+)?(\$?\b'.$property->getName().'\b)/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1 $2$3", $module_file);
+					if ($module_file === NULL)
+						throw new Exception(sprintf(Tools::displayError('Failed to override property %1$s in class %2$s.'), $property->getName(), $classname));
+				}
 			}
 
 			file_put_contents($override_dest, preg_replace($pattern_escape_com, '', $module_file));
