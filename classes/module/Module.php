@@ -2596,8 +2596,8 @@ abstract class ModuleCore
 						throw new Exception(sprintf(Tools::displayError('The method %1$s in the class %2$s is already overridden by the module %3$s version %4$s at %5$s.'), $method->getName(), $classname, $name[1], $version[1], $date[1]));
 					throw new Exception(sprintf(Tools::displayError('The method %1$s in the class %2$s is already overridden.'), $method->getName(), $classname));
 				}
-				else
-					$module_file = preg_replace('/((:?public|private|protected)\s+(static\s+)?function\s+(?:\b'.$method->getName().'\b))/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1", $module_file);
+
+				$module_file = preg_replace('/((:?public|private|protected)\s+(static\s+)?function\s+(?:\b'.$method->getName().'\b))/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1", $module_file);
 			}
 
 			// Check if none of the properties already exists in the override class
@@ -2605,8 +2605,8 @@ abstract class ModuleCore
 			{
 				if ($override_class->hasProperty($property->getName()))
 					throw new Exception(sprintf(Tools::displayError('The property %1$s in the class %2$s is already defined.'), $property->getName(), $classname));
-				else
-					$module_file = preg_replace('/(:?public|private|protected|const)\s+(static\s+)?(\$?\b'.$property->getName().'\b)/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1 $2$3", $module_file);
+
+				$module_file = preg_replace('/(:?public|private|protected|const)\s+(static\s+)?(\$?\b'.$property->getName().'\b)/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1 $2$3", $module_file);
 			}
 
 			// Insert the methods from module override in override
