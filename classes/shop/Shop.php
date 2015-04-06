@@ -321,6 +321,8 @@ class ShopCore extends ObjectModel
 			$host = Tools::getHttpHost();
 			$request_uri = rawurldecode($_SERVER['REQUEST_URI']);
 
+			$request_uri = parse_url($request_uri, PHP_URL_PATH).parse_url($request_uri, PHP_URL_QUERY);
+
 			$sql = 'SELECT s.id_shop, CONCAT(su.physical_uri, su.virtual_uri) AS uri, su.domain, su.main
 					FROM '._DB_PREFIX_.'shop_url su
 					LEFT JOIN '._DB_PREFIX_.'shop s ON (s.id_shop = su.id_shop)
