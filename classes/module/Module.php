@@ -1301,18 +1301,16 @@ abstract class ModuleCore
                     $dependencies_injector = new DependencyInjector(DependencyInjector::TYPE_MODULE);
                     $module_dependencies = $dependencies_injector->getDependencies($module);
 
-
                     if ($module_dependencies)
                     {
                         $module_rc = new ReflectionClass($module);
                         $module_with_dependencies = $module_rc->newInstanceArgs($module_dependencies);
-                        $tmp_module = new $module_with_dependencies;
+                        /** @var Module $tmp_module */
+                        $tmp_module = $module_with_dependencies;
                     }
                     else
+                        /** @var Module $tmp_module */
                         $tmp_module = new $module;
-
-					/** @var Module $tmp_module */
-
 
 					$item = new stdClass();
 					$item->id = $tmp_module->id;
