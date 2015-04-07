@@ -913,6 +913,16 @@ class AdminControllerCore extends Controller
 	}
 
 	/**
+	 * @param string $value
+	 * @param string $text_delimiter
+	 * @return string
+	 */
+	private function doubleDelimiter($value, $text_delimiter)
+	{
+		return str_replace($text_delimiter, $text_delimiter.$text_delimiter, $value);
+	}
+	
+	/**
 	 * @param string $text_delimiter
 	 * @throws PrestaShopException
 	 */
@@ -936,7 +946,7 @@ class AdminControllerCore extends Controller
 			if ($datas['title'] == 'PDF')
 				unset($this->fields_list[$key]);
 			else
-				$headers[] = Tools::htmlentitiesDecodeUTF8($datas['title']);
+				$headers[] = $this->doubleDelimiter(Tools::htmlentitiesDecodeUTF8($datas['title']), $text_delimiter);
 		}
 		$content = array();
 		foreach ($this->_list as $i => $row)
@@ -962,7 +972,7 @@ class AdminControllerCore extends Controller
 					if (!preg_match('/<([a-z]+)([^<]+)*(?:>(.*)<\/\1>|\s+\/>)/ism', call_user_func_array(array($callback_obj, $params['callback']), array($field_value, $row))))
 						$field_value = call_user_func_array(array($callback_obj, $params['callback']), array($field_value, $row));
 				}
-				$content[$i][] = $field_value;
+				$content[$i][] = $this->doubleDelimiter($field_value, $text_delimiter);
 			}
 		}
 
