@@ -543,6 +543,7 @@ abstract class ModuleCore
 						$list[] = array(
 							'file' => $upgrade_path.$file,
 							'version' => $file_version,
+							/* The coding norm is incorrect, PrestaShop's standards have to be respected. */
 							'upgrade_function' => 'upgrade_module_'.str_replace('.', '_', $file_version));
 					}
 				}
