@@ -35,7 +35,7 @@ if (!$products_accesses['edit'] && !$cms_accesses['edit'])
 
 
 $base_url= Tools::getHttpHost(true);  // DON'T TOUCH (base url (only domain) of site (without final /)).
-$upload_dir = Context::getContext()->getBaseURI().'img/cms/'; // path from base_url to base of upload folder (with start and final /)
+$upload_dir = Context::getContext()->shop->getBaseURI().'img/cms/'; // path from base_url to base of upload folder (with start and final /)
 $current_path =  _PS_ROOT_DIR_.'/img/cms/'; // relative path from filemanager folder to upload folder (with final /)
 //thumbs folder can't put inside upload folder
 $thumbs_base_path =  _PS_ROOT_DIR_.'/img/tmp/cms/'; // relative path from filemanager folder to thumbs folder (with final /)
