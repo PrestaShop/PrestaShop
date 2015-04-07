@@ -917,7 +917,7 @@ class AdminControllerCore extends Controller
 	 * @param string $text_delimiter
 	 * @return string
 	 */
-	private function doubleDelimiter($value, $text_delimiter)
+	protected function doubleDelimiter($value, $text_delimiter)
 	{
 		return str_replace($text_delimiter, $text_delimiter.$text_delimiter, $value);
 	}
