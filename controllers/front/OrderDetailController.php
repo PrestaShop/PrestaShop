@@ -209,7 +209,7 @@ class OrderDetailControllerCore extends FrontController
 					/* DEPRECATED: customizedDatas @since 1.5 */
 					'customizedDatas' => $customizedDatas,
 					/* DEPRECATED: customizedDatas @since 1.5 */
-					'reorderingAllowed' => !(int)Configuration::get('PS_DISALLOW_HISTORY_REORDERING')
+					'reorderingAllowed' => (bool)Configuration::get('PS_REORDERING')
 				));
 
 				if ($carrier->url && $order->shipping_number)

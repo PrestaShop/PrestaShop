@@ -826,5 +826,8 @@ Country</value>
 	<configuration id="PS_LOG_MODULE_PERFS_MODULO" name="PS_LOG_MODULE_PERFS_MODULO">
 		<value>0</value>
 	</configuration>
+    <configuration id="PS_REORDERING" name="PS_REORDERING">
+      <value>1</value>
+    </configuration>
   </entities>
 </entity_configuration>
