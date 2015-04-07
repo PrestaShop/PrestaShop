@@ -214,7 +214,7 @@
 	{/if}
 	<div class="clear">&nbsp;</div>
 	<div class="row alert alert-warning">
-		{l s='For this particular customer group, prices are displayed as:'} <b>{if $order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC}{l s='Tax excluded'}{else}{l s='Tax included'}{/if}</b>
+		{l s='For this particular customer group, prices are displayed as:'} <b>{if $tax_calculation_method == $smarty.const.PS_TAX_EXC}{l s='Tax excluded'}{else}{l s='Tax included'}{/if}</b>
 	</div>
 {/block}
 </div>
