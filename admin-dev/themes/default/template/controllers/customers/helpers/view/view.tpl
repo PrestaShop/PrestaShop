@@ -334,7 +334,7 @@
 			{if count($interested)}
 			<div class="panel">
 				<div class="panel-heading">
-					<i class="icon-eye"></i> {l s='Products interested in'} <span class="badge">{count($interested)}</span>
+					<i class="icon-eye"></i> {l s='Viewed products'} <span class="badge">{count($interested)}</span>
 				</div>
 				<table class="table">
 					<thead>
