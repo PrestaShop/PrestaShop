@@ -120,14 +120,19 @@ class ImageManagerCore
 	/**
 	 * Resize, cut and optimize image
 	 *
-	 * @param string $src_file Image object from $_FILE
-	 * @param string $dst_file Destination filename
-	 * @param integer $dst_width Desired width (optional)
+	 * @param string  $src_file   Image object from $_FILE
+	 * @param string  $dst_file   Destination filename
+	 * @param integer $dst_width  Desired width (optional)
 	 * @param integer $dst_height Desired height (optional)
-	 * @param string $file_type
-	 * @return boolean Operation result
+	 * @param string  $file_type
+	 * @param bool    $force_type
+	 * @param int     $error
+	 * @param int     $width
+	 * @param int     $height
+	 * @param int     $quality
+	 * @return bool Operation result
 	 */
-	public static function resize($src_file, $dst_file, $dst_width = null, $dst_height = null, $file_type = 'jpg', $force_type = false, &$error = 0)
+	public static function resize($src_file, $dst_file, $dst_width = null, $dst_height = null, $file_type = 'jpg', $force_type = false, &$error = 0, &$width = null, &$height = null, $quality = 5)
 	{
 		if (PHP_VERSION_ID < 50300)
 			clearstatcache();
@@ -138,8 +143,7 @@ class ImageManagerCore
 			return !($error = self::ERROR_FILE_NOT_EXIST);
 
 		list($tmp_width, $tmp_height, $type) = getimagesize($src_file);
-		$src_image = ImageManager::create($type, $src_file);
-
+		$rotate = 0;
 		if (function_exists('exif_read_data') && function_exists('mb_strtolower'))
 		{
 			$exif = @exif_read_data($src_file);
@@ -151,19 +155,19 @@ class ImageManagerCore
 					case 3:
 						$src_width = $tmp_width;
 						$src_height = $tmp_height;
-						$src_image = imagerotate($src_image, 180, 0);
+						$rotate = 180;
 						break;
 
 					case 6:
 						$src_width = $tmp_height;
 						$src_height = $tmp_width;
-						$src_image = imagerotate($src_image, -90, 0);
+						$rotate = -90;
 						break;
 
 					case 8:
 						$src_width = $tmp_height;
 						$src_height = $tmp_width;
-						$src_image = imagerotate($src_image, 90, 0);
+						$rotate = 90;
 						break;
 
 					default:
@@ -200,6 +204,7 @@ class ImageManagerCore
 		$width_diff = $dst_width / $src_width;
 		$height_diff = $dst_height / $src_height;
 
+		$ps_image_generation_method = Configuration::get('PS_IMAGE_GENERATION_METHOD');
 		if ($width_diff > 1 && $height_diff > 1)
 		{
 			$next_width = $src_width;
@@ -207,22 +212,25 @@ class ImageManagerCore
 		}
 		else
 		{
-			if (Configuration::get('PS_IMAGE_GENERATION_METHOD') == 2 || (!Configuration::get('PS_IMAGE_GENERATION_METHOD') && $width_diff > $height_diff))
+			if ($ps_image_generation_method == 2 || (!$ps_image_generation_method && $width_diff > $height_diff))
 			{
 				$next_height = $dst_height;
 				$next_width = round(($src_width * $next_height) / $src_height);
-				$dst_width = (int)(!Configuration::get('PS_IMAGE_GENERATION_METHOD') ? $dst_width : $next_width);
+				$dst_width = (int)(!$ps_image_generation_method ? $dst_width : $next_width);
 			}
 			else
 			{
 				$next_width = $dst_width;
 				$next_height = round($src_height * $dst_width / $src_width);
-				$dst_height = (int)(!Configuration::get('PS_IMAGE_GENERATION_METHOD') ? $dst_height : $next_height);
+				$dst_height = (int)(!$ps_image_generation_method ? $dst_height : $next_height);
 			}
 		}
 
 		if (!ImageManager::checkImageMemoryLimit($src_file))
 			return !($error = self::ERROR_MEMORY_LIMIT);
+
+		$width = $dst_width;
+		$height = $dst_height;
 
 		$dest_image = imagecreatetruecolor($dst_width, $dst_height);
 
@@ -240,8 +248,41 @@ class ImageManagerCore
 			imagefilledrectangle ($dest_image, 0, 0, $dst_width, $dst_height, $white);
 		}
 
-		imagecopyresampled($dest_image, $src_image, (int)(($dst_width - $next_width) / 2), (int)(($dst_height - $next_height) / 2), 0, 0, $next_width, $next_height, $src_width, $src_height);
+		$src_image = ImageManager::create($type, $src_file);
+		if ($rotate)
+			$src_image = imagerotate($src_image, $rotate, 0);
+
+		ImageManager::imagecopyresampled($dest_image, $src_image, (int)(($dst_width - $next_width) / 2), (int)(($dst_height - $next_height) / 2), 0, 0, $next_width, $next_height, $src_width, $src_height, $quality);
 		return (ImageManager::write($file_type, $dest_image, $dst_file));
+	}
+
+	public static function imagecopyresampled(&$dst_image, $src_image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h, $quality = 3)
+	{
+		// Plug-and-Play fastimagecopyresampled function replaces much slower imagecopyresampled.
+		// Just include this function and change all "imagecopyresampled" references to "fastimagecopyresampled".
+		// Typically from 30 to 60 times faster when reducing high resolution images down to thumbnail size using the default quality setting.
+		// Author: Tim Eckel - Date: 09/07/07 - Version: 1.1 - Project: FreeRingers.net - Freely distributable - These comments must remain.
+		//
+		// Optional "quality" parameter (defaults is 3). Fractional values are allowed, for example 1.5. Must be greater than zero.
+		// Between 0 and 1 = Fast, but mosaic results, closer to 0 increases the mosaic effect.
+		// 1 = Up to 350 times faster. Poor results, looks very similar to imagecopyresized.
+		// 2 = Up to 95 times faster.  Images appear a little sharp, some prefer this over a quality of 3.
+		// 3 = Up to 60 times faster.  Will give high quality smooth results very close to imagecopyresampled, just faster.
+		// 4 = Up to 25 times faster.  Almost identical to imagecopyresampled for most images.
+		// 5 = No speedup. Just uses imagecopyresampled, no advantage over imagecopyresampled.
+
+		if (empty($src_image) || empty($dst_image) || $quality <= 0)
+			return false;
+		if ($quality < 5 && (($dst_w * $quality) < $src_w || ($dst_h * $quality) < $src_h))
+		{
+			$temp = imagecreatetruecolor ($dst_w * $quality + 1, $dst_h * $quality + 1);
+			imagecopyresized ($temp, $src_image, 0, 0, $src_x, $src_y, $dst_w * $quality + 1, $dst_h * $quality + 1, $src_w, $src_h);
+			imagecopyresampled ($dst_image, $temp, $dst_x, $dst_y, 0, 0, $dst_w, $dst_h, $dst_w * $quality, $dst_h * $quality);
+			imagedestroy ($temp);
+		}
+		else
+			imagecopyresampled ($dst_image, $src_image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
+		return true;
 	}
 
 	/**

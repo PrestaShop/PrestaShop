@@ -84,12 +84,14 @@ class ImageTypeCore extends ObjectModel
 	protected $webserviceParameters = array();
 
 	/**
-	* Returns image type definitions
-	*
-	* @param string|null Image type
-	* @return array Image type definitions
-	*/
-	public static function getImagesTypes($type = null)
+	 * Returns image type definitions
+	 *
+	 * @param string|null Image type
+	 * @param bool        $order_by_size
+	 * @return array Image type definitions
+	 * @throws PrestaShopDatabaseException
+	 */
+	public static function getImagesTypes($type = null, $order_by_size = false)
 	{
 		if (!isset(self::$images_types_cache[$type]))
 		{
@@ -97,7 +99,11 @@ class ImageTypeCore extends ObjectModel
 			if (!empty($type))
 				$where .= ' AND `'.bqSQL($type).'` = 1 ';
 
-			$query = 'SELECT * FROM `'._DB_PREFIX_.'image_type` '.$where.' ORDER BY `name` ASC';
+			if ($order_by_size)
+				$query = 'SELECT * FROM `'._DB_PREFIX_.'image_type` '.$where.' ORDER BY `width` DESC, `height` DESC, `name`ASC';
+			else
+				$query = 'SELECT * FROM `'._DB_PREFIX_.'image_type` '.$where.' ORDER BY `name` ASC';
+
 			self::$images_types_cache[$type] = Db::getInstance()->executeS($query);
 		}
 		return self::$images_types_cache[$type];
