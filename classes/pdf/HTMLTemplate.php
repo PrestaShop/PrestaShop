@@ -113,7 +113,6 @@ abstract class HTMLTemplateCore
 		$shop_address_obj = $this->shop->getAddress();
 		if (isset($shop_address_obj) && $shop_address_obj instanceof Address)
 			$shop_address = AddressFormat::generateAddress($shop_address_obj, array(), ' - ', ' ');
-		return $shop_address;
 
 		return $shop_address;
 	}
