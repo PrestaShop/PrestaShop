@@ -733,7 +733,7 @@ function updatePrice()
 	// Hide everything then show what needs to be shown
 	$('#reduction_percent').hide();
 	$('#reduction_amount').hide();
-	$('#old_price,#old_price_display,#old_price_display_taxes').hide();
+	$('#old_price, #old_price_display, #old_price_display_taxes').hide();
 	$('.price-ecotax').hide();
 	$('.unit-price').hide();
 
@@ -743,8 +743,8 @@ function updatePrice()
 	// we show the old price striked through
 	if (priceWithDiscountsDisplay.toFixed(2) != basePriceDisplay.toFixed(2))
 	{
-		$('#old_price_display').text(formatCurrency(basePriceDisplay, currencyFormat, currencySign, currencyBlank));
-		$('#old_price,#old_price_display,#old_price_display_taxes').show();
+		$('#old_price_display span.price').text(formatCurrency(basePriceDisplay, currencyFormat, currencySign, currencyBlank));
+		$('#old_price, #old_price_display, #old_price_display_taxes').show();
 
 		// Then if it's not only a group reduction we display the discount in red box
 		if (priceWithDiscountsWithoutTax != priceWithGroupReductionWithoutTax)
