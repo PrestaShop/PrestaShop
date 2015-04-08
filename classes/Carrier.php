@@ -40,6 +40,10 @@ class CarrierCore extends ObjectModel
 	const SHIPPING_METHOD_PRICE = 2;
 	const SHIPPING_METHOD_FREE = 3;
 
+	const SHIPPING_PRICE_EXCEPTION = 0;
+	const SHIPPING_WEIGHT_EXCEPTION = 1;
+	const SHIPPING_SIZE_EXCEPTION = 2;
+
 	const SORT_BY_PRICE = 0;
 	const SORT_BY_POSITION = 1;
 
@@ -565,9 +569,10 @@ class CarrierCore extends ObjectModel
 	 *
 	 * @param int $id_zone
 	 * @param Array $groups group of the customer
+	 * @param array &$error contain an error message if an error occurs
 	 * @return Array
 	 */
-	public static function getCarriersForOrder($id_zone, $groups = null, $cart = null)
+	public static function getCarriersForOrder($id_zone, $groups = null, $cart = null, &$error = array())
 	{
 		$context = Context::getContext();
 		$id_lang = $context->language->id;
@@ -589,9 +594,15 @@ class CarrierCore extends ObjectModel
 			if ($shipping_method != Carrier::SHIPPING_METHOD_FREE)
 			{
 				// Get only carriers that are compliant with shipping method
-				if (($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && $carrier->getMaxDeliveryPriceByWeight($id_zone) === false)
-					|| ($shipping_method == Carrier::SHIPPING_METHOD_PRICE && $carrier->getMaxDeliveryPriceByPrice($id_zone) === false))
+				if (($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT && $carrier->getMaxDeliveryPriceByWeight($id_zone) === false))
 				{
+					$error[$carrier->id] = Carrier::SHIPPING_WEIGHT_EXCEPTION;
+					unset($result[$k]);
+					continue;
+				}
+				if (($shipping_method == Carrier::SHIPPING_METHOD_PRICE && $carrier->getMaxDeliveryPriceByPrice($id_zone) === false))
+				{
+					$error[$carrier->id] = Carrier::SHIPPING_PRICE_EXCEPTION;
 					unset($result[$k]);
 					continue;
 				}
@@ -604,11 +615,18 @@ class CarrierCore extends ObjectModel
 							$id_zone = Country::getIdZone(Country::getDefaultCountryId());
 
 					// Get only carriers that have a range compatible with cart
-					if (($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT
+					if ($shipping_method == Carrier::SHIPPING_METHOD_WEIGHT
 						&& (!Carrier::checkDeliveryPriceByWeight($row['id_carrier'], $cart->getTotalWeight(), $id_zone)))
-						|| ($shipping_method == Carrier::SHIPPING_METHOD_PRICE
-						&& (!Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING), $id_zone, $id_currency))))
 					{
+						$error[$carrier->id] = Carrier::SHIPPING_WEIGHT_EXCEPTION;
+						unset($result[$k]);
+						continue;
+					}
+
+					if ($shipping_method == Carrier::SHIPPING_METHOD_PRICE
+						&& (!Carrier::checkDeliveryPriceByPrice($row['id_carrier'], $cart->getOrderTotal(true, Cart::BOTH_WITHOUT_SHIPPING), $id_zone, $id_currency)))
+					{
+						$error[$carrier->id] = Carrier::SHIPPING_PRICE_EXCEPTION;
 						unset($result[$k]);
 						continue;
 					}
@@ -1192,9 +1210,10 @@ class CarrierCore extends ObjectModel
 	 *
 	 * @since 1.5.0
 	 * @param Product $product The id of the product, or an array with at least the package size and weight
+	 * @param array &$error contain an error message if an error occurs
 	 * @return array
 	 */
-	public static function getAvailableCarrierList(Product $product, $id_warehouse, $id_address_delivery = null, $id_shop = null, $cart = null)
+	public static function getAvailableCarrierList(Product $product, $id_warehouse, $id_address_delivery = null, $id_shop = null, $cart = null, &$error = array())
 	{
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->id;
@@ -1254,7 +1273,7 @@ class CarrierCore extends ObjectModel
 
 		$available_carrier_list = array();
 		$customer = new Customer($cart->id_customer);
-		$carriers = Carrier::getCarriersForOrder($id_zone, $customer->getGroups(), $cart);
+		$carriers = Carrier::getCarriersForOrder($id_zone, $customer->getGroups(), $cart, $error);
 
 		foreach ($carriers as $carrier)
 			$available_carrier_list[] = $carrier['id_carrier'];
@@ -1287,9 +1306,17 @@ class CarrierCore extends ObjectModel
 
 				if (($carrier_sizes[0] > 0 && $carrier_sizes[0] < $product_sizes[0])
 					|| ($carrier_sizes[1] > 0 && $carrier_sizes[1] < $product_sizes[1])
-					|| ($carrier_sizes[2] > 0 && $carrier_sizes[2] < $product_sizes[2])
-					|| ($carrier->max_weight > 0 && $carrier->max_weight < $product->weight * $cart_quantity))
+					|| ($carrier_sizes[2] > 0 && $carrier_sizes[2] < $product_sizes[2]))
+				{
+					$error[$carrier->id] = Carrier::SHIPPING_SIZE_EXCEPTION;
 					unset($carrier_list[$key]);
+				}
+
+				if ($carrier->max_weight > 0 && $carrier->max_weight < $product->weight * $cart_quantity)
+				{
+					$error[$carrier->id] = Carrier::SHIPPING_WEIGHT_EXCEPTION;
+					unset($carrier_list[$key]);
+				}
 			}
 		}
 		return $carrier_list;
