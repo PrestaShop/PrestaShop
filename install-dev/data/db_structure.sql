@@ -463,7 +463,7 @@ CREATE TABLE `PREFIX_configuration_kpi` (
   `id_configuration_kpi` int(10) unsigned NOT NULL auto_increment,
   `id_shop_group` INT(11) UNSIGNED DEFAULT NULL,
   `id_shop` INT(11) UNSIGNED DEFAULT NULL,
-  `name` varchar(32) NOT NULL,
+  `name` varchar(64) NOT NULL,
   `value` text,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
