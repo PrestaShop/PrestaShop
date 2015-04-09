@@ -308,6 +308,7 @@ class FrontControllerCore extends Controller
 
 			if (Validate::isLoadedObject($cart) && $cart->OrderExists())
 			{
+				PrestaShopLogger::addLog('Frontcontroller::init - Cart cannot be loaded or an order has already been placed using this cart', 1, null, 'Cart', (int)$this->context->cookie->id_cart, true);
 				unset($this->context->cookie->id_cart, $cart, $this->context->cookie->checkedTOS);
 				$this->context->cookie->check_cgv = false;
 			}
@@ -317,7 +318,10 @@ class FrontControllerCore extends Controller
 					$cart->nbProducts() && intval(Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR')) != -1 &&
 					!FrontController::isInWhitelistForGeolocation() &&
 					!in_array($_SERVER['SERVER_NAME'], array('localhost', '127.0.0.1')))
-				unset($this->context->cookie->id_cart, $cart);
+				{
+					PrestaShopLogger::addLog('Frontcontroller::init - GEOLOCATION is deleting a cart', 1, null, 'Cart', (int)$this->context->cookie->id_cart, true);
+					unset($this->context->cookie->id_cart, $cart);
+				}
 			// update cart values
 			elseif ($this->context->cookie->id_customer != $cart->id_customer || $this->context->cookie->id_lang != $cart->id_lang || $currency->id != $cart->id_currency)
 			{
