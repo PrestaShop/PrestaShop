@@ -231,8 +231,9 @@ class TabCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'tab` t
 			WHERE t.`module` IS NOT NULL AND t.`module` != ""');
 
-		foreach ($result as $detail)
-			$list[strtolower($detail['class_name'])] = $detail;
+		if (is_array($result))
+			foreach ($result as $detail)
+				$list[strtolower($detail['class_name'])] = $detail;
 		return $list;
 	}
 
@@ -254,12 +255,14 @@ class TabCore extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'tab_lang` tl ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = '.(int)$id_lang.')
 			WHERE 1 '.(defined('_PS_HOST_MODE_') ? ' AND `hide_host_mode` = 0' : '').'
 			ORDER BY t.`position` ASC');
-			foreach ($result as $row)
-			{
-				if (!isset(self::$_cache_tabs[$id_lang][$row['id_parent']]))
-					self::$_cache_tabs[$id_lang][$row['id_parent']] = array();
-				self::$_cache_tabs[$id_lang][$row['id_parent']][] = $row;
-			}
+
+			if (is_array($result))
+				foreach ($result as $row)
+				{
+					if (!isset(self::$_cache_tabs[$id_lang][$row['id_parent']]))
+						self::$_cache_tabs[$id_lang][$row['id_parent']] = array();
+					self::$_cache_tabs[$id_lang][$row['id_parent']][] = $row;
+				}
 		}
 		if ($id_parent === null)
 		{
@@ -285,8 +288,10 @@ class TabCore extends ObjectModel
 		{
 			self::$_getIdFromClassName = array();
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT id_tab, class_name FROM `'._DB_PREFIX_.'tab`', true, false);
-			foreach ($result as $row)
-				self::$_getIdFromClassName[strtolower($row['class_name'])] = $row['id_tab'];
+
+			if (is_array($result))
+				foreach ($result as $row)
+					self::$_getIdFromClassName[strtolower($row['class_name'])] = $row['id_tab'];
 		}
 		return (isset(self::$_getIdFromClassName[$class_name]) ? (int)self::$_getIdFromClassName[$class_name] : false);
 	}
