@@ -506,7 +506,7 @@ class HelperListCore extends Helper
 	}
 
 	/**
-	 * Display delete action link
+	 * Display default action link
 	 */
 	public function displayDefaultLink($token = null, $id, $name = null)
 	{
@@ -514,11 +514,11 @@ class HelperListCore extends Helper
 		if (!array_key_exists('Default', self::$cache_lang))
 			self::$cache_lang['Default'] = $this->l('Default', 'Helper');
 
-		$tpl->assign(array_merge($this->tpl_delete_link_vars, array(
-			'href' => $this->currentIndex.'&'.$this->identifier.'='.(int)$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
+		$tpl->assign(array(
+			'href' => $this->currentIndex.'&'.$this->identifier.'='.(int)$id.'&default'.$this->table.'&token='.($token != null ? $token : $this->token),
 			'action' => self::$cache_lang['Default'],
 			'name' => $name,
-		)));
+		));
 
 		return $tpl->fetch();
 	}
