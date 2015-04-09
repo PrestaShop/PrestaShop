@@ -39,7 +39,7 @@ class ToolsCore
 	*
 	* @param integer $length Desired length (optional)
 	* @param string $flag Output type (NUMERIC, ALPHANUMERIC, NO_NUMERIC, RANDOM)
-	* @return string|boolean Password
+	* @return bool|string Password
 	*/
 	public static function passwdGen($length = 8, $flag = 'ALPHANUMERIC')
 	{
@@ -79,6 +79,14 @@ class ToolsCore
 		return $result;
 	}
 
+	/**
+	 * Random bytes generator
+	 *
+	 * Thanks to Zend for entropy
+	 *
+	 * @param $length Desired length of random bytes
+	 * @return bool|string Random bytes
+	 */
 	public static function getBytes($length)
 	{
 		$length = (int)$length;
@@ -102,7 +110,8 @@ class ToolsCore
 				return $bytes;
 		}
 
-		// Else try to get $length bytes of entropy
+		// Else try to get $length bytes of entropy.
+		// Thanks to Zend
 
 		$result         = '';
 		$entropy        = '';
