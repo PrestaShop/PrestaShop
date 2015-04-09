@@ -117,6 +117,14 @@ function initTableDnD(table)
 						way: way
 					};
 				}
+				else if (table.id.indexOf('module-') != -1) {
+					module = table.id.replace('module-', '');
+
+					params = {
+						updatePositions: true,
+						configure: module
+					};
+				}
 				// default
 				else
 				{
