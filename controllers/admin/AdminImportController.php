@@ -815,7 +815,7 @@ class AdminImportControllerCore extends AdminController
 
 	protected static function getBoolean($field)
 	{
-		return (boolean)$field;
+		return (bool)$field;
 	}
 
 	protected static function getPrice($field)
