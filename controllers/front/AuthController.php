@@ -461,9 +461,13 @@ class AuthControllerCore extends FrontController
 
 						if (($back = Tools::getValue('back')) && $back == Tools::secureReferrer($back))
 							Tools::redirect(html_entity_decode($back));
+
 						// redirection: if cart is not empty : redirection to the cart
 						if (count($this->context->cart->getProducts(true)) > 0)
-							Tools::redirect('index.php?controller=order'.($multi = (int)Tools::getValue('multi-shipping') ? '&multi-shipping='.$multi : ''));
+						{
+							$multi = (int)Tools::getValue('multi-shipping');
+							Tools::redirect('index.php?controller=order'.($multi ? '&multi-shipping='.$multi : ''));
+						}
 						// else : redirection to the account
 						else
 							Tools::redirect('index.php?controller='.(($this->authRedirection !== false) ? urlencode($this->authRedirection) : 'my-account'));

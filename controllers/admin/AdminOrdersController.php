@@ -2177,6 +2177,7 @@ class AdminOrdersControllerCore extends AdminController
 		$result = array_diff($new_cart_rules, $old_cart_rules);
 		$refresh = false;
 
+		$res = true;
 		foreach ($result as $cart_rule)
 		{
 			$refresh = true;

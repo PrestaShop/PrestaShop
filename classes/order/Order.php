@@ -1865,7 +1865,7 @@ class OrderCore extends ObjectModel
 
 			// format response
 			$tmp_tax_infos = array();
-			foreach ($taxes_infos as $tax_infos)
+			foreach ($taxes_by_tax as $tax_infos)
 			{
 				$tmp_tax_infos[$tax_infos['rate']]['total_amount'] = $tax_infos['tax_amount'];
 				$tmp_tax_infos[$tax_infos['rate']]['name'] = $tax_infos['name'];

@@ -254,7 +254,7 @@ class CMSCategoryCore extends ObjectModel
 		Db::getInstance()->delete($this->def['table'].'_shop', '`'.$this->def['primary'].'` IN ('.$list.') AND id_shop IN ('.implode(', ', $id_shop_list).')');
 
 		$has_multishop_entries = $this->hasMultishopEntries();
-		if (!$hasMultishopEntries)
+		if (!$has_multishop_entries)
 		{
 			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cms_category` WHERE `id_cms_category` IN ('.$list.')');
 			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'cms_category_lang` WHERE `id_cms_category` IN ('.$list.')');

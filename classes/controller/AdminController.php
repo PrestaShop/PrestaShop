@@ -3341,6 +3341,7 @@ class AdminControllerCore extends Controller
 			$definition = ObjectModel::getDefinition($class_name);
 
 		$default_language = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$languages = Language::getLanguages(false);
 
 		foreach ($definition['fields'] as $field => $def)
 		{
@@ -3361,7 +3362,7 @@ class AdminControllerCore extends Controller
 						);
 				}
 
-				foreach (Language::getLanguages(false) as $language)
+				foreach ($languages as $language)
 				{
 					$value = Tools::getValue($field.'_'.$language['id_lang']);
 					if (!empty($value))
@@ -3377,7 +3378,6 @@ class AdminControllerCore extends Controller
 		/* Overload this method for custom checking */
 		$this->_childValidation();
 
-		// @TODO Undefined var $languages 3 lines below
 		/* Checking for multilingual fields validity */
 		if (isset($rules['validateLang']) && is_array($rules['validateLang']))
 			foreach ($rules['validateLang'] as $field_lang => $function)

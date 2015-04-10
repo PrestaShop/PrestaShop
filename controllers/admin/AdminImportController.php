@@ -1910,9 +1910,16 @@ class AdminImportControllerCore extends AdminController
 		$category_to_create->id_parent = (int)$id_parent_category ? (int)$id_parent_category : (int)Configuration::get('PS_HOME_CATEGORY'); // Default parent is home for unknown category to create
 		$category_link_rewrite = Tools::link_rewrite($category_to_create->name[$default_language_id]);
 		$category_to_create->link_rewrite = AdminImportController::createMultiLangField($category_link_rewrite);
+
 		if (($field_error = $category_to_create->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 			($lang_field_error = $category_to_create->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true && $category_to_create->add())
-			$product->id_category[] = (int)$category_to_create->id;
+		{
+			/**
+			 * @see AdminImportController::productImport() @ Line 1480
+			 * @TODO Refactor if statement
+			 */
+			// $product->id_category[] = (int)$category_to_create->id;
+		}
 		else
 		{
 			$this->errors[] = sprintf(
@@ -2307,7 +2314,7 @@ class AdminImportControllerCore extends AdminController
 							StockAvailable::synchronize($product->id);
 						}
 						else
-							$this->warnings[] = sprintf(Tools::displayError('Warehouse did not exist, cannot set on product %1$s.'), $product->name[$default_language_id]);
+							$this->warnings[] = sprintf(Tools::displayError('Warehouse did not exist, cannot set on product %1$s.'), $product->name[$default_language]);
 					}
 				}
 
@@ -2315,9 +2322,9 @@ class AdminImportControllerCore extends AdminController
 				if (isset($info['depends_on_stock']))
 				{
 					if ($info['depends_on_stock'] != 0 && $info['depends_on_stock'] != 1)
-						$this->warnings[] = sprintf(Tools::displayError('Incorrect value for depends on stock for product %1$s '), $product->name[$default_language_id]);
+						$this->warnings[] = sprintf(Tools::displayError('Incorrect value for depends on stock for product %1$s '), $product->name[$default_language]);
 					elseif ((!$info['advanced_stock_management'] || $info['advanced_stock_management'] == 0) && $info['depends_on_stock'] == 1)
-						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, cannot set depends on stock %1$s '), $product->name[$default_language_id]);
+						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, cannot set depends on stock %1$s '), $product->name[$default_language]);
 					else
 						StockAvailable::setProductDependsOnStock($product->id, $info['depends_on_stock'], null, $id_product_attribute);
 

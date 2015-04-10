@@ -386,7 +386,11 @@ class ParentOrderControllerCore extends FrontController
 			Tools::redirect('');
 		}
 		elseif (!Customer::getAddressesTotalById($this->context->customer->id))
-			Tools::redirect('index.php?controller=address&back='.urlencode('order.php?step=1'.($multi = (int)Tools::getValue('multi-shipping') ? '&multi-shipping='.$multi : '')));
+		{
+			$multi = (int)Tools::getValue('multi-shipping');
+			Tools::redirect('index.php?controller=address&back='.urlencode('order.php?step=1'.($multi ? '&multi-shipping='.$multi : '')));
+		}
+
 		$customer = $this->context->customer;
 		if (Validate::isLoadedObject($customer))
 		{

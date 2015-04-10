@@ -362,6 +362,9 @@ class AddressCore extends ObjectModel
 	*/
 	public static function initialize($id_address = null, $with_geoloc = false)
 	{
+		if (!isset($context))
+			$context = Context::getContext();
+
 		// if an id_address has been specified retrieve the address
 		if ($id_address)
 		{
@@ -381,7 +384,7 @@ class AddressCore extends ObjectModel
 		{
 			// set the default address
 			$address = new Address();
-			$address->id_country = (int)Context::getContext()->country->id;
+			$address->id_country = (int)$context->country->id;
 			$address->id_state = 0;
 			$address->postcode = 0;
 		}

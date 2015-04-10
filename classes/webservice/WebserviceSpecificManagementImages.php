@@ -689,6 +689,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
 	protected function manageCustomizationImages()
 	{
+		$normal_image_sizes = ImageType::getImagesTypes($this->imageType);
 		if (empty($this->wsObject->urlSegment[2]))
 		{
 			$results = Db::getInstance()->executeS('SELECT DISTINCT `id_cart` FROM `'._DB_PREFIX_.'customization`');
@@ -722,7 +723,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
 				$this->output .= $this->objOutput->getObjectRender()->renderNodeHeader('images', array());
 				foreach ($results as $result)
-					$this->output .= $this->objOutput->getObjectRender()->renderNodeHeader('image', array(), array('id' => $result['index'], 'xlink_resource'=>$this->wsObject->wsUrl.'images/'.$this->imageType.'/'.$id), false);
+					$this->output .= $this->objOutput->getObjectRender()->renderNodeHeader('image', array(), array('id' => $result['index'], 'xlink_resource'=>$this->wsObject->wsUrl.'images/'.$this->imageType.'/'.$result['index']), false);
 				$this->output .= $this->objOutput->getObjectRender()->renderNodeFooter('images', array());
 				return true;
 			}
@@ -772,6 +773,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 				throw new WebserviceException('This image does not exist on disk', array(61, 500));
 			$this->imgToDisplay = _PS_UPLOAD_DIR_.$results[0]['value'];
 			$filename_exists = file_exists($this->imgToDisplay);
+
 			return $this->manageDeclinatedImagesCRUD($filename_exists, $this->imgToDisplay, $normal_image_sizes, _PS_UPLOAD_DIR_);
 		}
 	}
