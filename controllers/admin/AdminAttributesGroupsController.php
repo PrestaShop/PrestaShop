@@ -456,7 +456,6 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	 */
 	public function initContent()
 	{
-		$this->initTabModuleList();
 		if (!Combination::isFeatureActive())
 		{
 			$url = '<a href="index.php?tab=AdminPerformance&token='.Tools::getAdminTokenLite('AdminPerformance').'#featuresDetachables">'.

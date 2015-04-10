@@ -248,7 +248,6 @@ class RequestSqlCore extends ObjectModel
 		if (preg_match('/((`(\()?([a-z0-9_])+`(\))?)|((\()?([a-z0-9_])+(\))?))\.((`(\()?([a-z0-9_])+`(\))?)|((\()?([a-z0-9_])+(\))?))$/i', $attr, $matches, PREG_OFFSET_CAPTURE))
 		{
 			$tab = explode('.', str_replace(array('`', '(', ')'), '', $matches[0][0]));
-
 			if ($table = $this->returnNameTable($tab[0], $from))
 				return array(
 					'table' => $table,
@@ -260,7 +259,6 @@ class RequestSqlCore extends ObjectModel
 		elseif (preg_match('/((`(\()?([a-z0-9_])+`(\))?)|((\()?([a-z0-9_])+(\))?))$/i', $attr, $matches, PREG_OFFSET_CAPTURE))
 		{
 			$attribut = str_replace(array('`', '(', ')'), '', $matches[0][0]);
-
 			if ($table = $this->returnNameTable(false, $from, $attr))
 				return array(
 					'table' => $table,
