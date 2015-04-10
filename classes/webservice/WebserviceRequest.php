@@ -718,7 +718,7 @@ class WebserviceRequestCore
 	 */
 	protected function hasErrors()
 	{
-		return (boolean)$this->errors;
+		return (bool)$this->errors;
 	}
 
 	/**

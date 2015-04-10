@@ -169,7 +169,7 @@ class CartControllerCore extends FrontController
 		if (Tools::getValue('value') === false)
 			$this->ajaxDie('{"error":true, "error_message": "No value setted"}');
 
-		$this->context->cart->allow_seperated_package = (boolean)Tools::getValue('value');
+		$this->context->cart->allow_seperated_package = (bool)Tools::getValue('value');
 		$this->context->cart->update();
 		$this->ajaxDie('{"error":false}');
 	}
