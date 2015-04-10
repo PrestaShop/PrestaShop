@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author 	PrestaShop SA <contact@prestashop.com>
+ *  @copyright  2007-2015 PrestaShop SA
+ *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManagementInterface
 {
@@ -175,6 +175,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	 * Management of images URL segment
 	 *
 	 * @return boolean
+	 *
+	 * @throws WebserviceException
 	 */
 	protected function manageImages()
 	{
@@ -340,6 +342,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	 * Management of general images
 	 *
 	 * @return boolean
+	 *
+	 * @throws WebserviceException
 	 */
 	protected function manageGeneralImages()
 	{
@@ -705,7 +709,6 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 		elseif (empty($this->wsObject->urlSegment[3]))
 		{
 			$this->output .= $this->objOutput->getObjectRender()->renderNodeHeader('customizations', array());
-			$results = Product::getAllCustomizedDatas((int)$this->wsObject->urlSegment[2]);
 			$customizations = $this->getCustomizations();
 			foreach ($customizations as $id)
 				$this->output .= $this->objOutput->getObjectRender()->renderNodeHeader('customization', array(), array('id' => $id, 'xlink_resource'=>$this->wsObject->wsUrl.'images/'.$this->imageType.'/'.$id), false);
@@ -786,6 +789,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	 * @param array $image_sizes The
 	 * @param string $directory
 	 * @return boolean
+	 *
+	 * @throws WebserviceException
 	 */
 	protected function manageDeclinatedImagesCRUD($filename_exists, $filename, $image_sizes, $directory)
 	{
@@ -857,7 +862,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	 * 	Delete the image on disk
 	 *
 	 * @param string $file_path the image file path
-	 * @param array $image_types The differents sizes
+	 * @param array $image_types The different sizes
 	 * @param string $parent_path The parent path
 	 * @return boolean
 	 */
@@ -903,6 +908,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	 * @param array $image_types
 	 * @param string $parent_path
 	 * @return string
+	 *
+	 * @throws WebserviceException
 	 */
 	protected function writeImageOnDisk($base_path, $new_path, $dest_width = null, $dest_height = null, $image_types = null, $parent_path = null)
 	{
@@ -963,7 +970,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 			throw new WebserviceException(sprintf('Unable to build the image "%s".', str_replace(_PS_ROOT_DIR_, '[SHOP_ROOT_DIR]', $new_path)), array(69, 500));
 
 		// Write it on disk
-		$imaged = false;
+
 		switch ($this->imgExtension)
 		{
 			case 'gif':
@@ -1024,6 +1031,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	 * @param array $image_types
 	 * @param string $parent_path
 	 * @return boolean
+	 *
+	 * @throws WebserviceException
 	 */
 	protected function writePostedImageOnDisk($reception_path, $dest_width = null, $dest_height = null, $image_types = null, $parent_path = null)
 	{
