@@ -105,7 +105,7 @@ function updateAddresses()
    	if(isNaN(idAddress_delivery) == false && isNaN(idAddress_invoice) == false)
 	{
 		$('.addresses .waitimage').show();
-		$('.button[name="processAddress"]').prop('disabled', 'disabled');
+		$('[name="processAddress"]').prop('disabled', 'disabled');
 		$.ajax({
 			type: 'POST',
 			headers: { "cache-control": "no-cache" },
@@ -147,11 +147,11 @@ function updateAddresses()
 		                alert(errors);
 				}
 				$('.addresses .waitimage').hide();
-				$('.button[name="processAddress"]').prop('disabled', '');
+				$('[name="processAddress"]').prop('disabled', '');
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
 				$('.addresses .waitimage').hide();
-				$('.button[name="processAddress"]').prop('disabled', '');
+				$('[name="processAddress"]').prop('disabled', '');
 				if (textStatus !== 'abort')
 				{
 					error = "TECHNICAL ERROR: unable to save adresses \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus;
