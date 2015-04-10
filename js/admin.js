@@ -1364,7 +1364,7 @@ function perfect_access_js_gestion(src, action, id_tab, tabsize, tabnumber, tabl
 	check_for_all_accesses(tabsize, tabnumber);
 }
 
-verifMailREGEX = /^([\w+-]+(?:\.[\w+-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
+verifMailREGEX = /^([\w+-]+(?:\.[\w+-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,66}(?:\.[a-z]{2})?)$/;
 function verifyMail(testMsg, testSubject)
 {
 	$("#mailResultCheck").removeClass("alert-danger").removeClass('alert-success').html('<img src="../img/admin/ajax-loader.gif" alt="" />');
