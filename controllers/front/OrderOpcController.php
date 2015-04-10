@@ -121,6 +121,7 @@ class OrderOpcControllerCore extends ParentOrderController
 							$this->errors = array_merge($this->errors, $this->context->customer->validateController());
 							$this->context->customer->newsletter = (int)Tools::isSubmit('newsletter');
 							$this->context->customer->optin = (int)Tools::isSubmit('optin');
+							$this->context->customer->is_guest = (Tools::isSubmit('is_new_customer') ? !Tools::getValue('is_new_customer', 1) : 0);
 							$return = array(
 								'hasError' => !empty($this->errors),
 								'errors' => $this->errors,
@@ -135,7 +136,7 @@ class OrderOpcControllerCore extends ParentOrderController
 							break;
 
 						case 'getAddressBlockAndCarriersAndPayments':
-							if ($this->context->customer->isLogged())
+							if ($this->context->customer->isLogged() || $this->context->customer->isGuest())
 							{
 								// check if customer have addresses
 								if (!Customer::getAddressesTotalById($this->context->customer->id))
