@@ -235,15 +235,15 @@ input[type="checkbox"],
 
 // Warning
 .has-warning {
-  @include form-control-validation($state-warning-text, $state-warning-text, $state-warning-bg);
+  @include form-control-validation($state-warning-border, $state-warning-border, $state-warning-bg);
 }
 // Error
 .has-error {
-  @include form-control-validation($state-danger-text, $state-danger-text, $state-danger-bg);
+  @include form-control-validation($state-danger-border, $state-danger-border, $state-danger-bg);
 }
 // Success
 .has-success {
-  @include form-control-validation($state-success-text, $state-success-text, $state-success-bg);
+  @include form-control-validation($state-success-border, $state-success-border, $state-success-bg);
 }
 
 
