@@ -735,7 +735,7 @@ class CustomerCore extends ObjectModel
 		if (!$this->isGuest())
 			return false;
 		if (empty($password))
-			$password = Tools::passwdGen();
+			$password = Tools::passwdGen(8, 'RANDOM');
 		if (!Validate::isPasswd($password))
 			return false;
 
