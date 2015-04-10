@@ -86,8 +86,8 @@
 						</p>
 						{if $product->cache_is_pack}
 							<p class="help-block">
-								{l s='You cannot use advanced stock management for this pack if'}</br>
-								{l s='- advanced stock management is not enabled for these products'}</br>
+								{l s='You cannot use advanced stock management for this pack if'}<br />
+								{l s='- advanced stock management is not enabled for these products'}<br />
 								{l s='- you have chosen to decrement products quantities.'}
 							</p>
 						{/if}
