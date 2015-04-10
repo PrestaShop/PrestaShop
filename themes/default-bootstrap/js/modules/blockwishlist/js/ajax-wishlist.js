@@ -313,7 +313,7 @@ function WishlistDefault(id, id_wishlist)
 		cache: false,
 		data: {
 			rand:new Date().getTime(),
-			default: 1,
+			'default': 1,
 			id_wishlist:id_wishlist,
 			myajax: 1,
 			action: 'setdefault'
