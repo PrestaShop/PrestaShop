@@ -125,6 +125,11 @@
 							<span class="price product-price">
 								{if !$priceDisplay}{convertPrice price=$product.price}{else}{convertPrice price=$product.price_tax_exc}{/if}
 							</span>
+                                                        <span class="product-price">
+                                                                {if $tax_enabled  && ((isset($display_tax_label) && $display_tax_label == 1) || !isset($display_tax_label))}
+                                                                        {if $priceDisplay == 1} {l s='tax excl.'}{else} {l s='tax incl.'}{/if}
+                                                                {/if}                                                                        
+                                                        </span>
 							{if isset($product.specific_prices) && $product.specific_prices && isset($product.specific_prices.reduction) && $product.specific_prices.reduction > 0}
 								{hook h="displayProductPriceBlock" product=$product type="old_price"}
 								<span class="old-price product-price">
