@@ -575,12 +575,15 @@ class LanguageCore extends ObjectModel
 	}
 
 	/**
-	 * Return available languages
+	 * Returns available languages
 	 *
-	 * @param boolean $active Select only active languages
+	 * @param bool     $active   Select only active languages
+	 * @param int|bool $id_shop  Shop ID
+	 * @param bool     $ids_only If true, returns an array of language IDs
+	 *
 	 * @return array Languages
 	 */
-	public static function getLanguages($active = true, $id_shop = false)
+	public static function getLanguages($active = true, $id_shop = false, $ids_only = false)
 	{
 		if (!self::$_LANGUAGES)
 			Language::loadLanguages();
@@ -590,9 +593,24 @@ class LanguageCore extends ObjectModel
 		{
 			if ($active && !$language['active'] || ($id_shop && !isset($language['shops'][(int)$id_shop])))
 				continue;
-			$languages[] = $language;
+
+			$languages[] = $ids_only ? $language['id_lang'] : $language;
 		}
+
 		return $languages;
+	}
+
+	/**
+	 * Returns an array of language IDs
+	 *
+	 * @param bool     $active  Select only active languages
+	 * @param int|bool $id_shop Shop ID
+	 *
+	 * @return array
+	 */
+	public static function getIDs($active = true, $id_shop = false)
+	{
+		return self::getLanguages($active, $id_shop, true);
 	}
 
 	public static function getLanguage($id_lang)
