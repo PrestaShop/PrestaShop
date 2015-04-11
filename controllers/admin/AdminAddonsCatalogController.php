@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -38,7 +38,8 @@ class AdminAddonsCatalogControllerCore extends AdminController
 		$iso_lang = $this->context->language->iso_code;
 		$iso_currency = $this->context->currency->iso_code;
 		$iso_country = $this->context->country->iso_code;
-		$addons_url = 'http://addons.prestashop.com/iframe/search-1.6.php?psVersion='._PS_VERSION_.'&isoLang='.$iso_lang.'&isoCurrency='.$iso_currency.'&isoCountry='.$iso_country.'&parentUrl='.$parent_domain;
+		$activity = Configuration::get('PS_SHOP_ACTIVITY');
+		$addons_url = 'http://addons.prestashop.com/iframe/search-1.6.php?psVersion='._PS_VERSION_.'&isoLang='.$iso_lang.'&isoCurrency='.$iso_currency.'&isoCountry='.$iso_country.'&activity='.(int)$activity.'&parentUrl='.$parent_domain;
 		$addons_content = Tools::file_get_contents($addons_url);
 
 		$this->context->smarty->assign(array(
@@ -53,5 +54,3 @@ class AdminAddonsCatalogControllerCore extends AdminController
 		parent::initContent();
 	}
 }
-
-

@@ -10,9 +10,9 @@
     #compare_shipping .form-group.last input {
       margin-bottom: 3px; }
 #compare_shipping .table {
-  background: white; }
+  background: #fff; }
   #compare_shipping .table thead tr th {
-    background: white;
+    background: #fff;
     padding: 4px 10px 3px 10px; }
   #compare_shipping .table tbody td {
     margin: 0; }
@@ -52,3 +52,5 @@
 
 #carriercompare_errors {
   display: none; }
+
+/*# sourceMappingURL=style.css.map */

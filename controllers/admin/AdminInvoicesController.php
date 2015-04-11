@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -57,7 +57,7 @@ class AdminInvoicesControllerCore extends AdminController
 					),
 					'PS_INVOICE_START_NUMBER' => array(
 						'title' => $this->l('Invoice number'),
-						'desc' => $this->l('The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number.').(Order::getLastInvoiceNumber() + 1).').',
+						'desc' => sprintf($this->l('The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number (which is #%s).'), Order::getLastInvoiceNumber() + 1),
 						'size' => 6,
 						'type' => 'text',
 						'cast' => 'intval'
@@ -142,7 +142,7 @@ class AdminInvoicesControllerCore extends AdminController
 			'input' => array(
 				array(
 					'type' => 'checkboxStatuses',
-					'label' => $this->l('Statuses'),
+					'label' => $this->l('Order statuses'),
 					'name' => 'id_order_state',
 					'values' => array(
 						'query' => OrderState::getOrderStates($this->context->language->id),
@@ -164,6 +164,7 @@ class AdminInvoicesControllerCore extends AdminController
 			FROM `'._DB_PREFIX_.'order_invoice` oi
 			LEFT JOIN `'._DB_PREFIX_.'orders` o ON  oi.id_order = o.id_order 
 			WHERE o.id_shop IN('.implode(', ', Shop::getContextListShopID()).')
+			AND oi.number > 0
 			GROUP BY o.current_state
 		 ');
 

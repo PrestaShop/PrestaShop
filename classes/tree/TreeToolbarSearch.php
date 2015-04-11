@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -40,7 +40,10 @@ class TreeToolbarSearchCore extends TreeToolbarButtonCore implements
 
 	public function render()
 	{
-		if ($this->hasAttribute('data'))
+		if ($this->hasAttribute('data_search'))
+			$this->setAttribute('typeahead_source',
+				$this->_renderData($this->getAttribute('data_search')));
+		else  if ($this->hasAttribute('data'))
 			$this->setAttribute('typeahead_source',
 				$this->_renderData($this->getAttribute('data')));
 
@@ -69,14 +72,7 @@ class TreeToolbarSearchCore extends TreeToolbarButtonCore implements
 
 		foreach ($data as $item)
 		{
-			$html .= '{';
-
-			foreach ($item as $key => $value)
-				if (!is_array($value))
-					$html .= $key.':'.(is_numeric($value) ? $value : '"'.$value.'"').',';
-
-			$html .= '},';
-
+			$html .= Tools::jsonEncode($item).',';
 			if (array_key_exists('children', $item) && !empty($item['children']))
 				$html .= $this->_renderData($item['children']);
 		}

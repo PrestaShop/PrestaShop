@@ -1,5 +1,5 @@
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -27,51 +27,12 @@ var responsiveflagMenu = false;
 var categoryMenu = $('ul.sf-menu');
 var mCategoryGrover = $('.sf-contener .cat-title');
 
-// init Super Fish Menu for 767px+ resolution
-
-function desktopInit() {
-	mCategoryGrover.off();
-	mCategoryGrover.removeClass('active');
-	$('.sf-menu > li > ul').removeClass('menu-mobile').parent().find('.menu-mobile-grover').remove();
-	$('.sf-menu').removeAttr('style');
-	categoryMenu.superfish('init');
-	$('.sf-menu > li > ul').addClass('submenu-container clearfix'); //add class for width define
-	i = 0;
-	$('.sf-menu > li > ul > li:not(#category-thumbnail)').each(function(){  //add classes for clearing
-		i++;
-		if(i%2 == 1)
-			$(this).addClass('first-in-line-xs');
-		else if (i%5 == 1)
-			$(this).addClass('first-in-line-lg');
-	});
-}
-
-function mobileInit() {
-	categoryMenu.superfish('destroy');
-	$('.sf-menu').removeAttr('style');
-	mCategoryGrover.on('click', function(){
-		$(this).toggleClass('active').parent().find('ul.menu-content').stop().slideToggle('medium');
-	}),
-	$('.sf-menu > li > ul').addClass('menu-mobile clearfix').parent().prepend('<span class="menu-mobile-grover"></span>');
-	$(".sf-menu .menu-mobile-grover").on('click touchstart', function() {
-		var catSubUl = $(this).next().next('.menu-mobile');
-		if(catSubUl.is(':hidden')) {
-		catSubUl.slideDown(),
-		$(this).addClass('active')
-		}
-		else {
-			catSubUl.slideUp(),
-			$(this).removeClass('active');
-		}
-		return false
-	})
-}
-
-// change the menu display at different resolutions
-function menuChange(status)
-{
-	status == 'enable'?mobileInit():desktopInit()
-}
+$(document).ready(function(){
+	categoryMenu = $('ul.sf-menu');
+	mCategoryGrover = $('.sf-contener .cat-title');
+	responsiveMenu();
+	$(window).resize(responsiveMenu);
+});
 
 // check resolution
 function responsiveMenu()
@@ -80,7 +41,6 @@ function responsiveMenu()
 	{
 		menuChange('enable');
 		responsiveflagMenu = true;
-
 	}
 	else if ($(document).width() >= 768)
 	{
@@ -89,5 +49,86 @@ function responsiveMenu()
 	}
 }
 
-$(document).ready(responsiveMenu);
-$(window).resize(responsiveMenu);
+// init Super Fish Menu for 767px+ resolution
+function desktopInit()
+{
+	mCategoryGrover.off();
+	mCategoryGrover.removeClass('active');
+	$('.sf-menu > li > ul').removeClass('menu-mobile').parent().find('.menu-mobile-grover').remove();
+	$('.sf-menu').removeAttr('style');
+	categoryMenu.superfish('init');
+	//add class for width define
+	$('.sf-menu > li > ul').addClass('submenu-container clearfix');
+	 // loop through each sublist under each top list item
+    $('.sf-menu > li > ul').each(function(){
+        i = 0;
+        //add classes for clearing
+        $(this).each(function(){
+            if ($(this).attr('class') != "category-thumbnail"){
+                i++;
+                if(i % 2 == 1)
+                    $(this).addClass('first-in-line-xs');
+                else if (i % 5 == 1)
+                    $(this).addClass('first-in-line-lg');
+            }
+        });
+    });
+}
+
+function mobileInit()
+{
+
+	categoryMenu.superfish('destroy');
+	$('.sf-menu').removeAttr('style');
+
+	mCategoryGrover.on('click', function(e){
+		$(this).toggleClass('active').parent().find('ul.menu-content').stop().slideToggle('medium');
+		return false;
+	});
+
+	$('.sf-menu > li > ul').addClass('menu-mobile clearfix').parent().prepend('<span class="menu-mobile-grover"></span>');
+
+	$(".sf-menu .menu-mobile-grover").on('click', function(e){
+		var catSubUl = $(this).next().next('.menu-mobile');
+		if (catSubUl.is(':hidden'))
+		{
+			catSubUl.slideDown();
+			$(this).addClass('active');
+		}
+		else
+		{
+			catSubUl.slideUp();
+			$(this).removeClass('active');
+		}
+		return false;
+	});
+
+
+	$('#block_top_menu > ul:first > li > a').on('click', function(e){
+		var parentOffset = $(this).prev().offset();
+	   	var relX = parentOffset.left - e.pageX;
+		if ($(this).parent('li').find('ul').length && relX >= 0 && relX <= 20)
+		{
+			e.preventDefault();
+			var mobCatSubUl = $(this).next('.menu-mobile');
+			var mobMenuGrover = $(this).prev();
+			if (mobCatSubUl.is(':hidden'))
+			{
+				mobCatSubUl.slideDown();
+				mobMenuGrover.addClass('active');
+			}
+			else
+			{
+				mobCatSubUl.slideUp();
+				mobMenuGrover.removeClass('active');
+			}
+		}
+	});
+
+}
+
+// change the menu display at different resolutions
+function menuChange(status)
+{
+	status == 'enable' ? mobileInit(): desktopInit();
+}

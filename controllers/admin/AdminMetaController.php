@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,28 +19,33 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Meta $object
+ */
 class AdminMetaControllerCore extends AdminController
 {
 	public $table = 'meta';
 	public $className = 'Meta';
 	public $lang = true;
+
+	/** @var ShopUrl */
+	protected $url = false;
 	protected $toolbar_scroll = false;
 
 	public function __construct()
 	{
-	 	$this->table = 'meta';
-	 	$this->className = 'Meta';
+		$this->table = 'meta';
+		$this->className = 'Meta';
 
 		$this->bootstrap = true;
 		$this->identifier_name = 'page';
 		$this->ht_file = _PS_ROOT_DIR_.'/.htaccess';
 		$this->rb_file = _PS_ROOT_DIR_.'/robots.txt';
-		$this->sm_file = _PS_ROOT_DIR_.'/sitemap.xml';
 		$this->rb_data = $this->getRobotsContent();
 
 		$this->explicitSelect = true;
@@ -57,7 +62,7 @@ class AdminMetaControllerCore extends AdminController
 		$this->fields_list = array(
 			'id_meta' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
 			'page' => array('title' => $this->l('Page')),
-			'title' => array('title' => $this->l('Title')),
+			'title' => array('title' => $this->l('Page title')),
 			'url_rewrite' => array('title' => $this->l('Friendly URL'))
 		);
 		$this->_where = ' AND a.configurable = 1';
@@ -65,6 +70,7 @@ class AdminMetaControllerCore extends AdminController
 
 		parent::__construct();
 
+		$this->sm_file = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$this->context->shop->id.'_index_sitemap.xml';
 		// Options to generate friendly urls
 		$mod_rewrite = Tools::modRewriteActive();
 		$general_fields = array(
@@ -74,7 +80,7 @@ class AdminMetaControllerCore extends AdminController
 				'validation' => 'isBool',
 				'cast' => 'intval',
 				'type' => 'bool',
-				'mod_rewrite' => $mod_rewrite
+				'desc' => (!$mod_rewrite ? $this->l('URL rewriting (mod_rewrite) is not active on your server, or it is not possible to check your server configuration. If you want to use Friendly URLs, you must activate this mod.') : '')
 			),
 			'PS_ALLOW_ACCENTED_CHARS_URL' => array(
 				'title' => $this->l('Accented URL'),
@@ -98,33 +104,36 @@ class AdminMetaControllerCore extends AdminController
 		);
 
 		$url_description = '';
-		if ($this->checkConfiguration($this->ht_file))
+		if (!defined('_PS_HOST_MODE_'))
 		{
-			$general_fields['PS_HTACCESS_DISABLE_MULTIVIEWS'] = array(
-				'title' => $this->l('Disable apache multiviews'),
-				'hint' => $this->l('Enable this option only if you have problems with URL rewriting.'),
-				'validation' => 'isBool',
-				'cast' => 'intval',
-				'type' => 'bool',
-			);
+			if ($this->checkConfiguration($this->ht_file))
+			{
+				$general_fields['PS_HTACCESS_DISABLE_MULTIVIEWS'] = array(
+					'title' => $this->l('Disable Apache\'s MultiViews option'),
+					'hint' => $this->l('Enable this option only if you have problems with URL rewriting.'),
+					'validation' => 'isBool',
+					'cast' => 'intval',
+					'type' => 'bool',
+				);
 
-			$general_fields['PS_HTACCESS_DISABLE_MODSEC'] = array(
-				'title' => $this->l('Disable apache mod security'),
-				'hint' => $this->l('Some features could not work correctly with a specific configuration of Apache mod_security. We recommend to turn it off.'),
-				'validation' => 'isBool',
-				'cast' => 'intval',
-				'type' => 'bool',
-			);
-		}
-		else
-		{
-			$url_description = $this->l('Before you can use this tool, you need to:');
-			$url_description .= $this->l('Create a blank .htaccess in your root directory.');
-			$url_description .= $this->l('Give it write permissions (CHMOD 666 on Unix system).');
+				$general_fields['PS_HTACCESS_DISABLE_MODSEC'] = array(
+					'title' => $this->l('Disable Apache\'s mod_security module'),
+					'hint' => $this->l('Some of PrestaShop\'s features might not work correctly with a specific configuration of Apache\'s mod_security module. We recommend to turn it off.'),
+					'validation' => 'isBool',
+					'cast' => 'intval',
+					'type' => 'bool',
+				);
+			}
+			else
+			{
+				$url_description = $this->l('Before you can use this tool, you need to:');
+				$url_description .= $this->l('1) Create a blank .htaccess file in your root directory.');
+				$url_description .= $this->l('2) Give it write permissions (CHMOD 666 on Unix system).');
+			}
 		}
 
 		// Options to generate robot.txt
-		$robots_description = $this->l('Your robots.txt file MUST be in your website\'s root directory and nowhere else (e.g. http://www.yoursite.com/robots.txt).');
+		$robots_description = $this->l('Your robots.txt file MUST be in your website\'s root directory and nowhere else (e.g. http://www.example.com/robots.txt).');
 		if ($this->checkConfiguration($this->rb_file))
 		{
 			$robots_description .= $this->l('Generate your "robots.txt" file by clicking on the following button (this will erase the old robots.txt file)');
@@ -133,8 +142,8 @@ class AdminMetaControllerCore extends AdminController
 		else
 		{
 			$robots_description .= $this->l('Before you can use this tool, you need to:');
-			$robots_description .= $this->l('Create a blank robots.txt file in your root directory.');
-			$robots_description .= $this->l('Give it write permissions (CHMOD 666 on Unix system).');
+			$robots_description .= $this->l('1) Create a blank robots.txt file in your root directory.');
+			$robots_description .= $this->l('2) Give it write permissions (CHMOD 666 on Unix system).');
 		}
 
 		$robots_options = array(
@@ -145,45 +154,46 @@ class AdminMetaControllerCore extends AdminController
 		if (isset($robots_submit))
 			$robots_options['submit'] = $robots_submit;
 
-		// Options for shop URL if multishop is disabled
-		$shop_url_options = array(
-			'title' => $this->l('Set shop URL'),
-			'fields' => array(),
-		);
-
-		if (!Shop::isFeatureActive())
+		if (!defined('_PS_HOST_MODE_'))
 		{
-			$this->url = ShopUrl::getShopUrls($this->context->shop->id)->where('main', '=', 1)->getFirst();
-			if ($this->url)
-			{
-				$shop_url_options['description'] = $this->l('Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.');
-				$shop_url_options['fields'] = array(
-					'domain' => array(
-						'title' =>	$this->l('Shop domain'),
-						'validation' => 'isString',
-						'type' => 'text',
-						'defaultValue' => $this->url->domain,
-					),
-					'domain_ssl' => array(
-						'title' =>	$this->l('SSL domain'),
-						'validation' => 'isString',
-						'type' => 'text',
-						'defaultValue' => $this->url->domain_ssl,
-					),
-				);
+			// Options for shop URL if multishop is disabled
+			$shop_url_options = array(
+				'title' => $this->l('Set shop URL'),
+				'fields' => array(),
+			);
 
-				if(!defined('_PS_HOST_MODE_'))
-					$shop_url_options['fields']['uri'] = array(
-						'title' =>	$this->l('Base URI'),
-						'validation' => 'isString',
-						'type' => 'text',
-						'defaultValue' => $this->url->physical_uri,
+			if (!Shop::isFeatureActive())
+			{
+				$this->url = ShopUrl::getShopUrls($this->context->shop->id)->where('main', '=', 1)->getFirst();
+				if ($this->url)
+				{
+					$shop_url_options['description'] = $this->l('Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.');
+					$shop_url_options['fields'] = array(
+						'domain' => array(
+							'title' =>	$this->l('Shop domain'),
+							'validation' => 'isString',
+							'type' => 'text',
+							'defaultValue' => $this->url->domain,
+						),
+						'domain_ssl' => array(
+							'title' =>	$this->l('SSL domain'),
+							'validation' => 'isString',
+							'type' => 'text',
+							'defaultValue' => $this->url->domain_ssl,
+						),
+						'uri' => array(
+							'title' =>	$this->l('Base URI'),
+							'validation' => 'isString',
+							'type' => 'text',
+							'defaultValue' => $this->url->physical_uri,
+						)
 					);
-				$shop_url_options['submit'] = array('title' => $this->l('Save'));
+					$shop_url_options['submit'] = array('title' => $this->l('Save'));
+				}
 			}
+			else
+				$shop_url_options['description'] = $this->l('The multistore option is enabled. If you want to change the URL of your shop, you must go to the "Multistore" page under the "Advanced Parameters" menu.');
 		}
-		else
-			$shop_url_options['description'] = $this->l('The multistore option is enabled. If you want to change the URL of your shop, you must go to the "Multistore" page under the "Advanced Parameters" menu.');
 
 		// List of options
 		$this->fields_options = array(
@@ -192,20 +202,33 @@ class AdminMetaControllerCore extends AdminController
 				'description' => $url_description,
 				'fields' =>	$general_fields,
 				'submit' => array('title' => $this->l('Save'))
-			),
-			'shop_url' => $shop_url_options
+			)
 		);
 
-		// Add display route options to options form
-		if (Configuration::get('PS_REWRITING_SETTINGS'))
-		{
-			$this->fields_options['routes'] = array(
-				'title' =>	$this->l('Schema of URLs'),
-				'description' => $this->l('Change the pattern of your links. There are some available keywords for each route listed below, keywords with * are required. To add a keyword in your URL use {keyword} syntax. You can add text before or after the keyword if the keyword is not empty with syntax {prepend:keyword:append}. For example {-hey-:meta_title} will add "-hey-my-title" in the URL if the meta title is set. Friendly URL and rewriting Apache option must be activated on your web server to use this functionality.'),
-				'fields' => array(),
-				'submit' => array('title' => $this->l('Save'))
+		if (!defined('_PS_HOST_MODE_'))
+			$this->fields_options['shop_url'] = $shop_url_options;
+		else
+			$this->fields_options['manage_domain_name'] = array(
+				'title' => $this->l('Manage domain name'),
+				'description' => $this->l('You can search for a new domain name or add a domain name that you already own. You will be redirected to your PrestaShop account.'),
+				'buttons' => array(
+					array(
+						'title' => $this->l('Add a domain name'),
+						'href' => 'https://www.prestashop.com/cloud/',
+						'class' => 'pull-right', 'icon' => 'process-icon-new',
+						'js' => 'return !window.open(this.href);'
+					)
+				)
 			);
-			$this->addAllRouteFields();
+
+		// Add display route options to options form
+		if (Configuration::get('PS_REWRITING_SETTINGS') || Tools::getValue('PS_REWRITING_SETTINGS'))
+		{
+			if (Configuration::get('PS_REWRITING_SETTINGS'))
+				$this->addAllRouteFields();
+			$this->fields_options['routes']['title'] = $this->l('Schema of URLs');
+			$this->fields_options['routes']['description'] = $this->l('This section enables you to change the default pattern of your links. In order to use this functionality, PrestaShop\'s "Friendly URL" option must be enabled, and Apache\'s URL rewriting module (mod_rewrite) must be activated on your web server.').'<br />'.$this->l('There are several available keywords for each route listed below; note that keywords with * are required!').'<br />'.$this->l('To add a keyword in your URL, use the {keyword} syntax. If the keyword is not empty, you can add text before or after the keyword with syntax {prepend:keyword:append}. For example {-hey-:meta_title} will add "-hey-my-title" in the URL if the meta title is set.');
+			$this->fields_options['routes']['submit'] = array('title' => $this->l('Save'));
 		}
 
 		$this->fields_options['robots'] = $robots_options;
@@ -257,11 +280,11 @@ class AdminMetaControllerCore extends AdminController
 	public function renderForm()
 	{
 		$files = Meta::getPages(true, ($this->object->page ? $this->object->page : false));
-		
+
 		$is_index = false;
-		if (is_array($this->object))
+		if (is_object($this->object) && is_array($this->object->url_rewrite) && count($this->object->url_rewrite))
 			foreach ($this->object->url_rewrite as $rewrite)
-				if($is_index != true)
+				if ($is_index != true)
 					$is_index = ($this->object->page == 'index' && empty($rewrite)) ? true : false;
 
 		$pages = array(
@@ -284,7 +307,7 @@ class AdminMetaControllerCore extends AdminController
 			);
 		}
 
- 		$this->fields_form = array(
+		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Meta tags'),
 				'icon' => 'icon-tags'
@@ -367,6 +390,14 @@ class AdminMetaControllerCore extends AdminController
 
 	public function postProcess()
 	{
+		/* PrestaShop demo mode */
+		if (_PS_MODE_DEMO_ && Tools::isSubmit('submitOptionsmeta')
+			&& (Tools::getValue('domain') != Configuration::get('PS_SHOP_DOMAIN') || Tools::getValue('domain_ssl') != Configuration::get('PS_SHOP_DOMAIN_SSL')))
+		{
+			$this->errors[] = Tools::displayError('This functionality has been disabled.');
+			return;
+		}
+
 		if (Tools::isSubmit('submitAddmeta'))
 		{
 			$langs = Language::getLanguages(false);
@@ -402,25 +433,27 @@ class AdminMetaControllerCore extends AdminController
 
 			Hook::exec('actionAdminMetaSave');
 		}
-		else if (Tools::isSubmit('submitRobots'))
+		elseif (Tools::isSubmit('submitRobots'))
 			$this->generateRobotsFile();
 
 		if (Tools::isSubmit('PS_ROUTE_product_rule'))
 			Tools::clearCache($this->context->smarty);
 
 		if (Tools::isSubmit('deletemeta') && (int)Tools::getValue('id_meta') > 0)
-			Db::getInstance()->delete('theme_meta', 'id_meta='.Tools::getValue('id_meta'));
+			Db::getInstance()->delete('theme_meta', 'id_meta='.(int)Tools::getValue('id_meta'));
 
 		$ret = parent::postProcess();
 
 		if (Tools::isSubmit('submitAddmeta') && Validate::isLoadedObject($ret))
 		{
+			/** @var Theme $ret */
 			$themes = Theme::getThemes();
 			$theme_meta_value = array();
 			foreach ($themes as $theme)
 			{
+				/** @var Theme $theme */
 				$theme_meta_value[] = array(
-					'id_theme' => $theme->id,
+					'id_theme' => (int)$theme->id,
 					'id_meta' => (int)$ret->id,
 					'left_column' => (int)$theme->default_left_column,
 					'right_column' => (int)$theme->default_right_column
@@ -431,7 +464,6 @@ class AdminMetaControllerCore extends AdminController
 				Db::getInstance()->insert('theme_meta', $theme_meta_value, false, true, DB::INSERT_IGNORE);
 		}
 
-
 		return $ret;
 	}
 
@@ -441,6 +473,10 @@ class AdminMetaControllerCore extends AdminController
 			$this->errors[] = sprintf(Tools::displayError('Cannot write into file: %s. Please check write permissions.'), $this->rb_file);
 		else
 		{
+			Hook::exec('actionAdminMetaBeforeWriteRobotsFile', array(
+				'rb_data' => &$this->rb_data
+			));
+
 			// PS Comments
 			fwrite($write_fd, "# robots.txt automaticaly generated by PrestaShop e-commerce open-source solution\n");
 			fwrite($write_fd, "# http://www.prestashop.com - http://www.prestashop.com/forums\n");
@@ -449,11 +485,11 @@ class AdminMetaControllerCore extends AdminController
 			fwrite($write_fd, "# and Google. By telling these \"robots\" where not to go on your site,\n");
 			fwrite($write_fd, "# you save bandwidth and server resources.\n");
 			fwrite($write_fd, "# For more information about the robots.txt standard, see:\n");
-			fwrite($write_fd, "# http://www.robotstxt.org/wc/robots.html\n");
+			fwrite($write_fd, "# http://www.robotstxt.org/robotstxt.html\n");
 
 			// User-Agent
 			fwrite($write_fd, "User-agent: *\n");
-			
+
 			// Private pages
 			if (count($this->rb_data['GB']))
 			{
@@ -461,7 +497,7 @@ class AdminMetaControllerCore extends AdminController
 				foreach ($this->rb_data['GB'] as $gb)
 					fwrite($write_fd, 'Disallow: /*'.$gb."\n");
 			}
-			
+
 			// Directories
 			if (count($this->rb_data['Directories']))
 			{
@@ -469,22 +505,33 @@ class AdminMetaControllerCore extends AdminController
 				foreach ($this->rb_data['Directories'] as $dir)
 					fwrite($write_fd, 'Disallow: */'.$dir."\n");
 			}
-			
+
 			// Files
 			if (count($this->rb_data['Files']))
 			{
+				$languages = Language::getLanguages();
 				fwrite($write_fd, "# Files\n");
 				foreach ($this->rb_data['Files'] as $iso_code => $files)
 					foreach ($files as $file)
-						fwrite($write_fd, 'Disallow: /*'.$iso_code.'/'.$file."\n");
+						if (count($languages) > 1)
+							fwrite($write_fd, 'Disallow: /*'.$iso_code.'/'.$file."\n");
+						else
+							fwrite($write_fd, 'Disallow: /'.$file."\n");
 			}
-			
+
 			// Sitemap
 			if (file_exists($this->sm_file) && filesize($this->sm_file))
 			{
 				fwrite($write_fd, "# Sitemap\n");
-				fwrite($write_fd, 'Sitemap: '.(Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://').$_SERVER['SERVER_NAME'].__PS_BASE_URI__.'sitemap.xml'."\n");
+				$sitemap_filename = basename($this->sm_file);
+				fwrite($write_fd, 'Sitemap: '.(Configuration::get('PS_SSL_ENABLED') ? 'https://' : 'http://').$_SERVER['SERVER_NAME']
+					.__PS_BASE_URI__.$sitemap_filename."\n");
 			}
+
+			Hook::exec('actionAdminMetaAfterWriteRobotsFile', array(
+				'rb_data' => $this->rb_data,
+				'write_fd' => &$write_fd
+			));
 
 			fclose($write_fd);
 
@@ -496,7 +543,7 @@ class AdminMetaControllerCore extends AdminController
 	{
 		parent::getList($id_lang, $orderBy, $orderWay, $start, $limit, Context::getContext()->shop->id);
 	}
-	
+
 	public function renderList()
 	{
 		if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP)
@@ -526,7 +573,7 @@ class AdminMetaControllerCore extends AdminController
 				Configuration::updateValue('PS_ROUTE_'.$route_id, '');
 				return;
 			}
-	
+
 			$errors = array();
 			if (!Dispatcher::getInstance()->validateRoute($route_id, $rule, $errors))
 			{
@@ -665,10 +712,12 @@ class AdminMetaControllerCore extends AdminController
 			$helper = new HelperOptions($this);
 			$this->setHelperDisplay($helper);
 			$helper->toolbar_scroll = true;
-			$helper->toolbar_btn = array('save' => array(
-								'href' => '#',
-								'desc' => $this->l('Save')
-							));
+			$helper->toolbar_btn = array(
+				'save' => array(
+					'href' => '#',
+					'desc' => $this->l('Save')
+				)
+			);
 			$helper->id = $this->id;
 			$helper->tpl_vars = $this->tpl_option_vars;
 			$options = $helper->generateOptions($this->fields_options);
@@ -684,7 +733,7 @@ class AdminMetaControllerCore extends AdminController
 	{
 		$this->addFieldRoute('product_rule', $this->l('Route to products'));
 		$this->addFieldRoute('category_rule', $this->l('Route to category'));
-		$this->addFieldRoute('layered_rule', $this->l('Route to category with attribute selected_filter for the module block layered'));
+		$this->addFieldRoute('layered_rule', $this->l('Route to category which has the "selected_filter" attribute for the "Layered Navigation" (blocklayered) module'));
 		$this->addFieldRoute('supplier_rule', $this->l('Route to supplier'));
 		$this->addFieldRoute('manufacturer_rule', $this->l('Route to manufacturer'));
 		$this->addFieldRoute('cms_rule', $this->l('Route to CMS page'));
@@ -735,7 +784,8 @@ class AdminMetaControllerCore extends AdminController
 		}
 
 		$tab['GB'] = array(
-			'orderby=','orderway=','tag=','id_currency=','search_query=','back=','n='
+			'?orderby=','?orderway=','?tag=','?id_currency=','?search_query=','?back=','?n=',
+			'&orderby=','&orderway=','&tag=','&id_currency=','&search_query=','&back=','&n='
 		);
 
 		foreach ($disallow_controllers as $controller)

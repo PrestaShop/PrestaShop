@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -58,7 +58,7 @@
 			</div>
 	    	<div class="top-pagination-content clearfix">
 	        	{include file="./product-compare.tpl"}
-	            {include file="$tpl_dir./pagination.tpl"}
+	            {include file="$tpl_dir./pagination.tpl" no_follow=1}
 	        </div>
 		</div>
 
@@ -67,10 +67,10 @@
 		<div class="content_sortPagiBar">
 	        <div class="bottom-pagination-content clearfix">
 	        	{include file="./product-compare.tpl"}
-				{include file="./pagination.tpl" paginationId='bottom'}
+				{include file="./pagination.tpl" no_follow=1 paginationId='bottom'}
 	        </div>
 		</div>
 	{else}
 		<p class="alert alert-warning">{l s='No products for this manufacturer.'}</p>
-	{/if} 
+	{/if}
 {/if}

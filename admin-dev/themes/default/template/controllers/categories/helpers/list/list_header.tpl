@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -34,13 +34,13 @@
 			{if $i++ == 0}
 				<i class="icon-home"></i>
 				{assign var=params_url value=""}
-			{else}
+			{elseif isset($category.id_category)}
 				{assign var=params_url value="&id_category={$category.id_category|intval}&viewcategory"}
 			{/if}
-			{if $category.id_category == $categories_tree_current_id}
-				{$category.name}
+			{if isset($category.id_category) && $category.id_category == $categories_tree_current_id}
+				{$category.name|escape:'html':'UTF-8'}
 			{else}
-				<a href="{$currentIndex}{$params_url}&amp;token={$token}">{$category.name}</a>
+				<a href="{$current|escape:'html':'UTF-8'}{$params_url|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}">{$category.name|escape:'html':'UTF-8'}</a>
 			{/if}
 		</li>
 		{/foreach}
@@ -64,19 +64,19 @@
 				<div class="radio">
 					<label for="deleteMode_linkanddisable">
 						<input type="radio" name="deleteMode" value="linkanddisable" id="deleteMode_linkanddisable" checked="checked" />
-						{l s='I want to associate the products without other categories with the parent category and then disable them.'} <strong>{l s='(Recommended)'}</strong>
+						{l s='I want to associate the products without other categories to the parent category, then disable these products for now. I re-enable them when they are moved in their new category.'} <strong>{l s='(Recommended)'}</strong>
 					</label>
 				</div>
 				<div class="radio">
 					<label for="deleteMode_link">
 						<input type="radio" name="deleteMode" value="link" id="deleteMode_link" />
-						{l s='I want to associate the products without other categories with the parent category.'}
+						{l s='I want to associate the products without other categories to the parent category, and keep them enabled.'}
 					</label>
 				</div>
 				<div class="radio">
 					<label for="deleteMode_delete">
 						<input type="radio" name="deleteMode" value="delete" id="deleteMode_delete" />
-						{l s='I want to remove products linked only within this category and no others.'}
+						{l s='I want to remove the products which are listed only within this category and no others.'}
 					</label>
 				</div>
 			{else}

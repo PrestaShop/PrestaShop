@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -35,9 +35,9 @@ class OrderSlipControllerCore extends FrontController
 	{
 		parent::setMedia();
 		$this->addCSS(array(_THEME_CSS_DIR_.'history.css', _THEME_CSS_DIR_.'addresses.css'));
-		$this->addJqueryPlugin('scrollTo');
+		$this->addJqueryPlugin(array('scrollTo', 'footable', 'footable-sort'));
 		$this->addJS(array(
-			_THEME_JS_DIR_.'history.js', 
+			_THEME_JS_DIR_.'history.js',
 			_THEME_JS_DIR_.'tools.js') // retro compat themes 1.5
 		);
 	}

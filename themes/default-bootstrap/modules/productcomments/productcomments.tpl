@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -27,29 +27,33 @@
 		{if $comments}
 			{foreach from=$comments item=comment}
 				{if $comment.content}
-				<div class="comment row">
+				<div class="comment row" itemprop="review" itemscope itemtype="http://schema.org/Review">
 					<div class="comment_author col-sm-2">
 						<span>{l s='Grade' mod='productcomments'}&nbsp;</span>
-						<div class="star_content clearfix">
-						{section name="i" start=0 loop=5 step=1}
-							{if $comment.grade le $smarty.section.i.index}
-								<div class="star"></div>
-							{else}
-								<div class="star star_on"></div>
-							{/if}
-						{/section}
+						<div class="star_content clearfix"  itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">
+							{section name="i" start=0 loop=5 step=1}
+								{if $comment.grade le $smarty.section.i.index}
+									<div class="star"></div>
+								{else}
+									<div class="star star_on"></div>
+								{/if}
+							{/section}
+            				<meta itemprop="worstRating" content = "0" />
+							<meta itemprop="ratingValue" content = "{$comment.grade|escape:'html':'UTF-8'}" />
+            				<meta itemprop="bestRating" content = "5" />
 						</div>
 						<div class="comment_author_infos">
-							<strong>{$comment.customer_name|escape:'html':'UTF-8'}</strong>
+							<strong itemprop="author">{$comment.customer_name|escape:'html':'UTF-8'}</strong>
+							<meta itemprop="datePublished" content="{$comment.date_add|escape:'html':'UTF-8'|substr:0:10}" />
 							<em>{dateFormat date=$comment.date_add|escape:'html':'UTF-8' full=0}</em>
 						</div>
 					</div> <!-- .comment_author -->
-					
+
 					<div class="comment_details col-sm-10">
-						<p class="title_block">
+						<p itemprop="name" class="title_block">
 							<strong>{$comment.title}</strong>
 						</p>
-						<p>{$comment.content|escape:'html':'UTF-8'|nl2br}</p>
+						<p itemprop="reviewBody">{$comment.content|escape:'html':'UTF-8'|nl2br}</p>
 						<ul>
 							{if $comment.total_advice > 0}
 								<li>
@@ -78,14 +82,14 @@
 							{/if}
 						</ul>
 					</div><!-- .comment_details -->
-					
+
 				</div> <!-- .comment -->
 				{/if}
 			{/foreach}
 			{if (!$too_early AND ($is_logged OR $allow_guests))}
 			<p class="align_center">
 				<a id="new_comment_tab_btn" class="btn btn-default button button-small open-comment-form" href="#new_comment_form">
-					<span>{l s='Write your review' mod='productcomments'} !</span>
+					<span>{l s='Write your review!' mod='productcomments'}</span>
 				</a>
 			</p>
 			{/if}
@@ -93,13 +97,13 @@
 			{if (!$too_early AND ($is_logged OR $allow_guests))}
 			<p class="align_center">
 				<a id="new_comment_tab_btn" class="btn btn-default button button-small open-comment-form" href="#new_comment_form">
-					<span>{l s='Be the first to write your review' mod='productcomments'} !</span>
+					<span>{l s='Be the first to write your review!' mod='productcomments'}</span>
 				</a>
 			</p>
 			{else}
-			<p class="align_center">{l s='No customer comments for the moment.' mod='productcomments'}</p>
+			<p class="align_center">{l s='No customer reviews for the moment.' mod='productcomments'}</p>
 			{/if}
-		{/if}	
+		{/if}
 	</div> <!-- #product_comments_block_tab -->
 </div>
 
@@ -123,7 +127,6 @@
 					</div>
 				{/if}
 				<div class="new_comment_form_content col-xs-12 col-sm-6">
-					<h2>{l s='Write a review' mod='productcomments'}</h2>
 					<div id="new_comment_form_error" class="error" style="display: none; padding: 15px 25px">
 						<ul></ul>
 					</div>
@@ -135,8 +138,8 @@
 								<div class="star_content">
 									<input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="1" />
 									<input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="2" />
-									<input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="3" checked="checked" />
-									<input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="4" />
+									<input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="3" />
+									<input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="4" checked="checked" />
 									<input class="star" type="radio" name="criterion[{$criterion.id_product_comment_criterion|round}]" value="5" />
 								</div>
 								<div class="clearfix"></div>
@@ -145,16 +148,16 @@
 						</ul>
 					{/if}
 					<label for="comment_title">
-						{l s='Title' mod='productcomments'}: <sup class="required">*</sup>
+						{l s='Title:' mod='productcomments'} <sup class="required">*</sup>
 					</label>
 					<input id="comment_title" name="title" type="text" value=""/>
 					<label for="content">
-						{l s='Comment' mod='productcomments'}: <sup class="required">*</sup>
+						{l s='Comment:' mod='productcomments'} <sup class="required">*</sup>
 					</label>
 					<textarea id="content" name="content"></textarea>
 					{if $allow_guests == true && !$is_logged}
 						<label>
-							{l s='Your name' mod='productcomments'}: <sup class="required">*</sup>
+							{l s='Your name:' mod='productcomments'} <sup class="required">*</sup>
 						</label>
 						<input id="commentCustomerName" name="customer_name" type="text" value=""/>
 					{/if}
@@ -163,7 +166,7 @@
 						<p class="fl required"><sup>*</sup> {l s='Required fields' mod='productcomments'}</p>
 						<p class="fr">
 							<button id="submitNewMessage" name="submitMessage" type="submit" class="btn button button-small">
-								<span>{l s='Send' mod='productcomments'}</span>
+								<span>{l s='Submit' mod='productcomments'}</span>
 							</button>&nbsp;
 							{l s='or' mod='productcomments'}&nbsp;
 							<a class="closefb" href="#">
@@ -184,9 +187,9 @@
 {addJsDef productcomments_url_rewrite=$productcomments_url_rewriting_activated|boolval}
 {addJsDef secure_key=$secure_key}
 
-{addJsDefL name=confirm_report_message}{l s='Are you sure you want report this comment?' mod='productcomments' js=1}{/addJsDefL}
+{addJsDefL name=confirm_report_message}{l s='Are you sure that you want to report this comment?' mod='productcomments' js=1}{/addJsDefL}
 {addJsDefL name=productcomment_added}{l s='Your comment has been added!' mod='productcomments' js=1}{/addJsDefL}
-{addJsDefL name=productcomment_added_moderation}{l s='Your comment has been added and will be available once approved by a moderator' mod='productcomments' js=1}{/addJsDefL}
+{addJsDefL name=productcomment_added_moderation}{l s='Your comment has been added and will be available once approved by a moderator.' mod='productcomments' js=1}{/addJsDefL}
 {addJsDefL name=productcomment_title}{l s='New comment' mod='productcomments' js=1}{/addJsDefL}
 {addJsDefL name=productcomment_ok}{l s='OK' mod='productcomments' js=1}{/addJsDefL}
 {/strip}

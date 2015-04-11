@@ -8,7 +8,7 @@ You have received a new message regarding order with the reference
 
 CUSTOMER: {firstname} {lastname} ({email})
 
-{message} 
+{message} 		 
 
 {shop_name} [{shop_url}] powered by
 PrestaShop(tm) [http://www.prestashop.com/] 

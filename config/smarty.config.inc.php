@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -29,27 +29,21 @@ define('_PS_SMARTY_DIR_', _PS_TOOL_DIR_.'smarty/');
 require_once(_PS_SMARTY_DIR_.'Smarty.class.php');
 
 global $smarty;
-$smarty = new Smarty();
+$smarty = new SmartyCustom();
 $smarty->setCompileDir(_PS_CACHE_DIR_.'smarty/compile');
 $smarty->setCacheDir(_PS_CACHE_DIR_.'smarty/cache');
 if (!Tools::getSafeModeStatus())
 	$smarty->use_sub_dirs = true;
 $smarty->setConfigDir(_PS_SMARTY_DIR_.'configs');
 $smarty->caching = false;
+if (Configuration::get('PS_SMARTY_CACHING_TYPE') == 'mysql')
+{
+	include(_PS_CLASS_DIR_.'/SmartyCacheResourceMysql.php');
+	$smarty->caching_type = 'mysql';
+}
 $smarty->force_compile = (Configuration::get('PS_SMARTY_FORCE_COMPILE') == _PS_SMARTY_FORCE_COMPILE_) ? true : false;
 $smarty->compile_check = (Configuration::get('PS_SMARTY_FORCE_COMPILE') >= _PS_SMARTY_CHECK_COMPILE_) ? true : false;
-
-// Production mode
-$smarty->debugging = false;
-$smarty->debugging_ctrl = 'NONE';
-
-if (Configuration::get('PS_SMARTY_CONSOLE') == _PS_SMARTY_CONSOLE_OPEN_BY_URL_)
-{
-	$smarty->debugging_ctrl = 'URL';
-	$smarty->smarty_debug_id = Configuration::get('PS_SMARTY_CONSOLE_KEY');
-}
-else if (Configuration::get('PS_SMARTY_CONSOLE') == _PS_SMARTY_CONSOLE_OPEN_)
-	$smarty->debugging = true;
+$smarty->debug_tpl = _PS_ALL_THEMES_DIR_.'debug.tpl';
 
 /* Use this constant if you want to load smarty without all PrestaShop functions */
 if (defined('_PS_SMARTY_FAST_LOAD_') && _PS_SMARTY_FAST_LOAD_)
@@ -147,18 +141,20 @@ function smarty_modifier_htmlentitiesUTF8($string)
 }
 function smartyMinifyHTML($tpl_output, &$smarty)
 {
-	if (in_array(Context::getContext()->controller->php_self, array('pdf-invoice', 'pdf-order-return', 'pdf-order-slip')))
+	$context = Context::getContext();
+	if (isset($context->controller) && in_array($context->controller->php_self, array('pdf-invoice', 'pdf-order-return', 'pdf-order-slip')))
 		return $tpl_output;
-    $tpl_output = Media::minifyHTML($tpl_output);
-    return $tpl_output;
+	$tpl_output = Media::minifyHTML($tpl_output);
+	return $tpl_output;
 }
 
 function smartyPackJSinHTML($tpl_output, &$smarty)
 {
-	if (in_array(Context::getContext()->controller->php_self, array('pdf-invoice', 'pdf-order-return', 'pdf-order-slip')))
+	$context = Context::getContext();
+	if (isset($context->controller) && in_array($context->controller->php_self, array('pdf-invoice', 'pdf-order-return', 'pdf-order-slip')))
 		return $tpl_output;
-    $tpl_output = Media::packJSinHTML($tpl_output);
-    return $tpl_output;
+	$tpl_output = Media::packJSinHTML($tpl_output);
+	return $tpl_output;
 }
 
 function smartyRegisterFunction($smarty, $type, $function, $params, $lazy = true)
@@ -243,13 +239,13 @@ class SmartyLazyRegister
 		else
 		{
 			$args = array();
-			
+
 			foreach($arguments as $a => $argument)
 				if($a == 0)
-					$args[] = $arguments[0]; 
+					$args[] = $arguments[0];
 				else
-					$args[] = &$arguments[$a]; 
-			
+					$args[] = &$arguments[$a];
+
 			return call_user_func_array($item, $args);
 		}
 	}

@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -26,9 +26,9 @@
 <!-- <label for="node-search">{l s=$label}</label> -->
 <div class="pull-right">
 	<input type="text"
-		{if isset($id)}id="{$id}"{/if}
-		{if isset($name)}name="{$name}"{/if}
-		class="search-field {if isset($class)} {$class}{/if}"
+		{if isset($id)}id="{$id|escape:'html':'UTF-8'}"{/if}
+		{if isset($name)}name="{$name|escape:'html':'UTF-8'}"{/if}
+		class="search-field{if isset($class)} {$class|escape:'html':'UTF-8'}{/if}"
 		placeholder="{l s='search...'}" />
 </div>
 
@@ -38,14 +38,14 @@
 	$(document).ready(
 		function()
 		{
-			$("#{$id}").typeahead(
+			$("#{$id|escape:'html':'UTF-8'}").typeahead(
 			{
-				name: "{$name}",
+				name: "{$name|escape:'html':'UTF-8'}",
 				valueKey: 'name',
 				local: [{$typeahead_source}]
 			});
 
-			$("#{$id}").keypress(function( event ) {
+			$("#{$id|escape:'html':'UTF-8'}").keypress(function( event ) {
 				if ( event.which == 13 ) {
 					event.stopPropagation();
 				}

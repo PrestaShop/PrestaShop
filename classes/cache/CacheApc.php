@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -33,13 +33,49 @@ class CacheApcCore extends Cache
 {
 	public function __construct()
 	{
-		$this->keys = array();
-		$cache_info = apc_cache_info((extension_loaded('apcu') === true )? '' : 'user' );
-		foreach ($cache_info['cache_list'] as $entry)
-			if ( extension_loaded('apcu') === true )
-				$this->keys[$entry['key']] = $entry['ttl'];
-			else
-				$this->keys[$entry['info']] = $entry['ttl'];
+		if (!function_exists('apc_exists'))
+		{
+			$this->keys = array();
+			$cache_info = apc_cache_info((extension_loaded('apcu') === true) ? '' : 'user');
+			foreach ($cache_info['cache_list'] as $entry)
+			{
+				if (extension_loaded('apcu') === true)
+					$this->keys[$entry['key']] = $entry['ttl'];
+				else
+					$this->keys[$entry['info']] = $entry['ttl'];
+			}
+		}
+	}
+
+	/**
+	 * Delete one or several data from cache (* joker can be used, but avoid it !)
+	 * 	E.g.: delete('*'); delete('my_prefix_*'); delete('my_key_name');
+	 *
+	 * @param string $key
+	 * @return bool
+	 */
+	public function delete($key)
+	{
+		if ($key == '*')
+			$this->flush();
+		elseif (strpos($key, '*') === false)
+			$this->_delete($key);
+		else
+		{
+			$pattern = str_replace('\\*', '.*', preg_quote($key));
+
+			$cache_info = apc_cache_info((extension_loaded('apcu') === true) ? '' : 'user');
+			foreach ($cache_info['cache_list'] as $entry)
+			{
+				if (extension_loaded('apcu') === true)
+					$key = $entry['key'];
+				else
+					$key = $entry['info'];
+				if (preg_match('#^'.$pattern.'$#', $key))
+					$this->_delete($key);
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -63,7 +99,10 @@ class CacheApcCore extends Cache
 	 */
 	protected function _exists($key)
 	{
-		return isset($this->keys[$key]);
+		if (!function_exists('apc_exists'))
+			return isset($this->keys[$key]);
+		else
+			return apc_exists($key);
 	}
 
 	/**
@@ -87,5 +126,40 @@ class CacheApcCore extends Cache
 	public function flush()
 	{
 		return apc_clear_cache();
+	}
+
+	/**
+	 * Store a data in cache
+	 *
+	 * @param string $key
+	 * @param mixed $value
+	 * @param int $ttl
+	 * @return bool
+	 */
+	public function set($key, $value, $ttl = 0)
+	{
+		return $this->_set($key, $value, $ttl);
+	}
+
+	/**
+	 * Retrieve a data from cache
+	 *
+	 * @param string $key
+	 * @return mixed
+	 */
+	public function get($key)
+	{
+		return $this->_get($key);
+	}
+
+	/**
+	 * Check if a data is cached
+	 *
+	 * @param string $key
+	 * @return bool
+	 */
+	public function exists($key)
+	{
+		return $this->_exists($key);
 	}
 }

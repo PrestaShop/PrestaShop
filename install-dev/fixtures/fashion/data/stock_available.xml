@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity_stock_available>
   <fields primary="id_stock_available" class="StockAvailable" null="1">
-    <field name="id_product"/>
-    <field name="id_product_attribute"/>
+    <field name="id_product" relation="product" />
+    <field name="id_product_attribute" relation="product_attribute"/>
     <field name="id_shop"/>
     <field name="id_shop_group"/>
     <field name="quantity"/>

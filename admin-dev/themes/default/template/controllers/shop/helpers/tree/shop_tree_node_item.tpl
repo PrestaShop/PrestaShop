@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -26,7 +26,7 @@
 <li class="tree-item">
 	<label class="tree-item-name">
 		<i class="tree-dot"></i>
-		<a href="{$url_shop}&id_shop={$node['id_shop']}">{$node['name']}</a>
+		<a href="{$url_shop|escape:'html':'UTF-8'}&amp;shop_id={$node['id_shop']}">{$node['name']}</a>
 	</label>
 	{if isset($node['urls'])}
 		<ul class="tree">
@@ -34,7 +34,7 @@
 			<li class="tree-item">
 				<label class="tree-item-name">
 					<i class="tree-dot"></i>
-					<a href="{$url_shop_url}&id_shop_url={$url['id_shop_url']}">{$url['name']}</a>
+					<a href="{$url_shop_url|escape:'html':'UTF-8'}&amp;id_shop_url={$url['id_shop_url']}">{$url['name']}</a>
 				</label>
 			</li>
 			{/foreach}

@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -26,7 +26,7 @@
 {if $products}
     {if !$refresh}
         <div class="wishlistLinkTop">
-        <a id="hideSendWishlist" class="button_account icon"  href="#" onclick="WishlistVisibility('wishlistLinkTop', 'SendWishlist'); return false;" rel="nofollow" title="{l s='Close send this wishlist' mod='blockwishlist'}">
+        <a id="hideWishlist" class="button_account icon pull-right" href="#" onclick="WishlistVisibility('wishlistLinkTop', 'Wishlist'); return false;" rel="nofollow" title="{l s='Close this wishlist' mod='blockwishlist'}">
             <i class="icon-remove"></i>
         </a>
         <ul class="clearfix display_list">
@@ -41,10 +41,10 @@
             {if count($productsBoughts)}
                 <li>
                     <a id="hideBoughtProductsInfos" class="button_account" href="#" onclick="WishlistVisibility('wlp_bought_infos', 'BoughtProductsInfos'); return false;" title="{l s='Hide products' mod='blockwishlist'}">
-                        {l s="Hide bought product's info" mod='blockwishlist'}
+                        {l s="Hide bought products' info" mod='blockwishlist'}
                     </a>
                     <a id="showBoughtProductsInfos" class="button_account" href="#" onclick="WishlistVisibility('wlp_bought_infos', 'BoughtProductsInfos'); return false;" title="{l s='Show products' mod='blockwishlist'}">
-                        {l s="Show bought product's info" mod='blockwishlist'}
+                        {l s="Show bought products' info" mod='blockwishlist'}
                     </a>
                 </li>
             {/if}
@@ -54,9 +54,11 @@
             <input type="text" class="form-control" value="{$link->getModuleLink('blockwishlist', 'view', ['token' => $token_wish])|escape:'html':'UTF-8'}" readonly="readonly"/>
         </p>
         <p class="submit">
-            <a id="showSendWishlist" class="btn btn-default button button-small" href="#" onclick="WishlistVisibility('wl_send', 'SendWishlist'); return false;" title="{l s='Send this wishlist' mod='blockwishlist'}">
-                <span>{l s='Send this wishlist' mod='blockwishlist'}</span>
-            </a>
+            <div id="showSendWishlist">
+                <a class="btn btn-default button button-small" href="#" onclick="WishlistVisibility('wl_send', 'SendWishlist'); return false;" title="{l s='Send this wishlist' mod='blockwishlist'}">
+                    <span>{l s='Send this wishlist' mod='blockwishlist'}</span>
+                </a>
+            </div>
         </p>
     {/if}
     <div class="wlp_bought">
@@ -126,6 +128,30 @@
                                     <a class="btn btn-default button button-small"  href="javascript:;" onclick="WishlistProductManage('wlp_bought_{$product.id_product_attribute}', 'update', '{$id_wishlist}', '{$product.id_product}', '{$product.id_product_attribute}', $('#quantity_{$product.id_product}_{$product.id_product_attribute}').val(), $('#priority_{$product.id_product}_{$product.id_product_attribute}').val());" title="{l s='Save' mod='blockwishlist'}">
                                         <span>{l s='Save' mod='blockwishlist'}</span>
                                     </a>
+                                    {if $wishlists|count > 1}
+                                        {foreach name=wl from=$wishlists item=wishlist}
+                                            {if $smarty.foreach.wl.first}
+                                                <a class="btn btn-default button button-small wishlist_change_button" tabindex="0" data-toggle="popover" data-trigger="focus" title="{l s='Move to a wishlist' mod='blockwishlist'}" data-placement="bottom">
+                                                    <span>{l s='Move' mod='blockwishlist'}</span>
+                                                    </a>
+                                                    <div hidden class="popover-content">
+                                                        <table class="table" border="1">
+                                                            <tbody>
+                                            {/if}
+                                            {if $id_wishlist != {$wishlist.id_wishlist}}
+                                                                <tr title="{$wishlist.name}" value="{$wishlist.id_wishlist}" onclick="wishlistProductChange({$product.id_product}, {$product.id_product_attribute}, '{$id_wishlist}', '{$wishlist.id_wishlist}');">
+                                                                    <td>
+                                                                        {l s='Move to %s'|sprintf:$wishlist.name mod='blockwishlist'}
+                                                                    </td>
+                                                                </tr>
+                                            {/if}
+                                            {if $smarty.foreach.wl.last}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            {/if}
+                                        {/foreach}
+                                    {/if}
                                 </div>
                             </div>
                         </div>
@@ -136,6 +162,9 @@
     </div>
     {if !$refresh}
         <form method="post" class="wl_send box unvisible" onsubmit="return (false);">
+        <a id="hideSendWishlist" class="button_account btn icon"  href="#" onclick="WishlistVisibility('wl_send', 'SendWishlist'); return false;" rel="nofollow" title="{l s='Close this wishlist' mod='blockwishlist'}">
+            <i class="icon-remove"></i>
+        </a>
             <fieldset>
                 <div class="required form-group">
                     <label for="email1">{l s='Email' mod='blockwishlist'}1 <sup>*</sup></label>
@@ -179,7 +208,7 @@
 										<img
                                                 src="{$link->getImageLink($product.link_rewrite, $product.cover, 'small')|escape:'html':'UTF-8'}"
                                                 alt="{$product.name|escape:'html':'UTF-8'}"/>
-									</span>			
+									</span>
 									<span style="float:left;">
 										{$product.name|truncate:40:'...'|escape:'html':'UTF-8'}
                                         {if isset($product.attributes_small)}

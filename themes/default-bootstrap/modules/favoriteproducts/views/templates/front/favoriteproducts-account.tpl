@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -51,7 +51,7 @@
                     </p>
                     <div class="product_desc">{$favoriteProduct.description_short|strip_tags|escape:'html':'UTF-8'}</div>
                     <div class="remove">
-                    	<a href="#" onclick="return false" rel="ajax_id_favoriteproduct_{$favoriteProduct.id_product}">
+                    	<a href="#" rel="ajax_id_favoriteproduct_{$favoriteProduct.id_product}">
                     		<i class="icon-remove"></i>
                     	</a>
                     </div>

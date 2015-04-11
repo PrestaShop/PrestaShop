@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -27,7 +27,7 @@
 	{assign var="type" value="customer"}
 {else}
 	{assign var="type" value="employee"}
-{/if}	
+{/if}
 
 <div class="message-item{if $initial}-initial-body{/if}">
 {if !$initial}
@@ -36,7 +36,7 @@
 			{if $type == 'customer'}
 				<i class="icon-user icon-3x"></i>
 			{else}
-				{if isset($current_employee->firstname)}<img src="{$current_employee->getImage()}">{/if}
+				{if isset($current_employee->firstname)}<img src="{$message.employee_image}" alt="{$current_employee->firstname|escape:'html':'UTF-8'}" />{/if}
 			{/if}
 		</div>
 	</div>
@@ -44,15 +44,17 @@
 	<div class="message-body">
 		{if !$initial}
 			<h4 class="message-item-heading">
-				<i class="icon-mail-reply text-muted"></i> 
+				<i class="icon-mail-reply text-muted"></i>
 					{if $type == 'customer'}
-						{$message.customer_name}
+						{$message.customer_name|escape:'html':'UTF-8'}
 					{else}
-						{$message.employee_name}
+						{$message.employee_name|escape:'html':'UTF-8'}
 					{/if}
 			</h4>
 		{/if}
 		<span class="message-date">&nbsp;<i class="icon-calendar"></i> - {dateFormat date=$message.date_add full=0} - <i class="icon-time"></i> {$message.date_add|substr:11:5}</span>
-		<p class="message-item-text">{$message.message}</p>
+		{if isset($message.file_name)} <span class="message-product">&nbsp;<i class="icon-link"></i> <a href="{$message.file_name|escape:'html':'UTF-8'}" class="_blank">{l s="Attachment"}</a></span>{/if}
+		{if isset($message.product_name)} <span class="message-attachment">&nbsp;<i class="icon-book"></i> <a href="{$message.product_link|escape:'html':'UTF-8'}" class="_blank">{l s="Product:"} {$message.product_name|escape:'html':'UTF-8'} </a></span>{/if}
+		<p class="message-item-text">{$message.message|escape:'html':'UTF-8'|nl2br}</p>
 	</div>
 </div>

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -65,8 +65,7 @@ abstract class ModuleGridEngineCore extends Module
 	abstract public function setValues($values);
 	abstract public function setTitle($title);
 	abstract public function setSize($width, $height);
-	abstract public function setTotalCount($totalCount);
+	abstract public function setTotalCount($total_count);
 	abstract public function setLimit($start, $limit);
 	abstract public function render();
 }
-

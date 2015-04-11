@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -26,9 +26,9 @@
 
 {block name="label"}
 	{if $input.name == 'zipcode' && isset($input.label)}
-		<label id="zipcode-label" class="control-label col-lg-3 ">{$input.label}</label>
+		<label id="zipcode-label" class="control-label col-lg-3">{$input.label}</label>
 	{elseif $input.name == 'states[]'}
-		<label id="states-label" class="control-label col-lg-3 ">{$input.label}</label>
+		<label id="states-label" class="control-label col-lg-3">{$input.label}</label>
 	{else}
 		{$smarty.block.parent}
 	{/if}
@@ -36,17 +36,28 @@
 
 {block name="script"}
 	$(document).ready(function() {
-		$('#country').click(function() {
+		$('#country').change(function() {
 			populateStates($(this).val(), '');
 		});
 
-		$('#tax_rule_form').hide();
+		$('#id_tax_rules_group').clone().attr('id', '').insertAfter('#id_tax_rule');
 
-		$('#page-header-desc-tax_rule-new').click(function() {
+
+		if ($('#id_tax_rules_group').val() != '' && $('table.tax_rule tbody tr').length == 0)
+		{
 			initForm();
-			$('#tax_rule_form').slideToggle();
-			return false;
-		});
+			$('#tax_rule_form').show();
+			$('#country').focus();
+		}
+		else
+		{
+			$('#tax_rule_form').hide();
+			$('#page-header-desc-tax_rule-new').click(function() {
+				initForm();
+				$('#tax_rule_form').slideToggle();
+				return false;
+			});
+		}
 	});
 
 	function populateStates(id_country, id_state)

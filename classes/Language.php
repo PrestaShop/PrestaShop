@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -96,6 +96,7 @@ class LanguageCore extends ObjectModel
 	 */
 	public function getFields()
 	{
+		$this->iso_code = strtolower($this->iso_code);
 		if (empty($this->language_code))
 			$this->language_code = $this->iso_code;
 
@@ -161,6 +162,7 @@ class LanguageCore extends ObjectModel
 
 		foreach (Theme::getThemes() as $theme)
 		{
+			/** @var Theme $theme */
 			$theme_dir = $theme->directory;
 			if (file_exists(_PS_ALL_THEMES_DIR_.$theme_dir.'/lang/'.$this->iso_code.'.php'))
 				rename(_PS_ALL_THEMES_DIR_.$theme_dir.'/lang/'.$this->iso_code.'.php', _PS_ALL_THEMES_DIR_.$theme_dir.'/lang/'.$newIso.'.php');
@@ -175,10 +177,10 @@ class LanguageCore extends ObjectModel
 	}
 
 	/**
-	  * Return an array of theme 
+	  * Return an array of theme
 	  *
 	  * @return array([theme dir] => array('name' => [theme name]))
-	  * @deprecated
+	  * @deprecated 1.5.5.0
 	  */
 	protected function _getThemesList()
 	{
@@ -190,7 +192,10 @@ class LanguageCore extends ObjectModel
 		{
 			$installed_themes = Theme::getThemes();
 			foreach ($installed_themes as $theme)
+			{
+				/** @var Theme $theme */
 				$themes[$theme->directory] = array('name' => $theme->name);
+			}
 		}
 		return $themes;
 	}
@@ -345,7 +350,7 @@ class LanguageCore extends ObjectModel
 					// Lang file
 					if (file_exists($modDir.'/translations/'.(string)$iso_from.'.php'))
 						$files_modules[$modDir.'/translations/'.(string)$iso_from.'.php'] = ($copy ? $modDir.'/translations/'.(string)$iso_to.'.php' : ++$number);
-					else if (file_exists($modDir.'/'.(string)$iso_from.'.php'))
+					elseif (file_exists($modDir.'/'.(string)$iso_from.'.php'))
 						$files_modules[$modDir.'/'.(string)$iso_from.'.php'] = ($copy ? $modDir.'/'.(string)$iso_to.'.php' : ++$number);
 					// Mails files
 					$modMailDirFrom = $modDir.'/mails/'.(string)$iso_from;
@@ -363,7 +368,7 @@ class LanguageCore extends ObjectModel
 				$files = array_merge($files, $files_modules);
 			}
 		}
-		else if ($select == 'mail' || $select == 'tr')
+		elseif ($select == 'mail' || $select == 'tr')
 			return $files;
 
 		// Theme files
@@ -408,42 +413,54 @@ class LanguageCore extends ObjectModel
 		$shops = Shop::getShopsCollection(false);
 		foreach ($shops as $shop)
 		{
+			/** @var Shop $shop */
 			$id_lang_default = Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
 
 			foreach ($langTables as $name)
 			{
+				preg_match('#^'.preg_quote(_DB_PREFIX_).'(.+)_lang$#i', $name, $m);
+				$identifier = 'id_'.$m[1];
+
 				$fields = '';
 				// We will check if the table contains a column "id_shop"
 				// If yes, we will add "id_shop" as a WHERE condition in queries copying data from default language
-				$shop_field_exists = false;
+				$shop_field_exists = $primary_key_exists = false;
 				$columns = Db::getInstance()->executeS('SHOW COLUMNS FROM `'.$name.'`');
 				foreach ($columns as $column)
 				{
 					$fields .= $column['Field'].', ';
 					if ($column['Field'] == 'id_shop')
 						$shop_field_exists = true;
+					if ($column['Field'] == $identifier)
+						$primary_key_exists = true;
 				}
 				$fields = rtrim($fields, ', ');
-				preg_match('#^'.preg_quote(_DB_PREFIX_).'(.+)_lang$#i', $name, $m);
-				$identifier = 'id_'.$m[1];
+
+				if (!$primary_key_exists)
+					continue;
 
 				$sql = 'INSERT IGNORE INTO `'.$name.'` ('.$fields.') (SELECT ';
 
 				// For each column, copy data from default language
+				reset($columns);
 				foreach ($columns as $column)
 				{
 					if ($identifier != $column['Field'] && $column['Field'] != 'id_lang')
 					{
-						$sql .= '(SELECT `'.$column['Field'].'`	FROM `'.$name.'` tl	WHERE tl.`id_lang` = '.(int)$id_lang_default
-									.($shop_field_exists ? ' AND tl.`id_shop` = '.(int)$shop->id : '')
-									.' AND tl.`'.$identifier.'` = `'.str_replace('_lang', '', $name).'`.`'.$identifier.'`), ';
+						$sql .= '(
+							SELECT `'.bqSQL($column['Field']).'`
+							FROM `'.bqSQL($name).'` tl
+							WHERE tl.`id_lang` = '.(int)$id_lang_default.'
+							'.($shop_field_exists ? ' AND tl.`id_shop` = '.(int)$shop->id : '').'
+							AND tl.`'.bqSQL($identifier).'` = `'.bqSQL(str_replace('_lang', '', $name)).'`.`'.bqSQL($identifier).'`
+						),';
 					}
 					else
-						$sql .= '`'.$column['Field'].'`, ';
+						$sql .= '`'.bqSQL($column['Field']).'`,';
 				}
 				$sql = rtrim($sql, ', ');
-				$sql .= ' FROM `'._DB_PREFIX_.'lang` CROSS JOIN `'.str_replace('_lang', '', $name).'`) ;';
-				$return &= Db::getInstance()->execute(pSQL($sql));
+				$sql .= ' FROM `'._DB_PREFIX_.'lang` CROSS JOIN `'.bqSQL(str_replace('_lang', '', $name)).'`)';
+				$return &= Db::getInstance()->execute($sql);
 			}
 		}
 		return $return;
@@ -475,21 +492,21 @@ class LanguageCore extends ObjectModel
 		{
 			if (empty($this->iso_code))
 				$this->iso_code = Language::getIsoById($this->id);
-	
+
 			// Database translations deletion
 			$result = Db::getInstance()->executeS('SHOW TABLES FROM `'._DB_NAME_.'`');
 			foreach ($result as $row)
 				if (isset($row['Tables_in_'._DB_NAME_]) && !empty($row['Tables_in_'._DB_NAME_]) && preg_match('/'.preg_quote(_DB_PREFIX_).'_lang/', $row['Tables_in_'._DB_NAME_]))
 					if (!Db::getInstance()->execute('DELETE FROM `'.$row['Tables_in_'._DB_NAME_].'` WHERE `id_lang` = '.(int)$this->id))
 						return false;
-	
-	
+
+
 			// Delete tags
 			Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'tag WHERE id_lang = '.(int)$this->id);
-	
+
 			// Delete search words
 			Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'search_word WHERE id_lang = '.(int)$this->id);
-	
+
 			// Files deletion
 			foreach (Language::getFilesList($this->iso_code, _THEME_NAME_, false, false, false, true, true) as $key => $file)
 				if (file_exists($key))
@@ -502,7 +519,7 @@ class LanguageCore extends ObjectModel
 				$files = @scandir(_PS_MODULE_DIR_.$mod.'/mails/');
 				if (count($files) <= 2)
 					Language::recurseDeleteDir(_PS_MODULE_DIR_.$mod.'/mails/');
-	
+
 				if (file_exists(_PS_MODULE_DIR_.$mod.'/'.$this->iso_code.'.php'))
 				{
 					unlink(_PS_MODULE_DIR_.$mod.'/'.$this->iso_code.'.php');
@@ -511,7 +528,7 @@ class LanguageCore extends ObjectModel
 						Language::recurseDeleteDir(_PS_MODULE_DIR_.$mod);
 				}
 			}
-	
+
 			if (file_exists(_PS_MAIL_DIR_.$this->iso_code))
 				Language::recurseDeleteDir(_PS_MAIL_DIR_.$this->iso_code);
 			if (file_exists(_PS_TRANSLATIONS_DIR_.$this->iso_code))
@@ -558,11 +575,11 @@ class LanguageCore extends ObjectModel
 	}
 
 	/**
-	  * Return available languages
-	  *
-	  * @param boolean $active Select only active languages
-	  * @return array Languages
-	  */
+	 * Return available languages
+	 *
+	 * @param boolean $active Select only active languages
+	 * @return array Languages
+	 */
 	public static function getLanguages($active = true, $id_shop = false)
 	{
 		if (!self::$_LANGUAGES)
@@ -586,11 +603,11 @@ class LanguageCore extends ObjectModel
 	}
 
 	/**
-	  * Return iso code from id
-	  *
-	  * @param integer $id_lang Language ID
-	  * @return string Iso code
-	  */
+	 * Return iso code from id
+	 *
+	 * @param integer $id_lang Language ID
+	 * @return string Iso code
+	 */
 	public static function getIsoById($id_lang)
 	{
 		if (isset(self::$_LANGUAGES[(int)$id_lang]['iso_code']))
@@ -599,22 +616,22 @@ class LanguageCore extends ObjectModel
 	}
 
 	/**
-	  * Return id from iso code
-	  *
-	  * @param string $iso_code Iso code
-	  * @return integer Language ID
-	  */
+	 * Return id from iso code
+	 *
+	 * @param string $iso_code Iso code
+	 * @return integer Language ID
+	 */
 	public static function getIdByIso($iso_code)
 	{
-	 	if (!Validate::isLanguageIsoCode($iso_code))
-	 		die(Tools::displayError('Fatal error: ISO code is not correct').' '.Tools::safeOutput($iso_code));
+		if (!Validate::isLanguageIsoCode($iso_code))
+			die(Tools::displayError('Fatal error: ISO code is not correct').' '.Tools::safeOutput($iso_code));
 
 		return Db::getInstance()->getValue('SELECT `id_lang` FROM `'._DB_PREFIX_.'lang` WHERE `iso_code` = \''.pSQL(strtolower($iso_code)).'\'');
 	}
 
 	public static function getLanguageCodeByIso($iso_code)
 	{
-	 	if (!Validate::isLanguageIsoCode($iso_code))
+		if (!Validate::isLanguageIsoCode($iso_code))
 			die(Tools::displayError('Fatal error: ISO code is not correct').' '.Tools::safeOutput($iso_code));
 
 		return Db::getInstance()->getValue('SELECT `language_code` FROM `'._DB_PREFIX_.'lang` WHERE `iso_code` = \''.pSQL(strtolower($iso_code)).'\'');
@@ -637,9 +654,10 @@ class LanguageCore extends ObjectModel
 		// That way using only one query we get either the exact wanted language
 		// or a close match.
 		$id_lang = Db::getInstance()->getValue(
-			'SELECT `id_lang` FROM ' 
-			.'`'._DB_PREFIX_.'lang` WHERE LEFT(`language_code`,2) = \''.pSQL($lang).'\' '
-			.'ORDER BY language_code = \''.pSQL($code).'\' DESC'
+			'SELECT `id_lang`, IF(language_code = \''.pSQL($code).'\', 0, LENGTH(language_code)) as found
+			FROM `'._DB_PREFIX_.'lang`
+			WHERE LEFT(`language_code`,2) = \''.pSQL($lang).'\'
+			ORDER BY found ASC'
 		);
 
 		// Instantiate the Language object if we found it.
@@ -650,11 +668,11 @@ class LanguageCore extends ObjectModel
 	}
 
 	/**
-	  * Return array (id_lang, iso_code)
-	  *
-	  * @param string $iso_code Iso code
-	  * @return array  Language (id_lang, iso_code)
-	  */
+	 * Return array (id_lang, iso_code)
+	 *
+	 * @param string $iso_code Iso code
+	 * @return array  Language (id_lang, iso_code)
+	 */
 	public static function getIsoIds($active = true)
 	{
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT `id_lang`, `iso_code` FROM `'._DB_PREFIX_.'lang` '.($active ? 'WHERE active = 1' : ''));
@@ -676,7 +694,7 @@ class LanguageCore extends ObjectModel
 					$query .= '(';
 					$row2['id_lang'] = $to;
 					foreach ($row2 as $field)
-						$query .= '\''.pSQL($field, true).'\',';
+						$query .= (!is_string($field) && $field == null) ? 'NULL,' : '\''.pSQL($field, true).'\',';
 					$query = rtrim($query, ',').'),';
 				}
 				$query = rtrim($query, ',');
@@ -686,8 +704,8 @@ class LanguageCore extends ObjectModel
 	}
 
 	/**
-	  * Load all languages in memory for caching
-	  */
+	 * Load all languages in memory for caching
+	 */
 	public static function loadLanguages()
 	{
 		self::$_LANGUAGES = array();
@@ -720,8 +738,8 @@ class LanguageCore extends ObjectModel
 
 		// Initialize the language
 		$lang = new Language();
-		$lang->iso_code = $iso_code;
-		$lang->language_code = $iso_code;
+		$lang->iso_code = Tools::strtolower($iso_code);
+		$lang->language_code = $iso_code; // Rewritten afterwards if the language code is available
 		$lang->active = true;
 
 		// If the language pack has not been provided, retrieve it from prestashop.com
@@ -740,8 +758,14 @@ class LanguageCore extends ObjectModel
 				if ($key != 'iso_code' && isset(Language::$definition['fields'][$key]))
 					$lang->$key = $value;
 
-		if (!$lang->add(true, false, $only_add))
+		if (!$lang->name && $lang->iso_code)
+			$lang->name = $lang->iso_code;
+
+		if (!$lang->validateFields() || !$lang->validateFieldsLang() || !$lang->add(true, false, $only_add))
 			return false;
+
+		if (isset($params_lang['allow_accented_chars_url']) && in_array($params_lang['allow_accented_chars_url'], array('1', 'true')))
+			Configuration::updateGlobalValue('PS_ALLOW_ACCENTED_CHARS_URL', 1);
 
 		$flag = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/flags/jpeg/'.$iso_code.'.jpg');
 		if ($flag != null && !preg_match('/<body>/', $flag))
@@ -795,7 +819,7 @@ class LanguageCore extends ObjectModel
 
 	public static function countActiveLanguages($id_shop = null)
 	{
-		if ($id_shop === null)
+		if (isset(Context::getContext()->shop) && is_object(Context::getContext()->shop) && $id_shop === null)
 			$id_shop = (int)Context::getContext()->shop->id;
 
 		if (!isset(self::$countActiveLanguages[$id_shop]))
@@ -814,6 +838,7 @@ class LanguageCore extends ObjectModel
 
 		if ($version == null)
 			$version = _PS_VERSION_;
+
 		$lang_pack = false;
 		$lang_pack_ok = false;
 		$errors = array();
@@ -834,7 +859,7 @@ class LanguageCore extends ObjectModel
 				elseif (!is_writable($file))
 					$errors[] = Tools::displayError('Server does not have permissions for writing.').' ('.$file.')';
 			}
-		
+
 		if (!file_exists($file))
 			$errors[] = Tools::displayError('No language pack is available for your version.');
 		elseif ($install)
@@ -847,7 +872,7 @@ class LanguageCore extends ObjectModel
 			$i = 0;
 			$tmp_array = array();
 
-			foreach($files_paths as $files_path)
+			foreach ($files_paths as $files_path)
 			{
 				$path = dirname($files_path);
 				if (is_dir(_PS_TRANSLATIONS_DIR_.'../'.$path) && !is_writable(_PS_TRANSLATIONS_DIR_.'../'.$path) && !in_array($path, $tmp_array))
@@ -855,7 +880,6 @@ class LanguageCore extends ObjectModel
 					$errors[] = (!$i++? Tools::displayError('The archive cannot be extracted.').' ' : '').Tools::displayError('The server does not have permissions for writing.').' '.sprintf(Tools::displayError('Please check rights for %s'), $path);
 					$tmp_array[] = $path;
 				}
-
 			}
 
 			if (defined('_PS_HOST_MODE_'))
@@ -870,20 +894,18 @@ class LanguageCore extends ObjectModel
 						$other_files[] = $data;
 
 				$files_list = $other_files;
-
-				if (!$gz->extractList(AdminTranslationsController::filesListToPaths($mails_files), _PS_CORE_DIR_))
-					$errors[] = Tools::displayError('Cannot decompress the translation mail file for the following language:').' '.(string)$iso;
 			}
 
 			if (!$gz->extractList(AdminTranslationsController::filesListToPaths($files_list), _PS_TRANSLATIONS_DIR_.'../'))
 				$errors[] = Tools::displayError('Cannot decompress the translation file for the following language:').' '.(string)$iso;
 			// Clear smarty modules cache
 			Tools::clearCache();
+
 			if (!Language::checkAndAddLanguage((string)$iso, $lang_pack, false, $params))
 				$errors[] = Tools::displayError('An error occurred while creating the language: ').(string)$iso;
 			else
 			{
-				// Reset cache 
+				// Reset cache
 				Language::loadLanguages();
 
 				AdminTranslationsController::checkAndAddMailsFiles($iso, $files_list);
@@ -924,6 +946,7 @@ class LanguageCore extends ObjectModel
 		$languages = Language::getLanguages(false);
 		foreach ($languages as $lang)
 		{
+			$gz = false;
 			$files_listing = array();
 			foreach ($modules_list as $module_name)
 			{
@@ -944,7 +967,8 @@ class LanguageCore extends ObjectModel
 					if (isset($file['filename']) && is_string($file['filename']))
 						$files_listing[] = $file['filename'];
 			}
-			$gz->extractList($files_listing, _PS_TRANSLATIONS_DIR_.'../', '');
+			if ($gz)
+				$gz->extractList($files_listing, _PS_TRANSLATIONS_DIR_.'../', '');
 		}
 	}
 }

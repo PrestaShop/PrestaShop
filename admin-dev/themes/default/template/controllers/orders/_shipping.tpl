@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -30,7 +30,7 @@
 					<span class="title_box ">{l s='Date'}</span>
 				</th>
 				<th>
-					<span class="title_box ">{l s='Type'}</span>
+					<span class="title_box ">&nbsp;</span>
 				</th>
 				<th>
 					<span class="title_box ">{l s='Carrier'}</span>
@@ -44,13 +44,14 @@
 				<th>
 					<span class="title_box ">{l s='Tracking number'}</span>
 				</th>
+				<th></th>
 			</tr>
 		</thead>
 		<tbody>
 			{foreach from=$order->getShipping() item=line}
 			<tr>
 				<td>{dateFormat date=$line.date_add full=true}</td>
-				<td>{$line.type}</td>
+				<td>&nbsp;</td>
 				<td>{$line.carrier_name}</td>
 				<td class="weight">{$line.weight|string_format:"%.3f"} {Configuration::get('PS_WEIGHT_UNIT')}</td>
 				<td class="center">
@@ -60,10 +61,12 @@
 						{displayPrice price=$line.shipping_cost_tax_excl currency=$currency->id}
 					{/if}
 				</td>
-				<td class="actions">
-					<span id="shipping_number_show">{if $line.url && $line.tracking_number}<a target="_blank" href="{$line.url|replace:'@':$line.tracking_number}">{$line.tracking_number}</a>{else}{$line.tracking_number}{/if}</span>
+				<td>
+					<span class="shipping_number_show">{if $line.url && $line.tracking_number}<a class="_blank" href="{$line.url|replace:'@':$line.tracking_number}">{$line.tracking_number}</a>{else}{$line.tracking_number}{/if}</span>
+				</td>
+				<td>
 					{if $line.can_edit}
-						<form method="post" action="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&vieworder&id_order={$order->id|escape:'html':'UTF-8'}">
+						<form method="post" action="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;vieworder&amp;id_order={$order->id|intval}">
 							<span class="shipping_number_edit" style="display:none;">
 								<input type="hidden" name="id_order_carrier" value="{$line.id_order_carrier|htmlentities}" />
 								<input type="text" name="tracking_number" value="{$line.tracking_number|htmlentities}" />

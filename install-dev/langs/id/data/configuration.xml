@@ -1,13 +1,13 @@
 <?xml version='1.0'?>
 <entity_configuration>
   <configuration id='PS_INVOICE_PREFIX'>
-    <value>IN</value>
+    <value>#IN</value>
   </configuration>
   <configuration id='PS_DELIVERY_PREFIX'>
-    <value>DE</value>
+    <value>#DE</value>
   </configuration>
   <configuration id='PS_SEARCH_BLACKLIST'>
-    <value>a|the|of|on|in|and|to</value>
+    <value></value>
   </configuration>
   <configuration id='PS_META_KEYWORDS'>
     <value>0</value>

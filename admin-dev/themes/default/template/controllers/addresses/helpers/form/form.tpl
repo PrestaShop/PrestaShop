@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -41,7 +41,7 @@
 	{if $input.type == 'text_customer'}
 		{if isset($customer)}
 			<div class="col-lg-9">
-				<a class="btn btn-default" href="?tab=AdminCustomers&amp;id_customer={$customer->id}&amp;viewcustomer&amp;token={$tokenCustomer}">
+				<a class="btn btn-default" href="?tab=AdminCustomers&amp;id_customer={$customer->id|intval}&amp;viewcustomer&amp;token={$tokenCustomer}">
 					<i class="icon-eye-open"></i> {$customer->lastname} {$customer->firstname} ({$customer->email})
 				</a>
 			</div>
@@ -56,7 +56,7 @@
 				{
 					var data = {};
 					data.email = email;
-					data.token = "{$token}";
+					data.token = "{$token|escape:'html':'UTF-8'}";
 					data.ajax = 1;
 					data.controller = "AdminAddresses";
 					data.action = "loadNames";

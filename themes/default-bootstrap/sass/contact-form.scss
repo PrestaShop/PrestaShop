@@ -6,12 +6,12 @@
 **************************************************************************/
 
 .contact-title {
-	margin: -5px 0 27px 0;
+	margin: -5px 0 0px 0;
 	line-height: 23px;
 	i {
 		font-size: 23px;
 		color: #c0c0c0;
-		padding: 0 8px 0 0;	
+		padding: 0 8px 0 0;
 	}
 }
 
@@ -26,14 +26,14 @@
 		background-size: contain;
 	}
 	label {
-		margin: 0 0 6px 0;	
+		margin: 0 0 6px 0;
 	}
 	.page-subheading {
 		padding-left: 0px;
 		border: none;
 		margin-bottom: 0;
 	}
-	
+
 	.col-md-3 {
 		padding-left: 0;
 		@media (max-width: $screen-sm-max) { // max 991px
@@ -53,7 +53,7 @@
 		margin-bottom: 7px;
 	}
 	textarea {
-		height: 257px;	
+		height: 257px;
 	}
 	.submit {
 		margin-top: 13px;
@@ -63,11 +63,11 @@
 		width: 100%;
 	}
 	input.form-control {
-		max-width: 270px;	
+		max-width: 270px;
 	}
 	@media (min-width: $screen-md) and (max-width: $screen-md-max) {// min 992px max 1199px
 		div.uploader span.filename {
-			width: 114px;	
+			width: 114px;
 		}
 	}
 }

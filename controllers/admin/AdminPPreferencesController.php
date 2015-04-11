@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,11 +19,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Configuration $object
+ */
 class AdminPPreferencesControllerCore extends AdminController
 {
 	public function __construct()
@@ -33,6 +36,10 @@ class AdminPPreferencesControllerCore extends AdminController
 		$this->table = 'configuration';
 
 		parent::__construct();
+
+		$warehouse_list = Warehouse::getWarehouses();
+		$warehouse_no = array(array('id_warehouse' => 0,'name' => $this->l('No default warehouse (default setting)')));
+		$warehouse_list = array_merge($warehouse_no, $warehouse_list);
 
 		$this->fields_options = array(
 			'products' => array(
@@ -127,7 +134,7 @@ class AdminPPreferencesControllerCore extends AdminController
 							array('id' => '4', 'name' => $this->l('Position inside category')),
 							array('id' => '5', 'name' => $this->l('Manufacturer')),
 							array('id' => '6', 'name' => $this->l('Product quantity')),
-							array('id' => '7', 'name' => $this->l('Product reference')) 
+							array('id' => '7', 'name' => $this->l('Product reference'))
 						),
 						'identifier' => 'id'
 					),
@@ -169,7 +176,7 @@ class AdminPPreferencesControllerCore extends AdminController
 						'type' => 'text'
 					),
 					'PS_DISPLAY_JQZOOM' => array(
-						'title' => $this->l('Enable JqZoom instead of Thickbox on the product page'),
+						'title' => $this->l('Enable JqZoom instead of Fancybox on the product page'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'required' => false,
@@ -213,12 +220,12 @@ class AdminPPreferencesControllerCore extends AdminController
 				'title' =>	$this->l('Products stock'),
 				'fields' =>	array(
 					'PS_ORDER_OUT_OF_STOCK' => array(
-		 				'title' => $this->l('Allow ordering of out-of-stock products'),
-		 				'hint' => $this->l('By default, the Add to Cart button is hidden when a product is unavailable. You can choose to have it displayed in all cases.'),
-		 				'validation' => 'isBool',
-		 				'cast' => 'intval',
-		 				'required' => false,
-		 				'type' => 'bool'
+						'title' => $this->l('Allow ordering of out-of-stock products'),
+						'hint' => $this->l('By default, the Add to Cart button is hidden when a product is unavailable. You can choose to have it displayed in all cases.'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'required' => false,
+						'type' => 'bool'
 					),
 					'PS_STOCK_MANAGEMENT' => array(
 						'title' => $this->l('Enable stock management'),
@@ -246,15 +253,41 @@ class AdminPPreferencesControllerCore extends AdminController
 					),
 					'PS_FORCE_ASM_NEW_PRODUCT' => array(
 						'title' => $this->l('New products use advanced stock management'),
-						'hint' => $this->l('New products will automaticlly use advanced stock management and depends on stock, but no warehouse will be selected'),
+						'hint' => $this->l('New products will automatically use advanced stock management and depends on stock, but no warehouse will be selected'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'required' => false,
 						'type' => 'bool',
 						'visibility' => Shop::CONTEXT_ALL,
 					),
+					'PS_DEFAULT_WAREHOUSE_NEW_PRODUCT' => array(
+						'title' => $this->l('Default warehouse on new products'),
+						'hint' => $this->l('Automatically set a default warehouse when new product is created'),
+						'type' => 'select',
+						'list' => $warehouse_list,
+						'identifier' => 'id_warehouse'
+					),
+					'PS_PACK_STOCK_TYPE' => array(
+						'title' =>  $this->l('Default pack stock management'),
+						'type' => 'select',
+						'list' =>array(
+							array(
+								'pack_stock' => 0,
+								'name' => $this->l('Decrement pack only.')
+							),
+							array(
+								'pack_stock' => 1,
+								'name' => $this->l('Decrement products in pack only.')
+							),
+							array(
+								'pack_stock' => 2,
+								'name' => $this->l('Decrement both.')
+							),
+						),
+						'identifier' => 'pack_stock',
+					),
 				),
-				'bottom' => '<script type="text/javascript">stockManagementActivationAuthorization();advancedStockManagementActivationAuthorization():</script>',
+				'bottom' => '<script type="text/javascript">stockManagementActivationAuthorization();advancedStockManagementActivationAuthorization();</script>',
 				'submit' => array('title' => $this->l('Save'))
 			),
 		);
@@ -269,15 +302,21 @@ class AdminPPreferencesControllerCore extends AdminController
 		}
 
 		// if advanced stock management is disabled, updates concerned tables
-		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 1 &&
-			(int)Tools::getValue('PS_ADVANCED_STOCK_MANAGEMENT') == 0 && Context::getContext()->shop->getContext() == Shop::CONTEXT_ALL)
+		if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 1 && (int)Tools::getValue('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
 		{
-			ObjectModel::updateMultishopTable('Product', array('advanced_stock_management' => 0), 'product_shop.`advanced_stock_management` = 1');
+			$id_shop_list = Shop::getContextListShopID();
+			$sql_shop = 'UPDATE `'._DB_PREFIX_.'product_shop` SET `advanced_stock_management` = 0 WHERE
+			`advanced_stock_management` = 1 AND (`id_shop` = '.implode(' OR `id_shop` = ', $id_shop_list).')';
 
-			Db::getInstance()->execute(
-				'UPDATE `'._DB_PREFIX_.'stock_available`
-				 SET `depends_on_stock` = 0, `quantity` = 0
-				 WHERE `depends_on_stock` = 1');
+			$sql_stock = 'UPDATE `'._DB_PREFIX_.'stock_available` SET `depends_on_stock` = 0, `quantity` = 0
+					 WHERE `depends_on_stock` = 1 AND (`id_shop` = '.implode(' OR `id_shop` = ', $id_shop_list).')';
+
+			$sql = 'UPDATE `'._DB_PREFIX_.'product` SET `advanced_stock_management` = 0 WHERE
+			`advanced_stock_management` = 1 AND (`id_shop_default` = '.implode(' OR `id_shop_default` = ', $id_shop_list).')';
+
+			Db::getInstance()->execute($sql_shop);
+			Db::getInstance()->execute($sql_stock);
+			Db::getInstance()->execute($sql);
 		}
 
 		if (Tools::getIsset('PS_CATALOG_MODE'))

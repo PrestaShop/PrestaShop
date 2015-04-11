@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -55,21 +55,18 @@
 	{else}
 		{capture name=path}{l s='Your shopping cart'}{/capture}
 		<h2 class="page-heading">{l s='Your shopping cart'}</h2>
+		{include file="$tpl_dir./errors.tpl"}
 		<p class="alert alert-warning">{l s='Your shopping cart is empty.'}</p>
 	{/if}
 {strip}
 {addJsDef imgDir=$img_dir}
-{addJsDef authenticationUrl=$link->getPageLink("authentication", true)|addslashes}
-{addJsDef orderOpcUrl=$link->getPageLink("order-opc", true)|addslashes}
-{addJsDef historyUrl=$link->getPageLink("history", true)|addslashes}
-{addJsDef guestTrackingUrl=$link->getPageLink("guest-tracking", true)|addslashes}
-{addJsDef addressUrl=$link->getPageLink("address", true, NULL, "back={$back_order_page}")|addslashes}
+{addJsDef authenticationUrl=$link->getPageLink("authentication", true)|escape:'quotes':'UTF-8'}
+{addJsDef orderOpcUrl=$link->getPageLink("order-opc", true)|escape:'quotes':'UTF-8'}
+{addJsDef historyUrl=$link->getPageLink("history", true)|escape:'quotes':'UTF-8'}
+{addJsDef guestTrackingUrl=$link->getPageLink("guest-tracking", true)|escape:'quotes':'UTF-8'}
+{addJsDef addressUrl=$link->getPageLink("address", true, NULL, "back={$back_order_page}")|escape:'quotes':'UTF-8'}
 {addJsDef orderProcess='order-opc'}
 {addJsDef guestCheckoutEnabled=$PS_GUEST_CHECKOUT_ENABLED|intval}
-{addJsDef currencySign=$currencySign|html_entity_decode:2:"UTF-8"}
-{addJsDef currencyRate=$currencyRate|floatval}
-{addJsDef currencyFormat=$currencyFormat|intval}
-{addJsDef currencyBlank=$currencyBlank|intval}
 {addJsDef displayPrice=$priceDisplay}
 {addJsDef taxEnabled=$use_taxes}
 {addJsDef conditionEnabled=$conditions|intval}
@@ -98,7 +95,7 @@
 {addJsDefL name=txtFree}{l s='Free' js=1}{/addJsDefL}
 
 {capture}{if $back}&mod={$back|urlencode}{/if}{/capture}
-{capture name=addressUrl}{$link->getPageLink('address', true, NULL, 'back='|cat:$back_order_page|cat:'?step=1'|cat:$smarty.capture.default)|addslashes}{/capture}
+{capture name=addressUrl}{$link->getPageLink('address', true, NULL, 'back='|cat:$back_order_page|cat:'?step=1'|cat:$smarty.capture.default)|escape:'quotes':'UTF-8'}{/capture}
 {addJsDef addressUrl=$smarty.capture.addressUrl}
 {capture}{'&multi-shipping=1'|urlencode}{/capture}
 {addJsDef addressMultishippingUrl=$smarty.capture.addressUrl|cat:$smarty.capture.default}

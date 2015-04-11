@@ -5,13 +5,13 @@
 **********************************************************************/
 #maintenance {
 	margin: 50px 0 0 0;
-	@media (min-width: $screen-lg) { // > 1200 
+	@media (min-width: $screen-lg) { // > 1200
 		margin: 126px 0 0 0;
 		padding: 91px 48px 365px 297px;
 		background: url(../img/bg_maintenance.png) no-repeat;
 	}
 	.logo {
-		margin: 0 0 31px 0;	
+		margin: 0 0 31px 0;
 	}
 	h1 {
 		font: 600 28px/34px $font-custom;
@@ -25,11 +25,32 @@
 		font: 600 16px/31px $font-custom;
 		padding: 0 0 0 18px;
 		color: #555454;
-		text-transform: uppercase;	
+		text-transform: uppercase;
+	}
+}
+.container {
+	padding-right: 15px;
+	padding-left: 15px;
+	margin-right: auto;
+	margin-left: auto;
+}
+@media (min-width: 768px) {
+	.container {
+		width: 750px;
+	}
+}
+@media (min-width: 992px) {
+	.container {
+		width: 970px;
+	}
+}
+@media (min-width: 1200px) {
+	.container {
+		width: 1170px;
 	}
 }
 @media only screen and (min-width: 1200px) {
-	.container { 
+	.container {
 		padding-left: 0;
 		padding-right: 0;
 	}

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,14 +19,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class OrderStateCore extends ObjectModel
 {
- 	/** @var string Name */
+	/** @var string Name */
 	public $name;
 
 	/** @var string Template name if there is any e-mail to send */
@@ -59,7 +59,13 @@ class OrderStateCore extends ObjectModel
 
 	/** @var boolean Paid */
 	public $paid;
-	
+
+	/** @var boolean Attach PDF Invoice */
+	public $pdf_invoice;
+
+	/** @var boolean Attach PDF Delivery Slip */
+	public $pdf_delivery;
+
 	/** @var boolean True if carrier has been deleted (staying in database as deleted) */
 	public $deleted = 0;
 
@@ -81,9 +87,11 @@ class OrderStateCore extends ObjectModel
 			'delivery' =>	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'hidden' =>		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'paid' =>		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'pdf_delivery' =>		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+			'pdf_invoice' =>		array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 			'deleted' =>	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
 
-			// Lang fields
+			/* Lang fields */
 			'name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64),
 			'template' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isTplName', 'size' => 64),
 		),
@@ -96,19 +104,18 @@ class OrderStateCore extends ObjectModel
 			'hidden' => array(),
 		),
 	);
-	
+
 	const FLAG_NO_HIDDEN	= 1;  /* 00001 */
 	const FLAG_LOGABLE		= 2;  /* 00010 */
 	const FLAG_DELIVERY		= 4;  /* 00100 */
 	const FLAG_SHIPPED		= 8;  /* 01000 */
-	const FLAG_PAID			= 16; /* 10000 */
-	
+	const FLAG_PAID		= 16; /* 10000 */
 
 	/**
-	* Get all available order states
+	* Get all available order statuses
 	*
-	* @param integer $id_lang Language id for state name
-	* @return array Order states
+	* @param integer $id_lang Language id for status name
+	* @return array Order statuses
 	*/
 	public static function getOrderStates($id_lang)
 	{
@@ -127,24 +134,24 @@ class OrderStateCore extends ObjectModel
 	}
 
 	/**
-	* Check if we can make a facture when order is in this state
+	* Check if we can make a invoice when order is in this state
 	*
 	* @param integer $id_order_state State ID
 	* @return boolean availability
 	*/
 	public static function invoiceAvailable($id_order_state)
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-		SELECT `invoice` AS ok
-		FROM `'._DB_PREFIX_.'order_state`
-		WHERE `id_order_state` = '.(int)$id_order_state);
-		return $result['ok'];
+		$result = false;
+		if (Configuration::get('PS_INVOICE'))
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT `invoice`
+			FROM `'._DB_PREFIX_.'order_state`
+			WHERE `id_order_state` = '.(int)$id_order_state);
+		return (bool)$result;
 	}
 
 	public function isRemovable()
 	{
-	 	return !($this->unremovable);
+		return !($this->unremovable);
 	}
 }
-
-

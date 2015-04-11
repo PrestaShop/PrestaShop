@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,13 +19,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 /**
  * @since 1.5.0
+ * @property StockMvt $object
  */
 class AdminStockMvtControllerCore extends AdminController
 {
@@ -112,7 +113,7 @@ class AdminStockMvtControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
-		$this->page_header_toolbar_title = $this->l('Stock mouvement');
+		$this->page_header_toolbar_title = $this->l('Stock movement');
 
 		if (Tools::isSubmit('id_warehouse') && (int)Tools::getValue('id_warehouse') != -1)
 			$this->page_header_toolbar_btn['export-stock-mvt-csv'] = array(

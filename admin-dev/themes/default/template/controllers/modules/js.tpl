@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
@@ -30,17 +30,16 @@
     var body_confirm_reset = '{l s='Would you like to delete the content related to this module ?'}';
     var left_button_confirm_reset = '{l s='No - reset only the parameters'}';
     var right_button_confirm_reset = '{l s='Yes - reset everything'}';
-	var currentIndex = '{$currentIndex}';
-	var currentIndexWithToken = '{$currentIndex}&token={$token}';
+	var currentIndex = '{$currentIndex|escape:'html':'UTF-8'}';
+	var currentIndexWithToken = '{$currentIndex|escape:'html':'UTF-8'}&token={$token|escape:'html':'UTF-8'}';
 	var dirNameCurrentIndex = '{$dirNameCurrentIndex}';
 	var ajaxCurrentIndex = '{$ajaxCurrentIndex}';
 	var installed_modules = {if isset($installed_modules) && count($installed_modules)}{$installed_modules}{else}false{/if};
 	var by = '{l s='by'}';
-	var errorLogin = '{l s='PrestaShop was unable to login to Addons. Please check your credentials and your internet connection.'}';
 	var confirmPreferencesSaved = '{l s='Preferences saved'}';
 	{if isset($smarty.get.anchor) && !isset($error_module)}var anchor = '{$smarty.get.anchor|htmlentities|replace:'(':''|replace:')':''|replace:'{':''|replace:'}':''|replace:'\'':''|replace:'/':''}';{else}var anchor = '';{/if}
 
-	{if isset($smarty.get.module_name) && !isset($error_module)}var module_name = '{$smarty.get.module_name|htmlentities|replace:'(':''|replace:')':''|replace:'{':''|replace:'}':''|replace:'\'':''|replace:'/':''}';{else}var module_name = '';{/if}
+	{if isset($smarty.get.module_name) && !isset($error_module) && (!isset($dont_filter) || !$dont_filter)}var module_name = '{$smarty.get.module_name|htmlentities|replace:'(':''|replace:')':''|replace:'{':''|replace:'}':''|replace:'\'':''|replace:'/':''}';{else}var module_name = '';{/if}
 
 	{literal}
 
@@ -54,7 +53,7 @@
 		{
 			if (modules[i].checked == true)
 			{
-				rel = modules[i].getAttribute('rel');
+				rel = modules[i].getAttribute('data-rel');
 				if (rel != "false" && action == "uninstall")
 				{
 					if (!confirm(rel))
@@ -147,6 +146,7 @@
 
 						$('#moduleContainer').html(data);
 						$('.dropdown-toggle').dropdown();
+						$('.help-tooltip').tooltip();
 					}
 				});
 			}
@@ -177,78 +177,6 @@
 			});
 		}
 		catch(e) { }
-
-		// Method to log on PrestaShop Addons WebServices
-		$('#addons_login_button').click(function()
-		{
-			var username_addons = $("#username_addons").val();
-			var password_addons = $("#password_addons").val();
-			try
-			{
-				resAjax = $.ajax({
-					type:"POST",
-					url : ajaxCurrentIndex,
-					async: true,
-					data : {
-						ajax : "1",
-						token : token,
-						controller : "AdminModules",
-						action : "logOnAddonsWebservices",
-						username_addons : username_addons,
-						password_addons : password_addons
-					},
-					beforeSend: function(xhr){
-						$('#addons_loading').html('<img src="../img/loader.gif" alt="" border="0" />');
-					},
-					success : function(data){
-						if (data == 'OK')
-						{
-							$('#addons_loading').html('');
-							$('#addons_login_div').fadeOut();
-							window.location.href = currentIndexWithToken + '&conf=32';
-						}
-						else
-							$('#addons_loading').html(errorLogin);
-					}
-				});
-			}
-			catch(e){}
-			return false;
-		});
-
-		// Method to log out PrestaShop Addons WebServices
-		$('#addons_logout_button').click(function()
-		{
-			try
-			{
-				resAjax = $.ajax({
-					type:"POST",
-					url : ajaxCurrentIndex,
-					async: true,
-					data : {
-						ajax : "1",
-						token : token,
-						controller : "AdminModules",
-						action : "logOutAddonsWebservices"
-					},
-					beforeSend: function(xhr){
-						$('#addons_loading').html('<img src="../img/loader.gif" alt="" border="0" />');
-					},
-					success: function(data) {
-						if (data == 'OK')
-						{
-							$('#addons_loading').html('');
-							$('#addons_login_div').fadeOut();
-							window.location.href = currentIndexWithToken;
-						}
-						else
-							$('#addons_loading').html(errorLogin);
-					}
-				});
-			}
-			catch(e){}
-			return false;
-		});
 
 		// Method to set filter on modules
 		function setFilter()
@@ -373,8 +301,8 @@
 	              // res.status  = cache or refresh
 	              if (data == 'OK')
 	              {
-	                el.parent('li').find('.toggle_favorite').toggle();
-
+	                el.toggle();
+	                el.parent('li').siblings().find('a.toggle_favorite').toggle();
 
 					if (value_pref)
 						$('#favorite-count').html(total_favorites+1);

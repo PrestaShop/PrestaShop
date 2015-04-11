@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2014 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author 	PrestaShop SA <contact@prestashop.com>
+ *  @copyright  2007-2015 PrestaShop SA
+ *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 class AdminLoginControllerCore extends AdminController
 {
@@ -48,10 +48,14 @@ class AdminLoginControllerCore extends AdminController
 		$this->addJquery();
 		$this->addjqueryPlugin('validate');
 		$this->addJS(_PS_JS_DIR_.'jquery/plugins/validate/localization/messages_'.$this->context->language->iso_code.'.js');
-		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/admin-theme.css');
+		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/admin-theme.css', 'all', 0);
 		$this->addJS(_PS_JS_DIR_.'vendor/spin.js');
 		$this->addJS(_PS_JS_DIR_.'vendor/ladda.js');
-		$this->addJS(_PS_JS_DIR_.'login.js');
+
+		Hook::exec('actionAdminLoginControllerSetMedia');
+
+		// Specific Admin Theme
+		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/overrides.css', 'all', PHP_INT_MAX);
 	}
 	
 	public function initContent()
@@ -69,7 +73,13 @@ class AdminLoginControllerCore extends AdminController
 			else
 			{	
 				$url = 'https://'.Tools::safeOutput(Tools::getServerName()).Tools::safeOutput($_SERVER['REQUEST_URI']);
-				$warningSslMessage = sprintf(Tools::displayError('SSL is activated. Please connect using the following link to <a href="%s">log into secure mode (https://)</a>', false), $url);
+				$warningSslMessage = sprintf(
+					Translate::ppTags(
+						Tools::displayError('SSL is activated. Please connect using the following link to [1]log into secure mode (https://)[/1]', false),
+						array('<a href="%s">')
+					),
+					$url
+				);
 			}
 			$this->context->smarty->assign('warningSslMessage', $warningSslMessage);
 		}
@@ -79,7 +89,7 @@ class AdminLoginControllerCore extends AdminController
 		
 		if (basename(_PS_ADMIN_DIR_) == 'admin' && file_exists(_PS_ADMIN_DIR_.'/../admin/'))
 		{	
-			$rand = 'admin'.sprintf('%04d', rand(0, 9999)).'/';
+			$rand = 'admin'.sprintf('%03d', rand(0, 999)).Tools::strtolower(Tools::passwdGen(6)).'/';
 			if (@rename(_PS_ADMIN_DIR_.'/../admin/', _PS_ADMIN_DIR_.'/../'.$rand))
 				Tools::redirectAdmin('../'.$rand);
 			else
@@ -111,6 +121,11 @@ class AdminLoginControllerCore extends AdminController
 				'shop_name' => Tools::safeOutput(Configuration::get('PS_SHOP_NAME')),
 				'disableDefaultErrorOutPut' => true,
 			));
+
+		if ($email = Tools::getValue('email'))
+			$this->context->smarty->assign('email', $email);
+		if ($password = Tools::getValue('password'))
+			$this->context->smarty->assign('password', $password);
 
 		$this->setMedia();
 		$this->initHeader();
@@ -174,7 +189,9 @@ class AdminLoginControllerCore extends AdminController
 			}
 			else
 			{
-				$this->context->employee->remote_addr = ip2long(Tools::getRemoteAddr());
+				PrestaShopLogger::addLog(sprintf($this->l('Back Office connection from %s', 'AdminTab', false, false), Tools::getRemoteAddr()), 1, null, '', 0, true, (int)$this->context->employee->id);
+
+				$this->context->employee->remote_addr = (int)ip2long(Tools::getRemoteAddr());
 				// Update cookie
 				$cookie = Context::getContext()->cookie;
 				$cookie->id_employee = $this->context->employee->id;
@@ -228,9 +245,9 @@ class AdminLoginControllerCore extends AdminController
 		}
 
 		if (!count($this->errors))
-		{	
-			$pwd = Tools::passwdGen();
-			$employee->passwd = md5(pSQL(_COOKIE_KEY_.$pwd));
+		{
+			$pwd = Tools::passwdGen(10, 'RANDOM');
+			$employee->passwd = Tools::encrypt($pwd);
 			$employee->last_passwd_gen = date('Y-m-d H:i:s', time());
 
 			$params = array(
@@ -240,9 +257,11 @@ class AdminLoginControllerCore extends AdminController
 				'{passwd}' => $pwd
 			);
 						
-			if (Mail::Send($employee->id_lang, 'password', Mail::l('Your new password', $employee->id_lang), $params, $employee->email, $employee->firstname.' '.$employee->lastname))
+			if (Mail::Send($employee->id_lang, 'employee_password', Mail::l('Your new password', $employee->id_lang), $params, $employee->email, $employee->firstname.' '.$employee->lastname))
 			{
 				// Update employee only if the mail can be sent
+				Shop::setContext(Shop::CONTEXT_SHOP, (int)min($employee->getAssociatedShops()));
+
 				$result = $employee->update();
 				if (!$result)
 					$this->errors[] = Tools::displayError('An error occurred while attempting to change your password.');
@@ -259,7 +278,7 @@ class AdminLoginControllerCore extends AdminController
 				)));
 		
 		}
-		else if (Tools::isSubmit('ajax'))
+		elseif (Tools::isSubmit('ajax'))
 			die(Tools::jsonEncode(array('hasErrors' => true, 'errors' => $this->errors)));
 	}
 }

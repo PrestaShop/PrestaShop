@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,19 +18,21 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div class="panel">
 	{if isset($header)}{$header}{/if}
 	{if isset($nodes)}
-	<ul id="{$id}" class="tree">
+	<ul id="{$id|escape:'html':'UTF-8'}" class="tree">
 		{$nodes}
 	</ul>
 	{/if}
 </div>
 <script type="text/javascript">
+	var currentToken="{$token|@addslashes}";
+	var idTree="{$id|escape:'html':'UTF-8'}";
 	{if isset($use_checkbox) && $use_checkbox == true}
 		function checkAllAssociatedCategories($tree)
 		{
@@ -55,59 +57,44 @@
 		}
 	{/if}
 	{if isset($use_search) && $use_search == true}
-		$("#{$id}-categories-search").bind("typeahead:selected", function(obj, datum) {
-		    $("#{$id}").find(":input").each(
+		$("#{$id|escape:'html':'UTF-8'}-categories-search").bind("typeahead:selected", function(obj, datum) {
+		    $("#{$id|escape:'html':'UTF-8'}").find(":input").each(
 				function()
 				{
 					if ($(this).val() == datum.id_category)
 					{
+						{if (!(isset($use_checkbox) && $use_checkbox == true))}
+							$("#{$id|escape:'html':'UTF-8'} label").removeClass("tree-selected");
+						{/if}
 						$(this).prop("checked", true);
 						$(this).parent().addClass("tree-selected");
-						$(this).parents("ul.tree").each(
-							function()
-							{
-								$(this).children().children().children(".icon-folder-close")
-									.removeClass("icon-folder-close")
-									.addClass("icon-folder-open");
-								$(this).show();
-							}
-						);
+						$(this).parents('ul.tree').each(function(){
+							$(this).show();
+							$(this).prev().find('.icon-folder-close').removeClass('icon-folder-close').addClass('icon-folder-open');	
+						});
 					}
 				}
 			);
 		});
 	{/if}
 	$(document).ready(function () {
-		$("#{$id}").tree("collapseAll");
-		$("#{$id}").find(":input[type=radio]").click(
-			function()
-			{
-				location.href = location.href.replace(
-					/&id_category=[0-9]*/, "")+"&id_category="
-					+$(this).val();
-			}
-		);
+		$("#{$id|escape:'html':'UTF-8'}").tree("collapseAll");
 
 		{if isset($selected_categories)}
 			{assign var=imploded_selected_categories value='","'|implode:$selected_categories}
 			var selected_categories = new Array("{$imploded_selected_categories}");
 
-			$("#{$id}").find(":input").each(
+			$("#{$id|escape:'html':'UTF-8'}").find(":input").each(
 				function()
 				{
 					if ($.inArray($(this).val(), selected_categories) != -1)
 					{
 						$(this).prop("checked", true);
 						$(this).parent().addClass("tree-selected");
-						$(this).parents("ul.tree").each(
-							function()
-							{
-								$(this).children().children().children(".icon-folder-close")
-									.removeClass("icon-folder-close")
-									.addClass("icon-folder-open");
-								$(this).show();
-							}
-						);
+						$(this).parents('ul.tree').each(function(){
+							$(this).show();
+							$(this).prev().find('.icon-folder-close').removeClass('icon-folder-close').addClass('icon-folder-open');	
+						});
 					}
 				}
 			);

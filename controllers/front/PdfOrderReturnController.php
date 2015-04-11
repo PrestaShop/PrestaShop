@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -32,7 +32,9 @@ class PdfOrderReturnControllerCore extends FrontController
 
 	public function postProcess()
 	{
-		if (!$this->context->customer->isLogged())
+		$from_admin = (Tools::getValue('adtoken') == Tools::getAdminToken('AdminReturn'.(int)Tab::getIdFromClassName('AdminReturn').(int)Tools::getValue('id_employee')));
+
+		if (!$from_admin && !$this->context->customer->isLogged())
 			Tools::redirect('index.php?controller=authentication&back=order-follow');
 
 		if (Tools::getValue('id_order_return') && Validate::isUnsignedId(Tools::getValue('id_order_return')))
@@ -40,9 +42,9 @@ class PdfOrderReturnControllerCore extends FrontController
 
 		if (!isset($this->orderReturn) || !Validate::isLoadedObject($this->orderReturn))
 			die(Tools::displayError('Order return not found.'));
-		else if ($this->orderReturn->id_customer != $this->context->customer->id)
+		elseif (!$from_admin && $this->orderReturn->id_customer != $this->context->customer->id)
 			die(Tools::displayError('Order return not found.'));
-		else if ($this->orderReturn->state < 2)
+		elseif ($this->orderReturn->state < 2)
 			die(Tools::displayError('Order return not confirmed.'));
 
 	}
@@ -53,4 +55,3 @@ class PdfOrderReturnControllerCore extends FrontController
         $pdf->render();
 	}
 }
-

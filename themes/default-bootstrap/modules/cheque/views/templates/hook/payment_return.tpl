@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,19 +18,19 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
 {if $status == 'ok'}
 	<p class="alert alert-success">{l s='Your order on %s is complete.' sprintf=$shop_name mod='cheque'}</p>
-    <div class="box order-confirmation">
-    <h3 class="page-subheading">{l s='Your check must include:' mod='cheque'}</h3>
+	<div class="box order-confirmation">
+		<h3 class="page-subheading">{l s='Your check must include:' mod='cheque'}</h3>
 		- {l s='Payment amount.' mod='cheque'} <span class="price"><strong>{$total_to_pay}</strong></span>
 		<br />- {l s='Payable to the order of' mod='cheque'} <strong>{if $chequeName}{$chequeName}{else}___________{/if}</strong>
 		<br />- {l s='Mail to' mod='cheque'} <strong>{if $chequeAddress}{$chequeAddress}{else}___________{/if}</strong>
-		{if !isset($reference)}
+		{if !isset($reference) && isset($id_order) && $id_order}
 			<br />- {l s='Do not forget to insert your order number #%d.' sprintf=$id_order mod='cheque'}
 		{else}
 			<br />- {l s='Do not forget to insert your order reference %s.' sprintf=$reference mod='cheque'}
@@ -41,7 +41,7 @@
 	</div>
 {else}
 	<p class="alert alert-warning">
-		{l s='We have noticed that there is a problem with your order. If you think this is an error, you can contact our' mod='cheque'} 
+		{l s='We noticed a problem with your order. If you think this is an error, feel free to contact our' mod='cheque'}
 		<a href="{$link->getPageLink('contact', true)|escape:'html':'UTF-8'}">{l s='customer service department.' mod='cheque'}</a>.
 	</p>
 {/if}

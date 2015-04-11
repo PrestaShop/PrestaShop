@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -150,30 +150,30 @@ class SupplyOrderCore extends ObjectModel
 	/**
 	 * @see ObjectModel::$webserviceParameters
 	 */
- 	protected $webserviceParameters = array(
- 		'fields' => array(
- 			'id_supplier' => array('xlink_resource' => 'suppliers'),
- 			'id_lang' => array('xlink_resource' => 'languages'),
- 			'id_warehouse' => array('xlink_resource' => 'warehouses'),
- 			'id_supply_order_state' => array('xlink_resource' => 'supply_order_states'),
- 			'id_currency' => array('xlink_resource' => 'currencies'),
- 		),
- 		'hidden_fields' => array(
- 			'id_ref_currency',
- 		),
- 		'associations' => array(
+	protected $webserviceParameters = array(
+		'fields' => array(
+			'id_supplier' => array('xlink_resource' => 'suppliers'),
+			'id_lang' => array('xlink_resource' => 'languages'),
+			'id_warehouse' => array('xlink_resource' => 'warehouses'),
+			'id_supply_order_state' => array('xlink_resource' => 'supply_order_states'),
+			'id_currency' => array('xlink_resource' => 'currencies'),
+		),
+		'hidden_fields' => array(
+			'id_ref_currency',
+		),
+		'associations' => array(
 			'supply_order_details' => array(
 				'resource' => 'supply_order_detail',
 				'fields' => array(
 					'id' => array(),
- 					'id_product' => array(),
- 					'id_product_attribute' => array(),
- 					'supplier_reference' => array(),
- 					'product_name' => array(),
+					'id_product' => array(),
+					'id_product_attribute' => array(),
+					'supplier_reference' => array(),
+					'product_name' => array(),
 				),
 			),
 		),
- 	);
+	);
 
 	/**
 	 * @see ObjectModel::update()
@@ -225,6 +225,7 @@ class SupplyOrderCore extends ObjectModel
 
 		foreach ($entries as $entry)
 		{
+			/** @var SupplyOrderDetail $entry */
 			// applys global discount rate on each product if possible
 			if ($is_discount)
 				$entry->applyGlobalDiscount((float)$this->discount_rate);
@@ -504,6 +505,33 @@ class SupplyOrderCore extends ObjectModel
 		$ref = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
 
 		return (pSQL($ref));
+	}
+
+	public function getAllExpectedQuantity()
+	{
+		return Db::getInstance()->getValue('
+			SELECT SUM(`quantity_expected`)
+			FROM `'._DB_PREFIX_.'supply_order_detail`
+			WHERE `id_supply_order` = '.(int)$this->id
+		);
+	}
+
+	public function getAllReceivedQuantity()
+	{
+		return Db::getInstance()->getValue('
+			SELECT SUM(`quantity_received`)
+			FROM `'._DB_PREFIX_.'supply_order_detail`
+			WHERE `id_supply_order` = '.(int)$this->id
+		);
+	}
+
+	public function getAllPendingQuantity()
+	{
+		return Db::getInstance()->getValue('
+			SELECT (SUM(`quantity_expected`) - SUM(`quantity_received`))
+			FROM `'._DB_PREFIX_.'supply_order_detail`
+			WHERE `id_supply_order` = '.(int)$this->id
+		);
 	}
 
 	/*********************************\

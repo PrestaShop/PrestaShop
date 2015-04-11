@@ -6,26 +6,25 @@
 	height: 64px
 	margin-bottom: 10px
 	.boxchart-overlay
-		padding: 10px 10px 5px 10px
-		margin-right: 10px
-		float: left
+		@include padding(10px, 10px, 5px, 10px)
+		@include margin-right(10px)
+		@include float(left)
 		@include border-radius(3px)
-	
 	.kpi-content
-		float: left
 		width: 100%
-		padding-left: 72px
 		position: relative
+		@include padding-left(72px)
+		@include float(left)
 		i
 			position: absolute
 			top: 0
-			left: 0
 			font-size: 56px
 			text-align: center
 			color: white
 			width: 66px
 			height: 66px
 			line-height: 66px
+			@include left(0)
 			@include border-radius(3px)
 
 		.title
@@ -41,7 +40,6 @@
 			font-size: 1.8em
 			white-space: nowrap
 			text-overflow: ellipsis
-			
 			overflow: hidden
 	&:hover
 		text-decoration: none
@@ -69,7 +67,6 @@
 		@include box-shadow(rgba(black,.2) 0 -3px 0 inset)
 	.value
 		color: #95CC6B
-
 
 .data_chart
 	rect

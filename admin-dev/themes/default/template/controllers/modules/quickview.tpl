@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -26,16 +26,16 @@
 	<div class="col-lg-2">
 		<img src="{$image}" alt="{$displayName}" class="img-thumbnail" />
 		{if isset($badges)}
-		{foreach $badges as $badge}
-			<img src="{$badge}" alt="" class="clearfix quickview-badge" />
-		{/foreach}
+			{foreach $badges as $badge}
+				<img src="{$badge}" alt="" class="clearfix quickview-badge" />
+			{/foreach}
 		{/if}
 	</div>
 	<div class="col-lg-10">
 		<h1>{$displayName}</h1>
 		<div class="row">
-			{if (int)$nb_rates > 0}
-			<div class="col-lg-4">
+			<div class="col-sm-6">
+				{if (int)$nb_rates > 0}
 				<span class="rating">
 					<span class="star{if $avg_rate == 5} active{/if}"></span>
 					<span class="star{if $avg_rate == 4} active{/if}"></span>
@@ -44,17 +44,29 @@
 					<span class="star{if $avg_rate == 1} active{/if}"></span>
 				</span>
 				<p class="small">{if (int)$nb_rates > 1}{l s="(%s votes)" sprintf=$nb_rates}{else}{l s="(%s vote)" sprintf=$nb_rates}{/if}</p>
-			</div>
 			{/if}
+			</div>
+			<div class="col-sm-6">
+				{if (int)$price}
+					<div class="quickview-price">
+						{displayPrice price=$price currency=$id_currency}
+					</div>
+				{/if}
+			</div>
 		</div>
+		<hr />
 		<h3>{l s="Description"}</h3>
 		<p class="text-justify">{$description_full}</p>
 		{if isset($additional_description) && trim($additional_description) != ''}
+			<hr />
 			<h3>{l s="Merchant benefits"}</h3>
 			<p class="text-justify">{$additional_description}</p>
 		{/if}
-		<div class="row">
-			<a class="btn btn-success btn-lg" href="{$url}" onclick="return !window.open(this.href);">{l s='View on PrestaShop Addons'}</a>
-		</div>
+		<hr />
+		{if $is_addons_partner}
+			<a class="btn btn-success btn-lg pull-right" href="{$url}">{l s='Install module'}</a>
+		{else}
+			<a class="btn btn-success btn-lg pull-right" href="{$url}" onclick="return !window.open(this.href);">{l s='View on PrestaShop Addons'}</a>
+		{/if}
 	</div>
 </div>

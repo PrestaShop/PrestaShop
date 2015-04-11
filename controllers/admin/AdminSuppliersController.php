@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,11 +19,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Supplier $object
+ */
 class AdminSuppliersControllerCore extends AdminController
 {
 	public $bootstrap = true ;
@@ -38,9 +41,9 @@ class AdminSuppliersControllerCore extends AdminController
 		$this->addRowAction('delete');
 		$this->allow_export = true;
 
-		$this->_orderBy = 'name';
-		$this->_orderWay = 'ASC';
-		
+		$this->_defaultOrderBy = 'name';
+		$this->_defaultOrderWay = 'ASC';
+
 		$this->bulk_actions = array(
 			'delete' => array(
 				'text' => $this->l('Delete selected'),
@@ -64,6 +67,7 @@ class AdminSuppliersControllerCore extends AdminController
 		);
 
 		parent::__construct();
+
 	}
 
 	public function setMedia()
@@ -96,6 +100,12 @@ class AdminSuppliersControllerCore extends AdminController
 			$this->imageType, true, true);
 		$image_size = file_exists($image) ? filesize($image) / 1000 : false;
 
+		$tmp_addr = new Address();
+		$res = $tmp_addr->getFieldsRequiredDatabase();
+		$required_fields = array();
+		foreach ($res as $row)
+			$required_fields[(int)$row['id_required_field']] = $row['field_name'];
+
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Suppliers'),
@@ -114,6 +124,19 @@ class AdminSuppliersControllerCore extends AdminController
 					'col' => 4,
 					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}',
 				),
+				(in_array('company', $required_fields) ?
+					array(
+						'type' => 'text',
+						'label' => $this->l('Company'),
+						'name' => 'company',
+						'display' => in_array('company', $required_fields),
+						'required' => in_array('company', $required_fields),
+						'maxlength' => 16,
+						'col' => 4,
+						'hint' => $this->l('Company name for this supplier')
+					)
+					: null
+				),
 				array(
 					'type' => 'textarea',
 					'label' => $this->l('Description'),
@@ -129,9 +152,19 @@ class AdminSuppliersControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Phone'),
 					'name' => 'phone',
+					'required' => in_array('phone', $required_fields),
 					'maxlength' => 16,
 					'col' => 4,
 					'hint' => $this->l('Phone number for this supplier')
+				),
+				array(
+					'type' => 'text',
+					'label' => $this->l('Mobile phone'),
+					'name' => 'phone_mobile',
+					'required' => in_array('phone_mobile', $required_fields),
+					'maxlength' => 16,
+					'col' => 4,
+					'hint' => $this->l('Mobile phone number for this supplier.')
 				),
 				array(
 					'type' => 'text',
@@ -145,6 +178,7 @@ class AdminSuppliersControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Address').' (2)',
 					'name' => 'address2',
+					'required' => in_array('address2', $required_fields),
 					'col' => 6,
 					'maxlength' => 128,
 				),
@@ -152,9 +186,9 @@ class AdminSuppliersControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Zip/postal code'),
 					'name' => 'postcode',
+					'required' => in_array('postcode', $required_fields),
 					'maxlength' => 12,
 					'col' => 2,
-					'required' => true,
 				),
 				array(
 					'type' => 'text',
@@ -266,6 +300,7 @@ class AdminSuppliersControllerCore extends AdminController
 			$this->fields_value = array(
 				'id_address' => $address->id,
 				'phone' => $address->phone,
+				'phone_mobile' => $address->phone_mobile,
 				'address' => $address->address1,
 				'address2' => $address->address2,
 				'postcode' => $address->postcode,
@@ -302,7 +337,8 @@ class AdminSuppliersControllerCore extends AdminController
 	{
 		parent::initToolbar();
 		$this->addPageHeaderToolBarModulesListButton();
-		if (empty($this->display))
+
+		if (empty($this->display) && $this->can_import)
 			$this->toolbar_btn['import'] = array(
 				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=suppliers',
 				'desc' => $this->l('Import')
@@ -315,6 +351,7 @@ class AdminSuppliersControllerCore extends AdminController
 		$this->toolbar_title = $this->object->name;
 		$products = $this->object->getProductsLite($this->context->language->id);
 		$total_product = count($products);
+
 		for ($i = 0; $i < $total_product; $i++)
 		{
 			$products[$i] = new Product($products[$i]['id_product'], false, $this->context->language->id);
@@ -425,6 +462,7 @@ class AdminSuppliersControllerCore extends AdminController
 			$address->address2 = Tools::getValue('address2', null);
 			$address->postcode = Tools::getValue('postcode', null);
 			$address->phone = Tools::getValue('phone', null);
+			$address->phone_mobile = Tools::getValue('phone_mobile', null);
 			$address->id_country = Tools::getValue('id_country', null);
 			$address->id_state = Tools::getValue('id_state', null);
 			$address->city = Tools::getValue('city', null);
@@ -450,17 +488,17 @@ class AdminSuppliersControllerCore extends AdminController
 			}
 			return parent::postProcess();
 		}
-		else if (Tools::isSubmit('delete'.$this->table))
+		elseif (Tools::isSubmit('delete'.$this->table))
 		{
 			if (!($obj = $this->loadObject(true)))
 				return;
-			else if (SupplyOrder::supplierHasPendingOrders($obj->id))
+			elseif (SupplyOrder::supplierHasPendingOrders($obj->id))
 				$this->errors[] = $this->l('It is not possible to delete a supplier if there are pending supplier orders.');
 			else
 			{
 				//delete all product_supplier linked to this supplier
-				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_supplier` WHERE `id_supplier`='.(int)$obj->id); 
-				
+				Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'product_supplier` WHERE `id_supplier`='.(int)$obj->id);
+
 				$id_address = Address::getAddressIdBySupplierId($obj->id);
 				$address = new Address($id_address);
 				if (Validate::isLoadedObject($address))
@@ -510,4 +548,3 @@ class AdminSuppliersControllerCore extends AdminController
 	}
 
 }
-

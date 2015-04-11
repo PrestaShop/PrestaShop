@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -65,7 +65,7 @@ class EmployeeCore extends ObjectModel
 
 	/** @var string employee's chosen theme */
 	public $bo_theme;
-	
+
 	/** @var string employee's chosen css file */
 	public $bo_css = 'admin-theme.css';
 
@@ -74,7 +74,7 @@ class EmployeeCore extends ObjectModel
 
 	/** @var bool, false */
 	public $bo_menu = 1;
-	
+
 	/* Deprecated */
 	public $bo_show_screencast = false;
 
@@ -159,7 +159,7 @@ class EmployeeCore extends ObjectModel
 	public function getFields()
 	{
 		if (empty($this->stats_date_from) || $this->stats_date_from == '0000-00-00')
-			$this->stats_date_from = date('Y-m-d', strtotime("-1 month"));
+			$this->stats_date_from = date('Y-m-d', strtotime('-1 month'));
 
 		if (empty($this->stats_compare_from) || $this->stats_compare_from == '0000-00-00')
 			$this->stats_compare_from = null;
@@ -177,8 +177,8 @@ class EmployeeCore extends ObjectModel
 	{
 		$this->last_passwd_gen = date('Y-m-d H:i:s', strtotime('-'.Configuration::get('PS_PASSWD_TIME_BACK').'minutes'));
 		$this->saveOptin();
-
-	 	return parent::add($autodate, $null_values);
+		$this->updateTextDirection();
+		return parent::add($autodate, $null_values);
 	}
 
 	public function update($null_values = false)
@@ -188,9 +188,30 @@ class EmployeeCore extends ObjectModel
 		if (empty($this->stats_date_to) || $this->stats_date_to == '0000-00-00')
 			$this->stats_date_to = date('Y-m-d');
 		$this->saveOptin();
-	 	return parent::update($null_values);
+		$this->updateTextDirection();
+		return parent::update($null_values);
 	}
-	
+
+	protected function updateTextDirection()
+	{
+		if (!defined('_PS_ADMIN_DIR_'))
+			return;
+		$path = _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR.$this->bo_theme.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR;
+		$language = new Language($this->id_lang);
+		if ($language->is_rtl && !strpos($this->bo_css, '_rtl'))
+		{
+			$bo_css = preg_replace('/^(.*)\.css$/', '$1_rtl.css', $this->bo_css);
+			if (file_exists($path.$bo_css))
+				$this->bo_css = $bo_css;
+		}
+		elseif (!$language->is_rtl && strpos($this->bo_css, '_rtl'))
+		{
+			$bo_css = preg_replace('/^(.*)_rtl\.css$/', '$1.css', $this->bo_css);
+			if (file_exists($path.$bo_css))
+				$this->bo_css = $bo_css;
+		}
+	}
+
 	protected function saveOptin()
 	{
 		if ($this->optin && !defined('PS_INSTALLATION_IN_PROGRESS'))
@@ -209,35 +230,39 @@ class EmployeeCore extends ObjectModel
 
 	/**
 	 * Return list of employees
+	 *
+	 * @param bool $active_only Filter employee by active status
+	 * @return array|false Employees or false
 	 */
-	public static function getEmployees()
+	public static function getEmployees($active_only = true)
 	{
 		return Db::getInstance()->executeS('
 			SELECT `id_employee`, `firstname`, `lastname`
 			FROM `'._DB_PREFIX_.'employee`
-			WHERE `active` = 1
+			'.($active_only ? ' WHERE `active` = 1' : '').'
 			ORDER BY `lastname` ASC
 		');
 	}
 
 	/**
-	  * Return employee instance from its e-mail (optionnaly check password)
-	  *
-	  * @param string $email e-mail
-	  * @param string $passwd Password is also checked if specified
-	  * @return Employee instance
-	  */
-	public function getByEmail($email, $passwd = null)
+	 * Return employee instance from its e-mail (optionnaly check password)
+	 *
+	 * @param string $email e-mail
+	 * @param string $passwd Password is also checked if specified
+	 * @param boolean $active_only Filter employee by active status
+	 * @return Employee instance
+	 */
+	public function getByEmail($email, $passwd = null, $active_only = true)
 	{
-	 	if (!Validate::isEmail($email) || ($passwd != null && !Validate::isPasswd($passwd)))
-	 		die(Tools::displayError());
+		if (!Validate::isEmail($email) || ($passwd != null && !Validate::isPasswd($passwd)))
+			die(Tools::displayError());
 
 		$result = Db::getInstance()->getRow('
 		SELECT *
 		FROM `'._DB_PREFIX_.'employee`
-		WHERE `active` = 1
-		AND `email` = \''.pSQL($email).'\'
-		'.($passwd !== null ? 'AND `passwd` = \''.Tools::encrypt($passwd).'\'' : ''));
+		WHERE `email` = \''.pSQL($email).'\'
+		'.($active_only ? ' AND active = 1' : '')
+		.($passwd !== null ? ' AND `passwd` = \''.Tools::encrypt($passwd).'\'' : ''));
 		if (!$result)
 			return false;
 		$this->id = $result['id_employee'];
@@ -250,8 +275,8 @@ class EmployeeCore extends ObjectModel
 
 	public static function employeeExists($email)
 	{
-	 	if (!Validate::isEmail($email))
-	 		die (Tools::displayError());
+		if (!Validate::isEmail($email))
+			die (Tools::displayError());
 
 		return (bool)Db::getInstance()->getValue('
 		SELECT `id_employee`
@@ -260,15 +285,15 @@ class EmployeeCore extends ObjectModel
 	}
 
 	/**
-	  * Check if employee password is the right one
-	  *
-	  * @param string $passwd Password
-	  * @return boolean result
-	  */
+	 * Check if employee password is the right one
+	 *
+	 * @param string $passwd Password
+	 * @return boolean result
+	 */
 	public static function checkPassword($id_employee, $passwd)
 	{
-	 	if (!Validate::isUnsignedId($id_employee) || !Validate::isPasswd($passwd, 8))
-	 		die (Tools::displayError());
+		if (!Validate::isUnsignedId($id_employee) || !Validate::isPasswd($passwd, 8))
+			die (Tools::displayError());
 
 		return Db::getInstance()->getValue('
 		SELECT `id_employee`
@@ -308,10 +333,10 @@ class EmployeeCore extends ObjectModel
 	}
 
 	/**
-	  * Check employee informations saved into cookie and return employee validity
-	  *
-	  * @return boolean employee validity
-	  */
+	 * Check employee informations saved into cookie and return employee validity
+	 *
+	 * @return boolean employee validity
+	 */
 	public function isLoggedBack()
 	{
 		if (!Cache::isStored('isLoggedBack'.$this->id))
@@ -326,8 +351,8 @@ class EmployeeCore extends ObjectModel
 	}
 
 	/**
-	  * Logout
-	  */
+	 * Logout
+	 */
 	public function logout()
 	{
 		if (isset(Context::getContext()->cookie))
@@ -336,6 +361,15 @@ class EmployeeCore extends ObjectModel
 			Context::getContext()->cookie->write();
 		}
 		$this->id = null;
+	}
+
+	public function favoriteModulesList()
+	{
+		return Db::getInstance()->executeS('
+			SELECT module
+			FROM `'._DB_PREFIX_.'module_preference`
+			WHERE `id_employee` = '.(int)$this->id.' AND `favorite` = 1 AND (`interest` = 1 OR `interest` IS NULL)'
+		);
 	}
 
 	/**
@@ -399,7 +433,7 @@ class EmployeeCore extends ObjectModel
 	{
 		return $this->id_profile == _PS_ADMIN_PROFILE_;
 	}
-	
+
 	public function getImage()
 	{
 		if (!Validate::isLoadedObject($this))
@@ -419,5 +453,14 @@ class EmployeeCore extends ObjectModel
 			$max = 0;
 
 		return (int)$max;
+	}
+
+	public static function setLastConnectionDate($id_employee)
+	{
+		return Db::getInstance()->execute('
+			UPDATE `'._DB_PREFIX_.'employee`
+			SET `last_connection_date` = CURRENT_DATE()
+			WHERE `id_employee` = '.(int)$id_employee.' AND `last_connection_date`< CURRENT_DATE()
+		');
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,14 +19,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class FeatureCore extends ObjectModel
 {
- 	/** @var string Name */
+	/** @var string Name */
 	public $name;
 	public $position;
 
@@ -40,7 +40,7 @@ class FeatureCore extends ObjectModel
 		'fields' => array(
 			'position' => 	array('type' => self::TYPE_INT, 'validate' => 'isInt'),
 
-			// Lang fields
+			/* Lang fields */
 			'name' => 		array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 128),
 		),
 	);
@@ -58,7 +58,6 @@ class FeatureCore extends ObjectModel
 	 * @param integer $id_lang Language id
 	 * @param integer $id_feature Feature id
 	 * @return array Array with feature's data
-	 * @static
 	 */
 	public static function getFeature($id_lang, $id_feature)
 	{
@@ -76,7 +75,6 @@ class FeatureCore extends ObjectModel
 	 *
 	 * @param integer $id_lang Language id
 	 * @return array Multiple arrays with feature's data
-	 * @static
 	 */
 	public static function getFeatures($id_lang, $with_shop = true)
 	{
@@ -118,10 +116,16 @@ class FeatureCore extends ObjectModel
 
 	public function delete()
 	{
-	 	/* Also delete related attributes */
+		/* Also delete related attributes */
 		Db::getInstance()->execute('
-			DELETE FROM `'._DB_PREFIX_.'feature_value_lang`
-			WHERE `id_feature_value` IN (SELECT id_feature_value FROM `'._DB_PREFIX_.'feature_value` WHERE `id_feature` = '.(int)$this->id.')
+			DELETE
+				`'._DB_PREFIX_.'feature_value_lang`
+			FROM
+				`'._DB_PREFIX_.'feature_value_lang`
+				JOIN `'._DB_PREFIX_.'feature_value`
+					ON (`'._DB_PREFIX_.'feature_value_lang`.id_feature_value = `'._DB_PREFIX_.'feature_value`.id_feature_value)
+			WHERE
+				`'._DB_PREFIX_.'feature_value`.`id_feature` = '.(int)$this->id.'
 		');
 		Db::getInstance()->execute('
 			DELETE FROM `'._DB_PREFIX_.'feature_value`
@@ -145,19 +149,19 @@ class FeatureCore extends ObjectModel
 
 	public function update($nullValues = false)
 	{
-	 	$this->clearCache();
+		$this->clearCache();
 
-	 	$result = 1;
-	 	$fields = $this->getFieldsLang();
+		$result = 1;
+		$fields = $this->getFieldsLang();
 		foreach ($fields as $field)
 		{
 			foreach (array_keys($field) as $key)
-			 	if (!Validate::isTableOrIdentifier($key))
-	 				die(Tools::displayError());
+				if (!Validate::isTableOrIdentifier($key))
+					die(Tools::displayError());
 
-	 		$sql = 'SELECT `id_lang` FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_lang`
-	 				WHERE `'.$this->def['primary'].'` = '.(int)$this->id.'
-	 					AND `id_lang` = '.(int)$field['id_lang'];
+			$sql = 'SELECT `id_lang` FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_lang`
+					WHERE `'.$this->def['primary'].'` = '.(int)$this->id.'
+						AND `id_lang` = '.(int)$field['id_lang'];
 			$mode = Db::getInstance()->getRow($sql);
 			$result &= (!$mode) ? Db::getInstance()->insert($this->def['table'].'_lang', $field) :
 			Db::getInstance()->update(
@@ -175,14 +179,13 @@ class FeatureCore extends ObjectModel
 	*
 	* @param integer $id_lang Language id
 	* @return int Number of feature
-	* @static
 	*/
 	public static function nbFeatures($id_lang)
 	{
 		return Db::getInstance()->getValue('
 		SELECT COUNT(*) as nb
 		FROM `'._DB_PREFIX_.'feature` ag
-		LEFT JOIN `'._DB_PREFIX_.'feature_lang` agl 
+		LEFT JOIN `'._DB_PREFIX_.'feature_lang` agl
 		ON (ag.`id_feature` = agl.`id_feature` AND `id_lang` = '.(int)$id_lang.')
 		');
 	}
@@ -216,12 +219,13 @@ class FeatureCore extends ObjectModel
 			$feature->add();
 			return $feature->id;
 		}
-		else
+		elseif (isset($rq['id_feature']) && $rq['id_feature'])
 		{
-			if ($position && $feature = new Feature((int)$rq['id_feature']))
+			if (is_numeric($position) && $feature = new Feature((int)$rq['id_feature']))
 			{
 				$feature->position = (int)$position;
-				$feature->update();
+				if (Validate::isLoadedObject($feature))
+					$feature->update();
 			}
 
 			return (int)$rq['id_feature'];
@@ -243,7 +247,7 @@ class FeatureCore extends ObjectModel
 			return false;
 
 		return Db::getInstance()->executeS('
-			SELECT * , COUNT(*) as nb
+			SELECT f.*, fl.*
 			FROM `'._DB_PREFIX_.'feature` f
 			LEFT JOIN `'._DB_PREFIX_.'feature_product` fp
 				ON f.`id_feature` = fp.`id_feature`
@@ -252,7 +256,7 @@ class FeatureCore extends ObjectModel
 			WHERE fp.`id_product` IN ('.$ids.')
 			AND `id_lang` = '.(int)$id_lang.'
 			GROUP BY f.`id_feature`
-			ORDER BY nb DESC
+			ORDER BY f.`position` ASC
 		');
 	}
 
@@ -312,37 +316,8 @@ class FeatureCore extends ObjectModel
 	 */
 	public static function cleanPositions()
 	{
-		//Reordering positions to remove "holes" in them (after delete for instance)
-		$sql = "SELECT id_feature, position FROM "._DB_PREFIX_."feature ORDER BY id_feature";
-		$db = Db::getInstance();
-		$r = $db->executeS($sql, false);
-		$shiftTable = array(); //List of update queries (one query is necessary for each "hole" in the table)
-		$currentDelta = 0;
-		$minId = 0;
-		$maxId = 0;
-		$futurePosition = 1;
-		while ($line = $db->nextRow($r)) {
-			$delta = $futurePosition - $line['position']; //Difference between current position and future position
-			if ($delta != $currentDelta) {
-				$shiftTable[] = array('minId' => $minId, 'maxId' => $maxId, 'delta' => $currentDelta);
-				$currentDelta = $delta;
-				$minId = $line['id_feature'];
-			}
-			$maxId = $line['id_feature'];
-			$futurePosition++;
-		}
-		$shiftTable[] = array('minId' => $minId, 'maxId' => $maxId, 'delta' => $currentDelta);
-		
-		//Executing generated queries
-		foreach ($shiftTable as $line) {
-			$delta = $line['delta'];
-			if ($delta == 0) continue;
-			$delta = $delta > 0 ? '+' . (int)$delta : (int)$delta;
-			$minId = (int)$line['minId'];
-			$maxId = (int)$line['maxId'];
-			$sql = "UPDATE "._DB_PREFIX_."feature SET position = position $delta WHERE id_feature >= $minId AND id_feature <= $maxId";
-			Db::getInstance()->execute($sql);
-		}
+		$sql = 'SET @i = -1; UPDATE `'._DB_PREFIX_.'feature` SET `position` = @i:=@i+1 ORDER BY `position` ASC';
+		return (bool)Db::getInstance()->execute($sql);
 	}
 
 	/**
@@ -357,7 +332,6 @@ class FeatureCore extends ObjectModel
 		$sql = 'SELECT MAX(`position`)
 				FROM `'._DB_PREFIX_.'feature`';
 		$position = DB::getInstance()->getValue($sql);
-		return (is_numeric($position)) ? $position : -1;
+		return (is_numeric($position)) ? $position : - 1;
 	}
 }
-

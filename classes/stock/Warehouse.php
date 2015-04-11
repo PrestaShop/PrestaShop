@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -54,7 +54,8 @@ class WarehouseCore extends ObjectModel
 
 	/**
 	 * Describes the way a Warehouse is managed
-	 * @var enum WA|LIFO|FIFO
+	 *
+	 * @var string enum WA|LIFO|FIFO
 	 */
 	public $management_type;
 
@@ -78,15 +79,15 @@ class WarehouseCore extends ObjectModel
 	/**
 	 * @see ObjectModel::$webserviceParameters
 	 */
- 	protected $webserviceParameters = array(
- 		'fields' => array(
- 			'id_address' => array('xlink_resource' => 'addresses'),
- 			'id_employee' => array('xlink_resource' => 'employees'),
- 			'id_currency' => array('xlink_resource' => 'currencies'),
- 			'valuation' => array('getter' => 'getWsStockValue', 'setter' => false),
- 			'deleted' => array(),
- 		),
- 		'associations' => array(
+	protected $webserviceParameters = array(
+		'fields' => array(
+			'id_address' => array('xlink_resource' => 'addresses'),
+			'id_employee' => array('xlink_resource' => 'employees'),
+			'id_currency' => array('xlink_resource' => 'currencies'),
+			'valuation' => array('getter' => 'getWsStockValue', 'setter' => false),
+			'deleted' => array(),
+		),
+		'associations' => array(
 			'stocks' => array(
 				'resource' => 'stock',
 				'fields' => array(
@@ -107,7 +108,7 @@ class WarehouseCore extends ObjectModel
 				),
 			),
 		),
- 	);
+	);
 
 	/**
 	 * Gets the shops associated to the current warehouse
@@ -291,16 +292,7 @@ class WarehouseCore extends ObjectModel
 	 */
 	public static function getProductWarehouseList($id_product, $id_product_attribute = 0, $id_shop = null)
 	{
-
 		// if it's a pack, returns warehouses if and only if some products use the advanced stock management
-		if (Pack::isPack($id_product))
-		{
-			$warehouses = Warehouse::getPackWarehouses($id_product);
-			$res = array();
-			foreach ($warehouses as $warehouse)
-				$res[]['id_warehouse'] = $warehouse;
-			return $res;
-		}
 		$share_stock = false;
 		if ($id_shop === null)
 		{
@@ -310,7 +302,7 @@ class WarehouseCore extends ObjectModel
 			{
 				$shop_group = Context::getContext()->shop->getGroup();
 				$id_shop = (int)Context::getContext()->shop->id;
-			}	
+			}
 			$share_stock = $shop_group->share_stock;
 		}
 		else
@@ -514,7 +506,10 @@ class WarehouseCore extends ObjectModel
 
 		// fills $list
 		foreach ($pack_warehouses as $pack_warehouse)
+		{
+			/** @var WarehouseProductLocation $pack_warehouse */
 			$list['pack_warehouses'][] = (int)$pack_warehouse->id_warehouse;
+		}
 
 		// for each products in the pack
 		foreach ($products as $product)
@@ -536,7 +531,7 @@ class WarehouseCore extends ObjectModel
 			$res = call_user_func_array('array_intersect', $list);
 		return $res;
 	}
-	
+
 	public function resetStockAvailable()
 	{
 		$products = WarehouseProductLocation::getProducts((int)$this->id);

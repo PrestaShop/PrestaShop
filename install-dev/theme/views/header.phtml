@@ -10,6 +10,9 @@
 	<meta name="robots" content="noindex" />
 	<link rel="shortcut icon" href="theme/img/favicon.ico" />
 	<link rel="stylesheet" type="text/css" media="all" href="theme/view.css" />
+	<?php if ( ($this->language->getLanguage()->getMetaInformation('is_rtl')) == 'true'): ?>
+		<link rel="stylesheet" type="text/css" media="all" href="theme/rtl.css" />
+	<?php endif; ?>
 	<script type="text/javascript" src="../js/jquery/jquery-1.11.0.min.js"></script>
 	<script type="text/javascript" src="../js/jquery/plugins/jquery.chosen.js"></script>
 	<script type="text/javascript" src="theme/js/install.js"></script>
@@ -101,7 +104,7 @@
 	<noscript>
 		<h4 class="errorBlock" style="margin-bottom:10px">
 			<?php echo $this->l('To install PrestaShop, you need to have JavaScript enabled in your browser.') ?>
-			<a href="<?php echo $this->l('http://doc.prestashop.com/display/PS15/What+you+need+to+get+started#HowtoenableJavaScript-HowtoenableJavaScript') ?>" target="_blank">
+			<a href="<?php echo $this->l('http://doc.prestashop.com/display/PS16/What+you+need+to+get+started#HowtoenableJavaScript-HowtoenableJavaScript') ?>" target="_blank">
 				<img src="theme/img/help.png" style="height:16px;width:16px" />
 			</a>
 		</h4>

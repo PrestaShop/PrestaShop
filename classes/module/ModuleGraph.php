@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -74,7 +74,8 @@ abstract class ModuleGraphCore extends Module
 			if (is_callable(array($this, 'setDayValues')))
 				$this->setDayValues($layers);
 		}
-		// If the granularity is inferior to 1 month TODO : change to manage 28 to 31 days
+		// If the granularity is inferior to 1 month
+		// @TODO : change to manage 28 to 31 days
 		elseif (strtotime($this->_employee->stats_date_to) - strtotime($this->_employee->stats_date_from) <= 2678400)
 		{
 			if ($legend)
@@ -196,21 +197,21 @@ abstract class ModuleGraphCore extends Module
 					if (!isset($this->_values[$i]) || !is_array($this->_values[$i]))
 						if (isset($this->_values[$key]))
 						{
-						    // We don't want strings to be divided. Example: product name
+							// We don't want strings to be divided. Example: product name
 							if (is_numeric($this->_values[$key]))
-					            $this->_csv .= $this->_values[$key] / (($datas['type'] == 'pie') ? $total : 1);
-					        else
-					            $this->_csv .= $this->_values[$key];
+								$this->_csv .= $this->_values[$key] / (($datas['type'] == 'pie') ? $total : 1);
+							else
+								$this->_csv .= $this->_values[$key];
 						}
 						else
 							$this->_csv .= '0';
 					else
 					{
-					    // We don't want strings to be divided. Example: product name
-					    if (is_numeric($this->_values[$i][$key]))
-						    $this->_csv .= $this->_values[$i][$key] / (($datas['type'] == 'pie') ? $total : 1);
-				        else
-				            $this->_csv .= $this->_values[$i][$key];
+						// We don't want strings to be divided. Example: product name
+						if (is_numeric($this->_values[$i][$key]))
+							$this->_csv .= $this->_values[$i][$key] / (($datas['type'] == 'pie') ? $total : 1);
+						else
+							$this->_csv .= $this->_values[$i][$key];
 					}
 					$this->_csv .= ';';
 				}
@@ -276,7 +277,7 @@ abstract class ModuleGraphCore extends Module
 		if (!isset($params['type']))
 			$params['type'] = 'column';
 		if (!isset($params['width']))
-			$params['width'] = 550;
+			$params['width'] = '100%';
 		if (!isset($params['height']))
 			$params['height'] = 270;
 
@@ -331,5 +332,3 @@ abstract class ModuleGraphCore extends Module
 		return $this->_id_lang;
 	}
 }
-
-

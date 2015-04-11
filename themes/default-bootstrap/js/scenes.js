@@ -1,5 +1,5 @@
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -31,7 +31,7 @@ $(document).ready(function(){
 	/* calcul nb of click to see every scenes */
 	var ul_width = parseInt($('#scenes_list ul').width());
 	var div_width = parseInt($('#scenes_list').width());
-	nb_move_available = Math.ceil((ul_width-div_width)/li_width)+1;
+	nb_move_available = Math.ceil((ul_width-div_width)/ul_width)+1;
 	if (nb_move_available < 2)
 		$('#scenes .next').hide();
 	
@@ -82,7 +82,7 @@ $(document).ready(function(){
 
 	$(document).on('click', '.scene_thumb', function(e){
 		e.preventDefault();
-		loadScene($(this).date('id_scene'));
+		loadScene($(this).attr('data-id_scene'));
 	});
 });
 

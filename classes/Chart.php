@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -31,7 +31,7 @@ class ChartCore
 	protected $width = 600;
 	protected $height = 300;
 
-	// Time mode
+	/* Time mode */
 	protected $timeMode = false;
 	protected $from;
 	protected $to;
@@ -107,9 +107,12 @@ class ChartCore
 			$options = 'xaxis:{mode:"time",timeformat:\''.addslashes($this->format).'\',min:'.$this->from.'000,max:'.$this->to.'000}';
 			if ($this->granularity == 'd')
 				foreach ($this->curves as $curve)
+				{
+					/** @var Curve $curve */
 					for ($i = $this->from; $i <= $this->to; $i = strtotime('+1 day', $i))
 						if (!$curve->getPoint($i))
 							$curve->setPoint($i, 0);
+				}
 		}
 
 		$jsCurves = array();

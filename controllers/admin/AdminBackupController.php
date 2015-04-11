@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014  
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,11 +19,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property PrestaShopBackup $object
+ */
 class AdminBackupControllerCore extends AdminController
 {
 	/** @var string The field we are sorting on */
@@ -91,7 +94,7 @@ class AdminBackupControllerCore extends AdminController
 
 		if ($object->id)
 			$this->tpl_view_vars = array('url_backup' => $object->getBackupURL());
-		else if ($object->error)
+		elseif ($object->error)
 		{
 			$this->errors[] = $object->error;
 			$this->tpl_view_vars = array('errors' => $this->errors);
@@ -167,8 +170,7 @@ class AdminBackupControllerCore extends AdminController
 
 		// Test if the backup dir is writable
 		if (!is_writable(PrestaShopBackup::getBackupPath()))
-			$this->warnings[] = $this->l('The "Backups" directory located in the admin directory must be writeable 
-				(CHMOD 755 / 777).');
+			$this->warnings[] = $this->l('The "Backups" directory located in the admin directory must be writable (CHMOD 755 / 777).');
 		elseif ($this->display == 'add')
 			{
 				if (($object = $this->loadObject()))
@@ -177,8 +179,7 @@ class AdminBackupControllerCore extends AdminController
 						$this->errors[] = $object->error;
 					else
 						$this->context->smarty->assign(array(
-							'conf' => $this->l('It appears the backup was successful, however you must download and 
-								carefully verify the backup file before proceeding. '),
+							'conf' => $this->l('It appears the backup was successful, however you must download and carefully verify the backup file before proceeding.'),
 							'backup_url' => $object->getBackupURL(),
 							'backup_weight' => number_format((filesize($object->id) * 0.000001), 2, '.', '')
 						));
@@ -222,7 +223,7 @@ class AdminBackupControllerCore extends AdminController
 				$order_way = 'desc';
 		}
 		if (empty($limit))
-			$limit = ((!isset($this->context->cookie->{$this->table.'_pagination'})) ? $this->_pagination[0] : $limit = 
+			$limit = ((!isset($this->context->cookie->{$this->table.'_pagination'})) ? $this->_pagination[0] : $limit =
 				$this->context->cookie->{$this->table.'_pagination'});
 		$limit = (int)Tools::getValue('pagination', $limit);
 		$this->context->cookie->{$this->table.'_pagination'} = $limit;
@@ -245,17 +246,17 @@ class AdminBackupControllerCore extends AdminController
 		}
 		while (($file = readdir($dh)) !== false)
 		{
-			if (preg_match('/^([\d]+-[a-z\d]+)\.sql(\.gz|\.bz2)?$/', $file, $matches) == 0)
+			if (preg_match('/^([_a-zA-Z0-9\-]*[\d]+-[a-z\d]+)\.sql(\.gz|\.bz2)?$/', $file, $matches) == 0)
 				continue;
 			$timestamp = (int)$matches[1];
 			$date = date('Y-m-d H:i:s', $timestamp);
 			$age = time() - $timestamp;
 			if ($age < 3600)
 				$age = '< 1 '.$this->l('Hour', 'AdminTab', false, false);
-			else if ($age < 86400)
+			elseif ($age < 86400)
 			{
 				$age = floor($age / 3600);
-				$age = $age.' '.(($age == 1) ? $this->l('Hour', 'AdminTab', false, false) : 
+				$age = $age.' '.(($age == 1) ? $this->l('Hour', 'AdminTab', false, false) :
 					$this->l('Hours', 'AdminTab', false, false));
 			}
 			else

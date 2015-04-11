@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -40,7 +40,7 @@ if ($tabAccess['view'] !== '1')
 $backupdir = realpath(PrestaShopBackup::getBackupPath());
 
 if ($backupdir === false)
-	die (Tools::displayError('A "Backup" directory does not exist.'));
+	die (Tools::displayError('There is no "/backup" directory.'));
 
 if (!$backupfile = Tools::getValue('filename'))
 	die (Tools::displayError('No file has been specified.'));

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,11 +19,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Currency $object
+ */
 class AdminCurrenciesControllerCore extends AdminController
 {
 	public function __construct()
@@ -55,7 +58,7 @@ class AdminCurrenciesControllerCore extends AdminController
 			'change' => array(
 				'title' =>	$this->l('Currency rates'),
 				'image' => '../img/admin/exchangesrate.gif',
-				'description' => $this->l('Use PrestaShop\'s webservice to update your currency exchange rates. Please use caution, however, rates are provided as-is.'),
+				'description' => $this->l('Use PrestaShop\'s webservice to update your currency\'s exchange rates. However, please use caution: rates are provided as-is.'),
 				'submit' => array(
 					'title' => $this->l('Update currency rates'),
 					'name' => 'SubmitExchangesRates'
@@ -64,7 +67,7 @@ class AdminCurrenciesControllerCore extends AdminController
 			'cron' => array(
 				'title' =>	$this->l('Automatically update currency rates'),
 				'image' => '../img/admin/tab-tools.gif',
-				'info' => '<div class="alert alert-block"><p>'.$this->l('Use PrestaShop\'s webservice to update your currency exchange rates. Please use caution, rates are provided as-is. You can place this URL in the crontab,or access it manually:').'</p>
+				'info' => '<div class="alert alert-block"><p>'.$this->l('Use PrestaShop\'s webservice to update your currency exchange rates. However, please use caution: rates are provided as-is.').'<br/>'.$this->l('You can place the following URL in your crontab file, or you can click it yourself regularly:').'</p>
 					<p><strong><a href="'.Tools::getShopDomain(true, true).__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/cron_currency_rates.php?secure_key='.md5(_COOKIE_KEY_.Configuration::get('PS_SHOP_NAME')).'" onclick="return !window.open($(this).attr(\'href\'));">'.Tools::getShopDomain(true, true).__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/cron_currency_rates.php?secure_key='.md5(_COOKIE_KEY_.Configuration::get('PS_SHOP_NAME')).'</a></strong></p></div>',
 			)
 		);
@@ -73,7 +76,7 @@ class AdminCurrenciesControllerCore extends AdminController
 
 		$this->_select .= 'currency_shop.conversion_rate conversion_rate';
 		$this->_join .= Shop::addSqlAssociation('currency', 'a');
-		$this->_group .= 'GROUP BY id_currency';
+		$this->_group .= 'GROUP BY a.id_currency';
 	}
 
 	public function renderList()
@@ -125,7 +128,7 @@ class AdminCurrenciesControllerCore extends AdminController
 					'name' => 'sign',
 					'maxlength' => 8,
 					'required' => true,
-					'hint' => $this->l('Will appear in Front Office (e.g. $, &euro;, etc.)')
+					'hint' => $this->l('Will appear in front office (e.g. $, &euro;, etc.)')
 				),
 				array(
 					'type' => 'text',
@@ -148,7 +151,7 @@ class AdminCurrenciesControllerCore extends AdminController
 							array('key' => 2, 'name' => '0 000,00X ('.$this->l('Such as with Euros').')'),
 							array('key' => 3, 'name' => 'X0.000,00'),
 							array('key' => 4, 'name' => '0,000.00X'),
-							array('key' => 5, 'name' => 'X0\'000.00') // Added for the switzerland currency
+							array('key' => 5, 'name' => '0\'000.00X') // Added for the switzerland currency
 						),
 						'name' => 'name',
 						'id' => 'key'
@@ -274,7 +277,7 @@ class AdminCurrenciesControllerCore extends AdminController
 			return false;
 		return parent::processDelete();
 	}
-	
+
 	protected function processBulkDelete()
 	{
 		if (is_array($this->boxes) && !empty($this->boxes))
@@ -298,10 +301,10 @@ class AdminCurrenciesControllerCore extends AdminController
 		$object = $this->loadObject();
 		if (!$this->checkDisableStatus($object))
 			return false;
-		
+
 		return parent::processStatus();
 	}
-	
+
 	protected function processBulkDisableSelection()
 	{
 		if (is_array($this->boxes) && !empty($this->boxes))
@@ -356,4 +359,3 @@ class AdminCurrenciesControllerCore extends AdminController
 		parent::initPageHeaderToolbar();
 	}
 }
-

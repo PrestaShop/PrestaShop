@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,102 +19,108 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 /**
- * @since 1.5.0
+ * Class ContextCore
+ *
+ * @since 1.5.0.1
  */
 class ContextCore
 {
-	/**
-	 * @var Context
-	 */
+	/* @var Context */
 	protected static $instance;
 
-	/**
-	 * @var Cart
-	 */
+	/** @var Cart */
 	public $cart;
 
-	/**
-	 * @var Customer
-	 */
+	/** @var Customer */
 	public $customer;
 
-	/**
-	 * @var Cookie
-	 */
+	/** @var Cookie */
 	public $cookie;
 
-	/**
-	 * @var Link
-	 */
+	/** @var Link */
 	public $link;
 
-	/**
-	 * @var Country
-	 */
+	/** @var Country */
 	public $country;
 
-	/**
-	 * @var Employee
-	 */
+	/** @var Employee */
 	public $employee;
 
-	/**
-	 * @var Controller
-	 */
+	/** @var AdminController|FrontController */
 	public $controller;
 
-	/**
-	 * @var Language
-	 */
+	/** @var string */
+	public $override_controller_name_for_translations;
+
+	/** @var Language */
 	public $language;
 
-	/**
-	 * @var Currency
-	 */
+	/** @var Currency */
 	public $currency;
 
-	/**
-	 * @var AdminTab
-	 */
+	/** @var AdminTab */
 	public $tab;
 
-	/**
-	 * @var Shop
-	 */
+	/** @var Shop */
 	public $shop;
 
-	/**
-	 * @var Theme
-	 */
+	/** @var Theme */
 	public $theme;
 
-	/**
-	 * @var Smarty
-	 */
+	/** @var Smarty */
 	public $smarty;
 
-	/**
-	 * @ var Mobile Detect
-	 */
+	/** @var Mobile_Detect */
 	public $mobile_detect;
 
+	/** @var int */
+	public $mode;
+
 	/**
-	 * @var boolean|string mobile device of the customer
+	 * Mobile device of the customer
+	 *
+	 * @var bool|null
 	 */
 	protected $mobile_device = null;
-	
+
+	/** @var bool|null */
+	protected $is_mobile = null;
+
+	/** @var bool|null */
+	protected $is_tablet = null;
+
+	/** @var int */
 	const DEVICE_COMPUTER = 1;
-	
+
+	/** @var int */
 	const DEVICE_TABLET = 2;
-	
+
+	/** @var int */
 	const DEVICE_MOBILE = 4;
 
+	/** @var int */
+	const MODE_STD = 1;
+
+	/** @var int */
+	const MODE_STD_CONTRIB = 2;
+
+	/** @var int */
+	const MODE_HOST_CONTRIB = 4;
+
+	/** @var int */
+	const MODE_HOST = 8;
+
+	/**
+	 * Sets Mobile_Detect tool object
+	 *
+	 * @return Mobile_Detect
+	 */
 	public function getMobileDetect()
 	{
 		if ($this->mobile_detect === null)
@@ -125,6 +131,41 @@ class ContextCore
 		return $this->mobile_detect;
 	}
 
+	/**
+	 * Checks if visitor's device is a mobile device
+	 *
+	 * @return bool
+	 */
+	public function isMobile()
+	{
+		if ($this->is_mobile === null)
+		{
+			$mobile_detect = $this->getMobileDetect();
+			$this->is_mobile = $mobile_detect->isMobile();
+		}
+		return $this->is_mobile;
+	}
+
+	/**
+	 * Checks if visitor's device is a tablet device
+	 *
+	 * @return bool
+	 */
+	public function isTablet()
+	{
+		if ($this->is_tablet === null)
+		{
+			$mobile_detect = $this->getMobileDetect();
+			$this->is_tablet = $mobile_detect->isTablet();
+		}
+		return $this->is_tablet;
+	}
+
+	/**
+	 * Sets mobile_device context variable
+	 *
+	 * @return bool
+	 */
 	public function getMobileDevice()
 	{
 		if ($this->mobile_device === null)
@@ -132,43 +173,45 @@ class ContextCore
 			$this->mobile_device = false;
 			if ($this->checkMobileContext())
 			{
-				if (isset(Context::getContext()->cookie->no_mobile) && Context::getContext()->cookie->no_mobile == false AND (int)Configuration::get('PS_ALLOW_MOBILE_DEVICE') != 0)
+				if (isset(Context::getContext()->cookie->no_mobile) && Context::getContext()->cookie->no_mobile == false && (int)Configuration::get('PS_ALLOW_MOBILE_DEVICE') != 0)
 					$this->mobile_device = true;
 				else
 				{
-					$mobile_detect = $this->getMobileDetect();
 					switch ((int)Configuration::get('PS_ALLOW_MOBILE_DEVICE'))
 					{
 						case 1: // Only for mobile device
-							if ($mobile_detect->isMobile() && !$mobile_detect->isTablet())
+							if ($this->isMobile() && !$this->isTablet())
 								$this->mobile_device = true;
 							break;
 						case 2: // Only for touchpads
-							if ($mobile_detect->isTablet() && !$mobile_detect->isMobile())
+							if ($this->isTablet() && !$this->isMobile())
 								$this->mobile_device = true;
 							break;
 						case 3: // For touchpad or mobile devices
-							if ($mobile_detect->isMobile() || $mobile_detect->isTablet())
+							if ($this->isMobile() || $this->isTablet())
 								$this->mobile_device = true;
 							break;
 					}
 				}
 			}
 		}
-
 		return $this->mobile_device;
 	}
-	
+
+	/**
+	 * Returns mobile device type
+	 *
+	 * @return int
+	 */
 	public function getDevice()
 	{
 		static $device = null;
 
 		if ($device === null)
 		{
-			$mobile_detect = $this->getMobileDetect();
-			if ($mobile_detect->isTablet())
+			if ($this->isTablet())
 				$device = Context::DEVICE_TABLET;
-			elseif ($mobile_detect->isMobile())
+			elseif ($this->isMobile())
 				$device = Context::DEVICE_MOBILE;
 			else
 				$device = Context::DEVICE_COMPUTER;
@@ -177,6 +220,12 @@ class ContextCore
 		return $device;
 	}
 
+	/**
+	 * Checks if mobile context is possible
+	 *
+	 * @return bool
+	 * @throws PrestaShopException
+	 */
 	protected function checkMobileContext()
 	{
 		// Check mobile context
@@ -209,7 +258,7 @@ class ContextCore
 	}
 
 	/**
-	 * Get a singleton context
+	 * Get a singleton instance of Context object
 	 *
 	 * @return Context
 	 */
@@ -217,12 +266,30 @@ class ContextCore
 	{
 		if (!isset(self::$instance))
 			self::$instance = new Context();
+
 		return self::$instance;
 	}
-	
+
 	/**
-	 * Clone current context
-	 * 
+	 * @param $test_instance Context
+	 * Unit testing purpose only
+	 */
+	public static function setInstanceForTesting($test_instance)
+	{
+		self::$instance = $test_instance;
+	}
+
+	/**
+	 * Unit testing purpose only
+	 */
+	public static function deleteTestingInstance()
+	{
+		self::$instance = null;
+	}
+
+	/**
+	 * Clone current context object
+	 *
 	 * @return Context
 	 */
 	public function cloneContext()

@@ -1,7 +1,7 @@
 <div id="datepicker" class="row row-padding-top hide">
 	<div class="col-lg-12">
 		<div class="daterangepicker-days">
-			<div class="row">	
+			<div class="row">
 				{if $is_rtl}
 				<div class="col-sm-6 col-lg-4">
 					<div class="datepicker2" data-date="{$date_to}" data-date-format="{$date_format}"></div>
@@ -63,7 +63,7 @@
 								<label>{l s='From'}</label>
 								<input id="date-start-compare" class="date-input form-control" type="text" placeholder="Start" name="compare_date_from" value="{$compare_date_from}" data-date-format="{$date_format}" tabindex="4" />
 								<label>{l s='to'}</label>
-								<input id="date-end-compare" class="date-input form-control" type="text" placeholder="End" name="compare_date_to" value="{$compare_date_to}" data-date-format="{$date_format}" 
+								<input id="date-end-compare" class="date-input form-control" type="text" placeholder="End" name="compare_date_to" value="{$compare_date_to}" data-date-format="{$date_format}"
 								tabindex="5" />
 							</div>
 						</div>
@@ -90,6 +90,6 @@
 		daysShort: ['{l s='Sun' js=1}', '{l s='Mon' js=1}', '{l s='Tue' js=1}', '{l s='Wed' js=1}', '{l s='Thu' js=1}', '{l s='Fri' js=1}', '{l s='Sat' js=1}', '{l s='Sun' js=1}'],
 		daysMin: ['{l s='Su' js=1}', '{l s='Mo' js=1}', '{l s='Tu' js=1}', '{l s='We' js=1}', '{l s='Th' js=1}', '{l s='Fr' js=1}', '{l s='Sa' js=1}', '{l s='Su' js=1}'],
 		months: ['{l s='January' js=1}', '{l s='February' js=1}', '{l s='March' js=1}', '{l s='April' js=1}', '{l s='May' js=1}', '{l s='June' js=1}', '{l s='July' js=1}', '{l s='August' js=1}', '{l s='September' js=1}', '{l s='October' js=1}', '{l s='November' js=1}', '{l s='December' js=1}'],
-		monthsShort: ['{l s='Jan' js=1}', '{l s='Feb' js=1}', '{l s='Mar' js=1}', '{l s='Apr' js=1}', '{l s='May' js=1}', '{l s='Jun' js=1}', '{l s='Jul' js=1}', '{l s='Aug' js=1}', '{l s='Sep' js=1}', '{l s='Oct' js=1}', '{l s='Nov' js=1}', '{l s='Dec' js=1}']
+		monthsShort: ['{l s='Jan' js=1}', '{l s='Feb' js=1}', '{l s='Mar' js=1}', '{l s='Apr' js=1}', '{l s='May ' js=1}', '{l s='Jun' js=1}', '{l s='Jul' js=1}', '{l s='Aug' js=1}', '{l s='Sep' js=1}', '{l s='Oct' js=1}', '{l s='Nov' js=1}', '{l s='Dec' js=1}']
 	};
 </script>

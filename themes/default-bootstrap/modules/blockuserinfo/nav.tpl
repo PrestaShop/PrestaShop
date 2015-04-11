@@ -10,7 +10,7 @@
 			{l s='Sign out' mod='blockuserinfo'}
 		</a>
 	{else}
-		<a class="login" href="{$link->getPageLink('my-account', true)|escape:'html':'UTF-8'}" rel="nofollow" title="{l s='Login to your customer account' mod='blockuserinfo'}">
+		<a class="login" href="{$link->getPageLink('my-account', true)|escape:'html':'UTF-8'}" rel="nofollow" title="{l s='Log in to your customer account' mod='blockuserinfo'}">
 			{l s='Sign in' mod='blockuserinfo'}
 		</a>
 	{/if}

@@ -1,5 +1,5 @@
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -37,7 +37,7 @@ $(document).ready(function(){
 		if (markerNum !== 'none')
 		google.maps.event.trigger(markers[markerNum], 'click');
 	};
-	
+
 	$('#addressInput').keypress(function(e) {
 		code = e.keyCode ? e.keyCode : e.which;
 		if(code.toString() === 13)
@@ -96,7 +96,7 @@ function searchLocations()
 			searchLocationsNear(results[0].geometry.location);
 		else
 		{
-			if (!!$.prototype.fancybox)
+			if (!!$.prototype.fancybox && isCleanHtml(address))
 			    $.fancybox.open([
 			        {
 			            type: 'inline',
@@ -119,7 +119,7 @@ function clearLocations(n)
 	infoWindow.close();
 	for (var i = 0; i < markers.length; i++)
 		markers[i].setMap(null);
-		
+
 	markers.length = 0;
 
 	locationSelect.innerHTML = '';
@@ -133,9 +133,12 @@ function clearLocations(n)
 			option.innerHTML = '1'+' '+translation_2;
 		else
 			option.innerHTML = n+' '+translation_3;
-	} 
+	}
 	locationSelect.appendChild(option);
-	$("select#locationSelect").uniform();
+
+	if (!!$.prototype.uniform)
+		$("select#locationSelect").uniform();
+
 	$('#stores-table tr.node').remove();
 }
 
@@ -167,6 +170,8 @@ function searchLocationsNear(center)
 			createOption(name, distance, i);
 			createMarker(latlng, name, address, other, id_store, has_store_picture);
 			bounds.extend(latlng);
+			address = address.replace(phone, '');
+
 			$('table#stores-table').find('tbody').append('<tr ><td class="num">'+parseInt(i + 1)+'</td><td class="name">'+(has_store_picture == 1 ? '<img src="'+img_store_dir+parseInt(id_store)+'.jpg" alt="" />' : '')+'<span>'+name+'</span></td><td class="address">'+address+(phone !== '' ? ''+translation_4+' '+phone : '')+'</td><td class="distance">'+distance+' '+distance_unit+'</td></tr>');
 			$('#stores-table').show();
 		}
@@ -174,9 +179,9 @@ function searchLocationsNear(center)
 		if (markerNodes.length)
 		{
 			map.fitBounds(bounds);
-			var listener = google.maps.event.addListener(map, "idle", function() { 
+			var listener = google.maps.event.addListener(map, "idle", function() {
 				if (map.getZoom() > 13) map.setZoom(13);
-				google.maps.event.removeListener(listener); 
+				google.maps.event.removeListener(listener);
 			});
 		}
 		locationSelect.style.visibility = 'visible';

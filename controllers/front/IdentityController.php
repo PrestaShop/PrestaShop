@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -30,6 +30,9 @@ class IdentityControllerCore extends FrontController
 	public $php_self = 'identity';
 	public $authRedirection = 'identity';
 	public $ssl = true;
+
+	/** @var Customer */
+	protected $customer;
 
 	public function init()
 	{
@@ -50,7 +53,7 @@ class IdentityControllerCore extends FrontController
 			$email = trim(Tools::getValue('email'));
 
 			if (Tools::getValue('months') != '' && Tools::getValue('days') != '' && Tools::getValue('years') != '')
-				$this->customer->birthday = (int)(Tools::getValue('years')).'-'.(int)(Tools::getValue('months')).'-'.(int)(Tools::getValue('days'));
+				$this->customer->birthday = (int)Tools::getValue('years').'-'.(int)Tools::getValue('months').'-'.(int)Tools::getValue('days');
 			elseif (Tools::getValue('months') == '' && Tools::getValue('days') == '' && Tools::getValue('years') == '')
 				$this->customer->birthday = null;
 			else
@@ -58,7 +61,7 @@ class IdentityControllerCore extends FrontController
 
 			if (Tools::getIsset('old_passwd'))
 				$old_passwd = trim(Tools::getValue('old_passwd'));
-			
+
 			if (!Validate::isEmail($email))
 				$this->errors[] = Tools::displayError('This email address is not valid');
 			elseif ($this->customer->email != $email && Customer::customerExists($email, true))
@@ -90,8 +93,11 @@ class IdentityControllerCore extends FrontController
 					$this->customer->newsletter = 0;
 				elseif (!$origin_newsletter && Tools::getIsset('newsletter'))
 					if ($module_newsletter = Module::getInstanceByName('blocknewsletter'))
+					{
+						/** @var Blocknewsletter $module_newsletter */
 						if ($module_newsletter->active)
 							$module_newsletter->confirmSubscription($this->customer->email);
+					}
 
 				if (!Tools::getIsset('optin'))
 					$this->customer->optin = 0;
@@ -137,7 +143,16 @@ class IdentityControllerCore extends FrontController
 				'genders' => Gender::getGenders(),
 			));
 
-		$this->context->smarty->assign('newsletter', (int)Module::getInstanceByName('blocknewsletter')->active);
+		// Call a hook to display more information
+		$this->context->smarty->assign(array(
+			'HOOK_CUSTOMER_IDENTITY_FORM' => Hook::exec('displayCustomerIdentityForm'),
+		));
+
+		$newsletter = Configuration::get('PS_CUSTOMER_NWSL') || (Module::isInstalled('blocknewsletter') && Module::getInstanceByName('blocknewsletter')->active);
+		$this->context->smarty->assign('newsletter', $newsletter);
+		$this->context->smarty->assign('optin', (bool)Configuration::get('PS_CUSTOMER_OPTIN'));
+
+		$this->context->smarty->assign('field_required', $this->context->customer->validateFieldsRequiredDatabase());
 
 		$this->setTemplate(_PS_THEME_DIR_.'identity.tpl');
 	}

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,11 +19,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property CMS $object
+ */
 class AdminCmsContentControllerCore extends AdminController
 {
 	/** @var object adminCMSCategories() instance */
@@ -82,16 +85,16 @@ class AdminCmsContentControllerCore extends AdminController
 	public function initContent()
 	{
 		$this->initTabModuleList();
-		$this->content .= $this->renderPageHeaderToolbar();
+		$this->renderPageHeaderToolbar();
 		
 		$this->admin_cms_categories->token = $this->token;
 		$this->admin_cms->token = $this->token;
 
 		if ($this->display == 'edit_category')
 			$this->content .= $this->admin_cms_categories->renderForm();
-		else if ($this->display == 'edit_page')
+		elseif ($this->display == 'edit_page')
 			$this->content .= $this->admin_cms->renderForm();
-		else if ($this->display == 'view_page')
+		elseif ($this->display == 'view_page')
 			$fixme = 'fixme';// @FIXME
 		else
 		{
@@ -187,8 +190,6 @@ class AdminCmsContentControllerCore extends AdminController
 			'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
 			'page_header_toolbar_title' => $this->toolbar_title,
 		));
-
-		return $template->fetch();
 	}
 
 	public function postProcess()
@@ -225,7 +226,7 @@ class AdminCmsContentControllerCore extends AdminController
 			|| Tools::isSubmit('updatecms_category')
 			|| Tools::isSubmit('addcms_category'))
 			$this->display = 'edit_category';
-		else if (((Tools::isSubmit('submitAddcms') || Tools::isSubmit('submitAddcmsAndStay')) && count($this->admin_cms->errors))
+		elseif (((Tools::isSubmit('submitAddcms') || Tools::isSubmit('submitAddcmsAndStay')) && count($this->admin_cms->errors))
 			|| Tools::isSubmit('updatecms')
 			|| Tools::isSubmit('addcms'))
 			$this->display = 'edit_page';

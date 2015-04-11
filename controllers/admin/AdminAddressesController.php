@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,11 +19,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Address $object
+ */
 class AdminAddressesControllerCore extends AdminController
 {
 	/** @var array countries list */
@@ -77,12 +80,14 @@ class AdminAddressesControllerCore extends AdminController
 			LEFT JOIN `'._DB_PREFIX_.'customer` c ON a.id_customer = c.id_customer
 		';
 		$this->_where = 'AND a.id_customer != 0 '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'c');
+		$this->_use_found_rows = false;
 	}
 
 	public function initToolbar()
 	{
 		parent::initToolbar();
-		if (!$this->display)
+
+		if (!$this->display && $this->can_import)
 			$this->toolbar_btn['import'] = array(
 				'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=addresses',
 				'desc' => $this->l('Import')
@@ -132,22 +137,6 @@ class AdminAddressesControllerCore extends AdminController
 					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
 				),
 				array(
-					'type' => 'text',
-					'label' => $this->l('Home phone'),
-					'name' => 'phone',
-					'required' => false,
-					'col' => '4',
-					'hint' => Configuration::get('PS_ONE_PHONE_AT_LEAST') ? sprintf($this->l('You must register at least one phone number.')) : ''
-				),
-				array(
-					'type' => 'text',
-					'label' => $this->l('Mobile phone'),
-					'name' => 'phone_mobile',
-					'required' => false,
-					'col' => '4',
-					'hint' => Configuration::get('PS_ONE_PHONE_AT_LEAST') ? sprintf($this->l('You must register at least one phone number.')) : ''
-				),
-				array(
 					'type' => 'textarea',
 					'label' => $this->l('Other'),
 					'name' => 'other',
@@ -156,11 +145,26 @@ class AdminAddressesControllerCore extends AdminController
 					'rows' => 3,
 					'hint' => $this->l('Forbidden characters:').' &lt;&gt;;=#{}'
 				),
+				array(
+					'type' => 'hidden',
+					'name' => 'id_order'
+				),
+				array(
+					'type' => 'hidden',
+					'name' => 'address_type',
+				),
+				array(
+					'type' => 'hidden',
+					'name' => 'back'
+				)
 			),
 			'submit' => array(
 				'title' => $this->l('Save'),
 			)
 		);
+
+		$this->fields_value['address_type'] = (int)Tools::getValue('address_type', 1);
+
 		$id_customer = (int)Tools::getValue('id_customer');
 		if (!$id_customer && Validate::isLoadedObject($this->object))
 			$id_customer = $this->object->id_customer;
@@ -172,13 +176,20 @@ class AdminAddressesControllerCore extends AdminController
 
 		$this->tpl_form_vars = array(
 			'customer' => isset($customer) ? $customer : null,
-			'tokenCustomer' => isset ($token_customer) ? $token_customer : null
+			'tokenCustomer' => isset ($token_customer) ? $token_customer : null,
+			'back_url' => urldecode(Tools::getValue('back'))
 		);
 
 		// Order address fields depending on country format
 		$addresses_fields = $this->processAddressFormat();
 		// we use  delivery address
 		$addresses_fields = $addresses_fields['dlv_all_fields'];
+
+		// get required field
+		$required_fields = AddressFormat::getFieldsRequired();
+
+		// Merge with field required
+		$addresses_fields = array_unique(array_merge($addresses_fields, $required_fields));
 
 		$temp_fields = array();
 
@@ -190,7 +201,7 @@ class AdminAddressesControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Company'),
 					'name' => 'company',
-					'required' => false,
+					'required' => in_array('company', $required_fields),
 					'col' => '4',
 					'hint' => $this->l('Invalid characters:').' &lt;&gt;;=#{}'
 				);
@@ -198,10 +209,11 @@ class AdminAddressesControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('VAT number'),
 					'col' => '2',
-					'name' => 'vat_number'
+					'name' => 'vat_number',
+					'required' => in_array('vat_number', $required_fields)
 				);
 			}
-			else if ($addr_field_item == 'lastname')
+			elseif ($addr_field_item == 'lastname')
 			{
 				if (isset($customer) &&
 					!Tools::isSubmit('submit'.strtoupper($this->table)) &&
@@ -221,7 +233,7 @@ class AdminAddressesControllerCore extends AdminController
 					'default_value' => $default_value,
 				);
 			}
-			else if ($addr_field_item == 'firstname')
+			elseif ($addr_field_item == 'firstname')
 			{
 				if (isset($customer) &&
 					!Tools::isSubmit('submit'.strtoupper($this->table)) &&
@@ -241,7 +253,7 @@ class AdminAddressesControllerCore extends AdminController
 					'default_value' => $default_value,
 				);
 			}
-			else if ($addr_field_item == 'address1')
+			elseif ($addr_field_item == 'address1')
 			{
 				$temp_fields[] = array(
 					'type' => 'text',
@@ -251,14 +263,14 @@ class AdminAddressesControllerCore extends AdminController
 					'required' => true,
 				);
 			}
-			else if ($addr_field_item == 'address2')
+			elseif ($addr_field_item == 'address2')
 			{
 				$temp_fields[] = array(
 					'type' => 'text',
 					'label' => $this->l('Address').' (2)',
 					'name' => 'address2',
 					'col' => '6',
-					'required' => false,
+					'required' => in_array('address2', $required_fields),
 				);
 			}
 			elseif ($addr_field_item == 'postcode')
@@ -271,7 +283,7 @@ class AdminAddressesControllerCore extends AdminController
 					'required' => true,
 				);
 			}
-			else if ($addr_field_item == 'city')
+			elseif ($addr_field_item == 'city')
 			{
 				$temp_fields[] = array(
 					'type' => 'text',
@@ -281,13 +293,13 @@ class AdminAddressesControllerCore extends AdminController
 					'required' => true,
 				);
 			}
-			else if ($addr_field_item == 'country' || $addr_field_item == 'Country:name')
+			elseif ($addr_field_item == 'country' || $addr_field_item == 'Country:name')
 			{
 				$temp_fields[] = array(
 					'type' => 'select',
 					'label' => $this->l('Country'),
 					'name' => 'id_country',
-					'required' => false,
+					'required' => in_array('Country:name', $required_fields) || in_array('country', $required_fields),
 					'col' => '4',
 					'default_value' => (int)$this->context->country->id,
 					'options' => array(
@@ -307,6 +319,28 @@ class AdminAddressesControllerCore extends AdminController
 						'id' => 'id_state',
 						'name' => 'name'
 					)
+				);
+			}
+			elseif ($addr_field_item == 'phone')
+			{
+				$temp_fields[] = array(
+					'type' => 'text',
+					'label' => $this->l('Home phone'),
+					'name' => 'phone',
+					'required' => in_array('phone', $required_fields) || Configuration::get('PS_ONE_PHONE_AT_LEAST'),
+					'col' => '4',
+					'hint' => Configuration::get('PS_ONE_PHONE_AT_LEAST') ? sprintf($this->l('You must register at least one phone number.')) : ''
+				);
+			}
+			elseif ($addr_field_item == 'phone_mobile')
+			{
+				$temp_fields[] = array(
+					'type' => 'text',
+					'label' => $this->l('Mobile phone'),
+					'name' => 'phone_mobile',
+					'required' =>  in_array('phone_mobile', $required_fields) || Configuration::get('PS_ONE_PHONE_AT_LEAST'),
+					'col' => '4',
+					'hint' => Configuration::get('PS_ONE_PHONE_AT_LEAST') ? sprintf($this->l('You must register at least one phone number.')) : ''
 				);
 			}
 		}
@@ -332,16 +366,16 @@ class AdminAddressesControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('This email address is not registered.');
 		}
-		else if ($id_customer = Tools::getValue('id_customer'))
+		elseif ($id_customer = Tools::getValue('id_customer'))
 		{
 			$customer = new Customer((int)$id_customer);
 			if (Validate::isLoadedObject($customer))
 				$_POST['id_customer'] = $customer->id;
 			else
-				$this->errors[] = Tools::displayError('Unknown customer');
+				$this->errors[] = Tools::displayError('This customer ID is not recognized.');
 		}
 		else
-			$this->errors[] = Tools::displayError('Unknown customer');
+			$this->errors[] = Tools::displayError('This email address is not valid. Please use an address like bob@example.com.');
 		if (Country::isNeedDniByCountryId(Tools::getValue('id_country')) && !Tools::getValue('dni'))
 			$this->errors[] = Tools::displayError('The identification number is incorrect or has already been used.');
 
@@ -356,16 +390,16 @@ class AdminAddressesControllerCore extends AdminController
 		if ((int)$country->contains_states && !$id_state)
 			$this->errors[] = Tools::displayError('An address located in a country containing states must have a state selected.');
 
-		$postcode = Tools::getValue('postcode');		
+		$postcode = Tools::getValue('postcode');
 		/* Check zip code format */
 		if ($country->zip_code_format && !$country->checkZipCode($postcode))
 			$this->errors[] = Tools::displayError('Your Zip/postal code is incorrect.').'<br />'.Tools::displayError('It must be entered as follows:').' '.str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)));
-		elseif(empty($postcode) && $country->need_zip_code)
+		elseif (empty($postcode) && $country->need_zip_code)
 			$this->errors[] = Tools::displayError('A Zip/postal code is required.');
 		elseif ($postcode && !Validate::isPostCode($postcode))
 			$this->errors[] = Tools::displayError('The Zip/postal code is invalid.');
 
-		if (Configuration::get('PS_ONE_PHONE_AT_LEAST') && !Tools::getValue('phone') && !Tools::getValue('phone_mobile'))		
+		if (Configuration::get('PS_ONE_PHONE_AT_LEAST') && !Tools::getValue('phone') && !Tools::getValue('phone_mobile'))
 			$this->errors[] = Tools::displayError('You must register at least one phone number.');
 
 		/* If this address come from order's edition and is the same as the other one (invoice or delivery one)
@@ -374,28 +408,34 @@ class AdminAddressesControllerCore extends AdminController
 		{
 			$this->_redirect = false;
 			if (isset($_POST['address_type']))
+			{
 				$_POST['id_address'] = '';
+				$this->id_object = null;
+			}
 		}
 
 		// Check the requires fields which are settings in the BO
 		$address = new Address();
 		$this->errors = array_merge($this->errors, $address->validateFieldsRequiredDatabase());
 
+		$return = false;
 		if (empty($this->errors))
-			return parent::processSave();
+			$return = parent::processSave();
 		else
 			// if we have errors, we stay on the form instead of going back to the list
 			$this->display = 'edit';
 
 		/* Reassignation of the order's new (invoice or delivery) address */
-		$address_type = ((int)Tools::getValue('address_type') == 2 ? 'invoice' : ((int)Tools::getValue('address_type') == 1 ? 'delivery' : ''));
+		$address_type = (int)Tools::getValue('address_type') == 2 ? 'invoice' : 'delivery';
+
 		if ($this->action == 'save' && ($id_order = (int)Tools::getValue('id_order')) && !count($this->errors) && !empty($address_type))
 		{
-			if (!Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'orders SET `id_address_'.$address_type.'` = '.Db::getInstance()->Insert_ID().' WHERE `id_order` = '.$id_order))
+			if (!Db::getInstance()->Execute('UPDATE '._DB_PREFIX_.'orders SET `id_address_'.bqSQL($address_type).'` = '.(int)$this->object->id.' WHERE `id_order` = '.(int)$id_order))
 				$this->errors[] = Tools::displayError('An error occurred while linking this address to its order.');
 			else
-				Tools::redirectAdmin(Tools::getValue('back').'&conf=4');
+				Tools::redirectAdmin(urldecode(Tools::getValue('back')).'&conf=4');
 		}
+		return $return;
 	}
 
 	public function processAdd()
@@ -463,8 +503,11 @@ class AdminAddressesControllerCore extends AdminController
 	public function processDelete()
 	{
 		if (Validate::isLoadedObject($object = $this->loadObject()))
+		{
+			/** @var Address $object */
 			if (!$object->isUsed())
 				$this->deleted = false;
+		}
 
 		return parent::processDelete();
 	}

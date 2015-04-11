@@ -1,4 +1,4 @@
-2007-2014 PrestaShop
+2007-2015 PrestaShop
 
 NOTICE OF LICENSE
 
@@ -17,12 +17,12 @@ versions in the future. If you wish to customize PrestaShop for your
 needs please refer to http://www.prestashop.com for more information.
 
 @author PrestaShop SA <contact@prestashop.com>
-@copyright 2007-2014 PrestaShop SA
+@copyright 2007-2015 PrestaShop SA
 @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 International Registered Trademark & Property of PrestaShop SA
 
-NAME: Prestashop 1.6.0.4
-VERSION: 1.6.0.4
+NAME: Prestashop 1.6.0.14
+VERSION: 1.6.0.14
 
 PREPARACIÓN
 ===========
@@ -31,7 +31,7 @@ Para instalar PrestaShop, necesita un servidor web remoto o en su ordenador (MAM
 Tendrá acceso a phpMyAdmin para crear una base de datos y para indicar la información en la base de datos en el instalador.
 
 Si no de acogida y no puede crear su tienda, le ofrecemos una tienda "llave en mano, que le permite crear su tienda en línea en menos de 10 minutos sin ningún conocimiento técnico.
-Le invitamos a visitar: 
+Le invitamos a visitar:
 	http://www.prestabox.com/
 
 INSTALACIÓN

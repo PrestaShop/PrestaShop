@@ -1,6 +1,6 @@
-<?xml version="1.0"?>
+<?xml version='1.0'?>
 <entity_cms_category>
-  <cms_category id="Home">
+  <cms_category id='Home'>
     <name>Home</name>
     <description/>
     <link_rewrite>home</link_rewrite>

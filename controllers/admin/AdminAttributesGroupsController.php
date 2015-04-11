@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,11 +19,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property AttributeGroup $object
+ */
 class AdminAttributesGroupsControllerCore extends AdminController
 {
 	public $bootstrap = true;
@@ -87,9 +90,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	 */
 	public function renderList()
 	{
+		$this->addRowAction('view');
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-		$this->addRowAction('view');
+
 
 		return parent::renderList();
 	}
@@ -106,12 +110,16 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			$this->list_id    = 'attribute_values';
 			$this->lang       = true;
 
+			$this->context->smarty->assign(array(
+				'current' => self::$currentIndex.'&id_attribute_group='.(int)$id.'&viewattribute_group'
+			));
+
 			if (!Validate::isLoadedObject($obj = new AttributeGroup((int)$id)))
 			{
 				$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 				return;
 			}
-			
+
 			$this->attribute_name = $obj->name;
 			$this->fields_list = array(
 				'id_attribute' => array(
@@ -129,7 +137,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			if ($obj->group_type == 'color')
 				$this->fields_list['color'] = array(
 					'title' => $this->l('Color'),
-					'filter_key' => 'b!color'
+					'filter_key' => 'a!color',
 				);
 
 			$this->fields_list['position'] = array(
@@ -150,7 +158,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			return parent::renderList();
 		}
 	}
-	
+
 	/**
 	 * AdminController::renderForm() override
 	 * @see AdminController::renderForm()
@@ -167,11 +175,11 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			),
 			array(
 				'id' => 'radio',
-				'name' => $this->l('Radio button')
+				'name' => $this->l('Radio buttons')
 			),
 			array(
 				'id' => 'color',
-				'name' => $this->l('Color')
+				'name' => $this->l('Color or texture')
 			),
 		);
 
@@ -188,7 +196,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					'lang' => true,
 					'required' => true,
 					'col' => '4',
-					'hint' => $this->l('Invalid characters:').' <>;=#{}'
+					'hint' => $this->l('Your internal name for this attribute.').'&nbsp;'.$this->l('Invalid characters:').' <>;=#{}'
 				),
 				array(
 					'type' => 'text',
@@ -197,7 +205,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					'lang' => true,
 					'required' => true,
 					'col' => '4',
-					'hint' => $this->l('Group name displayed to the customer').'&nbsp;'.$this->l('Invalid characters:').' <>;=#{}'
+					'hint' => $this->l('The public name for this attribute, displayed to the customers.').'&nbsp;'.$this->l('Invalid characters:').' <>;=#{}'
 				),
 				array(
 					'type' => 'select',
@@ -210,7 +218,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 						'name' => 'name'
 					),
 					'col' => '2',
-					'hint' => $this->l('Choose the type of the attribute.')
+					'hint' => $this->l('The way the attribute\'s values will be presented to the customers in the product\'s page.')
 				)
 			)
 		);
@@ -258,7 +266,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 						'id' => 'id_attribute_group',
 						'name' => 'name'
 					),
-					'hint' => $this->l('Choose the group of the attribute.')
+					'hint' => $this->l('Choose the attribute group for this value.')
 				),
 				array(
 					'type' => 'text',
@@ -304,7 +312,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			'label' => $this->l('Texture'),
 			'name' => 'texture',
 			'hint' => array(
-				$this->l('Upload color texture from your computer.'),
+				$this->l('Upload an image file containing the color texture from your computer.'),
 				$this->l('This will override the HTML color!')
 			)
 		);
@@ -314,7 +322,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			'label' => $this->l('Current texture'),
 			'name' => 'current_texture'
 		);
-		
+
 		$this->fields_form['input'][] = array(
 			'type' => 'closediv',
 			'name' => ''
@@ -372,9 +380,9 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	{
 		if (Tools::isSubmit('updateattribute'))
 			$this->display = 'editAttributes';
-		else if (Tools::isSubmit('submitAddattribute'))
+		elseif (Tools::isSubmit('submitAddattribute'))
 			$this->display = 'editAttributes';
-		else if (Tools::isSubmit('submitAddattribute_group'))
+		elseif (Tools::isSubmit('submitAddattribute_group'))
 			$this->display = 'add';
 
 		parent::init();
@@ -388,6 +396,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 	{
 		if ($this->table == 'attribute')
 		{
+			/** @var AttributeGroup $object */
 			$object = new $this->className();
 			foreach (Language::getLanguages(false) as $language)
 				if ($object->isAttribute((int)Tools::getValue('id_attribute_group'),
@@ -409,10 +418,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			else
 				$this->redirect_after = self::$currentIndex.'&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&conf=3&update'.$this->table.'&token='.$this->token;
 		}
-		
+
 		if (count($this->errors))
 			$this->setTypeAttribute();
-		
+
 		return $object;
 	}
 
@@ -431,10 +440,13 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			else
 				$this->redirect_after = self::$currentIndex.'&'.$this->identifier.'=&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&conf=3&update'.$this->table.'&token='.$this->token;
 		}
-		
+
 		if (count($this->errors))
 			$this->setTypeAttribute();
-			
+
+		if (Tools::isSubmit('updateattribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute') || Tools::isSubmit('submitBulkdeleteattribute'))
+			Tools::clearColorListCache();
+
 		return $object;
 	}
 
@@ -462,14 +474,14 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				return;
 			$this->content .= $this->renderForm();
 		}
-		else if ($this->display == 'editAttributes')
+		elseif ($this->display == 'editAttributes')
 		{
 			if (!$this->object = new Attribute((int)Tools::getValue('id_attribute')))
 				return;
 
 			$this->content .= $this->renderFormAttributes();
 		}
-		else if ($this->display != 'view' && !$this->ajax)
+		elseif ($this->display != 'view' && !$this->ajax)
 		{
 			$this->content .= $this->renderList();
 			$this->content .= $this->renderOptions();
@@ -544,10 +556,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				break;
 			case 'view':
 				$this->toolbar_btn['newAttributes'] = array(
-						'href' => self::$currentIndex.'&updateattribute&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&token='.$this->token,
-						'desc' => $this->l('Add New Values', null, null, false),
-						'class' => 'toolbar-new'
-					);
+					'href' => self::$currentIndex.'&updateattribute&id_attribute_group='.(int)Tools::getValue('id_attribute_group').'&token='.$this->token,
+					'desc' => $this->l('Add New Values', null, null, false),
+					'class' => 'toolbar-new'
+				);
 
 				$this->toolbar_btn['back'] = array(
 					'href' => self::$currentIndex.'&token='.$this->token,
@@ -559,11 +571,12 @@ class AdminAttributesGroupsControllerCore extends AdminController
 					'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
 					'desc' => $this->l('Add New Attributes', null, null, false)
 				);
+				if ($this->can_import)
+					$this->toolbar_btn['import'] = array(
+						'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=combinations',
+						'desc' => $this->l('Import', null, null, false)
+					);
 		}
-			$this->toolbar_btn['import'] = array(
-					'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=combinations',
-					'desc' => $this->l('Import', null, null, false)
-				);
 	}
 
 	public function initToolbarTitle()
@@ -609,6 +622,9 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				break;
 		}
 
+		if (count($bread_extended) > 0)
+			$this->addMetaTitle($bread_extended[count($bread_extended) - 1]);
+
 		$this->toolbar_title = $bread_extended;
 	}
 
@@ -634,7 +650,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			$this->id_attribute = (int)Tools::getValue('id_attribute');
 		}
 	}
-	
+
 	protected function setTypeAttribute()
 	{
 		if (Tools::isSubmit('updateattribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute') || Tools::isSubmit('submitBulkdeleteattribute'))
@@ -642,7 +658,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 			$this->table = 'attribute';
 			$this->className = 'Attribute';
 			$this->identifier = 'id_attribute';
-			
+
 			if ($this->display == 'edit')
 				$this->display = 'editAttributes';
 		}
@@ -708,7 +724,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 		{
 			if ($this->tabAccess['edit'] !== '1')
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
-			else if (!$object = new Attribute((int)Tools::getValue($this->identifier)))
+			elseif (!$object = new Attribute((int)Tools::getValue($this->identifier)))
 				$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 
 			if (Tools::getValue('position') !== false && Tools::getValue('id_attribute'))
@@ -719,14 +735,14 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				else
 					Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.Tools::getAdminTokenLite('AdminAttributesGroups').'#details_details_'.$object->id_attribute_group);
 			}
-			else if (Tools::isSubmit('deleteattribute') && Tools::getValue('id_attribute'))
+			elseif (Tools::isSubmit('deleteattribute') && Tools::getValue('id_attribute'))
 			{
 				if (!$object->delete())
 					$this->errors[] = Tools::displayError('Failed to delete the attribute.');
 				else
 					Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.Tools::getAdminTokenLite('AdminAttributesGroups'));
 			}
-			else if (Tools::isSubmit('submitAddattribute'))
+			elseif (Tools::isSubmit('submitAddattribute'))
 			{
 				Hook::exec('actionObjectAttributeAddBefore');
 				$this->action = 'save';
@@ -744,6 +760,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				$_POST['id_parent'] = 0;
 				$this->processSave($this->token);
 			}
+
+			if (Tools::getValue('id_attribute') && Tools::isSubmit('submitAddattribute') && Tools::getValue('color') && !Tools::getValue('filename'))
+				if (file_exists(_PS_IMG_DIR_.$this->fieldImageSettings['dir'].'/'.(int)Tools::getValue('id_attribute').'.jpg'))
+					unlink(_PS_IMG_DIR_.$this->fieldImageSettings['dir'].'/'.(int)Tools::getValue('id_attribute').'.jpg');
 		}
 		else
 		{
@@ -753,6 +773,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				{
 					if (isset($_POST[$this->table.'Box']))
 					{
+						/** @var AttributeGroup $object */
 						$object = new $this->className();
 						if ($object->deleteSelection($_POST[$this->table.'Box']))
 							Tools::redirectAdmin(self::$currentIndex.'&conf=2'.'&token='.$this->token);
@@ -766,7 +787,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 				// clean position after delete
 				AttributeGroup::cleanPositions();
 			}
-			else if (Tools::isSubmit('submitAdd'.$this->table))
+			elseif (Tools::isSubmit('submitAdd'.$this->table))
 			{
 				Hook::exec('actionObjectAttributeGroupAddBefore');
 				$id_attribute_group = (int)Tools::getValue('id_attribute_group');

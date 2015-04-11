@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -27,10 +27,12 @@
     {l s='The "%1$s" theme has been successfully installed.'|sprintf:$theme_name}
 </div>
 
+{hook h='displayAfterThemeInstallation' theme_name=$theme_name}
+
 {if $doc|count > 0}
     <ul>
         {foreach $doc as $key => $item}
-        <li><i><a target="_blank" href="{$item}">{$key}</a></i>
+        <li><i><a class="_blank" href="{$item}">{$key}</a></i>
         {/foreach}
     </ul>
 {/if}

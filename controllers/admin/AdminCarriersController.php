@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,17 +19,24 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Carrier $object
+ */
 class AdminCarriersControllerCore extends AdminController
 {
 	protected $position_identifier = 'id_carrier';
 
 	public function __construct()
 	{
+
+		if ($id_carrier = Tools::getValue('id_carrier') && !Tools::isSubmit('deletecarrier') && !Tools::isSubmit('statuscarrier') && !Tools::isSubmit('isFreecarrier') && !Tools::isSubmit('onboarding_carrier'))
+			Tools::redirectAdmin(Context::getContext()->link->getAdminLink('AdminCarrierWizard').'&id_carrier='.(int)$id_carrier);
+
 		$this->bootstrap = true;
 		$this->table = 'carrier';
 		$this->className = 'Carrier';
@@ -102,36 +109,47 @@ class AdminCarriersControllerCore extends AdminController
 			)
 		);
 		parent::__construct();
+		
+		if (Tools::isSubmit('onboarding_carrier'))
+			$this->display = 'view';
 	}
 
 	public function initToolbar()
 	{
 		parent::initToolbar();
 		
-		if (isset($this->toolbar_btn['new']))
-			$this->toolbar_btn['new']['href'] = $this->context->link->getAdminLink('AdminCarrierWizard');
+		if (isset($this->toolbar_btn['new']) && $this->display != 'view')
+			$this->toolbar_btn['new']['href'] = $this->context->link->getAdminLink('AdminCarriers').'&onboarding_carrier';
 	}
 
 	public function initPageHeaderToolbar()
 	{
 		$this->page_header_toolbar_title = $this->l('Carriers');
-		$this->page_header_toolbar_btn['new_carrier'] = array(
-			'href' => $this->context->link->getAdminLink('AdminCarrierWizard'),
-			'desc' => $this->l('Add new carrier', null, null, false),
-			'icon' => 'process-icon-new'
-		);
+		if ($this->display != 'view')
+			$this->page_header_toolbar_btn['new_carrier'] = array(
+				'href' => $this->context->link->getAdminLink('AdminCarriers').'&onboarding_carrier',
+				'desc' => $this->l('Add new carrier', null, null, false),
+				'icon' => 'process-icon-new'
+			);
 
 		parent::initPageHeaderToolbar();
 	}
-
+	
+	public function renderView()
+	{
+		$this->initTabModuleList();
+		$this->filterTabModuleList();
+		$this->context->smarty->assign('panel_title', $this->l('Use one of our recommended carrier modules'));
+		$this->tpl_view_vars = array('modules_list' => $this->renderModulesList());
+		unset($this->page_header_toolbar_btn['modules-list']);
+		return parent::renderView();
+	}
+	
 	public function renderList()
 	{
 		$this->_select = 'b.*';
-		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'carrier_lang` b ON a.id_carrier = b.id_carrier'.Shop::addSqlRestrictionOnLang('b').'
-							LEFT JOIN `'._DB_PREFIX_.'carrier_tax_rules_group_shop` ctrgs ON (a.`id_carrier` = ctrgs.`id_carrier`
-								AND ctrgs.id_shop='.(int)$this->context->shop->id.')';
-		$this->_where = 'AND b.id_lang = '.$this->context->language->id;
-
+		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'carrier_lang` b ON a.id_carrier = b.id_carrier'.Shop::addSqlRestrictionOnLang('b').' AND b.id_lang = '.$this->context->language->id.' LEFT JOIN `'._DB_PREFIX_.'carrier_tax_rules_group_shop` ctrgs ON (a.`id_carrier` = ctrgs.`id_carrier` AND ctrgs.id_shop='.(int)$this->context->shop->id.')';
+		$this->_use_found_rows = false;
 		return parent::renderList();
 	}
 
@@ -219,7 +237,7 @@ class AdminCarriersControllerCore extends AdminController
 							'label' => $this->l('Disabled')
 						)
 					),
-					'hint' => $this->l('Enable the carrier in the Front Office.')
+					'hint' => $this->l('Enable the carrier in the front office.')
 				),
 				array(
 					'type' => 'switch',
@@ -323,28 +341,28 @@ class AdminCarriersControllerCore extends AdminController
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Maximium package height'),
+					'label' => $this->l('Maximum package height'),
 					'name' => 'max_height',
 					'required' => false,
 					'hint' => $this->l('Maximum height managed by this carrier. Set the value to "0," or leave this field blank to ignore.')
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Maximium package width'),
+					'label' => $this->l('Maximum package width'),
 					'name' => 'max_width',
 					'required' => false,
 					'hint' => $this->l('Maximum width managed by this carrier. Set the value to "0," or leave this field blank to ignore.')
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Maximium package depth'),
+					'label' => $this->l('Maximum package depth'),
 					'name' => 'max_depth',
 					'required' => false,
 					'hint' => $this->l('Maximum depth managed by this carrier. Set the value to "0," or leave this field blank to ignore.')
 				),
 				array(
 					'type' => 'text',
-					'label' => $this->l('Maximium package weight'),
+					'label' => $this->l('Maximum package weight'),
 					'name' => 'max_weight',
 					'required' => false,
 					'hint' => $this->l('Maximum weight managed by this carrier. Set the value to "0," or leave this field blank to ignore.')
@@ -390,6 +408,9 @@ class AdminCarriersControllerCore extends AdminController
 
 	public function postProcess()
 	{
+		if (Tools::getValue('action') == 'GetModuleQuickView' && Tools::getValue('ajax') == '1')
+			$this->ajaxProcessGetModuleQuickView();
+		
 		if (Tools::getValue('submitAdd'.$this->table))
 		{
 			/* Checking fields validity */
@@ -407,7 +428,8 @@ class AdminCarriersControllerCore extends AdminController
 							$current_carrier = new Carrier($id);
 							if (!Validate::isLoadedObject($current_carrier))
 								throw new PrestaShopException('Cannot load Carrier object');
-							
+
+							/** @var Carrier $new_carrier */
 							// Duplicate current Carrier
 							$new_carrier = $current_carrier->duplicateObject();
 							if (Validate::isLoadedObject($new_carrier))
@@ -474,12 +496,12 @@ class AdminCarriersControllerCore extends AdminController
 			parent::postProcess();
 		}
 		/*
-else if ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools::getValue($this->identifier))
+elseif ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tools::getValue($this->identifier))
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
 				if (Tools::getValue('id_carrier') == Configuration::get('PS_CARRIER_DEFAULT'))
-					$this->errors[] = Tools::displayError('You cannot disable the default carrier, however you can change your defeault carrier. ');
+					$this->errors[] = Tools::displayError('You cannot disable the default carrier, however you can change your default carrier. ');
 				else
 					parent::postProcess();
 			}
@@ -487,7 +509,7 @@ else if ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tool
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 */
-		else if (isset($_GET['isFree'.$this->table]))
+		elseif (isset($_GET['isFree'.$this->table]))
 		{
 			$this->processIsFree();
 		}
@@ -508,7 +530,7 @@ else if ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tool
 					$carrier = new Carrier((int)$id);
 					Warehouse::removeCarrier($carrier->id_reference);
 				}
-				else if (Tools::isSubmit($this->table.'Box') && count(Tools::isSubmit($this->table.'Box')) > 0)
+				elseif (Tools::isSubmit($this->table.'Box') && count(Tools::isSubmit($this->table.'Box')) > 0)
 				{
 					$ids = Tools::getValue($this->table.'Box');
 					array_walk($ids, 'intval');
@@ -577,6 +599,10 @@ else if ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tool
 		$this->fields_value['id_tax_rules_group'] = $this->object->getIdTaxRulesGroup($this->context);
 	}
 
+	/**
+	 * @param Carrier $object
+	 * @return int
+	 */
 	protected function beforeDelete($object)
 	{
 		return $object->isUsed();
@@ -597,6 +623,7 @@ else if ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tool
 
 	public function changeZones($id)
 	{
+		/** @var Carrier $carrier */
 		$carrier = new $this->className($id);
 		if (!Validate::isLoadedObject($carrier))
 			die (Tools::displayError('The object cannot be loaded.'));
@@ -621,7 +648,7 @@ else if ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tool
 
 		foreach ($this->_list as $key => $list)
 			if ($list['name'] == '0')
-				$this->_list[$key]['name'] = Configuration::get('PS_SHOP_NAME');
+				$this->_list[$key]['name'] = Carrier::getCarrierNameFromShopName();
 	}
 
 	public function ajaxProcessUpdatePositions()
@@ -703,7 +730,15 @@ else if ((isset($_GET['status'.$this->table]) || isset($_GET['status'])) && Tool
 		else
 			return;
 	}
-
+	
+	protected function initTabModuleList()
+	{
+		if (Tools::isSubmit('onboarding_carrier'))
+		{
+			parent::initTabModuleList();
+			$this->filter_modules_list = $this->tab_modules_list['default_list'] = $this->tab_modules_list['slider_list'];
+		}
+	}
 }
 
 

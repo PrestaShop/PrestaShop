@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,11 +19,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property OrderMessage $object
+ */
 class AdminOrderMessageControllerCore extends AdminController
 {
 	public function __construct()
@@ -97,7 +100,7 @@ class AdminOrderMessageControllerCore extends AdminController
 	{
 		if (empty($this->display))
 			$this->page_header_toolbar_btn['new_order_message'] = array(
-				'href' => self::$currentIndex.'&amp;addorder_message&amp;token='.$this->token,
+				'href' => self::$currentIndex.'&addorder_message&token='.$this->token,
 				'desc' => $this->l('Add new order message'),
 				'icon' => 'process-icon-new'
 			);

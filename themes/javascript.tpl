@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,12 +18,12 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<script type="text/javascript">
 {if isset($js_def) && is_array($js_def) && $js_def|@count}
+<script type="text/javascript">
 {foreach from=$js_def key=k item=def}
 {if !empty($k) && is_string($k)}
 {if is_bool($def)}
@@ -43,8 +43,8 @@ var {$k} = '{$def|@addcslashes:'\''}';
 {/if}
 {/if}
 {/foreach}
-{/if}
 </script>
+{/if}
 {if isset($js_files) && $js_files|@count}
 {foreach from=$js_files key=k item=js_uri}
 <script type="text/javascript" src="{$js_uri}"></script>

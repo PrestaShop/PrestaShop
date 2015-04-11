@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -56,27 +56,25 @@ class PrestaShopBackupCore
 
 	/**
 	 * you can set a different path with that function
-	 * 
+	 *
 	 * @TODO include the prefix name
-	 * @param string $dir 
+	 * @param string $dir
 	 * @return boolean bo
 	 */
 	public function setCustomBackupPath($dir)
 	{
-		$customDir = DIRECTORY_SEPARATOR.trim($dir, '/').DIRECTORY_SEPARATOR;
-		if (is_dir((defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_).DIRECTORY_SEPARATOR.$customDir
-			.DIRECTORY_SEPARATOR))
-			$this->customBackupDir = $customDir;
+		$custom_dir = DIRECTORY_SEPARATOR.trim($dir, '/').DIRECTORY_SEPARATOR;
+		if (is_dir((defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_).$custom_dir))
+			$this->customBackupDir = $custom_dir;
 		else
 			return false;
 
 		return true;
-
 	}
 
 	/**
 	 * get the path to use for backup (customBackupDir if specified, or default)
-	 * 
+	 *
 	 * @param string $filename filename to use
 	 * @return string full path
 	 */
@@ -98,7 +96,7 @@ class PrestaShopBackupCore
 	 * Get the full path of the backup file
 	 *
 	 * @param string $filename prefix of the backup file (datetime will be the second part)
-	 * @return The full path of the backup file, or false if the backup file does not exists
+	 * @return string The full path of the backup file, or false if the backup file does not exists
 	 */
 	public static function getBackupPath($filename = '')
 	{
@@ -135,9 +133,9 @@ class PrestaShopBackupCore
 		return @filemtime($backupdir.DIRECTORY_SEPARATOR.$filename);
 	}
 	/**
-	 * Get the URL used to retreive this backup file
+	 * Get the URL used to retrieve this backup file
 	 *
-	 * @return The url used to request the backup file
+	 * @return string The url used to request the backup file
 	 */
 	public function getBackupURL()
 	{
@@ -191,7 +189,7 @@ class PrestaShopBackupCore
 				.'connections_source', _DB_PREFIX_.'guest', _DB_PREFIX_.'statssearch');
 		else
 			$ignore_insert_table = array();
-		
+
 		// Generate some random number, to make it extra hard to guess backup file names
 		$rand = dechex ( mt_rand(0, min(0xffffffff, mt_getrandmax() ) ) );
 		$date = time();
@@ -203,7 +201,7 @@ class PrestaShopBackupCore
 			$backupfile .= '.bz2';
 			$fp = @bzopen($backupfile, 'w');
 		}
-		else if (function_exists('gzopen'))
+		elseif (function_exists('gzopen'))
 		{
 			$backupfile .= '.gz';
 			$fp = @gzopen($backupfile, 'w');
@@ -245,10 +243,10 @@ class PrestaShopBackupCore
 			}
 
 			fwrite($fp, '/* Scheme for table '.$schema[0]['Table']." */\n");
-			
+
 			if ($this->psBackupDropTable)
 				fwrite($fp, 'DROP TABLE IF EXISTS `'.$schema[0]['Table'].'`;'."\n");
-			
+
 			fwrite($fp, $schema[0]['Create Table'].";\n\n");
 
 			if (!in_array($schema[0]['Table'], $ignore_insert_table))
@@ -265,7 +263,7 @@ class PrestaShopBackupCore
 					while ($row = DB::getInstance()->nextRow($data))
 					{
 						$s = '(';
-						
+
 						foreach ($row as $field => $value)
 						{
 							$tmp = "'".pSQL($value, true)."',";
@@ -275,7 +273,7 @@ class PrestaShopBackupCore
 							{
 								foreach ($lines as $line)
 									if (strpos($line, '`'.$field.'`') !== false)
-									{	
+									{
 										if (preg_match('/(.*NOT NULL.*)/Ui', $line))
 											$s .= "'',";
 										else
@@ -311,5 +309,4 @@ class PrestaShopBackupCore
 
 		return true;
 	}
-
 }

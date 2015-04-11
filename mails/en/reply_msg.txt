@@ -5,14 +5,10 @@ Hi {firstname} {lastname},
 
 {reply} 
 
-You can review your order and download your invoice from the
-"Order history" [{history_url}] section of your
-customer account by clicking "My account"
-[{my_account_url}] on our shop. 
+Please do not reply directly to this email, we will not receive it. 
 
-If you have a guest account, you can follow your order via the
-"Guest Tracking" [{guest_tracking_url}] section
-on our shop. 
+In order to reply, please use the following link: {link}
+[{link}] 
 
 {shop_name} [{shop_url}] powered by
 PrestaShop(tm) [http://www.prestashop.com/] 

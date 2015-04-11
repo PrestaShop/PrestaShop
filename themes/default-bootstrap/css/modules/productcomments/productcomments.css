@@ -10,7 +10,7 @@
   #product_comments_block_extra .comments_note span,
   #product_comments_block_extra .star_content {
     float: left;
-    color: #333333; }
+    color: #333; }
   #product_comments_block_extra .star_content {
     margin-top: 1px; }
   #product_comments_block_extra div.star:after {
@@ -37,7 +37,7 @@
         line-height: 20px; } }
   .comments_advices a {
     text-decoration: none;
-    color: #777777;
+    color: #777;
     position: relative;
     margin-right: 8px;
     line-height: 30px;
@@ -49,10 +49,8 @@
         line-height: 20px; } }
     .comments_advices a:before {
       background: #929292;
-      -webkit-border-radius: 50px;
       -moz-border-radius: 50px;
-      -ms-border-radius: 50px;
-      -o-border-radius: 50px;
+      -webkit-border-radius: 50px;
       border-radius: 50px;
       color: white;
       display: inline-block;
@@ -73,7 +71,7 @@
     .comments_advices a.open-comment-form:before {
       content: "\f040"; }
     .comments_advices a:hover {
-      color: #333333; }
+      color: #333; }
     .comments_advices a.reviews {
       border-right: 1px solid #d6d4d4;
       padding-right: 30px;
@@ -94,16 +92,16 @@
 
 #new_comment_form {
   overflow: hidden;
-  color: #333333;
+  color: #333;
   text-align: left; }
   #new_comment_form h2 {
     margin-bottom: 10px; }
   #new_comment_form .title {
     padding: 10px;
     font-size: 13px;
-    color: white;
+    color: #fff;
     text-transform: uppercase;
-    background: #333333; }
+    background: #333; }
   #new_comment_form ul.grade_content {
     list-style-type: none;
     margin: 0 0 20px 0; }
@@ -122,7 +120,7 @@
       border: 1px solid #d6d4d4; }
     #new_comment_form .product .product_desc {
       line-height: 18px;
-      color: #666666; }
+      color: #666; }
       #new_comment_form .product .product_desc .product_name {
         padding: 10px 0 5px;
         font-size: 13px;
@@ -148,7 +146,7 @@
     height: 28px;
     width: 100%;
     border: 1px solid #ccc;
-    background: white; }
+    background: #fff; }
   #new_comment_form textarea {
     height: 80px; }
   #new_comment_form .submit {
@@ -184,9 +182,10 @@
       border: none; }
     #product_comments_block_tab div.comment .comment_author {
       padding: 0 20px;
-      line-height: 18px span;
-        line-height-font-weight: bold;
-        line-height-float: left; }
+      line-height: 18px; }
+      #product_comments_block_tab div.comment .comment_author span {
+        font-weight: bold;
+        float: left; }
       #product_comments_block_tab div.comment .comment_author .star_content {
         display: inline-block;
         vertical-align: middle;
@@ -205,7 +204,7 @@
               #product_comments_block_tab div.comment .comment_details ul li:before {
                 font-family: "FontAwesome";
                 content: "\f0da";
-                color: #333333;
+                color: #333;
                 margin-right: 8px; } }
   #product_comments_block_tab div.star:after {
     content: "\f006";
@@ -222,7 +221,7 @@
     padding-top: 9px; }
     #product_comments_block_tab .comment_author_infos strong {
       display: block;
-      color: #333333; }
+      color: #333; }
     #product_comments_block_tab .comment_author_infos em {
       color: #adadad; }
   #product_comments_block_tab a {
@@ -238,3 +237,5 @@
 
 .fr {
   float: right; }
+
+/*# sourceMappingURL=productcomments.css.map */

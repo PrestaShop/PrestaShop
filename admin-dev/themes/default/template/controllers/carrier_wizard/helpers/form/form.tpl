@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *	@author PrestaShop SA <contact@prestashop.com>
-*	@copyright	2007-2014 PrestaShop SA
+*	@copyright	2007-2015 PrestaShop SA
 *	@license		http://opensource.org/licenses/afl-3.0.php	Academic Free License (AFL 3.0)
 *	International Registered Trademark & Property of PrestaShop SA
 *}
@@ -46,7 +46,7 @@
 			<input type="hidden" id="logo" name="logo" value="" />
 			<div class="dummyfile input-group">
 				<span class="input-group-addon"><i class="icon-file"></i></span>
-				<input id="attachement_filename" type="text" name="filename" readonly="">
+				<input id="attachement_filename" type="text" name="filename" readonly="" />
 				<span class="input-group-btn">
 					<button id="attachement_fileselectbutton" type="button" name="submitAddAttachments" class="btn btn-default">
 						<i class="icon-folder-open"></i> {l s='Choose a file'}

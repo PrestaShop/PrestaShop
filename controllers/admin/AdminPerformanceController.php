@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,11 +19,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Configuration $object
+ */
 class AdminPerformanceControllerCore extends AdminController
 {
 
@@ -31,9 +34,9 @@ class AdminPerformanceControllerCore extends AdminController
 	{
 		$this->bootstrap = true;
 		$this->className = 'Configuration';
-		parent::__construct();		
+		parent::__construct();
 	}
-	
+
 	public function initFieldsetSmarty()
 	{
 		$this->fields_form[0]['form'] = array(
@@ -92,33 +95,38 @@ class AdminPerformanceControllerCore extends AdminController
 				),
 				array(
 					'type' => 'radio',
-					'label' => $this->l('Debug console'),
-					'name' => 'smarty_console',
+					'label' => $this->l('Caching type'),
+					'name' => 'smarty_caching_type',
 					'values' => array(
 						array(
-							'id' => 'smarty_console_none',
-							'value' => 0,
-							'label' => $this->l('Do not open console.')
+							'id' => 'smarty_caching_type_filesystem',
+							'value' => 'filesystem',
+							'label' => $this->l('File System').(is_writable(_PS_CACHE_DIR_.'smarty/cache') ? '' : ' '.sprintf($this->l('(the directory %s must be writable)'), realpath(_PS_CACHE_DIR_.'smarty/cache')))
 						),
 						array(
-							'id' => 'smarty_console_url',
-							'value' => 1,
-							'label' => $this->l('Open console with URL parameter (SMARTY_DEBUG)'),
-							'hint' => $this->l('To open the debug console, simply pass the SMARTY_DEBUG=1 parameter in the URL.')
+							'id' => 'smarty_caching_type_mysql',
+							'value' => 'mysql',
+							'label' => $this->l('MySQL')
 						),
-						array(
-							'id' => 'smarty_console_open',
-							'value' => 2,
-							'label' => $this->l('Always open console'),
-							'hint' => $this->l('Choose this option to always force the debug console to open.')
-						)
+
 					)
 				),
 				array(
-					'type' => 'text',
-					'label' => $this->l('Debug console key'),
-					'name' => 'smarty_console_key',
-					'hint' => $this->l('You can change the URL parameter for the console (default is SMARTY_DEBUG).')
+					'type' => 'radio',
+					'label' => $this->l('Clear cache'),
+					'name' => 'smarty_clear_cache',
+					'values' => array(
+						array(
+							'id' => 'smarty_clear_cache_never',
+							'value' => 'never',
+							'label' => $this->l('Never clear cache files'),
+						),
+						array(
+							'id' => 'smarty_clear_cache_everytime',
+							'value' => 'everytime',
+							'label' => $this->l('Clear cache everytime something has been modified'),
+						),
+					)
 				),
 			),
 			'submit' => array(
@@ -128,6 +136,8 @@ class AdminPerformanceControllerCore extends AdminController
 
 		$this->fields_value['smarty_force_compile'] = Configuration::get('PS_SMARTY_FORCE_COMPILE');
 		$this->fields_value['smarty_cache'] = Configuration::get('PS_SMARTY_CACHE');
+		$this->fields_value['smarty_caching_type'] = Configuration::get('PS_SMARTY_CACHING_TYPE');
+		$this->fields_value['smarty_clear_cache'] = Configuration::get('PS_SMARTY_CLEAR_CACHE');
 		$this->fields_value['smarty_console'] = Configuration::get('PS_SMARTY_CONSOLE');
 		$this->fields_value['smarty_console_key'] = Configuration::get('PS_SMARTY_CONSOLE_KEY');
 	}
@@ -357,33 +367,54 @@ class AdminPerformanceControllerCore extends AdminController
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Apache optimization'),
-					'name' => 'PS_HTACCESS_CACHE_CONTROL',
-					'hint' => $this->l('This will add directives to your .htaccess file, which should improve caching and compression.'),
+					'label' => $this->l('Move JavaScript to the end'),
+					'name' => 'PS_JS_DEFER',
 					'values' => array(
 						array(
-							'id' => 'PS_HTACCESS_CACHE_CONTROL_1',
+							'id' => 'PS_JS_DEFER_1',
 							'value' => 1,
-							'label' => $this->l('Yes'),
+							'label' => $this->l('Move JavaScript to the end of the HTML document')
 						),
 						array(
-							'id' => 'PS_HTACCESS_CACHE_CONTROL_0',
+							'id' => 'PS_JS_DEFER_0',
 							'value' => 0,
-							'label' => $this->l('No'),
-						),
-					),
-				)
+							'label' => $this->l('Keep JavaScript in HTML at its original position')
+						)
+					)
+				),
+
 			),
 			'submit' => array(
 				'title' => $this->l('Save')
 			)
 		);
 
+		if (!defined('_PS_HOST_MODE_'))
+			$this->fields_form[3]['form']['input'][] = array(
+				'type' => 'switch',
+				'label' => $this->l('Apache optimization'),
+				'name' => 'PS_HTACCESS_CACHE_CONTROL',
+				'hint' => $this->l('This will add directives to your .htaccess file, which should improve caching and compression.'),
+				'values' => array(
+					array(
+						'id' => 'PS_HTACCESS_CACHE_CONTROL_1',
+						'value' => 1,
+						'label' => $this->l('Yes'),
+					),
+					array(
+						'id' => 'PS_HTACCESS_CACHE_CONTROL_0',
+						'value' => 0,
+						'label' => $this->l('No'),
+					),
+				),
+			);
+
 		$this->fields_value['PS_CSS_THEME_CACHE'] = Configuration::get('PS_CSS_THEME_CACHE');
 		$this->fields_value['PS_JS_THEME_CACHE'] = Configuration::get('PS_JS_THEME_CACHE');
 		$this->fields_value['PS_HTML_THEME_COMPRESSION'] = Configuration::get('PS_HTML_THEME_COMPRESSION');
 		$this->fields_value['PS_JS_HTML_THEME_COMPRESSION'] = Configuration::get('PS_JS_HTML_THEME_COMPRESSION');
 		$this->fields_value['PS_HTACCESS_CACHE_CONTROL'] = Configuration::get('PS_HTACCESS_CACHE_CONTROL');
+		$this->fields_value['PS_JS_DEFER'] = Configuration::get('PS_JS_DEFER');
 		$this->fields_value['ccc_up'] = 1;
 	}
 
@@ -424,9 +455,9 @@ class AdminPerformanceControllerCore extends AdminController
 			)
 		);
 
-		$this->fields_value['_MEDIA_SERVER_1_'] = Tools::getValue('_MEDIA_SERVER_1_', _MEDIA_SERVER_1_);
-		$this->fields_value['_MEDIA_SERVER_2_'] = Tools::getValue('_MEDIA_SERVER_2_', _MEDIA_SERVER_2_);
-		$this->fields_value['_MEDIA_SERVER_3_'] = Tools::getValue('_MEDIA_SERVER_3_', _MEDIA_SERVER_3_);
+		$this->fields_value['_MEDIA_SERVER_1_'] = Configuration::get('PS_MEDIA_SERVER_1');
+		$this->fields_value['_MEDIA_SERVER_2_'] = Configuration::get('PS_MEDIA_SERVER_2');
+		$this->fields_value['_MEDIA_SERVER_3_'] = Configuration::get('PS_MEDIA_SERVER_3');
 	}
 
 	public function initFieldsetCiphering()
@@ -437,41 +468,42 @@ class AdminPerformanceControllerCore extends AdminController
 		$warning_mcrypt = ' '.$this->l('(you must install the [a]Mcrypt extension[/a])');
 		$warning_mcrypt = str_replace('[a]', '<a href="http://www.php.net/manual/'.substr($php_lang, 0, 2).'/book.mcrypt.php" target="_blank">', $warning_mcrypt);
 		$warning_mcrypt = str_replace('[/a]', '</a>', $warning_mcrypt);
-	
-		$this->fields_form[5]['form'] = array(
 
-			'legend' => array(
-				'title' => $this->l('Ciphering'),
-				'icon' => 'icon-desktop'
-			),
-			'input' => array(
-				array(
-					'type' => 'hidden',
-					'name' => 'ciphering_up'
+		if (defined('_RIJNDAEL_KEY_') && defined('_RIJNDAEL_IV_'))
+			$this->fields_form[5]['form'] = array(
+
+				'legend' => array(
+					'title' => $this->l('Ciphering'),
+					'icon' => 'icon-desktop'
 				),
-				array(
-					'type' => 'radio',
-					'label' => $this->l('Algorithm'),
-					'name' => 'PS_CIPHER_ALGORITHM',
-					'hint' => $this->l('Mcrypt is faster than our custom BlowFish class, but requires the "mcrypt" PHP extension. If you change this configuration, all cookies will be reset.'),
-					'values' => array(
-						array(
-							'id' => 'PS_CIPHER_ALGORITHM_1',
-							'value' => 1,
-							'label' => $this->l('Use Rijndael with mcrypt lib.').(!function_exists('mcrypt_encrypt') ? '' : $warning_mcrypt)
-						),
-						array(
-							'id' => 'PS_CIPHER_ALGORITHM_0',
-							'value' => 0,
-							'label' => $this->l('Use the custom BlowFish class.')
+				'input' => array(
+					array(
+						'type' => 'hidden',
+						'name' => 'ciphering_up'
+					),
+					array(
+						'type' => 'radio',
+						'label' => $this->l('Algorithm'),
+						'name' => 'PS_CIPHER_ALGORITHM',
+						'hint' => $this->l('Mcrypt is faster than our custom BlowFish class, but requires the "mcrypt" PHP extension. If you change this configuration, all cookies will be reset.'),
+						'values' => array(
+							array(
+								'id' => 'PS_CIPHER_ALGORITHM_1',
+								'value' => 1,
+								'label' => $this->l('Use Rijndael with mcrypt lib.').(!function_exists('mcrypt_encrypt') ? '' : $warning_mcrypt)
+							),
+							array(
+								'id' => 'PS_CIPHER_ALGORITHM_0',
+								'value' => 0,
+								'label' => $this->l('Use the custom BlowFish class.')
+							)
 						)
 					)
+				),
+				'submit' => array(
+					'title' => $this->l('Save')
 				)
-			),
-			'submit' => array(
-				'title' => $this->l('Save')
-			)
-		);
+			);
 
 		$this->fields_value['PS_CIPHER_ALGORITHM'] = Configuration::get('PS_CIPHER_ALGORITHM');
 	}
@@ -549,7 +581,7 @@ class AdminPerformanceControllerCore extends AdminController
 							'value' => 'CacheXcache',
 							'label' => $this->l('Xcache').(extension_loaded('xcache') ? '' : $warning_xcache)
 						),
-						
+
 					)
 				),
 				array(
@@ -575,20 +607,17 @@ class AdminPerformanceControllerCore extends AdminController
 
 	public function renderForm()
 	{
-		// Initialize fieldset for a form
 		$this->initFieldsetSmarty();
-
-		if (_PS_MODE_DEV_)
-			$this->initFieldsetDebugMode();
-
+		$this->initFieldsetDebugMode();
 		$this->initFieldsetFeaturesDetachables();
 		$this->initFieldsetCCC();
 
 		if (!defined('_PS_HOST_MODE_'))
+		{
 			$this->initFieldsetMediaServer();
-
-		$this->initFieldsetCiphering();
-		$this->initFieldsetCaching();
+			$this->initFieldsetCiphering();
+			$this->initFieldsetCaching();
+		}
 
 		// Reindex fields
 		$this->fields_form = array_values($this->fields_form);
@@ -609,7 +638,7 @@ class AdminPerformanceControllerCore extends AdminController
 
 		$this->context->smarty->assign(array(
 			'content' => $this->content,
-			'url_post' => self::$currentIndex.'&token='.$this->token,			
+			'url_post' => self::$currentIndex.'&token='.$this->token,
 			'show_page_header_toolbar' => $this->show_page_header_toolbar,
 			'page_header_toolbar_title' => $this->page_header_toolbar_title,
 			'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
@@ -618,11 +647,14 @@ class AdminPerformanceControllerCore extends AdminController
 		));
 	}
 
-	public function initToolbar()
+	public function initPageHeaderToolbar()
 	{
-		$this->toolbar_btn['save'] = array(
-			'href' => '#',
-			'desc' => $this->l('Save')
+		parent::initPageHeaderToolbar();
+
+		$this->page_header_toolbar_btn['clear_cache'] = array(
+			'href' => self::$currentIndex.'&token='.$this->token.'&empty_smarty_cache=1',
+			'desc' => $this->l('Clear cache'),
+			'icon' => 'process-icon-eraser'
 		);
 	}
 
@@ -679,9 +711,13 @@ class AdminPerformanceControllerCore extends AdminController
 			if ($this->tabAccess['edit'] === '1')
 			{
 				Configuration::updateValue('PS_SMARTY_FORCE_COMPILE', Tools::getValue('smarty_force_compile', _PS_SMARTY_NO_COMPILE_));
+
+				if (Configuration::get('PS_SMARTY_CACHE') != Tools::getValue('smarty_cache') || Configuration::get('PS_SMARTY_CACHING_TYPE') != Tools::getValue('smarty_caching_type'))
+					Tools::clearSmartyCache();
+
 				Configuration::updateValue('PS_SMARTY_CACHE', Tools::getValue('smarty_cache', 0));
-				Configuration::updateValue('PS_SMARTY_CONSOLE', Tools::getValue('smarty_console', 0));
-				Configuration::updateValue('PS_SMARTY_CONSOLE_KEY', Tools::getValue('smarty_console_key', 'SMARTY_DEBUG'));
+				Configuration::updateValue('PS_SMARTY_CACHING_TYPE', Tools::getValue('smarty_caching_type'));
+				Configuration::updateValue('PS_SMARTY_CLEAR_CACHE', Tools::getValue('smarty_clear_cache'));
 				$redirectAdmin = true;
 			}
 			else
@@ -692,11 +728,15 @@ class AdminPerformanceControllerCore extends AdminController
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
-				if (Tools::getValue('combination') || !Combination::isCurrentlyUsed())
-					Configuration::updateValue('PS_COMBINATION_FEATURE_ACTIVE', Tools::getValue('combination'));
-				if (Tools::getValue('customer_group') && !Group::isCurrentlyUsed())
-					Configuration::updateValue('PS_GROUP_FEATURE_ACTIVE', Tools::getValue('customer_group'));
-				Configuration::updateValue('PS_FEATURE_FEATURE_ACTIVE', Tools::getValue('feature'));
+				if (Tools::isSubmit('combination'))
+					if ((!Tools::getValue('combination') && Combination::isCurrentlyUsed()) === false)
+						Configuration::updateValue('PS_COMBINATION_FEATURE_ACTIVE', (bool)Tools::getValue('combination'));
+
+				if (Tools::isSubmit('customer_group'))
+					if ((!Tools::getValue('customer_group') && Group::isCurrentlyUsed()) === false)
+						Configuration::updateValue('PS_GROUP_FEATURE_ACTIVE', (bool)Tools::getValue('customer_group'));
+
+				Configuration::updateValue('PS_FEATURE_FEATURE_ACTIVE', (bool)Tools::getValue('feature'));
 				$redirectAdmin = true;
 			}
 			else
@@ -707,20 +747,48 @@ class AdminPerformanceControllerCore extends AdminController
 		{
 			if ($this->tabAccess['edit'] === '1')
 			{
-				$theme_cache_directory = _PS_ALL_THEMES_DIR_.$this->context->shop->theme_directory.'/cache/';							
+				$theme_cache_directory = _PS_ALL_THEMES_DIR_.$this->context->shop->theme_directory.'/cache/';
 				if (((bool)Tools::getValue('PS_CSS_THEME_CACHE') || (bool)Tools::getValue('PS_JS_THEME_CACHE')) && !is_writable($theme_cache_directory))
-					$this->errors[] = Tools::displayError(sprintf($this->l('To use Smart Cache directory %s must be writable.'), realpath($theme_cache_directory)));
+					$this->errors[] = sprintf(Tools::displayError('To use Smart Cache directory %s must be writable.'), realpath($theme_cache_directory));
+
+				if ($tmp = (int)Tools::getValue('PS_CSS_THEME_CACHE'))
+				{
+					$version = (int)Configuration::get('PS_CCCCSS_VERSION');
+					if (Configuration::get('PS_CSS_THEME_CACHE') != $tmp)
+						Configuration::updateValue('PS_CCCCSS_VERSION', ++$version);
+				}
+
+
+				if ($tmp = (int)Tools::getValue('PS_JS_THEME_CACHE'))
+				{
+					$version = (int)Configuration::get('PS_CCCJS_VERSION');
+					if (Configuration::get('PS_JS_THEME_CACHE') != $tmp)
+						Configuration::updateValue('PS_CCCJS_VERSION', ++$version);
+				}
+
 				if (!Configuration::updateValue('PS_CSS_THEME_CACHE', (int)Tools::getValue('PS_CSS_THEME_CACHE')) ||
 					!Configuration::updateValue('PS_JS_THEME_CACHE', (int)Tools::getValue('PS_JS_THEME_CACHE')) ||
 					!Configuration::updateValue('PS_HTML_THEME_COMPRESSION', (int)Tools::getValue('PS_HTML_THEME_COMPRESSION')) ||
 					!Configuration::updateValue('PS_JS_HTML_THEME_COMPRESSION', (int)Tools::getValue('PS_JS_HTML_THEME_COMPRESSION')) ||
+					!Configuration::updateValue('PS_JS_DEFER', (int)Tools::getValue('PS_JS_DEFER')) ||
 					!Configuration::updateValue('PS_HTACCESS_CACHE_CONTROL', (int)Tools::getValue('PS_HTACCESS_CACHE_CONTROL')))
 					$this->errors[] = Tools::displayError('Unknown error.');
 				else
 				{
 					$redirectAdmin = true;
 					if (Configuration::get('PS_HTACCESS_CACHE_CONTROL'))
-						Tools::generateHtaccess();
+					{
+						if (is_writable(_PS_ROOT_DIR_.'/.htaccess'))
+							Tools::generateHtaccess();
+						else
+						{
+							$message = $this->l('Before being able to use this tool, you need to:');
+							$message .= '<br />- '.$this->l('Create a blank .htaccess in your root directory.');
+							$message .= '<br />- '.$this->l('Give it write permissions (CHMOD 666 on Unix system).');
+							$this->errors[] = Tools::displayError($message, false);
+							Configuration::updateValue('PS_HTACCESS_CACHE_CONTROL', false);
+						}
+					}
 				}
 			}
 			else
@@ -748,20 +816,35 @@ class AdminPerformanceControllerCore extends AdminController
 					else
 						Configuration::updateValue('PS_MEDIA_SERVERS', 0);
 					rewriteSettingsFile($base_urls, null, null);
+					Configuration::updateValue('PS_MEDIA_SERVER_1', Tools::getValue('_MEDIA_SERVER_1_'));
+					Configuration::updateValue('PS_MEDIA_SERVER_2', Tools::getValue('_MEDIA_SERVER_2_'));
+					Configuration::updateValue('PS_MEDIA_SERVER_3', Tools::getValue('_MEDIA_SERVER_3_'));
 					Tools::clearSmartyCache();
 					Media::clearCache();
-					Tools::generateHtaccess(null, null, null, '', null, array($base_urls['_MEDIA_SERVER_1_'], $base_urls['_MEDIA_SERVER_2_'], $base_urls['_MEDIA_SERVER_3_']));
-					unset($this->_fieldsGeneral['_MEDIA_SERVER_1_']);
-					unset($this->_fieldsGeneral['_MEDIA_SERVER_2_']);
-					unset($this->_fieldsGeneral['_MEDIA_SERVER_3_']);
-					$redirectAdmin = true;
+
+					if (is_writable(_PS_ROOT_DIR_.'/.htaccess'))
+					{
+						Tools::generateHtaccess(null, null, null, '', null, array($base_urls['_MEDIA_SERVER_1_'], $base_urls['_MEDIA_SERVER_2_'], $base_urls['_MEDIA_SERVER_3_']));
+						unset($this->_fieldsGeneral['_MEDIA_SERVER_1_']);
+						unset($this->_fieldsGeneral['_MEDIA_SERVER_2_']);
+						unset($this->_fieldsGeneral['_MEDIA_SERVER_3_']);
+						$redirectAdmin = true;
+					}
+					else
+					{
+						$message = $this->l('Before being able to use this tool, you need to:');
+						$message .= '<br />- '.$this->l('Create a blank .htaccess in your root directory.');
+						$message .= '<br />- '.$this->l('Give it write permissions (CHMOD 666 on Unix system).');
+						$this->errors[] = Tools::displayError($message, false);
+						Configuration::updateValue('PS_HTACCESS_CACHE_CONTROL', false);
+					}
 				}
 			}
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
 		if ((bool)Tools::getValue('ciphering_up') && Configuration::get('PS_CIPHER_ALGORITHM') != (int)Tools::getValue('PS_CIPHER_ALGORITHM'))
-		{				
+		{
 			if ($this->tabAccess['edit'] === '1')
 			{
 				$algo = (int)Tools::getValue('PS_CIPHER_ALGORITHM');
@@ -820,8 +903,8 @@ class AdminPerformanceControllerCore extends AdminController
 			{
 				$new_settings = $prev_settings = file_get_contents(_PS_ROOT_DIR_.'/config/settings.inc.php');
 				$cache_active = (bool)Tools::getValue('cache_active');
-				
-				if ($caching_system = Tools::getValue('caching_system'))
+
+				if ($caching_system = preg_replace('[^a-zA-Z0-9]', '', Tools::getValue('caching_system')))
 				{
 					$new_settings = preg_replace(
 						'/define\(\'_PS_CACHING_SYSTEM_\', \'([a-z0-9=\/+-_]*)\'\);/Ui',
@@ -847,15 +930,12 @@ class AdminPerformanceControllerCore extends AdminController
 							<a href="http://xcache.lighttpd.net">http://xcache.lighttpd.net</a>';
 					elseif ($caching_system == 'CacheXcache' && !ini_get('xcache.var_size'))
 						$this->errors[] = Tools::displayError('To use Xcache, you must configure "xcache.var_size" for the Xcache extension (recommended value 16M to 64M).').'
-							<a href="http://xcache.lighttpd.net/wiki/XcacheIni">http://xcache.lighttpd.net/wiki/XcacheIni</a>';						
+							<a href="http://xcache.lighttpd.net/wiki/XcacheIni">http://xcache.lighttpd.net/wiki/XcacheIni</a>';
 					elseif ($caching_system == 'CacheFs')
 						if (!is_dir(_PS_CACHEFS_DIRECTORY_))
 							@mkdir(_PS_CACHEFS_DIRECTORY_, 0777, true);
-						elseif  (!is_writable(_PS_CACHEFS_DIRECTORY_))
-							$this->errors[] = sprintf(
-								Tools::displayError('To use CacheFS, the directory %s must be writable.'),
-								realpath(_PS_CACHEFS_DIRECTORY_)
-							);
+						elseif (!is_writable(_PS_CACHEFS_DIRECTORY_))
+							$this->errors[] = sprintf(Tools::displayError('To use CacheFS, the directory %s must be writable.'), realpath(_PS_CACHEFS_DIRECTORY_));
 
 					if ($caching_system == 'CacheFs')
 					{
@@ -880,7 +960,11 @@ class AdminPerformanceControllerCore extends AdminController
 						copy(_PS_ROOT_DIR_.'/config/settings.inc.php', _PS_ROOT_DIR_.'/config/settings.old.php')
 						&& (bool)file_put_contents(_PS_ROOT_DIR_.'/config/settings.inc.php', $new_settings)
 					))
+					{
+						if (function_exists('opcache_invalidate'))
+							opcache_invalidate(_PS_ROOT_DIR_.'/config/settings.inc.php');
 						$redirectAdmin = true;
+					}
 					else
 						$this->errors[] = Tools::displayError('The settings file cannot be overwritten.');
 				}
@@ -895,18 +979,14 @@ class AdminPerformanceControllerCore extends AdminController
 			Tools::clearSmartyCache();
 			Tools::clearXMLCache();
 			Media::clearCache();
-			PrestaShopAutoload::getInstance()->generateIndex();
+			Tools::generateIndex();
 		}
 
-		if (Tools::isSubmit('submitAddconfiguration') && _PS_MODE_DEV_)
+		if (Tools::isSubmit('submitAddconfiguration'))
 		{
 			Configuration::updateGlobalValue('PS_DISABLE_NON_NATIVE_MODULE', (int)Tools::getValue('native_module'));
 			Configuration::updateGlobalValue('PS_DISABLE_OVERRIDES', (int)Tools::getValue('overrides'));
-
-			if (Tools::getValue('overrides'))
-				PrestaShopAutoload::getInstance()->_include_override_path = false;
-
-			PrestaShopAutoload::getInstance()->generateIndex();
+			Tools::generateIndex();
 		}
 
 		if ($redirectAdmin && (!isset($this->errors) || !count($this->errors)))
@@ -916,7 +996,7 @@ class AdminPerformanceControllerCore extends AdminController
 		}
 	}
 
-	public function ajaxProcess()
+	public function displayAjaxTestServer()
 	{
 		/* PrestaShop demo mode */
 		if (_PS_MODE_DEMO_)
@@ -942,5 +1022,5 @@ class AdminPerformanceControllerCore extends AdminController
 			}
 		}
 		die;
-    }
+	}
 }

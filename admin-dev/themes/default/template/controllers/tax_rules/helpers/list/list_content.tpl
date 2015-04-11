@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -26,10 +26,9 @@
 	{foreach $list AS $index => $tr}
 		<tr
 		{if $position_identifier}id="tr_{$id_category}_{$tr.$identifier}_{$tr.position['position']}"{/if}
-		{if isset($tr.color) && $color_on_bg}style="background-color: {$tr.color}"{/if}
-		>
-			<td>
-				{if $bulk_actions}
+		{if isset($tr.color) && $color_on_bg}style="background-color: {$tr.color}"{/if} >
+			{if $bulk_actions && $has_bulk_actions}
+				<td class="text-center">
 					{assign var=bulkActionPossible value=true}
 					{foreach $list_skip_actions as $key => $value}
 						{if in_array($tr.$identifier, $value) == true}
@@ -39,19 +38,19 @@
 					{if $bulkActionPossible == true}
 						<input type="checkbox" name="{$table}Box[]" value="{$tr.$identifier}" class="noborder" />
 					{/if}
-				{/if}
-			</td>
+				</td>
+			{/if}
 			{foreach $fields_display AS $key => $params}
 				<td
 					{if isset($params.position)}
 						id="td_{if $id_category}{$id_category}{else}0{/if}_{$tr.$identifier}"
 					{/if}
-					class="{if !$no_link}pointer{/if}
+					class="{strip}{if !$no_link}pointer{/if}
 						   {if isset($params.position) && $order_by == 'position'} dragHandle{/if}
-						   {if isset($params.align)} {$params.align}{/if}"
+						   {if isset($params.align)} {$params.align}{/if}{/strip}"
 
 				{if (!isset($params.position) && !$no_link)}
-					onclick="document.location = '{$current_index}&{$identifier}={$tr.$identifier}{if $view}&view{else}&update{/if}{$table}&token={$token}'">{if isset($params.prefix)}{$params.prefix}{/if}
+					onclick="document.location = '{$current_index|escape:'html':'UTF-8'}&amp;{$identifier|escape:'html':'UTF-8'}={$tr.$identifier|escape:'html':'UTF-8'}{if $view}&amp;view{else}&amp;update{/if}{$table}&amp;token={$token|escape:'html':'UTF-8'}'">{if isset($params.prefix)}{$params.prefix}{/if}
 				{else}
 					>
 				{/if}
@@ -91,12 +90,12 @@
 						{if $tr.$key == 0}
 							{l s='This tax only'}
 						{elseif $tr.$key == 1}
-							{l s='Compute with others'}
+							{l s='Combine'}
 						{elseif $tr.$key == 2}
 							{l s='One after another'}
 						{/if}
 					{elseif $key == 'rate'}
-						{$tr.$key|string_format:"%.2f"}%
+						{$tr.$key|string_format:"%.3f"}%
 					{elseif $key == 'zipcode'}
 						{if $tr.$key == '0 - 0'}
 							--

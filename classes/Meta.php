@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -78,9 +78,9 @@ class MetaCore extends ObjectModel
 					$selected_pages[strtolower(str_replace('Controller.php', '', $file))] = strtolower(str_replace('Controller.php', '', $file));
 				elseif (preg_match('/^([a-z0-9_.-]*\/)?[a-z0-9_.-]*\.php$/i', $file))
 					$selected_pages[strtolower(sprintf(Tools::displayError('%2$s (in %1$s)'), dirname($file), str_replace('Controller.php', '', basename($file))))] = strtolower(str_replace('Controller.php', '', basename($file)));
-			}	
+			}
 		}
-		
+
 		// Add modules controllers to list (this function is cool !)
 		foreach (glob(_PS_MODULE_DIR_.'*/controllers/front/*.php') as $file)
 		{
@@ -283,16 +283,16 @@ class MetaCore extends ObjectModel
 			{
 				if (empty($row['meta_description']))
 					$row['meta_description'] = strip_tags($row['description']);
-	
+
 				// Paginate title
 				if (!empty($row['meta_title']))
 					$row['meta_title'] = $title.$row['meta_title'].(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
 				else
 					$row['meta_title'] = $row['name'].(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
-	
+
 				if (!empty($title))
 					$row['meta_title'] = $title.(!empty($page_number) ? ' ('.$page_number.')' : '').' - '.Configuration::get('PS_SHOP_NAME');
-	
+
 				$result = Meta::completeMetaTags($row, $row['name']);
 			}
 			else
@@ -321,7 +321,7 @@ class MetaCore extends ObjectModel
 					AND ml.id_manufacturer = '.(int)$id_manufacturer;
 		if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql))
 		{
-			if (empty($row['meta_description']))
+			if (!empty($row['meta_description']))
 				$row['meta_description'] = strip_tags($row['meta_description']);
 			$row['meta_title'] = ($row['meta_title'] ? $row['meta_title'] : $row['name']).(!empty($page_number) ? ' ('.$page_number.')' : '');
 			$row['meta_title'] .= ' - '.Configuration::get('PS_SHOP_NAME');
@@ -349,7 +349,7 @@ class MetaCore extends ObjectModel
 					AND sl.id_supplier = '.(int)$id_supplier;
 		if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql))
 		{
-			if (empty($row['meta_description']))
+			if (!empty($row['meta_description']))
 				$row['meta_description'] = strip_tags($row['meta_description']);
 			if (!empty($row['meta_title']))
 				$row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');
@@ -373,7 +373,10 @@ class MetaCore extends ObjectModel
 		$sql = 'SELECT `meta_title`, `meta_description`, `meta_keywords`
 				FROM `'._DB_PREFIX_.'cms_lang`
 				WHERE id_lang = '.(int)$id_lang.'
-					AND id_cms = '.(int)$id_cms;
+					AND id_cms = '.(int)$id_cms.
+					((int)Context::getContext()->shop->id ?
+						' AND id_shop = '.(int)Context::getContext()->shop->id : '' );
+
 		if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql))
 		{
 			$row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');
@@ -397,7 +400,9 @@ class MetaCore extends ObjectModel
 		$sql = 'SELECT `meta_title`, `meta_description`, `meta_keywords`
 				FROM `'._DB_PREFIX_.'cms_category_lang`
 				WHERE id_lang = '.(int)$id_lang.'
-					AND id_cms_category = '.(int)$id_cms_category;
+					AND id_cms_category = '.(int)$id_cms_category.
+					((int)Context::getContext()->shop->id ?
+						' AND id_shop = '.(int)Context::getContext()->shop->id : '');
 		if ($row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($sql))
 		{
 			$row['meta_title'] = $row['meta_title'].' - '.Configuration::get('PS_SHOP_NAME');

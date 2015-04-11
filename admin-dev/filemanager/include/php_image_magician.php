@@ -1225,7 +1225,7 @@ class imageLib
     }
     $im = $bg;
 
-    $transaprencyAmount = $this->invertTransparency($startingTransparency, 100);
+    $transparencyAmount = $this->invertTransparency($startingTransparency, 100);
 
 
     // *** Fade
@@ -1594,7 +1594,7 @@ class imageLib
   Add Caption Box
 *-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-**-*-*-*-*-*-*-*-*-*-*-*-*-*/
 
-  public function addCaptionBox($side='b', $thickness=50, $padding=0, $bgColor='#000', $transaprencyAmount=30)
+  public function addCaptionBox($side='b', $thickness=50, $padding=0, $bgColor='#000', $transparencyAmount=30)
   #
   # Author:   Jarrod Oberto
   # Date:   26 May 2011
@@ -1602,7 +1602,7 @@ class imageLib
   # Params in:  (str) $side: the side to add the caption box (t, r, b, or l).
   #       (int) $thickness: how thick you want the caption box to be.
   #       (mixed) $bgColor: The color of the caption box.
-  #       (int) $transaprencyAmount: The amount of transparency to be
+  #       (int) $transparencyAmount: The amount of transparency to be
   #       applied.
   # Params out: n/a
   # Notes:
@@ -1622,8 +1622,8 @@ class imageLib
       $this->captionBoxPositionArray = $positionArray;
 
 
-      $transaprencyAmount = $this->invertTransparency($transaprencyAmount, 127, false);
-      $transparent = imagecolorallocatealpha($this->imageResized, $r, $g, $b, $transaprencyAmount);
+      $transparencyAmount = $this->invertTransparency($transparencyAmount, 127, false);
+      $transparent = imagecolorallocatealpha($this->imageResized, $r, $g, $b, $transparencyAmount);
       imagefilledrectangle($this->imageResized, $positionArray['x1'], $positionArray['y1'], $positionArray['x2'], $positionArray['y2'], $transparent);
   }
 

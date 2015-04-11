@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,11 +19,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Configuration $object
+ */
 class AdminAdminPreferencesControllerCore extends AdminController
 {
 
@@ -64,20 +67,22 @@ class AdminAdminPreferencesControllerCore extends AdminController
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_COOKIE_LIFETIME_FO' => array(
-						'title' => $this->l('Lifetime of Front Office cookies'),
-						'hint' => $this->l('Set the value in hours.'),
+						'title' => $this->l('Lifetime of front office cookies'),
+						'hint' => $this->l('Set the amount of hours during which the front office cookies are valid. After that amount of time, the customer will have to log in again.'),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'text',
+						'suffix' => $this->l('hours'),
 						'default' => '480',
 						'visibility' => Shop::CONTEXT_ALL
 					),
 					'PS_COOKIE_LIFETIME_BO' => array(
-						'title' => $this->l('Lifetime of Back Office cookies'),
-						'hint' => $this->l('Set the value in hours.'),
+						'title' => $this->l('Lifetime of back office cookies'),
+						'hint' => $this->l('Set the amount of hours during which the back office cookies are valid. After that amount of time, the PrestaShop user will have to log in again.'),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'text',
+						'suffix' => $this->l('hours'),
 						'default' => '480',
 						'visibility' => Shop::CONTEXT_ALL
 					),
@@ -90,11 +95,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 				'fields' => array(
 					'PS_ATTACHMENT_MAXIMUM_SIZE' => array(
 						'title' => $this->l('Maximum size for attachment'),
-						'hint' => $this->l('Set the maximum size allowed for attachment files (in megabytes).'),
-						/***** TO DO - ajouter cette ligne dans le hint ? 
-						.' '.$this->l('Maximum:').' '.
-							((int)str_replace('M', '', ini_get('post_max_size')) > (int)str_replace('M', '', ini_get('upload_max_filesize')) ? ini_get('upload_max_filesize') : ini_get('post_max_size')),
-							*****/
+						'hint' =>  sprintf($this->l('Set the maximum size allowed for attachment files (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %s MB).'), $upload_mb),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'text',
@@ -103,7 +104,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 					),
 					'PS_LIMIT_UPLOAD_FILE_VALUE' => array(
 						'title' => $this->l('Maximum size for a downloadable product'),
-						'hint' => $this->l('Define the upload limit for a downloadable product (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server. ').sprintf('(%s MB).', $upload_mb),
+						'hint' => sprintf($this->l('Define the upload limit for a downloadable product (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %s MB).'), $upload_mb),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'text',
@@ -112,7 +113,7 @@ class AdminAdminPreferencesControllerCore extends AdminController
 					),
 					'PS_LIMIT_UPLOAD_IMAGE_VALUE' => array(
 						'title' => $this->l('Maximum size for a product\'s image'),
-						'hint' => $this->l('Define the upload limit for an image (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server. ').sprintf('(%s MB).', $upload_mb),
+						'hint' => sprintf($this->l('Define the upload limit for an image (in megabytes). This value has to be lower or equal to the maximum file upload allotted by your server (currently: %s MB).'), $upload_mb),
 						'validation' => 'isInt',
 						'cast' => 'intval',
 						'type' => 'text',
@@ -122,24 +123,10 @@ class AdminAdminPreferencesControllerCore extends AdminController
 				),
 				'submit' => array('title' => $this->l('Save'))
 			),
-			'help' => array(
-				'title' =>	$this->l('Help'),
-				'icon' =>	'icon-question-sign',
-				'fields' =>	array(
-					'PS_HELPBOX' => array(
-						'title' => $this->l('Back Office help boxes'),
-						'hint' => $this->l('Allow yellow help boxes to be displayed under the form fields in the Back Office.'),
-						'validation' => 'isBool',
-						'cast' => 'intval',
-						'type' => 'bool',
-						'visibility' => Shop::CONTEXT_ALL
-					),
-				),
-				'submit' => array('title' => $this->l('Save'))
-			),
 			'notifications' => array(
 				'title' =>	$this->l('Notifications'),
 				'icon' =>	'icon-list-alt',
+				'description' => $this->l('Notifications are numbered bubbles displayed at the very top of your back office, right next to the shop\'s name. They display the number of new items since you last clicked on them.'),
 				'fields' =>	array(
 					'PS_SHOW_NEW_ORDERS' => array(
 						'title' => $this->l('Show notifications for new orders'),

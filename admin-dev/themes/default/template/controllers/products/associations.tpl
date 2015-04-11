@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -30,24 +30,23 @@
 		{l s='Please select a default category.'}
 	</div>
 	<div class="form-group">
-		<label class="control-label col-lg-3" for="category_block">
-			{include file="controllers/products/multishop/checkbox.tpl" field="associated-categories-tree" type="category_box"}
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="category_box" type="category_box"}</span></div>
+		<label class="control-label col-lg-2" for="category_block">
 			{l s='Associated categories'}
 		</label>
 		<div class="col-lg-9">
 			<div id="category_block">
 				{$category_tree}
 			</div>
-			<a class="btn btn-link bt-icon confirm_leave" href="{$link->getAdminLink('AdminCategories')|escape:'html':'UTF-8'}&addcategory">
+			<a class="btn btn-link bt-icon confirm_leave" href="{$link->getAdminLink('AdminCategories')|escape:'html':'UTF-8'}&amp;addcategory">
 				<i class="icon-plus-sign"></i> {l s='Create new category'} <i class="icon-external-link-sign"></i>
 			</a>
 		</div>
 	</div>
 	<div class="form-group">
-		<label class="control-label col-lg-3" for="id_category_default">
-			{include file="controllers/products/multishop/checkbox.tpl" field="id_category_default" type="default"}
-			<span class="label-tooltip" data-toggle="tooltip"
-			title="{l s='The default category is the main category for your product, and is displayed by default.'}">
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="id_category_default" type="default"}</span></div>
+		<label class="control-label col-lg-2" for="id_category_default">
+			<span class="label-tooltip" data-toggle="tooltip" title="{l s='The default category is the main category for your product, and is displayed by default.'}">
 				{l s='Default category'}
 			</span>
 		</label>
@@ -71,7 +70,7 @@
 			<input type="hidden" name="nameAccessories" id="nameAccessories" value="{foreach from=$accessories item=accessory}{$accessory.name|escape:'html':'UTF-8'}¤{/foreach}" />
 			<div id="ajax_choose_product">
 				<div class="input-group">
-					<input type="text" value="" id="product_autocomplete_input" />
+					<input type="text" id="product_autocomplete_input" name="product_autocomplete_input" />
 					<span class="input-group-addon"><i class="icon-search"></i></span>
 				</div>
 			</div>
@@ -82,7 +81,7 @@
 				<button type="button" class="btn btn-default delAccessory" name="{$accessory.id_product}">
 					<i class="icon-remove text-danger"></i>
 				</button>
-				{$accessory.name|escape:'html':'UTF-8'}{if !empty($accessory.reference)}{$accessory.reference}{/if}
+				{$accessory.name|escape:'html':'UTF-8'}{if !empty($accessory.reference)}&nbsp;{l s='(ref: %s)' sprintf=$accessory.reference}{/if}
 			</div>
 			{/foreach}
 			</div>
@@ -100,14 +99,14 @@
 			</select>
 		</div>
 		<div class="col-lg-4">
-			<a class="btn btn-link bt-icon confirm_leave" style="margin-bottom:0" href="{$link->getAdminLink('AdminManufacturers')|escape:'html':'UTF-8'}&addmanufacturer">
+			<a class="btn btn-link bt-icon confirm_leave" style="margin-bottom:0" href="{$link->getAdminLink('AdminManufacturers')|escape:'html':'UTF-8'}&amp;addmanufacturer">
 				<i class="icon-plus-sign"></i> {l s='Create new manufacturer'} <i class="icon-external-link-sign"></i>
 			</a>
 		</div>
 	</div>
 	<div class="panel-footer">
-		<a href="{$link->getAdminLink('AdminProducts')}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
-		<button type="submit" name="submitAddproduct" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save'}</button>
-		<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right"><i class="process-icon-save"></i> {l s='Save and stay'}</button>
+		<a href="{$link->getAdminLink('AdminProducts')|escape:'html':'UTF-8'}{if isset($smarty.request.page) && $smarty.request.page > 1}&amp;submitFilterproduct={$smarty.request.page|intval}{/if}" class="btn btn-default"><i class="process-icon-cancel"></i> {l s='Cancel'}</a>
+		<button type="submit" name="submitAddproduct" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> {l s='Save'}</button>
+		<button type="submit" name="submitAddproductAndStay" class="btn btn-default pull-right" disabled="disabled"><i class="process-icon-loading"></i> {l s='Save and stay'}</button>
 	</div>
 </div>

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,11 +19,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Manufacturer $object
+ */
 class AdminManufacturersControllerCore extends AdminController
 {
 	public $bootstrap = true ;
@@ -37,9 +40,10 @@ class AdminManufacturersControllerCore extends AdminController
 	 	$this->lang = false;
 	 	$this->deleted = false;
 		$this->allow_export = true;
-
-		$this->_orderBy = 'name';
-		$this->_orderWay = 'ASC';
+		$this->list_id = 'manufacturer';
+		$this->identifier = 'id_manufacturer';
+		$this->_defaultOrderBy = 'name';
+		$this->_defaultOrderWay = 'ASC';
 
 	 	$this->bulk_actions = array(
 			'delete' => array(
@@ -48,7 +52,7 @@ class AdminManufacturersControllerCore extends AdminController
 				'confirm' => $this->l('Delete selected items?')
 			)
 		);
-		
+
 		$this->context = Context::getContext();
 
 		$this->fieldImageSettings = array(
@@ -156,7 +160,7 @@ class AdminManufacturersControllerCore extends AdminController
 
 		$this->content .= parent::renderList();
 	}
-	
+
 	protected function getAddressFieldsList()
 	{
 		// Sub tab addresses
@@ -173,7 +177,7 @@ class AdminManufacturersControllerCore extends AdminController
 			'manufacturer_name' => array(
 				'title' => $this->l('Manufacturer'),
 				'width' => 'auto',
-				'filter_key' => 'm!name'
+				'filter_key' => 'manufacturer_name'
 			),
 			'firstname' => array(
 				'title' => $this->l('First name')
@@ -198,6 +202,17 @@ class AdminManufacturersControllerCore extends AdminController
 		);
 	}
 
+	public function processExport($text_delimiter = '"')
+	{
+		if (strtolower($this->table) == 'address')
+		{
+			$this->_defaultOrderBy = 'id_manufacturer';
+			$this->_where = 'AND a.`id_customer` = 0 AND a.`id_supplier` = 0 AND a.`id_warehouse` = 0 AND a.`deleted`= 0';
+		}
+
+		return parent::processExport($text_delimiter);
+	}
+
 	public function initListManufacturerAddresses()
 	{
 		$this->toolbar_title = $this->l('Addresses');
@@ -209,6 +224,10 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->list_id = 'address';
 		$this->identifier = 'id_address';
 		$this->deleted = true;
+
+		$this->_defaultOrderBy = 'id_address';
+		$this->_defaultOrderWay = 'ASC';
+
 		$this->_orderBy = null;
 
 		$this->addRowAction('editaddresses');
@@ -222,6 +241,13 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->action = (isset($_POST['submitReset'.$this->table]) ? 'reset_filters' : '');
 
 		$this->fields_list = $this->getAddressFieldsList();
+		$this->bulk_actions = array(
+			'delete' => array(
+				'text' => $this->l('Delete selected'),
+				'icon' => 'icon-trash',
+				'confirm' => $this->l('Delete selected items?')
+			)
+		);
 
 		$this->_select = 'cl.`name` as country, m.`name` AS manufacturer_name';
 		$this->_join = '
@@ -230,7 +256,7 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->_join .= '
 			LEFT JOIN `'._DB_PREFIX_.'manufacturer` m
 				ON (a.`id_manufacturer` = m.`id_manufacturer`)';
-		$this->_where = 'AND a.`id_customer` = 0 AND a.`id_supplier` = 0 AND a.`id_warehouse` = 0 AND a.`deleted`=0';
+		$this->_where = 'AND a.`id_customer` = 0 AND a.`id_supplier` = 0 AND a.`id_warehouse` = 0 AND a.`deleted`= 0';
 
 		$this->context->smarty->assign('title_list', $this->l('Manufacturers addresses'));
 
@@ -238,6 +264,7 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->postProcess();
 
 		$this->initToolbar();
+
 		$this->content .= parent::renderList();
 
 	}
@@ -420,6 +447,11 @@ class AdminManufacturersControllerCore extends AdminController
 	 	// Create Object Address
 		$address = new Address($id_address);
 
+		$res = $address->getFieldsRequiredDatabase();
+		$required_fields = array();
+		foreach ($res as $row)
+			$required_fields[(int)$row['id_required_field']] = $row['field_name'];
+
 		$form = array(
 			'legend' => array(
 				'title' => $this->l('Addresses'),
@@ -458,12 +490,24 @@ class AdminManufacturersControllerCore extends AdminController
 			'type' => 'hidden',
 			'name' => 'alias',
 		);
-		
+
 		$form['input'][] = array(
 			'type' => 'hidden',
 			'name' => 'id_address',
 		);
-		
+
+		 if (in_array('company', $required_fields))
+			$form['input'][] = array(
+				'type' => 'text',
+				'label' => $this->l('Company'),
+				'name' => 'company',
+				'display' => in_array('company', $required_fields),
+				'required' => in_array('company', $required_fields),
+				'maxlength' => 16,
+				'col' => 4,
+				'hint' => $this->l('Company name for this supplier')
+			);
+
 		$form['input'][] = array(
 			'type' => 'text',
 			'label' => $this->l('Last name'),
@@ -492,14 +536,14 @@ class AdminManufacturersControllerCore extends AdminController
 			'label' => $this->l('Address (2)'),
 			'name' => 'address2',
 			'col' => 6,
-			'required' => false,
+			'required' => in_array('address2', $required_fields)
 		);
 		$form['input'][] = array(
 			'type' => 'text',
 			'label' => $this->l('Zip/postal code'),
 			'name' => 'postcode',
 			'col' => 2,
-			'required' => false,
+			'required' => in_array('postcode', $required_fields)
 		);
 		$form['input'][] = array(
 			'type' => 'text',
@@ -538,14 +582,14 @@ class AdminManufacturersControllerCore extends AdminController
 			'label' => $this->l('Home phone'),
 			'name' => 'phone',
 			'col' => 4,
-			'required' => false,
+			'required' => in_array('phone', $required_fields)
 		);
 		$form['input'][] = array(
 			'type' => 'text',
 			'label' => $this->l('Mobile phone'),
 			'name' => 'phone_mobile',
 			'col' => 4,
-			'required' => false,
+			'required' => in_array('phone_mobile', $required_fields)
 		);
 		$form['input'][] = array(
 			'type' => 'textarea',
@@ -627,10 +671,12 @@ class AdminManufacturersControllerCore extends AdminController
 
 			default:
 				parent::initToolbar();
-				$this->toolbar_btn['import'] = array(
-					'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=manufacturers',
-					'desc' => $this->l('Import')
-				);
+
+				if ($this->can_import)
+					$this->toolbar_btn['import'] = array(
+						'href' => $this->context->link->getAdminLink('AdminImport', true).'&import_type=manufacturers',
+						'desc' => $this->l('Import')
+					);
 		}
 	}
 
@@ -638,7 +684,9 @@ class AdminManufacturersControllerCore extends AdminController
 	{
 		if (!($manufacturer = $this->loadObject()))
 			return;
-		
+
+		/** @var Manufacturer $manufacturer */
+
 		$this->toolbar_btn['new'] = array(
 					'href' => $this->context->link->getAdminLink('AdminManufacturers').'&addaddress=1&id_manufacturer='.(int)$manufacturer->id,
 					'desc' => $this->l('Add address')
@@ -646,7 +694,7 @@ class AdminManufacturersControllerCore extends AdminController
 
 		$this->toolbar_title = is_array($this->breadcrumbs) ? array_unique($this->breadcrumbs) : array($this->breadcrumbs);
 		$this->toolbar_title[] = $manufacturer->name;
-		
+
 		$addresses = $manufacturer->getAddresses($this->context->language->id);
 
 		$products = $manufacturer->getProductsLite($this->context->language->id);
@@ -703,20 +751,20 @@ class AdminManufacturersControllerCore extends AdminController
 		$this->initPageHeaderToolbar();
 		if ($this->display == 'editaddresses' || $this->display == 'addaddress')
 			$this->content .= $this->renderFormAddress();
-		else if ($this->display == 'edit' || $this->display == 'add')
+		elseif ($this->display == 'edit' || $this->display == 'add')
 		{
 			if (!$this->loadObject(true))
 				return;
 			$this->content .= $this->renderForm();
 		}
-		else if ($this->display == 'view')
+		elseif ($this->display == 'view')
 		{
 			// Some controllers use the view action without an object
 			if ($this->className)
 				$this->loadObject(true);
 			$this->content .= $this->renderView();
 		}
-		else if (!$this->ajax)
+		elseif (!$this->ajax)
 		{
 			$this->content .= $this->renderList();
 			$this->content .= $this->renderOptions();
@@ -741,19 +789,19 @@ class AdminManufacturersControllerCore extends AdminController
 
 		if (Tools::isSubmit('editaddresses'))
 			$this->display = 'editaddresses';
-		else if (Tools::isSubmit('updateaddress'))
+		elseif (Tools::isSubmit('updateaddress'))
 			$this->display = 'editaddresses';
-		else if (Tools::isSubmit('addaddress'))
+		elseif (Tools::isSubmit('addaddress'))
 			$this->display = 'addaddress';
-		else if (Tools::isSubmit('submitAddaddress'))
+		elseif (Tools::isSubmit('submitAddaddress'))
 			$this->action = 'save';
-		else if (Tools::isSubmit('deleteaddress'))
+		elseif (Tools::isSubmit('deleteaddress'))
 			$this->action = 'delete';
 	}
 
 	public function initProcess()
 	{
-		if (Tools::getValue('submitAddaddress') || Tools::isSubmit('deleteaddress') || Tools::isSubmit('submitBulkdeleteaddress') || Tools::isSubmit('exportaddress'))
+		if (Tools::isSubmit('submitAddaddress') || Tools::isSubmit('deleteaddress') || Tools::isSubmit('submitBulkdeleteaddress') || Tools::isSubmit('exportaddress'))
 		{
 			$this->table = 'address';
 			$this->className = 'Address';
@@ -800,5 +848,12 @@ class AdminManufacturersControllerCore extends AdminController
 	protected function beforeDelete($object)
 	{
 		return true;
+	}
+
+	public function processSave()
+	{
+		parent::processSave();
+		if (Tools::isSubmit('submitAddaddress'))
+			$this->display = 'editaddresses';
 	}
 }

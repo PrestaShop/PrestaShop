@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -31,6 +31,11 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 {
 	public $order;
 
+	/**
+	 * @param OrderInvoice $order_invoice
+	 * @param Smarty $smarty
+	 * @throws PrestaShopException
+	 */
 	public function __construct(OrderInvoice $order_invoice, $smarty)
 	{
 		$this->order_invoice = $order_invoice;
@@ -39,7 +44,8 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 
 		// header informations
 		$this->date = Tools::displayDate($this->order->invoice_date);
-		$this->title = HTMLTemplateDeliverySlip::l('Delivery').' #'.Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id).sprintf('%06d', $this->order_invoice->delivery_number);
+		$prefix = Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id);
+		$this->title = sprintf(HTMLTemplateDeliverySlip::l('Delivery %1$s%2$06d'), $prefix, $this->order_invoice->delivery_number);
 
 		// footer informations
 		$this->shop = new Shop((int)$this->order->id_shop);
@@ -60,12 +66,36 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 			$invoice_address = new Address((int)$this->order->id_address_invoice);
 			$formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
 		}
-		
+
 		$carrier = new Carrier($this->order->id_carrier);
 		$carrier->name = ($carrier->name == '0' ? Configuration::get('PS_SHOP_NAME') : $carrier->name);
+
+		$order_details = $this->order_invoice->getProducts();
+		if (Configuration::get('PS_PDF_IMG_DELIVERY'))
+			foreach ($order_details as &$order_detail)
+			{
+				if ($order_detail['image'] != null)
+				{
+					$name = 'product_mini_'.(int)$order_detail['product_id'].(isset($order_detail['product_attribute_id']) ? '_'.(int)$order_detail['product_attribute_id'] : '').'.jpg';
+					$path = _PS_PROD_IMG_DIR_.$order_detail['image']->getExistingImgPath().'.jpg';
+
+					$order_detail['image_tag'] = preg_replace(
+						'/\.*'.preg_quote(__PS_BASE_URI__, '/').'/',
+						_PS_ROOT_DIR_.DIRECTORY_SEPARATOR,
+						ImageManager::thumbnail($path, $name, 45, 'jpg', false),
+						1
+					);
+
+					if (file_exists(_PS_TMP_IMG_DIR_.$name))
+						$order_detail['image_size'] = getimagesize(_PS_TMP_IMG_DIR_.$name);
+					else
+						$order_detail['image_size'] = false;
+				}
+			}
+
 		$this->smarty->assign(array(
 			'order' => $this->order,
-			'order_details' => $this->order_invoice->getProducts(),
+			'order_details' => $order_details,
 			'delivery_address' => $formatted_delivery_address,
 			'invoice_address' => $formatted_invoice_address,
 			'order_invoice' => $this->order_invoice,
@@ -93,4 +123,3 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 		return Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id, null, $this->order->id_shop).sprintf('%06d', $this->order->delivery_number).'.pdf';
 	}
 }
-

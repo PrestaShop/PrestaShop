@@ -12,7 +12,7 @@
     margin: 0 0 31px 0; }
   #maintenance h1 {
     font: 600 28px/34px "Open Sans", sans-serif;
-    color: #333333;
+    color: #333;
     text-transform: uppercase;
     border-bottom: 1px solid #d6d4d4;
     padding: 0 0 14px 0;
@@ -23,7 +23,24 @@
     color: #555454;
     text-transform: uppercase; }
 
+.container {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto; }
+
+@media (min-width: 768px) {
+  .container {
+    width: 750px; } }
+@media (min-width: 992px) {
+  .container {
+    width: 970px; } }
+@media (min-width: 1200px) {
+  .container {
+    width: 1170px; } }
 @media only screen and (min-width: 1200px) {
   .container {
     padding-left: 0;
     padding-right: 0; } }
+
+/*# sourceMappingURL=maintenance.css.map */

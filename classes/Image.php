@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -66,9 +66,9 @@ class ImageCore extends ObjectModel
 		'primary' => 'id_image',
 		'multilang' => true,
 		'fields' => array(
-			'id_product' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+			'id_product' => array('type' => self::TYPE_INT, 'shop' => 'both', 'validate' => 'isUnsignedId', 'required' => true),
 			'position' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
-			'cover' => 		array('type' => self::TYPE_BOOL, 'validate' => 'isBool', 'shop' => true),
+			'cover' => 		array('type' => self::TYPE_BOOL, 'allow_null' => true, 'validate' => 'isBool', 'shop' => true),
 			'legend' => 	array('type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 128),
 		),
 	);
@@ -87,7 +87,23 @@ class ImageCore extends ObjectModel
 		if ($this->position <= 0)
 			$this->position = Image::getHighestPosition($this->id_product) + 1;
 
+		if ($this->cover)
+			$this->cover = 1;
+		else
+			$this->cover = null;
+
 		return parent::add($autodate, $null_values);
+	}
+
+	public function update($null_values = false)
+	{
+		if ($this->cover)
+			$this->cover = 1;
+		else
+			$this->cover = null;
+
+
+		return parent::update($null_values);
 	}
 
 	public function delete()
@@ -102,21 +118,44 @@ class ImageCore extends ObjectModel
 			return false;
 
 		// update positions
-		$result = Db::getInstance()->executeS('
-			SELECT *
-			FROM `'._DB_PREFIX_.'image`
-			WHERE `id_product` = '.(int)$this->id_product.'
-			ORDER BY `position`
-		');
-		$i = 1;
-		if ($result)
-			foreach ($result as $row)
-			{
-				$row['position'] = $i++;
-				Db::getInstance()->update($this->def['table'], $row, '`id_image` = '.(int)$row['id_image'], 1);
-			}
+		Db::getInstance()->execute('SET @position:=0', false);
+		Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'image` SET position=(@position:=@position+1)
+									WHERE `id_product` = '.(int)$this->id_product.' ORDER BY position ASC');
 
 		return true;
+	}
+
+	/**
+	 * Return first image (by position) associated with a product attribute
+	 *
+	 * @param integer $id_shop Shop ID
+	 * @param integer $id_lang Language ID
+	 * @param integer $id_product Product ID
+	 * @param integer $id_product_attribute Product Attribute ID
+	 * @return array
+	 */
+	public static function getBestImageAttribute($id_shop, $id_lang, $id_product, $id_product_attribute)
+	{
+		$cache_id = 'Image::getBestImageAttribute'.'-'.(int)$id_product.'-'.(int)$id_product_attribute.'-'.(int)$id_lang.'-'.(int)$id_shop;
+
+		if (!Cache::isStored($cache_id))
+		{
+			$row = Db::getInstance()->getRow('
+					SELECT image_shop.`id_image` id_image, il.`legend`
+					FROM `'._DB_PREFIX_.'image` i
+					INNER JOIN `'._DB_PREFIX_.'image_shop` image_shop
+						ON (i.id_image = image_shop.id_image AND image_shop.id_shop = '.(int)$id_shop.')
+						INNER JOIN `'._DB_PREFIX_.'product_attribute_image` pai
+						ON (pai.`id_image` = i.`id_image` AND pai.`id_product_attribute` = '.(int)$id_product_attribute.')
+					LEFT JOIN `'._DB_PREFIX_.'image_lang` il
+						ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
+					WHERE i.`id_product` = '.(int)$id_product.' ORDER BY i.`position` ASC');
+
+			Cache::store($cache_id, $row);
+		}
+
+		$row = Cache::retrieve($cache_id);
+		return $row;
 	}
 
 	/**
@@ -127,7 +166,7 @@ class ImageCore extends ObjectModel
 	 * @param integer $id_product_attribute Product Attribute ID
 	 * @return array Images
 	 */
-	public static function getImages($id_lang, $id_product, $id_product_attribute = NULL)
+	public static function getImages($id_lang, $id_product, $id_product_attribute = null)
 	{
 		$attribute_filter = ($id_product_attribute ? ' AND ai.`id_product_attribute` = '.(int)$id_product_attribute : '');
 		$sql = 'SELECT *
@@ -137,9 +176,31 @@ class ImageCore extends ObjectModel
 		if ($id_product_attribute)
 			$sql .= ' LEFT JOIN `'._DB_PREFIX_.'product_attribute_image` ai ON (i.`id_image` = ai.`id_image`)';
 
-		$sql .= ' WHERE i.`id_product` = '.(int)$id_product.' AND il.`id_lang` = '.(int)$id_lang . $attribute_filter.'
+		$sql .= ' WHERE i.`id_product` = '.(int)$id_product.' AND il.`id_lang` = '.(int)$id_lang.$attribute_filter.'
 			ORDER BY i.`position` ASC';
 		return Db::getInstance()->executeS($sql);
+	}
+
+	/**
+	 * Check if a product has an image available
+	 *
+	 * @param integer $id_lang Language ID
+	 * @param integer $id_product Product ID
+	 * @param integer $id_product_attribute Product Attribute ID
+	 * @return bool
+	 */
+	public static function hasImages($id_lang, $id_product, $id_product_attribute = null)
+	{
+		$attribute_filter = ($id_product_attribute ? ' AND ai.`id_product_attribute` = '.(int)$id_product_attribute : '');
+		$sql = 'SELECT 1
+			FROM `'._DB_PREFIX_.'image` i
+			LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (i.`id_image` = il.`id_image`)';
+
+		if ($id_product_attribute)
+			$sql .= ' LEFT JOIN `'._DB_PREFIX_.'product_attribute_image` ai ON (i.`id_image` = ai.`id_image`)';
+
+		$sql .= ' WHERE i.`id_product` = '.(int)$id_product.' AND il.`id_lang` = '.(int)$id_lang.$attribute_filter;
+		return (bool)Db::getInstance()->getValue($sql);
 	}
 
 	/**
@@ -198,15 +259,15 @@ class ImageCore extends ObjectModel
 
 		if (file_exists(_PS_TMP_IMG_DIR_.'product_'.$id_product.'.jpg'))
 			unlink(_PS_TMP_IMG_DIR_.'product_'.$id_product.'.jpg');
-		
+
 		return (Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'image`
-			SET `cover` = 0
+			SET `cover` = NULL
 			WHERE `id_product` = '.(int)$id_product
 		) &&
 		Db::getInstance()->execute('
 			UPDATE `'._DB_PREFIX_.'image` i, `'._DB_PREFIX_.'image_shop` image_shop
-			SET image_shop.`cover` = 0
+			SET image_shop.`cover` = NULL
 			WHERE image_shop.id_shop IN ('.implode(',', array_map('intval', Shop::getContextListShopID())).') AND image_shop.id_image = i.id_image AND i.`id_product` = '.(int)$id_product
 		));
 	}
@@ -222,7 +283,7 @@ class ImageCore extends ObjectModel
 		return Db::getInstance()->getRow('
 			SELECT * FROM `'._DB_PREFIX_.'image` i'.
 			Shop::addSqlAssociation('image', 'i').'
-			WHERE `id_product` = '.(int)$id_product.'
+			WHERE i.`id_product` = '.(int)$id_product.'
 			AND image_shop.`cover`= 1');
 	}
 
@@ -258,6 +319,9 @@ class ImageCore extends ObjectModel
 						$image_new->createImgFolder();
 						copy(_PS_PROD_IMG_DIR_.$image_old->getExistingImgPath().'-'.$image_type['name'].'.jpg',
 						$new_path.'-'.$image_type['name'].'.jpg');
+						if (Configuration::get('WATERMARK_HASH'))
+							copy(_PS_PROD_IMG_DIR_.$image_old->getExistingImgPath().'-'.$image_type['name'].'-'.Configuration::get('WATERMARK_HASH').'.jpg',
+							$new_path.'-'.$image_type['name'].'-'.Configuration::get('WATERMARK_HASH').'.jpg');
 					}
 				}
 
@@ -375,15 +439,15 @@ class ImageCore extends ObjectModel
 				FROM '._DB_PREFIX_.'image_type
 				WHERE `name` = \''.pSQL($type).'\'
 			');
-	 	return self::$_cacheGetSize[$type];
+		return self::$_cacheGetSize[$type];
 	}
-	
+
 	public static function getWidth($params, &$smarty)
 	{
 		$result = self::getSize($params['type']);
 		return $result['width'];
 	}
-	
+
 	public static function getHeight($params, &$smarty)
 	{
 		$result = self::getSize($params['type']);
@@ -431,7 +495,11 @@ class ImageCore extends ObjectModel
 		// Delete auto-generated images
 		$image_types = ImageType::getImagesTypes();
 		foreach ($image_types as $image_type)
+		{
 			$files_to_delete[] = $this->image_dir.$this->getExistingImgPath().'-'.$image_type['name'].'.'.$this->image_format;
+			if (Configuration::get('WATERMARK_HASH'))
+				$files_to_delete[] = $this->image_dir.$this->getExistingImgPath().'-'.$image_type['name'].'-'.Configuration::get('WATERMARK_HASH').'.'.$this->image_format;
+		}
 
 		// Delete watermark image
 		$files_to_delete[] = $this->image_dir.$this->getExistingImgPath().'-watermark.'.$this->image_format;
@@ -477,7 +545,7 @@ class ImageCore extends ObjectModel
 		{
 			if (preg_match('/^[0-9]+(\-(.*))?\.'.$format.'$/', $file))
 				unlink($path.$file);
-			else if (is_dir($path.$file) && (preg_match('/^[0-9]$/', $file)))
+			elseif (is_dir($path.$file) && (preg_match('/^[0-9]$/', $file)))
 				Image::deleteAllImages($path.$file.'/', $format);
 		}
 
@@ -599,7 +667,7 @@ class ImageCore extends ObjectModel
 	 * If max_execution_time is provided, stops before timeout and returns string "timeout".
 	 * If any image cannot be moved, stops and returns "false"
 	 *
-	 * @param int max_execution_time
+	 * @param int $max_execution_time
 	 * @return mixed success or timeout
 	 */
 	public static function moveToNewFileSystem($max_execution_time = 0)

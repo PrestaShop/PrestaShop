@@ -18,6 +18,8 @@ ALTER TABLE `PREFIX_employee` ADD `bo_css` varchar(64) default 'admin-theme.css'
 
 INSERT INTO `PREFIX_web_browser` (name) VALUES ('IE 11');
 
+DELETE FROM `PREFIX_theme` WHERE `directory` = 'default-bootstrap';
+
 INSERT INTO `PREFIX_theme` (`name`, `directory`, `responsive`, `default_left_column`, `default_right_column`, `product_per_page`)
 VALUES ('default-bootstrap', 'default-bootstrap', 1, 1, 0, 12);
 

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,22 +19,25 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Tax $object
+ */
 class AdminTaxesControllerCore extends AdminController
 {
 	public function __construct()
 	{
 		$this->bootstrap = true;
-	 	$this->table = 'tax';
-	 	$this->className = 'Tax';
-	 	$this->lang = true;
+		$this->table = 'tax';
+		$this->className = 'Tax';
+		$this->lang = true;
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-		
+
 		$this->bulk_actions = array(
 			'delete' => array(
 				'text' => $this->l('Delete selected'),
@@ -47,7 +50,7 @@ class AdminTaxesControllerCore extends AdminController
 			'id_tax' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
 			'name' => array('title' => $this->l('Name'), 'width' => 'auto'),
 			'rate' => array('title' => $this->l('Rate'), 'align' => 'center', 'suffix' => '%' , 'class' => 'fixed-width-md'),
-			'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'class' => 'fixed-width-sm')
+			'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'class' => 'fixed-width-sm', 'remove_onclick' => true)
 			);
 
 		$ecotax_desc = '';
@@ -94,7 +97,7 @@ class AdminTaxesControllerCore extends AdminController
 			),
 		);
 
-		if (Configuration::get('PS_USE_ECOTAX'))
+		if (Configuration::get('PS_USE_ECOTAX') || Tools::getValue('PS_USE_ECOTAX'))
 			$this->fields_options['general']['fields']['PS_ECOTAX_TAX_RULES_GROUP_ID'] = array(
 				'title' => $this->l('Ecotax'),
 				'hint' => $this->l('Define the ecotax (e.g. French ecotax: 19.6%).'),
@@ -105,7 +108,7 @@ class AdminTaxesControllerCore extends AdminController
 				);
 
 		parent::__construct();
-		
+
 		$this->_where .= ' AND a.deleted = 0';
 	}
 
@@ -133,7 +136,7 @@ class AdminTaxesControllerCore extends AdminController
 			self::$cache_lang['DeleteItem'] = $this->l('Delete item #', __CLASS__, true, false);
 
 		if (TaxRule::isTaxInUse($id))
-			$confirm = $this->l('This tax is currently in use as a tax rule. Are you sure you\'d like to continue?');
+			$confirm = $this->l('This tax is currently in use as a tax rule. Are you sure you\'d like to continue?', null, true, false);
 
 		$this->context->smarty->assign(array(
 			'href' => self::$currentIndex.'&'.$this->identifier.'='.$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
@@ -157,8 +160,7 @@ class AdminTaxesControllerCore extends AdminController
 	public function displayEnableLink($token, $id, $value, $active, $id_category = null, $id_product = null)
 	{
 		if ($value && TaxRule::isTaxInUse($id))
-			$confirm = $this->l('This tax is currently in use as a tax rule. If you continue, this tax will be removed from the tax rule. Are you sure you\'d like to continue?');
-
+			$confirm = $this->l('This tax is currently in use as a tax rule. If you continue, this tax will be removed from the tax rule. Are you sure you\'d like to continue?', null, true, false);
 		$tpl_enable = $this->context->smarty->createTemplate('helpers/list/list_action_enable.tpl');
 		$tpl_enable->assign(array(
 			'enabled' => (bool)$value,
@@ -226,7 +228,7 @@ class AdminTaxesControllerCore extends AdminController
 	{
 		if ($this->action == 'save')
 		{
-		 	/* Checking fields validity */
+			/* Checking fields validity */
 			$this->validateRules();
 			if (!count($this->errors))
 			{
@@ -235,6 +237,7 @@ class AdminTaxesControllerCore extends AdminController
 				/* Object update */
 				if (isset($id) && !empty($id))
 				{
+					/** @var Tax $object */
 					$object = new $this->className($id);
 					if (Validate::isLoadedObject($object))
 					{
@@ -253,6 +256,7 @@ class AdminTaxesControllerCore extends AdminController
 				/* Object creation */
 				else
 				{
+					/** @var Tax $object */
 					$object = new $this->className();
 					$this->copyFromPost($object, $this->table);
 					if (!$object->add())
@@ -280,4 +284,3 @@ class AdminTaxesControllerCore extends AdminController
 		}
 	}
 }
-

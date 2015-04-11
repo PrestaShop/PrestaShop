@@ -1,24 +1,40 @@
+- 123monsite-regis
+- 1RV34
 - adonis karavokyros
+- Adonis Karavokyros
 - Adrien
 - aFolletete
 - Agence CINS
 - aKorczak
 - Aleksander Palyan
+- Alessandro Corbelli
 - Alexander Grosul
 - Alexander Otchenashev
+- Alexandra Even
+- Alex Even
+- AlexEven
 - alexey-svistunov
 - Alexey Svistunov
+- Alfakom-MK
+- Alfonso Jiménez
+- Alphacom IT Solutions - Macedonia
+- amatosg
 - anat
+- Anatole
 - Andrew
 - aNiassy
 - antoniofr
 - AntonLejon
 - Arnaud Lemercier
+- axi
 - Axome
 - Balestrino
+- bellini13
 - Benjamin PONGY
+- Bersam Karbasion
 - BigZ
 - bLeveque
+- BluTiGeS
 - bMancone
 - Bruno Leveque
 - bumbu
@@ -29,29 +45,42 @@
 - Captain-FLAM
 - ccauw
 - cedricfontaine
+- cedricgeffroy
 - Cédric Mouleyre
 - Chen.Zhidong
 - Chris
+- Chris Gurk
 - ChristopheBoucaut
 - CINS
 - cippest
 - cmouleyre
+- codvir
+- Comkwatt
 - Corentin Delcourt
 - Cosmin Hutanu
+- damien
 - Damien Metzger
 - DamienMetzger
 - Damon Skelhorn
+- danidomen
 - Daniel
 - Daniele Giachino
+- danoosh
+- Danoosh Mir
 - David Gasperoni
+- David-Julian BUCH
+- David Sivocha
 - Davy Rolink
+- DevNet
 - Dh42
 - Dimitrios Karvounaris
 - Dinis Lage
+- djbuch
 - djfm
 - dlage
 - dMetzger
 - (d)oekia
+- doekia
 - DOEO
 - Dragan Skrbic
 - dreammeup
@@ -60,8 +89,13 @@
 - DrÿSs
 - DrÿSs'
 - dSevere
+- Dustin
+- Dvir Julius
+- Dvir-Julius
 - edamart
 - Edouard Gaulué
+- elationbase
+- eleazar
 - emilien-puget
 - Emilien Puget
 - emily-d
@@ -72,16 +106,21 @@
 - fchellypresta
 - Felipe Uribe
 - fetis
+- flashmaestro
+- Florian Kwakkenbos
 - fram
 - Francois Gaillard
 - François Gaillard
-- Fran�ois Gaillard
+- François-Marie de Jouvencel
+- Fran�ois Gaillard
 - fSerny
 - Gabriel Schwardy
 - Gaelle ITZKOVITZ
 - Gamesh
 - gBrunier
 - gCharmes
+- ggedamed
+- Gordon Coubrough
 - gPoulain
 - gr4devel
 - Granger Kevin
@@ -90,14 +129,22 @@
 - gRoussac
 - Guillaume DELOINCE
 - Guillaume Lafarge
+- Gytis
+- Gytis Škėma
 - ha99y
 - hAitmansour
 - Ha!*!*y
 - hiousi
+- htrex
 - indesign47
 - inem0o
+- iNem0o
+- ironwo0d
+- ITBpro.com
+- Ivan
 - ivancasasempere
 - Jáchym Toušek
+- janisVincent
 - Javsmile
 - jBreux
 - J. Danse
@@ -109,12 +156,23 @@
 - Jérôme Nadaud
 - jessylenne
 - jmCollin
+- Joan
+- Joan Juvanteny
 - jObregon
+- joemartin247
+- Joep Hendrix
+- Jonadabe
 - Jonathan Danse
+- Jonathan SAHM
+- Jorge Vargas
 - joseantgv
+- jtogrul
 - Julien
+- Julien Bouchez
 - julienbourdeau
 - Julien Bourdeau
+- kermes
+- Kévin Dunglas
 - Kevin Granger
 - kiropowered
 - kpodemski
@@ -122,25 +180,32 @@
 - lBrieu
 - lCherifi
 - ldecoker
+- Léo
 - lesley paone
+- Lesley Paone
 - lLefevre
 - LOIC ROSSET ltd
 - LucasC
 - Lucas Cerdan
 - Lucas CERDAN
 - Luca T.
+- Lyo Nick
+- LyoNick
 - Madef
 - Madman
 - Mainmich
 - makk1ntosh
 - marcinsz101
 - Marco Cervellin
+- Marcos
 - matiasiglesias
 - Mats Rynge
+- Matteo
 - MatthieuB
 - Maxence
 - Maxime
 - mBertholino
+- mchelh
 - mchojnacki
 - mDeflotte
 - Michel Courtade
@@ -148,36 +213,56 @@
 - Mikael Blotin
 - Mikko Hellsing
 - Milow
+- Mingsong Hu
 - minic studio
 - misthero
 - mMarinetti
+- M-Mommsen
 - montes
+- mplh
 - MustangZhong
+- natrim
 - neemzy
 - nezenmoins
 - Nicolas Sorosac
 - Niklas Ekman
+- Niko Wicaksono
 - Nils-Helge Garli Hegvik
+- NinjaOfWeb
 - Nino Uzelac
 - nPellicari
 - nturato
 - oleacorner
 - Otto Nascarella
+- Panagiotis Tigas
+- panesarsandeep
 - Patanock
+- Patrick Mettraux
+- Pavel Novitsky
+- Per Lejontand
+- peterept
 - Peter Schaeffer
+- Petyuska
 - PhpMadman
 - Pierre
 - Piotr Kaczor
 - Piotr Moćko
 - PrestaEdit
 - PrestaLab
+- prestamodule
 - PrestanceDesign
 - prestarocket
 - Prestaspirit
 - Priyank Bolia
+- Pronux
+- proydsl
 - pxls
 - quadrateam
+- Quentin Leonetti
 - Quentin Montant
+- Quetzacoalt91
+- Racochejl
+- Rafael Cunha
 - Raphaël Malié
 - raulgundin
 - Rémi Gaillard
@@ -186,39 +271,63 @@
 - Rimas Kudelis
 - rMalie
 - rMontagne
+- robert
 - romainberger
 - root
 - runningz
+- Sacha
+- Sacha Froment
+- Sacha FROMENT
+- sadlyblue
 - sagaradonis
+- Samir Shah
+- Sam Sanchez
 - Samy Rabih
 - Sarah Lorenzini
 - s-duval
 - Seb
 - Sébastien
+- Sébastien Bareyre
 - Sébastien Bocahu
 - Seynaeve
+- sfroment42
+- shaffe-fr
 - Shagshag
 - Shipow
+- shudrum
+- Shudrum
 - sjousse
 - sLorenzini
 - smartdatasoft
+- snamor
 - soufyan
 - soware
 - Staging
 - Stanislav Yordanov
+- Stephan Obadia
 - Steven "SDF" Sulley
 - sThiebaut
+- Studio Kiwik
 - Sumh
 - Sylvain Gougouzian
 - Sylvain WITMEYER
+- tchauviere
 - tDidierjean
+- Thibaud Chauviere
 - thoma202
+- Thomas
+- thomas-aw
 - Thomas Blanc
+- Thomas N
+- Thomas Nabord
+- Threef
 - timsit
+- tmackay
 - TMMeilleur
 - Tomasz Slominski
 - Tom Panier
 - tucoinfo
+- Tung Dao
 - unknown
 - vAugagneur
 - vChabot
@@ -229,11 +338,14 @@
 - vinzter
 - vKham
 - vSchoener
+- Wayann
+- web-plus
 - Xavier
 - Xavier Borderie
 - Xavier POITAU
+- xKnut
 - yanngarras
 - Yoozio
 - zimmi1
+- ZiZuu.com
 - Zollner Robert
-

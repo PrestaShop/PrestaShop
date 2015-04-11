@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,11 +19,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Tab $object
+ */
 class AdminTabsControllerCore extends AdminController
 {
 	protected $position_identifier = 'id_tab';
@@ -99,7 +102,7 @@ class AdminTabsControllerCore extends AdminController
 				'desc' => $this->l('Add new menu', null, null, false),
 				'icon' => 'process-icon-new'
 			);
-		
+
 		parent::initPageHeaderToolbar();
 	}
 
@@ -205,8 +208,8 @@ class AdminTabsControllerCore extends AdminController
 	public function renderList()
 	{
 		$this->addRowAction('edit');
-		$this->addRowAction('delete');
 		$this->addRowAction('details');
+		$this->addRowAction('delete');
 
 		$this->_where = 'AND a.`id_parent` = 0';
 		$this->_orderBy = 'position';
@@ -238,6 +241,8 @@ class AdminTabsControllerCore extends AdminController
 			$this->addRowAction('edit');
 			$this->addRowAction('delete');
 			$this->toolbar_btn = array();
+
+			/** @var Tab $tab */
 			$tab = $this->loadObject($id);
 			$this->toolbar_title = $tab->name[$this->context->employee->id_lang];
 
@@ -245,7 +250,8 @@ class AdminTabsControllerCore extends AdminController
 			$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'tab_lang` b ON (b.`id_tab` = a.`id_tab` AND b.`id_lang` = '.$this->context->language->id.')';
 			$this->_where = 'AND a.`id_parent` = '.(int)$id;
 			$this->_orderBy = 'position';
-		
+			$this->_use_found_rows = false;
+
 			self::$currentIndex = self::$currentIndex.'&details'.$this->table;
 			$this->processFilter();
 			return parent::renderList();
@@ -279,22 +285,63 @@ class AdminTabsControllerCore extends AdminController
 			else
 				Tools::redirectAdmin(self::$currentIndex.'&conf=5&token='.Tools::getAdminTokenLite('AdminTabs'));
 		}
-		elseif (Tools::isSubmit('submitAddtab') && Tools::getValue('id_tab') === Tools::getValue('id_parent'))
+		elseif (Tools::isSubmit('submitAdd'.$this->table) && Tools::getValue('id_tab') === Tools::getValue('id_parent'))
 			$this->errors[] = Tools::displayError('You can\'t put this menu inside itself. ');
+		elseif (Tools::isSubmit('submitAdd'.$this->table) && $id_parent = (int)Tools::getValue('id_parent'))
+			$this->redirect_after = self::$currentIndex.'&id_'.$this->table.'='.$id_parent.'&details'.$this->table.'&conf=4&token='.$this->token;
+		elseif (isset($_GET['details'.$this->table]) && is_array($this->bulk_actions))
+		{
+			$submit_bulk_actions = array_merge(array(
+				'enableSelection' => array(
+					'text' => $this->l('Enable selection'),
+					'icon' => 'icon-power-off text-success'
+				),
+				'disableSelection' => array(
+					'text' => $this->l('Disable selection'),
+					'icon' => 'icon-power-off text-danger'
+				)
+			), $this->bulk_actions);
+			foreach ($submit_bulk_actions as $bulk_action => $params)
+			{
+				if (Tools::isSubmit('submitBulk'.$bulk_action.$this->table) || Tools::isSubmit('submitBulk'.$bulk_action))
+				{
+					if ($this->tabAccess['edit'] === '1')
+					{
+						$this->action = 'bulk'.$bulk_action;
+						$this->boxes = Tools::getValue($this->list_id.'Box');
+					}
+					else
+						$this->errors[] = Tools::displayError('You do not have permission to edit this.');
+					break;
+				}
+				elseif (Tools::isSubmit('submitBulk'))
+				{
+					if ($this->tabAccess['edit'] === '1')
+					{
+						$this->action = 'bulk'.Tools::getValue('select_submitBulk');
+						$this->boxes = Tools::getValue($this->list_id.'Box');
+					}
+					else
+						$this->errors[] = Tools::displayError('You do not have permission to edit this.');
+					break;
+				}
+			}
+		}
 		else
 		{
 			// Temporary add the position depend of the selection of the parent category
 			if (!Tools::isSubmit('id_tab')) // @todo Review
 				$_POST['position'] = Tab::getNbTabs(Tools::getValue('id_parent'));
 		}
-		
+
 		if (!count($this->errors))
 			parent::postProcess();
-		
+
 	}
 
 	protected function afterImageUpload()
 	{
+		/** @var Tab $obj */
 		if (!($obj = $this->loadObject(true)))
 			return;
 		@rename(_PS_IMG_DIR_.'t/'.$obj->id.'.gif', _PS_IMG_DIR_.'t/'.$obj->class_name.'.gif');

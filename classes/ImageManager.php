@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -36,7 +36,7 @@ class ImageManagerCore
 	const ERROR_MEMORY_LIMIT   = 3;
 
 	/**
-	 * Generate a cached thumbnail for object lists (eg. carrier, order states...etc)
+	 * Generate a cached thumbnail for object lists (eg. carrier, order statuses...etc)
 	 *
 	 * @param string $image Real image filename
 	 * @param string $cache_image Cached filename
@@ -92,13 +92,15 @@ class ImageManagerCore
 	/**
 	 * Check if memory limit is too long or not
 	 *
-	 * @static
 	 * @param $image
 	 * @return bool
 	 */
 	public static function checkImageMemoryLimit($image)
 	{
 		$infos = @getimagesize($image);
+
+		if (!is_array($infos) || !isset($infos['bits']))
+			return true;
 
 		$memory_limit = Tools::getMemoryLimit();
 		// memory_limit == -1 => unlimited memory
@@ -118,24 +120,72 @@ class ImageManagerCore
 	/**
 	 * Resize, cut and optimize image
 	 *
-	 * @param string $src_file Image object from $_FILE
-	 * @param string $dst_file Destination filename
-	 * @param integer $dst_width Desired width (optional)
+	 * @param string  $src_file   Image object from $_FILE
+	 * @param string  $dst_file   Destination filename
+	 * @param integer $dst_width  Desired width (optional)
 	 * @param integer $dst_height Desired height (optional)
-	 * @param string $file_type
-	 * @return boolean Operation result
+	 * @param string  $file_type
+	 * @param bool    $force_type
+	 * @param int     $error
+	 * @param int     $width
+	 * @param int     $height
+	 * @param int     $quality
+	 * @return bool Operation result
 	 */
-	public static function resize($src_file, $dst_file, $dst_width = null, $dst_height = null, $file_type = 'jpg', $force_type = false, &$error = 0)
+	public static function resize($src_file, $dst_file, $dst_width = null, $dst_height = null, $file_type = 'jpg', $force_type = false, &$error = 0, &$width = null, &$height = null, $quality = 5)
 	{
 		if (PHP_VERSION_ID < 50300)
 			clearstatcache();
 		else
 			clearstatcache(true, $src_file);
-		
+
 		if (!file_exists($src_file) || !filesize($src_file))
 			return !($error = self::ERROR_FILE_NOT_EXIST);
 
-		list($src_width, $src_height, $type) = getimagesize($src_file);
+		list($tmp_width, $tmp_height, $type) = getimagesize($src_file);
+		$rotate = 0;
+		if (function_exists('exif_read_data') && function_exists('mb_strtolower'))
+		{
+			$exif = @exif_read_data($src_file);
+
+			if ($exif && isset($exif['Orientation']))
+			{
+				switch ($exif['Orientation'])
+				{
+					case 3:
+						$src_width = $tmp_width;
+						$src_height = $tmp_height;
+						$rotate = 180;
+						break;
+
+					case 6:
+						$src_width = $tmp_height;
+						$src_height = $tmp_width;
+						$rotate = -90;
+						break;
+
+					case 8:
+						$src_width = $tmp_height;
+						$src_height = $tmp_width;
+						$rotate = 90;
+						break;
+
+					default:
+						$src_width = $tmp_width;
+						$src_height = $tmp_height;
+				}
+			}
+			else
+			{
+				$src_width = $tmp_width;
+				$src_height = $tmp_height;
+			}
+		}
+		else
+		{
+			$src_width = $tmp_width;
+			$src_height = $tmp_height;
+		}
 
 		// If PS_IMAGE_QUALITY is activated, the generated image will be a PNG with .jpg as a file extension.
 		// This allow for higher quality and for transparency. JPG source files will also benefit from a higher quality
@@ -151,11 +201,10 @@ class ImageManagerCore
 		if (!$dst_height)
 			$dst_height = $src_height;
 
-		$src_image = ImageManager::create($type, $src_file);
-
 		$width_diff = $dst_width / $src_width;
 		$height_diff = $dst_height / $src_height;
 
+		$ps_image_generation_method = Configuration::get('PS_IMAGE_GENERATION_METHOD');
 		if ($width_diff > 1 && $height_diff > 1)
 		{
 			$next_width = $src_width;
@@ -163,23 +212,26 @@ class ImageManagerCore
 		}
 		else
 		{
-			if (Configuration::get('PS_IMAGE_GENERATION_METHOD') == 2 || (!Configuration::get('PS_IMAGE_GENERATION_METHOD') && $width_diff > $height_diff))
+			if ($ps_image_generation_method == 2 || (!$ps_image_generation_method && $width_diff > $height_diff))
 			{
 				$next_height = $dst_height;
 				$next_width = round(($src_width * $next_height) / $src_height);
-				$dst_width = (int)(!Configuration::get('PS_IMAGE_GENERATION_METHOD') ? $dst_width : $next_width);
+				$dst_width = (int)(!$ps_image_generation_method ? $dst_width : $next_width);
 			}
 			else
 			{
 				$next_width = $dst_width;
 				$next_height = round($src_height * $dst_width / $src_width);
-				$dst_height = (int)(!Configuration::get('PS_IMAGE_GENERATION_METHOD') ? $dst_height : $next_height);
+				$dst_height = (int)(!$ps_image_generation_method ? $dst_height : $next_height);
 			}
 		}
 
 		if (!ImageManager::checkImageMemoryLimit($src_file))
 			return !($error = self::ERROR_MEMORY_LIMIT);
-		
+
+		$width = $dst_width;
+		$height = $dst_height;
+
 		$dest_image = imagecreatetruecolor($dst_width, $dst_height);
 
 		// If image is a PNG and the output is PNG, fill with transparency. Else fill with white background.
@@ -196,8 +248,41 @@ class ImageManagerCore
 			imagefilledrectangle ($dest_image, 0, 0, $dst_width, $dst_height, $white);
 		}
 
-		imagecopyresampled($dest_image, $src_image, (int)(($dst_width - $next_width) / 2), (int)(($dst_height - $next_height) / 2), 0, 0, $next_width, $next_height, $src_width, $src_height);
+		$src_image = ImageManager::create($type, $src_file);
+		if ($rotate)
+			$src_image = imagerotate($src_image, $rotate, 0);
+
+		ImageManager::imagecopyresampled($dest_image, $src_image, (int)(($dst_width - $next_width) / 2), (int)(($dst_height - $next_height) / 2), 0, 0, $next_width, $next_height, $src_width, $src_height, $quality);
 		return (ImageManager::write($file_type, $dest_image, $dst_file));
+	}
+
+	public static function imagecopyresampled(&$dst_image, $src_image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h, $quality = 3)
+	{
+		// Plug-and-Play fastimagecopyresampled function replaces much slower imagecopyresampled.
+		// Just include this function and change all "imagecopyresampled" references to "fastimagecopyresampled".
+		// Typically from 30 to 60 times faster when reducing high resolution images down to thumbnail size using the default quality setting.
+		// Author: Tim Eckel - Date: 09/07/07 - Version: 1.1 - Project: FreeRingers.net - Freely distributable - These comments must remain.
+		//
+		// Optional "quality" parameter (defaults is 3). Fractional values are allowed, for example 1.5. Must be greater than zero.
+		// Between 0 and 1 = Fast, but mosaic results, closer to 0 increases the mosaic effect.
+		// 1 = Up to 350 times faster. Poor results, looks very similar to imagecopyresized.
+		// 2 = Up to 95 times faster.  Images appear a little sharp, some prefer this over a quality of 3.
+		// 3 = Up to 60 times faster.  Will give high quality smooth results very close to imagecopyresampled, just faster.
+		// 4 = Up to 25 times faster.  Almost identical to imagecopyresampled for most images.
+		// 5 = No speedup. Just uses imagecopyresampled, no advantage over imagecopyresampled.
+
+		if (empty($src_image) || empty($dst_image) || $quality <= 0)
+			return false;
+		if ($quality < 5 && (($dst_w * $quality) < $src_w || ($dst_h * $quality) < $src_h))
+		{
+			$temp = imagecreatetruecolor ($dst_w * $quality + 1, $dst_h * $quality + 1);
+			imagecopyresized ($temp, $src_image, 0, 0, $src_x, $src_y, $dst_w * $quality + 1, $dst_h * $quality + 1, $src_w, $src_h);
+			imagecopyresampled ($dst_image, $temp, $dst_x, $dst_y, 0, 0, $dst_w, $dst_h, $dst_w * $quality, $dst_h * $quality);
+			imagedestroy ($temp);
+		}
+		else
+			imagecopyresampled ($dst_image, $src_image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h);
+		return true;
 	}
 
 	/**
@@ -216,7 +301,16 @@ class ImageManagerCore
 			$mime_type_list = array('image/gif', 'image/jpg', 'image/jpeg', 'image/pjpeg', 'image/png', 'image/x-png');
 
 		// Try 4 different methods to determine the mime type
-		if (function_exists('finfo_open'))
+		if (function_exists('getimagesize'))
+		{
+			$image_info = @getimagesize($filename);
+
+			if ($image_info)
+				$mime_type = $image_info['mime'];
+			else
+				$file_mime_type = false;
+		}
+		elseif (function_exists('finfo_open'))
 		{
 			$const = defined('FILEINFO_MIME_TYPE') ? FILEINFO_MIME_TYPE : FILEINFO_MIME;
 			$finfo = finfo_open($const);
@@ -248,9 +342,9 @@ class ImageManagerCore
 	/**
 	 * Check if image file extension is correct
 	 *
-	 * @static
-	 * @param $filename real filename
-	 * @return bool true if it's correct
+	 * @param string $filename Real filename
+	 * @param array|null $authorized_extensions
+	 * @return bool True if it's correct
 	 */
 	public static function isCorrectImageFileExt($filename, $authorized_extensions = null)
 	{
@@ -281,7 +375,7 @@ class ImageManagerCore
 	{
 		if ((int)$max_file_size > 0 && $file['size'] > (int)$max_file_size)
 			return sprintf(Tools::displayError('Image is too large (%1$d kB). Maximum allowed: %2$d kB'), $file['size'] / 1024, $max_file_size / 1024);
-		if (!ImageManager::isRealImage($file['tmp_name'], $file['type']) || !ImageManager::isCorrectImageFileExt($file['name'], $types))
+		if (!ImageManager::isRealImage($file['tmp_name'], $file['type']) || !ImageManager::isCorrectImageFileExt($file['name'], $types) || preg_match('/\%00/', $file['name']))
 			return Tools::displayError('Image format not recognized, allowed formats are: .gif, .jpg, .png');
 		if ($file['error'])
 			return sprintf(Tools::displayError('Error while uploading image; please change your server\'s settings. (Error code: %s)'), $file['error']);
@@ -417,7 +511,7 @@ class ImageManagerCore
 			case 'jpeg':
 			default:
 				$quality = (Configuration::get('PS_JPEG_QUALITY') === false ? 90 : Configuration::get('PS_JPEG_QUALITY'));
-				imageinterlace($resource,1); /// make it PROGRESSIVE
+				imageinterlace($resource, 1); /// make it PROGRESSIVE
 				$success = imagejpeg($resource, $filename, (int)$quality);
 			break;
 		}
@@ -438,7 +532,7 @@ class ImageManagerCore
 						'image/gif' => array('gif'),
 						'image/jpeg' => array('jpg', 'jpeg'),
 						'image/png' => array('png')
-					);	
+					);
 		$extension = substr($file_name, strrpos($file_name, '.') + 1);
 
 		$mime_type = null;

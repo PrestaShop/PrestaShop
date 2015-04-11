@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -38,13 +38,13 @@
 				</select>
 			</div>
 			<div class="form-group">
-				<button type="button" id="add_table" class="btn btn-default"><i class="icon-plus-sign"></i> {l s='Add table'}</button>
+				<button type="button" id="add_table" class="btn btn-default"><i class="icon-plus-sign"></i> {l s='Add table name to SQL query'}</button>
 			</div>
 		</div>
 	</div>
 	<div class="col-lg-9">
 		<div class="panel">
-			<h3><i class="icon-list"></i> {l s='List of tables attributes'}</h3>
+			<h3><i class="icon-list"></i> {l s='List of attributes for this MySQL table'}</h3>
 			<div id="listAttributes">
 				<div class="alert alert-warning">{l s='Please choose a MySQL table'}</div>
 			</div>
@@ -64,7 +64,7 @@
 				data: {
 					table: table,
 					controller: 'adminrequestsql',
-					token: '{$token}',
+					token: '{$token|escape:'html':'UTF-8'}',
 					action: 'addrequest_sql',
 					ajax: true
 				},
@@ -87,7 +87,7 @@
 							html += "<tr>";
 								html += "<td>"+data[i].Field+"</td>";
 								html += "<td>"+data[i].Type+"</td>";
-								html += "<td><button type=\"button\" class=\"btn btn-default\" onclick=\"javascript:AddRequestSql('"+data[i].Field+"');\">{l s='Add attribute'}</button></td>";
+								html += "<td><button type=\"button\" class=\"btn btn-default\" onclick=\"javascript:AddRequestSql('"+data[i].Field+"');\">{l s='Add attribute to SQL query'}</button></td>";
 							html += "</tr>";
 						}
 						html += "</tbody>";

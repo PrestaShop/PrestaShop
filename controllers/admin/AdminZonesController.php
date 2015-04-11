@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,11 +19,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Zone $object
+ */
 class AdminZonesControllerCore extends AdminController
 {
 	public $asso_type = 'shop';
@@ -31,10 +34,10 @@ class AdminZonesControllerCore extends AdminController
 	public function __construct()
 	{
 		$this->bootstrap = true;
-	 	$this->table = 'zone';
+		$this->table = 'zone';
 		$this->className = 'Zone';
-	 	$this->lang = false;
-		
+		$this->lang = false;
+
 		$this->fields_list = array(
 			'id_zone' => array(
 				'title' => $this->l('ID'),
@@ -60,7 +63,7 @@ class AdminZonesControllerCore extends AdminController
 				'icon' => 'icon-trash'
 			)
 		);
-			
+
 		parent::__construct();
 	}
 

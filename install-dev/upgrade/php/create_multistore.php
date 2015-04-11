@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -44,7 +44,7 @@ function create_multistore()
 	$all_themes_dir = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'themes';
 	$themes = scandir($all_themes_dir);
 	foreach ($themes AS $theme)
-		if (is_dir($all_themes_dir.DIRECTORY_SEPARATOR.$theme.DIRECTORY_SEPARATOR) && $theme[0] != '.' && $theme != 'prestashop')
+		if (!is_file($all_themes_dir.DIRECTORY_SEPARATOR.$theme) && is_dir($all_themes_dir.DIRECTORY_SEPARATOR.$theme.DIRECTORY_SEPARATOR) && $theme[0] != '.' && $theme != 'prestashop'  && $theme != 'default-bootstrap')
 			$res &= Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'theme (name) VALUES("'.Db::getInstance()->escape($theme).'")');
 	$res &= Db::getInstance()->execute('
 	UPDATE '._DB_PREFIX_.'shop 
@@ -76,9 +76,9 @@ function create_multistore()
 	$res &= Db::getInstance()->execute($sql);
 
 	// Add admin tabs
-	$shopTabId = add_new_tab('AdminShop', 'it:Shops|es:Shops|fr:Boutiques|de:Shops|en:Shops',  0, true);
-	add_new_tab('AdminGroupShop', 'it:Group Shops|es:Group Shops|fr:Groupes de boutique|de:Group Shops|en:Group Shops', $shopTabId);
-	add_new_tab('AdminShopUrl', 'it:Shop Urls|es:Shop Urls|fr:URLs de boutique|de:Shop Urls|en:Shop Urls', $shopTabId);
+	$shop_tab_id = add_new_tab('AdminShop', 'it:Shops|es:Shops|fr:Boutiques|de:Shops|en:Shops', 0, true);
+	add_new_tab('AdminGroupShop', 'it:Group Shops|es:Group Shops|fr:Groupes de boutique|de:Group Shops|en:Group Shops', $shop_tab_id);
+	add_new_tab('AdminShopUrl', 'it:Shop Urls|es:Shop Urls|fr:URLs de boutique|de:Shop Urls|en:Shop Urls', $shop_tab_id);
 
 	return $res;
 }

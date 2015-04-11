@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,11 +19,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property TaxRulesGroup $object
+ */
 class AdminTaxRulesGroupControllerCore extends AdminController
 {
 	public $tax_rule;
@@ -67,17 +70,19 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			)
 		);
 
+		$this->_where .= ' AND a.deleted = 0';
+
 		parent::__construct();
 	}
 
 	public function initPageHeaderToolbar()
 	{
-        if (empty($this->display))
-		$this->page_header_toolbar_btn['new_tax_rules_group'] = array(
-			'href' => self::$currentIndex.'&addtax_rules_group&token='.$this->token,
-			'desc' => $this->l('Add new tax rules group', null, null, false),
-			'icon' => 'process-icon-new'
-		);
+		if (empty($this->display))
+			$this->page_header_toolbar_btn['new_tax_rules_group'] = array(
+				'href' => self::$currentIndex.'&addtax_rules_group&token='.$this->token,
+				'desc' => $this->l('Add new tax rules group', null, null, false),
+				'icon' => 'process-icon-new'
+			);
 
 		parent::initPageHeaderToolbar();
 	}
@@ -145,9 +150,12 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			LEFT JOIN `'._DB_PREFIX_.'tax` t
 				ON (a.`id_tax` = t.`id_tax`)';
 		$this->_where = 'AND `id_tax_rules_group` = '.(int)$id_group;
+		$this->_use_found_rows = false;
 
 		$this->show_toolbar = false;
 		$this->tpl_list_vars = array('id_tax_rules_group' => (int)$id_group);
+
+		$this->_filter = false;
 
 		return parent::renderList();
 	}
@@ -192,7 +200,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				'stay' => true
 			)
 		);
-		
+
 		if (Shop::isFeatureActive())
 		{
 			$this->fields_form['input'][] = array(
@@ -214,7 +222,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			$this->no_back = true;
 			$this->page_header_toolbar_btn['new'] = array(
 				'href' => '#',
-				'desc' => $this->l('Add a new tax rule.')
+				'desc' => $this->l('Add a new tax rule')
 			);
 			$content = parent::renderForm();
 			$this->tpl_folder = 'tax_rules/';
@@ -269,10 +277,6 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				array(
 					'type' => 'hidden',
 					'name' => 'action'
-				),
-				array(
-					'type' => 'hidden',
-					'name' => 'id_tax_rules_group'
 				),
 				array(
 					'type' => 'text',
@@ -382,14 +386,14 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 		}
-		else if (Tools::isSubmit('submitBulkdeletetax_rule'))
+		elseif (Tools::isSubmit('submitBulkdeletetax_rule'))
 		{
 			if ($this->tabAccess['delete'] === '1')
 				$this->action = 'bulk_delete_tax_rules';
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 		}
-		else if (Tools::getValue('action') == 'create_rule')
+		elseif (Tools::getValue('action') == 'create_rule')
 		{
 			if ($this->tabAccess['add'] === '1')
 				$this->action = 'create_rule';
@@ -426,6 +430,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 		$tax_rules_group = new TaxRulesGroup((int)$id_tax_rules_group);
 		foreach ($this->selected_countries as $id_country)
 		{
+			$first = true;
 			foreach ($this->selected_states as $id_state)
 			{
 				if ($tax_rules_group->hasUniqueTaxRuleForCountry($id_country, $id_state, $id_rule))
@@ -436,11 +441,15 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				$tr = new TaxRule();
 
 				// update or creation?
-				if (isset($id_rule))
+				if (isset($id_rule) && $first)
+				{
 					$tr->id = $id_rule;
+					$first = false;
+				}
 
 				$tr->id_tax = $id_tax;
-				$tr->id_tax_rules_group = (int)$id_tax_rules_group;
+				$tax_rules_group = new TaxRulesGroup((int)$id_tax_rules_group);
+				$tr->id_tax_rules_group = (int)$tax_rules_group->id;
 				$tr->id_country = (int)$id_country;
 				$tr->id_state = (int)$id_state;
 				list($tr->zipcode_from, $tr->zipcode_to) = $tr->breakDownZipCode($zip_code);
@@ -472,14 +481,20 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 				$this->errors = array_merge($this->errors, $this->validateTaxRule($tr));
 
 				if (count($this->errors) == 0)
+				{
+					$tax_rules_group = $this->updateTaxRulesGroup($tax_rules_group);
+					$tr->id = (int)$tax_rules_group->getIdTaxRuleGroupFromHistorizedId((int)$tr->id);
+					$tr->id_tax_rules_group = (int)$tax_rules_group->id;
+
 					if (!$tr->save())
 						$this->errors[] = Tools::displayError('An error has occurred: Cannot save the current tax rule.');
+				}
 			}
 		}
 
 		if (count($this->errors) == 0)
 			Tools::redirectAdmin(
-				self::$currentIndex.'&'.$this->identifier.'='.(int)$id_tax_rules_group.'&conf=4&update'.$this->table.'&token='.$this->token
+				self::$currentIndex.'&'.$this->identifier.'='.(int)$tax_rules_group->id.'&conf=4&update'.$this->table.'&token='.$this->token
 			);
 		else
 			$this->display = 'edit';
@@ -503,11 +518,17 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 		{
 			$tax_rule = new TaxRule((int)$id_tax_rule);
 			if (Validate::isLoadedObject($tax_rule))
-				$result &= $tax_rule->delete();
+			{
+				$tax_rules_group = new TaxRulesGroup((int)$tax_rule->id_tax_rules_group);
+				$tax_rules_group = $this->updateTaxRulesGroup($tax_rules_group);
+				$tax_rule = new TaxRule($tax_rules_group->getIdTaxRuleGroupFromHistorizedId((int)$id_tax_rule));
+				if (Validate::isLoadedObject($tax_rule))
+					$result &= $tax_rule->delete();
+			}
 		}
 
 		Tools::redirectAdmin(
-			self::$currentIndex.'&'.$this->identifier.'='.(int)$tax_rule->id_tax_rules_group.'&conf=4&update'.$this->table.'&token='.$this->token
+			self::$currentIndex.'&'.$this->identifier.'='.(int)$tax_rules_group->id.'&conf=4&update'.$this->table.'&token='.$this->token
 		);
 	}
 
@@ -518,10 +539,10 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 	*/
 	protected function validateTaxRule(TaxRule $tr)
 	{
-		// TODO: check if the rule already exists
+		// @TODO: check if the rule already exists
 		return $tr->validateController();
 	}
-	
+
 	protected function displayAjaxUpdateTaxRule()
 	{
 		if ($this->tabAccess['view'] === '1')
@@ -534,5 +555,21 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 			die(Tools::jsonEncode($output));
 		}
 	}
-}
 
+	/**
+	 * @param TaxRulesGroup $object
+	 *
+	 * @return TaxRulesGroup
+	 */
+	protected function updateTaxRulesGroup($object)
+	{
+		static $tax_rules_group = null;
+		if ($tax_rules_group === null)
+		{
+			$object->update();
+			$tax_rules_group = $object;
+		}
+
+		return $tax_rules_group;
+	}
+}

@@ -1,5 +1,5 @@
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -35,11 +35,12 @@ function submitFunction()
 	$('#create_account_error').html('').hide();
 	$.ajax({
 		type: 'POST',
-		url: baseUri,
+		url: baseUri + '?rand=' + new Date().getTime(),
 		async: true,
 		cache: false,
 		dataType : "json",
-		data: 
+		headers: { "cache-control": "no-cache" },
+		data:
 		{
 			controller: 'authentication',
 			SubmitCreate: 1,
@@ -50,7 +51,7 @@ function submitFunction()
 		},
 		success: function(jsonData)
 		{
-			if (jsonData.hasError) 
+			if (jsonData.hasError)
 			{
 				var errors = '';
 				for(error in jsonData.errors)
@@ -70,6 +71,8 @@ function submitFunction()
 					{
 						if (typeof bindUniform !=='undefined')
 							bindUniform();
+						if (typeof bindStateInputAndUpdate !=='undefined')
+							bindStateInputAndUpdate();
 						document.location = '#account-creation';
 					});
 				});
@@ -80,19 +83,19 @@ function submitFunction()
 			error = "TECHNICAL ERROR: unable to load form.\n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus;
 			if (!!$.prototype.fancybox)
 			{
-			    $.fancybox.open([
-		        {
-		            type: 'inline',
-		            autoScale: true,
-		            minHeight: 30,
-		            content: "<p class='fancybox-error'>" + error + '</p>'
-		        }],
+				$.fancybox.open([
 				{
-			        padding: 0
-			    });
+					type: 'inline',
+					autoScale: true,
+					minHeight: 30,
+					content: "<p class='fancybox-error'>" + error + '</p>'
+				}],
+				{
+					padding: 0
+				});
 			}
 			else
-			    alert(error);
+				alert(error);
 		}
 	});
 }

@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,13 +18,11 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
 {extends file="helpers/view/view.tpl"}
-
 {block name="override_tpl"}
 	<script type="text/javascript">
 		function chooseTypeTranslation(id_lang)
@@ -69,12 +67,11 @@
 
 				if (lang == null)
 					return !alert('{l s='Please select your language!'}');
-				
+
 				chooseTypeTranslation($('#translations-languages li.active').data('type'));
 			});
 		});
 	</script>
-	
 	<form method="get" action="index.php" id="typeTranslationForm" class="form-horizontal">
 		<div class="panel">
 			<h3>
@@ -83,7 +80,7 @@
 			</h3>
 			<p class="alert alert-info">
 				{l s='Here you can modify translations for every line of text inside PrestaShop.'}<br />
-				{l s='First, select a type of translation (such as "Back Office" or "Installed modules"), and then select the language you want to translate strings in.'}
+				{l s='First, select a type of translation (such as "Back office" or "Installed modules"), and then select the language you want to translate strings in.'}
 			</p>
 			<div class="form-group">
 				<input type="hidden" name="controller" value="AdminTranslations" />
@@ -112,7 +109,7 @@
 			</div>
 			<div class="form-group">
 				<label class="control-label col-lg-3" for="language-button">{l s='Select your language'}</label>
-				<div class="input-group col-lg-4">
+				<div class="col-lg-4">
 					<button type="button" id="language-button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 						{l s='Language'} <span class="caret"></span>
 					</button>
@@ -122,7 +119,7 @@
 						{/foreach}
 					</ul>
 				</div>
-				<input type="hidden" name="token" value="{$token}" />
+				<input type="hidden" name="token" value="{$token|escape:'html':'UTF-8'}" />
 			</div>
 			<div class="panel-footer">
 				<button type="button" class="btn btn-default pull-right" id="modify-translations">
@@ -131,7 +128,7 @@
 			</div>
 		</div>
 	</form>
-	<form action="{$url_submit}" method="post" enctype="multipart/form-data" class="form-horizontal">
+	<form action="{$url_submit|escape:'html':'UTF-8'}" method="post" enctype="multipart/form-data" class="form-horizontal">
 		<div class="panel">
 			<h3>
 				<i class="icon-download"></i>
@@ -140,7 +137,7 @@
 			<div id="submitAddLangContent" class="form-group">
 				<p class="alert alert-info">
 					{l s='You can add or update a language directly from the PrestaShop website here.'}<br/>
-					{l s='If you choose to update an existing language pack, all of your previous customization\'s in the theme named "Default" will be lost. This includes Front Office expressions and default email templates.'}
+					{l s='If you choose to update an existing language pack, all of your previous customizations in the theme named "Default-bootstrap" will be lost. This includes front office expressions and default email templates.'}
 				</p>
 				{if $packs_to_update || $packs_to_install}
 					<label class="control-label col-lg-3" for="params_import_language">{l s='Please select the language you want to add or update'}</label>
@@ -153,19 +150,19 @@
 										<option value="{$lang_pack['iso_code']}|{$lang_pack['version']}">{$lang_pack['name']}</option>
 									{/foreach}
 								</optgroup>
-								<optgroup label="{l s='Add a language'}">		
+								<optgroup label="{l s='Add a language'}">
 									{foreach $packs_to_install as $lang_pack}
 										<option value="{$lang_pack['iso_code']}|{$lang_pack['version']}">{$lang_pack['name']}</option>
 									{/foreach}
 								</optgroup>
-							</select> 
+							</select>
 							</div>
 						</div>
 					</div>
-					
+
 				{else}
 					<p class="text-danger">{l s='Cannot connect to the PrestaShop website to get the language list.'}</p>
-				{/if}				
+				{/if}
 			</div>
 			<div class="panel-footer">
 				<button type="submit" name="submitAddLanguage" class="btn btn-default pull-right">
@@ -174,8 +171,7 @@
 			</div>
 		</div>
 	</form>
-	
-	<form action="{$url_submit}" method="post" enctype="multipart/form-data" class="form-horizontal">
+	<form action="{$url_submit|escape:'html':'UTF-8'}" method="post" enctype="multipart/form-data" class="form-horizontal">
 		<div class="panel">
 			<h3>
 				<i class="icon-download"></i>
@@ -186,7 +182,7 @@
 				{l s='Warning: This will replace all of the existing data inside the destination language.'}
 			</p>
 			<div class="form-group">
-				<label for="importLanguage" class="control-label col-lg-3" for="importLanguage">{l s='Language pack to import'}</label>
+				<label for="importLanguage" class="control-label col-lg-3">{l s='Language pack to import'}</label>
 				<div class="col-lg-4">
 					<div class="form-group">
 						<div class="col-lg-12">
@@ -205,7 +201,7 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="selectThemeForImport" class="control-label col-lg-3" for="selectThemeForImport">{l s='Select your theme'}</label>
+				<label for="selectThemeForImport" class="control-label col-lg-3">{l s='Select your theme'}</label>
 				<div class="col-lg-4">
 					<select name="theme[]" id="selectThemeForImport" {if count($themes) > 1}multiple="multiple"{/if} >
 						{foreach $themes as $theme}
@@ -219,8 +215,7 @@
 			</div>
 		</div>
 	</form>
-	
-	<form action="{$url_submit}" method="post" enctype="multipart/form-data" class="form-horizontal">
+	<form action="{$url_submit|escape:'html':'UTF-8'}" method="post" enctype="multipart/form-data" class="form-horizontal">
 		<div class="panel">
 			<h3>
 				<i class="icon-upload"></i>
@@ -228,7 +223,7 @@
 			</h3>
 			<p class="alert alert-info">
 				{l s='Export data from one language to a file (language pack).'}<br />
-				{l s='Select which theme you\'d like to export your translations to. '}
+				{l s='Select which theme you would like to export your translations to.'}
 			</p>
 			<div class="form-group">
 				<label class="control-label col-lg-3" for="iso_code">{l s='Language'}</label>
@@ -255,8 +250,7 @@
 			</div>
 		</div>
 	</form>
-	
-	<form action="{$url_submit}" method="post" class="form-horizontal">
+	<form action="{$url_submit|escape:'html':'UTF-8'}" method="post" class="form-horizontal">
 		<div class="panel">
 			<h3>
 				<i class="icon-copy"></i>
@@ -265,7 +259,7 @@
 			<p class="alert alert-info">
 				{l s='Copies data from one language to another.'}<br />
 				{l s='Warning: This will replace all of the existing data inside the destination language.'}<br />
-				{l s='If necessary'}, <b><a href="{$url_create_language}" class="btn btn-link"><i class="icon-external-link-sign"></i> {l s='you must first create a new language.'}</a></b>.
+				{l s='If necessary'}, <b><a href="{$url_create_language|escape:'html':'UTF-8'}" class="btn btn-link"><i class="icon-external-link-sign"></i> {l s='you must first create a new language.'}</a></b>.
 			</p>
 			<div class="form-group">
 				<label class="control-label col-lg-3 required" for="fromLang"> {l s='From'}</label>
@@ -299,7 +293,7 @@
 							<option value="{$theme->directory}" {if $id_theme_current == $theme->id}selected=selected{/if}>{$theme->name}</option>
 						{/foreach}
 					</select>
-				</div>			
+				</div>
 			</div>
 			<div class="form-group">
 				<p class="col-lg-12 text-muted required">

@@ -33,34 +33,33 @@
 		opacity: 0
 		z-index: 5
 		&:checked ~ a
-			left: 0%
+			@include left(0)
 	> span
 		position: absolute
-		left: 0
 		width: 100%
 		margin: 0
-		text-align: left
 		font-weight: normal
+		@include text-align(left)
+		@include left(0)
 		span
 			position: absolute
 			top: 0
-			left: 0
 			z-index: 5
 			display: block
 			width: 50%
 			text-align: center
+			@include left(0)
 			&:last-child
-				left: 50%
+				@include left(50%)
 	a
 		position: absolute
-		left: 50%
 		top: 0
 		z-index: 4
 		display: block
 		width: 50%
 		height: 100%
 		padding: 0
-
+		@include left(50%)
 
 // Radio Switch
 @mixin switch-toggle()
@@ -72,15 +71,14 @@
 	label
 		position: relative
 		z-index: 2
-		float: left
 		width: 50%
 		height: 100%
 		margin: 0
 		text-align: center
+		@include float(left)
 	a
 		position: absolute
 		top: 0
-		left: 0
 		padding: 0
 		z-index: 1
 		width: 50%
@@ -88,11 +86,12 @@
 		color: white
 		border: solid 1px $brand-success
 		background-color: lighten($brand-success,10%)
+		@include left(0)
 		@include box-shadow($brand-success 0 -1px 0 inset)
 	input:last-of-type:checked ~ a
-		left: 50%
 		border: solid 1px $brand-danger
 		background-color: lighten($brand-danger,10%)
+		@include left(50%)
 		@include box-shadow($brand-danger 0 -1px 0 inset)
 	input:disabled ~ a
 		border: solid 1px lighten(gray,20%) !important
@@ -108,9 +107,9 @@
 				width: $width * 1%
 		@for $j from 2 through ($i + 1)
 			&.switch-#{$state} input:checked:nth-of-type(#{$j}) ~ a
-				left: $width * ($j - 1) * 1%
+				@include left($width * ($j - 1) * 1%)
 		&.switch-#{$state} input:checked:last-of-type ~ a
-			left: 100 - $width * 1%
+			@include left(100 - $width * 1%)
 
 .switch a,
 .switch-light span span
@@ -161,4 +160,3 @@
 					color: #ccc
 				&:last-of-type
 					color: white
-

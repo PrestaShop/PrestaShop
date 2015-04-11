@@ -6,7 +6,9 @@
 @import "modules/colors"
 @import "modules/variables"
 @import "modules/mixins"
-@import "modules/web-fonts"
+
+@import "vendor/bi-app/bi-app-ltr"
+
 @import "vendor/animate"
 @import "vendor/font-awesome/font-awesome"
 
@@ -16,9 +18,9 @@
 @import "vendor/bootstrap-sass/normalize"
 //@import "vendor/bootstrap-sass/print"
 
-//fonts
-@import url(https://fonts.googleapis.com/css?family=Ubuntu+Condensed)
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,700)
+//import fonts
+@import url($url-font-content)
+@import url($url-font-headings)
 
 //Bootstrap's rules applied only on div#content.bootstrap, nav.bootstrap, header.bootstrap, footer.bootstrap
 .bootstrap
@@ -54,7 +56,7 @@
 	@import "vendor/bootstrap-sass/close"
 	// Components w/ JavaScript
 	@import "vendor/bootstrap-sass/tooltip"
-	//@import "vendor/bootstrap-sass/popovers"
+	@import "vendor/bootstrap-sass/popovers"
 	//Utility classes
 	@import "vendor/bootstrap-sass/utilities"
 	@import "vendor/bootstrap-sass/responsive-utilities"
@@ -72,7 +74,6 @@
 
 .bootstrap
 	//Partials
-	//@import "partials/message"
 	@import "partials/commons"
 	@import "partials/tables"
 	@import "partials/tree"
@@ -81,8 +82,8 @@
 	@import "partials/switch"
 	@import "partials/toolbar"
 	@import "partials/date-range-picker"
-	@import "partials/multishop"
-	@import "partials/rtl"
+	@import "partials/multistore"
+	@import "partials/product"
 
 	//Controllers
 	@import "controllers/carrier-wizard"
@@ -92,13 +93,20 @@
 	@import "controllers/search"
 	@import "controllers/translations"
 	@import "controllers/customer-thread"
-
-@import "partials/tinymce"
+	@import "controllers/themes"
+	@import "controllers/order"
+	@import "controllers/products"
 
 //Plug-ins
-@import "vendor/growl"
-@import "vendor/chosen"
-@import "vendor/ladda"
+@import "partials/tinymce"
+@import "partials/growl"
+@import "partials/chosen"
+@import "partials/ladda"
+@import "partials/date-picker"
+@import "partials/select2"
 
 //Backward compatibility
 @import "partials/backward"
+
+//Print support
+@import "partials/print"

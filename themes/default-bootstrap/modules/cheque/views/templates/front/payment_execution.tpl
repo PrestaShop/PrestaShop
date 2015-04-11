@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -33,7 +33,7 @@
 {if isset($nbProducts) && $nbProducts <= 0}
 	<p class="alert alert-warning">{l s='Your shopping cart is empty.' mod='cheque'}</p>
 {else}
-   
+
 	<form action="{$link->getModuleLink('cheque', 'validation', [], true)|escape:'html':'UTF-8'}" method="post">
 		<div class="box cheque-box">
 			<h3 class="page-subheading">{l s='Check payment' mod='cheque'}</h3>
@@ -56,15 +56,15 @@
 					<br />
 					<div class="form-group">
 						<label>{l s='Choose one of the following:' mod='cheque'}</label>
-						<select id="currency_payement" class="form-control" name="currency_payement">
+						<select id="currency_payment" class="form-control" name="currency_payment">
 						{foreach from=$currencies item=currency}
-							<option value="{$currency.id_currency}" {if isset($currencies) && $currency.id_currency == $cust_currency}selected="selected"{/if}>{$currency.name}</option>
+							<option value="{$currency.id_currency}"{if isset($currencies) && $currency.id_currency == $cust_currency} selected="selected"{/if}>{$currency.name}</option>
 						{/foreach}
 						</select>
 					</div>
 				{else}
 					{l s='We allow the following currencies to be sent by check:' mod='cheque'}&nbsp;<b>{$currencies.0.name}</b>
-					<input type="hidden" name="currency_payement" value="{$currencies.0.id_currency}" />
+					<input type="hidden" name="currency_payment" value="{$currencies.0.id_currency}" />
 				{/if}
 			</p>
 			<p>

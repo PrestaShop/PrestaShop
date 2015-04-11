@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,11 +19,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property CMSCategory $object
+ */
 class AdminCmsCategoriesControllerCore extends AdminController
 {
 	/** @var object CMSCategory() instance for navigation*/
@@ -42,7 +45,9 @@ class AdminCmsCategoriesControllerCore extends AdminController
 		$this->addRowAction('view');
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-				$this->bulk_actions = array(
+		$this->_orderBy = 'position';
+
+		$this->bulk_actions = array(
 			'delete' => array(
 				'text' => $this->l('Delete selected'),
 				'confirm' => $this->l('Delete selected items?'),
@@ -79,8 +84,9 @@ class AdminCmsCategoriesControllerCore extends AdminController
 	public function renderList()
 	{
 		$this->initToolbar();
+		$this->_group = 'GROUP BY a.`id_cms_category`';
 		if (isset($this->toolbar_btn['new']))
-        	$this->toolbar_btn['new']['href'] .= '&amp;id_parent='.(int)Tools::getValue('id_cms_category');
+			$this->toolbar_btn['new']['href'] .= '&id_parent='.(int)Tools::getValue('id_cms_category');
 		return parent::renderList();
 	}
 
@@ -100,6 +106,7 @@ class AdminCmsCategoriesControllerCore extends AdminController
 				}
 			}
             $object = parent::postProcess();
+            $this->updateAssoShop((int)Tools::getValue('id_cms_category'));
             if ($object !== false)
                 Tools::redirectAdmin(self::$currentIndex.'&conf=3&id_cms_category='.(int)$object->id.'&token='.Tools::getValue('token'));
             return $object;
@@ -300,6 +307,16 @@ class AdminCmsCategoriesControllerCore extends AdminController
 				'title' => $this->l('Save'),
 			)
 		);
+
+		if (Shop::isFeatureActive())
+		{
+			$this->fields_form['input'][] = array(
+				'type' => 'shop',
+				'label' => $this->l('Shop association'),
+				'name' => 'checkBoxShopAsso',
+			);
+		}
+
 		$this->tpl_form_vars['PS_ALLOW_ACCENTED_CHARS_URL'] = (int)Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL');
 		return parent::renderForm();
 	}

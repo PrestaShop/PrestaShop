@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -80,9 +80,6 @@ class InstallModelInstall extends InstallAbstractModel
 			'_MYSQL_ENGINE_' => 		$database_engine,
 			'_PS_CACHING_SYSTEM_' => 	'CacheMemcache',
 			'_PS_CACHE_ENABLED_' => 	'0',
-			'_MEDIA_SERVER_1_' => 		'',
-			'_MEDIA_SERVER_2_' => 		'',
-			'_MEDIA_SERVER_3_' => 		'',
 			'_COOKIE_KEY_' => 			Tools::passwdGen(56),
 			'_COOKIE_IV_' => 			Tools::passwdGen(8),
 			'_PS_CREATION_DATE_' => 	date('Y-m-d'),
@@ -97,8 +94,15 @@ class InstallModelInstall extends InstallAbstractModel
 		}
 
 		$settings_content = "<?php\n";
+
 		foreach ($settings_constants as $constant => $value)
+		{
+			if ($constant == '_PS_VERSION_')
+				$settings_content .= 'if (!defined(\''.$constant.'\'))'."\n\t";
+
 			$settings_content .= "define('$constant', '".str_replace('\'', '\\\'', $value)."');\n";
+		}
+
 		if (!file_put_contents(_PS_ROOT_DIR_.'/'.self::SETTINGS_FILE, $settings_content))
 		{
 			$this->setError($this->language->l('Cannot write settings file'));
@@ -118,11 +122,14 @@ class InstallModelInstall extends InstallAbstractModel
 		if ($clear_database)
 			$this->clearDatabase();
 
+		$allowed_collation = array('utf8_general_ci', 'utf8_unicode_ci');
+		$collation_database = Db::getInstance()->getValue('SELECT @@collation_database');
 		// Install database structure
 		$sql_loader = new InstallSqlLoader();
 		$sql_loader->setMetaData(array(
 			'PREFIX_' => _DB_PREFIX_,
 			'ENGINE_TYPE' => _MYSQL_ENGINE_,
+			'COLLATION' => (empty($collation_database) || !in_array($collation_database, $allowed_collation)) ? '' : 'COLLATE '.$collation_database
 		));
 
 		try
@@ -164,7 +171,7 @@ class InstallModelInstall extends InstallAbstractModel
 	 * PROCESS : installDefaultData
 	 * Create default shop and languages
 	 */
-	public function installDefaultData($shop_name, $clear_database = false)
+	public function installDefaultData($shop_name, $iso_country = false, $all_languages = false, $clear_database = false)
 	{
 		if ($clear_database)
 			$this->clearDatabase(true);
@@ -176,7 +183,24 @@ class InstallModelInstall extends InstallAbstractModel
 		// Install languages
 		try
 		{
-			$languages = $this->installLanguages(array($this->language->getLanguageIso()));
+			if (!$all_languages)
+			{
+				$iso_codes_to_install = array($this->language->getLanguageIso());
+				if ($iso_country)
+				{
+					$version = str_replace('.', '', _PS_VERSION_);
+					$version = substr($version, 0, 2);
+					$localization_file_content = $this->getLocalizationPackContent($version, $iso_country);
+
+					if ($xml = @simplexml_load_string($localization_file_content))
+						foreach ($xml->languages->language as $language)
+							$iso_codes_to_install[] = (string)$language->attributes()->iso_code;
+				}
+			}
+			else
+				$iso_codes_to_install = null;
+
+			$languages = $this->installLanguages($iso_codes_to_install);
 		}
 		catch (PrestashopInstallerException $e)
 		{
@@ -188,6 +212,7 @@ class InstallModelInstall extends InstallAbstractModel
 		$id_lang =  (!empty($flip_languages[$this->language->getLanguageIso()])) ? $flip_languages[$this->language->getLanguageIso()] : 1;
 		Configuration::updateGlobalValue('PS_LANG_DEFAULT', $id_lang);
 		Configuration::updateGlobalValue('PS_VERSION_DB', _PS_INSTALL_VERSION_);
+		Configuration::updateGlobalValue('PS_INSTALL_VERSION', _PS_INSTALL_VERSION_);
 		return true;
 	}
 
@@ -299,20 +324,31 @@ class InstallModelInstall extends InstallAbstractModel
 		if ($languages_list == null || !is_array($languages_list) || !count($languages_list))
 			$languages_list = $this->language->getIsoList();
 
+		$languages_available = $this->language->getIsoList();
 		$languages = array();
 		foreach ($languages_list as $iso)
 		{
+			if (!in_array($iso, $languages_available))
+				continue;
 			if (!file_exists(_PS_INSTALL_LANGS_PATH_.$iso.'/language.xml'))
 				throw new PrestashopInstallerException($this->language->l('File "language.xml" not found for language iso "%s"', $iso));
 
 			if (!$xml = @simplexml_load_file(_PS_INSTALL_LANGS_PATH_.$iso.'/language.xml'))
 				throw new PrestashopInstallerException($this->language->l('File "language.xml" not valid for language iso "%s"', $iso));
-			
-			$params_lang = array('name' => (string)$xml->name, 'iso_code' => substr((string)$xml->language_code, 0, 2));
 
-			if (!InstallSession::getInstance()->safe_mode || !Language::downloadAndInstallLanguagePack($iso, _PS_INSTALL_VERSION_, $params_lang))
+			$params_lang = array(
+				'name' => (string)$xml->name,
+				'iso_code' => substr((string)$xml->language_code, 0, 2),
+				'allow_accented_chars_url' => (string)$xml->allow_accented_chars_url
+			);
+
+			if (InstallSession::getInstance()->safe_mode)
 				Language::checkAndAddLanguage($iso, false, true, $params_lang);
+			else
+				Language::downloadAndInstallLanguagePack($iso, _PS_INSTALL_VERSION_, $params_lang);
 
+			Language::loadLanguages();
+			Tools::clearCache();
 			if (!$id_lang = Language::getIdByIso($iso))
 				throw new PrestashopInstallerException($this->language->l('Cannot install language "%s"', ($xml->name) ? $xml->name : $iso));
 			$languages[$id_lang] = $iso;
@@ -334,7 +370,7 @@ class InstallModelInstall extends InstallAbstractModel
 
 		$list = array(
 			'products' =>		_PS_PROD_IMG_DIR_,
-			'categories',		_PS_CAT_IMG_DIR_,
+			'categories' =>		_PS_CAT_IMG_DIR_,
 			'manufacturers' =>	_PS_MANU_IMG_DIR_,
 			'suppliers' =>		_PS_SUPP_IMG_DIR_,
 			'scenes' =>			_PS_SCENE_IMG_DIR_,
@@ -358,6 +394,23 @@ class InstallModelInstall extends InstallAbstractModel
 					ImageManager::resize($img_path.$iso.'.jpg', $dst_path.$iso.'-default-'.$type['name'].'.jpg', $type['width'], $type['height']);
 			}
 		}
+	}
+
+	public function getLocalizationPackContent($version, $country)
+	{
+		$localization_file_content = @Tools::file_get_contents('http://api.prestashop.com/localization/'.$version.'/'.$country.'.xml');
+		if (!@simplexml_load_string($localization_file_content))
+			$localization_file_content = false;
+		if (!$localization_file_content)
+		{
+			$localization_file = _PS_ROOT_DIR_.'/localization/default.xml';
+			if (file_exists(_PS_ROOT_DIR_.'/localization/'.$country.'.xml'))
+				$localization_file = _PS_ROOT_DIR_.'/localization/'.$country.'.xml';
+
+			$localization_file_content = file_get_contents($localization_file);
+		}
+
+		return $localization_file_content;
 	}
 
 	/**
@@ -393,7 +446,7 @@ class InstallModelInstall extends InstallAbstractModel
 		// use the old image system if the safe_mod is enabled otherwise the installer will fail with the fixtures installation
 		if (InstallSession::getInstance()->safe_mode)
 			Configuration::updateGlobalValue('PS_LEGACY_IMAGES', 1);
-	
+
 		$id_country = Country::getByIso($data['shop_country']);
 
 		// Set default configuration
@@ -402,22 +455,49 @@ class InstallModelInstall extends InstallAbstractModel
 		Configuration::updateGlobalValue('PS_INSTALL_VERSION', 			_PS_INSTALL_VERSION_);
 		Configuration::updateGlobalValue('PS_LOCALE_LANGUAGE', 			$this->language->getLanguageIso());
 		Configuration::updateGlobalValue('PS_SHOP_NAME', 				$data['shop_name']);
-		Configuration::updateGlobalValue('PS_SHOP_ACTIVITY', 			$data['shop_activity']);
+		Configuration::updateGlobalValue('PS_SHOP_ACTIVITY', 				$data['shop_activity']);
 		Configuration::updateGlobalValue('PS_COUNTRY_DEFAULT',			$id_country);
 		Configuration::updateGlobalValue('PS_LOCALE_COUNTRY', 			$data['shop_country']);
 		Configuration::updateGlobalValue('PS_TIMEZONE', 				$data['shop_timezone']);
-		Configuration::updateGlobalValue('PS_CONFIGURATION_AGREMENT',	(int)$data['configuration_agrement']);
+		Configuration::updateGlobalValue('PS_CONFIGURATION_AGREMENT',		(int)$data['configuration_agrement']);
 
 		// Set mails configuration
 		Configuration::updateGlobalValue('PS_MAIL_METHOD', 			($data['use_smtp']) ? 2 : 1);
-		Configuration::updateGlobalValue('PS_MAIL_SMTP_ENCRYPTION', $data['smtp_encryption']);
+		Configuration::updateGlobalValue('PS_MAIL_SMTP_ENCRYPTION', 	$data['smtp_encryption']);
 		Configuration::updateGlobalValue('PS_MAIL_SMTP_PORT', 		$data['smtp_port']);
-		
+
 		// Set default rewriting settings
 		Configuration::updateGlobalValue('PS_REWRITING_SETTINGS', $data['rewrite_engine']);
 
 		// Activate rijndael 128 encrypt algorihtm if mcrypt is activated
 		Configuration::updateGlobalValue('PS_CIPHER_ALGORITHM', function_exists('mcrypt_encrypt') ? 1 : 0);
+
+		$groups = Group::getGroups((int)Configuration::get('PS_LANG_DEFAULT'));
+		$groups_default = Db::getInstance()->executeS('SELECT `name` FROM '._DB_PREFIX_.'configuration WHERE `name` LIKE "PS_%_GROUP" ORDER BY `id_configuration`');
+		foreach ($groups_default as &$group_default)
+			if (is_array($group_default) && isset($group_default['name']))
+				$group_default = $group_default['name'];
+
+		if (is_array($groups) && count($groups))
+			foreach ($groups as $key => $group)
+				if (Configuration::get($groups_default[$key]) != $groups[$key]['id_group'])
+					Configuration::updateGlobalValue($groups_default[$key], (int)$groups[$key]['id_group']);
+
+		$states = Db::getInstance()->executeS('SELECT `id_order_state` FROM '._DB_PREFIX_.'order_state ORDER by `id_order_state`');
+		$states_default = Db::getInstance()->executeS('SELECT MIN(`id_configuration`), `name` FROM '._DB_PREFIX_.'configuration WHERE `name` LIKE "PS_OS_%" GROUP BY `value` ORDER BY`id_configuration`');
+
+		foreach ($states_default as &$state_default)
+			if (is_array($state_default) && isset($state_default['name']))
+				$state_default = $state_default['name'];
+
+		if (is_array($states) && count($states))
+		{
+			foreach ($states as $key => $state)
+				if (Configuration::get($states_default[$key]) != $states[$key]['id_order_state'])
+					Configuration::updateGlobalValue($states_default[$key], (int)$states[$key]['id_order_state']);
+			/* deprecated order state */
+			Configuration::updateGlobalValue('PS_OS_OUTOFSTOCK_PAID', (int)Configuration::get('PS_OS_OUTOFSTOCK'));
+		}
 
 		// Set logo configuration
 		if (file_exists(_PS_IMG_DIR_.'logo.jpg'))
@@ -426,7 +506,7 @@ class InstallModelInstall extends InstallAbstractModel
 			Configuration::updateGlobalValue('SHOP_LOGO_WIDTH', round($width));
 			Configuration::updateGlobalValue('SHOP_LOGO_HEIGHT', round($height));
 		}
-		
+
 		// Disable cache for debug mode
 		if (_PS_MODE_DEV_)
 			Configuration::updateGlobalValue('PS_SMARTY_CACHE', 1);
@@ -437,18 +517,7 @@ class InstallModelInstall extends InstallAbstractModel
 		// Set localization configuration
 		$version = str_replace('.', '', _PS_VERSION_);
 		$version = substr($version, 0, 2);
-
-		$localization_file_content = @Tools::file_get_contents('http://api.prestashop.com/localization/'.$version.'/'.$data['shop_country'].'.xml');
-		if (!@simplexml_load_string($localization_file_content))
-			$localization_file_content = false;
-		if (!$localization_file_content)
-		{
-			$localization_file = _PS_ROOT_DIR_.'/localization/default.xml';
-			if (file_exists(_PS_ROOT_DIR_.'/localization/'.$data['shop_country'].'.xml'))
-				$localization_file = _PS_ROOT_DIR_.'/localization/'.$data['shop_country'].'.xml';
-
-			$localization_file_content = file_get_contents($localization_file);
-		}
+		$localization_file_content = $this->getLocalizationPackContent($version, $data['shop_country']);
 
 		$locale = new LocalizationPackCore();
 		$locale->loadLocalisationPack($localization_file_content, '', true);
@@ -579,20 +648,20 @@ class InstallModelInstall extends InstallAbstractModel
 		}
 		return $modules;
 	}
-	
+
 	public function getAddonsModulesList($params = array())
 	{
 		$addons_modules = array();
 		$content = Tools::addonsRequest('install-modules', $params);
 		$xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
-			
+
 		if ($xml !== false and isset($xml->module))
 			foreach ($xml->module as $modaddons)
 				$addons_modules[] = array('id_module' => $modaddons->id, 'name' => $modaddons->name);
-		
+
 		return $addons_modules;
 	}
-	
+
 	/**
 	 * PROCESS : installModules
 	 * Download module from addons and Install all modules in ~/modules/ directory
@@ -600,21 +669,21 @@ class InstallModelInstall extends InstallAbstractModel
 	public function installModulesAddons($module = null)
 	{
 		$addons_modules = $module ? array($module) : $this->getAddonsModulesList();
-		$modules = array();	
+		$modules = array();
 		if (!InstallSession::getInstance()->safe_mode)
 		{
-			foreach($addons_modules as $addons_module)
+			foreach ($addons_modules as $addons_module)
 				if (file_put_contents(_PS_MODULE_DIR_.$addons_module['name'].'.zip', Tools::addonsRequest('module', array('id_module' => $addons_module['id_module']))))
 					if (Tools::ZipExtract(_PS_MODULE_DIR_.$addons_module['name'].'.zip', _PS_MODULE_DIR_))
 					{
 						$modules[] = (string)$addons_module['name'];//if the module has been unziped we add the name in the modules list to install
 						unlink(_PS_MODULE_DIR_.$addons_module['name'].'.zip');
 					}
-		}		
+		}
 
 		return count($modules) ? $this->installModules($modules) : true;
 	}
-	
+
 	/**
 	 * PROCESS : installModules
 	 * Download module from addons and Install all modules in ~/modules/ directory
@@ -640,7 +709,7 @@ class InstallModelInstall extends InstallAbstractModel
 		}
 
 		if ($errors)
-		{	
+		{
 			$this->setError($errors);
 			return false;
 		}
@@ -698,7 +767,7 @@ class InstallModelInstall extends InstallAbstractModel
 			$xml_loader = new $class();
 			if (!$xml_loader instanceof InstallXmlLoader)
 			{
-				$this->setError($this->language->l('"%s" must be an instane of "InstallXmlLoader"', $class));
+				$this->setError($this->language->l('"%s" must be an instance of "InstallXmlLoader"', $class));
 				return false;
 			}
 		}

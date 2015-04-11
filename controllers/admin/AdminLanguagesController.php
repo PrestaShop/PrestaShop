@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,11 +19,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Language $object
+ */
 class AdminLanguagesControllerCore extends AdminController
 {
 	public function __construct()
@@ -258,6 +261,7 @@ class AdminLanguagesControllerCore extends AdminController
 			'title' => $this->l('Save'),
 		);
 
+		/** @var Language $obj */
 		if (!($obj = $this->loadObject(true)))
 			return;
 
@@ -323,6 +327,12 @@ class AdminLanguagesControllerCore extends AdminController
 
 	protected function checkDeletion($object)
 	{
+		if (_PS_MODE_DEMO_)
+		{
+				$this->errors[] = Tools::displayError('This functionality has been disabled.');
+				return;
+		}
+
 		if (Validate::isLoadedObject($object))
 		{
 			if ($object->id == Configuration::get('PS_LANG_DEFAULT'))
@@ -340,6 +350,11 @@ class AdminLanguagesControllerCore extends AdminController
 
 	protected function checkDisableStatus($object)
 	{
+		if (_PS_MODE_DEMO_)
+		{
+				$this->errors[] = Tools::displayError('This functionality has been disabled.');
+				return;
+		}
 		if (!Validate::isLoadedObject($object))
 			$this->errors[] = Tools::displayError('An error occurred while updating the status for an object.').' <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
 		else
@@ -380,6 +395,12 @@ class AdminLanguagesControllerCore extends AdminController
 
 	public function processAdd()
 	{
+		if (_PS_MODE_DEMO_)
+		{
+				$this->errors[] = Tools::displayError('This functionality has been disabled.');
+				return;
+		}
+
 		if (isset($_POST['iso_code']) && !empty($_POST['iso_code']) && Validate::isLanguageIsoCode(Tools::getValue('iso_code')) && Language::getIdByIso($_POST['iso_code']))
 			$this->errors[] = Tools::displayError('This ISO code is already linked to another language.');
 		if ((!empty($_FILES['no_picture']['tmp_name']) || !empty($_FILES['flag']['tmp_name'])) && Validate::isLanguageIsoCode(Tools::getValue('iso_code')))
@@ -396,6 +417,12 @@ class AdminLanguagesControllerCore extends AdminController
 
 	public function processUpdate()
 	{
+		if (_PS_MODE_DEMO_)
+		{
+				$this->errors[] = Tools::displayError('This functionality has been disabled.');
+				return;
+		}
+
 		if (( isset($_FILES['no_picture']) && !$_FILES['no_picture']['error'] || isset($_FILES['flag']) && !$_FILES['flag']['error'])
 				&& Validate::isLanguageIsoCode(Tools::getValue('iso_code')))
 			{
@@ -404,6 +431,8 @@ class AdminLanguagesControllerCore extends AdminController
 						// class AdminTab deal with every $_FILES content, don't do that for no_picture
 					unset($_FILES['no_picture']);
 			}
+
+			/** @var Language $object */
 			$object = $this->loadObject();
 			if (Tools::getValue('active') != (int)$object->active)
 				if (!$this->checkDisableStatus($object))
@@ -476,6 +505,10 @@ class AdminLanguagesControllerCore extends AdminController
 		return !count($this->errors) ? true : false;
 	}
 
+	/**
+	 * @param Language $object
+	 * @param string   $table
+	 */
 	protected function copyFromPost(&$object, $table)
 	{
 		if ($object->id && ($object->iso_code != $_POST['iso_code']))

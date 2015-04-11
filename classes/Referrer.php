@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -271,15 +271,15 @@ class ReferrerCore extends ObjectModel
 				$stats_sales = $referrer->getStatsSales(null, $employee);
 
 				Db::getInstance()->update('referrer_shop', array(
-					'cache_visitors' => $stats_visits['uniqs'],
-					'cache_visits' => $stats_visits['visits'],
-					'cache_pages' => $stats_visits['pages'],
-					'cache_registrations' => $registrations,
-					'cache_orders' => $stats_sales['orders'],
+					'cache_visitors' => (int)$stats_visits['uniqs'],
+					'cache_visits' => (int)$stats_visits['visits'],
+					'cache_pages' => (int)$stats_visits['pages'],
+					'cache_registrations' => (int)$registrations,
+					'cache_orders' => (int)$stats_sales['orders'],
 					'cache_sales' => number_format($stats_sales['sales'], 2, '.', ''),
 					'cache_reg_rate' => $stats_visits['uniqs'] ? $registrations / $stats_visits['uniqs'] : 0,
 					'cache_order_rate' => $stats_visits['uniqs'] ? $stats_sales['orders'] / $stats_visits['uniqs'] : 0,
-				), 'id_referrer = '.$referrer->id.' AND id_shop = '.$shop_id);
+				), 'id_referrer = '.(int)$referrer->id.' AND id_shop = '.(int)$shop_id);
 			}
 		}
 
@@ -336,7 +336,7 @@ class ReferrerCore extends ObjectModel
 
 		$json_array = array(
 			'id_product' => (int)$product->id,
-			'product_name' => addslashes($product->name),
+			'product_name' => htmlspecialchars($product->name),
 			'uniqs' => (int)$stats_visits['uniqs'],
 			'visitors' => (int)$stats_visits['visitors'],
 			'visits' => (int)$stats_visits['visits'],

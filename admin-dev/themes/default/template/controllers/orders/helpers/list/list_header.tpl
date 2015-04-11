@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -34,7 +34,7 @@
 		<form action="{$REQUEST_URI}" method="post">
 			<div class="radio">
 				<label for="id_order_state">
-					<select id="id_order_state" name="id_order_state" class="chosen">
+					<select id="id_order_state" name="id_order_state">
 {foreach from=$order_statuses item=order_status_name key=id_order_state}
 						<option value="{$id_order_state|intval}">{$order_status_name|escape}</option>
 {/foreach}
@@ -46,8 +46,9 @@
 		{foreach $value as $val}
 			<input type="hidden" name="{$key|escape:'html':'UTF-8'}[]" value="{$val|escape:'html':'UTF-8'}" />
 		{/foreach}
-	{else}
+	{elseif strtolower($key) != 'id_order_state'}
 			<input type="hidden" name="{$key|escape:'html':'UTF-8'}" value="{$value|escape:'html':'UTF-8'}" />
+
 	{/if}
 {/foreach}
 			<div class="panel-footer">

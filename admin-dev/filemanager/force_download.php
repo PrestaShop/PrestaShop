@@ -6,7 +6,7 @@ include('include/utils.php');
 if (preg_match('/\.{1,2}[\/|\\\]/', $_POST['path']) !== 0)
 	die('wrong path');
 
-if (strpos($_POST['name'], DIRECTORY_SEPARATOR) !== false)
+if (strpos($_POST['name'], '/') !== false || strpos($_POST['name'], '\\') !== false)
 	die('wrong path');
 
 $path = $current_path.$_POST['path'];

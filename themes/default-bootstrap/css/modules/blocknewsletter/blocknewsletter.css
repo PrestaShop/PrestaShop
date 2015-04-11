@@ -44,17 +44,16 @@
     margin-bottom: 0; }
     #footer #newsletter_block_left .form-group .form-control {
       height: 45px;
-      line-height: 30px;
       max-width: 267px;
       background: #3c3c3c;
       border-color: #515151;
-      color: white;
-      padding: 5px 43px 5px 12px;
+      color: #fff;
+      padding: 10px 43px 10px 12px;
       display: inline-block;
       float: left; }
       #footer #newsletter_block_left .form-group .form-control:focus {
-        -webkit-box-shadow: black 0px 0px 0px;
         -moz-box-shadow: black 0px 0px 0px;
+        -webkit-box-shadow: black 0px 0px 0px;
         box-shadow: black 0px 0px 0px; }
     #footer #newsletter_block_left .form-group .button-small {
       margin-left: -43px;
@@ -69,7 +68,7 @@
         font-size: 28px;
         line-height: 28px; }
       #footer #newsletter_block_left .form-group .button-small:hover {
-        color: white !important; }
+        color: #fff !important; }
       #footer #newsletter_block_left .form-group .button-small span {
         display: none; }
   #footer #newsletter_block_left .warning_inline {
@@ -88,3 +87,5 @@
         clear: none; } }
   #footer #newsletter_block_left .newsletter-input {
     max-width: 300px !important; }
+
+/*# sourceMappingURL=blocknewsletter.css.map */

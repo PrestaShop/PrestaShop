@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,25 +19,28 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property RangePrice $object
+ */
 class AdminRangePriceControllerCore extends AdminController
 {
 	public function __construct()
 	{
 		$this->bootstrap = true;
-	 	$this->table = 'range_price';
-	 	$this->className = 'RangePrice';
-	 	$this->lang = false;
+		$this->table = 'range_price';
+		$this->className = 'RangePrice';
+		$this->lang = false;
 
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-	 	$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
+		$this->bulk_actions = array('delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')));
 
-	 	$this->fields_list = array(
+		$this->fields_list = array(
 			'id_range_price' => array('title' => $this->l('ID'), 'align' => 'center', 'width' => 25),
 			'carrier_name' => array('title' => $this->l('Carrier'), 'align' => 'left', 'width' => 'auto', 'filter_key' => 'ca!name'),
 			'delimiter1' => array('title' => $this->l('From'), 'width' => 86, 'type' => 'price', 'align' => 'right'),
@@ -46,6 +49,7 @@ class AdminRangePriceControllerCore extends AdminController
 		$this->_join = 'LEFT JOIN '._DB_PREFIX_.'carrier ca ON (ca.`id_carrier` = a.`id_carrier`)';
 		$this->_select = 'ca.`name` AS carrier_name';
 		$this->_where = 'AND ca.`deleted` = 0';
+		$this->_use_found_rows = false;
 
 		parent::__construct();
 	}
@@ -124,26 +128,24 @@ class AdminRangePriceControllerCore extends AdminController
 		if ($this->_list && is_array($this->_list))
 			foreach ($this->_list as $key => $list)
 				if ($list['carrier_name'] == '0')
-					$this->_list[$key]['carrier_name'] = Configuration::get('PS_SHOP_NAME');
+					$this->_list[$key]['carrier_name'] = Carrier::getCarrierNameFromShopName();
 	}
 
 	public function postProcess()
 	{
-		$id = (int)Tools::getValue('id_'.$this->table);	
+		$id = (int)Tools::getValue('id_'.$this->table);
 		if (Tools::getValue('submitAdd'.$this->table))
 		{
 			if (Tools::getValue('delimiter1') >= Tools::getValue('delimiter2'))
 				$this->errors[] = Tools::displayError('Invalid range');
-			else if (!$id && RangePrice::rangeExist((int)Tools::getValue('id_carrier'), (float)Tools::getValue('delimiter1'), (float)Tools::getValue('delimiter2')))
+			elseif (!$id && RangePrice::rangeExist((int)Tools::getValue('id_carrier'), (float)Tools::getValue('delimiter1'), (float)Tools::getValue('delimiter2')))
 				$this->errors[] = Tools::displayError('The range already exists');
-			else if (RangePrice::isOverlapping((int)Tools::getValue('id_carrier'), (float)Tools::getValue('delimiter1'), (float)Tools::getValue('delimiter2'), ($id ? (int)$id : null)))
+			elseif (RangePrice::isOverlapping((int)Tools::getValue('id_carrier'), (float)Tools::getValue('delimiter1'), (float)Tools::getValue('delimiter2'), ($id ? (int)$id : null)))
 				$this->errors[] = Tools::displayError('Error: Ranges are overlapping');
-			else if (!count($this->errors))
+			elseif (!count($this->errors))
 				parent::postProcess();
 		}
 		else
 			parent::postProcess();
- 	}
+	}
 }
-
-

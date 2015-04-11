@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,19 +18,16 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <div class="row">
-	<div class="col-xs-12 col-md-6">
-        <p class="payment_module">
-            <a 
-            class="bankwire" 
-            href="{$link->getModuleLink('bankwire', 'payment')|escape:'html':'UTF-8'}" 
-            title="{l s='Pay by bank wire' mod='bankwire'}">
-            	{l s='Pay by bank wire' mod='bankwire'} <span>{l s='(order processing will be longer)' mod='bankwire'}</span>
-            </a>
-        </p>
-    </div>
+	<div class="col-xs-12">
+		<p class="payment_module">
+			<a class="bankwire" href="{$link->getModuleLink('bankwire', 'payment')|escape:'html':'UTF-8'}" title="{l s='Pay by bank wire' mod='bankwire'}">
+				{l s='Pay by bank wire' mod='bankwire'} <span>{l s='(order processing will be longer)' mod='bankwire'}</span>
+			</a>
+		</p>
+	</div>
 </div>

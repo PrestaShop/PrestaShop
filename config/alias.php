@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -49,6 +49,11 @@ function ddd($var)
 	Tools::d($var);
 }
 
+function epr($var, $message_type = null, $destination = null, $extra_headers = null)
+{
+	return Tools::error_log($var, $message_type, $destination, $extra_headers);
+}
+
 /**
  * Sanitize data which will be injected into SQL query
  *
@@ -58,12 +63,7 @@ function ddd($var)
  */
 function pSQL($string, $htmlOK = false)
 {
-	// Avoid thousands of "Db::getInstance()"...
-	static $db = false;
-	if (!$db)
-		$db = Db::getInstance();
-
-	return $db->escape($string, $htmlOK);
+	return Db::getInstance()->escape($string, $htmlOK);
 }
 
 function bqSQL($string)
@@ -77,7 +77,7 @@ function displayFatalError()
 	if (function_exists('error_get_last'))
 		$error = error_get_last();
 	if ($error !== NULL && in_array($error['type'], array(E_ERROR, E_PARSE, E_COMPILE_ERROR )))
-		echo '[PrestaShop] Fatal error in module '.substr(basename($error['file']), 0, -4).':<br />'.$error['message'];
+		echo '[PrestaShop] Fatal error in module file :'.$error['file'].':<br />'.$error['message'];
 }
 
 /**

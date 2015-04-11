@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,11 +19,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Profile $object
+ */
 class AdminAccessControllerCore extends AdminController
 {
 	/* @var array : Black list of id_tab that do not have access */
@@ -74,7 +77,7 @@ class AdminAccessControllerCore extends AdminController
 		foreach ($profiles as $profile)
 		{
 			$modules[$profile['id_profile']] = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-				SELECT ma.`id_module`, m.`name`, ma.`view`, ma.`configure`
+				SELECT ma.`id_module`, m.`name`, ma.`view`, ma.`configure`, ma.`uninstall`
 				FROM '._DB_PREFIX_.'module_access ma
 				LEFT JOIN '._DB_PREFIX_.'module m
 					ON ma.id_module = m.id_module
@@ -98,6 +101,8 @@ class AdminAccessControllerCore extends AdminController
 		$this->tpl_form_vars = array(
 			'profiles' => $profiles,
 			'accesses' => $accesses,
+			'id_tab_parentmodule' => (int)Tab::getIdFromClassName('AdminParentModules'),
+			'id_tab_module' => (int)Tab::getIdFromClassName('AdminModules'),
 			'tabs' => $tabs,
 			'current_profile' => (int)$current_profile,
 			'admin_profile' => (int)_PS_ADMIN_PROFILE_,
@@ -215,19 +220,19 @@ class AdminAccessControllerCore extends AdminController
 			$id_module = (int)Tools::getValue('id_module');
 			$id_profile = (int)Tools::getValue('id_profile');
 
-			if (!in_array($perm, array('view', 'configure')))
+			if (!in_array($perm, array('view', 'configure', 'uninstall')))
 				throw new PrestaShopException('permission does not exist');
 
 			if ($id_module == -1)
 				$sql = '
-					UPDATE `'._DB_PREFIX_.'module_access`
-					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
+					UPDATE `'._DB_PREFIX_.'module_access` 
+					SET `'.bqSQL($perm).'` = '.(int)$enabled.' 
 					WHERE `id_profile` = '.(int)$id_profile;
 			else
 				$sql = '
-					UPDATE `'._DB_PREFIX_.'module_access`
-					SET `'.bqSQL($perm).'` = '.(int)$enabled.'
-					WHERE `id_module` = '.(int)$id_module.'
+					UPDATE `'._DB_PREFIX_.'module_access` 
+					SET `'.bqSQL($perm).'` = '.(int)$enabled.' 
+					WHERE `id_module` = '.(int)$id_module.' 
 						AND `id_profile` = '.(int)$id_profile;
 
 			$res = Db::getInstance()->execute($sql) ? 'ok' : 'error';
@@ -239,7 +244,7 @@ class AdminAccessControllerCore extends AdminController
 	/**
 	* Get the current profile id
 	*
-	* @return the $_GET['profile'] if valid, else 1 (the first profile id)
+	* @return int the $_GET['profile'] if valid, else 1 (the first profile id)
 	*/
 	public function getCurrentProfileId()
 	{

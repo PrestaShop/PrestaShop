@@ -1,7 +1,11 @@
 SET NAMES 'utf8';
 
-INSERT INTO `PREFIX_hook` (`id_hook` , `name` , `title` , `description` , `position` , `live_edit`) 
+INSERT INTO `PREFIX_hook` (`id_hook` , `name` , `title` , `description` , `position` , `live_edit`)
 VALUES (NULL , 'actionAdminControllerSetMedia', 'Admin action setMedia', '', '0', '0');
+
+INSERT INTO `PREFIX_hook_module` (`id_module`, `id_shop`, `id_hook`, `position`) (
+	SELECT m.id_module, s.id_shop, h.id_hook, 0 FROM `PREFIX_module` m, `PREFIX_shop` s, `PREFIX_hook` h WHERE m.name IN ('graphnvd3') AND h.name IN ('GraphEngine', 'actionAdminControllerSetMedia')
+);
 
 INSERT INTO `PREFIX_hook_module` (`id_module`, `id_shop`, `id_hook`, `position`) (
   SELECT m.id_module, s.id_shop, h.id_hook, 0
@@ -26,6 +30,6 @@ CREATE TABLE IF NOT EXISTS `PREFIX_theme_meta` (
   UNIQUE KEY `id_theme_2` (`id_theme`,`id_meta`),
   KEY `id_theme` (`id_theme`),
   KEY `id_meta` (`id_meta`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 ALTER TABLE `PREFIX_meta` ADD `configurable` TINYINT(1) UNSIGNED NOT NULL DEFAULT '1' AFTER `page`;

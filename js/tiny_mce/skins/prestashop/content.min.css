@@ -42,10 +42,10 @@ td,th {
     -moz-user-modify: read-only;
     user-select: all;
     user-modify: read-only;
-    width: 9px !important;
-    height: 9px !important;
+    width: 10px !important;
+    height: 10px !important;
     border: 1px dotted #3A3A3A;
-    background: #d5d5d5 url(img/anchor.gif) no-repeat center
+    background: #00AFF0;
 }
 
 .mce-nbsp {

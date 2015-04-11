@@ -1,6 +1,6 @@
 <?php
-/*
-* 2007-2014 PrestaShop
+/**
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,16 +19,17 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 /* Debug only */
-define('_PS_MODE_DEV_', true);
+if (!defined('_PS_MODE_DEV_'))
+	define('_PS_MODE_DEV_', true);
 /* Compatibility warning */
 define('_PS_DISPLAY_COMPATIBILITY_WARNING_', true);
-if (_PS_MODE_DEV_)
+if (_PS_MODE_DEV_ === true)
 {
 	@ini_set('display_errors', 'on');
 	@error_reporting(E_ALL | E_STRICT);
@@ -51,13 +52,20 @@ if (!defined('PHP_VERSION_ID'))
     define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
 }
 
+if (!defined('_PS_VERSION_') && (getenv('_PS_VERSION_') || getenv('REDIRECT__PS_VERSION_')))
+	define('_PS_VERSION_', getenv('_PS_VERSION_') ? getenv('_PS_VERSION_') : getenv('REDIRECT__PS_VERSION_'));
+
+if (!defined('_PS_HOST_MODE_') && (getenv('_PS_HOST_MODE_') || getenv('REDIRECT__PS_HOST_MODE_')))
+	define('_PS_HOST_MODE_', getenv('_PS_HOST_MODE_') ? getenv('_PS_HOST_MODE_') : getenv('REDIRECT__PS_HOST_MODE_'));
+
+if (!defined('_PS_ROOT_DIR_') && (getenv('_PS_ROOT_DIR_') || getenv('REDIRECT__PS_ROOT_DIR_')))
+	define('_PS_ROOT_DIR_', getenv('_PS_ROOT_DIR_') ? getenv('_PS_ROOT_DIR_') : getenv('REDIRECT__PS_ROOT_DIR_'));
+
 /* Directories */
 if (!defined('_PS_ROOT_DIR_'))
-{
 	define('_PS_ROOT_DIR_', realpath($currentDir.'/..'));
-	define('_PS_CORE_DIR_', _PS_ROOT_DIR_);
-}
-else
+
+if (!defined('_PS_CORE_DIR_'))
 	define('_PS_CORE_DIR_', realpath($currentDir.'/..'));
 
 define('_PS_ALL_THEMES_DIR_',        _PS_ROOT_DIR_.'/themes/');
@@ -66,12 +74,14 @@ if (defined('_PS_ADMIN_DIR_'))
 	define('_PS_BO_ALL_THEMES_DIR_', _PS_ADMIN_DIR_.'/themes/');
 define('_PS_CACHE_DIR_',			 _PS_ROOT_DIR_.'/cache/');
 define('_PS_CONFIG_DIR_',			 _PS_CORE_DIR_.'/config/');
+define('_PS_CUSTOM_CONFIG_FILE_',	 _PS_CONFIG_DIR_.'settings_custom.inc.php');
 define('_PS_CLASS_DIR_',             _PS_CORE_DIR_.'/classes/');
 define('_PS_DOWNLOAD_DIR_',          _PS_ROOT_DIR_.'/download/');
 define('_PS_MAIL_DIR_',              _PS_CORE_DIR_.'/mails/');
 if (!defined('_PS_MODULE_DIR_'))
 	define('_PS_MODULE_DIR_',        _PS_ROOT_DIR_.'/modules/');
-define('_PS_OVERRIDE_DIR_',          _PS_ROOT_DIR_.'/override/');
+if (!defined('_PS_OVERRIDE_DIR_'))
+    define('_PS_OVERRIDE_DIR_',          _PS_ROOT_DIR_.'/override/');
 define('_PS_PDF_DIR_',               _PS_CORE_DIR_.'/pdf/');
 define('_PS_TRANSLATIONS_DIR_',      _PS_ROOT_DIR_.'/translations/');
 define('_PS_UPLOAD_DIR_',			 _PS_ROOT_DIR_.'/upload/');
@@ -82,6 +92,7 @@ define('_PS_FRONT_CONTROLLER_DIR_',  _PS_CORE_DIR_.'/controllers/front/');
 
 define('_PS_TOOL_DIR_',              _PS_CORE_DIR_.'/tools/');
 define('_PS_GEOIP_DIR_',             _PS_TOOL_DIR_.'geoip/');
+define('_PS_GEOIP_CITY_FILE_',       'GeoLiteCity.dat');
 define('_PS_PEAR_XML_PARSER_PATH_',  _PS_TOOL_DIR_.'pear_xml_parser/');
 define('_PS_SWIFT_DIR_',             _PS_TOOL_DIR_.'swift/');
 define('_PS_TAASC_PATH_',            _PS_TOOL_DIR_.'taasc/');
@@ -117,15 +128,14 @@ if (!defined('_PS_MAGIC_QUOTES_GPC_'))
 
 define('_CAN_LOAD_FILES_', 1);
 
-/* Order states
-Order states has been moved in config.inc.php file for backward compatibility reasons */
+/* Order statuses
+Order statuses have been moved into config.inc.php file for backward compatibility reasons */
 
 /* Tax behavior */
 define('PS_PRODUCT_TAX', 0);
 define('PS_STATE_TAX', 1);
 define('PS_BOTH_TAX', 2);
 
-define('_PS_PRICE_DISPLAY_PRECISION_', 2);
 define('PS_TAX_EXC', 1);
 define('PS_TAX_INC', 0);
 
@@ -134,7 +144,13 @@ define('PS_ORDER_PROCESS_OPC', 1);
 
 define('PS_ROUND_UP', 0);
 define('PS_ROUND_DOWN', 1);
-define('PS_ROUND_HALF', 2);
+define('PS_ROUND_HALF_UP', 2);
+define('PS_ROUND_HALF_DOWN', 3);
+define('PS_ROUND_HALF_EVEN', 4);
+define('PS_ROUND_HALF_ODD', 5);
+
+/* Backward compatibility */
+define('PS_ROUND_HALF', PS_ROUND_HALF_UP);
 
 /* Registration behavior */
 define('PS_REGISTRATION_PROCESS_STANDARD', 0);
@@ -181,4 +197,3 @@ define('_PS_SMARTY_CONSOLE_OPEN_BY_URL_', 1);
 define('_PS_SMARTY_CONSOLE_OPEN_', 2);
 
 define('_PS_JQUERY_VERSION_', '1.11.0');
-

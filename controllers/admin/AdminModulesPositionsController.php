@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>o
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -232,6 +232,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 		if (array_key_exists('addToHook', $_GET) || array_key_exists('editGraft', $_GET) || (Tools::isSubmit('submitAddToHook') && $this->errors))
 		{
 			$this->display = 'edit';
+
 			$this->content .= $this->renderForm();
 		}
 		else
@@ -280,11 +281,16 @@ class AdminModulesPositionsControllerCore extends AdminController
 			// Get all modules for this hook or only the filtered module
 			$hooks[$key]['modules'] = Hook::getModulesFromHook($hook['id_hook'], $this->display_key);
 			$hooks[$key]['module_count'] = count($hooks[$key]['modules']);
-			// If modules were found, link to the previously created Module instances
-			if (is_array($hooks[$key]['modules']) && !empty($hooks[$key]['modules']))
-				foreach ($hooks[$key]['modules'] as $module_key => $module)
-					if (isset($assoc_modules_id[$module['id_module']]))
-						$hooks[$key]['modules'][$module_key]['instance'] = $module_instances[$assoc_modules_id[$module['id_module']]];
+			if($hooks[$key]['module_count'])
+			{
+				// If modules were found, link to the previously created Module instances
+				if (is_array($hooks[$key]['modules']) && !empty($hooks[$key]['modules']))
+					foreach ($hooks[$key]['modules'] as $module_key => $module)
+						if (isset($assoc_modules_id[$module['id_module']]))
+							$hooks[$key]['modules'][$module_key]['instance'] = $module_instances[$assoc_modules_id[$module['id_module']]];
+			}
+			else
+				unset($hooks[$key]);
 		}
 
 		$this->addJqueryPlugin('tablednd');
@@ -331,7 +337,11 @@ class AdminModulesPositionsControllerCore extends AdminController
 		$dir = str_replace($admin_dir, '', dirname($_SERVER['SCRIPT_NAME']));
 		if (Configuration::get('PS_REWRITING_SETTINGS') && count(Language::getLanguages(true)) > 1)
 			$lang = Language::getIsoById($this->context->employee->id_lang).'/';
-		$url = Tools::getCurrentUrlProtocolPrefix().Tools::getHttpHost().$dir.$lang.Dispatcher::getInstance()->createUrl('index', (int)$this->context->language->id, $live_edit_params);
+
+		// Shop::initialize() in config.php may empty $this->context->shop->virtual_uri so using a new shop instance for getBaseUrl()
+		$this->context->shop = new Shop((int)$this->context->shop->id);
+		$url = $this->context->shop->getBaseURL().$lang.Dispatcher::getInstance()->createUrl('index', (int)$this->context->language->id, $live_edit_params);
+
 		return $url;
 	}
 	
@@ -443,7 +453,17 @@ class AdminModulesPositionsControllerCore extends AdminController
 
 		foreach ($controllers as $k => $v)
 			$content .= '<option value="'.$k.'">'.$k.'</option>';
-
+		
+		$modules_controllers_type = array('admin' => $this->l('Admin modules controller'), 'front' => $this->l('Front modules controller'));
+		foreach ($modules_controllers_type as $type => $label)
+		{
+			$content .= '<option disabled="disabled">____________ '.$label.' ____________</option>';
+			$all_modules_controllers = Dispatcher::getModuleControllers($type);
+			foreach ($all_modules_controllers as $module => $modules_controllers)
+				foreach ($modules_controllers as $cont)
+				$content .= '<option value="module-'.$module.'-'.$cont.'">module-'.$module.'-'.$cont.'</option>';
+		}
+					
 		$content .= '</select>
 					</p>';
 
@@ -476,7 +496,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 		{
 			/* PrestaShop demo mode */
 			if (_PS_MODE_DEMO_)
-				die('{"hasError" : true, "errors" : ["Live Edit: This functionnality has been disabled."]}');
+				die('{"hasError" : true, "errors" : ["Live Edit: This functionality has been disabled."]}');
 
 			if (!count(Tools::getValue('hooks_list')))
 				die('{"hasError" : true, "errors" : ["Live Edit: no module on this page."]}');
@@ -518,7 +538,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 		{
 			/* PrestaShop demo mode */
 			if (_PS_MODE_DEMO_)
-				die('{"hasError" : true, "errors" : ["Live Edit: This functionnality has been disabled."]}');
+				die('{"hasError" : true, "errors" : ["Live Edit: This functionality has been disabled."]}');
 			/* PrestaShop demo mode*/
 
 			$hook_name = Tools::getValue('hook');
@@ -531,6 +551,8 @@ class AdminModulesPositionsControllerCore extends AdminController
 				if (file_exists(_PS_MODULE_DIR_.$module['name'].'/'.$module['name'].'.php'))
 				{
 					include_once(_PS_MODULE_DIR_.$module['name'].'/'.$module['name'].'.php');
+
+					/** @var Module $mod */
 					$mod = new $module['name']();
 					if ($mod->isHookableOn($hook_name))
 						$hookableModulesList[] = array('id' => (int)$mod->id, 'name' => $mod->displayName, 'display' => Hook::exec($hook_name, array(), (int)$mod->id));
@@ -545,7 +567,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 		{
 				/* PrestaShop demo mode */
 			if (_PS_MODE_DEMO_)
-				die('{"hasError" : true, "errors" : ["Live Edit: This functionnality has been disabled."]}');
+				die('{"hasError" : true, "errors" : ["Live Edit: This functionality has been disabled."]}');
 
 			$hooks_list = explode(',', Tools::getValue('hooks_list'));
 			$id_shop = (int)Tools::getValue('id_shop');
@@ -556,12 +578,12 @@ class AdminModulesPositionsControllerCore extends AdminController
 			$hookableList = array();
 			// $_POST['hook'] is an array of id_module
 			$hooks_list = Tools::getValue('hook');
+
 			foreach ($hooks_list as $id_hook => $modules)
 			{
+
 				// 1st, drop all previous hooked modules
-				$sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module`
-					WHERE `id_hook` =  '.(int)$id_hook.'
-					AND id_shop = '.(int)$id_shop;
+				$sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module` WHERE `id_hook` =  '.(int)$id_hook.' AND id_shop = '.(int)$id_shop;
 				$res &= Db::getInstance()->execute($sql);
 
 				$i = 1;
@@ -569,20 +591,24 @@ class AdminModulesPositionsControllerCore extends AdminController
 				$ids = array();
 				// then prepare sql query to rehook all chosen modules(id_module, id_shop, id_hook, position)
 				// position is i (autoincremented)
-				foreach ($modules as $id_module)
+				if (is_array($modules) && count($modules))
 				{
-					if (!in_array($id_module, $ids))
+					foreach ($modules as $id_module)
 					{
-						$ids[] = (int)$id_module;
-						$value .= '('.(int)$id_module.', '.(int)$id_shop.', '.(int)$id_hook.', '.(int)$i.'),';
+						if ($id_module && !in_array($id_module, $ids))
+						{
+							$ids[] = (int)$id_module;
+							$value .= '('.(int)$id_module.', '.(int)$id_shop.', '.(int)$id_hook.', '.(int)$i.'),';
+						}
+						$i++;
 					}
-					$i++;
-				}
-				$value = rtrim($value, ',');
-				$res &= Db::getInstance()->execute('INSERT INTO  `'._DB_PREFIX_.'hook_module`
-					(id_module, id_shop, id_hook, position)
-					VALUES '.$value);
 
+					if ($value)
+					{
+						$value = rtrim($value, ',');
+						$res &= Db::getInstance()->execute('INSERT INTO  `'._DB_PREFIX_.'hook_module` (id_module, id_shop, id_hook, position) VALUES '.$value);
+					}
+				}
 			}
 			if ($res)
 				$hasError = true;

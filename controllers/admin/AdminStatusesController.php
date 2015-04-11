@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,11 +19,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property OrderState $object
+ */
 class AdminStatusesControllerCore extends AdminController
 {
 	public function __construct()
@@ -62,7 +65,7 @@ class AdminStatusesControllerCore extends AdminController
 	{
 		$this->addRowAction('edit');
 		$this->addRowAction('delete');
-
+		$this->addRowActionSkipList('delete', range(1, 14));
 		$this->bulk_actions = array(
 			'delete' => array(
 				'text' => $this->l('Delete selected'),
@@ -130,6 +133,7 @@ class AdminStatusesControllerCore extends AdminController
 	protected function initOrdersReturnsList()
 	{
 		$this->table = 'order_return_state';
+		$this->className = 'OrderReturnState';
 		$this->_defaultOrderBy = $this->identifier = 'id_order_return_state';
 		$this->list_id = 'order_return_state';
 		$this->deleted = false;
@@ -182,7 +186,10 @@ class AdminStatusesControllerCore extends AdminController
 				'color' => $this->getFieldValue($order_return_state, 'color'),
 			);
 		else
-			$helper->fields_value = $this->getFieldsValue($order_return_state);
+			$helper->fields_value = array(
+				'name' => $this->getFieldValue($order_return_state, 'name'),
+				'color' => "#ffffff",
+			);
 
 		$helper->toolbar_btn = $this->toolbar_btn;
 		$helper->title = $this->l('Edit Return Status');
@@ -195,12 +202,12 @@ class AdminStatusesControllerCore extends AdminController
 		{
 			$this->page_header_toolbar_btn['new_order_state'] = array(
 				'href' => self::$currentIndex.'&addorder_state&token='.$this->token,
-				'desc' => $this->l('Add new order state', null, null, false),
+				'desc' => $this->l('Add new order status', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 			$this->page_header_toolbar_btn['new_order_return_state'] = array(
 				'href' => self::$currentIndex.'&addorder_return_state&token='.$this->token,
-				'desc' => $this->l('Add new order return state', null, null, false),
+				'desc' => $this->l('Add new order return status', null, null, false),
 				'icon' => 'process-icon-new'
 			);
 		}
@@ -218,12 +225,13 @@ class AdminStatusesControllerCore extends AdminController
 		$lists = parent::renderList();
 
 		//init and render the second list
+		$this->list_skip_actions = array();
 		$this->_filter = false;
 		$this->initOrdersReturnsList();
 
 		// call postProcess() to take care of actions and filters
 		$this->postProcess();
-		$this->toolbar_title = $this->l('Return status');
+		$this->toolbar_title = $this->l('Return statuses');
 		$this->checkFilterForOrdersReturnsList();
 
 		parent::initToolbar();
@@ -324,6 +332,28 @@ class AdminStatusesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'checkbox',
+					'name' => 'pdf_invoice',
+					'values' => array(
+						'query' => array(
+							array('id' => 'on',  'name' => $this->l('Attach invoice PDF to email'), 'val' => '1'),
+							),
+						'id' => 'id',
+						'name' => 'name'
+					),
+				),
+				array(
+					'type' => 'checkbox',
+					'name' => 'pdf_delivery',
+					'values' => array(
+						'query' => array(
+							array('id' => 'on',  'name' => $this->l('Attach delivery slip PDF to email'), 'val' => '1'),
+							),
+						'id' => 'id',
+						'name' => 'name'
+					),
+				),
+				array(
+					'type' => 'checkbox',
 					'name' => 'shipped',
 					'values' => array(
 						'query' => array(
@@ -361,9 +391,10 @@ class AdminStatusesControllerCore extends AdminController
 					'name' => 'template',
 					'lang' => true,
 					'options' => array(
-						'query' => $this->getTemplates($this->context->language->iso_code),
+						'query' => $this->getTemplates(),
 						'id' => 'id',
-						'name' => 'name'
+						'name' => 'name',
+						'folder' => 'folder'
 					),
 					'hint' => array(
 						$this->l('Only letters, numbers and underscores ("_") are allowed.'),
@@ -378,7 +409,7 @@ class AdminStatusesControllerCore extends AdminController
 
 		if (Tools::isSubmit('updateorder_state') || Tools::isSubmit('addorder_state'))
 			return $this->renderOrderStatusForm();
-		else if (Tools::isSubmit('updateorder_return_state') || Tools::isSubmit('addorder_return_state'))
+		elseif (Tools::isSubmit('updateorder_return_state') || Tools::isSubmit('addorder_return_state'))
 			return $this->renderOrderReturnsForm();
 		else
 			return parent::renderForm();
@@ -397,6 +428,8 @@ class AdminStatusesControllerCore extends AdminController
 			'shipped_on' => $this->getFieldValue($obj, 'shipped'),
 			'paid_on' => $this->getFieldValue($obj, 'paid'),
 			'delivery_on' => $this->getFieldValue($obj, 'delivery'),
+			'pdf_delivery_on' => $this->getFieldValue($obj, 'pdf_delivery'),
+			'pdf_invoice_on' => $this->getFieldValue($obj, 'pdf_invoice'),
 		);
 
 		if ($this->getFieldValue($obj, 'color') !== false)
@@ -452,18 +485,36 @@ class AdminStatusesControllerCore extends AdminController
 		return $helper->generateForm($this->fields_form);
 	}
 
-	protected function getTemplates($iso_code)
+	protected function getTemplates()
 	{
+		$theme = new Theme($this->context->shop->id_theme);
+		$default_path = '../mails/';
+		$theme_path = '../themes/'.$theme->directory.'/mails/'; // Mail templates can also be found in the theme folder
+
 		$array = array();
-		if (!file_exists(_PS_ADMIN_DIR_.'/../mails/'.$iso_code))
-			return false;
-		$templates = scandir(_PS_ADMIN_DIR_.'/../mails/'.$iso_code);
-		foreach ($templates as $key => $template)
-			if (!strncmp(strrev($template), 'lmth.', 5))
-				$array[] = array(
-							'id' => substr($template, 0, -5),
-							'name' => substr($template, 0, -5)
-				);
+		foreach(Language::getLanguages(true) as $language)
+		{
+			$iso_code = $language['iso_code'];
+
+			// If there is no folder for the given iso_code in /mails or in /themes/[theme_name]/mails, we bypass this language
+			if (!@filemtime(_PS_ADMIN_DIR_.'/'.$default_path.$iso_code) && !@filemtime(_PS_ADMIN_DIR_.'/'.$theme_path.$iso_code))
+				continue;
+			
+			$theme_templates_dir = _PS_ADMIN_DIR_.'/'.$theme_path.$iso_code;
+			$theme_templates = is_dir($theme_templates_dir) ? scandir($theme_templates_dir) : array();
+			// We merge all available emails in one array 
+			$templates = array_unique(array_merge(scandir(_PS_ADMIN_DIR_.'/'.$default_path.$iso_code), $theme_templates));
+			foreach ($templates as $key => $template)
+				if (!strncmp(strrev($template), 'lmth.', 5))
+				{
+					$search_result = array_search($template, $theme_templates);
+					$array[$iso_code][] = array(
+								'id' => substr($template, 0, -5),
+								'name' => substr($template, 0, -5),
+								'folder' => ((!empty($search_result)?$theme_path:$default_path))
+					);
+				}
+		}
 
 		return $array;
 	}
@@ -488,7 +539,7 @@ class AdminStatusesControllerCore extends AdminController
 
 			// Update object
 			if (!$order_return_state->save())
-				$this->errors[] = Tools::displayError('An error has occurred: Can\'t save the current order\'s return state.');
+				$this->errors[] = Tools::displayError('An error has occurred: Can\'t save the current order\'s return status.');
 			else
 				Tools::redirectAdmin(self::$currentIndex.'&conf=4&token='.$this->token);
 		}
@@ -509,7 +560,7 @@ class AdminStatusesControllerCore extends AdminController
 			$order_return_state = new OrderReturnState((int)$id_order_return_state);
 
 			if (!$order_return_state->delete())
-				$this->errors[] = Tools::displayError('An error has occurred: Can\'t delete the current order\'s return state.');
+				$this->errors[] = Tools::displayError('An error has occurred: Can\'t delete the current order\'s return status.');
 			else
 				Tools::redirectAdmin(self::$currentIndex.'&conf=1&token='.$this->token);
 		}
@@ -524,6 +575,8 @@ class AdminStatusesControllerCore extends AdminController
 			$_POST['shipped'] = (int)Tools::getValue('shipped_on');
 			$_POST['paid'] = (int)Tools::getValue('paid_on');
 			$_POST['delivery'] = (int)Tools::getValue('delivery_on');
+			$_POST['pdf_delivery'] = (int)Tools::getValue('pdf_delivery_on');
+			$_POST['pdf_invoice'] = (int)Tools::getValue('pdf_invoice_on');
 			if (!$_POST['send_email'])
 			{
 				$languages = Language::getLanguages(false);
@@ -533,7 +586,7 @@ class AdminStatusesControllerCore extends AdminController
 
 			return parent::postProcess();
 		}
-		else if (Tools::isSubmit('delete'.$this->table))
+		elseif (Tools::isSubmit('delete'.$this->table))
 		{
 			$order_state = new OrderState(Tools::getValue('id_order_state'), $this->context->language->id);
 			if (!$order_state->isRemovable())
@@ -541,7 +594,7 @@ class AdminStatusesControllerCore extends AdminController
 			else
 				return parent::postProcess();
 		}
-		else if (Tools::isSubmit('submitBulkdelete'.$this->table))
+		elseif (Tools::isSubmit('submitBulkdelete'.$this->table))
 		{
 			foreach (Tools::getValue($this->table.'Box') as $selection)
 			{

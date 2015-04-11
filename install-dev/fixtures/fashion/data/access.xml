@@ -122,9 +122,9 @@
     <access id="access_4_11" id_profile="Translator" id_tab="Customers" view="0" add="0" edit="0" delete="0"/>
     <access id="access_4_12" id_profile="Translator" id_tab="Price_rules" view="0" add="0" edit="0" delete="0"/>
     <access id="access_4_13" id_profile="Translator" id_tab="Shipping" view="0" add="0" edit="0" delete="0"/>
-    <access id="access_4_14" id_profile="Translator" id_tab="Localization" view="0" add="0" edit="0" delete="0"/>
+    <access id="access_4_14" id_profile="Translator" id_tab="Localization" view="1" add="0" edit="0" delete="0"/>
     <access id="access_4_15" id_profile="Translator" id_tab="Modules" view="0" add="0" edit="0" delete="0"/>
-    <access id="access_4_16" id_profile="Translator" id_tab="Preferences" view="0" add="0" edit="0" delete="0"/>
+    <access id="access_4_16" id_profile="Translator" id_tab="Preferences" view="1" add="0" edit="0" delete="0"/>
     <access id="access_4_17" id_profile="Translator" id_tab="Advanced_parameters" view="0" add="0" edit="0" delete="0"/>
     <access id="access_4_18" id_profile="Translator" id_tab="Administration" view="0" add="0" edit="0" delete="0"/>
     <access id="access_4_19" id_profile="Translator" id_tab="Stats" view="0" add="0" edit="0" delete="0"/>

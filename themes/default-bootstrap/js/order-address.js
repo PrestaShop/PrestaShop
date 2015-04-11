@@ -1,5 +1,5 @@
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -69,7 +69,7 @@ function updateAddressesDisplay(first_view)
 		{
 			$('ul#address_invoice').html($('ul#address_delivery').html());
 			$('ul#address_invoice li.address_title').html(txtInvoiceTitle);
-		}	
+		}
 	}
 	if(!first_view)
 	{
@@ -101,11 +101,11 @@ function updateAddresses()
 {
 	var idAddress_delivery = parseInt($('#id_address_delivery').val());
 	var idAddress_invoice = $('#addressesAreEquals:checked').length === 1 ? idAddress_delivery : parseInt($('#id_address_invoice').val());
-	
-   	if(isNaN(idAddress_delivery) == false && isNaN(idAddress_invoice) == false)	
+
+   	if(isNaN(idAddress_delivery) == false && isNaN(idAddress_invoice) == false)
 	{
 		$('.addresses .waitimage').show();
-		$('.button[name="processAddress"]').prop('disabled', 'disabled');
+		$('[name="processAddress"]').prop('disabled', 'disabled');
 		$.ajax({
 			type: 'POST',
 			headers: { "cache-control": "no-cache" },
@@ -147,11 +147,11 @@ function updateAddresses()
 		                alert(errors);
 				}
 				$('.addresses .waitimage').hide();
-				$('.button[name="processAddress"]').prop('disabled', '');
+				$('[name="processAddress"]').prop('disabled', '');
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
-				$('.addresses .waitimage').hide();                        
-				$('.button[name="processAddress"]').prop('disabled', '');
+				$('.addresses .waitimage').hide();
+				$('[name="processAddress"]').prop('disabled', '');
 				if (textStatus !== 'abort')
 				{
 					error = "TECHNICAL ERROR: unable to save adresses \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus;
@@ -214,12 +214,18 @@ function appendAddressList(dest_comp, values, fields_name)
 {
 	for (var item in fields_name)
 	{
-		var name = fields_name[item];
+		var name = fields_name[item].replace(/,/g, "");
 		var value = getFieldValue(name, values);
-		if (value != "") {
+		if (value != "")
+		{
 			var new_li = document.createElement('li');
-			new_li.className = 'address_' + name;
-			new_li.innerHTML = getFieldValue(name, values);
+			var reg = new RegExp("[ ]+", "g");
+			var classes = name.split(reg);
+			new_li.className = '';
+			for (clas in classes)
+				new_li.className += 'address_' + classes[clas].toLowerCase().replace(":", "_") + ' ';
+			new_li.className = $.trim(new_li.className);
+			new_li.innerHTML = value;
 			dest_comp.append(new_li);
 		}
 	}
@@ -227,12 +233,12 @@ function appendAddressList(dest_comp, values, fields_name)
 
 function getFieldValue(field_name, values)
 {
-	var reg=new RegExp("[ ]+", "g");
+	var reg = new RegExp("[ ]+", "g");
 	var items = field_name.split(reg);
 	var vals = new Array();
 	for (var field_item in items)
 	{
-		items[field_item] = items[field_item].replace(",", "");
+		items[field_item] = items[field_item].replace(/,/g, "");
 		vals.push(values[items[field_item]]);
 	}
 	return vals.join(" ");

@@ -11,7 +11,7 @@
     <meta_title>Legal Notice</meta_title>
     <meta_description>Legal notice</meta_description>
     <meta_keywords>notice, legal, credits</meta_keywords>
-    <content>&lt;h2&gt;Legal&lt;/h2&gt;&lt;h3&gt;Credits&lt;/h3&gt;&lt;p&gt;Concept and production:&lt;/p&gt;&lt;p&gt;This Web site was created using &lt;a href="http://www.prestashop.com"&gt;PrestaShop&lt;/a&gt;&amp;trade; open-source software.&lt;/p&gt;</content>
+    <content>&lt;h2&gt;Legal&lt;/h2&gt;&lt;h3&gt;Credits&lt;/h3&gt;&lt;p&gt;Concept and production:&lt;/p&gt;&lt;p&gt;This Online store was created using &lt;a href="http://www.prestashop.com"&gt;Prestashop Shopping Cart Software&lt;/a&gt;,check out PrestaShop's &lt;a href="http://www.prestashop.com/blog/en/"&gt;ecommerce blog&lt;/a&gt; for news and advices about selling online and running your ecommerce website.&lt;/p&gt;</content>
     <link_rewrite>legal-notice</link_rewrite>
   </cms>
   <cms id="Terms_and_conditions_of_use">
@@ -48,7 +48,7 @@
 &lt;div class=&quot;col-xs-12 col-sm-4&quot;&gt;
 &lt;div class=&quot;cms-box&quot;&gt;
 &lt;h3 class=&quot;page-subheading&quot;&gt;Our team&lt;/h3&gt;
-&lt;img title=&quot;cms-img&quot; src=&quot;http://192.168.9.41/prestashop1601/img/cms/cms-img.jpg&quot; alt=&quot;cms-img&quot; width=&quot;370&quot; height=&quot;192&quot; /&gt;
+&lt;img title=&quot;cms-img&quot; src=&quot;../img/cms/cms-img.jpg&quot; alt=&quot;cms-img&quot; width=&quot;370&quot; height=&quot;192&quot; /&gt;
 &lt;p&gt;&lt;strong class=&quot;dark&quot;&gt;Lorem set sint occaecat cupidatat non &lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;Eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.&lt;/p&gt;
 &lt;/div&gt;
@@ -71,11 +71,11 @@
   </cms>
   <cms id="Secure_payment">
     <meta_title>Secure payment</meta_title>
-    <meta_description>Our secure payment mean</meta_description>
+    <meta_description>Our secure payment method</meta_description>
     <meta_keywords>secure payment, ssl, visa, mastercard, paypal</meta_keywords>
     <content>&lt;h2&gt;Secure payment&lt;/h2&gt;&#xD;
 &lt;h3&gt;Our secure payment&lt;/h3&gt;&lt;p&gt;With SSL&lt;/p&gt;&#xD;
-&lt;h3&gt;Using Visa/Mastercard/Paypal&lt;/h3&gt;&lt;p&gt;About this services&lt;/p&gt;</content>
+&lt;h3&gt;Using Visa/Mastercard/Paypal&lt;/h3&gt;&lt;p&gt;About this service&lt;/p&gt;</content>
     <link_rewrite>secure-payment</link_rewrite>
   </cms>
 </entity_cms>

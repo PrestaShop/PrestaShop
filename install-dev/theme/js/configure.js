@@ -17,7 +17,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -45,7 +45,7 @@ function checkTimeZone(elt)
 		success: function(json) {
 			if (json.success) {
 				$('#infosTimezone').val(json.message).trigger("liszt:updated");
-				if (in_array(iso, ['us','ca','ru','me','au','id']))
+				if (in_array(iso, ['br','us','ca','ru','me','au','id']))
 				{
 					if ($('#infosTimezone:visible').length == 0 && $('#infosTimezone_chosen').length == 0)
 					{

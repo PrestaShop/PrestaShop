@@ -2,13 +2,12 @@
 /**
  * Smarty plugin
  *
- * @package Smarty
+ * @package    Smarty
  * @subpackage PluginsFunction
  */
 
 /**
  * Smarty {html_table} function plugin
- *
  * Type:     function<br>
  * Name:     html_table<br>
  * Date:     Feb 17, 2003<br>
@@ -37,17 +36,18 @@
  * {table loop=$data cols="first,second,third" tr_attr=$colors}
  * </pre>
  *
- * @author Monte Ohrt <monte at ohrt dot com>
- * @author credit to Messju Mohr <messju at lammfellpuschen dot de>
- * @author credit to boots <boots dot smarty at yahoo dot com>
- * @version 1.1
- * @link http://www.smarty.net/manual/en/language.function.html.table.php {html_table}
- *          (Smarty online manual)
- * @param array                    $params   parameters
- * @param Smarty_Internal_Template $template template object
+ * @author   Monte Ohrt <monte at ohrt dot com>
+ * @author   credit to Messju Mohr <messju at lammfellpuschen dot de>
+ * @author   credit to boots <boots dot smarty at yahoo dot com>
+ * @version  1.1
+ * @link     http://www.smarty.net/manual/en/language.function.html.table.php {html_table}
+ *           (Smarty online manual)
+ *
+ * @param array $params parameters
+ *
  * @return string
  */
-function smarty_function_html_table($params, $template)
+function smarty_function_html_table($params)
 {
     $table_attr = 'border="1"';
     $tr_attr = '';
@@ -63,14 +63,15 @@ function smarty_function_html_table($params, $template)
     $loop = null;
 
     if (!isset($params['loop'])) {
-        trigger_error("html_table: missing 'loop' parameter",E_USER_WARNING);
+        trigger_error("html_table: missing 'loop' parameter", E_USER_WARNING);
+
         return;
     }
 
     foreach ($params as $_key => $_value) {
         switch ($_key) {
             case 'loop':
-                $$_key = (array)$_value;
+                $$_key = (array) $_value;
                 break;
 
             case 'cols':
@@ -81,14 +82,14 @@ function smarty_function_html_table($params, $template)
                     $cols = explode(',', $_value);
                     $cols_count = count($cols);
                 } elseif (!empty($_value)) {
-                    $cols_count = (int)$_value;
+                    $cols_count = (int) $_value;
                 } else {
                     $cols_count = $cols;
                 }
                 break;
 
             case 'rows':
-                $$_key = (int)$_value;
+                $$_key = (int) $_value;
                 break;
 
             case 'table_attr':
@@ -97,7 +98,7 @@ function smarty_function_html_table($params, $template)
             case 'vdir':
             case 'inner':
             case 'caption':
-                $$_key = (string)$_value;
+                $$_key = (string) $_value;
                 break;
 
             case 'tr_attr':
@@ -129,7 +130,7 @@ function smarty_function_html_table($params, $template)
         $cols = ($hdir == 'right') ? $cols : array_reverse($cols);
         $output .= "<thead><tr>\n";
 
-        for ($r = 0; $r < $cols_count; $r++) {
+        for ($r = 0; $r < $cols_count; $r ++) {
             $output .= '<th' . smarty_function_html_table_cycle('th', $th_attr, $r) . '>';
             $output .= $cols[$r];
             $output .= "</th>\n";
@@ -138,12 +139,12 @@ function smarty_function_html_table($params, $template)
     }
 
     $output .= "<tbody>\n";
-    for ($r = 0; $r < $rows; $r++) {
+    for ($r = 0; $r < $rows; $r ++) {
         $output .= "<tr" . smarty_function_html_table_cycle('tr', $tr_attr, $r) . ">\n";
-        $rx = ($vdir == 'down') ? $r * $cols_count : ($rows-1 - $r) * $cols_count;
+        $rx = ($vdir == 'down') ? $r * $cols_count : ($rows - 1 - $r) * $cols_count;
 
-        for ($c = 0; $c < $cols_count; $c++) {
-            $x = ($hdir == 'right') ? $rx + $c : $rx + $cols_count-1 - $c;
+        for ($c = 0; $c < $cols_count; $c ++) {
+            $x = ($hdir == 'right') ? $rx + $c : $rx + $cols_count - 1 - $c;
             if ($inner != 'cols') {
                 /* shuffle x to loop over rows*/
                 $x = floor($x / $cols_count) + ($x % $cols_count) * $rows;
@@ -173,5 +174,3 @@ function smarty_function_html_table_cycle($name, $var, $no)
 
     return ($ret) ? ' ' . $ret : '';
 }
-
-?>

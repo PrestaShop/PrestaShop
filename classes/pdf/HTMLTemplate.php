@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -32,7 +32,11 @@ abstract class HTMLTemplateCore
 	public $title;
 	public $date;
 	public $available_in_your_account = true;
+
+	/** @var Smarty */
 	public $smarty;
+
+	/** @var Shop */
 	public $shop;
 
 	/**
@@ -41,13 +45,25 @@ abstract class HTMLTemplateCore
 	 */
 	public function getHeader()
 	{
-		$shop_name = Configuration::get('PS_SHOP_NAME', null, null, (int)$this->order->id_shop);
+		$this->setShopId();
+		$id_shop = (int)$this->shop->id;
+		$shop_name = Configuration::get('PS_SHOP_NAME', null, null, $id_shop);
+
 		$path_logo = $this->getLogo();
 
 		$width = 0;
 		$height = 0;
 		if (!empty($path_logo))
 			list($width, $height) = getimagesize($path_logo);
+
+		// Limit the height of the logo for the PDF render
+		$maximum_height = 100;
+		if ($height > $maximum_height)
+		{
+			$ratio = $maximum_height / $height;
+			$height *= $ratio;
+			$width *= $ratio;
+		}
 
 		$this->smarty->assign(array(
 			'logo_path' => $path_logo,
@@ -56,6 +72,7 @@ abstract class HTMLTemplateCore
 			'title' => $this->title,
 			'date' => $this->date,
 			'shop_name' => $shop_name,
+			'shop_details' => Configuration::get('PS_SHOP_DETAILS', null, null, (int)$id_shop),
 			'width_logo' => $width,
 			'height_logo' => $height
 		));
@@ -70,13 +87,16 @@ abstract class HTMLTemplateCore
 	public function getFooter()
 	{
 		$shop_address = $this->getShopAddress();
+
+		$id_shop = (int)$this->shop->id;
+
 		$this->smarty->assign(array(
 			'available_in_your_account' => $this->available_in_your_account,
 			'shop_address' => $shop_address,
-			'shop_fax' => Configuration::get('PS_SHOP_FAX', null, null, (int)$this->order->id_shop),
-			'shop_phone' => Configuration::get('PS_SHOP_PHONE', null, null, (int)$this->order->id_shop),
-			'shop_details' => Configuration::get('PS_SHOP_DETAILS', null, null, (int)$this->order->id_shop),
-			'free_text' => Configuration::get('PS_INVOICE_FREE_TEXT', (int)Context::getContext()->language->id, null, (int)$this->order->id_shop)
+			'shop_fax' => Configuration::get('PS_SHOP_FAX', null, null, $id_shop),
+			'shop_phone' => Configuration::get('PS_SHOP_PHONE', null, null, $id_shop),
+			'shop_email' => Configuration::get('PS_SHOP_EMAIL', null, null, $id_shop),
+			'free_text' => Configuration::get('PS_INVOICE_FREE_TEXT', (int)Context::getContext()->language->id, null, $id_shop)
 		));
 
 		return $this->smarty->fetch($this->getTemplate('footer'));
@@ -89,13 +109,10 @@ abstract class HTMLTemplateCore
 	protected function getShopAddress()
 	{
 		$shop_address = '';
-		if (Validate::isLoadedObject($this->shop))
-		{
-			$shop_address_obj = $this->shop->getAddress();
-			if (isset($shop_address_obj) && $shop_address_obj instanceof Address)
-				$shop_address = AddressFormat::generateAddress($shop_address_obj, array(), ' - ', ' ');
-			return $shop_address;
-		}
+
+		$shop_address_obj = $this->shop->getAddress();
+		if (isset($shop_address_obj) && $shop_address_obj instanceof Address)
+			$shop_address = AddressFormat::generateAddress($shop_address_obj, array(), ' - ', ' ');
 
 		return $shop_address;
 	}
@@ -107,19 +124,19 @@ abstract class HTMLTemplateCore
 	{
 		$logo = '';
 
-		$physical_uri = Context::getContext()->shop->physical_uri.'img/';
+		$id_shop = (int)$this->shop->id;
 
-		if (Configuration::get('PS_LOGO_INVOICE', null, null, (int)$this->order->id_shop) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, (int)$this->order->id_shop)))
-			$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, (int)$this->order->id_shop);
-		elseif (Configuration::get('PS_LOGO', null, null, (int)$this->order->id_shop) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, (int)$this->order->id_shop)))
-			$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, (int)$this->order->id_shop);
+		if (Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop)))
+			$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, $id_shop);
+		elseif (Configuration::get('PS_LOGO', null, null, $id_shop) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, $id_shop)))
+			$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, $id_shop);
 		return $logo;
 	}
 
 	/**
 	* Assign hook data
 	*
-	* @param $object generally the object used in the constructor
+	* @param ObjectModel $object generally the object used in the constructor
 	*/
 	public function assignHookData($object)
 	{
@@ -160,12 +177,11 @@ abstract class HTMLTemplateCore
 	protected function getTemplate($template_name)
 	{
 		$template = false;
-		$default_template = _PS_PDF_DIR_.'/'.$template_name.'.tpl';
-		$overriden_template = _PS_THEME_DIR_.'pdf/'.$template_name.'.tpl';
-
-		if (file_exists($overriden_template))
-			$template = $overriden_template;
-		else if (file_exists($default_template))
+		$default_template = rtrim(_PS_PDF_DIR_, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$template_name.'.tpl';
+		$overridden_template = _PS_ALL_THEMES_DIR_.$this->shop->getTheme().DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.$template_name.'.tpl';
+		if (file_exists($overridden_template))
+			$template = $overridden_template;
+		elseif (file_exists($default_template))
 			$template = $default_template;
 
 		return $template;
@@ -181,5 +197,16 @@ abstract class HTMLTemplateCore
 	{
 		return Translate::getPdfTranslation($string);
 	}
-}
 
+	protected function setShopId()
+	{
+		if (isset($this->order) && Validate::isLoadedObject($this->order))
+			$id_shop = (int)$this->order->id_shop;
+		else
+			$id_shop = (int)Context::getContext()->shop->id;
+
+		$this->shop = new Shop($id_shop);
+		if (Validate::isLoadedObject($this->shop))
+			Shop::setContext(Shop::CONTEXT_SHOP, (int)$this->shop->id);
+	}
+}

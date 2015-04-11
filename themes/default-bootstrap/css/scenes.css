@@ -9,7 +9,8 @@
     content: "\f0fe";
     font-family: "FontAwesome";
     display: block;
-    vertical-align: 5px; }
+    vertical-align: 5px;
+    color: grey; }
 
 .thumbs_banner {
   margin: 10px auto;
@@ -28,7 +29,7 @@
       width: 21px;
       background: #fbfbfb;
       text-decoration: none;
-      color: #333333; }
+      color: #333; }
       .thumbs_banner .space-keeper a.prev:before {
         font-family: "FontAwesome";
         content: "\f053";
@@ -41,7 +42,7 @@
       width: 21px;
       background: #fbfbfb;
       text-decoration: none;
-      color: #333333; }
+      color: #333; }
       .thumbs_banner .space-keeper a.next:before {
         font-family: "FontAwesome";
         content: "\f054";
@@ -65,10 +66,8 @@
   position: absolute;
   text-decoration: none; }
 #scenes .popover {
-  -webkit-border-radius: 0;
   -moz-border-radius: 0;
-  -ms-border-radius: 0;
-  -o-border-radius: 0;
+  -webkit-border-radius: 0;
   border-radius: 0;
   border-color: #d6d4d4; }
 #scenes .product-image-container,
@@ -85,3 +84,5 @@
 @media (max-width: 1199px) {
   #scenes {
     display: none; } }
+
+/*# sourceMappingURL=scenes.css.map */

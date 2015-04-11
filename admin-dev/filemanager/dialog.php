@@ -10,11 +10,13 @@ else
 
 	include('include/utils.php');
 
+
+
 	if (isset($_GET['fldr'])
 		&& !empty($_GET['fldr'])
 		&& preg_match('/\.{1,2}[\/|\\\]/', urldecode($_GET['fldr'])) === 0
 	)
-		$subdir = urldecode(trim($_GET['fldr'], '/').'/');
+		$subdir = str_replace("\0", '', urldecode(trim($_GET['fldr'], '/').'/'));
 	else
 		$subdir = '';
 
@@ -434,7 +436,12 @@ else
 		$sorted = array_reverse($sorted);
 	}
 
-	$files = array_merge(array($prev_folder), array($current_folder), $sorted);
+	$files = array();
+	if (!empty($prev_folder))
+		$files = array($prev_folder);
+	if (!empty($current_folder))
+		$files = array_merge($files, array($current_folder));
+	$files = array_merge($files, $sorted);
 	?>
 	<!----- header div start ------->
 	<div class="navbar navbar-fixed-top">
@@ -773,8 +780,6 @@ else
 		$src = $base_url.$cur_dir.rawurlencode($file);
 		$mini_src = $src_thumb = $thumbs_path.$subdir.$file;
 
-		if (strpos($src_thumb, _PS_ROOT_DIR_) === 0)
-			$mini = $thumb = __PS_BASE_URI__.substr($thumbs_path.$subdir.$file, strlen(_PS_ROOT_DIR_) + 1);
 		//add in thumbs folder if not exist
 		if (!file_exists($src_thumb))
 		{
@@ -842,6 +847,16 @@ else
 	{
 		$class_ext = 1;
 	}
+
+	/* PrestaShop */
+	if(isset($src_thumb) && $src_thumb)
+		if (($src_thumb = preg_replace('#('.addslashes($current_path).')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/cms/'), $src_thumb)) == $src_thumb)
+			$src_thumb = preg_replace('#('.addslashes($thumbs_base_path).')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/tmp/cms/'), $src_thumb);
+	if(isset($mini_src) && $mini_src)
+		if (($mini_src = preg_replace('#('.addslashes($current_path).')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/cms/'), $mini_src)) == $mini_src)
+			$mini_src = preg_replace('#('.addslashes($thumbs_base_path).')#ism', Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/tmp/cms/'), $mini_src);
+	/* END PrestaShop */
+
 	if ((!(Tools::getValue('type') == 1 && !$is_img) && !((Tools::getValue('type') == 3 && !$is_video) && (Tools::getValue('type') == 3 && !$is_audio))) && $class_ext > 0){
 	?>
 	<li class="ff-item-type-<?php echo Tools::safeOutput($class_ext); ?> file" data-name="<?php echo Tools::safeOutput($file); ?>">
@@ -852,7 +867,7 @@ else
 		{
 			echo "file";
 		} ?>">
-			<a href="javascript:void('')" class="link" data-file="<?php echo Tools::safeOutput($file); ?>" data-field_id="<?php echo Tools::safeOutput(Tools::getValue('field_id')); ?>" data-function="<?php echo Tools::safeOutput($apply); ?>">
+			<a href="javascript:void('')" class="link" data-file="<?php echo Tools::safeOutput($file); ?>" data-field_id="" data-function="<?php echo Tools::safeOutput($apply); ?>">
 				<div class="img-precontainer">
 					<?php if ($is_icon_thumb)
 					{
@@ -860,7 +875,7 @@ else
 						<div class="filetype"><?php echo $extension_lower ?></div><?php } ?>
 					<div class="img-container">
 						<span></span>
-						<img alt="<?php echo Tools::safeOutput($filename." thumbnails"); ?>" class="<?php echo $show_original ? "original" : "" ?> <?php echo $is_icon_thumb ? "icon" : "" ?>" src="<?php echo Tools::safeOutput($thumb); ?>">
+						<img alt="<?php echo Tools::safeOutput($filename." thumbnails"); ?>" class="<?php echo $show_original ? "original" : "" ?> <?php echo $is_icon_thumb ? "icon" : "" ?>" src="<?php echo Tools::safeOutput($src_thumb); ?>">
 					</div>
 				</div>
 				<div class="img-precontainer-mini <?php if ($is_img) echo 'original-thumb' ?>">
@@ -873,7 +888,7 @@ else
 						<?php if ($mini_src != "")
 						{
 							?>
-							<img alt="<?php echo Tools::safeOutput($filename." thumbnails"); ?>" class="<?php echo $show_original_mini ? "original" : "" ?> <?php echo $is_icon_thumb_mini ? "icon" : "" ?>" src="<?php echo Tools::safeOutput($mini); ?>">
+							<img alt="<?php echo Tools::safeOutput($filename." thumbnails"); ?>" class="<?php echo $show_original_mini ? "original" : "" ?> <?php echo $is_icon_thumb_mini ? "icon" : "" ?>" src="<?php echo Tools::safeOutput($mini_src); ?>">
 						<?php } ?>
 					</div>
 				</div>
@@ -889,7 +904,7 @@ else
 				{
 					echo "ellipsis";
 				} ?>">
-					<a href="javascript:void('')" class="link" data-file="<?php echo Tools::safeOutput($file); ?>" data-field_id="<?php echo Tools::safeOutput(Tools::getValue('field_id')); ?>" data-function="<?php echo Tools::safeOutput($apply); ?>">
+					<a href="javascript:void('')" class="link" data-file="<?php echo Tools::safeOutput($file); ?>" data-field_id="" data-function="<?php echo Tools::safeOutput($apply); ?>">
 						<?php echo Tools::safeOutput($filename); ?></a></h4>
 			</div>
 			<input type="hidden" class="date" value="<?php echo $file_array['date']; ?>"/>
@@ -925,7 +940,7 @@ else
 						{
 							echo "video";
 						} ?>"
-						   title="<?php echo lang_Preview ?>" data-url="ajax_calls.php?action=media_preview&title=<?php echo Tools::safeOutput($filename); ?>&file=<?php echo Tools::safeOutput($current_path.$subfolder.$subdir.$file); ?>"
+						   title="<?php echo lang_Preview ?>" data-url="ajax_calls.php?action=media_preview&title=<?php echo Tools::safeOutput($filename); ?>&file=<?php echo Tools::safeOutput(Context::getContext()->shop->physical_uri.'img/cms/'.$subfolder.$subdir.$file); ?>"
 						   href="javascript:void('');"><i class=" icon-eye-open"></i></a>
 					<?php
 					} else

@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -65,7 +65,7 @@
 	{include file="$tpl_dir./errors.tpl"}
 	
 	{if isset($transformSuccess)}
-		<p class="alert alert-success">{l s='Your guest account has been successfully transformed into a customer account. You can now login as a registered shopper. '} <a href="{$link->getPageLink('authentication', true)|escape:'html':'UTF-8'}">{l s='page.'}</a></p>
+		<p class="alert alert-success">{l s='Your guest account has been successfully transformed into a customer account. You can now log in as a registered shopper. '} <a href="{$link->getPageLink('authentication', true)|escape:'html':'UTF-8'}">{l s='page.'}</a></p>
 	{else}
 		<form method="post" action="{$action|escape:'html':'UTF-8'}#guestToCustomer" class="std">
 			<fieldset class="description_box box">
@@ -98,7 +98,7 @@
 {else}
 	{include file="$tpl_dir./errors.tpl"}
 	{if isset($show_login_link) && $show_login_link}
-		<p><img src="{$img_dir}icon/userinfo.gif" alt="{l s='Information'}" class="icon" /><a href="{$link->getPageLink('my-account', true)|escape:'html':'UTF-8'}">{l s='Click here to login to your customer account.'}</a><br /><br /></p>
+		<p><img src="{$img_dir}icon/userinfo.gif" alt="{l s='Information'}" class="icon" /><a href="{$link->getPageLink('my-account', true)|escape:'html':'UTF-8'}">{l s='Click here to log in to your customer account.'}</a><br /><br /></p>
 	{/if}
 	<form method="post" action="{$action|escape:'html':'UTF-8'}" class="std" id="guestTracking">
 		<fieldset class="description_box box">

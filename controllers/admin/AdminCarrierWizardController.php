@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,11 +19,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Carrier $object
+ */
 class AdminCarrierWizardControllerCore extends AdminController
 {
 	protected $wizard_access;
@@ -38,10 +41,11 @@ class AdminCarrierWizardControllerCore extends AdminController
 		$this->lang = false;
 		$this->deleted = true;
 		$this->step_number = 0;
-		
+		$this->type_context = Shop::getContext();
+		$this->old_context = Context::getContext();
 		$this->multishop_context = Shop::CONTEXT_ALL;
 		$this->context = Context::getContext();
-		
+
 		$this->fieldImageSettings = array(
 			'name' => 'logo',
 			'dir' => 's'
@@ -57,7 +61,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 		parent::setMedia();
 		$this->addJqueryPlugin('smartWizard');
 		$this->addJqueryPlugin('typewatch');
-		$this->addJs(_PS_JS_DIR_.'admin_carrier_wizard.js');
+		$this->addJs(_PS_JS_DIR_.'admin/carrier_wizard.js');
 	}
 
 	public function initWizard()
@@ -105,7 +109,9 @@ class AdminCarrierWizardControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('You do not have permission to use this wizard.');
 			return ;
 		}
-		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+
+		$currency = $this->getActualCurrency();
+
 		$this->tpl_view_vars = array(
 			'currency_sign' => $currency->sign,
 			'PS_WEIGHT_UNIT' => Configuration::get('PS_WEIGHT_UNIT'),
@@ -131,16 +137,16 @@ class AdminCarrierWizardControllerCore extends AdminController
 		$this->context->smarty->assign(array(
 				'carrier_logo' => (Validate::isLoadedObject($carrier) && file_exists(_PS_SHIP_IMG_DIR_.$carrier->id.'.jpg') ? _THEME_SHIP_DIR_.$carrier->id.'.jpg' : false),
  			));
- 			
+
  		$this->context->smarty->assign(array(
  			'logo_content' => $this->createTemplate('logo.tpl')->fetch()
  		));
- 		
+
 		$this->addjQueryPlugin(array('ajaxfileupload'));
 
 		return parent::renderView();
 	}
-	
+
 	public function initBreadcrumbs($tab_id = null,$tabs = null)
 	{
 		if (Tools::getValue('id_carrier'))
@@ -149,7 +155,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 			$this->display = 'add';
 
 		parent::initBreadcrumbs((int)Tab::getIdFromClassName('AdminCarriers'));
-		
+
 		$this->display = 'view';
 	}
 
@@ -206,7 +212,8 @@ class AdminCarrierWizardControllerCore extends AdminController
 						'type' => 'text',
 						'label' => $this->l('Tracking URL'),
 						'name' => 'url',
-						'hint' => $this->l('Delivery tracking URL: Type \'@\' where the tracking number should appear. It will be automatically replaced by the tracking number.')
+						'hint' => $this->l('Delivery tracking URL: Type \'@\' where the tracking number should appear. It will be automatically replaced by the tracking number.'),
+						'desc' => $this->l('For example: \'http://exampl.com/track.php?num=@\' with \'@\' where the tracking number should appear.')
 					),
 				)),
 		);
@@ -221,6 +228,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 		$this->fields_form = array(
 			'form' => array(
 				'id_form' => 'step_carrier_shops',
+				'force' => true,
 				'input' => array(
 					array(
 						'type' => 'shop',
@@ -230,6 +238,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 				))
 		);
 		$fields_value = $this->getStepTwoFieldsValues($carrier);
+
 		return $this->renderGenericForm(array('form' => $this->fields_form), $fields_value);
 	}
 
@@ -241,7 +250,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 				'input' => array(
 					array(
 						'type' => 'switch',
-						'label' => $this->l('Shipping and handling'),
+						'label' => $this->l('Add handling costs'),
 						'name' => 'shipping_handling',
 						'required' => false,
 						'class' => 't',
@@ -258,11 +267,11 @@ class AdminCarrierWizardControllerCore extends AdminController
 								'label' => $this->l('Disabled')
 							)
 						),
-						'hint' => $this->l('Include the shipping and handling costs in the carrier price.')
+						'hint' => $this->l('Include the handling costs (as set in Shipping > Preferences) in the final carrier price.')
 					),
 					array(
 						'type' => 'switch',
-						'label' => $this->l('Free Shipping'),
+						'label' => $this->l('Free shipping'),
 						'name' => 'is_free',
 						'required' => false,
 						'class' => 't',
@@ -343,7 +352,9 @@ class AdminCarrierWizardControllerCore extends AdminController
 
 		$tpl_vars = array();
 		$tpl_vars['PS_WEIGHT_UNIT'] = Configuration::get('PS_WEIGHT_UNIT');
-		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+
+		$currency = $this->getActualCurrency();
+
 		$tpl_vars['currency_sign'] = $currency->sign;
 
 		$fields_value = $this->getStepThreeFieldsValues($carrier);
@@ -352,6 +363,11 @@ class AdminCarrierWizardControllerCore extends AdminController
 		return $this->renderGenericForm(array('form' => $this->fields_form), $fields_value, $tpl_vars);
 	}
 
+	/**
+	 * @param Carrier $carrier
+	 *
+	 * @return string
+	 */
 	public function renderStepFour($carrier)
 	{
 		$this->fields_form = array(
@@ -360,17 +376,17 @@ class AdminCarrierWizardControllerCore extends AdminController
 				'input' => array(
 					array(
 						'type' => 'text',
-						'label' => sprintf($this->l('Maximum package height (%s)'), Configuration::get('PS_DIMENSION_UNIT')),
-						'name' => 'max_height',
-						'required' => false,
-						'hint' => $this->l('Maximum height managed by this carrier. Set the value to "0", or leave this field blank to ignore.').' '.$this->l('The value must be an integer.')
-					),
-					array(
-						'type' => 'text',
 						'label' => sprintf($this->l('Maximum package width (%s)'), Configuration::get('PS_DIMENSION_UNIT')),
 						'name' => 'max_width',
 						'required' => false,
 						'hint' => $this->l('Maximum width managed by this carrier. Set the value to "0", or leave this field blank to ignore.').' '.$this->l('The value must be an integer.')
+					),
+					array(
+						'type' => 'text',
+						'label' => sprintf($this->l('Maximum package height (%s)'), Configuration::get('PS_DIMENSION_UNIT')),
+						'name' => 'max_height',
+						'required' => false,
+						'hint' => $this->l('Maximum height managed by this carrier. Set the value to "0", or leave this field blank to ignore.').' '.$this->l('The value must be an integer.')
 					),
 					array(
 						'type' => 'text',
@@ -421,7 +437,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 				'input' => array(
 					array(
 						'type' => 'switch',
-						'label' => $this->l('Status'),
+						'label' => $this->l('Enabled'),
 						'name' => 'active',
 						'required' => false,
 						'class' => 't',
@@ -429,16 +445,14 @@ class AdminCarrierWizardControllerCore extends AdminController
 						'values' => array(
 							array(
 								'id' => 'active_on',
-								'value' => 1,
-								'label' => $this->l('Enabled')
+								'value' => 1
 							),
 							array(
 								'id' => 'active_off',
-								'value' => 0,
-								'label' => $this->l('Disabled')
+								'value' => 0
 							)
 						),
-						'hint' => $this->l('Enable the carrier in the Front Office.')
+						'hint' => $this->l('Enable the carrier in the front office.')
 					)
 				)
 			));
@@ -456,6 +470,11 @@ class AdminCarrierWizardControllerCore extends AdminController
 		return $template->fetch('controllers/carrier_wizard/summary.tpl');
 	}
 
+	/**
+	 * @param Carrier $carrier
+	 * @param array   $tpl_vars
+	 * @param array   $fields_value
+	 */
 	protected function getTplRangesVarsAndValues($carrier, &$tpl_vars, &$fields_value)
 	{
 		$tpl_vars['zones'] = Zone::getZones(false);
@@ -502,6 +521,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 
 	public function renderGenericForm($fields_form, $fields_value, $tpl_vars = array())
 	{
+
 		$helper = new HelperForm();
 		$helper->show_toolbar = false;
 		$helper->table =  $this->table;
@@ -594,14 +614,15 @@ class AdminCarrierWizardControllerCore extends AdminController
 		$template->assign('fields_value', $fields_value);
 		$template->assign('input', array('type' => 'zone', 'name' => 'zones' ));
 
-		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+		$currency = $this->getActualCurrency();
+
 		$template->assign('currency_sign', $currency->sign);
 		$template->assign('PS_WEIGHT_UNIT', Configuration::get('PS_WEIGHT_UNIT'));
 
 		die($template->fetch());
 	}
 
-	public function ajaxProcessValidateStep()
+	protected function validateForm($die = true)
 	{
 		$step_number = (int)Tools::getValue('step_number');
 		$return = array('has_error' => false);
@@ -627,7 +648,15 @@ class AdminCarrierWizardControllerCore extends AdminController
 			$return['has_error'] = true;
 			$return['errors'] = $this->errors;
 		}
-		die(Tools::jsonEncode($return));
+		if (count($this->errors) || $die)
+			die(Tools::jsonEncode($return));
+
+	}
+
+
+	public function ajaxProcessValidateStep()
+	{
+			$this->validateForm(true);
 	}
 
 	public function processRanges($id_carrier)
@@ -701,7 +730,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 						);
 					}
 				}
-				
+
 				if (count($price_list) && !$carrier->addDeliveryPrice($price_list, true))
 					return false;
 			}
@@ -738,7 +767,6 @@ class AdminCarrierWizardControllerCore extends AdminController
 	public function ajaxProcessFinishStep()
 	{
 		$return = array('has_error' => false);
-
 		if (!$this->tabAccess['edit'])
 			$return = array(
 				'has_error' =>  true,
@@ -746,11 +774,15 @@ class AdminCarrierWizardControllerCore extends AdminController
 			);
 		else
 		{
+			$this->validateForm(false);
 			if ($id_carrier = Tools::getValue('id_carrier'))
 			{
 				$current_carrier = new Carrier((int)$id_carrier);
+
 				// if update we duplicate current Carrier
+				/** @var Carrier $new_carrier */
 				$new_carrier = $current_carrier->duplicateObject();
+
 				if (Validate::isLoadedObject($new_carrier))
 				{
 					// Set flag deteled to true for historization
@@ -765,11 +797,11 @@ class AdminCarrierWizardControllerCore extends AdminController
 					$this->updateAssoShop((int)$new_carrier->id);
 					$this->duplicateLogo((int)$new_carrier->id, (int)$current_carrier->id);
 					$this->changeGroups((int)$new_carrier->id);
-					
+
 					//Copy default carrier
 					if (Configuration::get('PS_CARRIER_DEFAULT') == $current_carrier->id)
 						Configuration::updateValue('PS_CARRIER_DEFAULT', (int)$new_carrier->id);
-					
+
 					// Call of hooks
 					Hook::exec('actionCarrierUpdate', array(
 							'id_carrier' => (int)$current_carrier->id,
@@ -883,7 +915,9 @@ class AdminCarrierWizardControllerCore extends AdminController
 
 	public function getValidationRules()
 	{
-		$step_number = Tools::getValue('step_number');
+		$step_number = (int)Tools::getValue('step_number');
+		if (!$step_number)
+			return;
 
 		if ($step_number == 4 && !Shop::isFeatureActive() || $step_number == 5 && Shop::isFeatureActive())
 			return array('fields' => array());
@@ -894,18 +928,18 @@ class AdminCarrierWizardControllerCore extends AdminController
 			3 => array('range_behavior', 'max_height', 'max_width', 'max_depth', 'max_weight'),
 			4 => array(),
 		);
-
 		if (Shop::isFeatureActive())
 		{
-			$multistore_field = array(array('shop'));
-			array_splice($step_fields, 1, 0, $multistore_field);
+			$tmp = $step_fields;
+			$step_fields = array_slice($tmp, 0, 1, true) + array(2 => array('shop'));
+			$step_fields[3] = $tmp[2];
+			$step_fields[4] = $tmp[3];
 		}
 
 		$definition = ObjectModel::getDefinition('Carrier');
 		foreach ($definition['fields'] as $field => $def)
-			if (!in_array($field, $step_fields[$step_number]))
+			if (is_array($step_fields[$step_number]) && !in_array($field, $step_fields[$step_number]))
 				unset($definition['fields'][$field]);
-
 		return $definition;
 	}
 
@@ -927,5 +961,19 @@ class AdminCarrierWizardControllerCore extends AdminController
 				copy($old_tmp_logo, _PS_TMP_IMG_DIR_.'/carrier_mini_'.$new_id.'.jpg');
 			unlink($old_tmp_logo);
 		}
+	}
+
+	public function getActualCurrency()
+	{
+		if ($this->type_context == Shop::CONTEXT_SHOP)
+			Shop::setContext($this->type_context, $this->old_context->shop->id);
+		elseif ($this->type_context == Shop::CONTEXT_GROUP)
+			Shop::setContext($this->type_context, $this->old_context->shop->id_shop_group);
+
+		$currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+
+		Shop::setContext(Shop::CONTEXT_ALL);
+
+		return $currency;
 	}
 }

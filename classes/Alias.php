@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -50,7 +50,7 @@ class AliasCore extends ObjectModel
 
 		if ($id)
 			parent::__construct($id);
-		else if ($alias && Validate::isValidSearch($alias))
+		elseif ($alias && Validate::isValidSearch($alias))
 		{
 			if (!Alias::isFeatureActive())
 			{
@@ -62,12 +62,12 @@ class AliasCore extends ObjectModel
 				$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 				SELECT a.id_alias, a.search, a.alias
 				FROM `'._DB_PREFIX_.'alias` a
-				WHERE `alias` LIKE \''.pSQL($alias).'\' AND `active` = 1');
+				WHERE `alias` = \''.pSQL($alias).'\' AND `active` = 1');
 
 				if ($row)
 				{
-				 	$this->id = (int)($row['id_alias']);
-				 	$this->search = $search ? trim($search) : $row['search'];
+					$this->id = (int)$row['id_alias'];
+					$this->search = $search ? trim($search) : $row['search'];
 					$this->alias = $row['alias'];
 				}
 				else
@@ -79,8 +79,12 @@ class AliasCore extends ObjectModel
 		}
 	}
 
+
 	public function add($autodate = true, $nullValues = false)
 	{
+		$this->alias = Tools::replaceAccentedChars($this->alias);
+		$this->search = Tools::replaceAccentedChars($this->search);
+
 		if (parent::add($autodate, $nullValues))
 		{
 			// Set cache of feature detachable to true
@@ -141,4 +145,3 @@ class AliasCore extends ObjectModel
 		return isset($row['id_alias']);
 	}
 }
-

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -105,13 +105,13 @@ class StateCore extends ObjectModel
 	{
 		if (empty($state))
 			return false;
-		$cache_id = 'State::getNameById_'.pSQL($state);
+		$cache_id = 'State::getIdByName_'.pSQL($state);
 		if (!Cache::isStored($cache_id))
 		{
 			$result = (int)Db::getInstance()->getValue('
 				SELECT `id_state`
 				FROM `'._DB_PREFIX_.'state`
-				WHERE `name` LIKE \''.pSQL($state).'\'
+				WHERE `name` = \''.pSQL($state).'\'
 			');
 			Cache::store($cache_id, $result);
 		}
@@ -126,7 +126,7 @@ class StateCore extends ObjectModel
 	*/
 	public static function getIdByIso($iso_code, $id_country = null)
 	{
-	  	return Db::getInstance()->getValue('
+		return Db::getInstance()->getValue('
 		SELECT `id_state`
 		FROM `'._DB_PREFIX_.'state`
 		WHERE `iso_code` = \''.pSQL($iso_code).'\'
@@ -181,17 +181,17 @@ class StateCore extends ObjectModel
 		return $result;
 	}
 
-    public static function getStatesByIdCountry($id_country)
-    {
-        if (empty($id_country))
-            die(Tools::displayError());
+	public static function getStatesByIdCountry($id_country)
+	{
+		if (empty($id_country))
+			die(Tools::displayError());
 
-        return Db::getInstance()->executeS('
-        SELECT *
-        FROM `'._DB_PREFIX_.'state` s
-        WHERE s.`id_country` = '.(int)$id_country
-        );
-    }
+		return Db::getInstance()->executeS('
+			SELECT *
+			FROM `'._DB_PREFIX_.'state` s
+			WHERE s.`id_country` = '.(int)$id_country
+		);
+	}
 
 	public static function hasCounties($id_state)
 	{
@@ -224,4 +224,3 @@ class StateCore extends ObjectModel
 		');
 	}
 }
-

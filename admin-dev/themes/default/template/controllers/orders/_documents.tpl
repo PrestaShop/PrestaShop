@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -69,21 +69,21 @@
 						<td>
 							{if get_class($document) eq 'OrderInvoice'}
 								{if isset($document->is_delivery)}
-									<a target="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&submitAction=generateDeliverySlipPDF&id_order_invoice={$document->id}">
+									<a class="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateDeliverySlipPDF&amp;id_order_invoice={$document->id}">
 								{else}
-									<a target="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&submitAction=generateInvoicePDF&id_order_invoice={$document->id}">
+									<a class="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateInvoicePDF&amp;id_order_invoice={$document->id}">
 							   {/if}
 							{elseif get_class($document) eq 'OrderSlip'}
-								<a target="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&submitAction=generateOrderSlipPDF&id_order_slip={$document->id}">
+								<a class="_blank" title="{l s='See the document'}" href="{$link->getAdminLink('AdminPdf')|escape:'html':'UTF-8'}&amp;submitAction=generateOrderSlipPDF&amp;id_order_slip={$document->id}">
 							{/if}
 							{if get_class($document) eq 'OrderInvoice'}
 								{if isset($document->is_delivery)}
-									#{Configuration::get('PS_DELIVERY_PREFIX', $current_id_lang, null, $order->id_shop)}{'%06d'|sprintf:$document->delivery_number}
+									{Configuration::get('PS_DELIVERY_PREFIX', $current_id_lang, null, $order->id_shop)}{'%06d'|sprintf:$document->delivery_number}
 								{else}
 									{$document->getInvoiceNumberFormatted($current_id_lang, $order->id_shop)}
 								{/if}
 							{elseif get_class($document) eq 'OrderSlip'}
-								#{Configuration::get('PS_CREDIT_SLIP_PREFIX', $current_id_lang)}{'%06d'|sprintf:$document->id}
+								{Configuration::get('PS_CREDIT_SLIP_PREFIX', $current_id_lang)}{'%06d'|sprintf:$document->id}
 							{/if}
 							</a>
 						</td>
@@ -104,7 +104,7 @@
 								{/if}
 							{/if}
 						{elseif get_class($document) eq 'OrderSlip'}
-							{displayPrice price=$document->amount currency=$currency->id}
+							{displayPrice price=$document->amount+$document->shipping_cost_amount currency=$currency->id}
 						{/if}
 						</td>
 						<td class="text-right document_action">
@@ -112,9 +112,9 @@
 							{if !isset($document->is_delivery)}
 
 								{if $document->getRestPaid()}
-									<a href="#" class="js-set-payment btn btn-default" data-amount="{$document->getRestPaid()}" data-id-invoice="{$document->id}" title="{l s='Set payment form'}">
+									<a href="#formAddPaymentPanel" class="js-set-payment btn btn-default anchor" data-amount="{$document->getRestPaid()}" data-id-invoice="{$document->id}" title="{l s='Set payment form'}">
 										<i class="icon-money"></i>
-										{l s='Enter Payment'}
+										{l s='Enter payment'}
 									</a>
 								{/if}
 
@@ -143,7 +143,7 @@
 									<textarea name="note" id="editNote{$document->id}" class="edit-note textarea-autosize">{$document->note|escape:'html':'UTF-8'}</textarea>
 								</p>
 								<p>
-									<button type="submit" name="submitEditNote" class="btn btn-default"> 
+									<button type="submit" name="submitEditNote" class="btn btn-default">
 										<i class="icon-save"></i>
 										{l s='Save'}
 									</button>
@@ -162,7 +162,7 @@
 					<td colspan="5" class="list-empty">
 						<div class="list-empty-msg">
 							<i class="icon-warning-sign list-empty-icon"></i>
-							{l s='No document are available'}
+							{l s='There is no available document'}
 						</div>
 						{if isset($invoice_management_active) && $invoice_management_active}
 							<a class="btn btn-default" href="{$current_index}&amp;viewOrder&amp;submitGenerateInvoice&amp;id_order={$order->id}{if isset($smarty.get.token)}&amp;token={$smarty.get.token|escape:'html':'UTF-8'}{/if}">

@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -81,13 +81,13 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 		$this->tests_render = array(
 			'required' => array(
 				array(
-					'title' => $this->l('PHP parameters:'),
+					'title' => $this->l('Required PHP parameters'),
 					'success' => 1,
 					'checks' => array(
 						'phpversion' => $this->l('PHP 5.1.2 or later is not enabled'),
 						'upload' => $this->l('Cannot upload files'),
 						'system' => $this->l('Cannot create new files and folders'),
-						'gd' => $this->l('GD Library is not installed'),
+						'gd' => $this->l('GD library is not installed'),
 						'mysql_support' => $this->l('MySQL support is not activated')
 					)
 				),
@@ -95,7 +95,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 					'title' => $this->l('Files'),
 					'success' => 1,
 					'checks' => array(
-						'files' => $this->l('All files are not successfuly uploaded on your server')
+						'files' => $this->l('Not all files were successfully uploaded on your server')
 					)
 				),
 				array(
@@ -119,7 +119,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 			),
 			'optional' => array(
 				array(
-					'title' => $this->l('PHP parameters:'),
+					'title' => $this->l('Recommended PHP parameters'),
 					'success' => $this->tests['optional']['success'],
 					'checks' => array(
 						'fopen' => $this->l('Cannot open external URLs'),

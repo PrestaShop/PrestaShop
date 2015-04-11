@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,7 +19,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
@@ -35,6 +35,11 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 	public $address_supplier;
 	public $context;
 
+	/**
+	 * @param SupplyOrder $supply_order
+	 * @param Smarty $smarty
+	 * @throws PrestaShopException
+	 */
 	public function __construct(SupplyOrder $supply_order, $smarty)
 	{
 		$this->supply_order = $supply_order;
@@ -140,10 +145,10 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 		$shop_name = Configuration::get('PS_SHOP_NAME');
 		$path_logo = $this->getLogo();
 		$width = $height = 0;
-		
+
 		if (!empty($path_logo))
 			list($width, $height) = getimagesize($path_logo);
-		
+
 		$this->smarty->assign(array(
 			'logo_path' => $path_logo,
 			'img_ps_dir' => 'http://'.Tools::getMediaServer(_PS_IMG_)._PS_IMG_,
@@ -187,6 +192,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 	{
 		foreach ($collection as $supply_order_detail)
 		{
+			/** @var SupplyOrderDetail $supply_order_detail */
 			$supply_order_detail->unit_price_te = Tools::ps_round($supply_order_detail->unit_price_te, 2);
 			$supply_order_detail->price_te = Tools::ps_round($supply_order_detail->price_te, 2);
 			$supply_order_detail->discount_rate = Tools::ps_round($supply_order_detail->discount_rate, 2);
@@ -209,4 +215,3 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 		$supply_order->total_ti = Tools::ps_round($supply_order->total_ti, 2);
 	}
 }
-

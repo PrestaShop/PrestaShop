@@ -11,7 +11,7 @@
 		padding-bottom: 20px;
 	}
 	.cart_navigation {
-		margin-bottom: 53px;	
+		margin-bottom: 53px;
 	}
 	.page-heading.step-num {
 		position: relative;
@@ -28,7 +28,7 @@
 			top: -14px;
 		}
 	}
-	.form-group { 
+	.form-group {
 		margin-bottom: 2px;
 			.form-control {
 				max-width: 271px;
@@ -45,7 +45,7 @@
 	.title_block {
 		font-weight: bold;
 		color: $base-text-color;
-		padding: 3px 0 6px;	
+		padding: 3px 0 6px;
 	}
 	.opc-button {
 		padding: 11px 0 0 0;
@@ -60,7 +60,7 @@
 	.opc-add-save {
 		border-top: 1px solid $base-border-color;
 		margin-top: 20px;
-		padding-top: 20px;	
+		padding-top: 20px;
 	}
 	#message {
 		margin-bottom: 35px;
@@ -83,8 +83,8 @@
 	}
 }
 
-#new_account_form .id_state, 
-#new_account_form .dni, 
+#new_account_form .id_state,
+#new_account_form .dni,
 #new_account_form .postcode {
 	display: none;
 }

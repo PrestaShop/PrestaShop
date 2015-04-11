@@ -5,19 +5,19 @@
 			{l s='Name'}
 		</span>
 	</label>
-	<div class="col-lg-8">	
+	<div class="col-lg-8">
 		{foreach from=$languages item=language}
 		{if $languages|count > 1}
 		<div class="row">
 			<div class="translatable-field lang-{$language.id_lang}" {if $language.id_lang != $id_lang_default}style="display:none"{/if}>
 				<div class="col-lg-9">
 		{/if}
-					<input id="name_{$language.id_lang|intval}" type="text"  name="name_{$language.id_lang|intval}" value="{$currentTab->getFieldValue($currentObject, 'name', $language.id_lang|intval)|escape:html:'UTF-8'}">
+					<input id="name_{$language.id_lang|intval}" type="text"  name="name_{$language.id_lang|intval}" value="{$currentTab->getFieldValue($currentObject, 'name', $language.id_lang|intval)|escape:'html':'UTF-8'}">
 		{if $languages|count > 1}
 				</div>
 				<div class="col-lg-2">
 					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-						{$language.iso_code} 
+						{$language.iso_code}
 						<span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu">
@@ -25,7 +25,7 @@
 						<li><a href="javascript:hideOtherLanguage({$language.id_lang});" tabindex="-1">{$language.name}</a></li>
 						{/foreach}
 					</ul>
-				</div>		
+				</div>
 			</div>
 		</div>
 		{/if}
@@ -48,7 +48,7 @@
 <div class="form-group">
 	<label class="control-label col-lg-3">
 		<span class="label-tooltip" data-toggle="tooltip"
-		title="{l s='Caution! The rule will automatically be applied if you leave this field blank.'}">
+		title="{l s='This is the code users should enter to apply the voucher to a cart. Either create your own code or generate one by clicking on "Generate".'}">
 			{l s='Code'}
 		</span>
 	</label>
@@ -59,6 +59,7 @@
 				<a href="javascript:gencode(8);" class="btn btn-default"><i class="icon-random"></i> {l s='Generate'}</a>
 			</span>
 		</div>
+	<span class="help-block">{l s='Caution! If you leave this field blank, the rule will automatically be applied to benefiting customers.'}</span>
 	</div>
 </div>
 

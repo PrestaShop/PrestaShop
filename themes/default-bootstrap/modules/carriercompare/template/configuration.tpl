@@ -1,6 +1,6 @@
 {if isset($display_error)}
 	{if $display_error}
-		<div class="error">{l s='An error occured during form validation.' mod='carriercompare'}</div>
+		<div class="error">{l s='An error occurred during form validation.' mod='carriercompare'}</div>
 	{else}
 		<div class="conf">{l s='Configuration updated' mod='carriercompare'}</div>
 	{/if}
@@ -9,7 +9,7 @@
 <form method="post" action="{$smarty.server.REQUEST_URI|escape:'html':'UTF-8'}">
 	<fieldset>
 		<div class="warn">
-			{l s='This module is only available during the standard five-step checkout process. The carrier list has already been defined for one-page checkout. ' mod='carriercompare'}.
+			{l s='This module is only available during the standard five-step checkout process. The carrier list has already been defined for one-page checkout.' mod='carriercompare'}
 		</div>
 		<legend>{l s='Global Configuration' mod='carriercompare'}</legend>
 		

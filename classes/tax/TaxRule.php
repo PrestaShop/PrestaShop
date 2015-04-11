@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,21 +19,21 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
 class TaxRuleCore extends ObjectModel
 {
-	 public $id_tax_rules_group;
-	 public $id_country;
-	 public $id_state;
-	 public $zipcode_from;
-	 public $zipcode_to;
-	 public $id_tax;
-	 public $behavior;
-	 public $description;
+	public $id_tax_rules_group;
+	public $id_country;
+	public $id_state;
+	public $zipcode_from;
+	public $zipcode_to;
+	public $id_tax;
+	public $behavior;
+	public $description;
 
 	/**
 	 * @see ObjectModel::$definition
@@ -53,31 +53,31 @@ class TaxRuleCore extends ObjectModel
 		),
 	);
 
-    protected $webserviceParameters = array(
-        'fields' => array(
-            'id_tax_rules_group' => array('xlink_resource'=> 'tax_rule_groups'),
-            'id_state' => array('xlink_resource'=> 'states'),
-            'id_country' => array('xlink_resource'=> 'countries')
-        ),
-    );
+	protected $webserviceParameters = array(
+		'fields' => array(
+			'id_tax_rules_group' => array('xlink_resource'=> 'tax_rule_groups'),
+			'id_state' => array('xlink_resource'=> 'states'),
+			'id_country' => array('xlink_resource'=> 'countries')
+		),
+	);
 
-    public static function deleteByGroupId($id_group)
-    {
-        if (empty($id_group))
-            die(Tools::displayError());
+	public static function deleteByGroupId($id_group)
+	{
+		if (empty($id_group))
+			die(Tools::displayError());
 
-        return Db::getInstance()->execute('
-        DELETE FROM `'._DB_PREFIX_.'tax_rule`
-        WHERE `id_tax_rules_group` = '.(int)$id_group
-        );
-    }
+		return Db::getInstance()->execute('
+			DELETE FROM `'._DB_PREFIX_.'tax_rule`
+			WHERE `id_tax_rules_group` = '.(int)$id_group
+		);
+	}
 
-    public static function retrieveById($id_tax_rule)
-    {
-    	return Db::getInstance()->getRow('
-    	SELECT * FROM `'._DB_PREFIX_.'tax_rule`
-    	WHERE `id_tax_rule` = '.(int)$id_tax_rule);
-    }
+	public static function retrieveById($id_tax_rule)
+	{
+		return Db::getInstance()->getRow('
+			SELECT * FROM `'._DB_PREFIX_.'tax_rule`
+			WHERE `id_tax_rule` = '.(int)$id_tax_rule);
+	}
 
 	public static function getTaxRulesByGroupId($id_lang, $id_group)
 	{
@@ -100,14 +100,13 @@ class TaxRuleCore extends ObjectModel
 		);
 	}
 
-    public static function deleteTaxRuleByIdTax($id_tax)
-    {
-        return Db::getInstance()->execute('
-        DELETE FROM `'._DB_PREFIX_.'tax_rule`
-        WHERE `id_tax` = '.(int)$id_tax
-        );
-    }
-
+	public static function deleteTaxRuleByIdTax($id_tax)
+	{
+		return Db::getInstance()->execute('
+			DELETE FROM `'._DB_PREFIX_.'tax_rule`
+			WHERE `id_tax` = '.(int)$id_tax
+		);
+	}
 
 	/**
 	* @deprecated since 1.5
@@ -122,8 +121,8 @@ class TaxRuleCore extends ObjectModel
 	* @param int $id_tax
 	* @return boolean
 	*/
-    public static function isTaxInUse($id_tax)
-    {
+	public static function isTaxInUse($id_tax)
+	{
 		$cache_id = 'TaxRule::isTaxInUse_'.(int)$id_tax;
 		if (!Cache::isStored($cache_id))
 		{
@@ -131,13 +130,13 @@ class TaxRuleCore extends ObjectModel
 			Cache::store($cache_id, $result);
 		}
 		return Cache::retrieve($cache_id);
-    }
+	}
 
 
-	 /**
-	  * @param string $zipcode a range of zipcode (eg: 75000 / 75000-75015)
-	  * @return array an array containing two zipcode ordered by zipcode
-	  */
+	/**
+	 * @param string $zipcode a range of zipcode (eg: 75000 / 75000-75015)
+	 * @return array an array containing two zipcode ordered by zipcode
+	 */
 	public function breakDownZipCode($zip_codes)
 	{
 		$zip_codes = preg_split('/-/', $zip_codes);
@@ -153,13 +152,13 @@ class TaxRuleCore extends ObjectModel
 				$from = $zip_codes[1];
 				$to   = $zip_codes[0];
 			}
-			else if ($zip_codes[0] == $zip_codes[1])
+			elseif ($zip_codes[0] == $zip_codes[1])
 			{
 				$from = $zip_codes[0];
 				$to   = 0;
 			}
 		}
-		else if (count($zip_codes) == 1)
+		elseif (count($zip_codes) == 1)
 		{
 			$from = $zip_codes[0];
 			$to = 0;
@@ -183,4 +182,3 @@ class TaxRuleCore extends ObjectModel
 		);
 	}
 }
-

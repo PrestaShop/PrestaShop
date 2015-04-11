@@ -5,7 +5,7 @@
 	</fields>
 	<entities>
 		<meta id="404">
-			<page>404</page>
+			<page>pagenotfound</page>
 			<configurable>1</configurable>
 		</meta>
 		<meta id="best-sales">
@@ -134,6 +134,10 @@
 		</meta>
 		<meta id="module-bankwire-payment">
 			<page>module-bankwire-payment</page>
+			<configurable>0</configurable>
+		</meta>
+		<meta id="module-cashondelivery-validation">
+			<page>module-cashondelivery-validation</page>
 			<configurable>0</configurable>
 		</meta>
 		<meta id="products-comparison">

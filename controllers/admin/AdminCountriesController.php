@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,33 +19,36 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Country $object
+ */
 class AdminCountriesControllerCore extends AdminController
 {
 	public function __construct()
 	{
 		$this->bootstrap = true;
-	 	$this->table = 'country';
+		$this->table = 'country';
 		$this->className = 'Country';
-	 	$this->lang = true;
+		$this->lang = true;
 		$this->deleted = false;
+		$this->_defaultOrderBy = 'name';
+		$this->_defaultOrderWay = 'ASC';
 
 		$this->explicitSelect = true;
 		$this->addRowAction('edit');
 
 		$this->context = Context::getContext();
-		
+
 		$this->bulk_actions = array(
 			'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
-			'enableSelection' => array('text' => $this->l('Enable selection')),
-			'disableSelection' => array('text' => $this->l('Disable selection')),
 			'affectzone' => array('text' => $this->l('Assign to a new zone'))
 		);
-		
+
 		$this->fieldImageSettings = array(
 			'name' => 'logo',
 			'dir' => 'st'
@@ -56,7 +59,7 @@ class AdminCountriesControllerCore extends AdminController
 				'title' =>	$this->l('Country options'),
 				'fields' =>	array(
 					'PS_RESTRICT_DELIVERED_COUNTRIES' => array(
-						'title' => $this->l('Restrict country selections in Front Office to those covered by active carriers'),
+						'title' => $this->l('Restrict country selections in front office to those covered by active carriers'),
 						'cast' => 'intval',
 						'type' => 'bool',
 						'default' => '0'
@@ -65,7 +68,7 @@ class AdminCountriesControllerCore extends AdminController
 				'submit' => array('title' => $this->l('Save'))
 			)
 		);
-		
+
 		$zones_array = array();
 		$this->zones = Zone::getZones();
 		foreach ($this->zones as $zone)
@@ -98,7 +101,7 @@ class AdminCountriesControllerCore extends AdminController
 				'list' => $zones_array,
 				'filter_key' => 'z!id_zone',
 				'filter_type' => 'int',
-				'order_key' => 'zone'
+				'order_key' => 'z!name'
 			),
 			'active' => array(
 				'title' => $this->l('Enabled'),
@@ -139,11 +142,12 @@ class AdminCountriesControllerCore extends AdminController
 
 	public function renderList()
 	{
-	 	$this->_select = 'z.`name` AS zone';
-	 	$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = a.`id_zone`)';
+		$this->_select = 'z.`name` AS zone';
+		$this->_join = 'LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = a.`id_zone`)';
+		$this->_use_found_rows = false;
 
 		$this->tpl_list_vars['zones'] = Zone::getZones();
-	 	return parent::renderList();
+		return parent::renderList();
 	}
 
 	public function renderForm()
@@ -183,7 +187,7 @@ class AdminCountriesControllerCore extends AdminController
 					'name' => 'name',
 					'lang' => true,
 					'required' => true,
-					'hint' => $this->l('Country name').' - '.$this->l('Invalid characters:'). ' &lt;&gt;;=#{} '
+					'hint' => $this->l('Country name').' - '.$this->l('Invalid characters:').' &lt;&gt;;=#{} '
 				),
 				array(
 					'type' => 'text',
@@ -192,8 +196,8 @@ class AdminCountriesControllerCore extends AdminController
 					'maxlength' => 3,
 					'class' => 'uppercase',
 					'required' => true,
-					'hint' => $this->l('Two -- or three -- letter ISO code (e.g. U.S. for United States).')
-					 /* TO DO - ajouter les liens dans le hint ? */
+					'hint' => $this->l('Two -- or three -- letter ISO code (e.g. "us for United States).')
+					/* @TODO - ajouter les liens dans le hint ? */
 					/*'desc' => $this->l('Two -- or three -- letter ISO code (e.g. U.S. for United States)').'.
 							<a href="http://www.iso.org/iso/country_codes/iso_3166_code_lists/country_names_and_code_elements.htm" target="_blank">'.
 								$this->l('Official list here').'
@@ -270,25 +274,6 @@ class AdminCountriesControllerCore extends AdminController
 				),
 				array(
 					'type' => 'switch',
-					'label' => $this->l('Address Standardization'),
-					'name' => 'standardization',
-					'required' => false,
-					'is_bool' => true,
-					'values' => array(
-						array(
-							'id' => 'standardization_on',
-							'value' => 1,
-							'label' => $this->l('Enabled')
-						),
-						array(
-							'id' => 'standardization_off',
-							'value' => 0,
-							'label' => $this->l('Disabled')
-						)
-					),
-				),					
-				array(
-					'type' => 'switch',
 					'label' => $this->l('Active'),
 					'name' => 'active',
 					'required' => false,
@@ -306,7 +291,7 @@ class AdminCountriesControllerCore extends AdminController
 						)
 					),
 					'hint' => $this->l('Display this country to your customers (the selected country will always be displayed in the Back Office).')
-				),			
+				),
 				array(
 					'type' => 'switch',
 					'label' => $this->l('Contains states'),
@@ -362,7 +347,7 @@ class AdminCountriesControllerCore extends AdminController
 					)
 				)
 			)
-			
+
 		);
 
 		if (Shop::isFeatureActive())
@@ -377,15 +362,13 @@ class AdminCountriesControllerCore extends AdminController
 		$this->fields_form['submit'] = array(
 			'title' => $this->l('Save')
 		);
-		
-		if ($this->object->iso_code == 'US')
-			$this->object->standardization = Configuration::get('PS_TAASC');
-		
+
 		return parent::renderForm();
 	}
-	
+
 	public function processUpdate()
 	{
+		/** @var Country $country */
 		$country = $this->loadObject();
 		if (Validate::isLoadedObject($country) && Tools::getValue('id_zone'))
 		{
@@ -397,11 +380,11 @@ class AdminCountriesControllerCore extends AdminController
 				$ids = array();
 				foreach ($results as $res)
 					$ids[] = (int)$res['id_state'];
-				
+
 				if (count($ids))
 					$res = Db::getInstance()->execute(
-							'UPDATE `'._DB_PREFIX_.'state` 
-							SET `id_zone` = '.(int)Tools::getValue('id_zone').' 
+							'UPDATE `'._DB_PREFIX_.'state`
+							SET `id_zone` = '.(int)Tools::getValue('id_zone').'
 							WHERE `id_state` IN ('.implode(',', $ids).')');
 			}
 		}
@@ -415,64 +398,59 @@ class AdminCountriesControllerCore extends AdminController
 			if (Validate::isLanguageIsoCode(Tools::getValue('iso_code')) && Country::getByIso(Tools::getValue('iso_code')))
 				$this->errors[] = Tools::displayError('This ISO code already exists.You cannot create two countries with the same ISO code.');
 		}
-		else if (Validate::isLanguageIsoCode(Tools::getValue('iso_code')))
+		elseif (Validate::isLanguageIsoCode(Tools::getValue('iso_code')))
 		{
 			$id_country = Country::getByIso(Tools::getValue('iso_code'));
 			if (!is_null($id_country) && $id_country != Tools::getValue('id_'.$this->table))
 				$this->errors[] = Tools::displayError('This ISO code already exists.You cannot create two countries with the same ISO code.');
 		}
-		
-		if (Tools::isSubmit('standardization'))
-			Configuration::updateValue('PS_TAASC', (bool)Tools::getValue('standardization', false));	
 
 		return parent::postProcess();
 	}
-	
+
 	public function processSave()
 	{
+		if (!$this->id_object)
+			$tmp_addr_format = new AddressFormat();
+		else
+			$tmp_addr_format = new AddressFormat($this->id_object);
+
+		$tmp_addr_format->format = Tools::getValue('address_layout');
+
+		if (!$tmp_addr_format->checkFormatFields())
+		{
+			$error_list = $tmp_addr_format->getErrorList();
+			foreach ($error_list as $num_error => $error)
+				$this->errors[] = $error;
+		}
+		if (strlen($tmp_addr_format->format) <= 0)
+			$this->errors[] = $this->l('Address format invalid');
+
+		$country = parent::processSave();
+
 		if (!count($this->errors))
 		{
-			$id_country = Tools::getValue('id_country');
-			$tmp_addr_format = new AddressFormat($id_country);
+			if (is_null($tmp_addr_format->id_country))
+				$tmp_addr_format->id_country = $country->id;
 
-			$save_status = false;
-
-			$is_new = is_null($tmp_addr_format->id_country);
-			if ($is_new)
-			{
-				$tmp_addr_format = new AddressFormat();
-				$tmp_addr_format->id_country = $id_country;
-			}
-
-			$tmp_addr_format->format = Tools::getValue('address_layout');
-			if (strlen($tmp_addr_format->format) > 0)
-			{
-				if ($tmp_addr_format->checkFormatFields())
-					$address_format_result = $tmp_addr_format->save();
-				else
-				{
-					$error_list = $tmp_addr_format->getErrorList();
-					foreach ($error_list as $num_error => $error)
-						$this->errors[] = $error;
-				}
-
-				if (!isset($address_format_result) || !$address_format_result)
-					$this->errors[] = Tools::displayError('Invalid address layout '.Db::getInstance()->getMsgError());
-			}
-			unset($tmp_addr_format);
+			if (!$tmp_addr_format->save())
+				$this->errors[] = Tools::displayError('Invalid address layout '.Db::getInstance()->getMsgError());
 		}
 
-		return parent::processSave();
+		return $country;
 	}
-	
+
 	public function processStatus()
 	{
 		parent::processStatus();
-		if (Validate::isLoadedObject($object = $this->loadObject()) &&  $object->active == 1)
-			return Country::addModuleRestrictions(array(), array(array('id_country' => $object->id)), array());				
+
+		/** @var Country $object */
+		if (Validate::isLoadedObject($object = $this->loadObject()) && $object->active == 1)
+			return Country::addModuleRestrictions(array(), array(array('id_country' => $object->id)), array());
+
 		return false;
 	}
-	
+
 	public function processBulkStatusSelection($way)
 	{
 		if (is_array($this->boxes) && !empty($this->boxes))
@@ -498,7 +476,6 @@ class AdminCountriesControllerCore extends AdminController
 		$this->l('Address');
 		*/
 
-
 		$html_tabnav = '<ul class="nav nav-tabs" id="custom-address-fields">';
 		$html_tabcontent = '<div class="tab-content" >';
 
@@ -510,11 +487,12 @@ class AdminCountriesControllerCore extends AdminController
 		$class_tab_active = 'active';
 		foreach ($object_list as $class_name => &$object)
 		{
-			if ($i != 0){ $class_tab_active = ''; }
+			if ($i != 0)
+				$class_tab_active = '';
 			$fields = array();
-			$html_tabnav .= '<li class="'.$class_tab_active.'"">
+			$html_tabnav .= '<li'.($class_tab_active ? ' class="'.$class_tab_active.'"' : '').'>
 				<a href="#availableListFieldsFor_'.$class_name.'"><i class="icon-caret-down"></i>&nbsp;'.Translate::getAdminTranslation($class_name, 'AdminCountries').'</a></li>';
-			
+
 			foreach (AddressFormat::getValidateFields($class_name) as $name)
 				$fields[] = '<a href="javascript:void(0);" class="addPattern btn btn-default btn-xs" id="'.($class_name == 'Address' ? $name : $class_name.':'.$name).'">
 					<i class="icon-plus-sign"></i>&nbsp;'.ObjectModel::displayFieldName($name, $class_name).'</a>';

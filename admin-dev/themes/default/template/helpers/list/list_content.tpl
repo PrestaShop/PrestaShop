@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,21 +18,17 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+{capture name='tr_count'}{counter name='tr_count'}{/capture}
 <tbody>
 {if count($list)}
 {foreach $list AS $index => $tr}
-	<tr
-	{if $position_identifier}id="tr_{$position_group_identifier}_{$tr.$identifier}_{if isset($tr.position['position'])}{$tr.position['position']}{else}0{/if}"{/if}
-	class="{if isset($tr.class)} {$tr.class}{/if} {if $tr@iteration is odd by 1}odd{/if}"
-	{if isset($tr.color) && $color_on_bg}style="background-color: {$tr.color}"{/if}
-
-	>
-		<td class="text-center">
-			{if $bulk_actions && $has_bulk_actions}
+	<tr{if $position_identifier} id="tr_{$position_group_identifier}_{$tr.$identifier}_{if isset($tr.position['position'])}{$tr.position['position']}{else}0{/if}"{/if} class="{if isset($tr.class)}{$tr.class}{/if} {if $tr@iteration is odd by 1}odd{/if}"{if isset($tr.color) && $color_on_bg} style="background-color: {$tr.color}"{/if} >
+		{if $bulk_actions && $has_bulk_actions}
+			<td class="row-selector text-center">
 				{if isset($list_skip_actions.delete)}
 					{if !in_array($tr.$identifier, $list_skip_actions.delete)}
 						<input type="checkbox" name="{$list_id}Box[]" value="{$tr.$identifier}"{if isset($checked_boxes) && is_array($checked_boxes) && in_array({$tr.$identifier}, $checked_boxes)} checked="checked"{/if} class="noborder" />
@@ -40,20 +36,20 @@
 				{else}
 					<input type="checkbox" name="{$list_id}Box[]" value="{$tr.$identifier}"{if isset($checked_boxes) && is_array($checked_boxes) && in_array({$tr.$identifier}, $checked_boxes)} checked="checked"{/if} class="noborder" />
 				{/if}
-			{/if}
-		</td>
+			</td>
+		{/if}
 		{foreach $fields_display AS $key => $params}
 			{block name="open_td"}
 				<td
 					{if isset($params.position)}
-						id="td_{if !empty($position_group_identifier)}{$position_group_identifier}{else}0{/if}_{$tr.$identifier}"
+						id="td_{if !empty($position_group_identifier)}{$position_group_identifier}{else}0{/if}_{$tr.$identifier}{if $smarty.capture.tr_count > 1}_{($smarty.capture.tr_count - 1)|intval}{/if}"
 					{/if}
-					class="{if !$no_link}pointer{/if}
+					class="{strip}{if !$no_link}pointer{/if}
 					{if isset($params.position) && $order_by == 'position'  && $order_way != 'DESC'} dragHandle{/if}
 					{if isset($params.class)} {$params.class}{/if}
-					{if isset($params.align)} {$params.align}{/if}"
+					{if isset($params.align)} {$params.align}{/if}{/strip}"
 					{if (!isset($params.position) && !$no_link && !isset($params.remove_onclick))}
-						onclick="document.location = '{$current_index}&{$identifier}={$tr.$identifier}{if $view}&view{else}&update{/if}{$table}&token={$token}'">
+						onclick="document.location = '{$current_index|escape:'html':'UTF-8'}&amp;{$identifier|escape:'html':'UTF-8'}={$tr.$identifier|escape:'html':'UTF-8'}{if $view}&amp;view{else}&amp;update{/if}{$table|escape:'html':'UTF-8'}{if $page > 1}&amp;page={$page|intval}{/if}&amp;token={$token|escape:'html':'UTF-8'}'">
 					{else}
 					>
 				{/if}
@@ -80,15 +76,7 @@
 						{if $order_by == 'position' && $order_way != 'DESC'}
 							<div class="dragGroup">
 								<div class="positions">
-									{$tr.$key.position}
-								</div>
-								<div class="btn-group">
-									<a class="btn btn-default btn-xs" href="{$tr.$key.position_url_down}" {if !($tr.$key.position != $positions[count($positions) - 1])}disabled{/if}>
-										<i class="icon-chevron-{if $order_way == 'ASC'}down{else}up{/if}"></i>
-									</a>
-									<a class="btn btn-default btn-xs" href="{$tr.$key.position_url_up}" {if !($tr.$key.position != $positions.0)}disabled{/if}>
-										<i class="icon-chevron-{if $order_way == 'ASC'}up{else}down{/if}"></i>
-									</a>
+									{$tr.$key.position + 1}
 								</div>
 							</div>
 						{else}
@@ -103,8 +91,6 @@
 							{else}
 								<img src="../img/admin/{$tr[$key]['src']}" alt="{$tr[$key]['alt']}" title="{$tr[$key]['alt']}" />
 							{/if}
-                        {else}
-                            <i class="{$tr[$key]}"></i>
 						{/if}
 					{elseif isset($params.type) && $params.type == 'price'}
 						{displayPrice price=$tr.$key}
@@ -171,13 +157,16 @@
 					{if $key == 0}
 						{assign var='action' value=$action}
 					{/if}
+					{if $action == 'delete' && $actions|@count > 2}
+						{$compiled_actions[] = 'divider'}
+					{/if}
 					{$compiled_actions[] = $tr.$action}
 				{/if}
 			{/foreach}
 			{if $compiled_actions|count > 0}
 				{if $compiled_actions|count > 1}<div class="btn-group-action">{/if}
 				<div class="btn-group pull-right">
-					{$compiled_actions[0]|regex_replace:'/class\s*=\s*"(\w*)"/':'class="$1 btn btn-default"'}
+					{$compiled_actions[0]}
 					{if $compiled_actions|count > 1}
 					<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 						<i class="icon-caret-down"></i>&nbsp;
@@ -185,8 +174,8 @@
 						<ul class="dropdown-menu">
 						{foreach $compiled_actions AS $key => $action}
 							{if $key != 0}
-							<li>
-								{$action}
+							<li {if $action == 'divider'}class="divider"{/if}>
+								{if $action != 'divider'}{$action}{/if}
 							</li>
 							{/if}
 						{/foreach}
@@ -201,7 +190,7 @@
 {/foreach}
 {else}
 	<tr>
-		<td class="list-empty" colspan="{count($fields_display) + 2}">
+		<td class="list-empty" colspan="{count($fields_display)+1}">
 			<div class="list-empty-msg">
 				<i class="icon-warning-sign list-empty-icon"></i>
 				{l s='No records found'}

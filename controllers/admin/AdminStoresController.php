@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,11 +19,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Store $object
+ */
 class AdminStoresControllerCore extends AdminController
 {
 	public function __construct()
@@ -67,8 +70,8 @@ class AdminStoresControllerCore extends AdminController
 
 		$this->fields_options = array(
 			'general' => array(
-				'title' =>	$this->l('Parameters'),
-				'fields' =>	array(
+				'title' => $this->l('Parameters'),
+				'fields' => array(
 					'PS_STORES_DISPLAY_FOOTER' => array(
 						'title' => $this->l('Display in the footer'),
 						'hint' => $this->l('Display a link to the store locator in the footer.'),
@@ -128,7 +131,7 @@ class AdminStoresControllerCore extends AdminController
 
 		if ($this->display == 'options')
 			unset($this->toolbar_btn['new']);
-		else if ($this->display != 'add' && $this->display != 'edit')
+		elseif ($this->display != 'add' && $this->display != 'edit')
 			unset($this->toolbar_btn['save']);
 	}
 
@@ -140,7 +143,7 @@ class AdminStoresControllerCore extends AdminController
 				'desc' => $this->l('Add new store', null, null, false),
 				'icon' => 'process-icon-new'
 			);
-		
+
 		parent::initPageHeaderToolbar();
 	}
 
@@ -174,6 +177,12 @@ class AdminStoresControllerCore extends AdminController
 			$this->imageType, true, true);
 		$image_size = file_exists($image) ? filesize($image) / 1000 : false;
 
+		$tmp_addr = new Address();
+		$res = $tmp_addr->getFieldsRequiredDatabase();
+		$required_fields = array();
+		foreach ($res as $row)
+			$required_fields[(int)$row['id_required_field']] = $row['field_name'];
+
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Stores'),
@@ -205,7 +214,7 @@ class AdminStoresControllerCore extends AdminController
 					'type' => 'text',
 					'label' => $this->l('Zip/postal Code'),
 					'name' => 'postcode',
-					'required' => true
+					'required' => in_array('postcode', $required_fields)
 				),
 				array(
 					'type' => 'text',
@@ -302,7 +311,7 @@ class AdminStoresControllerCore extends AdminController
 				'title' => $this->l('Save'),
 			)
 		);
-		
+
 		if (Shop::isFeatureActive())
 		{
 			$this->fields_form['input'][] = array(
@@ -345,8 +354,8 @@ class AdminStoresControllerCore extends AdminController
 					$_POST[$kp] = trim($vp);
 
 			/* Rewrite latitude and longitude to 8 digits */
-			$_POST['latitude'] = number_format($_POST['latitude'], 8);
-			$_POST['longitude'] = number_format($_POST['longitude'], 8);
+			$_POST['latitude'] = number_format((float)$_POST['latitude'], 8);
+			$_POST['longitude'] = number_format((float)$_POST['longitude'], 8);
 
 			/* If the selected country does not contain states */
 			$id_state = (int)Tools::getValue('id_state');
@@ -365,8 +374,8 @@ class AdminStoresControllerCore extends AdminController
 
 			if (empty($latitude) || empty($longitude))
 			   $this->errors[] = Tools::displayError('Latitude and longitude are required.');
-			
-			$postcode = Tools::getValue('postcode');		
+
+			$postcode = Tools::getValue('postcode');
 			/* Check zip code format */
 			if ($country->zip_code_format && !$country->checkZipCode($postcode))
 				$this->errors[] = Tools::displayError('Your Zip/postal code is incorrect.').'<br />'.Tools::displayError('It must be entered as follows:').' '.str_replace('C', $country->iso_code, str_replace('N', '0', str_replace('L', 'A', $country->zip_code_format)));
@@ -423,7 +432,8 @@ class AdminStoresControllerCore extends AdminController
 				'hint' => $this->l('Displayed in emails and page titles.'),
 				'validation' => 'isGenericName',
 				'required' => true,
-				'type' => 'text'
+				'type' => 'text',
+				'no_escape' => true,
 			),
 			'PS_SHOP_EMAIL' => array('title' => $this->l('Shop email'),
 				'hint' => $this->l('Displayed in emails sent to customers.'),
@@ -432,7 +442,7 @@ class AdminStoresControllerCore extends AdminController
 				'type' => 'text'
 			),
 			'PS_SHOP_DETAILS' => array(
-				'title' => $this->l('Registration'),
+				'title' => $this->l('Registration number'),
 				'hint' => $this->l('Shop registration information (e.g. SIRET or RCS).'),
 				'validation' => 'isGenericName',
 				'type' => 'textarea',
@@ -495,7 +505,7 @@ class AdminStoresControllerCore extends AdminController
 	{
 		// You cannot do that, because the fields must be sorted for the country you've selected.
 		// Simple example: the current country is France, where we don't display the state. You choose "US" as a country in the form. The state is not dsplayed at the right place...
-		
+
 		// $associatedOrderKey = array(
 			// 'PS_SHOP_NAME' => 'company',
 			// 'PS_SHOP_ADDR1' => 'address1',
@@ -534,7 +544,7 @@ class AdminStoresControllerCore extends AdminController
 						AND `id_state` = '.(int)Tools::getValue('PS_SHOP_STATE_ID');
 			$isStateOk = Db::getInstance()->getValue($sql);
 			if ($isStateOk != 1)
-				$this->errors[] = Tools::displayError('The state specified is not located in this country.');
+				$this->errors[] = Tools::displayError('The specified state is not located in this country.');
 		}
 	}
 

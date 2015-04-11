@@ -1,5 +1,5 @@
 {*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -18,7 +18,7 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
@@ -28,13 +28,13 @@
 <div class="panel">
 	<h3><i class="icon-cogs"></i> {l s='Filters'}</h3>
 	<div class="filter-stock-extended">
-		<form id="supply_orders" type="get" class="form-horizontal">
+		<form id="supply_orders" method="get" class="form-horizontal">
 			<input type="hidden" name="controller" value="AdminSupplyOrders" />
-			<input type="hidden" name="token" value="{$token}" />
+			<input type="hidden" name="token" value="{$token|escape:'html':'UTF-8'}" />
 			<div class="form-group">
 				<label for="id_warehouse" class="control-label col-lg-3">{l s='Filter by warehouse:'}</label>
 				<div class="col-lg-9">
-					<select name="id_warehouse" onChange="$('#supply_orders').submit();">
+					<select id="id_warehouse" name="id_warehouse" onchange="$('#supply_orders').submit();">
 					{foreach from=$warehouses key=k item=i}
 						<option {if $i.id_warehouse == $current_warehouse} selected="selected"{/if} value="{$i.id_warehouse}">{$i.name}</option>
 					{/foreach}
@@ -44,7 +44,7 @@
 			<div class="form-group">
 				<div class="checkbox col-lg-9 col-lg-push-3">
 					<label for="filter_status">
-						<input id="filter_status" type="checkbox" name="filter_status" class="noborder" onChange="$('#supply_orders').submit();" {if $filter_status == 1}value="on" checked{/if} /> {l s='Choose not to display completed/canceled orders:'}
+						<input id="filter_status" type="checkbox" name="filter_status" class="noborder" onchange="$('#supply_orders').submit();" {if $filter_status == 1}value="on" checked{/if} /> {l s='Choose not to display completed/canceled orders:'}
 					</label>
 				</div>
 			</div>

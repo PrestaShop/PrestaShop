@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,22 +19,25 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property Scene $object
+ */
 class AdminScenesControllerCore extends AdminController
 {
-	public $bootstrap = true ;
+	public $bootstrap = true;
 
 	public function __construct()
 	{
-	 	$this->table = 'scene';
+		$this->table = 'scene';
 		$this->className = 'Scene';
-	 	$this->lang = true;
-	 	$this->addRowAction('edit');
-	 	$this->addRowAction('delete');
+		$this->lang = true;
+		$this->addRowAction('edit');
+		$this->addRowAction('delete');
 
 		$this->identifier = 'id_scene';
 		$this->fieldImageSettings = array(
@@ -90,7 +93,7 @@ class AdminScenesControllerCore extends AdminController
 						(int)$image_type['width'],
 						(int)$image_type['height']);
 				}
-				elseif (isset($_FILES['image']) AND isset($_FILES['image']['tmp_name']) AND !$_FILES['image']['error'])
+				elseif (isset($_FILES['image']) && isset($_FILES['image']['tmp_name']) && !$_FILES['image']['error'])
 					ImageManager::resize(
 						$base_img_path,
 						_PS_SCENE_IMG_DIR_.$obj->id.'-'.stripslashes($image_type['name']).'.jpg',
@@ -106,6 +109,7 @@ class AdminScenesControllerCore extends AdminController
 	{
 		$this->initFieldsForm();
 
+		/** @var Scene $obj */
 		if (!($obj = $this->loadObject(true)))
 			return;
 
@@ -216,7 +220,7 @@ class AdminScenesControllerCore extends AdminController
 		{
 			$this->addJqueryPlugin('autocomplete');
 			$this->addJqueryPlugin('imgareaselect');
-			$this->addJs(_PS_JS_DIR_.'admin-scene-cropping.js' );
+			$this->addJs(_PS_JS_DIR_.'admin/scenes.js' );
 			$image_to_map_desc .= '<div class="panel panel-default"><span class="thumbnail row-margin-bottom"><img id="large_scene_image" alt="" src="'.
 				_THEME_SCENE_DIR_.$obj->id.'-scene_default.jpg?rand='.(int)rand().'" /></span>';
 
@@ -260,7 +264,7 @@ class AdminScenesControllerCore extends AdminController
 			if (Tools::isSubmit('categories'))
 				foreach (Tools::getValue('categories') as $row)
 					$selected_cat[] = $row;
-			else if ($obj->id)
+			elseif ($obj->id)
 				foreach (Scene::getIndexedCategories($obj->id) as $row)
 					$selected_cat[] = $row['id_category'];
 
@@ -310,7 +314,7 @@ class AdminScenesControllerCore extends AdminController
 			if (!Tools::isSubmit('zones') || !count(Tools::getValue('zones')))
 				$this->errors[] = Tools::displayError('You should create at least one zone.');
 		}
-		
+
 		if (Tools::isSubmit('delete'.$this->table))
 		{
 			if (Validate::isLoadedObject($object = $this->loadObject()))
@@ -321,5 +325,3 @@ class AdminScenesControllerCore extends AdminController
 		parent::postProcess();
 	}
 }
-
-

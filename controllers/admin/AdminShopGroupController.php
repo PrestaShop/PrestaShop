@@ -1,6 +1,6 @@
 <?php
 /*
-* 2007-2014 PrestaShop
+* 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
@@ -19,11 +19,14 @@
 * needs please refer to http://www.prestashop.com for more information.
 *
 *  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2014 PrestaShop SA
+*  @copyright  2007-2015 PrestaShop SA
 *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+/**
+ * @property ShopGroup $object
+ */
 class AdminShopGroupControllerCore extends AdminController
 {
 	public function __construct()
@@ -94,7 +97,7 @@ class AdminShopGroupControllerCore extends AdminController
 	public function initContent()
 	{
 		parent::initContent();
-		
+
 		$this->addJqueryPlugin('cooki-plugin');
 		$data = Shop::getTree();
 
@@ -115,7 +118,7 @@ class AdminShopGroupControllerCore extends AdminController
 				}
 			}
 
-		$shops_tree = new HelperTreeShops('shops-tree', 'Multistore tree');
+		$shops_tree = new HelperTreeShops('shops-tree', $this->l('Multistore tree'));
 		$shops_tree->setNodeFolderTemplate('shop_tree_node_folder.tpl')->setNodeItemTemplate('shop_tree_node_item.tpl')
 			->setHeaderTemplate('shop_tree_header.tpl')->setActions(array(
 				new TreeToolbarLink(
@@ -154,20 +157,21 @@ class AdminShopGroupControllerCore extends AdminController
 		{
 			$this->page_header_toolbar_btn['new'] = array(
 				'desc' => $this->l('Add a new shop group'),
-				'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token,
+				'href' => self::$currentIndex.'&add'.$this->table.'&token='.$this->token
 			);
 			$this->page_header_toolbar_btn['new_2'] = array(
 				'desc' => $this->l('Add a new shop'),
 				'href' => $this->context->link->getAdminLink('AdminShop').'&addshop',
-				'imgclass' => 'new'
+				'imgclass' => 'new_2',
+				'icon' => 'process-icon-new'
 			);
 		}
 	}
-	
+
 	public function initToolbar()
 	{
 		parent::initToolbar();
-		
+
 		if ($this->display != 'add' && $this->display != 'edit')
 			$this->toolbar_btn['new'] = array(
 				'desc' => $this->l('Add a new shop group'),
@@ -319,10 +323,12 @@ class AdminShopGroupControllerCore extends AdminController
 	{
 		if (Tools::isSubmit('delete'.$this->table) || Tools::isSubmit('status') || Tools::isSubmit('status'.$this->table))
 		{
+			/** @var ShopGroup $object */
 			$object = $this->loadObject();
+
 			if (ShopGroup::getTotalShopGroup() == 1)
 				$this->errors[] = Tools::displayError('You cannot delete or disable the last shop group.');
-			else if ($object->haveShops())
+			elseif ($object->haveShops())
 				$this->errors[] = Tools::displayError('You cannot delete or disable a shop group in use.');
 
 			if (count($this->errors))
@@ -359,5 +365,3 @@ class AdminShopGroupControllerCore extends AdminController
 		}
 	}
 }
-
-
