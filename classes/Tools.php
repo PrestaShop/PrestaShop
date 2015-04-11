@@ -2078,7 +2078,8 @@ class ToolsCore
 		{
 			if (!preg_match('/^(?:https?:)?\/\//iUs', $matches[2]))
 			{
-				$tmp = dirname($current_css_file).'/'.$matches[2];
+				$sep = '/';
+				$tmp = substr($matches[2], 0, 1) == $sep ? $matches[2] : dirname($current_css_file).$sep.ltrim($matches[2], $sep);
 				$server = Tools::getMediaServer($tmp);
 				return $matches[1].$protocol_link.$server.$tmp;
 			}
