@@ -1333,6 +1333,10 @@ class CartCore extends ObjectModel
 	*/
 	public function getOrderTotal($with_taxes = true, $type = Cart::BOTH, $products = null, $id_carrier = null, $use_cache = true)
 	{
+		// Dependencies
+		$address_factory = Adapter_ServiceLocator::get('Adapter_AddressFactory');
+		$price_calculator = Adapter_ServiceLocator::get('Adapter_ProductPriceCalculator');
+
 		$ps_tax_address_type = Configuration::get('PS_TAX_ADDRESS_TYPE');
 		$ps_use_ecotax = Configuration::get('PS_USE_ECOTAX');
 		$ps_round_type = Configuration::get('PS_ROUND_TYPE');
@@ -1424,8 +1428,6 @@ class CartCore extends ObjectModel
 			if (!Address::addressExists($id_address))
 				$id_address = null;
 
-			$price_calculator = Adapter_ServiceLocator::get('Adapter_ProductPriceCalculator');
-
 			$price = $price_calculator->getProductPrice(
 				(int)$product['id_product'],
 				false,
@@ -1454,7 +1456,7 @@ class CartCore extends ObjectModel
 			else
 				$ecotax = 0;
 
-			$address = Address::initialize($id_address, true);
+			$address = $address_factory->findOrCreate($id_address, true);
 
 			if ($with_taxes)
 			{
@@ -1521,7 +1523,7 @@ class CartCore extends ObjectModel
 			if ($with_taxes && $ps_round_type == Order::ROUND_TOTAL)
 			{
 				$tmp = explode('_', $key);
-				$address = Address::initialize((int)$tmp[1], true);
+				$address = $address_factory->findOrCreate((int)$tmp[1], true);
 				$tax_calculator = TaxManagerFactory::getManager($address, $tmp[0])->getTaxCalculator();
 				$order_total += Tools::ps_round($price + $tax_calculator->getTaxesTotalAmount($price), _PS_PRICE_COMPUTE_PRECISION_);
 			}
