@@ -1424,7 +1424,9 @@ class CartCore extends ObjectModel
 			if (!Address::addressExists($id_address))
 				$id_address = null;
 
-			$price = Product::getPriceStatic(
+			$price_calculator = Adapter_ServiceLocator::get('Adapter_ProductPriceCalculator');
+
+			$price = $price_calculator->getProductPrice(
 				(int)$product['id_product'],
 				false,
 				(int)$product['id_product_attribute'],
