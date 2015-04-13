@@ -42,6 +42,8 @@
     #categories_block_top .sf-menu .category_thumb {
       display: none; }
 
+#categories_block_left h2 {
+  margin-top: 0px}
 #categories_block_left .block_content > ul {
   border-top: 1px solid #d6d4d4; }
 #categories_block_left li {
