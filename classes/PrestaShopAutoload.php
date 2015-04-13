@@ -134,6 +134,7 @@ class PrestaShopAutoload
 		$classes = array_merge(
 			$this->getClassesFromDir('classes/'),
 			$this->getClassesFromDir('controllers/'),
+			$this->getClassesFromDir('Adapter/'),
 			$this->getClassesFromDir('Core/')
 		);
 
