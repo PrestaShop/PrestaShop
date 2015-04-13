@@ -1627,7 +1627,7 @@ class FrontControllerCore extends Controller
 		Tools::enableCache();
 		foreach ($products as &$product)
 		{
-			$tpl = $this->context->smarty->createTemplate(_PS_THEME_DIR_.'product-list-colors.tpl');
+			$tpl = $this->context->smarty->createTemplate(_PS_THEME_DIR_.'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']));
 			if (isset($colors[$product['id_product']]))
 				$tpl->assign(array(
 					'id_product'  => $product['id_product'],
