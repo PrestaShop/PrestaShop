@@ -133,7 +133,8 @@ class PrestaShopAutoload
 	{
 		$classes = array_merge(
 			$this->getClassesFromDir('classes/'),
-			$this->getClassesFromDir('controllers/')
+			$this->getClassesFromDir('controllers/'),
+			$this->getClassesFromDir('Core/')
 		);
 
 		if ($this->_include_override_path)
