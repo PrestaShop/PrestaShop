@@ -31,8 +31,6 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
 
 	public function setUpCommonStaticMocks()
 	{
-		$db_mock = new DbMock();
-		$cache_mock = new CacheMock();
 		$this->database = $this->getMockBuilder('PrestaShop\PrestaShop\Tests\Helper\Mocks\DbMock')->getMock();
 		Db::setInstanceForTesting($this->database);
 
