@@ -71,7 +71,7 @@ class Core_Foundation_IoC_Container
             throw new Core_Foundation_IoC_Exception(sprintf('This doesn\'t seem to be a class name: `%s`.', $className));
         }
 
-        $args = [];
+        $args = array();
 
         if ($refl->isAbstract()) {
             throw new Core_Foundation_IoC_Exception(sprintf('Cannot build abstract class: `%s`.', $className));
@@ -134,6 +134,6 @@ class Core_Foundation_IoC_Container
 
     public function make($serviceName)
     {
-        return $this->doMake($serviceName, []);
+        return $this->doMake($serviceName, array());
     }
 }

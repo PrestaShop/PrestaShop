@@ -22,6 +22,6 @@ class Adapter_ProductPriceCalculator
 		$use_customer_price = true
     )
     {
-        return call_user_func_array(['Product', 'getPriceStatic'], func_get_args());
+        return call_user_func_array(array('Product', 'getPriceStatic'), func_get_args());
     }
 }
