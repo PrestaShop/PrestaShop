@@ -11,10 +11,12 @@ use Adapter_ProductPriceCalculator;
 use Adapter_ServiceLocator;
 use Adapter_AddressFactory;
 use Core_Business_Configuration;
+use Core_Foundation_IoC_ContainerBuilder;
 
 use Address;
 use Cart;
 use Order;
+use Tools;
 
 class FakeConfiguration implements Core_Business_Configuration
 {
@@ -100,6 +102,15 @@ class CartTest extends UnitTestCase
 
         $this->cart = new Cart;
         $this->cart->id = 1;
+    }
+
+    public function teardown()
+    {
+        $this->tearDownCommonStaticMocks();
+        $container_builder = new Core_Foundation_IoC_ContainerBuilder;
+        $container = $container_builder->build();
+        Adapter_ServiceLocator::setServiceContainerInstance($container);
+        Tools::$round_mode = null;
     }
 
     public function setConfiguration(array $keys)
