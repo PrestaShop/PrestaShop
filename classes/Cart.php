@@ -1427,7 +1427,7 @@ class CartCore extends ObjectModel
 				$id_address = (int)$this->id_address_invoice;
 			else
 				$id_address = (int)$product['id_address_delivery']; // Get delivery address of the product from the cart
-			if (!Address::addressExists($id_address))
+			if (!$address_factory->addressExists($id_address))
 				$id_address = null;
 
 			// The $null variable below is not used,
