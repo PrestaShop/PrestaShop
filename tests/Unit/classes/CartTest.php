@@ -87,18 +87,14 @@ class CartTest extends UnitTestCase
         Adapter_ServiceLocator::setServiceContainerInstance($this->container);
 
         $this->productPriceCalculator = new FakeProductPriceCalculator;
-        $this->container->bind('Adapter_ProductPriceCalculator', function () {
-            return $this->productPriceCalculator;
-        });
+        $this->container->bind('Adapter_ProductPriceCalculator', $this->productPriceCalculator);
 
         $addressFactory = $this->getMockBuilder('Adapter_AddressFactory')->getMock();
         $address = new Address;
         $address->id = 1;
         $addressFactory->method('findOrCreate')->willReturn($address);
 
-        $this->container->bind('Adapter_AddressFactory', function () use ($addressFactory) {
-            return $addressFactory;
-        });
+        $this->container->bind('Adapter_AddressFactory', $addressFactory);
 
         $this->cart = new Cart;
         $this->cart->id = 1;
@@ -115,11 +111,10 @@ class CartTest extends UnitTestCase
 
     public function setConfiguration(array $keys)
     {
-        $mockConfiguration = new FakeConfiguration($keys);
-
-        $this->container->bind('Core_Business_Configuration', function () use ($mockConfiguration) {
-            return $mockConfiguration;
-        });
+        $this->container->bind(
+            'Core_Business_Configuration',
+            new FakeConfiguration($keys)
+        );
     }
 
     public function test_price_calculator_adapter_is_loaded()
