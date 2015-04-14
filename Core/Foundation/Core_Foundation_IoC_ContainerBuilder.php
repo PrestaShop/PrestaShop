@@ -4,6 +4,10 @@ class Core_Foundation_IoC_ContainerBuilder
 {
     public function build()
     {
-        return new Core_Foundation_IoC_Container;
+        $container = new Core_Foundation_IoC_Container;
+
+        $container->bind('Core_Business_Configuration', 'Adapter_Configuration', true);
+
+        return $container;
     }
 }
