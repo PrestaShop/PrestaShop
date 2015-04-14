@@ -11,6 +11,30 @@
     'type' => 'abstract class',
     'override' => false,
   ),
+  'Adapter_AddressFactory' => 
+  array (
+    'path' => 'Adapter/Adapter_AddressFactory.php',
+    'type' => 'class',
+    'override' => false,
+  ),
+  'Adapter_Configuration' => 
+  array (
+    'path' => 'Adapter/Adapter_Configuration.php',
+    'type' => 'class',
+    'override' => false,
+  ),
+  'Adapter_ProductPriceCalculator' => 
+  array (
+    'path' => 'Adapter/Adapter_ProductPriceCalculator.php',
+    'type' => 'class',
+    'override' => false,
+  ),
+  'Adapter_ServiceLocator' => 
+  array (
+    'path' => 'Adapter/Adapter_ServiceLocator.php',
+    'type' => 'class',
+    'override' => false,
+  ),
   'Address' => 
   array (
     'path' => '',
@@ -1700,6 +1724,30 @@
   'CookieCore' => 
   array (
     'path' => 'classes/Cookie.php',
+    'type' => 'class',
+    'override' => false,
+  ),
+  'Core_Business_Configuration' => 
+  array (
+    'path' => 'Core/Business/Core_Business_Configuration.php',
+    'type' => 'interface',
+    'override' => false,
+  ),
+  'Core_Foundation_IoC_Container' => 
+  array (
+    'path' => 'Core/Foundation/Core_Foundation_IoC_Container.php',
+    'type' => 'class',
+    'override' => false,
+  ),
+  'Core_Foundation_IoC_ContainerBuilder' => 
+  array (
+    'path' => 'Core/Foundation/Core_Foundation_IoC_ContainerBuilder.php',
+    'type' => 'class',
+    'override' => false,
+  ),
+  'Core_Foundation_IoC_Exception' => 
+  array (
+    'path' => 'Core/Foundation/Core_Foundation_IoC_Exception.php',
     'type' => 'class',
     'override' => false,
   ),
