@@ -87,7 +87,7 @@
 					</label>
 					<div class="col-lg-5">
 					{$virtual_product_file_uploader}
-					<p class="help-block">{l s='Upload a file from your computer'} ({Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE')|string_format:'%.2f'} {l s='MB max.'})</p>
+					<p class="help-block">{l s='Upload a file from your computer'} ({Configuration::get('PS_LIMIT_UPLOAD_FILE_VALUE')|string_format:'%.2f'} {l s='MB max.'})</p>
 					</div>
 				</div>
 				<div class="form-group">
