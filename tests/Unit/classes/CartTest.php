@@ -78,11 +78,6 @@ class CartTest extends UnitTestCase
 {
     private $container;
 
-    public function test_price_calculator_adapter_is_loaded()
-    {
-        new Adapter_ProductPriceCalculator;
-    }
-
     public function setup()
     {
         $this->setUpCommonStaticMocks();
@@ -114,6 +109,11 @@ class CartTest extends UnitTestCase
         $this->container->bind('Core_Business_Configuration', function () use ($mockConfiguration) {
             return $mockConfiguration;
         });
+    }
+
+    public function test_price_calculator_adapter_is_loaded()
+    {
+        new Adapter_ProductPriceCalculator;
     }
 
     public function test_getOrderTotal_Round_Line()
