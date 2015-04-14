@@ -35,6 +35,9 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
 		Db::setInstanceForTesting($this->database);
 
 		$this->context = $this->getMockBuilder('Context')->getMock();
+
+		$this->context->method('cloneContext')->willReturn($this->context);
+
 		$this->context->shop = $this->getMockBuilder('Shop')->getMock();
 		Context::setInstanceForTesting($this->context);
 

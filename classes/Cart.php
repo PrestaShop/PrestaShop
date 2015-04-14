@@ -1334,15 +1334,14 @@ class CartCore extends ObjectModel
 	public function getOrderTotal($with_taxes = true, $type = Cart::BOTH, $products = null, $id_carrier = null, $use_cache = true)
 	{
 		// Dependencies
-		$address_factory = Adapter_ServiceLocator::get('Adapter_AddressFactory');
-		$price_calculator = Adapter_ServiceLocator::get('Adapter_ProductPriceCalculator');
+		$address_factory 	= Adapter_ServiceLocator::get('Adapter_AddressFactory');
+		$price_calculator 	= Adapter_ServiceLocator::get('Adapter_ProductPriceCalculator');
+		$configuration 		= Adapter_ServiceLocator::get('Core_Business_Configuration');
 
-		$ps_tax_address_type = Configuration::get('PS_TAX_ADDRESS_TYPE');
-		$ps_use_ecotax = Configuration::get('PS_USE_ECOTAX');
-		$ps_round_type = Configuration::get('PS_ROUND_TYPE');
-		$ps_ecotax_tax_rules_group_id = Configuration::get('PS_ECOTAX_TAX_RULES_GROUP_ID');
-
-		$configuration = Adapter_ServiceLocator::get('Core_Business_Configuration');
+		$ps_tax_address_type = $configuration->get('PS_TAX_ADDRESS_TYPE');
+		$ps_use_ecotax = $configuration->get('PS_USE_ECOTAX');
+		$ps_round_type = $configuration->get('PS_ROUND_TYPE');
+		$ps_ecotax_tax_rules_group_id = $configuration->get('PS_ECOTAX_TAX_RULES_GROUP_ID');
 		$compute_precision = $configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
 
 		if (!$this->id)
@@ -1431,6 +1430,10 @@ class CartCore extends ObjectModel
 			if (!Address::addressExists($id_address))
 				$id_address = null;
 
+			// The $null variable below is not used,
+			// but it is necessary to pass it to getProductPrice because
+			// it expects a reference.
+			$null = null;
 			$price = $price_calculator->getProductPrice(
 				(int)$product['id_product'],
 				false,
