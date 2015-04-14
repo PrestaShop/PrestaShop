@@ -119,6 +119,9 @@ class Core_Foundation_IoC_Container
 
             if (is_callable($constructor)) {
                 $service = call_user_func($constructor);
+            } else if (!is_string($constructor)) {
+                // user already provided the value, no need to construct it.
+                $service = $constructor;
             } else {
                 // assume the $constructor is a class name
                 $service = $this->makeInstanceFromClassName($constructor, $alreadySeen);

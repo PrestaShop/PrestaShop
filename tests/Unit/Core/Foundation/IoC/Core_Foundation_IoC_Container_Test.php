@@ -2,6 +2,8 @@
 
 namespace PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC;
 
+use Exception;
+
 use PHPUnit_Framework_TestCase;
 
 use Core_Foundation_IoC_Container as Container;
@@ -148,5 +150,35 @@ class Core_Foundation_IoC_Container_Test extends PHPUnit_Framework_TestCase
             'PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures\ClassDependingOnClosureBuiltDep'
         );
         $this->assertEquals(42, $instance->getDep()->getValue());
+    }
+
+    /**
+     * data provider for test_container_can_bind_values_directly
+     */
+    public function valuesToBind()
+    {
+        return array(
+            array(new Dummy),
+            array(42),
+            array(array(1, 2, 3))
+        );
+    }
+
+    /**
+     * @dataProvider valuesToBind
+     */
+    public function test_container_can_bind_values_directly($value)
+    {
+        $this->container->bind('value', $value);
+        $this->assertSame($value, $this->container->make('value'));
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    public function test_container_doesnt_bind_strings_as_literal_values()
+    {
+        $this->container->bind('value', 'a string which is not a class name');
+        $this->container->make('value');
     }
 }
