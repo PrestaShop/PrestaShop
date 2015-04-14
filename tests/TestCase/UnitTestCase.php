@@ -1,8 +1,7 @@
 <?php
-
-
 namespace PrestaShop\PrestaShop\Tests\TestCase;
 
+use Exception;
 
 use Cache;
 use Context;
@@ -11,6 +10,8 @@ use Db;
 use PHPUnit_Framework_TestCase;
 use PrestaShop\PrestaShop\Tests\Helper\Mocks\DbMock;
 use PrestaShop\PrestaShop\Tests\Helper\Mocks\CacheMock;
+
+use Phake;
 
 class UnitTestCase extends PHPUnit_Framework_TestCase
 {
@@ -29,19 +30,24 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
 	 */
 	public $cache;
 
+	public function setupDatabaseMock()
+	{
+		$this->database = Phake::mock('Db');
+		Db::setInstanceForTesting($this->database);
+	}
+
 	public function setUpCommonStaticMocks()
 	{
-		$this->database = $this->getMockBuilder('PrestaShop\PrestaShop\Tests\Helper\Mocks\DbMock')->getMock();
-		Db::setInstanceForTesting($this->database);
+		$this->setupDatabaseMock();
 
-		$this->context = $this->getMockBuilder('Context')->getMock();
+		$this->context = Phake::mock('Context');
 
-		$this->context->method('cloneContext')->willReturn($this->context);
+		Phake::when($this->context)->cloneContext()->thenReturn($this->context);
 
-		$this->context->shop = $this->getMockBuilder('Shop')->getMock();
+		$this->context->shop = Phake::mock('Shop');
 		Context::setInstanceForTesting($this->context);
 
-		$this->cache = $this->getMockBuilder('PrestaShop\PrestaShop\Tests\Helper\Mocks\CacheMock')->getMock();
+		$this->cache = Phake::mock('Cache');
 		Cache::setInstanceForTesting($this->cache);
 	}
 

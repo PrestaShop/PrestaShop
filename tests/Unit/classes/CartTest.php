@@ -18,6 +18,8 @@ use Cart;
 use Order;
 use Tools;
 
+use Phake;
+
 class FakeConfiguration implements Core_Business_Configuration
 {
     private $keys;
@@ -89,11 +91,11 @@ class CartTest extends UnitTestCase
         $this->productPriceCalculator = new FakeProductPriceCalculator;
         $this->container->bind('Adapter_ProductPriceCalculator', $this->productPriceCalculator);
 
-        $addressFactory = $this->getMockBuilder('Adapter_AddressFactory')->getMock();
+        $addressFactory = Phake::mock('Adapter_AddressFactory');
         $address = new Address;
         $address->id = 1;
-        $addressFactory->method('findOrCreate')->willReturn($address);
 
+        Phake::when($addressFactory)->findOrCreate()->thenReturn($address);
         $this->container->bind('Adapter_AddressFactory', $addressFactory);
 
         $this->cart = new Cart;
