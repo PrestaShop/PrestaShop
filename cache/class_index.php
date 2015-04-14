@@ -1735,19 +1735,19 @@
   ),
   'Core_Foundation_IoC_Container' => 
   array (
-    'path' => 'Core/Foundation/Core_Foundation_IoC_Container.php',
+    'path' => 'Core/Foundation/IoC/Core_Foundation_IoC_Container.php',
     'type' => 'class',
     'override' => false,
   ),
   'Core_Foundation_IoC_ContainerBuilder' => 
   array (
-    'path' => 'Core/Foundation/Core_Foundation_IoC_ContainerBuilder.php',
+    'path' => 'Core/Foundation/IoC/Core_Foundation_IoC_ContainerBuilder.php',
     'type' => 'class',
     'override' => false,
   ),
   'Core_Foundation_IoC_Exception' => 
   array (
-    'path' => 'Core/Foundation/Core_Foundation_IoC_Exception.php',
+    'path' => 'Core/Foundation/IoC/Core_Foundation_IoC_Exception.php',
     'type' => 'class',
     'override' => false,
   ),

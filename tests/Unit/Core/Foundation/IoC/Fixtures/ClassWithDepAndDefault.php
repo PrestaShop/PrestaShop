@@ -1,6 +1,6 @@
 <?php
 
-namespace PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\Fixtures;
+namespace PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\IoC\Fixtures;
 
 class ClassWithDepAndDefault
 {
