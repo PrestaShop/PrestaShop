@@ -185,8 +185,6 @@ class SmartyCustomCore extends Smarty
 							SET filepath=\''.pSQL($filepath).'\'
 							WHERE `template_hash`=\''.pSQL($template_md5).'\'';
 
-		if (strlen($cache_id) > 32)
-			$cache_id = md5($cache_id);
 		$sql .= ' AND cache_id="'.pSQL((string)$cache_id).'"';
 
 		if (strlen($compile_id) > 32)
@@ -209,13 +207,11 @@ class SmartyCustomCore extends Smarty
 	{
 		static $is_in_lazy_cache = array();
 		$template_md5 = md5($template);
-		if (strlen($cache_id) > 32)
-			$cache_id = md5($cache_id);
 
 		if (strlen($compile_id) > 32)
 			$compile_id = md5($compile_id);
 
-		$key = $template_md5.'-'.$cache_id.'-'.$compile_id;
+		$key = md5($template_md5.'-'.$cache_id.'-'.$compile_id);
 
 		if (isset($is_in_lazy_cache[$key]))
 			return $is_in_lazy_cache[$key];
@@ -267,8 +263,6 @@ class SmartyCustomCore extends Smarty
 							(`template_hash`, `cache_id`, `compile_id`, `last_update`)
 							VALUES (\''.pSQL($template_md5).'\'';
 
-		if (strlen($cache_id) > 32)
-			$cache_id = md5($cache_id);
 		$sql .= ',"'.pSQL((string)$cache_id).'"';
 
 		if (strlen($compile_id) > 32)
@@ -299,9 +293,7 @@ class SmartyCustomCore extends Smarty
 
 		if ($cache_id != null)
 		{
-			if (strlen($cache_id) > 32)
-				$cache_id = md5($cache_id);
-			$sql .= ' AND cache_id="'.pSQL((string)$cache_id).'"';
+			$sql .= ' AND cache_id LIKE "'.pSQL((string)$cache_id).'%"';
 		}
 
 		if ($compile_id != null)

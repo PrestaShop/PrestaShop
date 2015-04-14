@@ -100,7 +100,7 @@ ALTER IGNORE TABLE `PREFIX_specific_price` ADD UNIQUE KEY `id_product_2` (`id_pr
 DROP TABLE IF EXISTS `PREFIX_smarty_lazy_cache`;
 CREATE TABLE `PREFIX_smarty_lazy_cache` (
   `template_hash` varchar(32) NOT NULL DEFAULT '',
-  `cache_id` varchar(32) NOT NULL DEFAULT '',
+  `cache_id` varchar(255) NOT NULL DEFAULT '',
   `compile_id` varchar(32) NOT NULL DEFAULT '',
   `filepath` varchar(255) NOT NULL DEFAULT '',
   `last_update` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -172,3 +172,6 @@ ALTER TABLE `PREFIX_cart_rule` ADD KEY `id_customer_2` (`id_customer`,`active`,`
 ALTER TABLE `PREFIX_cart_rule` ADD KEY `group_restriction_2` (`group_restriction`,`active`,`highlight`,`date_to`);
 
 ALTER TABLE `PREFIX_configuration_kpi` CHANGE `name` `name` varchar(64);
+
+ALTER TABLE `PREFIX_smarty_lazy_cache` CHANGE `cache_id` `cache_id` varchar(255) NOT NULL DEFAULT '';
+TRUNCATE TABLE `PREFIX_smarty_lazy_cache`;
