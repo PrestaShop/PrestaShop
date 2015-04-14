@@ -148,7 +148,6 @@ class AuthControllerCore extends FrontController
 			// Call a hook to display more information on form
 			$this->context->smarty->assign(array(
 					'PS_REGISTRATION_PROCESS_TYPE' => Configuration::get('PS_REGISTRATION_PROCESS_TYPE'),
-					'genders' => Gender::getGenders()
 				));
 
 			$return = array(
