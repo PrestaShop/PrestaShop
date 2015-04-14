@@ -83,20 +83,47 @@ class CartTest extends UnitTestCase
         Tools::$round_mode = null;
     }
 
-    public function test_getOrderTotal_Round_Line()
+    private function setRoundType($type)
     {
         $this->setConfiguration(array(
             '_PS_PRICE_COMPUTE_PRECISION_' => 2,
             'PS_TAX_ADDRESS_TYPE' => 0,
             'PS_USE_ECOTAX' => 0,
-            'PS_ROUND_TYPE' => Order::ROUND_LINE,
+            'PS_ROUND_TYPE' => $type,
             'PS_ECOTAX_TAX_RULES_GROUP_ID' => 0
         ));
+    }
 
-        $this->productPriceCalculator->addFakeProduct(new FakeProduct(1, 10.125));
+    public function test_getOrderTotal_Round_Line_When_No_Tax()
+    {
+        $this->setRoundType(Order::ROUND_LINE);
+
+        $this->productPriceCalculator->addFakeProduct(new FakeProduct(3, 10.125));
         $this->productPriceCalculator->addFakeProduct(new FakeProduct(1, 10.125));
 
         $orderTotal = $this->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $this->productPriceCalculator->getProducts());
-        $this->assertEquals(20.26, $orderTotal);
+        $this->assertEquals(40.51, $orderTotal);
+    }
+
+    public function test_getOrderTotal_Round_Total_When_No_Tax()
+    {
+        $this->setRoundType(Order::ROUND_TOTAL);
+
+        $this->productPriceCalculator->addFakeProduct(new FakeProduct(3, 10.125));
+        $this->productPriceCalculator->addFakeProduct(new FakeProduct(1, 10.125));
+
+        $orderTotal = $this->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $this->productPriceCalculator->getProducts());
+        $this->assertEquals(40.5, $orderTotal);
+    }
+
+    public function test_getOrderTotal_Round_Item_When_No_Tax()
+    {
+        $this->setRoundType(Order::ROUND_ITEM);
+
+        $this->productPriceCalculator->addFakeProduct(new FakeProduct(3, 10.125));
+        $this->productPriceCalculator->addFakeProduct(new FakeProduct(1, 10.125));
+
+        $orderTotal = $this->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $this->productPriceCalculator->getProducts());
+        $this->assertEquals(40.52, $orderTotal);
     }
 }
