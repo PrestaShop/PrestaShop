@@ -81,7 +81,7 @@
 				<div class="form-group"{if $is_file} style="display:none"{/if}>
 					<label id="virtual_product_file_label" for="virtual_product_file" class="control-label col-lg-3">
 						<span class="label-tooltip" data-toggle="tooltip"
-							title="{l s='Upload a file from your computer'} ({Configuration::get('PS_ATTACHMENT_MAXIMUM_SIZE')|string_format:'%.2f'} {l s='MB max.'})">
+							title="{l s='Upload a file from your computer'} ({Configuration::get('PS_LIMIT_UPLOAD_FILE_VALUE')|string_format:'%.2f'} {l s='MB max.'})">
 							{l s='File'}
 						</span>
 					</label>
