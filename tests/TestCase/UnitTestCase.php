@@ -8,13 +8,19 @@ use Context;
 use Configuration;
 use Db;
 use PHPUnit_Framework_TestCase;
-use PrestaShop\PrestaShop\Tests\Helper\Mocks\DbMock;
-use PrestaShop\PrestaShop\Tests\Helper\Mocks\CacheMock;
+
+use Core_Foundation_IoC_ContainerBuilder;
+use Core_Foundation_IoC_Container;
+use Adapter_ServiceLocator;
+
+use PrestaShop\PrestaShop\Tests\Fake\FakeConfiguration;
 
 use Phake;
 
 class UnitTestCase extends PHPUnit_Framework_TestCase
 {
+	protected $container;
+
 	/**
 	 * @var Context
 	 */
@@ -36,8 +42,11 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
 		Db::setInstanceForTesting($this->database);
 	}
 
-	public function setUpCommonStaticMocks()
+	public function setup()
 	{
+		$this->container = new Core_Foundation_IoC_Container;
+		Adapter_ServiceLocator::setServiceContainerInstance($this->container);
+
 		$this->setupDatabaseMock();
 
 		$this->context = Phake::mock('Context');
@@ -51,7 +60,15 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
 		Cache::setInstanceForTesting($this->cache);
 	}
 
-	public function tearDownCommonStaticMocks()
+	public function setConfiguration(array $keys)
+    {
+        $this->container->bind(
+            'Core_Business_Configuration',
+            new FakeConfiguration($keys)
+        );
+    }
+
+	public function teardown()
 	{
 		Cache::deleteTestingInstance();
 		Db::deleteTestingInstance();
@@ -62,6 +79,10 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
 		 * This way we'll avoid doing obscure teardown stuff like below.
 		 */
 		Configuration::clearConfigurationCacheForTesting();
+
+		$container_builder = new Core_Foundation_IoC_ContainerBuilder;
+        $container = $container_builder->build();
+        Adapter_ServiceLocator::setServiceContainerInstance($container);
 	}
 
 }

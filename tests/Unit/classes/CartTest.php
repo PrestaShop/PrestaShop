@@ -6,12 +6,9 @@ use Exception;
 
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
 
-use Core_Foundation_IoC_Container;
 use Adapter_ProductPriceCalculator;
-use Adapter_ServiceLocator;
 use Adapter_AddressFactory;
 use Core_Business_Configuration;
-use Core_Foundation_IoC_ContainerBuilder;
 
 use Address;
 use Cart;
@@ -19,24 +16,6 @@ use Order;
 use Tools;
 
 use Phake;
-
-class FakeConfiguration implements Core_Business_Configuration
-{
-    private $keys;
-
-    public function __construct(array $keys)
-    {
-        $this->keys = $keys;
-    }
-
-    public function get($key)
-    {
-        if (!array_key_exists($key, $this->keys)) {
-            throw new Exception("Key $key does not exist in the fake configuration.");
-        }
-        return $this->keys[$key];
-    }
-}
 
 class FakeProduct
 {
@@ -80,13 +59,9 @@ class FakeProductPriceCalculator
 
 class CartTest extends UnitTestCase
 {
-    private $container;
-
     public function setup()
     {
-        $this->setUpCommonStaticMocks();
-        $this->container = new Core_Foundation_IoC_Container;
-        Adapter_ServiceLocator::setServiceContainerInstance($this->container);
+        parent::setup();
 
         $this->productPriceCalculator = new FakeProductPriceCalculator;
         $this->container->bind('Adapter_ProductPriceCalculator', $this->productPriceCalculator);
@@ -104,24 +79,8 @@ class CartTest extends UnitTestCase
 
     public function teardown()
     {
-        $this->tearDownCommonStaticMocks();
-        $container_builder = new Core_Foundation_IoC_ContainerBuilder;
-        $container = $container_builder->build();
-        Adapter_ServiceLocator::setServiceContainerInstance($container);
+        parent::teardown();
         Tools::$round_mode = null;
-    }
-
-    public function setConfiguration(array $keys)
-    {
-        $this->container->bind(
-            'Core_Business_Configuration',
-            new FakeConfiguration($keys)
-        );
-    }
-
-    public function test_price_calculator_adapter_is_loaded()
-    {
-        new Adapter_ProductPriceCalculator;
     }
 
     public function test_getOrderTotal_Round_Line()
