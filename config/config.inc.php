@@ -55,9 +55,7 @@ if (!file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php'))
 require_once(_PS_ROOT_DIR_.'/config/settings.inc.php');
 require_once(_PS_CONFIG_DIR_.'autoload.php');
 
-$container_builder = new Core_Foundation_IoC_ContainerBuilder;
-$container = $container_builder->build();
-Adapter_ServiceLocator::setServiceContainerInstance($container);
+require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
 /* Custom config made by users */
 if (is_file(_PS_CUSTOM_CONFIG_FILE_))

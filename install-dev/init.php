@@ -44,6 +44,7 @@ if (!defined('_THEME_NAME_'))
 
 require_once(_PS_CORE_DIR_.'/config/defines.inc.php');
 require_once(_PS_CORE_DIR_.'/config/autoload.php');
+require_once(_PS_CORE_DIR_.'/config/bootstrap.php');
 require_once(_PS_CORE_DIR_.'/config/defines_uri.inc.php');
 
 // Generate common constants
