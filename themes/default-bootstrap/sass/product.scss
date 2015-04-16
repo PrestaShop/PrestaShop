@@ -1163,9 +1163,6 @@ Quick View Styles
 		div,
 		section {
 			&.primary_block {
-				@media (max-width: $screen-xs - 1)  {  // max 479px
-					margin-left: 0;
-				}
 				div {
 					&.pb-left-column {
 						width: 100%;
@@ -1191,23 +1188,10 @@ Quick View Styles
 						width: 50%;
 						float: left;
 						padding-left: 35px;
-						@media (max-width: $screen-xs - 1)  { // max 479px
-							width: 100%;
-							float: none;
-							padding-left: 15px;
-							@include box-sizing(border-box)
-						}
 					}
 					&.pb-right-column {
 						width: 50%;
 						float: left;
-						@media (max-width: $screen-xs - 1)  {  // max 479px
-							margin-top: 10px;
-							width: 100%;
-							float: none;
-							padding-left: 15px;
-							@include box-sizing(border-box)
-						}
 						.box-info-product {
 							border-top-width: 1px;
 							min-height: 1px;

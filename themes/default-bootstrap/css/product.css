@@ -1045,29 +1045,6 @@ Quick View Styles
     #product.content_only section.primary_block div.pb-right-column .box-info-product {
       border-top-width: 1px;
       min-height: 1px; } }
-@media (max-width: 1050px) and (max-width: 479px) {
-  #product.content_only div.primary_block,
-  #product.content_only section.primary_block {
-    margin-left: 0; } }
-  @media (max-width: 1050px) and (max-width: 479px) {
-    #product.content_only div.primary_block div.pb-center-column,
-    #product.content_only section.primary_block div.pb-center-column {
-      width: 100%;
-      float: none;
-      padding-left: 15px;
-      -webkit-box-sizing: border-box;
-      -moz-box-sizing: border-box;
-      box-sizing: border-box; } }
-  @media (max-width: 1050px) and (max-width: 479px) {
-    #product.content_only div.primary_block div.pb-right-column,
-    #product.content_only section.primary_block div.pb-right-column {
-      margin-top: 10px;
-      width: 100%;
-      float: none;
-      padding-left: 15px;
-      -webkit-box-sizing: border-box;
-      -moz-box-sizing: border-box;
-      box-sizing: border-box; } }
 /***** IE code ****/
 .ie8 .pb-left-column #image-block #view_full_size .span_link {
   background: #fff;
