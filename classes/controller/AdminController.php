@@ -1013,7 +1013,7 @@ class AdminControllerCore extends Controller
 				}
 				elseif ($res = $object->delete())
 					$this->redirect_after = self::$currentIndex.'&conf=1&token='.$this->token;
-				$this->errors[] = Tools::displayError('An error occurred during deletion.');
+				//$this->errors[] = Tools::displayError('An error occurred during deletion.');
 				if ($res)
 					PrestaShopLogger::addLog(sprintf($this->l('%s deletion', 'AdminTab', false, false), $this->className), 1, null, $this->className, (int)$this->object->id, true, (int)$this->context->employee->id);
 			}
