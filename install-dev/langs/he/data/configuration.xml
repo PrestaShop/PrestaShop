@@ -6,6 +6,9 @@
   <configuration id="PS_DELIVERY_PREFIX">
     <value>#DE</value>
   </configuration>
+  <configuration id="PS_RETURN_PREFIX">
+    <value>#RE</value>
+  </configuration>
   <configuration id="PS_SEARCH_BLACKLIST">
     <value>a|the|of|on|in|and|to</value>
   </configuration>
