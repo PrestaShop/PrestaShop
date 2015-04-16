@@ -24,13 +24,34 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class PaymentOption extends BaseObject
+class FileSystem
 {
-	private $cta_text;
-	private $logo;
-	private $action;
-	private $method;
-	private $inputs;
-	private $form;
+	public function getDirContentRecursive($dir, $is_iterating = false)
+	{
+		if (!file_exists($dir) || !is_dir($dir))
+			return false;
 
+		$content_dir_scanned = scandir($dir);
+		$content_list = array();
+
+		if (!$content_dir_scanned)
+			return false;
+
+		foreach ($content_dir_scanned as $entry)
+		{
+			if ($entry != '.' && $entry != '..') {
+				if (is_dir($dir . DIRECTORY_SEPARATOR . $entry)) {
+					$recurse_iteration = $this->getDirContentRecursive($dir . DIRECTORY_SEPARATOR . $entry, true);
+					if ($recurse_iteration)
+						$content_list[$entry] = $recurse_iteration;
+				} else {
+					if ($is_iterating)
+						$content_list[] = $entry;
+					else
+						$content_list['root'][] = $entry;
+				}
+			}
+		}
+		return $content_list;
+	}
 }
