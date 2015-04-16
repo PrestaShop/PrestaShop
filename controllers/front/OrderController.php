@@ -27,6 +27,10 @@
 class OrderControllerCore extends ParentOrderController
 {
 	public $step;
+	const STEP_SUMMARY_EMPTY_CART = -1;
+	const STEP_ADDRESSES = 1;
+	const STEP_DELIVERY = 2;
+	const STEP_PAYMENT = 3;
 
 	/**
 	 * Initialize order controller
@@ -142,12 +146,13 @@ class OrderControllerCore extends ParentOrderController
 		// 4 steps to the order
 		switch ((int)$this->step)
 		{
-			case -1;
+
+			case OrderController::STEP_SUMMARY_EMPTY_CART:
 				$this->context->smarty->assign('empty', 1);
 				$this->setTemplate(_PS_THEME_DIR_.'shopping-cart.tpl');
 			break;
 
-			case 1:
+			case OrderController::STEP_ADDRESSES:
 				$this->_assignAddress();
 				$this->processAddressFormat();
 				if (Tools::getValue('multi-shipping') == 1)
@@ -160,7 +165,7 @@ class OrderControllerCore extends ParentOrderController
 					$this->setTemplate(_PS_THEME_DIR_.'order-address.tpl');
 			break;
 
-			case 2:
+			case OrderController::STEP_DELIVERY:
 				if (Tools::isSubmit('processAddress'))
 					$this->processAddress();
 				$this->autoStep();
@@ -168,7 +173,7 @@ class OrderControllerCore extends ParentOrderController
 				$this->setTemplate(_PS_THEME_DIR_.'order-carrier.tpl');
 			break;
 
-			case 3:
+			case OrderController::STEP_PAYMENT:
 				// Check that the conditions (so active) were accepted by the customer
 				$cgv = Tools::getValue('cgv') || $this->context->cookie->check_cgv;
 				if (Configuration::get('PS_CONDITIONS') && (!Validate::isBool($cgv) || $cgv == false))
