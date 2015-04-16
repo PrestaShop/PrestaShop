@@ -3264,19 +3264,30 @@ exit;
 		return false;
 	}
 
-	public static function fileAttachment($input = 'fileUpload')
+	/**
+	 * Returns an array containing information about
+	 * HTTP file upload variable ($_FILES)
+	 *
+	 * @param string $input          File upload field name
+	 * @param bool   $return_content If true, returns uploaded file contents
+	 *
+	 * @return array|null
+	 */
+	public static function fileAttachment($input = 'fileUpload', $return_content = true)
 	{
 		$file_attachment = null;
 		if (isset($_FILES[$input]['name']) && !empty($_FILES[$input]['name']) && !empty($_FILES[$input]['tmp_name']))
 		{
 			$file_attachment['rename'] = uniqid().Tools::strtolower(substr($_FILES[$input]['name'], -5));
-			$file_attachment['content'] = file_get_contents($_FILES[$input]['tmp_name']);
+			if ($return_content)
+				$file_attachment['content'] = file_get_contents($_FILES[$input]['tmp_name']);
 			$file_attachment['tmp_name'] = $_FILES[$input]['tmp_name'];
-			$file_attachment['name'] = $_FILES[$input]['name'];
-			$file_attachment['mime'] = $_FILES[$input]['type'];
-			$file_attachment['error'] = $_FILES[$input]['error'];
-			$file_attachment['size'] = $_FILES[$input]['size'];
+			$file_attachment['name']     = $_FILES[$input]['name'];
+			$file_attachment['mime']     = $_FILES[$input]['type'];
+			$file_attachment['error']    = $_FILES[$input]['error'];
+			$file_attachment['size']     = $_FILES[$input]['size'];
 		}
+
 		return $file_attachment;
 	}
 
