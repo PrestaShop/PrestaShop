@@ -177,7 +177,7 @@ a.fancybox-nav {
 		}
 		@media (max-width: $screen-xs-max) { //max 767px
 			width: 196px;
-		}		
+		}
 	}
 }
 
@@ -190,7 +190,7 @@ span.view_scroll_spacer {
 		padding-left: 18px;
 	}
 	@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { // min 768px max 991px
-		width: 30px;			
+		width: 30px;
 		padding-left: 3px;
 	}
 	@media (max-width: $screen-xs-max) { //max 767px
@@ -204,17 +204,17 @@ span.view_scroll_spacer {
 		width: 27px;
 		padding-left: 2px;
 		@media (min-width: $screen-md) and (max-width: $screen-md-max) { //min 992px max 1199px
-			width: 44px;			
+			width: 44px;
 			padding-left: 16px;
 		}
 		@media (min-width: $screen-sm) and (max-width: $screen-sm-max) { // min 768px max 991px
-			width: 41px;			
+			width: 41px;
 			padding-left: 13px;
 		}
 		@media (max-width: $screen-xs-max) { //max 767px
 			width: 45px;
 			padding-left: 14px;
-		}	
+		}
 	}
 }
 #view_scroll_left,

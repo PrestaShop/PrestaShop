@@ -1012,10 +1012,6 @@ Quick View Styles
 .addsharethisinner .stButton .stArrow {
   display: none !important; }
 
-@media (max-width: 1050px) and (max-width: 479px) {
-  #product.content_only div.primary_block,
-  #product.content_only section.primary_block {
-    margin-left: 0; } }
 @media (max-width: 1050px) {
   #product.content_only div.primary_block div.pb-left-column,
   #product.content_only section.primary_block div.pb-left-column {
@@ -1040,21 +1036,28 @@ Quick View Styles
   #product.content_only section.primary_block div.pb-center-column {
     width: 50%;
     float: left;
-    padding-left: 35px; } }
+    padding-left: 35px; }
+  #product.content_only div.primary_block div.pb-right-column,
+  #product.content_only section.primary_block div.pb-right-column {
+    width: 50%;
+    float: left; }
+    #product.content_only div.primary_block div.pb-right-column .box-info-product,
+    #product.content_only section.primary_block div.pb-right-column .box-info-product {
+      border-top-width: 1px;
+      min-height: 1px; } }
+@media (max-width: 1050px) and (max-width: 479px) {
+  #product.content_only div.primary_block,
+  #product.content_only section.primary_block {
+    margin-left: 0; } }
   @media (max-width: 1050px) and (max-width: 479px) {
     #product.content_only div.primary_block div.pb-center-column,
     #product.content_only section.primary_block div.pb-center-column {
       width: 100%;
       float: none;
       padding-left: 15px;
-      -moz-box-sizing: border-box;
       -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
       box-sizing: border-box; } }
-@media (max-width: 1050px) {
-  #product.content_only div.primary_block div.pb-right-column,
-  #product.content_only section.primary_block div.pb-right-column {
-    width: 50%;
-    float: left; } }
   @media (max-width: 1050px) and (max-width: 479px) {
     #product.content_only div.primary_block div.pb-right-column,
     #product.content_only section.primary_block div.pb-right-column {
@@ -1062,14 +1065,9 @@ Quick View Styles
       width: 100%;
       float: none;
       padding-left: 15px;
-      -moz-box-sizing: border-box;
       -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
       box-sizing: border-box; } }
-@media (max-width: 1050px) {
-    #product.content_only div.primary_block div.pb-right-column .box-info-product,
-    #product.content_only section.primary_block div.pb-right-column .box-info-product {
-      border-top-width: 1px;
-      min-height: 1px; } }
 /***** IE code ****/
 .ie8 .pb-left-column #image-block #view_full_size .span_link {
   background: #fff;
