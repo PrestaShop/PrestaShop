@@ -496,8 +496,8 @@ class LinkCore
 
 		$controller = Dispatcher::getInstance()->getController();
 
-		if (!empty(Context::getContext()->controller->php_self))
-			$controller = Context::getContext()->controller->php_self;
+		if (!empty($context->controller->php_self))
+			$controller = $context->controller->php_self;
 
 		if ($controller == 'product' && isset($params['id_product']))
 			return $this->getProductLink((int)$params['id_product'], null, null, null, (int)$id_lang);
