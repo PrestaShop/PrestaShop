@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class Email extends BaseObject
+class Email
 {
 	private $filesytem;
 

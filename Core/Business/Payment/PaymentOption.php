@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class PaymentOption extends BaseObject
+class PaymentOption
 {
 	private $cta_text;
 	private $logo;
