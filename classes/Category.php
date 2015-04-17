@@ -1244,6 +1244,7 @@ class CategoryCore extends ObjectModel
 		$this->cleanGroups();
 		if (empty($list))
 			$list = array(Configuration::get('PS_UNIDENTIFIED_GROUP'), Configuration::get('PS_GUEST_GROUP'), Configuration::get('PS_CUSTOMER_GROUP'));
+		$list = array_unique($list);
 		$this->addGroups($list);
 	}
 
