@@ -26,12 +26,12 @@
 
 class Email
 {
-	private $filesytem;
+	private $filesystem;
 
 	public function __construct(FileSystem $fs)
 	{
 		// Register dependencies
-		$this->filesytem = $fs;
+		$this->filesystem = $fs;
 	}
 
 	public function getAvailableMails($lang = null, $dir = null)
