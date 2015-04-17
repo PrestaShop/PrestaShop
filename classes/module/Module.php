@@ -1060,9 +1060,6 @@ abstract class ModuleCore
 
 		include_once(_PS_MODULE_DIR_.$module_name.'/'.$module_name.'.php');
 
-		$dependencies_injector = new DependencyInjector(DependencyInjector::TYPE_MODULE);
-		$module_dependencies = $dependencies_injector->getDependencies($module_name);
-
 		$r = false;
 		if (Tools::file_exists_no_cache(_PS_OVERRIDE_DIR_.'modules/'.$module_name.'/'.$module_name.'.php'))
 		{
@@ -1073,17 +1070,8 @@ abstract class ModuleCore
 				$r = self::$_INSTANCE[$module_name] = new $override;
 		}
 
-		if (!$r && class_exists($module_name, false)) {
-
-			if ($module_dependencies)
-			{
-				$module_rc = new ReflectionClass($module_name);
-				$module_with_dependencies = $module_rc->newInstanceArgs($module_dependencies);
-				$r = self::$_INSTANCE[$module_name] = $module_with_dependencies;
-			}
-			else
-				$r = self::$_INSTANCE[$module_name] = new $module_name;
-		}
+		if (!$r && class_exists($module_name, false))
+			$r = self::$_INSTANCE[$module_name] = Adapter_ServiceLocator::get($module_name);
 
 		if (Module::$_log_modules_perfs)
 		{
@@ -1298,20 +1286,8 @@ abstract class ModuleCore
 				// If class exists, we just instanciate it
 				if (class_exists($module, false))
 				{
-                    $dependencies_injector = new DependencyInjector(DependencyInjector::TYPE_MODULE);
-                    $module_dependencies = $dependencies_injector->getDependencies($module);
-
-                    if ($module_dependencies)
-                    {
-                        $module_rc = new ReflectionClass($module);
-                        $module_with_dependencies = $module_rc->newInstanceArgs($module_dependencies);
-                        /** @var Module $tmp_module */
-                        $tmp_module = $module_with_dependencies;
-                    }
-                    else
-                        /** @var Module $tmp_module */
-                        $tmp_module = new $module;
-
+					$tmp_module = Adapter_ServiceLocator::get($module);
+					
 					$item = new stdClass();
 					$item->id = $tmp_module->id;
 					$item->warning = $tmp_module->warning;
