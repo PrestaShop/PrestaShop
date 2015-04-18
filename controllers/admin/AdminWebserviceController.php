@@ -274,6 +274,9 @@ class AdminWebserviceControllerCore extends AdminController
 			else
 				$this->warnings[] = $this->l('We could not check to see if basic authentication and rewrite extensions have been activated. Please manually check if they\'ve been activated in order to use the PrestaShop webservice.');
 		}
+
+        if (configuration::get('PS_WEBSERVICE') && !file_exists(_PS_ROOT_DIR_.'/.htaccess'))
+            $this->warnings[] = $this->l('The .htaccess file is missing. Please check if the server has write access to PrestaShop\'s main folder and reenable webservice in order to generate that file.');
 		if (!extension_loaded('SimpleXML'))
 			$this->warnings[] = $this->l('Please activate the \'SimpleXML\' PHP extension to allow testing of PrestaShop\'s webservice.');
 		if (!configuration::get('PS_SSL_ENABLED'))
