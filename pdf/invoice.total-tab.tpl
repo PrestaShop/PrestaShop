@@ -23,9 +23,41 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 <table id="total-tab" width="100%">
+
+    {if $footer.product_discounts_tax_excl > 0}
+
+        <tr>
+            <td class="grey" width="70%">
+                {l s='Total Products Before Discounts' pdf='true'}
+            </td>
+            <td class="white" width="30%">
+                {displayPrice currency=$order->id_currency price=$footer.products_before_discounts_tax_excl}
+            </td>
+        </tr>
+
+        <tr>
+            <td class="grey" width="70%">
+                {l s='Total Discounts' pdf='true'}
+            </td>
+            <td class="white" width="30%">
+                - {displayPrice currency=$order->id_currency price=$footer.product_discounts_tax_excl}
+            </td>
+        </tr>
+
+    {/if}
+
+    <tr {if $footer.product_discounts_tax_excl > 0}class="separator"{/if}>
+        <td class="grey" width="70%">
+            {l s='Total Products' pdf='true'}
+        </td>
+        <td class="white" width="30%">
+            {displayPrice currency=$order->id_currency price=$footer.products_after_discounts_tax_excl}
+        </td>
+    </tr>
+
     <tr>
         <td class="grey" width="70%">
-            {l s='Shipping Cost (Tax Excl.)' pdf='true'}
+            {l s='Shipping Cost' pdf='true'}
         </td>
         <td class="white" width="30%">
             {if $footer.shipping_tax_excl > 0}
@@ -39,42 +71,11 @@
     {if $footer.wrapping_tax_excl > 0}
         <tr>
             <td class="grey">
-                {l s='Wrapping Cost (Tax Excl.)' pdf='true'}
+                {l s='Wrapping Cost' pdf='true'}
             </td>
             <td class="white">{displayPrice currency=$order->id_currency price=$footer.wrapping_tax_excl}</td>
         </tr>
     {/if}
-
-    {if $footer.product_discounts_tax_excl > 0}
-
-        <tr>
-            <td class="grey">
-                {l s='Total Products Before Discounts (Tax Excl.)' pdf='true'}
-            </td>
-            <td class="white">
-                {displayPrice currency=$order->id_currency price=$footer.products_before_discounts_tax_excl}
-            </td>
-        </tr>
-
-        <tr>
-            <td class="grey">
-                {l s='Total Discounts (Tax Excl.)' pdf='true'}
-            </td>
-            <td class="white">
-                - {displayPrice currency=$order->id_currency price=$footer.product_discounts_tax_excl}
-            </td>
-        </tr>
-
-    {/if}
-
-    <tr>
-        <td class="grey">
-            {l s='Total Products (Tax Excl.)' pdf='true'}
-        </td>
-        <td class="white">
-            {displayPrice currency=$order->id_currency price=$footer.products_after_discounts_tax_excl}
-        </td>
-    </tr>
 
     <tr class="separator">
         <td class="grey">
