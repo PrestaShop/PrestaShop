@@ -59,6 +59,7 @@ class LocalizationPackCore
 		{
 			$res &= $this->_installStates($xml);
 			$res &= $this->_installTaxes($xml);
+			$res &= $this->_installCurrencies($xml, $install_mode);
 			$res &= $this->installConfiguration($xml);
 			$res &= $this->installModules($xml);
 			$res &= $this->updateDefaultGroupDisplayMethod($xml);
@@ -75,7 +76,6 @@ class LocalizationPackCore
 
 			if (!Language::isInstalled(Language::getIsoById($id_lang)))
 			{
-				$res &= $this->_installCurrencies($xml, $install_mode);
 				$res &= $this->_installLanguages($xml, $install_mode);
 				$res &= $this->_installUnits($xml);
 			}
