@@ -43,6 +43,16 @@ $(document).ready(function(){
         	return $("#popover-content").html();
     	}
   	});
+
+  	$('.wishlist').each(function() {
+  		current = $(this);
+  		$(this).children('.wishlist_button_list').popover({
+  			html: true,
+  			content: function () {
+  				return current.children('.popover-content').html();
+  			}
+  		});
+  	});
 });
 
 function WishlistCart(id, action, id_product, id_product_attribute, quantity, id_wishlist)
