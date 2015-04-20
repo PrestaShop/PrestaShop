@@ -104,7 +104,13 @@
     <tr>
         <td colspan="7" class="left small">
 
-            {$legal_free_text|escape:'html':'UTF-8'|nl2br}
+            <table>
+                <tr>
+                    <td>
+                        <p>{$legal_free_text|escape:'html':'UTF-8'|nl2br}</p>
+                    </td>
+                </tr>
+            </table>
 
         </td>
     </tr>

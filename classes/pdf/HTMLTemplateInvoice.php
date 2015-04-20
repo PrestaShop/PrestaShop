@@ -59,13 +59,13 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 				'width' => 15,
 			),
 			'product' => array(
-				'width' => 45,
+				'width' => 40,
 			),
 			'quantity' => array(
-				'width' => 6,
+				'width' => 8,
 			),
 			'tax_code' => array(
-				'width' => 6,
+				'width' => 8,
 			),
 			'unit_price_tax_excl' => array(
 				'width' => 0,

@@ -25,22 +25,17 @@
 <table id="addresses-tab">
     <tr>
         <td width="33%">
-            <p class="small">&nbsp;</p>
-            <p class="small">
-                {$order_invoice->company_address}
-            </p>
+            <p class="small">{$order_invoice->company_address}</p>
         </td>
         <td width="33%">
             {if $delivery_address}
-                <p class="small bold">{l s='Delivery Address' pdf='true'}</p>
-                <p class="small">
+                <p class="small"><span class="bold">{l s='Delivery Address' pdf='true'}</span><br/><br/>
                     {$delivery_address}
                 </p>
             {/if}
         </td>
         <td width="33%">
-            <p class="small bold">{l s='Billing Address' pdf='true'}</p>
-            <p class="small">
+            <p class="small"><span class="bold">{l s='Billing Address' pdf='true'}</span><br/><br/>
                 {$invoice_address}
             </p>
         </td>
