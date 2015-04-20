@@ -2325,11 +2325,6 @@ class ToolsCore
 						fwrite($write_fd, $domain_rewrite_cond);
 					fwrite($write_fd, 'RewriteRule ^c/([a-zA-Z_-]+)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/c/$1$2.jpg [L]'."\n");
 				}
-
-				fwrite($write_fd, "# AlphaImageLoader for IE and fancybox\n");
-				if (Shop::isFeatureActive())
-					fwrite($write_fd, $domain_rewrite_cond);
-				fwrite($write_fd, 'RewriteRule ^images_ie/?([^/]+)\.(jpe?g|png|gif)$ js/jquery/plugins/fancybox/images/$1.$2 [L]'."\n");
 			}
 			// Redirections to dispatcher
 			if ($rewrite_settings)

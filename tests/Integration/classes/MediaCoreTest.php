@@ -32,6 +32,13 @@ use Media;
 
 class MediaCoreTest extends IntegrationTestCase
 {
+	protected $domain;
+
+	protected function setUp()
+	{
+		$this->domain = Configuration::get('PS_SHOP_DOMAIN');
+	}
+
 	public function isCssInputsProvider()
 	{
 		return array(
@@ -45,26 +52,27 @@ class MediaCoreTest extends IntegrationTestCase
 			array('url(//wwww.google.com/images/nav_logo7.png)', '', 'url(//wwww.google.com/images/nav_logo7.png)', false),
 			array('url("//wwww.google.com/images/nav_logo8.png")', '', 'url("//wwww.google.com/images/nav_logo8.png")', false),
 			array('url(\'//wwww.google.com/images/nav_logo9.png\')', '', 'url(\'//wwww.google.com/images/nav_logo9.png\')', false),
-			array('background: url(../img/contact-form1.png)', '/themes/default-bootstrap/css/contact-form.css', 'background:url(http://debian/themes/default-bootstrap/css/../img/contact-form1.png)', true),
-			array('background: url(./contact-form2.png)', '/themes/default-bootstrap/css/contact-form.css', 'background:url(http://debian/themes/default-bootstrap/css/./contact-form2.png)', true),
-			array('background: url(/img/contact-form3.png)', '/themes/default-bootstrap/css/contact-form.css', 'background:url(http://debian/img/contact-form3.png)', true),
-			array('background: url(/PrestaShop/img/contact-form4.png)', '/PrestaShop/themes/default-bootstrap/css/contact-form.css', 'background:url(http://debian/PrestaShop/img/contact-form4.png)', true),
+			array('url(http://cdn.server/uri/img/contact-form4.png)', '/path/', 'url(http://cdn.server/uri/img/contact-form4.png)', false),			
+			array('background: url(../img/contact-form1.png)', '/themes/default-bootstrap/css/contact-form.css', 'background:url(http://server/themes/default-bootstrap/css/../img/contact-form1.png)', true),
+			array('background: url(./contact-form2.png)', '/themes/default-bootstrap/css/contact-form.css', 'background:url(http://server/themes/default-bootstrap/css/./contact-form2.png)', true),
+			array('background: url(/img/contact-form3.png)', '/themes/default-bootstrap/css/contact-form.css', 'background:url(http://server/img/contact-form3.png)', true),
 		);
 	}
 
 	public function testCorrectJQueryNoConflictURL()
 	{
 		$result = Media::getJqueryPath('1.11');
-		$this->assertEquals(true, in_array('http://debian'.__PS_BASE_URI__.'js/jquery/jquery.noConflict.php?version=1.11', $result));
+		$this->assertEquals(true, in_array('http://'.$this->domain.__PS_BASE_URI__.'js/jquery/jquery.noConflict.php?version=1.11', $result));
 	}
 
 	/**
 	 * @dataProvider isCssInputsProvider
 	 */
-	public function testMinifyCSS($input, $fileuri, $expected)
+	public function testMinifyCSS($input, $fileuri, $output)
 	{
+		$output = str_replace('//server/', '//'.$this->domain.'/', $output);
 		$return = Media::minifyCSS($input, $fileuri, $import_url);
-		$this->assertEquals($expected, $return, 'MinifyCSS failed for data input : '.$input.'; Expected : '.$expected);
+		$this->assertEquals($output, $return, 'MinifyCSS failed for data input : '.$input.'; Expected : '.$output.'; Returns : '.$return);
 	}
 
 	/**
