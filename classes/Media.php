@@ -129,7 +129,7 @@ class MediaCore
 			if (function_exists('preg_last_error') && preg_last_error() == PREG_BACKTRACK_LIMIT_ERROR)
 			{
 				if (_PS_MODE_DEV_)
-					error_log('ERROR: PREG_BACKTRACK_LIMIT_ERROR in function packJSinHTML');
+					Tools::error_log('ERROR: PREG_BACKTRACK_LIMIT_ERROR in function packJSinHTML');
 				return $html_content_copy;
 			}
 			return $html_content;
