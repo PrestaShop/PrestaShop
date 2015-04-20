@@ -491,7 +491,8 @@ ul#optional {
 }
 	ul#required li.fail,
 	ul#optional li.fail {
-		background:#f8f8f8 url(img/pict_error.png) no-repeat 99% 8px;
+		background: #f8eba8 url(img/pict_error.png) no-repeat 99% 8px;
+        padding-right: 20px;
 }
 
 /* ETAPE 3 - DB ************************************************************* */
