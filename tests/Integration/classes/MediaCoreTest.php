@@ -32,12 +32,6 @@ use Media;
 
 class MediaCoreTest extends IntegrationTestCase
 {
-    public function testCorrectJQueryNoConflictURL()
-    {
-        $domain = Configuration::get('PS_SHOP_DOMAIN');
-        $result = Media::getJqueryPath('1.11');
-        $this->assertEquals(true, in_array('http://'.$domain.__PS_BASE_URI__.'js/jquery/jquery.noConflict.php?version=1.11', $result));
-    }
 	protected $domain;
 
 	protected function setUp()
@@ -73,6 +67,12 @@ class MediaCoreTest extends IntegrationTestCase
 			array('url("./contact-form8.png")', '/themes/default-bootstrap/css/contact-form.css', 'url("http://server/themes/default-bootstrap/css/./contact-form8.png")', true),
 			array('url("/img/contact-form9.png")', '/themes/default-bootstrap/css/contact-form.css', 'url("http://server/img/contact-form9.png")', true),
 		);
+	}
+
+	public function testCorrectJQueryNoConflictURL()
+	{
+		$result = Media::getJqueryPath('1.11');
+		$this->assertEquals(true, in_array('http://'.$this->domain.__PS_BASE_URI__.'js/jquery/jquery.noConflict.php?version=1.11', $result));
 	}
 
 	/**
