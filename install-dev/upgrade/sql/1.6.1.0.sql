@@ -177,3 +177,5 @@ ALTER TABLE `PREFIX_smarty_lazy_cache` CHANGE `cache_id` `cache_id` varchar(255)
 TRUNCATE TABLE `PREFIX_smarty_lazy_cache`;
 
 ALTER TABLE `PREFIX_order_invoice` ADD `company_address` TEXT DEFAULT NULL AFTER `total_wrapping_tax_incl`;
+
+INSERT INTO `PREFIX_hook` (`name`, `title`, `description`) VALUES ('displayInvoiceLegalFreeText', 'PDF Invoice - Legal Free Text', 'This hook allows you to modify the legal free text on PDF invoices');

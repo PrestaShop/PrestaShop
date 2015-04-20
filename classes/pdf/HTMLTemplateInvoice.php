@@ -267,6 +267,10 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
 		$layout = $this->computeLayout(array('has_discount' => $has_discount));
 
+		$legal_free_text = Hook::exec('displayInvoiceLegalFreeText', array('order' => $this->order));
+		if (!$legal_free_text)
+			$legal_free_text = Configuration::get('PS_INVOICE_LEGAL_FREE_TEXT', (int)Context::getContext()->language->id, null, (int)$this->order->id_shop);
+
 		$data = array(
 			'order' => $this->order,
 			'order_details' => $order_details,
@@ -282,7 +286,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			'footer' => $footer,
 			'ps_price_compute_precision' => _PS_PRICE_COMPUTE_PRECISION_,
 			'round_type' => $round_type,
-			'legal_free_text' => Configuration::get('PS_INVOICE_LEGAL_FREE_TEXT', (int)$this->order->id_lang, null, (int)$this->order->id_shop),
+			'legal_free_text' => $legal_free_text,
 		);
 
 		if (Tools::getValue('debug'))
