@@ -2564,7 +2564,9 @@ class CartCore extends ObjectModel
 		{
 			if (!isset($delivery_option_list[$id_address]) || !isset($delivery_option_list[$id_address][$key]))
 				continue;
-			if ($use_tax)
+			if ($delivery_option_list[$id_address][$key]['is_free'])
+				$total_shipping += 0;
+			elseif ($use_tax)
 				$total_shipping += $delivery_option_list[$id_address][$key]['total_price_with_tax'];
 			else
 				$total_shipping += $delivery_option_list[$id_address][$key]['total_price_without_tax'];
