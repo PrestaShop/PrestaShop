@@ -45,7 +45,8 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
 
 		// header informations
 		$this->date = Tools::displayDate($this->order->invoice_date);
-		$this->title = sprintf(HTMLTemplateOrderReturn::l('Order Return #%06d'), $this->order_return->id);
+		$prefix = Configuration::get('PS_RETURN_PREFIX', Context::getContext()->language->id)
+		$this->title = sprintf(HTMLTemplateOrderReturn::l('Order Return %1$s%2$06d'), $prefix, $this->order_return->id);
 
 		// footer informations
 		$this->shop = new Shop((int)$this->order->id_shop);

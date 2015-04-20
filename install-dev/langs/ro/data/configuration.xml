@@ -6,6 +6,9 @@
   <configuration id="PS_DELIVERY_PREFIX">
     <value>#AE</value>
   </configuration>
+  <configuration id="PS_RETURN_PREFIX">
+    <value>#RE</value>
+  </configuration>
   <configuration id="PS_SEARCH_BLACKLIST">
     <value>un|o|de|pe|la|in|în|si|și</value>
   </configuration>
