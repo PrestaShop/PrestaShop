@@ -29,7 +29,7 @@
 {assign var=color_line_even value="#FFFFFF"}
 {assign var=color_line_odd value="#F9F9F9"}
 {assign var=font_size_text value="9pt"}
-{assign var=font_size_header value="10pt"}
+{assign var=font_size_header value="9pt"}
 {assign var=font_size_product value="9pt"}
 {assign var=height_header value="20px"}
 {assign var=table_padding value="4px"}

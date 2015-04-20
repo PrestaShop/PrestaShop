@@ -78,7 +78,7 @@
 
     <tr class="separator">
         <td class="grey">
-            {l s='Total (Tax Excl.)' pdf='true'}
+            {l s='Total (Before tax)' pdf='true'}
         </td>
         <td class="white">
             {displayPrice currency=$order->id_currency price=$footer.total_paid_tax_excl}
@@ -94,7 +94,7 @@
     </tr>
     <tr>
         <td class="grey">
-            {l s='Total (Tax Incl.)' pdf='true'}
+            {l s='Total (After tax)' pdf='true'}
         </td>
         <td class="white">
             {displayPrice currency=$order->id_currency price=$footer.total_paid_tax_incl}

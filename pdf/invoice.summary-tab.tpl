@@ -26,7 +26,7 @@
     <tr>
         <th class="header small" width="25%" valign="middle">{l s='Invoice Number' pdf='true'}</th>
         <th class="header small" width="20%" valign="middle">{l s='Invoice Date' pdf='true'}</th>
-        <th class="header small" width="25%" valign="middle">{l s='Order Number' pdf='true'}</th>
+        <th class="header small" width="25%" valign="middle">{l s='Order Reference' pdf='true'}</th>
         <th class="header small" width="30%" valign="middle">{l s='VAT Number' pdf='true'}</th>
     </tr>
     <tr>
