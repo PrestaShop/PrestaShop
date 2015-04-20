@@ -3370,8 +3370,7 @@ class AdminControllerCore extends Controller
 							$this->errors[$field.'_'.$language['id_lang']] = $error;
 				}
 			}
-			else
-				if (($error = $object->validateField($field, Tools::getValue($field), null, $skip, true)) !== true)
+			elseif (($error = $object->validateField($field, Tools::getValue($field), null, $skip, true)) !== true)
 					$this->errors[$field] = $error;
 		}
 
