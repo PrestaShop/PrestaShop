@@ -28,7 +28,7 @@ class CategoryCore extends ObjectModel
 {
 	public $id;
 
-	/** @var integer category ID */
+	/** @var int category ID */
 	public $id_category;
 
 	/** @var string Name */
@@ -37,25 +37,25 @@ class CategoryCore extends ObjectModel
 	/** @var boolean Status for display */
 	public $active = 1;
 
-	/** @var  integer category position */
+	/** @var  int category position */
 	public $position;
 
 	/** @var string Description */
 	public $description;
 
-	/** @var integer Parent category ID */
+	/** @var int Parent category ID */
 	public $id_parent;
 
-	/** @var integer default Category id */
+	/** @var int default Category id */
 	public $id_category_default;
 
-	/** @var integer Parents number */
+	/** @var int Parents number */
 	public $level_depth;
 
-	/** @var integer Nested tree model "left" value */
+	/** @var int Nested tree model "left" value */
 	public $nleft;
 
-	/** @var integer Nested tree model "right" value */
+	/** @var int Nested tree model "right" value */
 	public $nright;
 
 	/** @var string string used in rewrited URL */
@@ -79,7 +79,7 @@ class CategoryCore extends ObjectModel
 	/** @var boolean is Category Root */
 	public $is_root_category;
 
-	/** @var integer */
+	/** @var int */
 	public $id_shop_default;
 
 	public $groupBox;
@@ -228,9 +228,9 @@ class CategoryCore extends ObjectModel
 	/**
 	 * Recursive scan of subcategories
 	 *
-	 * @param integer $max_depth Maximum depth of the tree (i.e. 2 => 3 levels depth)
-	 * @param integer $current_depth specify the current depth in the tree (don't use it, only for rucursivity!)
-	 * @param integer $id_lang Specify the id of the language used
+	 * @param int $max_depth Maximum depth of the tree (i.e. 2 => 3 levels depth)
+	 * @param int $current_depth specify the current depth in the tree (don't use it, only for rucursivity!)
+	 * @param int $id_lang Specify the id of the language used
 	 * @param array $excluded_ids_array specify a list of ids to exclude of results
 	 *
 	 * @return array Subcategories lite tree
@@ -285,7 +285,7 @@ class CategoryCore extends ObjectModel
 	 * Recursively add specified category childs to $to_delete array
 	 *
 	 * @param array &$to_delete Array reference where categories ID will be saved
-	 * @param integer $id_category Parent category ID
+	 * @param int $id_category Parent category ID
 	 */
 	protected function recursiveDelete(&$to_delete, $id_category)
 	{
@@ -367,7 +367,7 @@ class CategoryCore extends ObjectModel
 	/**
 	 * Get the depth level for the category
 	 *
-	 * @return integer Depth level
+	 * @return int Depth level
 	 */
 	public function calcLevelDepth()
 	{
@@ -420,7 +420,7 @@ class CategoryCore extends ObjectModel
 	/**
 	 * Updates level_depth for all children of the given id_category
 	 *
-	 * @param integer $id_category parent category
+	 * @param int $id_category parent category
 	 */
 	public function recalculateLevelDepth($id_category)
 	{
@@ -451,7 +451,7 @@ class CategoryCore extends ObjectModel
 	/**
 	 * Return available categories
 	 *
-	 * @param integer $id_lang Language ID
+	 * @param int $id_lang Language ID
 	 * @param boolean $active return only active categories
 	 * @return array Categories
 	 */
@@ -601,7 +601,7 @@ class CategoryCore extends ObjectModel
 	/**
 	 * Return current category childs
 	 *
-	 * @param integer $id_lang Language ID
+	 * @param int $id_lang Language ID
 	 * @param boolean $active return only active categories
 	 * @return array Categories
 	 */
@@ -762,7 +762,7 @@ class CategoryCore extends ObjectModel
 	/**
 	 * Return main categories
 	 *
-	 * @param integer $id_lang Language ID
+	 * @param int $id_lang Language ID
 	 * @param boolean $active return only active categories
 	 * @return array categories
 	 */
@@ -931,7 +931,7 @@ class CategoryCore extends ObjectModel
 	/**
 	 * Copy products from a category to another
 	 *
-	 * @param integer $id_old Source category ID
+	 * @param int $id_old Source category ID
 	 * @param boolean $id_new Destination category ID
 	 * @return boolean Duplication result
 	 */
@@ -962,8 +962,8 @@ class CategoryCore extends ObjectModel
 	 * Check if category can be moved in another one.
 	 * The category cannot be moved in a child category.
 	 *
-	 * @param integer $id_category current category
-	 * @param integer $id_parent Parent candidate
+	 * @param int $id_category current category
+	 * @param int $id_parent Parent candidate
 	 * @return boolean Parent validity
 	 */
 	public static function checkBeforeMove($id_category, $id_parent)
@@ -1024,7 +1024,7 @@ class CategoryCore extends ObjectModel
 	/**
 	 * Light back office search for categories
 	 *
-	 * @param integer $id_lang Language ID
+	 * @param int $id_lang Language ID
 	 * @param string $query Searched string
 	 * @param boolean $unrestricted allows search without lang and includes first category and exact match
 	 * @return array Corresponding categories
@@ -1049,9 +1049,9 @@ class CategoryCore extends ObjectModel
 	/**
 	 * Retrieve category by name and parent category id
 	 *
-	 * @param integer $id_lang Language ID
+	 * @param int $id_lang Language ID
 	 * @param string  $category_name Searched category name
-	 * @param integer $id_parent_category parent category ID
+	 * @param int $id_parent_category parent category ID
 	 * @return array Corresponding category
 	 */
 	public static function searchByNameAndParentCategoryId($id_lang, $category_name, $id_parent_category)
@@ -1070,7 +1070,7 @@ class CategoryCore extends ObjectModel
 	/**
 	 * Search with Pathes for categories
 	 *
-	 * @param integer $id_lang Language ID
+	 * @param int $id_lang Language ID
 	 * @param string $path of category
 	 * @param boolean $object_to_create a category
 * 	 * @param boolean $method_to_create a category
@@ -1103,7 +1103,7 @@ class CategoryCore extends ObjectModel
 	/**
 	 * Get Each parent category of this category until the root category
 	 *
-	 * @param integer $id_lang Language ID
+	 * @param int $id_lang Language ID
 	 * @return array Corresponding categories
 	 */
 	public function getParentsCategories($id_lang = null)

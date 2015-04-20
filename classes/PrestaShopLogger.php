@@ -26,13 +26,13 @@
 
 class	PrestaShopLoggerCore extends ObjectModel
 {
-	/** @var integer Log id */
+	/** @var int Log id */
 	public $id_log;
 
-	/** @var integer Log severity */
+	/** @var int Log severity */
 	public $severity;
 
-	/** @var integer Error code */
+	/** @var int Error code */
 	public $error_code;
 
 	/** @var string Message */
@@ -41,10 +41,10 @@ class	PrestaShopLoggerCore extends ObjectModel
 	/** @var string Object type (eg. Order, Customer...) */
 	public $object_type;
 
-	/** @var integer Object ID */
+	/** @var int Object ID */
 	public $object_id;
 
-	/** @var integer Object ID */
+	/** @var int Object ID */
 	public $id_employee;
 
 	/** @var string Object creation date */

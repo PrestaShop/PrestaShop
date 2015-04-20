@@ -34,16 +34,16 @@ class TabCore extends ObjectModel
 
 	public $module;
 
-	/** @var integer parent ID */
+	/** @var int parent ID */
 	public $id_parent;
 
-	/** @var integer position */
+	/** @var int position */
 	public $position;
 
 	/** @var boolean active */
 	public $active = true;
 
-	/** @var integer hide_host_mode */
+	/** @var int hide_host_mode */
 	public $hide_host_mode = false;
 
 	const TAB_MODULE_LIST_URL = _PS_TAB_MODULE_LIST_URL_;
@@ -162,7 +162,7 @@ class TabCore extends ObjectModel
 	/**
 	 * Get tab id
 	 *
-	 * @return integer tab id
+	 * @return int tab id
 	 */
 	public static function getCurrentTabId()
 	{
@@ -176,7 +176,7 @@ class TabCore extends ObjectModel
 	/**
 	 * Get tab parent id
 	 *
-	 * @return integer tab parent id
+	 * @return int tab parent id
 	 */
 	public static function getCurrentParentId()
 	{

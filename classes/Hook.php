@@ -725,7 +725,7 @@ class HookCore extends ObjectModel
 	 * Return hook ID from name
 	 *
 	 * @param string $hook_name Hook name
-	 * @return integer Hook ID
+	 * @return int Hook ID
 	 *
 	 * @deprecated since 1.5.0 use Hook::getIdByName() instead
 	 */

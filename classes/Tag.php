@@ -26,7 +26,7 @@
 
 class TagCore extends ObjectModel
 {
-	/** @var integer Language id */
+	/** @var int Language id */
 	public $id_lang;
 
 	/** @var string Name */
@@ -86,8 +86,8 @@ class TagCore extends ObjectModel
 	/**
 	* Add several tags in database and link it to a product
 	*
-	* @param integer $id_lang Language id
-	* @param integer $id_product Product id to link tags with
+	* @param int $id_lang Language id
+	* @param int $id_product Product id to link tags with
 	* @param string|array $tag_list List of tags, as array or as a string with comas
 	* @return boolean Operation success
 	*/

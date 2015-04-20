@@ -478,7 +478,7 @@ class LinkCore
 	/**
 	 * Create link after language change, for the change language block
 	 *
-	 * @param integer $id_lang Language ID
+	 * @param int $id_lang Language ID
 	 * @return string link
 	 */
 	public function getLanguageLink($id_lang, Context $context = null)

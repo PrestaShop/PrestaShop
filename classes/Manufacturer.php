@@ -28,7 +28,7 @@ class ManufacturerCore extends ObjectModel
 {
 	public $id;
 
-	/** @var integer manufacturer ID //FIXME is it really usefull...? */
+	/** @var int manufacturer ID //FIXME is it really usefull...? */
 	public $id_manufacturer;
 
 	/** @var string Name */
@@ -226,7 +226,7 @@ class ManufacturerCore extends ObjectModel
 	/**
 	 * Return name from id
 	 *
-	 * @param integer $id_manufacturer Manufacturer ID
+	 * @param int $id_manufacturer Manufacturer ID
 	 * @return string name
 	 */
 	static protected $cacheName = array();

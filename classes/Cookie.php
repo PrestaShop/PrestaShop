@@ -126,7 +126,7 @@ class CookieCore
 	/**
 	 * Set expiration date
 	 *
-	 * @param integer $expire Expiration time from now
+	 * @param int $expire Expiration time from now
 	 */
 	public function setExpire($expire)
 	{

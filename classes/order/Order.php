@@ -31,32 +31,32 @@ class OrderCore extends ObjectModel
 	const ROUND_TOTAL = 3;
 
 
-	/** @var integer Delivery address id */
+	/** @var int Delivery address id */
 	public $id_address_delivery;
 
-	/** @var integer Invoice address id */
+	/** @var int Invoice address id */
 	public $id_address_invoice;
 
 	public $id_shop_group;
 
 	public $id_shop;
 
-	/** @var integer Cart id */
+	/** @var int Cart id */
 	public $id_cart;
 
-	/** @var integer Currency id */
+	/** @var int Currency id */
 	public $id_currency;
 
-	/** @var integer Language id */
+	/** @var int Language id */
 	public $id_lang;
 
-	/** @var integer Customer id */
+	/** @var int Customer id */
 	public $id_customer;
 
-	/** @var integer Carrier id */
+	/** @var int Carrier id */
 	public $id_carrier;
 
-	/** @var integer Order Status id */
+	/** @var int Order Status id */
 	public $current_state;
 
 	/** @var string Secure key */
@@ -135,10 +135,10 @@ class OrderCore extends ObjectModel
 	/** @var float Wrapping total tax excluded */
 	public $total_wrapping_tax_excl;
 
-	/** @var integer Invoice number */
+	/** @var int Invoice number */
 	public $invoice_number;
 
-	/** @var integer Delivery number */
+	/** @var int Delivery number */
 	public $delivery_number;
 
 	/** @var string Invoice creation date */
@@ -478,10 +478,10 @@ class OrderCore extends ObjectModel
 	/**
 	 * Get order history
 	 *
-	 * @param integer $id_lang Language id
-	 * @param integer $id_order_state Filter a specific order status
-	 * @param integer $no_hidden Filter no hidden status
-	 * @param integer $filters Flag to use specific field filter
+	 * @param int $id_lang Language id
+	 * @param int $id_order_state Filter a specific order status
+	 * @param int $no_hidden Filter no hidden status
+	 * @param int $filters Flag to use specific field filter
 	 *
 	 * @return array History entries ordered by date DESC
 	 */
@@ -858,7 +858,7 @@ class OrderCore extends ObjectModel
 	/**
 	 * Get customer orders
 	 *
-	 * @param integer $id_customer Customer id
+	 * @param int $id_customer Customer id
 	 * @param boolean $show_hidden_status Display or not hidden order statuses
 	 * @return array Customer orders
 	 */
@@ -1038,7 +1038,7 @@ class OrderCore extends ObjectModel
 	/**
 	 * Get customer orders number
 	 *
-	 * @param integer $id_customer Customer id
+	 * @param int $id_customer Customer id
 	 * @return array Customer orders number
 	 */
 	public static function getCustomerNbOrders($id_customer)
@@ -1055,7 +1055,7 @@ class OrderCore extends ObjectModel
 	/**
 	 * Get an order by its cart id
 	 *
-	 * @param integer $id_cart Cart id
+	 * @param int $id_cart Cart id
 	 * @return array Order details
 	 */
 	public static function getOrderByCartId($id_cart)

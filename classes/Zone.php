@@ -72,7 +72,7 @@ class ZoneCore extends ObjectModel
 	 * Get a zone ID from its default language name
 	 *
 	 * @param string $name
-	 * @return integer id_zone
+	 * @return int id_zone
 	 */
 	public static function getIdByName($name)
 	{

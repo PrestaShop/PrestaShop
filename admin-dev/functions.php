@@ -132,7 +132,7 @@ function displayDate($sql_date, $with_time = false)
  * Return path to a product category
  *
  * @param string $url_base Start URL
- * @param integer $id_category Start category
+ * @param int $id_category Start category
  * @param string $path Current path
  * @param string $highlight String to highlight (in XHTML/CSS)
  * @param string $type Category type (products/cms)

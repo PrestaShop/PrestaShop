@@ -33,7 +33,7 @@ class AttachmentCore extends ObjectModel
 	public $mime;
 	public $description;
 
-	/** @var integer position */
+	/** @var int position */
 	public $position;
 
 	/**

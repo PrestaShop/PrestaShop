@@ -26,13 +26,13 @@
 
 class AddressCore extends ObjectModel
 {
-	/** @var integer Customer id which address belongs to */
+	/** @var int Customer id which address belongs to */
 	public $id_customer = null;
 
-	/** @var integer Manufacturer id which address belongs to */
+	/** @var int Manufacturer id which address belongs to */
 	public $id_manufacturer = null;
 
-	/** @var integer Supplier id which address belongs to */
+	/** @var int Supplier id which address belongs to */
 	public $id_supplier = null;
 
 	/**
@@ -41,10 +41,10 @@ class AddressCore extends ObjectModel
 	 */
 	public $id_warehouse = null;
 
-	/** @var integer Country id */
+	/** @var int Country id */
 	public $id_country;
 
-	/** @var integer State id */
+	/** @var int State id */
 	public $id_state;
 
 	/** @var string Country name */
@@ -151,7 +151,7 @@ class AddressCore extends ObjectModel
 	/**
 	 * Build an address
 	 *
-	 * @param integer $id_address Existing address id in order to load object (optional)
+	 * @param int $id_address Existing address id in order to load object (optional)
 	 */
 	public	function __construct($id_address = null, $id_lang = null)
 	{
@@ -235,8 +235,8 @@ class AddressCore extends ObjectModel
 	/**
 	 * Get zone id for a given address
 	 *
-	 * @param integer $id_address Address id for which we want to get zone id
-	 * @return integer Zone id
+	 * @param int $id_address Address id for which we want to get zone id
+	 * @return int Zone id
 	 */
 	public static function getZoneById($id_address)
 	{
@@ -268,8 +268,8 @@ class AddressCore extends ObjectModel
 	/**
 	 * Check if country is active for a given address
 	 *
-	 * @param integer $id_address Address id for which we want to get country status
-	 * @return integer Country status
+	 * @param int $id_address Address id for which we want to get country status
+	 * @return int Country status
 	 */
 	public static function isCountryActiveById($id_address)
 	{
@@ -292,7 +292,7 @@ class AddressCore extends ObjectModel
 	/**
 	 * Check if address is used (at least one order placed)
 	 *
-	 * @return integer Order count for this address
+	 * @return int Order count for this address
 	 */
 	public function isUsed()
 	{

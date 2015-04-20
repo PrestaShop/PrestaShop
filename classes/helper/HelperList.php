@@ -32,7 +32,7 @@ class HelperListCore extends Helper
 	/** @var array Cache for query results */
 	protected $_list = array();
 
-	/** @var integer Number of results in list */
+	/** @var int Number of results in list */
 	public $listTotal = 0;
 
 	/** @var array WHERE clause determined by filter fields */
@@ -41,7 +41,7 @@ class HelperListCore extends Helper
 	/** @var array Number of results in list per page (used in select field) */
 	public $_pagination = array(20, 50, 100, 300, 1000);
 
-	/** @var integer Default number of results in list per page */
+	/** @var int Default number of results in list per page */
 	public $_default_pagination = 50;
 
 	/** @var string ORDER BY clause determined by field/arrows in list header */

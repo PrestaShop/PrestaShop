@@ -30,16 +30,16 @@ class OrderInvoiceCore extends ObjectModel
 	const TAX_INCL = 1;
 	const DETAIL = 2;
 
-	/** @var integer */
+	/** @var int */
 	public $id_order;
 
-	/** @var integer */
+	/** @var int */
 	public $number;
 
-	/** @var integer */
+	/** @var int */
 	public $delivery_number;
 
-	/** @var integer */
+	/** @var int */
 	public $delivery_date = '0000-00-00 00:00:00';
 
 	/** @var float */

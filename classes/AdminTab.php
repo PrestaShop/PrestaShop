@@ -29,7 +29,7 @@
  */
 abstract class AdminTabCore
 {
-	/** @var integer Tab id */
+	/** @var int Tab id */
 	public $id = -1;
 
 	/** @var string Associated table name */
@@ -106,7 +106,7 @@ abstract class AdminTabCore
 	/** @var array Cache for query results */
 	protected $_list = array();
 
-	/** @var integer Number of results in list */
+	/** @var int Number of results in list */
 	protected $_listTotal = 0;
 
 	/** @var array WHERE clause determined by filter fields */
@@ -127,7 +127,7 @@ abstract class AdminTabCore
 	/** @var string Order way (ASC, DESC) determined by arrows in list header */
 	protected $_orderWay;
 
-	/** @var integer Max image size for upload
+	/** @var int Max image size for upload
 	 * As of 1.5 it is recommended to not set a limit to max image size
 	 **/
 	protected $maxImageSize;
@@ -513,7 +513,7 @@ abstract class AdminTabCore
 	/**
 	 * Overload this method for custom checking
 	 *
-	 * @param integer $id Object id used for deleting images
+	 * @param int $id Object id used for deleting images
 	 * @deprecated As of 1.5 use ObjectModel->deleteImage instead.
 	 */
 	public function deleteImage($id)
@@ -1117,7 +1117,7 @@ abstract class AdminTabCore
 	/**
 	 * Overload this method for custom checking
 	 *
-	 * @param integer $id Object id used for deleting images
+	 * @param int $id Object id used for deleting images
 	 * @return boolean
 	 */
 	protected function postImage($id)
@@ -1261,11 +1261,11 @@ abstract class AdminTabCore
 	/**
 	 * Get the current objects' list form the database
 	 *
-	 * @param integer $id_lang Language used for display
+	 * @param int $id_lang Language used for display
 	 * @param string $orderBy ORDER BY clause
 	 * @param string $_orderWay Order way (ASC, DESC)
-	 * @param integer $start Offset in LIMIT clause
-	 * @param integer $limit Row count in LIMIT clause
+	 * @param int $start Offset in LIMIT clause
+	 * @param int $limit Row count in LIMIT clause
 	 */
 	public function getList($id_lang, $orderBy = null, $orderWay = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
@@ -1358,10 +1358,10 @@ abstract class AdminTabCore
 	/**
 	 * Display image aside object form
 	 *
-	 * @param integer $id Object id
+	 * @param int $id Object id
 	 * @param string $image Local image filepath
-	 * @param integer $size Image width
-	 * @param integer $id_image Image id (for products with several images)
+	 * @param int $size Image width
+	 * @param int $id_image Image id (for products with several images)
 	 * @param string $token Employee token used in the image deletion link
 	 * @param boolean $disableCache When turned on a timestamp will be added to the image URI to disable the HTTP cache
 	 */
@@ -2156,7 +2156,7 @@ abstract class AdminTabCore
 	 *
 	 * @param object $obj Object
 	 * @param string $key Field name
-	 * @param integer $id_lang Language id (optional)
+	 * @param int $id_lang Language id (optional)
 	 * @return string
 	 */
 	public function getFieldValue($obj, $key, $id_lang = null, $id_shop = null)
@@ -2279,7 +2279,7 @@ abstract class AdminTabCore
 	 * Display flags in forms for translations
 	 *
 	 * @param array $languages All languages available
-	 * @param integer $default_language Default language id
+	 * @param int $default_language Default language id
 	 * @param string $ids Multilingual div ids in form
 	 * @param string $id Current div id]
 	 * @param boolean $return define the return way : false for a display, true for a return

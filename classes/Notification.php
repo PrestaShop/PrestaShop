@@ -60,7 +60,7 @@ class NotificationCore
 	 * Get all the element ids
 	 *
 	 * @param string $type contains the field name of the Employee table
-	 * @param integer $id_last_element contains the id of the last seen element
+	 * @param int $id_last_element contains the id of the last seen element
 	 * @return array containing the notifications
 	 */
 	public static function getLastElementsIdsByType($type, $id_last_element)

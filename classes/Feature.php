@@ -55,8 +55,8 @@ class FeatureCore extends ObjectModel
 	/**
 	 * Get a feature data for a given id_feature and id_lang
 	 *
-	 * @param integer $id_lang Language id
-	 * @param integer $id_feature Feature id
+	 * @param int $id_lang Language id
+	 * @param int $id_feature Feature id
 	 * @return array Array with feature's data
 	 */
 	public static function getFeature($id_lang, $id_feature)
@@ -73,7 +73,7 @@ class FeatureCore extends ObjectModel
 	/**
 	 * Get all features for a given language
 	 *
-	 * @param integer $id_lang Language id
+	 * @param int $id_lang Language id
 	 * @return array Multiple arrays with feature's data
 	 */
 	public static function getFeatures($id_lang, $with_shop = true)
@@ -177,7 +177,7 @@ class FeatureCore extends ObjectModel
 	/**
 	* Count number of features for a given language
 	*
-	* @param integer $id_lang Language id
+	* @param int $id_lang Language id
 	* @return int Number of feature
 	*/
 	public static function nbFeatures($id_lang)
@@ -193,8 +193,8 @@ class FeatureCore extends ObjectModel
 	/**
 	* Create a feature from import
 	*
-	* @param integer $id_feature Feature id
-	* @param integer $id_product Product id
+	* @param int $id_feature Feature id
+	* @param int $id_product Product id
 	* @param array $value Feature Value
 	*/
 	public static function addFeatureImport($name, $position = false)
@@ -273,7 +273,7 @@ class FeatureCore extends ObjectModel
 	/**
 	 * Move a feature
 	 * @param boolean $way Up (1)  or Down (0)
-	 * @param integer $position
+	 * @param int $position
 	 * @return boolean Update result
 	 */
 	public function updatePosition($way, $position, $id_feature = null)
@@ -325,7 +325,7 @@ class FeatureCore extends ObjectModel
 	 *
 	 * Get the higher feature position
 	 *
-	 * @return integer $position
+	 * @return int $position
 	 */
 	public static function getHigherPosition()
 	{

@@ -32,22 +32,22 @@ class CartCore extends ObjectModel
 
 	public $id_shop;
 
-	/** @var integer Customer delivery address ID */
+	/** @var int Customer delivery address ID */
 	public $id_address_delivery;
 
-	/** @var integer Customer invoicing address ID */
+	/** @var int Customer invoicing address ID */
 	public $id_address_invoice;
 
-	/** @var integer Customer currency ID */
+	/** @var int Customer currency ID */
 	public $id_currency;
 
-	/** @var integer Customer ID */
+	/** @var int Customer ID */
 	public $id_customer;
 
-	/** @var integer Guest ID */
+	/** @var int Guest ID */
 	public $id_guest;
 
-	/** @var integer Language ID */
+	/** @var int Language ID */
 	public $id_lang;
 
 	/** @var boolean True if the customer wants a recycled package */
@@ -68,7 +68,7 @@ class CartCore extends ObjectModel
 	/** @var string secure_key */
 	public $secure_key;
 
-	/** @var integer Carrier ID */
+	/** @var int Carrier ID */
 	public $id_carrier = 0;
 
 	/** @var string Object last modification date */
@@ -837,9 +837,9 @@ class CartCore extends ObjectModel
 	/**
 	 * Update product quantity
 	 *
-	 * @param integer $quantity Quantity to add (or substract)
-	 * @param integer $id_product Product ID
-	 * @param integer $id_product_attribute Attribute ID if needed
+	 * @param int $quantity Quantity to add (or substract)
+	 * @param int $id_product Product ID
+	 * @param int $id_product_attribute Attribute ID if needed
 	 * @param string $operator Indicate if quantity must be increased or decreased
 	 */
 	public function updateQty($quantity, $id_product, $id_product_attribute = null, $id_customization = false,
@@ -1165,9 +1165,9 @@ class CartCore extends ObjectModel
 	/**
 	 * Delete a product from the cart
 	 *
-	 * @param integer $id_product Product ID
-	 * @param integer $id_product_attribute Attribute ID if needed
-	 * @param integer $id_customization Customization id
+	 * @param int $id_product Product ID
+	 * @param int $id_product_attribute Attribute ID if needed
+	 * @param int $id_customization Customization id
 	 * @return boolean result
 	 */
 	public function deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0)
@@ -1250,7 +1250,7 @@ class CartCore extends ObjectModel
 	 * Delete a customization from the cart. If customization is a Picture,
 	 * then the image is also deleted
 	 *
-	 * @param integer $id_customization
+	 * @param int $id_customization
 	 * @return boolean result
 	 */
 	protected function _deleteCustomization($id_customization, $id_product, $id_product_attribute, $id_address_delivery = 0)
@@ -1327,7 +1327,7 @@ class CartCore extends ObjectModel
 	* Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING
 	*
 	* @param boolean $withTaxes With or without taxes
-	* @param integer $type Total type
+	* @param int $type Total type
 	* @param boolean $use_cache Allow using cache of the method CartRule::getContextualValue
 	* @return float Order total
 	*/

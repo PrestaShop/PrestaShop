@@ -69,7 +69,7 @@ class EmployeeCore extends ObjectModel
 	/** @var string employee's chosen css file */
 	public $bo_css = 'admin-theme.css';
 
-	/** @var integer employee desired screen width */
+	/** @var int employee desired screen width */
 	public $bo_width;
 
 	/** @var bool, false */

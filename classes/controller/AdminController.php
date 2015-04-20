@@ -86,7 +86,7 @@ class AdminControllerCore extends Controller
 	/** @var array */
 	public $tabAccess;
 
-	/** @var integer Tab id */
+	/** @var int Tab id */
 	public $id = -1;
 
 	/** @var bool */
@@ -185,7 +185,7 @@ class AdminControllerCore extends Controller
 	/** @var boolean Set to true to show toolbar and page title for options */
 	protected $show_toolbar_options = false;
 
-	/** @var integer Number of results in list */
+	/** @var int Number of results in list */
 	protected $_listTotal = 0;
 
 	/** @var boolean Automatically join language table if true */
@@ -203,7 +203,7 @@ class AdminControllerCore extends Controller
 	/** @var array Number of results in list per page (used in select field) */
 	protected $_pagination = array(20, 50, 100, 300, 1000);
 
-	/** @var integer Default number of results in list per page */
+	/** @var int Default number of results in list per page */
 	protected $_default_pagination = 50;
 
 	/** @var string ORDER BY clause determined by field/arrows in list header */
@@ -2944,11 +2944,11 @@ class AdminControllerCore extends Controller
 	/**
 	 * Get the current objects' list form the database
 	 *
-	 * @param integer $id_lang Language used for display
+	 * @param int $id_lang Language used for display
 	 * @param string|null $order_by ORDER BY clause
 	 * @param string|null $order_way Order way (ASC, DESC)
-	 * @param integer $start Offset in LIMIT clause
-	 * @param integer|null $limit Row count in LIMIT clause
+	 * @param int $start Offset in LIMIT clause
+	 * @param int|null $limit Row count in LIMIT clause
 	 * @param int|bool $id_lang_shop
 	 * @throws PrestaShopDatabaseException
 	 * @throws PrestaShopException
@@ -3308,7 +3308,7 @@ class AdminControllerCore extends Controller
 	 *
 	 * @param ObjectModel $obj Object
 	 * @param string $key Field name
-	 * @param integer|null $id_lang Language id (optional)
+	 * @param int|null $id_lang Language id (optional)
 	 * @return string
 	 */
 	public function getFieldValue($obj, $key, $id_lang = null)
@@ -3586,7 +3586,7 @@ class AdminControllerCore extends Controller
 	/**
 	 * Overload this method for custom checking
 	 *
-	 * @param integer $id Object id used for deleting images
+	 * @param int $id Object id used for deleting images
 	 * @return boolean
 	 */
 	protected function postImage($id)

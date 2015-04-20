@@ -224,8 +224,8 @@ class TaxCore extends ObjectModel
 	/**
 	 * Return the product tax rate using the tax rules system
 	 *
-	 * @param integer $id_product
-	 * @param integer $id_country
+	 * @param int $id_product
+	 * @param int $id_country
 	 * @return Tax
 	 *
 	 * @deprecated since 1.5
@@ -246,8 +246,8 @@ class TaxCore extends ObjectModel
 	/**
 	 * Returns the product tax
 	 *
-	 * @param integer $id_product
-	 * @param integer $id_country
+	 * @param int $id_product
+	 * @param int $id_country
 	 * @return Tax
 	 */
 	public static function getProductTaxRate($id_product, $id_address = null, Context $context = null)

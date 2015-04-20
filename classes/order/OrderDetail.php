@@ -26,40 +26,40 @@
 
 class OrderDetailCore extends ObjectModel
 {
-	/** @var integer */
+	/** @var int */
 	public $id_order_detail;
 
-	/** @var integer */
+	/** @var int */
 	public $id_order;
 
-	/** @var integer */
+	/** @var int */
 	public $id_order_invoice;
 
-	/** @var integer */
+	/** @var int */
 	public $product_id;
 
-	/** @var integer */
+	/** @var int */
 	public $id_shop;
 
-	/** @var integer */
+	/** @var int */
 	public $product_attribute_id;
 
 	/** @var string */
 	public $product_name;
 
-	/** @var integer */
+	/** @var int */
 	public $product_quantity;
 
-	/** @var integer */
+	/** @var int */
 	public $product_quantity_in_stock;
 
-	/** @var integer */
+	/** @var int */
 	public $product_quantity_return;
 
-	/** @var integer */
+	/** @var int */
 	public $product_quantity_refunded;
 
-	/** @var integer */
+	/** @var int */
 	public $product_quantity_reinjected;
 
 	/** @var float */
@@ -119,13 +119,13 @@ class OrderDetailCore extends ObjectModel
 	/** @var float */
 	public $ecotax_tax_rate;
 
-	/** @var integer */
+	/** @var int */
 	public $discount_quantity_applied;
 
 	/** @var string */
 	public $download_hash;
 
-	/** @var integer */
+	/** @var int */
 	public $download_nb;
 
 	/** @var datetime */

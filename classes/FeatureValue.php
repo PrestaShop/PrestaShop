@@ -26,7 +26,7 @@
 
 class FeatureValueCore extends ObjectModel
 {
-	/** @var integer Group id which attribute belongs */
+	/** @var int Group id which attribute belongs */
 	public $id_feature;
 
 	/** @var string Name */
@@ -77,7 +77,7 @@ class FeatureValueCore extends ObjectModel
 	/**
 	 * Get all values for a given feature and language
 	 *
-	 * @param integer $id_lang Language id
+	 * @param int $id_lang Language id
 	 * @param boolean $id_feature Feature id
 	 * @return array Array with feature's values
 	 */
@@ -114,7 +114,7 @@ class FeatureValueCore extends ObjectModel
 	 * Select the good lang in tab
 	 *
 	 * @param array $lang Array with all language
-	 * @param integer $id_lang Language id
+	 * @param int $id_lang Language id
 	 * @return string String value name selected
 	 */
 	public static function selectLang($lang, $id_lang)

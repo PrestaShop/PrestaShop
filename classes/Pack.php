@@ -271,9 +271,9 @@ class PackCore extends Product
 	/**
 	 * Add an item to the pack
 	 *
-	 * @param integer $id_product
-	 * @param integer $id_item
-	 * @param integer $qty
+	 * @param int $id_product
+	 * @param int $id_item
+	 * @param int $qty
 	 * @param int     $id_attribute_item
 	 * @return bool true if everything was fine
 	 * @throws PrestaShopDatabaseException

@@ -26,19 +26,19 @@
 
 class CustomizationCore extends ObjectModel
 {
-	/** @var integer */
+	/** @var int */
 	public $id_product_attribute;
-	/** @var integer */
+	/** @var int */
 	public $id_address_delivery;
-	/** @var integer */
+	/** @var int */
 	public $id_cart;
-	/** @var integer */
+	/** @var int */
 	public $id_product;
-	/** @var integer */
+	/** @var int */
 	public $quantity;
-	/** @var integer */
+	/** @var int */
 	public $quantity_refunded;
-	/** @var integer */
+	/** @var int */
 	public $quantity_returned;
 	/** @var boolean */
 	public $in_cart;

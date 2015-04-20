@@ -156,8 +156,8 @@ class CompareProductCore extends ObjectModel
 
 	/**
 	 * Get the id_compare by id_customer
-	 * @param integer $id_customer
-	 * @return integer $id_compare
+	 * @param int $id_customer
+	 * @return int $id_compare
 	 */
 	public static function getIdCompareByIdCustomer($id_customer)
 	{

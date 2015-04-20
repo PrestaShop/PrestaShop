@@ -26,10 +26,10 @@
 
 class StateCore extends ObjectModel
 {
-	/** @var integer Country id which state belongs */
+	/** @var int Country id which state belongs */
 	public $id_country;
 
-	/** @var integer Zone id which state belongs */
+	/** @var int Zone id which state belongs */
 	public $id_zone;
 
 	/** @var string 2 letters iso code */
@@ -75,7 +75,7 @@ class StateCore extends ObjectModel
 	/**
 	 * Get a state name with its ID
 	 *
-	 * @param integer $id_state Country ID
+	 * @param int $id_state Country ID
 	 * @return string State name
 	 */
 	public static function getNameById($id_state)
@@ -99,7 +99,7 @@ class StateCore extends ObjectModel
 	 * Get a state id with its name
 	 *
 	 * @param string $id_state Country ID
-	 * @return integer state id
+	 * @return int state id
 	 */
 	public static function getIdByName($state)
 	{
@@ -122,7 +122,7 @@ class StateCore extends ObjectModel
 	* Get a state id with its iso code
 	*
 	* @param string $iso_code Iso code
-	* @return integer state id
+	* @return int state id
 	*/
 	public static function getIdByIso($iso_code, $id_country = null)
 	{
@@ -169,7 +169,7 @@ class StateCore extends ObjectModel
 	/**
 	 * Returns the number of utilisation of a state
 	 *
-	 * @return integer count for this state
+	 * @return int count for this state
 	 */
 	public function countUsed()
 	{

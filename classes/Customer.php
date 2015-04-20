@@ -38,13 +38,13 @@ class CustomerCore extends ObjectModel
 	/** @var string protected note */
 	public $note;
 
-	/** @var integer Gender ID */
+	/** @var int Gender ID */
 	public $id_gender = 0;
 
-	/** @var integer Default group ID */
+	/** @var int Default group ID */
 	public $id_default_group;
 
-	/** @var integer Current language used by the customer */
+	/** @var int Current language used by the customer */
 	public $id_lang;
 
 	/** @var string Lastname */
@@ -86,16 +86,16 @@ class CustomerCore extends ObjectModel
 	/** @var float Outstanding allow amount (B2B opt)  */
 	public $outstanding_allow_amount = 0;
 
-	/** @var integer Show public prices (B2B opt) */
+	/** @var int Show public prices (B2B opt) */
 	public $show_public_prices = 0;
 
 	/** @var int Risk ID (B2B opt) */
 	public $id_risk;
 
-	/** @var integer Max payment day */
+	/** @var int Max payment day */
 	public $max_payment_days = 0;
 
-	/** @var integer Password */
+	/** @var int Password */
 	public $passwd;
 
 	/** @var string Datetime Password */
@@ -402,8 +402,8 @@ class CustomerCore extends ObjectModel
 	/**
 	 * Check if an address is owned by a customer
 	 *
-	 * @param integer $id_customer Customer ID
-	 * @param integer $id_address Address ID
+	 * @param int $id_customer Customer ID
+	 * @param int $id_address Address ID
 	 * @return boolean result
 	 */
 	public static function customerHasAddress($id_customer, $id_address)
@@ -431,7 +431,7 @@ class CustomerCore extends ObjectModel
 	/**
 	 * Return customer addresses
 	 *
-	 * @param integer $id_lang Language ID
+	 * @param int $id_lang Language ID
 	 * @return array Addresses
 	 */
 	public function getAddresses($id_lang)
@@ -457,8 +457,8 @@ class CustomerCore extends ObjectModel
 	/**
 	 * Count the number of addresses for a customer
 	 *
-	 * @param integer $id_customer Customer ID
-	 * @return integer Number of addresses
+	 * @param int $id_customer Customer ID
+	 * @return int Number of addresses
 	 */
 	public static function getAddressesTotalById($id_customer)
 	{

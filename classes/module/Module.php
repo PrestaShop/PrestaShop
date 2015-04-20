@@ -26,7 +26,7 @@
 
 abstract class ModuleCore
 {
-	/** @var integer Module ID */
+	/** @var int Module ID */
 	public $id = null;
 
 	/** @var float Version */
@@ -749,7 +749,7 @@ abstract class ModuleCore
 	 * @deprecated since 1.6.0.10
 	 *
 	 * @param array $languages All languages available
-	 * @param integer $default_language Default language id
+	 * @param int $default_language Default language id
 	 * @param string $ids Multilingual div ids in form
 	 * @param string $id Current div id]
 	 * @param boolean $return define the return way : false for a display, true for a return
@@ -1089,7 +1089,7 @@ abstract class ModuleCore
 	/**
 	 * Return an instance of the specified module
 	 *
-	 * @param integer $id_module Module ID
+	 * @param int $id_module Module ID
 	 * @return Module instance
 	 */
 	public static function getInstanceById($id_module)
@@ -1584,7 +1584,7 @@ abstract class ModuleCore
 	 *
 	 * @param string $name The module name (the folder name)
 	 * @param string $key The key provided by addons
-	 * @return integer
+	 * @return int
 	 */
 	final public static function isModuleTrusted($module_name)
 	{
@@ -2301,7 +2301,7 @@ abstract class ModuleCore
 
 	/**
 	 * Check employee permission for module (static method)
-	 * @param integer $id_module
+	 * @param int $id_module
 	 * @param array $variable (action)
 	 * @param object $employee
 	 * @return bool if module can be transplanted on hook
@@ -2414,7 +2414,7 @@ abstract class ModuleCore
 	 * Return module position for a given hook
 	 *
 	 * @param boolean $id_hook Hook ID
-	 * @return integer position
+	 * @return int position
 	 */
 	public function getPosition($id_hook)
 	{

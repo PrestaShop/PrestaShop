@@ -26,10 +26,10 @@
 
 class ConnectionCore extends ObjectModel
 {
-	/** @var integer */
+	/** @var int */
 	public $id_guest;
 
-	/** @var integer */
+	/** @var int */
 	public $id_page;
 
 	/** @var string */

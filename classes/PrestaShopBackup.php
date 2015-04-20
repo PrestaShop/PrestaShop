@@ -26,7 +26,7 @@
 
 class PrestaShopBackupCore
 {
-	/** @var integer Object id */
+	/** @var int Object id */
 	public $id;
 	/** @var string Last error messages */
 	public $error;

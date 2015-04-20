@@ -31,28 +31,28 @@ class ImageTypeCore extends ObjectModel
 	/** @var string Name */
 	public $name;
 
-	/** @var integer Width */
+	/** @var int Width */
 	public $width;
 
-	/** @var integer Height */
+	/** @var int Height */
 	public $height;
 
 	/** @var boolean Apply to products */
 	public $products;
 
-	/** @var integer Apply to categories */
+	/** @var int Apply to categories */
 	public $categories;
 
-	/** @var integer Apply to manufacturers */
+	/** @var int Apply to manufacturers */
 	public $manufacturers;
 
-	/** @var integer Apply to suppliers */
+	/** @var int Apply to suppliers */
 	public $suppliers;
 
-	/** @var integer Apply to scenes */
+	/** @var int Apply to scenes */
 	public $scenes;
 
-	/** @var integer Apply to store */
+	/** @var int Apply to store */
 	public $stores;
 
 	/**
@@ -113,7 +113,7 @@ class ImageTypeCore extends ObjectModel
 	* Check if type already is already registered in database
 	*
 	* @param string $typeName Name
-	* @return integer Number of results found
+	* @return int Number of results found
 	*/
 	public static function typeAlreadyExists($type_name)
 	{

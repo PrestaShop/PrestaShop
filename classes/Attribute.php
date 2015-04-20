@@ -26,7 +26,7 @@
 
 class AttributeCore extends ObjectModel
 {
-	/** @var integer Group id which attribute belongs */
+	/** @var int Group id which attribute belongs */
 	public $id_attribute_group;
 
 	/** @var string Name */
@@ -137,7 +137,7 @@ class AttributeCore extends ObjectModel
 	/**
 	 * Get all attributes for a given language
 	 *
-	 * @param integer $id_lang Language id
+	 * @param int $id_lang Language id
 	 * @param boolean $notNull Get only not null fields if true
 	 * @return array Attributes
 	 */
@@ -189,8 +189,8 @@ class AttributeCore extends ObjectModel
 	 * Get quantity for a given attribute combination
 	 * Check if quantity is enough to deserve customer
 	 *
-	 * @param integer $id_product_attribute Product attribute combination id
-	 * @param integer $qty Quantity needed
+	 * @param int $id_product_attribute Product attribute combination id
+	 * @param int $qty Quantity needed
 	 * @return boolean Quantity is available or not
 	 */
 	public static function checkAttributeQty($id_product_attribute, $qty, Shop $shop = null)
@@ -261,7 +261,7 @@ class AttributeCore extends ObjectModel
 	 * Get minimal quantity for product with attributes quantity
 	 *
 	 * @acces public static
-	 * @param integer $id_product_attribute
+	 * @param int $id_product_attribute
 	 * @return mixed Minimal Quantity or false
 	 */
 	public static function getAttributeMinimalQty($id_product_attribute)
@@ -282,7 +282,7 @@ class AttributeCore extends ObjectModel
 	/**
 	 * Move an attribute inside its group
 	 * @param boolean $way Up (1)  or Down (0)
-	 * @param integer $position
+	 * @param int $position
 	 * @return boolean Update result
 	 */
 	public function updatePosition($way, $position)
@@ -354,8 +354,8 @@ class AttributeCore extends ObjectModel
 	 *
 	 * Get the higher attribute position from a group attribute
 	 *
-	 * @param integer $id_attribute_group
-	 * @return integer $position
+	 * @param int $id_attribute_group
+	 * @return int $position
 	 */
 	public static function getHigherPosition($id_attribute_group)
 	{

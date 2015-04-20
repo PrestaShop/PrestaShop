@@ -220,7 +220,7 @@ class CarrierCore extends ObjectModel
 	/**
 	* Change carrier id in delivery prices when updating a carrier
 	*
-	* @param integer $id_old Old id carrier
+	* @param int $id_old Old id carrier
 	*/
 	public function setConfiguration($id_old)
 	{
@@ -425,7 +425,7 @@ class CarrierCore extends ObjectModel
 	/**
 	 * Get all carriers in a given language
 	 *
-	 * @param integer $id_lang Language id
+	 * @param int $id_lang Language id
 	 * @param $modules_filters, possible values:
 			PS_CARRIERS_ONLY
 			CARRIERS_MODULE
@@ -829,7 +829,7 @@ class CarrierCore extends ObjectModel
 	/**
 	 * Copy old carrier informations when update carrier
 	 *
-	 * @param integer $oldId Old id carrier (copy from that id)
+	 * @param int $oldId Old id carrier (copy from that id)
 	 */
 	public function copyCarrierData($old_id)
 	{
@@ -931,7 +931,7 @@ class CarrierCore extends ObjectModel
 	/**
 	 * Check if carrier is used (at least one order placed)
 	 *
-	 * @return integer Order count for this carrier
+	 * @return int Order count for this carrier
 	 */
 	public function isUsed()
 	{
@@ -1109,7 +1109,7 @@ class CarrierCore extends ObjectModel
 	 *
 	 * @since 1.5.0
 	 * @param boolean $way Up (1) or Down (0)
-	 * @param integer $position
+	 * @param int $position
 	 * @return boolean Update result
 	 */
 	public function updatePosition($way, $position)

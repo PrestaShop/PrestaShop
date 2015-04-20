@@ -26,16 +26,16 @@
 
 class OrderCartRuleCore extends ObjectModel
 {
-	/** @var integer */
+	/** @var int */
 	public $id_order_cart_rule;
 
-	/** @var integer */
+	/** @var int */
 	public $id_order;
 
-	/** @var integer */
+	/** @var int */
 	public $id_cart_rule;
 
-	/** @var integer */
+	/** @var int */
 	public $id_order_invoice;
 
 	/** @var string */

@@ -26,7 +26,7 @@
 
 abstract class PaymentModuleCore extends Module
 {
-	/** @var integer Current order's id */
+	/** @var int Current order's id */
 	public	$currentOrder;
 	public	$currencies = true;
 	public	$currencies_mode = 'checkbox';
@@ -135,8 +135,8 @@ abstract class PaymentModuleCore extends Module
 	 * Validate an order in database
 	 * Function called from a payment module
 	 *
-	 * @param integer $id_cart
-	 * @param integer $id_order_state
+	 * @param int $id_cart
+	 * @param int $id_order_state
 	 * @param float   $amount_paid    Amount really paid by customer (in the default currency)
 	 * @param string  $payment_method Payment method (eg. 'Credit card')
 	 * @param null    $message        Message to attach to order
@@ -978,7 +978,7 @@ abstract class PaymentModuleCore extends Module
 	 * Fetch the content of $template_name inside the folder current_theme/mails/current_iso_lang/ if found, otherwise in mails/current_iso_lang
 	 *
 	 * @param string  $template_name template name with extension
-	 * @param integer $mail_type     Mail::TYPE_HTML or Mail::TYPE_TXT
+	 * @param int $mail_type     Mail::TYPE_HTML or Mail::TYPE_TXT
 	 * @param array   $var           list send to smarty
 	 *
 	 * @return string

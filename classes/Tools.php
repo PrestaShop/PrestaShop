@@ -37,7 +37,7 @@ class ToolsCore
 	/**
 	* Random password generator
 	*
-	* @param integer $length Desired length (optional)
+	* @param int $length Desired length (optional)
 	* @param string $flag Output type (NUMERIC, ALPHANUMERIC, NO_NUMERIC, RANDOM)
 	* @return bool|string Password
 	*/
@@ -778,7 +778,7 @@ class ToolsCore
 	* Display date regarding to language preferences
 	*
 	* @param string $date Date to display format UNIX
-	* @param integer $id_lang Language id DEPRECATED
+	* @param int $id_lang Language id DEPRECATED
 	* @param boolean $full With time or not (optional)
 	* @param string $separator DEPRECATED
 	* @return string Date
@@ -1167,7 +1167,7 @@ class ToolsCore
 	/**
 	* Get the user's journey
 	*
-	* @param integer $id_category Category ID
+	* @param int $id_category Category ID
 	* @param string $path Path end
 	* @param boolean $linkOntheLastItem Put or not a link on the current category
 	* @param string [optionnal] $categoryType defined what type of categories is used (products or cms)
@@ -1440,7 +1440,7 @@ class ToolsCore
 	* Truncate strings
 	*
 	* @param string $str
-	* @param integer $max_length Max length
+	* @param int $max_length Max length
 	* @param string $suffix Suffix optional
 	* @return string $str truncated
 	*/
@@ -1590,9 +1590,9 @@ class ToolsCore
 	/**
 	* Generate date form
 	*
-	* @param integer $year Year to select
-	* @param integer $month Month to select
-	* @param integer $day Day to select
+	* @param int $year Year to select
+	* @param int $month Month to select
+	* @param int $day Day to select
 	* @return array $tab html data with 3 cells :['days'], ['months'], ['years']
 	*
 	*/
@@ -3545,7 +3545,7 @@ exit;
  *
  * @param float $a
  * @param float $b
- * @return integer
+ * @return int
  */
 /* Externalized because of a bug in PHP 5.1.6 when inside an object */
 function cmpPriceAsc($a, $b)

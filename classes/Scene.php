@@ -270,7 +270,7 @@ class SceneCore extends ObjectModel
 	/**
 	* Get categories where scene is indexed
 	*
-	* @param integer $id_scene Scene id
+	* @param int $id_scene Scene id
 	* @return array Categories where scene is indexed
 	*/
 	public static function getIndexedCategories($id_scene)

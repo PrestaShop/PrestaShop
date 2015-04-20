@@ -38,9 +38,9 @@ class SmartyCustomCore extends Smarty
 	*
 	* @param  string  $resource_name template name
 	* @param  string  $compile_id    compile id
-	* @param  integer $exp_time      expiration time
+	* @param  int $exp_time      expiration time
 	*
-	* @return integer number of template files deleted
+	* @return int number of template files deleted
 	*/
 	public function clearCompiledTemplate($resource_name = null, $compile_id = null, $exp_time = null)
 	{
@@ -56,10 +56,10 @@ class SmartyCustomCore extends Smarty
 	/**
 	* Mark all template files to be regenerated
 	*
-	* @param  integer $exp_time expiration time
+	* @param  int $exp_time expiration time
 	* @param  string  $type     resource type
 	*
-	* @return integer number of cache files which needs to be updated
+	* @return int number of cache files which needs to be updated
 	*/
 	public function clearAllCache($exp_time = null, $type = null)
 	{
@@ -73,10 +73,10 @@ class SmartyCustomCore extends Smarty
 	* @param  string  $template_name template name
 	* @param  string  $cache_id      cache id
 	* @param  string  $compile_id    compile id
-	* @param  integer $exp_time      expiration time
+	* @param  int $exp_time      expiration time
 	* @param  string  $type          resource type
 	*
-	* @return integer number of cache files which needs to be updated
+	* @return int number of cache files which needs to be updated
 	*/
 	public function clearCache($template_name, $cache_id = null, $compile_id = null, $exp_time = null, $type = null)
 	{

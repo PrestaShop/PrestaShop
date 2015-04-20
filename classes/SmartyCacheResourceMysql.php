@@ -36,7 +36,7 @@ class Smarty_CacheResource_Mysql extends Smarty_CacheResource_Custom
 	 * @param string $cache_id cache id
 	 * @param string $compile_id compile id
 	 * @param string $content cached content
-	 * @param integer $mtime cache modification timestamp (epoch)
+	 * @param int $mtime cache modification timestamp (epoch)
 	 * @return void
 	 */
 	protected function fetch($id, $name, $cache_id, $compile_id, &$content, &$mtime)
@@ -62,7 +62,7 @@ class Smarty_CacheResource_Mysql extends Smarty_CacheResource_Custom
 	 * @param string $name template name
 	 * @param string $cache_id cache id
 	 * @param string $compile_id compile id
-	 * @return integer|boolean timestamp (epoch) the template was modified, or false if not found
+	 * @return int|boolean timestamp (epoch) the template was modified, or false if not found
 	 */
 	protected function fetchTimestamp($id, $name, $cache_id, $compile_id)
 	{
@@ -78,7 +78,7 @@ class Smarty_CacheResource_Mysql extends Smarty_CacheResource_Custom
 	 * @param string $name template name
 	 * @param string $cache_id cache id
 	 * @param string $compile_id compile id
-	 * @param integer|null $exp_time seconds till expiration time in seconds or null
+	 * @param int|null $exp_time seconds till expiration time in seconds or null
 	 * @param string $content content to cache
 	 * @return boolean success
 	 */
@@ -102,8 +102,8 @@ class Smarty_CacheResource_Mysql extends Smarty_CacheResource_Custom
 	 * @param string $name template name
 	 * @param string $cache_id cache id
 	 * @param string $compile_id compile id
-	 * @param integer|null $exp_time seconds till expiration or null
-	 * @return integer number of deleted caches
+	 * @param int|null $exp_time seconds till expiration or null
+	 * @return int number of deleted caches
 	 */
 	protected function delete($name, $cache_id, $compile_id, $exp_time)
 	{

@@ -26,13 +26,13 @@
 
 class OrderHistoryCore extends ObjectModel
 {
-	/** @var integer Order id */
+	/** @var int Order id */
 	public $id_order;
 
-	/** @var integer Order status id */
+	/** @var int Order status id */
 	public $id_order_state;
 
-	/** @var integer Employee id for this history entry */
+	/** @var int Employee id for this history entry */
 	public $id_employee;
 
 	/** @var string Object creation date */

@@ -623,7 +623,7 @@ class LanguageCore extends ObjectModel
 	/**
 	 * Return iso code from id
 	 *
-	 * @param integer $id_lang Language ID
+	 * @param int $id_lang Language ID
 	 * @return string Iso code
 	 */
 	public static function getIsoById($id_lang)
@@ -637,7 +637,7 @@ class LanguageCore extends ObjectModel
 	 * Return id from iso code
 	 *
 	 * @param string $iso_code Iso code
-	 * @return integer Language ID
+	 * @return int Language ID
 	 */
 	public static function getIdByIso($iso_code)
 	{

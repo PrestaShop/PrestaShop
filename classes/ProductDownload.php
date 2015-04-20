@@ -26,7 +26,7 @@
 
 class ProductDownloadCore extends ObjectModel
 {
-	/** @var integer Product id which download belongs */
+	/** @var int Product id which download belongs */
 	public $id_product;
 
 	/** @var string DisplayFilename the name which appear */
@@ -77,7 +77,7 @@ class ProductDownloadCore extends ObjectModel
 	/**
 	 * Build a virtual product
 	 *
-	 * @param integer $id_product_download Existing productDownload id in order to load object (optional)
+	 * @param int $id_product_download Existing productDownload id in order to load object (optional)
 	 */
 	public function __construct($id_product_download = null)
 	{
@@ -162,7 +162,7 @@ class ProductDownloadCore extends ObjectModel
 	 * Return the id_product_download from an id_product
 	 *
 	 * @param int $id_product Product the id
-	 * @return integer Product the id for this virtual product
+	 * @return int Product the id for this virtual product
 	 */
 	public static function getIdFromIdProduct($id_product)
 	{
@@ -186,7 +186,7 @@ class ProductDownloadCore extends ObjectModel
 	 * @since 1.5.0.1
 	 *
 	 * @param string $filename Filename physically
-	 * @return integer Product the id for this virtual product
+	 * @return int Product the id for this virtual product
 	 *
 	 */
 	public static function getIdFromFilename($filename)

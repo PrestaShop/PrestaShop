@@ -648,7 +648,7 @@ class ValidateCore
 	/**
 	 * Check for an integer validity
 	 *
-	 * @param integer $value Integer to validate
+	 * @param int $value Integer to validate
 	 * @return boolean Validity is ok or not
 	 */
 	public static function isInt($value)
@@ -659,7 +659,7 @@ class ValidateCore
 	/**
 	 * Check for an integer validity (unsigned)
 	 *
-	 * @param integer $value Integer to validate
+	 * @param int $value Integer to validate
 	 * @return boolean Validity is ok or not
 	 */
 	public static function isUnsignedInt($value)
@@ -682,7 +682,7 @@ class ValidateCore
 	 * Check for an integer validity (unsigned)
 	 * Mostly used in database for auto-increment
 	 *
-	 * @param integer $id Integer to validate
+	 * @param int $id Integer to validate
 	 * @return boolean Validity is ok or not
 	 */
 	public static function isUnsignedId($id)
@@ -709,7 +709,7 @@ class ValidateCore
 	/**
 	 * Check object validity
 	 *
-	 * @param integer $object Object to validate
+	 * @param int $object Object to validate
 	 * @return boolean Validity is ok or not
 	 */
 	public static function isColor($color)
@@ -857,7 +857,7 @@ class ValidateCore
 	/**
 	 * Price display method validity
 	 *
-	 * @param integer $data Data to validate
+	 * @param int $data Data to validate
 	 * @return boolean Validity is ok or not
 	 */
 	public static function isPriceDisplayMethod($data)

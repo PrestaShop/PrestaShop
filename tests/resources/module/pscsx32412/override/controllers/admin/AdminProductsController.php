@@ -1483,8 +1483,8 @@ class AdminProductsController extends AdminProductsControllerCore
 	/**
 	 * Copy a product image
 	 *
-	 * @param integer $id_product Product Id for product image filename
-	 * @param integer $id_image Image Id for product image filename
+	 * @param int $id_product Product Id for product image filename
+	 * @param int $id_image Image Id for product image filename
 	 */
 	public function copyImage($id_product, $id_image, $method = 'auto')
 	{
@@ -2242,7 +2242,7 @@ class AdminProductsController extends AdminProductsControllerCore
 	 * @param array $indexedCategories Array with categories where product is indexed (in order to check checkbox)
 	 * @param array $categories Categories to list
 	 * @param array $current Current category
-	 * @param integer $id_category Current category id
+	 * @param int $id_category Current category id
 	 */
 	public static function recurseCategoryForInclude($id_obj, $indexedCategories, $categories, $current, $id_category = null, $id_category_default = null, $has_suite = array())
 	{

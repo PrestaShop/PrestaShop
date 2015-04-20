@@ -114,7 +114,7 @@ class OrderStateCore extends ObjectModel
 	/**
 	* Get all available order statuses
 	*
-	* @param integer $id_lang Language id for status name
+	* @param int $id_lang Language id for status name
 	* @return array Order statuses
 	*/
 	public static function getOrderStates($id_lang)
@@ -136,7 +136,7 @@ class OrderStateCore extends ObjectModel
 	/**
 	* Check if we can make a invoice when order is in this state
 	*
-	* @param integer $id_order_state State ID
+	* @param int $id_order_state State ID
 	* @return boolean availability
 	*/
 	public static function invoiceAvailable($id_order_state)
