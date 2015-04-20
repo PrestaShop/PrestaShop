@@ -69,11 +69,13 @@ class SearchControllerCore extends FrontController
 
 		//Only controller content initialization when the user use the normal search
 		parent::initContent();
+		
+		$product_per_page = isset($this->context->cookie->nb_item_per_page) ? (int)$this->context->cookie->nb_item_per_page : Configuration::get('PS_PRODUCTS_PER_PAGE');
 
 		if ($this->instant_search && !is_array($query))
 		{
 			$this->productSort();
-			$this->n = abs((int)(Tools::getValue('n', Configuration::get('PS_PRODUCTS_PER_PAGE'))));
+			$this->n = abs((int)(Tools::getValue('n', $product_per_page)));
 			$this->p = abs((int)(Tools::getValue('p', 1)));
 			$search = Search::find($this->context->language->id, $query, 1, 10, 'position', 'desc');
 			Hook::exec('actionSearch', array('expr' => $query, 'total' => $search['total']));
@@ -93,7 +95,7 @@ class SearchControllerCore extends FrontController
 		elseif (($query = Tools::getValue('search_query', Tools::getValue('ref'))) && !is_array($query))
 		{
 			$this->productSort();
-			$this->n = abs((int)(Tools::getValue('n', Configuration::get('PS_PRODUCTS_PER_PAGE'))));
+			$this->n = abs((int)(Tools::getValue('n', $product_per_page)));
 			$this->p = abs((int)(Tools::getValue('p', 1)));
 			$original_query = $query;
 			$query = Tools::replaceAccentedChars(urldecode($query));
