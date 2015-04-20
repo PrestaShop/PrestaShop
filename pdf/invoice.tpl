@@ -26,7 +26,7 @@
 {$style_tab}
 
 
-<table width="100%" id="body" border="0" cellpadding="2">
+<table width="100%" id="body" border="0" cellpadding="0">
     <!-- Invoicing -->
     <tr>
         <td colspan="12">
