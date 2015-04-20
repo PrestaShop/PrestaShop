@@ -158,7 +158,7 @@
         </tr>
         {/if}
         <tr class="discount">
-            <td class="white" colspan="{$layout._colCount - 1}">
+            <td class="white right" colspan="{$layout._colCount - 1}">
                 {$cart_rule.name}
             </td>
             <td class="right white">
@@ -169,4 +169,10 @@
 
     </tbody>
 
+</table>
+
+<table width="100%">
+    <tr>
+        <td><p>{$tax_label}</p></td>
+    </tr>
 </table>
