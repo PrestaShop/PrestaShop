@@ -2071,21 +2071,8 @@ class ToolsCore
 
 	public static function replaceByAbsoluteURL($matches)
 	{
-		global $current_css_file;
-		$protocol_link = Tools::getCurrentUrlProtocolPrefix();
-
-		if (array_key_exists(1, $matches) && array_key_exists(2, $matches))
-		{
-			if (!preg_match('/^(?:https?:)?\/\//iUs', $matches[2]))
-			{
-				$tmp = dirname($current_css_file).'/'.$matches[2];
-				$server = Tools::getMediaServer($tmp);
-				return $matches[1].$protocol_link.$server.$tmp;
-			}
-			else
-				return $matches[0];
-		}
-		return false;
+		Tools::displayAsDeprecated();
+		return Media::replaceByAbsoluteURL($matches);
 	}
 
 	/**
@@ -2338,7 +2325,6 @@ class ToolsCore
 						fwrite($write_fd, $domain_rewrite_cond);
 					fwrite($write_fd, 'RewriteRule ^c/([a-zA-Z_-]+)(-[0-9]+)?/.+\.jpg$ %{ENV:REWRITEBASE}img/c/$1$2.jpg [L]'."\n");
 				}
-
 				fwrite($write_fd, "# AlphaImageLoader for IE and fancybox\n");
 				if (Shop::isFeatureActive())
 					fwrite($write_fd, $domain_rewrite_cond);

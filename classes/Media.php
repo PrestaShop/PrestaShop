@@ -78,6 +78,16 @@ class MediaCore
 	 */
 	protected static $inline_script_src = array();
 
+	/**
+	 * @var string pattern used in replaceByAbsoluteURL
+	 */
+	public static $pattern_callback = '#(url\((?![\'"]?(?:data:|//|https?:))(?:\'|")?)([^\)\'"]*)(?=[\'"]?\))#s';
+
+	/**
+	 * @var string used for preg_replace_callback parameter (avoid global)
+	 */
+	protected static $current_css_file;
+
 	public static function minifyHTML($html_content)
 	{
 		if (strlen($html_content) > 0)
@@ -170,14 +180,12 @@ class MediaCore
 
 	public static function minifyCSS($css_content, $fileuri = false, &$import_url = array())
 	{
-		global $current_css_file;
-
-		$current_css_file = $fileuri;
+		Media::$current_css_file = $fileuri;
 		if (strlen($css_content) > 0)
 		{
 			$limit  = Media::getBackTrackLimit();
 			$css_content = preg_replace('#/\*.*?\*/#s', '', $css_content, $limit);
-			$css_content = preg_replace_callback('#(url\((?![\\\'"]?data:)(?!http://)(?!https://)(?:\'|")?)([^\)\'"]*(?:\'|")?\))#s', array('Tools', 'replaceByAbsoluteURL'), $css_content, $limit);
+			$css_content = preg_replace_callback(Media::$pattern_callback, array('Media', 'replaceByAbsoluteURL'), $css_content, $limit);
 			$css_content = preg_replace('#\s+#', ' ', $css_content, $limit);
 			$css_content = str_replace(array("\t", "\n", "\r"), '', $css_content);
 			$css_content = str_replace(array('; ', ': '), array(';', ':'), $css_content);
@@ -188,6 +196,7 @@ class MediaCore
 			$css_content = str_replace(array(' 0px', ' 0em', ' 0pt', ' 0%'), ' 0', $css_content);
 			$css_content = str_replace('\'images_ie/', '\'images/', $css_content);
 			$css_content = preg_replace_callback('#(AlphaImageLoader\(src=\')([^\']*\',)#s', array('Tools', 'replaceByAbsoluteURL'), $css_content);
+
 			// Store all import url
 			preg_match_all('#@(import|charset) .*?;#i', $css_content, $m);
 			for ($i = 0, $total = count($m[0]); $i < $total; $i++)
@@ -198,6 +207,25 @@ class MediaCore
 			}
 
 			return trim($css_content);
+		}
+		return false;
+	}
+
+	public static function replaceByAbsoluteURL($matches)
+	{
+		if (array_key_exists(1, $matches) && array_key_exists(2, $matches))
+		{
+			if (!preg_match('/^(?:https?:)?\/\//iUs', $matches[2]))
+			{
+				$protocol_link = Tools::getCurrentUrlProtocolPrefix();
+				$sep = '/';
+				$tmp = $matches[2][0] == $sep ? $matches[2] : dirname(Media::$current_css_file).$sep.ltrim($matches[2], $sep);
+				$server = Tools::getMediaServer($tmp);
+
+				return $matches[1].$protocol_link.$server.$tmp;
+			}
+			else
+				return $matches[0];
 		}
 		return false;
 	}
