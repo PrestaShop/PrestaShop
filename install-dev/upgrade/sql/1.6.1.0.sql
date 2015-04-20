@@ -165,3 +165,5 @@ ALTER TABLE `PREFIX_cart` DROP KEY `id_shop`;
 ALTER TABLE `PREFIX_cart` ADD KEY `id_shop_2` (`id_shop`,`date_upd`), ADD KEY `id_shop` (`id_shop`,`date_add`);
 
 ALTER TABLE `PREFIX_order_invoice` ADD `company_address` TEXT DEFAULT NULL AFTER `total_wrapping_tax_incl`;
+
+INSERT INTO `PREFIX_hook` (`name`, `title`, `description`) VALUES ('displayInvoiceLegalFreeText', 'PDF Invoice - Legal Free Text', 'This hook allows you to modify the legal free text on PDF invoices');
