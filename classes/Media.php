@@ -177,7 +177,7 @@ class MediaCore
 		{
 			$limit  = Media::getBackTrackLimit();
 			$css_content = preg_replace('#/\*.*?\*/#s', '', $css_content, $limit);
-			$css_content = preg_replace_callback('#(url\((?![\\\'"]?data:)(?!http://)(?!https://)(?:\'|")?)([^\)\'"]*(?:\'|")?\))#s', array('Tools', 'replaceByAbsoluteURL'), $css_content, $limit);
+			$css_content = preg_replace_callback('#(url\((?![\'"]?(?:data:|//|https?:))(?:\'|")?)([^\)\'"]*)(?=[\'"]?\))#s', array('Tools', 'replaceByAbsoluteURL'), $css_content, $limit);
 			$css_content = preg_replace('#\s+#', ' ', $css_content, $limit);
 			$css_content = str_replace(array("\t", "\n", "\r"), '', $css_content);
 			$css_content = str_replace(array('; ', ': '), array(';', ':'), $css_content);
