@@ -66,7 +66,7 @@ class AdminTranslationsControllerCore extends AdminController
 	/** @var Language object : Language for the selected language */
 	protected $lang_selected;
 
-	/** @var boolean : Is true if number of var exceed the suhosin request or post limit */
+	/** @var bool : Is true if number of var exceed the suhosin request or post limit */
 	protected $post_limit_exceed = false;
 
 	public function __construct()
@@ -388,7 +388,7 @@ class AdminTranslationsControllerCore extends AdminController
 	 * @param string $path
 	 * @param string $theme_from
 	 * @param string $theme_to
-	 * @return boolean
+	 * @return bool
 	 */
 	public function changeModulesKeyTranslation($path, $theme_from, $theme_to)
 	{
@@ -2777,7 +2777,7 @@ class AdminTranslationsControllerCore extends AdminController
 	 * @param array $array_files by reference - array which saved files to parse.
 	 * @param string $module_name module name
 	 * @param string $lang_file full path of translation file
-	 * @param boolean $is_default
+	 * @param bool $is_default
 	 */
 	protected function recursiveGetModuleFiles($path, &$array_files, $module_name, $lang_file, $is_default = false)
 	{
@@ -2809,7 +2809,7 @@ class AdminTranslationsControllerCore extends AdminController
 	 * @param array $modules list of modules
 	 * @param string $root_dir path where it get each modules
 	 * @param string $lang iso code of choosen language to translate
-	 * @param boolean $is_default set it if modules are located in root/prestashop/modules folder
+	 * @param bool $is_default set it if modules are located in root/prestashop/modules folder
 	 * 				  This allow to distinguish overrided prestashop theme and original module
 	 */
 	protected function getAllModuleFiles($modules, $root_dir = null, $lang, $is_default = false)

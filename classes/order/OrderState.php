@@ -32,12 +32,12 @@ class OrderStateCore extends ObjectModel
 	/** @var string Template name if there is any e-mail to send */
 	public $template;
 
-	/** @var boolean Send an e-mail to customer ? */
+	/** @var bool Send an e-mail to customer ? */
 	public $send_email;
 
 	public $module_name;
 
-	/** @var boolean Allow customer to view and download invoice when order is at this state */
+	/** @var bool Allow customer to view and download invoice when order is at this state */
 	public $invoice;
 
 	/** @var string Display state in the specified color */
@@ -45,28 +45,28 @@ class OrderStateCore extends ObjectModel
 
 	public $unremovable;
 
-	/** @var boolean Log authorization */
+	/** @var bool Log authorization */
 	public $logable;
 
-	/** @var boolean Delivery */
+	/** @var bool Delivery */
 	public $delivery;
 
-	/** @var boolean Hidden */
+	/** @var bool Hidden */
 	public $hidden;
 
-	/** @var boolean Shipped */
+	/** @var bool Shipped */
 	public $shipped;
 
-	/** @var boolean Paid */
+	/** @var bool Paid */
 	public $paid;
 
-	/** @var boolean Attach PDF Invoice */
+	/** @var bool Attach PDF Invoice */
 	public $pdf_invoice;
 
-	/** @var boolean Attach PDF Delivery Slip */
+	/** @var bool Attach PDF Delivery Slip */
 	public $pdf_delivery;
 
-	/** @var boolean True if carrier has been deleted (staying in database as deleted) */
+	/** @var bool True if carrier has been deleted (staying in database as deleted) */
 	public $deleted = 0;
 
 	/**
@@ -137,7 +137,7 @@ class OrderStateCore extends ObjectModel
 	* Check if we can make a invoice when order is in this state
 	*
 	* @param int $id_order_state State ID
-	* @return boolean availability
+	* @return bool availability
 	*/
 	public static function invoiceAvailable($id_order_state)
 	{

@@ -30,7 +30,7 @@ class CustomizationFieldCore extends ObjectModel
 	public $id_product;
 	/** @var int Customization type (0 File, 1 Textfield) (See Product class) */
 	public $type;
-	/** @var boolean Field is required */
+	/** @var bool Field is required */
 	public $required;
 	/** @var string Label for customized field */
 	public $name;

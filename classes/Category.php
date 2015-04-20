@@ -34,7 +34,7 @@ class CategoryCore extends ObjectModel
 	/** @var string Name */
 	public $name;
 
-	/** @var boolean Status for display */
+	/** @var bool Status for display */
 	public $active = 1;
 
 	/** @var  int category position */
@@ -76,7 +76,7 @@ class CategoryCore extends ObjectModel
 	/** @var string Object last modification date */
 	public $date_upd;
 
-	/** @var boolean is Category Root */
+	/** @var bool is Category Root */
 	public $is_root_category;
 
 	/** @var int */
@@ -176,7 +176,7 @@ class CategoryCore extends ObjectModel
 	 * update category positions in parent
 	 *
 	 * @param mixed $null_values
-	 * @return boolean
+	 * @return bool
 	 */
 	public function update($null_values = false)
 	{
@@ -452,7 +452,7 @@ class CategoryCore extends ObjectModel
 	 * Return available categories
 	 *
 	 * @param int $id_lang Language ID
-	 * @param boolean $active return only active categories
+	 * @param bool $active return only active categories
 	 * @return array Categories
 	 */
 	public static function getCategories($id_lang = false, $active = true, $order = true, $sql_filter = '', $sql_sort = '', $sql_limit = '')
@@ -602,7 +602,7 @@ class CategoryCore extends ObjectModel
 	 * Return current category childs
 	 *
 	 * @param int $id_lang Language ID
-	 * @param boolean $active return only active categories
+	 * @param bool $active return only active categories
 	 * @return array Categories
 	 */
 	public function getSubCategories($id_lang, $active = true)
@@ -763,7 +763,7 @@ class CategoryCore extends ObjectModel
 	 * Return main categories
 	 *
 	 * @param int $id_lang Language ID
-	 * @param boolean $active return only active categories
+	 * @param bool $active return only active categories
 	 * @return array categories
 	 */
 	public static function getHomeCategories($id_lang, $active = true, $id_shop = false)
@@ -932,8 +932,8 @@ class CategoryCore extends ObjectModel
 	 * Copy products from a category to another
 	 *
 	 * @param int $id_old Source category ID
-	 * @param boolean $id_new Destination category ID
-	 * @return boolean Duplication result
+	 * @param bool $id_new Destination category ID
+	 * @return bool Duplication result
 	 */
 	public static function duplicateProductCategories($id_old, $id_new)
 	{
@@ -964,7 +964,7 @@ class CategoryCore extends ObjectModel
 	 *
 	 * @param int $id_category current category
 	 * @param int $id_parent Parent candidate
-	 * @return boolean Parent validity
+	 * @return bool Parent validity
 	 */
 	public static function checkBeforeMove($id_category, $id_parent)
 	{
@@ -1026,7 +1026,7 @@ class CategoryCore extends ObjectModel
 	 *
 	 * @param int $id_lang Language ID
 	 * @param string $query Searched string
-	 * @param boolean $unrestricted allows search without lang and includes first category and exact match
+	 * @param bool $unrestricted allows search without lang and includes first category and exact match
 	 * @return array Corresponding categories
 	 */
 	public static function searchByName($id_lang, $query, $unrestricted = false)
@@ -1072,8 +1072,8 @@ class CategoryCore extends ObjectModel
 	 *
 	 * @param int $id_lang Language ID
 	 * @param string $path of category
-	 * @param boolean $object_to_create a category
-* 	 * @param boolean $method_to_create a category
+	 * @param bool $object_to_create a category
+* 	 * @param bool $method_to_create a category
 	 * @return array Corresponding categories
 	 */
 	public static function searchByPath($id_lang, $path, $object_to_create = false, $method_to_create = false)
@@ -1154,7 +1154,7 @@ class CategoryCore extends ObjectModel
 	* Specify if a category already in base
 	*
 	* @param int $id_category Category id
-	* @return boolean
+	* @return bool
 	*/
 	public static function categoryExists($id_category)
 	{
@@ -1213,7 +1213,7 @@ class CategoryCore extends ObjectModel
 	 *
 	 * @param mixed $id_customer
 	 * @access public
-	 * @return boolean true if access allowed for customer $id_customer
+	 * @return bool true if access allowed for customer $id_customer
 	 */
 	public function checkAccess($id_customer)
 	{
@@ -1302,7 +1302,7 @@ class CategoryCore extends ObjectModel
 	 * are clean at the beginning !
 	 *
 	 * @param mixed $id_category_parent
-	 * @return boolean true if succeed
+	 * @return bool true if succeed
 	 */
 	public static function cleanPositions($id_category_parent = null)
 	{

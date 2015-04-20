@@ -148,7 +148,7 @@ class CookieCore
 	 * Magic method which check if key exists in the cookie
 	 *
 	 * @param string $key key wanted
-	 * @return boolean key existence
+	 * @return bool key existence
 	 */
 	public function __isset($key)
 	{
@@ -189,7 +189,7 @@ class CookieCore
 	 * Check customer informations saved into cookie and return customer validity
 	 *
 	 * @deprecated as of version 1.5 use Customer::isLogged() instead
-	 * @return boolean customer validity
+	 * @return bool customer validity
 	 */
 	public function isLogged($withGuest = false)
 	{
@@ -207,7 +207,7 @@ class CookieCore
 	 * Check employee informations saved into cookie and return employee validity
 	 *
 	 * @deprecated as of version 1.5 use Employee::isLoggedBack() instead
-	 * @return boolean employee validity
+	 * @return bool employee validity
 	 */
 	public function isLoggedBack()
 	{

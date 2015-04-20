@@ -40,7 +40,7 @@ class CustomizationCore extends ObjectModel
 	public $quantity_refunded;
 	/** @var int */
 	public $quantity_returned;
-	/** @var boolean */
+	/** @var bool */
 	public $in_cart;
 
 	/**

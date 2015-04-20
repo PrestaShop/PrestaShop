@@ -89,7 +89,7 @@ class TagCore extends ObjectModel
 	* @param int $id_lang Language id
 	* @param int $id_product Product id to link tags with
 	* @param string|array $tag_list List of tags, as array or as a string with comas
-	* @return boolean Operation success
+	* @return bool Operation success
 	*/
 	public static function addTags($id_lang, $id_product, $tag_list, $separator = ',')
 	{

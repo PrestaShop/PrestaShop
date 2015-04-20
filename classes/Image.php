@@ -37,7 +37,7 @@ class ImageCore extends ObjectModel
 	/** @var int Position used to order images of the same product */
 	public $position;
 
-	/** @var boolean Image is cover */
+	/** @var bool Image is cover */
 	public $cover;
 
 	/** @var string Legend */
@@ -250,7 +250,7 @@ class ImageCore extends ObjectModel
 	 * Delete product cover
 	 *
 	 * @param int $id_product Product ID
-	 * @return boolean result
+	 * @return bool result
 	 */
 	public static function deleteCover($id_product)
 	{
@@ -276,7 +276,7 @@ class ImageCore extends ObjectModel
 	 *Get product cover
 	 *
 	 * @param int $id_product Product ID
-	 * @return boolean result
+	 * @return bool result
 	 */
 	public static function getCover($id_product)
 	{
@@ -291,7 +291,7 @@ class ImageCore extends ObjectModel
 	 * Copy images from a product to another
 	 *
 	 * @param int $id_product_old Source product ID
-	 * @param boolean $id_product_new Destination product ID
+	 * @param bool $id_product_new Destination product ID
 	 */
 	public static function duplicateProductImages($id_product_old, $id_product_new, $combination_images)
 	{
@@ -352,7 +352,7 @@ class ImageCore extends ObjectModel
 	/**
 	 * Duplicate product attribute image associations
 	 * @param int $id_product_attribute_old
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function duplicateAttributeImageAssociations($combination_images)
 	{
@@ -370,7 +370,7 @@ class ImageCore extends ObjectModel
 	 * Reposition image
 	 *
 	 * @param int $position Position
-	 * @param boolean $direction Direction
+	 * @param bool $direction Direction
 	 * @deprecated since version 1.5.0.1 use Image::updatePosition() instead
 	 */
 	public function	positionImage($position, $direction)
@@ -718,7 +718,7 @@ class ImageCore extends ObjectModel
 	/**
 	 * Try to create and delete some folders to check if moving images to new file system will be possible
 	 *
-	 * @return boolean success
+	 * @return bool success
 	 */
 	public static function testFileSystem()
 	{

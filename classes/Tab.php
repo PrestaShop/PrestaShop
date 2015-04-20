@@ -40,7 +40,7 @@ class TabCore extends ObjectModel
 	/** @var int position */
 	public $position;
 
-	/** @var boolean active */
+	/** @var bool active */
 	public $active = true;
 
 	/** @var int hide_host_mode */
@@ -74,8 +74,8 @@ class TabCore extends ObjectModel
 	 * - generate a new position
 	 * - add access for admin profile
 	 *
-	 * @param boolean $autodate
-	 * @param boolean $null_values
+	 * @param bool $autodate
+	 * @param bool $null_values
 	 * @return int id_tab
 	 */
 	public function add($autodate = true, $null_values = false)
@@ -121,7 +121,7 @@ class TabCore extends ObjectModel
 	 * @todo this should not be public static but protected
 	 * @param int $id_tab
 	 * @param Context $context
-	 * @return boolean true if succeed
+	 * @return bool true if succeed
 	 */
 	public static function initAccess($id_tab, Context $context = null)
 	{

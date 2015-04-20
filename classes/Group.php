@@ -37,7 +37,7 @@ class GroupCore extends ObjectModel
 	/** @var int Price display method (tax inc/tax exc) */
 	public $price_display_method;
 
-	/** @var boolean Show prices */
+	/** @var bool Show prices */
 	public $show_prices = 1;
 
 	/** @var string Object creation date */

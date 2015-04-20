@@ -708,7 +708,7 @@ class HookCore extends ObjectModel
 	 *
 	 * @deprecated 1.5.0 use Hook::getHookModuleList() instead
 	 *
-	 * @return boolean preload_needed
+	 * @return bool preload_needed
 	 */
 	public static function preloadHookModulesCache()
 	{

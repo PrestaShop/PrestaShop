@@ -38,7 +38,7 @@ class StateCore extends ObjectModel
 	/** @var string Name */
 	public $name;
 
-	/** @var boolean Status for delivery */
+	/** @var bool Status for delivery */
 	public $active = true;
 
 	/**
@@ -136,7 +136,7 @@ class StateCore extends ObjectModel
 	/**
 	* Delete a state only if is not in use
 	*
-	* @return boolean
+	* @return bool
 	*/
 	public function delete()
 	{
@@ -159,7 +159,7 @@ class StateCore extends ObjectModel
 	/**
 	 * Check if a state is used
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isUsed()
 	{

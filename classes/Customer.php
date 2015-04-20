@@ -59,7 +59,7 @@ class CustomerCore extends ObjectModel
 	/** @var string e-mail */
 	public $email;
 
-	/** @var boolean Newsletter subscription */
+	/** @var bool Newsletter subscription */
 	public $newsletter;
 
 	/** @var string Newsletter ip registration */
@@ -68,7 +68,7 @@ class CustomerCore extends ObjectModel
 	/** @var string Newsletter ip registration */
 	public $newsletter_date_add;
 
-	/** @var boolean Opt-in subscription */
+	/** @var bool Opt-in subscription */
 	public $optin;
 
 	/** @var string WebSite **/
@@ -101,13 +101,13 @@ class CustomerCore extends ObjectModel
 	/** @var string Datetime Password */
 	public $last_passwd_gen;
 
-	/** @var boolean Status */
+	/** @var bool Status */
 	public $active = true;
 
-	/** @var boolean Status */
+	/** @var bool Status */
 	public $is_guest = 0;
 
-	/** @var boolean True if carrier has been deleted (staying in database as deleted) */
+	/** @var bool True if carrier has been deleted (staying in database as deleted) */
 	public $deleted = 0;
 
 	/** @var string Object creation date */
@@ -127,7 +127,7 @@ class CustomerCore extends ObjectModel
 	/** @var string customer postcode as determined by geolocation */
 	public $geoloc_postcode;
 
-	/** @var boolean is the customer logged in */
+	/** @var bool is the customer logged in */
 	public $logged = 0;
 
 	/** @var int id_guest meaning the guest table, not the guest customer  */
@@ -353,7 +353,7 @@ class CustomerCore extends ObjectModel
 	/**
 	 * Check id the customer is active or not
 	 *
-	 * @return boolean customer validity
+	 * @return bool customer validity
 	 */
 	public static function isBanned($id_customer)
 	{
@@ -404,7 +404,7 @@ class CustomerCore extends ObjectModel
 	 *
 	 * @param int $id_customer Customer ID
 	 * @param int $id_address Address ID
-	 * @return boolean result
+	 * @return bool result
 	 */
 	public static function customerHasAddress($id_customer, $id_address)
 	{
@@ -474,7 +474,7 @@ class CustomerCore extends ObjectModel
 	 * Check if customer password is the right one
 	 *
 	 * @param string $passwd Password
-	 * @return boolean result
+	 * @return bool result
 	 */
 	public static function checkPassword($id_customer, $passwd)
 	{
@@ -587,7 +587,7 @@ class CustomerCore extends ObjectModel
 	* Specify if a customer already in base
 	*
 	* @param $id_customer Customer id
-	* @return boolean
+	* @return bool
 	*/
 	/* DEPRECATED */
 	public function customerIdExists($id_customer)
@@ -783,8 +783,8 @@ class CustomerCore extends ObjectModel
 	 * Check customer informations and return customer validity
 	 *
 	 * @since 1.5.0
-	 * @param boolean $with_guest
-	 * @return boolean customer validity
+	 * @param bool $with_guest
+	 * @return bool customer validity
 	 */
 	public function isLogged($with_guest = false)
 	{

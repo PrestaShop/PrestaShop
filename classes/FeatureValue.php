@@ -32,7 +32,7 @@ class FeatureValueCore extends ObjectModel
 	/** @var string Name */
 	public $value;
 
-	/** @var boolean Custom */
+	/** @var bool Custom */
 	public $custom = 0;
 
 	/**
@@ -62,7 +62,7 @@ class FeatureValueCore extends ObjectModel
 	/**
 	 * Get all values for a given feature
 	 *
-	 * @param boolean $id_feature Feature id
+	 * @param bool $id_feature Feature id
 	 * @return array Array with feature's values
 	 */
 	public static function getFeatureValues($id_feature)
@@ -78,7 +78,7 @@ class FeatureValueCore extends ObjectModel
 	 * Get all values for a given feature and language
 	 *
 	 * @param int $id_lang Language id
-	 * @param boolean $id_feature Feature id
+	 * @param bool $id_feature Feature id
 	 * @return array Array with feature's values
 	 */
 	public static function getFeatureValuesWithLang($id_lang, $id_feature, $custom = false)
@@ -97,7 +97,7 @@ class FeatureValueCore extends ObjectModel
 	/**
 	 * Get all language for a given value
 	 *
-	 * @param boolean $id_feature_value Feature value id
+	 * @param bool $id_feature_value Feature value id
 	 * @return array Array with value's languages
 	 */
 	public static function getFeatureValueLang($id_feature_value)

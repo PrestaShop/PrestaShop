@@ -816,7 +816,7 @@ class CartRuleCore extends ObjectModel
 	 *
 	 * @param bool $use_tax
 	 * @param Context $context
-	 * @param boolean $use_cache Allow using cache to avoid multiple free gift using multishipping
+	 * @param bool $use_cache Allow using cache to avoid multiple free gift using multishipping
 	 * @return float|int|string
 	 */
 	public function getContextualValue($use_tax, Context $context = null, $filter = null, $package = null, $use_cache = true)

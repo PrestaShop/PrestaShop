@@ -36,7 +36,7 @@ class TaxCore extends ObjectModel
 	/** @var bool active state */
 	public $active;
 
-	/** @var boolean true if the tax has been historized */
+	/** @var bool true if the tax has been historized */
 	public $deleted = 0;
 
 	/**
@@ -174,7 +174,7 @@ class TaxCore extends ObjectModel
 	* Return the tax id associated to the specified name
 	*
 	* @param string $tax_name
-	* @param boolean $active (true by default)
+	* @param bool $active (true by default)
 	*/
 	public static function getTaxIdByName($tax_name, $active = 1)
 	{

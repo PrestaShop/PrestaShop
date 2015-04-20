@@ -37,7 +37,7 @@ class ImageTypeCore extends ObjectModel
 	/** @var int Height */
 	public $height;
 
-	/** @var boolean Apply to products */
+	/** @var bool Apply to products */
 	public $products;
 
 	/** @var int Apply to categories */

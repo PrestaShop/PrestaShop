@@ -71,16 +71,16 @@ class OrderCore extends ObjectModel
 	/** @var float Currency exchange rate */
 	public $conversion_rate;
 
-	/** @var boolean Customer is ok for a recyclable package */
+	/** @var bool Customer is ok for a recyclable package */
 	public $recyclable = 1;
 
-	/** @var boolean True if the customer wants a gift wrapping */
+	/** @var bool True if the customer wants a gift wrapping */
 	public $gift = 0;
 
 	/** @var string Gift message if specified */
 	public $gift_message;
 
-	/** @var boolean Mobile Theme */
+	/** @var bool Mobile Theme */
 	public $mobile_theme;
 
 	/**
@@ -147,7 +147,7 @@ class OrderCore extends ObjectModel
 	/** @var string Delivery creation date */
 	public $delivery_date;
 
-	/** @var boolean Order validity: current order status is logable (usually paid and not canceled) */
+	/** @var bool Order validity: current order status is logable (usually paid and not canceled) */
 	public $valid;
 
 	/** @var string Object creation date */
@@ -727,8 +727,8 @@ class OrderCore extends ObjectModel
 	/**
 	* Check if order contains (only) virtual products
 	*
-	* @param boolean $strict If false return true if there are at least one product virtual
-	* @return boolean true if is a virtual order or false
+	* @param bool $strict If false return true if there are at least one product virtual
+	* @return bool true if is a virtual order or false
 	*
 	*/
 	public function isVirtual($strict = true)
@@ -859,7 +859,7 @@ class OrderCore extends ObjectModel
 	 * Get customer orders
 	 *
 	 * @param int $id_customer Customer id
-	 * @param boolean $show_hidden_status Display or not hidden order statuses
+	 * @param bool $show_hidden_status Display or not hidden order statuses
 	 * @return array Customer orders
 	 */
 	public static function getCustomerOrders($id_customer, $show_hidden_status = false, Context $context = null)
@@ -1574,7 +1574,7 @@ class OrderCore extends ObjectModel
 	 * One After Another tax computation method.
 	 *
 	 * @since 1.5.0.1
-	 * @return boolean
+	 * @return bool
 	 */
 	public function useOneAfterAnotherTaxComputationMethod()
 	{

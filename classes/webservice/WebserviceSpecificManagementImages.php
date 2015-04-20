@@ -77,7 +77,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	protected $productImageDeclinationId = null;
 
 	/**
-	 * @var boolean If the current image management has to manage a "default" image (i.e. "No product available")
+	 * @var bool If the current image management has to manage a "default" image (i.e. "No product available")
 	 */
 	protected $defaultImage = false;
 
@@ -174,7 +174,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	/**
 	 * Management of images URL segment
 	 *
-	 * @return boolean
+	 * @return bool
 	 *
 	 * @throws WebserviceException
 	 */
@@ -341,7 +341,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	/**
 	 * Management of general images
 	 *
-	 * @return boolean
+	 * @return bool
 	 *
 	 * @throws WebserviceException
 	 */
@@ -649,7 +649,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	 * Management of normal images (as categories, suppliers, manufacturers and stores)
 	 *
 	 * @param string $directory the file path of the root of the images folder type
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function manageDeclinatedImages($directory)
 	{
@@ -784,11 +784,11 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	/**
 	 * Management of normal images CRUD
 	 *
-	 * @param boolean $filename_exists if the filename exists
+	 * @param bool $filename_exists if the filename exists
 	 * @param string $filename the image path
 	 * @param array $image_sizes The
 	 * @param string $directory
-	 * @return boolean
+	 * @return bool
 	 *
 	 * @throws WebserviceException
 	 */
@@ -864,7 +864,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	 * @param string $file_path the image file path
 	 * @param array $image_types The different sizes
 	 * @param string $parent_path The parent path
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function deleteImageOnDisk($file_path, $image_types = null, $parent_path = null)
 	{
@@ -1030,7 +1030,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	 * @param int $dest_height
 	 * @param array $image_types
 	 * @param string $parent_path
-	 * @return boolean
+	 * @return bool
 	 *
 	 * @throws WebserviceException
 	 */

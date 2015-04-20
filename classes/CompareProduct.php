@@ -72,7 +72,7 @@ class CompareProductCore extends ObjectModel
 	/**
 	 * Add a compare product for the customer
 	 * @param int $id_customer, int $id_product
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function addCompareProduct($id_compare, $id_product)
 	{
@@ -105,7 +105,7 @@ class CompareProductCore extends ObjectModel
 	 * Remove a compare product for the customer
 	 * @param int $id_compare
 	 * @param int $id_product
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function removeCompareProduct($id_compare, $id_product)
 	{

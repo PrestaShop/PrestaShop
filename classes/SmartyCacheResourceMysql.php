@@ -80,7 +80,7 @@ class Smarty_CacheResource_Mysql extends Smarty_CacheResource_Custom
 	 * @param string $compile_id compile id
 	 * @param int|null $exp_time seconds till expiration time in seconds or null
 	 * @param string $content content to cache
-	 * @return boolean success
+	 * @return bool success
 	 */
 	protected function save($id, $name, $cache_id, $compile_id, $exp_time, $content)
 	{

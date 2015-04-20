@@ -47,10 +47,10 @@ class ProductDownloadCore extends ObjectModel
 	/** @var string NbDownloadable how many time the customer can download the file */
 	public $nb_downloadable;
 
-	/** @var boolean Active if file is accessible or not */
+	/** @var bool Active if file is accessible or not */
 	public $active = 1;
 
-	/** @var boolean is_shareable indicates whether the product can be shared */
+	/** @var bool is_shareable indicates whether the product can be shared */
 	public $is_shareable = 0;
 
 	protected static $_productIds = array();
@@ -126,7 +126,7 @@ class ProductDownloadCore extends ObjectModel
 	 * Delete the file
 	 * @param int $id_product_download : if we need to delete a specific product attribute file
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public function deleteFile($id_product_download = null)
 	{
@@ -140,7 +140,7 @@ class ProductDownloadCore extends ObjectModel
 	/**
 	 * Check if file exists
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public function checkFile()
 	{
@@ -151,7 +151,7 @@ class ProductDownloadCore extends ObjectModel
 	/**
 	 * Check if download repository is writable
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function checkWritableDir()
 	{

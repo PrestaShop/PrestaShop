@@ -29,7 +29,7 @@ class SceneCore extends ObjectModel
 	/** @var string Name */
 	public $name;
 
-	/** @var boolean Active Scene */
+	/** @var bool Active Scene */
 	public $active = true;
 
 	/** @var array Zone for image map */

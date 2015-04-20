@@ -46,7 +46,7 @@ class LanguageCore extends ObjectModel
 	/** @var bool true if this language is right to left language */
 	public $is_rtl = false;
 
-	/** @var boolean Status */
+	/** @var bool Status */
 	public $active = true;
 
 	/**
@@ -396,7 +396,7 @@ class LanguageCore extends ObjectModel
 	/**
 	 * loadUpdateSQL will create default lang values when you create a new lang, based on default id lang
 	 *
-	 * @return boolean true if succeed
+	 * @return bool true if succeed
 	 */
 	public function loadUpdateSQL()
 	{

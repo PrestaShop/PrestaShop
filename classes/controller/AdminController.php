@@ -176,19 +176,19 @@ class AdminControllerCore extends Controller
 	/** @var array List of toolbar buttons */
 	protected $toolbar_btn = null;
 
-	/** @var boolean Scrolling toolbar */
+	/** @var bool Scrolling toolbar */
 	protected $toolbar_scroll = true;
 
-	/** @var boolean Set to false to hide toolbar and page title */
+	/** @var bool Set to false to hide toolbar and page title */
 	protected $show_toolbar = true;
 
-	/** @var boolean Set to true to show toolbar and page title for options */
+	/** @var bool Set to true to show toolbar and page title for options */
 	protected $show_toolbar_options = false;
 
 	/** @var int Number of results in list */
 	protected $_listTotal = 0;
 
-	/** @var boolean Automatically join language table if true */
+	/** @var bool Automatically join language table if true */
 	public $lang = false;
 
 	/** @var array WHERE clause determined by filter fields */
@@ -221,7 +221,7 @@ class AdminControllerCore extends Controller
 	/** @var array List of row ids associated with a given action for witch this action have to not be available */
 	protected $list_skip_actions = array();
 
-	/* @var boolean Don't show header & footer */
+	/* @var bool Don't show header & footer */
 	protected $lite_display = false;
 
 	/** @var bool List content lines are clickable if true */
@@ -290,7 +290,7 @@ class AdminControllerCore extends Controller
 	/** @var string|int */
 	protected $position_group_identifier;
 
-	/** @var boolean Table records are not deleted but marked as deleted if set to true */
+	/** @var bool Table records are not deleted but marked as deleted if set to true */
 	protected $deleted = false;
 
 	/**  @var bool Is a list filter set */
@@ -673,7 +673,7 @@ class AdminControllerCore extends Controller
 	 * Check rights to view the current tab
 	 *
 	 * @param bool $disable
-	 * @return boolean
+	 * @return bool
 	 */
 	public function viewAccess($disable = false)
 	{
@@ -2563,8 +2563,8 @@ class AdminControllerCore extends Controller
 	 *
 	 * @param string  $string Term or expression in english
 	 * @param string|null $class Name of the class
-	 * @param boolean $addslashes If set to true, the return value will pass through addslashes(). Otherwise, stripslashes().
-	 * @param boolean $htmlentities If set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
+	 * @param bool $addslashes If set to true, the return value will pass through addslashes(). Otherwise, stripslashes().
+	 * @param bool $htmlentities If set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
 	 * @return string The translation if available, or the english default text.
 	 */
 	protected function l($string, $class = null, $addslashes = false, $htmlentities = true)
@@ -3414,7 +3414,7 @@ class AdminControllerCore extends Controller
 	 * Called before deletion
 	 *
 	 * @param ObjectModel $object Object
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function beforeDelete($object)
 	{
@@ -3426,7 +3426,7 @@ class AdminControllerCore extends Controller
 	 *
 	 * @param ObjectModel $object Object
 	 * @param int $old_id
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function afterDelete($object, $old_id)
 	{
@@ -3454,7 +3454,7 @@ class AdminControllerCore extends Controller
 	/**
 	 * Check rights to view the current tab
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function afterImageUpload()
 	{
@@ -3587,7 +3587,7 @@ class AdminControllerCore extends Controller
 	 * Overload this method for custom checking
 	 *
 	 * @param int $id Object id used for deleting images
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function postImage($id)
 	{
@@ -3654,7 +3654,7 @@ class AdminControllerCore extends Controller
 	/**
 	 * Delete multiple items
 	 *
-	 * @return boolean true if success
+	 * @return bool true if success
 	 */
 	protected function processBulkDelete()
 	{
@@ -3747,7 +3747,7 @@ class AdminControllerCore extends Controller
 	/**
 	 * Enable multiple items
 	 *
-	 * @return boolean true if success
+	 * @return bool true if success
 	 */
 	protected function processBulkEnableSelection()
 	{
@@ -3757,7 +3757,7 @@ class AdminControllerCore extends Controller
 	/**
 	 * Disable multiple items
 	 *
-	 * @return boolean true if success
+	 * @return bool true if success
 	 */
 	protected function processBulkDisableSelection()
 	{
@@ -3768,7 +3768,7 @@ class AdminControllerCore extends Controller
 	 * Toggle status of multiple items
 	 *
 	 * @param bool $status
-	 * @return boolean true if success
+	 * @return bool true if success
 	 * @throws PrestaShopException
 	 */
 	protected function processBulkStatusSelection($status)
@@ -3813,7 +3813,7 @@ class AdminControllerCore extends Controller
 	 * Called before Add
 	 *
 	 * @param ObjectModel $object Object
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function beforeAdd($object)
 	{

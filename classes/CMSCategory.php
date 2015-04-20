@@ -34,7 +34,7 @@ class CMSCategoryCore extends ObjectModel
 	/** @var string Name */
 	public $name;
 
-	/** @var boolean Status for display */
+	/** @var bool Status for display */
 	public $active = 1;
 
 	/** @var string Description */
@@ -309,7 +309,7 @@ class CMSCategoryCore extends ObjectModel
 	 * Return available categories
 	 *
 	 * @param int $id_lang Language ID
-	 * @param boolean $active return only active categories
+	 * @param bool $active return only active categories
 	 * @return array Categories
 	 */
 	public static function getCategories($id_lang, $active = true, $order = true)
@@ -348,7 +348,7 @@ class CMSCategoryCore extends ObjectModel
 	 * Return current CMSCategory childs
 	 *
 	 * @param int $id_lang Language ID
-	 * @param boolean $active return only active categories
+	 * @param bool $active return only active categories
 	 * @return array Categories
 	 */
 	public function getSubCategories($id_lang, $active = true)
@@ -386,7 +386,7 @@ class CMSCategoryCore extends ObjectModel
 	 * Return main categories
 	 *
 	 * @param int $id_lang Language ID
-	 * @param boolean $active return only active categories
+	 * @param bool $active return only active categories
 	 * @return array categories
 	 */
 	public static function getHomeCategories($id_lang, $active = true)
@@ -422,7 +422,7 @@ class CMSCategoryCore extends ObjectModel
 	 * Check if CMSCategory can be moved in another one
 	 *
 	 * @param int $id_parent Parent candidate
-	 * @return boolean Parent validity
+	 * @return bool Parent validity
 	 */
 	public static function checkBeforeMove($id_cms_category, $id_parent)
 	{
@@ -483,7 +483,7 @@ class CMSCategoryCore extends ObjectModel
 	  *
 	  * @param int $id_lang Language ID
 	  * @param string $query Searched string
-	  * @param boolean $unrestricted allows search without lang and includes first CMSCategory and exact match
+	  * @param bool $unrestricted allows search without lang and includes first CMSCategory and exact match
 	  * @return array Corresponding categories
 	  */
 	public static function searchByName($id_lang, $query, $unrestricted = false)

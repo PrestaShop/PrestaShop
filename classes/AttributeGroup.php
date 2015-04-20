@@ -163,7 +163,7 @@ class AttributeGroupCore extends ObjectModel
 	 * Get all attributes for a given language / group
 	 *
 	 * @param int $id_lang Language id
-	 * @param boolean $id_attribute_group Attribute group id
+	 * @param bool $id_attribute_group Attribute group id
 	 * @return array Attributes
 	 */
 	public static function getAttributes($id_lang, $id_attribute_group)
@@ -256,9 +256,9 @@ class AttributeGroupCore extends ObjectModel
 
 	/**
 	 * Move a group attribute
-	 * @param boolean $way Up (1)  or Down (0)
+	 * @param bool $way Up (1)  or Down (0)
 	 * @param int $position
-	 * @return boolean Update result
+	 * @return bool Update result
 	 */
 	public function updatePosition($way, $position)
 	{

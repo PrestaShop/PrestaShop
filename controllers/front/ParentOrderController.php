@@ -164,7 +164,7 @@ class ParentOrderControllerCore extends FrontController
 
 	/**
 	 * Check if order is free
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function _checkFreeOrder()
 	{

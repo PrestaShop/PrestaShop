@@ -4,7 +4,7 @@ class Cart extends CartCore
 {
 	public $delivery_option;
 
-	/** @var boolean Allow to seperate order in multiple package in order to recieve as soon as possible the available products */
+	/** @var bool Allow to seperate order in multiple package in order to recieve as soon as possible the available products */
 	public $allow_seperated_package = false;
 
 	protected static $_nbProducts = array();

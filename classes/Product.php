@@ -91,10 +91,10 @@ class ProductCore extends ObjectModel
 	/** @var float Wholesale Price in euros */
 	public $wholesale_price = 0;
 
-	/** @var boolean on_sale */
+	/** @var bool on_sale */
 	public $on_sale = false;
 
-	/** @var boolean online_only */
+	/** @var bool online_only */
 	public $online_only = false;
 
 	/** @var string unity */
@@ -148,13 +148,13 @@ class ProductCore extends ObjectModel
 	/** @var string Meta tag title */
 	public $meta_title;
 
-	/** @var boolean Product statuts */
+	/** @var bool Product statuts */
 	public $quantity_discount = 0;
 
-	/** @var boolean Product customization */
+	/** @var bool Product customization */
 	public $customizable;
 
-	/** @var boolean Product is new */
+	/** @var bool Product is new */
 	public $new = null;
 
 	/** @var int Number of uploadable files (concerning customizable products) */
@@ -163,16 +163,16 @@ class ProductCore extends ObjectModel
 	/** @var int Number of text fields */
 	public $text_fields;
 
-	/** @var boolean Product statuts */
+	/** @var bool Product statuts */
 	public $active = true;
 
-	/** @var boolean Product statuts */
+	/** @var bool Product statuts */
 	public $redirect_type = '';
 
-	/** @var boolean Product statuts */
+	/** @var bool Product statuts */
 	public $id_product_redirected = 0;
 
-	/** @var boolean Product available for order */
+	/** @var bool Product available for order */
 	public $available_for_order = true;
 
 	/** @var string Object available order date */
@@ -181,10 +181,10 @@ class ProductCore extends ObjectModel
 	/** @var string Enumerated (enum) product condition (new, used, refurbished) */
 	public $condition;
 
-	/** @var boolean Show price of Product */
+	/** @var bool Show price of Product */
 	public $show_price = true;
 
-	/** @var boolean is the product indexed in the search index? */
+	/** @var bool is the product indexed in the search index? */
 	public $indexed = 0;
 
 	/** @var string ENUM('both', 'catalog', 'search', 'none') front office visibility */
@@ -215,7 +215,7 @@ class ProductCore extends ObjectModel
 
 	/**
 	 * @since 1.5.0
-	 * @var boolean Tells if the product uses the advanced stock management
+	 * @var bool Tells if the product uses the advanced stock management
 	 */
 	public $advanced_stock_management = 0;
 	public $out_of_stock;
@@ -599,7 +599,7 @@ class ProductCore extends ObjectModel
 
 	/**
 	 * Move a product inside its category
-	 * @param boolean $way Up (1)  or Down (0)
+	 * @param bool $way Up (1)  or Down (0)
 	 * @param int $position
 	 * return boolean Update result
 	 */
@@ -920,7 +920,7 @@ class ProductCore extends ObjectModel
 	 * addToCategories add this product to the category/ies if not exists.
 	 *
 	 * @param mixed $categories id_category or array of id_category
-	 * @return boolean true if succeed
+	 * @return bool true if succeed
 	 */
 	public function addToCategories($categories = array())
 	{
@@ -969,7 +969,7 @@ class ProductCore extends ObjectModel
 	* Update categories to index product into
 	*
 	* @param string $productCategories Categories list to index product into
-	* @param boolean $keeping_current_pos (deprecated, no more used)
+	* @param bool $keeping_current_pos (deprecated, no more used)
 	* @return array Update/insertion result
 	*/
 	public function updateCategories($categories, $keeping_current_pos = false)
@@ -1005,7 +1005,7 @@ class ProductCore extends ObjectModel
 	 *
 	 * @param mixed $id_category
 	 * @param mixed $clean_positions
-	 * @return boolean
+	 * @return bool
 	 */
 	public function deleteCategory($id_category, $clean_positions = true)
 	{
@@ -1027,7 +1027,7 @@ class ProductCore extends ObjectModel
 	/**
 	* Delete all association to category where product is indexed
 	*
-	* @param boolean $clean_positions clean category positions after deletion
+	* @param bool $clean_positions clean category positions after deletion
 	* @return array Deletion result
 	*/
 	public function deleteCategories($clean_positions = false)
@@ -1552,7 +1552,7 @@ class ProductCore extends ObjectModel
 	 * @param string $reference Reference
 	 * @param string $location Location
 	 * @param string $ean13 Ean-13 barcode
-	 * @param boolean $default Is default attribute for product
+	 * @param bool $default Is default attribute for product
 	 * @param int $minimal_quantity Minimal quantity to add to cart
 	 * @return mixed $id_product_attribute or false
 	 */
@@ -1703,7 +1703,7 @@ class ProductCore extends ObjectModel
 	/**
 	* Delete product attachments
 	*
-	* @param boolean $update_cache If set to true attachment cache will be updated
+	* @param bool $update_cache If set to true attachment cache will be updated
 	* @return array Deletion result
 	*/
 	public function deleteAttachments($update_attachment_cache = true)
@@ -2325,7 +2325,7 @@ class ProductCore extends ObjectModel
 	* @param int $id_lang Language id
 	* @param int $pageNumber Start from (optional)
 	* @param int $nbProducts Number of products to return (optional)
-	* @param boolean $count Only in order to get total number (optional)
+	* @param bool $count Only in order to get total number (optional)
 	* @return array Prices drop
 	*/
 	public static function getPricesDrop($id_lang, $page_number = 0, $nb_products = 10, $count = false,
@@ -2963,7 +2963,7 @@ class ProductCore extends ObjectModel
 	* Get product price
 	* Same as static function getPriceStatic, no need to specify product id
 	*
-	* @param boolean $tax With taxes or not (optional)
+	* @param bool $tax With taxes or not (optional)
 	* @param int $id_product_attribute Product attribute id (optional)
 	* @param int $decimals Number of decimals (optional)
 	* @param int $divisor Util when paying many time without fees (optional)
@@ -3170,7 +3170,7 @@ class ProductCore extends ObjectModel
 	 * Check product availability
 	 *
 	 * @param int $qty Quantity desired
-	 * @return boolean True if product is available with this quantity
+	 * @return bool True if product is available with this quantity
 	 */
 	public function checkQty($qty)
 	{
@@ -4585,7 +4585,7 @@ class ProductCore extends ObjectModel
 	 *
 	 * @param int $id_product
 	 * @param array $categories array of category arrays
-	 * @return boolean is the product in at least one category
+	 * @return bool is the product in at least one category
 	 */
 	public static function idIsOnCategoryId($id_product, $categories)
 	{
@@ -5173,7 +5173,7 @@ class ProductCore extends ObjectModel
 
 	/**
 	 * Checks if reference exists
-	 * @return boolean
+	 * @return bool
 	 */
 	public function existsRefInDatabase($reference)
 	{

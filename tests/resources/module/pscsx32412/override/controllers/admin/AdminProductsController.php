@@ -2052,7 +2052,7 @@ class AdminProductsController extends AdminProductsControllerCore
 	 *
 	 * @param array Languages
 	 * @param object $product Product
-	 * @return boolean Update result
+	 * @return bool Update result
 	 */
 	public function updateTags($languages, $product)
 	{
@@ -4508,7 +4508,7 @@ class AdminProductsController extends AdminProductsControllerCore
 	 * if yes, add the pack items from input "inputPackItems"
 	 *
 	 * @param Product $product
-	 * @return boolean
+	 * @return bool
 	 */
 	public function updatePackItems($product)
 	{

@@ -55,7 +55,7 @@ class SupplierCore extends ObjectModel
 	/** @var string Meta description */
 	public $meta_description;
 
-	/** @var boolean active */
+	/** @var bool active */
 	public $active;
 
 	/**
@@ -347,7 +347,7 @@ class SupplierCore extends ObjectModel
 	* Tells if a supplier exists
 	*
 	* @param $id_supplier Supplier id
-	* @return boolean
+	* @return bool
 	*/
 	public static function supplierExists($id_supplier)
 	{

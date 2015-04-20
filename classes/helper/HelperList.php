@@ -81,7 +81,7 @@ class HelperListCore extends Helper
 	 */
 	protected $fields_list;
 
-	/** @var boolean Content line is clickable if true */
+	/** @var bool Content line is clickable if true */
 	public $no_link = false;
 
 	/** @var Smarty_Internal_Template|string */
@@ -110,7 +110,7 @@ class HelperListCore extends Helper
 	/** @var string|null If not null, a title will be added on that list */
 	public $title = null;
 
-	/** @var boolean ask for simple header : no filters, no paginations and no sorting */
+	/** @var bool ask for simple header : no filters, no paginations and no sorting */
 	public $simple_header = false;
 
 	public $ajax_params = array();

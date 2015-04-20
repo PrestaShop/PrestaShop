@@ -276,8 +276,8 @@ class ToolsCore
 	 * This function should not be used to choose http or https domain name.
 	 * Use Tools::getShopDomain() or Tools::getShopDomainSsl instead
 	 *
-	 * @param boolean $http
-	 * @param boolean $entities
+	 * @param bool $http
+	 * @param bool $entities
 	 * @return string host
 	 */
 	public static function getHttpHost($http = false, $entities = false, $ignore_port = false)
@@ -295,8 +295,8 @@ class ToolsCore
 	/**
 	 * getShopDomain returns domain name according to configuration and ignoring ssl
 	 *
-	 * @param boolean $http if true, return domain name with protocol
-	 * @param boolean $entities if true, convert special chars to HTML entities
+	 * @param bool $http if true, return domain name with protocol
+	 * @param bool $entities if true, convert special chars to HTML entities
 	 * @return string domain
 	 */
 	public static function getShopDomain($http = false, $entities = false)
@@ -313,8 +313,8 @@ class ToolsCore
 	/**
 	 * getShopDomainSsl returns domain name according to configuration and depending on ssl activation
 	 *
-	 * @param boolean $http if true, return domain name with protocol
-	 * @param boolean $entities if true, convert special chars to HTML entities
+	 * @param bool $http if true, return domain name with protocol
+	 * @param bool $entities if true, convert special chars to HTML entities
 	 * @return string domain
 	 */
 	public static function getShopDomainSsl($http = false, $entities = false)
@@ -699,7 +699,7 @@ class ToolsCore
 	*
 	* @param float $price Product price
 	* @param object|array $currency Current currency object
-	* @param boolean $to_currency convert to currency or from currency to default currency
+	* @param bool $to_currency convert to currency or from currency to default currency
 	* @param Context $context
 	* @return float Price
 	*/
@@ -779,7 +779,7 @@ class ToolsCore
 	*
 	* @param string $date Date to display format UNIX
 	* @param int $id_lang Language id DEPRECATED
-	* @param boolean $full With time or not (optional)
+	* @param bool $full With time or not (optional)
 	* @param string $separator DEPRECATED
 	* @return string Date
 	*/
@@ -808,7 +808,7 @@ class ToolsCore
 	* Sanitize a string
 	*
 	* @param string $string String to sanitize
-	* @param boolean $full String contains HTML or not (optional)
+	* @param bool $full String contains HTML or not (optional)
 	* @return string Sanitized string
 	*/
 	public static function safeOutput($string, $html = false)
@@ -919,7 +919,7 @@ class ToolsCore
 	* Display an error according to an error code
 	*
 	* @param string $string Error message
-	* @param boolean $htmlentities By default at true for parsing error message with htmlentities
+	* @param bool $htmlentities By default at true for parsing error message with htmlentities
 	*/
 	public static function displayError($string = 'Fatal error', $htmlentities = true, Context $context = null)
 	{
@@ -943,7 +943,7 @@ class ToolsCore
 	 * Display an error with detailed object
 	 *
 	 * @param mixed $object
-	 * @param boolean $kill
+	 * @param bool $kill
 	 * @return $object if $kill = false;
 	 */
 	public static function dieObject($object, $kill = true)
@@ -1141,7 +1141,7 @@ class ToolsCore
 	* Get a valid URL to use from BackOffice
 	*
 	* @param string $url An URL to use in BackOffice
-	* @param boolean $entites Set to true to use htmlentities function on URL param
+	* @param bool $entites Set to true to use htmlentities function on URL param
 	*/
 	public static function getAdminUrl($url = null, $entities = false)
 	{
@@ -1157,7 +1157,7 @@ class ToolsCore
 	* Get a valid image URL to use from BackOffice
 	*
 	* @param string $image Image name
-	* @param boolean $entites Set to true to use htmlentities function on image param
+	* @param bool $entites Set to true to use htmlentities function on image param
 	*/
 	public static function getAdminImageUrl($image = null, $entities = false)
 	{
@@ -1169,7 +1169,7 @@ class ToolsCore
 	*
 	* @param int $id_category Category ID
 	* @param string $path Path end
-	* @param boolean $linkOntheLastItem Put or not a link on the current category
+	* @param bool $linkOntheLastItem Put or not a link on the current category
 	* @param string [optionnal] $categoryType defined what type of categories is used (products or cms)
 	*/
 	public static function getPath($id_category, $path = '', $link_on_the_item = false, $category_type = 'products', Context $context = null)
@@ -1898,7 +1898,7 @@ class ToolsCore
 	 * file_exists() wrapper with cache to speedup performance
 	 *
 	 * @param string $filename File name
-	 * @return boolean Cached result of file_exists($filename)
+	 * @return bool Cached result of file_exists($filename)
 	 */
 	public static function file_exists_cache($filename)
 	{
@@ -1911,7 +1911,7 @@ class ToolsCore
 	 * file_exists() wrapper with a call to clearstatcache prior
 	 *
 	 * @param string $filename File name
-	 * @return boolean Cached result of file_exists($filename)
+	 * @return bool Cached result of file_exists($filename)
 	 */
 	public static function file_exists_no_cache($filename)
 	{
@@ -2480,7 +2480,7 @@ exit;
 	 * jsonDecode convert json string to php array / object
 	 *
 	 * @param string $json
-	 * @param boolean $assoc  (since 1.4.2.4) if true, convert to associativ array
+	 * @param bool $assoc  (since 1.4.2.4) if true, convert to associativ array
 	 * @return array
 	 */
 	public static function jsonDecode($json, $assoc = false)
@@ -2999,7 +2999,7 @@ exit;
 	 * to be available. With CGI mod, we cannot get php modules
 	 *
 	 * @param string $name module name
-	 * @return boolean true if exists
+	 * @return bool true if exists
 	 * @since 1.4.5.0
 	 */
 	public static function apacheModExists($name)

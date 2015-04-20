@@ -46,7 +46,7 @@ class CurrencyCore extends ObjectModel
 	/** @var string exchange rate from euros */
 	public $conversion_rate;
 
-	/** @var boolean True if currency has been deleted (staying in database as deleted) */
+	/** @var bool True if currency has been deleted (staying in database as deleted) */
 	public $deleted = 0;
 
 	/** @var int ID used for displaying prices */
@@ -132,7 +132,7 @@ class CurrencyCore extends ObjectModel
 	 * Check if a curency already exists.
 	 *
 	 * @param int|string $iso_code int for iso code number string for iso code
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function exists($iso_code, $iso_code_num, $id_shop = 0)
 	{

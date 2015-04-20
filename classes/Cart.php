@@ -50,16 +50,16 @@ class CartCore extends ObjectModel
 	/** @var int Language ID */
 	public $id_lang;
 
-	/** @var boolean True if the customer wants a recycled package */
+	/** @var bool True if the customer wants a recycled package */
 	public $recyclable = 0;
 
-	/** @var boolean True if the customer wants a gift wrapping */
+	/** @var bool True if the customer wants a gift wrapping */
 	public $gift = 0;
 
 	/** @var string Gift message if specified */
 	public $gift_message;
 
-	/** @var boolean Mobile Theme */
+	/** @var bool Mobile Theme */
 	public $mobile_theme;
 
 	/** @var string Object creation date */
@@ -80,7 +80,7 @@ class CartCore extends ObjectModel
 
 	public $delivery_option;
 
-	/** @var boolean Allow to seperate order in multiple package in order to recieve as soon as possible the available products */
+	/** @var bool Allow to seperate order in multiple package in order to recieve as soon as possible the available products */
 	public $allow_seperated_package = false;
 
 	protected static $_nbProducts = array();
@@ -1069,7 +1069,7 @@ class CartCore extends ObjectModel
 	 * @param int $type
 	 * @param string $field
 	 * @param int $quantity
-	 * @return boolean success
+	 * @return bool success
 	 */
 	public function _addCustomization($id_product, $id_product_attribute, $index, $type, $field, $quantity)
 	{
@@ -1124,7 +1124,7 @@ class CartCore extends ObjectModel
 	/**
 	 * Check if order has already been placed
 	 *
-	 * @return boolean result
+	 * @return bool result
 	 */
 	public function orderExists()
 	{
@@ -1168,7 +1168,7 @@ class CartCore extends ObjectModel
 	 * @param int $id_product Product ID
 	 * @param int $id_product_attribute Attribute ID if needed
 	 * @param int $id_customization Customization id
-	 * @return boolean result
+	 * @return bool result
 	 */
 	public function deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0)
 	{
@@ -1251,7 +1251,7 @@ class CartCore extends ObjectModel
 	 * then the image is also deleted
 	 *
 	 * @param int $id_customization
-	 * @return boolean result
+	 * @return bool result
 	 */
 	protected function _deleteCustomization($id_customization, $id_product, $id_product_attribute, $id_address_delivery = 0)
 	{
@@ -1326,9 +1326,9 @@ class CartCore extends ObjectModel
 	* Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING
 	* Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING
 	*
-	* @param boolean $withTaxes With or without taxes
+	* @param bool $withTaxes With or without taxes
 	* @param int $type Total type
-	* @param boolean $use_cache Allow using cache of the method CartRule::getContextualValue
+	* @param bool $use_cache Allow using cache of the method CartRule::getContextualValue
 	* @return float Order total
 	*/
 	public function getOrderTotal($with_taxes = true, $type = Cart::BOTH, $products = null, $id_carrier = null, $use_cache = true)
@@ -1618,7 +1618,7 @@ class CartCore extends ObjectModel
 
 	/**
 	* Get the gift wrapping price
-	* @param boolean $with_taxes With or without taxes
+	* @param bool $with_taxes With or without taxes
 	* @return float wrapping price
 	*/
 	public function getGiftWrappingPrice($with_taxes = true, $id_address = null)
@@ -1956,7 +1956,7 @@ class CartCore extends ObjectModel
 	/**
 	 * Get all deliveries options available for the current cart
 	 * @param Country $default_country
-	 * @param boolean $flush Force flushing cache
+	 * @param bool $flush Force flushing cache
 	 *
 	 * @return array array(
 	 *                   0 => array( // First address
@@ -2301,7 +2301,7 @@ class CartCore extends ObjectModel
 	 * @since 1.5.0
 	 *
 	 * @param Country $default_country
-	 * @param boolean $flush Force flushing cache
+	 * @param bool $flush Force flushing cache
 	 *
 	 */
 	public function simulateCarriersOutput(Country $default_country = null, $flush = false)
@@ -2387,7 +2387,7 @@ class CartCore extends ObjectModel
 
 	/**
 	 * Does the cart use multiple address
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isMultiAddressDelivery()
 	{
@@ -3188,7 +3188,7 @@ class CartCore extends ObjectModel
 	/**
 	* Check if cart contains only virtual products
 	*
-	* @return boolean true if is a virtual cart or false
+	* @return bool true if is a virtual cart or false
 	*/
 	public function isVirtualCart($strict = false)
 	{

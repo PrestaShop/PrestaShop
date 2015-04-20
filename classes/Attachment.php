@@ -131,7 +131,7 @@ class AttachmentCore extends ObjectModel
 	 * associate $id_product to the current object.
 	 *
 	 * @param int $id_product id of the product to associate
-	 * @return boolean true if succed
+	 * @return bool true if succed
 	 */
 	public function attachProduct($id_product)
 	{

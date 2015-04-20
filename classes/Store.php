@@ -74,7 +74,7 @@ class StoreCore extends ObjectModel
 	/** @var string Object last modification date */
 	public $date_upd;
 
-	/** @var boolean Store status */
+	/** @var bool Store status */
 	public $active = true;
 
 	/**

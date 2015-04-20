@@ -44,31 +44,31 @@ abstract class AdminTabCore
 	/** @var string Security token */
 	public $token;
 
-	/** @var boolean Automatically join language table if true */
+	/** @var bool Automatically join language table if true */
 	public $lang = false;
 
-	/** @var boolean Tab Automatically displays edit/delete icons if true */
+	/** @var bool Tab Automatically displays edit/delete icons if true */
 	public $edit = false;
 
-	/** @var boolean Tab Automatically displays view icon if true */
+	/** @var bool Tab Automatically displays view icon if true */
 	public $view = false;
 
-	/** @var boolean Tab Automatically displays delete icon if true */
+	/** @var bool Tab Automatically displays delete icon if true */
 	public $delete = false;
 
-	/** @var boolean Table records are not deleted but marked as deleted */
+	/** @var bool Table records are not deleted but marked as deleted */
 	public $deleted = false;
 
-	/** @var boolean Tab Automatically displays duplicate icon if true */
+	/** @var bool Tab Automatically displays duplicate icon if true */
 	public $duplicate = false;
 
-	/** @var boolean Content line is clickable if true */
+	/** @var bool Content line is clickable if true */
 	public $noLink = false;
 
-	/** @var boolean select other required fields */
+	/** @var bool select other required fields */
 	public $requiredDatabase = false;
 
-	/** @var boolean Tab Automatically displays '$color' as background color on listing if true */
+	/** @var bool Tab Automatically displays '$color' as background color on listing if true */
 	public $colorOnBackground = false;
 
 	/** @var string Add fields into data query to display list */
@@ -184,7 +184,7 @@ abstract class AdminTabCore
 
 	/**
 	 * if true, ajax-tab will not wait 1 sec
-	 * @var boolean
+	 * @var bool
 	 */
 	public $ignore_sleep = false;
 
@@ -1118,7 +1118,7 @@ abstract class AdminTabCore
 	 * Overload this method for custom checking
 	 *
 	 * @param int $id Object id used for deleting images
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function postImage($id)
 	{
@@ -1363,7 +1363,7 @@ abstract class AdminTabCore
 	 * @param int $size Image width
 	 * @param int $id_image Image id (for products with several images)
 	 * @param string $token Employee token used in the image deletion link
-	 * @param boolean $disableCache When turned on a timestamp will be added to the image URI to disable the HTTP cache
+	 * @param bool $disableCache When turned on a timestamp will be added to the image URI to disable the HTTP cache
 	 */
 	public function displayImage($id, $image, $size, $id_image = null, $token = null, $disableCache = false)
 	{
@@ -2123,7 +2123,7 @@ abstract class AdminTabCore
 	 * Load class object using identifier in $_GET (if possible)
 	 * otherwise return an empty object, or die
 	 *
-	 * @param boolean $opt Return an empty object if load fail
+	 * @param bool $opt Return an empty object if load fail
 	 * @return object
 	 */
 	protected function loadObject($opt = false)
@@ -2222,7 +2222,7 @@ abstract class AdminTabCore
 	 * Called before deletion
 	 *
 	 * @param object $object Object
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function beforeDelete($object) { return true; }
 
@@ -2230,7 +2230,7 @@ abstract class AdminTabCore
 	 * Called before deletion
 	 *
 	 * @param object $object Object
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function afterDelete($object, $oldId) { return true; }
 
@@ -2241,7 +2241,7 @@ abstract class AdminTabCore
 	/**
 	 * Check rights to view the current tab
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 
 	protected function afterImageUpload() {
@@ -2251,7 +2251,7 @@ abstract class AdminTabCore
 	/**
 	 * Check rights to view the current tab
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 
 	public function viewAccess($disable = false)
@@ -2282,8 +2282,8 @@ abstract class AdminTabCore
 	 * @param int $default_language Default language id
 	 * @param string $ids Multilingual div ids in form
 	 * @param string $id Current div id]
-	 * @param boolean $return define the return way : false for a display, true for a return
-	 * @param boolean $use_vars_instead_of_ids use an js vars instead of ids seperate by "¤"
+	 * @param bool $return define the return way : false for a display, true for a return
+	 * @param bool $use_vars_instead_of_ids use an js vars instead of ids seperate by "¤"
 	 */
 	public function displayFlags($languages, $default_language, $ids, $id, $return = false, $use_vars_instead_of_ids = false)
 	{

@@ -138,7 +138,7 @@ class AttributeCore extends ObjectModel
 	 * Get all attributes for a given language
 	 *
 	 * @param int $id_lang Language id
-	 * @param boolean $notNull Get only not null fields if true
+	 * @param bool $notNull Get only not null fields if true
 	 * @return array Attributes
 	 */
 	public static function getAttributes($id_lang, $not_null = false)
@@ -191,7 +191,7 @@ class AttributeCore extends ObjectModel
 	 *
 	 * @param int $id_product_attribute Product attribute combination id
 	 * @param int $qty Quantity needed
-	 * @return boolean Quantity is available or not
+	 * @return bool Quantity is available or not
 	 */
 	public static function checkAttributeQty($id_product_attribute, $qty, Shop $shop = null)
 	{
@@ -281,9 +281,9 @@ class AttributeCore extends ObjectModel
 
 	/**
 	 * Move an attribute inside its group
-	 * @param boolean $way Up (1)  or Down (0)
+	 * @param bool $way Up (1)  or Down (0)
 	 * @param int $position
-	 * @return boolean Update result
+	 * @return bool Update result
 	 */
 	public function updatePosition($way, $position)
 	{

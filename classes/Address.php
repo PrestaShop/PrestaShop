@@ -95,7 +95,7 @@ class AddressCore extends ObjectModel
 	/** @var string Object last modification date */
 	public $date_upd;
 
-	/** @var boolean True if address has been deleted (staying in database as deleted) */
+	/** @var bool True if address has been deleted (staying in database as deleted) */
 	public $deleted = 0;
 
 	protected static $_idZones = array();
@@ -323,7 +323,7 @@ class AddressCore extends ObjectModel
 	* Specify if an address is already in base
 	*
 	* @param int $id_address Address id
-	* @return boolean
+	* @return bool
 	*/
 	public static function addressExists($id_address)
 	{

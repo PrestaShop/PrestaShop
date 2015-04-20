@@ -910,7 +910,7 @@ abstract class PaymentModuleCore extends Module
 	 * @since 1.4.5
 	 * @param int $id_currency
 	 * @param array $id_module_list
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function addCurrencyPermissions($id_currency, array $id_module_list = array())
 	{

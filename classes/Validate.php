@@ -43,7 +43,7 @@ class ValidateCore
 	 * Check for e-mail validity
 	 *
 	 * @param string $email e-mail address to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isEmail($email)
 	{
@@ -55,7 +55,7 @@ class ValidateCore
 	 *
 	 * @param string $url module URL to validate
 	 * @param array $errors Reference array for catching errors
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isModuleUrl($url, &$errors)
 	{
@@ -80,7 +80,7 @@ class ValidateCore
 	 * Check for MD5 string validity
 	 *
 	 * @param string $md5 MD5 string to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isMd5($md5)
 	{
@@ -91,7 +91,7 @@ class ValidateCore
 	 * Check for SHA1 string validity
 	 *
 	 * @param string $sha1 SHA1 string to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isSha1($sha1)
 	{
@@ -102,7 +102,7 @@ class ValidateCore
 	 * Check for a float number validity
 	 *
 	 * @param float $float Float number to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isFloat($float)
 	{
@@ -118,7 +118,7 @@ class ValidateCore
 	 * Check for a float number validity
 	 *
 	 * @param float $float Float number to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isOptFloat($float)
 	{
@@ -129,7 +129,7 @@ class ValidateCore
 	 * Check for a carrier name validity
 	 *
 	 * @param string $name Carrier name to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isCarrierName($name)
 	{
@@ -140,7 +140,7 @@ class ValidateCore
 	 * Check for an image size validity
 	 *
 	 * @param string $size Image size to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isImageSize($size)
 	{
@@ -151,7 +151,7 @@ class ValidateCore
 	 * Check for name validity
 	 *
 	 * @param string $name Name to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isName($name)
 	{
@@ -162,7 +162,7 @@ class ValidateCore
 	 * Check for hook name validity
 	 *
 	 * @param string $hook Hook name to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isHookName($hook)
 	{
@@ -173,7 +173,7 @@ class ValidateCore
 	 * Check for sender name validity
 	 *
 	 * @param string $mail_name Sender name to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isMailName($mail_name)
 	{
@@ -184,7 +184,7 @@ class ValidateCore
 	 * Check for e-mail subject validity
 	 *
 	 * @param string $mail_subject e-mail subject to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isMailSubject($mail_subject)
 	{
@@ -195,7 +195,7 @@ class ValidateCore
 	 * Check for module name validity
 	 *
 	 * @param string $module_name Module name to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isModuleName($module_name)
 	{
@@ -206,7 +206,7 @@ class ValidateCore
 	 * Check for template name validity
 	 *
 	 * @param string $tpl_name Template name to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isTplName($tpl_name)
 	{
@@ -217,7 +217,7 @@ class ValidateCore
 	 * Check for image type name validity
 	 *
 	 * @param string $type Image type name to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isImageTypeName($type)
 	{
@@ -228,7 +228,7 @@ class ValidateCore
 	 * Check for price validity
 	 *
 	 * @param string $price Price to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isPrice($price)
 	{
@@ -239,7 +239,7 @@ class ValidateCore
 	* Check for price validity (including negative price)
 	*
 	* @param string $price Price to validate
-	* @return boolean Validity is ok or not
+	* @return bool Validity is ok or not
 	*/
 	public static function isNegativePrice($price)
 	{
@@ -250,7 +250,7 @@ class ValidateCore
 	 * Check for language code (ISO) validity
 	 *
 	 * @param string $iso_code Language code (ISO) to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isLanguageIsoCode($iso_code)
 	{
@@ -276,7 +276,7 @@ class ValidateCore
 	 * Check for voucher name validity
 	 *
 	 * @param string $voucher voucher to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isDiscountName($voucher)
 	{
@@ -287,7 +287,7 @@ class ValidateCore
 	 * Check for product or category name validity
 	 *
 	 * @param string $name Product or category name to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isCatalogName($name)
 	{
@@ -298,7 +298,7 @@ class ValidateCore
 	 * Check for a message validity
 	 *
 	 * @param string $message Message to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isMessage($message)
 	{
@@ -309,7 +309,7 @@ class ValidateCore
 	 * Check for a country name validity
 	 *
 	 * @param string $name Country name to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isCountryName($name)
 	{
@@ -320,7 +320,7 @@ class ValidateCore
 	 * Check for a link (url-rewriting only) validity
 	 *
 	 * @param string $link Link to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isLinkRewrite($link)
 	{
@@ -333,7 +333,7 @@ class ValidateCore
 	 * Check for a route pattern validity
 	 *
 	 * @param string $pattern to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isRoutePattern($pattern)
 	{
@@ -346,7 +346,7 @@ class ValidateCore
 	 * Check for a postal address validity
 	 *
 	 * @param string $address Address to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isAddress($address)
 	{
@@ -357,7 +357,7 @@ class ValidateCore
 	 * Check for city name validity
 	 *
 	 * @param string $city City name to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isCityName($city)
 	{
@@ -368,7 +368,7 @@ class ValidateCore
 	 * Check for search query validity
 	 *
 	 * @param string $search Query to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isValidSearch($search)
 	{
@@ -379,7 +379,7 @@ class ValidateCore
 	 * Check for standard name validity
 	 *
 	 * @param string $name Name to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isGenericName($name)
 	{
@@ -390,7 +390,7 @@ class ValidateCore
 	 * Check for HTML field validity (no XSS please !)
 	 *
 	 * @param string $html HTML field to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isCleanHtml($html, $allow_iframe = false)
 	{
@@ -415,7 +415,7 @@ class ValidateCore
 	 * Check for product reference validity
 	 *
 	 * @param string $reference Product reference to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isReference($reference)
 	{
@@ -427,7 +427,7 @@ class ValidateCore
 	 *
 	 * @param string $passwd Password to validate
 	 * @param int $size
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isPasswd($passwd, $size = Validate::PASSWORD_LENGTH)
 	{
@@ -443,7 +443,7 @@ class ValidateCore
 	 * Check for configuration key validity
 	 *
 	 * @param string $config_name Configuration key to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isConfigName($config_name)
 	{
@@ -454,7 +454,7 @@ class ValidateCore
 	 * Check date formats like http://php.net/manual/en/function.date.php
 	 *
 	 * @param string $date_format date format to check
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isPhpDateFormat($date_format)
 	{
@@ -467,7 +467,7 @@ class ValidateCore
 	 * Check for date format
 	 *
 	 * @param string $date Date to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isDateFormat($date)
 	{
@@ -478,7 +478,7 @@ class ValidateCore
 	 * Check for date validity
 	 *
 	 * @param string $date Date to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isDate($date)
 	{
@@ -491,7 +491,7 @@ class ValidateCore
 	 * Check for birthDate validity
 	 *
 	 * @param string $date birthdate to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isBirthDate($date)
 	{
@@ -511,8 +511,8 @@ class ValidateCore
 	/**
 	 * Check for boolean validity
 	 *
-	 * @param boolean $bool Boolean to validate
-	 * @return boolean Validity is ok or not
+	 * @param bool $bool Boolean to validate
+	 * @return bool Validity is ok or not
 	 */
 	public static function isBool($bool)
 	{
@@ -523,7 +523,7 @@ class ValidateCore
 	 * Check for phone number validity
 	 *
 	 * @param string $number Phone number to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isPhoneNumber($number)
 	{
@@ -534,7 +534,7 @@ class ValidateCore
 	 * Check for barcode validity (EAN-13)
 	 *
 	 * @param string $ean13 Barcode to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isEan13($ean13)
 	{
@@ -545,7 +545,7 @@ class ValidateCore
 	 * Check for barcode validity (UPC)
 	 *
 	 * @param string $upc Barcode to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isUpc($upc)
 	{
@@ -556,7 +556,7 @@ class ValidateCore
 	 * Check for postal code validity
 	 *
 	 * @param string $postcode Postal code to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isPostCode($postcode)
 	{
@@ -567,7 +567,7 @@ class ValidateCore
 	 * Check for zip code format validity
 	 *
 	 * @param string $zip_code zip code format to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isZipCodeFormat($zip_code)
 	{
@@ -581,7 +581,7 @@ class ValidateCore
 	 * Mostly used in database for ordering : ASC / DESC
 	 *
 	 * @param string $way Keyword to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isOrderWay($way)
 	{
@@ -593,7 +593,7 @@ class ValidateCore
 	 * Mostly used in database for ordering : ORDER BY field
 	 *
 	 * @param string $order Field to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isOrderBy($order)
 	{
@@ -605,7 +605,7 @@ class ValidateCore
 	 * Mostly used in database for table names and id_table
 	 *
 	 * @param string $table Table/identifier to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isTableOrIdentifier($table)
 	{
@@ -627,7 +627,7 @@ class ValidateCore
 	 * Check for tags list validity
 	 *
 	 * @param string $list List to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isTagsList($list)
 	{
@@ -638,7 +638,7 @@ class ValidateCore
 	 * Check for product visibility
 	 *
 	 * @param string $s visibility to check
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isProductVisibility($s)
 	{
@@ -649,7 +649,7 @@ class ValidateCore
 	 * Check for an integer validity
 	 *
 	 * @param int $value Integer to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isInt($value)
 	{
@@ -660,7 +660,7 @@ class ValidateCore
 	 * Check for an integer validity (unsigned)
 	 *
 	 * @param int $value Integer to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isUnsignedInt($value)
 	{
@@ -671,7 +671,7 @@ class ValidateCore
 	 * Check for an percentage validity (between 0 and 100)
 	 *
 	 * @param float $value Float to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isPercentage($value)
 	{
@@ -683,7 +683,7 @@ class ValidateCore
 	 * Mostly used in database for auto-increment
 	 *
 	 * @param int $id Integer to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isUnsignedId($id)
 	{
@@ -699,7 +699,7 @@ class ValidateCore
 	 * Check object validity
 	 *
 	 * @param object $object Object to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isLoadedObject($object)
 	{
@@ -710,7 +710,7 @@ class ValidateCore
 	 * Check object validity
 	 *
 	 * @param int $object Object to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isColor($color)
 	{
@@ -721,7 +721,7 @@ class ValidateCore
 	 * Check url validity (disallowed empty string)
 	 *
 	 * @param string $url Url to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isUrl($url)
 	{
@@ -732,7 +732,7 @@ class ValidateCore
 	 * Check tracking number validity (disallowed empty string)
 	 *
 	 * @param string $tracking_number Tracking number to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isTrackingNumber($tracking_number)
 	{
@@ -743,7 +743,7 @@ class ValidateCore
 	 * Check url validity (allowed empty string)
 	 *
 	 * @param string $url Url to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isUrlOrEmpty($url)
 	{
@@ -754,7 +754,7 @@ class ValidateCore
 	 * Check if URL is absolute
 	 *
 	 * @param string $url URL to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isAbsoluteUrl($url)
 	{
@@ -783,7 +783,7 @@ class ValidateCore
 	 * Check for standard name file validity
 	 *
 	 * @param string $name Name to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isFileName($name)
 	{
@@ -794,7 +794,7 @@ class ValidateCore
 	 * Check for standard name directory validity
 	 *
 	 * @param string $dir Directory to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isDirName($dir)
 	{
@@ -805,7 +805,7 @@ class ValidateCore
 	 * Check for admin panel tab name validity
 	 *
 	 * @param string $name Name to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isTabName($name)
 	{
@@ -836,7 +836,7 @@ class ValidateCore
 	 * Check if the value is a sort direction value (DESC/ASC)
 	 *
 	 * @param string $value
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isSortDirection($value)
 	{
@@ -847,7 +847,7 @@ class ValidateCore
 	 * Customization fields' label validity
 	 *
 	 * @param string $label
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isLabel($label)
 	{
@@ -858,7 +858,7 @@ class ValidateCore
 	 * Price display method validity
 	 *
 	 * @param int $data Data to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isPriceDisplayMethod($data)
 	{
@@ -889,7 +889,7 @@ class ValidateCore
 	 * Price display method validity
 	 *
 	 * @param string $data Data to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isString($data)
 	{
@@ -900,7 +900,7 @@ class ValidateCore
 	 * Check if the data is a reduction type (amout or percentage)
 	 *
 	 * @param string $data Data to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isReductionType($data)
 	{
@@ -911,7 +911,7 @@ class ValidateCore
 	 * Check for bool_id
 	 *
 	 * @param string $ids
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isBoolId($ids)
 	{
@@ -931,7 +931,7 @@ class ValidateCore
 	 * Check the localization pack part selected
 	 *
 	 * @param string $data Localization pack to check
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isLocalizationPackSelection($data)
 	{
@@ -942,7 +942,7 @@ class ValidateCore
 	 * Check for PHP serialized data
 	 *
 	 * @param string $data Serialized data to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isSerializedArray($data)
 	{
@@ -953,7 +953,7 @@ class ValidateCore
 	 * Check for Latitude/Longitude
 	 *
 	 * @param string $data Coordinate to validate
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isCoordinate($data)
 	{
@@ -964,7 +964,7 @@ class ValidateCore
 	 * Check for Language Iso Code
 	 *
 	 * @param string $iso_code
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isLangIsoCode($iso_code)
 	{
@@ -975,7 +975,7 @@ class ValidateCore
 	 * Check for Language File Name
 	 *
 	 * @param string $file_name
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	public static function isLanguageFileName($file_name)
 	{
@@ -985,7 +985,7 @@ class ValidateCore
 	/**
 	 *
 	 * @param array $ids
-	 * @return boolean return true if the array contain only unsigned int value
+	 * @return bool return true if the array contain only unsigned int value
 	 */
 	public static function isArrayWithIds($ids)
 	{
@@ -999,7 +999,7 @@ class ValidateCore
 	/**
 	 *
 	 * @param array $zones
-	 * @return boolean return true if array contain all value required for an image map zone
+	 * @return bool return true if array contain all value required for an image map zone
 	 */
 	public static function isSceneZones($zones)
 	{
@@ -1022,7 +1022,7 @@ class ValidateCore
 	/**
 	 *
 	 * @param array $stock_management
-	 * @return boolean return true if is a valide stock management
+	 * @return bool return true if is a valide stock management
 	 */
 	public static function isStockManagement($stock_management)
 	{
@@ -1056,7 +1056,7 @@ class ValidateCore
 	 * Validate APE Code
 	 *
 	 * @param string $ape APE Code
-	 * @return boolean Return true if is valid
+	 * @return bool Return true if is valid
 	 */
 	public static function isApe($ape)
 	{

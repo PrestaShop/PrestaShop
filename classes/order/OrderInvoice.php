@@ -286,7 +286,7 @@ class OrderInvoiceCore extends ObjectModel
 	 * One After Another tax computation method.
 	 *
 	 * @since 1.5
-	 * @return boolean
+	 * @return bool
 	 */
 	public function useOneAfterAnotherTaxComputationMethod()
 	{

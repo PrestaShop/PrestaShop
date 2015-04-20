@@ -61,7 +61,7 @@ class ManufacturerCore extends ObjectModel
 	/** @var string Meta description */
 	public $meta_description;
 
-	/** @var boolean active */
+	/** @var bool active */
 	public $active;
 
 	/**
@@ -152,7 +152,7 @@ class ManufacturerCore extends ObjectModel
 	/**
 	 * Return manufacturers
 	 *
-	 * @param boolean $get_nb_products [optional] return products numbers for each
+	 * @param bool $get_nb_products [optional] return products numbers for each
 	 * @param int $id_lang
 	 * @param bool $active
 	 * @param int $p
@@ -403,7 +403,7 @@ class ManufacturerCore extends ObjectModel
 	* Specify if a manufacturer already in base
 	*
 	* @param $id_manufacturer Manufacturer id
-	* @return boolean
+	* @return bool
 	*/
 	public static function manufacturerExists($id_manufacturer)
 	{

@@ -332,7 +332,7 @@ class OrderDetailCore extends ObjectModel
 	 * @deprecated Functionality moved to Order::updateOrderDetailTax
 	 *             because we need the full order object to do a good job here.
 	 *             Will no longer be supported after 1.6.1
-	 * @return boolean
+	 * @return bool
 	 */
 	public function saveTaxCalculator(Order $order, $replace = false)
 	{

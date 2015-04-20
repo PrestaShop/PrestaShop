@@ -26,7 +26,7 @@
 
 class LinkCore
 {
-	/** @var boolean Rewriting activation */
+	/** @var bool Rewriting activation */
 	protected $allow;
 	protected $url;
 	public static $cache = array('page' => array());
@@ -360,7 +360,7 @@ class LinkCore
 	 * Use controller name to create a link
 	 *
 	 * @param string $controller
-	 * @param boolean $with_token include or not the token in the url
+	 * @param bool $with_token include or not the token in the url
 	 * @return string url
 	 */
 	public function getAdminLink($controller, $with_token = true)
@@ -535,10 +535,10 @@ class LinkCore
 	 *
 	 * @param string $type Controller name
 	 * @param int $id_object
-	 * @param boolean $nb Show nb element per page attribute
-	 * @param boolean $sort Show sort attribute
-	 * @param boolean $pagination Show page number attribute
-	 * @param boolean $array If false return an url, if true return an array
+	 * @param bool $nb Show nb element per page attribute
+	 * @param bool $sort Show sort attribute
+	 * @param bool $pagination Show page number attribute
+	 * @param bool $array If false return an url, if true return an array
 	 */
 	public function getPaginationLink($type, $id_object, $nb = false, $sort = false, $pagination = false, $array = false)
 	{

@@ -43,7 +43,7 @@ class MessageCore extends ObjectModel
 	/** @var int Employee ID (if applicable) */
 	public $id_employee;
 
-	/** @var boolean Message is not displayed to the customer */
+	/** @var bool Message is not displayed to the customer */
 	public $private;
 
 	/** @var string Object creation date */
@@ -85,7 +85,7 @@ class MessageCore extends ObjectModel
 	 * Return messages from Order ID
 	 *
 	 * @param int $id_order Order ID
-	 * @param boolean $private return WITH private messages
+	 * @param bool $private return WITH private messages
 	 * @return array Messages
 	 */
 	public static function getMessagesByOrderId($id_order, $private = false, Context $context = null)
@@ -116,7 +116,7 @@ class MessageCore extends ObjectModel
 	 * Return messages from Cart ID
 	 *
 	 * @param int $id_order Order ID
-	 * @param boolean $private return WITH private messages
+	 * @param bool $private return WITH private messages
 	 * @return array Messages
 	 */
 	public static function getMessagesByCartId($id_cart, $private = false, Context $context = null)

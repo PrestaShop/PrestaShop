@@ -131,7 +131,7 @@ class NotificationCore
 	 * Updates the last seen element by the employee
 	 *
 	 * @param string $type contains the field name of the Employee table
-	 * @return boolean if type exists or not
+	 * @return bool if type exists or not
 	 */
 	public function updateEmployeeLastElement($type)
 	{

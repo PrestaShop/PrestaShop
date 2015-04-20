@@ -90,7 +90,7 @@ class FeatureCore extends ObjectModel
 	 * Delete several objects from database
 	 *
 	 * @param array $selection Array with items to delete
-	 * @return boolean Deletion result
+	 * @return bool Deletion result
 	 */
 	public function deleteSelection($selection)
 	{
@@ -272,9 +272,9 @@ class FeatureCore extends ObjectModel
 
 	/**
 	 * Move a feature
-	 * @param boolean $way Up (1)  or Down (0)
+	 * @param bool $way Up (1)  or Down (0)
 	 * @param int $position
-	 * @return boolean Update result
+	 * @return bool Update result
 	 */
 	public function updatePosition($way, $position, $id_feature = null)
 	{

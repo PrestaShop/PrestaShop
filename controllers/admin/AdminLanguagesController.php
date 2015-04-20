@@ -483,7 +483,7 @@ class AdminLanguagesControllerCore extends AdminController
 	 * deleteNoPictureImages will delete all default image created for the language id_language
 	 *
 	 * @param string $id_language
-	 * @return boolean true if no error
+	 * @return bool true if no error
 	 */
 	protected function deleteNoPictureImages($id_language)
 	{

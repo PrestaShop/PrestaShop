@@ -564,7 +564,7 @@ class ShopCore extends ObjectModel
 	/**
 	 * check if the table has an id_shop_default
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function checkIdShopDefault($table)
 	{
