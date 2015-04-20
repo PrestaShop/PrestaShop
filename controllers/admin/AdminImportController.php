@@ -1901,7 +1901,8 @@ class AdminImportControllerCore extends AdminController
 	public function productImportCreateCat($default_language_id, $category_name, $id_parent_category = null)
 	{
 		$category_to_create = new Category();
-		if (!Shop::isFeatureActive())
+		$shop_is_feature_active = Shop::isFeatureActive();
+		if (!$shop_is_feature_active)
 			$category_to_create->id_shop_default = 1;
 		else
 			$category_to_create->id_shop_default = (int)Context::getContext()->shop->id;
@@ -2371,7 +2372,6 @@ class AdminImportControllerCore extends AdminController
 
 	public function customerImport()
 	{
-		$customer_exist = false;
 		$this->receiveTab();
 		$handle = $this->openCsvFile();
 		$default_language_id = (int)Configuration::get('PS_LANG_DEFAULT');
@@ -2402,11 +2402,13 @@ class AdminImportControllerCore extends AdminController
 					$customer = new Customer();
 			}
 
-			if (array_key_exists('id', $info) && (int)$info['id'] && Customer::customerIdExistsStatic((int)$info['id']))
+			$customer_exist = false;
+
+			if (array_key_exists('id', $info) && (int)$info['id'] && Customer::customerIdExistsStatic((int)$info['id']) && Validate::isLoadedObject($customer))
 			{
-				$current_id_customer = $customer->id;
-				$current_id_shop = $customer->id_shop;
-				$current_id_shop_group = $customer->id_shop_group;
+				$current_id_customer = (int)$customer->id;
+				$current_id_shop = (int)$customer->id_shop;
+				$current_id_shop_group = (int)$customer->id_shop_group;
 				$customer_exist = true;
 				$customer_groups = $customer->getGroups();
 				$addresses = $customer->getAddresses((int)Configuration::get('PS_LANG_DEFAULT'));
@@ -2511,9 +2513,9 @@ class AdminImportControllerCore extends AdminController
 						{
 							$customer->id_shop = (int)$key;
 							$customer->id_shop_group = (int)$id;
-							if ($customer_exist && ($current_id_shop_group == $id || in_array($current_id_shop, ShopGroup::getShopsFromGroup($id))))
+							if ($customer_exist && ((int)$current_id_shop_group == (int)$id || in_array($current_id_shop, ShopGroup::getShopsFromGroup($id))))
 							{
-								$customer->id = $current_id_customer;
+								$customer->id = (int)$current_id_customer;
 								$res &= $customer->update();
 							}
 							else
@@ -2523,7 +2525,7 @@ class AdminImportControllerCore extends AdminController
 									foreach ($addresses as $address)
 									{
 										$address['id_customer'] = $customer->id;
-										unset($address['country'], $address['state'], $address['state_iso'], $address['id_address']	);
+										unset($address['country'], $address['state'], $address['state_iso'], $address['id_address']);
 										Db::getInstance()->insert('address', $address);
 									}
 							}
@@ -2535,9 +2537,9 @@ class AdminImportControllerCore extends AdminController
 					{
 						$customer->id_shop = $id_shop;
 						$customer->id_shop_group = $id_group;
-						if ($customer_exist && $id_shop == $current_id_shop)
+						if ($customer_exist && (int)$id_shop == (int)$current_id_shop)
 						{
-							$customer->id = $current_id_customer;
+							$customer->id = (int)$current_id_customer;
 							$res &= $customer->update();
 						}
 						else
@@ -2556,8 +2558,18 @@ class AdminImportControllerCore extends AdminController
 					}
 				}
 			}
-			unset($customer_groups);
-			$customer_exist = false;
+
+			if (isset($customer_groups))
+				unset($customer_groups);
+			if (isset($current_id_customer))
+				unset($current_id_customer);
+			if (isset($current_id_shop))
+				unset($current_id_shop);
+			if (isset($current_id_shop_group))
+				unset($current_id_shop_group);
+			if (isset($addresses))
+				unset($addresses);
+
 			if (!$res)
 			{
 				$this->errors[] = sprintf(
@@ -2589,7 +2601,17 @@ class AdminImportControllerCore extends AdminController
 			$info = AdminImportController::getMaskedRow($line);
 
 			AdminImportController::setDefaultValues($info);
-			$address = new Address();
+
+			if ($force_ids && isset($info['id']) && (int)$info['id'])
+				$address = new Address((int)$info['id']);
+			else
+			{
+				if (array_key_exists('id', $info) && (int)$info['id'] && Address::addressExists((int)$info['id']))
+					$address = new Address((int)$info['id']);
+				else
+					$address = new Address();
+			}
+
 			AdminImportController::arrayWalk($info, array('AdminImportController', 'fillInfo'), $address);
 
 			if (isset($address->country) && is_numeric($address->country))
@@ -2745,6 +2767,8 @@ class AdminImportControllerCore extends AdminController
 			if (($field_error = $address->validateFields(UNFRIENDLY_ERROR, true)) === true &&
 				($lang_field_error = $address->validateFieldsLang(UNFRIENDLY_ERROR, true)) === true)
 			{
+				$address->force_id = (bool)$force_ids;
+
 				if (isset($customer_list) && count($customer_list) > 0)
 				{
 					$filter_list = array();
@@ -2754,27 +2778,14 @@ class AdminImportControllerCore extends AdminController
 							continue;
 
 						$filter_list[] = $customer['id_customer'];
-
-						unset($address->id);
 						$address->id_customer = $customer['id_customer'];
-						$res = $address->add();
-
-						if (!$res)
-							$this->errors[] = sprintf(
-								Tools::displayError('%1$s (ID: %2$s) cannot be saved'),
-								$info['alias'],
-								(isset($info['id']) && !empty($info['id']))? $info['id'] : 'null'
-							);
 					}
 				}
-				else
-				{
-					$address->force_id = (bool)$force_ids;
-					if ($address->id && $address->addressExists($address->id))
-						$res = $address->update();
-					if (!$res)
-						$res = $address->add();
-				}
+
+				if ($address->id && $address->addressExists($address->id))
+					$res = $address->update();
+				if (!$res)
+					$res = $address->add();
 			}
 			if (!$res)
 			{
@@ -3408,8 +3419,9 @@ class AdminImportControllerCore extends AdminController
 			// Check if the CSV file exist
 			if (Tools::getValue('csv'))
 			{
+				$shop_is_feature_active = Shop::isFeatureActive();
 				// If i am a superadmin, i can truncate table
-				if (((Shop::isFeatureActive() && $this->context->employee->isSuperAdmin()) || !Shop::isFeatureActive()) && Tools::getValue('truncate'))
+				if ((($shop_is_feature_active && $this->context->employee->isSuperAdmin()) || !$shop_is_feature_active) && Tools::getValue('truncate'))
 					$this->truncateTables((int)Tools::getValue('entity'));
 				$import_type = false;
 				switch ((int)Tools::getValue('entity'))
