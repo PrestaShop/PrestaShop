@@ -102,9 +102,18 @@
         height: {$height_header};
         background-color: {$color_header};
         vertical-align: middle;
-        text-align: center;
+		text-align: center;
         font-weight: bold;
     }
+
+	th.header-right {
+		font-size: {$font_size_header};
+		height: {$height_header};
+		background-color: {$color_header};
+		vertical-align: middle;
+		text-align: right;
+		font-weight: bold;
+	}
 
     th.payment {
         background-color: {$color_header};
@@ -116,19 +125,6 @@
         background-color: {$color_header};
         vertical-align: middle;
         font-weight: bold;
-    }
-
-    td.header {
-        vertical-align: middle;
-        text-align: center;
-    }
-
-    td.payment {
-        vertical-align: middle;
-    }
-
-    td.tva {
-        vertical-align: middle;
     }
 
     tr.separator td {

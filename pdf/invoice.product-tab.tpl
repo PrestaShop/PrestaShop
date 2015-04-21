@@ -35,8 +35,8 @@
             <th class="product header small" width="{$layout.unit_price_tax_excl.width}%">{l s='Price before discount' pdf='true'} <br /> {l s='(Before tax)' pdf='true'}</th>
         {/if}
 
-        <th class="product header small" width="{$layout.unit_price_tax_excl.width}%">{l s='Unit Price' pdf='true'} <br /> {l s='(Before tax)' pdf='true'}</th>
-        <th class="product header center small" width="{$layout.total_tax_excl.width}%">{l s='Total' pdf='true'} <br /> {l s='(Before tax)' pdf='true'}</th>
+        <th class="product header-right small" width="{$layout.unit_price_tax_excl.width}%">{l s='Unit Price' pdf='true'} <br /> {l s='(Before tax)' pdf='true'}</th>
+        <th class="product header-right small" width="{$layout.total_tax_excl.width}%">{l s='Total' pdf='true'} <br /> {l s='(Before tax)' pdf='true'}</th>
     </tr>
     </thead>
 
@@ -87,7 +87,7 @@
                 </td>
             {/if}
 
-            <td class="product center">
+            <td class="product right">
                 {displayPrice currency=$order->id_currency price=$order_detail.unit_price_tax_excl_including_ecotax}
                 {if $order_detail.ecotax_tax_excl > 0}
                     <br>
