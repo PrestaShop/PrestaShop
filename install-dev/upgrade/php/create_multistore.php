@@ -43,11 +43,11 @@ function create_multistore()
 	}
 	$all_themes_dir = _PS_ROOT_DIR_.DIRECTORY_SEPARATOR.'themes';
 	$themes = scandir($all_themes_dir);
-	foreach ($themes AS $theme)
+	foreach ($themes as $theme)
 		if (!is_file($all_themes_dir.DIRECTORY_SEPARATOR.$theme) && is_dir($all_themes_dir.DIRECTORY_SEPARATOR.$theme.DIRECTORY_SEPARATOR) && $theme[0] != '.' && $theme != 'prestashop'  && $theme != 'default-bootstrap')
 			$res &= Db::getInstance()->execute('INSERT INTO '._DB_PREFIX_.'theme (name) VALUES("'.Db::getInstance()->escape($theme).'")');
 	$res &= Db::getInstance()->execute('
-	UPDATE '._DB_PREFIX_.'shop 
+	UPDATE '._DB_PREFIX_.'shop
 	SET
 		name = (SELECT value FROM '._DB_PREFIX_.'configuration WHERE name = "PS_SHOP_NAME"),
 		id_theme = (SELECT id_theme FROM '._DB_PREFIX_.'theme WHERE name = "'.Db::getInstance()->escape(_THEME_NAME_).'")
@@ -63,7 +63,7 @@ function create_multistore()
 	$physical_uri = trim($physical_uri, '/\\');
 	$physical_uri = ($physical_uri ? '/'.$physical_uri.'/' : '/');
 	$res &= Db::getInstance()->execute('
-	INSERT INTO `'._DB_PREFIX_.'shop_url` (`id_shop`, `domain`, `domain_ssl`, `physical_uri`, `virtual_uri`, `main`, `active`) 
+	INSERT INTO `'._DB_PREFIX_.'shop_url` (`id_shop`, `domain`, `domain_ssl`, `physical_uri`, `virtual_uri`, `main`, `active`)
 	VALUES(1, \''.pSQL($shop_domain).'\', \''.pSQL($shop_domain_ssl).'\', \''.pSQL($physical_uri).'\', \'\', 1, 1)');
 
 	// Stock conversion

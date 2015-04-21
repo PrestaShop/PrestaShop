@@ -28,7 +28,7 @@ function set_payment_module()
 {
 	// Get all modules then select only payment ones
 	$modules = Module::getModulesInstalled();
-	foreach ($modules AS $module)
+	foreach ($modules as $module)
 	{
 		$file = _PS_MODULE_DIR_.$module['name'].'/'.$module['name'].'.php';
 		if (!file_exists($file))

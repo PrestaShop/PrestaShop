@@ -134,7 +134,7 @@ function deleteImage($id_item, $id_image = NULL)
 
 	/* Auto-generated images */
 	$imagesTypes = ImageType::getImagesTypes();
-	foreach ($imagesTypes AS $k => $imagesType)
+	foreach ($imagesTypes as $k => $imagesType)
 			if (file_exists($path.$id_item.'-'.$imagesType['name'].'.jpg'))
 			unlink($path.$id_item.'-'.$imagesType['name'].'.jpg');
 	}else // Product
@@ -142,18 +142,18 @@ function deleteImage($id_item, $id_image = NULL)
 		$path = _PS_PROD_IMG_DIR_;
 		$table = 'product';
 		$image = new Image($id_image);
-		$image->id_product = $id_item;	
+		$image->id_product = $id_item;
 
 		if (file_exists($path.$image->getExistingImgPath().'.jpg'))
 			unlink($path.$image->getExistingImgPath().'.jpg');
-			
+
 		/* Auto-generated images */
 		$imagesTypes = ImageType::getImagesTypes();
-		foreach ($imagesTypes AS $k => $imagesType)
+		foreach ($imagesTypes as $k => $imagesType)
 			if (file_exists($path.$image->getExistingImgPath().'-'.$imagesType['name'].'.jpg'))
 				unlink($path.$image->getExistingImgPath().'-'.$imagesType['name'].'.jpg');
 	}
-		
+
 	/* BO "mini" image */
 	if (file_exists(_PS_TMP_IMG_DIR_.$table.'_mini_'.$id_item.'.jpg'))
 		unlink(_PS_TMP_IMG_DIR_.$table.'_mini_'.$id_item.'.jpg');

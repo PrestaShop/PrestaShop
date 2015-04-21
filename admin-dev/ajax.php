@@ -45,7 +45,7 @@ if (Tools::isSubmit('getAvailableFields') AND Tools::isSubmit('entity'))
 	$import = new AdminImportController();
 
 	$fields = $import->getAvailableFields(true);
-	foreach ($fields AS $field)
+	foreach ($fields as $field)
 		$jsonArray[] = '{"field":"'.addslashes($field).'"}';
 	die('['.implode(',', $jsonArray).']');
 }
@@ -62,7 +62,7 @@ if (Tools::isSubmit('ajaxProductPackItems'))
 	AND NOT EXISTS (SELECT 1 FROM `'._DB_PREFIX_.'pack` WHERE `id_product_pack` = p.`id_product`)
 	AND p.`id_product` != '.(int)(Tools::getValue('id_product')));
 
-	foreach ($products AS $packItem)
+	foreach ($products as $packItem)
 		$jsonArray[] = '{"value": "'.(int)($packItem['id_product']).'-'.addslashes($packItem['name']).'", "text":"'.(int)($packItem['id_product']).' - '.addslashes($packItem['name']).'"}';
 	die('['.implode(',', $jsonArray).']');
 }
