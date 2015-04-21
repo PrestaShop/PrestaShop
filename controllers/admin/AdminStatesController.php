@@ -44,7 +44,7 @@ class AdminStatesControllerCore extends AdminController
 
 		if (!Tools::getValue('realedit'))
 			$this->deleted = false;
-		
+
 		$this->bulk_actions = array(
 			'delete' => array('text' => $this->l('Delete selected'), 'confirm' => $this->l('Delete selected items?')),
 			'affectzone' => array('text' => $this->l('Affect a new zone'))
@@ -63,7 +63,7 @@ class AdminStatesControllerCore extends AdminController
 			$zones_array[$zone['id_zone']] = $zone['name'];
 		foreach ($this->countries as $country)
 			$countries_array[$country['id_country']] = $country['name'];
-		
+
 		$this->fields_list = array(
 			'id_state' => array(
 				'title' => $this->l('ID'),
@@ -265,7 +265,7 @@ class AdminStatesControllerCore extends AdminController
 				$list = '<option value="0">'.Tools::htmlentitiesUTF8($empty_value).'</option>'."\n";
 			}
 
-			foreach ($states AS $state)
+			foreach ($states as $state)
 				$list .= '<option value="'.(int)($state['id_state']).'"'.((isset($_GET['id_state']) AND $_GET['id_state'] == $state['id_state']) ? ' selected="selected"' : '').'>'.$state['name'].'</option>'."\n";
 		}
 		else
