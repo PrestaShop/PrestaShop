@@ -11,7 +11,7 @@
 				<!-- END Error return block -->
 				<p class="form-group">
 					<label for="login_email">{l s='Email address'}</label>
-					<input type="text" class="form-control validate" id="login_email" name="email" data-validate="isEmail" />
+					<input type="email" class="form-control validate" id="login_email" name="email" data-validate="isEmail" />
 				</p>
 				<p class="form-group">
 					<label for="login_passwd">{l s='Password'}</label>
@@ -60,7 +60,7 @@
 					<input type="hidden" id="opc_id_address_invoice" name="opc_id_address_invoice" value="{if isset($guestInformations) && isset($guestInformations.id_address_delivery) && $guestInformations.id_address_delivery}{$guestInformations.id_address_delivery}{else}0{/if}" />
 					<div class="required text form-group">
 						<label for="email">{l s='Email'} <sup>*</sup></label>
-						<input type="text" class="text form-control validate" id="email" name="email" data-validate="isEmail" value="{if isset($guestInformations) && isset($guestInformations.email) && $guestInformations.email}{$guestInformations.email}{/if}" />
+						<input type="email" class="text form-control validate" id="email" name="email" data-validate="isEmail" value="{if isset($guestInformations) && isset($guestInformations.email) && $guestInformations.email}{$guestInformations.email}{/if}" />
 					</div>
 					<div class="required password is_customer_param form-group">
 						<label for="passwd">{l s='Password'} <sup>*</sup></label>
