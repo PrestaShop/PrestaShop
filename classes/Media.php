@@ -185,13 +185,11 @@ class MediaCore
 		{
 			$limit  = Media::getBackTrackLimit();
 			$css_content = preg_replace('#/\*.*?\*/#s', '', $css_content, $limit);
+			$css_content = preg_replace('#\s\s+#', ' ', $css_content, $limit);
 			$css_content = preg_replace_callback(Media::$pattern_callback, array('Media', 'replaceByAbsoluteURL'), $css_content, $limit);
-			$css_content = preg_replace('#\s+#', ' ', $css_content, $limit);
 			$css_content = str_replace(array("\t", "\n", "\r"), '', $css_content);
-			$css_content = str_replace(array('; ', ': '), array(';', ':'), $css_content);
-			$css_content = str_replace(array(' {', '{ '), '{', $css_content);
-			$css_content = str_replace(', ', ',', $css_content);
-			$css_content = str_replace(array('} ', ' }', ';}'), '}', $css_content);
+			$css_content = preg_replace('#\s?(;|:|\,|\{|\})\s?#', '$1', $css_content, $limit);
+			$css_content = str_replace(';}', '}', $css_content);
 			$css_content = str_replace(array(':0px', ':0em', ':0pt', ':0%'), ':0', $css_content);
 			$css_content = str_replace(array(' 0px', ' 0em', ' 0pt', ' 0%'), ' 0', $css_content);
 
