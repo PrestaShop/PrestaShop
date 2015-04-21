@@ -87,7 +87,7 @@ Tree.prototype =
 						}
 					}
 				});
-		    }
+			}
 			if (name != 'id_parent')
 			{
 				this.$element.find(":input[type=radio]").unbind('click');
