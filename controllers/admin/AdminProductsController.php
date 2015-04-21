@@ -457,8 +457,7 @@ class AdminProductsControllerCore extends AdminController
 		$category = Tools::getValue('category', Category::getRootCategory()->id);
 		$fullTree = Tools::getValue('fullTree', 0);
 		$selected = Tools::getValue('selected', array());
-		$input_name = Tools::getValue('inputName', null);
-		$input_name = str_replace(array('[', ']'), '', $input_name);
+		$input_name = str_replace(array('[', ']'), '', Tools::getValue('inputName', null));
 		$type = Tools::getValue('type', '');
 		if ($type == 'categories-tree')
 			$use_check_box = false;
