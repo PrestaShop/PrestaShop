@@ -22,26 +22,18 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<table style="width: 100%">
-<tr>
-	<td style="width: 50%">
-		{if $logo_path}
-			<img src="{$logo_path}" style="width:{$width_logo}px; height:{$height_logo}px;" />
-		{/if}
-	</td>
-	<td style="width: 50%; text-align: right;">
-		<table style="width: 100%">
-			<tr>
-				<td style="font-weight: bold; font-size: 14pt; color: #444; width: 100%">{l s='INVOICE' pdf='true'}</td>
-			</tr>
-			<tr>
-				<td style="font-size: 14pt; color: #9E9F9E">{$date|escape:'html':'UTF-8'}</td>
-			</tr>
-			<tr>
-				<td style="font-size: 14pt; color: #9E9F9E">{$title|escape:'html':'UTF-8'}</td>
-			</tr>
-		</table>
-	</td>
-</tr>
+<table id="payment-tab" width="100%">
+    <tr>
+        <td class="payment center small grey bold" width="44%">{l s='Payment Method' pdf='true'}</td>
+        <td class="payment left white" width="56%">
+            <table width="100%" border="0">
+                {foreach from=$order_invoice->getOrderPaymentCollection() item=payment}
+                    <tr>
+                        <td class="right small">{$payment->payment_method}</td>
+                        <td class="right small">{displayPrice currency=$payment->id_currency price=$payment->amount}</td>
+                    </tr>
+                {/foreach}
+            </table>
+        </td>
+    </tr>
 </table>
-

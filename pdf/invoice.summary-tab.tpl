@@ -22,26 +22,23 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<table style="width: 100%">
-<tr>
-	<td style="width: 50%">
-		{if $logo_path}
-			<img src="{$logo_path}" style="width:{$width_logo}px; height:{$height_logo}px;" />
-		{/if}
-	</td>
-	<td style="width: 50%; text-align: right;">
-		<table style="width: 100%">
-			<tr>
-				<td style="font-weight: bold; font-size: 14pt; color: #444; width: 100%">{l s='INVOICE' pdf='true'}</td>
-			</tr>
-			<tr>
-				<td style="font-size: 14pt; color: #9E9F9E">{$date|escape:'html':'UTF-8'}</td>
-			</tr>
-			<tr>
-				<td style="font-size: 14pt; color: #9E9F9E">{$title|escape:'html':'UTF-8'}</td>
-			</tr>
-		</table>
-	</td>
-</tr>
+<table id="summary-tab" width="100%">
+    <tr>
+        <th class="header small" width="25%" valign="middle">{l s='Invoice Number' pdf='true'}</th>
+        <th class="header small" width="20%" valign="middle">{l s='Invoice Date' pdf='true'}</th>
+        <th class="header small" width="25%" valign="middle">{l s='Order Reference' pdf='true'}</th>
+        <th class="header small" width="30%" valign="middle">{l s='VAT Number' pdf='true'}</th>
+    </tr>
+    <tr>
+        <td class="center small white">{$title|escape:'html':'UTF-8'}</td>
+        <td class="center small white">{dateFormat date=$order->date_add full=0}</td>
+        <td class="center small white">{$order->getUniqReference()}</td>
+        <td class="center small white">
+            {if $data.addresses.invoice->vat_number}
+                {$data.addresses.invoice->vat_number}
+            {else}
+                --
+            {/if}
+        </td>
+    </tr>
 </table>
-

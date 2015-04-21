@@ -1025,7 +1025,12 @@ class CartRuleCore extends ObjectModel
 				if ($filter != CartRule::FILTER_ACTION_ALL_NOCAP)
 				{
 					// Cart values
-					$cart_average_vat_rate = Context::getContext()->cart->getAverageProductsTaxRate();
+					$cart = Context::getContext()->cart;
+
+					if (!Validate::isLoadedObject($cart))
+						$cart = new Cart();
+
+					$cart_average_vat_rate = $cart->getAverageProductsTaxRate();
 					$current_cart_amount = $use_tax ? $cart_amount_ti : $cart_amount_te;
 
 					foreach ($all_cart_rules_ids as $current_cart_rule_id)

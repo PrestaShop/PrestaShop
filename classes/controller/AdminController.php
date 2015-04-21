@@ -823,7 +823,7 @@ class AdminControllerCore extends Controller
 						{
 							if ($type == 'price')
 								$value = (float)str_replace(',', '.', $value);
-							$sql_filter .= ($check_key ? 'a.' : '').pSQL($key).' LIKE \'%'.pSQL($value).'%\' ';
+							$sql_filter .= ($check_key ? 'a.' : '').pSQL($key).' LIKE \'%'.pSQL(trim($value)).'%\' ';
 						}
 					}
 				}

@@ -100,7 +100,8 @@ ol#tabs li{
 	float:left;
 }
 ul#optional li.fail{
-	background:#f8f8f8 url(img/pict_error.png) no-repeat 1% 8px;
+	background:#f8eba8 url(img/pict_error.png) no-repeat 1% 8px;
+    padding-left: 20px;
 }
 #mailSMTPParam p{
 	background:url(img/bg_field.png) repeat-x 0 0 transparent;

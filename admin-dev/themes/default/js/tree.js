@@ -12,6 +12,7 @@ Tree.prototype =
 	init: function ()
 	{
 		var that = $(this);
+		var name = this.$element.find('ul.tree input').first().attr('name');
 		this.$element.find("label.tree-toggler, .icon-folder-close, .icon-folder-open").unbind('click');
 		this.$element.find("label.tree-toggler, .icon-folder-close, .icon-folder-open").click(
 			function ()
@@ -39,7 +40,7 @@ Tree.prototype =
 						var thatOne = $(this);
 						$.get(
 							'ajax-tab.php',
-							{controller:'AdminProducts',token:currentToken,action:'getCategoryTree',type:idTree,category:category},
+							{controller:'AdminProducts',token:currentToken,action:'getCategoryTree',type:idTree,category:category,inputName:name},
 							function(content)
 							{
 								thatOne.parent().closest('.tree-folder').find('ul.tree').html(content);
@@ -69,31 +70,36 @@ Tree.prototype =
 
 		if (typeof(idTree) != 'undefined')
 		{
-			this.$element.find(':input[type=checkbox]').unbind('click');
-			this.$element.find(':input[type=checkbox]').click(function()
+			if ($('select#id_category_default').length)
 			{
-				if ($(this).prop('checked'))
-					addDefaultCategory($(this));
-				else
+				this.$element.find(':input[type=checkbox]').unbind('click');
+				this.$element.find(':input[type=checkbox]').click(function()
 				{
-					$('select#id_category_default option[value=' + $(this).val() + ']').remove();
-					if ($('select#id_category_default option').length == 0)
+					if ($(this).prop('checked'))
+						addDefaultCategory($(this));
+					else
 					{
-						$('select#id_category_default').closest('.form-group').hide();
-						$('#no_default_category').show();
+						$('select#id_category_default option[value=' + $(this).val() + ']').remove();
+						if ($('select#id_category_default option').length == 0)
+						{
+							$('select#id_category_default').closest('.form-group').hide();
+							$('#no_default_category').show();
+						}
 					}
-				}
-			});
-
-			this.$element.find(":input[type=radio]").unbind('click');
-			this.$element.find(":input[type=radio]").click(
-				function()
-				{
-					location.href = location.href.replace(
-						/&id_category=[0-9]*/, "")+"&id_category="
-						+$(this).val();
-				}
-			);
+				});
+			}
+			if (name != 'id_parent')
+			{
+				this.$element.find(":input[type=radio]").unbind('click');
+				this.$element.find(":input[type=radio]").click(
+					function()
+					{
+						location.href = location.href.replace(
+							/&id_category=[0-9]*/, "")+"&id_category="
+							+$(this).val();
+					}
+				);
+			}
 		}
 
 		return $(this);
@@ -141,9 +147,10 @@ Tree.prototype =
 					selected.push($(this).val());
 				}
 			);
+			var name = $('#'+idTree).find('ul.tree input').first().attr('name');
 			$.get(
 				'ajax-tab.php',
-				{controller:'AdminProducts',token:currentToken,action:'getCategoryTree',type:idTree,fullTree:1,selected:selected},
+				{controller:'AdminProducts',token:currentToken,action:'getCategoryTree',type:idTree,fullTree:1,selected:selected, inputName:name},
 				function(content)
 				{
 					$('#'+idTree).html(content);

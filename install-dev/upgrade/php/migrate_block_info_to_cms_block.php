@@ -39,7 +39,7 @@ function migrate_block_info_to_cms_block()
 		//install module blockcms
 		// Module::getInstanceByName('blockcms')->install()
 		// 1) from module
-		$ps_lang_default = Db::getInstance()->getValue('SELECT value 
+		$ps_lang_default = Db::getInstance()->getValue('SELECT value
 			FROM `'._DB_PREFIX_.'configuration`
 			WHERE name="PS_LANG_DEFAULT"');
 		// 2) parent::install()
@@ -50,7 +50,7 @@ function migrate_block_info_to_cms_block()
 		$hooks = array('leftColumn', 'rightColumn', 'footer', 'header');
 		foreach($hooks as $hook_name)
 		{
-			// do not pSql hook_name 
+			// do not pSql hook_name
 			$row = Db::getInstance()->getRow('SELECT h.id_hook, '.$id_module.' as id_module, MAX(hm.position)+1 as position
 				FROM  `'._DB_PREFIX_.'hook_module` hm
 				LEFT JOIN `'._DB_PREFIX_.'hook` h on hm.id_hook=h.id_hook
@@ -79,7 +79,7 @@ function migrate_block_info_to_cms_block()
 		) ENGINE='._MYSQL_ENGINE_.' DEFAULT CHARSET=utf8');
 
 		$query_lang = 'INSERT INTO `'._DB_PREFIX_.'cms_block_lang` (`id_cms_block`, `id_lang`) VALUES';
-		foreach ($languages AS $language)
+		foreach ($languages as $language)
 			$query_lang .= '(1, '.(int)($language['id_lang']).'),';
 		$query_lang = rtrim($query_lang, ',');
 		$res &= Db::getInstance()->execute($query_lang);
@@ -110,18 +110,18 @@ function migrate_block_info_to_cms_block()
 			$res &= Db::getInstance()->execute('UPDATE `'._DB_PREFIX_.'configuration` SET value = "1" WHERE `name` = \'FOOTER_POWEREDBY\'');
 		else
 			$res &= Db::getInstance()->getValue('INSERT INTO `'._DB_PREFIX_.'configuration` (name, value) VALUES ("FOOTER_POWEREDBY", "1")');
-		
+
 			//add new block in new cms block
-			$res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cms_block` 
-				(`id_cms_category`, `name`, `location`, `position`) 
+			$res &= Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cms_block`
+				(`id_cms_category`, `name`, `location`, `position`)
 				VALUES( 1, "", 0, 0)');
 			$id_block = Db::getInstance()->insert_id();
-			
-			foreach ($languages AS $language)
+
+			foreach ($languages as $language)
 				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cms_block_lang` (`id_cms_block`, `id_lang`, `name`) VALUES ('.(int)$id_block.', '.(int)$language['id_lang'].', \'Information\')');
-			
+
 			//save ids cms of block information in new module cms bloc
-			foreach ($ids_cms AS $id_cms)
+			foreach ($ids_cms as $id_cms)
 				Db::getInstance()->execute('INSERT INTO `'._DB_PREFIX_.'cms_block_page` (`id_cms_block`, `id_cms`, `is_category`) VALUES ('.(int)$id_block.', '.(int)$id_cms['id_cms'].', 0)');
 		}
 		else

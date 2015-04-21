@@ -71,13 +71,13 @@ $sql = 'SELECT p.`id_product`, pl.`link_rewrite`, p.`reference`, pl.`name`, imag
 $items = Db::getInstance()->executeS($sql);
 
 if ($items && ($excludeIds || strpos($_SERVER['HTTP_REFERER'], 'AdminScenes') !== false))
-	foreach ($items AS $item)
+	foreach ($items as $item)
 		echo trim($item['name']).(!empty($item['reference']) ? ' (ref: '.$item['reference'].')' : '').'|'.(int)($item['id_product'])."\n";
 elseif ($items)
 {
 	// packs
 	$results = array();
-	foreach ($items AS $item)
+	foreach ($items as $item)
 	{
 		// check if product have combination
 		if (Combination::isFeatureActive() && $item['cache_default_attribute'])

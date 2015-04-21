@@ -129,27 +129,6 @@ class AdminOrderPreferencesControllerCore extends AdminController
 				),
 				'submit' => array('title' => $this->l('Save'))
 			),
-			'pdf' => array(
-				'title' => $this->l('PDF Settings'),
-				'icon' => 'icon-file-text',
-				'fields' => array(
-					'PS_PDF_IMG_INVOICE' => array(
-						'title' => $this->l('Enable product image on Invoice'),
-						'hint' => $this->l('Adds an image before product name on Invoice'),
-						'validation' => 'isBool',
-						'cast' => 'intval',
-						'type' => 'bool'
-					),
-					'PS_PDF_IMG_DELIVERY' => array(
-						'title' => $this->l('Enable product image on Delivery slip'),
-						'hint' => $this->l('Adds an image before product name on Delivery slip'),
-						'validation' => 'isBool',
-						'cast' => 'intval',
-						'type' => 'bool'
-					),
-				),
-				'submit' => array('title' => $this->l('Save'))
-			),
 			'gift' => array(
 				'title' =>	$this->l('Gift options'),
 				'icon' =>	'icon-gift',

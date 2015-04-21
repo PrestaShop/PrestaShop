@@ -197,3 +197,8 @@ CREATE TABLE IF NOT EXISTS `PREFIX_cms_role_lang` (
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
 UPDATE `PREFIX_configuration` SET `name` = 'PS_REORDERING' WHERE `name` = 'PS_DISALLOW_HISTORY_REORDERING';
+
+ALTER TABLE `PREFIX_order_invoice` ADD `company_address` TEXT DEFAULT NULL AFTER `total_wrapping_tax_incl`;
+
+INSERT INTO `PREFIX_hook` (`name`, `title`, `description`) VALUES ('displayInvoiceLegalFreeText', 'PDF Invoice - Legal Free Text', 'This hook allows you to modify the legal free text on PDF invoices');
+
