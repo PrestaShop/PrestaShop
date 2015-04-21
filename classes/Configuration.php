@@ -215,11 +215,11 @@ class ConfigurationCore extends ObjectModel
 	 */
 	public static function getInt($key, $id_shop_group = null, $id_shop = null)
 	{
-		$languages = Language::getLanguages();
-		$resultsArray = array();
-		foreach ($languages as $language)
-			$resultsArray[$language['id_lang']] = Configuration::get($key, $language['id_lang'], $id_shop_group, $id_shop);
-		return $resultsArray;
+		$results_array = array();
+		foreach (Language::getIDs() as $id_lang)
+			$results_array[$id_lang] = Configuration::get($key, $id_lang, $id_shop_group, $id_shop);
+
+		return $results_array;
 	}
 
 	/**
@@ -530,9 +530,9 @@ class ConfigurationCore extends ObjectModel
 		if (Configuration::isLangKey($key))
 		{
 			$testContext = false;
-			foreach (Language::getLanguages(false) as $lang)
-				if ((Shop::getContext() == Shop::CONTEXT_SHOP && Configuration::hasContext($key, $lang['id_lang'], Shop::CONTEXT_SHOP))
-					|| (Shop::getContext() == Shop::CONTEXT_GROUP && Configuration::hasContext($key, $lang['id_lang'], Shop::CONTEXT_GROUP)))
+			foreach (Language::getIDs(false) as $id_lang)
+				if ((Shop::getContext() == Shop::CONTEXT_SHOP && Configuration::hasContext($key, $id_lang, Shop::CONTEXT_SHOP))
+					|| (Shop::getContext() == Shop::CONTEXT_GROUP && Configuration::hasContext($key, $id_lang, Shop::CONTEXT_GROUP)))
 						$testContext = true;
 		}
 		else

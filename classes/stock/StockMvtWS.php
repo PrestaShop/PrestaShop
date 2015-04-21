@@ -280,10 +280,9 @@ class StockMvtWSCore extends ObjectModelCore
 	 */
 	public function getWSProductName()
 	{
-		$languages = Language::getLanguages(true);
 		$res = array();
-		foreach ($languages as $language)
-			$res[$language['id_lang']] = Product::getProductName($this->id_product, $this->id_product_attribute, $language['id_lang']);
+		foreach (Language::getIDs(true) as $id_lang)
+			$res[$id_lang] = Product::getProductName($this->id_product, $this->id_product_attribute, $id_lang);
 
 		return $res;
 	}

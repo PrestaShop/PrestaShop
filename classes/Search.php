@@ -615,7 +615,7 @@ class SearchCore
 		$query_array3 = array();
 
 		// Retrieve the number of languages
-		$total_languages = count(Language::getLanguages(false));
+		$total_languages = count(Language::getIDs(false));
 
 		$sql_attribute = Search::getSQLProductAttributeFields($weight_array);
 		// Products are processed 50 by 50 in order to avoid overloading MySQL

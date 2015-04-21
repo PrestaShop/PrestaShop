@@ -1929,10 +1929,6 @@ class AdminControllerCore extends Controller
 		));
 
 		$module = Module::getInstanceByName('themeconfigurator');
-		$lang = '';
-		if (Configuration::get('PS_REWRITING_SETTINGS') && count(Language::getLanguages(true)) > 1)
-			$lang = Language::getIsoById($this->context->employee->id_lang).'/';
-
 		if (is_object($module) && $module->active && (int)Configuration::get('PS_TC_ACTIVE') == 1 && $this->context->shop->getBaseURL())
 		{
 			$request =
@@ -3483,7 +3479,6 @@ class AdminControllerCore extends Controller
 			}
 
 		/* Multilingual fields */
-		$languages = Language::getLanguages(false);
 		$class_vars = get_class_vars(get_class($object));
 		$fields = array();
 		if (isset($class_vars['definition']['fields']))
@@ -3491,9 +3486,9 @@ class AdminControllerCore extends Controller
 
 		foreach ($fields as $field => $params)
 			if (array_key_exists('lang', $params) && $params['lang'])
-				foreach ($languages as $language)
-					if (Tools::isSubmit($field.'_'.(int)$language['id_lang']))
-						$object->{$field}[(int)$language['id_lang']] = Tools::getValue($field.'_'.(int)$language['id_lang']);
+				foreach (Language::getIDs(false) as $id_lang)
+					if (Tools::isSubmit($field.'_'.(int)$id_lang))
+						$object->{$field}[(int)$id_lang] = Tools::getValue($field.'_'.(int)$id_lang);
 	}
 
 	/**

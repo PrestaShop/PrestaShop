@@ -3840,15 +3840,14 @@ class ProductCore extends ObjectModel
 					SELECT MAX(`id_feature_value`) AS nb
 					FROM `'._DB_PREFIX_.'feature_value`');
 				$new_id_feature_value = $max_fv['nb'];
-				$languages = Language::getLanguages(false);
 
-				foreach ($languages as $language)
+				foreach (Language::getIDs(false) as $id_lang)
 				{
 					$result3 = Db::getInstance()->getRow('
 					SELECT *
 					FROM `'._DB_PREFIX_.'feature_value_lang`
 					WHERE `id_feature_value` = '.(int)$old_id_feature_value.'
-					AND `id_lang` = '.(int)$language['id_lang']);
+					AND `id_lang` = '.(int)$id_lang);
 
 					if ($result3)
 					{
@@ -4414,7 +4413,7 @@ class ProductCore extends ObjectModel
 		return true;
 	}
 
-	protected function _createLabel(&$languages, $type)
+	protected function _createLabel($languages, $type)
 	{
 		// Label insertion
 		if (!Db::getInstance()->execute('

@@ -476,10 +476,7 @@ class WebserviceRequestCore
 			if (isset($this->urlFragments['language']))
 				$this->_available_languages = $this->filterLanguage();
 			else
-			{
-				foreach (Language::getLanguages() as $key => $language)
-					$this->_available_languages[] = $language['id_lang'];
-			}
+				$this->_available_languages[] = Language::getIDs();
 
 			if (empty($this->_available_languages))
 				$this->setError(400, 'language is not available', 81);
