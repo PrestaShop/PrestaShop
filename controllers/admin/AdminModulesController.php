@@ -706,7 +706,7 @@ class AdminModulesControllerCore extends AdminController
 				continue;
 
 			/* PrestaShop demo mode */
-			if (_PS_MODE_DEMO_)
+			if (_PS_MODE_DEMO_ && ($key != 'configure'))
 			{
 				$this->errors[] = Tools::displayError('This functionality has been disabled.');
 				return;
