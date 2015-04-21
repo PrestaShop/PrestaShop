@@ -143,6 +143,9 @@ class OrderControllerCore extends ParentOrderController
 		if (!Tools::getValue('multi-shipping'))
 			$this->context->cart->setNoMultishipping();
 
+		// Check for alternative payment api
+		$is_advanced_payment_api = (bool)Configuration::get('PS_ADVANCED_PAYMENT_API');
+
 		// 4 steps to the order
 		switch ((int)$this->step)
 		{
@@ -176,9 +179,12 @@ class OrderControllerCore extends ParentOrderController
 			case OrderController::STEP_PAYMENT:
 				// Check that the conditions (so active) were accepted by the customer
 				$cgv = Tools::getValue('cgv') || $this->context->cookie->check_cgv;
-				if (Configuration::get('PS_CONDITIONS') && (!Validate::isBool($cgv) || $cgv == false))
+
+				if (!$is_advanced_payment_api && Configuration::get('PS_CONDITIONS') && (!Validate::isBool($cgv) || $cgv == false))
 					Tools::redirect('index.php?controller=order&step=2');
-				Context::getContext()->cookie->check_cgv = true;
+
+				if (!$is_advanced_payment_api)
+					Context::getContext()->cookie->check_cgv = true;
 
 				// Check the delivery option is set
 				if (!$this->context->cart->isVirtualCart())
@@ -213,6 +219,10 @@ class OrderControllerCore extends ParentOrderController
 						Tools::redirect('index.php?controller=history');
 				}
 				$this->_assignPayment();
+
+				if ($is_advanced_payment_api)
+					$this->_assignAddress();
+
 				// assign some informations to display cart
 				$this->_assignSummaryInformations();
 				$this->setTemplate(_PS_THEME_DIR_.'order-payment.tpl');
@@ -407,11 +417,20 @@ class OrderControllerCore extends ParentOrderController
 
 		/* We may need to display an order summary */
 		$this->context->smarty->assign($this->context->cart->getSummaryDetails());
+
+		if ((bool)Configuration::get('PS_ADVANCED_PAYMENT_API'))
+			$this->context->cart->checkedTOS = null;
+		else
+			$this->context->cart->checkedTOS = 1;
+
 		$this->context->smarty->assign(array(
 			'total_price' => (float)$orderTotal,
-			'taxes_enabled' => (int)Configuration::get('PS_TAX')
+			'taxes_enabled' => (int)Configuration::get('PS_TAX'),
+			'cms_id' => (int)Configuration::get('PS_CONDITIONS_CMS_ID'),
+			'conditions' => (int)Configuration::get('PS_CONDITIONS'),
+			'checkedTOS' => (int)$this->context->cart->checkedTOS
 		));
-		$this->context->cart->checkedTOS = '1';
+
 
 		parent::_assignPayment();
 	}

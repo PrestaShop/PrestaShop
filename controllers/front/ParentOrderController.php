@@ -351,6 +351,7 @@ class ParentOrderControllerCore extends FrontController
 		}
 
 		$show_option_allow_separate_package = (!$this->context->cart->isAllProductsInStock(true) && Configuration::get('PS_SHIP_WHEN_AVAILABLE'));
+		$advanced_payment_api = (bool)Configuration::get('PS_ADVANCED_PAYMENT_API');
 
 		$this->context->smarty->assign($summary);
 		$this->context->smarty->assign(array(
@@ -368,6 +369,7 @@ class ParentOrderControllerCore extends FrontController
 			'displayVouchers' => $available_cart_rules,
 			'show_option_allow_separate_package' => $show_option_allow_separate_package,
 			'smallSize' => Image::getSize(ImageType::getFormatedName('small')),
+			'advanced_payment_api' => $advanced_payment_api
 
 		));
 
@@ -503,13 +505,16 @@ class ParentOrderControllerCore extends FrontController
 			'delivery_option' => $delivery_option
 		));
 
+		$advanced_payment_api = (bool)Configuration::get('PS_ADVANCED_PAYMENT_API');
+
 		$vars = array(
 			'HOOK_BEFORECARRIER' => Hook::exec('displayBeforeCarrier', array(
 				'carriers' => $carriers,
 				'checked' => $checked,
 				'delivery_option_list' => $delivery_option_list,
 				'delivery_option' => $delivery_option
-			))
+			)),
+			'advanced_payment_api' => $advanced_payment_api
 		);
 
 		Cart::addExtraCarriers($vars);
@@ -561,10 +566,30 @@ class ParentOrderControllerCore extends FrontController
 
 	protected function _assignPayment()
 	{
-		$this->context->smarty->assign(array(
-			'HOOK_TOP_PAYMENT' => Hook::exec('displayPaymentTop'),
-			'HOOK_PAYMENT' => Hook::exec('displayPayment'),
-		));
+
+		if ((bool)Configuration::get('PS_ADVANCED_PAYMENT_API'))
+		{
+			$this->addJS(_THEME_JS_DIR_.'advanced-payment-api.js');
+
+			// TOS
+			$cms = new CMS(Configuration::get('PS_CONDITIONS_CMS_ID'), $this->context->language->id);
+			$this->link_conditions = $this->context->link->getCMSLink($cms, $cms->link_rewrite, (bool)Configuration::get('PS_SSL_ENABLED'));
+			if (!strpos($this->link_conditions, '?'))
+				$this->link_conditions .= '?content_only=1';
+			else
+				$this->link_conditions .= '&content_only=1';
+
+			$this->context->smarty->assign(array(
+				'HOOK_TOP_PAYMENT' => Hook::exec('displayPaymentTop'),
+				'HOOK_ADVANCED_PAYMENT' => Hook::exec('advancedPaymentApi', array(), null, true),
+				'link_conditions' => $this->link_conditions
+			));
+		}
+		else
+			$this->context->smarty->assign(array(
+				'HOOK_TOP_PAYMENT' => Hook::exec('displayPaymentTop'),
+				'HOOK_PAYMENT' => Hook::exec('displayPayment'),
+			));
 	}
 
 	/**

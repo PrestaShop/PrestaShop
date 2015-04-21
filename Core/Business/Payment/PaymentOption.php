@@ -26,11 +26,11 @@
 
 class PaymentOption
 {
-	private $cta_text;
-	private $logo;
-	private $action;
-	private $method;
-	private $inputs;
-	private $form;
+	public $cta_text;
+	public $logo;
+	public $action;
+	public $method;
+	public $inputs;
+	public $form;
 
 }
