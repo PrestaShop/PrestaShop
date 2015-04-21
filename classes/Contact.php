@@ -59,7 +59,7 @@ class ContactCore extends ObjectModel
 	/**
 	 * Return available contacts
 	 *
-	 * @param integer $id_lang Language ID
+	 * @param int $id_lang Language ID
 	 * @param Context
 	 * @return array Contacts
 	 */

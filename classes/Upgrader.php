@@ -30,7 +30,7 @@ class UpgraderCore
 	public $rss_version_link;
 	public $rss_md5file_link_dir;
 	/**
-	 * @var boolean contains true if last version is not installed
+	 * @var bool contains true if last version is not installed
 	 */
 	protected $need_upgrade = false;
 	protected $changed_files = array();
@@ -73,7 +73,7 @@ class UpgraderCore
 	 *
 	 * @param string $dest directory where to save the file
 	 * @param string $filename new filename
-	 * @return boolean
+	 * @return bool
 	 *
 	 * @TODO ftp if copy is not possible (safe_mode for example)
 	 */

@@ -23,7 +23,6 @@
 *  International Registred Trademark & Property of PrestaShop SA
 *}
 
-<!-- Block layered navigation module -->
 {if $nbr_filterBlocks != 0}
 <div id="layered_block_left" class="block">
 	<p class="title_block">{l s='Catalog' mod='blocklayered'}</p>
@@ -223,7 +222,6 @@
 	</div>
 </div>
 {/if}
-<!-- /Block layered navigation module -->
 {if $nbr_filterBlocks != 0}
 {strip}
 	{if version_compare($smarty.const._PS_VERSION_,'1.5','>')}

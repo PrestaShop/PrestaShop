@@ -39,7 +39,7 @@ class WebserviceRequestCore
 
 	/**
 	 * Set if return should display content or not
-	 * @var boolean
+	 * @var bool
 	 */
 	protected $_outputEnabled = true;
 
@@ -63,7 +63,7 @@ class WebserviceRequestCore
 
 	/**
 	 * Set if the authentication key was checked
-	 * @var boolean
+	 * @var bool
 	 */
 	protected $_authenticated = false;
 
@@ -638,7 +638,7 @@ class WebserviceRequestCore
 	 * @param array $errstr contains the error message, as a string
 	 * @param array $errfile errfile, which contains the filename that the error was raised in, as a string
 	 * @param array $errline errline, which contains the line number the error was raised at, as an integer
-	 * @return boolean Always return true to avoid the default PHP error handler
+	 * @return bool Always return true to avoid the default PHP error handler
 	 */
 	public function webserviceErrorHandler($errno, $errstr, $errfile, $errline)
 	{
@@ -662,7 +662,7 @@ class WebserviceRequestCore
 			E_RECOVERABLE_ERROR	=> 'Recoverable error'
 		);
 		$type = (isset($errortype[$errno]) ? $errortype[$errno] : 'Unknown error');
-		error_log('[PHP '.$type.' #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')');
+		Tools::error_log('[PHP '.$type.' #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')');
 
 		switch ($errno)
 		{
@@ -714,7 +714,7 @@ class WebserviceRequestCore
 	/**
 	 * Check if there is one or more error
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function hasErrors()
 	{
@@ -724,7 +724,7 @@ class WebserviceRequestCore
 	/**
 	 * Check request authentication
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function authenticate()
 	{
@@ -767,7 +767,7 @@ class WebserviceRequestCore
 	/**
 	 * Check webservice activation
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function isActivated()
 	{
@@ -845,7 +845,7 @@ class WebserviceRequestCore
 	/**
 	 * Check HTTP method
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function checkHTTPMethod()
 	{
@@ -863,7 +863,7 @@ class WebserviceRequestCore
 	/**
 	 * Check resource validity
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function checkResource()
 	{
@@ -1316,7 +1316,7 @@ class WebserviceRequestCore
 	 * Build sort
 	 * Build limit
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public function executeEntityGetAndHead()
 	{
@@ -1338,7 +1338,7 @@ class WebserviceRequestCore
 	/**
 	 * Execute POST method on a PrestaShop entity
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function executeEntityPost()
 	{
@@ -1348,7 +1348,7 @@ class WebserviceRequestCore
 	/**
 	 * Execute PUT method on a PrestaShop entity
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function executeEntityPut()
 	{
@@ -1358,7 +1358,7 @@ class WebserviceRequestCore
 	/**
 	 * Execute DELETE method on a PrestaShop entity
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function executeEntityDelete()
 	{
@@ -1417,7 +1417,7 @@ class WebserviceRequestCore
 	 * save Entity Object from XML
 	 *
 	 * @param int $successReturnCode
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function saveEntityFromXml($successReturnCode)
 	{

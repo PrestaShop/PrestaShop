@@ -29,7 +29,7 @@
  */
 class AdminProductsControllerCore extends AdminController
 {
-	/** @var integer Max image size for upload
+	/** @var int Max image size for upload
 	 * As of 1.5 it is recommended to not set a limit to max image size
 	 */
 	protected $max_file_size = null;
@@ -1798,8 +1798,8 @@ class AdminProductsControllerCore extends AdminController
 	/**
 	 * Copy a product image
 	 *
-	 * @param integer $id_product Product Id for product image filename
-	 * @param integer $id_image Image Id for product image filename
+	 * @param int $id_product Product Id for product image filename
+	 * @param int $id_image Image Id for product image filename
 	 */
 	public function copyImage($id_product, $id_image, $method = 'auto')
 	{
@@ -2368,7 +2368,7 @@ class AdminProductsControllerCore extends AdminController
 	 *
 	 * @param array $languages Array languages
 	 * @param object $product Product
-	 * @return boolean Update result
+	 * @return bool Update result
 	 */
 	public function updateTags($languages, $product)
 	{
@@ -4916,7 +4916,7 @@ class AdminProductsControllerCore extends AdminController
 	 * if yes, add the pack items from input "inputPackItems"
 	 *
 	 * @param Product $product
-	 * @return boolean
+	 * @return bool
 	 */
 	public function updatePackItems($product)
 	{

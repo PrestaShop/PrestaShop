@@ -26,16 +26,16 @@
 
 class OrderCartRuleCore extends ObjectModel
 {
-	/** @var integer */
+	/** @var int */
 	public $id_order_cart_rule;
 
-	/** @var integer */
+	/** @var int */
 	public $id_order;
 
-	/** @var integer */
+	/** @var int */
 	public $id_cart_rule;
 
-	/** @var integer */
+	/** @var int */
 	public $id_order_invoice;
 
 	/** @var string */
@@ -47,7 +47,7 @@ class OrderCartRuleCore extends ObjectModel
 	/** @var float value (tax excl.) of voucher */
 	public $value_tax_excl;
 
-	/** @var boolean value : voucher gives free shipping or not */
+	/** @var bool value : voucher gives free shipping or not */
 	public $free_shipping;
 
 	/**

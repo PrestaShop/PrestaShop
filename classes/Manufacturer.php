@@ -28,7 +28,7 @@ class ManufacturerCore extends ObjectModel
 {
 	public $id;
 
-	/** @var integer manufacturer ID //FIXME is it really usefull...? */
+	/** @var int manufacturer ID //FIXME is it really usefull...? */
 	public $id_manufacturer;
 
 	/** @var string Name */
@@ -61,7 +61,7 @@ class ManufacturerCore extends ObjectModel
 	/** @var string Meta description */
 	public $meta_description;
 
-	/** @var boolean active */
+	/** @var bool active */
 	public $active;
 
 	/**
@@ -152,7 +152,7 @@ class ManufacturerCore extends ObjectModel
 	/**
 	 * Return manufacturers
 	 *
-	 * @param boolean $get_nb_products [optional] return products numbers for each
+	 * @param bool $get_nb_products [optional] return products numbers for each
 	 * @param int $id_lang
 	 * @param bool $active
 	 * @param int $p
@@ -226,7 +226,7 @@ class ManufacturerCore extends ObjectModel
 	/**
 	 * Return name from id
 	 *
-	 * @param integer $id_manufacturer Manufacturer ID
+	 * @param int $id_manufacturer Manufacturer ID
 	 * @return string name
 	 */
 	static protected $cacheName = array();
@@ -403,7 +403,7 @@ class ManufacturerCore extends ObjectModel
 	* Specify if a manufacturer already in base
 	*
 	* @param $id_manufacturer Manufacturer id
-	* @return boolean
+	* @return bool
 	*/
 	public static function manufacturerExists($id_manufacturer)
 	{

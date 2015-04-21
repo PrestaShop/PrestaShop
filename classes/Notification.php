@@ -60,7 +60,7 @@ class NotificationCore
 	 * Get all the element ids
 	 *
 	 * @param string $type contains the field name of the Employee table
-	 * @param integer $id_last_element contains the id of the last seen element
+	 * @param int $id_last_element contains the id of the last seen element
 	 * @return array containing the notifications
 	 */
 	public static function getLastElementsIdsByType($type, $id_last_element)
@@ -131,7 +131,7 @@ class NotificationCore
 	 * Updates the last seen element by the employee
 	 *
 	 * @param string $type contains the field name of the Employee table
-	 * @return boolean if type exists or not
+	 * @return bool if type exists or not
 	 */
 	public function updateEmployeeLastElement($type)
 	{

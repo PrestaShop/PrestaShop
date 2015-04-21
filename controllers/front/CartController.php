@@ -126,6 +126,14 @@ class CartControllerCore extends FrontController
 
 		if ($this->context->cart->deleteProduct($this->id_product, $this->id_product_attribute, $this->customization_id, $this->id_address_delivery))
 		{
+			Hook::exec('actionAfterDeleteProductInCart', array(
+				'id_cart' => (int)$this->context->cart->id,
+				'id_product' => (int)$this->id_product,
+				'id_product_attribute' => (int)$this->id_product_attribute,
+				'customization_id' => (int)$this->customization_id,
+				'id_address_delivery' => (int)$this->id_address_delivery
+			));
+
 			if (!Cart::getNbProducts((int)$this->context->cart->id))
 			{
 				$this->context->cart->setDeliveryOption(null);

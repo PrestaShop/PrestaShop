@@ -28,25 +28,25 @@ class CMSCategoryCore extends ObjectModel
 {
 	public $id;
 
-	/** @var integer CMSCategory ID */
+	/** @var int CMSCategory ID */
 	public $id_cms_category;
 
 	/** @var string Name */
 	public $name;
 
-	/** @var boolean Status for display */
+	/** @var bool Status for display */
 	public $active = 1;
 
 	/** @var string Description */
 	public $description;
 
-	/** @var integer Parent CMSCategory ID */
+	/** @var int Parent CMSCategory ID */
 	public $id_parent;
 
-	/** @var  integer category position */
+	/** @var  int category position */
 	public $position;
 
-	/** @var integer Parents number */
+	/** @var int Parents number */
 	public $level_depth;
 
 	/** @var string string used in rewrited URL */
@@ -119,10 +119,10 @@ class CMSCategoryCore extends ObjectModel
 	/**
 	 * Recursive scan of subcategories
 	 *
-	 * @param integer $max_depth Maximum depth of the tree (i.e. 2 => 3 levels depth)
-	 * @param integer $currentDepth specify the current depth in the tree (don't use it, only for rucursivity!)
+	 * @param int $max_depth Maximum depth of the tree (i.e. 2 => 3 levels depth)
+	 * @param int $currentDepth specify the current depth in the tree (don't use it, only for rucursivity!)
 	 * @param array $excluded_ids_array specify a list of ids to exclude of results
-	 * @param integer $idLang Specify the id of the language used
+	 * @param int $idLang Specify the id of the language used
 	 *
 	 * @return array Subcategories lite tree
 	 */
@@ -295,7 +295,7 @@ class CMSCategoryCore extends ObjectModel
 	/**
 	 * Get the number of parent categories
 	 *
-	 * @return integer Level depth
+	 * @return int Level depth
 	 */
 	public function calcLevelDepth()
 	{
@@ -308,8 +308,8 @@ class CMSCategoryCore extends ObjectModel
 	/**
 	 * Return available categories
 	 *
-	 * @param integer $id_lang Language ID
-	 * @param boolean $active return only active categories
+	 * @param int $id_lang Language ID
+	 * @param bool $active return only active categories
 	 * @return array Categories
 	 */
 	public static function getCategories($id_lang, $active = true, $order = true)
@@ -347,8 +347,8 @@ class CMSCategoryCore extends ObjectModel
 	/**
 	 * Return current CMSCategory childs
 	 *
-	 * @param integer $id_lang Language ID
-	 * @param boolean $active return only active categories
+	 * @param int $id_lang Language ID
+	 * @param bool $active return only active categories
 	 * @return array Categories
 	 */
 	public function getSubCategories($id_lang, $active = true)
@@ -385,8 +385,8 @@ class CMSCategoryCore extends ObjectModel
 	/**
 	 * Return main categories
 	 *
-	 * @param integer $id_lang Language ID
-	 * @param boolean $active return only active categories
+	 * @param int $id_lang Language ID
+	 * @param bool $active return only active categories
 	 * @return array categories
 	 */
 	public static function getHomeCategories($id_lang, $active = true)
@@ -421,8 +421,8 @@ class CMSCategoryCore extends ObjectModel
 	/**
 	 * Check if CMSCategory can be moved in another one
 	 *
-	 * @param integer $id_parent Parent candidate
-	 * @return boolean Parent validity
+	 * @param int $id_parent Parent candidate
+	 * @return bool Parent validity
 	 */
 	public static function checkBeforeMove($id_cms_category, $id_parent)
 	{
@@ -481,9 +481,9 @@ class CMSCategoryCore extends ObjectModel
 	/**
 	  * Light back office search for categories
 	  *
-	  * @param integer $id_lang Language ID
+	  * @param int $id_lang Language ID
 	  * @param string $query Searched string
-	  * @param boolean $unrestricted allows search without lang and includes first CMSCategory and exact match
+	  * @param bool $unrestricted allows search without lang and includes first CMSCategory and exact match
 	  * @return array Corresponding categories
 	  */
 	public static function searchByName($id_lang, $query, $unrestricted = false)
@@ -505,9 +505,9 @@ class CMSCategoryCore extends ObjectModel
 	/**
 	  * Retrieve CMSCategory by name and parent CMSCategory id
 	  *
-	  * @param integer $id_lang Language ID
+	  * @param int $id_lang Language ID
 	  * @param string  $CMSCategory_name Searched CMSCategory name
-	  * @param integer $id_parent_CMSCategory parent CMSCategory ID
+	  * @param int $id_parent_CMSCategory parent CMSCategory ID
 	  * @return array Corresponding CMSCategory
 	  * @deprecated 1.5.3.0
 	  */
@@ -526,7 +526,7 @@ class CMSCategoryCore extends ObjectModel
 	/**
 	  * Get Each parent CMSCategory of this CMSCategory until the root CMSCategory
 	  *
-	  * @param integer $id_lang Language ID
+	  * @param int $id_lang Language ID
 	  * @return array Corresponding categories
 	  */
 	public function getParentsCategories($id_lang = null)

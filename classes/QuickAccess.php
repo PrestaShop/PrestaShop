@@ -32,7 +32,7 @@ class QuickAccessCore extends ObjectModel
 	/** @var string Link */
 	public $link;
 
-	/** @var boolean New windows or not */
+	/** @var bool New windows or not */
 	public $new_window;
 
 	/**

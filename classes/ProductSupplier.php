@@ -30,17 +30,17 @@
 class ProductSupplierCore extends ObjectModel
 {
 	/**
-	 * @var integer product ID
+	 * @var int product ID
 	 * */
 	public $id_product;
 
 	/**
-	 * @var integer product attribute ID
+	 * @var int product attribute ID
 	 * */
 	public $id_product_attribute;
 
 	/**
-	 * @var integer the supplier ID
+	 * @var int the supplier ID
 	 * */
 	public $id_supplier;
 
@@ -50,7 +50,7 @@ class ProductSupplierCore extends ObjectModel
 	public $product_supplier_reference;
 
 	/**
-	 * @var integer the currency ID for unit price tax excluded
+	 * @var int the currency ID for unit price tax excluded
 	 * */
 	public $id_currency;
 

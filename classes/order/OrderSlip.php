@@ -26,28 +26,28 @@
 
 class OrderSlipCore extends ObjectModel
 {
-	/** @var integer */
+	/** @var int */
 	public $id;
 
-	/** @var integer */
+	/** @var int */
 	public $id_customer;
 
-	/** @var integer */
+	/** @var int */
 	public $id_order;
 
 	/** @var float */
 	public $conversion_rate;
 
-	/** @var integer */
+	/** @var int */
 	public $amount;
 
-	/** @var integer */
+	/** @var int */
 	public $shipping_cost;
 
-	/** @var integer */
+	/** @var int */
 	public $shipping_cost_amount;
 
-	/** @var integer */
+	/** @var int */
 	public $partial;
 
 	/** @var string Object creation date */
@@ -56,7 +56,7 @@ class OrderSlipCore extends ObjectModel
 	/** @var string Object last modification date */
 	public $date_upd;
 
-	/** @var integer */
+	/** @var int */
 	public $order_slip_type = 0;
 
 	/**

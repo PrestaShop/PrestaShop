@@ -41,16 +41,16 @@ class ProductCore extends ObjectModel
 	/** @var string Tax rate */
 	public $tax_rate;
 
-	/** @var integer Manufacturer id */
+	/** @var int Manufacturer id */
 	public $id_manufacturer;
 
-	/** @var integer Supplier id */
+	/** @var int Supplier id */
 	public $id_supplier;
 
-	/** @var integer default Category id */
+	/** @var int default Category id */
 	public $id_category_default;
 
-	/** @var integer default Shop id */
+	/** @var int default Shop id */
 	public $id_shop_default;
 
 	/** @var string Manufacturer name */
@@ -68,10 +68,10 @@ class ProductCore extends ObjectModel
 	/** @var string Short description */
 	public $description_short;
 
-	/** @var integer Quantity available */
+	/** @var int Quantity available */
 	public $quantity = 0;
 
-	/** @var integer Minimal quantity for add to cart */
+	/** @var int Minimal quantity for add to cart */
 	public $minimal_quantity = 1;
 
 	/** @var string available_now */
@@ -91,10 +91,10 @@ class ProductCore extends ObjectModel
 	/** @var float Wholesale Price in euros */
 	public $wholesale_price = 0;
 
-	/** @var boolean on_sale */
+	/** @var bool on_sale */
 	public $on_sale = false;
 
-	/** @var boolean online_only */
+	/** @var bool online_only */
 	public $online_only = false;
 
 	/** @var string unity */
@@ -148,31 +148,31 @@ class ProductCore extends ObjectModel
 	/** @var string Meta tag title */
 	public $meta_title;
 
-	/** @var boolean Product statuts */
+	/** @var bool Product statuts */
 	public $quantity_discount = 0;
 
-	/** @var boolean Product customization */
+	/** @var bool Product customization */
 	public $customizable;
 
-	/** @var boolean Product is new */
+	/** @var bool Product is new */
 	public $new = null;
 
-	/** @var integer Number of uploadable files (concerning customizable products) */
+	/** @var int Number of uploadable files (concerning customizable products) */
 	public $uploadable_files;
 
 	/** @var int Number of text fields */
 	public $text_fields;
 
-	/** @var boolean Product statuts */
+	/** @var bool Product statuts */
 	public $active = true;
 
-	/** @var boolean Product statuts */
+	/** @var bool Product statuts */
 	public $redirect_type = '';
 
-	/** @var boolean Product statuts */
+	/** @var bool Product statuts */
 	public $id_product_redirected = 0;
 
-	/** @var boolean Product available for order */
+	/** @var bool Product available for order */
 	public $available_for_order = true;
 
 	/** @var string Object available order date */
@@ -181,10 +181,10 @@ class ProductCore extends ObjectModel
 	/** @var string Enumerated (enum) product condition (new, used, refurbished) */
 	public $condition;
 
-	/** @var boolean Show price of Product */
+	/** @var bool Show price of Product */
 	public $show_price = true;
 
-	/** @var boolean is the product indexed in the search index? */
+	/** @var bool is the product indexed in the search index? */
 	public $indexed = 0;
 
 	/** @var string ENUM('both', 'catalog', 'search', 'none') front office visibility */
@@ -215,7 +215,7 @@ class ProductCore extends ObjectModel
 
 	/**
 	 * @since 1.5.0
-	 * @var boolean Tells if the product uses the advanced stock management
+	 * @var bool Tells if the product uses the advanced stock management
 	 */
 	public $advanced_stock_management = 0;
 	public $out_of_stock;
@@ -599,8 +599,8 @@ class ProductCore extends ObjectModel
 
 	/**
 	 * Move a product inside its category
-	 * @param boolean $way Up (1)  or Down (0)
-	 * @param integer $position
+	 * @param bool $way Up (1)  or Down (0)
+	 * @param int $position
 	 * return boolean Update result
 	 */
 	public function updatePosition($way, $position)
@@ -920,7 +920,7 @@ class ProductCore extends ObjectModel
 	 * addToCategories add this product to the category/ies if not exists.
 	 *
 	 * @param mixed $categories id_category or array of id_category
-	 * @return boolean true if succeed
+	 * @return bool true if succeed
 	 */
 	public function addToCategories($categories = array())
 	{
@@ -969,7 +969,7 @@ class ProductCore extends ObjectModel
 	* Update categories to index product into
 	*
 	* @param string $productCategories Categories list to index product into
-	* @param boolean $keeping_current_pos (deprecated, no more used)
+	* @param bool $keeping_current_pos (deprecated, no more used)
 	* @return array Update/insertion result
 	*/
 	public function updateCategories($categories, $keeping_current_pos = false)
@@ -1005,7 +1005,7 @@ class ProductCore extends ObjectModel
 	 *
 	 * @param mixed $id_category
 	 * @param mixed $clean_positions
-	 * @return boolean
+	 * @return bool
 	 */
 	public function deleteCategory($id_category, $clean_positions = true)
 	{
@@ -1027,7 +1027,7 @@ class ProductCore extends ObjectModel
 	/**
 	* Delete all association to category where product is indexed
 	*
-	* @param boolean $clean_positions clean category positions after deletion
+	* @param bool $clean_positions clean category positions after deletion
 	* @return array Deletion result
 	*/
 	public function deleteCategories($clean_positions = false)
@@ -1103,9 +1103,9 @@ class ProductCore extends ObjectModel
 	/**
 	* Get all available products
 	*
-	* @param integer $id_lang Language id
-	* @param integer $start Start number
-	* @param integer $limit Number of products to return
+	* @param int $id_lang Language id
+	* @param int $start Start number
+	* @param int $limit Number of products to return
 	* @param string $order_by Field for ordering
 	* @param string $order_way Way for ordering (ASC or DESC)
 	* @return array Products details
@@ -1307,7 +1307,7 @@ class ProductCore extends ObjectModel
 	}
 
 	/**
-	* @param integer $quantity DEPRECATED
+	* @param int $quantity DEPRECATED
 	* @param string $supplier_reference DEPRECATED
 	*/
 	public function addCombinationEntity($wholesale_price, $price, $weight, $unit_impact, $ecotax, $quantity,
@@ -1468,13 +1468,13 @@ class ProductCore extends ObjectModel
 	/**
 	* Update a product attribute
 	*
-	* @param integer $id_product_attribute Product attribute id
+	* @param int $id_product_attribute Product attribute id
 	* @param float $wholesale_price Wholesale price
 	* @param float $price Additional price
 	* @param float $weight Additional weight
 	* @param float $unit
 	* @param float $ecotax Additional ecotax
-	* @param integer $id_image Image id
+	* @param int $id_image Image id
 	* @param string $reference Reference
 	* @param string $ean13 Ean-13 barcode
 	* @param int $default Default On
@@ -1548,12 +1548,12 @@ class ProductCore extends ObjectModel
 	 * @param float $price Additional price
 	 * @param float $weight Additional weight
 	 * @param float $ecotax Additional ecotax
-	 * @param integer $id_images Image ids
+	 * @param int $id_images Image ids
 	 * @param string $reference Reference
 	 * @param string $location Location
 	 * @param string $ean13 Ean-13 barcode
-	 * @param boolean $default Is default attribute for product
-	 * @param integer $minimal_quantity Minimal quantity to add to cart
+	 * @param bool $default Is default attribute for product
+	 * @param int $minimal_quantity Minimal quantity to add to cart
 	 * @return mixed $id_product_attribute or false
 	 */
 	public function addAttribute($price, $weight, $unit_impact, $ecotax, $id_images, $reference, $ean13,
@@ -1703,7 +1703,7 @@ class ProductCore extends ObjectModel
 	/**
 	* Delete product attachments
 	*
-	* @param boolean $update_cache If set to true attachment cache will be updated
+	* @param bool $update_cache If set to true attachment cache will be updated
 	* @return array Deletion result
 	*/
 	public function deleteAttachments($update_attachment_cache = true)
@@ -1800,7 +1800,7 @@ class ProductCore extends ObjectModel
 	/**
 	* Add a product attributes combinaison
 	*
-	* @param integer $id_product_attribute Product attribute id
+	* @param int $id_product_attribute Product attribute id
 	* @param array $attributes Attributes to forge combinaison
 	* @return array Insertion result
 	* @deprecated since 1.5.0.7
@@ -1843,7 +1843,7 @@ class ProductCore extends ObjectModel
 	/**
 	* Delete a product attributes combination
 	*
-	* @param integer $id_product_attribute Product attribute id
+	* @param int $id_product_attribute Product attribute id
 	* @return array Deletion result
 	*/
 	public function deleteAttributeCombination($id_product_attribute)
@@ -1901,7 +1901,7 @@ class ProductCore extends ObjectModel
 	/**
 	* Get all available product attributes resume
 	*
-	* @param integer $id_lang Language id
+	* @param int $id_lang Language id
 	* @return array Product attributes combinations
 	*/
 	public function getAttributesResume($id_lang, $attribute_value_separator = ' - ', $attribute_separator = ', ')
@@ -1954,7 +1954,7 @@ class ProductCore extends ObjectModel
 	/**
 	* Get all available product attributes combinations
 	*
-	* @param integer $id_lang Language id
+	* @param int $id_lang Language id
 	* @return array Product attributes combinations
 	*/
 	public function getAttributeCombinations($id_lang)
@@ -1997,8 +1997,8 @@ class ProductCore extends ObjectModel
 	/**
 	* Get product attribute combination by id_product_attribute
 	*
-	* @param integer $id_product_attribute
-	* @param integer $id_lang Language id
+	* @param int $id_product_attribute
+	* @param int $id_lang Language id
 	* @return array Product attribute combination by id_product_attribute
 	*/
 	public function getAttributeCombinationsById($id_product_attribute, $id_lang)
@@ -2098,7 +2098,7 @@ class ProductCore extends ObjectModel
 	/**
 	* Check if product has attributes combinations
 	*
-	* @return integer Attributes combinations number
+	* @return int Attributes combinations number
 	*/
 	public function hasAttributes()
 	{
@@ -2115,9 +2115,9 @@ class ProductCore extends ObjectModel
 	/**
 	* Get new products
 	*
-	* @param integer $id_lang Language id
-	* @param integer $pageNumber Start from (optional)
-	* @param integer $nbProducts Number of products to return (optional)
+	* @param int $id_lang Language id
+	* @param int $pageNumber Start from (optional)
+	* @param int $nbProducts Number of products to return (optional)
 	* @return array New products
 	*/
 	public static function getNewProducts($id_lang, $page_number = 0, $nb_products = 10, $count = false, $order_by = null, $order_way = null, Context $context = null)
@@ -2246,7 +2246,7 @@ class ProductCore extends ObjectModel
 	/**
 	* Get a random special
 	*
-	* @param integer $id_lang Language id
+	* @param int $id_lang Language id
 	* @return array Special
 	*/
 	public static function getRandomSpecial($id_lang, $beginning = false, $ending = false, Context $context = null)
@@ -2322,10 +2322,10 @@ class ProductCore extends ObjectModel
 	/**
 	* Get prices drop
 	*
-	* @param integer $id_lang Language id
-	* @param integer $pageNumber Start from (optional)
-	* @param integer $nbProducts Number of products to return (optional)
-	* @param boolean $count Only in order to get total number (optional)
+	* @param int $id_lang Language id
+	* @param int $pageNumber Start from (optional)
+	* @param int $nbProducts Number of products to return (optional)
+	* @param bool $count Only in order to get total number (optional)
 	* @return array Prices drop
 	*/
 	public static function getPricesDrop($id_lang, $page_number = 0, $nb_products = 10, $count = false,
@@ -2533,7 +2533,7 @@ class ProductCore extends ObjectModel
 	/**
 	* Get product images and legends
 	*
-	* @param integer $id_lang Language id for multilingual legends
+	* @param int $id_lang Language id for multilingual legends
 	* @return array Product images and legends
 	*/
 	public function getImages($id_lang, Context $context = null)
@@ -2963,10 +2963,10 @@ class ProductCore extends ObjectModel
 	* Get product price
 	* Same as static function getPriceStatic, no need to specify product id
 	*
-	* @param boolean $tax With taxes or not (optional)
-	* @param integer $id_product_attribute Product attribute id (optional)
-	* @param integer $decimals Number of decimals (optional)
-	* @param integer $divisor Util when paying many time without fees (optional)
+	* @param bool $tax With taxes or not (optional)
+	* @param int $id_product_attribute Product attribute id (optional)
+	* @param int $decimals Number of decimals (optional)
+	* @param int $divisor Util when paying many time without fees (optional)
 	* @return float Product price in euros
 	*/
 	public function getPrice($tax = true, $id_product_attribute = null, $decimals = 6,
@@ -3063,9 +3063,9 @@ class ProductCore extends ObjectModel
 	/**
 	* Get available product quantities
 	*
-	* @param integer $id_product Product id
-	* @param integer $id_product_attribute Product attribute id (optional)
-	* @return integer Available quantities
+	* @param int $id_product Product id
+	* @param int $id_product_attribute Product attribute id (optional)
+	* @return int Available quantities
 	*/
 	public static function getQuantity($id_product, $id_product_attribute = null, $cache_is_pack = null)
 	{
@@ -3169,8 +3169,8 @@ class ProductCore extends ObjectModel
 	/**
 	 * Check product availability
 	 *
-	 * @param integer $qty Quantity desired
-	 * @return boolean True if product is available with this quantity
+	 * @param int $qty Quantity desired
+	 * @return bool True if product is available with this quantity
 	 */
 	public function checkQty($qty)
 	{
@@ -3270,7 +3270,7 @@ class ProductCore extends ObjectModel
 	/**
 	 * Get all available attribute groups
 	 *
-	 * @param integer $id_lang Language id
+	 * @param int $id_lang Language id
 	 * @return array Attribute groups
 	 */
 	public function getAttributesGroups($id_lang)
@@ -3322,8 +3322,8 @@ class ProductCore extends ObjectModel
 	/**
 	 * Get product accessories (only names)
 	 *
-	 * @param integer $id_lang Language id
-	 * @param integer $id_product Product id
+	 * @param int $id_lang Language id
+	 * @param int $id_product Product id
 	 * @return array Product accessories
 	 */
 	public static function getAccessoriesLight($id_lang, $id_product)
@@ -3344,7 +3344,7 @@ class ProductCore extends ObjectModel
 	/**
 	 * Get product accessories
 	 *
-	 * @param integer $id_lang Language id
+	 * @param int $id_lang Language id
 	 * @return array Product accessories
 	 */
 	public function getAccessories($id_lang, $active = true)
@@ -3524,7 +3524,7 @@ class ProductCore extends ObjectModel
 	/**
 	* Admin panel product search
 	*
-	* @param integer $id_lang Language id
+	* @param int $id_lang Language id
 	* @param string $query Search query
 	* @return array Matching products
 	*/
@@ -3584,8 +3584,8 @@ class ProductCore extends ObjectModel
 	/**
 	* Duplicate attributes when duplicating a product
 	*
-	* @param integer $id_product_old Old product id
-	* @param integer $id_product_new New product id
+	* @param int $id_product_old Old product id
+	* @param int $id_product_new New product id
 	*/
 	public static function duplicateAttributes($id_product_old, $id_product_new)
 	{
@@ -3706,7 +3706,7 @@ class ProductCore extends ObjectModel
 
 	/**
 	* Get product attribute image associations
-	* @param integer $id_product_attribute
+	* @param int $id_product_attribute
 	* @return array
 	*/
 	public static function _getAttributeImageAssociations($id_product_attribute)
@@ -3813,8 +3813,8 @@ class ProductCore extends ObjectModel
 	/**
 	* Duplicate features when duplicating a product
 	*
-	* @param integer $id_product_old Old product id
-	* @param integer $id_product_old New product id
+	* @param int $id_product_old Old product id
+	* @param int $id_product_old New product id
 	*/
 	public static function duplicateFeatures($id_product_old, $id_product_new)
 	{
@@ -3955,8 +3955,8 @@ class ProductCore extends ObjectModel
 	/**
 	 * Adds suppliers from old product onto a newly duplicated product
 	 *
-	 * @param integer $id_product_old
-	 * @param integer $id_product_new
+	 * @param int $id_product_old
+	 * @param int $id_product_new
 	 */
 	public static function duplicateSuppliers($id_product_old, $id_product_new)
 	{
@@ -4585,7 +4585,7 @@ class ProductCore extends ObjectModel
 	 *
 	 * @param int $id_product
 	 * @param array $categories array of category arrays
-	 * @return boolean is the product in at least one category
+	 * @return bool is the product in at least one category
 	 */
 	public static function idIsOnCategoryId($id_product, $categories)
 	{
@@ -5173,7 +5173,7 @@ class ProductCore extends ObjectModel
 
 	/**
 	 * Checks if reference exists
-	 * @return boolean
+	 * @return bool
 	 */
 	public function existsRefInDatabase($reference)
 	{
@@ -5409,7 +5409,7 @@ class ProductCore extends ObjectModel
 	/**
 	 * Get the combination url anchor of the product
 	 *
-	 * @param integer $id_product_attribute
+	 * @param int $id_product_attribute
 	 * @return string
 	 */
 	public function getAnchor($id_product_attribute, $with_id = false)

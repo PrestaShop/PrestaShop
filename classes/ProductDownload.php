@@ -26,7 +26,7 @@
 
 class ProductDownloadCore extends ObjectModel
 {
-	/** @var integer Product id which download belongs */
+	/** @var int Product id which download belongs */
 	public $id_product;
 
 	/** @var string DisplayFilename the name which appear */
@@ -47,10 +47,10 @@ class ProductDownloadCore extends ObjectModel
 	/** @var string NbDownloadable how many time the customer can download the file */
 	public $nb_downloadable;
 
-	/** @var boolean Active if file is accessible or not */
+	/** @var bool Active if file is accessible or not */
 	public $active = 1;
 
-	/** @var boolean is_shareable indicates whether the product can be shared */
+	/** @var bool is_shareable indicates whether the product can be shared */
 	public $is_shareable = 0;
 
 	protected static $_productIds = array();
@@ -77,7 +77,7 @@ class ProductDownloadCore extends ObjectModel
 	/**
 	 * Build a virtual product
 	 *
-	 * @param integer $id_product_download Existing productDownload id in order to load object (optional)
+	 * @param int $id_product_download Existing productDownload id in order to load object (optional)
 	 */
 	public function __construct($id_product_download = null)
 	{
@@ -126,7 +126,7 @@ class ProductDownloadCore extends ObjectModel
 	 * Delete the file
 	 * @param int $id_product_download : if we need to delete a specific product attribute file
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public function deleteFile($id_product_download = null)
 	{
@@ -140,7 +140,7 @@ class ProductDownloadCore extends ObjectModel
 	/**
 	 * Check if file exists
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public function checkFile()
 	{
@@ -151,7 +151,7 @@ class ProductDownloadCore extends ObjectModel
 	/**
 	 * Check if download repository is writable
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function checkWritableDir()
 	{
@@ -162,7 +162,7 @@ class ProductDownloadCore extends ObjectModel
 	 * Return the id_product_download from an id_product
 	 *
 	 * @param int $id_product Product the id
-	 * @return integer Product the id for this virtual product
+	 * @return int Product the id for this virtual product
 	 */
 	public static function getIdFromIdProduct($id_product)
 	{
@@ -186,7 +186,7 @@ class ProductDownloadCore extends ObjectModel
 	 * @since 1.5.0.1
 	 *
 	 * @param string $filename Filename physically
-	 * @return integer Product the id for this virtual product
+	 * @return int Product the id for this virtual product
 	 *
 	 */
 	public static function getIdFromFilename($filename)

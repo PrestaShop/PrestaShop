@@ -56,9 +56,9 @@ class ProductSaleCore
 	/*
 	** Get required informations on best sales products
 	**
-	** @param integer $id_lang Language id
-	** @param integer $page_number Start from (optional)
-	** @param integer $nb_products Number of products to return (optional)
+	** @param int $id_lang Language id
+	** @param int $page_number Start from (optional)
+	** @param int $nb_products Number of products to return (optional)
 	** @return array from Product::getProductProperties
 	*/
 	public static function getBestSales($id_lang, $page_number = 0, $nb_products = 10, $order_by = null, $order_way = null)
@@ -142,9 +142,9 @@ class ProductSaleCore
 	/*
 	** Get required informations on best sales products
 	**
-	** @param integer $id_lang Language id
-	** @param integer $page_number Start from (optional)
-	** @param integer $nb_products Number of products to return (optional)
+	** @param int $id_lang Language id
+	** @param int $page_number Start from (optional)
+	** @param int $nb_products Number of products to return (optional)
 	** @return array keys : id_product, link_rewrite, name, id_image, legend, sales, ean13, upc, link
 	*/
 	public static function getBestSalesLight($id_lang, $page_number = 0, $nb_products = 10, Context $context = null)

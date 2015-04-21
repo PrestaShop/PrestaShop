@@ -6,6 +6,9 @@
   <configuration id="PS_DELIVERY_PREFIX">
     <value>#TA</value>
   </configuration>
+  <configuration id="PS_RETURN_PREFIX">
+    <value>#RE</value>
+  </configuration>
   <configuration id="PS_SEARCH_BLACKLIST">
     <value>و|یا|با|در|یک|روی|به|برای|تا|که</value>
   </configuration>

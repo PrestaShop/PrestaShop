@@ -28,7 +28,7 @@ class SupplierCore extends ObjectModel
 {
 	public $id;
 
-	/** @var integer supplier ID */
+	/** @var int supplier ID */
 	public $id_supplier;
 
 	/** @var string Name */
@@ -55,7 +55,7 @@ class SupplierCore extends ObjectModel
 	/** @var string Meta description */
 	public $meta_description;
 
-	/** @var boolean active */
+	/** @var bool active */
 	public $active;
 
 	/**
@@ -174,7 +174,7 @@ class SupplierCore extends ObjectModel
 	/**
 	 * Return name from id
 	 *
-	 * @param integer $id_supplier Supplier ID
+	 * @param int $id_supplier Supplier ID
 	 * @return string name
 	 */
 	static protected $cache_name = array();
@@ -347,7 +347,7 @@ class SupplierCore extends ObjectModel
 	* Tells if a supplier exists
 	*
 	* @param $id_supplier Supplier id
-	* @return boolean
+	* @return bool
 	*/
 	public static function supplierExists($id_supplier)
 	{

@@ -160,7 +160,7 @@ class PrestaShopAutoload
 		}
 		// $filename_tmp couldn't be written. $filename should be there anyway (even if outdated), no need to die.
 		else
-			error_log('Cannot write temporary file '.$filename_tmp);
+			Tools::error_log('Cannot write temporary file '.$filename_tmp);
 		$this->index = $classes;
 	}
 

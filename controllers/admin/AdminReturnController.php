@@ -52,8 +52,22 @@ class AdminReturnControllerCore extends AdminController
 			'general' => array(
 				'title' =>	$this->l('Merchandise return (RMA) options'),
 				'fields' =>	array(
-					'PS_ORDER_RETURN' => array('title' => $this->l('Enable returns'), 'desc' => $this->l('Would you like to allow merchandise returns in your shop?'), 'cast' => 'intval', 'type' => 'bool'),
-					'PS_ORDER_RETURN_NB_DAYS' => array('title' => $this->l('Time limit of validity'), 'desc' => $this->l('How many days after the delivery date does the customer have to return a product?'), 'cast' => 'intval', 'type' => 'text', 'size' => '2'),
+					'PS_ORDER_RETURN' => array(
+						'title' => $this->l('Enable returns'),
+						'desc' => $this->l('Would you like to allow merchandise returns in your shop?'),
+						'cast' => 'intval', 'type' => 'bool'),
+					'PS_ORDER_RETURN_NB_DAYS' => array(
+						'title' => $this->l('Time limit of validity'),
+						'desc' => $this->l('How many days after the delivery date does the customer have to return a product?'),
+						'cast' => 'intval',
+						'type' => 'text',
+						'size' => '2'),
+					'PS_RETURN_PREFIX' => array(
+						'title' => $this->l('Returns prefix'),
+						'desc' => $this->l('Prefix used for return name (e.g. RE00001).'),
+						'size' => 6,
+						'type' => 'textLang'
+					),
 				),
 				'submit' => array('title' => $this->l('Save'))
 			),

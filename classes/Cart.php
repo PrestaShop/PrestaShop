@@ -32,34 +32,34 @@ class CartCore extends ObjectModel
 
 	public $id_shop;
 
-	/** @var integer Customer delivery address ID */
+	/** @var int Customer delivery address ID */
 	public $id_address_delivery;
 
-	/** @var integer Customer invoicing address ID */
+	/** @var int Customer invoicing address ID */
 	public $id_address_invoice;
 
-	/** @var integer Customer currency ID */
+	/** @var int Customer currency ID */
 	public $id_currency;
 
-	/** @var integer Customer ID */
+	/** @var int Customer ID */
 	public $id_customer;
 
-	/** @var integer Guest ID */
+	/** @var int Guest ID */
 	public $id_guest;
 
-	/** @var integer Language ID */
+	/** @var int Language ID */
 	public $id_lang;
 
-	/** @var boolean True if the customer wants a recycled package */
+	/** @var bool True if the customer wants a recycled package */
 	public $recyclable = 0;
 
-	/** @var boolean True if the customer wants a gift wrapping */
+	/** @var bool True if the customer wants a gift wrapping */
 	public $gift = 0;
 
 	/** @var string Gift message if specified */
 	public $gift_message;
 
-	/** @var boolean Mobile Theme */
+	/** @var bool Mobile Theme */
 	public $mobile_theme;
 
 	/** @var string Object creation date */
@@ -68,7 +68,7 @@ class CartCore extends ObjectModel
 	/** @var string secure_key */
 	public $secure_key;
 
-	/** @var integer Carrier ID */
+	/** @var int Carrier ID */
 	public $id_carrier = 0;
 
 	/** @var string Object last modification date */
@@ -80,7 +80,7 @@ class CartCore extends ObjectModel
 
 	public $delivery_option;
 
-	/** @var boolean Allow to seperate order in multiple package in order to recieve as soon as possible the available products */
+	/** @var bool Allow to seperate order in multiple package in order to recieve as soon as possible the available products */
 	public $allow_seperated_package = false;
 
 	protected static $_nbProducts = array();
@@ -837,9 +837,9 @@ class CartCore extends ObjectModel
 	/**
 	 * Update product quantity
 	 *
-	 * @param integer $quantity Quantity to add (or substract)
-	 * @param integer $id_product Product ID
-	 * @param integer $id_product_attribute Attribute ID if needed
+	 * @param int $quantity Quantity to add (or substract)
+	 * @param int $id_product Product ID
+	 * @param int $id_product_attribute Attribute ID if needed
 	 * @param string $operator Indicate if quantity must be increased or decreased
 	 */
 	public function updateQty($quantity, $id_product, $id_product_attribute = null, $id_customization = false,
@@ -1069,7 +1069,7 @@ class CartCore extends ObjectModel
 	 * @param int $type
 	 * @param string $field
 	 * @param int $quantity
-	 * @return boolean success
+	 * @return bool success
 	 */
 	public function _addCustomization($id_product, $id_product_attribute, $index, $type, $field, $quantity)
 	{
@@ -1124,7 +1124,7 @@ class CartCore extends ObjectModel
 	/**
 	 * Check if order has already been placed
 	 *
-	 * @return boolean result
+	 * @return bool result
 	 */
 	public function orderExists()
 	{
@@ -1165,10 +1165,10 @@ class CartCore extends ObjectModel
 	/**
 	 * Delete a product from the cart
 	 *
-	 * @param integer $id_product Product ID
-	 * @param integer $id_product_attribute Attribute ID if needed
-	 * @param integer $id_customization Customization id
-	 * @return boolean result
+	 * @param int $id_product Product ID
+	 * @param int $id_product_attribute Attribute ID if needed
+	 * @param int $id_customization Customization id
+	 * @return bool result
 	 */
 	public function deleteProduct($id_product, $id_product_attribute = null, $id_customization = null, $id_address_delivery = 0)
 	{
@@ -1250,8 +1250,8 @@ class CartCore extends ObjectModel
 	 * Delete a customization from the cart. If customization is a Picture,
 	 * then the image is also deleted
 	 *
-	 * @param integer $id_customization
-	 * @return boolean result
+	 * @param int $id_customization
+	 * @return bool result
 	 */
 	protected function _deleteCustomization($id_customization, $id_product, $id_product_attribute, $id_address_delivery = 0)
 	{
@@ -1326,9 +1326,9 @@ class CartCore extends ObjectModel
 	* Cart::ONLY_PRODUCTS_WITHOUT_SHIPPING
 	* Cart::ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING
 	*
-	* @param boolean $withTaxes With or without taxes
-	* @param integer $type Total type
-	* @param boolean $use_cache Allow using cache of the method CartRule::getContextualValue
+	* @param bool $withTaxes With or without taxes
+	* @param int $type Total type
+	* @param bool $use_cache Allow using cache of the method CartRule::getContextualValue
 	* @return float Order total
 	*/
 	public function getOrderTotal($with_taxes = true, $type = Cart::BOTH, $products = null, $id_carrier = null, $use_cache = true)
@@ -1628,7 +1628,7 @@ class CartCore extends ObjectModel
 
 	/**
 	* Get the gift wrapping price
-	* @param boolean $with_taxes With or without taxes
+	* @param bool $with_taxes With or without taxes
 	* @return float wrapping price
 	*/
 	public function getGiftWrappingPrice($with_taxes = true, $id_address = null)
@@ -1966,7 +1966,7 @@ class CartCore extends ObjectModel
 	/**
 	 * Get all deliveries options available for the current cart
 	 * @param Country $default_country
-	 * @param boolean $flush Force flushing cache
+	 * @param bool $flush Force flushing cache
 	 *
 	 * @return array array(
 	 *                   0 => array( // First address
@@ -2311,7 +2311,7 @@ class CartCore extends ObjectModel
 	 * @since 1.5.0
 	 *
 	 * @param Country $default_country
-	 * @param boolean $flush Force flushing cache
+	 * @param bool $flush Force flushing cache
 	 *
 	 */
 	public function simulateCarriersOutput(Country $default_country = null, $flush = false)
@@ -2397,7 +2397,7 @@ class CartCore extends ObjectModel
 
 	/**
 	 * Does the cart use multiple address
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isMultiAddressDelivery()
 	{
@@ -2574,7 +2574,9 @@ class CartCore extends ObjectModel
 		{
 			if (!isset($delivery_option_list[$id_address]) || !isset($delivery_option_list[$id_address][$key]))
 				continue;
-			if ($use_tax)
+			if ($delivery_option_list[$id_address][$key]['is_free'])
+				$total_shipping += 0;
+			elseif ($use_tax)
 				$total_shipping += $delivery_option_list[$id_address][$key]['total_price_with_tax'];
 			else
 				$total_shipping += $delivery_option_list[$id_address][$key]['total_price_without_tax'];
@@ -3196,7 +3198,7 @@ class CartCore extends ObjectModel
 	/**
 	* Check if cart contains only virtual products
 	*
-	* @return boolean true if is a virtual cart or false
+	* @return bool true if is a virtual cart or false
 	*/
 	public function isVirtualCart($strict = false)
 	{

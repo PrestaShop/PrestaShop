@@ -129,7 +129,7 @@ class MediaCore
 			if (function_exists('preg_last_error') && preg_last_error() == PREG_BACKTRACK_LIMIT_ERROR)
 			{
 				if (_PS_MODE_DEV_)
-					error_log('ERROR: PREG_BACKTRACK_LIMIT_ERROR in function packJSinHTML');
+					Tools::error_log('ERROR: PREG_BACKTRACK_LIMIT_ERROR in function packJSinHTML');
 				return $html_content_copy;
 			}
 			return $html_content;
@@ -177,7 +177,7 @@ class MediaCore
 		{
 			$limit  = Media::getBackTrackLimit();
 			$css_content = preg_replace('#/\*.*?\*/#s', '', $css_content, $limit);
-			$css_content = preg_replace_callback('#(url\((?![\\\'"]?data:)(?!http://)(?!https://)(?:\'|")?)([^\)\'"]*(?:\'|")?\))#s', array('Tools', 'replaceByAbsoluteURL'), $css_content, $limit);
+			$css_content = preg_replace_callback('#(url\((?![\'"]?(?:data:|//|https?:))(?:\'|")?)([^\)\'"]*)(?=[\'"]?\))#s', array('Tools', 'replaceByAbsoluteURL'), $css_content, $limit);
 			$css_content = preg_replace('#\s+#', ' ', $css_content, $limit);
 			$css_content = str_replace(array("\t", "\n", "\r"), '', $css_content);
 			$css_content = str_replace(array('; ', ': '), array(';', ':'), $css_content);

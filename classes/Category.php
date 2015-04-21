@@ -28,34 +28,34 @@ class CategoryCore extends ObjectModel
 {
 	public $id;
 
-	/** @var integer category ID */
+	/** @var int category ID */
 	public $id_category;
 
 	/** @var string Name */
 	public $name;
 
-	/** @var boolean Status for display */
+	/** @var bool Status for display */
 	public $active = 1;
 
-	/** @var  integer category position */
+	/** @var  int category position */
 	public $position;
 
 	/** @var string Description */
 	public $description;
 
-	/** @var integer Parent category ID */
+	/** @var int Parent category ID */
 	public $id_parent;
 
-	/** @var integer default Category id */
+	/** @var int default Category id */
 	public $id_category_default;
 
-	/** @var integer Parents number */
+	/** @var int Parents number */
 	public $level_depth;
 
-	/** @var integer Nested tree model "left" value */
+	/** @var int Nested tree model "left" value */
 	public $nleft;
 
-	/** @var integer Nested tree model "right" value */
+	/** @var int Nested tree model "right" value */
 	public $nright;
 
 	/** @var string string used in rewrited URL */
@@ -76,10 +76,10 @@ class CategoryCore extends ObjectModel
 	/** @var string Object last modification date */
 	public $date_upd;
 
-	/** @var boolean is Category Root */
+	/** @var bool is Category Root */
 	public $is_root_category;
 
-	/** @var integer */
+	/** @var int */
 	public $id_shop_default;
 
 	public $groupBox;
@@ -176,7 +176,7 @@ class CategoryCore extends ObjectModel
 	 * update category positions in parent
 	 *
 	 * @param mixed $null_values
-	 * @return boolean
+	 * @return bool
 	 */
 	public function update($null_values = false)
 	{
@@ -228,9 +228,9 @@ class CategoryCore extends ObjectModel
 	/**
 	 * Recursive scan of subcategories
 	 *
-	 * @param integer $max_depth Maximum depth of the tree (i.e. 2 => 3 levels depth)
-	 * @param integer $current_depth specify the current depth in the tree (don't use it, only for rucursivity!)
-	 * @param integer $id_lang Specify the id of the language used
+	 * @param int $max_depth Maximum depth of the tree (i.e. 2 => 3 levels depth)
+	 * @param int $current_depth specify the current depth in the tree (don't use it, only for rucursivity!)
+	 * @param int $id_lang Specify the id of the language used
 	 * @param array $excluded_ids_array specify a list of ids to exclude of results
 	 *
 	 * @return array Subcategories lite tree
@@ -285,7 +285,7 @@ class CategoryCore extends ObjectModel
 	 * Recursively add specified category childs to $to_delete array
 	 *
 	 * @param array &$to_delete Array reference where categories ID will be saved
-	 * @param integer $id_category Parent category ID
+	 * @param int $id_category Parent category ID
 	 */
 	protected function recursiveDelete(&$to_delete, $id_category)
 	{
@@ -367,7 +367,7 @@ class CategoryCore extends ObjectModel
 	/**
 	 * Get the depth level for the category
 	 *
-	 * @return integer Depth level
+	 * @return int Depth level
 	 */
 	public function calcLevelDepth()
 	{
@@ -420,7 +420,7 @@ class CategoryCore extends ObjectModel
 	/**
 	 * Updates level_depth for all children of the given id_category
 	 *
-	 * @param integer $id_category parent category
+	 * @param int $id_category parent category
 	 */
 	public function recalculateLevelDepth($id_category)
 	{
@@ -451,8 +451,8 @@ class CategoryCore extends ObjectModel
 	/**
 	 * Return available categories
 	 *
-	 * @param integer $id_lang Language ID
-	 * @param boolean $active return only active categories
+	 * @param int $id_lang Language ID
+	 * @param bool $active return only active categories
 	 * @return array Categories
 	 */
 	public static function getCategories($id_lang = false, $active = true, $order = true, $sql_filter = '', $sql_sort = '', $sql_limit = '')
@@ -601,8 +601,8 @@ class CategoryCore extends ObjectModel
 	/**
 	 * Return current category childs
 	 *
-	 * @param integer $id_lang Language ID
-	 * @param boolean $active return only active categories
+	 * @param int $id_lang Language ID
+	 * @param bool $active return only active categories
 	 * @return array Categories
 	 */
 	public function getSubCategories($id_lang, $active = true)
@@ -637,39 +637,56 @@ class CategoryCore extends ObjectModel
 	}
 
 	/**
-	 * Return current category products
+	 * Returns category products
 	 *
-	 * @param integer $id_lang Language ID
-	 * @param integer $p Page number
-	 * @param integer $n Number of products per page
-	 * @param boolean $get_total return the number of results instead of the results themself
-	 * @param boolean $active return only active products
-	 * @param boolean $random active a random filter for returned products
-	 * @param int $random_number_products number of products to return if random is activated
-	 * @param boolean $check_access set to false to return all products (even if customer hasn't access)
-	 * @return mixed Products or number of products
+	 * @param int         $id_lang                Language ID
+	 * @param int         $p                      Page number
+	 * @param int         $n                      Number of products per page
+	 * @param string|null $order_by               ORDER BY column
+	 * @param string|null $order_way              Order way
+	 * @param bool        $get_total              If set to true, returns the total number of results only
+	 * @param bool        $active                 If set to true, finds only active products
+	 * @param bool        $random                 If true, sets a random filter for returned products
+	 * @param int         $random_number_products Number of products to return if random is activated
+	 * @param bool        $check_access           If set tot rue, check if the current customer
+	 *                                            can see products from this category
+	 * @param Context|null $context
+	 *
+	 * @return array|int|false Products, number of products or false (no access)
+	 * @throws PrestaShopDatabaseException
 	 */
 	public function getProducts($id_lang, $p, $n, $order_by = null, $order_way = null, $get_total = false, $active = true, $random = false, $random_number_products = 1, $check_access = true, Context $context = null)
 	{
 		if (!$context)
 			$context = Context::getContext();
+
 		if ($check_access && !$this->checkAccess($context->customer->id))
 			return false;
 
-		$front = true;
-		if (!in_array($context->controller->controller_type, array('front', 'modulefront')))
-			$front = false;
+		$front = in_array($context->controller->controller_type, array('front', 'modulefront'));
+		$id_supplier = (int)Tools::getValue('id_supplier');
 
-		if ($p < 1) $p = 1;
+		/** Return only the number of products */
+		if ($get_total)
+		{
+			$sql = 'SELECT COUNT(cp.`id_product`) AS total
+					FROM `'._DB_PREFIX_.'product` p
+					'.Shop::addSqlAssociation('product', 'p').'
+					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON p.`id_product` = cp.`id_product`
+					WHERE cp.`id_category` = '.(int)$this->id.
+				($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').
+				($active ? ' AND product_shop.`active` = 1' : '').
+				($id_supplier ? 'AND p.id_supplier = '.(int)$id_supplier : '');
 
-		if (empty($order_by))
-			$order_by = 'position';
-		else
-			/* Fix for all modules which are now using lowercase values for 'orderBy' parameter */
-			$order_by = strtolower($order_by);
+			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
+		}
 
-		if (empty($order_way))
-			$order_way = 'ASC';
+		if ($p < 1)
+			$p = 1;
+
+		/** Tools::strtolower is a fix for all modules which are now using lowercase values for 'orderBy' parameter */
+		$order_by  = Validate::isOrderBy($order_by)   ? Tools::strtolower($order_by)  : 'position';
+		$order_way = Validate::isOrderWay($order_way) ? Tools::strtoupper($order_way) : 'ASC';
 
 		$order_by_prefix = false;
 		if ($order_by == 'id_product' || $order_by == 'date_add' || $order_by == 'date_upd')
@@ -687,32 +704,16 @@ class CategoryCore extends ObjectModel
 		if ($order_by == 'price')
 			$order_by = 'orderprice';
 
-		if (!Validate::isBool($active) || !Validate::isOrderBy($order_by) || !Validate::isOrderWay($order_way))
-			die (Tools::displayError());
+		$nb_days_new_product = Configuration::get('PS_NB_DAYS_NEW_PRODUCT');
+		if (!Validate::isUnsignedInt($nb_days_new_product))
+			$nb_days_new_product = 20;
 
-		$id_supplier = (int)Tools::getValue('id_supplier');
-
-		/* Return only the number of products */
-		if ($get_total)
-		{
-			$sql = 'SELECT COUNT(cp.`id_product`) AS total
-					FROM `'._DB_PREFIX_.'product` p
-					'.Shop::addSqlAssociation('product', 'p').'
-					LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON p.`id_product` = cp.`id_product`
-					WHERE cp.`id_category` = '.(int)$this->id.
-					($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').
-					($active ? ' AND product_shop.`active` = 1' : '').
-					($id_supplier ? 'AND p.id_supplier = '.(int)$id_supplier : '');
-			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
-		}
-
-		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity'.(Combination::isFeatureActive() ? ', IFNULL(product_attribute_shop.id_product_attribute, 0) id_product_attribute,
+		$sql = 'SELECT p.*, product_shop.*, stock.out_of_stock, IFNULL(stock.quantity, 0) AS quantity'.(Combination::isFeatureActive() ? ', IFNULL(product_attribute_shop.id_product_attribute, 0) AS id_product_attribute,
 					product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity' : '').', pl.`description`, pl.`description_short`, pl.`available_now`,
 					pl.`available_later`, pl.`link_rewrite`, pl.`meta_description`, pl.`meta_keywords`, pl.`meta_title`, pl.`name`, image_shop.`id_image` id_image,
 					il.`legend` as legend, m.`name` AS manufacturer_name, cl.`name` AS category_default,
 					DATEDIFF(product_shop.`date_add`, DATE_SUB("'.date('Y-m-d').' 00:00:00",
-					INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).'
-						DAY)) > 0 AS new, product_shop.price AS orderprice
+					INTERVAL '.(int)$nb_days_new_product.' DAY)) > 0 AS new, product_shop.price AS orderprice
 				FROM `'._DB_PREFIX_.'category_product` cp
 				LEFT JOIN `'._DB_PREFIX_.'product` p
 					ON p.`id_product` = cp.`id_product`
@@ -747,21 +748,22 @@ class CategoryCore extends ObjectModel
 			LIMIT '.(((int)$p - 1) * (int)$n).','.(int)$n;
 
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql, true, false);
-		if ($order_by == 'orderprice')
-			Tools::orderbyPrice($result, $order_way);
 
 		if (!$result)
 			return array();
 
-		/* Modify SQL result */
+		if ($order_by == 'orderprice')
+			Tools::orderbyPrice($result, $order_way);
+
+		/** Modify SQL result */
 		return Product::getProductsProperties($id_lang, $result);
 	}
 
 	/**
 	 * Return main categories
 	 *
-	 * @param integer $id_lang Language ID
-	 * @param boolean $active return only active categories
+	 * @param int $id_lang Language ID
+	 * @param bool $active return only active categories
 	 * @return array categories
 	 */
 	public static function getHomeCategories($id_lang, $active = true, $id_shop = false)
@@ -929,9 +931,9 @@ class CategoryCore extends ObjectModel
 	/**
 	 * Copy products from a category to another
 	 *
-	 * @param integer $id_old Source category ID
-	 * @param boolean $id_new Destination category ID
-	 * @return boolean Duplication result
+	 * @param int $id_old Source category ID
+	 * @param bool $id_new Destination category ID
+	 * @return bool Duplication result
 	 */
 	public static function duplicateProductCategories($id_old, $id_new)
 	{
@@ -960,9 +962,9 @@ class CategoryCore extends ObjectModel
 	 * Check if category can be moved in another one.
 	 * The category cannot be moved in a child category.
 	 *
-	 * @param integer $id_category current category
-	 * @param integer $id_parent Parent candidate
-	 * @return boolean Parent validity
+	 * @param int $id_category current category
+	 * @param int $id_parent Parent candidate
+	 * @return bool Parent validity
 	 */
 	public static function checkBeforeMove($id_category, $id_parent)
 	{
@@ -1022,9 +1024,9 @@ class CategoryCore extends ObjectModel
 	/**
 	 * Light back office search for categories
 	 *
-	 * @param integer $id_lang Language ID
+	 * @param int $id_lang Language ID
 	 * @param string $query Searched string
-	 * @param boolean $unrestricted allows search without lang and includes first category and exact match
+	 * @param bool $unrestricted allows search without lang and includes first category and exact match
 	 * @return array Corresponding categories
 	 */
 	public static function searchByName($id_lang, $query, $unrestricted = false)
@@ -1047,9 +1049,9 @@ class CategoryCore extends ObjectModel
 	/**
 	 * Retrieve category by name and parent category id
 	 *
-	 * @param integer $id_lang Language ID
+	 * @param int $id_lang Language ID
 	 * @param string  $category_name Searched category name
-	 * @param integer $id_parent_category parent category ID
+	 * @param int $id_parent_category parent category ID
 	 * @return array Corresponding category
 	 */
 	public static function searchByNameAndParentCategoryId($id_lang, $category_name, $id_parent_category)
@@ -1068,10 +1070,10 @@ class CategoryCore extends ObjectModel
 	/**
 	 * Search with Pathes for categories
 	 *
-	 * @param integer $id_lang Language ID
+	 * @param int $id_lang Language ID
 	 * @param string $path of category
-	 * @param boolean $object_to_create a category
-* 	 * @param boolean $method_to_create a category
+	 * @param bool $object_to_create a category
+* 	 * @param bool $method_to_create a category
 	 * @return array Corresponding categories
 	 */
 	public static function searchByPath($id_lang, $path, $object_to_create = false, $method_to_create = false)
@@ -1101,7 +1103,7 @@ class CategoryCore extends ObjectModel
 	/**
 	 * Get Each parent category of this category until the root category
 	 *
-	 * @param integer $id_lang Language ID
+	 * @param int $id_lang Language ID
 	 * @return array Corresponding categories
 	 */
 	public function getParentsCategories($id_lang = null)
@@ -1152,7 +1154,7 @@ class CategoryCore extends ObjectModel
 	* Specify if a category already in base
 	*
 	* @param int $id_category Category id
-	* @return boolean
+	* @return bool
 	*/
 	public static function categoryExists($id_category)
 	{
@@ -1211,7 +1213,7 @@ class CategoryCore extends ObjectModel
 	 *
 	 * @param mixed $id_customer
 	 * @access public
-	 * @return boolean true if access allowed for customer $id_customer
+	 * @return bool true if access allowed for customer $id_customer
 	 */
 	public function checkAccess($id_customer)
 	{
@@ -1300,7 +1302,7 @@ class CategoryCore extends ObjectModel
 	 * are clean at the beginning !
 	 *
 	 * @param mixed $id_category_parent
-	 * @return boolean true if succeed
+	 * @return bool true if succeed
 	 */
 	public static function cleanPositions($id_category_parent = null)
 	{

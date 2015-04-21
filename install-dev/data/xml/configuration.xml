@@ -125,6 +125,9 @@
 	<configuration id="PS_DELIVERY_NUMBER" name="PS_DELIVERY_NUMBER">
 		<value>1</value>
 	</configuration>
+	<configuration id="PS_RETURN_PREFIX" name="PS_RETURN_PREFIX">
+		<value>#RE</value>
+	</configuration>
 	<configuration id="PS_INVOICE" name="PS_INVOICE">
 		<value>1</value>
 	</configuration>

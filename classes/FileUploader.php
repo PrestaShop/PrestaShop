@@ -92,7 +92,7 @@ class QqUploadedFileForm
 {
 	/**
 	 * Save the file to the specified path
-	 * @return boolean TRUE on success
+	 * @return bool TRUE on success
 	 */
 	public function save()
 	{
@@ -169,7 +169,7 @@ class QqUploadedFileXhr
 {
 	/**
 	 * Save the file to the specified path
-	 * @return boolean TRUE on success
+	 * @return bool TRUE on success
 	 */
 	public function upload($path)
 	{

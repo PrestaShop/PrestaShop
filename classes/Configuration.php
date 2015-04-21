@@ -167,7 +167,7 @@ class ConfigurationCore extends ObjectModel
 	 * Get a single configuration value (in one language only)
 	 *
 	 * @param string $key Key wanted
-	 * @param integer $id_lang Language ID
+	 * @param int $id_lang Language ID
 	 * @return string Value
 	 */
 	public static function get($key, $id_lang = null, $id_shop_group = null, $id_shop = null)
@@ -244,7 +244,7 @@ class ConfigurationCore extends ObjectModel
 	 *
 	 * @throws PrestaShopException
 	 * @param array $keys Keys wanted
-	 * @param integer $id_lang Language ID
+	 * @param int $id_lang Language ID
 	 * @param int $id_shop_group
 	 * @param int $id_shop
 	 * @return array Values
@@ -346,10 +346,10 @@ class ConfigurationCore extends ObjectModel
 	 *
 	 * @param string $key Key
 	 * @param mixed $values $values is an array if the configuration is multilingual, a single string else.
-	 * @param boolean $html Specify if html is authorized in value
+	 * @param bool $html Specify if html is authorized in value
 	 * @param int $id_shop_group
 	 * @param int $id_shop
-	 * @return boolean Update result
+	 * @return bool Update result
 	 */
 	public static function updateValue($key, $values, $html = false, $id_shop_group = null, $id_shop = null)
 	{
@@ -444,7 +444,7 @@ class ConfigurationCore extends ObjectModel
 	 * Delete a configuration key in database (with or without language management)
 	 *
 	 * @param string $key Key to delete
-	 * @return boolean Deletion result
+	 * @return bool Deletion result
 	 */
 	public static function deleteByName($key)
 	{
