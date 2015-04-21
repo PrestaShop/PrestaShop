@@ -26,10 +26,10 @@
 
 class AddressFormatCore extends ObjectModel
 {
-	/** @var integer */
+	/** @var int */
 	public $id_address_format;
 
-	/** @var integer */
+	/** @var int */
 	public $id_country;
 
 	/** @var string */

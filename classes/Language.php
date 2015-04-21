@@ -46,7 +46,7 @@ class LanguageCore extends ObjectModel
 	/** @var bool true if this language is right to left language */
 	public $is_rtl = false;
 
-	/** @var boolean Status */
+	/** @var bool Status */
 	public $active = true;
 
 	/**
@@ -396,7 +396,7 @@ class LanguageCore extends ObjectModel
 	/**
 	 * loadUpdateSQL will create default lang values when you create a new lang, based on default id lang
 	 *
-	 * @return boolean true if succeed
+	 * @return bool true if succeed
 	 */
 	public function loadUpdateSQL()
 	{
@@ -623,7 +623,7 @@ class LanguageCore extends ObjectModel
 	/**
 	 * Return iso code from id
 	 *
-	 * @param integer $id_lang Language ID
+	 * @param int $id_lang Language ID
 	 * @return string Iso code
 	 */
 	public static function getIsoById($id_lang)
@@ -637,7 +637,7 @@ class LanguageCore extends ObjectModel
 	 * Return id from iso code
 	 *
 	 * @param string $iso_code Iso code
-	 * @return integer Language ID
+	 * @return int Language ID
 	 */
 	public static function getIdByIso($iso_code)
 	{

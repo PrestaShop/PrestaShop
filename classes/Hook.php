@@ -708,7 +708,7 @@ class HookCore extends ObjectModel
 	 *
 	 * @deprecated 1.5.0 use Hook::getHookModuleList() instead
 	 *
-	 * @return boolean preload_needed
+	 * @return bool preload_needed
 	 */
 	public static function preloadHookModulesCache()
 	{
@@ -725,7 +725,7 @@ class HookCore extends ObjectModel
 	 * Return hook ID from name
 	 *
 	 * @param string $hook_name Hook name
-	 * @return integer Hook ID
+	 * @return int Hook ID
 	 *
 	 * @deprecated since 1.5.0 use Hook::getIdByName() instead
 	 */

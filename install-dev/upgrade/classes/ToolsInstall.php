@@ -50,13 +50,13 @@ class ToolsInstall
 			 * ...And so on.
 			 * _____________________________________
 			 * @param simpleXMLElement $xml the XML to convert
-			 * @param boolean $flattenValues    Choose wether to flatten values
+			 * @param bool $flattenValues    Choose wether to flatten values
 			 *                                    or to set them under a particular index.
 			 *                                    defaults to true;
-			 * @param boolean $flattenAttributes Choose wether to flatten attributes
+			 * @param bool $flattenAttributes Choose wether to flatten attributes
 			 *                                    or to set them under a particular index.
 			 *                                    Defaults to true;
-			 * @param boolean $flattenChildren    Choose wether to flatten children
+			 * @param bool $flattenChildren    Choose wether to flatten children
 			 *                                    or to set them under a particular index.
 			 *                                    Defaults to true;
 			 * @param string $valueKey            index for values, in case $flattenValues was set to

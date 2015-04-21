@@ -993,7 +993,7 @@ class AdminImportControllerCore extends AdminController
 	 * @param string $url path or url to use
 	 * @param string $entity 'products' or 'categories'
 	 * @param bool $regenerate
-	 * @return boolean
+	 * @return bool
 	 */
 	protected static function copyImg($id_entity, $id_image = null, $url, $entity = 'products', $regenerate = true)
 	{

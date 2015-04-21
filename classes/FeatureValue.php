@@ -26,13 +26,13 @@
 
 class FeatureValueCore extends ObjectModel
 {
-	/** @var integer Group id which attribute belongs */
+	/** @var int Group id which attribute belongs */
 	public $id_feature;
 
 	/** @var string Name */
 	public $value;
 
-	/** @var boolean Custom */
+	/** @var bool Custom */
 	public $custom = 0;
 
 	/**
@@ -62,7 +62,7 @@ class FeatureValueCore extends ObjectModel
 	/**
 	 * Get all values for a given feature
 	 *
-	 * @param boolean $id_feature Feature id
+	 * @param bool $id_feature Feature id
 	 * @return array Array with feature's values
 	 */
 	public static function getFeatureValues($id_feature)
@@ -77,8 +77,8 @@ class FeatureValueCore extends ObjectModel
 	/**
 	 * Get all values for a given feature and language
 	 *
-	 * @param integer $id_lang Language id
-	 * @param boolean $id_feature Feature id
+	 * @param int $id_lang Language id
+	 * @param bool $id_feature Feature id
 	 * @return array Array with feature's values
 	 */
 	public static function getFeatureValuesWithLang($id_lang, $id_feature, $custom = false)
@@ -97,7 +97,7 @@ class FeatureValueCore extends ObjectModel
 	/**
 	 * Get all language for a given value
 	 *
-	 * @param boolean $id_feature_value Feature value id
+	 * @param bool $id_feature_value Feature value id
 	 * @return array Array with value's languages
 	 */
 	public static function getFeatureValueLang($id_feature_value)
@@ -114,7 +114,7 @@ class FeatureValueCore extends ObjectModel
 	 * Select the good lang in tab
 	 *
 	 * @param array $lang Array with all language
-	 * @param integer $id_lang Language id
+	 * @param int $id_lang Language id
 	 * @return string String value name selected
 	 */
 	public static function selectLang($lang, $id_lang)

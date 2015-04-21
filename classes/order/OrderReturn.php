@@ -26,16 +26,16 @@
 
 class OrderReturnCore extends ObjectModel
 {
-	/** @var integer */
+	/** @var int */
 	public $id;
 
-	/** @var integer */
+	/** @var int */
 	public $id_customer;
 
-	/** @var integer */
+	/** @var int */
 	public $id_order;
 
-	/** @var integer */
+	/** @var int */
 	public $state;
 
 	/** @var string message content */

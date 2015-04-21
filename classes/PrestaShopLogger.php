@@ -26,13 +26,13 @@
 
 class	PrestaShopLoggerCore extends ObjectModel
 {
-	/** @var integer Log id */
+	/** @var int Log id */
 	public $id_log;
 
-	/** @var integer Log severity */
+	/** @var int Log severity */
 	public $severity;
 
-	/** @var integer Error code */
+	/** @var int Error code */
 	public $error_code;
 
 	/** @var string Message */
@@ -41,10 +41,10 @@ class	PrestaShopLoggerCore extends ObjectModel
 	/** @var string Object type (eg. Order, Customer...) */
 	public $object_type;
 
-	/** @var integer Object ID */
+	/** @var int Object ID */
 	public $object_id;
 
-	/** @var integer Object ID */
+	/** @var int Object ID */
 	public $id_employee;
 
 	/** @var string Object creation date */
@@ -99,8 +99,8 @@ class	PrestaShopLoggerCore extends ObjectModel
 	 * @param int $error_code
 	 * @param string $object_type
 	 * @param int $object_id
-	 * @param boolean $allow_duplicate if set to true, can log several time the same information (not recommended)
-	 * @return boolean true if succeed
+	 * @param bool $allow_duplicate if set to true, can log several time the same information (not recommended)
+	 * @return bool true if succeed
 	 */
 	public static function addLog($message, $severity = 1, $error_code = null, $object_type = null, $object_id = null, $allow_duplicate = false, $id_employee = null)
 	{

@@ -26,10 +26,10 @@
 
 class StoreCore extends ObjectModel
 {
-	/** @var integer Country id */
+	/** @var int Country id */
 	public $id_country;
 
-	/** @var integer State id */
+	/** @var int State id */
 	public $id_state;
 
 	/** @var string Store name */
@@ -74,7 +74,7 @@ class StoreCore extends ObjectModel
 	/** @var string Object last modification date */
 	public $date_upd;
 
-	/** @var boolean Store status */
+	/** @var bool Store status */
 	public $active = true;
 
 	/**

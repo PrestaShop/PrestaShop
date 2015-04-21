@@ -515,7 +515,7 @@ class AdminAddressesControllerCore extends AdminController
 	/**
 	 * Delete multiple items
 	 *
-	 * @return boolean true if succcess
+	 * @return bool true if succcess
 	 */
 	protected function processBulkDelete()
 	{

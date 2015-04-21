@@ -35,10 +35,10 @@ class AdminCategoriesControllerCore extends AdminController
 	protected $_category = null;
 	protected $position_identifier = 'id_category_to_move';
 
-	/** @var boolean does the product have to be removed during the delete process */
+	/** @var bool does the product have to be removed during the delete process */
 	public $remove_products = true;
 
-	/** @var boolean does the product have to be disable during the delete process */
+	/** @var bool does the product have to be disable during the delete process */
 	public $disable_products = false;
 
 	private $original_filter = '';

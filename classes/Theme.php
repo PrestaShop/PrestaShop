@@ -78,7 +78,7 @@ class ThemeCore extends ObjectModel
 	/**
 	 * return an array of all available theme (installed or not)
 	 *
-	 * @param boolean $installed_only
+	 * @param bool $installed_only
 	 * @return array string (directory)
 	 */
 	public static function getAvailable($installed_only = true)
@@ -117,7 +117,7 @@ class ThemeCore extends ObjectModel
 	/**
 	 * check if a theme is used by a shop
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public function isUsed()
 	{
@@ -130,7 +130,7 @@ class ThemeCore extends ObjectModel
 	 *
 	 * @param bool $null_values
 	 * @param bool $autodate
-	 * @return boolean Insertion result
+	 * @return bool Insertion result
 	 */
 	public function add($autodate = true, $null_values = false)
 	{

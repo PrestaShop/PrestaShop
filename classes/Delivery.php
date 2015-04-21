@@ -26,7 +26,7 @@
 
 class DeliveryCore extends ObjectModel
 {
-	/** @var integer */
+	/** @var int */
 	public $id_delivery;
 
 	/** @var int **/
@@ -35,16 +35,16 @@ class DeliveryCore extends ObjectModel
 	/** @var int **/
 	public $id_shop_group;
 
-	/** @var integer */
+	/** @var int */
 	public $id_carrier;
 
-	/** @var integer */
+	/** @var int */
 	public $id_range_price;
 
-	/** @var integer */
+	/** @var int */
 	public $id_range_weight;
 
-	/** @var integer */
+	/** @var int */
 	public $id_zone;
 
 	/** @var float */

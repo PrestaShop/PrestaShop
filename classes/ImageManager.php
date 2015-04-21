@@ -122,8 +122,8 @@ class ImageManagerCore
 	 *
 	 * @param string  $src_file   Image object from $_FILE
 	 * @param string  $dst_file   Destination filename
-	 * @param integer $dst_width  Desired width (optional)
-	 * @param integer $dst_height Desired height (optional)
+	 * @param int $dst_width  Desired width (optional)
+	 * @param int $dst_height Desired height (optional)
 	 * @param string  $file_type
 	 * @param bool    $force_type
 	 * @param int     $error
@@ -368,7 +368,7 @@ class ImageManagerCore
 	 * Validate image upload (check image type and weight)
 	 *
 	 * @param array $file Upload $_FILE value
-	 * @param integer $max_file_size Maximum upload size
+	 * @param int $max_file_size Maximum upload size
 	 * @return bool|string Return false if no error encountered
 	 */
 	public static function validateUpload($file, $max_file_size = 0, $types = null)
@@ -409,8 +409,8 @@ class ImageManagerCore
 	 *
 	 * @param array $src_file Origin filename
 	 * @param string $dst_file Destination filename
-	 * @param integer $dst_width Desired width
-	 * @param integer $dst_height Desired height
+	 * @param int $dst_width Desired width
+	 * @param int $dst_height Desired height
 	 * @param string $file_type
 	 * @param int $dst_x
 	 * @param int $dst_y

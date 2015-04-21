@@ -26,7 +26,7 @@
 
 abstract class ModuleCore
 {
-	/** @var integer Module ID */
+	/** @var int Module ID */
 	public $id = null;
 
 	/** @var float Version */
@@ -81,10 +81,10 @@ abstract class ModuleCore
 	/** @var string Admin tab corresponding to the module */
 	public $tab = null;
 
-	/** @var boolean Status */
+	/** @var bool Status */
 	public $active = false;
 
-	/** @var boolean Is the module certified by addons.prestashop.com */
+	/** @var bool Is the module certified by addons.prestashop.com */
 	public $trusted = false;
 
 	/** @var string Fill it if the module is installed but not yet set up */
@@ -578,7 +578,7 @@ abstract class ModuleCore
 	/**
 	 * Delete module from datable
 	 *
-	 * @return boolean result
+	 * @return bool result
 	 */
 	public function uninstall()
 	{
@@ -749,11 +749,11 @@ abstract class ModuleCore
 	 * @deprecated since 1.6.0.10
 	 *
 	 * @param array $languages All languages available
-	 * @param integer $default_language Default language id
+	 * @param int $default_language Default language id
 	 * @param string $ids Multilingual div ids in form
 	 * @param string $id Current div id]
-	 * @param boolean $return define the return way : false for a display, true for a return
-	 * @param boolean $use_vars_instead_of_ids use an js vars instead of ids seperate by "¤"
+	 * @param bool $return define the return way : false for a display, true for a return
+	 * @param bool $use_vars_instead_of_ids use an js vars instead of ids seperate by "¤"
 	*/
 	public function displayFlags($languages, $default_language, $ids, $id, $return = false, $use_vars_instead_of_ids = false)
 	{
@@ -783,7 +783,7 @@ abstract class ModuleCore
 	 *
 	 * @param string $hook_name Hook name
 	 * @param array $shop_list List of shop linked to the hook (if null, link hook to all shops)
-	 * @return boolean result
+	 * @return bool result
 	 */
 	public function registerHook($hook_name, $shop_list = null)
 	{
@@ -873,7 +873,7 @@ abstract class ModuleCore
 	 *
 	 * @param mixed $id_hook Hook id (can be a hook name since 1.5.0)
 	 * @param array $shop_list List of shop
-	 * @return boolean result
+	 * @return bool result
 	 */
 	public function unregisterHook($hook_id, $shop_list = null)
 	{
@@ -910,7 +910,7 @@ abstract class ModuleCore
 	 *
 	 * @param int $id_hook Hook id
 	 * @param array $shop_list List of shop
-	 * @return boolean result
+	 * @return bool result
 	 */
 	public function unregisterExceptions($hook_id, $shop_list = null)
 	{
@@ -926,7 +926,7 @@ abstract class ModuleCore
 	 * @param int $id_hook Hook id
 	 * @param array $excepts List of file name
 	 * @param array $shop_list List of shop
-	 * @return boolean result
+	 * @return bool result
 	 */
 	public function registerExceptions($id_hook, $excepts, $shop_list = null)
 	{
@@ -960,7 +960,7 @@ abstract class ModuleCore
 	 *
 	 * @param int $hookID Hook id
 	 * @param array $excepts List of shopID and file name
-	 * @return boolean result
+	 * @return bool result
 	 */
 	public function editExceptions($id_hook, $excepts)
 	{
@@ -982,7 +982,7 @@ abstract class ModuleCore
 	 * related to a module in its directory (instead of $_LANGADM)
 	 *
 	 * @param mixed $current_class the
-	 * @return boolean|string if the class belongs to a module, will return the module name. Otherwise, return false.
+	 * @return bool|string if the class belongs to a module, will return the module name. Otherwise, return false.
 	 */
 	public static function getModuleNameFromClass($current_class)
 	{
@@ -1089,7 +1089,7 @@ abstract class ModuleCore
 	/**
 	 * Return an instance of the specified module
 	 *
-	 * @param integer $id_module Module ID
+	 * @param int $id_module Module ID
 	 * @return Module instance
 	 */
 	public static function getInstanceById($id_module)
@@ -1170,7 +1170,7 @@ abstract class ModuleCore
 	/**
 	 * Return available modules
 	 *
-	 * @param boolean $use_config in order to use config.xml file in module dir
+	 * @param bool $use_config in order to use config.xml file in module dir
 	 * @return array Modules
 	 */
 	public static function getModulesOnDisk($use_config = false, $logged_on_addons = false, $id_employee = false)
@@ -1584,7 +1584,7 @@ abstract class ModuleCore
 	 *
 	 * @param string $name The module name (the folder name)
 	 * @param string $key The key provided by addons
-	 * @return integer
+	 * @return int
 	 */
 	final public static function isModuleTrusted($module_name)
 	{
@@ -1733,7 +1733,7 @@ abstract class ModuleCore
 	 * Create the Addons API call from the module name only
 	 *
 	 * @param string $name Module dir name
-	 * @return boolean Returns if the module is trusted by addons.prestashop.com
+	 * @return bool Returns if the module is trusted by addons.prestashop.com
 	 */
 	final public static function checkModuleFromAddonsApi($module_name)
 	{
@@ -1855,7 +1855,7 @@ abstract class ModuleCore
 	 * when module is loaded with eval() Module::getModulesOnDisk()
 	 *
 	 * @param string $string String to translate
-	 * @param boolean|string $specific filename to use in translation key
+	 * @param bool|string $specific filename to use in translation key
 	 * @return string Translation
 	 */
 	public function l($string, $specific = false)
@@ -1869,8 +1869,8 @@ abstract class ModuleCore
 	/*
 	 * Reposition module
 	 *
-	 * @param boolean $id_hook Hook ID
-	 * @param boolean $way Up (0) or Down (1)
+	 * @param bool $id_hook Hook ID
+	 * @param bool $way Up (0) or Down (1)
 	 * @param int $position
 	 */
 	public function updatePosition($id_hook, $way, $position = null)
@@ -1919,7 +1919,7 @@ abstract class ModuleCore
 	/*
 	 * Reorder modules position
 	 *
-	 * @param boolean $id_hook Hook ID
+	 * @param bool $id_hook Hook ID
 	 * @param array $shop_list List of shop
 	 */
 	public function cleanPositions($id_hook, $shop_list = null)
@@ -2301,7 +2301,7 @@ abstract class ModuleCore
 
 	/**
 	 * Check employee permission for module (static method)
-	 * @param integer $id_module
+	 * @param int $id_module
 	 * @param array $variable (action)
 	 * @param object $employee
 	 * @return bool if module can be transplanted on hook
@@ -2413,8 +2413,8 @@ abstract class ModuleCore
 	/*
 	 * Return module position for a given hook
 	 *
-	 * @param boolean $id_hook Hook ID
-	 * @return integer position
+	 * @param bool $id_hook Hook ID
+	 * @return int position
 	 */
 	public function getPosition($id_hook)
 	{
