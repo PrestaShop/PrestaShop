@@ -65,7 +65,7 @@
 						<label class="control-label" for="email">{l s='Email address'}</label>
 						<div class="input-group">
 							<span class="input-group-addon"><i class="icon-envelope"></i></span>
-							<input name="email" type="text" id="email" class="form-control" value="{if isset($email)}{$email|escape:'html':'UTF-8'}{/if}" autofocus="autofocus" tabindex="1" placeholder="test@example.com" />
+							<input name="email" type="email" id="email" class="form-control" value="{if isset($email)}{$email|escape:'html':'UTF-8'}{/if}" autofocus="autofocus" tabindex="1" placeholder="test@example.com" />
 						</div>
 					</div>
 					<div class="form-group">
