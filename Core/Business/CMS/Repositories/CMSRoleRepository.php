@@ -88,6 +88,21 @@ class CMSRoleRepository extends RepositoryManager
 		return Db::getInstance()->executeS($sql);
 	}
 
+	/**
+	 * Get associated CMS id from CMS Role reference name
+	 * @param $reference_name
+	 * @return array|false
+	 */
+	public function getCMSIdAssociatedFromName($reference_name)
+	{
+		$sql = '
+		SELECT `id_cms`
+		FROM `'._DB_PREFIX_.CMSRoleEntity::$definition['table'].'`
+		WHERE `name` = "'.pSQL($reference_name).'"';
+
+		return Db::getInstance()->getRow($sql);
+	}
+
 
 	/**
 	 * Return all CMS roles already associated to a CMS Page
