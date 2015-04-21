@@ -46,7 +46,6 @@ class PDFGeneratorCore extends TCPDF
 		'uk' => 'freeserif',
 		'mk' => 'freeserif',
 		'el' => 'freeserif',
-		'en' => 'dejavusans',
 		'vn' => 'dejavusans',
 		'pl' => 'dejavusans',
 		'ar' => 'dejavusans',

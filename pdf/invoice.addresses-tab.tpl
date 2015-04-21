@@ -22,26 +22,22 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<table style="width: 100%">
-<tr>
-	<td style="width: 50%">
-		{if $logo_path}
-			<img src="{$logo_path}" style="width:{$width_logo}px; height:{$height_logo}px;" />
-		{/if}
-	</td>
-	<td style="width: 50%; text-align: right;">
-		<table style="width: 100%">
-			<tr>
-				<td style="font-weight: bold; font-size: 14pt; color: #444; width: 100%">{l s='INVOICE' pdf='true'}</td>
-			</tr>
-			<tr>
-				<td style="font-size: 14pt; color: #9E9F9E">{$date|escape:'html':'UTF-8'}</td>
-			</tr>
-			<tr>
-				<td style="font-size: 14pt; color: #9E9F9E">{$title|escape:'html':'UTF-8'}</td>
-			</tr>
-		</table>
-	</td>
-</tr>
+<table id="addresses-tab">
+    <tr>
+        <td width="33%">
+            <p class="small">{$order_invoice->company_address}</p>
+        </td>
+        <td width="33%">
+            {if $delivery_address}
+                <p class="small"><span class="bold">{l s='Delivery Address' pdf='true'}</span><br/><br/>
+                    {$delivery_address}
+                </p>
+            {/if}
+        </td>
+        <td width="33%">
+            <p class="small"><span class="bold">{l s='Billing Address' pdf='true'}</span><br/><br/>
+                {$invoice_address}
+            </p>
+        </td>
+    </tr>
 </table>
-
