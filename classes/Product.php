@@ -100,10 +100,10 @@ class ProductCore extends ObjectModel
 	/** @var string unity */
 	public $unity = null;
 
-		/** @var float price for product's unity */
+	/** @var float price for product's unity */
 	public $unit_price;
 
-		/** @var float price for product's unity ratio */
+	/** @var float price for product's unity ratio */
 	public $unit_price_ratio = 0;
 
 	/** @var float Ecotax */
@@ -3665,14 +3665,14 @@ class ProductCore extends ObjectModel
 			}
 			else
 				Shop::setContext($context_old, $context_shop_id_old);
-			
+
 			//Copy suppliers
 			$result3 = Db::getInstance()->executeS('
 			SELECT *
 			FROM `'._DB_PREFIX_.'product_supplier`
 			WHERE `id_product_attribute` = '.(int)$id_product_attribute_old.'
 			AND `id_product` = '.(int)$id_product_old);
-			
+
 			foreach ($result3 as $row3)
 			{
 				unset($row3['id_product_supplier']);
@@ -3978,7 +3978,7 @@ class ProductCore extends ObjectModel
 		SELECT *
 		FROM `'._DB_PREFIX_.'product_supplier`
 		WHERE `id_product` = '.(int)$id_product_old.' AND `id_product_attribute` = 0');
-		
+
 		foreach ($result as $row)
 		{
 			unset($row['id_product_supplier']);
@@ -3986,10 +3986,10 @@ class ProductCore extends ObjectModel
 			if (!Db::getInstance()->insert('product_supplier', $row))
 				return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	/**
 	* Get the link of the product page of this product
 	*/
@@ -5370,7 +5370,7 @@ class ProductCore extends ObjectModel
 					$result[] = array_merge($attribute, $group[0]);
 				}
 				$values_not_custom = Db::getInstance()->executeS('
-				SELECT DISTINCT a.`id_attribute`, a.`id_attribute_group`, al.`name` as `attribute`, agl.`name` as `group`
+				SELECT DISTINCT a.`id_attribute`, a.`id_attribute_group`, al.`name` as `attribute`, agl.`public_name` as `group`
 				FROM `'._DB_PREFIX_.'attribute` a
 				LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al
 					ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)Context::getContext()->language->id.')
@@ -5389,7 +5389,7 @@ class ProductCore extends ObjectModel
 			else
 			{
 				$result = Db::getInstance()->executeS('
-				SELECT DISTINCT a.`id_attribute`, a.`id_attribute_group`, al.`name` as `attribute`, agl.`name` as `group`
+				SELECT DISTINCT a.`id_attribute`, a.`id_attribute_group`, al.`name` as `attribute`, agl.`public_name` as `group`
 				FROM `'._DB_PREFIX_.'attribute` a
 				LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al
 					ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)Context::getContext()->language->id.')
@@ -5407,7 +5407,7 @@ class ProductCore extends ObjectModel
 		else
 		{
 			$result = Db::getInstance()->executeS('
-			SELECT DISTINCT a.`id_attribute`, a.`id_attribute_group`, al.`name` as `attribute`, agl.`name` as `group`
+			SELECT DISTINCT a.`id_attribute`, a.`id_attribute_group`, al.`name` as `attribute`, agl.`public_name` as `group`
 			FROM `'._DB_PREFIX_.'attribute` a
 			LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al
 				ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)Context::getContext()->language->id.')
