@@ -66,6 +66,15 @@ class MediaCoreTest extends IntegrationTestCase
 			array('url("../img/contact-form7.png")', '/themes/default-bootstrap/css/contact-form.css', 'url("http://server/themes/default-bootstrap/css/../img/contact-form7.png")', true),
 			array('url("./contact-form8.png")', '/themes/default-bootstrap/css/contact-form.css', 'url("http://server/themes/default-bootstrap/css/./contact-form8.png")', true),
 			array('url("/img/contact-form9.png")', '/themes/default-bootstrap/css/contact-form.css', 'url("http://server/img/contact-form9.png")', true),
+			array('/* this is a css comment */', '', '', false),
+			array('display   :none;', '', 'display:none;', false),
+			array("\t\n\r".'display:none;', '', 'display:none;', false),
+			array('display: none; ', '', 'display:none;', false),
+			array(' { display:none;', '', '{display:none;', false),
+			array('.show, .hide', '', '.show,.hide', false),
+			array('display:none; } ', '', 'display:none}', false),
+			array('width:0px;', '', 'width:0;', false),
+			array('width: 0em;', '', 'width:0;', false),
 		);
 	}
 
@@ -82,7 +91,7 @@ class MediaCoreTest extends IntegrationTestCase
 	{
 		$output = str_replace('//server/', '//'.$this->domain.'/', $output);
 		$return = Media::minifyCSS($input, $fileuri, $import_url);
-		$this->assertEquals($output, $return, 'MinifyCSS failed for data input : '.$input.'; Expected : '.$output.'; Returns : '.$return);
+		$this->assertEquals($output, $return, 'MinifyCSS failed for data input='.$input);
 	}
 
 	/**
@@ -91,6 +100,6 @@ class MediaCoreTest extends IntegrationTestCase
 	public function testReplaceByAbsoluteURLPattern($input, $fileuri, $output, $expected)
 	{
 		$return = preg_match(Media::$pattern_callback, $input, $matches);
-		$this->assertEquals((bool)$expected, (bool)$return, 'ReplaceByAbsoluteURLPattern failed for data input : '.$input.(isset($matches[2]) && $matches[2] ? '; Matches : '.$matches[2] : ''));
+		$this->assertEquals((bool)$expected, (bool)$return, 'ReplaceByAbsoluteURLPattern failed for data input='.$input.(isset($matches[2]) && $matches[2] ? '; Matches : '.$matches[2] : ''));
 	}
 }
