@@ -4727,9 +4727,6 @@ class AdminProductsControllerCore extends AdminController
 									$custom = false;
 
 						if ($custom)
-							$features[$k]['val'] = FeatureValue::getFeatureValueLang($features[$k]['current_item']);
-
-						if ($custom)
 						{
 							$feature_values_lang = FeatureValue::getFeatureValueLang($features[$k]['current_item']);
 							foreach($feature_values_lang as $feature_value)
