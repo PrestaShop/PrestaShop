@@ -1947,6 +1947,11 @@ abstract class ModuleCore
 		return true;
 	}
 
+	/**
+	 * Helper displaying error message(s)
+	 * @param string|array $error
+	 * @return string
+	 */
 	public function displayError($error)
 	{
 
