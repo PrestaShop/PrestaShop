@@ -71,20 +71,6 @@ class AdminCustomersControllerCore extends AdminController
             $titles_array[$gender->id_gender] = $gender->name;
         }
 
-        $this->_select = '
-		a.date_add, gl.name as title, (
-			SELECT SUM(total_paid_real / conversion_rate)
-			FROM '._DB_PREFIX_.'orders o
-			WHERE o.id_customer = a.id_customer
-			'.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
-			AND o.valid = 1
-		) as total_spent, (
-			SELECT c.date_add FROM '._DB_PREFIX_.'guest g
-			LEFT JOIN '._DB_PREFIX_.'connections c ON c.id_guest = g.id_guest
-			WHERE g.id_customer = a.id_customer
-			ORDER BY c.date_add DESC
-			LIMIT 1
-		) as connect';
         $this->_join = 'LEFT JOIN '._DB_PREFIX_.'gender_lang gl ON (a.id_gender = gl.id_gender AND gl.id_lang = '.(int)$this->context->language->id.')';
         $this->_use_found_rows = false;
         $this->fields_list = array(
@@ -168,6 +154,21 @@ class AdminCustomersControllerCore extends AdminController
         $this->shopShareDatas = Shop::SHARE_CUSTOMER;
 
         parent::__construct();
+
+        $this->_select = '
+        a.date_add, gl.name as title, (
+            SELECT SUM(total_paid_real / conversion_rate)
+            FROM '._DB_PREFIX_.'orders o
+            WHERE o.id_customer = a.id_customer
+            '.Shop::addSqlRestriction(Shop::SHARE_ORDER, 'o').'
+            AND o.valid = 1
+        ) as total_spent, (
+            SELECT c.date_add FROM '._DB_PREFIX_.'guest g
+            LEFT JOIN '._DB_PREFIX_.'connections c ON c.id_guest = g.id_guest
+            WHERE g.id_customer = a.id_customer
+            ORDER BY c.date_add DESC
+            LIMIT 1
+        ) as connect';
 
         // Check if we can add a customer
         if (Shop::isFeatureActive() && (Shop::getContext() == Shop::CONTEXT_ALL || Shop::getContext() == Shop::CONTEXT_GROUP)) {
