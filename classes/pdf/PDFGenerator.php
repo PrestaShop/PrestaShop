@@ -33,6 +33,7 @@ require_once(_PS_TOOL_DIR_.'tcpdf/tcpdf.php');
 class PDFGeneratorCore extends TCPDF
 {
 	const DEFAULT_FONT = 'helvetica';
+	const IMAGE_SCALE = 1.53; /* scale for pixel to mm conv */
 
 	public $header;
 	public $footer;
@@ -138,6 +139,7 @@ class PDFGeneratorCore extends TCPDF
 	 */
 	public function Header()
 	{
+                $this->setImageScale(self::IMAGE_SCALE);
 		$this->writeHTML($this->header);
 	}
 
@@ -146,6 +148,7 @@ class PDFGeneratorCore extends TCPDF
 	 */
 	public function Footer()
 	{
+                $this->setImageScale(self::IMAGE_SCALE);
 		$this->writeHTML($this->footer);
 	}
 
@@ -188,6 +191,7 @@ class PDFGeneratorCore extends TCPDF
 		$this->SetFooterMargin(18);
 		$this->setMargins(10, 40, 10);
 
+                $this->setImageScale(self::IMAGE_SCALE);
 		$this->AddPage();
 
 		$this->writeHTML($this->content, true, false, true, false, '');
