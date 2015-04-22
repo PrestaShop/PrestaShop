@@ -287,12 +287,12 @@ abstract class ObjectModelCore
 
 		$fields = array();
 		if ($this->id_lang === null)
-			foreach (Language::getLanguages(false) as $language)
+			foreach (Language::getIDs(false) as $id_lang)
 			{
-				$fields[$language['id_lang']] = $this->formatFields(self::FORMAT_LANG, $language['id_lang']);
-				$fields[$language['id_lang']]['id_lang'] = $language['id_lang'];
+				$fields[$id_lang] = $this->formatFields(self::FORMAT_LANG, $id_lang);
+				$fields[$id_lang]['id_lang'] = $id_lang;
 				if ($this->id_shop && $is_lang_multishop)
-					$fields[$language['id_lang']]['id_shop'] = (int)$this->id_shop;
+					$fields[$id_lang]['id_shop'] = (int)$this->id_shop;
 			}
 		else
 		{
@@ -803,8 +803,8 @@ abstract class ObjectModelCore
 		$fields = array();
 
 		if ($this->id_lang == null)
-			foreach (Language::getLanguages(false) as $language)
-				$this->makeTranslationFields($fields, $fields_array, $language['id_lang']);
+			foreach (Language::getIDs(false) as $id_lang)
+				$this->makeTranslationFields($fields, $fields_array, $id_lang);
 		else
 			$this->makeTranslationFields($fields, $fields_array, $this->id_lang);
 

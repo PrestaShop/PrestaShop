@@ -1946,15 +1946,32 @@ abstract class ModuleCore
 		return true;
 	}
 
+	/**
+	 * Helper displaying error message(s)
+	 * @param string|array $error
+	 * @return string
+	 */
 	public function displayError($error)
 	{
+
 		$output = '
 		<div class="bootstrap">
 		<div class="module_error alert alert-danger" >
-			<button type="button" class="close" data-dismiss="alert">&times;</button>
-			'.$error.'
-		</div>
-		</div>';
+			<button type="button" class="close" data-dismiss="alert">&times;</button>';
+
+		if (is_array($error))
+		{
+			$output .= '<ul>';
+			foreach ($error as $msg)
+				$output .= '<li>'.$msg.'</li>';
+			$output .= '</ul>';
+		}
+		else
+			$output .= $error;
+
+		// Close div openned previously
+		$output .= '</div></div>';
+
 		$this->error = true;
 		return $output;
 	}

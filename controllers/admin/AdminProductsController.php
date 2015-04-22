@@ -330,13 +330,12 @@ class AdminProductsControllerCore extends AdminController
 			return;
 
 		/* Additional fields */
-		$languages = Language::getLanguages(false);
-		foreach ($languages as $language)
-			if (isset($_POST['meta_keywords_'.$language['id_lang']]))
+		foreach (Language::getIDs(false) as $id_lang)
+			if (isset($_POST['meta_keywords_'.$id_lang]))
 			{
-				$_POST['meta_keywords_'.$language['id_lang']] = $this->_cleanMetaKeywords(Tools::strtolower($_POST['meta_keywords_'.$language['id_lang']]));
-				// preg_replace('/ *,? +,* /', ',', strtolower($_POST['meta_keywords_'.$language['id_lang']]));
-				$object->meta_keywords[$language['id_lang']] = $_POST['meta_keywords_'.$language['id_lang']];
+				$_POST['meta_keywords_'.$id_lang] = $this->_cleanMetaKeywords(Tools::strtolower($_POST['meta_keywords_'.$id_lang]));
+				// preg_replace('/ *,? +,* /', ',', strtolower($_POST['meta_keywords_'.$id_lang]));
+				$object->meta_keywords[$id_lang] = $_POST['meta_keywords_'.$id_lang];
 			}
 		$_POST['width'] = empty($_POST['width']) ? '0' : str_replace(',', '.', $_POST['width']);
 		$_POST['height'] = empty($_POST['height']) ? '0' : str_replace(',', '.', $_POST['height']);
@@ -4747,7 +4746,11 @@ class AdminProductsControllerCore extends AdminController
 									$custom = false;
 
 						if ($custom)
-							$features[$k]['val'] = FeatureValue::getFeatureValueLang($features[$k]['current_item']);
+						{
+							$feature_values_lang = FeatureValue::getFeatureValueLang($features[$k]['current_item']);
+							foreach($feature_values_lang as $feature_value)
+								$features[$k]['val'][$feature_value['id_lang']] = $feature_value;
+						}
 					}
 
 					$data->assign('available_features', $features);
@@ -5052,12 +5055,12 @@ class AdminProductsControllerCore extends AdminController
 	{
 		if (Tools::getValue('key_tab') == 'Images' && Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
 		{
-			$languages = Language::getLanguages(false);
+			$language_ids = Language::getIDs(false);
 			foreach ($_POST as $key => $val)
 				if (preg_match('/^legend_([0-9]+)/i', $key, $match))
-					foreach ($languages as $language)
-						if ($val && $language['id_lang'] == $match[1])
-							Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_lang SET legend = "'.pSQL($val).'" WHERE EXISTS (SELECT 1 FROM '._DB_PREFIX_.'image WHERE '._DB_PREFIX_.'image.id_image = '._DB_PREFIX_.'image_lang.id_image AND id_product = '.(int)$product->id.') AND id_lang = '.(int)$language['id_lang']);
+					foreach ($language_ids as $id_lang)
+						if ($val && $id_lang == $match[1])
+							Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_lang SET legend = "'.pSQL($val).'" WHERE EXISTS (SELECT 1 FROM '._DB_PREFIX_.'image WHERE '._DB_PREFIX_.'image.id_image = '._DB_PREFIX_.'image_lang.id_image AND id_product = '.(int)$product->id.') AND id_lang = '.(int)$id_lang);
 		}
 	}
 
