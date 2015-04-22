@@ -100,10 +100,10 @@ class ProductCore extends ObjectModel
 	/** @var string unity */
 	public $unity = null;
 
-		/** @var float price for product's unity */
-	public $unit_pricegetAttributesInformationsByProduct;
+	/** @var float price for product's unity */	
+	public $unit_price;	 
 
-		/** @var float price for product's unity ratio */
+	/** @var float price for product's unity ratio */
 	public $unit_price_ratio = 0;
 
 	/** @var float Ecotax */
