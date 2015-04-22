@@ -4993,9 +4993,11 @@ class AdminProductsControllerCore extends AdminController
 		if ($this->tabAccess['edit'] === '1')
 		{
 			$way = (int)(Tools::getValue('way'));
-			$id_product = (int)(Tools::getValue('id_product'));
-			$id_category = (int)(Tools::getValue('id_category'));
+			$id_product = (int)Tools::getValue('id_product');
+			$id_category = (int)Tools::getValue('id_category');
 			$positions = Tools::getValue('product');
+			$page = (int)Tools::getValue('page');
+			$selected_pagination = (int)Tools::getValue('selected_pagination');
 
 			if (is_array($positions))
 				foreach ($positions as $position => $value)
@@ -5004,6 +5006,9 @@ class AdminProductsControllerCore extends AdminController
 
 					if ((isset($pos[1]) && isset($pos[2])) && ($pos[1] == $id_category && (int)$pos[2] === $id_product))
 					{
+						if ($page > 1)
+							$position = $position + (($page - 1) * $selected_pagination);
+
 						if ($product = new Product((int)$pos[2]))
 							if (isset($position) && $product->updatePosition($way, $position))
 							{
