@@ -2545,7 +2545,9 @@ class AdminControllerCore extends Controller
 			$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/help.js');
 
 		if (!Tools::getValue('submitFormAjax'))
-			$this->addJs(_PS_JS_DIR_.'admin/notifications.js');
+			$this->addJS(_PS_JS_DIR_.'admin/notifications.js');
+
+		$this->addJS('https://cdn.statuspage.io/se-v2.js');
 
 		// Execute Hook AdminController SetMedia
 		Hook::exec('actionAdminControllerSetMedia');
