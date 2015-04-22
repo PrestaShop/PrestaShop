@@ -23,7 +23,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-{$style_tab}
+{$style-tab}
 
 
 <table width="100%" id="body" border="0" cellpadding="0">
@@ -31,7 +31,7 @@
     <tr>
         <td colspan="12">
 
-            {$addresses_tab}
+            {$addresses-tab}
 
         </td>
     </tr>
@@ -44,7 +44,7 @@
     <tr>
         <td colspan="10" >
 
-            {$summary_tab}
+            {$summary-tab}
 
         </td>
         <td colspan="2">&nbsp;</td>
@@ -58,7 +58,7 @@
     <tr>
         <td colspan="12">
 
-            {$product_tab}
+            {$product-tab}
 
         </td>
     </tr>
@@ -72,14 +72,14 @@
         <!-- Code TVA -->
         <td colspan="6" class="left">
 
-            {$tax_tab}
+            {$tax-tab}
 
         </td>
         <td colspan="1">&nbsp;</td>
         <!-- Calcule TVA -->
         <td colspan="5" rowspan="5" class="right">
 
-            {$total_tab}
+            {$total-tab}
 
         </td>
     </tr>
@@ -91,7 +91,7 @@
     <tr>
         <td colspan="6" class="left">
 
-            {$payment_tab}
+            {$payment-tab}
 
         </td>
         <td colspan="1">&nbsp;</td>
