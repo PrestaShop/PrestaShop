@@ -76,6 +76,11 @@
 				<i class="icon-book"></i>
 				{l s='Training'}
 			</a>
+			/&nbsp;
+			<a href="http://status.prestashop.com/" class="footer_link _blank">
+				<i class="icon-circle status-page-dot"></i>
+				<span class="status-page-description"></span>
+			</a>
 			{if $iso_is_fr && !host_mode}
 			<p>Questions • Renseignements • Formations :
 				<strong>+33 (0)1.40.18.30.04</strong>
