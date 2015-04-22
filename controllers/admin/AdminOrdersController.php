@@ -733,10 +733,10 @@ class AdminOrdersControllerCore extends AdminController
 						{
 							$cart_rule = new CartRule();
 							$cart_rule->description = sprintf($this->l('Credit slip for order #%d'), $order->id);
-							$languages = Language::getLanguages(false);
-							foreach ($languages as $language)
+							$language_ids = Language::getIDs(false);
+							foreach ($language_ids as $id_lang)
 								// Define a temporary name
-								$cart_rule->name[$language['id_lang']] = sprintf('V0C%1$dO%2$d', $order->id_customer, $order->id);
+								$cart_rule->name[$id_lang] = sprintf('V0C%1$dO%2$d', $order->id_customer, $order->id);
 
 							// Define a temporary code
 							$cart_rule->code = sprintf('V0C%1$dO%2$d', $order->id_customer, $order->id);
@@ -761,8 +761,8 @@ class AdminOrdersControllerCore extends AdminController
 							else
 							{
 								// Update the voucher code and name
-								foreach ($languages as $language)
-									$cart_rule->name[$language['id_lang']] = sprintf('V%1$dC%2$dO%3$d', $cart_rule->id, $order->id_customer, $order->id);
+								foreach ($language_ids as $id_lang)
+									$cart_rule->name[$id_lang] = sprintf('V%1$dC%2$dO%3$d', $cart_rule->id, $order->id_customer, $order->id);
 								$cart_rule->code = sprintf('V%1$dC%2$dO%3$d', $cart_rule->id, $order->id_customer, $order->id);
 
 								if (!$cart_rule->update())
@@ -980,12 +980,12 @@ class AdminOrdersControllerCore extends AdminController
 						if (Tools::isSubmit('generateDiscount') && !count($this->errors))
 						{
 							$cartrule = new CartRule();
-							$languages = Language::getLanguages($order);
+							$language_ids = Language::getIDs((bool)$order);
 							$cartrule->description = sprintf($this->l('Credit card slip for order #%d'), $order->id);
-							foreach ($languages as $language)
+							foreach ($language_ids as $id_lang)
 							{
 								// Define a temporary name
-								$cartrule->name[$language['id_lang']] = 'V0C'.(int)($order->id_customer).'O'.(int)($order->id);
+								$cartrule->name[$id_lang] = 'V0C'.(int)($order->id_customer).'O'.(int)($order->id);
 							}
 							// Define a temporary code
 							$cartrule->code = 'V0C'.(int)($order->id_customer).'O'.(int)($order->id);
@@ -1023,8 +1023,8 @@ class AdminOrdersControllerCore extends AdminController
 							else
 							{
 								// Update the voucher code and name
-								foreach ($languages as $language)
-									$cartrule->name[$language['id_lang']] = 'V'.(int)($cartrule->id).'C'.(int)($order->id_customer).'O'.$order->id;
+								foreach ($language_ids as $id_lang)
+									$cartrule->name[$id_lang] = 'V'.(int)($cartrule->id).'C'.(int)($order->id_customer).'O'.$order->id;
 								$cartrule->code = 'V'.(int)($cartrule->id).'C'.(int)($order->id_customer).'O'.$order->id;
 								if (!$cartrule->update())
 									$this->errors[] = Tools::displayError('You cannot generate a voucher.');

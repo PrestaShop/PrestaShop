@@ -550,9 +550,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 			$available_image_ids = array();
 
 			// New Behavior
-			$languages = Language::getLanguages();
-			foreach ($languages as $language)
-				foreach (Image::getImages($language['id_lang'], $object_id) as $image)
+			foreach (Language::getIDs() as $id_lang)
+				foreach (Image::getImages($id_lang, $object_id) as $image)
 					$available_image_ids[] = $image['id_image'];
 			$available_image_ids = array_unique($available_image_ids, SORT_NUMERIC);
 

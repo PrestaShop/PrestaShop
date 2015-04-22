@@ -855,10 +855,10 @@ class AdminImportControllerCore extends AdminController
 
 	protected static function createMultiLangField($field)
 	{
-		$languages = Language::getLanguages(false);
 		$res = array();
-		foreach ($languages as $lang)
-			$res[$lang['id_lang']] = $field;
+		foreach (Language::getIDs(false) as $id_lang)
+			$res[$id_lang] = $field;
+
 		return $res;
 	}
 

@@ -400,8 +400,6 @@ class AdminMetaControllerCore extends AdminController
 
 		if (Tools::isSubmit('submitAddmeta'))
 		{
-			$langs = Language::getLanguages(false);
-
 			$default_language = Configuration::get('PS_LANG_DEFAULT');
 			if (Tools::getValue('page') != 'index')
 			{
@@ -420,15 +418,15 @@ class AdminMetaControllerCore extends AdminController
 				return false;
 			}
 
-			foreach ($langs as $lang)
+			foreach (Language::getIDs(false) as $id_lang)
 			{
-				$current = Tools::getValue('url_rewrite_'.$lang['id_lang']);
+				$current = Tools::getValue('url_rewrite_'.$id_lang);
 				if (strlen($current) == 0)
 					// Prioritize default language first
 					if ($defaultLangIsValidated)
-						$_POST['url_rewrite_'.$lang['id_lang']] = Tools::getValue('url_rewrite_'.$default_language);
+						$_POST['url_rewrite_'.$id_lang] = Tools::getValue('url_rewrite_'.$default_language);
 					else
-						$_POST['url_rewrite_'.$lang['id_lang']] = Tools::getValue('url_rewrite_1');
+						$_POST['url_rewrite_'.$id_lang] = Tools::getValue('url_rewrite_1');
 			}
 
 			Hook::exec('actionAdminMetaSave');
@@ -509,11 +507,11 @@ class AdminMetaControllerCore extends AdminController
 			// Files
 			if (count($this->rb_data['Files']))
 			{
-				$languages = Language::getLanguages();
+				$language_ids = Language::getIDs();
 				fwrite($write_fd, "# Files\n");
 				foreach ($this->rb_data['Files'] as $iso_code => $files)
 					foreach ($files as $file)
-						if (count($languages) > 1)
+						if (!empty($language_ids))
 							fwrite($write_fd, 'Disallow: /*'.$iso_code.'/'.$file."\n");
 						else
 							fwrite($write_fd, 'Disallow: /'.$file."\n");

@@ -204,7 +204,6 @@ class DiscountCore extends CartRule
 	 */
 	public static function createOrderDiscount($order, $productList, $qtyList, $name, $shipping_cost = false, $id_category = 0, $subcategory = 0)
 	{
-		$languages = Language::getLanguages($order);
 		$products = $order->getProducts(false, $productList, $qtyList);
 
 		// Totals are stored in the order currency (or at least should be)
@@ -224,8 +223,8 @@ class DiscountCore extends CartRule
 		// create discount
 		$voucher = new Discount();
 		$voucher->id_discount_type = Discount::AMOUNT;
-		foreach ($languages as $language)
-			$voucher->description[$language['id_lang']] = strval($name).(int)($order->id);
+		foreach (Language::getIDs((bool)$order) as $id_lang)
+			$voucher->description[$id_lang] = strval($name).(int)($order->id);
 		$voucher->value = (float)($total);
 		$voucher->name = 'V0C'.(int)($order->id_customer).'O'.(int)($order->id);
 		$voucher->id_customer = (int)($order->id_customer);

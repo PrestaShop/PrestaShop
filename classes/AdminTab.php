@@ -963,7 +963,7 @@ abstract class AdminTabCore
 		{
 			$this->beforeUpdateOptions();
 
-			$languages = Language::getLanguages(false);
+			$language_ids = Language::getIDs(false);
 			foreach ($this->optionsList as $category => $categoryData)
 			{
 				$fields = $categoryData['fields'];
@@ -973,8 +973,8 @@ abstract class AdminTabCore
 					if (isset($values['required']) && $values['required'] && !empty($_POST['multishopOverrideOption'][$field]))
 						if (isset($values['type']) && $values['type'] == 'textLang')
 						{
-							foreach ($languages as $language)
-								if (($value = Tools::getValue($field.'_'.$language['id_lang'])) == false && (string)$value != '0')
+							foreach ($language_ids as $id_lang)
+								if (($value = Tools::getValue($field.'_'.$id_lang)) == false && (string)$value != '0')
 									$this->_errors[] = sprintf(Tools::displayError('field %s is required.'), $values['title']);
 						}
 						elseif (($value = Tools::getValue($field)) == false && (string)$value != '0')
@@ -984,9 +984,9 @@ abstract class AdminTabCore
 				foreach ($fields as $field => $values)
 					if (isset($values['type']) && $values['type'] == 'textLang')
 					{
-						foreach ($languages as $language)
-							if (Tools::getValue($field.'_'.$language['id_lang']) && isset($values['validation']))
-								if (!Validate::$values['validation'](Tools::getValue($field.'_'.$language['id_lang'])))
+						foreach ($language_ids as $id_lang)
+							if (Tools::getValue($field.'_'.$id_lang) && isset($values['validation']))
+								if (!Validate::$values['validation'](Tools::getValue($field.'_'.$id_lang)))
 									$this->_errors[] = sprintf(Tools::displayError('field %s is invalid.'), $values['title']);
 					}
 					elseif (Tools::getValue($field) && isset($values['validation']))
@@ -1018,15 +1018,15 @@ abstract class AdminTabCore
 						elseif (isset($options['type']) && in_array($options['type'], array('textLang', 'textareaLang')))
 						{
 							$list = array();
-							foreach ($languages as $language)
+							foreach ($language_ids as $id_lang)
 							{
-								$val = (isset($options['cast']) ? $options['cast'](Tools::getValue($key.'_'.$language['id_lang'])) : Tools::getValue($key.'_'.$language['id_lang']));
+								$val = (isset($options['cast']) ? $options['cast'](Tools::getValue($key.'_'.$id_lang)) : Tools::getValue($key.'_'.$id_lang));
 								if ($this->validateField($val, $options))
 								{
 									if (Validate::isCleanHtml($val))
-										$list[$language['id_lang']] = $val;
+										$list[$id_lang] = $val;
 									else
-										$this->_errors[] = Tools::displayError('Can not add configuration '.$key.' for lang '.Language::getIsoById((int)$language['id_lang']));
+										$this->_errors[] = Tools::displayError('Can not add configuration '.$key.' for lang '.Language::getIsoById((int)$id_lang));
 								}
 							}
 							Configuration::updateValue($key, $list);
@@ -1156,11 +1156,11 @@ abstract class AdminTabCore
 		$rules = call_user_func(array(get_class($object), 'getValidationRules'), get_class($object));
 		if (count($rules['validateLang']))
 		{
-			$languages = Language::getLanguages(false);
-			foreach ($languages as $language)
+			$language_ids = Language::getIDs(false);
+			foreach ($language_ids as $id_lang)
 				foreach (array_keys($rules['validateLang']) as $field)
-					if (Tools::isSubmit($field.'_'.(int)$language['id_lang']))
-						$object->{$field}[(int)$language['id_lang']] = Tools::getValue($field.'_'.(int)$language['id_lang']);
+					if (Tools::isSubmit($field.'_'.(int)$id_lang))
+						$object->{$field}[(int)$id_lang] = Tools::getValue($field.'_'.(int)$id_lang);
 		}
 	}
 

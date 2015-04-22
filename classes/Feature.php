@@ -209,9 +209,7 @@ class FeatureCore extends ObjectModel
 		{
 			// Feature doesn't exist, create it
 			$feature = new Feature();
-			$languages = Language::getLanguages();
-			foreach ($languages as $language)
-				$feature->name[$language['id_lang']] = strval($name);
+			$feature->name = array_fill_keys(Language::getIDs(), (string)$name);
 			if ($position)
 				$feature->position = (int)$position;
 			else
