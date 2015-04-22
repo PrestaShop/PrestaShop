@@ -426,23 +426,22 @@ class DispatcherCore
 			}
 
 		$language_ids = Language::getIDs();
+
 		if (isset($context->language) && !in_array($context->language->id, $language_ids))
-		{
 			$language_ids[] = (int)$context->language->id;
 
-			// Set default routes
-			foreach ($language_ids as $id_lang)
-				foreach ($this->default_routes as $id => $route)
-					$this->addRoute(
-						$id,
-						$route['rule'],
-						$route['controller'],
-						$id_lang,
-						$route['keywords'],
-						isset($route['params']) ? $route['params'] : array(),
-						$id_shop
-					);
-		}
+		// Set default routes
+		foreach ($language_ids as $id_lang)
+			foreach ($this->default_routes as $id => $route)
+				$this->addRoute(
+					$id,
+					$route['rule'],
+					$route['controller'],
+					$id_lang,
+					$route['keywords'],
+					isset($route['params']) ? $route['params'] : array(),
+					$id_shop
+				);
 
 		// Load the custom routes prior the defaults to avoid infinite loops
 		if ($this->use_routes)
