@@ -38,27 +38,4 @@ class MediaCoreTest extends IntegrationTestCase
         $result = Media::getJqueryPath('1.11');
         $this->assertEquals(true, in_array('http://'.$domain.__PS_BASE_URI__.'js/jquery/jquery.noConflict.php?version=1.11', $result));
     }
-
-	public function isJsInputsProvider()
-	{
-		return array(
-			array('<script>test 1</script>', '<script>/* <![CDATA[ */;test 1;/* ]]> */</script>'),
-			array('<script type="text/javascript">test 2</script>', '<script type="text/javascript">/* <![CDATA[ */;test 2;/* ]]> */</script>'),
-			array('<script type="javascript">test 3</script>', '<script type="javascript">/* <![CDATA[ */;test 3;/* ]]> */</script>'),
-			array('<script type= "javascript" nonsense>test 4</script>', '<script type= "javascript" nonsense>/* <![CDATA[ */;test 4;/* ]]> */</script>'),
-			array('<script language="JavaScript" type="text/javascript">test 5</script>', '<script language="JavaScript" type="text/javascript">/* <![CDATA[ */;test 5;/* ]]> */</script>'),
-			array('<script class="myJS" type="text/javascript">test 6</script>', '<script class="myJS" type="text/javascript">/* <![CDATA[ */;test 6;/* ]]> */</script>'),
-			array('<scripttype="text/javascript"> test 7</script>', '<scripttype="text/javascript"> test 7</script>'),
-			array('<script type="application/ld+json">{"@context": http://schema.org","@type": "Product","name": "[the name of the product]","aggregateRating": {"@type": "AggregateRating","ratingValue": "[rating]","reviewCount": "[number of reviews]"}}</script>', '<script type="application/ld+json">{"@context": http://schema.org","@type": "Product","name": "[the name of the product]","aggregateRating": {"@type": "AggregateRating","ratingValue": "[rating]","reviewCount": "[number of reviews]"}}</script>'),
-		);
-	}
-
-	/**
-	 * @dataProvider isJsInputsProvider
-	 */
-	public function testPackJSinHTML($input, $output)
-	{
-		$return = Media::packJSinHTML($input);
-		$this->assertEquals($output, $return, 'packJSinHTML failed for data input='.$input);
-	}
 }
