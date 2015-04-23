@@ -583,6 +583,17 @@ abstract class Controller extends ControllerCore
 			</table>
 		</div>';	
 	}
+	
+	protected function displayisExists($query){
+		$key = md5(str_replace('SQL_NO_CACHE ', '', $query));
+		$str = 'Cache:';
+		if(Cache::getInstance()->exists($key)){
+			$str .= '<font color="green"> Exist ';
+		}else{
+			$str .= '<font color="red"> Not Exist ';
+		}
+		return  $str.$key.'</font><br />';
+	}
 
 	protected function displayProfilingStopwatch()
 	{
@@ -611,6 +622,7 @@ abstract class Controller extends ControllerCore
 					<td class="pre"><pre>'.preg_replace("/(^[\s]*)/m", "", htmlspecialchars($data['query'], ENT_NOQUOTES, 'utf-8', false)).'</pre></td>
 					<td data-value="'.$data['time'].'"><span '.$this->getTimeColor($data['time'] * 1000).'>'.(round($data['time'] * 1000, 1) < 0.1 ? '< 1' : round($data['time'] * 1000, 1)).'</span></td>
 					<td>'.(int)$data['rows'].'</td>
+					<td>'.$this->displayisExists($data['query']).'</td>
 					<td data-value="'.$data['filesort'].'">'.($data['filesort'] ? '<span style="color:red">Yes</span>' : '').'</td>
 					<td data-value="'.$data['group_by'].'">'.($data['group_by'] ? '<span style="color:red">Yes</span>' : '').'</td>
 					<td data-value="'.$data['location'].'">
