@@ -157,7 +157,6 @@ class CacheFsCore extends Cache
 	 */
 	protected function getFilename($key)
 	{
-		$key = md5($key);
 		$path = _PS_CACHEFS_DIRECTORY_;
 		for ($i = 0; $i < $this->depth; $i++)
 			$path .= $key[$i].'/';
