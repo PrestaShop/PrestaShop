@@ -794,7 +794,7 @@ function updatePrice()
 
 	// If there is a quantity discount table,
 	// we update it according to the new price
-	updateDiscountTable(priceWithDiscountsDisplay);
+	updateDiscountTable(basePriceDisplay);
 }
 
 //update display of the large image
@@ -845,7 +845,7 @@ function displayDiscounts(combination)
 	else if(allQuantityDiscount.length != 0)
 	{
 		allQuantityDiscount.show();
-		$('tr', quantityDiscountTable).not('#quantityDiscount_0').hide();
+		$('tbody tr', quantityDiscountTable).not('#quantityDiscount_0').hide();
 		quantityDiscountTable.show();
 	}
 	else
