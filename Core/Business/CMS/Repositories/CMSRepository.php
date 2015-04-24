@@ -35,6 +35,7 @@ class CMSRepository extends RepositoryManager
 	}
 
 	/**
+	 * Return the complete list of CMS pages
 	 * @return array|false
 	 */
 	public function getCMSPagesList()
@@ -42,5 +43,19 @@ class CMSRepository extends RepositoryManager
 		// @TODO: Works as a "proxy" ATM but should be integrated directly here in the future
 		return CMS::listCms();
 	}
+
+	/**
+	 * Return a CMS Page from given ID
+	 * @param $cms_id
+	 * @param $id_language
+	 * @return CMS
+	 */
+	public function getCMSById($cms_id, $id_language)
+	{
+		// @TODO: To be refactored
+		return new CMS($cms_id, $id_language);
+	}
+
+
 
 }
