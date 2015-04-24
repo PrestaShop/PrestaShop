@@ -423,12 +423,16 @@ class OrderControllerCore extends ParentOrderController
 		else
 			$this->context->cart->checkedTOS = 1;
 
+		// Test if we have to override TOS display through hook
+		$hook_override_tos_display = Hook::exec('overrideTOSDisplay');
+
 		$this->context->smarty->assign(array(
 			'total_price' => (float)$orderTotal,
 			'taxes_enabled' => (int)Configuration::get('PS_TAX'),
 			'cms_id' => (int)Configuration::get('PS_CONDITIONS_CMS_ID'),
 			'conditions' => (int)Configuration::get('PS_CONDITIONS'),
-			'checkedTOS' => (int)$this->context->cart->checkedTOS
+			'checkedTOS' => (int)$this->context->cart->checkedTOS,
+			'override_tos_display' => $hook_override_tos_display
 		));
 
 
