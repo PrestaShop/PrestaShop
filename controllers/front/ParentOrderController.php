@@ -561,6 +561,7 @@ class ParentOrderControllerCore extends FrontController
 			'delivery_option' => $this->context->cart->getDeliveryOption(null, false),
 			'gift_wrapping_price' => (float)$wrapping_fees,
 			'total_wrapping_cost' => Tools::convertPrice($wrapping_fees_tax_inc, $this->context->currency),
+			'override_tos_display' => Hook::exec('overrideTOSDisplay'),
 			'total_wrapping_tax_exc_cost' => Tools::convertPrice($wrapping_fees, $this->context->currency)));
 	}
 
