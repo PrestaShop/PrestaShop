@@ -871,4 +871,14 @@ abstract class DbCore
 		Db::s($sql, $use_cache);
 		die();
 	}
+	
+	/**
+	 * Get used link instance
+	 *
+	 * @return PDO|mysqli|resource Resource
+	 */
+	public function getLink()
+	{
+		return $this -> link;
+	}
 }
