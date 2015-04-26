@@ -792,8 +792,8 @@ function updateNewAccountToAddressBlock()
 					// update block user info
 					if (json.block_user_info !== '' && $('#header_user').length == 1)
 					{
-						var elt = $(json.block_user_info).find('#header_user_info').html();
-						$('#header_user_info').fadeOut('nortmal', function() {
+						var elt = $('<div>' + json.block_user_info + '</div>').find('#header_user_info').html();
+						$('#header_user_info').fadeOut('normal', function() {
 							$(this).html(elt).fadeIn();
 						});
 					}
