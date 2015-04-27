@@ -2805,6 +2805,26 @@ abstract class ModuleCore
 
 		return true;
 	}
+
+	/**
+	 * Retrieve an array of the override in the module
+	 *
+	 * @return array|null
+	 */
+	public function getOverrides()
+	{
+		if (!is_dir($this->getLocalPath().'override'))
+			return null;
+
+		$result = array();
+		foreach (Tools::scandir($this->getLocalPath().'override', 'php', '', true) as $file)
+		{
+			$class = basename($file, '.php');
+			if (PrestaShopAutoload::getInstance()->getClassPath($class.'Core') || Module::getModuleIdByName($class))
+				$result[] = $class;
+		}
+		return $result;
+	}
 }
 
 function ps_module_version_sort($a, $b)
