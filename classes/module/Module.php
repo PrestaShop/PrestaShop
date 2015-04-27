@@ -742,6 +742,8 @@ abstract class ModuleCore
 	 */
 	public function disable($force_all = false)
 	{
+		if ($this->getOverrides() != null)
+			$this->uninstallOverrides();
 		// Disable module for all shops
 		$sql = 'DELETE FROM `'._DB_PREFIX_.'module_shop` WHERE `id_module` = '.(int)$this->id.' '.((!$force_all) ? ' AND `id_shop` IN('.implode(', ', Shop::getContextListShopID()).')' : '');
 		Db::getInstance()->execute($sql);
