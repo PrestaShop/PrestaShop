@@ -48,21 +48,31 @@ function deactivate_custom_modules()
 		return false;
 	}
 
-	$nativeModules = simplexml_load_file($module_list_xml);
-	$nativeModules = $nativeModules->modules;
-	$arrNativeModules = array();
-	foreach ($nativeModules as $nativeModulesType)
-		if (in_array($nativeModulesType['type'],array('native','partner')))
-		{
-			$arrNativeModules[] = '""';
-			foreach ($nativeModulesType->module as $module)
-				$arrNativeModules[] = '"'.pSQL($module['name']).'"';
-		}
+	$nativeModules = @simplexml_load_file($module_list_xml);
 
-	$arrNonNative = $db->executeS('
-		SELECT *
-		FROM `'._DB_PREFIX_.'module` m
-		WHERE name NOT IN ('.implode(',',$arrNativeModules).') ');
+	if ($nativeModules) {
+		$nativeModules = $nativeModules->modules;
+	}
+	$arrNativeModules = array();
+
+	if (is_array($nativeModules)) {
+		foreach ($nativeModules as $nativeModulesType)
+			if (in_array($nativeModulesType['type'],array('native','partner')))
+			{
+				$arrNativeModules[] = '""';
+				foreach ($nativeModulesType->module as $module)
+					$arrNativeModules[] = '"'.pSQL($module['name']).'"';
+			}
+	}
+
+	$arrNonNative = array();
+
+	if ($arrNativeModules) {
+		$arrNonNative = $db->executeS('
+			SELECT *
+			FROM `'._DB_PREFIX_.'module` m
+			WHERE name NOT IN ('.implode(',',$arrNativeModules).') ');
+	}
 
 	$uninstallMe = array("undefined-modules");
 	if (is_array($arrNonNative))

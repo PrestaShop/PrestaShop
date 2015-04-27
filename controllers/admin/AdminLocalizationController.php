@@ -179,7 +179,6 @@ class AdminLocalizationControllerCore extends AdminController
 					$pack = @Tools::file_get_contents(_PS_API_URL_.'/localization/'.$version.'/'.$iso_localization_pack.'.xml');
 				else
 					$pack = false;
-				
 				if (defined('_PS_HOST_MODE_'))
 					$path = _PS_CORE_DIR_.'/localization/'.$iso_localization_pack.'.xml';
 				else
@@ -228,7 +227,7 @@ class AdminLocalizationControllerCore extends AdminController
 		{
 			$localization_file = _PS_ROOT_DIR_.'/localization/localization.xml';
 			if (file_exists($localization_file))
-				$xml_localization = simplexml_load_file($localization_file);
+				$xml_localization = @simplexml_load_file($localization_file);
 		}
 
 		// Array to hold the list of country ISOs that have a localization pack hosted on prestashop.com
@@ -256,7 +255,10 @@ class AdminLocalizationControllerCore extends AdminController
 				$iso = $m[1];
 				if (empty($remote_isos[$iso])) // if the pack is only there locally and not on prestashop.com
 				{
-					$xml_pack = simplexml_load_file(_PS_ROOT_DIR_.'/localization/'.$entry);
+					$xml_pack = @simplexml_load_file(_PS_ROOT_DIR_.'/localization/'.$entry);
+					if (!$xml_pack) {
+						return $this->displayWarning($this->l(sprintf('%1s could not be loaded', $entry)));
+					}
 					$localizations_pack[$i]['iso_localization_pack'] = $iso;
 					$localizations_pack[$i]['name'] = sprintf($this->l('%s (local)'), (string)$xml_pack['name']);
 					$i++;
@@ -372,7 +374,7 @@ class AdminLocalizationControllerCore extends AdminController
 	{
 		$this->initTabModuleList();
 		if (!$this->loadObject(true))
-			return;	
+			return;
 
 		$this->initToolbar();
 		$this->initPageHeaderToolbar();
@@ -385,7 +387,7 @@ class AdminLocalizationControllerCore extends AdminController
 			'page_header_toolbar_btn' => $this->page_header_toolbar_btn
 		));
 	}
-	
+
 	public function display()
 	{
 		$this->initContent();
@@ -411,7 +413,7 @@ class AdminLocalizationControllerCore extends AdminController
 
 		/* Set conversion rate of default currency to 1 */
 		ObjectModel::updateMultishopTable('Currency', array('conversion_rate' => 1), 'a.id_currency');
-		
+
 		$tmp_context = Shop::getContext();
 		if ($tmp_context == Shop::CONTEXT_GROUP)
 			$tmp_shop = Shop::getContextShopGroupID();

@@ -1133,7 +1133,12 @@ abstract class ModuleCore
 
 		// Load config.xml
 		libxml_use_internal_errors(true);
-		$xml_module = simplexml_load_file($config_file);
+		$xml_module = @simplexml_load_file($config_file);
+
+		if (!$xml_module) {
+			return 'Module '.ucfirst($module);
+		}
+
 		foreach (libxml_get_errors() as $error)
 		{
 			libxml_clear_errors();
@@ -1220,7 +1225,13 @@ abstract class ModuleCore
 			{
 				// Load config.xml
 				libxml_use_internal_errors(true);
-				$xml_module = simplexml_load_file($config_file);
+				$xml_module = @simplexml_load_file($config_file);
+
+				if (!$xml_module) {
+					$errors[] = Tools::displayError(sprintf('%1s could not be loaded.', $config_file));
+					break;
+				}
+
 				foreach (libxml_get_errors() as $error)
 					$errors[] = '['.$module.'] '.Tools::displayError('Error found in config file:').' '.htmlentities($error->message);
 				libxml_clear_errors();
@@ -1530,17 +1541,27 @@ abstract class ModuleCore
 		$db = Db::getInstance();
 
 		$module_list_xml = _PS_ROOT_DIR_.self::CACHE_FILE_MODULES_LIST;
-		$native_modules = simplexml_load_file($module_list_xml);
-		$native_modules = $native_modules->modules;
-		foreach ($native_modules as $native_modules_type)
-			if (in_array($native_modules_type['type'], array('native', 'partner')))
-			{
-				$arr_native_modules[] = '""';
-				foreach ($native_modules_type->module as $module)
-					$arr_native_modules[] = '"'.pSQL($module['name']).'"';
-			}
+		$native_modules = @simplexml_load_file($module_list_xml);
 
-		return $db->executeS('SELECT * FROM `'._DB_PREFIX_.'module` m WHERE `name` NOT IN ('.implode(',', $arr_native_modules).') ');
+		if ($native_modules) {
+			$native_modules = $native_modules->modules;
+		}
+
+		$arr_native_modules = array();
+		if (is_array($native_modules)) {
+			foreach ($native_modules as $native_modules_type)
+				if (in_array($native_modules_type['type'], array('native', 'partner')))
+				{
+					$arr_native_modules[] = '""';
+					foreach ($native_modules_type->module as $module)
+						$arr_native_modules[] = '"'.pSQL($module['name']).'"';
+				}
+		}
+
+		if ($arr_native_modules) {
+			return $db->executeS('SELECT * FROM `'._DB_PREFIX_.'module` m WHERE `name` NOT IN ('.implode(',', $arr_native_modules).') ');
+		}
+		return false;
 	}
 
 	public static function getNativeModuleList()
@@ -1549,17 +1570,24 @@ abstract class ModuleCore
 		if (!file_exists($module_list_xml))
 			return false;
 
-		$native_modules = simplexml_load_file($module_list_xml);
-		$native_modules = $native_modules->modules;
-		$modules = array();
-		foreach ($native_modules as $native_modules_type)
-			if (in_array($native_modules_type['type'], array('native', 'partner')))
-			{
-				foreach ($native_modules_type->module as $module)
-					$modules[] = $module['name'];
-			}
+		$native_modules = @simplexml_load_file($module_list_xml);
+		if ($native_modules) {
+			$native_modules = $native_modules->modules;
+		}
 
-		return $modules;
+		$modules = array();
+		if (is_array($native_modules)) {
+			foreach ($native_modules as $native_modules_type)
+				if (in_array($native_modules_type['type'], array('native', 'partner')))
+				{
+					foreach ($native_modules_type->module as $module)
+						$modules[] = $module['name'];
+				}
+		}
+		if ($modules) {
+			return $modules;
+		}
+		return false;
 	}
 
 	/**
@@ -1659,9 +1687,9 @@ abstract class ModuleCore
 		$untrusted = array();
 
 		$trusted_modules_xml = array(
-									_PS_ROOT_DIR_.self::CACHE_FILE_ALL_COUNTRY_MODULES_LIST,
-									_PS_ROOT_DIR_.self::CACHE_FILE_MUST_HAVE_MODULES_LIST,
-								);
+			_PS_ROOT_DIR_.self::CACHE_FILE_ALL_COUNTRY_MODULES_LIST,
+			_PS_ROOT_DIR_.self::CACHE_FILE_MUST_HAVE_MODULES_LIST,
+		);
 
 		if (file_exists(_PS_ROOT_DIR_.self::CACHE_FILE_CUSTOMER_MODULES_LIST))
 			$trusted_modules_xml[] = _PS_ROOT_DIR_.self::CACHE_FILE_CUSTOMER_MODULES_LIST;
@@ -1682,9 +1710,12 @@ abstract class ModuleCore
 			{
 				$content  = Tools::file_get_contents($theme_xml);
 				$xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
-				foreach ($xml->modules->module as $modaddons)
-					if ((string)$modaddons['action'] == 'install')
-						$trusted[] = Tools::strtolower((string)$modaddons['name']);
+
+				if ($xml) {
+					foreach ($xml->modules->module as $modaddons)
+						if ((string)$modaddons['action'] == 'install')
+							$trusted[] = Tools::strtolower((string)$modaddons['name']);
+				}
 			}
 
 		foreach ($modules_on_disk as $name)

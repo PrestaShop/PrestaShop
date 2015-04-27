@@ -521,7 +521,7 @@ class AdminThemesControllerCore extends AdminController
 			file_put_contents(_PS_ROOT_DIR_.Theme::CACHE_FILE_CUSTOMER_THEMES_LIST, Tools::addonsRequest('customer_themes'));
 
 		$customer_themes_list = file_get_contents(_PS_ROOT_DIR_.Theme::CACHE_FILE_CUSTOMER_THEMES_LIST);
-		if (!empty($customer_themes_list) && $customer_themes_list_xml = simplexml_load_string($customer_themes_list))
+		if (!empty($customer_themes_list) && $customer_themes_list_xml = @simplexml_load_string($customer_themes_list))
 		{
 			foreach ($customer_themes_list_xml->theme as $addons_theme)
 			{
@@ -1297,7 +1297,7 @@ class AdminThemesControllerCore extends AdminController
 		{
 			foreach ($to_install as $module)
 				$fields_value['modulesToExport_module'.$module] = true;
-				
+
 			$fields_form['form']['input'][] = array(
 				'type' => 'checkbox',
 				'label' => $this->l('Select the theme\'s modules that you wish to export'),
@@ -1397,7 +1397,7 @@ class AdminThemesControllerCore extends AdminController
 
 	private function checkXmlFields($xml_file)
 	{
-		if (!file_exists($xml_file) || !$xml = simplexml_load_file($xml_file))
+		if (!file_exists($xml_file) || !$xml = @simplexml_load_file($xml_file))
 			return false;
 		if (!$xml['version'] || !$xml['name'])
 			return false;
@@ -1998,7 +1998,7 @@ class AdminThemesControllerCore extends AdminController
 	 */
 	private function getNativeModule($type = 0)
 	{
-		$xml = simplexml_load_string(Tools::file_get_contents(_PS_API_URL_.'/xml/modules_list_16.xml'));
+		$xml = @simplexml_load_string(Tools::file_get_contents(_PS_API_URL_.'/xml/modules_list_16.xml'));
 
 		if ($xml)
 		{
@@ -2185,9 +2185,9 @@ class AdminThemesControllerCore extends AdminController
 
 		$xml = false;
 		if (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml'))
-			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml');
+			$xml = @simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml');
 		elseif (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/default.xml'))
-			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/default.xml');
+			$xml = @simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/default.xml');
 
 		if ($xml)
 		{
@@ -2306,9 +2306,13 @@ class AdminThemesControllerCore extends AdminController
 				if (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/'.$shop_theme->directory.'.xml'))
 					$old_xml_name = $shop_theme->directory.'.xml';
 
-				$shop_xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/'.$old_xml_name);
-				$theme_shop_module = $this->getModules($shop_xml);
+				$shop_xml = @simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/'.$old_xml_name);
 
+				if (!$shop_xml) {
+					continue;
+				}
+
+				$theme_shop_module = $this->getModules($shop_xml);
 				$to_shop_uninstall = array_merge($theme_shop_module['to_install'], $theme_shop_module['to_enable']);
 
 				$to_shop_uninstall = preg_grep('/dash/', $to_shop_uninstall, PREG_GREP_INVERT);
@@ -2449,9 +2453,9 @@ class AdminThemesControllerCore extends AdminController
 
 		$xml = false;
 		if (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml'))
-			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml');
+			$xml = @simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/'.$theme->directory.'.xml');
 		elseif (file_exists(_PS_ROOT_DIR_.'/config/xml/themes/default.xml'))
-			$xml = simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/default.xml');
+			$xml = @simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/themes/default.xml');
 
 		if ($xml)
 		{

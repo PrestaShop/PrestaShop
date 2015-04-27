@@ -138,7 +138,7 @@ class InstallLanguages
 		$args[0] = $translation;
 		if(count($args) > 1)
 			return call_user_func_array('sprintf', $args);
-		else 
+		else
 			return $translation;
 	}
 
@@ -169,11 +169,13 @@ class InstallLanguages
 			$countries = array();
 			$countries_lang = $this->getLanguage()->getCountries();
 			$countries_default = $this->getLanguage(self::DEFAULT_ISO)->getCountries();
-			$xml = simplexml_load_file(_PS_INSTALL_DATA_PATH_.'xml/country.xml');
-			foreach ($xml->entities->country as $country)
-			{
-				$iso = strtolower((string)$country['iso_code']);
-				$countries[$iso] = isset($countries_lang[$iso]) ? $countries_lang[$iso] : $countries_default[$iso];
+			$xml = @simplexml_load_file(_PS_INSTALL_DATA_PATH_.'xml/country.xml');
+			if ($xml) {
+				foreach ($xml->entities->country as $country)
+				{
+					$iso = strtolower((string)$country['iso_code']);
+					$countries[$iso] = isset($countries_lang[$iso]) ? $countries_lang[$iso] : $countries_default[$iso];
+				}
 			}
 			asort($countries);
 		}
