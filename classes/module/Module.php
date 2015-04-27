@@ -676,6 +676,9 @@ abstract class ModuleCore
 			foreach ($results as $row)
 				$items[] = $row['id_shop'];
 
+		if ($this->getOverrides() != null)
+			$this->installOverrides();
+
 		// Enable module in the shop where it is not enabled yet
 		foreach ($list as $id)
 			if (!in_array($id, $items))
