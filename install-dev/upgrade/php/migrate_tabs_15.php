@@ -161,7 +161,7 @@ function migrate_tabs_15()
 	$sql = 'SELECT id_tab FROM '._DB_PREFIX_.'tab
 			WHERE id_tab NOT IN ('.implode(', ', $parent).')
 				AND id_parent = 0';
-	
+
 	$id_tabs = Db::getInstance()->executeS($sql);
 	if (is_array($id_tabs) && count($id_tabs))
 		foreach (Db::getInstance()->executeS($sql) as $row)
@@ -180,12 +180,12 @@ function get_tab_id($class_name)
 /* DO NOT REMOVE THIS FUNCTION !
 function get_tab_langs($classname)
 {
-	$parent_xml = simplexml_load_file(_PS_INSTALL_DATA_PATH_.'xml/tab.xml');
+	$parent_xml = @simplexml_load_file(_PS_INSTALL_DATA_PATH_.'xml/tab.xml');
 	$result = $parent_xml->xpath('entities/tab[class_name=\''.$classname.'\']');
 	$id = (string)$result[0]['id'];
 	foreach (array('en', 'fr', 'es', 'de', 'it') as $iso)
 	{
-		$xml = simplexml_load_file(_PS_INSTALL_LANGS_PATH_.$iso.'/data/tab.xml');
+		$xml = @simplexml_load_file(_PS_INSTALL_LANGS_PATH_.$iso.'/data/tab.xml');
 		$result = $xml->xpath('tab[@id=\''.$id.'\']');
 		$values[$iso] = (string)$result[0]['name'];
 	}

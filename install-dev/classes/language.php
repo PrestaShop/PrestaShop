@@ -80,7 +80,7 @@ class InstallLanguage
 		if (!is_array($this->meta))
 		{
 			$this->meta = array();
-			$xml = simplexml_load_file($this->path.'language.xml');
+			$xml = @simplexml_load_file($this->path.'language.xml');
 			foreach ($xml->children() as $node)
 				$this->meta[$node->getName()] = (string)$node;
 		}
@@ -103,7 +103,7 @@ class InstallLanguage
 			$this->countries = array();
 			if (file_exists($this->path.'data/country.xml'))
 			{
-				if ($xml = simplexml_load_file($this->path.'data/country.xml'))
+				if ($xml = @simplexml_load_file($this->path.'data/country.xml'))
 					foreach ($xml->country as $country)
 						$this->countries[strtolower((string)$country['id'])] = (string)$country->name;
 			}

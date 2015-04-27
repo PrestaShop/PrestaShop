@@ -454,9 +454,10 @@ if (empty($return_type) || $return_type == 'xml')
 else
 {
 	// result in xml to array
-	$result = simplexml_load_string($result);
+	$result = @simplexml_load_string($result);
+
 	if (!class_exists('ToolsInstall', false))
-		if(file_exists(_PS_INSTALL_PATH_.'/upgrade/classes/ToolsInstall.php'))
+		if (file_exists(_PS_INSTALL_PATH_.'/upgrade/classes/ToolsInstall.php'))
 			include_once(_PS_INSTALL_PATH_.'/upgrade/classes/ToolsInstall.php');
 
 	if (class_exists('ToolsInstall', false))
@@ -483,6 +484,7 @@ else
 		}
 	}
 }
+
 function getConfValue($name)
 {
 	$full = version_compare('1.5.0.10', _PS_VERSION_) < 0;

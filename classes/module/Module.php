@@ -1133,7 +1133,7 @@ abstract class ModuleCore
 
 		// Load config.xml
 		libxml_use_internal_errors(true);
-		$xml_module = simplexml_load_file($config_file);
+		$xml_module = @simplexml_load_file($config_file);
 		foreach (libxml_get_errors() as $error)
 		{
 			libxml_clear_errors();
@@ -1220,7 +1220,7 @@ abstract class ModuleCore
 			{
 				// Load config.xml
 				libxml_use_internal_errors(true);
-				$xml_module = simplexml_load_file($config_file);
+				$xml_module = @simplexml_load_file($config_file);
 				foreach (libxml_get_errors() as $error)
 					$errors[] = '['.$module.'] '.Tools::displayError('Error found in config file:').' '.htmlentities($error->message);
 				libxml_clear_errors();
@@ -1503,6 +1503,7 @@ abstract class ModuleCore
 	{
 		$module_list = array();
 		$modules = scandir(_PS_MODULE_DIR_);
+
 		foreach ($modules as $name)
 		{
 			if (is_file(_PS_MODULE_DIR_.$name))
@@ -1530,7 +1531,7 @@ abstract class ModuleCore
 		$db = Db::getInstance();
 
 		$module_list_xml = _PS_ROOT_DIR_.self::CACHE_FILE_MODULES_LIST;
-		$native_modules = simplexml_load_file($module_list_xml);
+		$native_modules = @simplexml_load_file($module_list_xml);
 		$native_modules = $native_modules->modules;
 		foreach ($native_modules as $native_modules_type)
 			if (in_array($native_modules_type['type'], array('native', 'partner')))
@@ -1549,7 +1550,7 @@ abstract class ModuleCore
 		if (!file_exists($module_list_xml))
 			return false;
 
-		$native_modules = simplexml_load_file($module_list_xml);
+		$native_modules = @simplexml_load_file($module_list_xml);
 		$native_modules = $native_modules->modules;
 		$modules = array();
 		foreach ($native_modules as $native_modules_type)
@@ -1659,9 +1660,9 @@ abstract class ModuleCore
 		$untrusted = array();
 
 		$trusted_modules_xml = array(
-									_PS_ROOT_DIR_.self::CACHE_FILE_ALL_COUNTRY_MODULES_LIST,
-									_PS_ROOT_DIR_.self::CACHE_FILE_MUST_HAVE_MODULES_LIST,
-								);
+			_PS_ROOT_DIR_.self::CACHE_FILE_ALL_COUNTRY_MODULES_LIST,
+			_PS_ROOT_DIR_.self::CACHE_FILE_MUST_HAVE_MODULES_LIST,
+		);
 
 		if (file_exists(_PS_ROOT_DIR_.self::CACHE_FILE_CUSTOMER_MODULES_LIST))
 			$trusted_modules_xml[] = _PS_ROOT_DIR_.self::CACHE_FILE_CUSTOMER_MODULES_LIST;
@@ -1682,6 +1683,7 @@ abstract class ModuleCore
 			{
 				$content  = Tools::file_get_contents($theme_xml);
 				$xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
+
 				foreach ($xml->modules->module as $modaddons)
 					if ((string)$modaddons['action'] == 'install')
 						$trusted[] = Tools::strtolower((string)$modaddons['name']);
