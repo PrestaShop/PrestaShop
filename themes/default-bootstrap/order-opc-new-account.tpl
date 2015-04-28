@@ -155,7 +155,7 @@
 					{if $field_name eq "company"}
 						<div class="text form-group">
 							<label for="company">{l s='Company'}{if in_array($field_name, $required_fields)} <sup>*</sup>{/if}</label>
-							<input type="text" class="text form-control validate" id="company" name="company" data-validate="isName" value="{if isset($guestInformations) && isset($guestInformations.company) && $guestInformations.company}{$guestInformations.company}{/if}" />
+							<input type="text" class="text form-control validate" id="company" name="company" data-validate="isGenericName" value="{if isset($guestInformations) && isset($guestInformations.company) && $guestInformations.company}{$guestInformations.company}{/if}" />
 						</div>
 					{elseif $field_name eq "vat_number"}
 					<div id="vat_number_block" style="display:none;">
