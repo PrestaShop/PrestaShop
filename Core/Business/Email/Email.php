@@ -34,6 +34,12 @@ class Email
 		$this->filesystem = $fs;
 	}
 
+	/**
+	 * Return the list of available mails
+	 * @param null $lang
+	 * @param null $dir
+	 * @return array|null
+	 */
 	public function getAvailableMails($lang = null, $dir = null)
 	{
 		if (is_null($lang))
@@ -67,5 +73,20 @@ class Email
 			}
 		}
 		return $clean_mail_list;
+	}
+
+
+	/**
+	 * Give in input getAvailableMails(), will output a human readable and proper string name
+	 * @return array
+	 */
+	public function getCleanedMailsNames()
+	{
+		$output = array();
+
+		foreach ($this->getAvailableMails() as $mail)
+			$output[] = ucfirst(str_replace(array('_', '-'), ' ', $mail));
+
+		return $output;
 	}
 }
