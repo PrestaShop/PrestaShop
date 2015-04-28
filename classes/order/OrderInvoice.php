@@ -75,8 +75,8 @@ class OrderInvoiceCore extends ObjectModel
 	/** @var float */
 	public $total_wrapping_tax_incl;
 
-	/** @var string note */
-	public $company_address;
+	/** @var string shop address */
+	public $shop_address;
 
 	/** @var string note */
 	public $note;
@@ -112,7 +112,7 @@ class OrderInvoiceCore extends ObjectModel
 			'shipping_tax_computation_method' => array('type' => self::TYPE_INT),
 			'total_wrapping_tax_excl' =>array('type' => self::TYPE_FLOAT),
 			'total_wrapping_tax_incl' =>array('type' => self::TYPE_FLOAT),
-			'company_address' => 		array('type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => 1000),
+			'shop_address' => 		array('type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => 1000),
 			'note' => 					array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 65000),
 			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
@@ -128,7 +128,7 @@ class OrderInvoiceCore extends ObjectModel
 		$address->city = Configuration::get('PS_SHOP_CITY');
 		$address->phone = Configuration::get('PS_SHOP_PHONE');
 
-		$this->company_address = AddressFormat::generateAddress($address, array(), '<br />', ' ');
+		$this->shop_address = AddressFormat::generateAddress($address, array(), '<br />', ' ');
 
 		return parent::add();
 	}
