@@ -25,7 +25,7 @@
 <table id="addresses-tab">
     <tr>
         <td width="33%">
-            <p class="small">{$order_invoice->company_address}</p>
+            <p class="small">{$order_invoice->shop_address}</p>
         </td>
         <td width="33%">
             {if $delivery_address}
