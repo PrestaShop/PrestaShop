@@ -1876,7 +1876,7 @@ class CartCore extends ObjectModel
                 $key = 'in_stock';
             } else {
                 $key = $product['in_stock'] ? 'in_stock' : 'out_of_stock';
-				$product_quantity_in_stock = StockAvailable::getQuantityAvailableByProduct($product['id_product'], $product['id_product_attribute']);
+                $product_quantity_in_stock = StockAvailable::getQuantityAvailableByProduct($product['id_product'], $product['id_product_attribute']);
                 if ($product['in_stock'] && $product['cart_quantity'] > $product_quantity_in_stock) {
                     $out_stock_part = $product['cart_quantity'] - $product_quantity_in_stock;
                     $product_bis = $product;
