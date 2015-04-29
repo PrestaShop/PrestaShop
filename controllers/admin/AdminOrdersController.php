@@ -2226,21 +2226,7 @@ class AdminOrdersControllerCore extends AdminController
 		if (is_null($order))
 			$order = new Order(Tools::getValue('id_order'));
 
-		$data = array(
-			'{lastname}' => $order->getCustomer()->lastname,
-			'{firstname}' => $order->getCustomer()->firstname,
-			'{id_order}' => (int)$order->id,
-			'{order_name}' => $order->getUniqReference()
-		);
-
-		Mail::Send(
-			(int)$order->id_lang,
-			'order_changed',
-			Mail::l('Your order has been changed', (int)$order->id_lang),
-			$data,
-			$order->getCustomer()->email,
-			$order->getCustomer()->firstname.' '.$order->getCustomer()->lastname,
-			null, null, null, null, _PS_MAIL_DIR_, true, (int)$order->id_shop);
+		Hook::exec('actionOrderChanged', array('order' => $order));
 	}
 
 	public function ajaxProcessLoadProductInformation()
