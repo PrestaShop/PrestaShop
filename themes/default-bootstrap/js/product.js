@@ -633,7 +633,7 @@ function updatePrice()
 	var basePriceWithoutTax = +productPriceTaxExcluded;
 	var priceWithGroupReductionWithoutTax = 0;
 
-	priceWithGroupReductionWithoutTax = basePriceWithoutTax * (1 - group_reduction);
+	priceWithGroupReductionWithoutTax = basePriceWithoutTax * (1 - groupReduction);
 
 	// Apply combination price impact (only if there is no specific price)
 	// 0 by default, +x if price is inscreased, -x if price is decreased
@@ -656,7 +656,7 @@ function updatePrice()
 			{
 				var reduction = combination.specific_price.reduction;
 				if (combination.specific_price.id_currency == 0)
-					reduction = reduction * currencyRate * (1 - group_reduction);
+					reduction = reduction * currencyRate * (1 - groupReduction);
 				priceWithDiscountsWithoutTax -= reduction;
 			}
 		}
