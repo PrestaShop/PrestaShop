@@ -919,7 +919,10 @@ function refreshProductImages(id_product_attribute)
 				$('#thumbnail_' + parseInt(combinationImages[id_product_attribute][i])).show();
 	}
 	else
+	{
 		$('#thumbs_list li').show();
+		displayImage($('#thumbs_list li:first a'));
+	}
 
 	if (parseInt($('#thumbs_list_frame >li:visible').length) != parseInt($('#thumbs_list_frame >li').length))
 		$('#wrapResetImages').stop(true, true).show();
