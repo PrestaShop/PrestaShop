@@ -115,7 +115,6 @@
 									$("#countImage").html(parseInt($("#countImage").html()) + 1);
 									$("#img" + id).remove();
 									$("#imageTable").tableDnDUpdate();
-									$('#legend_1').val('');
 								}
 							}
 
