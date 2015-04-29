@@ -78,6 +78,11 @@ class MediaCore
 	 */
 	protected static $inline_script_src = array();
 
+	/**
+	 * @var string pattern used in packJSinHTML
+	 */
+	public static $pattern_js = '#\s*(<\s*script(?:\s[^>]*(?:javascript)[^>]*|)+>)(.*)(<\s*/script\s*[^>]*>)\s*#Uims';
+
 	public static function minifyHTML($html_content)
 	{
 		if (strlen($html_content) > 0)
@@ -119,7 +124,7 @@ class MediaCore
 		{
 			$html_content_copy = $html_content;
 			$html_content = preg_replace_callback(
-				'/\\s*(<script\\b[^>]*?>)([\\s\\S]*?)(<\\/script>)\\s*/i',
+				Media::$pattern_js,
 				array('Media', 'packJSinHTMLpregCallback'),
 				$html_content,
 				Media::getBackTrackLimit());
@@ -794,7 +799,7 @@ class MediaCore
 						Context::getContext()->controller->addJS($src);
 				}
 			}
-		$output = preg_replace_callback('/<script[^>]*>(.*)<\s*\/script\s*[^>]*>/Uims', array('Media', 'deferScript'), $output);
+		$output = preg_replace_callback(Media::$pattern_js, array('Media', 'deferScript'), $output);
 		return $output;
 	}
 
@@ -815,11 +820,11 @@ class MediaCore
 		if (isset($matches[0]))
 			$original = trim($matches[0]);
 
-		if (isset($matches[1]))
-			$inline = trim($matches[1]);
+		if (isset($matches[2]))
+			$inline = trim($matches[2]);
 
 		/* This is an inline script, add its content to inline scripts stack then remove it from content */
-		if (!empty($inline) && preg_match('/<\s*[\/]script[^>]*>/ims', $original) !== false && Media::$inline_script[] = $inline)
+		if (!empty($inline) && preg_match(Media::$pattern_js, $original) !== false && Media::$inline_script[] = $inline)
 			return '';
 
 		/* This is an external script, if it already belongs to js_files then remove it from content */
