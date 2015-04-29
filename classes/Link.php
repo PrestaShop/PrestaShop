@@ -499,29 +499,31 @@ class LinkCore
 		if (!empty($context->controller->php_self))
 			$controller = $context->controller->php_self;
 
+		$id_shop = (int)$context->shop->id;
+
 		if ($controller == 'product' && isset($params['id_product']))
-			return $this->getProductLink((int)$params['id_product'], null, null, null, (int)$id_lang);
+			return $this->getProductLink((int)$params['id_product'], null, null, null, (int)$id_lang, $id_shop);
 		elseif ($controller == 'category' && isset($params['id_category']))
-			return $this->getCategoryLink((int)$params['id_category'], null, (int)$id_lang);
+			return $this->getCategoryLink((int)$params['id_category'], null, (int)$id_lang, $id_shop);
 		elseif ($controller == 'supplier' && isset($params['id_supplier']))
-			return $this->getSupplierLink((int)$params['id_supplier'], null, (int)$id_lang);
+			return $this->getSupplierLink((int)$params['id_supplier'], null, (int)$id_lang, $id_shop);
 		elseif ($controller == 'manufacturer' && isset($params['id_manufacturer']))
-			return $this->getManufacturerLink((int)$params['id_manufacturer'], null, (int)$id_lang);
+			return $this->getManufacturerLink((int)$params['id_manufacturer'], null, (int)$id_lang, $id_shop);
 		elseif ($controller == 'cms' && isset($params['id_cms']))
-			return $this->getCMSLink((int)$params['id_cms'], null, false, (int)$id_lang);
+			return $this->getCMSLink((int)$params['id_cms'], null, false, (int)$id_lang, $id_shop);
 		elseif ($controller == 'cms' && isset($params['id_cms_category']))
-			return $this->getCMSCategoryLink((int)$params['id_cms_category'], null, (int)$id_lang);
+			return $this->getCMSCategoryLink((int)$params['id_cms_category'], null, (int)$id_lang, $id_shop);
 		elseif (isset($params['fc']) && $params['fc'] == 'module')
 		{
 			$module = Validate::isModuleName(Tools::getValue('module')) ? Tools::getValue('module') : '';
 			if (!empty($module))
 			{
 				unset($params['fc'], $params['module']);
-				return $this->getModuleLink($module, $controller, $params, null, (int)$id_lang);
+				return $this->getModuleLink($module, $controller, $params, null, (int)$id_lang, $id_shop);
 			}
 		}
 
-		return $this->getPageLink($controller, null, $id_lang, $params);
+		return $this->getPageLink($controller, null, $id_lang, $params, false, $id_shop);
 	}
 
 	public function goPage($url, $p)
