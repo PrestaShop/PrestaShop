@@ -330,7 +330,7 @@ abstract class CacheCore
 
 	public static function store($key, $value)
 	{
-		// PHP is not efficient as storing array
+		// PHP is not efficient at storing array
 		// Better delete the whole cache if there are
 		// more than 1000 elements in the array
 		if (count(Cache::$local) > 1000) {
