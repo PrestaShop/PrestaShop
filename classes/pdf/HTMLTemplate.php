@@ -45,37 +45,7 @@ abstract class HTMLTemplateCore
 	 */
 	public function getHeader()
 	{
-		$this->setShopId();
-		$id_shop = (int)$this->shop->id;
-		$shop_name = Configuration::get('PS_SHOP_NAME', null, null, $id_shop);
-
-		$path_logo = $this->getLogo();
-
-		$width = 0;
-		$height = 0;
-		if (!empty($path_logo))
-			list($width, $height) = getimagesize($path_logo);
-
-		// Limit the height of the logo for the PDF render
-		$maximum_height = 100;
-		if ($height > $maximum_height)
-		{
-			$ratio = $maximum_height / $height;
-			$height *= $ratio;
-			$width *= $ratio;
-		}
-
-		$this->smarty->assign(array(
-			'logo_path' => $path_logo,
-			'img_ps_dir' => 'http://'.Tools::getMediaServer(_PS_IMG_)._PS_IMG_,
-			'img_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
-			'title' => $this->title,
-			'date' => $this->date,
-			'shop_name' => $shop_name,
-			'shop_details' => Configuration::get('PS_SHOP_DETAILS', null, null, (int)$id_shop),
-			'width_logo' => $width,
-			'height_logo' => $height
-		));
+		$this->assignCommonHeaderData();
 
 		return $this->smarty->fetch($this->getTemplate('header'));
 	}
@@ -131,6 +101,46 @@ abstract class HTMLTemplateCore
 		elseif (Configuration::get('PS_LOGO', null, null, $id_shop) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, $id_shop)))
 			$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, $id_shop);
 		return $logo;
+	}
+
+	/**
+	 * Assign common header data to smarty variables
+	 * @return void
+	 */
+
+	public function assignCommonHeaderData()
+	{
+		$this->setShopId();
+		$id_shop = (int)$this->shop->id;
+		$shop_name = Configuration::get('PS_SHOP_NAME', null, null, $id_shop);
+
+		$path_logo = $this->getLogo();
+
+		$width = 0;
+		$height = 0;
+		if (!empty($path_logo))
+			list($width, $height) = getimagesize($path_logo);
+
+		// Limit the height of the logo for the PDF render
+		$maximum_height = 100;
+		if ($height > $maximum_height)
+		{
+			$ratio = $maximum_height / $height;
+			$height *= $ratio;
+			$width *= $ratio;
+		}
+
+		$this->smarty->assign(array(
+			'logo_path' => $path_logo,
+			'img_ps_dir' => 'http://'.Tools::getMediaServer(_PS_IMG_)._PS_IMG_,
+			'img_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
+			'date' => $this->date,
+			'title' => $this->title,
+			'shop_name' => $shop_name,
+			'shop_details' => Configuration::get('PS_SHOP_DETAILS', null, null, (int)$id_shop),
+			'width_logo' => $width,
+			'height_logo' => $height
+		));
 	}
 
 	/**
