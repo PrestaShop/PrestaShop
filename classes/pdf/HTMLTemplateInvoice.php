@@ -52,6 +52,20 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 		$this->shop = new Shop((int)$this->order->id_shop);
 	}
 
+	/**
+	 * Returns the template's HTML header
+	 * @return string HTML header
+	 */
+	public function getHeader()
+	{
+		$this->assignCommonHeaderData();
+		$this->smarty->assign(array(
+			'header' => $this->l('INVOICE'),
+		));
+
+		return $this->smarty->fetch($this->getTemplate('header'));
+	}
+
 	private function computeLayout($params)
 	{
 		$layout = array(
