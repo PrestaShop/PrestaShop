@@ -127,6 +127,7 @@ class OrderInvoiceCore extends ObjectModel
 		$address->postcode = Configuration::get('PS_SHOP_CODE');
 		$address->city = Configuration::get('PS_SHOP_CITY');
 		$address->phone = Configuration::get('PS_SHOP_PHONE');
+		$address->id_country = Configuration::get('PS_SHOP_COUNTRY_ID');
 
 		$this->shop_address = AddressFormat::generateAddress($address, array(), '<br />', ' ');
 
