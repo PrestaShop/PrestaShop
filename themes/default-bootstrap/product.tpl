@@ -697,7 +697,7 @@
 	{addJsDef customerGroupWithoutTax=false}
 {/if}
 {if isset($group_reduction)}
-	{addJsDef groupReduction=$group_reduction}
+	{addJsDef groupReduction=$group_reduction|floatval}
 {else}
 	{addJsDef groupReduction=false}
 {/if}
@@ -742,7 +742,6 @@
 {addJsDef specific_currency=($product->specificPrice && $product->specificPrice.id_currency)|boolval} {* TODO: remove if always false *}
 {addJsDef stock_management=$PS_STOCK_MANAGEMENT|intval}
 {addJsDef taxRate=$tax_rate|floatval}
-{addJsDef group_reduction=$group_reduction|floatval}
 {addJsDefL name=doesntExist}{l s='This combination does not exist for this product. Please select another combination.' js=1}{/addJsDefL}
 {addJsDefL name=doesntExistNoMore}{l s='This product is no longer in stock' js=1}{/addJsDefL}
 {addJsDefL name=doesntExistNoMoreBut}{l s='with those attributes but is available with others.' js=1}{/addJsDefL}
