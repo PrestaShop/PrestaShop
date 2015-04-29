@@ -418,13 +418,13 @@
 								<td>
 									{if $quantity_discount.price >= 0 || $quantity_discount.reduction_type == 'amount'}
 										{if $display_discount_price}
-											{convertPrice price=$productPrice|floatval-$quantity_discount.real_value|floatval}
+											{convertPrice price=$productPriceWithoutReduction|floatval-$quantity_discount.real_value|floatval}
 										{else}
 											{convertPrice price=$quantity_discount.real_value|floatval}
 										{/if}
 									{else}
 										{if $display_discount_price}
-											{convertPrice price = $productPrice|floatval-($productPrice*$quantity_discount.reduction)|floatval}
+											{convertPrice price = $productPriceWithoutReduction|floatval-($productPriceWithoutReduction*$quantity_discount.reduction)|floatval}
 										{else}
 											{$quantity_discount.real_value|floatval}%
 										{/if}
@@ -433,12 +433,12 @@
 								<td>
 									<span>{l s='Up to'}</span>
 									{if $quantity_discount.price >= 0 || $quantity_discount.reduction_type == 'amount'}
-										{$discountPrice=$productPrice|floatval-$quantity_discount.real_value|floatval}
+										{$discountPrice=$productPriceWithoutReduction|floatval-$quantity_discount.real_value|floatval}
 									{else}
-										{$discountPrice=$productPrice|floatval-($productPrice*$quantity_discount.reduction)|floatval}
+										{$discountPrice=$productPriceWithoutReduction|floatval-($productPriceWithoutReduction*$quantity_discount.reduction)|floatval}
 									{/if}
 									{$discountPrice=$discountPrice * $quantity_discount.quantity}
-									{$qtyProductPrice=$productPrice|floatval * $quantity_discount.quantity}
+									{$qtyProductPrice=$productPriceWithoutReduction|floatval * $quantity_discount.quantity}
 									{convertPrice price=$qtyProductPrice - $discountPrice}
 								</td>
 							</tr>
