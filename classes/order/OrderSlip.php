@@ -311,7 +311,9 @@ class OrderSlipCore extends ObjectModel
 			if ($quantity == 0)
 				continue;
 
-			$order_detail->product_quantity_refunded += $quantity;
+			if (!Tools::isSubmit('cancelProduct') && $order->hasBeenPaid())
+				$order_detail->product_quantity_refunded += $quantity;
+
 			$order_detail->save();
 
 			$address = Address::initialize($order->id_address_invoice, false);
