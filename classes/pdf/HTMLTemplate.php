@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author 	PrestaShop SA <contact@prestashop.com>
+ *  @copyright  2007-2015 PrestaShop SA
+ *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * @since 1.5
@@ -41,6 +41,7 @@ abstract class HTMLTemplateCore
 
 	/**
 	 * Returns the template's HTML header
+	 *
 	 * @return string HTML header
 	 */
 	public function getHeader()
@@ -52,6 +53,7 @@ abstract class HTMLTemplateCore
 
 	/**
 	 * Returns the template's HTML footer
+	 *
 	 * @return string HTML footer
 	 */
 	public function getFooter()
@@ -74,6 +76,7 @@ abstract class HTMLTemplateCore
 
 	/**
 	 * Returns the shop address
+	 *
 	 * @return string
 	 */
 	protected function getShopAddress()
@@ -105,7 +108,6 @@ abstract class HTMLTemplateCore
 
 	/**
 	 * Assign common header data to smarty variables
-	 * @return void
 	 */
 
 	public function assignCommonHeaderData()
@@ -144,10 +146,10 @@ abstract class HTMLTemplateCore
 	}
 
 	/**
-	* Assign hook data
-	*
-	* @param ObjectModel $object generally the object used in the constructor
-	*/
+	 * Assign hook data
+	 *
+	 * @param ObjectModel $object generally the object used in the constructor
+	 */
 	public function assignHookData($object)
 	{
 		$template = ucfirst(str_replace('HTMLTemplate', '', get_class($this)));
@@ -160,6 +162,7 @@ abstract class HTMLTemplateCore
 
 	/**
 	 * Returns the template's HTML content
+	 *
 	 * @return string HTML content
 	 */
 	abstract public function getContent();
@@ -167,12 +170,14 @@ abstract class HTMLTemplateCore
 
 	/**
 	 * Returns the template filename
+	 *
 	 * @return string filename
 	 */
 	abstract public function getFilename();
 
 	/**
 	 * Returns the template filename when using bulk rendering
+	 *
 	 * @return string filename
 	 */
 	abstract public function getBulkFilename();
@@ -182,6 +187,7 @@ abstract class HTMLTemplateCore
 	 * in _PS_PDF_DIR_ directory
 	 *
 	 * @param $template_name
+	 *
 	 * @return string
 	 */
 	protected function getTemplate($template_name)
@@ -199,8 +205,10 @@ abstract class HTMLTemplateCore
 
 
 	/**
-	 * Translatation method
+	 * Translation method
+	 *
 	 * @param string $string
+	 *
 	 * @return string translated text
 	 */
 	protected static function l($string)
