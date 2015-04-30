@@ -255,4 +255,20 @@ class CustomizationCore extends ObjectModel
 		}
 		return true;
 	}
+
+	/**
+	 * Method gets customized data value
+	 * @param int $id_customization
+	 * @return array
+	 */
+	public static function getCustomizedDataValue($id_customization)
+	{
+		$results = Db::getInstance()->executeS('
+			SELECT `value`
+			FROM `'._DB_PREFIX_.'customized_data`
+			WHERE `id_customization` = '.(int)$id_customization
+			);
+
+		return $results;
+	}
 }
