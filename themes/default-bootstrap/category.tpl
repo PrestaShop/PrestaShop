@@ -104,12 +104,14 @@
                 	{include file="./nbr-product-page.tpl"}
 				</div>
                 <div class="top-pagination-content clearfix">
+                    {hook h='displayCompareForm'}
 					{include file="$tpl_dir./pagination.tpl"}
                 </div>
 			</div>
 			{include file="./product-list.tpl" products=$products}
 			<div class="content_sortPagiBar">
 				<div class="bottom-pagination-content clearfix">
+                    {hook h='displayCompareForm' paginationId='bottom'}
                     {include file="./pagination.tpl" paginationId='bottom'}
 				</div>
 			</div>
