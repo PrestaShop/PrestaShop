@@ -316,8 +316,8 @@
     <hook id="actionAdminLoginControllerSetMedia" live_edit="0">
       <name>actionAdminLoginControllerSetMedia</name><title>Set media on admin login page header</title><description>This hook is called after adding media to admin login page header</description>
     </hook>
-    <hook id="actionOrderChanged" live_edit="0">
-      <name>actionOrderChanged</name><title>Order changed - Event</title><description>This hook launches modules an order is modified.</description>
+    <hook id="actionOrderEdited" live_edit="0">
+      <name>actionOrderEdited</name><title>Order edited</title><description>This hook is called when an order is edited.</description>
     </hook>
   </entities>
 </entity_hook>

@@ -2226,7 +2226,7 @@ class AdminOrdersControllerCore extends AdminController
 		if (is_null($order))
 			$order = new Order(Tools::getValue('id_order'));
 
-		Hook::exec('actionOrderChanged', array('order' => $order));
+		Hook::exec('actionOrderEdited', array('order' => $order));
 	}
 
 	public function ajaxProcessLoadProductInformation()
