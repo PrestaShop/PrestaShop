@@ -135,9 +135,6 @@ class CategoryControllerCore extends FrontController
 		if (!$this->customer_access)
 			return;
 
-		if (isset($this->context->cookie->id_compare))
-			$this->context->smarty->assign('compareProducts', CompareProduct::getCompareProducts((int)$this->context->cookie->id_compare));
-
 		// Product sort must be called before assignProductList()
 		$this->productSort();
 
