@@ -1330,9 +1330,12 @@ class AdminImportControllerCore extends AdminController
 			else
 				$product = new Product();
 
+
+			$update_advanced_stock_management_value = false;
 			if (isset($product->id) && $product->id && Product::existsInDatabase((int)$product->id, 'product'))
 			{
 				$product->loadStockData();
+				$update_advanced_stock_management_value = true;
 				$category_data = Product::getProductCategories((int)$product->id);
 
 				if (is_array($category_data))
@@ -1815,7 +1818,7 @@ class AdminImportControllerCore extends AdminController
 						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management has incorrect value. Not set for product %1$s '), $product->name[$default_language_id]);
 					elseif (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $product->advanced_stock_management == 1)
 						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, cannot enable on product %1$s '), $product->name[$default_language_id]);
-					else
+					elseif ($update_advanced_stock_management_value)
 						$product->setAdvancedStockManagement($product->advanced_stock_management);
 					// automaticly disable depends on stock, if a_s_m set to disabled
 					if (StockAvailable::dependsOnStock($product->id) == 1 && $product->advanced_stock_management == 0)
