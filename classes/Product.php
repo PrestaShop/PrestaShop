@@ -2449,18 +2449,23 @@ class ProductCore extends ObjectModel
 	 */
 	public static function getProductCategories($id_product = '')
 	{
-		$ret = array();
+		$cache_id = 'Product::getProductCategories_'.(int)$id_product;
+		if (!Cache::isStored($cache_id))
+		{
+			$ret = array();
 
-		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT `id_category` FROM `'._DB_PREFIX_.'category_product`
-			WHERE `id_product` = '.(int)$id_product
-		);
+			$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+				SELECT `id_category` FROM `'._DB_PREFIX_.'category_product`
+				WHERE `id_product` = '.(int)$id_product
+			);
 
-		if ($row)
-			foreach ($row as $val)
-				$ret[] = $val['id_category'];
-
-		return $ret;
+			if ($row)
+				foreach ($row as $val)
+					$ret[] = $val['id_category'];
+			Cache::store($cache_id, $ret);
+			return $ret;
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	public static function getProductCategoriesFull($id_product = '', $id_lang = null)

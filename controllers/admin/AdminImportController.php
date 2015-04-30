@@ -1302,6 +1302,7 @@ class AdminImportControllerCore extends AdminController
 		$match_ref = Tools::getValue('match_ref');
 		$regenerate = Tools::getValue('regenerate');
 		$shop_is_feature_active = Shop::isFeatureActive();
+		Module::setInImport(true);
 
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
@@ -1896,6 +1897,7 @@ class AdminImportControllerCore extends AdminController
 			}
 		}
 		$this->closeCsvFile($handle);
+		Module::processDeferedClearCache();
 	}
 
 	public function productImportCreateCat($default_language_id, $category_name, $id_parent_category = null)

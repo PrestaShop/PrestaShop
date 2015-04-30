@@ -682,11 +682,18 @@ class ShopCore extends ObjectModel
 
 	public static function getCompleteListOfShopsID()
 	{
-		$list = array();
-		$sql = 'SELECT id_shop FROM '._DB_PREFIX_.'shop';
-		foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql) as $row)
-			$list[] = $row['id_shop'];
-		return $list;
+		$cache_id = 'Shop::getCompleteListOfShopsID';
+		if (!Cache::isStored($cache_id))
+		{
+			$list = array();
+			$sql = 'SELECT id_shop FROM '._DB_PREFIX_.'shop';
+			foreach (Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql) as $row)
+				$list[] = $row['id_shop'];
+
+			Cache::store($cache_id, $list);
+			return $list;
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	/**
