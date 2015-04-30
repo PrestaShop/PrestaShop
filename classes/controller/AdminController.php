@@ -764,6 +764,7 @@ class AdminControllerCore extends Controller
 		}
 
 		$filters = $this->context->cookie->getFamily($prefix.$this->list_id.'Filter_');
+		$definition = ObjectModel::getDefinition($this->className);
 		foreach ($filters as $key => $value)
 		{
 			/* Extracting filters from $_POST on key filter_ */
@@ -812,18 +813,19 @@ class AdminControllerCore extends Controller
 					{
 						$sql_filter .= ' AND ';
 						$check_key = ($key == $this->identifier || $key == '`'.$this->identifier.'`');
+						$alias = !empty($definition['fields'][$filter]['shop']) ? 'sa' : 'a';
 
 						if ($type == 'int' || $type == 'bool')
-							$sql_filter .= (($check_key || $key == '`active`') ? 'a.' : '').pSQL($key).' = '.(int)$value.' ';
+							$sql_filter .= (($check_key || $key == '`active`') ?  $alias.'.' : '').pSQL($key).' = '.(int)$value.' ';
 						elseif ($type == 'decimal')
-							$sql_filter .= ($check_key ? 'a.' : '').pSQL($key).' = '.(float)$value.' ';
+							$sql_filter .= ($check_key ?  $alias.'.' : '').pSQL($key).' = '.(float)$value.' ';
 						elseif ($type == 'select')
-							$sql_filter .= ($check_key ? 'a.' : '').pSQL($key).' = \''.pSQL($value).'\' ';
+							$sql_filter .= ($check_key ?  $alias.'.' : '').pSQL($key).' = \''.pSQL($value).'\' ';
 						else
 						{
 							if ($type == 'price')
 								$value = (float)str_replace(',', '.', $value);
-							$sql_filter .= ($check_key ? 'a.' : '').pSQL($key).' LIKE \'%'.pSQL(trim($value)).'%\' ';
+							$sql_filter .= ($check_key ?  $alias.'.' : '').pSQL($key).' LIKE \'%'.pSQL(trim($value)).'%\' ';
 						}
 					}
 				}
