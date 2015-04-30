@@ -129,8 +129,14 @@ class ProductsComparison extends Module
 		if (isset($params['paginationId']))
 			$this->context->smarty->assign('paginationId', $params['paginationId']);
 
+		$compared_products = array();
+		if (isset($this->context->cookie->id_compare))
+			$compared_products = CompareProduct::getCompareProducts($this->context->cookie->id_compare);
+
 		$this->context->smarty->assign(array(
-			'comparator_max_item' => $comparator_max_item
+			'comparator_max_item' => $comparator_max_item,
+			'compared_products'   => is_array($compared_products) ? $compared_products : array(),
+			'compareProducts'   => is_array($compared_products) ? $compared_products : array(),
 		));
 
 		return $this->display(__FILE__, 'product-compare.tpl');
