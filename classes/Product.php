@@ -1940,12 +1940,16 @@ class ProductCore extends ObjectModel
 			$cache_key = $row['id_product'].'_'.$row['id_product_attribute'].'_quantity';
 
 			if (!Cache::isStored($cache_key))
+			{
+				$result = StockAvailable::getQuantityAvailableByProduct($row['id_product'], $row['id_product_attribute']);
 				Cache::store(
 					$cache_key,
-					StockAvailable::getQuantityAvailableByProduct($row['id_product'], $row['id_product_attribute'])
+					$result
 				);
-
-			$combinations[$key]['quantity'] = Cache::retrieve($cache_key);
+				$combinations[$key]['quantity'] = $result;
+			}
+			else
+				$combinations[$key]['quantity'] = Cache::retrieve($cache_key);
 		}
 
 		return $combinations;
@@ -2027,12 +2031,16 @@ class ProductCore extends ObjectModel
 			$cache_key = $row['id_product'].'_'.$row['id_product_attribute'].'_quantity';
 
 			if (!Cache::isStored($cache_key))
+			{
+				$result = StockAvailable::getQuantityAvailableByProduct($row['id_product'], $row['id_product_attribute']);
 				Cache::store(
 					$cache_key,
-					StockAvailable::getQuantityAvailableByProduct($row['id_product'], $row['id_product_attribute'])
+					$result
 				);
-
-			$res[$key]['quantity'] = Cache::retrieve($cache_key);
+				$res[$key]['quantity'] = $result;
+			}
+			else
+				$res[$key]['quantity'] = Cache::retrieve($cache_key);
 		}
 
 		return $res;
@@ -2567,6 +2575,7 @@ class ProductCore extends ObjectModel
 					AND image_shop.`cover` = 1';
 			$result = Db::getInstance()->getRow($sql);
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -2651,7 +2660,8 @@ class ProductCore extends ObjectModel
 				$cart_quantity = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 				Cache::store($cache_id, $cart_quantity);
 			}
-			$cart_quantity = Cache::retrieve($cache_id);
+			else
+				$cart_quantity = Cache::retrieve($cache_id);
 		}
 
 		$id_currency = Validate::isLoadedObject($context->currency) ? (int)$context->currency->id : (int)Configuration::get('PS_CURRENCY_DEFAULT');
@@ -4638,6 +4648,7 @@ class ProductCore extends ObjectModel
 				WHERE cp.`id_product` = '.(int)$id_product.' AND cg.`id_customer` = '.(int)$id_customer);
 
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -4735,13 +4746,15 @@ class ProductCore extends ObjectModel
 			$context = Context::getContext();
 		$key = 'product_id_tax_rules_group_'.(int)$id_product.'_'.(int)$context->shop->id;
 		if (!Cache::isStored($key))
-			Cache::store($key,
-			Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT `id_tax_rules_group`
-				FROM `'._DB_PREFIX_.'product_shop`
-				WHERE `id_product` = '.(int)$id_product.' AND id_shop='.(int)$context->shop->id));
-
-		return (int)Cache::retrieve($key);
+		{
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+							SELECT `id_tax_rules_group`
+							FROM `'._DB_PREFIX_.'product_shop`
+							WHERE `id_product` = '.(int)$id_product.' AND id_shop='.(int)$context->shop->id);
+			Cache::store($key, (int)$result);
+			return (int)$result;
+		}
+		return Cache::retrieve($key);
 	}
 
 	/**
@@ -5296,7 +5309,8 @@ class ProductCore extends ObjectModel
 				AND agl.`id_lang` = '.(int)$id_lang);
 			Cache::store($cache_id, $result);
 		}
-		$result = Cache::retrieve($cache_id);
+		else
+			$result = Cache::retrieve($cache_id);
 		return $result;
 	}
 

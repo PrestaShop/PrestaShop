@@ -2057,6 +2057,7 @@ abstract class ModuleCore
 		{
 			$id_module = Module::getModuleIdByName($module_name);
 			Cache::store('Module::isInstalled'.$module_name, (bool)$id_module);
+			return (bool)$id_module;
 		}
 		return Cache::retrieve('Module::isInstalled'.$module_name);
 	}
@@ -2081,6 +2082,7 @@ abstract class ModuleCore
 			if (Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module_shop` WHERE `id_module` = '.(int)$id_module.' AND `id_shop` = '.(int)Context::getContext()->shop->id))
 				$active = true;
 			Cache::store('Module::isEnabled'.$module_name, (bool)$active);
+			return (bool)$active;
 		}
 		return Cache::retrieve('Module::isEnabled'.$module_name);
 	}
@@ -2379,6 +2381,7 @@ abstract class ModuleCore
 		{
 			$result = (int)Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = "'.pSQL($name).'"');
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}

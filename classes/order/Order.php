@@ -779,6 +779,7 @@ class OrderCore extends ObjectModel
 			WHERE o.id_customer = '.(int)$id_customer.'
 			AND ocr.id_cart_rule = '.(int)$id_cart_rule);
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}

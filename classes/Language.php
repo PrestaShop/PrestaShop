@@ -637,14 +637,23 @@ class LanguageCore extends ObjectModel
 	 * Return id from iso code
 	 *
 	 * @param string $iso_code Iso code
-	 * @return int Language ID
+	 * @param bool $no_cache
+	 * @return false|null|string
 	 */
-	public static function getIdByIso($iso_code)
+	public static function getIdByIso($iso_code, $no_cache = false)
 	{
 		if (!Validate::isLanguageIsoCode($iso_code))
 			die(Tools::displayError('Fatal error: ISO code is not correct').' '.Tools::safeOutput($iso_code));
 
-		return Db::getInstance()->getValue('SELECT `id_lang` FROM `'._DB_PREFIX_.'lang` WHERE `iso_code` = \''.pSQL(strtolower($iso_code)).'\'');
+		$key = 'Language::getIdByIso_'.$iso_code;
+		if ($no_cache || !Cache::isStored($key))
+		{
+			$id_lang = Db::getInstance()->getValue('SELECT `id_lang` FROM `'._DB_PREFIX_.'lang` WHERE `iso_code` = \''.pSQL(strtolower($iso_code)).'\'');
+
+			Cache::store($key, $id_lang);
+			return $id_lang;
+		}
+		return Cache::retrieve($key);
 	}
 
 	public static function getLanguageCodeByIso($iso_code)
@@ -952,7 +961,9 @@ class LanguageCore extends ObjectModel
 		{
 			if (!$tar instanceof Archive_Tar)
 				return false;
-			Cache::store($key, $tar->listContent());
+			$result = $tar->listContent();
+			Cache::store($key, $result);
+			return $result;
 		}
 		return Cache::retrieve($key);
 	}

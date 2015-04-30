@@ -303,6 +303,7 @@ class CarrierCore extends ObjectModel
 					ORDER BY w.`delimiter2` DESC';
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -481,7 +482,9 @@ class CarrierCore extends ObjectModel
 			$carriers = Db::getInstance()->executeS($sql);
 			Cache::store($cache_id, $carriers);
 		}
-		$carriers = Cache::retrieve($cache_id);
+		else
+			$carriers = Cache::retrieve($cache_id);
+
 		foreach ($carriers as $key => $carrier)
 			if ($carrier['name'] == '0')
 				$carriers[$key]['name'] = Carrier::getCarrierNameFromShopName();
@@ -1005,12 +1008,14 @@ class CarrierCore extends ObjectModel
 			$context = Context::getContext();
 		$key = 'carrier_id_tax_rules_group_'.(int)$id_carrier.'_'.(int)$context->shop->id;
 		if (!Cache::isStored($key))
-			Cache::store($key,
-			Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT `id_tax_rules_group`
-				FROM `'._DB_PREFIX_.'carrier_tax_rules_group_shop`
-				WHERE `id_carrier` = '.(int)$id_carrier.' AND id_shop='.(int)Context::getContext()->shop->id));
-
+		{
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+							SELECT `id_tax_rules_group`
+							FROM `'._DB_PREFIX_.'carrier_tax_rules_group_shop`
+							WHERE `id_carrier` = '.(int)$id_carrier.' AND id_shop='.(int)Context::getContext()->shop->id);
+			Cache::store($key, $result);
+			return $result;
+		}
 		return Cache::retrieve($key);
 	}
 
@@ -1231,7 +1236,8 @@ class CarrierCore extends ObjectModel
 			$carriers_for_product = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 			Cache::store($cache_id, $carriers_for_product);
 		}
-		$carriers_for_product = Cache::retrieve($cache_id);
+		else
+			$carriers_for_product = Cache::retrieve($cache_id);
 
 		$carrier_list = array();
 		if (!empty($carriers_for_product))

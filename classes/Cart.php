@@ -374,7 +374,8 @@ class CartCore extends ObjectModel
 			);
 			Cache::store($cache_key, $result);
 		}
-		$result = Cache::retrieve($cache_key);
+		else
+			$result = Cache::retrieve($cache_key);
 
 		// Define virtual context to prevent case where the cart is not the in the global context
 		$virtual_context = Context::getContext()->cloneContext();
@@ -420,7 +421,8 @@ class CartCore extends ObjectModel
 			);
 			Cache::store($cache_key, $result);
 		}
-		$result = Cache::retrieve($cache_key);
+		else
+			$result = Cache::retrieve($cache_key);
 
 		return $result;
 	}
@@ -437,6 +439,7 @@ class CartCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'cart_cart_rule`
 				WHERE `id_cart_rule` = '.(int)$id_cart_rule.' AND `id_cart` = '.(int)$this->id);
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -1133,6 +1136,7 @@ class CartCore extends ObjectModel
 		{
 			$result = (bool)Db::getInstance()->getValue('SELECT count(*) FROM `'._DB_PREFIX_.'orders` WHERE `id_cart` = '.(int)$this->id);
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -2421,7 +2425,8 @@ class CartCore extends ObjectModel
 			);
 			Cache::store($cache_id, $result);
 		}
-		$result = Cache::retrieve($cache_id);
+		else
+			$result = Cache::retrieve($cache_id);
 
 		$result[] = array('id_address_delivery' => (int)$this->id_address_delivery);
 

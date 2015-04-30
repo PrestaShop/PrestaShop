@@ -202,7 +202,8 @@ class ShopCore extends ObjectModel
 			AND s.active = 1 AND s.deleted = 0 AND su.main = 1');
 			Cache::store($cache_id, $row);
 		}
-		$row = Cache::retrieve($cache_id);
+		else
+			$row = Cache::retrieve($cache_id);
 		if (!$row)
 			return false;
 

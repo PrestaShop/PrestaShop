@@ -153,8 +153,8 @@ class ImageCore extends ObjectModel
 
 			Cache::store($cache_id, $row);
 		}
-
-		$row = Cache::retrieve($cache_id);
+		else
+			$row = Cache::retrieve($cache_id);
 		return $row;
 	}
 

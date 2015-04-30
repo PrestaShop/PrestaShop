@@ -375,7 +375,9 @@ class StockAvailableCore extends ObjectModel
 
 			$query->where('id_product_attribute = '.(int)$id_product_attribute);
 			$query = StockAvailable::addSqlShopRestriction($query, $id_shop);
-			Cache::store($key, (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query));
+			$result = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+			Cache::store($key, $result);
+			return $result;
 		}
 
 		return Cache::retrieve($key);

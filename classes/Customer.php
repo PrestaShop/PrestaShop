@@ -369,6 +369,7 @@ class CustomerCore extends ObjectModel
 			AND active = 1
 			AND `deleted` = 0');
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -450,6 +451,7 @@ class CustomerCore extends ObjectModel
 
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -489,6 +491,7 @@ class CustomerCore extends ObjectModel
 			WHERE `id_customer` = '.(int)$id_customer.'
 			AND `passwd` = \''.pSQL($passwd).'\'');
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -605,6 +608,7 @@ class CustomerCore extends ObjectModel
 			FROM '._DB_PREFIX_.'customer c
 			WHERE c.`id_customer` = '.(int)$id_customer);
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}
