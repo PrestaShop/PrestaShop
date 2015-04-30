@@ -27,6 +27,9 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
+// Loading Models
+include(_PS_MODULE_DIR_ . 'productscomparison/models/CompareProduct.php');
+
 class ProductsComparison extends Module
 {
 	public function __construct()
@@ -53,7 +56,7 @@ class ProductsComparison extends Module
 		if (!parent::install())
 			return false;
 
-		if (!$this->registerHook('displayProductComparison') || !$this->registerHook('displayCompareForm') || !$this->registerHook('actionFrontControllerSetMedia'))
+		if (!$this->registerHook('displayProductComparison') || !$this->registerHook('displayCompareForm') || !$this->registerHook('actionFrontControllerSetMedia') || !$this->registerHook('actionAuthentication'))
 			return false;
 
 		Configuration::updateValue('PS_COMPARATOR_MAX_ITEM', (int)3);
@@ -78,6 +81,12 @@ class ProductsComparison extends Module
 		*/
 	}
 
+	public function hookActionAuthentication()
+	{
+		$this->context->cookie->id_compare = isset($this->context->cookie->id_compare) ? $this->context->cookie->id_compare: CompareProduct::getIdCompareByIdCustomer($customer->id);
+		$this->context->cookie->write();
+	}
+
 	public function hookActionFrontControllerSetMedia()
 	{
 		if (Configuration::get('PS_COMPARATOR_MAX_ITEM') > 0)
@@ -92,6 +101,8 @@ class ProductsComparison extends Module
 			return false;
 
 		$compared_products = array();
+		if (isset($this->context->cookie->id_compare))
+			$compared_products = CompareProduct::getCompareProducts($this->context->cookie->id_compare);
 
 		Media::addJsDef('comparator_max_item', $comparator_max_item);
 		Media::addJsDef('comparedProductsIds', $compared_products);
@@ -101,7 +112,8 @@ class ProductsComparison extends Module
 
 		$this->context->smarty->assign(array(
 			'product' => $params['product'],
-			'comparator_max_item' => $comparator_max_item
+			'comparator_max_item' => $comparator_max_item,
+			'compared_products'   => is_array($compared_products) ? $compared_products : array(),
 		));
 
 		return $this->display(__FILE__, 'displayProductComparison.tpl');
@@ -109,7 +121,6 @@ class ProductsComparison extends Module
 
 	public function hookDisplayCompareForm($params)
 	{
-		ddd('aa');
 		$comparator_max_item = (int)Configuration::get('PS_COMPARATOR_MAX_ITEM');
 
 		if (!(int)$comparator_max_item)

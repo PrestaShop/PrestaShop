@@ -24,7 +24,7 @@
 *}
 aaaa
 {if $comparator_max_item}
-	<form method="post" action="{$link->getPageLink('products-comparison')|escape:'html':'UTF-8'}" class="compare-form">
+	<form method="post" action="{$link->getModuleLink('productscomparison', 'compare', [], true)|escape:'html':'UTF-8'}" class="compare-form">
 		<button type="submit" class="btn btn-default button button-medium bt_compare bt_compare{if isset($paginationId)}_{$paginationId}{/if}" disabled="disabled">
 			<span>{l s='Compare'} (<strong class="total-compare-val">{count($compared_products)}</strong>)<i class="icon-chevron-right right"></i></span>
 		</button>
