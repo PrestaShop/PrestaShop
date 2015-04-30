@@ -32,7 +32,7 @@ class HelperListCore extends Helper
 	/** @var array Cache for query results */
 	protected $_list = array();
 
-	/** @var integer Number of results in list */
+	/** @var int Number of results in list */
 	public $listTotal = 0;
 
 	/** @var array WHERE clause determined by filter fields */
@@ -41,7 +41,7 @@ class HelperListCore extends Helper
 	/** @var array Number of results in list per page (used in select field) */
 	public $_pagination = array(20, 50, 100, 300, 1000);
 
-	/** @var integer Default number of results in list per page */
+	/** @var int Default number of results in list per page */
 	public $_default_pagination = 50;
 
 	/** @var string ORDER BY clause determined by field/arrows in list header */
@@ -81,7 +81,7 @@ class HelperListCore extends Helper
 	 */
 	protected $fields_list;
 
-	/** @var boolean Content line is clickable if true */
+	/** @var bool Content line is clickable if true */
 	public $no_link = false;
 
 	/** @var Smarty_Internal_Template|string */
@@ -110,7 +110,7 @@ class HelperListCore extends Helper
 	/** @var string|null If not null, a title will be added on that list */
 	public $title = null;
 
-	/** @var boolean ask for simple header : no filters, no paginations and no sorting */
+	/** @var bool ask for simple header : no filters, no paginations and no sorting */
 	public $simple_header = false;
 
 	public $ajax_params = array();
@@ -506,7 +506,7 @@ class HelperListCore extends Helper
 	}
 
 	/**
-	 * Display delete action link
+	 * Display default action link
 	 */
 	public function displayDefaultLink($token = null, $id, $name = null)
 	{
@@ -514,11 +514,11 @@ class HelperListCore extends Helper
 		if (!array_key_exists('Default', self::$cache_lang))
 			self::$cache_lang['Default'] = $this->l('Default', 'Helper');
 
-		$tpl->assign(array_merge($this->tpl_delete_link_vars, array(
-			'href' => $this->currentIndex.'&'.$this->identifier.'='.(int)$id.'&delete'.$this->table.'&token='.($token != null ? $token : $this->token),
+		$tpl->assign(array(
+			'href' => $this->currentIndex.'&'.$this->identifier.'='.(int)$id.'&default'.$this->table.'&token='.($token != null ? $token : $this->token),
 			'action' => self::$cache_lang['Default'],
 			'name' => $name,
-		)));
+		));
 
 		return $tpl->fetch();
 	}

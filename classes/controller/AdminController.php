@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author 	PrestaShop SA <contact@prestashop.com>
+ *  @copyright  2007-2015 PrestaShop SA
+ *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 class AdminControllerCore extends Controller
 {
@@ -86,7 +86,7 @@ class AdminControllerCore extends Controller
 	/** @var array */
 	public $tabAccess;
 
-	/** @var integer Tab id */
+	/** @var int Tab id */
 	public $id = -1;
 
 	/** @var bool */
@@ -176,19 +176,19 @@ class AdminControllerCore extends Controller
 	/** @var array List of toolbar buttons */
 	protected $toolbar_btn = null;
 
-	/** @var boolean Scrolling toolbar */
+	/** @var bool Scrolling toolbar */
 	protected $toolbar_scroll = true;
 
-	/** @var boolean Set to false to hide toolbar and page title */
+	/** @var bool Set to false to hide toolbar and page title */
 	protected $show_toolbar = true;
 
-	/** @var boolean Set to true to show toolbar and page title for options */
+	/** @var bool Set to true to show toolbar and page title for options */
 	protected $show_toolbar_options = false;
 
-	/** @var integer Number of results in list */
+	/** @var int Number of results in list */
 	protected $_listTotal = 0;
 
-	/** @var boolean Automatically join language table if true */
+	/** @var bool Automatically join language table if true */
 	public $lang = false;
 
 	/** @var array WHERE clause determined by filter fields */
@@ -203,7 +203,7 @@ class AdminControllerCore extends Controller
 	/** @var array Number of results in list per page (used in select field) */
 	protected $_pagination = array(20, 50, 100, 300, 1000);
 
-	/** @var integer Default number of results in list per page */
+	/** @var int Default number of results in list per page */
 	protected $_default_pagination = 50;
 
 	/** @var string ORDER BY clause determined by field/arrows in list header */
@@ -221,7 +221,7 @@ class AdminControllerCore extends Controller
 	/** @var array List of row ids associated with a given action for witch this action have to not be available */
 	protected $list_skip_actions = array();
 
-	/* @var boolean Don't show header & footer */
+	/* @var bool Don't show header & footer */
 	protected $lite_display = false;
 
 	/** @var bool List content lines are clickable if true */
@@ -290,7 +290,7 @@ class AdminControllerCore extends Controller
 	/** @var string|int */
 	protected $position_group_identifier;
 
-	/** @var boolean Table records are not deleted but marked as deleted if set to true */
+	/** @var bool Table records are not deleted but marked as deleted if set to true */
 	protected $deleted = false;
 
 	/**  @var bool Is a list filter set */
@@ -673,7 +673,7 @@ class AdminControllerCore extends Controller
 	 * Check rights to view the current tab
 	 *
 	 * @param bool $disable
-	 * @return boolean
+	 * @return bool
 	 */
 	public function viewAccess($disable = false)
 	{
@@ -823,7 +823,7 @@ class AdminControllerCore extends Controller
 						{
 							if ($type == 'price')
 								$value = (float)str_replace(',', '.', $value);
-							$sql_filter .= ($check_key ? 'a.' : '').pSQL($key).' LIKE \'%'.pSQL($value).'%\' ';
+							$sql_filter .= ($check_key ? 'a.' : '').pSQL($key).' LIKE \'%'.pSQL(trim($value)).'%\' ';
 						}
 					}
 				}
@@ -1892,8 +1892,6 @@ class AdminControllerCore extends Controller
 				'shop_list' => Helper::renderShopList(),
 				'shop' => $this->context->shop,
 				'shop_group' => new ShopGroup((int)Shop::getContextShopGroupID()),
-				'current_parent_id' => (int)Tab::getCurrentParentId(),
-				'tabs' => $tabs,
 				'is_multishop' => $is_multishop,
 				'multishop_context' => $this->multishop_context,
 				'default_tab_link' => $this->context->link->getAdminLink(Tab::getClassNameById((int)Context::getContext()->employee->default_tab)),
@@ -1931,10 +1929,6 @@ class AdminControllerCore extends Controller
 		));
 
 		$module = Module::getInstanceByName('themeconfigurator');
-		$lang = '';
-		if (Configuration::get('PS_REWRITING_SETTINGS') && count(Language::getLanguages(true)) > 1)
-			$lang = Language::getIsoById($this->context->employee->id_lang).'/';
-
 		if (is_object($module) && $module->active && (int)Configuration::get('PS_TC_ACTIVE') == 1 && $this->context->shop->getBaseURL())
 		{
 			$request =
@@ -2551,7 +2545,9 @@ class AdminControllerCore extends Controller
 			$this->addJS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/js/help.js');
 
 		if (!Tools::getValue('submitFormAjax'))
-			$this->addJs(_PS_JS_DIR_.'admin/notifications.js');
+			$this->addJS(_PS_JS_DIR_.'admin/notifications.js');
+
+		$this->addJS('https://cdn.statuspage.io/se-v2.js');
 
 		// Execute Hook AdminController SetMedia
 		Hook::exec('actionAdminControllerSetMedia');
@@ -2565,8 +2561,8 @@ class AdminControllerCore extends Controller
 	 *
 	 * @param string  $string Term or expression in english
 	 * @param string|null $class Name of the class
-	 * @param boolean $addslashes If set to true, the return value will pass through addslashes(). Otherwise, stripslashes().
-	 * @param boolean $htmlentities If set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
+	 * @param bool $addslashes If set to true, the return value will pass through addslashes(). Otherwise, stripslashes().
+	 * @param bool $htmlentities If set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
 	 * @return string The translation if available, or the english default text.
 	 */
 	protected function l($string, $class = null, $addslashes = false, $htmlentities = true)
@@ -2946,11 +2942,11 @@ class AdminControllerCore extends Controller
 	/**
 	 * Get the current objects' list form the database
 	 *
-	 * @param integer $id_lang Language used for display
+	 * @param int $id_lang Language used for display
 	 * @param string|null $order_by ORDER BY clause
 	 * @param string|null $order_way Order way (ASC, DESC)
-	 * @param integer $start Offset in LIMIT clause
-	 * @param integer|null $limit Row count in LIMIT clause
+	 * @param int $start Offset in LIMIT clause
+	 * @param int|null $limit Row count in LIMIT clause
 	 * @param int|bool $id_lang_shop
 	 * @throws PrestaShopDatabaseException
 	 * @throws PrestaShopException
@@ -3310,7 +3306,7 @@ class AdminControllerCore extends Controller
 	 *
 	 * @param ObjectModel $obj Object
 	 * @param string $key Field name
-	 * @param integer|null $id_lang Language id (optional)
+	 * @param int|null $id_lang Language id (optional)
 	 * @return string
 	 */
 	public function getFieldValue($obj, $key, $id_lang = null)
@@ -3343,6 +3339,7 @@ class AdminControllerCore extends Controller
 			$definition = ObjectModel::getDefinition($class_name);
 
 		$default_language = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$languages = Language::getLanguages(false);
 
 		foreach ($definition['fields'] as $field => $def)
 		{
@@ -3363,7 +3360,7 @@ class AdminControllerCore extends Controller
 						);
 				}
 
-				foreach (Language::getLanguages(false) as $language)
+				foreach ($languages as $language)
 				{
 					$value = Tools::getValue($field.'_'.$language['id_lang']);
 					if (!empty($value))
@@ -3371,15 +3368,13 @@ class AdminControllerCore extends Controller
 							$this->errors[$field.'_'.$language['id_lang']] = $error;
 				}
 			}
-			else
-				if (($error = $object->validateField($field, Tools::getValue($field), null, $skip, true)) !== true)
+			elseif (($error = $object->validateField($field, Tools::getValue($field), null, $skip, true)) !== true)
 					$this->errors[$field] = $error;
 		}
 
 		/* Overload this method for custom checking */
 		$this->_childValidation();
 
-		// @TODO Undefined var $languages 3 lines below
 		/* Checking for multilingual fields validity */
 		if (isset($rules['validateLang']) && is_array($rules['validateLang']))
 			foreach ($rules['validateLang'] as $field_lang => $function)
@@ -3417,7 +3412,7 @@ class AdminControllerCore extends Controller
 	 * Called before deletion
 	 *
 	 * @param ObjectModel $object Object
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function beforeDelete($object)
 	{
@@ -3428,8 +3423,8 @@ class AdminControllerCore extends Controller
 	 * Called before deletion
 	 *
 	 * @param ObjectModel $object Object
-	 * @param int $oldId
-	 * @return boolean
+	 * @param int $old_id
+	 * @return bool
 	 */
 	protected function afterDelete($object, $old_id)
 	{
@@ -3457,7 +3452,7 @@ class AdminControllerCore extends Controller
 	/**
 	 * Check rights to view the current tab
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function afterImageUpload()
 	{
@@ -3486,7 +3481,6 @@ class AdminControllerCore extends Controller
 			}
 
 		/* Multilingual fields */
-		$languages = Language::getLanguages(false);
 		$class_vars = get_class_vars(get_class($object));
 		$fields = array();
 		if (isset($class_vars['definition']['fields']))
@@ -3494,9 +3488,9 @@ class AdminControllerCore extends Controller
 
 		foreach ($fields as $field => $params)
 			if (array_key_exists('lang', $params) && $params['lang'])
-				foreach ($languages as $language)
-					if (Tools::isSubmit($field.'_'.(int)$language['id_lang']))
-						$object->{$field}[(int)$language['id_lang']] = Tools::getValue($field.'_'.(int)$language['id_lang']);
+				foreach (Language::getIDs(false) as $id_lang)
+					if (Tools::isSubmit($field.'_'.(int)$id_lang))
+						$object->{$field}[(int)$id_lang] = Tools::getValue($field.'_'.(int)$id_lang);
 	}
 
 	/**
@@ -3589,8 +3583,8 @@ class AdminControllerCore extends Controller
 	/**
 	 * Overload this method for custom checking
 	 *
-	 * @param integer $id Object id used for deleting images
-	 * @return boolean
+	 * @param int $id Object id used for deleting images
+	 * @return bool
 	 */
 	protected function postImage($id)
 	{
@@ -3657,7 +3651,7 @@ class AdminControllerCore extends Controller
 	/**
 	 * Delete multiple items
 	 *
-	 * @return boolean true if success
+	 * @return bool true if success
 	 */
 	protected function processBulkDelete()
 	{
@@ -3750,7 +3744,7 @@ class AdminControllerCore extends Controller
 	/**
 	 * Enable multiple items
 	 *
-	 * @return boolean true if success
+	 * @return bool true if success
 	 */
 	protected function processBulkEnableSelection()
 	{
@@ -3760,7 +3754,7 @@ class AdminControllerCore extends Controller
 	/**
 	 * Disable multiple items
 	 *
-	 * @return boolean true if success
+	 * @return bool true if success
 	 */
 	protected function processBulkDisableSelection()
 	{
@@ -3771,7 +3765,7 @@ class AdminControllerCore extends Controller
 	 * Toggle status of multiple items
 	 *
 	 * @param bool $status
-	 * @return boolean true if success
+	 * @return bool true if success
 	 * @throws PrestaShopException
 	 */
 	protected function processBulkStatusSelection($status)
@@ -3816,7 +3810,7 @@ class AdminControllerCore extends Controller
 	 * Called before Add
 	 *
 	 * @param ObjectModel $object Object
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function beforeAdd($object)
 	{

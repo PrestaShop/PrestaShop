@@ -26,7 +26,7 @@
 
 class PrestaShopBackupCore
 {
-	/** @var integer Object id */
+	/** @var int Object id */
 	public $id;
 	/** @var string Last error messages */
 	public $error;
@@ -59,19 +59,17 @@ class PrestaShopBackupCore
 	 *
 	 * @TODO include the prefix name
 	 * @param string $dir
-	 * @return boolean bo
+	 * @return bool bo
 	 */
 	public function setCustomBackupPath($dir)
 	{
 		$custom_dir = DIRECTORY_SEPARATOR.trim($dir, '/').DIRECTORY_SEPARATOR;
-		if (is_dir((defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_).DIRECTORY_SEPARATOR.$customDir
-			.DIRECTORY_SEPARATOR))
+		if (is_dir((defined('_PS_HOST_MODE_') ? _PS_ROOT_DIR_ : _PS_ADMIN_DIR_).$custom_dir))
 			$this->customBackupDir = $custom_dir;
 		else
 			return false;
 
 		return true;
-
 	}
 
 	/**
@@ -123,7 +121,7 @@ class PrestaShopBackupCore
 	 * Check if a backup file exist
 	 *
 	 * @param string $filename prefix of the backup file (datetime will be the second part)
-	 * @return boolean true if backup file exist
+	 * @return bool true if backup file exist
 	 */
 	public static function backupExist($filename)
 	{
@@ -147,7 +145,7 @@ class PrestaShopBackupCore
 	/**
 	 * Delete the current backup file
 	 *
-	 * @return boolean Deletion result, true on success
+	 * @return bool Deletion result, true on success
 	 */
 	public function delete()
 	{
@@ -163,7 +161,7 @@ class PrestaShopBackupCore
 	/**
 	 * Deletes a range of backup files
 	 *
-	 * @return boolean True on success
+	 * @return bool True on success
 	 */
 	public function deleteSelection($list)
 	{
@@ -182,7 +180,7 @@ class PrestaShopBackupCore
 	/**
 	 * Creates a new backup file
 	 *
-	 * @return boolean true on successful backup
+	 * @return bool true on successful backup
 	 */
 	public function add()
 	{

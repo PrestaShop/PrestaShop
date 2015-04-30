@@ -323,7 +323,9 @@ class AdminShopGroupControllerCore extends AdminController
 	{
 		if (Tools::isSubmit('delete'.$this->table) || Tools::isSubmit('status') || Tools::isSubmit('status'.$this->table))
 		{
+			/** @var ShopGroup $object */
 			$object = $this->loadObject();
+
 			if (ShopGroup::getTotalShopGroup() == 1)
 				$this->errors[] = Tools::displayError('You cannot delete or disable the last shop group.');
 			elseif ($object->haveShops())

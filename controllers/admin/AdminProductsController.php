@@ -29,7 +29,7 @@
  */
 class AdminProductsControllerCore extends AdminController
 {
-	/** @var integer Max image size for upload
+	/** @var int Max image size for upload
 	 * As of 1.5 it is recommended to not set a limit to max image size
 	 */
 	protected $max_file_size = null;
@@ -330,13 +330,12 @@ class AdminProductsControllerCore extends AdminController
 			return;
 
 		/* Additional fields */
-		$languages = Language::getLanguages(false);
-		foreach ($languages as $language)
-			if (isset($_POST['meta_keywords_'.$language['id_lang']]))
+		foreach (Language::getIDs(false) as $id_lang)
+			if (isset($_POST['meta_keywords_'.$id_lang]))
 			{
-				$_POST['meta_keywords_'.$language['id_lang']] = $this->_cleanMetaKeywords(Tools::strtolower($_POST['meta_keywords_'.$language['id_lang']]));
-				// preg_replace('/ *,? +,* /', ',', strtolower($_POST['meta_keywords_'.$language['id_lang']]));
-				$object->meta_keywords[$language['id_lang']] = $_POST['meta_keywords_'.$language['id_lang']];
+				$_POST['meta_keywords_'.$id_lang] = $this->_cleanMetaKeywords(Tools::strtolower($_POST['meta_keywords_'.$id_lang]));
+				// preg_replace('/ *,? +,* /', ',', strtolower($_POST['meta_keywords_'.$id_lang]));
+				$object->meta_keywords[$id_lang] = $_POST['meta_keywords_'.$id_lang];
 			}
 		$_POST['width'] = empty($_POST['width']) ? '0' : str_replace(',', '.', $_POST['width']);
 		$_POST['height'] = empty($_POST['height']) ? '0' : str_replace(',', '.', $_POST['height']);
@@ -411,7 +410,9 @@ class AdminProductsControllerCore extends AdminController
 
 				// convert price with the currency from context
 				$this->_list[$i]['price'] = Tools::convertPrice($this->_list[$i]['price'], $this->context->currency, true, $this->context);
-				$this->_list[$i]['price_tmp'] = Product::getPriceStatic($this->_list[$i]['id_product'], true, null, 2, null, false, true, 1, true, null, null, null, $nothing, true, true, $context);
+				$this->_list[$i]['price_tmp'] = Product::getPriceStatic($this->_list[$i]['id_product'], true, null,
+					(int)Configuration::get('PS_PRICE_DISPLAY_PRECISION'), null, false, true, 1, true, null, null, null, $nothing, true, true,
+					$context);
 			}
 		}
 
@@ -457,17 +458,13 @@ class AdminProductsControllerCore extends AdminController
 		$category = Tools::getValue('category', Category::getRootCategory()->id);
 		$fullTree = Tools::getValue('fullTree', 0);
 		$selected = Tools::getValue('selected', array());
+		$input_name = str_replace(array('[', ']'), '', Tools::getValue('inputName', null));
 		$type = Tools::getValue('type', '');
 		if ($type == 'categories-tree')
-		{
 			$use_check_box = false;
-			$input_name = 'id-category';
-		}
 		else
-		{
 			$use_check_box = true;
-			$input_name = null;
-		}
+
 		$tree = new HelperTreeCategories('subtree_associated_categories');
 		$tree->setTemplate('subtree_associated_categories.tpl')
 			->setUseCheckBox($use_check_box)
@@ -1798,8 +1795,8 @@ class AdminProductsControllerCore extends AdminController
 	/**
 	 * Copy a product image
 	 *
-	 * @param integer $id_product Product Id for product image filename
-	 * @param integer $id_image Image Id for product image filename
+	 * @param int $id_product Product Id for product image filename
+	 * @param int $id_image Image Id for product image filename
 	 */
 	public function copyImage($id_product, $id_image, $method = 'auto')
 	{
@@ -2368,7 +2365,7 @@ class AdminProductsControllerCore extends AdminController
 	 *
 	 * @param array $languages Array languages
 	 * @param object $product Product
-	 * @return boolean Update result
+	 * @return bool Update result
 	 */
 	public function updateTags($languages, $product)
 	{
@@ -2557,10 +2554,15 @@ class AdminProductsControllerCore extends AdminController
 	/**
 	 * Build a categories tree
 	 *
-	 * @param array $indexedCategories Array with categories where product is indexed (in order to check checkbox)
-	 * @param array $categories Categories to list
-	 * @param array $current Current category
-	 * @param integer $id_category Current category id
+	 * @param       $id_obj
+	 * @param array $indexedCategories   Array with categories where product is indexed (in order to check checkbox)
+	 * @param array $categories          Categories to list
+	 * @param       $current
+	 * @param null  $id_category         Current category ID
+	 * @param null  $id_category_default
+	 * @param array $has_suite
+	 *
+	 * @return string
 	 */
 	public static function recurseCategoryForInclude($id_obj, $indexedCategories, $categories, $current, $id_category = null, $id_category_default = null, $has_suite = array())
 	{
@@ -2568,7 +2570,7 @@ class AdminProductsControllerCore extends AdminController
 		static $irow;
 		$content = '';
 
-		if (!$category)
+		if (!$id_category)
 			$id_category = (int)Configuration::get('PS_ROOT_CATEGORY');
 
 		if (!isset($done[$current['infos']['id_parent']]))
@@ -4746,7 +4748,11 @@ class AdminProductsControllerCore extends AdminController
 									$custom = false;
 
 						if ($custom)
-							$features[$k]['val'] = FeatureValue::getFeatureValueLang($features[$k]['current_item']);
+						{
+							$feature_values_lang = FeatureValue::getFeatureValueLang($features[$k]['current_item']);
+							foreach($feature_values_lang as $feature_value)
+								$features[$k]['val'][$feature_value['id_lang']] = $feature_value;
+						}
 					}
 
 					$data->assign('available_features', $features);
@@ -4781,8 +4787,8 @@ class AdminProductsControllerCore extends AdminController
 				if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && (int)Tools::getValue('value') == 1 && (Pack::isPack($product->id) && !Pack::allUsesAdvancedStockManagement($product->id)
 					&& ($product->pack_stock_type == 2 || $product->pack_stock_type == 1 ||
 						($product->pack_stock_type == 3 && (Configuration::get('PS_PACK_STOCK_TYPE') == 1 || Configuration::get('PS_PACK_STOCK_TYPE') == 2)))))
-					die (Tools::jsonEncode(array('error' => $this->l('You cannot use advanced stock management for this pack because').'</br>'.
-						$this->l('- advanced stock management is not enabled for these products').'</br>'.
+					die (Tools::jsonEncode(array('error' => $this->l('You cannot use advanced stock management for this pack because').'<br />'.
+						$this->l('- advanced stock management is not enabled for these products').'<br />'.
 						$this->l('- you have chosen to decrement products quantities.'))));
 
 				StockAvailable::setProductDependsOnStock($product->id, (int)Tools::getValue('value'));
@@ -4797,8 +4803,8 @@ class AdminProductsControllerCore extends AdminController
 					die (Tools::jsonEncode(array('error' =>  $this->l('Incorrect value'))));
 				if ($product->depends_on_stock && !Pack::allUsesAdvancedStockManagement($product->id) && ((int)$value == 1
 					|| (int)$value == 2 || ((int)$value == 3 && (Configuration::get('PS_PACK_STOCK_TYPE') == 1 || Configuration::get('PS_PACK_STOCK_TYPE') == 2))))
-					die (Tools::jsonEncode(array('error' => $this->l('You cannot use this stock management option because:').'</br>'.
-						$this->l('- advanced stock management is not enabled for these products').'</br>'.
+					die (Tools::jsonEncode(array('error' => $this->l('You cannot use this stock management option because:').'<br />'.
+						$this->l('- advanced stock management is not enabled for these products').'<br />'.
 						$this->l('- advanced stock management is enabled for the pack'))));
 
 				Product::setPackStockType($product->id, $value);
@@ -4911,7 +4917,7 @@ class AdminProductsControllerCore extends AdminController
 	 * if yes, add the pack items from input "inputPackItems"
 	 *
 	 * @param Product $product
-	 * @return boolean
+	 * @return bool
 	 */
 	public function updatePackItems($product)
 	{
@@ -4992,9 +4998,11 @@ class AdminProductsControllerCore extends AdminController
 		if ($this->tabAccess['edit'] === '1')
 		{
 			$way = (int)(Tools::getValue('way'));
-			$id_product = (int)(Tools::getValue('id_product'));
-			$id_category = (int)(Tools::getValue('id_category'));
+			$id_product = (int)Tools::getValue('id_product');
+			$id_category = (int)Tools::getValue('id_category');
 			$positions = Tools::getValue('product');
+			$page = (int)Tools::getValue('page');
+			$selected_pagination = (int)Tools::getValue('selected_pagination');
 
 			if (is_array($positions))
 				foreach ($positions as $position => $value)
@@ -5003,6 +5011,9 @@ class AdminProductsControllerCore extends AdminController
 
 					if ((isset($pos[1]) && isset($pos[2])) && ($pos[1] == $id_category && (int)$pos[2] === $id_product))
 					{
+						if ($page > 1)
+							$position = $position + (($page - 1) * $selected_pagination);
+
 						if ($product = new Product((int)$pos[2]))
 							if (isset($position) && $product->updatePosition($way, $position))
 							{
@@ -5051,12 +5062,12 @@ class AdminProductsControllerCore extends AdminController
 	{
 		if (Tools::getValue('key_tab') == 'Images' && Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
 		{
-			$languages = Language::getLanguages(false);
+			$language_ids = Language::getIDs(false);
 			foreach ($_POST as $key => $val)
 				if (preg_match('/^legend_([0-9]+)/i', $key, $match))
-					foreach ($languages as $language)
-						if ($val && $language['id_lang'] == $match[1])
-							Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_lang SET legend = "'.pSQL($val).'" WHERE EXISTS (SELECT 1 FROM '._DB_PREFIX_.'image WHERE '._DB_PREFIX_.'image.id_image = '._DB_PREFIX_.'image_lang.id_image AND id_product = '.(int)$product->id.') AND id_lang = '.(int)$language['id_lang']);
+					foreach ($language_ids as $id_lang)
+						if ($val && $id_lang == $match[1])
+							Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_lang SET legend = "'.pSQL($val).'" WHERE EXISTS (SELECT 1 FROM '._DB_PREFIX_.'image WHERE '._DB_PREFIX_.'image.id_image = '._DB_PREFIX_.'image_lang.id_image AND id_product = '.(int)$product->id.') AND id_lang = '.(int)$id_lang);
 		}
 	}
 

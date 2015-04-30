@@ -43,6 +43,16 @@ $(document).ready(function(){
         	return $("#popover-content").html();
     	}
   	});
+
+  	$('.wishlist').each(function() {
+  		current = $(this);
+  		$(this).children('.wishlist_button_list').popover({
+  			html: true,
+  			content: function () {
+  				return current.children('.popover-content').html();
+  			}
+  		});
+  	});
 });
 
 function WishlistCart(id, action, id_product, id_product_attribute, quantity, id_wishlist)
@@ -313,7 +323,7 @@ function WishlistDefault(id, id_wishlist)
 		cache: false,
 		data: {
 			rand:new Date().getTime(),
-			default: 1,
+			'default': 1,
 			id_wishlist:id_wishlist,
 			myajax: 1,
 			action: 'setdefault'

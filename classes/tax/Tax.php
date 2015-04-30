@@ -36,7 +36,7 @@ class TaxCore extends ObjectModel
 	/** @var bool active state */
 	public $active;
 
-	/** @var boolean true if the tax has been historized */
+	/** @var bool true if the tax has been historized */
 	public $deleted = 0;
 
 	/**
@@ -174,7 +174,7 @@ class TaxCore extends ObjectModel
 	* Return the tax id associated to the specified name
 	*
 	* @param string $tax_name
-	* @param boolean $active (true by default)
+	* @param bool $active (true by default)
 	*/
 	public static function getTaxIdByName($tax_name, $active = 1)
 	{
@@ -224,8 +224,8 @@ class TaxCore extends ObjectModel
 	/**
 	 * Return the product tax rate using the tax rules system
 	 *
-	 * @param integer $id_product
-	 * @param integer $id_country
+	 * @param int $id_product
+	 * @param int $id_country
 	 * @return Tax
 	 *
 	 * @deprecated since 1.5
@@ -246,8 +246,8 @@ class TaxCore extends ObjectModel
 	/**
 	 * Returns the product tax
 	 *
-	 * @param integer $id_product
-	 * @param integer $id_country
+	 * @param int $id_product
+	 * @param int $id_country
 	 * @return Tax
 	 */
 	public static function getProductTaxRate($id_product, $id_address = null, Context $context = null)

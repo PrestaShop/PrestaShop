@@ -556,6 +556,11 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 		}
 	}
 
+	/**
+	 * @param TaxRulesGroup $object
+	 *
+	 * @return TaxRulesGroup
+	 */
 	protected function updateTaxRulesGroup($object)
 	{
 		static $tax_rules_group = null;

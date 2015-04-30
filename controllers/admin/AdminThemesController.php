@@ -482,7 +482,7 @@ class AdminThemesControllerCore extends AdminController
 	 * @param string $base_theme_dir   relative path to base dir
 	 * @param string $target_theme_dir relative path to target dir
 	 *
-	 * @return boolean true if success
+	 * @return bool true if success
 	 */
 	protected static function copyTheme($base_theme_dir, $target_theme_dir)
 	{
@@ -1880,7 +1880,7 @@ class AdminThemesControllerCore extends AdminController
 	 *
 	 * @param string $theme_dir theme directory
 	 *
-	 * @return boolean Validity is ok or not
+	 * @return bool Validity is ok or not
 	 */
 	protected function _isThemeCompatible($theme_dir)
 	{

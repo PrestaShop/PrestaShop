@@ -34,16 +34,16 @@ class TabCore extends ObjectModel
 
 	public $module;
 
-	/** @var integer parent ID */
+	/** @var int parent ID */
 	public $id_parent;
 
-	/** @var integer position */
+	/** @var int position */
 	public $position;
 
-	/** @var boolean active */
+	/** @var bool active */
 	public $active = true;
 
-	/** @var integer hide_host_mode */
+	/** @var int hide_host_mode */
 	public $hide_host_mode = false;
 
 	const TAB_MODULE_LIST_URL = _PS_TAB_MODULE_LIST_URL_;
@@ -74,8 +74,8 @@ class TabCore extends ObjectModel
 	 * - generate a new position
 	 * - add access for admin profile
 	 *
-	 * @param boolean $autodate
-	 * @param boolean $null_values
+	 * @param bool $autodate
+	 * @param bool $null_values
 	 * @return int id_tab
 	 */
 	public function add($autodate = true, $null_values = false)
@@ -121,7 +121,7 @@ class TabCore extends ObjectModel
 	 * @todo this should not be public static but protected
 	 * @param int $id_tab
 	 * @param Context $context
-	 * @return boolean true if succeed
+	 * @return bool true if succeed
 	 */
 	public static function initAccess($id_tab, Context $context = null)
 	{
@@ -162,7 +162,7 @@ class TabCore extends ObjectModel
 	/**
 	 * Get tab id
 	 *
-	 * @return integer tab id
+	 * @return int tab id
 	 */
 	public static function getCurrentTabId()
 	{
@@ -176,7 +176,7 @@ class TabCore extends ObjectModel
 	/**
 	 * Get tab parent id
 	 *
-	 * @return integer tab parent id
+	 * @return int tab parent id
 	 */
 	public static function getCurrentParentId()
 	{
@@ -231,8 +231,9 @@ class TabCore extends ObjectModel
 			FROM `'._DB_PREFIX_.'tab` t
 			WHERE t.`module` IS NOT NULL AND t.`module` != ""');
 
-		foreach ($result as $detail)
-			$list[strtolower($detail['class_name'])] = $detail;
+		if (is_array($result))
+			foreach ($result as $detail)
+				$list[strtolower($detail['class_name'])] = $detail;
 		return $list;
 	}
 
@@ -254,12 +255,14 @@ class TabCore extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'tab_lang` tl ON (t.`id_tab` = tl.`id_tab` AND tl.`id_lang` = '.(int)$id_lang.')
 			WHERE 1 '.(defined('_PS_HOST_MODE_') ? ' AND `hide_host_mode` = 0' : '').'
 			ORDER BY t.`position` ASC');
-			foreach ($result as $row)
-			{
-				if (!isset(self::$_cache_tabs[$id_lang][$row['id_parent']]))
-					self::$_cache_tabs[$id_lang][$row['id_parent']] = array();
-				self::$_cache_tabs[$id_lang][$row['id_parent']][] = $row;
-			}
+
+			if (is_array($result))
+				foreach ($result as $row)
+				{
+					if (!isset(self::$_cache_tabs[$id_lang][$row['id_parent']]))
+						self::$_cache_tabs[$id_lang][$row['id_parent']] = array();
+					self::$_cache_tabs[$id_lang][$row['id_parent']][] = $row;
+				}
 		}
 		if ($id_parent === null)
 		{
@@ -285,8 +288,10 @@ class TabCore extends ObjectModel
 		{
 			self::$_getIdFromClassName = array();
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('SELECT id_tab, class_name FROM `'._DB_PREFIX_.'tab`', true, false);
-			foreach ($result as $row)
-				self::$_getIdFromClassName[strtolower($row['class_name'])] = $row['id_tab'];
+
+			if (is_array($result))
+				foreach ($result as $row)
+					self::$_getIdFromClassName[strtolower($row['class_name'])] = $row['id_tab'];
 		}
 		return (isset(self::$_getIdFromClassName[$class_name]) ? (int)self::$_getIdFromClassName[$class_name] : false);
 	}

@@ -199,7 +199,7 @@ class InstallModelInstall extends InstallAbstractModel
 			}
 			else
 				$iso_codes_to_install = null;
-
+			$iso_codes_to_install = array_flip(array_flip($iso_codes_to_install));
 			$languages = $this->installLanguages($iso_codes_to_install);
 		}
 		catch (PrestashopInstallerException $e)
@@ -396,21 +396,33 @@ class InstallModelInstall extends InstallAbstractModel
 		}
 	}
 
+	private static $_cache_localization_pack_content = null;
 	public function getLocalizationPackContent($version, $country)
 	{
-		$localization_file_content = @Tools::file_get_contents('http://api.prestashop.com/localization/'.$version.'/'.$country.'.xml');
-		if (!@simplexml_load_string($localization_file_content))
-			$localization_file_content = false;
-		if (!$localization_file_content)
+		if (InstallModelInstall::$_cache_localization_pack_content === null || array_key_exists($country, InstallModelInstall::$_cache_localization_pack_content))
 		{
-			$localization_file = _PS_ROOT_DIR_.'/localization/default.xml';
-			if (file_exists(_PS_ROOT_DIR_.'/localization/'.$country.'.xml'))
-				$localization_file = _PS_ROOT_DIR_.'/localization/'.$country.'.xml';
+			$path_cache_file = _PS_CACHE_DIR_.'sandbox'.DIRECTORY_SEPARATOR.$version.$country.'.xml';
+			if (is_file($path_cache_file))
+				$localization_file_content = file_get_contents($path_cache_file);
+			else
+			{
+				$localization_file_content = @Tools::file_get_contents('http://api.prestashop.com/localization/'.$version.'/'.$country.'.xml');
+				if (!@simplexml_load_string($localization_file_content))
+					$localization_file_content = false;
+				if (!$localization_file_content)
+				{
+					$localization_file = _PS_ROOT_DIR_.'/localization/default.xml';
+					if (file_exists(_PS_ROOT_DIR_.'/localization/'.$country.'.xml'))
+						$localization_file = _PS_ROOT_DIR_.'/localization/'.$country.'.xml';
 
-			$localization_file_content = file_get_contents($localization_file);
+					$localization_file_content = file_get_contents($localization_file);
+				}
+				file_put_contents($path_cache_file, $localization_file_content);
+			}
+			InstallModelInstall::$_cache_localization_pack_content[$country] = $localization_file_content;
 		}
 
-		return $localization_file_content;
+		return isset(InstallModelInstall::$_cache_localization_pack_content[$country]) ? InstallModelInstall::$_cache_localization_pack_content[$country] : false;
 	}
 
 	/**

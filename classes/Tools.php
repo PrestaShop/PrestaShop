@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author 	PrestaShop SA <contact@prestashop.com>
+ *  @copyright  2007-2015 PrestaShop SA
+ *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 class ToolsCore
 {
@@ -37,12 +37,17 @@ class ToolsCore
 	/**
 	* Random password generator
 	*
-	* @param integer $length Desired length (optional)
-	* @param string $flag Output type (NUMERIC, ALPHANUMERIC, NO_NUMERIC)
-	* @return string Password
+	* @param int $length Desired length (optional)
+	* @param string $flag Output type (NUMERIC, ALPHANUMERIC, NO_NUMERIC, RANDOM)
+	* @return bool|string Password
 	*/
 	public static function passwdGen($length = 8, $flag = 'ALPHANUMERIC')
 	{
+		$length = (int)$length;
+
+		if ($length <= 0)
+			return false;
+
 		switch ($flag)
 		{
 			case 'NUMERIC':
@@ -51,14 +56,111 @@ class ToolsCore
 			case 'NO_NUMERIC':
 				$str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 				break;
+			case 'RANDOM':
+				$num_bytes = ceil($length * 0.75);
+				$bytes = self::getBytes($num_bytes);
+				return substr(rtrim(base64_encode($bytes), '='), 0, $length);
+			case 'ALPHANUMERIC':
 			default:
 				$str = 'abcdefghijkmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 				break;
 		}
 
-		for ($i = 0, $passwd = ''; $i < $length; $i++)
-			$passwd .= Tools::substr($str, mt_rand(0, Tools::strlen($str) - 1), 1);
-		return $passwd;
+		$bytes = static::getBytes($length);
+		$position = 0;
+		$result = '';
+
+		for ($i = 0; $i < $length; $i++)
+		{
+			$position = ($position + ord($bytes[$i])) % strlen($str);
+			$result .= $str[$position];
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Random bytes generator
+	 *
+	 * Thanks to Zend for entropy
+	 *
+	 * @param $length Desired length of random bytes
+	 * @return bool|string Random bytes
+	 */
+	public static function getBytes($length)
+	{
+		$length = (int)$length;
+
+		if ($length <= 0)
+			return false;
+
+		if (function_exists('openssl_random_pseudo_bytes'))
+		{
+			$bytes = openssl_random_pseudo_bytes($length, $crypto_strong);
+
+			if ($crypto_strong === true)
+				return $bytes;
+		}
+
+		if (function_exists('mcrypt_create_iv'))
+		{
+			$bytes = mcrypt_create_iv($length, MCRYPT_DEV_URANDOM);
+
+			if ($bytes !== false && strlen($bytes) === $length)
+				return $bytes;
+		}
+
+		// Else try to get $length bytes of entropy.
+		// Thanks to Zend
+
+		$result         = '';
+		$entropy        = '';
+		$msec_per_round = 400;
+		$bits_per_round = 2;
+		$total          = $length;
+		$hash_length    = 20;
+
+		while (strlen($result) < $length)
+		{
+			$bytes  = ($total > $hash_length) ? $hash_length : $total;
+			$total -= $bytes;
+
+			for ($i=1; $i < 3; $i++)
+			{
+				$t1 = microtime(true);
+				$seed = mt_rand();
+
+				for ($j=1; $j < 50; $j++)
+					$seed = sha1($seed);
+
+				$t2 = microtime(true);
+				$entropy .= $t1 . $t2;
+			}
+
+			$div = (int) (($t2 - $t1) * 1000000);
+
+			if ($div <= 0)
+				$div = 400;
+
+			$rounds = (int) ($msec_per_round * 50 / $div);
+			$iter = $bytes * (int) (ceil(8 / $bits_per_round));
+
+			for ($i = 0; $i < $iter; $i ++)
+			{
+				$t1 = microtime();
+				$seed = sha1(mt_rand());
+
+				for ($j = 0; $j < $rounds; $j++)
+					$seed = sha1($seed);
+
+				$t2 = microtime();
+				$entropy .= $t1 . $t2;
+			}
+
+			$result .= sha1($entropy, true);
+		}
+
+		return substr($result, 0, $length);
 	}
 
 	public static function strReplaceFirst($search, $replace, $subject, $cur = 0)
@@ -70,7 +172,7 @@ class ToolsCore
 	 * Redirect user to another page
 	 *
 	 * @param string $url Desired URL
-	 * @param string $baseUri Base URI (optional)
+	 * @param string $base_uri Base URI (optional)
 	 * @param Link $link
 	 * @param string|array $headers A list of headers to send before redirection
 	 */
@@ -174,8 +276,8 @@ class ToolsCore
 	 * This function should not be used to choose http or https domain name.
 	 * Use Tools::getShopDomain() or Tools::getShopDomainSsl instead
 	 *
-	 * @param boolean $http
-	 * @param boolean $entities
+	 * @param bool $http
+	 * @param bool $entities
 	 * @return string host
 	 */
 	public static function getHttpHost($http = false, $entities = false, $ignore_port = false)
@@ -193,8 +295,8 @@ class ToolsCore
 	/**
 	 * getShopDomain returns domain name according to configuration and ignoring ssl
 	 *
-	 * @param boolean $http if true, return domain name with protocol
-	 * @param boolean $entities if true, convert special chars to HTML entities
+	 * @param bool $http if true, return domain name with protocol
+	 * @param bool $entities if true, convert special chars to HTML entities
 	 * @return string domain
 	 */
 	public static function getShopDomain($http = false, $entities = false)
@@ -211,8 +313,8 @@ class ToolsCore
 	/**
 	 * getShopDomainSsl returns domain name according to configuration and depending on ssl activation
 	 *
-	 * @param boolean $http if true, return domain name with protocol
-	 * @param boolean $entities if true, convert special chars to HTML entities
+	 * @param bool $http if true, return domain name with protocol
+	 * @param bool $entities if true, convert special chars to HTML entities
 	 * @return string domain
 	 */
 	public static function getShopDomainSsl($http = false, $entities = false)
@@ -558,7 +660,7 @@ class ToolsCore
 				break;
 			/* X 0'000.00  Added for the switzerland currency */
 			case 5:
-				$ret = $c_char.$blank.number_format($price, $c_decimals, '.', "'");
+				$ret = number_format($price, $c_decimals, '.', "'").$blank.$c_char;
 				break;
 		}
 		if ($is_negative)
@@ -597,7 +699,7 @@ class ToolsCore
 	*
 	* @param float $price Product price
 	* @param object|array $currency Current currency object
-	* @param boolean $to_currency convert to currency or from currency to default currency
+	* @param bool $to_currency convert to currency or from currency to default currency
 	* @param Context $context
 	* @return float Price
 	*/
@@ -676,8 +778,8 @@ class ToolsCore
 	* Display date regarding to language preferences
 	*
 	* @param string $date Date to display format UNIX
-	* @param integer $id_lang Language id DEPRECATED
-	* @param boolean $full With time or not (optional)
+	* @param int $id_lang Language id DEPRECATED
+	* @param bool $full With time or not (optional)
 	* @param string $separator DEPRECATED
 	* @return string Date
 	*/
@@ -706,7 +808,7 @@ class ToolsCore
 	* Sanitize a string
 	*
 	* @param string $string String to sanitize
-	* @param boolean $full String contains HTML or not (optional)
+	* @param bool $full String contains HTML or not (optional)
 	* @return string Sanitized string
 	*/
 	public static function safeOutput($string, $html = false)
@@ -788,7 +890,7 @@ class ToolsCore
 
 		if (file_exists($file) && is_file($file) && array_search(basename($file), $exclude_files) === false)
 		{
-			@chmod($dirname.$file, 0777); // NT ?
+			@chmod($file, 0777); // NT ?
 			unlink($file);
 		}
 	}
@@ -817,7 +919,7 @@ class ToolsCore
 	* Display an error according to an error code
 	*
 	* @param string $string Error message
-	* @param boolean $htmlentities By default at true for parsing error message with htmlentities
+	* @param bool $htmlentities By default at true for parsing error message with htmlentities
 	*/
 	public static function displayError($string = 'Fatal error', $htmlentities = true, Context $context = null)
 	{
@@ -841,7 +943,7 @@ class ToolsCore
 	 * Display an error with detailed object
 	 *
 	 * @param mixed $object
-	 * @param boolean $kill
+	 * @param bool $kill
 	 * @return $object if $kill = false;
 	 */
 	public static function dieObject($object, $kill = true)
@@ -1039,7 +1141,7 @@ class ToolsCore
 	* Get a valid URL to use from BackOffice
 	*
 	* @param string $url An URL to use in BackOffice
-	* @param boolean $entites Set to true to use htmlentities function on URL param
+	* @param bool $entites Set to true to use htmlentities function on URL param
 	*/
 	public static function getAdminUrl($url = null, $entities = false)
 	{
@@ -1055,7 +1157,7 @@ class ToolsCore
 	* Get a valid image URL to use from BackOffice
 	*
 	* @param string $image Image name
-	* @param boolean $entites Set to true to use htmlentities function on image param
+	* @param bool $entites Set to true to use htmlentities function on image param
 	*/
 	public static function getAdminImageUrl($image = null, $entities = false)
 	{
@@ -1065,9 +1167,9 @@ class ToolsCore
 	/**
 	* Get the user's journey
 	*
-	* @param integer $id_category Category ID
+	* @param int $id_category Category ID
 	* @param string $path Path end
-	* @param boolean $linkOntheLastItem Put or not a link on the current category
+	* @param bool $linkOntheLastItem Put or not a link on the current category
 	* @param string [optionnal] $categoryType defined what type of categories is used (products or cms)
 	*/
 	public static function getPath($id_category, $path = '', $link_on_the_item = false, $category_type = 'products', Context $context = null)
@@ -1338,7 +1440,7 @@ class ToolsCore
 	* Truncate strings
 	*
 	* @param string $str
-	* @param integer $max_length Max length
+	* @param int $max_length Max length
 	* @param string $suffix Suffix optional
 	* @return string $str truncated
 	*/
@@ -1361,6 +1463,11 @@ class ToolsCore
 
 		$options = array_merge($default, $options);
 		extract($options);
+		/**
+		 * @var string $ellipsis
+		 * @var bool   $exact
+		 * @var bool   $html
+		 */
 
 		if ($html)
 		{
@@ -1483,9 +1590,9 @@ class ToolsCore
 	/**
 	* Generate date form
 	*
-	* @param integer $year Year to select
-	* @param integer $month Month to select
-	* @param integer $day Day to select
+	* @param int $year Year to select
+	* @param int $month Month to select
+	* @param int $day Day to select
 	* @return array $tab html data with 3 cells :['days'], ['months'], ['years']
 	*
 	*/
@@ -1791,7 +1898,7 @@ class ToolsCore
 	 * file_exists() wrapper with cache to speedup performance
 	 *
 	 * @param string $filename File name
-	 * @return boolean Cached result of file_exists($filename)
+	 * @return bool Cached result of file_exists($filename)
 	 */
 	public static function file_exists_cache($filename)
 	{
@@ -1804,7 +1911,7 @@ class ToolsCore
 	 * file_exists() wrapper with a call to clearstatcache prior
 	 *
 	 * @param string $filename File name
-	 * @return boolean Cached result of file_exists($filename)
+	 * @return bool Cached result of file_exists($filename)
 	 */
 	public static function file_exists_no_cache($filename)
 	{
@@ -1849,7 +1956,10 @@ class ToolsCore
 
 	public static function simplexml_load_file($url, $class_name = null)
 	{
-		return @simplexml_load_string(Tools::file_get_contents($url), $class_name);
+		$cache_id = 'Tools::simplexml_load_file'.$url;
+		if (!Cache::isStored($cache_id))
+			Cache::store($cache_id, @simplexml_load_string(Tools::file_get_contents($url), $class_name));
+		return Cache::retrieve($cache_id);
 	}
 
 	public static function copy($source, $destination, $stream_context = null)
@@ -1971,7 +2081,8 @@ class ToolsCore
 		{
 			if (!preg_match('/^(?:https?:)?\/\//iUs', $matches[2]))
 			{
-				$tmp = dirname($current_css_file).'/'.$matches[2];
+				$sep = '/';
+				$tmp = substr($matches[2], 0, 1) == $sep ? $matches[2] : dirname($current_css_file).$sep.ltrim($matches[2], $sep);
 				$server = Tools::getMediaServer($tmp);
 				return $matches[1].$protocol_link.$server.$tmp;
 			}
@@ -2372,7 +2483,7 @@ exit;
 	 * jsonDecode convert json string to php array / object
 	 *
 	 * @param string $json
-	 * @param boolean $assoc  (since 1.4.2.4) if true, convert to associativ array
+	 * @param bool $assoc  (since 1.4.2.4) if true, convert to associativ array
 	 * @return array
 	 */
 	public static function jsonDecode($json, $assoc = false)
@@ -2891,7 +3002,7 @@ exit;
 	 * to be available. With CGI mod, we cannot get php modules
 	 *
 	 * @param string $name module name
-	 * @return boolean true if exists
+	 * @return bool true if exists
 	 * @since 1.4.5.0
 	 */
 	public static function apacheModExists($name)
@@ -3157,19 +3268,30 @@ exit;
 		return false;
 	}
 
-	public static function fileAttachment($input = 'fileUpload')
+	/**
+	 * Returns an array containing information about
+	 * HTTP file upload variable ($_FILES)
+	 *
+	 * @param string $input          File upload field name
+	 * @param bool   $return_content If true, returns uploaded file contents
+	 *
+	 * @return array|null
+	 */
+	public static function fileAttachment($input = 'fileUpload', $return_content = true)
 	{
 		$file_attachment = null;
 		if (isset($_FILES[$input]['name']) && !empty($_FILES[$input]['name']) && !empty($_FILES[$input]['tmp_name']))
 		{
 			$file_attachment['rename'] = uniqid().Tools::strtolower(substr($_FILES[$input]['name'], -5));
-			$file_attachment['content'] = file_get_contents($_FILES[$input]['tmp_name']);
+			if ($return_content)
+				$file_attachment['content'] = file_get_contents($_FILES[$input]['tmp_name']);
 			$file_attachment['tmp_name'] = $_FILES[$input]['tmp_name'];
-			$file_attachment['name'] = $_FILES[$input]['name'];
-			$file_attachment['mime'] = $_FILES[$input]['type'];
-			$file_attachment['error'] = $_FILES[$input]['error'];
-			$file_attachment['size'] = $_FILES[$input]['size'];
+			$file_attachment['name']     = $_FILES[$input]['name'];
+			$file_attachment['mime']     = $_FILES[$input]['type'];
+			$file_attachment['error']    = $_FILES[$input]['error'];
+			$file_attachment['size']     = $_FILES[$input]['size'];
 		}
+
 		return $file_attachment;
 	}
 
@@ -3312,7 +3434,8 @@ exit;
 				$config->set('HTML.Trusted', true);
 				$config->set('Cache.SerializerPath', _PS_CACHE_DIR_.'purifier');
 				$config->set('Attr.AllowedFrameTargets', array('_blank', '_self', '_parent', '_top'));
-				$config->set('URI.UnescapeCharacters', implode('', $uri_unescape));
+				if (is_array($uri_unescape))
+					$config->set('URI.UnescapeCharacters', implode('', $uri_unescape));
 
 				if (Configuration::get('PS_ALLOW_HTML_IFRAME'))
 				{
@@ -3425,7 +3548,7 @@ exit;
  *
  * @param float $a
  * @param float $b
- * @return integer
+ * @return int
  */
 /* Externalized because of a bug in PHP 5.1.6 when inside an object */
 function cmpPriceAsc($a, $b)

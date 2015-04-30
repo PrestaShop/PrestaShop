@@ -77,7 +77,6 @@ class WebserviceOutputJSON implements WebserviceOutputInterface
 
 	public function getContentType()
 	{
-		return 'text/html';
 		return 'application/json';
 	}
 

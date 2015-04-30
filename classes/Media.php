@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author 	PrestaShop SA <contact@prestashop.com>
+ *  @copyright  2007-2015 PrestaShop SA
+ *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 class MediaCore
 {
@@ -78,16 +78,21 @@ class MediaCore
 	 */
 	protected static $inline_script_src = array();
 
+	/**
+	 * @var string pattern used in packJSinHTML
+	 */
+	public static $pattern_js = '#\s*(<\s*script(?:\s[^>]*(?:javascript)[^>]*|)+>)(.*)(<\s*/script\s*[^>]*>)\s*#Uims';
+
 	public static function minifyHTML($html_content)
 	{
 		if (strlen($html_content) > 0)
 		{
 			//set an alphabetical order for args
 			// $html_content = preg_replace_callback(
-				// '/(<[a-zA-Z0-9]+)((\s*[a-zA-Z0-9]+=[\"\\\'][^\"\\\']*[\"\\\']\s*)*)>/',
-				// array('Media', 'minifyHTMLpregCallback'),
-				// $html_content,
-				// Media::getBackTrackLimit());
+			// '/(<[a-zA-Z0-9]+)((\s*[a-zA-Z0-9]+=[\"\\\'][^\"\\\']*[\"\\\']\s*)*)>/',
+			// array('Media', 'minifyHTMLpregCallback'),
+			// $html_content,
+			// Media::getBackTrackLimit());
 
 			require_once(_PS_TOOL_DIR_.'minify_html/minify_html.class.php');
 			$html_content = str_replace(chr(194).chr(160), '&nbsp;', $html_content);
@@ -119,7 +124,7 @@ class MediaCore
 		{
 			$html_content_copy = $html_content;
 			$html_content = preg_replace_callback(
-				'/\\s*(<script\\b[^>]*?>)([\\s\\S]*?)(<\\/script>)\\s*/i',
+				Media::$pattern_js,
 				array('Media', 'packJSinHTMLpregCallback'),
 				$html_content,
 				Media::getBackTrackLimit());
@@ -129,7 +134,7 @@ class MediaCore
 			if (function_exists('preg_last_error') && preg_last_error() == PREG_BACKTRACK_LIMIT_ERROR)
 			{
 				if (_PS_MODE_DEV_)
-					error_log('ERROR: PREG_BACKTRACK_LIMIT_ERROR in function packJSinHTML');
+					Tools::error_log('ERROR: PREG_BACKTRACK_LIMIT_ERROR in function packJSinHTML');
 				return $html_content_copy;
 			}
 			return $html_content;
@@ -177,7 +182,7 @@ class MediaCore
 		{
 			$limit  = Media::getBackTrackLimit();
 			$css_content = preg_replace('#/\*.*?\*/#s', '', $css_content, $limit);
-			$css_content = preg_replace_callback('#(url\((?![\\\'"]?data:)(?!http://)(?!https://)(?:\'|")?)([^\)\'"]*(?:\'|")?\))#s', array('Tools', 'replaceByAbsoluteURL'), $css_content, $limit);
+			$css_content = preg_replace_callback('#(url\((?![\'"]?(?:data:|//|https?:))(?:\'|")?)([^\)\'"]*)(?=[\'"]?\))#s', array('Tools', 'replaceByAbsoluteURL'), $css_content, $limit);
 			$css_content = preg_replace('#\s+#', ' ', $css_content, $limit);
 			$css_content = str_replace(array("\t", "\n", "\r"), '', $css_content);
 			$css_content = str_replace(array('; ', ': '), array(';', ':'), $css_content);
@@ -206,6 +211,7 @@ class MediaCore
 	 * addJS return javascript path
 	 *
 	 * @param mixed $js_uri
+	 *
 	 * @return string
 	 */
 	public static function getJSPath($js_uri)
@@ -219,6 +225,7 @@ class MediaCore
 	 * @param mixed $css_uri
 	 * @param string $css_media_type
 	 * @param bool $need_rtl
+	 *
 	 * @return string
 	 */
 	public static function getCSSPath($css_uri, $css_media_type = 'all', $need_rtl = true)
@@ -265,10 +272,7 @@ class MediaCore
 				elseif (!@filemtime($file_uri_host_mode) || @filesize($file_uri_host_mode) === 0)
 					return false;
 				else
-				{
 					$media_uri = $media_uri_host_mode;
-					$file_uri = $file_uri_host_mode;
-				}
 			}
 		}
 
@@ -285,6 +289,7 @@ class MediaCore
 	 * return jquery path.
 	 *
 	 * @param mixed $version
+	 *
 	 * @return string
 	 */
 	public static function getJqueryPath($version = null, $folder = null, $minifier = true)
@@ -330,6 +335,7 @@ class MediaCore
 	 * return jqueryUI component path.
 	 *
 	 * @param mixed $component
+	 *
 	 * @return string
 	 */
 	public static function getJqueryUIPath($component, $theme, $check_dependencies)
@@ -397,6 +403,7 @@ class MediaCore
 	 * return jquery plugin path.
 	 *
 	 * @param mixed $name
+	 *
 	 * @return string|boolean
 	 */
 	public static function getJqueryPluginPath($name, $folder = null)
@@ -425,6 +432,7 @@ class MediaCore
 	 * return jquery plugin css path if exist.
 	 *
 	 * @param mixed $name
+	 *
 	 * @return string|boolean
 	 */
 	public static function getJqueryPluginCSSPath($name, $folder = null)
@@ -445,11 +453,12 @@ class MediaCore
 	}
 
 	/**
-	* Combine Compress and Cache CSS (ccc) calls
-	*
-	* @param array $css_files
-	* @return array processed css_files
-	*/
+	 * Combine Compress and Cache CSS (ccc) calls
+	 *
+	 * @param array $css_files
+	 *
+	 * @return array processed css_files
+	 */
 	public static function cccCss($css_files)
 	{
 		//inits
@@ -575,11 +584,12 @@ class MediaCore
 	}
 
 	/**
-	* Combine Compress and Cache (ccc) JS calls
-	*
-	* @param array $js_files
-	* @return array processed js_files
-	*/
+	 * Combine Compress and Cache (ccc) JS calls
+	 *
+	 * @param array $js_files
+	 *
+	 * @return array processed js_files
+	 */
 	public static function cccJS($js_files)
 	{
 		//inits
@@ -663,6 +673,11 @@ class MediaCore
 		return array_merge(array($protocol_link.Tools::getMediaServer($url).$url), $js_external_files);
 	}
 
+	/**
+	 * Clear theme cache
+	 *
+	 * @return void
+	 */
 	public static function clearCache()
 	{
 		foreach (array(_PS_THEME_DIR_.'cache') as $dir)
@@ -677,12 +692,22 @@ class MediaCore
 		Configuration::updateValue('PS_CCCCSS_VERSION', ++$version);
 	}
 
+	/**
+	 * Get JS definitions
+	 *
+	 * @return array JS definitions
+	 */
 	public static function getJsDef()
 	{
 		ksort(Media::$js_def);
 		return Media::$js_def;
 	}
 
+	/**
+	 * Get JS inline script
+	 *
+	 * @return array inline script
+	 */
 	public static function getInlineScript()
 	{
 		return Media::$inline_script;
@@ -692,13 +717,14 @@ class MediaCore
 	 * Add a new javascript definition at bottom of page
 	 *
 	 * @param mixed $js_def
+	 *
 	 * @return void
 	 */
 	public static function addJsDef($js_def)
 	{
 		if (is_array($js_def))
 			foreach ($js_def as $key => $js)
-					Media::$js_def[$key] = $js;
+				Media::$js_def[$key] = $js;
 		elseif ($js_def)
 			Media::$js_def[] = $js_def;
 	}
@@ -706,7 +732,11 @@ class MediaCore
 	/**
 	 * Add a new javascript definition from a capture at bottom of page
 	 *
-	 * @param mixed $js_def
+	 * @param mixed $params
+	 * @param string $content
+	 * @param Smarty $smarty
+	 * @param bool $repeat
+	 *
 	 * @return void
 	 */
 	public static function addJsDefL($params, $content, $smarty = null, &$repeat = false)
@@ -769,10 +799,18 @@ class MediaCore
 						Context::getContext()->controller->addJS($src);
 				}
 			}
-		$output = preg_replace_callback('/<script[^>]*>(.*)<\s*\/script\s*[^>]*>/Uims', array('Media', 'deferScript'), $output);
+		$output = preg_replace_callback(Media::$pattern_js, array('Media', 'deferScript'), $output);
 		return $output;
 	}
 
+	/**
+	 * Get all JS scripts and place it to bottom
+	 * To be used in callback with deferInlineScripts
+	 *
+	 * @param array $matches
+	 *
+	 * @return bool|string Empty string or original script lines
+	 */
 	public static function deferScript($matches)
 	{
 		if (!is_array($matches))
@@ -782,11 +820,11 @@ class MediaCore
 		if (isset($matches[0]))
 			$original = trim($matches[0]);
 
-		if (isset($matches[1]))
-			$inline = trim($matches[1]);
+		if (isset($matches[2]))
+			$inline = trim($matches[2]);
 
 		/* This is an inline script, add its content to inline scripts stack then remove it from content */
-		if (!empty($inline) && preg_match('/<\s*[\/]script[^>]*>/ims', $original) !== false && Media::$inline_script[] = $inline)
+		if (!empty($inline) && preg_match(Media::$pattern_js, $original) !== false && Media::$inline_script[] = $inline)
 			return '';
 
 		/* This is an external script, if it already belongs to js_files then remove it from content */

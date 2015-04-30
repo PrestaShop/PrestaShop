@@ -345,6 +345,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 		$_POST['price'] = Tools::getValue('leave_bprice_on') ? '-1' : Tools::getValue('price');
 		if (Validate::isLoadedObject(($object = parent::processSave())))
 		{
+			/** @var SpecificPriceRule $object */
 			$object->deleteConditions();
 			foreach ($_POST as $key => $values)
 			{

@@ -782,6 +782,9 @@ var ajaxCart = {
 	updateCartEverywhere : function(jsonData){
 		$('.ajax_cart_total').text($.trim(jsonData.productTotal));
 
+		if (typeof hasDeliveryAddress == 'undefined')
+			hasDeliveryAddress = false;
+
 		if (parseFloat(jsonData.shippingCostFloat) > 0)
 			$('.ajax_cart_shipping_cost').text(jsonData.shippingCost).parent().find('.unvisible').show();
 		else if ((hasDeliveryAddress || typeof(orderProcess) !== 'undefined' && orderProcess == 'order-opc') && typeof(freeShippingTranslation) != 'undefined')

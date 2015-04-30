@@ -50,7 +50,7 @@ class OrderReturnStateCore extends ObjectModel
 	/**
 	* Get all available order statuses
 	*
-	* @param integer $id_lang Language id for status name
+	* @param int $id_lang Language id for status name
 	* @return array Order statuses
 	*/
 	public static function getOrderReturnStates($id_lang)

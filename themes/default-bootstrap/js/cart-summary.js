@@ -977,6 +977,8 @@ function updateCustomizedDatas(json)
 function updateHookShoppingCart(html)
 {
 	$('#HOOK_SHOPPING_CART').html(html);
+	if (typeof initCrossSellingbxSlider !== 'undefined')
+		initCrossSellingbxSlider();
 }
 
 function updateHookShoppingCartExtra(html)

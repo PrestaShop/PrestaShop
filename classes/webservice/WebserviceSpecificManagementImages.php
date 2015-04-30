@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author 	PrestaShop SA <contact@prestashop.com>
+ *  @copyright  2007-2015 PrestaShop SA
+ *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManagementInterface
 {
@@ -77,7 +77,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	protected $productImageDeclinationId = null;
 
 	/**
-	 * @var boolean If the current image management has to manage a "default" image (i.e. "No product available")
+	 * @var bool If the current image management has to manage a "default" image (i.e. "No product available")
 	 */
 	protected $defaultImage = false;
 
@@ -174,7 +174,9 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	/**
 	 * Management of images URL segment
 	 *
-	 * @return boolean
+	 * @return bool
+	 *
+	 * @throws WebserviceException
 	 */
 	protected function manageImages()
 	{
@@ -339,7 +341,9 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	/**
 	 * Management of general images
 	 *
-	 * @return boolean
+	 * @return bool
+	 *
+	 * @throws WebserviceException
 	 */
 	protected function manageGeneralImages()
 	{
@@ -546,9 +550,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 			$available_image_ids = array();
 
 			// New Behavior
-			$languages = Language::getLanguages();
-			foreach ($languages as $language)
-				foreach (Image::getImages($language['id_lang'], $object_id) as $image)
+			foreach (Language::getIDs() as $id_lang)
+				foreach (Image::getImages($id_lang, $object_id) as $image)
 					$available_image_ids[] = $image['id_image'];
 			$available_image_ids = array_unique($available_image_ids, SORT_NUMERIC);
 
@@ -645,7 +648,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	 * Management of normal images (as categories, suppliers, manufacturers and stores)
 	 *
 	 * @param string $directory the file path of the root of the images folder type
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function manageDeclinatedImages($directory)
 	{
@@ -689,6 +692,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
 	protected function manageCustomizationImages()
 	{
+		$normal_image_sizes = ImageType::getImagesTypes($this->imageType);
 		if (empty($this->wsObject->urlSegment[2]))
 		{
 			$results = Db::getInstance()->executeS('SELECT DISTINCT `id_cart` FROM `'._DB_PREFIX_.'customization`');
@@ -704,7 +708,6 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 		elseif (empty($this->wsObject->urlSegment[3]))
 		{
 			$this->output .= $this->objOutput->getObjectRender()->renderNodeHeader('customizations', array());
-			$results = Product::getAllCustomizedDatas((int)$this->wsObject->urlSegment[2]);
 			$customizations = $this->getCustomizations();
 			foreach ($customizations as $id)
 				$this->output .= $this->objOutput->getObjectRender()->renderNodeHeader('customization', array(), array('id' => $id, 'xlink_resource'=>$this->wsObject->wsUrl.'images/'.$this->imageType.'/'.$id), false);
@@ -722,7 +725,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 
 				$this->output .= $this->objOutput->getObjectRender()->renderNodeHeader('images', array());
 				foreach ($results as $result)
-					$this->output .= $this->objOutput->getObjectRender()->renderNodeHeader('image', array(), array('id' => $result['index'], 'xlink_resource'=>$this->wsObject->wsUrl.'images/'.$this->imageType.'/'.$id), false);
+					$this->output .= $this->objOutput->getObjectRender()->renderNodeHeader('image', array(), array('id' => $result['index'], 'xlink_resource'=>$this->wsObject->wsUrl.'images/'.$this->imageType.'/'.$result['index']), false);
 				$this->output .= $this->objOutput->getObjectRender()->renderNodeFooter('images', array());
 				return true;
 			}
@@ -772,6 +775,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 				throw new WebserviceException('This image does not exist on disk', array(61, 500));
 			$this->imgToDisplay = _PS_UPLOAD_DIR_.$results[0]['value'];
 			$filename_exists = file_exists($this->imgToDisplay);
+
 			return $this->manageDeclinatedImagesCRUD($filename_exists, $this->imgToDisplay, $normal_image_sizes, _PS_UPLOAD_DIR_);
 		}
 	}
@@ -779,11 +783,13 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	/**
 	 * Management of normal images CRUD
 	 *
-	 * @param boolean $filename_exists if the filename exists
+	 * @param bool $filename_exists if the filename exists
 	 * @param string $filename the image path
 	 * @param array $image_sizes The
 	 * @param string $directory
-	 * @return boolean
+	 * @return bool
+	 *
+	 * @throws WebserviceException
 	 */
 	protected function manageDeclinatedImagesCRUD($filename_exists, $filename, $image_sizes, $directory)
 	{
@@ -855,9 +861,9 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	 * 	Delete the image on disk
 	 *
 	 * @param string $file_path the image file path
-	 * @param array $image_types The differents sizes
+	 * @param array $image_types The different sizes
 	 * @param string $parent_path The parent path
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function deleteImageOnDisk($file_path, $image_types = null, $parent_path = null)
 	{
@@ -901,6 +907,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	 * @param array $image_types
 	 * @param string $parent_path
 	 * @return string
+	 *
+	 * @throws WebserviceException
 	 */
 	protected function writeImageOnDisk($base_path, $new_path, $dest_width = null, $dest_height = null, $image_types = null, $parent_path = null)
 	{
@@ -961,7 +969,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 			throw new WebserviceException(sprintf('Unable to build the image "%s".', str_replace(_PS_ROOT_DIR_, '[SHOP_ROOT_DIR]', $new_path)), array(69, 500));
 
 		// Write it on disk
-		$imaged = false;
+
 		switch ($this->imgExtension)
 		{
 			case 'gif':
@@ -1021,7 +1029,9 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
 	 * @param int $dest_height
 	 * @param array $image_types
 	 * @param string $parent_path
-	 * @return boolean
+	 * @return bool
+	 *
+	 * @throws WebserviceException
 	 */
 	protected function writePostedImageOnDisk($reception_path, $dest_width = null, $dest_height = null, $image_types = null, $parent_path = null)
 	{

@@ -656,24 +656,33 @@ function saveAddress(type)
 	if (type !== 'delivery' && type !== 'invoice')
 		return false;
 
-	var params = 'firstname=' + encodeURIComponent($('#firstname' + (type == 'invoice' ? '_invoice' : '')).val()) + '&lastname=' + encodeURIComponent($('#lastname'+(type == 'invoice' ? '_invoice' : '')).val()) + '&';
+	var params = 'firstname=' + encodeURIComponent($('#firstname' + (type == 'invoice' ? '_invoice' : '')).val()) + '&lastname=' + encodeURIComponent($('#lastname' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
 	if ($('#company' + (type == 'invoice' ? '_invoice' : '')).length)
 		params += 'company=' + encodeURIComponent($('#company' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
 	if ($('#vat_number' + (type == 'invoice' ? '_invoice' : '')).length)
 		params += 'vat_number='+encodeURIComponent($('#vat_number' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
-	if ($('#dni'+(type == 'invoice' ? '_invoice' : '')).length)
+	if ($('#dni' + (type == 'invoice' ? '_invoice' : '')).length)
 		params += 'dni=' + encodeURIComponent($('#dni' + (type == 'invoice' ? '_invoice' : '')).val())+'&';
-	params += 'address1=' + encodeURIComponent($('#address1' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
-	params += 'address2=' + encodeURIComponent($('#address2' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
-	params += 'postcode=' + encodeURIComponent($('#postcode' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
-	params += 'city=' + encodeURIComponent($('#city' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
-	params += 'id_country=' + parseInt($('#id_country' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
-	if ($('#id_state'+(type == 'invoice' ? '_invoice' : '')).length)
-		params += 'id_state='+encodeURIComponent($('#id_state'+(type == 'invoice' ? '_invoice' : '')).val()) + '&';
-	params += 'other=' + encodeURIComponent($('#other' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
-	params += 'phone=' + encodeURIComponent($('#phone' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
-	params += 'phone_mobile=' + encodeURIComponent($('#phone_mobile' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
-	params += 'alias=' + encodeURIComponent($('#alias' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
+	if ($('#address1' + (type == 'invoice' ? '_invoice' : '')).length)
+		params += 'address1=' + encodeURIComponent($('#address1' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
+	if ($('#address2' + (type == 'invoice' ? '_invoice' : '')).length)
+		params += 'address2=' + encodeURIComponent($('#address2' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
+	if ($('#postcode' + (type == 'invoice' ? '_invoice' : '')).length)
+		params += 'postcode=' + encodeURIComponent($('#postcode' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
+	if ($('#city' + (type == 'invoice' ? '_invoice' : '')).length)
+		params += 'city=' + encodeURIComponent($('#city' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
+	if ($('#id_country' + (type == 'invoice' ? '_invoice' : '')).length)
+		params += 'id_country=' + parseInt($('#id_country' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
+	if ($('#id_state' + (type == 'invoice' ? '_invoice' : '')).length)
+		params += 'id_state=' + encodeURIComponent($('#id_state' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
+	if ($('#other' + (type == 'invoice' ? '_invoice' : '')).length)
+		params += 'other=' + encodeURIComponent($('#other' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
+	if ($('#phone' + (type == 'invoice' ? '_invoice' : '')).length)
+		params += 'phone=' + encodeURIComponent($('#phone' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
+	if ($('#phone_mobile' + (type == 'invoice' ? '_invoice' : '')).length)
+		params += 'phone_mobile=' + encodeURIComponent($('#phone_mobile' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
+	if ($('#alias' + (type == 'invoice' ? '_invoice' : '')).length)
+		params += 'alias=' + encodeURIComponent($('#alias' + (type == 'invoice' ? '_invoice' : '')).val()) + '&';
 	if (type == 'delivery' && $('#opc_id_address_delivery').val() != undefined && parseInt($('#opc_id_address_delivery').val()) > 0)
 		params += 'opc_id_address_delivery=' + parseInt($('#opc_id_address_delivery').val()) + '&';
 	if (type == 'invoice' && $('#opc_id_address_invoice').val() != undefined && parseInt($('#opc_id_address_invoice').val()) > 0)

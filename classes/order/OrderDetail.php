@@ -26,40 +26,40 @@
 
 class OrderDetailCore extends ObjectModel
 {
-	/** @var integer */
+	/** @var int */
 	public $id_order_detail;
 
-	/** @var integer */
+	/** @var int */
 	public $id_order;
 
-	/** @var integer */
+	/** @var int */
 	public $id_order_invoice;
 
-	/** @var integer */
+	/** @var int */
 	public $product_id;
 
-	/** @var integer */
+	/** @var int */
 	public $id_shop;
 
-	/** @var integer */
+	/** @var int */
 	public $product_attribute_id;
 
 	/** @var string */
 	public $product_name;
 
-	/** @var integer */
+	/** @var int */
 	public $product_quantity;
 
-	/** @var integer */
+	/** @var int */
 	public $product_quantity_in_stock;
 
-	/** @var integer */
+	/** @var int */
 	public $product_quantity_return;
 
-	/** @var integer */
+	/** @var int */
 	public $product_quantity_refunded;
 
-	/** @var integer */
+	/** @var int */
 	public $product_quantity_reinjected;
 
 	/** @var float */
@@ -119,13 +119,13 @@ class OrderDetailCore extends ObjectModel
 	/** @var float */
 	public $ecotax_tax_rate;
 
-	/** @var integer */
+	/** @var int */
 	public $discount_quantity_applied;
 
 	/** @var string */
 	public $download_hash;
 
-	/** @var integer */
+	/** @var int */
 	public $download_nb;
 
 	/** @var datetime */
@@ -332,7 +332,7 @@ class OrderDetailCore extends ObjectModel
 	 * @deprecated Functionality moved to Order::updateOrderDetailTax
 	 *             because we need the full order object to do a good job here.
 	 *             Will no longer be supported after 1.6.1
-	 * @return boolean
+	 * @return bool
 	 */
 	public function saveTaxCalculator(Order $order, $replace = false)
 	{
@@ -412,6 +412,18 @@ class OrderDetailCore extends ObjectModel
 	public static function getList($id_order)
 	{
 		return Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'order_detail` WHERE `id_order` = '.(int)$id_order);
+	}
+
+	public function getTaxList()
+	{
+		return self::getTaxList($this->id);
+	}
+
+	public static function getTaxListStatic($id_order_detail)
+	{
+		$sql = 'SELECT * FROM `'._DB_PREFIX_.'order_detail_tax`
+					WHERE `id_order_detail` = '.(int)$id_order_detail;
+		return Db::getInstance()->executeS($sql);
 	}
 
 	/*

@@ -78,13 +78,12 @@ class AdminProductsController extends AdminProductsControllerCore
 			return;
 
 		/* Additional fields */
-		$languages = Language::getLanguages(false);
-		foreach ($languages as $language)
-			if (isset($_POST['meta_keywords_'.$language['id_lang']]))
+		foreach (Language::getIDs(false) as $id_lang)
+			if (isset($_POST['meta_keywords_'.$id_lang]))
 			{
-				$_POST['meta_keywords_'.$language['id_lang']] = $this->_cleanMetaKeywords(Tools::strtolower($_POST['meta_keywords_'.$language['id_lang']]));
-				// preg_replace('/ *,? +,* /', ',', strtolower($_POST['meta_keywords_'.$language['id_lang']]));
-				$object->meta_keywords[$language['id_lang']] = $_POST['meta_keywords_'.$language['id_lang']];
+				$_POST['meta_keywords_'.$id_lang] = $this->_cleanMetaKeywords(Tools::strtolower($_POST['meta_keywords_'.$id_lang]));
+				// preg_replace('/ *,? +,* /', ',', strtolower($_POST['meta_keywords_'.$id_lang]));
+				$object->meta_keywords[$id_lang] = $_POST['meta_keywords_'.$id_lang];
 			}
 		$_POST['width'] = empty($_POST['width']) ? '0' : str_replace(',', '.', $_POST['width']);
 		$_POST['height'] = empty($_POST['height']) ? '0' : str_replace(',', '.', $_POST['height']);
@@ -1483,8 +1482,8 @@ class AdminProductsController extends AdminProductsControllerCore
 	/**
 	 * Copy a product image
 	 *
-	 * @param integer $id_product Product Id for product image filename
-	 * @param integer $id_image Image Id for product image filename
+	 * @param int $id_product Product Id for product image filename
+	 * @param int $id_image Image Id for product image filename
 	 */
 	public function copyImage($id_product, $id_image, $method = 'auto')
 	{
@@ -2052,7 +2051,7 @@ class AdminProductsController extends AdminProductsControllerCore
 	 *
 	 * @param array Languages
 	 * @param object $product Product
-	 * @return boolean Update result
+	 * @return bool Update result
 	 */
 	public function updateTags($languages, $product)
 	{
@@ -2242,7 +2241,7 @@ class AdminProductsController extends AdminProductsControllerCore
 	 * @param array $indexedCategories Array with categories where product is indexed (in order to check checkbox)
 	 * @param array $categories Categories to list
 	 * @param array $current Current category
-	 * @param integer $id_category Current category id
+	 * @param int $id_category Current category id
 	 */
 	public static function recurseCategoryForInclude($id_obj, $indexedCategories, $categories, $current, $id_category = null, $id_category_default = null, $has_suite = array())
 	{
@@ -4508,7 +4507,7 @@ class AdminProductsController extends AdminProductsControllerCore
 	 * if yes, add the pack items from input "inputPackItems"
 	 *
 	 * @param Product $product
-	 * @return boolean
+	 * @return bool
 	 */
 	public function updatePackItems($product)
 	{
@@ -4648,12 +4647,12 @@ class AdminProductsController extends AdminProductsControllerCore
 	{
 		if (Tools::getValue('key_tab') == 'Images' && Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
 		{
-			$languages = Language::getLanguages(false);
+			$language_ids = Language::getIDs(false);
 			foreach ($_POST as $key => $val)
 				if (preg_match('/^legend_([0-9]+)/i', $key, $match))
-					foreach ($languages as $language)
-						if ($val && $language['id_lang'] == $match[1])
-							Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_lang SET legend = "'.pSQL($val).'" WHERE id_image IN (SELECT id_image FROM '._DB_PREFIX_.'image WHERE id_product = '.(int)$product->id.') AND id_lang = '.(int)$language['id_lang']);
+					foreach ($language_ids as $id_lang)
+						if ($val && $id_lang == $match[1])
+							Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_lang SET legend = "'.pSQL($val).'" WHERE id_image IN (SELECT id_image FROM '._DB_PREFIX_.'image WHERE id_product = '.(int)$product->id.') AND id_lang = '.(int)$id_lang);
 		}
 	}
 }

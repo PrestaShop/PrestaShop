@@ -29,7 +29,7 @@ class ZoneCore extends ObjectModel
 	/** @var string Name */
 	public $name;
 
-	/** @var boolean Zone status */
+	/** @var bool Zone status */
 	public $active = true;
 
 	/**
@@ -72,7 +72,7 @@ class ZoneCore extends ObjectModel
 	 * Get a zone ID from its default language name
 	 *
 	 * @param string $name
-	 * @return integer id_zone
+	 * @return int id_zone
 	 */
 	public static function getIdByName($name)
 	{
@@ -86,7 +86,7 @@ class ZoneCore extends ObjectModel
 	/**
 	* Delete a zone
 	*
-	* @return boolean Deletion result
+	* @return bool Deletion result
 	*/
 	public function delete()
 	{

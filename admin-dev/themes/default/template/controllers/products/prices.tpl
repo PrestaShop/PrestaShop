@@ -213,7 +213,7 @@ $(document).ready(function () {
 				<span class="input-group-addon">{$currency->prefix}{$currency->suffix}</span>
 				<input id="unit_price" name="unit_price" type="text" value="{$unit_price|string_format:'%.6f'}" maxlength="27" onkeyup="if (isArrowKey(event)) return ;this.value = this.value.replace(/,/g, '.'); unitPriceWithTax('unit');"/>
 				<span class="input-group-addon">{l s='per'}</span>
-				<input id="unity" name="unity" type="text" value="{$product->unity|htmlentitiesUTF8}"  maxlength="10" onkeyup="if (isArrowKey(event)) return ;unitySecond();" onchange="unitySecond();"/>
+				<input id="unity" name="unity" type="text" value="{$product->unity|htmlentitiesUTF8}"  maxlength="255" onkeyup="if (isArrowKey(event)) return ;unitySecond();" onchange="unitySecond();"/>
 			</div>
 		</div>
 	</div>
@@ -431,7 +431,7 @@ $(document).ready(function () {
 						<div class="col-lg-6">
 							<select name="sp_reduction_type" id="sp_reduction_type">
 								<option selected="selected">-</option>
-								<option value="amount">{l s='%s (%s)' sprintf=[$currency->name|escape:'html':'UTF-8', $currency->iso_code|escape:'html':'UTF-8']}</option>
+								<option value="amount">{$currency->name|escape:'html':'UTF-8'}</option>
 								<option value="percentage">{l s='Percent'}</option>
 							</select>
 						</div>
@@ -441,6 +441,7 @@ $(document).ready(function () {
 		</div>
 	</div>
 	<script type="text/javascript">
+		var currencyName = '{$currency->name|escape:'html':'UTF-8'|@addcslashes:'\''}';
 		$(document).ready(function(){
 			product_prices['0'] = $('#sp_current_ht_price').html();
 			$('#id_product_attribute').change(function() {

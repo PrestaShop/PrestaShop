@@ -120,7 +120,7 @@ function rewriteSettingsFile($base_urls = null, $theme = null, $array_db = null)
  * Display SQL date in friendly format
  *
  * @param string $sql_date Date in SQL format (YYYY-MM-DD HH:mm:ss)
- * @param boolean $with_time Display both date and time
+ * @param bool $with_time Display both date and time
  * @todo Several formats (french : DD-MM-YYYY)
 */
 function displayDate($sql_date, $with_time = false)
@@ -132,7 +132,7 @@ function displayDate($sql_date, $with_time = false)
  * Return path to a product category
  *
  * @param string $url_base Start URL
- * @param integer $id_category Start category
+ * @param int $id_category Start category
  * @param string $path Current path
  * @param string $highlight String to highlight (in XHTML/CSS)
  * @param string $type Category type (products/cms)
@@ -318,13 +318,13 @@ function checkTabRights($id_tab)
  * ...And so on.
  * _____________________________________
  * @param simpleXMLElement $xml the XML to convert
- * @param boolean $flatten_values    Choose wether to flatten values
+ * @param bool $flatten_values    Choose wether to flatten values
  *                                    or to set them under a particular index.
  *                                    defaults to true;
- * @param boolean $flatten_attributes Choose wether to flatten attributes
+ * @param bool $flatten_attributes Choose wether to flatten attributes
  *                                    or to set them under a particular index.
  *                                    Defaults to true;
- * @param boolean $flatten_children    Choose wether to flatten children
+ * @param bool $flatten_children    Choose wether to flatten children
  *                                    or to set them under a particular index.
  *                                    Defaults to true;
  * @param string $value_key            index for values, in case $flatten_values was set to false. Defaults to "@value"

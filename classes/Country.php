@@ -28,37 +28,37 @@ class CountryCore extends ObjectModel
 {
 	public $id;
 
-	/** @var integer Zone id which country belongs */
+	/** @var int Zone id which country belongs */
 	public $id_zone;
 
-	/** @var integer Currency id which country belongs */
+	/** @var int Currency id which country belongs */
 	public $id_currency;
 
 	/** @var string 2 letters iso code */
 	public $iso_code;
 
-	/** @var integer international call prefix */
+	/** @var int international call prefix */
 	public $call_prefix;
 
 	/** @var string Name */
 	public $name;
 
-	/** @var boolean Contain states */
+	/** @var bool Contain states */
 	public $contains_states;
 
-	/** @var boolean Need identification number dni/nif/nie */
+	/** @var bool Need identification number dni/nif/nie */
 	public $need_identification_number;
 
-	/** @var boolean Need Zip Code */
+	/** @var bool Need Zip Code */
 	public $need_zip_code;
 
 	/** @var string Zip Code Format */
 	public $zip_code_format;
 
-	/** @var boolean Display or not the tax incl./tax excl. mention in the front office */
+	/** @var bool Display or not the tax incl./tax excl. mention in the front office */
 	public $display_tax_label = true;
 
-	/** @var boolean Status for delivery */
+	/** @var bool Status for delivery */
 	public $active = true;
 
 	protected static $_idZones = array();
@@ -111,10 +111,10 @@ class CountryCore extends ObjectModel
 	/**
 	 * @brief Return available countries
 	 *
-	 * @param integer $id_lang Language ID
-	 * @param boolean $active return only active coutries
-	 * @param boolean $contain_states return only country with states
-	 * @param boolean $list_states Include the states list with the returned list
+	 * @param int $id_lang Language ID
+	 * @param bool $active return only active coutries
+	 * @param bool $contain_states return only country with states
+	 * @param bool $list_states Include the states list with the returned list
 	 *
 	 * @return Array Countries and corresponding zones
 	 */
@@ -156,7 +156,7 @@ class CountryCore extends ObjectModel
 	 *
 	 * @param string $iso_code Country iso code
 	 * @param bool $active return only active coutries
-	 * @return integer Country ID
+	 * @return int Country ID
 	 */
 	public static function getByIso($iso_code, $active = false)
 	{
@@ -191,8 +191,8 @@ class CountryCore extends ObjectModel
 	/**
 	 * Get a country name with its ID
 	 *
-	 * @param integer $id_lang Language ID
-	 * @param integer $id_country Country ID
+	 * @param int $id_lang Language ID
+	 * @param int $id_country Country ID
 	 * @return string Country name
 	 */
 	public static function getNameById($id_lang, $id_country)
@@ -212,7 +212,7 @@ class CountryCore extends ObjectModel
 	/**
 	 * Get a country iso with its ID
 	 *
-	 * @param integer $id_country Country ID
+	 * @param int $id_country Country ID
 	 * @return string Country iso
 	 */
 	public static function getIsoById($id_country)
@@ -275,7 +275,7 @@ class CountryCore extends ObjectModel
 	 * Returns the default country Id
 	 *
 	 * @deprecated as of 1.5 use $context->country->id instead
-	 * @return integer default country id
+	 * @return int default country id
 	 */
 	public static function getDefaultCountryId()
 	{

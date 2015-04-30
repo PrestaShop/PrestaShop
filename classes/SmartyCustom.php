@@ -38,9 +38,9 @@ class SmartyCustomCore extends Smarty
 	*
 	* @param  string  $resource_name template name
 	* @param  string  $compile_id    compile id
-	* @param  integer $exp_time      expiration time
+	* @param  int $exp_time      expiration time
 	*
-	* @return integer number of template files deleted
+	* @return int number of template files deleted
 	*/
 	public function clearCompiledTemplate($resource_name = null, $compile_id = null, $exp_time = null)
 	{
@@ -56,10 +56,10 @@ class SmartyCustomCore extends Smarty
 	/**
 	* Mark all template files to be regenerated
 	*
-	* @param  integer $exp_time expiration time
+	* @param  int $exp_time expiration time
 	* @param  string  $type     resource type
 	*
-	* @return integer number of cache files which needs to be updated
+	* @return int number of cache files which needs to be updated
 	*/
 	public function clearAllCache($exp_time = null, $type = null)
 	{
@@ -73,10 +73,10 @@ class SmartyCustomCore extends Smarty
 	* @param  string  $template_name template name
 	* @param  string  $cache_id      cache id
 	* @param  string  $compile_id    compile id
-	* @param  integer $exp_time      expiration time
+	* @param  int $exp_time      expiration time
 	* @param  string  $type          resource type
 	*
-	* @return integer number of cache files which needs to be updated
+	* @return int number of cache files which needs to be updated
 	*/
 	public function clearCache($template_name, $cache_id = null, $compile_id = null, $exp_time = null, $type = null)
 	{
@@ -185,8 +185,6 @@ class SmartyCustomCore extends Smarty
 							SET filepath=\''.pSQL($filepath).'\'
 							WHERE `template_hash`=\''.pSQL($template_md5).'\'';
 
-		if (strlen($cache_id) > 32)
-			$cache_id = md5($cache_id);
 		$sql .= ' AND cache_id="'.pSQL((string)$cache_id).'"';
 
 		if (strlen($compile_id) > 32)
@@ -209,13 +207,11 @@ class SmartyCustomCore extends Smarty
 	{
 		static $is_in_lazy_cache = array();
 		$template_md5 = md5($template);
-		if (strlen($cache_id) > 32)
-			$cache_id = md5($cache_id);
 
 		if (strlen($compile_id) > 32)
 			$compile_id = md5($compile_id);
 
-		$key = $template_md5.'-'.$cache_id.'-'.$compile_id;
+		$key = md5($template_md5.'-'.$cache_id.'-'.$compile_id);
 
 		if (isset($is_in_lazy_cache[$key]))
 			return $is_in_lazy_cache[$key];
@@ -267,8 +263,6 @@ class SmartyCustomCore extends Smarty
 							(`template_hash`, `cache_id`, `compile_id`, `last_update`)
 							VALUES (\''.pSQL($template_md5).'\'';
 
-		if (strlen($cache_id) > 32)
-			$cache_id = md5($cache_id);
 		$sql .= ',"'.pSQL((string)$cache_id).'"';
 
 		if (strlen($compile_id) > 32)
@@ -299,9 +293,7 @@ class SmartyCustomCore extends Smarty
 
 		if ($cache_id != null)
 		{
-			if (strlen($cache_id) > 32)
-				$cache_id = md5($cache_id);
-			$sql .= ' AND cache_id="'.pSQL((string)$cache_id).'"';
+			$sql .= ' AND cache_id LIKE "'.pSQL((string)$cache_id).'%"';
 		}
 
 		if ($compile_id != null)

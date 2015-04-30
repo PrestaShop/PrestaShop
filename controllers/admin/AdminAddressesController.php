@@ -503,8 +503,11 @@ class AdminAddressesControllerCore extends AdminController
 	public function processDelete()
 	{
 		if (Validate::isLoadedObject($object = $this->loadObject()))
+		{
+			/** @var Address $object */
 			if (!$object->isUsed())
 				$this->deleted = false;
+		}
 
 		return parent::processDelete();
 	}
@@ -512,7 +515,7 @@ class AdminAddressesControllerCore extends AdminController
 	/**
 	 * Delete multiple items
 	 *
-	 * @return boolean true if succcess
+	 * @return bool true if succcess
 	 */
 	protected function processBulkDelete()
 	{

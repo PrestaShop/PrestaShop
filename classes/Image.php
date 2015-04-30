@@ -28,16 +28,16 @@ class ImageCore extends ObjectModel
 {
 	public $id;
 
-	/** @var integer Image ID */
+	/** @var int Image ID */
 	public $id_image;
 
-	/** @var integer Product ID */
+	/** @var int Product ID */
 	public $id_product;
 
-	/** @var integer Position used to order images of the same product */
+	/** @var int Position used to order images of the same product */
 	public $position;
 
-	/** @var boolean Image is cover */
+	/** @var bool Image is cover */
 	public $cover;
 
 	/** @var string Legend */
@@ -128,10 +128,10 @@ class ImageCore extends ObjectModel
 	/**
 	 * Return first image (by position) associated with a product attribute
 	 *
-	 * @param integer $id_shop Shop ID
-	 * @param integer $id_lang Language ID
-	 * @param integer $id_product Product ID
-	 * @param integer $id_product_attribute Product Attribute ID
+	 * @param int $id_shop Shop ID
+	 * @param int $id_lang Language ID
+	 * @param int $id_product Product ID
+	 * @param int $id_product_attribute Product Attribute ID
 	 * @return array
 	 */
 	public static function getBestImageAttribute($id_shop, $id_lang, $id_product, $id_product_attribute)
@@ -161,9 +161,9 @@ class ImageCore extends ObjectModel
 	/**
 	 * Return available images for a product
 	 *
-	 * @param integer $id_lang Language ID
-	 * @param integer $id_product Product ID
-	 * @param integer $id_product_attribute Product Attribute ID
+	 * @param int $id_lang Language ID
+	 * @param int $id_product Product ID
+	 * @param int $id_product_attribute Product Attribute ID
 	 * @return array Images
 	 */
 	public static function getImages($id_lang, $id_product, $id_product_attribute = null)
@@ -184,9 +184,9 @@ class ImageCore extends ObjectModel
 	/**
 	 * Check if a product has an image available
 	 *
-	 * @param integer $id_lang Language ID
-	 * @param integer $id_product Product ID
-	 * @param integer $id_product_attribute Product Attribute ID
+	 * @param int $id_lang Language ID
+	 * @param int $id_product Product ID
+	 * @param int $id_product_attribute Product Attribute ID
 	 * @return bool
 	 */
 	public static function hasImages($id_lang, $id_product, $id_product_attribute = null)
@@ -219,8 +219,8 @@ class ImageCore extends ObjectModel
 	/**
 	 * Return number of images for a product
 	 *
-	 * @param integer $id_product Product ID
-	 * @return integer number of images
+	 * @param int $id_product Product ID
+	 * @return int number of images
 	 */
 	public static function getImagesTotal($id_product)
 	{
@@ -234,8 +234,8 @@ class ImageCore extends ObjectModel
 	/**
 	 * Return highest position of images for a product
 	 *
-	 * @param integer $id_product Product ID
-	 * @return integer highest position of images
+	 * @param int $id_product Product ID
+	 * @return int highest position of images
 	 */
 	public static function getHighestPosition($id_product)
 	{
@@ -249,8 +249,8 @@ class ImageCore extends ObjectModel
 	/**
 	 * Delete product cover
 	 *
-	 * @param integer $id_product Product ID
-	 * @return boolean result
+	 * @param int $id_product Product ID
+	 * @return bool result
 	 */
 	public static function deleteCover($id_product)
 	{
@@ -275,8 +275,8 @@ class ImageCore extends ObjectModel
 	/**
 	 *Get product cover
 	 *
-	 * @param integer $id_product Product ID
-	 * @return boolean result
+	 * @param int $id_product Product ID
+	 * @return bool result
 	 */
 	public static function getCover($id_product)
 	{
@@ -290,8 +290,8 @@ class ImageCore extends ObjectModel
 	/**
 	 * Copy images from a product to another
 	 *
-	 * @param integer $id_product_old Source product ID
-	 * @param boolean $id_product_new Destination product ID
+	 * @param int $id_product_old Source product ID
+	 * @param bool $id_product_new Destination product ID
 	 */
 	public static function duplicateProductImages($id_product_old, $id_product_new, $combination_images)
 	{
@@ -351,8 +351,8 @@ class ImageCore extends ObjectModel
 
 	/**
 	 * Duplicate product attribute image associations
-	 * @param integer $id_product_attribute_old
-	 * @return boolean
+	 * @param int $id_product_attribute_old
+	 * @return bool
 	 */
 	public static function duplicateAttributeImageAssociations($combination_images)
 	{
@@ -369,8 +369,8 @@ class ImageCore extends ObjectModel
 	/**
 	 * Reposition image
 	 *
-	 * @param integer $position Position
-	 * @param boolean $direction Direction
+	 * @param int $position Position
+	 * @param bool $direction Direction
 	 * @deprecated since version 1.5.0.1 use Image::updatePosition() instead
 	 */
 	public function	positionImage($position, $direction)
@@ -718,7 +718,7 @@ class ImageCore extends ObjectModel
 	/**
 	 * Try to create and delete some folders to check if moving images to new file system will be possible
 	 *
-	 * @return boolean success
+	 * @return bool success
 	 */
 	public static function testFileSystem()
 	{

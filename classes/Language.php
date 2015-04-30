@@ -46,7 +46,7 @@ class LanguageCore extends ObjectModel
 	/** @var bool true if this language is right to left language */
 	public $is_rtl = false;
 
-	/** @var boolean Status */
+	/** @var bool Status */
 	public $active = true;
 
 	/**
@@ -396,7 +396,7 @@ class LanguageCore extends ObjectModel
 	/**
 	 * loadUpdateSQL will create default lang values when you create a new lang, based on default id lang
 	 *
-	 * @return boolean true if succeed
+	 * @return bool true if succeed
 	 */
 	public function loadUpdateSQL()
 	{
@@ -575,12 +575,15 @@ class LanguageCore extends ObjectModel
 	}
 
 	/**
-	 * Return available languages
+	 * Returns available languages
 	 *
-	 * @param boolean $active Select only active languages
+	 * @param bool     $active   Select only active languages
+	 * @param int|bool $id_shop  Shop ID
+	 * @param bool     $ids_only If true, returns an array of language IDs
+	 *
 	 * @return array Languages
 	 */
-	public static function getLanguages($active = true, $id_shop = false)
+	public static function getLanguages($active = true, $id_shop = false, $ids_only = false)
 	{
 		if (!self::$_LANGUAGES)
 			Language::loadLanguages();
@@ -590,9 +593,24 @@ class LanguageCore extends ObjectModel
 		{
 			if ($active && !$language['active'] || ($id_shop && !isset($language['shops'][(int)$id_shop])))
 				continue;
-			$languages[] = $language;
+
+			$languages[] = $ids_only ? $language['id_lang'] : $language;
 		}
+
 		return $languages;
+	}
+
+	/**
+	 * Returns an array of language IDs
+	 *
+	 * @param bool     $active  Select only active languages
+	 * @param int|bool $id_shop Shop ID
+	 *
+	 * @return array
+	 */
+	public static function getIDs($active = true, $id_shop = false)
+	{
+		return self::getLanguages($active, $id_shop, true);
 	}
 
 	public static function getLanguage($id_lang)
@@ -605,7 +623,7 @@ class LanguageCore extends ObjectModel
 	/**
 	 * Return iso code from id
 	 *
-	 * @param integer $id_lang Language ID
+	 * @param int $id_lang Language ID
 	 * @return string Iso code
 	 */
 	public static function getIsoById($id_lang)
@@ -619,7 +637,7 @@ class LanguageCore extends ObjectModel
 	 * Return id from iso code
 	 *
 	 * @param string $iso_code Iso code
-	 * @return integer Language ID
+	 * @return int Language ID
 	 */
 	public static function getIdByIso($iso_code)
 	{

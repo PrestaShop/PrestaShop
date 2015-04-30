@@ -633,6 +633,9 @@ class AdminWarehousesControllerCore extends AdminController
 		// loads object
 		if (!($object = $this->loadObject(true)))
 			return;
+
+		/** @var Warehouse $object */
+
 		$this->updateAddress();
 		// handles carriers associations
 		$ids_carriers_selected = Tools::getValue('ids_carriers_selected');
@@ -649,6 +652,8 @@ class AdminWarehousesControllerCore extends AdminController
 		parent::updateAssoShop($id_object);
 		if (!($obj = $this->loadObject(true)))
 			return;
+
+		/** @var Warehouse $obj */
 		$obj->resetStockAvailable();
 	}
 }

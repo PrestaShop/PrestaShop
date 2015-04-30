@@ -31,16 +31,16 @@ abstract class ModuleGridCore extends Module
 	/** @var array of strings graph data */
 	protected $_values = array();
 
-	/** @var integer total number of values **/
+	/** @var int total number of values **/
 	protected $_totalCount = 0;
 
 	/**@var string graph titles */
 	protected $_title;
 
-	/**@var integer start */
+	/**@var int start */
 	protected $_start;
 
-	/**@var integer limit */
+	/**@var int limit */
 	protected $_limit;
 
 	/**@var string column name on which to sort */

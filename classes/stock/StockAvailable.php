@@ -192,7 +192,8 @@ class StockAvailableCore extends ObjectModel
 									array(
 										'id_product' => $id_product,
 										'id_product_attribute' => 0,
-										'quantity' => $product_quantity
+										'quantity' => $product_quantity,
+										'id_shop' => $id_shop
 										)
 					);
 				}
@@ -250,7 +251,8 @@ class StockAvailableCore extends ObjectModel
 									array(
 										'id_product' => $id_product,
 										'id_product_attribute' => $id_product_attribute,
-										'quantity' => $quantity
+										'quantity' => $quantity,
+										'id_shop' => $id_shop
 									)
 						);
 					}
@@ -631,7 +633,7 @@ class StockAvailableCore extends ObjectModel
 
 			$stock_available = new StockAvailable();
 			$stock_available->id_product = (int)$id_product;
-			$stock_available->id_product_attribute = (int)$id_product;
+			$stock_available->id_product_attribute = (int)$id_product_attribute;
 			$stock_available->id_shop = (int)$id_shop;
 			$stock_available->postSave();
 		}
@@ -722,13 +724,13 @@ class StockAvailableCore extends ObjectModel
 	/**
 	 * Add an sql restriction for shops fields - specific to StockAvailable
 	 *
-	 * @param DbQuery $query Reference to the query object
-	 * @param int $id_shop Optional : The shop ID
-	 * @param string $alias Optional : The current table alias
+	 * @param DbQuery|string|null $sql   Reference to the query object
+	 * @param Shop|int|null       $shop  Optional : The shop ID
+	 * @param string|null         $alias Optional : The current table alias
 	 *
-	 * @return mixed the DbQuery object or the sql restriction string
+	 * @return string|DbQuery DbQuery object or the sql restriction string
 	 */
-	public static function addSqlShopRestriction(DbQuery $sql = null, $shop = null, $alias = null)
+	public static function addSqlShopRestriction($sql = null, $shop = null, $alias = null)
 	{
 		$context = Context::getContext();
 

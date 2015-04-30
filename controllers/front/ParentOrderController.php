@@ -164,7 +164,7 @@ class ParentOrderControllerCore extends FrontController
 
 	/**
 	 * Check if order is free
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function _checkFreeOrder()
 	{
@@ -338,15 +338,10 @@ class ParentOrderControllerCore extends FrontController
 		}
 
 		// Get available cart rules and unset the cart rules already in the cart
-		$available_cart_rules = CartRule::getCustomerCartRules($this->context->language->id, (isset($this->context->customer->id) ? $this->context->customer->id : 0), true, true, true, $this->context->cart);
+		$available_cart_rules = CartRule::getCustomerCartRules($this->context->language->id, (isset($this->context->customer->id) ? $this->context->customer->id : 0), true, true, true, $this->context->cart, false, true);
 		$cart_cart_rules = $this->context->cart->getCartRules();
 		foreach ($available_cart_rules as $key => $available_cart_rule)
 		{
-			if (!$available_cart_rule['highlight'] || strpos($available_cart_rule['code'], CartRule::BO_ORDER_CODE_PREFIX) === 0)
-			{
-				unset($available_cart_rules[$key]);
-				continue;
-			}
 			foreach ($cart_cart_rules as $cart_cart_rule)
 				if ($available_cart_rule['id_cart_rule'] == $cart_cart_rule['id_cart_rule'])
 				{
@@ -391,7 +386,11 @@ class ParentOrderControllerCore extends FrontController
 			Tools::redirect('');
 		}
 		elseif (!Customer::getAddressesTotalById($this->context->customer->id))
-			Tools::redirect('index.php?controller=address&back='.urlencode('order.php?step=1'.($multi = (int)Tools::getValue('multi-shipping') ? '&multi-shipping='.$multi : '')));
+		{
+			$multi = (int)Tools::getValue('multi-shipping');
+			Tools::redirect('index.php?controller=address&back='.urlencode('order.php?step=1'.($multi ? '&multi-shipping='.$multi : '')));
+		}
+
 		$customer = $this->context->customer;
 		if (Validate::isLoadedObject($customer))
 		{

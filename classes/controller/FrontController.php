@@ -308,6 +308,7 @@ class FrontControllerCore extends Controller
 
 			if (Validate::isLoadedObject($cart) && $cart->OrderExists())
 			{
+				PrestaShopLogger::addLog('Frontcontroller::init - Cart cannot be loaded or an order has already been placed using this cart', 1, null, 'Cart', (int)$this->context->cookie->id_cart, true);
 				unset($this->context->cookie->id_cart, $cart, $this->context->cookie->checkedTOS);
 				$this->context->cookie->check_cgv = false;
 			}
@@ -317,7 +318,10 @@ class FrontControllerCore extends Controller
 					$cart->nbProducts() && intval(Configuration::get('PS_GEOLOCATION_NA_BEHAVIOR')) != -1 &&
 					!FrontController::isInWhitelistForGeolocation() &&
 					!in_array($_SERVER['SERVER_NAME'], array('localhost', '127.0.0.1')))
-				unset($this->context->cookie->id_cart, $cart);
+				{
+					PrestaShopLogger::addLog('Frontcontroller::init - GEOLOCATION is deleting a cart', 1, null, 'Cart', (int)$this->context->cookie->id_cart, true);
+					unset($this->context->cookie->id_cart, $cart);
+				}
 			// update cart values
 			elseif ($this->context->cookie->id_customer != $cart->id_customer || $this->context->cookie->id_lang != $cart->id_lang || $currency->id != $cart->id_currency)
 			{
@@ -434,6 +438,7 @@ class FrontControllerCore extends Controller
 			'link'                => $link,
 			'cart'                => $cart,
 			'currency'            => $currency,
+			'currencyRate'        => (float)$currency->getConversationRate(),
 			'cookie'              => $this->context->cookie,
 			'page_name'           => $page_name,
 			'hide_left_column'    => !$this->display_column_left,
@@ -474,10 +479,9 @@ class FrontControllerCore extends Controller
 			'shop_phone'          => Configuration::get('PS_SHOP_PHONE'),
 			'compared_products'   => is_array($compared_products) ? $compared_products : array(),
 			'comparator_max_item' => (int)Configuration::get('PS_COMPARATOR_MAX_ITEM'),
-			'currencyRate'        => (float)$currency->getConversationRate(),
-			'currencySign'        => $currency->sign,
-			'currencyFormat'      => $currency->format,
-			'currencyBlank'       => $currency->blank,
+			'currencySign'        => $currency->sign, // backward compat, see global.tpl
+			'currencyFormat'      => $currency->format, // backward compat
+			'currencyBlank'       => $currency->blank, // backward compat
 		));
 
 		// Add the tpl files directory for mobile
@@ -1623,7 +1627,7 @@ class FrontControllerCore extends Controller
 		Tools::enableCache();
 		foreach ($products as &$product)
 		{
-			$tpl = $this->context->smarty->createTemplate(_PS_THEME_DIR_.'product-list-colors.tpl');
+			$tpl = $this->context->smarty->createTemplate(_PS_THEME_DIR_.'product-list-colors.tpl', $this->getColorsListCacheId($product['id_product']));
 			if (isset($colors[$product['id_product']]))
 				$tpl->assign(array(
 					'id_product'  => $product['id_product'],

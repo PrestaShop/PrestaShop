@@ -522,7 +522,7 @@ class ShopCore extends ObjectModel
 	 */
 	public function getCategory()
 	{
-		return ($this->id_category) ? $this->id_category : 1;
+		return (int)($this->id_category ? $this->id_category : Configuration::get('PS_ROOT_CATEGORY'));
 	}
 
 	/**
@@ -564,7 +564,7 @@ class ShopCore extends ObjectModel
 	/**
 	 * check if the table has an id_shop_default
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public static function checkIdShopDefault($table)
 	{

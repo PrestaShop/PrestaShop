@@ -191,7 +191,7 @@ $oldversion = implode('.', $arrayVersion);
 // end of fix
 
 $neededUpgradeFiles = array();
-foreach ($upgradeFiles AS $version)
+foreach ($upgradeFiles as $version)
 {
 	if (version_compare($version, $oldversion) == 1 AND version_compare(_PS_INSTALL_VERSION_, $version) != -1)
 	$neededUpgradeFiles[] = $version;
@@ -312,7 +312,7 @@ if (empty($fail_result))
 		$fail_result .= '<action result="fail" error="'.$confFile->error.'" />'."\n";
 	}
 	else
-		foreach ($datas AS $data)
+		foreach ($datas as $data)
 			$confFile->writeInFile($data[0], $data[1]);
 	if ($confFile->error != false)
 	{
@@ -344,7 +344,7 @@ if (empty($fail_result))
 					else
 						$parameters = array();
 					if (is_array($parameters))
-						foreach ($parameters AS &$parameter)
+						foreach ($parameters as &$parameter)
 							$parameter = str_replace('\'', '', $parameter);
 
 					/* Call a simple function */

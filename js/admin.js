@@ -929,6 +929,15 @@ $(document).ready(function()
 
 		$('button:submit').click(bindSwapSave);
 	}
+
+    // http://status.prestashop.com/
+    var sp = new StatusPage.page({page : 'rmfc0cm3rk9y'});
+    sp.status({
+        success : function(data) {
+            $('.status-page-description').text(data.status.description);
+            $('.status-page-dot').addClass(data.status.indicator);
+        }
+    });
 });
 
 function bindSwapSave()
@@ -1552,3 +1561,5 @@ function confirm_link(head_text, display_text, confirm_text, cancel_text, confir
 			document.location = cancel_link;
 	});
 }
+
+

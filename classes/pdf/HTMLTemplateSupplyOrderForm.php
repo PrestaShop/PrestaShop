@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author 	PrestaShop SA <contact@prestashop.com>
+ *  @copyright  2007-2015 PrestaShop SA
+ *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * @since 1.5
@@ -37,7 +37,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 
 	/**
 	 * @param SupplyOrder $supply_order
-	 * @param Smarty $smarty
+	 * @param $smarty
 	 * @throws PrestaShopException
 	 */
 	public function __construct(SupplyOrder $supply_order, $smarty)
@@ -82,17 +82,18 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 
 	/**
 	 * Returns the invoice logo
+	 *
+	 * @return String Logo path
 	 */
 	protected function getLogo()
 	{
 		$logo = '';
 
-		$physical_uri = Context::getContext()->shop->physical_uri.'img/';
-
 		if (Configuration::get('PS_LOGO_INVOICE', null, null, (int)Shop::getContextShopID()) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, (int)Shop::getContextShopID())))
 			$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO_INVOICE', null, null, (int)Shop::getContextShopID());
 		elseif (Configuration::get('PS_LOGO', null, null, (int)Shop::getContextShopID()) != false && file_exists(_PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, (int)Shop::getContextShopID())))
 			$logo = _PS_IMG_DIR_.Configuration::get('PS_LOGO', null, null, (int)Shop::getContextShopID());
+
 		return $logo;
 	}
 
@@ -111,6 +112,13 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 	{
 		return self::l('SupplyOrderForm').sprintf('_%s', $this->supply_order->reference).'.pdf';
 	}
+
+	/**
+	 * Get order taxes summary
+	 *
+	 * @return array|false|mysqli_result|null|PDOStatement|resource
+	 * @throws PrestaShopDatabaseException
+	 */
 
 	protected function getTaxOrderSummary()
 	{
@@ -132,6 +140,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 			$result['tax_rate'] = Tools::ps_round($result['tax_rate'], 2);
 			$result['total_tax_value'] = Tools::ps_round($result['total_tax_value'], 2);
 		}
+
 		unset($result); // remove reference
 
 		return $results;
@@ -186,6 +195,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 
 	/**
 	 * Rounds values of a SupplyOrderDetail object
+	 *
 	 * @param array|PrestaShopCollection $collection
 	 */
 	protected function roundSupplyOrderDetails(&$collection)
@@ -204,6 +214,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 
 	/**
 	 * Rounds values of a SupplyOrder object
+	 *
 	 * @param SupplyOrder $supply_order
 	 */
 	protected function roundSupplyOrder(SupplyOrder &$supply_order)

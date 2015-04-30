@@ -39,7 +39,7 @@ class WebserviceRequestCore
 
 	/**
 	 * Set if return should display content or not
-	 * @var boolean
+	 * @var bool
 	 */
 	protected $_outputEnabled = true;
 
@@ -63,7 +63,7 @@ class WebserviceRequestCore
 
 	/**
 	 * Set if the authentication key was checked
-	 * @var boolean
+	 * @var bool
 	 */
 	protected $_authenticated = false;
 
@@ -451,7 +451,7 @@ class WebserviceRequestCore
 		if ($this->webserviceChecks())
 		{
 			if ($bad_class_name)
-				$this->setError(500, 'Class "'.html_special_chars($bad_class_name).'" not found. Please update the class_name field in the webservice_account table.', 126);
+				$this->setError(500, 'Class "'.htmlspecialchars($bad_class_name).'" not found. Please update the class_name field in the webservice_account table.', 126);
 			// parse request url
 			$this->method = $method;
 			$this->urlSegment = explode('/', $url);
@@ -476,10 +476,7 @@ class WebserviceRequestCore
 			if (isset($this->urlFragments['language']))
 				$this->_available_languages = $this->filterLanguage();
 			else
-			{
-				foreach (Language::getLanguages() as $key => $language)
-					$this->_available_languages[] = $language['id_lang'];
-			}
+				$this->_available_languages[] = Language::getIDs();
 
 			if (empty($this->_available_languages))
 				$this->setError(400, 'language is not available', 81);
@@ -638,7 +635,7 @@ class WebserviceRequestCore
 	 * @param array $errstr contains the error message, as a string
 	 * @param array $errfile errfile, which contains the filename that the error was raised in, as a string
 	 * @param array $errline errline, which contains the line number the error was raised at, as an integer
-	 * @return boolean Always return true to avoid the default PHP error handler
+	 * @return bool Always return true to avoid the default PHP error handler
 	 */
 	public function webserviceErrorHandler($errno, $errstr, $errfile, $errline)
 	{
@@ -662,7 +659,7 @@ class WebserviceRequestCore
 			E_RECOVERABLE_ERROR	=> 'Recoverable error'
 		);
 		$type = (isset($errortype[$errno]) ? $errortype[$errno] : 'Unknown error');
-		error_log('[PHP '.$type.' #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')');
+		Tools::error_log('[PHP '.$type.' #'.$errno.'] '.$errstr.' ('.$errfile.', line '.$errline.')');
 
 		switch ($errno)
 		{
@@ -714,17 +711,17 @@ class WebserviceRequestCore
 	/**
 	 * Check if there is one or more error
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function hasErrors()
 	{
-		return (boolean)$this->errors;
+		return (bool)$this->errors;
 	}
 
 	/**
 	 * Check request authentication
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function authenticate()
 	{
@@ -767,7 +764,7 @@ class WebserviceRequestCore
 	/**
 	 * Check webservice activation
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function isActivated()
 	{
@@ -845,7 +842,7 @@ class WebserviceRequestCore
 	/**
 	 * Check HTTP method
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function checkHTTPMethod()
 	{
@@ -863,7 +860,7 @@ class WebserviceRequestCore
 	/**
 	 * Check resource validity
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function checkResource()
 	{
@@ -1316,7 +1313,7 @@ class WebserviceRequestCore
 	 * Build sort
 	 * Build limit
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public function executeEntityGetAndHead()
 	{
@@ -1338,7 +1335,7 @@ class WebserviceRequestCore
 	/**
 	 * Execute POST method on a PrestaShop entity
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function executeEntityPost()
 	{
@@ -1348,7 +1345,7 @@ class WebserviceRequestCore
 	/**
 	 * Execute PUT method on a PrestaShop entity
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function executeEntityPut()
 	{
@@ -1358,7 +1355,7 @@ class WebserviceRequestCore
 	/**
 	 * Execute DELETE method on a PrestaShop entity
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function executeEntityDelete()
 	{
@@ -1417,7 +1414,7 @@ class WebserviceRequestCore
 	 * save Entity Object from XML
 	 *
 	 * @param int $successReturnCode
-	 * @return boolean
+	 * @return bool
 	 */
 	protected function saveEntityFromXml($successReturnCode)
 	{

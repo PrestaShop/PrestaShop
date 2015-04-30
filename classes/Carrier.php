@@ -58,34 +58,34 @@ class CarrierCore extends ObjectModel
 	/** @var string Delay needed to deliver customer */
 	public $delay;
 
-	/** @var boolean Carrier statuts */
+	/** @var bool Carrier statuts */
 	public $active = true;
 
-	/** @var boolean True if carrier has been deleted (staying in database as deleted) */
+	/** @var bool True if carrier has been deleted (staying in database as deleted) */
 	public $deleted = 0;
 
-	/** @var boolean Active or not the shipping handling */
+	/** @var bool Active or not the shipping handling */
 	public $shipping_handling = true;
 
 	/** @var int Behavior taken for unknown range */
 	public $range_behavior;
 
-	/** @var boolean Carrier module */
+	/** @var bool Carrier module */
 	public $is_module;
 
-	/** @var boolean Free carrier */
+	/** @var bool Free carrier */
 	public $is_free = false;
 
 	/** @var int shipping behavior: by weight or by price */
 	public $shipping_method = 0;
 
-	/** @var boolean Shipping external */
+	/** @var bool Shipping external */
 	public $shipping_external = 0;
 
 	/** @var string Shipping external */
 	public $external_module_name = null;
 
-	/** @var boolean Need Range */
+	/** @var bool Need Range */
 	public $need_range = 0;
 
 	/** @var int Position */
@@ -220,7 +220,7 @@ class CarrierCore extends ObjectModel
 	/**
 	* Change carrier id in delivery prices when updating a carrier
 	*
-	* @param integer $id_old Old id carrier
+	* @param int $id_old Old id carrier
 	*/
 	public function setConfiguration($id_old)
 	{
@@ -425,14 +425,14 @@ class CarrierCore extends ObjectModel
 	/**
 	 * Get all carriers in a given language
 	 *
-	 * @param integer $id_lang Language id
+	 * @param int $id_lang Language id
 	 * @param $modules_filters, possible values:
 			PS_CARRIERS_ONLY
 			CARRIERS_MODULE
 			CARRIERS_MODULE_NEED_RANGE
 			PS_CARRIERS_AND_CARRIER_MODULES_NEED_RANGE
 			ALL_CARRIERS
-	 * @param boolean $active Returns only active carriers when true
+	 * @param bool $active Returns only active carriers when true
 	 * @return array Carriers
 	 */
 	public static function getCarriers($id_lang, $active = false, $delete = false, $id_zone = false, $ids_group = null, $modules_filters = self::PS_CARRIERS_ONLY)
@@ -757,7 +757,7 @@ class CarrierCore extends ObjectModel
 	 * Clean delivery prices (weight/price)
 	 *
 	 * @param string $rangeTable Table name to clean (weight or price according to shipping method)
-	 * @return boolean Deletion result
+	 * @return bool Deletion result
 	 */
 	public function deleteDeliveryPrice($range_table)
 	{
@@ -777,7 +777,7 @@ class CarrierCore extends ObjectModel
 	 * Add new delivery prices
 	 *
 	 * @param array $priceList Prices list in multiple arrays (changed to array since 1.5.0)
-	 * @return boolean Insertion result
+	 * @return bool Insertion result
 	 */
 	public function addDeliveryPrice($price_list, $delete = false)
 	{
@@ -829,7 +829,7 @@ class CarrierCore extends ObjectModel
 	/**
 	 * Copy old carrier informations when update carrier
 	 *
-	 * @param integer $oldId Old id carrier (copy from that id)
+	 * @param int $oldId Old id carrier (copy from that id)
 	 */
 	public function copyCarrierData($old_id)
 	{
@@ -931,7 +931,7 @@ class CarrierCore extends ObjectModel
 	/**
 	 * Check if carrier is used (at least one order placed)
 	 *
-	 * @return integer Order count for this carrier
+	 * @return int Order count for this carrier
 	 */
 	public function isUsed()
 	{
@@ -1108,9 +1108,9 @@ class CarrierCore extends ObjectModel
 	 * Moves a carrier
 	 *
 	 * @since 1.5.0
-	 * @param boolean $way Up (1) or Down (0)
-	 * @param integer $position
-	 * @return boolean Update result
+	 * @param bool $way Up (1) or Down (0)
+	 * @param int $position
+	 * @return bool Update result
 	 */
 	public function updatePosition($way, $position)
 	{

@@ -31,6 +31,8 @@
 	{/if}
 </div>
 <script type="text/javascript">
+	var currentToken="{$token|@addslashes}";
+	var idTree="{$id|escape:'html':'UTF-8'}";
 	{if isset($use_checkbox) && $use_checkbox == true}
 		function checkAllAssociatedCategories($tree)
 		{

@@ -234,7 +234,9 @@ CREATE TABLE `PREFIX_cart_rule` (
 	`date_upd` datetime NOT NULL,
 	PRIMARY KEY (`id_cart_rule`),
 	KEY `id_customer` (`id_customer`, `active`, `date_to`),
-	KEY `group_restriction` (`group_restriction`, `active`, `date_to`)
+	KEY `group_restriction` (`group_restriction`, `active`, `date_to`),
+	KEY `id_customer_2` (`id_customer`,`active`,`highlight`,`date_to`),
+  KEY `group_restriction_2` (`group_restriction`,`active`,`highlight`,`date_to`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_cart_rule_lang` (
@@ -461,7 +463,7 @@ CREATE TABLE `PREFIX_configuration_kpi` (
   `id_configuration_kpi` int(10) unsigned NOT NULL auto_increment,
   `id_shop_group` INT(11) UNSIGNED DEFAULT NULL,
   `id_shop` INT(11) UNSIGNED DEFAULT NULL,
-  `name` varchar(32) NOT NULL,
+  `name` varchar(64) NOT NULL,
   `value` text,
   `date_add` datetime NOT NULL,
   `date_upd` datetime NOT NULL,
@@ -1171,6 +1173,7 @@ CREATE TABLE `PREFIX_order_invoice` (
   `shipping_tax_computation_method` int(10) unsigned NOT NULL,
   `total_wrapping_tax_excl` decimal(20, 6) NOT NULL DEFAULT '0.00',
   `total_wrapping_tax_incl` decimal(20, 6) NOT NULL DEFAULT '0.00',
+  `shop_address` text DEFAULT NULL,
   `note` text,
   `date_add` datetime NOT NULL,
   PRIMARY KEY (`id_order_invoice`),
@@ -2608,7 +2611,7 @@ CREATE TABLE IF NOT EXISTS `PREFIX_mail` (
 
 CREATE TABLE `PREFIX_smarty_lazy_cache` (
   `template_hash` varchar(32) NOT NULL DEFAULT '',
-  `cache_id` varchar(32) NOT NULL DEFAULT '',
+  `cache_id` varchar(255) NOT NULL DEFAULT '',
   `compile_id` varchar(32) NOT NULL DEFAULT '',
   `filepath` varchar(255) NOT NULL DEFAULT '',
   `last_update` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',

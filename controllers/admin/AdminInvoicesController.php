@@ -49,6 +49,13 @@ class AdminInvoicesControllerCore extends AdminController
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
+					'PS_PDF_IMG_INVOICE' => array(
+						'title' => $this->l('Enable product image on Invoice'),
+						'hint' => $this->l('Adds an image before product name on Invoice'),
+						'validation' => 'isBool',
+						'cast' => 'intval',
+						'type' => 'bool'
+					),
 					'PS_INVOICE_PREFIX' => array(
 						'title' => $this->l('Invoice prefix'),
 						'desc' => $this->l('Prefix used for invoice name (e.g. IN00001).'),
@@ -61,6 +68,12 @@ class AdminInvoicesControllerCore extends AdminController
 						'size' => 6,
 						'type' => 'text',
 						'cast' => 'intval'
+					),
+					'PS_INVOICE_LEGAL_FREE_TEXT' => array(
+						'title' => $this->l('Free text'),
+						'desc' => $this->l('This text will appear underneath the tax summary table.'),
+						'size' => 50,
+						'type' => 'textareaLang',
 					),
 					'PS_INVOICE_FREE_TEXT' => array(
 						'title' => $this->l('Footer text'),

@@ -69,7 +69,7 @@ class EmployeeCore extends ObjectModel
 	/** @var string employee's chosen css file */
 	public $bo_css = 'admin-theme.css';
 
-	/** @var integer employee desired screen width */
+	/** @var int employee desired screen width */
 	public $bo_width;
 
 	/** @var bool, false */
@@ -78,10 +78,10 @@ class EmployeeCore extends ObjectModel
 	/* Deprecated */
 	public $bo_show_screencast = false;
 
-	/** @var boolean Status */
+	/** @var bool Status */
 	public $active = 1;
 
-	/** @var boolean Optin status */
+	/** @var bool Optin status */
 	public $optin = 1;
 
 	public $remote_addr;
@@ -249,7 +249,7 @@ class EmployeeCore extends ObjectModel
 	 *
 	 * @param string $email e-mail
 	 * @param string $passwd Password is also checked if specified
-	 * @param boolean $active_only Filter employee by active status
+	 * @param bool $active_only Filter employee by active status
 	 * @return Employee instance
 	 */
 	public function getByEmail($email, $passwd = null, $active_only = true)
@@ -288,7 +288,7 @@ class EmployeeCore extends ObjectModel
 	 * Check if employee password is the right one
 	 *
 	 * @param string $passwd Password
-	 * @return boolean result
+	 * @return bool result
 	 */
 	public static function checkPassword($id_employee, $passwd)
 	{
@@ -335,7 +335,7 @@ class EmployeeCore extends ObjectModel
 	/**
 	 * Check employee informations saved into cookie and return employee validity
 	 *
-	 * @return boolean employee validity
+	 * @return bool employee validity
 	 */
 	public function isLoggedBack()
 	{

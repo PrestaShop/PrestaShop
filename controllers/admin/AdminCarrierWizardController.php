@@ -363,6 +363,11 @@ class AdminCarrierWizardControllerCore extends AdminController
 		return $this->renderGenericForm(array('form' => $this->fields_form), $fields_value, $tpl_vars);
 	}
 
+	/**
+	 * @param Carrier $carrier
+	 *
+	 * @return string
+	 */
 	public function renderStepFour($carrier)
 	{
 		$this->fields_form = array(
@@ -447,7 +452,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 								'value' => 0
 							)
 						),
-						'hint' => $this->l('Enable the carrier in the Front Office.')
+						'hint' => $this->l('Enable the carrier in the front office.')
 					)
 				)
 			));
@@ -465,6 +470,11 @@ class AdminCarrierWizardControllerCore extends AdminController
 		return $template->fetch('controllers/carrier_wizard/summary.tpl');
 	}
 
+	/**
+	 * @param Carrier $carrier
+	 * @param array   $tpl_vars
+	 * @param array   $fields_value
+	 */
 	protected function getTplRangesVarsAndValues($carrier, &$tpl_vars, &$fields_value)
 	{
 		$tpl_vars['zones'] = Zone::getZones(false);
@@ -768,8 +778,11 @@ class AdminCarrierWizardControllerCore extends AdminController
 			if ($id_carrier = Tools::getValue('id_carrier'))
 			{
 				$current_carrier = new Carrier((int)$id_carrier);
+
 				// if update we duplicate current Carrier
+				/** @var Carrier $new_carrier */
 				$new_carrier = $current_carrier->duplicateObject();
+
 				if (Validate::isLoadedObject($new_carrier))
 				{
 					// Set flag deteled to true for historization

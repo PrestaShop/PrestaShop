@@ -457,11 +457,11 @@ class WarehouseCore extends ObjectModel
 		$query = new DbQuery();
 		$query->select('DISTINCT w.id_warehouse, CONCAT(w.reference, " - ", w.name) as name');
 		$query->from('warehouse', 'w');
-		$query->leftJoin('stock', 's', 's.id_warehouse = w.id_warehouse');
+		$query->leftJoin('warehouse_product_location', 'wpl', 'wpl.id_warehouse = w.id_warehouse');
 		if ($id_product)
-			$query->where('s.id_product = '.(int)$id_product);
+			$query->where('wpl.id_product = '.(int)$id_product);
 		if ($id_product_attribute)
-			$query->where('s.id_product_attribute = '.(int)$id_product_attribute);
+			$query->where('wpl.id_product_attribute = '.(int)$id_product_attribute);
 		$query->orderBy('w.reference ASC');
 
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);

@@ -44,13 +44,13 @@ class ModulesInstallUninstallTest extends IntegrationTestCase
         $module = Module::getInstanceByName($moduleName);
         if ($module->id)
         {
-            $this->assertTrue((bool)$module->uninstall());
-            $this->assertTrue((bool)$module->install());
+            $this->assertTrue((bool)$module->uninstall(), 'Module uninstall failed : '.$moduleName);
+            $this->assertTrue((bool)$module->install(), 'Module install failed : '.$moduleName);
         }
         else
         {
-            $this->assertTrue((bool)$module->install());
-            $this->assertTrue((bool)$module->uninstall());
+            $this->assertTrue((bool)$module->install(), 'Module install failed : '.$moduleName);
+            $this->assertTrue((bool)$module->uninstall(), 'Module uninstall failed : '.$moduleName);
         }
     }
 }

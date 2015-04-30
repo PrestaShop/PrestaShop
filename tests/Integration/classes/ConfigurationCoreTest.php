@@ -32,6 +32,8 @@ use Configuration;
 
 class ConfigurationCoreTest extends IntegrationTestCase
 {
+    public $default;
+
 	protected function setUp()
 	{
 		$configuration = array();
@@ -69,8 +71,15 @@ class ConfigurationCoreTest extends IntegrationTestCase
 		foreach ($id_shops as $id_shop)
 				$configuration['configuration'][0]['shop'][$id_shop]['PS_TEST_GROUP_SHOP_OVERRIDDEN'] = 'RESULT_GROUP_SHOP_OVERRIDDEN_SHOP_'.$id_shop;
 
+
+        $this->default = ReflexionHelper::getProperty(new Configuration(), '_cache');
         ReflexionHelper::setProperty(new Configuration(), '_cache', $configuration);
 	}
+
+    public function teardown()
+    {
+        ReflexionHelper::setProperty(new Configuration(), '_cache', $this->default);
+    }
 
 	public function testGetGlobalValue()
 	{

@@ -74,7 +74,7 @@
 
 		<p>{l s="A module that hasn't been verified may be dangerous and could add hidden functionalities like backdoors, ads, hidden links, spam, etc. Don’t worry, this alert is simply a warning."}</p>
 
-		<p>{l s="PrestaShop, being an open-source software, has an awesome community with a long history of developing and sharing high quality modules. Before installing this module, making sure its author is a known community member is always a good idea (by checking [1]our forum[/1] for instance)." tags=['<a href="http://forum.prestashop.com">']}</p>
+		<p>{l s="PrestaShop, being an open-source software, has an awesome community with a long history of developing and sharing high quality modules. Before installing this module, making sure its author is a known community member is always a good idea (by checking [1]our forum[/1] for instance)." tags=['<a href="https://www.prestashop.com/forums/">']}</p>
 
 		<h4>{l s='What Should I Do?'}</h4>
 		

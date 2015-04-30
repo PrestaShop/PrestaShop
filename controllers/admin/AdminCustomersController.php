@@ -1018,7 +1018,7 @@ class AdminCustomersControllerCore extends AdminController
 
 	/**
 	 * @param string $token
-	 * @param integer $id
+	 * @param int $id
 	 * @param string $name
 	 * @return mixed
 	 */

@@ -24,11 +24,12 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-namespace PrestaShop\PrestaShop\Tests\Unit;
+namespace PrestaShop\PrestaShop\Tests\Integration;
 
 use PHPUnit_Framework_TestCase;
 use PHPUnit_Framework_Assert as Assert;
 
+use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
 use PrestaShopAutoload;
 use Tools;
 use Db;
@@ -36,12 +37,13 @@ use Configuration;
 use Module;
 use Order;
 
-class PrestaShopSecurityTest extends PHPUnit_Framework_TestCase
+class PrestaShopSecurityTest extends IntegrationTestCase
 {
 	protected static $prestafraud = null;
 
 	public static function setupBeforeClass()
 	{
+        parent::setUpBeforeClass();
 		if (!file_exists(_PS_MODULE_DIR_.'/prestafraud/prestafraud.php'))
 		{
 			$download = file_put_contents(_PS_CACHE_DIR_.'sandbox/prestafraud.zip', Tools::addonsRequest('module', array('id_module' => 4181)));

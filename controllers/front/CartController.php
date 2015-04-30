@@ -126,6 +126,14 @@ class CartControllerCore extends FrontController
 
 		if ($this->context->cart->deleteProduct($this->id_product, $this->id_product_attribute, $this->customization_id, $this->id_address_delivery))
 		{
+			Hook::exec('actionAfterDeleteProductInCart', array(
+				'id_cart' => (int)$this->context->cart->id,
+				'id_product' => (int)$this->id_product,
+				'id_product_attribute' => (int)$this->id_product_attribute,
+				'customization_id' => (int)$this->customization_id,
+				'id_address_delivery' => (int)$this->id_address_delivery
+			));
+
 			if (!Cart::getNbProducts((int)$this->context->cart->id))
 			{
 				$this->context->cart->setDeliveryOption(null);
@@ -169,7 +177,7 @@ class CartControllerCore extends FrontController
 		if (Tools::getValue('value') === false)
 			$this->ajaxDie('{"error":true, "error_message": "No value setted"}');
 
-		$this->context->cart->allow_seperated_package = (boolean)Tools::getValue('value');
+		$this->context->cart->allow_seperated_package = (bool)Tools::getValue('value');
 		$this->context->cart->update();
 		$this->ajaxDie('{"error":false}');
 	}
@@ -374,6 +382,7 @@ class CartControllerCore extends FrontController
 			if ($result['customizedDatas'])
 				Product::addCustomizationPrice($result['summary']['products'], $result['customizedDatas']);
 
+			$json = '';
 			Hook::exec('actionCartListOverride', array('summary' => $result, 'json' => &$json));
 			$this->ajaxDie(Tools::jsonEncode(array_merge($result, (array)Tools::jsonDecode($json, true))));
 

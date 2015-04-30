@@ -30,16 +30,16 @@ class OrderInvoiceCore extends ObjectModel
 	const TAX_INCL = 1;
 	const DETAIL = 2;
 
-	/** @var integer */
+	/** @var int */
 	public $id_order;
 
-	/** @var integer */
+	/** @var int */
 	public $number;
 
-	/** @var integer */
+	/** @var int */
 	public $delivery_number;
 
-	/** @var integer */
+	/** @var int */
 	public $delivery_date = '0000-00-00 00:00:00';
 
 	/** @var float */
@@ -75,6 +75,9 @@ class OrderInvoiceCore extends ObjectModel
 	/** @var float */
 	public $total_wrapping_tax_incl;
 
+	/** @var string shop address */
+	public $shop_address;
+
 	/** @var string note */
 	public $note;
 
@@ -109,10 +112,27 @@ class OrderInvoiceCore extends ObjectModel
 			'shipping_tax_computation_method' => array('type' => self::TYPE_INT),
 			'total_wrapping_tax_excl' =>array('type' => self::TYPE_FLOAT),
 			'total_wrapping_tax_incl' =>array('type' => self::TYPE_FLOAT),
+			'shop_address' => 		array('type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => 1000),
 			'note' => 					array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 65000),
 			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
 	);
+
+	public function add($autodate = true, $null_values = false)
+	{
+		$address = new Address();
+		$address->company = Configuration::get('PS_SHOP_NAME');
+		$address->address1 = Configuration::get('PS_SHOP_ADDR1');
+		$address->address2 = Configuration::get('PS_SHOP_ADDR2');
+		$address->postcode = Configuration::get('PS_SHOP_CODE');
+		$address->city = Configuration::get('PS_SHOP_CITY');
+		$address->phone = Configuration::get('PS_SHOP_PHONE');
+		$address->id_country = Configuration::get('PS_SHOP_COUNTRY_ID');
+
+		$this->shop_address = AddressFormat::generateAddress($address, array(), '<br />', ' ');
+
+		return parent::add();
+	}
 
 	public function getProductsDetail()
 	{
@@ -286,7 +306,7 @@ class OrderInvoiceCore extends ObjectModel
 	 * One After Another tax computation method.
 	 *
 	 * @since 1.5
-	 * @return boolean
+	 * @return bool
 	 */
 	public function useOneAfterAnotherTaxComputationMethod()
 	{
@@ -328,27 +348,28 @@ class OrderInvoiceCore extends ObjectModel
 
 		$details = $order->getProductTaxesDetails();
 
-		if ($sum_composite_taxes)
-		{
-			$grouped_details = array();
-			foreach ($details as $row)
-			{
-				if (!isset($grouped_details[$row['id_order_detail']]))
-				{
-					$grouped_details[$row['id_order_detail']] = array(
+        if ($sum_composite_taxes)
+        {
+            $grouped_details = array();
+            foreach ($details as $row)
+            {
+                if (!isset($grouped_details[$row['id_order_detail']]))
+                {
+                    $grouped_details[$row['id_order_detail']] = array(
 						'tax_rate' => 0,
 						'total_tax_base' => 0,
-						'total_amount' => 0
+						'total_amount' => 0,
+                        'id_tax' => $row['id_tax'],
 					);
-				}
+                }
 
-				$grouped_details[$row['id_order_detail']]['tax_rate'] += $row['tax_rate'];
-				$grouped_details[$row['id_order_detail']]['total_tax_base'] += $row['total_tax_base'];
-				$grouped_details[$row['id_order_detail']]['total_amount'] += $row['total_amount'];
-			}
+                $grouped_details[$row['id_order_detail']]['tax_rate'] += $row['tax_rate'];
+                $grouped_details[$row['id_order_detail']]['total_tax_base'] += $row['total_tax_base'];
+                $grouped_details[$row['id_order_detail']]['total_amount'] += $row['total_amount'];
+            }
 
-			$details = $grouped_details;
-		}
+            $details = $grouped_details;
+        }
 
 		foreach ($details as $row)
 		{
@@ -357,7 +378,9 @@ class OrderInvoiceCore extends ObjectModel
 			{
 				$breakdown[$rate] = array(
 					'total_price_tax_excl' => 0,
-					'total_amount' => 0
+					'total_amount' => 0,
+                    'id_tax' => $row['id_tax'],
+					'rate' =>$rate,
 				);
 			}
 
@@ -399,7 +422,7 @@ class OrderInvoiceCore extends ObjectModel
 		if (Configuration::get('PS_INVOICE_TAXES_BREAKDOWN'))
 		{
 			$shipping_breakdown = Db::getInstance()->executeS(
-				'SELECT '.(float)$this->total_shipping_tax_excl.' as total_tax_excl, t.rate, oit.amount as total_amount
+				'SELECT '.(float)$this->total_shipping_tax_excl.' as total_tax_excl, t.id_tax, t.rate, oit.amount as total_amount
 				 FROM `'._DB_PREFIX_.'tax` t
 				 INNER JOIN `'._DB_PREFIX_.'order_invoice_tax` oit ON oit.id_tax = t.id_tax
 				 WHERE oit.type = "shipping" AND oit.id_order_invoice = '.(int)$this->id
@@ -424,7 +447,8 @@ class OrderInvoiceCore extends ObjectModel
 				array(
 					'total_tax_excl' => $this->total_shipping_tax_excl,
 					'rate' => $order->carrier_tax_rate,
-					'total_amount' => $shipping_tax_amount
+					'total_amount' => $shipping_tax_amount,
+                    'id_tax' => null,
 				)
 			);
 		}
@@ -445,7 +469,7 @@ class OrderInvoiceCore extends ObjectModel
 		$wrapping_tax_amount = $this->total_wrapping_tax_incl - $this->total_wrapping_tax_excl;
 
 		$wrapping_breakdown = Db::getInstance()->executeS(
-			'SELECT '.(float)$this->total_wrapping_tax_incl.' as total_tax_excl, t.rate, oit.amount as total_amount
+			'SELECT '.(float)$this->total_wrapping_tax_incl.' as total_tax_excl, t.id_tax, t.rate, oit.amount as total_amount
 			FROM `'._DB_PREFIX_.'tax` t
 			INNER JOIN `'._DB_PREFIX_.'order_invoice_tax` oit ON oit.id_tax = t.id_tax
 			WHERE oit.type = "wrapping" AND oit.id_order_invoice = '.(int)$this->id
@@ -472,7 +496,7 @@ class OrderInvoiceCore extends ObjectModel
 				array(
 					'total_tax_excl' => $this->total_wrapping_tax_excl,
 					'rate' => $total_tax_rate,
-					'total_amount' => $wrapping_tax_amount
+					'total_amount' => $wrapping_tax_amount,
 				)
 			);
 		}

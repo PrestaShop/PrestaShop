@@ -332,11 +332,11 @@ class AdminModulesPositionsControllerCore extends AdminController
 	public function getLiveEditUrl($live_edit_params)
 	{
 		$lang = '';
-		$admin_dir = dirname($_SERVER['PHP_SELF']);
-		$admin_dir = substr($admin_dir, strrpos($admin_dir, '/') + 1);		
-		$dir = str_replace($admin_dir, '', dirname($_SERVER['SCRIPT_NAME']));
-		if (Configuration::get('PS_REWRITING_SETTINGS') && count(Language::getLanguages(true)) > 1)
+
+		$language_ids = Language::getIDs(true);
+		if (Configuration::get('PS_REWRITING_SETTINGS') && !empty($language_ids))
 			$lang = Language::getIsoById($this->context->employee->id_lang).'/';
+		unset($language_ids);
 
 		// Shop::initialize() in config.php may empty $this->context->shop->virtual_uri so using a new shop instance for getBaseUrl()
 		$this->context->shop = new Shop((int)$this->context->shop->id);
@@ -551,6 +551,8 @@ class AdminModulesPositionsControllerCore extends AdminController
 				if (file_exists(_PS_MODULE_DIR_.$module['name'].'/'.$module['name'].'.php'))
 				{
 					include_once(_PS_MODULE_DIR_.$module['name'].'/'.$module['name'].'.php');
+
+					/** @var Module $mod */
 					$mod = new $module['name']();
 					if ($mod->isHookableOn($hook_name))
 						$hookableModulesList[] = array('id' => (int)$mod->id, 'name' => $mod->displayName, 'display' => Hook::exec($hook_name, array(), (int)$mod->id));
