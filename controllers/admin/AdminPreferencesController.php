@@ -188,6 +188,14 @@ class AdminPreferencesControllerCore extends AdminController
 					'type' => 'text',
 					'class' => 'fixed-width-xxl'
 				),
+				'PS_PRICE_COMPUTE_PRECISION' => array(
+					'title' => $this->l('Number of decimals for computations'),
+					'desc' => $this->l('Choose how many decimals you want to compute with'),
+					'validation' => 'isUnsignedInt',
+					'cast' => 'intval',
+					'type' => 'text',
+					'class' => 'fixed-width-xxl'
+				),
 				'PS_DISPLAY_SUPPLIERS' => array(
 					'title' => $this->l('Display suppliers and manufacturers'),
 					'desc' => $this->l('Enable suppliers and manufacturers pages on your Front Office even when their respective modules are disabled.'),
