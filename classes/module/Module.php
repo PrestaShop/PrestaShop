@@ -152,6 +152,7 @@ abstract class ModuleCore
 
 	protected static $_in_import = false;
 	protected static $_defered_clearCache = array();
+	protected static $_defered_func_call = array();
 
 	/** @var bool If true, allow push */
 	public $allow_push;
@@ -187,6 +188,15 @@ abstract class ModuleCore
 	public static function setInImport($value)
 	{
 		self::$_in_import = (bool)$value;
+	}
+
+	public static function processDeferedFuncCall()
+	{
+		self::setInImport(false);
+		foreach(self::$_defered_func_call as $func_call)
+			call_user_func_array($func_call[0], $func_call[1]);
+
+		self::$_defered_func_call = array();
 	}
 
 	/**

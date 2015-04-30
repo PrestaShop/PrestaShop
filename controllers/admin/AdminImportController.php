@@ -1897,6 +1897,7 @@ class AdminImportControllerCore extends AdminController
 			}
 		}
 		$this->closeCsvFile($handle);
+		Module::processDeferedFuncCall();
 		Module::processDeferedClearCache();
 	}
 
