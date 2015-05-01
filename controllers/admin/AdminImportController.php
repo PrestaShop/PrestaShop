@@ -1054,7 +1054,7 @@ class AdminImportControllerCore extends AdminController
 		{
 			$last_width = $last_height = 0;
 			$error = 0;
-			ImageManager::resize($tmpfile, $path.'.jpg', null, null, 'jpg', false, $error, $last_width, $last_height, 4);
+			ImageManager::resize($tmpfile, $path.'.jpg', null, null, 'jpg', false, $error, $last_width, $last_height);
 			$images_types = ImageType::getImagesTypes($entity, true);
 
 			if ($regenerate)
@@ -1062,15 +1062,11 @@ class AdminImportControllerCore extends AdminController
 				$previous_path = null;
 				foreach ($images_types as $image_type)
 				{
-					if ($image_type['width'] >= $last_width && $image_type['height'] >= $last_height)
-						copy($tmpfile, $path.'-'.stripslashes($image_type['name']).'.jpg');
-					else
-					{
-						if ($previous_path && $image_type['width'] < $last_width && $image_type['height'] < $last_height)
-							$tmpfile = $previous_path;
+					if ($previous_path && $image_type['width'] < $last_width && $image_type['height'] < $last_height)
+						$tmpfile = $previous_path;
 
-						ImageManager::resize($tmpfile, $path.'-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height'], 'jpg', false, $error, $last_width, $last_height, 3);
-					}
+					ImageManager::resize($tmpfile, $path.'-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height'], 'jpg', false, $error, $last_width, $last_height);
+
 					$previous_path = $path.'-'.stripslashes($image_type['name']).'.jpg';
 					if (in_array($image_type['id_image_type'], $watermark_types))
 						Hook::exec('actionWatermark', array('id_image' => $id_image, 'id_product' => $id_entity));
