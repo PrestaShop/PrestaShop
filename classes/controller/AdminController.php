@@ -1089,7 +1089,7 @@ class AdminControllerCore extends Controller
 		if (!empty($this->errors))
 		{
 			// if we have errors, we stay on the form instead of going back to the list
-			$this->display = 'edit';
+			$this->display = 'add';
 			return false;
 		}
 
