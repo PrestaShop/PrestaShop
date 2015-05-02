@@ -2915,7 +2915,7 @@ class CartCore extends ObjectModel
 		if ($use_tax && isset($carrier_tax))
 			$shipping_cost *= 1 + ($carrier_tax / 100);
 
-		$shipping_cost = (float)Tools::ps_round((float)$shipping_cost, 2);
+		$shipping_cost = (float)Tools::ps_round((float)$shipping_cost, (Currency::getCurrencyInstance((int)$this->id_currency)->decimals * _PS_PRICE_DISPLAY_PRECISION_));
 		Cache::store($cache_id, $shipping_cost);
 
 		return $shipping_cost;
