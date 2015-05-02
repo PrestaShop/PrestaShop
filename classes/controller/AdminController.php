@@ -2098,21 +2098,32 @@ class AdminControllerCore extends Controller
 		$must_have_module_list = file_get_contents(_PS_ROOT_DIR_.Module::CACHE_FILE_MUST_HAVE_MODULES_LIST);
 		$all_module_list = array();
 
-		if (!empty($country_module_list) && $country_module_list_xml = simplexml_load_string($country_module_list))
+		if (!empty($country_module_list) && $country_module_list_xml = @simplexml_load_string($country_module_list))
 		{
 			$country_module_list_array = array();
 			if (is_object($country_module_list_xml->module))
 				foreach ($country_module_list_xml->module as $k => $m)
 					$all_module_list[] = (string)$m->name;
 		}
+		else
+			foreach (libxml_get_errors() as $error)
+				$this->errors[] = Tools::displayError(sprintf('Error found : %1$s in country_module_list.xml file.', $error->message));
 
-		if (!empty($must_have_module_list) && $must_have_module_list_xml = simplexml_load_string($must_have_module_list))
+		libxml_clear_errors();
+
+		if (!empty($must_have_module_list) && $must_have_module_list_xml = @simplexml_load_string($must_have_module_list))
 		{
 			$must_have_module_list_array = array();
 			if (is_object($country_module_list_xml->module))
 				foreach ($must_have_module_list_xml->module as $l => $mo)
 					$all_module_list[] = (string)$mo->name;
 		}
+		else
+			foreach (libxml_get_errors() as $error)
+				$this->errors[] = Tools::displayError(sprintf('Error found : %1$s in must_have_module_list.xml file.',
+					$error->message));
+
+		libxml_clear_errors();
 
 		$this->tab_modules_list['slider_list'] = array_intersect($this->tab_modules_list['slider_list'], $all_module_list);
 

@@ -48,7 +48,7 @@ function deactivate_custom_modules()
 		return false;
 	}
 
-	$nativeModules = simplexml_load_file($module_list_xml);
+	$nativeModules = @simplexml_load_file($module_list_xml);
 	$nativeModules = $nativeModules->modules;
 	$arrNativeModules = array();
 	foreach ($nativeModules as $nativeModulesType)

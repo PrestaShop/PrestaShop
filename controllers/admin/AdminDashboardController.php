@@ -348,7 +348,7 @@ class AdminDashboardControllerCore extends AdminController
 
 		if (!$return['has_errors'])
 		{
-			$rss = simpleXML_load_file(_PS_ROOT_DIR_.'/config/xml/blog-'.$this->context->language->iso_code.'.xml');
+			$rss = @simplexml_load_file(_PS_ROOT_DIR_.'/config/xml/blog-'.$this->context->language->iso_code.'.xml');
 			$articles_limit = 2;
 			foreach ($rss->channel->item as $item)
 			{
