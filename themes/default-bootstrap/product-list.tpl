@@ -115,7 +115,12 @@
 							{$product.name|truncate:45:'...'|escape:'html':'UTF-8'}
 						</a>
 					</h5>
-					{hook h='displayProductListReviews' product=$product}
+					{$reviewsHook = {hook h='displayProductListReviews' product=$product}}
+					{if $reviewsHook}
+						<div class="list-reviews">
+							{$reviewsHook}
+						</div>
+					{/if}
 					<p class="product-desc" itemprop="description">
 						{$product.description_short|strip_tags:'UTF-8'|truncate:360:'...'}
 					</p>
