@@ -1898,6 +1898,7 @@ class AdminImportControllerCore extends AdminController
 		$this->closeCsvFile($handle);
 		Module::processDeferedFuncCall();
 		Module::processDeferedClearCache();
+		Tag::updateTagCount();
 	}
 
 	public function productImportCreateCat($default_language_id, $category_name, $id_parent_category = null)
