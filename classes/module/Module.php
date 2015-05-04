@@ -190,6 +190,14 @@ abstract class ModuleCore
 		self::$_in_import = (bool)$value;
 	}
 
+	/**
+	 * @return bool
+	 */
+	public static function getInImport()
+	{
+		return self::$_in_import;
+	}
+
 	public static function processDeferedFuncCall()
 	{
 		self::setInImport(false);
