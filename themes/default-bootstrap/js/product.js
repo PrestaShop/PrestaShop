@@ -633,7 +633,7 @@ function updatePrice()
 	var basePriceWithoutTax = +productPriceTaxExcluded;
 	var priceWithGroupReductionWithoutTax = 0;
 
-	priceWithGroupReductionWithoutTax = basePriceWithoutTax * (1 - group_reduction);
+	priceWithGroupReductionWithoutTax = basePriceWithoutTax * (1 - groupReduction);
 
 	// Apply combination price impact (only if there is no specific price)
 	// 0 by default, +x if price is inscreased, -x if price is decreased
@@ -656,7 +656,7 @@ function updatePrice()
 			{
 				var reduction = combination.specific_price.reduction;
 				if (combination.specific_price.id_currency == 0)
-					reduction = reduction * currencyRate * (1 - group_reduction);
+					reduction = reduction * currencyRate * (1 - groupReduction);
 				priceWithDiscountsWithoutTax -= reduction;
 			}
 		}
@@ -797,7 +797,7 @@ function updatePrice()
 
 	// If there is a quantity discount table,
 	// we update it according to the new price
-	updateDiscountTable(priceWithDiscountsDisplay);
+	updateDiscountTable(basePriceDisplay);
 }
 
 //update display of the large image
@@ -848,7 +848,7 @@ function displayDiscounts(combination)
 	else if(allQuantityDiscount.length != 0)
 	{
 		allQuantityDiscount.show();
-		$('tr', quantityDiscountTable).not('#quantityDiscount_0').hide();
+		$('tbody tr', quantityDiscountTable).not('#quantityDiscount_0').hide();
 		quantityDiscountTable.show();
 	}
 	else
@@ -919,7 +919,10 @@ function refreshProductImages(id_product_attribute)
 				$('#thumbnail_' + parseInt(combinationImages[id_product_attribute][i])).show();
 	}
 	else
+	{
 		$('#thumbs_list li').show();
+		displayImage($('#thumbs_list li:first a'));
+	}
 
 	if (parseInt($('#thumbs_list_frame >li:visible').length) != parseInt($('#thumbs_list_frame >li').length))
 		$('#wrapResetImages').stop(true, true).show();

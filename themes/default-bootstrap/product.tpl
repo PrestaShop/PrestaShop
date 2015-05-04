@@ -418,13 +418,13 @@
 								<td>
 									{if $quantity_discount.price >= 0 || $quantity_discount.reduction_type == 'amount'}
 										{if $display_discount_price}
-											{convertPrice price=$productPrice|floatval-$quantity_discount.real_value|floatval}
+											{convertPrice price=$productPriceWithoutReduction|floatval-$quantity_discount.real_value|floatval}
 										{else}
 											{convertPrice price=$quantity_discount.real_value|floatval}
 										{/if}
 									{else}
 										{if $display_discount_price}
-											{convertPrice price = $productPrice|floatval-($productPrice*$quantity_discount.reduction)|floatval}
+											{convertPrice price = $productPriceWithoutReduction|floatval-($productPriceWithoutReduction*$quantity_discount.reduction)|floatval}
 										{else}
 											{$quantity_discount.real_value|floatval}%
 										{/if}
@@ -433,12 +433,12 @@
 								<td>
 									<span>{l s='Up to'}</span>
 									{if $quantity_discount.price >= 0 || $quantity_discount.reduction_type == 'amount'}
-										{$discountPrice=$productPrice|floatval-$quantity_discount.real_value|floatval}
+										{$discountPrice=$productPriceWithoutReduction|floatval-$quantity_discount.real_value|floatval}
 									{else}
-										{$discountPrice=$productPrice|floatval-($productPrice*$quantity_discount.reduction)|floatval}
+										{$discountPrice=$productPriceWithoutReduction|floatval-($productPriceWithoutReduction*$quantity_discount.reduction)|floatval}
 									{/if}
 									{$discountPrice=$discountPrice * $quantity_discount.quantity}
-									{$qtyProductPrice=$productPrice|floatval * $quantity_discount.quantity}
+									{$qtyProductPrice=$productPriceWithoutReduction|floatval * $quantity_discount.quantity}
 									{convertPrice price=$qtyProductPrice - $discountPrice}
 								</td>
 							</tr>
@@ -697,7 +697,7 @@
 	{addJsDef customerGroupWithoutTax=false}
 {/if}
 {if isset($group_reduction)}
-	{addJsDef groupReduction=$group_reduction}
+	{addJsDef groupReduction=$group_reduction|floatval}
 {else}
 	{addJsDef groupReduction=false}
 {/if}
@@ -742,7 +742,6 @@
 {addJsDef specific_currency=($product->specificPrice && $product->specificPrice.id_currency)|boolval} {* TODO: remove if always false *}
 {addJsDef stock_management=$PS_STOCK_MANAGEMENT|intval}
 {addJsDef taxRate=$tax_rate|floatval}
-{addJsDef group_reduction=$group_reduction|floatval}
 {addJsDefL name=doesntExist}{l s='This combination does not exist for this product. Please select another combination.' js=1}{/addJsDefL}
 {addJsDefL name=doesntExistNoMore}{l s='This product is no longer in stock' js=1}{/addJsDefL}
 {addJsDefL name=doesntExistNoMoreBut}{l s='with those attributes but is available with others.' js=1}{/addJsDefL}

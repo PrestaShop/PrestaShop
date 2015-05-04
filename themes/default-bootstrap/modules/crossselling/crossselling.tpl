@@ -44,6 +44,8 @@
 									{$orderProduct.name|truncate:15:'...'|escape:'html':'UTF-8'}
 								</a>
 							</h5>
+							
+							{if isset($orderProduct.description_short)}<p>{$orderProduct.description_short|strip_tags:'UTF-8'|truncate:50:'...'}</p>{/if}
 						</div>
 						{if $crossDisplayPrice AND $orderProduct.show_price == 1 AND !isset($restricted_country_mode) AND !$PS_CATALOG_MODE}
 							<p class="price_display">

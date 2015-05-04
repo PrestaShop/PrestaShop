@@ -633,7 +633,7 @@ class StockAvailableCore extends ObjectModel
 
 			$stock_available = new StockAvailable();
 			$stock_available->id_product = (int)$id_product;
-			$stock_available->id_product_attribute = (int)$id_product;
+			$stock_available->id_product_attribute = (int)$id_product_attribute;
 			$stock_available->id_shop = (int)$id_shop;
 			$stock_available->postSave();
 		}
