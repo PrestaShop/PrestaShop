@@ -24,15 +24,9 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class CMSRoleRepository extends RepositoryManager
+class CMSRoleRepository extends EntityRepository
 {
-	protected $entity = null;
-
-	public function __construct($component_name)
-	{
-		$this->component = $component_name;
-		$this->entity = 'CMSRoleEntity';
-	}
+	protected $entityClass = 'CMSRoleEntity';
 
 	/**
 	 * Get CMS Role by its given reference name

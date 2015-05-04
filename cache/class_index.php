@@ -29,6 +29,12 @@
     'type' => 'class',
     'override' => false,
   ),
+  'Adapter_EntityPersister' => 
+  array (
+    'path' => 'Adapter/Adapter_EntityPersister.php',
+    'type' => 'class',
+    'override' => false,
+  ),
   'Adapter_ProductPriceCalculator' => 
   array (
     'path' => 'Adapter/Adapter_ProductPriceCalculator.php',
@@ -295,7 +301,7 @@
   ),
   'AdminController' => 
   array (
-    'path' => 'override/classes/controller/AdminController.php',
+    'path' => '',
     'type' => 'class',
     'override' => false,
   ),
@@ -535,7 +541,7 @@
   ),
   'AdminLoginController' => 
   array (
-    'path' => 'override/controllers/admin/AdminLoginController.php',
+    'path' => '',
     'type' => 'class',
     'override' => false,
   ),
@@ -1325,12 +1331,6 @@
     'type' => 'class',
     'override' => false,
   ),
-  'BaseObject' => 
-  array (
-    'path' => 'Core/Foundation/Object/BaseObject.php',
-    'type' => 'abstract class',
-    'override' => false,
-  ),
   'BestSalesController' => 
   array (
     'path' => '',
@@ -2018,6 +2018,12 @@
   'Entity' => 
   array (
     'path' => 'Core/Foundation/Entity/Entity.php',
+    'type' => 'class',
+    'override' => false,
+  ),
+  'EntityRepository' => 
+  array (
+    'path' => 'Core/Foundation/Repository/EntityRepository.php',
     'type' => 'class',
     'override' => false,
   ),
@@ -3356,12 +3362,6 @@
   'ReferrerCore' => 
   array (
     'path' => 'classes/Referrer.php',
-    'type' => 'class',
-    'override' => false,
-  ),
-  'RepositoryManager' => 
-  array (
-    'path' => 'Core/Foundation/Repository/RepositoryManager.php',
     'type' => 'class',
     'override' => false,
   ),

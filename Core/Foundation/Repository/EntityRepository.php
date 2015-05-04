@@ -24,45 +24,45 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class RepositoryManager
+class EntityRepository
 {
-	protected $component = null;
+	protected $db;
+	protected $tablesPrefix;
+	protected $entityClass = null;
 
-	/**
-	 * @param $name
-	 * @return mixed
-	 */
-	public function getRepository($name)
+	public function __construct($db, $tablesPrefix)
 	{
-		$repository_name = $name.'Repository';
-		return new $repository_name($name);
+		$this->db = $db;
+		$this->tablesPrefix = $tablesPrefix;
 	}
 
-	/**
-	 * @return mixed
-	 * @throws PrestaShopExceptionCore
-	 */
-	public function createNewRecord()
-	{
-		if (is_null($this->component))
-			throw new PrestaShopExceptionCore('No repository currently in use! use getRepository() to load one !');
 
-		$entity_name = $this->component.'Entity';
-		return new $entity_name;
+	public function save($entity)
+	{
+		$persister = new Adapter_EntityPersister;
+		$persister->save($entity);
+
+		return $this;
 	}
 
-	/**
-	 * @TODO: Make it more generics to allow to get record by any column possible :)
-	 * @param $id
-	 * @return mixed
-	 * @throws PrestaShopExceptionCore
-	 */
-	public function getRecordByID($id, $legacy = false)
+	public function findOneByName($name)
 	{
-		if (is_null($this->component))
-			throw new PrestaShopExceptionCore('No repository currently in use! use getRepository() to load one !');
+		$entityClass = $this->entityClass;
+		$tableName = $this->tablesPrefix . $entityClass::$definition['table'];
 
-		$entity_name = $this->component.($legacy ? '' : 'Entity');
-		return new $entity_name($id);
+		$rows = $this->db->executeS(
+			'SELECT * FROM `' . $tableName . '` WHERE name = \'' . $this->db->escape($name) . '\''
+		);
+
+		if (count($rows) === 0) {
+			return null;
+		} else if (count($rows) > 1) {
+			throw new Exception('Too many rows returned.');
+		} else {
+			$data = $rows[0];
+			$entity = new $entityClass;
+			$entity->hydrate($data);
+			return $entity;
+		}
 	}
 }
