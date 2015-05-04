@@ -543,20 +543,20 @@ class StockManagerCore implements StockManagerInterface
             // Gets client_orders_qty
 			$products .= ($products != '' ? ',' : '').(int)$id_product;
 		}
-        
+
 		if ($products != '') {
-			$sql = 'SELECT SUM(COALESCE(od.product_quantity, 0) - COALESCE(od.product_quantity_refunded, 0))'.
-				' FROM `'._DB_PREFIX_.'orders` o'.
-				' JOIN `'._DB_PREFIX_.'configuration` e ON e.name = "PS_OS_ERROR"'.
-				' JOIN `'._DB_PREFIX_.'configuration` c ON c.name = "PS_OS_CANCELED"'.
-				' JOIN `'._DB_PREFIX_.'order_detail` od ON od.id_order = o.id_order'.
-									' AND od.product_id IN ('.$products.')'.
-									(count($ids_warehouse) ? ' AND od.id_warehouse IN('.implode(', ', $ids_warehouse).')': '').
-				' JOIN `'._DB_PREFIX_.'order_history` oh ON oh.id_order = od.id_order'.
-									' AND oh.id_order_state = o.current_state'.
-				' JOIN `'._DB_PREFIX_.'order_state` os ON os.id_order_state = oh.id_order_state'.
-									' AND os.shipped != 1'.
-				' WHERE o.valid = 1 OR (os.id_order_state NOT IN (e.value, c.value))';
+			$sql = 'SELECT SUM(COALESCE(od.product_quantity, 0) - COALESCE(od.product_quantity_refunded, 0))
+				 FROM `'._DB_PREFIX_.'orders` o
+				 JOIN `'._DB_PREFIX_.'configuration` e ON e.name = "PS_OS_ERROR"
+				 JOIN `'._DB_PREFIX_.'configuration` c ON c.name = "PS_OS_CANCELED"
+				 JOIN `'._DB_PREFIX_.'order_detail` od ON od.id_order = o.id_order
+									 AND od.product_id IN ('.$products.')'.
+									(!is_null($ids_warehouse) && count($ids_warehouse) ? ' AND od.id_warehouse IN('.implode(', ', $ids_warehouse).')': '').
+				' JOIN `'._DB_PREFIX_.'order_history` oh ON oh.id_order = od.id_order
+									 AND oh.id_order_state = o.current_state
+				 JOIN `'._DB_PREFIX_.'order_state` os ON os.id_order_state = oh.id_order_state
+									 AND os.shipped != 1
+				 WHERE o.valid = 1 OR (os.id_order_state NOT IN (e.value, c.value))';
 			$client_orders_qty = Db::getInstance(_PS_USE_SQL_SLAVE_)->getvalue($sql);
 		}
         // Gets supply_orders_qty
