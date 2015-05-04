@@ -84,7 +84,7 @@
 							{if isset($module['instance'])}
 							<li id="{$hook['id_hook']|intval}_{$module['instance']->id|intval}" class="module_list_item{if $can_move && $hook['module_count'] >= 2} draggable{/if}">
 								<div class="module_col_select">
-									<input type="checkbox" id="mod{$hook['id_hook']|intval}_{$module['instance']->id|intval}" class="hook{$hook['id_hook']}" onclick="hookCheckboxes({$hook['id_hook']}, 1, this)" name="unhooks[]" value="{$hook['id_hook']}_{$module['instance']->id}"/>
+									<input type="checkbox" id="mod{$hook['id_hook']|intval}_{$module['instance']->id|intval}" class="modules-position-checkbox hook{$hook['id_hook']}" onclick="hookCheckboxes({$hook['id_hook']}, 1, this)" name="unhooks[]" value="{$hook['id_hook']}_{$module['instance']->id}"/>
 								</div>
 								{if !$display_key}
 								<div class="module_col_position{if $can_move && $hook['module_count'] >= 2} dragHandle{/if}" id="td_{$hook['id_hook']|intval}_{$module['instance']->id}">
@@ -164,6 +164,18 @@
 						{l s='Run Live Edit'}
 					</a>
 			{/if}
+		</div>
+		<div class="panel" id="modules-position-selection-panel">
+			<h3><i class="icon-check"></i> {l s='Selection'}</h3>
+			<p>
+				<span id="modules-position-single-selection">{l s='1 module selected'}</span>
+				<span id="modules-position-multiple-selection">
+					<span id="modules-position-selection-count"></span> {l s='modules selected'}
+				</span>
+			</p>
+			<div class="text-center">
+				<button class="btn btn-default"><i class="icon-remove"></i> {l s='Unhook the selection'}</button>
+			</div>
 		</div>
 	</div>
 </div>
