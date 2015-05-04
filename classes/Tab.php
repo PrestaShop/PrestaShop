@@ -190,6 +190,7 @@ class TabCore extends ObjectModel
 			if (!$value)
 				$value = -1;
 			Cache::store($cache_id, $value);
+			return $value;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -213,6 +214,7 @@ class TabCore extends ObjectModel
 				WHERE t.`id_tab` = '.(int)$id_tab.(defined('_PS_HOST_MODE_') ? ' AND `hide_host_mode` = 0' : '')
 			);
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}

@@ -113,8 +113,9 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 				if ($row['behavior'] == 0)
 					break;
 			}
-
-			Cache::store($cache_id, new TaxCalculator($taxes, $behavior));
+			$result = new TaxCalculator($taxes, $behavior);
+			Cache::store($cache_id, $result);
+			return $result;
 		}
 
 		return Cache::retrieve($cache_id);

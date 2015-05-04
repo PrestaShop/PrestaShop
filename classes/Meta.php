@@ -298,6 +298,7 @@ class MetaCore extends ObjectModel
 			else
 				$result = Meta::getHomeMetas($id_lang, $page_name);
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}

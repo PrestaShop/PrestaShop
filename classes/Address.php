@@ -285,6 +285,7 @@ class AddressCore extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'country` c ON c.`id_country` = a.`id_country`
 			WHERE a.`id_address` = '.(int)$id_address);
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -332,6 +333,7 @@ class AddressCore extends ObjectModel
 		{
 			$id_address = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `id_address` FROM '._DB_PREFIX_.'address a WHERE a.`id_address` = '.(int)$id_address);
 			Cache::store($key, (bool)$id_address);
+			return (bool)$id_address;
 		}
 		return Cache::retrieve($key);
 	}
@@ -349,6 +351,7 @@ class AddressCore extends ObjectModel
 				WHERE `id_customer` = '.(int)$id_customer.' AND `deleted` = 0'.($active ? ' AND `active` = 1' : '')
 			);
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}

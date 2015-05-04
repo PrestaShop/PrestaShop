@@ -1054,7 +1054,7 @@ class AdminImportControllerCore extends AdminController
 		{
 			$last_width = $last_height = 0;
 			$error = 0;
-			ImageManager::resize($tmpfile, $path.'.jpg', null, null, 'jpg', false, $error, $last_width, $last_height, 4);
+			ImageManager::resize($tmpfile, $path.'.jpg', null, null, 'jpg', false, $error, $last_width, $last_height);
 			$images_types = ImageType::getImagesTypes($entity, true);
 
 			if ($regenerate)
@@ -1062,15 +1062,11 @@ class AdminImportControllerCore extends AdminController
 				$previous_path = null;
 				foreach ($images_types as $image_type)
 				{
-					if ($image_type['width'] >= $last_width && $image_type['height'] >= $last_height)
-						copy($tmpfile, $path.'-'.stripslashes($image_type['name']).'.jpg');
-					else
-					{
-						if ($previous_path && $image_type['width'] < $last_width && $image_type['height'] < $last_height)
-							$tmpfile = $previous_path;
+					if ($previous_path && $image_type['width'] < $last_width && $image_type['height'] < $last_height)
+						$tmpfile = $previous_path;
 
-						ImageManager::resize($tmpfile, $path.'-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height'], 'jpg', false, $error, $last_width, $last_height, 3);
-					}
+					ImageManager::resize($tmpfile, $path.'-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height'], 'jpg', false, $error, $last_width, $last_height);
+
 					$previous_path = $path.'-'.stripslashes($image_type['name']).'.jpg';
 					if (in_array($image_type['id_image_type'], $watermark_types))
 						Hook::exec('actionWatermark', array('id_image' => $id_image, 'id_product' => $id_entity));
@@ -1302,6 +1298,7 @@ class AdminImportControllerCore extends AdminController
 		$match_ref = Tools::getValue('match_ref');
 		$regenerate = Tools::getValue('regenerate');
 		$shop_is_feature_active = Shop::isFeatureActive();
+		Module::setInImport(true);
 
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
@@ -1329,9 +1326,12 @@ class AdminImportControllerCore extends AdminController
 			else
 				$product = new Product();
 
+
+			$update_advanced_stock_management_value = false;
 			if (isset($product->id) && $product->id && Product::existsInDatabase((int)$product->id, 'product'))
 			{
 				$product->loadStockData();
+				$update_advanced_stock_management_value = true;
 				$category_data = Product::getProductCategories((int)$product->id);
 
 				if (is_array($category_data))
@@ -1814,7 +1814,7 @@ class AdminImportControllerCore extends AdminController
 						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management has incorrect value. Not set for product %1$s '), $product->name[$default_language_id]);
 					elseif (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $product->advanced_stock_management == 1)
 						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, cannot enable on product %1$s '), $product->name[$default_language_id]);
-					else
+					elseif ($update_advanced_stock_management_value)
 						$product->setAdvancedStockManagement($product->advanced_stock_management);
 					// automaticly disable depends on stock, if a_s_m set to disabled
 					if (StockAvailable::dependsOnStock($product->id) == 1 && $product->advanced_stock_management == 0)
@@ -1896,6 +1896,8 @@ class AdminImportControllerCore extends AdminController
 			}
 		}
 		$this->closeCsvFile($handle);
+		Module::processDeferedFuncCall();
+		Module::processDeferedClearCache();
 	}
 
 	public function productImportCreateCat($default_language_id, $category_name, $id_parent_category = null)

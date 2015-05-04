@@ -652,6 +652,7 @@ class OrderInvoiceCore extends ObjectModel
 				$amount += $payment->amount;
 			}
 			Cache::store($cache_id, $amount);
+			return $amount;
 		}
 		return Cache::retrieve($cache_id);
 	}

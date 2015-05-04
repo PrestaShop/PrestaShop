@@ -150,6 +150,10 @@ abstract class ModuleCore
 
 	protected static $update_translations_after_install = true;
 
+	protected static $_in_import = false;
+	protected static $_defered_clearCache = array();
+	protected static $_defered_func_call = array();
+
 	/** @var bool If true, allow push */
 	public $allow_push;
 
@@ -175,6 +179,39 @@ abstract class ModuleCore
 	const CACHE_FILE_UNTRUSTED_MODULES_LIST = '/config/xml/untrusted_modules_list.xml';
 
 	public static $hosted_modules_blacklist = array('autoupgrade');
+
+	/**
+	 * Set the flag to indicate we are doing an import
+	 *
+	 * @param bool $value
+	 */
+	public static function setInImport($value)
+	{
+		self::$_in_import = (bool)$value;
+	}
+
+	public static function processDeferedFuncCall()
+	{
+		self::setInImport(false);
+		foreach(self::$_defered_func_call as $func_call)
+			call_user_func_array($func_call[0], $func_call[1]);
+
+		self::$_defered_func_call = array();
+	}
+
+	/**
+	 * Clear the caches stored in $_defered_clearCache
+	 *
+	 */
+	public static function processDeferedClearCache()
+	{
+		self::setInImport(false);
+
+		foreach(self::$_defered_clearCache as $clearCache_array)
+			self::_deferedClearCache($clearCache_array[0], $clearCache_array[1], $clearCache_array[2]);
+
+		self::$_defered_clearCache = array();
+	}
 
 	/**
 	 * Constructor
@@ -2057,6 +2094,7 @@ abstract class ModuleCore
 		{
 			$id_module = Module::getModuleIdByName($module_name);
 			Cache::store('Module::isInstalled'.$module_name, (bool)$id_module);
+			return (bool)$id_module;
 		}
 		return Cache::retrieve('Module::isInstalled'.$module_name);
 	}
@@ -2081,6 +2119,7 @@ abstract class ModuleCore
 			if (Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module_shop` WHERE `id_module` = '.(int)$id_module.' AND `id_shop` = '.(int)Context::getContext()->shop->id))
 				$active = true;
 			Cache::store('Module::isEnabled'.$module_name, (bool)$active);
+			return (bool)$active;
 		}
 		return Cache::retrieve('Module::isEnabled'.$module_name);
 	}
@@ -2249,14 +2288,50 @@ abstract class ModuleCore
 	 */
 	protected function _clearCache($template, $cache_id = null, $compile_id = null)
 	{
-		if (Configuration::get('PS_SMARTY_CLEAR_CACHE') == 'never')
-			return 0;
+		static $ps_smarty_clear_cache = null;
+		if ($ps_smarty_clear_cache === null)
+			$ps_smarty_clear_cache = Configuration::get('PS_SMARTY_CLEAR_CACHE');
 
-		if ($cache_id === null)
-			$cache_id = $this->name;
+		if (self::$_in_import)
+		{
+			if ($ps_smarty_clear_cache == 'never')
+				return 0;
 
+			if ($cache_id === null)
+				$cache_id = $this->name;
+
+			$key = $template.'-'.$cache_id.'-'.$compile_id;
+			if (!isset(self::$_defered_clearCache[$key]))
+				self::$_defered_clearCache[$key] = array($this->getTemplatePath($template), $cache_id, $compile_id);
+		}
+		else
+		{
+			if ($ps_smarty_clear_cache == 'never')
+				return 0;
+
+			if ($cache_id === null)
+				$cache_id = $this->name;
+
+			Tools::enableCache();
+			$number_of_template_cleared = Tools::clearCache(Context::getContext()->smarty, $this->getTemplatePath($template), $cache_id, $compile_id);
+			Tools::restoreCacheSettings();
+
+			return $number_of_template_cleared;
+		}
+	}
+
+		/*
+	 * Clear defered template cache
+	 *
+	 * @param string $template_path Template path
+	 * @param int null $cache_id
+	 * @param int null $compile_id
+	 * @return int Number of template cleared
+	 */
+	static public function _deferedClearCache($template_path, $cache_id, $compile_id)
+	{
 		Tools::enableCache();
-		$number_of_template_cleared = Tools::clearCache(Context::getContext()->smarty, $this->getTemplatePath($template), $cache_id, $compile_id);
+		$number_of_template_cleared = Tools::clearCache(Context::getContext()->smarty, $template_path, $cache_id, $compile_id);
 		Tools::restoreCacheSettings();
 
 		return $number_of_template_cleared;
@@ -2379,6 +2454,7 @@ abstract class ModuleCore
 		{
 			$result = (int)Db::getInstance()->getValue('SELECT `id_module` FROM `'._DB_PREFIX_.'module` WHERE `name` = "'.pSQL($name).'"');
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}

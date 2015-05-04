@@ -349,7 +349,7 @@ class InstallModelInstall extends InstallAbstractModel
 
 			Language::loadLanguages();
 			Tools::clearCache();
-			if (!$id_lang = Language::getIdByIso($iso))
+			if (!$id_lang = Language::getIdByIso($iso, true))
 				throw new PrestashopInstallerException($this->language->l('Cannot install language "%s"', ($xml->name) ? $xml->name : $iso));
 			$languages[$id_lang] = $iso;
 
