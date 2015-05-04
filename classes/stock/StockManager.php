@@ -551,8 +551,15 @@ class StockManagerCore implements StockManagerInterface
 				 JOIN `'._DB_PREFIX_.'configuration` c ON c.name = "PS_OS_CANCELED"
 				 JOIN `'._DB_PREFIX_.'order_detail` od ON od.id_order = o.id_order
 									 AND od.product_id IN ('.$products.')'.
-									(!is_null($ids_warehouse) && count($ids_warehouse) ? ' AND od.id_warehouse IN('.implode(', ', $ids_warehouse).')': '').
-				' JOIN `'._DB_PREFIX_.'order_history` oh ON oh.id_order = od.id_order
+									(!is_null($ids_warehouse) && count($ids_warehouse) ? ' AND od.id_warehouse IN('.implode(', ', $ids_warehouse).')' : '');
+
+				if ((int)$id_product_attribute)
+				{
+					$sql .= (count(explode(',', $products)) > 1 ? ' AND od.product_attribute_id IN ('.(int)$id_product_attribute.', 0)'
+						: ' AND od.product_attribute_id = '.(int)$id_product_attribute);
+				}
+
+				$sql .= ' JOIN `'._DB_PREFIX_.'order_history` oh ON oh.id_order = od.id_order
 									 AND oh.id_order_state = o.current_state
 				 JOIN `'._DB_PREFIX_.'order_state` os ON os.id_order_state = oh.id_order_state
 									 AND os.shipped != 1
