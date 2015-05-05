@@ -18,7 +18,8 @@ class EntityManagerTest extends IntegrationTestCase
 
 	public function setup()
 	{
-		$this->container = (new Core_Foundation_IoC_ContainerBuilder)->build();
+		$containerBuilder = new Core_Foundation_IoC_ContainerBuilder;
+		$this->container = $containerBuilder->build();
 		$this->entityManager = $this->container->make('Core_Foundation_Database_EntityManager');
 	}
 
