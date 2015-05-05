@@ -25,4 +25,6 @@
 */
 
 // @TODO: Only a proxy ATM
-class CMSEntity extends Entity {}
+class CMSEntity extends Adapter_Entity {
+    public static $repositoryClass = 'CMSRepository';
+}

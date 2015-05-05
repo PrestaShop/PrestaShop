@@ -150,7 +150,7 @@ abstract class ObjectModelCore
 	public $def;
 
 	/** @var array|null List of specific fields to update (all fields if null). */
-	protected $update_fields = null;
+	public $update_fields = null;
 
 	/** @var Db An instance of the db in order to avoid calling Db::getInstance() thousands of times. */
 	protected static $db = false;

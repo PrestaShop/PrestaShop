@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class CMSRoleRepository extends EntityRepository
+class CMSRoleRepository extends Core_Foundation_Database_EntityRepository
 {
 	protected $entityClass = 'CMSRoleEntity';
 

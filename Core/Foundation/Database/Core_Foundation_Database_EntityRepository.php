@@ -24,18 +24,30 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class EntityRepository
+class Core_Foundation_Database_EntityRepository
 {
 	protected $db;
 	protected $tablesPrefix;
-	protected $entityClass = null;
+	protected $entityClass;
 
-	public function __construct($db, $tablesPrefix)
+	public function __construct($db, $tablesPrefix, $entityClass)
 	{
 		$this->db = $db;
 		$this->tablesPrefix = $tablesPrefix;
+		$this->entityClass = $entityClass;
 	}
 
+	private function getIdFieldName()
+	{
+		$entityClass = $this->entityClass;
+		return $entityClass::$definition['primary'];
+	}
+
+	private function getTableName()
+	{
+		$entityClass = $this->entityClass;
+		return $this->tablesPrefix . $entityClass::$definition['table'];
+	}
 
 	public function save($entity)
 	{
@@ -48,11 +60,29 @@ class EntityRepository
 	public function findOneByName($name)
 	{
 		$entityClass = $this->entityClass;
-		$tableName = $this->tablesPrefix . $entityClass::$definition['table'];
 
-		$rows = $this->db->executeS(
-			'SELECT * FROM `' . $tableName . '` WHERE name = \'' . $this->db->escape($name) . '\''
+		$rows = $this->db->select(
+			'SELECT * FROM `' . $this->getTableName() . '` WHERE name = \'' . $this->db->escape($name) . '\''
 		);
+
+		if (count($rows) === 0) {
+			return null;
+		} else if (count($rows) > 1) {
+			throw new Exception('Too many rows returned.');
+		} else {
+			$data = $rows[0];
+			$entity = new $entityClass;
+			$entity->hydrate($data);
+			return $entity;
+		}
+	}
+
+	public function find($id)
+	{
+		$entityClass = $this->entityClass;
+
+		$sql = 'SELECT * FROM ' . $this->getTableName() . ' WHERE ' . $this->getIdFieldName() . ' = ' . (int)$id;
+		$rows = $this->db->select($sql);
 
 		if (count($rows) === 0) {
 			return null;

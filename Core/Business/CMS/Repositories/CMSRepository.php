@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class CMSRepository extends EntityRepository
+class CMSRepository extends Core_Foundation_Database_EntityRepository
 {
 	protected $entity = null;
 

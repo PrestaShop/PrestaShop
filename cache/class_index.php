@@ -23,6 +23,18 @@
     'type' => 'class',
     'override' => false,
   ),
+  'Adapter_Database' => 
+  array (
+    'path' => 'Adapter/Adapter_Database.php',
+    'type' => 'class',
+    'override' => false,
+  ),
+  'Adapter_Entity' => 
+  array (
+    'path' => 'Adapter/Adapter_Entity.php',
+    'type' => 'class',
+    'override' => false,
+  ),
   'Adapter_EntityMapper' => 
   array (
     'path' => 'Adapter/Adapter_EntityMapper.php',
@@ -1769,6 +1781,24 @@
     'type' => 'interface',
     'override' => false,
   ),
+  'Core_Foundation_Database_Database' => 
+  array (
+    'path' => 'Core/Foundation/Database/Core_Foundation_Database_Database.php',
+    'type' => 'interface',
+    'override' => false,
+  ),
+  'Core_Foundation_Database_EntityManager' => 
+  array (
+    'path' => 'Core/Foundation/Database/Core_Foundation_Database_EntityManager.php',
+    'type' => 'class',
+    'override' => false,
+  ),
+  'Core_Foundation_Database_EntityRepository' => 
+  array (
+    'path' => 'Core/Foundation/Database/Core_Foundation_Database_EntityRepository.php',
+    'type' => 'class',
+    'override' => false,
+  ),
   'Core_Foundation_IoC_Container' => 
   array (
     'path' => 'Core/Foundation/IoC/Core_Foundation_IoC_Container.php',
@@ -2012,18 +2042,6 @@
   'EmployeeCore' => 
   array (
     'path' => 'classes/Employee.php',
-    'type' => 'class',
-    'override' => false,
-  ),
-  'Entity' => 
-  array (
-    'path' => 'Core/Foundation/Entity/Entity.php',
-    'type' => 'class',
-    'override' => false,
-  ),
-  'EntityRepository' => 
-  array (
-    'path' => 'Core/Foundation/Repository/EntityRepository.php',
     'type' => 'class',
     'override' => false,
   ),

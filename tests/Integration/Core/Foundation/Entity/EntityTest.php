@@ -3,17 +3,18 @@
 namespace PrestaShop\PrestaShop\Tests\Integration\Core\Foundation\Entity;
 
 
-use Db;
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
+
+use Adapter_Database;
 
 use CMSRoleEntity;
 use CMSRoleRepository;
+use Db;
 use Product;
 
 class EntityTest extends IntegrationTestCase
 {
-
-	public function test_save_product()
+	public function test_save_activeRecord_style()
 	{
 		$product = new Product(null, false, 1);
         $product->name = 'A Product';
@@ -22,12 +23,10 @@ class EntityTest extends IntegrationTestCase
 		$this->assertTrue($product->save());
 	}
 
-	public function test_save()
+	public function test_save_dataMapper_style()
 	{
 
-		$db = Db::getInstance();
-
-		$repository = new CMSRoleRepository($db, _DB_PREFIX_);
+		$repository = new CMSRoleRepository(new Adapter_Database, _DB_PREFIX_, 'CMSRoleEntity');
 		$entity = new CMSRoleEntity;
 
 		$name = "Yo CMS Role " . rand();

@@ -25,8 +25,10 @@
 */
 
 
-class CMSRoleEntity extends Entity
+class CMSRoleEntity extends Adapter_Entity
 {
+	public static $repositoryClass = 'CMSRoleRepository';
+
 	/** @var string name */
 	public $name;
 	/** @var integer id_cms */
