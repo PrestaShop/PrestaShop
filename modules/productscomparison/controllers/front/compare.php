@@ -134,7 +134,7 @@ class ProductsComparisonCompareModuleFrontController extends ModuleFrontControll
 					$width = 80 / count($listProducts);
 
 					$hasProduct = true;
-					$ordered_features = Feature::getFeaturesForComparison($ids, $this->context->language->id);
+					$ordered_features = CompareProduct::getFeaturesForComparison($ids, $this->context->language->id);
 					$this->context->smarty->assign(array(
 						'ordered_features' => $ordered_features,
 						'product_features' => $listFeatures,
