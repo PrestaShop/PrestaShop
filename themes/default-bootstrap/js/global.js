@@ -274,8 +274,9 @@ function display(view)
 					if (rating != null) {
 						html += '<div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" class="comments_note">'+ rating + '</div>';
 					}
-					if ($(element).find('.list-reviews').length)
-						html += $(element).find('.list-reviews')[0].outerHTML;
+					var hookReviews = $(element).find('.hook-reviews');
+					if (hookReviews.length)
+						html += hookReviews[0].outerHTML;
 					html += '<p class="product-desc">'+ $(element).find('.product-desc').html() + '</p>';
 					var colorList = $(element).find('.color-list-container').html();
 					if (colorList != null) {
@@ -316,8 +317,9 @@ function display(view)
 					if (rating != null) {
 						html += '<div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" class="comments_note">'+ rating + '</div>';
 					}
-				if ($(element).find('.list-reviews').length)
-					html += $(element).find('.list-reviews')[0].outerHTML;
+				var hookReviews = $(element).find('.hook-reviews');
+				if (hookReviews.length)
+					html += hookReviews[0].outerHTML;
 				html += '<p itemprop="description" class="product-desc">'+ $(element).find('.product-desc').html() + '</p>';
 				var price = $(element).find('.content_price').html(); // check : catalog mode is enabled
 					if (price != null) {
