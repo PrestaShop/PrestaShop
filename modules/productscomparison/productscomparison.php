@@ -27,8 +27,8 @@
 if (!defined('_PS_VERSION_'))
 	exit;
 
-// Loading Models
-include(_PS_MODULE_DIR_ . 'productscomparison/models/CompareProduct.php');
+/* Loading Models */
+include(_PS_MODULE_DIR_.'productscomparison/models/CompareProduct.php');
 
 class ProductsComparison extends Module
 {
@@ -61,7 +61,7 @@ class ProductsComparison extends Module
 	{
 		if (!file_exists(dirname(__FILE__).'/sql/'.self::INSTALL_SQL_FILE))
 			return (false);
-		else if (!$sql = file_get_contents(dirname(__FILE__).'/sql/'.self::INSTALL_SQL_FILE))
+		else if (!$sql = Tools::file_get_contents(dirname(__FILE__).'/sql/'.self::INSTALL_SQL_FILE))
 			return (false);
 		$sql = str_replace(array('PREFIX_', 'ENGINE_TYPE'), array(_DB_PREFIX_, _MYSQL_ENGINE_), $sql);
 		$sql = preg_split("/;\s*[\r\n]+/", $sql);
@@ -116,7 +116,7 @@ class ProductsComparison extends Module
 
 	public function hookActionAuthentication()
 	{
-		$this->context->cookie->id_compare = isset($this->context->cookie->id_compare) ? $this->context->cookie->id_compare: CompareProduct::getIdCompareByIdCustomer($customer->id);
+		$this->context->cookie->id_compare = isset($this->context->cookie->id_compare) ? (int)$this->context->cookie->id_compare: CompareProduct::getIdCompareByIdCustomer((int)$this->context->customer->id);
 		$this->context->cookie->write();
 	}
 
@@ -127,7 +127,7 @@ class ProductsComparison extends Module
 
 		$this->context->smarty->assign('compare_controller_link', $this->context->link->getModuleLink($this->name, 'compare', array(), null, (int)$this->context->language->id));
 
-		$this->context->controller->addJS($this->_path.'js/products-comparison.js');
+		$this->context->controller->addJS($this->_path.'views/js/products-comparison.js');
 	}
 
 	public function hookDisplayProductComparisonInProductList($params)
@@ -202,7 +202,7 @@ class ProductsComparison extends Module
 
 		$helper = new HelperForm();
 		$helper->show_toolbar = false;
-		$helper->table =  $this->table;
+		$helper->table = $this->table;
 		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
 		$helper->default_form_language = $lang->id;
 		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
