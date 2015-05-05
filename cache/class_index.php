@@ -41,9 +41,9 @@
     'type' => 'class',
     'override' => false,
   ),
-  'Adapter_EntityPersister' => 
+  'Adapter_EntityMetaDataRetriever' => 
   array (
-    'path' => 'Adapter/Adapter_EntityPersister.php',
+    'path' => 'Adapter/Adapter_EntityMetaDataRetriever.php',
     'type' => 'class',
     'override' => false,
   ),
@@ -1787,9 +1787,21 @@
     'type' => 'interface',
     'override' => false,
   ),
+  'Core_Foundation_Database_Entity' => 
+  array (
+    'path' => 'Core/Foundation/Database/Core_Foundation_Database_Entity.php',
+    'type' => 'interface',
+    'override' => false,
+  ),
   'Core_Foundation_Database_EntityManager' => 
   array (
     'path' => 'Core/Foundation/Database/Core_Foundation_Database_EntityManager.php',
+    'type' => 'class',
+    'override' => false,
+  ),
+  'Core_Foundation_Database_EntityMetaData' => 
+  array (
+    'path' => 'Core/Foundation/Database/Core_Foundation_Database_EntityMetaData.php',
     'type' => 'class',
     'override' => false,
   ),

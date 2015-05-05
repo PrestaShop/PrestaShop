@@ -28,6 +28,8 @@ class Core_Foundation_Database_EntityManager
 	private $db;
 	private $configuration;
 
+	private $entityMetaData = array();
+
 	public function __construct(
         Core_Foundation_Database_Database $db,
         Core_Business_Configuration $configuration
@@ -36,6 +38,11 @@ class Core_Foundation_Database_EntityManager
 		$this->db = $db;
 		$this->configuration = $configuration;
     }
+
+	public function getDatabase()
+	{
+		return $this->db;
+	}
 
 	public function getRepository($className)
 	{
@@ -46,35 +53,27 @@ class Core_Foundation_Database_EntityManager
         }
 
         $repository = new $repositoryClass(
-			$this->db,
+			$this,
 			$this->configuration->get('_DB_PREFIX_'),
-			$className
+			$this->getEntityMetaData($className)
 		);
 
 		return $repository;
 	}
-	/**
-	 * @return mixed
-	 * @throws PrestaShopExceptionCore
-	 */
-	public function createNewRecord()
+
+	public function getEntityMetaData($className)
 	{
-		if (is_null($this->component))
-			throw new PrestaShopExceptionCore('No repository currently in use! use getRepository() to load one !');
-		$entity_name = $this->component.'Entity';
-		return new $entity_name;
+		if (!array_key_exists($className, $this->entityMetaData)) {
+			$metaDataRetriever = new Adapter_EntityMetaDataRetriever;
+			$this->entityMetaData[$className] = $metaDataRetriever->getEntityMetaData($className);
+		}
+
+		return $this->entityMetaData[$className];
 	}
-	/**
-	 * @TODO: Make it more generics to allow to get record by any column possible :)
-	 * @param $id
-	 * @return mixed
-	 * @throws PrestaShopExceptionCore
-	 */
-	public function getRecordByID($id, $legacy = false)
+
+	public function save(Core_Foundation_Database_Entity $entity)
 	{
-		if (is_null($this->component))
-			throw new PrestaShopExceptionCore('No repository currently in use! use getRepository() to load one !');
-		$entity_name = $this->component.($legacy ? '' : 'Entity');
-		return new $entity_name($id);
+		$entity->save();
+		return $this;
 	}
 }

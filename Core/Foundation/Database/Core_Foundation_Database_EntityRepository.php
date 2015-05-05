@@ -26,43 +26,61 @@
 
 class Core_Foundation_Database_EntityRepository
 {
+	protected $entityManager;
 	protected $db;
 	protected $tablesPrefix;
-	protected $entityClass;
+	protected $entityMetaData;
 
-	public function __construct($db, $tablesPrefix, $entityClass)
+	public function __construct(
+		Core_Foundation_Database_EntityManager $entityManager,
+		$tablesPrefix,
+		Core_Foundation_Database_EntityMetaData $entityMetaData
+	)
 	{
-		$this->db = $db;
+		$this->entityManager = $entityManager;
+		$this->db = $this->entityManager->getDatabase();
 		$this->tablesPrefix = $tablesPrefix;
-		$this->entityClass = $entityClass;
+		$this->entityMetaData = $entityMetaData;
 	}
 
 	private function getIdFieldName()
 	{
-		$entityClass = $this->entityClass;
-		return $entityClass::$definition['primary'];
+		$primary = $this->entityMetaData->getPrimaryKeyFieldnames();
+
+		if (count($primary) === 0) {
+			throw new Exception(
+				sprintf(
+					'No primary key defined in entity `%s`.',
+					$this->entityMetaData->getEntityClassName()
+				)
+			);
+		} else if (count($primary) > 1) {
+			throw new Exception(
+				sprintf(
+					'Entity `%s` has a composite primary key, which is not supported by entity repositories.',
+					$this->entityMetaData->getEntityClassName()
+				)
+			);
+		}
+
+		return $primary[0];
 	}
 
-	private function getTableName()
+	private function getTableNameWithPrefix()
 	{
-		$entityClass = $this->entityClass;
-		return $this->tablesPrefix . $entityClass::$definition['table'];
+		return $this->tablesPrefix . $this->entityMetaData->getTableName();
 	}
 
-	public function save($entity)
+	private function getNewEntity()
 	{
-		$persister = new Adapter_EntityPersister;
-		$persister->save($entity);
-
-		return $this;
+		$entityClassName = $this->entityMetaData->getEntityClassName();
+		return new $entityClassName;
 	}
 
 	public function findOneByName($name)
 	{
-		$entityClass = $this->entityClass;
-
 		$rows = $this->db->select(
-			'SELECT * FROM `' . $this->getTableName() . '` WHERE name = \'' . $this->db->escape($name) . '\''
+			'SELECT * FROM `' . $this->getTableNameWithPrefix() . '` WHERE name = \'' . $this->db->escape($name) . '\''
 		);
 
 		if (count($rows) === 0) {
@@ -71,7 +89,7 @@ class Core_Foundation_Database_EntityRepository
 			throw new Exception('Too many rows returned.');
 		} else {
 			$data = $rows[0];
-			$entity = new $entityClass;
+			$entity = $this->getNewEntity();
 			$entity->hydrate($data);
 			return $entity;
 		}
@@ -79,9 +97,7 @@ class Core_Foundation_Database_EntityRepository
 
 	public function find($id)
 	{
-		$entityClass = $this->entityClass;
-
-		$sql = 'SELECT * FROM ' . $this->getTableName() . ' WHERE ' . $this->getIdFieldName() . ' = ' . (int)$id;
+		$sql = 'SELECT * FROM ' . $this->getTableNameWithPrefix() . ' WHERE ' . $this->getIdFieldName() . ' = ' . (int)$id;
 		$rows = $this->db->select($sql);
 
 		if (count($rows) === 0) {
@@ -90,7 +106,7 @@ class Core_Foundation_Database_EntityRepository
 			throw new Exception('Too many rows returned.');
 		} else {
 			$data = $rows[0];
-			$entity = new $entityClass;
+			$entity = $this->getNewEntity();
 			$entity->hydrate($data);
 			return $entity;
 		}
