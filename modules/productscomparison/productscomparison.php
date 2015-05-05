@@ -70,19 +70,19 @@ class ProductsComparison extends Module
 
 	public function getContent()
 	{
-		//@todo
-		// Let's the user set the max item number
-
-		/*
-					'PS_COMPARATOR_MAX_ITEM' => array(
-						'title' => $this->l('Product comparison'),
-						'hint' => $this->l('Set the maximum number of products that can be selected for comparison. Set to "0" to disable this feature.'),
-						'validation' => 'isUnsignedId',
-						'required' => true,
-						'cast' => 'intval',
-						'type' => 'text'
-					),
-		*/
+		$output = '';
+		if (Tools::isSubmit('submitConfigure'))
+		{
+			if (!($comparator_max_item = Tools::getValue('PS_COMPARATOR_MAX_ITEM')) || empty($comparator_max_item))
+				$output .= $this->displayError($this->l('Please complete the field.'));
+			else
+			{
+				Configuration::updateValue('PS_COMPARATOR_MAX_ITEM', (int)$comparator_max_item);
+				$this->_clearCache('*');
+				$output .= $this->displayConfirmation($this->l('Settings updated'));
+			}
+		}
+		return $output.$this->renderForm();
 	}
 
 	public function hookActionAuthentication()
@@ -144,5 +144,56 @@ class ProductsComparison extends Module
 		));
 
 		return $this->display(__FILE__, 'product-compare.tpl');
+	}
+
+	public function renderForm()
+	{
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Product comparison'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'text',
+						'required' => true,
+						'label' => $this->l('Maximum number of products'),
+						'name' => 'PS_COMPARATOR_MAX_ITEM',
+						'class' => 'fixed-width-xs',
+						'cast' => 'intval',
+						'desc' => $this->l('Set the maximum number of products that can be selected for comparison. Set to "0" to disable this feature.')
+					)
+				),
+				'submit' => array(
+					'title' => $this->l('Save'),
+				)
+			),
+		);
+
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitConfigure';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
+	}
+
+	public function getConfigFieldsValues()
+	{
+		return array(
+			'PS_COMPARATOR_MAX_ITEM' => Tools::getValue('PS_COMPARATOR_MAX_ITEM', Configuration::get('PS_COMPARATOR_MAX_ITEM'))
+		);
 	}
 }

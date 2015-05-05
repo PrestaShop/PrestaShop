@@ -26,6 +26,14 @@
 
 class ProductsComparisonCompareModuleFrontController extends ModuleFrontController
 {
+	public function __construct()
+	{
+		parent::__construct();
+
+		$this->display_column_left = false;
+		$this->display_column_right = false;
+	}
+
 	public function setMedia()
 	{
 		parent::setMedia();
