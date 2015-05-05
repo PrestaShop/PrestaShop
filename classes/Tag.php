@@ -134,7 +134,7 @@ class TagCore extends ObjectModel
 
 	public static function updateTagCount()
 	{
-		if (!Module::getInImport())
+		if (!Module::getBatchMode())
 		{
 			Db::getInstance()->execute('REPLACE INTO `'._DB_PREFIX_.'tag_count` (id_group, id_tag, id_lang, id_shop, counter)
 			SELECT cg.id_group, t.id_tag, t.id_lang, ps.id_shop, COUNT(pt.id_tag) AS times

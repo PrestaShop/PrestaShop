@@ -1298,7 +1298,7 @@ class AdminImportControllerCore extends AdminController
 		$match_ref = Tools::getValue('match_ref');
 		$regenerate = Tools::getValue('regenerate');
 		$shop_is_feature_active = Shop::isFeatureActive();
-		Module::setInImport(true);
+		Module::setBatchMode(true);
 
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
