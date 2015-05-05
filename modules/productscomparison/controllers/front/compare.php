@@ -26,8 +26,6 @@
 
 class ProductsComparisonCompareModuleFrontController extends ModuleFrontController
 {
-	public $php_self = 'products-comparison';
-
 	public function setMedia()
 	{
 		parent::setMedia();
@@ -89,7 +87,7 @@ class ProductsComparisonCompareModuleFrontController extends ModuleFrontControll
 		{
 			$ids = CompareProduct::getCompareProducts($this->context->cookie->id_compare);
 			if (count($ids))
-				Tools::redirect($this->context->link->getPageLink('products-comparison', null, $this->context->language->id, array('compare_product_list' => implode('|', $ids))));
+				Tools::redirect($this->context->link->getModuleLink($this->module->name, 'compare', array('compare_product_list' => implode('|', $ids)), null, (int)$this->context->language->id));
 		}
 
 		if ($ids)
@@ -149,7 +147,6 @@ class ProductsComparisonCompareModuleFrontController extends ModuleFrontControll
 		}
 		$this->context->smarty->assign('hasProduct', $hasProduct);
 
-		$this->setTemplate(_PS_THEME_DIR_.'products-comparison.tpl');
+		$this->setTemplate('products-comparison.tpl');
 	}
-
 }
