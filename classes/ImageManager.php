@@ -256,7 +256,9 @@ class ImageManagerCore
 			imagecopyresized($dest_image, $src_image, (int)(($dst_width - $next_width) / 2), (int)(($dst_height - $next_height) / 2), 0, 0, $next_width, $next_height, $src_width, $src_height);
 		else
 			ImageManager::imagecopyresampled($dest_image, $src_image, (int)(($dst_width - $next_width) / 2), (int)(($dst_height - $next_height) / 2), 0, 0, $next_width, $next_height, $src_width, $src_height, $quality);
-		return (ImageManager::write($file_type, $dest_image, $dst_file));
+		$write_file = ImageManager::write($file_type, $dest_image, $dst_file);
+		@imagedestroy($src_image);
+		return $write_file;
 	}
 
 	public static function imagecopyresampled(&$dst_image, $src_image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h, $quality = 3)
@@ -445,6 +447,7 @@ class ImageManagerCore
 		imagecopyresampled($dest['ressource'], $src['ressource'], 0, 0, $dest['x'], $dest['y'], $dest['width'], $dest['height'], $dest['width'], $dest['height']);
 		imagecolortransparent($dest['ressource'], $white);
 		$return = ImageManager::write($file_type, $dest['ressource'], $dst_file);
+		@imagedestroy($src['ressource']);
 		return	$return;
 	}
 
