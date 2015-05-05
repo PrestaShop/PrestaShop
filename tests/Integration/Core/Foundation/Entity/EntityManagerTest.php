@@ -6,7 +6,7 @@ use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
 
 use Core_Foundation_IoC_ContainerBuilder;
 
-use CMSRoleEntity;
+use CMSRole;
 use CMSRoleRepository;
 use Db;
 use Product;
@@ -22,16 +22,6 @@ class EntityManagerTest extends IntegrationTestCase
 		$this->entityManager = $this->container->make('Core_Foundation_Database_EntityManager');
 	}
 
-	public function test_explicitly_defined_repository_is_found_by_entitymanager()
-	{
-		$this->entityManager->getRepository('CMSRoleEntity');
-	}
-
-	public function test_implicitly_defined_repository_is_found_by_entitymanager()
-	{
-		$this->entityManager->getRepository('Product');
-	}
-
 	public function test_find_implicitly_defined_repository()
 	{
 		$repository = $this->entityManager->getRepository('Product');
@@ -44,7 +34,7 @@ class EntityManagerTest extends IntegrationTestCase
 	{
 		$repository = $this->entityManager->getRepository('CMSRoleEntity');
 
-		$entity = new CMSRoleEntity;
+		$entity = new CMSRole;
 
 		$name = "Yo CMS Role " . rand();
 
