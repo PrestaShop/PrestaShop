@@ -103,6 +103,30 @@ class CMSRoleRepository extends RepositoryManager
 		return Db::getInstance()->getRow($sql);
 	}
 
+	/**
+	 * Get associated CMS id from CMS Role id
+	 * @param $cms_role_id
+	 * @return array|false
+	 */
+	public function getCMSIdFromCMSRoleId($cms_role_id)
+	{
+		$sql = '
+		SELECT `id_cms`
+		FROM `'._DB_PREFIX_.CMSRoleEntity::$definition['table'].'`
+		WHERE `id_cms_role` = '.(int)$cms_role_id;
+
+		return Db::getInstance()->getRow($sql);
+	}
+
+	public function getCMSIdsWhereCMSRoleIdIn($cms_roles_ids_list)
+	{
+		$sql = '
+		SELECT `id_cms`
+		FROM `'._DB_PREFIX_.CMSRoleEntity::$definition['table'].'`
+		WHERE `id_cms_role` IN ('.$cms_roles_ids_list.')';
+
+		return Db::getInstance()->executeS($sql);
+	}
 
 	/**
 	 * Return all CMS roles already associated to a CMS Page
@@ -124,5 +148,4 @@ class CMSRoleRepository extends RepositoryManager
 
 		return $result;
 	}
-
 }

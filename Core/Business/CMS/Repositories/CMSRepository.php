@@ -56,6 +56,15 @@ class CMSRepository extends RepositoryManager
 		return new CMS($cms_id, $id_language);
 	}
 
-
-
+	/**
+	 * Get CMS Page content for a given id_cms / id_lang (optionnal) / id_shop (optionnal)
+	 * @param $id_cms
+	 * @param null $id_lang
+	 * @param null $id_shop
+	 * @return array|bool|null|object
+	 */
+	public function getCMSContent($id_cms, $id_lang = null, $id_shop = null)
+	{
+		return CMS::getCMSContent($id_cms, $id_lang, $id_shop);
+	}
 }

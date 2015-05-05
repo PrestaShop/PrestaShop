@@ -24,5 +24,4 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-// @TODO: Only a proxy ATM
 class CMSEntity extends Entity {}
