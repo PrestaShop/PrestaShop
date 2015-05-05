@@ -47,7 +47,7 @@
         <meta meta_page="module-bankwire-validation" left="0" right="0"/>
         <meta meta_page="module-bankwire-payment" left="0" right="0"/>
         <meta meta_page="module-cashondelivery-validation" left="0" right="0"/>
-        <meta meta_page="products-comparison" left="0" right="0"/>
+        <meta meta_page="module-productscomparison-compare" left="0" right="0"/>
     </metas>
     <modules>
         <module action="enable" name="socialsharing"/>
@@ -90,6 +90,7 @@
         <module action="enable" name="blockwishlist"/>
         <module action="enable" name="productcomments"/>
         <module action="enable" name="sendtoafriend"/>
+        <module action="enable" name="productscomparison"/>
         <module action="disable" name="autoupgrade"/>
         <module action="disable" name="blockadvertising"/>
         <module action="disable" name="blockcustomerprivacy"/>
