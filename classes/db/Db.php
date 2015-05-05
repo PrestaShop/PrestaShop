@@ -41,6 +41,9 @@ abstract class DbCore
 	/** @var int Constant used by insert() method */
 	const REPLACE = 3;
 
+	/** @var int Constant used by insert() method */
+	const ON_DUPLICATE_KEY = 4;
+
 	/** @var string Server (eg. localhost) */
 	protected $server;
 
@@ -424,6 +427,8 @@ abstract class DbCore
 			$insert_keyword = 'INSERT IGNORE';
 		elseif ($type == Db::REPLACE)
 			$insert_keyword = 'REPLACE';
+		elseif ($type == Db::ON_DUPLICATE_KEY)
+			$insert_keyword = 'INSERT';
 		else
 			throw new PrestaShopDatabaseException('Bad keyword, must be Db::INSERT or Db::INSERT_IGNORE or Db::REPLACE');
 
@@ -434,16 +439,21 @@ abstract class DbCore
 
 		$keys = array();
 		$values_stringified = array();
+		$first_loop = true;
+		$duplicate_key_stringified = '';
 		foreach ($data as $row_data)
 		{
 			$values = array();
 			foreach ($row_data as $key => $value)
 			{
-				if (isset($keys_stringified))
+				if (!$first_loop)
 				{
 					// Check if row array mapping are the same
 					if (!in_array("`$key`", $keys))
 						throw new PrestaShopDatabaseException('Keys form $data subarray don\'t match');
+
+					if ($duplicate_key_stringified != '')
+						throw new PrestaShopDatabaseException('On duplicate key cannot be used on insert with more than 1 VALUE group');
 				}
 				else
 					$keys[] = '`'.bqSQL($key).'`';
@@ -451,15 +461,21 @@ abstract class DbCore
 				if (!is_array($value))
 					$value = array('type' => 'text', 'value' => $value);
 				if ($value['type'] == 'sql')
-					$values[] = $value['value'];
+					$values[] = $string_value = $value['value'];
 				else
-					$values[] = $null_values && ($value['value'] === '' || is_null($value['value'])) ? 'NULL' : "'{$value['value']}'";
+					$values[] = $string_value = $null_values && ($value['value'] === '' || is_null($value['value'])) ? 'NULL' : "'{$value['value']}'";
+
+				if ($type == Db::ON_DUPLICATE_KEY)
+					$duplicate_key_stringified .= '`'.bqSQL($key).'` = '.$string_value.',';
 			}
-			$keys_stringified = implode(', ', $keys);
+			$first_loop = false;
 			$values_stringified[] = '('.implode(', ', $values).')';
 		}
+		$keys_stringified = implode(', ', $keys);
 
 		$sql = $insert_keyword.' INTO `'.$table.'` ('.$keys_stringified.') VALUES '.implode(', ', $values_stringified);
+		if ($type == Db::ON_DUPLICATE_KEY)
+			$sql .= ' ON DUPLICATE KEY UPDATE '.substr($duplicate_key_stringified, 0, -1);
 
 		return (bool)$this->q($sql, $use_cache);
 	}

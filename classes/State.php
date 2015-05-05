@@ -91,6 +91,7 @@ class StateCore extends ObjectModel
 				WHERE `id_state` = '.(int)$id_state
 			);
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -114,6 +115,7 @@ class StateCore extends ObjectModel
 				WHERE `name` = \''.pSQL($state).'\'
 			');
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}

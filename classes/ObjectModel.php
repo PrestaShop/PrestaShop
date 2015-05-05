@@ -940,12 +940,24 @@ abstract class ObjectModelCore
 	 */
 	public function validateField($field, $value, $id_lang = null, $skip = array(), $human_errors = false)
 	{
+		static $ps_lang_default = null;
+		static $ps_allow_html_iframe = null;
+
+		if ($ps_lang_default === null)
+			$ps_lang_default = Configuration::get('PS_LANG_DEFAULT');
+
+		if ($ps_allow_html_iframe === null)
+			$ps_allow_html_iframe = (int)Configuration::get('PS_ALLOW_HTML_IFRAME');
+
+
 		$this->cacheFieldsRequiredDatabase();
 		$data = $this->def['fields'][$field];
 
+
+
 		// Check if field is required
 		$required_fields = (isset(self::$fieldsRequiredDatabase[get_class($this)])) ? self::$fieldsRequiredDatabase[get_class($this)] : array();
-		if (!$id_lang || $id_lang == Configuration::get('PS_LANG_DEFAULT'))
+		if (!$id_lang || $id_lang == $ps_lang_default)
 			if (!in_array('required', $skip) && (!empty($data['required']) || in_array($field, $required_fields)))
 				if (Tools::isEmpty($value))
 					if ($human_errors)
@@ -1000,7 +1012,7 @@ abstract class ObjectModelCore
 				$res = true;
 				if (Tools::strtolower($data['validate']) == 'iscleanhtml')
 				{
-					if (!call_user_func(array('Validate', $data['validate']), $value, (int)Configuration::get('PS_ALLOW_HTML_IFRAME')))
+					if (!call_user_func(array('Validate', $data['validate']), $value, $ps_allow_html_iframe))
 						$res = false;
 				}
 				else
@@ -1374,6 +1386,7 @@ abstract class ObjectModelCore
 				return $associated;
 
 			Cache::store($cache_id, $associated);
+			return $associated;
 		}
 
 		return Cache::retrieve($cache_id);
@@ -1608,7 +1621,7 @@ abstract class ObjectModelCore
 		$row = Db::getInstance()->getRow('
 			SELECT `id_'.bqSQL($table).'` as id
 			FROM `'._DB_PREFIX_.bqSQL($table).'` e
-			WHERE e.`id_'.bqSQL($table).'` = '.(int)$id_entity
+			WHERE e.`id_'.bqSQL($table).'` = '.(int)$id_entity, false
 		);
 
 		return isset($row['id']);

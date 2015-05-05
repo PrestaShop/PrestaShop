@@ -1968,7 +1968,11 @@ class ToolsCore
 	{
 		$cache_id = 'Tools::simplexml_load_file'.$url;
 		if (!Cache::isStored($cache_id))
-			Cache::store($cache_id, @simplexml_load_string(Tools::file_get_contents($url), $class_name));
+		{
+			$result = @simplexml_load_string(Tools::file_get_contents($url), $class_name);
+			Cache::store($cache_id, $result);
+			return $result;
+		}
 		return Cache::retrieve($cache_id);
 	}
 

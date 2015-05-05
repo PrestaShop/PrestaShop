@@ -252,8 +252,13 @@ class ImageManagerCore
 		if ($rotate)
 			$src_image = imagerotate($src_image, $rotate, 0);
 
-		ImageManager::imagecopyresampled($dest_image, $src_image, (int)(($dst_width - $next_width) / 2), (int)(($dst_height - $next_height) / 2), 0, 0, $next_width, $next_height, $src_width, $src_height, $quality);
-		return (ImageManager::write($file_type, $dest_image, $dst_file));
+		if ($dst_width >= $src_width && $dst_height >= $src_height)
+			imagecopyresized($dest_image, $src_image, (int)(($dst_width - $next_width) / 2), (int)(($dst_height - $next_height) / 2), 0, 0, $next_width, $next_height, $src_width, $src_height);
+		else
+			ImageManager::imagecopyresampled($dest_image, $src_image, (int)(($dst_width - $next_width) / 2), (int)(($dst_height - $next_height) / 2), 0, 0, $next_width, $next_height, $src_width, $src_height, $quality);
+		$write_file = ImageManager::write($file_type, $dest_image, $dst_file);
+		@imagedestroy($src_image);
+		return $write_file;
 	}
 
 	public static function imagecopyresampled(&$dst_image, $src_image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h, $quality = 3)
@@ -442,6 +447,7 @@ class ImageManagerCore
 		imagecopyresampled($dest['ressource'], $src['ressource'], 0, 0, $dest['x'], $dest['y'], $dest['width'], $dest['height'], $dest['width'], $dest['height']);
 		imagecolortransparent($dest['ressource'], $white);
 		$return = ImageManager::write($file_type, $dest['ressource'], $dst_file);
+		@imagedestroy($src['ressource']);
 		return	$return;
 	}
 
@@ -496,6 +502,15 @@ class ImageManagerCore
 	 */
 	public static function write($type, $resource, $filename)
 	{
+		static $ps_png_quality = null;
+		static $ps_jpeg_quality = null;
+
+		if ($ps_png_quality === null)
+			$ps_png_quality = Configuration::get('PS_PNG_QUALITY');
+
+		if ($ps_jpeg_quality === null)
+		 	$ps_jpeg_quality = Configuration::get('PS_JPEG_QUALITY');
+
 		switch ($type)
 		{
 			case 'gif':
@@ -503,14 +518,14 @@ class ImageManagerCore
 			break;
 
 			case 'png':
-				$quality = (Configuration::get('PS_PNG_QUALITY') === false ? 7 : Configuration::get('PS_PNG_QUALITY'));
+				$quality = ($ps_png_quality === false ? 7 : $ps_png_quality);
 				$success = imagepng($resource, $filename, (int)$quality);
 			break;
 
 			case 'jpg':
 			case 'jpeg':
 			default:
-				$quality = (Configuration::get('PS_JPEG_QUALITY') === false ? 90 : Configuration::get('PS_JPEG_QUALITY'));
+				$quality = ($ps_jpeg_quality === false ? 90 : $ps_jpeg_quality);
 				imageinterlace($resource, 1); /// make it PROGRESSIVE
 				$success = imagejpeg($resource, $filename, (int)$quality);
 			break;
