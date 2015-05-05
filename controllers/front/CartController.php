@@ -124,7 +124,7 @@ class CartControllerCore extends FrontController
 			if ($total_quantity < $minimal_quantity)
 				$this->ajaxDie(Tools::jsonEncode(array(
 						'hasError' => true,
-						'errors' => array(sprintf(Tools::displayError('You must add %d minimum quantity', !Tools::getValue('ajax')), $product->minimal_quantity)),
+						'errors' => array(sprintf(Tools::displayError('You must add %d minimum quantity', !Tools::getValue('ajax')), $minimal_quantity)),
 				)));
 		}
 
