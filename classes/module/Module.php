@@ -150,7 +150,7 @@ abstract class ModuleCore
 
 	protected static $update_translations_after_install = true;
 
-	protected static $_in_import = false;
+	protected static $_batch_mode = false;
 	protected static $_defered_clearCache = array();
 	protected static $_defered_func_call = array();
 
@@ -185,22 +185,22 @@ abstract class ModuleCore
 	 *
 	 * @param bool $value
 	 */
-	public static function setInImport($value)
+	public static function setBatchMode($value)
 	{
-		self::$_in_import = (bool)$value;
+		self::$_batch_mode = (bool)$value;
 	}
 
 	/**
 	 * @return bool
 	 */
-	public static function getInImport()
+	public static function getBatchMode()
 	{
-		return self::$_in_import;
+		return self::$_batch_mode;
 	}
 
 	public static function processDeferedFuncCall()
 	{
-		self::setInImport(false);
+		self::setBatchMode(false);
 		foreach(self::$_defered_func_call as $func_call)
 			call_user_func_array($func_call[0], $func_call[1]);
 
@@ -213,7 +213,7 @@ abstract class ModuleCore
 	 */
 	public static function processDeferedClearCache()
 	{
-		self::setInImport(false);
+		self::setBatchMode(false);
 
 		foreach(self::$_defered_clearCache as $clearCache_array)
 			self::_deferedClearCache($clearCache_array[0], $clearCache_array[1], $clearCache_array[2]);
@@ -2300,7 +2300,7 @@ abstract class ModuleCore
 		if ($ps_smarty_clear_cache === null)
 			$ps_smarty_clear_cache = Configuration::get('PS_SMARTY_CLEAR_CACHE');
 
-		if (self::$_in_import)
+		if (self::$_batch_mode)
 		{
 			if ($ps_smarty_clear_cache == 'never')
 				return 0;
