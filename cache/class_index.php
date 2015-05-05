@@ -1391,27 +1391,21 @@
     'type' => 'class',
     'override' => false,
   ),
-  'CMSEntity' => 
+  'CMSRole' => 
   array (
-    'path' => 'Core/Business/CMS/Entities/CMSEntity.php',
+    'path' => '',
     'type' => 'class',
     'override' => false,
   ),
-  'CMSRepository' => 
+  'CMSRoleCore' => 
   array (
-    'path' => 'Core/Business/CMS/Repositories/CMSRepository.php',
-    'type' => 'class',
-    'override' => false,
-  ),
-  'CMSRoleEntity' => 
-  array (
-    'path' => 'Core/Business/CMS/Entities/CMSRoleEntity.php',
+    'path' => 'classes/CMSRole.php',
     'type' => 'class',
     'override' => false,
   ),
   'CMSRoleRepository' => 
   array (
-    'path' => 'Core/Business/CMS/Repositories/CMSRoleRepository.php',
+    'path' => 'Core/Business/CMS/CMSRoleRepository.php',
     'type' => 'class',
     'override' => false,
   ),

@@ -32,7 +32,7 @@ class EntityManagerTest extends IntegrationTestCase
 
 	public function test_save_dataMapper_style()
 	{
-		$repository = $this->entityManager->getRepository('CMSRoleEntity');
+		$repository = $this->entityManager->getRepository('CMSRole');
 
 		$entity = new CMSRole;
 

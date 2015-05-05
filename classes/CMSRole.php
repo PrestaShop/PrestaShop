@@ -25,10 +25,8 @@
 */
 
 
-class CMSRoleEntity extends Adapter_Entity
+class CMSRoleCore extends ObjectModel
 {
-	public static $repositoryClass = 'CMSRoleRepository';
-
 	/** @var string name */
 	public $name;
 	/** @var integer id_cms */
@@ -45,5 +43,10 @@ class CMSRoleEntity extends Adapter_Entity
 			'id_cms' 	=> 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'),
 		),
 	);
+
+	public static function getRepositoryClassName()
+	{
+		return 'CMSRoleRepository';
+	}
 
 }

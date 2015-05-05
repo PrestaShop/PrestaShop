@@ -12,6 +12,13 @@ class Adapter_EntityMetaDataRetriever
             // Legacy entity
             $metaData->setTableName($className::$definition['table']);
             $metaData->setPrimaryKeyFieldNames(array($className::$definition['primary']));
+        } else {
+            throw new Exception(
+                sprintf(
+                    'Cannot get metadata for entity `%s`.',
+                    $className
+                )
+            );
         }
 
         return $metaData;
