@@ -196,7 +196,7 @@
 				{if $page_name != 'index'}
 	 				<div class="functional-buttons clearfix">
 						{hook h='displayProductListFunctionalButtons' product=$product}
-						{hook h='displayProductComparison' product=$product}
+						{hook h='displayProductComparisonInProductList' product=$product}
 					</div>
 				{/if}
 			</div><!-- .product-container> -->

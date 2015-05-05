@@ -22,15 +22,15 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{capture name=path}{l s='Product Comparison'}{/capture}
-<h1 class="page-heading">{l s='Product Comparison'}</h1>
+{capture name=path}{l s='Product Comparison' mod='productscomparison'}{/capture}
+<h1 class="page-heading">{l s='Product Comparison' mod='productscomparison'}</h1>
 {if $hasProduct}
 	<div class="products_block table-responsive">
 		<table id="product_comparison" class="table table-bordered">
 			<tr>
 				<td class="td_empty compare_extra_information">
 					{$HOOK_COMPARE_EXTRA_INFORMATION}
-					<span>{l s='Features:'}</span>
+					<span>{l s='Features:' mod='productscomparison'}</span>
 				</td>
 				{assign var='taxes_behavior' value=false}
 				{if $use_taxes && (!$priceDisplay  || $priceDisplay == 2)}
@@ -40,7 +40,7 @@
 					{assign var='replace_id' value=$product->id|cat:'|'}
 					<td class="ajax_block_product comparison_infos product-block product-{$product->id}">
 						<div class="remove">
-							<a class="cmp_remove" href="{$link->getPageLink('products-comparison', true)|escape:'html':'UTF-8'}" title="{l s='Remove'}" data-id-product="{$product->id}">
+							<a class="cmp_remove" href="{$link->getModuleLink('productscomparison', 'compare', [], true)|escape:'html':'UTF-8'}" title="{l s='Remove' mod='productscomparison'}" data-id-product="{$product->id}">
 								<i class="icon-trash"></i>
 							</a>
 						</div>
@@ -56,13 +56,13 @@
 							</a>
 							{if isset($product->new) && $product->new == 1}
 								<a class="new-box" href="{$product->getLink()|escape:'html':'UTF-8'}">
-									<span class="new-label">{l s='New'}</span>
+									<span class="new-label">{l s='New' mod='productscomparison'}</span>
 								</a>
 							{/if}
 							{if isset($product->show_price) && $product->show_price && !isset($restricted_country_mode) && !$PS_CATALOG_MODE}
 								{if $product->on_sale}
 									<a class="sale-box" href="{$product->getLink()|escape:'html':'UTF-8'}">
-										<span class="sale-label">{l s='Sale!'}</span>
+										<span class="sale-label">{l s='Sale!' mod='productscomparison'}</span>
 									</a>
 								{/if}
 							{/if}
@@ -98,13 +98,13 @@
 								{if $product->on_sale}
 									{elseif $product->specificPrice AND $product->specificPrice.reduction}
 										<div class="product_discount">
-											<span class="reduced-price">{l s='Reduced price!'}</span>
+											<span class="reduced-price">{l s='Reduced price!' mod='productscomparison'}}</span>
 										</div>
 									{/if}
 									{if !empty($product->unity) && $product->unit_price_ratio > 0.000000}
 										{math equation="pprice / punit_price"  pprice=$product->getPrice($taxes_behavior)  punit_price=$product->unit_price_ratio assign=unit_price}
 										<span class="comparison_unit_price">
-											&nbsp;{convertPrice price=$unit_price} {l s='per %s' sprintf=$product->unity|escape:'html':'UTF-8'}
+											&nbsp;{convertPrice price=$unit_price} {l s='per %s' mod='productscomparison' sprintf=$product->unity|escape:'html':'UTF-8'}
 										</span>
 										{hook h="displayProductPriceBlock" product=$product type="unit_price"}
 									{else}
@@ -117,13 +117,13 @@
 						<div class="comparison_product_infos">
 							<p class="comparison_availability_statut">
 								{if !(($product->quantity <= 0 && !$product->available_later) OR ($product->quantity != 0 && !$product->available_now) OR !$product->available_for_order OR $PS_CATALOG_MODE)}
-									<span class="availability_label">{l s='Availability:'}</span>
+									<span class="availability_label">{l s='Availability:' mod='productscomparison'}</span>
 									<span class="availability_value"{if $product->quantity <= 0} class="warning-inline"{/if}>
 										{if $product->quantity <= 0}
 											{if $product->allow_oosp}
 												{$product->available_later|escape:'html':'UTF-8'}
 											{else}
-												{l s='This product is no longer in stock.'}
+												{l s='This product is no longer in stock.' mod='productscomparison'}
 											{/if}
 										{else}
 											{$product->available_now|escape:'html':'UTF-8'}
@@ -137,17 +137,17 @@
 								<div class="button-container">
 									{if (!$product->hasAttributes() OR (isset($add_prod_display) AND ($add_prod_display == 1))) AND $product->minimal_quantity == 1 AND $product->customizable != 2 AND !$PS_CATALOG_MODE}
 										{if ($product->quantity > 0 OR $product->allow_oosp)}
-											<a class="button ajax_add_to_cart_button btn btn-default" data-id-product="{$product->id}" href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$product->id}&amp;token={$static_token}&amp;add")|escape:'html':'UTF-8'}" title="{l s='Add to cart'}">
-												<span>{l s='Add to cart'}</span>
+											<a class="button ajax_add_to_cart_button btn btn-default" data-id-product="{$product->id}" href="{$link->getPageLink('cart', true, NULL, "qty=1&amp;id_product={$product->id}&amp;token={$static_token}&amp;add")|escape:'html':'UTF-8'}" title="{l s='Add to cart' mod='productscomparison'}">
+												<span>{l s='Add to cart' mod='productscomparison'}</span>
 											</a>
 										{else}
 											<span class="ajax_add_to_cart_button button btn btn-default disabled">
-												<span>{l s='Add to cart'}</span>
+												<span>{l s='Add to cart' mod='productscomparison'}</span>
 											</span>
 										{/if}
 									{/if}
-									<a class="button lnk_view btn btn-default" href="{$product->getLink()|escape:'html':'UTF-8'}" title="{l s='View'}">
-										<span>{l s='View'}</span>
+									<a class="button lnk_view btn btn-default" href="{$product->getLink()|escape:'html':'UTF-8'}" title="{l s='View' mod='productscomparison'}">
+										<span>{l s='View' mod='productscomparison'}</span>
 									</a>
 								</div>
 							</div>
@@ -177,19 +177,21 @@
 			{else}
 				<tr>
 					<td></td>
-					<td colspan="{$products|@count}" class="text-center">{l s='No features to compare'}</td>
+					<td colspan="{$products|@count}" class="text-center">{l s='No features to compare' mod='productscomparison'}</td>
 				</tr>
 			{/if}
 			{$HOOK_EXTRA_PRODUCT_COMPARISON}
 		</table>
 	</div> <!-- end products_block -->
 {else}
-	<p class="alert alert-warning">{l s='There are no products selected for comparison.'}</p>
+	<p class="alert alert-warning">{l s='There are no products selected for comparison.' mod='productscomparison'}</p>
 {/if}
 <ul class="footer_link">
 	<li>
 		<a class="button lnk_view btn btn-default" href="{$base_dir}">
-			<span><i class="icon-chevron-left left"></i>{l s='Continue Shopping'}</span>
+			<span><i class="icon-chevron-left left"></i>{l s='Continue Shopping' mod='productscomparison'}</span>
 		</a>
 	</li>
 </ul>
+
+{addJsDef compare_controller_link=$compare_controller_link}

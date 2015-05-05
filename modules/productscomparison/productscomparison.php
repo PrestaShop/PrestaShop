@@ -32,6 +32,8 @@ include(_PS_MODULE_DIR_ . 'productscomparison/models/CompareProduct.php');
 
 class ProductsComparison extends Module
 {
+	public $comparator_max_item = null;
+
 	public function __construct()
 	{
 		$this->name = 'productscomparison';
@@ -49,6 +51,8 @@ class ProductsComparison extends Module
 
 		$this->displayName = $this->l('Products Comparison');
 		$this->description = $this->l('Add products comparator');
+
+		$this->comparator_max_item = (int)Configuration::get('PS_COMPARATOR_MAX_ITEM');
 	}
 
 	public function install()
@@ -56,7 +60,7 @@ class ProductsComparison extends Module
 		if (!parent::install())
 			return false;
 
-		if (!$this->registerHook('displayProductComparison') || !$this->registerHook('displayCompareForm') || !$this->registerHook('actionFrontControllerSetMedia') || !$this->registerHook('actionAuthentication'))
+		if (!$this->registerHook('displayProductComparisonInProductList') || !$this->registerHook('displayCompareForm') || !$this->registerHook('actionFrontControllerSetMedia') || !$this->registerHook('actionAuthentication'))
 			return false;
 
 		Configuration::updateValue('PS_COMPARATOR_MAX_ITEM', (int)3);
@@ -89,41 +93,41 @@ class ProductsComparison extends Module
 
 	public function hookActionFrontControllerSetMedia()
 	{
-		if (Configuration::get('PS_COMPARATOR_MAX_ITEM') > 0)
-			$this->context->controller->addJS($this->_path.'js/products-comparison.js');
+		if (!(int)$this->comparator_max_item)
+			return false;
+
+		$this->context->smarty->assign('compare_controller_link', $this->context->link->getModuleLink($this->name, 'compare', array(), null, (int)$this->context->language->id));
+
+		$this->context->controller->addJS($this->_path.'js/products-comparison.js');
 	}
 
-	public function hookDisplayProductComparison($params)
+	public function hookDisplayProductComparisonInProductList($params)
 	{
-		$comparator_max_item = (int)Configuration::get('PS_COMPARATOR_MAX_ITEM');
-
-		if (!(int)$comparator_max_item || !(int)$params['product']['id_product'])
+		if (!(int)$this->comparator_max_item || !(int)$params['product']['id_product'])
 			return false;
 
 		$compared_products = array();
 		if (isset($this->context->cookie->id_compare))
 			$compared_products = CompareProduct::getCompareProducts($this->context->cookie->id_compare);
 
-		Media::addJsDef('comparator_max_item', $comparator_max_item);
+		Media::addJsDef('comparator_max_item', $this->comparator_max_item);
 		Media::addJsDef('comparedProductsIds', $compared_products);
 
 		Media::addJsDefL('min_item', $this->l('Please select at least one product'));
-		Media::addJsDefL('max_item', sprintf($this->l('You cannot add more than %d product(s) to the product comparison'), $comparator_max_item));
+		Media::addJsDefL('max_item', sprintf($this->l('You cannot add more than %d product(s) to the product comparison'), $this->comparator_max_item));
 
 		$this->context->smarty->assign(array(
 			'product' => $params['product'],
-			'comparator_max_item' => $comparator_max_item,
+			'comparator_max_item' => $this->comparator_max_item,
 			'compared_products'   => is_array($compared_products) ? $compared_products : array(),
 		));
 
-		return $this->display(__FILE__, 'displayProductComparison.tpl');
+		return $this->display(__FILE__, 'displayProductComparisonInProductList.tpl');
 	}
 
 	public function hookDisplayCompareForm($params)
 	{
-		$comparator_max_item = (int)Configuration::get('PS_COMPARATOR_MAX_ITEM');
-
-		if (!(int)$comparator_max_item)
+		if (!(int)$this->comparator_max_item)
 			return false;
 
 		if (isset($params['paginationId']))
@@ -134,7 +138,7 @@ class ProductsComparison extends Module
 			$compared_products = CompareProduct::getCompareProducts($this->context->cookie->id_compare);
 
 		$this->context->smarty->assign(array(
-			'comparator_max_item' => $comparator_max_item,
+			'comparator_max_item' => $this->comparator_max_item,
 			'compared_products'   => is_array($compared_products) ? $compared_products : array(),
 			'compareProducts'   => is_array($compared_products) ? $compared_products : array(),
 		));
