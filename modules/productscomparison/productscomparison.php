@@ -39,7 +39,7 @@ class ProductsComparison extends Module
 	public function __construct()
 	{
 		$this->name = 'productscomparison';
-		$this->tab = 'front_office_features';
+		$this->tab = 'smart_shopping';
 		$this->version = '1.0.0';
 		$this->author = 'PrestaShop';
 		$this->module_key = '';
@@ -61,7 +61,7 @@ class ProductsComparison extends Module
 	{
 		if (!file_exists(dirname(__FILE__).'/sql/'.self::INSTALL_SQL_FILE))
 			return (false);
-		else if (!$sql = file_get_contents(dirname(__FILE__).'/'.self::INSTALL_SQL_FILE))
+		else if (!$sql = file_get_contents(dirname(__FILE__).'/sql/'.self::INSTALL_SQL_FILE))
 			return (false);
 		$sql = str_replace(array('PREFIX_', 'ENGINE_TYPE'), array(_DB_PREFIX_, _MYSQL_ENGINE_), $sql);
 		$sql = preg_split("/;\s*[\r\n]+/", $sql);
