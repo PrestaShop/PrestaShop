@@ -32,6 +32,8 @@ include(_PS_MODULE_DIR_ . 'productscomparison/models/CompareProduct.php');
 
 class ProductsComparison extends Module
 {
+	const INSTALL_SQL_FILE = 'install.sql';
+
 	public $comparator_max_item = null;
 
 	public function __construct()
@@ -57,6 +59,17 @@ class ProductsComparison extends Module
 
 	public function install()
 	{
+		if (!file_exists(dirname(__FILE__).'/sql/'.self::INSTALL_SQL_FILE))
+			return (false);
+		else if (!$sql = file_get_contents(dirname(__FILE__).'/'.self::INSTALL_SQL_FILE))
+			return (false);
+		$sql = str_replace(array('PREFIX_', 'ENGINE_TYPE'), array(_DB_PREFIX_, _MYSQL_ENGINE_), $sql);
+		$sql = preg_split("/;\s*[\r\n]+/", $sql);
+		foreach ($sql as $query)
+			if ($query)
+				if (!Db::getInstance()->execute(trim($query)))
+					return false;
+
 		if (!parent::install())
 			return false;
 
@@ -66,6 +79,22 @@ class ProductsComparison extends Module
 		Configuration::updateValue('PS_COMPARATOR_MAX_ITEM', (int)3);
 
 		return true;
+	}
+	public function uninstall()
+	{
+		if (!$this->deleteTables() || !parent::uninstall())
+			return false;
+
+		return true;
+	}
+
+	private function deleteTables()
+	{
+		return Db::getInstance()->execute(
+			'DROP TABLE IF EXISTS
+			`'._DB_PREFIX_.'compare`,
+			`'._DB_PREFIX_.'compare_product`'
+		);
 	}
 
 	public function getContent()
