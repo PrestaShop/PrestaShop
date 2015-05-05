@@ -117,7 +117,7 @@
 					</h5>
 					{$reviewsHook = {hook h='displayProductListReviews' product=$product}}
 					{if $reviewsHook}
-						<div class="list-reviews">
+						<div class="hook-reviews">
 							{$reviewsHook}
 						</div>
 					{/if}
