@@ -30,7 +30,7 @@ class CMSRoleRepository extends Core_Foundation_Database_EntityRepository
 
 	public function findByName(array $names)
 	{
-		$safe_names = [];
+		$safe_names = array();
 
 		foreach ($names as $name) {
 			$safe_names[] = '\'' . $this->db->escape($name) . '\'';
