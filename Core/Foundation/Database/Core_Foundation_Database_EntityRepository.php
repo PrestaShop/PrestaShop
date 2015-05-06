@@ -77,12 +77,17 @@ class Core_Foundation_Database_EntityRepository
 		return new $entityClassName;
 	}
 
-	public function findOneByName($name)
+	/**
+	 * This function takes an array of database rows as input
+	 * and returns an hydrated entity if there is one row only.
+	 *
+	 * Null is returned when there are no rows, and an exception is thrown
+	 * if there are too many rows.
+	 *
+	 * @param array $rows Database rows
+	 */
+	private function hydrateOne(array $rows)
 	{
-		$rows = $this->db->select(
-			'SELECT * FROM `' . $this->getTableNameWithPrefix() . '` WHERE name = \'' . $this->db->escape($name) . '\''
-		);
-
 		if (count($rows) === 0) {
 			return null;
 		} else if (count($rows) > 1) {
@@ -95,20 +100,20 @@ class Core_Foundation_Database_EntityRepository
 		}
 	}
 
+	public function findOneByName($name)
+	{
+		$rows = $this->db->select(
+			'SELECT * FROM `' . $this->getTableNameWithPrefix() . '` WHERE name = \'' . $this->db->escape($name) . '\''
+		);
+
+		return $this->hydrateOne($rows);
+	}
+
 	public function find($id)
 	{
 		$sql = 'SELECT * FROM ' . $this->getTableNameWithPrefix() . ' WHERE ' . $this->getIdFieldName() . ' = ' . (int)$id;
 		$rows = $this->db->select($sql);
 
-		if (count($rows) === 0) {
-			return null;
-		} else if (count($rows) > 1) {
-			throw new Exception('Too many rows returned.');
-		} else {
-			$data = $rows[0];
-			$entity = $this->getNewEntity();
-			$entity->hydrate($data);
-			return $entity;
-		}
+		return $this->hydrateOne($rows);
 	}
 }
