@@ -38,6 +38,9 @@
 			<label class="control-label col-lg-3 required"> {l s='Module'}</label>
 			<div class="col-lg-9">
 				<select name="id_module" {if $edit_graft} disabled="disabled"{/if}>
+					{if !$hooks}
+						<option value="0">{l s='Select a module'}</option>
+					{/if}
 					{foreach $modules as $module}
 						<option value="{$module->id|intval}"{if $id_module == $module->id || (!$id_module && $show_modules == $module->id)} selected="selected"{/if}>{$module->displayName|stripslashes}</option>
 					{/foreach}
@@ -48,9 +51,13 @@
 			<label class="control-label col-lg-3 required"> {l s='Hook into'}</label>
 			<div class="col-lg-9">
 				<select name="id_hook" {if $edit_graft} disabled="disabled"{/if}>
-					{foreach $hooks as $hook}
-						<option value="{$hook['id_hook']}" {if $id_hook == $hook['id_hook']} selected="selected"{/if}>{$hook['name']}{if $hook['name'] != $hook['title']} ({$hook['title']}){/if}</option>
-					{/foreach}
+					{if !$hooks}
+						<option value="0">{l s='Select a module to see the possible hooks'}</option>
+					{else}
+						{foreach $hooks as $hook}
+							<option value="{$hook['id_hook']}" {if $id_hook == $hook['id_hook']} selected="selected"{/if}>{$hook['name']}{if $hook['name'] != $hook['title']} ({$hook['title']}){/if}</option>
+						{/foreach}
+					{/if}
 				</select>
 			</div>
 		</div>
@@ -91,7 +98,7 @@
 		var list = obj.closest('form').find('#em_list_' + shopID);
 		var values = obj.val().split(',');
 		var len = values.length;
-		
+
 		list.find('option').prop('selected', false);
 		for (var i = 0; i < len; i++)
 			list.find('option[value="' + $.trim(values[i]) + '"]').prop('selected', true);

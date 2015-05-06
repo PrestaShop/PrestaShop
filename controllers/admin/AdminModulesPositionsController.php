@@ -405,7 +405,12 @@ class AdminModulesPositionsControllerCore extends AdminController
 				$instances[$tmp_instance->displayName] = $tmp_instance;
 		ksort($instances);
 		$modules = $instances;
-		$hooks = Hook::getHooks(0);
+
+		$hooks = array();
+		if ((int)Tools::getValue('id_hook') > 0) {
+			$module_instance = Module::getInstanceById((int)Tools::getValue('id_module'));
+			$hooks = $module_instance->getPossibleHooksList();
+		}
 
 		$exception_list_diff = array();
 		foreach ($excepts_list as $shop_id => $file_list)
@@ -626,5 +631,20 @@ class AdminModulesPositionsControllerCore extends AdminController
 				$hasError = false;
 			die('{"hasError" : false, "errors" : ""}');
 		}
+	}
+
+	/**
+	 * Return a json array containing the possible hooks for a module.
+	 *
+	 * @return null
+	 */
+	public function ajaxProcessGetPossibleHookingListForModule()
+	{
+		$module_id = (int)Tools::getValue('module_id');
+		if ($module_id == 0)
+			die('{"hasError" : true, "errors" : ["Wrong module ID."]}');
+
+		$module_instance = Module::getInstanceById($module_id);
+		die(json_encode($module_instance->getPossibleHooksList()));
 	}
 }

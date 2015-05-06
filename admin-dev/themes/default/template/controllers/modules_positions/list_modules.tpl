@@ -38,7 +38,7 @@
 <div class="row">
 	<div class="col-lg-9">
 		<div class="panel">
-			<form class="well form-horizontal">
+			<form class="well form-horizontal" id="position_filer">
 				<div class="row">
 					<div class="form-group col-lg-5 col-md-12">
 						<label class="control-label col-lg-3" style="text-align: left">{l s='Show'}</label>
