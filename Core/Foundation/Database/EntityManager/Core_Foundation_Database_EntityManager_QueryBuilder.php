@@ -34,7 +34,7 @@ class Core_Foundation_Database_EntityManager_QueryBuilder
             if (is_scalar($value)) {
                 $parts[] = $key . ' = ' . $this->quote($value);
             } else {
-                $list = [];
+                $list = array();
                 foreach ($value as $item) {
                     $list[] = $this->quote($item);
                 }

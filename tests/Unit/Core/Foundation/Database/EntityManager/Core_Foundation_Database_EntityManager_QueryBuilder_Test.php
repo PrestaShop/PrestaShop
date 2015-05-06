@@ -52,7 +52,7 @@ class Core_Foundation_Database_EntityManager_QueryBuilder_Test extends UnitTestC
     public function test_buildWhereConditions_arrayValue()
     {
         $this->assertEquals("stuff IN ('escaped', escaped, escaped)", $this->queryBuilder->buildWhereConditions('AND', array(
-            'stuff' => ['a string', 123, 456]
+            'stuff' => array('a string', 123, 456452)
         )));
     }
 }
