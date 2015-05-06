@@ -46,11 +46,15 @@ class Core_Foundation_Database_EntityManager
 
 	public function getRepository($className)
 	{
-        if (property_exists($className, 'repositoryClass')) {
-            $repositoryClass = $className::$repositoryClass;
+        if (is_callable(array($className, 'getRepositoryClassName'))) {
+            $repositoryClass = $className::getRepositoryClassName();
         } else {
-            $repositoryClass = 'Core_Foundation_Database_EntityRepository';
+            $repositoryClass = null;
         }
+
+		if (!$repositoryClass) {
+			$repositoryClass = 'Core_Foundation_Database_EntityRepository';
+		}
 
         $repository = new $repositoryClass(
 			$this,

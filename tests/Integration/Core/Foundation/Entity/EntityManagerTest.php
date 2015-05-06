@@ -23,6 +23,14 @@ class EntityManagerTest extends IntegrationTestCase
 		$this->entityManager = $this->container->make('Core_Foundation_Database_EntityManager');
 	}
 
+	public function test_explicitly_defined_repository_is_found_by_entitymanager()
+	{
+		$this->assertInstanceOf(
+			'CMSRoleRepository',
+			$this->entityManager->getRepository('CMSRole')
+		);
+	}
+
 	public function test_find_implicitly_defined_repository()
 	{
 		$repository = $this->entityManager->getRepository('Product');
