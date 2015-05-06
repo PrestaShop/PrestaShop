@@ -30,6 +30,7 @@ class Core_Foundation_Database_EntityRepository
 	protected $db;
 	protected $tablesPrefix;
 	protected $entityMetaData;
+	protected $queryBuilder;
 
 	public function __construct(
 		Core_Foundation_Database_EntityManager $entityManager,
@@ -41,6 +42,7 @@ class Core_Foundation_Database_EntityRepository
 		$this->db = $this->entityManager->getDatabase();
 		$this->tablesPrefix = $tablesPrefix;
 		$this->entityMetaData = $entityMetaData;
+		$this->queryBuilder = new Core_Foundation_Database_EntityManager_QueryBuilder($this->db);
 	}
 
 	protected function getIdFieldName()
@@ -111,21 +113,34 @@ class Core_Foundation_Database_EntityRepository
 		return $entities;
 	}
 
+	private function doFind($one, array $cumulativeConditions)
+	{
+		$whereClause = $this->queryBuilder->buildWhereConditions('AND', $cumulativeConditions);
+
+		$sql = 'SELECT * FROM ' . $this->getTableNameWithPrefix() . ' WHERE ' . $whereClause;
+
+		$rows = $this->db->select($sql);
+
+		if ($one) {
+			return $this->hydrateOne($rows);
+		} else {
+			return $this->hydrateMany($rows);
+		}
+	}
+
 	public function findOneByName($name)
 	{
-		$rows = $this->db->select(
-			'SELECT * FROM `' . $this->getTableNameWithPrefix() . '` WHERE name = \'' . $this->db->escape($name) . '\''
-		);
-
-		return $this->hydrateOne($rows);
+		return $this->doFind(true, array(
+			'name' => $name
+		));
 	}
 
 	public function findOne($id)
 	{
-		$sql = 'SELECT * FROM ' . $this->getTableNameWithPrefix() . ' WHERE ' . $this->getIdFieldName() . ' = ' . (int)$id;
-		$rows = $this->db->select($sql);
+		$conditions = array();
+		$conditions[$this->getIdFieldName()] = $id;
 
-		return $this->hydrateOne($rows);
+		return $this->doFind(true, $conditions);
 	}
 
 	public function findAll()

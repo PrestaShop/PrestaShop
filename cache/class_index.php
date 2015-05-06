@@ -1793,6 +1793,12 @@
     'type' => 'class',
     'override' => false,
   ),
+  'Core_Foundation_Database_EntityManager_QueryBuilder' => 
+  array (
+    'path' => 'Core/Foundation/Database/EntityManager/Core_Foundation_Database_EntityManager_QueryBuilder.php',
+    'type' => 'class',
+    'override' => false,
+  ),
   'Core_Foundation_Database_EntityMetaData' => 
   array (
     'path' => 'Core/Foundation/Database/Core_Foundation_Database_EntityMetaData.php',
