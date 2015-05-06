@@ -11,4 +11,6 @@ interface Core_Foundation_Database_Entity
     public static function getRepositoryClassName();
 
     public function save();
+
+    public function hydrate(array $keyValueData);
 }
