@@ -636,8 +636,7 @@ class CartRuleCore extends ObjectModel
 		if (!$nb_products)
 			return (!$display_error) ? false : Tools::displayError('Cart is empty');
 
-		if (!$display_error)
-			return true;
+		return (!$display_error) ? true : false;
 	}
 
 	protected function checkProductRestrictions(Context $context, $return_products = false, $display_error = true, $already_in_cart = false)
