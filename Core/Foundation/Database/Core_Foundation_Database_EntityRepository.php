@@ -45,6 +45,33 @@ class Core_Foundation_Database_EntityRepository
 		$this->queryBuilder = new Core_Foundation_Database_EntityManager_QueryBuilder($this->db);
 	}
 
+	public function __call($method, $arguments)
+	{
+		if (0 === strpos($method, 'findOneBy')) {
+			$one = true;
+			$by  = substr($method, 9);
+		} else if (0 === strpos($method, 'findBy')) {
+			$one = false;
+			$by  = substr($method, 6);
+		} else {
+			throw new Exception(sprintf('Undefind method %s.', $method));
+		}
+
+		if (count($arguments) !== 1) {
+			throw new Exception(sprintf('Method %s takes exactly one argument.', $method));
+		}
+
+		if (!$by) {
+			$where = $arguments[0];
+		} else {
+			$where = array(
+				$by => $arguments[0]
+			);
+		}
+
+		return $this->doFind($one, $where);
+	}
+
 	protected function getIdFieldName()
 	{
 		$primary = $this->entityMetaData->getPrimaryKeyFieldnames();
@@ -126,13 +153,6 @@ class Core_Foundation_Database_EntityRepository
 		} else {
 			return $this->hydrateMany($rows);
 		}
-	}
-
-	public function findOneByName($name)
-	{
-		return $this->doFind(true, array(
-			'name' => $name
-		));
 	}
 
 	public function findOne($id)
