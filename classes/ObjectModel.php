@@ -24,7 +24,7 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-abstract class ObjectModelCore
+abstract class ObjectModelCore implements Core_Foundation_Database_Entity
 {
 	/**
 	 * List of field types
@@ -162,6 +162,11 @@ abstract class ObjectModelCore
 	 * @var bool If true, objects are cached in memory.
 	 */
 	protected static $cache_objects = true;
+
+	public static function getRepositoryClassName()
+	{
+		return null;
+	}
 
 	/**
 	 * Returns object validation rules (fields validity)

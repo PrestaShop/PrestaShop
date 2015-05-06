@@ -23,9 +23,27 @@
     'type' => 'class',
     'override' => false,
   ),
+  'Adapter_Database' => 
+  array (
+    'path' => 'Adapter/Adapter_Database.php',
+    'type' => 'class',
+    'override' => false,
+  ),
+  'Adapter_Entity' => 
+  array (
+    'path' => 'Adapter/Adapter_Entity.php',
+    'type' => 'class',
+    'override' => false,
+  ),
   'Adapter_EntityMapper' => 
   array (
     'path' => 'Adapter/Adapter_EntityMapper.php',
+    'type' => 'class',
+    'override' => false,
+  ),
+  'Adapter_EntityMetaDataRetriever' => 
+  array (
+    'path' => 'Adapter/Adapter_EntityMetaDataRetriever.php',
     'type' => 'class',
     'override' => false,
   ),
@@ -295,7 +313,7 @@
   ),
   'AdminController' => 
   array (
-    'path' => 'override/classes/controller/AdminController.php',
+    'path' => '',
     'type' => 'class',
     'override' => false,
   ),
@@ -535,7 +553,7 @@
   ),
   'AdminLoginController' => 
   array (
-    'path' => 'override/controllers/admin/AdminLoginController.php',
+    'path' => '',
     'type' => 'class',
     'override' => false,
   ),
@@ -1325,12 +1343,6 @@
     'type' => 'class',
     'override' => false,
   ),
-  'BaseObject' => 
-  array (
-    'path' => 'Core/Foundation/Object/BaseObject.php',
-    'type' => 'abstract class',
-    'override' => false,
-  ),
   'BestSalesController' => 
   array (
     'path' => '',
@@ -1379,27 +1391,21 @@
     'type' => 'class',
     'override' => false,
   ),
-  'CMSEntity' => 
+  'CMSRole' => 
   array (
-    'path' => 'Core/Business/CMS/Entities/CMSEntity.php',
+    'path' => '',
     'type' => 'class',
     'override' => false,
   ),
-  'CMSRepository' => 
+  'CMSRoleCore' => 
   array (
-    'path' => 'Core/Business/CMS/Repositories/CMSRepository.php',
-    'type' => 'class',
-    'override' => false,
-  ),
-  'CMSRoleEntity' => 
-  array (
-    'path' => 'Core/Business/CMS/Entities/CMSRoleEntity.php',
+    'path' => 'classes/CMSRole.php',
     'type' => 'class',
     'override' => false,
   ),
   'CMSRoleRepository' => 
   array (
-    'path' => 'Core/Business/CMS/Repositories/CMSRoleRepository.php',
+    'path' => 'Core/Business/CMS/CMSRoleRepository.php',
     'type' => 'class',
     'override' => false,
   ),
@@ -1769,6 +1775,42 @@
     'type' => 'interface',
     'override' => false,
   ),
+  'Core_Foundation_Database_Database' => 
+  array (
+    'path' => 'Core/Foundation/Database/Core_Foundation_Database_Database.php',
+    'type' => 'interface',
+    'override' => false,
+  ),
+  'Core_Foundation_Database_Entity' => 
+  array (
+    'path' => 'Core/Foundation/Database/Core_Foundation_Database_Entity.php',
+    'type' => 'interface',
+    'override' => false,
+  ),
+  'Core_Foundation_Database_EntityManager' => 
+  array (
+    'path' => 'Core/Foundation/Database/Core_Foundation_Database_EntityManager.php',
+    'type' => 'class',
+    'override' => false,
+  ),
+  'Core_Foundation_Database_EntityManager_QueryBuilder' => 
+  array (
+    'path' => 'Core/Foundation/Database/EntityManager/Core_Foundation_Database_EntityManager_QueryBuilder.php',
+    'type' => 'class',
+    'override' => false,
+  ),
+  'Core_Foundation_Database_EntityMetaData' => 
+  array (
+    'path' => 'Core/Foundation/Database/Core_Foundation_Database_EntityMetaData.php',
+    'type' => 'class',
+    'override' => false,
+  ),
+  'Core_Foundation_Database_EntityRepository' => 
+  array (
+    'path' => 'Core/Foundation/Database/Core_Foundation_Database_EntityRepository.php',
+    'type' => 'class',
+    'override' => false,
+  ),
   'Core_Foundation_IoC_Container' => 
   array (
     'path' => 'Core/Foundation/IoC/Core_Foundation_IoC_Container.php',
@@ -2012,12 +2054,6 @@
   'EmployeeCore' => 
   array (
     'path' => 'classes/Employee.php',
-    'type' => 'class',
-    'override' => false,
-  ),
-  'Entity' => 
-  array (
-    'path' => 'Core/Foundation/Entity/Entity.php',
     'type' => 'class',
     'override' => false,
   ),
@@ -3356,12 +3392,6 @@
   'ReferrerCore' => 
   array (
     'path' => 'classes/Referrer.php',
-    'type' => 'class',
-    'override' => false,
-  ),
-  'RepositoryManager' => 
-  array (
-    'path' => 'Core/Foundation/Repository/RepositoryManager.php',
     'type' => 'class',
     'override' => false,
   ),

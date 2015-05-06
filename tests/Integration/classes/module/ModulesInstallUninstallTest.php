@@ -38,6 +38,7 @@ class ModulesInstallUninstallTest extends IntegrationTestCase
 
     /**
      * @dataProvider listModulesOnDisk
+     * @group slow
      */
     public function testInstallationAndUnInstallation($moduleName)
     {
