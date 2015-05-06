@@ -34,7 +34,7 @@ class EntityManagerTest extends IntegrationTestCase
 	public function test_find_implicitly_defined_repository()
 	{
 		$repository = $this->entityManager->getRepository('Product');
-		$product = $repository->find(1);
+		$product = $repository->findOne(1);
 		$this->assertInstanceOf('Product', $product);
 		$this->assertEquals(1, $product->id);
 	}

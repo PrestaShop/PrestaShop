@@ -120,7 +120,7 @@ class Core_Foundation_Database_EntityRepository
 		return $this->hydrateOne($rows);
 	}
 
-	public function find($id)
+	public function findOne($id)
 	{
 		$sql = 'SELECT * FROM ' . $this->getTableNameWithPrefix() . ' WHERE ' . $this->getIdFieldName() . ' = ' . (int)$id;
 		$rows = $this->db->select($sql);
