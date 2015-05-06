@@ -73,11 +73,8 @@ class CMSRoleRepository extends RepositoryManager
 	 * @throws PrestaShopDatabaseException
 	 * @throws PrestaShopExceptionCore
 	 */
-	public function getCMSRolesWhereNamesIn($names_array)
+	public function getCMSRolesWhereNamesIn(array $names_array)
 	{
-		if (!is_array($names_array))
-			throw new PrestaShopExceptionCore('Expected array given '.gettype($names_array));
-
 		$names_exploded = implode('","', $names_array);
 
 		$sql = '
@@ -118,7 +115,7 @@ class CMSRoleRepository extends RepositoryManager
 		return Db::getInstance()->getRow($sql);
 	}
 
-	public function getCMSIdsWhereCMSRoleIdIn($cms_roles_ids_list)
+	public function getCMSIdsWhereCMSRoleIdIn(array $cms_roles_ids_list)
 	{
 		$sql = '
 		SELECT `id_cms`
