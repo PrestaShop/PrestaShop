@@ -40,7 +40,6 @@ class CMSRepository extends RepositoryManager
 	 */
 	public function getCMSPagesList()
 	{
-		// @TODO: Works as a "proxy" ATM but should be integrated directly here in the future
 		return CMS::listCms();
 	}
 
@@ -52,7 +51,6 @@ class CMSRepository extends RepositoryManager
 	 */
 	public function getCMSById($cms_id, $id_language)
 	{
-		// @TODO: To be refactored
 		return new CMS($cms_id, $id_language);
 	}
 
