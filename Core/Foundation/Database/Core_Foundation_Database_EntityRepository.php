@@ -100,6 +100,17 @@ class Core_Foundation_Database_EntityRepository
 		}
 	}
 
+	protected function hydrateMany(array $rows)
+	{
+		$entities = array();
+		foreach ($rows as $row) {
+			$entity = $this->getNewEntity();
+			$entity->hydrate($row);
+			$entities[] = $entities;
+		}
+		return $entities;
+	}
+
 	public function findOneByName($name)
 	{
 		$rows = $this->db->select(
@@ -115,5 +126,11 @@ class Core_Foundation_Database_EntityRepository
 		$rows = $this->db->select($sql);
 
 		return $this->hydrateOne($rows);
+	}
+
+	public function findAll()
+	{
+		$sql = 'SELECT * FROM ' . $this->getTableNameWithPrefix();
+		return $this->hydrateMany($this->db->select($sql));
 	}
 }
