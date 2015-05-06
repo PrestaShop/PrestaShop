@@ -43,7 +43,7 @@ class Core_Foundation_Database_EntityRepository
 		$this->entityMetaData = $entityMetaData;
 	}
 
-	private function getIdFieldName()
+	protected function getIdFieldName()
 	{
 		$primary = $this->entityMetaData->getPrimaryKeyFieldnames();
 
@@ -66,7 +66,7 @@ class Core_Foundation_Database_EntityRepository
 		return $primary[0];
 	}
 
-	private function getTableNameWithPrefix()
+	protected function getTableNameWithPrefix()
 	{
 		return $this->tablesPrefix . $this->entityMetaData->getTableName();
 	}
@@ -86,7 +86,7 @@ class Core_Foundation_Database_EntityRepository
 	 *
 	 * @param array $rows Database rows
 	 */
-	private function hydrateOne(array $rows)
+	protected function hydrateOne(array $rows)
 	{
 		if (count($rows) === 0) {
 			return null;
