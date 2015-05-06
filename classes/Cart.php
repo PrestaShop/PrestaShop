@@ -1704,7 +1704,7 @@ class CartCore extends ObjectModel
 		if (isset($cache[(int)$this->id.'_'.(int)$this->id_address_delivery]) && $cache[(int)$this->id.'_'.(int)$this->id_address_delivery] !== false && !$flush)
 			return $cache[(int)$this->id.'_'.(int)$this->id_address_delivery];
 
-		$product_list = $this->getProducts();
+		$product_list = $this->getProducts($flush);
 		// Step 1 : Get product informations (warehouse_list and carrier_list), count warehouse
 		// Determine the best warehouse to determine the packages
 		// For that we count the number of time we can use a warehouse for a specific delivery address
@@ -2007,7 +2007,7 @@ class CartCore extends ObjectModel
 		$delivery_option_list = array();
 		$carriers_price = array();
 		$carrier_collection = array();
-		$package_list = $this->getPackageList();
+		$package_list = $this->getPackageList($flush);
 
 		// Foreach addresses
 		foreach ($package_list as $id_address => $packages)
