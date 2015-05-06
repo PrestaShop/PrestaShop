@@ -23,15 +23,6 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 
-<script type="text/javascript">
-	var newLabel = '{l s='New label'}';
-	var choose_language = '{l s='Choose language:'}';
-	var required = '{l s='Required'}';
-	var customizationUploadableFileNumber = '{$product->uploadable_files}';
-	var customizationTextFieldNumber = '{$product->text_fields}';
-	var uploadableFileLabel = 0;
-	var textFieldLabel = 0;
-</script>
 <div id="product-virtualproduct" class="panel product-tab">
 	<input type="hidden" name="submitted_tabs[]" value="VirtualProduct" />
 	<input type="hidden" id="virtual_product_filename" name="virtual_product_filename" value="{$product->productDownload->filename}" />
