@@ -167,7 +167,7 @@
 					{if $order->hasInvoice()}
 						<a id="desc-order-partial_refund" class="btn btn-default" href="#refundForm">
 							<i class="icon-exchange"></i>
-							{l s='Partial refund'}
+							{l s='Refund'}
 						</a>
 					{/if}
 				</div>
