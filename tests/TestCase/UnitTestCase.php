@@ -7,7 +7,7 @@ use Context;
 use Db;
 use PHPUnit_Framework_TestCase;
 
-use Core_Foundation_IoC_ContainerBuilder;
+use Core_Business_ContainerBuilder;
 use Core_Foundation_IoC_Container;
 use Adapter_ServiceLocator;
 
@@ -93,7 +93,7 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
 		 */
 		Configuration::clearConfigurationCacheForTesting();
 
-		$container_builder = new Core_Foundation_IoC_ContainerBuilder;
+		$container_builder = new Core_Business_ContainerBuilder;
         $container = $container_builder->build();
         Adapter_ServiceLocator::setServiceContainerInstance($container);
 	}

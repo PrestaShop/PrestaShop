@@ -1,6 +1,6 @@
 <?php
 
-class Core_Foundation_IoC_ContainerBuilder
+class Core_Business_ContainerBuilder
 {
     public function build()
     {
