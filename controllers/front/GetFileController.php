@@ -292,6 +292,8 @@ class GetFileControllerCore extends FrontController
 	/**
 	 * Display an error message with js
 	 * and redirect using js function
+	 *
+	 * @param string $msg
 	 */
 	protected function displayCustomError($msg)
 	{

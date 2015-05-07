@@ -532,11 +532,13 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 		);
 	}
 
-
 	/**
-	* check if the tax rule could be added in the database
-	* @param TaxRule $tr
-	*/
+	 * Check if the tax rule could be added in the database
+	 *
+	 * @param TaxRule $tr
+	 *
+	 * @return array
+	 */
 	protected function validateTaxRule(TaxRule $tr)
 	{
 		// @TODO: check if the rule already exists
