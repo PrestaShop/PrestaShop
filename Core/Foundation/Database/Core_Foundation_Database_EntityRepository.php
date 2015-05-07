@@ -67,6 +67,7 @@ class Core_Foundation_Database_EntityRepository
 			$where = array(
 				$by => $arguments[0]
 			);
+
 		}
 
 		return $this->doFind($one, $where);
@@ -100,7 +101,7 @@ class Core_Foundation_Database_EntityRepository
 		return $this->tablesPrefix . $this->entityMetaData->getTableName();
 	}
 
-	private function getNewEntity()
+	public function getNewEntity()
 	{
 		$entityClassName = $this->entityMetaData->getEntityClassName();
 		return new $entityClassName;
@@ -123,7 +124,7 @@ class Core_Foundation_Database_EntityRepository
 			throw new Exception('Too many rows returned.');
 		} else {
 			$data = $rows[0];
-			$entity = $this->getNewEntity();
+			$entity = $this-> getNewEntity();
 			$entity->hydrate($data);
 			return $entity;
 		}
@@ -135,7 +136,7 @@ class Core_Foundation_Database_EntityRepository
 		foreach ($rows as $row) {
 			$entity = $this->getNewEntity();
 			$entity->hydrate($row);
-			$entities[] = $entities;
+			$entities[] = $entity;
 		}
 		return $entities;
 	}
