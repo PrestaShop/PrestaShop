@@ -46,7 +46,7 @@ class CMSRoleCore extends ObjectModel
 
 	public static function getRepositoryClassName()
 	{
-		return 'CMSRoleRepository';
+		return 'Core_Business_CMS_CMSRoleRepository';
 	}
 
 }

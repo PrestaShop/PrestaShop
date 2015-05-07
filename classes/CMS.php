@@ -244,4 +244,10 @@ class CMSCore extends ObjectModel
 
 		return Db::getInstance()->getRow($sql);
 	}
+
+	/* Method required for new PrestaShop Core */
+	public static function getRepositoryClassName()
+	{
+		return 'Core_Business_CMS_CMSRepository';
+	}
 }
