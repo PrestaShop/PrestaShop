@@ -112,7 +112,7 @@ class CartControllerCore extends FrontController
 		if (count($customization_product))
 		{
 			$product = new Product((int)$this->id_product);
-			if ($this->id_product_attribute>0)
+			if ($this->id_product_attribute > 0)
 		                $minimal_quantity = (int)Attribute::getAttributeMinimalQty($this->id_product_attribute);
 	        	else
 		                $minimal_quantity = (int)$product->minimal_quantity;
