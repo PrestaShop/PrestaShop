@@ -107,20 +107,24 @@ class CartControllerCore extends FrontController
 	protected function processDeleteProductInCart()
 	{
 		$customization_product = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'customization`
-		WHERE `id_product` = '.(int)$this->id_product.' AND `id_customization` != '.(int)$this->customization_id);
+		WHERE `id_cart` = '.(int)$this->context->cart->id.' AND `id_product` = '.(int)$this->id_product.' AND `id_customization` != '.(int)$this->customization_id);
 
 		if (count($customization_product))
 		{
 			$product = new Product((int)$this->id_product);
-
+			if ($this->id_product_attribute > 0)
+		                $minimal_quantity = (int)Attribute::getAttributeMinimalQty($this->id_product_attribute);
+	        	else
+		                $minimal_quantity = (int)$product->minimal_quantity;
+            
 			$total_quantity = 0;
 			foreach ($customization_product as $custom)
 				$total_quantity += $custom['quantity'];
 
-			if ($total_quantity < $product->minimal_quantity)
+			if ($total_quantity < $minimal_quantity)
 				$this->ajaxDie(Tools::jsonEncode(array(
 						'hasError' => true,
-						'errors' => array(sprintf(Tools::displayError('You must add %d minimum quantity', !Tools::getValue('ajax')), $product->minimal_quantity)),
+						'errors' => array(sprintf(Tools::displayError('You must add %d minimum quantity', !Tools::getValue('ajax')), $minimal_quantity)),
 				)));
 		}
 
