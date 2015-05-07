@@ -206,7 +206,7 @@
                                 <td class="first_item">
 									<span style="float:left;">
 										<img
-                                                src="{$link->getImageLink($product.link_rewrite, $product.cover, 'small')|escape:'html':'UTF-8'}"
+                                                src="{$link->getImageLink($product.link_rewrite, $product.cover, 'small_default')|escape:'html':'UTF-8'}"
                                                 alt="{$product.name|escape:'html':'UTF-8'}"/>
 									</span>
 									<span style="float:left;">
