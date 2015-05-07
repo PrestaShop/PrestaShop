@@ -74,7 +74,10 @@
   color: $input-color;
   text-align: center;
   background-color: $input-group-addon-bg;
-  border: 1px solid $input-group-addon-border-color;
+  border-top: 1px solid $input-group-addon-border-color;
+  border-left: 1px solid $input-group-addon-border-color;
+  border-bottom: 1px solid $input-group-addon-border-color;
+  border-right: 1px solid $input-group-addon-border-color;
   border-radius: $border-radius-base;
 
   // Sizing

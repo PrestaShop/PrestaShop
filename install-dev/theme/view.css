@@ -158,35 +158,39 @@ sup.required {color: red;}
 
 
 /* form */
-input.button {
+.button {
 	padding:0 30px;
 	height:31px;
 	line-height:31px;
-	font-weight:bold;
 	color:#fff;
-	text-shadow:0 1px 0 #0d7903;
-	background:#039701 url(img/bt.png) repeat-x 0 0;
-	border:1px solid #ccc;
-	-moz-border-radius: 5px;
-	-webkit-border-radius:5px;
-	border-radius: 5px;
-	box-shadow:0 1px #666;
+    border: 1px solid transparent;
+	background-color: #00aff0;
+	-moz-border-radius: 3px;
+	-webkit-border-radius:3px;
+	border-radius: 3px;
 }
-	input.button:hover {
-		background:#039701 url(img/bt-hover.png) repeat-x 0 0;
-		cursor:pointer;
+
+.button:hover {
+		background-color: #008abd;
+		cursor: pointer;
 }
-	input#btBack {
+
+#btBack {
 		color:#666;
-		text-shadow:0 1px 0 #fff;
-		background-image:url(img/bt_off.png);
+        background-color: #fff;
+        border: 1px solid #666
 }
-		input#btBack:hover {background-image:url(img/bt_off_hover.png);}
+
+#btBack:hover {
+    color:#666;
+    border: 1px solid #666
+}
 
 input.button.disabled {
-	color:#666;
-	text-shadow:0 1px 0 #fff;
-	background:#ccc url(img/bt-dsbl.png) repeat-x 0 0;
+    color:#666;
+    background-color: #e4e4e4;
+    cursor: inherit;
+    border: 1px solid #666
 }
 
 input.text {
@@ -230,7 +234,7 @@ div.field {
 		float: right;
 }
 
-#uploadedImage {border:1px solid #ccc;}	
+#uploadedImage {border:1px solid #ccc;}
 
 #dbPart #formCheckSQL .waitBlock {
 	padding:20px;
@@ -359,23 +363,23 @@ ol#tabs{
 	}
 		ol#tabs li.selected{
 			font-weight: bold;
-			color:#000;
+			color:#25B9D7;
 			background : url(img/bg-li-tabs.png) no-repeat 1px 15px;
 		}
 		ol#tabs li.finished{
-			color:#78a531;
+			color:#666;
+            text-decoration: line-through;
 			background : url(img/bg-li-tabs-finished.png) no-repeat 0 12px;
 		}
 			ol#tabs li.finished a{
-				color:#78a531;
-				text-decoration: none;
+				color:#666;
+				text-decoration: line-through;
 			}
 		ol#tabs li.configuring{
-			color:#78a531;
-			background : url(img/pict_info.png) no-repeat 0 12px;
+			color:#25B9D7;
 		}
 			ol#tabs li.configuring a{
-				color:#D41958;
+				color:#25B9D7;
 				text-decoration: none;
 			}
 
@@ -417,7 +421,6 @@ ul#footer a:link, ul#footer a:active, ul#footer a:visited {
 		padding:15px 25px 10px 38px;
 		height:28px;/* 53 */
 		width:927px;/* 990 */
-		background:transparent url(img/bg-contentTitle.png) repeat-x 0 0;
 }
 		.sheet .contentTitle .stepList {
 			position:absolute;
@@ -484,7 +487,7 @@ ul#optional {
 		border-top:1px solid #fff;
 		border-bottom:1px solid #ccc;
 }
-	ul#required li.ok, 
+	ul#required li.ok,
 	ul#optional li.ok{
 		display:none
 		/*background:#f8f8f8 url(img/pict_ok.png) no-repeat 99% 10px*/
@@ -582,12 +585,10 @@ color: #385E0B;
 	margin:34px 20px 22px 0;
 	padding:10px;
 	width:292px;
-	background:#fff url(img/bg_blockInfoEnd.png) repeat-x 0 0;
 	border:1px solid #ccc;
-	-moz-border-radius: 5px;
-	-webkit-border-radius:5px;
-	border-radius: 5px;
-	box-shadow:0 1px #d9d9d9;
+	-moz-border-radius: 3px;
+	-webkit-border-radius:3px;
+	border-radius: 3px;
     cursor: pointer;
 }
 .blockInfoEnd.last {margin-right:0;}
@@ -603,24 +604,22 @@ color: #385E0B;
 	.blockInfoEnd a.BO,
 	.blockInfoEnd a.FO {
 		float:right;
-		padding:0 0 0 10px;
+		padding:0 10px 0 10px;
 		height:33px;
 		line-height:33px;
 		color:#fff;
-		background:#039701 url(img/bg_bt_blockInfoEnd.png) no-repeat 0 0;
-		border:1px solid #019700;
-		-moz-border-radius: 5px;
-		-webkit-border-radius:5px;
-		border-radius: 5px;
+		background-color:#00aff0;
+		border:1px solid transparent;
+		-moz-border-radius: 3px;
+		-webkit-border-radius:3px;
+		border-radius: 3px;
 }
 		.blockInfoEnd a.BO span ,
 		.blockInfoEnd a.FO span {
 			display:inline-block;
-			padding:0 32px 0 0;
 			height:33px;
 			line-height:33px;
 			color:#fff;
-			background:#039701 url(img/bg_bt_blockInfoEnd.png) no-repeat 100% 0;
 		}
 
 #prestastore,
@@ -687,7 +686,7 @@ ul#required_update li.fail,
 ul#optional_update li.fail {
 	background:#f8f8f8 url(img/pict_error.png) no-repeat 100% 8px;
 }
-ul#required_update li.ok, 
+ul#required_update li.ok,
 ul#optional_update li.ok {
 	background:#f8f8f8 url(img/pict_ok.png) no-repeat 100% 10px;
 }
@@ -767,8 +766,9 @@ ul#optional_update li.ok {
 	margin-bottom: 5px;
 }
 #progress_bar ol.process_list li.success {
-	background: url("img/pict_ok.png") no-repeat scroll 0 3px transparent;
-	color: #78A531;
+	background: url("img/bg-li-tabs-finished.png") no-repeat scroll 0 3px transparent;
+	color: #666;
+    text-decoration: line-through;
 	padding-left: 18px;
 }
 #progress_bar ol.process_list li.fail {

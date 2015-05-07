@@ -1,8 +1,8 @@
 //Avatar
+
 .employee_avatar_small
 	@extend .avatar-sm
 	vertical-align: middle
-	@include margin-right(4px)
 	img
 		padding: 0
 		border: none
@@ -13,31 +13,16 @@
 	margin: 10px auto!important
 	text-align: center
 
-@mixin avatar($size)
-	height: $size
-	width: $size
-	display: inline-block
-	text-align: center
-	background-color: #eee
-	overflow: hidden
-	@include border-radius($size)
-	img
-		width: 100%
-		height: 100%
-	i
-		font-size: $size/3*2
-		line-height: $size
-
 .avatar-xs
-	@include avatar(16px)
+	@include avatar(16px, 16px)
 .avatar-sm
-	@include avatar(32px)
+	@include avatar(32px, 32px)
 .avatar-md
-	@include avatar(48px)
+	@include avatar(48px, 32px)
 .avatar-lg
-	@include avatar(80px)
+	@include avatar(80px, 80px)
 .avatar-xl
-	@include avatar(128px)
+	@include avatar(128px, 128px)
 
 
 #employee-thumbnail
@@ -76,7 +61,7 @@
 		@include left(1px)
 		@include box-shadow(white 0 0 0 3px inset)
 
-			
+
 
 .message-item-initial
 	h2

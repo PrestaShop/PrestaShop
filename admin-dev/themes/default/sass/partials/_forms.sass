@@ -47,7 +47,6 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 		.caret
 			border-top-color: white!important
 	&.btn-default
-		@include box-shadow(darken($btn-default-bg,10%) 0 -2px 0 inset)
 		i
 			color: $gray
 		&:hover
@@ -58,20 +57,18 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 			i
 				color: white
 	&.btn-primary
+		i
+			color: white
 		background-color: $brand-primary
 		color: white
 		text-transform: uppercase
-		border-color: darken($brand-primary,10%)
-		@include box-shadow(darken($brand-primary,10%) 0 -2px 0 inset)
 		&:hover
 			background-color: darken($brand-primary,10%)
-			border-color: darken($brand-primary,20%)
 			@include box-shadow(none)
 	&.btn-default[disabled]
 		border-color: $gray-light
 		color: $gray-light
 		background-color: lighten($gray-light,35%)
-		@include box-shadow(lighten($gray-light,20%) 0 -2px 0 inset)
 
 .dropdown-menu
 	@include text-align(left)
@@ -168,3 +165,6 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 		.input-group
 			input[type="text"],input[type="search"],input[type="password"], textarea, select
 				margin: 0
+
+input[type="text"],input[type="search"],input[type="password"],input[type="email"],input[type="tel"]
+	font-family: $font-family-sans-serif, $icon-font-family !important

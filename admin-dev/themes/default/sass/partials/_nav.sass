@@ -8,7 +8,7 @@ $min-height: 850px
 	width: $widthSidebarNav
 	height: 100%
 	z-index: 500
-	background-color: darken($main-color,15%)
+	background-color: $main-color
 	@include left(0)
 	ul.menu
 		margin: 0
@@ -18,24 +18,40 @@ $min-height: 850px
 			padding: 14px 7px
 			height: 55px
 			position: relative
-			background-color: darken($main-color,5%)
-			border-bottom: darken($main-color,10%) solid 1px
-			@include box-shadow(rgba(black,0.1) 0 -3px 0 0 inset)
+			background-color: $main-color
 			#bo_query
+				@include border-radius(0, 55px, 55px, 0)
 				color: $main-color
-				background-color: lighten($main-color,60%)
+				background-color: white
+				border: 1px solid transparent !important
+				@include box-shadow(none)
+				@include transition(none)
+			.input-group-btn
+				@include border-radius(55px, 0, 0, 55px)
+				.btn
+					@include border-radius(55px, 0, 0, 55px)
+					@include box-shadow(none)
+				.btn-default
+					@include box-shadow(none)
+					border: 1px solid transparent !important
 			.form-group.focus-search
 				position: absolute
 				width: 400px
 				height: 55px
 				z-index: 900
 				top: 0
-				background-color: darken($main-color,5%)
-				border-bottom: darken($main-color,10%) solid 1px
+				background-color: $main-color
 				@include left(0)
 				@include padding(14px, 13px, 0, 7px)
 				#bo_query
 					width: 100%
+				.input-group-btn
+					@include border-radius(55px, 0, 0, 55px)
+					.btn
+						@include border-radius(55px, 0, 0, 55px)
+						@include box-shadow(none)
+					.btn-default
+						@include box-shadow(none)
 			.clear_search
 				position: absolute
 				top: 6px
@@ -47,21 +63,22 @@ $min-height: 850px
 			position: relative
 			ul.submenu
 				display: none
-				padding: 4px
-				background-color: darken($main-color,8%)
+				padding: 0px
+				background-color: #363A41
 				li
 					list-style: none !important
 					a
-						color: mix($main-color, contrast-color($main-color, black, white), 30%)
+						color: $sidebar-menu-color
 						display: block
-						padding: 3px 8px
+						padding: 4px 8px
+						@media (min-height: $min-height)
+							padding: 8px 8px
+							min-height: 34px
 						background-color: $main-color
-						border-bottom: darken($main-color,10%) solid 1px
 						&:hover
-							color: contrast-color($main-color, black, white)
+							color: $sidebar-menu-hover-color
 							text-decoration: none
-							background-color: darken($main-color,10%)
-							@include box-shadow($brand-primary -4px 0 0 0 inset)
+							background-color: $sidebar-menu-bg-hover-color
 			a
 				white-space: nowrap
 				text-overflow: ellipsis
@@ -71,30 +88,43 @@ $min-height: 850px
 				position: relative
 				padding: 0 .35em
 				height: $menu-item-size
-				border-bottom: darken($main-color,10%) solid 1px
 				background-color: $main-color
-				color: mix($main-color, contrast-color($main-color, black, white), 30%)
+				color: $sidebar-menu-color
 				line-height: $menu-item-size
-				text-transform: uppercase
 				text-decoration: none
 				@include transition-property(background-color)
 				@include transition-duration(0.2s)
 				@include transition-timing-function(ease-out)
 				i
-					width: 42px
-					font-size: $icon-size-base*2
 					vertical-align: middle
-					color: mix($main-color, contrast-color($main-color, black, white), 60%)
+					margin-top: -5px
+					color: $sidebar-menu-color
 					@include transition-property(color)
 					@include transition-duration(0.4s)
 					@include transition-timing-function(ease-out)
+				span
+					padding-left: 10px
 			&.hover, &:hover:not(.hover)
 				> a.title
-					background-color: darken($main-color,8%)
-					color: contrast-color($main-color, black, white)
+					color: $sidebar-menu-hover-color
+					background-color: $sidebar-menu-bg-hover-color
 					i
-						color: white
+						color: $sidebar-menu-hover-color
 			&.hover
+				&:before
+					content: ''
+					width: 0
+					height: 0
+					border-style: solid
+					border-width: 8px 10px 8px 0
+					border-color: transparent $main-color transparent transparent
+					background-color: transparent
+					margin-top: 6px
+					@media (min-height: $min-height)
+						margin-top: 10px
+					position: absolute
+					z-index: 1
+					right: 0
 				ul.submenu
 					position: absolute
 					display: block
@@ -105,36 +135,40 @@ $min-height: 850px
 			&:last-child > a.title
 				border-bottom: none
 			&.active
+				&:before
+					content: ''
+					width: 0
+					height: 0
+					border-style: solid
+					border-width: 8px 10px 8px 0
+					border-color: transparent #ffffff transparent transparent
+					background-color: transparent
+					margin-top: 6px
+					@media (min-height: $min-height)
+						margin-top: 10px
+					position: absolute
+					z-index: 1
+					right: 0
 				a, li.active a
-					background-color: lighten($main-color,10%)
-					color: contrast-color($main-color, black, white)
+					color: $sidebar-menu-active-color
 					i
-						color: white
+						color: $sidebar-menu-active-color
 				@media (min-height: $min-height)
 					ul.submenu
 						body:not(.page-sidebar-closed) &
 							display: block
-							background-color: white
-							@include border-right(1px solid darken($bg-content-color,10%))
+							margin-left: 35px
+							@include border-left(1px solid $sidebar-menu-bg-hover-color)
 							a
-								background-color: white
-								color: $brand-primary
-								border-bottom: solid 1px mix(white, $brand-primary, 85%)
+								color: $sidebar-menu-color
+								padding: 8px 8px
 								&:hover
-									color: $brand-primary
-									border-bottom: solid 1px mix(white, $brand-primary, 85%)
-									background-color: mix(white, $brand-primary, 85%)
+									color: $sidebar-menu-hover-color
+									background-color: $sidebar-menu-bg-hover-color
 									text-decoration: none
-									@include box-shadow(white 0 -1px)
-							li:last-child a
-								border-bottom: solid 1px white
 							li.active a
-								color: contrast-color($brand-primary, white, #333)
-								background-color: $brand-primary
+								color: $sidebar-menu-active-color
 								position: relative
-								top: -1px
-								border-top: solid 1px white
-								border-bottom: solid 1px $brand-primary
 
 	@media (max-width: $screen-phone)
 		display: none
@@ -154,8 +188,8 @@ $min-height: 850px
 			@include padding(1px, 1px, 0, 1px)
 			li a
 				padding: 0 6px
-				height: 26px
-				line-height: 26px
+				height: 27px
+				line-height: 27px
 		#nav-sidebar ul.menu li.maintab.active ul.submenu
 			display: none
 		#nav-sidebar ul.menu li.maintab.active.hover ul.submenu
@@ -439,7 +473,7 @@ $min-height: 850px
 	text-align: center
 	line-height: 55px
 	display: block
-	color: $main-color
+	color: #BEBEBE
 
 .mobile-nav
 	#content

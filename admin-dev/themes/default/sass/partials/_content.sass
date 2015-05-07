@@ -1,7 +1,7 @@
 html, body
 	min-height: 100%
 	height: 100%
-	
+
 body
 	font: 400 #{$font-size-base}/#{$line-height-base} $font-family-base
 	color: $text-color
@@ -16,7 +16,7 @@ body
 	@include float(left)
 
 #content.bootstrap
-	padding: 80px 10px 0
+	padding: 120px 10px 0
 	@include transition-property(margin)
 	@include transition-duration(0.4s)
 	@include transition-timing-function(ease-out)
@@ -27,7 +27,6 @@ body
 		border: solid 1px darken($bg-content-color,10%)
 		background-color: white
 		@include border-radius(5px)
-		@include box-shadow(rgba(black,0.10) 0 2px 0, white 0 0 0 3px inset)
 		&.panel-highlighted
 			border-color: $brand-primary!important
 			@include box-shadow(rgba($brand-primary,.15) 0 0 0 6px inset !important)
@@ -65,7 +64,7 @@ body
 		.badge
 			color: $gray
 			font-size: 1.1em
-			line-height: 1.2em			
+			line-height: 1.2em
 			padding: 0 10px
 			font-weight: 700
 			border: solid 1px lighten($gray-light,25%)
@@ -107,9 +106,9 @@ body
 	.panel-danger .panel-heading
 		background-color: $badge-notif-color!important
 	form .alert
-		clear: both		
+		clear: both
 	@media (max-width: $screen-phone)
-		padding: 80px 5px 0
+		padding: 120px 5px 0
 		@include margin-left(0!important)
 	.help-block
 		font-style: italic
@@ -144,7 +143,7 @@ body
 			color: $brand-success
 			border: solid 2px $brand-success
 
-//modal 
+//modal
 body.display-modal
 	#content, #main
 		margin: 0
@@ -195,16 +194,14 @@ body.display-modal
 	padding: 0
 	float: right
 	width: 30%
-	margin-top: 120px
+	margin-top: 155px
 	margin-bottom: 50px
 	background-color: white
 	box-sizing: border-box
 	overflow-x: hidden
 	@media (max-width: $screen-lg)
-		display: none	
+		display: none
 
 .page-topbar
 	#help-container
 		margin-top: 140px
-
-

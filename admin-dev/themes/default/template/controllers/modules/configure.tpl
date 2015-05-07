@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{extends file="page_header_toolbar.tpl"} 
+{extends file="page_header_toolbar.tpl"}
 
 
 {block name=pageTitle}
@@ -41,7 +41,6 @@
 	{if $breadcrumbs2.container.name != ''}
 		<li class="breadcrumb-current">
 			{if $breadcrumbs2.container.href != ''}<a href="{$breadcrumbs2.container.href|escape}">{/if}
-			{if $breadcrumbs2.container.icon != ''}<i class="{$breadcrumbs2.container.icon|escape}"></i>{/if}
 			{$breadcrumbs2.container.name|escape}
 			{if $breadcrumbs2.container.href != ''}</a>{/if}
 		</li>
