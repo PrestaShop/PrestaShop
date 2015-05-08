@@ -2194,8 +2194,8 @@ class CartCore extends ObjectModel
 		foreach ($cart_rules as $cart_rule)
 		{
 			$total_price = $cart_rule['minimum_amount_tax'] ? $total_products_wt : $total_products;
-			$total_price += $cart_rule['minimum_amount_tax'] && $cart_rule['minimum_amount_shipping'] ? $real_best_price : 0;
-			$total_price += !$cart_rule['minimum_amount_tax'] && $cart_rule['minimum_amount_shipping'] ? $real_best_price_wt : 0;
+			$total_price += isset($real_best_price) && $cart_rule['minimum_amount_tax'] && $cart_rule['minimum_amount_shipping'] ? $real_best_price : 0;
+			$total_price += isset($real_best_price_wt) && !$cart_rule['minimum_amount_tax'] && $cart_rule['minimum_amount_shipping'] ? $real_best_price_wt : 0;
 			if ($cart_rule['free_shipping'] && $cart_rule['carrier_restriction'] && $cart_rule['minimum_amount'] <= $total_price)
 			{
 				$cr = new CartRule((int)$cart_rule['id_cart_rule']);
