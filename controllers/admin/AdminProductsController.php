@@ -2549,7 +2549,7 @@ class AdminProductsControllerCore extends AdminController
 				foreach ($manufacturers as $manufacturer)
 				{
 		            $tmp = array("optionValue" => $manufacturer['id_manufacturer'], "optionDisplay" => htmlspecialchars(trim($manufacturer['name'])));
-		            $jsonArray[] = json_encode($tmp);
+		            $jsonArray[] = Tools::jsonEncode($tmp);
 				}
 			die('['.implode(',', $jsonArray).']');
 	}
