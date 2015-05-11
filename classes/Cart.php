@@ -2196,7 +2196,9 @@ class CartCore extends ObjectModel
 			$total_price = $cart_rule['minimum_amount_tax'] ? $total_products_wt : $total_products;
 			$total_price += $cart_rule['minimum_amount_tax'] && $cart_rule['minimum_amount_shipping'] ? $real_best_price : 0;
 			$total_price += !$cart_rule['minimum_amount_tax'] && $cart_rule['minimum_amount_shipping'] ? $real_best_price_wt : 0;
-			if ($cart_rule['free_shipping'] && $cart_rule['carrier_restriction'] && $cart_rule['minimum_amount'] <= $total_price)
+			if ($cart_rule['free_shipping'] && $cart_rule['carrier_restriction']
+				&& in_array($cart_rule['id_cart_rule'], $cart_rules_in_cart)
+				&& $cart_rule['minimum_amount'] <= $total_price)
 			{
 				$cr = new CartRule((int)$cart_rule['id_cart_rule']);
 				if (Validate::isLoadedObject($cr) &&
