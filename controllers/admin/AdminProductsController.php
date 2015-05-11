@@ -2547,7 +2547,10 @@ class AdminProductsControllerCore extends AdminController
 		$jsonArray = array();
 			if ($manufacturers)
 				foreach ($manufacturers as $manufacturer)
-					$jsonArray[] = '{"optionValue": "'.(int)$manufacturer['id_manufacturer'].'", "optionDisplay": "'.htmlspecialchars(trim($manufacturer['name'])).'"}';
+				{
+		            $tmp = array("optionValue" => $manufacturer['id_manufacturer'], "optionDisplay" => htmlspecialchars(trim($manufacturer['name'])));
+		            $jsonArray[] = Tools::jsonEncode($tmp);
+				}
 			die('['.implode(',', $jsonArray).']');
 	}
 
