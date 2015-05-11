@@ -657,7 +657,7 @@ class CartCore extends ObjectModel
 					break;
 			}
 
-			$row['price_wt'] = $tax_calculator->addTaxes($row['price']);
+			$row['price_wt'] = Tools::ps_round($tax_calculator->addTaxes($row['price']), 6);
 
 			$ecotax_tax_amount = Tools::ps_round($row['ecotax'], 2);
 			if ($apply_eco_tax)
