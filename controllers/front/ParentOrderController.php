@@ -272,7 +272,10 @@ class ParentOrderControllerCore extends FrontController
 
 	/**
 	 * Validate get/post param delivery option
+	 *
 	 * @param array $delivery_option
+	 *
+	 * @return bool
 	 */
 	protected function validateDeliveryOption($delivery_option)
 	{

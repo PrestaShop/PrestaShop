@@ -265,7 +265,9 @@ class AdminTranslationsControllerCore extends AdminController
 	 * Read the Post var and write the translation file.
 	 * This method overwrites the old translation file.
 	 *
-	 * @param bool $override_file : set true if this file is a override
+	 * @param bool $override_file Set true if this file is a override
+	 *
+	 * @throws PrestaShopException
 	 */
 	protected function writeTranslationFile($override_file = false)
 	{
@@ -611,6 +613,8 @@ class AdminTranslationsControllerCore extends AdminController
 	 *
 	 * @param array $iso_code
 	 * @param array $files
+	 *
+	 * @return array
 	 */
 	public static function addNewTabs($iso_code, $files)
 	{
@@ -791,15 +795,17 @@ class AdminTranslationsControllerCore extends AdminController
 	}
 
 	/**
-	* Filter the translation files contained in a .gzip pack
-	* and return only the ones that we want.
-	*
-	* Right now the function only needs to check that
-	* the modules for which we want to add translations
-	* are present on the shop (installed or not).
-	*
-	* $list is the output of Archive_Tar::listContent()
-	*/
+	 * Filter the translation files contained in a .gzip pack
+	 * and return only the ones that we want.
+	 *
+	 * Right now the function only needs to check that
+	 * the modules for which we want to add translations
+	 * are present on the shop (installed or not).
+	 *
+	 * @param array $list Is the output of Archive_Tar::listContent()
+	 *
+	 * @return array
+	 */
 	public static function filterTranslationFiles($list)
 	{
 		$kept = array();
@@ -819,11 +825,15 @@ class AdminTranslationsControllerCore extends AdminController
 	}
 
 	/**
-	* Turn the list returned by
-	* AdminTranslationsController::filterTranslationFiles()
-	* into a list of paths that can be passed to
-	* Archive_Tar::extractList()
-	*/
+	 * Turn the list returned by
+	 * AdminTranslationsController::filterTranslationFiles()
+	 * into a list of paths that can be passed to
+	 * Archive_Tar::extractList()
+	 *
+	 * @param array $list
+	 *
+	 * @return array
+	 */
 	public static function filesListToPaths($list)
 	{
 		$paths = array();
@@ -889,12 +899,13 @@ class AdminTranslationsControllerCore extends AdminController
 	 * This method check each file (tpl or php file), get its sentences to translate,
 	 * compare with posted values and write in iso code translation file.
 	 *
-	 * @param string $file_name
-	 * @param array $files
-	 * @param string $theme_name
-	 * @param string $module_name
-	 * @param string|boolean $dir
-	 * @return void
+	 * @param string      $file_name
+	 * @param array       $files
+	 * @param string      $theme_name
+	 * @param string      $module_name
+	 * @param string|bool $dir
+	 *
+	 * @throws PrestaShopException
 	 */
 	protected function findAndWriteTranslationsIntoFile($file_name, $files, $theme_name, $module_name, $dir = false)
 	{
@@ -1002,12 +1013,10 @@ class AdminTranslationsControllerCore extends AdminController
 	 * compare with global $_MODULES array and fill AdminTranslations::modules_translations array
 	 * With key as English sentences and values as their iso code translations.
 	 *
-	 * @param array $files
-	 * @param string $theme_name
-	 * @param string $module_name
-	 * @param string|boolean $dir
-	 * @param string $iso_code
-	 * @return void
+	 * @param array       $files
+	 * @param string      $theme_name
+	 * @param string      $module_name
+	 * @param string|bool $dir
 	 */
 	protected function findAndFillTranslations($files, $theme_name, $module_name, $dir = false)
 	{
@@ -2010,7 +2019,8 @@ class AdminTranslationsControllerCore extends AdminController
 	/**
 	 * Check if directory and file exist and return an list of modules
 	 *
-	 * @return array : list of modules
+	 * @return array List of modules
+	 * @throws PrestaShopException
 	 */
 	public function getListModules()
 	{
@@ -2267,14 +2277,16 @@ class AdminTranslationsControllerCore extends AdminController
 	/**
 	 * Display mails in html format.
 	 * This was create for factorize the html displaying
-	 *
 	 * @since 1.4.0.14
-	 * @param array $mails
-	 * @param array $all_subject_mail
-	 * @param Language $obj_lang
-	 * @param string $id_html use for set html id attribute for the block
-	 * @param string $title Set the title for the block
-	 * @param string|boolean $name_for_module is not false define add a name for disntiguish mails module
+	 *
+	 * @param array       $mails
+	 * @param array       $all_subject_mail
+	 * @param Language    $obj_lang
+	 * @param string      $id_html          Use for set html id attribute for the block
+	 * @param string      $title            Set the title for the block
+	 * @param string|bool $name_for_module  Is not false define add a name for distinguish mails module
+	 *
+	 * @return string
 	 */
 	protected function displayMailContent($mails, $all_subject_mail, $obj_lang, $id_html, $title, $name_for_module = false)
 	{
@@ -2389,13 +2401,15 @@ class AdminTranslationsControllerCore extends AdminController
 	}
 	/**
 	 * Just build the html structure for display txt mails
-	 *
 	 * @since 1.4.0.14
-	 * @param array $content with english and language needed contents
-	 * @param string $lang iso code of the needed language
-	 * @param string $mail_name name of the file to translate (same for txt and html files)
-	 * @param string $group_name group name allow to distinguish each block of mail.
-	 * @param string|boolean $name_for_module is not false define add a name for disntiguish mails module
+	 *
+	 * @param array       $content         With english and language needed contents
+	 * @param string      $lang            ISO code of the needed language
+	 * @param string      $mail_name       Name of the file to translate (same for txt and html files)
+	 * @param string      $group_name      Group name allow to distinguish each block of mail.
+	 * @param string|bool $name_for_module Is not false define add a name for distinguish mails module
+	 *
+	 * @return string
 	 */
 	protected function displayMailBlockTxt($content, $lang, $mail_name, $group_name, $name_for_module = false)
 	{
@@ -2405,16 +2419,19 @@ class AdminTranslationsControllerCore extends AdminController
 					</div>
 				</div>';
 	}
+
 	/**
 	 * Just build the html structure for display html mails.
 	 *
 	 * @since 1.4.0.14
-	 * @param array $content with english and language needed contents
-	 * @param string $lang iso code of the needed language
-	 * @param string $url for the html page and displaying an outline
-	 * @param string $mail_name name of the file to translate (same for txt and html files)
-	 * @param string $group_name group name allow to distinguish each block of mail.
-	 * @param string|boolean $name_for_module is not false define add a name for disntiguish mails module
+	 * @param array       $content         With english and language needed contents
+	 * @param string      $lang            ISO code of the needed language
+	 * @param string      $url for         The html page and displaying an outline
+	 * @param string      $mail_name       Name of the file to translate (same for txt and html files)
+	 * @param string      $group_name      Group name allow to distinguish each block of mail.
+	 * @param string|bool $name_for_module Is not false define add a name for distinguish mails module
+	 *
+	 * @return string
 	 */
 	protected function displayMailBlockHtml($content, $lang, $url, $mail_name, $group_name, $name_for_module = false)
 	{
@@ -2467,7 +2484,9 @@ class AdminTranslationsControllerCore extends AdminController
 	/**
 	 * Check in each module if contains mails folder.
 	 *
-	 * @return array of module which has mails
+	 * @param bool $with_module_name
+	 *
+	 * @return array Array of modules which have mails
 	 */
 	public function getModulesHasMails($with_module_name = false)
 	{
@@ -2497,10 +2516,12 @@ class AdminTranslationsControllerCore extends AdminController
 		return $arr_modules;
 	}
 
-	 /**
+	/**
 	 * Check in each module if contains pdf folder.
 	 *
-	 * @return array of module which has pdf
+	 * @param bool $classes
+	 *
+	 * @return array Array of modules which have pdf
 	 */
 	public function getModulesHasPDF($classes = false)
 	{
@@ -2549,6 +2570,10 @@ class AdminTranslationsControllerCore extends AdminController
 
 	/**
 	 * This method generate the form for mails translations
+	 *
+	 * @param bool $no_display
+	 *
+	 * @return array|string
 	 */
 	public function initFormMails($no_display = false)
 	{
@@ -2806,11 +2831,13 @@ class AdminTranslationsControllerCore extends AdminController
 	 * This method get translation in each translations file.
 	 * The file depend on $lang param.
 	 *
-	 * @param array $modules list of modules
-	 * @param string $root_dir path where it get each modules
-	 * @param string $lang iso code of choosen language to translate
-	 * @param bool $is_default set it if modules are located in root/prestashop/modules folder
-	 * 				  This allow to distinguish overrided prestashop theme and original module
+	 * @param array       $modules    List of modules
+	 * @param string|null $root_dir   path where it get each modules
+	 * @param string      $lang       ISO code of chosen language to translate
+	 * @param bool        $is_default Set it if modules are located in root/prestashop/modules folder
+	 *                                This allow to distinguish overridden prestashop theme and original module
+	 *
+	 * @return array
 	 */
 	protected function getAllModuleFiles($modules, $root_dir = null, $lang, $is_default = false)
 	{
@@ -2891,15 +2918,18 @@ class AdminTranslationsControllerCore extends AdminController
 		}
 	}
 
-	/** Parse PDF class
-	 *
-	 * @param string $file_path file to parse
-	 * @param string $file_type type of file
-	 * @param array $langArray contains expression in the chosen language
-	 * @param string $tab name to use with the md5 key
-	 * @param array $tabs_array
-	 * @return array containing all datas needed for building the translation form
+	/**
+	 * Parse PDF class
 	 * @since 1.4.5.0
+	 *
+	 * @param string $file_path     File to parse
+	 * @param string $file_type     Type of file
+	 * @param array  $lang_array    Contains expression in the chosen language
+	 * @param string $tab name      To use with the md5 key
+	 * @param array  $tabs_array
+	 * @param array  $count_missing
+	 *
+	 * @return array Array          Containing all datas needed for building the translation form
 	 */
 	protected function parsePdfClass($file_path, $file_type, $lang_array, $tab, $tabs_array, &$count_missing)
 	{
@@ -3016,7 +3046,13 @@ class AdminTranslationsControllerCore extends AdminController
 	}
 
 	/**
-	 * recursively list files in directory $dir
+	 * Recursively list files in directory $dir
+	 *
+	 * @param string $dir
+	 * @param array  $list
+	 * @param string $file_ext
+	 *
+	 * @return array
 	 */
 	public function listFiles($dir, $list = array(), $file_ext = 'tpl')
 	{
@@ -3037,6 +3073,13 @@ class AdminTranslationsControllerCore extends AdminController
 		return $list;
 	}
 
+	/**
+	 * Checks if theme exists
+	 *
+	 * @param string $theme
+	 *
+	 * @return bool
+	 */
 	protected function theme_exists($theme)
 	{
 		if (!is_array($this->themes))

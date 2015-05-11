@@ -1761,7 +1761,10 @@ class AdminProductsControllerCore extends AdminController
 	/**
 	 * Add or update a product image
 	 *
-	 * @param object $product Product object to add image
+	 * @param Product $product Product object to add image
+	 * @param string  $method
+	 *
+	 * @return int|false
 	 */
 	public function addProductImage($product, $method = 'auto')
 	{
@@ -1792,11 +1795,16 @@ class AdminProductsControllerCore extends AdminController
 		@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.$product->id.'_'.$this->context->shop->id.'.jpg');
 		return ((isset($id_image) && is_int($id_image) && $id_image) ? $id_image : false);
 	}
+
 	/**
 	 * Copy a product image
 	 *
-	 * @param int $id_product Product Id for product image filename
-	 * @param int $id_image Image Id for product image filename
+	 * @param int    $id_product Product Id for product image filename
+	 * @param int    $id_image   Image Id for product image filename
+	 * @param string $method
+	 *
+	 * @return void|false
+	 * @throws PrestaShopException
 	 */
 	public function copyImage($id_product, $id_image, $method = 'auto')
 	{
@@ -2263,7 +2271,9 @@ class AdminProductsControllerCore extends AdminController
 	/**
 	 * Update product download
 	 *
-	 * @param object $product Product
+	 * @param Product $product
+	 * @param int     $edit
+	 *
 	 * @return bool
 	 */
 	public function updateDownloadProduct($product, $edit = 0)
@@ -2716,6 +2726,7 @@ class AdminProductsControllerCore extends AdminController
 	 * renderForm contains all necessary initialization needed for all tabs
 	 *
 	 * @return string|void
+	 * @throws PrestaShopException
 	 */
 	public function renderForm()
 	{
@@ -4905,9 +4916,12 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['input_namepack_items'] = $input_namepack_items;
 	}
 
-
 	/**
-	 *  AdminProducts display hook
+	 * AdminProducts display hook
+	 *
+	 * @param $obj
+	 *
+	 * @throws PrestaShopException
 	 */
 	public function initFormModules($obj)
 	{
