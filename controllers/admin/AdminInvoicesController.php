@@ -39,26 +39,26 @@ class AdminInvoicesControllerCore extends AdminController
 				'fields' =>	array(
 					'PS_INVOICE' => array(
 						'title' => $this->l('Enable invoices'),
-						'desc' => $this->l('If enabled, your customers will be able to receive an invoice for their purchase(s).'),
+						'desc' => $this->l('If enabled, your customers will receive an invoice for their purchase(s).'),
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
 					'PS_INVOICE_TAXES_BREAKDOWN' => array(
-						'title' => $this->l('Enable the breakdown of taxes on the invoice'),
-						'desc' => $this->l('Show a breakdown of taxes by tax rate on the invoice when there are several taxes combined.'),
+						'title' => $this->l('Enable tax breakdown'),
+						'desc' => $this->l('Show a summary of tax rates when there are several taxes.'),
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
 					'PS_PDF_IMG_INVOICE' => array(
-						'title' => $this->l('Enable product image on Invoice'),
-						'hint' => $this->l('Adds an image before product name on Invoice'),
+						'title' => $this->l('Enable product image'),
+						'hint' => $this->l('Adds an image before product name on the invoice'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
 					'PS_INVOICE_PREFIX' => array(
 						'title' => $this->l('Invoice prefix'),
-						'desc' => $this->l('Prefix used for invoice name (e.g. IN00001).'),
+						'desc' => $this->l('Prefix used for invoice name (e.g. #IN00001).'),
 						'size' => 6,
 						'type' => 'textLang'
 					),
@@ -70,14 +70,14 @@ class AdminInvoicesControllerCore extends AdminController
 						'cast' => 'intval'
 					),
 					'PS_INVOICE_LEGAL_FREE_TEXT' => array(
-						'title' => $this->l('Free text'),
-						'desc' => $this->l('This text will appear underneath the tax summary table.'),
+						'title' => $this->l('Legal free text'),
+						'desc' => $this->l('Use this field to display additional text on your invoice, like specific legal information. It will appear below the payment methods summary.'),
 						'size' => 50,
 						'type' => 'textareaLang',
 					),
 					'PS_INVOICE_FREE_TEXT' => array(
 						'title' => $this->l('Footer text'),
-						'desc' => $this->l('This text will appear at the bottom of the invoice.'),
+						'desc' => $this->l('This text will appear at the bottom of the invoice, below your company details.'),
 						'size' => 50,
 						'type' => 'textLang',
 					),
@@ -90,7 +90,7 @@ class AdminInvoicesControllerCore extends AdminController
 					),
 					'PS_PDF_USE_CACHE' => array(
 						'title' => $this->l('Use the disk as cache for PDF invoices'),
-						'desc' => $this->l('Saves memory but slows down the rendering process.'),
+						'desc' => $this->l('Saves memory but slows down the PDF generation.'),
 						'validation' => 'isBool',
 						'cast' => 'intval',
 						'type' => 'bool'
