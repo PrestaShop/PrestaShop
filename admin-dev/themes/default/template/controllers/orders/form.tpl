@@ -639,7 +639,7 @@
 						attributes_html += '<select class="id_product_attribute" id="ipa_'+this.id_product+'" style="display:none;">';
 						var id_product = this.id_product;
 						stock[id_product] = new Array();
-						if (this.customizable == '1')
+						if (this.customizable == '1' || this.customizable == '2')
 						{
 							customization_html += '<div class="bootstrap"><div class="panel"><div class="panel-heading">{l s='Customization'}</div><form id="customization_'+id_product+'" class="id_customization" method="post" enctype="multipart/form-data" action="'+admin_cart_link+'" style="display:none;">';
 							customization_html += '<input type="hidden" name="id_product" value="'+id_product+'" />';
