@@ -791,8 +791,10 @@ class AdminThemesControllerCore extends AdminController
 
 			if (!in_array($extension, $extensions))
 				$this->errors[] = $this->l('File extension must be .txt or .pdf');
-			elseif ($_FILES['documentation']['error'] > 0 || $_FILES['documentation']['size'] > 1048576)
+			elseif ($_FILES['documentation']['error'] > 0)
 				$this->errors[] = $this->l('An error occurred during documentation upload');
+			elseif ($_FILES['documentation']['size'] > 1048576)
+				$this->errors[] = $this->l('An error occurred while uploading the documentation. Maximum size allowed is 1MB.');
 			elseif (!$name || !Validate::isGenericName($name) || strlen($name) > self::MAX_NAME_LENGTH)
 				$this->errors[] = $this->l('Please enter a valid documentation name');
 		}
