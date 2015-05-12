@@ -661,7 +661,8 @@ abstract class PaymentModuleCore extends Module
 						'order' => $order,
 						'customer' => $this->context->customer,
 						'currency' => $this->context->currency,
-						'orderStatus' => $order_status
+						'orderStatus' => $order_status,
+						'extraVars' => &$extra_vars
 					));
 
 					foreach ($this->context->cart->getProducts() as $product)
