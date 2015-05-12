@@ -165,9 +165,11 @@ $(function(){
 							if (error != 'indexOf')
 								errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
 					}
-					else
+					else {
 						for (var current_hook = 0; current_hook < jsonData.length; current_hook++)
 							hook_select.append('<option value="'+jsonData[current_hook].id_hook+'">'+jsonData[current_hook].name+'</option>');
+						hook_select.prop('disabled', false);
+					}
 				}
 			});
 		}

@@ -40,9 +40,9 @@
 		<div class="panel">
 			<form class="well form-horizontal" id="position_filer">
 				<div class="row">
-					<div class="form-group col-lg-5 col-md-12">
-						<label class="control-label col-lg-3" style="text-align: left">{l s='Show'}</label>
-						<div class="col-lg-9">
+					<div class="form-group col-lg-6 col-sm-12">
+						<label class="control-label col-lg-4" style="text-align: left">{l s='Show'}</label>
+						<div class="col-lg-7">
 							<select id="show_modules" class="filter" style="width: 100%;">
 								<option value="all">{l s='All modules'}&nbsp;</option>
 								{foreach $modules as $module}
@@ -51,9 +51,9 @@
 							</select>
 						</div>
 					</div>
-					<div class="form-group col-lg-5 col-md-12 pull-right">
-						<label class="control-label col-lg-3" style="text-align: left">{l s='Search for a hook'}</label>
-						<div class="col-lg-9">
+					<div class="form-group col-lg-6 col-sm-12">
+						<label class="control-label col-lg-offset-1 col-lg-4" style="text-align: left">{l s='Search for a hook'}</label>
+						<div class="col-lg-7">
 							<div class="input-group">
 								<div class="input-group-addon"><i class="icon icon-search"></i></div>
 								<input type="text" class="form-control" id="hook_search" name="hook_search" placeholder="">
