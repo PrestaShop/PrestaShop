@@ -52,7 +52,7 @@
 						</div>
 					</div>
 					<div class="form-group col-lg-5 col-md-12 pull-right">
-						<label class="control-label col-lg-3" style="text-align: left">{l s='Hook search'}</label>
+						<label class="control-label col-lg-3" style="text-align: left">{l s='Search for a hook'}</label>
 						<div class="col-lg-9">
 							<div class="input-group">
 								<div class="input-group-addon"><i class="icon icon-search"></i></div>

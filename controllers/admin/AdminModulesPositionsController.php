@@ -444,7 +444,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 		if (!is_array($file_list))
 			$file_list = ($file_list) ? array($file_list) : array();
 
-		$content = '<p><input type="text" name="exceptions['.$shop_id.']" value="'.implode(', ', $file_list).'" id="em_text_'.$shop_id.'"/></p>';
+		$content = '<p><input type="text" name="exceptions['.$shop_id.']" value="'.implode(', ', $file_list).'" id="em_text_'.$shop_id.'" placeholder="'.$this->l('E.g. address, addresses, attachment').'"/></p>';
 
 		if ($shop_id)
 		{
