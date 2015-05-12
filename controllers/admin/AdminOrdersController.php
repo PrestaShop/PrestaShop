@@ -2793,4 +2793,53 @@ class AdminOrdersControllerCore extends AdminController
 			'view' => $this->createTemplate('_select_payment.tpl')->fetch(),
 		)));
 	}
+
+	/**
+	 * Re calculate shipping cost
+	 */
+	public function ajaxProcessRefreshShippingCost()
+	{
+		$order = new Order((int)Tools::getValue('id_order'));
+
+		if (!Validate::isLoadedObject($order))
+			die(Tools::jsonEncode(array('result' => false)));
+
+		$fake_cart = new Cart($order->id_cart);
+		$new_cart = $fake_cart->duplicate();
+		$new_cart = $new_cart['cart'];
+
+		//remove all products : cart (maybe change in the meantime)
+		foreach($new_cart->getProducts() as $product){
+			$new_cart->deleteProduct($product['id_product'], $product['id_product_attribute']);
+		}
+
+		//add real order products
+		foreach($order->getProducts() as $product){
+			$new_cart->updateQty($product['product_quantity'], $product['product_id']);
+		}
+
+		//get new shipping cost
+		$base_total_shipping_tax_incl = $new_cart->getOrderTotal(true, Cart::ONLY_SHIPPING);
+		$base_total_shipping_tax_excl = $new_cart->getOrderTotal(false, Cart::ONLY_SHIPPING);
+
+		//calculate diff price, then apply new order totals
+		$diff_shipping_tax_incl = $order->total_shipping_tax_incl - $base_total_shipping_tax_incl;
+		$diff_shipping_tax_excl = $order->total_shipping_tax_excl - $base_total_shipping_tax_excl;
+
+		$order->total_shipping_tax_excl = $order->total_shipping_tax_excl - $diff_shipping_tax_excl;
+		$order->total_shipping_tax_incl = $order->total_shipping_tax_incl - $diff_shipping_tax_incl;
+		$order->total_shipping = $order->total_shipping_tax_incl;
+		$order->total_paid_tax_excl = $order->total_paid_tax_excl - $diff_shipping_tax_excl;
+		$order->total_paid_tax_incl = $order->total_paid_tax_incl - $diff_shipping_tax_incl;
+		$order->total_paid = $order->total_paid_tax_incl;
+
+		$order->save();
+
+		//remove fake cart
+		$new_cart->delete();
+
+		die(Tools::jsonEncode(array(
+			'order' => $order
+		)));
+	}
 }
