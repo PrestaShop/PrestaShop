@@ -48,7 +48,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
 		$id_lang = Context::getContext()->language->id;
 		$this->title = $order_invoice->getInvoiceNumberFormatted($id_lang);
-		// footer informations
+
 		$this->shop = new Shop((int)$this->order->id_shop);
 	}
 
