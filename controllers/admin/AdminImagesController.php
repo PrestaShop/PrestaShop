@@ -489,21 +489,27 @@ class AdminImagesControllerCore extends AdminController
 
 		if (!$productsImages)
 		{
+			$formated_thumb_scene = ImageType::getFormatedName('thumb_scene');
+			$formated_medium = ImageType::getFormatedName('medium');
 			foreach (scandir($dir) as $image)
 				if (preg_match('/^[0-9]*\.jpg$/', $image))
 					foreach ($type as $k => $imageType)
 					{
 						// Customizable writing dir
 						$newDir = $dir;
-						if ($imageType['name'] == 'thumb_scene')
+						if ($imageType['name'] == $formated_thumb_scene)
 							$newDir .= 'thumbs/';
 						if (!file_exists($newDir))
 							continue;
+
+						if (($dir == _PS_CAT_IMG_DIR_) && ($imageType['name'] == $formated_medium) && is_file(_PS_CAT_IMG_DIR_.str_replace('.', '_thumb.', $image)))
+							$image = str_replace('.', '_thumb.', $image);
+
 						if (!file_exists($newDir.substr($image, 0, -4).'-'.stripslashes($imageType['name']).'.jpg'))
 						{
 							if (!file_exists($dir.$image) || !filesize($dir.$image))
 								$this->errors[] = sprintf(Tools::displayError('Source file does not exist or is empty (%s)'), $dir.$image);
-							elseif (!ImageManager::resize($dir.$image, $newDir.substr($image, 0, -4).'-'.stripslashes($imageType['name']).'.jpg', (int)$imageType['width'], (int)$imageType['height']))
+							elseif (!ImageManager::resize($dir.$image, $newDir.substr(str_replace('_thumb.', '.', $image), 0, -4).'-'.stripslashes($imageType['name']).'.jpg', (int)$imageType['width'], (int)$imageType['height']))
 								$this->errors[] = sprintf(Tools::displayError('Failed to resize image file (%s)'), $dir.$image);
 						}
 						if (time() - $this->start_time > $this->max_execution_time - 4) // stop 4 seconds before the timeout, just enough time to process the end of the page on a slow server
@@ -525,7 +531,7 @@ class AdminImagesControllerCore extends AdminController
 				}
 				else
 					$this->errors[] = sprintf(Tools::displayError('Original image is missing or empty (%1$s) for product ID %2$d'), $existing_img, (int)$imageObj->id_product);
-				if (time() - $this->start_time > $this->max_execution_time - 4) // stop 4 seconds before the tiemout, just enough time to process the end of the page on a slow server
+				if (time() - $this->start_time > $this->max_execution_time - 4) // stop 4 seconds before the timeout, just enough time to process the end of the page on a slow server
 					return 'timeout';
 			}
 		}
