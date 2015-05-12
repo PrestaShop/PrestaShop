@@ -879,6 +879,6 @@ abstract class DbCore
 	 */
 	public function getLink()
 	{
-		return $this -> link;
+		return $this->link;
 	}
 }
