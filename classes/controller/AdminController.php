@@ -2208,6 +2208,9 @@ class AdminControllerCore extends Controller
             'addons_forgot_password_link' => '//addons.prestashop.com/'.$this->context->language->iso_code.'/forgot-your-password'
         ));
 
+        //Translation ugly hack for included template : force translation key
+        Context::getContext()->override_controller_name_for_translations = 'AdminModules';
+
         $this->modals[] = array(
             'modal_id' => 'modal_addons_connect',
             'modal_class' => 'modal-md',
@@ -2217,6 +2220,9 @@ class AdminControllerCore extends Controller
             .'&utm_content='.(defined('_PS_HOST_MODE_') ? 'cloud' : 'download').'">PrestaShop Addons</a>',
             'modal_content' => $this->context->smarty->fetch('controllers/modules/login_addons.tpl'),
         );
+
+        //After forcing translation key, cancel it
+        Context::getContext()->override_controller_name_for_translations = null;
     }
 
     /**
