@@ -254,7 +254,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 						'name' => 'name',
 						'default' => array(
 							'value' => 0,
-							'label' => $this->l('All')
+							'label' => $this->l('All', 'AdminTaxRulesGroupController')
 						)
 					)
 				),
@@ -270,7 +270,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
 						'name' => 'name',
 						'default' => array(
 							'value' => 0,
-							'label' => $this->l('All')
+							'label' => $this->l('All', 'AdminTaxRulesGroupController')
 						)
 					)
 				),
