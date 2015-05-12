@@ -126,7 +126,7 @@ Tree.prototype =
 
 		return $(this);
 	},
-	
+
 	collapseAll : function($speed)
 	{
 		this.$element.find("label.tree-toggler").each(
@@ -154,8 +154,8 @@ Tree.prototype =
 					selected.push($(this).val());
 				}
 			);
-			var name = $('#'+idTree).find('ul.tree input').first().attr('name');
-			var inputType = $('#'+idTree).find('ul.tree input').first().attr('type');
+			var name = $('#'+idTree+'.tree input').first().attr('name');
+			var inputType = $('#'+idTree+'.tree input').first().attr('type');
 			var useCheckBox = 0;
 			if (inputType == 'checkbox')
 			{
