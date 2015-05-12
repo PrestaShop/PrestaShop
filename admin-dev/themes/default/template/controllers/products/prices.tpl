@@ -37,7 +37,7 @@ $(document).ready(function () {
 		"loader": jQuery('#customerLoader'),
 		"init": function() {
 			jQuery(Customer.field).typeWatch({
-				"captureLength": 1,
+				"captureLength": 2,
 				"highlight": true,
 				"wait": 50,
 				"callback": Customer.search

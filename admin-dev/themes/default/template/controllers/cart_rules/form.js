@@ -389,7 +389,7 @@ $('.datepicker').datetimepicker({
 });
 
 $('#giftProductFilter').typeWatch({
-	captureLength: 2,
+	captureLength: 3,
 	highlight: false,
 	wait: 100,
 	callback: function(){ searchProducts(); }
@@ -474,7 +474,7 @@ $('#cart_rule_select_1').jscroll().data('jscrollapi').load_scroll(baseHref+'&typ
 $('#cart_rule_select_2').jscroll().data('jscrollapi').load_scroll(baseHref+'&type=selected&search=');
 
 $('.uncombinable_search_filter').typeWatch({
-	captureLength: -1,
+	captureLength: 0,
 	highlight: true,
 	wait: 500,
 	callback: function(text) { combinable_filter('#cart_rule_select_1', text, 'unselected'); }
@@ -482,7 +482,7 @@ $('.uncombinable_search_filter').typeWatch({
 
 
 $('.combinable_search_filter').typeWatch({
-	captureLength: -1,
+	captureLength: 0,
 	highlight: true,
 	wait: 500,
 	callback: function(text) { combinable_filter('#cart_rule_select_2', text, 'selected'); }

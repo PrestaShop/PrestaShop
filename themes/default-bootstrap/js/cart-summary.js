@@ -46,8 +46,8 @@ $(document).ready(function(){
 	});
 
 	$('.cart_quantity_input').typeWatch({
-		highlight: true, wait: 600, captureLength: 0, callback: function(val){
-			updateQty(val, true, this.el);
+		highlight: true, wait: 600, captureLength: 1, callback: function(val){
+			updateQty(val, true, this);
 		}
 	});
 
