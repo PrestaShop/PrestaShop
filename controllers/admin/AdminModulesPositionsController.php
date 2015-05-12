@@ -277,17 +277,15 @@ class AdminModulesPositionsControllerCore extends AdminController
 
 		$assoc_modules_id = array();
 		foreach ($modules as $module)
-			if ($tmp_instance = Module::getInstanceById((int)$module['id_module']))
-			{
+			if ($tmp_instance = Module::getInstanceById((int)$module['id_module'])) {
 				// We want to be able to sort modules by display name
 				$module_instances[$tmp_instance->displayName] = $tmp_instance;
 				// But we also want to associate hooks to modules using the modules IDs
 				$assoc_modules_id[(int)$module['id_module']] = $tmp_instance->displayName;
 			}
 		ksort($module_instances);
-		$hooks = Hook::getHooks(!(int)Tools::getValue('hook_position'));
-		foreach ($hooks as $key => $hook)
-		{
+		$hooks = Hook::getHooks();
+		foreach ($hooks as $key => $hook) {
 			// Get all modules for this hook or only the filtered module
 			$hooks[$key]['modules'] = Hook::getModulesFromHook($hook['id_hook'], $this->display_key);
 			$hooks[$key]['module_count'] = count($hooks[$key]['modules']);
@@ -311,12 +309,12 @@ class AdminModulesPositionsControllerCore extends AdminController
 		);
 
 		$live_edit_params = array(
-									'live_edit' => true,
-									'ad' => $admin_dir,
-									'liveToken' => $this->token,
-									'id_employee' => (int)$this->context->employee->id,
-									'id_shop' => (int)$this->context->shop->id
-									);
+			'live_edit' => true,
+			'ad' => $admin_dir,
+			'liveToken' => $this->token,
+			'id_employee' => (int)$this->context->employee->id,
+			'id_shop' => (int)$this->context->shop->id
+		);
 
 		$this->context->smarty->assign(array(
 			'show_toolbar' => true,
@@ -327,7 +325,6 @@ class AdminModulesPositionsControllerCore extends AdminController
 			'url_show_modules' => self::$currentIndex.'&token='.$this->token.'&show_modules=',
 			'modules' => $module_instances,
 			'url_show_invisible' => self::$currentIndex.'&token='.$this->token.'&show_modules='.(int)Tools::getValue('show_modules').'&hook_position=',
-			'hook_position' => Tools::getValue('hook_position'),
 			'live_edit' => Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP,
 			'url_live_edit' => $this->getLiveEditUrl($live_edit_params),
 			'display_key' => $this->display_key,

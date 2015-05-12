@@ -61,40 +61,42 @@
 						</div>
 					</div>
 				</div>
-				<div class="text-right">
-					<p class="checkbox">
-						<label class="control-label" for="hook_position">
-							<input type="checkbox" id="hook_position" onclick="autoUrlNoList('hook_position', '{$url_show_invisible|escape:'html':'UTF-8'}')" {if $hook_position}checked="checked"{/if} />
-							{l s='Display non-positionable hooks'}
-						</label>
-					</p>
+				<div class="row">
+					<div class="col-sm-12">
+							<p class="checkbox">
+								<label class="control-label" for="hook_position">
+									<input type="checkbox" id="hook_position"/>
+									{l s='Display non-positionable hooks'}
+								</label>
+							</p>
+					</div>
 				</div>
 			</form>
 			<div id="modulePosition">
 				<form method="post" action="{$url_submit|escape:'html':'UTF-8'}" >
-{foreach $hooks as $hook}
-					<section class="hook_panel">
+					{foreach $hooks as $hook}
+					<section class="hook_panel {if $hook['position'] == 0}hook_position{/if}" {if $hook['position'] == 0}style="display:none;"{/if}>
 						<a name="{$hook['name']}"></a>
 						<header class="hook_panel_header">
 							<span class="hook_name">{$hook['name']}</span>
 							<!-- <span class="hook_title">{$hook['title']}</span> -->
 							<span class="badge pull-right">
-	{if $hook['module_count'] && $can_move}
+								{if $hook['module_count'] && $can_move}
 								<input type="checkbox" id="Ghook{$hook['id_hook']}" onclick="hookCheckboxes({$hook['id_hook']}, 0, this)"/>
-	{/if}
+								{/if}
 								{$hook['module_count']} {if $hook['module_count'] > 1}{l s='Modules'}{else}{l s='Module'}{/if}
 							</span>
 
-	{if !empty($hook['description'])}
+							{if !empty($hook['description'])}
 							<div class="hook_description">{$hook['description']}</div>
-	{/if}
+							{/if}
 						</header>
 
-	{if $hook['module_count']}
+						{if $hook['module_count']}
 						<section class="module_list">
 						<ul class="list-unstyled{if $hook['modules']|count > 1} sortable{/if}">
 
-						{foreach $hook['modules'] as $position => $module}
+							{foreach $hook['modules'] as $position => $module}
 							{if isset($module['instance'])}
 							<li id="{$hook['id_hook']|intval}_{$module['instance']->id|intval}" class="module_position_{$module['instance']->id|intval} module_list_item{if $can_move && $hook['module_count'] >= 2} draggable{/if}">
 								<div class="module_col_select">

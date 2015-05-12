@@ -85,6 +85,11 @@ $(function(){
 			modulesPositionFilterHooks();
 		});
 
+		var hook_position = $("#hook_position");
+		hook_position.bind("change", function () {
+			modulesPositionFilterHooks();
+		});
+
 		$('#hook_search').bind('input', function () {
 			modulesPositionFilterHooks();
 		});
@@ -93,6 +98,7 @@ $(function(){
 			var id;
 			var hook_name = $('#hook_search').val();
 			var module_id = $("#show_modules").val();
+			var position = hook_position.prop('checked');
 			var regex = new RegExp("(" + hook_name + ")", "gi");
 
 			for (id = 0; id < hooks_list.length; id++) {
@@ -130,6 +136,11 @@ $(function(){
 				else
 					hooks_to_show_from_hook_name.filter(hooks_to_show_from_module).show();
 			}
+
+			if (!position)
+				for (id = 0; id < hooks_list.length; id++)
+					if (hooks_list[id].container.is('.hook_position'))
+						hooks_list[id].container.hide();
 		}
 	}
 
