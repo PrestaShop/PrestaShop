@@ -271,8 +271,7 @@ abstract class ObjectModelCore
 			{
 				$this->id = (int)$id;
 				foreach ($object_datas as $key => $value)
-					if (array_key_exists($key, $this))
-						$this->{$key} = $value;
+					$this->{$key} = $value;
 			}
 		}
 	}
@@ -1714,8 +1713,7 @@ abstract class ObjectModelCore
 			$this->id = $data[$this->def['primary']];
 
 		foreach ($data as $key => $value)
-			if (array_key_exists($key, $this))
-				$this->$key = $value;
+			$this->$key = $value;
 	}
 
 	/**
@@ -1793,6 +1791,11 @@ abstract class ObjectModelCore
 		{
 			$reflection = new ReflectionClass($class);
 			$definition = $reflection->getStaticPropertyValue('definition');
+
+			Hook::exec(
+				'actionOverride'.$class.'Definition',
+				array('definition'=>&$definition)
+			);
 
 			$definition['classname'] = $class;
 
