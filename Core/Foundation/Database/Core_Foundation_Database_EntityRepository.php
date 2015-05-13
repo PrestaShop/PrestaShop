@@ -64,13 +64,17 @@ class Core_Foundation_Database_EntityRepository
 		if (!$by) {
 			$where = $arguments[0];
 		} else {
-			$where = array(
-				$by => $arguments[0]
-			);
-
+			$where = array();
+			$by = $this->convertToDbFieldName($by);
+			$where[$by] = $arguments[0];
 		}
 
 		return $this->doFind($one, $where);
+	}
+
+	private function convertToDbFieldName($camel_case_field_name)
+	{
+		return strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $camel_case_field_name));
 	}
 
 	protected function getIdFieldName()
