@@ -4372,8 +4372,8 @@ class ProductCore extends ObjectModel
 	protected function _deleteOldLabels()
 	{
 		$max = array(
-			Product::CUSTOMIZE_FILE => (int)Tools::getValue('uploadable_files'),
-			Product::CUSTOMIZE_TEXTFIELD => (int)Tools::getValue('text_fields')
+			Product::CUSTOMIZE_FILE => (int)$this->uploadable_files,
+			Product::CUSTOMIZE_TEXTFIELD => (int)$this->text_fields
 		);
 
 		/* Get customization field ids */
