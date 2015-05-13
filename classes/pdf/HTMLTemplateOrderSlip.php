@@ -54,7 +54,6 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 		$prefix = Configuration::get('PS_CREDIT_SLIP_PREFIX', Context::getContext()->language->id);
 		$this->title = sprintf(HTMLTemplateOrderSlip::l('Credit Slip %1$s%2$06d'), $prefix, (int)$this->order_slip->id);
 
-		// footer informations
 		$this->shop = new Shop((int)$this->order->id_shop);
 	}
 

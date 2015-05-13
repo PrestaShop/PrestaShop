@@ -650,6 +650,10 @@ class AdminMetaControllerCore extends AdminController
 
 	/**
 	 * Update shop domain (for mono shop)
+	 *
+	 * @param string $value
+	 *
+	 * @throws PrestaShopException
 	 */
 	public function updateOptionDomain($value)
 	{
@@ -668,6 +672,10 @@ class AdminMetaControllerCore extends AdminController
 
 	/**
 	 * Update shop SSL domain (for mono shop)
+	 *
+	 * @param string $value
+	 *
+	 * @throws PrestaShopException
 	 */
 	public function updateOptionDomainSsl($value)
 	{
@@ -686,6 +694,10 @@ class AdminMetaControllerCore extends AdminController
 
 	/**
 	 * Update shop physical uri for mono shop)
+	 *
+	 * @param string $value
+	 *
+	 * @throws PrestaShopException
 	 */
 	public function updateOptionUri($value)
 	{

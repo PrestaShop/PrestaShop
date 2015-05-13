@@ -258,6 +258,15 @@ class AdminStockInstantStateControllerCore extends AdminController
 	/**
 	 * AdminController::getList() override
 	 * @see AdminController::getList()
+	 *
+	 * @param int         $id_lang
+	 * @param string|null $order_by
+	 * @param string|null $order_way
+	 * @param int         $start
+	 * @param int|null    $limit
+	 * @param int|bool    $id_lang_shop
+	 *
+	 * @throws PrestaShopException
 	 */
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
@@ -371,6 +380,8 @@ class AdminStockInstantStateControllerCore extends AdminController
 	 *
 	 * @param array $n
 	 * @param array $m
+	 *
+	 * @return bool
 	 */
 	public function valuationCmp($n, $m)
 	{
@@ -385,6 +396,8 @@ class AdminStockInstantStateControllerCore extends AdminController
 	 *
 	 * @param array $n
 	 * @param array $m
+	 *
+	 * @return bool
 	 */
 	public function realQuantityCmp($n, $m)
 	{
