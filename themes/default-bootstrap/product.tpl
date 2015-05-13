@@ -307,7 +307,7 @@
 								{hook h="displayProductPriceBlock" product=$product type="unit_price"}
 							{/if}
 						{/if} {*close if for show price*}
-						{hook h="displayProductPriceBlock" product=$product type="weight"}
+						{hook h="displayProductPriceBlock" product=$product type="weight" hook_origin='product_sheet'}
                         {hook h="displayProductPriceBlock" product=$product type="after_price"}
 						<div class="clear"></div>
 					</div> <!-- end content_prices -->
