@@ -30,12 +30,10 @@
 <html lang="{$iso}">
 <head>
 	<meta charset="utf-8">
-
 	<meta name="viewport" content="width=device-width, initial-scale=0.75, maximum-scale=0.75, user-scalable=0">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<link rel="icon" type="image/x-icon" href="{$img_dir}favicon.ico" />
 	<link rel="apple-touch-icon" href="{$img_dir}app_icon.png" />
-
 	<meta name="robots" content="NOFOLLOW, NOINDEX">
 	<title>{if $meta_title != ''}{$meta_title} • {/if}{$shop_name}</title>
 	{if $display_header}
@@ -115,9 +113,16 @@
 				</button>
 
 				<a id="header_shopname" href="{$default_tab_link|escape:'html':'UTF-8'}">
-					<small>{$version}</small><span id="shop_name">{$shop_name}</span>
+					<span id="shop_version">{$version}</span>
 				</a>
-
+				{* Shop *}
+				{if isset($is_multishop) && $is_multishop && $shop_list && (isset($multishop_context) && $multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
+					<ul id="shop_list_selector">
+						<li class="breadcrumb-multishop">
+							{$shop_list}
+						</li>
+					</ul>
+				{/if}
 				<ul id="header_notifs_icon_wrapper">
 {if {$show_new_orders} == 1}
 					<li id="orders_notif" class="dropdown" data-type="order">
@@ -279,14 +284,6 @@
 					});
 				</script>
 {/if}
-				{* Shop *}
-				{if isset($is_multishop) && $is_multishop && $shop_list && (isset($multishop_context) && $multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
-					<!--<ul>
-						<li class="breadcrumb-multishop">
-							{$shop_list}
-						</li>
-					</ul>-->
-				{/if}
 				<ul id="header_employee_box">
 					{if (!isset($logged_on_addons) || !$logged_on_addons) && (isset($display_addons_connection) && $display_addons_connection)}
 						<li>
