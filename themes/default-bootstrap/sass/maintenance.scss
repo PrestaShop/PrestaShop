@@ -3,29 +3,32 @@
 /*********************************************************************
 					Maintenance Page Styles
 **********************************************************************/
+#body {
+	background-color: #F7F7F7;
+}
 #maintenance {
 	margin: 50px 0 0 0;
+	background-color: #fff;
+	@include box-shadow(0 1px 3px rgba(0, 0, 0, 0.3));
 	@media (min-width: $screen-lg) { // > 1200
 		margin: 126px 0 0 0;
-		padding: 91px 48px 365px 297px;
-		background: url(../img/bg_maintenance.png) no-repeat;
+		padding: 50px;
 	}
 	.logo {
 		margin: 0 0 31px 0;
+		text-align: center;
 	}
 	h1 {
-		font: 600 28px/34px $font-custom;
+		font: 24px $font-custom;
 		color: $base-text-color;
-		text-transform: uppercase;
-		border-bottom: 1px solid $base-border-color;
 		padding: 0 0 14px 0;
 		margin: 0 0 19px 0;
 	}
 	#message {
-		font: 600 16px/31px $font-custom;
+		font: 14px $font-custom;
 		padding: 0 0 0 18px;
 		color: #555454;
-		text-transform: uppercase;
+		text-align: center;
 	}
 }
 .container {
@@ -36,17 +39,17 @@
 }
 @media (min-width: 768px) {
 	.container {
-		width: 750px;
+		width: 500px;
 	}
 }
 @media (min-width: 992px) {
 	.container {
-		width: 970px;
+		width: 500px;
 	}
 }
 @media (min-width: 1200px) {
 	.container {
-		width: 1170px;
+		width: 500px;
 	}
 }
 @media only screen and (min-width: 1200px) {

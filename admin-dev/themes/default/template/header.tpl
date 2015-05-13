@@ -115,7 +115,7 @@
 				</button>
 
 				<a id="header_shopname" href="{$default_tab_link|escape:'html':'UTF-8'}">
-					{$shop_name}
+					<small>{$version}</small><span id="shop_name">{$shop_name}</span>
 				</a>
 
 				<ul id="header_notifs_icon_wrapper">
@@ -270,6 +270,14 @@
 					});
 				</script>
 {/if}
+				{* Shop *}
+				{if isset($is_multishop) && $is_multishop && $shop_list && (isset($multishop_context) && $multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
+					<!--<ul>
+						<li class="breadcrumb-multishop">
+							{$shop_list}
+						</li>
+					</ul>-->
+				{/if}
 				<ul id="header_employee_box">
 					{if (!isset($logged_on_addons) || !$logged_on_addons) && (isset($display_addons_connection) && $display_addons_connection)}
 						<li>
@@ -283,7 +291,6 @@
 {if {$base_url}}
 					<li>
 						<a href="{if isset($base_url_tc)}{$base_url_tc|escape:'html':'UTF-8'}{else}{$base_url|escape:'html':'UTF-8'}{/if}" id="header_foaccess" class="_blank" title="{l s='View my shop'}">
-							<i class="icon-star"></i>
 							<span class="string-long">{l s='My shop'}</span>
 							<span class="string-short">{l s='Shop'}</span>
 						</a>

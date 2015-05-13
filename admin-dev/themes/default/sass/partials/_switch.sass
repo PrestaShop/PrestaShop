@@ -1,5 +1,5 @@
 // CSS TOGGLE SWITCHES (Ionuț Colceriu)
-// Licensed under Unlicense 
+// Licensed under Unlicense
 // https://github.com/ghinda/css-toggle-switch
 
 @mixin switch-shared()
@@ -84,15 +84,15 @@
 		width: 50%
 		height: 100%
 		color: white
-		border: solid 1px $brand-success
-		background-color: lighten($brand-success,10%)
+		border: solid 1px #279CBB
+		background-color: #2eacce
 		@include left(0)
-		@include box-shadow($brand-success 0 -1px 0 inset)
+		@include box-shadow('#1B7088' 0 -1px 0 inset)
 	input:last-of-type:checked ~ a
-		border: solid 1px $brand-danger
-		background-color: lighten($brand-danger,10%)
+		border: solid 1px #CA6F6F
+		background-color: #E08F95
 		@include left(50%)
-		@include box-shadow($brand-danger 0 -1px 0 inset)
+		@include box-shadow('#5C5C5C' 0 -1px 0 inset)
 	input:disabled ~ a
 		border: solid 1px lighten(gray,20%) !important
 		background-color: lighten(gray,30%)	!important

@@ -725,7 +725,7 @@ Country</value>
 		<value>favicon.ico</value>
 	</configuration>
 	<configuration id="PS_STORES_ICON" name="PS_STORES_ICON">
-		<value>logo_stores.gif</value>
+		<value>logo_stores.png</value>
 	</configuration>
 	<configuration id="PS_ROOT_CATEGORY" name="PS_ROOT_CATEGORY">
 		<value>1</value>

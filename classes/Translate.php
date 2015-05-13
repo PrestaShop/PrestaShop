@@ -209,7 +209,7 @@ class TranslateCore
 	 * @param string $string
 	 * @return string
 	 */
-	public static function getPdfTranslation($string)
+	public static function getPdfTranslation($string, $sprintf = null)
 	{
 		global $_LANGPDF;
 
@@ -233,6 +233,9 @@ class TranslateCore
 		$key = md5($string);
 
 		$str = (array_key_exists('PDF'.$key, $_LANGPDF) ? $_LANGPDF['PDF'.$key] : $string);
+
+		if ($sprintf !== null)
+			$str = Translate::checkAndReplaceArgs($str, $sprintf);
 
 		return $str;
 	}

@@ -1,22 +1,22 @@
 .page-head
 	width: 100%
-	height: 55px
+	height: 100px
 	padding: 0
 	margin: 0
-	border-bottom: 4px solid darken($secondary-color,10%)
 	position: fixed
 	top: 36px
 	z-index: 499
-	background-color: $secondary-color
+	background-color: white
+	border-bottom: #DFDFDF 1px solid
+	color: #363A41
 	@include left(0)
-	@include box-shadow(rgba(black,0.15) 0 7px 0)
 	h2.page-title
 		@include float(left)
 		position: relative
 		margin: 0
-		font: 300 20px/1em $font-family-sans-serif
-		color: white
-		@include padding(28px, 0, 0, ($widthSidebarNav+70px))
+		font: 24pt $font-family-sans-serif
+		color: #363A41
+		@include padding(28px, 0, 0, ($widthSidebarNav+20px))
 		@media (max-width: $screen-tablet)
 			@include padding(26px, 0, 0, 70px)
 		a
@@ -32,21 +32,17 @@
 		background-color: transparent!important
 		@include right(0)
 		@media (max-width: $screen-sm)
-			background-color: $secondary-color
 		#toolbar-nav
 			border: none
-			background-color: $secondary-color
 		.btn-toolbar
 			margin: 0
 			@include padding(3px, 0, 0, 0)
 			.toolbar_btn
-				height: 46px
 				position: relative
-				padding: 2px 5px !important
+				padding: 20px 5px !important
 				font-size: 12px
 				line-height: 8px
-				color: white
-				background-color: $secondary-color
+				color: $main-color
 				text-align: center
 				text-shadow: none
 				white-space: nowrap
@@ -55,15 +51,15 @@
 				@include margin(0, 3px, 2px, 0)
 				@media (max-width: $screen-desktop)
 					width: 46px
-					border: solid 1px darken($secondary-color,15%)
 					font-size: 11px
-				&:hover
-					color: $secondary-color
-					border-color: white
-					background-color: white!important
+				i
+					color: $toolbar-buttons-color
+					&:hover
+						color: $toolbar-buttons-hover-color
+				div
+					padding-top: 10px
 			.dropdown-toolbar
 				display: none
-				background-color: $secondary-color
 				@include float(right)
 				@include border-radius(3px)
 				@media (max-width: $screen-sm)
@@ -83,13 +79,12 @@
 		border: none !important
 		white-space: nowrap
 		@include border-radius(0)
-		@include left($widthSidebarNav+70px)
+		@include left($widthSidebarNav+20px)
 		@media (max-width: $screen-tablet)
-			@include left(70px)
+			@include left(20px)
 		li
-			text-transform: uppercase
 			i
-				font-size: 14px
+				font-size: 10px
 			&.breadcrumb-container i, &.breadcrumb-current i
 				position: absolute
 				top: 2px
@@ -101,9 +96,9 @@
 			&:before
 				color: darken($secondary-color,15%)
 			a
-				color: rgba(white,0.6)
+				color: #363A41
 				&:hover
-					color: white
+					color: #363A41
 
 .page-header-toolbar-back
 	border: none!important
