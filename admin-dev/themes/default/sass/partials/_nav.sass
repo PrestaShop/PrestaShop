@@ -110,7 +110,7 @@ $min-height: 850px
 					background-color: $sidebar-menu-bg-hover-color
 					i
 						color: $sidebar-menu-hover-color
-			&.hover
+			&.hover:not(.active)
 				&:before
 					content: ''
 					width: 0
@@ -125,6 +125,7 @@ $min-height: 850px
 					position: absolute
 					z-index: 1
 					right: 0
+			&.hover
 				ul.submenu
 					position: absolute
 					display: block
