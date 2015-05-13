@@ -308,6 +308,7 @@
 							{/if}
 						{/if} {*close if for show price*}
 						{hook h="displayProductPriceBlock" product=$product type="weight"}
+                        {hook h="displayProductPriceBlock" product=$product type="after_price"}
 						<div class="clear"></div>
 					</div> <!-- end content_prices -->
 					<div class="product_attributes clearfix">
