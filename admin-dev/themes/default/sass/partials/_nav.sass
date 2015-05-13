@@ -135,22 +135,11 @@ $min-height: 850px
 			&:last-child > a.title
 				border-bottom: none
 			&.active
-				&:before
-					content: ''
-					width: 0
-					height: 0
-					border-style: solid
-					border-width: 8px 10px 8px 0
-					border-color: transparent #ffffff transparent transparent
-					background-color: transparent
-					margin-top: 6px
-					@media (min-height: $min-height)
-						margin-top: 10px
-					position: absolute
-					z-index: 1
-					right: 0
 				a, li.active a
 					color: $sidebar-menu-active-color
+					&.title
+						border-right: 3px solid #fff
+						background-color: $sidebar-menu-bg-hover-color
 					i
 						color: $sidebar-menu-active-color
 				@media (min-height: $min-height)
