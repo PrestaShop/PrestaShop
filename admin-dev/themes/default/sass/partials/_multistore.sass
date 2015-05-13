@@ -1,4 +1,4 @@
-.breadcrumb-multishop 
+.breadcrumb-multishop
 	width: auto
 	position: relative
 	&:after
@@ -10,27 +10,24 @@
 		line-height: 22px
 		padding: 0 7px
 		font-family: FontAwesome
-		background-color: darken($secondary-color,15%)
+		background-color: #282b30
 		color: white
 		pointer-events: none
 		@include right(0)
-		@include border-radius(0 4px 4px 0)
 
 	select
+		border: 0px !important
 		display: inline-block
 		height: 22px
 		line-height: 20px
-		border: 1px solid darken($secondary-color,15%)
 		margin: 0
 		outline: none //remove focus ring from Webkit
-		color: #666
-		background: white
+		background-color: #282b30
+		color: white
 		position: relative
 		-webkit-appearance: none //remove the strong OSX influence from Webkit
 		@include padding(0, 5px, 0, 8px)
-		@include border-radius(4px)
-		&:focus
-			box-shadow: 0 0 0 1px darken($secondary-color,15%)
+		@include box-shadow(none)
 
 
 @media screen and (-webkit-min-device-pixel-ratio:0)
