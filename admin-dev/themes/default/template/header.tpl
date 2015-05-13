@@ -235,40 +235,42 @@
 					$(function() {
 						$('.ajax-quick-link').on('click', function(e){
 							e.preventDefault();
-							var name = prompt("{l s='Please provide name for this shortcut' js=1}");
-							if(name) {
-								$.ajax({
-									type: 'POST',
-									headers: { "cache-control": "no-cache" },
-									async: false,
-									url: "{$link->getAdminLink('AdminQuickAccesses')}" + "&action=GetUrl" + "&rand={1|rand:200}" + "&ajax=1" + "&method=" + $(this).data('method') + ( $(this).data('quicklink-id') ? "&id_quick_access=" + $(this).data('quicklink-id') : ""),
-									data: {
-										"url": "{$link->getQuickLink($smarty.server['REQUEST_URI'])}",
-										"name": name,
-										"icon": "{$quick_access_current_link_icon}"
-									},
-									dataType: "json",
-									success: function(data) {
-										var quicklink_list ='';
-										$.each(data, function(index,value){
-											if (typeof data[index]['name'] !== 'undefined')
-												quicklink_list += '<li><a href="' + data[index]['link'] + '&token=' + data[index]['token'] + '"><i class="icon-chevron-right"></i> ' + data[index]['name'] + '</a></li>';
-										});
+							
+							var method = $(this).data('method');
+							if(method == 'add')
+								var name = prompt("{l s='Please provide name for this shortcut' js=1}");
 
-										if (typeof data['has_errors'] !== 'undefined' && data['has_errors'])
-											$.each(data, function(index, value)
-											{
-												if (typeof data[index] == 'string')
-													$.growl.error({ title: "", message: data[index]});
-											});
-										else if (quicklink_list)
+							$.ajax({
+								type: 'POST',
+								headers: { "cache-control": "no-cache" },
+								async: false,
+								url: "{$link->getAdminLink('AdminQuickAccesses')}" + "&action=GetUrl" + "&rand={1|rand:200}" + "&ajax=1" + "&method=" + method + ( $(this).data('quicklink-id') ? "&id_quick_access=" + $(this).data('quicklink-id') : ""),
+								data: {
+									"url": "{$link->getQuickLink($smarty.server['REQUEST_URI'])}",
+									"name": name,
+									"icon": "{$quick_access_current_link_icon}"
+								},
+								dataType: "json",
+								success: function(data) {
+									var quicklink_list ='';
+									$.each(data, function(index,value){
+										if (typeof data[index]['name'] !== 'undefined')
+											quicklink_list += '<li><a href="' + data[index]['link'] + '&token=' + data[index]['token'] + '"><i class="icon-chevron-right"></i> ' + data[index]['name'] + '</a></li>';
+									});
+
+									if (typeof data['has_errors'] !== 'undefined' && data['has_errors'])
+										$.each(data, function(index, value)
 										{
-											$("#header_quick ul.dropdown-menu").html(quicklink_list);
-											showSuccessMessage(update_success_msg);
-										}
+											if (typeof data[index] == 'string')
+												$.growl.error({ title: "", message: data[index]});
+										});
+									else if (quicklink_list)
+									{
+										$("#header_quick ul.dropdown-menu").html(quicklink_list);
+										showSuccessMessage(update_success_msg);
 									}
-								});
-							}
+								}
+							});
 						});
 					});
 				</script>
