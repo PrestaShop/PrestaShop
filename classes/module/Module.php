@@ -2697,8 +2697,10 @@ abstract class ModuleCore
 						throw new Exception(sprintf(Tools::displayError('The method %1$s in the class %2$s is already overridden by the module %3$s version %4$s at %5$s.'), $method->getName(), $classname, $name[1], $version[1], $date[1]));
 					throw new Exception(sprintf(Tools::displayError('The method %1$s in the class %2$s is already overridden.'), $method->getName(), $classname));
 				}
-				else
-					$module_file = preg_replace('/((:?public|private|protected)\s+(static\s+)?function\s+(?:\b'.$method->getName().'\b))/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1", $module_file);
+
+				$module_file = preg_replace('/((:?public|private|protected)\s+(static\s+)?function\s+(?:\b'.$method->getName().'\b))/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1", $module_file);
+				if ($module_file === NULL)
+					throw new Exception(sprintf(Tools::displayError('Failed to override method %1$s in class %2$s.'), $method->getName(), $classname));
 			}
 
 			// Check if none of the properties already exists in the override class
@@ -2706,8 +2708,20 @@ abstract class ModuleCore
 			{
 				if ($override_class->hasProperty($property->getName()))
 					throw new Exception(sprintf(Tools::displayError('The property %1$s in the class %2$s is already defined.'), $property->getName(), $classname));
-				else
-					$module_file = preg_replace('/(:?public|private|protected|const)\s+(static\s+)?(\$?\b'.$property->getName().'\b)/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1 $2$3", $module_file);
+
+				$module_file = preg_replace('/((?:public|private|protected)\s)\s*(static\s)?\s*(\$\b'.$property->getName().'\b)/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1$2$3", $module_file);
+				if ($module_file === NULL)
+					throw new Exception(sprintf(Tools::displayError('Failed to override property %1$s in class %2$s.'), $property->getName(), $classname));
+			}
+
+			foreach ($module_class->getConstants() as $constant => $value)
+			{
+				if ($override_class->hasConstant($constant))
+					throw new Exception(sprintf(Tools::displayError('The constant %1$s in the class %2$s is already defined.'), $constant, $classname));
+
+				$module_file = preg_replace('/(const\s)\s*(\b'.$constant.'\b)/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1$2", $module_file);
+				if ($module_file === NULL)
+					throw new Exception(sprintf(Tools::displayError('Failed to override constant %1$s in class %2$s.'), $constant, $classname));
 			}
 
 			// Insert the methods from module override in override
@@ -2743,13 +2757,29 @@ abstract class ModuleCore
 				eval(preg_replace(array('#^\s*<\?(?:php)?#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array(' ', 'class '.$classname.'Override'.$uniq), implode('', $module_file)));
 				$module_class = new ReflectionClass($classname.'Override'.$uniq);
 
-				// Add foreach function a comment with the module name and the module version
+				// For each method found in the override, prepend a comment with the module name and version
 				foreach ($module_class->getMethods() as $method)
+				{
 					$module_file = preg_replace('/((:?public|private|protected)\s+(static\s+)?function\s+(?:\b'.$method->getName().'\b))/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1", $module_file);
+					if ($module_file === NULL)
+						throw new Exception(sprintf(Tools::displayError('Failed to override method %1$s in class %2$s.'), $method->getName(), $classname));
+				}
 
-				// same as precedent but for variable
+				// Same loop for properties
 				foreach ($module_class->getProperties() as $property)
-					$module_file = preg_replace('/(:?public|private|protected|const)\s+(static\s+)?(\$?\b'.$property->getName().'\b)/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1 $2$3", $module_file);
+				{
+					$module_file = preg_replace('/((?:public|private|protected)\s)\s*(static\s)?\s*(\$\b'.$property->getName().'\b)/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1$2$3", $module_file);
+					if ($module_file === NULL)
+						throw new Exception(sprintf(Tools::displayError('Failed to override property %1$s in class %2$s.'), $property->getName(), $classname));
+				}
+
+				// Same loop for constants
+				foreach ($module_class->getConstants() as $constant => $value)
+				{
+					$module_file = preg_replace('/(const\s)\s*(\b'.$constant.'\b)/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1$2", $module_file);
+					if ($module_file === NULL)
+						throw new Exception(sprintf(Tools::displayError('Failed to override constant %1$s in class %2$s.'), $constant, $classname));
+				}
 			}
 
 			file_put_contents($override_dest, preg_replace($pattern_escape_com, '', $module_file));
@@ -2839,7 +2869,26 @@ abstract class ModuleCore
 				// Replace the declaration line by #--remove--#
 				foreach ($override_file as $line_number => &$line_content)
 				{
-					if (preg_match('/(public|private|protected|const)\s+(static\s+)?(\$)?'.$property->getName().'/i', $line_content))
+					if (preg_match('/(public|private|protected)\s+(static\s+)?(\$)?'.$property->getName().'/i', $line_content))
+					{
+						if (preg_match('/\* module: ('.$this->name.')/ism', $override_file[$line_number - 4]))
+							$override_file[$line_number - 5] = $override_file[$line_number - 4] = $override_file[$line_number - 3] = $override_file[$line_number - 2] = $override_file[$line_number - 1] = '#--remove--#';
+						$line_content = '#--remove--#';
+						break;
+					}
+				}
+			}
+
+			// Remove properties from override file
+			foreach ($module_class->getConstants() as $constant => $value)
+			{
+				if (!$override_class->hasConstant($constant))
+					continue;
+
+				// Replace the declaration line by #--remove--#
+				foreach ($override_file as $line_number => &$line_content)
+				{
+					if (preg_match('/(const)\s+(static\s+)?(\$)?'.$constant.'/i', $line_content))
 					{
 						if (preg_match('/\* module: ('.$this->name.')/ism', $override_file[$line_number - 4]))
 							$override_file[$line_number - 5] = $override_file[$line_number - 4] = $override_file[$line_number - 3] = $override_file[$line_number - 2] = $override_file[$line_number - 1] = '#--remove--#';
