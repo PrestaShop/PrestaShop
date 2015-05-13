@@ -138,7 +138,7 @@ ul#optional li.fail{
 }
 .blockInfoEnd a.FO span{
 	padding:0 0 0 32px;
-	background:#039701 url(img/bg_bt_blockInfoEnd.png) no-repeat 0 0;
+	background:#00aff0;
 }
 ul#optional_update li.fail{
 	background:#f8f8f8 url(img/pict_error.png) no-repeat 0 8px;

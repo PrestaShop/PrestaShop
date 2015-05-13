@@ -1,5 +1,9 @@
 .kpi-container
 	padding-bottom: 10px !important
+	.kpi-refresh
+		position: absolute
+		z-index: 1
+		right: 20px
 
 .box-stats
 	display: block
@@ -13,17 +17,15 @@
 	.kpi-content
 		width: 100%
 		position: relative
-		@include padding-left(72px)
+		@include padding-left(40px)
 		@include float(left)
 		i
 			position: absolute
 			top: 0
-			font-size: 56px
+			font-size: 26px
 			text-align: center
 			color: white
-			width: 66px
-			height: 66px
-			line-height: 66px
+			line-height: 26px
 			@include left(0)
 			@include border-radius(3px)
 
@@ -45,26 +47,22 @@
 		text-decoration: none
 .color1
 	i, .boxchart-overlay
-		background-color: #2BA8E3
-		@include box-shadow(rgba(black,.2) 0 -3px 0 inset)
+		color: #2BA8E3 !important
 	.value
 		color: #2BA8E3
 .color2
 	i, .boxchart-overlay
-		background-color: #FF5450
-		@include box-shadow(rgba(black,.2) 0 -3px 0 inset)
+		color: #FF5450 !important
 	.value
 		color: #FF5450
 .color3
 	i, .boxchart-overlay
-		background-color: #9E5BA1
-		@include box-shadow(rgba(black,.2) 0 -3px 0 inset)
+		color: #9E5BA1 !important
 	.value
 		color: #9E5BA1
 .color4
 	i, .boxchart-overlay
-		background-color: #95CC6B
-		@include box-shadow(rgba(black,.2) 0 -3px 0 inset)
+		color: #95CC6B !important
 	.value
 		color: #95CC6B
 

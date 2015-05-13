@@ -27,7 +27,7 @@
 <html lang="{$language_code|escape:'html':'UTF-8'}">
 <head>
 	<meta charset="utf-8">
-	<title>{$meta_title|escape:'html':'UTF-8'}</title>	
+	<title>{$meta_title|escape:'html':'UTF-8'}</title>
 {if isset($meta_description)}
 	<meta name="description" content="{$meta_description|escape:'html':'UTF-8'}">
 {/if}
@@ -41,15 +41,17 @@
 </head>
 <body>
     	<div class="container">
-		<div id="maintenance">
-			<div class="logo"><img src="{$logo_url}" {if $logo_image_width}width="{$logo_image_width}"{/if} {if $logo_image_height}height="{$logo_image_height}"{/if} alt="logo" /></div>
-        		{$HOOK_MAINTENANCE}
-        		<div id="message">
-             			<h1 class="maintenance-heading">{l s='Maintenance mode'}</h1>
-				{l s='In order to perform website maintenance, our online store will be temporarily offline.'}
-				{l s='We apologize for the inconvenience and ask that you please try again later.'}
-			</div>
+			<div id="maintenance">
+				<div class="logo"><img src="{$logo_url}" {if $logo_image_width}width="{$logo_image_width}"{/if} {if $logo_image_height}height="{$logo_image_height}"{/if} alt="logo" /></div>
+	        		{$HOOK_MAINTENANCE}
+	        		<div id="message">
+	             			<h1 class="maintenance-heading">{l s='We\'ll be back soon.'}</h1>
+							{l s='We are currently updating our shop and will be back really soon.'}
+							<br />
+							{l s='Thanks for your patience.'}
+					</div>
+				</div>
+	        </div>
 		</div>
-        </div>
 </body>
 </html>

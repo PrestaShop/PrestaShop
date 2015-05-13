@@ -6,9 +6,10 @@ html
 .bootstrap
 	/* fix SVG */
 	.chart svg
-		direction:ltr
-		svg text
-		font: normal 11px Tahoma,Arial !important
+		direction: ltr
+		svg
+			text
+				font: normal 11px Tahoma,Arial !important
 
 	/* reverse font awesome icon directions */
 	.icon-step-forward:before
@@ -71,10 +72,50 @@ html
 	//fix bootstrap
 	dd
 		margin-right: 0
-		
+
 	.pull-right
 		float: left !important
 	.pull-left
 		float: right !important
 	.input-group input[type="text"]
 		float: right
+
+.kpi-container
+	padding-bottom: 10px !important
+	.kpi-refresh
+		position: absolute
+		z-index: 1
+		left: 20px
+
+#nav-sidebar
+	ul.menu
+		li.maintab
+			&.hover
+				&:before
+					content: ''
+					width: 0
+					height: 0
+					border-style: solid
+					border-width: 8px 0 8px 10px
+					border-color: transparent transparent transparent $main-color
+					background-color: transparent
+					margin-top: 6px
+					@media (min-height: $min-height)
+						margin-top: 10px
+					position: absolute
+					z-index: 1
+					left: 0
+					right: inherit
+			&.active
+				a, li.active a
+					&.title
+						border-left: 3px solid #fff
+						border-right: 0px
+						background-color: $sidebar-menu-bg-hover-color
+				@media (min-height: $min-height)
+					ul.submenu
+						body:not(.page-sidebar-closed) &
+							margin-right: 35px
+							margin-left: 0px
+							@include border-right(1px solid $sidebar-menu-bg-hover-color)
+							border-left: 0px
