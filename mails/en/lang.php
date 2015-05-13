@@ -16,6 +16,7 @@ $_LANGMAIL['New message regarding your order'] = 'New message regarding your ord
 $_LANGMAIL['New voucher for your order #%s'] = 'New voucher for your order #%s';
 $_LANGMAIL['New credit slip regarding your order'] = 'New credit slip regarding your order';
 $_LANGMAIL['Process the payment of your order'] = 'Process the payment of your order';
+$_LANGMAIL['Your order has been changed'] = 'Your order has been changed';
 $_LANGMAIL['Your order return status has changed'] = 'Your order return status has changed';
 $_LANGMAIL['Welcome!'] = 'Welcome!';
 $_LANGMAIL['Your message has been correctly sent #ct%1$s #tc%2$s'] = 'Your message has been correctly sent #ct%1$s #tc%2$s';
