@@ -275,6 +275,10 @@ abstract class ObjectModelCore
 						$this->{$key} = $value;
 			}
 		}
+		
+		// @hook actionObject*Init
+		Hook::exec('actionObjectInit', array('object' => $this));
+		Hook::exec('actionObject'.get_class($this).'Init', array('object' => $this));
 	}
 
 	/**
