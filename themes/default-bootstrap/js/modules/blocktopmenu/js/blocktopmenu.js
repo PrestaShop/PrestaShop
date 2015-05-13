@@ -28,6 +28,7 @@ var categoryMenu = $('ul.sf-menu');
 var mCategoryGrover = $('.sf-contener .cat-title');
 
 $(document).ready(function(){
+	$('ul.sf-menu .sfHoverForce').parentsUntil('ul.sf-menu', 'li').addClass('sfHoverForce');
 	categoryMenu = $('ul.sf-menu');
 	mCategoryGrover = $('.sf-contener .cat-title');
 	responsiveMenu();
