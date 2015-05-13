@@ -230,12 +230,11 @@
 						</ul>
 					</li>
 				</ul>
-				{$quick_access_current_link_name = " - "|explode:$quick_access_current_link_name}
 				<script>
 					$(function() {
 						$('.ajax-quick-link').on('click', function(e){
 							e.preventDefault();
-							
+
 							var method = $(this).data('method');
 							if(method == 'add')
 								var name = prompt("{l s='Please provide name for this shortcut' js=1}");
