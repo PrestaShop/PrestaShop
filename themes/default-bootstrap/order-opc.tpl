@@ -36,6 +36,7 @@
 {else}
 	{if $productNumber}
 		<!-- Shopping Cart -->
+
 		{include file="$tpl_dir./shopping-cart.tpl"}
 		<!-- End Shopping Cart -->
 		{if $is_logged AND !$is_guest}

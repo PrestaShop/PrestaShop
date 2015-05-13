@@ -69,7 +69,7 @@
 <!-- end HOOK_ADVANCED_PAYMENT -->
 
 <h2>{l s='Address(es) Details'}</h2>
-{if ((!empty($delivery_option) AND !isset($virtualCart)) OR $delivery->id OR $invoice->id) AND !$opc}
+{if ((!empty($delivery_option) AND !isset($virtualCart)) OR $delivery->id OR $invoice->id)}
     <div class="order_delivery clearfix row">
         {if !isset($formattedAddresses) || (count($formattedAddresses.invoice) == 0 && count($formattedAddresses.delivery) == 0) || (count($formattedAddresses.invoice.formated) == 0 && count($formattedAddresses.delivery.formated) == 0)}
             {if $delivery->id}
@@ -505,12 +505,17 @@
     </table>
 </div> <!-- end order-detail-content -->
 
-{if !$opc}
+
 <p class="cart_navigation clearfix">
-    <a href="{$link->getPageLink('order', true, NULL, "step=2")|escape:'html':'UTF-8'}" title="{l s='Previous'}" class="button-exclusive btn btn-default">
+
+    {if $opc}
+        {assign var='back_link' value=$link->getPageLink('index')}
+    {else}
+        {assign var='back_link' value=$link->getPageLink('order', true, NULL, "step=2")}
+    {/if}
+    <a href="{$back_link|escape:'html':'UTF-8'}" title="{l s='Previous'}" class="button-exclusive btn btn-default">
         <i class="icon-chevron-left"></i>
         {l s='Continue shopping'}
     </a>
     <button data-show-if-js="" style="" id="confirmOrder" type="button" class="button btn btn-default standard-checkout button-medium"><span>{l s='Order With Obligation To Pay'}</span></button>
 </p>
-{/if}
