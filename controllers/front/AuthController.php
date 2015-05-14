@@ -271,7 +271,6 @@ class AuthControllerCore extends FrontController
 				$this->errors[] = Tools::displayError('Authentication failed.');
 			else
 			{
-				$this->context->cookie->id_compare = isset($this->context->cookie->id_compare) ? $this->context->cookie->id_compare: CompareProduct::getIdCompareByIdCustomer($customer->id);
 				$this->context->cookie->id_customer = (int)($customer->id);
 				$this->context->cookie->customer_lastname = $customer->lastname;
 				$this->context->cookie->customer_firstname = $customer->firstname;

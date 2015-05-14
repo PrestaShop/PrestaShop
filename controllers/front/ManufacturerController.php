@@ -105,7 +105,6 @@ class ManufacturerControllerCore extends FrontController
 			'products' => $products,
 			'path' => ($this->manufacturer->active ? Tools::safeOutput($this->manufacturer->name) : ''),
 			'manufacturer' => $this->manufacturer,
-			'comparator_max_item' => Configuration::get('PS_COMPARATOR_MAX_ITEM'),
 			'body_classes' => array($this->php_self.'-'.$this->manufacturer->id, $this->php_self.'-'.$this->manufacturer->link_rewrite)
 		));
 	}

@@ -1,13 +1,13 @@
 <?php
-/*
+/**
 * 2007-2015 PrestaShop
 *
 * NOTICE OF LICENSE
 *
-* This source file is subject to the Open Software License (OSL 3.0)
+* This source file is subject to the Academic Free License (AFL 3.0)
 * that is bundled with this package in the file LICENSE.txt.
 * It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
+* http://opensource.org/licenses/afl-3.0.php
 * If you did not receive a copy of the license and are unable to
 * obtain it through the world-wide-web, please send an email
 * to license@prestashop.com so we can send you a copy immediately.
@@ -18,20 +18,26 @@
 * versions in the future. If you wish to customize PrestaShop for your
 * needs please refer to http://www.prestashop.com for more information.
 *
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+*  @author    PrestaShop SA <contact@prestashop.com>
+*  @copyright 2007-2015 PrestaShop SA
+*  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class CompareControllerCore extends FrontController
+class ProductsComparisonCompareModuleFrontController extends ModuleFrontController
 {
-	public $php_self = 'products-comparison';
+	public function __construct()
+	{
+		parent::__construct();
+
+		$this->display_column_left = false;
+		$this->display_column_right = false;
+	}
 
 	public function setMedia()
 	{
 		parent::setMedia();
-		$this->addCSS(_THEME_CSS_DIR_.'comparator.css');
+		$this->addCSS($this->module->getPathUri().'views/css/comparator.css');
 	}
 
 	/**
@@ -45,7 +51,7 @@ class CompareControllerCore extends FrontController
 			if (Tools::getValue('action') == 'add')
 			{
 				$id_compare = isset($this->context->cookie->id_compare) ? $this->context->cookie->id_compare: false;
-				if (CompareProduct::getNumberProducts($id_compare) < Configuration::get('PS_COMPARATOR_MAX_ITEM'))
+				if (CompareProduct::getNumberProducts($id_compare) < $this->module->comparator_max_item)
 					CompareProduct::addCompareProduct($id_compare, (int)Tools::getValue('id_product'));
 				else
 					$this->ajaxDie('0');
@@ -77,35 +83,35 @@ class CompareControllerCore extends FrontController
 		//Clean compare product table
 		CompareProduct::cleanCompareProducts('week');
 
-		$hasProduct = false;
+		$has_product = false;
 
-		if (!Configuration::get('PS_COMPARATOR_MAX_ITEM'))
+		if (!(int)$this->module->comparator_max_item)
 			return Tools::redirect('index.php?controller=404');
 
 		$ids = null;
-		if (($product_list = Tools::getValue('compare_product_list')) && ($postProducts = (isset($product_list) ? rtrim($product_list, '|') : '')))
-			$ids = array_unique(explode('|', $postProducts));
+		if (($product_list = Tools::getValue('compare_product_list')) && ($post_products = (isset($product_list) ? rtrim($product_list, '|') : '')))
+			$ids = array_unique(explode('|', $post_products));
 		elseif (isset($this->context->cookie->id_compare))
 		{
 			$ids = CompareProduct::getCompareProducts($this->context->cookie->id_compare);
 			if (count($ids))
-				Tools::redirect($this->context->link->getPageLink('products-comparison', null, $this->context->language->id, array('compare_product_list' => implode('|', $ids))));
+				Tools::redirect($this->context->link->getModuleLink($this->module->name, 'compare', array('compare_product_list' => implode('|', $ids)), null, (int)$this->context->language->id));
 		}
 
 		if ($ids)
 		{
 			if (count($ids) > 0)
 			{
-				if (count($ids) > Configuration::get('PS_COMPARATOR_MAX_ITEM'))
-					$ids = array_slice($ids, 0, Configuration::get('PS_COMPARATOR_MAX_ITEM'));
+				if (count($ids) > (int)$this->module->comparator_max_item)
+					$ids = array_slice($ids, 0, (int)$this->module->comparator_max_item);
 
-				$listProducts = array();
-				$listFeatures = array();
+				$list_products = array();
+				$list_features = array();
 
 				foreach ($ids as $k => &$id)
 				{
-					$curProduct = new Product((int)$id, true, $this->context->language->id);
-					if (!Validate::isLoadedObject($curProduct) || !$curProduct->active || !$curProduct->isAssociatedToShop())
+					$current_product = new Product((int)$id, true, $this->context->language->id);
+					if (!Validate::isLoadedObject($current_product) || !$current_product->active || !$current_product->isAssociatedToShop())
 					{
 						if (isset($this->context->cookie->id_compare))
 							CompareProduct::removeCompareProduct($this->context->cookie->id_compare, $id);
@@ -113,26 +119,26 @@ class CompareControllerCore extends FrontController
 						continue;
 					}
 
-					foreach ($curProduct->getFrontFeatures($this->context->language->id) as $feature)
-						$listFeatures[$curProduct->id][$feature['id_feature']] = $feature['value'];
+					foreach ($current_product->getFrontFeatures($this->context->language->id) as $feature)
+						$list_features[$current_product->id][$feature['id_feature']] = $feature['value'];
 
 					$cover = Product::getCover((int)$id);
 
-					$curProduct->id_image = Tools::htmlentitiesUTF8(Product::defineProductImage(array('id_image' => $cover['id_image'], 'id_product' => $id), $this->context->language->id));
-					$curProduct->allow_oosp = Product::isAvailableWhenOutOfStock($curProduct->out_of_stock);
-					$listProducts[] = $curProduct;
+					$current_product->id_image = Tools::htmlentitiesUTF8(Product::defineProductImage(array('id_image' => $cover['id_image'], 'id_product' => $id), $this->context->language->id));
+					$current_product->allow_oosp = Product::isAvailableWhenOutOfStock($current_product->out_of_stock);
+					$list_products[] = $current_product;
 				}
 
-				if (count($listProducts) > 0)
+				if (count($list_products) > 0)
 				{
-					$width = 80 / count($listProducts);
+					$width = 80 / count($list_products);
 
-					$hasProduct = true;
-					$ordered_features = Feature::getFeaturesForComparison($ids, $this->context->language->id);
+					$has_product = true;
+					$ordered_features = CompareProduct::getFeaturesForComparison($ids, $this->context->language->id);
 					$this->context->smarty->assign(array(
 						'ordered_features' => $ordered_features,
-						'product_features' => $listFeatures,
-						'products' => $listProducts,
+						'product_features' => $list_features,
+						'products' => $list_products,
 						'width' => $width,
 						'HOOK_COMPARE_EXTRA_INFORMATION' => Hook::exec('displayCompareExtraInformation', array('list_ids_product' => $ids)),
 						'HOOK_EXTRA_PRODUCT_COMPARISON' => Hook::exec('displayProductComparison', array('list_ids_product' => $ids)),
@@ -143,13 +149,14 @@ class CompareControllerCore extends FrontController
 				{
 					$object = new CompareProduct((int)$this->context->cookie->id_compare);
 					if (Validate::isLoadedObject($object))
-					  $object->delete();
+						$object->delete();
 				}
 			}
 		}
-		$this->context->smarty->assign('hasProduct', $hasProduct);
+		$this->context->smarty->assign('hasProduct', $has_product);
 
-		$this->setTemplate(_PS_THEME_DIR_.'products-comparison.tpl');
+		$this->context->smarty->assign('compare_controller_link', $this->context->link->getModuleLink($this->module->name, 'compare', array(), null, (int)$this->context->language->id));
+
+		$this->setTemplate('products-comparison.tpl');
 	}
-
 }

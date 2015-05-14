@@ -109,7 +109,6 @@ class SupplierControllerCore extends FrontController
 					'products' => $products,
 					'path' => ($this->supplier->active ? Tools::safeOutput($this->supplier->name) : ''),
 					'supplier' => $this->supplier,
-					'comparator_max_item' => Configuration::get('PS_COMPARATOR_MAX_ITEM'),
 					'body_classes' => array(
 						$this->php_self.'-'.$this->supplier->id,
 						$this->php_self.'-'.$this->supplier->link_rewrite
@@ -147,7 +146,7 @@ class SupplierControllerCore extends FrontController
 		else
 			Tools::redirect('index.php?controller=404');
 	}
-	
+
 	/**
 	* Get instance of current supplier
 	*/

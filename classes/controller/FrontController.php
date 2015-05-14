@@ -428,10 +428,6 @@ class FrontControllerCore extends Controller
 		foreach ($languages as $lang)
 			$meta_language[] = $lang['iso_code'];
 
-		$compared_products = array();
-		if (Configuration::get('PS_COMPARATOR_MAX_ITEM') && isset($this->context->cookie->id_compare))
-			$compared_products = CompareProduct::getCompareProducts($this->context->cookie->id_compare);
-
 		$this->context->smarty->assign(array(
 			// Useful for layout.tpl
 			'mobile_device'       => $this->context->getMobileDevice(),
@@ -477,8 +473,6 @@ class FrontControllerCore extends Controller
 			'PS_STOCK_MANAGEMENT' => Configuration::get('PS_STOCK_MANAGEMENT'),
 			'quick_view'          => (bool)Configuration::get('PS_QUICK_VIEW'),
 			'shop_phone'          => Configuration::get('PS_SHOP_PHONE'),
-			'compared_products'   => is_array($compared_products) ? $compared_products : array(),
-			'comparator_max_item' => (int)Configuration::get('PS_COMPARATOR_MAX_ITEM'),
 			'currencySign'        => $currency->sign, // backward compat, see global.tpl
 			'currencyFormat'      => $currency->format, // backward compat
 			'currencyBlank'       => $currency->blank, // backward compat
@@ -977,9 +971,6 @@ class FrontControllerCore extends Controller
 
 		if (Configuration::get('PS_QUICK_VIEW'))
 			$this->addjqueryPlugin('fancybox');
-
-		if (Configuration::get('PS_COMPARATOR_MAX_ITEM') > 0)
-			$this->addJS(_THEME_JS_DIR_.'products-comparison.js');
 
 		// Execute Hook FrontController SetMedia
 		Hook::exec('actionFrontControllerSetMedia', array());

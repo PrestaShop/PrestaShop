@@ -1547,30 +1547,6 @@
     'type' => 'class',
     'override' => false,
   ),
-  'CompareController' => 
-  array (
-    'path' => '',
-    'type' => 'class',
-    'override' => false,
-  ),
-  'CompareControllerCore' => 
-  array (
-    'path' => 'controllers/front/CompareController.php',
-    'type' => 'class',
-    'override' => false,
-  ),
-  'CompareProduct' => 
-  array (
-    'path' => '',
-    'type' => 'class',
-    'override' => false,
-  ),
-  'CompareProductCore' => 
-  array (
-    'path' => 'classes/CompareProduct.php',
-    'type' => 'class',
-    'override' => false,
-  ),
   'Configuration' => 
   array (
     'path' => '',
