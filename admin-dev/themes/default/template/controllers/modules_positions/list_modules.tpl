@@ -38,23 +38,37 @@
 <div class="row">
 	<div class="col-lg-9">
 		<div class="panel">
-			<form class="form-inline well">
-				<label>{l s='Show'}</label>
-				<span>
-					<select id="show_modules" onchange="autoUrl('show_modules', '{$url_show_modules|escape:'html':'UTF-8'}')" class="filter fixed-width-lg">
-						<option value="all">{l s='All modules'}&nbsp;</option>
-						<option>-</option>
-						{foreach $modules as $module}
-							<option value="{$module->id|intval}"{if $display_key == $module->id} selected="selected"{/if}>{$module->displayName|escape:'html':'UTF-8'}</option>
-						{/foreach}
-					</select>
-				</span>
-				<p class="checkbox">
-					<label class="control-label" for="hook_position">
-						<input type="checkbox" id="hook_position" onclick="autoUrlNoList('hook_position', '{$url_show_invisible|escape:'html':'UTF-8'}')" {if $hook_position}checked="checked"{/if} />
-						{l s='Display non-positionable hooks'}
-					</label>
-				</p>
+			<form class="well form-horizontal">
+				<div class="row">
+					<div class="form-group col-lg-5 col-md-12">
+						<label class="control-label col-lg-3" style="text-align: left">{l s='Show'}</label>
+						<div class="col-lg-9">
+							<select id="show_modules" class="filter" style="width: 100%;">
+								<option value="all">{l s='All modules'}&nbsp;</option>
+								{foreach $modules as $module}
+									<option value="{$module->id|intval}"{if $display_key == $module->id} selected="selected"{/if}>{$module->displayName|escape:'html':'UTF-8'}</option>
+								{/foreach}
+							</select>
+						</div>
+					</div>
+					<div class="form-group col-lg-5 col-md-12 pull-right">
+						<label class="control-label col-lg-3" style="text-align: left">{l s='Hook search'}</label>
+						<div class="col-lg-9">
+							<div class="input-group">
+								<div class="input-group-addon"><i class="icon icon-search"></i></div>
+								<input type="text" class="form-control" id="hook_search" name="hook_search" placeholder="">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="text-right">
+					<p class="checkbox">
+						<label class="control-label" for="hook_position">
+							<input type="checkbox" id="hook_position" onclick="autoUrlNoList('hook_position', '{$url_show_invisible|escape:'html':'UTF-8'}')" {if $hook_position}checked="checked"{/if} />
+							{l s='Display non-positionable hooks'}
+						</label>
+					</p>
+				</div>
 			</form>
 			<div id="modulePosition">
 				<form method="post" action="{$url_submit|escape:'html':'UTF-8'}" >
@@ -82,7 +96,7 @@
 
 						{foreach $hook['modules'] as $position => $module}
 							{if isset($module['instance'])}
-							<li id="{$hook['id_hook']|intval}_{$module['instance']->id|intval}" class="module_list_item{if $can_move && $hook['module_count'] >= 2} draggable{/if}">
+							<li id="{$hook['id_hook']|intval}_{$module['instance']->id|intval}" class="module_position_{$module['instance']->id|intval} module_list_item{if $can_move && $hook['module_count'] >= 2} draggable{/if}">
 								<div class="module_col_select">
 									<input type="checkbox" id="mod{$hook['id_hook']|intval}_{$module['instance']->id|intval}" class="modules-position-checkbox hook{$hook['id_hook']}" onclick="hookCheckboxes({$hook['id_hook']}, 1, this)" name="unhooks[]" value="{$hook['id_hook']}_{$module['instance']->id}"/>
 								</div>

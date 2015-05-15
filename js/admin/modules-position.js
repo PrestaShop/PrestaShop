@@ -32,16 +32,15 @@ $(function(){
 	var panelSelectionOriginalY = panelSelection.offset().top;
 
 	var pageHeader = $(".page-head");
-	var panelSelectionOriginalYTopMargin = pageHeader.outerHeight() + 50;
+	var panelSelectionOriginalYTopMargin = 111;
 
 	panelSelection.css("position", "relative").hide();
 
 	$(window).on("scroll", function(event) {
 		var scrollTop = $(window).scrollTop();
-
 		panelSelection.css(
 			"top",
-			scrollTop < panelSelectionOriginalY
+			scrollTop < panelSelectionOriginalYTopMargin
 				? 0
 				: scrollTop - panelSelectionOriginalY + panelSelectionOriginalYTopMargin
 		);
@@ -55,6 +54,7 @@ $(function(){
 		panelSelectionSingleSelection.hide();
 		panelSelectionMultipleSelection.hide();
 		if (checkedCount == 1) {
+
 			panelSelection.show();
 			panelSelectionSingleSelection.show();
 		} else if (checkedCount > 1) {
@@ -67,4 +67,73 @@ $(function(){
 	panelSelection.find("button").click(function(){
 		$("button[name='unhookform']").trigger("click");
 	});
+
+	var hooksList = [];
+	$("section.hook_panel").find(".hook_name").each(function(){
+		var $this = $(this);
+		hooksList.push({
+			'title' : $this.html(),
+			'element' : $this,
+			'container' : $this.parents(".hook_panel")
+		});
+	});
+
+	var showModules = $("#show_modules");
+	showModules.select2();
+	showModules.bind("change", function() {
+		modulesPositionFilterHooks();
+	});
+
+	$('#hook_search').bind('input', function() {
+		modulesPositionFilterHooks();
+	});
+
+	function modulesPositionFilterHooks() {
+
+		var id = 0;
+		var hookName = $('#hook_search').val();
+		var moduleId = $("#show_modules").val();
+		var regex = new RegExp("("+hookName+")", "gi");
+
+		for (id = 0; id < hooksList.length; id++) {
+			hooksList[id].container.toggle(hookName == "" && moduleId == "all");
+			hooksList[id].element.html(hooksList[id].title);
+			hooksList[id].container.find('.module_list_item').removeClass('highlight' );
+		}
+
+
+		if (hookName != "" || moduleId != "all") {
+
+			var hooksToShowFromModule = $();
+			var hooksToShowFromHookName = $();
+
+			if (moduleId != "all") {
+				for (id = 0; id < hooksList.length; id++) {
+					var currentHooks = hooksList[id].container.find(".module_position_"+moduleId);
+					if (currentHooks.length > 0) {
+						hooksToShowFromModule = hooksToShowFromModule.add(hooksList[id].container);
+						currentHooks.addClass('highlight');
+					}
+				}
+			}
+
+			if (hookName != "") {
+				for (id = 0; id < hooksList.length; id++) {
+					var start = hooksList[id].title.toLowerCase().search(hookName.toLowerCase());
+					if (start != -1) {
+						hooksToShowFromHookName = hooksToShowFromHookName.add(hooksList[id].container);
+						hooksList[id].element.html(hooksList[id].title.replace(regex, '<span class="highlight">$1</span>'));
+					}
+				}
+			}
+
+			if (moduleId == "all" && hookName != "") {
+				hooksToShowFromHookName.show();
+			} else if (hookName == "" && moduleId != "all") {
+				hooksToShowFromModule.show();
+			} else {
+				hooksToShowFromHookName.filter(hooksToShowFromModule).show();
+			}
+		}
+	}
 });

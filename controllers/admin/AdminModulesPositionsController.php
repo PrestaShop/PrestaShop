@@ -40,8 +40,13 @@ class AdminModulesPositionsControllerCore extends AdminController
 		if (Tools::getValue('show_modules') && strval(Tools::getValue('show_modules')) != 'all')
 			$this->display_key = (int)Tools::getValue('show_modules');
 
+		$this->addjQueryPlugin(array(
+			'select2',
+		));
+
 		$this->addJS(array(
 			_PS_JS_DIR_.'admin/modules-position.js',
+			_PS_JS_DIR_.'jquery/plugins/select2/select2_locale_'.$this->context->language->iso_code.'.js',
 		));
 
 
