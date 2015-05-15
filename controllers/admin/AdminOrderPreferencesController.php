@@ -170,6 +170,11 @@ class AdminOrderPreferencesControllerCore extends AdminController
 
 		if (!Configuration::get('PS_ALLOW_MULTISHIPPING'))
 			unset($this->fields_options['general']['fields']['PS_ALLOW_MULTISHIPPING']);
+
+		if (Configuration::get('PS_ATCP_SHIPWRAP'))
+		{
+			unset($this->fields_options['gift']['fields']['PS_GIFT_WRAPPING_TAX_RULES_GROUP']);
+		}
 	}
 
 	/**

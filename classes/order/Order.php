@@ -1195,7 +1195,7 @@ class OrderCore extends ObjectModel
 				$order_invoice->number = 0;
 			$address = new Address((int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
 			$carrier = new Carrier((int)$this->id_carrier);
-			$tax_calculator = $carrier->getTaxCalculator($address);
+			$tax_calculator = $carrier->getTaxCalculator($address, $this->id, Configuration::get('PS_ATCP_SHIPWRAP'));
 			$order_invoice->total_discount_tax_excl = $this->total_discounts_tax_excl;
 			$order_invoice->total_discount_tax_incl = $this->total_discounts_tax_incl;
 			$order_invoice->total_paid_tax_excl = $this->total_paid_tax_excl;
@@ -1214,11 +1214,32 @@ class OrderCore extends ObjectModel
 			if (Configuration::get('PS_INVOICE'))
 				$this->setLastInvoiceNumber($order_invoice->id, $this->id_shop);
 
-			$wrapping_tax_manager = TaxManagerFactory::getManager($address, (int)Configuration::get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'));
-			$wrapping_tax_calculator = $wrapping_tax_manager->getTaxCalculator();
+			if (Configuration::get('PS_ATCP_SHIPWRAP'))
+			{
+				$wrapping_tax_calculator = Adapter_ServiceLocator::get('AverageTaxOfProductsTaxCalculator')->setIdOrder($this->id);
+			}
+			else
+			{
+				$wrapping_tax_manager = TaxManagerFactory::getManager($address, (int)Configuration::get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'));
+				$wrapping_tax_calculator = $wrapping_tax_manager->getTaxCalculator();
+			}
 
-			$order_invoice->saveCarrierTaxCalculator($tax_calculator->getTaxesAmount($order_invoice->total_shipping_tax_excl));
-			$order_invoice->saveWrappingTaxCalculator($wrapping_tax_calculator->getTaxesAmount($order_invoice->total_wrapping_tax_excl));
+			$order_invoice->saveCarrierTaxCalculator(
+				$tax_calculator->getTaxesAmount(
+					$order_invoice->total_shipping_tax_excl,
+					$order_invoice->total_shipping_tax_incl,
+					_PS_PRICE_COMPUTE_PRECISION_,
+					$this->round_mode
+				)
+			);
+			$order_invoice->saveWrappingTaxCalculator(
+				$wrapping_tax_calculator->getTaxesAmount(
+					$order_invoice->total_wrapping_tax_excl,
+					$order_invoice->total_wrapping_tax_incl,
+					_PS_PRICE_COMPUTE_PRECISION_,
+					$this->round_mode
+				)
+			);
 
 			// Update order_carrier
 			$id_order_carrier = Db::getInstance()->getValue('

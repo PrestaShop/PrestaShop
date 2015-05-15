@@ -1343,6 +1343,12 @@
     'type' => 'class',
     'override' => false,
   ),
+  'AverageTaxOfProductsTaxCalculator' => 
+  array (
+    'path' => 'classes/tax/AverageTaxOfProductsTaxCalculator.php',
+    'type' => 'class',
+    'override' => false,
+  ),
   'BestSalesController' => 
   array (
     'path' => '',
@@ -1400,12 +1406,6 @@
   'CMSRoleCore' => 
   array (
     'path' => 'classes/CMSRole.php',
-    'type' => 'class',
-    'override' => false,
-  ),
-  'CMSRoleRepository' => 
-  array (
-    'path' => 'Core/Business/CMS/CMSRoleRepository.php',
     'type' => 'class',
     'override' => false,
   ),
@@ -1766,6 +1766,18 @@
   'CookieCore' => 
   array (
     'path' => 'classes/Cookie.php',
+    'type' => 'class',
+    'override' => false,
+  ),
+  'Core_Business_CMS_CMSRepository' => 
+  array (
+    'path' => 'Core/Business/CMS/Core_Business_CMS_CMSRepository.php',
+    'type' => 'class',
+    'override' => false,
+  ),
+  'Core_Business_CMS_CMSRoleRepository' => 
+  array (
+    'path' => 'Core/Business/CMS/Core_Business_CMS_CMSRoleRepository.php',
     'type' => 'class',
     'override' => false,
   ),
