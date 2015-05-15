@@ -277,7 +277,8 @@ class AdminModulesPositionsControllerCore extends AdminController
 
 		$assoc_modules_id = array();
 		foreach ($modules as $module)
-			if ($tmp_instance = Module::getInstanceById((int)$module['id_module'])) {
+			if ($tmp_instance = Module::getInstanceById((int)$module['id_module']))
+			{
 				// We want to be able to sort modules by display name
 				$module_instances[$tmp_instance->displayName] = $tmp_instance;
 				// But we also want to associate hooks to modules using the modules IDs
@@ -285,7 +286,8 @@ class AdminModulesPositionsControllerCore extends AdminController
 			}
 		ksort($module_instances);
 		$hooks = Hook::getHooks();
-		foreach ($hooks as $key => $hook) {
+		foreach ($hooks as $key => $hook)
+		{
 			// Get all modules for this hook or only the filtered module
 			$hooks[$key]['modules'] = Hook::getModulesFromHook($hook['id_hook'], $this->display_key);
 			$hooks[$key]['module_count'] = count($hooks[$key]['modules']);
@@ -404,7 +406,8 @@ class AdminModulesPositionsControllerCore extends AdminController
 		$modules = $instances;
 
 		$hooks = array();
-		if ((int)Tools::getValue('id_hook') > 0) {
+		if ((int)Tools::getValue('id_hook') > 0)
+		{
 			$module_instance = Module::getInstanceById((int)Tools::getValue('id_module'));
 			$hooks = $module_instance->getPossibleHooksList();
 		}
@@ -593,7 +596,6 @@ class AdminModulesPositionsControllerCore extends AdminController
 
 			foreach ($hooks_list as $id_hook => $modules)
 			{
-
 				// 1st, drop all previous hooked modules
 				$sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module` WHERE `id_hook` =  '.(int)$id_hook.' AND id_shop = '.(int)$id_shop;
 				$res &= Db::getInstance()->execute($sql);

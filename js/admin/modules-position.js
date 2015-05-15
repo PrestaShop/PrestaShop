@@ -28,7 +28,8 @@ $(function(){
 	//
 	// Used for the modules listing
 	//
-	if ($("#position_filer").length != 0) {
+	if ($("#position_filer").length != 0)
+	{
 		var panel_selection = $("#modules-position-selection-panel");
 		var panel_selection_single_selection = panel_selection.find("#modules-position-single-selection");
 		var panel_selection_multiple_selection = panel_selection.find("#modules-position-multiple-selection");
@@ -51,14 +52,20 @@ $(function(){
 		var modules_list = $(".modules-position-checkbox");
 
 		modules_list.on("change", function () {
+
 			var checked_count = modules_list.filter(":checked").length;
+
 			panel_selection.hide();
 			panel_selection_single_selection.hide();
 			panel_selection_multiple_selection.hide();
-			if (checked_count == 1) {
+
+			if (checked_count == 1)
+			{
 				panel_selection.show();
 				panel_selection_single_selection.show();
-			} else if (checked_count > 1) {
+			}
+			else if (checked_count > 1)
+			{
 				panel_selection.show();
 				panel_selection_multiple_selection.show();
 				panel_selection_multiple_selection.find("#modules-position-selection-count").html(checked_count);
@@ -94,36 +101,43 @@ $(function(){
 			modulesPositionFilterHooks();
 		});
 
-		function modulesPositionFilterHooks() {
+		function modulesPositionFilterHooks()
+		{
 			var id;
 			var hook_name = $('#hook_search').val();
 			var module_id = $("#show_modules").val();
 			var position = hook_position.prop('checked');
 			var regex = new RegExp("(" + hook_name + ")", "gi");
 
-			for (id = 0; id < hooks_list.length; id++) {
+			for (id = 0; id < hooks_list.length; id++)
+			{
 				hooks_list[id].container.toggle(hook_name == "" && module_id == "all");
 				hooks_list[id].element.html(hooks_list[id].title);
 				hooks_list[id].container.find('.module_list_item').removeClass('highlight');
 			}
 
-			if (hook_name != "" || module_id != "all") {
+			if (hook_name != "" || module_id != "all")
+			{
 				var hooks_to_show_from_module = $();
 				var hooks_to_show_from_hook_name = $();
 
 				if (module_id != "all")
-					for (id = 0; id < hooks_list.length; id++) {
+					for (id = 0; id < hooks_list.length; id++)
+					{
 						var current_hooks = hooks_list[id].container.find(".module_position_" + module_id);
-						if (current_hooks.length > 0) {
+						if (current_hooks.length > 0)
+						{
 							hooks_to_show_from_module = hooks_to_show_from_module.add(hooks_list[id].container);
 							current_hooks.addClass('highlight');
 						}
 					}
 
 				if (hook_name != "")
-					for (id = 0; id < hooks_list.length; id++) {
+					for (id = 0; id < hooks_list.length; id++)
+					{
 						var start = hooks_list[id].title.toLowerCase().search(hook_name.toLowerCase());
-						if (start != -1) {
+						if (start != -1)
+						{
 							hooks_to_show_from_hook_name = hooks_to_show_from_hook_name.add(hooks_list[id].container);
 							hooks_list[id].element.html(hooks_list[id].title.replace(regex, '<span class="highlight">$1</span>'));
 						}
@@ -152,8 +166,8 @@ $(function(){
 		var $this = $(this);
 		var hook_select = $("select[name='id_hook']");
 
-		if ($this.val() != 0) {
-
+		if ($this.val() != 0)
+		{
 			$this.find("[value='0']").remove();
 			hook_select.find("option").remove();
 
@@ -170,15 +184,18 @@ $(function(){
 					token: token
 				},
 				success: function (jsonData) {
-					if (jsonData.hasError) {
+					if (jsonData.hasError)
+					{
 						var errors = '';
 						for (var error in jsonData.errors)
 							if (error != 'indexOf')
 								errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
 					}
-					else {
+					else
+					{
 						for (var current_hook = 0; current_hook < jsonData.length; current_hook++)
 							hook_select.append('<option value="'+jsonData[current_hook].id_hook+'">'+jsonData[current_hook].name+'</option>');
+
 						hook_select.prop('disabled', false);
 					}
 				}

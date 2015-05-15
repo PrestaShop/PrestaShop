@@ -2954,9 +2954,11 @@ abstract class ModuleCore
 	{
 		$hooks_list = Hook::getHooks();
 		$possible_hooks_list = array();
-		foreach ($hooks_list as &$current_hook) {
+		foreach ($hooks_list as &$current_hook)
+		{
 			$hook_name = $current_hook['name'];
 			$retro_hook_name = Hook::getRetroHookName($hook_name);
+
 			if (is_callable(array($this, 'hook'.ucfirst($hook_name))) || is_callable(array($this, 'hook'.ucfirst($retro_hook_name))))
 				$possible_hooks_list[] = array(
 					'id_hook' => $current_hook['id_hook'],
