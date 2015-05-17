@@ -567,7 +567,22 @@ class SearchCore
 		if ($id_product)
 			$full = false;
 
-		if ($full)
+		if ($full && Context::getContext()->shop->getContext() == Shop::CONTEXT_SHOP)
+		{
+			$db->execute('DELETE si, sw FROM `'._DB_PREFIX_.'search_index` si
+				INNER JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = si.id_product)
+				'.Shop::addSqlAssociation('product', 'p').'
+				INNER JOIN `'._DB_PREFIX_.'search_word` sw ON (sw.id_word = si.id_word AND product_shop.id_shop = sw.id_shop)
+				WHERE product_shop.`visibility` IN ("both", "search")
+				AND product_shop.`active` = 1');
+			$db->execute('UPDATE `'._DB_PREFIX_.'product` p
+				'.Shop::addSqlAssociation('product', 'p').'
+				SET p.`indexed` = 0, product_shop.`indexed` = 0
+				WHERE product_shop.`visibility` IN ("both", "search")
+				AND product_shop.`active` = 1
+				');
+		}
+		elseif ($full)
 		{
 			$db->execute('TRUNCATE '._DB_PREFIX_.'search_index');
 			$db->execute('TRUNCATE '._DB_PREFIX_.'search_word');
