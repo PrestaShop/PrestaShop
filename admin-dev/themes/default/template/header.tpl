@@ -115,9 +115,16 @@
 				</button>
 
 				<a id="header_shopname" href="{$default_tab_link|escape:'html':'UTF-8'}">
-					<small>{$version}</small><span id="shop_name">{$shop_name}</span>
+					<span id="shop_version">{$version}</span>
 				</a>
-
+				{* Shop *}
+				{if isset($is_multishop) && $is_multishop && $shop_list && (isset($multishop_context) && $multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
+					<ul id="header_shop">
+						<li class="dropdown">
+							{$shop_list}
+						</li>
+					</ul>
+				{/if}
 				<ul id="header_notifs_icon_wrapper">
 {if {$show_new_orders} == 1}
 					<li id="orders_notif" class="dropdown" data-type="order">
@@ -279,14 +286,6 @@
 					});
 				</script>
 {/if}
-				{* Shop *}
-				{if isset($is_multishop) && $is_multishop && $shop_list && (isset($multishop_context) && $multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
-					<!--<ul>
-						<li class="breadcrumb-multishop">
-							{$shop_list}
-						</li>
-					</ul>-->
-				{/if}
 				<ul id="header_employee_box">
 					{if (!isset($logged_on_addons) || !$logged_on_addons) && (isset($display_addons_connection) && $display_addons_connection)}
 						<li>

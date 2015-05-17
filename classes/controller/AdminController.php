@@ -1874,6 +1874,7 @@ class AdminControllerCore extends Controller
 		if (Validate::isLoadedObject($this->context->employee))
 		{
 			$accesses = Profile::getProfileAccesses($this->context->employee->id_profile, 'class_name');
+			$helperShop = new HelperShop();
 			/* Hooks are voluntary out the initialize array (need those variables already assigned) */
 			$bo_color = empty($this->context->employee->bo_color) ? '#FFFFFF' : $this->context->employee->bo_color;
 			$this->context->smarty->assign(array(
@@ -1892,7 +1893,7 @@ class AdminControllerCore extends Controller
 				'bo_query' => Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query'))),
 				'quick_access' => $quick_access,
 				'multi_shop' => Shop::isFeatureActive(),
-				'shop_list' => Helper::renderShopList(),
+				'shop_list' => $helperShop->getRenderedShopList(),
 				'shop' => $this->context->shop,
 				'shop_group' => new ShopGroup((int)Shop::getContextShopGroupID()),
 				'is_multishop' => $is_multishop,
