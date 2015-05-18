@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  'informations' => 
+  'informations' =>
   array (
     'phone' => '+1 (888) 947-6543',
     'documentation' => 'http://doc.prestashop.com/',
@@ -10,7 +10,7 @@ return array (
     'blog' => 'http://www.prestashop.com/blog/',
     'support' => 'https://www.prestashop.com/en/support',
   ),
-  'translations' => 
+  'translations' =>
   array (
     'An SQL error occurred for entity <i>%1$s</i>: <i>%2$s</i>' => '<i>%1$s</i>: <i>%2$s</i> এনটিটির জন্য একটি ত্রুটি ঘটেছে ',
     'Cannot create image "%1$s" for entity "%2$s"' => 'এনটিটি "%2$s"এর জন্য চিত্র "%1$s" তৈরি করা যায় নি',
@@ -201,7 +201,7 @@ return array (
     'PrestaShop requires at least 32 MB of memory to run: please check the memory_limit directive in your php.ini file or contact your host provider about this.' => 'PrestaShop চালাতে অন্তত 32M মেমরি প্রয়োজন।php.ini তে আপনার মেমরি চেক করুন অথবা অথবা আপনার হোস্ট সরবরাহকারীর সাথে যোগাযোগ করুন।',
     '<b>Warning: You cannot use this tool to upgrade your store anymore.</b><br /><br />You already have <b>PrestaShop version %1$s installed</b>.<br /><br />If you want to upgrade to the latest version, please read our documentation: <a href="%2$s">%2$s</a>' => '<b>সতর্কবার্তা: আপনি আপনার দোকান আপগ্রেড করতে আর এই টুল ব্যবহার করতে পারবেন না </b><br /><br />আপনার ইতিমধ্যেই আছে<b>PrestaShop সংস্করণ %1$s ইনস্টল করা </b>.<br /><br />আপনি সর্বশেষ সংস্করণে আপগ্রেড করতে চান তাহলে আমাদের ডকুমেন্টেশন দয়া করে পড়ুন:<a href="%2$s">%2$s</a>',
     'Welcome to the PrestaShop %s Installer' => 'PrestaShop  ইনস্টলার  %s এ স্বাগতম',
-    'Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 200,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'PrestaShop ইনস্টলেশন দ্রুত এবং সহজ। মাত্র কয়েক মুহূর্তের মধ্যে, আপনি  200.000 এর বেশি বণিকদের একটি কমিউনিটির অংশ হয়ে যাবেন। আপনি আপনার নিজের অসাধারন দোকান তৈরির পথে আছেন যেটি খুব সহজে প্রতিদিন ম্যানেজ করতে পারবেন।     ',
+    'Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 230,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'PrestaShop ইনস্টলেশন দ্রুত এবং সহজ। মাত্র কয়েক মুহূর্তের মধ্যে, আপনি  230.000 এর বেশি বণিকদের একটি কমিউনিটির অংশ হয়ে যাবেন। আপনি আপনার নিজের অসাধারন দোকান তৈরির পথে আছেন যেটি খুব সহজে প্রতিদিন ম্যানেজ করতে পারবেন।     ',
     'If you need help, do not hesitate to check <a href="%1$s" target="_blank">our documentation</a> or to contact our support team: %2$s.' => 'যদি আপনার কোনো সাহায্যের দরকার হয়,তবে আমাদের নত্থিপত্র<a href="%1$s" target="_blank">চেক করতে দ্বিধা করবেন না</a> অথবা আমাদের সাপোর্ট টিম এর সাথে যোগাযোগ করুন: %2$s.',
     'Continue the installation in:' => 'এ ইনস্টলেশন চালিয়ে যান: ',
     'The language selection above only applies to the Installation Assistant. Once your store is installed, you can choose the language of your store from over %d translations, all for free!' => 'উপরোক্ত ভাষা নির্বাচন শুধুমাত্র ইনস্টলেশনের সহকারীর জন্য প্রযোজ্য।আপনার দোকান ইনস্টল করা হলে,আপনি উপর থেকে আপনার দোকানের ভাষা নির্বাচন করতে পারবেন একদম বিনামূল্যে!',

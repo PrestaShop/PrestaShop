@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  'informations' => 
+  'informations' =>
   array (
     'phone' => '+1 (888) 947-6543',
     'documentation' => 'http://doc.prestashop.com/',
@@ -10,7 +10,7 @@ return array (
     'blog' => 'http://www.prestashop.com/blog/',
     'support' => 'https://www.prestashop.com/en/support',
   ),
-  'translations' => 
+  'translations' =>
   array (
     'An SQL error occurred for entity <i>%1$s</i>: <i>%2$s</i>' => 'SQL hiba lépett fel a következőnél: <i>%1$s</i>, hibaüzenete <i>%2$s</i>',
     'Cannot create image "%1$s" for entity "%2$s"' => '"%1$s" kép nem hozható létre "%2$s" részére',
@@ -201,7 +201,7 @@ return array (
     'PrestaShop requires at least 32 MB of memory to run: please check the memory_limit directive in your php.ini file or contact your host provider about this.' => 'A PrestaShop legalább 32 MB memóriát igényel a futtatáshoz: kérünk, ellenőrizd a memory_limit direktívákat a php.ini fájlodban vagy vedd fel a kapcsolatot szolgáltatóddal!',
     '<b>Warning: You cannot use this tool to upgrade your store anymore.</b><br /><br />You already have <b>PrestaShop version %1$s installed</b>.<br /><br />If you want to upgrade to the latest version, please read our documentation: <a href="%2$s">%2$s</a>' => '<b>Figyelem: Ezt az eszközt már nem használhatod a boltod frissítéséhez!</b><br /><br />Már telepítve van a <b>PrestaShop %1$s verzió</b>.<br /><br />Ha a legfrissebb verzióra szeretnél frissíteni, itt tudod elolvasni a dokumentációt: <a href="%2$s">%2$s</a>',
     'Welcome to the PrestaShop %s Installer' => 'Üdvözöl a PrestaShop %s telepítő',
-    'Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 200,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'A PrestaShop telepítése gyors és könnyű. Csupán néhány perc alatt részese lehetsz a több, mint 200.000 kereskedőből álló közösségnek! Úton vagy saját egyedi online webáruházad létrehozásához, melyet könnyen kezelhetsz nap-mint-nap.',
+    'Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 230,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'A PrestaShop telepítése gyors és könnyű. Csupán néhány perc alatt részese lehetsz a több, mint 230.000 kereskedőből álló közösségnek! Úton vagy saját egyedi online webáruházad létrehozásához, melyet könnyen kezelhetsz nap-mint-nap.',
     'If you need help, do not hesitate to check <a href="%1$s" target="_blank">our documentation</a> or to contact our support team: %2$s.' => 'Ha segítségre van szükséged, tekintsd meg <a href="%1$s" target="_blank">dokumentációnkat</a> vagy lépj kapcsolatba a támogató csapattal: %2$s.',
     'Continue the installation in:' => 'Telepítés nyelve:',
     'The language selection above only applies to the Installation Assistant. Once your store is installed, you can choose the language of your store from over %d translations, all for free!' => 'A fenti nyelv kiválasztása csak a telepítési asszisztensre érvényes. A bolt nyelvét a telepítés után tudod kiválasztani %d fordításból, és ez mind ingyenes!',
