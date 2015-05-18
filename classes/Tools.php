@@ -2169,6 +2169,7 @@ class ToolsCore
 		// Default values for parameters
 		if (is_null($path))
 			$path = _PS_ROOT_DIR_.'/.htaccess';
+
 		if (is_null($cache_control))
 			$cache_control = (int)Configuration::get('PS_HTACCESS_CACHE_CONTROL');
 		if (is_null($disable_multiviews))

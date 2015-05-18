@@ -640,7 +640,7 @@ class AdminTranslationsControllerCore extends AdminController
 						//Check if class name exists
 						if (isset($tab->class_name) && !empty($tab->class_name))
 						{
-							$id_lang = Language::getIdByIso($iso_code);
+							$id_lang = Language::getIdByIso($iso_code, true);
 							$tab->name[(int)$id_lang] = $translations;
 
 							// Do not crash at intall
@@ -656,6 +656,7 @@ class AdminTranslationsControllerCore extends AdminController
 				}
 			}
 		}
+
 		return $errors;
 	}
 
