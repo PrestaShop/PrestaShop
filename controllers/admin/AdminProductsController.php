@@ -456,21 +456,17 @@ class AdminProductsControllerCore extends AdminController
 	public function ajaxProcessGetCategoryTree()
 	{
 		$category = Tools::getValue('category', Category::getRootCategory()->id);
-		$fullTree = Tools::getValue('fullTree', 0);
+		$full_tree = Tools::getValue('fullTree', 0);
+		$use_check_box = Tools::getValue('useCheckBox', 1);
 		$selected = Tools::getValue('selected', array());
 		$input_name = str_replace(array('[', ']'), '', Tools::getValue('inputName', null));
-		$type = Tools::getValue('type', '');
-		if ($type == 'categories-tree')
-			$use_check_box = false;
-		else
-			$use_check_box = true;
 
 		$tree = new HelperTreeCategories('subtree_associated_categories');
 		$tree->setTemplate('subtree_associated_categories.tpl')
 			->setUseCheckBox($use_check_box)
 			->setUseSearch(true)
 			->setSelectedCategories($selected)
-			->setFullTree($fullTree)
+			->setFullTree($full_tree)
 			->setChildrenOnly(true)
 			->setNoJS(true)
 			->setRootCategory($category);
