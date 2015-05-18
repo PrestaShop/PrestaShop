@@ -26,7 +26,7 @@ class EntityManagerTest extends IntegrationTestCase
 	public function test_explicitly_defined_repository_is_found_by_entitymanager()
 	{
 		$this->assertInstanceOf(
-			'CMSRoleRepository',
+			'Core_Business_CMS_CMSRoleRepository',
 			$this->entityManager->getRepository('CMSRole')
 		);
 	}
