@@ -7,23 +7,6 @@
 			<li class="searchtab">
 				{include file="search_form.tpl" id="header_search" show_clear_btn=1}
 			</li>
-
-			{*if count($quick_access) > 0}
-				<li id="header_quick" class="maintab has_submenu">
-					<a href="#" id="quick_select" class="title">
-						<i class="icon-AdminFlash"></i>
-						<span>{l s='Quick Access'}</span>
-					</a>
-					<ul class="submenu">
-					{foreach $quick_access as $quick}
-						<li>
-							<a href="{$quick.link|escape:'html':'UTF-8'}" {if $quick.new_window} onclick="return !window.open(this.href);"{/if}>{$quick.name}</a>
-						</li>
-					{/foreach}
-					</ul>
-				</li>
-			{/if*}
-
 			{foreach $tabs as $t}
 				{if $t.active}
 				<li class="maintab {if $t.current}active{/if} {if $t.sub_tabs|@count}has_submenu{/if}" id="maintab-{$t.class_name}" data-submenu="{$t.id_tab}">
