@@ -32,12 +32,6 @@
 {/block}
 {block name=pageBreadcrumb}
 <ul class="breadcrumb page-breadcrumb">
-	{* Shop *}
-	{if $is_multishop && $shop_list && ($multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
-		<li class="breadcrumb-multishop">
-			{$shop_list}
-		</li>
-	{/if}
 	{if $breadcrumbs2.container.name != ''}
 		<li class="breadcrumb-current">
 			{if $breadcrumbs2.container.href != ''}<a href="{$breadcrumbs2.container.href|escape}">{/if}

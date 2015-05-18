@@ -916,7 +916,6 @@ class AdminModulesControllerCore extends AdminController
 							}
 
 							$this->context->smarty->assign(array(
-								'shop_list' => Helper::renderShopList(),
 								'is_multishop' => Shop::isFeatureActive(),
 								'multishop_context' => Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP
 							));

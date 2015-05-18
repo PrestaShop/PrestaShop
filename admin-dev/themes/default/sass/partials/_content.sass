@@ -38,6 +38,8 @@ body
 			white-space: nowrap
 			color: #555
 			height: 32px
+			.btn
+				padding: 4px 8px !important
 			a.btn
 				font-family: $font-family-sans-serif
 				text-transform: none
@@ -47,7 +49,6 @@ body
 				font-size: $icon-size-base
 		.panel
 			border: solid 1px #DDDDDD
-			@include box-shadow(rgba(black,0.10) 0 2px 0, white 0 0 0 3px inset)
 		.panel.tab-content
 			@include border-radius(0 0 3px 3px)
 	h3:not(.modal-title), .panel-heading
@@ -79,6 +80,8 @@ body
 			position: absolute
 			top: 2px
 			@include right(0)
+			.btn
+				padding: 4px 8px !important
 			.btn-group
 				position: absolute
 				white-space: nowrap
