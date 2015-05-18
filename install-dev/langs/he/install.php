@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  'informations' => 
+  'informations' =>
   array (
     'phone' => '+1 (888) 947-6543',
     'documentation' => 'http://doc.prestashop.com/display/PS16/PrestaShop+1.6+documentation',
@@ -10,7 +10,7 @@ return array (
     'blog' => 'http://www.prestashop.com/blog/',
     'support' => 'https://www.prestashop.com/en/support',
   ),
-  'translations' => 
+  'translations' =>
   array (
     'An SQL error occurred for entity <i>%1$s</i>: <i>%2$s</i>' => 'שגיאת SQL אירעה עבור <i>%1$s</i>: <i>%2$s</i>',
     'Cannot create image "%1$s" for entity "%2$s"' => 'כשלון ביצירת תמונה "%1$s" עבור "%2$s"',
@@ -201,7 +201,7 @@ return array (
     'PrestaShop requires at least 32 MB of memory to run: please check the memory_limit directive in your php.ini file or contact your host provider about this.' => 'להרצת פרסטהשופ נדרש לפחות 32 MB של זיכרון: בדוק את הגדרת memory_limit בקובץ ה php.ini שלך, או צור קשר עם ספק האכסון שלך בנושא.',
     '<b>Warning: You cannot use this tool to upgrade your store anymore.</b><br /><br />You already have <b>PrestaShop version %1$s installed</b>.<br /><br />If you want to upgrade to the latest version, please read our documentation: <a href="%2$s">%2$s</a>' => '<b>אזהרה: אין באפשרותך להשתמש עוד בכלי זה לשדרוג חנותך.</b><br /><br />כבר <b>מותקנת אצלך גרסה %1$s</b> של פרסטהשופ.<br /><br />אם ברצונך לשדרג לגרסה האחרונה, קרא בבקשה את התיעוד: <a href="%2$s">%2$s</a>',
     'Welcome to the PrestaShop %s Installer' => 'ברוכים הבאים להתקנת פרסטהשופ %s',
-    'Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 200,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'התקנת פרסטהשופ היא קלה ופשוטה. תוך מספר דקות תהפוך לחלק מקהילה הכוללת מעל 200,000 סוחרים. אתה נמצא בדרכך ליצירת חנות וירטואלית ייחודית שתוכל לנהלה בקלות על בסיס יומי.',
+    'Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 230,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'התקנת פרסטהשופ היא קלה ופשוטה. תוך מספר דקות תהפוך לחלק מקהילה הכוללת מעל 230,000 סוחרים. אתה נמצא בדרכך ליצירת חנות וירטואלית ייחודית שתוכל לנהלה בקלות על בסיס יומי.',
     'If you need help, do not hesitate to check <a href="%1$s" target="_blank">our documentation</a> or to contact our support team: %2$s.' => 'אם אתה נזקק לעזרה, אל תהסס לבדוק את <a href="%1$s" target="_blank">התיעוד שלנו</a> או לפנות לצוות התמיכה: %2$s.',
     'Continue the installation in:' => 'המשך התקנה בשפה:',
     'The language selection above only applies to the Installation Assistant. Once your store is installed, you can choose the language of your store from over %d translations, all for free!' => 'בחירת השפה למעלה חלה על תהליך ההתקנה בלבד. לאחר שהחנות מותקנת, באפשרותך לבחור שפה עבור ממשק החנות מתוך מעל %d תרגומים, והכל בחינם!',

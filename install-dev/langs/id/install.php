@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  'informations' => 
+  'informations' =>
   array (
     'phone' => '+1 (888) 947-6543',
     'documentation' => 'http://doc.prestashop.com/',
@@ -10,7 +10,7 @@ return array (
     'blog' => 'http://www.prestashop.com/blog/',
     'support' => 'https://www.prestashop.com/en/support',
   ),
-  'translations' => 
+  'translations' =>
   array (
     'An SQL error occurred for entity <i>%1$s</i>: <i>%2$s</i>' => 'Terdapat kesalahan SQL pada objek <i>%1$s</i>: <i>%2$s</i>',
     'Cannot create image "%1$s" for entity "%2$s"' => 'Tidak dapat membuat image "%1$s" untuk objek "%2$s"',
@@ -201,7 +201,7 @@ return array (
     'PrestaShop requires at least 32 MB of memory to run: please check the memory_limit directive in your php.ini file or contact your host provider about this.' => 'PrestaShop membutuhkan memori minimal sebesar 32 MB: harap cek direktif memory_limit pada file php.ini atau hubungi tempat hosting Anda.',
     '<b>Warning: You cannot use this tool to upgrade your store anymore.</b><br /><br />You already have <b>PrestaShop version %1$s installed</b>.<br /><br />If you want to upgrade to the latest version, please read our documentation: <a href="%2$s">%2$s</a>' => '<b>Perhatian: Anda tidak dapat menggunakan tool ini untuk melakukan upgrade toko Anda.</b><br /><br />Anda menggunakan <b>PrestaShop versi %1$s</b>.<br /><br />Jika ingin melakukan upgrade ke versi terbaru, silahkan baca petunjuknya di: <a href="%2$s">%2$s</a>',
     'Welcome to the PrestaShop %s Installer' => 'Selamat datang di instalasi Prestashop %s',
-    'Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 200,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'Instalasi Prestashop cukup cepat dan mudah. Dalam waktu singkat, Anda akan bergabung di komunitas kami yang terdiri dari lebih 200.000 pedagang.  Sehingga anda dapat membuat toko online unik yang dapat dikelola dengan mudah setiap harinya.',
+    'Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 230,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'Instalasi Prestashop cukup cepat dan mudah. Dalam waktu singkat, Anda akan bergabung di komunitas kami yang terdiri dari lebih 230.000 pedagang.  Sehingga anda dapat membuat toko online unik yang dapat dikelola dengan mudah setiap harinya.',
     'If you need help, do not hesitate to check <a href="%1$s" target="_blank">our documentation</a> or to contact our support team: %2$s.' => 'Jika memerlukan bantuan, jangan ragu untuk membaca <a href="%1$s" target="_blank">panduan Prestashop</a> atau hubungi kami: %2$s.',
     'Continue the installation in:' => 'Lanjutkan instalasi di:',
     'The language selection above only applies to the Installation Assistant. Once your store is installed, you can choose the language of your store from over %d translations, all for free!' => 'Pilihan bahasa diatas hanya berlaku ketika proses instalasi. Setelah terinstall, Anda dapat memilih bahasa untuk toko Anda dari lebih %d bahasa yang tersedia secara gratis!',
