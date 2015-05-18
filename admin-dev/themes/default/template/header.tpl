@@ -113,8 +113,7 @@
 				<button id="header_nav_toggle" type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-primary">
 					<i class="icon-reorder"></i>
 				</button>
-
-				<a id="header_shopname" href="{$default_tab_link|escape:'html':'UTF-8'}">
+				<a id="header_shopversion" href="{$default_tab_link|escape:'html':'UTF-8'}">
 					<span id="shop_version">{$version}</span>
 				</a>
 				{* Shop *}
@@ -124,6 +123,8 @@
 							{$shop_list}
 						</li>
 					</ul>
+				{else}
+					<a id="header_shopname" href="{$default_tab_link|escape:'html':'UTF-8'}">{$shop_name}</a>
 				{/if}
 				<ul id="header_notifs_icon_wrapper">
 {if {$show_new_orders} == 1}
