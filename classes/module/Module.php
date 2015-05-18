@@ -476,18 +476,21 @@ abstract class ModuleCore
 		$upgrade = &self::$modules_cache[$this->name]['upgrade'];
 		foreach ($upgrade['upgrade_file_left'] as $num => $file_detail)
 		{
-			if (function_exists($file_detail['upgrade_function']))
-			{
-				$upgrade['success'] = false;
-				$upgrade['duplicate'] = true;
-				break;
-			}
+			foreach ($file_detail['upgrade_function'] as $item)
+				if (function_exists($item))
+				{
+					$upgrade['success'] = false;
+					$upgrade['duplicate'] = true;
+					break 2;
+				}
+
 			include($file_detail['file']);
 
 			// Call the upgrade function if defined
 			$upgrade['success'] = false;
-			if (function_exists($file_detail['upgrade_function']))
-				$upgrade['success'] = $file_detail['upgrade_function']($this);
+			foreach ($file_detail['upgrade_function'] as $item)
+				if (function_exists($item))
+					$upgrade['success'] = $item($this);
 
 			// Set detail when an upgrade succeed or failed
 			if ($upgrade['success'])
@@ -588,7 +591,10 @@ abstract class ModuleCore
 						$list[] = array(
 							'file' => $upgrade_path.$file,
 							'version' => $file_version,
-							'upgrade_function' => 'upgrade_module_'.str_replace('.', '_', $file_version));
+							'upgrade_function' => array(
+								'upgrade_module_'.str_replace('.', '_', $file_version),
+								'upgradeModule'.str_replace('.', '', $file_version))
+							);
 					}
 				}
 		}

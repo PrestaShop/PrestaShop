@@ -201,6 +201,8 @@ UPDATE `PREFIX_configuration` SET `name` = 'PS_REORDERING' WHERE `name` = 'PS_DI
 ALTER TABLE `PREFIX_order_invoice` ADD `company_address` TEXT DEFAULT NULL AFTER `total_wrapping_tax_incl`;
 
 ALTER TABLE `PREFIX_order_invoice` ADD `shop_address` TEXT DEFAULT NULL AFTER `total_wrapping_tax_incl`;
+ALTER TABLE `PREFIX_order_invoice` ADD `invoice_address` TEXT DEFAULT NULL AFTER `shop_address`;
+ALTER TABLE `PREFIX_order_invoice` ADD `delivery_address` TEXT DEFAULT NULL AFTER `invoice_address`;
 
 
 INSERT INTO `PREFIX_hook` (`name`, `title`, `description`) VALUES ('displayInvoiceLegalFreeText', 'PDF Invoice - Legal Free Text', 'This hook allows you to modify the legal free text on PDF invoices');

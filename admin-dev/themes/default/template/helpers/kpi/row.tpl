@@ -31,7 +31,7 @@
 				</div>
 				<div class="row">
 			{/if}
-			<div class="col-sm-5 col-lg-{$col}">{$i}</div>
+			<div class="col-sm-6 col-lg-{$col}">{$i}</div>
 		{/foreach}
 	</div>
 </div>

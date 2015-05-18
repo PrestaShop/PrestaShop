@@ -1,7 +1,7 @@
 <?php
 
 return array (
-  'informations' => 
+  'informations' =>
   array (
     'phone' => '+1 888 947 6543',
     'documentation' => 'http://doc.prestashop.com/',
@@ -10,7 +10,7 @@ return array (
     'blog' => 'http://www.prestashop.com/blog/',
     'support' => 'https://www.prestashop.com/en/support',
   ),
-  'translations' => 
+  'translations' =>
   array (
     'An SQL error occurred for entity <i>%1$s</i>: <i>%2$s</i>' => 'En SQL-feil oppstod fir <i>%1$s</i>: <i>%2$s</i>',
     'Cannot create image "%1$s" for entity "%2$s"' => 'Kan ikke opprette bilde "%1$s" for "%2$s"',
@@ -201,7 +201,7 @@ return array (
     'PrestaShop requires at least 32 MB of memory to run: please check the memory_limit directive in your php.ini file or contact your host provider about this.' => 'PrestaShop krever minimum 32M minne for å kunne kjøre. Vennligst kontroller memory_limit i din php.ini, eller ta kontakt med din webhotell-leverandør.',
     '<b>Warning: You cannot use this tool to upgrade your store anymore.</b><br /><br />You already have <b>PrestaShop version %1$s installed</b>.<br /><br />If you want to upgrade to the latest version, please read our documentation: <a href="%2$s">%2$s</a>' => '<b>Advarsel: DU kan ikke bruke dette verktøyet for å oppgradere din butikk.</b><br /><br />Du har allerede <b>PrestaShop versjon  %1$s installert</b>.<br /><br />Dersom du ønsker å oppgradere til siste versjon kan du lese vår dokumentasjon: <a href="%2$s">%2$s</a>',
     'Welcome to the PrestaShop %s Installer' => 'Velkommen til PrestaShop %s installasjonsveileder',
-    'Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 200,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'Installasjonen av PrestaShop er kjapp og enkel. Om noen få øyeblikk vil du bli en del av et samfunn av mer enn 200.000 forhandlere. Du er nå på vei til å ha din egen, unike butikk, som du enkelt kan kontrollere hver dag.',
+    'Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 230,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'Installasjonen av PrestaShop er kjapp og enkel. Om noen få øyeblikk vil du bli en del av et samfunn av mer enn 230.000 forhandlere. Du er nå på vei til å ha din egen, unike butikk, som du enkelt kan kontrollere hver dag.',
     'If you need help, do not hesitate to check <a href="%1$s" target="_blank">our documentation</a> or to contact our support team: %2$s.' => 'Hvis du trenger hjelp, ikke nøl med å se på <a href="%1$s" target="_blank">vår dokumentasjon</a>eller kontakte vårt support-team: %2$s.',
     'Continue the installation in:' => 'Fortsett installasjonen i:',
     'The language selection above only applies to the Installation Assistant. Once your store is installed, you can choose the language of your store from over %d translations, all for free!' => 'Språket over gjelder bare i installasjonsveilederen. Når din butikk er installert kan du velge fra over %d oversettelser til din butikk, og alle er gratis!',

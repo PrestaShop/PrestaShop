@@ -196,6 +196,43 @@ class AdminDashboardControllerCore extends AdminController
 		// 	'Save' => $this->l('Save', 'AdminStatsTab')
 		// );
 
+		if ($this->context->cookie->__get('stats_date_update') < strtotime(date('Y-m-d')))
+		{
+			switch ($this->context->employee->preselect_date_range)
+			{
+				case 'day':
+				default:
+					$date_from = date('Y-m-d');
+					$date_to = date('Y-m-d');
+					break;
+				case 'prev-day':
+					$date_from = date('Y-m-d', strtotime('-1 day'));
+					$date_to = date('Y-m-d', strtotime('-1 day'));
+					break;
+				case 'month':
+					$date_from = date('Y-m-01');
+					$date_to = date('Y-m-d');
+					break;
+				case 'prev-month':
+					$date_from = date('Y-m-01', strtotime('-1 month'));
+					$date_to = date('Y-m-t', strtotime('-1 month'));
+					break;
+				case 'year':
+					$date_from = date('Y-01-01');
+					$date_to = date('Y-m-d');
+					break;
+				case 'prev-year':
+					$date_from = date('Y-m-01', strtotime('-1 year'));
+					$date_to = date('Y-12-t', strtotime('-1 year'));
+					break;
+			}
+			$this->context->employee->stats_date_from = $date_from;
+			$this->context->employee->stats_date_to = $date_to;
+			$this->context->employee->update();
+			$this->context->cookie->__set('stats_date_update', strtotime(date('Y-m-d')));
+			$this->context->cookie->write();
+		}
+
 		$calendar_helper = new HelperCalendar();
 
 		$calendar_helper->setDateFrom(Tools::getValue('date_from', $this->context->employee->stats_date_from));
