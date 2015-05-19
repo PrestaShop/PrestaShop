@@ -3414,7 +3414,7 @@ exit;
 		return strip_tags(stripslashes($description));
 	}
 
-	public static function purifyHTML($html, $uri_unescape = null)
+	public static function purifyHTML($html, $uri_unescape = null, $allow_style = false)
 	{
 		static $use_html_purifier = null;
 		static $purifier = null;
@@ -3446,12 +3446,12 @@ exit;
 				{
 					$config->set('HTML.SafeIframe', true);
 					$config->set('HTML.SafeObject', true);
-					$config->set('URI.SafeIframeRegexp','/.*/');
+					$config->set('URI.SafeIframeRegexp', '/.*/');
 				}
 
 				/** @var HTMLPurifier_HTMLDefinition|HTMLPurifier_HTMLModule $def */
 				// http://developers.whatwg.org/the-video-element.html#the-video-element
-				if ($def = $config->maybeGetRawHTMLDefinition())
+				if ($def = $config->getHTMLDefinition(true))
 				{
 					$def->addElement('video', 'Block', 'Optional: (source, Flow) | (Flow, source) | Flow', 'Common', array(
 						'src' => 'URI',
@@ -3464,6 +3464,10 @@ exit;
 					));
 					$def->addElement('source', 'Block', 'Flow', 'Common', array(
 						'src' => 'URI',
+						'type' => 'Text',
+					));
+					if ($allow_style)
+						$def->addElement('style', 'Block', 'Flow', 'Common', array(
 						'type' => 'Text',
 					));
 				}
