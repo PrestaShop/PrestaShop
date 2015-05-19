@@ -26,10 +26,76 @@
 
 class Core_Business_Payment_PaymentOption
 {
-	public $cta_text;
-	public $logo;
-	public $action;
-	public $method;
-	public $inputs;
-	public $form;
+	private $cta_text;
+	private $logo;
+	private $action;
+	private $method;
+	private $inputs;
+	private $form;
+
+	public function getCtaText()
+	{
+		return $this->cta_text;
+	}
+
+	public function setCtaText($cta_text)
+	{
+		$this->cta_text = $cta_text;
+		return $this;
+	}
+
+	public function getLogo()
+	{
+		return $this->logo;
+	}
+
+	public function setLogo($logo)
+	{
+		$this->logo = $logo;
+		return $this;
+	}
+
+	public function getAction()
+	{
+		return $this->action;
+	}
+
+	public function setAction($action)
+	{
+		$this->action = $action;
+		return $this;
+	}
+
+	public function getMethod()
+	{
+		return $this->method;
+	}
+
+	public function setMethod($method)
+	{
+		$this->method = $method;
+		return $this;
+	}
+
+	public function getInputs()
+	{
+		return $this->inputs;
+	}
+
+	public function setInputs($inputs)
+	{
+		$this->inputs = $inputs;
+		return $this;
+	}
+
+	public function getForm()
+	{
+		return $this->form;
+	}
+
+	public function setForm($form)
+	{
+		$this->form = $form;
+		return $this;
+	}
 }
