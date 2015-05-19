@@ -98,4 +98,18 @@ class Core_Business_Payment_PaymentOption
 		$this->form = $form;
 		return $this;
 	}
+
+	/**
+	 * Legacy options were specified this way:
+	 * - either an array with a top level property 'cta_text'
+	 * 	and then the other properties
+	 * - or a numerically indexed array or arrays as described above
+	 * Since this was a mess, this method is provided to convert them.
+	 * It takes as input a legacy option (in either form) and always
+	 * returns an array of instances of Core_Business_Payment_PaymentOption
+	 */
+	public static function convertLegacyOption(array $legacyOption)
+	{
+		// TODO implement
+	}
 }

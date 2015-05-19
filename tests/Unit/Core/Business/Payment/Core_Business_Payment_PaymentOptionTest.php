@@ -8,8 +8,59 @@ use Core_Business_Payment_PaymentOption as PaymentOption;
 
 class Core_Business_Payment_PaymentOptionTest extends UnitTestCase
 {
-    public function testNothing()
+    public function test_convertLegacyOption_converts_one_option()
     {
-        new PaymentOption;
+        $newOption = new PaymentOption;
+        $newOption
+            ->setCtaText('Pay by bankwire')
+            ->setLogo('http://example.com/logo.png')
+            ->setAction('http://example.com/submit')
+            ->setMethod('POST')
+            ->setForm(null)
+            ->setInputs(array('key' => 42))
+        ;
+
+        $legacyOption = array(
+            'cta_text'  => 'Pay by bankwire',
+            'logo'      => 'http://example.com/logo.png',
+            'action'    => 'http://example.com/submit',
+            'method'    => 'POST',
+            'form'      => null,
+            'inputs'    => array('key' => 42)
+        );
+
+        $this->assertEquals(
+            array($newOption),
+            PaymentOption::convertLegacyOption($legacyOption)
+        );
+    }
+
+    public function test_convertLegacyOption_converts_two_options_specified_as_one()
+    {
+        $newOption = new PaymentOption;
+        $newOption
+            ->setCtaText('Pay by bankwire')
+            ->setLogo('http://example.com/logo.png')
+            ->setAction('http://example.com/submit')
+            ->setMethod('POST')
+            ->setForm(null)
+            ->setInputs(array('key' => 42))
+        ;
+
+        $singleLegacyOption = array(
+            'cta_text'  => 'Pay by bankwire',
+            'logo'      => 'http://example.com/logo.png',
+            'action'    => 'http://example.com/submit',
+            'method'    => 'POST',
+            'form'      => null,
+            'inputs'    => array('key' => 42)
+        );
+
+        $legacyOption = array($singleLegacyOption, $singleLegacyOption);
+
+        $this->assertEquals(
+            array($newOption, $newOption),
+            PaymentOption::convertLegacyOption($legacyOption)
+        );
     }
 }
