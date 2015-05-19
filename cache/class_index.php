@@ -29,12 +29,6 @@
     'type' => 'class',
     'override' => false,
   ),
-  'Adapter_Entity' => 
-  array (
-    'path' => 'Adapter/Adapter_Entity.php',
-    'type' => 'class',
-    'override' => false,
-  ),
   'Adapter_EntityMapper' => 
   array (
     'path' => 'Adapter/Adapter_EntityMapper.php',
@@ -1793,6 +1787,12 @@
     'type' => 'class',
     'override' => false,
   ),
+  'Core_Business_Payment_PaymentOption' => 
+  array (
+    'path' => 'Core/Business/Payment/Core_Business_Payment_PaymentOption.php',
+    'type' => 'class',
+    'override' => false,
+  ),
   'Core_Foundation_Database_Database' => 
   array (
     'path' => 'Core/Foundation/Database/Core_Foundation_Database_Database.php',
@@ -2372,6 +2372,18 @@
   'HelperOptionsCore' => 
   array (
     'path' => 'classes/helper/HelperOptions.php',
+    'type' => 'class',
+    'override' => false,
+  ),
+  'HelperShop' => 
+  array (
+    'path' => '',
+    'type' => 'class',
+    'override' => false,
+  ),
+  'HelperShopCore' => 
+  array (
+    'path' => 'classes/helper/HelperShop.php',
     'type' => 'class',
     'override' => false,
   ),
@@ -3141,12 +3153,6 @@
   array (
     'path' => 'classes/PaymentModule.php',
     'type' => 'abstract class',
-    'override' => false,
-  ),
-  'PaymentOption' => 
-  array (
-    'path' => 'Core/Business/Payment/PaymentOption.php',
-    'type' => 'class',
     'override' => false,
   ),
   'PdfInvoiceController' => 

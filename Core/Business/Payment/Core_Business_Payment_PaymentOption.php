@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class PaymentOption
+class Core_Business_Payment_PaymentOption
 {
 	public $cta_text;
 	public $logo;
@@ -32,5 +32,4 @@ class PaymentOption
 	public $method;
 	public $inputs;
 	public $form;
-
 }
