@@ -2533,6 +2533,8 @@ class AdminControllerCore extends Controller
 		$this->addjQueryPlugin('growl', null, false);
 		$this->addJqueryUI(array('ui.slider', 'ui.datepicker'));
 
+		Media::addJsDef(array('host_mode' => (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)));
+
 		$this->addJS(array(
 			_PS_JS_DIR_.'admin.js',
 			_PS_JS_DIR_.'tools.js',
@@ -2552,6 +2554,17 @@ class AdminControllerCore extends Controller
 			$this->addJS(_PS_JS_DIR_.'admin/notifications.js');
 
 		$this->addJS('https://cdn.statuspage.io/se-v2.js');
+
+		if (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)
+		{
+			$this->addJS('https://cdn.statuspage.io/se-v2.js');
+
+			Media::addJsDefL('status_operational', $this->l('Operational'));
+			Media::addJsDefL('status_degraded_performance', $this->l('Degraded Performance'));
+			Media::addJsDefL('status_partial_outage', $this->l('Partial Outage'));
+			Media::addJsDefL('status_major_outage', $this->l('Major Outage'));
+			Media::addJsDef(array('host_cluster' => defined('_PS_HOST_CLUSTER_') ? _PS_HOST_CLUSTER_ : 'fr1'));
+		}
 
 		// Execute Hook AdminController SetMedia
 		Hook::exec('actionAdminControllerSetMedia');
