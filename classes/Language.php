@@ -214,15 +214,7 @@ class LanguageCore extends ObjectModel
 		// @todo Since a lot of modules are not in right format with their primary keys name, just get true ...
 		$this->loadUpdateSQL();
 
-		return Tools::generateHtaccess();
-	}
-
-	public function toggleStatus()
-	{
-		if (!parent::toggleStatus())
-			return false;
-
-		return Tools::generateHtaccess();
+		return true;
 	}
 
 	public function checkFiles()
@@ -556,7 +548,7 @@ class LanguageCore extends ObjectModel
 		if (!parent::delete())
 			return false;
 
-		return Tools::generateHtaccess();
+		return true;
 	}
 
 	public function deleteSelection($selection)
@@ -750,14 +742,6 @@ class LanguageCore extends ObjectModel
 		}
 	}
 
-	public function update($nullValues = false)
-	{
-		if (!parent::update($nullValues))
-			return false;
-
-		return Tools::generateHtaccess();
-	}
-
 	public static function checkAndAddLanguage($iso_code, $lang_pack = false, $only_add = false, $params_lang = null)
 	{
 		if (Language::getIdByIso($iso_code))
@@ -860,7 +844,7 @@ class LanguageCore extends ObjectModel
 
 	public static function downloadAndInstallLanguagePack($iso, $version = null, $params = null, $install = true)
 	{
-		if (!Validate::isLanguageIsoCode($iso))
+		if (!Validate::isLanguageIsoCode((string)$iso))
 			return false;
 
 		if ($version == null)
@@ -869,9 +853,9 @@ class LanguageCore extends ObjectModel
 		$lang_pack = false;
 		$lang_pack_ok = false;
 		$errors = array();
-		$file = _PS_TRANSLATIONS_DIR_.$iso.'.gzip';
+		$file = _PS_TRANSLATIONS_DIR_.(string)$iso.'.gzip';
 
-		if (!$lang_pack_link = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='.$version.'&iso_lang='.Tools::strtolower($iso)))
+		if (!$lang_pack_link = Tools::file_get_contents('http://www.prestashop.com/download/lang_packs/get_language_pack.php?version='.$version.'&iso_lang='.Tools::strtolower((string)$iso)))
 			$errors[] = Tools::displayError('Archive cannot be downloaded from prestashop.com.');
 		elseif (!$lang_pack = Tools::jsonDecode($lang_pack_link))
 			$errors[] = Tools::displayError('Error occurred when language was checked according to your Prestashop version.');
@@ -893,7 +877,7 @@ class LanguageCore extends ObjectModel
 		{
 			require_once(_PS_TOOL_DIR_.'tar/Archive_Tar.php');
 			$gz = new Archive_Tar($file, true);
-			$files_list = AdminTranslationsController::filterTranslationFiles(Language::getLanguagePackListContent($iso, $gz));
+			$files_list = AdminTranslationsController::filterTranslationFiles(Language::getLanguagePackListContent((string)$iso, $gz));
 			$files_paths = AdminTranslationsController::filesListToPaths($files_list);
 
 			$i = 0;
@@ -924,19 +908,19 @@ class LanguageCore extends ObjectModel
 			}
 
 			if (!$gz->extractList(AdminTranslationsController::filesListToPaths($files_list), _PS_TRANSLATIONS_DIR_.'../'))
-				$errors[] = Tools::displayError('Cannot decompress the translation file for the following language:').' '.(string)$iso;
+				$errors[] = sprintf(Tools::displayError('Cannot decompress the translation file for the following language: %s'), (string)$iso);
+
 			// Clear smarty modules cache
 			Tools::clearCache();
 
 			if (!Language::checkAndAddLanguage((string)$iso, $lang_pack, false, $params))
-				$errors[] = Tools::displayError('An error occurred while creating the language: ').(string)$iso;
+				$errors[] = sprintf(Tools::displayError('An error occurred while creating the language: %s'), (string)$iso);
 			else
 			{
 				// Reset cache
 				Language::loadLanguages();
-
-				AdminTranslationsController::checkAndAddMailsFiles($iso, $files_list);
-				AdminTranslationsController::addNewTabs($iso, $files_list);
+				AdminTranslationsController::checkAndAddMailsFiles((string)$iso, $files_list);
+				AdminTranslationsController::addNewTabs((string)$iso, $files_list);
 			}
 		}
 
