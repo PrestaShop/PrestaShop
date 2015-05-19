@@ -24,11 +24,11 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class Email
+class Core_Business_Email_EmailLister
 {
 	private $filesystem;
 
-	public function __construct(FileSystem $fs)
+	public function __construct(Core_Foundation_FileSystem_FileSystem $fs)
 	{
 		// Register dependencies
 		$this->filesystem = $fs;
@@ -40,38 +40,19 @@ class Email
 	 * @param null $dir
 	 * @return array|null
 	 */
-	public function getAvailableMails($lang = null, $dir = null)
+	public function getAvailableMails($dir)
 	{
-		if (is_null($lang))
-			$iso_lang = Language::getIsoById((int)Configuration::get('PS_LANG_DEFAULT'));
-		else
-			$iso_lang = $lang;
-
-		if (is_null($dir))
-			$mail_directory = _PS_MAIL_DIR_.$iso_lang.DIRECTORY_SEPARATOR;
-		else
-			$mail_directory = $dir;
-
-		if (!file_exists($mail_directory))
+		if (!file_exists($dir))
 			return null;
 
-		// @TODO: Make scanned directory dynamic ?
-		$mail_directory = $this->filesystem->getDirContentRecursive(_PS_MAIL_DIR_.$iso_lang.DIRECTORY_SEPARATOR);
-		// Prestashop Mail should only be at root level
-		$mail_directory = $mail_directory['root'];
+		$mail_directory = $this->filesystem->listEntriesRecursively($dir);
 		$clean_mail_list = array();
 
 		// Remove duplicate .html / .txt / .tpl
 		foreach ($mail_directory as $mail) {
-			$exploded_filename = explode('.', $mail, 3);
-			// Avoid badly named mail templates
-			if (is_array($exploded_filename) && count($exploded_filename) == 2) {
-				$clean_filename = (string)$exploded_filename[0];
-				if (!in_array($clean_filename, $clean_mail_list)) {
-					$clean_mail_list[] = $clean_filename;
-				}
-			}
+			$clean_mail_list[] = $mail->getFilename();
 		}
+
 		return $clean_mail_list;
 	}
 
@@ -80,13 +61,9 @@ class Email
 	 * Give in input getAvailableMails(), will output a human readable and proper string name
 	 * @return array
 	 */
-	public function getCleanedMailsNames()
+	public function getCleanedMailName($mail_name)
 	{
-		$output = array();
-
-		foreach ($this->getAvailableMails() as $mail)
-			$output[] = ucfirst(str_replace(array('_', '-'), ' ', $mail));
-
-		return $output;
+		if ()
+		return ucfirst(str_replace(array('_', '-'), ' ', $mail_name));
 	}
 }
