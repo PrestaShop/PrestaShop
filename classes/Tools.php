@@ -66,7 +66,7 @@ class ToolsCore
 				break;
 		}
 
-		$bytes = static::getBytes($length);
+		$bytes = Tools::getBytes($length);
 		$position = 0;
 		$result = '';
 
