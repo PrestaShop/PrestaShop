@@ -141,8 +141,9 @@
 						$('#moduleContainer').html('<img id="loader_module_list" src="../img/loader.gif" alt="" border="0" />');
 					},
 					success: function(data, status, request){
-						if (request.getResponseHeader('Login') === 'true')
+						if (request.getResponseHeader('Login') === 'true') {
 							return window.location.reload();
+						}
 
 						$('#moduleContainer').html(data);
 						$('.dropdown-toggle').dropdown();

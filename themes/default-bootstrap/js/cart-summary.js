@@ -418,8 +418,10 @@ function deleteProductFromSummary(id)
 			}
 			else
 			{
-				if (jsonData.refresh)
+				if (jsonData.refresh) {
 					location.reload();
+					return;
+				}
 				if (parseInt(jsonData.summary.products.length) == 0)
 				{
 					if (typeof(orderProcess) == 'undefined' || orderProcess !== 'order-opc')
@@ -853,8 +855,10 @@ function updateCartSummary(json)
 	}
 	else
 	{
-		if ($('.cart_discount').length == 0)
+		if ($('.cart_discount').length == 0) {
 			location.reload();
+			return;
+		}
 
 		if (priceDisplayMethod !== 0)
 			$('#total_discount').html('-' + formatCurrency(json.total_discounts_tax_exc, currencyFormat, currencySign, currencyBlank));

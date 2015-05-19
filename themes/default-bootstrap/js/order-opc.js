@@ -381,8 +381,10 @@ function updateAddressSelection()
 			}
 			else
 			{
-				if (jsonData.refresh)
+				if (jsonData.refresh) {
 					location.reload();
+					return;
+				}
 				// Update all product keys with the new address id
 				$('#cart_summary .address_'+deliveryAddress).each(function() {
 					$(this)
