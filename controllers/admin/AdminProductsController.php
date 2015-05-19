@@ -2551,13 +2551,15 @@ class AdminProductsControllerCore extends AdminController
 	{
 		$manufacturers = Manufacturer::getManufacturers(false, 0, true, false, false, false, true);
 		$jsonArray = array();
-			if ($manufacturers)
-				foreach ($manufacturers as $manufacturer)
-				{
-		            $tmp = array("optionValue" => $manufacturer['id_manufacturer'], "optionDisplay" => htmlspecialchars(trim($manufacturer['name'])));
-		            $jsonArray[] = Tools::jsonEncode($tmp);
-				}
-			die('['.implode(',', $jsonArray).']');
+
+		if ($manufacturers)
+			foreach ($manufacturers as $manufacturer)
+			{
+				$tmp = array("optionValue" => $manufacturer['id_manufacturer'], "optionDisplay" => htmlspecialchars(trim($manufacturer['name'])));
+				$jsonArray[] = Tools::jsonEncode($tmp);
+			}
+
+		die('['.implode(',', $jsonArray).']');
 	}
 
 	/**
