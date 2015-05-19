@@ -7,6 +7,7 @@
 	height: 36px !important
 	.navbar-header
 		width: 100%
+
 #header_shopversion
 	@extend .navbar-brand
 	font-size: 1.3em !important
@@ -21,10 +22,7 @@
 	@media (max-width: $screen-xs)
 		display: none
 #header_shopname
-	@extend .nav
-	@extend .navbar-nav
-	@include padding(10px, 5px, 9px, 5px)
-	color: #fff
+	@extend .navbar-brand
 	text-decoration: none
 
 #header_notifs_icon_wrapper
@@ -98,11 +96,11 @@
 			display: inline-block
 			@include float(left)
 	span.string-long
-		@media (max-width: $screen-md)
+		@media (max-width: $screen-lg)
 			display: none
 	span.string-short
 		display: none
-		@media (max-width: $screen-md)
+		@media (max-width: $screen-lg)
 			display: inline-block
 	a img
 		@include margin-right(5px)
@@ -153,10 +151,19 @@
 		sup
 			font-size: 0.7em
 
-#header_quick, #header_shop
+#header_quick
 	@extend .nav
 	@extend .navbar-nav
+	@include ltr
+		@extend .navbar-left
+	@include rtl
+		@extend .navbar-right
 	@extend .hidden-xs
+	@extend .hidden-sm
+
+#header_shop
+	@extend .nav
+	@extend .navbar-nav
 	@include ltr
 		@extend .navbar-left
 	@include rtl
