@@ -40,6 +40,16 @@ class AdminModulesPositionsControllerCore extends AdminController
 		if (Tools::getValue('show_modules') && strval(Tools::getValue('show_modules')) != 'all')
 			$this->display_key = (int)Tools::getValue('show_modules');
 
+		$this->addjQueryPlugin(array(
+			'select2',
+		));
+
+		$this->addJS(array(
+			_PS_JS_DIR_.'admin/modules-position.js',
+			_PS_JS_DIR_.'jquery/plugins/select2/select2_locale_'.$this->context->language->iso_code.'.js',
+		));
+
+
 		// Change position in hook
 		if (array_key_exists('changePosition', $_GET))
 		{
@@ -275,7 +285,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 				$assoc_modules_id[(int)$module['id_module']] = $tmp_instance->displayName;
 			}
 		ksort($module_instances);
-		$hooks = Hook::getHooks(!(int)Tools::getValue('hook_position'));
+		$hooks = Hook::getHooks();
 		foreach ($hooks as $key => $hook)
 		{
 			// Get all modules for this hook or only the filtered module
@@ -299,14 +309,14 @@ class AdminModulesPositionsControllerCore extends AdminController
 			'href' => self::$currentIndex.'&addToHook'.($this->display_key ? '&show_modules='.$this->display_key : '').'&token='.$this->token,
 			'desc' => $this->l('Transplant a module')
 		);
-						
+
 		$live_edit_params = array(
-									'live_edit' => true, 
-									'ad' => $admin_dir, 
-									'liveToken' => $this->token,
-									'id_employee' => (int)$this->context->employee->id,
-									'id_shop' => (int)$this->context->shop->id
-									);
+			'live_edit' => true,
+			'ad' => $admin_dir,
+			'liveToken' => $this->token,
+			'id_employee' => (int)$this->context->employee->id,
+			'id_shop' => (int)$this->context->shop->id
+		);
 
 		$this->context->smarty->assign(array(
 			'show_toolbar' => true,
@@ -317,7 +327,6 @@ class AdminModulesPositionsControllerCore extends AdminController
 			'url_show_modules' => self::$currentIndex.'&token='.$this->token.'&show_modules=',
 			'modules' => $module_instances,
 			'url_show_invisible' => self::$currentIndex.'&token='.$this->token.'&show_modules='.(int)Tools::getValue('show_modules').'&hook_position=',
-			'hook_position' => Tools::getValue('hook_position'),
 			'live_edit' => Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP,
 			'url_live_edit' => $this->getLiveEditUrl($live_edit_params),
 			'display_key' => $this->display_key,
@@ -328,7 +337,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 
 		return $this->createTemplate('list_modules.tpl')->fetch();
 	}
-	
+
 	public function getLiveEditUrl($live_edit_params)
 	{
 		$lang = '';
@@ -344,7 +353,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 
 		return $url;
 	}
-	
+
 	public function renderForm()
 	{
 		// Init toolbar
@@ -395,7 +404,13 @@ class AdminModulesPositionsControllerCore extends AdminController
 				$instances[$tmp_instance->displayName] = $tmp_instance;
 		ksort($instances);
 		$modules = $instances;
-		$hooks = Hook::getHooks(0);
+
+		$hooks = array();
+		if ((int)Tools::getValue('id_hook') > 0)
+		{
+			$module_instance = Module::getInstanceById((int)Tools::getValue('id_module'));
+			$hooks = $module_instance->getPossibleHooksList();
+		}
 
 		$exception_list_diff = array();
 		foreach ($excepts_list as $shop_id => $file_list)
@@ -429,14 +444,14 @@ class AdminModulesPositionsControllerCore extends AdminController
 		if (!is_array($file_list))
 			$file_list = ($file_list) ? array($file_list) : array();
 
-		$content = '<p><input type="text" name="exceptions['.$shop_id.']" value="'.implode(', ', $file_list).'" id="em_text_'.$shop_id.'"/></p>';
+		$content = '<p><input type="text" name="exceptions['.$shop_id.']" value="'.implode(', ', $file_list).'" id="em_text_'.$shop_id.'" placeholder="'.$this->l('E.g. address, addresses, attachment').'"/></p>';
 
 		if ($shop_id)
 		{
 			$shop = new Shop($shop_id);
 			$content .= ' ('.$shop->name.')';
 		}
-		
+
 		$content .= '<p>
 					<select size="25" id="em_list_'.$shop_id.'" multiple="multiple">
 					<option disabled="disabled">'.$this->l('___________ CUSTOM ___________').'</option>';
@@ -444,7 +459,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 		// @todo do something better with controllers
 		$controllers = Dispatcher::getControllers(_PS_FRONT_CONTROLLER_DIR_);
 		ksort($controllers);
-		
+
 		foreach ($file_list as $k => $v)
 			if ( ! array_key_exists ($v, $controllers))
 				$content .= '<option value="'.$v.'">'.$v.'</option>';
@@ -453,7 +468,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 
 		foreach ($controllers as $k => $v)
 			$content .= '<option value="'.$k.'">'.$k.'</option>';
-		
+
 		$modules_controllers_type = array('admin' => $this->l('Admin modules controller'), 'front' => $this->l('Front modules controller'));
 		foreach ($modules_controllers_type as $type => $label)
 		{
@@ -463,7 +478,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 				foreach ($modules_controllers as $cont)
 				$content .= '<option value="module-'.$module.'-'.$cont.'">module-'.$module.'-'.$cont.'</option>';
 		}
-					
+
 		$content .= '</select>
 					</p>';
 
@@ -489,7 +504,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 				die('{"hasError" : true, "errors" : "This module cannot be loaded."}');
 		}
 	}
-	
+
 	public function ajaxProcessGetHookableList()
 	{
 		if ($this->tabAccess['view'] === '1')
@@ -513,7 +528,7 @@ class AdminModulesPositionsControllerCore extends AdminController
 
 				if (!Validate::isModuleName($module))
 						die('{"hasError" : true, "errors" : ["Live Edit: module is invalid."]}');
-						
+
 				$moduleInstance = Module::getInstanceByName($module);
 				foreach ($hooks_list as $hook_name)
 				{
@@ -581,7 +596,6 @@ class AdminModulesPositionsControllerCore extends AdminController
 
 			foreach ($hooks_list as $id_hook => $modules)
 			{
-
 				// 1st, drop all previous hooked modules
 				$sql = 'DELETE FROM `'._DB_PREFIX_.'hook_module` WHERE `id_hook` =  '.(int)$id_hook.' AND id_shop = '.(int)$id_shop;
 				$res &= Db::getInstance()->execute($sql);
@@ -616,5 +630,20 @@ class AdminModulesPositionsControllerCore extends AdminController
 				$hasError = false;
 			die('{"hasError" : false, "errors" : ""}');
 		}
+	}
+
+	/**
+	 * Return a json array containing the possible hooks for a module.
+	 *
+	 * @return null
+	 */
+	public function ajaxProcessGetPossibleHookingListForModule()
+	{
+		$module_id = (int)Tools::getValue('module_id');
+		if ($module_id == 0)
+			die('{"hasError" : true, "errors" : ["Wrong module ID."]}');
+
+		$module_instance = Module::getInstanceById($module_id);
+		die(json_encode($module_instance->getPossibleHooksList()));
 	}
 }
