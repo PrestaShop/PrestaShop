@@ -50,16 +50,33 @@
     <!-- Should get a collection of "PaymentOption" object -->
     {if $HOOK_ADVANCED_PAYMENT }
         {foreach from=$HOOK_ADVANCED_PAYMENT item=paymentOption key=module_name}
-            <div class="col-xs-12 col-md-12">
-                <p class="payment_module">
-                    <a>
-                        <img src="{$paymentOption->logo}"/>
-                        <input name="payment_option" data-payment-option-name="{$module_name}" data-payment-action="{$paymentOption->action}"
-                               type="radio" value="{$module_name}">
-                        {$paymentOption->cta_text}
-                    </a>
-                </p>
-            </div>
+            {if is_array($paymentOption)}
+                {foreach from=$paymentOption item=backwardOption}
+                    <div class="col-xs-12 col-md-12">
+                        <p class="payment_module">
+                            <a>
+                                <img src="{$backwardOption->logo}"/>
+                                <input name="payment_option" data-payment-option-name="{$backwardOption->module_name}" data-payment-action="{$backwardOption->action}"
+                                       type="radio" value="{$backwardOption->module_name}">
+                                {$backwardOption->cta_text}
+                            </a>
+                            {$backwardOption->form}
+                        </p>
+                    </div>
+                {/foreach}
+            {else}
+                <div class="col-xs-12 col-md-12">
+                    <p class="payment_module">
+                        <a>
+                            <img src="{$paymentOption->logo}"/>
+                            <input name="payment_option" data-payment-option-name="{$module_name}" data-payment-action="{$paymentOption->action}"
+                                   type="radio" value="{$module_name}">
+                            {$paymentOption->cta_text}
+                        </a>
+                        {$paymentOption->form}
+                    </p>
+                </div>
+            {/if}
         {/foreach}
     </div>
     {else}

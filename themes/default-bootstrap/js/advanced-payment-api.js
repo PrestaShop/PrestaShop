@@ -39,11 +39,11 @@ $(document).ready(function(){
         }
 
         var payment_details = handler.getSelectedPaymentOptionDetails();
-
-        if (payment_details !== false)
+        if (payment_details !== false && payment_details.action) {
             handler.submitPaymentOption(payment_details.action, payment_details.data);
-        else
-        {
+        } else if (!payment_details.action && payment_details.has_form === true) {
+                payment_details.form_to_submit.submit();
+        } else {
             alert('An error occured please be sure you have properly selected your payment option!');
             return;
         }
@@ -63,8 +63,13 @@ var PaymentOptionHandler = function() {
             // @TODO: Check if there's an embedded form within this payment option to get it as well !
             var po_action = payment_option.attr('data-payment-action');
             var po_name = payment_option.attr('data-payment-option-name');
-
-            return {name: po_name, action: po_action, data: {}};
+            var po_form = $('input:checked', '#HOOK_ADVANCED_PAYMENT').parents('.payment_module').first().next('form');
+            if (po_form) {
+                var po_has_form = true;
+            } else {
+                var po_has_form = false;
+            }
+            return {name: po_name, action: po_action, data: {}, has_form: po_has_form, form_to_submit: po_form};
         }
 
         return false;
@@ -77,6 +82,10 @@ var PaymentOptionHandler = function() {
 
         return false;
     }
+
+
+
+
 
     this.submitPaymentOption = function(action, params, method) {
 
