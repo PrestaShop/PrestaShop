@@ -26,12 +26,17 @@
 
 class Core_Business_CMS_CMSRepository extends Core_Foundation_Database_EntityRepository
 {
+	private function getLanguageTableNameWithPrefix()
+	{
+		return $this->getTableNameWithPrefix() . '_lang';
+	}
+
 	public function i10nFindAll($id_lang, $id_shop)
 	{
 		$sql = '
 			SELECT *
 			FROM `'.$this->getTableNameWithPrefix().'` c
-			JOIN `ps_cms_lang` cl ON c.`id_cms`= cl.`id_cms`
+			JOIN `'.$this->getLanguageTableNameWithPrefix().'` cl ON c.`id_cms`= cl.`id_cms`
 			WHERE cl.`id_lang` = '.$id_lang.'
 			AND cl.`id_shop` = '.$id_shop.'
 		';
@@ -44,7 +49,7 @@ class Core_Business_CMS_CMSRepository extends Core_Foundation_Database_EntityRep
 		$sql = '
 			SELECT *
 			FROM `'.$this->getTableNameWithPrefix().'` c
-			JOIN `ps_cms_lang` cl ON c.`id_cms`= cl.`id_cms`
+			JOIN `'.$this->getLanguageTableNameWithPrefix().'` cl ON c.`id_cms`= cl.`id_cms`
 			WHERE c.`id_cms` = '.$id_cms.'
 			AND cl.`id_lang` = '.$id_lang.'
 			AND cl.`id_shop` = '.$id_shop.'
