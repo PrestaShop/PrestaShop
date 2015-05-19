@@ -132,6 +132,7 @@
 		</div>
 		{/if}
 	</div>
+	{hook h="displayAdminLogin"}
 	<div id="login-footer">
 		<p class="text-center text-muted">
 			<a href="http://www.prestashop.com/" onclick="return !window.open(this.href);">

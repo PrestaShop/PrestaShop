@@ -358,6 +358,8 @@
 			</div>
 {/if}
 
+			{hook h='displayAdminAfterHeader'}
+
 
 {* end display_header*}
 
