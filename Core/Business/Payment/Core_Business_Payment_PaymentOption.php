@@ -32,6 +32,7 @@ class Core_Business_Payment_PaymentOption
 	private $method;
 	private $inputs;
 	private $form;
+	private $module_name;
 
 	public function getCtaText()
 	{
@@ -99,6 +100,17 @@ class Core_Business_Payment_PaymentOption
 		return $this;
 	}
 
+	public function getModuleName()
+	{
+		return $this->module_name;
+	}
+
+	public function setModuleName($module_name)
+	{
+		$this->module_name = $module_name;
+		return $this;
+	}
+
 	/**
 	 * Legacy options were specified this way:
 	 * - either an array with a top level property 'cta_text'
@@ -110,6 +122,38 @@ class Core_Business_Payment_PaymentOption
 	 */
 	public static function convertLegacyOption(array $legacyOption)
 	{
-		// TODO implement
+		if (!$legacyOption)
+			return;
+
+		if (array_key_exists('cta_text', $legacyOption)) {
+			$legacyOption = array($legacyOption);
+		}
+
+		$newOptions = array();
+
+		$defaults = array(
+			'action' => null,
+			'form' => null,
+			'method' => null,
+			'inputs' => array(),
+			'logo' => null
+		);
+
+		foreach ($legacyOption as $option) {
+
+			$option = array_merge($defaults, $option);
+
+			$newOption = new Core_Business_Payment_PaymentOption();
+			$newOption->setCtaText($option['cta_text'])
+					  ->setAction($option['action'])
+					  ->setForm($option['form'])
+					  ->setInputs($option['inputs'])
+					  ->setLogo($option['logo'])
+					  ->setMethod($option['method']);
+
+			$newOptions[] = $newOption;
+		}
+
+		return $newOptions;
 	}
 }

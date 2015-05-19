@@ -49,34 +49,20 @@
     <div class="row">
     <!-- Should get a collection of "PaymentOption" object -->
     {if $HOOK_ADVANCED_PAYMENT }
-        {foreach from=$HOOK_ADVANCED_PAYMENT item=paymentOption key=module_name}
-            {if is_array($paymentOption)}
-                {foreach from=$paymentOption item=backwardOption}
-                    <div class="col-xs-12 col-md-12">
-                        <p class="payment_module">
-                            <a>
-                                <img src="{$backwardOption->logo}"/>
-                                <input name="payment_option" data-payment-option-name="{$backwardOption->module_name}" data-payment-action="{$backwardOption->action}"
-                                       type="radio" value="{$backwardOption->module_name}">
-                                {$backwardOption->cta_text}
-                            </a>
-                            {$backwardOption->form}
-                        </p>
-                    </div>
-                {/foreach}
-            {else}
+        {foreach $HOOK_ADVANCED_PAYMENT as $advanced_payment_opt_list}
+            {foreach $advanced_payment_opt_list as $paymentOption}
                 <div class="col-xs-12 col-md-12">
                     <p class="payment_module">
                         <a>
-                            <img src="{$paymentOption->logo}"/>
-                            <input name="payment_option" data-payment-option-name="{$module_name}" data-payment-action="{$paymentOption->action}"
-                                   type="radio" value="{$module_name}">
-                            {$paymentOption->cta_text}
+                            <img src="{$paymentOption->getLogo()}"/>
+                            <input name="payment_option" data-payment-option-name="{$paymentOption->getModuleName()}" data-payment-action="{$paymentOption->getAction()}"
+                                   type="radio" value="{$paymentOption->getModuleName()}">
+                            {$paymentOption->getCtaText()}
                         </a>
-                        {$paymentOption->form}
+                        {$paymentOption->getForm()}
                     </p>
                 </div>
-            {/if}
+            {/foreach}
         {/foreach}
     </div>
     {else}
