@@ -50,9 +50,10 @@ class Core_Business_Email_EmailLister
 
 		// Remove duplicate .html / .txt / .tpl
 		foreach ($mail_directory as $mail) {
-			$clean_mail_list[] = $mail->getFilename();
+			if (!in_array($mail->getFilename(), $clean_mail_list)) {
+				$clean_mail_list[] = $mail->getFilename();
+			}
 		}
-
 		return $clean_mail_list;
 	}
 
@@ -63,7 +64,13 @@ class Core_Business_Email_EmailLister
 	 */
 	public function getCleanedMailName($mail_name)
 	{
-		if ()
-		return ucfirst(str_replace(array('_', '-'), ' ', $mail_name));
+		if (strpos($mail_name, '.') !== false) {
+			$tmp = explode('.', $mail_name);
+			if ($tmp === false || !isset($tmp[0])) {
+				return $mail_name;
+			}
+			$mail_name_no_ext = $tmp[0];
+		}
+		return ucfirst(str_replace(array('_', '-'), ' ', $mail_name_no_ext));
 	}
 }
