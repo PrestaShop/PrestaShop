@@ -16,7 +16,8 @@
 		margin: 0
 		font: 20pt $font-family-sans-serif
 		color: #363A41
-		@include padding(28px, 0, 0, ($widthSidebarNav+20px))
+		white-space: nowrap
+		@include padding(26px, 0, 0, ($widthSidebarNav+20px))
 		@media (max-width: $screen-tablet)
 			@include padding(26px, 0, 0, 70px)
 		a
@@ -81,7 +82,7 @@
 		@include border-radius(0)
 		@include left($widthSidebarNav+20px)
 		@media (max-width: $screen-tablet)
-			@include left(20px)
+			@include left(70px)
 		li
 			i
 				font-size: 10px
