@@ -585,7 +585,7 @@ class ParentOrderControllerCore extends FrontController
 
 			$this->context->smarty->assign(array(
 				'HOOK_TOP_PAYMENT' => Hook::exec('displayPaymentTop'),
-				'HOOK_ADVANCED_PAYMENT' => Hook::exec('advancedPaymentApi', array(), null, true),
+				'HOOK_ADVANCED_PAYMENT' => Hook::exec('advancedPaymentOptions', array(), null, true),
 				'link_conditions' => $this->link_conditions
 			));
 		}

@@ -516,7 +516,7 @@ class OrderOpcControllerCore extends ParentOrderController
 			$this->context->smarty->assign(array(
 				'HOOK_TOP_PAYMENT' => ($this->isLogged ? Hook::exec('displayPaymentTop') : ''),
 				'HOOK_PAYMENT' => $this->_getPaymentMethods(),
-				'HOOK_ADVANCED_PAYMENT' => Hook::exec('advancedPaymentApi', array(), null, true),
+				'HOOK_ADVANCED_PAYMENT' => Hook::exec('advancedPaymentOptions', array(), null, true),
 				'link_conditions' => $this->link_conditions
 			));
 		} else {
