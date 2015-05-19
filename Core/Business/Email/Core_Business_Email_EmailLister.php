@@ -46,15 +46,25 @@ class Core_Business_Email_EmailLister
 			return null;
 
 		$mail_directory = $this->filesystem->listEntriesRecursively($dir);
-		$clean_mail_list = array();
+		$mail_list = array();
+		$already_done = array();
 
 		// Remove duplicate .html / .txt / .tpl
 		foreach ($mail_directory as $mail) {
-			if (!in_array($mail->getFilename(), $clean_mail_list)) {
-				$clean_mail_list[] = $mail->getFilename();
+
+			if (strpos($mail->getFilename(), '.') !== false) {
+				$tmp = explode('.', $mail->getFilename());
+				if ($tmp === false || !isset($tmp[0])) {
+					continue;
+				}
+				$mail_name_no_ext = $tmp[0];
+			}
+			if (!in_array($mail_name_no_ext, $already_done)) {
+				$mail_list[] = $mail->getFilename();
+				$already_done[] = $mail_name_no_ext;
 			}
 		}
-		return $clean_mail_list;
+		return $mail_list;
 	}
 
 
