@@ -4551,7 +4551,7 @@ class AdminProductsControllerCore extends AdminController
 						}
 					}
 
-					if (!Warehouse::getPackWarehouses((int)$obj->id))
+					if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && !Warehouse::getPackWarehouses((int)$obj->id))
 						$this->displayWarning($this->l('You must have a common warehouse between this pack and its product.'));
 				}
 
