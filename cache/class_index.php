@@ -1829,6 +1829,12 @@
     'type' => 'class',
     'override' => false,
   ),
+  'Core_Foundation_FileSystem_FileSystem' => 
+  array (
+    'path' => 'Core/Foundation/Filesystem/Core_Foundation_FileSystem_FileSystem.php',
+    'type' => 'class',
+    'override' => false,
+  ),
   'Core_Foundation_IoC_Container' => 
   array (
     'path' => 'Core/Foundation/IoC/Core_Foundation_IoC_Container.php',
@@ -2009,12 +2015,6 @@
     'type' => 'class',
     'override' => false,
   ),
-  'DependencyInjector' => 
-  array (
-    'path' => 'Core/Foundation/Dependency/DependencyInjector.php',
-    'type' => 'class',
-    'override' => false,
-  ),
   'Discount' => 
   array (
     'path' => '',
@@ -2102,12 +2102,6 @@
   'FileLoggerCore' => 
   array (
     'path' => 'classes/log/FileLogger.php',
-    'type' => 'class',
-    'override' => false,
-  ),
-  'FileSystem' => 
-  array (
-    'path' => 'Core/Foundation/Filesystem/FileSystem.php',
     'type' => 'class',
     'override' => false,
   ),
