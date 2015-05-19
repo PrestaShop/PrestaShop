@@ -1552,7 +1552,7 @@ class CartCore extends ObjectModel
 
 		// Wrapping Fees
 		$wrapping_fees = 0;
-		if ($this->gift)
+		if ($this->gift && ($type !== Cart::ONLY_PRODUCTS && $configuration->get('PS_ATCP_SHIPWRAP')))
 			$wrapping_fees = Tools::convertPrice(Tools::ps_round($this->getGiftWrappingPrice($with_taxes), $compute_precision), Currency::getCurrencyInstance((int)$this->id_currency));
 		if ($type == Cart::ONLY_WRAPPING)
 			return $wrapping_fees;
@@ -1657,9 +1657,19 @@ class CartCore extends ObjectModel
 				}
 			}
 
-			$tax_manager = TaxManagerFactory::getManager($address[$this->id], (int)Configuration::get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'));
-			$tax_calculator = $tax_manager->getTaxCalculator();
-			$wrapping_fees = $tax_calculator->addTaxes($wrapping_fees);
+			if (configuration::get('PS_ATCP_SHIPWRAP'))
+			{
+				$wrapping_fees = Tools::ps_round(
+					$wrapping_fees * (1 + $this->getAverageProductsTaxRate()),
+					_PS_PRICE_COMPUTE_PRECISION_
+				);
+			}
+			else
+			{
+				$tax_manager = TaxManagerFactory::getManager($address[$this->id], (int)Configuration::get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'));
+				$tax_calculator = $tax_manager->getTaxCalculator();
+				$wrapping_fees = $tax_calculator->addTaxes($wrapping_fees);
+			}
 		}
 
 		return $wrapping_fees;
@@ -2821,7 +2831,13 @@ class CartCore extends ObjectModel
 		if ($use_tax && !Tax::excludeTaxeOption())
 		{
 			$address = Address::initialize((int)$address_id);
-			$carrier_tax = $carrier->getTaxesRate($address);
+
+			if (Configuration::get('PS_ATCP_SHIPWRAP')) {
+				$carrier_tax = 100 * $this->getAverageProductsTaxRate();
+			} else {
+				$carrier_tax = $carrier->getTaxesRate($address);
+			}
+
 		}
 
 		$configuration = Configuration::getMultiple(array(

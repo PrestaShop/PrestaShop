@@ -24,13 +24,15 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class PaymentOption
+class Core_Business_ContainerBuilder
 {
-	public $cta_text;
-	public $logo;
-	public $action;
-	public $method;
-	public $inputs;
-	public $form;
+    public function build()
+    {
+        $container = new Core_Foundation_IoC_Container;
 
+        $container->bind('Core_Business_Configuration', 'Adapter_Configuration', true);
+        $container->bind('Core_Foundation_Database_Database', 'Adapter_Database', true);
+
+        return $container;
+    }
 }

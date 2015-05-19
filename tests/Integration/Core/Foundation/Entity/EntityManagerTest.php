@@ -4,7 +4,7 @@ namespace PrestaShop\PrestaShop\Tests\Integration\Core\Foundation\Entity;
 
 use PrestaShop\PrestaShop\Tests\TestCase\IntegrationTestCase;
 
-use Core_Foundation_IoC_ContainerBuilder;
+use Core_Business_ContainerBuilder;
 
 use CMSRole;
 use CMSRoleRepository;
@@ -18,7 +18,7 @@ class EntityManagerTest extends IntegrationTestCase
 
 	public function setup()
 	{
-		$containerBuilder = new Core_Foundation_IoC_ContainerBuilder;
+		$containerBuilder = new Core_Business_ContainerBuilder;
 		$this->container = $containerBuilder->build();
 		$this->entityManager = $this->container->make('Core_Foundation_Database_EntityManager');
 	}
@@ -26,7 +26,7 @@ class EntityManagerTest extends IntegrationTestCase
 	public function test_explicitly_defined_repository_is_found_by_entitymanager()
 	{
 		$this->assertInstanceOf(
-			'CMSRoleRepository',
+			'Core_Business_CMS_CMSRoleRepository',
 			$this->entityManager->getRepository('CMSRole')
 		);
 	}
