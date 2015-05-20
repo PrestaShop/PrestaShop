@@ -46,21 +46,29 @@ class Adapter_EntityMapper {
 
 			// Get lang informations
 			if ($id_lang && isset($entity_defs['multilang']) && $entity_defs['multilang']) {
+
 				$sql->leftJoin($entity_defs['table'] . '_lang', 'b', 'a.`' . bqSQL($entity_defs['primary']) . '` = b.`' . bqSQL($entity_defs['primary']) . '` AND b.`id_lang` = ' . (int)$id_lang);
-				if ($id_shop && !empty($entity_defs['multilang_shop']))
+				if ($id_shop && !empty($entity_defs['multilang_shop'])) {
 					$sql->where('b.`id_shop` = ' . (int)$id_shop);
+				}
 			}
 
 			// Get shop informations
-			if (Shop::isTableAssociated($entity_defs['table']))
+			if (Shop::isTableAssociated($entity_defs['table'])) {
 				$sql->leftJoin($entity_defs['table'] . '_shop', 'c', 'a.`' . bqSQL($entity_defs['primary']) . '` = c.`' . bqSQL($entity_defs['primary']) . '` AND c.`id_shop` = ' . (int)$id_shop);
+			}
+
 			if ($object_datas = Db::getInstance()->getRow($sql)) {
 				if (!$id_lang && isset($entity_defs['multilang']) && $entity_defs['multilang']) {
-					$sql = 'SELECT * FROM `' . bqSQL(_DB_PREFIX_ . $entity_defs['table']) . '_lang`
-								WHERE `' . bqSQL($entity_defs['primary']) . '` = ' . (int)$id
-						. (($id_shop && $entity->isLangMultishop()) ? ' AND `id_shop` = ' . (int)$id_shop : '');
-					if ($object_datas_lang = Db::getInstance()->executeS($sql))
-						foreach ($object_datas_lang as $row)
+
+					$sql = 'SELECT *
+							FROM `' . bqSQL(_DB_PREFIX_ . $entity_defs['table']) . '_lang`
+							WHERE `' . bqSQL($entity_defs['primary']) . '` = ' . (int)$id
+							.(($id_shop && $entity->isLangMultishop()) ? ' AND `id_shop` = ' . (int)$id_shop : '');
+
+					if ($object_datas_lang = Db::getInstance()->executeS($sql)) {
+
+						foreach ($object_datas_lang as $row) {
 							foreach ($row as $key => $value) {
 								if ($key != $entity_defs['primary'] && array_key_exists($key, $entity)) {
 									if (!isset($object_datas[$key]) || !is_array($object_datas[$key]))
@@ -69,6 +77,8 @@ class Adapter_EntityMapper {
 									$object_datas[$key][$row['id_lang']] = $value;
 								}
 							}
+						}
+					}
 				}
 				if ($should_cache_objects)
 					Cache::store($cache_id, $object_datas);
@@ -78,9 +88,11 @@ class Adapter_EntityMapper {
 
 		if ($object_datas) {
 			$entity->id = (int)$id;
-			foreach ($object_datas as $key => $value)
-				if (array_key_exists($key, $entity))
+			foreach ($object_datas as $key => $value) {
+				if (array_key_exists($key, $entity)) {
 					$entity->{$key} = $value;
+				}
+			}
 		}
 	}
 
