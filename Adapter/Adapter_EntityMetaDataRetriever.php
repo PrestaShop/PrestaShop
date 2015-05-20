@@ -37,7 +37,7 @@ class Adapter_EntityMetaDataRetriever
             $metaData->setTableName($className::$definition['table']);
             $metaData->setPrimaryKeyFieldNames(array($className::$definition['primary']));
         } else {
-            throw new Exception(
+            throw new Adapter_Exception(
                 sprintf(
                     'Cannot get metadata for entity `%s`.',
                     $className
