@@ -37,6 +37,11 @@ class Core_Foundation_Exception_Exception extends Exception
 
 		$final_output = '['.strtoupper(get_called_class()).']';
 		$final_output .= $this->addBreakLines(2);
+		$final_output .= 'Stack Trace:'.$this->addBreakLines(1);
+		$final_output .= '- Code:'.$this->getCode().$this->addBreakLines(1);
+		$final_output .= '- File:'.$this->getFile().$this->addBreakLines(1);
+		$final_output .= '- Line:'.$this->getLine().$this->addBreakLines(1);
+		$final_output .= $this->addBreakLines(2);
 		$final_output .= print_r($this->getTrace(), true);
 		$final_output .= $this->addBreakLines(2);
 		echo $final_output;
