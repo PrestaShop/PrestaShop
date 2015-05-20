@@ -2028,10 +2028,10 @@ abstract class ModuleCore
 	}
 
 	/**
-	+	 * Helper displaying warning message(s)
-	+	 * @param string|array $error
-	+	 * @return string
-	+	 */
+	* Helper displaying warning message(s)
+	* @param string|array $error
+	* @return string
+	*/
 	public function displayWarning($warning)
 	{
 		$output = '
