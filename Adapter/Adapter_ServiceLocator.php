@@ -38,6 +38,9 @@ class Adapter_ServiceLocator
 
     public static function get($serviceName)
     {
+		if (empty(self::$service_container) || is_null(self::$service_container)) {
+			throw new Adapter_Exception('Service container is not set.');
+		}
         return self::$service_container->make($serviceName);
     }
 }
