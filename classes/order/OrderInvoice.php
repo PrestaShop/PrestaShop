@@ -234,10 +234,11 @@ class OrderInvoiceCore extends ObjectModel
 			) as $ecotax_field)
 				$row[$ecotax_field] = Tools::ps_round($row[$ecotax_field], _PS_PRICE_COMPUTE_PRECISION_, $round_mode);
 
-			$row['unit_price_tax_excl_including_ecotax'] = $row['unit_price_tax_excl'] + $row['ecotax_tax_excl'];
-			$row['unit_price_tax_incl_including_ecotax'] = $row['unit_price_tax_incl'] + $row['ecotax_tax_incl'];
-			$row['total_price_tax_excl_including_ecotax'] = $row['total_price_tax_excl'] + $row['total_ecotax_tax_excl'];
-			$row['total_price_tax_incl_including_ecotax'] = $row['total_price_tax_incl'] + $row['total_ecotax_tax_incl'];
+			// Aliases
+			$row['unit_price_tax_excl_including_ecotax'] = $row['unit_price_tax_excl'];
+			$row['unit_price_tax_incl_including_ecotax'] = $row['unit_price_tax_incl'];
+			$row['total_price_tax_excl_including_ecotax'] = $row['total_price_tax_excl'];
+			$row['total_price_tax_incl_including_ecotax'] = $row['total_price_tax_incl'];
 
 			/* Stock product */
 			$result_array[(int)$row['id_order_detail']] = $row;
