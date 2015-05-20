@@ -201,7 +201,6 @@ class AdminDashboardControllerCore extends AdminController
 			switch ($this->context->employee->preselect_date_range)
 			{
 				case 'day':
-				default:
 					$date_from = date('Y-m-d');
 					$date_to = date('Y-m-d');
 					break;
@@ -210,6 +209,7 @@ class AdminDashboardControllerCore extends AdminController
 					$date_to = date('Y-m-d', strtotime('-1 day'));
 					break;
 				case 'month':
+				default:
 					$date_from = date('Y-m-01');
 					$date_to = date('Y-m-d');
 					break;
