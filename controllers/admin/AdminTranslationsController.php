@@ -1638,7 +1638,7 @@ class AdminTranslationsControllerCore extends AdminController
 							$path = str_replace('{module}', $module_name, $path);
 						if (!file_exists($path) && !mkdir($path, 0777, true))
 							throw new PrestaShopException(sprintf(Tools::displayError('Directory "%s" cannot be created'), dirname($path)));
-						file_put_contents($path.$mail_name.'.'.$type_content, Tools::purifyHTML($content, array('{', '}'), true));
+						file_put_contents($path.$mail_name.'.'.$type_content, Tools::purifyHTML($content, array('{', '}')));
 					}
 					else
 						throw new PrestaShopException(Tools::displayError('Your HTML email templates cannot contain JavaScript code.'));
