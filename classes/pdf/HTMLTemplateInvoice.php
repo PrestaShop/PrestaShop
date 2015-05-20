@@ -167,6 +167,11 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 				$has_discount = true;
 				$order_detail['unit_price_tax_excl_before_specific_price'] = $order_detail['unit_price_tax_excl_including_ecotax'] + $order_detail['reduction_amount_tax_excl'];
 			}
+			elseif ($order_detail['reduction_percent'] > 0)
+			{
+				$has_discount = true;
+				$order_detail['unit_price_tax_excl_before_specific_price'] = (100 * $order_detail['unit_price_tax_excl_including_ecotax']) / (100 - 15);
+			}
 
 			// Set tax_code
 			$taxes = OrderDetail::getTaxListStatic($id);

@@ -659,13 +659,17 @@ class CartCore extends ObjectModel
 
 			$row['price_wt'] = $tax_calculator->addTaxes($row['price']);
 
-			$ecotax_tax_amount = Tools::ps_round($row['ecotax'], 2);
+			$ecotax_tax_amount = Tools::ps_round($row['ecotax'], 6);
+
 			if ($apply_eco_tax)
-				$ecotax_tax_amount = Tools::ps_round($ecotax_tax_amount * (1 + $ecotax_rate / 100), 2);
+				$ecotax_tax_amount_wt = Tools::ps_round($ecotax_tax_amount * (1 + $ecotax_rate / 100), 6);
+			else
+				$ecotax_tax_amount_wt = $ecotax_tax_amount;
+
 			$row['price'] += $ecotax_tax_amount;
-			$row['price_wt'] += $ecotax_tax_amount;
+			$row['price_wt'] += $ecotax_tax_amount_wt;
 			$row['total'] += $ecotax_tax_amount * $row['cart_quantity'];
-			$row['total_wt'] += $ecotax_tax_amount * $row['cart_quantity'];
+			$row['total_wt'] += $ecotax_tax_amount_wt * $row['cart_quantity'];
 			$row['description_short'] = Tools::nl2br($row['description_short']);
 
 			// check if a image associated with the attribute exists
