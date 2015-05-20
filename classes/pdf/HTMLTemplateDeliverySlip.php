@@ -43,7 +43,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 		$this->smarty = $smarty;
 
 		// header informations
-		$this->date = Tools::displayDate($this->order->invoice_date);
+		$this->date = Tools::displayDate($order_invoice->date_add);
 		$prefix = Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id);
 		$this->title = sprintf(HTMLTemplateDeliverySlip::l('Delivery %1$s%2$06d'), $prefix, $this->order_invoice->delivery_number);
 
