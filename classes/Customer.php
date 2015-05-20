@@ -500,7 +500,9 @@ class CustomerCore extends ObjectModel
 	 * Light back office search for customers
 	 *
 	 * @param string $query Searched string
-	 * @return array Corresponding customers
+	 * @param null|int $limit Limit query results
+	 * @return array|false|mysqli_result|null|PDOStatement|resource Corresponding customers
+	 * @throws PrestaShopDatabaseException
 	 */
 	public static function searchByName($query, $limit = null)
 	{
