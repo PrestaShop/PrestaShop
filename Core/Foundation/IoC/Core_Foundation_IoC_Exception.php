@@ -24,7 +24,10 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class Core_Foundation_IoC_Exception extends Exception
+class Core_Foundation_IoC_Exception extends Core_Foundation_Exception_Exception
 {
-
+	public function __construct($msg)
+	{
+		$this->dumpExceptionAndQuit($msg);
+	}
 }
