@@ -5083,7 +5083,7 @@ class AdminProductsControllerCore extends AdminController
 
 	public function processImageLegends()
 	{
-		if (Tools::getValue('key_tab') == 'Images' && Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
+		if (Tools::getValue('key_tab') == 'Images' && Tools::getValue('submitAddproductAndStay') == 'update_legends' && Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
 		{
 			$language_ids = Language::getIDs(false);
 			foreach ($_POST as $key => $val)
