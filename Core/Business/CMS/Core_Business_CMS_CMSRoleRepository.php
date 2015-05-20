@@ -26,7 +26,6 @@
 
 class Core_Business_CMS_CMSRoleRepository extends Core_Foundation_Database_EntityRepository
 {
-
 	public function getCMSRolesAssociated()
 	{
 		$sql = '

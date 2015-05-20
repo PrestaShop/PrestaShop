@@ -32,8 +32,8 @@ class Core_Business_CMS_CMSRepository extends Core_Foundation_Database_EntityRep
 			SELECT *
 			FROM `'.$this->getTableNameWithPrefix().'` c
 			JOIN `ps_cms_lang` cl ON c.`id_cms`= cl.`id_cms`
-			WHERE cl.`id_lang` = '.$id_lang.'
-			AND cl.`id_shop` = '.$id_shop.'
+			WHERE cl.`id_lang` = '.(int)$id_lang.'
+			AND cl.`id_shop` = '.(int)$id_shop.'
 		';
 
 		return $this->hydrateMany($this->db->select($sql));
@@ -45,9 +45,9 @@ class Core_Business_CMS_CMSRepository extends Core_Foundation_Database_EntityRep
 			SELECT *
 			FROM `'.$this->getTableNameWithPrefix().'` c
 			JOIN `ps_cms_lang` cl ON c.`id_cms`= cl.`id_cms`
-			WHERE c.`id_cms` = '.$id_cms.'
-			AND cl.`id_lang` = '.$id_lang.'
-			AND cl.`id_shop` = '.$id_shop.'
+			WHERE c.`id_cms` = '.(int)$id_cms.'
+			AND cl.`id_lang` = '.(int)$id_lang.'
+			AND cl.`id_shop` = '.(int)$id_shop.'
 			LIMIT 0 , 1
 		';
 

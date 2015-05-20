@@ -102,7 +102,7 @@ class Core_Foundation_Database_EntityRepository
 
 	protected function getTableNameWithPrefix()
 	{
-		return $this->tablesPrefix . $this->entityMetaData->getTableName();
+		return $this->db->escape($this->tablesPrefix . $this->entityMetaData->getTableName());
 	}
 
 	public function getNewEntity()
