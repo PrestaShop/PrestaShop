@@ -857,7 +857,10 @@ class AdminTranslationsControllerCore extends AdminController
 				{
 					require_once(_PS_TOOL_DIR_.'/tar/Archive_Tar.php');
 					$gz = new Archive_Tar($file, true);
+					if (_PS_MODE_DEV_)
+						$gz->setErrorHandling(PEAR_ERROR_TRIGGER, E_USER_WARNING);
 					$files_list = AdminTranslationsController::filterTranslationFiles($gz->listContent());
+
 					if ($error = $gz->extractList(AdminTranslationsController::filesListToPaths($files_list), _PS_TRANSLATIONS_DIR_.'../'))
 					{
 						if (is_object($error) && !empty($error->message))
@@ -883,8 +886,25 @@ class AdminTranslationsControllerCore extends AdminController
 							$this->redirect(false, (isset($conf) ? $conf : '15'));
 						}
 					}
-					elseif (!unlink($file))
-							$this->errors[] = sprintf(Tools::displayError('Cannot delete the archive %s.'), $file);
+					else
+					{
+						$this->errors[] = sprintf(Tools::displayError('Cannot decompress the translation file for the following language: %s'), $arr_import_lang[0]);
+						$checks= array();
+						foreach ($files_list as $f)
+							if (isset($f['filename']))
+							{
+								if (is_file(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$f['filename']) && !is_writable(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$f['filename']))
+									$checks[] = dirname($f['filename']);
+								elseif (is_dir(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.$f['filename']) && !is_writable(_PS_ROOT_DIR_.DIRECTORY_SEPARATOR.dirname($f['filename'])))
+									$checks[] = dirname($f['filename']);
+							}
+
+						$checks = array_unique($checks);
+						foreach ($checks as $check)
+							$this->errors[] = sprintf(Tools::displayError('Please check rights for folder and files in %s'), $check);
+						if (!unlink($file))
+							$this->errors[] = sprintf(Tools::displayError('Cannot delete the archive %s.'), $file);						
+					}
 				}
 				else
 					$this->errors[] = Tools::displayError('The server does not have permissions for writing.').' '.sprintf(Tools::displayError('Please check rights for %s'), dirname($file));

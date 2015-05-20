@@ -207,3 +207,5 @@ ALTER TABLE `PREFIX_order_invoice` ADD `delivery_address` TEXT DEFAULT NULL AFTE
 
 INSERT INTO `PREFIX_hook` (`name`, `title`, `description`) VALUES ('displayInvoiceLegalFreeText', 'PDF Invoice - Legal Free Text', 'This hook allows you to modify the legal free text on PDF invoices');
 
+UPDATE `PREFIX_hook` SET position = 0 WHERE name LIKE 'action%';
+

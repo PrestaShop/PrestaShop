@@ -659,13 +659,17 @@ class CartCore extends ObjectModel
 
 			$row['price_wt'] = $tax_calculator->addTaxes($row['price']);
 
-			$ecotax_tax_amount = Tools::ps_round($row['ecotax'], 2);
+			$ecotax_tax_amount = Tools::ps_round($row['ecotax'], 6);
+
 			if ($apply_eco_tax)
-				$ecotax_tax_amount = Tools::ps_round($ecotax_tax_amount * (1 + $ecotax_rate / 100), 2);
+				$ecotax_tax_amount_wt = Tools::ps_round($ecotax_tax_amount * (1 + $ecotax_rate / 100), 6);
+			else
+				$ecotax_tax_amount_wt = $ecotax_tax_amount;
+
 			$row['price'] += $ecotax_tax_amount;
-			$row['price_wt'] += $ecotax_tax_amount;
+			$row['price_wt'] += $ecotax_tax_amount_wt;
 			$row['total'] += $ecotax_tax_amount * $row['cart_quantity'];
-			$row['total_wt'] += $ecotax_tax_amount * $row['cart_quantity'];
+			$row['total_wt'] += $ecotax_tax_amount_wt * $row['cart_quantity'];
 			$row['description_short'] = Tools::nl2br($row['description_short']);
 
 			// check if a image associated with the attribute exists
@@ -3927,16 +3931,16 @@ class CartCore extends ObjectModel
 	 * Get all the ids of the delivery addresses without carriers
 	 *
 	 * @param bool $return_collection Return a collection
-	 *
+	 * @param array &$error contain an error message if an error occurs
 	 * @return array Array of address id or of address object
 	 */
-	public function getDeliveryAddressesWithoutCarriers($return_collection = false)
+	public function getDeliveryAddressesWithoutCarriers($return_collection = false, &$error = array())
 	{
 		$addresses_without_carriers = array();
 		foreach ($this->getProducts() as $product)
 		{
 			if (!in_array($product['id_address_delivery'], $addresses_without_carriers)
-				&& !count(Carrier::getAvailableCarrierList(new Product($product['id_product']), null, $product['id_address_delivery'])))
+				&& !count(Carrier::getAvailableCarrierList(new Product($product['id_product']), null, $product['id_address_delivery'], null, null, $error)))
 				$addresses_without_carriers[] = $product['id_address_delivery'];
 		}
 		if (!$return_collection)

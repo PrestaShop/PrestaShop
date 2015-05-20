@@ -50,7 +50,7 @@
 	$(document).ready(function() {
 
 		$('#customer').typeWatch({
-			captureLength: 1,
+			captureLength: 3,
 			highlight: true,
 			wait: 100,
 			callback: function(){ searchCustomers(); }

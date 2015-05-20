@@ -174,7 +174,7 @@ function add_condition(id_condition_group, type, value)
 function delete_condition(condition)
 {
 	delete conditions[condition];
-	
+
 	to_delete = $('#'+condition).prev();
 	if ($(to_delete).children().hasClass('btn_delete_condition'))
 		$(to_delete).remove();
@@ -237,7 +237,7 @@ $(document).ready(function() {
 		var id_condition = add_condition(current_id_condition_group, 'category', $('#id_category option:selected').val());
 		if (!id_condition)
 			return false;
-		
+
 		var html = '<tr id="'+id_condition+'"><td>{l s='Category'}</td><td>'+$('#id_category option:selected').html()+'</td><td><a href="#" onclick="delete_condition(\''+id_condition+'\');" class="btn btn-default"><i class="icon-remove"></i> {l s='Delete'}</a></td></tr>';
 		appendConditionToGroup(html);
 

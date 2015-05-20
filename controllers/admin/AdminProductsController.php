@@ -545,6 +545,8 @@ class AdminProductsControllerCore extends AdminController
 
 	public function ajaxProcessAddAttachment()
 	{
+		if ($this->tabAccess['edit'] === '0')
+			return die(Tools::jsonEncode(array('error' => $this->l('You do not have the right permission'))));
 		if (isset($_FILES['attachment_file']))
 		{
 			if ((int)$_FILES['attachment_file']['error'] === 1)
@@ -1633,6 +1635,8 @@ class AdminProductsControllerCore extends AdminController
 
 	public function ajaxProcessUpdateImagePosition()
 	{
+		if ($this->tabAccess['edit'] === '0')
+			return die(Tools::jsonEncode(array('error' => $this->l('You do not have the right permission'))));
 		$res = false;
 		if ($json = Tools::getValue('json'))
 		{
@@ -1654,6 +1658,8 @@ class AdminProductsControllerCore extends AdminController
 
 	public function ajaxProcessUpdateCover()
 	{
+		if ($this->tabAccess['edit'] === '0')
+			return die(Tools::jsonEncode(array('error' => $this->l('You do not have the right permission'))));
 		Image::deleteCover((int)Tools::getValue('id_product'));
 		$img = new Image((int)Tools::getValue('id_image'));
 		$img->cover = 1;
@@ -4549,7 +4555,7 @@ class AdminProductsControllerCore extends AdminController
 						}
 					}
 
-					if (!Warehouse::getPackWarehouses((int)$obj->id))
+					if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && !Warehouse::getPackWarehouses((int)$obj->id))
 						$this->displayWarning($this->l('You must have a common warehouse between this pack and its product.'));
 				}
 
@@ -4783,6 +4789,8 @@ class AdminProductsControllerCore extends AdminController
 
 	public function ajaxProcessProductQuantity()
 	{
+		if ($this->tabAccess['edit'] === '0')
+			return die(Tools::jsonEncode(array('error' => $this->l('You do not have the right permission'))));
 		if (!Tools::getValue('actionQty'))
 			return Tools::jsonEncode(array('error' => $this->l('Undefined action')));
 
@@ -5075,7 +5083,7 @@ class AdminProductsControllerCore extends AdminController
 
 	public function processImageLegends()
 	{
-		if (Tools::getValue('key_tab') == 'Images' && Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
+		if (Tools::getValue('key_tab') == 'Images' && Tools::getValue('submitAddproductAndStay') == 'update_legends' && Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
 		{
 			$language_ids = Language::getIDs(false);
 			foreach ($_POST as $key => $val)

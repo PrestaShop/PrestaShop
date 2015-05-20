@@ -2971,6 +2971,31 @@ abstract class ModuleCore
 
 		return true;
 	}
+
+	/**
+	 * Return the hooks list where this module can be hooked.
+	 *
+	 * @return array Hooks list.
+	 */
+	public function getPossibleHooksList()
+	{
+		$hooks_list = Hook::getHooks();
+		$possible_hooks_list = array();
+		foreach ($hooks_list as &$current_hook)
+		{
+			$hook_name = $current_hook['name'];
+			$retro_hook_name = Hook::getRetroHookName($hook_name);
+
+			if (is_callable(array($this, 'hook'.ucfirst($hook_name))) || is_callable(array($this, 'hook'.ucfirst($retro_hook_name))))
+				$possible_hooks_list[] = array(
+					'id_hook' => $current_hook['id_hook'],
+					'name' => $hook_name,
+					'title' => $current_hook['title'],
+				);
+		}
+
+		return $possible_hooks_list;
+	}
 }
 
 function ps_module_version_sort($a, $b)

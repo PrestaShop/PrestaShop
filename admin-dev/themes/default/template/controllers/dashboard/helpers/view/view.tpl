@@ -29,6 +29,7 @@
 	var dashboard_use_push = '{$dashboard_use_push|intval}';
 	var read_more = '{l s='Read more' js=1}';
 </script>
+
 <div id="dashboard">
 	<div class="row">
 		<div class="col-lg-12">
@@ -41,7 +42,7 @@
 						<button type="button" name="submitDateDay" class="btn btn-default submitDateDay{if isset($preselect_date_range) && $preselect_date_range == 'day'} active{/if}">
 							{l s='Day'}
 						</button>
-						<button type="button" name="submitDateMonth" class="btn btn-default submitDateMonth{if isset($preselect_date_range) && $preselect_date_range == 'month'} active{/if}">
+						<button type="button" name="submitDateMonth" class="btn btn-default submitDateMonth{if (!isset($preselect_date_range) || !$preselect_date_range) || (isset($preselect_date_range) && $preselect_date_range == 'month')} active{/if}">
 							{l s='Month'}
 						</button>
 						<button type="button" name="submitDateYear" class="btn btn-default submitDateYear{if isset($preselect_date_range) && $preselect_date_range == 'year'} active{/if}">

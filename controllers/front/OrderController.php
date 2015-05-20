@@ -332,14 +332,34 @@ class OrderControllerCore extends ParentOrderController
 				$this->_updateMessage(Tools::getValue('message'));
 
 			// Add checking for all addresses
-			$address_without_carriers = $this->context->cart->getDeliveryAddressesWithoutCarriers();
+			$errors = array();
+			$address_without_carriers = $this->context->cart->getDeliveryAddressesWithoutCarriers(false, $errors);
 			if (count($address_without_carriers) && !$this->context->cart->isVirtualCart())
 			{
-				if (count($address_without_carriers) > 1)
+				$flag_error_message = false;
+				foreach ($errors as $error)
+				{
+					if ($error == Carrier::SHIPPING_WEIGHT_EXCEPTION && !$flag_error_message)
+					{
+						$this->errors[] = sprintf(Tools::displayError('The product selection cannot be delivered by the available carrier(s): it is too heavy. Please amend your cart to lower its weight.', !Tools::getValue('ajax')));
+						$flag_error_message = true;
+					}
+					elseif ($error == Carrier::SHIPPING_PRICE_EXCEPTION && !$flag_error_message)
+					{
+						$this->errors[] = sprintf(Tools::displayError('The product selection cannot be delivered by the available carrier(s). Please amend your cart.', !Tools::getValue('ajax')));
+						$flag_error_message = true;
+					}
+					elseif ($error == Carrier::SHIPPING_SIZE_EXCEPTION && !$flag_error_message)
+					{
+						$this->errors[] = sprintf(Tools::displayError('The product selection cannot be delivered by the available carrier(s): its size does not fit. Please amend your cart to reduce its size.', !Tools::getValue('ajax')));
+						$flag_error_message = true;
+					}
+				}
+				if (count($address_without_carriers) > 1 && !$flag_error_message)
 					$this->errors[] = sprintf(Tools::displayError('There are no carriers that deliver to some addresses you selected.', !Tools::getValue('ajax')));
-				elseif ($this->context->cart->isMultiAddressDelivery())
+				elseif ($this->context->cart->isMultiAddressDelivery() && !$flag_error_message)
 					$this->errors[] = sprintf(Tools::displayError('There are no carriers that deliver to one of the address you selected.', !Tools::getValue('ajax')));
-				else
+				elseif (!$flag_error_message)
 					$this->errors[] = sprintf(Tools::displayError('There are no carriers that deliver to the address you selected.', !Tools::getValue('ajax')));
 			}
 		}
