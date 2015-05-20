@@ -54,11 +54,11 @@ class Core_Foundation_Database_EntityRepository
 			$one = false;
 			$by  = substr($method, 6);
 		} else {
-			throw new Exception(sprintf('Undefind method %s.', $method));
+			throw new Core_Foundation_Database_Exception(sprintf('Undefind method %s.', $method));
 		}
 
 		if (count($arguments) !== 1) {
-			throw new Exception(sprintf('Method %s takes exactly one argument.', $method));
+			throw new Core_Foundation_Database_Exception(sprintf('Method %s takes exactly one argument.', $method));
 		}
 
 		if (!$by) {
@@ -82,14 +82,14 @@ class Core_Foundation_Database_EntityRepository
 		$primary = $this->entityMetaData->getPrimaryKeyFieldnames();
 
 		if (count($primary) === 0) {
-			throw new Exception(
+			throw new Core_Foundation_Database_Exception(
 				sprintf(
 					'No primary key defined in entity `%s`.',
 					$this->entityMetaData->getEntityClassName()
 				)
 			);
 		} else if (count($primary) > 1) {
-			throw new Exception(
+			throw new Core_Foundation_Database_Exception(
 				sprintf(
 					'Entity `%s` has a composite primary key, which is not supported by entity repositories.',
 					$this->entityMetaData->getEntityClassName()
@@ -125,7 +125,7 @@ class Core_Foundation_Database_EntityRepository
 		if (count($rows) === 0) {
 			return null;
 		} else if (count($rows) > 1) {
-			throw new Exception('Too many rows returned.');
+			throw new Core_Foundation_Database_Exception('Too many rows returned.');
 		} else {
 			$data = $rows[0];
 			$entity = $this-> getNewEntity();
