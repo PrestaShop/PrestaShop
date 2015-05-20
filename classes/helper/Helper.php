@@ -367,6 +367,8 @@ class HelperCore
 	 */
 	public static function renderShopList()
 	{
+		Tools::displayAsDeprecated();
+
 		if (!Shop::isFeatureActive() || Shop::getTotalShops(false, null) < 2)
 			return null;
 
