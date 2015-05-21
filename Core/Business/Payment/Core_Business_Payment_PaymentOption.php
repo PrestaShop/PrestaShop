@@ -26,22 +26,31 @@
 
 class Core_Business_Payment_PaymentOption
 {
-	private $cta_text;
+	private $callToActionText;
 	private $logo;
 	private $action;
 	private $method;
 	private $inputs;
 	private $form;
-	private $module_name;
+	private $moduleName;
 
-	public function getCtaText()
+	/**
+	 * Return Call to Action Text
+	 * @return mixed
+	 */
+	public function getCallToActionText()
 	{
-		return $this->cta_text;
+		return $this->callToActionText;
 	}
 
-	public function setCtaText($cta_text)
+	/**
+	 * Set Call To Action Text
+	 * @param $cta_text
+	 * @return $this
+	 */
+	public function setCallToActionText($callToActionText)
 	{
-		$this->cta_text = $cta_text;
+		$this->callToActionText = $callToActionText;
 		return $this;
 	}
 
@@ -102,12 +111,12 @@ class Core_Business_Payment_PaymentOption
 
 	public function getModuleName()
 	{
-		return $this->module_name;
+		return $this->moduleName;
 	}
 
-	public function setModuleName($module_name)
+	public function setModuleName($moduleName)
 	{
-		$this->module_name = $module_name;
+		$this->moduleName = $moduleName;
 		return $this;
 	}
 
@@ -144,7 +153,7 @@ class Core_Business_Payment_PaymentOption
 			$option = array_merge($defaults, $option);
 
 			$newOption = new Core_Business_Payment_PaymentOption();
-			$newOption->setCtaText($option['cta_text'])
+			$newOption->setCallToActionText($option['cta_text'])
 					  ->setAction($option['action'])
 					  ->setForm($option['form'])
 					  ->setInputs($option['inputs'])

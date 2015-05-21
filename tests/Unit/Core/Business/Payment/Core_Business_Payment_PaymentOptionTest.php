@@ -36,7 +36,7 @@ class Core_Business_Payment_PaymentOptionTest extends UnitTestCase
     {
         $newOption = new PaymentOption;
         $newOption
-            ->setCtaText('Pay by bankwire')
+            ->setCallToActionText('Pay by bankwire')
             ->setLogo('http://example.com/logo.png')
             ->setAction('http://example.com/submit')
             ->setMethod('POST')
@@ -63,7 +63,7 @@ class Core_Business_Payment_PaymentOptionTest extends UnitTestCase
     {
         $newOption = new PaymentOption;
         $newOption
-            ->setCtaText('Pay by bankwire')
+            ->setCallToActionText('Pay by bankwire')
             ->setLogo('http://example.com/logo.png')
             ->setAction('http://example.com/submit')
             ->setMethod('POST')
