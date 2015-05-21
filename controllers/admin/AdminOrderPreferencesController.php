@@ -78,7 +78,7 @@ class AdminOrderPreferencesControllerCore extends AdminController
 						'cast' => 'intval',
 						'type' => 'bool'
 					),
-					'PS_REORDERING' => array(
+					'PS_DISALLOW_HISTORY_REORDERING' => array(
 						'title' => $this->l('Disable Reordering Option'),
 						'hint' => $this->l('Disable the option to allow customers to reorder in one click from the order history page (required in some European countries).'),
 						'validation' => 'isBool',

@@ -195,8 +195,6 @@ CREATE TABLE IF NOT EXISTS `PREFIX_cms_role_lang` (
   PRIMARY KEY (`id_cms_role`,`id_lang`, `id_shop`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
 
-UPDATE `PREFIX_configuration` SET `name` = 'PS_REORDERING' WHERE `name` = 'PS_DISALLOW_HISTORY_REORDERING';
-
 ALTER TABLE `PREFIX_order_invoice` ADD `company_address` TEXT DEFAULT NULL AFTER `total_wrapping_tax_incl`;
 
 ALTER TABLE `PREFIX_order_invoice` ADD `shop_address` TEXT DEFAULT NULL AFTER `total_wrapping_tax_incl`;
