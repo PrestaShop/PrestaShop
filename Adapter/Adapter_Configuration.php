@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class Adapter_Configuration implements Core_Business_Configuration
+class Adapter_Configuration implements Core_Business_ConfigurationInterface
 {
     public function get($key)
     {

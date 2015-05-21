@@ -75,7 +75,7 @@ class UnitTestCase extends PHPUnit_Framework_TestCase
     {
 		$fakeConfiguration = new FakeConfiguration($keys);
 		$this->container->bind(
-            'Core_Business_Configuration',
+            'Core_Business_ConfigurationInterface',
 			$fakeConfiguration
         );
 		return $fakeConfiguration;

@@ -2,9 +2,9 @@
 
 namespace PrestaShop\PrestaShop\Tests\Fake;
 
-use Core_Business_Configuration;
+use Core_Business_ConfigurationInterface;
 
-class FakeConfiguration implements Core_Business_Configuration
+class FakeConfiguration implements Core_Business_ConfigurationInterface
 {
     private $keys;
 

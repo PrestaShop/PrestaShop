@@ -31,8 +31,8 @@ class Core_Foundation_Database_EntityManager
 	private $entityMetaData = array();
 
 	public function __construct(
-        Core_Foundation_Database_Database $db,
-        Core_Business_Configuration $configuration
+        Core_Foundation_Database_DatabaseInterface $db,
+        Core_Business_ConfigurationInterface $configuration
     )
     {
 		$this->db = $db;
@@ -75,7 +75,7 @@ class Core_Foundation_Database_EntityManager
 		return $this->entityMetaData[$className];
 	}
 
-	public function save(Core_Foundation_Database_Entity $entity)
+	public function save(Core_Foundation_Database_EntityInterface $entity)
 	{
 		$entity->save();
 		return $this;

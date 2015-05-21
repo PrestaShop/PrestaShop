@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-interface Core_Foundation_Database_Entity
+interface Core_Foundation_Database_EntityInterface
 {
     /**
      * Returns the name of the repository class for this entity.

@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
 
 use Adapter_ProductPriceCalculator;
 use Adapter_AddressFactory;
-use Core_Business_Configuration;
+use Core_Business_ConfigurationInterface;
 
 use Address;
 use Cart;

@@ -1344,7 +1344,7 @@ class CartCore extends ObjectModel
 		// Dependencies
 		$address_factory 	= Adapter_ServiceLocator::get('Adapter_AddressFactory');
 		$price_calculator 	= Adapter_ServiceLocator::get('Adapter_ProductPriceCalculator');
-		$configuration 		= Adapter_ServiceLocator::get('Core_Business_Configuration');
+		$configuration 		= Adapter_ServiceLocator::get('Core_Business_ConfigurationInterface');
 
 		$ps_tax_address_type = $configuration->get('PS_TAX_ADDRESS_TYPE');
 		$ps_use_ecotax = $configuration->get('PS_USE_ECOTAX');

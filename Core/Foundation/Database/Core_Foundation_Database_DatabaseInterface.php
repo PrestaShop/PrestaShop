@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-interface Core_Foundation_Database_Database
+interface Core_Foundation_Database_DatabaseInterface
 {
     public function select($sqlString);
     public function escape($unsafeData);

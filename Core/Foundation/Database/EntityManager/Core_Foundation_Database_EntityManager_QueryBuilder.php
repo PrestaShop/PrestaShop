@@ -28,7 +28,7 @@ class Core_Foundation_Database_EntityManager_QueryBuilder
 {
     private $db;
 
-    public function __construct(Core_Foundation_Database_Database $db)
+    public function __construct(Core_Foundation_Database_DatabaseInterface $db)
     {
         $this->db = $db;
     }

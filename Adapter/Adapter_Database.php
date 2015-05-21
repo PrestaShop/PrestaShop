@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-class Adapter_Database implements Core_Foundation_Database_Database
+class Adapter_Database implements Core_Foundation_Database_DatabaseInterface
 {
     public function select($sqlString)
     {

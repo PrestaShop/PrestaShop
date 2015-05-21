@@ -24,7 +24,7 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-interface Core_Business_Configuration
+interface Core_Business_ConfigurationInterface
 {
     public function get($key);
 }

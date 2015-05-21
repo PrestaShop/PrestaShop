@@ -40,7 +40,7 @@ class Core_Foundation_Database_EntityRepository_Test extends UnitTestCase
     {
         $mockEntityManager = Phake::mock('Core_Foundation_Database_EntityManager');
 
-        $mockDb = Phake::mock('Core_Foundation_Database_Database');
+        $mockDb = Phake::mock('Core_Foundation_Database_DatabaseInterface');
 
         Phake::when($mockDb)->select(Phake::anyParameters())->thenReturn(array());
 

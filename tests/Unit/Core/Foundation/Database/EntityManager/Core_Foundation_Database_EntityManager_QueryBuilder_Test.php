@@ -38,7 +38,7 @@ class Core_Foundation_Database_EntityManager_QueryBuilder_Test extends UnitTestC
 
     public function setup()
     {
-        $mockDb = Phake::mock('Core_Foundation_Database_Database');
+        $mockDb = Phake::mock('Core_Foundation_Database_DatabaseInterface');
 
         Phake::when($mockDb)->escape(Phake::anyParameters())->thenReturn('escaped');
 
