@@ -66,14 +66,52 @@ $(document).ready(function(){
 			url: baseUri + '?rand=' + new Date().getTime(),
 			async: true,
 			cache: false,
-			data: 'controller=cart&ajax=true&allowSeperatedPackage=true&value='
+			dataType: 'json',
+			data: 'controller=cart&ajax=true'
+				+ '&summary=true'
+				+ '&allowSeperatedPackage=true'
+				+ '&value='
 				+ ($(this).prop('checked') ? '1' : '0')
 				+ '&token='+static_token
 				+ '&allow_refresh=1',
 			success: function(jsonData)
 			{
-				if (typeof(getCarrierListAndUpdate) !== 'undefined')
-					getCarrierListAndUpdate();
+				if (jsonData.hasError)
+				{
+					var errors = '';
+					for(var error in jsonData.errors)
+						//IE6 bug fix
+						if(error !== 'indexOf')
+							errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
+					if (!!$.prototype.fancybox)
+					    $.fancybox.open([
+				        {
+				            type: 'inline',
+				            autoScale: true,
+				            minHeight: 30,
+				            content: '<p class="fancybox-error">' + errors + '</p>'
+				        }],
+						{
+					        padding: 0
+					    });
+					else
+					    alert(errors);
+					$('input[name=quantity_'+ id +']').val($('input[name=quantity_'+ id +'_hidden]').val());
+				}
+				else
+				{
+					if (jsonData.refresh)
+						window.location.href = window.location.href;
+					updateCartSummary(jsonData.summary);
+					if (window.ajaxCart != undefined)
+						ajaxCart.updateCart(jsonData);
+					updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
+					updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
+					if (typeof(getCarrierListAndUpdate) !== 'undefined')
+						getCarrierListAndUpdate();
+					if (typeof(updatePaymentMethodsDisplay) !== 'undefined')
+						updatePaymentMethodsDisplay();
+				}
 			}
 		});
 	});
