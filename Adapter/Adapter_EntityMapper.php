@@ -42,7 +42,7 @@ class Adapter_EntityMapper {
 		if (!$should_cache_objects || !Cache::isStored($cache_id)) {
 			$sql = new DbQuery();
 			$sql->from($entity_defs['table'], 'a');
-			$sql->where('a.`' . pSQL($entity_defs['primary']) . '` = ' . (int)$id);
+			$sql->where('a.`' . bqSQL($entity_defs['primary']) . '` = ' . (int)$id);
 
 			// Get lang informations
 			if ($id_lang && isset($entity_defs['multilang']) && $entity_defs['multilang']) {
