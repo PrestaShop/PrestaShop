@@ -413,12 +413,13 @@ class OrderOpcControllerCore extends ParentOrderController
 
 		$this->_processAddressFormat();
 
-		if ((bool)Configuration::get('PS_ADVANCED_PAYMENT_API')) {
-			$this->addJS(_THEME_JS_DIR_.'advanced-payment-api.js');
-			$this->setTemplate(_PS_THEME_DIR_.'order-opc-advanced.tpl');
-		} else {
-			$this->setTemplate(_PS_THEME_DIR_.'order-opc.tpl');
+		if ((bool)Configuration::get('PS_ADVANCED_PAYMENT_API'))
+		{
+			$this->addJS(_THEME_JS_DIR_ . 'advanced-payment-api.js');
+			$this->setTemplate(_PS_THEME_DIR_ . 'order-opc-advanced.tpl');
 		}
+		else
+			$this->setTemplate(_PS_THEME_DIR_.'order-opc.tpl');
 	}
 
 	protected function _getGuestInformations()

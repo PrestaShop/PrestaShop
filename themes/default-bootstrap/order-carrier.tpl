@@ -348,7 +348,7 @@
 				{/if}
 				{/if}
 			{/if}
-			{if $conditions AND $cms_id AND !$advanced_payment_api}
+			{if $conditions && $cms_id && !$advanced_payment_api}
 				{if $opc}
 					<hr style="" />
 				{/if}
