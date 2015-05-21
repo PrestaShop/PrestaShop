@@ -80,6 +80,7 @@ smartyRegisterFunction($smarty, 'function', 'getHeightSize', array('Image', 'get
 smartyRegisterFunction($smarty, 'function', 'addJsDef', array('Media', 'addJsDef'));
 smartyRegisterFunction($smarty, 'block', 'addJsDefL', array('Media', 'addJsDefL'));
 smartyRegisterFunction($smarty, 'modifier', 'boolval', array('Tools', 'boolval'));
+smartyRegisterFunction($smarty, 'modifier', 'cleanHtml', 'smartyCleanHtml');
 
 function smartyDieObject($params, &$smarty)
 {
@@ -195,6 +196,13 @@ function smartyHook($params, &$smarty)
 		unset($hook_params['h']);
 		return Hook::exec($params['h'], $hook_params, $id_module);
 	}
+}
+
+function smartyCleanHtml($data)
+{
+	// Prevent xss injection.
+	if (Validate::isCleanHtml($data))
+		return $data;
 }
 
 function toolsConvertPrice($params, &$smarty)

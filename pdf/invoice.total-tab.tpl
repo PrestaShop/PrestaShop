@@ -24,16 +24,16 @@
 *}
 <table id="total-tab" width="100%">
 
-    {if $footer.product_discounts_tax_excl > 0}
+	<tr>
+		<td class="grey" width="70%">
+			{l s='Total Products' pdf='true'}
+		</td>
+		<td class="white" width="30%">
+			{displayPrice currency=$order->id_currency price=$footer.products_before_discounts_tax_excl}
+		</td>
+	</tr>
 
-        <tr>
-            <td class="grey" width="70%">
-                {l s='Total Products Before Discounts' pdf='true'}
-            </td>
-            <td class="white" width="30%">
-                {displayPrice currency=$order->id_currency price=$footer.products_before_discounts_tax_excl}
-            </td>
-        </tr>
+	{if $footer.product_discounts_tax_excl > 0}
 
         <tr>
             <td class="grey" width="70%">
@@ -45,15 +45,6 @@
         </tr>
 
     {/if}
-
-    <tr {if $footer.product_discounts_tax_excl > 0}class="separator"{/if}>
-        <td class="grey" width="70%">
-            {l s='Total Products' pdf='true'}
-        </td>
-        <td class="white" width="30%">
-            {displayPrice currency=$order->id_currency price=$footer.products_after_discounts_tax_excl}
-        </td>
-    </tr>
 
     <tr>
         <td class="grey" width="70%">

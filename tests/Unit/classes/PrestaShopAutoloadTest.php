@@ -45,7 +45,8 @@ class	PrestaShopAutoloadTest extends PHPUnit_Framework_TestCase
 	public function testGenerateIndex()
 	{
 		$this->assertTrue(file_exists($this->file_index));
-		$this->assertEquals($this->file_index_content, md5(file_get_contents($this->file_index)));
+		$data = include($this->file_index);
+		$this->assertEquals($data['OrderControllerCore']['path'], 'controllers/front/OrderController.php');
 	}
 
 	public function testLoad()

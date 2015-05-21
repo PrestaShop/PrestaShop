@@ -95,7 +95,6 @@ ALTER IGNORE TABLE `PREFIX_image_shop` DROP PRIMARY KEY, ADD PRIMARY KEY (`id_im
 ALTER TABLE `PREFIX_product_supplier` ADD KEY `id_supplier` (`id_supplier`,`id_product`);
 ALTER TABLE `PREFIX_product` DROP KEY `product_manufacturer`;
 ALTER TABLE `PREFIX_product` ADD KEY `product_manufacturer` (`id_manufacturer`, `id_product`);
-ALTER IGNORE TABLE `PREFIX_specific_price` ADD UNIQUE KEY `id_product_2` (`id_product`,`id_shop`,`id_shop_group`,`id_currency`,`id_country`,`id_group`,`id_customer`,`id_product_attribute`,`from_quantity`,`from`,`to`);
 
 DROP TABLE IF EXISTS `PREFIX_smarty_lazy_cache`;
 CREATE TABLE `PREFIX_smarty_lazy_cache` (
@@ -208,4 +207,7 @@ ALTER TABLE `PREFIX_order_invoice` ADD `delivery_address` TEXT DEFAULT NULL AFTE
 INSERT INTO `PREFIX_hook` (`name`, `title`, `description`) VALUES ('displayInvoiceLegalFreeText', 'PDF Invoice - Legal Free Text', 'This hook allows you to modify the legal free text on PDF invoices');
 
 UPDATE `PREFIX_hook` SET position = 0 WHERE name LIKE 'action%';
+
+ALTER IGNORE TABLE `PREFIX_specific_price` DROP KEY `id_product_2`;
+ALTER IGNORE TABLE `PREFIX_specific_price` ADD UNIQUE KEY `id_product_2` (`id_product`,`id_shop`,`id_shop_group`,`id_currency`,`id_country`,`id_group`,`id_customer`,`id_product_attribute`,`from_quantity`,`id_specific_price_rule`,`from`,`to`);
 
