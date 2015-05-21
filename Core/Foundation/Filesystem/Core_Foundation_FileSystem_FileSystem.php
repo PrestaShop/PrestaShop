@@ -82,8 +82,11 @@ class Core_Foundation_FileSystem_FileSystem
 		}
 
 		if (!is_dir($path)) {
-			return array(
-				$path => new SplFileInfo($path)
+			throw new Core_Foundation_FileSystem_Exception(
+				sprintf(
+					'%s is not a directory',
+					$path
+				)
 			);
 		}
 

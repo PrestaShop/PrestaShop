@@ -122,13 +122,11 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
     }
 
     /**
-     * Rationale: ls /some/file.txt is not an error
+	 *
+	 * @expectedException Core_Foundation_FileSystem_Exception
      */
-    public function test_listEntriesRecursively_returns_file_info_when_listing_one_file_only()
+    public function test_listEntriesRecursively_throws_when_path_is_a_file()
     {
-        $this->assertEquals(
-            array(__FILE__),
-            array_keys($this->fs->listEntriesRecursively(__FILE__))
-        );
+        $this->fs->listEntriesRecursively(__FILE__);
     }
 }
