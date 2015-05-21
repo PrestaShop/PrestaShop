@@ -26,8 +26,4 @@
 
 class Core_Foundation_Database_Exception extends Core_Foundation_Exception_Exception
 {
-	public function __construct($msg)
-	{
-		$this->dumpExceptionAndQuit($msg);
-	}
 }

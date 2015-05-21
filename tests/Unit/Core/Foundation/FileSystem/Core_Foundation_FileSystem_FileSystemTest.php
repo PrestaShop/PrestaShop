@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Tests\Unit\Core\Foundation\FileSystem;
 use PrestaShop\PrestaShop\Tests\TestCase\UnitTestCase;
 
 use Core_Foundation_FileSystem_FileSystem;
+use Core_Foundation_FileSystem_Exception;
 
 class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
 {
@@ -58,7 +59,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException Core_Foundation_FileSystem_Exception
      */
     public function test_joinPaths_one_path_throws()
     {
@@ -66,7 +67,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException Core_Foundation_FileSystem_Exception
      */
     public function test_joinPaths_zero_path_throws()
     {
@@ -113,7 +114,7 @@ class Core_Foundation_FileSystem_FileSystemTest extends UnitTestCase
 
     /**
      * Rationale: ls /some/non/existing/file => ls: cannot access /some/non/existing/file: No such file or directory
-     * @expectedException Exception
+     * @expectedException Core_Foundation_FileSystem_Exception
      */
     public function test_listEntriesRecursively_throws_if_path_does_not_exist()
     {

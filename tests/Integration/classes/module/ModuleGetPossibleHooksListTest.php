@@ -42,10 +42,10 @@ class ModuleGetPossibleHooksListTest extends IntegrationTestCase
 		$module = Module::getInstanceByName('bankwire');
 		$possible_hooks_list = $module->getPossibleHooksList();
 
-		$this->assertCount(4, $possible_hooks_list);
-		$this->assertEquals('advancedPaymentApi', $possible_hooks_list[0]['name']);
-		$this->assertEquals('displayPayment', $possible_hooks_list[1]['name']);
-		$this->assertEquals('displayPaymentEU', $possible_hooks_list[2]['name']);
-		$this->assertEquals('displayPaymentReturn', $possible_hooks_list[3]['name']);
+		$this->assertCount(3, $possible_hooks_list);
+
+		$this->assertEquals('displayPayment', $possible_hooks_list[0]['name']);
+		$this->assertEquals('displayPaymentEU', $possible_hooks_list[1]['name']);
+		$this->assertEquals('displayPaymentReturn', $possible_hooks_list[2]['name']);
 	}
 }

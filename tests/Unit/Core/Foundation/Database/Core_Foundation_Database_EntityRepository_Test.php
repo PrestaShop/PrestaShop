@@ -32,6 +32,7 @@ use Phake;
 
 use Core_Foundation_Database_EntityRepository;
 use Core_Foundation_Database_EntityMetaData;
+use Core_Foundation_Database_Exception;
 
 class Core_Foundation_Database_EntityRepository_Test extends UnitTestCase
 {
@@ -53,7 +54,7 @@ class Core_Foundation_Database_EntityRepository_Test extends UnitTestCase
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException Core_Foundation_Database_Exception
      */
     public function test_call_to_invalid_method_throws_exception()
     {
