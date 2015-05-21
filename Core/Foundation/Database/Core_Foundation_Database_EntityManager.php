@@ -101,4 +101,15 @@ class Core_Foundation_Database_EntityManager
 		$entity->save();
 		return $this;
 	}
+
+	/**
+	 * DElete entity from DB
+	 * @param Core_Foundation_Database_EntityInterface $entity
+	 * @return $this
+	 */
+	public function delete(Core_Foundation_Database_EntityInterface $entity)
+	{
+		$entity->delete();
+		return $this;
+	}
 }

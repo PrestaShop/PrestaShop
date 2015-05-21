@@ -76,7 +76,9 @@ class EntityManagerTest extends IntegrationTestCase
 
 		$this->entityManager->save($entity);
 
-
 		$this->assertGreaterThan(0, $repository->findOneByName($name)->id);
+
+		// Clean DB !
+		$this->entityManager->delete($entity);
 	}
 }
