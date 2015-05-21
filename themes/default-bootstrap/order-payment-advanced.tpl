@@ -57,7 +57,7 @@
                             <img src="{$paymentOption->getLogo()}"/>
                             <input name="payment_option" data-payment-option-name="{$paymentOption->getModuleName()}" data-payment-action="{$paymentOption->getAction()}"
                                    type="radio" value="{$paymentOption->getModuleName()}">
-                            {$paymentOption->getCtaText()}
+                            {$paymentOption->getCallToActionText()}
                         </a>
                         {$paymentOption->getForm()}
                     </p>
