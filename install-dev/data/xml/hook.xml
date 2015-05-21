@@ -319,5 +319,11 @@
     <hook id="actionOrderEdited" live_edit="0">
       <name>actionOrderEdited</name><title>Order edited</title><description>This hook is called when an order is edited.</description>
     </hook>
+    <hook id="actionEmailAddBeforeContent" live_edit="0">
+      <name>actionEmailAddBeforeContent</name><title>Add extra content before mail content</title><description>This hook is called just before fetching mail template</description>
+    </hook>
+    <hook id="actionEmailAddAfterContent" live_edit="0">
+      <name>actionEmailAddAfterContent</name><title>Add extra content after mail content</title><description>This hook is called just after fetching mail template</description>
+    </hook>
   </entities>
 </entity_hook>

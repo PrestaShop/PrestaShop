@@ -829,5 +829,17 @@ Country</value>
 	<configuration id="PS_LOG_MODULE_PERFS_MODULO" name="PS_LOG_MODULE_PERFS_MODULO">
 		<value>0</value>
 	</configuration>
+    <configuration id="PS_DISALLOW_HISTORY_REORDERING" name="PS_DISALLOW_HISTORY_REORDERING">
+      <value>0</value>
+    </configuration>
+    <configuration id="PS_DISPLAY_PRODUCT_WEIGHT" name="PS_DISPLAY_PRODUCT_WEIGHT">
+      <value>0</value>
+    </configuration>
+    <configuration id="PS_PRODUCT_WEIGHT_PRECISION" name="PS_PRODUCT_WEIGHT_PRECISION">
+      <value>2</value>
+    </configuration>
+    <configuration id="PS_ADVANCED_PAYMENT_API" name="PS_ADVANCED_PAYMENT_API">
+      <value>0</value>
+    </configuration>
   </entities>
 </entity_configuration>

@@ -1122,7 +1122,7 @@ abstract class ModuleCore
 		}
 
 		if (!$r && class_exists($module_name, false))
-			$r = self::$_INSTANCE[$module_name] = new $module_name;
+			$r = self::$_INSTANCE[$module_name] = Adapter_ServiceLocator::get($module_name);
 
 		if (Module::$_log_modules_perfs)
 		{
@@ -1337,9 +1337,8 @@ abstract class ModuleCore
 				// If class exists, we just instanciate it
 				if (class_exists($module, false))
 				{
-					/** @var Module $tmp_module */
-					$tmp_module = new $module;
-
+					$tmp_module = Adapter_ServiceLocator::get($module);
+					
 					$item = new stdClass();
 					$item->id = $tmp_module->id;
 					$item->warning = $tmp_module->warning;
@@ -2025,6 +2024,34 @@ abstract class ModuleCore
 		$output .= '</div></div>';
 
 		$this->error = true;
+		return $output;
+	}
+
+	/**
+	* Helper displaying warning message(s)
+	* @param string|array $error
+	* @return string
+	*/
+	public function displayWarning($warning)
+	{
+		$output = '
+		<div class="bootstrap">
+		<div class="module_warning alert alert-warning" >
+			<button type="button" class="close" data-dismiss="alert">&times;</button>';
+
+		if (is_array($warning))
+		{
+			$output .= '<ul>';
+			foreach ($warning as $msg)
+				$output .= '<li>'.$msg.'</li>';
+			$output .= '</ul>';
+		}
+		else
+			$output .= $warning;
+
+		// Close div openned previously
+		$output .= '</div></div>';
+
 		return $output;
 	}
 

@@ -27,6 +27,10 @@
 class OrderControllerCore extends ParentOrderController
 {
 	public $step;
+	const STEP_SUMMARY_EMPTY_CART = -1;
+	const STEP_ADDRESSES = 1;
+	const STEP_DELIVERY = 2;
+	const STEP_PAYMENT = 3;
 
 	/**
 	 * Initialize order controller
@@ -139,15 +143,19 @@ class OrderControllerCore extends ParentOrderController
 		if (!Tools::getValue('multi-shipping'))
 			$this->context->cart->setNoMultishipping();
 
+		// Check for alternative payment api
+		$is_advanced_payment_api = (bool)Configuration::get('PS_ADVANCED_PAYMENT_API');
+
 		// 4 steps to the order
 		switch ((int)$this->step)
 		{
-			case -1;
+
+			case OrderController::STEP_SUMMARY_EMPTY_CART:
 				$this->context->smarty->assign('empty', 1);
 				$this->setTemplate(_PS_THEME_DIR_.'shopping-cart.tpl');
 			break;
 
-			case 1:
+			case OrderController::STEP_ADDRESSES:
 				$this->_assignAddress();
 				$this->processAddressFormat();
 				if (Tools::getValue('multi-shipping') == 1)
@@ -160,7 +168,7 @@ class OrderControllerCore extends ParentOrderController
 					$this->setTemplate(_PS_THEME_DIR_.'order-address.tpl');
 			break;
 
-			case 2:
+			case OrderController::STEP_DELIVERY:
 				if (Tools::isSubmit('processAddress'))
 					$this->processAddress();
 				$this->autoStep();
@@ -168,15 +176,19 @@ class OrderControllerCore extends ParentOrderController
 				$this->setTemplate(_PS_THEME_DIR_.'order-carrier.tpl');
 			break;
 
-			case 3:
+			case OrderController::STEP_PAYMENT:
 				// Check that the conditions (so active) were accepted by the customer
 				$cgv = Tools::getValue('cgv') || $this->context->cookie->check_cgv;
-				if (Configuration::get('PS_CONDITIONS') && (!Validate::isBool($cgv) || $cgv == false))
+
+				if ($is_advanced_payment_api === false && Configuration::get('PS_CONDITIONS')
+					&& (!Validate::isBool($cgv) || $cgv == false))
 					Tools::redirect('index.php?controller=order&step=2');
-				Context::getContext()->cookie->check_cgv = true;
+
+				if ($is_advanced_payment_api === false)
+					Context::getContext()->cookie->check_cgv = true;
 
 				// Check the delivery option is set
-				if (!$this->context->cart->isVirtualCart())
+				if ($this->context->cart->isVirtualCart() === false)
 				{
 					if (!Tools::getValue('delivery_option') && !Tools::getValue('id_carrier') && !$this->context->cart->delivery_option && !$this->context->cart->id_carrier)
 						Tools::redirect('index.php?controller=order&step=2');
@@ -208,6 +220,10 @@ class OrderControllerCore extends ParentOrderController
 						Tools::redirect('index.php?controller=history');
 				}
 				$this->_assignPayment();
+
+				if ($is_advanced_payment_api === true)
+					$this->_assignAddress();
+
 				// assign some informations to display cart
 				$this->_assignSummaryInformations();
 				$this->setTemplate(_PS_THEME_DIR_.'order-payment.tpl');
@@ -422,11 +438,24 @@ class OrderControllerCore extends ParentOrderController
 
 		/* We may need to display an order summary */
 		$this->context->smarty->assign($this->context->cart->getSummaryDetails());
+
+		if ((bool)Configuration::get('PS_ADVANCED_PAYMENT_API'))
+			$this->context->cart->checkedTOS = null;
+		else
+			$this->context->cart->checkedTOS = 1;
+
+		// Test if we have to override TOS display through hook
+		$hook_override_tos_display = Hook::exec('overrideTOSDisplay');
+
 		$this->context->smarty->assign(array(
 			'total_price' => (float)$orderTotal,
-			'taxes_enabled' => (int)Configuration::get('PS_TAX')
+			'taxes_enabled' => (int)Configuration::get('PS_TAX'),
+			'cms_id' => (int)Configuration::get('PS_CONDITIONS_CMS_ID'),
+			'conditions' => (int)Configuration::get('PS_CONDITIONS'),
+			'checkedTOS' => (int)$this->context->cart->checkedTOS,
+			'override_tos_display' => $hook_override_tos_display
 		));
-		$this->context->cart->checkedTOS = '1';
+
 
 		parent::_assignPayment();
 	}

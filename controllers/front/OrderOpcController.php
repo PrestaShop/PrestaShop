@@ -413,7 +413,13 @@ class OrderOpcControllerCore extends ParentOrderController
 
 		$this->_processAddressFormat();
 
-		$this->setTemplate(_PS_THEME_DIR_.'order-opc.tpl');
+		if ((bool)Configuration::get('PS_ADVANCED_PAYMENT_API'))
+		{
+			$this->addJS(_THEME_JS_DIR_ . 'advanced-payment-api.js');
+			$this->setTemplate(_PS_THEME_DIR_ . 'order-opc-advanced.tpl');
+		}
+		else
+			$this->setTemplate(_PS_THEME_DIR_.'order-opc.tpl');
 	}
 
 	protected function _getGuestInformations()
@@ -508,10 +514,19 @@ class OrderOpcControllerCore extends ParentOrderController
 
 	protected function _assignPayment()
 	{
-		$this->context->smarty->assign(array(
-			'HOOK_TOP_PAYMENT' => ($this->isLogged ? Hook::exec('displayPaymentTop') : ''),
-			'HOOK_PAYMENT' => $this->_getPaymentMethods()
-		));
+		if ((bool)Configuration::get('PS_ADVANCED_PAYMENT_API')) {
+			$this->context->smarty->assign(array(
+				'HOOK_TOP_PAYMENT' => ($this->isLogged ? Hook::exec('displayPaymentTop') : ''),
+				'HOOK_PAYMENT' => $this->_getPaymentMethods(),
+				'HOOK_ADVANCED_PAYMENT' => Hook::exec('advancedPaymentOptions', array(), null, true),
+				'link_conditions' => $this->link_conditions
+			));
+		} else {
+			$this->context->smarty->assign(array(
+				'HOOK_TOP_PAYMENT' => ($this->isLogged ? Hook::exec('displayPaymentTop') : ''),
+				'HOOK_PAYMENT' => $this->_getPaymentMethods()
+			));
+		}
 	}
 
 	protected function _getPaymentMethods()

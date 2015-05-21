@@ -176,9 +176,31 @@ ALTER TABLE `PREFIX_configuration_kpi` CHANGE `name` `name` varchar(64);
 ALTER TABLE `PREFIX_smarty_lazy_cache` CHANGE `cache_id` `cache_id` varchar(255) NOT NULL DEFAULT '';
 TRUNCATE TABLE `PREFIX_smarty_lazy_cache`;
 
+ALTER TABLE `PREFIX_product_shop` ADD KEY `indexed` (`indexed`, `active`, `id_product`);
+
+/* Advanced EU Compliance tables */
+CREATE TABLE IF NOT EXISTS `PREFIX_cms_role` (
+  `id_cms_role` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `id_cms` int(11) unsigned NOT NULL,
+  PRIMARY KEY (`id_cms_role`, `id_cms`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `PREFIX_cms_role_lang` (
+  `id_cms_role` int(11) unsigned NOT NULL,
+  `id_lang` int(11) unsigned NOT NULL,
+  `id_shop` int(11) unsigned NOT NULL,
+  `name` varchar(128) DEFAULT NULL,
+  PRIMARY KEY (`id_cms_role`,`id_lang`, `id_shop`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+ALTER TABLE `PREFIX_order_invoice` ADD `company_address` TEXT DEFAULT NULL AFTER `total_wrapping_tax_incl`;
+
 ALTER TABLE `PREFIX_order_invoice` ADD `shop_address` TEXT DEFAULT NULL AFTER `total_wrapping_tax_incl`;
 ALTER TABLE `PREFIX_order_invoice` ADD `invoice_address` TEXT DEFAULT NULL AFTER `shop_address`;
 ALTER TABLE `PREFIX_order_invoice` ADD `delivery_address` TEXT DEFAULT NULL AFTER `invoice_address`;
+
 
 INSERT INTO `PREFIX_hook` (`name`, `title`, `description`) VALUES ('displayInvoiceLegalFreeText', 'PDF Invoice - Legal Free Text', 'This hook allows you to modify the legal free text on PDF invoices');
 
@@ -186,3 +208,4 @@ UPDATE `PREFIX_hook` SET position = 0 WHERE name LIKE 'action%';
 
 ALTER IGNORE TABLE `PREFIX_specific_price` DROP KEY `id_product_2`;
 ALTER IGNORE TABLE `PREFIX_specific_price` ADD UNIQUE KEY `id_product_2` (`id_product`,`id_shop`,`id_shop_group`,`id_currency`,`id_country`,`id_group`,`id_customer`,`id_product_attribute`,`from_quantity`,`id_specific_price_rule`,`from`,`to`);
+

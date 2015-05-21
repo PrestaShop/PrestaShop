@@ -441,6 +441,16 @@ class ToolsCore
 		return $ret;
 	}
 
+
+	/**
+	 * Get all values from $_POST/$_GET
+	 * @return mixed
+	 */
+	public static function getAllValues()
+	{
+		return $_POST + $_GET;
+	}
+
 	public static function getIsset($key)
 	{
 		if (!isset($key) || empty($key) || !is_string($key))

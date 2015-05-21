@@ -67,6 +67,7 @@
 							<div class="content_price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
 								{if isset($product.show_price) && $product.show_price && !isset($restricted_country_mode)}
 									<span itemprop="price" class="price product-price">
+                                        {hook h="displayProductPriceBlock" product=$product type="before_price"}
 										{if !$priceDisplay}{convertPrice price=$product.price}{else}{convertPrice price=$product.price_tax_exc}{/if}
 									</span>
 									<meta itemprop="priceCurrency" content="{$currency->iso_code}" />
@@ -124,6 +125,7 @@
 					{if (!$PS_CATALOG_MODE AND ((isset($product.show_price) && $product.show_price) || (isset($product.available_for_order) && $product.available_for_order)))}
 					<div class="content_price">
 						{if isset($product.show_price) && $product.show_price && !isset($restricted_country_mode)}
+                            {hook h="displayProductPriceBlock" product=$product type='before_price'}
 							<span class="price product-price">
 								{if !$priceDisplay}{convertPrice price=$product.price}{else}{convertPrice price=$product.price_tax_exc}{/if}
 							</span>
@@ -139,6 +141,7 @@
 							{/if}
 							{hook h="displayProductPriceBlock" product=$product type="price"}
 							{hook h="displayProductPriceBlock" product=$product type="unit_price"}
+                            {hook h="displayProductPriceBlock" product=$product type='after_price'}
 						{/if}
 					</div>
 					{/if}
