@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author 	PrestaShop SA <contact@prestashop.com>
+ *  @copyright  2007-2015 PrestaShop SA
+ *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 class Core_Business_Payment_PaymentOption
 {
@@ -36,7 +36,7 @@ class Core_Business_Payment_PaymentOption
 
 	/**
 	 * Return Call to Action Text
-	 * @return mixed
+	 * @return string
 	 */
 	public function getCallToActionText()
 	{
@@ -45,7 +45,7 @@ class Core_Business_Payment_PaymentOption
 
 	/**
 	 * Set Call To Action Text
-	 * @param $cta_text
+	 * @param $callToActionText
 	 * @return $this
 	 */
 	public function setCallToActionText($callToActionText)
@@ -54,22 +54,41 @@ class Core_Business_Payment_PaymentOption
 		return $this;
 	}
 
+	/**
+	 * Return logo path
+	 * @return string
+	 */
 	public function getLogo()
 	{
 		return $this->logo;
 	}
 
+	/**
+	 * Set logo path
+	 * @param $logo
+	 * @return $this
+	 */
 	public function setLogo($logo)
 	{
 		$this->logo = $logo;
 		return $this;
 	}
 
+	/**
+	 * Return action to perform (POST/GET)
+	 * @return string
+	 */
 	public function getAction()
 	{
 		return $this->action;
 	}
 
+
+	/**
+	 * Set action to be performed by this option
+	 * @param $action
+	 * @return $this
+	 */
 	public function setAction($action)
 	{
 		$this->action = $action;
@@ -87,33 +106,60 @@ class Core_Business_Payment_PaymentOption
 		return $this;
 	}
 
+	/**
+	 * Return inputs contained in this payment option
+	 * @return mixed
+	 */
 	public function getInputs()
 	{
 		return $this->inputs;
 	}
 
+	/**
+	 * Set inputs for this payment option
+	 * @param $inputs
+	 * @return $this
+	 */
 	public function setInputs($inputs)
 	{
 		$this->inputs = $inputs;
 		return $this;
 	}
 
+	/**
+	 * Get payment option form
+	 * @return mixed
+	 */
 	public function getForm()
 	{
 		return $this->form;
 	}
 
+	/**
+	 * Set payment option form
+	 * @param $form
+	 * @return $this
+	 */
 	public function setForm($form)
 	{
 		$this->form = $form;
 		return $this;
 	}
 
+	/**
+	 * Get related module name to this payment option
+	 * @return string
+	 */
 	public function getModuleName()
 	{
 		return $this->moduleName;
 	}
 
+	/**
+	 * Set related module name to this payment option
+	 * @param $moduleName
+	 * @return $this
+	 */
 	public function setModuleName($moduleName)
 	{
 		$this->moduleName = $moduleName;
