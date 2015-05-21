@@ -144,7 +144,7 @@ return array (
     'Test your database connection now!' => 'Test din databasetilkobling nå!',
     'Next' => 'Neste',
     'Back' => 'Tilbake',
-    'If you need some assistance during the installation process, please call our team at %s and one of our experts will be happy to help.' => 'Dersom du trenger assistanse under installasjons-prosessen, ring vårt team på %s, og en av våre eksperter vil gladelig hjelpe deg.',
+    'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="http://doc.prestashop.com/display/PS16/Installing+PrestaShop" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.' => 'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="http://doc.prestashop.com/display/PS16/Installing+PrestaShop" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.',
     'Official forum' => 'Offisielt forum',
     'Support' => 'Kundestøtte',
     'Documentation' => 'Dokumentasjon',

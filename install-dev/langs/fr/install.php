@@ -145,7 +145,7 @@ return array (
     'Test your database connection now!' => 'Tester la connexion à la base de données',
     'Next' => 'Suivant',
     'Back' => 'Précédent',
-    'If you need some assistance during the installation process, please call our team at %s and one of our experts will be happy to help.' => 'PrestaShop peut vous accompagner si vous avez besoin d\'aide pour finaliser l\'installation de votre boutique. Contactez notre équipe au %s et indiquez-nous l\'URL de votre boutique. Nous serons heureux de vous aider dans les dernières étapes de l\'installation !',
+    'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="http://doc.prestashop.com/display/PS16/Installing+PrestaShop" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.' => 'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="http://doc.prestashop.com/display/PS16/Installer+PrestaShop" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.',
     'Official forum' => 'Forum officiel',
     'Support' => 'Support',
     'Documentation' => 'Documentation',

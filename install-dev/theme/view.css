@@ -244,7 +244,7 @@ div.field {
 
 .okBlock {
 	padding:20px 20px 20px 38px;
-	background:#b7e2a7 url(img/pict_ok.png) no-repeat 15px 21px;
+	background:#b7e2a7 url(img/bg-li-tabs-finished.png) no-repeat 15px 21px;
 	border:1px solid #85c10c;
 }
 
@@ -490,7 +490,6 @@ ul#optional {
 	ul#required li.ok,
 	ul#optional li.ok{
 		display:none
-		/*background:#f8f8f8 url(img/pict_ok.png) no-repeat 99% 10px*/
 }
 	ul#required li.fail,
 	ul#optional li.fail {
@@ -519,7 +518,7 @@ ul#optional {
 }
 #formCheckSQL p#dbResultCheck.okBlock {
 	padding:20px 20px 20px 38px;
-	background:#b7e2a7 url(img/pict_ok.png) no-repeat 15px 21px;
+	background:#b7e2a7 url(img/bg-li-tabs-finished.png) no-repeat 15px 21px;
 	border:1px solid #85c10c;
 }
 #formCheckSQL p label {
@@ -688,7 +687,7 @@ ul#optional_update li.fail {
 }
 ul#required_update li.ok,
 ul#optional_update li.ok {
-	background:#f8f8f8 url(img/pict_ok.png) no-repeat 100% 10px;
+	background:#f8f8f8 url(img/bg-li-tabs-finished.png) no-repeat 100% 10px;
 }
 #sheet_require_update #req_bt_refresh_update {float:right;}
 
