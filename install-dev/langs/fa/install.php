@@ -144,7 +144,7 @@ return array (
     'Test your database connection now!' => 'هم اکنون اتصال به دیتابیس را بررسی کن!',
     'Next' => 'شروع خرید',
     'Back' => 'قبلی',
-    'If you need some assistance during the installation process, please call our team at %s and one of our experts will be happy to help.' => 'اگر هنگام نصب با خطایی مواجه شدید، می‌توانید با ما تماس بگیرید. متخصصان ما برای کمک شما آماده هستند.',
+    'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="http://doc.prestashop.com/display/PS16/Installing+PrestaShop" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.' => 'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="http://doc.prestashop.com/display/PS16/Installing+PrestaShop" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.',
     'Official forum' => 'انجمن اختصاصی',
     'Support' => 'پشتیبانی',
     'Documentation' => 'مستندات',

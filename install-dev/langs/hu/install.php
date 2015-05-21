@@ -144,7 +144,7 @@ return array (
     'Test your database connection now!' => 'Adatbázis kapcsolat tesztelése most',
     'Next' => 'Következő',
     'Back' => 'Vissza',
-    'If you need some assistance during the installation process, please call our team at %s and one of our experts will be happy to help.' => 'Ha szükséged van némi segítségre a telepítés alatt, kérlek, hívd fel csapatunk a %s számon és valamelyik tapasztalt tagunk boldogan segítségedre lesz!',
+    'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="http://doc.prestashop.com/display/PS16/Installing+PrestaShop" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.' => 'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="http://doc.prestashop.com/display/PS16/Installing+PrestaShop" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.',
     'Official forum' => 'Hivatalos fórum',
     'Support' => 'Támogatás',
     'Documentation' => 'Dokumentáció',

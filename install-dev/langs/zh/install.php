@@ -144,7 +144,7 @@ return array (
     'Test your database connection now!' => '现在测试你的数据库连接吧！',
     'Next' => '下一个',
     'Back' => '返回',
-    'If you need some assistance during the installation process, please call our team at %s and one of our experts will be happy to help.' => '如果您在安装过程中需要一些协助，请致电我们的团队%s，我们的专家将很乐意提供帮助。',
+    'If you need some assistance, you can <a href="http://addons.prestashop.com/en/388-support">get tailored help</a> from our support team. <a href="http://doc.prestashop.com/display/PS16/Installing+PrestaShop" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.' => 'If you need some assistance, you can <a href="http://addons.prestashop.com/en/388-support">get tailored help</a> from our support team. <a href="http://doc.prestashop.com/display/PS16/Installing+PrestaShop" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.',
     'Official forum' => '官方论坛',
     'Support' => '支持',
     'Documentation' => '文档',
