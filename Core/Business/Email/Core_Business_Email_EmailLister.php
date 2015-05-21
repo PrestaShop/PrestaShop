@@ -42,8 +42,9 @@ class Core_Business_Email_EmailLister
 	 */
 	public function getAvailableMails($dir)
 	{
-		if (!file_exists($dir))
+		if (!is_dir($dir)) {
 			return null;
+		}
 
 		$mail_directory = $this->filesystem->listEntriesRecursively($dir);
 		$mail_list = array();
@@ -51,19 +52,25 @@ class Core_Business_Email_EmailLister
 
 		// Remove duplicate .html / .txt / .tpl
 		foreach ($mail_directory as $mail) {
+			if (strtolower($mail->getFilename())== 'index.php') {
+				continue;
+			}
 
 			if (strpos($mail->getFilename(), '.') !== false) {
 				$tmp = explode('.', $mail->getFilename());
 				if ($tmp === false || !isset($tmp[0])) {
 					continue;
 				}
+
 				$mail_name_no_ext = $tmp[0];
 			}
+
 			if (!in_array($mail_name_no_ext, $already_done)) {
 				$mail_list[] = $mail->getFilename();
 				$already_done[] = $mail_name_no_ext;
 			}
 		}
+
 		return $mail_list;
 	}
 
@@ -76,11 +83,14 @@ class Core_Business_Email_EmailLister
 	{
 		if (strpos($mail_name, '.') !== false) {
 			$tmp = explode('.', $mail_name);
+
 			if ($tmp === false || !isset($tmp[0])) {
 				return $mail_name;
 			}
+
 			$mail_name_no_ext = $tmp[0];
 		}
+
 		return ucfirst(str_replace(array('_', '-'), ' ', $mail_name_no_ext));
 	}
 }
