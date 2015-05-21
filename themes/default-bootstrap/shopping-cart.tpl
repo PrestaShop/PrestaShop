@@ -492,7 +492,7 @@
 		{$addresses_style.alias = 'address_title'}
 	{/if}
 
-	{if !$advanced_payment_api AND ((!empty($delivery_option) AND !isset($virtualCart)) OR $delivery->id OR $invoice->id) AND !$opc}
+	{if !$advanced_payment_api && ((!empty($delivery_option) && !isset($virtualCart)) OR $delivery->id || $invoice->id) && !$opc}
 		<div class="order_delivery clearfix row">
 			{if !isset($formattedAddresses) || (count($formattedAddresses.invoice) == 0 && count($formattedAddresses.delivery) == 0) || (count($formattedAddresses.invoice.formated) == 0 && count($formattedAddresses.delivery.formated) == 0)}
 				{if $delivery->id}
