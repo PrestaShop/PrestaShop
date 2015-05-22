@@ -675,6 +675,7 @@
 {if isset($combinationImages) && $combinationImages}
 	{addJsDef combinationImages=$combinationImages}
 {/if}
+{addJsDef customizationId=$id_customization}
 {addJsDef customizationFields=$customizationFields}
 {addJsDef default_eco_tax=$product->ecotax|floatval}
 {addJsDef displayPrice=$priceDisplay|intval}

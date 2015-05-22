@@ -275,6 +275,7 @@ var ajaxCart = {
 	updateFancyBox : function (){},
 	// add a product in the cart via ajax
 	add : function(idProduct, idCombination, addedFromProductPage, callerElement, quantity, whishlist){
+
 		if (addedFromProductPage && !checkCustomizations())
 		{
 			if (contentOnly)
@@ -299,7 +300,7 @@ var ajaxCart = {
 			    alert(fieldRequired);
             return;
 		}
-		emptyCustomizations();
+
 		//disabled the button when adding to not double add if user double click
 		if (addedFromProductPage)
 		{
@@ -320,7 +321,7 @@ var ajaxCart = {
 			async: true,
 			cache: false,
 			dataType : "json",
-			data: 'controller=cart&add=1&ajax=true&qty=' + ((quantity && quantity != null) ? quantity : '1') + '&id_product=' + idProduct + '&token=' + static_token + ( (parseInt(idCombination) && idCombination != null) ? '&ipa=' + parseInt(idCombination): ''),
+			data: 'controller=cart&add=1&ajax=true&qty=' + ((quantity && quantity != null) ? quantity : '1') + '&id_product=' + idProduct + '&token=' + static_token + ( (parseInt(idCombination) && idCombination != null) ? '&ipa=' + parseInt(idCombination): '' + '&id_customization=' + ((typeof customizationId !== 'undefined') ? customizationId : 0)),
 			success: function(jsonData,textStatus,jqXHR)
 			{
 				// add appliance to whishlist module
@@ -367,6 +368,8 @@ var ajaxCart = {
 					else
 						$(callerElement).removeProp('disabled');
 				}
+
+				emptyCustomizations();
 
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown)
