@@ -49,16 +49,16 @@
 					{l s='Caption'}
 				</span>
 			</label>
-			<div class="col-lg-5">
+			<div class="col-lg-4">
 			{foreach from=$languages item=language}
 				{if $languages|count > 1}
 				<div class="translatable-field row lang-{$language.id_lang}">
-					<div class="col-lg-11">
+					<div class="col-lg-8">
 				{/if}
 						<input type="text" id="legend_{$language.id_lang}"{if isset($input_class)} class="{$input_class}"{/if} name="legend_{$language.id_lang}" value="{if $images|count}{$images[0]->legend[$language.id_lang]|escape:'html':'UTF-8'}{else}{$product->name[$language.id_lang]|escape:'html':'UTF-8'}{/if}"{if !$product->id} disabled="disabled"{/if}/>
 				{if $languages|count > 1}
 					</div>
-					<div class="col-lg-1">
+					<div class="col-lg-2">
 						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" tabindex="-1">
 							{$language.iso_code}
 							<span class="caret"></span>
@@ -75,7 +75,19 @@
 				{/if}
 			{/foreach}
 			</div>
-			<div class="col-lg-2"><button type="submit" class="btn btn-default" name="submitAddproductAndStay" value="update_legends"><i class="icon-random"></i> {l s='Update each captions'}</button></div>
+			<div class="col-lg-2">
+				<select name="id_image">
+					<option value="0">{l s='Each captions'}</option>
+					{foreach from=$images item=image}
+					<option value="{$image->id_image|intval}">
+						{l s='Position %d' sprintf=$image->position|intval}
+					</option>
+					{/foreach}
+				</select>
+			</div>				
+			<div class="col-lg-2">
+				<button type="submit" class="btn btn-default" name="submitAddproductAndStay" value="update_legends"><i class="icon-random"></i> {l s='Update'}</button>
+			</div>
 		</div>
 	</div>
 	<table class="table tableDnD" id="imageTable">
