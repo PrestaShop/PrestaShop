@@ -148,9 +148,9 @@ class SupplierCore extends ObjectModel
 						FROM `'._DB_PREFIX_.'category_group` cg
 						LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_category` = cg.`id_category`)
 						WHERE cg.`id_group` '.$sql_groups.'
-					)
+					)').'
 					GROUP BY ps.`id_supplier`'
-				));
+				);
 
 			$counts = array();
 			foreach ($results as $result)
