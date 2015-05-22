@@ -1643,13 +1643,22 @@ class AdminTranslationsControllerCore extends AdminController
 						$title = '';
 						if (Tools::getValue('title_'.$group_name.'_'.$mail_name))
 							$title = Tools::getValue('title_'.$group_name.'_'.$mail_name);
-						$string_mail = $this->getMailPattern();
-						$content = str_replace(array('#title', '#content'), array($title, $content), $string_mail);
 
-						// Magic Quotes shall... not.. PASS!
+						// Unescape quotes in variables received from POST
 						if (_PS_MAGIC_QUOTES_GPC_)
+						{
+							$title   = stripslashes($title);
 							$content = stripslashes($content);
+						}
+
+						$html_mail_pattern = $this->getMailPattern();
+
+						// Purify content before inserting it, HTMLPurifier returns HTML body only
+						$content = Tools::purifyHTML($content, array('{', '}'), true);
+						$content = str_replace(array('#title', '#content'), array($title, $content), $html_mail_pattern);
 					}
+					else
+						$content = Tools::purifyHTML($content, array('{', '}'), true);
 
 					if (Validate::isCleanHTML($content))
 					{
@@ -1658,7 +1667,7 @@ class AdminTranslationsControllerCore extends AdminController
 							$path = str_replace('{module}', $module_name, $path);
 						if (!file_exists($path) && !mkdir($path, 0777, true))
 							throw new PrestaShopException(sprintf(Tools::displayError('Directory "%s" cannot be created'), dirname($path)));
-						file_put_contents($path.$mail_name.'.'.$type_content, Tools::purifyHTML($content, array('{', '}'), true));
+						file_put_contents($path.$mail_name.'.'.$type_content, $content);
 					}
 					else
 						throw new PrestaShopException(Tools::displayError('Your HTML email templates cannot contain JavaScript code.'));
