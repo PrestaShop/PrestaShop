@@ -3904,7 +3904,7 @@ class ProductCore extends ObjectModel
 			$customization_field_ids[] = (int)$customization_field['id_customization_field'];
 
 		if (($customization_labels = Db::getInstance()->executeS('
-			SELECT `id_customization_field`, `id_lang`, `name`
+			SELECT `id_customization_field`, `id_lang`, `id_shop`, `name`
 			FROM `'._DB_PREFIX_.'customization_field_lang`
 			WHERE `id_customization_field` IN ('.implode(', ', $customization_field_ids).')'.($id_shop ? ' AND cfl.`id_shop` = '.$id_shop : '').'
 			ORDER BY `id_customization_field`')) === false)
@@ -3955,6 +3955,7 @@ class ProductCore extends ObjectModel
 					$data = array(
 						'id_customization_field' => (int)$customization_field_id,
 						'id_lang' => (int)$customization_label['id_lang'],
+						'id_shop' => (int)$customization_label['id_shop'],
 						'name' => pSQL($customization_label['name']),
 					);
 
