@@ -179,14 +179,7 @@
 										{if $voucherAllowed}
 											<td colspan="2" id="cart_voucher" class="cart_voucher">
 												<div id="cart_voucher" class="table_block">
-													{if isset($errors_discount) && $errors_discount}
-														<ul class="alert alert-danger">
-														{foreach from=$errors_discount key=k item=error}
-															<li>{$error|escape:'html':'UTF-8'}</li>
-														{/foreach}
-														</ul>
-													{/if}
-													{if $voucherAllowed}
+												{if $voucherAllowed}
 														<form action="{if $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" id="voucher">
 															<fieldset>
 																<h4>{l s='Vouchers'}</h4>
