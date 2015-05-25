@@ -3,12 +3,13 @@
 return array (
   'informations' =>
   array (
-    'phone' => '+1 (888) 947-6543',
-    'documentation' => 'http://doc.prestashop.com/',
-    'documentation_upgrade' => 'http://docs.prestashop.com/display/PS15/Updating+PrestaShop',
-    'forum' => 'http://www.prestashop.com/forums/',
-    'blog' => 'http://www.prestashop.com/blog/',
-    'support' => 'https://www.prestashop.com/en/support',
+      'documentation' => 'http://doc.prestashop.com/pages/viewpage.action?pageId=28016773',
+      'documentation_upgrade' => 'http://docs.prestashop.com/display/PS16/Updating+PrestaShop',
+      'forum' => 'http://www.prestashop.com/forums/',
+      'blog' => 'http://www.prestashop.com/blog/',
+      'support' => 'https://www.prestashop.com/en/support',
+      'tutorial' => 'https://www.youtube.com/watch?v=psz4aIPZZuk',
+      'tailored_help' => 'http://addons.prestashop.com/en/388-support',
   ),
   'translations' =>
   array (
@@ -144,7 +145,7 @@ return array (
     'Test your database connection now!' => 'Comproveu ara la vostra connexió a la base de dades!',
     'Next' => 'Següent',
     'Back' => 'Enrera',
-    'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="http://doc.prestashop.com/display/PS16/Installing+PrestaShop" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.' => 'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="http://doc.prestashop.com/pages/viewpage.action?pageId=28016773" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.',
+    'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="%2$s" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.' => 'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="%2$s" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.',
     'Official forum' => 'Fòrum oficial',
     'Support' => 'Suport',
     'Documentation' => 'Documentació',
@@ -202,7 +203,7 @@ return array (
     '<b>Warning: You cannot use this tool to upgrade your store anymore.</b><br /><br />You already have <b>PrestaShop version %1$s installed</b>.<br /><br />If you want to upgrade to the latest version, please read our documentation: <a href="%2$s">%2$s</a>' => '<b>Alerta: No es pot utilitzar més aquesta eina per actualitzar la vostra botiga.</b><br /><br />Ara teniu la <b>versió %1$s de PrestaShop instal·lada</b>.<br /><br />Si voleu actualitzar-vos a la darrera versió si us plau llegiu la documentació:<a href="%2$s">%2$s</a>',
     'Welcome to the PrestaShop %s Installer' => 'Benvinguts a l\'instal·lador de Prestashop %s',
     'Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 230,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'La instal·lació de PrestaShop és ràpida i fàcil. En uns instants, formareu part d\'una comunitat formada per més de 230.000 comerciants. Ara esteu en el procés de crear la vostra pròpia botiga online, la qual gestionareu fàcilment dia a dia.',
-    'If you need help, do not hesitate to check <a href="%1$s" target="_blank">our documentation</a> or to contact our support team: %2$s.' => 'Si us cal ajut, no dubteu a consultar <a href="%1$s" target="_blank">la documentació</a> o contacteu amb el nostre equip de suport: %2$s.',
+    'If you need help, do not hesitate to <a href="%1$s" target="_blank">watch this short tutorial</a>, or check <a href="%2$s" target="_blank">our documentation</a>.' => 'If you need help, do not hesitate to <a href="%1$s" target="_blank">watch this short tutorial</a>, or check <a href="%2$s" target="_blank">our documentation</a>.',
     'Continue the installation in:' => 'Continuar la instal·lació a:',
     'The language selection above only applies to the Installation Assistant. Once your store is installed, you can choose the language of your store from over %d translations, all for free!' => 'La secció d\'idiomes anterior només s\'aplica a l\'Assistent d\'Instal·lació. Quan la vostra botiga estigui instal·lada, podeu triar la llengua de la vostra botiga entre més de %d traduccions, totes de franc!',
   ),

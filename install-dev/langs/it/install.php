@@ -3,12 +3,13 @@
 return array (
   'informations' =>
   array (
-    'phone' => '+33 (0)1.40.18.30.04',
-    'documentation' => 'http://doc.prestashop.com/',
-    'documentation_upgrade' => 'http://docs.prestashop.com/display/PS15/Updating+PrestaShop',
+    'documentation' => 'http://doc.prestashop.com/display/PS16/Installing+PrestaShop',
+    'documentation_upgrade' => 'http://docs.prestashop.com/display/PS16/Updating+PrestaShop',
     'forum' => 'http://www.prestashop.com/forums/',
     'blog' => 'http://www.prestashop.com/blog/it/',
     'support' => 'http://addons.prestashop.com/it/388-supporto',
+    'tutorial' => 'https://www.youtube.com/watch?v=psz4aIPZZuk',
+    'tailored_help' => 'http://addons.prestashop.com/en/388-support',
   ),
   'translations' =>
   array (
@@ -202,7 +203,7 @@ return array (
     '<b>Warning: You cannot use this tool to upgrade your store anymore.</b><br /><br />You already have <b>PrestaShop version %1$s installed</b>.<br /><br />If you want to upgrade to the latest version, please read our documentation: <a href="%2$s">%2$s</a>' => '<b>Attenzione: Non puoi utilizzare più questo strumento per aggiornare il tuo negozio.</b><br /><br />Hai già <b>installato PrestaShop versione %1$s</b>.<br /><br />Se vuoi aggiornare all\'ultima versione, leggi la nostra documentazione: <a href="%2$s">%2$s</a>',
     'Welcome to the PrestaShop %s Installer' => 'Benvenuto nell\'Assistente di Installazione di PrestaShop %s',
     'Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 230,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'Installare PrestaShop è veloce e facile. In pochi istanti farai parte di una comunità composta da più di 230.000 venditori. Stai per creare il tuo personale negozio online che potrai gestire con facilità ogni giorno.',
-    'If you need help, do not hesitate to check <a href="%1$s" target="_blank">our documentation</a> or to contact our support team: %2$s.' => 'Se hai bisogno di aiuto, non esitare a controllare <a href="%1$s" target="_blank">la nostra documentazione</a> o a contattare il nostro team di assistenza: %2$s.',
+    'If you need help, do not hesitate to <a href="%1$s" target="_blank">watch this short tutorial</a>, or check <a href="%2$s" target="_blank">our documentation</a>.' => 'If you need help, do not hesitate to <a href="%1$s" target="_blank">watch this short tutorial</a>, or check <a href="%2$s" target="_blank">our documentation</a>.',
     'Continue the installation in:' => 'Continua l\'installazione in:',
     'The language selection above only applies to the Installation Assistant. Once your store is installed, you can choose the language of your store from over %d translations, all for free!' => 'La selezione della lingua qui sopra è valida solamente nell\'Assistente di Installazione. Una volta che il negozio è installato, potrai scegliere la lingua del negozio tra le oltre %d  traduzioni disponibili gratuitamente!',
   ),
