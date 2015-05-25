@@ -116,7 +116,13 @@ class Core_Foundation_IoC_Container
             }
         }
 
-        return $refl->newInstanceArgs($args);
+        if (count($args) > 0) {
+            return $refl->newInstanceArgs($args);
+        } else {
+            // newInstanceArgs with empty array fails in PHP 5.3 when the class
+            // doesn't have an explicitly defined constructor
+            return $refl->newInstance();
+        }
     }
 
     private function doMake($serviceName, array $alreadySeen = array())
