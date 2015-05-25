@@ -1403,6 +1403,18 @@
     'type' => 'class',
     'override' => false,
   ),
+  'CacheMemcached' => 
+  array (
+    'path' => '',
+    'type' => 'class',
+    'override' => false,
+  ),
+  'CacheMemcachedCore' => 
+  array (
+    'path' => 'classes/cache/CacheMemcached.php',
+    'type' => 'class',
+    'override' => false,
+  ),
   'CacheXcache' => 
   array (
     'path' => '',

@@ -212,7 +212,7 @@ $mysqlEngine = (defined('_MYSQL_ENGINE_') ? _MYSQL_ENGINE_ : 'MyISAM');
 
 if (defined('_PS_CACHING_SYSTEM_') AND _PS_CACHING_SYSTEM_ == 'CacheFS')
 	$cache_engine = 'CacheFs';
-elseif (defined('_PS_CACHING_SYSTEM_') AND _PS_CACHING_SYSTEM_ != 'CacheMemcache')
+elseif (defined('_PS_CACHING_SYSTEM_') AND _PS_CACHING_SYSTEM_ != 'CacheMemcache' AND _PS_CACHING_SYSTEM_ != 'CacheMemcached')
 	$cache_engine = _PS_CACHING_SYSTEM_;
 else
 	$cache_engine = 'CacheMemcache';
