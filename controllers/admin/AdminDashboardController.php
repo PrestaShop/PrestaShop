@@ -341,6 +341,7 @@ class AdminDashboardControllerCore extends AdminController
 
 	public function ajaxProcessGetBlogRss()
 	{
+		die; // the whole thing should be an optional module
 		$return = array('has_errors' => false, 'rss' => array());
 		if (!$this->isFresh('/config/xml/blog-'.$this->context->language->iso_code.'.xml', 86400))
 			if (!$this->refresh('/config/xml/blog-'.$this->context->language->iso_code.'.xml', 'https://api.prestashop.com/rss/blog/blog-'.$this->context->language->iso_code.'.xml'))
