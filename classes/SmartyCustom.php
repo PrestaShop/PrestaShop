@@ -96,7 +96,7 @@ class SmartyCustomCore extends Smarty
 			if ($last_flush === null)
 			{
 				$sql = 'SELECT UNIX_TIMESTAMP(last_flush) as last_flush FROM `'._DB_PREFIX_.'smarty_last_flush` WHERE type=\'compile\'';
-				$last_flush = Db::getInstance()->getValue($sql, false);
+				$last_flush = Db::getInstance()->getValue($sql);
 			}
 			if ((int)$last_flush && @filemtime($this->getCompileDir().'last_flush') < $last_flush)
 			{
@@ -147,7 +147,7 @@ class SmartyCustomCore extends Smarty
 			if ($last_flush === null)
 			{
 				$sql = 'SELECT UNIX_TIMESTAMP(last_flush) as last_flush FROM `'._DB_PREFIX_.'smarty_last_flush` WHERE type=\'template\'';
-				$last_flush = Db::getInstance()->getValue($sql, false);
+				$last_flush = Db::getInstance()->getValue($sql);
 			}
 
 			if ((int)$last_flush && @filemtime($this->getCacheDir().'last_template_flush') < $last_flush)
@@ -190,7 +190,7 @@ class SmartyCustomCore extends Smarty
 		if (strlen($compile_id) > 32)
 			$compile_id = md5($compile_id);
 		$sql .= ' AND compile_id="'.pSQL((string)$compile_id).'"';
-		Db::getInstance()->execute($sql, false);
+		Db::getInstance()->execute($sql);
 	}
 
 	/**
@@ -222,7 +222,7 @@ class SmartyCustomCore extends Smarty
 			$sql .= ' AND cache_id="'.pSQL((string)$cache_id).'"';
 			$sql .= ' AND compile_id="'.pSQL((string)$compile_id).'"';
 
-			$result = Db::getInstance()->getRow($sql, false);
+			$result = Db::getInstance()->getRow($sql);
 			// If the filepath is not yet set, it means the cache update is in progress in another process.
 			// In this case do not try to clear the cache again and tell to use the existing cache, if any
 			if ($result !== false && $result['filepath'] == '')
@@ -270,7 +270,7 @@ class SmartyCustomCore extends Smarty
 		$sql .= ',"'.pSQL((string)$compile_id).'"';
 		$sql .= ',"'.date('Y-m-d H:i:s').'")';
 
-		return Db::getInstance()->execute($sql, false);
+		return Db::getInstance()->execute($sql);
 	}
 
 	/**
@@ -302,7 +302,7 @@ class SmartyCustomCore extends Smarty
 				$compile_id = md5($compile_id);
 			$sql .= ' AND compile_id="'.pSQL((string)$compile_id).'"';
 		}
-		Db::getInstance()->execute($sql, false);
+		Db::getInstance()->execute($sql);
 		return Db::getInstance()->Affected_Rows();
 	}
 }
