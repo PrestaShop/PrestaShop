@@ -156,13 +156,24 @@ class OrderOpcControllerCore extends ParentOrderController
 								// Wrapping fees
 								$wrapping_fees = $this->context->cart->getGiftWrappingPrice(false);
 								$wrapping_fees_tax_inc = $this->context->cart->getGiftWrappingPrice();
+								$is_adv_api = Tools::getValue('isAdvApi');
+
+								if ($is_adv_api) {
+									$tpl = 'order-address-advanced.tpl';
+									$this->context->smarty->assign(
+										array('products' => $this->context->cart->getProducts())
+									);
+								} else {
+									$tpl = 'order-address.tpl';
+								}
+
 								$return = array_merge(array(
-									'order_opc_adress' => $this->context->smarty->fetch(_PS_THEME_DIR_.'order-address.tpl'),
+									'order_opc_adress' => $this->context->smarty->fetch(_PS_THEME_DIR_.$tpl),
 									'block_user_info' => (isset($block_user_info) ? $block_user_info->hookDisplayTop(array()) : ''),
 									'formatedAddressFieldsValuesList' => $formated_address_fields_values_list,
-									'carrier_data' => $this->_getCarrierList(),
-									'HOOK_TOP_PAYMENT' => Hook::exec('displayPaymentTop'),
-									'HOOK_PAYMENT' => $this->_getPaymentMethods(),
+									'carrier_data' => ($is_adv_api ? '' : $this->_getCarrierList()),
+									'HOOK_TOP_PAYMENT' => ($is_adv_api ? '' : Hook::exec('displayPaymentTop')),
+									'HOOK_PAYMENT' => ($is_adv_api ? '' : $this->_getPaymentMethods()),
 									'no_address' => 0,
 									'gift_price' => Tools::displayPrice(Tools::convertPrice(Product::getTaxCalculationMethod() == 1 ? $wrapping_fees : $wrapping_fees_tax_inc, new Currency((int)$this->context->cookie->id_currency)))
 									),
