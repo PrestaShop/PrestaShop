@@ -72,7 +72,7 @@ Extending PrestaShop
 
 PrestaShop is a very extensible e-commerce platform, both through modules and themes. Developers can even override the default components and behaviors. Learn more about this using the [Developer Guide][11] and the [Designer Guide][12].
 
-Themes and modules can be obtained (and sold!) from [PrestaShop Addons][20], the officiel marketplace for PrestaShop.
+Themes and modules can be obtained (and sold!) from [PrestaShop Addons][20], the official marketplace for PrestaShop.
 
 
 Community forums
