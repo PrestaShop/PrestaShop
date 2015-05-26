@@ -39,7 +39,7 @@ class CacheApcCore extends Cache
 			$cache_info = apc_cache_info((extension_loaded('apcu') === true) ? '' : 'user');
 			foreach ($cache_info['cache_list'] as $entry)
 			{
-				if (extension_loaded('apcu') === true)
+				if (isset($entry['key']))
 					$this->keys[$entry['key']] = $entry['ttl'];
 				else
 					$this->keys[$entry['info']] = $entry['ttl'];
@@ -67,7 +67,7 @@ class CacheApcCore extends Cache
 			$cache_info = apc_cache_info((extension_loaded('apcu') === true) ? '' : 'user');
 			foreach ($cache_info['cache_list'] as $entry)
 			{
-				if (extension_loaded('apcu') === true)
+				if (isset($entry['key']))
 					$key = $entry['key'];
 				else
 					$key = $entry['info'];
