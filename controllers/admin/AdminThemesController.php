@@ -1584,6 +1584,7 @@ class AdminThemesControllerCore extends AdminController
 			return array(sprintf($this->l('Theme %s already installed.'), $th_name));
 
 		$new_theme_array = array();
+		if(! $xml->variations->variation) return array($this->l('Configuration file is missing variations'));
 		foreach ($xml->variations->variation as $variation)
 		{
 			$name = strval($variation['name']);
