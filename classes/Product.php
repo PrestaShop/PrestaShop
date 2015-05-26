@@ -115,7 +115,10 @@ class ProductCore extends ObjectModel
 	/** @var string Supplier Reference */
 	public $supplier_reference;
 
-	/** @var string Location */
+	/**
+	 * @var string Location
+	 * @deprecated 1.5.0.0
+	 */
 	public $location;
 
 	/** @var string Width in default width unit */
