@@ -16,7 +16,7 @@
 </div>
 </form>
 <div id="phone_help">
-	<?php echo sprintf($this->l('If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="http://doc.prestashop.com/display/PS16/Installing+PrestaShop" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.'), 'http://addons.prestashop.com/en/388-support') ?>
+	<?php echo sprintf($this->l('If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="%2$s" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.'), $this->getTailoredHelp(), $this->getDocumentationLink()) ?>
 </div>
 </div><!-- div id="container" -->
 
