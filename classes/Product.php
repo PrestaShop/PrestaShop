@@ -3565,7 +3565,6 @@ class ProductCore extends ObjectModel
 		OR p.`supplier_reference` LIKE \'%'.pSQL($query).'%\'
 		OR EXISTS(SELECT * FROM `'._DB_PREFIX_.'product_supplier` sp WHERE sp.`id_product` = p.`id_product` AND `product_supplier_reference` LIKE \'%'.pSQL($query).'%\')';
 
-		$sql->groupBy('p.`id_product`');
 		$sql->orderBy('pl.`name` ASC');
 
 		if (Combination::isFeatureActive())
