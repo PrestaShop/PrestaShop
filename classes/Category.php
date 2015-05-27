@@ -189,10 +189,15 @@ class CategoryCore extends ObjectModel
 		// Update group selection
 		$this->updateGroup($this->groupBox);
 
-		$this->level_depth = $this->calcLevelDepth();
+		if ($this->level_depth != $this->calcLevelDepth())
+		{
+			$this->level_depth = $this->calcLevelDepth();
+			$changed = true;
+		}
 
 		// If the parent category was changed, we don't want to have 2 categories with the same position
-		$changed = $this->getDuplicatePosition();
+		if (!isset($changed))
+			$changed = $this->getDuplicatePosition();
 		if ($changed)
 		{
 			if (Tools::isSubmit('checkBoxShopAsso_category'))
