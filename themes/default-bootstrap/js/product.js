@@ -833,14 +833,15 @@ function displayImage(domAAroundImgThumb, no_animation)
 function displayDiscounts(combination)
 {
 	// Tables & rows selection
-	var quantityDiscountTable = $('#quantityDiscount');
-	var combinationsSpecificQuantityDiscount = $('#quantityDiscount_'+combination, quantityDiscountTable);
-	var allQuantityDiscount = $('#quantityDiscount_0', quantityDiscountTable);
+	var quantityDiscountTable = $('#quantityDiscount').parent();
+	var combinationsSpecificQuantityDiscount = $('.quantityDiscount_'+combination, quantityDiscountTable);
+	var allQuantityDiscount = $('.quantityDiscount_0', quantityDiscountTable);
 
 	// If there is some combinations specific quantity discount, show them, else, if there are some
 	// products quantity discount: show them. In case of result, show the category.
 	if (combinationsSpecificQuantityDiscount.length != 0)
 	{
+		$('tbody tr', quantityDiscountTable).hide();
 		combinationsSpecificQuantityDiscount.show();
 		allQuantityDiscount.hide();
 		quantityDiscountTable.show();
@@ -864,19 +865,10 @@ function updateDiscountTable(newPrice)
 		var discount = $(this).data("discount");
 		var quantity = $(this).data("discount-quantity");
 
-		if (type == 'percentage')
-		{
-			var discountedPrice = newPrice * (1 - discount/100);
-			var discountUpTo = newPrice * (discount/100) * quantity;
-		}
-		else if (type == 'amount')
-		{
-			var discountedPrice = newPrice - discount;
-			var discountUpTo = discount * quantity;
-		}
+		var discountedPrice = displayDiscountPrice == 1 ? Math.abs(discount) : newPrice + discount;
+		var discountUpTo = displayDiscountPrice == 1 ? (newPrice + discount) * quantity : discountedPrice * quantity;
 
-		if (displayDiscountPrice != 0)
-			$(this).children('td').eq(1).text( formatCurrency(discountedPrice * currencyRate, currencyFormat, currencySign, currencyBlank) );
+		$(this).children('td').eq(1).text( formatCurrency(discountedPrice * currencyRate, currencyFormat, currencySign, currencyBlank) );
 		$(this).children('td').eq(2).text(upToTxt + ' ' + formatCurrency(discountUpTo * currencyRate, currencyFormat, currencySign, currencyBlank));
 	});
 }
