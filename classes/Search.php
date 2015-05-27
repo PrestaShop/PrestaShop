@@ -503,6 +503,7 @@ class SearchCore
 			if ($products)
 				foreach ($products as $product)
 					$ids[] = (int)$product['id_product'];
+			$ids = array_unique(array_map('intval', $ids));
 			if (count($ids))
 			{
 				$db->execute('DELETE FROM '._DB_PREFIX_.'search_index WHERE id_product IN ('.implode(',', $ids).')');
@@ -658,7 +659,7 @@ class SearchCore
 	public static function removeProductsSearchIndex($products)
 	{
 		if (count($products)) {
-			Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'search_index WHERE id_product IN ('.implode(',', array_map('intval', $products)).')');
+			Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'search_index WHERE id_product IN ('.implode(',', array_unique(array_map('intval', $products))).')');
 			ObjectModel::updateMultishopTable('Product', array('indexed' => 0), 'a.id_product IN ('.implode(',', array_map('intval', $products)).')');
 		}
 	}
