@@ -8528,4 +8528,24 @@ div.star.star_hover:after {
   .btn-pinterest:hover i {
     color: white; }
 
+.payment_option_selected {
+  display: none;
+  margin-top: 15px; }
+  .payment_option_selected i {
+    color: green; }
+
+.payment_option_cta {
+  margin-left: 10px;
+  color: #333 !important; }
+
+.tnc_box {
+  background: #fbfbfb;
+  border: 1px solid #d6d4d4;
+  padding: 14px 18px 13px;
+  margin: 0 0 30px 0;
+  line-height: 23px; }
+
+.pointer-box {
+  cursor: pointer; }
+
 /*# sourceMappingURL=global.css.map */

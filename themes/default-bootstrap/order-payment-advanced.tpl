@@ -51,13 +51,20 @@
     {if $HOOK_ADVANCED_PAYMENT }
         {foreach $HOOK_ADVANCED_PAYMENT as $advanced_payment_opt_list}
             {foreach $advanced_payment_opt_list as $paymentOption}
-                <div class="col-xs-12 col-md-12">
-                    <p class="payment_module">
+                <div class="col-xs-6 col-md-6">
+                    <p class="payment_module pointer-box">
                         <a>
-                            <img src="{$paymentOption->getLogo()}"/>
-                            <input name="payment_option" data-payment-option-name="{$paymentOption->getModuleName()}" data-payment-action="{$paymentOption->getAction()}"
-                                   type="radio" value="{$paymentOption->getModuleName()}">
-                            {$paymentOption->getCallToActionText()}
+                            <img class="payment_option_logo" src="{$paymentOption->getLogo()}"/>
+                            <span class="payment_option_cta">
+                                {$paymentOption->getCallToActionText()}
+                            </span>
+                            <span class="pull-right payment_option_selected">
+                                <i class="icon-check"></i>
+                                <input name="payment_option"
+                                       data-payment-option-name="{$paymentOption->getModuleName()}"
+                                       data-payment-action="{$paymentOption->getAction()}"
+                                       type="hidden" value="{$paymentOption->getModuleName()}">
+                            </span>
                         </a>
                         {$paymentOption->getForm()}
                     </p>
@@ -79,19 +86,23 @@
     <!-- END Create account / Guest account / Login block -->
 {/if}
 
-<h2>{l s='Terms and Conditions'}</h2>
 <!-- TNC -->
 {if $conditions AND $cms_id}
     {if $override_tos_display }
         {$override_tos_display}
     {else}
-        <div class="box">
-            <p class="carrier_title">{l s='Terms of service'}</p>
-            <p class="checkbox">
-                <input type="checkbox" name="cgv" id="cgv" value="1" {if $checkedTOS}checked="checked"{/if} />
-                <label for="cgv">{l s='I agree to the terms of service and will adhere to them unconditionally.'}</label>
-                <a href="{$link_conditions|escape:'html':'UTF-8'}" class="iframe" rel="nofollow">{l s='(Read the Terms of Service)'}</a>
-            </p>
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <h2>{l s='Terms and Conditions'}</h2>
+                <div class="box">
+                    <p class="carrier_title">{l s='Terms of service'}</p>
+                    <p class="checkbox">
+                        <input type="checkbox" name="cgv" id="cgv" value="1" {if $checkedTOS}checked="checked"{/if} />
+                        <label for="cgv">{l s='I agree to the terms of service and will adhere to them unconditionally.'}</label>
+                        <a href="{$link_conditions|escape:'html':'UTF-8'}" class="iframe" rel="nofollow">{l s='(Read the Terms of Service)'}</a>
+                    </p>
+                </div>
+            </div>
         </div>
     {/if}
 {/if}

@@ -27,6 +27,10 @@ $(document).ready(function(){
 
     var handler = new PaymentOptionHandler();
 
+    $('p.payment_module').on('click', function(event){
+        handler.selectOption($(this));
+    });
+
     $('#confirmOrder').on('click', function(event){
         /* Avoid any further action */
         event.preventDefault();
@@ -34,7 +38,7 @@ $(document).ready(function(){
 
         if (!handler.checkTOS())
         {
-            alert('Please check TOS box first !')
+            alert('Please check TOS box first !');
             return;
         }
 
@@ -44,36 +48,67 @@ $(document).ready(function(){
         } else if (!payment_details.action && payment_details.has_form === true) {
                 payment_details.form_to_submit.submit();
         } else {
-            alert('An error occured please be sure you have properly selected your payment option!');
+            alert('TECHNICAL ERROR: Something went wrong in processing payment!');
             return;
         }
     });
-
 
 });
 
 var PaymentOptionHandler = function() {
 
+    this.selected_option = null;
+
+    this.selectOption = function(elem) {
+        if (typeof elem === 'undefined' || elem.hasClass('payment_selected')) {
+            return;
+        }
+        if (this.selected_option !== null) {
+            this.unselectOption();
+        }
+        this.selected_option = elem;
+        this.selected_option.addClass('payment_selected');
+        this.selected_option.children('a:first').css({
+            'border': '1px solid #55c65e',
+            'border-radius': '4px'
+        });
+        this.selected_option.children('a:first').children('.payment_option_selected:first').fadeIn();
+    };
+
+    this.unselectOption = function() {
+        this.selected_option.children('a:first').css({
+            'border': '1px solid #d6d4d4',
+            'border-radius': '4px'
+        });
+        this.selected_option.children('a:first').children('.payment_option_selected:first').fadeOut();
+        this.selected_option.removeClass('payment_selected');
+    };
+
     /* Return array with all payment option information required */
     this.getSelectedPaymentOptionDetails = function()
     {
-        var payment_option = $('input:checked', '#HOOK_ADVANCED_PAYMENT');
-        if (typeof payment_option.prop('checked') != 'undefined' && payment_option.prop('checked') === true)
+        if (typeof this.selected_option !== 'undefined' && this.selected_option !== null && this.selected_option.hasClass('payment_selected'))
         {
-            // @TODO: Check if there's an embedded form within this payment option to get it as well !
-            var po_action = payment_option.attr('data-payment-action');
-            var po_name = payment_option.attr('data-payment-option-name');
-            var po_form = $('input:checked', '#HOOK_ADVANCED_PAYMENT').parents('.payment_module').first().next('form');
-            if (po_form) {
-                var po_has_form = true;
-            } else {
-                var po_has_form = false;
+            var data_input = this.selected_option.children('a:first').children('span:last').children('input:last');
+
+            if (typeof data_input === 'undefined') {
+                return false;
             }
+
+            var po_action = data_input.attr('data-payment-action');
+            var po_name = data_input.attr('data-payment-option-name');
+            var po_form = this.selected_option.next('form');
+            var po_has_form = false;
+
+            if (typeof po_form !== 'undefined') {
+                var po_has_form = true;
+            }
+
             return {name: po_name, action: po_action, data: {}, has_form: po_has_form, form_to_submit: po_form};
         }
 
         return false;
-    }
+    };
 
     this.checkTOS = function() {
 
@@ -81,11 +116,7 @@ var PaymentOptionHandler = function() {
             return true;
 
         return false;
-    }
-
-
-
-
+    };
 
     this.submitPaymentOption = function(action, params, method) {
 
@@ -111,4 +142,4 @@ var PaymentOptionHandler = function() {
         }
         form.submit();
     }
-}
+};
