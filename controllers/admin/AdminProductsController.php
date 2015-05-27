@@ -4944,6 +4944,7 @@ class AdminProductsControllerCore extends AdminController
 	 */
 	public function updatePackItems($product)
 	{
+		if(!Tools::isSubmit('inputPackItems')) return; //dont update if no data
 		Pack::deleteItems($product->id);
 		// lines format: QTY x ID-QTY x ID
 		if (Tools::getValue('type_product') == Product::PTYPE_PACK)
