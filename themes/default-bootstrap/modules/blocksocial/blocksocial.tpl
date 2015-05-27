@@ -55,7 +55,7 @@
         {/if}
         {if isset($google_plus_url) && $google_plus_url != ''}
         	<li class="google-plus">
-        		<a class="_blank" href="{$google_plus_url|escape:html:'UTF-8'}">
+        		<a class="_blank" href="{$google_plus_url|escape:html:'UTF-8'}" rel="publisher">
         			<span>{l s='Google Plus' mod='blocksocial'}</span>
         		</a>
         	</li>
