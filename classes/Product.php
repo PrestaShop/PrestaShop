@@ -3571,7 +3571,7 @@ class ProductCore extends ObjectModel
 
 		if (Combination::isFeatureActive())
 		{
-			$sql->leftJoin('product_attribute', 'pa', 'pa.`id_product` = p.`id_product`');
+			$sql->leftJoin('product_attribute', 'pa', 'pa.`id_product` = p.`id_product` AND pa.`id_product_attribute` = sp.`id_product_attribute`');
 			$sql->join(Shop::addSqlAssociation('product_attribute', 'pa', false));
 			$where .= ' OR pa.`reference` LIKE \'%'.pSQL($query).'%\'
 			OR pa.`supplier_reference` LIKE \'%'.pSQL($query).'%\'
