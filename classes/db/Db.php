@@ -323,6 +323,10 @@ abstract class DbCore
 		$this->is_cache_enabled = false;
 	}
 
+	/**
+	 * Enable & flush the cache
+	 *
+	 */
 	public function enableCache()
 	{
 		$this->is_cache_enabled = true;
