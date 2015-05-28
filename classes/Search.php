@@ -250,7 +250,7 @@ class SearchCore
 		AND product_shop.`active` = 1
 		AND product_shop.`visibility` IN ("both", "search")
 		AND product_shop.indexed = 1
-		'.$sql_groups);
+		'.$sql_groups, true, false);
 
 		$eligible_products = array();
 		foreach ($results as $row)
@@ -258,7 +258,7 @@ class SearchCore
 		foreach ($intersect_array as $query)
 		{
 			$eligible_products2 = array();
-			foreach ($db->executeS($query) as $row)
+			foreach ($db->executeS($query, true, false) as $row)
 				$eligible_products2[] = $row['id_product'];
 
 			$eligible_products = array_intersect($eligible_products, $eligible_products2);
@@ -292,7 +292,7 @@ class SearchCore
 					)
 					WHERE p.`id_product` '.$product_pool.'
 					ORDER BY position DESC LIMIT 10';
-			return $db->executeS($sql);
+			return $db->executeS($sql, true, false);
 		}
 
 		if (strpos($order_by, '.') > 0)
@@ -343,7 +343,7 @@ class SearchCore
 				)
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
 				WHERE p.`id_product` '.$product_pool;
-		$total = $db->getValue($sql);
+		$total = $db->getValue($sql, false);
 
 		if (!$result)
 			$result_properties = false;
@@ -365,7 +365,7 @@ class SearchCore
 		$tagsArray = $db->executeS('
 		SELECT t.name FROM '._DB_PREFIX_.'product_tag pt
 		LEFT JOIN '._DB_PREFIX_.'tag t ON (pt.id_tag = t.id_tag AND t.id_lang = '.(int)$id_lang.')
-		WHERE pt.id_product = '.(int)$id_product);
+		WHERE pt.id_product = '.(int)$id_product, true, false);
 		foreach ($tagsArray as $tag)
 			$tags .= $tag['name'].' ';
 		return $tags;
@@ -388,7 +388,7 @@ class SearchCore
 		INNER JOIN '._DB_PREFIX_.'product_attribute_combination pac ON pa.id_product_attribute = pac.id_product_attribute
 		INNER JOIN '._DB_PREFIX_.'attribute_lang al ON (pac.id_attribute = al.id_attribute AND al.id_lang = '.(int)$id_lang.')
 		'.Shop::addSqlAssociation('product_attribute', 'pa').'
-		WHERE pa.id_product = '.(int)$id_product);
+		WHERE pa.id_product = '.(int)$id_product, true, false);
 		foreach ($attributesArray as $attribute)
 			$attributes .= $attribute['name'].' ';
 		return $attributes;
@@ -409,7 +409,7 @@ class SearchCore
 		$featuresArray = $db->executeS('
 		SELECT fvl.value FROM '._DB_PREFIX_.'feature_product fp
 		LEFT JOIN '._DB_PREFIX_.'feature_value_lang fvl ON (fp.id_feature_value = fvl.id_feature_value AND fvl.id_lang = '.(int)$id_lang.')
-		WHERE fp.id_product = '.(int)$id_product);
+		WHERE fp.id_product = '.(int)$id_product, true, false);
 		foreach ($featuresArray as $feature)
 			$features .= $feature['value'].' ';
 		return $features;
@@ -517,7 +517,7 @@ class SearchCore
 			AND product_shop.`active` = 1
 			AND pl.`id_shop` = product_shop.`id_shop`';
 
-		return Db::getInstance()->executeS($sql);
+		return Db::getInstance()->executeS($sql, true, false);
 	}
 
 	/**
@@ -530,7 +530,7 @@ class SearchCore
 	protected static function getAttributesFields($db, $id_product, $sql_attribute)
 	{
 		return $db->executeS('SELECT id_product '.$sql_attribute.' FROM '.
-										   _DB_PREFIX_.'product_attribute pa WHERE pa.id_product = '.(int)$id_product);
+										   _DB_PREFIX_.'product_attribute pa WHERE pa.id_product = '.(int)$id_product, true, false);
 	}
 
 	/**
@@ -683,7 +683,7 @@ class SearchCore
 						// The words are inserted...
 						$db->execute('
 						INSERT IGNORE INTO '._DB_PREFIX_.'search_word (id_lang, id_shop, word)
-						VALUES '.implode(',', $query_array));
+						VALUES '.implode(',', $query_array), false);
 					}
 					$word_ids_by_word = array();
 					if (is_array($query_array2) && !empty($query_array2))
@@ -749,7 +749,7 @@ class SearchCore
 			Db::getInstance()->execute(
 				'INSERT INTO '._DB_PREFIX_.'search_index (id_product, id_word, weight)
 				VALUES '.implode(',', $queryArray3).'
-				ON DUPLICATE KEY UPDATE weight = weight + VALUES(weight)'
+				ON DUPLICATE KEY UPDATE weight = weight + VALUES(weight)', false
 		);
 		$queryArray3 = array();
 	}
