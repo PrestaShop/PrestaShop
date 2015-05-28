@@ -1556,7 +1556,11 @@ class CartCore extends ObjectModel
 
 		// Wrapping Fees
 		$wrapping_fees = 0;
-		if ($this->gift && ($type !== Cart::ONLY_PRODUCTS && $configuration->get('PS_ATCP_SHIPWRAP')))
+
+		// With PS_ATCP_SHIPWRAP on the gift wrapping cost computation calls getOrderTotal with $type === Cart::ONLY_PRODUCTS, so the flag below prevents an infinite recursion.
+		$include_gift_wrapping = (!$configuration->get('PS_ATCP_SHIPWRAP') || $type !== Cart::ONLY_PRODUCTS);
+
+		if ($this->gift && $include_gift_wrapping)
 			$wrapping_fees = Tools::convertPrice(Tools::ps_round($this->getGiftWrappingPrice($with_taxes), $compute_precision), Currency::getCurrencyInstance((int)$this->id_currency));
 		if ($type == Cart::ONLY_WRAPPING)
 			return $wrapping_fees;
@@ -1644,36 +1648,49 @@ class CartCore extends ObjectModel
 		static $address = array();
 
 		$wrapping_fees = (float)Configuration::get('PS_GIFT_WRAPPING_PRICE');
-		if ($with_taxes && $wrapping_fees > 0)
-		{
-			if (!isset($address[$this->id]))
-			{
-				if ($id_address === null)
-					$id_address = (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
-				try
-				{
-					$address[$this->id] = Address::initialize($id_address);
-				}
-				catch (Exception $e)
-				{
-					$address[$this->id] = new Address();
-					$address[$this->id]->id_country = Configuration::get('PS_COUNTRY_DEFAULT');
-				}
-			}
 
-			if (configuration::get('PS_ATCP_SHIPWRAP'))
+		if ($wrapping_fees <= 0)
+		{
+			return $wrapping_fees;
+		}
+
+		if ($with_taxes)
+		{
+			if (Configuration::get('PS_ATCP_SHIPWRAP'))
 			{
-				$wrapping_fees = Tools::ps_round(
-					$wrapping_fees * (1 + $this->getAverageProductsTaxRate()),
-					_PS_PRICE_COMPUTE_PRECISION_
-				);
+				// With PS_ATCP_SHIPWRAP, wrapping fee is by default tax included
+				// so nothing to do here.
 			}
 			else
 			{
+				if (!isset($address[$this->id]))
+				{
+					if ($id_address === null)
+						$id_address = (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+					try
+					{
+						$address[$this->id] = Address::initialize($id_address);
+					}
+					catch (Exception $e)
+					{
+						$address[$this->id] = new Address();
+						$address[$this->id]->id_country = Configuration::get('PS_COUNTRY_DEFAULT');
+					}
+				}
+
 				$tax_manager = TaxManagerFactory::getManager($address[$this->id], (int)Configuration::get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'));
 				$tax_calculator = $tax_manager->getTaxCalculator();
 				$wrapping_fees = $tax_calculator->addTaxes($wrapping_fees);
 			}
+		}
+		else if (Configuration::get('PS_ATCP_SHIPWRAP'))
+		{
+			// With PS_ATCP_SHIPWRAP, wrapping fee is by default tax included, so we convert it
+			// when asked for the pre tax price.
+			$wrapping_fees = Tools::ps_round(
+				$wrapping_fees / (1 + $this->getAverageProductsTaxRate()),
+				_PS_PRICE_COMPUTE_PRECISION_
+			);
 		}
 
 		return $wrapping_fees;
@@ -2836,9 +2853,15 @@ class CartCore extends ObjectModel
 		{
 			$address = Address::initialize((int)$address_id);
 
-			if (Configuration::get('PS_ATCP_SHIPWRAP')) {
-				$carrier_tax = 100 * $this->getAverageProductsTaxRate();
-			} else {
+			if (Configuration::get('PS_ATCP_SHIPWRAP'))
+			{
+				// With PS_ATCP_SHIPWRAP, pre-tax price is deduced
+				// from post tax price, so no $carrier_tax here
+				// even though it sounds weird.
+				$carrier_tax = 0;
+			}
+			else
+			{
 				$carrier_tax = $carrier->getTaxesRate($address);
 			}
 
@@ -2949,9 +2972,21 @@ class CartCore extends ObjectModel
 			}
 		}
 
-		// Apply tax
-		if ($use_tax && isset($carrier_tax))
-			$shipping_cost *= 1 + ($carrier_tax / 100);
+		if (Configuration::get('PS_ATCP_SHIPWRAP'))
+		{
+				if (!$use_tax)
+				{
+					// With PS_ATCP_SHIPWRAP, we deduce the pre-tax price from the post-tax
+					// price. This is on purpose and required in Germany.
+					$shipping_cost /= (1 + $this->getAverageProductsTaxRate());
+				}
+		}
+		else
+		{
+			// Apply tax
+			if ($use_tax && isset($carrier_tax))
+				$shipping_cost *= 1 + ($carrier_tax / 100);
+		}
 
 		$shipping_cost = (float)Tools::ps_round((float)$shipping_cost, 2);
 		Cache::store($cache_id, $shipping_cost);

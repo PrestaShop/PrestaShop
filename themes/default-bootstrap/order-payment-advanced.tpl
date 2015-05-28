@@ -51,16 +51,32 @@
     {if $HOOK_ADVANCED_PAYMENT }
         {foreach $HOOK_ADVANCED_PAYMENT as $advanced_payment_opt_list}
             {foreach $advanced_payment_opt_list as $paymentOption}
-                <div class="col-xs-12 col-md-12">
-                    <p class="payment_module">
-                        <a>
-                            <img src="{$paymentOption->getLogo()}"/>
-                            <input name="payment_option" data-payment-option-name="{$paymentOption->getModuleName()}" data-payment-action="{$paymentOption->getAction()}"
-                                   type="radio" value="{$paymentOption->getModuleName()}">
-                            {$paymentOption->getCallToActionText()}
+                <div class="col-xs-6 col-md-6">
+                    <p class="payment_module pointer-box">
+                        <a class="payment_module_adv">
+                            <img class="payment_option_logo" src="{$paymentOption->getLogo()}"/>
+                            <span class="payment_option_cta">
+                                {$paymentOption->getCallToActionText()}
+                            </span>
+                            <span class="pull-right payment_option_selected">
+                                <i class="icon-check"></i>
+                            </span>
                         </a>
-                        {$paymentOption->getForm()}
+
                     </p>
+                    <div class="payment_option_form">
+                        {if $paymentOption->getForm()}
+                            {$paymentOption->getForm()}
+                        {else}
+                            <form method="{if $paymentOption->getMethod()}{$paymentOption->getMethod()}{else}POST{/if}" action="{$paymentOption->getAction()}">
+                                {if $paymentOption->getInputs()}
+                                    {foreach from=$paymentOption->getInputs() item=value key=name}
+                                        <input type="hidden" name="{$name}" value="{$value}">
+                                    {/foreach}
+                                {/if}
+                            </form>
+                        {/if}
+                    </div>
                 </div>
             {/foreach}
         {/foreach}
@@ -71,89 +87,30 @@
 </div>
 <!-- end HOOK_ADVANCED_PAYMENT -->
 
-<h2>{l s='Address(es) Details'}</h2>
-{if ((!empty($delivery_option) AND !isset($virtualCart)) OR $delivery->id OR $invoice->id)}
-    <div class="order_delivery clearfix row">
-        {if !isset($formattedAddresses) || (count($formattedAddresses.invoice) == 0 && count($formattedAddresses.delivery) == 0) || (count($formattedAddresses.invoice.formated) == 0 && count($formattedAddresses.delivery.formated) == 0)}
-            {if $delivery->id}
-                <div class="col-xs-12 col-sm-6"{if !$have_non_virtual_products} style="display: none;"{/if}>
-                    <ul id="delivery_address" class="address item box">
-                        <li><h3 class="page-subheading">{l s='Delivery address'}&nbsp;<span class="address_alias">({$delivery->alias})</span></h3></li>
-                        {if $delivery->company}<li class="address_company">{$delivery->company|escape:'html':'UTF-8'}</li>{/if}
-                        <li class="address_name">{$delivery->firstname|escape:'html':'UTF-8'} {$delivery->lastname|escape:'html':'UTF-8'}</li>
-                        <li class="address_address1">{$delivery->address1|escape:'html':'UTF-8'}</li>
-                        {if $delivery->address2}<li class="address_address2">{$delivery->address2|escape:'html':'UTF-8'}</li>{/if}
-                        <li class="address_city">{$delivery->postcode|escape:'html':'UTF-8'} {$delivery->city|escape:'html':'UTF-8'}</li>
-                        <li class="address_country">{$delivery->country|escape:'html':'UTF-8'} {if $delivery_state}({$delivery_state|escape:'html':'UTF-8'}){/if}</li>
-                    </ul>
-                </div>
-            {/if}
-            {if $invoice->id}
-                <div class="col-xs-12 col-sm-6">
-                    <ul id="invoice_address" class="address alternate_item box">
-                        <li><h3 class="page-subheading">{l s='Invoice address'}&nbsp;<span class="address_alias">({$invoice->alias})</span></h3></li>
-                        {if $invoice->company}<li class="address_company">{$invoice->company|escape:'html':'UTF-8'}</li>{/if}
-                        <li class="address_name">{$invoice->firstname|escape:'html':'UTF-8'} {$invoice->lastname|escape:'html':'UTF-8'}</li>
-                        <li class="address_address1">{$invoice->address1|escape:'html':'UTF-8'}</li>
-                        {if $invoice->address2}<li class="address_address2">{$invoice->address2|escape:'html':'UTF-8'}</li>{/if}
-                        <li class="address_city">{$invoice->postcode|escape:'html':'UTF-8'} {$invoice->city|escape:'html':'UTF-8'}</li>
-                        <li class="address_country">{$invoice->country|escape:'html':'UTF-8'} {if $invoice_state}({$invoice_state|escape:'html':'UTF-8'}){/if}</li>
-                    </ul>
-                </div>
-            {/if}
-        {else}
-            {foreach from=$formattedAddresses key=k item=address}
-                <div class="col-xs-12 col-sm-6"{if $k == 'delivery' && !$have_non_virtual_products} style="display: none;"{/if}>
-                    <ul class="address {if $address@last}last_item{elseif $address@first}first_item{/if} {if $address@index % 2}alternate_item{else}item{/if} box">
-                        <li>
-                            <h3 class="page-subheading">
-                                {if $k eq 'invoice'}
-                                    {l s='Invoice address'}
-                                {elseif $k eq 'delivery' && $delivery->id}
-                                    {l s='Delivery address'}
-                                {/if}
-                                {if isset($address.object.alias)}
-                                    <span class="address_alias">({$address.object.alias})</span>
-                                {/if}
-                            </h3>
-                        </li>
-                        {foreach $address.ordered as $pattern}
-                            {assign var=addressKey value=" "|explode:$pattern}
-                            {assign var=addedli value=false}
-                            {foreach from=$addressKey item=key name=foo}
-                                {$key_str = $key|regex_replace:AddressFormat::_CLEANING_REGEX_:""}
-                                {if isset($address.formated[$key_str]) && !empty($address.formated[$key_str])}
-                                    {if (!$addedli)}
-                                        {$addedli = true}
-                                        <li><span class="{if isset($addresses_style[$key_str])}{$addresses_style[$key_str]}{/if}">
-                                    {/if}
-                                    {$address.formated[$key_str]|escape:'html':'UTF-8'}
-                                {/if}
-                                {if ($smarty.foreach.foo.last && $addedli)}
-                                    </span></li>
-                                {/if}
-                            {/foreach}
-                        {/foreach}
-                    </ul>
-                </div>
-            {/foreach}
-        {/if}
-    </div>
+{if $is_logged AND !$is_guest}
+    {include file="$tpl_dir./order-address-advanced.tpl"}
+{else}
+    <!-- Create account / Guest account / Login block -->
+    {include file="$tpl_dir./order-opc-new-account-advanced.tpl"}
+    <!-- END Create account / Guest account / Login block -->
 {/if}
 
-<h2>{l s='Terms and Conditions'}</h2>
 <!-- TNC -->
 {if $conditions AND $cms_id}
     {if $override_tos_display }
         {$override_tos_display}
     {else}
-        <div class="box">
-            <p class="carrier_title">{l s='Terms of service'}</p>
-            <p class="checkbox">
-                <input type="checkbox" name="cgv" id="cgv" value="1" {if $checkedTOS}checked="checked"{/if} />
-                <label for="cgv">{l s='I agree to the terms of service and will adhere to them unconditionally.'}</label>
-                <a href="{$link_conditions|escape:'html':'UTF-8'}" class="iframe" rel="nofollow">{l s='(Read the Terms of Service)'}</a>
-            </p>
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <h2>{l s='Terms and Conditions'}</h2>
+                <div class="box">
+                    <p class="checkbox">
+                        <input type="checkbox" name="cgv" id="cgv" value="1" {if $checkedTOS}checked="checked"{/if} />
+                        <label for="cgv">{l s='I agree to the terms of service and will adhere to them unconditionally.'}</label>
+                        <a href="{$link_conditions|escape:'html':'UTF-8'}" class="iframe" rel="nofollow">{l s='(Read the Terms of Service)'}</a>
+                    </p>
+                </div>
+            </div>
         </div>
     {/if}
 {/if}

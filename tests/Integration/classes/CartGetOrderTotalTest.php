@@ -398,6 +398,7 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         self::deactivateCurrentCartRules();
         // Something might have disabled CartRules :)
         Configuration::set('PS_CART_RULE_FEATURE_ACTIVE', true);
+		Configuration::set('PS_ATCP_SHIPWRAP', false);
     }
 
     public function testBasicOnlyProducts()

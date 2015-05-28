@@ -79,6 +79,7 @@ $(document).ready(function(){
 		// LOGIN FORM SENDING
 		$(document).on('click', '#SubmitLogin', function(e){
 			e.preventDefault();
+            var that = $(this);
 			$.ajax({
 				type: 'POST',
 				headers: { "cache-control": "no-cache" },
@@ -103,7 +104,7 @@ $(document).ready(function(){
 					{
 						// update token
 						static_token = jsonData.token;
-						updateNewAccountToAddressBlock();
+						updateNewAccountToAddressBlock(that.attr('data-adv-api'));
 					}
 				},
 				error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -134,7 +135,12 @@ $(document).ready(function(){
 			$('#opc_new_account-overlay, #opc_delivery_methods-overlay, #opc_payment_methods-overlay').fadeIn('slow')
 
 			var callingFile = '';
-			var params = '';
+            var advApiParam = '';
+            var params = '';
+
+            if ($(this).attr('data-adv-api')) {
+                advApiParam = '&isAdvApi=1';
+            }
 
 			if (parseInt($('#opc_id_customer').val()) == 0)
 			{
@@ -176,7 +182,7 @@ $(document).ready(function(){
 			$.ajax({
 				type: 'POST',
 				headers: { "cache-control": "no-cache" },
-				url: callingFile + '?rand=' + new Date().getTime(),
+				url: callingFile + '?rand=' + new Date().getTime() + advApiParam,
 				async: false,
 				cache: false,
 				dataType : "json",
@@ -244,10 +250,10 @@ $(document).ready(function(){
 							isLogged = 1;
 							$('#opc_account_saved').fadeIn('slow');
 							$('#submitAccount').hide();
-							updateAddressSelection();
+							updateAddressSelection(advApiParam);
 						}
 						else
-							updateNewAccountToAddressBlock();
+							updateNewAccountToAddressBlock(advApiParam);
 					}
 					$('#opc_new_account-overlay, #opc_delivery_methods-overlay, #opc_payment_methods-overlay').fadeIn('slow');
 				},
@@ -339,7 +345,7 @@ function updatePaymentMethodsDisplay()
 	});
 }
 
-function updateAddressSelection()
+function updateAddressSelection(is_adv_api)
 {
 	var idAddress_delivery = ($('#opc_id_address_delivery').length == 1 ? $('#opc_id_address_delivery').val() : $('#id_address_delivery').val());
 	var idAddress_invoice = ($('#opc_id_address_invoice').length == 1 ? $('#opc_id_address_invoice').val() : ($('#addressesAreEquals:checked').length == 1 ? idAddress_delivery : ($('#id_address_invoice').length == 1 ? $('#id_address_invoice').val() : idAddress_delivery)));
@@ -355,7 +361,9 @@ function updateAddressSelection()
 		async: true,
 		cache: false,
 		dataType : "json",
-		data: 'allow_refresh=1&ajax=true&method=updateAddressesSelected&id_address_delivery=' + idAddress_delivery + '&id_address_invoice=' + idAddress_invoice + '&token=' + static_token,
+		data: 'allow_refresh=1&ajax=true&method=updateAddressesSelected&id_address_delivery=' + idAddress_delivery +
+              '&id_address_invoice=' + idAddress_invoice + '&token=' + static_token +
+              (is_adv_api ? '&isAdvApi=1' : ''),
 		success: function(jsonData)
 		{
 			if (jsonData.hasError)
@@ -759,9 +767,10 @@ function saveAddress(type)
 	return result;
 }
 
-function updateNewAccountToAddressBlock()
+function updateNewAccountToAddressBlock(is_adv_api)
 {
-	$('#opc_account-overlay, #opc_delivery_methods-overlay, #opc_payment_methods-overlay').fadeOut('slow');;
+	$('#opc_account-overlay, #opc_delivery_methods-overlay, #opc_payment_methods-overlay').fadeOut('slow');
+
 	$.ajax({
 		type: 'POST',
 		headers: { "cache-control": "no-cache" },
@@ -769,7 +778,8 @@ function updateNewAccountToAddressBlock()
 		async: true,
 		cache: false,
 		dataType : "json",
-		data: 'ajax=true&method=getAddressBlockAndCarriersAndPayments&token=' + static_token ,
+		data: 'ajax=true&method=getAddressBlockAndCarriersAndPayments&token=' + static_token +
+              (is_adv_api ? '&isAdvApi=1' : '') ,
 		success: function(json)
 		{
 			if (json.hasError)
@@ -801,17 +811,20 @@ function updateNewAccountToAddressBlock()
 						});
 					}
 					$(this).fadeIn('fast', function() {
+                        if ($('#gift-price').length == 1)
+                            $('#gift-price').html(json.gift_price);
+
 						//After login, the products are automatically associated to an address
 						$.each(json.summary.products, function() {
 							updateAddressId(this.id_product, this.id_product_attribute, '0', this.id_address_delivery);
 						});
 						updateAddressesDisplay(true);
-						updateCarrierList(json.carrier_data);
-						updateCarrierSelectionAndGift();
-						updatePaymentMethods(json);
-						if ($('#gift-price').length == 1)
-							$('#gift-price').html(json.gift_price);
-						$('#opc_delivery_methods-overlay, #opc_payment_methods-overlay').fadeOut('slow');
+                        if (typeof is_adv_api === 'undefined' || !is_adv_api) {
+                            updateCarrierList(json.carrier_data);
+                            updateCarrierSelectionAndGift();
+                            updatePaymentMethods(json);
+                        }
+                        $('#opc_delivery_methods-overlay, #opc_payment_methods-overlay').fadeOut('slow');
 					});
 				});
 			}
