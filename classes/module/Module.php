@@ -2693,7 +2693,7 @@ abstract class ModuleCore
 		if (!file_exists($path_override))
 			return false;
 		else
-			file_put_contents($path_override, preg_replace('#(\r|\r\n)#ism', "\n", file_get_contents($path_override)));
+			file_put_contents($path_override, preg_replace('#(\r\n|\r)#ism', "\n", file_get_contents($path_override)));
 
 		$pattern_escape_com = '#(^\s*?\/\/.*?\n|\/\*(?!\n\s+\* module:.*?\* date:.*?\* version:.*?\*\/).*?\*\/)#ism';
 		// Check if there is already an override file, if not, we just need to copy the file
@@ -2847,7 +2847,7 @@ abstract class ModuleCore
 		if (!is_file($override_path) || !is_writable($override_path))
 			return false;
 
-		file_put_contents($override_path, preg_replace('#(\r|\r\n)#ism', "\n", file_get_contents($override_path)));
+		file_put_contents($override_path, preg_replace('#(\r\n|\r)#ism', "\n", file_get_contents($override_path)));
 
 		if ($orig_path)
 		{
