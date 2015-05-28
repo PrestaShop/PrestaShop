@@ -3,6 +3,7 @@
 namespace PrestaShop\PrestaShop\Tests\Fake;
 
 use Core_Business_ConfigurationInterface;
+use Exception;
 
 class FakeConfiguration implements Core_Business_ConfigurationInterface
 {
