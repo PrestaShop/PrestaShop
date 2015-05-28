@@ -172,6 +172,10 @@
         background-color: #FFFFFF;
     }
 
+	.big,
+	tr.big td{
+		font-size: 110%;
+	}
     .small {
         font-size:small;
     }
