@@ -23,6 +23,9 @@ class CacheMemcachedCore extends Cache
 		$this->connect();
 		if($this->is_connected)
 		{
+			$this->memcached->setOption(Memcached::OPT_PREFIX_KEY, _DB_PREFIX_);
+			if($this->memcached->getOption(Memcached::HAVE_IGBINARY))
+				$this->memcached->setOption(Memcached::OPT_SERIALIZER, Memcached::SERIALIZER_IGBINARY);
 			$this->keys = array_flip($this->memcached->getAllKeys());
 		}
 
