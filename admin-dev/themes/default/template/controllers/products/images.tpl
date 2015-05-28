@@ -75,7 +75,7 @@
 				{/if}
 			{/foreach}
 			</div>
-			<div class="col-lg-2"><button type="submit" class="btn btn-default" name="submitAddproductAndStay" value="update_legends"><i class="icon-random"></i> {l s='Update each captions'}</button></div>
+			<div class="col-lg-2"><button type="submit" class="btn btn-default" name="submitAddproductAndStay" value="update_legends"><i class="icon-random"></i> {l s='Update each caption'}</button></div>
 		</div>
 	</div>
 	<table class="table tableDnD" id="imageTable">
