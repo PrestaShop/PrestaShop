@@ -3,12 +3,13 @@
 return array (
   'informations' =>
   array (
-    'phone' => '+1 (888) 947-6543',
-    'documentation' => 'http://doc.prestashop.com/',
-    'documentation_upgrade' => 'http://docs.prestashop.com/display/PS16/Updating+PrestaShop',
-    'forum' => 'http://www.prestashop.com/forums/forum/164-انجمن-فارسی-persian/',
-    'blog' => 'http://www.prestashop.com/blog/',
-    'support' => 'https://www.prestashop.com/en/support',
+      'documentation' => 'http://doc.prestashop.com/display/PS16/Installing+PrestaShop',
+      'documentation_upgrade' => 'http://docs.prestashop.com/display/PS16/Updating+PrestaShop',
+      'forum' => 'http://www.prestashop.com/forums/forum/164-انجمن-فارسی-persian/',
+      'blog' => 'http://www.prestashop.com/blog/',
+      'support' => 'https://www.prestashop.com/en/support',
+      'tutorial' => 'https://www.youtube.com/watch?v=psz4aIPZZuk',
+      'tailored_help' => 'http://addons.prestashop.com/en/388-support',
   ),
   'translations' =>
   array (
@@ -144,7 +145,7 @@ return array (
     'Test your database connection now!' => 'هم اکنون اتصال به دیتابیس را بررسی کن!',
     'Next' => 'شروع خرید',
     'Back' => 'قبلی',
-    'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="http://doc.prestashop.com/display/PS16/Installing+PrestaShop" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.' => 'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="http://doc.prestashop.com/display/PS16/Installing+PrestaShop" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.',
+    'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="%2$s" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.' => 'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="%2$s" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.',
     'Official forum' => 'انجمن اختصاصی',
     'Support' => 'پشتیبانی',
     'Documentation' => 'مستندات',
@@ -202,7 +203,7 @@ return array (
     '<b>Warning: You cannot use this tool to upgrade your store anymore.</b><br /><br />You already have <b>PrestaShop version %1$s installed</b>.<br /><br />If you want to upgrade to the latest version, please read our documentation: <a href="%2$s">%2$s</a>' => '<b>هشدار: شما دیگر نمیتوانید از این ابزار برای ارتقای فروشگاه خود استفاده کنید.</b><br /><b> شما هم اکنون یک  <b>پرستا شاپ نسخه %1$s را نصب دارید</b>.<br /><br />اگر میخواهید به آخرین نسخه ارتقا بدهید لطفا مستندات ما را مطالعه کنید: <a href="%2$s">%2$s</a>',
     'Welcome to the PrestaShop %s Installer' => 'به محیط نصب پرستاشاپ %s خوش آمدید',
     'Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 230,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'نصب پرستاشاپ سریع و آسان است. در مدت چند دقیقه، شما عضوی از انجمنی خواهید شد که بیش از 230,000 فروشنده در آن هستند. شما در مسیر ساخت فروشگاه منحصر به فرد خود هستید که می‌توانید هر روز آن را به سادگی، مدیریت کنید.',
-    'If you need help, do not hesitate to check <a href="%1$s" target="_blank">our documentation</a> or to contact our support team: %2$s.' => 'اگر به کمک نیاز دارید به بخش <a href="%1$s" target="_blank">مستندات ما</a> سر بزنید یا برای ارتباط با تیم پشتیبانی ما %2$s تماس بگیرید.',
+    'If you need help, do not hesitate to <a href="%1$s" target="_blank">watch this short tutorial</a>, or check <a href="%2$s" target="_blank">our documentation</a>.' => 'If you need help, do not hesitate to <a href="%1$s" target="_blank">watch this short tutorial</a>, or check <a href="%2$s" target="_blank">our documentation</a>.',
     'Continue the installation in:' => 'ادامه نصب در:',
     'The language selection above only applies to the Installation Assistant. Once your store is installed, you can choose the language of your store from over %d translations, all for free!' => 'انتخاب زبان در بالا فقط برای کمک در نصب است. به محض نصب فروشگاه، شما می توانید زبان فروشگاه خود را از بین %d تعداد ترجمه انتخاب کنید. به صورت کاملا رایگان!',
   ),

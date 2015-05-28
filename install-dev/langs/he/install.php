@@ -3,12 +3,13 @@
 return array (
   'informations' =>
   array (
-    'phone' => '+1 (888) 947-6543',
-    'documentation' => 'http://doc.prestashop.com/display/PS16/PrestaShop+1.6+documentation',
-    'documentation_upgrade' => 'http://docs.prestashop.com/display/PS16/Updating+PrestaShop',
-    'forum' => 'http://www.prestashop.com/forums/',
-    'blog' => 'http://www.prestashop.com/blog/',
-    'support' => 'https://www.prestashop.com/en/support',
+  'documentation' => 'http://doc.prestashop.com/display/PS16/Installing+PrestaShop',
+  'documentation_upgrade' => 'http://docs.prestashop.com/display/PS16/Updating+PrestaShop',
+  'forum' => 'http://www.prestashop.com/forums/',
+  'blog' => 'http://www.prestashop.com/blog/',
+  'support' => 'https://www.prestashop.com/en/support',
+  'tutorial' => 'https://www.youtube.com/watch?v=psz4aIPZZuk',
+  'tailored_help' => 'http://addons.prestashop.com/en/388-support',
   ),
   'translations' =>
   array (
@@ -144,7 +145,7 @@ return array (
     'Test your database connection now!' => 'בדוק קישוריות לדטהבייס כעת!',
     'Next' => 'הבא',
     'Back' => 'חזרה',
-    'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="http://doc.prestashop.com/display/PS16/Installing+PrestaShop" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.' => 'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="http://doc.prestashop.com/display/PS16/Installing+PrestaShop" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.',
+    'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="%2$s" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.' => 'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="%2$s" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.',
     'Official forum' => 'פורום פרסטהשופ',
     'Support' => 'תמיכה',
     'Documentation' => 'תיעוד',
@@ -202,7 +203,7 @@ return array (
     '<b>Warning: You cannot use this tool to upgrade your store anymore.</b><br /><br />You already have <b>PrestaShop version %1$s installed</b>.<br /><br />If you want to upgrade to the latest version, please read our documentation: <a href="%2$s">%2$s</a>' => '<b>אזהרה: אין באפשרותך להשתמש עוד בכלי זה לשדרוג חנותך.</b><br /><br />כבר <b>מותקנת אצלך גרסה %1$s</b> של פרסטהשופ.<br /><br />אם ברצונך לשדרג לגרסה האחרונה, קרא בבקשה את התיעוד: <a href="%2$s">%2$s</a>',
     'Welcome to the PrestaShop %s Installer' => 'ברוכים הבאים להתקנת פרסטהשופ %s',
     'Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 230,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'התקנת פרסטהשופ היא קלה ופשוטה. תוך מספר דקות תהפוך לחלק מקהילה הכוללת מעל 230,000 סוחרים. אתה נמצא בדרכך ליצירת חנות וירטואלית ייחודית שתוכל לנהלה בקלות על בסיס יומי.',
-    'If you need help, do not hesitate to check <a href="%1$s" target="_blank">our documentation</a> or to contact our support team: %2$s.' => 'אם אתה נזקק לעזרה, אל תהסס לבדוק את <a href="%1$s" target="_blank">התיעוד שלנו</a> או לפנות לצוות התמיכה: %2$s.',
+    'If you need help, do not hesitate to <a href="%1$s" target="_blank">watch this short tutorial</a>, or check <a href="%2$s" target="_blank">our documentation</a>.' => 'If you need help, do not hesitate to <a href="%1$s" target="_blank">watch this short tutorial</a>, or check <a href="%2$s" target="_blank">our documentation</a>.',
     'Continue the installation in:' => 'המשך התקנה בשפה:',
     'The language selection above only applies to the Installation Assistant. Once your store is installed, you can choose the language of your store from over %d translations, all for free!' => 'בחירת השפה למעלה חלה על תהליך ההתקנה בלבד. לאחר שהחנות מותקנת, באפשרותך לבחור שפה עבור ממשק החנות מתוך מעל %d תרגומים, והכל בחינם!',
   ),

@@ -3557,29 +3557,25 @@ class ProductCore extends ObjectModel
 			AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl')
 		);
 		$sql->leftJoin('manufacturer', 'm', 'm.`id_manufacturer` = p.`id_manufacturer`');
-		$sql->leftJoin('product_supplier', 'sp', 'sp.`id_product` = p.`id_product`');
 
 		$where = 'pl.`name` LIKE \'%'.pSQL($query).'%\'
 		OR p.`ean13` LIKE \'%'.pSQL($query).'%\'
 		OR p.`upc` LIKE \'%'.pSQL($query).'%\'
 		OR p.`reference` LIKE \'%'.pSQL($query).'%\'
 		OR p.`supplier_reference` LIKE \'%'.pSQL($query).'%\'
-		OR `product_supplier_reference` LIKE \'%'.pSQL($query).'%\'';
+		OR EXISTS(SELECT * FROM `'._DB_PREFIX_.'product_supplier` sp WHERE sp.`id_product` = p.`id_product` AND `product_supplier_reference` LIKE \'%'.pSQL($query).'%\')';
 
-		$sql->groupBy('p.`id_product`');
 		$sql->orderBy('pl.`name` ASC');
 
 		if (Combination::isFeatureActive())
 		{
-			$sql->leftJoin('product_attribute', 'pa', 'pa.`id_product` = p.`id_product`');
-			$sql->join(Shop::addSqlAssociation('product_attribute', 'pa', false));
-			$where .= ' OR pa.`reference` LIKE \'%'.pSQL($query).'%\'
+			$where .= ' OR EXISTS(SELECT * FROM `'._DB_PREFIX_.'product_attribute` `pa` WHERE pa.`id_product` = p.`id_product` AND (pa.`reference` LIKE \'%'.pSQL($query).'%\'
 			OR pa.`supplier_reference` LIKE \'%'.pSQL($query).'%\'
 			OR pa.`ean13` LIKE \'%'.pSQL($query).'%\'
-			OR pa.`upc` LIKE \'%'.pSQL($query).'%\'';
+			OR pa.`upc` LIKE \'%'.pSQL($query).'%\'))';
 		}
 		$sql->where($where);
-		$sql->join(Product::sqlStock('p', 'pa', false, $context->shop));
+		$sql->join(Product::sqlStock('p', 0));
 
 		$result = Db::getInstance()->executeS($sql);
 
