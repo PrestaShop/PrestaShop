@@ -53,21 +53,30 @@
             {foreach $advanced_payment_opt_list as $paymentOption}
                 <div class="col-xs-6 col-md-6">
                     <p class="payment_module pointer-box">
-                        <a>
+                        <a class="payment_module_adv">
                             <img class="payment_option_logo" src="{$paymentOption->getLogo()}"/>
                             <span class="payment_option_cta">
                                 {$paymentOption->getCallToActionText()}
                             </span>
                             <span class="pull-right payment_option_selected">
                                 <i class="icon-check"></i>
-                                <input name="payment_option"
-                                       data-payment-option-name="{$paymentOption->getModuleName()}"
-                                       data-payment-action="{$paymentOption->getAction()}"
-                                       type="hidden" value="{$paymentOption->getModuleName()}">
                             </span>
                         </a>
-                        {$paymentOption->getForm()}
+
                     </p>
+                    <div class="payment_option_form">
+                        {if $paymentOption->getForm()}
+                            {$paymentOption->getForm()}
+                        {else}
+                            <form method="{if $paymentOption->getMethod()}{$paymentOption->getMethod()}{else}POST{/if}" action="{$paymentOption->getAction()}">
+                                {if $paymentOption->getInputs()}
+                                    {foreach from=$paymentOption->getInputs() item=value key=name}
+                                        <input type="hidden" name="{$name}" value="{$value}">
+                                    {/foreach}
+                                {/if}
+                            </form>
+                        {/if}
+                    </div>
                 </div>
             {/foreach}
         {/foreach}

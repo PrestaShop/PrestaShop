@@ -24,11 +24,11 @@
  */
 
 $(document).ready(function(){
-
     var handler = new PaymentOptionHandler();
 
     $('p.payment_module').on('click', function(event){
         handler.selectOption($(this));
+        return;
     });
 
     $('#confirmOrder').on('click', function(event){
@@ -36,21 +36,16 @@ $(document).ready(function(){
         event.preventDefault();
         event.stopPropagation();
 
-        if (!handler.checkTOS())
+        if (handler.checkTOS() === false)
         {
-            alert('Please check TOS box first !');
+            alert(aeuc_tos_err_str);
             return;
         }
-
-        var payment_details = handler.getSelectedPaymentOptionDetails();
-        if (payment_details !== false && payment_details.action) {
-            handler.submitPaymentOption(payment_details.action, payment_details.data);
-        } else if (!payment_details.action && payment_details.has_form === true) {
-                payment_details.form_to_submit.submit();
-        } else {
-            alert('TECHNICAL ERROR: Something went wrong in processing payment!');
+        if (handler.submitForm() === false) {
+            alert(aeuc_submit_err_str);
             return;
         }
+        return;
     });
 
 });
@@ -85,61 +80,25 @@ var PaymentOptionHandler = function() {
     };
 
     /* Return array with all payment option information required */
-    this.getSelectedPaymentOptionDetails = function()
+    this.submitForm = function()
     {
         if (typeof this.selected_option !== 'undefined' && this.selected_option !== null && this.selected_option.hasClass('payment_selected'))
         {
-            var data_input = this.selected_option.children('a:first').children('span:last').children('input:last');
-
-            if (typeof data_input === 'undefined') {
-                return false;
+            var form_to_submit = this.selected_option.next('.payment_option_form').children('form:first');
+            if (typeof form_to_submit !== 'undefined') {
+                form_to_submit.submit();
+                return true;
             }
-
-            var po_action = data_input.attr('data-payment-action');
-            var po_name = data_input.attr('data-payment-option-name');
-            var po_form = this.selected_option.next('form');
-            var po_has_form = false;
-
-            if (typeof po_form !== 'undefined') {
-                var po_has_form = true;
-            }
-
-            return {name: po_name, action: po_action, data: {}, has_form: po_has_form, form_to_submit: po_form};
         }
-
         return false;
     };
 
     this.checkTOS = function() {
 
-        if ($('#cgv').prop('checked'))
+        if ($('#cgv').prop('checked')) {
             return true;
+        }
 
         return false;
     };
-
-    this.submitPaymentOption = function(action, params, method) {
-
-        var method = method || "post"; // Set method to post by default if not specified.
-
-        // The rest of this code assumes you are not using a library.
-        // It can be made less wordy if you use one.
-        var form = document.createElement("form");
-        form.setAttribute("method", method);
-        form.setAttribute("action", action);
-
-        for(var key in params)
-        {
-            if(params.hasOwnProperty(key))
-            {
-                var hiddenField = document.createElement("input");
-                hiddenField.setAttribute("type", "hidden");
-                hiddenField.setAttribute("name", key);
-                hiddenField.setAttribute("value", params[key]);
-                // Add input to global form
-                form.appendChild(hiddenField);
-            }
-        }
-        form.submit();
-    }
 };
