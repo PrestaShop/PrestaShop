@@ -3502,6 +3502,20 @@ div.star.star_hover {
 	}
 }
 
+.payment_option_form {
+  display: none;
+}
+
+.payment_option_logo {
+  height:50px;
+  max-height: 50px;
+}
+
+.payment_module_adv {
+  height:120px;
+  max-height: 120px;
+}
+
 .payment_option_selected {
     i {
       color: green;
