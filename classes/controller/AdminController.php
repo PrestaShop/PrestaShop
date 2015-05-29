@@ -1470,7 +1470,7 @@ class AdminControllerCore extends Controller
 					array_pop($this->toolbar_title);
 					array_pop($this->meta_title);
 					$this->toolbar_title[] = sprintf($this->l('Edit: %s'),
-						is_array($obj->{$this->identifier_name}) ? $obj->{$this->identifier_name}[$this->context->employee->id_lang] : $obj->{$this->identifier_name});
+						(is_array($obj->{$this->identifier_name}) && isset($obj->{$this->identifier_name}[$this->context->employee->id_lang])) ? $obj->{$this->identifier_name}[$this->context->employee->id_lang] : $obj->{$this->identifier_name});
 					$this->addMetaTitle($this->toolbar_title[count($this->toolbar_title) - 1]);
 				}
 				break;
