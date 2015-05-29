@@ -545,7 +545,8 @@ function reloadContent(params_plus)
 				$('#pagination').hide();
 				$('#pagination_bottom').hide();
 			}
-
+			current_friendly_url = result.current_friendly_url;
+			
 			paginationButton(result.nbRenderedProducts, result.nbAskedProducts);
 			ajaxLoaderOn = 0;
 
@@ -574,8 +575,6 @@ function reloadContent(params_plus)
 			filters = result.filters;
 			initFilters();
 			initSliders();
-
-			current_friendly_url = result.current_friendly_url;
 
 			// Currente page url
 			if (typeof(current_friendly_url) === 'undefined')
