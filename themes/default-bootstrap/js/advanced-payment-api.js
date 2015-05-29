@@ -41,6 +41,10 @@ $(document).ready(function(){
             alert(aeuc_tos_err_str);
             return;
         }
+        if (handler.selected_option === null) {
+            alert(aeuc_no_pay_err_str);
+            return;
+        }
         if (handler.submitForm() === false) {
             alert(aeuc_submit_err_str);
             return;
