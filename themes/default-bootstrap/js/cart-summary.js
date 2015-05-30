@@ -524,8 +524,11 @@ function deleteProductFromSummary(id)
 				updateCustomizedDatas(jsonData.customizedDatas);
 				updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
 				updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
+
 				if (typeof(getCarrierListAndUpdate) !== 'undefined' && jsonData.summary.products.length > 0)
 					getCarrierListAndUpdate();
+				else if(jsonData.summary.products.length > 0)
+					getCarrierListAndUpdateForSummary();
 				if (typeof(updatePaymentMethodsDisplay) !== 'undefined')
 					updatePaymentMethodsDisplay();
 			}
@@ -1072,7 +1075,29 @@ function updateExtraCarrier(id_delivery_option, id_address)
 			+ '&allow_refresh=1',
 		success: function(jsonData)
 		{
+			ajaxCart.refresh();
 			$('#HOOK_EXTRACARRIER_' + id_address).html(jsonData['content']);
+		}
+	});
+}
+
+function getCarrierListAndUpdateForSummary()
+{
+	$.ajax({
+		type: 'POST',
+		headers: { "cache-control": "no-cache" },
+		url: orderUrl + '?rand=' + new Date().getTime(),
+		async: true,
+		cache: false,
+		dataType : "json",
+		data: 'ajax=true&method=getCarrierList&token=' + static_token,
+		success: function(jsonData)
+		{
+			if (!jsonData.hasError){
+				$('#carrier_area').replaceWith(jsonData.carrier_block);
+				/* update hooks for carrier module */
+				$('#HOOK_BEFORECARRIER').html(jsonData.HOOK_BEFORECARRIER);
+			}
 		}
 	});
 }
