@@ -87,9 +87,11 @@
 </div>
 <!-- end HOOK_ADVANCED_PAYMENT -->
 
+{if $opc}
 <!-- Carrier -->
 {include file="$tpl_dir./order-carrier-advanced.tpl"}
 <!-- END Carrier -->
+{/if}
 
 {if $is_logged AND !$is_guest}
     {include file="$tpl_dir./order-address-advanced.tpl"}
