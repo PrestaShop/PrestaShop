@@ -52,7 +52,7 @@
 			<div class="col-lg-9">
 				<select name="id_hook" disabled="disabled">
 					{if !$hooks}
-						<option value="0">{l s='Select a module to choose from available hooks'}</option>
+						<option value="0">{l s='Select a module above before choosing from available hooks'}</option>
 					{else}
 						{foreach $hooks as $hook}
 							<option value="{$hook['id_hook']}" {if $id_hook == $hook['id_hook']} selected="selected"{/if}>{$hook['name']}{if $hook['name'] != $hook['title']} ({$hook['title']}){/if}</option>

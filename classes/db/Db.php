@@ -315,6 +315,25 @@ abstract class DbCore
 	}
 
 	/**
+	 * Disable the use of the cache
+	 *
+	 */
+	public function disableCache()
+	{
+		$this->is_cache_enabled = false;
+	}
+
+	/**
+	 * Enable & flush the cache
+	 *
+	 */
+	public function enableCache()
+	{
+		$this->is_cache_enabled = true;
+		Cache::getInstance()->flush();
+	}
+
+	/**
 	 * Closes connection to database
 	 */
 	public function __destruct()

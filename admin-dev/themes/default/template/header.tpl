@@ -247,7 +247,7 @@
 							var method = $(this).data('method');
 
 							if(method == 'add')
-								var name = prompt('{l s='Please provide name for this shortcut' js=1}', '{$quick_access_current_link_name.0|truncate:32}');
+								var name = prompt('{l s='Please name this shortcut:' js=1}', '{$quick_access_current_link_name.0|truncate:32}');
 
 							if(method == 'add' && name || method == 'remove')
 							{
