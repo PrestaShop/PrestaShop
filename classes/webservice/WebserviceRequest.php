@@ -1130,7 +1130,7 @@ class WebserviceRequestCore
 							}
 							else
 							{
-								if (isset($this->resourceConfiguration['fields'][$field]['getter']))
+								if (!isset($this->resourceConfiguration['fields'][$field]['getter']))
 								{
 									$this->setError(400, 'The field "'.$field.'" is dynamic. It is not possible to filter GET query with this field.', 34);
 									return false;
