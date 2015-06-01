@@ -41,6 +41,11 @@ $(document).ready(function(){
             alert(aeuc_tos_err_str);
             return;
         }
+        if (aeuc_has_virtual_products === true && handler.checkVirtualProductRevocation() === false)
+        {
+            alert(aeuc_virt_prod_err_str);
+            return;
+        }
         if (handler.selected_option === null) {
             alert(aeuc_no_pay_err_str);
             return;
@@ -105,4 +110,12 @@ var PaymentOptionHandler = function() {
 
         return false;
     };
+
+    this.checkVirtualProductRevocation = function() {
+        if ($('#revocation_vp_terms_agreed').prop('checked')) {
+            return true;
+        }
+
+        return false;
+    }
 };
