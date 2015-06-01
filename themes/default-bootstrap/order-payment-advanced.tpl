@@ -136,9 +136,11 @@
             <th class="cart_description item">{l s='Description'}</th>
             {if $PS_STOCK_MANAGEMENT}
                 {assign var='col_span_subtotal' value='3'}
+                {assign var='col_span_total' value='7'}
                 <th class="cart_avail item text-center">{l s='Availability'}</th>
             {else}
                 {assign var='col_span_subtotal' value='2'}
+                {assign var='col_span_total' value='6'}
             {/if}
             <th class="cart_unit item text-right">{l s='Unit price'}</th>
             <th class="cart_quantity item text-center">{l s='Qty'}</th>
@@ -363,6 +365,7 @@
                 </td>
             {/if}
         </tr>
+        {hook h="displayAfterShoppingCartBlock" colspan_total=$col_span_total}
         </tfoot>
         <tbody>
         {assign var='odd' value=0}
@@ -470,6 +473,7 @@
         {/if}
     </table>
 </div> <!-- end order-detail-content -->
+
 
 
 <p class="cart_navigation clearfix">
