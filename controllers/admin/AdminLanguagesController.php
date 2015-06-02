@@ -446,6 +446,8 @@ class AdminLanguagesControllerCore extends AdminController
 	 * Copy a no-product image
 	 *
 	 * @param string $language Language iso_code for no_picture image filename
+	 *
+	 * @return void|false
 	 */
 	public function copyNoPictureImage($language)
 	{

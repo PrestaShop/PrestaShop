@@ -1874,6 +1874,7 @@ class AdminControllerCore extends Controller
 		if (Validate::isLoadedObject($this->context->employee))
 		{
 			$accesses = Profile::getProfileAccesses($this->context->employee->id_profile, 'class_name');
+			$helperShop = new HelperShop();
 			/* Hooks are voluntary out the initialize array (need those variables already assigned) */
 			$bo_color = empty($this->context->employee->bo_color) ? '#FFFFFF' : $this->context->employee->bo_color;
 			$this->context->smarty->assign(array(
@@ -1892,7 +1893,7 @@ class AdminControllerCore extends Controller
 				'bo_query' => Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query'))),
 				'quick_access' => $quick_access,
 				'multi_shop' => Shop::isFeatureActive(),
-				'shop_list' => Helper::renderShopList(),
+				'shop_list' => $helperShop->getRenderedShopList(),
 				'shop' => $this->context->shop,
 				'shop_group' => new ShopGroup((int)Shop::getContextShopGroupID()),
 				'is_multishop' => $is_multishop,
@@ -2532,6 +2533,8 @@ class AdminControllerCore extends Controller
 		$this->addjQueryPlugin('growl', null, false);
 		$this->addJqueryUI(array('ui.slider', 'ui.datepicker'));
 
+		Media::addJsDef(array('host_mode' => (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)));
+
 		$this->addJS(array(
 			_PS_JS_DIR_.'admin.js',
 			_PS_JS_DIR_.'tools.js',
@@ -2551,6 +2554,17 @@ class AdminControllerCore extends Controller
 			$this->addJS(_PS_JS_DIR_.'admin/notifications.js');
 
 		$this->addJS('https://cdn.statuspage.io/se-v2.js');
+
+		if (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)
+		{
+			$this->addJS('https://cdn.statuspage.io/se-v2.js');
+
+			Media::addJsDefL('status_operational', $this->l('Operational'));
+			Media::addJsDefL('status_degraded_performance', $this->l('Degraded Performance'));
+			Media::addJsDefL('status_partial_outage', $this->l('Partial Outage'));
+			Media::addJsDefL('status_major_outage', $this->l('Major Outage'));
+			Media::addJsDef(array('host_cluster' => defined('_PS_HOST_CLUSTER_') ? _PS_HOST_CLUSTER_ : 'fr1'));
+		}
 
 		// Execute Hook AdminController SetMedia
 		Hook::exec('actionAdminControllerSetMedia');

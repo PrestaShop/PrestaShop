@@ -248,7 +248,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 			'form' => array(
 				'id_form' => 'step_carrier_ranges',
 				'input' => array(
-					array(
+					'shipping_handling' => array(
 						'type' => 'switch',
 						'label' => $this->l('Add handling costs'),
 						'name' => 'shipping_handling',
@@ -269,7 +269,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 						),
 						'hint' => $this->l('Include the handling costs (as set in Shipping > Preferences) in the final carrier price.')
 					),
-					array(
+					'is_free' => array(
 						'type' => 'switch',
 						'label' => $this->l('Free shipping'),
 						'name' => 'is_free',
@@ -288,7 +288,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 							)
 						),
 					),
-					array(
+					'shipping_method' => array(
 						'type' => 'radio',
 						'label' => $this->l('Billing'),
 						'name' => 'shipping_method',
@@ -308,7 +308,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 							)
 						)
 					),
-					array(
+					'id_tax_rules_group' => array(
 						'type' => 'select',
 						'label' => $this->l('Tax'),
 						'name' => 'id_tax_rules_group',
@@ -322,7 +322,7 @@ class AdminCarrierWizardControllerCore extends AdminController
 							)
 						)
 					),
-					array(
+					'range_behavior' => array(
 						'type' => 'select',
 						'label' => $this->l('Out-of-range behavior'),
 						'name' => 'range_behavior',
@@ -342,13 +342,18 @@ class AdminCarrierWizardControllerCore extends AdminController
 						),
 						'hint' => $this->l('Out-of-range behavior occurs when no defined range matches the customer\'s cart (e.g. when the weight of the cart is greater than the highest weight limit defined by the weight ranges).')
 					),
-					array(
+					'zones' => array(
 						'type' => 'zone',
 						'name' => 'zones'
 					)
 				),
 
 			));
+
+		if (Configuration::get('PS_ATCP_SHIPWRAP'))
+		{
+			unset($this->fields_form['form']['input']['id_tax_rules_group']);
+		}
 
 		$tpl_vars = array();
 		$tpl_vars['PS_WEIGHT_UNIT'] = Configuration::get('PS_WEIGHT_UNIT');

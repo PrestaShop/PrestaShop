@@ -34,8 +34,8 @@
         <td class="center small white">{dateFormat date=$order->date_add full=0}</td>
         <td class="center small white">{$order->getUniqReference()}</td>
         <td class="center small white">
-            {if $data.addresses.invoice->vat_number}
-                {$data.addresses.invoice->vat_number}
+            {if $addresses.invoice->vat_number}
+                {$addresses.invoice->vat_number}
             {else}
                 --
             {/if}

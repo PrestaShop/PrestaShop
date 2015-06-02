@@ -476,18 +476,21 @@ abstract class ModuleCore
 		$upgrade = &self::$modules_cache[$this->name]['upgrade'];
 		foreach ($upgrade['upgrade_file_left'] as $num => $file_detail)
 		{
-			if (function_exists($file_detail['upgrade_function']))
-			{
-				$upgrade['success'] = false;
-				$upgrade['duplicate'] = true;
-				break;
-			}
+			foreach ($file_detail['upgrade_function'] as $item)
+				if (function_exists($item))
+				{
+					$upgrade['success'] = false;
+					$upgrade['duplicate'] = true;
+					break 2;
+				}
+
 			include($file_detail['file']);
 
 			// Call the upgrade function if defined
 			$upgrade['success'] = false;
-			if (function_exists($file_detail['upgrade_function']))
-				$upgrade['success'] = $file_detail['upgrade_function']($this);
+			foreach ($file_detail['upgrade_function'] as $item)
+				if (function_exists($item))
+					$upgrade['success'] = $item($this);
 
 			// Set detail when an upgrade succeed or failed
 			if ($upgrade['success'])
@@ -588,7 +591,10 @@ abstract class ModuleCore
 						$list[] = array(
 							'file' => $upgrade_path.$file,
 							'version' => $file_version,
-							'upgrade_function' => 'upgrade_module_'.str_replace('.', '_', $file_version));
+							'upgrade_function' => array(
+								'upgrade_module_'.str_replace('.', '_', $file_version),
+								'upgradeModule'.str_replace('.', '', $file_version))
+							);
 					}
 				}
 		}
@@ -1116,7 +1122,7 @@ abstract class ModuleCore
 		}
 
 		if (!$r && class_exists($module_name, false))
-			$r = self::$_INSTANCE[$module_name] = new $module_name;
+			$r = self::$_INSTANCE[$module_name] = Adapter_ServiceLocator::get($module_name);
 
 		if (Module::$_log_modules_perfs)
 		{
@@ -1331,9 +1337,8 @@ abstract class ModuleCore
 				// If class exists, we just instanciate it
 				if (class_exists($module, false))
 				{
-					/** @var Module $tmp_module */
-					$tmp_module = new $module;
-
+					$tmp_module = Adapter_ServiceLocator::get($module);
+					
 					$item = new stdClass();
 					$item->id = $tmp_module->id;
 					$item->warning = $tmp_module->warning;
@@ -2022,6 +2027,34 @@ abstract class ModuleCore
 		return $output;
 	}
 
+	/**
+	* Helper displaying warning message(s)
+	* @param string|array $error
+	* @return string
+	*/
+	public function displayWarning($warning)
+	{
+		$output = '
+		<div class="bootstrap">
+		<div class="module_warning alert alert-warning" >
+			<button type="button" class="close" data-dismiss="alert">&times;</button>';
+
+		if (is_array($warning))
+		{
+			$output .= '<ul>';
+			foreach ($warning as $msg)
+				$output .= '<li>'.$msg.'</li>';
+			$output .= '</ul>';
+		}
+		else
+			$output .= $warning;
+
+		// Close div openned previously
+		$output .= '</div></div>';
+
+		return $output;
+	}
+
 	public function displayConfirmation($string)
 	{
 		$output = '
@@ -2697,8 +2730,10 @@ abstract class ModuleCore
 						throw new Exception(sprintf(Tools::displayError('The method %1$s in the class %2$s is already overridden by the module %3$s version %4$s at %5$s.'), $method->getName(), $classname, $name[1], $version[1], $date[1]));
 					throw new Exception(sprintf(Tools::displayError('The method %1$s in the class %2$s is already overridden.'), $method->getName(), $classname));
 				}
-				else
-					$module_file = preg_replace('/((:?public|private|protected)\s+(static\s+)?function\s+(?:\b'.$method->getName().'\b))/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1", $module_file);
+
+				$module_file = preg_replace('/((:?public|private|protected)\s+(static\s+)?function\s+(?:\b'.$method->getName().'\b))/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1", $module_file);
+				if ($module_file === NULL)
+					throw new Exception(sprintf(Tools::displayError('Failed to override method %1$s in class %2$s.'), $method->getName(), $classname));
 			}
 
 			// Check if none of the properties already exists in the override class
@@ -2706,8 +2741,20 @@ abstract class ModuleCore
 			{
 				if ($override_class->hasProperty($property->getName()))
 					throw new Exception(sprintf(Tools::displayError('The property %1$s in the class %2$s is already defined.'), $property->getName(), $classname));
-				else
-					$module_file = preg_replace('/(:?public|private|protected|const)\s+(static\s+)?(\$?\b'.$property->getName().'\b)/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1 $2$3", $module_file);
+
+				$module_file = preg_replace('/((?:public|private|protected)\s)\s*(static\s)?\s*(\$\b'.$property->getName().'\b)/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1$2$3", $module_file);
+				if ($module_file === NULL)
+					throw new Exception(sprintf(Tools::displayError('Failed to override property %1$s in class %2$s.'), $property->getName(), $classname));
+			}
+
+			foreach ($module_class->getConstants() as $constant => $value)
+			{
+				if ($override_class->hasConstant($constant))
+					throw new Exception(sprintf(Tools::displayError('The constant %1$s in the class %2$s is already defined.'), $constant, $classname));
+
+				$module_file = preg_replace('/(const\s)\s*(\b'.$constant.'\b)/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1$2", $module_file);
+				if ($module_file === NULL)
+					throw new Exception(sprintf(Tools::displayError('Failed to override constant %1$s in class %2$s.'), $constant, $classname));
 			}
 
 			// Insert the methods from module override in override
@@ -2743,13 +2790,29 @@ abstract class ModuleCore
 				eval(preg_replace(array('#^\s*<\?(?:php)?#', '#class\s+'.$classname.'(\s+extends\s+([a-z0-9_]+)(\s+implements\s+([a-z0-9_]+))?)?#i'), array(' ', 'class '.$classname.'Override'.$uniq), implode('', $module_file)));
 				$module_class = new ReflectionClass($classname.'Override'.$uniq);
 
-				// Add foreach function a comment with the module name and the module version
+				// For each method found in the override, prepend a comment with the module name and version
 				foreach ($module_class->getMethods() as $method)
+				{
 					$module_file = preg_replace('/((:?public|private|protected)\s+(static\s+)?function\s+(?:\b'.$method->getName().'\b))/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1", $module_file);
+					if ($module_file === NULL)
+						throw new Exception(sprintf(Tools::displayError('Failed to override method %1$s in class %2$s.'), $method->getName(), $classname));
+				}
 
-				// same as precedent but for variable
+				// Same loop for properties
 				foreach ($module_class->getProperties() as $property)
-					$module_file = preg_replace('/(:?public|private|protected|const)\s+(static\s+)?(\$?\b'.$property->getName().'\b)/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1 $2$3", $module_file);
+				{
+					$module_file = preg_replace('/((?:public|private|protected)\s)\s*(static\s)?\s*(\$\b'.$property->getName().'\b)/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1$2$3", $module_file);
+					if ($module_file === NULL)
+						throw new Exception(sprintf(Tools::displayError('Failed to override property %1$s in class %2$s.'), $property->getName(), $classname));
+				}
+
+				// Same loop for constants
+				foreach ($module_class->getConstants() as $constant => $value)
+				{
+					$module_file = preg_replace('/(const\s)\s*(\b'.$constant.'\b)/ism', "/*\n\t* module: ".$this->name."\n\t* date: ".date('Y-m-d H:i:s')."\n\t* version: ".$this->version."\n\t*/\n\t$1$2", $module_file);
+					if ($module_file === NULL)
+						throw new Exception(sprintf(Tools::displayError('Failed to override constant %1$s in class %2$s.'), $constant, $classname));
+				}
 			}
 
 			file_put_contents($override_dest, preg_replace($pattern_escape_com, '', $module_file));
@@ -2839,7 +2902,26 @@ abstract class ModuleCore
 				// Replace the declaration line by #--remove--#
 				foreach ($override_file as $line_number => &$line_content)
 				{
-					if (preg_match('/(public|private|protected|const)\s+(static\s+)?(\$)?'.$property->getName().'/i', $line_content))
+					if (preg_match('/(public|private|protected)\s+(static\s+)?(\$)?'.$property->getName().'/i', $line_content))
+					{
+						if (preg_match('/\* module: ('.$this->name.')/ism', $override_file[$line_number - 4]))
+							$override_file[$line_number - 5] = $override_file[$line_number - 4] = $override_file[$line_number - 3] = $override_file[$line_number - 2] = $override_file[$line_number - 1] = '#--remove--#';
+						$line_content = '#--remove--#';
+						break;
+					}
+				}
+			}
+
+			// Remove properties from override file
+			foreach ($module_class->getConstants() as $constant => $value)
+			{
+				if (!$override_class->hasConstant($constant))
+					continue;
+
+				// Replace the declaration line by #--remove--#
+				foreach ($override_file as $line_number => &$line_content)
+				{
+					if (preg_match('/(const)\s+(static\s+)?(\$)?'.$constant.'/i', $line_content))
 					{
 						if (preg_match('/\* module: ('.$this->name.')/ism', $override_file[$line_number - 4]))
 							$override_file[$line_number - 5] = $override_file[$line_number - 4] = $override_file[$line_number - 3] = $override_file[$line_number - 2] = $override_file[$line_number - 1] = '#--remove--#';
@@ -2888,6 +2970,31 @@ abstract class ModuleCore
 		Tools::generateIndex();
 
 		return true;
+	}
+
+	/**
+	 * Return the hooks list where this module can be hooked.
+	 *
+	 * @return array Hooks list.
+	 */
+	public function getPossibleHooksList()
+	{
+		$hooks_list = Hook::getHooks();
+		$possible_hooks_list = array();
+		foreach ($hooks_list as &$current_hook)
+		{
+			$hook_name = $current_hook['name'];
+			$retro_hook_name = Hook::getRetroHookName($hook_name);
+
+			if (is_callable(array($this, 'hook'.ucfirst($hook_name))) || is_callable(array($this, 'hook'.ucfirst($retro_hook_name))))
+				$possible_hooks_list[] = array(
+					'id_hook' => $current_hook['id_hook'],
+					'name' => $hook_name,
+					'title' => $current_hook['title'],
+				);
+		}
+
+		return $possible_hooks_list;
 	}
 }
 

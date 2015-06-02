@@ -852,8 +852,9 @@ class AdminManufacturersControllerCore extends AdminController
 
 	public function processSave()
 	{
-		parent::processSave();
 		if (Tools::isSubmit('submitAddaddress'))
 			$this->display = 'editaddresses';
+
+		return parent::processSave();
 	}
 }

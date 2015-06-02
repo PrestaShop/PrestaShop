@@ -22,19 +22,12 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<script type="text/javascript">
-	var one_error = '{l s='There is one error.'}';
-	var more_errors = '{l s='There are several errors.'}';
-</script>
 <div id="login-panel">
 	<div id="login-header">
 		<h1 class="text-center">
-			<img id="logo" width="40px" src="{$img_dir}icon-prestashop.svg"/>
-			PRESTASHOP
+			<img id="logo" src="{$img_dir}prestashop@2x.png" width="123px" height="24px" alt="PrestaShop" />
 		</h1>
-		<hr/>
-		<h4 class="text-center">{$shop_name}</h4>
-		<hr/>
+		<div class="text-center">{$ps_version}</div>
 		<div id="error" class="hide alert alert-danger">
 		{if isset($errors)}
 			<h4>
@@ -56,47 +49,42 @@
 		<div class="alert alert-warning">{$warningSslMessage}</div>
 		{/if}
 	</div>
+	<div id="shop-img"><img src="{$img_dir}preston-login@2x.png" alt="{$shop_name}" width="69.5px" height="118.5px" /></div>
 	<div class="flip-container">
 		<div class="flipper">
 			<div class="front panel">
+				<h2 class="text-center">{$shop_name}</h2>
 				{if !isset($wrong_folder_name) && !isset($wrong_install_name)}
 				<form action="#" id="login_form" method="post">
+					<input type="hidden" name="redirect" id="redirect" value="{$redirect}"/>
 					<div class="form-group">
 						<label class="control-label" for="email">{l s='Email address'}</label>
-						<div class="input-group">
-							<span class="input-group-addon"><i class="icon-envelope"></i></span>
-							<input name="email" type="email" id="email" class="form-control" value="{if isset($email)}{$email|escape:'html':'UTF-8'}{/if}" autofocus="autofocus" tabindex="1" placeholder="test@example.com" />
-						</div>
+						<input name="email" type="email" id="email" class="form-control" value="{if isset($email)}{$email|escape:'html':'UTF-8'}{/if}" autofocus="autofocus" tabindex="1" placeholder="&#xf0e0 test@example.com" />
 					</div>
 					<div class="form-group">
 						<label class="control-label" for="passwd">
 							{l s='Password'}
 						</label>
-						<div class="input-group">
-							<span class="input-group-addon"><i class="icon-key"></i></span>
-							<input name="passwd" type="password" id="passwd" class="form-control" value="{if isset($password)}{$password|escape:'html':'UTF-8'}{/if}" tabindex="2" placeholder="{l s='Password'}" />
-						</div>
+						<input name="passwd" type="password" id="passwd" class="form-control" value="{if isset($password)}{$password|escape:'html':'UTF-8'}{/if}" tabindex="2" placeholder="&#xf084 {l s='Password'}" />
 					</div>
-					<div class="form-group clearfix">
-						<div id="remind-me" class="checkbox pull-left">
-							<label for="stay_logged_in">
-								<input name="stay_logged_in" type="checkbox" id="stay_logged_in" value="1"	tabindex="3"/>
-								{l s='Keep me logged in'}
-							</label>
-						</div>
-						<a href="#" class="show-forgot-password pull-right" >
-							{l s='Lost password'}
-						</a>
-					</div>
-					<div class="panel-footer">
-						<button name="submitLogin" type="submit" tabindex="4" class="btn btn-default btn-lg btn-block ladda-button" data-style="slide-up" data-spinner-color="black" >
+					<div class="form-group row-padding-top">
+						<button name="submitLogin" type="submit" tabindex="4" class="btn btn-primary btn-lg btn-block ladda-button" data-style="slide-up" data-spinner-color="white" >
 							<span class="ladda-label">
-								<i class="icon-check text-success"></i>
-								{l s='Sign in'}
+								{l s='Log in'}
 							</span>
 						</button>
 					</div>
-					<input type="hidden" name="redirect" id="redirect" value="{$redirect}"/>
+					<div class="form-group">
+						<div id="remind-me" class="checkbox pull-left">
+							<label for="stay_logged_in">
+								<input name="stay_logged_in" type="checkbox" id="stay_logged_in" value="1"	tabindex="3"/>
+								{l s='Stay logged in'}
+							</label>
+						</div>
+						<a href="#" class="show-forgot-password pull-right" >
+							{l s='I forgot my password'}
+						</a>
+					</div>
 				</form>
 			</div>
 
@@ -110,10 +98,7 @@
 						<label class="control-label" for="email_forgot">
 							{l s='Email'}
 						</label>
-						<div class="input-group">
-							<span class="input-group-addon"><i class="icon-envelope"></i></span>
-							<input type="text" name="email_forgot" id="email_forgot" class="form-control" autofocus="autofocus" tabindex="5" placeholder="test@example.com" />
-						</div>
+						<input type="text" name="email_forgot" id="email_forgot" class="form-control" autofocus="autofocus" tabindex="5" placeholder="&#xf0e0 test@example.com" />
 					</div>
 					<div class="panel-footer">
 						<button type="button" href="#" class="btn btn-default show-login-form" tabindex="7">

@@ -261,12 +261,28 @@
 							{if isset($HOOK_EXTRACARRIER_ADDR) &&  isset($HOOK_EXTRACARRIER_ADDR.$id_address)}{$HOOK_EXTRACARRIER_ADDR.$id_address}{/if}
 						</div>
 						{foreachelse}
+							{assign var='errors' value=' '|explode:''}
 							<p class="alert alert-warning" id="noCarrierWarning">
-								{foreach $cart->getDeliveryAddressesWithoutCarriers(true) as $address}
+								{foreach $cart->getDeliveryAddressesWithoutCarriers(true, $errors) as $address}
 									{if empty($address->alias)}
 										{l s='No carriers available.'}
 									{else}
-										{l s='No carriers available for the address "%s".' sprintf=$address->alias}
+										{assign var='flag_error_message' value=false}
+										{foreach $errors as $error}
+											{if $error == Carrier::SHIPPING_WEIGHT_EXCEPTION}
+												{$flag_error_message = true}
+												{l s='The product selection cannot be delivered by the available carrier(s): it is too heavy. Please amend your cart to lower its weight.'}
+											{elseif $error == Carrier::SHIPPING_PRICE_EXCEPTION}
+												{$flag_error_message = true}
+												{l s='The product selection cannot be delivered by the available carrier(s). Please amend your cart.'}
+											{elseif $error == Carrier::SHIPPING_SIZE_EXCEPTION}
+												{$flag_error_message = true}
+												{l s='The product selection cannot be delivered by the available carrier(s): its size does not fit. Please amend your cart to reduce its size.'}
+											{/if}
+										{/foreach}
+										{if !$flag_error_message}
+											{l s='No carriers available for the address "%s".' sprintf=$address->alias}
+										{/if}
 									{/if}
 									{if !$address@last}
 										<br />
@@ -332,16 +348,21 @@
 				{/if}
 				{/if}
 			{/if}
-			{if $conditions AND $cms_id}
+			{if $conditions && $cms_id && !$advanced_payment_api}
 				{if $opc}
 					<hr style="" />
 				{/if}
-				<p class="carrier_title">{l s='Terms of service'}</p>
-				<p class="checkbox">
-					<input type="checkbox" name="cgv" id="cgv" value="1" {if $checkedTOS}checked="checked"{/if} />
-					<label for="cgv">{l s='I agree to the terms of service and will adhere to them unconditionally.'}</label>
-					<a href="{$link_conditions|escape:'html':'UTF-8'}" class="iframe" rel="nofollow">{l s='(Read the Terms of Service)'}</a>
-				</p>
+                {if $override_tos_display }
+                    {$override_tos_display}
+                {else}
+                    <div class="box">
+                        <p class="checkbox">
+                            <input type="checkbox" name="cgv" id="cgv" value="1" {if $checkedTOS}checked="checked"{/if} />
+                            <label for="cgv">{l s='I agree to the terms of service and will adhere to them unconditionally.'}</label>
+                            <a href="{$link_conditions|escape:'html':'UTF-8'}" class="iframe" rel="nofollow">{l s='(Read the Terms of Service)'}</a>
+                        </p>
+                    </div>
+                {/if}
 			{/if}
 		</div> <!-- end delivery_options_address -->
 		{if !$opc}

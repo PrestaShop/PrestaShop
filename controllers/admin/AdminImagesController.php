@@ -431,8 +431,14 @@ class AdminImagesControllerCore extends AdminController
 	}
 
 	/**
-	  * Delete resized image then regenerate new one with updated settings
-	  */
+	 * Delete resized image then regenerate new one with updated settings
+	 *
+	 * @param string $dir
+	 * @param array  $type
+	 * @param bool   $product
+	 *
+	 * @return bool
+	 */
 	protected function _deleteOldImages($dir, $type, $product = false)
 	{
 		if (!is_dir($dir))

@@ -66,7 +66,7 @@ class ToolsCore
 				break;
 		}
 
-		$bytes = static::getBytes($length);
+		$bytes = Tools::getBytes($length);
 		$position = 0;
 		$result = '';
 
@@ -439,6 +439,16 @@ class ToolsCore
 			return stripslashes(urldecode(preg_replace('/((\%5C0+)|(\%00+))/i', '', urlencode($ret))));
 
 		return $ret;
+	}
+
+
+	/**
+	 * Get all values from $_POST/$_GET
+	 * @return mixed
+	 */
+	public static function getAllValues()
+	{
+		return $_POST + $_GET;
 	}
 
 	public static function getIsset($key)
@@ -2169,6 +2179,7 @@ class ToolsCore
 		// Default values for parameters
 		if (is_null($path))
 			$path = _PS_ROOT_DIR_.'/.htaccess';
+
 		if (is_null($cache_control))
 			$cache_control = (int)Configuration::get('PS_HTACCESS_CACHE_CONTROL');
 		if (is_null($disable_multiviews))
@@ -3413,7 +3424,7 @@ exit;
 		return strip_tags(stripslashes($description));
 	}
 
-	public static function purifyHTML($html, $uri_unescape = null)
+	public static function purifyHTML($html, $uri_unescape = null, $allow_style = false)
 	{
 		static $use_html_purifier = null;
 		static $purifier = null;
@@ -3430,10 +3441,6 @@ exit;
 			{
 				$config = HTMLPurifier_Config::createDefault();
 
-				// Set some HTML5 properties
-				$config->set('HTML.DefinitionID', 'html5-definitions'); // unqiue id
-				$config->set('HTML.DefinitionRev', 1);
-
 				$config->set('Attr.EnableID', true);
 				$config->set('HTML.Trusted', true);
 				$config->set('Cache.SerializerPath', _PS_CACHE_DIR_.'purifier');
@@ -3445,12 +3452,12 @@ exit;
 				{
 					$config->set('HTML.SafeIframe', true);
 					$config->set('HTML.SafeObject', true);
-					$config->set('URI.SafeIframeRegexp','/.*/');
+					$config->set('URI.SafeIframeRegexp', '/.*/');
 				}
 
 				/** @var HTMLPurifier_HTMLDefinition|HTMLPurifier_HTMLModule $def */
 				// http://developers.whatwg.org/the-video-element.html#the-video-element
-				if ($def = $config->maybeGetRawHTMLDefinition())
+				if ($def = $config->getHTMLDefinition(true))
 				{
 					$def->addElement('video', 'Block', 'Optional: (source, Flow) | (Flow, source) | Flow', 'Common', array(
 						'src' => 'URI',
@@ -3463,6 +3470,10 @@ exit;
 					));
 					$def->addElement('source', 'Block', 'Flow', 'Common', array(
 						'src' => 'URI',
+						'type' => 'Text',
+					));
+					if ($allow_style)
+						$def->addElement('style', 'Block', 'Flow', 'Common', array(
 						'type' => 'Text',
 					));
 				}

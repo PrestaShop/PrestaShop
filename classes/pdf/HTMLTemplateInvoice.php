@@ -48,7 +48,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
 		$id_lang = Context::getContext()->language->id;
 		$this->title = $order_invoice->getInvoiceNumberFormatted($id_lang);
-		// footer informations
+
 		$this->shop = new Shop((int)$this->order->id_shop);
 	}
 
@@ -136,14 +136,22 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 		$invoice_address = new Address((int)$this->order->id_address_invoice);
 		$country = new Country((int)$invoice_address->id_country);
 
-		$formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
+		if ($this->order_invoice->invoice_address)
+			$formatted_invoice_address = $this->order_invoice->invoice_address;
+		else
+			$formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
 
 		$delivery_address = null;
 		$formatted_delivery_address = '';
 		if (isset($this->order->id_address_delivery) && $this->order->id_address_delivery)
 		{
-			$delivery_address = new Address((int)$this->order->id_address_delivery);
-			$formatted_delivery_address = AddressFormat::generateAddress($delivery_address, array(), '<br />', ' ');
+			if ($this->order_invoice->delivery_address)
+				$formatted_delivery_address = $this->order_invoice->delivery_address;
+			else
+			{
+				$delivery_address = new Address((int)$this->order->id_address_delivery);
+				$formatted_delivery_address = AddressFormat::generateAddress($delivery_address, array(), '<br />', ' ');
+			}
 		}
 
 		$customer = new Customer((int)$this->order->id_customer);
@@ -158,6 +166,11 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			{
 				$has_discount = true;
 				$order_detail['unit_price_tax_excl_before_specific_price'] = $order_detail['unit_price_tax_excl_including_ecotax'] + $order_detail['reduction_amount_tax_excl'];
+			}
+			elseif ($order_detail['reduction_percent'] > 0)
+			{
+				$has_discount = true;
+				$order_detail['unit_price_tax_excl_before_specific_price'] = (100 * $order_detail['unit_price_tax_excl_including_ecotax']) / (100 - 15);
 			}
 
 			// Set tax_code

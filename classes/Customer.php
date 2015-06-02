@@ -500,9 +500,11 @@ class CustomerCore extends ObjectModel
 	 * Light back office search for customers
 	 *
 	 * @param string $query Searched string
-	 * @return array Corresponding customers
+	 * @param null|int $limit Limit query results
+	 * @return array|false|mysqli_result|null|PDOStatement|resource Corresponding customers
+	 * @throws PrestaShopDatabaseException
 	 */
-	public static function searchByName($query)
+	public static function searchByName($query, $limit = null)
 	{
 		$sql_base = 'SELECT *
 				FROM `'._DB_PREFIX_.'customer`';
@@ -510,6 +512,10 @@ class CustomerCore extends ObjectModel
 		$sql .= ' UNION ('.$sql_base.' WHERE `id_customer` = '.(int)$query.' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
 		$sql .= ' UNION ('.$sql_base.' WHERE `lastname` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
 		$sql .= ' UNION ('.$sql_base.' WHERE `firstname` LIKE \'%'.pSQL($query).'%\' '.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).')';
+
+		if ($limit)
+			$sql .= ' LIMIT 0, '.(int)$limit;
+
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 	}
 

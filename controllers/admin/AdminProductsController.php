@@ -456,21 +456,17 @@ class AdminProductsControllerCore extends AdminController
 	public function ajaxProcessGetCategoryTree()
 	{
 		$category = Tools::getValue('category', Category::getRootCategory()->id);
-		$fullTree = Tools::getValue('fullTree', 0);
+		$full_tree = Tools::getValue('fullTree', 0);
+		$use_check_box = Tools::getValue('useCheckBox', 1);
 		$selected = Tools::getValue('selected', array());
 		$input_name = str_replace(array('[', ']'), '', Tools::getValue('inputName', null));
-		$type = Tools::getValue('type', '');
-		if ($type == 'categories-tree')
-			$use_check_box = false;
-		else
-			$use_check_box = true;
 
 		$tree = new HelperTreeCategories('subtree_associated_categories');
 		$tree->setTemplate('subtree_associated_categories.tpl')
 			->setUseCheckBox($use_check_box)
 			->setUseSearch(true)
 			->setSelectedCategories($selected)
-			->setFullTree($fullTree)
+			->setFullTree($full_tree)
 			->setChildrenOnly(true)
 			->setNoJS(true)
 			->setRootCategory($category);
@@ -549,6 +545,8 @@ class AdminProductsControllerCore extends AdminController
 
 	public function ajaxProcessAddAttachment()
 	{
+		if ($this->tabAccess['edit'] === '0')
+			return die(Tools::jsonEncode(array('error' => $this->l('You do not have the right permission'))));
 		if (isset($_FILES['attachment_file']))
 		{
 			if ((int)$_FILES['attachment_file']['error'] === 1)
@@ -1637,6 +1635,8 @@ class AdminProductsControllerCore extends AdminController
 
 	public function ajaxProcessUpdateImagePosition()
 	{
+		if ($this->tabAccess['edit'] === '0')
+			return die(Tools::jsonEncode(array('error' => $this->l('You do not have the right permission'))));
 		$res = false;
 		if ($json = Tools::getValue('json'))
 		{
@@ -1658,6 +1658,8 @@ class AdminProductsControllerCore extends AdminController
 
 	public function ajaxProcessUpdateCover()
 	{
+		if ($this->tabAccess['edit'] === '0')
+			return die(Tools::jsonEncode(array('error' => $this->l('You do not have the right permission'))));
 		Image::deleteCover((int)Tools::getValue('id_product'));
 		$img = new Image((int)Tools::getValue('id_image'));
 		$img->cover = 1;
@@ -1761,7 +1763,10 @@ class AdminProductsControllerCore extends AdminController
 	/**
 	 * Add or update a product image
 	 *
-	 * @param object $product Product object to add image
+	 * @param Product $product Product object to add image
+	 * @param string  $method
+	 *
+	 * @return int|false
 	 */
 	public function addProductImage($product, $method = 'auto')
 	{
@@ -1792,11 +1797,16 @@ class AdminProductsControllerCore extends AdminController
 		@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.$product->id.'_'.$this->context->shop->id.'.jpg');
 		return ((isset($id_image) && is_int($id_image) && $id_image) ? $id_image : false);
 	}
+
 	/**
 	 * Copy a product image
 	 *
-	 * @param int $id_product Product Id for product image filename
-	 * @param int $id_image Image Id for product image filename
+	 * @param int    $id_product Product Id for product image filename
+	 * @param int    $id_image   Image Id for product image filename
+	 * @param string $method
+	 *
+	 * @return void|false
+	 * @throws PrestaShopException
 	 */
 	public function copyImage($id_product, $id_image, $method = 'auto')
 	{
@@ -2263,7 +2273,9 @@ class AdminProductsControllerCore extends AdminController
 	/**
 	 * Update product download
 	 *
-	 * @param object $product Product
+	 * @param Product $product
+	 * @param int     $edit
+	 *
 	 * @return bool
 	 */
 	public function updateDownloadProduct($product, $edit = 0)
@@ -2545,10 +2557,15 @@ class AdminProductsControllerCore extends AdminController
 	{
 		$manufacturers = Manufacturer::getManufacturers(false, 0, true, false, false, false, true);
 		$jsonArray = array();
-			if ($manufacturers)
-				foreach ($manufacturers as $manufacturer)
-					$jsonArray[] = '{"optionValue": "'.(int)$manufacturer['id_manufacturer'].'", "optionDisplay": "'.htmlspecialchars(trim($manufacturer['name'])).'"}';
-			die('['.implode(',', $jsonArray).']');
+
+		if ($manufacturers)
+			foreach ($manufacturers as $manufacturer)
+			{
+				$tmp = array("optionValue" => $manufacturer['id_manufacturer'], "optionDisplay" => htmlspecialchars(trim($manufacturer['name'])));
+				$jsonArray[] = Tools::jsonEncode($tmp);
+			}
+
+		die('['.implode(',', $jsonArray).']');
 	}
 
 	/**
@@ -2713,6 +2730,7 @@ class AdminProductsControllerCore extends AdminController
 	 * renderForm contains all necessary initialization needed for all tabs
 	 *
 	 * @return string|void
+	 * @throws PrestaShopException
 	 */
 	public function renderForm()
 	{
@@ -4537,7 +4555,7 @@ class AdminProductsControllerCore extends AdminController
 						}
 					}
 
-					if (!Warehouse::getPackWarehouses((int)$obj->id))
+					if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && !Warehouse::getPackWarehouses((int)$obj->id))
 						$this->displayWarning($this->l('You must have a common warehouse between this pack and its product.'));
 				}
 
@@ -4771,6 +4789,8 @@ class AdminProductsControllerCore extends AdminController
 
 	public function ajaxProcessProductQuantity()
 	{
+		if ($this->tabAccess['edit'] === '0')
+			return die(Tools::jsonEncode(array('error' => $this->l('You do not have the right permission'))));
 		if (!Tools::getValue('actionQty'))
 			return Tools::jsonEncode(array('error' => $this->l('Undefined action')));
 
@@ -4902,9 +4922,12 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['input_namepack_items'] = $input_namepack_items;
 	}
 
-
 	/**
-	 *  AdminProducts display hook
+	 * AdminProducts display hook
+	 *
+	 * @param $obj
+	 *
+	 * @throws PrestaShopException
 	 */
 	public function initFormModules($obj)
 	{
@@ -5060,7 +5083,7 @@ class AdminProductsControllerCore extends AdminController
 
 	public function processImageLegends()
 	{
-		if (Tools::getValue('key_tab') == 'Images' && Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
+		if (Tools::getValue('key_tab') == 'Images' && Tools::getValue('submitAddproductAndStay') == 'update_legends' && Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
 		{
 			$language_ids = Language::getIDs(false);
 			foreach ($_POST as $key => $val)

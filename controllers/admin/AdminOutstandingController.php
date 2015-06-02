@@ -88,7 +88,7 @@ class AdminOutstandingControllerCore  extends AdminController
 				'filter_type' => 'int'
 			),
 			'outstanding_allow_amount' => array(
-				'title' => $this->l('Outstanding Allow'),
+				'title' => $this->l('Outstanding Allowance'),
 				'align' => 'center',
 				'prefix' => '<b>',
 				'suffix' => '</b>',
@@ -141,13 +141,13 @@ class AdminOutstandingControllerCore  extends AdminController
 	{
 		$order_invoice = new OrderInvoice($id_invoice);
 		if (!Validate::isLoadedObject($order_invoice))
-			throw new PrestaShopException('object OrderInvoice can\'t be loaded');
+			throw new PrestaShopException('object OrderInvoice cannot be loaded');
 		$order = new Order($order_invoice->id_order);
 		if (!Validate::isLoadedObject($order))
-			throw new PrestaShopException('object Order can\'t be loaded');
+			throw new PrestaShopException('object Order cannot be loaded');
 		$customer = new Customer((int)$order->id_customer);
 		if (!Validate::isLoadedObject($order_invoice))
-			throw new PrestaShopException('object Customer can\'t be loaded');
+			throw new PrestaShopException('object Customer cannot be loaded');
 
 		return '<b>'.Tools::displayPrice($customer->getOutstanding(), Context::getContext()->currency).'</b>';
 	}
@@ -160,10 +160,10 @@ class AdminOutstandingControllerCore  extends AdminController
 	{
 		$order_invoice = new OrderInvoice((int)Tools::getValue('id_order_invoice'));
 		if (!Validate::isLoadedObject($order_invoice))
-			throw new PrestaShopException('object OrderInvoice can\'t be loaded');
+			throw new PrestaShopException('object OrderInvoice cannot be loaded');
 		$order = new Order($order_invoice->id_order);
 		if (!Validate::isLoadedObject($order))
-			throw new PrestaShopException('object Order can\'t be loaded');
+			throw new PrestaShopException('object Order cannot be loaded');
 
 		$link = $this->context->link->getAdminLink('AdminOrders');
 		$link .= '&vieworder&id_order='.$order->id;

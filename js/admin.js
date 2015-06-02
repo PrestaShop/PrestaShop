@@ -930,14 +930,26 @@ $(document).ready(function()
 		$('button:submit').click(bindSwapSave);
 	}
 
-    // http://status.prestashop.com/
-    var sp = new StatusPage.page({page : 'rmfc0cm3rk9y'});
-    sp.status({
-        success : function(data) {
-            $('.status-page-description').text(data.status.description);
-            $('.status-page-dot').addClass(data.status.indicator);
-        }
-    });
+	if (host_mode)
+	{
+        // http://status.prestashop.com/
+        var status_map = {
+            operational: status_operational,
+            degraded_performance: status_degraded_performance,
+            partial_outage: status_partial_outage,
+            major_outage: status_major_outage,
+        };
+
+        var components_map = {'ca1': 0, 'fr1': 1};
+
+        var sp = new StatusPage.page({page: 'rmfc0cm3rk9y'});
+        sp.components({
+            success: function (data) {
+                $('.status-page-description').text(status_map[data.components[components_map[host_cluster]].status]);
+                $('.status-page-dot').addClass(data.components[components_map[host_cluster]].status);
+            }
+        });
+    }
 });
 
 function bindSwapSave()
@@ -1561,5 +1573,3 @@ function confirm_link(head_text, display_text, confirm_text, cancel_text, confir
 			document.location = cancel_link;
 	});
 }
-
-

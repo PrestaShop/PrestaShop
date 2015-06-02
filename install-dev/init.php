@@ -27,8 +27,8 @@
 ob_start();
 
 // Check PHP version
-if (version_compare(preg_replace('/[^0-9.]/', '', PHP_VERSION), '5.1.3', '<'))
-	die('You need at least PHP 5.1.3 to run PrestaShop. Your current PHP version is '.PHP_VERSION);
+if (version_compare(preg_replace('/[^0-9.]/', '', PHP_VERSION), '5.2', '<'))
+	die('You need at least PHP 5.2 to run PrestaShop. Your current PHP version is '.PHP_VERSION);
 
 // we check if theses constants are defined
 // in order to use init.php in upgrade.php script
@@ -44,6 +44,7 @@ if (!defined('_THEME_NAME_'))
 
 require_once(_PS_CORE_DIR_.'/config/defines.inc.php');
 require_once(_PS_CORE_DIR_.'/config/autoload.php');
+require_once(_PS_CORE_DIR_.'/config/bootstrap.php');
 require_once(_PS_CORE_DIR_.'/config/defines_uri.inc.php');
 
 // Generate common constants

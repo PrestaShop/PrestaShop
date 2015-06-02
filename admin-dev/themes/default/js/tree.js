@@ -37,10 +37,17 @@ Tree.prototype =
 					if (load_tree)
 					{
 						var category = $(this).parent().children('ul.tree input').first().val();
+						var inputType = $(this).parent().children('ul.tree input').first().attr('type');
+						var useCheckBox = 0;
+						if (inputType == 'checkbox')
+						{
+							useCheckBox = 1;
+						}
+
 						var thatOne = $(this);
 						$.get(
 							'ajax-tab.php',
-							{controller:'AdminProducts',token:currentToken,action:'getCategoryTree',type:idTree,category:category,inputName:name},
+							{controller:'AdminProducts',token:currentToken,action:'getCategoryTree',type:idTree,category:category,inputName:name,useCheckBox:useCheckBox},
 							function(content)
 							{
 								thatOne.parent().closest('.tree-folder').find('ul.tree').html(content);
@@ -148,9 +155,15 @@ Tree.prototype =
 				}
 			);
 			var name = $('#'+idTree).find('ul.tree input').first().attr('name');
+			var inputType = $('#'+idTree).find('ul.tree input').first().attr('type');
+			var useCheckBox = 0;
+			if (inputType == 'checkbox')
+			{
+				useCheckBox = 1;
+			}
 			$.get(
 				'ajax-tab.php',
-				{controller:'AdminProducts',token:currentToken,action:'getCategoryTree',type:idTree,fullTree:1,selected:selected, inputName:name},
+				{controller:'AdminProducts',token:currentToken,action:'getCategoryTree',type:idTree,fullTree:1,selected:selected, inputName:name,useCheckBox:useCheckBox},
 				function(content)
 				{
 					$('#'+idTree).html(content);

@@ -1,16 +1,17 @@
 <?php
 
 return array (
-  'informations' => 
+  'informations' =>
   array (
-    'phone' => '',
-    'documentation' => '',
-    'documentation_upgrade' => 'http://docs.prestashop.com/display/PS16/Updating+PrestaShop',
-    'forum' => '',
-    'blog' => '',
-    'support' => '',
+  'documentation' => 'http://doc.prestashop.com/display/PS16/Installing+PrestaShop',
+  'documentation_upgrade' => 'http://docs.prestashop.com/display/PS16/Updating+PrestaShop',
+  'forum' => 'http://www.prestashop.com/forums/',
+  'blog' => 'http://www.prestashop.com/blog/',
+  'support' => 'https://www.prestashop.com/en/support',
+  'tutorial' => 'https://www.youtube.com/watch?v=psz4aIPZZuk',
+  'tailored_help' => 'http://addons.prestashop.com/en/388-support',
   ),
-  'translations' => 
+  'translations' =>
   array (
     'An SQL error occurred for entity <i>%1$s</i>: <i>%2$s</i>' => '',
     'Cannot create image "%1$s" for entity "%2$s"' => '不能在"%2$s" 创建图片"%1$s"',
@@ -144,7 +145,7 @@ return array (
     'Test your database connection now!' => '现在测试你的数据库连接吧！',
     'Next' => '下一个',
     'Back' => '返回',
-    'If you need some assistance during the installation process, please call our team at %s and one of our experts will be happy to help.' => '如果您在安装过程中需要一些协助，请致电我们的团队%s，我们的专家将很乐意提供帮助。',
+    'If you need some assistance, you can <a href="http://addons.prestashop.com/en/388-support">get tailored help</a> from our support team. <a href="http://doc.prestashop.com/display/PS16/Installing+PrestaShop" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.' => 'If you need some assistance, you can <a href="http://addons.prestashop.com/en/388-support">get tailored help</a> from our support team. <a href="http://doc.prestashop.com/display/PS16/Installing+PrestaShop" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.',
     'Official forum' => '官方论坛',
     'Support' => '支持',
     'Documentation' => '文档',
@@ -201,8 +202,8 @@ return array (
     'PrestaShop requires at least 32 MB of memory to run: please check the memory_limit directive in your php.ini file or contact your host provider about this.' => 'Prestashop 至少需要32M的内存来运行，请检查php.ini中的memory_limit的指令或联系您的主机提供商',
     '<b>Warning: You cannot use this tool to upgrade your store anymore.</b><br /><br />You already have <b>PrestaShop version %1$s installed</b>.<br /><br />If you want to upgrade to the latest version, please read our documentation: <a href="%2$s">%2$s</a>' => '<b>警告：你无法使用此工具来升级你的店铺。</b><br /><br />您已经安装了 <b> PrestaShop 的 %1$s s版本</b>。<br/><br/>如果你想升级到最新版本，请阅读我们的文档：<a href="%2$s">%2$s</a>',
     'Welcome to the PrestaShop %s Installer' => '欢迎来到PrestaShop %s 安装',
-    'Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 200,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'Prestashop 的安装快速而简单。在短短的几分钟，你就会成为一个拥有超过200,000位商人社区的一份子。在创建您独特的网上商店途中，您可以很容易地每天管理它。',
-    'If you need help, do not hesitate to check <a href="%1$s" target="_blank">our documentation</a> or to contact our support team: %2$s.' => '如果您需要帮助，请不要犹豫，查看 <a href="%1$s" target="_blank"> 我们的文档</a> 或联系我们的客服团队：%2$s',
+    'Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 230,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'Prestashop 的安装快速而简单。在短短的几分钟，你就会成为一个拥有超过230,000位商人社区的一份子。在创建您独特的网上商店途中，您可以很容易地每天管理它。',
+    'If you need help, do not hesitate to <a href="%1$s" target="_blank">watch this short tutorial</a>, or check <a href="%2$s" target="_blank">our documentation</a>.' => 'If you need help, do not hesitate to <a href="%1$s" target="_blank">watch this short tutorial</a>, or check <a href="%2$s" target="_blank">our documentation</a>.',
     'Continue the installation in:' => '继续安装：',
     'The language selection above only applies to the Installation Assistant. Once your store is installed, you can choose the language of your store from over %d translations, all for free!' => '上面语言选择用于安装助手。一旦店铺安装完毕，你可以从超过 %d 个翻译版本选择您的商店需要的语言，这一切都是免费的！',
   ),

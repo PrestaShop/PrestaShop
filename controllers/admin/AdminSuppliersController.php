@@ -515,6 +515,10 @@ class AdminSuppliersControllerCore extends AdminController
 
 	/**
 	 * @see AdminController::afterAdd()
+	 *
+	 * @param Supplier $object
+	 *
+	 * @return bool
 	 */
 	protected function afterAdd($object)
 	{
@@ -525,12 +529,16 @@ class AdminSuppliersControllerCore extends AdminController
 			$address->id_supplier = $object->id;
 			$address->save();
 		}
-		return true;
 
+		return true;
 	}
 
 	/**
 	 * @see AdminController::afterUpdate()
+	 *
+	 * @param Supplier $object
+	 *
+	 * @return bool
 	 */
 	protected function afterUpdate($object)
 	{

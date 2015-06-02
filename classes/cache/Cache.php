@@ -268,9 +268,35 @@ abstract class CacheCore
 		// Get all table from the query and save them in cache
 		if ($tables = $this->getTables($query))
 			foreach ($tables as $table)
+			{
 				if (!isset($this->sql_tables_cached[$table][$key]))
+				{
+					$this->adujstTableCacheSize($table);
 					$this->sql_tables_cached[$table][$key] = true;
+				}
+			}
 		$this->set(Tools::encryptIV(self::SQL_TABLES_NAME), $this->sql_tables_cached);
+	}
+
+	/**
+	 * Autoadjust the table cache size to avoid storing too big elements in the cache
+	 *
+	 * @param $table
+	 */
+	protected function adujstTableCacheSize($table)
+	{
+		if (isset($this->sql_tables_cached[$table])
+			&& count($this->sql_tables_cached[$table]) > 5000)
+		{
+			// make sure the cache doesn't contains too many elements : delete the first 1000
+			$table_buffer = array_slice($this->sql_tables_cached[$table], 0, 1000, true);
+			foreach($table_buffer as $fs_key => $value)
+			{
+				$this->delete($fs_key);
+				$this->delete($fs_key.'_nrows');
+				unset($this->sql_tables_cached[$table][$fs_key]);
+			}
+		}
 	}
 
 	protected function getTables($string)

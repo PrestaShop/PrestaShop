@@ -78,6 +78,12 @@ class OrderInvoiceCore extends ObjectModel
 	/** @var string shop address */
 	public $shop_address;
 
+	/** @var string invoice address */
+	public $invoice_address;
+
+	/** @var string delivery address */
+	public $delivery_address;
+
 	/** @var string note */
 	public $note;
 
@@ -113,6 +119,8 @@ class OrderInvoiceCore extends ObjectModel
 			'total_wrapping_tax_excl' =>array('type' => self::TYPE_FLOAT),
 			'total_wrapping_tax_incl' =>array('type' => self::TYPE_FLOAT),
 			'shop_address' => 		array('type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => 1000),
+			'invoice_address' => 		array('type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => 1000),
+			'delivery_address' => 		array('type' => self::TYPE_HTML, 'validate' => 'isCleanHtml', 'size' => 1000),
 			'note' => 					array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'size' => 65000),
 			'date_add' => 				array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
 		),
@@ -130,6 +138,14 @@ class OrderInvoiceCore extends ObjectModel
 		$address->id_country = Configuration::get('PS_SHOP_COUNTRY_ID');
 
 		$this->shop_address = AddressFormat::generateAddress($address, array(), '<br />', ' ');
+
+		$order = new Order($this->id_order);
+
+		$invoice_address = new Address((int)$order->id_address_invoice);
+		$this->invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
+
+		$delivery_address = new Address((int)$order->id_address_delivery);
+		$this->delivery_address = AddressFormat::generateAddress($delivery_address, array(), '<br />', ' ');
 
 		return parent::add();
 	}
@@ -234,10 +250,11 @@ class OrderInvoiceCore extends ObjectModel
 			) as $ecotax_field)
 				$row[$ecotax_field] = Tools::ps_round($row[$ecotax_field], _PS_PRICE_COMPUTE_PRECISION_, $round_mode);
 
-			$row['unit_price_tax_excl_including_ecotax'] = $row['unit_price_tax_excl'] + $row['ecotax_tax_excl'];
-			$row['unit_price_tax_incl_including_ecotax'] = $row['unit_price_tax_incl'] + $row['ecotax_tax_incl'];
-			$row['total_price_tax_excl_including_ecotax'] = $row['total_price_tax_excl'] + $row['total_ecotax_tax_excl'];
-			$row['total_price_tax_incl_including_ecotax'] = $row['total_price_tax_incl'] + $row['total_ecotax_tax_incl'];
+			// Aliases
+			$row['unit_price_tax_excl_including_ecotax'] = $row['unit_price_tax_excl'];
+			$row['unit_price_tax_incl_including_ecotax'] = $row['unit_price_tax_incl'];
+			$row['total_price_tax_excl_including_ecotax'] = $row['total_price_tax_excl'];
+			$row['total_price_tax_incl_including_ecotax'] = $row['total_price_tax_incl'];
 
 			/* Stock product */
 			$result_array[(int)$row['id_order_detail']] = $row;
@@ -419,27 +436,43 @@ class OrderInvoiceCore extends ObjectModel
 
 		$shipping_tax_amount = $this->total_shipping_tax_incl - $this->total_shipping_tax_excl;
 
-		if (Configuration::get('PS_INVOICE_TAXES_BREAKDOWN'))
+		if (Configuration::get('PS_INVOICE_TAXES_BREAKDOWN') || Configuration::get('PS_ATCP_SHIPWRAP'))
 		{
 			$shipping_breakdown = Db::getInstance()->executeS(
-				'SELECT '.(float)$this->total_shipping_tax_excl.' as total_tax_excl, t.id_tax, t.rate, oit.amount as total_amount
+				'SELECT t.id_tax, t.rate, oit.amount as total_amount
 				 FROM `'._DB_PREFIX_.'tax` t
 				 INNER JOIN `'._DB_PREFIX_.'order_invoice_tax` oit ON oit.id_tax = t.id_tax
 				 WHERE oit.type = "shipping" AND oit.id_order_invoice = '.(int)$this->id
 			);
 
 			$sum_of_split_taxes = 0;
+			$sum_of_tax_bases = 0;
 			foreach ($shipping_breakdown as &$row)
 			{
+				if (Configuration::get('PS_ATCP_SHIPWRAP'))
+				{
+					$row['total_tax_excl'] = Tools::ps_round($row['total_amount'] / $row['rate'] * 100, _PS_PRICE_COMPUTE_PRECISION_, $this->getOrder()->round_mode);
+					$sum_of_tax_bases += $row['total_tax_excl'];
+				}
+				else
+				{
+					$row['total_tax_excl'] = $this->total_shipping_tax_excl;
+				}
+
 				$row['total_amount'] = Tools::ps_round($row['total_amount'], _PS_PRICE_COMPUTE_PRECISION_, $this->getOrder()->round_mode);
 				$sum_of_split_taxes += $row['total_amount'];
 			}
 			unset($row);
 
-			$delta = $shipping_tax_amount - $sum_of_split_taxes;
+			$delta_amount = $shipping_tax_amount - $sum_of_split_taxes;
 
-			if ($delta != 0)
-				Tools::spreadAmount($delta, _PS_PRICE_COMPUTE_PRECISION_, $shipping_breakdown, 'total_amount');
+			if ($delta_amount != 0)
+				Tools::spreadAmount($delta_amount, _PS_PRICE_COMPUTE_PRECISION_, $shipping_breakdown, 'total_amount');
+
+			$delta_base = $this->total_shipping_tax_excl - $sum_of_tax_bases;
+
+			if ($delta_base != 0)
+				Tools::spreadAmount($delta_base, _PS_PRICE_COMPUTE_PRECISION_, $shipping_breakdown, 'total_tax_excl');
 		}
 		else
 		{
@@ -469,28 +502,44 @@ class OrderInvoiceCore extends ObjectModel
 		$wrapping_tax_amount = $this->total_wrapping_tax_incl - $this->total_wrapping_tax_excl;
 
 		$wrapping_breakdown = Db::getInstance()->executeS(
-			'SELECT '.(float)$this->total_wrapping_tax_incl.' as total_tax_excl, t.id_tax, t.rate, oit.amount as total_amount
+			'SELECT t.id_tax, t.rate, oit.amount as total_amount
 			FROM `'._DB_PREFIX_.'tax` t
 			INNER JOIN `'._DB_PREFIX_.'order_invoice_tax` oit ON oit.id_tax = t.id_tax
 			WHERE oit.type = "wrapping" AND oit.id_order_invoice = '.(int)$this->id
 		);
 
 		$sum_of_split_taxes = 0;
+		$sum_of_tax_bases = 0;
 		$total_tax_rate = 0;
 		foreach ($wrapping_breakdown as &$row)
 		{
+			if (Configuration::get('PS_ATCP_SHIPWRAP'))
+			{
+				$row['total_tax_excl'] = Tools::ps_round($row['total_amount'] / $row['rate'] * 100, _PS_PRICE_COMPUTE_PRECISION_, $this->getOrder()->round_mode);
+				$sum_of_tax_bases += $row['total_tax_excl'];
+			}
+			else
+			{
+				$row['total_tax_excl'] = $this->total_wrapping_tax_excl;
+			}
+
 			$row['total_amount'] = Tools::ps_round($row['total_amount'], _PS_PRICE_COMPUTE_PRECISION_, $this->getOrder()->round_mode);
 			$sum_of_split_taxes += $row['total_amount'];
 			$total_tax_rate += (float)$row['rate'];
 		}
 		unset($row);
 
-		$delta = $wrapping_tax_amount - $sum_of_split_taxes;
+		$delta_amount = $wrapping_tax_amount - $sum_of_split_taxes;
 
-		if ($delta != 0)
-			Tools::spreadAmount($delta, _PS_PRICE_COMPUTE_PRECISION_, $wrapping_breakdown, 'total_amount');
+		if ($delta_amount != 0)
+			Tools::spreadAmount($delta_amount, _PS_PRICE_COMPUTE_PRECISION_, $wrapping_breakdown, 'total_amount');
 
-		if (!Configuration::get('PS_INVOICE_TAXES_BREAKDOWN'))
+		$delta_base = $this->total_wrapping_tax_excl - $sum_of_tax_bases;
+
+		if ($delta_base != 0)
+			Tools::spreadAmount($delta_base, _PS_PRICE_COMPUTE_PRECISION_, $wrapping_breakdown, 'total_tax_excl');
+
+		if (!Configuration::get('PS_INVOICE_TAXES_BREAKDOWN') && !Configuration::get('PS_ATCP_SHIPWRAP'))
 		{
 			$wrapping_breakdown = array(
 				array(
