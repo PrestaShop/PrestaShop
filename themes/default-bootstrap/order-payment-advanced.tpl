@@ -64,7 +64,13 @@
     <div id="HOOK_ADVANCED_PAYMENT">
         <div class="row">
         <!-- Should get a collection of "PaymentOption" object -->
-        {if $HOOK_ADVANCED_PAYMENT }
+        {assign var='adv_payment_empty' value=true}
+        {foreach from=$HOOK_ADVANCED_PAYMENT item=pay_option key=key}
+            {if $pay_option}
+                {assign var='adv_payment_empty' value=false}
+            {/if}
+        {/foreach}
+        {if $HOOK_ADVANCED_PAYMENT && !$adv_payment_empty}
             {foreach $HOOK_ADVANCED_PAYMENT as $advanced_payment_opt_list}
                 {foreach $advanced_payment_opt_list as $paymentOption}
                     <div class="col-xs-6 col-md-6">
@@ -98,7 +104,9 @@
             {/foreach}
         </div>
         {else}
-            <p class="alert alert-warning">{l s='Unable to find any available payment option for your cart. Please contact us if the problem persists'}</p>
+        <div class="col-xs-12 col-md-12">
+            <p class="alert alert-warning ">{l s='Unable to find any available payment option for your cart. Please contact us if the problem persists'}</p>
+        </div>
         {/if}
     </div>
     <!-- end HOOK_ADVANCED_PAYMENT -->
