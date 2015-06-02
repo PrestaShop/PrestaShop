@@ -197,7 +197,6 @@ input.text {
 	padding:0 6px;
 	height:22px;
 	width:218px;/* 230 */
-	background:#fff url(img/bg_input_button.png) repeat-x 0 0;
 	border:1px solid #ccc;
 }
 select {
@@ -368,13 +367,11 @@ ol#tabs{
 		}
 		ol#tabs li.finished{
 			color:#666;
-            text-decoration: line-through;
 			background : url(img/bg-li-tabs-finished.png) no-repeat 0 12px;
 		}
-			ol#tabs li.finished a{
-				color:#666;
-				text-decoration: line-through;
-			}
+		ol#tabs li.finished a{
+			color:#666;
+		}
 		ol#tabs li.configuring{
 			color:#25B9D7;
 		}
@@ -560,7 +557,6 @@ ul#optional {
 	margin-bottom:15px;
 	padding:14px;
 	width:650px;
-	background:#f8f8f8;
 }
 
 #inputFileLogo {margin-left:190px;}
@@ -865,7 +861,7 @@ ul#optional_update li.ok {
   padding: 0 0 0 8px;
   height: 23px;
   border: 1px solid #aaa;
-  border-radius: 5px;
+  border-radius: 3px;
   background-color: #fff;
   background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(20%, #ffffff), color-stop(50%, #f6f6f6), color-stop(52%, #eeeeee), color-stop(100%, #f4f4f4));
   background: -webkit-linear-gradient(top, #ffffff 20%, #f6f6f6 50%, #eeeeee 52%, #f4f4f4 100%);
