@@ -930,7 +930,7 @@ $(document).ready(function()
 		$('button:submit').click(bindSwapSave);
 	}
 
-	if (host_mode)
+	if (typeof host_mode !== 'undefined' && host_mode)
 	{
         // http://status.prestashop.com/
         var status_map = {
