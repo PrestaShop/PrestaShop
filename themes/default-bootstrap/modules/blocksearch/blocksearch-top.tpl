@@ -26,7 +26,7 @@
 <div id="search_block_top" class="col-sm-4 clearfix" itemscope itemtype="http://schema.org/WebSite">
 	<meta itemprop="url" content="{$base_dir_ssl}"/>
 	<form id="searchbox" method="get" action="{$link->getPageLink('search', null, null, null, false, null, true)|escape:'html':'UTF-8'}" itemprop="potentialAction" itemscope itemtype="http://schema.org/SearchAction">
-		<meta itemprop="target" content="{$base_dir_ssl}/search?controller=search&amp;orderby=position&amp;orderway=desc&amp;search_query={search_query}&amp;submit_search="/>
+	{literal}<meta itemprop="target" content="{$base_dir_ssl}/search?controller=search&amp;orderby=position&amp;orderway=desc&amp;search_query={search_query}&amp;submit_search="/>{/literal}
 		<input type="hidden" name="controller" value="search" />
 		<input type="hidden" name="orderby" value="position" />
 		<input type="hidden" name="orderway" value="desc" />
