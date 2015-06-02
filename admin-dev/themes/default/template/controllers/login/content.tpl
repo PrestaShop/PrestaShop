@@ -53,7 +53,7 @@
 	<div class="flip-container">
 		<div class="flipper">
 			<div class="front panel">
-				<h2 class="text-center">{$shop_name}</h2>
+				<h4 id="shop_name">{$shop_name}</h4>
 				{if !isset($wrong_folder_name) && !isset($wrong_install_name)}
 				<form action="#" id="login_form" method="post">
 					<input type="hidden" name="redirect" id="redirect" value="{$redirect}"/>
