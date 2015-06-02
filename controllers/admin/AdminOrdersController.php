@@ -956,7 +956,6 @@ class AdminOrdersControllerCore extends AdminController
 								$this->errors[] = Tools::displayError('A credit slip cannot be generated. ');
 							else
 							{
-								Hook::exec('actionOrderSlipAdd', array('order' => $order, 'productList' => $full_product_list, 'qtyList' => $full_quantity_list), null, false, true, false, $order->id_shop);
 								@Mail::Send(
 									(int)$order->id_lang,
 									'credit_slip',
