@@ -477,7 +477,6 @@ ul#optional {
 		margin-top: 20px;
 		padding:4px 8px;
 		font-size:13px;
-		background:#f8f8f8 url(img/bg_li_title.png) repeat-x 0 0;
 }
 	ul#required li.required ,
 	ul#optional li {
