@@ -66,7 +66,6 @@ SELECT 0, t.id_tag, t.id_lang, ps.id_shop, COUNT(pt.id_tag) AS times
 
 ALTER TABLE `PREFIX_shop_group` ADD KEY `deleted` (`deleted`, `name`);
 ALTER TABLE `PREFIX_shop` DROP KEY `id_shop_group`;
-ALTER TABLE `PREFIX_shop` DROP KEY `id_group_shop`;
 ALTER TABLE `PREFIX_shop` ADD KEY `id_shop_group` (`id_shop_group`, `deleted`);
 ALTER TABLE `PREFIX_shop_url` DROP KEY `id_shop`;
 ALTER TABLE `PREFIX_shop_url` ADD KEY `id_shop` (`id_shop`, `main`);
