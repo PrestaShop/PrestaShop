@@ -104,8 +104,18 @@
 			display: inline-block
 	a img
 		@include margin-right(5px)
-	#header_foaccess i
-		font-size: 1.2em
+	#header_foaccess
+		display: inline-block
+		i
+			font-size: 1.2em
+	.maintenance-mode
+		color: $contrasted-light-default
+		cursor: default
+		display: inline-block
+		margin-left: -13px
+		.label-tooltip
+			padding: 9px 0
+			color: $brand-warning
 #employee_infos
 	.employee_name
 		position: relative

@@ -303,6 +303,13 @@
 							<span class="string-long">{l s='My shop'}</span>
 							<span class="string-short">{l s='Shop'}</span>
 						</a>
+						{if isset($maintenance_mode) && $maintenance_mode == true}
+							<span class="maintenance-mode">
+								&mdash;
+								<span class="label-tooltip" data-toggle="tooltip" data-placement="bottom" data-html="true"
+								title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in maintenance.'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Preferences > Maintenance.' sprintf='<br />'}</p>">{l s='Maintenance mode'}</span>
+							</span>
+						{/if}
 					</li>
 {/if}
 					<li id="employee_infos" class="dropdown">
@@ -322,7 +329,7 @@
 									<img class="imgm img-thumbnail" alt="" src="{$employee->getImage()}" width="96" height="96" />
 								</span>
 							</li>
-							<li class="text-center">{$employee->firstname} {$employee->lastname}</li>
+							<li class="text-center text-nowrap">{$employee->firstname} {$employee->lastname}</li>
 							<li class="divider"></li>
 							<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences'}</a></li>
 							{if $host_mode}
@@ -357,6 +364,8 @@
 				{l s='For security reasons, you must also delete the /install folder.'}
 			</div>
 {/if}
+
+			{hook h='displayAdminAfterHeader'}
 
 
 {* end display_header*}
