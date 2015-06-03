@@ -1508,11 +1508,16 @@ class WebserviceRequestCore
 				}
 				elseif (isset($fieldProperties['required']) && $fieldProperties['required'] && !$fieldProperties['i18n'])
 				{
-					$this->setError(400, 'parameter "'.$fieldName.'" required', 41);
-					return false;
+					if ($this->method == 'POST') {
+						$this->setError(400, 'parameter "'.$fieldName.'" required', 41);
+						return false;
+					}
 				}
 				elseif ((!isset($fieldProperties['required']) || !$fieldProperties['required']) && property_exists($object, $sqlId))
-					$object->$sqlId = null;
+				{
+					if ($this->method == 'POST')
+						$object->$sqlId = null;
+				}
 				if (isset($fieldProperties['i18n']) && $fieldProperties['i18n'])
 				{
 					$i18n = true;
@@ -1522,7 +1527,7 @@ class WebserviceRequestCore
 							/** @var SimpleXMLElement $lang */
 							$object->{$fieldName}[(int)$lang->attributes()->id] = (string)$lang;
 						}
-					else
+					elseif ($this->method == 'POST' || isset($attributes->$fieldName))
 						$object->{$fieldName} = (string)$attributes->$fieldName;
 				}
 			}
