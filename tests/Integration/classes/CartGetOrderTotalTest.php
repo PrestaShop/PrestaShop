@@ -487,4 +487,29 @@ class CartGetOrderTotalTest extends IntegrationTestCase
         $this->assertEquals(5, $cart->getOrderTotal(false, Cart::BOTH, null, $id_carrier));
         $this->assertEquals(6, $cart->getOrderTotal(true, Cart::BOTH, null, $id_carrier));
     }
+
+    /**
+     * This test checks that if PS_ATCP_SHIPWRAP is set to true then:
+     * - the shipping cost of the carrier is understood as tax included instead of tax excluded
+     * - the tax excluded shipping cost is deduced from the tax included shipping cost
+     * 	 by removing the average tax rate of the cart
+     */
+    public function testAverageTaxOfCartProducts_ShippingTax()
+    {
+        Configuration::set('PS_ATCP_SHIPWRAP', true);
+
+        $highProduct = self::makeProduct('High Product', 10, self::getIdTaxRulesGroup(20));
+        $lowProduct = self::makeProduct('Low Product', 10, self::getIdTaxRulesGroup(10));
+        $cart = self::makeCart();
+
+        $id_carrier = self::getIdCarrier('costs 5 with tax', 5, null);
+
+        $cart->updateQty(1, $highProduct->id);
+        $cart->updateQty(3, $lowProduct->id);
+
+        $preTax = round(5 / (1 + (3 * 10 + 1 * 20) / (4 * 100)), 2);
+
+        $this->assertEquals($preTax, $cart->getOrderTotal(false, Cart::ONLY_SHIPPING, null, $id_carrier));
+        $this->assertEquals(5, $cart->getOrderTotal(true, Cart::ONLY_SHIPPING, null, $id_carrier));
+    }
 }
