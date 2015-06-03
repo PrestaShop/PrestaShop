@@ -1031,24 +1031,27 @@ class CategoryCore extends ObjectModel
 	/**
 	 * Light back office search for categories
 	 *
-	 * @param int $id_lang Language ID
-	 * @param string $query Searched string
-	 * @param bool $unrestricted allows search without lang and includes first category and exact match
+	 * @param int    $id_lang      Language ID
+	 * @param string $query        Searched string
+	 * @param bool   $unrestricted allows search without lang and includes first category and exact match
+	 * @param bool   $skip_cache
 	 * @return array Corresponding categories
+	 * @throws PrestaShopDatabaseException
 	 */
-	public static function searchByName($id_lang, $query, $unrestricted = false)
+	public static function searchByName($id_lang, $query, $unrestricted = false, $skip_cache = false)
 	{
 		if ($unrestricted === true)
 		{
 			$key = 'Category::searchByName_'.$query;
-			if (!Cache::isStored($key))
+			if ($skip_cache || !Cache::isStored($key))
 			{
 				$categories = Db::getInstance()->getRow('
 				SELECT c.*, cl.*
 				FROM `'._DB_PREFIX_.'category` c
 				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` '.Shop::addSqlRestrictionOnLang('cl').')
 				WHERE `name` = \''.pSQL($query).'\'');
-				Cache::store($key, $categories);
+				if (!$skip_cache)
+					Cache::store($key, $categories);
 				return $categories;
 			}
 			return Cache::retrieve($key);
@@ -1103,7 +1106,7 @@ class CategoryCore extends ObjectModel
 				if ($id_parent_category)
 					$category = Category::searchByNameAndParentCategoryId($id_lang, $category_name, $id_parent_category);
 				else
-					$category = Category::searchByName($id_lang, $category_name, true);
+					$category = Category::searchByName($id_lang, $category_name, true, true);
 
 				if (!$category && $object_to_create && $method_to_create)
 				{
