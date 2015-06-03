@@ -174,8 +174,6 @@ ALTER TABLE `PREFIX_configuration_kpi` CHANGE `name` `name` varchar(64);
 ALTER TABLE `PREFIX_smarty_lazy_cache` CHANGE `cache_id` `cache_id` varchar(255) NOT NULL DEFAULT '';
 TRUNCATE TABLE `PREFIX_smarty_lazy_cache`;
 
-ALTER TABLE `PREFIX_product_shop` ADD KEY `indexed` (`indexed`, `active`, `id_product`);
-
 /* Advanced EU Compliance tables */
 CREATE TABLE IF NOT EXISTS `PREFIX_cms_role` (
   `id_cms_role` int(11) unsigned NOT NULL AUTO_INCREMENT,
