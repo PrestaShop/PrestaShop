@@ -42,12 +42,11 @@
 
     <!-- TVA Info -->
     <tr>
-        <td colspan="10" >
+        <td colspan="12">
 
             {$summary_tab}
 
         </td>
-        <td colspan="2">&nbsp;</td>
     </tr>
 
     <tr>
