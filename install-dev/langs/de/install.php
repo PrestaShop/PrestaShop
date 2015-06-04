@@ -125,7 +125,7 @@ return array (
     'First name' => 'Vorname',
     'Last name' => 'Name',
     'E-mail address' => 'E-Mail-Adresse',
-    'This email address will be your username to access your store\'s back office.' => 'Diese E-Mail-Adresse it Ihre Benutznername, um in den Verwaltungsbereich Ihres Shops zu gelangen.',
+    'This email address will be your username to access your store\'s back office.' => 'Diese E-Mail-Adresse ist Ihre Benutznername, um in den Verwaltungsbereich Ihres Shops zu gelangen.',
     'Shop password' => 'Passwort des Shops',
     'Must be at least 8 characters' => 'Mindestens 8 Zeichen',
     'Re-type to confirm' => 'Bestätigen Sie das Passwort',
