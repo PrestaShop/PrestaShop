@@ -8,5 +8,14 @@
   "require": {
     "smarty/smarty": "3.1.19",
     "PrestaShop/Cldr": "dev-master"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.5",
+    "phake/phake": "@stable"
+  },
+  "autoload": {
+    "psr-4": {
+      "PrestaShop\\PrestaShop\\Tests\\": "tests/"
+    }
   }
 }

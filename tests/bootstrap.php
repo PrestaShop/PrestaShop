@@ -25,4 +25,4 @@
  */
 require_once(dirname(__FILE__).'/../config/defines.inc.php');
 require_once(_PS_CONFIG_DIR_.'autoload.php');
-require(dirname(__FILE__).'/vendor/autoload.php');
+require(dirname(dirname(__FILE__)).'/vendor/autoload.php');
