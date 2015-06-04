@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "383aed9a2a8283d5cb5fd69eebfdd083",
+    "hash": "c345cbb7438b140c478214b7a0607350",
     "packages": [
         {
             "name": "PrestaShop/cldr",
@@ -12,18 +12,23 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:PrestaShop/cldr.git",
-                "reference": "b9a3d939fce20ed3279f17fa6996495ec31463cb"
+                "reference": "398bf87591e4a4686c1aabf0e49c2f68aaf890c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/cldr/zipball/b9a3d939fce20ed3279f17fa6996495ec31463cb",
-                "reference": "b9a3d939fce20ed3279f17fa6996495ec31463cb",
+                "url": "https://api.github.com/repos/PrestaShop/cldr/zipball/398bf87591e4a4686c1aabf0e49c2f68aaf890c2",
+                "reference": "398bf87591e4a4686c1aabf0e49c2f68aaf890c2",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4"
             },
             "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PrestaShop\\Cldr\\": "Libraries/"
+                }
+            },
             "license": [
                 "MIT"
             ],
@@ -33,7 +38,7 @@
                 "source": "https://github.com/PrestaShop/cldr/tree/master",
                 "issues": "https://github.com/PrestaShop/cldr/issues"
             },
-            "time": "2015-06-04 09:41:11"
+            "time": "2015-06-04 15:27:33"
         },
         {
             "name": "smarty/smarty",
