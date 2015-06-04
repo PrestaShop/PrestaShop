@@ -45,7 +45,7 @@
 		<div class="form-group">
 			<label class="control-label col-lg-3">
 				<span class="label-tooltip" data-toggle="tooltip"
-					title="{l s='Invalid characters:'} <>;=#{}">
+					title="{l s='Update all captions at once, or select the position of the image whose caption you wish to edit. Invalid characters:'} <>;=#{}">
 					{l s='Caption'}
 				</span>
 			</label>
@@ -77,7 +77,7 @@
 			</div>
 			<div class="col-lg-2">
 				<select name="id_image">
-					<option value="0">{l s='Each captions'}</option>
+					<option value="0">{l s='All captions'}</option>
 					{foreach from=$images item=image}
 					<option value="{$image->id_image|intval}">
 						{l s='Position %d' sprintf=$image->position|intval}
