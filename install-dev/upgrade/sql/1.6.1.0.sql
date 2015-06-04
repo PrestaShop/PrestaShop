@@ -64,6 +64,9 @@ SELECT 0, t.id_tag, t.id_lang, ps.id_shop, COUNT(pt.id_tag) AS times
     AND product_shop.id_shop = ps.id_shop
     GROUP BY pt.id_tag;
 
+
+/* PHP:ps1610_safe_remove_indexes(); */;
+
 ALTER TABLE `PREFIX_shop_group` ADD KEY `deleted` (`deleted`, `name`);
 ALTER TABLE `PREFIX_shop` DROP KEY `id_shop_group`;
 ALTER TABLE `PREFIX_shop` ADD KEY `id_shop_group` (`id_shop_group`, `deleted`);
