@@ -26,8 +26,6 @@
 
 define('_PS_SMARTY_DIR_', _PS_VENDOR_DIR_.'smarty/smarty/libs/');
 
-require_once(_PS_SMARTY_DIR_.'Smarty.class.php');
-
 global $smarty;
 if (Configuration::get('PS_SMARTY_LOCAL')) {
     $smarty = new SmartyCustom();
