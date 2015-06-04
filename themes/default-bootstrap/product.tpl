@@ -43,11 +43,15 @@
 			</div>
 		{/if}
 		{if isset($adminActionDisplay) && $adminActionDisplay}
-			<div id="admin-action">
-				<p>{l s='This product is not visible to your customers.'}
+			<div id="admin-action" class="container">
+				<p class="alert alert-info">{l s='This product is not visible to your customers.'}
 					<input type="hidden" id="admin-action-product-id" value="{$product->id}" />
-					<input type="submit" value="{l s='Publish'}" name="publish_button" class="exclusive" />
-					<input type="submit" value="{l s='Back'}" name="lnk_view" class="exclusive" />
+					<a id="publish_button" class="btn btn-default button button-small" href="#">
+						<span>{l s='Publish'}</span>
+					</a>
+					<a id="lnk_view" class="btn btn-default button button-small" href="#">
+						<span>{l s='Back'}</span>
+					</a>
 				</p>
 				<p id="admin-action-result"></p>
 			</div>

@@ -206,5 +206,5 @@ return array (
     'If you need help, do not hesitate to <a href="%1$s" target="_blank">watch this short tutorial</a>, or check <a href="%2$s" target="_blank">our documentation</a>.' => 'If you need help, do not hesitate to <a href="%1$s" target="_blank">watch this short tutorial</a>, or check <a href="%2$s" target="_blank">our documentation</a>.',
     'Continue the installation in:' => 'Continúe con la instalación en:',
     'The language selection above only applies to the Installation Assistant. Once your store is installed, you can choose the language of your store from over %d translations, all for free!' => 'La elección del idioma se realiza sólo al inicio y se aplica al asistente de instalación. Una vez que tu tienda Online está instalada, podrás elegir el idioma de tu tienda, ¡entre las más de %d traducciones disponibles, ¡todas ellas de forma gratuitas!',
-  ),
+    ),
 );

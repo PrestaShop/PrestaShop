@@ -1470,7 +1470,7 @@ class AdminControllerCore extends Controller
 					array_pop($this->toolbar_title);
 					array_pop($this->meta_title);
 					$this->toolbar_title[] = sprintf($this->l('Edit: %s'),
-						is_array($obj->{$this->identifier_name}) ? $obj->{$this->identifier_name}[$this->context->employee->id_lang] : $obj->{$this->identifier_name});
+						(is_array($obj->{$this->identifier_name}) && isset($obj->{$this->identifier_name}[$this->context->employee->id_lang])) ? $obj->{$this->identifier_name}[$this->context->employee->id_lang] : $obj->{$this->identifier_name});
 					$this->addMetaTitle($this->toolbar_title[count($this->toolbar_title) - 1]);
 				}
 				break;
@@ -2019,6 +2019,7 @@ class AdminControllerCore extends Controller
 		}
 
 		$this->context->smarty->assign(array(
+			'maintenance_mode' => !(bool)Configuration::get('PS_SHOP_ENABLE'),
 			'content' => $this->content,
 			'lite_display' => $this->lite_display,
 			'url_post' => self::$currentIndex.'&token='.$this->token,

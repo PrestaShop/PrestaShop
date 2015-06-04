@@ -52,8 +52,8 @@ class AdminLoginControllerCore extends AdminController
 		$this->addJS(_PS_JS_DIR_.'vendor/spin.js');
 		$this->addJS(_PS_JS_DIR_.'vendor/ladda.js');
 		Media::addJsDef(array('img_dir' => _PS_IMG_));
-		Media::addJsDefL(one_error, $this->l('There is one error.'));
-		Media::addJsDefL(more_errors, $this->l('There are several errors'));
+		Media::addJsDefL('one_error', $this->l('There is one error.'));
+		Media::addJsDefL('more_errors', $this->l('There are several errors.'));
 
 		Hook::exec('actionAdminLoginControllerSetMedia');
 
@@ -134,6 +134,9 @@ class AdminLoginControllerCore extends AdminController
 		$this->initHeader();
 		parent::initContent();
 		$this->initFooter();
+
+		//force to disable modals
+		$this->context->smarty->assign('modals', null);
 	}
 
 	public function checkToken()

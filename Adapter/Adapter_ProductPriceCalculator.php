@@ -46,6 +46,24 @@ class Adapter_ProductPriceCalculator
 		$use_customer_price = true
     )
     {
-        return call_user_func_array(array('Product', 'getPriceStatic'), func_get_args());
+        return Product::getPriceStatic(
+            $id_product,
+            $usetax,
+            $id_product_attribute,
+            $decimals,
+            $divisor,
+            $only_reduc,
+            $usereduc,
+            $quantity,
+            $force_associated_tax,
+            $id_customer,
+            $id_cart,
+            $id_address,
+            $specific_price_output,
+            $with_ecotax,
+            $use_group_reduction,
+            $context,
+            $use_customer_price
+        );
     }
 }
