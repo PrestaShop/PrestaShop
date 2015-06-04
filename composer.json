@@ -1,0 +1,12 @@
+{
+    "repositories": [
+      {
+        "type": "vcs",
+        "url":  "https://github.com/PrestaShop/cldr"
+      }
+    ],
+    "require": {
+      "smarty/smarty": "3.1.19",
+      "PrestaShop/cldr": "dev-master"
+    }
+}
