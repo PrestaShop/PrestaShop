@@ -75,7 +75,7 @@
 				{/if}
 			{/foreach}
 			</div>
-			<div class="col-lg-2">
+			<div class="col-lg-2{if $images|count <= 1} hidden{/if}" id="caption_selection">
 				<select name="id_image">
 					<option value="0">{l s='All captions'}</option>
 					{foreach from=$images item=image}
@@ -257,6 +257,9 @@
 					$("#countImage").html(parseInt($("#countImage").html()) - 1);
 					refreshImagePositions($("#imageTable"));
 					showSuccessMessage(data.confirmations);
+
+					if (parseInt($("#countImage").html()) <= 1)
+						$('#caption_selection').addClass('hidden');
 				}
 			}
 
