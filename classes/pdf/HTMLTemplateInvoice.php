@@ -310,7 +310,8 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
 		$data = array(
 			'order' => $this->order,
-			'order_details' => $order_details,
+            'order_invoice' => $this->order_invoice,
+            'order_details' => $order_details,
 			'cart_rules' => $cart_rules,
 			'delivery_address' => $formatted_delivery_address,
 			'invoice_address' => $formatted_invoice_address,
