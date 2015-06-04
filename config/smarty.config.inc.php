@@ -24,7 +24,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-define('_PS_SMARTY_DIR_', _PS_TOOL_DIR_.'smarty/');
+define('_PS_SMARTY_DIR_', _PS_VENDOR_DIR_.'smarty/smarty/libs/');
 
 require_once(_PS_SMARTY_DIR_.'Smarty.class.php');
 

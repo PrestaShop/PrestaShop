@@ -49,6 +49,7 @@ admin-dev/themes/default/sass/screen.sass
 admin-dev/themes/default/css/ie.css
 admin-dev/themes/default/css/print.css
 admin-dev/themes/default/css/screen.css
+vendor/*
 
 # Translations and emails templates
 
