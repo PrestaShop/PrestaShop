@@ -133,13 +133,15 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 	 */
 	public function getContent()
 	{
+        $invoiceAddressPatternRules = Tools::jsonDecode(Configuration::get('PS_INVCE_INVOICE_ADDR_RULES'), true);
+
 		$invoice_address = new Address((int)$this->order->id_address_invoice);
 		$country = new Country((int)$invoice_address->id_country);
 
 		if ($this->order_invoice->invoice_address)
 			$formatted_invoice_address = $this->order_invoice->invoice_address;
 		else
-			$formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
+			$formatted_invoice_address = AddressFormat::generateAddress($invoice_address, $invoiceAddressPatternRules, '<br />', ' ');
 
 		$delivery_address = null;
 		$formatted_delivery_address = '';
