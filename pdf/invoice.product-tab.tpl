@@ -32,11 +32,11 @@
         <th class="product header small" width="{$layout.tax_code.width}%">{l s='Tax Code' pdf='true'}</th>
 
         {if isset($layout.before_discount)}
-            <th class="product header small" width="{$layout.unit_price_tax_excl.width}%">{l s='Base price' pdf='true'} <br /> {l s='(Before tax)' pdf='true'}</th>
+            <th class="product header small" width="{$layout.unit_price_tax_excl.width}%">{l s='Base price' pdf='true'} <br /> {l s='(Tax excl.)' pdf='true'}</th>
         {/if}
 
-        <th class="product header-right small" width="{$layout.unit_price_tax_excl.width}%">{l s='Unit Price' pdf='true'} <br /> {l s='(Before tax)' pdf='true'}</th>
-        <th class="product header-right small" width="{$layout.total_tax_excl.width}%">{l s='Total' pdf='true'} <br /> {l s='(Before tax)' pdf='true'}</th>
+        <th class="product header-right small" width="{$layout.unit_price_tax_excl.width}%">{l s='Unit Price' pdf='true'} <br /> {l s='(Tax excl.)' pdf='true'}</th>
+        <th class="product header-right small" width="{$layout.total_tax_excl.width}%">{l s='Total' pdf='true'} <br /> {l s='(Tax excl.)' pdf='true'}</th>
     </tr>
     </thead>
 
