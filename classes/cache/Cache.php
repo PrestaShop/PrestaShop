@@ -271,7 +271,7 @@ abstract class CacheCore
 			{
 				if (!isset($this->sql_tables_cached[$table][$key]))
 				{
-					$this->adujstTableCacheSize($table);
+					$this->adjustTableCacheSize($table);
 					$this->sql_tables_cached[$table][$key] = true;
 				}
 			}
@@ -283,7 +283,7 @@ abstract class CacheCore
 	 *
 	 * @param $table
 	 */
-	protected function adujstTableCacheSize($table)
+	protected function adjustTableCacheSize($table)
 	{
 		if (isset($this->sql_tables_cached[$table])
 			&& count($this->sql_tables_cached[$table]) > 5000)
