@@ -374,7 +374,8 @@ class CartCore extends ObjectModel
 			);
 			Cache::store($cache_key, $result);
 		}
-		$result = Cache::retrieve($cache_key);
+		else
+			$result = Cache::retrieve($cache_key);
 
 		// Define virtual context to prevent case where the cart is not the in the global context
 		$virtual_context = Context::getContext()->cloneContext();
@@ -420,7 +421,8 @@ class CartCore extends ObjectModel
 			);
 			Cache::store($cache_key, $result);
 		}
-		$result = Cache::retrieve($cache_key);
+		else
+			$result = Cache::retrieve($cache_key);
 
 		return $result;
 	}
@@ -437,6 +439,7 @@ class CartCore extends ObjectModel
 				FROM `'._DB_PREFIX_.'cart_cart_rule`
 				WHERE `id_cart_rule` = '.(int)$id_cart_rule.' AND `id_cart` = '.(int)$this->id);
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -656,13 +659,17 @@ class CartCore extends ObjectModel
 
 			$row['price_wt'] = $tax_calculator->addTaxes($row['price']);
 
-			$ecotax_tax_amount = Tools::ps_round($row['ecotax'], 2);
+			$ecotax_tax_amount = Tools::ps_round($row['ecotax'], 6);
+
 			if ($apply_eco_tax)
-				$ecotax_tax_amount = Tools::ps_round($ecotax_tax_amount * (1 + $ecotax_rate / 100), 2);
+				$ecotax_tax_amount_wt = Tools::ps_round($ecotax_tax_amount * (1 + $ecotax_rate / 100), 6);
+			else
+				$ecotax_tax_amount_wt = $ecotax_tax_amount;
+
 			$row['price'] += $ecotax_tax_amount;
-			$row['price_wt'] += $ecotax_tax_amount;
+			$row['price_wt'] += $ecotax_tax_amount_wt;
 			$row['total'] += $ecotax_tax_amount * $row['cart_quantity'];
-			$row['total_wt'] += $ecotax_tax_amount * $row['cart_quantity'];
+			$row['total_wt'] += $ecotax_tax_amount_wt * $row['cart_quantity'];
 			$row['description_short'] = Tools::nl2br($row['description_short']);
 
 			// check if a image associated with the attribute exists
@@ -1133,6 +1140,7 @@ class CartCore extends ObjectModel
 		{
 			$result = (bool)Db::getInstance()->getValue('SELECT count(*) FROM `'._DB_PREFIX_.'orders` WHERE `id_cart` = '.(int)$this->id);
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -1333,10 +1341,16 @@ class CartCore extends ObjectModel
 	*/
 	public function getOrderTotal($with_taxes = true, $type = Cart::BOTH, $products = null, $id_carrier = null, $use_cache = true)
 	{
-		$ps_tax_address_type = Configuration::get('PS_TAX_ADDRESS_TYPE');
-		$ps_use_ecotax = Configuration::get('PS_USE_ECOTAX');
-		$ps_round_type = Configuration::get('PS_ROUND_TYPE');
-		$ps_ecotax_tax_rules_group_id = Configuration::get('PS_ECOTAX_TAX_RULES_GROUP_ID');
+		// Dependencies
+		$address_factory 	= Adapter_ServiceLocator::get('Adapter_AddressFactory');
+		$price_calculator 	= Adapter_ServiceLocator::get('Adapter_ProductPriceCalculator');
+		$configuration 		= Adapter_ServiceLocator::get('Core_Business_ConfigurationInterface');
+
+		$ps_tax_address_type = $configuration->get('PS_TAX_ADDRESS_TYPE');
+		$ps_use_ecotax = $configuration->get('PS_USE_ECOTAX');
+		$ps_round_type = $configuration->get('PS_ROUND_TYPE');
+		$ps_ecotax_tax_rules_group_id = $configuration->get('PS_ECOTAX_TAX_RULES_GROUP_ID');
+		$compute_precision = $configuration->get('_PS_PRICE_COMPUTE_PRECISION_');
 
 		if (!$this->id)
 			return 0;
@@ -1421,10 +1435,14 @@ class CartCore extends ObjectModel
 				$id_address = (int)$this->id_address_invoice;
 			else
 				$id_address = (int)$product['id_address_delivery']; // Get delivery address of the product from the cart
-			if (!Address::addressExists($id_address))
+			if (!$address_factory->addressExists($id_address))
 				$id_address = null;
 
-			$price = Product::getPriceStatic(
+			// The $null variable below is not used,
+			// but it is necessary to pass it to getProductPrice because
+			// it expects a reference.
+			$null = null;
+			$price = $price_calculator->getProductPrice(
 				(int)$product['id_product'],
 				false,
 				(int)$product['id_product_attribute'],
@@ -1452,7 +1470,7 @@ class CartCore extends ObjectModel
 			else
 				$ecotax = 0;
 
-			$address = Address::initialize($id_address, true);
+			$address = $address_factory->findOrCreate($id_address, true);
 
 			if ($with_taxes)
 			{
@@ -1486,29 +1504,29 @@ class CartCore extends ObjectModel
 					$product_price = $price * $product['cart_quantity'];
 
 					if ($with_taxes)
-						$products_total[$id_tax_rules_group] += Tools::ps_round($product_price + $tax_calculator->getTaxesTotalAmount($product_price), _PS_PRICE_COMPUTE_PRECISION_);
+						$products_total[$id_tax_rules_group] += Tools::ps_round($product_price + $tax_calculator->getTaxesTotalAmount($product_price), $compute_precision);
 					else
-						$products_total[$id_tax_rules_group] += Tools::ps_round($product_price, _PS_PRICE_COMPUTE_PRECISION_);
+						$products_total[$id_tax_rules_group] += Tools::ps_round($product_price, $compute_precision);
 
 					if ($ecotax)
 					{
 						$ecotax_price = $ecotax * (int)$product['cart_quantity'];
 
 						if ($with_taxes)
-							$ecotax_total += Tools::ps_round($ecotax_price + $ecotax_tax_calculator->getTaxesTotalAmount($ecotax_price), _PS_PRICE_COMPUTE_PRECISION_);
+							$ecotax_total += Tools::ps_round($ecotax_price + $ecotax_tax_calculator->getTaxesTotalAmount($ecotax_price), $compute_precision);
 						else
-							$ecotax_total += Tools::ps_round($ecotax_price, _PS_PRICE_COMPUTE_PRECISION_);
+							$ecotax_total += Tools::ps_round($ecotax_price, $compute_precision);
 					}
 					break;
 				case Order::ROUND_ITEM:
 				default:
 					$product_price = $with_taxes ? $tax_calculator->addTaxes($price) : $price;
-					$products_total[$id_tax_rules_group] += Tools::ps_round($product_price, _PS_PRICE_COMPUTE_PRECISION_) * (int)$product['cart_quantity'];
+					$products_total[$id_tax_rules_group] += Tools::ps_round($product_price, $compute_precision) * (int)$product['cart_quantity'];
 
 					if ($ecotax)
 					{
 						$ecotax_price = $with_taxes ? $ecotax_tax_calculator->addTaxes($ecotax) : $ecotax;
-						$ecotax_total += Tools::ps_round($ecotax_price, _PS_PRICE_COMPUTE_PRECISION_) * (int)$product['cart_quantity'];
+						$ecotax_total += Tools::ps_round($ecotax_price, $compute_precision) * (int)$product['cart_quantity'];
 					}
 					break;
 			}
@@ -1519,16 +1537,16 @@ class CartCore extends ObjectModel
 			if ($with_taxes && $ps_round_type == Order::ROUND_TOTAL)
 			{
 				$tmp = explode('_', $key);
-				$address = Address::initialize((int)$tmp[1], true);
+				$address = $address_factory->findOrCreate((int)$tmp[1], true);
 				$tax_calculator = TaxManagerFactory::getManager($address, $tmp[0])->getTaxCalculator();
-				$order_total += Tools::ps_round($price + $tax_calculator->getTaxesTotalAmount($price), _PS_PRICE_COMPUTE_PRECISION_);
+				$order_total += Tools::ps_round($price + $tax_calculator->getTaxesTotalAmount($price), $compute_precision);
 			}
 			else
 				$order_total += $price;
 		}
 
 		if ($ecotax_total && $with_taxes && $ps_round_type == Order::ROUND_TOTAL)
-			$ecotax_total = Tools::ps_round($ecotax_total, _PS_PRICE_COMPUTE_PRECISION_) + Tools::ps_round($ecotax_tax_calculator->getTaxesTotalAmount($ecotax_total), _PS_PRICE_COMPUTE_PRECISION_);
+			$ecotax_total = Tools::ps_round($ecotax_total, $compute_precision) + Tools::ps_round($ecotax_tax_calculator->getTaxesTotalAmount($ecotax_total), $compute_precision);
 
 		$order_total += $ecotax_total;
 		$order_total_products = $order_total;
@@ -1538,8 +1556,12 @@ class CartCore extends ObjectModel
 
 		// Wrapping Fees
 		$wrapping_fees = 0;
-		if ($this->gift)
-			$wrapping_fees = Tools::convertPrice(Tools::ps_round($this->getGiftWrappingPrice($with_taxes), _PS_PRICE_COMPUTE_PRECISION_), Currency::getCurrencyInstance((int)$this->id_currency));
+
+		// With PS_ATCP_SHIPWRAP on the gift wrapping cost computation calls getOrderTotal with $type === Cart::ONLY_PRODUCTS, so the flag below prevents an infinite recursion.
+		$include_gift_wrapping = (!$configuration->get('PS_ATCP_SHIPWRAP') || $type !== Cart::ONLY_PRODUCTS);
+
+		if ($this->gift && $include_gift_wrapping)
+			$wrapping_fees = Tools::convertPrice(Tools::ps_round($this->getGiftWrappingPrice($with_taxes), $compute_precision), Currency::getCurrencyInstance((int)$this->id_currency));
 		if ($type == Cart::ONLY_WRAPPING)
 			return $wrapping_fees;
 
@@ -1577,7 +1599,7 @@ class CartCore extends ObjectModel
 				// If the cart rule offers free shipping, add the shipping cost
 				if (($with_shipping || $type == Cart::ONLY_DISCOUNTS) && $cart_rule['obj']->free_shipping && !$flag)
 				{
-					$order_shipping_discount = (float)Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_SHIPPING, ($param_product ? $package : null), $use_cache), _PS_PRICE_COMPUTE_PRECISION_);
+					$order_shipping_discount = (float)Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_SHIPPING, ($param_product ? $package : null), $use_cache), $compute_precision);
 					$flag = true;
 				}
 
@@ -1598,7 +1620,7 @@ class CartCore extends ObjectModel
 
 				// If the cart rule offers a reduction, the amount is prorated (with the products in the package)
 				if ($cart_rule['obj']->reduction_percent > 0 || $cart_rule['obj']->reduction_amount > 0)
-					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_REDUCTION, $package, $use_cache), _PS_PRICE_COMPUTE_PRECISION_);
+					$order_total_discount += Tools::ps_round($cart_rule['obj']->getContextualValue($with_taxes, $virtual_context, CartRule::FILTER_ACTION_REDUCTION, $package, $use_cache), $compute_precision);
 			}
 			$order_total_discount = min(Tools::ps_round($order_total_discount, 2), (float)$order_total_products) + (float)$order_shipping_discount;
 			$order_total -= $order_total_discount;
@@ -1613,7 +1635,7 @@ class CartCore extends ObjectModel
 		if ($type == Cart::ONLY_DISCOUNTS)
 			return $order_total_discount;
 
-		return Tools::ps_round((float)$order_total, _PS_PRICE_COMPUTE_PRECISION_);
+		return Tools::ps_round((float)$order_total, $compute_precision);
 	}
 
 	/**
@@ -1626,26 +1648,49 @@ class CartCore extends ObjectModel
 		static $address = array();
 
 		$wrapping_fees = (float)Configuration::get('PS_GIFT_WRAPPING_PRICE');
-		if ($with_taxes && $wrapping_fees > 0)
-		{
-			if (!isset($address[$this->id]))
-			{
-				if ($id_address === null)
-					$id_address = (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
-				try
-				{
-					$address[$this->id] = Address::initialize($id_address);
-				}
-				catch (Exception $e)
-				{
-					$address[$this->id] = new Address();
-					$address[$this->id]->id_country = Configuration::get('PS_COUNTRY_DEFAULT');
-				}
-			}
 
-			$tax_manager = TaxManagerFactory::getManager($address[$this->id], (int)Configuration::get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'));
-			$tax_calculator = $tax_manager->getTaxCalculator();
-			$wrapping_fees = $tax_calculator->addTaxes($wrapping_fees);
+		if ($wrapping_fees <= 0)
+		{
+			return $wrapping_fees;
+		}
+
+		if ($with_taxes)
+		{
+			if (Configuration::get('PS_ATCP_SHIPWRAP'))
+			{
+				// With PS_ATCP_SHIPWRAP, wrapping fee is by default tax included
+				// so nothing to do here.
+			}
+			else
+			{
+				if (!isset($address[$this->id]))
+				{
+					if ($id_address === null)
+						$id_address = (int)$this->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+					try
+					{
+						$address[$this->id] = Address::initialize($id_address);
+					}
+					catch (Exception $e)
+					{
+						$address[$this->id] = new Address();
+						$address[$this->id]->id_country = Configuration::get('PS_COUNTRY_DEFAULT');
+					}
+				}
+
+				$tax_manager = TaxManagerFactory::getManager($address[$this->id], (int)Configuration::get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'));
+				$tax_calculator = $tax_manager->getTaxCalculator();
+				$wrapping_fees = $tax_calculator->addTaxes($wrapping_fees);
+			}
+		}
+		else if (Configuration::get('PS_ATCP_SHIPWRAP'))
+		{
+			// With PS_ATCP_SHIPWRAP, wrapping fee is by default tax included, so we convert it
+			// when asked for the pre tax price.
+			$wrapping_fees = Tools::ps_round(
+				$wrapping_fees / (1 + $this->getAverageProductsTaxRate()),
+				_PS_PRICE_COMPUTE_PRECISION_
+			);
 		}
 
 		return $wrapping_fees;
@@ -1690,7 +1735,7 @@ class CartCore extends ObjectModel
 		if (isset($cache[(int)$this->id.'_'.(int)$this->id_address_delivery]) && $cache[(int)$this->id.'_'.(int)$this->id_address_delivery] !== false && !$flush)
 			return $cache[(int)$this->id.'_'.(int)$this->id_address_delivery];
 
-		$product_list = $this->getProducts();
+		$product_list = $this->getProducts($flush);
 		// Step 1 : Get product informations (warehouse_list and carrier_list), count warehouse
 		// Determine the best warehouse to determine the packages
 		// For that we count the number of time we can use a warehouse for a specific delivery address
@@ -1993,7 +2038,7 @@ class CartCore extends ObjectModel
 		$delivery_option_list = array();
 		$carriers_price = array();
 		$carrier_collection = array();
-		$package_list = $this->getPackageList();
+		$package_list = $this->getPackageList($flush);
 
 		// Foreach addresses
 		foreach ($package_list as $id_address => $packages)
@@ -2187,16 +2232,19 @@ class CartCore extends ObjectModel
 
 		$free_carriers_rules = array();
 
+		$context = Context::getContext();
 		foreach ($cart_rules as $cart_rule)
 		{
 			$total_price = $cart_rule['minimum_amount_tax'] ? $total_products_wt : $total_products;
 			$total_price += $cart_rule['minimum_amount_tax'] && $cart_rule['minimum_amount_shipping'] ? $real_best_price : 0;
 			$total_price += !$cart_rule['minimum_amount_tax'] && $cart_rule['minimum_amount_shipping'] ? $real_best_price_wt : 0;
-			if ($cart_rule['free_shipping'] && $cart_rule['carrier_restriction'] && $cart_rule['minimum_amount'] <= $total_price)
+			if ($cart_rule['free_shipping'] && $cart_rule['carrier_restriction']
+				&& in_array($cart_rule['id_cart_rule'], $cart_rules_in_cart)
+				&& $cart_rule['minimum_amount'] <= $total_price)
 			{
 				$cr = new CartRule((int)$cart_rule['id_cart_rule']);
 				if (Validate::isLoadedObject($cr) &&
-					$cr->checkValidity(Context::getContext(), in_array((int)$cart_rule['id_cart_rule'], $cart_rules_in_cart), false, false))
+					$cr->checkValidity($context, in_array((int)$cart_rule['id_cart_rule'], $cart_rules_in_cart), false, false))
 				{
 					$carriers = $cr->getAssociatedRestrictions('carrier', true, false);
 					if (is_array($carriers) && count($carriers) && isset($carriers['selected']))
@@ -2421,7 +2469,8 @@ class CartCore extends ObjectModel
 			);
 			Cache::store($cache_id, $result);
 		}
-		$result = Cache::retrieve($cache_id);
+		else
+			$result = Cache::retrieve($cache_id);
 
 		$result[] = array('id_address_delivery' => (int)$this->id_address_delivery);
 
@@ -2803,7 +2852,19 @@ class CartCore extends ObjectModel
 		if ($use_tax && !Tax::excludeTaxeOption())
 		{
 			$address = Address::initialize((int)$address_id);
-			$carrier_tax = $carrier->getTaxesRate($address);
+
+			if (Configuration::get('PS_ATCP_SHIPWRAP'))
+			{
+				// With PS_ATCP_SHIPWRAP, pre-tax price is deduced
+				// from post tax price, so no $carrier_tax here
+				// even though it sounds weird.
+				$carrier_tax = 0;
+			}
+			else
+			{
+				$carrier_tax = $carrier->getTaxesRate($address);
+			}
+
 		}
 
 		$configuration = Configuration::getMultiple(array(
@@ -2911,9 +2972,21 @@ class CartCore extends ObjectModel
 			}
 		}
 
-		// Apply tax
-		if ($use_tax && isset($carrier_tax))
-			$shipping_cost *= 1 + ($carrier_tax / 100);
+		if (Configuration::get('PS_ATCP_SHIPWRAP'))
+		{
+				if (!$use_tax)
+				{
+					// With PS_ATCP_SHIPWRAP, we deduce the pre-tax price from the post-tax
+					// price. This is on purpose and required in Germany.
+					$shipping_cost /= (1 + $this->getAverageProductsTaxRate());
+				}
+		}
+		else
+		{
+			// Apply tax
+			if ($use_tax && isset($carrier_tax))
+				$shipping_cost *= 1 + ($carrier_tax / 100);
+		}
 
 		$shipping_cost = (float)Tools::ps_round((float)$shipping_cost, 2);
 		Cache::store($cache_id, $shipping_cost);
@@ -3893,16 +3966,16 @@ class CartCore extends ObjectModel
 	 * Get all the ids of the delivery addresses without carriers
 	 *
 	 * @param bool $return_collection Return a collection
-	 *
+	 * @param array &$error contain an error message if an error occurs
 	 * @return array Array of address id or of address object
 	 */
-	public function getDeliveryAddressesWithoutCarriers($return_collection = false)
+	public function getDeliveryAddressesWithoutCarriers($return_collection = false, &$error = array())
 	{
 		$addresses_without_carriers = array();
 		foreach ($this->getProducts() as $product)
 		{
 			if (!in_array($product['id_address_delivery'], $addresses_without_carriers)
-				&& !count(Carrier::getAvailableCarrierList(new Product($product['id_product']), null, $product['id_address_delivery'])))
+				&& !count(Carrier::getAvailableCarrierList(new Product($product['id_product']), null, $product['id_address_delivery'], null, null, $error)))
 				$addresses_without_carriers[] = $product['id_address_delivery'];
 		}
 		if (!$return_collection)

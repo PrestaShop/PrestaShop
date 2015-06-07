@@ -199,13 +199,16 @@ class CountryCore extends ObjectModel
 	{
 		$key = 'country_getNameById_'.$id_country.'_'.$id_lang;
 		if (!Cache::isStored($key))
-			Cache::store($key, Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT `name`
-				FROM `'._DB_PREFIX_.'country_lang`
-				WHERE `id_lang` = '.(int)$id_lang.'
-				AND `id_country` = '.(int)$id_country
-			));
-
+		{
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+							SELECT `name`
+							FROM `'._DB_PREFIX_.'country_lang`
+							WHERE `id_lang` = '.(int)$id_lang.'
+							AND `id_country` = '.(int)$id_country
+						);
+			Cache::store($key, $result);
+			return $result;
+		}
 		return Cache::retrieve($key);
 	}
 

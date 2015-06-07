@@ -791,8 +791,10 @@ class AdminThemesControllerCore extends AdminController
 
 			if (!in_array($extension, $extensions))
 				$this->errors[] = $this->l('File extension must be .txt or .pdf');
-			elseif ($_FILES['documentation']['error'] > 0 || $_FILES['documentation']['size'] > 1048576)
+			elseif ($_FILES['documentation']['error'] > 0)
 				$this->errors[] = $this->l('An error occurred during documentation upload');
+			elseif ($_FILES['documentation']['size'] > 1048576)
+				$this->errors[] = $this->l('An error occurred while uploading the documentation. Maximum size allowed is 1MB.');
 			elseif (!$name || !Validate::isGenericName($name) || strlen($name) > self::MAX_NAME_LENGTH)
 				$this->errors[] = $this->l('Please enter a valid documentation name');
 		}
@@ -861,7 +863,7 @@ class AdminThemesControllerCore extends AdminController
 	{
 		$zip = new ZipArchive();
 		$zip_file_name = md5(time()).'.zip';
-		if ($zip->open(_PS_CACHE_DIR_.$zip_file_name, ZipArchive::OVERWRITE) === true)
+		if ($zip->open(_PS_CACHE_DIR_.$zip_file_name, ZipArchive::OVERWRITE | ZipArchive::CREATE) === true)
 		{
 			if (!$zip->addFromString('Config.xml', $this->xml_file))
 				$this->errors[] = $this->l('Cannot create config file.');
@@ -1297,7 +1299,7 @@ class AdminThemesControllerCore extends AdminController
 		{
 			foreach ($to_install as $module)
 				$fields_value['modulesToExport_module'.$module] = true;
-				
+
 			$fields_form['form']['input'][] = array(
 				'type' => 'checkbox',
 				'label' => $this->l('Select the theme\'s modules that you wish to export'),

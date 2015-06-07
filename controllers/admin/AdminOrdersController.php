@@ -777,7 +777,6 @@ class AdminOrdersControllerCore extends AdminController
 									$params['{order_name}'] = $order->getUniqReference();
 									$params['{voucher_amount}'] = Tools::displayPrice($cart_rule->reduction_amount, $currency, false);
 									$params['{voucher_num}'] = $cart_rule->code;
-									$customer = new Customer((int)$order->id_customer);
 									@Mail::Send((int)$order->id_lang, 'voucher', sprintf(Mail::l('New voucher for your order #%s', (int)$order->id_lang), $order->reference),
 										$params, $customer->email, $customer->firstname.' '.$customer->lastname, null, null, null,
 										null, _PS_MAIL_DIR_, true, (int)$order->id_shop);
@@ -2226,21 +2225,7 @@ class AdminOrdersControllerCore extends AdminController
 		if (is_null($order))
 			$order = new Order(Tools::getValue('id_order'));
 
-		$data = array(
-			'{lastname}' => $order->getCustomer()->lastname,
-			'{firstname}' => $order->getCustomer()->firstname,
-			'{id_order}' => (int)$order->id,
-			'{order_name}' => $order->getUniqReference()
-		);
-
-		Mail::Send(
-			(int)$order->id_lang,
-			'order_changed',
-			Mail::l('Your order has been changed', (int)$order->id_lang),
-			$data,
-			$order->getCustomer()->email,
-			$order->getCustomer()->firstname.' '.$order->getCustomer()->lastname,
-			null, null, null, null, _PS_MAIL_DIR_, true, (int)$order->id_shop);
+		Hook::exec('actionOrderEdited', array('order' => $order));
 	}
 
 	public function ajaxProcessLoadProductInformation()

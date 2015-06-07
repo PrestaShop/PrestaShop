@@ -264,9 +264,22 @@ class MailCore extends ObjectModel
 				Tools::dieOrLog(Tools::displayError('Error - The following e-mail template is missing:').' '.$template_path.$iso_template.'.html', $die);
 				return false;
 			}
-			$template_html = file_get_contents($template_path.$iso_template.'.html');
-			$template_txt = strip_tags(html_entity_decode(file_get_contents($template_path.$iso_template.'.txt'), null, 'utf-8'));
-
+			$template_html = '';
+			$template_txt = '';
+			Hook::exec('actionEmailAddBeforeContent', array(
+				'template' => $template,
+				'template_html' => &$template_html,
+				'template_txt' => &$template_txt,
+				'id_lang' => (int)$id_lang
+			), null, true);
+			$template_html .= file_get_contents($template_path.$iso_template.'.html');
+			$template_txt .= strip_tags(html_entity_decode(file_get_contents($template_path.$iso_template.'.txt'), null, 'utf-8'));
+			Hook::exec('actionEmailAddAfterContent', array(
+				'template' => $template,
+				'template_html' => &$template_html,
+				'template_txt' => &$template_txt,
+				'id_lang' => (int)$id_lang
+			), null, true);
 			if ($override_mail && file_exists($template_path.$iso.'/lang.php'))
 					include_once($template_path.$iso.'/lang.php');
 			elseif ($module_name && file_exists($theme_path.'mails/'.$iso.'/lang.php'))

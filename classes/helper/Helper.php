@@ -358,8 +358,17 @@ class HelperCore
 		return $html;
 	}
 
+	/**
+	 * Render shop list
+	 *
+	 * @deprecated deprecated since 1.6.1.0 use HelperShop->getRenderedShopList
+	 *
+	 * @return string
+	 */
 	public static function renderShopList()
 	{
+		Tools::displayAsDeprecated();
+
 		if (!Shop::isFeatureActive() || Shop::getTotalShops(false, null) < 2)
 			return null;
 

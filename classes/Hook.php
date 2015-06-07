@@ -146,26 +146,31 @@ class HookCore extends ObjectModel
 	{
 		$cache_id = 'hook_namebyid_'.$hook_id;
 		if (!Cache::isStored($cache_id))
-			Cache::store($cache_id, Db::getInstance()->getValue('
-				SELECT `name`
-				FROM `'._DB_PREFIX_.'hook`
-				WHERE `id_hook` = '.(int)$hook_id)
-			);
+		{
+			$result = Db::getInstance()->getValue('
+							SELECT `name`
+							FROM `'._DB_PREFIX_.'hook`
+							WHERE `id_hook` = '.(int)$hook_id);
+			Cache::store($cache_id, $result);
+			return $result;
+		}
 		return Cache::retrieve($cache_id);
 	}
 
 	/**
 	 * Return hook live edit bool from ID
 	 */
-	public static function getLiveEditById($hook_id)
-	{
+	public static function getLiveEditById($hook_id) {
 		$cache_id = 'hook_live_editbyid_'.$hook_id;
 		if (!Cache::isStored($cache_id))
-			Cache::store($cache_id, Db::getInstance()->getValue('
-				SELECT `live_edit`
-				FROM `'._DB_PREFIX_.'hook`
-				WHERE `id_hook` = '.(int)$hook_id)
-			);
+		{
+			$result = Db::getInstance()->getValue('
+							SELECT `live_edit`
+							FROM `'._DB_PREFIX_.'hook`
+							WHERE `id_hook` = '.(int)$hook_id);
+			Cache::store($cache_id, $result);
+			return $result;
+		}
 		return Cache::retrieve($cache_id);
 	}
 
@@ -186,6 +191,7 @@ class HookCore extends ObjectModel
 				foreach ($hook_alias_list as $ha)
 					$hook_alias[strtolower($ha['alias'])] = $ha['name'];
 			Cache::store($cache_id, $hook_alias);
+			return $hook_alias;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -248,6 +254,7 @@ class HookCore extends ObjectModel
 
 			// @todo remove this in 1.6, we keep it in 1.5 for retrocompatibility
 			Hook::$_hook_modules_cache = $list;
+			return $list;
 		}
 
 		return Cache::retrieve($cache_id);

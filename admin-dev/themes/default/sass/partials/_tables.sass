@@ -2,7 +2,7 @@
 	border-collapse: separate
 	border-spacing: 0 2px 0 0
 	margin-bottom: 5px
-	thead 
+	thead
 		> tr > th
 			border: none
 			font-weight: normal
@@ -121,13 +121,11 @@ tr.highlighted td
 	color: rgba(white,0.8)
 	@include border-radius(3px)
 	&.action-enabled
-		border: solid $brand-success 1px
-		background-color: lighten($brand-success,10%)
+		color: $brand-success
 	&.action-disabled
-		border: solid $brand-danger 1px
-		background-color: lighten($brand-danger,10%)
+		color: $brand-danger
 	&:hover
-		color: white
+		color: #25B9D7
 
 .list-empty
 	background-color: #FCFDFE !important
@@ -176,7 +174,7 @@ tr.highlighted td
 			overflow: hidden
 			text-overflow: ellipsis
 			&:last-child
-				border: none				
+				border: none
 			.btn-group-action
 				.dropdown-toggle
 					display: none !important
@@ -244,7 +242,7 @@ tr.highlighted td
 		border: 1px solid $table-border-color
 		-ms-overflow-style: -ms-autohiding-scrollbar
 		-webkit-overflow-scrolling: touch
-		> .table 
+		> .table
 			margin-bottom: 0
 			> thead,
 			> tbody,
@@ -267,7 +265,7 @@ tr.highlighted td
 						@include border-right(0)
 			> tbody,
 			> tfoot
-				> tr:last-child 
+				> tr:last-child
 					> th,
 					> td
 						border-bottom: 0

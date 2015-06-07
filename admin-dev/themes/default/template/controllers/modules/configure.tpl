@@ -22,7 +22,7 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-{extends file="page_header_toolbar.tpl"} 
+{extends file="page_header_toolbar.tpl"}
 
 
 {block name=pageTitle}
@@ -32,16 +32,9 @@
 {/block}
 {block name=pageBreadcrumb}
 <ul class="breadcrumb page-breadcrumb">
-	{* Shop *}
-	{if $is_multishop && $shop_list && ($multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
-		<li class="breadcrumb-multishop">
-			{$shop_list}
-		</li>
-	{/if}
 	{if $breadcrumbs2.container.name != ''}
 		<li class="breadcrumb-current">
 			{if $breadcrumbs2.container.href != ''}<a href="{$breadcrumbs2.container.href|escape}">{/if}
-			{if $breadcrumbs2.container.icon != ''}<i class="{$breadcrumbs2.container.icon|escape}"></i>{/if}
 			{$breadcrumbs2.container.name|escape}
 			{if $breadcrumbs2.container.href != ''}</a>{/if}
 		</li>

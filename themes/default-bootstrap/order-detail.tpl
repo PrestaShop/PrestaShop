@@ -23,20 +23,19 @@
 *  International Registered Trademark & Property of PrestaShop SA
 *}
 {if isset($order)}
-{if isset($reorderingAllowed) && $reorderingAllowed}
 <div class="box box-small clearfix">
+	{if isset($reorderingAllowed) && $reorderingAllowed}
 	<form id="submitReorder" action="{if isset($opc) && $opc}{$link->getPageLink('order-opc', true)}{else}{$link->getPageLink('order', true)}{/if}" method="post" class="submit">
-			<input type="hidden" value="{$order->id}" name="id_order"/>
-			<input type="hidden" value="" name="submitReorder"/>
+		<input type="hidden" value="{$order->id}" name="id_order"/>
+		<input type="hidden" value="" name="submitReorder"/>
 
-				<a href="#" onclick="$(this).closest('form').submit(); return false;" class="button btn btn-default button-medium pull-right"><span>{l s='Reorder'}<i class="icon-chevron-right right"></i></span></a>
-			<p class="dark">
-				<strong>{l s='Order Reference %s - placed on' sprintf=$order->getUniqReference()} {dateFormat date=$order->date_add full=0}</strong>
-			</p>
-
+		<a href="#" onclick="$(this).closest('form').submit(); return false;" class="button btn btn-default button-medium pull-right"><span>{l s='Reorder'}<i class="icon-chevron-right right"></i></span></a>
 	</form>
+	{/if}
+	<p class="dark">
+		<strong>{l s='Order Reference %s - placed on' sprintf=$order->getUniqReference()} {dateFormat date=$order->date_add full=0}</strong>
+	</p>
 </div>
-{/if}
 <div class="info-order box">
 	{if $carrier->id}<p><strong class="dark">{l s='Carrier'}</strong> {if $carrier->name == "0"}{$shop_name|escape:'html':'UTF-8'}{else}{$carrier->name|escape:'html':'UTF-8'}{/if}</p>{/if}
 	<p><strong class="dark">{l s='Payment method'}</strong> <span class="color-myaccount">{$order->payment|escape:'html':'UTF-8'}</span></p>

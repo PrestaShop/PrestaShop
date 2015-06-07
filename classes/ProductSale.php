@@ -225,7 +225,7 @@ class ProductSaleCore
 		if ($total_sales > 1)
 			return Db::getInstance()->execute('
 				UPDATE '._DB_PREFIX_.'product_sale
-				SET `quantity` = `quantity` - '.(int)$qty.', `sale_nbr` = `sale_nbr` - 1, `date_upd` = NOW()
+				SET `quantity` = CAST(`quantity` AS SIGNED) - '.(int)$qty.', `sale_nbr` = CAST(`sale_nbr` AS SIGNED) - 1, `date_upd` = NOW()
 				WHERE `id_product` = '.(int)$id_product
 			);
 		elseif ($total_sales == 1)

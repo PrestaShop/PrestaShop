@@ -270,11 +270,11 @@ $(document).on('click', 'button[name=saveCustomization]', function(e){
 
 if (typeof ad !== 'undefined' && ad && typeof adtoken !== 'undefined' && adtoken)
 {
-	$(document).on('click', 'input[name=publish_button]', function(e){
+	$(document).on('click', 'a#publish_button', function(e){
 		e.preventDefault();
 		submitPublishProduct(ad, 0, adtoken);
 	});
-	$(document).on('click', 'input[name=lnk_view]', function(e){
+	$(document).on('click', 'a#lnk_view', function(e){
 		e.preventDefault();
 		submitPublishProduct(ad, 1, adtoken);
 	});

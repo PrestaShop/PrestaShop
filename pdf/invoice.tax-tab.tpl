@@ -42,6 +42,8 @@
 			</tr>
 		</thead>
 		<tbody>
+		{assign var=has_line value=false}
+
 		{foreach $tax_breakdowns as $label => $bd}
 			{assign var=label_printed value=false}
 
@@ -49,6 +51,7 @@
 				{if $line.rate == 0}
 					{continue}
 				{/if}
+				{assign var=has_line value=true}
 				<tr>
 					<td class="white">
 						{if !$label_printed}
@@ -84,11 +87,14 @@
 			{/foreach}
 		{/foreach}
 
-		{if $label_printed == false}
+		{if !$has_line}
 		<tr>
-			<td class="white center" colspan="{if $display_tax_bases_in_breakdowns}4{else}3{/if}">{l s='No taxes' pdf='true'}</td>
+			<td class="white center" colspan="{if $display_tax_bases_in_breakdowns}4{else}3{/if}">
+				{l s='No taxes' pdf='true'}
+			</td>
 		</tr>
 		{/if}
+
 		</tbody>
     </table>
 

@@ -764,6 +764,8 @@ class AdminControllerCore extends Controller
 		}
 
 		$filters = $this->context->cookie->getFamily($prefix.$this->list_id.'Filter_');
+		$definition = ObjectModel::getDefinition($this->className);
+
 		foreach ($filters as $key => $value)
 		{
 			/* Extracting filters from $_POST on key filter_ */
@@ -812,18 +814,19 @@ class AdminControllerCore extends Controller
 					{
 						$sql_filter .= ' AND ';
 						$check_key = ($key == $this->identifier || $key == '`'.$this->identifier.'`');
+						$alias = !empty($definition['fields'][$filter]['shop']) ? 'sa' : 'a';
 
 						if ($type == 'int' || $type == 'bool')
-							$sql_filter .= (($check_key || $key == '`active`') ? 'a.' : '').pSQL($key).' = '.(int)$value.' ';
+							$sql_filter .= (($check_key || $key == '`active`') ?  $alias.'.' : '').pSQL($key).' = '.(int)$value.' ';
 						elseif ($type == 'decimal')
-							$sql_filter .= ($check_key ? 'a.' : '').pSQL($key).' = '.(float)$value.' ';
+							$sql_filter .= ($check_key ?  $alias.'.' : '').pSQL($key).' = '.(float)$value.' ';
 						elseif ($type == 'select')
-							$sql_filter .= ($check_key ? 'a.' : '').pSQL($key).' = \''.pSQL($value).'\' ';
+							$sql_filter .= ($check_key ?  $alias.'.' : '').pSQL($key).' = \''.pSQL($value).'\' ';
 						else
 						{
 							if ($type == 'price')
 								$value = (float)str_replace(',', '.', $value);
-							$sql_filter .= ($check_key ? 'a.' : '').pSQL($key).' LIKE \'%'.pSQL(trim($value)).'%\' ';
+							$sql_filter .= ($check_key ?  $alias.'.' : '').pSQL($key).' LIKE \'%'.pSQL(trim($value)).'%\' ';
 						}
 					}
 				}
@@ -1467,7 +1470,7 @@ class AdminControllerCore extends Controller
 					array_pop($this->toolbar_title);
 					array_pop($this->meta_title);
 					$this->toolbar_title[] = sprintf($this->l('Edit: %s'),
-						is_array($obj->{$this->identifier_name}) ? $obj->{$this->identifier_name}[$this->context->employee->id_lang] : $obj->{$this->identifier_name});
+						(is_array($obj->{$this->identifier_name}) && isset($obj->{$this->identifier_name}[$this->context->employee->id_lang])) ? $obj->{$this->identifier_name}[$this->context->employee->id_lang] : $obj->{$this->identifier_name});
 					$this->addMetaTitle($this->toolbar_title[count($this->toolbar_title) - 1]);
 				}
 				break;
@@ -1871,6 +1874,7 @@ class AdminControllerCore extends Controller
 		if (Validate::isLoadedObject($this->context->employee))
 		{
 			$accesses = Profile::getProfileAccesses($this->context->employee->id_profile, 'class_name');
+			$helperShop = new HelperShop();
 			/* Hooks are voluntary out the initialize array (need those variables already assigned) */
 			$bo_color = empty($this->context->employee->bo_color) ? '#FFFFFF' : $this->context->employee->bo_color;
 			$this->context->smarty->assign(array(
@@ -1889,7 +1893,7 @@ class AdminControllerCore extends Controller
 				'bo_query' => Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query'))),
 				'quick_access' => $quick_access,
 				'multi_shop' => Shop::isFeatureActive(),
-				'shop_list' => Helper::renderShopList(),
+				'shop_list' => $helperShop->getRenderedShopList(),
 				'shop' => $this->context->shop,
 				'shop_group' => new ShopGroup((int)Shop::getContextShopGroupID()),
 				'is_multishop' => $is_multishop,
@@ -2015,6 +2019,7 @@ class AdminControllerCore extends Controller
 		}
 
 		$this->context->smarty->assign(array(
+			'maintenance_mode' => !(bool)Configuration::get('PS_SHOP_ENABLE'),
 			'content' => $this->content,
 			'lite_display' => $this->lite_display,
 			'url_post' => self::$currentIndex.'&token='.$this->token,
@@ -2529,6 +2534,8 @@ class AdminControllerCore extends Controller
 		$this->addjQueryPlugin('growl', null, false);
 		$this->addJqueryUI(array('ui.slider', 'ui.datepicker'));
 
+		Media::addJsDef(array('host_mode' => (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)));
+
 		$this->addJS(array(
 			_PS_JS_DIR_.'admin.js',
 			_PS_JS_DIR_.'tools.js',
@@ -2548,6 +2555,17 @@ class AdminControllerCore extends Controller
 			$this->addJS(_PS_JS_DIR_.'admin/notifications.js');
 
 		$this->addJS('https://cdn.statuspage.io/se-v2.js');
+
+		if (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)
+		{
+			$this->addJS('https://cdn.statuspage.io/se-v2.js');
+
+			Media::addJsDefL('status_operational', $this->l('Operational'));
+			Media::addJsDefL('status_degraded_performance', $this->l('Degraded Performance'));
+			Media::addJsDefL('status_partial_outage', $this->l('Partial Outage'));
+			Media::addJsDefL('status_major_outage', $this->l('Major Outage'));
+			Media::addJsDef(array('host_cluster' => defined('_PS_HOST_CLUSTER_') ? _PS_HOST_CLUSTER_ : 'fr1'));
+		}
 
 		// Execute Hook AdminController SetMedia
 		Hook::exec('actionAdminControllerSetMedia');
@@ -3115,13 +3133,13 @@ class AdminControllerCore extends Controller
 						continue;
 
 					if (isset($array_value['filter_key']))
-						$this->_listsql .= str_replace('!', '.', $array_value['filter_key']).' as '.$key.',';
+						$this->_listsql .= str_replace('!', '.`', $array_value['filter_key']).'` AS `'.$key.'`, ';
 					elseif ($key == 'id_'.$this->table)
-						$this->_listsql .= 'a.`'.bqSQL($key).'`,';
+						$this->_listsql .= 'a.`'.bqSQL($key).'`, ';
 					elseif ($key != 'image' && !preg_match('/'.preg_quote($key, '/').'/i', $this->_select))
-						$this->_listsql .= '`'.bqSQL($key).'`,';
+						$this->_listsql .= '`'.bqSQL($key).'`, ';
 				}
-				$this->_listsql = rtrim($this->_listsql, ',');
+				$this->_listsql = rtrim(trim($this->_listsql), ',');
 			}
 			else
 				$this->_listsql .= ($this->lang ? 'b.*,' : '').' a.*';
@@ -3141,20 +3159,20 @@ class AdminControllerCore extends Controller
 			'.$having_clause;
 			$sql_order_by = ' ORDER BY '.((str_replace('`', '', $order_by) == $this->identifier) ? 'a.' : '').$order_by.' '.pSQL($order_way).
 			($this->_tmpTableFilter ? ') tmpTable WHERE 1'.$this->_tmpTableFilter : '');
-			$sql_limit = ' '.(($use_limit === true) ? ' LIMIT '.(int)$start.','.(int)$limit : '');
+			$sql_limit = ' '.(($use_limit === true) ? ' LIMIT '.(int)$start.', '.(int)$limit : '');
 
 			if ($this->_use_found_rows)
 			{
 				$this->_listsql = 'SELECT SQL_CALC_FOUND_ROWS
 								'.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '').$this->_listsql.$sql_from.$sql_join.' WHERE 1 '.$sql_where.
-								  $sql_order_by.$sql_limit;
+								$sql_order_by.$sql_limit;
 				$list_count = 'SELECT FOUND_ROWS() AS `'._DB_PREFIX_.$this->table.'`';
 			}
 			else
 			{
 				$this->_listsql = 'SELECT
 								'.($this->_tmpTableFilter ? ' * FROM (SELECT ' : '').$this->_listsql.$sql_from.$sql_join.' WHERE 1 '.$sql_where.
-								  $sql_order_by.$sql_limit;
+								$sql_order_by.$sql_limit;
 				$list_count = 'SELECT COUNT(*) AS `'._DB_PREFIX_.$this->table.'` '.$sql_from.$sql_join.' WHERE 1 '.$sql_where;
 			}
 

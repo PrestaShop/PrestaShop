@@ -349,7 +349,7 @@ class InstallModelInstall extends InstallAbstractModel
 
 			Language::loadLanguages();
 			Tools::clearCache();
-			if (!$id_lang = Language::getIdByIso($iso))
+			if (!$id_lang = Language::getIdByIso($iso, true))
 				throw new PrestashopInstallerException($this->language->l('Cannot install language "%s"', ($xml->name) ? $xml->name : $iso));
 			$languages[$id_lang] = $iso;
 
@@ -546,7 +546,7 @@ class InstallModelInstall extends InstallAbstractModel
 			$employee->bo_theme = 'default';
 			$employee->default_tab = 1;
 			$employee->active = true;
-			$employee->optin = (bool)$data['send_informations'];
+			$employee->optin = true;
 			$employee->id_profile = 1;
 			$employee->id_lang = Configuration::get('PS_LANG_DEFAULT');
 			$employee->bo_menu = 1;

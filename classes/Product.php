@@ -1940,12 +1940,16 @@ class ProductCore extends ObjectModel
 			$cache_key = $row['id_product'].'_'.$row['id_product_attribute'].'_quantity';
 
 			if (!Cache::isStored($cache_key))
+			{
+				$result = StockAvailable::getQuantityAvailableByProduct($row['id_product'], $row['id_product_attribute']);
 				Cache::store(
 					$cache_key,
-					StockAvailable::getQuantityAvailableByProduct($row['id_product'], $row['id_product_attribute'])
+					$result
 				);
-
-			$combinations[$key]['quantity'] = Cache::retrieve($cache_key);
+				$combinations[$key]['quantity'] = $result;
+			}
+			else
+				$combinations[$key]['quantity'] = Cache::retrieve($cache_key);
 		}
 
 		return $combinations;
@@ -2027,12 +2031,16 @@ class ProductCore extends ObjectModel
 			$cache_key = $row['id_product'].'_'.$row['id_product_attribute'].'_quantity';
 
 			if (!Cache::isStored($cache_key))
+			{
+				$result = StockAvailable::getQuantityAvailableByProduct($row['id_product'], $row['id_product_attribute']);
 				Cache::store(
 					$cache_key,
-					StockAvailable::getQuantityAvailableByProduct($row['id_product'], $row['id_product_attribute'])
+					$result
 				);
-
-			$res[$key]['quantity'] = Cache::retrieve($cache_key);
+				$res[$key]['quantity'] = $result;
+			}
+			else
+				$res[$key]['quantity'] = Cache::retrieve($cache_key);
 		}
 
 		return $res;
@@ -2441,18 +2449,23 @@ class ProductCore extends ObjectModel
 	 */
 	public static function getProductCategories($id_product = '')
 	{
-		$ret = array();
+		$cache_id = 'Product::getProductCategories_'.(int)$id_product;
+		if (!Cache::isStored($cache_id))
+		{
+			$ret = array();
 
-		$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT `id_category` FROM `'._DB_PREFIX_.'category_product`
-			WHERE `id_product` = '.(int)$id_product
-		);
+			$row = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+				SELECT `id_category` FROM `'._DB_PREFIX_.'category_product`
+				WHERE `id_product` = '.(int)$id_product
+			);
 
-		if ($row)
-			foreach ($row as $val)
-				$ret[] = $val['id_category'];
-
-		return $ret;
+			if ($row)
+				foreach ($row as $val)
+					$ret[] = $val['id_category'];
+			Cache::store($cache_id, $ret);
+			return $ret;
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	public static function getProductCategoriesFull($id_product = '', $id_lang = null)
@@ -2567,6 +2580,7 @@ class ProductCore extends ObjectModel
 					AND image_shop.`cover` = 1';
 			$result = Db::getInstance()->getRow($sql);
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -2651,7 +2665,8 @@ class ProductCore extends ObjectModel
 				$cart_quantity = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
 				Cache::store($cache_id, $cart_quantity);
 			}
-			$cart_quantity = Cache::retrieve($cache_id);
+			else
+				$cart_quantity = Cache::retrieve($cache_id);
 		}
 
 		$id_currency = Validate::isLoadedObject($context->currency) ? (int)$context->currency->id : (int)Configuration::get('PS_CURRENCY_DEFAULT');
@@ -3542,29 +3557,25 @@ class ProductCore extends ObjectModel
 			AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl')
 		);
 		$sql->leftJoin('manufacturer', 'm', 'm.`id_manufacturer` = p.`id_manufacturer`');
-		$sql->leftJoin('product_supplier', 'sp', 'sp.`id_product` = p.`id_product`');
 
 		$where = 'pl.`name` LIKE \'%'.pSQL($query).'%\'
 		OR p.`ean13` LIKE \'%'.pSQL($query).'%\'
 		OR p.`upc` LIKE \'%'.pSQL($query).'%\'
 		OR p.`reference` LIKE \'%'.pSQL($query).'%\'
 		OR p.`supplier_reference` LIKE \'%'.pSQL($query).'%\'
-		OR `product_supplier_reference` LIKE \'%'.pSQL($query).'%\'';
+		OR EXISTS(SELECT * FROM `'._DB_PREFIX_.'product_supplier` sp WHERE sp.`id_product` = p.`id_product` AND `product_supplier_reference` LIKE \'%'.pSQL($query).'%\')';
 
-		$sql->groupBy('p.`id_product`');
 		$sql->orderBy('pl.`name` ASC');
 
 		if (Combination::isFeatureActive())
 		{
-			$sql->leftJoin('product_attribute', 'pa', 'pa.`id_product` = p.`id_product`');
-			$sql->join(Shop::addSqlAssociation('product_attribute', 'pa', false));
-			$where .= ' OR pa.`reference` LIKE \'%'.pSQL($query).'%\'
+			$where .= ' OR EXISTS(SELECT * FROM `'._DB_PREFIX_.'product_attribute` `pa` WHERE pa.`id_product` = p.`id_product` AND (pa.`reference` LIKE \'%'.pSQL($query).'%\'
 			OR pa.`supplier_reference` LIKE \'%'.pSQL($query).'%\'
 			OR pa.`ean13` LIKE \'%'.pSQL($query).'%\'
-			OR pa.`upc` LIKE \'%'.pSQL($query).'%\'';
+			OR pa.`upc` LIKE \'%'.pSQL($query).'%\'))';
 		}
 		$sql->where($where);
-		$sql->join(Product::sqlStock('p', 'pa', false, $context->shop));
+		$sql->join(Product::sqlStock('p', 0));
 
 		$result = Db::getInstance()->executeS($sql);
 
@@ -4357,8 +4368,8 @@ class ProductCore extends ObjectModel
 	protected function _deleteOldLabels()
 	{
 		$max = array(
-			Product::CUSTOMIZE_FILE => (int)Tools::getValue('uploadable_files'),
-			Product::CUSTOMIZE_TEXTFIELD => (int)Tools::getValue('text_fields')
+			Product::CUSTOMIZE_FILE => (int)$this->uploadable_files,
+			Product::CUSTOMIZE_TEXTFIELD => (int)$this->text_fields
 		);
 
 		/* Get customization field ids */
@@ -4638,6 +4649,7 @@ class ProductCore extends ObjectModel
 				WHERE cp.`id_product` = '.(int)$id_product.' AND cg.`id_customer` = '.(int)$id_customer);
 
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -4735,13 +4747,15 @@ class ProductCore extends ObjectModel
 			$context = Context::getContext();
 		$key = 'product_id_tax_rules_group_'.(int)$id_product.'_'.(int)$context->shop->id;
 		if (!Cache::isStored($key))
-			Cache::store($key,
-			Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-				SELECT `id_tax_rules_group`
-				FROM `'._DB_PREFIX_.'product_shop`
-				WHERE `id_product` = '.(int)$id_product.' AND id_shop='.(int)$context->shop->id));
-
-		return (int)Cache::retrieve($key);
+		{
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+							SELECT `id_tax_rules_group`
+							FROM `'._DB_PREFIX_.'product_shop`
+							WHERE `id_product` = '.(int)$id_product.' AND id_shop='.(int)$context->shop->id);
+			Cache::store($key, (int)$result);
+			return (int)$result;
+		}
+		return Cache::retrieve($key);
 	}
 
 	/**
@@ -5296,7 +5310,8 @@ class ProductCore extends ObjectModel
 				AND agl.`id_lang` = '.(int)$id_lang);
 			Cache::store($cache_id, $result);
 		}
-		$result = Cache::retrieve($cache_id);
+		else
+			$result = Cache::retrieve($cache_id);
 		return $result;
 	}
 

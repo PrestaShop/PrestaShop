@@ -141,7 +141,9 @@ class ThemeCore extends ObjectModel
 	}
 
 	/**
-	 * @param $directory
+	 * Checks if theme exists (by folder) and returns Theme object.
+	 *
+	 * @param string $directory
 	 *
 	 * @return bool|Theme
 	 */
@@ -149,13 +151,12 @@ class ThemeCore extends ObjectModel
 	{
 		if (is_string($directory) && strlen($directory) > 0 && file_exists(_PS_ALL_THEMES_DIR_.$directory) && is_dir(_PS_ALL_THEMES_DIR_.$directory))
 		{
-			$res = Db::getInstance()->getRow('SELECT * FROM '._DB_PREFIX_.'theme WHERE directory="'.pSQL($directory).'"');
+			$id_theme = (int)Db::getInstance()->getValue('SELECT id_theme FROM '._DB_PREFIX_.'theme WHERE directory="'.pSQL($directory).'"');
 
-			if (!$res)
-				return false;
-
-			return new Theme((int)$res['id_theme']);
+			return $id_theme ? new Theme($id_theme) : false;
 		}
+
+		return false;
 	}
 
 	public static function getInstalledThemeDirectories()

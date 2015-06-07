@@ -78,7 +78,7 @@
 	</td>
 
 	<td class="cart_quantity text-center" data-title="{l s='Quantity'}">
-		{if isset($cannotModify) AND $cannotModify == 1}
+		{if (isset($cannotModify) && $cannotModify == 1)}
 			<span>
 				{if $quantityDisplayed == 0 AND isset($customizedDatas.$productId.$productAttributeId)}
 					{$product.customizationQuantityTotal}
@@ -109,6 +109,7 @@
 			{/if}
 		{/if}
 	</td>
+
 	{if !isset($noDeleteButton) || !$noDeleteButton}
 		<td class="cart_delete text-center" data-title="{l s='Delete'}">
 		{if (!isset($customizedDatas.$productId.$productAttributeId) OR $quantityDisplayed > 0) && empty($product.gift)}

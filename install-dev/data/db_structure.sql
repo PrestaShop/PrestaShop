@@ -1174,6 +1174,8 @@ CREATE TABLE `PREFIX_order_invoice` (
   `total_wrapping_tax_excl` decimal(20, 6) NOT NULL DEFAULT '0.00',
   `total_wrapping_tax_incl` decimal(20, 6) NOT NULL DEFAULT '0.00',
   `shop_address` text DEFAULT NULL,
+  `invoice_address` text DEFAULT NULL,
+  `delivery_address` text DEFAULT NULL,
   `note` text,
   `date_add` datetime NOT NULL,
   PRIMARY KEY (`id_order_invoice`),
@@ -1792,7 +1794,7 @@ CREATE TABLE `PREFIX_specific_price` (
 	KEY `from_quantity` (`from_quantity`),
 	KEY (`id_specific_price_rule`),
 	KEY (`id_cart`),
-  UNIQUE KEY `id_product_2` (`id_product`,`id_shop`,`id_shop_group`,`id_currency`,`id_country`,`id_group`,`id_customer`,`id_product_attribute`,`from_quantity`,`from`,`to`)
+  UNIQUE KEY `id_product_2` (`id_product`,`id_shop`,`id_shop_group`,`id_currency`,`id_country`,`id_group`,`id_customer`,`id_product_attribute`,`from_quantity`,`id_specific_price_rule`,`from`,`to`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_state` (
@@ -2635,4 +2637,20 @@ CREATE TABLE `PREFIX_modules_perfs` (
   `memory_end` int unsigned NOT NULL,
   PRIMARY KEY (`id_modules_perfs`),
   KEY (`session`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `PREFIX_cms_role` (
+  `id_cms_role` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL,
+  `id_cms` int(11) unsigned NOT NULL,
+  PRIMARY KEY (`id_cms_role`, `id_cms`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `PREFIX_cms_role_lang` (
+  `id_cms_role` int(11) unsigned NOT NULL,
+  `id_lang` int(11) unsigned NOT NULL,
+  `id_shop` int(11) unsigned NOT NULL,
+  `name` varchar(128) DEFAULT NULL,
+  PRIMARY KEY (`id_cms_role`,`id_lang`, id_shop)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;

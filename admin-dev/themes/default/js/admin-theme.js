@@ -127,6 +127,13 @@ $(document).ready(function() {
 		});
 		//sidebar menu collapse
 		sidebar.find('.menu-collapse').on('click',function(){
+			$(this).toggleClass('icon-rotate-90');
+
+			if ($(this).hasClass('icon-rotate-90'))
+				$(this).css('margin-left', '5px');
+			else
+				$(this).css('margin-left', '');
+
 			$('body').toggleClass('page-sidebar-closed');
 			$('.expanded').removeClass('expanded');
 			$.ajax({
@@ -327,7 +334,7 @@ $(document).ready(function() {
 			}
 		},
 		unmatch : function() {
-			
+
 		}
 	});
 	enquire.register('screen and (max-width: 768px)', {
@@ -420,7 +427,7 @@ $(document).ready(function() {
 		}
 		$('#header_search .form-group').addClass('focus-search');
 	});
-	
+
 	//select list for search type
 	$('#header_search_options').on('click','li a', function(e){
 		e.preventDefault();

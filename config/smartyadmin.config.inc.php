@@ -41,7 +41,7 @@ function smartyTranslate($params, &$smarty)
 	$sprintf = isset($params['sprintf']) ? $params['sprintf'] : null;
 
 	if ($pdf)
-		return Translate::smartyPostProcessTranslation(Translate::getPdfTranslation($params['s']), $params);
+		return Translate::smartyPostProcessTranslation(Translate::getPdfTranslation($params['s'], $params['sprintf']), $params);
 
 	$filename = ((!isset($smarty->compiler_object) || !is_object($smarty->compiler_object->template)) ? $smarty->template_resource : $smarty->compiler_object->template->getTemplateFilepath());
 

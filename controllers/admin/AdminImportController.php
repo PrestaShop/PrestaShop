@@ -688,7 +688,7 @@ class AdminImportControllerCore extends AdminController
 		$this->context->cookie->csv_selected = urlencode(Tools::getValue('csv'));
 
 		$this->tpl_view_vars = array(
-			'import_matchs' => Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'import_match'),
+			'import_matchs' => Db::getInstance()->executeS('SELECT * FROM '._DB_PREFIX_.'import_match', true, false),
 			'fields_value' => array(
 				'csv' => Tools::getValue('csv'),
 				'convert' => Tools::getValue('convert'),
@@ -1054,7 +1054,7 @@ class AdminImportControllerCore extends AdminController
 		{
 			$last_width = $last_height = 0;
 			$error = 0;
-			ImageManager::resize($tmpfile, $path.'.jpg', null, null, 'jpg', false, $error, $last_width, $last_height, 4);
+			ImageManager::resize($tmpfile, $path.'.jpg', null, null, 'jpg', false, $error, $last_width, $last_height);
 			$images_types = ImageType::getImagesTypes($entity, true);
 
 			if ($regenerate)
@@ -1062,15 +1062,11 @@ class AdminImportControllerCore extends AdminController
 				$previous_path = null;
 				foreach ($images_types as $image_type)
 				{
-					if ($image_type['width'] >= $last_width && $image_type['height'] >= $last_height)
-						copy($tmpfile, $path.'-'.stripslashes($image_type['name']).'.jpg');
-					else
-					{
-						if ($previous_path && $image_type['width'] < $last_width && $image_type['height'] < $last_height)
-							$tmpfile = $previous_path;
+					if ($previous_path && $image_type['width'] < $last_width && $image_type['height'] < $last_height)
+						$tmpfile = $previous_path;
 
-						ImageManager::resize($tmpfile, $path.'-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height'], 'jpg', false, $error, $last_width, $last_height, 3);
-					}
+					ImageManager::resize($tmpfile, $path.'-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height'], 'jpg', false, $error, $last_width, $last_height);
+
 					$previous_path = $path.'-'.stripslashes($image_type['name']).'.jpg';
 					if (in_array($image_type['id_image_type'], $watermark_types))
 						Hook::exec('actionWatermark', array('id_image' => $id_image, 'id_product' => $id_entity));
@@ -1302,6 +1298,7 @@ class AdminImportControllerCore extends AdminController
 		$match_ref = Tools::getValue('match_ref');
 		$regenerate = Tools::getValue('regenerate');
 		$shop_is_feature_active = Shop::isFeatureActive();
+		Module::setBatchMode(true);
 
 		for ($current_line = 0; $line = fgetcsv($handle, MAX_LINE_SIZE, $this->separator); $current_line++)
 		{
@@ -1318,7 +1315,7 @@ class AdminImportControllerCore extends AdminController
 						FROM `'._DB_PREFIX_.'product` p
 						'.Shop::addSqlAssociation('product', 'p').'
 						WHERE p.`reference` = "'.pSQL($info['reference']).'"
-					');
+					', false);
 					if (isset($datas['id_product']) && $datas['id_product'])
 						$product = new Product((int)$datas['id_product']);
 					else
@@ -1329,9 +1326,12 @@ class AdminImportControllerCore extends AdminController
 			else
 				$product = new Product();
 
+
+			$update_advanced_stock_management_value = false;
 			if (isset($product->id) && $product->id && Product::existsInDatabase((int)$product->id, 'product'))
 			{
 				$product->loadStockData();
+				$update_advanced_stock_management_value = true;
 				$category_data = Product::getProductCategories((int)$product->id);
 
 				if (is_array($category_data))
@@ -1555,7 +1555,7 @@ class AdminImportControllerCore extends AdminController
 						FROM `'._DB_PREFIX_.'product` p
 						'.Shop::addSqlAssociation('product', 'p').'
 						WHERE p.`reference` = "'.pSQL($product->reference).'"
-					');
+					', false);
 					$product->id = (int)$datas['id_product'];
 					$product->date_add = pSQL($datas['date_add']);
 					$res = $product->update();
@@ -1566,7 +1566,7 @@ class AdminImportControllerCore extends AdminController
 						SELECT product_shop.`date_add`
 						FROM `'._DB_PREFIX_.'product` p
 						'.Shop::addSqlAssociation('product', 'p').'
-						WHERE p.`id_product` = '.(int)$product->id);
+						WHERE p.`id_product` = '.(int)$product->id, false);
 					$product->date_add = pSQL($datas['date_add']);
 					$res = $product->update();
 				}
@@ -1814,7 +1814,7 @@ class AdminImportControllerCore extends AdminController
 						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management has incorrect value. Not set for product %1$s '), $product->name[$default_language_id]);
 					elseif (!Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && $product->advanced_stock_management == 1)
 						$this->warnings[] = sprintf(Tools::displayError('Advanced stock management is not enabled, cannot enable on product %1$s '), $product->name[$default_language_id]);
-					else
+					elseif ($update_advanced_stock_management_value)
 						$product->setAdvancedStockManagement($product->advanced_stock_management);
 					// automaticly disable depends on stock, if a_s_m set to disabled
 					if (StockAvailable::dependsOnStock($product->id) == 1 && $product->advanced_stock_management == 0)
@@ -1896,6 +1896,9 @@ class AdminImportControllerCore extends AdminController
 			}
 		}
 		$this->closeCsvFile($handle);
+		Module::processDeferedFuncCall();
+		Module::processDeferedClearCache();
+		Tag::updateTagCount();
 	}
 
 	public function productImportCreateCat($default_language_id, $category_name, $id_parent_category = null)
@@ -1990,7 +1993,7 @@ class AdminImportControllerCore extends AdminController
 					FROM `'._DB_PREFIX_.'product` p
 					'.Shop::addSqlAssociation('product', 'p').'
 					WHERE p.`reference` = "'.pSQL($info['product_reference']).'"
-				');
+				', false);
 				if (isset($datas['id_product']) && $datas['id_product'])
 					$product = new Product((int)$datas['id_product'], false, $default_language);
 			}
@@ -2278,7 +2281,7 @@ class AdminImportControllerCore extends AdminController
 				{
 					Db::getInstance()->execute('
 						INSERT IGNORE INTO '._DB_PREFIX_.'product_attribute_combination (id_attribute, id_product_attribute)
-						VALUES ('.(int)$attribute_to_add.','.(int)$id_product_attribute.')');
+						VALUES ('.(int)$attribute_to_add.','.(int)$id_product_attribute.')', false);
 				}
 
 				// set advanced stock managment
@@ -2526,7 +2529,7 @@ class AdminImportControllerCore extends AdminController
 									{
 										$address['id_customer'] = $customer->id;
 										unset($address['country'], $address['state'], $address['state_iso'], $address['id_address']);
-										Db::getInstance()->insert('address', $address);
+										Db::getInstance()->insert('address', $address, false, false);
 									}
 							}
 							if ($res && isset($customer_groups))
@@ -2550,7 +2553,7 @@ class AdminImportControllerCore extends AdminController
 								{
 									$address['id_customer'] = $customer->id;
 									unset($address['country'], $address['state'], $address['state_iso'], $address['id_address']);
-									Db::getInstance()->insert('address', $address);
+									Db::getInstance()->insert('address', $address, false, false);
 								}
 						}
 						if ($res && isset($customer_groups))
@@ -3424,6 +3427,7 @@ class AdminImportControllerCore extends AdminController
 				if ((($shop_is_feature_active && $this->context->employee->isSuperAdmin()) || !$shop_is_feature_active) && Tools::getValue('truncate'))
 					$this->truncateTables((int)Tools::getValue('entity'));
 				$import_type = false;
+				Db::getInstance()->disableCache();
 				switch ((int)Tools::getValue('entity'))
 				{
 					case $this->entities[$import_type = $this->l('Categories')]:
@@ -3518,6 +3522,7 @@ class AdminImportControllerCore extends AdminController
 				}
 			}
 		}
+		Db::getInstance()->enableCache();
 		return parent::postProcess();
 	}
 
@@ -3550,7 +3555,7 @@ class AdminImportControllerCore extends AdminController
 										\''.pSQL(Tools::getValue('newImportMatchs')).'\',
 										\''.pSQL($match).'\',
 										\''.pSQL(Tools::getValue('skip')).'\'
-										)');
+										)', false);
 
 			die('{"id" : "'.Db::getInstance()->Insert_ID().'"}');
 		}
@@ -3561,7 +3566,7 @@ class AdminImportControllerCore extends AdminController
 		if ($this->tabAccess['edit'] === '1')
 		{
 			$return = Db::getInstance()->executeS('SELECT * FROM `'._DB_PREFIX_.'import_match` WHERE `id_import_match` = '
-				.(int)Tools::getValue('idImportMatchs'));
+				.(int)Tools::getValue('idImportMatchs'), true, false);
 			die('{"id" : "'.$return[0]['id_import_match'].'", "matchs" : "'.$return[0]['match'].'", "skip" : "'
 				.$return[0]['skip'].'"}');
 		}
@@ -3572,7 +3577,7 @@ class AdminImportControllerCore extends AdminController
 		if ($this->tabAccess['edit'] === '1')
 		{
 			Db::getInstance()->execute('DELETE FROM `'._DB_PREFIX_.'import_match` WHERE `id_import_match` = '
-				.(int)Tools::getValue('idImportMatchs'));
+				.(int)Tools::getValue('idImportMatchs'), false);
 			die;
 		}
 	}

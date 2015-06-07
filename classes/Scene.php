@@ -222,7 +222,8 @@ class SceneCore extends ObjectModel
 					$scene = new Scene($scene['id_scene'], $id_lang, false, $hide_scene_position);
 			Cache::store($cache_key, $scenes);
 		}
-		$scenes = Cache::retrieve($cache_key);
+		else
+			$scenes = Cache::retrieve($cache_key);
 		return $scenes;
 	}
 
