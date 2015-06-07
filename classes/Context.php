@@ -96,7 +96,7 @@ class ContextCore
 	protected $is_tablet = null;
 
 	/** @var bool|null */
-	protected $webservice_call = null;
+	public $webservice_call = null;
 
 	/** @var int */
 	const DEVICE_COMPUTER = 1;
