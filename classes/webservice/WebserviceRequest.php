@@ -38,6 +38,12 @@ class WebserviceRequestCore
 	public $errors = array();
 
 	/**
+	 * True if errors should be displayed, based on ini "display_errors" value
+	 * @var bool
+	 */
+	protected $display_errors = null;
+
+	/**
 	 * Set if return should display content or not
 	 * @var bool
 	 */
@@ -432,10 +438,8 @@ class WebserviceRequestCore
 		set_error_handler(array($this, 'webserviceErrorHandler'));
 		ini_set('html_errors', 'off');
 
-		// Two global vars, for compatibility with the PS core...
-		global $webservice_call, $display_errors;
-		$webservice_call = true;
-		$display_errors = strtolower(ini_get('display_errors')) != 'off';
+		Context::getContext()->webservice_call = true;
+
 		// __PS_BASE_URI__ is from Shop::$current_base_uri
 		$this->wsUrl = Tools::getHttpHost(true).__PS_BASE_URI__.'api/';
 		// set the output object which manage the content and header structure and informations
@@ -542,7 +546,7 @@ class WebserviceRequestCore
 					{
 						$this->objectSpecificManagement = new $specificObjectName();
 						$this->objectSpecificManagement->setObjectOutput($this->objOutput)
-													   ->setWsObject($this);
+													->setWsObject($this);
 
 						try {
 							$this->objectSpecificManagement->manage();
@@ -557,8 +561,7 @@ class WebserviceRequestCore
 			}
 		}
 		$return = $this->returnOutput();
-		unset($webservice_call);
-		unset($display_errors);
+		Context::getContext()->webservice_call = null;
 		return $return;
 	}
 
@@ -577,12 +580,9 @@ class WebserviceRequestCore
 	 */
 	public function setError($status, $label, $code)
 	{
-		global $display_errors;
-		if (!isset($display_errors))
-			$display_errors = strtolower(ini_get('display_errors')) != 'off';
 		if (isset($this->objOutput))
 			$this->objOutput->setStatus($status);
-		$this->errors[] = $display_errors ? array($code, $label) : 'Internal error. To see this error please display the PHP errors.';
+		$this->errors[] = self::getDisplayErrors() ? array($code, $label) : 'Internal error. To see this error please display the PHP errors.';
 	}
 
 	/**
@@ -639,8 +639,7 @@ class WebserviceRequestCore
 	 */
 	public function webserviceErrorHandler($errno, $errstr, $errfile, $errline)
 	{
-		$display_errors = strtolower(ini_get('display_errors')) != 'off';
-		if (!(error_reporting() & $errno) || $display_errors)
+		if (!(error_reporting() & $errno) || self::getDisplayErrors())
 			return;
 
 		$errortype = array (
@@ -1277,7 +1276,7 @@ class WebserviceRequestCore
 				$check_shop_group = false;
 
 				$sql = 'SELECT 1
-	 						FROM `'.bqSQL(_DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table']);
+							FROM `'.bqSQL(_DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table']);
 				if ($assoc['type'] != 'fk_shop')
 					$sql .= '_'.$assoc['type'];
 				else
@@ -1865,4 +1864,12 @@ class WebserviceRequestCore
 		ksort($retarr);
 		return $retarr;
 	}
+
+	protected static function getDisplayErrors()
+	{
+		if (self::$display_errors === null)
+			self::$display_errors = (ini_get('display_errors') && !in_array(strtolower(ini_get('display_errors')), array('off', 'no')));
+		return self::$display_errors;
+	}
+
 }

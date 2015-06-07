@@ -751,10 +751,8 @@ abstract class DbCore
 	 */
 	public function displayError($sql = false)
 	{
-		global $webservice_call;
-
 		$errno = $this->getNumberError();
-		if ($webservice_call && $errno)
+		if (Context::getContext()->webservice_call && $errno)
 		{
 			$dbg = debug_backtrace();
 			WebserviceRequest::getInstance()->setError(500, '[SQL Error] '.$this->getMsgError().'. From '.(isset($dbg[3]['class']) ? $dbg[3]['class'] : '').'->'.$dbg[3]['function'].'() Query was : '.$sql, 97);
@@ -906,7 +904,7 @@ abstract class DbCore
 		Db::s($sql, $use_cache);
 		die();
 	}
-	
+
 	/**
 	 * Get used link instance
 	 *
