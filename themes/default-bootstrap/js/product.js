@@ -631,6 +631,7 @@ function updatePrice()
 
 	// Set product (not the combination) base price
 	var basePriceWithoutTax = +productPriceTaxExcluded;
+	var basePriceWithTax = +productPriceTaxIncluded;
 	var priceWithGroupReductionWithoutTax = 0;
 
 	priceWithGroupReductionWithoutTax = basePriceWithoutTax * (1 - groupReduction);
@@ -638,12 +639,26 @@ function updatePrice()
 	// Apply combination price impact (only if there is no specific price)
 	// 0 by default, +x if price is inscreased, -x if price is decreased
 	basePriceWithoutTax = basePriceWithoutTax + +combination.price;
+	basePriceWithTax = basePriceWithTax + +combination.price;
 
 	// If a specific price redefine the combination base price
 	if (combination.specific_price && combination.specific_price.price > 0)
+	{
 		basePriceWithoutTax = +combination.specific_price.price;
+		basePriceWithTax = +combination.specific_price.price;
+	}
 
 	var priceWithDiscountsWithoutTax = basePriceWithoutTax;
+	var priceWithDiscountsWithTax = basePriceWithTax;
+
+	if (default_eco_tax)
+	{
+		// combination.ecotax doesn't modify the price but only the display
+		priceWithDiscountsWithoutTax = priceWithDiscountsWithoutTax + default_eco_tax * (1 + ecotaxTax_rate / 100);
+		priceWithDiscountsWithTax = priceWithDiscountsWithTax + default_eco_tax * (1 + ecotaxTax_rate / 100);
+		basePriceWithTax = basePriceWithTax + default_eco_tax * (1 + ecotaxTax_rate / 100);
+		basePriceWithoutTax = basePriceWithoutTax + default_eco_tax * (1 + ecotaxTax_rate / 100);
+	}
 
 	// Apply specific price (discount)
 	// We only apply percentage discount and discount amount given before tax
@@ -658,13 +673,16 @@ function updatePrice()
 				if (combination.specific_price.id_currency == 0)
 					reduction = reduction * currencyRate * (1 - groupReduction);
 				priceWithDiscountsWithoutTax -= reduction;
+				priceWithDiscountsWithTax -= reduction;
 			}
 		}
 		else if (combination.specific_price.reduction_type == 'percentage')
 		{
 			priceWithDiscountsWithoutTax = priceWithDiscountsWithoutTax * (1 - +combination.specific_price.reduction);
+			priceWithDiscountsWithTax = priceWithDiscountsWithTax * (1 - +combination.specific_price.reduction);
 		}
 	}
+
 
 	// Apply Tax if necessary
 	if (noTaxForThisProduct || customerGroupWithoutTax)
@@ -674,15 +692,8 @@ function updatePrice()
 	}
 	else
 	{
-		basePriceDisplay = basePriceWithoutTax * (taxRate/100 + 1);
-		priceWithDiscountsDisplay = priceWithDiscountsWithoutTax * (taxRate/100 + 1);
-	}
-
-	if (default_eco_tax)
-	{
-		// combination.ecotax doesn't modify the price but only the display
-		basePriceDisplay = basePriceDisplay + default_eco_tax * (1 + ecotaxTax_rate / 100);
-		priceWithDiscountsDisplay = priceWithDiscountsDisplay + default_eco_tax * (1 + ecotaxTax_rate / 100);
+		basePriceDisplay = basePriceWithTax;
+		priceWithDiscountsDisplay = priceWithDiscountsWithTax;
 	}
 
 	// If the specific price was given after tax, we apply it now
