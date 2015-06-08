@@ -204,6 +204,14 @@
 												<td style="background-color:{$row['color']};color:{$row['text-color']}">{$row['ostate_name']|stripslashes}</td>
 												<td style="background-color:{$row['color']};color:{$row['text-color']}">{if $row['employee_lastname']}{$row['employee_firstname']|stripslashes} {$row['employee_lastname']|stripslashes}{/if}</td>
 												<td style="background-color:{$row['color']};color:{$row['text-color']}">{dateFormat date=$row['date_add'] full=true}</td>
+												<td style="background-color:{$row['color']};color:{$row['text-color']}" class="text-right">
+													{if $row['send_email']|intval}
+														<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;vieworder&amp;id_order={$order->id|intval}&amp;sendStateEmail={$row['id_order_state']|intval}&amp;id_order_history={$row['id_order_history']|intval}" title="{l s='Resend this email to the customer'}">
+															<i class="icon-mail-reply"></i>
+															{l s='Resend email'}
+														</a>
+													{/if}
+												</td>
 											</tr>
 										{else}
 											<tr>
@@ -211,6 +219,14 @@
 												<td>{$row['ostate_name']|stripslashes}</td>
 												<td>{if $row['employee_lastname']}{$row['employee_firstname']|stripslashes} {$row['employee_lastname']|stripslashes}{else}&nbsp;{/if}</td>
 												<td>{dateFormat date=$row['date_add'] full=true}</td>
+												<td class="text-right">
+													{if $row['send_email']|intval}
+														<a class="btn btn-default" href="{$link->getAdminLink('AdminOrders')|escape:'html':'UTF-8'}&amp;vieworder&amp;id_order={$order->id|intval}&amp;sendStateEmail={$row['id_order_state']|intval}&amp;id_order_history={$row['id_order_history']|intval}" title="{l s='Resend this email to the customer'}">
+															<i class="icon-mail-reply"></i>
+															{l s='Resend email'}
+														</a>
+													{/if}
+												</td>
 											</tr>
 										{/if}
 									{/foreach}
