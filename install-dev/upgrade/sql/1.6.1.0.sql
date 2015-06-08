@@ -64,9 +64,11 @@ SELECT 0, t.id_tag, t.id_lang, ps.id_shop, COUNT(pt.id_tag) AS times
     AND product_shop.id_shop = ps.id_shop
     GROUP BY pt.id_tag;
 
+
+/* PHP:ps1610_safe_remove_indexes(); */;
+
 ALTER TABLE `PREFIX_shop_group` ADD KEY `deleted` (`deleted`, `name`);
 ALTER TABLE `PREFIX_shop` DROP KEY `id_shop_group`;
-ALTER TABLE `PREFIX_shop` DROP KEY `id_group_shop`;
 ALTER TABLE `PREFIX_shop` ADD KEY `id_shop_group` (`id_shop_group`, `deleted`);
 ALTER TABLE `PREFIX_shop_url` DROP KEY `id_shop`;
 ALTER TABLE `PREFIX_shop_url` ADD KEY `id_shop` (`id_shop`, `main`);
@@ -74,6 +76,7 @@ ALTER TABLE `PREFIX_customization` ADD KEY `id_cart` (`id_cart`);
 ALTER TABLE `PREFIX_product_sale` ADD KEY `quantity` (`quantity`);
 ALTER TABLE `PREFIX_cart_rule` ADD KEY `id_customer` (`id_customer`, `active`, `date_to`);
 ALTER TABLE `PREFIX_cart_rule` ADD KEY `group_restriction` (`group_restriction`, `active`, `date_to`);
+ALTER TABLE `PREFIX_hook_module` DROP KEY `position`;
 ALTER TABLE `PREFIX_hook_module` ADD KEY `position` (`id_shop`, `position`);
 ALTER TABLE `PREFIX_cart_product` DROP KEY `cart_product_index`;
 ALTER IGNORE TABLE `PREFIX_cart_product` ADD PRIMARY KEY (`id_cart`,`id_product`,`id_product_attribute`,`id_address_delivery`);
@@ -180,8 +183,6 @@ ALTER TABLE `PREFIX_configuration_kpi` CHANGE `name` `name` varchar(64);
 ALTER TABLE `PREFIX_smarty_lazy_cache` CHANGE `cache_id` `cache_id` varchar(255) NOT NULL DEFAULT '';
 TRUNCATE TABLE `PREFIX_smarty_lazy_cache`;
 
-ALTER TABLE `PREFIX_product_shop` ADD KEY `indexed` (`indexed`, `active`, `id_product`);
-
 /* Advanced EU Compliance tables */
 CREATE TABLE IF NOT EXISTS `PREFIX_cms_role` (
   `id_cms_role` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -210,5 +211,4 @@ INSERT INTO `PREFIX_hook` (`name`, `title`, `description`) VALUES ('displayInvoi
 
 UPDATE `PREFIX_hook` SET position = 0 WHERE name LIKE 'action%';
 
-ALTER IGNORE TABLE `PREFIX_specific_price` DROP KEY `id_product_2`;
 ALTER IGNORE TABLE `PREFIX_specific_price` ADD UNIQUE KEY `id_product_2` (`id_product`,`id_shop`,`id_shop_group`,`id_currency`,`id_country`,`id_group`,`id_customer`,`id_product_attribute`,`from_quantity`,`id_specific_price_rule`,`from`,`to`);
