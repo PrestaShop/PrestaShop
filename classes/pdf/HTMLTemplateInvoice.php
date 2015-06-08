@@ -134,6 +134,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 	public function getContent()
 	{
         $invoiceAddressPatternRules = Tools::jsonDecode(Configuration::get('PS_INVCE_INVOICE_ADDR_RULES'), true);
+        $deliveryAddressPatternRules = Tools::jsonDecode(Configuration::get('PS_INVCE_DELIVERY_ADDR_RULES'), true);
 
 		$invoice_address = new Address((int)$this->order->id_address_invoice);
 		$country = new Country((int)$invoice_address->id_country);
@@ -152,7 +153,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			else
 			{
 				$delivery_address = new Address((int)$this->order->id_address_delivery);
-				$formatted_delivery_address = AddressFormat::generateAddress($delivery_address, array(), '<br />', ' ');
+				$formatted_delivery_address = AddressFormat::generateAddress($delivery_address, $deliveryAddressPatternRules, '<br />', ' ');
 			}
 		}
 

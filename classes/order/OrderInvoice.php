@@ -146,7 +146,8 @@ class OrderInvoiceCore extends ObjectModel
         $this->invoice_address = AddressFormat::generateAddress($invoice_address, $invoiceAddressPatternRules, '<br />', ' ');
 
 		$delivery_address = new Address((int)$order->id_address_delivery);
-		$this->delivery_address = AddressFormat::generateAddress($delivery_address, array(), '<br />', ' ');
+        $deliveryAddressPatternRules = Tools::jsonDecode(Configuration::get('PS_INVCE_DELIVERY_ADDR_RULES'), true);
+        $this->delivery_address = AddressFormat::generateAddress($delivery_address, $deliveryAddressPatternRules, '<br />', ' ');
 
 		return parent::add();
 	}

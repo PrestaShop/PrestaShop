@@ -215,3 +215,5 @@ ALTER IGNORE TABLE `PREFIX_specific_price` ADD UNIQUE KEY `id_product_2` (`id_pr
 
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`)
   VALUES ('PS_INVCE_INVOICE_ADDR_RULES', '{"avoid":["vat_number","phone","phone_mobile"]}', NOW(), NOW());
+INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`)
+  VALUES ('PS_INVCE_DELIVERY_ADDR_RULES', '{"avoid":["vat_number","phone","phone_mobile"]}', NOW(), NOW());
