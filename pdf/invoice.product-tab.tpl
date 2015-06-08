@@ -170,9 +170,3 @@
     </tbody>
 
 </table>
-
-<table width="100%">
-    <tr>
-        <td><p>{$tax_label}</p></td>
-    </tr>
-</table>
