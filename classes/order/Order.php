@@ -687,7 +687,8 @@ class OrderCore extends ObjectModel
 				SELECT `image_shop`.id_image
 				FROM `'._DB_PREFIX_.'product_attribute_image` pai'.
 				Shop::addSqlAssociation('image', 'pai', true).'
-				WHERE id_product_attribute = '.(int)$product['product_attribute_id']);
+				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_image` = pai.`id_image`)
+				WHERE id_product_attribute = '.(int)$product['product_attribute_id']. ' ORDER by i.position ASC');
 
 		if (!isset($id_image) || !$id_image)
 			$id_image = Db::getInstance()->getValue('
