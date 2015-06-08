@@ -36,7 +36,7 @@
 				<th class="header small">{l s='Tax Detail' pdf='true'}</th>
 				<th class="header small">{l s='Tax Rate' pdf='true'}</th>
 				{if $display_tax_bases_in_breakdowns}
-					<th class="header small">{l s='Total' pdf='true'}</th>
+					<th class="header small">{l s='Base price' pdf='true'}</th>
 				{/if}
 				<th class="header-right small">{l s='Total Tax' pdf='true'}</th>
 			</tr>

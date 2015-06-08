@@ -28,7 +28,7 @@
     <tr>
         <th class="product header small" width="{$layout.reference.width}%">{l s='Reference' pdf='true'}</th>
         <th class="product header small" width="{$layout.product.width}%">{l s='Product' pdf='true'}</th>
-        <th class="product header small" width="{$layout.tax_code.width}%">{l s='Tax Code' pdf='true'}</th>
+        <th class="product header small" width="{$layout.tax_code.width}%">{l s='Tax Rate' pdf='true'}</th>
 
         {if isset($layout.before_discount)}
             <th class="product header small" width="{$layout.unit_price_tax_excl.width}%">{l s='Base price' pdf='true'} <br /> {l s='(Tax excl.)' pdf='true'}</th>
