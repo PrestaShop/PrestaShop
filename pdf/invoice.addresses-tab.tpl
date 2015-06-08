@@ -22,23 +22,17 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<table id="addresses-tab">
+<table id="addresses-tab" cellspacing="0" cellpadding="0">
     <tr>
-        <td width="30%">
-            <p class="small">{$order_invoice->shop_address}</p>
+        <td width="33%"><span class="bold"> </span><br/><br/>
+            {$order_invoice->shop_address}
         </td>
-        <td width="30%">
-            {if $delivery_address}
-                <p class="small"><span class="bold">{l s='Delivery Address' pdf='true'}</span><br/><br/>
-                    <span class="big">{$delivery_address}</span>
-                </p>
+        <td width="33%">{if $delivery_address}<span class="bold">{l s='Delivery Address' pdf='true'}</span><br/><br/>
+                {$delivery_address}
             {/if}
         </td>
-        <td width="10%"></td>
-        <td width="30%">
-            <p class="small"><span class="bold">{l s='Billing Address' pdf='true'}</span><br/><br/>
-                <span class="big">{$invoice_address}</span>
-            </p>
+        <td width="33%"><span class="bold">{l s='Billing Address' pdf='true'}</span><br/><br/>
+                {$invoice_address}
         </td>
     </tr>
 </table>
