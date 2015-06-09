@@ -28,15 +28,15 @@
     <tr>
         <th class="product header small" width="{$layout.reference.width}%">{l s='Reference' pdf='true'}</th>
         <th class="product header small" width="{$layout.product.width}%">{l s='Product' pdf='true'}</th>
-        <th class="product header small" width="{$layout.quantity.width}%">{l s='Qty' pdf='true'}</th>
-        <th class="product header small" width="{$layout.tax_code.width}%">{l s='Tax Code' pdf='true'}</th>
+        <th class="product header small" width="{$layout.tax_code.width}%">{l s='Tax Rate' pdf='true'}</th>
 
         {if isset($layout.before_discount)}
-            <th class="product header small" width="{$layout.unit_price_tax_excl.width}%">{l s='Price before discount' pdf='true'} <br /> {l s='(Before tax)' pdf='true'}</th>
+            <th class="product header small" width="{$layout.unit_price_tax_excl.width}%">{l s='Base price' pdf='true'} <br /> {l s='(Tax excl.)' pdf='true'}</th>
         {/if}
 
-        <th class="product header-right small" width="{$layout.unit_price_tax_excl.width}%">{l s='Unit Price' pdf='true'} <br /> {l s='(Before tax)' pdf='true'}</th>
-        <th class="product header-right small" width="{$layout.total_tax_excl.width}%">{l s='Total' pdf='true'} <br /> {l s='(Before tax)' pdf='true'}</th>
+        <th class="product header-right small" width="{$layout.unit_price_tax_excl.width}%">{l s='Unit Price' pdf='true'} <br /> {l s='(Tax excl.)' pdf='true'}</th>
+        <th class="product header small" width="{$layout.quantity.width}%">{l s='Qty' pdf='true'}</th>
+        <th class="product header-right small" width="{$layout.total_tax_excl.width}%">{l s='Total' pdf='true'} <br /> {l s='(Tax excl.)' pdf='true'}</th>
     </tr>
     </thead>
 
@@ -71,9 +71,6 @@
 
             </td>
             <td class="product center">
-                {$order_detail.product_quantity}
-            </td>
-            <td class="product center">
                 {$order_detail.order_detail_tax_label}
             </td>
 
@@ -93,6 +90,9 @@
                     <br>
                     <small>{{displayPrice currency=$order->id_currency price=$order_detail.ecotax_tax_excl}|string_format:{l s='ecotax: %s' pdf='true'}}</small>
                 {/if}
+            </td>
+            <td class="product center">
+                {$order_detail.product_quantity}
             </td>
             <td  class="product right">
                 {displayPrice currency=$order->id_currency price=$order_detail.total_price_tax_excl_including_ecotax}
@@ -169,10 +169,4 @@
 
     </tbody>
 
-</table>
-
-<table width="100%">
-    <tr>
-        <td><p>{$tax_label}</p></td>
-    </tr>
 </table>

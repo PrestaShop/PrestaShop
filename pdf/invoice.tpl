@@ -26,7 +26,7 @@
 {$style_tab}
 
 
-<table width="100%" id="body" border="0" cellpadding="0">
+<table width="100%" id="body" border="0" cellpadding="0" cellspacing="0" style="margin:0;">
     <!-- Invoicing -->
     <tr>
         <td colspan="12">
@@ -42,12 +42,11 @@
 
     <!-- TVA Info -->
     <tr>
-        <td colspan="10" >
+        <td colspan="12">
 
             {$summary_tab}
 
         </td>
-        <td colspan="2">&nbsp;</td>
     </tr>
 
     <tr>
