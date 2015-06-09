@@ -28,6 +28,7 @@ class AuthControllerCore extends FrontController
 {
 	public $ssl = true;
 	public $php_self = 'authentication';
+	public $auth = false;
 
 	/**
 	 * @var bool create_account
