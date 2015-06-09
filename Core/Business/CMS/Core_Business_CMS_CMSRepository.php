@@ -46,7 +46,7 @@ class Core_Business_CMS_CMSRepository extends Core_Foundation_Database_EntityRep
 		$sql = '
 			SELECT *
 			FROM `'.$this->getTableNameWithPrefix().'` c
-			JOIN `'.$this->tablesPrefix.'cms_lang` cl ON c.`id_cms`= cl.`id_cms`
+			JOIN `'.$this->getPrefix().'cms_lang` cl ON c.`id_cms`= cl.`id_cms`
 			WHERE cl.`id_lang` = '.(int)$id_lang.'
 			AND cl.`id_shop` = '.(int)$id_shop.'
 
@@ -68,7 +68,7 @@ class Core_Business_CMS_CMSRepository extends Core_Foundation_Database_EntityRep
 		$sql = '
 			SELECT *
 			FROM `'.$this->getTableNameWithPrefix().'` c
-			JOIN `'.$this->tablesPrefix.'cms_lang` cl ON c.`id_cms`= cl.`id_cms`
+			JOIN `'.$this->getPrefix().'cms_lang` cl ON c.`id_cms`= cl.`id_cms`
 			WHERE c.`id_cms` = '.(int)$id_cms.'
 			AND cl.`id_lang` = '.(int)$id_lang.'
 			AND cl.`id_shop` = '.(int)$id_shop.'

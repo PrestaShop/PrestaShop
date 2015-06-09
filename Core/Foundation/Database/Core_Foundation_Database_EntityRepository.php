@@ -120,6 +120,15 @@ class Core_Foundation_Database_EntityRepository
 		return $this->db->escape($this->tablesPrefix . $this->entityMetaData->getTableName());
 	}
 
+    /**
+     * Returns escaped DB table prefix
+     * @return mixed
+     */
+    protected function getPrefix()
+    {
+        return $this->db->escape($this->tablesPrefix);
+    }
+
 	/**
 	 * Return a new empty Entity depending on current Repository selected
 	 * @return mixed
