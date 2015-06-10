@@ -32,19 +32,19 @@
 </head>
 <body>
 	<script type="text/javascript">
-	{if $customization_errors}
-		parent.customization_errors = true;
-	{else}
-		parent.customization_errors = false;
-		parent.$('#products_err', window.parent.document).hide();
-	{/if}
-	var id_selected_product = parent.$('#id_product option:selected').val();
-	if (parent.searchProducts())
-	{
+		var id_selected_product = parent.$('#id_product option:selected').val();
+
 		parent.$('#products_err', window.parent.document).html('{$customization_errors}');
 		parent.$('#id_product option[value="'+id_selected_product+'"]').attr('selected', true);
 		parent.$('#id_product').change();
-	}
+
+		{if $customization_errors}
+			parent.customization_errors = true;
+		{else}
+			parent.customization_errors = false;
+		{/if}
+
+		parent.customizationProductListener();
 	</script>
 	</body>
 </html>
