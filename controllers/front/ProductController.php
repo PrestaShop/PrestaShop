@@ -696,17 +696,25 @@ class ProductControllerCore extends FrontController
 			$row['quantity'] = &$row['from_quantity'];
 			if ($row['price'] >= 0) // The price may be directly set
 			{
-				$cur_price = (Product::$_taxCalculationMethod == PS_TAX_EXC ? $row['price'] : $row['price'] * (1 + $tax_rate / 100)) + (float)$ecotax_amount;
+				$cur_price = (!$row['reduction_tax'] ? $row['price'] : $row['price'] * (1 + $tax_rate / 100)) + (float)$ecotax_amount;
+
 				if ($row['reduction_type'] == 'amount')
-					$cur_price -= (Product::$_taxCalculationMethod == PS_TAX_INC ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100));
+				{
+					$cur_price -= ($row['reduction_tax'] ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100));
+					$row['reduction_with_tax'] = $row['reduction_tax'] ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100);
+				}
 				else
 					$cur_price *= 1 - $row['reduction'];
+
 				$row['real_value'] = $price - $cur_price;
 			}
 			else
 			{
 				if ($row['reduction_type'] == 'amount')
-					$row['real_value'] = Product::$_taxCalculationMethod == PS_TAX_INC ? $row['reduction'] : $row['reduction'] / (1 + $tax_rate / 100);
+				{
+					$row['real_value'] = $row['reduction_tax'] ? $row['reduction'] : $row['reduction'] +  ($row['reduction'] *$tax_rate) / 100;
+					$row['reduction_with_tax'] = $row['reduction_tax'] ? $row['reduction'] : $row['reduction'] +  ($row['reduction'] *$tax_rate) / 100;
+				}
 				else
 					$row['real_value'] = $row['reduction'] * 100;
 			}

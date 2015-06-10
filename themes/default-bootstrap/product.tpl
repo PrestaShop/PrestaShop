@@ -423,13 +423,21 @@
 								<td>
 									{if $quantity_discount.price >= 0 || $quantity_discount.reduction_type == 'amount'}
 										{if $display_discount_price}
-											{convertPrice price=$productPriceWithoutReduction|floatval-$quantity_discount.real_value|floatval}
+											{if $quantity_discount.reduction_tax == 0}
+												{convertPrice price = $productPriceWithoutReduction|floatval-($productPriceWithoutReduction*$quantity_discount.reduction_with_tax)|floatval}
+											{else}
+												{convertPrice price=$productPriceWithoutReduction|floatval-$quantity_discount.real_value|floatval}
+											{/if}
 										{else}
 											{convertPrice price=$quantity_discount.real_value|floatval}
 										{/if}
 									{else}
 										{if $display_discount_price}
-											{convertPrice price = $productPriceWithoutReduction|floatval-($productPriceWithoutReduction*$quantity_discount.reduction)|floatval}
+											{if $quantity_discount.reduction_tax == 0}
+												{convertPrice price = $productPriceWithoutReduction|floatval-($productPriceWithoutReduction*$quantity_discount.reduction_with_tax)|floatval}
+											{else}
+												{convertPrice price = $productPriceWithoutReduction|floatval-($productPriceWithoutReduction*$quantity_discount.reduction)|floatval}
+											{/if}
 										{else}
 											{$quantity_discount.real_value|floatval}%
 										{/if}
@@ -709,6 +717,7 @@
 {addJsDef oosHookJsCodeFunctions=Array()}
 {addJsDef productHasAttributes=isset($groups)|boolval}
 {addJsDef productPriceTaxExcluded=($product->getPriceWithoutReduct(true)|default:'null' - $product->ecotax)|floatval}
+{addJsDef productPriceTaxIncluded=($product->getPriceWithoutReduct(false)|default:'null' - $product->ecotax)|floatval}
 {addJsDef productBasePriceTaxExcluded=($product->getPrice(false, null, 6, null, false, false) - $product->ecotax)|floatval}
 {addJsDef productBasePriceTaxExcl=($product->getPrice(false, null, 6, null, false, false)|floatval)}
 {addJsDef productReference=$product->reference|escape:'html':'UTF-8'}
