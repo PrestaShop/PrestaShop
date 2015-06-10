@@ -160,12 +160,13 @@ class ContactControllerCore extends FrontController
 				if (!count($this->errors))
 				{
 					$var_list = array(
-									'{order_name}' => '-',
-									'{attached_file}' => '-',
-									'{message}' => Tools::nl2br(stripslashes($message)),
-									'{email}' =>  $from,
-									'{product_name}' => '',
-								);
+						'{id_order}'      => '-',
+						'{order_name}'    => '-',
+						'{attached_file}' => '-',
+						'{message}'       => Tools::nl2br(stripslashes($message)),
+						'{email}'         => $from,
+						'{product_name}'  => '',
+					);
 
 					if (isset($file_attachment['name']))
 						$var_list['{attached_file}'] = $file_attachment['name'];
