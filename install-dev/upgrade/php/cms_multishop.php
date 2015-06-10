@@ -90,7 +90,7 @@ function cms_multishop()
 			$cms_category_shop['id_shop'] = $shop['id_shop'];
 			$data_bis[] = $cms_category_shop;
 		}
-		Db::getInstance()->insert('cms_category_lang', $data);
-		Db::getInstance()->insert('cms_category_shop', $data_bis);
+		Db::getInstance()->insert('cms_category_lang', $data, false, true, Db::INSERT_IGNORE);
+		Db::getInstance()->insert('cms_category_shop', $data_bis, false, true, Db::INSERT_IGNORE);
 	}
 }
