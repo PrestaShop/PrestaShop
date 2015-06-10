@@ -758,8 +758,7 @@ class CustomerCore extends ObjectModel
 			$vars = array(
 				'{firstname}' => $this->firstname,
 				'{lastname}' => $this->lastname,
-				'{email}' => $this->email,
-				'{passwd}' => $password
+				'{email}' => $this->email
 			);
 
 			Mail::Send(
