@@ -435,9 +435,9 @@ class SearchCore
 					}
 
 		$sql .= ' FROM '._DB_PREFIX_.'product p
-			LEFT JOIN '._DB_PREFIX_.'product_lang pl
-				ON p.id_product = pl.id_product
 			'.Shop::addSqlAssociation('product', 'p').'
+			LEFT JOIN '._DB_PREFIX_.'product_lang pl
+				ON p.id_product = pl.id_product AND product_shop.id_shop = pl.id_shop
 			LEFT JOIN '._DB_PREFIX_.'category_lang cl
 				ON (cl.id_category = product_shop.id_category_default AND pl.id_lang = cl.id_lang AND cl.id_shop = product_shop.id_shop)
 			LEFT JOIN '._DB_PREFIX_.'manufacturer m
