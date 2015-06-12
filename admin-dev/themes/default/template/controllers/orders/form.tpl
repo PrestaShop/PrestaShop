@@ -898,9 +898,13 @@
 	function addProduct()
 	{
 		var id_product = $('#id_product option:selected').val();
-		$('#products_found #customization_list').contents().find('#customization_'+id_product).submit();
 
-		addProductProcess();
+		//if its a customizable product, send iframe form
+		if($('#products_found #customization_list').contents().find('#customization_'+id_product).length){
+			$('#products_found #customization_list').contents().find('#customization_'+id_product).submit();
+		}else{
+			addProductProcess();
+		}
 	}
 
 	//Called from form_customization_feedback.tpl
@@ -917,6 +921,7 @@
 		if (customization_errors) {
 			$('#products_err').removeClass('hide');
 		} else {
+			customization_errors = false;
 			$('#products_err').addClass('hide');
 			updateQty($('#id_product').val(), $('#ipa_'+$('#id_product').val()+' option:selected').val(), 0, $('#qty').val());
 		}
