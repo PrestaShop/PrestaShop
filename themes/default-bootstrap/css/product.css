@@ -420,7 +420,7 @@ span.view_scroll_spacer {
   -moz-box-shadow: inset 0 6px 6px rgba(0, 0, 0, 0.05);
   -webkit-box-shadow: inset 0 6px 6px rgba(0, 0, 0, 0.05);
   box-shadow: inset 0 6px 6px rgba(0, 0, 0, 0.05);
-  padding: 19px 19px 17px; }
+  padding: 19px 10px 17px; }
 
 .box-cart-bottom {
   padding: 0; }
@@ -708,8 +708,8 @@ table.table-product-discounts {
   font-weight: 700; }
 
 /* quantity_wanted */
-#quantity_wanted_p input {
-  width: 78px;
+#quantity_wanted_p input, #price_wanted_p input {
+  width: 70px;
   height: 27px;
   padding: 0 6px;
   float: left;
@@ -718,7 +718,7 @@ table.table-product-discounts {
 #quantity_wanted_p .btn {
   float: left;
   margin-left: 3px; }
-#quantity_wanted_p label {
+#quantity_wanted_p label, #price_wanted_p label {
   display: block;
   margin-bottom: 7px; }
 

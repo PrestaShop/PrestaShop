@@ -358,8 +358,10 @@ class AdminProductsControllerCore extends AdminController
 			if ($this->checkMultishopBox('online_only', $this->context))
 				$object->online_only = (int)Tools::getValue('online_only');
 		}
-		if ($this->isTabSubmitted('Prices'))
+		if ($this->isTabSubmitted('Prices')) {
 			$object->on_sale = (int)Tools::getValue('on_sale');
+			$object->pwyw_price = (int)Tools::getValue('pwyw_price');
+		}
 	}
 
 	public function checkMultishopBox($field, $context = null)
@@ -3931,7 +3933,7 @@ class AdminProductsControllerCore extends AdminController
 		// prices
 		array_push($product_props,
 			'price', 'wholesale_price', 'id_tax_rules_group', 'unit_price_ratio', 'on_sale',
-			'unity', 'minimum_quantity', 'additional_shipping_cost',
+			'pwyw_price', 'unity', 'minimum_quantity', 'additional_shipping_cost',
 			'available_now', 'available_later', 'available_date'
 		);
 

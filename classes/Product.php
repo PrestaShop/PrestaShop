@@ -94,6 +94,9 @@ class ProductCore extends ObjectModel
 	/** @var bool on_sale */
 	public $on_sale = false;
 
+	/** @var bool pwyw_price */
+	public $pwyw_price = false;
+
 	/** @var bool online_only */
 	public $online_only = false;
 
@@ -286,6 +289,7 @@ class ProductCore extends ObjectModel
 			'id_category_default' => 		array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId'),
 			'id_tax_rules_group' => 		array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedId'),
 			'on_sale' => 					array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
+			'pwyw_price' => 					array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
 			'online_only' => 				array('type' => self::TYPE_BOOL, 'shop' => true, 'validate' => 'isBool'),
 			'ecotax' => 					array('type' => self::TYPE_FLOAT, 'shop' => true, 'validate' => 'isPrice'),
 			'minimal_quantity' => 			array('type' => self::TYPE_INT, 'shop' => true, 'validate' => 'isUnsignedInt'),

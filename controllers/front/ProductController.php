@@ -689,6 +689,8 @@ class ProductControllerCore extends FrontController
 				$customization_form_target = preg_replace('/&group_([[:digit:]]+)=([[:digit:]]+)/', '', $customization_form_target);
 		if (isset($_POST['quantityBackup']))
 			$this->context->smarty->assign('quantityBackup', (int)$_POST['quantityBackup']);
+		if (isset($_POST['pwyw_priceBackup']))
+			$this->context->smarty->assign('pwyw_priceBackup', (float)$_POST['pwyw_priceBackup']);
 		$this->context->smarty->assign('customizationFormTarget', $customization_form_target);
 	}
 

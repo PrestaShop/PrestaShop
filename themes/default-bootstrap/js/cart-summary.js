@@ -37,6 +37,11 @@ $(document).ready(function(){
 		e.preventDefault();
 		deleteProductFromSummary($(this).attr('id'));
 	});
+	$('.cart_pwyw_price_change' ).off('click').on('click', function(e){
+		e.preventDefault();
+		updatePWYW($(this).data('field-pwyw_price_input_id'),
+			   $(this).data('field-product_cart_key'));
+	});
 	$('.cart_address_delivery').on('change', function(e){
 		changeAddressDelivery($(this));
 	});
@@ -783,6 +788,106 @@ function downQuantity(id, qty)
 	}
 }
 
+// TODO: use name attr rather than id for javascript-less POSTing consistency and simplicity?
+function updatePWYW(id, product_cart_key)
+{
+	var targetInput = 'input[id=' + id + ']';
+	var val = $(targetInput).val();
+	var newVal = val;
+	if(typeof(val) == 'undefined' || !val || !parseFloat(val))
+	{
+		newVal = 0;
+	}
+	else
+	{
+		newVal = parseFloat(val);
+	}
+
+	var productId = 0,
+	    productAttributeId = 0,
+	    customizationId = 0,
+	    id_address_delivery = 0;
+
+	var ids = product_cart_key.split('_');
+	productId = parseInt(ids[0]);
+	if (typeof(ids[1]) !== 'undefined')
+		productAttributeId = parseInt(ids[1]);
+	/* if (typeof(ids[2]) !== 'undefined' && ids[2] !== 'nocustom')
+		customizationId = parseInt(ids[2]); */
+	if (typeof(ids[2]) !== 'undefined')
+		id_address_delivery = parseInt(ids[2]);
+
+	$.ajax({
+		type: 'POST',
+		headers: { "cache-control": "no-cache" },
+		url: baseUri + '?rand=' + new Date().getTime(),
+		async: true,
+		cache: false,
+		dataType: 'json',
+		data: 'controller=cart'
+			+ '&ajax=true'
+			+ '&updatePWYW=1'
+			+ '&getproductprice=true'
+			+ '&summary=true'
+			+ '&id_product='+productId
+			+ '&ipa='+productAttributeId
+			+ '&id_address_delivery='+id_address_delivery
+			+ ((customizationId !== 0) ? '&id_customization='+customizationId : '')
+			+ '&pwyw_price='+newVal
+			+ '&token='+static_token
+			+ '&allow_refresh=1',
+
+		success: function(jsonData)
+		{
+			if (jsonData.hasError)
+			{
+				var errors = '';
+				for(var error in jsonData.errors)
+					//IE6 bug fix
+					if(error !== 'indexOf')
+						errors += $('<div />').html(jsonData.errors[error]).text() + "\n";
+				if (!!$.prototype.fancybox)
+					$.fancybox.open([
+						{
+							type: 'inline',
+							autoScale: true,
+							minHeight: 30,
+							content: '<p class="fancybox-error">' + errors + '</p>'
+						}],
+							{
+								padding: 0
+							});
+				else
+					alert(errors);
+				$(targetInput).val(0);
+			}
+			else
+			{
+				if (jsonData.refresh)
+					window.location.href = window.location.href;
+				updateCartSummary(jsonData.summary);
+
+				if (window.ajaxCart !== undefined)
+					ajaxCart.updateCart(jsonData);
+				if (customizationId !== 0)
+					updateCustomizedDatas(jsonData.customizedDatas);
+				updateHookShoppingCart(jsonData.HOOK_SHOPPING_CART);
+				updateHookShoppingCartExtra(jsonData.HOOK_SHOPPING_CART_EXTRA);
+
+				if (typeof(getCarrierListAndUpdate) !== 'undefined')
+					getCarrierListAndUpdate();
+				if (typeof(updatePaymentMethodsDisplay) !== 'undefined')
+					updatePaymentMethodsDisplay();
+			}
+		},
+
+		error: function(XMLHttpRequest, textStatus, errorThrown) {
+			if (textStatus !== 'abort')
+				alert("TECHNICAL ERROR: unable to save updated Pay-What-You-Want price \n\nDetails:\nError thrown: " + XMLHttpRequest + "\n" + 'Text status: ' + textStatus);
+		}
+	});
+}
+
 function updateCartSummary(json)
 {
 	var i;
@@ -865,13 +970,26 @@ function updateCartSummary(json)
 		var key_for_blockcart = product_list[i].id_product + '_' + product_list[i].id_product_attribute + '_' + product_list[i].id_address_delivery;
 		var key_for_blockcart_nocustom = product_list[i].id_product + '_' + product_list[i].id_product_attribute + '_' + ((product_list[i].id_customization && product_list[i].quantity_without_customization != product_list[i].quantity)? 'nocustom' : '0') + '_' + product_list[i].id_address_delivery;
 
-		$('#product_price_' + key_for_blockcart).html('<li class="' + current_price_class + '">' + current_price + '</li>' + initial_price_text);
-		if (typeof(product_list[i].customizationQuantityTotal) !== 'undefined' && product_list[i].customizationQuantityTotal > 0)
-			$('#total_product_price_' + key_for_blockcart).html(formatCurrency(product_customization_total, currencyFormat, currencySign, currencyBlank));
-		else
-			$('#total_product_price_' + key_for_blockcart).html(formatCurrency(product_total, currencyFormat, currencySign, currencyBlank));
-		if (product_list[i].quantity_without_customization != product_list[i].quantity)
-			$('#total_product_price_' + key_for_blockcart_nocustom).html(formatCurrency(product_total, currencyFormat, currencySign, currencyBlank));
+		if (! product_list[i].pwyw_price) {
+			$('#product_price_' + key_for_blockcart).html('<li class="' + current_price_class + '">' + current_price + '</li>' + initial_price_text);
+		}
+
+		if (! product_list[i].pwyw_price) {
+			if (typeof(product_list[i].customizationQuantityTotal) !== 'undefined' && product_list[i].customizationQuantityTotal > 0)
+				$('#total_product_price_' + key_for_blockcart).html(formatCurrency(product_customization_total, currencyFormat, currencySign, currencyBlank));
+			else
+				$('#total_product_price_' + key_for_blockcart).html(formatCurrency(product_total, currencyFormat, currencySign, currencyBlank));
+			if (product_list[i].quantity_without_customization != product_list[i].quantity)
+				$('#total_product_price_' + key_for_blockcart_nocustom).html(formatCurrency(product_total, currencyFormat, currencySign, currencyBlank));
+		}
+
+		else {
+			if(typeof(product_list[i].customizationQuantityTotal) !== 'undefined' && product_list[i].customizationQuantityTotal > 0)
+				$('#total_product_price_' + key_for_blockcart + ' input.price_wanted').val(customizationQuantityTotal);
+			else
+				$('#total_product_price_' + key_for_blockcart + ' input.price_wanted').val(product_total);
+
+		}
 
 		$('input[name=quantity_' + key_for_blockcart_nocustom + ']').val(product_list[i].id_customization? product_list[i].quantity_without_customization : product_list[i].cart_quantity);
 		$('input[name=quantity_' + key_for_blockcart_nocustom + '_hidden]').val(product_list[i].id_customization? product_list[i].quantity_without_customization : product_list[i].cart_quantity);

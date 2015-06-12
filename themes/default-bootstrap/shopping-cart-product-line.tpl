@@ -40,6 +40,8 @@
 		<ul class="price text-right" id="product_price_{$product.id_product}_{$product.id_product_attribute}{if $quantityDisplayed > 0}_nocustom{/if}_{$product.id_address_delivery|intval}{if !empty($product.gift)}_gift{/if}">
 			{if !empty($product.gift)}
 				<li class="gift-icon">{l s='Gift!'}</li>
+			{elseif $product.pwyw_price}
+				<li class="price">-</li>
 			{else}
             	{if !$priceDisplay}
 					<li class="price{if isset($product.is_discounted) && $product.is_discounted && isset($product.reduction_applies) && $product.reduction_applies} special-price{/if}">{convertPrice price=$product.price_wt}</li>
@@ -123,6 +125,8 @@
 	{/if}
 	<td class="cart_total" data-title="{l s='Total'}">
 		<span class="price" id="total_product_price_{$product.id_product}_{$product.id_product_attribute}{if $quantityDisplayed > 0}_nocustom{/if}_{$product.id_address_delivery|intval}{if !empty($product.gift)}_gift{/if}">
+
+		  {if !$product.pwyw_price OR (isset($cannotModify) AND $cannotModify == 1)}
 			{if !empty($product.gift)}
 				<span class="gift-icon">{l s='Gift!'}</span>
 			{else}
@@ -132,6 +136,25 @@
 					{if !$priceDisplay}{displayPrice price=$product.total_wt}{else}{displayPrice price=$product.total}{/if}
 				{/if}
 			{/if}
+		  {else}
+				{assign var=key_for_blockcart value="{$product.id_product}_{$product.id_product_attribute}_{$product.id_address_delivery|intval}"}
+
+				<span class="input-group-addon" style="width:10px;padding:4px 6px;">{$currency->sign}</span>
+				<input type="text"
+				       name="pwyw_price_{$key_for_blockcart}"
+				       id="price_wanted_{$key_for_blockcart}"
+				       class="text price_wanted"
+				       size="5"
+				       maxlength="27"
+				       value="{$product.total}" />
+
+				<a id="refresh"
+				   class="btn-small cart_pwyw_price_change"
+				   data-field-pwyw_price_input_id="price_wanted_{$key_for_blockcart}"
+				   data-field-product_cart_key="{$key_for_blockcart}"
+				   href="{$link->getPageLink('cart', true, NULL, "updatePWYW=1&amp;id_product={$product.id_product|intval}&amp;ipa={$product.id_product_attribute|intval}&amp;id_address_delivery={$product.id_address_delivery|intval}&amp;token={$token_cart}")|escape:'html':'UTF-8'}"><i class="icon-refresh"></i></a>
+				<span class="clearfix"></span>
+		  {/if}
 		</span>
 	</td>
 

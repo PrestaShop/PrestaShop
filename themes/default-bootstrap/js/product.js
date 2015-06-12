@@ -332,6 +332,19 @@ if (typeof minimalQuantity != 'undefined' && minimalQuantity)
 	});
 }
 
+// The button to validate price change, if free price is available
+/*
+$(document).on('click', '.pwyw_price_refresh', function(e){
+    e.preventDefault();
+    fieldName = $(this).data('field-pwyw_price');
+    var currentVal = parseFloat($('input[name='+fieldName+']').val());
+    if (!isNaN(currentVal) && currentVal > 0) {
+        $('input[name='+fieldName+']').val(currentVal).trigger('keyup');
+    }
+    return;
+});
+*/
+
 function arrayUnique(a)
 {
     return a.reduce(function(p, c){

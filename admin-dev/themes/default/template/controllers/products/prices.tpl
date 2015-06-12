@@ -201,6 +201,17 @@ $(document).ready(function () {
 			<input id="priceTI" name="priceTI" type="text" value="" onchange="noComma('priceTI');" maxlength="27" onkeyup="$('#priceType').val('TI');if (isArrowKey(event)) return;  calcPriceTE();" />
 		</div>
 		{if isset($pack) && $pack->isPack($product->id)}<p class="col-lg-9 col-lg-offset-3 help-block">{l s='The sum of prices of the products in the pack is %s%s%s' sprintf=[$currency->prefix,{toolsConvertPrice price=$pack->noPackPrice($product->id)|string_format:$priceDisplayPrecisionFormat},$currency->suffix]}</p>{/if}
+
+		<div class="col-lg-1"><span class="pull-right">{include file="controllers/products/multishop/checkbox.tpl" field="pwyw_price" type="default"}</span></div>
+		<label class="control-label col-lg-2" for="pwyw_price">&nbsp;</label>
+		<div class="col-lg-9">
+			<div class="checkbox">
+				<label class="control-label" for="pwyw_price" >
+					<input type="checkbox" name="pwyw_price" id="pwyw_price" {if $product->pwyw_price}checked="checked"{/if} value="1" />
+					{l s='Pay-What-You-Want product. The customer chooses how much he is willing to pay.'}
+				</label>
+			</div>
+		</div>
 	</div>
 
 	<div class="form-group">

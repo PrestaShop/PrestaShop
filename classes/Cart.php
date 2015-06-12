@@ -499,7 +499,8 @@ class CartCore extends ObjectModel
 						stock.`quantity` AS quantity_available, p.`width`, p.`height`, p.`depth`, stock.`out_of_stock`, p.`weight`,
 						p.`date_add`, p.`date_upd`, IFNULL(stock.quantity, 0) as quantity, pl.`link_rewrite`, cl.`link_rewrite` AS category,
 						CONCAT(LPAD(cp.`id_product`, 10, 0), LPAD(IFNULL(cp.`id_product_attribute`, 0), 10, 0), IFNULL(cp.`id_address_delivery`, 0)) AS unique_id, cp.id_address_delivery,
-						product_shop.advanced_stock_management, ps.product_supplier_reference supplier_reference');
+						product_shop.advanced_stock_management, ps.product_supplier_reference supplier_reference,
+						IF(product_shop.`pwyw_price`=1 AND cp.`pwyw_price` IS NOT NULL, cp.`pwyw_price`, NULL) AS pwyw_price');
 
 		// Build FROM
 		$sql->from('cart_product', 'cp');
@@ -676,22 +677,32 @@ class CartCore extends ObjectModel
 				true,
 				$cart_shop_context
 			);
+			// $specific_price_output, apparently useful below is only
+			// defined if the above getPriceStatic() is run although useless in
+			// the case of a Pay-What-You-Want price
+			if(is_numeric($row['pwyw_price'])) {
+				$row['price'] = $row['pwyw_price'];
+			}
+
+      // while cart_quantity remain useful, free pricing applies to the sum of the products of
+      // this type and as such cart_quantity is not taken into account for the calculation of totals
+      $cart_quantity_multiplier = is_numeric($row['pwyw_price']) ? 1 : $row['cart_quantity'];
 
 			switch (Configuration::get('PS_ROUND_TYPE'))
 			{
 				case Order::ROUND_TOTAL:
-					$row['total'] = $row['price_with_reduction_without_tax'] * (int)$row['cart_quantity'];
-					$row['total_wt'] = $row['price_with_reduction'] * (int)$row['cart_quantity'];
+					$row['total'] = $row['price_with_reduction_without_tax'] * $cart_quantity_multiplier;
+					$row['total_wt'] = $row['price_with_reduction'] * $cart_quantity_multiplier;
 					break;
 				case Order::ROUND_LINE:
-					$row['total'] = Tools::ps_round($row['price_with_reduction_without_tax'] * (int)$row['cart_quantity'], _PS_PRICE_COMPUTE_PRECISION_);
-					$row['total_wt'] = Tools::ps_round($row['price_with_reduction'] * (int)$row['cart_quantity'], _PS_PRICE_COMPUTE_PRECISION_);
+					$row['total'] = Tools::ps_round($row['price_with_reduction_without_tax'] * $cart_quantity_multiplier, _PS_PRICE_COMPUTE_PRECISION_);
+					$row['total_wt'] = Tools::ps_round($row['price_with_reduction'] * $cart_quantity_multiplier, _PS_PRICE_COMPUTE_PRECISION_);
 					break;
 
 				case Order::ROUND_ITEM:
 				default:
-					$row['total'] = Tools::ps_round($row['price_with_reduction_without_tax'], _PS_PRICE_COMPUTE_PRECISION_) * (int)$row['cart_quantity'];
-					$row['total_wt'] = Tools::ps_round($row['price_with_reduction'], _PS_PRICE_COMPUTE_PRECISION_) * (int)$row['cart_quantity'];
+					$row['total'] = Tools::ps_round($row['price_with_reduction_without_tax'], _PS_PRICE_COMPUTE_PRECISION_) * $cart_quantity_multiplier;
+					$row['total_wt'] = Tools::ps_round($row['price_with_reduction'], _PS_PRICE_COMPUTE_PRECISION_) * $cart_quantity_multiplier;
 					break;
 			}
 
@@ -1035,6 +1046,87 @@ class CartCore extends ObjectModel
 			return $this->_updateCustomizationQuantity((int)$quantity, (int)$id_customization, (int)$id_product, (int)$id_product_attribute, (int)$id_address_delivery, $operator);
 		else
 			return true;
+	}
+
+	/**
+	 * Update product's price in case it's available for freepricing
+	 *
+	 * @param float $pwyw_price New price chosen by the customer
+	 * @param integer $id_product Product ID
+	 */
+	public function updatePWYW($pwyw_price, $id_product, $id_product_attribute = 0, $id_address_delivery = 0, Shop $shop = null)
+	{
+		if (!is_numeric($pwyw_price))
+			return false;
+		if (!$shop)
+			$shop = Context::getContext()->shop;
+
+		if (Context::getContext()->customer->id)
+		{
+			if ($id_address_delivery == 0 && (int)$this->id_address_delivery) // The $id_address_delivery is null, use the cart delivery address
+				$id_address_delivery = $this->id_address_delivery;
+			elseif ($id_address_delivery == 0) // The $id_address_delivery is null, get the default customer address
+				$id_address_delivery = (int)Address::getFirstCustomerAddressId((int)Context::getContext()->customer->id);
+			elseif (!Customer::customerHasAddress(Context::getContext()->customer->id, $id_address_delivery)) // The $id_address_delivery must be linked with customer
+				$id_address_delivery = 0;
+		}
+
+		$new_pwyw_price = (float)$pwyw_price;
+		$id_product = (int)$id_product;
+		$product = new Product($id_product, false, Configuration::get('PS_LANG_DEFAULT'), $shop->id);
+
+		if (!Validate::isLoadedObject($product))
+			die(Tools::displayError());
+		if (!$product->pwyw_price)
+			die(Tools::displayError());
+
+		Hook::exec('actionBeforeCartUpdatePWYW', array(
+			'cart' => $this,
+			'product' => $product,
+			'id_product_attribute' => $id_product_attribute,
+			'pwyw_price' => $new_pwyw_price,
+			'id_address_delivery' => $id_address_delivery,
+			'shop' => $shop
+		));
+
+		if (!$product->available_for_order || (Configuration::get('PS_CATALOG_MODE') && !defined('_PS_ADMIN_DIR_')))
+			return false;
+
+		/* update the Pay-What-You-Want price value
+			 the product is supposed to always exist in the cart since updatePWYW()
+			 is always triggered *following previous call to updateQty()
+			 see controllers/front/CartController.php:processChangeProductInCart()
+			 TODO: currently if multiple attribute-derived-variants or customizations exists in
+			 the cart, they are all updated. Thus Pay-What-You-Want pricing is currently incompatible
+			 with variants */
+
+		// Check if the product is already in the cart
+		$result = $this->containsProduct($id_product, 0, 0, (int)$id_address_delivery);
+		if(! $result) return false;
+
+		$ret = Db::getInstance()->update(
+			// UPDATE table
+			'cart_product',
+			// UPDATE fields
+			array('pwyw_price' => $new_pwyw_price, 'date_add' => array('type' => 'sql', 'value' => 'NOW()')),
+			// WHERE
+			implode(' AND ', array_filter( array(
+				'`id_cart` = '.(int)$this->id,
+				'`id_product` = '.(int)$id_product,
+				'`id_product_attribute` = '.(int)$id_product_attribute,
+				'`id_shop` = '.(int)$shop->id,
+				(Configuration::get('PS_ALLOW_MULTISHIPPING') && $this->isMultiAddressDelivery() ? '`id_address_delivery` = '.(int)$id_address_delivery : NULL))))
+			// LIMIT
+			/* 1 */);
+
+		// refresh cache of self::_products
+		$this->_products = $this->getProducts(true);
+		$this->update();
+		$context = Context::getContext()->cloneContext();
+		$context->cart = $this;
+		Cache::clean('getContextualValue_*');
+
+		return $ret;
 	}
 
 	/*
@@ -1489,6 +1581,8 @@ class CartCore extends ObjectModel
 				$virtual_context
 			);
 
+			if(is_numeric($product['pwyw_price'])) $price = $product['pwyw_price'];
+			$cart_quantity_multiplier = is_numeric($product['pwyw_price']) ? 1 : $product['cart_quantity'];
 			$address = $address_factory->findOrCreate($id_address, true);
 
 			if ($with_taxes)
@@ -1511,18 +1605,18 @@ class CartCore extends ObjectModel
 			switch ($ps_round_type)
 			{
 				case Order::ROUND_TOTAL:
-					$products_total[$id_tax_rules_group.'_'.$id_address] += $price * (int)$product['cart_quantity'];
+					$products_total[$id_tax_rules_group.'_'.$id_address] += $price * (int)$cart_quantity_multiplier;
 					break;
 
 				case Order::ROUND_LINE:
-					$product_price = $price * $product['cart_quantity'];
+					$product_price = $price * $cart_quantity_multiplier;
 					$products_total[$id_tax_rules_group] += Tools::ps_round($product_price, $compute_precision);
 					break;
 
 				case Order::ROUND_ITEM:
 				default:
 					$product_price = /*$with_taxes ? $tax_calculator->addTaxes($price) : */$price;
-					$products_total[$id_tax_rules_group] += Tools::ps_round($product_price, $compute_precision) * (int)$product['cart_quantity'];
+					$products_total[$id_tax_rules_group] += Tools::ps_round($product_price, $compute_precision) * (int)$cart_quantity_multiplier;
 					break;
 			}
 		}

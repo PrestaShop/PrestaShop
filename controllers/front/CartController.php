@@ -33,6 +33,7 @@ class CartControllerCore extends FrontController
 	protected $id_address_delivery;
 	protected $customization_id;
 	protected $qty;
+	protected $pwyw_price;
 	public $ssl = true;
 
 	protected $ajax_refresh = false;
@@ -60,6 +61,8 @@ class CartControllerCore extends FrontController
 		$this->id_product_attribute = (int)Tools::getValue('id_product_attribute', Tools::getValue('ipa'));
 		$this->customization_id = (int)Tools::getValue('id_customization');
 		$this->qty = abs(Tools::getValue('qty', 1));
+		$this->pwyw_price = Tools::getValue('pwyw_price', NULL);
+		$this->pwyw_price = is_numeric($this->pwyw_price) ? floatval($this->pwyw_price) : NULL;
 		$this->id_address_delivery = (int)Tools::getValue('id_address_delivery');
 	}
 
@@ -72,6 +75,8 @@ class CartControllerCore extends FrontController
 				$this->processChangeProductInCart();
 			elseif (Tools::getIsset('delete'))
 				$this->processDeleteProductInCart();
+			elseif (Tools::getIsset('updatePWYW'))
+				$this->processPWYWChangeProductInCart();
 			elseif (Tools::getIsset('changeAddressDelivery'))
 				$this->processChangeProductAddressDelivery();
 			elseif (Tools::getIsset('allowSeperatedPackage'))
@@ -222,6 +227,11 @@ class CartControllerCore extends FrontController
 			$this->errors[] = Tools::displayError('This product is no longer available.', !Tools::getValue('ajax'));
 			return;
 		}
+		if(is_numeric($this->pwyw_price) && !$product->pwyw_price)
+		{
+			$this->errors[] = Tools::displayError('This product does not accept free pricing.', !Tools::getValue('ajax'));
+			return;
+		}
 
 		$qty_to_check = $this->qty;
 		$cart_products = $this->context->cart->getProducts();
@@ -294,23 +304,27 @@ class CartControllerCore extends FrontController
 				}
 				elseif (!$update_quantity)
 					$this->errors[] = Tools::displayError('You already have the maximum quantity available for this product.', !Tools::getValue('ajax'));
-				elseif ((int)Tools::getValue('allow_refresh'))
-				{
-					// If the cart rules has changed, we need to refresh the whole cart
-					$cart_rules2 = $this->context->cart->getCartRules();
-					if (count($cart_rules2) != count($cart_rules))
-						$this->ajax_refresh = true;
-					else
+				else {
+          // below updatePWYW() is no-op if pwyw_price is NULL
+          $this->context->cart->updatePWYW($this->pwyw_price, $this->id_product, $this->id_product_attribute, $this->id_address_delivery);
+					if ((int)Tools::getValue('allow_refresh'))
 					{
-						$rule_list = array();
-						foreach ($cart_rules2 as $rule)
-							$rule_list[] = $rule['id_cart_rule'];
-						foreach ($cart_rules as $rule)
-							if (!in_array($rule['id_cart_rule'], $rule_list))
-							{
-								$this->ajax_refresh = true;
-								break;
-							}
+            // If the cart rules has changed, we need to refresh the whole cart
+						$cart_rules2 = $this->context->cart->getCartRules();
+						if (count($cart_rules2) != count($cart_rules))
+							$this->ajax_refresh = true;
+						else
+						{
+							$rule_list = array();
+							foreach ($cart_rules2 as $rule)
+								$rule_list[] = $rule['id_cart_rule'];
+							foreach ($cart_rules as $rule)
+								if (!in_array($rule['id_cart_rule'], $rule_list))
+								{
+									$this->ajax_refresh = true;
+									break;
+								}
+						}
 					}
 				}
 			}
@@ -320,6 +334,41 @@ class CartControllerCore extends FrontController
 		CartRule::autoAddToCart();
 		if (count($removed) && (int)Tools::getValue('allow_refresh'))
 			$this->ajax_refresh = true;
+	}
+
+	/**
+	 * This process a change in the value of the price for a Pay-What-You-Want product
+	 * There is no autoRemove implied (even with a 0 free-priced product, the line is kept)
+	 */
+	protected function processPWYWChangeProductInCart()
+	{
+		if (!$this->id_product)
+			$this->errors[] = Tools::displayError('Product not found', !Tools::getValue('ajax'));
+
+		$product = new Product($this->id_product, true, $this->context->language->id);
+		if (!$product->id || !$product->active || !$product->checkAccess($this->context->cart->id_customer))
+		{
+			$this->errors[] = Tools::displayError('This product is no longer available.', !Tools::getValue('ajax'));
+			return;
+		}
+		if(! is_numeric($this->pwyw_price)) {
+			$this->errors[] = Tools::displayError('The specified price is invalid or forbidden.', !Tools::getValue('ajax'));
+			return;
+		}
+
+		if(! $product->pwyw_price)
+		{
+			$this->errors[] = Tools::displayError('This product does not accept free pricing.', !Tools::getValue('ajax'));
+			return;
+		}
+
+		/* we should not have to deal with creating a new cart if not existing since
+       1) we can only upload the PWYW price for already added product.
+			 2) the original adding from the product page is taken care of by processChangeProductInCart()
+			 Updating the PWYW price should not have consequence on attributes nor on customizable fields.
+       Actually triggering a change in of the PWYW price does not trigger price rules rebuilding.
+       Thus, only: */
+    $this->context->cart->updatePWYW($this->pwyw_price, $this->id_product, $this->id_product_attribute, $this->id_address_delivery);
 	}
 
 	/**
