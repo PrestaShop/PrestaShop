@@ -188,6 +188,8 @@ class CustomerCore extends ObjectModel
             'id_lang' =>                    array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'copy_post' => false),
             'date_add' =>                    array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false),
             'date_upd' =>                    array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false),
+            'reset_password_token' =>        array('type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => 40, 'copy_post' => false),
+            'reset_password_validity' =>    array('type' => self::TYPE_DATE, 'copy_post' => false),
         ),
     );
 
