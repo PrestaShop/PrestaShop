@@ -30,11 +30,42 @@
 {include file="$tpl_dir./errors.tpl"}
 
 {if isset($confirmation) && $confirmation == 1}
+<p>{l s='Please enter a new password twice.'}</p>
+<p class="required">
+	<sup>*</sup>{l s='Required field'}
+</p>
+<form action="{$link->getPageLink('password', true)|escape:'html':'UTF-8'}" method="post" class="std" id="form_changepassword">
+	<fieldset>
+		<div class="form-group">
+			<label for="email">{l s='Email address'}</label>
+			<input class="form-control" type="email" id="email" name="email" value="{if isset($customer_email)}{$customer_email|escape:'html':'UTF-8'|stripslashes}{/if}" disabled="disabled" />
+		</div>
+		<div class="required password form-group">
+			<label for="password" class="required">
+				{l s='New password'}
+			</label>
+			<input class="is_required validate form-control" type="password" data-validate="isPasswd" id="passwd" name="passwd" value="" />
+		</div>
+		<div class="required password form-group">
+			<label for="confirmation" class="required">
+				{l s='Confirmation'}
+			</label>
+			<input class="is_required validate form-control" type="password" data-validate="isPasswd" id="confirmation" name="confirmation" value="" />
+		</div>
+		<input type="hidden" name="token" id="token" value="{if isset($customer_token)}{$customer_token|escape:'html':'UTF-8'}{/if}" />
+		<input type="hidden" name="id_customer" id="id_customer" value="{if isset($id_customer)}{$id_customer|escape:'html':'UTF-8'}{/if}" />
+		<input type="hidden" name="reset_token" id="reset_token" value="{if isset($reset_token)}{$reset_token|escape:'html':'UTF-8'}{/if}" />
+		<p class="submit">
+            <button type="submit" class="btn btn-default button button-medium"><span>{l s='Change Password'}<i class="icon-chevron-right right"></i></span></button>
+		</p>
+	</fieldset>
+</form>
+{elseif isset($confirmation) && $confirmation == 3}
 <p class="alert alert-success">{l s='Your password has been successfully reset and a confirmation has been sent to your email address:'} {if isset($customer_email)}{$customer_email|escape:'html':'UTF-8'|stripslashes}{/if}</p>
 {elseif isset($confirmation) && $confirmation == 2}
 <p class="alert alert-success">{l s='A confirmation email has been sent to your address:'} {if isset($customer_email)}{$customer_email|escape:'html':'UTF-8'|stripslashes}{/if}</p>
 {else}
-<p>{l s='Please enter the email address you used to register. We will then send you a new password. '}</p>
+<p>{l s='Please enter the email address you used to register. We will then send you a temporary link to reset your password. '}</p>
 <form action="{$request_uri|escape:'html':'UTF-8'}" method="post" class="std" id="form_forgotpassword">
 	<fieldset>
 		<div class="form-group">
