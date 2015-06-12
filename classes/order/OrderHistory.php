@@ -384,6 +384,14 @@ class OrderHistoryCore extends ObjectModel
 		if (!$this->add($autodate))
 			return false;
 
+		if (!$this->sendEmail($order, $template_vars))
+			return false;
+
+		return true;
+	}
+
+	public function sendEmail($order, $template_vars = false)
+	{
 		$result = Db::getInstance()->getRow('
 			SELECT osl.`template`, c.`lastname`, c.`firstname`, osl.`name` AS osname, c.`email`, os.`module_name`, os.`id_order_state`, os.`pdf_invoice`, os.`pdf_delivery`
 			FROM `'._DB_PREFIX_.'order_history` oh
@@ -444,8 +452,9 @@ class OrderHistoryCore extends ObjectModel
 				else
 					$file_attachement = null;
 
-				Mail::Send((int)$order->id_lang, $result['template'], $topic, $data, $result['email'], $result['firstname'].' '.$result['lastname'],
-					null, null, $file_attachement, null, _PS_MAIL_DIR_, false, (int)$order->id_shop);
+				if(!Mail::Send((int)$order->id_lang, $result['template'], $topic, $data, $result['email'], $result['firstname'].' '.$result['lastname'],
+					null, null, $file_attachement, null, _PS_MAIL_DIR_, false, (int)$order->id_shop))
+					return false;
 			}
 
 			ShopUrl::resetMainDomainCache();

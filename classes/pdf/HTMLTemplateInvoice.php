@@ -133,13 +133,16 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 	 */
 	public function getContent()
 	{
+        $invoiceAddressPatternRules = Tools::jsonDecode(Configuration::get('PS_INVCE_INVOICE_ADDR_RULES'), true);
+        $deliveryAddressPatternRules = Tools::jsonDecode(Configuration::get('PS_INVCE_DELIVERY_ADDR_RULES'), true);
+
 		$invoice_address = new Address((int)$this->order->id_address_invoice);
 		$country = new Country((int)$invoice_address->id_country);
 
 		if ($this->order_invoice->invoice_address)
 			$formatted_invoice_address = $this->order_invoice->invoice_address;
 		else
-			$formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
+			$formatted_invoice_address = AddressFormat::generateAddress($invoice_address, $invoiceAddressPatternRules, '<br />', ' ');
 
 		$delivery_address = null;
 		$formatted_delivery_address = '';
@@ -150,7 +153,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			else
 			{
 				$delivery_address = new Address((int)$this->order->id_address_delivery);
-				$formatted_delivery_address = AddressFormat::generateAddress($delivery_address, array(), '<br />', ' ');
+				$formatted_delivery_address = AddressFormat::generateAddress($delivery_address, $deliveryAddressPatternRules, '<br />', ' ');
 			}
 		}
 
@@ -177,7 +180,10 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			$taxes = OrderDetail::getTaxListStatic($id);
 			$tax_temp = array();
 			foreach ($taxes as $tax)
-				$tax_temp[] = $tax['id_tax'];
+            {
+                $obj = new Tax($tax['id_tax']);
+				$tax_temp[] = sprintf($this->l('%1$s%2$s%%'), ($obj->rate + 0), '&nbsp;');
+            }
 
 			$order_detail['order_detail_tax'] = $taxes;
 			$order_detail['order_detail_tax_label'] = implode(', ', $tax_temp);
@@ -310,7 +316,8 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
 		$data = array(
 			'order' => $this->order,
-			'order_details' => $order_details,
+            'order_invoice' => $this->order_invoice,
+            'order_details' => $order_details,
 			'cart_rules' => $cart_rules,
 			'delivery_address' => $formatted_delivery_address,
 			'invoice_address' => $formatted_invoice_address,
@@ -372,7 +379,6 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			'ecotax_tax_breakdown' => $this->order_invoice->getEcoTaxTaxesBreakdown(),
 			'wrapping_tax_breakdown' => $this->order_invoice->getWrappingTaxesBreakdown(),
 			'tax_breakdowns' => $tax_breakdowns,
-			'tax_label' => $this->getTaxLabel($tax_breakdowns),
 			'order' => $debug ? null : $this->order,
 			'order_invoice' => $debug ? null : $this->order_invoice,
 			'carrier' => $debug ? null : $carrier
@@ -425,6 +431,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 		return $breakdowns;
 	}
 
+    /*
 	protected function getTaxLabel($tax_breakdowns)
 	{
 		$tax_label = '';
@@ -444,6 +451,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
 		return $tax_label;
 	}
+    */
 
 	/**
 	 * Returns the invoice template associated to the country iso_code

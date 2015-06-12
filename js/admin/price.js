@@ -131,7 +131,7 @@ function calcPriceTI()
 	document.getElementById('finalPrice').innerHTML = (isNaN(newPrice) == true || newPrice < 0) ? '' :
 		ps_round(newPrice, priceDisplayPrecision).toFixed(priceDisplayPrecision);
 	document.getElementById('finalPriceWithoutTax').innerHTML = (isNaN(priceTE) == true || priceTE < 0) ? '' :
-		(ps_round(priceTE, 6) + getEcotaxTaxExcluded()).toFixed(6);
+		(ps_round(priceTE, 6)).toFixed(6);
 	calcReduction();
 
 	if (isNaN(parseFloat($('#priceTI').val())))
@@ -157,7 +157,7 @@ function calcPriceTE()
 	document.getElementById('finalPrice').innerHTML = (isNaN(newPrice) == true || newPrice < 0) ? '' :
 		ps_round(priceTI, priceDisplayPrecision).toFixed(priceDisplayPrecision);
 	document.getElementById('finalPriceWithoutTax').innerHTML = (isNaN(newPrice) == true || newPrice < 0) ? '' :
-		(ps_round(newPrice, 6) + getEcotaxTaxExcluded()).toFixed(6);
+		(ps_round(newPrice, 6)).toFixed(6);
 	calcReduction();
 }
 
@@ -304,4 +304,3 @@ function changeCurrencySpecificPrice(index)
 		$('#spm_currency_sign_pre_' + index).html(currencies[id_currency]["sign"] + ' ');
 	}
 }
-

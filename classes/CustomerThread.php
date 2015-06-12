@@ -181,7 +181,7 @@ class CustomerThreadCore extends ObjectModel
 			return (int)Db::getInstance()->getValue('
 				SELECT COUNT(*)
 				FROM '._DB_PREFIX_.'customer_thread
-				WHERE '.$where
+				WHERE '.$where.Shop::addSqlRestriction()
 			);
 	}
 

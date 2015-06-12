@@ -39,6 +39,7 @@
 <div class="order_carrier_content box">
 	{if isset($virtual_cart) && $virtual_cart}
 		<input id="input_virtual_carrier" class="hidden" type="hidden" name="id_carrier" value="0" />
+        <p class="alert alert-warning">{l s='No carrier is needed for this order.'}</p>
 	{else}
 		<div id="HOOK_BEFORECARRIER">
 			{if isset($carriers) && isset($HOOK_BEFORECARRIER)}

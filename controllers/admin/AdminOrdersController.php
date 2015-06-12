@@ -1517,6 +1517,32 @@ class AdminOrdersControllerCore extends AdminController
 			else
 				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 		}
+		elseif (Tools::isSubmit('sendStateEmail') && Tools::getValue('sendStateEmail') > 0 && Tools::getValue('id_order') > 0)
+		{
+			if ($this->tabAccess['edit'] === '1')
+			{
+				$order_state = new OrderState((int)Tools::getValue('sendStateEmail'));
+
+				if (!Validate::isLoadedObject($order_state))
+					$this->errors[] = Tools::displayError('An error occurred while loading order status.');
+				else
+				{
+					$history = new OrderHistory((int)Tools::getValue('id_order_history'));
+
+					$carrier = new Carrier($order->id_carrier, $order->id_lang);
+					$templateVars = array();
+					if ($order_state->id == Configuration::get('PS_OS_SHIPPING') && $order->shipping_number)
+						$templateVars = array('{followup}' => str_replace('@', $order->shipping_number, $carrier->url));
+
+					if ($history->sendEmail($order, $templateVars))
+						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=10&token='.$this->token);
+					else
+						$this->errors[] = Tools::displayError('An error occurred while sending the e-mail to the customer.');
+				}
+			}
+			else
+				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
+		}
 
 		parent::postProcess();
 	}
