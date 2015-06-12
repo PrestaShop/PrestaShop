@@ -1224,7 +1224,7 @@ class CartCore extends ObjectModel
 				AND `id_product_attribute` = '.(int)$id_product_attribute);
 
 			$customization_quantity = (int)Db::getInstance()->getValue('
-			SELECT `quantity`
+			SELECT SUM(`quantity`)
 			FROM `'._DB_PREFIX_.'customization`
 			WHERE `id_cart` = '.(int)$this->id.'
 			AND `id_product` = '.(int)$id_product.'
