@@ -1581,8 +1581,15 @@ class CartCore extends ObjectModel
 				$virtual_context
 			);
 
-			if(is_numeric($product['pwyw_price'])) $price = $product['pwyw_price'];
-			$cart_quantity_multiplier = is_numeric($product['pwyw_price']) ? 1 : $product['cart_quantity'];
+			// unit tests may not define pwyw_price
+			if(array_key_exists('pwyw_price', $product) && is_numeric($product['pwyw_price'])) {
+				$price = $product['pwyw_price'];
+				$cart_quantity_multiplier = 1;
+			}
+			else {
+				$cart_quantity_multiplier = $product['cart_quantity'];
+			}
+
 			$address = $address_factory->findOrCreate($id_address, true);
 
 			if ($with_taxes)
