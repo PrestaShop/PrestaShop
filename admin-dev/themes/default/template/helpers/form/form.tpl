@@ -57,6 +57,12 @@
 					{/block}
 				{elseif $key == 'description' && $field}
 					<div class="alert alert-info">{$field}</div>
+				{elseif $key == 'warning' && $field}
+					<div class="alert alert-warning">{$field}</div>
+				{elseif $key == 'success' && $field}
+					<div class="alert alert-success">{$field}</div>
+				{elseif $key == 'error' && $field}
+					<div class="alert alert-danger">{$field}</div>
 				{elseif $key == 'input'}
 					<div class="form-wrapper">
 					{foreach $field as $input}
