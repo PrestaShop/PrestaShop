@@ -775,25 +775,24 @@ abstract class DbCore
      * @param bool $html_ok Does data contain HTML code ? (optional)
      * @return string Sanitized data
      */
-    public function escape($string, $html_ok = false, $bq_sql = false)
-    {
-        if (_PS_MAGIC_QUOTES_GPC_) {
-            $string = stripslashes($string);
-        }
+	public function escape($string, $html_ok = false, $bq_sql = false)
+	{
+		if (_PS_MAGIC_QUOTES_GPC_)
+			$string = stripslashes($string);
 
-        if (!is_numeric($string)) {
-            $string = $this->_escape($string);
-            if (!$html_ok) {
-                $string = strip_tags(Tools::nl2br($string));
-            }
-        }
+		if (!is_numeric($string))
+		{
+			$string = $this->_escape($string);
 
-        if ($bq_sql === true) {
-            $string = str_replace('`', '\`', $string);
-        }
+			if (!$html_ok)
+				$string = strip_tags(Tools::nl2br($string));
 
-        return $string;
-    }
+			if ($bq_sql === true)
+				$string = str_replace('`', '\`', $string);
+		}
+
+		return $string;
+	}
 
 	/**
 	 * Try a connection to the database
@@ -912,7 +911,7 @@ abstract class DbCore
 		Db::s($sql, $use_cache);
 		die();
 	}
-	
+
 	/**
 	 * Get used link instance
 	 *
