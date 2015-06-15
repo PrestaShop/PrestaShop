@@ -532,7 +532,7 @@
 										{/if}
 									</td>
 									<td class="actions">
-										<button class="btn btn-primary btn-block" type="submit" name="submitAddPayment">
+										<button class="btn btn-primary" type="submit" name="submitAddPayment">
 											{l s='Add'}
 										</button>
 									</td>
