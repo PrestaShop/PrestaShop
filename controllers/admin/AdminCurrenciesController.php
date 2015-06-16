@@ -35,12 +35,13 @@ class AdminCurrenciesControllerCore extends AdminController
         $this->table = 'currency';
         $this->className = 'Currency';
         $this->lang = false;
+        $this->cldr = new Core_Business_Cldr_CldrRepository();
 
         $this->fields_list = array(
             'id_currency' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-            'name' => array('title' => $this->l('Currency')),
+            'name' => array('title' => $this->l('Currency'), 'orderby' => false, 'search' => false),
             'iso_code' => array('title' => $this->l('ISO code'), 'align' => 'center', 'class' => 'fixed-width-xs'),
-            'iso_code_num' => array('title' => $this->l('ISO code number'), 'align' => 'center', 'class' => 'fixed-width-xs'),
+            'iso_code_num' => array('title' => $this->l('ISO code number'), 'align' => 'center', 'class' => 'fixed-width-xs', 'orderby' => false, 'search' => false),
             'sign' => array('title' => $this->l('Symbol'), 'width' => 20, 'align' => 'center', 'orderby' => false, 'search' => false, 'class' => 'fixed-width-xs'),
             'conversion_rate' => array('title' => $this->l('Exchange rate'), 'type' => 'float', 'align' => 'center', 'width' => 130, 'search' => false, 'filter_key' => 'currency_shop!conversion_rate'),
             'active' => array('title' => $this->l('Enabled'), 'width' => 25, 'align' => 'center', 'active' => 'status', 'type' => 'bool', 'orderby' => false, 'class' => 'fixed-width-sm'),
@@ -86,7 +87,26 @@ class AdminCurrenciesControllerCore extends AdminController
 
         $this->_where = 'AND a.`deleted` = 0';
 
-        return parent::renderList();
+        //retrieve datas list
+        $this->getList($this->context->language->id);
+
+        foreach($this->_list as $k=>$v){
+            $currency = $this->cldr->getCurrency($this->_list[$k]['iso_code']);
+
+            $this->_list[$k]['name'] = ucfirst($currency['name']);
+            $this->_list[$k]['iso_code_num'] = $currency['iso_code'];
+            $this->_list[$k]['sign'] = $currency['symbol'];
+        }
+
+        $helper = new HelperList();
+        $this->setHelperDisplay($helper);
+
+        return $helper->generateList($this->_list, $this->fields_list);
+    }
+
+    public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
+    {
+        parent::getList($id_lang, $order_by, $order_way, $start, $limit, Context::getContext()->shop->id);
     }
 
     public function renderForm()
@@ -98,37 +118,16 @@ class AdminCurrenciesControllerCore extends AdminController
             ),
             'input' => array(
                 array(
-                    'type' => 'text',
-                    'label' => $this->l('Currency name'),
-                    'name' => 'name',
-                    'size' => 30,
-                    'maxlength' => 32,
-                    'required' => true,
-                    'hint' => $this->l('Only letters and the minus character are allowed.')
-                ),
-                array(
-                    'type' => 'text',
+                    'type' => 'select',
                     'label' => $this->l('ISO code'),
                     'name' => 'iso_code',
-                    'maxlength' => 32,
                     'required' => true,
-                    'hint' => $this->l('ISO code (e.g. USD for Dollars, EUR for Euros, etc.).')
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => $this->l('Numeric ISO code'),
-                    'name' => 'iso_code_num',
-                    'maxlength' => 32,
-                    'required' => true,
-                    'hint' => $this->l('Numeric ISO code (e.g. 840 for Dollars, 978 for Euros, etc.).')
-                ),
-                array(
-                    'type' => 'text',
-                    'label' => $this->l('Symbol'),
-                    'name' => 'sign',
-                    'maxlength' => 8,
-                    'required' => true,
-                    'hint' => $this->l('Will appear in front office (e.g. $, &euro;, etc.)')
+                    'hint' => $this->l('ISO code (e.g. USD for Dollars, EUR for Euros, etc.).'),
+                    'options' => array(
+                        'query' => $this->cldr->getAllCurrencies(),
+                        'name' => 'name',
+                        'id' => 'code'
+                    )
                 ),
                 array(
                     'type' => 'text',
@@ -137,65 +136,6 @@ class AdminCurrenciesControllerCore extends AdminController
                     'maxlength' => 11,
                     'required' => true,
                     'hint' => $this->l('Exchange rates are calculated from one unit of your shop\'s default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1&euro; = $1.20).')
-                ),
-                array(
-                    'type' => 'select',
-                    'label' => $this->l('Currency format'),
-                    'name' => 'format',
-                    'maxlength' => 11,
-                    'required' => true,
-                    'hint' =>$this->l('Applies to all prices (e.g. $1,240.15).'),
-                    'options' => array(
-                        'query' => array(
-                            array('key' => 1, 'name' => 'X0,000.00 ('.$this->l('Such as with Dollars').')'),
-                            array('key' => 2, 'name' => '0 000,00X ('.$this->l('Such as with Euros').')'),
-                            array('key' => 3, 'name' => 'X0.000,00'),
-                            array('key' => 4, 'name' => '0,000.00X'),
-                            array('key' => 5, 'name' => '0\'000.00X') // Added for the switzerland currency
-                        ),
-                        'name' => 'name',
-                        'id' => 'key'
-                    )
-                ),
-                array(
-                    'type' => 'switch',
-                    'label' => $this->l('Decimals'),
-                    'name' => 'decimals',
-                    'required' => false,
-                    'is_bool' => true,
-                    'hint' => $this->l('Display decimals in prices.'),
-                    'values' => array(
-                        array(
-                            'id' => 'decimals_on',
-                            'value' => 1,
-                            'label' => $this->l('Enabled')
-                        ),
-                        array(
-                            'id' => 'decimals_off',
-                            'value' => 0,
-                            'label' => $this->l('Disabled')
-                        )
-                    ),
-                ),
-                array(
-                    'type' => 'switch',
-                    'label' => $this->l('Spacing'),
-                    'name' => 'blank',
-                    'required' => false,
-                    'is_bool' => true,
-                    'hint' => $this->l('Include a space between symbol and price (e.g. $1,240.15 -> $ 1,240.15).'),
-                    'values' => array(
-                        array(
-                            'id' => 'blank_on',
-                            'value' => 1,
-                            'label' => $this->l('Enabled')
-                        ),
-                        array(
-                            'id' => 'blank_off',
-                            'value' => 0,
-                            'label' => $this->l('Disabled')
-                        )
-                    ),
                 ),
                 array(
                     'type' => 'switch',
@@ -231,6 +171,20 @@ class AdminCurrenciesControllerCore extends AdminController
             'title' => $this->l('Save'),
         );
 
+        //form preselect : define the default currency or object value
+        if(Tools::getValue('id_currency')){
+            $currency = new Currency((int)Tools::getValue('id_currency'));
+            if($currency) {
+                $this->fields_value = array(
+                    'iso_code' => $currency->iso_code
+                );
+            }
+        }else{
+            $this->fields_value = array(
+                'iso_code' => $this->cldr->getCurrency()['code']
+            );
+        }
+
         return parent::renderForm();
     }
 
@@ -244,7 +198,7 @@ class AdminCurrenciesControllerCore extends AdminController
             }
         } else {
             $this->errors[] = Tools::displayError('An error occurred while deleting the object.').'
-				<b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
+                <b>'.$this->table.'</b> '.Tools::displayError('(cannot load object)');
         }
 
         return false;
@@ -340,7 +294,7 @@ class AdminCurrenciesControllerCore extends AdminController
                 $this->errors[] = Tools::displayError('You do not have permission to edit this.');
             }
         }
-        if (Tools::isSubmit('submitAddcurrency') && !Tools::getValue('id_currency') && Currency::exists(Tools::getValue('iso_code'), Tools::getValue('iso_code_num'))) {
+        if (Tools::isSubmit('submitAddcurrency') && !Tools::getValue('id_currency') && Currency::exists(Tools::getValue('iso_code'))) {
             $this->errors[] = Tools::displayError('This currency already exists.');
         }
         if (Tools::isSubmit('submitAddcurrency') && (float)Tools::getValue('conversion_rate') <= 0) {

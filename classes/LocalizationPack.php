@@ -283,7 +283,7 @@ class LocalizationPackCore
             foreach ($xml->currencies->currency as $data) {
                 /** @var SimpleXMLElement $data */
                 $attributes = $data->attributes();
-                if (Currency::exists($attributes['iso_code'], (int)$attributes['iso_code_num'])) {
+                if (Currency::exists($attributes['iso_code'])) {
                     continue;
                 }
                 $currency = new Currency();
@@ -300,7 +300,7 @@ class LocalizationPackCore
                     $this->_errors[] = Tools::displayError('Invalid currency properties.');
                     return false;
                 }
-                if (!Currency::exists($currency->iso_code, $currency->iso_code_num)) {
+                if (!Currency::exists($currency->iso_code)) {
                     if (!$currency->add()) {
                         $this->_errors[] = Tools::displayError('An error occurred while importing the currency: ').strval($attributes['name']);
                         return false;
@@ -321,6 +321,8 @@ class LocalizationPackCore
 
         return true;
     }
+
+
 
     /**
      * @param SimpleXMLElement $xml

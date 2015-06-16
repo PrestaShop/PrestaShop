@@ -33,6 +33,9 @@ class Core_Business_Cldr_CldrUpdate extends Core_Business_Cldr_CldrRepository
 		parent::__construct();
 	}
 
+	/**
+	 * fetch all CLDR translations datas
+	 */
 	public function fetch(){
 
 		if (!is_file($file = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'core.zip')) {
@@ -66,6 +69,9 @@ class Core_Business_Cldr_CldrUpdate extends Core_Business_Cldr_CldrRepository
 		$this->generateMainDatas();
 	}
 
+	/**
+	 * generate CLDR translations supplemental datas
+	 */
 	private function generateSupplementalDatas(){
 		$rootPath = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR;
 		$files = @scandir($rootPath.'supplemental');
@@ -78,6 +84,9 @@ class Core_Business_Cldr_CldrUpdate extends Core_Business_Cldr_CldrRepository
 		}
 	}
 
+	/**
+	 * generate CLDR translations main datas
+	 */
 	private function generateMainDatas(){
 		$rootPath = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'tmp'.DIRECTORY_SEPARATOR;
 		$files = @scandir($rootPath.'main');
