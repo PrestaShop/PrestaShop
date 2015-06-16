@@ -54,8 +54,7 @@ class HelperHelpAccessCore extends Helper
         $info = HelpAccess::retrieveInfos($this->label, $this->iso_lang, $this->country, $this->ps_version);
         $content = '';
 
-        if (array_key_exists('version', $info) && $info['version'] != '')
-        {
+        if (array_key_exists('version', $info) && $info['version'] != '') {
             $last_version = HelpAccess::getVersion($this->label);
 
             $tpl_vars['button_class'] = 'process-icon-help';

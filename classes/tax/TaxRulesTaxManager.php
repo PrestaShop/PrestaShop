@@ -29,60 +29,59 @@
  */
 class TaxRulesTaxManagerCore implements TaxManagerInterface
 {
-	public $address;
-	public $type;
-	public $tax_calculator;
+    public $address;
+    public $type;
+    public $tax_calculator;
 
-	protected static $cache_tax_calculator;
+    protected static $cache_tax_calculator;
 
 
-	/**
-	 * 
-	 * @param Address $address
-	 * @param mixed An additional parameter for the tax manager (ex: tax rules id for TaxRuleTaxManager)
-	 */
-	public function __construct(Address $address, $type)
-	{
-		$this->address = $address;
-		$this->type = $type;
-	}
+    /**
+     *
+     * @param Address $address
+     * @param mixed An additional parameter for the tax manager (ex: tax rules id for TaxRuleTaxManager)
+     */
+    public function __construct(Address $address, $type)
+    {
+        $this->address = $address;
+        $this->type = $type;
+    }
 
-	/**
-	* Returns true if this tax manager is available for this address
-	*
-	* @return boolean
-	*/
-	public static function isAvailableForThisAddress(Address $address)
-	{
-		return true; // default manager, available for all addresses
-	}
+    /**
+     * Returns true if this tax manager is available for this address
+     *
+     * @return boolean
+     */
+    public static function isAvailableForThisAddress(Address $address)
+    {
+        return true; // default manager, available for all addresses
+    }
 
-	/**
-	* Return the tax calculator associated to this address
-	*
-	* @return TaxCalculator
-	*/
-	public function getTaxCalculator()
-	{
-		static $tax_enabled = null;
+    /**
+     * Return the tax calculator associated to this address
+     *
+     * @return TaxCalculator
+     */
+    public function getTaxCalculator()
+    {
+        static $tax_enabled = null;
 
-		if (isset($this->tax_calculator))
-			return $this->tax_calculator;
+        if (isset($this->tax_calculator))
+            return $this->tax_calculator;
 
-		if ($tax_enabled === null)
-			$tax_enabled = Configuration::get('PS_TAX');
-		
-		if (!$tax_enabled)
-			return new TaxCalculator(array());
-	
-		$taxes = array();
-		$postcode = 0;
-		if (!empty($this->address->postcode))
-			$postcode = $this->address->postcode;
+        if ($tax_enabled === null)
+            $tax_enabled = Configuration::get('PS_TAX');
 
-		if (!isset(self::$cache_tax_calculator[$postcode.'-'.$this->type]))
-		{
-			$rows = Db::getInstance()->executeS('
+        if (!$tax_enabled)
+            return new TaxCalculator(array());
+
+        $taxes = array();
+        $postcode = 0;
+        if (!empty($this->address->postcode))
+            $postcode = $this->address->postcode;
+
+        if (!isset(self::$cache_tax_calculator[$postcode.'-'.$this->type])) {
+            $rows = Db::getInstance()->executeS('
 			SELECT *
 			FROM `'._DB_PREFIX_.'tax_rule`
 			WHERE `id_country` = '.(int)$this->address->id_country.'
@@ -91,30 +90,27 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 			AND (\''.pSQL($postcode).'\' BETWEEN `zipcode_from` AND `zipcode_to` OR (`zipcode_to` = 0 AND `zipcode_from` IN(0, \''.pSQL($postcode).'\')))
 			ORDER BY `zipcode_from` DESC, `zipcode_to` DESC, `id_state` DESC, `id_country` DESC');
 
-			$behavior = 0;
-			$first_row = true;
+            $behavior = 0;
+            $first_row = true;
 
-			foreach ($rows as $row)
-			{
-				$tax = new Tax((int)$row['id_tax']);
+            foreach ($rows as $row) {
+                $tax = new Tax((int)$row['id_tax']);
 
-				$taxes[] = $tax;
+                $taxes[] = $tax;
 
-				// the applied behavior correspond to the most specific rules
-				if ($first_row)
-				{
-					$behavior = $row['behavior'];
-					$first_row = false;
-				}
+                // the applied behavior correspond to the most specific rules
+                if ($first_row) {
+                    $behavior = $row['behavior'];
+                    $first_row = false;
+                }
 
-				if ($row['behavior'] == 0)
-					 break;
-			}
+                if ($row['behavior'] == 0)
+                    break;
+            }
 
-			self::$cache_tax_calculator[$postcode.'-'.$this->type] = new TaxCalculator($taxes, $behavior);
-		}
+            self::$cache_tax_calculator[$postcode.'-'.$this->type] = new TaxCalculator($taxes, $behavior);
+        }
 
-		return self::$cache_tax_calculator[$postcode.'-'.$this->type];
-	}
+        return self::$cache_tax_calculator[$postcode.'-'.$this->type];
+    }
 }
-

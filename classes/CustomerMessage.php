@@ -26,50 +26,50 @@
 
 class CustomerMessageCore extends ObjectModel
 {
-	public $id;
-	public $id_customer_thread;
-	public $id_employee;
-	public $message;
-	public $file_name;
-	public $ip_address;
-	public $user_agent;
-	public $private;
-	public $date_add;
-	public $read;
+    public $id;
+    public $id_customer_thread;
+    public $id_employee;
+    public $message;
+    public $file_name;
+    public $ip_address;
+    public $user_agent;
+    public $private;
+    public $date_add;
+    public $read;
 
-	/**
-	 * @see ObjectModel::$definition
-	 */
-	public static $definition = array(
-		'table' => 'customer_message',
-		'primary' => 'id_customer_message',
-		'fields' => array(
-			'id_employee' => 		array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
-			'id_customer_thread' => array('type' => self::TYPE_INT),
-			'ip_address' => 		array('type' => self::TYPE_INT, 'validate' => 'isIp2Long'),
-			'message' => 			array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 65000),
-			'file_name' => 			array('type' => self::TYPE_STRING),
-			'user_agent' => 		array('type' => self::TYPE_STRING),
-			'private' => 			array('type' => self::TYPE_INT),
-			'date_add' => 			array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
-			'read' => 				array('type' => self::TYPE_BOOL, 'validate' => 'isBool')
-		),
-	);
-	
-	protected $webserviceParameters = array(
-		'fields' => array(
-			'id_employee' => array(
-				'xlink_resource' => 'employees'
-			),
-			'id_customer_thread' => array(
-				'xlink_resource' => 'customer_threads'
-			),
-		),
-	);
+    /**
+     * @see ObjectModel::$definition
+     */
+    public static $definition = array(
+        'table' => 'customer_message',
+        'primary' => 'id_customer_message',
+        'fields' => array(
+            'id_employee' =>   array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId'),
+            'id_customer_thread' => array('type' => self::TYPE_INT),
+            'ip_address' =>   array('type' => self::TYPE_INT, 'validate' => 'isIp2Long'),
+            'message' =>    array('type' => self::TYPE_STRING, 'validate' => 'isCleanHtml', 'required' => true, 'size' => 65000),
+            'file_name' =>    array('type' => self::TYPE_STRING),
+            'user_agent' =>   array('type' => self::TYPE_STRING),
+            'private' =>    array('type' => self::TYPE_INT),
+            'date_add' =>    array('type' => self::TYPE_DATE, 'validate' => 'isDate'),
+            'read' =>     array('type' => self::TYPE_BOOL, 'validate' => 'isBool')
+        ),
+    );
 
-	public static function getMessagesByOrderId($id_order, $private = true)
-	{
-		return Db::getInstance()->executeS('
+    protected $webserviceParameters = array(
+        'fields' => array(
+            'id_employee' => array(
+                'xlink_resource' => 'employees'
+            ),
+            'id_customer_thread' => array(
+                'xlink_resource' => 'customer_threads'
+            ),
+        ),
+    );
+
+    public static function getMessagesByOrderId($id_order, $private = true)
+    {
+        return Db::getInstance()->executeS('
 			SELECT cm.*,
 				c.`firstname` AS cfirstname,
 				c.`lastname` AS clastname,
@@ -88,22 +88,21 @@ class CustomerMessageCore extends ObjectModel
 			GROUP BY cm.id_customer_message
 			ORDER BY cm.date_add DESC
 		');
-	}
+    }
 
-	public static function getTotalCustomerMessages($where = null)
-	{
-		if (is_null($where))
-			return (int)Db::getInstance()->getValue('
+    public static function getTotalCustomerMessages($where = null)
+    {
+        if (is_null($where))
+            return (int)Db::getInstance()->getValue('
 				SELECT COUNT(*)
 				FROM '._DB_PREFIX_.'customer_message
 			');
-		else
-			return (int)Db::getInstance()->getValue('
+        else
+            return (int)Db::getInstance()->getValue('
 				SELECT COUNT(*)
 				FROM '._DB_PREFIX_.'customer_message
 				WHERE '.$where
-			);
-	}
+            );
+    }
 
 }
-

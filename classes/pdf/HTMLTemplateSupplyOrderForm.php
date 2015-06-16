@@ -29,168 +29,165 @@
  */
 class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 {
-	public $supply_order;
-	public $warehouse;
-	public $address_warehouse;
-	public $address_supplier;
-	public $context;
+    public $supply_order;
+    public $warehouse;
+    public $address_warehouse;
+    public $address_supplier;
+    public $context;
 
-	public function __construct(SupplyOrder $supply_order, $smarty)
-	{
-		$this->supply_order = $supply_order;
-		$this->smarty = $smarty;
-		$this->context = Context::getContext();
-		$this->warehouse = new Warehouse((int)$supply_order->id_warehouse);
-		$this->address_warehouse = new Address((int)$this->warehouse->id_address);
-		$this->address_supplier = new Address(Address::getAddressIdBySupplierId((int)$supply_order->id_supplier));
+    public function __construct(SupplyOrder $supply_order, $smarty)
+    {
+        $this->supply_order = $supply_order;
+        $this->smarty = $smarty;
+        $this->context = Context::getContext();
+        $this->warehouse = new Warehouse((int)$supply_order->id_warehouse);
+        $this->address_warehouse = new Address((int)$this->warehouse->id_address);
+        $this->address_supplier = new Address(Address::getAddressIdBySupplierId((int)$supply_order->id_supplier));
 
-		// header informations
-		$this->date = Tools::displayDate($supply_order->date_add, (int)$this->supply_order->id_lang);
-		$this->title = HTMLTemplateSupplyOrderForm::l('Supply order form');
-	}
+        // header informations
+        $this->date = Tools::displayDate($supply_order->date_add, (int)$this->supply_order->id_lang);
+        $this->title = HTMLTemplateSupplyOrderForm::l('Supply order form');
+    }
 
-	/**
-	 * @see HTMLTemplate::getContent()
-	 */
-	public function getContent()
-	{
-		$supply_order_details = $this->supply_order->getEntriesCollection((int)$this->supply_order->id_lang);
-		$this->roundSupplyOrderDetails($supply_order_details);
+    /**
+     * @see HTMLTemplate::getContent()
+     */
+    public function getContent()
+    {
+        $supply_order_details = $this->supply_order->getEntriesCollection((int)$this->supply_order->id_lang);
+        $this->roundSupplyOrderDetails($supply_order_details);
 
-		$this->roundSupplyOrder($this->supply_order);
+        $this->roundSupplyOrder($this->supply_order);
 
-		$tax_order_summary = $this->getTaxOrderSummary();
-		$currency = new Currency((int)$this->supply_order->id_currency);
+        $tax_order_summary = $this->getTaxOrderSummary();
+        $currency = new Currency((int)$this->supply_order->id_currency);
 
-		$this->smarty->assign(array(
-			'warehouse' => $this->warehouse,
-			'address_warehouse' => $this->address_warehouse,
-			'address_supplier' => $this->address_supplier,
-			'supply_order' => $this->supply_order,
-			'supply_order_details' => $supply_order_details,
-			'tax_order_summary' => $tax_order_summary,
-			'currency' => $currency,
-		));
+        $this->smarty->assign(array(
+                'warehouse' => $this->warehouse,
+                'address_warehouse' => $this->address_warehouse,
+                'address_supplier' => $this->address_supplier,
+                'supply_order' => $this->supply_order,
+                'supply_order_details' => $supply_order_details,
+                'tax_order_summary' => $tax_order_summary,
+                'currency' => $currency,
+            ));
 
-		return $this->smarty->fetch($this->getTemplate('supply-order'));
-	}
+        return $this->smarty->fetch($this->getTemplate('supply-order'));
+    }
 
-	/**
-	 * @see HTMLTemplate::getBulkFilename()
-	 */
-	public function getBulkFilename()
-	{
-		return 'supply_order.pdf';
-	}
+    /**
+     * @see HTMLTemplate::getBulkFilename()
+     */
+    public function getBulkFilename()
+    {
+        return 'supply_order.pdf';
+    }
 
-	/**
-	 * @see HTMLTemplate::getFileName()
-	 */
-	public function getFilename()
-	{
-		return self::l('SupplyOrderForm').sprintf('_%s', $this->supply_order->reference).'.pdf';
-	}
+    /**
+     * @see HTMLTemplate::getFileName()
+     */
+    public function getFilename()
+    {
+        return self::l('SupplyOrderForm').sprintf('_%s', $this->supply_order->reference).'.pdf';
+    }
 
-	protected function getTaxOrderSummary()
-	{
-		$query = new DbQuery();
-		$query->select('
+    protected function getTaxOrderSummary()
+    {
+        $query = new DbQuery();
+        $query->select('
 			SUM(price_with_order_discount_te) as base_te,
 			tax_rate,
 			SUM(tax_value_with_order_discount) as total_tax_value
 		');
-		$query->from('supply_order_detail');
-		$query->where('id_supply_order = '.(int)$this->supply_order->id);
-		$query->groupBy('tax_rate');
+        $query->from('supply_order_detail');
+        $query->where('id_supply_order = '.(int)$this->supply_order->id);
+        $query->groupBy('tax_rate');
 
-		$results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+        $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
-		foreach ($results as &$result)
-		{
-			$result['base_te'] = Tools::ps_round($result['base_te'], 2);
-			$result['tax_rate'] = Tools::ps_round($result['tax_rate'], 2);
-			$result['total_tax_value'] = Tools::ps_round($result['total_tax_value'], 2);
-		}
-		unset($result); // remove reference
+        foreach ($results as &$result) {
+            $result['base_te'] = Tools::ps_round($result['base_te'], 2);
+            $result['tax_rate'] = Tools::ps_round($result['tax_rate'], 2);
+            $result['total_tax_value'] = Tools::ps_round($result['total_tax_value'], 2);
+        }
+        unset($result); // remove reference
 
-		return $results;
-	}
+        return $results;
+    }
 
-	/**
-	 * @see HTMLTemplate::getHeader()
-	 */
-	public function getHeader()
-	{
-		$shop_name = Configuration::get('PS_SHOP_NAME');
-		$path_logo = $this->getLogo();
-		$width = $height = 0;
-		
-		if (!empty($path_logo))
-			list($width, $height) = getimagesize($path_logo);
-		
-		$this->smarty->assign(array(
-			'logo_path' => $path_logo,
-			'img_ps_dir' => 'http://'.Tools::getMediaServer(_PS_IMG_)._PS_IMG_,
-			'img_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
-			'title' => $this->title,
-			'reference' => $this->supply_order->reference,
-			'date' => $this->date,
-			'shop_name' => $shop_name,
-			'width_logo' => $width,
-			'height_logo' => $height
-		));
+    /**
+     * @see HTMLTemplate::getHeader()
+     */
+    public function getHeader()
+    {
+        $shop_name = Configuration::get('PS_SHOP_NAME');
+        $path_logo = $this->getLogo();
+        $width = $height = 0;
 
-		return $this->smarty->fetch($this->getTemplate('supply-order-header'));
-	}
+        if (!empty($path_logo))
+            list($width, $height) = getimagesize($path_logo);
 
-	/**
-	 * @see HTMLTemplate::getFooter()
-	 */
-	public function getFooter()
-	{
-		$this->address = $this->address_warehouse;
-		$free_text = array();
-		$free_text[] = HTMLTemplateSupplyOrderForm::l('DE: Discount excluded ');
-		$free_text[] = HTMLTemplateSupplyOrderForm::l(' DI: Discount included');
+        $this->smarty->assign(array(
+                'logo_path' => $path_logo,
+                'img_ps_dir' => 'http://'.Tools::getMediaServer(_PS_IMG_)._PS_IMG_,
+                'img_update_time' => Configuration::get('PS_IMG_UPDATE_TIME'),
+                'title' => $this->title,
+                'reference' => $this->supply_order->reference,
+                'date' => $this->date,
+                'shop_name' => $shop_name,
+                'width_logo' => $width,
+                'height_logo' => $height
+            ));
 
-		$this->smarty->assign(array(
-			'shop_address' => $this->getShopAddress(),
-			'shop_fax' => Configuration::get('PS_SHOP_FAX'),
-			'shop_phone' => Configuration::get('PS_SHOP_PHONE'),
-			'shop_details' => Configuration::get('PS_SHOP_DETAILS'),
-			'free_text' => $free_text,
-		));
-		return $this->smarty->fetch($this->getTemplate('supply-order-footer'));
-	}
+        return $this->smarty->fetch($this->getTemplate('supply-order-header'));
+    }
 
-	/**
-	 * Rounds values of a SupplyOrderDetail object
-	 * @param array $collection
-	 */
-	protected function roundSupplyOrderDetails(&$collection)
-	{
-		foreach ($collection as $supply_order_detail)
-		{
-			$supply_order_detail->unit_price_te = Tools::ps_round($supply_order_detail->unit_price_te, 2);
-			$supply_order_detail->price_te = Tools::ps_round($supply_order_detail->price_te, 2);
-			$supply_order_detail->discount_rate = Tools::ps_round($supply_order_detail->discount_rate, 2);
-			$supply_order_detail->price_with_discount_te = Tools::ps_round($supply_order_detail->price_with_discount_te, 2);
-			$supply_order_detail->tax_rate = Tools::ps_round($supply_order_detail->tax_rate, 2);
-			$supply_order_detail->price_ti = Tools::ps_round($supply_order_detail->price_ti, 2);
-		}
-	}
+    /**
+     * @see HTMLTemplate::getFooter()
+     */
+    public function getFooter()
+    {
+        $this->address = $this->address_warehouse;
+        $free_text = array();
+        $free_text[] = HTMLTemplateSupplyOrderForm::l('DE: Discount excluded ');
+        $free_text[] = HTMLTemplateSupplyOrderForm::l(' DI: Discount included');
 
-	/**
-	 * Rounds values of a SupplyOrder object
-	 * @param SupplyOrder $supply_order
-	 */
-	protected function roundSupplyOrder(SupplyOrder &$supply_order)
-	{
-		$supply_order->total_te = Tools::ps_round($supply_order->total_te, 2);
-		$supply_order->discount_value_te = Tools::ps_round($supply_order->discount_value_te, 2);
-		$supply_order->total_with_discount_te = Tools::ps_round($supply_order->total_with_discount_te, 2);
-		$supply_order->total_tax = Tools::ps_round($supply_order->total_tax, 2);
-		$supply_order->total_ti = Tools::ps_round($supply_order->total_ti, 2);
-	}
+        $this->smarty->assign(array(
+                'shop_address' => $this->getShopAddress(),
+                'shop_fax' => Configuration::get('PS_SHOP_FAX'),
+                'shop_phone' => Configuration::get('PS_SHOP_PHONE'),
+                'shop_details' => Configuration::get('PS_SHOP_DETAILS'),
+                'free_text' => $free_text,
+            ));
+        return $this->smarty->fetch($this->getTemplate('supply-order-footer'));
+    }
+
+    /**
+     * Rounds values of a SupplyOrderDetail object
+     * @param array $collection
+     */
+    protected function roundSupplyOrderDetails(&$collection)
+    {
+        foreach ($collection as $supply_order_detail) {
+            $supply_order_detail->unit_price_te = Tools::ps_round($supply_order_detail->unit_price_te, 2);
+            $supply_order_detail->price_te = Tools::ps_round($supply_order_detail->price_te, 2);
+            $supply_order_detail->discount_rate = Tools::ps_round($supply_order_detail->discount_rate, 2);
+            $supply_order_detail->price_with_discount_te = Tools::ps_round($supply_order_detail->price_with_discount_te, 2);
+            $supply_order_detail->tax_rate = Tools::ps_round($supply_order_detail->tax_rate, 2);
+            $supply_order_detail->price_ti = Tools::ps_round($supply_order_detail->price_ti, 2);
+        }
+    }
+
+    /**
+     * Rounds values of a SupplyOrder object
+     * @param SupplyOrder $supply_order
+     */
+    protected function roundSupplyOrder(SupplyOrder &$supply_order)
+    {
+        $supply_order->total_te = Tools::ps_round($supply_order->total_te, 2);
+        $supply_order->discount_value_te = Tools::ps_round($supply_order->discount_value_te, 2);
+        $supply_order->total_with_discount_te = Tools::ps_round($supply_order->total_with_discount_te, 2);
+        $supply_order->total_tax = Tools::ps_round($supply_order->total_tax, 2);
+        $supply_order->total_ti = Tools::ps_round($supply_order->total_ti, 2);
+    }
 }
-

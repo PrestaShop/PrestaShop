@@ -75,24 +75,21 @@ class HelpAccessCore
      */
     public static function retrieveInfos($label, $iso_lang, $country, $version)
     {
-   	    $url = HelpAccess::URL.'/documentation/renderIcon?label='.$label.'&iso_lang='.$iso_lang.'&country='.$country.'&version='.$version;
+        $url = HelpAccess::URL.'/documentation/renderIcon?label='.$label.'&iso_lang='.$iso_lang.'&country='.$country.'&version='.$version;
         $tooltip = '';
 
         $ctx = @stream_context_create(array('http' => array('timeout' => 10)));
         $res = Tools::file_get_contents($url, false, $ctx);
 
-	    $infos = preg_split('/\|/', $res);
-	    if (count($infos) > 0)
-	    {
+        $infos = preg_split('/\|/', $res);
+        if (count($infos) > 0) {
             $version = trim($infos[0]);
-            if (!empty($version))
-            {
+            if (!empty($version)) {
                 if (count($infos) > 1)
                     $tooltip = trim($infos[1]);
             }
-	    }
+        }
 
-	    return array('version' => $version, 'tooltip' => $tooltip);
-	}
+        return array('version' => $version, 'tooltip' => $tooltip);
+    }
 }
-

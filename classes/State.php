@@ -26,148 +26,147 @@
 
 class StateCore extends ObjectModel
 {
-	/** @var integer Country id which state belongs */
-	public $id_country;
+    /** @var integer Country id which state belongs */
+    public $id_country;
 
-	/** @var integer Zone id which state belongs */
-	public $id_zone;
+    /** @var integer Zone id which state belongs */
+    public $id_zone;
 
-	/** @var string 2 letters iso code */
-	public $iso_code;
+    /** @var string 2 letters iso code */
+    public $iso_code;
 
-	/** @var string Name */
-	public $name;
+    /** @var string Name */
+    public $name;
 
-	/** @var boolean Status for delivery */
-	public $active = true;
+    /** @var boolean Status for delivery */
+    public $active = true;
 
-	/**
-	 * @see ObjectModel::$definition
-	 */
-	public static $definition = array(
-		'table' => 'state',
-		'primary' => 'id_state',
-		'fields' => array(
-			'id_country' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-			'id_zone' => 	array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
-			'iso_code' => 	array('type' => self::TYPE_STRING, 'validate' => 'isStateIsoCode', 'required' => true, 'size' => 7),
-			'name' => 		array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
-			'active' => 	array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
-		),
-	);
+    /**
+     * @see ObjectModel::$definition
+     */
+    public static $definition = array(
+        'table' => 'state',
+        'primary' => 'id_state',
+        'fields' => array(
+            'id_country' => array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'id_zone' =>  array('type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true),
+            'iso_code' =>  array('type' => self::TYPE_STRING, 'validate' => 'isStateIsoCode', 'required' => true, 'size' => 7),
+            'name' =>   array('type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'required' => true, 'size' => 32),
+            'active' =>  array('type' => self::TYPE_BOOL, 'validate' => 'isBool'),
+        ),
+    );
 
-	protected $webserviceParameters = array(
-		'fields' => array(
-			'id_zone' => array('xlink_resource'=> 'zones'),
-			'id_country' => array('xlink_resource'=> 'countries')
-		),
-	);
+    protected $webserviceParameters = array(
+        'fields' => array(
+            'id_zone' => array('xlink_resource'=> 'zones'),
+            'id_country' => array('xlink_resource'=> 'countries')
+        ),
+    );
 
-	public static function getStates($id_lang = false, $active = false)
-	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
+    public static function getStates($id_lang = false, $active = false)
+    {
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
 		SELECT `id_state`, `id_country`, `id_zone`, `iso_code`, `name`, `active`
 		FROM `'._DB_PREFIX_.'state`
 		'.($active ? 'WHERE active = 1' : '').'
 		ORDER BY `name` ASC');
-	}
+    }
 
-	/**
-	 * Get a state name with its ID
-	 *
-	 * @param integer $id_state Country ID
-	 * @return string State name
-	 */
-	public static function getNameById($id_state)
-	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+    /**
+     * Get a state name with its ID
+     *
+     * @param integer $id_state Country ID
+     * @return string State name
+     */
+    public static function getNameById($id_state)
+    {
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
 			SELECT `name`
 			FROM `'._DB_PREFIX_.'state`
 			WHERE `id_state` = '.(int)$id_state
-		);
+        );
 
-		return $result['name'];
-	}
+        return $result['name'];
+    }
 
-	/**
-	 * Get a state id with its name
-	 *
-	 * @param string $id_state Country ID
-	 * @return integer state id
-	 */
-	public static function getIdByName($state)
-	{
-		$result = Db::getInstance()->getValue('
+    /**
+     * Get a state id with its name
+     *
+     * @param string $id_state Country ID
+     * @return integer state id
+     */
+    public static function getIdByName($state)
+    {
+        $result = Db::getInstance()->getValue('
 			SELECT `id_state`
 			FROM `'._DB_PREFIX_.'state`
 			WHERE `name` LIKE \''.pSQL($state).'\'
 		');
 
         return (int)$result;
-	}
+    }
 
-	/**
-	* Get a state id with its iso code
-	*
-	* @param string $iso_code Iso code
-	* @return integer state id
-	*/
-	public static function getIdByIso($iso_code, $id_country = null)
-	{
-	  	return Db::getInstance()->getValue('
+    /**
+     * Get a state id with its iso code
+     *
+     * @param string $iso_code Iso code
+     * @return integer state id
+     */
+    public static function getIdByIso($iso_code, $id_country = null)
+    {
+        return Db::getInstance()->getValue('
 		SELECT `id_state`
 		FROM `'._DB_PREFIX_.'state`
 		WHERE `iso_code` = \''.pSQL($iso_code).'\'
 		'.($id_country ? 'AND `id_country` = '.(int)$id_country : ''));
-	}
+    }
 
-	/**
-	* Delete a state only if is not in use
-	*
-	* @return boolean
-	*/
-	public function delete()
-	{
-		if (!$this->isUsed())
-		{
-			// Database deletion
-			$result = Db::getInstance()->delete($this->def['table'], '`'.$this->def['primary'].'` = '.(int)$this->id);
-			if (!$result)
-				return false;
+    /**
+     * Delete a state only if is not in use
+     *
+     * @return boolean
+     */
+    public function delete()
+    {
+        if (!$this->isUsed()) {
+            // Database deletion
+            $result = Db::getInstance()->delete($this->def['table'], '`'.$this->def['primary'].'` = '.(int)$this->id);
+            if (!$result)
+                return false;
 
-			// Database deletion for multilingual fields related to the object
-			if (!empty($this->def['multilang']))
-				Db::getInstance()->delete(bqSQL($this->def['table']).'_lang', '`'.$this->def['primary'].'` = '.(int)$this->id);
-			return $result;
-		}
-		else
-			return false;
-	}
+            // Database deletion for multilingual fields related to the object
+            if (!empty($this->def['multilang']))
+                Db::getInstance()->delete(bqSQL($this->def['table']).'_lang', '`'.$this->def['primary'].'` = '.(int)$this->id);
+            return $result;
+        }
+        else
+            return false;
+    }
 
-	/**
-	 * Check if a state is used
-	 *
-	 * @return boolean
-	 */
-	public function isUsed()
-	{
-		return ($this->countUsed() > 0);
-	}
+    /**
+     * Check if a state is used
+     *
+     * @return boolean
+     */
+    public function isUsed()
+    {
+        return ($this->countUsed() > 0);
+    }
 
-	/**
-	 * Returns the number of utilisation of a state
-	 *
-	 * @return integer count for this state
-	 */
-	public function countUsed()
-	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+    /**
+     * Returns the number of utilisation of a state
+     *
+     * @return integer count for this state
+     */
+    public function countUsed()
+    {
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT COUNT(*)
 			FROM `'._DB_PREFIX_.'address`
 			WHERE `'.$this->def['primary'].'` = '.(int)$this->id
-		);
-		return $result;
-	}
+        );
+        return $result;
+    }
 
     public static function getStatesByIdCountry($id_country)
     {
@@ -181,35 +180,34 @@ class StateCore extends ObjectModel
         );
     }
 
-	public static function hasCounties($id_state)
-	{
-		return count(County::getCounties((int)$id_state));
-	}
+    public static function hasCounties($id_state)
+    {
+        return count(County::getCounties((int)$id_state));
+    }
 
-	public static function getIdZone($id_state)
-	{
-		if (!Validate::isUnsignedId($id_state))
-			die(Tools::displayError());
+    public static function getIdZone($id_state)
+    {
+        if (!Validate::isUnsignedId($id_state))
+            die(Tools::displayError());
 
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT `id_zone`
 			FROM `'._DB_PREFIX_.'state`
 			WHERE `id_state` = '.(int)$id_state
-		);
-	}
+        );
+    }
 
-	/**
-	 * @param $ids_states
-	 * @param $id_zone
-	 * @return bool
-	 */
-	public function affectZoneToSelection($ids_states, $id_zone)
-	{
-		// cast every array values to int (security)
-		$ids_states = array_map('intval', $ids_states);
-		return Db::getInstance()->execute('
+    /**
+     * @param $ids_states
+     * @param $id_zone
+     * @return bool
+     */
+    public function affectZoneToSelection($ids_states, $id_zone)
+    {
+        // cast every array values to int (security)
+        $ids_states = array_map('intval', $ids_states);
+        return Db::getInstance()->execute('
 		UPDATE `'._DB_PREFIX_.'state` SET `id_zone` = '.(int)$id_zone.' WHERE `id_state` IN ('.implode(',', $ids_states).')
 		');
-	}
+    }
 }
-
