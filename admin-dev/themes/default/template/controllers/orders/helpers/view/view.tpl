@@ -45,6 +45,7 @@
 	var txt_add_product_no_product = "{l s='Error: No product has been selected' js=1}";
 	var txt_add_product_no_product_quantity = "{l s='Error: Quantity of products must be set' js=1}";
 	var txt_add_product_no_product_price = "{l s='Error: Product price must be set' js=1}";
+	var txt_add_product_no_value_for_required_fields = "{l s='Error: All the required fields must be set' js=1}";
 	var txt_confirm = "{l s='Are you sure?' js=1}";
 	var statesShipped = new Array();
 	var has_voucher = {if count($discounts)}1{else}0{/if};

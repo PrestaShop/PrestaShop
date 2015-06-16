@@ -1931,27 +1931,15 @@ class AdminOrdersControllerCore extends AdminController
                 die(Tools::jsonEncode(array(
                 'result' => false,
                 'error' => Tools::displayError('The combination object cannot be loaded.')
-            )));
+                )));
             }
         }
 
         // Total method
         $total_method = Cart::BOTH_WITHOUT_SHIPPING;
 
-        // Create new cart
-        $cart = new Cart();
-        $cart->id_shop_group = $order->id_shop_group;
-        $cart->id_shop = $order->id_shop;
-        $cart->id_customer = $order->id_customer;
-        $cart->id_carrier = $order->id_carrier;
-        $cart->id_address_delivery = $order->id_address_delivery;
-        $cart->id_address_invoice = $order->id_address_invoice;
-        $cart->id_currency = $order->id_currency;
-        $cart->id_lang = $order->id_lang;
-        $cart->secure_key = $order->secure_key;
-
-        // Save new cart
-        $cart->add();
+        // Load the old cart
+        $cart = new Cart($order->id_cart);
 
         // Save context (in order to apply cart rule)
         $this->context->cart = $cart;
@@ -1985,6 +1973,58 @@ class AdminOrdersControllerCore extends AdminController
             $specific_price->from = '0000-00-00 00:00:00';
             $specific_price->to = '0000-00-00 00:00:00';
             $specific_price->add();
+        }
+
+        if (is_array($field_ids = $product->getCustomizationFieldIds())) {
+            $authorized_text_fields = array();
+            foreach ($field_ids as $field_id) {
+                if ($field_id['type'] == Product::CUSTOMIZE_TEXTFIELD) {
+                    $authorized_text_fields[(int)$field_id['id_customization_field']] = 'textField'.(int)$field_id['id_customization_field'];
+                } elseif ($field_id['type'] == Product::CUSTOMIZE_FILE) {
+                    $authorized_file_fields[(int)$field_id['id_customization_field']] = 'file'.(int)$field_id['id_customization_field'];
+                }
+            }
+
+            $indexes_text_fields = array_flip($authorized_text_fields);
+            foreach ($_POST as $field_name => $value) {
+                if (in_array($field_name, $authorized_text_fields) && $value != '') {
+                    if (!Validate::isMessage($value)) {
+                        $this->errors[] = Tools::displayError('Invalid message');
+                    } else {
+                        $id_customization = $this->context->cart->addTextFieldToProduct($product->id, $indexes_text_fields[$field_name], Product::CUSTOMIZE_TEXTFIELD, $value);
+                    }
+                } elseif (in_array($field_name, $authorized_text_fields) && $value == '') {
+                    $this->context->cart->deleteCustomizationToProduct((int)$product->id, $indexes_text_fields[$field_name]);
+                }
+            }
+
+            $indexes_file_fields = array_flip($authorized_file_fields);
+            foreach ($_FILES as $field_name => $file) {
+                if (in_array($field_name, $authorized_file_fields) && isset($file['tmp_name']) && !empty($file['tmp_name'])) {
+                    $file_name = md5(uniqid(rand(), true));
+                    if ($error = ImageManager::validateUpload($file, (int)Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE'))) {
+                        $this->errors[] = $error;
+                    }
+
+                    $product_picture_width = (int)Configuration::get('PS_PRODUCT_PICTURE_WIDTH');
+                    $product_picture_height = (int)Configuration::get('PS_PRODUCT_PICTURE_HEIGHT');
+                    $tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS');
+                    if ($error || (!$tmp_name || !move_uploaded_file($file['tmp_name'], $tmp_name))) {
+                        return false;
+                    }
+
+                    if (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name)) {
+                        $this->errors[] = Tools::displayError('An error occurred during the image upload process.');
+                    } elseif (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_.$file_name.'_small', $product_picture_width, $product_picture_height)) {
+                        $this->errors[] = Tools::displayError('An error occurred during the image upload process.');
+                    } elseif (!chmod(_PS_UPLOAD_DIR_.$file_name, 0777) || !chmod(_PS_UPLOAD_DIR_.$file_name.'_small', 0777)) {
+                        $this->errors[] = Tools::displayError('An error occurred during the image upload process.');
+                    } else {
+                        $this->context->cart->addPictureToProduct($product->id, $indexes_file_fields[$field_name], Product::CUSTOMIZE_FILE, $file_name);
+                    }
+                    unlink($tmp_name);
+                }
+            }
         }
 
         // Add product to cart
@@ -2073,15 +2113,19 @@ class AdminOrdersControllerCore extends AdminController
                 $order_carrier->shipping_cost_tax_excl = (float)$order_invoice->total_shipping_tax_excl;
                 $order_carrier->shipping_cost_tax_incl = ($use_taxes) ? (float)$order_invoice->total_shipping_tax_incl : (float)$order_invoice->total_shipping_tax_excl;
                 $order_carrier->add();
-            }
-            // Update current invoice
-            else {
+            } else {
                 $order_invoice->total_paid_tax_excl += Tools::ps_round((float)($cart->getOrderTotal(false, $total_method)), 2);
                 $order_invoice->total_paid_tax_incl += Tools::ps_round((float)($cart->getOrderTotal($use_taxes, $total_method)), 2);
                 $order_invoice->total_products += (float)$cart->getOrderTotal(false, Cart::ONLY_PRODUCTS);
                 $order_invoice->total_products_wt += (float)$cart->getOrderTotal($use_taxes, Cart::ONLY_PRODUCTS);
                 $order_invoice->update();
             }
+        }
+
+        $order_details = OrderDetail::getList($order->id);
+        foreach ($order_details as $order_detail) {
+            $detail = new OrderDetail($order_detail['id_order_detail']);
+            $detail->delete();
         }
 
         // Create Order detail information
@@ -2212,7 +2256,7 @@ class AdminOrdersControllerCore extends AdminController
 
         die(Tools::jsonEncode(array(
             'result' => true,
-            'view' => $this->createTemplate('_product_line.tpl')->fetch(),
+            'view' => $this->createTemplate(($product['customizedDatas']) ? '_customized_data.tpl' : '_product_line.tpl')->fetch(),
             'can_edit' => $this->tabAccess['add'],
             'order' => $order,
             'invoices' => $invoice_array,
