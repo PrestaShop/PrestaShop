@@ -153,7 +153,7 @@ function calcPriceTE()
 	var newPrice = removeTaxes(ps_round(priceTI - getEcotaxTaxIncluded(), priceDisplayPrecision));
 	document.getElementById('priceTE').value = (isNaN(newPrice) == true || newPrice < 0) ? '' :
 		ps_round(newPrice, 6).toFixed(6);
-	document.getElementById('priceTEReal').value = (isNaN(newPrice) == true || newPrice < 0) ? 0 : ps_round(newPrice, 9);
+	document.getElementById('priceTEReal').value = (isNaN(newPrice) == true || newPrice < 0) ? 0 : ps_round(newPrice, 6);
 	document.getElementById('finalPrice').innerHTML = (isNaN(newPrice) == true || newPrice < 0) ? '' :
 		ps_round(priceTI, priceDisplayPrecision).toFixed(priceDisplayPrecision);
 	document.getElementById('finalPriceWithoutTax').innerHTML = (isNaN(newPrice) == true || newPrice < 0) ? '' :
