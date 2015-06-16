@@ -655,7 +655,7 @@
 								if (this.type == 0)
 									customization_html += '<input class="form-control customization_field" type="file" name="customization_'+id_product+'_'+this.id_customization_field+'" id="customization_'+id_product+'_'+this.id_customization_field+'">';
 								else if (this.type == 1)
-									customization_html += '<input class="form-control customization_field" type="text" name="customization_'+id_product+'_'+this.id_customization_field+'" id="customization_'+id_product+'_'+this.id_customization_field+'">';
+									customization_html += '<input class="form-control customization_field" type="text" name="textField'+this.id_customization_field+'" id="customization_'+id_product+'_'+this.id_customization_field+'">';
 								customization_html += '</div></div>';
 							});
 							customization_html += '</form></div></div>';
