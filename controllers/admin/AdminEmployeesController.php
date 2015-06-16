@@ -641,18 +641,9 @@ class AdminEmployeesControllerCore extends AdminController
     {
         $res = parent::afterUpdate($object);
         // Update cookie if needed
-        if (Tools::getValue('id_employee') == $this->context->employee->id && ($passwd = Tools::getValue('passwd'))
+        if (Tools::getValue('id_employee') == $this->context->employee->id && Tools::getValue('passwd')
             && $object->passwd != $this->context->employee->passwd) {
             $this->context->cookie->passwd = $this->context->employee->passwd = $object->passwd;
-            if (Tools::getValue('passwd_send_email')) {
-                $params = array(
-                    '{email}' => $object->email,
-                    '{lastname}' => $object->lastname,
-                    '{firstname}' => $object->firstname,
-                    '{passwd}' => $passwd
-                );
-                Mail::Send($object->id_lang, 'password', Mail::l('Your new password', $object->id_lang), $params, $object->email, $object->firstname.' '.$object->lastname);
-            }
         }
 
         return $res;

@@ -573,16 +573,6 @@
 														</button>
 													</div>
 												</div>
-												<div class="form-group">
-													<div class="col-lg-10 col-lg-offset-2">
-														<p class="checkbox">
-															<label for="{$input.name}-checkbox-mail">
-																<input name="passwd_send_email" id="{$input.name}-checkbox-mail" type="checkbox" checked="checked">
-																{l s='Send me this new password by Email'}
-															</label>
-														</p>
-													</div>
-												</div>
 												<div class="row">
 													<div class="col-lg-12">
 														<button type="button" id="{$input.name}-cancel-btn" class="btn btn-default">
