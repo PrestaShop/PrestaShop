@@ -135,6 +135,12 @@ class CustomerCore extends ObjectModel
 
     public $groupBox;
 
+    /** @var string Unique token for forgot passsword feature */
+    public $reset_password_token;
+
+    /** @var string token validity date for forgot password feature */
+    public $reset_password_validity;
+
     protected $webserviceParameters = array(
         'fields' => array(
             'id_default_group' => array('xlink_resource' => 'groups'),
@@ -189,7 +195,7 @@ class CustomerCore extends ObjectModel
             'date_add' =>                    array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false),
             'date_upd' =>                    array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false),
             'reset_password_token' =>        array('type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => 40, 'copy_post' => false),
-            'reset_password_validity' =>    array('type' => self::TYPE_DATE, 'copy_post' => false),
+            'reset_password_validity' =>    array('type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false),
         ),
     );
 
@@ -941,5 +947,58 @@ class CustomerCore extends ObjectModel
     {
         $sql_filter .= Shop::addSqlRestriction(Shop::SHARE_CUSTOMER, 'main');
         return parent::getWebserviceObjectList($sql_join, $sql_filter, $sql_sort, $sql_limit);
+    }
+
+    /**
+     * Fill Reset password unique token with random sha1 and its validity date. For forgot password feature.
+     */
+    public function stampResetPasswordToken()
+    {
+        $salt = $this->id.'-'.$this->secure_key;
+        $this->reset_password_token = sha1(time().$salt);
+        $validity = (int)Configuration::get('PS_PASSWD_RESET_VALIDITY')?:1440;
+        $this->reset_password_validity = date('Y-m-d H:i:s', strtotime('+'.$validity.' minutes'));
+    }
+
+    /**
+     * Test if a reset password token is present and is recent enough to avoid creating a new one (in case of customer triggering the forgot password link too often).
+     */
+    public function hasRecentResetPasswordToken()
+    {
+        if (!$this->reset_password_token || $this->reset_password_token == '') {
+            return false;
+        }
+
+        // TODO maybe use another 'recent' value for this test. For instance, equals password validity value.
+        if (!$this->reset_password_validity || strtotime($this->reset_password_validity) < time()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns the valid reset password token if it validity date is > now().
+     */
+    public function getValidResetPasswordToken()
+    {
+        if (!$this->reset_password_token || $this->reset_password_token == '') {
+            return false;
+        }
+
+        if (!$this->reset_password_validity || strtotime($this->reset_password_validity) < time()) {
+            return false;
+        }
+
+        return $this->reset_password_token;
+    }
+
+    /**
+     * Delete reset password token data
+     */
+    public function removeResetPasswordToken()
+    {
+        $this->reset_password_token = null;
+        $this->reset_password_validity = null;
     }
 }
