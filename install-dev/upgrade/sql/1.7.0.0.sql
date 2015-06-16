@@ -47,18 +47,11 @@ ALTER TABLE  `PREFIX_product_lang` ADD  `social_sharing_description` VARCHAR( 25
 
 /* PHP:ps1700_stores(); */;
 
-ALTER TABLE  `PREFIX_currency` DROP  `iso_code_num` ,DROP  `sign` ,DROP  `blank` ,DROP  `format` ,DROP  `decimals` ;
 
-/* Password reset token for new "Forgot my password" screen */
-CREATE TABLE IF NOT EXISTS `PREFIX_reset_token` (
-  `id_reset_token` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `id_customer` int(10) unsigned NULL DEFAULT 0,
-  `secure_key` varchar(32) DEFAULT NULL,
-  `id_employee` int(10) unsigned NULL DEFAULT 0,
-  `unique_token` varchar(40) DEFAULT NULL,
-  `last_token_gen` datetime NOT NULL,
-  `validity_date` datetime NOT NULL,
-  PRIMARY KEY (`id_reset_token`),
-  KEY (`id_customer`),
-  KEY (`id_customer`)
-) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8;
+/* Password reset token for new "Forgot my password screen */
+ALTER TABLE PREFIX_customer ADD `reset_password_token` varchar(40) DEFAULT NULL;
+ALTER TABLE PREFIX_customer ADD `reset_password_validity` datetime DEFAULT NULL;
+ALTER TABLE PREFIX_employee ADD `reset_password_token` varchar(40) DEFAULT NULL;
+ALTER TABLE PREFIX_employee ADD `reset_password_validity` datetime DEFAULT NULL;
+
+INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`) VALUES ('PS_PASSWD_RESET_VALIDITY', '1440', NOW(), NOW());
