@@ -1963,8 +1963,7 @@ class AdminOrdersControllerCore extends AdminController
         }
 
         // Add product to cart
-        $update_quantity = $cart->updateQty($product_informations['product_quantity'], $product->id, isset($product_informations['product_attribute_id']) ? $product_informations['product_attribute_id'] : null,
-            isset($combination) ? $combination->id : null, 'up', 0, new Shop($cart->id_shop));
+        $update_quantity = $cart->updateQty($product_informations['product_quantity'], $product->id, isset($product_informations['product_attribute_id']) ? $product_informations['product_attribute_id'] : null, null, 'up', 0, new Shop($cart->id_shop));
 
         if ($update_quantity < 0) {
             // If product has attribute, minimal quantity is set with minimal quantity of attribute
