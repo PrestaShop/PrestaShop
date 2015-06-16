@@ -691,6 +691,7 @@ class AdminOrdersControllerCore extends AdminController
                     }
 
                     $choosen = false;
+
                     $voucher = 0;
 
                     if ((int)Tools::getValue('refund_voucher_off') == 1) {
@@ -1959,8 +1960,7 @@ class AdminOrdersControllerCore extends AdminController
         // always add taxes even if there are not displayed to the customer
         $use_taxes = true;
 
-        $initial_product_price_tax_incl = Product::getPriceStatic($product->id, $use_taxes, isset($combination) ? $combination->id : null, 2, null, false, true, 1,
-            false, $order->id_customer, $cart->id, $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)});
+        $initial_product_price_tax_incl = Product::getPriceStatic($product->id, $use_taxes, isset($product_informations['product_attribute_id']) ? $product_informations['product_attribute_id'] : null, 2, null, false, true, 1, false, $order->id_customer, $cart->id, $order->{Configuration::get('PS_TAX_ADDRESS_TYPE', null, null, $order->id_shop)});
 
         // Creating specific price if needed
         if ($product_informations['product_price_tax_incl'] != $initial_product_price_tax_incl) {
