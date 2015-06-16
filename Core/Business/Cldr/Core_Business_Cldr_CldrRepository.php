@@ -157,15 +157,29 @@ class Core_Business_Cldr_CldrRepository
 			);
 		}
 
-		$locale = $this->repository->locales[$this->locale];
-		$currency = $locale['currencies'][$code];
+		$currency = new Currency($this->repository, $code);
+		$localized_currency = $currency->localize($this->locale);
 
 		return array(
-			'name' => $currency['displayName'],
-			'symbol' => !empty($currency['symbol-alt-narrow']) ? $currency['symbol-alt-narrow'] : $currency['symbol'],
+			'name' => $localized_currency->name,
+			'symbol' => $this->getCurrencySymbol($code), //!empty($currency['symbol-alt-narrow']) ? $currency['symbol-alt-narrow'] : $currency['symbol'],
 			'code' => $code,
 			'iso_code' => $this->getCurrencyIsoCodeNum($code)
 		);
+	}
+
+	/**
+	 * Return a currency symbol
+	 *
+	 * @param string $code currency iso code
+	 *
+	 * @return string symbol
+	 */
+	public function getCurrencySymbol($code){
+		$locale = $this->repository->locales[$this->locale];
+		$currency = $locale['currencies'][$code];
+
+		return !empty($currency['symbol-alt-narrow']) ? $currency['symbol-alt-narrow'] : $currency['symbol'];
 	}
 
 	/**

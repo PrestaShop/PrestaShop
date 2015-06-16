@@ -158,8 +158,7 @@ class CurrencyCore extends ObjectModel
 	 */
 	public function getSign($side = null)
 	{
-		$currency = $this->cldr->getCurrency($this->iso_code);
-		return $currency['symbol'];
+		return $this->cldr->getCurrencySymbol($this->iso_code);
 
 		/*if (!$side)
 			return $this->sign;
