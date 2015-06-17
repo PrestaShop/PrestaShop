@@ -1111,7 +1111,7 @@ class CategoryCore extends ObjectModel
 				if (!$category && $object_to_create && $method_to_create)
 				{
 					call_user_func_array(array($object_to_create, $method_to_create), array($id_lang, $category_name , $id_parent_category));
-					$category = Category::searchByPath($id_lang, $category_name);
+					$category = Category::searchByNameAndParentCategoryId($id_lang, $category_name, $id_parent_category);
 				}
 				if (isset($category['id_category']) && $category['id_category'])
 					$id_parent_category = (int)$category['id_category'];
