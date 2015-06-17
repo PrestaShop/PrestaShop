@@ -42,6 +42,10 @@ class CurrencyCore extends ObjectModel
 	/** @var int bool active */
 	public $active;
 
+    public $sign;
+    public $name;
+    public $format;
+
 	/**
 	 * @see ObjectModel::$definition
 	 */
@@ -78,13 +82,21 @@ class CurrencyCore extends ObjectModel
 
 	public function __construct($id = null, $id_lang = null, $id_shop = null)
 	{
-		$this->cldr = new Repository();
+		$this->cldr = new Repository(Context::getContext()->language);
 
 		parent::__construct($id, $id_lang, $id_shop);
+
+        if($this->iso_code){
+            $cldrCurrency = $this->cldr->getCurrency($this->iso_code);
+            $this->sign = $cldrCurrency['symbol'];
+            $this->name = $cldrCurrency['name'];
+            $this->format = $this->cldr->getCurrencyFormatPattern();
+        }
 
 		if (!$this->conversion_rate)
 			$this->conversion_rate = 1;
 	}
+
 	/**
 	 * Overriding check if currency rate is not empty and if currency with the same iso code already exists.
 	 * If it's true, currency is not added.
@@ -160,26 +172,7 @@ class CurrencyCore extends ObjectModel
 	 */
 	public function getSign($side = null)
 	{
-		return $this->cldr->getCurrencySymbol($this->iso_code);
-
-		/*if (!$side)
-			return $this->sign;
-		$formated_strings = array(
-			'left' => $this->sign.' ',
-			'right' => ' '.$this->sign
-		);
-
-		$formats = array(
-			1 => array('left' => &$formated_strings['left'], 'right' => ''),
-			2 => array('left' => '', 'right' => &$formated_strings['right']),
-			3 => array('left' => &$formated_strings['left'], 'right' => ''),
-			4 => array('left' => '', 'right' => &$formated_strings['right']),
-			5 => array('left' => '', 'right' => &$formated_strings['right'])
-		);
-		print_r($formats);die;
-		if (isset($formats[$this->format][$side]))
-			return ($formats[$this->format][$side]);
-		return $this->sign;*/
+		return $this->sign;
 	}
 
 	/**

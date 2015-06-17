@@ -526,8 +526,6 @@ class AdminControllerCore extends Controller
             'logged_on_addons' => $this->logged_on_addons,
             'can_import' => $this->can_import,
         ));
-
-        $this->cldr = new PrestaShop\PrestaShop\Core\Business\Cldr\Repository(Context::getContext()->language);
     }
 
     /**
@@ -2593,10 +2591,16 @@ class AdminControllerCore extends Controller
         $this->addjQueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox' ));
         $this->addjQueryPlugin('growl', null, false);
         $this->addJqueryUI(array('ui.slider', 'ui.datepicker'));
-
+        
         Media::addJsDef(array('host_mode' => (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)));
-        Media::addJsDef(array('curency_format_pattern' => $this->cldr->getCurrencyFormatPattern()));
-
+        
+        Media::addJsDef(array('currency' => array(
+            'iso_code' => Context::getContext()->currency->iso_code,
+            'sign' => Context::getContext()->currency->sign,
+            'name' => Context::getContext()->currency->name,
+            'format' => Context::getContext()->currency->format
+        )));
+        
         $this->addJS(array(
             _PS_JS_DIR_.'admin.js',
             _PS_JS_DIR_.'tools.js',
