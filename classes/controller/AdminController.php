@@ -2554,8 +2554,6 @@ class AdminControllerCore extends Controller
 		if (!Tools::getValue('submitFormAjax'))
 			$this->addJS(_PS_JS_DIR_.'admin/notifications.js');
 
-		$this->addJS('https://cdn.statuspage.io/se-v2.js');
-
 		if (defined('_PS_HOST_MODE_') && _PS_HOST_MODE_)
 		{
 			$this->addJS('https://cdn.statuspage.io/se-v2.js');

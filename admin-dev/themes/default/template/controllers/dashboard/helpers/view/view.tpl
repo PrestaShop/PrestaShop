@@ -127,22 +127,6 @@
 						<dd></dd>
 					</dl>
 			</section>
-			<section class="dash_simulation panel">
-				<h3><i class="icon-link"></i> {l s="Demo Mode"}</h3>
-				<span class="switch prestashop-switch">
-					<input id="PS_DASHBOARD_SIMULATION_on" class="ps_dashboard_simulation" type="radio" {if $PS_DASHBOARD_SIMULATION == 1}checked="checked"{/if} value="1" name="PS_DASHBOARD_SIMULATION">
-					<label class="radioCheck" for="PS_DASHBOARD_SIMULATION_on">
-						{l s='On'}
-					</label>
-					<input id="PS_DASHBOARD_SIMULATION_off" class="ps_dashboard_simulation" type="radio" {if $PS_DASHBOARD_SIMULATION == 0}checked="checked"{/if} value="0" name="PS_DASHBOARD_SIMULATION">
-					<label class="radioCheck" for="PS_DASHBOARD_SIMULATION_off">
-						{l s='Off'}
-					</label>
-					<a class="slide-button btn"></a>
-				</span>
-				{l s='This mode displays sample data so you can try your dashboard without real numbers.'}
-			</section>
-
 		</div>
 	</div>
 </div>

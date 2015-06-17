@@ -768,22 +768,27 @@ abstract class DbCore
 		}
 	}
 
-	/**
-	 * Sanitize data which will be injected into SQL query
-	 *
-	 * @param string $string SQL data which will be injected into SQL query
-	 * @param bool $html_ok Does data contain HTML code ? (optional)
-	 * @return string Sanitized data
-	 */
-	public function escape($string, $html_ok = false)
+    /**
+     * Sanitize data which will be injected into SQL query
+     *
+     * @param string $string SQL data which will be injected into SQL query
+     * @param bool $html_ok Does data contain HTML code ? (optional)
+     * @return string Sanitized data
+     */
+	public function escape($string, $html_ok = false, $bq_sql = false)
 	{
 		if (_PS_MAGIC_QUOTES_GPC_)
 			$string = stripslashes($string);
+
 		if (!is_numeric($string))
 		{
 			$string = $this->_escape($string);
+
 			if (!$html_ok)
 				$string = strip_tags(Tools::nl2br($string));
+
+			if ($bq_sql === true)
+				$string = str_replace('`', '\`', $string);
 		}
 
 		return $string;
@@ -906,7 +911,7 @@ abstract class DbCore
 		Db::s($sql, $use_cache);
 		die();
 	}
-	
+
 	/**
 	 * Get used link instance
 	 *
