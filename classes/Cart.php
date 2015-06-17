@@ -531,14 +531,14 @@ class CartCore extends ObjectModel
 		// Build ORDER BY
 		$sql->orderBy('cp.`date_add`, cp.`id_product`, cp.`id_product_attribute` ASC');
 
-		/*if (Customization::isFeatureActive())
+		if (Customization::isFeatureActive())
 		{
 			$sql->select('cu.`id_customization`, cu.`quantity` AS customization_quantity');
 			$sql->leftJoin('customization', 'cu',
 				'p.`id_product` = cu.`id_product` AND cp.`id_product_attribute` = cu.`id_product_attribute` AND cu.`id_cart` = '.(int)$this->id);
 		}
 		else
-			$sql->select('NULL AS customization_quantity, NULL AS id_customization');*/
+			$sql->select('NULL AS customization_quantity, NULL AS id_customization');
 
 		if (Combination::isFeatureActive())
 		{
@@ -564,6 +564,12 @@ class CartCore extends ObjectModel
 				'p.`reference` AS reference, p.`ean13`,
 				p.`upc` AS upc, product_shop.`minimal_quantity` AS minimal_quantity, product_shop.`wholesale_price` wholesale_price'
 			);
+
+		if (Customization::isFeatureActive())
+			$sql->groupBy('cp.`id_product_attribute`, cp.`id_product`, cp.`id_shop`');
+
+		/*var_dump($sql->__toString());
+		die();*/
 		$result = Db::getInstance()->executeS($sql);
 
 		// Reset the cache before the following return, or else an empty cart will add dozens of queries
@@ -836,7 +842,7 @@ class CartCore extends ObjectModel
 		Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_SHIPPING);
 		Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_REDUCTION);
 		Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_GIFT);
-		
+
 		Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_ALL). '-ids';
 		Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_SHIPPING). '-ids';
 		Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_REDUCTION). '-ids';
@@ -1193,7 +1199,7 @@ class CartCore extends ObjectModel
 		Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_SHIPPING);
 		Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_REDUCTION);
 		Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_GIFT);
-		
+
 		Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_ALL). '-ids';
 		Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_SHIPPING). '-ids';
 		Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_REDUCTION). '-ids';
