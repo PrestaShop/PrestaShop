@@ -331,28 +331,39 @@ class CartRuleCore extends ObjectModel
 					unset($result[$key]);
 				}
 
-		foreach ($result as $key => $cart_rule)
-			if ($cart_rule['country_restriction'])
-			{
-				$countries = Db::getInstance()->ExecuteS('
+		foreach ($result as $key => $cart_rule) {
+
+            $customer_countries = Db::getInstance()->ExecuteS('
 					SELECT `id_country`
 					FROM `'._DB_PREFIX_.'address`
 					WHERE `id_customer` = '.(int)$id_customer.'
 					AND `deleted` = 0'
-				);
+            );
 
-				if (is_array($countries) && count($countries))
-					foreach ($countries as $country)
-					{
-						$id_cart_rule = (bool)Db::getInstance()->getValue('
+            // Check if cart_rule has country restriction and if customer has at least one valid address to get his country
+            if ($cart_rule['country_restriction']) {
+
+                if (is_array($customer_countries) && count($customer_countries)) {
+
+                    foreach ($customer_countries as $customer_country) {
+
+                        $id_cart_rule = (bool)Db::getInstance()
+                                                ->getValue('
 							SELECT crc.id_cart_rule
-							FROM '._DB_PREFIX_.'cart_rule_country crc
-							WHERE crc.id_cart_rule = '.(int)$cart_rule['id_cart_rule'].'
-							AND crc.id_country = '.(int)$country['id_country']);
-						if (!$id_cart_rule)
-							unset($result[$key]);
-					}
-			}
+							FROM ' . _DB_PREFIX_ . 'cart_rule_country crc
+							WHERE crc.id_cart_rule = ' . (int)$cart_rule['id_cart_rule'] . '
+							AND crc.id_country = ' . (int)$customer_country['id_country']);
+
+                        if (!$id_cart_rule) {
+                            unset($result[$key]);
+                        }
+                    }
+                } else {
+                    unset($result[$key]);
+                }
+
+            }
+        }
 
 		// Retrocompatibility with 1.4 discounts
 		foreach ($result as &$cart_rule)
