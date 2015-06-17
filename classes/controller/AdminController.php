@@ -2250,6 +2250,16 @@ class AdminControllerCore extends Controller
 
 		if ($this->getModulesList($this->filter_modules_list))
 		{
+			$tmp = array();
+			foreach ($this->modules_list as $key => $module)
+				if ($module->active)
+				{
+					$tmp[] = $module;
+					unset($this->modules_list[$key]);
+				}
+
+			$this->modules_list = array_merge($tmp, $this->modules_list);
+
 			foreach ($this->modules_list as $key => $module)
 			{
 				if (in_array($module->name, $this->list_partners_modules))
