@@ -29,7 +29,6 @@
  */
 
 use PrestaShop\PrestaShop\Core\Business\Cldr\Repository;
-use PrestaShop\PrestaShop\Core\Business\Cldr\Update;
 
 class AdminCurrenciesControllerCore extends AdminController
 {

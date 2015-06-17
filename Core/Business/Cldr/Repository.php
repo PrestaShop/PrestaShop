@@ -30,7 +30,7 @@ use ICanBoogie\CLDR\FileProvider;
 use ICanBoogie\CLDR\RunTimeProvider;
 use ICanBoogie\CLDR\WebProvider;
 use ICanBoogie\CLDR\Currency;
-use ICanBoogie\CLDR\NumberFormatter;
+use ICanBoogie\CLDR\Numbers;
 use ICanBoogie\CLDR\Repository as cldrRepository;
 
 use PrestaShop\PrestaShop\Core\Business\Cldr\Localize;
@@ -247,5 +247,18 @@ class Repository
         }
 
         return true;
+    }
+
+    /**
+     * Get currency format pattern
+     *
+     * @param string $locale locale
+     *
+     * @return string pattern
+     */
+    public function getCurrencyFormatPattern($locale = null)
+    {
+        $locale = $this->repository->locales[$locale ? $locale : $this->locale];
+        return $locale['numbers']['currencyFormats-numberSystem-latn']['standard'];
     }
 }
