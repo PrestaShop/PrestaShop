@@ -98,7 +98,7 @@ var admin = '<?php echo(file_exists('../admin-dev') ? '../admin-dev' : '../admin
 </div>
 
 <?php if (@fsockopen('addons.prestashop.com', 80, $errno, $errst, 3)): ?>
-	<iframe src="https://addons.prestashop.com/psinstall1541.php?version=2&lang=<?php echo $this->language->getLanguageIso() ?>&email=<?php echo $this->session->admin_email ?>&activity=<?php echo $this->session->shop_activity ?>&country=<?php echo $this->session->shop_country ?>" scrolling="no" id="prestastore">
+	<iframe src="https://addons.prestashop.com/psinstall1541.php?version=2&lang=<?php echo $this->language->getLanguageIso() ?>&activity=<?php echo $this->session->shop_activity ?>&country=<?php echo $this->session->shop_country ?>" scrolling="no" id="prestastore">
 		<p><a href="http://addons.prestashop.com/" target="_blank"><?php echo $this->l('Check out PrestaShop Addons to add that little something extra to your store!'); ?></a></p>
 	</iframe>
 <?php endif; ?>
