@@ -179,7 +179,27 @@ class AdminSearchControllerCore extends AdminController
 	*/
 	public function searchCustomer()
 	{
-		$this->_list['customers'] = Customer::searchByName($this->query);
+		$search_items = explode(' ', $this->query);
+		if (count($search_items) == 1)
+			$this->_list['customers'] = Customer::searchByName($this->query);
+		else
+		{
+			$sql = 'SELECT *
+					FROM `'._DB_PREFIX_.'customer`
+					WHERE 1';
+
+			$research_fields = array('firstname', 'lastname', 'email');
+			$items = array();
+			foreach ($research_fields as $field)
+				foreach ($search_items as $item)
+					$items[$item][] = $field.' LIKE \'%'.$item.'%\' ';
+
+			foreach ($items as $likes)
+				$sql .= ' AND ('.implode(' OR ', $likes).') ';
+			$sql .= Shop::addSqlRestriction(Shop::SHARE_CUSTOMER);
+
+			$this->_list['customers'] = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
+		}
 	}
 
 	public function searchModule()
