@@ -9,7 +9,9 @@
   },
   "autoload": {
     "psr-4": {
-      "PrestaShop\\PrestaShop\\Tests\\": "tests/"
+      "PrestaShop\\PrestaShop\\Tests\\": "tests/",
+      "PrestaShop\\PrestaShop\\Core\\Business\\Cldr\\": "Core/Business/Cldr/",
+      "PrestaShop\\PrestaShop\\Core\\Foundation\\Net\\": "Core/Foundation/Net/"
     }
   }
 }
