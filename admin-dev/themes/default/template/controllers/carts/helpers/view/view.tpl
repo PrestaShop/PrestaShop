@@ -77,6 +77,9 @@
 			{/if}
 		</div>
 	</div>
+	<div class="col-lg-6">
+		{hook h='displayAdminCart' id_cart=$cart->id}
+	</div>
 </div>
 <div class="panel">
 	<h3><i class="icon-archive"></i> {l s='Cart summary'}</h3>
