@@ -24,20 +24,22 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-class Core_Business_Cldr_CldrLocalize
+namespace PrestaShop\PrestaShop\Core\Business\Cldr;
+
+class Localize
 {
     const DEFAULT_LOCALE = 'en';
 
-    protected static $_filters = array(
+    protected static $filters = array(
         'language' => array('filter' => 'strtolower'),
         'script' => array('filter' => array('strtolower', 'ucfirst')),
         'territory' => array('filter' => 'strtoupper'),
         'variant' => array('filter' => 'strtoupper')
     );
 
-    private static $_browserLocales;
-    private static $_environmentLocale;
-    private static $_locale;
+    private static $browserLocales;
+    private static $environmentLocale;
+    private static $locale;
 
     public function __toString()
     {
@@ -46,8 +48,8 @@ class Core_Business_Cldr_CldrLocalize
 
     public static function getBrowserLocales()
     {
-        if (self::$_browserLocales !== null) {
-            return self::$_browserLocales;
+        if (self::$browserLocales !== null) {
+            return self::$browserLocales;
         }
 
         $regex  = '(?P<locale>[\w\-]+)+(?:;q=(?P<quality>[0-9]+\.[0-9]+))?';
@@ -66,20 +68,20 @@ class Core_Business_Cldr_CldrLocalize
         foreach (explode(',', $httpLanguages) as $language) {
             if (preg_match("/{$regex}/", $language, $matches)) {
                 $quality = isset($matches['quality']) ? $matches['quality'] : 1;
-                $result[self::_canonicalize($matches['locale'])] = $quality;
+                $result[self::canonicalize($matches['locale'])] = $quality;
             }
         }
 
         arsort($result);
         $result = array_keys($result);
-        self::$_browserLocales = $result;
+        self::$browserLocales = $result;
         return $result;
     }
 
     public static function getEnvironmentLocale()
     {
-        if (self::$_environmentLocale !== null) {
-            return self::$_environmentLocale;
+        if (self::$environmentLocale !== null) {
+            return self::$environmentLocale;
         }
 
         $regex = '(?P<locale>[\w\_]+)(\.|@|$)+';
@@ -93,7 +95,7 @@ class Core_Business_Cldr_CldrLocalize
         // TODO: Add region handle
         }
 
-        self::$_environmentLocale = $result;
+        self::$environmentLocale = $result;
         return $result;
     }
 
@@ -113,16 +115,16 @@ class Core_Business_Cldr_CldrLocalize
             throw new \InvalidArgumentException('Invalid type for setLocale function');
         }
 
-        self::$_locale = self::_canonicalize($value);
+        self::$locale = self::canonicalize($value);
     }
 
     public static function getLocale()
     {
-        if (!isset(self::$_locale)) {
-            self::$_locale = self::getPreferedLocale();
+        if (!isset(self::$locale)) {
+            self::$locale = self::getPreferedLocale();
         }
 
-        return self::$_locale;
+        return self::$locale;
     }
 
     public static function getPreferedLocale($locale = null)
@@ -153,7 +155,7 @@ class Core_Business_Cldr_CldrLocalize
             $locale = self::DEFAULT_LOCALE;
         }
 
-        $locale = self::_canonicalize($locale);
+        $locale = self::canonicalize($locale);
         return (string)$locale;
     }
 
@@ -177,29 +179,29 @@ class Core_Business_Cldr_CldrLocalize
         return (string)self::getLocale();
     }
 
-    private static function _canonicalize($locale)
+    private static function canonicalize($locale)
     {
         if (empty($locale) || $locale == '') {
             return null;
         }
 
-        $regex  = '(?P<language>[a-z]{2,3})(?:[_-](?P<script>[a-z]{4}))?(?:[_-](?P<territory>[a-z]{2}))?(?:[_-](?P<variant>[a-z]{5,}))?';
+        $regex = '(?P<language>[a-z]{2,3})(?:[_-](?P<script>[a-z]{4}))?(?:[_-](?P<territory>[a-z]{2}))?(?:[_-](?P<variant>[a-z]{5,}))?';
 
         if (!preg_match("/^{$regex}$/i", $locale, $matches)) {
             throw new \InvalidArgumentException('Locale "'.$locale.'" could not be parsed');
         }
 
-        $tags = array_filter(array_intersect_key($matches, static::$_filters));
+        $tags = array_filter(array_intersect_key($matches, static::$filters));
 
         foreach ($tags as $name => &$tag) {
-            foreach ((array)static::$_filters[$name]['filter'] as $filter) {
+            foreach ((array)static::$filters[$name]['filter'] as $filter) {
                 $tag = $filter($tag);
             }
         }
 
         $result = array();
 
-        foreach (static::$_filters as $name => $value) {
+        foreach (static::$filters as $name => $value) {
             if (isset($tags[$name])) {
                 $result[] = $tags[$name];
             }

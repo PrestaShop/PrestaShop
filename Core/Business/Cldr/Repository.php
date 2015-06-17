@@ -24,14 +24,18 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
+namespace PrestaShop\PrestaShop\Core\Business\Cldr;
+
 use ICanBoogie\CLDR\FileProvider;
-use ICanBoogie\CLDR\Repository;
 use ICanBoogie\CLDR\RunTimeProvider;
 use ICanBoogie\CLDR\WebProvider;
 use ICanBoogie\CLDR\Currency;
 use ICanBoogie\CLDR\NumberFormatter;
+use ICanBoogie\CLDR\Repository as cldrRepository;
 
-class Core_Business_Cldr_CldrRepository
+use PrestaShop\PrestaShop\Core\Business\Cldr\Localize;
+
+class Repository
 {
     protected $cldrCacheFolder;
     protected $repository;
@@ -55,11 +59,11 @@ class Core_Business_Cldr_CldrRepository
             new FileProvider(new WebProvider, $this->cldrCacheFolder)
         );
 
-        $locale = new Core_Business_Cldr_CldrLocalize();
+        $locale = new Localize();
         $this->locale = $locale->getLanguage();
         $this->region = $locale->getRegion();
 
-        $this->repository = new Repository($provider);
+        $this->repository = new cldrRepository($provider);
         $this->localeRepository = $this->repository->locales[$this->locale];
     }
 

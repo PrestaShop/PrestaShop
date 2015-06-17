@@ -24,6 +24,8 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
+use PrestaShop\PrestaShop\Core\Business\Cldr\Repository;
+
 class CurrencyCore extends ObjectModel
 {
 	public $id;
@@ -76,7 +78,7 @@ class CurrencyCore extends ObjectModel
 
 	public function __construct($id = null, $id_lang = null, $id_shop = null)
 	{
-		$this->cldr = new Core_Business_Cldr_CldrRepository();
+		$this->cldr = new Repository();
 
 		parent::__construct($id, $id_lang, $id_shop);
 

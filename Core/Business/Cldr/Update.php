@@ -24,7 +24,11 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-class Core_Business_Cldr_CldrUpdate extends Core_Business_Cldr_CldrRepository
+namespace PrestaShop\PrestaShop\Core\Business\Cldr;
+
+use PrestaShop\PrestaShop\Core\Foundation\Net\Curl;
+
+class Update extends Repository
 {
     const ZIP_CORE_URL = 'http://www.unicode.org/Public/cldr/26/json-full.zip';
 
@@ -38,10 +42,9 @@ class Core_Business_Cldr_CldrUpdate extends Core_Business_Cldr_CldrRepository
      */
     public function fetch()
     {
-
         if (!is_file($file = $this->cldrCacheFolder.DIRECTORY_SEPARATOR.'core.zip')) {
             $fp = fopen($file, "w");
-            $curl = new Core_Foundation_Net_Curl();
+            $curl = new Curl();
             $curl->setOptions(array(
                 CURLOPT_FILE => $fp,
                 CURLOPT_FOLLOWLOCATION => true,

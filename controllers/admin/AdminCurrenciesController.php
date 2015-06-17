@@ -27,6 +27,10 @@
 /**
  * @property Currency $object
  */
+
+use PrestaShop\PrestaShop\Core\Business\Cldr\Repository;
+use PrestaShop\PrestaShop\Core\Business\Cldr\Update;
+
 class AdminCurrenciesControllerCore extends AdminController
 {
     public function __construct()
@@ -35,7 +39,7 @@ class AdminCurrenciesControllerCore extends AdminController
         $this->table = 'currency';
         $this->className = 'Currency';
         $this->lang = false;
-        $this->cldr = new Core_Business_Cldr_CldrRepository();
+        $this->cldr = new Repository();
 
         $this->fields_list = array(
             'id_currency' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),
