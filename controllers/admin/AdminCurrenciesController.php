@@ -39,7 +39,7 @@ class AdminCurrenciesControllerCore extends AdminController
         $this->table = 'currency';
         $this->className = 'Currency';
         $this->lang = false;
-        $this->cldr = new Repository();
+        $this->cldr = new Repository(Context::getContext()->language);
 
         $this->fields_list = array(
             'id_currency' => array('title' => $this->l('ID'), 'align' => 'center', 'class' => 'fixed-width-xs'),

@@ -42,9 +42,12 @@ class Repository
     protected $localeRepository;
     protected $region;
     protected $locale;
+    protected $contextLanguage;
 
-    public function __construct()
+    public function __construct($contextLanguage = null)
     {
+        $this->contextLanguage = $contextLanguage;
+
         $this->cldrCacheFolder = _PS_CACHE_DIR_.'cldr';
 
         if (!is_dir($this->cldrCacheFolder)) {
@@ -59,9 +62,16 @@ class Repository
             new FileProvider(new WebProvider, $this->cldrCacheFolder)
         );
 
-        $locale = new Localize();
-        $this->locale = $locale->getLanguage();
-        $this->region = $locale->getRegion();
+        //if contextLanguage is define, set locale/regio from it
+        if ($contextLanguage) {
+            $locale = explode('-', $contextLanguage->language_code);
+            $this->locale = $locale[0];
+            $this->region = strtoupper($locale[1]);
+        } else {
+            $locale = new Localize();
+            $this->locale = $locale->getLanguage();
+            $this->region = $locale->getRegion();
+        }
 
         $this->repository = new cldrRepository($provider);
         $this->localeRepository = $this->repository->locales[$this->locale];
