@@ -179,7 +179,7 @@ class CustomizationCore extends ObjectModel
 		');
 
 		foreach ($results as $row)
-			$quantity[$row['id_product']][$row['product_attribute_id']] = $row['quantity'];
+			$quantity[$row['id_product']][$row['id_product_attribute']] = $row['quantity'];
 
 		return $quantity;
 	}

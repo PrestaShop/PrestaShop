@@ -2066,7 +2066,7 @@ class AdminControllerCore extends Controller
 		if (is_array($this->tab_modules_list['slider_list']) && count($this->tab_modules_list['slider_list']))
 			$this->page_header_toolbar_btn['modules-list'] = array(
 				'href' => '#',
-				'desc' => $this->l('Recommended Modules')
+				'desc' => $this->l('Recommended Modules and Services')
 			);
 	}
 
@@ -2077,7 +2077,7 @@ class AdminControllerCore extends Controller
 		if (is_array($this->tab_modules_list['slider_list']) && count($this->tab_modules_list['slider_list']))
 			$this->toolbar_btn['modules-list'] = array(
 				'href' => '#',
-				'desc' => $this->l('Recommended Modules')
+				'desc' => $this->l('Recommended Modules and Services')
 			);
 	}
 

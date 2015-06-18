@@ -27,6 +27,7 @@
 class PasswordControllerCore extends FrontController
 {
 	public $php_self = 'password';
+	public $auth = false;
 
 	/**
 	 * Start forms process
@@ -116,4 +117,3 @@ class PasswordControllerCore extends FrontController
 		$this->setTemplate(_PS_THEME_DIR_.'password.tpl');
 	}
 }
-
