@@ -932,7 +932,29 @@ function refreshProductImages(id_product_attribute)
 	else
 	{
 		$('#thumbs_list li').show();
-		displayImage($('#thumbs_list li:first a'));
+
+		if (typeof combinations == 'undefined' || !combinations)
+			combinations = [];
+
+		//testing every combination to find the conbination's attributes' case of the user
+		for (var combination = 0; combination < combinations.length; ++combination)
+		{
+			//verify if this combinaison is the same that the user's choice
+			var combinationMatchForm = true;
+
+			$.each(combinations[combination]['idsAttributes'], function(key, value)
+			{
+				if (!in_array(parseInt(value), choice))
+					combinationMatchForm = false;
+			});
+
+			if (combinationMatchForm)
+			{
+				//show the large image in relation to the selected combination
+				if (combinations[combination]['image'] && combinations[combination]['image'] != -1)
+					displayImage($('#thumb_' + combinations[combination]['image']).parent());
+			}
+		}
 	}
 
 	if (parseInt($('#thumbs_list_frame >li:visible').length) != parseInt($('#thumbs_list_frame >li').length))
