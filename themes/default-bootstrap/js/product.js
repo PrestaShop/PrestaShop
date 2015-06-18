@@ -639,13 +639,13 @@ function updatePrice()
 	// Apply combination price impact (only if there is no specific price)
 	// 0 by default, +x if price is inscreased, -x if price is decreased
 	basePriceWithoutTax = basePriceWithoutTax + +combination.price;
-	basePriceWithTax = basePriceWithTax + +combination.price;
+	basePriceWithTax = basePriceWithTax + +combination.price * (taxRate/100 + 1);
 
 	// If a specific price redefine the combination base price
 	if (combination.specific_price && combination.specific_price.price > 0)
 	{
 		basePriceWithoutTax = +combination.specific_price.price;
-		basePriceWithTax = +combination.specific_price.price;
+		basePriceWithTax = +combination.specific_price.price * (taxRate/100 + 1);
 	}
 
 	var priceWithDiscountsWithoutTax = basePriceWithoutTax;
@@ -673,7 +673,7 @@ function updatePrice()
 				if (combination.specific_price.id_currency == 0)
 					reduction = reduction * currencyRate * (1 - groupReduction);
 				priceWithDiscountsWithoutTax -= reduction;
-				priceWithDiscountsWithTax -= reduction;
+				priceWithDiscountsWithTax -= reduction * (taxRate/100 + 1);
 			}
 		}
 		else if (combination.specific_price.reduction_type == 'percentage')
