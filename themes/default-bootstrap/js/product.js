@@ -932,6 +932,17 @@ function refreshProductImages(id_product_attribute)
 	else
 	{
 		$('#thumbs_list li').show();
+		
+		var choice = [];
+		var radio_inputs = parseInt($('#attributes .checked > input[type=radio]').length);
+		if (radio_inputs)
+			radio_inputs = '#attributes .checked > input[type=radio]';
+		else
+			radio_inputs = '#attributes input[type=radio]:checked';
+	
+		$('#attributes select, #attributes input[type=hidden], ' + radio_inputs).each(function(){
+			choice.push(parseInt($(this).val()));
+		});
 
 		if (typeof combinations == 'undefined' || !combinations)
 			combinations = [];
