@@ -270,7 +270,7 @@ class ProductControllerCore extends FrontController
 				'last_qties' =>  (int)Configuration::get('PS_LAST_QTIES'),
 				'HOOK_EXTRA_LEFT' => Hook::exec('displayLeftColumnProduct'),
 				'HOOK_EXTRA_RIGHT' => Hook::exec('displayRightColumnProduct'),
-				'HOOK_PRODUCT_OOS' => Hook::exec('actionProductOutOfStock', array('product' => $this->product)),
+				'HOOK_PRODUCT_OOS' => Hook::exec('displayProductOutOfStock', array('product' => $this->product)),
 				'HOOK_PRODUCT_ACTIONS' => Hook::exec('displayProductButtons', array('product' => $this->product)),
 				'HOOK_PRODUCT_TAB' =>  Hook::exec('displayProductTab', array('product' => $this->product)),
 				'HOOK_PRODUCT_TAB_CONTENT' =>  Hook::exec('displayProductTabContent', array('product' => $this->product)),
