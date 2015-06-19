@@ -588,7 +588,9 @@ color: #385E0B;
 	.blockInfoEnd p {
 		font:italic 11px/14px Georgia, Arial, Sans-serif;
 		color:#666;
-		min-height:58px;
+}
+	.blockInfoEnd p.description {
+		min-height:93px;
 }
 	.blockInfoEnd img {
 	float:left;

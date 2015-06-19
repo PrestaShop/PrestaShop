@@ -67,13 +67,17 @@ var admin = '<?php echo(file_exists('../admin-dev') ? '../admin-dev' : '../admin
 			<img src="theme/img/visu_boBlock.png" alt="" />
 			<h3><?php echo $this->l('Back Office'); ?></h3>
 			<p class="description"><?php echo $this->l('Manage your store using your Back Office. Manage your orders and customers, add modules, change themes, etc.') ?></p>
-			<a class="BO" target="_blank"><span><?php echo $this->l('Manage your store') ?></span></a>
+			<p>
+				<a class="BO" target="_blank"><span><?php echo $this->l('Manage your store') ?></span></a>
+			</p>
 		</div>
 		<div id="foBlock" class="blockInfoEnd last clearfix" onclick="window.open('../')" />
 			<img src="theme/img/visu_foBlock.png" alt="" />
 			<h3><?php echo $this->l('Front Office'); ?></h3>
 			<p class="description"><?php echo $this->l('Discover your store as your future customers will see it!') ?></p>
-			<a class="FO" target="_blank"><span><?php echo $this->l('Discover your store') ?></span></a>
+			<p>
+				<a class="FO" target="_blank"><span><?php echo $this->l('Discover your store') ?></span></a>
+			</p>
 		</div>
 	</div>
 
