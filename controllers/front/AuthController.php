@@ -269,6 +269,7 @@ class AuthControllerCore extends FrontController
 				$this->errors[] = Tools::displayError('Your account isn\'t available at this time, please contact us');
 			elseif (!$authentication || !$customer->id)
 				$this->errors[] = Tools::displayError('Authentication failed.');
+				Hook::exec('actionAuthenticationFailed');
 			else
 			{
 				$this->context->cookie->id_compare = isset($this->context->cookie->id_compare) ? $this->context->cookie->id_compare: CompareProduct::getIdCompareByIdCustomer($customer->id);
