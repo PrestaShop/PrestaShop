@@ -155,6 +155,8 @@ class AdminLoginControllerCore extends AdminController
 	
 	public function processLogin()
 	{
+		Hook::exec('actionBeforeAdminAuthentication');
+
 		/* Check fields validity */
 		$passwd = trim(Tools::getValue('passwd'));
 		$email = trim(Tools::getValue('email'));
@@ -178,11 +180,13 @@ class AdminLoginControllerCore extends AdminController
 			{
 				$this->errors[] = Tools::displayError('The Employee does not exist, or the password provided is incorrect.');
 				$this->context->employee->logout();
+				
 			}
 			elseif (empty($employee_associated_shop) && !$this->context->employee->isSuperAdmin())
 			{
 				$this->errors[] = Tools::displayError('This employee does not manage the shop anymore (Either the shop has been deleted or permissions have been revoked).');
 				$this->context->employee->logout();
+				Hook::exec('actionAdminAuthenticationFailed');
 			}
 			else
 			{
@@ -201,6 +205,8 @@ class AdminLoginControllerCore extends AdminController
 					$cookie->last_activity = time();
 
 				$cookie->write();
+				
+				Hook::exec('actionAdminAuthentication');
 
 				// If there is a valid controller name submitted, redirect to it
 				if (isset($_POST['redirect']) && Validate::isControllerName($_POST['redirect']))
