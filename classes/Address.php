@@ -297,13 +297,13 @@ class AddressCore extends ObjectModel
 	 */
 	public function isUsed()
 	{
-		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
+		$result = (bool)Db::getInstance(_PS_USE_SQL_SLAVE_)->getvalue('
 		SELECT COUNT(`id_order`) AS used
 		FROM `'._DB_PREFIX_.'orders`
 		WHERE `id_address_delivery` = '.(int)$this->id.'
 		OR `id_address_invoice` = '.(int)$this->id);
 
-		return isset($result['used']) ? $result['used'] : false;
+		return $result;
 	}
 
 	public static function getCountryAndState($id_address)
