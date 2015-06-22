@@ -52,4 +52,15 @@ class Core_Foundation_Crypto_Hashing
                 ]
             ];
     }
+
+    public function encrypt($passwd, $cookie_key)
+    {
+        if (!count($this->hash_methods)) {
+            $this->initHashMethods();
+        }
+
+        $closure = reset($this->hash_methods);
+
+        return $closure['crypt']($passwd, $cookie_key);
+    }
 }
