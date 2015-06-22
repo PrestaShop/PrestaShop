@@ -320,26 +320,48 @@ class CustomerCore extends ObjectModel
     {
         if (!Validate::isEmail($email) || ($passwd && !Validate::isPasswd($passwd))) {
             die(Tools::displayError());
-        }
+		}
 
-        $result = Db::getInstance()->getRow('
+        if (isset($passwd)) {
+            try {
+                $crypto = Adapter_ServiceLocator::get('Core_Foundation_Crypto_Hashing');
+            } catch (Adapter_Exception $e) {
+                return false;
+            }
+
+			$hash = Db::getInstance()->getValue('SELECT `passwd` FROM `'._DB_PREFIX_.'customer` WHERE `email` = \''.pSQL($email).'\'
+				'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).' AND `deleted` = 0 AND `is_guest` = 0');
+
+			if (!$crypto->checkHash($passwd, $hash, _COOKIE_KEY_))
+				return false;
+		}
+
+		$result = Db::getInstance()->getRow('
 		SELECT *
 		FROM `'._DB_PREFIX_.'customer`
 		WHERE `email` = \''.pSQL($email).'\'
 		'.Shop::addSqlRestriction(Shop::SHARE_CUSTOMER).'
-		'.(isset($passwd) ? 'AND `passwd` = \''.pSQL(Tools::encrypt($passwd)).'\'' : '').'
+		'.(isset($passwd) ? 'AND `passwd` = \''.pSQL($hash).'\'' : '').'
 		AND `deleted` = 0
 		'.($ignore_guest ? ' AND `is_guest` = 0' : ''));
 
         if (!$result) {
             return false;
         }
+
+		
+		if (!$crypto->isFirstHash($passwd, $hash, _COOKIE_KEY_)) {
+			$this->passwd = $crypto->encrypt($passwd, _COOKIE_KEY_);
+			$this->update();
+		}
+
         $this->id = $result['id_customer'];
         foreach ($result as $key => $value) {
             if (property_exists($this, $key)) {
                 $this->{$key} = $value;
             }
         }
+
         return $this;
     }
 
