@@ -74,8 +74,7 @@ class Smarty_Internal_Compile_Config_Load extends Smarty_Internal_CompileBase
             }
         }
         // create config object
-        $_output = "<?php  \$_config = new Smarty_Internal_Config($conf_file, \$_smarty_tpl->smarty, \$_smarty_tpl);";
-        $_output .= "\$_config->loadConfigVars($section, '$scope'); ?>";
+        $_output = "<?php  Smarty_Internal_Extension_Config::configLoad(\$_smarty_tpl, $conf_file, $section, '$scope');?>";
 
         return $_output;
     }

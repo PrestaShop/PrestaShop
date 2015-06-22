@@ -9,8 +9,14 @@
  * @author     Uwe Tews
  * @author     Rodney Rehm
  */
-class Smarty_Internal_Resource_PHP extends Smarty_Resource_Uncompiled
+class Smarty_Internal_Resource_Php extends Smarty_Internal_Resource_File
 {
+    /**
+     * Flag that it's an uncompiled resource
+     *
+     * @var bool
+     */
+    public $uncompiled = true;
     /**
      * container for short_open_tag directive's value before executing PHP templates
      *
@@ -25,44 +31,6 @@ class Smarty_Internal_Resource_PHP extends Smarty_Resource_Uncompiled
     public function __construct()
     {
         $this->short_open_tag = ini_get('short_open_tag');
-    }
-
-    /**
-     * populate Source Object with meta data from Resource
-     *
-     * @param  Smarty_Template_Source   $source    source object
-     * @param  Smarty_Internal_Template $_template template object
-     *
-     * @return void
-     */
-    public function populate(Smarty_Template_Source $source, Smarty_Internal_Template $_template = null)
-    {
-        $source->filepath = $this->buildFilepath($source, $_template);
-
-        if ($source->filepath !== false) {
-            if (is_object($source->smarty->security_policy)) {
-                $source->smarty->security_policy->isTrustedResourceDir($source->filepath);
-            }
-
-            $source->uid = sha1($source->filepath);
-            if ($source->smarty->compile_check) {
-                $source->timestamp = @filemtime($source->filepath);
-                $source->exists = !!$source->timestamp;
-            }
-        }
-    }
-
-    /**
-     * populate Source Object with timestamp and exists from Resource
-     *
-     * @param  Smarty_Template_Source $source source object
-     *
-     * @return void
-     */
-    public function populateTimestamp(Smarty_Template_Source $source)
-    {
-        $source->timestamp = @filemtime($source->filepath);
-        $source->exists = !!$source->timestamp;
     }
 
     /**
@@ -115,5 +83,18 @@ class Smarty_Internal_Resource_PHP extends Smarty_Resource_Uncompiled
         $_smarty_template = $_template;
         include($source->filepath);
         ini_set('short_open_tag', $this->short_open_tag);
+    }
+
+    /**
+     * populate compiled object with compiled filepath
+     *
+     * @param Smarty_Template_Compiled $compiled  compiled object
+     * @param Smarty_Internal_Template $_template template object (is ignored)
+     */
+    public function populateCompiledFilepath(Smarty_Template_Compiled $compiled, Smarty_Internal_Template $_template)
+    {
+        $compiled->filepath = false;
+        $compiled->timestamp = false;
+        $compiled->exists = false;
     }
 }

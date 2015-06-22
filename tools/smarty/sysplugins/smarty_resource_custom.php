@@ -88,7 +88,7 @@ abstract class Smarty_Resource_Custom extends Smarty_Resource
      *
      * @return string                 resource's basename
      */
-    protected function getBasename(Smarty_Template_Source $source)
+    public function getBasename(Smarty_Template_Source $source)
     {
         return basename($source->name);
     }
