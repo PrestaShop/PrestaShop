@@ -583,7 +583,7 @@ CREATE TABLE `PREFIX_customer` (
   `firstname` varchar(32) NOT NULL,
   `lastname` varchar(32) NOT NULL,
   `email` varchar(128) NOT NULL,
-  `passwd` varchar(32) NOT NULL,
+  `passwd` varchar(255) NOT NULL,
   `last_passwd_gen` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `birthday` date DEFAULT NULL,
   `newsletter` tinyint(1) unsigned NOT NULL DEFAULT '0',

@@ -275,9 +275,7 @@ class CustomerCore extends ObjectModel
         Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'specific_price WHERE id_customer='.(int)$this->id);
         Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'compare WHERE id_customer='.(int)$this->id);
 
-        $carts = Db::getInstance()->executes('SELECT id_cart
-															FROM '._DB_PREFIX_.'cart
-															WHERE id_customer='.(int)$this->id);
+        $carts = Db::getInstance()->executes('SELECT id_cart FROM '._DB_PREFIX_.'cart WHERE id_customer='.(int)$this->id);
         if ($carts) {
             foreach ($carts as $cart) {
                 Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'cart WHERE id_cart='.(int)$cart['id_cart']);
@@ -285,9 +283,7 @@ class CustomerCore extends ObjectModel
             }
         }
 
-        $cts = Db::getInstance()->executes('SELECT id_customer_thread
-															FROM '._DB_PREFIX_.'customer_thread
-															WHERE id_customer='.(int)$this->id);
+        $cts = Db::getInstance()->executes('SELECT id_customer_thread FROM '._DB_PREFIX_.'customer_thread WHERE id_customer='.(int)$this->id);
         if ($cts) {
             foreach ($cts as $ct) {
                 Db::getInstance()->execute('DELETE FROM '._DB_PREFIX_.'customer_thread WHERE id_customer_thread='.(int)$ct['id_customer_thread']);
