@@ -26,4 +26,7 @@
 
 class Core_Foundation_Crypto_Hashing
 {
+
+    private $hash_methods = [];
+
 }
