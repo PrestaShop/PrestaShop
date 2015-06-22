@@ -33,8 +33,8 @@ class Core_Foundation_Crypto_Hashing
     {
         $this->hash_methods = [
                 'BCryptSHA256' => [
-                    'salt' => 32,
-                    'crypt' => function ($passwd, $cookie_key) {
+                    'option' => [],
+                    'encrypt' => function ($passwd, $cookie_key, $option) {
                         return password_hash($cookie_key.$passwd, PASSWORD_BCRYPT);
                     },
                     'verify' => function ($passwd, $hash, $cookie_key) {
@@ -42,8 +42,8 @@ class Core_Foundation_Crypto_Hashing
                     }
                 ],
                 'md5' => [
-                    'salt' => 32,
-                    'crypt' => function ($passwd, $cookie_key) {
+                    'option' => [],
+                    'encrypt' => function ($passwd, $cookie_key, $option) {
                         return md5($cookie_key.$passwd);
                     },
                     'verify' => function ($passwd, $hash, $cookie_key) {
@@ -71,7 +71,6 @@ class Core_Foundation_Crypto_Hashing
         }
 
         foreach ($this->hash_methods as $closure) {
-            p(var_dump($closure['verify']($passwd, $hash, $cookie_key)));
             if ($closure['verify']($passwd, $hash, $cookie_key)) {
                 return true;
             }
@@ -88,6 +87,6 @@ class Core_Foundation_Crypto_Hashing
 
         $closure = reset($this->hash_methods);
 
-        return $closure['crypt']($passwd, $cookie_key);
+        return $closure['encrypt']($passwd, $cookie_key, $closure['option']);
     }
 }
