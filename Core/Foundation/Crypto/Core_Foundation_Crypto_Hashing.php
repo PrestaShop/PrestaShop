@@ -53,6 +53,22 @@ class Core_Foundation_Crypto_Hashing
             ];
     }
 
+    public function checkHash($passwd, $hash, $cookie_key)
+    {
+        if (!count($this->hash_methods)) {
+            $this->initHashMethods();
+        }
+
+        foreach ($this->hash_methods as $closure) {
+            p(var_dump($closure['verify']($passwd, $hash, $cookie_key)));
+            if ($closure['verify']($passwd, $hash, $cookie_key)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function encrypt($passwd, $cookie_key)
     {
         if (!count($this->hash_methods)) {
