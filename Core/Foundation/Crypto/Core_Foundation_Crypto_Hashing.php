@@ -29,4 +29,27 @@ class Core_Foundation_Crypto_Hashing
 
     private $hash_methods = [];
 
+    private function initHashMethods()
+    {
+        $this->hash_methods = [
+                'BCryptSHA256' => [
+                    'salt' => 32,
+                    'crypt' => function ($passwd, $cookie_key) {
+                        return password_hash($cookie_key.$passwd, PASSWORD_BCRYPT);
+                    },
+                    'verify' => function ($passwd, $hash, $cookie_key) {
+                        return password_verify($cookie_key.$passwd, $hash);
+                    }
+                ],
+                'md5' => [
+                    'salt' => 32,
+                    'crypt' => function ($passwd, $cookie_key) {
+                        return md5($cookie_key.$passwd);
+                    },
+                    'verify' => function ($passwd, $hash, $cookie_key) {
+                        return md5($cookie_key.$passwd) === $hash;
+                    }
+                ]
+            ];
+    }
 }
