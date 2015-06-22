@@ -53,6 +53,17 @@ class Core_Foundation_Crypto_Hashing
             ];
     }
 
+    public function isFirstHash($passwd, $hash, $cookie_key)
+    {
+        if (!count($this->hash_methods)) {
+            $this->initHashMethods();
+        }
+
+        $closure = reset($this->hash_methods);
+
+        return $closure['verify']($passwd, $hash, $cookie_key);
+    }
+
     public function checkHash($passwd, $hash, $cookie_key)
     {
         if (!count($this->hash_methods)) {
