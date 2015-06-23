@@ -2271,10 +2271,17 @@ class ProductCore extends ObjectModel
 
 		if ($product_reductions)
 		{
-			$ids_product = ' AND (';
+			$ids_products = '';
 			foreach ($product_reductions as $product_reduction)
-				$ids_product .= '( product_shop.`id_product` = '.(int)$product_reduction['id_product'].($product_reduction['id_product_attribute'] ? ' AND product_attribute_shop.`id_product_attribute`='.(int)$product_reduction['id_product_attribute'] :'').') OR';
-			$ids_product = rtrim($ids_product, 'OR').')';
+			{
+				$ids_products .= '('.(int)$product_reduction['id_product'].','.($product_reduction['id_product_attribute'] ? (int)$product_reduction['id_product_attribute'] :'0').'),';
+			}
+			$ids_products = rtrim($ids_products, ',');
+			if ($ids_products)
+			{
+				Db::getInstance(_PS_USE_SQL_SLAVE_)->execute('CREATE TEMPORARY TABLE product_reductions (id_product INT UNSIGNED NOT NULL DEFAULT 0, id_product_attribute INT UNSIGNED NOT NULL DEFAULT 0) ENGINE=MEMORY');
+				Db::getInstance(_PS_USE_SQL_SLAVE_)->execute('INSERT INTO product_reductions VALUES '.$ids_products);
+			}
 
 			$groups = FrontController::getCurrentCustomerGroups();
 			$sql_groups = ' AND EXISTS(SELECT 1 FROM `'._DB_PREFIX_.'category_product` cp
@@ -2283,11 +2290,13 @@ class ProductCore extends ObjectModel
 
 			// Please keep 2 distinct queries because RAND() is an awful way to achieve this result
 			$sql = 'SELECT product_shop.id_product, IFNULL(product_attribute_shop.id_product_attribute,0) id_product_attribute
-					FROM `'._DB_PREFIX_.'product` p
+					FROM
+					`'._DB_PREFIX_.'product_reductions` pr,
+					`'._DB_PREFIX_.'product` p
 					'.Shop::addSqlAssociation('product', 'p').'
 					LEFT JOIN `'._DB_PREFIX_.'product_attribute_shop` product_attribute_shop
 				   		ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop='.(int)$context->shop->id.')
-					WHERE product_shop.`active` = 1
+					WHERE p.id_product=pr.id_product AND (pr.id_product_attribute = 0 OR product_attribute_shop.id_product_attribute = pr.id_product_attribute) AND product_shop.`active` = 1
 						'.(($ids_product) ? $ids_product : '').' '.$sql_groups.'
 					'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
 					ORDER BY RAND()';
