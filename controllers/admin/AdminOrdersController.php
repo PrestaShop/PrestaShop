@@ -488,40 +488,7 @@ class AdminOrdersControllerCore extends AdminController
 			($module_name = Tools::getValue('payment_module_name')) &&
 			($id_order_state = Tools::getValue('id_order_state')) && Validate::isModuleName($module_name))
 		{
-			if ($this->tabAccess['edit'] === '1')
-			{
-				if (!Configuration::get('PS_CATALOG_MODE'))
-					$payment_module = Module::getInstanceByName($module_name);
-				else
-					$payment_module = new BoOrder();
-
-				$cart = new Cart((int)$id_cart);
-				Context::getContext()->currency = new Currency((int)$cart->id_currency);
-				Context::getContext()->customer = new Customer((int)$cart->id_customer);
-
-				$bad_delivery = false;
-				if (($bad_delivery = (bool)!Address::isCountryActiveById((int)$cart->id_address_delivery))
-					|| !Address::isCountryActiveById((int)$cart->id_address_invoice))
-				{
-					if ($bad_delivery)
-						$this->errors[] = Tools::displayError('This delivery address country is not active.');
-					else
-						$this->errors[] = Tools::displayError('This invoice address country is not active.');
-				}
-				else
-				{
-					$employee = new Employee((int)Context::getContext()->cookie->id_employee);
-					$payment_module->validateOrder(
-						(int)$cart->id, (int)$id_order_state,
-						$cart->getOrderTotal(true, Cart::BOTH), $payment_module->displayName, $this->l('Manual order -- Employee:').' '.
-						substr($employee->firstname, 0, 1).'. '.$employee->lastname, array(), null, false, $cart->secure_key
-					);
-					if ($payment_module->currentOrder)
-						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$payment_module->currentOrder.'&vieworder'.'&token='.$this->token);
-				}
-			}
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to add this.');
+			$this->processSubmitAddOrder($id_cart, $module_name, $id_order_state);
 		}
 		elseif ((Tools::isSubmit('submitAddressShipping') || Tools::isSubmit('submitAddressInvoice')) && isset($order))
 		{
@@ -1208,6 +1175,44 @@ class AdminOrdersControllerCore extends AdminController
 		}
 		else
 			$this->errors[] = Tools::displayError('The invoice for edit note was unable to load. ');
+	}
+
+	protected function processSubmitAddOrder($id_cart, $module_name, $id_order_state)
+	{
+		if ($this->tabAccess['edit'] === '1')
+		{
+			if (!Configuration::get('PS_CATALOG_MODE'))
+				$payment_module = Module::getInstanceByName($module_name);
+			else
+				$payment_module = new BoOrder();
+
+			$cart = new Cart((int)$id_cart);
+			Context::getContext()->currency = new Currency((int)$cart->id_currency);
+			Context::getContext()->customer = new Customer((int)$cart->id_customer);
+
+			$bad_delivery = false;
+			if (($bad_delivery = (bool)!Address::isCountryActiveById((int)$cart->id_address_delivery))
+				|| !Address::isCountryActiveById((int)$cart->id_address_invoice))
+			{
+				if ($bad_delivery)
+					$this->errors[] = Tools::displayError('This delivery address country is not active.');
+				else
+					$this->errors[] = Tools::displayError('This invoice address country is not active.');
+			}
+			else
+			{
+				$employee = new Employee((int)Context::getContext()->cookie->id_employee);
+				$payment_module->validateOrder(
+					(int)$cart->id, (int)$id_order_state,
+					$cart->getOrderTotal(true, Cart::BOTH), $payment_module->displayName, $this->l('Manual order -- Employee:').' '.
+					substr($employee->firstname, 0, 1).'. '.$employee->lastname, array(), null, false, $cart->secure_key
+				);
+				if ($payment_module->currentOrder)
+					Tools::redirectAdmin(self::$currentIndex.'&id_order='.$payment_module->currentOrder.'&vieworder'.'&token='.$this->token);
+			}
+		}
+		else
+			$this->errors[] = Tools::displayError('You do not have permission to add this.');
 	}
 
 	protected function processSubmitAddressShipping($order)
