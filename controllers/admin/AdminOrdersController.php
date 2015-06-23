@@ -460,83 +460,7 @@ class AdminOrdersControllerCore extends AdminController
 		/* Add a new message for the current order and send an e-mail to the customer if needed */
 		elseif (Tools::isSubmit('submitMessage') && isset($order))
 		{
-			if ($this->tabAccess['edit'] === '1')
-			{
-				$customer = new Customer(Tools::getValue('id_customer'));
-				if (!Validate::isLoadedObject($customer))
-					$this->errors[] = Tools::displayError('The customer is invalid.');
-				elseif (!Tools::getValue('message'))
-					$this->errors[] = Tools::displayError('The message cannot be blank.');
-				else
-				{
-					/* Get message rules and and check fields validity */
-					$rules = call_user_func(array('Message', 'getValidationRules'), 'Message');
-					foreach ($rules['required'] as $field)
-						if (($value = Tools::getValue($field)) == false && (string)$value != '0')
-							if (!Tools::getValue('id_'.$this->table) || $field != 'passwd')
-								$this->errors[] = sprintf(Tools::displayError('field %s is required.'), $field);
-					foreach ($rules['size'] as $field => $maxLength)
-						if (Tools::getValue($field) && Tools::strlen(Tools::getValue($field)) > $maxLength)
-							$this->errors[] = sprintf(Tools::displayError('field %1$s is too long (%2$d chars max).'), $field, $maxLength);
-					foreach ($rules['validate'] as $field => $function)
-						if (Tools::getValue($field))
-							if (!Validate::$function(htmlentities(Tools::getValue($field), ENT_COMPAT, 'UTF-8')))
-								$this->errors[] = sprintf(Tools::displayError('field %s is invalid.'), $field);
-
-					if (!count($this->errors))
-					{
-						//check if a thread already exist
-						$id_customer_thread = CustomerThread::getIdCustomerThreadByEmailAndIdOrder($customer->email, $order->id);
-						if (!$id_customer_thread)
-						{
-							$customer_thread = new CustomerThread();
-							$customer_thread->id_contact = 0;
-							$customer_thread->id_customer = (int)$order->id_customer;
-							$customer_thread->id_shop = (int)$this->context->shop->id;
-							$customer_thread->id_order = (int)$order->id;
-							$customer_thread->id_lang = (int)$this->context->language->id;
-							$customer_thread->email = $customer->email;
-							$customer_thread->status = 'open';
-							$customer_thread->token = Tools::passwdGen(12);
-							$customer_thread->add();
-						}
-						else
-							$customer_thread = new CustomerThread((int)$id_customer_thread);
-
-						$customer_message = new CustomerMessage();
-						$customer_message->id_customer_thread = $customer_thread->id;
-						$customer_message->id_employee = (int)$this->context->employee->id;
-						$customer_message->message = Tools::getValue('message');
-						$customer_message->private = Tools::getValue('visibility');
-
-						if (!$customer_message->add())
-							$this->errors[] = Tools::displayError('An error occurred while saving the message.');
-						elseif ($customer_message->private)
-							Tools::redirectAdmin(self::$currentIndex.'&id_order='.(int)$order->id.'&vieworder&conf=11&token='.$this->token);
-						else
-						{
-							$message = $customer_message->message;
-							if (Configuration::get('PS_MAIL_TYPE', null, null, $order->id_shop) != Mail::TYPE_TEXT)
-								$message = Tools::nl2br($customer_message->message);
-
-							$varsTpl = array(
-								'{lastname}' => $customer->lastname,
-								'{firstname}' => $customer->firstname,
-								'{id_order}' => $order->id,
-								'{order_name}' => $order->getUniqReference(),
-								'{message}' => $message
-							);
-							if (@Mail::Send((int)$order->id_lang, 'order_merchant_comment',
-								Mail::l('New message regarding your order', (int)$order->id_lang), $varsTpl, $customer->email,
-								$customer->firstname.' '.$customer->lastname, null, null, null, null, _PS_MAIL_DIR_, true, (int)$order->id_shop))
-								Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=11'.'&token='.$this->token);
-						}
-						$this->errors[] = Tools::displayError('An error occurred while sending an email to the customer.');
-					}
-				}
-			}
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to delete this.');
+			$this->processSubmitMessage($order);
 		}
 
 		/* Partial refund from order */
@@ -1554,6 +1478,87 @@ class AdminOrdersControllerCore extends AdminController
 		}
 		else
 			$this->errors[] = Tools::displayError('You do not have permission to edit this.');
+	}
+
+	protected function processSubmitMessage($order)
+	{
+		if ($this->tabAccess['edit'] === '1')
+		{
+			$customer = new Customer(Tools::getValue('id_customer'));
+			if (!Validate::isLoadedObject($customer))
+				$this->errors[] = Tools::displayError('The customer is invalid.');
+			elseif (!Tools::getValue('message'))
+				$this->errors[] = Tools::displayError('The message cannot be blank.');
+			else
+			{
+				/* Get message rules and and check fields validity */
+				$rules = call_user_func(array('Message', 'getValidationRules'), 'Message');
+				foreach ($rules['required'] as $field)
+					if (($value = Tools::getValue($field)) == false && (string)$value != '0')
+						if (!Tools::getValue('id_'.$this->table) || $field != 'passwd')
+							$this->errors[] = sprintf(Tools::displayError('field %s is required.'), $field);
+				foreach ($rules['size'] as $field => $maxLength)
+					if (Tools::getValue($field) && Tools::strlen(Tools::getValue($field)) > $maxLength)
+						$this->errors[] = sprintf(Tools::displayError('field %1$s is too long (%2$d chars max).'), $field, $maxLength);
+				foreach ($rules['validate'] as $field => $function)
+					if (Tools::getValue($field))
+						if (!Validate::$function(htmlentities(Tools::getValue($field), ENT_COMPAT, 'UTF-8')))
+							$this->errors[] = sprintf(Tools::displayError('field %s is invalid.'), $field);
+
+				if (!count($this->errors))
+				{
+					//check if a thread already exist
+					$id_customer_thread = CustomerThread::getIdCustomerThreadByEmailAndIdOrder($customer->email, $order->id);
+					if (!$id_customer_thread)
+					{
+						$customer_thread = new CustomerThread();
+						$customer_thread->id_contact = 0;
+						$customer_thread->id_customer = (int)$order->id_customer;
+						$customer_thread->id_shop = (int)$this->context->shop->id;
+						$customer_thread->id_order = (int)$order->id;
+						$customer_thread->id_lang = (int)$this->context->language->id;
+						$customer_thread->email = $customer->email;
+						$customer_thread->status = 'open';
+						$customer_thread->token = Tools::passwdGen(12);
+						$customer_thread->add();
+					}
+					else
+						$customer_thread = new CustomerThread((int)$id_customer_thread);
+
+					$customer_message = new CustomerMessage();
+					$customer_message->id_customer_thread = $customer_thread->id;
+					$customer_message->id_employee = (int)$this->context->employee->id;
+					$customer_message->message = Tools::getValue('message');
+					$customer_message->private = Tools::getValue('visibility');
+
+					if (!$customer_message->add())
+						$this->errors[] = Tools::displayError('An error occurred while saving the message.');
+					elseif ($customer_message->private)
+						Tools::redirectAdmin(self::$currentIndex.'&id_order='.(int)$order->id.'&vieworder&conf=11&token='.$this->token);
+					else
+					{
+						$message = $customer_message->message;
+						if (Configuration::get('PS_MAIL_TYPE', null, null, $order->id_shop) != Mail::TYPE_TEXT)
+							$message = Tools::nl2br($customer_message->message);
+
+						$varsTpl = array(
+							'{lastname}' => $customer->lastname,
+							'{firstname}' => $customer->firstname,
+							'{id_order}' => $order->id,
+							'{order_name}' => $order->getUniqReference(),
+							'{message}' => $message
+						);
+						if (@Mail::Send((int)$order->id_lang, 'order_merchant_comment',
+							Mail::l('New message regarding your order', (int)$order->id_lang), $varsTpl, $customer->email,
+							$customer->firstname.' '.$customer->lastname, null, null, null, null, _PS_MAIL_DIR_, true, (int)$order->id_shop))
+							Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=11'.'&token='.$this->token);
+					}
+					$this->errors[] = Tools::displayError('An error occurred while sending an email to the customer.');
+				}
+			}
+		}
+		else
+			$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 	}
 
 	public function renderKpis()
