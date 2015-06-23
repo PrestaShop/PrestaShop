@@ -557,199 +557,7 @@ class AdminOrdersControllerCore extends AdminController
 		}
 		elseif (Tools::isSubmit('submitNewVoucher') && isset($order))
 		{
-			if ($this->tabAccess['edit'] === '1')
-			{
-				if (!Tools::getValue('discount_name'))
-					$this->errors[] = Tools::displayError('You must specify a name in order to create a new discount.');
-				else
-				{
-					if ($order->hasInvoice())
-					{
-						// If the discount is for only one invoice
-						if (!Tools::isSubmit('discount_all_invoices'))
-						{
-							$order_invoice = new OrderInvoice(Tools::getValue('discount_invoice'));
-							if (!Validate::isLoadedObject($order_invoice))
-								throw new PrestaShopException('Can\'t load Order Invoice object');
-						}
-					}
-
-					$cart_rules = array();
-					$discount_value = (float)str_replace(',', '.', Tools::getValue('discount_value'));
-					switch (Tools::getValue('discount_type'))
-					{
-						// Percent type
-						case 1:
-							if ($discount_value < 100)
-							{
-								if (isset($order_invoice))
-								{
-									$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($order_invoice->total_paid_tax_incl * $discount_value / 100, 2);
-									$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($order_invoice->total_paid_tax_excl * $discount_value / 100, 2);
-
-									// Update OrderInvoice
-									$this->applyDiscountOnInvoice($order_invoice, $cart_rules[$order_invoice->id]['value_tax_incl'], $cart_rules[$order_invoice->id]['value_tax_excl']);
-								}
-								elseif ($order->hasInvoice())
-								{
-									$order_invoices_collection = $order->getInvoicesCollection();
-									foreach ($order_invoices_collection as $order_invoice)
-									{
-										/** @var OrderInvoice $order_invoice */
-										$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($order_invoice->total_paid_tax_incl * $discount_value / 100, 2);
-										$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($order_invoice->total_paid_tax_excl * $discount_value / 100, 2);
-
-										// Update OrderInvoice
-										$this->applyDiscountOnInvoice($order_invoice, $cart_rules[$order_invoice->id]['value_tax_incl'], $cart_rules[$order_invoice->id]['value_tax_excl']);
-									}
-								}
-								else
-								{
-									$cart_rules[0]['value_tax_incl'] = Tools::ps_round($order->total_paid_tax_incl * $discount_value / 100, 2);
-									$cart_rules[0]['value_tax_excl'] = Tools::ps_round($order->total_paid_tax_excl * $discount_value / 100, 2);
-								}
-							}
-							else
-								$this->errors[] = Tools::displayError('The discount value is invalid.');
-							break;
-						// Amount type
-						case 2:
-							if (isset($order_invoice))
-							{
-								if ($discount_value > $order_invoice->total_paid_tax_incl)
-									$this->errors[] = Tools::displayError('The discount value is greater than the order invoice total.');
-								else
-								{
-									$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($discount_value, 2);
-									$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($discount_value / (1 + ($order->getTaxesAverageUsed() / 100)), 2);
-
-									// Update OrderInvoice
-									$this->applyDiscountOnInvoice($order_invoice, $cart_rules[$order_invoice->id]['value_tax_incl'], $cart_rules[$order_invoice->id]['value_tax_excl']);
-								}
-							}
-							elseif ($order->hasInvoice())
-							{
-								$order_invoices_collection = $order->getInvoicesCollection();
-								foreach ($order_invoices_collection as $order_invoice)
-								{
-									/** @var OrderInvoice $order_invoice */
-									if ($discount_value > $order_invoice->total_paid_tax_incl)
-										$this->errors[] = Tools::displayError('The discount value is greater than the order invoice total.').$order_invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, (int)$order->id_shop).')';
-									else
-									{
-										$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($discount_value, 2);
-										$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($discount_value / (1 + ($order->getTaxesAverageUsed() / 100)), 2);
-
-										// Update OrderInvoice
-										$this->applyDiscountOnInvoice($order_invoice, $cart_rules[$order_invoice->id]['value_tax_incl'], $cart_rules[$order_invoice->id]['value_tax_excl']);
-									}
-								}
-							}
-							else
-							{
-								if ($discount_value > $order->total_paid_tax_incl)
-									$this->errors[] = Tools::displayError('The discount value is greater than the order total.');
-								else
-								{
-									$cart_rules[0]['value_tax_incl'] = Tools::ps_round($discount_value, 2);
-									$cart_rules[0]['value_tax_excl'] = Tools::ps_round($discount_value / (1 + ($order->getTaxesAverageUsed() / 100)), 2);
-								}
-							}
-							break;
-						// Free shipping type
-						case 3:
-							if (isset($order_invoice))
-							{
-								if ($order_invoice->total_shipping_tax_incl > 0)
-								{
-									$cart_rules[$order_invoice->id]['value_tax_incl'] = $order_invoice->total_shipping_tax_incl;
-									$cart_rules[$order_invoice->id]['value_tax_excl'] = $order_invoice->total_shipping_tax_excl;
-
-									// Update OrderInvoice
-									$this->applyDiscountOnInvoice($order_invoice, $cart_rules[$order_invoice->id]['value_tax_incl'], $cart_rules[$order_invoice->id]['value_tax_excl']);
-								}
-							}
-							elseif ($order->hasInvoice())
-							{
-								$order_invoices_collection = $order->getInvoicesCollection();
-								foreach ($order_invoices_collection as $order_invoice)
-								{
-									/** @var OrderInvoice $order_invoice */
-									if ($order_invoice->total_shipping_tax_incl <= 0)
-										continue;
-									$cart_rules[$order_invoice->id]['value_tax_incl'] = $order_invoice->total_shipping_tax_incl;
-									$cart_rules[$order_invoice->id]['value_tax_excl'] = $order_invoice->total_shipping_tax_excl;
-
-									// Update OrderInvoice
-									$this->applyDiscountOnInvoice($order_invoice, $cart_rules[$order_invoice->id]['value_tax_incl'], $cart_rules[$order_invoice->id]['value_tax_excl']);
-								}
-							}
-							else
-							{
-								$cart_rules[0]['value_tax_incl'] = $order->total_shipping_tax_incl;
-								$cart_rules[0]['value_tax_excl'] = $order->total_shipping_tax_excl;
-							}
-							break;
-						default:
-							$this->errors[] = Tools::displayError('The discount type is invalid.');
-					}
-
-					$res = true;
-					foreach ($cart_rules as &$cart_rule)
-					{
-						$cartRuleObj = new CartRule();
-						$cartRuleObj->date_from = date('Y-m-d H:i:s', strtotime('-1 hour', strtotime($order->date_add)));
-						$cartRuleObj->date_to = date('Y-m-d H:i:s', strtotime('+1 hour'));
-						$cartRuleObj->name[Configuration::get('PS_LANG_DEFAULT')] = Tools::getValue('discount_name');
-						$cartRuleObj->quantity = 0;
-						$cartRuleObj->quantity_per_user = 1;
-						if (Tools::getValue('discount_type') == 1)
-							$cartRuleObj->reduction_percent = $discount_value;
-						elseif (Tools::getValue('discount_type') == 2)
-							$cartRuleObj->reduction_amount = $cart_rule['value_tax_excl'];
-						elseif (Tools::getValue('discount_type') == 3)
-							$cartRuleObj->free_shipping = 1;
-						$cartRuleObj->active = 0;
-						if ($res = $cartRuleObj->add())
-							$cart_rule['id'] = $cartRuleObj->id;
-						else
-							break;
-					}
-
-					if ($res)
-					{
-						foreach ($cart_rules as $id_order_invoice => $cart_rule)
-						{
-							// Create OrderCartRule
-							$order_cart_rule = new OrderCartRule();
-							$order_cart_rule->id_order = $order->id;
-							$order_cart_rule->id_cart_rule = $cart_rule['id'];
-							$order_cart_rule->id_order_invoice = $id_order_invoice;
-							$order_cart_rule->name = Tools::getValue('discount_name');
-							$order_cart_rule->value = $cart_rule['value_tax_incl'];
-							$order_cart_rule->value_tax_excl = $cart_rule['value_tax_excl'];
-							$res &= $order_cart_rule->add();
-
-							$order->total_discounts += $order_cart_rule->value;
-							$order->total_discounts_tax_incl += $order_cart_rule->value;
-							$order->total_discounts_tax_excl += $order_cart_rule->value_tax_excl;
-							$order->total_paid -= $order_cart_rule->value;
-							$order->total_paid_tax_incl -= $order_cart_rule->value;
-							$order->total_paid_tax_excl -= $order_cart_rule->value_tax_excl;
-						}
-
-						// Update Order
-						$res &= $order->update();
-					}
-
-					if ($res)
-						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
-					else
-						$this->errors[] = Tools::displayError('An error occurred during the OrderCartRule creation');
-				}
-			}
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
+			$this->processSubmitNewVoucher($order);
 		}
 		elseif (Tools::isSubmit('sendStateEmail') && Tools::getValue('sendStateEmail') > 0 && Tools::getValue('id_order') > 0)
 		{
@@ -1591,6 +1399,203 @@ class AdminOrdersControllerCore extends AdminController
 			}
 			else
 				$this->errors[] = Tools::displayError('You cannot edit this cart rule.');
+		}
+		else
+			$this->errors[] = Tools::displayError('You do not have permission to edit this.');
+	}
+
+	protected function processSubmitNewVoucher($order)
+	{
+		if ($this->tabAccess['edit'] === '1')
+		{
+			if (!Tools::getValue('discount_name'))
+				$this->errors[] = Tools::displayError('You must specify a name in order to create a new discount.');
+			else
+			{
+				if ($order->hasInvoice())
+				{
+					// If the discount is for only one invoice
+					if (!Tools::isSubmit('discount_all_invoices'))
+					{
+						$order_invoice = new OrderInvoice(Tools::getValue('discount_invoice'));
+						if (!Validate::isLoadedObject($order_invoice))
+							throw new PrestaShopException('Can\'t load Order Invoice object');
+					}
+				}
+
+				$cart_rules = array();
+				$discount_value = (float)str_replace(',', '.', Tools::getValue('discount_value'));
+				switch (Tools::getValue('discount_type'))
+				{
+					// Percent type
+					case 1:
+						if ($discount_value < 100)
+						{
+							if (isset($order_invoice))
+							{
+								$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($order_invoice->total_paid_tax_incl * $discount_value / 100, 2);
+								$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($order_invoice->total_paid_tax_excl * $discount_value / 100, 2);
+
+								// Update OrderInvoice
+								$this->applyDiscountOnInvoice($order_invoice, $cart_rules[$order_invoice->id]['value_tax_incl'], $cart_rules[$order_invoice->id]['value_tax_excl']);
+							}
+							elseif ($order->hasInvoice())
+							{
+								$order_invoices_collection = $order->getInvoicesCollection();
+								foreach ($order_invoices_collection as $order_invoice)
+								{
+									/** @var OrderInvoice $order_invoice */
+									$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($order_invoice->total_paid_tax_incl * $discount_value / 100, 2);
+									$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($order_invoice->total_paid_tax_excl * $discount_value / 100, 2);
+
+									// Update OrderInvoice
+									$this->applyDiscountOnInvoice($order_invoice, $cart_rules[$order_invoice->id]['value_tax_incl'], $cart_rules[$order_invoice->id]['value_tax_excl']);
+								}
+							}
+							else
+							{
+								$cart_rules[0]['value_tax_incl'] = Tools::ps_round($order->total_paid_tax_incl * $discount_value / 100, 2);
+								$cart_rules[0]['value_tax_excl'] = Tools::ps_round($order->total_paid_tax_excl * $discount_value / 100, 2);
+							}
+						}
+						else
+							$this->errors[] = Tools::displayError('The discount value is invalid.');
+						break;
+					// Amount type
+					case 2:
+						if (isset($order_invoice))
+						{
+							if ($discount_value > $order_invoice->total_paid_tax_incl)
+								$this->errors[] = Tools::displayError('The discount value is greater than the order invoice total.');
+							else
+							{
+								$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($discount_value, 2);
+								$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($discount_value / (1 + ($order->getTaxesAverageUsed() / 100)), 2);
+
+								// Update OrderInvoice
+								$this->applyDiscountOnInvoice($order_invoice, $cart_rules[$order_invoice->id]['value_tax_incl'], $cart_rules[$order_invoice->id]['value_tax_excl']);
+							}
+						}
+						elseif ($order->hasInvoice())
+						{
+							$order_invoices_collection = $order->getInvoicesCollection();
+							foreach ($order_invoices_collection as $order_invoice)
+							{
+								/** @var OrderInvoice $order_invoice */
+								if ($discount_value > $order_invoice->total_paid_tax_incl)
+									$this->errors[] = Tools::displayError('The discount value is greater than the order invoice total.').$order_invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, (int)$order->id_shop).')';
+								else
+								{
+									$cart_rules[$order_invoice->id]['value_tax_incl'] = Tools::ps_round($discount_value, 2);
+									$cart_rules[$order_invoice->id]['value_tax_excl'] = Tools::ps_round($discount_value / (1 + ($order->getTaxesAverageUsed() / 100)), 2);
+
+									// Update OrderInvoice
+									$this->applyDiscountOnInvoice($order_invoice, $cart_rules[$order_invoice->id]['value_tax_incl'], $cart_rules[$order_invoice->id]['value_tax_excl']);
+								}
+							}
+						}
+						else
+						{
+							if ($discount_value > $order->total_paid_tax_incl)
+								$this->errors[] = Tools::displayError('The discount value is greater than the order total.');
+							else
+							{
+								$cart_rules[0]['value_tax_incl'] = Tools::ps_round($discount_value, 2);
+								$cart_rules[0]['value_tax_excl'] = Tools::ps_round($discount_value / (1 + ($order->getTaxesAverageUsed() / 100)), 2);
+							}
+						}
+						break;
+					// Free shipping type
+					case 3:
+						if (isset($order_invoice))
+						{
+							if ($order_invoice->total_shipping_tax_incl > 0)
+							{
+								$cart_rules[$order_invoice->id]['value_tax_incl'] = $order_invoice->total_shipping_tax_incl;
+								$cart_rules[$order_invoice->id]['value_tax_excl'] = $order_invoice->total_shipping_tax_excl;
+
+								// Update OrderInvoice
+								$this->applyDiscountOnInvoice($order_invoice, $cart_rules[$order_invoice->id]['value_tax_incl'], $cart_rules[$order_invoice->id]['value_tax_excl']);
+							}
+						}
+						elseif ($order->hasInvoice())
+						{
+							$order_invoices_collection = $order->getInvoicesCollection();
+							foreach ($order_invoices_collection as $order_invoice)
+							{
+								/** @var OrderInvoice $order_invoice */
+								if ($order_invoice->total_shipping_tax_incl <= 0)
+									continue;
+								$cart_rules[$order_invoice->id]['value_tax_incl'] = $order_invoice->total_shipping_tax_incl;
+								$cart_rules[$order_invoice->id]['value_tax_excl'] = $order_invoice->total_shipping_tax_excl;
+
+								// Update OrderInvoice
+								$this->applyDiscountOnInvoice($order_invoice, $cart_rules[$order_invoice->id]['value_tax_incl'], $cart_rules[$order_invoice->id]['value_tax_excl']);
+							}
+						}
+						else
+						{
+							$cart_rules[0]['value_tax_incl'] = $order->total_shipping_tax_incl;
+							$cart_rules[0]['value_tax_excl'] = $order->total_shipping_tax_excl;
+						}
+						break;
+					default:
+						$this->errors[] = Tools::displayError('The discount type is invalid.');
+				}
+
+				$res = true;
+				foreach ($cart_rules as &$cart_rule)
+				{
+					$cartRuleObj = new CartRule();
+					$cartRuleObj->date_from = date('Y-m-d H:i:s', strtotime('-1 hour', strtotime($order->date_add)));
+					$cartRuleObj->date_to = date('Y-m-d H:i:s', strtotime('+1 hour'));
+					$cartRuleObj->name[Configuration::get('PS_LANG_DEFAULT')] = Tools::getValue('discount_name');
+					$cartRuleObj->quantity = 0;
+					$cartRuleObj->quantity_per_user = 1;
+					if (Tools::getValue('discount_type') == 1)
+						$cartRuleObj->reduction_percent = $discount_value;
+					elseif (Tools::getValue('discount_type') == 2)
+						$cartRuleObj->reduction_amount = $cart_rule['value_tax_excl'];
+					elseif (Tools::getValue('discount_type') == 3)
+						$cartRuleObj->free_shipping = 1;
+					$cartRuleObj->active = 0;
+					if ($res = $cartRuleObj->add())
+						$cart_rule['id'] = $cartRuleObj->id;
+					else
+						break;
+				}
+
+				if ($res)
+				{
+					foreach ($cart_rules as $id_order_invoice => $cart_rule)
+					{
+						// Create OrderCartRule
+						$order_cart_rule = new OrderCartRule();
+						$order_cart_rule->id_order = $order->id;
+						$order_cart_rule->id_cart_rule = $cart_rule['id'];
+						$order_cart_rule->id_order_invoice = $id_order_invoice;
+						$order_cart_rule->name = Tools::getValue('discount_name');
+						$order_cart_rule->value = $cart_rule['value_tax_incl'];
+						$order_cart_rule->value_tax_excl = $cart_rule['value_tax_excl'];
+						$res &= $order_cart_rule->add();
+
+						$order->total_discounts += $order_cart_rule->value;
+						$order->total_discounts_tax_incl += $order_cart_rule->value;
+						$order->total_discounts_tax_excl += $order_cart_rule->value_tax_excl;
+						$order->total_paid -= $order_cart_rule->value;
+						$order->total_paid_tax_incl -= $order_cart_rule->value;
+						$order->total_paid_tax_excl -= $order_cart_rule->value_tax_excl;
+					}
+
+					// Update Order
+					$res &= $order->update();
+				}
+
+				if ($res)
+					Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
+				else
+					$this->errors[] = Tools::displayError('An error occurred during the OrderCartRule creation');
+			}
 		}
 		else
 			$this->errors[] = Tools::displayError('You do not have permission to edit this.');
