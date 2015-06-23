@@ -553,47 +553,7 @@ class AdminOrdersControllerCore extends AdminController
 		}
 		elseif (Tools::isSubmit('submitDeleteVoucher') && isset($order))
 		{
-			if ($this->tabAccess['edit'] === '1')
-			{
-				$order_cart_rule = new OrderCartRule(Tools::getValue('id_order_cart_rule'));
-				if (Validate::isLoadedObject($order_cart_rule) && $order_cart_rule->id_order == $order->id)
-				{
-					if ($order_cart_rule->id_order_invoice)
-					{
-						$order_invoice = new OrderInvoice($order_cart_rule->id_order_invoice);
-						if (!Validate::isLoadedObject($order_invoice))
-							throw new PrestaShopException('Can\'t load Order Invoice object');
-
-						// Update amounts of Order Invoice
-						$order_invoice->total_discount_tax_excl -= $order_cart_rule->value_tax_excl;
-						$order_invoice->total_discount_tax_incl -= $order_cart_rule->value;
-
-						$order_invoice->total_paid_tax_excl += $order_cart_rule->value_tax_excl;
-						$order_invoice->total_paid_tax_incl += $order_cart_rule->value;
-
-						// Update Order Invoice
-						$order_invoice->update();
-					}
-
-					// Update amounts of order
-					$order->total_discounts -= $order_cart_rule->value;
-					$order->total_discounts_tax_incl -= $order_cart_rule->value;
-					$order->total_discounts_tax_excl -= $order_cart_rule->value_tax_excl;
-
-					$order->total_paid += $order_cart_rule->value;
-					$order->total_paid_tax_incl += $order_cart_rule->value;
-					$order->total_paid_tax_excl += $order_cart_rule->value_tax_excl;
-
-					// Delete Order Cart Rule and update Order
-					$order_cart_rule->delete();
-					$order->update();
-					Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
-				}
-				else
-					$this->errors[] = Tools::displayError('You cannot edit this cart rule.');
-			}
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
+			$this->processSubmitDeleteVoucher($order);
 		}
 		elseif (Tools::isSubmit('submitNewVoucher') && isset($order))
 		{
@@ -1589,6 +1549,51 @@ class AdminOrdersControllerCore extends AdminController
 			$order->setInvoice(true);
 			Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
 		}
+	}
+
+	protected function processSubmitDeleteVoucher($order)
+	{
+		if ($this->tabAccess['edit'] === '1')
+		{
+			$order_cart_rule = new OrderCartRule(Tools::getValue('id_order_cart_rule'));
+			if (Validate::isLoadedObject($order_cart_rule) && $order_cart_rule->id_order == $order->id)
+			{
+				if ($order_cart_rule->id_order_invoice)
+				{
+					$order_invoice = new OrderInvoice($order_cart_rule->id_order_invoice);
+					if (!Validate::isLoadedObject($order_invoice))
+						throw new PrestaShopException('Can\'t load Order Invoice object');
+
+					// Update amounts of Order Invoice
+					$order_invoice->total_discount_tax_excl -= $order_cart_rule->value_tax_excl;
+					$order_invoice->total_discount_tax_incl -= $order_cart_rule->value;
+
+					$order_invoice->total_paid_tax_excl += $order_cart_rule->value_tax_excl;
+					$order_invoice->total_paid_tax_incl += $order_cart_rule->value;
+
+					// Update Order Invoice
+					$order_invoice->update();
+				}
+
+				// Update amounts of order
+				$order->total_discounts -= $order_cart_rule->value;
+				$order->total_discounts_tax_incl -= $order_cart_rule->value;
+				$order->total_discounts_tax_excl -= $order_cart_rule->value_tax_excl;
+
+				$order->total_paid += $order_cart_rule->value;
+				$order->total_paid_tax_incl += $order_cart_rule->value;
+				$order->total_paid_tax_excl += $order_cart_rule->value_tax_excl;
+
+				// Delete Order Cart Rule and update Order
+				$order_cart_rule->delete();
+				$order->update();
+				Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
+			}
+			else
+				$this->errors[] = Tools::displayError('You cannot edit this cart rule.');
+		}
+		else
+			$this->errors[] = Tools::displayError('You do not have permission to edit this.');
 	}
 
 	public function renderKpis()
