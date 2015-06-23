@@ -43,7 +43,7 @@ function customization_field_multishop_lang()
 		$customization_lang = array(
 			'id_customization_field' => $value['id_customization_field'],
 			'id_lang' => $value['id_lang'],
-			'name' => $value['name']
+			'name' => pSQL($value['name'])
 			);
 		foreach ($shops as $shop)
 		{
