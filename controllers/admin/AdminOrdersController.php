@@ -541,24 +541,7 @@ class AdminOrdersControllerCore extends AdminController
 		}
 		elseif ((Tools::isSubmit('submitAddressShipping') || Tools::isSubmit('submitAddressInvoice')) && isset($order))
 		{
-			if ($this->tabAccess['edit'] === '1')
-			{
-				$address = new Address(Tools::getValue('id_address'));
-				if (Validate::isLoadedObject($address))
-				{
-					// Update the address on order
-					if (Tools::isSubmit('submitAddressShipping'))
-						$order->id_address_delivery = $address->id;
-					elseif (Tools::isSubmit('submitAddressInvoice'))
-						$order->id_address_invoice = $address->id;
-					$order->update();
-					Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
-				}
-				else
-					$this->errors[] = Tools::displayError('This address can\'t be loaded');
-			}
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
+			$this->processSubmitAddressShipping($order);
 		}
 		elseif (Tools::isSubmit('submitChangeCurrency') && isset($order))
 		{
@@ -1571,6 +1554,28 @@ class AdminOrdersControllerCore extends AdminController
 				else
 					Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
 			}
+		}
+		else
+			$this->errors[] = Tools::displayError('You do not have permission to edit this.');
+	}
+
+	protected function processSubmitAddressShipping($order)
+	{
+		if ($this->tabAccess['edit'] === '1')
+		{
+			$address = new Address(Tools::getValue('id_address'));
+			if (Validate::isLoadedObject($address))
+			{
+				// Update the address on order
+				if (Tools::isSubmit('submitAddressShipping'))
+					$order->id_address_delivery = $address->id;
+				elseif (Tools::isSubmit('submitAddressInvoice'))
+					$order->id_address_invoice = $address->id;
+				$order->update();
+				Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
+			}
+			else
+				$this->errors[] = Tools::displayError('This address can\'t be loaded');
 		}
 		else
 			$this->errors[] = Tools::displayError('You do not have permission to edit this.');
