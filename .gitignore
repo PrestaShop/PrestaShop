@@ -26,6 +26,7 @@ admin-dev/autoupgrade/*
 admin-dev/backups/*
 
 themes/*/cache/*
+admin-dev/themes/*/cache/*
 
 # Config
 

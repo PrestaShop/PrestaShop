@@ -1762,32 +1762,25 @@ class AdminControllerCore extends Controller
 		$is_multishop = Shop::isFeatureActive();
 
 		// Quick access
-		if ((int)$this->context->employee->id)
-		{
+		if ((int)$this->context->employee->id) {
 			$quick_access = QuickAccess::getQuickAccesses($this->context->language->id);
-			foreach ($quick_access as $index => $quick)
-			{
-				if ($quick['link'] == '../' && Shop::getContext() == Shop::CONTEXT_SHOP)
-				{
+			foreach ($quick_access as $index => $quick) {
+				if ($quick['link'] == '../' && Shop::getContext() == Shop::CONTEXT_SHOP) {
 					$url = $this->context->shop->getBaseURL();
-					if (!$url)
-					{
+					if (!$url) {
 						unset($quick_access[$index]);
 						continue;
 					}
 					$quick_access[$index]['link'] = $url;
-				}
-				else
-				{
+				} else {
 					preg_match('/controller=(.+)(&.+)?$/', $quick['link'], $admin_tab);
-					if (isset($admin_tab[1]))
-					{
+					if (isset($admin_tab[1])) {
 						if (strpos($admin_tab[1], '&'))
 							$admin_tab[1] = substr($admin_tab[1], 0, strpos($admin_tab[1], '&'));
 
-						$token = Tools::getAdminToken($admin_tab[1].(int)Tab::getIdFromClassName($admin_tab[1]).(int)$this->context->employee->id);
+						$token = Tools::getAdminToken($admin_tab[1] . (int)Tab::getIdFromClassName($admin_tab[1]) . (int)$this->context->employee->id);
 						$quick_access[$index]['target'] = $admin_tab[1];
-						$quick_access[$index]['link'] .= '&token='.$token;
+						$quick_access[$index]['link'] .= '&token=' . $token;
 					}
 				}
 			}
@@ -1796,83 +1789,72 @@ class AdminControllerCore extends Controller
 		// Tab list
 		$tabs = Tab::getTabs($this->context->language->id, 0);
 		$current_id = Tab::getCurrentParentId();
-		foreach ($tabs as $index => $tab)
-		{
+		foreach ($tabs as $index => $tab) {
 			if (!Tab::checkTabRights($tab['id_tab'])
 				|| ($tab['class_name'] == 'AdminStock' && Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') == 0)
-				|| $tab['class_name'] == 'AdminCarrierWizard')
-			{
+				|| $tab['class_name'] == 'AdminCarrierWizard'
+			) {
 				unset($tabs[$index]);
 				continue;
 			}
 
-			$img_cache_url = 'themes/'.$this->context->employee->bo_theme.'/img/t/'.$tab['class_name'].'.png';
-			$img_exists_cache = Tools::file_exists_cache(_PS_ADMIN_DIR_.$img_cache_url);
+			$img_cache_url = 'themes/' . $this->context->employee->bo_theme . '/img/t/' . $tab['class_name'] . '.png';
+			$img_exists_cache = Tools::file_exists_cache(_PS_ADMIN_DIR_ . $img_cache_url);
 			// retrocompatibility : change png to gif if icon not exists
 			if (!$img_exists_cache)
-				$img_exists_cache = Tools::file_exists_cache(_PS_ADMIN_DIR_.str_replace('.png', '.gif', $img_cache_url));
+				$img_exists_cache = Tools::file_exists_cache(_PS_ADMIN_DIR_ . str_replace('.png', '.gif', $img_cache_url));
 
 			if ($img_exists_cache)
 				$path_img = $img = $img_exists_cache;
-			else
-			{
-				$path_img = _PS_IMG_DIR_.'t/'.$tab['class_name'].'.png';
+			else {
+				$path_img = _PS_IMG_DIR_ . 't/' . $tab['class_name'] . '.png';
 				// Relative link will always work, whatever the base uri set in the admin
-				$img = '../img/t/'.$tab['class_name'].'.png';
+				$img = '../img/t/' . $tab['class_name'] . '.png';
 			}
 
-			if (trim($tab['module']) != '')
-			{
-				$path_img = _PS_MODULE_DIR_.$tab['module'].'/'.$tab['class_name'].'.png';
+			if (trim($tab['module']) != '') {
+				$path_img = _PS_MODULE_DIR_ . $tab['module'] . '/' . $tab['class_name'] . '.png';
 				// Relative link will always work, whatever the base uri set in the admin
-				$img = '../modules/'.$tab['module'].'/'.$tab['class_name'].'.png';
+				$img = '../modules/' . $tab['module'] . '/' . $tab['class_name'] . '.png';
 			}
 
 			// retrocompatibility
 			if (!file_exists($path_img))
 				$img = str_replace('png', 'gif', $img);
 			// tab[class_name] does not contains the "Controller" suffix
-			$tabs[$index]['current'] = ($tab['class_name'].'Controller' == get_class($this)) || ($current_id == $tab['id_tab']);
+			$tabs[$index]['current'] = ($tab['class_name'] . 'Controller' == get_class($this)) || ($current_id == $tab['id_tab']);
 			$tabs[$index]['img'] = $img;
 			$tabs[$index]['href'] = $this->context->link->getAdminLink($tab['class_name']);
 
 			$sub_tabs = Tab::getTabs($this->context->language->id, $tab['id_tab']);
-			foreach ($sub_tabs as $index2 => $sub_tab)
-			{
+			foreach ($sub_tabs as $index2 => $sub_tab) {
 				//check if module is enable and
-				if (isset($sub_tab['module']) && !empty($sub_tab['module']))
-				{
+				if (isset($sub_tab['module']) && !empty($sub_tab['module'])) {
 					$module = Module::getInstanceByName($sub_tab['module']);
-					if (is_object($module) && !$module->isEnabledForShopContext())
-					{
+					if (is_object($module) && !$module->isEnabledForShopContext()) {
 						unset($sub_tabs[$index2]);
 						continue;
 					}
 				}
 
 				// class_name is the name of the class controller
-				if (Tab::checkTabRights($sub_tab['id_tab']) === true && (bool)$sub_tab['active'] && $sub_tab['class_name'] != 'AdminCarrierWizard')
-				{
+				if (Tab::checkTabRights($sub_tab['id_tab']) === true && (bool)$sub_tab['active'] && $sub_tab['class_name'] != 'AdminCarrierWizard') {
 					$sub_tabs[$index2]['href'] = $this->context->link->getAdminLink($sub_tab['class_name']);
-					$sub_tabs[$index2]['current'] = ($sub_tab['class_name'].'Controller' == get_class($this) || $sub_tab['class_name'] == Tools::getValue('controller'));
-				}
-				elseif ($sub_tab['class_name'] == 'AdminCarrierWizard' && $sub_tab['class_name'].'Controller' == get_class($this))
-				{
+					$sub_tabs[$index2]['current'] = ($sub_tab['class_name'] . 'Controller' == get_class($this) || $sub_tab['class_name'] == Tools::getValue('controller'));
+				} elseif ($sub_tab['class_name'] == 'AdminCarrierWizard' && $sub_tab['class_name'] . 'Controller' == get_class($this)) {
 					foreach ($sub_tabs as $i => $tab)
 						if ($tab['class_name'] == 'AdminCarriers')
 							break;
 
 					$sub_tabs[$i]['current'] = true;
 					unset($sub_tabs[$index2]);
-				}
-				else
+				} else
 					unset($sub_tabs[$index2]);
 			}
 			$tabs[$index]['sub_tabs'] = array_values($sub_tabs);
 		}
 
-		if (Validate::isLoadedObject($this->context->employee))
-		{
+		if (Validate::isLoadedObject($this->context->employee)) {
 			$accesses = Profile::getProfileAccesses($this->context->employee->id_profile, 'class_name');
 			$helperShop = new HelperShop();
 			/* Hooks are voluntary out the initialize array (need those variables already assigned) */
@@ -1901,8 +1883,7 @@ class AdminControllerCore extends Controller
 				'default_tab_link' => $this->context->link->getAdminLink(Tab::getClassNameById((int)Context::getContext()->employee->default_tab)),
 				'collapse_menu' => isset($this->context->cookie->collapse_menu) ? (int)$this->context->cookie->collapse_menu : 0,
 			));
-		}
-		else
+		} else
 			$this->context->smarty->assign('default_tab_link', $this->context->link->getAdminLink('AdminDashboard'));
 
 		// Shop::initialize() in config.php may empty $this->context->shop->virtual_uri so using a new shop instance for getBaseUrl()
@@ -1923,7 +1904,7 @@ class AdminControllerCore extends Controller
 			'tab' => isset($tab) ? $tab : null, // Deprecated, this tab is declared in the foreach, so it's the last tab in the foreach
 			'current_parent_id' => (int)Tab::getCurrentParentId(),
 			'tabs' => $tabs,
-			'install_dir_exists' => file_exists(_PS_ADMIN_DIR_.'/../install'),
+			'install_dir_exists' => file_exists(_PS_ADMIN_DIR_ . '/../install'),
 			'pic_dir' => _THEME_PROD_PIC_DIR_,
 			'controller_name' => htmlentities(Tools::getValue('controller')),
 			'currentIndex' => self::$currentIndex,
@@ -1933,15 +1914,22 @@ class AdminControllerCore extends Controller
 		));
 
 		$module = Module::getInstanceByName('themeconfigurator');
-		if (is_object($module) && $module->active && (int)Configuration::get('PS_TC_ACTIVE') == 1 && $this->context->shop->getBaseURL())
-		{
+		if (is_object($module) && $module->active && (int)Configuration::get('PS_TC_ACTIVE') == 1 && $this->context->shop->getBaseURL()) {
 			$request =
-			'live_configurator_token='.$module->getLiveConfiguratorToken()
-			.'&id_employee='.(int)$this->context->employee->id
-			.'&id_shop='.(int)$this->context->shop->id
-			.(Configuration::get('PS_TC_THEME') != '' ? '&theme='.Configuration::get('PS_TC_THEME') : '')
-			.(Configuration::get('PS_TC_FONT') != '' ? '&theme_font='.Configuration::get('PS_TC_FONT') : '');
+				'live_configurator_token=' . $module->getLiveConfiguratorToken()
+				. '&id_employee=' . (int)$this->context->employee->id
+				. '&id_shop=' . (int)$this->context->shop->id
+				. (Configuration::get('PS_TC_THEME') != '' ? '&theme=' . Configuration::get('PS_TC_THEME') : '')
+				. (Configuration::get('PS_TC_FONT') != '' ? '&theme_font=' . Configuration::get('PS_TC_FONT') : '');
 			$this->context->smarty->assign('base_url_tc', $this->context->link->getPageLink('index', null, $id_lang = null, $request));
+		}
+
+		//In production mode OR user browser is IE <= 9, compile css
+		if (preg_match('/(?i)msie [1-9]/',$_SERVER['HTTP_USER_AGENT']) || !defined('_PS_MODE_DEV_') || (defined('_PS_MODE_DEV_') && !_PS_MODE_DEV_)) {
+			$this->css_files = Media::cccCss($this->css_files, _PS_CACHE_DIR_.'admin'.DIRECTORY_SEPARATOR.'css'.DIRECTORY_SEPARATOR);
+			$this->context->smarty->assign(array(
+				'css_files' => $this->css_files
+			));
 		}
 	}
 
@@ -2528,6 +2516,7 @@ class AdminControllerCore extends Controller
 	{
 		//Bootstrap
 		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/'.$this->bo_css, 'all', 0);
+		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/overrides.css', 'all', PHP_INT_MAX);
 
 		$this->addJquery();
 		$this->addjQueryPlugin(array('scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox' ));
@@ -2567,9 +2556,6 @@ class AdminControllerCore extends Controller
 
 		// Execute Hook AdminController SetMedia
 		Hook::exec('actionAdminControllerSetMedia');
-
-		// Specific Admin Theme
-		$this->addCSS(__PS_BASE_URI__.$this->admin_webpath.'/themes/'.$this->bo_theme.'/css/overrides.css', 'all', PHP_INT_MAX);
 	}
 
 	/**
