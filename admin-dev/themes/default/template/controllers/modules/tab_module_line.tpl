@@ -62,7 +62,7 @@
 			<p>
 				<a href="{$module->addons_buy_url|replace:' ':'+'|escape:'html':'UTF-8'}" class="button updated _blank">
 					<span class="btn btn-default">
-						<i class="icon-shopping-cart"></i>{if isset($module->price) && isset($module->id_currency)} &nbsp;&nbsp;{displayPrice price=$module->price currency=$module->id_currency}{/if}
+						<i class="icon-shopping-cart"></i>{if $module->price|floatval == 0}{l s='Free'}{elseif isset($module->price) && isset($module->id_currency)} &nbsp;&nbsp;{displayPrice price=$module->price currency=$module->id_currency}{/if}
 					</span>
 				</a>
 			</p>
