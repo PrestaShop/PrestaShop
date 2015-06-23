@@ -266,11 +266,17 @@ class AdminModulesControllerCore extends AdminController
 		$back = Tools::getValue('back_tab_modules_list');
 		if ($back)
 			$back .= '&tab_modules_open=1';
-		$modules_list = array('installed' =>array(), 'not_installed' => array());
 		if ($tab_modules_list)
 		{
 			$tab_modules_list = explode(',', $tab_modules_list);
-			$modules_list_unsort = $this->getModulesByInstallation($tab_modules_list);
+			if ($admin_list_from_source = Tools::getValue('admin_list_from_source'))
+			{
+				$modules_list_unsort = $this->getModulesByInstallation($tab_modules_list, $admin_list_from_source);
+			}
+			else
+			{
+				$modules_list_unsort = $this->getModulesByInstallation($tab_modules_list);
+			}
 		}
 
 		$installed = $uninstalled = array();
@@ -781,7 +787,7 @@ class AdminModulesControllerCore extends AdminController
 							elseif (!is_null($attr['id']))
 							{
 								$download_ok = false;
-								if ($attr['need_loggedOnAddons'] == 0 && file_put_contents(_PS_MODULE_DIR_.$name.'.zip', Tools::addonsRequest('module', array('id_module' => pSQL($attr['id'])))))
+								if ($attr['need_loggedOnAddons'] == 0 && file_put_contents(_PS_MODULE_DIR_.$name.'.zip', Tools::addonsRequest('module', array('id_module' => pSQL($attr['id']), 'source' => Tools::getValue('source')))))
 									$download_ok = true;
 								elseif ($attr['need_loggedOnAddons'] == 1 && $this->logged_on_addons && file_put_contents(_PS_MODULE_DIR_.$name.'.zip', Tools::addonsRequest('module', array('id_module' => pSQL($attr['id']), 'username_addons' => pSQL(trim($this->context->cookie->username_addons)), 'password_addons' => pSQL(trim($this->context->cookie->password_addons))))))
 									$download_ok = true;
@@ -1024,7 +1030,7 @@ class AdminModulesControllerCore extends AdminController
 		}
 	}
 
-	protected function getModulesByInstallation($tab_modules_list = null)
+	protected function getModulesByInstallation($tab_modules_list = null, $install_source_tracking = false)
 	{
 		$all_modules = Module::getModulesOnDisk(true, $this->logged_on_addons, $this->id_employee);
 		$all_unik_modules = array();
@@ -1056,7 +1062,7 @@ class AdminModulesControllerCore extends AdminController
 
 				if ($perm)
 				{
-					$this->fillModuleData($module, 'array');
+					$this->fillModuleData($module, 'array', null, $install_source_tracking);
 					if ($module->id)
 						$modules_list['installed'][] = $module;
 					else
@@ -1504,7 +1510,7 @@ class AdminModulesControllerCore extends AdminController
 				if (isset($modules_preferences[$modules[$km]->name]))
 					$modules[$km]->preferences = $modules_preferences[$modules[$km]->name];
 
-				$this->fillModuleData($module, 'array');
+				$this->fillModuleData($module, 'array', null, 'back-office,AdminModules,index');
 				$module->categoryName = (isset($this->list_modules_categories[$module->tab]['name']) ? $this->list_modules_categories[$module->tab]['name'] : $this->list_modules_categories['others']['name']);
 			}
 			unset($object);
