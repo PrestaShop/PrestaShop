@@ -305,6 +305,8 @@ class AdminModulesControllerCore extends AdminController
 			'tab_modules_list' => $modules_list_sort,
 			'admin_module_favorites_view' => $this->context->link->getAdminLink('AdminModules').'&select=favorites',
 		));
+		if ($admin_list_from_source = Tools::getValue('admin_list_from_source'))
+			$this->context->smarty->assign('admin_list_from_source', $admin_list_from_source);
 
 		$this->smartyOutputContent('controllers/modules/tab_modules_list.tpl');
 		exit;
