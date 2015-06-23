@@ -545,99 +545,7 @@ class AdminOrdersControllerCore extends AdminController
 		}
 		elseif (Tools::isSubmit('submitChangeCurrency') && isset($order))
 		{
-			if ($this->tabAccess['edit'] === '1')
-			{
-				if (Tools::getValue('new_currency') != $order->id_currency && !$order->valid)
-				{
-					$old_currency = new Currency($order->id_currency);
-					$currency = new Currency(Tools::getValue('new_currency'));
-					if (!Validate::isLoadedObject($currency))
-						throw new PrestaShopException('Can\'t load Currency object');
-
-					// Update order detail amount
-					foreach ($order->getOrderDetailList() as $row)
-					{
-						$order_detail = new OrderDetail($row['id_order_detail']);
-						$fields = array(
-							'ecotax',
-							'product_price',
-							'reduction_amount',
-							'total_shipping_price_tax_excl',
-							'total_shipping_price_tax_incl',
-							'total_price_tax_incl',
-							'total_price_tax_excl',
-							'product_quantity_discount',
-							'purchase_supplier_price',
-							'reduction_amount',
-							'reduction_amount_tax_incl',
-							'reduction_amount_tax_excl',
-							'unit_price_tax_incl',
-							'unit_price_tax_excl',
-							'original_product_price'
-
-						);
-						foreach ($fields as $field)
-							$order_detail->{$field} = Tools::convertPriceFull($order_detail->{$field}, $old_currency, $currency);
-
-						$order_detail->update();
-						$order_detail->updateTaxAmount($order);
-					}
-
-					$id_order_carrier = (int)$order->getIdOrderCarrier();
-					if ($id_order_carrier)
-					{
-						$order_carrier = $order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
-						$order_carrier->shipping_cost_tax_excl = (float)Tools::convertPriceFull($order_carrier->shipping_cost_tax_excl, $old_currency, $currency);
-						$order_carrier->shipping_cost_tax_incl = (float)Tools::convertPriceFull($order_carrier->shipping_cost_tax_incl, $old_currency, $currency);
-						$order_carrier->update();
-					}
-
-					// Update order && order_invoice amount
-					$fields = array(
-						'total_discounts',
-						'total_discounts_tax_incl',
-						'total_discounts_tax_excl',
-						'total_discount_tax_excl',
-						'total_discount_tax_incl',
-						'total_paid',
-						'total_paid_tax_incl',
-						'total_paid_tax_excl',
-						'total_paid_real',
-						'total_products',
-						'total_products_wt',
-						'total_shipping',
-						'total_shipping_tax_incl',
-						'total_shipping_tax_excl',
-						'total_wrapping',
-						'total_wrapping_tax_incl',
-						'total_wrapping_tax_excl',
-					);
-
-					$invoices = $order->getInvoicesCollection();
-					if ($invoices)
-						foreach ($invoices as $invoice)
-						{
-							foreach ($fields as $field)
-								if (isset($invoice->$field))
-									$invoice->{$field} = Tools::convertPriceFull($invoice->{$field}, $old_currency, $currency);
-							$invoice->save();
-						}
-
-					foreach ($fields as $field)
-						if (isset($order->$field))
-							$order->{$field} = Tools::convertPriceFull($order->{$field}, $old_currency, $currency);
-
-					// Update currency in order
-					$order->id_currency = $currency->id;
-					// Update exchange rate
-					$order->conversion_rate = (float)$currency->conversion_rate;
-					$order->update();
-				}
-				else
-					$this->errors[] = Tools::displayError('You cannot change the currency.');
-			}
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
+			$this->processSubmitChangeCurrency($order);
 		}
 		elseif (Tools::isSubmit('submitGenerateInvoice') && isset($order))
 		{
@@ -1576,6 +1484,103 @@ class AdminOrdersControllerCore extends AdminController
 			}
 			else
 				$this->errors[] = Tools::displayError('This address can\'t be loaded');
+		}
+		else
+			$this->errors[] = Tools::displayError('You do not have permission to edit this.');
+	}
+
+	protected function processSubmitChangeCurrency($order)
+	{
+		if ($this->tabAccess['edit'] === '1')
+		{
+			if (Tools::getValue('new_currency') != $order->id_currency && !$order->valid)
+			{
+				$old_currency = new Currency($order->id_currency);
+				$currency = new Currency(Tools::getValue('new_currency'));
+				if (!Validate::isLoadedObject($currency))
+					throw new PrestaShopException('Can\'t load Currency object');
+
+				// Update order detail amount
+				foreach ($order->getOrderDetailList() as $row)
+				{
+					$order_detail = new OrderDetail($row['id_order_detail']);
+					$fields = array(
+						'ecotax',
+						'product_price',
+						'reduction_amount',
+						'total_shipping_price_tax_excl',
+						'total_shipping_price_tax_incl',
+						'total_price_tax_incl',
+						'total_price_tax_excl',
+						'product_quantity_discount',
+						'purchase_supplier_price',
+						'reduction_amount',
+						'reduction_amount_tax_incl',
+						'reduction_amount_tax_excl',
+						'unit_price_tax_incl',
+						'unit_price_tax_excl',
+						'original_product_price'
+
+					);
+					foreach ($fields as $field)
+						$order_detail->{$field} = Tools::convertPriceFull($order_detail->{$field}, $old_currency, $currency);
+
+					$order_detail->update();
+					$order_detail->updateTaxAmount($order);
+				}
+
+				$id_order_carrier = (int)$order->getIdOrderCarrier();
+				if ($id_order_carrier)
+				{
+					$order_carrier = $order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
+					$order_carrier->shipping_cost_tax_excl = (float)Tools::convertPriceFull($order_carrier->shipping_cost_tax_excl, $old_currency, $currency);
+					$order_carrier->shipping_cost_tax_incl = (float)Tools::convertPriceFull($order_carrier->shipping_cost_tax_incl, $old_currency, $currency);
+					$order_carrier->update();
+				}
+
+				// Update order && order_invoice amount
+				$fields = array(
+					'total_discounts',
+					'total_discounts_tax_incl',
+					'total_discounts_tax_excl',
+					'total_discount_tax_excl',
+					'total_discount_tax_incl',
+					'total_paid',
+					'total_paid_tax_incl',
+					'total_paid_tax_excl',
+					'total_paid_real',
+					'total_products',
+					'total_products_wt',
+					'total_shipping',
+					'total_shipping_tax_incl',
+					'total_shipping_tax_excl',
+					'total_wrapping',
+					'total_wrapping_tax_incl',
+					'total_wrapping_tax_excl',
+				);
+
+				$invoices = $order->getInvoicesCollection();
+				if ($invoices)
+					foreach ($invoices as $invoice)
+					{
+						foreach ($fields as $field)
+							if (isset($invoice->$field))
+								$invoice->{$field} = Tools::convertPriceFull($invoice->{$field}, $old_currency, $currency);
+						$invoice->save();
+					}
+
+				foreach ($fields as $field)
+					if (isset($order->$field))
+						$order->{$field} = Tools::convertPriceFull($order->{$field}, $old_currency, $currency);
+
+				// Update currency in order
+				$order->id_currency = $currency->id;
+				// Update exchange rate
+				$order->conversion_rate = (float)$currency->conversion_rate;
+				$order->update();
+			}
+			else
+				$this->errors[] = Tools::displayError('You cannot change the currency.');
 		}
 		else
 			$this->errors[] = Tools::displayError('You do not have permission to edit this.');
