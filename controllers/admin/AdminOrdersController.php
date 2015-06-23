@@ -472,249 +472,7 @@ class AdminOrdersControllerCore extends AdminController
 		/* Cancel product from order */
 		elseif (Tools::isSubmit('cancelProduct') && isset($order))
 		{
-		 	if ($this->tabAccess['delete'] === '1')
-			{
-				if (!Tools::isSubmit('id_order_detail') && !Tools::isSubmit('id_customization'))
-					$this->errors[] = Tools::displayError('You must select a product.');
-				elseif (!Tools::isSubmit('cancelQuantity') && !Tools::isSubmit('cancelCustomizationQuantity'))
-					$this->errors[] = Tools::displayError('You must enter a quantity.');
-				else
-				{
-					$productList = Tools::getValue('id_order_detail');
-					if ($productList)
-						$productList = array_map('intval', $productList);
-
-					$customizationList = Tools::getValue('id_customization');
-					if ($customizationList)
-						$customizationList = array_map('intval', $customizationList);
-
-					$qtyList = Tools::getValue('cancelQuantity');
-					if ($qtyList)
-						$qtyList = array_map('intval', $qtyList);
-
-					$customizationQtyList = Tools::getValue('cancelCustomizationQuantity');
-					if ($customizationQtyList)
-						$customizationQtyList = array_map('intval', $customizationQtyList);
-
-					$full_product_list = $productList;
-					$full_quantity_list = $qtyList;
-
-					if ($customizationList)
-						foreach ($customizationList as $key => $id_order_detail)
-						{
-							$full_product_list[(int)$id_order_detail] = $id_order_detail;
-							if (isset($customizationQtyList[$key]))
-								$full_quantity_list[(int)$id_order_detail] += $customizationQtyList[$key];
-						}
-
-					if ($productList || $customizationList)
-					{
-						if ($productList)
-						{
-							$id_cart = Cart::getCartIdByOrderId($order->id);
-							$customization_quantities = Customization::countQuantityByCart($id_cart);
-
-							foreach ($productList as $key => $id_order_detail)
-							{
-								$qtyCancelProduct = abs($qtyList[$key]);
-								if (!$qtyCancelProduct)
-									$this->errors[] = Tools::displayError('No quantity has been selected for this product.');
-
-								$order_detail = new OrderDetail($id_order_detail);
-								$customization_quantity = 0;
-								if (array_key_exists($order_detail->product_id, $customization_quantities) && array_key_exists($order_detail->product_attribute_id, $customization_quantities[$order_detail->product_id]))
-									$customization_quantity = (int)$customization_quantities[$order_detail->product_id][$order_detail->product_attribute_id];
-
-								if (($order_detail->product_quantity - $customization_quantity - $order_detail->product_quantity_refunded - $order_detail->product_quantity_return) < $qtyCancelProduct)
-									$this->errors[] = Tools::displayError('An invalid quantity was selected for this product.');
-
-							}
-						}
-						if ($customizationList)
-						{
-							$customization_quantities = Customization::retrieveQuantitiesFromIds(array_keys($customizationList));
-
-							foreach ($customizationList as $id_customization => $id_order_detail)
-							{
-								$qtyCancelProduct = abs($customizationQtyList[$id_customization]);
-								$customization_quantity = $customization_quantities[$id_customization];
-
-								if (!$qtyCancelProduct)
-									$this->errors[] = Tools::displayError('No quantity has been selected for this product.');
-
-								if ($qtyCancelProduct > ($customization_quantity['quantity'] - ($customization_quantity['quantity_refunded'] + $customization_quantity['quantity_returned'])))
-									$this->errors[] = Tools::displayError('An invalid quantity was selected for this product.');
-							}
-						}
-
-						if (!count($this->errors) && $productList)
-							foreach ($productList as $key => $id_order_detail)
-							{
-								$qty_cancel_product = abs($qtyList[$key]);
-								$order_detail = new OrderDetail((int)($id_order_detail));
-
-								if (!$order->hasBeenDelivered() || ($order->hasBeenDelivered() && Tools::isSubmit('reinjectQuantities')) && $qty_cancel_product > 0)
-									$this->reinjectQuantity($order_detail, $qty_cancel_product);
-
-								// Delete product
-								$order_detail = new OrderDetail((int)$id_order_detail);
-								if (!$order->deleteProduct($order, $order_detail, $qty_cancel_product))
-									$this->errors[] = Tools::displayError('An error occurred while attempting to delete the product.').' <span class="bold">'.$order_detail->product_name.'</span>';
-								// Update weight SUM
-								$order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
-								if (Validate::isLoadedObject($order_carrier))
-								{
-									$order_carrier->weight = (float)$order->getTotalWeight();
-									if ($order_carrier->update())
-										$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);
-								}
-
-								if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && StockAvailable::dependsOnStock($order_detail->product_id))
-									StockAvailable::synchronize($order_detail->product_id);
-								Hook::exec('actionProductCancel', array('order' => $order, 'id_order_detail' => (int)$id_order_detail), null, false, true, false, $order->id_shop);
-							}
-						if (!count($this->errors) && $customizationList)
-							foreach ($customizationList as $id_customization => $id_order_detail)
-							{
-								$order_detail = new OrderDetail((int)($id_order_detail));
-								$qtyCancelProduct = abs($customizationQtyList[$id_customization]);
-								if (!$order->deleteCustomization($id_customization, $qtyCancelProduct, $order_detail))
-									$this->errors[] = Tools::displayError('An error occurred while attempting to delete product customization.').' '.$id_customization;
-							}
-						// E-mail params
-						if ((Tools::isSubmit('generateCreditSlip') || Tools::isSubmit('generateDiscount')) && !count($this->errors))
-						{
-							$customer = new Customer((int)($order->id_customer));
-							$params['{lastname}'] = $customer->lastname;
-							$params['{firstname}'] = $customer->firstname;
-							$params['{id_order}'] = $order->id;
-							$params['{order_name}'] = $order->getUniqReference();
-						}
-
-						// Generate credit slip
-						if (Tools::isSubmit('generateCreditSlip') && !count($this->errors))
-						{
-							$product_list = array();
-							$amount = $order_detail->unit_price_tax_incl * $full_quantity_list[$id_order_detail];
-
-							$choosen = false;
-							if ((int)Tools::getValue('refund_total_voucher_off') == 1)
-								$amount -= $voucher = (float)Tools::getValue('order_discount_price');
-							elseif ((int)Tools::getValue('refund_total_voucher_off') == 2)
-							{
-								$choosen = true;
-								$amount = $voucher = (float)Tools::getValue('refund_total_voucher_choose');
-							}
-							foreach ($full_product_list as $id_order_detail)
-							{
-								$order_detail = new OrderDetail((int)$id_order_detail);
-								$product_list[$id_order_detail] = array(
-									'id_order_detail' => $id_order_detail,
-									'quantity' => $full_quantity_list[$id_order_detail],
-									'unit_price' => $order_detail->unit_price_tax_excl,
-									'amount' => isset($amount) ? $amount : $order_detail->unit_price_tax_incl * $full_quantity_list[$id_order_detail],
-								);
-							}
-
-							$shipping = Tools::isSubmit('shippingBack') ? null : false;
-
-							if (!OrderSlip::create($order, $product_list, $shipping, $voucher, $choosen))
-								$this->errors[] = Tools::displayError('A credit slip cannot be generated. ');
-							else
-							{
-								Hook::exec('actionOrderSlipAdd', array('order' => $order, 'productList' => $full_product_list, 'qtyList' => $full_quantity_list), null, false, true, false, $order->id_shop);
-								@Mail::Send(
-									(int)$order->id_lang,
-									'credit_slip',
-									Mail::l('New credit slip regarding your order', (int)$order->id_lang),
-									$params,
-									$customer->email,
-									$customer->firstname.' '.$customer->lastname,
-									null,
-									null,
-									null,
-									null,
-									_PS_MAIL_DIR_,
-									true,
-									(int)$order->id_shop
-								);
-							}
-						}
-
-						// Generate voucher
-						if (Tools::isSubmit('generateDiscount') && !count($this->errors))
-						{
-							$cartrule = new CartRule();
-							$language_ids = Language::getIDs((bool)$order);
-							$cartrule->description = sprintf($this->l('Credit card slip for order #%d'), $order->id);
-							foreach ($language_ids as $id_lang)
-							{
-								// Define a temporary name
-								$cartrule->name[$id_lang] = 'V0C'.(int)($order->id_customer).'O'.(int)($order->id);
-							}
-							// Define a temporary code
-							$cartrule->code = 'V0C'.(int)($order->id_customer).'O'.(int)($order->id);
-
-							$cartrule->quantity = 1;
-							$cartrule->quantity_per_user = 1;
-							// Specific to the customer
-							$cartrule->id_customer = $order->id_customer;
-							$now = time();
-							$cartrule->date_from = date('Y-m-d H:i:s', $now);
-							$cartrule->date_to = date('Y-m-d H:i:s', $now + (3600 * 24 * 365.25)); /* 1 year */
-							$cartrule->active = 1;
-
-							$products = $order->getProducts(false, $full_product_list, $full_quantity_list);
-
-							$total = 0;
-							foreach ($products as $product)
-								$total += $product['unit_price_tax_incl'] * $product['product_quantity'];
-
-							if (Tools::isSubmit('shippingBack'))
-								$total += $order->total_shipping;
-
-							if ((int)Tools::getValue('refund_total_voucher_off') == 1)
-								$total -= (float)Tools::getValue('order_discount_price');
-							elseif ((int)Tools::getValue('refund_total_voucher_off') == 2)
-								$total = (float)Tools::getValue('refund_total_voucher_choose');
-
-							$cartrule->reduction_amount = $total;
-							$cartrule->reduction_tax = true;
-							$cartrule->minimum_amount_currency = $order->id_currency;
-							$cartrule->reduction_currency = $order->id_currency;
-
-							if (!$cartrule->add())
-								$this->errors[] = Tools::displayError('You cannot generate a voucher.');
-							else
-							{
-								// Update the voucher code and name
-								foreach ($language_ids as $id_lang)
-									$cartrule->name[$id_lang] = 'V'.(int)($cartrule->id).'C'.(int)($order->id_customer).'O'.$order->id;
-								$cartrule->code = 'V'.(int)($cartrule->id).'C'.(int)($order->id_customer).'O'.$order->id;
-								if (!$cartrule->update())
-									$this->errors[] = Tools::displayError('You cannot generate a voucher.');
-								else
-								{
-									$currency = $this->context->currency;
-									$params['{voucher_amount}'] = Tools::displayPrice($cartrule->reduction_amount, $currency, false);
-									$params['{voucher_num}'] = $cartrule->code;
-									@Mail::Send((int)$order->id_lang, 'voucher', sprintf(Mail::l('New voucher for your order #%s', (int)$order->id_lang), $order->reference),
-									$params, $customer->email, $customer->firstname.' '.$customer->lastname, null, null, null,
-									null, _PS_MAIL_DIR_, true, (int)$order->id_shop);
-								}
-							}
-						}
-					}
-					else
-						$this->errors[] = Tools::displayError('No product or quantity has been selected.');
-
-					// Redirect if no errors
-					if (!count($this->errors))
-						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=31&token='.$this->token);
-				}
-			}
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to delete this.');
+			$this->processCancelProduct($order);
 		}
 		elseif (Tools::isSubmit('messageReaded'))
 			Message::markAsReaded(Tools::getValue('messageReaded'), $this->context->employee->id);
@@ -1566,6 +1324,252 @@ class AdminOrdersControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 	}
 
+	protected function processCancelProduct($order)
+	{
+		if ($this->tabAccess['delete'] === '1')
+		{
+			if (!Tools::isSubmit('id_order_detail') && !Tools::isSubmit('id_customization'))
+				$this->errors[] = Tools::displayError('You must select a product.');
+			elseif (!Tools::isSubmit('cancelQuantity') && !Tools::isSubmit('cancelCustomizationQuantity'))
+				$this->errors[] = Tools::displayError('You must enter a quantity.');
+			else
+			{
+				$productList = Tools::getValue('id_order_detail');
+				if ($productList)
+					$productList = array_map('intval', $productList);
+
+				$customizationList = Tools::getValue('id_customization');
+				if ($customizationList)
+					$customizationList = array_map('intval', $customizationList);
+
+				$qtyList = Tools::getValue('cancelQuantity');
+				if ($qtyList)
+					$qtyList = array_map('intval', $qtyList);
+
+				$customizationQtyList = Tools::getValue('cancelCustomizationQuantity');
+				if ($customizationQtyList)
+					$customizationQtyList = array_map('intval', $customizationQtyList);
+
+				$full_product_list = $productList;
+				$full_quantity_list = $qtyList;
+
+				if ($customizationList)
+					foreach ($customizationList as $key => $id_order_detail)
+					{
+						$full_product_list[(int)$id_order_detail] = $id_order_detail;
+						if (isset($customizationQtyList[$key]))
+							$full_quantity_list[(int)$id_order_detail] += $customizationQtyList[$key];
+					}
+
+				if ($productList || $customizationList)
+				{
+					if ($productList)
+					{
+						$id_cart = Cart::getCartIdByOrderId($order->id);
+						$customization_quantities = Customization::countQuantityByCart($id_cart);
+
+						foreach ($productList as $key => $id_order_detail)
+						{
+							$qtyCancelProduct = abs($qtyList[$key]);
+							if (!$qtyCancelProduct)
+								$this->errors[] = Tools::displayError('No quantity has been selected for this product.');
+
+							$order_detail = new OrderDetail($id_order_detail);
+							$customization_quantity = 0;
+							if (array_key_exists($order_detail->product_id, $customization_quantities) && array_key_exists($order_detail->product_attribute_id, $customization_quantities[$order_detail->product_id]))
+								$customization_quantity = (int)$customization_quantities[$order_detail->product_id][$order_detail->product_attribute_id];
+
+							if (($order_detail->product_quantity - $customization_quantity - $order_detail->product_quantity_refunded - $order_detail->product_quantity_return) < $qtyCancelProduct)
+								$this->errors[] = Tools::displayError('An invalid quantity was selected for this product.');
+
+						}
+					}
+					if ($customizationList)
+					{
+						$customization_quantities = Customization::retrieveQuantitiesFromIds(array_keys($customizationList));
+
+						foreach ($customizationList as $id_customization => $id_order_detail)
+						{
+							$qtyCancelProduct = abs($customizationQtyList[$id_customization]);
+							$customization_quantity = $customization_quantities[$id_customization];
+
+							if (!$qtyCancelProduct)
+								$this->errors[] = Tools::displayError('No quantity has been selected for this product.');
+
+							if ($qtyCancelProduct > ($customization_quantity['quantity'] - ($customization_quantity['quantity_refunded'] + $customization_quantity['quantity_returned'])))
+								$this->errors[] = Tools::displayError('An invalid quantity was selected for this product.');
+						}
+					}
+
+					if (!count($this->errors) && $productList)
+						foreach ($productList as $key => $id_order_detail)
+						{
+							$qty_cancel_product = abs($qtyList[$key]);
+							$order_detail = new OrderDetail((int)($id_order_detail));
+
+							if (!$order->hasBeenDelivered() || ($order->hasBeenDelivered() && Tools::isSubmit('reinjectQuantities')) && $qty_cancel_product > 0)
+								$this->reinjectQuantity($order_detail, $qty_cancel_product);
+
+							// Delete product
+							$order_detail = new OrderDetail((int)$id_order_detail);
+							if (!$order->deleteProduct($order, $order_detail, $qty_cancel_product))
+								$this->errors[] = Tools::displayError('An error occurred while attempting to delete the product.').' <span class="bold">'.$order_detail->product_name.'</span>';
+							// Update weight SUM
+							$order_carrier = new OrderCarrier((int)$order->getIdOrderCarrier());
+							if (Validate::isLoadedObject($order_carrier))
+							{
+								$order_carrier->weight = (float)$order->getTotalWeight();
+								if ($order_carrier->update())
+									$order->weight = sprintf("%.3f ".Configuration::get('PS_WEIGHT_UNIT'), $order_carrier->weight);
+							}
+
+							if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && StockAvailable::dependsOnStock($order_detail->product_id))
+								StockAvailable::synchronize($order_detail->product_id);
+							Hook::exec('actionProductCancel', array('order' => $order, 'id_order_detail' => (int)$id_order_detail), null, false, true, false, $order->id_shop);
+						}
+					if (!count($this->errors) && $customizationList)
+						foreach ($customizationList as $id_customization => $id_order_detail)
+						{
+							$order_detail = new OrderDetail((int)($id_order_detail));
+							$qtyCancelProduct = abs($customizationQtyList[$id_customization]);
+							if (!$order->deleteCustomization($id_customization, $qtyCancelProduct, $order_detail))
+								$this->errors[] = Tools::displayError('An error occurred while attempting to delete product customization.').' '.$id_customization;
+						}
+					// E-mail params
+					if ((Tools::isSubmit('generateCreditSlip') || Tools::isSubmit('generateDiscount')) && !count($this->errors))
+					{
+						$customer = new Customer((int)($order->id_customer));
+						$params['{lastname}'] = $customer->lastname;
+						$params['{firstname}'] = $customer->firstname;
+						$params['{id_order}'] = $order->id;
+						$params['{order_name}'] = $order->getUniqReference();
+					}
+
+					// Generate credit slip
+					if (Tools::isSubmit('generateCreditSlip') && !count($this->errors))
+					{
+						$product_list = array();
+						$amount = $order_detail->unit_price_tax_incl * $full_quantity_list[$id_order_detail];
+
+						$choosen = false;
+						if ((int)Tools::getValue('refund_total_voucher_off') == 1)
+							$amount -= $voucher = (float)Tools::getValue('order_discount_price');
+						elseif ((int)Tools::getValue('refund_total_voucher_off') == 2)
+						{
+							$choosen = true;
+							$amount = $voucher = (float)Tools::getValue('refund_total_voucher_choose');
+						}
+						foreach ($full_product_list as $id_order_detail)
+						{
+							$order_detail = new OrderDetail((int)$id_order_detail);
+							$product_list[$id_order_detail] = array(
+								'id_order_detail' => $id_order_detail,
+								'quantity' => $full_quantity_list[$id_order_detail],
+								'unit_price' => $order_detail->unit_price_tax_excl,
+								'amount' => isset($amount) ? $amount : $order_detail->unit_price_tax_incl * $full_quantity_list[$id_order_detail],
+							);
+						}
+
+						$shipping = Tools::isSubmit('shippingBack') ? null : false;
+
+						if (!OrderSlip::create($order, $product_list, $shipping, $voucher, $choosen))
+							$this->errors[] = Tools::displayError('A credit slip cannot be generated. ');
+						else
+						{
+							Hook::exec('actionOrderSlipAdd', array('order' => $order, 'productList' => $full_product_list, 'qtyList' => $full_quantity_list), null, false, true, false, $order->id_shop);
+							@Mail::Send(
+								(int)$order->id_lang,
+								'credit_slip',
+								Mail::l('New credit slip regarding your order', (int)$order->id_lang),
+								$params,
+								$customer->email,
+								$customer->firstname.' '.$customer->lastname,
+								null,
+								null,
+								null,
+								null,
+								_PS_MAIL_DIR_,
+								true,
+								(int)$order->id_shop
+							);
+						}
+					}
+
+					// Generate voucher
+					if (Tools::isSubmit('generateDiscount') && !count($this->errors))
+					{
+						$cartrule = new CartRule();
+						$language_ids = Language::getIDs((bool)$order);
+						$cartrule->description = sprintf($this->l('Credit card slip for order #%d'), $order->id);
+						foreach ($language_ids as $id_lang)
+						{
+							// Define a temporary name
+							$cartrule->name[$id_lang] = 'V0C'.(int)($order->id_customer).'O'.(int)($order->id);
+						}
+						// Define a temporary code
+						$cartrule->code = 'V0C'.(int)($order->id_customer).'O'.(int)($order->id);
+
+						$cartrule->quantity = 1;
+						$cartrule->quantity_per_user = 1;
+						// Specific to the customer
+						$cartrule->id_customer = $order->id_customer;
+						$now = time();
+						$cartrule->date_from = date('Y-m-d H:i:s', $now);
+						$cartrule->date_to = date('Y-m-d H:i:s', $now + (3600 * 24 * 365.25)); /* 1 year */
+						$cartrule->active = 1;
+
+						$products = $order->getProducts(false, $full_product_list, $full_quantity_list);
+
+						$total = 0;
+						foreach ($products as $product)
+							$total += $product['unit_price_tax_incl'] * $product['product_quantity'];
+
+						if (Tools::isSubmit('shippingBack'))
+							$total += $order->total_shipping;
+
+						if ((int)Tools::getValue('refund_total_voucher_off') == 1)
+							$total -= (float)Tools::getValue('order_discount_price');
+						elseif ((int)Tools::getValue('refund_total_voucher_off') == 2)
+							$total = (float)Tools::getValue('refund_total_voucher_choose');
+
+						$cartrule->reduction_amount = $total;
+						$cartrule->reduction_tax = true;
+						$cartrule->minimum_amount_currency = $order->id_currency;
+						$cartrule->reduction_currency = $order->id_currency;
+
+						if (!$cartrule->add())
+							$this->errors[] = Tools::displayError('You cannot generate a voucher.');
+						else
+						{
+							// Update the voucher code and name
+							foreach ($language_ids as $id_lang)
+								$cartrule->name[$id_lang] = 'V'.(int)($cartrule->id).'C'.(int)($order->id_customer).'O'.$order->id;
+							$cartrule->code = 'V'.(int)($cartrule->id).'C'.(int)($order->id_customer).'O'.$order->id;
+							if (!$cartrule->update())
+								$this->errors[] = Tools::displayError('You cannot generate a voucher.');
+							else
+							{
+								$currency = $this->context->currency;
+								$params['{voucher_amount}'] = Tools::displayPrice($cartrule->reduction_amount, $currency, false);
+								$params['{voucher_num}'] = $cartrule->code;
+								@Mail::Send((int)$order->id_lang, 'voucher', sprintf(Mail::l('New voucher for your order #%s', (int)$order->id_lang), $order->reference),
+								$params, $customer->email, $customer->firstname.' '.$customer->lastname, null, null, null,
+								null, _PS_MAIL_DIR_, true, (int)$order->id_shop);
+							}
+						}
+					}
+				}
+				else
+					$this->errors[] = Tools::displayError('No product or quantity has been selected.');
+
+				// Redirect if no errors
+				if (!count($this->errors))
+					Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=31&token='.$this->token);
+			}
+		}
+		else
+			$this->errors[] = Tools::displayError('You do not have permission to delete this.');
+	}
 	public function renderKpis()
 	{
 		$time = time();
