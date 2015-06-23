@@ -2296,7 +2296,7 @@ class ProductCore extends ObjectModel
 					LEFT JOIN `'._DB_PREFIX_.'product_attribute_shop` product_attribute_shop
 				   		ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop='.(int)$context->shop->id.')
 					WHERE p.id_product=pr.id_product AND (pr.id_product_attribute = 0 OR product_attribute_shop.id_product_attribute = pr.id_product_attribute) AND product_shop.`active` = 1
-						'.(($ids_product) ? $ids_product : '').' '.$sql_groups.'
+						'.$sql_groups.'
 					'.($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '').'
 					ORDER BY RAND()';
 
