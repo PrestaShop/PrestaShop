@@ -571,12 +571,10 @@
 			<i class="icon-chevron-left"></i>{l s='Continue shopping'}
 		</a>
 	</p>
-	{if isset($HOOK_SHOPPING_CART_EXTRA)}
-		<div class="clear"></div>
-		<div class="cart_navigation_extra">
-			<div id="HOOK_SHOPPING_CART_EXTRA">{$HOOK_SHOPPING_CART_EXTRA}</div>
-		</div>
-	{/if}
+	<div class="clear"></div>
+	<div class="cart_navigation_extra">
+		<div id="HOOK_SHOPPING_CART_EXTRA">{if isset($HOOK_SHOPPING_CART_EXTRA)}{$HOOK_SHOPPING_CART_EXTRA}{/if}</div>
+	</div>
 {strip}
 {addJsDef deliveryAddress=$cart->id_address_delivery|intval}
 {addJsDefL name=txtProduct}{l s='product' js=1}{/addJsDefL}
