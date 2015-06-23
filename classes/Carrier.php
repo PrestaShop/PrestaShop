@@ -667,17 +667,22 @@ class CarrierCore extends ObjectModel
 
 	public static function checkCarrierZone($id_carrier, $id_zone)
 	{
-		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
-			SELECT c.`id_carrier`
-			FROM `'._DB_PREFIX_.'carrier` c
-			LEFT JOIN `'._DB_PREFIX_.'carrier_zone` cz ON (cz.`id_carrier` = c.`id_carrier`)
-			LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = '.(int)$id_zone.')
-			WHERE c.`id_carrier` = '.(int)$id_carrier.'
-			AND c.`deleted` = 0
-			AND c.`active` = 1
-			AND cz.`id_zone` = '.(int)$id_zone.'
-			AND z.`active` = 1'
-		);
+		$cache_id = 'Carrier::checkCarrierZone'.(int)$id_carrier.'-'.(int)$id_zone;
+		if (!Cache::isStored($cache_id))
+		{
+			$sql = 'SELECT c.`id_carrier`
+						FROM `'._DB_PREFIX_.'carrier` c
+						LEFT JOIN `'._DB_PREFIX_.'carrier_zone` cz ON (cz.`id_carrier` = c.`id_carrier`)
+						LEFT JOIN `'._DB_PREFIX_.'zone` z ON (z.`id_zone` = '.(int)$id_zone.')
+						WHERE c.`id_carrier` = '.(int)$id_carrier.'
+						AND c.`deleted` = 0
+						AND c.`active` = 1
+						AND cz.`id_zone` = '.(int)$id_zone.'
+						AND z.`active` = 1';
+			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
+			Cache::store($cache_id, $result);
+		}
+		return Cache::retrieve($cache_id);
 	}
 
 	/**
@@ -1219,11 +1224,21 @@ class CarrierCore extends ObjectModel
 	 *
 	 * @since 1.5.0
 	 * @param Product $product The id of the product, or an array with at least the package size and weight
-	 * @param array &$error contain an error message if an error occurs
+	 * @param         $id_warehouse
+	 * @param int     $id_address_delivery
+	 * @param int     $id_shop
+	 * @param Cart    $cart
+	 * @param array   &$error  contain an error message if an error occurs
 	 * @return array
+	 * @throws PrestaShopDatabaseException
 	 */
 	public static function getAvailableCarrierList(Product $product, $id_warehouse, $id_address_delivery = null, $id_shop = null, $cart = null, &$error = array())
 	{
+		static $ps_country_default = null;
+
+		if ($ps_country_default === null)
+			$ps_country_default = Configuration::get('PS_COUNTRY_DEFAULT');
+
 		if (is_null($id_shop))
 			$id_shop = Context::getContext()->shop->id;
 		if (is_null($cart))
@@ -1232,16 +1247,15 @@ class CarrierCore extends ObjectModel
 		$id_address = (int)((!is_null($id_address_delivery) && $id_address_delivery != 0) ? $id_address_delivery :  $cart->id_address_delivery);
 		if ($id_address)
 		{
-			$address = new Address($id_address);
-			$id_zone = Address::getZoneById($address->id);
+			$id_zone = Address::getZoneById($id_address);
 
 			// Check the country of the address is activated
-			if (!Address::isCountryActiveById($address->id))
+			if (!Address::isCountryActiveById($id_address))
 				return array();
 		}
 		else
 		{
-			$country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'));
+			$country = new Country($ps_country_default);
 			$id_zone = $country->id_zone;
 		}
 
@@ -1282,8 +1296,17 @@ class CarrierCore extends ObjectModel
 		}
 
 		$available_carrier_list = array();
-		$customer = new Customer($cart->id_customer);
-		$carriers = Carrier::getCarriersForOrder($id_zone, $customer->getGroups(), $cart, $error);
+		$cache_id = 'Carrier::getAvailableCarrierList_getCarriersForOrder_'.(int)$id_zone.'-'.(int)$cart->id;
+		if (!Cache::isStored($cache_id))
+		{
+			$customer = new Customer($cart->id_customer);
+			$carrier_error = array();
+			$carriers = Carrier::getCarriersForOrder($id_zone, $customer->getGroups(), $cart, $carrier_error);
+			Cache::store($cache_id, array($carriers, $carrier_error));
+		} else
+			list($carriers, $carrier_error) = Cache::retrieve($cache_id);
+
+		$error = array_merge($error, $carrier_error);
 
 		foreach ($carriers as $carrier)
 			$available_carrier_list[] = $carrier['id_carrier'];

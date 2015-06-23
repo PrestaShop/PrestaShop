@@ -2676,8 +2676,20 @@ class ProductCore extends ObjectModel
 		$id_state = 0;
 		$zipcode = 0;
 
+		static $ps_tax_address_type = null;
+		static $vatnumber_country = null;
+		static $vatnumber_management = null;
+		if ($ps_tax_address_type === null)
+			$ps_tax_address_type = Configuration::get('PS_TAX_ADDRESS_TYPE');
+
+		if ($vatnumber_country === null)
+			$vatnumber_country = Configuration::get('VATNUMBER_COUNTRY');
+
+		if ($vatnumber_management === null)
+			$vatnumber_management = Configuration::get('VATNUMBER_MANAGEMENT');
+
 		if (!$id_address && Validate::isLoadedObject($cur_cart))
-			$id_address = $cur_cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')};
+			$id_address = $cur_cart->{$ps_tax_address_type};
 
 		if ($id_address)
 		{
@@ -2701,8 +2713,8 @@ class ProductCore extends ObjectModel
 
 		if ($usetax != false
 			&& !empty($address_infos['vat_number'])
-			&& $address_infos['id_country'] != Configuration::get('VATNUMBER_COUNTRY')
-			&& Configuration::get('VATNUMBER_MANAGEMENT'))
+			&& $address_infos['id_country'] != $vatnumber_country
+			&& $vatnumber_management)
 			$usetax = false;
 
 		if (is_null($id_customer) && Validate::isLoadedObject($context->customer))
