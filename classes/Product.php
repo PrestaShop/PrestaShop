@@ -2273,14 +2273,13 @@ class ProductCore extends ObjectModel
 		{
 			$ids_products = '';
 			foreach ($product_reductions as $product_reduction)
-			{
 				$ids_products .= '('.(int)$product_reduction['id_product'].','.($product_reduction['id_product_attribute'] ? (int)$product_reduction['id_product_attribute'] :'0').'),';
-			}
+
 			$ids_products = rtrim($ids_products, ',');
 			if ($ids_products)
 			{
-				Db::getInstance(_PS_USE_SQL_SLAVE_)->execute('CREATE TEMPORARY TABLE product_reductions (id_product INT UNSIGNED NOT NULL DEFAULT 0, id_product_attribute INT UNSIGNED NOT NULL DEFAULT 0) ENGINE=MEMORY');
-				Db::getInstance(_PS_USE_SQL_SLAVE_)->execute('INSERT INTO product_reductions VALUES '.$ids_products);
+				Db::getInstance(_PS_USE_SQL_SLAVE_)->execute('CREATE TEMPORARY TABLE `'._DB_PREFIX_.'product_reductions` (id_product INT UNSIGNED NOT NULL DEFAULT 0, id_product_attribute INT UNSIGNED NOT NULL DEFAULT 0) ENGINE=MEMORY');
+				Db::getInstance(_PS_USE_SQL_SLAVE_)->execute('INSERT INTO `'._DB_PREFIX_.'product_reductions` VALUES '.$ids_products);
 			}
 
 			$groups = FrontController::getCurrentCustomerGroups();
