@@ -29,6 +29,9 @@ function ps1610_safe_remove_indexes()
     $keysToRemove = array(
         array('table' => 'shop', 'key' => 'id_group_shop'),
         array('table' => 'specific_price', 'key' => 'id_product_2'),
+        array('table' => 'hook_module', 'key' => 'position'),
+        array('table' => 'cart_product', 'key' => 'PRIMARY'),
+        array('table' => 'cart_product', 'key' => 'cart_product_index'),
     );
 
     foreach ($keysToRemove as $details) {
