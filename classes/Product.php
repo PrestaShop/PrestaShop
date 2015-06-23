@@ -100,10 +100,10 @@ class ProductCore extends ObjectModel
 	/** @var string unity */
 	public $unity = null;
 
-		/** @var float price for product's unity */
-	public $unit_price;
+	/** @var float price for product's unity */	
+	public $unit_price;	 
 
-		/** @var float price for product's unity ratio */
+	/** @var float price for product's unity ratio */
 	public $unit_price_ratio = 0;
 
 	/** @var float Ecotax */
@@ -5366,7 +5366,7 @@ class ProductCore extends ObjectModel
 					$result[] = array_merge($attribute, $group[0]);
 				}
 				$values_not_custom = Db::getInstance()->executeS('
-				SELECT DISTINCT a.`id_attribute`, a.`id_attribute_group`, al.`name` as `attribute`, agl.`name` as `group`
+				SELECT DISTINCT a.`id_attribute`, a.`id_attribute_group`, al.`name` as `attribute`, agl.`public_name` as `group`
 				FROM `'._DB_PREFIX_.'attribute` a
 				LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al
 					ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)Context::getContext()->language->id.')
@@ -5385,7 +5385,7 @@ class ProductCore extends ObjectModel
 			else
 			{
 				$result = Db::getInstance()->executeS('
-				SELECT DISTINCT a.`id_attribute`, a.`id_attribute_group`, al.`name` as `attribute`, agl.`name` as `group`
+				SELECT DISTINCT a.`id_attribute`, a.`id_attribute_group`, al.`name` as `attribute`, agl.`public_name` as `group`
 				FROM `'._DB_PREFIX_.'attribute` a
 				LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al
 					ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)Context::getContext()->language->id.')
@@ -5403,7 +5403,7 @@ class ProductCore extends ObjectModel
 		else
 		{
 			$result = Db::getInstance()->executeS('
-			SELECT DISTINCT a.`id_attribute`, a.`id_attribute_group`, al.`name` as `attribute`, agl.`name` as `group`
+			SELECT DISTINCT a.`id_attribute`, a.`id_attribute_group`, al.`name` as `attribute`, agl.`public_name` as `group`
 			FROM `'._DB_PREFIX_.'attribute` a
 			LEFT JOIN `'._DB_PREFIX_.'attribute_lang` al
 				ON (a.`id_attribute` = al.`id_attribute` AND al.`id_lang` = '.(int)Context::getContext()->language->id.')
