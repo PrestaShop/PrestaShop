@@ -478,40 +478,7 @@ class AdminOrdersControllerCore extends AdminController
 			Message::markAsReaded(Tools::getValue('messageReaded'), $this->context->employee->id);
 		elseif (Tools::isSubmit('submitAddPayment') && isset($order))
 		{
-			if ($this->tabAccess['edit'] === '1')
-			{
-				$amount = str_replace(',', '.', Tools::getValue('payment_amount'));
-				$currency = new Currency(Tools::getValue('payment_currency'));
-				$order_has_invoice = $order->hasInvoice();
-				if ($order_has_invoice)
-					$order_invoice = new OrderInvoice(Tools::getValue('payment_invoice'));
-				else
-					$order_invoice = null;
-
-				if (!Validate::isLoadedObject($order))
-					$this->errors[] = Tools::displayError('The order cannot be found');
-				elseif (!Validate::isNegativePrice($amount) || !(float)$amount)
-					$this->errors[] = Tools::displayError('The amount is invalid.');
-				elseif (!Validate::isGenericName(Tools::getValue('payment_method')))
-					$this->errors[] = Tools::displayError('The selected payment method is invalid.');
-				elseif (!Validate::isString(Tools::getValue('payment_transaction_id')))
-					$this->errors[] = Tools::displayError('The transaction ID is invalid.');
-				elseif (!Validate::isLoadedObject($currency))
-					$this->errors[] = Tools::displayError('The selected currency is invalid.');
-				elseif ($order_has_invoice && !Validate::isLoadedObject($order_invoice))
-					$this->errors[] = Tools::displayError('The invoice is invalid.');
-				elseif (!Validate::isDate(Tools::getValue('payment_date')))
-					$this->errors[] = Tools::displayError('The date is invalid');
-				else
-				{
-					if (!$order->addOrderPayment($amount, Tools::getValue('payment_method'), Tools::getValue('payment_transaction_id'), $currency, Tools::getValue('payment_date'), $order_invoice))
-						$this->errors[] = Tools::displayError('An error occurred during payment.');
-					else
-						Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
-				}
-			}
-			else
-				$this->errors[] = Tools::displayError('You do not have permission to edit this.');
+			$this->processSubmitAddPayment($order);
 		}
 		elseif (Tools::isSubmit('submitEditNote'))
 		{
@@ -1570,6 +1537,45 @@ class AdminOrdersControllerCore extends AdminController
 		else
 			$this->errors[] = Tools::displayError('You do not have permission to delete this.');
 	}
+
+	protected function processSubmitAddPayment($order)
+	{
+		if ($this->tabAccess['edit'] === '1')
+		{
+			$amount = str_replace(',', '.', Tools::getValue('payment_amount'));
+			$currency = new Currency(Tools::getValue('payment_currency'));
+			$order_has_invoice = $order->hasInvoice();
+			if ($order_has_invoice)
+				$order_invoice = new OrderInvoice(Tools::getValue('payment_invoice'));
+			else
+				$order_invoice = null;
+
+			if (!Validate::isLoadedObject($order))
+				$this->errors[] = Tools::displayError('The order cannot be found');
+			elseif (!Validate::isNegativePrice($amount) || !(float)$amount)
+				$this->errors[] = Tools::displayError('The amount is invalid.');
+			elseif (!Validate::isGenericName(Tools::getValue('payment_method')))
+				$this->errors[] = Tools::displayError('The selected payment method is invalid.');
+			elseif (!Validate::isString(Tools::getValue('payment_transaction_id')))
+				$this->errors[] = Tools::displayError('The transaction ID is invalid.');
+			elseif (!Validate::isLoadedObject($currency))
+				$this->errors[] = Tools::displayError('The selected currency is invalid.');
+			elseif ($order_has_invoice && !Validate::isLoadedObject($order_invoice))
+				$this->errors[] = Tools::displayError('The invoice is invalid.');
+			elseif (!Validate::isDate(Tools::getValue('payment_date')))
+				$this->errors[] = Tools::displayError('The date is invalid');
+			else
+			{
+				if (!$order->addOrderPayment($amount, Tools::getValue('payment_method'), Tools::getValue('payment_transaction_id'), $currency, Tools::getValue('payment_date'), $order_invoice))
+					$this->errors[] = Tools::displayError('An error occurred during payment.');
+				else
+					Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
+			}
+		}
+		else
+			$this->errors[] = Tools::displayError('You do not have permission to edit this.');
+	}
+
 	public function renderKpis()
 	{
 		$time = time();
