@@ -370,10 +370,18 @@ class AddressCore extends ObjectModel
 	{
 		$context = Context::getContext();
 
-		$context_hash = md5((int)$context->customer->geoloc_id_country.'-'.(int)$context->customer->id_state.'-'.
-							$context->customer->postcode.'-'.(int)$context->country->id);
+		if ($id_address)
+			$context_hash = (int)$id_address;
+		else
+			if ($with_geoloc && isset($context->customer->geoloc_id_country))
+				$context_hash = md5((int)$context->customer->geoloc_id_country.'-'.(int)$context->customer->id_state.'-'.
+								$context->customer->postcode);
+			else
+				$context_hash = md5((int)$context->country->id);
 
-		$cache_id = 'Address::initialize_'.(int)$id_address.'-'.(int)$with_geoloc.'-'.$context_hash;
+
+		$cache_id = 'Address::initialize_'.$context_hash;
+
 		if (!Cache::isStored($cache_id))
 		{
 			// if an id_address has been specified retrieve the address
