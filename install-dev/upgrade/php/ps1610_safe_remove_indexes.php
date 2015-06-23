@@ -36,7 +36,7 @@ function ps1610_safe_remove_indexes()
             SHOW INDEX FROM `'._DB_PREFIX_.$details['table'].'` WHERE Key_name = \''.$details['key'].'\'
         ');
         if (count($indexes) > 0) {
-            Db::getInstance()->executeS('
+            Db::getInstance()->execute('
                 ALTER TABLE `'._DB_PREFIX_.$details['table'].'` DROP KEY `'.$details['key'].'`
             ');
         }
