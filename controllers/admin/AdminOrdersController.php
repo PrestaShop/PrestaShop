@@ -549,15 +549,7 @@ class AdminOrdersControllerCore extends AdminController
 		}
 		elseif (Tools::isSubmit('submitGenerateInvoice') && isset($order))
 		{
-			if (!Configuration::get('PS_INVOICE', null, null, $order->id_shop))
-				$this->errors[] = Tools::displayError('Invoice management has been disabled.');
-			elseif ($order->hasInvoice())
-				$this->errors[] = Tools::displayError('This order already has an invoice.');
-			else
-			{
-				$order->setInvoice(true);
-				Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
-			}
+			$this->processSubmitGenerateInvoice($order);
 		}
 		elseif (Tools::isSubmit('submitDeleteVoucher') && isset($order))
 		{
@@ -1584,6 +1576,19 @@ class AdminOrdersControllerCore extends AdminController
 		}
 		else
 			$this->errors[] = Tools::displayError('You do not have permission to edit this.');
+	}
+
+	protected function processSubmitGenerateInvoice($otrder)
+	{
+		if (!Configuration::get('PS_INVOICE', null, null, $order->id_shop))
+			$this->errors[] = Tools::displayError('Invoice management has been disabled.');
+		elseif ($order->hasInvoice())
+			$this->errors[] = Tools::displayError('This order already has an invoice.');
+		else
+		{
+			$order->setInvoice(true);
+			Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
+		}
 	}
 
 	public function renderKpis()
