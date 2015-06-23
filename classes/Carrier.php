@@ -667,7 +667,7 @@ class CarrierCore extends ObjectModel
 
 	public static function checkCarrierZone($id_carrier, $id_zone)
 	{
-		$cache_id = 'Carrier::checkCarrierZone'.(int)$id_carrier.'-'.(int)$id_zone;
+		$cache_id = 'Carrier::checkCarrierZone_'.(int)$id_carrier.'-'.(int)$id_zone;
 		if (!Cache::isStored($cache_id))
 		{
 			$sql = 'SELECT c.`id_carrier`
@@ -1266,7 +1266,8 @@ class CarrierCore extends ObjectModel
 			$query = new DbQuery();
 			$query->select('id_carrier');
 			$query->from('product_carrier', 'pc');
-			$query->innerJoin('carrier', 'c', 'c.id_reference = pc.id_carrier_reference AND c.deleted = 0');
+			$query->innerJoin('carrier', 'c',
+							  'c.id_reference = pc.id_carrier_reference AND c.deleted = 0 AND c.active = 1');
 			$query->where('pc.id_product = '.(int)$product->id);
 			$query->where('pc.id_shop = '.(int)$id_shop);
 
@@ -1282,7 +1283,7 @@ class CarrierCore extends ObjectModel
 			//the product is linked with carriers
 			foreach ($carriers_for_product as $carrier) //check if the linked carriers are available in current zone
 				if (Carrier::checkCarrierZone($carrier['id_carrier'], $id_zone))
-					$carrier_list[] = $carrier['id_carrier'];
+					$carrier_list[$carrier['id_carrier']] = $carrier['id_carrier'];
 			if (empty($carrier_list))
 				return array();//no linked carrier are available for this zone
 		}
@@ -1309,7 +1310,7 @@ class CarrierCore extends ObjectModel
 		$error = array_merge($error, $carrier_error);
 
 		foreach ($carriers as $carrier)
-			$available_carrier_list[] = $carrier['id_carrier'];
+			$available_carrier_list[$carrier['id_carrier']] = $carrier['id_carrier'];
 
 		if ($carrier_list)
 			$carrier_list = array_intersect($available_carrier_list, $carrier_list);

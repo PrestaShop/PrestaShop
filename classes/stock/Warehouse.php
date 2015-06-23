@@ -152,7 +152,7 @@ class WarehouseCore extends ObjectModel
 
 		foreach ($res as $carriers)
 			foreach ($carriers as $carrier)
-				$ids_carrier[] = $carrier;
+				$ids_carrier[$carrier] = $carrier;
 
 		return $ids_carrier;
 	}
