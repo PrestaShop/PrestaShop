@@ -633,9 +633,11 @@ class CategoryCore extends ObjectModel
 		GROUP BY c.`id_category`
 		ORDER BY `level_depth` ASC, category_shop.`position` ASC');
 
+		$formated_medium = ImageType::getFormatedName('medium');
+
 		foreach ($result as &$row)
 		{
-			$row['id_image'] = Tools::file_exists_cache(_PS_CAT_IMG_DIR_.$row['id_category'].'.jpg') ? (int)$row['id_category'] : Language::getIsoById($id_lang).'-default';
+			$row['id_image'] = Tools::file_exists_cache(_PS_CAT_IMG_DIR_.$row['id_category'].'-'.$formated_medium.'.jpg') ? (int)$row['id_category'] : Language::getIsoById($id_lang).'-default';
 			$row['legend'] = 'no picture';
 		}
 		return $result;
