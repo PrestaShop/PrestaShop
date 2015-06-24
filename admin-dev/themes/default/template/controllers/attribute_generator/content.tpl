@@ -24,17 +24,17 @@
 *}
 
 <script type="text/javascript">
-	var attrs = new Array();
-	attrs[0] = new Array(0, '---');
+	var attrs = [];
+	attrs[0] = [0, '---'];
 
 	{foreach $attribute_js as $idgrp => $group}
-		{assign var="row" value="attrs[{$idgrp}] = new Array(0, '---'"}
+		{assign var="row" value="attrs[{$idgrp}] = [0, '---'"}
 
 		{foreach $group as $idattr => $attrname}
 			{assign var="row" value="{$row}, {$idattr}, '{$attrname|escape}'"}
 		{/foreach}
 
-		{assign var="row" value="{$row});"}
+		{assign var="row" value="{$row}];"}
 		{$row}
 	{/foreach}
 

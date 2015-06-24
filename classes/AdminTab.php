@@ -2198,7 +2198,7 @@ abstract class AdminTabCore
 			<script type="text/javascript">
 				$(document).ready(function() {
 					id_language = '.$this->_defaultFormLanguage.';
-					languages = new Array();';
+					languages = [];';
 			foreach ($this->_languages as $k => $language)
 				echo '
 					languages['.$k.'] = {

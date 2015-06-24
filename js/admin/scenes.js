@@ -94,7 +94,7 @@ function editThisZone(aInFixedZoneElement) {
 
 	valueOfZoneEdited = $fixedZoneElement.find('a').attr('rel');
 
-	selectionCurrent = new Array();
+	selectionCurrent = [];
 	selectionCurrent['x1'] = x1;
 	selectionCurrent['y1'] = y1;
 	selectionCurrent['width'] = width;

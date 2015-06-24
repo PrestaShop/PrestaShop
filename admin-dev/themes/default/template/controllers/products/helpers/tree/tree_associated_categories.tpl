@@ -128,7 +128,7 @@
 		{if isset($selected_categories)}
 			$('#no_default_category').hide();
 			{assign var=imploded_selected_categories value='","'|implode:$selected_categories}
-			var selected_categories = new Array("{$imploded_selected_categories}");
+			var selected_categories = ["{$imploded_selected_categories}"];
 
 			if (selected_categories.length > 1)
 				$('#expand-all-{$id|escape:'html':'UTF-8'}').hide();

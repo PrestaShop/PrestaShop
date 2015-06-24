@@ -30,16 +30,16 @@
 		var msg_combination_3 = '{l s='You can only add one combination per attribute type.'}';
 		var msg_new_combination = '{l s='New combination'}';
 		var msg_cancel_combination = '{l s='Cancel combination'}';
-		var attrs = new Array();
+		var attrs = [];
 		var modifyattributegroup = "{l s='Modify this attribute combination.' js=1}";
-		attrs[0] = new Array(0, "---");
+		attrs[0] = [0, "---"];
 		{foreach from=$attributeJs key=idgrp item=group}
-			attrs[{$idgrp}] = new Array(0
+			attrs[{$idgrp}] = [0
 			, '---'
 			{foreach from=$group key=idattr item=attrname}
 				, {$idattr|strval|json_encode}, {$attrname|trim|json_encode}
 			{/foreach}
-			);
+			];
 		{/foreach}
 		$(document).ready(function(){
 			populate_attrs();

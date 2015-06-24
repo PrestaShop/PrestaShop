@@ -38,7 +38,7 @@
 		</div>
 
 		<script type="text/javascript"> 
-			var ajaxQueries = new Array();
+			var ajaxQueries = [];
 			function run_sync()
 			{
 				$('#ajax_error').html('');
@@ -47,7 +47,7 @@
 				$('#ajax_conf').hide();
 				for(i = 0; i < ajaxQueries.length; i++)
 					ajaxQueries[i].abort();
-				ajaxQueries = new Array();
+				ajaxQueries = [];
 				$('#ajax_loader').html('<img src="{$smarty.const._PS_ADMIN_IMG_}ajax-loader.gif">');
 				ajaxQuery = $.ajax({
 					type: "POST",

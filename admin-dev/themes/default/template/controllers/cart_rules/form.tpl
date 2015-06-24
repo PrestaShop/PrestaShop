@@ -32,7 +32,7 @@
 
 	<script type="text/javascript">
 		var product_rule_groups_counter = {if isset($product_rule_groups_counter)}{$product_rule_groups_counter|intval}{else}0{/if};
-		var product_rule_counters = new Array();
+		var product_rule_counters = [];
 		var currentToken = '{$currentToken|escape:'quotes'}';
 		var currentFormTab = '{if isset($smarty.post.currentFormTab)}{$smarty.post.currentFormTab|escape:'quotes'}{else}informations{/if}';
 		var currentText = '{l s='Now' js=1}';
@@ -42,7 +42,7 @@
 		var hourText = '{l s='Hour' js=1}';
 		var minuteText = '{l s='Minute' js=1}';
 		
-		var languages = new Array();
+		var languages = [];
 		{foreach from=$languages item=language key=k}
 			languages[{$k}] = {
 				id_lang: {$language.id_lang},

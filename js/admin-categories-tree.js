@@ -33,7 +33,7 @@ var needUncheckAll = false;
 var interval = null;
 var intervalCheck = null;
 var id_tree = 0;
-var arrayCatToExpand = new Array();
+var arrayCatToExpand = [];
 var id_category_root = 0;
 
 function buildTreeView()
@@ -104,7 +104,7 @@ function callbackToggle(element)
 
 function closeChildrenCategories(element)
 {
-	var arrayLevel = new Array();
+	var arrayLevel = [];
 
 	if (element.children('ul').find('li.collapsable').length == 0)
 		return false;
@@ -112,7 +112,7 @@ function closeChildrenCategories(element)
 	element.children('ul').find('li.collapsable').each(function() {
 		var level = $(this).children('span.category_level').html();
 		if (arrayLevel[level] == undefined)
-			arrayLevel[level] = new Array();
+			arrayLevel[level] = [];
 
 		arrayLevel[level].push($(this).attr('id'));
 	});
@@ -131,7 +131,7 @@ function setCategoryToExpand()
 	var ret = false;
 
 	id_tree = 0;
-	arrayCatToExpand = new Array();
+	arrayCatToExpand = [];
 	$('#categories-treeview').find('li.expandable:visible').each(function() {
 		arrayCatToExpand.push($(this).attr('id'));
 		ret = true;

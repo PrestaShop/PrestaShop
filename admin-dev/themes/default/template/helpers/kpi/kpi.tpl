@@ -75,7 +75,7 @@
 <script>
 	function set_d3_{$id|str_replace:'-':'_'|addslashes}(jsonObject)
 	{
-		var data = new Array;
+		var data = [];
 		$.each(jsonObject, function (index, value) {
 			data.push(value);
 		});

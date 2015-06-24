@@ -35,15 +35,15 @@
 
 {block name="after"}
 	<script type="text/javascript">
-		startingData = new Array();
+		startingData = [];
 		{foreach from=$products item=product key=key}
-			startingData[{$key}] = new Array(
+			startingData[{$key}] = [
 				'{$product.details->name|@addcslashes:'\''}',
 				'{$product.id_product|intval}',
 				{$product.x_axis},
 				{$product.y_axis},
 				{$product.zone_width},
-				{$product.zone_height});
+				{$product.zone_height}];
 		{/foreach}
 	</script>
 {/block}

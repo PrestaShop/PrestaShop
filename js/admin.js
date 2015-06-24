@@ -1339,7 +1339,7 @@ function check_for_all_accesses(tabsize, tabnumber)
 	var i = 0;
 	var res = 0;
 	var right = 0;
-	var rights = new Array('view', 'add', 'edit', 'delete', 'all');
+	var rights = ['view', 'add', 'edit', 'delete', 'all'];
 
 	while (i != parseInt(tabsize) + 1)
 	{

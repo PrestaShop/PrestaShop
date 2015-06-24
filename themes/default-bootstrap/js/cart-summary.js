@@ -787,7 +787,7 @@ function updateCartSummary(json)
 {
 	var i;
 	var nbrProducts = 0;
-	var product_list = new Array();
+	var product_list = [];
 
 	if (typeof json == 'undefined')
 		return;

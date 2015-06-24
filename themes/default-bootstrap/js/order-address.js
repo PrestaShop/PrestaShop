@@ -235,7 +235,7 @@ function getFieldValue(field_name, values)
 {
 	var reg = new RegExp("[ ]+", "g");
 	var items = field_name.split(reg);
-	var vals = new Array();
+	var vals = [];
 	for (var field_item in items)
 	{
 		items[field_item] = items[field_item].replace(/,/g, "");

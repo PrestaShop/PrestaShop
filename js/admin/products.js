@@ -181,7 +181,7 @@ function ProductTabsManager(){
 		if (this.current_request !== undefined)
 		{
 			this.current_request.complete(function(request, status) {
-				var wrong_status_code = new Array(400, 401, 403, 404, 405, 406, 408, 410, 413, 429, 499, 500, 502, 503, 504);
+				var wrong_status_code = [400, 401, 403, 404, 405, 406, 408, 410, 413, 429, 499, 500, 502, 503, 504];
 
 				if ((status === 'abort' || status === 'error' || request.responseText.length == 0 || in_array(request.status, wrong_status_code) || self.stack_error.length !== 0) && !self.page_reloading)
 				{
@@ -291,7 +291,7 @@ product_tabs['Combinations'] = new function(){
 					var ean = data[0]['ean13'];
 					var quantity = data[0]['quantity'];
 					var image = false;
-					var product_att_list = new Array();
+					var product_att_list = [];
 					for(i=0;i<data.length;i++)
 					{
 						product_att_list.push(data[i]['group_name']+' : '+data[i]['attribute_name']);
@@ -1266,7 +1266,7 @@ product_tabs['Pack'] = new function() {
 				},
 				results: function (data) {
 					var excludeIds = getSelectedIds();
-					var returnIds = new Array();
+					var returnIds = [];
 					if (data) {
 						for (var i = data.length - 1; i >= 0; i--) {
 							var is_in = 0;
@@ -1386,11 +1386,11 @@ product_tabs['Pack'] = new function() {
 
 			var inputCut = input.val().split(reg);
 
-			var ints = new Array();
+			var ints = [];
 
 			for (var i = 0; i < inputCut.length; ++i)
 			{
-				var in_ints = new Array();
+				var in_ints = [];
 				if (inputCut[i]) {
 					var inputQty = inputCut[i].split(regx);
 					in_ints[0] = inputQty[1];

@@ -147,7 +147,7 @@ $(document).ready(function () {
 		<div class="col-lg-8">
 			<script type="text/javascript">
 				noTax = {if $tax_exclude_taxe_option}true{else}false{/if};
-				taxesArray = new Array();
+				taxesArray = [];
 				{foreach $taxesRatesByGroup as $tax_by_group}
 					taxesArray[{$tax_by_group.id_tax_rules_group}] = {$tax_by_group|json_encode};
 				{/foreach}
@@ -286,7 +286,7 @@ $(document).ready(function () {
 		</div>
 	</div>
 	<script type="text/javascript">
-		var product_prices = new Array();
+		var product_prices = [];
 		{foreach from=$combinations item='combination'}
 			product_prices['{$combination.id_product_attribute}'] = '{$combination.price|@addcslashes:'\''}';
 		{/foreach}

@@ -3284,15 +3284,15 @@ class AdminProductsController extends AdminProductsControllerCore
 
 		$content .= '
 		<script type="text/javascript">
-			var currencies = new Array();
-			currencies[0] = new Array();
+			var currencies = [];
+			currencies[0] = [];
 			currencies[0]["sign"] = "'.$defaultCurrency->sign.'";
 			currencies[0]["format"] = '.intval($defaultCurrency->format).';
 			';
 			foreach ($currencies as $currency)
 			{
 				$content .= '
-				currencies['.$currency['id_currency'].'] = new Array();
+				currencies['.$currency['id_currency'].'] = [];
 				currencies['.$currency['id_currency'].']["sign"] = "'.$currency['sign'].'";
 				currencies['.$currency['id_currency'].']["format"] = '.intval($currency['format']).';
 				';
@@ -4449,13 +4449,13 @@ class AdminProductsController extends AdminProductsControllerCore
 		if (!($obj = $this->loadObject(true)))
 			return;
 
-		$content = 'var combination_images = new Array();';
+		$content = 'var combination_images = [];';
 		if (!$allCombinationImages = $obj->getCombinationImages($this->context->language->id))
 			return $content;
 		foreach ($allCombinationImages as $id_product_attribute => $combination_images)
 		{
 			$i = 0;
-			$content .= 'combination_images['.(int)$id_product_attribute.'] = new Array();';
+			$content .= 'combination_images['.(int)$id_product_attribute.'] = [];';
 			foreach ($combination_images as $combination_image)
 				$content .= 'combination_images['.(int)$id_product_attribute.']['.$i++.'] = '.(int)$combination_image['id_image'].';';
 		}

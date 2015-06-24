@@ -132,7 +132,7 @@
 {/block}
 
 {block name="script"}
-	var ids_category = new Array();
+	var ids_category = [];
 	{foreach $ids_category as $key => $id_category}
 		ids_category[{$key}] = {$id_category};
 	{/foreach}
