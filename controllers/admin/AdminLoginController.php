@@ -285,7 +285,7 @@ class AdminLoginControllerCore extends AdminController
 				Shop::setContext(Shop::CONTEXT_SHOP, (int)min($employee->getAssociatedShops()));
 				die(Tools::jsonEncode(array(
 					'hasErrors' => false,
-					'confirm' => $this->l('A reset link has been sent to you. Please use it to change your password', 'AdminTab', false, false)
+					'confirm' => $this->l('An email with a link to reset your password has been sent. Please check your mailbox.', 'AdminTab', false, false)
 				)));
 			}
 			else
@@ -312,13 +312,13 @@ class AdminLoginControllerCore extends AdminController
 			$this->errors[] = Tools::displayError('Some identification information is missing.');
 		// password (twice)
 		elseif (!($reset_password = trim(Tools::getValue('reset_passwd'))))
-			$this->errors[] = Tools::displayError('The password is empty.');
+			$this->errors[] = Tools::displayError('The password is missing: please enter your new password.');
 		elseif (!Validate::isPasswd($reset_password))
 			$this->errors[] = Tools::displayError('The password is not in a valid format.');
 		elseif (!($reset_confirm = trim(Tools::getValue('reset_confirm'))))
-			$this->errors[] = Tools::displayError('The password confirmation is empty.');
+			$this->errors[] = Tools::displayError('The confirmation is empty: please fill in the password confirmation as well.');
 		elseif ($reset_password !== $reset_confirm)
-			$this->errors[] = Tools::displayError('The password and it\'s confirmation are different.');
+			$this->errors[] = Tools::displayError('The password and its confirmation do not match. Please double check both passwords.');
 		else
 		{
 			$employee = new Employee();
@@ -326,12 +326,12 @@ class AdminLoginControllerCore extends AdminController
 				$this->errors[] = Tools::displayError('This account does not exist.');
 			elseif ((strtotime($employee->last_passwd_gen.'+'.Configuration::get('PS_PASSWD_TIME_BACK').' minutes') - time()) > 0)
 				$this->errors[] = sprintf(
-					Tools::displayError('You can regenerate your password only every %d minute(s)'),
+					Tools::displayError('You can reset your password every %d minute(s) only. Please try again later.'),
 					Configuration::get('PS_PASSWD_TIME_BACK')
 				);
 			// To update password, we must have the temporary reset token that matches.
 			elseif ($employee->getValidResetPasswordToken() !== $reset_token_value)
-				$this->errors[] = Tools::displayError('The password change request expired. You should ask for a new one.');
+				$this->errors[] = Tools::displayError('Your password reset request expired. Please start again.');
 		}
 
 		if (!count($this->errors))
