@@ -37,6 +37,7 @@ class AdminShopUrlControllerCore extends AdminController
 		$this->lang = false;
 		$this->requiredDatabase = true;
 		$this->multishop_context = Shop::CONTEXT_ALL;
+		$this->bulk_actions = array();
 
 		/* if $_GET['id_shop'] is transmitted, virtual url can be loaded in config.php, so we wether transmit shop_id in herfs */
 		if ($this->id_shop = (int)Tools::getValue('shop_id'))
