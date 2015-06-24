@@ -670,7 +670,7 @@
 {strip}
 {if isset($smarty.post.id_state) && $smarty.post.id_state}
 	{addJsDef idSelectedState=$smarty.post.id_state|intval}
-{else if isset($address->id_state) && $address->id_state}
+{elseif isset($address->id_state) && $address->id_state}
 	{addJsDef idSelectedState=$address->id_state|intval}
 {else}
 	{addJsDef idSelectedState=false}
@@ -682,7 +682,7 @@
 {/if}
 {if isset($smarty.post.id_country) && $smarty.post.id_country}
 	{addJsDef idSelectedCountry=$smarty.post.id_country|intval}
-{else if isset($address->id_country) && $address->id_country}
+{elseif isset($address->id_country) && $address->id_country}
 	{addJsDef idSelectedCountry=$address->id_country|intval}
 {else}
 	{addJsDef idSelectedCountry=false}

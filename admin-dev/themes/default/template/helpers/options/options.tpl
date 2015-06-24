@@ -136,7 +136,7 @@
 														<option value="{$option[$field['identifier']]}"{if $field['value'] == $option[$field['identifier']]} selected="selected"{/if}>{$option['name']}</option>
 													{/foreach}
 												</select>
-											{else if isset($input.empty_message)}
+											{elseif isset($input.empty_message)}
 												{$input.empty_message}
 											{/if}
 										</div>
