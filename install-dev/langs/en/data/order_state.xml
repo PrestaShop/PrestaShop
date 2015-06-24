@@ -25,7 +25,7 @@
     <template>order_canceled</template>
   </order_state>
   <order_state id="Refund">
-    <name>Refund</name>
+    <name>Refunded</name>
     <template>refund</template>
   </order_state>
   <order_state id="Payment_error">
@@ -53,7 +53,7 @@
     <template>payment</template>
   </order_state>
   <order_state id="Awaiting_cod_validation">
-    <name>Awaiting cod validation</name>
+    <name>Awaiting Cash On Delivery validation</name>
     <template>cashondelivery</template>
   </order_state>
 </entity_order_state>
