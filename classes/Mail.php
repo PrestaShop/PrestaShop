@@ -126,8 +126,13 @@ class MailCore extends ObjectModel
 
 		// Sending an e-mail can be of vital importance for the merchant, when his password is lost for example, so we must not die but do our best to send the e-mail
 
-		if (!isset($from) || !Validate::isEmail($from))
+		if (!isset($reply_to) && isset($from) && $from != $configuration['PS_SHOP_EMAIL']) {
+            		$reply_to = $from;
 			$from = $configuration['PS_SHOP_EMAIL'];
+        	}
+		if (!isset($from) || !Validate::isEmail($from)) {
+			$from = $configuration['PS_SHOP_EMAIL'];
+		}
 
 		if (!Validate::isEmail($from))
 			$from = null;
