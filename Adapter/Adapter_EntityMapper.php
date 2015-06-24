@@ -81,15 +81,15 @@ class Adapter_EntityMapper {
 						}
 					}
 				}
-				if ($should_cache_objects) {
-					$entity->id = (int)$id;
-					foreach ($object_datas as $key => $value) {
-						if (array_key_exists($key, $entity)) {
-							$entity->{$key} = $value;
-						} else {
-							unset($object_datas[$key]);
-						}
+				$entity->id = (int)$id;
+				foreach ($object_datas as $key => $value) {
+					if (array_key_exists($key, $entity)) {
+						$entity->{$key} = $value;
+					} else {
+						unset($object_datas[$key]);
 					}
+				}
+				if ($should_cache_objects) {
 					Cache::store($cache_id, $object_datas);
 				}
 			}
