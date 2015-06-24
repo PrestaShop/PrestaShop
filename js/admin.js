@@ -937,7 +937,7 @@ $(document).ready(function()
             operational: status_operational,
             degraded_performance: status_degraded_performance,
             partial_outage: status_partial_outage,
-            major_outage: status_major_outage,
+            major_outage: status_major_outage
         };
 
         var components_map = {'ca1': 0, 'fr1': 1};

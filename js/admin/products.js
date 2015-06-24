@@ -1288,7 +1288,7 @@ product_tabs['Pack'] = new function() {
 				}
 			},
 			formatResult: productFormatResult,
-			formatSelection: productFormatSelection,
+			formatSelection: productFormatSelection
 		})
 		.on("select2-selecting", function(e) {
 			selectedProduct = e.object

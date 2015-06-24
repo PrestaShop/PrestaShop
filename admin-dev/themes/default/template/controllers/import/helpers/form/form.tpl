@@ -429,7 +429,7 @@
 						}
 					}
 				}
-			},
+			}
 		}).on('fileuploadalways', function (e, data) {
 			file_add_button.stop();
 		}).on('fileuploadprocessalways', function (e, data) {

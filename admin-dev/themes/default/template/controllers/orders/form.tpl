@@ -285,7 +285,7 @@
 		$('.fancybox').fancybox({
 			'type': 'iframe',
 			'width': '90%',
-			'height': '90%',
+			'height': '90%'
 		});
 
 		$('.fancybox_customer').fancybox({
@@ -869,7 +869,7 @@
 				id_customization: id_customization,
 				qty: qty,
 				id_customer: id_customer,
-				id_cart: id_cart,
+				id_cart: id_cart
 			},
 			success : function(res)
 			{

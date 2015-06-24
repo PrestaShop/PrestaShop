@@ -656,7 +656,7 @@
 													"{$input.name}2": {
 														password_same: true
 													},
-													"old_passwd" : {},
+													"old_passwd" : {}
 												},
 												// override jquery validate plugin defaults for bootstrap 3
 												highlight: function(element) {
@@ -971,7 +971,7 @@
 				timeOnlyTitle: '{l s='Choose Time' js=1}',
 				timeText: '{l s='Time' js=1}',
 				hourText: '{l s='Hour' js=1}',
-				minuteText: '{l s='Minute' js=1}',
+				minuteText: '{l s='Minute' js=1}'
 			});
 			{if isset($use_textarea_autosize)}
 			$(".textarea-autosize").autosize();

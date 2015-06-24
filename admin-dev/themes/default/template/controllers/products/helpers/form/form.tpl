@@ -244,7 +244,7 @@
 						inputPackItems: {
 							required: {
 								depends: checkIfProductTypeIsPack
-							},
+							}
 						}
 					},
 					messages: {
