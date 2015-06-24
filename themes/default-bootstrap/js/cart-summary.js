@@ -160,8 +160,8 @@ function cleanSelectAddressDelivery()
 
 			// Need at least two address to allow skipping products to multiple address
 			if (address_count < 2)
-				$($(item).find('option[value=-2]')).remove();
-			else if($($(item).find('option[value=-2]')).length == 0)
+				$($(item).find('option[value="-2"]')).remove();
+			else if($($(item).find('option[value="-2"]')).length == 0)
 				$(item).append($('<option value="-2">' + ShipToAnOtherAddress + '</option>'));
 		});
 	}
