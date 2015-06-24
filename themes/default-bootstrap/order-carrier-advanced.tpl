@@ -150,17 +150,17 @@
                                                                             {foreach $first.product_list as $product}
                                                                                 {if $product@index == 4}
                                                                                     <acronym title="
-																{/if}
-																{strip}
-																	{if $product@index >= 4}
-																		{$product.name|escape:'htmlall':'UTF-8'}
-																		{if isset($product.attributes) && $product.attributes}
-																			{$product.attributes|escape:'htmlall':'UTF-8'}
-																		{/if}
-																		{if !$product@last}
-																			,&nbsp;
-																		{else}
-																			">&hellip;</acronym>)
+                                                                {/if}
+                                                                {strip}
+                                                                    {if $product@index >= 4}
+                                                                        {$product.name|escape:'htmlall':'UTF-8'}
+                                                                        {if isset($product.attributes) && $product.attributes}
+                                                                            {$product.attributes|escape:'htmlall':'UTF-8'}
+                                                                        {/if}
+                                                                        {if !$product@last}
+                                                                            ,&nbsp;
+                                                                        {else}
+                                                                            ">&hellip;</acronym>)
                                                                             {/if}
                                                                             {else}
                                                                                 {$product.name|escape:'htmlall':'UTF-8'}
@@ -221,17 +221,17 @@
                                                                                     {foreach $carrier.product_list as $product}
                                                                                         {if $product@index == 4}
                                                                                             <acronym title="
-																	                    {/if}
-																	                    {strip}
-																	                    	{if $product@index >= 4}
-																	                    		{$product.name|escape:'htmlall':'UTF-8'}
-																	                    		{if isset($product.attributes) && $product.attributes}
-																	                    			{$product.attributes|escape:'htmlall':'UTF-8'}
-																	                    		{/if}
-																	                    		{if !$product@last}
-																	                    			,&nbsp;
-																	                    		{else}
-																	                    			">&hellip;</acronym>)
+                                                                                        {/if}
+                                                                                        {strip}
+                                                                                            {if $product@index >= 4}
+                                                                                                {$product.name|escape:'htmlall':'UTF-8'}
+                                                                                                {if isset($product.attributes) && $product.attributes}
+                                                                                                    {$product.attributes|escape:'htmlall':'UTF-8'}
+                                                                                                {/if}
+                                                                                                {if !$product@last}
+                                                                                                    ,&nbsp;
+                                                                                                {else}
+                                                                                                    ">&hellip;</acronym>)
                                                                                                 {/if}
                                                                                             {else}
                                                                                                 {$product.name|escape:'htmlall':'UTF-8'}
@@ -299,9 +299,9 @@
                                 <p class="carrier_title">{l s='Leave a message'}</p>
                                 <div>
                                     <p>{l s='If you would like to add a comment about your order, please write it in the field below.'}</p>
-						<textarea class="form-control" cols="120" rows="2" name="message" id="message">{strip}
-							{if isset($oldMessage)}{$oldMessage|escape:'html':'UTF-8'}{/if}
-						{/strip}</textarea>
+                        <textarea class="form-control" cols="120" rows="2" name="message" id="message">{strip}
+                            {if isset($oldMessage)}{$oldMessage|escape:'html':'UTF-8'}{/if}
+                        {/strip}</textarea>
                                 </div>
                             {/if}
                             {if $recyclablePackAllowed}
@@ -324,12 +324,12 @@
                                         {if $gift_wrapping_price > 0}
                                             &nbsp;<i>({l s='Additional cost of'}
                                             <span class="price" id="gift-price">
-									{if $priceDisplay == 1}
+                                    {if $priceDisplay == 1}
                                         {convertPrice price=$total_wrapping_tax_exc_cost}
                                     {else}
                                         {convertPrice price=$total_wrapping_cost}
                                     {/if}
-								</span>
+                                </span>
                                             {if $use_taxes && $display_tax_label}
                                                 {if $priceDisplay == 1}
                                                     {l s='(tax excl.)'}
@@ -389,10 +389,10 @@
                     {/if}
                     {if isset($virtual_cart) && $virtual_cart || (isset($delivery_option_list) && !empty($delivery_option_list))}
                         <button type="submit" name="processCarrier" class="button btn btn-default standard-checkout button-medium">
-							<span>
-								{l s='Proceed to checkout'}
+                            <span>
+                                {l s='Proceed to checkout'}
                                 <i class="icon-chevron-right right"></i>
-							</span>
+                            </span>
                         </button>
                     {/if}
                 </p>
