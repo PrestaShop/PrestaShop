@@ -25,15 +25,11 @@
 
 {capture name=path}<a href="{$link->getPageLink('authentication', true)|escape:'html':'UTF-8'}" title="{l s='Authentication'}" rel="nofollow">{l s='Authentication'}</a><span class="navigation-pipe">{$navigationPipe}</span>{l s='Forgot your password'}{/capture}
 <div class="box">
-<h1 class="page-subheading">{l s='Forgot your password?'}</h1>
+<h1 class="page-subheading">{if isset($confirmation) && $confirmation >= 1}{l s='Reset your password'}{else}{l s='Forgot your password?'}{/if}</h1>
 
 {include file="$tpl_dir./errors.tpl"}
 
 {if isset($confirmation) && $confirmation == 1}
-<p>{l s='Please enter a new password twice.'}</p>
-<p class="required">
-	<sup>*</sup>{l s='Required field'}
-</p>
 <form action="{$link->getPageLink('password', true)|escape:'html':'UTF-8'}" method="post" class="std" id="form_changepassword">
 	<fieldset>
 		<div class="form-group">
@@ -60,6 +56,9 @@
 		</p>
 	</fieldset>
 </form>
+<p class="required">
+	<sup>*</sup>{l s='Required field'}
+</p>
 {elseif isset($confirmation) && $confirmation == 3}
 <p class="alert alert-success">{l s='Your password has been successfully reset and a confirmation has been sent to your email address:'} {if isset($customer_email)}{$customer_email|escape:'html':'UTF-8'|stripslashes}{/if}</p>
 {elseif isset($confirmation) && $confirmation == 2}
