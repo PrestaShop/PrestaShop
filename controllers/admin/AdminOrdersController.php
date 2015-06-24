@@ -1758,7 +1758,7 @@ class AdminOrdersControllerCore extends AdminController
 			'returns' => OrderReturn::getOrdersReturn($order->id_customer, $order->id),
 			'customer_thread_message' => CustomerThread::getCustomerMessages($order->id_customer, null, $order->id),
 			'orderMessages' => OrderMessage::getOrderMessages($order->id_lang),
-			'messages' => Message::getMessagesByOrderId($order->id, true),
+			'recent_customer_messages' => array_slice(CustomerMessage::getMessagesByOrderId($order->id, true, true), 0, 1), // Only most recent one. Increase array_slice for more
 			'carrier' => new Carrier($order->id_carrier),
 			'history' => $history,
 			'states' => OrderState::getOrderStates($this->context->language->id),
