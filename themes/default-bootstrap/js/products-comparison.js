@@ -104,7 +104,7 @@ function reloadProductComparison()
 		if (new_compare_product_list.length)
 			window.location.search = window.location.search.replace(bak, new_compare_product_list.join(encodeURIComponent('|')));
 	});
-};
+}
 
 function compareButtonsStatusRefresh()
 {

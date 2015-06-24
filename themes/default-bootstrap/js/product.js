@@ -339,7 +339,7 @@ function arrayUnique(a)
 			p.push(c);
         return p;
     }, []);
-};
+}
 
 //check if a function exists
 function function_exists(function_name)
