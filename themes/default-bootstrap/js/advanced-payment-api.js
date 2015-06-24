@@ -25,6 +25,13 @@
 
 $(document).ready(function(){
     var handler = new PaymentOptionHandler();
+    
+    if (!!$.prototype.fancybox)
+        $("a.iframe").fancybox({
+            'type': 'iframe',
+            'width': 600,
+            'height': 600
+        });
 
     $('p.payment_module').on('click', function(event){
         handler.selectOption($(this));
