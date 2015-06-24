@@ -62,9 +62,9 @@
 {elseif isset($confirmation) && $confirmation == 3}
 <p class="alert alert-success">{l s='Your password has been successfully reset and a confirmation has been sent to your email address:'} {if isset($customer_email)}{$customer_email|escape:'html':'UTF-8'|stripslashes}{/if}</p>
 {elseif isset($confirmation) && $confirmation == 2}
-<p class="alert alert-success">{l s='A confirmation email has been sent to your address:'} {if isset($customer_email)}{$customer_email|escape:'html':'UTF-8'|stripslashes}{/if}</p>
+<p class="alert alert-success">{l s='A link to reset your password has been sent to your address:'} {if isset($customer_email)}{$customer_email|escape:'html':'UTF-8'|stripslashes}{/if}</p>
 {else}
-<p>{l s='Please enter the email address you used to register. We will then send you a temporary link to reset your password. '}</p>
+<p>{l s='Please enter the email address you used to register. You will receive a temporary link to reset your password. '}</p>
 <form action="{$request_uri|escape:'html':'UTF-8'}" method="post" class="std" id="form_forgotpassword">
 	<fieldset>
 		<div class="form-group">
@@ -72,7 +72,7 @@
 			<input class="form-control" type="email" id="email" name="email" value="{if isset($smarty.post.email)}{$smarty.post.email|escape:'html':'UTF-8'|stripslashes}{/if}" />
 		</div>
 		<p class="submit">
-            <button type="submit" class="btn btn-default button button-medium"><span>{l s='Retrieve Password'}<i class="icon-chevron-right right"></i></span></button>
+            <button type="submit" class="btn btn-default button button-medium"><span>{l s='Send reset link'}<i class="icon-chevron-right right"></i></span></button>
 		</p>
 	</fieldset>
 </form>
