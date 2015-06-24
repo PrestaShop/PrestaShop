@@ -63,7 +63,7 @@
 	</div>
 </div>
 <div class="panel">
-	<h3>{l s='Product reference(s)'}</h3>
+	<h3>{l s='Supplier reference(s)'}</h3>
 	<div class="alert alert-info">
 		{if $associated_suppliers|@count == 0}
 			{l s='You must specify the suppliers associated with this product. You must also select the default product supplier before setting references.'}
