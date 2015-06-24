@@ -29,10 +29,10 @@ class AdminLoginControllerCore extends AdminController
 	public function __construct()
 	{
 		$this->bootstrap = true;
-	 	$this->errors = array();
-	 	$this->context = Context::getContext();
-	 	$this->display_header = false;
-	 	$this->display_footer = false;
+		$this->errors = array();
+		$this->context = Context::getContext();
+		$this->display_header = false;
+		$this->display_footer = false;
 		$this->meta_title = $this->l('Administration panel');
 		parent::__construct();
 		$this->layout = _PS_ADMIN_DIR_.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR.$this->bo_theme
@@ -130,6 +130,17 @@ class AdminLoginControllerCore extends AdminController
 		if ($password = Tools::getValue('password'))
 			$this->context->smarty->assign('password', $password);
 
+		// For reset password feature
+		if ($reset_token = Tools::getValue('reset_token'))
+			$this->context->smarty->assign('reset_token', $reset_token);
+		if ($id_employee = Tools::getValue('id_employee'))
+		{
+			$this->context->smarty->assign('id_employee', $id_employee);
+			$employee = new Employee($id_employee);
+			if (Validate::isLoadedObject($employee))
+				$this->context->smarty->assign('reset_email', $employee->email);
+		}
+
 		$this->setMedia();
 		$this->initHeader();
 		parent::initContent();
@@ -160,6 +171,8 @@ class AdminLoginControllerCore extends AdminController
 			$this->processLogin();
 		elseif (Tools::isSubmit('submitForgot'))
 			$this->processForgot();
+		elseif (Tools::isSubmit('submitReset'))
+			$this->processReset();
 	}
 
 	public function processLogin()
@@ -252,37 +265,109 @@ class AdminLoginControllerCore extends AdminController
 
 		if (!count($this->errors))
 		{
-			$pwd = Tools::passwdGen(10, 'RANDOM');
-			$employee->passwd = Tools::encrypt($pwd);
-			$employee->last_passwd_gen = date('Y-m-d H:i:s', time());
+			if (!$employee->hasRecentResetPasswordToken())
+			{
+				$employee->stampResetPasswordToken();
+				$employee->update();
+			}
 
+			$admin_url = Tools::getShopDomain(true, true).__PS_BASE_URI__.basename(_PS_ADMIN_DIR_).'/'.$this->context->link->getAdminLink('AdminLogin');
 			$params = array(
 				'{email}' => $employee->email,
 				'{lastname}' => $employee->lastname,
 				'{firstname}' => $employee->firstname,
-				'{passwd}' => $pwd
+				'{url}' => $admin_url.'&id_employee='.(int)$employee->id.'&reset_token='.$employee->reset_password_token
 			);
 
 			if (Mail::Send($employee->id_lang, 'employee_password', Mail::l('Your new password', $employee->id_lang), $params, $employee->email, $employee->firstname.' '.$employee->lastname))
 			{
 				// Update employee only if the mail can be sent
 				Shop::setContext(Shop::CONTEXT_SHOP, (int)min($employee->getAssociatedShops()));
+				die(Tools::jsonEncode(array(
+					'hasErrors' => false,
+					'confirm' => $this->l('An email with a link to reset your password has been sent. Please check your mailbox.', 'AdminTab', false, false)
+				)));
+			}
+			else
+				die(Tools::jsonEncode(array(
+					'hasErrors' => true,
+					'errors' => array(Tools::displayError('An error occurred while attempting to reset your password.'))
+				)));
 
+		}
+		elseif (Tools::isSubmit('ajax'))
+			die(Tools::jsonEncode(array('hasErrors' => true, 'errors' => $this->errors)));
+	}
+
+	public function processReset()
+	{
+		if (_PS_MODE_DEMO_)
+			$this->errors[] = Tools::displayError('This functionality has been disabled.');
+		// hidden fields
+		elseif (!($reset_token_value = trim(Tools::getValue('reset_token'))))
+			$this->errors[] = Tools::displayError('Some identification information is missing.');
+		elseif (!($id_employee = trim(Tools::getValue('id_employee'))))
+			$this->errors[] = Tools::displayError('Some identification information is missing.');
+		elseif (!($reset_email = trim(Tools::getValue('reset_email'))))
+			$this->errors[] = Tools::displayError('Some identification information is missing.');
+		// password (twice)
+		elseif (!($reset_password = trim(Tools::getValue('reset_passwd'))))
+			$this->errors[] = Tools::displayError('The password is missing: please enter your new password.');
+		elseif (!Validate::isPasswd($reset_password))
+			$this->errors[] = Tools::displayError('The password is not in a valid format.');
+		elseif (!($reset_confirm = trim(Tools::getValue('reset_confirm'))))
+			$this->errors[] = Tools::displayError('The confirmation is empty: please fill in the password confirmation as well.');
+		elseif ($reset_password !== $reset_confirm)
+			$this->errors[] = Tools::displayError('The password and its confirmation do not match. Please double check both passwords.');
+		else
+		{
+			$employee = new Employee();
+			if (!$employee->getByEmail($reset_email) || !$employee || $employee->id != $id_employee) // check matching employee id with its email
+				$this->errors[] = Tools::displayError('This account does not exist.');
+			elseif ((strtotime($employee->last_passwd_gen.'+'.Configuration::get('PS_PASSWD_TIME_BACK').' minutes') - time()) > 0)
+				$this->errors[] = sprintf(
+					Tools::displayError('You can reset your password every %d minute(s) only. Please try again later.'),
+					Configuration::get('PS_PASSWD_TIME_BACK')
+				);
+			// To update password, we must have the temporary reset token that matches.
+			elseif ($employee->getValidResetPasswordToken() !== $reset_token_value)
+				$this->errors[] = Tools::displayError('Your password reset request expired. Please start again.');
+		}
+
+		if (!count($this->errors))
+		{
+			$employee->passwd = Tools::encrypt($reset_password);
+			$employee->last_passwd_gen = date('Y-m-d H:i:s', time());
+			
+			$params = array(
+				'{email}' => $employee->email,
+				'{lastname}' => $employee->lastname,
+				'{firstname}' => $employee->firstname,
+			);
+			
+			if (Mail::Send($employee->id_lang, 'password', Mail::l('Your new password', $employee->id_lang), $params, $employee->email, $employee->firstname.' '.$employee->lastname))
+			{
+				// Update employee only if the mail can be sent
+				Shop::setContext(Shop::CONTEXT_SHOP, (int)min($employee->getAssociatedShops()));
+			
 				$result = $employee->update();
 				if (!$result)
 					$this->errors[] = Tools::displayError('An error occurred while attempting to change your password.');
 				else
+				{
+					$employee->removeResetPasswordToken(); // Delete temporary reset token
+					$employee->update();
 					die(Tools::jsonEncode(array(
 						'hasErrors' => false,
-						'confirm' => $this->l('Your password has been emailed to you.', 'AdminTab', false, false)
+						'confirm' => $this->l('The password has been changed successfully.', 'AdminTab', false, false)
 					)));
+				}
 			}
 			else
 				die(Tools::jsonEncode(array(
 					'hasErrors' => true,
 					'errors' => array(Tools::displayError('An error occurred while attempting to change your password.'))
 				)));
-
 		}
 		elseif (Tools::isSubmit('ajax'))
 			die(Tools::jsonEncode(array('hasErrors' => true, 'errors' => $this->errors)));

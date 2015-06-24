@@ -52,7 +52,7 @@
 	<div id="shop-img"><img src="{$img_dir}preston-login@2x.png" alt="{$shop_name}" width="69.5px" height="118.5px" /></div>
 	<div class="flip-container">
 		<div class="flipper">
-			<div class="front panel">
+			<div class="front front_login panel" {if isset($reset_token) && isset($id_employee)}style="display:none;"{/if}>
 				<h4 id="shop_name">{$shop_name}</h4>
 				{if !isset($wrong_folder_name) && !isset($wrong_install_name)}
 				<form action="#" id="login_form" method="post">
@@ -87,30 +87,62 @@
 					</div>
 				</form>
 			</div>
-
-			<div class="back panel">
-				<form action="#" id="forgot_password_form" method="post">
-					<div class="alert alert-info">
-						<h4>{l s='Forgot your password?'}</h4>
-						<p>{l s='In order to receive your access code by email, please enter the address you provided during the registration process.'}</p>
+			{if isset($reset_token) && isset($id_employee)}
+			<div class="front front_reset panel">
+				<form action="#" id="reset_password_form" method="post">
+					<h4 id="reset_name">{l s='Reset your password'}</h4>
+					<div class="form-group">
+						<label class="control-label" for="reset_passwd">
+							{l s='New password'}
+						</label>
+						<input name="reset_passwd" type="password" id="reset_passwd" class="form-control" value="" tabindex="1" placeholder="&#xf084 {l s='Password'}" />
 					</div>
 					<div class="form-group">
+						<label class="control-label" for="reset_confirm">
+							{l s='Confirm new password'}
+						</label>
+						<input name="reset_confirm" type="password" id="reset_confirm" class="form-control" value="" tabindex="2" placeholder="&#xf084 {l s='Confirm password'}" />
+					</div>
+					<div class="panel-footer">
+						<button class="btn btn-primary btn-default pull-right" name="submitLogin" type="submit" tabindex="3">
+							<i class="icon-ok text-success"></i>
+							{l s='Reset password'}
+						</button>
+					</div>
+					<input type="hidden" name="reset_token" id="reset_token" value="{$reset_token|escape:'html':'UTF-8'}" />
+					<input type="hidden" name="id_employee" id="id_employee" value="{$id_employee|escape:'html':'UTF-8'}" />
+					<input type="hidden" name="reset_email" id="reset_email" value="{$reset_email|escape:'html':'UTF-8'}" />
+				</form>
+			</div>
+			<div class="back back_reset">
+				<h4 id="reset_confirm_name">{l s='Your password has been successfully changed.'}<br/><br/>{l s='You will be redirected to the login page in a few seconds.'}</h4>
+			</div>
+			{/if}
+
+			<div class="back panel">
+				<h4 id="forgot_name">{l s='Forgot your password?'}</h4>
+				<form action="#" id="forgot_password_form" method="post">
+					<div class="form-group">
 						<label class="control-label" for="email_forgot">
-							{l s='Email'}
+							{l s='Email address'}
 						</label>
 						<input type="text" name="email_forgot" id="email_forgot" class="form-control" autofocus="autofocus" tabindex="5" placeholder="&#xf0e0 test@example.com" />
 					</div>
 					<div class="panel-footer">
 						<button type="button" href="#" class="btn btn-default show-login-form" tabindex="7">
 							<i class="icon-caret-left"></i>
-							{l s='Back to login'}
+							{l s='Cancel'}
 						</button>
-						<button class="btn btn-default pull-right" name="submitLogin" type="submit" tabindex="6">
+						<button class="btn btn-primary btn-default pull-right" name="submitLogin" type="submit" tabindex="6">
 							<i class="icon-ok text-success"></i>
-							{l s='Send'}
+							{l s='Send reset link'}
 						</button>
 					</div>
 				</form>
+			</div>
+			
+			<div class="front forgot_confirm" style="display: none">
+				<h4 id="forgot_confirm_name">{l s='Please, check your mailbox.'}<br/><br/>{l s='A link to reset your password has been sent to you.'}</h4>
 			</div>
 		</div>
 		{else}

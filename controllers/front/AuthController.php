@@ -722,8 +722,7 @@ class AuthControllerCore extends FrontController
 			array(
 				'{firstname}' => $customer->firstname,
 				'{lastname}' => $customer->lastname,
-				'{email}' => $customer->email,
-				'{passwd}' => Tools::getValue('passwd')),
+				'{email}' => $customer->email),
 			$customer->email,
 			$customer->firstname.' '.$customer->lastname
 		);
