@@ -152,7 +152,7 @@ function WishlistBuyProduct(token, id_product, id_product_attribute, id_quantity
 	else
 	{
 		$('#' + id_quantity).val(0);
-		WishlistAddProductCart(token, id_product, id_product_attribute, id_quantity)
+		WishlistAddProductCart(token, id_product, id_product_attribute, id_quantity);
 		document.forms['addtocart' + '_' + id_product + '_' + id_product_attribute].method='POST';
 		document.forms['addtocart' + '_' + id_product + '_' + id_product_attribute].action=baseUri + '?controller=cart';
 		document.forms['addtocart' + '_' + id_product + '_' + id_product_attribute].elements['token'].value = static_token;

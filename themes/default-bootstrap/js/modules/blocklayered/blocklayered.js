@@ -245,7 +245,7 @@ function initSliders()
 				to = formatCurrency($('#layered_'+slider['type']+'_slider').slider('values', 1), slider['format'], slider['unit']);
 				break;
 			case 5:
-				from =  $('#layered_'+slider['type']+'_slider').slider('values', 0)+slider['unit']
+				from =  $('#layered_'+slider['type']+'_slider').slider('values', 0)+slider['unit'];
 				to = $('#layered_'+slider['type']+'_slider').slider('values', 1)+slider['unit'];
 				break;
 		}
@@ -521,7 +521,7 @@ function reloadContent(params_plus)
 
 			if (result.pagination.search(/[^\s]/) >= 0)
 			{
-				var pagination = $('<div/>').html(result.pagination)
+				var pagination = $('<div/>').html(result.pagination);
 				var pagination_bottom = $('<div/>').html(result.pagination_bottom);
 
 				if ($('<div/>').html(pagination).find('#pagination').length)
