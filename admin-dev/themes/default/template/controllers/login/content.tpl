@@ -115,7 +115,7 @@
 				</form>
 			</div>
 			<div class="back back_reset">
-				<h4 id="reset_confirm_name">{l s='Your password was successfully changed.'}<br/><br/>{l s='You\'ll be redirected to the login page in 5s.'}</h4>
+				<h4 id="reset_confirm_name">{l s='Your password has been successfully changed.'}<br/><br/>{l s='You will be redirected to the login page in a few seconds.'}</h4>
 			</div>
 			{/if}
 
@@ -131,7 +131,7 @@
 					<div class="panel-footer">
 						<button type="button" href="#" class="btn btn-default show-login-form" tabindex="7">
 							<i class="icon-caret-left"></i>
-							{l s='Back to login'}
+							{l s='Cancel'}
 						</button>
 						<button class="btn btn-primary btn-default pull-right" name="submitLogin" type="submit" tabindex="6">
 							<i class="icon-ok text-success"></i>
@@ -142,7 +142,7 @@
 			</div>
 			
 			<div class="front forgot_confirm" style="display: none">
-				<h4 id="forgot_confirm_name">{l s='Please, check your mailbox.'}</h4>
+				<h4 id="forgot_confirm_name">{l s='Please, check your mailbox.'}<br/><br/>{l s='A link to reset your password has been sent to you.'}</h4>
 			</div>
 		</div>
 		{else}

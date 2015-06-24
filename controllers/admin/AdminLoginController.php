@@ -259,7 +259,7 @@ class AdminLoginControllerCore extends AdminController
                 $this->errors[] = Tools::displayError('This account does not exist.');
             } elseif ((strtotime($employee->last_passwd_gen.'+'.Configuration::get('PS_PASSWD_TIME_BACK').' minutes') - time()) > 0) {
                 $this->errors[] = sprintf(
-                    Tools::displayError('You can regenerate your password only every %d minute(s)'),
+                    Tools::displayError('You can reset your password every %d minute(s) only. Please try again later.'),
                     Configuration::get('PS_PASSWD_TIME_BACK')
                 );
             }
@@ -284,7 +284,7 @@ class AdminLoginControllerCore extends AdminController
                 Shop::setContext(Shop::CONTEXT_SHOP, (int)min($employee->getAssociatedShops()));
                 die(Tools::jsonEncode(array(
                     'hasErrors' => false,
-                    'confirm' => $this->l('A reset link has been sent to you. Please use it to change your password', 'AdminTab', false, false)
+                    'confirm' => $this->l('An email with a link to reset your password has been sent. Please check your mailbox.', 'AdminTab', false, false)
                 )));
             } else {
                 die(Tools::jsonEncode(array(
@@ -301,37 +301,34 @@ class AdminLoginControllerCore extends AdminController
     {
         if (_PS_MODE_DEMO_) {
             $this->errors[] = Tools::displayError('This functionality has been disabled.');
-        }
-        // hidden fields
-        elseif (!($reset_token_value = trim(Tools::getValue('reset_token')))) {
+        } elseif (!($reset_token_value = trim(Tools::getValue('reset_token')))) {
+            // hidden fields
             $this->errors[] = Tools::displayError('Some identification information is missing.');
         } elseif (!($id_employee = trim(Tools::getValue('id_employee')))) {
             $this->errors[] = Tools::displayError('Some identification information is missing.');
         } elseif (!($reset_email = trim(Tools::getValue('reset_email')))) {
             $this->errors[] = Tools::displayError('Some identification information is missing.');
-        }
-        // password (twice)
-        elseif (!($reset_password = trim(Tools::getValue('reset_passwd')))) {
-            $this->errors[] = Tools::displayError('The password is empty.');
+        } elseif (!($reset_password = trim(Tools::getValue('reset_passwd')))) {
+            // password (twice)
+            $this->errors[] = Tools::displayError('The password is missing: please enter your new password.');
         } elseif (!Validate::isPasswd($reset_password)) {
             $this->errors[] = Tools::displayError('The password is not in a valid format.');
         } elseif (!($reset_confirm = trim(Tools::getValue('reset_confirm')))) {
-            $this->errors[] = Tools::displayError('The password confirmation is empty.');
+            $this->errors[] = Tools::displayError('The confirmation is empty: please fill in the password confirmation as well.');
         } elseif ($reset_password !== $reset_confirm) {
-            $this->errors[] = Tools::displayError('The password and it\'s confirmation are different.');
+            $this->errors[] = Tools::displayError('The password and its confirmation do not match. Please double check both passwords.');
         } else {
             $employee = new Employee();
             if (!$employee->getByEmail($reset_email) || !$employee || $employee->id != $id_employee) { // check matching employee id with its email
                 $this->errors[] = Tools::displayError('This account does not exist.');
             } elseif ((strtotime($employee->last_passwd_gen.'+'.Configuration::get('PS_PASSWD_TIME_BACK').' minutes') - time()) > 0) {
                 $this->errors[] = sprintf(
-                    Tools::displayError('You can regenerate your password only every %d minute(s)'),
+                    Tools::displayError('You can reset your password every %d minute(s) only. Please try again later.'),
                     Configuration::get('PS_PASSWD_TIME_BACK')
                 );
-            }
-            // To update password, we must have the temporary reset token that matches.
-            elseif ($employee->getValidResetPasswordToken() !== $reset_token_value) {
-                $this->errors[] = Tools::displayError('The password change request expired. You should ask for a new one.');
+            } elseif ($employee->getValidResetPasswordToken() !== $reset_token_value) {
+                // To update password, we must have the temporary reset token that matches.
+                $this->errors[] = Tools::displayError('Your password reset request expired. Please start again.');
             }
         }
 
