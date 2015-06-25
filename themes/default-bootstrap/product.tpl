@@ -237,7 +237,6 @@
 							{l s='Print'}
 						</a>
 					</li>
-					{if $have_image && !$jqZoomEnabled}{/if}
 				</ul>
 			{/if}
 		</div>
