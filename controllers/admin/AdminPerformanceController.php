@@ -569,7 +569,12 @@ class AdminPerformanceControllerCore extends AdminController
 						array(
 							'id' => 'CacheMemcache',
 							'value' => 'CacheMemcache',
-							'label' => $this->l('Memcached').(extension_loaded('memcache') ? '' : $warning_memcached)
+							'label' => $this->l('Memcached via PHP::Memcache').(extension_loaded('memcache') ? '' : $warning_memcached)
+						),
+						array(
+							'id' => 'CacheMemcached',
+							'value' => 'CacheMemcached',
+							'label' => $this->l('Memcached via PHP::Memcached').(extension_loaded('memcached') ? '' : $warning_memcached)
 						),
 						array(
 							'id' => 'CacheApc',
@@ -922,6 +927,9 @@ class AdminPerformanceControllerCore extends AdminController
 					if ($caching_system == 'CacheMemcache' && !extension_loaded('memcache'))
 						$this->errors[] = Tools::displayError('To use Memcached, you must install the Memcache PECL extension on your server.').'
 							<a href="http://www.php.net/manual/en/memcache.installation.php">http://www.php.net/manual/en/memcache.installation.php</a>';
+					elseif ($caching_system == 'CacheMemcached' && !extension_loaded('memcached'))
+						$this->errors[] = Tools::displayError('To use Memcached, you must install the Memcached PECL extension on your server.').'
+							<a href="http://www.php.net/manual/en/memcached.installation.php">http://www.php.net/manual/en/memcached.installation.php</a>';
 					elseif ($caching_system == 'CacheApc' && !extension_loaded('apc'))
 						$this->errors[] = Tools::displayError('To use APC cache, you must install the APC PECL extension on your server.').'
 							<a href="http://fr.php.net/manual/fr/apc.installation.php">http://fr.php.net/manual/fr/apc.installation.php</a>';
@@ -949,6 +957,8 @@ class AdminPerformanceControllerCore extends AdminController
 						}
 					}
 					elseif ($caching_system == 'CacheMemcache' && !_PS_CACHE_ENABLED_ && _PS_CACHING_SYSTEM_ == 'CacheMemcache')
+						Cache::getInstance()->flush();
+					elseif ($caching_system == 'CacheMemcached' && !_PS_CACHE_ENABLED_ && _PS_CACHING_SYSTEM_ == 'CacheMemcached')
 						Cache::getInstance()->flush();
 				}
 
