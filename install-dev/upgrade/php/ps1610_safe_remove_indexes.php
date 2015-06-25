@@ -29,6 +29,9 @@ function ps1610_safe_remove_indexes()
     $keysToRemove = array(
         array('table' => 'shop', 'key' => 'id_group_shop'),
         array('table' => 'specific_price', 'key' => 'id_product_2'),
+        array('table' => 'hook_module', 'key' => 'position'),
+        array('table' => 'cart_product', 'key' => 'PRIMARY'),
+        array('table' => 'cart_product', 'key' => 'cart_product_index'),
     );
 
     foreach ($keysToRemove as $details) {
@@ -36,7 +39,7 @@ function ps1610_safe_remove_indexes()
             SHOW INDEX FROM `'._DB_PREFIX_.$details['table'].'` WHERE Key_name = \''.$details['key'].'\'
         ');
         if (count($indexes) > 0) {
-            Db::getInstance()->executeS('
+            Db::getInstance()->execute('
                 ALTER TABLE `'._DB_PREFIX_.$details['table'].'` DROP KEY `'.$details['key'].'`
             ');
         }
