@@ -27,8 +27,9 @@
 
 {block name=pageTitle}
 <h2 class="page-title">
-	{l s='Configure "%s" module' sprintf=$module_display_name}
+	{l s='Configure'}
 </h2>
+<h4 class="page-subtitle">{$module_display_name}</h4>
 {/block}
 {block name=pageBreadcrumb}
 <ul class="breadcrumb page-breadcrumb">
