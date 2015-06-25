@@ -45,6 +45,7 @@ $(document).ready(function(){
 	else
 		$('#homepage-slider').addClass('col-xs-12');
 
+	var slideCount = $('#homeslider li').size();
 	if (!!$.prototype.bxSlider)
 		$('#homeslider').bxSlider({
 			useCSS: false,
@@ -54,9 +55,9 @@ $(document).ready(function(){
 			hideControlOnEnd: true,
 			pager: false,
 			autoHover: true,
-			auto: homeslider_loop,
+			auto: (slideCount>1?homeslider_loop:0),
 			speed: parseInt(homeslider_speed),
 			pause: homeslider_pause,
-			controls: true
+			controls: (slideCount>1?true:false)
 		});
 });
