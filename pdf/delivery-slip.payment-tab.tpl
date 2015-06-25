@@ -22,17 +22,22 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<table id="addresses-tab" cellspacing="0" cellpadding="0">
-    <tr>
-        <td width="33%"><span class="bold"> </span><br/><br/>
-            {if isset($order_invoice)}{$order_invoice->shop_address}{/if}
-        </td>
-        <td width="33%">{if $delivery_address}<span class="bold">{l s='Delivery Address' pdf='true'}</span><br/><br/>
-                {$delivery_address}
-            {/if}
-        </td>
-        <td width="33%"><span class="bold">{l s='Billing Address' pdf='true'}</span><br/><br/>
-                {$invoice_address}
-        </td>
-    </tr>
+<table id="payment-tab" width="100%" cellpadding="4" cellspacing="0">
+	<tr>
+		<td class="payment center small grey bold" width="44%">{l s='Payment Method' pdf='true'}</td>
+		<td class="payment left white" width="56%">
+			<table width="100%" border="0">
+				{foreach from=$order_invoice->getOrderPaymentCollection() item=payment}
+					<tr>
+						<td class="right small">{$payment->payment_method}</td>
+						<td class="right small">{displayPrice currency=$payment->id_currency price=$payment->amount}</td>
+					</tr>
+				{foreachelse}
+					<tr>
+						<td>{l s='No payment' pdf='true'}</td>
+					</tr>
+				{/foreach}
+			</table>
+		</td>
+	</tr>
 </table>

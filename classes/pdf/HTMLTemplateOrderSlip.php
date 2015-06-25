@@ -52,9 +52,24 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 		// header informations
 		$this->date = Tools::displayDate($this->order_slip->date_add);
 		$prefix = Configuration::get('PS_CREDIT_SLIP_PREFIX', Context::getContext()->language->id);
-		$this->title = sprintf(HTMLTemplateOrderSlip::l('Credit Slip %1$s%2$06d'), $prefix, (int)$this->order_slip->id);
+		$this->title = sprintf(HTMLTemplateOrderSlip::l('%1$s%2$06d'), $prefix, (int)$this->order_slip->id);
 
 		$this->shop = new Shop((int)$this->order->id_shop);
+	}
+	
+	/**
+	 * Returns the template's HTML header
+	 *
+	 * @return string HTML header
+	 */
+	public function getHeader()
+	{
+		$this->assignCommonHeaderData();
+		$this->smarty->assign(array(
+			'header' => $this->l('CREDIT SLIP'),
+		));
+	
+		return $this->smarty->fetch($this->getTemplate('header'));
 	}
 
 	/**
@@ -137,10 +152,21 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 			'amount_choosen' => $this->order_slip->order_slip_type == 2 ? true : false,
 			'delivery_address' => $formatted_delivery_address,
 			'invoice_address' => $formatted_invoice_address,
+			'addresses' => array('invoice' => $invoice_address, 'delivery' => $delivery_address),
 			'tax_excluded_display' => $tax_excluded_display,
-			'tax_tab' => $this->getTaxTabContent(),
 		));
 
+		$tpls = array(
+			'style_tab' => $this->smarty->fetch($this->getTemplate('invoice.style-tab')),
+			'addresses_tab' => $this->smarty->fetch($this->getTemplate('invoice.addresses-tab')),
+			'summary_tab' => $this->smarty->fetch($this->getTemplate('order-slip.summary-tab')),
+			'product_tab' => $this->smarty->fetch($this->getTemplate('order-slip.product-tab')),
+			'total_tab' => $this->smarty->fetch($this->getTemplate('order-slip.total-tab')),
+			'payment_tab' => $this->smarty->fetch($this->getTemplate('order-slip.payment-tab')),
+			'tax_tab' => $this->getTaxTabContent(),
+		);
+		$this->smarty->assign($tpls);
+		
 		return $this->smarty->fetch($this->getTemplate('order-slip'));
 	}
 

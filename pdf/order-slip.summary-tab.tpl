@@ -22,17 +22,21 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<table id="addresses-tab" cellspacing="0" cellpadding="0">
+<table id="summary-tab" width="100%">
     <tr>
-        <td width="33%"><span class="bold"> </span><br/><br/>
-            {if isset($order_invoice)}{$order_invoice->shop_address}{/if}
-        </td>
-        <td width="33%">{if $delivery_address}<span class="bold">{l s='Delivery Address' pdf='true'}</span><br/><br/>
-                {$delivery_address}
-            {/if}
-        </td>
-        <td width="33%"><span class="bold">{l s='Billing Address' pdf='true'}</span><br/><br/>
-                {$invoice_address}
-        </td>
+        <th class="header small" valign="middle">{l s='Order Reference' pdf='true'}</th>
+        <th class="header small" valign="middle">{l s='Order date' pdf='true'}</th>
+        {if $addresses.invoice->vat_number}
+            <th class="header small" valign="middle">{l s='VAT Number' pdf='true'}</th>
+        {/if}
+    </tr>
+    <tr>
+        <td class="center small white">{$order->getUniqReference()}</td>
+        <td class="center small white">{dateFormat date=$order->date_add full=0}</td>
+        {if $addresses.invoice->vat_number}
+            <td class="center small white">
+                {$addresses.invoice->vat_number}
+            </td>
+        {/if}
     </tr>
 </table>
