@@ -149,7 +149,8 @@ CREATE TABLE `PREFIX_carrier` (
   `grade` int(10)  DEFAULT '0',
   PRIMARY KEY (`id_carrier`),
   KEY `deleted` (`deleted`,`active`),
-  KEY `id_tax_rules_group` (`id_tax_rules_group`)
+  KEY `id_tax_rules_group` (`id_tax_rules_group`),
+  KEY `reference` (`id_reference`, `deleted`, `active`)
 ) ENGINE=ENGINE_TYPE  DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_carrier_lang` (
@@ -1383,7 +1384,8 @@ CREATE TABLE `PREFIX_pack` (
   `id_product_item` int(10) unsigned NOT NULL,
   `id_product_attribute_item` int(10) unsigned NOT NULL,
   `quantity` int(10) unsigned NOT NULL DEFAULT 1,
-  PRIMARY KEY (`id_product_pack`, `id_product_item`, `id_product_attribute_item`)
+  PRIMARY KEY (`id_product_pack`, `id_product_item`, `id_product_attribute_item`),
+  KEY `product_item` (`id_product_item`,`id_product_attribute_item`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;
 
 CREATE TABLE `PREFIX_page` (
@@ -2408,8 +2410,7 @@ CREATE TABLE `PREFIX_supply_order_detail` (
 `tax_value_with_order_discount` DECIMAL(20,6) DEFAULT '0.000000',
 `price_with_order_discount_te` DECIMAL(20,6) DEFAULT '0.000000',
   PRIMARY KEY (`id_supply_order_detail`),
-  KEY `id_supply_order` (`id_supply_order`),
-  KEY `id_product` (`id_product`),
+  KEY `id_supply_order` (`id_supply_order`, `id_product`),
   KEY `id_product_attribute` (`id_product_attribute`),
   KEY `id_product_product_attribute` (`id_product`, `id_product_attribute`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8 COLLATION;

@@ -368,34 +368,51 @@ class AddressCore extends ObjectModel
 	 */
 	public static function initialize($id_address = null, $with_geoloc = false)
 	{
-		if (!isset($context))
-			$context = Context::getContext();
+		$context = Context::getContext();
 
-		// if an id_address has been specified retrieve the address
 		if ($id_address)
-		{
-			$address = new Address((int)$id_address);
-
-			if (!Validate::isLoadedObject($address))
-				throw new PrestaShopException('Invalid address #'.(int)$id_address);
-		}
-		elseif ($with_geoloc && isset($context->customer->geoloc_id_country))
-		{
-			$address = new Address();
-			$address->id_country = (int)$context->customer->geoloc_id_country;
-			$address->id_state = (int)$context->customer->id_state;
-			$address->postcode = $context->customer->postcode;
-		}
+			$context_hash = (int)$id_address;
 		else
+			if ($with_geoloc && isset($context->customer->geoloc_id_country))
+				$context_hash = md5((int)$context->customer->geoloc_id_country.'-'.(int)$context->customer->id_state.'-'.
+								$context->customer->postcode);
+			else
+				$context_hash = md5((int)$context->country->id);
+
+
+		$cache_id = 'Address::initialize_'.$context_hash;
+
+		if (!Cache::isStored($cache_id))
 		{
-			// set the default address
-			$address = new Address();
-			$address->id_country = (int)$context->country->id;
-			$address->id_state = 0;
-			$address->postcode = 0;
+			// if an id_address has been specified retrieve the address
+			if ($id_address)
+			{
+				$address = new Address((int)$id_address);
+
+				if (!Validate::isLoadedObject($address))
+					throw new PrestaShopException('Invalid address #'.(int)$id_address);
+
+			}
+			elseif ($with_geoloc && isset($context->customer->geoloc_id_country))
+			{
+				$address             = new Address();
+				$address->id_country = (int)$context->customer->geoloc_id_country;
+				$address->id_state   = (int)$context->customer->id_state;
+				$address->postcode   = $context->customer->postcode;
+			}
+			else
+			{
+				// set the default address
+				$address             = new Address();
+				$address->id_country = (int)$context->country->id;
+				$address->id_state   = 0;
+				$address->postcode   = 0;
+			}
+			Cache::store($cache_id, $address);
+			return $address;
 		}
 
-		return $address;
+		return Cache::retrieve($cache_id);
 	}
 
 	/**

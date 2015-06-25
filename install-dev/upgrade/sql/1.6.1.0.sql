@@ -215,3 +215,9 @@ INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`)
   VALUES ('PS_INVCE_INVOICE_ADDR_RULES', '{"avoid":["vat_number","phone","phone_mobile"]}', NOW(), NOW());
 INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`)
   VALUES ('PS_INVCE_DELIVERY_ADDR_RULES', '{"avoid":["vat_number","phone","phone_mobile"]}', NOW(), NOW());
+
+ALTER TABLE `PREFIX_pack` ADD KEY `product_item` (`id_product_item`,`id_product_attribute_item`);
+
+ALTER TABLE `PREFIX_supply_order_detail DROP KEY `id_supply_order`, DROP KEY `id_product`, ADD KEY `id_supply_order` (`id_supply_order`, `id_product`);
+
+ALTER TABLE `PREFIX_carrier` ADD KEY `reference` (`id_reference`, `deleted`, `active`);
