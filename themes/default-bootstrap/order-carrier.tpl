@@ -349,11 +349,11 @@
 				{/if}
 				{/if}
 			{/if}
-			{if $conditions && $cms_id && !$advanced_payment_api}
+			{if $conditions && $cms_id && (isset($advanced_payment_api) && !$advanced_payment_api)}
 				{if $opc}
 					<hr style="" />
 				{/if}
-                {if $override_tos_display }
+                {if isset($override_tos_display) && $override_tos_display}
                     {$override_tos_display}
                 {else}
                     <div class="box">
