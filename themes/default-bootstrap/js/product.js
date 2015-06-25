@@ -639,13 +639,13 @@ function updatePrice()
 	// Apply combination price impact (only if there is no specific price)
 	// 0 by default, +x if price is inscreased, -x if price is decreased
 	basePriceWithoutTax = basePriceWithoutTax + +combination.price;
-	basePriceWithTax = basePriceWithTax + +combination.price;
+	basePriceWithTax = basePriceWithTax + +combination.price * (taxRate/100 + 1);
 
 	// If a specific price redefine the combination base price
 	if (combination.specific_price && combination.specific_price.price > 0)
 	{
 		basePriceWithoutTax = +combination.specific_price.price;
-		basePriceWithTax = +combination.specific_price.price;
+		basePriceWithTax = +combination.specific_price.price * (taxRate/100 + 1);
 	}
 
 	var priceWithDiscountsWithoutTax = basePriceWithoutTax;
@@ -673,7 +673,7 @@ function updatePrice()
 				if (combination.specific_price.id_currency == 0)
 					reduction = reduction * currencyRate * (1 - groupReduction);
 				priceWithDiscountsWithoutTax -= reduction;
-				priceWithDiscountsWithTax -= reduction;
+				priceWithDiscountsWithTax -= reduction * (taxRate/100 + 1);
 			}
 		}
 		else if (combination.specific_price.reduction_type == 'percentage')
@@ -932,7 +932,40 @@ function refreshProductImages(id_product_attribute)
 	else
 	{
 		$('#thumbs_list li').show();
-		displayImage($('#thumbs_list li:first a'));
+		
+		var choice = [];
+		var radio_inputs = parseInt($('#attributes .checked > input[type=radio]').length);
+		if (radio_inputs)
+			radio_inputs = '#attributes .checked > input[type=radio]';
+		else
+			radio_inputs = '#attributes input[type=radio]:checked';
+	
+		$('#attributes select, #attributes input[type=hidden], ' + radio_inputs).each(function(){
+			choice.push(parseInt($(this).val()));
+		});
+
+		if (typeof combinations == 'undefined' || !combinations)
+			combinations = [];
+
+		//testing every combination to find the conbination's attributes' case of the user
+		for (var combination = 0; combination < combinations.length; ++combination)
+		{
+			//verify if this combinaison is the same that the user's choice
+			var combinationMatchForm = true;
+
+			$.each(combinations[combination]['idsAttributes'], function(key, value)
+			{
+				if (!in_array(parseInt(value), choice))
+					combinationMatchForm = false;
+			});
+
+			if (combinationMatchForm)
+			{
+				//show the large image in relation to the selected combination
+				if (combinations[combination]['image'] && combinations[combination]['image'] != -1)
+					displayImage($('#thumb_' + combinations[combination]['image']).parent());
+			}
+		}
 	}
 
 	if (parseInt($('#thumbs_list_frame >li:visible').length) != parseInt($('#thumbs_list_frame >li').length))

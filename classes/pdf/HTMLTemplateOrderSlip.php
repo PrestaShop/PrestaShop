@@ -183,81 +183,126 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 			'shipping_tax_breakdown' => $this->getShippingTaxesBreakdown(),
 			'order' => $this->order,
 			'ecotax_tax_breakdown' => $this->order_slip->getEcoTaxTaxesBreakdown(),
-			'is_order_slip' => true
+			'is_order_slip' => true,
+			'tax_breakdowns' => $this->getTaxBreakdown(),
 		));
 
 		return $this->smarty->fetch($this->getTemplate('invoice.tax-tab'));
 	}
 
 	/**
-	 * Returns product tax breakdown elements
+	 * Returns different tax breakdown elements
 	 *
-	 * @return Array Product tax breakdown elements
+	 * @return Array Different tax breakdown elements
 	 */
-	public function getProductTaxesBreakdown()
+	protected function getTaxBreakdown()
 	{
-		$tmp_tax_infos = array();
-		$infos = array(
-			'total_price_tax_excl' => 0,
-			'total_amount' => 0
+		$breakdowns = array(
+			'product_tax' => $this->getProductTaxesBreakdown(),
+			'shipping_tax' => $this->getShippingTaxesBreakdown(),
+			'ecotax_tax' => $this->order_slip->getEcoTaxTaxesBreakdown(),
 		);
 
-		foreach ($this->order_slip->getOrdersSlipDetail((int)$this->order_slip->id) as $order_slip_details)
+		foreach ($breakdowns as $type => $bd)
 		{
-			$tax_calculator = OrderDetail::getTaxCalculatorStatic((int)$order_slip_details['id_order_detail']);
-			$tax_amount = $tax_calculator->getTaxesAmount($order_slip_details['amount_tax_excl']);
+			if (empty($bd))
+				unset($breakdowns[$type]);
+		}
 
-			if ($this->order->useOneAfterAnotherTaxComputationMethod())
+		if (empty($breakdowns))
+			$breakdowns = false;
+
+		if (isset($breakdowns['product_tax']))
+		{
+			foreach ($breakdowns['product_tax'] as &$bd)
+				$bd['total_tax_excl'] = $bd['total_price_tax_excl'];
+		}
+
+		if (isset($breakdowns['ecotax_tax']))
+		{
+			foreach ($breakdowns['ecotax_tax'] as &$bd)
 			{
-				foreach ($tax_amount as $tax_id => $amount)
-				{
-					$tax = new Tax((int)$tax_id);
-					if (!isset($total_tax_amount[$tax->rate]))
-					{
-						$tmp_tax_infos[$tax->rate]['name'] = $tax->name;
-						$tmp_tax_infos[$tax->rate]['total_price_tax_excl'] = $order_slip_details['amount_tax_excl'];
-						$tmp_tax_infos[$tax->rate]['total_amount'] = $amount;
-					}
-					else
-					{
-						$tmp_tax_infos[$tax->rate]['total_price_tax_excl'] += $order_slip_details['amount_tax_excl'];
-						$tmp_tax_infos[$tax->rate]['total_amount'] += $amount;
-					}
-				}
-			}
-			else
-			{
-				$tax_rate = 0;
-				foreach ($tax_amount as $tax_id => $amount)
-				{
-					$tax = new Tax((int)$tax_id);
-					$tax_rate = $tax->rate;
-					$infos['total_price_tax_excl'] += (float)Tools::ps_round($order_slip_details['amount_tax_excl'], 2);
-					$infos['total_amount'] += (float)Tools::ps_round($amount, 2);
-				}
-				$tmp_tax_infos[(string)number_format($tax_rate, 3)] = $infos;
+				$bd['total_tax_excl'] = $bd['ecotax_tax_excl'];
+				$bd['total_amount'] = $bd['ecotax_tax_incl'] - $bd['ecotax_tax_excl'];
 			}
 		}
 
-		// Delete ecotax from the total
-		$ecotax = $this->order_slip->getEcoTaxTaxesBreakdown();
-		if ($this->order_slip->order_slip_type == 1)
-			foreach ($tmp_tax_infos as $rate => &$row)
+		return $breakdowns;
+	}
+
+	public function getProductTaxesBreakdown()
+	{
+		$sum_composite_taxes = !$this->useOneAfterAnotherTaxComputationMethod();
+
+		// $breakdown will be an array with tax rates as keys and at least the columns:
+		// 	- 'total_price_tax_excl'
+		// 	- 'total_amount'
+		$breakdown = array();
+
+		$details = $this->order->getProductTaxesDetails();
+
+		if ($sum_composite_taxes)
+		{
+			$grouped_details = array();
+			foreach ($details as $row)
 			{
-				$row['total_price_tax_excl'] -= Db::getInstance()->getValue('SELECT `value_tax_excl` FROM '._DB_PREFIX_.'order_cart_rule WHERE id_order = '.$this->order_slip->id_order);
-				$row['total_amount'] -= Db::getInstance()->getValue('SELECT `value` FROM '._DB_PREFIX_.'order_cart_rule WHERE id_order = '.$this->order_slip->id_order) - $row['total_price_tax_excl'];
+				if (!isset($grouped_details[$row['id_order_detail']]))
+				{
+					$grouped_details[$row['id_order_detail']] = array(
+						'tax_rate' => 0,
+						'total_tax_base' => 0,
+						'total_amount' => 0,
+						'id_tax' => $row['id_tax'],
+					);
+				}
+
+				$grouped_details[$row['id_order_detail']]['tax_rate'] += $row['tax_rate'];
+				$grouped_details[$row['id_order_detail']]['total_tax_base'] += $row['total_tax_base'];
+				$grouped_details[$row['id_order_detail']]['total_amount'] += $row['total_amount'];
 			}
 
-		if ($ecotax)
-			foreach ($tmp_tax_infos as $rate => &$row)
+			$details = $grouped_details;
+		}
+
+		foreach ($details as $row)
+		{
+			$rate = sprintf('%.3f', $row['tax_rate']);
+			if (!isset($breakdown[$rate]))
 			{
-				if (!isset($ecotax[$rate]))
-					continue;
-				$row['total_price_tax_excl'] -= $ecotax[$rate]['ecotax_tax_excl'];
-				$row['total_amount'] -= ($ecotax[$rate]['ecotax_tax_incl'] - $ecotax[$rate]['ecotax_tax_excl']);
+				$breakdown[$rate] = array(
+					'total_price_tax_excl' => 0,
+					'total_amount' => 0,
+					'id_tax' => $row['id_tax'],
+					'rate' =>$rate,
+				);
 			}
 
-		return $tmp_tax_infos;
+			$breakdown[$rate]['total_price_tax_excl'] += $row['total_tax_base'];
+			$breakdown[$rate]['total_amount'] += $row['total_amount'];
+		}
+
+		foreach ($breakdown as $rate => $data)
+		{
+			$breakdown[$rate]['total_price_tax_excl'] = Tools::ps_round($data['total_price_tax_excl'], _PS_PRICE_COMPUTE_PRECISION_, $order->round_mode);
+			$breakdown[$rate]['total_amount'] = Tools::ps_round($data['total_amount'], _PS_PRICE_COMPUTE_PRECISION_, $order->round_mode);
+		}
+
+		ksort($breakdown);
+
+		return $breakdown;
+	}
+
+	public function useOneAfterAnotherTaxComputationMethod()
+	{
+		// if one of the order details use the tax computation method the display will be different
+		return Db::getInstance()->getValue('
+		SELECT od.`tax_computation_method`
+		FROM `'._DB_PREFIX_.'order_detail_tax` odt
+		LEFT JOIN `'._DB_PREFIX_.'order_detail` od ON (od.`id_order_detail` = odt.`id_order_detail`)
+		WHERE od.`id_order` = '.(int)$this->id_order.'
+		AND od.`id_order_invoice` = '.(int)$this->id.'
+		AND od.`tax_computation_method` = '.(int)TaxCalculator::ONE_AFTER_ANOTHER_METHOD
+		) || Configuration::get('PS_INVOICE_TAXES_BREAKDOWN');
 	}
 
 	/**

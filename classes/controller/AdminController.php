@@ -1645,6 +1645,7 @@ class AdminControllerCore extends Controller
 		}
 		$this->layout = 'layout-ajax.tpl';
 		$this->display_header = false;
+		$this->display_header_javascript = false;
 		$this->display_footer = false;
 		return $this->display();
 	}
@@ -1663,6 +1664,7 @@ class AdminControllerCore extends Controller
 	{
 		$this->context->smarty->assign(array(
 			'display_header' => $this->display_header,
+			'display_header_javascript'=> $this->display_header_javascript,
 			'display_footer' => $this->display_footer,
 			'js_def' => Media::getJsDef(),
 		));
@@ -2066,7 +2068,7 @@ class AdminControllerCore extends Controller
 		if (is_array($this->tab_modules_list['slider_list']) && count($this->tab_modules_list['slider_list']))
 			$this->page_header_toolbar_btn['modules-list'] = array(
 				'href' => '#',
-				'desc' => $this->l('Recommended Modules')
+				'desc' => $this->l('Recommended Modules and Services')
 			);
 	}
 
@@ -2077,7 +2079,7 @@ class AdminControllerCore extends Controller
 		if (is_array($this->tab_modules_list['slider_list']) && count($this->tab_modules_list['slider_list']))
 			$this->toolbar_btn['modules-list'] = array(
 				'href' => '#',
-				'desc' => $this->l('Recommended Modules')
+				'desc' => $this->l('Recommended Modules and Services')
 			);
 	}
 
@@ -2643,6 +2645,7 @@ class AdminControllerCore extends Controller
 		if ((int)Tools::getValue('liteDisplaying'))
 		{
 			$this->display_header = false;
+			$this->display_header_javascript = true;
 			$this->display_footer = false;
 			$this->content_only = false;
 			$this->lite_display = true;

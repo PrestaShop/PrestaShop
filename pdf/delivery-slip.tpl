@@ -131,7 +131,7 @@
 							<tr style="line-height:6px;background-color:{$bgcolor};">
 								<td style="line-height:3px; text-align: left; width: 60%; vertical-align: top">
 										<blockquote>
-											{if isset($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) && count($customization.datas[Product::CUSTOMIZE_TEXTFIELD_]) > 0}
+											{if isset($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) && count($customization.datas[Product::CUSTOMIZE_TEXTFIELD]) > 0}
 												{foreach $customization.datas[Product::CUSTOMIZE_TEXTFIELD] as $customization_infos}
 													{$customization_infos.name}: {$customization_infos.value}
 													{if !$smarty.foreach.custo_foreach.last}<br />
