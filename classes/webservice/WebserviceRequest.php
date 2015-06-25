@@ -542,7 +542,7 @@ class WebserviceRequestCore
 					{
 						$this->objectSpecificManagement = new $specificObjectName();
 						$this->objectSpecificManagement->setObjectOutput($this->objOutput)
-													   ->setWsObject($this);
+													->setWsObject($this);
 
 						try {
 							$this->objectSpecificManagement->manage();
@@ -1130,7 +1130,7 @@ class WebserviceRequestCore
 							}
 							else
 							{
-								if (isset($this->resourceConfiguration['fields'][$field]['getter']))
+								if (!isset($this->resourceConfiguration['fields'][$field]['getter']) &&	!isset($this->resourceConfiguration['fields'][$field]['sqlId']))
 								{
 									$this->setError(400, 'The field "'.$field.'" is dynamic. It is not possible to filter GET query with this field.', 34);
 									return false;
@@ -1277,7 +1277,7 @@ class WebserviceRequestCore
 				$check_shop_group = false;
 
 				$sql = 'SELECT 1
-	 						FROM `'.bqSQL(_DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table']);
+							FROM `'.bqSQL(_DB_PREFIX_.$this->resourceConfiguration['retrieveData']['table']);
 				if ($assoc['type'] != 'fk_shop')
 					$sql .= '_'.$assoc['type'];
 				else
