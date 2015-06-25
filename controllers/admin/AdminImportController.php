@@ -1060,14 +1060,15 @@ class AdminImportControllerCore extends AdminController
 			if ($regenerate)
 			{
 				$previous_path = null;
+				$path_infos = array();
+				$path_infos[] = array(PHP_INT_MAX, PHP_INT_MAX, $tmpfile);
 				foreach ($images_types as $image_type)
 				{
-					if ($previous_path && $image_type['width'] < $last_width && $image_type['height'] < $last_height)
-						$tmpfile = $previous_path;
+					$tmpfile = self::get_best_path($image_type['width'], $image_type['height'], $path_infos);
 
 					ImageManager::resize($tmpfile, $path.'-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height'], 'jpg', false, $error, $last_width, $last_height);
 
-					$previous_path = $path.'-'.stripslashes($image_type['name']).'.jpg';
+					$path_infos[] = array($last_width, $last_height, $path.'-'.stripslashes($image_type['name']).'.jpg');
 					if (in_array($image_type['id_image_type'], $watermark_types))
 						Hook::exec('actionWatermark', array('id_image' => $id_image, 'id_product' => $id_entity));
 				}
@@ -1080,6 +1081,18 @@ class AdminImportControllerCore extends AdminController
 		}
 		unlink($tmpfile);
 		return true;
+	}
+
+	private function get_best_path($tgt_width, $tgt_height, $path_infos)
+	{
+		$path_infos = array_reverse($path_infos);
+		foreach($path_infos as $path_info)
+		{
+			list($width, $height, $path) = $path_info;
+			if ($width >= $tgt_width && $height >= $tgt_height)
+				return $path;
+		}
+		return '';
 	}
 
 	public function categoryImport()
