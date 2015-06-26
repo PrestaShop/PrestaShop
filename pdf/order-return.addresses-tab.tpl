@@ -22,70 +22,21 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-
-{$style_tab}
-
-
-<table width="100%" id="body" border="0" cellpadding="0" cellspacing="0" style="margin:0;">
-	<!-- Invoicing -->
+<table id="addresses-tab" cellspacing="0" cellpadding="0">
 	<tr>
-		<td colspan="12">
-
-			{$addresses_tab}
-
-		</td>
+		{if !empty($invoice_address)}
+			<td width="50%">{if $delivery_address}<span class="bold">{l s='Delivery Address' pdf='true'}</span><br/><br/>
+					{$delivery_address}
+				{/if}
+			</td>
+			<td width="50%"><span class="bold">{l s='Billing Address' pdf='true'}</span><br/><br/>
+				{$invoice_address}
+			</td>
+		{else}
+			<td width="100%">{if $delivery_address}<span class="bold">{l s='Billing & Delivery Address' pdf='true'}</span><br/><br/>
+					{$delivery_address}
+				{/if}
+			</td>
+		{/if}
 	</tr>
-
-	<tr>
-		<td colspan="12" height="30">&nbsp;</td>
-	</tr>
-
-	<!-- TVA Info -->
-	<tr>
-		<td colspan="12">
-
-			{$summary_tab}
-
-		</td>
-	</tr>
-
-	<tr>
-		<td colspan="12" height="20">&nbsp;</td>
-	</tr>
-
-	<!-- Product -->
-	<tr>
-		<td colspan="12">
-
-			{$product_tab}
-
-		</td>
-	</tr>
-
-	<tr>
-		<td colspan="12" height="20">&nbsp;</td>
-	</tr>
-
-	<tr>
-		<td colspan="2">&nbsp;</td>
-		<td colspan="10">
-			{$conditions_tab}
-		</td>
-	</tr>
-
-
-	<!-- Hook -->
-	{if isset($HOOK_DISPLAY_PDF)}
-	<tr>
-		<td colspan="12" height="30">&nbsp;</td>
-	</tr>
-
-	<tr>
-		<td colspan="2">&nbsp;</td>
-		<td colspan="10">
-			{$HOOK_DISPLAY_PDF}
-		</td>
-	</tr>
-	{/if}
-
 </table>

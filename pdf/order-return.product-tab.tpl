@@ -22,70 +22,37 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+<table class="product" width="100%" cellpadding="4" cellspacing="0">
+	
+	<thead>
+		<tr>
+			<th class="product header small" width="60%">{l s='ITEMS TO BE RETURNED' pdf='true'}</th>
+			<th class="product header small" width="20%">{l s='REFERENCE' pdf='true'}</th>
+			<th class="product header small" width="20%">{l s='QTY' pdf='true'}</th>
+		</tr>
+	</thead>
 
-{$style_tab}
-
-
-<table width="100%" id="body" border="0" cellpadding="0" cellspacing="0" style="margin:0;">
-	<!-- Invoicing -->
-	<tr>
-		<td colspan="12">
-
-			{$addresses_tab}
-
-		</td>
-	</tr>
-
-	<tr>
-		<td colspan="12" height="30">&nbsp;</td>
-	</tr>
-
-	<!-- TVA Info -->
-	<tr>
-		<td colspan="12">
-
-			{$summary_tab}
-
-		</td>
-	</tr>
-
-	<tr>
-		<td colspan="12" height="20">&nbsp;</td>
-	</tr>
-
-	<!-- Product -->
-	<tr>
-		<td colspan="12">
-
-			{$product_tab}
-
-		</td>
-	</tr>
-
-	<tr>
-		<td colspan="12" height="20">&nbsp;</td>
-	</tr>
-
-	<tr>
-		<td colspan="2">&nbsp;</td>
-		<td colspan="10">
-			{$conditions_tab}
-		</td>
-	</tr>
-
-
-	<!-- Hook -->
-	{if isset($HOOK_DISPLAY_PDF)}
-	<tr>
-		<td colspan="12" height="30">&nbsp;</td>
-	</tr>
-
-	<tr>
-		<td colspan="2">&nbsp;</td>
-		<td colspan="10">
-			{$HOOK_DISPLAY_PDF}
-		</td>
-	</tr>
-	{/if}
+	<tbody>
+		<!-- PRODUCTS -->
+		{foreach $products as $product}
+			{cycle values=["color_line_even", "color_line_odd"] assign=bgcolor_class}
+			<tr class="product {$bgcolor_class}">
+				<td class="product left">
+					{$product.product_name}
+				</td>
+				<td class="product left">
+					{if empty($product.product_reference)}
+						---
+					{else}
+						{$product.product_reference}
+					{/if}
+				</td>
+				<td class="product center">
+					{$product.product_quantity}
+				</td>
+			</tr>
+		{/foreach}
+		<!-- END PRODUCTS -->
+	</tbody>
 
 </table>

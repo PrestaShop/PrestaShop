@@ -78,6 +78,15 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 			'tax_order_summary' => $tax_order_summary,
 			'currency' => $currency,
 		));
+		
+		$tpls = array(
+			'style_tab' => $this->smarty->fetch($this->getTemplate('invoice.style-tab')),
+			'addresses_tab' => $this->smarty->fetch($this->getTemplate('supply-order.addresses-tab')),
+			'product_tab' => $this->smarty->fetch($this->getTemplate('supply-order.product-tab')),
+			'tax_tab' => $this->smarty->fetch($this->getTemplate('supply-order.tax-tab')),
+			'total_tab' => $this->smarty->fetch($this->getTemplate('supply-order.total-tab')),
+		);
+		$this->smarty->assign($tpls);
 
 		return $this->smarty->fetch($this->getTemplate('supply-order'));
 	}

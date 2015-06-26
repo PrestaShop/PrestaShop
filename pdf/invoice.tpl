@@ -113,5 +113,19 @@
 
         </td>
     </tr>
+    
+    <!-- Hook -->
+	{if isset($HOOK_DISPLAY_PDF)}
+	<tr>
+		<td colspan="12" height="30">&nbsp;</td>
+	</tr>
+
+	<tr>
+		<td colspan="2">&nbsp;</td>
+		<td colspan="10">
+			{$HOOK_DISPLAY_PDF}
+		</td>
+	</tr>
+	{/if}
 
 </table>

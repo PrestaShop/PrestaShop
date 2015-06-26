@@ -46,7 +46,7 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
 		// header informations
 		$this->date = Tools::displayDate($this->order->invoice_date);
 		$prefix = Configuration::get('PS_RETURN_PREFIX', Context::getContext()->language->id);
-		$this->title = sprintf(HTMLTemplateOrderReturn::l('Order Return %1$s%2$06d'), $prefix, $this->order_return->id);
+		$this->title = sprintf(HTMLTemplateOrderReturn::l('%1$s%2$06d'), $prefix, $this->order_return->id);
 
 		$this->shop = new Shop((int)$this->order->id_shop);
 	}
@@ -76,6 +76,16 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
 			'invoice_address' => $formatted_invoice_address,
 			'shop_address' => AddressFormat::generateAddress($this->shop->getAddress(), array(), '<br />', ' ')
 		));
+		
+		$tpls = array(
+			'style_tab' => $this->smarty->fetch($this->getTemplate('invoice.style-tab')),
+			'addresses_tab' => $this->smarty->fetch($this->getTemplate('order-return.addresses-tab')),
+			'summary_tab' => $this->smarty->fetch($this->getTemplate('order-return.summary-tab')),
+			'product_tab' => $this->smarty->fetch($this->getTemplate('order-return.product-tab')),
+			'conditions_tab' => $this->smarty->fetch($this->getTemplate('order-return.conditions-tab')),
+		);
+		$this->smarty->assign($tpls);
+		
 		return $this->smarty->fetch($this->getTemplate('order-return'));
 	}
 
@@ -97,5 +107,20 @@ class HTMLTemplateOrderReturnCore extends HTMLTemplate
 	public function getBulkFilename()
 	{
 		return 'invoices.pdf';
+	}
+	
+	/**
+	 * Returns the template's HTML header
+	 *
+	 * @return string HTML header
+	 */
+	public function getHeader()
+	{
+		$this->assignCommonHeaderData();
+		$this->smarty->assign(array(
+			'header' => $this->l('ORDER RETURN'),
+		));
+	
+		return $this->smarty->fetch($this->getTemplate('header'));
 	}
 }
