@@ -174,7 +174,7 @@
 																			)
 																		{/if}
 																	{/if}
-																{strip}
+																{/strip}
 															{/foreach}
 														{/if}
 													</td>
@@ -245,7 +245,7 @@
 																				)
 																			{/if}
 																		{/if}
-																	{strip}
+																	{/strip}
 																{/foreach}
 															{/if}
 														</td>
