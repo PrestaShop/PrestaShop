@@ -95,7 +95,7 @@
 		{/if}
 
 		</tbody>
-    </table>
+	</table>
 
 {/if}
 <!--  / TAX DETAILS -->

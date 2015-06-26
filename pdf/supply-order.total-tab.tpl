@@ -57,7 +57,7 @@
 		</td>
 	</tr>
 	<tr class="bold">
-		<td class="grey" width="70%">{l s='TOTAL TO PAY' pdf='true'}</td>
+		<td class="grey" width="70%">{l s='Total to pay' pdf='true'}</td>
 		<td class="white" width="30%">
 			{$currency->prefix} {$supply_order->total_ti} {$currency->suffix}
 		</td>

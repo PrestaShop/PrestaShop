@@ -26,9 +26,9 @@
 	
 	<thead>
 		<tr>
-			<th class="product header small" width="60%">{l s='ITEMS TO BE RETURNED' pdf='true'}</th>
-			<th class="product header small" width="20%">{l s='REFERENCE' pdf='true'}</th>
-			<th class="product header small" width="20%">{l s='QTY' pdf='true'}</th>
+			<th class="product header small" width="60%">{l s='Items to be returned' pdf='true'}</th>
+			<th class="product header small" width="20%">{l s='Reference' pdf='true'}</th>
+			<th class="product header small" width="20%">{l s='Qty' pdf='true'}</th>
 		</tr>
 	</thead>
 

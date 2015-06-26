@@ -191,8 +191,8 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 	{
 		$this->address = $this->address_warehouse;
 		$free_text = array();
-		$free_text[] = HTMLTemplateSupplyOrderForm::l('DE: Discount excluded ');
-		$free_text[] = HTMLTemplateSupplyOrderForm::l(' DI: Discount included');
+		$free_text[] = HTMLTemplateSupplyOrderForm::l('TE: Tax excluded');
+		$free_text[] = HTMLTemplateSupplyOrderForm::l('TI: Tax included');
 
 		$this->smarty->assign(array(
 			'shop_address' => $this->getShopAddress(),
