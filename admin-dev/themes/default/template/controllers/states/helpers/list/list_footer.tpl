@@ -108,7 +108,7 @@
 									<a href="javascript:void(0);">&hellip;</a>
 								</li>
 								{assign p $page-3}
-							{else if $p > $page+2}
+							{elseif $p > $page+2}
 								<li class="disabled">
 									<a href="javascript:void(0);">&hellip;</a>
 								</li>

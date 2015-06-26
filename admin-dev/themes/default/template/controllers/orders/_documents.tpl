@@ -97,7 +97,7 @@
 									<span>
 									{if $document->getRestPaid() > 0}
 										({displayPrice price=$document->getRestPaid() currency=$currency->id} {l s='not paid'})
-									{else if $document->getRestPaid() < 0}
+									{elseif $document->getRestPaid() < 0}
 										({displayPrice price=-$document->getRestPaid() currency=$currency->id} {l s='overpaid'})
 									{/if}
 									</span>

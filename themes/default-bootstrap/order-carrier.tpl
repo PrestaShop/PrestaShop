@@ -72,7 +72,7 @@
 													{foreach $option.carrier_list as $carrier}
 														{if $carrier.logo}
 															<img src="{$carrier.logo|escape:'htmlall':'UTF-8'}" alt="{$carrier.instance->name|escape:'htmlall':'UTF-8'}"/>
-														{else if !$option.unique_carrier}
+														{elseif !$option.unique_carrier}
 															{$carrier.instance->name|escape:'htmlall':'UTF-8'}
 															{if !$carrier@last} - {/if}
 														{/if}
@@ -95,7 +95,7 @@
 															{else}
 																<span class="best_grade best_grade_speed">{l s='The fastest'}</span>
 															{/if}
-														{else if $option.is_best_price}
+														{elseif $option.is_best_price}
 															<span class="best_grade best_grade_price">{l s='The best price'}</span>
 														{/if}
 													{/if}
@@ -131,7 +131,7 @@
 													<td class="delivery_option_logo{if $first.product_list[0].carrier_list[0] eq 0} hide{/if}">
 														{if $first.logo}
 															<img src="{$first.logo|escape:'htmlall':'UTF-8'}" alt="{$first.instance->name|escape:'htmlall':'UTF-8'}"/>
-														{else if !$option.unique_carrier}
+														{elseif !$option.unique_carrier}
 															{$first.instance->name|escape:'htmlall':'UTF-8'}
 														{/if}
 													</td>
@@ -202,7 +202,7 @@
 														<td class="delivery_option_logo{if $carrier.product_list[0].carrier_list[0] eq 0} hide{/if}">
 															{if $carrier.logo}
 																<img src="{$carrier.logo|escape:'htmlall':'UTF-8'}" alt="{$carrier.instance->name|escape:'htmlall':'UTF-8'}"/>
-															{else if !$option.unique_carrier}
+															{elseif !$option.unique_carrier}
 																{$carrier.instance->name|escape:'htmlall':'UTF-8'}
 															{/if}
 														</td>

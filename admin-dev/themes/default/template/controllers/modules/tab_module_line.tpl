@@ -67,7 +67,7 @@
 				</a>
 			</p>
 		</td>
-	{else if !isset($module->not_on_disk)}
+	{elseif !isset($module->not_on_disk)}
 		<td>&nbsp;</td>
 		<td class="actions">
 			<div class="btn-group-action">

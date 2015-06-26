@@ -133,7 +133,7 @@
 												{/if}
 											{/foreach}
 										</ul>
-									{else if !isset($module->not_on_disk) && !isset($module->id)}
+									{elseif !isset($module->not_on_disk) && !isset($module->id)}
 										<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
 											<span class="caret">&nbsp;</span>
 										</button>
@@ -148,7 +148,7 @@
 												{/if}
 											{/foreach}
 										</ul>
-									{else if isset($module->not_on_disk)}
+									{elseif isset($module->not_on_disk)}
 										<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
 											<span class="caret">&nbsp;</span>
 										</button>
