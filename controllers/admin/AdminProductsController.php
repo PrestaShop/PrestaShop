@@ -4119,7 +4119,7 @@ class AdminProductsControllerCore extends AdminController
 							$file['error'] = Tools::displayError('An error occurred while copying image:').' '.stripslashes($imageType['name']);
 							continue;
 						}
-						
+
 						if ($generate_hight_dpi_images)
 							if (!ImageManager::resize($file['save_path'], $new_path.'-'.stripslashes($imageType['name']).'2x.'.$image->image_format, (int)$imageType['width']*2, (int)$imageType['height']*2, $image->image_format))
 							{

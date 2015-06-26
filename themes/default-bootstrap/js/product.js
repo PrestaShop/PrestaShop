@@ -806,9 +806,10 @@ function updatePrice()
 		$('.unit-price').show();
 	}
 
-	// If there is a quantity discount table,
-	// we update it according to the new price
-	updateDiscountTable(basePriceDisplay);
+	if (noTaxForThisProduct || customerGroupWithoutTax)
+		updateDiscountTable(productBasePriceTaxExcl);
+	else
+		updateDiscountTable(productBasePriceTaxIncl);
 }
 
 //update display of the large image
@@ -932,14 +933,14 @@ function refreshProductImages(id_product_attribute)
 	else
 	{
 		$('#thumbs_list li').show();
-		
+
 		var choice = [];
 		var radio_inputs = parseInt($('#attributes .checked > input[type=radio]').length);
 		if (radio_inputs)
 			radio_inputs = '#attributes .checked > input[type=radio]';
 		else
 			radio_inputs = '#attributes input[type=radio]:checked';
-	
+
 		$('#attributes select, #attributes input[type=hidden], ' + radio_inputs).each(function(){
 			choice.push(parseInt($(this).val()));
 		});
