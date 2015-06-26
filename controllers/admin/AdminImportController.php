@@ -1048,6 +1048,8 @@ class AdminImportControllerCore extends AdminController
 		if (!ImageManager::checkImageMemoryLimit($url))
 			return false;
 
+		$orig_tmpfile = $tmpfile;
+
 		// 'file_exists' doesn't work on distant file, and getimagesize makes the import slower.
 		// Just hide the warning, the processing will be the same.
 		if (Tools::copy($url, $tmpfile))
@@ -1057,9 +1059,6 @@ class AdminImportControllerCore extends AdminController
 			$error = 0;
 			ImageManager::resize($tmpfile, $path.'.jpg', null, null, 'jpg', false, $error, $tgt_width, $tgt_height, 5,
 								 $src_width, $src_height);
-
-			$orig_tmpfile = $tmpfile;
-
 			$images_types = ImageType::getImagesTypes($entity, true);
 
 			if ($regenerate)
@@ -1086,7 +1085,7 @@ class AdminImportControllerCore extends AdminController
 		}
 		else
 		{
-			unlink($tmpfile);
+			@unlink($orig_tmpfile);
 			return false;
 		}
 		unlink($orig_tmpfile);
