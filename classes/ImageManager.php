@@ -120,19 +120,23 @@ class ImageManagerCore
 	/**
 	 * Resize, cut and optimize image
 	 *
-	 * @param string  $src_file   Image object from $_FILE
-	 * @param string  $dst_file   Destination filename
-	 * @param int $dst_width  Desired width (optional)
-	 * @param int $dst_height Desired height (optional)
-	 * @param string  $file_type
-	 * @param bool    $force_type
-	 * @param int     $error
-	 * @param int     $width
-	 * @param int     $height
-	 * @param int     $quality
+	 * @param string $src_file   Image object from $_FILE
+	 * @param string $dst_file   Destination filename
+	 * @param int    $dst_width  Desired width (optional)
+	 * @param int    $dst_height Desired height (optional)
+	 * @param string $file_type
+	 * @param bool   $force_type
+	 * @param int    $error
+	 * @param int    $tgt_width
+	 * @param int    $tgt_height
+	 * @param int    $quality
+	 * @param int    $src_width
+	 * @param int    $src_height
 	 * @return bool Operation result
 	 */
-	public static function resize($src_file, $dst_file, $dst_width = null, $dst_height = null, $file_type = 'jpg', $force_type = false, &$error = 0, &$width = null, &$height = null, $quality = 5)
+	public static function resize($src_file, $dst_file, $dst_width = null, $dst_height = null, $file_type = 'jpg',
+								$force_type = false, &$error = 0, &$tgt_width = null, &$tgt_height = null, $quality = 5,
+								&$src_width = null, &$src_height = null)
 	{
 		if (PHP_VERSION_ID < 50300)
 			clearstatcache();
@@ -229,8 +233,8 @@ class ImageManagerCore
 		if (!ImageManager::checkImageMemoryLimit($src_file))
 			return !($error = self::ERROR_MEMORY_LIMIT);
 
-		$width = $dst_width;
-		$height = $dst_height;
+		$tgt_width  = $dst_width;
+		$tgt_height = $dst_height;
 
 		$dest_image = imagecreatetruecolor($dst_width, $dst_height);
 
