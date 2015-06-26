@@ -815,6 +815,7 @@ class AdminManufacturersControllerCore extends AdminController
 	protected function afterImageUpload()
 	{
 		$res = true;
+		$generate_hight_dpi_images = (bool)Configuration::get('PS_HIGHT_DPI');
 
 		/* Generate image with differents size */
 		if (($id_manufacturer = (int)Tools::getValue('id_manufacturer')) &&
@@ -831,6 +832,14 @@ class AdminManufacturersControllerCore extends AdminController
 					(int)$image_type['width'],
 					(int)$image_type['height']
 				);
+
+				if ($generate_hight_dpi_images)
+					$res &= ImageManager::resize(
+						_PS_MANU_IMG_DIR_.$id_manufacturer.'.jpg',
+						_PS_MANU_IMG_DIR_.$id_manufacturer.'-'.stripslashes($image_type['name']).'2x.jpg',
+						(int)$image_type['width']*2,
+						(int)$image_type['height']*2
+					);
 			}
 
 			$current_logo_file = _PS_TMP_IMG_DIR_.'manufacturer_mini_'.$id_manufacturer.'_'.$this->context->shop->id.'.jpg';

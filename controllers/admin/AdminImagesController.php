@@ -165,7 +165,16 @@ class AdminImagesControllerCore extends AdminController
 						'height' => 'px',
 						'suffix' => $this->l('pixels'),
 						'visibility' => Shop::CONTEXT_ALL
-					)
+					),
+					'PS_HIGHT_DPI' => array(
+						'type' => 'bool',
+						'title' => $this->l('Generate high resolution images'),
+						'required' => false,
+						'is_bool' => true,
+						'hint' => $this->l('This will generate an additional file for each image (thus doubling your total amount of images). Resolution of these images will be twice higher.'),
+						'desc' => $this->l('Enable to optimize the display of your images on high pixel density screens.'),
+						'visibility' => Shop::CONTEXT_ALL,
+					),
 				),
 				'submit' => array('title' => $this->l('Save')),
 			),
@@ -487,6 +496,8 @@ class AdminImagesControllerCore extends AdminController
 		if (!is_dir($dir))
 			return false;
 
+		$generate_hight_dpi_images = (bool)Configuration::get('PS_HIGHT_DPI');
+
 		if (!$productsImages)
 		{
 			foreach (scandir($dir) as $image)
@@ -503,8 +514,17 @@ class AdminImagesControllerCore extends AdminController
 						{
 							if (!file_exists($dir.$image) || !filesize($dir.$image))
 								$this->errors[] = sprintf(Tools::displayError('Source file does not exist or is empty (%s)'), $dir.$image);
-							elseif (!ImageManager::resize($dir.$image, $newDir.substr($image, 0, -4).'-'.stripslashes($imageType['name']).'.jpg', (int)$imageType['width'], (int)$imageType['height']))
-								$this->errors[] = sprintf(Tools::displayError('Failed to resize image file (%s)'), $dir.$image);
+							else
+							{
+								if (!ImageManager::resize($dir.$image, $newDir.substr($image, 0, -4).'-'.stripslashes($imageType['name']).'.jpg', (int)$imageType['width'], (int)$imageType['height']))
+									$this->errors[] = sprintf(Tools::displayError('Failed to resize image file (%s)'), $dir.$image);
+
+								if ($generate_hight_dpi_images)
+								{
+									if (!ImageManager::resize($dir.$image, $newDir.substr($image, 0, -4).'-'.stripslashes($imageType['name']).'2x.jpg', (int)$imageType['width']*2, (int)$imageType['height']*2))
+										$this->errors[] = sprintf(Tools::displayError('Failed to resize image file to high resolution (%s)'), $dir.$image);
+								}
+							}
 						}
 						if (time() - $this->start_time > $this->max_execution_time - 4) // stop 4 seconds before the timeout, just enough time to process the end of the page on a slow server
 							return 'timeout';
@@ -520,8 +540,16 @@ class AdminImagesControllerCore extends AdminController
 				{
 					foreach ($type as $imageType)
 						if (!file_exists($dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg'))
-							if (!ImageManager::resize($existing_img, $dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg', (int)($imageType['width']), (int)($imageType['height'])))
+						{
+							if (!ImageManager::resize($existing_img, $dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'.jpg', (int)$imageType['width'], (int)$imageType['height']))
 								$this->errors[] = sprintf(Tools::displayError('Original image is corrupt (%s) for product ID %2$d or bad permission on folder'), $existing_img, (int)$imageObj->id_product);
+
+							if ($generate_hight_dpi_images)
+							{
+								if (!ImageManager::resize($existing_img, $dir.$imageObj->getExistingImgPath().'-'.stripslashes($imageType['name']).'2x.jpg', (int)$imageType['width']*2, (int)$imageType['height']*2))
+									$this->errors[] = sprintf(Tools::displayError('Original image is corrupt (%s) for product ID %2$d or bad permission on folder'), $existing_img, (int)$imageObj->id_product);
+							}
+						}
 				}
 				else
 					$this->errors[] = sprintf(Tools::displayError('Original image is missing or empty (%1$s) for product ID %2$d'), $existing_img, (int)$imageObj->id_product);
@@ -544,6 +572,8 @@ class AdminImagesControllerCore extends AdminController
 	protected function _regenerateNoPictureImages($dir, $type, $languages)
 	{
 		$errors = false;
+		$generate_hight_dpi_images = (bool)Configuration::get('PS_HIGHT_DPI');
+
 		foreach ($type as $image_type)
 			foreach ($languages as $language)
 			{
@@ -551,8 +581,14 @@ class AdminImagesControllerCore extends AdminController
 				if (!file_exists($file))
 					$file = _PS_PROD_IMG_DIR_.Language::getIsoById((int)Configuration::get('PS_LANG_DEFAULT')).'.jpg';
 				if (!file_exists($dir.$language['iso_code'].'-default-'.stripslashes($image_type['name']).'.jpg'))
+				{
 					if (!ImageManager::resize($file, $dir.$language['iso_code'].'-default-'.stripslashes($image_type['name']).'.jpg', (int)$image_type['width'], (int)$image_type['height']))
 						$errors = true;
+
+					if ($generate_hight_dpi_images)
+						if (!ImageManager::resize($file, $dir.$language['iso_code'].'-default-'.stripslashes($image_type['name']).'2x.jpg', (int)$image_type['width']*2, (int)$image_type['height']*2))
+							$errors = true;
+				}
 			}
 		return $errors;
 	}
