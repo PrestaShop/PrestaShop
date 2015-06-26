@@ -1083,7 +1083,7 @@ class AdminImportControllerCore extends AdminController
 		return true;
 	}
 
-	private function get_best_path($tgt_width, $tgt_height, $path_infos)
+	private static function get_best_path($tgt_width, $tgt_height, $path_infos)
 	{
 		$path_infos = array_reverse($path_infos);
 		foreach($path_infos as $path_info)
