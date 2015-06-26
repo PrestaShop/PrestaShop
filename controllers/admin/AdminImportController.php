@@ -1057,6 +1057,9 @@ class AdminImportControllerCore extends AdminController
 			$error = 0;
 			ImageManager::resize($tmpfile, $path.'.jpg', null, null, 'jpg', false, $error, $tgt_width, $tgt_height, 5,
 								 $src_width, $src_height);
+
+			$orig_tmpfile = $tmpfile;
+
 			$images_types = ImageType::getImagesTypes($entity, true);
 
 			if ($regenerate)
@@ -1086,7 +1089,7 @@ class AdminImportControllerCore extends AdminController
 			unlink($tmpfile);
 			return false;
 		}
-		unlink($tmpfile);
+		unlink($orig_tmpfile);
 		return true;
 	}
 
