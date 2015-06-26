@@ -4110,6 +4110,8 @@ class AdminProductsControllerCore extends AdminController
 				else
 				{
 					$imagesTypes = ImageType::getImagesTypes('products');
+					$generate_hight_dpi_images = (bool)Configuration::get('PS_HIGHT_DPI');
+
 					foreach ($imagesTypes as $imageType)
 					{
 						if (!ImageManager::resize($file['save_path'], $new_path.'-'.stripslashes($imageType['name']).'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format))
@@ -4117,6 +4119,13 @@ class AdminProductsControllerCore extends AdminController
 							$file['error'] = Tools::displayError('An error occurred while copying image:').' '.stripslashes($imageType['name']);
 							continue;
 						}
+						
+						if ($generate_hight_dpi_images)
+							if (!ImageManager::resize($file['save_path'], $new_path.'-'.stripslashes($imageType['name']).'2x.'.$image->image_format, (int)$imageType['width']*2, (int)$imageType['height']*2, $image->image_format))
+							{
+								$file['error'] = Tools::displayError('An error occurred while copying image:').' '.stripslashes($imageType['name']);
+								continue;
+							}
 					}
 				}
 

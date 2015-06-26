@@ -776,6 +776,8 @@ class AdminCategoriesControllerCore extends AdminController
 	protected function postImage($id)
 	{
 		$ret = parent::postImage($id);
+		$generate_hight_dpi_images = (bool)Configuration::get('PS_HIGHT_DPI');
+
 		if (($id_category = (int)Tools::getValue('id_category')) &&
 			isset($_FILES) && count($_FILES) && $_FILES['image']['name'] != null &&
 			file_exists(_PS_CAT_IMG_DIR_.$id_category.'.jpg'))
@@ -788,6 +790,13 @@ class AdminCategoriesControllerCore extends AdminController
 					_PS_CAT_IMG_DIR_.$id_category.'-'.stripslashes($image_type['name']).'.jpg',
 					(int)$image_type['width'], (int)$image_type['height']
 				);
+
+				if ($generate_hight_dpi_images)
+					ImageManager::resize(
+						_PS_CAT_IMG_DIR_.$id_category.'.jpg',
+						_PS_CAT_IMG_DIR_.$id_category.'-'.stripslashes($image_type['name']).'2x.jpg',
+						(int)$image_type['width']*2, (int)$image_type['height']*2
+					);
 			}
 		}
 

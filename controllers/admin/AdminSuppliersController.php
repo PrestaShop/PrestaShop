@@ -67,7 +67,6 @@ class AdminSuppliersControllerCore extends AdminController
 		);
 
 		parent::__construct();
-
 	}
 
 	public function setMedia()
@@ -411,6 +410,8 @@ class AdminSuppliersControllerCore extends AdminController
 	protected function afterImageUpload()
 	{
 		$return = true;
+		$generate_hight_dpi_images = (bool)Configuration::get('PS_HIGHT_DPI');
+
 		/* Generate image with differents size */
 		if (($id_supplier = (int)Tools::getValue('id_supplier')) &&
 			 isset($_FILES) && count($_FILES) && file_exists(_PS_SUPP_IMG_DIR_.$id_supplier.'.jpg'))
@@ -421,6 +422,10 @@ class AdminSuppliersControllerCore extends AdminController
 				$file = _PS_SUPP_IMG_DIR_.$id_supplier.'.jpg';
 				if (!ImageManager::resize($file, _PS_SUPP_IMG_DIR_.$id_supplier.'-'.stripslashes($image_type['name']).'.jpg', (int)$image_type['width'], (int)$image_type['height']))
 					$return = false;
+
+				if ($generate_hight_dpi_images)
+					if (!ImageManager::resize($file, _PS_SUPP_IMG_DIR_.$id_supplier.'-'.stripslashes($image_type['name']).'2x.jpg', (int)$image_type['width']*2, (int)$image_type['height']*2))
+						$return = false;
 			}
 
 			$current_logo_file = _PS_TMP_IMG_DIR_.'supplier_mini_'.$id_supplier.'_'.$this->context->shop->id.'.jpg';
