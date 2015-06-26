@@ -1052,23 +1052,30 @@ class AdminImportControllerCore extends AdminController
 		// Just hide the warning, the processing will be the same.
 		if (Tools::copy($url, $tmpfile))
 		{
-			$last_width = $last_height = 0;
+			$tgt_width = $tgt_height = 0;
+			$src_width = $src_height = 0;
 			$error = 0;
-			ImageManager::resize($tmpfile, $path.'.jpg', null, null, 'jpg', false, $error, $last_width, $last_height);
+			ImageManager::resize($tmpfile, $path.'.jpg', null, null, 'jpg', false, $error, $tgt_width, $tgt_height, 5,
+								 $src_width, $src_height);
 			$images_types = ImageType::getImagesTypes($entity, true);
 
 			if ($regenerate)
 			{
 				$previous_path = null;
 				$path_infos = array();
-				$path_infos[] = array(PHP_INT_MAX, PHP_INT_MAX, $tmpfile);
+				$path_infos[] = array($tgt_width, $tgt_height, $path.'.jpg');
 				foreach ($images_types as $image_type)
 				{
 					$tmpfile = self::get_best_path($image_type['width'], $image_type['height'], $path_infos);
 
-					ImageManager::resize($tmpfile, $path.'-'.stripslashes($image_type['name']).'.jpg', $image_type['width'], $image_type['height'], 'jpg', false, $error, $last_width, $last_height);
-
-					$path_infos[] = array($last_width, $last_height, $path.'-'.stripslashes($image_type['name']).'.jpg');
+					if (ImageManager::resize($tmpfile, $path.'-'.stripslashes($image_type['name']).'.jpg', $image_type['width'],
+										 $image_type['height'], 'jpg', false, $error, $tgt_width, $tgt_height, 5,
+										 $src_width, $src_height))
+					{
+						// the last image should not be added in the candidate list if it's bigger than the original image
+						if ($tgt_width <= $src_width && $tgt_height <= $src_height)
+							$path_infos[] = array($tgt_width, $tgt_height, $path.'-'.stripslashes($image_type['name']).'.jpg');
+					}
 					if (in_array($image_type['id_image_type'], $watermark_types))
 						Hook::exec('actionWatermark', array('id_image' => $id_image, 'id_product' => $id_entity));
 				}
@@ -1086,13 +1093,14 @@ class AdminImportControllerCore extends AdminController
 	private static function get_best_path($tgt_width, $tgt_height, $path_infos)
 	{
 		$path_infos = array_reverse($path_infos);
+		$path = '';
 		foreach($path_infos as $path_info)
 		{
 			list($width, $height, $path) = $path_info;
 			if ($width >= $tgt_width && $height >= $tgt_height)
 				return $path;
 		}
-		return '';
+		return $path;
 	}
 
 	public function categoryImport()
