@@ -136,30 +136,30 @@
                                                             {foreach $first.product_list as $product}
                                                                 {if $product@index == 4}
                                                                     <acronym title="
-                                                {/if}
-                                                {strip}
-                                                    {if $product@index >= 4}
-                                                        {$product.name|escape:'htmlall':'UTF-8'}
-                                                        {if isset($product.attributes) && $product.attributes}
-                                                            {$product.attributes|escape:'htmlall':'UTF-8'}
-                                                        {/if}
-                                                        {if !$product@last}
-                                                            ,&nbsp;
-                                                        {else}
-                                                            ">&hellip;</acronym>)
-                                                            {/if}
-                                                            {else}
-                                                                {$product.name|escape:'htmlall':'UTF-8'}
-                                                                {if isset($product.attributes) && $product.attributes}
-                                                                    {$product.attributes|escape:'htmlall':'UTF-8'}
                                                                 {/if}
-                                                                {if !$product@last}
-                                                                    ,&nbsp;
-                                                                {else}
-                                                                    )
-                                                                {/if}
-                                                            {/if}
                                                                 {strip}
+                                                                    {if $product@index >= 4}
+                                                                        {$product.name|escape:'htmlall':'UTF-8'}
+                                                                        {if isset($product.attributes) && $product.attributes}
+                                                                            {$product.attributes|escape:'htmlall':'UTF-8'}
+                                                                        {/if}
+                                                                        {if !$product@last}
+                                                                            ,&nbsp;
+                                                                        {else}
+                                                                            ">&hellip;</acronym>)
+                                                                        {/if}
+                                                                    {else}
+                                                                        {$product.name|escape:'htmlall':'UTF-8'}
+                                                                        {if isset($product.attributes) && $product.attributes}
+                                                                            {$product.attributes|escape:'htmlall':'UTF-8'}
+                                                                        {/if}
+                                                                        {if !$product@last}
+                                                                            ,&nbsp;
+                                                                        {else}
+                                                                            )
+                                                                        {/if}
+                                                                    {/if}
+                                                                {/strip}
                                                             {/foreach}
                                                         {/if}
                                                     </td>
@@ -207,30 +207,30 @@
                                                                     {foreach $carrier.product_list as $product}
                                                                         {if $product@index == 4}
                                                                             <acronym title="
-                                                    {/if}
-                                                    {strip}
-                                                        {if $product@index >= 4}
-                                                            {$product.name|escape:'htmlall':'UTF-8'}
-                                                            {if isset($product.attributes) && $product.attributes}
-                                                                {$product.attributes|escape:'htmlall':'UTF-8'}
-                                                            {/if}
-                                                            {if !$product@last}
-                                                                ,&nbsp;
-                                                            {else}
-                                                                ">&hellip;</acronym>)
-                                                                    {/if}
-                                                                    {else}
-                                                                        {$product.name|escape:'htmlall':'UTF-8'}
-                                                                        {if isset($product.attributes) && $product.attributes}
-                                                                            {$product.attributes|escape:'htmlall':'UTF-8'}
                                                                         {/if}
-                                                                        {if !$product@last}
-                                                                            ,&nbsp;
-                                                                        {else}
-                                                                            )
-                                                                        {/if}
-                                                                    {/if}
                                                                         {strip}
+                                                                            {if $product@index >= 4}
+                                                                                {$product.name|escape:'htmlall':'UTF-8'}
+                                                                                {if isset($product.attributes) && $product.attributes}
+                                                                                    {$product.attributes|escape:'htmlall':'UTF-8'}
+                                                                                {/if}
+                                                                                {if !$product@last}
+                                                                                    ,&nbsp;
+                                                                                {else}
+                                                                                    ">&hellip;</acronym>)
+                                                                                {/if}
+                                                                            {else}
+                                                                                {$product.name|escape:'htmlall':'UTF-8'}
+                                                                                {if isset($product.attributes) && $product.attributes}
+                                                                                    {$product.attributes|escape:'htmlall':'UTF-8'}
+                                                                                {/if}
+                                                                                {if !$product@last}
+                                                                                    ,&nbsp;
+                                                                                {else}
+                                                                                    )
+                                                                                {/if}
+                                                                            {/if}
+                                                                        {/strip}
                                                                     {/foreach}
                                                                 {/if}
                                                             </td>
