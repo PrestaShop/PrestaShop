@@ -12,7 +12,7 @@ Tree.prototype =
 	init: function ()
 	{
 		var that = $(this);
-		var name = this.$element.find('ul.tree input').first().attr('name');
+		var name = this.$element.parent().find('ul.tree input').first().attr('name');
 		this.$element.find("label.tree-toggler, .icon-folder-close, .icon-folder-open").unbind('click');
 		this.$element.find("label.tree-toggler, .icon-folder-close, .icon-folder-open").click(
 			function ()
@@ -126,7 +126,7 @@ Tree.prototype =
 
 		return $(this);
 	},
-	
+
 	collapseAll : function($speed)
 	{
 		this.$element.find("label.tree-toggler").each(
@@ -154,8 +154,8 @@ Tree.prototype =
 					selected.push($(this).val());
 				}
 			);
-			var name = $('#'+idTree).find('ul.tree input').first().attr('name');
-			var inputType = $('#'+idTree).find('ul.tree input').first().attr('type');
+			var name = $('#'+idTree).parent().find('ul.tree input').first().attr('name');
+			var inputType = $('#'+idTree).parent().find('ul.tree input').first().attr('type');
 			var useCheckBox = 0;
 			if (inputType == 'checkbox')
 			{
