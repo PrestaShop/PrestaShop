@@ -886,6 +886,10 @@ class CartCore extends ObjectModel
 	{
 		if (!$shop)
 			$shop = Context::getContext()->shop;
+			
+		//use the context language
+		if (!$id_lang)
+			$id_lang = Context::getContext()->language->id;
 
 		if (Context::getContext()->customer->id)
 		{
@@ -900,7 +904,7 @@ class CartCore extends ObjectModel
 		$quantity = (int)$quantity;
 		$id_product = (int)$id_product;
 		$id_product_attribute = (int)$id_product_attribute;
-		$product = new Product($id_product, false, Configuration::get('PS_LANG_DEFAULT'), $shop->id);
+		$product = new Product($id_product, false, $id_lang, $shop->id);
 
 		if ($id_product_attribute)
 		{
