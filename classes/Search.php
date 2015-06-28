@@ -787,10 +787,11 @@ class SearchCore
 		{
 			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
 			'SELECT COUNT(DISTINCT pt.`id_product`) nb
-			FROM `'._DB_PREFIX_.'product` p
+			FROM
+			`'._DB_PREFIX_.'tag` t
+			STRAIGHT_JOIN `'._DB_PREFIX_.'product_tag` pt ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = '.(int)$id_lang.')
+			STRAIGHT_JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = pt.`id_product`)
 			'.Shop::addSqlAssociation('product', 'p').'
-			LEFT JOIN `'._DB_PREFIX_.'product_tag` pt ON (p.`id_product` = pt.`id_product`)
-			LEFT JOIN `'._DB_PREFIX_.'tag` t ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = '.(int)$id_lang.')
 			LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)
 			LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cp.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
 			'.(Group::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)' : '').'
@@ -810,7 +811,10 @@ class SearchCore
 							INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY
 						)
 					) > 0 new
-				FROM `'._DB_PREFIX_.'product` p
+				FROM
+				`'._DB_PREFIX_.'tag` t
+				STRAIGHT_JOIN `'._DB_PREFIX_.'product_tag` pt ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = '.(int)$id_lang.')
+				STRAIGHT_JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = pt.`id_product`)
 				INNER JOIN `'._DB_PREFIX_.'product_lang` pl ON (
 					p.`id_product` = pl.`id_product`
 					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
@@ -822,8 +826,6 @@ class SearchCore
 					ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop='.(int)$context->shop->id.')
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
-				LEFT JOIN `'._DB_PREFIX_.'product_tag` pt ON (p.`id_product` = pt.`id_product`)
-				LEFT JOIN `'._DB_PREFIX_.'tag` t ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)
 				'.(Group::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)' : '').'
 				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cp.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
