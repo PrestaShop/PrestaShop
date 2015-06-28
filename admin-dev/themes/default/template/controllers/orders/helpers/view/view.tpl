@@ -96,6 +96,14 @@
             </div>
         </div>
     </div>
+
+    {assign var="hook_invoice" value={hook h="displayInvoice" id_order=$order->id}}
+    {if ($hook_invoice)}
+    <div>{$hook_invoice}</div>
+    {/if}
+            {hook h="displayAdminOrderLeft" id_order=$order->id}
+            {hook h="displayAdminOrderRight" id_order=$order->id}
+            {hook h="displayAdminOrder" id_order=$order->id}
 	<div class="panel">
                 <div class="panel-heading">
                     <i class="icon-credit-card"></i>
@@ -115,11 +123,6 @@
                 </div>
     <ul id="tabViews" class="nav nav-tabs">
         <li class="active">
-            <a href="#tab1">
-                {l s='Tab One'}
-            </a>
-        </li>
-        <li>
             <a href="#products">
                 {l s='Products'}
             </a>
@@ -144,34 +147,22 @@
                 {l s='Linked Orders '}
             </a>
         </li>
-        <li>
-            <a href="#old_view">
-                {l s='Full view'}
-            </a>
-        </li>
     </ul>
         <div class="tab-content panel">
-            <div class="tab-pane active" id="tab1">
-                First Tab<br>
-                This tab should be deleted! It's only here to keep a tab on, if tabs screws up
-            </div>
             <div class="tab-pane" id="products">
-                PRODUCTS
+                {include file='controllers/orders/tabs/_products.tpl'}
             </div>
             <div class="tab-pane" id="customer">
-                CUSTOMER
+                {include file='controllers/orders/tabs/_customer.tpl'}
             </div>
             <div class="tab-pane" id="messages">
-                MESSAGES
+                {include file='controllers/orders/tabs/_messages.tpl'}
             </div>
             <div class="tab-pane" id="order_info">
-                ORDER INFO
+                {include file='controllers/orders/tabs/_order_information.tpl'}
             </div>
             <div class="tab-pane" id="linked_orders">
-                LINKED ORDERS
-            </div>
-            <div class="tab-pane" id="old_view">
-               {include file='controllers/orders/helpers/view/old_view.tpl'}
+            {include file='controllers/orders/tabs/_linked_orders.tpl'}
             </div>
         </div>
     </div>
@@ -182,4 +173,29 @@
                     })
                 </script>
 
+
+    <script type="text/javascript">
+        $(document).ready(function()
+        {
+            $(".textarea-autosize").autosize();
+
+            var date = new Date();
+            var hours = date.getHours();
+            if (hours < 10)
+                hours = "0" + hours;
+            var mins = date.getMinutes();
+            if (mins < 10)
+                mins = "0" + mins;
+            var secs = date.getSeconds();
+            if (secs < 10)
+                secs = "0" + secs;
+
+            $('.datepicker').datetimepicker({
+                prevText: '',
+                nextText: '',
+                dateFormat: 'yy-mm-dd ' + hours + ':' + mins + ':' + secs
+            });
+        });
+
+    </script>
 {/block}
