@@ -3796,6 +3796,7 @@ class AdminControllerCore extends Controller
 			{
 				/** @var ObjectModel $object */
 				$object = new $this->className((int)$id);
+				$object->setFieldsToUpdate(array('active' => true));
 				$object->active = (int)$status;
 				$result &= $object->update();
 			}
