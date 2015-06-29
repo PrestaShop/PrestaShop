@@ -757,10 +757,11 @@ function updatePrice()
 
 	// If the calculated price (after all discounts) is different than the base price
 	// we show the old price striked through
+
 	if (priceWithDiscountsDisplay.toFixed(2) != basePriceDisplay.toFixed(2))
 	{
 		$('#old_price_display span.price').text(formatCurrency(basePriceDisplay, currencyFormat, currencySign, currencyBlank));
-		$('#old_price, #old_price_display, #old_price_display_taxes').show();
+		$('#old_price, #old_price_display, #old_price_display_taxes').removeClass('hidden').show();
 
 		// Then if it's not only a group reduction we display the discount in red box
 		if (priceWithDiscountsWithoutTax != priceWithGroupReductionWithoutTax)
@@ -932,14 +933,14 @@ function refreshProductImages(id_product_attribute)
 	else
 	{
 		$('#thumbs_list li').show();
-		
+
 		var choice = [];
 		var radio_inputs = parseInt($('#attributes .checked > input[type=radio]').length);
 		if (radio_inputs)
 			radio_inputs = '#attributes .checked > input[type=radio]';
 		else
 			radio_inputs = '#attributes input[type=radio]:checked';
-	
+
 		$('#attributes select, #attributes input[type=hidden], ' + radio_inputs).each(function(){
 			choice.push(parseInt($(this).val()));
 		});
