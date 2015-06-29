@@ -3,13 +3,13 @@
 return array (
   'informations' => 
   array (
-    'documentation' => '',
+    'documentation' => 'http://doc.prestashop.com/display/PS16/Installing+PrestaShop',
     'documentation_upgrade' => 'http://docs.prestashop.com/display/PS16/Updating+PrestaShop',
     'forum' => 'http://www.prestashop.com/forums/',
     'blog' => 'http://www.prestashop.com/blog/',
     'support' => 'https://www.prestashop.com/en/support',
-    'tutorial' => '',
-    'tailored_help' => '',
+    'tutorial' => 'https://www.youtube.com/watch?v=psz4aIPZZuk',
+    'tailored_help' => 'http://addons.prestashop.com/en/388-support',
   ),
   'translations' => 
   array (
@@ -131,9 +131,7 @@ return array (
     'Shop password' => 'Butikens lösenord',
     'Must be at least 8 characters' => 'Måste vara minst 8 tecken',
     'Re-type to confirm' => 'Skriv igen för att bekräfta',
-    'Sign-up to the newsletter' => 'Prenumerera på nyhetsbrevet',
-    'PrestaShop can provide you with guidance on a regular basis by sending you tips on how to optimize the management of your store which will help you grow your business. If you do not wish to receive these tips, please uncheck this box.' => 'PrestaShop kan hjälpa dig regelbundet genom att skicka dig tips om hur du optimerar hanteringen av din butik, vilket kommer att hjälpa ditt företag att växa. Om du inte vill ta emot dessa tips, vänligen avmarkera rutan.',
-    'All information collected is subject to data processing and statistics. Your personal data may be communicated to service providers and partners. Under the current "Act on Data Processing, Data Files and Individual Liberties" you have the right to access, rectify and oppose to the processing of your personal data, by sending an email to: information@prestashop.com. If you don\'t want to receive the newsletter you can use the unsubscribing link in the newsletter.' => '',
+    'All information you give us is collected by us and is subject to data processing and statistics, it is necessary for the members of the PrestaShop company in order to respond to your requests. Your personal data may be communicated to service providers and partners as part of partner relationships. Under the current "Act on Data Processing, Data Files and Individual Liberties" you have the right to access, rectify and oppose to the processing of your personal data through this <a href="%s" onclick="return !window.open(this.href)">link</a>.' => 'Alla uppgifter som ges till oss samlas in för att behandla data och statistik, det är nödvändigt för att medlemmar av PrestaShop\'s gemenskap ska få besvarat sina ärenden. Dina personliga uppgifter kan komma att lämnas till tjänsteleverantörer och partners. Enligt "Act on Data Processing, Data Files and Individual Liberties", så har du rätt att få tillgång till, rätta och motsätta dig behandlingen av din personliga data via <a href="%s" onclick="return !window.open(this.href)">denna länk</a>.',
     'Configure your database by filling out the following fields' => 'Konfigurera din databas genom att fylla i följande fält',
     'To use PrestaShop, you must <a href="http://doc.prestashop.com/display/PS16/Installing+PrestaShop#InstallingPrestaShop-Creatingadatabaseforyourshop" target="_blank">create a database</a> to collect all of your store\'s data-related activities.' => 'För att använda PrestaShop så måste du  <a href="http://doc.prestashop.com/display/PS16/Installing+PrestaShop#InstallingPrestaShop-Creatingadatabaseforyourshop" target="_blank">skapa en databas</a> för att lagra din butiks data.',
     'Please complete the fields below in order for PrestaShop to connect to your database. ' => 'Vänligen fyll i fälten nedan för att koppla PrestaShop till din databas. ',
@@ -148,7 +146,7 @@ return array (
     'Test your database connection now!' => 'Testa din databaskoppling nu!',
     'Next' => 'Nästa',
     'Back' => 'Tillbaka',
-    'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="%2$s" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.' => '',
+    'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="%2$s" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.' => 'Om du behöver någon hjälp, så kan du få <a href="%1$s" onclick="return !window.open(this.href);">anpassad hjälp</a> från vårt supportteam. <a href="%2$s" onclick="return !window.open(this.href);">Den officiella dokumentationen</a> kan också hjälpa dig.',
     'Official forum' => 'Officiellt forum',
     'Support' => 'Support',
     'Documentation' => 'Dokumentation',
@@ -206,7 +204,7 @@ return array (
     '<b>Warning: You cannot use this tool to upgrade your store anymore.</b><br /><br />You already have <b>PrestaShop version %1$s installed</b>.<br /><br />If you want to upgrade to the latest version, please read our documentation: <a href="%2$s">%2$s</a>' => '<b>Varning: Du kan inte använda det här verktyget längre för att uppgradera din butik.</b><br /><br />Du har redan <b>PrestaShop version %1$s installerad</b>.<br /><br />Om du vill uppgradera till senaste version, läs vår dokumentation: <a href="%2$s">%2$s</a>',
     'Welcome to the PrestaShop %s Installer' => 'Välkommen till installationen för PrestaShop %s',
     'Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 230,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'Att installera PrestaShop går snabbt och är enkelt. På bara några få steg blir du en del av communityt som består av mer än 230,000 e-handlare. Du är på väg att skapa din egen unika e-butik som du enkelt administrerar varje dag.',
-    'If you need help, do not hesitate to <a href="%1$s" target="_blank">watch this short tutorial</a>, or check <a href="%2$s" target="_blank">our documentation</a>.' => '',
+    'If you need help, do not hesitate to <a href="%1$s" target="_blank">watch this short tutorial</a>, or check <a href="%2$s" target="_blank">our documentation</a>.' => 'Om du behöver hjälp, tveka inte att <a href="%1$s" target="_blank">titta på den här instruktionen</a>, eller kolla <a href="%2$s" target="_blank">vår dokumentation</a>.',
     'Continue the installation in:' => 'Fortsätt med installationen på:',
     'The language selection above only applies to the Installation Assistant. Once your store is installed, you can choose the language of your store from over %d translations, all for free!' => 'Språkvalet ovan används bara att installationsassistenten. När din butik är installerad kan du välja språk till din butik från över %d översättningar, alla gratis!',
   ),
