@@ -265,7 +265,10 @@ class MediaCore
 		// check if css files exists
 		if (!array_key_exists('host', $url_data))
 		{
-			if (!@filemtime($file_uri) || @filesize($file_uri) === 0)
+			//remove query string from file_uri
+			$file_uri_to_test = explode('?', $file_uri);
+
+			if (!@filemtime($file_uri_to_test[0]) || @filesize($file_uri_to_test[0]) === 0)
 			{
 				if (!defined('_PS_HOST_MODE_'))
 					return false;
@@ -304,29 +307,24 @@ class MediaCore
 
 		if ($folder === null)
 			$folder = _PS_JS_DIR_.'jquery/'; //set default folder
-		//check if file exist
-		$file = $folder.'jquery-'.$version.($minifier ? '.min.js' : '.js');
-
-		// remove PS_BASE_URI on _PS_ROOT_DIR_ for the following
-		$url_data = parse_url($file);
-		$file_uri = _PS_ROOT_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
-		$file_uri_host_mode = _PS_CORE_DIR_.Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $url_data['path']);
-		// check if js files exists, if not try to load query from ajax.googleapis.com
 
 		$return = array();
 
-		if (@filemtime($file_uri) || (defined('_PS_HOST_MODE_') && @filemtime($file_uri_host_mode)))
-			$return[] = Media::getJSPath($file);
-		else
-			$return[] = Media::getJSPath(Tools::getCurrentUrlProtocolPrefix().'ajax.googleapis.com/ajax/libs/jquery/'
-				.$version.'/jquery'.($minifier ? '.min.js' : '.js'));
+		//add jquery from CDN
+		$return[] = '//code.jquery.com/jquery-'.$version.($minifier ? '.min.js' : '.js');
+
+		//add jquery CDN fallback
+		$return[] = Media::getJSPath($folder.'jquery-cdn-fallback.php?version='.$version);
 
 		if ($add_no_conflict)
 			$return[] = Media::getJSPath(Context::getContext()->shop->getBaseURL(true, false)._PS_JS_DIR_
 				.'jquery/jquery.noConflict.php?version='.$version);
 
-		//added query migrate for compatibility with new version of jquery will be removed in ps 1.6
-		$return[] = Media::getJSPath(_PS_JS_DIR_.'jquery/jquery-migrate-1.2.1.min.js');
+		//added jquery migrate from CDN : for compatibility with new version of jquery will be removed in ps 1.6
+		$return[] = '//code.jquery.com/jquery-migrate-1.2.1.min.js';
+
+		//add jquery migrate CDN fallback
+		$return[] = Media::getJSPath($folder.'jquery-migrate-fallback.js');
 
 		return $return;
 	}
