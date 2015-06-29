@@ -1760,7 +1760,7 @@ class AdminImportControllerCore extends AdminController
 						$product->deleteImages();
 				
 				//parse into an array
-				$product->image=explode(',',$product->image);
+				$product->image=explode($this->multiple_value_separator,$product->image);
 				
 				if (isset($product->image) && is_array($product->image) && count($product->image))
 				{
