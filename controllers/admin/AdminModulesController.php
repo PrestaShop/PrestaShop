@@ -1658,4 +1658,40 @@ class AdminModulesControllerCore extends AdminController
         ));
         $this->smartyOutputContent('controllers/modules/quickview.tpl');
     }
+
+	public function ajaxProcessGetModuleReadMoreView()
+	{
+		$modules = Module::getModulesOnDisk();
+
+		foreach ($modules as $module)
+			if ($module->name == Tools::getValue('module'))
+				break;
+
+		$url = $module->url;
+
+		if (isset($module->type) && ($module->type == 'addonsPartner' || $module->type == 'addonsNative'))
+			$url = $this->context->link->getAdminLink('AdminModules').'&install='.urlencode($module->name).'&tab_module='.$module->tab.'&module_name='.$module->name.'&anchor='.ucfirst($module->name);
+
+		$this->context->smarty->assign(array(
+			'displayName' => $module->displayName,
+			'image' => $module->image,
+			'nb_rates' => (int)$module->nb_rates[0],
+			'avg_rate' => (int)$module->avg_rate[0],
+			'badges' => $module->badges,
+			'compatibility' => $module->compatibility,
+			'description_full' => $module->description_full,
+			'additional_description' => $module->additional_description,
+			'is_addons_partner' => (isset($module->type) && ($module->type == 'addonsPartner' || $module->type == 'addonsNative')),
+			'url' => $url,
+			'price' => $module->price,
+			'author' => $module->author,
+			'version' => $module->version
+		));
+
+		die (Tools::jsonEncode(array(
+			'header' => $this->context->smarty->fetch('controllers/modules/readmore-header.tpl'),
+			'body' => $this->context->smarty->fetch('controllers/modules/readmore-body.tpl'),
+			'url' => $url
+		)));
+	}
 }

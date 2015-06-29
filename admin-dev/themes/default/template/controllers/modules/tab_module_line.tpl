@@ -50,7 +50,7 @@
 					{$module->description}
 				{/if}
 				{if isset($module->show_quick_view) &&  $module->show_quick_view}
-					<br><a href="{$currentIndex|escape:'html':'UTF-8'}&amp;token={$token|escape:'html':'UTF-8'}&amp;ajax=1&amp;action=GetModuleQuickView&amp;module={$module->name|urlencode}" class="fancybox-quick-view"><i class="icon-search"></i> {l s='Read more'}</a>
+					<br><a href="#" class="controller-quick-view" data-name="{$module->name|escape:'html':'UTF-8'}"><i class="icon-search"></i> {l s='Read more'}</a>
 				{/if}
 			</p>
 			{if isset($module->message) && (empty($module->name) !== false) && (!isset($module->type) || ($module->type != 'addonsMustHave' || $module->type !== 'addonsNative'))}<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>{$module->message}</div>{/if}
