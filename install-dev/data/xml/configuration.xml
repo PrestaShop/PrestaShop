@@ -842,7 +842,7 @@ Country</value>
       <value>0</value>
     </configuration>
     <configuration id="PS_PRODUCT_WEIGHT_PRECISION" name="PS_PRODUCT_WEIGHT_PRECISION">
-      <value>2</value>
+      <value>3</value>
     </configuration>
     <configuration id="PS_ADVANCED_PAYMENT_API" name="PS_ADVANCED_PAYMENT_API">
       <value>0</value>
