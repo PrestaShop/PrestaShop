@@ -218,6 +218,6 @@ INSERT INTO `PREFIX_configuration` (`name`, `value`, `date_add`, `date_upd`)
 
 ALTER TABLE `PREFIX_pack` ADD KEY `product_item` (`id_product_item`,`id_product_attribute_item`);
 
-ALTER TABLE `PREFIX_supply_order_detail DROP KEY `id_supply_order`, DROP KEY `id_product`, ADD KEY `id_supply_order` (`id_supply_order`, `id_product`);
+ALTER TABLE `PREFIX_supply_order_detail` DROP KEY `id_supply_order`, DROP KEY `id_product`, ADD KEY `id_supply_order` (`id_supply_order`, `id_product`);
 
 ALTER TABLE `PREFIX_carrier` ADD KEY `reference` (`id_reference`, `deleted`, `active`);
