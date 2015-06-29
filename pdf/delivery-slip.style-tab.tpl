@@ -56,14 +56,7 @@
 		padding: {$table_padding};
 		border: 1pt solid {$color_border};
 	}
-	table#total-tab {
-		padding: {$table_padding};
-		border: 1pt solid {$color_border};
-	}
-	table#tax-tab {
-		padding: {$table_padding};
-		border: 1pt solid {$color_border};
-	}
+
 	table#payment-tab {
 		padding: {$table_padding};
 		border: 1px solid {$color_border};
@@ -121,12 +114,6 @@
 		font-weight: bold;
 	}
 
-	th.tva {
-		background-color: {$color_header};
-		vertical-align: middle;
-		font-weight: bold;
-	}
-
 	tr.separator td {
 		border-top: 1px solid #000000;
 	}
@@ -176,8 +163,7 @@
 	tr.big td{
 		font-size: 110%;
 	}
-	
-	.small, table.small th, table.small td {
+	.small {
 		font-size:small;
 	}
 </style>

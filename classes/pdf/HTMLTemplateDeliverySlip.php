@@ -45,12 +45,27 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 		// header informations
 		$this->date = Tools::displayDate($this->order->invoice_date);
 		$prefix = Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id);
-		$this->title = sprintf(HTMLTemplateDeliverySlip::l('Delivery %1$s%2$06d'), $prefix, $this->order_invoice->delivery_number);
+		$this->title = sprintf(HTMLTemplateDeliverySlip::l('%1$s%2$06d'), $prefix, $this->order_invoice->delivery_number);
 
 		// footer informations
 		$this->shop = new Shop((int)$this->order->id_shop);
 	}
 
+	/**
+	 * Returns the template's HTML header
+	 *
+	 * @return string HTML header
+	 */
+	public function getHeader()
+	{
+		$this->assignCommonHeaderData();
+		$this->smarty->assign(array(
+			'header' => $this->l('DELIVERY'),
+		));
+	
+		return $this->smarty->fetch($this->getTemplate('header'));
+	}
+	
 	/**
 	 * Returns the template's HTML content
 	 *
@@ -100,8 +115,18 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
 			'delivery_address' => $formatted_delivery_address,
 			'invoice_address' => $formatted_invoice_address,
 			'order_invoice' => $this->order_invoice,
-			'carrier' => $carrier
+			'carrier' => $carrier,
+			'display_product_images' => Configuration::get('PS_PDF_IMG_DELIVERY')
 		));
+		
+		$tpls = array(
+			'style_tab' => $this->smarty->fetch($this->getTemplate('delivery-slip.style-tab')),
+			'addresses_tab' => $this->smarty->fetch($this->getTemplate('delivery-slip.addresses-tab')),
+ 			'summary_tab' => $this->smarty->fetch($this->getTemplate('delivery-slip.summary-tab')),
+ 			'product_tab' => $this->smarty->fetch($this->getTemplate('delivery-slip.product-tab')),
+ 			'payment_tab' => $this->smarty->fetch($this->getTemplate('delivery-slip.payment-tab')),
+		);
+		$this->smarty->assign($tpls);
 
 		return $this->smarty->fetch($this->getTemplate('delivery-slip'));
 	}

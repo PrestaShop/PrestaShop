@@ -22,25 +22,37 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
-<table id="summary-tab" width="100%">
-	<tr>
-		<th class="header small" valign="middle">{l s='Invoice Number' pdf='true'}</th>
-		<th class="header small" valign="middle">{l s='Invoice Date' pdf='true'}</th>
-		<th class="header small" valign="middle">{l s='Order Reference' pdf='true'}</th>
-		<th class="header small" valign="middle">{l s='Order date' pdf='true'}</th>
-		{if $addresses.invoice->vat_number}
-			<th class="header small" valign="middle">{l s='VAT Number' pdf='true'}</th>
-		{/if}
-	</tr>
-	<tr>
-		<td class="center small white">{$title|escape:'html':'UTF-8'}</td>
-		<td class="center small white">{dateFormat date=$order->invoice_date full=0}</td>
-		<td class="center small white">{$order->getUniqReference()}</td>
-		<td class="center small white">{dateFormat date=$order->date_add full=0}</td>
-		{if $addresses.invoice->vat_number}
-			<td class="center small white">
-				{$addresses.invoice->vat_number}
-			</td>
-		{/if}
-	</tr>
+<table class="product" width="100%" cellpadding="4" cellspacing="0">
+	
+	<thead>
+		<tr>
+			<th class="product header small" width="60%">{l s='Items to be returned' pdf='true'}</th>
+			<th class="product header small" width="20%">{l s='Reference' pdf='true'}</th>
+			<th class="product header small" width="20%">{l s='Qty' pdf='true'}</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		<!-- PRODUCTS -->
+		{foreach $products as $product}
+			{cycle values=["color_line_even", "color_line_odd"] assign=bgcolor_class}
+			<tr class="product {$bgcolor_class}">
+				<td class="product left">
+					{$product.product_name}
+				</td>
+				<td class="product left">
+					{if empty($product.product_reference)}
+						---
+					{else}
+						{$product.product_reference}
+					{/if}
+				</td>
+				<td class="product center">
+					{$product.product_quantity}
+				</td>
+			</tr>
+		{/foreach}
+		<!-- END PRODUCTS -->
+	</tbody>
+
 </table>

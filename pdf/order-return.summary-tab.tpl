@@ -22,25 +22,16 @@
 *  @license    http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
 *  International Registered Trademark & Property of PrestaShop SA
 *}
+{l s='We have logged your return request.' pdf='true'}<br />
+{l s='Your package must be returned to us within' pdf='true'} {$return_nb_days} {l s='days of receiving your order.' pdf='true'}<br /><br />
+
 <table id="summary-tab" width="100%">
 	<tr>
-		<th class="header small" valign="middle">{l s='Invoice Number' pdf='true'}</th>
-		<th class="header small" valign="middle">{l s='Invoice Date' pdf='true'}</th>
-		<th class="header small" valign="middle">{l s='Order Reference' pdf='true'}</th>
-		<th class="header small" valign="middle">{l s='Order date' pdf='true'}</th>
-		{if $addresses.invoice->vat_number}
-			<th class="header small" valign="middle">{l s='VAT Number' pdf='true'}</th>
-		{/if}
+		<th class="header small" valign="middle">{l s='Return Number' pdf='true'}</th>
+		<th class="header small" valign="middle">{l s='Date' pdf='true'}</th>
 	</tr>
 	<tr>
-		<td class="center small white">{$title|escape:'html':'UTF-8'}</td>
-		<td class="center small white">{dateFormat date=$order->invoice_date full=0}</td>
-		<td class="center small white">{$order->getUniqReference()}</td>
-		<td class="center small white">{dateFormat date=$order->date_add full=0}</td>
-		{if $addresses.invoice->vat_number}
-			<td class="center small white">
-				{$addresses.invoice->vat_number}
-			</td>
-		{/if}
+		<td class="center small white">{'%06d'|sprintf:$order_return->id}</td>
+		<td class="center small white">{dateFormat date=$order_return->date_add full=0}</td>
 	</tr>
 </table>

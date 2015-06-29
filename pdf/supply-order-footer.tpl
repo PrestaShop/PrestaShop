@@ -39,16 +39,16 @@
 				{/if}
 				<br />
 			{/if}
-            
-            {if isset($shop_details)}
-                {$shop_details|escape:'html':'UTF-8'}<br />
-            {/if}
+			
+			{if isset($shop_details)}
+				{$shop_details|escape:'html':'UTF-8'}<br />
+			{/if}
 
-            {if isset($free_text)}
-            	{foreach $free_text as $text}
-    				{$text|escape:'html':'UTF-8'}<br />
-    			{/foreach}
-            {/if}
+			{if isset($free_text)}
+				{foreach $free_text as $text}
+					{$text|escape:'html':'UTF-8'}<br />
+				{/foreach}
+			{/if}
 		</td>
 	</tr>
 </table>
