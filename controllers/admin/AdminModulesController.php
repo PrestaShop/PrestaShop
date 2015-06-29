@@ -296,6 +296,7 @@ class AdminModulesControllerCore extends AdminController
 			);
 
 		$this->context->smarty->assign(array(
+			'currentIndex' => self::$currentIndex,
 			'tab_modules_list' => $modules_list_sort,
 			'admin_module_favorites_view' => $this->context->link->getAdminLink('AdminModules').'&select=favorites',
 		));

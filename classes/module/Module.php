@@ -1303,7 +1303,7 @@ abstract class ModuleCore
 					$item->onclick_option = false;
 					$item->trusted = Module::isModuleTrusted($item->name);
 
-					$module_list[] = $item;
+					$module_list[$item->name.'_disk'] = $item;
 
 					$module_name_list[] = '\''.pSQL($item->name).'\'';
 					$modules_name_to_cursor[Tools::strtolower(strval($item->name))] = $item;
@@ -1338,9 +1338,9 @@ abstract class ModuleCore
 				if (class_exists($module, false))
 				{
 					$tmp_module = Adapter_ServiceLocator::get($module);
-					
+
 					$item = new stdClass();
-					$item->id = $tmp_module->id;
+					$item->id = (int)$tmp_module->id;
 					$item->warning = $tmp_module->warning;
 					$item->name = $tmp_module->name;
 					$item->version = $tmp_module->version;
@@ -1377,7 +1377,7 @@ abstract class ModuleCore
 							$item->onclick_option_content[$opt] = $tmp_module->onclickOption($opt, $href);
 					}
 
-					$module_list[] = $item;
+					$module_list[$item->name.'_disk'] = $item;
 
 					if (!$xml_exist || $need_new_config_file)
 					{
@@ -1476,16 +1476,11 @@ abstract class ModuleCore
 							$item->avg_rate = isset($modaddons->avg_rate) ? (array)$modaddons->avg_rate : null;
 							$item->badges = isset($modaddons->badges) ? (array)$modaddons->badges : null;
 							$item->url = isset($modaddons->url) ? $modaddons->url : null;
+							if (isset($item->description_full) && trim($item->description_full) != '')
+								$item->show_quick_view = true;
 
 							if (isset($modaddons->img))
-							{
-								if (!file_exists(_PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg'))
-									if (!file_put_contents(_PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg', Tools::file_get_contents($modaddons->img)))
-										copy(_PS_IMG_DIR_.'404.gif', _PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg');
-
-								if (file_exists(_PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg'))
-									$item->image = '../img/tmp/'.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg';
-							}
+								$item->image = Module::copyModAddonsImg($modaddons);
 
 							if ($item->type == 'addonsMustHave')
 							{
@@ -1504,7 +1499,15 @@ abstract class ModuleCore
 									}
 							}
 
-							$module_list[] = $item;
+							$module_list[$item->name.'_feed'] = $item;
+						}
+
+						if (isset($module_list[$modaddons->name.'_disk']))
+						{
+							$module_list[$modaddons->name.'_disk']->description_full = stripslashes(strip_tags((string)$modaddons->description_full));
+							$module_list[$modaddons->name.'_disk']->additional_description = stripslashes(strip_tags((string)$modaddons->additional_description));
+							$module_list[$modaddons->name.'_disk']->image = Module::copyModAddonsImg($modaddons);
+							$module_list[$modaddons->name.'_disk']->show_quick_view = true;
 						}
 					}
 			}
@@ -1542,6 +1545,17 @@ abstract class ModuleCore
 		}
 
 		return $module_list;
+	}
+
+	public static function copyModAddonsImg($modaddons)
+	{
+		if (!Validate::isLoadedObject($modaddons))
+			return;
+		if (!file_exists(_PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg'))
+			if (!file_put_contents(_PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg', Tools::file_get_contents($modaddons->img)))
+				copy(_PS_IMG_DIR_.'404.gif', _PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg');
+		if (file_exists(_PS_TMP_IMG_DIR_.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg'))
+			return '../img/tmp/'.md5((int)$modaddons->id.'-'.$modaddons->name).'.jpg';
 	}
 
 	/**
