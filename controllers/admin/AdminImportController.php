@@ -1758,7 +1758,10 @@ class AdminImportControllerCore extends AdminController
 				if (isset($product->delete_existing_images))
 					if ((bool)$product->delete_existing_images)
 						$product->deleteImages();
-
+				
+				//parse into an array
+				$product->image=explode(',',$product->image);
+				
 				if (isset($product->image) && is_array($product->image) && count($product->image))
 				{
 					$product_has_images = (bool)Image::getImages($this->context->language->id, (int)$product->id);
