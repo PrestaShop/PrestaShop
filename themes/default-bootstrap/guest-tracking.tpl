@@ -52,7 +52,7 @@
 		{if isset($order->followup)}
 			{assign var=followup value=$order->followup}
 		{/if}
-		
+
 		<div id="block-history">
 			<div id="block-order-detail" class="std">
 			{include file="./order-detail.tpl"}
@@ -63,13 +63,13 @@
 	<h2 id="guestToCustomer" class="page-heading">{l s='For more advantages...'}</h2>
 
 	{include file="$tpl_dir./errors.tpl"}
-	
+
 	{if isset($transformSuccess)}
-		<p class="alert alert-success">{l s='Your guest account has been successfully transformed into a customer account. You can now log in as a registered shopper. '} <a href="{$link->getPageLink('authentication', true)|escape:'html':'UTF-8'}">{l s='Login page.'}</a></p>
+		<p class="alert alert-success">{l s='Your guest account has been successfully transformed into a customer account. You can now log in as a registered shopper. '} <a href="{$link->getPageLink('authentication', true)|escape:'html':'UTF-8'}">{l s='Log in now.'}</a></p>
 	{else}
 		<form method="post" action="{$action|escape:'html':'UTF-8'}#guestToCustomer" class="std">
 			<fieldset class="description_box box">
-            	
+
                 <p><strong class="dark">{l s='Transform your guest account into a customer account and enjoy:'}</strong></p>
 				<ul>
 					<li> -{l s='Personalized and secure access'}</li>
@@ -84,11 +84,11 @@
                         </div>
                     </div>
                 </div>
-				
+
 				<input type="hidden" name="id_order" value="{if isset($order->id)}{$order->id}{else}{if isset($smarty.get.id_order)}{$smarty.get.id_order|escape:'html':'UTF-8'}{else}{if isset($smarty.post.id_order)}{$smarty.post.id_order|escape:'html':'UTF-8'}{/if}{/if}{/if}" />
 				<input type="hidden" name="order_reference" value="{if isset($smarty.get.order_reference)}{$smarty.get.order_reference|escape:'html':'UTF-8'}{else}{if isset($smarty.post.order_reference)}{$smarty.post.order_reference|escape:'html':'UTF-8'}{/if}{/if}" />
 				<input type="hidden" name="email" value="{if isset($smarty.get.email)}{$smarty.get.email|escape:'html':'UTF-8'}{else}{if isset($smarty.post.email)}{$smarty.post.email|escape:'html':'UTF-8'}{/if}{/if}" />
-				
+
 				<p>
                     <button type="submit" name="submitTransformGuestToCustomer" class="button button-medium btn btn-default"><span>{l s='Send'}<i class="icon-chevron-right right"></i></span></button>
                 </p>
