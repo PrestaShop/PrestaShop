@@ -517,6 +517,7 @@ abstract class ControllerCore
 
 			if ($defer && $dom_available)
 				$html = Media::deferInlineScripts($html);
+
 			$html = trim(str_replace(array('</body>', '</html>'), '', $html))."\n";
 
 			$this->context->smarty->assign(array(
@@ -528,7 +529,7 @@ abstract class ControllerCore
 			$javascript = $this->context->smarty->fetch(_PS_ALL_THEMES_DIR_.'javascript.tpl');
 
 			if ($defer)
-				echo $html.$javascript;
+				echo $html.$javascript.'</body></html>';
 			else
 				echo preg_replace('/(?<!\$)'.$js_tag.'/', $javascript, $html).$live_edit_content.((!isset($this->ajax) || ! $this->ajax) ? '</body></html>' : '');
 		}
