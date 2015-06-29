@@ -359,6 +359,12 @@ class AuthControllerCore extends FrontController
 				if ($module_newsletter->active)
 					$module_newsletter->confirmSubscription(Tools::getValue('email'));
 			}
+
+			Hook::exec('actionProcessCustomerNewsletter', array(
+				'active' => true,
+				'customer' => $customer,
+				'email' => Tools::getValue('email')
+			));
 		}
 	}
 
