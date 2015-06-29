@@ -65,7 +65,7 @@
 	{include file="$tpl_dir./errors.tpl"}
 	
 	{if isset($transformSuccess)}
-		<p class="alert alert-success">{l s='Your guest account has been successfully transformed into a customer account. You can now log in as a registered shopper. '} <a href="{$link->getPageLink('authentication', true)|escape:'html':'UTF-8'}">{l s='page.'}</a></p>
+		<p class="alert alert-success">{l s='Your guest account has been successfully transformed into a customer account. You can now log in as a registered shopper. '} <a href="{$link->getPageLink('authentication', true)|escape:'html':'UTF-8'}">{l s='Login page.'}</a></p>
 	{else}
 		<form method="post" action="{$action|escape:'html':'UTF-8'}#guestToCustomer" class="std">
 			<fieldset class="description_box box">
