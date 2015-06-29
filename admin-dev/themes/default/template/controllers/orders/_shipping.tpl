@@ -40,6 +40,7 @@
 				</th>
 				<th>
 					<span class="title_box ">{l s='Shipping cost'}</span>
+					<small class="text-muted">{$smarty.capture.TaxMethod}</small>
 				</th>
 				<th>
 					<span class="title_box ">{l s='Tracking number'}</span>

@@ -38,13 +38,25 @@ class OrderSlipCore extends ObjectModel
 	/** @var float */
 	public $conversion_rate;
 
+	/** @var float */
+	public $total_products_tax_excl;
+	
+	/** @var float */
+	public $total_products_tax_incl;
+	
+	/** @var float */
+	public $total_shipping_tax_excl;
+	
+	/** @var float */
+	public $total_shipping_tax_incl;
+	
 	/** @var int */
 	public $amount;
 
 	/** @var int */
 	public $shipping_cost;
 
-	/** @var int */
+	/** @var float */
 	public $shipping_cost_amount;
 
 	/** @var int */
@@ -374,6 +386,7 @@ class OrderSlipCore extends ObjectModel
 		}
 
 		$order_slip->{'total_products_tax_'.$inc_or_ex_2} -= (float)$amount && !$amount_choosen ? (float)$amount : 0;
+		// For these attributes: sometimes takes taxes, sometimes not.
 		$order_slip->amount = $amount_choosen ? (float)$amount : $order_slip->{'total_products_tax_'.$inc_or_ex_1};
 		$order_slip->shipping_cost_amount = $order_slip->{'total_shipping_tax_'.$inc_or_ex_1};
 

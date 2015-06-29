@@ -24,16 +24,20 @@
 *}
 <table id="total-tab" width="100%">
 
-	{if $order_slip->shipping_cost_amount > 0}
+	{if $order_slip->total_shipping_tax_incl > 0}
 		<tr>
 			{if $tax_excluded_display}
 				<td class="grey" width="70%">{l s='Shipping (Tax Excl.)' pdf='true'}</td>
+				<td class="white" width="30%">
+					- {displayPrice currency=$order->id_currency price=$order_slip->total_shipping_tax_excl}
+				</td>
 			{else}
 				<td class="grey" width="70%">{l s='Shipping (Tax Incl.)' pdf='true'}</td>
+				<td class="white" width="30%">
+					- {displayPrice currency=$order->id_currency price=$order_slip->total_shipping_tax_incl}
+				</td>
 			{/if}
-			<td class="white" width="30%">
-				- {displayPrice currency=$order->id_currency price=$order_slip->shipping_cost_amount}
-			</td>
+			
 		</tr>
 	{/if}
 
@@ -95,7 +99,11 @@
 				{/if}
 				- {displayPrice currency=$order->id_currency price=$total_paid}
 			{elseif $amount_choosen}
-				- {displayPrice currency=$order->id_currency price=($order_slip->amount+$order_slip->shipping_cost_amount)}
+				{if $tax_excluded_display}
+					- {displayPrice currency=$order->id_currency price=($order_slip->total_shipping_tax_excl+$order->total_products)}
+				{else}
+					- {displayPrice currency=$order->id_currency price=($order_slip->total_shipping_tax_incl+$order->total_products_wt)}
+				{/if}
 			{else}
 				{if $tax_excluded_display}
 					- {displayPrice currency=$order->id_currency price=$order->total_paid_tax_excl}

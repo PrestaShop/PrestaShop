@@ -37,6 +37,7 @@
 				</th>
 				<th>
 					<span class="title_box ">{l s='Amount'}</span>
+					<small class="text-muted">{$smarty.capture.TaxMethod}</small>
 				</th>
 				<th></th>
 			</tr>
@@ -92,7 +93,11 @@
 							{if isset($document->is_delivery)}
 								--
 							{else}
-								{displayPrice price=$document->total_paid_tax_incl currency=$currency->id}&nbsp;
+								{if $tax_excluded_display}
+									{displayPrice price=$document->total_paid_tax_excl currency=$currency->id}&nbsp;
+								{else}
+									{displayPrice price=$document->total_paid_tax_incl currency=$currency->id}&nbsp;
+								{/if}
 								{if $document->getTotalPaid()}
 									<span>
 									{if $document->getRestPaid() > 0}
@@ -104,7 +109,11 @@
 								{/if}
 							{/if}
 						{elseif get_class($document) eq 'OrderSlip'}
-							{displayPrice price=$document->amount+$document->shipping_cost_amount currency=$currency->id}
+							{if $tax_excluded_display}
+								{displayPrice currency=$currency->id price=-($document->total_shipping_tax_excl+$document->total_products_tax_excl)}
+							{else}
+								{displayPrice currency=$currency->id price=-($document->total_shipping_tax_incl+$document->total_products_tax_incl)}
+							{/if}
 						{/if}
 						</td>
 						<td class="text-right document_action">

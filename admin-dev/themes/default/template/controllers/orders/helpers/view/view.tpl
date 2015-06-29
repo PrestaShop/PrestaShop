@@ -62,6 +62,14 @@
 	var errorRefund = "{l s='Error. You cannot refund a negative amount.'}";
 	</script>
 
+	{capture "TaxMethod"}
+		{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
+			{l s='tax excluded.'}
+		{else}
+			{l s='tax included.'}
+		{/if}
+	{/capture}
+					
 	{assign var="hook_invoice" value={hook h="displayInvoice" id_order=$order->id}}
 	{if ($hook_invoice)}
 	<div>{$hook_invoice}</div>
@@ -899,13 +907,7 @@
 					-->
 					</div>
 
-					{capture "TaxMethod"}
-						{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
-							{l s='tax excluded.'}
-						{else}
-							{l s='tax included.'}
-						{/if}
-					{/capture}
+					
 					{if ($order->getTaxCalculationMethod() == $smarty.const.PS_TAX_EXC)}
 						<input type="hidden" name="TaxMethod" value="0">
 					{else}

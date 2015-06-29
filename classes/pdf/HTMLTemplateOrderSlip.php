@@ -124,26 +124,10 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 		if ($this->order_slip->shipping_cost == 0)
 			$this->order->total_shipping_tax_incl = $this->order->total_shipping_tax_excl = 0;
 
-		$tax = new Tax();
-		$tax->rate = $this->order->carrier_tax_rate;
-		$tax_calculator = new TaxCalculator(array($tax));
 		$tax_excluded_display = Group::getPriceDisplayMethod((int)$customer->id_default_group);
 
-		if (/*$this->order_slip->partial == 1 && */$this->order_slip->shipping_cost_amount > 0)
-		{
-			if ($tax_excluded_display)
-				$this->order->total_shipping_tax_incl = Tools::ps_round($tax_calculator->addTaxes($this->order_slip->shipping_cost_amount), 2);
-			else
-				$this->order->total_shipping_tax_incl = $this->order_slip->shipping_cost_amount;
-		}
-
-		if ($tax_excluded_display)
-			$this->order->total_shipping_tax_excl = $this->order_slip->shipping_cost_amount;
-		else
-			$this->order->total_shipping_tax_excl = Tools::ps_round($tax_calculator->removeTaxes($this->order_slip->shipping_cost_amount), 2);
-
-		$this->order->total_paid_tax_incl += $this->order->total_shipping_tax_incl;
-		$this->order->total_paid_tax_excl += $this->order->total_shipping_tax_excl;
+ 		$this->order->total_paid_tax_incl += $this->order_slip->total_shipping_tax_incl;
+ 		$this->order->total_paid_tax_excl += $this->order_slip->total_shipping_tax_excl;
 		$this->smarty->assign(array(
 			'order' => $this->order,
 			'order_slip' => $this->order_slip,
@@ -166,7 +150,7 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 			'tax_tab' => $this->getTaxTabContent(),
 		);
 		$this->smarty->assign($tpls);
-		
+
 		return $this->smarty->fetch($this->getTemplate('order-slip'));
 	}
 
@@ -339,28 +323,14 @@ class HTMLTemplateOrderSlipCore extends HTMLTemplateInvoice
 	public function getShippingTaxesBreakdown()
 	{
 		$taxes_breakdown = array();
-		$tax = new Tax();
-		$tax->rate = $this->order->carrier_tax_rate;
-		$tax_calculator = new TaxCalculator(array($tax));
-		$customer = new Customer((int)$this->order->id_customer);
-		$tax_excluded_display = Group::getPriceDisplayMethod((int)$customer->id_default_group);
-
-		if ($tax_excluded_display)
-		{
-			$total_tax_excl = $this->order_slip->shipping_cost_amount;
-			$shipping_tax_amount = $tax_calculator->addTaxes($this->order_slip->shipping_cost_amount) - $total_tax_excl;
-		}
-		else
-		{
-			$total_tax_excl = $tax_calculator->removeTaxes($this->order_slip->shipping_cost_amount);
-			$shipping_tax_amount = $this->order_slip->shipping_cost_amount - $total_tax_excl;
-		}
+		
+		$shipping_tax_amount = $this->order_slip->total_shipping_tax_incl - $this->order_slip->total_shipping_tax_excl;
 
 		if ($shipping_tax_amount > 0)
 			$taxes_breakdown[] = array(
 				'rate' =>  $this->order->carrier_tax_rate,
 				'total_amount' => $shipping_tax_amount,
-				'total_tax_excl' => $total_tax_excl
+				'total_tax_excl' => $this->order_slip->total_shipping_tax_excl
 			);
 
 		return $taxes_breakdown;
