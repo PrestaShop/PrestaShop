@@ -807,9 +807,10 @@ function updatePrice()
 		$('.unit-price').show();
 	}
 
-	// If there is a quantity discount table,
-	// we update it according to the new price
-	updateDiscountTable(basePriceDisplay);
+	if (noTaxForThisProduct || customerGroupWithoutTax)
+		updateDiscountTable(productBasePriceTaxExcl);
+	else
+		updateDiscountTable(productBasePriceTaxIncl);
 }
 
 //update display of the large image

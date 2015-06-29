@@ -488,7 +488,11 @@ $(document).ready(function () {
 				<th>{l s='Country'}</th>
 				<th>{l s='Group'}</th>
 				<th>{l s='Customer'}</th>
-				<th>{l s='Fixed price'}</th>
+				{if $country_display_tax_label}
+					<th>{l s='Fixed price (tax excl.)'}</th>
+				{else}
+					<th>{l s='Fixed price'}</th>
+				{/if}
 				<th>{l s='Impact'}</th>
 				<th>{l s='Period'}</th>
 				<th>{l s='From (quantity)'}</th>
