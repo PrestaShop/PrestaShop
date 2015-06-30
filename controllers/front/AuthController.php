@@ -253,7 +253,7 @@ class AuthControllerCore extends FrontController
 	{
 		Hook::exec('actionBeforeAuthentication');
 		$passwd = trim(Tools::getValue('passwd'));
-        $_POST['passwd'] = null;
+		$_POST['passwd'] = null;
 		$email = trim(Tools::getValue('email'));
 		if (empty($email))
 			$this->errors[] = Tools::displayError('An email address required.');
