@@ -508,7 +508,7 @@ abstract class AdminTabCore
         /* Checking for fields validity */
         foreach ($rules['validate'] as $field => $function) {
             if (($value = Tools::getValue($field)) !== false && !empty($value) && ($field != 'passwd')) {
-                if (!Validate::$function($value)) {
+                if ((PHP_MAJOR_VERSION < 7 && !Validate::$function($value)) || !Validate::{$function}($value)) {
                     $this->_errors[] = sprintf(Tools::displayError('The field %1$s (%2$s) is invalid.'), call_user_func(array($className, 'displayFieldName'), $field, $className));
                 }
             }

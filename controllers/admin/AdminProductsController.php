@@ -2242,10 +2242,10 @@ class AdminProductsControllerCore extends AdminController
             if ($this->isProductFieldUpdated($field) && ($value = Tools::getValue($field))) {
                 $res = true;
                 if (Tools::strtolower($function) == 'iscleanhtml') {
-                    if (!Validate::$function($value, (int)Configuration::get('PS_ALLOW_HTML_IFRAME'))) {
+                    if ((PHP_MAJOR_VERSION < 7 && !Validate::$function($value, (int)Configuration::get('PS_ALLOW_HTML_IFRAME'))) || !Validate::{$function}($value, (int)Configuration::get('PS_ALLOW_HTML_IFRAME'))) {
                         $res = false;
                     }
-                } elseif (!Validate::$function($value)) {
+                } elseif ((PHP_MAJOR_VERSION < 7 && !Validate::{$function}($value)) || !Validate::{$function}($value)) {
                     $res = false;
                 }
 
@@ -2261,7 +2261,7 @@ class AdminProductsControllerCore extends AdminController
         foreach ($rules['validateLang'] as $fieldLang => $function) {
             foreach ($languages as $language) {
                 if ($this->isProductFieldUpdated($fieldLang, $language['id_lang']) && ($value = Tools::getValue($fieldLang.'_'.$language['id_lang']))) {
-                    if (!Validate::$function($value, (int)Configuration::get('PS_ALLOW_HTML_IFRAME'))) {
+                    if ((PHP_MAJOR_VERSION < 7 && !Validate::$function($value, (int)Configuration::get('PS_ALLOW_HTML_IFRAME'))) || !Validate::{$function}($value, (int)Configuration::get('PS_ALLOW_HTML_IFRAME'))) {
                         $this->errors[] = sprintf(
                             Tools::displayError('The %1$s field (%2$s) is invalid.'),
                             call_user_func(array($className, 'displayFieldName'), $fieldLang, $className),
@@ -2597,7 +2597,7 @@ class AdminProductsControllerCore extends AdminController
         $helper->refresh = (bool)(ConfigurationKPI::get('8020_SALES_CATALOG_EXPIRE') < $time);
         $moduleManagerBuilder = new ModuleManagerBuilder();
         $moduleManager = $moduleManagerBuilder->build();
-    
+
         if ($moduleManager->isInstalled('statsbestproducts')) {
             $helper->href = Context::getContext()->link->getAdminLink('AdminStats').'&module=statsbestproducts&datepickerFrom='.date('Y-m-d', strtotime('-30 days')).'&datepickerTo='.date('Y-m-d');
         }
