@@ -627,6 +627,7 @@ class OrderOpcControllerCore extends ParentOrderController
 		$this->context->smarty->assign('isVirtualCart', $this->context->cart->isVirtualCart());
 
 		$vars = array(
+			'advanced_payment_api' => (bool)Configuration::get('PS_ADVANCED_PAYMENT_API'),
 			'free_shipping' => $free_shipping,
 			'checkedTOS' => (int)$this->context->cookie->checkedTOS,
 			'recyclablePackAllowed' => (int)Configuration::get('PS_RECYCLABLE_PACK'),
