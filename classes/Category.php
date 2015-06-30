@@ -327,6 +327,7 @@ class CategoryCore extends ObjectModel
 		{
 			/** @var Category $cat */
 			$cat->deleteLite();
+
 			if (!$this->hasMultishopEntries())
 			{
 				$cat->deleteImage();
@@ -345,7 +346,8 @@ class CategoryCore extends ObjectModel
 		if (!$this->hasMultishopEntries() && (!isset($this->doNotRegenerateNTree) || !$this->doNotRegenerateNTree))
 			Category::regenerateEntireNtree();
 
-		Hook::exec('actionCategoryDelete', array('category' => $this));
+		foreach ($all_cat as $cat)
+			Hook::exec('actionCategoryDelete', array('category' => $cat));
 
 		return true;
 	}
