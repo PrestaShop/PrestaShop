@@ -381,4 +381,5 @@
 [submodule "modules/sendtoafriend"]
 	path = modules/sendtoafriend
 	url = https://github.com/PrestaShop/sendtoafriend
+	branch = master
 	ignore = dirty
