@@ -268,7 +268,7 @@ class ToolsCore
 	 */
 	public static function getProtocol($use_ssl = null)
 	{
-		return (!is_null($use_ssl) && $use_ssl ? 'https://' : 'http://');
+		return ((!is_null($use_ssl) && $use_ssl) || Configuration::get('PS_SSL_ENABLED_EVERYWHERE') ? 'https://' : 'http://');
 	}
 
 	/**
