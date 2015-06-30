@@ -83,7 +83,7 @@
 				<h3>
 					<i class="icon-info"></i>
 					{l s='Server information'}
-				</h3>	
+				</h3>
 				{if count($uname)}
 				<p>
 					<strong>{l s='Server information:'}</strong> {$uname|escape:'html':'UTF-8'}
@@ -154,7 +154,7 @@
 				</h3>
 				<p>
 					<strong>{l s='Mail method:'}</strong>
-			
+
 			{if $mail}
 				{l s='You are using the PHP mail() function.'}</p>
 			{else}
@@ -224,12 +224,12 @@
 						<span class="text-success">{l s='OK'}</span>
 					</p>
 					{else}
-						<span class="text-success">{l s='Please fix the following error(s)'}</span>
+						<span class="text-danger">{l s='Please fix the following error(s)'}</span>
 					</p>
 					<ul>
 						{foreach from=$testsOptional item='value' key='key'}
-							{if $value eq 'fail'}
-								<li>{$key}</li>
+							{if $value eq 'fail' && isset($testsErrors[$key])}
+								<li>{$testsErrors[$key]}</li>
 							{/if}
 						{/foreach}
 					</ul>
@@ -241,7 +241,7 @@
 	{if !$host_mode}
 	<div class="panel">
 		<h3>
-			<i class="icon-info"></i> 
+			<i class="icon-info"></i>
 			{l s='List of changed files'}
 		</h3>
 		<div id="changedFiles"><i class="icon-spin icon-refresh"></i> {l s='Checking files...'}</div>
