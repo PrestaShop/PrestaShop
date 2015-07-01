@@ -53,8 +53,8 @@ class Repository
         if (!is_dir($this->cldrCacheFolder)) {
             try {
                 mkdir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'tmp', 0777, true);
-            } catch (Exception $e) {
-                throw new Exception('Cldr cache folder can\'t be created');
+            } catch (\Exception $e) {
+                throw new \Exception('Cldr cache folder can\'t be created');
             }
         }
 
@@ -62,7 +62,7 @@ class Repository
             new FileProvider(new WebProvider, $this->cldrCacheFolder)
         );
 
-        //if contextLanguage is define, set locale/regio from it
+        //if contextLanguage is define, set locale/region from it
         if ($contextLanguage) {
             $locale = explode('-', $contextLanguage->language_code);
             $this->locale = $locale[0];

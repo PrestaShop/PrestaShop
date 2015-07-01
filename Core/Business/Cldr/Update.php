@@ -32,9 +32,17 @@ class Update extends Repository
 {
     const ZIP_CORE_URL = 'http://www.unicode.org/Public/cldr/26/json-full.zip';
 
-    public function __construct()
+    public function __construct($psCacheDir)
     {
-        parent::__construct();
+        $this->cldrCacheFolder = $psCacheDir.'cldr';
+
+        if (!is_dir($this->cldrCacheFolder)) {
+            try {
+                mkdir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'tmp', 0777, true);
+            } catch (\Exception $e) {
+                throw new \Exception('Cldr cache folder can\'t be created');
+            }
+        }
     }
 
     /**
@@ -60,17 +68,17 @@ class Update extends Repository
             fclose($fp);
 
             $archive = new \ZipArchive();
-
             if ($archive->open($file) === true) {
                 $archive->extractTo($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'tmp');
                 $archive->close();
             } else {
                 throw new \Exception("Failed to unzip '".$file."'.");
             }
-        }
 
-        $this->generateSupplementalDatas();
-        $this->generateMainDatas();
+            $this->generateSupplementalDatas();
+            $this->generateMainDatas();
+            $this->rmdir($this->cldrCacheFolder.DIRECTORY_SEPARATOR.'tmp');
+        }
     }
 
     /**
@@ -114,6 +122,25 @@ class Update extends Repository
                     }
                 }
             }
+        }
+    }
+
+    /*Recursive rmdir */
+    private function rmdir($dir)
+    {
+        if (is_dir($dir)) {
+            $objects = scandir($dir);
+            foreach ($objects as $object) {
+                if ($object != "." && $object != "..") {
+                    if (filetype($dir."/".$object) == "dir") {
+                        $this->rmdir($dir."/".$object);
+                    } else {
+                        unlink($dir."/".$object);
+                    }
+                }
+            }
+            reset($objects);
+            rmdir($dir);
         }
     }
 }
