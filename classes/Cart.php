@@ -837,7 +837,7 @@ class CartCore extends ObjectModel
 		Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_SHIPPING);
 		Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_REDUCTION);
 		Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_GIFT);
-		
+
 		Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_ALL). '-ids';
 		Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_SHIPPING). '-ids';
 		Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_REDUCTION). '-ids';
@@ -950,9 +950,9 @@ class CartCore extends ObjectModel
 			{
 				if ($operator == 'up')
 				{
-					$sql = 'SELECT stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity
+					$sql = 'SELECT p.out_of_stock, IFNULL(stock.quantity, 0) as quantity
 							FROM '._DB_PREFIX_.'product p
-							'.Product::sqlStock('p', $id_product_attribute, true, $shop).'
+							'.Product::sqlStock('p', null, true, $shop).'
 							WHERE p.id_product = '.$id_product;
 
 					$result2 = Db::getInstance()->getRow($sql);
@@ -995,9 +995,9 @@ class CartCore extends ObjectModel
 			/* Add product to the cart */
 			elseif ($operator == 'up')
 			{
-				$sql = 'SELECT stock.out_of_stock, IFNULL(stock.quantity, 0) as quantity
+				$sql = 'SELECT p.out_of_stock, IFNULL(stock.quantity, 0) as quantity
 						FROM '._DB_PREFIX_.'product p
-						'.Product::sqlStock('p', $id_product_attribute, true, $shop).'
+						'.Product::sqlStock('p', null, true, $shop).'
 						WHERE p.id_product = '.$id_product;
 
 				$result2 = Db::getInstance()->getRow($sql);
@@ -1194,7 +1194,6 @@ class CartCore extends ObjectModel
 		Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_SHIPPING);
 		Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_REDUCTION);
 		Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_GIFT);
-		
 		Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_ALL). '-ids';
 		Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_SHIPPING). '-ids';
 		Cache::clean('Cart::getCartRules_'.$this->id.'-'.CartRule::FILTER_ACTION_REDUCTION). '-ids';
