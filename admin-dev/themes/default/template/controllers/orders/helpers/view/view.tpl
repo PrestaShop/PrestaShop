@@ -142,11 +142,13 @@
                 {l s='Order Information'}
             </a>
         </li>
+        {if count($order->getBrother()) > 0}
         <li>
             <a href="#linked_orders">
                 {l s='Linked Orders '}
             </a>
         </li>
+        {/if}
     </ul>
         <div class="tab-content panel">
             <div class="tab-pane" id="products">
@@ -161,8 +163,10 @@
             <div class="tab-pane" id="order_info">
                 {include file='controllers/orders/tabs/_order_information.tpl'}
             </div>
+            {if count($order->getBrother()) > 0}
             <div class="tab-pane" id="linked_orders">
             {include file='controllers/orders/tabs/_linked_orders.tpl'}
+            {/if}
             </div>
         </div>
     </div>
