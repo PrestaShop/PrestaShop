@@ -270,13 +270,9 @@ class AdminModulesControllerCore extends AdminController
 		{
 			$tab_modules_list = explode(',', $tab_modules_list);
 			if ($admin_list_from_source = Tools::getValue('admin_list_from_source'))
-			{
 				$modules_list_unsort = $this->getModulesByInstallation($tab_modules_list, $admin_list_from_source);
-			}
 			else
-			{
 				$modules_list_unsort = $this->getModulesByInstallation($tab_modules_list);
-			}
 		}
 
 		$installed = $uninstalled = array();
