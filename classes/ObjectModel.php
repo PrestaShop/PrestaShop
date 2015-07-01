@@ -24,7 +24,7 @@
  *  International Registered Trademark & Property of PrestaShop SA
  */
 
-abstract class ObjectModelCore
+abstract class ObjectModelCore implements Core_Foundation_Database_EntityInterface
 {
 	/**
 	 * List of field types
@@ -158,8 +158,15 @@ abstract class ObjectModelCore
 	/** @var bool Enables to define an ID before adding object. */
 	public $force_id = false;
 
-	/**  @var bool If true, objects are cached in memory. */
+	/**
+	 * @var bool If true, objects are cached in memory.
+	 */
 	protected static $cache_objects = true;
+
+	public static function getRepositoryClassName()
+	{
+		return null;
+	}
 
 	/**
 	 * Returns object validation rules (fields validity)
@@ -221,59 +228,8 @@ abstract class ObjectModelCore
 
 		if ($id)
 		{
-			// Load object from database if object id is present
-			$cache_id = 'objectmodel_'.$this->def['classname'].'_'.(int)$id.'_'.(int)$this->id_shop.'_'.(int)$id_lang;
-			if (!ObjectModel::$cache_objects || !Cache::isStored($cache_id))
-			{
-				$sql = new DbQuery();
-				$sql->from($this->def['table'], 'a');
-				$sql->where('a.'.$this->def['primary'].' = '.(int)$id);
-
-				// Get lang informations
-				if ($id_lang && isset($this->def['multilang']) && $this->def['multilang'])
-				{
-					$sql->leftJoin($this->def['table'].'_lang', 'b', 'a.'.$this->def['primary'].' = b.'.$this->def['primary'].' AND b.id_lang = '.(int)$id_lang);
-					if ($this->id_shop && !empty($this->def['multilang_shop']))
-						$sql->where('b.id_shop = '.$this->id_shop);
-				}
-
-				// Get shop informations
-				if (Shop::isTableAssociated($this->def['table']))
-					$sql->leftJoin($this->def['table'].'_shop', 'c', 'a.'.$this->def['primary'].' = c.'.$this->def['primary'].' AND c.id_shop = '.(int)$this->id_shop);
-				if ($object_datas = Db::getInstance()->getRow($sql))
-				{
-					if (!$id_lang && isset($this->def['multilang']) && $this->def['multilang'])
-					{
-						$sql = 'SELECT * FROM `'.pSQL(_DB_PREFIX_.$this->def['table']).'_lang`
-								WHERE `'.bqSQL($this->def['primary']).'` = '.(int)$id
-								.(($this->id_shop && $this->isLangMultishop()) ? ' AND `id_shop` = '.$this->id_shop : '');
-						if ($object_datas_lang = Db::getInstance()->executeS($sql))
-							foreach ($object_datas_lang as $row)
-								foreach ($row as $key => $value)
-								{
-									if ($key != $this->def['primary'] && array_key_exists($key, $this))
-									{
-										if (!isset($object_datas[$key]) || !is_array($object_datas[$key]))
-											$object_datas[$key] = array();
-
-										$object_datas[$key][$row['id_lang']] = $value;
-									}
-								}
-					}
-					if (ObjectModel::$cache_objects)
-						Cache::store($cache_id, $object_datas);
-				}
-			}
-			else
-				$object_datas = Cache::retrieve($cache_id);
-
-			if ($object_datas)
-			{
-				$this->id = (int)$id;
-				foreach ($object_datas as $key => $value)
-					if (array_key_exists($key, $this))
-						$this->{$key} = $value;
-			}
+			$entity_mapper = Adapter_ServiceLocator::get("Adapter_EntityMapper");
+			$entity_mapper->load($id, $id_lang, $this, $this->def, $this->id_shop, self::$cache_objects);
 		}
 	}
 
@@ -336,12 +292,12 @@ abstract class ObjectModelCore
 
 		$fields = array();
 		if ($this->id_lang === null)
-			foreach (Language::getLanguages(false) as $language)
+			foreach (Language::getIDs(false) as $id_lang)
 			{
-				$fields[$language['id_lang']] = $this->formatFields(self::FORMAT_LANG, $language['id_lang']);
-				$fields[$language['id_lang']]['id_lang'] = $language['id_lang'];
+				$fields[$id_lang] = $this->formatFields(self::FORMAT_LANG, $id_lang);
+				$fields[$id_lang]['id_lang'] = $id_lang;
 				if ($this->id_shop && $is_lang_multishop)
-					$fields[$language['id_lang']]['id_shop'] = (int)$this->id_shop;
+					$fields[$id_lang]['id_shop'] = (int)$this->id_shop;
 			}
 		else
 		{
@@ -852,8 +808,8 @@ abstract class ObjectModelCore
 		$fields = array();
 
 		if ($this->id_lang == null)
-			foreach (Language::getLanguages(false) as $language)
-				$this->makeTranslationFields($fields, $fields_array, $language['id_lang']);
+			foreach (Language::getIDs(false) as $id_lang)
+				$this->makeTranslationFields($fields, $fields_array, $id_lang);
 		else
 			$this->makeTranslationFields($fields, $fields_array, $this->id_lang);
 
@@ -989,12 +945,24 @@ abstract class ObjectModelCore
 	 */
 	public function validateField($field, $value, $id_lang = null, $skip = array(), $human_errors = false)
 	{
+		static $ps_lang_default = null;
+		static $ps_allow_html_iframe = null;
+
+		if ($ps_lang_default === null)
+			$ps_lang_default = Configuration::get('PS_LANG_DEFAULT');
+
+		if ($ps_allow_html_iframe === null)
+			$ps_allow_html_iframe = (int)Configuration::get('PS_ALLOW_HTML_IFRAME');
+
+
 		$this->cacheFieldsRequiredDatabase();
 		$data = $this->def['fields'][$field];
 
+
+
 		// Check if field is required
 		$required_fields = (isset(self::$fieldsRequiredDatabase[get_class($this)])) ? self::$fieldsRequiredDatabase[get_class($this)] : array();
-		if (!$id_lang || $id_lang == Configuration::get('PS_LANG_DEFAULT'))
+		if (!$id_lang || $id_lang == $ps_lang_default)
 			if (!in_array('required', $skip) && (!empty($data['required']) || in_array($field, $required_fields)))
 				if (Tools::isEmpty($value))
 					if ($human_errors)
@@ -1049,7 +1017,7 @@ abstract class ObjectModelCore
 				$res = true;
 				if (Tools::strtolower($data['validate']) == 'iscleanhtml')
 				{
-					if (!call_user_func(array('Validate', $data['validate']), $value, (int)Configuration::get('PS_ALLOW_HTML_IFRAME')))
+					if (!call_user_func(array('Validate', $data['validate']), $value, $ps_allow_html_iframe))
 						$res = false;
 				}
 				else
@@ -1423,6 +1391,7 @@ abstract class ObjectModelCore
 				return $associated;
 
 			Cache::store($cache_id, $associated);
+			return $associated;
 		}
 
 		return Cache::retrieve($cache_id);
@@ -1657,7 +1626,7 @@ abstract class ObjectModelCore
 		$row = Db::getInstance()->getRow('
 			SELECT `id_'.bqSQL($table).'` as id
 			FROM `'._DB_PREFIX_.bqSQL($table).'` e
-			WHERE e.`id_'.bqSQL($table).'` = '.(int)$id_entity
+			WHERE e.`id_'.bqSQL($table).'` = '.(int)$id_entity, false
 		);
 
 		return isset($row['id']);

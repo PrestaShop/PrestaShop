@@ -81,7 +81,7 @@
 							<div class="btn-group pull-right">
 								{if isset($module->type) && $module->type == 'addonsMustHave'}
 									<a class="btn btn-default _blank" href="{$module->addons_buy_url|replace:' ':'+'|escape:'html':'UTF-8'}">
-										<i class="icon-shopping-cart"></i> &nbsp;{if isset($module->id_currency) && isset($module->price)}{displayPrice price=$module->price currency=$module->id_currency}{/if}
+										<i class="icon-shopping-cart"></i> &nbsp;{if $module->price|floatval == 0}{l s='Free'}{elseif isset($module->id_currency) && isset($module->price)}{displayPrice price=$module->price currency=$module->id_currency}{/if}
 									</a>
 								{else}
 									{if isset($module->id) && $module->id gt 0}
@@ -133,7 +133,7 @@
 												{/if}
 											{/foreach}
 										</ul>
-									{else if !isset($module->not_on_disk) && !isset($module->id)}
+									{elseif !isset($module->not_on_disk) && !isset($module->id)}
 										<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
 											<span class="caret">&nbsp;</span>
 										</button>
@@ -148,7 +148,7 @@
 												{/if}
 											{/foreach}
 										</ul>
-									{else if isset($module->not_on_disk)}
+									{elseif isset($module->not_on_disk)}
 										<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >
 											<span class="caret">&nbsp;</span>
 										</button>

@@ -270,11 +270,11 @@ $(document).on('click', 'button[name=saveCustomization]', function(e){
 
 if (typeof ad !== 'undefined' && ad && typeof adtoken !== 'undefined' && adtoken)
 {
-	$(document).on('click', 'input[name=publish_button]', function(e){
+	$(document).on('click', 'a#publish_button', function(e){
 		e.preventDefault();
 		submitPublishProduct(ad, 0, adtoken);
 	});
-	$(document).on('click', 'input[name=lnk_view]', function(e){
+	$(document).on('click', 'a#lnk_view', function(e){
 		e.preventDefault();
 		submitPublishProduct(ad, 1, adtoken);
 	});
@@ -631,19 +631,34 @@ function updatePrice()
 
 	// Set product (not the combination) base price
 	var basePriceWithoutTax = +productPriceTaxExcluded;
+	var basePriceWithTax = +productPriceTaxIncluded;
 	var priceWithGroupReductionWithoutTax = 0;
 
-	priceWithGroupReductionWithoutTax = basePriceWithoutTax * (1 - group_reduction);
+	priceWithGroupReductionWithoutTax = basePriceWithoutTax * (1 - groupReduction);
 
 	// Apply combination price impact (only if there is no specific price)
 	// 0 by default, +x if price is inscreased, -x if price is decreased
 	basePriceWithoutTax = basePriceWithoutTax + +combination.price;
+	basePriceWithTax = basePriceWithTax + +combination.price * (taxRate/100 + 1);
 
 	// If a specific price redefine the combination base price
 	if (combination.specific_price && combination.specific_price.price > 0)
+	{
 		basePriceWithoutTax = +combination.specific_price.price;
+		basePriceWithTax = +combination.specific_price.price * (taxRate/100 + 1);
+	}
 
 	var priceWithDiscountsWithoutTax = basePriceWithoutTax;
+	var priceWithDiscountsWithTax = basePriceWithTax;
+
+	if (default_eco_tax)
+	{
+		// combination.ecotax doesn't modify the price but only the display
+		priceWithDiscountsWithoutTax = priceWithDiscountsWithoutTax + default_eco_tax * (1 + ecotaxTax_rate / 100);
+		priceWithDiscountsWithTax = priceWithDiscountsWithTax + default_eco_tax * (1 + ecotaxTax_rate / 100);
+		basePriceWithTax = basePriceWithTax + default_eco_tax * (1 + ecotaxTax_rate / 100);
+		basePriceWithoutTax = basePriceWithoutTax + default_eco_tax * (1 + ecotaxTax_rate / 100);
+	}
 
 	// Apply specific price (discount)
 	// We only apply percentage discount and discount amount given before tax
@@ -656,15 +671,18 @@ function updatePrice()
 			{
 				var reduction = combination.specific_price.reduction;
 				if (combination.specific_price.id_currency == 0)
-					reduction = reduction * currencyRate * (1 - group_reduction);
+					reduction = reduction * currencyRate * (1 - groupReduction);
 				priceWithDiscountsWithoutTax -= reduction;
+				priceWithDiscountsWithTax -= reduction * (taxRate/100 + 1);
 			}
 		}
 		else if (combination.specific_price.reduction_type == 'percentage')
 		{
 			priceWithDiscountsWithoutTax = priceWithDiscountsWithoutTax * (1 - +combination.specific_price.reduction);
+			priceWithDiscountsWithTax = priceWithDiscountsWithTax * (1 - +combination.specific_price.reduction);
 		}
 	}
+
 
 	// Apply Tax if necessary
 	if (noTaxForThisProduct || customerGroupWithoutTax)
@@ -674,15 +692,8 @@ function updatePrice()
 	}
 	else
 	{
-		basePriceDisplay = basePriceWithoutTax * (taxRate/100 + 1);
-		priceWithDiscountsDisplay = priceWithDiscountsWithoutTax * (taxRate/100 + 1);
-	}
-
-	if (default_eco_tax)
-	{
-		// combination.ecotax doesn't modify the price but only the display
-		basePriceDisplay = basePriceDisplay + default_eco_tax * (1 + ecotaxTax_rate / 100);
-		priceWithDiscountsDisplay = priceWithDiscountsDisplay + default_eco_tax * (1 + ecotaxTax_rate / 100);
+		basePriceDisplay = basePriceWithTax;
+		priceWithDiscountsDisplay = priceWithDiscountsWithTax;
 	}
 
 	// If the specific price was given after tax, we apply it now
@@ -699,6 +710,9 @@ function updatePrice()
 					reduction = reduction / currencyRate;
 				else if(!specific_currency)
 					reduction = reduction * currencyRate;
+
+				if (typeof groupReduction !== 'undefined' && groupReduction > 0)
+					reduction *= 1 - parseFloat(groupReduction);
 
 				priceWithDiscountsDisplay -= reduction;
 				// We recalculate the price without tax in order to keep the data consistency
@@ -743,10 +757,11 @@ function updatePrice()
 
 	// If the calculated price (after all discounts) is different than the base price
 	// we show the old price striked through
+
 	if (priceWithDiscountsDisplay.toFixed(2) != basePriceDisplay.toFixed(2))
 	{
 		$('#old_price_display span.price').text(formatCurrency(basePriceDisplay, currencyFormat, currencySign, currencyBlank));
-		$('#old_price, #old_price_display, #old_price_display_taxes').show();
+		$('#old_price, #old_price_display, #old_price_display_taxes').removeClass('hidden').show();
 
 		// Then if it's not only a group reduction we display the discount in red box
 		if (priceWithDiscountsWithoutTax != priceWithGroupReductionWithoutTax)
@@ -792,9 +807,10 @@ function updatePrice()
 		$('.unit-price').show();
 	}
 
-	// If there is a quantity discount table,
-	// we update it according to the new price
-	updateDiscountTable(priceWithDiscountsDisplay);
+	if (noTaxForThisProduct || customerGroupWithoutTax)
+		updateDiscountTable(productBasePriceTaxExcl);
+	else
+		updateDiscountTable(productBasePriceTaxIncl);
 }
 
 //update display of the large image
@@ -845,7 +861,7 @@ function displayDiscounts(combination)
 	else if(allQuantityDiscount.length != 0)
 	{
 		allQuantityDiscount.show();
-		$('tr', quantityDiscountTable).not('#quantityDiscount_0').hide();
+		$('tbody tr', quantityDiscountTable).not('#quantityDiscount_0').hide();
 		quantityDiscountTable.show();
 	}
 	else
@@ -916,7 +932,43 @@ function refreshProductImages(id_product_attribute)
 				$('#thumbnail_' + parseInt(combinationImages[id_product_attribute][i])).show();
 	}
 	else
+	{
 		$('#thumbs_list li').show();
+
+		var choice = [];
+		var radio_inputs = parseInt($('#attributes .checked > input[type=radio]').length);
+		if (radio_inputs)
+			radio_inputs = '#attributes .checked > input[type=radio]';
+		else
+			radio_inputs = '#attributes input[type=radio]:checked';
+
+		$('#attributes select, #attributes input[type=hidden], ' + radio_inputs).each(function(){
+			choice.push(parseInt($(this).val()));
+		});
+
+		if (typeof combinations == 'undefined' || !combinations)
+			combinations = [];
+
+		//testing every combination to find the conbination's attributes' case of the user
+		for (var combination = 0; combination < combinations.length; ++combination)
+		{
+			//verify if this combinaison is the same that the user's choice
+			var combinationMatchForm = true;
+
+			$.each(combinations[combination]['idsAttributes'], function(key, value)
+			{
+				if (!in_array(parseInt(value), choice))
+					combinationMatchForm = false;
+			});
+
+			if (combinationMatchForm)
+			{
+				//show the large image in relation to the selected combination
+				if (combinations[combination]['image'] && combinations[combination]['image'] != -1)
+					displayImage($('#thumb_' + combinations[combination]['image']).parent());
+			}
+		}
+	}
 
 	if (parseInt($('#thumbs_list_frame >li:visible').length) != parseInt($('#thumbs_list_frame >li').length))
 		$('#wrapResetImages').stop(true, true).show();

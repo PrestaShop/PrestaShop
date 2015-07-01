@@ -86,7 +86,7 @@
 			</script>
 
 			<div class="col-lg-4">
-				<input type="text" id="email" name="email" value="{$fields_value[$input.name]|escape:'html':'UTF-8'}"/>
+				<input type="email" id="email" name="email" value="{$fields_value[$input.name]|escape:'html':'UTF-8'}"/>
 			</div>
 		{/if}
 	{else}

@@ -189,10 +189,15 @@ class CategoryCore extends ObjectModel
 		// Update group selection
 		$this->updateGroup($this->groupBox);
 
-		$this->level_depth = $this->calcLevelDepth();
+		if ($this->level_depth != $this->calcLevelDepth())
+		{
+			$this->level_depth = $this->calcLevelDepth();
+			$changed = true;
+		}
 
 		// If the parent category was changed, we don't want to have 2 categories with the same position
-		$changed = $this->getDuplicatePosition();
+		if (!isset($changed))
+			$changed = $this->getDuplicatePosition();
 		if ($changed)
 		{
 			if (Tools::isSubmit('checkBoxShopAsso_category'))
@@ -819,6 +824,7 @@ class CategoryCore extends ObjectModel
 			ORDER BY category_shop.`position` ASC';
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -848,6 +854,7 @@ class CategoryCore extends ObjectModel
 			'.($active ? 'AND `active` = 1' : '').' LIMIT 1';
 			$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -1024,19 +1031,31 @@ class CategoryCore extends ObjectModel
 	/**
 	 * Light back office search for categories
 	 *
-	 * @param int $id_lang Language ID
-	 * @param string $query Searched string
-	 * @param bool $unrestricted allows search without lang and includes first category and exact match
+	 * @param int    $id_lang      Language ID
+	 * @param string $query        Searched string
+	 * @param bool   $unrestricted allows search without lang and includes first category and exact match
+	 * @param bool   $skip_cache
 	 * @return array Corresponding categories
+	 * @throws PrestaShopDatabaseException
 	 */
-	public static function searchByName($id_lang, $query, $unrestricted = false)
+	public static function searchByName($id_lang, $query, $unrestricted = false, $skip_cache = false)
 	{
 		if ($unrestricted === true)
-			return Db::getInstance()->getRow('
-			SELECT c.*, cl.*
-			FROM `'._DB_PREFIX_.'category` c
-			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` '.Shop::addSqlRestrictionOnLang('cl').')
-			WHERE `name` = \''.pSQL($query).'\'');
+		{
+			$key = 'Category::searchByName_'.$query;
+			if ($skip_cache || !Cache::isStored($key))
+			{
+				$categories = Db::getInstance()->getRow('
+				SELECT c.*, cl.*
+				FROM `'._DB_PREFIX_.'category` c
+				LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` '.Shop::addSqlRestrictionOnLang('cl').')
+				WHERE `name` = \''.pSQL($query).'\'');
+				if (!$skip_cache)
+					Cache::store($key, $categories);
+				return $categories;
+			}
+			return Cache::retrieve($key);
+		}
 		else
 			return Db::getInstance()->executeS('
 			SELECT c.*, cl.*
@@ -1087,7 +1106,7 @@ class CategoryCore extends ObjectModel
 				if ($id_parent_category)
 					$category = Category::searchByNameAndParentCategoryId($id_lang, $category_name, $id_parent_category);
 				else
-					$category = Category::searchByName($id_lang, $category_name, true);
+					$category = Category::searchByName($id_lang, $category_name, true, true);
 
 				if (!$category && $object_to_create && $method_to_create)
 				{
@@ -1196,6 +1215,7 @@ class CategoryCore extends ObjectModel
 			foreach ($result as $group)
 				$groups[] = $group['id_group'];
 			Cache::store($cache_id, $groups);
+			return $groups;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -1232,6 +1252,7 @@ class CategoryCore extends ObjectModel
 				INNER JOIN '._DB_PREFIX_.'customer_group cg on (cg.`id_group` = ctg.`id_group` AND cg.`id_customer` = '.(int)$id_customer.')
 				WHERE ctg.`id_category` = '.(int)$this->id);
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -1378,6 +1399,7 @@ class CategoryCore extends ObjectModel
 			FROM '._DB_PREFIX_.'category
 			WHERE id_category = '.(int)$id);
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -1564,6 +1586,7 @@ class CategoryCore extends ObjectModel
 			LEFT JOIN `'._DB_PREFIX_.'category_lang` cl ON (c.`id_category` = cl.`id_category` AND cl.`id_lang` = '.(int)Context::getContext()->language->id.')
 			WHERE `level_depth` = 1');
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}
@@ -1591,7 +1614,9 @@ class CategoryCore extends ObjectModel
 			SELECT `id_category`
 			FROM `'._DB_PREFIX_.'category`
 			WHERE `id_parent` = 0');
-			Cache::store($cache_id, new Category($id_category, $id_lang));
+			$category = new Category($id_category, $id_lang);
+			Cache::store($cache_id, $category);
+			return $category;
 		}
 		return Cache::retrieve($cache_id);
 	}

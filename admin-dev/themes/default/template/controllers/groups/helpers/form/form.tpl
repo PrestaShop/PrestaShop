@@ -47,6 +47,8 @@
 			$("#group_discount_category").fancybox({
 				beforeLoad: function () {
 					$('#group_discount_category_fancybox').show();
+					$('#group_discount_category_fancybox .tree-panel-heading-controls').css('margin', '-40px 0px 20px');
+					$('#group_discount_category_fancybox .form-horizontal').css('padding', '10px');
 					initFancyBox();
 				},
 				beforeClose: function () {
@@ -54,16 +56,16 @@
 				}
 			});
 		});
-		
+
 		function deleteCategoryReduction(id_category)
 		{
 			$('#group_discount_category_table tr#'+id_category).fadeOut('slow', function () {
-				$(this).remove();	
+				$(this).remove();
 			});
-		
+
 		}
-		
-		function addCategoryReduction() 
+
+		function addCategoryReduction()
 		{
 			exist = false;
 			$('.category_reduction').each( function () {
@@ -74,7 +76,7 @@
 					return false;
 				}
 			});
-			
+
 			if (exist)
 				return;
 			$.ajax({
@@ -108,16 +110,16 @@
 						input_hidden.setAttribute('value', jsonData.discount);
 						input_hidden.setAttribute('name', 'category_reduction['+jsonData.id_category+']');
 						input_hidden.setAttribute('class', 'category_reduction');
-						
+
 						$('#group_discount_category_table tr#'+jsonData.id_category+' > td:last').append(input_hidden);
 						$.fancybox.close();
 					}
 				}
 			});
-			
+
 			return false;
 		}
-			
+
 		function initFancyBox()
 		{
 			$('[name="id_category"]:checked').removeAttr('checked');
@@ -143,11 +145,12 @@
 			</table>
 		</div>
 		<div id="group_discount_category_fancybox" class="bootstrap" style="display:none" >
-			<div class="panel form-horizontal">
+			<div class="panel">
 				<div class="panel-heading">
 					<i class="icon-group"></i> {l s='New group category discount'}
 				</div>
 				{$categoryTreeView}
+				<div class="form-horizontal">
 				<div class="alert alert-info">{l s='Caution: The discount applied to a category does not stack with the overall reduction but instead replaces it.'}</div>
 				<div class="alert alert-warning">{l s='Only products that have this category as the default category will be affected.'}</div>
 				<div class="form-group">
@@ -161,6 +164,7 @@
 						<button type="button" onclick="addCategoryReduction();" class="btn btn-default pull-right">{l s='add'}</button>
 					</div>
 				</div>
+			</div>
 			</div>
 		</div>
 	</div>
@@ -178,7 +182,7 @@
 			});
 		</script>
 
-		<div class="col-lg-9" id="authorized-modules">			
+		<div class="col-lg-9" id="authorized-modules">
 			{foreach $input['values']['auth_modules'] key=key item=module }
 			<div class="form-group">
 				<label class="control-label col-lg-4"><img src="../modules/{$module->name|escape:'html':'UTF-8'}/logo.gif" height="16" width="16" alt="{$module->displayName|escape:'html':'UTF-8'}" /> {$module->displayName|escape:'html':'UTF-8'}</label>

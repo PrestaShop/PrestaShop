@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author 	PrestaShop SA <contact@prestashop.com>
+ *  @copyright  2007-2015 PrestaShop SA
+ *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * @since 1.5
@@ -34,7 +34,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
 	/**
 	 * @param OrderInvoice $order_invoice
-	 * @param Smarty $smarty
+	 * @param $smarty
 	 * @throws PrestaShopException
 	 */
 	public function __construct(OrderInvoice $order_invoice, $smarty)
@@ -48,9 +48,32 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
 		$id_lang = Context::getContext()->language->id;
 		$this->title = $order_invoice->getInvoiceNumberFormatted($id_lang);
-		// footer informations
+
 		$this->shop = new Shop((int)$this->order->id_shop);
 	}
+
+	/**
+	 * Returns the template's HTML header
+	 *
+	 * @return string HTML header
+	 */
+	public function getHeader()
+	{
+		$this->assignCommonHeaderData();
+		$this->smarty->assign(array(
+			'header' => $this->l('INVOICE'),
+		));
+
+		return $this->smarty->fetch($this->getTemplate('header'));
+	}
+
+	/**
+	 * Compute layout elements size
+	 *
+	 * @params $params Array Layout elements
+	 *
+	 * @return Array Layout elements columns size
+	 */
 
 	private function computeLayout($params)
 	{
@@ -105,21 +128,33 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
 	/**
 	 * Returns the template's HTML content
+	 *
 	 * @return string HTML content
 	 */
 	public function getContent()
 	{
+        $invoiceAddressPatternRules = Tools::jsonDecode(Configuration::get('PS_INVCE_INVOICE_ADDR_RULES'), true);
+        $deliveryAddressPatternRules = Tools::jsonDecode(Configuration::get('PS_INVCE_DELIVERY_ADDR_RULES'), true);
+
 		$invoice_address = new Address((int)$this->order->id_address_invoice);
 		$country = new Country((int)$invoice_address->id_country);
 
-		$formatted_invoice_address = AddressFormat::generateAddress($invoice_address, array(), '<br />', ' ');
+		if ($this->order_invoice->invoice_address)
+			$formatted_invoice_address = $this->order_invoice->invoice_address;
+		else
+			$formatted_invoice_address = AddressFormat::generateAddress($invoice_address, $invoiceAddressPatternRules, '<br />', ' ');
 
 		$delivery_address = null;
 		$formatted_delivery_address = '';
 		if (isset($this->order->id_address_delivery) && $this->order->id_address_delivery)
 		{
-			$delivery_address = new Address((int)$this->order->id_address_delivery);
-			$formatted_delivery_address = AddressFormat::generateAddress($delivery_address, array(), '<br />', ' ');
+			if ($this->order_invoice->delivery_address)
+				$formatted_delivery_address = $this->order_invoice->delivery_address;
+			else
+			{
+				$delivery_address = new Address((int)$this->order->id_address_delivery);
+				$formatted_delivery_address = AddressFormat::generateAddress($delivery_address, $deliveryAddressPatternRules, '<br />', ' ');
+			}
 		}
 
 		$customer = new Customer((int)$this->order->id_customer);
@@ -135,12 +170,20 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 				$has_discount = true;
 				$order_detail['unit_price_tax_excl_before_specific_price'] = $order_detail['unit_price_tax_excl_including_ecotax'] + $order_detail['reduction_amount_tax_excl'];
 			}
+			elseif ($order_detail['reduction_percent'] > 0)
+			{
+				$has_discount = true;
+				$order_detail['unit_price_tax_excl_before_specific_price'] = (100 * $order_detail['unit_price_tax_excl_including_ecotax']) / (100 - 15);
+			}
 
 			// Set tax_code
 			$taxes = OrderDetail::getTaxListStatic($id);
 			$tax_temp = array();
 			foreach ($taxes as $tax)
-				$tax_temp[] = $tax['id_tax'];
+            {
+                $obj = new Tax($tax['id_tax']);
+				$tax_temp[] = sprintf($this->l('%1$s%2$s%%'), ($obj->rate + 0), '&nbsp;');
+            }
 
 			$order_detail['order_detail_tax'] = $taxes;
 			$order_detail['order_detail_tax_label'] = implode(', ', $tax_temp);
@@ -273,7 +316,8 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
 		$data = array(
 			'order' => $this->order,
-			'order_details' => $order_details,
+            'order_invoice' => $this->order_invoice,
+            'order_details' => $order_details,
 			'cart_rules' => $cart_rules,
 			'delivery_address' => $formatted_delivery_address,
 			'invoice_address' => $formatted_invoice_address,
@@ -311,6 +355,8 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
 	/**
 	 * Returns the tax tab content
+	 *
+	 * @return String Tax tab html content
 	 */
 	public function getTaxTabContent()
 	{
@@ -333,7 +379,6 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 			'ecotax_tax_breakdown' => $this->order_invoice->getEcoTaxTaxesBreakdown(),
 			'wrapping_tax_breakdown' => $this->order_invoice->getWrappingTaxesBreakdown(),
 			'tax_breakdowns' => $tax_breakdowns,
-			'tax_label' => $this->getTaxLabel($tax_breakdowns),
 			'order' => $debug ? null : $this->order,
 			'order_invoice' => $debug ? null : $this->order_invoice,
 			'carrier' => $debug ? null : $carrier
@@ -347,6 +392,11 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 		return $this->smarty->fetch($this->getTemplate('invoice.tax-tab'));
 	}
 
+	/**
+	 * Returns different tax breakdown elements
+	 *
+	 * @return Array Different tax breakdown elements
+	 */
 	protected function getTaxBreakdown()
 	{
 		$breakdowns = array(
@@ -381,6 +431,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 		return $breakdowns;
 	}
 
+    /*
 	protected function getTaxLabel($tax_breakdowns)
 	{
 		$tax_label = '';
@@ -400,9 +451,11 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
 		return $tax_label;
 	}
+    */
 
 	/**
 	 * Returns the invoice template associated to the country iso_code
+	 *
 	 * @param string $iso_country
 	 */
 	protected function getTemplateByCountry($iso_country)
@@ -421,6 +474,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
 	/**
 	 * Returns the template filename when using bulk rendering
+	 *
 	 * @return string filename
 	 */
 	public function getBulkFilename()
@@ -430,6 +484,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
 	/**
 	 * Returns the template filename
+	 *
 	 * @return string filename
 	 */
 	public function getFilename()

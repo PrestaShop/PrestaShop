@@ -878,6 +878,15 @@ class AdminStockManagementControllerCore extends AdminController
 	/**
 	 * AdminController::getList() override
 	 * @see AdminController::getList()
+	 *
+	 * @param int         $id_lang
+	 * @param string|null $order_by
+	 * @param string|null $order_way
+	 * @param int         $start
+	 * @param int|null    $limit
+	 * @param int|bool    $id_lang_shop
+	 *
+	 * @throws PrestaShopException
 	 */
 	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
@@ -936,8 +945,8 @@ class AdminStockManagementControllerCore extends AdminController
 	 * Check stock for a given product or product attribute
 	 * and manage available actions in consequence
 	 *
-	 * @param array $item reference to the current item
-	 * @param bool $is_product_attribute specify if it's a product or a product variation
+	 * @param array $item                 Reference to the current item
+	 * @param bool  $is_product_variation Specify if it's a product or a product variation
 	 */
 	protected function skipActionByStock(&$item, $is_product_variation = false)
 	{

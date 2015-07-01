@@ -1025,7 +1025,12 @@ class CartRuleCore extends ObjectModel
 				if ($filter != CartRule::FILTER_ACTION_ALL_NOCAP)
 				{
 					// Cart values
-					$cart_average_vat_rate = Context::getContext()->cart->getAverageProductsTaxRate();
+					$cart = Context::getContext()->cart;
+
+					if (!Validate::isLoadedObject($cart))
+						$cart = new Cart();
+
+					$cart_average_vat_rate = $cart->getAverageProductsTaxRate();
 					$current_cart_amount = $use_tax ? $cart_amount_ti : $cart_amount_te;
 
 					foreach ($all_cart_rules_ids as $current_cart_rule_id)
@@ -1171,7 +1176,9 @@ class CartRuleCore extends ObjectModel
 			'.(in_array($type, array('carrier', 'shop')) ? ' AND t.deleted = 0' : '').'
 			'.($type == 'cart_rule' ? 'AND t.id_cart_rule != '.(int)$this->id : '').
 			$shop_list.
-			' ORDER BY name ASC '.$sql_limit);
+			(in_array($type, array('carrier', 'shop')) ? ' ORDER BY t.name ASC ' : '').
+			(in_array($type, array('country', 'group', 'cart_rule')) && $i18n ? ' ORDER BY tl.name ASC ' : '').
+			$sql_limit);
 		}
 		else
 		{
@@ -1187,7 +1194,9 @@ class CartRuleCore extends ObjectModel
 				WHERE 1 '.($active_only ? ' AND t.active = 1' : '').
 				$shop_list
 				.(in_array($type, array('carrier', 'shop')) ? ' AND t.deleted = 0' : '').
-				' ORDER BY name ASC '.$sql_limit,
+				(in_array($type, array('carrier', 'shop')) ? ' ORDER BY t.name ASC ' : '').
+				(in_array($type, array('country', 'group', 'cart_rule')) && $i18n ? ' ORDER BY tl.name ASC ' : '').
+				$sql_limit,
 				false);
 				while ($row = Db::getInstance()->nextRow($resource))
 					$array[($row['selected'] || $this->{$type.'_restriction'} == 0) ? 'selected' : 'unselected'][] = $row;

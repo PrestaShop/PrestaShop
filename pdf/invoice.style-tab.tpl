@@ -35,148 +35,149 @@
 {assign var=table_padding value="4px"}
 
 <style>
-    table, th, td {
-        margin: 0!important;
-        padding: 0!important;
-        vertical-align: middle;
-        font-size: {$font_size_text};
-        white-space: nowrap;
-    }
+	table, th, td {
+		margin: 0!important;
+		padding: 0!important;
+		vertical-align: middle;
+		font-size: {$font_size_text};
+		white-space: nowrap;
+	}
 
-    table.product {
-        border: 1px solid {$color_border};
-        border-collapse: collapse;
-    }
+	table.product {
+		border: 1px solid {$color_border};
+		border-collapse: collapse;
+	}
 
-    table#addresses-tab tr td {
-        font-size: large;
-    }
+	table#addresses-tab tr td {
+		font-size: large;
+	}
 
-    table#summary-tab {
-        padding: {$table_padding};
-        border: 1pt solid {$color_border};
-    }
-    table#total-tab {
-        padding: {$table_padding};
-        border: 1pt solid {$color_border};
-    }
-    table#tax-tab {
-        padding: {$table_padding};
-        border: 1pt solid {$color_border};
-    }
-    table#payment-tab {
-        padding: {$table_padding};
-        border: 1px solid {$color_border};
-    }
+	table#summary-tab {
+		padding: {$table_padding};
+		border: 1pt solid {$color_border};
+	}
+	table#total-tab {
+		padding: {$table_padding};
+		border: 1pt solid {$color_border};
+	}
+	table#tax-tab {
+		padding: {$table_padding};
+		border: 1pt solid {$color_border};
+	}
+	table#payment-tab {
+		padding: {$table_padding};
+		border: 1px solid {$color_border};
+	}
 
-    th.product {
-        border-bottom: 1px solid {$color_border};
-    }
+	th.product {
+		border-bottom: 1px solid {$color_border};
+	}
 
-    tr.discount th.header {
-        border-top: 1px solid {$color_border};
-    }
+	tr.discount th.header {
+		border-top: 1px solid {$color_border};
+	}
 
-    tr.product td {
-        border-bottom: 1px solid {$color_border_lighter};
-    }
+	tr.product td {
+		border-bottom: 1px solid {$color_border_lighter};
+	}
 
-    tr.color_line_even {
-        background-color: {$color_line_even};
-    }
+	tr.color_line_even {
+		background-color: {$color_line_even};
+	}
 
-    tr.color_line_odd {
-        background-color: {$color_line_odd};
-    }
+	tr.color_line_odd {
+		background-color: {$color_line_odd};
+	}
 
-    tr.customization_data td {
-    }
+	tr.customization_data td {
+	}
 
-    td.product {
-        vertical-align: middle;
-        font-size: {$font_size_product};
-    }
+	td.product {
+		vertical-align: middle;
+		font-size: {$font_size_product};
+	}
 
-    th.header {
-        font-size: {$font_size_header};
-        height: {$height_header};
-        background-color: {$color_header};
-        vertical-align: middle;
-        text-align: center;
-        font-weight: bold;
-    }
+	th.header {
+		font-size: {$font_size_header};
+		height: {$height_header};
+		background-color: {$color_header};
+		vertical-align: middle;
+		text-align: center;
+		font-weight: bold;
+	}
 
-    th.payment {
-        background-color: {$color_header};
-        vertical-align: middle;
-        font-weight: bold;
-    }
+	th.header-right {
+		font-size: {$font_size_header};
+		height: {$height_header};
+		background-color: {$color_header};
+		vertical-align: middle;
+		text-align: right;
+		font-weight: bold;
+	}
 
-    th.tva {
-        background-color: {$color_header};
-        vertical-align: middle;
-        font-weight: bold;
-    }
+	th.payment {
+		background-color: {$color_header};
+		vertical-align: middle;
+		font-weight: bold;
+	}
 
-    td.header {
-        vertical-align: middle;
-        text-align: center;
-    }
+	th.tva {
+		background-color: {$color_header};
+		vertical-align: middle;
+		font-weight: bold;
+	}
 
-    td.payment {
-        vertical-align: middle;
-    }
+	tr.separator td {
+		border-top: 1px solid #000000;
+	}
 
-    td.tva {
-        vertical-align: middle;
-    }
+	.left {
+		text-align: left;
+	}
 
-    tr.separator td {
-        border-top: 1px solid #000000;
-    }
+	.fright {
+		float: right;
+	}
 
-    .left {
-        text-align: left;
-    }
+	.right {
+		text-align: right;
+	}
 
-    .fright {
-        float: right;
-    }
+	.center {
+		text-align: center;
+	}
 
-    .right {
-        text-align: right;
-    }
+	.bold {
+		font-weight: bold;
+	}
 
-    .center {
-        text-align: center;
-    }
+	.border {
+		border: 1px solid black;
+	}
 
-    .bold {
-        font-weight: bold;
-    }
+	.no_top_border {
+		border-top:hidden;
+		border-bottom:1px solid black;
+		border-left:1px solid black;
+		border-right:1px solid black;
+	}
 
-    .border {
-        border: 1px solid black;
-    }
+	.grey {
+		background-color: {$color_header};
 
-    .no_top_border {
-        border-top:hidden;
-        border-bottom:1px solid black;
-        border-left:1px solid black;
-        border-right:1px solid black;
-    }
+	}
 
-    .grey {
-        background-color: {$color_header};
+	/* This is used for the border size */
+	.white {
+		background-color: #FFFFFF;
+	}
 
-    }
-
-    /* This is used for the border size */
-    .white {
-        background-color: #FFFFFF;
-    }
-
-    .small {
-        font-size:small;
-    }
+	.big,
+	tr.big td{
+		font-size: 110%;
+	}
+	
+	.small, table.small th, table.small td {
+		font-size:small;
+	}
 </style>

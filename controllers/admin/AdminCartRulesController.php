@@ -244,7 +244,15 @@ class AdminCartRulesControllerCore extends AdminController
 
 		return $cart_rule;
 	}
-	/* @TODO Move this function into CartRule */
+
+	/**
+	 * @TODO Move this function into CartRule
+	 *
+	 * @param ObjectModel $currentObject
+	 *
+	 * @return void
+	 * @throws PrestaShopDatabaseException
+	 */
 	protected function afterAdd($currentObject)
 	{
 		// Add restrictions for generic entities like country, carrier and group

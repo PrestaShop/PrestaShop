@@ -49,6 +49,9 @@
 		{/foreach}
 		<script type="text/javascript" src="../js/admin/login.js?{$smarty.now}"></script>
 
+		{if (isset($js_def) && count($js_def) || isset($js_files) && count($js_files))}
+			{include file=$smarty.const._PS_ALL_THEMES_DIR_|cat:"javascript.tpl"}
+		{/if}
 	</head>
 	<body class="ps_back-office bootstrap">
 		<div id="login">

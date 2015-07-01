@@ -44,7 +44,11 @@ class StoresControllerCore extends FrontController
 	}
 
 	/**
-	 * get formatted string address
+	 * Get formatted string address
+	 *
+	 * @param array $store
+	 *
+	 * @return string
 	 */
 	protected function processStoreAddress($store)
 	{

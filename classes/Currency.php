@@ -304,6 +304,7 @@ class CurrencyCore extends ObjectModel
 
 			$result = (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}

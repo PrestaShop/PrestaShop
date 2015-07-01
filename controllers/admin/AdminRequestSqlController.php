@@ -246,6 +246,13 @@ class AdminRequestSqlControllerCore extends AdminController
 
 	/**
 	 * Display export action link
+	 *
+	 * @param $token
+	 * @param int $id
+	 *
+	 * @return string
+	 * @throws Exception
+	 * @throws SmartyException
 	 */
 	public function displayExportLink($token, $id)
 	{

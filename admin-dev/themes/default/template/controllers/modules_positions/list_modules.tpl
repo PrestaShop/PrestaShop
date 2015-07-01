@@ -38,53 +38,69 @@
 <div class="row">
 	<div class="col-lg-9">
 		<div class="panel">
-			<form class="form-inline well">
-				<label>{l s='Show'}</label>
-				<span>
-					<select id="show_modules" onchange="autoUrl('show_modules', '{$url_show_modules|escape:'html':'UTF-8'}')" class="filter fixed-width-lg">
-						<option value="all">{l s='All modules'}&nbsp;</option>
-						<option>-</option>
-						{foreach $modules as $module}
-							<option value="{$module->id|intval}"{if $display_key == $module->id} selected="selected"{/if}>{$module->displayName|escape:'html':'UTF-8'}</option>
-						{/foreach}
-					</select>
-				</span>
-				<p class="checkbox">
-					<label class="control-label" for="hook_position">
-						<input type="checkbox" id="hook_position" onclick="autoUrlNoList('hook_position', '{$url_show_invisible|escape:'html':'UTF-8'}')" {if $hook_position}checked="checked"{/if} />
-						{l s='Display non-positionable hooks'}
-					</label>
-				</p>
+			<form class="well form-horizontal" id="position_filer">
+				<div class="row">
+					<div class="form-group col-lg-6 col-sm-12">
+						<label class="control-label col-lg-4" style="text-align: left">{l s='Show'}</label>
+						<div class="col-lg-7">
+							<select id="show_modules" class="filter" style="width: 100%;">
+								<option value="all">{l s='All modules'}&nbsp;</option>
+								{foreach $modules as $module}
+									<option value="{$module->id|intval}"{if $display_key == $module->id} selected="selected"{/if}>{$module->displayName|escape:'html':'UTF-8'}</option>
+								{/foreach}
+							</select>
+						</div>
+					</div>
+					<div class="form-group col-lg-6 col-sm-12">
+						<label class="control-label col-lg-offset-1 col-lg-4" style="text-align: left">{l s='Search for a hook'}</label>
+						<div class="col-lg-7">
+							<div class="input-group">
+								<div class="input-group-addon"><i class="icon icon-search"></i></div>
+								<input type="text" class="form-control" id="hook_search" name="hook_search" placeholder="">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12">
+							<p class="checkbox">
+								<label class="control-label" for="hook_position">
+									<input type="checkbox" id="hook_position"/>
+									{l s='Display non-positionable hooks'}
+								</label>
+							</p>
+					</div>
+				</div>
 			</form>
 			<div id="modulePosition">
 				<form method="post" action="{$url_submit|escape:'html':'UTF-8'}" >
-{foreach $hooks as $hook}
-					<section class="hook_panel">
+					{foreach $hooks as $hook}
+					<section class="hook_panel {if $hook['position'] == 0}hook_position{/if}" {if $hook['position'] == 0}style="display:none;"{/if}>
 						<a name="{$hook['name']}"></a>
 						<header class="hook_panel_header">
 							<span class="hook_name">{$hook['name']}</span>
 							<!-- <span class="hook_title">{$hook['title']}</span> -->
 							<span class="badge pull-right">
-	{if $hook['module_count'] && $can_move}
+								{if $hook['module_count'] && $can_move}
 								<input type="checkbox" id="Ghook{$hook['id_hook']}" onclick="hookCheckboxes({$hook['id_hook']}, 0, this)"/>
-	{/if}
+								{/if}
 								{$hook['module_count']} {if $hook['module_count'] > 1}{l s='Modules'}{else}{l s='Module'}{/if}
 							</span>
 
-	{if !empty($hook['description'])}
+							{if !empty($hook['description'])}
 							<div class="hook_description">{$hook['description']}</div>
-	{/if}
+							{/if}
 						</header>
 
-	{if $hook['module_count']}
+						{if $hook['module_count']}
 						<section class="module_list">
 						<ul class="list-unstyled{if $hook['modules']|count > 1} sortable{/if}">
 
-						{foreach $hook['modules'] as $position => $module}
+							{foreach $hook['modules'] as $position => $module}
 							{if isset($module['instance'])}
-							<li id="{$hook['id_hook']|intval}_{$module['instance']->id|intval}" class="module_list_item{if $can_move && $hook['module_count'] >= 2} draggable{/if}">
+							<li id="{$hook['id_hook']|intval}_{$module['instance']->id|intval}" class="module_position_{$module['instance']->id|intval} module_list_item{if $can_move && $hook['module_count'] >= 2} draggable{/if}">
 								<div class="module_col_select">
-									<input type="checkbox" id="mod{$hook['id_hook']|intval}_{$module['instance']->id|intval}" class="hook{$hook['id_hook']}" onclick="hookCheckboxes({$hook['id_hook']}, 1, this)" name="unhooks[]" value="{$hook['id_hook']}_{$module['instance']->id}"/>
+									<input type="checkbox" id="mod{$hook['id_hook']|intval}_{$module['instance']->id|intval}" class="modules-position-checkbox hook{$hook['id_hook']}" onclick="hookCheckboxes({$hook['id_hook']}, 1, this)" name="unhooks[]" value="{$hook['id_hook']}_{$module['instance']->id}"/>
 								</div>
 								{if !$display_key}
 								<div class="module_col_position{if $can_move && $hook['module_count'] >= 2} dragHandle{/if}" id="td_{$hook['id_hook']|intval}_{$module['instance']->id}">
@@ -164,6 +180,18 @@
 						{l s='Run Live Edit'}
 					</a>
 			{/if}
+		</div>
+		<div class="panel" id="modules-position-selection-panel">
+			<h3><i class="icon-check"></i> {l s='Selection'}</h3>
+			<p>
+				<span id="modules-position-single-selection">{l s='1 module selected'}</span>
+				<span id="modules-position-multiple-selection">
+					<span id="modules-position-selection-count"></span> {l s='modules selected'}
+				</span>
+			</p>
+			<div class="text-center">
+				<button class="btn btn-default"><i class="icon-remove"></i> {l s='Unhook the selection'}</button>
+			</div>
 		</div>
 	</div>
 </div>

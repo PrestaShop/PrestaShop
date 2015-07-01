@@ -373,9 +373,17 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	/**
 	 * AdminController::getList() override
 	 * @see AdminController::getList()
+	 *
+	 * @param int         $id_lang
+	 * @param string|null $order_by
+	 * @param string|null $order_way
+	 * @param int         $start
+	 * @param int|null    $limit
+	 * @param int|bool    $id_lang_shop
+	 *
+	 * @throws PrestaShopException
 	 */
-	public function getList($id_lang, $order_by = null, $order_way = null,
-		$start = 0, $limit = null, $id_lang_shop = false)
+	public function getList($id_lang, $order_by = null, $order_way = null, $start = 0, $limit = null, $id_lang_shop = false)
 	{
 		if (Tools::isSubmit('csv_orders') || Tools::isSubmit('csv_orders_details') || Tools::isSubmit('csv_order_details'))
 			$limit = false;
@@ -2139,7 +2147,10 @@ class AdminSupplyOrdersControllerCore extends AdminController
 	/**
 	 * Overrides AdminController::beforeAdd()
 	 * @see AdminController::beforeAdd()
-	 * @param ObjectModel $object
+	 *
+	 * @param SupplyOrder $object
+	 *
+	 * @return true
 	 */
 	public function beforeAdd($object)
 	{

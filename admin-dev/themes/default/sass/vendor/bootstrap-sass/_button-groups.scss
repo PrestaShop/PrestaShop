@@ -68,6 +68,10 @@
   @include border-left-radius(0);
 }
 
+.btn-group > .dropdown-toggle:not(:first-child) {
+    @include border-left(0);
+}
+
 // Custom edits for including btn-groups within btn-groups (useful for including dropdown buttons within a btn-group)
 .btn-group > .btn-group {
   float: left;

@@ -129,6 +129,7 @@ class OrderStateCore extends ObjectModel
 			WHERE deleted = 0
 			ORDER BY `name` ASC');
 			Cache::store($cache_id, $result);
+			return $result;
 		}
 		return Cache::retrieve($cache_id);
 	}

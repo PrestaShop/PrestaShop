@@ -929,6 +929,27 @@ $(document).ready(function()
 
 		$('button:submit').click(bindSwapSave);
 	}
+
+	if (typeof host_mode !== 'undefined' && host_mode)
+	{
+        // http://status.prestashop.com/
+        var status_map = {
+            operational: status_operational,
+            degraded_performance: status_degraded_performance,
+            partial_outage: status_partial_outage,
+            major_outage: status_major_outage,
+        };
+
+        var components_map = {'ca1': 0, 'fr1': 1};
+
+        var sp = new StatusPage.page({page: 'rmfc0cm3rk9y'});
+        sp.components({
+            success: function (data) {
+                $('.status-page-description').text(status_map[data.components[components_map[host_cluster]].status]);
+                $('.status-page-dot').addClass(data.components[components_map[host_cluster]].status);
+            }
+        });
+    }
 });
 
 function bindSwapSave()
@@ -1364,7 +1385,7 @@ function perfect_access_js_gestion(src, action, id_tab, tabsize, tabnumber, tabl
 	check_for_all_accesses(tabsize, tabnumber);
 }
 
-verifMailREGEX = /^([\w+-]+(?:\.[\w+-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
+verifMailREGEX = /^([\w+-]+(?:\.[\w+-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,66}(?:\.[a-z]{2})?)$/;
 function verifyMail(testMsg, testSubject)
 {
 	$("#mailResultCheck").removeClass("alert-danger").removeClass('alert-success').html('<img src="../img/admin/ajax-loader.gif" alt="" />');

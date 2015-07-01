@@ -212,7 +212,7 @@ class SpecificPriceCore extends ObjectModel
 		{
 			$now = date('Y-m-d H:i:00');
 			$query = '
-			SELECT SQL_NO_CACHE *, '.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
+			SELECT *, '.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
 				FROM `'._DB_PREFIX_.'specific_price` USE INDEX (id_product_2)
 				WHERE `id_product` IN (0, '.(int)$id_product.')
 				AND `id_product_attribute` IN (0, '.(int)$id_product_attribute.')
@@ -233,7 +233,7 @@ class SpecificPriceCore extends ObjectModel
 			$query .= (Configuration::get('PS_QTY_DISCOUNT_ON_COMBINATION') || !$id_cart || !$real_quantity) ? (int)$quantity : max(1, (int)$real_quantity);
 			$query .= ' ORDER BY `id_product_attribute` DESC, `from_quantity` DESC, `id_specific_price_rule` ASC, `score` DESC, `to` DESC, `from` DESC';
 
-			SpecificPrice::$_specificPriceCache[$key] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query, false);
+			SpecificPrice::$_specificPriceCache[$key] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query);
 
 		}
 		return SpecificPrice::$_specificPriceCache[$key];
@@ -278,7 +278,7 @@ class SpecificPriceCore extends ObjectModel
 
 		$now = date('Y-m-d H:i:00');
 		$result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-			SELECT SQL_NO_CACHE *,
+			SELECT *,
 					'.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
 				FROM `'._DB_PREFIX_.'specific_price` USE INDEX (id_product_2)
 				WHERE
@@ -323,7 +323,7 @@ class SpecificPriceCore extends ObjectModel
 
 		$now = date('Y-m-d H:i:00');
 		return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-			SELECT SQL_NO_CACHE *,
+			SELECT *,
 					'.SpecificPrice::_getScoreQuery($id_product, $id_shop, $id_currency, $id_country, $id_group, $id_customer).'
 			FROM `'._DB_PREFIX_.'specific_price` USE INDEX (id_product_2)
 			WHERE
@@ -342,7 +342,7 @@ class SpecificPriceCore extends ObjectModel
 						(`to` = \'0000-00-00 00:00:00\' OR \''.$now.'\' <= `to`)
 					)
 					ORDER BY `from_quantity` DESC, `score` DESC, `to` DESC, `from` DESC
-		', false);
+		');
 	}
 
 	public static function getProductIdByDate($id_shop, $id_currency, $id_country, $id_group, $beginning, $ending, $id_customer = 0, $with_combination_id = false)

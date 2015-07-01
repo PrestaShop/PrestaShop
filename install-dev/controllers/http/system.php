@@ -122,6 +122,7 @@ class InstallControllerHttpSystem extends InstallControllerHttp
 					'title' => $this->l('Recommended PHP parameters'),
 					'success' => $this->tests['optional']['success'],
 					'checks' => array(
+						'new_phpversion' => sprintf($this->l('You are using PHP %s version. Soon, the latest PHP version supported by PrestaShop will be PHP 5.4. To make sure you’re ready for the future, we recommend you to upgrade to PHP 5.4 now!'), phpversion()),
 						'fopen' => $this->l('Cannot open external URLs'),
 						'register_globals' => $this->l('PHP register_globals option is enabled'),
 						'gz' => $this->l('GZIP compression is not activated'),

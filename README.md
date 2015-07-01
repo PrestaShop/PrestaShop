@@ -62,9 +62,11 @@ Contributing
 
 If you want to contribute code to PrestaShop, read the [CONTRIBUTING.md][7] file in this repository or read the [tutorials about contribution][8] on the documentation site.
 
+Current [Travis](https://travis-ci.org/) status: [![Travis](https://travis-ci.org/PrestaShop/PrestaShop.svg?branch=1.6)](https://travis-ci.org/PrestaShop/PrestaShop) (The Unit Tests are being implemented, so the status might be broken).
+
 If you want to help translate PrestaShop in your language, [join us on Crowdin][9]!
 
-[![Crowdin](https://crowdin.net/badges/prestashop-official/localized.png)](https://crowdin.net/project/prestashop-official)
+Current Crowdin status (for 69 registered languages): [![Crowdin](https://crowdin.net/badges/prestashop-official/localized.png)](https://crowdin.net/project/prestashop-official)
 
 
 Extending PrestaShop
@@ -72,7 +74,7 @@ Extending PrestaShop
 
 PrestaShop is a very extensible e-commerce platform, both through modules and themes. Developers can even override the default components and behaviors. Learn more about this using the [Developer Guide][11] and the [Designer Guide][12].
 
-Themes and modules can be obtained (and sold!) from [PrestaShop Addons][20], the officiel marketplace for PrestaShop.
+Themes and modules can be obtained (and sold!) from [PrestaShop Addons][20], the official marketplace for PrestaShop.
 
 
 Community forums

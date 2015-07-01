@@ -305,7 +305,6 @@ abstract class PaymentModuleCore extends Module
 
 					$order->total_products = (float)$this->context->cart->getOrderTotal(false, Cart::ONLY_PRODUCTS, $order->product_list, $id_carrier);
 					$order->total_products_wt = (float)$this->context->cart->getOrderTotal(true, Cart::ONLY_PRODUCTS, $order->product_list, $id_carrier);
-
 					$order->total_discounts_tax_excl = (float)abs($this->context->cart->getOrderTotal(false, Cart::ONLY_DISCOUNTS, $order->product_list, $id_carrier));
 					$order->total_discounts_tax_incl = (float)abs($this->context->cart->getOrderTotal(true, Cart::ONLY_DISCOUNTS, $order->product_list, $id_carrier));
 					$order->total_discounts = $order->total_discounts_tax_incl;
@@ -411,7 +410,7 @@ abstract class PaymentModuleCore extends Module
 			$cart_rule_used = array();
 			$products = $this->context->cart->getProducts();
 
-			// Make sure CarRule caches are empty
+			// Make sure CartRule caches are empty
 			CartRule::cleanCache();
 			foreach ($order_detail_list as $key => $order_detail)
 			{

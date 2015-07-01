@@ -1,16 +1,17 @@
 <?php
 
 return array (
-  'informations' => 
+  'informations' =>
   array (
-    'phone' => '+1 (888) 947-6543',
-    'documentation' => 'http://doc.prestashop.com/',
-    'documentation_upgrade' => 'http://docs.prestashop.com/display/PS16/Updating+PrestaShop',
-    'forum' => 'http://www.prestashop.com/forums/',
-    'blog' => 'http://www.prestashop.com/blog/',
-    'support' => 'https://www.prestashop.com/en/support',
+  'documentation' => 'http://doc.prestashop.com/display/PS16/Installing+PrestaShop',
+  'documentation_upgrade' => 'http://docs.prestashop.com/display/PS16/Updating+PrestaShop',
+  'forum' => 'http://www.prestashop.com/forums/',
+  'blog' => 'http://www.prestashop.com/blog/',
+  'support' => 'https://www.prestashop.com/en/support',
+  'tutorial' => 'https://www.youtube.com/watch?v=psz4aIPZZuk',
+  'tailored_help' => 'http://addons.prestashop.com/en/388-support',
   ),
-  'translations' => 
+  'translations' =>
   array (
     'An SQL error occurred for entity <i>%1$s</i>: <i>%2$s</i>' => 'Bir SQL varlık hatası oluştu  <i>%1$s</i>: <i>%2$s</i>',
     'Cannot create image "%1$s" for entity "%2$s"' => 'Varlık  "%1$s" için "%2$s" imaj oluşturulamıyor.',
@@ -145,7 +146,7 @@ PHP 5.1.2 veya üstü etkinleştirilmemiştir',
     'Test your database connection now!' => 'Şimdi veritabanı bağlantısını test edin!',
     'Next' => 'Sonraki',
     'Back' => 'Geri',
-    'If you need some assistance during the installation process, please call our team at %s and one of our experts will be happy to help.' => 'Eğer yükleme işlemi sırasında bazı yardıma ihtiyacınız olursa, %s uzman ekibimizi arayın, biz size yardımcı olmaktan mutluluk duyarız.',
+    'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="http://doc.prestashop.com/display/PS16/Installing+PrestaShop" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.' => 'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="http://doc.prestashop.com/display/PS16/Installing+PrestaShop" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.',
     'Official forum' => 'Resmi Forum',
     'Support' => 'Destek',
     'Documentation' => 'Belgeleme',
@@ -202,8 +203,8 @@ PHP 5.1.2 veya üstü etkinleştirilmemiştir',
     'PrestaShop requires at least 32 MB of memory to run: please check the memory_limit directive in your php.ini file or contact your host provider about this.' => 'PrestaShop çalıştırmak için en az 32 MB bellek  gerektirir: php.ini dosyasında memory_limit yönergesini kontrol ediniz veya bu konuda host sağlayıcınıza başvurunuz.',
     '<b>Warning: You cannot use this tool to upgrade your store anymore.</b><br /><br />You already have <b>PrestaShop version %1$s installed</b>.<br /><br />If you want to upgrade to the latest version, please read our documentation: <a href="%2$s">%2$s</a>' => '<b>Uyarı:.. Siz mağaza yükseltmek için artık bu aracı kullanamazsınız. </b><br /><br />Zaten var <b>PrestaShop %1$s sürümü kurulu</b>.<br /><br />Eğer en son sürüme yükseltmek istiyorsanız bizim dökümanlarımızı okuyun lütfen: <a href="%2$s">%2$s</a>',
     'Welcome to the PrestaShop %s Installer' => 'PrestaShop %s Yükleyiciye Hoşgeldiniz',
-    'Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 200,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'PrestaShop kurulumu hızlı ve kolaydır. Sadece birkaç dakika içinde, size 200.000 \'den fazla tüccar oluşan bir topluluğun parçası haline gelecektir. Size her gün rahatlıkla yönetebileceğiniz kendi özgün bir online mağaza oluşturmak için çalışılmaktadır.',
-    'If you need help, do not hesitate to check <a href="%1$s" target="_blank">our documentation</a> or to contact our support team: %2$s.' => 'Eğer yardıma ihtiyacınız varsa, <a href="%1$s" target="_blank">belgelerimizi</a> kontrol etmek için çekinmeyin,  veya destek ekibimizle irtibata geçiniz: %2$s.',
+    'Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 230,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'PrestaShop kurulumu hızlı ve kolaydır. Sadece birkaç dakika içinde, size 230.000 \'den fazla tüccar oluşan bir topluluğun parçası haline gelecektir. Size her gün rahatlıkla yönetebileceğiniz kendi özgün bir online mağaza oluşturmak için çalışılmaktadır.',
+    'If you need help, do not hesitate to <a href="%1$s" target="_blank">watch this short tutorial</a>, or check <a href="%2$s" target="_blank">our documentation</a>.' => 'If you need help, do not hesitate to <a href="%1$s" target="_blank">watch this short tutorial</a>, or check <a href="%2$s" target="_blank">our documentation</a>.',
     'Continue the installation in:' => 'Kurulum Devam Ediyor:',
     'The language selection above only applies to the Installation Assistant. Once your store is installed, you can choose the language of your store from over %d translations, all for free!' => 'Yukarıda dil seçimi yalnızca kurulum asistanı için geçerlidir. Mağaza yüklendikten sonra, tüm ücretsiz, %d çeviriler bölümünden mağaza dilinizi seçebilirsiniz!',
   ),

@@ -120,19 +120,23 @@ class ImageManagerCore
 	/**
 	 * Resize, cut and optimize image
 	 *
-	 * @param string  $src_file   Image object from $_FILE
-	 * @param string  $dst_file   Destination filename
-	 * @param int $dst_width  Desired width (optional)
-	 * @param int $dst_height Desired height (optional)
-	 * @param string  $file_type
-	 * @param bool    $force_type
-	 * @param int     $error
-	 * @param int     $width
-	 * @param int     $height
-	 * @param int     $quality
+	 * @param string $src_file   Image object from $_FILE
+	 * @param string $dst_file   Destination filename
+	 * @param int    $dst_width  Desired width (optional)
+	 * @param int    $dst_height Desired height (optional)
+	 * @param string $file_type
+	 * @param bool   $force_type
+	 * @param int    $error
+	 * @param int    $tgt_width
+	 * @param int    $tgt_height
+	 * @param int    $quality
+	 * @param int    $src_width
+	 * @param int    $src_height
 	 * @return bool Operation result
 	 */
-	public static function resize($src_file, $dst_file, $dst_width = null, $dst_height = null, $file_type = 'jpg', $force_type = false, &$error = 0, &$width = null, &$height = null, $quality = 5)
+	public static function resize($src_file, $dst_file, $dst_width = null, $dst_height = null, $file_type = 'jpg',
+								$force_type = false, &$error = 0, &$tgt_width = null, &$tgt_height = null, $quality = 5,
+								&$src_width = null, &$src_height = null)
 	{
 		if (PHP_VERSION_ID < 50300)
 			clearstatcache();
@@ -229,8 +233,8 @@ class ImageManagerCore
 		if (!ImageManager::checkImageMemoryLimit($src_file))
 			return !($error = self::ERROR_MEMORY_LIMIT);
 
-		$width = $dst_width;
-		$height = $dst_height;
+		$tgt_width  = $dst_width;
+		$tgt_height = $dst_height;
 
 		$dest_image = imagecreatetruecolor($dst_width, $dst_height);
 
@@ -252,8 +256,13 @@ class ImageManagerCore
 		if ($rotate)
 			$src_image = imagerotate($src_image, $rotate, 0);
 
-		ImageManager::imagecopyresampled($dest_image, $src_image, (int)(($dst_width - $next_width) / 2), (int)(($dst_height - $next_height) / 2), 0, 0, $next_width, $next_height, $src_width, $src_height, $quality);
-		return (ImageManager::write($file_type, $dest_image, $dst_file));
+		if ($dst_width >= $src_width && $dst_height >= $src_height)
+			imagecopyresized($dest_image, $src_image, (int)(($dst_width - $next_width) / 2), (int)(($dst_height - $next_height) / 2), 0, 0, $next_width, $next_height, $src_width, $src_height);
+		else
+			ImageManager::imagecopyresampled($dest_image, $src_image, (int)(($dst_width - $next_width) / 2), (int)(($dst_height - $next_height) / 2), 0, 0, $next_width, $next_height, $src_width, $src_height, $quality);
+		$write_file = ImageManager::write($file_type, $dest_image, $dst_file);
+		@imagedestroy($src_image);
+		return $write_file;
 	}
 
 	public static function imagecopyresampled(&$dst_image, $src_image, $dst_x, $dst_y, $src_x, $src_y, $dst_w, $dst_h, $src_w, $src_h, $quality = 3)
@@ -442,6 +451,7 @@ class ImageManagerCore
 		imagecopyresampled($dest['ressource'], $src['ressource'], 0, 0, $dest['x'], $dest['y'], $dest['width'], $dest['height'], $dest['width'], $dest['height']);
 		imagecolortransparent($dest['ressource'], $white);
 		$return = ImageManager::write($file_type, $dest['ressource'], $dst_file);
+		@imagedestroy($src['ressource']);
 		return	$return;
 	}
 
@@ -496,6 +506,15 @@ class ImageManagerCore
 	 */
 	public static function write($type, $resource, $filename)
 	{
+		static $ps_png_quality = null;
+		static $ps_jpeg_quality = null;
+
+		if ($ps_png_quality === null)
+			$ps_png_quality = Configuration::get('PS_PNG_QUALITY');
+
+		if ($ps_jpeg_quality === null)
+		 	$ps_jpeg_quality = Configuration::get('PS_JPEG_QUALITY');
+
 		switch ($type)
 		{
 			case 'gif':
@@ -503,14 +522,14 @@ class ImageManagerCore
 			break;
 
 			case 'png':
-				$quality = (Configuration::get('PS_PNG_QUALITY') === false ? 7 : Configuration::get('PS_PNG_QUALITY'));
+				$quality = ($ps_png_quality === false ? 7 : $ps_png_quality);
 				$success = imagepng($resource, $filename, (int)$quality);
 			break;
 
 			case 'jpg':
 			case 'jpeg':
 			default:
-				$quality = (Configuration::get('PS_JPEG_QUALITY') === false ? 90 : Configuration::get('PS_JPEG_QUALITY'));
+				$quality = ($ps_jpeg_quality === false ? 90 : $ps_jpeg_quality);
 				imageinterlace($resource, 1); /// make it PROGRESSIVE
 				$success = imagejpeg($resource, $filename, (int)$quality);
 			break;

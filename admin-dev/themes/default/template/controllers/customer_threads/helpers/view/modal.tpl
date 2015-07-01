@@ -46,7 +46,7 @@
 			<div id="message_forward_email" class="row row-margin-bottom" style="display:none">
 				<label class="control-label col-lg-3">{l s='Email'}</label>
 				<div class="col-lg-3"> 
-					<input type="text" name="email" />
+					<input type="email" name="email" />
 				</div>
 			</div>
 			<div id="message_forward" style="display:none;">

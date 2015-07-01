@@ -1,28 +1,28 @@
 <?php
-/*
-* 2007-2015 PrestaShop
-*
-* NOTICE OF LICENSE
-*
-* This source file is subject to the Open Software License (OSL 3.0)
-* that is bundled with this package in the file LICENSE.txt.
-* It is also available through the world-wide-web at this URL:
-* http://opensource.org/licenses/osl-3.0.php
-* If you did not receive a copy of the license and are unable to
-* obtain it through the world-wide-web, please send an email
-* to license@prestashop.com so we can send you a copy immediately.
-*
-* DISCLAIMER
-*
-* Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-* versions in the future. If you wish to customize PrestaShop for your
-* needs please refer to http://www.prestashop.com for more information.
-*
-*  @author PrestaShop SA <contact@prestashop.com>
-*  @copyright  2007-2015 PrestaShop SA
-*  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
-*  International Registered Trademark & Property of PrestaShop SA
-*/
+/**
+ * 2007-2015 PrestaShop
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ *  @author 	PrestaShop SA <contact@prestashop.com>
+ *  @copyright  2007-2015 PrestaShop SA
+ *  @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
+ *  International Registered Trademark & Property of PrestaShop SA
+ */
 
 /**
  * @property SpecificPriceRule $object
@@ -37,6 +37,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 	 	$this->table = 'specific_price_rule';
 		$this->className = 'SpecificPriceRule';
 	 	$this->lang = false;
+		$this->multishop_context = Shop::CONTEXT_ALL;
 
 		/* if $_GET['id_shop'] is transmitted, virtual url can be loaded in config.php, so we wether transmit shop_id in herfs */
 		if ($this->id_shop = (int)Tools::getValue('shop_id'))
@@ -161,10 +162,6 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 		if (!$this->object->id)
 			$this->object->price = -1;
 
-		$shops = Shop::getShops();
-		if (count($this->context->employee->getAssociatedShops()) > 1)
-			$shops = array_merge(array(0 => array('id_shop' => 0, 'name' => $this->l('All shops'))), $shops);
-
 		$this->fields_form = array(
 			'legend' => array(
 				'title' => $this->l('Catalog price rules'),
@@ -184,7 +181,7 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
 					'label' => $this->l('Shop'),
 					'name' => 'shop_id',
 					'options' => array(
-						'query' => $shops,
+						'query' => Shop::getShops(),
 						'id' => 'id_shop',
 						'name' => 'name'
 					),

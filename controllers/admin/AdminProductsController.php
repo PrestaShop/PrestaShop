@@ -184,8 +184,8 @@ class AdminProductsControllerCore extends AdminController
 				LEFT JOIN `'._DB_PREFIX_.'image` i ON (i.`id_image` = image_shop.`id_image`)
 				LEFT JOIN `'._DB_PREFIX_.'product_download` pd ON (pd.`id_product` = a.`id_product`)';
 
-		$this->_select .= 'shop.name as shopname, a.id_shop_default, ';
-		$this->_select .= $alias_image.'.id_image id_image, cl.name `name_category`, '.$alias.'.`price`, 0 AS price_final, a.`is_virtual`, pd.`nb_downloadable`, sav.`quantity` as sav_quantity, '.$alias.'.`active`, IF(sav.`quantity`<=0, 1, 0) badge_danger';
+		$this->_select .= 'shop.`name` AS `shopname`, a.`id_shop_default`, ';
+		$this->_select .= $alias_image.'.`id_image` AS `id_image`, cl.`name` AS `name_category`, '.$alias.'.`price`, 0 AS `price_final`, a.`is_virtual`, pd.`nb_downloadable`, sav.`quantity` AS `sav_quantity`, '.$alias.'.`active`, IF(sav.`quantity`<=0, 1, 0) AS `badge_danger`';
 
 		if ($join_category)
 		{
@@ -330,13 +330,12 @@ class AdminProductsControllerCore extends AdminController
 			return;
 
 		/* Additional fields */
-		$languages = Language::getLanguages(false);
-		foreach ($languages as $language)
-			if (isset($_POST['meta_keywords_'.$language['id_lang']]))
+		foreach (Language::getIDs(false) as $id_lang)
+			if (isset($_POST['meta_keywords_'.$id_lang]))
 			{
-				$_POST['meta_keywords_'.$language['id_lang']] = $this->_cleanMetaKeywords(Tools::strtolower($_POST['meta_keywords_'.$language['id_lang']]));
-				// preg_replace('/ *,? +,* /', ',', strtolower($_POST['meta_keywords_'.$language['id_lang']]));
-				$object->meta_keywords[$language['id_lang']] = $_POST['meta_keywords_'.$language['id_lang']];
+				$_POST['meta_keywords_'.$id_lang] = $this->_cleanMetaKeywords(Tools::strtolower($_POST['meta_keywords_'.$id_lang]));
+				// preg_replace('/ *,? +,* /', ',', strtolower($_POST['meta_keywords_'.$id_lang]));
+				$object->meta_keywords[$id_lang] = $_POST['meta_keywords_'.$id_lang];
 			}
 		$_POST['width'] = empty($_POST['width']) ? '0' : str_replace(',', '.', $_POST['width']);
 		$_POST['height'] = empty($_POST['height']) ? '0' : str_replace(',', '.', $_POST['height']);
@@ -411,7 +410,9 @@ class AdminProductsControllerCore extends AdminController
 
 				// convert price with the currency from context
 				$this->_list[$i]['price'] = Tools::convertPrice($this->_list[$i]['price'], $this->context->currency, true, $this->context);
-				$this->_list[$i]['price_tmp'] = Product::getPriceStatic($this->_list[$i]['id_product'], true, null, 2, null, false, true, 1, true, null, null, null, $nothing, true, true, $context);
+				$this->_list[$i]['price_tmp'] = Product::getPriceStatic($this->_list[$i]['id_product'], true, null,
+					(int)Configuration::get('PS_PRICE_DISPLAY_PRECISION'), null, false, true, 1, true, null, null, null, $nothing, true, true,
+					$context);
 			}
 		}
 
@@ -455,25 +456,17 @@ class AdminProductsControllerCore extends AdminController
 	public function ajaxProcessGetCategoryTree()
 	{
 		$category = Tools::getValue('category', Category::getRootCategory()->id);
-		$fullTree = Tools::getValue('fullTree', 0);
+		$full_tree = Tools::getValue('fullTree', 0);
+		$use_check_box = Tools::getValue('useCheckBox', 1);
 		$selected = Tools::getValue('selected', array());
-		$type = Tools::getValue('type', '');
-		if ($type == 'categories-tree')
-		{
-			$use_check_box = false;
-			$input_name = 'id-category';
-		}
-		else
-		{
-			$use_check_box = true;
-			$input_name = null;
-		}
+		$input_name = str_replace(array('[', ']'), '', Tools::getValue('inputName', null));
+
 		$tree = new HelperTreeCategories('subtree_associated_categories');
 		$tree->setTemplate('subtree_associated_categories.tpl')
 			->setUseCheckBox($use_check_box)
 			->setUseSearch(true)
 			->setSelectedCategories($selected)
-			->setFullTree($fullTree)
+			->setFullTree($full_tree)
 			->setChildrenOnly(true)
 			->setNoJS(true)
 			->setRootCategory($category);
@@ -552,6 +545,8 @@ class AdminProductsControllerCore extends AdminController
 
 	public function ajaxProcessAddAttachment()
 	{
+		if ($this->tabAccess['edit'] === '0')
+			return die(Tools::jsonEncode(array('error' => $this->l('You do not have the right permission'))));
 		if (isset($_FILES['attachment_file']))
 		{
 			if ((int)$_FILES['attachment_file']['error'] === 1)
@@ -1640,6 +1635,8 @@ class AdminProductsControllerCore extends AdminController
 
 	public function ajaxProcessUpdateImagePosition()
 	{
+		if ($this->tabAccess['edit'] === '0')
+			return die(Tools::jsonEncode(array('error' => $this->l('You do not have the right permission'))));
 		$res = false;
 		if ($json = Tools::getValue('json'))
 		{
@@ -1661,6 +1658,8 @@ class AdminProductsControllerCore extends AdminController
 
 	public function ajaxProcessUpdateCover()
 	{
+		if ($this->tabAccess['edit'] === '0')
+			return die(Tools::jsonEncode(array('error' => $this->l('You do not have the right permission'))));
 		Image::deleteCover((int)Tools::getValue('id_product'));
 		$img = new Image((int)Tools::getValue('id_image'));
 		$img->cover = 1;
@@ -1764,7 +1763,10 @@ class AdminProductsControllerCore extends AdminController
 	/**
 	 * Add or update a product image
 	 *
-	 * @param object $product Product object to add image
+	 * @param Product $product Product object to add image
+	 * @param string  $method
+	 *
+	 * @return int|false
 	 */
 	public function addProductImage($product, $method = 'auto')
 	{
@@ -1795,11 +1797,16 @@ class AdminProductsControllerCore extends AdminController
 		@unlink(_PS_TMP_IMG_DIR_.'product_mini_'.$product->id.'_'.$this->context->shop->id.'.jpg');
 		return ((isset($id_image) && is_int($id_image) && $id_image) ? $id_image : false);
 	}
+
 	/**
 	 * Copy a product image
 	 *
-	 * @param int $id_product Product Id for product image filename
-	 * @param int $id_image Image Id for product image filename
+	 * @param int    $id_product Product Id for product image filename
+	 * @param int    $id_image   Image Id for product image filename
+	 * @param string $method
+	 *
+	 * @return void|false
+	 * @throws PrestaShopException
 	 */
 	public function copyImage($id_product, $id_image, $method = 'auto')
 	{
@@ -2266,7 +2273,9 @@ class AdminProductsControllerCore extends AdminController
 	/**
 	 * Update product download
 	 *
-	 * @param object $product Product
+	 * @param Product $product
+	 * @param int     $edit
+	 *
 	 * @return bool
 	 */
 	public function updateDownloadProduct($product, $edit = 0)
@@ -2548,10 +2557,15 @@ class AdminProductsControllerCore extends AdminController
 	{
 		$manufacturers = Manufacturer::getManufacturers(false, 0, true, false, false, false, true);
 		$jsonArray = array();
-			if ($manufacturers)
-				foreach ($manufacturers as $manufacturer)
-					$jsonArray[] = '{"optionValue": "'.(int)$manufacturer['id_manufacturer'].'", "optionDisplay": "'.htmlspecialchars(trim($manufacturer['name'])).'"}';
-			die('['.implode(',', $jsonArray).']');
+
+		if ($manufacturers)
+			foreach ($manufacturers as $manufacturer)
+			{
+				$tmp = array("optionValue" => $manufacturer['id_manufacturer'], "optionDisplay" => htmlspecialchars(trim($manufacturer['name'])));
+				$jsonArray[] = Tools::jsonEncode($tmp);
+			}
+
+		die('['.implode(',', $jsonArray).']');
 	}
 
 	/**
@@ -2716,6 +2730,7 @@ class AdminProductsControllerCore extends AdminController
 	 * renderForm contains all necessary initialization needed for all tabs
 	 *
 	 * @return string|void
+	 * @throws PrestaShopException
 	 */
 	public function renderForm()
 	{
@@ -4095,6 +4110,8 @@ class AdminProductsControllerCore extends AdminController
 				else
 				{
 					$imagesTypes = ImageType::getImagesTypes('products');
+					$generate_hight_dpi_images = (bool)Configuration::get('PS_HIGHT_DPI');
+
 					foreach ($imagesTypes as $imageType)
 					{
 						if (!ImageManager::resize($file['save_path'], $new_path.'-'.stripslashes($imageType['name']).'.'.$image->image_format, $imageType['width'], $imageType['height'], $image->image_format))
@@ -4102,6 +4119,13 @@ class AdminProductsControllerCore extends AdminController
 							$file['error'] = Tools::displayError('An error occurred while copying image:').' '.stripslashes($imageType['name']);
 							continue;
 						}
+
+						if ($generate_hight_dpi_images)
+							if (!ImageManager::resize($file['save_path'], $new_path.'-'.stripslashes($imageType['name']).'2x.'.$image->image_format, (int)$imageType['width']*2, (int)$imageType['height']*2, $image->image_format))
+							{
+								$file['error'] = Tools::displayError('An error occurred while copying image:').' '.stripslashes($imageType['name']);
+								continue;
+							}
 					}
 				}
 
@@ -4540,7 +4564,7 @@ class AdminProductsControllerCore extends AdminController
 						}
 					}
 
-					if (!Warehouse::getPackWarehouses((int)$obj->id))
+					if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT') && !Warehouse::getPackWarehouses((int)$obj->id))
 						$this->displayWarning($this->l('You must have a common warehouse between this pack and its product.'));
 				}
 
@@ -4751,7 +4775,11 @@ class AdminProductsControllerCore extends AdminController
 									$custom = false;
 
 						if ($custom)
-							$features[$k]['val'] = FeatureValue::getFeatureValueLang($features[$k]['current_item']);
+						{
+							$feature_values_lang = FeatureValue::getFeatureValueLang($features[$k]['current_item']);
+							foreach($feature_values_lang as $feature_value)
+								$features[$k]['val'][$feature_value['id_lang']] = $feature_value;
+						}
 					}
 
 					$data->assign('available_features', $features);
@@ -4770,6 +4798,8 @@ class AdminProductsControllerCore extends AdminController
 
 	public function ajaxProcessProductQuantity()
 	{
+		if ($this->tabAccess['edit'] === '0')
+			return die(Tools::jsonEncode(array('error' => $this->l('You do not have the right permission'))));
 		if (!Tools::getValue('actionQty'))
 			return Tools::jsonEncode(array('error' => $this->l('Undefined action')));
 
@@ -4901,9 +4931,12 @@ class AdminProductsControllerCore extends AdminController
 		$this->tpl_form_vars['input_namepack_items'] = $input_namepack_items;
 	}
 
-
 	/**
-	 *  AdminProducts display hook
+	 * AdminProducts display hook
+	 *
+	 * @param $obj
+	 *
+	 * @throws PrestaShopException
 	 */
 	public function initFormModules($obj)
 	{
@@ -4997,9 +5030,11 @@ class AdminProductsControllerCore extends AdminController
 		if ($this->tabAccess['edit'] === '1')
 		{
 			$way = (int)(Tools::getValue('way'));
-			$id_product = (int)(Tools::getValue('id_product'));
-			$id_category = (int)(Tools::getValue('id_category'));
+			$id_product = (int)Tools::getValue('id_product');
+			$id_category = (int)Tools::getValue('id_category');
 			$positions = Tools::getValue('product');
+			$page = (int)Tools::getValue('page');
+			$selected_pagination = (int)Tools::getValue('selected_pagination');
 
 			if (is_array($positions))
 				foreach ($positions as $position => $value)
@@ -5008,6 +5043,9 @@ class AdminProductsControllerCore extends AdminController
 
 					if ((isset($pos[1]) && isset($pos[2])) && ($pos[1] == $id_category && (int)$pos[2] === $id_product))
 					{
+						if ($page > 1)
+							$position = $position + (($page - 1) * $selected_pagination);
+
 						if ($product = new Product((int)$pos[2]))
 							if (isset($position) && $product->updatePosition($way, $position))
 							{
@@ -5054,14 +5092,15 @@ class AdminProductsControllerCore extends AdminController
 
 	public function processImageLegends()
 	{
-		if (Tools::getValue('key_tab') == 'Images' && Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
+		if (Tools::getValue('key_tab') == 'Images' && Tools::getValue('submitAddproductAndStay') == 'update_legends' && Validate::isLoadedObject($product = new Product((int)Tools::getValue('id_product'))))
 		{
-			$languages = Language::getLanguages(false);
+			$id_image = (int)Tools::getValue('id_caption');
+			$language_ids = Language::getIDs(false);
 			foreach ($_POST as $key => $val)
 				if (preg_match('/^legend_([0-9]+)/i', $key, $match))
-					foreach ($languages as $language)
-						if ($val && $language['id_lang'] == $match[1])
-							Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_lang SET legend = "'.pSQL($val).'" WHERE EXISTS (SELECT 1 FROM '._DB_PREFIX_.'image WHERE '._DB_PREFIX_.'image.id_image = '._DB_PREFIX_.'image_lang.id_image AND id_product = '.(int)$product->id.') AND id_lang = '.(int)$language['id_lang']);
+					foreach ($language_ids as $id_lang)
+						if ($val && $id_lang == $match[1])
+							Db::getInstance()->execute('UPDATE '._DB_PREFIX_.'image_lang SET legend = "'.pSQL($val).'" WHERE '.($id_image ? 'id_image = '.(int)$id_image : 'EXISTS (SELECT 1 FROM '._DB_PREFIX_.'image WHERE '._DB_PREFIX_.'image.id_image = '._DB_PREFIX_.'image_lang.id_image AND id_product = '.(int)$product->id.')').' AND id_lang = '.(int)$id_lang);
 		}
 	}
 

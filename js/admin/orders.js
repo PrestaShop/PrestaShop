@@ -498,7 +498,10 @@ function init()
 						if (data.result)
 						{
 							if (data.refresh)
+							{
 								location.reload();
+								return;
+							}
 							go = false;
 							addViewOrderDetailRow(data.view);
 							updateAmounts(data.order);

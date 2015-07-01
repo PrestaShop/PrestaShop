@@ -1,16 +1,18 @@
 <?php
 
 return array (
-  'informations' => 
+  'informations' =>
   array (
-    'phone' => '+1 888.947.6543',
-    'documentation' => 'http://doc.prestashop.com/',
-    'documentation_upgrade' => 'http://docs.prestashop.com/display/PS15/Updating+PrestaShop',
+    'support' => 'https://www.prestashop.com/pt/support',
+    'documentation' => 'http://doc.prestashop.com/display/PS16/Installing+PrestaShop',
+    'documentation_upgrade' => 'http://docs.prestashop.com/display/PS16/Updating+PrestaShop',
     'forum' => 'http://www.prestashop.com/forums/forum/203-forum-brasileiro/',
     'blog' => 'http://www.prestashop.com/blog/pt/',
-    'support' => 'https://www.prestashop.com/pt/support',
+    'support' => 'https://www.prestashop.com/en/support',
+    'tutorial' => 'https://www.youtube.com/watch?v=psz4aIPZZuk',
+    'tailored_help' => 'http://addons.prestashop.com/en/388-support',
   ),
-  'translations' => 
+  'translations' =>
   array (
     'An SQL error occurred for entity <i>%1$s</i>: <i>%2$s</i>' => 'Ocorreu um erro SQL para a entidade <i>%1$s</i>: <i>%2$s</i>',
     'Cannot create image "%1$s" for entity "%2$s"' => 'Não foi possível criar imagem "%1$s" para a entidade "%2$s"',
@@ -144,7 +146,7 @@ return array (
     'Test your database connection now!' => 'Teste a conexão do seu banco de dados agora!',
     'Next' => 'Próximo',
     'Back' => 'Voltar',
-    'If you need some assistance during the installation process, please call our team at %s and one of our experts will be happy to help.' => 'Se você precisar de auxílio durante o processo de instalação, por favor ligue para o nosso time em %s e um de nossos especialistas lhe ajudará.',
+    'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="%2$s" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.' => 'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="%2$s" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.',
     'Official forum' => 'Fórum oficial',
     'Support' => 'Suporte',
     'Documentation' => 'Documentação',
@@ -201,9 +203,9 @@ return array (
     'PrestaShop requires at least 32 MB of memory to run: please check the memory_limit directive in your php.ini file or contact your host provider about this.' => 'PrestaShop requer ao menos 32 MB para ser executado: por favor, verifique a diretiva memory_limit no seu arquivo php.ini ou contate seu provedor de hospedagem a respeito.',
     '<b>Warning: You cannot use this tool to upgrade your store anymore.</b><br /><br />You already have <b>PrestaShop version %1$s installed</b>.<br /><br />If you want to upgrade to the latest version, please read our documentation: <a href="%2$s">%2$s</a>' => '<b>Atenção: Você não pode mais usar essa ferramenta para atualizar sua loja.</b><br /><br />Você já tem <b>a versão %1$s do PrestaShop instalada.</b><br /><br />Se você deseja atualizar para a versão mais recente, por favor leia nossa documentação: <a href="%2$s">%2$s</a>',
     'Welcome to the PrestaShop %s Installer' => 'Bem-vindo ao Instalador do PrestaShop %s',
-    'Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 200,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'A instalação do PrestaShop é rápida e fácil. Em instantes você vai se tornar parte de uma comunidade composta por mais de 200.000 lojistas. Você está no caminho para a criação de sua própria loja online exclusiva que você pode gerenciar facilmente todos os dias.',
-    'If you need help, do not hesitate to check <a href="%1$s" target="_blank">our documentation</a> or to contact our support team: %2$s.' => 'Se você precisar de ajuda, não deixe de visitar <a href="%1$s" target="_blank">nossa documentação</a> ou contatar nossa equipe de suporte: %2$s.',
+    'Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 230,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'A instalação do PrestaShop é rápida e fácil. Em instantes você vai se tornar parte de uma comunidade composta por mais de 230.000 lojistas. Você está no caminho para a criação de sua própria loja online exclusiva que você pode gerenciar facilmente todos os dias.',
+    'If you need help, do not hesitate to <a href="%1$s" target="_blank">watch this short tutorial</a>, or check <a href="%2$s" target="_blank">our documentation</a>.' => 'If you need help, do not hesitate to <a href="%1$s" target="_blank">watch this short tutorial</a>, or check <a href="%2$s" target="_blank">our documentation</a>.',
     'Continue the installation in:' => 'Continue a instalação em:',
     'The language selection above only applies to the Installation Assistant. Once your store is installed, you can choose the language of your store from over %d translations, all for free!' => 'A seleção de idioma acima é válida somente para o Assistente de Instalação. Uma vez que a loja for instalada, você pode escolher o idioma da sua loja entre mais de %d traduções disponíveis, totalmente grátis!',
-  ),
+    ),
 );

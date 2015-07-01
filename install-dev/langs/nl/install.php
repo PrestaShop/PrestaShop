@@ -1,16 +1,17 @@
 <?php
 
 return array (
-  'informations' => 
+  'informations' =>
   array (
-    'phone' => '+1 (888) 947-6543',
-    'documentation' => 'http://doc.prestashop.com/',
-    'documentation_upgrade' => 'http://docs.prestashop.com/display/PS16/Updating+PrestaShop',
-    'forum' => 'http://www.prestashop.com/forums/',
-    'blog' => 'http://www.prestashop.com/blog/',
-    'support' => 'https://www.prestashop.com/en/support',
+  'documentation' => 'http://doc.prestashop.com/display/PS16/Installing+PrestaShop',
+  'documentation_upgrade' => 'http://docs.prestashop.com/display/PS16/Updating+PrestaShop',
+  'forum' => 'http://www.prestashop.com/forums/',
+  'blog' => 'http://www.prestashop.com/blog/',
+  'support' => 'https://www.prestashop.com/en/support',
+  'tutorial' => 'https://www.youtube.com/watch?v=psz4aIPZZuk',
+  'tailored_help' => 'http://addons.prestashop.com/en/388-support',
   ),
-  'translations' => 
+  'translations' =>
   array (
     'An SQL error occurred for entity <i>%1$s</i>: <i>%2$s</i>' => 'Er trad een SQL fout op voor: <i>%1$s</i>: <i>%2$s</i>',
     'Cannot create image "%1$s" for entity "%2$s"' => 'Kan afbeelding "%1$s" voor entiteit "%2$s" niet creëren',
@@ -144,7 +145,7 @@ return array (
     'Test your database connection now!' => 'Test uw databaseverbinding nu!',
     'Next' => 'Volgende',
     'Back' => 'Terug',
-    'If you need some assistance during the installation process, please call our team at %s and one of our experts will be happy to help.' => 'Hulp nodig tijdens de installatie? Neem dan contact met ons team op via %s en onze experts helpen u verder.',
+    'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="http://doc.prestashop.com/display/PS16/Installing+PrestaShop" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.' => 'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="http://doc.prestashop.com/display/PS16/Installing+PrestaShop" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.',
     'Official forum' => 'Officiële forum',
     'Support' => 'Ondersteuning',
     'Documentation' => 'Documentatie',
@@ -201,9 +202,9 @@ return array (
     'PrestaShop requires at least 32 MB of memory to run: please check the memory_limit directive in your php.ini file or contact your host provider about this.' => 'PrestaShop vereist tenminste 32MB geheugen om te draaien, controleer de memory_limit richtlijn in php.ini of neem contact op met uw hostingprovider.',
     '<b>Warning: You cannot use this tool to upgrade your store anymore.</b><br /><br />You already have <b>PrestaShop version %1$s installed</b>.<br /><br />If you want to upgrade to the latest version, please read our documentation: <a href="%2$s">%2$s</a>' => '<b>Waarschuwing: U kunt deze tool niet meer gebruiken om Uw winkel te upgraden.</b><br /><br />U gebruikt al <b>PrestaShop versie %1$s</b>.<br /><br />Indien U wilt upgraden naar de laatste versie, dan kunt u meer hierover lezen in onze documentatie: <a href="%2$s">%2$s</a>',
     'Welcome to the PrestaShop %s Installer' => 'Welkom bij het PrestaShop %s installatieprogramma',
-    'Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 200,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'De installatie van PrestaShop is snel en eenvoudig. In slechts enkele ogenblikken wordt U deelgenoot van een community van meer dan 200.000 verkopers. U heeft nu bijna Uw eigen unieke Webwinkel gecreëerd die U elke dag eenvoudig kunt onderhouden.',
-    'If you need help, do not hesitate to check <a href="%1$s" target="_blank">our documentation</a> or to contact our support team: %2$s.' => 'Als u hulp nodig hebt, lees onze <a href="%1$s" target="_blank">documentatie</a> door of neem contact op met onze support team: %2$s.',
+    'Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 230,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'De installatie van PrestaShop is snel en eenvoudig. In slechts enkele ogenblikken wordt U deelgenoot van een community van meer dan 230.000 verkopers. U heeft nu bijna Uw eigen unieke Webwinkel gecreëerd die U elke dag eenvoudig kunt onderhouden.',
+    'If you need help, do not hesitate to <a href="%1$s" target="_blank">watch this short tutorial</a>, or check <a href="%2$s" target="_blank">our documentation</a>.' => 'If you need help, do not hesitate to <a href="%1$s" target="_blank">watch this short tutorial</a>, or check <a href="%2$s" target="_blank">our documentation</a>.',
     'Continue the installation in:' => 'Ga door met de installatie in:',
     'The language selection above only applies to the Installation Assistant. Once your store is installed, you can choose the language of your store from over %d translations, all for free!' => 'De talenselectie hierboven geldt alleen voor de installatie assistent. Zodra uw webwinkel is geïnstalleerd, kunt u geheel gratis de taal voor uw webwinkel uit meer dan %d vertalingen kiezen.',
-  ),
+    ),
 );

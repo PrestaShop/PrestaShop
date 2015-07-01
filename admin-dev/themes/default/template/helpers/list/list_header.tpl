@@ -118,6 +118,8 @@
 
 {if !$simple_header}
 	<input type="hidden" id="submitFilter{$list_id}" name="submitFilter{$list_id}" value="0"/>
+	<input type="hidden" name="page" value="{$page|intval}"/>
+	<input type="hidden" name="selected_pagination" value="{$selected_pagination|intval}"/>
 	{block name="override_form_extra"}{/block}
 	<div class="panel col-lg-12">
 		<div class="panel-heading">

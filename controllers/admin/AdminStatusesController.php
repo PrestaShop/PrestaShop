@@ -533,9 +533,8 @@ class AdminStatusesControllerCore extends AdminController
 
 			$order_return_state->color = Tools::getValue('color');
 			$order_return_state->name = array();
-			$languages = Language::getLanguages(false);
-				foreach ($languages as $language)
-					$order_return_state->name[$language['id_lang']] = Tools::getValue('name_'.$language['id_lang']);
+			foreach (Language::getIDs(false) as $id_lang)
+				$order_return_state->name[$id_lang] = Tools::getValue('name_'.$id_lang);
 
 			// Update object
 			if (!$order_return_state->save())
@@ -578,11 +577,8 @@ class AdminStatusesControllerCore extends AdminController
 			$_POST['pdf_delivery'] = (int)Tools::getValue('pdf_delivery_on');
 			$_POST['pdf_invoice'] = (int)Tools::getValue('pdf_invoice_on');
 			if (!$_POST['send_email'])
-			{
-				$languages = Language::getLanguages(false);
-				foreach ($languages as $language)
-					$_POST['template_'.$language['id_lang']] = '';
-			}
+				foreach (Language::getIDs(false) as $id_lang)
+					$_POST['template_'.$id_lang] = '';
 
 			return parent::postProcess();
 		}

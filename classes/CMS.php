@@ -229,4 +229,25 @@ class CMSCore extends ObjectModel
 
 		return Db::getInstance()->executeS($sql);
 	}
+
+	public static function getCMSContent($id_cms, $id_lang = null, $id_shop = null)
+	{
+		if (is_null($id_lang))
+			$id_lang = (int)Configuration::get('PS_SHOP_DEFAULT');
+		if (is_null($id_shop))
+			$id_shop = (int)Configuration::get('PS_LANG_DEFAULT');
+
+		$sql = '
+			SELECT `content`
+			FROM `'._DB_PREFIX_.'cms_lang`
+			WHERE `id_cms` = '.(int)$id_cms.' AND `id_lang` = '.(int)$id_lang.' AND `id_shop` = '.(int)$id_shop;
+
+		return Db::getInstance()->getRow($sql);
+	}
+
+	/* Method required for new PrestaShop Core */
+	public static function getRepositoryClassName()
+	{
+		return 'Core_Business_CMS_CMSRepository';
+	}
 }

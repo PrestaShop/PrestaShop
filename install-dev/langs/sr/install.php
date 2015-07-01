@@ -1,16 +1,17 @@
 <?php
 
 return array (
-  'informations' => 
+  'informations' =>
   array (
-    'phone' => '+1 (888) 947-6543',
-    'documentation' => 'http://doc.prestashop.com/',
-    'documentation_upgrade' => 'http://docs.prestashop.com/display/PS16/Updating+PrestaShop',
-    'forum' => 'http://www.prestashop.com/forums/',
-    'blog' => 'http://www.prestashop.com/blog/',
-    'support' => 'https://www.prestashop.com/en/support',
+  'documentation' => 'http://doc.prestashop.com/display/PS16/Installing+PrestaShop',
+  'documentation_upgrade' => 'http://docs.prestashop.com/display/PS16/Updating+PrestaShop',
+  'forum' => 'http://www.prestashop.com/forums/',
+  'blog' => 'http://www.prestashop.com/blog/',
+  'support' => 'https://www.prestashop.com/en/support',
+  'tutorial' => 'https://www.youtube.com/watch?v=psz4aIPZZuk',
+  'tailored_help' => 'http://addons.prestashop.com/en/388-support',
   ),
-  'translations' => 
+  'translations' =>
   array (
     'An SQL error occurred for entity <i>%1$s</i>: <i>%2$s</i>' => 'SQL greška je uočena za entitet <i>%1$s</i>: <i>%2$s</i>',
     'Cannot create image "%1$s" for entity "%2$s"' => 'Ne može se kreirati slika "%1$s" za entitet "%2$s"',
@@ -144,7 +145,7 @@ return array (
     'Test your database connection now!' => 'Testirajte vašu konekciju sa bazom podataka odmah!',
     'Next' => 'Dalje',
     'Back' => 'Nazad',
-    'If you need some assistance during the installation process, please call our team at %s and one of our experts will be happy to help.' => 'Ako vam treba pomoć u toku procesa instalacije, pozovite naš tim na %s i jedan od naših eksperta će biti srećan da vam pomogne.',
+    'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="%2$s" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.' => 'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="%2$s" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.',
     'Official forum' => 'Zvanični forum',
     'Support' => 'Podrška',
     'Documentation' => 'Dokumentacija',
@@ -201,7 +202,7 @@ return array (
     'PrestaShop requires at least 32 MB of memory to run: please check the memory_limit directive in your php.ini file or contact your host provider about this.' => 'PrestaShop-u je potrebno najmanje 32M memorije za pokretanje, proverite memory_limit direkciju u php.ini ili kontaktirajte vašeg internet dobavljača.',
     '<b>Warning: You cannot use this tool to upgrade your store anymore.</b><br /><br />You already have <b>PrestaShop version %1$s installed</b>.<br /><br />If you want to upgrade to the latest version, please read our documentation: <a href="%2$s">%2$s</a>' => '<b>Upozorenje: Ne možete koristiti ovaj alat za nadogradnju vaše prodavnice.</b><br /><br />Već imate <b> instaliran PrestaShop, verzija %1$s</b>.<br /><br />Ako želite da nadogradite na najnoviju verziju, pročitajte našu dokumentaciju: <a href="%2$s">%2$s</a>',
     'Welcome to the PrestaShop %s Installer' => 'Dobrodošli na PrestaShop %s instalaciju',
-    'Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 200,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'Instalacija PrestaShop-a je brza i jednostavna. Za par trenutaka, postaćete deo zajednice u kojoj je više od 200.000 prodavaca. Na putu ste da napravite vašu jedinstvenu onlajn prodavnicu koju možete uređivati jednostavno, i svakog dana.',
+    'Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 230,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'Instalacija PrestaShop-a je brza i jednostavna. Za par trenutaka, postaćete deo zajednice u kojoj je više od 230.000 prodavaca. Na putu ste da napravite vašu jedinstvenu onlajn prodavnicu koju možete uređivati jednostavno, i svakog dana.',
     'If you need help, do not hesitate to check <a href="%1$s" target="_blank">our documentation</a> or to contact our support team: %2$s.' => 'Ako vam treba pomoć, ne oklevajte da pogledate <a href="%1$s" target="_blank">našu dokumentaciju</a> ili da kontaktirate naš tim za podršku: %2$s.',
     'Continue the installation in:' => 'Nastavite instalaciju u:',
     'The language selection above only applies to the Installation Assistant. Once your store is installed, you can choose the language of your store from over %d translations, all for free!' => 'Ova jezička sekcija podržava samo pomoć za instalaciju. Kada instalirate prodavnicu, možete odabrati jezik prodavnice između preko %d prevoda, besplatno!',

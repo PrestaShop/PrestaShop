@@ -178,6 +178,8 @@ class AdminAdminPreferencesControllerCore extends AdminController
 
 	/**
 	 * Update PS_ATTACHMENT_MAXIMUM_SIZE
+	 *
+	 * @param $value
 	 */
 	public function updateOptionPsAttachementMaximumSize($value)
 	{

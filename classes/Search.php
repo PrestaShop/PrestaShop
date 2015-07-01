@@ -250,7 +250,7 @@ class SearchCore
 		AND product_shop.`active` = 1
 		AND product_shop.`visibility` IN ("both", "search")
 		AND product_shop.indexed = 1
-		'.$sql_groups);
+		'.$sql_groups, true, false);
 
 		$eligible_products = array();
 		foreach ($results as $row)
@@ -258,7 +258,7 @@ class SearchCore
 		foreach ($intersect_array as $query)
 		{
 			$eligible_products2 = array();
-			foreach ($db->executeS($query) as $row)
+			foreach ($db->executeS($query, true, false) as $row)
 				$eligible_products2[] = $row['id_product'];
 
 			$eligible_products = array_intersect($eligible_products, $eligible_products2);
@@ -292,7 +292,7 @@ class SearchCore
 					)
 					WHERE p.`id_product` '.$product_pool.'
 					ORDER BY position DESC LIMIT 10';
-			return $db->executeS($sql);
+			return $db->executeS($sql, true, false);
 		}
 
 		if (strpos($order_by, '.') > 0)
@@ -343,7 +343,7 @@ class SearchCore
 				)
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON m.`id_manufacturer` = p.`id_manufacturer`
 				WHERE p.`id_product` '.$product_pool;
-		$total = $db->getValue($sql);
+		$total = $db->getValue($sql, false);
 
 		if (!$result)
 			$result_properties = false;
@@ -365,7 +365,7 @@ class SearchCore
 		$tagsArray = $db->executeS('
 		SELECT t.name FROM '._DB_PREFIX_.'product_tag pt
 		LEFT JOIN '._DB_PREFIX_.'tag t ON (pt.id_tag = t.id_tag AND t.id_lang = '.(int)$id_lang.')
-		WHERE pt.id_product = '.(int)$id_product);
+		WHERE pt.id_product = '.(int)$id_product, true, false);
 		foreach ($tagsArray as $tag)
 			$tags .= $tag['name'].' ';
 		return $tags;
@@ -388,7 +388,7 @@ class SearchCore
 		INNER JOIN '._DB_PREFIX_.'product_attribute_combination pac ON pa.id_product_attribute = pac.id_product_attribute
 		INNER JOIN '._DB_PREFIX_.'attribute_lang al ON (pac.id_attribute = al.id_attribute AND al.id_lang = '.(int)$id_lang.')
 		'.Shop::addSqlAssociation('product_attribute', 'pa').'
-		WHERE pa.id_product = '.(int)$id_product);
+		WHERE pa.id_product = '.(int)$id_product, true, false);
 		foreach ($attributesArray as $attribute)
 			$attributes .= $attribute['name'].' ';
 		return $attributes;
@@ -409,7 +409,7 @@ class SearchCore
 		$featuresArray = $db->executeS('
 		SELECT fvl.value FROM '._DB_PREFIX_.'feature_product fp
 		LEFT JOIN '._DB_PREFIX_.'feature_value_lang fvl ON (fp.id_feature_value = fvl.id_feature_value AND fvl.id_lang = '.(int)$id_lang.')
-		WHERE fp.id_product = '.(int)$id_product);
+		WHERE fp.id_product = '.(int)$id_product, true, false);
 		foreach ($featuresArray as $feature)
 			$features .= $feature['value'].' ';
 		return $features;
@@ -517,7 +517,7 @@ class SearchCore
 			AND product_shop.`active` = 1
 			AND pl.`id_shop` = product_shop.`id_shop`';
 
-		return Db::getInstance()->executeS($sql);
+		return Db::getInstance()->executeS($sql, true, false);
 	}
 
 	/**
@@ -530,7 +530,7 @@ class SearchCore
 	protected static function getAttributesFields($db, $id_product, $sql_attribute)
 	{
 		return $db->executeS('SELECT id_product '.$sql_attribute.' FROM '.
-										   _DB_PREFIX_.'product_attribute pa WHERE pa.id_product = '.(int)$id_product);
+										   _DB_PREFIX_.'product_attribute pa WHERE pa.id_product = '.(int)$id_product, true, false);
 	}
 
 	/**
@@ -567,7 +567,22 @@ class SearchCore
 		if ($id_product)
 			$full = false;
 
-		if ($full)
+		if ($full && Context::getContext()->shop->getContext() == Shop::CONTEXT_SHOP)
+		{
+			$db->execute('DELETE si, sw FROM `'._DB_PREFIX_.'search_index` si
+				INNER JOIN `'._DB_PREFIX_.'product` p ON (p.id_product = si.id_product)
+				'.Shop::addSqlAssociation('product', 'p').'
+				INNER JOIN `'._DB_PREFIX_.'search_word` sw ON (sw.id_word = si.id_word AND product_shop.id_shop = sw.id_shop)
+				WHERE product_shop.`visibility` IN ("both", "search")
+				AND product_shop.`active` = 1');
+			$db->execute('UPDATE `'._DB_PREFIX_.'product` p
+				'.Shop::addSqlAssociation('product', 'p').'
+				SET p.`indexed` = 0, product_shop.`indexed` = 0
+				WHERE product_shop.`visibility` IN ("both", "search")
+				AND product_shop.`active` = 1
+				');
+		}
+		elseif ($full)
 		{
 			$db->execute('TRUNCATE '._DB_PREFIX_.'search_index');
 			$db->execute('TRUNCATE '._DB_PREFIX_.'search_word');
@@ -615,7 +630,7 @@ class SearchCore
 		$query_array3 = array();
 
 		// Retrieve the number of languages
-		$total_languages = count(Language::getLanguages(false));
+		$total_languages = count(Language::getIDs(false));
 
 		$sql_attribute = Search::getSQLProductAttributeFields($weight_array);
 		// Products are processed 50 by 50 in order to avoid overloading MySQL
@@ -668,7 +683,7 @@ class SearchCore
 						// The words are inserted...
 						$db->execute('
 						INSERT IGNORE INTO '._DB_PREFIX_.'search_word (id_lang, id_shop, word)
-						VALUES '.implode(',', $query_array));
+						VALUES '.implode(',', $query_array), false);
 					}
 					$word_ids_by_word = array();
 					if (is_array($query_array2) && !empty($query_array2))
@@ -734,7 +749,7 @@ class SearchCore
 			Db::getInstance()->execute(
 				'INSERT INTO '._DB_PREFIX_.'search_index (id_product, id_word, weight)
 				VALUES '.implode(',', $queryArray3).'
-				ON DUPLICATE KEY UPDATE weight = weight + VALUES(weight)'
+				ON DUPLICATE KEY UPDATE weight = weight + VALUES(weight)', false
 		);
 		$queryArray3 = array();
 	}
@@ -772,10 +787,11 @@ class SearchCore
 		{
 			return (int)Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
 			'SELECT COUNT(DISTINCT pt.`id_product`) nb
-			FROM `'._DB_PREFIX_.'product` p
+			FROM
+			`'._DB_PREFIX_.'tag` t
+			STRAIGHT_JOIN `'._DB_PREFIX_.'product_tag` pt ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = '.(int)$id_lang.')
+			STRAIGHT_JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = pt.`id_product`)
 			'.Shop::addSqlAssociation('product', 'p').'
-			LEFT JOIN `'._DB_PREFIX_.'product_tag` pt ON (p.`id_product` = pt.`id_product`)
-			LEFT JOIN `'._DB_PREFIX_.'tag` t ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = '.(int)$id_lang.')
 			LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)
 			LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cp.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')
 			'.(Group::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)' : '').'
@@ -795,7 +811,10 @@ class SearchCore
 							INTERVAL '.(Validate::isUnsignedInt(Configuration::get('PS_NB_DAYS_NEW_PRODUCT')) ? Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20).' DAY
 						)
 					) > 0 new
-				FROM `'._DB_PREFIX_.'product` p
+				FROM
+				`'._DB_PREFIX_.'tag` t
+				STRAIGHT_JOIN `'._DB_PREFIX_.'product_tag` pt ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = '.(int)$id_lang.')
+				STRAIGHT_JOIN `'._DB_PREFIX_.'product` p ON (p.`id_product` = pt.`id_product`)
 				INNER JOIN `'._DB_PREFIX_.'product_lang` pl ON (
 					p.`id_product` = pl.`id_product`
 					AND pl.`id_lang` = '.(int)$id_lang.Shop::addSqlRestrictionOnLang('pl').'
@@ -807,8 +826,6 @@ class SearchCore
 					ON (image_shop.`id_product` = p.`id_product` AND image_shop.cover=1 AND image_shop.id_shop='.(int)$context->shop->id.')
 				LEFT JOIN `'._DB_PREFIX_.'image_lang` il ON (image_shop.`id_image` = il.`id_image` AND il.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'manufacturer` m ON (m.`id_manufacturer` = p.`id_manufacturer`)
-				LEFT JOIN `'._DB_PREFIX_.'product_tag` pt ON (p.`id_product` = pt.`id_product`)
-				LEFT JOIN `'._DB_PREFIX_.'tag` t ON (pt.`id_tag` = t.`id_tag` AND t.`id_lang` = '.(int)$id_lang.')
 				LEFT JOIN `'._DB_PREFIX_.'category_product` cp ON (cp.`id_product` = p.`id_product`)
 				'.(Group::isFeatureActive() ? 'LEFT JOIN `'._DB_PREFIX_.'category_group` cg ON (cg.`id_category` = cp.`id_category`)' : '').'
 				LEFT JOIN `'._DB_PREFIX_.'category_shop` cs ON (cp.`id_category` = cs.`id_category` AND cs.`id_shop` = '.(int)$id_shop.')

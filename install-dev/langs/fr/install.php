@@ -1,16 +1,17 @@
 <?php
 
 return array (
-  'informations' => 
+  'informations' =>
   array (
-    'phone' => '+33 (0)1.40.18.30.04',
-    'documentation' => 'http://doc.prestashop.com/pages/viewpage.action?pageId=20840476',
+    'documentation' => 'http://doc.prestashop.com/display/PS16/Installer+PrestaShop',
     'documentation_upgrade' => 'http://doc.prestashop.com/pages/viewpage.action?pageId=23069387',
+    'tailored_help' => 'http://addons.prestashop.com/en/388-support',
     'forum' => 'http://www.prestashop.com/forums/forum/18-forum-francophone/',
     'blog' => 'http://www.prestashop.com/blog/fr/',
     'support' => 'https://www.prestashop.com/fr/support',
+    'tutorial' => 'https://www.youtube.com/watch?v=psz4aIPZZuk'
   ),
-  'translations' => 
+  'translations' =>
   array (
     'An SQL error occurred for entity <i>%1$s</i>: <i>%2$s</i>' => 'Une erreur SQL est survenue pour l\'entité <i>%1$s</i> : <i>%2$s</i>',
     'Cannot create image "%1$s" for entity "%2$s"' => 'Impossible de créer l\'image "%1$s" pour l\'entité "%2$s"',
@@ -145,7 +146,7 @@ return array (
     'Test your database connection now!' => 'Tester la connexion à la base de données',
     'Next' => 'Suivant',
     'Back' => 'Précédent',
-    'If you need some assistance during the installation process, please call our team at %s and one of our experts will be happy to help.' => 'PrestaShop peut vous accompagner si vous avez besoin d\'aide pour finaliser l\'installation de votre boutique. Contactez notre équipe au %s et indiquez-nous l\'URL de votre boutique. Nous serons heureux de vous aider dans les dernières étapes de l\'installation !',
+    'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="%2$s" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.' => 'If you need some assistance, you can <a href="%1$s" onclick="return !window.open(this.href);">get tailored help</a> from our support team. <a href="%2$s" onclick="return !window.open(this.href);">The official documentation</a> is also here to guide you.',
     'Official forum' => 'Forum officiel',
     'Support' => 'Support',
     'Documentation' => 'Documentation',
@@ -202,9 +203,10 @@ return array (
     'PrestaShop requires at least 32 MB of memory to run: please check the memory_limit directive in your php.ini file or contact your host provider about this.' => 'PrestaShop a besoin d\'au moins 32 Mo d\'espace mémoire pour fonctionner : veuillez vérifier la directive memory_limit de votre fichier php.ini, ou contacter votre hébergeur à ce propos.',
     '<b>Warning: You cannot use this tool to upgrade your store anymore.</b><br /><br />You already have <b>PrestaShop version %1$s installed</b>.<br /><br />If you want to upgrade to the latest version, please read our documentation: <a href="%2$s">%2$s</a>' => '<b>Attention : vous ne pouvez plus utiliser cet outil pour mettre à jour votre boutique.</b><br /><br />Vous disposez déjà de <b>PrestaShop version %1$s</b>.<br /><br /> Si vous voulez passer à la dernière version, lisez notre documentation : <a href="%2$s">%2$s</a>',
     'Welcome to the PrestaShop %s Installer' => 'Bienvenue sur l\'installation de PrestaShop %s',
-    'Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 200,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'L\'installation de PrestaShop est simple et rapide. Dans quelques minutes vous ferez partie d\'une communauté de plus de 200 000 marchands. Vous êtes sur le point de créer votre propre boutique en ligne, unique en son genre, que vous pourrez gérer très facilement au quotidien.',
-    'If you need help, do not hesitate to check <a href="%1$s" target="_blank">our documentation</a> or to contact our support team: %2$s.' => 'Si vous avez besoin d\'aide, n\'hésitez pas à parcourir  <a href="%1$s" target="_blank">notre documentation</a> ou à contacter notre équipe de support : %2$s.',
+    'Installing PrestaShop is quick and easy. In just a few moments, you will become part of a community consisting of more than 230,000 merchants. You are on the way to creating your own unique online store that you can manage easily every day.' => 'L\'installation de PrestaShop est simple et rapide. Dans quelques minutes vous ferez partie d\'une communauté de plus de 230 000 marchands. Vous êtes sur le point de créer votre propre boutique en ligne, unique en son genre, que vous pourrez gérer très facilement au quotidien.',
+    'If you need help, do not hesitate to <a href="%1$s" target="_blank">watch this short tutorial</a>, or check <a href="%2$s" target="_blank">our documentation</a>.' => 'If you need help, do not hesitate to <a href="%1$s" target="_blank">watch this short tutorial</a>, or check <a href="%2$s" target="_blank">our documentation</a>.',
     'Continue the installation in:' => 'Continuer l\'installation en :',
     'The language selection above only applies to the Installation Assistant. Once your store is installed, you can choose the language of your store from over %d translations, all for free!' => 'Le choix de la langue ci-dessus s\'applique à l\'assistant d\'installation. Une fois votre boutique installée, vous pourrez choisir la langue de votre boutique parmi plus de %d traductions disponibles gratuitement !',
+    'All information you give us is collected by us and is subject to data processing and statistics, it is necessary for the members of the PrestaShop company in order to respond to your requests. Your personal data may be communicated to service providers and partners as part of partner relationships. Under the current "Act on Data Processing, Data Files and Individual Liberties" you have the right to access, rectify and oppose to the processing of your personal data through this <a href="%s" onclick="return !window.open(this.href)">link</a>.' => 'Les informations recueillies font l\'objet d’un traitement informatique et statistique, elles sont nécessaires aux membres de la société PrestaShop afin de répondre au mieux à votre demande. Ces informations peuvent être communiquées à nos partenaires à des fins de prospection commerciale et être transmises dans le cadre de nos relations partenariales. Conformément à la loi « Informatique et Libertés » du 6 janvier 1978 modifiée en 2004, vous pouvez exercer votre droit d\'accès, de rectification et d\'opposition au traitement des données qui vous concernent en cliquant <a href="%s" onclick="return !window.open(this.href)">ici</a>.'
   ),
 );

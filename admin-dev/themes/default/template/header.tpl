@@ -38,7 +38,7 @@
 
 	<meta name="robots" content="NOFOLLOW, NOINDEX">
 	<title>{if $meta_title != ''}{$meta_title} • {/if}{$shop_name}</title>
-	{if $display_header}
+	{if $display_header_javascript}
 	<script type="text/javascript">
 		var help_class_name = '{$controller_name|@addcslashes:'\''}';
 		var iso_user = '{$iso_user|@addcslashes:'\''}';
@@ -113,11 +113,19 @@
 				<button id="header_nav_toggle" type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-primary">
 					<i class="icon-reorder"></i>
 				</button>
-
-				<a id="header_shopname" href="{$default_tab_link|escape:'html':'UTF-8'}">
-					{$shop_name}
+				<a id="header_shopversion" href="{$default_tab_link|escape:'html':'UTF-8'}">
+					<span id="shop_version">{$version}</span>
 				</a>
-
+				{* Shop *}
+				{if isset($is_multishop) && $is_multishop && $shop_list && (isset($multishop_context) && $multishop_context & Shop::CONTEXT_GROUP || $multishop_context & Shop::CONTEXT_SHOP)}
+					<ul id="header_shop">
+						<li class="dropdown">
+							{$shop_list}
+						</li>
+					</ul>
+				{else}
+					<a id="header_shopname" href="{$default_tab_link|escape:'html':'UTF-8'}">{$shop_name}</a>
+				{/if}
 				<ul id="header_notifs_icon_wrapper">
 {if {$show_new_orders} == 1}
 					<li id="orders_notif" class="dropdown" data-type="order">
@@ -235,44 +243,53 @@
 					$(function() {
 						$('.ajax-quick-link').on('click', function(e){
 							e.preventDefault();
-							$.ajax({
-								type: 'POST',
-								headers: { "cache-control": "no-cache" },
-								async: false,
-								url: "{$link->getAdminLink('AdminQuickAccesses')}" + "&action=GetUrl" + "&rand={1|rand:200}" + "&ajax=1" + "&method=" + $(this).data('method') + ( $(this).data('quicklink-id') ? "&id_quick_access=" + $(this).data('quicklink-id') : ""),
-								data: {
-									"url": "{$link->getQuickLink($smarty.server['REQUEST_URI'])}",
-									"name": "{$quick_access_current_link_name.0|truncate:32}",
-									"icon": "{$quick_access_current_link_icon}"
-								},
-								dataType: "json",
-								success: function(data) {
-									var quicklink_list ='';
-									$.each(data, function(index,value){
-										if (typeof data[index]['name'] !== 'undefined')
-											quicklink_list += '<li><a href="' + data[index]['link'] + '&token=' + data[index]['token'] + '"><i class="icon-chevron-right"></i> ' + data[index]['name'] + '</a></li>';
-									});
 
-									if (typeof data['has_errors'] !== 'undefined' && data['has_errors'])
-										$.each(data, function(index, value)
-										{
-											if (typeof data[index] == 'string')
-												$.growl.error({ title: "", message: data[index]});
+							var method = $(this).data('method');
+
+							if(method == 'add')
+								var name = prompt('{l s='Please name this shortcut:' js=1}', '{$quick_access_current_link_name.0|truncate:32}');
+
+							if(method == 'add' && name || method == 'remove')
+							{
+								$.ajax({
+									type: 'POST',
+									headers: { "cache-control": "no-cache" },
+									async: false,
+									url: "{$link->getAdminLink('AdminQuickAccesses')}" + "&action=GetUrl" + "&rand={1|rand:200}" + "&ajax=1" + "&method=" + method + ( $(this).data('quicklink-id') ? "&id_quick_access=" + $(this).data('quicklink-id') : ""),
+									data: {
+										"url": "{$link->getQuickLink($smarty.server['REQUEST_URI'])}",
+										"name": name,
+										"icon": "{$quick_access_current_link_icon}"
+									},
+									dataType: "json",
+									success: function(data) {
+										var quicklink_list ='';
+										$.each(data, function(index,value){
+											if (typeof data[index]['name'] !== 'undefined')
+												quicklink_list += '<li><a href="' + data[index]['link'] + '&token=' + data[index]['token'] + '"><i class="icon-chevron-right"></i> ' + data[index]['name'] + '</a></li>';
 										});
-									else if (quicklink_list)
-									{
-										$("#header_quick ul.dropdown-menu").html(quicklink_list);
-										showSuccessMessage(update_success_msg);
+
+										if (typeof data['has_errors'] !== 'undefined' && data['has_errors'])
+											$.each(data, function(index, value)
+											{
+												if (typeof data[index] == 'string')
+													$.growl.error({ title: "", message: data[index]});
+											});
+										else if (quicklink_list)
+										{
+											$("#header_quick ul.dropdown-menu").html(quicklink_list);
+											showSuccessMessage(update_success_msg);
+										}
 									}
-								}
-							});
+								});
+							}
 						});
 					});
 				</script>
 {/if}
 				<ul id="header_employee_box">
 					{if (!isset($logged_on_addons) || !$logged_on_addons) && (isset($display_addons_connection) && $display_addons_connection)}
-						<li>
+						<li class="hidden-sm">
 							<a href="#" class="addons_connect toolbar_btn" data-toggle="modal" data-target="#modal_addons_connect" title="{l s='Connect to PrestaShop Marketplace account'}">
 								<i class="icon-chain-broken"></i>
 								<span class="string-long">{l s='Connect to PrestaShop Marketplace account'}</span>
@@ -283,10 +300,16 @@
 {if {$base_url}}
 					<li>
 						<a href="{if isset($base_url_tc)}{$base_url_tc|escape:'html':'UTF-8'}{else}{$base_url|escape:'html':'UTF-8'}{/if}" id="header_foaccess" class="_blank" title="{l s='View my shop'}">
-							<i class="icon-star"></i>
 							<span class="string-long">{l s='My shop'}</span>
 							<span class="string-short">{l s='Shop'}</span>
 						</a>
+						{if isset($maintenance_mode) && $maintenance_mode == true}
+							<span class="maintenance-mode">
+								&mdash;
+								<span class="label-tooltip" data-toggle="tooltip" data-placement="bottom" data-html="true"
+								title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in maintenance.'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Preferences > Maintenance.' sprintf='<br />'}</p>">{l s='Maintenance mode'}</span>
+							</span>
+						{/if}
 					</li>
 {/if}
 					<li id="employee_infos" class="dropdown">
@@ -306,7 +329,7 @@
 									<img class="imgm img-thumbnail" alt="" src="{$employee->getImage()}" width="96" height="96" />
 								</span>
 							</li>
-							<li class="text-center">{$employee->firstname} {$employee->lastname}</li>
+							<li class="text-center text-nowrap">{$employee->firstname} {$employee->lastname}</li>
 							<li class="divider"></li>
 							<li><a href="{$link->getAdminLink('AdminEmployees')|escape:'html':'UTF-8'}&amp;id_employee={$employee->id|intval}&amp;updateemployee"><i class="icon-wrench"></i> {l s='My preferences'}</a></li>
 							{if $host_mode}
@@ -341,6 +364,8 @@
 				{l s='For security reasons, you must also delete the /install folder.'}
 			</div>
 {/if}
+
+			{hook h='displayAdminAfterHeader'}
 
 
 {* end display_header*}

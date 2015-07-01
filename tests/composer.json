@@ -9,7 +9,8 @@
         }
     ],
     "require": {
-        "phpunit/phpunit": "~4.5"
+        "phpunit/phpunit": "~4.5",
+        "phake/phake": "@stable"
     },
     "autoload": {
         "psr-4": {

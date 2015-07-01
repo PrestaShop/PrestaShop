@@ -29,6 +29,7 @@
 	var dashboard_use_push = '{$dashboard_use_push|intval}';
 	var read_more = '{l s='Read more' js=1}';
 </script>
+
 <div id="dashboard">
 	<div class="row">
 		<div class="col-lg-12">
@@ -41,7 +42,7 @@
 						<button type="button" name="submitDateDay" class="btn btn-default submitDateDay{if isset($preselect_date_range) && $preselect_date_range == 'day'} active{/if}">
 							{l s='Day'}
 						</button>
-						<button type="button" name="submitDateMonth" class="btn btn-default submitDateMonth{if isset($preselect_date_range) && $preselect_date_range == 'month'} active{/if}">
+						<button type="button" name="submitDateMonth" class="btn btn-default submitDateMonth{if (!isset($preselect_date_range) || !$preselect_date_range) || (isset($preselect_date_range) && $preselect_date_range == 'month')} active{/if}">
 							{l s='Month'}
 						</button>
 						<button type="button" name="submitDateYear" class="btn btn-default submitDateYear{if isset($preselect_date_range) && $preselect_date_range == 'year'} active{/if}">
@@ -126,22 +127,6 @@
 						<dd></dd>
 					</dl>
 			</section>
-			<section class="dash_simulation panel">
-				<h3><i class="icon-link"></i> {l s="Demo Mode"}</h3>
-				<span class="switch prestashop-switch">
-					<input id="PS_DASHBOARD_SIMULATION_on" class="ps_dashboard_simulation" type="radio" {if $PS_DASHBOARD_SIMULATION == 1}checked="checked"{/if} value="1" name="PS_DASHBOARD_SIMULATION">
-					<label class="radioCheck" for="PS_DASHBOARD_SIMULATION_on">
-						{l s='On'}
-					</label>
-					<input id="PS_DASHBOARD_SIMULATION_off" class="ps_dashboard_simulation" type="radio" {if $PS_DASHBOARD_SIMULATION == 0}checked="checked"{/if} value="0" name="PS_DASHBOARD_SIMULATION">
-					<label class="radioCheck" for="PS_DASHBOARD_SIMULATION_off">
-						{l s='Off'}
-					</label>
-					<a class="slide-button btn"></a>
-				</span>
-				{l s='This mode displays sample data so you can try your dashboard without real numbers.'}
-			</section>
-
 		</div>
 	</div>
 </div>

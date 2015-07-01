@@ -52,10 +52,14 @@ class AdminDashboardControllerCore extends AdminController
 
 	public function initPageHeaderToolbar()
 	{
-		parent::initPageHeaderToolbar();
-
 		$this->page_header_toolbar_title = $this->l('Dashboard');
-		$this->page_header_toolbar_btn = array();
+		$this->page_header_toolbar_btn['switch_demo'] = array(
+			'desc' => $this->l('Demo mode', null, null, false),
+			'icon' => 'process-icon-toggle-'.(Configuration::get('PS_DASHBOARD_SIMULATION') ? 'on' : 'off'),
+			'help' => $this->l('This mode displays sample data so you can try your dashboard without real numbers.', null, null, false)
+		);
+
+		parent::initPageHeaderToolbar();
 
 		// Remove the last element on this controller to match the title with the rule of the others
 		array_pop($this->meta_title);
@@ -195,6 +199,43 @@ class AdminDashboardControllerCore extends AdminController
 		// 	'To' => $this->l('To:', 'AdminStatsTab'),
 		// 	'Save' => $this->l('Save', 'AdminStatsTab')
 		// );
+
+		if ($this->context->cookie->__get('stats_date_update') < strtotime(date('Y-m-d')))
+		{
+			switch ($this->context->employee->preselect_date_range)
+			{
+				case 'day':
+					$date_from = date('Y-m-d');
+					$date_to = date('Y-m-d');
+					break;
+				case 'prev-day':
+					$date_from = date('Y-m-d', strtotime('-1 day'));
+					$date_to = date('Y-m-d', strtotime('-1 day'));
+					break;
+				case 'month':
+				default:
+					$date_from = date('Y-m-01');
+					$date_to = date('Y-m-d');
+					break;
+				case 'prev-month':
+					$date_from = date('Y-m-01', strtotime('-1 month'));
+					$date_to = date('Y-m-t', strtotime('-1 month'));
+					break;
+				case 'year':
+					$date_from = date('Y-01-01');
+					$date_to = date('Y-m-d');
+					break;
+				case 'prev-year':
+					$date_from = date('Y-m-01', strtotime('-1 year'));
+					$date_to = date('Y-12-t', strtotime('-1 year'));
+					break;
+			}
+			$this->context->employee->stats_date_from = $date_from;
+			$this->context->employee->stats_date_to = $date_to;
+			$this->context->employee->update();
+			$this->context->cookie->__set('stats_date_update', strtotime(date('Y-m-d')));
+			$this->context->cookie->write();
+		}
 
 		$calendar_helper = new HelperCalendar();
 
