@@ -2358,4 +2358,59 @@ class OrderCore extends ObjectModel
 			'WHERE o.id_order = '.(int)$this->id
 		);
 	}
+
+	/**
+	 * Re calculate shipping cost
+	 * @return object $order
+	 */
+	public function refreshShippingCost()
+	{
+		if (empty($this->id))
+			return false;
+
+		$fake_cart = new Cart($this->id_cart);
+		$new_cart = $fake_cart->duplicate();
+		$new_cart = $new_cart['cart'];
+
+		//assign order id_address_delivery to cart
+		$new_cart->id_address_delivery = $this->id_address_delivery;
+
+		//remove all products : cart (maybe change in the meantime)
+		foreach($new_cart->getProducts() as $product){
+			$new_cart->deleteProduct($product['id_product'], $product['id_product_attribute']);
+		}
+
+		//add real order products
+		foreach($this->getProducts() as $product){
+			$new_cart->updateQty($product['product_quantity'], $product['product_id']);
+		}
+
+		//get new shipping cost
+		$base_total_shipping_tax_incl = $new_cart->getOrderTotal(true, Cart::ONLY_SHIPPING);
+		$base_total_shipping_tax_excl = $new_cart->getOrderTotal(false, Cart::ONLY_SHIPPING);
+
+		//calculate diff price, then apply new order totals
+		$diff_shipping_tax_incl = $this->total_shipping_tax_incl - $base_total_shipping_tax_incl;
+		$diff_shipping_tax_excl = $this->total_shipping_tax_excl - $base_total_shipping_tax_excl;
+
+		$this->total_shipping_tax_excl = $this->total_shipping_tax_excl - $diff_shipping_tax_excl;
+		$this->total_shipping_tax_incl = $this->total_shipping_tax_incl - $diff_shipping_tax_incl;
+		$this->total_shipping = $this->total_shipping_tax_incl;
+		$this->total_paid_tax_excl = $this->total_paid_tax_excl - $diff_shipping_tax_excl;
+		$this->total_paid_tax_incl = $this->total_paid_tax_incl - $diff_shipping_tax_incl;
+		$this->total_paid = $this->total_paid_tax_incl;
+
+		$this->save();
+
+		//save order_carrier prices
+		$order_carrier = new OrderCarrier((int)$this->getIdOrderCarrier());
+		$order_carrier->shipping_cost_tax_excl = $this->total_shipping_tax_excl;
+		$order_carrier->shipping_cost_tax_incl = $this->total_shipping_tax_incl;
+		$order_carrier->save();
+
+		//remove fake cart
+		$new_cart->delete();
+
+		return $this;
+	}
 }

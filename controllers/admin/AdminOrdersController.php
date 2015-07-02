@@ -1161,6 +1161,9 @@ class AdminOrdersControllerCore extends AdminController
 					elseif (Tools::isSubmit('submitAddressInvoice'))
 						$order->id_address_invoice = $address->id;
 					$order->update();
+
+					$order->refreshShippingCost();
+
 					Tools::redirectAdmin(self::$currentIndex.'&id_order='.$order->id.'&vieworder&conf=4&token='.$this->token);
 				}
 				else
@@ -1912,6 +1915,7 @@ class AdminOrdersControllerCore extends AdminController
 	{
 		// Load object
 		$order = new Order((int)Tools::getValue('id_order'));
+
 		if (!Validate::isLoadedObject($order))
 			die(Tools::jsonEncode(array(
 				'result' => false,
@@ -2182,6 +2186,8 @@ class AdminOrdersControllerCore extends AdminController
 			$invoice_array[] = $invoice;
 		}
 
+		$order = $order->refreshShippingCost();
+
 		// Assign to smarty informations in order to show the new product line
 		$this->context->smarty->assign(array(
 			'product' => $product,
@@ -2439,6 +2445,8 @@ class AdminOrdersControllerCore extends AdminController
 			$invoice_array[] = $invoice;
 		}
 
+		$order = $order->refreshShippingCost();
+
 		// Assign to smarty informations in order to show the new product line
 		$this->context->smarty->assign(array(
 			'product' => $product,
@@ -2537,6 +2545,8 @@ class AdminOrdersControllerCore extends AdminController
 			$invoice->name = $invoice->getInvoiceNumberFormatted(Context::getContext()->language->id, (int)$order->id_shop);
 			$invoice_array[] = $invoice;
 		}
+
+		$order = $order->refreshShippingCost();
 
 		// Assign to smarty informations in order to show the new product line
 		$this->context->smarty->assign(array(
@@ -2816,55 +2826,6 @@ class AdminOrdersControllerCore extends AdminController
 		die(Tools::jsonEncode(array(
 			'result' => true,
 			'view' => $this->createTemplate('_select_payment.tpl')->fetch(),
-		)));
-	}
-
-	/**
-	 * Re calculate shipping cost
-	 */
-	public function ajaxProcessRefreshShippingCost()
-	{
-		$order = new Order((int)Tools::getValue('id_order'));
-
-		if (!Validate::isLoadedObject($order))
-			die(Tools::jsonEncode(array('result' => false)));
-
-		$fake_cart = new Cart($order->id_cart);
-		$new_cart = $fake_cart->duplicate();
-		$new_cart = $new_cart['cart'];
-
-		//remove all products : cart (maybe change in the meantime)
-		foreach($new_cart->getProducts() as $product){
-			$new_cart->deleteProduct($product['id_product'], $product['id_product_attribute']);
-		}
-
-		//add real order products
-		foreach($order->getProducts() as $product){
-			$new_cart->updateQty($product['product_quantity'], $product['product_id']);
-		}
-
-		//get new shipping cost
-		$base_total_shipping_tax_incl = $new_cart->getOrderTotal(true, Cart::ONLY_SHIPPING);
-		$base_total_shipping_tax_excl = $new_cart->getOrderTotal(false, Cart::ONLY_SHIPPING);
-
-		//calculate diff price, then apply new order totals
-		$diff_shipping_tax_incl = $order->total_shipping_tax_incl - $base_total_shipping_tax_incl;
-		$diff_shipping_tax_excl = $order->total_shipping_tax_excl - $base_total_shipping_tax_excl;
-
-		$order->total_shipping_tax_excl = $order->total_shipping_tax_excl - $diff_shipping_tax_excl;
-		$order->total_shipping_tax_incl = $order->total_shipping_tax_incl - $diff_shipping_tax_incl;
-		$order->total_shipping = $order->total_shipping_tax_incl;
-		$order->total_paid_tax_excl = $order->total_paid_tax_excl - $diff_shipping_tax_excl;
-		$order->total_paid_tax_incl = $order->total_paid_tax_incl - $diff_shipping_tax_incl;
-		$order->total_paid = $order->total_paid_tax_incl;
-
-		$order->save();
-
-		//remove fake cart
-		$new_cart->delete();
-
-		die(Tools::jsonEncode(array(
-			'order' => $order
 		)));
 	}
 }

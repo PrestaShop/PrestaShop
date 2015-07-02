@@ -1077,15 +1077,7 @@
 											<td class="partial_refund_fields current-edit" style="display:none;"></td>
 										</tr>
 										<tr id="total_shipping">
-											<td class="text-right">
-												{$validStateForShipRefresh = [2, 3, 4, 5, 6, 7, 8, 9]}
-												{if not $currentState->id|in_array:$validStateForShipRefresh}
-												<button data-toggle="tooltip" title="{l s='You can update shipping price, use this carefully'}" class="btn btn-default btn-xs label-tooltip" id="refreshShippingCost">
-												<i class="icon-refresh"></i>
-												</button>
-												{/if}
-												{l s='Shipping'}
-											</td>
+											<td class="text-right">{l s='Shipping'}</td>
 											<td class="amount text-right nowrap" >
 												{displayPrice price=$order_shipping_price currency=$currency->id}
 											</td>
@@ -1390,30 +1382,6 @@
 			google.maps.event.trigger(invoice_map, 'resize');
 			invoice_map.setZoom(x);
 			invoice_map.setCenter(c);
-		});
-
-		// On demand refresh Shipping cost
-		$('#refreshShippingCost').click(function(){
-			if (confirm('{l s='You will update shipping price, are you sure?' js=1}')) {
-				$.ajax({
-					type:"POST",
-					url: "{$link->getAdminLink('AdminOrders')|addslashes}",
-					async: true,
-					dataType: "json",
-					data : {
-						ajax: "1",
-						token: "{getAdminToken tab='AdminOrders'}",
-						tab: "AdminOrders",
-						action: "refreshShippingCost",
-						id_order: id_order
-					},
-					success : function(data)
-					{
-						updateAmounts(data.order);
-					}
-				});
-			}
-			return false;
 		});
 	</script>
 
