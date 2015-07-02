@@ -104,7 +104,7 @@
 									<div class="form-group">
 									{/if}
 									{foreach $languages as $language}
-										{assign var='value_text' value=$fields_value[$input.name][$language.id_lang]}
+										{assign var='value_text' value=$fields_value[$input.name][$language.id_lang]|default:''}
 										{if $languages|count > 1}
 										<div class="translatable-field lang-{$language.id_lang}" {if $language.id_lang != $defaultFormLanguage}style="display:none"{/if}>
 											<div class="col-lg-9">
