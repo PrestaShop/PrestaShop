@@ -815,11 +815,11 @@ class AdminModulesControllerCore extends AdminController
 					elseif ($key == 'configure' && ($this->tabAccess['edit'] !== '1' || !$module->getPermission('configure') || !Module::isInstalled(urldecode($name))))
 						$this->errors[] = Tools::displayError('You do not have permission to configure this module.');
 					elseif ($key == 'install' && Module::isInstalled($module->name))
-						$this->errors[] = Tools::displayError(sprintf('This module is already installed: %s.', $module->name));
+						$this->errors[] = sprintf(Tools::displayError('This module is already installed: %s.'), $module->name);
 					elseif ($key == 'uninstall' && !Module::isInstalled($module->name))
-						$this->errors[] = Tools::displayError(sprintf('This module has already been uninstalled: %s.', $module->name));
+						$this->errors[] = sprintf(Tools::displayError('This module has already been uninstalled: %s.'), $module->name);
 					elseif ($key == 'update' && !Module::isInstalled($module->name))
-						$this->errors[] = Tools::displayError(sprintf('This module needs to be installed in order to be updated: %s.', $module->name));
+						$this->errors[] = sprintf(Tools::displayError('This module needs to be installed in order to be updated: %s.'), $module->name);
 					else
 					{
 						// If we install a module, force temporary global context for multishop
