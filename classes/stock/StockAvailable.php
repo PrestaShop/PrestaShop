@@ -324,7 +324,7 @@ class StockAvailableCore extends ObjectModel
 		if (!Validate::isUnsignedId($id_product))
 			return false;
 
-		if ($id_product_attribute)
+		if (!$id_product_attribute)
 			$existing_id = StockAvailable::getStockAvailableIdByProductId((int)$id_product, (int)$id_product_attribute, $id_shop);
 		else
 			$existing_id = 0;
